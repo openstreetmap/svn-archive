@@ -222,7 +222,7 @@ public class osmServerSQLHandler extends Thread
             + " " + trackid + ", "
             + " " + quality + ", "
             + " " + satellites + ", "
-            + " " + System.currentTimeMillis() + ", 1);";
+            + " " + System.currentTimeMillis() + ", 1,0);";
 
 
       System.out.println("querying with sql \n " + sSQL);

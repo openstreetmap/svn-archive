@@ -14,37 +14,43 @@ public class osmAppletButtons extends JPanel implements ActionListener
 
     setLayout(new FlowLayout());
 
-    JButton bLeft = new JButton( new ImageIcon("left.png"));
+    java.net.URL imageURL;
+    
+    imageURL = osmAppletButtons.class.getResource("left.png");
+    JButton bLeft = new JButton( new ImageIcon(imageURL) );
     bLeft.setActionCommand("left");
     bLeft.addActionListener(this);
     add(bLeft);
 
-    JButton bRight = new JButton("right");
+    imageURL = osmAppletButtons.class.getResource("right.png");
+    JButton bRight = new JButton(new ImageIcon(imageURL));
     bRight.setActionCommand("right");
     bRight.addActionListener(this);
     add(bRight);
 
-    JButton bUp = new JButton("up");
+    imageURL = osmAppletButtons.class.getResource("up.png");
+    JButton bUp = new JButton( new ImageIcon(imageURL));
     bUp.setActionCommand("up");
     bUp.addActionListener(this);
     add(bUp);
 
-    JButton bDown = new JButton("down");
+    imageURL = osmAppletButtons.class.getResource("down.png");
+    JButton bDown = new JButton( new ImageIcon(imageURL));
     bDown.setActionCommand("down");
     bDown.addActionListener(this);
     add(bDown);
 
-
-    JButton bZoomout = new JButton("zoom out");
+    imageURL = osmAppletButtons.class.getResource("zoomout.png");
+    JButton bZoomout = new JButton( new ImageIcon(imageURL));
     bZoomout.setActionCommand("zoomout");
     bZoomout.addActionListener(this);
     add(bZoomout);
 
-    JButton bZoomin = new JButton("zoom in");
+    imageURL = osmAppletButtons.class.getResource("zoomin.png");
+    JButton bZoomin = new JButton( new ImageIcon(imageURL));
     bZoomin.setActionCommand("zoomin");
     bZoomin.addActionListener(this);
     add(bZoomin);
-
 
   } // osmAppletButtons
 

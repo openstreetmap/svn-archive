@@ -222,7 +222,7 @@ public class osmServerSQLHandler extends Thread
       
       sSQL += 
         "insert into streets(name, timestamp, user_uid, visible) values ("
-        + " " + street_name + ", "
+        + " '" + street_name + "', "
         + " " + l + ", "
         + " " + uid + ", "
         + " true "
@@ -243,11 +243,16 @@ public class osmServerSQLHandler extends Thread
 
       sSQL += "commit; unlock tables; ";
 
-      sSQL += "select @id; ";
 
 
       System.out.println("querying with sql \n " + sSQL);
 
+      stmt.execute(sSQL);
+
+      sSQL = "select @id; ";
+      
+      System.out.println("querying with sql \n " + sSQL);
+      
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();

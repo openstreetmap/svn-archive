@@ -114,11 +114,11 @@ body {
   text-align: center;
 }
 
-keyvalue {
+#keyvalue {
   font-size: small;
   width: 100%;
 }
 
-keyvalue.th {
+#keyvalue.th {
   font-weight: bold;
 }

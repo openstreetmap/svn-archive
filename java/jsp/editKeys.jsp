@@ -28,7 +28,7 @@ else
   Enumeration e = keys.elements();
 
   %>
-   <table class="keyvalue" border="0" width="100%">
+   <table id="keyvalue" border="0" width="100%">
    <tr>
    <th>
    Key name

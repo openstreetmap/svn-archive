@@ -13,14 +13,14 @@ extern "C" {
 #include <string.h>
 #include <errno.h>
 #include "sirf_lowlevel.h"
-
-  int errno;
 }
+
+//extern int errno;
 
 namespace SiRF {
 
   // initialise
-  SiRFDevice::SiRFDevice(const char *devicename, int baud) {
+  SiRFDevice::SiRFDevice(const char *devicename, unsigned int baud) {
     // open the device
     open(devicename);
     // initialise
@@ -30,8 +30,8 @@ namespace SiRF {
     // set up the buffer
     read_buf_size = 4096;
     write_buf_size = 4096;
-    read_buffer = new unsigned char[read_buf_size];
-    write_buffer = new unsigned char[read_buf_size];
+    read_buffer = new uint8[read_buf_size];
+    write_buffer = new uint8[read_buf_size];
     read_buf_len = 0;
     read_buf_pos = 0;
     write_buf_pos = 0;
@@ -52,7 +52,7 @@ namespace SiRF {
   }
 
   // get a byte from the serial port
-  SiRFDevice &SiRFDevice::operator>>(unsigned char &c) {
+  SiRFDevice &SiRFDevice::operator>>(uint8 &c) {
     // if we have enough data then use it
     if (read_buf_pos >= read_buf_len) {
       // but we don't, so get some more data
@@ -66,7 +66,7 @@ namespace SiRF {
   }
   
   // get a byte from the serial port
-  SiRFDevice &SiRFDevice::operator<<(unsigned char &c) {
+  SiRFDevice &SiRFDevice::operator<<(uint8 &c) {
     // if we have enough data then use it
     write_buffer[write_buf_pos] = c;
     write_buf_pos++;

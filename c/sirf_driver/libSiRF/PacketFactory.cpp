@@ -10,6 +10,16 @@
 #include <vector>
 #include <iostream>
 
+#include "config.h"
+
+#ifndef HAVE_PTHREAD_H
+#error I need pthreads
+#endif
+
+#ifndef HAVE_SEM_H
+#error I need semaphores
+#endif
+
 namespace SiRF {
 
   /* construct self using the given stream

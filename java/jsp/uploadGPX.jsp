@@ -17,6 +17,8 @@
 
 <%
 
+String action = request.getParameter("action");
+
 if( !bLoggedIn )
 {
   %>
@@ -26,7 +28,7 @@ if( !bLoggedIn )
 else
 {
 
-  if(FileUpload.isMultipartContent(request))
+  if(action != null && action.equals("send") && FileUpload.isMultipartContent(request))
   {
 
     String sSaveFileName = "";
@@ -153,6 +155,7 @@ else
       <table>
       <tr><td>file:</td><td><input type="file" name="file"></td></tr>
       <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+      <input type="hidden" name="action" value="send">
       </table>
       </form>
 

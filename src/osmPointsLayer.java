@@ -64,10 +64,13 @@ public class osmPointsLayer extends Layer
 
   public void projectionChanged (ProjectionEvent e) {
 
-    System.out.println("projection changed");
+    System.out.println("projection changed to ");
+    
     
     proj = e.getProjection();
   
+    System.out.println("scale is " + proj.getScale());
+    System.out.println("center is " + proj.getCenter());
     // probably better to empty the list rather than create a new one?
     graphics = new OMGraphicList(2000);
     

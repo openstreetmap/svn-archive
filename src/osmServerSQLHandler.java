@@ -80,9 +80,10 @@ public class osmServerSQLHandler extends Thread
                     + " and X(g) > " + p2lat
                     + " and Y(g) > " + p1lon
                     + " and Y(g) < " + p2lon
-                    + " limit 6000";
+                    + " limit 10000";
 
-      System.out.println("querying with sql \n " + sSQL);
+      //System.out.println("querying with sql \n " + sSQL);
+      
       ResultSet rs = stmt.executeQuery(sSQL);
 
       boolean bFirst = true;
@@ -101,8 +102,6 @@ public class osmServerSQLHandler extends Thread
               rs.getLong(4) ));
 
       }
-
-
 
       bSQLSuccess = true;
 

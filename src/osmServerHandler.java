@@ -110,8 +110,6 @@ public class osmServerHandler implements Runnable
             innergs.finish();
 
 
-            System.out.println("write end");
-        
             out.close();
             
 

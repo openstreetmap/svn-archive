@@ -1,0 +1,4112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book>
+  <bookinfo>
+    <title>MySQL Connector/J Documentation</title>
+
+    <author>
+      <firstname>Mark</firstname>
+
+      <surname>Matthews</surname>
+    </author>
+
+    <copyright>
+      <year>2004</year>
+
+      <holder>MySQL AB</holder>
+    </copyright>
+  </bookinfo>
+
+  <chapter>
+    <title>Introduction</title>
+
+    <para></para>
+
+    <sect1>
+      <title>What is MySQL Connector/J?</title>
+
+      <para>MySQL Connector/J is an implementation of Sun&#39;s JDBC 3.0 API
+      for the MySQL relational database server. It strives to conform as much
+      as possible to the JDBC API as specified by JavaSoft. It is known to
+      work with many third-party products, including:</para>
+
+      <itemizedlist>
+        <title>Application Servers</title>
+
+        <listitem>
+          <para><ulink url="http://jakarta.apache.org/">Apache Tomcat</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://www.jboss.org/">JBoss</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://www.beasys.com/">Weblogic</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://www-3.ibm.com/software/info1/websphere/">IBM
+          WebSphere</ulink></para>
+        </listitem>
+      </itemizedlist>
+
+      <itemizedlist>
+        <title>Object Relational Mapping Tools</title>
+
+        <listitem>
+          <para><ulink url="http://hibernate.sourceforge.net/">Hibernate</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://db.apache.org/ojb/">Apache
+          ObjectRelationalBridge</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://www.thoughtinc.com/">CocoBase</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://www.solarmetric.com/">Kodo</ulink></para>
+        </listitem>
+      </itemizedlist>
+
+      <itemizedlist>
+        <title>Development Environments</title>
+
+        <listitem>
+          <para><ulink url="http://www.eclipse.org/">Eclipse</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink url="http://www.borland.com/jbuilder/">Borland JBuilder</ulink></para>
+        </listitem>
+
+        <listitem>
+          <para><ulink
+          url="http://www-3.ibm.com/software/awdtools/studioappdev/">IBM
+          WebSphere Studio</ulink></para>
+        </listitem>
+      </itemizedlist>
+    </sect1>
+
+    <sect1>
+      <title>Release Notes</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Known Issues</title>
+
+        <para></para>
+
+        <sect3>
+          <title>Implementation Notes (By java.sql and javax.sql
+          Interface/Class)</title>
+
+          <para>MySQL Connector/J passes all of the tests in Sun&#39;s JDBC
+          compliance testsuite except for tests requiring stored procedures
+          (which MySQL does not have at this time). However, in many places
+          the JDBC specification is vague about how certain functionality
+          should be implemented, or the specification allows leeway in
+          implementation.</para>
+
+          <para>This section gives details on a interface-by-interface level
+          about how certain implementation decisions may affect how you use
+          MySQL Connector/J.</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Blob</para>
+
+              <para>The Blob implementation does not allow in-place
+              modification (they are &#39;copies&#39;, as reported by the
+              DatabaseMetaData.locatorsUpdateCopies() method). Because of
+              this, you should use the corresponding
+              PreparedStatement.setBlob() or ResultSet.updateBlob() (in the
+              case of updatable result sets) methods to save changes back to
+              the database.</para>
+
+              <para>Starting with Connector/J version 3.1.0, you can emulate
+              Blobs with locators by adding the property
+              &#39;emulateLocators=true&#39; to your JDBC URL. You must then
+              use a column alias with the value of the column set to the
+              actual name of the Blob column in the SELECT that you write to
+              retrieve the Blob. The SELECT must also reference only one
+              table, the table must have a primary key, and the SELECT must
+              cover all columns that make up the primary key. The driver will
+              then delay loading the actual Blob data until you retrieve the
+              Blob and call retrieval methods (getInputStream(), getBytes(),
+              etc) on it.</para>
+            </listitem>
+
+            <listitem>
+              <para>CallableStatement</para>
+
+              <para>Starting with Connector/J 3.1.1, stored procedures are
+              supported when connecting to MySQL version 5.0 or newer via the
+              <classname>CallableStatement</classname> interface. Currently,
+              the <function>getParameterMetaData()</function> method of
+              <classname>CallableStatement</classname> is not supported.</para>
+            </listitem>
+
+            <listitem>
+              <para>Clob</para>
+
+              <para>The Clob implementation does not allow in-place
+              modification (they are &#39;copies&#39;, as reported by the
+              DatabaseMetaData.locatorsUpdateCopies() method). Because of
+              this, you should use the PreparedStatement.setClob() method to
+              save changes back to the database. The JDBC API does not have a
+              ResultSet.updateClob() method.</para>
+            </listitem>
+
+            <listitem>
+              <para>Connection</para>
+
+              <para>Unlike older versions of MM.MySQL the &#39;isClosed()&#39;
+              method does not &#34;ping&#34; the server to determine if it is
+              alive. In accordance with the JDBC specification, it only
+              returns true if &#39;closed()&#39; has been called on the
+              connection. If you need to determine if the connection is still
+              valid, you should issue a simple query, such as &#34;SELECT
+              1&#34;. The driver will throw an exception if the connection is
+              no longer valid.</para>
+            </listitem>
+
+            <listitem>
+              <para>DatabaseMetaData</para>
+
+              <para>Foreign Key information (getImported/ExportedKeys() and
+              getCrossReference()) is only available from
+              &#39;InnoDB&#39;-type tables. However, the driver uses &#39;SHOW
+              CREATE TABLE&#39; to retrieve this information, so when other
+              table types support foreign keys, the driver will transparently
+              support them as well.</para>
+            </listitem>
+
+            <listitem>
+              <para>Driver</para>
+            </listitem>
+
+            <listitem>
+              <para>PreparedStatement</para>
+
+              <para>PreparedStatements are implemented by the driver, as MySQL
+              does not have a prepared statement feature. Because of this, the
+              driver does not implement getParameterMetaData() or
+              getMetaData() as it would require the driver to have a complete
+              SQL parser in the client.</para>
+
+              <para>Starting with version 3.1.0 MySQL Connector/J, server-side
+              prepared statements and &#39;binary-encoded&#39; result sets are
+              used when the server supports them.</para>
+
+              <para>Take care when using a server-side prepared statement with
+              &#34;large&#34; parameters that are set via setBinaryStream(),
+              setAsciiStream(), setUnicodeStream(), setBlob(), or setClob().
+              If you want to re-execute the statement with any &#34;large&#34;
+              parameter changed to a non-&#34;large&#34; parameter, it is
+              necessary to call clearParameters() and set all parameters
+              again. The reason for this is as follows:</para>
+
+              <itemizedlist>
+                <listitem>
+                  <para>The driver streams the &#39;large&#39; data
+                  &#39;out-of-band&#39; to the prepared statement on the
+                  server side when the parameter is set (before execution of
+                  the prepared statement).</para>
+                </listitem>
+              </itemizedlist>
+
+              <itemizedlist>
+                <listitem>
+                  <para>Once that has been done, the stream used to read the
+                  data on the client side is closed (as per the JDBC spec),
+                  and can&#39;t be read from again.</para>
+                </listitem>
+              </itemizedlist>
+
+              <itemizedlist>
+                <listitem>
+                  <para>If a parameter changes from &#34;large&#34; to
+                  non-&#34;large&#34;, the driver must reset the server-side
+                  state of the prepared statement to allow the parameter that
+                  is being changed to take the place of the prior
+                  &#34;large&#34; value. This removes all of the
+                  &#39;large&#39; data that has already been sent to the
+                  server, thus requiring the data to be re-sent, via the
+                  setBinaryStream(), setAsciiStream(), setUnicodeStream(),
+                  setBlob() or setClob() methods.</para>
+                </listitem>
+              </itemizedlist>
+
+              <para>Consequently, if you want to change the &#34;type&#34; of
+              a parameter to a non-&#34;large&#34; one, you must call
+              clearParameters() and set all parameters of the prepared
+              statement again before it can be re-executed.</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet</para>
+
+              <para>By default, ResultSets are completely retrieved and stored
+              in memory. In most cases this is the most efficient way to
+              operate, and due to the design of the MySQL network protocol is
+              easier to implement. If you are working with ResultSets that
+              have a large number of rows or large values, and can not
+              allocate heap space in your JVM for the memory required, you can
+              tell the driver to &#39;stream&#39; the results back one row
+              at-a-time.</para>
+
+              <para>To enable this functionality, you need to create a
+              Statement instance in the following manner:
+              <programlisting>
+stmt = conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY,
+              java.sql.ResultSet.CONCUR_READ_ONLY);
+stmt.setFetchSize(Integer.MIN_VALUE);</programlisting>The combination of a
+              forward-only, read-only result set, with a fetch size of
+              Integer.MIN_VALUE serves as a signal to the driver to
+              &#34;stream&#34; result sets row-by-row. After this any result
+              sets created with the statement will be retrieved row-by-row.</para>
+
+              <para>There are some caveats with this approach. You will have
+              to read all of the rows in the result set (or close it) before
+              you can issue any other queries on the connection, or an
+              exception will be thrown. Also, any tables referenced by the
+              query that created the streaming result will be locked until all
+              of the results have been read or the connection closed.</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSetMetaData</para>
+
+              <para>The &#39;isAutoIncrement()&#39; method only works when
+              using MySQL servers 4.0 and newer.</para>
+            </listitem>
+
+            <listitem>
+              <para>Statement</para>
+            </listitem>
+          </itemizedlist>
+        </sect3>
+
+        <sect3>
+          <title>Un-implemented Functionality</title>
+
+          <para>The following methods in the JDBC API have not been
+          implemented yet. They rely on functionality that at this time is not
+          present in the MySQL server:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Blob.truncate()</para>
+            </listitem>
+          </itemizedlist>
+
+          <itemizedlist>
+            <listitem>
+              <para>Connection.setSavePoint() is not supported in versions
+              earlier than 3.1.1</para>
+            </listitem>
+
+            <listitem>
+              <para>Connection.prepareCall(String) is not supported in
+              versions earlier than 3.1.1</para>
+            </listitem>
+
+            <listitem>
+              <para>Connection.releaseSavepoint(Savepoint) is not supported in
+              versions earlier than 3.1.1</para>
+            </listitem>
+
+            <listitem>
+              <para>Connection.rollback(Savepoint) is not supported in
+              versions earlier than 3.1.1</para>
+            </listitem>
+          </itemizedlist>
+
+          <itemizedlist>
+            <listitem>
+              <para>PreparedStatement.setArray(int, Array)</para>
+            </listitem>
+
+            <listitem>
+              <para>PreparedStatement.setRef()</para>
+            </listitem>
+
+            <listitem>
+              <para>PreparedStatement.getParameterMetaData()</para>
+            </listitem>
+          </itemizedlist>
+
+          <itemizedlist>
+            <listitem>
+              <para>ResultSet.getArray(int)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.getArray(colName)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.getRef(int)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.getRef(String)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.rowDeleted()</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.rowInserted()</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.rowUpdated()</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.updateArray(int, Array)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.updateArray(String, Array)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.updateRef(int, Ref)</para>
+            </listitem>
+
+            <listitem>
+              <para>ResultSet.updateRef(String, Ref)</para>
+            </listitem>
+          </itemizedlist>
+        </sect3>
+      </sect2>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>Installation</title>
+
+    <para>This chapter contains instructions for installing the MySQL
+    Connector/J drivers on Microsoft Windows and UNIX platforms. If you are on
+    another platform that supports Java and the JDBC API then substitute
+    commands appropriate for your system.</para>
+
+    <sect1>
+      <title>System Requirements</title>
+
+      <sect2>
+        <title>Java Versions Supported</title>
+
+        <para>MySQL Connector/J supports Java-2 JVMs, including JDK-1.2.x,
+        JDK-1.3.x and JDK-1.4.x, and requires JDK-1.4.x or newer to compile
+        (but not run). MySQL Connector/J does not support JDK-1.1.x or
+        JDK-1.0.x</para>
+
+        <para>Because of the implementation of java.sql.Savepoint, Connector/J
+        3.1.0 and newer will not run on JDKs older than 1.4 unless the class
+        verifier is turned off (-Xverify:none), as the class verifier will try
+        to load the class definition for java.sql.Savepoint even though it is
+        not accessed by the driver unless you actually use savepoint
+        functionality.</para>
+      </sect2>
+
+      <sect2>
+        <title>MySQL Server Versions Supported</title>
+
+        <para>MySQL Connector/J supports all known MySQL server versions. Some
+        features (foreign keys, updatable result sets) require more recent
+        versions of MySQL to operate.</para>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>Installing MySQL Connector/J</title>
+
+      <para>MySQL Connector/J is distributed as a .zip or .tar.gz archive
+      containing the sources, the class files and a class-file only
+      &#34;binary&#34; .jar archive named
+      &#34;mysql-connector-java-[version]-bin.jar&#34;. You will need to use
+      the appropriate gui or command-line utility to un-archive the
+      distribution (for example, WinZip for the .zip archive, and
+      &#34;tar&#34; for the .tar.gz archive).</para>
+
+      <sect2>
+        <title>Setting the CLASSPATH (For Standalone Use)</title>
+
+        <para>Once you have un-archived the distribution archive, you can
+        install the driver in one of two ways: Either copy the &#34;com&#34;
+        and &#34;org&#34; subdirectories and all of their contents to anywhere
+        you like, and put the directory holding the &#34;com&#34; and
+        &#34;org&#34; subdirectories in your classpath, or put
+        mysql-connector-java-[version]-bin.jar in your classpath, either by
+        adding the FULL path to it to your CLASSPATH enviornment variable, or
+        by copying the .jar file to $JAVA_HOME/jre/lib/ext. If you are going
+        to use the driver with the JDBC DriverManager, you would use
+        &#34;com.mysql.jdbc.Driver&#34; as the class that implements
+        java.sql.Driver.</para>
+
+        <example>
+          <title>Setting the CLASSPATH Under UNIX</title>
+
+          <para>The following command works for &#39;csh&#39; under UNIX:</para>
+
+          <screen>$ setenv CLASSPATH /path/to/mysql-connector-java-[version]-bin.jar:$CLASSPATH</screen>
+        </example>
+
+        <para>The above command can be added to the appropriate startup file
+        for the login shell to make MySQL Connector/J available to all Java
+        applications.</para>
+
+        <example>
+          <title>Setting the CLASSPATH Under Microsoft Windows 9X</title>
+
+          <para>The following is an example of setting the CLASSPATH under
+          Microsoft Windows 95, 98, ME:</para>
+
+          <screen>C:\&#62; set CLASSPATH=\path\to\mysql-connector-java-[version]-bin.jar;%CLASSPATH%</screen>
+        </example>
+
+        <para>This command can be added as the last line in AUTOEXEC.BAT. If
+        this is done the MySQL Connector/J driver will be made available to
+        all Java applications that run on the Windows 9x system. This setting
+        will require the computer to be rebooted before the changes will take
+        effect.</para>
+      </sect2>
+
+      <sect2>
+        <title>Driver Class Name and JDBC URL Format</title>
+
+        <para>The name of the class that implements java.sql.Driver in MySQL
+        Connector/J is &#39;com.mysql.jdbc.Driver&#39;. The
+        &#39;org.gjt.mm.mysql.Driver&#39; class name is also usable to remain
+        backwards-compatible with MM.MySQL. You should use this class name
+        when registering the driver, or when otherwise configuring software to
+        use MySQL Connector/J.</para>
+
+        <para>The JDBC URL format for MySQL Connector/J is as follows, with
+        items in square brackets ([, ]) being optional:<screen>jdbc:mysql://[host][,failoverhost...][:port]/[database][?propertyName1][=propertyValue1][&#38;propertyName2][=propertyValue2]...</screen></para>
+
+        <para>If the hostname is not specified, it defaults to
+        &#39;127.0.0.1&#39;. If the port is not specified, it defaults to
+        &#39;3306&#39;, the default port number for MySQL servers.</para>
+
+        <para>Starting with version 3.0.12 and 3.1.2, Connector/J supports
+        multiple hosts with ports, separated by commas:</para>
+
+        <screen>jdbc:mysql://[host:port],[host:port].../[database][?propertyName1][=propertyValue1][&#38;propertyName2][=propertyValue2]...</screen>
+
+        <para>If the database is not specified, the connection will be made
+        with no &#39;current&#39; database. In this case, you will need to
+        either call the &#39;setCatalog()&#39; method on the Connection
+        instance, issue a &#39;USE dbname&#39; query or fully-specify table
+        names using the database name (i.e. &#39;SELECT
+        dbname.tablename.colname FROM dbname.tablename...&#39;) in your SQL.
+        Not specifying the database to use upon connection is generally only
+        useful when building tools that work with multiple databases, such as
+        GUI database managers.</para>
+
+        <para>MySQL Connector/J has fail-over support. This allows the driver
+        to fail-over to any number of &#34;slave&#34; hosts and still perform
+        read-only queries. Fail-over only happens when the connection is in an
+        autoCommit(true) state, because fail-over can not happen reliably when
+        a transaction is in progress. Most good application servers and
+        connection pools set autoCommit to &#39;true&#39; at the end of every
+        transaction/connection use. The fail-over functionality has the
+        following behavior: If the URL property &#34;autoReconnect&#34; is
+        false: Failover only happens at connection initialization, and
+        failback occurs when the driver determines that the first host has
+        become available again If the URL property &#34;autoReconnect&#34; is
+        true: Failover happens when the driver determines that the connection
+        has failed (before <emphasis>every</emphasis> query), and falls back
+        to the first host when it determines that the host has become
+        available again (after queriesBeforeRetryMaster queries have been
+        issued). In either case, whenever you are connected to a
+        &#34;failed-over&#34; server, the connection will be set to read-only
+        state, so queries that would modify data will have exceptions thrown
+        (the query will <emphasis>never</emphasis> be processed by the MySQL
+        server).</para>
+
+        <para>You may specify additional properties to the JDBC driver, either
+        by placing them in a java.util.Properties instance and passing that
+        instance to the DriverManager when you connect, or by adding them to
+        the end of your JDBC URL as name-value pairs. The first property needs
+        to be preceeded with a &#39;?&#39; character, and additional
+        name-value pair properties are separated by an &#39;&#38;&#39;
+        character. The properties, their definitions and their default values
+        are covered in the following table:</para>
+
+        <!-- The following table is auto-generated from the driver itself -->
+
+        <table>
+          <title>Connection Properties</title>
+
+          <tgroup cols="5">
+            <thead>
+              <row>
+                <entry>Property Name</entry>
+
+                <entry>Definition</entry>
+
+                <entry>Required?</entry>
+
+                <entry>Default Value</entry>
+
+                <entry>Since Version</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>user</entry>
+
+                <entry>The user to connect as</entry>
+
+                <entry>No</entry>
+
+                <entry></entry>
+
+                <entry>All</entry>
+              </row>
+
+              <row>
+                <entry>password</entry>
+
+                <entry>The password to use when connecting</entry>
+
+                <entry>No</entry>
+
+                <entry></entry>
+
+                <entry>All</entry>
+              </row>
+
+              <row>
+                <entry>gatherPerfMetrics</entry>
+
+                <entry>Should the driver gather performance metrics, and
+                report them via the configured logger every
+                &#39;reportMetricsIntervalMillis&#39; milliseconds?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>reportMetricsIntervalMillis</entry>
+
+                <entry>If &#39;gatherPerfMetrics&#39; is enabled, how often
+                should they be logged (in ms)?</entry>
+
+                <entry>false</entry>
+
+                <entry>30000</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>logSlowQueries</entry>
+
+                <entry>Should queries that take longer than
+                &#39;slowQueryThresholdMillis&#39; be logged?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>slowQueryThresholdMillis</entry>
+
+                <entry>If &#39;logSlowQueries&#39; is enabled, how long should
+                a query (in ms) before it is logged as &#39;slow&#39;?</entry>
+
+                <entry>false</entry>
+
+                <entry>2000</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>failOverReadOnly</entry>
+
+                <entry>When failing over in autoReconnect mode, should the
+                connection be set to &#39;read-only&#39;?</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.12</entry>
+              </row>
+
+              <row>
+                <entry>allowLoadLocalInfile</entry>
+
+                <entry>Should the driver allow use of &#39;LOAD DATA LOCAL
+                INFILE...&#39; (defaults to &#39;true&#39;).</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.3</entry>
+              </row>
+
+              <row>
+                <entry>allowMultiQueries</entry>
+
+                <entry>Allow the use of &#39;;&#39; to delimit multiple
+                queries during one statement (true/false, defaults to
+                &#39;false&#39;</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.1</entry>
+              </row>
+
+              <row>
+                <entry>autoReconnect</entry>
+
+                <entry>Should the driver try to re-establish bad connections?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>1.1</entry>
+              </row>
+
+              <row>
+                <entry>autoReconnectForPools</entry>
+
+                <entry>Use a reconnection strategy appropriate for connection
+                pools (defaults to &#39;false&#39;)</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.8</entry>
+              </row>
+
+              <row>
+                <entry>cacheCallableStmts</entry>
+
+                <entry>Should the driver cache the parsing stage of
+                CallableStatements</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>cachePrepStmts</entry>
+
+                <entry>Should the driver cache the parsing stage of
+                PreparedStatements?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.10</entry>
+              </row>
+
+              <row>
+                <entry>cacheResultSetMetadata</entry>
+
+                <entry>Should the driver cache ResultSetMetaData for
+                Statements and PreparedStatements? (Req. JDK-1.4+, true/false,
+                default &#39;false&#39;)</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.1</entry>
+              </row>
+
+              <row>
+                <entry>capitalizeTypeNames</entry>
+
+                <entry>Capitalize type names in DatabaseMetaData? (usually
+                only useful when using WebObjects, true/false, defaults to
+                &#39;false&#39;)</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>2.0.7</entry>
+              </row>
+
+              <row>
+                <entry>clobberStreamingResults</entry>
+
+                <entry>This will cause a &#39;streaming&#39; ResultSet to be
+                automatically closed, and any oustanding data still streaming
+                from the server to be discarded if another query is executed
+                before all the data has been read from the server.</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.9</entry>
+              </row>
+
+              <row>
+                <entry>continueBatchOnError</entry>
+
+                <entry>Should the driver continue processing batch commands if
+                one statement fails. The JDBC spec allows either way (defaults
+                to &#39;true&#39;).</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.3</entry>
+              </row>
+
+              <row>
+                <entry>useServerPrepStmts</entry>
+
+                <entry>Use server-side prepared statements if the server
+                supports them? (defaults to &#39;true&#39;).</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>emulateLocators</entry>
+
+                <entry>N/A</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>explainSlowQueries</entry>
+
+                <entry>If &#39;logSlowQueries&#39; is enabled, should the
+                driver automatically issue an &#39;EXPLAIN&#39; on the server
+                and send the results to the configured log at a WARN level?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>ignoreNonTxTables</entry>
+
+                <entry>Ignore non-transactional table warning for rollback?
+                (defaults to &#39;false&#39;).</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.9</entry>
+              </row>
+
+              <row>
+                <entry>interactiveClient</entry>
+
+                <entry>Set the CLIENT_INTERACTIVE flag, which tells MySQL to
+                timeout connections based on INTERACTIVE_TIMEOUT instead of
+                WAIT_TIMEOUT</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>paranoid</entry>
+
+                <entry>Take measures to prevent exposure sensitive information
+                in error messages and clear data structures holding sensitive
+                data when possible? (defaults to &#39;false&#39;)</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.1</entry>
+              </row>
+
+              <row>
+                <entry>pedantic</entry>
+
+                <entry>Follow the JDBC spec to the letter.</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.0</entry>
+              </row>
+
+              <row>
+                <entry>profileSQL</entry>
+
+                <entry>Trace queries and their execution/fetch times to the
+                configured logger (true/false) defaults to &#39;false&#39;</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>reconnectAtTxEnd</entry>
+
+                <entry>If autoReconnect is set to true, should the driver
+                attempt reconnectionsat the end of every transaction?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.10</entry>
+              </row>
+
+              <row>
+                <entry>relaxAutoCommit</entry>
+
+                <entry>If the version of MySQL the driver connects to does not
+                support transactions, still allow calls to commit(),
+                rollback() and setAutoCommit() (true/false, defaults to
+                &#39;false&#39;)?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>2.0.13</entry>
+              </row>
+
+              <row>
+                <entry>requireSSL</entry>
+
+                <entry>Require SSL connection if useSSL=true? (defaults to
+                &#39;false&#39;).</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>roundRobinLoadBalance</entry>
+
+                <entry>When autoReconnect is enabled, and failoverReadonly is
+                false, should we pick hosts to connect to on a round-robin
+                basis?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>strictFloatingPoint</entry>
+
+                <entry>Used only in older versions of compliance test</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.0</entry>
+              </row>
+
+              <row>
+                <entry>strictUpdates</entry>
+
+                <entry>Should the driver do strict checking (all primary keys
+                selected) of updatable result sets (true, false, defaults to
+                &#39;true&#39;)?</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.4</entry>
+              </row>
+
+              <row>
+                <entry>useCompression</entry>
+
+                <entry>Use zlib compression when communicating with the server
+                (true/false)? Defaults to &#39;false&#39;.</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>useHostsInPrivileges</entry>
+
+                <entry>Add &#39;@hostname&#39; to users in
+                DatabaseMetaData.getColumn/TablePrivileges() (true/false),
+                defaults to &#39;true&#39;.</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>useNewIO</entry>
+
+                <entry>Should the driver use the java.nio.* interfaces for
+                network communication (true/false), defaults to
+                &#39;false&#39;</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.0</entry>
+              </row>
+
+              <row>
+                <entry>useSSL</entry>
+
+                <entry>Use SSL when communicating with the server
+                (true/false), defaults to &#39;false&#39;</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>useStreamLengthsInPrepStmts</entry>
+
+                <entry>Honor stream length parameter in
+                PreparedStatement/ResultSet.setXXXStream() method calls
+                (true/false, defaults to &#39;true&#39;)?</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>useTimezone</entry>
+
+                <entry>Convert time/date types between client and server
+                timezones (true/false, defaults to &#39;false&#39;)?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>ultraDevHack</entry>
+
+                <entry>Create PreparedStatements for prepareCall() when
+                required, because UltraDev is broken and issues a
+                prepareCall() for _all_ statements? (true/false, defaults to
+                &#39;false&#39;)</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>2.0.3</entry>
+              </row>
+
+              <row>
+                <entry>useUnbufferedInput</entry>
+
+                <entry>Don&#39;t use BufferedInputStream for reading data from
+                the server</entry>
+
+                <entry>false</entry>
+
+                <entry>true</entry>
+
+                <entry>3.0.11</entry>
+              </row>
+
+              <row>
+                <entry>useUnicode</entry>
+
+                <entry>Should the driver use Unicode character encodings when
+                handling strings? Should only be used when the driver
+                can&#39;t determine the character set mapping, or you are
+                trying to &#39;force&#39; the driver to use a character set
+                that MySQL either doesn&#39;t natively support (such as
+                UTF-8), true/false, defaults to &#39;true&#39;</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>1.1g</entry>
+              </row>
+
+              <row>
+                <entry>useUsageAdvisor</entry>
+
+                <entry>Should the driver issue &#39;usage&#39; warnings
+                advising proper and efficient usage of JDBC and MySQL
+                Connector/J to the log (true/false, defaults to
+                &#39;false&#39;)?</entry>
+
+                <entry>false</entry>
+
+                <entry>false</entry>
+
+                <entry>3.1.1</entry>
+              </row>
+
+              <row>
+                <entry>callableStmtCacheSize</entry>
+
+                <entry>If &#39;cacheCallableStmts&#39; is enabled, how many
+                callable statements should be cached?</entry>
+
+                <entry>false</entry>
+
+                <entry>100</entry>
+
+                <entry>3.1.2</entry>
+              </row>
+
+              <row>
+                <entry>connectTimeout</entry>
+
+                <entry>Timeout for socket connect (in milliseconds), with 0
+                being no timeout. Only works on JDK-1.4 or newer. Defaults to
+                &#39;0&#39;.</entry>
+
+                <entry>false</entry>
+
+                <entry>0</entry>
+
+                <entry>3.0.1</entry>
+              </row>
+
+              <row>
+                <entry>initialTimeout</entry>
+
+                <entry>If autoReconnect is enabled, the initial time to wait
+                between re-connect attempts (in seconds, defaults to
+                &#39;2&#39;).</entry>
+
+                <entry>false</entry>
+
+                <entry>2</entry>
+
+                <entry>1.1</entry>
+              </row>
+
+              <row>
+                <entry>maxReconnects</entry>
+
+                <entry>Maximum number of reconnects to attempt if
+                autoReconnect is true, default is &#39;3&#39;.</entry>
+
+                <entry>false</entry>
+
+                <entry>3</entry>
+
+                <entry>1.1</entry>
+              </row>
+
+              <row>
+                <entry>maxRows</entry>
+
+                <entry>The maximum number of rows to return (0, the default
+                means return all rows).</entry>
+
+                <entry>false</entry>
+
+                <entry>-1</entry>
+
+                <entry>all versions</entry>
+              </row>
+
+              <row>
+                <entry>metadataCacheSize</entry>
+
+                <entry>The number of queries to cacheResultSetMetadata for if
+                cacheResultSetMetaData is set to &#39;true&#39; (default 50)</entry>
+
+                <entry>false</entry>
+
+                <entry>50</entry>
+
+                <entry>3.1.1</entry>
+              </row>
+
+              <row>
+                <entry>prepStmtCacheSize</entry>
+
+                <entry>If prepared statement caching is enabled, how many
+                prepared statements should be cached?</entry>
+
+                <entry>false</entry>
+
+                <entry>25</entry>
+
+                <entry>3.0.10</entry>
+              </row>
+
+              <row>
+                <entry>prepStmtCacheSqlLimit</entry>
+
+                <entry>If prepared statement caching is enabled, what&#39;s
+                the largest SQL the driver will cache the parsing for?</entry>
+
+                <entry>false</entry>
+
+                <entry>256</entry>
+
+                <entry>3.0.10</entry>
+              </row>
+
+              <row>
+                <entry>queriesBeforeRetryMaster</entry>
+
+                <entry>Number of queries to issue before falling back to
+                master when failed over (when using multi-host failover).
+                Whichever condition is met first,
+                &#39;queriesBeforeRetryMaster&#39; or
+                &#39;secondsBeforeRetryMaster&#39; will cause an attempt to be
+                made to reconnect to the master. Defaults to 50.</entry>
+
+                <entry>false</entry>
+
+                <entry>50</entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>secondsBeforeRetryMaster</entry>
+
+                <entry>How long should the driver wait, when failed over,
+                before attempting to reconnect to the master server? Whichever
+                condition is met first, &#39;queriesBeforeRetryMaster&#39; or
+                &#39;secondsBeforeRetryMaster&#39; will cause an attempt to be
+                made to reconnect to the master. Time in seconds, defaults to
+                30</entry>
+
+                <entry>false</entry>
+
+                <entry>30</entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>socketTimeout</entry>
+
+                <entry>Timeout on network socket operations (0, the default
+                means no timeout).</entry>
+
+                <entry>false</entry>
+
+                <entry>0</entry>
+
+                <entry>3.0.1</entry>
+              </row>
+
+              <row>
+                <entry>characterEncoding</entry>
+
+                <entry>If &#39;useUnicode&#39; is set to true, what character
+                encoding should the driver use when dealing with strings?
+                (defaults is to &#39;autodetect&#39;)</entry>
+
+                <entry>false</entry>
+
+                <entry></entry>
+
+                <entry>1.1g</entry>
+              </row>
+
+              <row>
+                <entry>logger</entry>
+
+                <entry>The name of a class that implements
+                &#39;com.mysql.jdbc.log.Log&#39; that will be used to log
+                messages to.(default is
+                &#39;com.mysql.jdbc.log.StandardLogger&#39;, which logs to
+                STDERR)</entry>
+
+                <entry>false</entry>
+
+                <entry>com.mysql.jdbc.log.StandardLogger</entry>
+
+                <entry>3.1.1</entry>
+              </row>
+
+              <row>
+                <entry>profileSql</entry>
+
+                <entry>Deprecated, use &#39;profileSQL&#39; instead. Trace
+                queries and their execution/fetch times on STDERR (true/false)
+                defaults to &#39;false&#39;</entry>
+
+                <entry>false</entry>
+
+                <entry></entry>
+
+                <entry>2.0.14</entry>
+              </row>
+
+              <row>
+                <entry>serverTimezone</entry>
+
+                <entry>Override detection/mapping of timezone. Used when
+                timezone from server doesn&#39;t map to Java timezone</entry>
+
+                <entry>false</entry>
+
+                <entry></entry>
+
+                <entry>3.0.2</entry>
+              </row>
+
+              <row>
+                <entry>socketFactory</entry>
+
+                <entry>The name of the class that the driver should use for
+                creating socket connections to the server. This class must
+                implement the interface &#39;com.mysql.jdbc.SocketFactory&#39;
+                and have public no-args constructor.</entry>
+
+                <entry>false</entry>
+
+                <entry>com.mysql.jdbc.StandardSocketFactory</entry>
+
+                <entry>3.0.3</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Connector/J also supports access to MySQL via named pipes on
+        Windows NT/2000/XP using the &#39;NamedPipeSocketFactory&#39; as a
+        plugin-socket factory via the &#39;socketFactory&#39; property. If you
+        don&#39;t use a &#39;namedPipePath&#39; property, the default of
+        &#39;\\.\pipe\MySQL&#39; will be used. If you use the
+        NamedPipeSocketFactory, the hostname and port number values in the
+        JDBC url will be ignored.</para>
+
+        <para>Adding the following property to your URL will enable the
+        NamedPipeSocketFactory:</para>
+
+        <para>socketFactory=com.mysql.jdbc.NamedPipeSocketFactory</para>
+
+        <para>Named pipes only work when connecting to a MySQL server on the
+        same physical machine as the one the JDBC driver is being used on. In
+        simple performance tests, it appears that named pipe access is between
+        30%-50% faster than the standard TCP/IP access.</para>
+
+        <para>You can create your own socket factories by following the
+        example code in com.mysql.jdbc.NamedPipeSocketFactory, or
+        com.mysql.jdbc.StandardSocketFactory.</para>
+      </sect2>
+
+      <sect2>
+        <title>Installing MySQL Connector/J for Use With Servlets/JSP/EJB</title>
+
+        <para>If you want to use MySQL Connector/J with a servlet engine or
+        application server such as Tomcat or JBoss, you will have to read your
+        vendor&#39;s documentation for more information on how to configure
+        third-party class libraries, as most application servers ignore the
+        CLASSPATH environment variable.</para>
+
+        <para>If you are developing servlets and/or JSPs, and your application
+        server is J2EE-compliant, you should put the driver&#39;s .jar file in
+        the WEB-INF/lib subdirectory of your webapp, as this is the standard
+        location for third party class libraries in J2EE web applications.</para>
+
+        <para>You can also use the MysqlDataSource,
+        MysqlConnectionPoolDataSource or MysqlXADataSource classes in the
+        com.mysql.jdbc.jdbc2.optional and com.mysql.jdbc.jdbc2.optional.xa
+        packages, if your J2EE application server supports or requires them.
+        The various MysqlDataSource classes support the following parameters
+        (through standard &#34;set&#34; mutators):</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>user</para>
+          </listitem>
+
+          <listitem>
+            <para>password</para>
+          </listitem>
+
+          <listitem>
+            <para>serverName (see the previous section about fail-over hosts)</para>
+          </listitem>
+
+          <listitem>
+            <para>databaseName</para>
+          </listitem>
+
+          <listitem>
+            <para>port</para>
+          </listitem>
+        </itemizedlist>
+      </sect2>
+    </sect1>
+
+    <sect1>
+      <title>What&#39;s Next?</title>
+
+      <para>Once the driver has been installed into your CLASSPATH or
+      application server, the driver is ready for use! Taking a look at the
+      next chapter containing programming information might be a good idea,
+      however.</para>
+    </sect1>
+
+    <!---->
+  </chapter>
+
+  <chapter>
+    <title>Developing Applications with MySQL Connector/J</title>
+
+    <para>...</para>
+
+    <sect1>
+      <title>Basic Functionality</title>
+
+      <para></para>
+
+      <!--
+      <sect2>
+        <title>Importing Interfaces From the java.sql Package</title>
+
+        <para></para>
+      </sect2>
+-->
+
+      <sect2>
+        <title>Registering MySQL Connector/J With the JDBC DriverManager</title>
+
+        <para>When you are using JDBC outside of an application server, the
+        DriverManager class manages the establishment of Connections.</para>
+
+        <para>The DriverManager needs to be told which JDBC drivers it should
+        try to make Connections with. The easiest way to do this is to use
+        Class.forName() on the class that implements the java.sql.Driver
+        interface. With MySQL Connector/J, the name of this class is
+        com.mysql.jdbc.Driver. With this method, you could use an external
+        configuration file to supply the driver class name and driver
+        parameters to use when connecting to a database.</para>
+
+        <example>
+          <title>Registering the Driver With the DriverManager</title>
+
+          <para>The following section of Java code shows how you might
+          register MySQL Connector/J from the main() method of your
+          application.<programlisting>import java.sql.Connection; 
+import java.sql.DriverManager; 
+import java.sql.SQLException; 
+
+// Notice, do not import com.mysql.jdbc.* 
+// or you will have problems! 
+
+public class LoadDriver { 
+    public static void main(String[] args) { 
+        try { 
+            // The newInstance() call is a work around for some 
+            // broken Java implementations
+
+            Class.forName(&#34;com.mysql.jdbc.Driver&#34;).newInstance(); 
+        } catch (Exception ex) { 
+            // handle the error 
+        }
+}</programlisting></para>
+        </example>
+      </sect2>
+
+      <sect2>
+        <title>Opening a Connection to MySQL</title>
+
+        <para>After the driver has been registered with the DriverManager, you
+        can obtain a Connection instance that is connected to a particular
+        database by calling DriverManager.getConnection():</para>
+
+        <example>
+          <title>Obtaining a Connection From the DriverManager</title>
+
+          <para>This example shows how you can obtain a Connection instance
+          from the DriverManager. There are a few different signatures for the
+          getConnection() method. You should see the API documentation that
+          comes with your JDK for more specific information on how to use
+          them. <programlisting>
+import java.sql.Connection;
+import java.sql.DriverManager; 
+import java.sql.SQLException; 
+
+    ... try {
+            Connection conn = DriverManager.getConnection(&#34;jdbc:mysql://localhost/test?user=monty&#38;password=greatsqldb&#34;);
+          
+            // Do something with the Connection 
+          
+           .... 
+        } catch (SQLException ex) {
+            // handle any errors 
+            System.out.println(&#34;SQLException: &#34; + ex.getMessage()); 
+            System.out.println(&#34;SQLState: &#34; + ex.getSQLState()); 
+            System.out.println(&#34;VendorError: &#34; + ex.getErrorCode()); 
+        }
+</programlisting></para>
+        </example>
+
+        <para>Once a Connection is established, it can be used to create
+        Statements and PreparedStatements, as well as retrieve metadata about
+        the database. This is explained in the following sections.</para>
+      </sect2>
+
+      <!--
+      <sect2>
+        <title>Exception Handling</title>
+
+        <para></para>
+      </sect2>
+      -->
+
+      <sect2>
+        <title>Creating a Statement Instance</title>
+
+        <para>Statements allow you to execute basic SQL queries and retrieve
+        the results through the ResultSet class which is described later. To
+        get a Statement object, you call the createStatement() method on the
+        Connection object you have retrieved via the
+        DriverManager.getConnection() method. Once you have a Statement
+        object, you can execute a SELECT query by calling the
+        executeQuery(String SQL) method with the SQL you want to use. To
+        update data in the database use the executeUpdate(String SQL) method.
+        This method returns the number of rows affected by the update
+        statement. If you don&#39;t know ahead of time whether the SQL
+        statement will be a SELECT or an UPDATE/INSERT, then you can use the
+        execute(String SQL) method. This method will return true if the SQL
+        query was a SELECT, or false if an UPDATE/INSERT/DELETE query. If the
+        query was a SELECT query, you can retrieve the results by calling the
+        getResultSet() method. If the query was an UPDATE/INSERT/DELETE query,
+        you can retrieve the affected rows count by calling getUpdateCount()
+        on the Statement instance.</para>
+      </sect2>
+
+      <sect2>
+        <title>Executing a SELECT Query</title>
+
+        <para></para>
+
+        <example>
+          <title>Using java.sql.Statement to Execute a SELECT Query</title>
+
+          <para></para>
+
+          <programlisting>// assume conn is an already created JDBC connection
+Statement stmt = null; 
+ResultSet rs = null; 
+
+try {
+    stmt = conn.createStatement(); 
+    rs = stmt.executeQuery(&#34;SELECT foo FROM bar&#34;); 
+
+    // or alternatively, if you don&#39;t know ahead of time that 
+    // the query will be a SELECT... 
+
+    if (stmt.execute(&#34;SELECT foo FROM bar&#34;)) { 
+        rs = stmt.getResultSet(); 
+    } 
+
+    // Now do something with the ResultSet .... 
+} finally { 
+    // it is a good idea to release
+    // resources in a finally{} block 
+    // in reverse-order of their creation 
+    // if they are no-longer needed 
+
+    if (rs != null) { 
+        try {
+            rs.close(); 
+        } catch (SQLException sqlEx) { // ignore } 
+
+        rs = null; 
+    }
+    
+    if (stmt != null) { 
+        try { 
+            stmt.close(); 
+        } catch (SQLException sqlEx) { // ignore } 
+
+        stmt = null; 
+    } 
+}</programlisting>
+        </example>
+      </sect2>
+
+      <!--
+      <sect2>
+        <title>Navigating a ResultSet</title>
+
+        <para></para>
+      </sect2>
+-->
+
+      <!--
+      <sect2>
+        <title>Making Changes to the Database</title>
+
+        <para></para>
+      </sect2>
+-->
+
+      <!--
+      <sect2>
+        <title>Using PreparedStatements</title>
+
+        <para></para>
+      </sect2>
+-->
+
+      <!--
+      <sect2>
+        <title>Closing the ResultSet, Statement and Connection Instances</title>
+
+        <para></para>
+      </sect2>
+-->
+    </sect1>
+
+    <!--
+    <sect1>
+      <title>JDBC-2.0 Functionality</title>
+
+      <para></para>
+    </sect1>
+-->
+
+    <!--
+    <sect1>
+      <title>JDBC-3.0 Functionality</title>
+
+      <para></para>
+    </sect1>
+-->
+
+    <sect1>
+      <title>Advanced Functionality</title>
+
+      <para></para>
+
+      <sect2>
+        <title>Character Sets and Unicode</title>
+
+        <para>All strings sent from the JDBC driver to the server are
+        converted automatically from native Java Unicode form to the client
+        character encoding, including all queries sent via
+        <methodname>Statement.execute()</methodname>,
+        <methodname>Statement.executeUpdate()</methodname>,
+        <methodname>Statement.executeQuery()</methodname> as well as all
+        <interfacename>PreparedStatement</interfacename> and
+        <interfacename>CallableStatement</interfacename> parameters with the
+        exclusion of parameters set using <methodname>setBytes()</methodname>,
+        <methodname>setBinaryStream()</methodname>, <methodname>setAsiiStream()</methodname>,
+        <methodname>setUnicodeStream()</methodname> and
+        <methodname>setBlob()</methodname>.</para>
+
+        <para>Prior to MySQL Server 4.1, Connector/J supported a single
+        character encoding per connection, which could either be automatically
+        detected from the server configuration, or could be configured by the
+        user through the <parameter>useUnicode</parameter> and
+        <parameter>characterEncoding</parameter> properties.</para>
+
+        <para>Starting with MySQL Server 4.1, Connector/J supports a single
+        character encoding between client and server, and any number of
+        character encodings for data returned by the server to the client in
+        <classname>ResultSets</classname>.</para>
+
+        <para>The character encoding between client and server is
+        automatically detected upon connection. The encoding used by the
+        driver is specified on the server via the configuration variable &#39;<parameter>character_set</parameter>&#39;
+        for server versions older than 4.1.0 and &#39;<parameter>character_set_server</parameter>&#39;
+        for server versions 4.1.0 and newer. See the &#34;<ulink
+        url="http://www.mysql.com/doc/en/Charset-server.html">Server Character
+        Set and Collation</ulink>&#34; section in the MySQL server manual for
+        more information.</para>
+
+        <para>To override the automatically-detected encoding on the client
+        side, use the <parameter>characterEncoding</parameter> property in the
+        URL used to connect to the server.</para>
+
+        <para>When specifying character encodings on the client side,
+        Java-style names should be used. The following table lists Java-style
+        names for MySQL character sets: <table><title>MySQL to Java Encoding
+        Name Translations</title><tgroup cols="2"><thead><row><entry>MySQL
+        Character Set Name</entry><entry>Java-Style Character Encoding Name</entry></row></thead><tbody><row><entry>usa7</entry><entry>US-ASCII</entry></row><row><entry>big5</entry><entry>Big5</entry></row><row><entry>gbk</entry><entry>GBK</entry></row><row><entry>sjis</entry><entry>SJIS</entry></row><row><entry>gb2312</entry><entry>EUC_CN</entry></row><row><entry>ujis</entry><entry>EUC_JP</entry></row><row><entry>euc_kr</entry><entry>EUC_KR</entry></row><row><entry>latin1</entry><entry>ISO8859_1</entry></row><row><entry>latin1_de</entry><entry>ISO8859_1</entry></row><row><entry>german1</entry><entry>ISO8859_1</entry></row><row><entry>danish</entry><entry>ISO8859_1</entry></row><row><entry>latin2</entry><entry>ISO8859_2</entry></row><row><entry>czech</entry><entry>ISO8859_2</entry></row><row><entry>hungarian</entry><entry>ISO8859_2</entry></row><row><entry>croat</entry><entry>ISO8859_2</entry></row><row><entry>greek</entry><entry>ISO8859_7</entry></row><row><entry>hebrew</entry><entry>ISO8859_8</entry></row><row><entry>latin5</entry><entry>ISO8859_9</entry></row><row><entry>latvian</entry><entry>ISO8859_13</entry></row><row><entry>latvian1</entry><entry>ISO8859_13</entry></row><row><entry>estonia</entry><entry>ISO8859_13</entry></row><row><entry>dos</entry><entry>Cp437</entry></row><row><entry>pclatin2</entry><entry>Cp852</entry></row><row><entry>cp866</entry><entry>Cp866</entry></row><row><entry>koi8_ru</entry><entry>KOI8_R</entry></row><row><entry>tis620</entry><entry>TIS620</entry></row><row><entry>win1250</entry><entry>Cp1250</entry></row><row><entry>win1250ch</entry><entry>Cp1250</entry></row><row><entry>win1251</entry><entry>Cp1251</entry></row><row><entry>cp1251</entry><entry>Cp1251</entry></row><row><entry>win1251ukr</entry><entry>Cp1251</entry></row><row><entry>cp1257</entry><entry>Cp1257</entry></row><row><entry>macroman</entry><entry>MacRoman</entry></row><row><entry>macce</entry><entry>MacCentralEurope</entry></row><row><entry>utf8</entry><entry>UTF-8</entry></row><row><entry>ucs2</entry><entry>UnicodeBig</entry></row></tbody></tgroup></table></para>
+
+        <warning>
+          <para>Do not issue the query &#39;set names&#39; with Connector/J,
+          as the driver will not detect that the character set has changed,
+          and will continue to use the character set detected during the
+          initial connection setup.</para>
+        </warning>
+
+        <para>To allow multiple character sets to be sent from the client, the
+        &#34;UTF-8&#34; encoding should be used, either by configuring
+        &#34;utf8&#34; as the default server character set, or by configuring
+        the JDBC driver to use &#34;UTF-8&#34; through the
+        <parameter>characterEncoding</parameter> property.</para>
+      </sect2>
+
+      <sect2>
+        <title>Stored Procedures</title>
+
+        <para>Starting with MySQL 5.0 and Connector/J 3.1.1, the
+        <classname>java.sql.CallableStatement</classname> interface is fully
+        implemented with the exception of the <function>getParameterMetaData()</function>
+        method.</para>
+
+        <para>MySQL&#39;s stored procedure syntax is documented in the &#34;<ulink
+        url="http://www.mysql.com/doc/en/Stored_Procedures.html">Stored
+        Procedures and Functions</ulink>&#34; section of the MySQL Reference
+        Manual.</para>
+
+        <para>Connector/J exposes stored procedure functionality through
+        JDBC&#39;s <classname>CallableStatement</classname> interface.</para>
+
+        <para>The following example shows a stored procedure that returns the
+        value of <varname>inOutParam</varname> incremented by 1, and the
+        string passed in via <varname>inputParam</varname> as a
+        <classname>ResultSet</classname>:<example><title>Stored Procedure
+        Example</title><programlisting>CREATE PROCEDURE demoSp(IN inputParam VARCHAR(255), INOUT inOutParam INT)
+BEGIN
+    DECLARE z INT;
+    SET z = inOutParam + 1;
+    SET inOutParam = z;
+
+    SELECT inputParam;
+
+    SELECT CONCAT(&#39;zyxw&#39;, inputParam);
+END</programlisting></example></para>
+
+        <para>To use the <function>demoSp</function> procedure with
+        Connector/J, follow these steps:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Prepare the callable statement by using
+            <function>Connection.prepareCall()</function>.</para>
+
+            <para>Notice that you have to use JDBC escape syntax, and that the
+            parentheses surrounding the parameter placeholders are not
+            optional:</para>
+
+            <example>
+              <title>Using Connection.prepareCall()</title>
+
+              <programlisting>import java.sql.CallableStatement;
+
+...
+
+    //
+    // Prepare a call to the stored procedure &#39;demoSp&#39;
+    // with two parameters
+    //
+    // Notice the use of JDBC-escape syntax ({call ...})
+    //
+
+    CallableStatement cStmt = conn.prepareCall(&#34;{call demoSp(?, ?)}&#34;);
+
+    
+
+    cStmt.setString(1, &#34;abcdefg&#34;);</programlisting>
+            </example>
+
+            <note>
+              <para><function>Connection.prepareCall()</function> is an
+              expensive method, due to the metadata retrieval that the driver
+              performs to support output parameters. For performance reasons,
+              you should try to minimize unnecessary calls to
+              <function>Connection.prepareCall()</function> by reusing
+              <classname>CallableStatement</classname> instances in your code.</para>
+            </note>
+          </listitem>
+
+          <listitem>
+            <para>Register the output parameters (if any exist)</para>
+
+            <para>To retrieve the values of output parameters (parameters
+            specified as <literal>OUT</literal> or <literal>INOUT</literal>
+            when you created the stored procedure), JDBC requires that they be
+            specified before statement execution using the various
+            <function>registerOutputParameter()</function> methods in the
+            <classname>CallableStatement</classname> interface:<example><title>Registering
+            Output Parameters</title><programlisting>import java.sql.Types;
+
+...
+    //
+    // Connector/J supports both named and indexed
+    // output parameters. You can register output
+    // parameters using either method, as well
+    // as retrieve output parameters using either
+    // method, regardless of what method was
+    // used to register them.
+    //
+    // The following examples show how to use
+    // the various methods of registering
+    // output parameters (you should of course
+    // use only one registration per parameter).
+    //
+
+    //
+    // Registers the second parameter as output
+    //
+
+    cStmt.registerOutParameter(2);
+
+    //
+    // Registers the second parameter as output, and 
+    // uses the type &#39;INTEGER&#39; for values returned from 
+    // getObject()
+    //
+
+    cStmt.registerOutParameter(2, Types.INTEGER);
+
+    //
+    // Registers the named parameter &#39;inOutParam&#39;
+    //
+
+    cStmt.registerOutParameter(&#34;inOutParam&#34;);
+
+    //
+    // Registers the named parameter &#39;inOutParam&#39;, and 
+    // uses the type &#39;INTEGER&#39; for values returned from 
+    // getObject()
+    //
+
+    cStmt.registerOutParameter(&#34;inOutParam&#34;, Types.INTEGER);
+
+...</programlisting></example></para>
+          </listitem>
+
+          <listitem>
+            <para>Set the input parameters (if any exist)</para>
+
+            <para>Input and in/out parameters are set as for
+            <classname>PreparedStatement</classname> objects. However,
+            <classname>CallableStatement</classname> also supports setting
+            parameters by name:<example><title>Setting CallableStatement Input
+            Parameters</title><programlisting>...
+
+    //
+    // Set a parameter by index
+    //
+
+    cStmt.setString(1, &#34;abcdefg&#34;);
+    
+    //
+    // Alternatively, set a parameter using
+    // the parameter name
+    //
+
+    cStmt.setString(&#34;inputParameter&#34;, &#34;abcdefg&#34;);
+
+    //
+    // Set the &#39;in/out&#39; parameter using an index
+    //
+
+    cStmt.setInt(2, 1);
+
+    //
+    // Alternatively, set the &#39;in/out&#39; parameter
+    // by name
+    //
+
+    cStmt.setInt(&#34;inOutParam&#34;, 1);
+
+...</programlisting></example></para>
+          </listitem>
+
+          <listitem>
+            <para>Execute the <classname>CallableStatement</classname>, and
+            retrieve any result sets or output parameters.</para>
+
+            <para>While <classname>CallableStatement</classname> supports
+            calling any of the <classname>Statement</classname> execute
+            methods (<function>executeUpdate()</function>,
+            <function>executeQuery()</function> or <function>execute()</function>),
+            the most flexible method to call is <function>execute()</function>,
+            as you do not need to know ahead of time if the stored procedure
+            returns result sets:<example><title>Retrieving Results and Output
+            Parameter Values</title><programlisting>...
+
+    boolean hadResults = cStmt.execute();
+
+    // 
+    // Process all returned result sets
+    //
+
+    while (hadResults) {
+        ResultSet rs = cStmt.getResultSet();
+
+        // process result set
+        ...
+
+        hadResults = cStmt.getMoreResults();
+    }
+
+    // 
+    // Retrieve output parameters
+    //
+    // Connector/J supports both index-based and
+    // name-based retrieval
+    //
+
+    int outputValue = cStmt.getInt(1); // index-based
+
+    outputValue = cStmt.getInt(&#34;inOutParam&#34;); // name-based
+
+...</programlisting></example></para>
+          </listitem>
+        </orderedlist>
+      </sect2>
+
+      <!--
+      <sect2>
+        <title>DataSources and Connection Pooling</title>
+
+        <para></para>
+      </sect2>
+      -->
+
+      <sect2>
+        <title>Connecting over SSL</title>
+
+        <para>SSL in MySQL Connector/J encrypts all data (other than the
+        initial handshake) between the JDBC driver and the server. The
+        performance penalty for enabling SSL is an increase in query
+        processing time between 35% and 50%, depending on the size of the
+        query, and the amount of data it returns.</para>
+
+        <para>For SSL Support to work, you must have the following:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>A JDK that includes JSSE (Java Secure Sockets Extension),
+            like JDK-1.4.1 or newer. SSL does not currently work with a JDK
+            that you can add JSSE to, like JDK-1.2.x or JDK-1.3.x due to the
+            following JSSE bug: <ulink
+            url="http://developer.java.sun.com/developer/bugParade/bugs/4273544.html">http://developer.java.sun.com/developer/bugParade/bugs/4273544.html</ulink></para>
+          </listitem>
+
+          <listitem>
+            <para>A MySQL server that supports SSL and has been compiled and
+            configured to do so, which is MySQL-4.0.4 or later, see: <ulink
+            url="http://www.mysql.com/doc/en/Secure_connections.html">http://www.mysql.com/doc/en/Secure_connections.html</ulink></para>
+          </listitem>
+
+          <listitem>
+            <para>A client certificate (covered later in this section)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>You will first need to import the MySQL server CA Certificate
+        into a Java truststore. A sample MySQL server CA Certificate is
+        located in the &#39;SSL&#39; subdirectory of the MySQL source
+        distribution. This is what SSL will use to determine if you are
+        communicating with a secure MySQL server.</para>
+
+        <para>To use Java&#39;s &#39;keytool&#39; to create a truststore in
+        the current directory , and import the server&#39;s CA certificate
+        (&#39;cacert.pem&#39;), you can do the following (assuming
+        that&#39;keytool&#39; is in your path. It&#39;s located in the
+        &#39;bin&#39; subdirectory of your JDK or JRE):</para>
+
+        <para><programlisting>shell&#62; keytool -import -alias mysqlServerCACert -file cacert.pem -keystore truststore
+        </programlisting></para>
+
+        <para>Keytool will respond with the following information:</para>
+
+        <para><programlisting>Enter keystore password:  *********
+Owner: EMAILADDRESS=walrus@example.com, CN=Walrus, O=MySQL AB, L=Orenburg, ST=Some
+-State, C=RU
+Issuer: EMAILADDRESS=walrus@example.com, CN=Walrus, O=MySQL AB, L=Orenburg, ST=Som
+e-State, C=RU
+Serial number: 0
+Valid from: Fri Aug 02 16:55:53 CDT 2002 until: Sat Aug 02 16:55:53 CDT 2003
+Certificate fingerprints:
+         MD5:  61:91:A0:F2:03:07:61:7A:81:38:66:DA:19:C4:8D:AB
+         SHA1: 25:77:41:05:D5:AD:99:8C:14:8C:CA:68:9C:2F:B8:89:C3:34:4D:6C
+Trust this certificate? [no]:  yes
+Certificate was added to keystore</programlisting></para>
+
+        <para>You will then need to generate a client certificate, so that the
+        MySQL server knows that it is talking to a secure client:</para>
+
+        <para><programlisting> shell&#62; keytool -genkey -keyalg rsa -alias mysqlClientCertificate -keystore keystore </programlisting></para>
+
+        <para>Keytool will prompt you for the following information, and
+        create a keystore named &#39;keystore&#39; in the current directory.</para>
+
+        <para>You should respond with information that is appropriate for your
+        situation:<programlisting>Enter keystore password:  *********
+What is your first and last name?
+  [Unknown]:  Matthews
+What is the name of your organizational unit?
+  [Unknown]:  Software Development
+What is the name of your organization?
+  [Unknown]:  MySQL AB
+What is the name of your City or Locality?
+  [Unknown]:  Flossmoor
+What is the name of your State or Province?
+  [Unknown]:  IL
+What is the two-letter country code for this unit?
+  [Unknown]:  US
+Is &#60;CN=Matthews, OU=Software Development, O=MySQL AB,
+ L=Flossmoor, ST=IL, C=US&#62; correct?
+  [no]:  y
+
+Enter key password for &#60;mysqlClientCertificate&#62;
+        (RETURN if same as keystore password):</programlisting></para>
+
+        <para>Finally, to get JSSE to use the keystore and truststore that you
+        have generated, you need to set the following system properties when
+        you start your JVM, replacing &#39;path_to_keystore_file&#39; with the
+        full path to the keystore file you created,
+        &#39;path_to_truststore_file&#39; with the path to the truststore file
+        you created, and using the appropriate password values for each
+        property.</para>
+
+        <para><programlisting>-Djavax.net.ssl.keyStore=path_to_keystore_file
+-Djavax.net.ssl.keyStorePassword=*********
+-Djavax.net.ssl.trustStore=path_to_truststore_file
+-Djavax.net.ssl.trustStorePassword=********* </programlisting></para>
+
+        <para>You will also need to set &#39;useSSL&#39; to &#39;true&#39; in
+        your connection parameters for MySQL Connector/J, either by adding
+        &#39;useSSL=true&#39; to your URL, or by setting the property
+        &#39;useSSL&#39; to &#39;true&#39; in the java.util.Properties
+        instance you pass to DriverManager.getConnection().</para>
+
+        <para>You can test that SSL is working by turning on JSSE debugging
+        (as detailed below), and look for the following key events:</para>
+
+        <para><programlisting>...
+ *** ClientHello, v3.1
+ RandomCookie:  GMT: 1018531834 bytes = { 199, 148, 180, 215, 74, 12, 54, 244, 0, 168, 55, 103, 215, 64, 16, 138, 225, 190, 132, 153, 2, 217, 219, 239, 202, 19, 121, 78 }
+ Session ID:  {}
+ Cipher Suites:  { 0, 5, 0, 4, 0, 9, 0, 10, 0, 18, 0, 19, 0, 3, 0, 17 }
+ Compression Methods:  { 0 }
+ ***
+ [write] MD5 and SHA1 hashes:  len = 59
+ 0000: 01 00 00 37 03 01 3D B6   90 FA C7 94 B4 D7 4A 0C  ...7..=.......J.
+ 0010: 36 F4 00 A8 37 67 D7 40   10 8A E1 BE 84 99 02 D9  6...7g.@........
+ 0020: DB EF CA 13 79 4E 00 00   10 00 05 00 04 00 09 00  ....yN..........
+ 0030: 0A 00 12 00 13 00 03 00   11 01 00                 ...........
+ main, WRITE:  SSL v3.1 Handshake, length = 59
+ main, READ:  SSL v3.1 Handshake, length = 74
+ *** ServerHello, v3.1
+ RandomCookie:  GMT: 1018577560 bytes = { 116, 50, 4, 103, 25, 100, 58, 202, 79, 185, 178, 100, 215, 66, 254, 21, 83, 187, 190, 42, 170, 3, 132, 110, 82, 148, 160, 92 }
+ Session ID:  {163, 227, 84, 53, 81, 127, 252, 254, 178, 179, 68, 63, 182, 158, 30, 11, 150, 79, 170, 76, 255, 92, 15, 226, 24, 17, 177, 219, 158, 177, 187, 143}
+ Cipher Suite:  { 0, 5 }
+ Compression Method: 0
+ ***
+ %% Created:  [Session-1, SSL_RSA_WITH_RC4_128_SHA]
+ ** SSL_RSA_WITH_RC4_128_SHA
+ [read] MD5 and SHA1 hashes:  len = 74
+ 0000: 02 00 00 46 03 01 3D B6   43 98 74 32 04 67 19 64  ...F..=.C.t2.g.d
+ 0010: 3A CA 4F B9 B2 64 D7 42   FE 15 53 BB BE 2A AA 03  :.O..d.B..S..*..
+ 0020: 84 6E 52 94 A0 5C 20 A3   E3 54 35 51 7F FC FE B2  .nR..\ ..T5Q....
+ 0030: B3 44 3F B6 9E 1E 0B 96   4F AA 4C FF 5C 0F E2 18  .D?.....O.L.\...
+ 0040: 11 B1 DB 9E B1 BB 8F 00   05 00                    ..........
+ main, READ:  SSL v3.1 Handshake, length = 1712
+ ...</programlisting></para>
+
+        <para>JSSE provides debugging (to STDOUT) when you set the following
+        system property: -Djavax.net.debug=all This will tell you what
+        keystores and truststores are being used, as well as what is going on
+        during the SSL handshake and certificate exchange. It will be helpful
+        when trying to determine what is not working when trying to get an SSL
+        connection to happen.</para>
+      </sect2>
+    </sect1>
+  </chapter>
+
+  <chapter>
+    <title>How to Report Bugs or Problems</title>
+
+    <para>The normal place to report bugs is <ulink
+    url="http://bugs.mysql.com/">http://bugs.mysql.com/</ulink>, which is the
+    address for our bugs database. This database is public, and can be browsed
+    and searched by anyone. If you log in to the system, you will also be able
+    to enter new reports.</para>
+
+    <para>If you have found a sensitive security bug in MySQL, you can send
+    email to <ulink url="mailto:security@mysql.com">security@mysql.com</ulink>
+    Writing a good bug report takes patience, but doing it right the first
+    time saves time both for us and for yourself. A good bug report,
+    containing a full test case for the bug, makes it very likely that we will
+    fix the bug in the next release. This section will help you write your
+    report correctly so that you don&#39;t waste your time doing things that
+    may not help us much or at all.</para>
+
+    <para>If you have a repeatable bug report, please report it to the bugs
+    database at <ulink url="???">http://bugs.mysql.com/</ulink>. Any bug that
+    we are able to repeat has a high chance of being fixed in the next MySQL
+    release. To report other problems, you can use one of the MySQL mailing
+    lists. Remember that it is possible for us to respond to a message
+    containing too much information, but not to one containing too little.
+    People often omit facts because they think they know the cause of a
+    problem and assume that some details don&#39;t matter. A good principle is
+    this: If you are in doubt about stating something, state it. It is faster
+    and less troublesome to write a couple more lines in your report than to
+    wait longer for the answer if we must ask you to provide information that
+    was missing from the initial report. The most common errors made in bug
+    reports are (a) not including the version number of Connector/J or MySQL
+    used, and (b) not fully describing the platform on which Connector/J is
+    installed (including the JVM version, and the platform type and version
+    number that MySQL itself is installed on). This is highly relevant
+    information, and in 99 cases out of 100, the bug report is useless without
+    it. Very often we get questions like, ``Why doesn&#39;t this work for
+    me?&#39;&#39; Then we find that the feature requested wasn&#39;t
+    implemented in that MySQL version, or that a bug described in a report has
+    already been fixed in newer MySQL versions. Sometimes the error is
+    platform-dependent; in such cases, it is next to impossible for us to fix
+    anything without knowing the operating system and the version number of
+    the platform.</para>
+
+    <para>If at all possible, you should create a repeatable, stanalone
+    testcase that doesn&#39;t involve any third-party classes.</para>
+
+    <para>To streamline this process, we ship a base class for testcases with
+    Connector/J, named &#39;<classname>com.mysql.jdbc.util.BaseBugReport</classname>&#39;.
+    To create a testcase for Connector/J using this class, create your own
+    class that inherits from <classname>com.mysql.jdbc.util.BaseBugReport</classname>
+    and override the methods <methodname>setUp()</methodname>,
+    <methodname>tearDown()</methodname> and <methodname>runTest</methodname>().</para>
+
+    <para>In the <methodname>setUp()</methodname> method, create code that
+    creates your tables, and populates them with any data needed to
+    demonstrate the bug.</para>
+
+    <para>In the <methodname>runTest</methodname>() method, create code that
+    demonstrates the bug using the tables and data you created in the
+    &#39;setUp&#39; method.</para>
+
+    <para>In the <methodname>tearDown()</methodname> method, drop any tables
+    you created in the <methodname>setUp()</methodname> method.</para>
+
+    <para>In any of the above three methods, you should use one of the
+    variants of the <methodname>getConnection</methodname>() method to create
+    a JDBC connection to MySQL:</para>
+
+    <para><itemizedlist><listitem><para>getConnection() - Provides a
+    connection to the JDBC URL specified in getUrl(). If a connection already
+    exists, that connection is returned, otherwise a new connection is
+    created.</para></listitem><listitem><para>getNewConnection() - Use this if
+    you need to get a new connection for your bug report (i.e. there&#39;s
+    more than one connection involved).</para></listitem><listitem><para>getConnection(String
+    url) - Returns a connection using the given URL.</para></listitem><listitem><para>getConnection(String
+    url, Properties props) - Returns a connection using the given URL and
+    properties.</para></listitem></itemizedlist>If you need to use a JDBC URL
+    that is different than &#39;jdbc:mysql:///test&#39;, then override the
+    method <methodname>getUrl()</methodname> as well.</para>
+
+    <para>Use the <methodname>assertTrue(boolean expression)</methodname> and
+    <methodname>assertTrue(String failureMessage, boolean expression)</methodname>
+    methods to create conditions that must be met in your testcase
+    demonstrating the behavior you are expecting (vs. the behavior you are
+    observing, which is why you are most likely filing a bug report).</para>
+
+    <para>Finally, create a <methodname>main</methodname>() method that
+    creates a new instance of your testcase, and calls the
+    <methodname>run</methodname> method: <programlisting>public static void main(String[] args) throws Exception {
+      new MyBugReport().run();
+ }</programlisting> Once you have finished your testcase, and have verified
+    that it demonstrates the bug you are reporting, upload it with your bug
+    report to <ulink url="http://bugs.mysql.com/">http://bugs.mysql.com/</ulink>.</para>
+  </chapter>
+
+  <chapter>
+    <title>Troubleshooting</title>
+
+    <para>There are a few issues that seem to be commonly encountered often by
+    users of MySQL Connector/J. This section deals with their symptoms, and
+    their resolutions. If you have further issues, see the &#34;SUPPORT&#34;
+    section.</para>
+
+    <qandaset>
+      <qandaentry>
+        <question>
+          <para>When I try to connect to the database with MySQL Connector/J,
+          I get the following exception:</para>
+
+          <screen>SQLException: Server configuration denies access to data source 
+SQLState: 08001 
+VendorError: 0</screen>
+
+          <para>What&#39;s going on? I can connect just fine with the MySQL
+          command-line client.</para>
+        </question>
+
+        <answer>
+          <para>MySQL Connector/J must use TCP/IP sockets to connect to MySQL,
+          as Java does not support Unix Domain Sockets. Therefore, when MySQL
+          Connector/J connects to MySQL, the security manager in MySQL server
+          will use its grant tables to determine whether or not the connection
+          should be allowed.</para>
+
+          <para>You must add grants to allow this to happen. The following is
+          an example of how to do this (but not the most secure).</para>
+
+          <para>From the mysql command-line client, logged in as a user that
+          can grant privileges, issue the following command:</para>
+
+          <screen>GRANT ALL PRIVILEGES ON [dbname].* to
+                &#39;[user]&#39;@&#39;[hostname]&#39; identified by
+                &#39;[password]&#39;</screen>
+
+          <para>replacing [dbname] with the name of your database, [user] with
+          the user name, [hostname] with the host that MySQL Connector/J will
+          be connecting from, and [password] with the password you want to
+          use. Be aware that RedHat Linux is broken with respect to the
+          hostname portion for the case when you are connecting from
+          localhost. You need to use &#34;localhost.localdomain&#34; for the
+          [hostname] value in this case. Follow this by issuing the &#34;FLUSH
+          PRIVILEGES&#34; command.</para>
+
+          <note>
+            <para>Testing your connectivity with the &#34;mysql&#34;
+            command-line client will not work unless you add the
+            &#34;--host&#34; flag, and use something other than
+            &#34;localhost&#34; for the host. The &#34;mysql&#34; command-line
+            client will use Unix domain sockets if you use the special
+            hostname &#34;localhost&#34;. If you are testing connectivity to
+            &#34;localhost&#34;, use &#34;127.0.0.1&#34; as the hostname
+            instead.</para>
+          </note>
+
+          <warning>
+            <para>If you don&#39;t understand what the &#39;GRANT&#39; command
+            does, or how it works, you should read and understand the <ulink
+            url="http://www.mysql.com/doc/en/Privilege_system.html">&#39;General
+            Security Issues and the MySQL Access Privilege System&#39;</ulink>
+            section of the MySQL manual before attempting to change
+            privileges.</para>
+
+            <para>Changing privileges and permissions improperly in MySQL can
+            potentially cause security problems with your MySQL server.</para>
+          </warning>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>My application throws a SQLException &#39;No Suitable
+          Driver&#39;. Why is this happening?</para>
+        </question>
+
+        <answer>
+          <para>One of two things are happening. Either the driver is not in
+          your CLASSPATH (see the &#34;INSTALLATION&#34; section above), or
+          your URL format is incorrect (see &#34;Developing Applications with
+          MySQL Connector/J&#34;).</para>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>I&#39;m trying to use MySQL Connector/J in an applet or
+          application and I get an exception similar to:</para>
+
+          <screen>SQLException: Cannot connect to MySQL server on host:3306. 
+Is there a MySQL server running on the machine/port you 
+are trying to connect to?
+
+(java.security.AccessControlException) 
+SQLState: 08S01
+VendorError: 0 </screen>
+        </question>
+
+        <answer>
+          <para>Either you&#39;re running an Applet, your MySQL server has
+          been installed with the &#34;--skip-networking&#34; option set, or
+          your MySQL server has a firewall sitting in front of it.</para>
+
+          <para>Applets can only make network connections back to the machine
+          that runs the web server that served the .class files for the
+          applet. This means that MySQL must run on the same machine (or you
+          must have some sort of port re-direction) for this to work. This
+          also means that you will not be able to test applets from your local
+          file system, you must always deploy them to a web server.</para>
+
+          <para>MySQL Connector/J can only communicate with MySQL using
+          TCP/IP, as Java does not support Unix domain sockets. TCP/IP
+          communication with MySQL might be affected if MySQL was started with
+          the &#34;--skip-networking&#34; flag, or if it is firewalled.</para>
+
+          <para>If MySQL has been started with the &#34;--skip-networking&#34;
+          option set (the Debian Linux package of MySQL server does this for
+          example), you need to comment it out in the file /etc/mysql/my.cnf
+          or /etc/my.cnf. Of course your my.cnf file might also exist in the
+          &#34;data&#34; directory of your MySQL server, or anywhere else
+          (depending on how MySQL was compiled for your system). Binaries
+          created by MySQL AB always look in /etc/my.cnf and [datadir]/my.cnf.
+          If your MySQL server has been firewalled, you will need to have the
+          firewall configured to allow TCP/IP connections from the host where
+          your Java code is running to the MySQL server on the port that MySQL
+          is listening to (by default, 3306).</para>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>I have a servlet/application that works fine for a day, and
+          then stops working overnight</para>
+        </question>
+
+        <answer>
+          <para>MySQL closes connections after 8 hours of inactivity. You
+          either need to use a connection pool that handles stale connections
+          or use the &#34;autoReconnect&#34; parameter (see &#34;Developing
+          Applications with MySQL Connector/J&#34;).</para>
+
+          <para>Also, you should be catching SQLExceptions in your application
+          and dealing with them, rather than propagating them all the way
+          until your application exits, this is just good programming
+          practice. MySQL Connector/J will set the SQLState (see
+          java.sql.SQLException.getSQLState() in your APIDOCS) to
+          &#34;08S01&#34; when it encounters network-connectivity issues
+          during the processing of a query. Your application code should then
+          attempt to re-connect to MySQL at this point.</para>
+
+          <para>The following (simplistic) example shows what code that can
+          handle these exceptions might look like:</para>
+
+          <para><example><title>Example of transaction with retry logic</title><programlisting>public void doBusinessOp() throws SQLException {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        //
+        // How many times do you want to retry the transaction
+        // (or at least _getting_ a connection)?
+        //
+        int retryCount = 5;
+
+        boolean transactionCompleted = false;
+
+        do {
+            try {
+                conn = getConnection(); // assume getting this from a 
+                                        // javax.sql.DataSource, or the
+                                        // java.sql.DriverManager
+
+                conn.setAutoCommit(false);
+
+                // 
+                // Okay, at this point, the &#39;retry-ability&#39; of the 
+                // transaction really depends on your application logic,
+                // whether or not you&#39;re using autocommit (in this case
+                // not), and whether you&#39;re using transacational storage
+                // engines
+                //
+                // For this example, we&#39;ll assume that it&#39;s _not_ safe
+                // to retry the entire transaction, so we set retry count
+                // to 0 at this point
+                //
+                // If you were using exclusively transaction-safe tables,
+                // or your application could recover from a connection going
+                // bad in the middle of an operation, then you would not
+                // touch &#39;retryCount&#39; here, and just let the loop repeat
+                // until retryCount == 0.
+                //
+                retryCount = 0;
+
+                stmt = conn.createStatement();
+
+                String query = &#34;SELECT foo FROM bar ORDER BY baz&#34;;
+
+                rs = stmt.executeQuery(query);
+
+                while (rs.next()) {
+                }
+
+                rs.close();
+                rs = null;
+                
+                stmt.close();
+                stmt = null;
+                
+                conn.commit();
+                conn.close();
+                conn = null;
+
+                transactionCompleted = true;
+            } catch (SQLException sqlEx) {
+            
+                //
+                // The two SQL states that are &#39;retry-able&#39; are 08S01 
+                // for a communications error, and 41000 for deadlock.
+                //
+                // Only retry if the error was due to a stale connection, 
+                // communications problem or deadlock
+                //
+        
+                String sqlState = sqlEx.getSQLState();
+
+                if (&#34;08S01&#34;.equals(sqlState) || &#34;41000&#34;.equals(sqlState)) {
+                    retryCount--;
+                } else {
+                    retryCount = 0;
+                }
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException sqlEx) {
+                        // You&#39;d probably want to log this . . .
+                    }
+                }
+
+                if (stmt != null) {
+                    try {
+                        stmt.close();
+                    } catch (SQLException sqlEx) {
+                        // You&#39;d probably want to log this as well . . .
+                    }
+                }
+
+                if (conn != null) {
+                    try {
+                        //
+                        // If we got here, and conn is not null, the
+                        // transaction should be rolled back, as not
+                        // all work has been done
+                    
+                        try {
+                            conn.rollback();
+                        } finally {
+                            conn.close();
+                        }
+                    } catch (SQLException sqlEx) {
+                        // 
+                        // If we got an exception here, something
+                        // pretty serious is going on, so we better
+                        // pass it up the stack, rather than just
+                        // logging it. . .
+                    
+                        throw sqlEx;
+                    }
+                }
+            }
+        } while (!transactionCompleted &#38;&#38; (retryCount &#62; 0));
+    }</programlisting></example></para>
+        </answer>
+      </qandaentry>
+
+      <qandaentry>
+        <question>
+          <para>I&#39;m trying to use JDBC-2.0 updatable result sets, and I
+          get an exception saying my result set is not updatable.</para>
+        </question>
+
+        <answer>
+          <para>Because MySQL does not have row identifiers, MySQL Connector/J
+          can only update result sets that have come from queries on tables
+          that have at least one primary key, the query must select all of the
+          primary key(s) and the query can only span one table (i.e. no
+          joins). This is outlined in the JDBC specification.</para>
+        </answer>
+      </qandaentry>
+    </qandaset>
+  </chapter>
+
+  <appendix>
+    <title>Reference</title>
+
+    <para></para>
+
+    <sect1>
+      <title>Type Conversions Supported by MySQL Connector/J</title>
+
+      <para></para>
+
+      <para>MySQL Connector/J is flexible in the way it handles conversions
+      between MySQL data types and Java data types.</para>
+
+      <para>In general, any MySQL data type can be converted to a
+      java.lang.String, and any numerical type can be converted to any of the
+      Java numerical types, although round-off, overflow, or loss of precision
+      may occur.</para>
+
+      <para>The conversions that are always guaranteed to work are listed in
+      the following table:</para>
+
+      <table>
+        <title>Conversion Table</title>
+
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>These MySQL Data Types</entry>
+
+              <entry>Can always be converted to these Java types</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry>CHAR, VARCHAR, BLOB, TEXT, ENUM, and SET</entry>
+
+              <entry>java.lang.String, java.io.InputStream, java.io.Reader,
+              java.sql.Blob, java.sql.Clob</entry>
+            </row>
+
+            <row>
+              <entry>FLOAT, REAL, DOUBLE PRECISION, NUMERIC, DECIMAL, TINYINT,
+              SMALLINT, MEDIUMINT, INTEGER, BIGINT</entry>
+
+              <entry>java.lang.String, java.lang.Short, java.lang.Integer,
+              java.lang.Long, java.lang.Double, java.math.BigDecimal<note><para>round-off,
+              overflow or loss of precision may occur if you choose a Java
+              numeric data type that has less precision or capacity than the
+              MySQL data type you are converting to/from.</para></note></entry>
+            </row>
+
+            <row>
+              <entry>DATE, TIME, DATETIME, TIMESTAMP</entry>
+
+              <entry>java.lang.String, java.sql.Date, java.sql.Timestamp</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </sect1>
+  </appendix>
+
+  <appendix>
+    <title>ChangeLog</title>
+
+    <programlisting># Changelog
+# $Id: CHANGES,v 1.38.4.62 2004/02/11 02:15:16 mmatthew Exp $
+
+xx-xx-04 - Version 3.1.2-alpha (not yet released)
+
+    - Fixed stored procedure parameter parsing info when size was
+      specified for a parameter (i.e. char(), varchar()).
+  
+    - Enabled callable statement caching via &#39;cacheCallableStmts&#39;
+      property.
+  
+    - Fixed case when no output parameters specified for a 
+      stored procedure caused a bogus query to be issued 
+      to retrieve out parameters, leading to a syntax error
+      from the server.
+  
+    - Fixed case when no parameters could cause a NullPointerException
+      in CallableStatement.setOutputParameters().
+
+    - Removed wrapping of exceptions in MysqlIO.changeUser().
+
+    - Fixed sending of split packets for large queries, enabled nio
+      ability to send large packets as well.
+  
+    - Added .toString() functionality to ServerPreparedStatement,
+      which should help if you&#39;re trying to debug a query that is
+      a prepared statement (it shows SQL as the server would process).
+  
+    - Added &#39;gatherPerformanceMetrics&#39; property, along with properties
+      to control when/where this info gets logged (see docs for more 
+      info).
+ 
+    - ServerPreparedStatements weren&#39;t actually de-allocating
+      server-side resources when .close() was called.
+
+02-14-04 - Version 3.1.1-alpha
+
+    - Fixed bug with UpdatableResultSets not using client-side
+      prepared statements.
+  
+    - Fixed character encoding issues when converting bytes to
+      ASCII when MySQL doesn&#39;t provide the character set, and
+      the JVM is set to a multibyte encoding (usually affecting
+      retrieval of numeric values).
+
+    - Unpack &#39;unknown&#39; data types from server prepared statements
+      as Strings.
+  
+    - Implemented long data (Blobs, Clobs, InputStreams, Readers)
+      for server prepared statements.
+  
+    - Implemented Statement.getWarnings() for MySQL-4.1 and newer
+      (using &#39;SHOW WARNINGS&#39;).
+
+    - Default result set type changed to TYPE_FORWARD_ONLY
+      (JDBC compliance).
+  
+    - Centralized setting of result set type and concurrency.
+
+    - Re-factored how connection properties are set and exposed
+      as DriverPropertyInfo as well as Connection and DataSource
+      properties.
+  
+    - Support for NIO. Use &#39;useNIO=true&#39; on platforms that support
+      NIO.
+ 
+    - Support for SAVEPOINTs (MySQL &#62;= 4.0.14 or 4.1.1).
+
+    - Support for mysql_change_user()...See the changeUser() method
+      in com.mysql.jdbc.Connection.
+  
+    - Reduced number of methods called in average query to be more
+      efficient.
+ 
+    - Prepared Statements will be re-prepared on auto-reconnect. Any errors
+      encountered are postponed until first attempt to re-execute the
+      re-prepared statement.
+  
+    - Ensure that warnings are cleared before executing queries
+      on prepared statements, as-per JDBC spec (now that we support
+      warnings).
+ 
+    - Support &#39;old&#39; profileSql capitalization in ConnectionProperties.
+      This property is deprecated, you should use &#39;profileSQL&#39; if possible.
+  
+    - Optimized Buffer.readLenByteArray() to return shared empty byte array 
+      when length is 0.
+ 
+    - Allow contents of PreparedStatement.setBlob() to be retained
+      between calls to .execute*().
+  
+    - Deal with 0-length tokens in EscapeProcessor (caused by callable
+      statement escape syntax).
+  
+    - Check for closed connection on delete/update/insert row operations in 
+      UpdatableResultSet. 
+
+    - Fix support for table aliases when checking for all primary keys in 
+      UpdatableResultSet.
+    
+    - Removed useFastDates connection property. 
+    
+    - Correctly initialize datasource properties from JNDI Refs, including 
+      explicitly specified URLs.
+  
+    - DatabaseMetaData now reports supportsStoredProcedures() for 
+      MySQL versions &#62;= 5.0.0
+  
+    - Fixed stack overflow in Connection.prepareCall() (bad merge).
+
+    - Fixed IllegalAccessError to Calendar.getTimeInMillis() in DateTimeValue
+      (for JDK &#60; 1.4). 
+  
+    - Fix for BUG#1673, where DatabaseMetaData.getColumns() is not
+      returning correct column ordinal info for non &#39;%&#39; column name patterns.
+      
+    - Merged fix of datatype mapping from MySQL type &#39;FLOAT&#39; to 
+      java.sql.Types.REAL from 3.0 branch.
+      
+    - Detect collation of column for RSMD.isCaseSensitive().
+    
+    - Fixed sending of queries &#62; 16M.
+    
+    - Added named and indexed input/output parameter support to CallableStatement.
+      MySQL-5.0.x or newer.
+      
+    - Fixed NullPointerException in ServerPreparedStatement.setTimestamp(),
+      as well as year and month descrepencies in 
+      ServerPreparedStatement.setTimestamp(), setDate().
+      
+    - Added ability to have multiple database/JVM targets for compliance
+      and regression/unit tests in build.xml.
+      
+    - Fixed NPE and year/month bad conversions when accessing some 
+      datetime functionality in ServerPreparedStatements and their 
+      resultant result sets.
+      
+    - Display where/why a connection was implicitly closed (to
+      aid debugging).
+      
+    - CommunicationsException implemented, that tries to determine
+      why communications was lost with a server, and displays
+      possible reasons when .getMessage() is called.
+      
+    - Fixed BUG#2359, NULL values for numeric types in binary
+      encoded result sets causing NullPointerExceptions.
+      
+    - Implemented Connection.prepareCall(), and DatabaseMetaData.
+      getProcedures() and getProcedureColumns().
+      
+    - Reset &#39;long binary&#39; parameters in ServerPreparedStatement when
+      clearParameters() is called, by sending COM_RESET_STMT to the 
+      server.
+      
+    - Merged prepared statement caching, and .getMetaData() support
+      from 3.0 branch.
+    
+    - Fixed off-by-1900 error in some cases for 
+      years in TimeUtil.fastDate/TimeCreate() when unpacking results
+      from server-side prepared statements.
+      
+    - Fixed BUG#2502 -- charset conversion issue in getTables().
+    
+    - Implemented multiple result sets returned from a statement 
+      or stored procedure.
+      
+    - Fixed BUG#2606 -- Server side prepared statements not returning
+      datatype &#39;YEAR&#39; correctly.
+      
+    - Enabled streaming of result sets from server-side prepared
+      statements.
+      
+    - Fixed BUG#2623 -- Class-cast exception when using 
+      scrolling result sets and server-side prepared statements.
+  
+    - Merged unbuffered input code from 3.0.
+
+    - Fixed ConnectionProperties that weren&#39;t properly exposed
+      via accessors, cleaned up ConnectionProperties code.
+  
+    - Fixed BUG#2671, NULL fields not being encoded correctly in
+      all cases in server side prepared statements.
+  
+    - Fixed rare buffer underflow when writing numbers into buffers
+      for sending prepared statement execution requests.
+  
+02-18-03 - Version 3.1.0-alpha
+
+    - Added &#39;requireSSL&#39; property.
+    
+    - Added &#39;useServerPrepStmts&#39; property (default &#39;false&#39;). The
+      driver will use server-side prepared statements when the
+      server version supports them (4.1 and newer) when this
+      property is set to &#39;true&#39;. It is currently set to &#39;false&#39; 
+      by default until all bind/fetch functionality has been 
+      implemented. Currently only DML prepared statements are
+      implemented for 4.1 server-side prepared statements.
+  
+    - Track open Statements, close all when Connection.close()
+      is called (JDBC compliance).
+
+05-27-04 - Version 3.0.14-production
+    - Fixed BUG#3923 - URL parsing error
+
+05-27-04 - Version 3.0.13-production
+    - Fixed BUG#3848 - Using a MySQLDatasource without server name fails
+
+    - Fixed BUG#3920 - &#34;No Database Selected&#34; when using 
+      MysqlConnectionPoolDataSource.
+
+    - Fixed BUG#3873 - PreparedStatement.getGeneratedKeys() method returns only 
+      1 result for batched insertions
+
+05-18-04 - Version 3.0.12-production
+    - Add unsigned attribute to DatabaseMetaData.getColumns() output
+      in the TYPE_NAME column.
+
+    - Added &#39;failOverReadOnly&#39; property, to allow end-user to configure
+      state of connection (read-only/writable) when failed over.
+
+    - Backported &#39;change user&#39; and &#39;reset server state&#39; functionality
+      from 3.1 branch, to allow clients of MysqlConnectionPoolDataSource
+      to reset server state on getConnection() on a pooled connection.
+
+    - Don&#39;t escape SJIS/GBK/BIG5 when using MySQL-4.1 or newer.
+
+    - Allow &#39;url&#39; parameter for MysqlDataSource and MysqlConnectionPool
+      DataSource so that passing of other properties is possible from
+      inside appservers.
+
+    - Map duplicate key and foreign key errors to SQLState of
+      &#39;23000&#39;.
+
+    - Backport documentation tooling from 3.1 branch.
+
+    - Return creating statement for ResultSets created by
+      getGeneratedKeys() (BUG#2957)
+
+    - Allow java.util.Date to be sent in as parameter to
+      PreparedStatement.setObject(), converting it to a Timestamp
+      to maintain full precision (BUG#3103).
+
+    - Don&#39;t truncate BLOBs/CLOBs when using setBytes() and/or
+      setBinary/CharacterStream() (BUG#2670).
+
+    - Dynamically configure character set mappings for field-level
+      character sets on MySQL-4.1.0 and newer using &#39;SHOW COLLATION&#39;
+      when connecting.
+
+    - Map &#39;binary&#39; character set to &#39;US-ASCII&#39; to support DATETIME
+      charset recognition for servers &#62;= 4.1.2
+
+    - Use &#39;SET character_set_results&#34; during initialization to allow any 
+      charset to be returned to the driver for result sets.
+
+    - Use charsetnr returned during connect to encode queries before
+      issuing &#39;SET NAMES&#39; on MySQL &#62;= 4.1.0.
+
+    - Add helper methods to ResultSetMetaData (getColumnCharacterEncoding()
+      and getColumnCharacterSet()) to allow end-users to see what charset
+      the driver thinks it should be using for the column.
+
+    - Only set character_set_results for MySQL &#62;= 4.1.0.
+
+    - Fixed BUG#3511, StringUtils.escapeSJISByteStream() not covering all
+      eastern double-byte charsets correctly.
+
+    - Renamed StringUtils.escapeSJISByteStream() to more appropriate
+      escapeEasternUnicodeByteStream().
+
+    - Fixed BUG#3554 - Not specifying database in URL caused MalformedURL
+      exception.
+
+    - Auto-convert MySQL encoding names to Java encoding names if used
+      for characterEncoding property.
+
+    - Added encoding names that are recognized on some JVMs to fix case
+      where they were reverse-mapped to MySQL encoding names incorrectly.
+
+    - Use junit.textui.TestRunner for all unit tests (to allow them to be
+      run from the command line outside of Ant or Eclipse).
+
+    - Fixed BUG#3557 - UpdatableResultSet not picking up default values
+      for moveToInsertRow().
+
+    - Fixed BUG#3570 - inconsistent reporting of column type. The server
+      still doesn&#39;t return all types for *BLOBs *TEXT correctly, so the
+      driver won&#39;t return those correctly.
+
+    - Fixed BUG#3520 -- DBMD.getSQLStateType() returns incorrect value.
+
+    - Fixed regression in PreparedStatement.setString() and eastern character
+      encodings.
+
+    - Made StringRegressionTest 4.1-unicode aware.
+
+02-19-04 - Version 3.0.11-stable
+
+    - Trigger a &#39;SET NAMES utf8&#39; when encoding is forced to &#39;utf8&#39; _or_
+    &#39;utf-8&#39; via the &#39;characterEncoding&#39; property. Previously, only the
+    Java-style encoding name of &#39;utf-8&#39; would trigger this.
+
+    - AutoReconnect time was growing faster than exponentially (BUG#2447).
+
+    - Fixed failover always going to last host in list (BUG#2578)
+
+    - Added &#39;useUnbufferedInput&#39; parameter, and now use it by default
+      (due to JVM issue 
+      http://developer.java.sun.com/developer/bugParade/bugs/4401235.html)
+
+    - Detect &#39;on/off&#39; or &#39;1&#39;,&#39;2&#39;,&#39;3&#39; form of lower_case_table_names on 
+      server.
+
+    - Return &#39;java.lang.Integer&#39; for TINYINT and SMALLINT types from
+      ResultSetMetaData.getColumnClassName() (fix for BUG#2852).
+
+    - Return &#39;java.lang.Double&#39; for FLOAT type from ResultSetMetaData.
+      getColumnClassName() (fix for BUG#2855).
+
+    - Return &#39;[B&#39; instead of java.lang.Object for BINARY, VARBINARY and 
+      LONGVARBINARY types from ResultSetMetaData.getColumnClassName() 
+      (JDBC compliance).
+
+    - Issue connection events on all instances created from a 
+      ConnectionPoolDataSource.
+  
+01-13-04 - Version 3.0.10-stable
+
+    - Don&#39;t count quoted id&#39;s when inside a &#39;string&#39; in PreparedStatement
+      parsing (fix for BUG#1511).
+      
+    - &#39;Friendlier&#39; exception message for PacketTooLargeException
+       (BUG#1534).
+       
+    - Backported fix for aliased tables and UpdatableResultSets in 
+      checkUpdatability() method from 3.1 branch.
+      
+    - Fix for ArrayIndexOutOfBounds exception when using Statement.setMaxRows()
+      (BUG#1695).
+      
+    - Fixed BUG#1576, dealing with large blobs and split packets not being 
+      read correctly.
+      
+    - Fixed regression of Statement.getGeneratedKeys() and REPLACE statements.
+    
+    - Fixed BUG#1630, subsequent call to ResultSet.updateFoo() causes NPE if
+      result set is not updatable.
+      
+    - Fix for 4.1.1-style auth with no password.
+    
+    - Fix for BUG#1731, Foreign Keys column sequence is not consistent in
+      DatabaseMetaData.getImported/Exported/CrossReference().
+      
+    - Fix for BUG#1775 - DatabaseMetaData.getSystemFunction() returning 
+      bad function &#39;VResultsSion&#39;.
+      
+    - Fix for BUG#1592 -- cross-database updatable result sets
+      are not checked for updatability correctly.
+      
+    - DatabaseMetaData.getColumns() should return Types.LONGVARCHAR for
+      MySQL LONGTEXT type.
+      
+    - ResultSet.getObject() on TINYINT and SMALLINT columns should return 
+      Java type &#39;Integer&#39; (BUG#1913)
+      
+    - Added &#39;alwaysClearStream&#39; connection property, which causes the driver
+      to always empty any remaining data on the input stream before
+      each query.
+      
+    - Added more descriptive error message &#39;Server Configuration Denies 
+      Access to DataSource&#39;, as well as retrieval of message from server.
+      
+    - Autoreconnect code didn&#39;t set catalog upon reconnect if it had been 
+      changed.
+      
+    - Implement ResultSet.updateClob().
+    
+    - ResultSetMetaData.isCaseSensitive() returned wrong value for CHAR/VARCHAR
+      columns.
+      
+    - Fix for BUG#1933 -- Connection property &#34;maxRows&#34; not honored.
+    
+    - Fix for BUG#1925 -- Statements being created too many times in 
+      DBMD.extractForeignKeyFromCreateTable().
+      
+    - Fix for BUG#1914 -- Support escape sequence {fn convert ... }
+    
+    - Fix for BUG#1958 -- ArrayIndexOutOfBounds when parameter number == 
+      number of parameters + 1.
+      
+    - Fix for BUG#2006 -- ResultSet.findColumn() should use first matching
+      column name when there are duplicate column names in SELECT query 
+      (JDBC-compliance).
+      
+    - Removed static synchronization bottleneck from 
+      PreparedStatement.setTimestamp().
+      
+    - Removed static synchronization bottleneck from instance factory 
+      method of SingleByteCharsetConverter.
+      
+    - Enable caching of the parsing stage of prepared statements via 
+      the &#39;cachePrepStmts&#39;, &#39;prepStmtCacheSize&#39; and &#39;prepStmtCacheSqlLimit&#39;
+      properties (disabled by default).
+      
+    - Speed up parsing of PreparedStatements, try to use one-pass whenever
+      possible.
+      
+    - Fixed security exception when used in Applets (applets can&#39;t
+      read the system property &#39;file.encoding&#39; which is needed
+      for LOAD DATA LOCAL INFILE).
+      
+    - Use constants for SQLStates.
+    
+    - Map charset &#39;ko18_ru&#39; to &#39;ko18r&#39; when connected to MySQL-4.1.0 or
+      newer.
+      
+    - Ensure that Buffer.writeString() saves room for the \0.
+    
+    - Fixed exception &#39;Unknown character set &#39;danish&#39; on connect w/ JDK-1.4.0
+    
+    - Fixed mappings in SQLError to report deadlocks with SQLStates of &#39;41000&#39;.
+    
+    - &#39;maxRows&#39; property would affect internal statements, so check it for all 
+      statement creation internal to the driver, and set to 0 when it is not.
+    
+10-07-03 - Version 3.0.9-stable
+
+    - Faster date handling code in ResultSet and PreparedStatement (no longer
+      uses Date methods that synchronize on static calendars).
+    
+    - Fixed test for end of buffer in Buffer.readString().
+
+    - Fixed ResultSet.previous() behavior to move current 
+      position to before result set when on first row
+      of result set (bugs.mysql.com BUG#496)
+
+    - Fixed Statement and PreparedStatement issuing bogus queries
+      when setMaxRows() had been used and a LIMIT clause was present
+      in the query.
+
+    - Fixed BUG#661 - refreshRow didn&#39;t work when primary key values
+      contained values that needed to be escaped (they ended up being
+      doubly-escaped).
+
+    - Support InnoDB contraint names when extracting foreign key info
+      in DatabaseMetaData BUG#517 and BUG#664
+      (impl. ideas from Parwinder Sekhon)
+
+    - Backported 4.1 protocol changes from 3.1 branch (server-side SQL
+      states, new field info, larger client capability flags, 
+      connect-with-database, etc).
+
+    - Fix UpdatableResultSet to return values for getXXX() when on
+      insert row (BUG#675).
+
+    - The insertRow in an UpdatableResultSet is now loaded with 
+      the default column values when moveToInsertRow() is called
+      (BUG#688)
+
+    - DatabaseMetaData.getColumns() wasn&#39;t returning NULL for 
+      default values that are specified as NULL.
+
+    - Change default statement type/concurrency to TYPE_FORWARD_ONLY
+      and CONCUR_READ_ONLY (spec compliance).
+
+    - Don&#39;t try and reset isolation level on reconnect if MySQL doesn&#39;t
+      support them.
+
+    - Don&#39;t wrap SQLExceptions in RowDataDynamic.
+
+    - Don&#39;t change timestamp TZ twice if useTimezone==true (BUG#774)
+
+    - Fixed regression in large split-packet handling (BUG#848).
+
+    - Better diagnostic error messages in exceptions for &#39;streaming&#39;
+      result sets.
+
+    - Issue exception on ResultSet.getXXX() on empty result set (wasn&#39;t
+      caught in some cases).
+
+    - Don&#39;t hide messages from exceptions thrown in I/O layers.
+
+    - Don&#39;t fire connection closed events when closing pooled connections, or
+      on PooledConnection.getConnection() with already open connections (BUG#884).
+
+    - Clip +/- INF (to smallest and largest representative values for the type in 
+      MySQL) and NaN (to 0) for setDouble/setFloat(), and issue a warning on the
+      statement when the server does not support +/- INF or NaN.
+  
+    - Fix for BUG#879, double-escaping of &#39;\&#39; when charset is SJIS or GBK and &#39;\&#39;
+      appears in non-escaped input.
+  
+    - When emptying input stream of unused rows for &#39;streaming&#39; result sets,
+      have the current thread yield() every 100 rows in order to not monopolize 
+      CPU time.
+  
+    - Fixed BUG#1099, DatabaseMetaData.getColumns() getting confused about the
+      keyword &#39;set&#39; in character columns.
+  
+    - Fixed deadlock issue with Statement.setMaxRows().
+
+    - Fixed CLOB.truncate(), BUG#1130
+
+    - Optimized CLOB.setChracterStream(), BUG#1131
+
+    - Made databaseName, portNumber and serverName optional parameters
+      for MysqlDataSourceFactory (BUG#1246)
+  
+    - Fix for BUG#1247 -- ResultSet.get/setString mashing char 127
+
+    - Backported auth. changes for 4.1.1 and newer from 3.1 branch. 
+
+    - Added com.mysql.jdbc.util.BaseBugReport to help creation of testcases
+      for bug reports.
+  
+    - Added property to &#39;clobber&#39; streaming results, by setting the 
+      &#39;clobberStreamingResults&#39; property to &#39;true&#39; (the default is &#39;false&#39;). 
+      This will cause a &#39;streaming&#39; ResultSet to be automatically
+      closed, and any oustanding data still streaming from the server to
+      be discarded if another query is executed before all the data has been
+      read from the server.
+       
+05-23-03 - Version 3.0.8-stable
+
+    - Allow bogus URLs in Driver.getPropertyInfo().
+
+    - Return list of generated keys when using multi-value INSERTS
+      with Statement.getGeneratedKeys().
+  
+    - Use JVM charset with filenames and &#39;LOAD DATA [LOCAL] INFILE&#39;
+
+    - Fix infinite loop with Connection.cleanup().
+
+    - Changed Ant target &#39;compile-core&#39; to &#39;compile-driver&#39;, and 
+      made testsuite compilation a separate target.
+ 
+    - Fixed result set not getting set for Statement.executeUpdate(),
+      which affected getGeneratedKeys() and getUpdateCount() in
+      some cases.
+  
+    - Unicode character 0xFFFF in a string would cause the driver to
+      throw an ArrayOutOfBoundsException (Bug #378)
+  
+    - Return correct amount of generated keys when using &#39;REPLACE&#39; 
+      statements.
+ 
+    - Fix problem detecting server character set in some cases.
+
+    - Fix row data decoding error when using _very_ large packets.
+
+    - Optimized row data decoding.
+
+    - Issue exception when operating on an already-closed
+      prepared statement.
+ 
+    - Fixed SJIS encoding bug, thanks to Naoto Sato.
+
+    - Optimized usage of EscapeProcessor.
+    
+    - Allow multiple calls to Statement.close()
+
+04-08-03 - Version 3.0.7-stable
+
+    - Fixed MysqlPooledConnection.close() calling wrong event type.
+    
+    - Fixed StringIndexOutOfBoundsException in PreparedStatement.
+      setClob().
+      
+    - 4.1 Column Metadata fixes
+    
+    - Remove synchronization from Driver.connect() and 
+      Driver.acceptsUrl().
+      
+    - IOExceptions during a transaction now cause the Connection to 
+      be closed.
+      
+    - Fixed missing conversion for &#39;YEAR&#39; type in ResultSetMetaData.
+      getColumnTypeName().
+      
+    - Don&#39;t pick up indexes that start with &#39;pri&#39; as primary keys
+      for DBMD.getPrimaryKeys().
+      
+    - Throw SQLExceptions when trying to do operations on a forcefully
+      closed Connection (i.e. when a communication link failure occurs).
+      
+    - You can now toggle profiling on/off using 
+      Connection.setProfileSql(boolean).
+      
+    - Fixed charset issues with database metadata (charset was not
+      getting set correctly).
+      
+    - Updatable ResultSets can now be created for aliased tables/columns
+      when connected to MySQL-4.1 or newer.
+      
+    - Fixed &#39;LOAD DATA LOCAL INFILE&#39; bug when file &#62; max_allowed_packet.
+    
+    - Fixed escaping of 0x5c (&#39;\&#39;) character for GBK and Big5 charsets.
+    
+    - Fixed ResultSet.getTimestamp() when underlying field is of type DATE.
+    
+    - Ensure that packet size from alignPacketSize() does not
+      exceed MAX_ALLOWED_PACKET (JVM bug)
+      
+    - Don&#39;t reset Connection.isReadOnly() when autoReconnecting.
+      
+02-18-03 - Version 3.0.6-stable
+
+    - Fixed ResultSetMetaData to return &#34;&#34; when catalog not known.
+      Fixes NullPointerExceptions with Sun&#39;s CachedRowSet.
+      
+    - Fixed DBMD.getTypeInfo() and DBMD.getColumns() returning 
+      different value for precision in TEXT/BLOB types.
+      
+    - Allow ignoring of warning for &#39;non transactional tables&#39; during
+      rollback (compliance/usability) by setting &#39;ignoreNonTxTables&#39;
+      property to &#39;true&#39;.
+      
+    - Fixed SQLExceptions getting swallowed on initial connect.
+    
+    - Fixed Statement.setMaxRows() to stop sending &#39;LIMIT&#39; type queries
+      when not needed (performance)
+      
+    - Clean up Statement query/method mismatch tests (i.e. INSERT not
+      allowed with .executeQuery()).
+      
+    - More checks added in ResultSet traversal method to catch
+      when in closed state.
+      
+    - Fixed ResultSetMetaData.isWritable() to return correct value.
+    
+    - Add &#39;window&#39; of different NULL sorting behavior to 
+      DBMD.nullsAreSortedAtStart (4.0.2 to 4.0.10, true, otherwise,
+      no).
+      
+    - Implemented Blob.setBytes(). You still need to pass the 
+      resultant Blob back into an updatable ResultSet or
+      PreparedStatement to persist the changes, as MySQL does
+      not support &#39;locators&#39;.
+      
+    - Backported 4.1 charset field info changes from Connector/J 3.1
+      
+01-22-03 - Version 3.0.5-gamma
+
+    - Fixed Buffer.fastSkipLenString() causing ArrayIndexOutOfBounds
+      exceptions with some queries when unpacking fields.
+      
+    - Implemented an empty TypeMap for Connection.getTypeMap() so that
+      some third-party apps work with MySQL (IBM WebSphere 5.0 Connection
+      pool).
+      
+    - Added missing LONGTEXT type to DBMD.getColumns().
+    
+    - Retrieve TX_ISOLATION from database for 
+      Connection.getTransactionIsolation() when the MySQL version 
+      supports it, instead of an instance variable.
+      
+    - Quote table names in DatabaseMetaData.getColumns(),
+      getPrimaryKeys(), getIndexInfo(), getBestRowIdentifier()
+      
+    - Greatly reduce memory required for setBinaryStream() in
+      PreparedStatements.
+      
+    - Fixed ResultSet.isBeforeFirst() for empty result sets.
+    
+    - Added update options for foreign key metadata.
+    
+      
+01-06-03 - Version 3.0.4-gamma
+
+    - Added quoted identifiers to database names for 
+      Connection.setCatalog.
+      
+    - Added support for quoted identifiers in PreparedStatement
+      parser.
+      
+    - Streamlined character conversion and byte[] handling in 
+      PreparedStatements for setByte().
+      
+    - Reduce memory footprint of PreparedStatements by sharing 
+      outbound packet with MysqlIO.
+      
+    - Added &#39;strictUpdates&#39; property to allow control of amount
+      of checking for &#39;correctness&#39; of updatable result sets. Set this
+      to &#39;false&#39; if you want faster updatable result sets and you know
+      that you create them from SELECTs on tables with primary keys and
+      that you have selected all primary keys in your query.
+      
+    - Added support for 4.0.8-style large packets. 
+    
+    - Fixed PreparedStatement.executeBatch() parameter overwriting.
+  
+12-17-02 - Version 3.0.3-dev
+
+    - Changed charsToByte in SingleByteCharConverter to be non-static
+    
+    - Changed SingleByteCharConverter to use lazy initialization of each
+      converter.
+      
+    - Fixed charset handling in Fields.java
+    
+    - Implemented Connection.nativeSQL()
+    
+    - More robust escape tokenizer -- recognize &#39;--&#39; comments, and allow
+      nested escape sequences (see testsuite.EscapeProcessingTest)
+      
+    - DBMD.getImported/ExportedKeys() now handles multiple foreign keys 
+      per table.
+      
+    - Fixed ResultSetMetaData.getPrecision() returning incorrect values 
+      for some floating point types.
+      
+    - Fixed ResultSetMetaData.getColumnTypeName() returning BLOB for 
+      TEXT and TEXT for BLOB types.
+      
+    - Fixed Buffer.isLastDataPacket() for 4.1 and newer servers.
+    
+    - Added CLIENT_LONG_FLAG to be able to get more column flags 
+      (isAutoIncrement() being the most important)
+      
+    - Because of above, implemented ResultSetMetaData.isAutoIncrement()
+      to use Field.isAutoIncrement().
+      
+    - Honor &#39;lower_case_table_names&#39; when enabled in the server when
+      doing table name comparisons in DatabaseMetaData methods.
+      
+    - Some MySQL-4.1 protocol support (extended field info from selects)
+    
+    - Use non-aliased table/column names and database names to fullly 
+      qualify tables and columns in UpdatableResultSet (requires 
+      MySQL-4.1 or newer)
+      
+    - Allow user to alter behavior of Statement/
+      PreparedStatement.executeBatch() via &#39;continueBatchOnError&#39; property
+      (defaults to &#39;true&#39;).
+      
+    - Check for connection closed in more Connection methods 
+      (createStatement, prepareStatement, setTransactionIsolation,
+      setAutoCommit).
+      
+    - More robust implementation of updatable result sets. Checks that
+      _all_ primary keys of the table have been selected.
+      
+    - &#39;LOAD DATA LOCAL INFILE ...&#39; now works, if your server is configured
+      to allow it. Can be turned off with the &#39;allowLoadLocalInfile&#39; 
+      property (see the README).
+      
+    - Substitute &#39;?&#39; for unknown character conversions in single-byte
+      character sets instead of &#39;\0&#39;.
+      
+    - NamedPipeSocketFactory now works (only intended for Windows), see
+      README for instructions.
+  
+11-08-02 - Version 3.0.2-dev
+
+    - Fixed issue with updatable result sets and PreparedStatements not 
+      working
+      
+    - Fixed ResultSet.setFetchDirection(FETCH_UNKNOWN)
+    
+    - Fixed issue when calling Statement.setFetchSize() when using 
+      arbitrary values
+      
+    - Fixed incorrect conversion in ResultSet.getLong()
+    
+    - Implemented ResultSet.updateBlob().
+    
+    - Removed duplicate code from UpdatableResultSet (it can be inherited 
+      from ResultSet, the extra code for each method to handle updatability
+      I thought might someday be necessary has not been needed).
+      
+    - Fixed &#34;UnsupportedEncodingException&#34; thrown when &#34;forcing&#34; a 
+      character encoding via properties.
+      
+    - Fixed various non-ASCII character encoding issues.
+    
+    - Added driver property &#39;useHostsInPrivileges&#39;. Defaults to true. 
+      Affects whether or not &#39;@hostname&#39; will be used in 
+      DBMD.getColumn/TablePrivileges.
+      
+    - All DBMD result set columns describing schemas now return NULL
+      to be more compliant with the behavior of other JDBC drivers
+      for other databases (MySQL does not support schemas).
+      
+    - Added SSL support. See README for information on how to use it.
+    
+    - Properly restore connection properties when autoReconnecting
+      or failing-over, including autoCommit state, and isolation level.
+      
+    - Use &#39;SHOW CREATE TABLE&#39; when possible for determining foreign key
+      information for DatabaseMetaData...also allows cascade options for
+      DELETE information to be returned
+      
+    - Escape 0x5c character in strings for the SJIS charset.
+    
+    - Fixed start position off-by-1 error in Clob.getSubString()
+    
+    - Implemented Clob.truncate()
+    
+    - Implemented Clob.setString()
+    
+    - Implemented Clob.setAsciiStream()
+    
+    - Implemented Clob.setCharacterStream()
+    
+    - Added com.mysql.jdbc.MiniAdmin class, which allows you to send
+      &#39;shutdown&#39; command to MySQL server...Intended to be used when &#39;embedding&#39;
+      Java and MySQL server together in an end-user application.
+      
+    - Added &#39;connectTimeout&#39; parameter that allows users of JDK-1.4 and newer
+      to specify a maxium time to wait to establish a connection.
+      
+    - Failover and autoReconnect only work when the connection is in a 
+      autoCommit(false) state, in order to stay transaction safe
+      
+    - Added &#39;queriesBeforeRetryMaster&#39; property that specifies how many
+      queries to issue when failed over before attempting to reconnect 
+      to the master (defaults to 50)
+      
+    - Fixed DBMD.supportsResultSetConcurrency() so that it returns true
+      for ResultSet.TYPE_SCROLL_INSENSITIVE and ResultSet.CONCUR_READ_ONLY or
+      ResultSet.CONCUR_UPDATABLE
+      
+    - Fixed ResultSet.isLast() for empty result sets (should return false).
+    
+    - PreparedStatement now honors stream lengths in setBinary/Ascii/Character
+      Stream() unless you set the connection property 
+      &#39;useStreamLengthsInPrepStmts&#39; to &#39;false&#39;.
+      
+    - Removed some not-needed temporary object creation by using Strings
+      smarter in EscapeProcessor, Connection and DatabaseMetaData classes.
+
+09-21-02 - Version 3.0.1-dev
+
+    - Fixed ResultSet.getRow() off-by-one bug.
+    
+    - Fixed RowDataStatic.getAt() off-by-one bug.
+    
+    - Added limited Clob functionality (ResultSet.getClob(),
+      PreparedStatemtent.setClob(), 
+      PreparedStatement.setObject(Clob).
+      
+    - Added socketTimeout parameter to URL.
+    
+    - Connection.isClosed() no longer &#34;pings&#34; the server.
+    
+    - Connection.close() issues rollback() when getAutoCommit() == false
+    
+    - Added &#34;paranoid&#34; parameter...sanitizes error messages removing
+      &#34;sensitive&#34; information from them (i.e. hostnames, ports,
+      usernames, etc.), as well as clearing &#34;sensitive&#34; data structures
+      when possible.
+      
+    - Fixed ResultSetMetaData.isSigned() for TINYINT and BIGINT.
+    
+    - Charsets now automatically detected. Optimized code for single-byte
+      character set conversion.
+      
+    - Implemented ResultSet.getCharacterStream()
+    
+    - Added &#34;LOCAL TEMPORARY&#34; to table types in DatabaseMetaData.getTableTypes()
+    
+    - Massive code clean-up to follow Java coding conventions (the time had come)
+  
+
+07-31-02 - Version 3.0.0-dev
+
+    - !!! LICENSE CHANGE !!! The driver is now GPL. If you need
+      non-GPL licenses, please contact me &#60;mark@mysql.com&#62;
+      
+    - JDBC-3.0 functionality including 
+      Statement/PreparedStatement.getGeneratedKeys() and
+      ResultSet.getURL()
+      
+    - Performance enchancements - driver is now 50-100% faster
+      in most situations, and creates fewer temporary objects
+      
+    - Repackaging...new driver name is &#34;com.mysql.jdbc.Driver&#34;,
+      old name still works, though (the driver is now provided 
+      by MySQL-AB)
+      
+    - Better checking for closed connections in Statement
+      and PreparedStatement.
+      
+    - Support for streaming (row-by-row) result sets (see README)
+      Thanks to Doron.
+      
+    - Support for large packets (new addition to MySQL-4.0 protocol),
+      see README for more information.
+      
+    - JDBC Compliance -- Passes all tests besides stored procedure tests
+    
+    
+    - Fix and sort primary key names in DBMetaData (SF bugs 582086 and 582086)
+    
+    - Float types now reported as java.sql.Types.FLOAT (SF bug 579573)
+    
+    - ResultSet.getTimestamp() now works for DATE types (SF bug 559134)
+    
+    - ResultSet.getDate/Time/Timestamp now recognizes all forms of invalid
+      values that have been set to all zeroes by MySQL (SF bug 586058)
+      
+    - Testsuite now uses Junit (which you can get from www.junit.org)
+    
+    - The driver now only works with JDK-1.2 or newer.
+    
+    - Added multi-host failover support (see README)
+    
+    - General source-code cleanup.
+    
+    - Overall speed improvements via controlling transient object
+      creation in MysqlIO class when reading packets
+      
+    - Performance improvements in  string handling and field 
+      metadata creation (lazily instantiated) contributed by
+      Alex Twisleton-Wykeham-Fiennes
+      
+    
+05-16-02 - Version 2.0.14
+
+    - More code cleanup
+    
+    - PreparedStatement now releases resources on .close() (SF bug 553268)
+    
+    - Quoted identifiers not used if server version does not support them. Also,
+      if server started with --ansi or --sql-mode=ANSI_QUOTES then &#39;&#34;&#39; will be 
+      used as an identifier quote, otherwise &#39;`&#39; will be used.
+      
+    - ResultSet.getDouble() now uses code built into JDK to be more precise (but slower)
+    
+    - LogicalHandle.isClosed() calls through to physical connection
+    
+    - Added SQL profiling (to STDERR). Set &#34;profileSql=true&#34; in your JDBC url. 
+      See README for more information.
+      
+    - Fixed typo for relaxAutoCommit parameter.
+
+04-24-02 - Version 2.0.13
+
+    - More code cleanup.
+    
+    - Fixed unicode chars being read incorrectly (SF bug 541088)
+    
+    - Faster blob escaping for PrepStmt
+    
+    - Added set/getPortNumber() to DataSource(s) (SF bug 548167)
+    
+    - Added setURL() to MySQLXADataSource (SF bug 546019)
+    
+    - PreparedStatement.toString() fixed (SF bug 534026)
+    
+    - ResultSetMetaData.getColumnClassName() now implemented
+    
+    - Rudimentary version of Statement.getGeneratedKeys() from JDBC-3.0
+      now implemented (you need to be using JDK-1.4 for this to work, I
+      believe)
+  
+    - DBMetaData.getIndexInfo() - bad PAGES fixed (SF BUG 542201)
+
+04-07-02 - Version 2.0.12
+
+    - General code cleanup. 
+    
+    - Added getIdleFor() method to Connection and MysqlLogicalHandle.
+    
+    - Relaxed synchronization in all classes, should fix 520615 and 520393.
+    
+    - Added getTable/ColumnPrivileges() to DBMD (fixes 484502).
+    
+    - Added new types to getTypeInfo(), fixed existing types thanks to
+      Al Davis and Kid Kalanon.
+      
+    - Added support for BIT types (51870) to PreparedStatement.
+    
+    - Fixed getRow() bug (527165) in ResultSet
+    
+    - Fixes for ResultSet updatability in PreparedStatement.
+    - Fixed timezone off by 1-hour bug in PreparedStatement (538286, 528785).
+    
+    - ResultSet: Fixed updatability (values being set to null 
+      if not updated).
+      
+    - DataSources - fixed setUrl bug (511614, 525565), 
+      wrong datasource class name (532816, 528767)
+      
+    - Added identifier quoting to all DatabaseMetaData methods
+      that need them (should fix 518108)
+      
+    - Added support for YEAR type (533556)
+    
+    - ResultSet.insertRow() should now detect auto_increment fields
+      in most cases and use that value in the new row. This detection
+      will not work in multi-valued keys, however, due to the fact that
+      the MySQL protocol does not return this information.
+      
+    - ResultSet.refreshRow() implemented.
+    
+    - Fixed testsuite.Traversal afterLast() bug, thanks to Igor Lastric.
+
+01-27-02 - Version 2.0.11
+
+    - Fixed missing DELETE_RULE value in 
+      DBMD.getImported/ExportedKeys() and getCrossReference().
+      
+    - Full synchronization of Statement.java.
+    
+    - More changes to fix &#34;Unexpected end of input stream&#34;
+      errors when reading BLOBs. This should be the last fix.
+       
+01-24-02 - Version 2.0.10
+
+     - Fixed spurious &#34;Unexpected end of input stream&#34; errors in 
+       MysqlIO (bug 507456).
+       
+     - Fixed null-pointer-exceptions when using 
+       MysqlConnectionPoolDataSource with Websphere 4 (bug 505839).
+       
+01-13-02 - Version 2.0.9
+
+     - Ant build was corrupting included jar files, fixed 
+       (bug 487669).
+       
+     - Fixed extra memory allocation in MysqlIO.readPacket() 
+       (bug 488663).
+       
+     - Implementation of DatabaseMetaData.getExported/ImportedKeys() and
+       getCrossReference().
+       
+     - Full synchronization on methods modifying instance and class-shared
+       references, driver should be entirely thread-safe now (please
+       let me know if you have problems)
+       
+     - DataSource implementations moved to org.gjt.mm.mysql.jdbc2.optional
+       package, and (initial) implementations of PooledConnectionDataSource
+       and XADataSource are in place (thanks to Todd Wolff for the 
+       implementation and testing of PooledConnectionDataSource with 
+       IBM WebSphere 4).
+       
+     - Added detection of network connection being closed when reading packets
+       (thanks to Todd Lizambri).
+       
+     - Fixed quoting error with escape processor (bug 486265).
+     
+     - Report batch update support through DatabaseMetaData (bug 495101).
+     
+     - Fixed off-by-one-hour error in PreparedStatement.setTimestamp() 
+       (bug 491577).
+       
+     - Removed concatenation support from driver (the &#39;||&#39; operator),
+       as older versions of VisualAge seem to be the only thing that
+       use it, and it conflicts with the logical &#39;||&#39; operator. You will
+       need to start mysqld with the &#34;--ansi&#34; flag to use the &#39;||&#39; 
+       operator as concatenation (bug 491680)
+       
+     - Fixed casting bug in PreparedStatement (bug 488663).
+     
+11-25-01 - Version 2.0.8
+
+     - Batch updates now supported (thanks to some inspiration 
+       from Daniel Rall).
+       
+     - XADataSource/ConnectionPoolDataSource code (experimental)
+     
+     - PreparedStatement.setAnyNumericType() now handles positive
+       exponents correctly (adds &#34;+&#34; so MySQL can understand it).
+       
+     - DatabaseMetaData.getPrimaryKeys() and getBestRowIdentifier()
+       are now more robust in identifying primary keys (matches 
+       regardless of case or abbreviation/full spelling of Primary Key
+       in Key_type column).
+       
+10-24-01 - Version 2.0.7
+
+     - PreparedStatement.setCharacterStream() now implemented
+         
+     - Fixed dangling socket problem when in high availability
+       (autoReconnect=true) mode, and finalizer for Connection will
+       close any dangling sockets on GC.
+       
+     - Fixed ResultSetMetaData.getPrecision() returning one
+       less than actual on newer versions of MySQL.
+       
+     - ResultSet.getBlob() now returns null if column value
+       was null.
+       
+     - Character sets read from database if useUnicode=true
+       and characterEncoding is not set. (thanks to 
+       Dmitry Vereshchagin)
+       
+     - Initial transaction isolation level read from 
+       database (if avaialable) (thanks to Dmitry Vereshchagin)
+       
+     - Fixed DatabaseMetaData.supportsTransactions(), and
+       supportsTransactionIsolationLevel() and getTypeInfo()
+       SQL_DATETIME_SUB and SQL_DATA_TYPE fields not being
+       readable.
+        
+     - Fixed PreparedStatement generating SQL that would end
+       up with syntax errors for some queries.
+       
+     - Fixed ResultSet.isAfterLast() always returning false.
+         
+     - Fixed timezone issue in PreparedStatement.setTimestamp()
+       (thanks to Erik Olofsson)
+         
+     - Captialize type names when &#34;captializeTypeNames=true&#34;
+       is passed in URL or properties (for WebObjects, thanks
+       to Anjo Krank)
+         
+     - Updatable result sets now correctly handle NULL
+       values in fields.
+       
+     - PreparedStatement.setDouble() now uses full-precision
+       doubles (reverting a fix made earlier to truncate them).
+       
+     - PreparedStatement.setBoolean() will use 1/0 for values
+       if your MySQL Version &#62;= 3.21.23.
+
+06-16-01 - Version 2.0.6
+
+     - Fixed PreparedStatement parameter checking
+
+     - Fixed case-sensitive column names in ResultSet.java
+
+06-13-01 - Version 2.0.5
+
+     - Fixed ResultSet.getBlob() ArrayIndex out-of-bounds
+
+     - Fixed ResultSetMetaData.getColumnTypeName for TEXT/BLOB
+
+     - Fixed ArrayIndexOutOfBounds when sending large BLOB queries 
+       (Max size packet was not being set)
+
+     - Added ISOLATION level support to Connection.setIsolationLevel()
+
+     - Fixed NPE on PreparedStatement.executeUpdate() when all columns
+       have not been set.
+
+     - Fixed data parsing of TIMESTAMPs with 2-digit years
+
+     - Added Byte to PreparedStatement.setObject()
+
+     - ResultSet.getBoolean() now recognizes &#39;-1&#39; as &#39;true&#39;
+
+     - ResultSet has +/-Inf/inf support
+
+     - ResultSet.insertRow() works now, even if not all columns are
+       set (they will be set to &#34;NULL&#34;)
+
+     - DataBaseMetaData.getCrossReference() no longer ArrayIndexOOB
+
+     - getObject() on ResultSet correctly does TINYINT-&#62;Byte and
+       SMALLINT-&#62;Short
+
+12-03-00 - Version 2.0.3
+
+     - Implemented getBigDecimal() without scale component
+       for JDBC2.
+
+     - Fixed composite key problem with updateable result sets.
+
+     - Added detection of -/+INF for doubles.
+
+     - Faster ASCII string operations.
+
+     - Fixed incorrect detection of MAX_ALLOWED_PACKET, so sending
+       large blobs should work now.
+
+     - Fixed off-by-one error in java.sql.Blob implementation code.
+
+     - Added &#34;ultraDevHack&#34; URL parameter, set to &#34;true&#34; to allow 
+       (broken) Macromedia UltraDev to use the driver.
+
+04-06-00 - Version 2.0.1
+
+     - Fixed RSMD.isWritable() returning wrong value. 
+       Thanks to Moritz Maass.
+
+     - Cleaned up exception handling when driver connects
+
+     - Columns that are of type TEXT now return as Strings
+       when you use getObject()
+
+     - DatabaseMetaData.getPrimaryKeys() now works correctly wrt
+       to key_seq. Thanks to Brian Slesinsky.
+
+     - No escape processing is done on PreparedStatements anymore
+       per JDBC spec.
+
+     - Fixed many JDBC-2.0 traversal, positioning bugs, especially
+       wrt to empty result sets. Thanks to Ron Smits, Nick Brook,
+       Cessar Garcia and Carlos Martinez.
+
+     - Fixed some issues with updatability support in ResultSet when
+       using multiple primary keys.
+
+02-21-00 - Version 2.0pre5
+
+     - Fixed Bad Handshake problem.
+
+01-10-00 - Version 2.0pre4
+
+     - Fixes to ResultSet for insertRow() - Thanks to
+       Cesar Garcia
+
+     - Fix to Driver to recognize JDBC-2.0 by loading a JDBC-2.0
+       class, instead of relying on JDK version numbers. Thanks
+       to John Baker.
+
+     - Fixed ResultSet to return correct row numbers
+     
+     - Statement.getUpdateCount() now returns rows matched,
+       instead of rows actually updated, which is more SQL-92
+       like.
+
+10-29-99 
+
+     - Statement/PreparedStatement.getMoreResults() bug fixed. 
+       Thanks to Noel J. Bergman.
+
+     - Added Short as a type to PreparedStatement.setObject().
+       Thanks to Jeff Crowder
+
+     - Driver now automagically configures maximum/preferred packet
+       sizes by querying server.
+
+     - Autoreconnect code uses fast ping command if server supports
+       it.
+
+     - Fixed various bugs wrt. to packet sizing when reading from
+       the server and when alloc&#39;ing to write to the server.
+
+08-17-99 - Version 2.0pre
+
+     - Now compiles under JDK-1.2. The driver supports both JDK-1.1
+       and JDK-1.2 at the same time through a core set of classes.
+       The driver will load the appropriate interface classes at
+       runtime by figuring out which JVM version you are using.
+
+     - Fixes for result sets with all nulls in the first row.
+       (Pointed out by Tim Endres)
+
+     - Fixes to column numbers in SQLExceptions in ResultSet
+       (Thanks to Blas Rodriguez Somoza)
+
+     - The database no longer needs to specified to connect.
+       (Thanks to Christian Motschke)
+
+07-04-99 - Version 1.2b
+
+     - Better Documentation (in progress), in doc/mm.doc/book1.html
+
+     - DBMD now allows null for a column name pattern (not in 
+       spec), which it changes to &#39;%&#39;.
+
+     - DBMD now has correct types/lengths for getXXX().
+
+     - ResultSet.getDate(), getTime(), and getTimestamp() fixes. 
+       (contributed by Alan Wilken)
+
+     - EscapeProcessor now handles \{ \} and { or } inside quotes
+       correctly. (thanks to Alik for some ideas on how to fix it)
+
+     - Fixes to properties handling in Connection.
+       (contributed by Juho Tikkala)
+
+     - ResultSet.getObject() now returns null for NULL columns
+       in the table, rather than bombing out.
+       (thanks to Ben Grosman)
+
+     - ResultSet.getObject() now returns Strings for types
+       from MySQL that it doesn&#39;t know about. (Suggested by
+       Chris Perdue)
+
+     - Removed DataInput/Output streams, not needed, 1/2 number
+       of method calls per IO operation.
+
+     - Use default character encoding if one is not specified. This
+       is a work-around for broken JVMs, because according to spec,
+       EVERY JVM must support &#34;ISO8859_1&#34;, but they don&#39;t.
+
+     - Fixed Connection to use the platform character encoding
+       instead of &#34;ISO8859_1&#34; if one isn&#39;t explicitly set. This 
+       fixes problems people were having loading the character-
+       converter classes that didn&#39;t always exist (JVM bug).
+       (thanks to Fritz Elfert for pointing out this problem)
+
+     - Changed MysqlIO to re-use packets where possible to reduce
+       memory usage.
+
+     - Fixed escape-processor bugs pertaining to {} inside
+       quotes.
+
+04-14-99 - Version 1.2a
+
+     - Fixed character-set support for non-Javasoft JVMs
+       (thanks to many people for pointing it out)
+
+     - Fixed ResultSet.getBoolean() to recognize &#39;y&#39; &#38; &#39;n&#39;
+       as well as &#39;1&#39; &#38; &#39;0&#39; as boolean flags.
+       (thanks to Tim Pizey)
+
+     - Fixed ResultSet.getTimestamp() to give better performance.
+       (thanks to Richard Swift)
+
+     - Fixed getByte() for numeric types.
+       (thanks to Ray Bellis)
+
+     - Fixed DatabaseMetaData.getTypeInfo() for DATE type.
+       (thanks to Paul Johnston)
+
+     - Fixed EscapeProcessor for &#34;fn&#34; calls.
+       (thanks to Piyush Shah at locomotive.org)
+
+     - Fixed EscapeProcessor to not do extraneous work if there
+       are no escape codes.
+       (thanks to Ryan Gustafson)
+
+     - Fixed Driver to parse URLs of the form &#34;jdbc:mysql://host:port&#34;
+       (thanks to Richard Lobb)
+
+03-24-99 - Version 1.1i
+
+     - Fixed Timestamps for PreparedStatements
+    
+     - Fixed null pointer exceptions in RSMD and RS
+
+     - Re-compiled with jikes for valid class files (thanks ms!)
+
+03-08-99 - Version 1.1h
+
+     - Fixed escape processor to deal with un-matched { and }
+       (thanks to Craig Coles)
+       
+     - Fixed escape processor to create more portable (between
+       DATETIME and TIMESTAMP types) representations so that
+       it will work with BETWEEN clauses.
+       (thanks to Craig Longman)
+       
+     - MysqlIO.quit() now closes the socket connection. Before,
+       after many failed connections some OS&#39;s would run out
+       of file descriptors. (thanks to Michael Brinkman)
+       
+     - Fixed NullPointerException in Driver.getPropertyInfo.
+       (thanks to Dave Potts)
+        
+     - Fixes to MysqlDefs to allow all *text fields to be
+       retrieved as Strings.
+       (thanks to Chris at Leverage)
+       
+     - Fixed setDouble in PreparedStatement for large numbers
+       to avoid sending scientific notation to the database.
+       (thanks to J.S. Ferguson)
+       
+     - Fixed getScale() and getPrecision() in RSMD.
+       (contrib&#39;d by James Klicman)
+       
+     - Fixed getObject() when field was DECIMAL or NUMERIC
+       (thanks to Bert Hobbs)
+       
+     - DBMD.getTables() bombed when passed a null table-name
+       pattern. Fixed. (thanks to Richard Lobb)
+       
+     - Added check for &#34;client not authorized&#34; errors during
+       connect. (thanks to Hannes Wallnoefer)
+       
+02-19-99 - Version 1.1g
+
+     - Result set rows are now byte arrays. Blobs and Unicode
+       work bidriectonally now. The useUnicode and encoding
+       options are implemented now.
+       
+     - Fixes to PreparedStatement to send binary set by
+       setXXXStream to be sent un-touched to the MySQL server.
+       
+     - Fixes to getDriverPropertyInfo().
+       
+12-31-98 - Version 1.1f
+
+     - Changed all ResultSet fields to Strings, this should allow
+       Unicode to work, but your JVM must be able to convert
+       between the character sets. This should also make reading
+       data from the server be a bit quicker, because there is now
+       no conversion from StringBuffer to String.
+
+     - Changed PreparedStatement.streamToString() to be more
+       efficient (code from Uwe Schaefer).
+
+     - URL parsing is more robust (throws SQL exceptions on errors
+       rather than NullPointerExceptions)
+
+     - PreparedStatement now can convert Strings to Time/Date values
+       via setObject() (code from Robert Currey).
+
+     - IO no longer hangs in Buffer.readInt(), that bug was
+       introduced in 1.1d when changing to all byte-arrays for
+       result sets. (Pointed out by Samo Login)
+
+11-03-98 - Version 1.1b 
+
+     - Fixes to DatabaseMetaData to allow both IBM VA and J-Builder
+       to work. Let me know how it goes. (thanks to Jac Kersing)
+
+     - Fix to ResultSet.getBoolean() for NULL strings 
+       (thanks to Barry Lagerweij)
+
+     - Beginning of code cleanup, and formatting. Getting ready
+       to branch this off to a parallel JDBC-2.0 source tree.
+
+     - Added &#34;final&#34; modifier to critical sections in MysqlIO and
+       Buffer to allow compiler to inline methods for speed.
+
+9-29-98 
+
+     - If object references passed to setXXX() in PreparedStatement are
+       null, setNull() is automatically called for you. (Thanks for the
+       suggestion goes to Erik Ostrom)
+
+     - setObject() in PreparedStatement will now attempt to write a 
+       serialized  representation of the object to the database for
+       objects of Types.OTHER and objects of unknown type.
+
+     - Util now has a static method readObject() which given a ResultSet
+       and a column index will re-instantiate an object serialized in
+       the above manner.
+
+9-02-98 - Vesion 1.1
+
+     - Got rid of &#34;ugly hack&#34; in MysqlIO.nextRow(). Rather than
+       catch an exception, Buffer.isLastDataPacket() was fixed.
+          
+     - Connection.getCatalog() and Connection.setCatalog()
+       should work now.
+
+     - Statement.setMaxRows() works, as well as setting
+       by property maxRows. Statement.setMaxRows() overrides
+       maxRows set via properties or url parameters.
+
+     - Automatic re-connection is available. Because it has
+       to &#34;ping&#34; the database before each query, it is
+       turned off by default. To use it, pass in &#34;autoReconnect=true&#34;
+       in the connection URL. You may also change the number of
+       reconnect tries, and the initial timeout value via 
+       &#34;maxReconnects=n&#34; (default 3) and &#34;initialTimeout=n&#34; 
+       (seconds, default 2) parameters. The timeout is an 
+       exponential backoff type of timeout, e.g. if you have initial 
+       timeout of 2 seconds, and maxReconnects of 3, then the driver
+       will timeout 2 seconds, 4 seconds, then 16 seconds between each
+       re-connection attempt.
+
+8-24-98 - Version 1.0 
+
+     - Fixed handling of blob data in Buffer.java
+
+     - Fixed bug with authentication packet being
+       sized too small.
+
+     - The JDBC Driver is now under the LPGL
+
+8-14-98 - 
+
+     - Fixed Buffer.readLenString() to correctly
+          read data for BLOBS.
+          
+     - Fixed PreparedStatement.stringToStream to
+          correctly read data for BLOBS.
+          
+     - Fixed PreparedStatement.setDate() to not
+       add a day.
+       (above fixes thanks to Vincent Partington)
+          
+     - Added URL parameter parsing (?user=... etc).
+      
+
+8-04-98 - Version 0.9d
+
+     - Big news! New package name. Tim Endres from ICE
+       Engineering is starting a new source tree for
+       GNU GPL&#39;d Java software. He&#39;s graciously given
+       me the org.gjt.mm package directory to use, so now 
+       the driver is in the org.gjt.mm.mysql package scheme.
+       I&#39;m &#34;legal&#34; now. Look for more information on Tim&#39;s
+       project soon.
+          
+     - Now using dynamically sized packets to reduce
+       memory usage when sending commands to the DB.
+          
+     - Small fixes to getTypeInfo() for parameters, etc.
+          
+     - DatabaseMetaData is now fully implemented. Let me
+       know if these drivers work with the various IDEs
+       out there. I&#39;ve heard that they&#39;re working with
+       JBuilder right now.
+          
+     - Added JavaDoc documentation to the package.
+          
+     - Package now available in .zip or .tar.gz.
+          
+7-28-98 - Version 0.9
+
+     - Implemented getTypeInfo(). 
+       Connection.rollback() now throws an SQLException
+       per the JDBC spec.
+          
+     - Added PreparedStatement that supports all JDBC API
+       methods for PreparedStatement including InputStreams.
+       Please check this out and let me know if anything is
+       broken.
+          
+     - Fixed a bug in ResultSet that would break some
+       queries that only returned 1 row.
+          
+     - Fixed bugs in DatabaseMetaData.getTables(), 
+       DatabaseMetaData.getColumns() and
+       DatabaseMetaData.getCatalogs().
+          
+     - Added functionality to Statement that allows
+       executeUpdate() to store values for IDs that are
+       automatically generated for AUTO_INCREMENT fields.
+       Basically, after an executeUpdate(), look at the
+       SQLWarnings for warnings like &#34;LAST_INSERTED_ID =
+       &#39;some number&#39;, COMMAND = &#39;your SQL query&#39;&#34;.
+          
+       If you are using AUTO_INCREMENT fields in your
+       tables and are executing a lot of executeUpdate()s
+       on one Statement, be sure to clearWarnings() every
+       so often to save memory.
+
+7-06-98 - Version 0.8
+
+     - Split MysqlIO and Buffer to separate classes. Some
+       ClassLoaders gave an IllegalAccess error for some
+       fields in those two classes. Now mm.mysql works in 
+       applets and all classloaders.
+
+       Thanks to Joe Ennis &#60;jce@mail.boone.com&#62; for pointing
+       out the problem and working on a fix with me.
+
+7-01-98 - Version 0.7
+
+     - Fixed DatabaseMetadata problems in getColumns() and
+       bug in switch statement in the Field constructor.
+
+       Thanks to Costin Manolache &#60;costin@tdiinc.com&#62; for 
+       pointing these out.
+
+5-21-98 - Version 0.6
+
+     - Incorporated efficiency changes from 
+       Richard Swift &#60;Richard.Swift@kanatek.ca&#62; in
+       MysqlIO.java and ResultSet.java
+
+     - We&#39;re now 15% faster than gwe&#39;s driver.
+
+     - Started working on DatabaseMetaData.
+          
+       The following methods are implemented:
+        * getTables() 
+        * getTableTypes()
+        * getColumns
+        * getCatalogs()
+</programlisting>
+  </appendix>
+</book>

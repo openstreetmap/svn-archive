@@ -23,7 +23,9 @@ public class osmGPXImporter extends DefaultHandler{
   private int fix = 0;
   
   private long timestamp = 0;
-
+  long lPointsAdded = 0;
+  int nPointTempCount = 0;
+  
   private static final int MODE_GET_TIME = 1;
   private static final int MODE_GET_ELE = 2;
 
@@ -191,6 +193,12 @@ public class osmGPXImporter extends DefaultHandler{
       setDate(sCurrent);
 
     }
+
+    if( qName.equals("gpx"))
+    {
+      out.print("Total added points = " + (nPointTempCount + lPointsAdded) + "<br>");
+
+    }
     
   } // endElement
 
@@ -214,32 +222,7 @@ public class osmGPXImporter extends DefaultHandler{
   
   private void addPoint()
   {
-    /*
-    try{
-
-      Thread.sleep(10);
-
-    }
-    catch(Exception e)
-    {
-      
-
-    }
     
-
-    Vector v = new Vector();
-
-    v.addElement(sToken);
-    v.addElement(new Double(lat)); // lat
-    v.addElement(new Double(lon)); // lon
-    v.addElement(new Double(ele)); // alt
-    v.addElement( new Date(timestamp) ); // timestamp for point
-    v.addElement(new Double(-1)); // hor_dilution
-    v.addElement(new Double(-1)); // vert_dilution
-    v.addElement(new Integer(-1)); // track_id
-    v.addElement(new Integer(255)); // quality
-    v.addElement(new Integer(fix)); // satellites
-*/
     osmServerHandler osmh = new osmServerHandler();
 
     boolean b = osmh.addPoint(
@@ -254,7 +237,20 @@ public class osmGPXImporter extends DefaultHandler{
         (int)255,
         (int)fix);
 
-    if( !b )
+    if( b )
+    {
+      nPointTempCount++;
+
+      if( nPointTempCount == 100 )
+      {
+        lPointsAdded += 100;
+
+        out.print("Added " + lPointsAdded + " points...<br>");
+
+      } 
+
+    }
+    else
     {
 
       out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp) + "<br>");
@@ -262,12 +258,6 @@ public class osmGPXImporter extends DefaultHandler{
       out.println("this is bad, quiting <br>");
 
     }
-    else
-    {
-      out.print(".");
-
-    }
-
     
   } // addPoint
 

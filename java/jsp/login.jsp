@@ -16,6 +16,7 @@ if( action == null)
 {
   %>
     <h1>Login:</h1><br>
+    Please login or <a href="newUser.jsp">create an account</a>.<br>
     <form action="http://www.openstreetmap.org/api/login.jsp">
     <table>
     <tr><td>email address:</td><td><input type="text" name="email"></td></tr>

@@ -2,7 +2,7 @@
 <head>
 <title>OpenStreetMap</title>
 </head>
-<h1>OpenStreetMap</h1><br><br>
+<h1>OpenStreetMap Toolbox</h1><br><br>
 
 <table border="0">
 <tr>

@@ -58,6 +58,10 @@ namespace SiRF {
    * critical
    */
   void Message::critical(const char *msg, ...) {
+    if (m->handler != NULL) {
+      m->handler->shutdownDisplay();
+      m->handler = NULL;
+    }
     va_list arg;
     va_start(arg, msg);
     internalHandleMessage(std::cerr, getSelf(), "ERROR: ", msg, arg);

@@ -20,6 +20,7 @@ public:
   void handle(MeasuredNavigationDataOut p);
   void handle(MeasuredTrackerDataOut p);
   void handleMessage(const char *);
+  void shutdownDisplay();
   void setStatus(const std::string &str);
   void waitToQuit();
 private:

@@ -159,3 +159,9 @@ void GPXReporterUI::waitToQuit() {
     }
   }
 }
+
+void GPXReporterUI::shutdownDisplay() {
+  // destroy curses and reset term
+  endwin();
+}
+

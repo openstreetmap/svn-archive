@@ -6,7 +6,7 @@
 namespace SiRF {
 
   static void killme(int signo) {
-    Message::critical("timeout. possible device disconnect?");
+    Message::critical("timeout. possible device disconnect?\n");
     exit(-1);
   }
 
@@ -20,7 +20,7 @@ namespace SiRF {
     act.sa_flags |= SA_INTERRUPT;
 #endif
     if (sigaction(SIGALRM, &act, &oact) < 0) {
-      Message::critical("unable to install a signal handler!");
+      Message::critical("unable to install a signal handler!\n");
       exit(-1);
     }
   }

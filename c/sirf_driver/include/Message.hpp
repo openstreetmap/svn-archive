@@ -15,6 +15,10 @@ namespace SiRF {
      * handleMessage
      */
     virtual void handleMessage(const char *) = 0;
+    /**
+     * handle critical error by shutting down special displays
+     */
+    virtual void shutdownDisplay() = 0;
   };
 
   /**

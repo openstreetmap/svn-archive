@@ -135,7 +135,7 @@ else
 
       <h1>Upload a GPX File</h1>
       <br>Here, you can upload a plain gpx file or a gzipped one.<br>
-      <form action="http://www.openstreetmap.org/api/uploadGPX.jsp" enctype="multipart/form-data" method="post">
+      <form action="http://www.openstreetmap.org/edit/uploadGPX.jsp" enctype="multipart/form-data" method="post">
       <table>
       <tr><td>file:</td><td><input type="file" name="file"></td></tr>
       <tr><td></td><td><input type="submit" value="Go!"></td></tr>

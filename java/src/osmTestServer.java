@@ -25,8 +25,27 @@ class osmTestServer
       String token = (String)xmlrpc.execute("openstreetmap.login", v);
       System.out.println(token);
       
+      
       v = new Vector();
 
+      v.addElement(token);
+      v.addElement(new Double(100));
+      v.addElement(new Double(100));
+      v.addElement(new Double(-100));
+      v.addElement(new Double(-100));
+      
+      Vector o = (Vector)xmlrpc.execute("openstreetmap.getFullPoints",v);
+
+      Enumeration e = o.elements();
+
+      while(e.hasMoreElements())
+      {
+        System.out.print(e.nextElement() +  " ");
+
+      }
+      
+      
+/*
       v.addElement(token);
       v.addElement(new Double(-1));
       v.addElement(new Double(-1));
@@ -34,12 +53,16 @@ class osmTestServer
       v.addElement( new Date() );
       
       
-      boolean b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
+//      boolean b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
 
       System.out.println(b);
+  */  
+      
+    
     }
     catch(Exception e)
     {
+      System.out.println("eek");
       System.out.println(e);
       e.printStackTrace();
       System.exit(-1);

@@ -335,8 +335,8 @@ public class osmServerSQLHandler extends Thread
         
         + " where X(g) < " + p1lat
         + " and X(g) > " + p2lat
-        + " and Y(g) > " + p1lon
-        + " and Y(g) < " + p2lon
+        + " and Y(g) < " + p1lon
+        + " and Y(g) > " + p2lon
         + " and tempPoints.uid = user.uid"
         + " limit 10000";
 

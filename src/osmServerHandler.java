@@ -28,18 +28,31 @@ import org.apache.xmlrpc.*;
 public class osmServerHandler
 {
 
+  public String login(String user, String pass)
+  {
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
-  public Vector getPoints(double p1lat,
+    return( osmSQLH.login(user,pass) );
+
+     
+  } // login
+  
+
+  public Vector getPoints(
+      String token,
+      double p1lat,
       double p1lon,
       double p2lat,
       double p2lon)
   {
     try{
 
-
-
       osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
+      if( !osmSQLH.validateToken(token) )
+      {
+        return null;
+      }
       Vector v = osmSQLH.getPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
 
       Vector results = new Vector();

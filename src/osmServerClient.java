@@ -46,6 +46,7 @@ public class osmServerClient
       
       XmlRpcClient xmlrpc = new XmlRpcClient("http://128.40.59.181:4000/");
 
+
       Vector params = new Vector();
 
       params.addElement( new Double((double)llp1.getLatitude()) );
@@ -81,6 +82,8 @@ public class osmServerClient
     catch(Exception e)
     {
       System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+     
       
       System.exit(-1);
 

@@ -54,15 +54,24 @@ public class osmServerSQLHandler extends Thread
   } // SQLSuccessful
 
 
-  
-  public synchronized Vector getPoints(float p1lat,
-                                       float p1lon,
-                                       float p2lat,
-                                       float p2lon
-                                       )
+  public synchronized String login(String user, String pass)
   {
+    // FIXME: add all the letters plus upper case etc
+    char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    
+    System.out.println("login " + user + " " + pass);
 
-    System.out.println("getPoints");
+    if( !(user.length() > 5 &&
+          user.length() < 30 &&
+          pass.length() > 5 &&
+          pass.length() < 30 &&
+          user.indexOf(" ") != -1 &&
+          user.indexOf("@") != -1 ))
+    {
+       return "ERROR";
+       
+    }
+    
     
     try{
 
@@ -75,15 +84,142 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
+      String sSQL = "select uid from user where user='" + user + "' and pass='" + pass;
+
+      System.out.println("querying with sql \n " + sSQL);
+      
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        String token = "";
+        Random r = new Random();
+        
+        for(int i = 1; i < 30; i++)
+        {
+          token = token + letters[ 1 + r.nextInt(letters.length -1)];
+          
+        }
+        int uid = rs.getInt(1);
+         sSQL = "update tempPoints set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
+          + " where uid = " + uid;
+
+        stmt.execute(sSQL);
+
+        sSQL = "update tempPoints set token='" + token + "' where uid = " + uid;
+
+        stmt.execute(sSQL);
+
+      }
+      else
+      {
+        return "ERROR";
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return "OK";
+    
+
+  } // login
+
+
+
+  public synchronized boolean validateToken(String token)
+  {
+    if(token.length() > 30 || token.indexOf(" ") != -1)
+    {
+      return false;
+
+    }
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid from user where token='" + token +"' and timeout > "+System.currentTimeMillis();
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        int uid = rs.getInt(1);
+
+        sSQL = "update tempPoints set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
+          + " where uid = " + uid;
+
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return false;
+
+
+  } // validateLoginToken
+
+
+
+  public synchronized Vector getPoints(float p1lat,
+      float p1lon,
+      float p2lat,
+      float p2lon
+      )
+  {
+
+    System.out.println("getPoints");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
       String sSQL = "select Y(g),X(g),altitude,timestamp from tempPoints"
-                    + " where X(g) < " + p1lat
-                    + " and X(g) > " + p2lat
-                    + " and Y(g) > " + p1lon
-                    + " and Y(g) < " + p2lon
-                    + " limit 10000";
+        + " where X(g) < " + p1lat
+        + " and X(g) > " + p2lat
+        + " and Y(g) > " + p1lon
+        + " and Y(g) < " + p2lon
+        + " limit 10000";
 
       //System.out.println("querying with sql \n " + sSQL);
-      
+
       ResultSet rs = stmt.executeQuery(sSQL);
 
       boolean bFirst = true;
@@ -118,7 +254,7 @@ public class osmServerSQLHandler extends Thread
     }
 
     return null;
-    
+
   } // getPoints
 
 } // osmServerSQLHandler

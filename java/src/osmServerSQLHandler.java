@@ -222,7 +222,7 @@ public class osmServerSQLHandler extends Thread
             + " " + trackid + ", "
             + " " + quality + ", "
             + " " + satellites + ", "
-            + " " + System.currentTimeMillis() + ");";
+            + " " + System.currentTimeMillis() + ", 1);";
 
 
       System.out.println("querying with sql \n " + sSQL);
@@ -268,7 +268,7 @@ public class osmServerSQLHandler extends Thread
         + " and X(g) > " + p2lat
         + " and Y(g) > " + p1lon
         + " and Y(g) < " + p2lon
-        + " limit 10000";
+        + " and visible=1 limit 10000";
 
       //System.out.println("querying with sql \n " + sSQL);
 
@@ -350,6 +350,7 @@ public class osmServerSQLHandler extends Thread
         + " and Y(g) > " + p1lon
         + " and Y(g) < " + p2lon
         + " and tempPoints.uid = user.uid"
+        + " and visible = 1"
         + " limit 10000";
 
       System.out.println("querying with sql \n " + sSQL);
@@ -397,5 +398,43 @@ public class osmServerSQLHandler extends Thread
     return null;
 
   } // getPoints
+
+
+  public synchronized boolean dropPoint(
+      float lon,
+      float lat,
+      int uid)
+  {
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
+        + " X(g) = " + lat 
+        + " and Y(g) = " + lon;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      stmt.execute(sSQL);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      return false;
+    }
+
+    return true;
+  } // dropPoint
 
 } // osmServerSQLHandler

@@ -67,7 +67,18 @@ class osmTestServer
 
       System.out.println(b);
       
+      System.out.println();
+      System.out.println();
+      System.out.println("dropping the point");
+
+      v = new Vector();
+      v.addElement(token);
+      v.addElement( new Double(-1));
+      v.addElement( new Double(-1));
     
+      b = ((Boolean)xmlrpc.execute("openstreetmap.dropPoint", v)).booleanValue();
+      
+      System.out.println(b);
     }
     catch(Exception e)
     {

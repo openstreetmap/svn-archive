@@ -169,6 +169,28 @@ public class osmServerHandler
     return null;
 
   } // getFullPoints
- 
+
+   
+  public boolean dropPoint(String token, double lon, double lat)
+  {
+
+
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+    }
+
+    return osmSQLH.dropPoint(
+        (float)lon,
+        (float)lat,
+        uid);
+
+  } // addPoint
+
+
 
 } // osmServerHandler

@@ -43,6 +43,7 @@ public class osmGPXImporter extends DefaultHandler{
 
   String sUser;
   String sPass;
+  int nLastTrackID = -1;
 
   osmServerHandler osmh;
  
@@ -58,10 +59,17 @@ public class osmGPXImporter extends DefaultHandler{
 
     sToken = token;
 
-    //connectToServer();
-      
     osmh = new osmServerHandler();
 
+    if( SQLConnectSuccess() )
+    {
+      nLastTrackID = osmh.largestTrackID(sToken);
+      
+      o.print("Starting at trackid " + nLastTrackID + "<br>");
+
+    }
+
+    
   } // osmGPXImporter
 
   
@@ -95,6 +103,12 @@ public class osmGPXImporter extends DefaultHandler{
     
       sCurrent = "";
         
+    }
+
+    if( qName.equals("trkseg"))
+    {
+      nLastTrackID++;
+      out.print("Found a new track, id incremented to " + nLastTrackID + "<br>");
     }
        
   
@@ -234,7 +248,7 @@ public class osmGPXImporter extends DefaultHandler{
         new Date(timestamp),
         (double)-1,
         (double)-1,
-        (int)-1,
+        (int)nLastTrackID,
         (int)255,
         (int)fix);
 

@@ -124,12 +124,12 @@ if(FileUpload.isMultipartContent(request))
 
         osmGPXImporter gpxImporter = new osmGPXImporter();
 
-        out.print("created importer ok at " + new java.util.Date());
+        out.print("created importer ok at " + new java.util.Date() + "<br>");
 
         
         if( sUploadFileName.endsWith(".gz") )
         {
-          out.print("looks like a gzip file...");
+          out.print("looks like a gzip file...<br>");
           
           gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sLoginToken);
 
@@ -137,7 +137,7 @@ if(FileUpload.isMultipartContent(request))
         else
         {
         
-          out.print("looks like a gpx file...");
+          out.print("looks like a gpx file...<br>");
           gpxImporter.upload(uploadedStream, out, sLoginToken);
  
         }

@@ -896,6 +896,7 @@ public class osmServerSQLHandler extends Thread
 
 
 
+ 
   public synchronized boolean userExists(String user)
   {
 
@@ -932,5 +933,50 @@ public class osmServerSQLHandler extends Thread
     }
 
   } // userExists
+
+  
+  
+  public synchronized int largestTrackID(String token)
+  {
+    
+    int uid = validateToken(token);
+   
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select max(trackid) from tempPoints where uid=" + uid;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      int trackID = -1;
+
+      if( rs.getString(1).equals("NULL"))
+      {
+
+      }
+      else{
+      
+        trackID = rs.getInt(1);
+      }
+
+      return trackID;
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+
+    return -1;
+  } // largestTrackID
 
 } // osmServerSQLHandler

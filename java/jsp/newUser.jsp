@@ -31,6 +31,7 @@ if( action == null)
   %>
     <h1>Create a user account</h1><br>
     Fill in the form, we'll send you an email to confirm you're you and activate your account.<br><br>
+    By creating an account, you agree that all work uploaded to openstreetmap.org and all data created by use of any tools on openstreetmap.org is to be licensed under <a href="http://creativecommons.org/licenses/by-sa/2.0/">this</a> Creative Commons license.<br><br>
     <form action="http://www.openstreetmap.org/api/newUser.jsp">
     <table>
     <tr><td>email address:</td><td><input type="text" name="email"></td></tr>

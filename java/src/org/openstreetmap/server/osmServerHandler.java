@@ -51,7 +51,12 @@ public class osmServerHandler
 
   } // SQLConnectSuccess
   
-  
+ 
+  public int largestTrackID(String token)
+  {
+    return osmSQLH.largestTrackID(token);
+
+  } // largestTrackID
 
 
   public String login(String user, String pass)

@@ -23,10 +23,11 @@ import java.net.*;
 import java.lang.*;
 import java.io.*;
 import com.bbn.openmap.LatLonPoint;
-import java.util.zip.*;
+import org.apache.xmlrpc.*;
 
 public class osmServerClient
 {
+  
 
   public osmServerClient()
   {
@@ -40,55 +41,38 @@ public class osmServerClient
   {
     Vector gpsPoints = new Vector();
     
+  
     try{
       
-      Socket s = new Socket("128.40.59.181", 2001);;
+      XmlRpcClientLite xmlrpc = new XmlRpcClientLite("http://127.0.0.1:4000/");
+      
 
-      BufferedReader in = new BufferedReader(new InputStreamReader(
-            s.getInputStream()));
+      Vector params = new Vector();
 
-      BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-            s.getOutputStream()));
+      params.addElement( new Double((double)llp1.getLatitude()) );
+      params.addElement( new Double((double)llp1.getLongitude()) );
+      params.addElement( new Double((double)llp2.getLatitude()) );
+      params.addElement( new Double((double)llp2.getLongitude()) );
 
-
-      out.write("GETPOINTS "
-                + llp1.getLatitude()  + " "
-                + llp1.getLongitude() + " "
-                + llp2.getLatitude()  + " "
-                + llp2.getLongitude() + " "
-                +"\n");
-
-      out.flush();
-
-      BufferedReader br = new BufferedReader(new InputStreamReader(
-          new GZIPInputStream(s.getInputStream())));
-
+      Vector results = (Vector) xmlrpc.execute("openstreetmap.getPoints",params);
 
       System.out.println("reading POINTS");
       
-      String sLine = br.readLine();
+      Enumeration e = results.elements();
 
-      System.out.println("Server said " + sLine);
-
-      while( (sLine = br.readLine()) != null)
+      while(e.hasMoreElements())
       {
-
-        if(sLine.equals("END"))
-        {
-          System.out.println("breaking on END");
-          break;
-        }
-
         
-        StringTokenizer st = new StringTokenizer(sLine);
-
-        String a = st.nextToken();
-        String b = st.nextToken();
-        String c = st.nextToken();
-        String d = st.nextToken();
-
-        gpsPoints.add( new gpspoint(a,b,c,d) );
+        //gpsPoints.add( 
+            
+          
+        //new gpspoint( 
+        double lat = ((Double)e.nextElement()).doubleValue();
+        double lon = ((Double)e.nextElement()).doubleValue();
       
+        System.out.println(lat+"," + lon);
+        
+        
         
       }
 

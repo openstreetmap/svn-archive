@@ -23,18 +23,16 @@ import java.lang.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.apache.xmlrpc.*;
 
-public class osmServer
+public class osmServer extends Thread
 {
-  
-  ServerSocket s;
-  osmServerSQLHandler osmSQLH;
   
   public static void main(String[] args)
   {
     
     System.out.println(new Date() + " openstreetmap server started");
-    new osmServer().startServer();
+    osmServer os = new osmServer();
 
   } // main
 
@@ -42,67 +40,41 @@ public class osmServer
 
   public osmServer()
   {
+    new Thread(this).start();
     
-    osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+  //  osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
   } // osmServer
 
   
 
-  public void startServer()
+  public void run()
   {
+    
+    WebServer webserver = new WebServer(4000);
 
+    webserver.addHandler("openstreetmap", new osmServerHandler());
 
-    getSocket();
+    webserver.start();
 
+    webserver.run();
+
+    System.out.println("sleeping");
+   
     while(true)
     {
-      
       try{
-      
-        Socket tempSocket = s.accept();
-    
-        System.out.println(new Date() + " got a connection from " + tempSocket.getInetAddress());
-
-
-        osmServerHandler osmsh = new osmServerHandler(tempSocket, osmSQLH);
-        
-        new Thread(osmsh).start();
-      
+        sleep(100000);
       }
       catch(Exception e)
       {
-        System.out.println("eek " + e);
+        System.out.print(e);
+        e.printStackTrace();
         System.exit(-1);
-      
-
       }
+        
     }
-
-
   } // startServer
 
-
-
-  private void getSocket()
-  {
-
-    try{
-
-      s = new ServerSocket(2001);
-     
-
-    }
-    catch(Exception e)
-    {
-
-      System.err.println("something went screwy getting a socket " + e);
-      System.exit(-1);
-    }
-
-
-  }
-
-
+  
 } // osmServer
-

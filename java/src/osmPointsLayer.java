@@ -44,10 +44,10 @@ public class osmPointsLayer extends Layer
   osmAppletMouseListener osmAML;
   Projection proj;
 
-  public osmPointsLayer(osmAppletMouseListener oa)
+  public osmPointsLayer(osmDisplay od)
   {
     super();
-    osmAML = oa;
+    osmAML = new osmAppletMouseListener(od, this);
     graphics = new OMGraphicList(2000);
     createGraphics(graphics);
 
@@ -97,6 +97,44 @@ public class osmPointsLayer extends Layer
   } // paint
 
 
+  public void select(LatLonPoint a, LatLonPoint b)
+  {
+    Iterator i = graphics.iterator();
+
+    while( i.hasNext() )
+    {
+      OMCircle omc = (OMCircle)i.next();
+
+      LatLonPoint llp = omc.getLatLon();
+
+      if( 
+          llp.getLatitude() < a.getLatitude() &&
+          llp.getLatitude() > b.getLatitude() &&
+          llp.getLongitude() > a.getLongitude() &&
+          llp.getLongitude() < b.getLongitude()
+        )
+      {
+
+        omc.select();
+      }
+      else
+      {
+        omc.deselect();
+
+      }
+
+
+
+      //System.out.println(llp);
+
+
+      
+    }
+
+    repaint();
+
+  } // selectArea
+
 
   protected void createGraphics (OMGraphicList list)
   {
@@ -130,7 +168,8 @@ public class osmPointsLayer extends Layer
             5f,
             com.bbn.openmap.proj.Length.METER
             );
-        omc.setLinePaint(Color.black);
+
+        omc.setLinePaint(Color.red);
         omc.setFillPaint(OMGraphic.clear);
 
         list.add(omc);

@@ -40,7 +40,6 @@ public class osmDisplay
 {
   JLabel label = new JLabel("OpenStreetMap pre-pre-pre alpha");
   BufferedMapBean mapBean;
-  osmAppletMouseListener osmAML = new osmAppletMouseListener(this);
 
   public osmDisplay(Container cp)
   {
@@ -62,7 +61,7 @@ public class osmDisplay
     mouseDelegator.setActive(selectMouseMode);
     
 
-    osmPointsLayer shapeLayer = new osmPointsLayer(osmAML);
+    osmPointsLayer shapeLayer = new osmPointsLayer(this);
     Properties shapeLayerProps = new Properties();
 
     shapeLayerProps.put("prettyName", "temporary points");

@@ -40,7 +40,19 @@ public class osmServerHandler
 
      
   } // login
-  
+ 
+
+
+
+  public String addUser(String user, String pass)
+  {
+    
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
+
+    return( osmSQLH.login(user,pass) );
+
+     
+  } // addUser
 
  
  

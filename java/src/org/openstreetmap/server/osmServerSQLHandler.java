@@ -96,7 +96,7 @@ public class osmServerSQLHandler extends Thread
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
-      if( rs.next() )
+      if( rs.next() && rs.getInt("active") == 1)
       {
         String token = "";
         Random r = new Random();
@@ -728,5 +728,76 @@ public class osmServerSQLHandler extends Thread
 
     return true;
   } // dropPoint
+
+
+
+
+
+
+  public synchronized String addUser(String user, String pass)
+  {
+    // FIXME: add all the letters plus upper case etc
+    char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' , 'i' , 'j'};
+
+    String token = "";
+    System.out.println("addUser " + user + " " + pass);
+
+    if( user.length() < 4 ||
+        user.length() > 30 ||
+        pass.length() < 5 ||
+        pass.length() > 30 ||
+        user.indexOf(" ") != -1 )
+    {
+      return "ERROR";
+
+    }
+
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      
+      Random r = new Random();
+
+      for(int i = 1; i < 30; i++)
+      {
+        token = token + letters[ 1 + r.nextInt(letters.length -1)];
+
+      }
+
+      String sSQL = "insert into user (user, pass, timeout, token) values (" +
+        "'" + sUser + "', " +
+        "'" + sPass + "', " +
+        " " + System.currentTimeMillis() + ", " +
+        " '" + token + "')";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      stmt.execute(sSQL);
+
+     
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return token;
+
+
+  } // addUser
+
 
 } // osmServerSQLHandler

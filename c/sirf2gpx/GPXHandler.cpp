@@ -80,6 +80,14 @@ void GPXHandler::handle(MeasuredNavigationDataOut p) {
 
 }
 
+void GPXHandler::setName(const std::string &s) {
+  docName = s;
+}
+
+void GPXHandler::setDescription(const std::string &s) {
+  docDescription = s;
+}
+
 void GPXHandler::writeHeader() {
   time_t utc = ::time(NULL);
   struct tm *the_time = ::gmtime(&utc);
@@ -87,16 +95,25 @@ void GPXHandler::writeHeader() {
   fprintf(fh, "<?xml version=\"1.0\"?>\n"
 	  "<gpx xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
 	  " xmlns=\"http://www.topografix.com/GPX/1/1\"\n" 
-	  " version=\"1.1\"\n creator=\"Test Program\"\n"
+	  " version=\"1.1\"\n creator=\"SiRF2GPX\"\n"
 	  " xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1"
 	  " http://www.topografix.com/GPX/1/1/gpx.xsd" 
 	  " http://www.topografix.com/GPX/gpx_style/0/2"
 	  " http://www.topografix.com/GPX/gpx_style/0/2/gpx_style.xsd\">\n"
-	  "<metadata>\n <name>Test Document</name>\n"
-	  " <desc>A document to test the gpx writing possibilites.</desc>\n"
+	  "<metadata>\n");
+  // optionally print names and descriptions
+  if (docName.length() > 0) {
+    fprintf(fh, " <name>%s</name>\n", docName.c_str());
+  }
+  if (docDescription.length() > 0) {
+    fprintf(fh, " <desc>%s</desc>\n", docDescription.c_str());
+  }
+
+  fprintf(fh, 
 	  "<author>\n<name>%s</name>\n<email id=\"%s\" domain=\"%s\"/>\n"
 	  "</author>\n<copyright author=\"%s\">\n<year>%d</year>\n"
 	  "<license>%s</license>\n</copyright>\n</metadata>\n<trk>\n",
+	  docName.c_str(), docDescription.c_str(),
 	  info.getFullName().c_str(), info.getEmailID().c_str(), 
 	  info.getEmailDomain().c_str(), info.getFullName().c_str(),
 	  the_time->tm_year + 1900, info.getCopyrightURL().c_str());

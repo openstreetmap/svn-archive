@@ -28,8 +28,8 @@ else
   Enumeration e = keys.elements();
 
   %>
-   <table border="0" width="100%">
-   <tr>
+   <table class="keyvalue" border="0" width="100%">
+   <th>
    <td>
    Key name
    </td>
@@ -39,7 +39,7 @@ else
    <td>
    Last edited at
    </td>
-   </tr>
+   </th>
    <%
 
   while( e.hasMoreElements() )

@@ -21,4 +21,5 @@ EXTRA_DIST = DumpPacketHandler.hpp \
 	PacketExtractor.hpp \
 	PacketExtractorBase.hpp \
 	Message.hpp \
-	Debug.hpp
+	Debug.hpp \
+	PrintAllHandler.hpp

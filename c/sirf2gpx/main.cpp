@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+// TODO: use getopt to set descriptions/names...
+
 int main(int argc, char *argv[]) {
   int baud = 57600;
 

@@ -6,9 +6,9 @@
 class AuthorInfo {
 public:
   enum CopyrightType {
-    CreativeCommons = 1,
-    PublicDomain = 2,
-    Artistic = 3
+    CreativeCommons = 0,
+    PublicDomain = 1,
+    Artistic = 2
   };
   /*
   static AuthorInfo importFromDotFile(const std::string &path);

@@ -47,8 +47,19 @@ int main(int argc, char *argv[]) {
   AuthorInfo author_info("Matt Amos", "matt@matt-amos.uklinux.net");
   GPXHandler gpx(argv[2], author_info);
   GPXReporterUI ui;
+#ifdef USE_SETUP_GPX
   SetupGPX setup(factory, gpx, ui);
   factory.registerHandler(&setup);
+#else /* USE_SETUP_GPX */
+  factory.registerHandler(&gpx);
+  factory.registerHandler(static_cast<PacketHandler<MeasuredNavigationDataOut>*>(&ui));
+  factory.registerHandler(static_cast<PacketHandler<MeasuredTrackerDataOut>*>(&ui));
+  ui.setStatus("GPS system set up");
+#endif /* USE_SETUP_GPX */
+
+  /* get good packets
+   */
+  factory.throwAwayPacketsUntilNice();
 
   /* enter main loop
    */

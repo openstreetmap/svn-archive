@@ -114,3 +114,10 @@ body {
   text-align: center;
 }
 
+keyvalue {
+  font-size: small;
+}
+
+keyvalue.th {
+  font-weight: bold;
+}

@@ -281,7 +281,7 @@ public class osmServerSQLHandler extends Thread
         + " ) "
         + " and visible=1 limit 10000";
 
-      //System.out.println("querying with sql \n " + sSQL);
+      System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 

@@ -138,8 +138,9 @@ public class osmLineLayer extends Layer
         float lon2 = (float)((Double)e.nextElement()).doubleValue();
         float lat2 = (float)((Double)e.nextElement()).doubleValue();
 
+        System.out.println("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
 
-        oml = new OMLine(lon1, lat1, lon2, lat2,
+        oml = new OMLine(lat1, lon1, lat2, lon2,
             com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT       
             );
 

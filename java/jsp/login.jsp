@@ -10,6 +10,8 @@
 <%
 
 String action = request.getParameter("action");
+String email = request.getParameter("email");
+String pass = request.getParameter("pass");
 
 if( action == null)
 {

@@ -1,5 +1,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.io.*" %>
+<%@ page import="org.openstreetmap.util.*"%>
 <%@ page import="org.apache.commons.fileupload.*" %>
 <%@ page import="org.apache.xmlrpc.*" %>
 <%@ page contentType="text/html" %>
@@ -18,6 +19,8 @@ if(FileUpload.isMultipartContent(request))
 
   String email = "";
   String pass = "";
+  String sFileName = "";
+  File fUploadedFile = null;
 
   out.print("Attempting to insert file...<br>");
 
@@ -37,7 +40,7 @@ if(FileUpload.isMultipartContent(request))
 
     Iterator iter = items.iterator();
 
-    InputStream uploadedStream = null; 
+    BufferedInputStream uploadedStream = null; 
 
     long sizeInBytes = 0;
     
@@ -64,7 +67,7 @@ if(FileUpload.isMultipartContent(request))
       } else {
         out.print("got a file<br>");
 
-        uploadedStream = item.getInputStream();
+        uploadedStream = new BufferedInputStream(item.getInputStream());
 
         String fieldName = item.getFieldName();
         String fileName = item.getName();
@@ -77,6 +80,14 @@ if(FileUpload.isMultipartContent(request))
         out.print("contentType: " +  contentType + "<br>");
         out.print("isInMemory: " + isInMemory + "<br>");
         out.print("sizeInBytes: " + sizeInBytes + "<br>");
+ 
+        sFileName = "/tmp/" + System.currentTimeMillis() + ".osm";
+       
+        fUploadedFile = new File(sFileName);
+        
+        item.write(
+            fUploadedFile);
+        
 
       }
     }
@@ -109,20 +120,14 @@ if(FileUpload.isMultipartContent(request))
       if( uploadedStream != null)
       {
 
-        try{
-          for(int i = 0; i < sizeInBytes; i++)
-          {
-            out.print( (char)uploadedStream.read() );
+        out.print("now trying to upload it!<br>");
 
-          }
+        osmGPXImporter gpxImporter = new osmGPXImporter();
 
-        }
-        catch(Exception e)
-        {
-          out.print(e + "<br>");
+        out.print("created importer ok!<br>Uploading file to database");
 
-        }
-
+        gpxImporter.upload(uploadedStream, out, sLoginToken);
+        
 
       }
 
@@ -137,7 +142,7 @@ else
   %>
 
     <h1>Upload a GPX File</h1>
-    <br><br>
+    <br>Here, you can upload a plain gpx file or a gzipped one.<br>
     <form action="http://www.openstreetmap.org/api/uploadGPX.jsp" enctype="multipart/form-data" method="post">
     <table>
     <tr><td>email address:</td><td><input type="text" name="email"></td></tr>

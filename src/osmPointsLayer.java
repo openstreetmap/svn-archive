@@ -51,25 +51,29 @@ public class osmPointsLayer extends Layer
   protected void createGraphics (OMGraphicList list) {
     // NOTE: all this is very non-optimized...
 
-    OMPoly poly;
+    OMCircle omc;
 
     // H
-    poly = new OMPoly(
-        new float [] {
-          10f, -150f, 35f, -150f,
-         35f, -145f, 25f, -145f,
-         25f, -135f, 35f, -135f,
-         35f, -130f, 10f, -130f,
-         10f, -135f, 20f, -135f,
-         20f, -145f, 10f, -145f,
-         10f, -150f
-        },
-        OMGraphic.DECIMAL_DEGREES,
-        OMGraphic.LINETYPE_RHUMB, 32);
-    poly.setLinePaint(Color.black);
-    poly.setFillPaint(Color.green);
-    list.add(poly);
+    
+    osmServerClient osc = new osmServerClient();
 
+    Vector v = osc.getPoints();
+    
+    Enumeration e = v.elements();
+
+    while( e.hasMoreElements() )
+    {
+      gpspoint p = (gpspoint)e.nextElement();
+
+      omc = new OMCircle( p.getLatitude(),
+                          p.getLongitude(),
+                          1f,
+                          com.bbn.openmap.proj.Length.METER
+                         );
+    
+      list.add(omc);
+    }
+    
 
   }
 

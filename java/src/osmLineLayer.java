@@ -83,4 +83,8 @@ public class osmLineLayer extends Layer
   } // paint
 
 
+  public void setMouseListen(boolean bYesNo)
+  {
+
+  } // setMouseListen
 } // osmPointsLayer

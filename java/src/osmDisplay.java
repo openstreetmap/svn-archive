@@ -75,7 +75,7 @@ public class osmDisplay
 
     selectLayer = new osmSelectLayer(this);
     pointsLayer = new osmPointsLayer(this);
-    lineLayer = nee osmLineLayer(this);
+    lineLayer = new osmLineLayer(this);
     
     Properties shapeLayerProps = new Properties();
 
@@ -92,7 +92,7 @@ public class osmDisplay
 
     mapBean.add(selectLayer);
 
-    mapBean.add(linesLayer);
+    mapBean.add(lineLayer);
     // Add the map to the frame
 
     osmAppletButtons buttons = new osmAppletButtons(this);
@@ -106,6 +106,8 @@ public class osmDisplay
     mapBean.setCenter(51.526447f, -0.14746371f);
 
     pointsLayer.setStartingUp(false);
+
+    setMode(MODE_DRAW_LINES);
 
   }
 
@@ -239,12 +241,12 @@ public class osmDisplay
     {
       case MODE_DROP_POINTS:
         pointsLayer.setMouseListen(false);
-        linesLayer.setMouseListen(true);  
+        lineLayer.setMouseListen(true);  
         break;
 
       case MODE_DRAW_LINES:
         pointsLayer.setMouseListen(true);
-        linesLayer.setMouseListen(false);  
+        lineLayer.setMouseListen(false);  
 
         break;
 

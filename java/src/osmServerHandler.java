@@ -192,5 +192,27 @@ public class osmServerHandler
   } // addPoint
 
 
+  public boolean dropPointsInArea(String token, double lon1, double lat1, double lon2, double lat2)
+  {
+
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+    }
+
+    return osmSQLH.dropPointsInArea(
+        (float)lon1,
+        (float)lat1,
+        (float)lon2,
+        (float)lat2,
+        uid);
+
+  } // addPoint
+
+  
 
 } // osmServerHandler

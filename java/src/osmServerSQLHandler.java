@@ -436,5 +436,49 @@ public class osmServerSQLHandler extends Thread
 
     return true;
   } // dropPoint
+  
+  
+  
+  public synchronized boolean dropPointsInArea(
+      float lon1,
+      float lat1,
+      float lon2,
+      float lat2,
+      
+      int uid)
+  {
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
+        + " X(g) <= " + lat1
+        + " and X(g) >= " + lat2
+        + " and Y(g) >= " + lon1
+        + " and Y(g) <= " + lon2;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      stmt.execute(sSQL);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      return false;
+    }
+
+    return true;
+  } // dropPoint
 
 } // osmServerSQLHandler

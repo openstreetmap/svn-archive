@@ -141,6 +141,12 @@ public class osmPointsLayer extends Layer
   } // selectArea
 
 
+  public void setMouseListen(boolean bYesNo)
+  {
+    osmAML.setMouseListen(bYesNo);
+
+  } // setMouseListen
+
 
   public synchronized void deleteSelectedPoints()
   {

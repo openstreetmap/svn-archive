@@ -2,6 +2,6 @@
 </td>
 </tr>
 <tr>
-<td colspan="2" align="center">OpenStreetMap</td>
+<td colspan="2">OpenStreetMap</td>
 </tr>
 </table>

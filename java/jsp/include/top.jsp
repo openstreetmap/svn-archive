@@ -11,8 +11,11 @@
 </tr>
 
 <tr>
+<td>
 
-<td>Menu</td>
-<td><a href="login.jsp">login</a></td>
-<td><a href="uploadGPX.jsp">upload GPX</a></td>
+Menu<br>
+<a href="login.jsp">login</a><br>
+<a href="uploadGPX.jsp">upload GPX</a><br>
+
+</td>
 <td>

@@ -19,7 +19,7 @@ public class osmServerClient
     
     try{
       
-      Socket s = new Socket("128.40.59.181", 1001);;
+      Socket s = new Socket("128.40.59.181", 2001);;
 
       BufferedReader in = new BufferedReader(new InputStreamReader(
             s.getInputStream()));

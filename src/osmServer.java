@@ -68,7 +68,8 @@ public class osmServer
 
     try{
 
-      s = new ServerSocket(1001);
+      s = new ServerSocket(2001);
+     
 
     }
     catch(Exception e)

@@ -43,22 +43,46 @@ public class osmServerHandler
       double lat,
       double lon,
       double alt,
-      Date date)
+      Date date,
+      double hor_dilution,
+      double vert_dilution,
+      int track_id,
+      int quality,
+      int satellites
+      )
   {
 
 
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
 
+    if(
+        date == null
+      )
+    {
+      //FIXME: add more data checks
+      return false;
+
+    }
+    
     int uid = osmSQLH.validateToken(token);
 
     if( uid == -1)
     {
       return false;
-
     }
 
-    return osmSQLH.addPoint((float)lat,(float)lon,(float)alt,date.getTime(), uid);
+    return osmSQLH.addPoint(
+        (float)lat,
+        (float)lon,
+        (float)alt,
+        date.getTime(),
+        (float)hor_dilution,
+        (float)vert_dilution,
+        track_id,
+        quality,
+        satellites,
+        uid);
 
   } // addPoint
 

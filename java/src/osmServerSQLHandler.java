@@ -191,6 +191,11 @@ public class osmServerSQLHandler extends Thread
       float lon,
       float alt,
       long timestamp,
+      float hor_dilution,
+      float vert_dilution,
+      int trackid,
+      int quality,
+      int satellites,
       int uid)
   {
 
@@ -210,7 +215,15 @@ public class osmServerSQLHandler extends Thread
       String sSQL = "insert into tempPoints values ("
             + " GeomFromText('Point("  + lon + " " + lat + ")'),"
             + " " + alt + ", "
-            + " " + timestamp + ", " + uid + ");";
+            + " " + timestamp + ", "
+            + " " + uid + ", "
+            + " " + hor_dilution + ", "
+            + " " + vert_dilution + ", "
+            + " " + trackid + ", "
+            + " " + quality + ", "
+            + " " + satellites + ", "
+            + " " + System.currentTimeMillis() + ", "
+            + ");";
 
 
       //System.out.println("querying with sql \n " + sSQL);
@@ -335,8 +348,8 @@ public class osmServerSQLHandler extends Thread
         
         + " where X(g) < " + p1lat
         + " and X(g) > " + p2lat
-        + " and Y(g) < " + p1lon
-        + " and Y(g) > " + p2lon
+        + " and Y(g) > " + p1lon
+        + " and Y(g) < " + p2lon
         + " and tempPoints.uid = user.uid"
         + " limit 10000";
 

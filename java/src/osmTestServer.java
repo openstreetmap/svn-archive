@@ -42,21 +42,30 @@ class osmTestServer
       {
         System.out.print(e.nextElement() +  " ");
 
+        
       }
       
+      System.out.println();
+      System.out.println();
+      System.out.println("adding a point");
       
-/*
+      v = new Vector();
+
       v.addElement(token);
-      v.addElement(new Double(-1));
-      v.addElement(new Double(-1));
-      v.addElement(new Double(-1));
-      v.addElement( new Date() );
+      v.addElement(new Double(-1)); // lat
+      v.addElement(new Double(-1)); // lon
+      v.addElement(new Double(-1)); // alt
+      v.addElement( new Date() ); // timestamp for point
+      v.addElement(new Double(-1)); // hor_dilution
+      v.addElement(new Double(-1)); // vert_dilution
+      v.addElement(new Integer(-1)); // track_id
+      v.addElement(new Integer(255)); // quality
+      v.addElement(new Integer(255)); // satellites
       
       
-//      boolean b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
+      boolean b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
 
       System.out.println(b);
-  */  
       
     
     }

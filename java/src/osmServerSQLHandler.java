@@ -297,4 +297,93 @@ public class osmServerSQLHandler extends Thread
 
   } // getPoints
 
+
+  public synchronized Vector getFullPoints(
+      float p1lat,
+      float p1lon,
+      float p2lat,
+      float p2lon
+      )
+  {
+
+    System.out.println("getPoints");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select X(g) as lat,"
+        + " Y(g) as lon,"
+        + " altitude,"
+        + " timestamp, "
+        + " hor_dilution, "
+        + " vert_dilution, "
+        + " track_id, "
+        + " quality, "
+        + " satellites, "
+        + " user, "
+        + " last_time "
+        
+        + " from tempPoints, user"
+        
+        + " where X(g) < " + p1lat
+        + " and X(g) > " + p2lat
+        + " and Y(g) > " + p1lon
+        + " and Y(g) < " + p2lon
+        + " and tempPoints.uid = user.uid"
+        + " limit 10000";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      boolean bFirst = true;
+
+      gpspoint gpFirst = new gpspoint(0,0,0,0);
+
+      gpspoint gpLastPoint = new gpspoint(0,0,0,0);
+
+      Vector v = new Vector();
+
+      while(rs.next())
+      {
+
+        v.add( new Double(rs.getDouble("lat")) ); // lat
+        v.add( new Double(rs.getDouble("lon")) ); // lon
+        v.add( new Double(rs.getDouble("altitude")) ); // alt
+        v.add( new java.util.Date(rs.getLong("timestamp") )); // time point was taken
+        v.add( new Double( rs.getDouble("hor_dilution")));
+        v.add( new Double( rs.getDouble("vert_dilution")));
+        v.add( new Long( rs.getLong("track_id")));
+        v.add( new Integer( rs.getInt("quality")));
+        v.add( new Integer( rs.getInt("satellites")));
+        v.add( rs.getString("user"));
+        v.add( new Long(rs.getLong("last_time")));
+      }
+
+      bSQLSuccess = true;
+
+      return v;
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return null;
+
+  } // getPoints
+
 } // osmServerSQLHandler

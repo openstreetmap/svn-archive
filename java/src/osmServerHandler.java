@@ -115,7 +115,36 @@ public class osmServerHandler
     }
 
     return null;
-  }
+  } // getPoints
 
+
+   public Vector getFullPoints(
+      String token,
+      double p1lat,
+      double p1lon,
+      double p2lat,
+      double p2lon)
+  {
+    try{
+
+      osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+
+      Vector v = osmSQLH.getFullPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
+
+      return v;
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+      System.exit(-1);
+
+    }
+
+    return null;
+
+  } // getFullPoints
+ 
 
 } // osmServerHandler

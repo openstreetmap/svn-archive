@@ -49,7 +49,7 @@ public class osmServerHandler
     
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
-    return( osmSQLH.login(user,pass) );
+    return( osmSQLH.addUser(user,pass) );
 
      
   } // addUser

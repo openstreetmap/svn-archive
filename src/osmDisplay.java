@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 import com.bbn.openmap.MapBean;
+import com.bbn.openmap.proj.*;
+
+
 import com.bbn.openmap.layer.shape.ShapeLayer;
 
 import java.util.Properties;
@@ -34,8 +37,15 @@ public class osmDisplay
         // Add the map to the frame
         cp.add(mapBean);
 
-       
-        mapBean.repaint();
+        Projection mp = mapBean.getProjection();
+    
+        System.out.println(" " + mp.getUpperLeft());
+        
+        mapBean.setScale(400000);
+        mapBean.setCenter(51.4f, 0.0f);
+
+
+        System.out.println(" " + mp.getUpperLeft());
     }
  
 } // osmDisplay

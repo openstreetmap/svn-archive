@@ -2,6 +2,7 @@ import java.util.*;
 import java.net.*;
 import java.lang.*;
 import java.io.*;
+import com.bbn.openmap.LatLonPoint;
 
 public class osmServerClient
 {
@@ -13,7 +14,8 @@ public class osmServerClient
   } // osmServerClient
 
 
-  public Vector getPoints()
+  public Vector getPoints(LatLonPoint llp1,
+                          LatLonPoint llp2)
   {
     Vector gpsPoints = new Vector();
     
@@ -28,7 +30,12 @@ public class osmServerClient
             s.getOutputStream()));
 
 
-      out.write("GETPOINTS\n");
+      out.write("GETPOINTS "
+                + llp1.getLatitude()  + " "
+                + llp1.getLongitude() + " "
+                + llp2.getLatitude()  + " "
+                + llp2.getLongitude() + " "
+                +"\n");
 
       out.flush();
 

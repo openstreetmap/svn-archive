@@ -35,7 +35,11 @@ public class osmServerSQLHandler extends Thread
 
 
   
-  public synchronized Vector getPoints()
+  public synchronized Vector getPoints(float p1lat,
+                                       float p1lon,
+                                       float p2lat,
+                                       float p2lon
+                                       )
   {
 
     System.out.println("getPoints");
@@ -51,8 +55,15 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
+      String sSQL = "select Y(g),X(g),altitude,timestamp from tempPoints"
+                    + " where X(g) > " + p1lat
+                    + " and X(g) < " + p2lat
+                    + " where Y(g) > " + p2lon
+                    + " and Y(g) < " + p2lon
+                    + " limit 2000";
 
-      ResultSet rs = stmt.executeQuery("select Y(g),X(g),altitude,timestamp  from tempPoints order by timestamp desc");
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
 
       boolean bFirst = true;
 

@@ -45,10 +45,19 @@ public class osmServerHandler implements Runnable
           // puth authentication type things here
         }
 
-        if(sLine.equals("GETPOINTS"))
+        if(sLine.startsWith("GETPOINTS"))
         {
+          StringTokenizer st = new StringTokenizer(sLine);
 
-          Vector v = osmSQLH.getPoints();
+          String s = st.nextToken();
+
+          float p1lat = Float.parseFloat( st.nextToken() );
+          float p1lon = Float.parseFloat( st.nextToken() );
+          float p2lat = Float.parseFloat( st.nextToken() );
+          float p2lon = Float.parseFloat( st.nextToken() );
+
+          Vector v = osmSQLH.getPoints(p1lat, p1lon, p2lat, p2lon);
+          
           if( osmSQLH.SQLSuccessful() )
           {
             out.write("POINTS\n");

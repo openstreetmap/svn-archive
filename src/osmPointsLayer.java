@@ -33,41 +33,56 @@ public class osmPointsLayer extends Layer
 
 
   public void setProperties(String prefix, java.util.Properties props) {
-    super.setProperties(prefix, props);
-  }
 
+    super.setProperties(prefix, props);
+  
+  } // setProperties
+  
+
+  
   public void projectionChanged (ProjectionEvent e) {
+ 
+    createGraphics(graphics);
+     
+   
     graphics.generate(e.getProjection());
+    
     repaint();
-  }
+  
+  } // projectionChanged
 
 
 
   public void paint (Graphics g) {
+
     graphics.render(g);
-  }
+  
+  } // paint
 
 
-  protected void createGraphics (OMGraphicList list) {
+
+  protected void createGraphics (OMGraphicList list)
+  {
     // NOTE: all this is very non-optimized...
 
     OMCircle omc;
 
-    // H
+    Projection proj = getProjection(); 
 
     osmServerClient osc = new osmServerClient();
 
-    Vector v = osc.getPoints();
+    Vector v = osc.getPoints(proj.getUpperLeft(),
+                             proj.getLowerRight());
 
     Enumeration e = v.elements();
 
-    while( list.size() < 1000 &&  e.hasMoreElements() )
+    while( e.hasMoreElements() )
     {
       gpspoint p = (gpspoint)e.nextElement();
 
       omc = new OMCircle( p.getLatitude(),
           p.getLongitude(),
-          100000f,
+          5f,
           com.bbn.openmap.proj.Length.METER
           );
       omc.setLinePaint(Color.black);

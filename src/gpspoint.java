@@ -28,6 +28,20 @@ public class gpspoint{
 
   } // gpspoint
 
+  
+  public gpspoint(String x,
+                  String y,
+                  String a,
+                  String millis)
+  {
+
+    m_lat = Float.parseFloat(x);
+    m_long = Float.parseFloat(x);
+    m_altitude = Float.parseFloat(x);
+    m_time = Long.parseLong(millis);
+  } // gpspoint
+
+  
 
   public void setHighlight(boolean bYesNo)
   {

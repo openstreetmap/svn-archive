@@ -7,15 +7,15 @@ import javax.swing.event.*;
 
 public class gpsShowMouseListener extends MouseInputAdapter{
 
-  gpsShowWindow gsw;
+  osmDisplayPanel dp;
   
   int lastX = 0;
   int lastY = 0;
   
-  public gpsShowMouseListener(gpsShowWindow g)
+  public gpsShowMouseListener(osmDisplayPanel d)
   {
     
-    gsw = g;
+    dp = d;
     
 
   } // gpsShowMouseListener
@@ -26,13 +26,13 @@ public class gpsShowMouseListener extends MouseInputAdapter{
 
     if( e.isControlDown() )
     {
-      gsw.scale(e.getX() - lastX, e.getY() - lastY);
+      dp.scale(e.getX() - lastX, e.getY() - lastY);
 
     }
     else
     {
 
-      gsw.translate(e.getX() - lastX, e.getY() - lastY);
+      dp.translate(e.getX() - lastX, e.getY() - lastY);
     }
       
     
@@ -67,7 +67,7 @@ public class gpsShowMouseListener extends MouseInputAdapter{
 
   public void mouseClicked(MouseEvent e){
     
-    gsw.mouseClicked(e);
+    dp.mouseClicked(e);
     
   }
 

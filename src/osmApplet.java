@@ -16,5 +16,12 @@ public class osmApplet extends JApplet {
         //and left lines don't appear -- seems to be an off-by-one error.
 
         getContentPane().add(label, BorderLayout.SOUTH);
+        
+
+        osmDisplayPanel odp = new osmDisplayPanel();
+        
+        getContentPane().add(odp, BorderLayout.CENTER);
+
+        
     } // init
 }

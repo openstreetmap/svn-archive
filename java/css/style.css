@@ -116,6 +116,7 @@ body {
 
 keyvalue {
   font-size: small;
+  width: 100%;
 }
 
 keyvalue.th {

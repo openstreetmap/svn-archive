@@ -1,4 +1,5 @@
 <%@ page import="java.util.*" %>
+<%@ page import="java.util.zip.*" %>
 <%@ page import="java.io.*" %>
 <%@ page import="org.openstreetmap.util.*"%>
 <%@ page import="org.apache.commons.fileupload.*" %>
@@ -20,7 +21,7 @@ if(FileUpload.isMultipartContent(request))
   String email = "";
   String pass = "";
   String sSaveFileName = "";
-  String sUploadFileNeme = "";
+  String sUploadFileName = "";
   File fUploadedFile = null;
 
   out.print("Attempting to insert file...<br>");
@@ -75,14 +76,14 @@ if(FileUpload.isMultipartContent(request))
         long sizeInBytes = item.getSize();
 
         out.print("fieldName: " + fieldName + "<br>");
-        out.print("fileName: " + fileName + "<br>");
+        out.print("fileName: " + sUploadFileName + "<br>");
         out.print("contentType: " +  contentType + "<br>");
         out.print("isInMemory: " + isInMemory + "<br>");
         out.print("sizeInBytes: " + sizeInBytes + "<br>");
  
         sSaveFileName = "/tmp/" + System.currentTimeMillis() + ".osm";
        
-        fUploadedFile = new File(sUploadSaveName);
+        fUploadedFile = new File(sSaveFileName);
         
         item.write(
             fUploadedFile);
@@ -124,10 +125,10 @@ if(FileUpload.isMultipartContent(request))
         osmGPXImporter gpxImporter = new osmGPXImporter();
         
 
-        if( sUploadSaveName.endsWith(".gz") )
+        if( sUploadFileName.endsWith(".gz") )
         {
           
-          gpxImporter.upload( new GzIPInputStream(uploadedStream), out, sLoginToken);
+          gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sLoginToken);
 
         }
         else

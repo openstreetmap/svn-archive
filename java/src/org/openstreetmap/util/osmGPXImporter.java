@@ -241,12 +241,13 @@ public class osmGPXImporter extends DefaultHandler{
     {
       nPointTempCount++;
 
-      if( nPointTempCount == 100 )
+      if( nPointTempCount == 500 )
       {
-        lPointsAdded += 100;
+        lPointsAdded += 500;
 
         out.print("Added " + lPointsAdded + " points so far...<br>");
 
+        out.flush();
       } 
 
     }
@@ -264,7 +265,7 @@ public class osmGPXImporter extends DefaultHandler{
 
 
 
-  public void upload(BufferedInputStream is, Writer out, String token)
+  public void upload(InputStream is, Writer out, String token)
   {
     PrintWriter o = new PrintWriter(out);
 

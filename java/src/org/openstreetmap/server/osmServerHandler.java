@@ -158,7 +158,7 @@ public class osmServerHandler
   {
     
 
-    System.out.println("adding point");
+//    System.out.println("adding point");
 
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
@@ -179,7 +179,8 @@ public class osmServerHandler
       return false;
     }
 
-    System.out.println("handing over to addPoint sql handler");
+//    System.out.println("handing over to addPoint sql handler");
+  
     return osmSQLH.addPoint(
         (float)lat,
         (float)lon,

@@ -31,6 +31,8 @@ public class osmServerSQLHandler extends Thread
   String sUser;
   String sPass;
 
+  Connection conn;
+  
   long lTimeout = 1000 * 60 * 10; // ten mins
 
 
@@ -47,7 +49,24 @@ public class osmServerSQLHandler extends Thread
     sUser = sTUser;
     sPass = sTPass;
 
-    System.out.println("osmSQLHandler instantiated");
+    try{
+
+      
+    Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+    conn = DriverManager.getConnection(sSQLConnection,
+        sUser,
+        sPass);
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+      
+
+    //    System.out.println("osmSQLHandler instantiated");
   } // osmServerSQLHandler
 
 
@@ -80,13 +99,6 @@ public class osmServerSQLHandler extends Thread
 
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 
@@ -148,18 +160,11 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
       Statement stmt = conn.createStatement();
 
       String sSQL = "select uid from user where token='" + token +"' and timeout > "+System.currentTimeMillis();
 
-      System.out.println("querying with sql \n " + sSQL);
+      //      System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -172,7 +177,7 @@ public class osmServerSQLHandler extends Thread
 
         stmt.execute(sSQL);
 
-        System.out.println("validated token " + token);
+        //        System.out.println("validated token " + token);
         return uid;
 
       }
@@ -192,9 +197,9 @@ public class osmServerSQLHandler extends Thread
 
   } // validateLoginToken
 
- 
-  
- 
+
+
+
   public synchronized Integer addNewStreet(
       String street_name,
       float lat1,
@@ -210,28 +215,21 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
       Statement stmt = conn.createStatement();
-  
+
       long l = System.currentTimeMillis();
-      
+
       String sSQL = "lock table streets write, streetSegments write;";
-      
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-      
-      sSQL = "start transaction; ";
-      
 
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-      
+
+      sSQL = "start transaction; ";
+
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
       sSQL = 
         "insert into streets(name, timestamp, user_uid, visible) values ("
         + " '" + street_name + "', "
@@ -242,12 +240,12 @@ public class osmServerSQLHandler extends Thread
 
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-      
+
       sSQL = "set @id = last_insert_id(); ";
 
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-      
+
       sSQL = "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
         + "  last_insert_id() , "
         + " " + lon1 + ", "
@@ -261,12 +259,12 @@ public class osmServerSQLHandler extends Thread
 
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-      
+
       sSQL = "commit;";
-      
+
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-      
+
       sSQL = "unlock tables; ";
 
 
@@ -276,9 +274,9 @@ public class osmServerSQLHandler extends Thread
       stmt.execute(sSQL);
 
       sSQL = "select @id; ";
-      
+
       System.out.println("querying with sql \n " + sSQL);
-      
+
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -318,13 +316,6 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
       Statement stmt = conn.createStatement();
 
       String sSQL = "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
@@ -357,7 +348,7 @@ public class osmServerSQLHandler extends Thread
   } // addStreetSegment
 
 
- 
+
   public synchronized boolean addPoint(
       float lat,
       float lon,
@@ -371,16 +362,9 @@ public class osmServerSQLHandler extends Thread
       int uid)
   {
 
-    System.out.println("addPoint");
+    //    System.out.println("addPoint");
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 
@@ -397,7 +381,7 @@ public class osmServerSQLHandler extends Thread
         + " " + System.currentTimeMillis() + ", 1,0);";
 
 
-      System.out.println("querying with sql \n " + sSQL);
+      //      System.out.println("querying with sql \n " + sSQL);
 
       stmt.execute(sSQL);
 
@@ -411,76 +395,76 @@ public class osmServerSQLHandler extends Thread
       return false;
     }
 
-    System.out.println("added point ok, returning");
+    //    System.out.println("added point ok, returning");
 
     return true;
 
   } // addPoint
 
- 
+
   /*
-  
-  public synchronized boolean addPoints(
-      float[] lat,
-      float[] lon,
-      float[] alt,
-      long[] timestamp,
-      float[] hor_dilution,
-      float[] vert_dilution,
-      int[] trackid,
-      int[] quality,
-      int[] satellites,
-      int nPoints,
-      int uid
-      )
+
+     public synchronized boolean addPoints(
+     float[] lat,
+     float[] lon,
+     float[] alt,
+     long[] timestamp,
+     float[] hor_dilution,
+     float[] vert_dilution,
+     int[] trackid,
+     int[] quality,
+     int[] satellites,
+     int nPoints,
+     int uid
+     )
+     {
+
+     System.out.println("addPoint");
+
+     try{
+
+     Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+     Connection conn = DriverManager.getConnection(sSQLConnection,
+     sUser,
+     sPass);
+
+     Statement stmt = conn.createStatement();
+
+     for(int i = 0; i< nPoints; i++)
+     {
+
+     String sSQL = "insert into tempPoints values ("
+     + " GeomFromText('Point("  + lon[i] + " " + lat[i] + ")'),"
+     + " " + alt[i] + ", "
+     + " " + timestamp[i] + ", "
+     + " " + uid + ", "
+     + " " + hor_dilution[i] + ", "
+     + " " + vert_dilution[i] + ", "
+     + " " + trackid[i] + ", "
+     + " " + quality[i] + ", "
+     + " " + satellites[i] + ", "
+     + " " + System.currentTimeMillis() + ", 1,0);";
+
+
+  //System.out.println("querying with sql \n " + sSQL);
+
+  stmt.execute(sSQL);
+  }
+  }
+  catch(Exception e)
   {
+  System.out.println(e);
+  e.printStackTrace();
 
-    System.out.println("addPoint");
+  return false;
+  }
 
-    try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
-      Statement stmt = conn.createStatement();
-
-      for(int i = 0; i< nPoints; i++)
-      {
-
-        String sSQL = "insert into tempPoints values ("
-          + " GeomFromText('Point("  + lon[i] + " " + lat[i] + ")'),"
-          + " " + alt[i] + ", "
-          + " " + timestamp[i] + ", "
-          + " " + uid + ", "
-          + " " + hor_dilution[i] + ", "
-          + " " + vert_dilution[i] + ", "
-          + " " + trackid[i] + ", "
-          + " " + quality[i] + ", "
-          + " " + satellites[i] + ", "
-          + " " + System.currentTimeMillis() + ", 1,0);";
-
-
-        //System.out.println("querying with sql \n " + sSQL);
-
-        stmt.execute(sSQL);
-      }
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-      return false;
-    }
-
-    return true;
+  return true;
 
   } // addPoints
-*/
+   */
 
   public synchronized Vector getStreets(
       float p1lat,
@@ -493,12 +477,6 @@ public class osmServerSQLHandler extends Thread
     System.out.println("getStreets");
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 
@@ -568,13 +546,6 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
       Statement stmt = conn.createStatement();
 
       String sSQL = "select Y(g),X(g),altitude,timestamp from tempPoints"
@@ -635,13 +606,6 @@ public class osmServerSQLHandler extends Thread
     System.out.println("getPoints");
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 
@@ -722,13 +686,6 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
       Statement stmt = conn.createStatement();
 
       String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
@@ -763,13 +720,6 @@ public class osmServerSQLHandler extends Thread
   {
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 
@@ -818,13 +768,6 @@ public class osmServerSQLHandler extends Thread
 
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 
@@ -882,13 +825,6 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
       Statement stmt = conn.createStatement();
 
       String sSQL = "select uid,active from user where user='" + user + "' and token='" + token + "'";
@@ -944,13 +880,6 @@ public class osmServerSQLHandler extends Thread
 
 
     try{
-
-      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-      Connection conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
 
       Statement stmt = conn.createStatement();
 

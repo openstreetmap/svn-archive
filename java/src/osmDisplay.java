@@ -27,8 +27,6 @@ import com.bbn.openmap.proj.*;
 import com.bbn.openmap.gui.*;
 import com.bbn.openmap.event.*;
 import com.bbn.openmap.*;
-
-
 import com.bbn.openmap.layer.shape.ShapeLayer;
 
 import java.util.Properties;

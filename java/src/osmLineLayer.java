@@ -95,7 +95,7 @@ public class osmLineLayer extends Layer
 
     //graphics.clear();
 
-    OMLine oml;
+    osmStreetSegment oml;
 
     Projection proj = getProjection(); 
 
@@ -119,7 +119,7 @@ public class osmLineLayer extends Layer
       while( e.hasMoreElements() )
       {
         
-        Integer id = (Integer)e.nextElement();
+        int id = ((Integer)e.nextElement()).intValue();
         
         float lon1 = (float)((Double)e.nextElement()).doubleValue();
         float lat1 = (float)((Double)e.nextElement()).doubleValue();
@@ -128,8 +128,9 @@ public class osmLineLayer extends Layer
 
         System.out.println("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
 
-        oml = new OMLine(lat1, lon1, lat2, lon2,
-            com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT       
+        oml = new osmStreetSegment(lat1, lon1, lat2, lon2,
+            com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
+            id
             );
 
 
@@ -216,45 +217,113 @@ public class osmLineLayer extends Layer
   } // findClosestLineEnding
 
 
+
+
+  private int findUidOfLineWithPoint(LatLonPoint p)
+  {
+
+    Iterator i = graphics.iterator();
+
+    while( i.hasNext())
+    {
+
+      osmStreetSegment oms = (osmStreetSegment)i.next();
+
+      float pos[] = oms.getLL();
+
+      if( (pos[0] == p.getLatitude() && pos[1] == p.getLongitude() )
+          || (pos[2] == p.getLatitude() && pos[3] == p.getLongitude() )
+        )
+      {
+        // found a line ending at that point
+
+        return oms.getUid();
+
+
+      }
+
+
+    }
+
+    return -1; // not found
+
+  } // findUidOfLineWithPoint
+
+
+  
   private double distance(double x1, double y1, double x2, double y2)
   {
-    
+
     double a = Math.sqrt( Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
 
     return a;
   } // distance
 
-  
 
-  
+
+
   public void setLine(LatLonPoint a, LatLonPoint b)
   {
 
-    System.out.println("adding line  "+
+    System.out.println("trying to adding line  "+
         +a.getLatitude()+","
         +a.getLongitude() + " "
         +b.getLatitude() + ","
         +b.getLongitude());
 
-    OMLine l = new OMLine(
-        a.getLatitude(),
-        a.getLongitude(),
-        b.getLatitude(),
-        b.getLongitude(),
+    int uid = findUidOfLineWithPoint(a);
 
-        com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
-        );
+    if(uid == -1)
+    {
+      uid = findUidOfLineWithPoint(b);
 
-    graphics.add( l);
+      
+    }
 
-    graphics.generate( getProjection(), true);
+    if(uid == -1)
+    {
+      // need to add a new street. for now we drop this
+      return;
 
-    repaint();
+    }
 
-    System.out.println(graphics.size());
+    if( !od.checkLogin() )
+    {
+      // not logged in
 
-    od.paintBean();
+      return;
 
+    }
+
+    if( osc.addStreetSegment(
+          uid,
+          a.getLatitude(),
+          a.getLongitude(),
+          b.getLatitude(),
+          b.getLongitude() )
+      )
+    {
+      // if it got added to the database then add it to our list too
+
+      osmStreetSegment l = new osmStreetSegment(
+          a.getLatitude(),
+          a.getLongitude(),
+          b.getLatitude(),
+          b.getLongitude(),
+          com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
+          uid
+          );
+
+      graphics.add( l);
+
+      graphics.generate( getProjection(), true);
+
+      repaint();
+
+      System.out.println(graphics.size());
+
+      od.paintBean();
+    }
   } // setLine
 
 

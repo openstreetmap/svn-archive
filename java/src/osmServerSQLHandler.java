@@ -202,7 +202,7 @@ public class osmServerSQLHandler extends Thread
       int uid)
   {
 
-    System.out.println("addPoint");
+    System.out.println("addStreetSegment");
 
     try{
 

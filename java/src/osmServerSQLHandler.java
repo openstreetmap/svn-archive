@@ -191,7 +191,62 @@ public class osmServerSQLHandler extends Thread
 
 
 
-  public synchronized boolean addPoint(float lat,
+ 
+  
+  public synchronized boolean addStreetSegment(
+      int street_uid,
+      float lat1,
+      float lon1,
+      float lat2,
+      float lon2,
+      int uid)
+  {
+
+    System.out.println("addPoint");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
+        + " " + street_uid + ", "
+        + " " + lon1 + ", "
+        + " " + lat1 + ", "
+        + " " + lon2 + ", "
+        + " " + lat2 + ", "
+        + " " + System.currentTimeMillis() + ", "
+        + " " + uid + ", "
+        + " true, "
+        + ");";
+
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      stmt.execute(sSQL);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      return false;
+    }
+
+    return true;
+
+  }
+
+  
+ public synchronized boolean addPoint(
+     float lat,
       float lon,
       float alt,
       long timestamp,
@@ -281,8 +336,10 @@ public class osmServerSQLHandler extends Thread
         + " ) "
         + " and visible=1 limit 10000";
 
+      
       System.out.println("querying with sql \n " + sSQL);
 
+      
       ResultSet rs = stmt.executeQuery(sSQL);
 
       Vector v = new Vector();

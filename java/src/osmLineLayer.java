@@ -89,23 +89,11 @@ public class osmLineLayer extends Layer
 
 
 
-  /*
-     public void projectionChanged (ProjectionEvent e) {
-
-     graphics.generate(e.getProjection());
-
-     repaint();
-
-     } // projectionChanged
-
-   */
-
-  
   protected void createGraphics()
   {
     // NOTE: all this is very non-optimized...
 
-    graphics.clear();
+    //graphics.clear();
 
     OMLine oml;
 
@@ -173,15 +161,80 @@ public class osmLineLayer extends Layer
 
   }
 
+
+  public LatLonPoint findClosestLineEnding(LatLonPoint p)
+  {
+    // return the nearest endpoint
+    // if too far return the given point
+    
+    Iterator i = graphics.iterator();
+
+    double cx = 0;
+    double cy = 0;
+
+    double d = 0.00025;
+    
+    while(i.hasNext())
+    {
+
+      OMLine oml = (OMLine)i.next();
+
+      float pos[] = oml.getLL();
+      
+
+      if( distance(pos[0], pos[1], p.getLatitude(), p.getLongitude()) < 
+          distance(cx,cy,p.getLatitude(), p.getLongitude()))
+      {
+        cx = pos[0];
+        cy = pos[1];
+
+      }
+
+      if( distance(pos[2], pos[3], p.getLatitude(), p.getLongitude()) <
+          distance(cx,cy,p.getLatitude(), p.getLongitude()))
+      {
+        cx = pos[2];
+
+        cy = pos[3];
+
+      }
+
+
+    }
+
+    if( cx != 0 && cy != 0 && 
+        distance(cx,cy,p.getLatitude(), p.getLongitude()) <d
+      )
+    {
+    
+      return new LatLonPoint(cx,cy);
+
+    }
+
+    return p;
+
+  } // findClosestLineEnding
+
+
+  private double distance(double x1, double y1, double x2, double y2)
+  {
+    
+    double a = Math.sqrt( Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+
+    return a;
+  } // distance
+
+  
+
+  
   public void setLine(LatLonPoint a, LatLonPoint b)
   {
+
     System.out.println("adding line  "+
         +a.getLatitude()+","
         +a.getLongitude() + " "
         +b.getLatitude() + ","
         +b.getLongitude());
-
-
 
     OMLine l = new OMLine(
         a.getLatitude(),
@@ -192,11 +245,9 @@ public class osmLineLayer extends Layer
         com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
         );
 
-
     graphics.add( l);
 
     graphics.generate( getProjection(), true);
-
 
     repaint();
 

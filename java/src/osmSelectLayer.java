@@ -90,11 +90,17 @@ public class osmSelectLayer extends Layer
 
   
  
-  public void setLine(int xa, int ya, int xb, int yb)
+  public void setLine(LatLonPoint a, LatLonPoint b)
   {
     graphics.clear();
     
-    OMLine l = new OMLine(xa,ya,xb,yb);
+    OMLine l = new OMLine(
+        a.getLatitude(),
+        a.getLongitude(),
+        b.getLatitude(),
+        b.getLongitude(),
+        com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
+        );
     
     l.generate( getProjection());
 

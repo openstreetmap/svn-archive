@@ -64,15 +64,13 @@ public class osmAppletLineDrawListener extends MapMouseAdapter
     }
     bMouseDown = true;
 
-    x1 = e.getX();
-    y1 = e.getY();
     MapMouseEvent mme = (MapMouseEvent)e;
     LatLonPoint p = mme.getLatLon();
 
-    pPressed = p;
 
     System.out.println("map pressed at " + p.getLatitude() + "," +  p.getLongitude());
 
+    pPressed = osmLL.findClosestLineEnding(p);
     return true;
   } 
 
@@ -126,8 +124,9 @@ public class osmAppletLineDrawListener extends MapMouseAdapter
 
     if( bMouseDown )
     {
+      MapMouseEvent m = (MapMouseEvent)e;
     
-      osmD.getSelectLayer().setLine(x1,y1,e.getX(), e.getY());
+      osmD.getSelectLayer().setLine(pPressed, m.getLatLon());
 
     }
 
@@ -158,21 +157,21 @@ public class osmAppletLineDrawListener extends MapMouseAdapter
 
     }
 
-   
-
-
     bMouseDown = false;
     bHasMouseBeenDown = true;
     
     MapMouseEvent mme = (MapMouseEvent)e;
-    pReleased = mme.getLatLon();
+    pReleased = osmLL.findClosestLineEnding(mme.getLatLon());
 
     System.out.println("map released at " + pReleased.getLatitude() + "," +  pReleased.getLongitude());
 
-    osmLL.setLine(pPressed, pReleased);
-
+    if( !pPressed.equals(pReleased) )
+    {
+      osmLL.setLine(pPressed, pReleased);
+    }
+    
     return true;
-
+    
   }
 
   

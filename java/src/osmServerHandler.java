@@ -39,6 +39,39 @@ public class osmServerHandler
   } // login
   
 
+ 
+  public boolean addStreetSegment(String token,
+      int street_uid,
+      double lat1,
+      double lon1,
+      double lat2,
+      double lon2
+      )
+  {
+
+
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+ 
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+    }
+
+    return osmSQLH.addStreetSegment(
+        street_uid,
+        (float)lat1,
+        (float)lon1,
+        (float)lat2,
+        (float)lon2,
+        uid);
+
+  } // addStreetSegment
+
+
+
+
   public boolean addPoint(String token,
       double lat,
       double lon,
@@ -64,7 +97,7 @@ public class osmServerHandler
       return false;
 
     }
-    
+
     int uid = osmSQLH.validateToken(token);
 
     if( uid == -1)
@@ -109,20 +142,20 @@ public class osmServerHandler
       {
 
         return v;
-        
+
       }
       else
       {
-     
+
         System.out.println("error....");
-      
+
       }
 
-      
+
     }
     catch(Exception e)
     {
-      
+
       System.out.println(e);
       e.printStackTrace();
       System.exit(-1);
@@ -134,8 +167,8 @@ public class osmServerHandler
 
 
 
-  
- public Vector getPoints(
+
+  public Vector getPoints(
       String token,
       double p1lat,
       double p1lon,
@@ -189,7 +222,7 @@ public class osmServerHandler
   } // getPoints
 
 
-   public Vector getFullPoints(
+  public Vector getFullPoints(
       String token,
       double p1lat,
       double p1lon,
@@ -217,7 +250,7 @@ public class osmServerHandler
 
   } // getFullPoints
 
-   
+
   public boolean dropPoint(String token, double lon, double lat)
   {
 
@@ -236,7 +269,7 @@ public class osmServerHandler
         (float)lat,
         uid);
 
-  } // addPoint
+  } // dropPoint
 
 
   public boolean dropPointsInArea(String token, double lon1, double lat1, double lon2, double lat2)
@@ -258,8 +291,8 @@ public class osmServerHandler
         (float)lat2,
         uid);
 
-  } // addPoint
+  } // dropPointsInArea
 
-  
+
 
 } // osmServerHandler

@@ -96,7 +96,7 @@ public class gpspoint{
   
   public String toString()
   {
-    return "{" +m_long + "," + m_lat + "," + m_altitude + "} " + new Date(m_time);
+    return m_long + " " + m_lat + " " + m_altitude + " " + m_time;
 
   } // toString
 

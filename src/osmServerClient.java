@@ -40,17 +40,23 @@ public class osmServerClient
 
       while( (sLine = in.readLine()) != null)
       {
-        System.out.print(".");
+        System.out.println(sLine);
 
         if(sLine.equals("END"))
         {
+          System.out.println("breaking on END");
           break;
         }
 
-
+        System.out.println("making tokenizer");
+        
         StringTokenizer st = new StringTokenizer(sLine);
 
+        System.out.println("making gpspoint");
+
         gpsPoints.add( new gpspoint(st.nextToken(), st.nextToken(), st.nextToken(), st.nextToken() ) );
+      
+        
       }
 
       System.out.println("done getting points");

@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "mk_packet.tab.h"
+#include "packet_yacc.h"
 %}
 %%
 packet			return PACKET;

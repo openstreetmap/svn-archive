@@ -19,12 +19,12 @@ public class SQLTempPointsReader
       Class.forName("com.mysql.jdbc.Driver").newInstance(); 
 
 
-      Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/openstreetmap","openstreetmap", "openstreetmap");
+      Connection conn = DriverManager.getConnection("jdbc:mysql://128.40.59.181/openstreetmap","openstreetmap", "openstreetmap");
 
       Statement stmt = conn.createStatement();
       
 
-      ResultSet rs = stmt.executeQuery("select Y(g),X(g),altitude,timestamp  from tempPoints");
+      ResultSet rs = stmt.executeQuery("select Y(g),X(g),altitude,timestamp  from tempPoints order by timestamp desc limit 2200");
 
       boolean bFirst = true;
 
@@ -36,8 +36,8 @@ public class SQLTempPointsReader
       
       while(rs.next())
       {
-        v.add( new gpspoint(rs.getFloat(1),
-                     rs.getFloat(2),
+        v.add( new gpspoint(rs.getFloat(2),
+                     rs.getFloat(1),
                      rs.getFloat(3),
                      rs.getLong(4) ));
 

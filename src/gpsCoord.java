@@ -62,12 +62,21 @@ public class gpsCoord
 
     // translate to the middle of the data
 
-    t.translate( ((float)screenSize /2) -  ((maxLon + minLon) / 2),
-                 ((float)screenSize /2) -  ((maxLat + minLat) / 2));
+    System.out.println("long range is " + minLon +" to " + maxLon);
+    System.out.println("lat range is " + minLat +" to " + maxLat);
+    
+    
+    t.translate( 0,
+                 ((maxLat + minLat) / -2));
 
 
+    //t.translate( ((float)screenSize /2) -  ((maxLon + minLon) / 2),
+       //          ((float)screenSize /2) +  ((maxLat + minLat) / 2));
 
-    t.scale(3, -70);
+
+    //t.scale(s, s);
+
+    t.scale(1, -1.6);
 
     
 

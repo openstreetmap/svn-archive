@@ -13,6 +13,8 @@
 
 <html>
 
+<jsp:include page="include/top.jsp" />
+
 <%
 
 if(FileUpload.isMultipartContent(request))
@@ -174,4 +176,5 @@ else
 %>
 
 
+<jsp:include page="include/bottom.jsp" />
 </html>

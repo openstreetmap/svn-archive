@@ -8,7 +8,7 @@ import org.xml.sax.*;
 import org.apache.xmlrpc.*;
 //import org.apache.xerces.parsers.SAXParser;
 
-public class osmGPXImporter extends DefaultHandler {
+public class osmGPXImporter extends DefaultHandler{
 
   private double lat = 0;
   private double lon = 0;
@@ -210,8 +210,19 @@ public class osmGPXImporter extends DefaultHandler {
   
   private void addPoint()
   {
+    try{
 
-      Vector v = new Vector();
+      Thread.sleep(10);
+
+    }
+    catch(Exception e)
+    {
+
+    }
+        
+
+   
+    Vector v = new Vector();
 
       v.addElement(sToken);
       v.addElement(new Double(lat)); // lat
@@ -249,6 +260,9 @@ public class osmGPXImporter extends DefaultHandler {
         System.out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp));
 
         System.out.println("this is bad, quiting");
+
+
+        System.exit(-1);
 
       }
       else

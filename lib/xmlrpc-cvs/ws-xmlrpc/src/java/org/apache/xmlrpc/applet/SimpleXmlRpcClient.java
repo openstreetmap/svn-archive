@@ -333,7 +333,7 @@ class XmlRpcSupport extends HandlerBase
             out.flush();
             InputStream in = con.getInputStream();
             parse(in);
-            System.out.println("result = " + result);
+            //System.out.println("result = " + result);
         }
         catch (Exception x)
         {

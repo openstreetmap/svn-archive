@@ -57,7 +57,7 @@ public class osmServerClient
 
       Vector results = (Vector) xmlrpc.execute("openstreetmap.getPoints",params);
 
-      System.out.println("reading POINTS");
+      System.out.println("reading points...");
       
       Enumeration e = results.elements();
 
@@ -71,7 +71,6 @@ public class osmServerClient
         float lat = (float)((Double)e.nextElement()).doubleValue();
         float lon = (float)((Double)e.nextElement()).doubleValue();
       
-        System.out.println(lat+"," + lon);
         
         gpsPoints.add( new gpspoint(lat,lon,0,0) );
         

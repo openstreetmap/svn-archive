@@ -49,7 +49,7 @@ public class osmServerHandler
     
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
-    String token  = smSQLH.addUser(user,pass);
+    String token  = osmSQLH.addUser(user,pass);
 
     System.out.println("handler returning " + token);
 

@@ -31,25 +31,41 @@ public class osmServerHandler
 {
   private String sJDBC = "jdbc:mysql://128.40.59.181/openstreetmap";
 
+  
+  private osmServerSQLHandler osmSQLH;
+
+  public osmServerHandler()
+  {
+
+  
+    osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
+
+    
+  } // osmServerSQLHandler
+  
+
+  
+  public boolean SQLConnectSuccess()
+  {
+    return osmSQLH.SQLConnectSuccess();
+
+  } // SQLConnectSuccess
+  
+  
+
 
   public String login(String user, String pass)
   {
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
     return( osmSQLH.login(user,pass) );
 
      
   } // login
  
 
-
-
  
   public String addUser(String user, String pass)
   {
     
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
     return  osmSQLH.addUser(user,pass);
 
      
@@ -61,8 +77,6 @@ public class osmServerHandler
   public boolean confirmUser(String user, String token)
   {
     
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
     return  osmSQLH.confirmUser(user,token);
 
      
@@ -72,8 +86,6 @@ public class osmServerHandler
   public boolean userExists(String user)
   {
     
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
     return  osmSQLH.userExists(user);
 
      
@@ -90,8 +102,6 @@ public class osmServerHandler
       )
   {
 
-
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
  
     int uid = osmSQLH.validateToken(token);
 
@@ -121,8 +131,6 @@ public class osmServerHandler
       )
   {
 
-
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
  
     int uid = osmSQLH.validateToken(token);
 
@@ -159,10 +167,6 @@ public class osmServerHandler
     
 
 //    System.out.println("adding point");
-
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
-
     if(
         date == null
       )
@@ -256,8 +260,6 @@ public class osmServerHandler
   {
     try{
 
-      osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
       if( !token.equals("applet") && osmSQLH.validateToken(token) == -1 )
       {
         return null;
@@ -303,8 +305,6 @@ public class osmServerHandler
       double p2lon)
   {
     try{
-
-      osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
       if( !token.equals("applet") && osmSQLH.validateToken(token) == -1 )
       {
@@ -358,8 +358,6 @@ public class osmServerHandler
   {
     try{
 
-      osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
       Vector v = osmSQLH.getFullPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
 
       return v;
@@ -382,8 +380,6 @@ public class osmServerHandler
   {
 
 
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
     int uid = osmSQLH.validateToken(token);
 
     if( uid == -1)
@@ -401,8 +397,6 @@ public class osmServerHandler
 
   public boolean dropPointsInArea(String token, double lon1, double lat1, double lon2, double lat2)
   {
-
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
     int uid = osmSQLH.validateToken(token);
 

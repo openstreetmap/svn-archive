@@ -33,10 +33,15 @@ public class osmServerSQLHandler extends Thread
 
   Connection conn;
   
+  boolean bTokenValidated = false;
+  long lValidationTimeout = 0;
+  int nLastUID = -1;
+  
   long lTimeout = 1000 * 60 * 10; // ten mins
 
-
   boolean bSQLSuccess = false;
+
+  boolean bConnectSuccess = false;
 
 
   public osmServerSQLHandler(String sTSQLConnection,
@@ -51,24 +56,36 @@ public class osmServerSQLHandler extends Thread
 
     try{
 
-      
-    Class.forName("com.mysql.jdbc.Driver").newInstance(); 
 
-    conn = DriverManager.getConnection(sSQLConnection,
-        sUser,
-        sPass);
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+      conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      bConnectSuccess = true;
+
+      System.out.println("sql connect apparently successful in sql handler");
+
     }
     catch(Exception e)
     {
+      System.out.println("sql connect failure");
       System.out.println(e);
       e.printStackTrace();
 
     }
-      
+
 
     //    System.out.println("osmSQLHandler instantiated");
   } // osmServerSQLHandler
 
+
+  public boolean SQLConnectSuccess()
+  {
+    return bConnectSuccess;
+
+  } // SQLConnectSuccess;
 
 
   public boolean SQLSuccessful()
@@ -150,9 +167,19 @@ public class osmServerSQLHandler extends Thread
 
   public synchronized int validateToken(String token)
   {
+    if( bTokenValidated
+        && System.currentTimeMillis() < lValidationTimeout)
+    {
+//      System.out.println("validated cached token returning " + nLastUID);
+      return nLastUID;
+
+    }
+
+
     if(token.length() > 30 || token.indexOf(" ") != -1)
     {
       System.out.println("didnt validate " + token );
+      bTokenValidated = false;
       return -1;
 
 
@@ -164,7 +191,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select uid from user where token='" + token +"' and timeout > "+System.currentTimeMillis();
 
-      //      System.out.println("querying with sql \n " + sSQL);
+      System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -177,7 +204,12 @@ public class osmServerSQLHandler extends Thread
 
         stmt.execute(sSQL);
 
-        //        System.out.println("validated token " + token);
+        System.out.println("validated token " + token);
+
+        lValidationTimeout = System.currentTimeMillis() + (1000 * 60 * 1); // timeout in 1 minute
+        bTokenValidated = true;
+        nLastUID = uid;
+
         return uid;
 
       }
@@ -188,10 +220,9 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
-      System.exit(-1);
-
     }
 
+    bTokenValidated = false;
     return -1;
 
 

@@ -10,7 +10,7 @@ import org.openstreetmap.server.*;
 import org.xml.sax.helpers.*;
 import org.xml.sax.*;
 
-import org.apache.xmlrpc.*;
+//import org.apache.xmlrpc.*;
 //import org.apache.xerces.parsers.SAXParser;
 
 public class osmGPXImporter extends DefaultHandler{
@@ -38,27 +38,29 @@ public class osmGPXImporter extends DefaultHandler{
   String sCurrent = "";
   boolean bDoneGetting = false;
 
-  XmlRpcClientLite xmlrpc;
+  //XmlRpcClientLite xmlrpc;
   String sToken = "";
 
   String sUser;
   String sPass;
 
-  
+  osmServerHandler osmh;
+ 
   public osmGPXImporter()
   {
 
-  }
+  } // osmGPXImporter
   
-  
+
   public osmGPXImporter(PrintWriter o, String token)
   {
     out = o;
 
     sToken = token;
 
-    connectToServer();
+    //connectToServer();
       
+    osmh = new osmServerHandler();
 
   } // osmGPXImporter
 
@@ -202,6 +204,7 @@ public class osmGPXImporter extends DefaultHandler{
     
   } // endElement
 
+  /*
 
   private void connectToServer()
   {
@@ -217,14 +220,12 @@ public class osmGPXImporter extends DefaultHandler{
     }
     
   } // connectToServer
-
+*/
 
   
   private void addPoint()
   {
-    
-    osmServerHandler osmh = new osmServerHandler();
-
+       
     boolean b = osmh.addPoint(
         sToken,
         (double)lat,
@@ -244,6 +245,7 @@ public class osmGPXImporter extends DefaultHandler{
       if( nPointTempCount == 500 )
       {
         lPointsAdded += 500;
+        nPointTempCount = 0;
 
         out.print("Added " + lPointsAdded + " points so far...<br>");
 
@@ -263,28 +265,50 @@ public class osmGPXImporter extends DefaultHandler{
   } // addPoint
 
 
+  private boolean SQLConnectSuccess()
+  {
+
+    return osmh.SQLConnectSuccess();
+
+  }
+
 
 
   public void upload(InputStream is, Writer out, String token)
   {
     PrintWriter o = new PrintWriter(out);
 
+    System.out.println("asked to upload");
+
+
     try{
 
       osmGPXImporter handler = new osmGPXImporter(o, token);
 
+      if( handler.SQLConnectSuccess() )
+      {
 
-      SAXParserFactory factory = SAXParserFactory.newInstance();
+        o.print("Success connecting to database<br>");
+        SAXParserFactory factory = SAXParserFactory.newInstance();
 
-      SAXParser saxParser = factory.newSAXParser();
+        SAXParser saxParser = factory.newSAXParser();
 
-      saxParser.parse( is, handler );
+        saxParser.parse( is, handler );
+      }
+      else
+      {
+
+        o.print("Something went wrong connecting to the database. Sorry.<br>");
+      }
     }
     catch(Exception e)
     {
-      o.print("prblem in upload!: " + e);
+      o.print("problem in upload!: " + e + "<br>");
     }
 
-  }
-}
+    o.print("upload done.<br>");
+
+  } // upload
+
+} // osmGPXImporter
 

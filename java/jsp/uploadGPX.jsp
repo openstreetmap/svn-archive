@@ -120,13 +120,16 @@ if(FileUpload.isMultipartContent(request))
       if( uploadedStream != null)
       {
 
-        out.print("now trying to upload it!<br>");
+        out.print("now trying to upload it...<br>");
 
         osmGPXImporter gpxImporter = new osmGPXImporter();
-        
 
+        out.print("created importer ok at " + new java.util.Date());
+
+        
         if( sUploadFileName.endsWith(".gz") )
         {
+          out.print("looks like a gzip file...");
           
           gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sLoginToken);
 
@@ -134,10 +137,12 @@ if(FileUpload.isMultipartContent(request))
         else
         {
         
+          out.print("looks like a gpx file...");
           gpxImporter.upload(uploadedStream, out, sLoginToken);
  
         }
 
+        out.println("All done at " + new java.util.Date());
       }
 
     }

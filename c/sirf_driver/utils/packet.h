@@ -1,16 +1,22 @@
 
+struct bit_collection {
+  char *name;
+  struct bit_collection *next;
+};
+
 struct field {
-	struct field *next;
-	int count;
-	float mult;
-	char *record, *name, *description, *convert_to;
+  struct field *next;
+  int count;
+  float mult;
+  char *record, *name, *description, *convert_to;
+  struct bit_collection *bitset;
 };
 
 struct packet {
-	int type, input;
-	char *name;
-	struct field *fields;
-	struct packet *next;
+  int type, input;
+  char *name;
+  struct field *fields;
+  struct packet *next;
 };
 
 struct field*

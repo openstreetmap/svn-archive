@@ -73,7 +73,7 @@ int sirf_write_checksum(unsigned char *buffer, int length) {
   int i;
   
   for (i = 0; i < length; i++) {
-    cksum = (cksum + buffer[i]) & 0xffff;
+    cksum = (cksum + buffer[i]) & 0x7fff;
   }
   
   // SiRF byte ordering is MSB first?
@@ -168,9 +168,9 @@ void lowlevel_sync(int fd, int baud) {
     set_reset_speed(fd, get_unistd_speed(supported_rates[i]));
     
     write_packet(fd, nmea_packet, "NMEA", supported_rates[i], baud);
-    usleep(50000);
+    usleep(500000);
     write_packet(fd, sirf_packet, "SiRF", supported_rates[i], baud);
-    usleep(50000);
+    usleep(500000);
     
   }
   
@@ -183,6 +183,9 @@ void lowlevel_sync(int fd, int baud) {
 // set and reset the speed
 void set_reset_speed(int fd, speed_t baud) {
   struct termios config;
+
+  // flush any unwritten data
+  tcdrain(fd);
   
   // set the speed the first time
   tcgetattr(fd, &config);
@@ -191,15 +194,18 @@ void set_reset_speed(int fd, speed_t baud) {
   tcsetattr(fd, TCSANOW, &config);
   
   // sleep to make sure the other side has time to catch up
-  usleep(10000);
+  usleep(100000);
   
   // reset the speed - for some reason. to get rid of garbage?
   tcgetattr(fd, &config);
   cfsetispeed(&config, baud);
   cfsetospeed(&config, baud);
   tcsetattr(fd, TCSANOW, &config);
-  
+
   usleep(100000);
+
+  // kill all the old data
+  tcflush(fd, TCIOFLUSH);
 }
 
 // initialise the serial port

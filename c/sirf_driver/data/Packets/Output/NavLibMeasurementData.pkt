@@ -1,0 +1,20 @@
+// navigation packet from the library - contains goodies
+// such as pseudo-range!
+// rate: 1Hz after enabled
+output packet NavLibMeasurementData (28) {
+  uint8 Channel /* channel being measured (0-11) */;
+  uint32 TimeTag /* time tag in milli-seconds of the measurement block in the receiver software time */;
+  uint8 SVID /* satellite number */;
+  float64 SoftwareTime /* T.O.W. in milli-sec, as estimated by the software */;
+  float64 PseudoRange /* in metres to the SV */;
+  float32 CarrierFreq /* either: the delta-PR normalised by the reciprocal of the delta-PR measurement interval, or the frequency from the AFC loop (if the delta-PR is zero) */;
+  float64 CarrierPhase /* integrated in metres */;
+  uint16 TimeInTrack /* milli-sec, if this is >0 then PR is valid */;
+  uint8 SyncFlags /* 1 -> integration, 6 -> synch */;
+  uint8 CNR[10] /* carrier to noise ratio (db-Hz) over the next ten 100 milli-second intervals */;
+  uint16 DeltaRange /* the delta-PR interval for the preceding second. a value of 0 means the AFC is in CarrierFreq */;
+  uint16 MeanDeltaRangeTime /* milli-sec */;
+  uint16 ExtrapolationTime /* extrapolation time in milli-sec to reach TimeTag */;
+  uint8 PhaseErrorCount /* number of phase errors > 60 degrees */;
+  uint8 LowPowerCount /* number of signal measurements < 28 Hz */;
+}

@@ -60,13 +60,14 @@ int main(int argc, char *argv[]) {
 %}
 
 %union{
-	int		inum;
-	float		fnum;
-	char*		string;
-	char		strim[1000];
-	struct packet*	pkt;
-	struct field*	fld;
-	char		chr;
+  int		inum;
+  float		fnum;
+  char*		string;
+  char		strim[1000];
+  struct packet*	pkt;
+  struct field*	fld;
+  char		chr;
+  struct bit_collection *bitset;
 }
 
 %type <pkt> packet packets
@@ -76,9 +77,11 @@ int main(int argc, char *argv[]) {
 %type <string> type
 %type <string> quoted
 %type <inum> pinput ptype
+%type <bitset> bit_collection
 
 %token PACKET OBRACE CBRACE TERMINATOR OBRACKET CBRACKET
 %token DIVISOR MULTIPLIER EQUALS OPAREN CPAREN INPUT OUTPUT
+%token BITMASK VBAR
 %token <strim> BYTES
 %token <strim> NAME
 %token <strim> QUOTED
@@ -166,8 +169,14 @@ field:  type name quoted TERMINATOR
 			fi = make_field_multiplier(1, $1, $2, $7, (1.0 / $6), $4); 
 			break;
 		}
-
 		$$ = fi;
+		}
+	| type name EQUALS BITMASK OPAREN bit_collection CPAREN quoted TERMINATOR
+		{
+		  struct field *fi;
+		  fi = make_field(1, $1, $2, $8);
+		  fi->bitset = $6;
+		  $$ = fi;
 		}
 ;
 
@@ -181,6 +190,24 @@ quoted:		QUOTED
 		if (quoted == NULL) { fprintf(stderr, "quoted == NULL!\n"); }
 		strcpy(quoted, $1);
 		$$ = quoted;
+	}
+;
+
+bit_collection:	name
+	{
+	  struct bit_collection *bc;
+	  bc = (struct bit_collection *)malloc(sizeof(struct bit_collection));
+	  bc->next = NULL;
+	  bc->name = $1;
+	  $$ = bc;
+	}
+	| name VBAR bit_collection
+	{
+	  struct bit_collection *bc;
+	  bc = (struct bit_collection *)malloc(sizeof(struct bit_collection));
+	  bc->next = $3;
+	  bc->name = $1;
+	  $$ = bc;
 	}
 ;
 

@@ -11,6 +11,7 @@ extern "C" {
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include <errno.h>
 #include "sirf_lowlevel.h"
 
   int errno;

@@ -55,6 +55,10 @@ namespace SiRF {
      */
     OutputStream &operator>>(float32 &f);
 
+    /* read a float (64 bits)
+     */
+    OutputStream &operator>>(float64 &f);
+
     /* read a packet boundary - also sets up state
      */
     OutputStream &operator>>(const Boundary b);

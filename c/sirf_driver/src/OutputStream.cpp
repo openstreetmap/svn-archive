@@ -126,6 +126,23 @@ namespace SiRF {
     uint32 i;
     (*this) >> i;
 
+    f = *(float32 *)(&i);
+
+    return (*this);
+  }
+  
+  /* read a float (64)
+   */
+  OutputStream &OutputStream::operator>>(float64 &f) {
+    /* this is more difficult... i don't know if the SiRF buggers
+     * about with the IEEE endian-ness... have to look in the docs
+     * somewhere.
+     */
+    uint32 i[2];
+    (*this) >> i[0] >> i[1];
+    
+    f = *(float64 *)(i);
+
     return (*this);
   }
   
@@ -138,7 +155,7 @@ namespace SiRF {
     /* looking for a starting marker
      */
     if (b == start) {
-      i = 300;
+      i = 512;
       do {
 	(*this) >> marker;
 	i--;

@@ -8,6 +8,11 @@
 #include "PacketExtractor.hpp"
 #include <map>
 
+extern "C" {
+#include <pthread.h>
+#include <semaphore.h>
+}
+
 namespace SiRF {
 
   class PacketFactory {
@@ -48,6 +53,10 @@ namespace SiRF {
      */
     void eventLoop();
 
+    /* exit the loop
+     */
+    void exitLoop();
+
     /*
      */
     void throwAwayPacketsUntilNice();
@@ -69,6 +78,20 @@ namespace SiRF {
     /* default handlers
      */
     PacketExtractor<UnknownPacket> defaultHandlers;
+
+    /* underlying semaphore and thread
+     */
+    ::sem_t lock;
+    ::pthread_t thread;
+
+    /* locking functions
+     */
+    bool goodToContinue();
+    void threadedEventLoop();
+
+    /* stupid hacked-up function to do pthreaded-ness
+     */
+    static void *stupidHackedUpPthreadFunction(void *);
 
   };
 

@@ -7,6 +7,7 @@ struct field *make_field_multiplier(int count, char *record, char *name,
 	if (f == NULL) { fprintf(stderr, "f == NULL!\n"); }
 	
 	f->next = NULL;
+	f->bitset = NULL;
 	f->count = count;
 	f->record = record;
 	f->name = name;
@@ -79,7 +80,8 @@ void make_hpp_file(struct packet *p, FILE *fh) {
 	   (strcmp(fptr->record, "uint16") != 0) &&
 	   (strcmp(fptr->record, "uint32") != 0) &&
 	   (strcmp(fptr->record, "uint64") != 0) &&
-	   (strcmp(fptr->record, "float") != 0) ) {
+	   (strcmp(fptr->record, "float32") != 0) &&
+	   (strcmp(fptr->record, "float64") != 0) ) {
 	// new type
 	fprintf(fh, "#include <%s.hpp>\n", fptr->record);
       }
@@ -92,6 +94,26 @@ void make_hpp_file(struct packet *p, FILE *fh) {
       fprintf(fh, " class %s : public OutputPacket {\n\n", pptr->name);
     }
     fprintf(fh, " public:\n\n");
+
+    for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
+      if ((fptr->bitset != NULL) && (strcmp(fptr->name,"Reserved") != 0)) {
+	int i = 0;
+	struct bit_collection *bptr;
+	fprintf(fh, "  enum %sOptions {\n", fptr->name);
+	for (bptr = fptr->bitset; bptr != NULL; bptr = bptr->next) {
+	  if (strcmp(bptr->name, "Reserved") != 0) {
+	    if (bptr->next != NULL) {
+	      fprintf(fh, "   %s = %d,\n", bptr->name, (1 << i));
+	    } else {
+	      fprintf(fh, "   %s = %d\n", bptr->name, (1 << i));
+	    }
+	  }
+	  i++;
+	}
+	fprintf(fh, "  };\n\n");
+      }
+    }
+    
     if (pptr->type >= 0) {
       fprintf(fh, "  static const unsigned char type = 0x%02x;\n\n",
 	      pptr->type);
@@ -328,15 +350,27 @@ void make_cpp_file(struct packet *p, FILE *fh) {
     for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
       if (strcmp(fptr->name,"Reserved") != 0) {
 	if (fptr->count == 1) {
-	  fprintf(fh, "  out << \"%s:\\t\" << (int)m_%s << \" %s\" << std::endl;\n", 
-		  fptr->name, fptr->name, fptr->description);
+	  if ((strcmp(fptr->record,"uint8")==0) ||
+	      (strcmp(fptr->record,"int8")==0)) {
+	    fprintf(fh, "  out << \"%s:\\t\" << (int)(m_%s) << \" %s\" << std::endl;\n", 
+		    fptr->name, fptr->name, fptr->description);
+	  } else {
+	    fprintf(fh, "  out << \"%s:\\t\" << m_%s << \" %s\" << std::endl;\n", 
+		    fptr->name, fptr->name, fptr->description);
+	  }
 	} else {
 	  fprintf(fh, "  out << \"%s: %s\" << std::endl;\n",
 		  fptr->name, fptr->description); 
 	  fprintf(fh, "  for (int i = 0; i < %d; i++) {\n",
 		  fptr->count);
-	  fprintf(fh, "   out << i << \":\\t\" << m_%s[i] << std::endl;\n",
-		  fptr->name);
+	  if ((strcmp(fptr->record,"uint8")==0) ||
+	      (strcmp(fptr->record,"int8")==0)) {
+	    fprintf(fh, "   out << i << \":\\t\" << (int)(m_%s[i]) << std::endl;\n",
+		    fptr->name);
+	  } else {
+	    fprintf(fh, "   out << i << \":\\t\" << m_%s[i] << std::endl;\n",
+		    fptr->name);
+	  }
 	  fprintf(fh, "  }\n");
 	}
       }

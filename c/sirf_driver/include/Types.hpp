@@ -16,6 +16,7 @@ namespace SiRF {
   typedef int int32;
   typedef long long int64;
   typedef float float32;
+  typedef double float64;
   
 }
 

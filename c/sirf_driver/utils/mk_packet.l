@@ -14,8 +14,10 @@ packet			return PACKET;
 =			return EQUALS;
 \(			return OPAREN;
 \)			return CPAREN;
+\|                      return VBAR;
 input			return INPUT;
 output			return OUTPUT;
+bitmask                 return BITMASK;
 unsigned		{
 			strcpy(yylval.strim,yytext); 
 			return MODIFIER;

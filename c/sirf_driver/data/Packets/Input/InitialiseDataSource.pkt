@@ -8,5 +8,12 @@ input packet InitialiseDataSource (128) {
   uint32 TimeOfWeek = float / 100.0 /* Time of week in seconds */;
   uint16 Week /* GPS week number */;
   uint8 Channels /* number of channels */;
-  uint8 ResetConfig /* bitmap for reset stuff */;
+  uint8 ResetConfig = bitmask (
+	DataValid|
+	ClearEphemeris|
+	ClearMemory|
+	FactoryReset|
+	NavLibData|
+	DebugSiRF|
+	DebugNMEA) /* bitmap for reset stuff */;
 }

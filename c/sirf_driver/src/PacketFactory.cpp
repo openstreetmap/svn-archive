@@ -54,17 +54,38 @@ namespace SiRF {
     return p;
   }
 
+  /* enter the threaded event loop
+   */
+  void PacketFactory::eventLoop() {
+    ::sem_init(&lock, 0, 0);
+    ::pthread_create(&thread, NULL, &stupidHackedUpPthreadFunction, this);
+  }
+
+  /* exit the threaded event loop
+   */
+  void PacketFactory::exitLoop() {
+    ::sem_post(&lock);
+    ::pthread_join(thread, NULL);
+    ::sem_destroy(&lock);
+  }
+
+  void *PacketFactory::stupidHackedUpPthreadFunction(void *ptr) {
+    // stupid function!
+    ((PacketFactory*)ptr)->threadedEventLoop();
+    return NULL;
+  }
+
   /* enters the main event loop, grabbing packets and 
    * firing them off to the PacketHandlers
    */
-  void PacketFactory::eventLoop() {
+  void PacketFactory::threadedEventLoop() {
     uint8 type;
     OutputPacket *packet;
 
     // at some point when i thread this class this will be a lock,
     // so that another thread can make this one safely exit at a
     // packet boundary.
-    while (true) {
+    while (goodToContinue()) {
       try {
 	in >> Stream::start >> type;
 
@@ -103,6 +124,16 @@ namespace SiRF {
 
     // we never actually get here
     // but we might when the pthread locking is written...
+  }
+
+  /* is it good to continue?
+   */
+  bool PacketFactory::goodToContinue() {
+    int i;
+
+    ::sem_getvalue(&lock, &i);
+
+    return (i == 0);
   }
 
   /* throw away packets until we have 5 nice ones in a row

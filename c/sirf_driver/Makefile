@@ -7,20 +7,23 @@ SRCDIR:=$(shell pwd)
 #	-I$(SRCDIR)/include/Packets/Input  \
 #	-I$(SRCDIR)/include/Packets/Output
 INC=-Iinclude/ -Iinclude/Packets/Output/ -Iinclude/Packets/Input/
-OPTFLAGS?=-g -ggdb
+OPTFLAGS?=-fPIC -g -ggdb
 CFLAGS?=$(OPTFLAGS)
 CXXFLAGS?=$(OPTFLAGS)
 LDFLAGS?=$(OPTFLAGS)
 #PKT_FILES:=$(wildcard data/Packets/Input/*.pkt data/Packets/Output/*.pkt)
 PKT_FILES:=$(wildcard data/Packets/Output/*.pkt) \
-	data/Packets/Input/PollSoftwareVersion.pkt
+	data/Packets/Input/PollSoftwareVersion.pkt \
+	data/Packets/Input/StaticNavigation.pkt \
+	data/Packets/Input/SetTricklePower.pkt \
+	data/Packets/Input/InitialiseDataSource.pkt
 SOURCES= $(wildcard src/*.cpp) $(wildcard src/*.c) \
 	$(wildcard src/Packets/Output/*.cpp) \
 	$(wildcard src/Packets/Input/*.cpp)
 #	$(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES))
 OBJECTS:=$(subst .c,.o,$(SOURCES:.cpp=.o))
 
-all: sirfdump
+all: libSiRF.so
 
 clean:
 	rm -f sirfdump Makefile.dep src/*.o \
@@ -40,7 +43,10 @@ include Makefile.dep
 endif
 
 sirfdump: $(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+	$(CXX) $(LDFLAGS) -o $@ $^ -lpthread
+
+libSiRF.so: $(OBJECTS)
+	$(CXX) $(LDFLAGS) -shared -o $@ $^ -lpthread
 
 utils/mk_packet: utils/packet.o utils/mk_packet.tab.o utils/lex.yy.o
 	$(CC) $(LDFLAGS) -o $@ $^

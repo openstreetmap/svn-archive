@@ -64,6 +64,6 @@ include/%.hpp: data/%.pkt utils/mk_packet
 src/%.cpp: data/%.pkt include/%.hpp utils/mk_packet
 	utils/mk_packet -c $@ $<
 
-Makefile.dep: $(SOURCES)
+Makefile.dep: $(SOURCES) $(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES))
 	$(CXX) -MM -MG $(CXXFLAGS) $(INC) -E $^ > $@
 

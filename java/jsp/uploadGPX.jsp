@@ -107,7 +107,7 @@ else
 
       // test the username and password
 
-      boolean bLoggedIn = false;
+//      boolean bLoggedIn = false;
 
 
       XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");

@@ -16,7 +16,7 @@
 
 <target name="compile" depends="init">
   <javac srcdir="${src}"
-         classpath="${lib}/openmap.jar"
+         classpath="${lib}/openmap.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar"
          debug="true"
          optimize="off"
          destdir="${build}"
@@ -34,6 +34,8 @@
   <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
   <copy file="${src}/index.html" tofile="${dist}/index.html"/>
   <copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
+  <copy file="${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar" tofile="${dist}/xmlrpc-1.2-b1.jar"/>
+  <copy file="${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1-applet.jar" tofile="${dist}/xmlrpc-1.2-b1-applet.jar"/>
  </target>
 
 

@@ -59,6 +59,48 @@ public class osmServerClient
 
 
  
+  public synchronized int addNewStreet(
+      String sStreetName,
+      double lat1,
+      double lon1,
+      double lat2,
+      double lon2
+      )
+  {
+    
+    Vector params = new Vector();
+
+    params.addElement(sLoginToken);
+    params.addElement(sStreetName);
+    params.addElement(new Double(lat1));
+    params.addElement(new Double(lon1));
+    params.addElement(new Double(lat2));
+    params.addElement(new Double(lon2));
+
+
+    Integer i =  new Integer(-1);
+    
+    try{
+
+      i = (Integer)xmlrpc.execute("openstreetmap.addNewStreet", params);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      return -1;
+
+    }
+
+    return  i.intValue();
+
+  } // addStreetSegment
+
+
+
+
   public synchronized boolean addStreetSegment(
       int street_uid,
       double lat1,
@@ -67,7 +109,7 @@ public class osmServerClient
       double lon2
       )
   {
-    
+
     Vector params = new Vector();
 
     params.addElement(sLoginToken);

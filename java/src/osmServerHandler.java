@@ -40,6 +40,38 @@ public class osmServerHandler
   
 
  
+ 
+  public Integer addNewStreet(String token,
+      String sStreetName,
+      double lat1,
+      double lon1,
+      double lat2,
+      double lon2
+      )
+  {
+
+
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+ 
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return new Integer(-1);
+    }
+
+    return osmSQLH.addNewStreet(
+        sStreetName,
+        (float)lat1,
+        (float)lon1,
+        (float)lat2,
+        (float)lon2,
+        uid);
+
+  } // addNewStreet
+
+
+
   public boolean addStreetSegment(String token,
       int street_uid,
       double lat1,

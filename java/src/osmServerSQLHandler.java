@@ -189,10 +189,91 @@ public class osmServerSQLHandler extends Thread
 
   } // validateLoginToken
 
-
-
  
   
+ 
+  public synchronized Integer addNewStreet(
+      String street_name,
+      float lat1,
+      float lon1,
+      float lat2,
+      float lon2,
+      int uid)
+  {
+    // creates a new street
+    // returns the street_uid created
+
+    System.out.println("addNewStreet");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+  
+      long l = System.currentTimeMillis();
+      
+      String sSQL = "lock table streets write, streetSegments write; start transaction; ";
+      
+      sSQL += 
+        "insert into streets(name, timestamp, user_uid, visible) values ("
+        + " " + street_name + ", "
+        + " " + l + ", "
+        + " " + uid + ", "
+        + " true "
+        + "); ";
+
+      sSQL += "set @id = last_insert_id(); ";
+
+      sSQL += "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
+        + "  last_insert_id() , "
+        + " " + lon1 + ", "
+        + " " + lat1 + ", "
+        + " " + lon2 + ", "
+        + " " + lat2 + ", "
+        + " " + l + ", "
+        + " " + uid + ", "
+        + " true "
+        + "); ";
+
+      sSQL += "commit; unlock tables; ";
+
+      sSQL += "select @id; ";
+
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      Integer i = new Integer(rs.getInt(1));
+
+      System.out.println("returned int on insert street was = " + i);
+
+      return i;
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return new Integer(-1);
+
+  } // addNewStreet
+
+
+
+
+
   public synchronized boolean addStreetSegment(
       int street_uid,
       float lat1,
@@ -242,11 +323,13 @@ public class osmServerSQLHandler extends Thread
 
     return true;
 
-  }
+  } // addStreetSegment
 
-  
- public synchronized boolean addPoint(
-     float lat,
+
+
+
+  public synchronized boolean addPoint(
+      float lat,
       float lon,
       float alt,
       long timestamp,
@@ -336,10 +419,10 @@ public class osmServerSQLHandler extends Thread
         + " ) "
         + " and visible=1 limit 10000";
 
-      
+
       System.out.println("querying with sql \n " + sSQL);
 
-      
+
       ResultSet rs = stmt.executeQuery(sSQL);
 
       Vector v = new Vector();
@@ -361,8 +444,8 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      
-      
+
+
       System.out.println(e);
       e.printStackTrace();
 

@@ -93,7 +93,7 @@ public class osmLineLayer extends Layer
   {
     // NOTE: all this is very non-optimized...
 
-    //graphics.clear();
+    graphics.clear();
 
     osmStreetSegment oml;
 
@@ -138,7 +138,7 @@ public class osmLineLayer extends Layer
       }
 
     }
-  }
+  } // createGraphics
 
 
   public void paint (Graphics g) {
@@ -264,6 +264,14 @@ public class osmLineLayer extends Layer
 
   public void setLine(LatLonPoint a, LatLonPoint b)
   {
+    if( !od.checkLogin() )
+    {
+      // not logged in
+
+      return;
+
+    }
+
 
     System.out.println("trying to adding line  "+
         +a.getLatitude()+","
@@ -280,29 +288,43 @@ public class osmLineLayer extends Layer
       
     }
 
+    boolean bSQLSuccess = false;
+
     if(uid == -1)
     {
-      // need to add a new street. for now we drop this
-      return;
+      // not attached to an existing line, create a new one
 
+      int i = osc.addNewStreet(
+          "",
+          a.getLatitude(),
+          a.getLongitude(),
+          b.getLatitude(),
+          b.getLongitude()
+          );
+
+      if( i!= -1)
+      {
+        uid = i;
+        bSQLSuccess = true;
+
+      }
     }
-
-    if( !od.checkLogin() )
+    else
     {
-      // not logged in
+      // attached to an existing line. yay.
 
-      return;
-
-    }
-
-    if( osc.addStreetSegment(
+      bSQLSuccess = osc.addStreetSegment(
           uid,
           a.getLatitude(),
           a.getLongitude(),
           b.getLatitude(),
-          b.getLongitude() )
-      )
+          b.getLongitude()
+          );
+    }
+
+    if( bSQLSuccess )
     {
+      // one of the sql queries worked so add it to our private list
       // if it got added to the database then add it to our list too
 
       osmStreetSegment l = new osmStreetSegment(

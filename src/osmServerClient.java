@@ -40,7 +40,8 @@ public class osmServerClient
 
       while( (sLine = in.readLine()) != null)
       {
-        System.out.println("Server said " + sLine);
+        System.out.print(".");
+
         if(sLine.equals("END"))
         {
           break;
@@ -51,6 +52,8 @@ public class osmServerClient
 
         gpsPoints.add( new gpspoint(st.nextToken(), st.nextToken(), st.nextToken(), st.nextToken() ) );
       }
+
+      System.out.println("done getting points");
     
     }
     catch(Exception e)

@@ -60,6 +60,8 @@ public class osmServerHandler implements Runnable
               gpspoint g = (gpspoint)e.nextElement();
 
               out.write(g + "\n");
+              
+              out.flush();
             }
               
             

@@ -18,7 +18,7 @@ class osmTestServer
   {
     try
     {
-      XmlRpcClientLite xmlrpc = new XmlRpcClientLite("http://128.40.59.181:4000/");
+      XmlRpcClientLite xmlrpc = new XmlRpcClientLite("http://128.40.59.181/openstreetmap/xml.jsp");
 
       Vector v = new Vector();
 

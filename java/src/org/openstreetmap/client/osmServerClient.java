@@ -44,7 +44,8 @@ public class osmServerClient
     try
     {
 
-      xmlrpc = new SimpleXmlRpcClient("128.40.59.181", 4000);
+      xmlrpc = new SimpleXmlRpcClient("http://128.40.59.181/openstreetmap/xml.jsp");
+
 
     }
     catch(Exception e)

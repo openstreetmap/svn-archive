@@ -513,6 +513,22 @@ public class osmServerHandler
   } // setNewKeyName
 
 
+  
+  public int newKey(String sToken, String sNewKeyName)
+  {
+    int uid = osmSQLH.validateToken(sToken);
+
+    if( uid == -1)
+    {
+      return -1;
+
+    }
+
+    return osmSQLH.newKey(sNewKeyName, uid);
+
+  } // newKey
+
+
   public boolean getKeyVisible(String sToken, int nKeyNum)
   {
     int uid = osmSQLH.validateToken(sToken);

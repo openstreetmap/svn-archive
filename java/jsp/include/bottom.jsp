@@ -34,6 +34,9 @@ if(bLoggedIn)
       <img src="/images/stock_edit-16.png"><a href="applet.jsp">Edit map</a>
     </li>
     <li>
+      <img src="/images/icon_key.png"><a href="editKeys.jsp">Edit keys</a>
+    </li>
+    <li>
       <img src="/images/stock_save-16.png"><a href="uploadGPX.jsp">Upload GPX</a>
     </li>
     <li>

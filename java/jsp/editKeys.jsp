@@ -155,7 +155,7 @@ else
       <table id="keyvalue" border="0" width="100%">
       <tr>
       <th>
-      Key name
+      Key Name
       </th>
       <th>
       Edited by
@@ -226,22 +226,57 @@ else
   {
     osmServerHandler osmSH = new osmServerHandler();
 
+    if( sAction != null && sAction.equals("addNewKey") )
+    {
+      String sNewKeyName = request.getParameter("newKeyName");
+      if( sNewKeyName != null)
+      {
+        int nNewKeyNum = osmSH.newKey(sToken, sNewKeyName);
+
+        if(nNewKeyNum == -1)
+        {
+          %>Adding that key failed, make sure it doesn't have any spaces in it<%
+
+        }
+        else
+        {
+          %>Success adding key <%=sNewKeyName%>...<%
+        }
+        
+
+      }
+
+    } 
+
+
     Vector keys = osmSH.getAllKeys(sToken, true); //get all visible keys
 
     Enumeration e = keys.elements();
 
     %>
+      <br>
+      <h2>Add new key:</h2>
+
+      <form action="editKeys.jsp">
+      <table>
+      <tr><td>New key name:</td><td><input type="text" name="newKeyName"></td></tr>
+      <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+      </table>
+      <input type="hidden" name="action" value="addNewKey">
+      </form>
+
+
       <h2>Visible keys:</h2>
       <table id="keyvalue" border="0" width="100%">
       <tr>
       <th>
-      Key name
+      Current Key Name
       </th>
       <th>
-      Created by
+      Last Edited by
       </th>
       <th>
-      Created at
+      Last Edited at
       </th>
       <th>
       Actions
@@ -299,13 +334,13 @@ else
       <table id="keyvalue" border="0" width="100%">
       <tr>
       <th>
-      Key name
+      Current Key Name
       </th>
       <th>
-      Created by
+      Last Edited by
       </th>
       <th>
-      Created at
+      Last Edited at at
       </th>
       <th>
       Actions

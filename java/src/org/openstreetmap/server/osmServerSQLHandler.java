@@ -988,7 +988,7 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "select h.uid, j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid) as j  where h.uid=j.uid and h.visible=" + bVisibleOrNot + " group by h.uid";
+      String sSQL = "select h.uid, j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid order by timestamp desc) as j  where h.uid=j.uid and h.visible=" + bVisibleOrNot + " group by h.uid";
       
       System.out.println("querying with sql \n " + sSQL);
 
@@ -1052,8 +1052,78 @@ public class osmServerSQLHandler extends Thread
   } // getKeyHistory
 
   
+ 
+  public synchronized int newKey(String sNewKeyName, int nUserUID)
+  {
+    if(!isStringSQLClean(sNewKeyName) || sNewKeyName.length() == 0)
+    {
+      return -1;
+
+    }
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      
+      sSQL = "insert into key_meta_table (timestamp, user_uid,visible) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID
+        + ", 1)";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "insert into osmKeys (uid,name,timestamp,user_uid,visible) values ("
+        + " last_insert_id(), "
+        + "'" + sNewKeyName + "', "
+        + System.currentTimeMillis() + ", "
+        + nUserUID + ", "
+        + "1)";
+
+      stmt.execute(sSQL);
+
+
+      sSQL = "commit;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "select @id;";
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newKey
+
+
   public synchronized boolean newKeyName(String sNewKeyName, int nKeyNum, int nUserUID)
   {
+    if( !isStringSQLClean(sNewKeyName) || sNewKeyName.length() ==0)
+    {
+      return false;
+    }
 
     try{
 
@@ -1077,7 +1147,7 @@ public class osmServerSQLHandler extends Thread
           + nUserUID + ", "
           + "1)";
 
-          stmt.execute(sSQL);
+        stmt.execute(sSQL);
 
         return true;
 
@@ -1096,7 +1166,7 @@ public class osmServerSQLHandler extends Thread
   } // newKeyName
 
 
- 
+
   public synchronized boolean deleteKey(int nKeyNum, int nUserUID)
   {
     try{
@@ -1159,7 +1229,7 @@ public class osmServerSQLHandler extends Thread
 
         if( rs.getString("visible").equals("1") )
         {
-          
+
           // the key is already undeleted
           return false;
         }
@@ -1184,8 +1254,6 @@ public class osmServerSQLHandler extends Thread
 
   private synchronized boolean updateKeyVisibility(int nKeyNum, boolean bVisible, String sKeyName, int nUserUID)
   {
-
-
     try
     {
       String sVisible = "0";
@@ -1240,7 +1308,7 @@ public class osmServerSQLHandler extends Thread
 
   } // updateKeyVisibility
 
-  
+
   public synchronized boolean getKeyVisible(int nKeyNum)
   {
 
@@ -1249,7 +1317,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "select visible from key_meta_table where uid=" + nKeyNum;
-      
+
       System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
@@ -1271,6 +1339,20 @@ public class osmServerSQLHandler extends Thread
     return false;
 
   } // getKeyVisible
+
+  
+  private boolean isStringSQLClean(String s)
+  {
+    int nSpace = s.indexOf(' ');
+
+    if(nSpace == -1)
+    {
+      return true;
+    }
+
+    return false;
+
+  } // isStringSQLClean
 
 
 } // osmServerSQLHandler

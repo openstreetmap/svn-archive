@@ -10,9 +10,8 @@
 
 <%@ include file="include/top.jsp" %>
 
-<%@ include file="include/loggedin.jsp" %>
 
-
+<div id="main_area">
 <%
 
 
@@ -149,7 +148,5 @@ else
   }
 }
 %>
-
+</div>
 <%@ include file="include/bottom.jsp" %>
-
-</html>

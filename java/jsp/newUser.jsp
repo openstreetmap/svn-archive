@@ -6,7 +6,10 @@
 <%@ page import="org.openstreetmap.server.osmServerHandler" %>
 
 <%@ page contentType="text/html" %>
-<%!
+<%@ include file="include/top.jsp" %>
+<div id="main_area">
+
+<%
 
 
 String smtpServer = "localhost";
@@ -110,9 +113,9 @@ else
         v.addElement(email);
         v.addElement(pass1);
 
-        String sToken = (String)xmlrpc.execute("openstreetmap.addUser",v);
+        String sAddUserToken = (String)xmlrpc.execute("openstreetmap.addUser",v);
 
-        if( !sToken.equals("ERROR"))
+        if( !sAddUserToken.equals("ERROR"))
         {
 
           bXmlSuccess = true;
@@ -178,5 +181,5 @@ else
 out.flush();
 
 %>
-
-</html>
+</div>
+<%@ include file="include/bottom.jsp" %>

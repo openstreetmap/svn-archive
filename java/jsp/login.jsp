@@ -6,6 +6,8 @@
 <%@ page contentType="text/html" %>
 <%@ include file="include/top.jsp" %>
 
+<div id="main_area">
+
 <%
 
 String action = request.getParameter("action");
@@ -17,7 +19,7 @@ if( action == null)
   %>
     <h1>Login:</h1><br>
     Please login or <a href="newUser.jsp">create an account</a>.<br>
-    <form action="http://www.openstreetmap.org/api/login.jsp">
+    <form action="/edit/login.jsp">
     <table>
     <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
     <tr><td>password:</td><td><input type="password" name="pass"></td></tr>
@@ -46,10 +48,10 @@ else
     }
     else
     {
-      String cookieName = "openstreetmap";
+      String sCookieName = "openstreetmap";
       Date now = new Date();
       String timestamp = now.toString();
-      Cookie cookie = new Cookie (cookieName, token);
+      Cookie cookie = new Cookie (sCookieName, token);
       cookie.setMaxAge(10 * 60);
       response.addCookie(cookie);
       %>Login success!<%
@@ -60,7 +62,5 @@ else
 out.flush();
 
 %>
-
+</div>
 <%@ include file="include/bottom.jsp" %>
-
-</html>

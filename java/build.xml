@@ -61,7 +61,8 @@ destdir="${build}"
 <copy file="${jsp}/newUser.jsp" tofile="/var/lib/tomcat4/webapps/edit/newUser.jsp" />
 <copy file="${jsp}/uploadGPX.jsp" tofile="/var/lib/tomcat4/webapps/edit/uploadGPX.jsp" />
 <copy file="${jsp}/login.jsp" tofile="/var/lib/tomcat4/webapps/edit/login.jsp" />
-
+<copy file="${jsp}/applet.jsp" tofile="/var/lib/tomcat4/webapps/edit/applet.jsp" />
+<copy file="${jsp}/logout.jsp" tofile="/var/lib/tomcat4/webapps/edit/logout.jsp" />
 <!-- includes -->
 
 <copy todir="/var/lib/tomcat4/webapps/edit/include/">
@@ -70,6 +71,27 @@ destdir="${build}"
   </fileset>
 </copy>
 
+<!-- images -->
+
+<copy todir="/var/www/openstreetmap/images/">
+  <fileset dir="html-images/">
+    <include name="**/*.png"/>
+  </fileset>
+</copy>
+
+<!-- css -->
+
+<copy file="css/style.css" tofile="/var/www/openstreetmap/css/style.css" />
+
+
+
+<!--"osm.jar , openmap.jar , xmlrpc-applet.jar , commons-codec-1.1.jar"-->
+
+
+<copy file="${dist}/osm.jar" tofile="/var/lib/tomcat4/webapps/edit/osm.jar" />
+<copy file="${dist}/openmap.jar" tofile="/var/lib/tomcat4/webapps/edit/openmap.jar" />
+<copy file="${dist}/xmlrpc-applet.jar" tofile="/var/lib/tomcat4/webapps/edit/xmlrpc-applet.jar" />
+<copy file="${dist}/commons-codec-1.1.jar" tofile="/var/lib/tomcat4/webapps/edit/commons-codec-1.1.jar" />
 
 
 </target>

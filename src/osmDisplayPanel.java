@@ -11,12 +11,15 @@ public class osmDisplayPanel extends JPanel{
 
   Vector gpsPoints;
 
+  osmApplet osmA;
+  
   AffineTransform at = new AffineTransform();
 
   Image offScreenBuffer;
 
-  public osmDisplayPanel() {
+  public osmDisplayPanel(osmApplet osmApp) {
 
+    osmA = osmApp;
 
     System.out.println("gpsShow instantiated...");
     
@@ -177,6 +180,7 @@ public class osmDisplayPanel extends JPanel{
   
     closestPoint.setHighlight(true);
 
+    osmA.setStatusLabel("closest point is " + closestPoint);
     repaint();
 
   } // mouseClicked

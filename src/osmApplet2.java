@@ -25,8 +25,10 @@ public class osmApplet2 extends JApplet {
 
         MapBean mapBean = new MapBean();
         getContentPane().add(label, BorderLayout.SOUTH);
-        ShapeLayer shapeLayer = new ShapeLayer();
+        
+        osmPointsLayer shapeLayer = new osmPointsLayer();
         Properties shapeLayerProps = new Properties();
+        
         shapeLayerProps.put("prettyName", "Political Solid");
         shapeLayerProps.put("lineColor", "000000");
         shapeLayerProps.put("fillColor", "BDDE83");

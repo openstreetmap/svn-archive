@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Contributing</title>
+    <author email="dlr@finemaltcoding.com">Daniel Rall</author>
+    <author email="rhoegg@isisnetworks.net">Ryan Hoegg</author>
+  </properties>
+
+  <body>
+    <section name="Contributing">
+      <p>A great <a
+      href="http://jakarta.apache.org/site/contributing.html">description</a>
+      of contributing to Apache XML-RPC is available from the Jakarta
+      project.</p>
+    </section>
+
+    <section name="Submitting Patches">
+      <p>The preferred patch format is unidiff.  Emails containing
+      patches should be sent to the xmlrpc-dev@ws.apache.org list, and
+      prefix their subject lines with <strong>[PATCH]</strong>.
+      Patches are also accepted via the <a
+      href="http://issues.apache.org/bugzilla/">issue tracker</a>.
+      The Jakarta project provides a description of <a
+      href="http://jakarta.apache.org/site/source.html">life with ASF
+      source code</a> -- look for the <strong>Patches</strong>
+      section.</p>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>XML Parsers</title>
+    <author email="hannes@helma.at">Hannes Wallnofer</author>
+  </properties>
+
+  <body>
+    <section name="XML Parsers">
+      <p>
+      Apache XML-RPC supports
+<a href="http://www.megginson.com/SAX/SAX1">SAX 1.0</a>
+and can therefore be used with any compliant XML parser. The default parser
+is John Wilson's <a href="http://www.wilson.co.uk/xml/minml.htm">MinML</a> parser
+which is included in the package so you don't need anything else to start using
+the software. MinML is an ideal parser for XML-RPC because it is small, fast,
+and implements exactly the features of XML which are used by XML-RPC.
+      </p>
+      <p>
+If you want to use a different SAX parser, you can do this by calling the
+setDriver() method in org.apache.xmlrpc.XmlRpc with the class name of the
+SAX parser.
+      </p>
+<pre>  XmlRpc.setDriver ("your.sax.driver");</pre>
+       <p>
+Alternatively you can set the parser by setting the System property
+"sax.driver" to the class name of the parser you want to use.
+       </p>
+<pre>  java -Dsax.driver=your.sax.driver helma.xmlrpc.WebServer</pre>
+
+    </section>
+  </body>
+</document>

@@ -23,7 +23,7 @@ import java.net.*;
 import java.lang.*;
 import java.io.*;
 import com.bbn.openmap.LatLonPoint;
-import org.apache.xmlrpc.*;
+import org.apache.xmlrpc.applet.*;
 
 public class osmServerClient
 {
@@ -44,11 +44,12 @@ public class osmServerClient
   
     try{
       
-      XmlRpcClient xmlrpc = new XmlRpcClient("http://128.40.59.181:4000/");
+      SimpleXmlRpcClient xmlrpc = new SimpleXmlRpcClient("128.40.59.181", 4000);
 
 
       Vector params = new Vector();
 
+      params.addElement( "applet" ); 
       params.addElement( new Double((double)llp1.getLatitude()) );
       params.addElement( new Double((double)llp1.getLongitude()) );
       params.addElement( new Double((double)llp2.getLatitude()) );

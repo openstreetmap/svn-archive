@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>XML-RPC</title>
+    <author email="dlr@finemaltcoding.com">Daniel Rall</author>
+  </properties>
+
+  <body>
+
+    <section name="Changes">
+      <p>
+        <ul>
+
+
+          <li>
+            <strong>10 Sep 2003</strong>
+            <ul>
+
+              <li>
+                CVS Repository Name has changed from <em>xml-rpc</em> to <em>ws-xmlrpc</em>.
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>28 Jan 2003</strong>
+            <ul>
+
+              <li>
+                Move HTTP Basic Authentication functionality to the XmlRpcTransport
+                classes.  Deprecate XmlRpcClient.setBasicAuthentication. (Ryan Hoegg)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>28 Jan 2003</strong>
+            <ul>
+
+              <li>
+		Refactor XmlRpcTransportFactory and add DefaultXmlRpcTransportFactory that
+                can load other transport factories via reflection.
+                Merge edited code from Larry Meader and Chris Jackson to use the Sun SSL 
+                provider as a transport. (Andrew Evers)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>25 Jan 2003</strong>
+            <ul>
+
+              <li>
+                Created base test class for XmlRpcTransport classes.
+                Future implementations of XmlRpcTransport should inherit
+                their test classes from XmlRpcTransportTest as it guarantees
+                that they behave identically to DefaultXmlRpcTransport.
+                (Ryan Hoegg)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>11 Nov 2002</strong>
+            <ul>
+
+              <li>
+                Don't retain memory for huge CDATA buffers in
+                XmlRpc.parse(InputStream) past the life of a
+                request. (Daniel Rall/Glen Lewis)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>1 Nov 2002</strong>
+            <ul>
+
+              <li>
+                When decoding base-64 data, ignore whitespace
+                occurring in body -- it may have been caused by XML
+                indentation or line wrapping. (Daniel Rall)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>21 Oct 2002</strong>
+            <ul>
+
+              <li>
+                Add context support for server side handlers, use
+                context support to re-implement system handlers.
+                Test case for new "system.multicall" handler. (Andrew Evers)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>27 Sep 2002</strong>
+            <ul>
+
+              <li>
+                Patches from Andrew Evers to allow for pluggable
+                mappings from XML-RPC types to Java types. (dlr)
+              </li>
+
+              <li>
+                HTTP auth tweaks suggested by Adam Megacz. (dlr)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>20 Aug 2002</strong>
+            <ul>
+
+              <li>
+                XmlWriter.java: Added error handling of characters
+                below 0x20 and above 0xff. (dlr/Adam Megacz/John
+                Wilson)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>15 Aug 2002</strong>
+            <ul>
+
+              <li>
+                WebServer.java: Renamed the checkSocket() method to
+                allowConnection(), and integrated checking of paranoia
+                state into it. (dlr)
+              </li>
+
+              <li>
+                WebServer.java: Server now shuts down cleanly, with
+                the start() and shutdown() methods mostly just a
+                controls for the listener thread's run() life
+                cycle. (dlr)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>13 Aug 2002</strong>
+            <ul>
+
+              <li>
+                SystemHandler.java: New handler for system.multicall
+                donated by Adam Megacz. (dlr)
+              </li>
+
+              <li>
+                XmlRpcServer.java: Refactored internals to be more
+                modular. (dlr)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>09 Aug 2002</strong>
+            <ul>
+
+              <li>
+                WebServer.java, SecureWebServer.java: Refactored code
+                so that start() is what opens the listener socket.
+                This changes the way the server is started! (dlr)
+              </li>
+
+              <li>
+                XmlRpcServer.java, XmlRpcClient.java,
+                XmlRpcClientLite.java, WebServer.java: Switched
+                general debugging statements from System.err to
+                System.out. (dlr)
+              </li>
+
+              <li>
+                WebServer.java: Reduced scope of setupServerSocket()
+                from public to private, and assured that it only sets
+                the (required) socket timeout when non has been
+                specified.  createServerSocket() can be overridden to
+                produced a different flavor of socket. (dlr)
+              </li>
+
+              <li>
+                SecureWebServer.java: Improved constructor
+                documentation. (dlr)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>08 Aug 2002</strong>
+            <ul>
+
+              <li>
+                XmlWriter.java: Corrected encoding of &lt;struct&gt;
+                parameter names.  (Adam Megacz)
+              </li>
+
+              <li>
+                XmlRpc.java, XmlWriter.java, DateUtil.java:  Extracted
+                inner and child class of the core XmlRpc class. (DLR)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>07 Mar 2002</strong>
+            <ul>
+
+              <li>
+                XmlRpc.java: Improved Base64 efficiency. (JSS)
+                Thanks to idea from (Martin Poeschl mpoeschl NOSPAM marmot.at)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>07 Mar 2002</strong>
+            <ul>
+
+              <li>
+                SimpleXmlRpcClient.java: Improved XmlWriter efficiency. (DLR)
+                (Martin Poeschl mpoeschl NO SPAM marmot.at)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>03 Mar 2002</strong>
+            <ul>
+
+              <li>
+                SimpleXmlRpcClient.java: Got rid of using Sun's
+                'private' Base64 encode/decode and used the one included
+                in this package. (JSS)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>18 Feb 2002</strong>
+            <ul>
+
+              <li>
+                Maximum number of threads made programmatically
+                configurable. (dlr)
+              </li>
+
+              <li>
+                Added XmlRpcTest which includes a unit test for
+                XmlWriter. (dlr)
+              </li>
+
+            </ul>
+          </li>
+
+          <li>
+            <strong>15 Feb 2002</strong>
+            <ul>
+              
+              <li>
+                Optimizations made to memory usage of XmlRpc
+                class. (dlr)
+              </li>
+
+            </ul>
+          </li>
+
+        </ul>
+      </p>
+    </section>
+  </body>
+</document>

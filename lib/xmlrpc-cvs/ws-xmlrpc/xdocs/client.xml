@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Client Classes</title>
+    <author email="hannes@helma.at">Hannes Wallnofer</author>
+  </properties>
+
+  <body>
+    <section name="Client Classes">
+      <p>
+      Apache XML-RPC provides two client classes.
+      </p>
+      <ul>
+      <li><a href="/xmlrpc/apidocs/org/apache/xmlrpc/XmlRpcClient.html">org.apache.xmlrpc.XmlRpcClient
+      </a> uses java.net.URLConnection, the HTTP client that comes with
+      the standard Java API</li>
+      <li><a href="/xmlrpc/apidocs/org/apache/xmlrpc/XmlRpcClientLite.html">org.apache.xmlrpc.XmlRpcClientLite</a> provides its own lightweight
+      HTTP client implementation.</li></ul>
+
+      <p>If you need full HTTP support (e.g. Proxies, Redirect etc),
+      you should use XmlRpcClient.  If you don't need full HTTP
+      support and are concerned about performance, you should
+      experiment with both XmlRpcClient and XmlRpcClientLite.  On some
+      platforms XmlRpcClient may be faster, while on others
+      XmlRpcClientLite may be faster.  Both client classes provide the
+      same interface, which includes methods for synchronous and
+      asynchronous calls.
+      </p>
+    </section>
+    <section name="Synchronous XML-RPC Calls">
+      <p>
+      Using the XML-RPC libray on the client side is quite straightforward.
+      Here is some sample code:</p>
+
+<pre>
+  XmlRpcClient xmlrpc = new XmlRpcClient ("http://localhost:8080/RPC2");
+  Vector params = new Vector ();
+  params.addElement ("some parameter");
+  // this method returns a string
+  String result = (String) xmlrpc.execute ("method.name", params);
+</pre>
+
+<p>Note that execute can throw <tt>XmlRpcException</tt> and <tt>IOException</tt>,
+which must be caught or declared by your code.</p>
+
+<p>To quickly test your installation you can issue the following commands:</p>
+
+<pre>
+  java org.apache.xmlrpc.WebServer
+  java org.apache.xmlrpc.XmlRpcClient http://localhost:8080 echo test 123
+</pre>
+
+<p>This should write [test, 123], which is the parameter array you sent to the echo
+handler of the XML-RPC server.</p>
+    </section>
+    <section name="Asynchronous XML-RPC Calls">
+      <p>
+        Apache XML-RPC supports asynchronous XML-RPC calls through the
+        executeAsync() method in the XML-RPC client classes. This means that
+        the call will return immediately without a result and the actual
+        XML-RPC call will be executed in a separate thread.</p>
+
+        <p>If the caller
+        is interested in the result of the remote call, or wants to be
+        notified of exceptions, it can pass an object implementing the
+        <a href="/xmlrpc/apidocs/org/apache/xmlrpc/AsyncCallback.html">org.apache.xmlrpc.AsyncCallback</a>
+        interface to the XML-RPC client class. This interface defines two
+        methods:</p>
+
+<pre>  public void handleResult (Object result, URL url, String method);
+  public void handleError (Exception exception, URL url, String method);</pre>
+
+<p>Depending on the outcome of the call, one of these methods will be called.
+      </p>
+     </section>
+
+  </body>
+</document>

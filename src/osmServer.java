@@ -5,20 +5,28 @@ import java.util.*;
 
 public class osmServer
 {
+  
   ServerSocket s;
-
+  osmServerSQLHandler osmSQLH;
+  
   public static void main(String[] args)
   {
+    
+    System.out.println(new Date() + "openstreetmap server started");
     new osmServer().startServer();
 
   } // main
 
   
+
   public osmServer()
   {
+    
+    osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
   } // osmServer
 
+  
 
   public void startServer()
   {
@@ -33,7 +41,7 @@ public class osmServer
         System.out.println(new Date() + " got a connection from " + tempSocket.getInetAddress());
 
 
-        osmServerHandler osmsh = new osmServerHandler(tempSocket);
+        osmServerHandler osmsh = new osmServerHandler(tempSocket, osmSQLH);
         
         new Thread(osmsh).start();
       

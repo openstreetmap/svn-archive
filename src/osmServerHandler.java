@@ -7,10 +7,14 @@ public class osmServerHandler implements Runnable
 {
 
   Socket s;
+  osmServerSQLHandler osmSQLH;
 
-  public osmServerHandler(Socket sInbound)
+  
+  public osmServerHandler(Socket sT,
+                          osmServerSQLHandler osmTSQLH)
   {
-    s = sInbound;
+    s = sT;
+    osmSQLH = osmTSQLH;
 
   } // osmServerHandler
 
@@ -43,6 +47,28 @@ public class osmServerHandler implements Runnable
         if(sLine.equals("GETPOINTS"))
         {
 
+          Vector v = osmSQLH.getPoints();
+          if( osmSQLH.SQLSuccessful() )
+          {
+            out.write("POINTS\n");
+
+            Enumeration e = v.elements();
+
+            while(e.hasMoreElements())
+            {
+              gpspoint g = (gpspoint)e.nextElement();
+
+              out.write(g + "\n");
+            }
+              
+            
+
+          }
+          else
+          {
+            out.write("ERROR\n");
+            bKeepTalking = false;
+          }
         }
 
       }

@@ -42,8 +42,6 @@ if(FileUpload.isMultipartContent(request))
 
     BufferedInputStream uploadedStream = null; 
 
-    long sizeInBytes = 0;
-    
     while (iter.hasNext()) {
       FileItem item = (FileItem) iter.next();
 
@@ -73,7 +71,7 @@ if(FileUpload.isMultipartContent(request))
         String fileName = item.getName();
         String contentType = item.getContentType();
         boolean isInMemory = item.isInMemory();
-        sizeInBytes = item.getSize();
+        long sizeInBytes = item.getSize();
 
         out.print("fieldName: " + fieldName + "<br>");
         out.print("fileName: " + fileName + "<br>");
@@ -123,9 +121,7 @@ if(FileUpload.isMultipartContent(request))
         out.print("now trying to upload it!<br>");
 
         osmGPXImporter gpxImporter = new osmGPXImporter();
-
-        out.print("created importer ok!<br>Uploading file to database");
-
+        
         gpxImporter.upload(uploadedStream, out, sLoginToken);
         
 

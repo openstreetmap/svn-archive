@@ -45,12 +45,15 @@ public class osmGPXImporter extends DefaultHandler{
 
   }
   
-  public osmGPXImporter(PrintWriter o, String u, String p)
+  public osmGPXImporter(PrintWriter o, String token)
   {
     out = o;
 
-    connectToServer(u,p);
 
+    sToken = token;
+
+    connectToServer();
+      
 
   } // osmGPXImporter
 
@@ -189,23 +192,13 @@ public class osmGPXImporter extends DefaultHandler{
   } // endElement
 
 
-  private void connectToServer(String sUser, String sPass)
+  private void connectToServer()
   {
 
     try
     {
       xmlrpc = new XmlRpcClientLite("http://www.openstreetmap.org/api/xml.jsp");
  
-      Vector v = new Vector();
-
-      v.addElement(sUser);
-      v.addElement(sPass);
-     
-      sToken = (String)xmlrpc.execute("openstreetmap.login", v);
-
-      out.print("logged in with token " + sToken);
-    
-      
     }
     catch(Exception e)
     {
@@ -278,13 +271,13 @@ public class osmGPXImporter extends DefaultHandler{
   
 
   
-  public void upload(BufferedInputStream is, Writer out, String user, String pass)
+  public void upload(BufferedInputStream is, Writer out, String token)
   {
     PrintWriter o = new PrintWriter(out);
 
     try{
     
-      osmGPXImporter handler = new osmGPXImporter(o, user, pass);
+      osmGPXImporter handler = new osmGPXImporter(o, token);
 
 
       SAXParserFactory factory = SAXParserFactory.newInstance();

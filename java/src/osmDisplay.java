@@ -88,11 +88,11 @@ public class osmDisplay
     selectLayer.setVisible(true);
   
     //mapBean.add(shapeLayer);
-    mapBean.add(pointsLayer);
 
     mapBean.add(selectLayer);
 
     mapBean.add(lineLayer);
+    mapBean.add(pointsLayer);
     // Add the map to the frame
 
     osmAppletButtons buttons = new osmAppletButtons(this);
@@ -237,16 +237,17 @@ public class osmDisplay
   {
     nCurrentMode = n;
 
+    System.out.println("switching to mode " + n);
     switch(nCurrentMode)
     {
       case MODE_DROP_POINTS:
-        pointsLayer.setMouseListen(false);
-        lineLayer.setMouseListen(true);  
+        pointsLayer.setMouseListen(true);
+        lineLayer.setMouseListen(false);  
         break;
 
       case MODE_DRAW_LINES:
-        pointsLayer.setMouseListen(true);
-        lineLayer.setMouseListen(false);  
+        pointsLayer.setMouseListen(false);
+        lineLayer.setMouseListen(true);  
 
         break;
 

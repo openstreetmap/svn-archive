@@ -48,7 +48,8 @@ public class osmSelectLayer extends Layer
   int x2 = 0;
   int y2 = 0;
   
-  boolean displayRect = false;
+  boolean bDisplayRect = false;
+  boolean bDisplayLine = false;
   
   public osmSelectLayer(osmDisplay od)
   {
@@ -67,8 +68,11 @@ public class osmSelectLayer extends Layer
 
   
 
+ 
   public void setRect(int xa, int ya, int xb, int yb)
   {
+
+    System.out.println("setrect...");
 
     x1 = xa;
     y1 = ya;
@@ -76,7 +80,23 @@ public class osmSelectLayer extends Layer
     y2 = yb-ya;
     
 
-    displayRect = true;
+    bDisplayRect = true;
+    bDisplayLine = false;
+    
+    repaint();
+
+  } // setRect
+
+ 
+  public void setLine(int xa, int ya, int xb, int yb)
+  {
+    x1 = xa;
+    y1 = ya;
+    x2 = xb;
+    y2 = yb;
+ 
+    bDisplayRect = false;
+    bDisplayLine = true;
 
     repaint();
 
@@ -84,13 +104,24 @@ public class osmSelectLayer extends Layer
 
   
 
-  public void setVisible(boolean bYesNo)
+ 
+  public void setRectVisible(boolean bYesNo)
   {
-    displayRect = bYesNo;
+    bDisplayRect = bYesNo;
 
     repaint();
     
-  } // setVisible
+  } // setRectVisible
+ 
+
+  
+  public void setLineVisible(boolean bYesNo)
+  {
+    bDisplayLine = bYesNo;
+
+    repaint();
+    
+  } // setLineVisible
 
   
 
@@ -104,13 +135,21 @@ public class osmSelectLayer extends Layer
 
 
 
-  public void paint (Graphics g) {
+  public void paint (Graphics g)
+  {
+    
+    System.out.println("painting in state " + bDisplayLine + " " + bDisplayRect);
 
-
-    if( displayRect)
+    if( bDisplayRect)
     {
       g.drawRect(x1,y1,x2,y2);
     }
+    else
+    {
+
+      g.drawLine(x1,y1,x2,y2);
+    }
+    
   } // paint
 
 

@@ -16,8 +16,14 @@ public class osmAppletModeListener implements ItemListener
   
   public void itemStateChanged(ItemEvent e)
   {
+    if( e.getStateChange() == ItemEvent.DESELECTED)
+    {
+      return;
+
+    }
     String s = (String)e.getItem();
-  
+ 
+    
     if( s.equals("add lines") )
     {
       od.setMode(od.MODE_DRAW_LINES);

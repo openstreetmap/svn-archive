@@ -39,13 +39,17 @@ import com.bbn.openmap.util.*;
 public class osmLineLayer extends Layer
 {
 
-  osmServerClient osc;;
+  osmServerClient osc;
   protected OMGraphicList graphics;
 
+  osmAppletLineDrawListener oLDL;
 
   public osmLineLayer(osmDisplay od)
   {
+
     super();
+
+    oLDL = new osmAppletLineDrawListener(od,this); 
 
     graphics = new OMGraphicList(4);
 
@@ -66,7 +70,7 @@ public class osmLineLayer extends Layer
   
 
 
-  public void projectionChanged (ProjectionEvent e) {
+ public void projectionChanged (ProjectionEvent e) {
 
     graphics.generate(e.getProjection());
 
@@ -85,6 +89,44 @@ public class osmLineLayer extends Layer
 
   public void setMouseListen(boolean bYesNo)
   {
+    oLDL.setMouseListen(bYesNo);
 
   } // setMouseListen
+
+
+  public MapMouseListener getMapMouseListener() {
+
+    System.out.println("asked for maplistener");
+    return oLDL;
+
+  }
+
+  public void setLine(LatLonPoint a, LatLonPoint b)
+  {
+    System.out.println("adding line  "+
+        +a.getLatitude()+","
+        +a.getLongitude() + " "
+        +b.getLatitude() + ","
+        +b.getLongitude());
+
+
+
+    OMLine l = new OMLine(
+        a.getLatitude(),
+        a.getLongitude(),
+        b.getLatitude(),
+        b.getLongitude(),
+
+        com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
+        );
+
+
+    graphics.add( l);
+    repaint();
+
+    System.out.println(graphics.size());
+
+  } // setLine
+
+
 } // osmPointsLayer

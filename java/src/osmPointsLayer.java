@@ -150,6 +150,17 @@ public class osmPointsLayer extends Layer
 
   public synchronized void deleteSelectedPoints()
   {
+    if( !osmAML.hasMouseBeenDown() )
+    {
+      // mouse hasnt been down yet
+
+      return;
+
+    }
+
+    LatLonPoint a = osmAML.getTopLeft();
+    LatLonPoint b = osmAML.getBottomRight();
+    
     Iterator i = graphics.iterator();
 
     Vector v = new Vector();
@@ -162,15 +173,28 @@ public class osmPointsLayer extends Layer
       {
         LatLonPoint p = omc.getLatLon();
 
-        if(osc.deletePoint(p.getLatitude(), p.getLongitude()))
-        {
-        
-              v.add(omc);
-        }
+
+        v.add(omc);
       }
 
     }
 
+    if(!
+      osc.deletePointsInArea(
+        (double)a.getLongitude(),
+        (double)a.getLatitude(),
+        (double)b.getLongitude(),
+        (double)b.getLatitude())
+      )
+    {
+      
+      System.out.println("something went screwy dropping points");
+      return;
+    
+    }
+        
+
+    
     Enumeration e = v.elements();
 
     while(e.hasMoreElements())
@@ -184,9 +208,9 @@ public class osmPointsLayer extends Layer
     repaint();
 
   } // deleteSelectedPoints
-  
 
-  
+
+
 
   protected void createGraphics (OMGraphicList list)
   {
@@ -219,7 +243,7 @@ public class osmPointsLayer extends Layer
             com.bbn.openmap.proj.Length.METER
             );
 
-        omc.setLinePaint(Color.black);
+        omc.setLinePaint(Color.gray);
         omc.setSelectPaint(Color.red);
         omc.setFillPaint(OMGraphic.clear);
 

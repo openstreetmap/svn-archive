@@ -4,12 +4,12 @@ import com.bbn.openmap.event.*;
 import com.bbn.openmap.LatLonPoint;
 import java.awt.event.*;
 
-public class osmAppletMouseListener extends MapMouseAdapter
+public class osmAppletLineDrawListener extends MapMouseAdapter
 {
 
   osmDisplay osmD;
-  osmPointsLayer osmPL;
-  osmSelectLayer selectLayer;
+  osmLineLayer osmLL;
+  
   int x1 = 0;
   int y1 = 0;
   LatLonPoint pPressed = new LatLonPoint();
@@ -20,29 +20,30 @@ public class osmAppletMouseListener extends MapMouseAdapter
   boolean bHasMouseBeenDown = false;
   boolean bCatchEvents = false;
 
-  public osmAppletMouseListener(osmDisplay od, osmPointsLayer opl)
+  public osmAppletLineDrawListener(osmDisplay od, osmLineLayer oll)
   {
-    System.out.println("osmappletmouselistener instantiated");
+    System.out.println("osmappletLineDrawListener instantiated");
     osmD = od;
-    osmPL = opl;
+    osmLL = oll;
 
   } // osmAppletMouseListener
 
 
 
-  public LatLonPoint getTopLeft()
+  public LatLonPoint getFirst()
   {
     return pPressed;
 
   } // getTopLeft
 
   
-  public LatLonPoint getBottomRight()
+  public LatLonPoint getSecond()
   {
     return pReleased;
     
   } // getBottomRight
   
+
 
   public String[] getMouseModeServiceList()
   {
@@ -108,14 +109,14 @@ public class osmAppletMouseListener extends MapMouseAdapter
 
   public void setMouseListen(boolean bYesNo)
   {
-    System.out.println("select points mouse listener told " + bYesNo);
     bCatchEvents = bYesNo;
 
   } // setMouseListen
 
-
+  
   public boolean mouseDragged(java.awt.event.MouseEvent e)
   {
+  
     if( !bCatchEvents )
     {
       return false;
@@ -127,32 +128,36 @@ public class osmAppletMouseListener extends MapMouseAdapter
     if( bMouseDown )
     {
 
-      osmD.getSelectLayer().setRect(x1,y1,e.getX(), e.getY());
+      osmD.getSelectLayer().setLine(x1,y1,e.getX(), e.getY());
 
     }
 
     return true;
 
   } 
+  
 
   public void mouseEntered(java.awt.event.MouseEvent e)
   {
 
   } 
 
+  
   public void mouseExited(java.awt.event.MouseEvent e)
   {
 
   } 
 
+  
+ 
   public boolean mouseReleased(java.awt.event.MouseEvent e)
   {
+  
     if( !bCatchEvents )
     {
       return false;
 
     }
-
 
 
     bMouseDown = false;
@@ -163,11 +168,11 @@ public class osmAppletMouseListener extends MapMouseAdapter
 
     System.out.println("map released at " + pReleased.getLatitude() + "," +  pReleased.getLongitude());
 
-    osmPL.select(pPressed, pReleased);
+    osmLL.setLine(pPressed, pReleased);
 
     return true;
 
-  } 
+  }
 
   
   public boolean hasMouseBeenDown()
@@ -175,9 +180,5 @@ public class osmAppletMouseListener extends MapMouseAdapter
     return bHasMouseBeenDown;
 
   } // hasMouseBeenDown
-  
-
-
-
 
 } // osmAppletMouseListener

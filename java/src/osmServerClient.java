@@ -67,9 +67,9 @@ public class osmServerClient
     params.addElement(new Double(lat));
 
     Boolean bYesNo;
-    
+
     try{
-      
+
       bYesNo = (Boolean)xmlrpc.execute("openstreetmap.dropPoint", params);
 
     }
@@ -85,11 +85,49 @@ public class osmServerClient
     return  bYesNo.booleanValue();
 
 
-    
+
   } // deletePoint
 
 
-  
+  public synchronized boolean deletePointsInArea(
+      double lon1,
+      double lat1,
+      double lon2,
+      double lat2
+      )
+  {
+    Vector params = new Vector();
+
+    params.addElement(sLoginToken);
+    params.addElement(new Double(lon1));
+    params.addElement(new Double(lat1));
+    params.addElement(new Double(lon2));
+    params.addElement(new Double(lat2));
+
+    Boolean bYesNo;
+
+    try{
+
+      bYesNo = (Boolean)xmlrpc.execute("openstreetmap.dropPointsInArea", params);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      return false;
+
+    }
+
+    return  bYesNo.booleanValue();
+
+
+
+  } // deletePoint
+
+
+
   public synchronized boolean login(String user, String pass)
   {
     System.out.println("trying to login with '" + user + "' , '" + pass +"'...");
@@ -102,7 +140,7 @@ public class osmServerClient
 
     String token = "hum";
     try{
-      
+
       token = (String)xmlrpc.execute("openstreetmap.login", params);
 
     }
@@ -141,7 +179,7 @@ public class osmServerClient
     }
 
     return false;
-        
+
   }
 
 

@@ -29,17 +29,17 @@ else
 
   %>
    <table class="keyvalue" border="0" width="100%">
+   <tr>
    <th>
-   <td>
    Key name
-   </td>
-   <td>
-   Last edited by
-   </td>
-   <td>
-   Last edited at
-   </td>
    </th>
+   <th>
+   Last edited by
+   </th>
+   <th>
+   Last edited at
+   </th>
+   </tr>
    <%
 
   while( e.hasMoreElements() )

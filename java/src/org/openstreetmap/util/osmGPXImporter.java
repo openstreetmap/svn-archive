@@ -5,6 +5,8 @@ import java.util.*;
 import java.io.*;
 import javax.xml.parsers.*;
 
+import org.openstreetmap.server.*;
+
 import org.xml.sax.helpers.*;
 import org.xml.sax.*;
 
@@ -212,6 +214,7 @@ public class osmGPXImporter extends DefaultHandler{
   
   private void addPoint()
   {
+    /*
     try{
 
       Thread.sleep(10);
@@ -222,6 +225,7 @@ public class osmGPXImporter extends DefaultHandler{
       
 
     }
+    
 
     Vector v = new Vector();
 
@@ -235,24 +239,20 @@ public class osmGPXImporter extends DefaultHandler{
     v.addElement(new Integer(-1)); // track_id
     v.addElement(new Integer(255)); // quality
     v.addElement(new Integer(fix)); // satellites
+*/
+    osmServerHandler osmh = new osmServerHandler();
 
-
-    boolean b = false;
-
-    try{
-
-
-      b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
-    }
-    catch(Exception e)
-    {
-      b = false;
-
-      out.print("problem in addpoint: " + e + "<br>");
-
-    }
-
-
+    boolean b = osmh.addPoint(
+        sToken,
+        (double)lat,
+        (double)lon,
+        (double)ele,
+        new Date(timestamp),
+        (double)-1,
+        (double)-1,
+        (int)-1,
+        (int)255,
+        (int)fix);
 
     if( !b )
     {

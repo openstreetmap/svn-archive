@@ -4,6 +4,7 @@
 #include <PrintAllHandler.hpp>
 #include <OkToSend.hpp>
 #include <Debug.hpp>
+#include <Signal.hpp>
 
 #include <iostream>
 
@@ -25,6 +26,10 @@ int main(int argc, char *argv[]) {
   if (argc > 3) {
     baud = atoi(argv[3]);
   }
+
+  /* set up signals
+   */
+  Signal::setup();
 
   /* get the file name from the first argument
    * initialise the SiRF stream

@@ -25,6 +25,9 @@ GPXReporterUI::GPXReporterUI() {
   inTrack = false;
   memset(&lastTracker, 0, sizeof(MeasuredTrackerDataOut));
 
+  // setup self as message handler
+  Message::setupHandler(this);
+
   // add the status line
   updateUI();
 }
@@ -72,6 +75,16 @@ void GPXReporterUI::handle(MeasuredTrackerDataOut p) {
   updateUI();
 }
 
+void GPXReporterUI::handleMessage(const char *msg) {
+  messages.push_back(std::string(msg));
+  if (messages.size() > 7) {
+    messages.pop_front();
+  }
+  std::cout << "got message: " << msg << std::endl;
+
+  updateUI();
+}
+
 static char *meanings[] = {
   "Not acquired",
   "Acquired",
@@ -85,17 +98,18 @@ static char *meanings[] = {
 };
 
 void GPXReporterUI::updateUI() const {
+  int line = 0;
   // clear the window
   clear();
   // add the status line
-  mvprintw(0, 0, "STATUS: %s", status.c_str());
+  mvprintw(line++, 0, "STATUS: %s", status.c_str());
   // add the other lines
-  mvprintw(1, 0, "Date:   %s", datestring.c_str());
-  mvprintw(2, 0, "Fix:    %s", fixstring.c_str());
-  mvprintw(3, 0, "nSats:  %d", nSats);
-  mvprintw(4, 0, "Pos:    % 10.7f, % 10.7f, % 10.5f", lon, lat, alt);
+  mvprintw(line++, 0, "Date:   %s", datestring.c_str());
+  mvprintw(line++, 0, "Fix:    %s", fixstring.c_str());
+  mvprintw(line++, 0, "nSats:  %d", nSats);
+  mvprintw(line++, 0, "Pos:    % 10.7f, % 10.7f, % 10.5f", lon, lat, alt);
   // do the tracker
-  for (int i = 0, line = 0; i < lastTracker.getChannels(); i++) {
+  for (int i = 0; i < lastTracker.getChannels(); i++) {
     TrackerSatelliteData data = lastTracker.getSatellites(i);
     unsigned int state = data.getState();
     unsigned int farth = 0;
@@ -108,8 +122,7 @@ void GPXReporterUI::updateUI() const {
 	}
       }
       
-      mvprintw(5 + line, 0, "%2d: %3d %03x ", data.getID(), str, state);
-      line++;
+      mvprintw(line++, 0, "%2d: %3d %03x ", data.getID(), str, state);
 
       for (int j = 0; j < 8; j++) {
 	if ((state & (1 << j)) > 0) {
@@ -123,6 +136,12 @@ void GPXReporterUI::updateUI() const {
       addstr(meanings[farth]);
     }
   }
+  // do the other messages
+  line = 16;
+  for (std::list<std::string>::const_iterator itr = messages.begin();
+       itr != messages.end(); ++itr) {
+    mvprintw(line++, 0, "%s", itr->c_str());
+  }
   // and put it to the screen
   refresh();
 }
@@ -132,5 +151,11 @@ void GPXReporterUI::waitToQuit() {
 
   while (i != 'q') {
     i = getch();
+
+    if (i == 'u') {
+      // update the screen!
+      updateUI();
+      refresh();
+    }
   }
 }

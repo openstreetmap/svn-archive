@@ -4,8 +4,10 @@
 /* NOTE: we don't include whatever you template on, so make sure
  * its included from the file which declares the template!
  */
-#include "PacketHandler.hpp"
+#include <PacketHandler.hpp>
+#include <Message.hpp>
 #include <iostream>
+#include <sstream>
 
 namespace SiRF {
 
@@ -19,7 +21,10 @@ namespace SiRF {
     /* handle a packet by printing it
      */
     void handle(T packet) {
-      std::cout << packet << std::endl;
+      std::ostringstream str;
+      str << packet;
+      // this next line is really ugly...
+      Message::info(str.str().c_str());
     }
 
   };

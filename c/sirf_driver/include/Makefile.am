@@ -19,4 +19,6 @@ EXTRA_DIST = DumpPacketHandler.hpp \
 	Stream.hpp \
 	PacketHandler.hpp \
 	PacketExtractor.hpp \
-	PacketExtractorBase.hpp
+	PacketExtractorBase.hpp \
+	Message.hpp \
+	Debug.hpp

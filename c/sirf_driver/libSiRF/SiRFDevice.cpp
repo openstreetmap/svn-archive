@@ -1,5 +1,6 @@
 // include the header file
-#include "SiRFDevice.hpp"
+#include <SiRFDevice.hpp>
+#include <Message.hpp>
 
 // need std::cerr
 #include <iostream>
@@ -105,14 +106,14 @@ namespace SiRF {
       if (read_buf_len < 0) {
 	if (errno != EAGAIN) {
 	  // some error other than time-out on data
-	  std::cerr << "Error reading data from serial port!" << std::endl;
+	  Message::critical("Error reading data from serial port!");
 	}
 	usleep(100000); // sleep - maybe it will all go away!
       }
     } while (read_buf_len < 0);
     // buf_len is now >= 0
     if (read_buf_len == 0) {
-      std::cerr << "End of file!" << std::endl;
+      Message::critical("End of file!");
       exit(-1);
     }
     // buf_len > 0

@@ -4,6 +4,9 @@ case $1 in
     build)
 	echo "aclocal" && aclocal && \
 	    echo "libtoolize" && libtoolize --force && \
+	    if [ ! -f m4/codeset.m4 ]; then \
+	    echo "gettextize" && gettextize; \
+	    fi && \
 	    echo "autoheader" && autoheader && \
 	    echo "automake" && automake --add-missing && \
 	    echo "autoconf" && autoconf && \

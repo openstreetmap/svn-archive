@@ -6,6 +6,8 @@
 #include <MeasuredTrackerDataOut.hpp>
 #include <CPUThroughput.hpp>
 #include <DifferentialData.hpp>
+#include <Message.hpp>
+#include <Debug.hpp>
 
 #include <vector>
 #include <iostream>
@@ -127,8 +129,8 @@ namespace SiRF {
 	}
 
       } catch (std::exception &e) {
-	std::cerr << "PacketFactory::eventLoop: caught exception!" << std::endl
-		  << e.what() << std::endl;
+	Message::warn("PacketFactory::eventLoop: caught exception!");
+	Message::warn(e.what());
       }
     }
 
@@ -160,15 +162,17 @@ namespace SiRF {
 	in >> p;
 	in >> Stream::end;
 	nice_count++;
+	if (Debug::isDebug()) {
+	  Message::info("Got a nice packet, packet count %i", nice_count);
+	}
       } catch (std::exception &e) {
-	std::cerr << "PacketFactory::throwAwayPacketsUntilNice: caught exception."
-		  << std::endl << "ERROR: " << e.what() << std::endl;
+	Message::warn("PacketFactory::throwAwayPacketsUntilNice: caught exception.");
+	Message::warn(e.what());
 	nice_count = 0;
       }
     } while (nice_count < 5);
 
-    std::cout << "PacketFactory::throwAwayPacketsUntilNice: got 5 nice packets in a row."
-	      << std::endl;
+    Message::info("PacketFactory::throwAwayPacketsUntilNice: got 5 nice packets in a row.");
   }
   
 }

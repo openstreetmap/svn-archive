@@ -5,6 +5,8 @@
 #include <vector>
 #include "PacketMap.hpp"
 #include "PacketHandler.hpp"
+#include <Message.hpp>
+#include <sstream>
 
 namespace SiRF {
 
@@ -19,8 +21,11 @@ namespace SiRF {
 
     /* handle a packet by sending it to std::cout
      */
-    void handle(const T &packet) {
-      std::cout << packet << std::endl;
+    void handle(T packet) {
+      std::ostringstream str;
+      str << packet;
+      // this next line is really ugly...
+      Message::info(str.str().c_str());
     }
   };
 

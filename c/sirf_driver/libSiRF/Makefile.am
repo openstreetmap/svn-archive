@@ -15,6 +15,8 @@ libSiRF_la_SOURCES = DumpPacketHandler.cpp \
 	PacketFactory.cpp \
 	WarnPacketHandler.cpp \
 	OutputPacket.cpp \
+	Message.cpp \
+	Debug.cpp \
 	sirf_lowlevel.c \
 	Packets/Input/libPacketInput.la \
 	Packets/Output/libPacketOutput.la

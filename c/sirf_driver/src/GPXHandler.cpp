@@ -113,7 +113,6 @@ void GPXHandler::writeHeader() {
 	  "<author>\n<name>%s</name>\n<email id=\"%s\" domain=\"%s\"/>\n"
 	  "</author>\n<copyright author=\"%s\">\n<year>%d</year>\n"
 	  "<license>%s</license>\n</copyright>\n</metadata>\n<trk>\n",
-	  docName.c_str(), docDescription.c_str(),
 	  info.getFullName().c_str(), info.getEmailID().c_str(), 
 	  info.getEmailDomain().c_str(), info.getFullName().c_str(),
 	  the_time->tm_year + 1900, info.getCopyrightURL().c_str());

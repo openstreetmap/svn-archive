@@ -67,7 +67,7 @@ namespace SiRF {
   private:
     /* current state, i.e: length, etc...
      */
-    unsigned short length, checksum;
+    uint16 length, checksum;
 
   };
 

@@ -149,7 +149,7 @@ namespace SiRF {
   /* read a packet boundary - also sets up state
    */
   OutputStream &OutputStream::operator>>(const Boundary b) {
-    unsigned short marker, original_length;
+    uint16 marker, original_length;
     int i;
 
     /* looking for a starting marker
@@ -180,7 +180,7 @@ namespace SiRF {
       /* otherwise we are looking for an end marker
        */
     } else if (b == end) {
-      unsigned short msgsum, old_checksum;
+      uint16 msgsum, old_checksum;
       if (length != 0) {
 	/* we read too many or too few bytes!
 	 */

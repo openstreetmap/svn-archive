@@ -25,7 +25,7 @@ public class convert{
   {
     try{
 
-      FileReader fr = new FileReader("/home/steve/wikimap/gpsdata"); 
+      FileReader fr = new FileReader("/home/steve/mine2"); 
       BufferedReader br = new BufferedReader(fr);
 
       String line;
@@ -34,10 +34,15 @@ public class convert{
       {
         StringTokenizer t = new StringTokenizer(line);
 
+        String alt = t.nextToken();
+        String lat = t.nextToken();
+        String lon = t.nextToken();
+        String time = t.nextToken();
+        
         System.out.println("insert into tempPoints values ("
-            + " GeomFromText('Point("  + t.nextToken() + " " + t.nextToken() + ")'),"
-            + " " + t.nextToken() + ", "
-            + " " + t.nextToken() + ");");
+            + " GeomFromText('Point("  + lat + " " + lon + ")'),"
+            + " " + alt + ", "
+            + " " + time + ");");
 
       } 
 

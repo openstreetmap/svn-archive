@@ -1,4 +1,4 @@
-AC_INIT([SiRF], [0.02], [matt@matt-amos.uklinux.net], [sirfdump])
+AC_INIT([SiRF], [0.03], [matt@matt-amos.uklinux.net], [sirfdump])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE

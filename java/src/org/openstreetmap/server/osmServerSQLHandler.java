@@ -731,9 +731,6 @@ public class osmServerSQLHandler extends Thread
 
 
 
-
-
-
   public synchronized String addUser(String user, String pass)
   {
     // FIXME: add all the letters plus upper case etc

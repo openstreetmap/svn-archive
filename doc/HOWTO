@@ -75,3 +75,33 @@ $ant
 
 Test openstreetmap
 -----------------
+
+$java -cp dist/openmap.jar:dist/osm.jar:lib/mysql-connector-java-3.0.14-production/mysql-connector-java-3.0.14-production-bin.jar traceSQL
+
+You should see a line of '.' chars. This means a value (lat/lon/alt/time) was recorded. A '-' char means no value recorded. So if you lose gps signal you'll see something like '.......-----'.
+
+Thats it.
+
+Notes
+-----
+
+You want to start that java every boot time. I have a bash script that starts it in an infinite while loop so if it dies it gets started again.
+
+
+#!/bin/sh
+
+while[ 1 ]
+do
+  cd /home/openstreetmap/openstreetmap
+  java -cp ...... (insert stuff here)
+  sleep 30
+done
+
+The same thing is done for gpsd. You want to make your laptop not go to sleep when you close the lid (if you have it in a backpack).
+
+
+If you've installed tomcat or some other jsp engine then look in jsp/ for gps.jsp. This is what I use with my zaurus to add data. You could of course use something more lightweight like php, and are welcome to submit things or improve whats there.
+
+The idea now is to write the stuff that takes your database and throws the data with login info to openstreetmap.org
+
+

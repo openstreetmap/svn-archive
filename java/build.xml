@@ -17,7 +17,7 @@
 
 <target name="compile" depends="init">
 <javac srcdir="${src}"
-classpath="${lib}/openmap.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar"
+  classpath="${lib}/openmap.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc.jar"
 debug="true"
 optimize="off"
 destdir="${build}"

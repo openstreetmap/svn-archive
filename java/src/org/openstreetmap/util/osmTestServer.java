@@ -18,7 +18,7 @@ class osmTestServer
   {
     try
     {
-      XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
+      XmlRpcClient xmlrpc = new XmlRpcClient("www.openstreetmap.org/api/xml.jsp");
 
       Vector v = new Vector();
 
@@ -26,14 +26,12 @@ class osmTestServer
       v.addElement(pass);
      
       String token = (String)xmlrpc.execute("openstreetmap.login", v);
-      System.out.println(token);
 
-      v = new Vector();
 
       v.addElement(token);
       v.addElement(new Boolean(true));
-      
-      
+
+
       Vector vResults = (Vector)xmlrpc.execute("openstreetmap.getAllKeys",v);
 
       Enumeration e = vResults.elements();
@@ -44,6 +42,7 @@ class osmTestServer
         System.out.println(sA);
       }
       
+
     }
     catch(Exception e)
     {
@@ -52,7 +51,7 @@ class osmTestServer
       e.printStackTrace();
       System.exit(-1);
     }
-    
+
 
   } // go
 

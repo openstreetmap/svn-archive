@@ -59,7 +59,7 @@ public class osmLineLayer extends Layer
 
     graphics = new OMGraphicList(4);
 
-    createGraphics();
+      //createGraphics();
 
     //graphics.add( new OMLine(51.526394f,-0.14697807f,51.529114f,-0.15060599f,
     //   com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
@@ -79,8 +79,10 @@ public class osmLineLayer extends Layer
     Projection proj = setProjection(pe);
     if (proj != null) {
 
+      System.out.println("projection changed...");
       createGraphics();
 
+      System.out.println("projection changed... here");
       graphics.generate(pe.getProjection());
       
       repaint();
@@ -110,6 +112,9 @@ public class osmLineLayer extends Layer
       {
         LatLonPoint a = proj.getUpperLeft();
         LatLonPoint b = proj.getLowerRight();
+
+        System.out.println(a);
+        System.out.println(b);
         
         v = osc.getStreets(a,b);
       }

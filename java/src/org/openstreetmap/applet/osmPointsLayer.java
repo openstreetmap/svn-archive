@@ -55,10 +55,10 @@ public class osmPointsLayer extends Layer
     od = oDisplay;
     osc = od.getServerClient();
 
-    
     osmAML = new osmAppletMouseListener(od, this);
     graphics = new OMGraphicList(10000);
-    createGraphics(graphics);
+    //createGraphics(graphics);
+
 
   } // osmPointsLayer
 
@@ -73,25 +73,37 @@ public class osmPointsLayer extends Layer
   public void projectionChanged (ProjectionEvent e) {
 
     //Projection proj = setProjection(e);
-    System.out.println("projection changed to ");
+    System.out.print("projection changed to: ");
 
     //if (proj != null) {
 
-      proj = e.getProjection();
+    proj = e.getProjection();
 
-      System.out.println("scale is " + proj.getScale());
-      System.out.println("center is " + proj.getCenter());
-      
-      graphics.clear();
+    System.out.print("scale is " + proj.getScale());
+    System.out.println(", center is " + proj.getCenter());
 
-      createGraphics(graphics);
+    graphics.clear();
 
-      graphics.generate(proj);
+    if(proj != null && !od.startingUp())
+    {
 
-      repaint();
+      new osmBackgroundLoader(osc, graphics, this, proj.getUpperLeft(), proj.getLowerRight()).start();
+    }
+
+  } // projectionChanged
+
+
+  public void fireBackgroundRedraw()
+  {
+    //createGraphics(graphics);
+
+    graphics.generate(proj);
+
+    repaint();
     //}
     fireStatusUpdate(LayerStatusEvent.FINISH_WORKING);
-  } // projectionChanged
+
+  }
 
 
 

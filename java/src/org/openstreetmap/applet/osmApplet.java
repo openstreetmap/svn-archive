@@ -51,7 +51,7 @@ public class osmApplet extends JApplet {
 
   public void go()
   {
-    JFrame jf = new JFrame("blah");
+    JFrame jf = new JFrame("OpenStreetMap");
 
     jf.show();
 

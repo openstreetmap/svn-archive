@@ -82,7 +82,7 @@ public class osmDisplay
 
     shapeLayerProps.put("prettyName", "Recorded points");
     shapeLayerProps.put("lineColor", "000000");
-//    shapeLayerProps.put("fillColor", "BDDE83");
+    shapeLayerProps.put("fillColor", "efefde");
     pointsLayer.setProperties(shapeLayerProps);
 
 //    selectLayer.setProperties(shapeLayerProps);

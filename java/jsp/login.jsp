@@ -9,6 +9,7 @@
 <%@ include file="include/top.jsp" %>
 <%
 
+String action = request.getParameter("action");
 
 if( action == null)
 {

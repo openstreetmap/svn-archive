@@ -5,13 +5,7 @@ import java.awt.*;
 
 
 
-public class osmApplet2 extends JApplet {
-    
-    //public osmApplet2() {
-    //    getRootPane().putClientProperty("defeatSystemEventQueueCheck",
-    //                                    Boolean.TRUE);
-    //} // osmApplet
-
+public class osmApplet extends JApplet {
     
     public void init() {
 
@@ -27,11 +21,11 @@ public class osmApplet2 extends JApplet {
     public static void main(String[] args)
     {
 
-      new osmApplet2().go();
+      new osmApplet().go();
 
     } // main
 
-    public osmApplet2()
+    public osmApplet()
     {
 
     } // osmApplet2

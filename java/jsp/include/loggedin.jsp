@@ -1,6 +1,6 @@
 <% 
 
-String cookieName = "openstreetmao";
+String cookieName = "openstreetmap";
 Cookie cookies [] = request.getCookies ();
 Cookie myCookie = null;
 boolean bLoggedIn = false;
@@ -20,7 +20,7 @@ if (cookies != null)
 
 if(myCookie != null)
 {
-  String sToken = myCookie.getValue();
+  sToken = myCookie.getValue();
 
   osmServerHandler osmSH = new osmServerHandler();
 

@@ -17,6 +17,7 @@ namespace SiRF {
    */
   void DumpPacketHandler::handle(UnknownPacket p) {
     p.outputBinary(file);
+    file.flush();
   }
 
 }

@@ -25,6 +25,7 @@ namespace SiRF {
   // input from a stream
   void UnknownPacket::input(OutputStream &in) {
     uint8 c;
+    payload.clear();
     payload.reserve(in.remainingLength());
     // gobble all the bytes from the stream
     while (in.remainingLength() > 0) {

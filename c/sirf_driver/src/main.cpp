@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 
   /* add the handlers
    */
-  factory.registerHandler(new NullPacketHandler<MeasuredNavigationDataOut>);
+  factory.registerHandler(new PrintPacketHandler<MeasuredNavigationDataOut>);
   factory.registerHandler(new NullPacketHandler<MeasuredTrackerDataOut>);
   factory.registerHandler(new NullPacketHandler<CPUThroughput>);
   factory.registerHandler(new PrintPacketHandler<CommandAcknowledgement>);

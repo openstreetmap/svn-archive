@@ -799,4 +799,67 @@ public class osmServerSQLHandler extends Thread
   } // addUser
 
 
+  public synchronized boolean confirmUser(String user, String token)
+  {
+
+    System.out.println("confirm " + user + " " + token);
+
+    if( user.length() < 5 ||
+        user.length() > 30 ||
+        user.indexOf(" ") != -1 )
+    {
+      return false;
+
+    }
+
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid,active from user where user='" + user + "' and token='" + token + "'";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() && rs.getInt("active") == 0)
+      {
+        sSQL = "update user set active=1" 
+          + " where uid = " + rs.getInt("uid");
+
+        System.out.println("executing sql " + sSQL);
+
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      else
+      {
+        return false;
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return false;
+
+
+  } // confirmUser
+
 } // osmServerSQLHandler

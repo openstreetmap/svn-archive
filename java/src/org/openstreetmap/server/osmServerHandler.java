@@ -44,16 +44,25 @@ public class osmServerHandler
 
 
 
+ 
   public String addUser(String user, String pass)
   {
     
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
-    String token  = osmSQLH.addUser(user,pass);
+    return  osmSQLH.addUser(user,pass);
 
-    System.out.println("handler returning " + token);
+     
+  } // addUser
 
-    return token;
+
+ 
+  public boolean confirmUser(String user, String token)
+  {
+    
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
+
+    return  osmSQLH.confirmUser(user,token);
 
      
   } // addUser

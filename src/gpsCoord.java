@@ -66,9 +66,10 @@ public class gpsCoord
     System.out.println("lat range is " + minLat +" to " + maxLat);
     
     
-    t.translate( 0,
-                 ((maxLat + minLat) / -2));
+    t.translate( -((maxLon + minLon)/2),
+                 -((maxLat + minLat)/2));
 
+    System.out.println("hmmm "+ ((maxLat + minLat) / 2));
 
     //t.translate( ((float)screenSize /2) -  ((maxLon + minLon) / 2),
        //          ((float)screenSize /2) +  ((maxLat + minLat) / 2));
@@ -76,7 +77,13 @@ public class gpsCoord
 
     //t.scale(s, s);
 
-    t.scale(1, -1.6);
+    //t.scale(1, -1.6);
+
+    double scale = 2000;
+    
+    t.preConcatenate(
+        AffineTransform.getScaleInstance(scale * 1 , scale * -1.6));
+
 
     
 

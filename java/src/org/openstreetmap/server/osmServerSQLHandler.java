@@ -745,6 +745,7 @@ public class osmServerSQLHandler extends Thread
         pass.length() > 30 ||
         user.indexOf(" ") != -1 )
     {
+      System.out.println("returning error");
       return "ERROR";
 
     }
@@ -791,6 +792,7 @@ public class osmServerSQLHandler extends Thread
 
     }
 
+    System.out.println("returning token " + token);
     return token;
 
 

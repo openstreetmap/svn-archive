@@ -27,7 +27,7 @@ public class osmPointsLayer extends Layer
   public osmPointsLayer()
   {  
     super();
-    graphics = new OMGraphicList(10);
+    graphics = new OMGraphicList(2000);
     createGraphics(graphics);
 
   } // osmPointsLayer
@@ -47,9 +47,11 @@ public class osmPointsLayer extends Layer
     System.out.println("projection changed");
     
     proj = e.getProjection();
+  
+    // probably better to empty the list rather than create a new one?
+    graphics = new OMGraphicList(2000);
     
     createGraphics(graphics);
-
 
     graphics.generate(e.getProjection());
 

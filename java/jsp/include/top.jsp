@@ -1,6 +1,6 @@
 <html>
 <head>
-<link rel="stylesheet" href="http://www.openstreetmap.org/wp-content/themes/default/style.css" type="text/css" media="screen" />
+<title>OpenStreetMap</title>
 </head>
 <h1>OpenStreetMap</h1><br><br>
 

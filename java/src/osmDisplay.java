@@ -23,7 +23,6 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 
-import com.bbn.openmap.BufferedMapBean;
 import com.bbn.openmap.proj.*;
 import com.bbn.openmap.gui.*;
 import com.bbn.openmap.event.*;
@@ -42,10 +41,10 @@ public class osmDisplay
   public static final int MODE_DROP_POINTS = 2;
   
   
-  int nCurrentMode = 2;
+  int nCurrentMode = MODE_DRAW_LINES;
 
   JLabel label = new JLabel("OpenStreetMap pre-pre-pre alpha");
-  BufferedMapBean mapBean;
+  MapBean mapBean;
 
   osmServerClient osc = new osmServerClient();
   
@@ -53,12 +52,13 @@ public class osmDisplay
   osmSelectLayer selectLayer;
   osmLineLayer lineLayer;
   
+  
   public osmDisplay(Container cp)
   {
 
     MapHandler mh = new MapHandler();
     
-    mapBean = new BufferedMapBean();
+    mapBean = new MapBean();
 
     mh.add(mapBean);
 
@@ -108,6 +108,16 @@ public class osmDisplay
     pointsLayer.setStartingUp(false);
 
     setMode(MODE_DRAW_LINES);
+
+  }
+
+
+
+  public void paintBean()
+  {
+    System.out.println("repainting bean");
+    mapBean.setBufferDirty(true);
+    mapBean.repaint();
 
   }
 

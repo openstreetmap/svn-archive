@@ -51,12 +51,12 @@ public class osmApplet extends JApplet {
   {
     JFrame jf = new JFrame("blah");
 
-    jf.setSize(600,600);
     jf.show();
 
     new osmDisplay(jf.getContentPane());
 
     jf.pack();
 
+    jf.setSize(600,600);
   } 
 }

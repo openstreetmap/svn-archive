@@ -52,7 +52,7 @@ public class osmPointsLayer extends Layer
 
     
     osmAML = new osmAppletMouseListener(od, this);
-    graphics = new OMGraphicList(2000);
+    graphics = new OMGraphicList(10000);
     createGraphics(graphics);
 
   } // osmPointsLayer
@@ -72,25 +72,27 @@ public class osmPointsLayer extends Layer
   } // setProperties
 
 
-
   public void projectionChanged (ProjectionEvent e) {
 
+    //Projection proj = setProjection(e);
     System.out.println("projection changed to ");
 
+    //if (proj != null) {
 
-    proj = e.getProjection();
+      proj = e.getProjection();
 
-    System.out.println("scale is " + proj.getScale());
-    System.out.println("center is " + proj.getCenter());
-    // probably better to empty the list rather than create a new one?
-    graphics = new OMGraphicList(2000);
+      System.out.println("scale is " + proj.getScale());
+      System.out.println("center is " + proj.getCenter());
+      
+      graphics.clear();
 
-    createGraphics(graphics);
+      createGraphics(graphics);
 
-    graphics.generate(e.getProjection());
+      graphics.generate(proj);
 
-    repaint();
-
+      repaint();
+    //}
+    fireStatusUpdate(LayerStatusEvent.FINISH_WORKING);
   } // projectionChanged
 
 
@@ -133,7 +135,7 @@ public class osmPointsLayer extends Layer
       //System.out.println(llp);
 
 
-      
+
     }
 
     repaint();
@@ -160,11 +162,11 @@ public class osmPointsLayer extends Layer
 
     LatLonPoint a = osmAML.getTopLeft();
     LatLonPoint b = osmAML.getBottomRight();
-    
+
     Iterator i = graphics.iterator();
 
     Vector v = new Vector();
-    
+
     while( i.hasNext() )
     {
       OMCircle omc = (OMCircle)i.next();
@@ -180,21 +182,21 @@ public class osmPointsLayer extends Layer
     }
 
     if(!
-      osc.deletePointsInArea(
-        (double)a.getLongitude(),
-        (double)a.getLatitude(),
-        (double)b.getLongitude(),
-        (double)b.getLatitude())
+        osc.deletePointsInArea(
+          (double)a.getLongitude(),
+          (double)a.getLatitude(),
+          (double)b.getLongitude(),
+          (double)b.getLatitude())
       )
     {
-      
+
       System.out.println("something went screwy dropping points");
       return;
-    
-    }
-        
 
-    
+    }
+
+
+
     Enumeration e = v.elements();
 
     while(e.hasMoreElements())

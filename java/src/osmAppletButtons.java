@@ -111,7 +111,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
     loginButtons.add( new JLabel("Mode:"));
 
     
-    String[] sModes = { "drop points", "add lines" };
+    String[] sModes = { "add lines" , "drop points" };
     JComboBox comboModes = new JComboBox(sModes);
     comboModes.setActionCommand("addline");
     ItemListener modeListener = new osmAppletModeListener(od);

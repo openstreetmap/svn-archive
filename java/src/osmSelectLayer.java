@@ -42,6 +42,7 @@ public class osmSelectLayer extends Layer
   osmServerClient osc;;
   protected OMGraphicList graphics;
 
+  osmDisplay od;
 
   int x1 = 0;
   int y1 = 0;
@@ -50,12 +51,15 @@ public class osmSelectLayer extends Layer
   
   boolean bDisplayRect = false;
   boolean bDisplayLine = false;
+ 
   
-  public osmSelectLayer(osmDisplay od)
+  public osmSelectLayer(osmDisplay oDisplay)
   {
     super();
 
+    od = oDisplay;
     graphics = new OMGraphicList(4);
+    
 
   } // osmPointsLayer
 
@@ -71,85 +75,65 @@ public class osmSelectLayer extends Layer
  
   public void setRect(int xa, int ya, int xb, int yb)
   {
-
-    System.out.println("setrect...");
-
-    x1 = xa;
-    y1 = ya;
-    x2 = xb-xa;
-    y2 = yb-ya;
+    graphics.clear();
     
+    OMRect r = new OMRect(xa,ya,xb,yb);
+    
+    r.generate( getProjection());
 
-    bDisplayRect = true;
-    bDisplayLine = false;
+    graphics.add(r);
+
     
     repaint();
 
   } // setRect
 
+  
  
   public void setLine(int xa, int ya, int xb, int yb)
   {
-    x1 = xa;
-    y1 = ya;
-    x2 = xb;
-    y2 = yb;
- 
-    bDisplayRect = false;
-    bDisplayLine = true;
+    graphics.clear();
+    
+    OMLine l = new OMLine(xa,ya,xb,yb);
+    
+    l.generate( getProjection());
+
+    graphics.add(l);
 
     repaint();
 
-  } // setRect
+  } // setLine
 
   
-
- 
-  public void setRectVisible(boolean bYesNo)
-  {
-    bDisplayRect = bYesNo;
-
-    repaint();
-    
-  } // setRectVisible
- 
-
-  
-  public void setLineVisible(boolean bYesNo)
-  {
-    bDisplayLine = bYesNo;
-
-    repaint();
-    
-  } // setLineVisible
-
   
 
-  public void projectionChanged (ProjectionEvent e) {
+  public void projectionChanged(com.bbn.openmap.event.ProjectionEvent pe) {
 
-    graphics.generate(e.getProjection());
+    
+    Projection proj = setProjection(pe);
+    
+    System.out.println(proj);
+ //   if (proj != null) {
 
+  
+    graphics.generate(pe.getProjection());
+      
+    
     repaint();
+   
+    // }
 
-  } // projectionChanged
+    fireStatusUpdate(LayerStatusEvent.FINISH_WORKING);
+  }
 
 
-
-  public void paint (Graphics g)
+ 
+  
+  public void paint(Graphics g)
   {
     
-    System.out.println("painting in state " + bDisplayLine + " " + bDisplayRect);
+    graphics.render(g);
 
-    if( bDisplayRect)
-    {
-      g.drawRect(x1,y1,x2,y2);
-    }
-    else
-    {
-
-      g.drawLine(x1,y1,x2,y2);
-    }
-    
   } // paint
 
 

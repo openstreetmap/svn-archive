@@ -41,22 +41,22 @@ public class osmLineLayer extends Layer
 
   osmServerClient osc;
   protected OMGraphicList graphics;
-
   osmAppletLineDrawListener oLDL;
+  osmDisplay od;
 
-  public osmLineLayer(osmDisplay od)
+  public osmLineLayer(osmDisplay oDisplay)
   {
 
     super();
 
+    od = oDisplay;
     oLDL = new osmAppletLineDrawListener(od,this); 
 
     graphics = new OMGraphicList(4);
 
-    graphics.add( new OMLine(51.526394f,-0.14697807f,51.529114f,-0.15060599f,
-
-       com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
-       ));
+    //graphics.add( new OMLine(51.526394f,-0.14697807f,51.529114f,-0.15060599f,
+    //   com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
+    //   ));
 
   } // osmPointsLayer
 
@@ -67,17 +67,31 @@ public class osmLineLayer extends Layer
 
   } // setProperties
 
-  
+
+  public void projectionChanged(com.bbn.openmap.event.ProjectionEvent pe) {
+    Projection proj = setProjection(pe);
+    if (proj != null) {
+
+      graphics.generate(pe.getProjection());
+      
+      repaint();
+    }
+
+    fireStatusUpdate(LayerStatusEvent.FINISH_WORKING);
+  }
 
 
- public void projectionChanged (ProjectionEvent e) {
 
-    graphics.generate(e.getProjection());
+  /*
+     public void projectionChanged (ProjectionEvent e) {
 
-    repaint();
+     graphics.generate(e.getProjection());
 
-  } // projectionChanged
+     repaint();
 
+     } // projectionChanged
+
+   */
 
 
   public void paint (Graphics g) {
@@ -122,9 +136,15 @@ public class osmLineLayer extends Layer
 
 
     graphics.add( l);
+
+    graphics.generate( getProjection(), true);
+
+
     repaint();
 
     System.out.println(graphics.size());
+
+    od.paintBean();
 
   } // setLine
 

@@ -123,11 +123,10 @@ public class osmAppletLineDrawListener extends MapMouseAdapter
 
     }
 
-    System.out.println("mouse dragged with mousedown:" + bMouseDown);
 
     if( bMouseDown )
     {
-
+    
       osmD.getSelectLayer().setLine(x1,y1,e.getX(), e.getY());
 
     }
@@ -159,10 +158,12 @@ public class osmAppletLineDrawListener extends MapMouseAdapter
 
     }
 
+   
+
 
     bMouseDown = false;
     bHasMouseBeenDown = true;
-    osmD.getSelectLayer().setVisible(false);
+    
     MapMouseEvent mme = (MapMouseEvent)e;
     pReleased = mme.getLatLon();
 

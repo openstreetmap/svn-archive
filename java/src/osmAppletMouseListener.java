@@ -157,12 +157,12 @@ public class osmAppletMouseListener extends MapMouseAdapter
 
     bMouseDown = false;
     bHasMouseBeenDown = true;
-    osmD.getSelectLayer().setVisible(false);
     MapMouseEvent mme = (MapMouseEvent)e;
     pReleased = mme.getLatLon();
 
     System.out.println("map released at " + pReleased.getLatitude() + "," +  pReleased.getLongitude());
 
+    System.out.println("calling osmPL.select...");
     osmPL.select(pPressed, pReleased);
 
     return true;

@@ -1,21 +1,21 @@
 /*
-Copyright (C) 2004 Stephen Coast (steve@fractalus.com)
+   Copyright (C) 2004 Stephen Coast (steve@fractalus.com)
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-*/
+ */
 
 
 import java.util.*;
@@ -28,15 +28,18 @@ public class osmServerSQLHandler extends Thread
   String sUser;
   String sPass;
 
+  long lTimeout = 1000 * 60 * 10; // ten mins
+
+
   boolean bSQLSuccess = false;
 
-  
+
   public osmServerSQLHandler(String sTSQLConnection,
-                             String sTUser,
-                             String sTPass)
-           
+      String sTUser,
+      String sTPass)
+
   {
-  
+
     sSQLConnection = sTSQLConnection;
     sUser = sTUser;
     sPass = sTPass;
@@ -45,62 +48,63 @@ public class osmServerSQLHandler extends Thread
   } // osmServerSQLHandler
 
 
-  
+
   public boolean SQLSuccessful()
   {
-    
+
     return bSQLSuccess;
 
   } // SQLSuccessful
 
 
+
   public synchronized String login(String user, String pass)
   {
     // FIXME: add all the letters plus upper case etc
-    char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-    
+    char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' , 'i' , 'j'};
+
     System.out.println("login " + user + " " + pass);
 
     if( 
-          user.length() > 30 ||
-          pass.length() < 5 ||
-          pass.length() > 30 ||
-          user.indexOf(" ") != -1 )
+        user.length() > 30 ||
+        pass.length() < 5 ||
+        pass.length() > 30 ||
+        user.indexOf(" ") != -1 )
     {
-       return "ERROR";
-       
+      return "ERROR";
+
     }
-    
-    
+
+
     try{
 
       Class.forName("com.mysql.jdbc.Driver").newInstance(); 
 
 
       Connection conn = DriverManager.getConnection(sSQLConnection,
-                                                    sUser,
-                                                    sPass);
+          sUser,
+          sPass);
 
       Statement stmt = conn.createStatement();
 
       String sSQL = "select uid from user where user='" + user + "' and pass='" + pass + "'";
 
       System.out.println("querying with sql \n " + sSQL);
-      
+
       ResultSet rs = stmt.executeQuery(sSQL);
 
       if( rs.next() )
       {
         String token = "";
         Random r = new Random();
-        
+
         for(int i = 1; i < 30; i++)
         {
           token = token + letters[ 1 + r.nextInt(letters.length -1)];
-          
+
         }
         int uid = rs.getInt(1);
-         sSQL = "update user set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
+        sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
           + " where uid = " + uid;
 
         stmt.execute(sSQL);
@@ -123,7 +127,7 @@ public class osmServerSQLHandler extends Thread
     }
 
     return "ERROR";
-    
+
 
   } // login
 
@@ -135,7 +139,7 @@ public class osmServerSQLHandler extends Thread
     {
       System.out.println("didnt validate " + token );
       return -1;
-      
+
 
     }
 
@@ -160,14 +164,14 @@ public class osmServerSQLHandler extends Thread
       {
         int uid = rs.getInt(1);
 
-        sSQL = "update user set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
+        sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
           + " where uid = " + uid;
 
         stmt.execute(sSQL);
 
         System.out.println("validated token " + token);
         return uid;
-        
+
       }
 
     }
@@ -213,16 +217,16 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "insert into tempPoints values ("
-            + " GeomFromText('Point("  + lon + " " + lat + ")'),"
-            + " " + alt + ", "
-            + " " + timestamp + ", "
-            + " " + uid + ", "
-            + " " + hor_dilution + ", "
-            + " " + vert_dilution + ", "
-            + " " + trackid + ", "
-            + " " + quality + ", "
-            + " " + satellites + ", "
-            + " " + System.currentTimeMillis() + ", 1,0);";
+        + " GeomFromText('Point("  + lon + " " + lat + ")'),"
+        + " " + alt + ", "
+        + " " + timestamp + ", "
+        + " " + uid + ", "
+        + " " + hor_dilution + ", "
+        + " " + vert_dilution + ", "
+        + " " + trackid + ", "
+        + " " + quality + ", "
+        + " " + satellites + ", "
+        + " " + System.currentTimeMillis() + ", 1,0);";
 
 
       System.out.println("querying with sql \n " + sSQL);
@@ -241,7 +245,80 @@ public class osmServerSQLHandler extends Thread
     return true;
 
   }
-  
+
+
+  public synchronized Vector getStreets(
+      float p1lat,
+      float p1lon,
+      float p2lat,
+      float p2lon
+      )
+  {
+
+    System.out.println("getStreets");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid_of_street, lon1, lat1, lon2, lat2 from streetSegments"
+        + " where ( "
+        + "     lat1 < " + p1lat
+        + " and lat1 > " + p2lat
+        + " and lon1 > " + p1lon
+        + " and lon1 < " + p2lon
+        + " ) or ( "
+        + "     lat2 < " + p1lat
+        + " and lat2 > " + p2lat
+        + " and lon2 > " + p1lon
+        + " and lon2 < " + p2lon
+        + " ) "
+        + " and visible=1 limit 10000";
+
+      //System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      Vector v = new Vector();
+
+      while(rs.next())
+      {
+        v.add( new Integer( rs.getInt(1) ) );
+        v.add( new Float( rs.getDouble(2)));
+        v.add( new Float( rs.getDouble(3)));
+        v.add( new Float( rs.getDouble(4)));
+        v.add( new Float( rs.getDouble(5)));
+
+      }
+
+      bSQLSuccess = true;
+
+      return v;
+
+    }
+    catch(Exception e)
+    {
+      
+      
+      System.out.println(e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return null;
+
+  } // getStreets
+
+
+
 
   public synchronized Vector getPoints(float p1lat,
       float p1lon,
@@ -342,9 +419,9 @@ public class osmServerSQLHandler extends Thread
         + " satellites, "
         + " user, "
         + " last_time "
-        
+
         + " from tempPoints, user"
-        
+
         + " where X(g) < " + p1lat
         + " and X(g) > " + p2lat
         + " and Y(g) > " + p1lon
@@ -436,15 +513,15 @@ public class osmServerSQLHandler extends Thread
 
     return true;
   } // dropPoint
-  
-  
-  
+
+
+
   public synchronized boolean dropPointsInArea(
       float lon1,
       float lat1,
       float lon2,
       float lat2,
-      
+
       int uid)
   {
 

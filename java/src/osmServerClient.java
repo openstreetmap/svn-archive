@@ -1,21 +1,21 @@
 /*
-Copyright (C) 2004 Stephen Coast (steve@fractalus.com)
+   Copyright (C) 2004 Stephen Coast (steve@fractalus.com)
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-*/
+ */
 
 
 import java.util.*;
@@ -31,8 +31,8 @@ public class osmServerClient
   private String sPassword = "";
   private String sLoginToken = "";
   private long loginTime = 0;
-  
-      
+
+
   SimpleXmlRpcClient xmlrpc;
 
   public osmServerClient()
@@ -40,7 +40,7 @@ public class osmServerClient
 
     try
     {
-    
+
       xmlrpc = new SimpleXmlRpcClient("128.40.59.181", 4000);
 
     }
@@ -182,6 +182,48 @@ public class osmServerClient
 
   }
 
+
+
+
+  public synchronized Vector getStreets(
+      LatLonPoint llp1,
+      LatLonPoint llp2)
+  {
+
+    System.out.println("getting streets...");
+
+    Vector streets = new Vector();
+
+    try{
+
+      Vector params = new Vector();
+
+      params.addElement( "applet" ); 
+      params.addElement( new Double((double)llp1.getLatitude()) );
+      params.addElement( new Double((double)llp1.getLongitude()) );
+      params.addElement( new Double((double)llp2.getLatitude()) );
+      params.addElement( new Double((double)llp2.getLongitude()) );
+
+      streets = (Vector) xmlrpc.execute("openstreetmap.getStreets",params);
+
+
+      System.out.println("done getting streets");
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+
+      System.exit(-1);
+
+    }
+
+    return streets;
+
+  } // getStreets
 
 
   public synchronized Vector getPoints(LatLonPoint llp1,

@@ -25,40 +25,38 @@ import java.awt.*;
 
 
 public class osmApplet extends JApplet {
-    
-    public void init() {
+
+  public void init() {
+
+    new osmDisplay( getContentPane() );       
 
 
-      new osmDisplay( getContentPane() );       
+  } // init
 
-        
-        
-        
-    } // init
 
-    
-    public static void main(String[] args)
-    {
+  public static void main(String[] args)
+  {
 
-      new osmApplet().go();
+    new osmApplet().go();
 
-    } // main
+  } // main
 
-    public osmApplet()
-    {
+  public osmApplet()
+  {
 
-    } // osmApplet2
+  } // osmApplet2
 
-    public void go()
-    {
-      JFrame jf = new JFrame("blah");
-      
-      jf.setSize(600,600);
-      jf.show();
-      
-      new osmDisplay(jf.getContentPane());
- 
-      jf.pack();
-      
-    } 
+
+  public void go()
+  {
+    JFrame jf = new JFrame("blah");
+
+    jf.setSize(600,600);
+    jf.show();
+
+    new osmDisplay(jf.getContentPane());
+
+    jf.pack();
+
+  } 
 }

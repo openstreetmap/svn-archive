@@ -1,21 +1,21 @@
 /*
-Copyright (C) 2004 Stephen Coast (steve@fractalus.com)
+   Copyright (C) 2004 Stephen Coast (steve@fractalus.com)
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-*/
+ */
 
 
 import java.util.*;
@@ -36,18 +36,18 @@ import com.bbn.openmap.proj.*;
 import com.bbn.openmap.util.*;
 
 
-
 public class osmPointsLayer extends Layer
 {
 
   protected OMGraphicList graphics;
   private boolean bStartingUp = true;
-  
+  osmAppletMouseListener osmAML;
   Projection proj;
-  
-  public osmPointsLayer()
-  {  
+
+  public osmPointsLayer(osmAppletMouseListener oa)
+  {
     super();
+    osmAML = oa;
     graphics = new OMGraphicList(2000);
     createGraphics(graphics);
 
@@ -71,15 +71,15 @@ public class osmPointsLayer extends Layer
   public void projectionChanged (ProjectionEvent e) {
 
     System.out.println("projection changed to ");
-    
-    
+
+
     proj = e.getProjection();
-  
+
     System.out.println("scale is " + proj.getScale());
     System.out.println("center is " + proj.getCenter());
     // probably better to empty the list rather than create a new one?
     graphics = new OMGraphicList(2000);
-    
+
     createGraphics(graphics);
 
     graphics.generate(e.getProjection());
@@ -104,21 +104,21 @@ public class osmPointsLayer extends Layer
 
     OMCircle omc;
 
-//    Projection proj = getProjection(); 
+    //    Projection proj = getProjection(); 
 
     if( proj != null )
     {
-      
+
       osmServerClient osc = new osmServerClient();
 
       Vector v = new Vector();
-      
+
       if( !bStartingUp )
       {
         v = osc.getPoints(proj.getUpperLeft(),
-          proj.getLowerRight());
+            proj.getLowerRight());
       }
-      
+
       Enumeration e = v.elements();
 
       while( e.hasMoreElements() )
@@ -139,8 +139,11 @@ public class osmPointsLayer extends Layer
     }
   }
 
+  public MapMouseListener getMapMouseListener() {
 
+    System.out.println("asked for maplistener");
+    return osmAML;
 
-
+  }
 
 } // osmPointsLayer

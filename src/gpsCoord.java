@@ -79,7 +79,7 @@ public class gpsCoord
 
     //t.scale(1, -1.6);
 
-    double scale = 2000;
+    double scale = 3000;
     
     t.preConcatenate(
         AffineTransform.getScaleInstance(scale * 1 , scale * -1.6));

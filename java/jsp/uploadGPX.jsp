@@ -2,6 +2,7 @@
 <%@ page import="java.util.zip.*" %>
 <%@ page import="java.io.*" %>
 <%@ page import="org.openstreetmap.util.*"%>
+<%@ page import="org.openstreetmap.server.*"%>
 <%@ page import="org.apache.commons.fileupload.*" %>
 <%@ page import="org.apache.xmlrpc.*" %>
 <%@ page contentType="text/html" %>

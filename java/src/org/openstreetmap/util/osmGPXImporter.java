@@ -13,6 +13,8 @@ import org.apache.xmlrpc.*;
 
 public class osmGPXImporter extends DefaultHandler{
 
+  private PrintStream out = null;
+  
   private double lat = 0;
   private double lon = 0;
   private double ele = 0;
@@ -38,8 +40,9 @@ public class osmGPXImporter extends DefaultHandler{
   String sUser;
   String sPass;
 
-  public osmGPXImporter(String u, String p)
+  public osmGPXImporter(OutputStream o, String u, String p)
   {
+    out = new PrintStream(o);
 
     connectToServer(u,p);
 
@@ -186,9 +189,7 @@ public class osmGPXImporter extends DefaultHandler{
 
     try
     {
- 
-  
-      xmlrpc = new XmlRpcClientLite("http://128.40.59.181/openstreetmap/xml.jsp");
+      xmlrpc = new XmlRpcClientLite("http://www.openstreetmap.org/api/xml.jsp");
  
       Vector v = new Vector();
 
@@ -197,15 +198,13 @@ public class osmGPXImporter extends DefaultHandler{
      
       sToken = (String)xmlrpc.execute("openstreetmap.login", v);
 
-      System.out.println("logged in with token " + sToken);
+      out.print("logged in with token " + sToken);
     
       
     }
     catch(Exception e)
     {
-      System.out.println(e);
-      e.printStackTrace();
-      System.exit(-1);
+      out.println(e);
     }
     
   } // connectToServer
@@ -250,8 +249,7 @@ public class osmGPXImporter extends DefaultHandler{
       {
         b = false;
 
-        System.out.println(e);
-        e.printStackTrace();
+        out.println(e);
 
       }
 
@@ -260,17 +258,14 @@ public class osmGPXImporter extends DefaultHandler{
       if( !b )
       {
       
-        System.out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp));
+        out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp));
 
-        System.out.println("this is bad, quiting");
-
-
-        System.exit(-1);
+        out.println("this is bad, quiting");
 
       }
       else
       {
-        System.out.print(".");
+        out.print(".");
 
       }
   } // addPoint
@@ -282,7 +277,7 @@ public class osmGPXImporter extends DefaultHandler{
 
     try{
     
-      osmGPXImporter handler = new osmGPXImporter(args[0], args[1]);
+      osmGPXImporter handler = new osmGPXImporter(System.out, args[0], args[1]);
 
 
       SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -299,8 +294,30 @@ public class osmGPXImporter extends DefaultHandler{
 
     }
 
-
-
   } // main
+
+
+  
+  public void upload(InputStream gpxInputStream, OutputStream out, String user, String pass)
+  {
+    PrintStream o = new PrintStream(out);
+
+    try{
+    
+      osmGPXImporter handler = new osmGPXImporter(out, user, pass);
+
+
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+
+      SAXParser saxParser = factory.newSAXParser();
+
+      saxParser.parse( gpxInputStream, handler );
+    }
+    catch(Exception e)
+    {
+      o.print(e);
+    }
+
+  }
 }
 

@@ -357,8 +357,7 @@ public class osmServerSQLHandler extends Thread
   } // addStreetSegment
 
 
-
-
+ 
   public synchronized boolean addPoint(
       float lat,
       float lon,
@@ -413,7 +412,71 @@ public class osmServerSQLHandler extends Thread
 
     return true;
 
-  }
+  } // addPoint
+
+ 
+  
+  
+  public synchronized boolean addPoints(
+      float[] lat,
+      float[] lon,
+      float[] alt,
+      long[] timestamp,
+      float[] hor_dilution,
+      float[] vert_dilution,
+      int[] trackid,
+      int[] quality,
+      int[] satellites,
+      int nPoints,
+      int uid
+      )
+  {
+
+    System.out.println("addPoint");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      for(int i = 0; i< nPoints; i++)
+      {
+
+        String sSQL = "insert into tempPoints values ("
+          + " GeomFromText('Point("  + lon[i] + " " + lat[i] + ")'),"
+          + " " + alt[i] + ", "
+          + " " + timestamp[i] + ", "
+          + " " + uid + ", "
+          + " " + hor_dilution[i] + ", "
+          + " " + vert_dilution[i] + ", "
+          + " " + trackid[i] + ", "
+          + " " + quality[i] + ", "
+          + " " + satellites[i] + ", "
+          + " " + System.currentTimeMillis() + ", 1,0);";
+
+
+        //System.out.println("querying with sql \n " + sSQL);
+
+        stmt.execute(sSQL);
+      }
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      return false;
+    }
+
+    return true;
+
+  } // addPoints
 
 
   public synchronized Vector getStreets(
@@ -762,7 +825,7 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      
+
       Random r = new Random();
 
       for(int i = 1; i < 30; i++)
@@ -781,7 +844,7 @@ public class osmServerSQLHandler extends Thread
 
       stmt.execute(sSQL);
 
-     
+
     }
     catch(Exception e)
     {
@@ -799,7 +862,7 @@ public class osmServerSQLHandler extends Thread
   } // addUser
 
 
- 
+
   public synchronized boolean confirmUser(String user, String token)
   {
 
@@ -861,8 +924,8 @@ public class osmServerSQLHandler extends Thread
   } // confirmUser
 
 
-  
-  
+
+
   public synchronized boolean userExists(String user)
   {
 
@@ -895,7 +958,7 @@ public class osmServerSQLHandler extends Thread
       ResultSet rs = stmt.executeQuery(sSQL);
 
       return rs.next();
-      
+
     }
     catch(Exception e)
     {

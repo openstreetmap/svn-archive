@@ -191,6 +191,57 @@ public class osmServerHandler
 
   } // addPoint
 
+/* 
+  public boolean addPoints(String token,
+      double lat[],
+      double lon[],
+      double alt[],
+      Date date[],
+      double hor_dilution[],
+      double vert_dilution[],
+      int track_id[],
+      int quality[],
+      int satellites[]
+      )
+  {
+
+
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
+
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+    }
+
+
+    long[] times = new long[date.length];
+    float[] lats = new float[date.length];
+//    float[] lons = new 
+    
+    for(int i = 0; i < date.length; i++)
+    {
+
+      times[i] = date[i].getTime();
+
+    }
+    
+    return osmSQLH.addPoint(
+        (float)lat,
+        (float)lon,
+        (float)alt,
+        times,
+        (float)hor_dilution,
+        (float)vert_dilution,
+        track_id,
+        quality,
+        satellites,
+        uid);
+
+  
+  } // addPoints
+*/
 
   public Vector getStreets(
       String token,

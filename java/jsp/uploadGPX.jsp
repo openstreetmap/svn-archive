@@ -53,11 +53,13 @@ else
 
       BufferedInputStream uploadedStream = null; 
 
-      while (iter.hasNext()) {
+      while (iter.hasNext())
+      {
     
         FileItem item = (FileItem) iter.next();
 
-        if (item.isFormField()) {
+        if(item.isFormField())
+        {
 
           if(item.getFieldName().equals("email"))
           {
@@ -74,7 +76,9 @@ else
 
           out.print("got a form field ok!<br>");
 
-        } else {
+        }
+        else
+        {
           out.print("got a file<br>");
 
           uploadedStream = new BufferedInputStream(item.getInputStream());
@@ -103,18 +107,8 @@ else
       }
 
 
-
-      // test the username and password
-
-      //      boolean bLoggedIn = false;
-
-
       XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
 
-      Vector v = new Vector();
-
-      v.addElement(email);
-      v.addElement(pass);
 
       out.print("login success!<br>");
 
@@ -166,9 +160,9 @@ else
       <%
 
   }
+}
+%>
 
-  %>
+<%@ include file="include/bottom.jsp" %>
 
-    <%@ include file="include/bottom.jsp" %>
-
-    </html>
+</html>

@@ -17,7 +17,6 @@
 
 <%
 
-String action = request.getParameter("action");
 
 if( !bLoggedIn )
 {
@@ -28,7 +27,8 @@ if( !bLoggedIn )
 else
 {
 
-  if(action != null && action.equals("send") && FileUpload.isMultipartContent(request))
+  
+  if(FileUpload.isMultipartContent(request))
   {
 
     String sSaveFileName = "";
@@ -62,21 +62,8 @@ else
 
         if(item.isFormField())
         {
+          // erm...
 
-          if(item.getFieldName().equals("email"))
-          {
-            email = item.getString();
-
-          }
-
-          if(item.getFieldName().equals("pass"))
-          {
-            pass = item.getString();
-
-          }
-
-
-          out.print("got a form field ok!<br>");
 
         }
         else
@@ -155,7 +142,6 @@ else
       <table>
       <tr><td>file:</td><td><input type="file" name="file"></td></tr>
       <tr><td></td><td><input type="submit" value="Go!"></td></tr>
-      <input type="hidden" name="action" value="send">
       </table>
       </form>
 

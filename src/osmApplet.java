@@ -18,6 +18,7 @@ public class osmApplet extends JApplet {
         getContentPane().add(label, BorderLayout.SOUTH);
         
 
+        
         osmDisplayPanel odp = new osmDisplayPanel(this);
         
         getContentPane().add(odp, BorderLayout.CENTER);

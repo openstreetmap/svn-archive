@@ -110,7 +110,7 @@ public class gpspoint{
   
   public String toString()
   {
-    return m_long + " " + m_lat + " " + m_altitude + " " + m_time;
+    return m_lat + " " + m_long + " " + m_altitude + " " + m_time;
 
   } // toString
 

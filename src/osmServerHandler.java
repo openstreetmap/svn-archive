@@ -59,8 +59,6 @@ public class osmServerHandler implements Runnable
             {
               gpspoint g = (gpspoint)e.nextElement();
 
-              System.out.println("writing " + g);
-              
               out.write(g + "\n");
               
               out.flush();
@@ -71,7 +69,8 @@ public class osmServerHandler implements Runnable
             out.flush();
 
             System.out.println("write end");
-            
+        
+            out.close();
             
 
           }
@@ -82,17 +81,10 @@ public class osmServerHandler implements Runnable
             bKeepTalking = false;
           }
 
-          System.out.println("a");
         }
 
-        System.out.println("b");
       }
 
-      out.write("END\n");
-
-      out.flush();
-
-      System.out.println("wrote END");
     }
     catch(Exception e)
     {

@@ -2,18 +2,19 @@ import java.util.*;
 import java.lang.*;
 import java.net.*;
 import java.io.*;
+import java.util.zip.*;
 
 public class osmServerHandler implements Runnable
 {
 
-  Socket s;
+  Socket sock;
   osmServerSQLHandler osmSQLH;
 
   
   public osmServerHandler(Socket sT,
                           osmServerSQLHandler osmTSQLH)
   {
-    s = sT;
+    sock = sT;
     osmSQLH = osmTSQLH;
 
   } // osmServerHandler
@@ -25,10 +26,10 @@ public class osmServerHandler implements Runnable
     try{
 
       BufferedReader in = new BufferedReader(new InputStreamReader(
-            s.getInputStream()));
+            sock.getInputStream()));
 
       BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-            s.getOutputStream()));
+            sock.getOutputStream()));
 
       String sLine;
 
@@ -62,20 +63,32 @@ public class osmServerHandler implements Runnable
           {
             out.write("POINTS\n");
 
+                  
+            GZIPOutputStream innergs = new GZIPOutputStream( sock.getOutputStream() ); 
+            BufferedWriter gs = new BufferedWriter(
+                new OutputStreamWriter( 
+                  
+                    innergs 
+                  ) 
+                );
+
             Enumeration e = v.elements();
 
+            
             while(e.hasMoreElements())
             {
               gpspoint g = (gpspoint)e.nextElement();
 
-              out.write(g + "\n");
+              gs.write(g + "\n");
               
-              out.flush();
             }
         
-            out.write("END\n");
+            gs.write("END\n");
 
-            out.flush();
+            gs.flush();
+
+            innergs.finish();
+
 
             System.out.println("write end");
         

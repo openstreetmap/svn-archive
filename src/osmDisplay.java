@@ -85,7 +85,7 @@ public class osmDisplay
       float up = p.getUpperLeft().getLatitude();
       float down = p.getLowerRight().getLatitude();
 
-      mapBean.setCenter( mapBean.getCenter().getLatitude() - (up-down)/4,
+      mapBean.setCenter( mapBean.getCenter().getLatitude() + (up-down)/4,
                          mapBean.getCenter().getLongitude());
 
     } // up
@@ -100,7 +100,7 @@ public class osmDisplay
       float up = p.getUpperLeft().getLatitude();
       float down = p.getLowerRight().getLatitude();
 
-      mapBean.setCenter( mapBean.getCenter().getLatitude() + (up-down)/4,
+      mapBean.setCenter( mapBean.getCenter().getLatitude() - (up-down)/4,
                          mapBean.getCenter().getLongitude());
 
     } // down

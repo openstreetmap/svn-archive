@@ -3,6 +3,7 @@ import java.net.*;
 import java.lang.*;
 import java.io.*;
 import com.bbn.openmap.LatLonPoint;
+import java.util.zip.*;
 
 public class osmServerClient
 {
@@ -45,7 +46,10 @@ public class osmServerClient
 
       System.out.println("Server said " + sLine);
 
-      while( (sLine = in.readLine()) != null)
+      BufferedReader br = new BufferedReader(new InputStreamReader(
+          new GZIPInputStream(s.getInputStream())));
+
+      while( (sLine = br.readLine()) != null)
       {
 
         if(sLine.equals("END"))

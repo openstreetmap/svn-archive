@@ -13,6 +13,8 @@ public class gpsShowWindow extends JFrame{
 
   AffineTransform at = new AffineTransform();
 
+  Image offScreenBuffer;
+
   public gpsShowWindow() {
 
 
@@ -20,9 +22,9 @@ public class gpsShowWindow extends JFrame{
     
     this.getContentPane().setLayout(new BorderLayout());
 
-    JLabel instructions = new JLabel("<html>hello</html>");
+    //JLabel instructions = new JLabel("<html>hello</html>");
 
-    this.getContentPane().add(instructions, BorderLayout.NORTH);
+    //this.getContentPane().add(instructions, BorderLayout.NORTH);
 
 
     this.setTitle("gpsShow");
@@ -72,23 +74,44 @@ public class gpsShowWindow extends JFrame{
   } // scale
 
 
+  public void update(Graphics g)
+  {
+    Graphics gr; 
+    
+    if (offScreenBuffer==null ||
+        (! (offScreenBuffer.getWidth(this) == this.size().width
+            && offScreenBuffer.getHeight(this) == this.size().height)))
+    {
+      offScreenBuffer = this.createImage(size().width, size().height);
+    }
 
-  
+    gr = offScreenBuffer.getGraphics();
+
+    paint(gr);
+    
+    g.drawImage(offScreenBuffer, 0, 0, this);
+  }
+
   public void paint(Graphics g)
   {
     super.paint(g);
 
     if( gpsPoints != null )
     {
- //     System.out.println(at);
+
+      g.setColor(Color.white);
+
+      g.fillRect(0,0,600,600);
+
+      g.setColor(Color.black);
       
+      //     System.out.println(at);
+
       Enumeration e = gpsPoints.elements();
 
       Point2D.Float p1 = new Point2D.Float();
       Point2D.Float p2 = new Point2D.Float();
 
-      int lastX=0;
-      int lastY=0;
       while( e.hasMoreElements() )
       {
         gpspoint p = (gpspoint)e.nextElement();
@@ -96,19 +119,12 @@ public class gpsShowWindow extends JFrame{
         p1.setLocation(p.getLongitude(), p.getLatitude());
 
         at.transform(p1,p2);
-               
-        g.drawLine(300 + lastX,
-                   300 + lastY,
-                   300 + (int)p2.getX(),
-                   300 + (int)p2.getY());
-                   
-  
-        
-        lastX = (int)p2.getX();
-        lastY = (int)p2.getY();
-        
 
-//        System.out.println("drawing point " + p2.getX() + "," + p2.getY());
+        g.drawLine(300 + (int)p2.getX(),
+            300 + (int)p2.getY(),
+            300 + (int)p2.getX(),
+            300 + (int)p2.getY());
+
       }
 
     }

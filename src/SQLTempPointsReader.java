@@ -24,7 +24,7 @@ public class SQLTempPointsReader
       Statement stmt = conn.createStatement();
       
 
-      ResultSet rs = stmt.executeQuery("select Y(g),X(g),altitude,timestamp  from tempPoints order by timestamp desc limit 2200");
+      ResultSet rs = stmt.executeQuery("select Y(g),X(g),altitude,timestamp  from tempPoints order by timestamp desc");
 
       boolean bFirst = true;
 

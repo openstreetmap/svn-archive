@@ -28,6 +28,7 @@ import org.apache.xmlrpc.*;
 public class osmServerHandler
 {
 
+
   public String login(String user, String pass)
   {
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
@@ -37,6 +38,29 @@ public class osmServerHandler
      
   } // login
   
+
+  public boolean addPoint(String token,
+      double lat,
+      double lon,
+      double alt,
+      Date date)
+  {
+
+
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
+
+
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+
+    }
+
+    return osmSQLH.addPoint((float)lat,(float)lon,(float)alt,date.getTime(), uid);
+
+  } // addPoint
 
   public Vector getPoints(
       String token,
@@ -49,7 +73,7 @@ public class osmServerHandler
 
       osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
-      if( !osmSQLH.validateToken(token) )
+      if( osmSQLH.validateToken(token) ==-1 )
       {
         return null;
       }
@@ -89,9 +113,6 @@ public class osmServerHandler
 
     return null;
   }
-
-
-
 
 
 } // osmServerHandler

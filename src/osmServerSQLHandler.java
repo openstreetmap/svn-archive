@@ -109,10 +109,7 @@ public class osmServerSQLHandler extends Thread
 
         stmt.execute(sSQL);
 
-      }
-      else
-      {
-        return "ERROR";
+        return token;
       }
 
     }
@@ -125,18 +122,20 @@ public class osmServerSQLHandler extends Thread
 
     }
 
-    return "OK";
+    return "ERROR";
     
 
   } // login
 
 
 
-  public synchronized boolean validateToken(String token)
+  public synchronized int validateToken(String token)
   {
     if(token.length() > 30 || token.indexOf(" ") != -1)
     {
-      return false;
+      System.out.println("didnt validate " + token );
+      return -1;
+      
 
     }
 
@@ -166,11 +165,9 @@ public class osmServerSQLHandler extends Thread
 
         stmt.execute(sSQL);
 
-        return true;
-      }
-      else
-      {
-        return false;
+        System.out.println("validated token " + token);
+        return uid;
+        
       }
 
     }
@@ -183,12 +180,56 @@ public class osmServerSQLHandler extends Thread
 
     }
 
-    return false;
+    return -1;
 
 
   } // validateLoginToken
 
 
+
+  public synchronized boolean addPoint(float lat,
+      float lon,
+      float alt,
+      long timestamp,
+      int uid)
+  {
+
+    System.out.println("addPoint");
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "insert into tempPoints values ("
+            + " GeomFromText('Point("  + lon + " " + lat + ")'),"
+            + " " + alt + ", "
+            + " " + timestamp + ", " + uid + ");";
+
+
+      //System.out.println("querying with sql \n " + sSQL);
+
+      stmt.execute(sSQL);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      return false;
+    }
+
+    return true;
+
+  }
+  
 
   public synchronized Vector getPoints(float p1lat,
       float p1lon,

@@ -41,6 +41,8 @@ public class osmDisplay
   JLabel label = new JLabel("OpenStreetMap pre-pre-pre alpha");
   BufferedMapBean mapBean;
 
+  osmServerClient osc = new osmServerClient();
+  
   public osmDisplay(Container cp)
   {
 
@@ -87,6 +89,15 @@ public class osmDisplay
     shapeLayer.setStartingUp(false);
 
   }
+
+
+  public osmServerClient getServerClient()
+  {
+    return osc;
+
+  } // getServerClient
+
+
 
   public void left()
   {
@@ -160,6 +171,12 @@ public class osmDisplay
 
   } // zoomout
 
+
+  public void login()
+  {
+
+
+  }
 
 
 

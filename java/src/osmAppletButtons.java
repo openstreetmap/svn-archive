@@ -43,6 +43,11 @@ public class osmAppletButtons extends JPanel implements ActionListener
     zoomButtons.setLayout(new BorderLayout());
     
     add(zoomButtons);
+
+    JPanel loginButtons = new JPanel();
+    loginButtons.setLayout(new GridLayout(1,2));
+    
+    add(loginButtons);
     
     java.net.URL imageURL;
     
@@ -81,6 +86,11 @@ public class osmAppletButtons extends JPanel implements ActionListener
     bZoomin.setActionCommand("zoomin");
     bZoomin.addActionListener(this);
     zoomButtons.add(bZoomin, BorderLayout.NORTH);
+
+    JButton bLogin = new JButton("Login");
+    bLogin.setActionCommand("login");
+    bLogin.addActionListener(this);
+    loginButtons.add(bLogin);
 
   } // osmAppletButtons
 
@@ -122,11 +132,20 @@ public class osmAppletButtons extends JPanel implements ActionListener
     }
     
 
-    if( e.getActionCommand().equals("zoomout") )
+     if( e.getActionCommand().equals("zoomout") )
     {
       od.zoomout();
       return;
     }
+
+    if( e.getActionCommand().equals("login") )
+    {
+      osmAppletLoginWindow loginWindow = new osmAppletLoginWindow((JFrame)null,true,od);
+
+      return;
+    }
+
+
 
 
   }

@@ -39,6 +39,7 @@ import com.bbn.openmap.util.*;
 public class osmPointsLayer extends Layer
 {
 
+  osmServerClient osc;;
   protected OMGraphicList graphics;
   private boolean bStartingUp = true;
   osmAppletMouseListener osmAML;
@@ -47,6 +48,8 @@ public class osmPointsLayer extends Layer
   public osmPointsLayer(osmDisplay od)
   {
     super();
+    osc = od.getServerClient();
+
     osmAML = new osmAppletMouseListener(od, this);
     graphics = new OMGraphicList(2000);
     createGraphics(graphics);
@@ -146,8 +149,6 @@ public class osmPointsLayer extends Layer
 
     if( proj != null )
     {
-
-      osmServerClient osc = new osmServerClient();
 
       Vector v = new Vector();
 

@@ -102,15 +102,21 @@ public class osmAppletButtons extends JPanel implements ActionListener
     bLogin.addActionListener(this);
     loginButtons.add(bLogin);
 
-     JButton bDeletePoints = new JButton("dp");
+    JButton bDeletePoints = new JButton("dp");
     bDeletePoints.setActionCommand("delpoints");
     bDeletePoints.addActionListener(this);
     loginButtons.add(bDeletePoints);
 
-    JButton bAddLine = new JButton("al");
-    bAddLine.setActionCommand("addline");
-    bAddLine.addActionListener(this);
-    loginButtons.add(bAddLine);
+
+    loginButtons.add( new JLabel("Mode:"));
+
+    
+    String[] sModes = { "drop points", "add lines" };
+    JComboBox comboModes = new JComboBox(sModes);
+    comboModes.setActionCommand("addline");
+    ItemListener modeListener = new osmAppletModeListener(od);
+    comboModes.addItemListener(modeListener);
+    loginButtons.add(comboModes);
 
     
     add(loginButtons);
@@ -175,6 +181,8 @@ public class osmAppletButtons extends JPanel implements ActionListener
       return;
 
     }
+
+
 
 
   }

@@ -38,6 +38,12 @@ import java.util.Properties;
 
 public class osmDisplay
 {
+  public static final int MODE_DRAW_LINES = 1;
+  public static final int MODE_DROP_POINTS = 2;
+  
+  
+  int nCurrentMode = 2;
+
   JLabel label = new JLabel("OpenStreetMap pre-pre-pre alpha");
   BufferedMapBean mapBean;
 
@@ -45,6 +51,7 @@ public class osmDisplay
   
   osmPointsLayer pointsLayer;
   osmSelectLayer selectLayer;
+  osmLineLayer lineLayer;
   
   public osmDisplay(Container cp)
   {
@@ -68,7 +75,7 @@ public class osmDisplay
 
     selectLayer = new osmSelectLayer(this);
     pointsLayer = new osmPointsLayer(this);
-    
+    lineLayer = nee osmLineLayer(this);
     
     Properties shapeLayerProps = new Properties();
 
@@ -79,12 +86,13 @@ public class osmDisplay
 
 //    selectLayer.setProperties(shapeLayerProps);
     selectLayer.setVisible(true);
+  
     //mapBean.add(shapeLayer);
     mapBean.add(pointsLayer);
 
     mapBean.add(selectLayer);
 
-    mapBean.add(new osmLineLayer(this));
+    mapBean.add(linesLayer);
     // Add the map to the frame
 
     osmAppletButtons buttons = new osmAppletButtons(this);
@@ -222,5 +230,26 @@ public class osmDisplay
     
   } // checkLogin
 
+
+  public void setMode(int n)
+  {
+    nCurrentMode = n;
+
+    switch(nCurrentMode)
+    {
+      case MODE_DROP_POINTS:
+        pointsLayer.setMouseListen(false);
+        linesLayer.setMouseListen(true);  
+        break;
+
+      case MODE_DRAW_LINES:
+        pointsLayer.setMouseListen(true);
+        linesLayer.setMouseListen(false);  
+
+        break;
+
+    }
+
+  } // setMode
 
 } // osmDisplay

@@ -21,6 +21,7 @@ public class osmServerSQLHandler extends Thread
     sUser = sTUser;
     sPass = sTPass;
 
+    System.out.println("osmSQLHandler instantiated");
   } // osmServerSQLHandler
 
 
@@ -37,6 +38,8 @@ public class osmServerSQLHandler extends Thread
   public synchronized Vector getPoints()
   {
 
+    System.out.println("getPoints");
+    
     try{
 
       Class.forName("com.mysql.jdbc.Driver").newInstance(); 

@@ -12,7 +12,7 @@ public class osmServer
   public static void main(String[] args)
   {
     
-    System.out.println(new Date() + "openstreetmap server started");
+    System.out.println(new Date() + " openstreetmap server started");
     new osmServer().startServer();
 
   } // main
@@ -31,7 +31,10 @@ public class osmServer
   public void startServer()
   {
 
-     while(true)
+
+    getSocket();
+
+    while(true)
     {
       
       try{
@@ -48,8 +51,9 @@ public class osmServer
       }
       catch(Exception e)
       {
+        System.out.println("eek " + e);
+        System.exit(-1);
       
-        /* this should never happen... */
 
       }
     }

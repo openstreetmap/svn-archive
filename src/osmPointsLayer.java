@@ -22,6 +22,8 @@ public class osmPointsLayer extends Layer
 
   protected OMGraphicList graphics;
 
+  Projection proj;
+  
   public osmPointsLayer()
   {  
     super();
@@ -35,20 +37,24 @@ public class osmPointsLayer extends Layer
   public void setProperties(String prefix, java.util.Properties props) {
 
     super.setProperties(prefix, props);
-  
-  } // setProperties
-  
 
-  
+  } // setProperties
+
+
+
   public void projectionChanged (ProjectionEvent e) {
- 
-    createGraphics(graphics);
-     
-   
-    graphics.generate(e.getProjection());
+
+    System.out.println("projection changed");
     
+    proj = e.getProjection();
+    
+    createGraphics(graphics);
+
+
+    graphics.generate(e.getProjection());
+
     repaint();
-  
+
   } // projectionChanged
 
 
@@ -56,7 +62,7 @@ public class osmPointsLayer extends Layer
   public void paint (Graphics g) {
 
     graphics.render(g);
-  
+
   } // paint
 
 
@@ -67,31 +73,33 @@ public class osmPointsLayer extends Layer
 
     OMCircle omc;
 
-    Projection proj = getProjection(); 
+//    Projection proj = getProjection(); 
 
-    osmServerClient osc = new osmServerClient();
-
-    Vector v = osc.getPoints(proj.getUpperLeft(),
-                             proj.getLowerRight());
-
-    Enumeration e = v.elements();
-
-    while( e.hasMoreElements() )
+    if( proj != null )
     {
-      gpspoint p = (gpspoint)e.nextElement();
+      osmServerClient osc = new osmServerClient();
 
-      omc = new OMCircle( p.getLatitude(),
-          p.getLongitude(),
-          5f,
-          com.bbn.openmap.proj.Length.METER
-          );
-      omc.setLinePaint(Color.black);
-      omc.setFillPaint(OMGraphic.clear);
+      Vector v = osc.getPoints(proj.getUpperLeft(),
+          proj.getLowerRight());
 
-      list.add(omc);
+      Enumeration e = v.elements();
+
+      while( e.hasMoreElements() )
+      {
+        gpspoint p = (gpspoint)e.nextElement();
+
+        omc = new OMCircle( p.getLatitude(),
+            p.getLongitude(),
+            5f,
+            com.bbn.openmap.proj.Length.METER
+            );
+        omc.setLinePaint(Color.black);
+        omc.setFillPaint(OMGraphic.clear);
+
+        list.add(omc);
+      }
+
     }
-
-
   }
 
 

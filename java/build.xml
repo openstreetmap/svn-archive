@@ -56,7 +56,7 @@ destdir="${build}"
   </fileset>
 </copy>
 
-<copy file="${jsp}/xml.jsp" tofile="/var/lib/tomcat4/webapps/api/" />
+<copy file="${jsp}/xml.jsp" tofile="/var/lib/tomcat4/webapps/api/xml.jsp" />
 
 <copy file="${jsp}/newUser.jsp" tofile="/var/lib/tomcat4/webapps/edit/newUser.jsp" />
 <copy file="${jsp}/uploadGPX.jsp" tofile="/var/lib/tomcat4/webapps/edit/uploadGPX.jsp" />

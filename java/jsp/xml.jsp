@@ -1,4 +1,5 @@
 <%@ page import="java.io.*" %>
+<%@ page import="java.util.zip.*" %>
 <%@ page import="org.apache.xmlrpc.*" %>
 <%@ page import="org.openstreetmap.server.osmServerHandler" %>
 <%@ page contentType="text/xml" %><%!
@@ -11,12 +12,46 @@ ServletInputStream in = pageContext.getRequest().getInputStream();
 
 byte[] result = xmlrpc.execute (in);
 
-response.setContentLength (result.length);
 
-for(int i = 0; i < result.length; i++)
+String encoding = request.getHeader("Accept-Encoding");    
+
+OutputStream out2;
+
+boolean bUseGzip = false;
+
+if (encoding != null && encoding.indexOf("gzip") != -1)
 {
-  out.write (result[i]);
+  System.out.println("got gzip stream");
+  response.setHeader("Content-Encoding" , "gzip");
+  out2 = new GZIPOutputStream(response.getOutputStream());
+
+  PrintWriter pw = new PrintWriter(out2, false);
+
+  for(int i = 0; i < result.length; i++)
+  {
+    out2.write (result[i]);
+  }
+
+
+  out2.flush();
+
+
 }
+else
+{
+
+  System.out.println("got normal  stream");
+  for(int i = 0; i < result.length; i++)
+  {
+    out.write (result[i]);
+  }
+
+
+
+}
+
+
+//response.setContentLength (result.length);
 
 out.flush ();
 %>

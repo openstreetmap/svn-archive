@@ -66,7 +66,7 @@ else
       if( bReturn.booleanValue() )
       {
         %>
-         Thanks, all done! Your account is now active.<br><br><a href="http://www.openstreetmap.org/">back to openstreetmap</a>
+         Thanks, all done! Your account is now active.<br><br>You can <a href="login.jsp">login</a> now!
         <%
       }
       else
@@ -79,6 +79,7 @@ else
     } 
     catch (Exception e)
     {
+      out.println(e);
       %>
         Something went wrong confirming that address, if the problem persists please <a href="mailto:steve@fractalus.com">report it</a>.<br><br><a href="http://www.openstreetmap.org/">back to openstreetmap</a>
         <%

@@ -29,8 +29,6 @@ else
   if(FileUpload.isMultipartContent(request))
   {
 
-    String email = "";
-    String pass = "";
     String sSaveFileName = "";
     String sUploadFileName = "";
     File fUploadedFile = null;
@@ -56,6 +54,7 @@ else
       BufferedInputStream uploadedStream = null; 
 
       while (iter.hasNext()) {
+    
         FileItem item = (FileItem) iter.next();
 
         if (item.isFormField()) {
@@ -107,7 +106,7 @@ else
 
       // test the username and password
 
-//      boolean bLoggedIn = false;
+      //      boolean bLoggedIn = false;
 
 
       XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
@@ -117,70 +116,59 @@ else
       v.addElement(email);
       v.addElement(pass);
 
-      String sLoginToken = (String)xmlrpc.execute("openstreetmap.login",v);
+      out.print("login success!<br>");
 
-      if( sLoginToken.equals("ERROR"))
+      if( uploadedStream != null)
       {
-        out.print("login failure :-(<br>");
 
-      }
-      else
-      {
-        out.print("login success!<br>");
+        out.print("now trying to upload it...<br>");
 
-        if( uploadedStream != null)
+        osmGPXImporter gpxImporter = new osmGPXImporter();
+
+        out.print("created importer ok at " + new java.util.Date() + "<br>");
+
+
+        if( sUploadFileName.endsWith(".gz") )
+        {
+          out.print("looks like a gzip file...<br>");
+
+          gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sToken);
+
+        }
+        else
         {
 
-          out.print("now trying to upload it...<br>");
+          out.print("looks like a gpx file...<br>");
+          gpxImporter.upload(uploadedStream, out, sToken);
 
-          osmGPXImporter gpxImporter = new osmGPXImporter();
-
-          out.print("created importer ok at " + new java.util.Date() + "<br>");
-
-
-          if( sUploadFileName.endsWith(".gz") )
-          {
-            out.print("looks like a gzip file...<br>");
-
-            gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sLoginToken);
-
-          }
-          else
-          {
-
-            out.print("looks like a gpx file...<br>");
-            gpxImporter.upload(uploadedStream, out, sLoginToken);
-
-          }
-
-          out.println("All done at " + new java.util.Date());
         }
 
+        out.println("All done at " + new java.util.Date());
       }
+
     }
-
-
   }
-  else
-  {
-
-    %>
-
-      <h1>Upload a GPX File</h1>
-      <br>Here, you can upload a plain gpx file or a gzipped one.<br>
-      <form action="http://www.openstreetmap.org/api/uploadGPX.jsp" enctype="multipart/form-data" method="post">
-      <table>
-      <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
-      <tr><td>password:</td><td><input type="password" name="pass"></td></tr>
-      <tr><td>file:</td><td><input type="file" name="file"></td></tr>
-      <tr><td></td><td><input type="submit" value="Go!"></td></tr>
-      </table>
-      </form>
 
 
-      <%
+}
+else
+{
 
-  }
+  %>
+
+    <h1>Upload a GPX File</h1>
+    <br>Here, you can upload a plain gpx file or a gzipped one.<br>
+    <form action="http://www.openstreetmap.org/api/uploadGPX.jsp" enctype="multipart/form-data" method="post">
+    <table>
+    <tr><td>file:</td><td><input type="file" name="file"></td></tr>
+    <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+    </table>
+    </form>
+
+
+    <%
+
+}
 }
 %>
 

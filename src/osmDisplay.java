@@ -62,8 +62,8 @@ public class osmDisplay
         cp.add( mapBean, BorderLayout.CENTER);
         cp.add(label,    BorderLayout.SOUTH);
         
-        mapBean.setScale(400000);
-        mapBean.setCenter(51.4f, 0.0f);
+        mapBean.setScale(10404.917);
+        mapBean.setCenter(51.526447f, -0.14746371f);
 
     }
 

@@ -58,9 +58,9 @@ namespace SiRF {
    * critical
    */
   void Message::critical(const char *msg, ...) {
-    if (m->handler != NULL) {
-      m->handler->shutdownDisplay();
-      m->handler = NULL;
+    if (getSelf()->handler != NULL) {
+      getSelf()->handler->shutdownDisplay();
+      getSelf()->handler = NULL;
     }
     va_list arg;
     va_start(arg, msg);

@@ -5,45 +5,79 @@
 <property name="dist" location="dist"/>
 <property name="lib" location="lib"/>
 <property name="icons" location="icons"/>
+<property name="jsp" location="jsp"/>
 
 
 <target name="init">
-  <tstamp/>
-  <mkdir dir="${build}"/>
-  <mkdir dir="${dist}"/>
+<tstamp/>
+<mkdir dir="${build}"/>
+<mkdir dir="${dist}"/>
 </target>
 
 
 <target name="compile" depends="init">
-  <javac srcdir="${src}"
-         classpath="${lib}/openmap.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar"
-         debug="true"
-         optimize="off"
-         destdir="${build}"
-  />
+<javac srcdir="${src}"
+classpath="${lib}/openmap.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar"
+debug="true"
+optimize="off"
+destdir="${build}"
+/>
 </target>
 
 <target name="dist" depends="compile">
 
-  <copy todir="${build}">
-    <fileset dir="${icons}"/>
-  </copy>
+<copy todir="${build}">
+<fileset dir="${icons}"/>
+</copy>
 
-  <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
-  <copy file="${src}/index.html" tofile="${dist}/index.html"/>
-  <copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
-  <copy file="${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar" tofile="${dist}/xmlrpc-1.2-b1.jar"/>
-  <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev-applet.jar" tofile="${dist}/xmlrpc-applet.jar"/>
-  <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
-  <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
+<jar destfile="${dist}/osm.jar" basedir="${build}"/>  
+<copy file="${src}/index.html" tofile="${dist}/index.html"/>
+<copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
+<copy file="${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar" tofile="${dist}/xmlrpc-1.2-b1.jar"/>
+<copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev-applet.jar" tofile="${dist}/xmlrpc-applet.jar"/>
+<copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
+<copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
 
- </target>
+</target>
 
+
+<target name="install" depends="dist">
+
+<!--svn up && ant clean && ant dist && cp dist/*.jar /var/lib/tomcat4/webapps/api/WEB-INF/lib/ && cp -r jsp/* /var/lib/tomcat4/webapps/api/ -->
+<copy todir="/var/lib/tomcat4/webapps/api/WEB-INF/lib/">
+  <fileset dir="${dist}" casesensitive="yes">
+    <include name="**/*.jar"/>
+  </fileset>
+</copy>
+
+<copy todir="/var/lib/tomcat4/webapps/edit/WEB-INF/lib/">
+  <fileset dir="${dist}" casesensitive="yes">
+    <include name="**/*.jar"/>
+  </fileset>
+</copy>
+
+<copy file="${jsp}/xml.jsp" tofile="/var/lib/tomcat4/webapps/api/" />
+
+<copy file="${jsp}/newUser.jsp" tofile="/var/lib/tomcat4/webapps/edit/newUser.jsp" />
+<copy file="${jsp}/uploadGPX.jsp" tofile="/var/lib/tomcat4/webapps/edit/uploadGPX.jsp" />
+<copy file="${jsp}/login.jsp" tofile="/var/lib/tomcat4/webapps/edit/login.jsp" />
+
+<!-- includes -->
+
+<copy todir="/var/lib/tomcat4/webapps/edit/include/">
+  <fileset dir="${jsp}/include/" casesensitive="yes">
+    <include name="**/*.jsp"/>
+  </fileset>
+</copy>
+
+
+
+</target>
 
 
 <target name="clean">
-  <delete dir="${build}"/>
-  <delete dir="${dist}"/>
+<delete dir="${build}"/>
+<delete dir="${dist}"/>
 </target>
 
 

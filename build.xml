@@ -3,6 +3,7 @@
 <property name="src" location="src"/>
 <property name="build" location="build"/>
 <property name="dist" location="dist"/>
+<property name="lib" location="lib"/>
 
 
 <target name="init">
@@ -13,7 +14,12 @@
 
 
 <target name="compile" depends="init">
-  <javac srcdir="${src}" debug="true" optimize="off" destdir="${build}"/>
+  <javac srcdir="${src}"
+         classpath="${lib}/openmap.jar"
+         debug="true"
+         optimize="off"
+         destdir="${build}"
+  />
 
 </target>
 
@@ -22,6 +28,7 @@
   
   <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
   <copy file="${src}/index.html" tofile="${dist}/index.html"/>
+  <copy file="${lib/openmap.jar" tofile="${dist}/index.html"/>
 </target>
 
 

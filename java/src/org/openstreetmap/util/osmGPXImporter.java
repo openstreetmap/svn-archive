@@ -278,7 +278,7 @@ public class osmGPXImporter extends DefaultHandler{
   
 
   
-  public void upload(File f, Writer out, String user, String pass)
+  public void upload(BufferedInputStream is, Writer out, String user, String pass)
   {
     PrintWriter o = new PrintWriter(out);
 
@@ -291,7 +291,7 @@ public class osmGPXImporter extends DefaultHandler{
 
       SAXParser saxParser = factory.newSAXParser();
 
-      saxParser.parse( f, handler );
+      saxParser.parse( is, handler );
     }
     catch(Exception e)
     {

@@ -81,6 +81,7 @@ destdir="${build}"
 <copy todir="/var/www/openstreetmap/images/">
   <fileset dir="html-images/">
     <include name="**/*.png"/>
+    <include name="**/*.jpg"/>
   </fileset>
 </copy>
 
@@ -96,6 +97,9 @@ destdir="${build}"
 
 <copy file="css/style.css" tofile="/var/www/openstreetmap/css/style.css" />
 
+<!-- front pahe -->
+
+<copy file="website/index.html" tofile="/var/www/openstreetmap/index.html" />
 
 
 <!--"osm.jar , openmap.jar , xmlrpc-applet.jar , commons-codec-1.1.jar"-->

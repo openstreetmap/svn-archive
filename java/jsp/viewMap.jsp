@@ -1,3 +1,4 @@
+<%@ page import="java.util.*"%>
 <%@ page import="org.openstreetmap.server.*"%>
 <%@ page import="com.bbn.openmap.*"%>
 <%@ page import="com.bbn.openmap.proj.*"%>
@@ -9,27 +10,30 @@
 String lat = request.getParameter("lat");
 String lon = request.getParameter("lon");
 String scale = request.getParameter("scale");
+String from = request.getParameter("from");
+String searchTerm = request.getParameter("searchTerm");
+boolean bSuccessParsing = false;
 
 float fLon = 0;
 float fLat = 0;
 float fScale = 0;
 
-if(lat == null || lon == null || scale == null)
+if(from != null && from.equals("frontpage"))
 {
 
-  fScale = 10404.917f;
-  fLat = 51.526447f;
-  fLon = -0.14746371f;
-
-}
-else
-{
   try
   {
-    // try and parse the stuff
-    fScale = Float.parseFloat(scale);
-    fLat = Float.parseFloat(lat);
-    fLon = Float.parseFloat(lon);
+  //user came from frontpage, assume lat lon and try and figure it out
+
+    if( searchTerm.indexOf(' ') != -1 )
+    {
+      StringTokenizer st = new StringTokenizer( searchTerm );
+      fLat = Float.parseFloat(st.nextToken());
+      fLon = Float.parseFloat(st.nextToken());
+      fScale = 10404.917f;
+      bSuccessParsing = true;
+    }
+
 
   }
   catch(Exception e)
@@ -38,12 +42,42 @@ else
     fLat = 51.526447f;
     fLon = -0.14746371f;
 
+  }
+}
+else
+{
+  if(lat == null || lon == null || scale == null)
+  {
+
+    fScale = 10404.917f;
+    fLat = 51.526447f;
+    fLon = -0.14746371f;
 
   }
+  else
+  {
+    try
+    {
+      // try and parse the stuff
+      fScale = Float.parseFloat(scale);
+      fLat = Float.parseFloat(lat);
+      fLon = Float.parseFloat(lon);
+      bSuccessParsing = true;
+
+    }
+    catch(Exception e)
+    {
+      fScale = 10404.917f;
+      fLat = 51.526447f;
+      fLon = -0.14746371f;
 
 
+    }
+  }
 
 }
+
+
 
 MapBean mb = new MapBean();
 mb.setScale(fScale);
@@ -70,7 +104,7 @@ String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
 
 
 %>
-<%!
+  <%!
 private String getURL(float fScale, float fLat, float fLon)
 {
   return "viewMap.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
@@ -136,6 +170,21 @@ private String getURL(float fScale, float fLat, float fLon)
 <div id="mapImage">
 <img src="<%=sURL%>" width="600" height="600" alt="Your map">
 
+<div id="mapEpilog">
+Latitude=<%=fLat%>, Longitude=<%=fLon%>, Scale=<%=fScale%><br>
+
+<%
+if( !bSuccessParsing )
+{
+  %>
+    Sorry, I didn't understand that lattitude and longitude, defaulting to some values in London.
+
+    <%
+
+}
+%>
+
+</div>
 </div>
 
 

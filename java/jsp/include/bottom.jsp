@@ -47,6 +47,7 @@ if(bLoggedIn)
     </li>
     
   </ul>
+  Internet Explorer has known problems with this site.
   <%
 }
 else
@@ -58,7 +59,9 @@ else
     </li>
    </ul>
  
-  You need to <a href="login.jsp">log in</a> to use more tools :-)
+  You need to <a href="login.jsp">log in</a> to use more tools :-)<br><br>
+
+  Internet Explorer has known problems with this site.
   <%
 }
 

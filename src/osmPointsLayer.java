@@ -41,7 +41,8 @@ public class osmPointsLayer extends Layer
 {
 
   protected OMGraphicList graphics;
-
+  private boolean bStartingUp = true;
+  
   Projection proj;
   
   public osmPointsLayer()
@@ -52,6 +53,11 @@ public class osmPointsLayer extends Layer
 
   } // osmPointsLayer
 
+  public void setStartingUp(boolean bYesNo)
+  {
+    bStartingUp = bYesNo;
+
+  } // setStartingUp
 
 
   public void setProperties(String prefix, java.util.Properties props) {
@@ -102,11 +108,17 @@ public class osmPointsLayer extends Layer
 
     if( proj != null )
     {
+      
       osmServerClient osc = new osmServerClient();
 
-      Vector v = osc.getPoints(proj.getUpperLeft(),
+      Vector v = new Vector();
+      
+      if( !bStartingUp )
+      {
+        v = osc.getPoints(proj.getUpperLeft(),
           proj.getLowerRight());
-
+      }
+      
       Enumeration e = v.elements();
 
       while( e.hasMoreElements() )

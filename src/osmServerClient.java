@@ -44,7 +44,7 @@ public class osmServerClient
   
     try{
       
-      XmlRpcClientLite xmlrpc = new XmlRpcClientLite("http://127.0.0.1:4000/");
+      XmlRpcClientLite xmlrpc = new XmlRpcClientLite("http://128.40.59.181:4000/");
       
 
       Vector params = new Vector();
@@ -67,12 +67,12 @@ public class osmServerClient
             
           
         //new gpspoint( 
-        double lat = ((Double)e.nextElement()).doubleValue();
-        double lon = ((Double)e.nextElement()).doubleValue();
+        float lat = (float)((Double)e.nextElement()).doubleValue();
+        float lon = (float)((Double)e.nextElement()).doubleValue();
       
-        System.out.println(lat+"," + lon);
+        //System.out.println(lat+"," + lon);
         
-        
+        gpsPoints.add( new gpspoint(lat,lon,0,0) );
         
       }
 

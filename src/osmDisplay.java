@@ -51,7 +51,6 @@ public class osmDisplay
         shapeLayerProps.put("fillColor", "BDDE83");
         shapeLayer.setProperties(shapeLayerProps);
 
-        // Add the political layer to the map
         mapBean.add(shapeLayer);
 
         // Add the map to the frame
@@ -63,7 +62,10 @@ public class osmDisplay
         cp.add(label,    BorderLayout.SOUTH);
         
         mapBean.setScale(10404.917f);
+        
         mapBean.setCenter(51.526447f, -0.14746371f);
+        
+        shapeLayer.setStartingUp(false);
 
     }
 

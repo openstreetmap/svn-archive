@@ -18,7 +18,7 @@ class osmTestServer
   {
     try
     {
-      XmlRpcClientLite xmlrpc = new XmlRpcClientLite("http://128.40.59.181/openstreetmap/xml.jsp");
+      XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
 
       Vector v = new Vector();
 
@@ -27,61 +27,23 @@ class osmTestServer
      
       String token = (String)xmlrpc.execute("openstreetmap.login", v);
       System.out.println(token);
-      
-      
+
       v = new Vector();
 
       v.addElement(token);
-      v.addElement(new Double(100));
-      v.addElement(new Double(100));
-      v.addElement(new Double(-100));
-      v.addElement(new Double(-100));
+      v.addElement(new Boolean(true));
       
-      Vector o = (Vector)xmlrpc.execute("openstreetmap.getFullPoints",v);
+      
+      Vector vResults = (Vector)xmlrpc.execute("openstreetmap.getAllKeys",v);
 
-      Enumeration e = o.elements();
+      Enumeration e = vResults.elements();
 
       while(e.hasMoreElements())
       {
-        System.out.print(e.nextElement() +  " ");
-
-        
+        String sA = (String)e.nextElement();
+        System.out.println(sA);
       }
       
-      System.out.println();
-      System.out.println();
-      System.out.println("adding a point");
-      
-      v = new Vector();
-
-      v.addElement(token);
-      v.addElement(new Double(-1)); // lat
-      v.addElement(new Double(-1)); // lon
-      v.addElement(new Double(-1)); // alt
-      v.addElement( new Date() ); // timestamp for point
-      v.addElement(new Double(-1)); // hor_dilution
-      v.addElement(new Double(-1)); // vert_dilution
-      v.addElement(new Integer(-1)); // track_id
-      v.addElement(new Integer(255)); // quality
-      v.addElement(new Integer(255)); // satellites
-      
-      
-      boolean b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
-
-      System.out.println(b);
-      
-      System.out.println();
-      System.out.println();
-      System.out.println("dropping the point");
-
-      v = new Vector();
-      v.addElement(token);
-      v.addElement( new Double(-1));
-      v.addElement( new Double(-1));
-    
-      b = ((Boolean)xmlrpc.execute("openstreetmap.dropPoint", v)).booleanValue();
-      
-      System.out.println(b);
     }
     catch(Exception e)
     {

@@ -24,7 +24,7 @@ import java.net.*;
 import java.lang.*;
 import java.io.*;
 import com.bbn.openmap.LatLonPoint;
-import org.apache.xmlrpc.applet.*;
+import org.apache.xmlrpc.*;
 
 import org.openstreetmap.util.*;
 
@@ -36,7 +36,7 @@ public class osmServerClient
   private long loginTime = 0;
 
 
-  SimpleXmlRpcClient xmlrpc;
+  XmlRpcClient xmlrpc;
 
   public osmServerClient()
   {
@@ -44,7 +44,7 @@ public class osmServerClient
     try
     {
 
-      xmlrpc = new SimpleXmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
+      xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
 
 
     }

@@ -395,6 +395,44 @@ public class osmServerSQLHandler extends Thread
   } // addStreetSegment
 
 
+  public synchronized int getGPXID(int nUID, String sFilename)
+  {
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid from points_meta_table where "
+        + "user_uid = " + nUID
+        + " and name='" + sFilename + "'";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return rs.getInt("uid");
+
+      }
+      else
+      {
+        return -1;
+      }
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+
+  }
+
 
   public synchronized boolean addPoint(
       float lat,
@@ -406,16 +444,18 @@ public class osmServerSQLHandler extends Thread
       int trackid,
       int quality,
       int satellites,
-      int uid)
+      int uid,
+      int gpx_id)
   {
 
-    //    System.out.println("addPoint");
+    
 
     try{
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "insert into tempPoints (latitude,longitude,altitude,timestamp,uid,hor_dilution,vert_dilution,trackid,quality,satellites,last_time,visible,dropped_by) values ("
+      String sSQL = "insert into tempPoints (gpx_id,latitude,longitude,altitude,timestamp,uid,hor_dilution,vert_dilution,trackid,quality,satellites,last_time,visible,dropped_by) values ("
+        + " " + gpx_id + ", "
         + " " + lat + ", "
         + " " + lon + ", "
         + " " + alt + ", "
@@ -598,7 +638,7 @@ public class osmServerSQLHandler extends Thread
         + " and latitude > " + p2lat
         + " and longitude > " + p1lon
         + " and longitude < " + p2lon
-        + " and visible=1 limit 10000";
+        + " and visible=1 limit 50000";
 
       System.out.println("querying with sql \n " + sSQL);
 
@@ -658,7 +698,7 @@ public class osmServerSQLHandler extends Thread
         + " and latitude > " + p2lat
         + " and longitude > " + p1lon
         + " and longitude < " + p2lon
-        + " and visible=1 limit 10000";
+        + " and visible=1 limit 50000";
 
       System.out.println("querying with sql \n " + sSQL);
 
@@ -1425,6 +1465,141 @@ public class osmServerSQLHandler extends Thread
     return false;
 
   } // isStringSQLClean
+
+  
+  public synchronized int newGPX(String sNewGPXName, int nUserUID)
+  {
+    if(!isStringSQLClean(sNewGPXName) || sNewGPXName.length() == 0)
+    {
+      return -1;
+
+    }
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+
+      String sSQL = "insert into points_meta_table (timestamp, user_uid, visible, name) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID
+        + ", 1"
+        + ", '"  + sNewGPXName + "')";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "select last_insert_id(); ";
+
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      System.out.println("new gpx returning " + rs.getInt(1));
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newKey
+
+
+  public synchronized Vector getGPXFileInfo(int nUID)
+  {
+
+    Vector v = new Vector();
+    
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+
+      String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+      
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      while(rs.next())
+      {
+
+        v.addElement(rs.getString("name"));
+        v.addElement(new java.util.Date(Long.parseLong(rs.getString("timestamp"))));
+        v.addElement(new Integer(rs.getInt("uid")));
+
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return v;
+
+  } // getGPXFileInfo
+
+
+  public synchronized boolean dropGPX(
+      int nUID,
+      int nGPXUID
+      )
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction; ";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "delete from points_meta_table where user_uid = "
+        + nUID 
+        + " and uid = " + nGPXUID;
+      
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "delete from tempPoints where uid="+ nUID
+        + " and gpx_id=" + nGPXUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      return true;
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // addNewStreet
+
 
 
 } // osmServerSQLHandler

@@ -22,7 +22,7 @@ if( !bLoggedIn )
 else
 {
 
-  
+
   if(FileUpload.isMultipartContent(request))
   {
 
@@ -52,7 +52,7 @@ else
 
       while (iter.hasNext())
       {
-    
+
         FileItem item = (FileItem) iter.next();
 
         if(item.isFormField())
@@ -72,13 +72,13 @@ else
           String contentType = item.getContentType();
           boolean isInMemory = item.isInMemory();
           long sizeInBytes = item.getSize();
-
-          out.print("fieldName: " + fieldName + "<br>");
-          out.print("fileName: " + sUploadFileName + "<br>");
-          out.print("contentType: " +  contentType + "<br>");
-          out.print("isInMemory: " + isInMemory + "<br>");
-          out.print("sizeInBytes: " + sizeInBytes + "<br>");
-
+          /*
+             out.print("fieldName: " + fieldName + "<br>");
+             out.print("fileName: " + sUploadFileName + "<br>");
+             out.print("contentType: " +  contentType + "<br>");
+             out.print("isInMemory: " + isInMemory + "<br>");
+             out.print("sizeInBytes: " + sizeInBytes + "<br>");
+             */
           sSaveFileName = "/tmp/" + System.currentTimeMillis() + ".osm";
 
           fUploadedFile = new File(sSaveFileName);
@@ -110,15 +110,14 @@ else
         {
           out.print("looks like a gzip file...<br>");
 
-          gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sToken);
+          gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sToken, sUploadFileName);
 
         }
         else
         {
 
           out.print("looks like a gpx file...<br>");
-          gpxImporter.upload(uploadedStream, out, sToken);
-
+          gpxImporter.upload(uploadedStream, out, sToken,sUploadFileName);
         }
 
         out.println("All done at " + new java.util.Date());
@@ -128,6 +127,7 @@ else
   }
   else
   {
+    String sRequestType  = request.getParameter("action");
 
     %>
 
@@ -143,7 +143,106 @@ else
 
       <%
 
+      if(sRequestType != null)
+      {
+        if( sRequestType.equals("delete") )
+        {
+          String sGpxUID = request.getParameter("gpxUID");
+          if( sGpxUID != null)
+          {
+            try
+            {
+              int nGPXUID = Integer.parseInt(sGpxUID);
+              boolean bSuccess = osmSH.dropGPX(sToken, nGPXUID);
+              if( bSuccess)
+              {
+                %>
+                  Dropped GPX successfully... 
+                  <%
+
+              }
+              else
+              {
+                %>
+                  Error dropping that GPX... 
+                  <%
+
+              }
+
+
+            }
+            catch(NumberFormatException e)
+            {
+
+            }
+
+
+
+          }
+
+
+        }
+      }
+
+        Vector v = osmSH.getGPXFileInfo(sToken);
+
+        Enumeration e = v.elements();
+
+        %>
+          <table id="keyvalue">
+          <tr>
+          <th>Filename</th>
+          <th>Uploaded at</th>
+          <th>actions</th>
+          </tr>
+          <%
+        int nCount = 0;
+        
+        while(e.hasMoreElements())
+        {
+          String s = (String)e.nextElement();
+          Date d = (Date)e.nextElement();
+          Integer i = (Integer)e.nextElement();
+          String sEmphasisColour = "";
+          if( (nCount & 1) != 1)
+          {
+            sEmphasisColour = "<td bgcolor=\"#82bcff\">";
+          }
+          else
+          {
+            sEmphasisColour = "<td bgcolor=\"#ffffff\">";
+          }
+          nCount++;
+
+          String sDeleteLink = "<a href=\"uploadGPX.jsp?action=delete&gpxUID=" + i + "\">delete</a>";
+
+          %>
+            <tr>
+            <%=sEmphasisColour%>
+            <%=s%>
+            </td>
+            <%=sEmphasisColour%>
+            <%=d%>
+            </td>
+            <%=sEmphasisColour%>
+            <%=sDeleteLink%>
+            </td>
+            </tr>
+
+
+            <%
+
+
+        }
+        %>
+          </table>
+          <%
+
+
+
   }
+
+
 }
 %>
 </div>

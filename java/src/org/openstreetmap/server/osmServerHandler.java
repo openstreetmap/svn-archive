@@ -156,7 +156,7 @@ public class osmServerHandler
 
 
 
-
+/*
   public boolean addPoint(String token,
       double lat,
       double lon,
@@ -203,7 +203,7 @@ public class osmServerHandler
         uid);
 
   } // addPoint
-
+*/
 /* 
   public boolean addPoints(String token,
       double lat[],
@@ -521,11 +521,40 @@ public class osmServerHandler
     return osmSQLH.getKeyVisible(nKeyNum);
 
   } // getKeyVisible
+  
+  
+  public Vector getGPXFileInfo(String sToken)
+  {
+    int uid = osmSQLH.validateToken(sToken);
+
+    if( uid == -1)
+    {
+      return new Vector();
+
+    }
+
+    return osmSQLH.getGPXFileInfo(uid);
+
+  } // getGPXFileInfo
+
+  public boolean dropGPX(String sToken, int nGPXUID)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return false;
+
+    }
+     
+    return osmSQLH.dropGPX(nUID, nGPXUID);
+
+  }
 
   public void closeDatabase()
   {
     osmSQLH.closeDatabase();
 
-  } // finalise
+  } // closeDatabase
 
 } // osmServerHandler

@@ -43,9 +43,13 @@ public class osmGPXImporter extends DefaultHandler{
 
   String sUser;
   String sPass;
-  int nLastTrackID = -1;
+  int nLastTrackID = 0;
+  private String sFilename;
+  private boolean bGotGPXOK = false;
+  private int nGPXUID = -1;
+  private int nUID = -1;
 
-  osmServerHandler osmh;
+  osmServerSQLHandler osmh;
  
   public osmGPXImporter()
   {
@@ -59,56 +63,70 @@ public class osmGPXImporter extends DefaultHandler{
   } // closeDatabase
   
 
-  public osmGPXImporter(PrintWriter o, String token)
+  public osmGPXImporter(PrintWriter o, String sToken, String sFilenameIn)
   {
     out = o;
 
-    sToken = token;
+    sFilename = sFilenameIn;
 
-    osmh = new osmServerHandler();
+    osmh = new osmServerSQLHandler("jdbc:mysql://128.40.59.181/openstreetmap?useUnicode=true&characterEncoding=latin1","openstreetmap","openstreetmap");
 
-    if( SQLConnectSuccess() )
+    if( osmh.SQLConnectSuccess() )
     {
-      nLastTrackID = osmh.largestTrackID(sToken);
-      
+
+      nUID = osmh.validateToken(sToken);
+
+      if( nUID != -1)
+      {
+        // didnt log in
+
+        nGPXUID = osmh.newGPX(sFilename, nUID);
+
+        if(nGPXUID != -1)
+        {
+          bGotGPXOK = true;
+
+        }
+      }
+      System.out.println("got uid and gpx uid: " + nUID + ", "+  nGPXUID);
+
       o.print("Starting at trackid " + nLastTrackID + "<br>");
 
     }
 
-    
   } // osmGPXImporter
 
-  
+
   public void startElement(
       String namespaceURI,
       String localName,
       String qName,
       Attributes atts)
   {
-    
-     
+
+
     if( qName.equals("trkpt"))    
     {
-    
+
       lat = Double.parseDouble(atts.getValue("lat"));
       lon = Double.parseDouble(atts.getValue("lon"));
 
       bLatLonValid = true;
-    
+
     }   
- 
+
     if( qName.equals("time"))
     {
-    
+
       sCurrent = "";
-        
+
     }
 
     if( qName.equals("ele"))
     {
-    
+
       sCurrent = "";
-        
+
     }
 
     if( qName.equals("trkseg"))
@@ -116,22 +134,22 @@ public class osmGPXImporter extends DefaultHandler{
       nLastTrackID++;
       out.print("Found a new track, id incremented to " + nLastTrackID + "<br>");
     }
-       
-  
-  
+
+
+
   } // startElement
 
 
 
   public void characters(char[] ch,
-                       int start,
-                       int length)
+      int start,
+      int length)
   {
 
     String s = new String(ch, start, length);
 
     sCurrent += s;
-    
+
   } // characters
 
 
@@ -142,13 +160,27 @@ public class osmGPXImporter extends DefaultHandler{
 
 
     int year = Integer.parseInt(t.nextToken()) - 1900;
-    
+
     int month = Integer.parseInt(t.nextToken()) - 1;
     int day = Integer.parseInt(t.nextToken()) - 1;
     int hour = Integer.parseInt(t.nextToken());
     int min = Integer.parseInt(t.nextToken());
-    int sec = Integer.parseInt(t.nextToken());
-      
+
+    String seconds = t.nextToken();
+
+    int sec = 0;
+    
+    if( seconds.indexOf(".") != -1)
+    {
+      t = new StringTokenizer(seconds,". ");
+      sec = Integer.parseInt(t.nextToken());
+
+    }
+    else
+    {
+      sec = Integer.parseInt(seconds);
+    }
+
     timestamp = new Date(year,month,day,hour,min,sec).getTime();
   } // setDate
 
@@ -163,8 +195,8 @@ public class osmGPXImporter extends DefaultHandler{
   private void setFix(String s)
   {
     s = s.trim();
-    
-  
+
+
     if( s.equals("2d"))
     {
       fix = 3;
@@ -185,11 +217,11 @@ public class osmGPXImporter extends DefaultHandler{
 
     }
 
-    
+
 
   } // setFix
 
-  
+
   public void endElement(
       String uri,
       String localName,
@@ -203,8 +235,8 @@ public class osmGPXImporter extends DefaultHandler{
 
     }
 
-    
- 
+
+
     if( qName.equals("ele"))
     {
       setEle(sCurrent);
@@ -221,42 +253,44 @@ public class osmGPXImporter extends DefaultHandler{
       out.print("Total added points: " + (nPointTempCount + lPointsAdded) + ", all done! :-)<br>");
 
     }
-    
+
   } // endElement
 
   /*
 
-  private void connectToServer()
-  {
+     private void connectToServer()
+     {
 
-    try
-    {
-      xmlrpc = new XmlRpcClientLite("http://www.openstreetmap.org/api/xml.jsp");
- 
-    }
-    catch(Exception e)
-    {
-      out.println("problem in connecting to server: " + e);
-    }
-    
-  } // connectToServer
-*/
+     try
+     {
+     xmlrpc = new XmlRpcClientLite("http://www.openstreetmap.org/api/xml.jsp");
 
-  
+     }
+     catch(Exception e)
+     {
+     out.println("problem in connecting to server: " + e);
+     }
+
+     } // connectToServer
+   */
+
+
   private void addPoint()
   {
-       
+
     boolean b = osmh.addPoint(
-        sToken,
-        (double)lat,
-        (double)lon,
-        (double)ele,
-        new Date(timestamp),
-        (double)-1,
-        (double)-1,
+        (float)lat,
+        (float)lon,
+        (float)ele,
+        timestamp,
+        (float)-1,
+        (float)-1,
         (int)nLastTrackID,
         (int)255,
-        (int)fix);
+        (int)fix,
+        nUID,
+        nGPXUID
+        );
 
     if( b )
     {
@@ -281,20 +315,20 @@ public class osmGPXImporter extends DefaultHandler{
       out.println("this is bad, quiting <br>");
 
     }
-    
+
   } // addPoint
 
 
   private boolean SQLConnectSuccess()
   {
 
-    return osmh.SQLConnectSuccess();
+    return osmh.SQLConnectSuccess() && bGotGPXOK;
 
   }
 
 
 
-  public void upload(InputStream is, Writer out, String token)
+  public void upload(InputStream is, Writer out, String token, String sFilename)
   {
     PrintWriter o = new PrintWriter(out);
 
@@ -303,7 +337,7 @@ public class osmGPXImporter extends DefaultHandler{
 
     try{
 
-      osmGPXImporter handler = new osmGPXImporter(o, token);
+      osmGPXImporter handler = new osmGPXImporter(o, token, sFilename);
 
       if( handler.SQLConnectSuccess() )
       {

@@ -72,6 +72,8 @@ destdir="${build}"
   </fileset>
 </copy>
 
+<copy file="${jsp}/include/loginmessage.html" tofile="/var/lib/tomcat4/webapps/edit/include/loginmessage.html" />
+
 <!-- images -->
 
 <copy todir="/var/www/openstreetmap/images/">

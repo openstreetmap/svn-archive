@@ -55,7 +55,9 @@ else
       cookie.setMaxAge(10 * 60);
       response.addCookie(cookie);
       bLoggedIn = true;
-      %>Login success!<%
+      %>
+       <%@ include file="include/loginmessage.html" %>
+      <%
     }
   }
 }

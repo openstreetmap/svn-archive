@@ -152,7 +152,7 @@ else
 
 
 
-      <table id="keyvalue" border="0" width="100%">
+      <table id="keyvalue" width="100%">
       <tr>
       <th>
       Key Name
@@ -267,7 +267,7 @@ else
 
 
       <h2>Visible keys:</h2>
-      <table id="keyvalue" border="0" width="100%">
+      <table id="keyvalue" width="100%">
       <tr>
       <th>
       Current Key Name
@@ -331,7 +331,7 @@ else
     e = keys.elements();
 
     %>
-      <table id="keyvalue" border="0" width="100%">
+      <table id="keyvalue" width="100%">
       <tr>
       <th>
       Current Key Name
@@ -340,7 +340,7 @@ else
       Last Edited by
       </th>
       <th>
-      Last Edited at at
+      Last Edited at
       </th>
       <th>
       Actions

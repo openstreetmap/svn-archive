@@ -9,12 +9,11 @@ byte[] result = xmlrpc.execute (in);
 
 
 String encoding = request.getHeader("Accept-Encoding");    
-
-boolean bUseGzip = false;
+System.out.println(encoding);
 
 if(encoding != null && encoding.indexOf("gzip") != -1)
 {
-//  System.out.println("got gzip stream");
+  System.out.println("got gzip stream");
   response.setHeader("Content-Encoding" , "gzip");
   GZIPOutputStream out2 = new GZIPOutputStream(response.getOutputStream());
 
@@ -28,7 +27,7 @@ if(encoding != null && encoding.indexOf("gzip") != -1)
 else
 {
 
-//  System.out.println("got normal stream");
+  System.out.println("got normal stream");
   for(int i = 0; i < result.length; i++)
   {
     out.write (result[i]);

@@ -90,7 +90,7 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "select uid from user where user='" + user + "' and pass='" + pass + "'";
+      String sSQL = "select uid,active from user where user='" + user + "' and pass='" + pass + "'";
 
       System.out.println("querying with sql \n " + sSQL);
 

@@ -361,11 +361,11 @@ public class osmServerSQLHandler extends Thread
         v.add( new java.util.Date(rs.getLong("timestamp") )); // time point was taken
         v.add( new Double( rs.getDouble("hor_dilution")));
         v.add( new Double( rs.getDouble("vert_dilution")));
-        v.add( new Long( rs.getLong("trackid")));
+        v.add( new Integer( rs.getInt("trackid")));
         v.add( new Integer( rs.getInt("quality")));
         v.add( new Integer( rs.getInt("satellites")));
         v.add( rs.getString("user"));
-        v.add( new Long(rs.getLong("last_time")));
+        v.add( new java.util.Date(rs.getLong("last_time")));
       }
 
       bSQLSuccess = true;

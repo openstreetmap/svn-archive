@@ -1,0 +1,17 @@
+INCLUDES = -I$(top_srcdir)/include \
+	-I$(top_srcdir)/include/Packets/Input \
+	-I$(top_srcdir)/include/Packets/Output
+
+%.cpp: $(top_srcdir)/data/Packets/Input/%.pkt
+	$(MAKE) $(AM_MAKEFLAGS) -C $(top_srcdir)/utils mkpacket
+	$(top_srcdir)/utils/mkpacket -c $@ $<
+
+%.cpp: $(top_srcdir)/data/Packets/Output/%.pkt
+	$(MAKE) $(AM_MAKEFLAGS) -C $(top_srcdir)/utils mkpacket
+	$(top_srcdir)/utils/mkpacket -c $@ $<
+
+$(top_srcdir)/include/Packets/%.hpp: $(top_srcdir)/data/Packets/%.pkt
+	$(MAKE) $(AM_MAKEFLAGS) -C $(top_srcdir)/utils mkpacket
+	mkdir -p $(@D)
+	$(top_srcdir)/utils/mkpacket -h $@ $<
+

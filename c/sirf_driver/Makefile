@@ -14,8 +14,10 @@ LDFLAGS?=$(OPTFLAGS)
 #PKT_FILES:=$(wildcard data/Packets/Input/*.pkt data/Packets/Output/*.pkt)
 PKT_FILES:=$(wildcard data/Packets/Output/*.pkt) \
 	data/Packets/Input/PollSoftwareVersion.pkt
-SOURCES:= $(wildcard src/*.cpp) $(wildcard src/*.c) \
-	$(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES))
+SOURCES= $(wildcard src/*.cpp) $(wildcard src/*.c) \
+	$(wildcard src/Packets/Output/*.cpp) \
+	$(wildcard src/Packets/Input/*.cpp)
+#	$(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES))
 OBJECTS:=$(subst .c,.o,$(SOURCES:.cpp=.o))
 
 all: sirfdump

@@ -13,3 +13,10 @@ proceding. now i have to add in some bits to support going to extended
 mode at 57600 baud and we should have pseudo range...
 ... then i need to bolt some gpx writer to the end, make a gui, win
 the lottery, etc...
+
+30/11/2004 - Matt Amos
+======================
+fixed some makefile issues, an end-of-string bug. added better
+printing for SoftwareVersion packets and a VisibleList packet. added
+support for dumping unknown packets to disk in binary for later
+analysis and guessing what they are!

@@ -10,6 +10,8 @@
 #include <CPUThroughput.hpp>
 #include <SoftwareVersion.hpp>
 #include <PollSoftwareVersion.hpp>
+#include <CommandAcknowledgement.hpp>
+#include <VisibleList.hpp>
 
 #include "PacketFactory.hpp"
 #include "PrintPacketHandler.hpp"
@@ -41,9 +43,11 @@ int main(int argc, char *argv[]) {
 
   /* add the handlers
    */
-  //factory.registerHandler(new PrintPacketHandler<MeasuredNavigationDataOut>);
-  //factory.registerHandler(new NullPacketHandler<MeasuredTrackerDataOut>);
-  //factory.registerHandler(new PrintPacketHandler<CPUThroughput>);
+  factory.registerHandler(new NullPacketHandler<MeasuredNavigationDataOut>);
+  factory.registerHandler(new NullPacketHandler<MeasuredTrackerDataOut>);
+  factory.registerHandler(new NullPacketHandler<CPUThroughput>);
+  factory.registerHandler(new PrintPacketHandler<CommandAcknowledgement>);
+  factory.registerHandler(new PrintPacketHandler<VisibleList>);
   factory.registerDefaultHandler(new WarnPacketHandler);
   factory.registerDefaultHandler(new DumpPacketHandler("dump.out"));
   factory.registerHandler(new PrintPacketHandler<SoftwareVersion>);

@@ -28,7 +28,7 @@
   
   <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
   <copy file="${src}/index.html" tofile="${dist}/index.html"/>
-  <copy file="${lib}/openmap.jar" tofile="${dist}/index.html"/>
+  <copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
 </target>
 
 

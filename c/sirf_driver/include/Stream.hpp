@@ -19,7 +19,7 @@ namespace SiRF {
 
     /* has to close the stream when done
      */
-    ~Stream();
+    //    ~Stream();
 
   private:
 

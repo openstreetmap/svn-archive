@@ -7,7 +7,7 @@
 
 namespace SiRF {
 
-  class OutputStream : public Stream {
+  class OutputStream : public virtual Stream {
   public:
 
     OutputStream(const char *devicename, int baud) : Stream(devicename, baud) {

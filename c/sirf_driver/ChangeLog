@@ -4,3 +4,12 @@ added writing ability by splitting Stream into Input- and OutputStream
 classes. this means i can do more interesting stuff, like asking for
 versions of the firmware. this is good because it gives a warning at
 the beginning if the version response is never received.
+
+30/11/2004 - Matt Amos
+======================
+finished off that writing support - now it actually works!
+the demo program now queries the firmware version before
+proceding. now i have to add in some bits to support going to extended
+mode at 57600 baud and we should have pseudo range...
+... then i need to bolt some gpx writer to the end, make a gui, win
+the lottery, etc...

@@ -19,8 +19,7 @@ namespace SiRF {
 
   };
 
-  /* allow operator use with virtual. this seems the cleanest way
-   * to do it.
+  /* read a packet from the stream
    */
   OutputStream &operator>>(OutputStream &in, OutputPacket &p);
 

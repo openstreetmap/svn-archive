@@ -144,18 +144,19 @@ namespace SiRF {
       (*this) << start_marker;
       (*this) << (uint16)0; // just dummies for now
       length = 0; // reset length here
+      checksum = 0;
 
       /* otherwise we are looking for an end marker
        */
     } else if (b == end) {
       unsigned short msgsum = checksum;
-      (*this) << msgsum;
-      (*this) << end_marker;
-
       /* go back and re-write the length
        */
       buffer[2] = (length >> 8);
       buffer[3] = (length & 0xff);
+
+      (*this) << msgsum;
+      (*this) << end_marker;
 
       /* write back to the underlying device 
        */

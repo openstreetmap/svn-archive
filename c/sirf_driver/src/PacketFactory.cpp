@@ -104,6 +104,31 @@ namespace SiRF {
     // we never actually get here
     // but we might when the pthread locking is written...
   }
+
+  /* throw away packets until we have 5 nice ones in a row
+   */
+  void PacketFactory::throwAwayPacketsUntilNice() {
+    int nice_count = 0;
+    UnknownPacket p;
+    uint8 type;
+
+    do {
+      try {
+	in >> Stream::start >> type;
+	p.setType(type);
+	in >> p;
+	in >> Stream::end;
+	nice_count++;
+      } catch (std::exception &e) {
+	std::cerr << "PacketFactory::throwAwayPacketsUntilNice: caught exception."
+		  << std::endl << "ERROR: " << e.what() << std::endl;
+	nice_count = 0;
+      }
+    } while (nice_count < 5);
+
+    std::cout << "PacketFactory::throwAwayPacketsUntilNice: got 5 nice packets in a row."
+	      << std::endl;
+  }
   
 }
 

@@ -6,13 +6,14 @@ SRCDIR:=$(shell pwd)
 #INC=-I$(SRCDIR)/include  \
 #	-I$(SRCDIR)/include/Packets/Input  \
 #	-I$(SRCDIR)/include/Packets/Output
-INC=-Iinclude/ -Iinclude/Packets/Output/
+INC=-Iinclude/ -Iinclude/Packets/Output/ -Iinclude/Packets/Input/
 OPTFLAGS?=-g -ggdb
 CFLAGS?=$(OPTFLAGS)
 CXXFLAGS?=$(OPTFLAGS)
 LDFLAGS?=$(OPTFLAGS)
 #PKT_FILES:=$(wildcard data/Packets/Input/*.pkt data/Packets/Output/*.pkt)
-PKT_FILES:=$(wildcard data/Packets/Output/*.pkt)
+PKT_FILES:=$(wildcard data/Packets/Output/*.pkt) \
+	data/Packets/Input/PollSoftwareVersion.pkt
 SOURCES:= $(wildcard src/*.cpp) $(wildcard src/*.c) \
 	$(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES))
 OBJECTS:=$(subst .c,.o,$(SOURCES:.cpp=.o))

@@ -3,10 +3,13 @@
 
 #include "IOStream.hpp"
 #include "OutputPacket.hpp"
+#include "InputPacket.hpp"
 
 #include <MeasuredNavigationDataOut.hpp>
 #include <MeasuredTrackerDataOut.hpp>
 #include <CPUThroughput.hpp>
+#include <SoftwareVersion.hpp>
+#include <PollSoftwareVersion.hpp>
 
 #include "PacketFactory.hpp"
 #include "PrintPacketHandler.hpp"
@@ -14,6 +17,8 @@
 #include "NullPacketHandler.hpp"
 
 #include <iostream>
+
+using namespace SiRF;
 
 int main(int argc, char *argv[]) {
 
@@ -27,18 +32,30 @@ int main(int argc, char *argv[]) {
   /* get the file name from the first argument
    * initialise the SiRF stream
    */
-  SiRF::IOStream stream(argv[1]);
+  IOStream stream(argv[1]);
 
   /* make the packet factory
    */
-  SiRF::PacketFactory factory(stream);
+  PacketFactory factory(stream);
 
   /* add the handlers
    */
-  factory.registerHandler(new SiRF::PrintPacketHandler<SiRF::MeasuredNavigationDataOut>);
-  factory.registerHandler(new SiRF::NullPacketHandler<SiRF::MeasuredTrackerDataOut>);
-  factory.registerHandler(new SiRF::PrintPacketHandler<SiRF::CPUThroughput>);
-  factory.registerDefaultHandler(new SiRF::WarnPacketHandler);
+  //factory.registerHandler(new PrintPacketHandler<MeasuredNavigationDataOut>);
+  //factory.registerHandler(new NullPacketHandler<MeasuredTrackerDataOut>);
+  //factory.registerHandler(new PrintPacketHandler<CPUThroughput>);
+  factory.registerDefaultHandler(new WarnPacketHandler);
+  factory.registerHandler(new PrintPacketHandler<SoftwareVersion>);
+
+  factory.throwAwayPacketsUntilNice();
+
+  PollSoftwareVersion req;
+
+  std::cout << "Sending version request" << std::endl;
+  stream << Stream::start << req.getType();
+  req.output(stream);
+  stream << Stream::end;
+  //stream.flush();
+  std::cout << "Sent" << std::endl;
 
   /* make the printer
    */

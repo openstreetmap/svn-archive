@@ -104,13 +104,46 @@ void make_hpp_file(struct packet *p, FILE *fh) {
       fprintf(fh, "  bool isInput() { return %s; }\n\n",
 	      (pptr->input == 1) ? "true" : "false");
     }
+    // constructor - leave as default when we have an output packet
+    if (pptr->input == 1) {
+      int latch = 0;
+
+      fprintf(fh, "  %s(", pptr->name);
+      // constructor reads in all the values
+      for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
+	if (strcmp(fptr->name,"Reserved") != 0) {
+	  if (latch == 0) {
+	    latch = 1;
+	  } else {
+	    fprintf(fh, ",\n");
+	  }
+	  if (fptr->convert_to == NULL) {
+	    if (fptr->count == 1) {
+	      fprintf(fh, "   %s _%s", 
+		      fptr->record, fptr->name);
+	    } else {
+	      fprintf(fh, "   %s _%s[%d]", 
+		      fptr->record, fptr->name, fptr->count);
+	    }
+	  } else {
+	    if (fptr->count == 1) {
+	      fprintf(fh, "   %s _%s",
+		      fptr->convert_to, fptr->name);
+	    } else {
+	      fprintf(fh, "   %s _%s[%d]",
+		      fptr->convert_to, fptr->name, fptr->count);
+	    }
+	  }
+	}
+      }
+      fprintf(fh, ");\n\n");
+    }
     // inserters
     if (pptr->input != 1) {
       fprintf(fh, "  void input(OutputStream &in);\n");
     } else {
       // extractors
-      fprintf(fh, "  friend InputStream &operator<<(InputStream &out, const %s &p);\n",
-	      pptr->name);
+      fprintf(fh, "  void output(InputStream &out) const;\n");
     }
     fprintf(fh, "  void output(std::ostream &out) const;\n\n");
     // now the accessor methods
@@ -179,31 +212,88 @@ void make_cpp_file(struct packet *p, FILE *fh) {
     fprintf(fh, "#include <%s.hpp>\n", pptr->name);
     fprintf(fh, "\nnamespace SiRF {\n\n");
     if (pptr->input == 1) { 
+      // constructor - leave as default when we have an output packet
+      int latch = 0;
+
+      fprintf(fh, " %s::%s(", pptr->name, pptr->name);
+      // constructor reads in all the values
+      for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
+	if (strcmp(fptr->name,"Reserved") != 0) {
+	  if (latch == 0) {
+	    latch = 1;
+	  } else {
+	    fprintf(fh, ",\n\t");
+	  }
+	  if (fptr->convert_to == NULL) {
+	    if (fptr->count == 1) {
+	      fprintf(fh, "%s _%s", 
+		      fptr->record, fptr->name);
+	    } else {
+	      fprintf(fh, "%s _%s[%d]", 
+		      fptr->record, fptr->name, fptr->count);
+	    }
+	  } else {
+	    if (fptr->count == 1) {
+	      fprintf(fh, "%s _%s",
+		      fptr->convert_to, fptr->name);
+	    } else {
+	      fprintf(fh, "%s _%s[%d]",
+		      fptr->convert_to, fptr->name, fptr->count);
+	    }
+	  }
+	}
+      }
+      fprintf(fh, ") {\n");
+      for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
+	if (strcmp(fptr->name,"Reserved") != 0) {
+	  if (fptr->convert_to == NULL) {
+	    if (fptr->count == 1) {
+	      fprintf(fh, "  m_%s = _%s;\n", fptr->name, fptr->name);
+	    } else {
+	      fprintf(fh, "  for(int i = 0; i < %d; i++) {\n", fptr->count);
+	      fprintf(fh, "   %s[i] = _%s[i];\n", fptr->name, fptr->name);
+	      fprintf(fh, "  }\n");
+	    }
+	  } else {
+	    if (fptr->count == 1) {
+	      fprintf(fh, "  m_%s = (%s)(_%s / %f);\n", 
+		      fptr->name, fptr->record, fptr->name, fptr->mult);
+	    } else {
+	      fprintf(fh, "  for(int i = 0; i < %d; i++) {\n", fptr->count);
+	      fprintf(fh, "   m_%s[i] = (%s)(_%s[i] / %f);\n", 
+		      fptr->name, fptr->record, fptr->name, fptr->mult);
+	      fprintf(fh, "  }\n");
+	    }
+	  }
+	} 
+      }
+      fprintf(fh, " }\n\n");
+
       // implementation of inserter
-      fprintf(fh, " InputStream &operator<<(InputStream &out, const %s &p) {\n",
+      fprintf(fh, " void %s::output(InputStream &out) const {\n",
 	      pptr->name);
       for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
 	if (strcmp(fptr->name,"Reserved") != 0) {
 	  if (fptr->count == 1) {
-	    fprintf(fh, "  out << (int)m_%s;\n", fptr->name);
+	    fprintf(fh, "  out << m_%s;\n", fptr->name);
 	  } else {
 	    fprintf(fh, "  for (int i = 0; i < %d; i++) {\n",
 		    fptr->count);
-	    fprintf(fh, "   out << (int)m_%s[i];\n", fptr->name);
+	    fprintf(fh, "   out << m_%s[i];\n", fptr->name);
 	    fprintf(fh, "  }\n");
 	  }
 	} else {
 	  fprintf(fh, "  {\n   %s Reserved = 0;\n", fptr->record);
 	  if (fptr->count == 1) {
-	    fprintf(fh, "   out << (int) Reserved;\n");
+	    fprintf(fh, "   out << Reserved;\n");
 	  } else {
 	    fprintf(fh, "   for (int i = 0; i < %d; i++) {\n", fptr->count);
-	    fprintf(fh, "    out << (int) Reserved;\n   }\n");
+	    fprintf(fh, "    out << Reserved;\n   }\n");
 	  }
 	  fprintf(fh, "  }\n");
 	}
       }
-      fprintf(fh, "  return out;\n }\n\n");
+      fprintf(fh, " }\n\n");
     } else {
       // implementation of extractor
       fprintf(fh, " void %s::input(OutputStream &in) {\n",

@@ -6,10 +6,11 @@
 
 namespace SiRF {
 
-  class InputStream : public Stream {
+  class InputStream : public virtual Stream {
   public:
 
     InputStream(const char *devicename, int baud) : Stream(devicename, baud) {
+      buf_pos = 0;
     }
 
     /* input and output functions 

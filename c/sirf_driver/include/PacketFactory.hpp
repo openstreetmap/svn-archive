@@ -48,6 +48,10 @@ namespace SiRF {
      */
     void eventLoop();
 
+    /*
+     */
+    void throwAwayPacketsUntilNice();
+
   private:
 
     /* allocate and return the right packet type

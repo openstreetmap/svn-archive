@@ -114,7 +114,28 @@ body {
   text-align: center;
 }
 
+#mapToolbar {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 200px;
+  border-width: 0;
+}
 
+#mapToolbarRight {
+  position: absolute;
+  left: 200px;
+  top: 50px;
+  width: 400px;
+  text-align: right;
+}
+
+#mapImage {
+  position: absolute;
+  left: 0px;
+  top: 100px;
+
+}
 
 #keyvalue {
   font-size: small;

@@ -58,6 +58,7 @@ float p2lat = p.getLowerRight().getLatitude();
 float p2lon = p.getLowerRight().getLongitude();
 
 String sURL = "viewMapImage.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
+String sURL = "applet.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
 
 String sLeftURL = getURL(fScale,fLat, fLon - (p2lon - p1lon)/4);
 String sRightURL = getURL(fScale,fLat, fLon + (p2lon - p1lon)/4);
@@ -79,6 +80,7 @@ private String getURL(float fScale, float fLat, float fLon)
 
 <!-- FIXME: do all this with css -->
 
+<div id="mapToolbar">
 <table border="0">
 <tr><td>
 
@@ -120,10 +122,21 @@ private String getURL(float fScale, float fLat, float fLon)
 <a href="<%=sZoominURL%>"><img src="/images/map_zoomin.png" border="0"></a>
 <br><br>
 <a href="<%=sZoomoutURL%>"><img src="/images/map_zoomout.png" border="0"></a>
-</td></tr>
-</table>
+</td>
 
+</td>
+</table>
+</div>
+
+<div id="mapToolbarRight">
+<img src="/images/stock_edit.png" border="0"><a href="<%=sAppletURL%>">edit this map...</a>
+
+</div>
+
+<div id="mapImage">
 <img src="<%=sURL%>" width="600" height="600" alt="Your map">
+
+</div>
 
 
 

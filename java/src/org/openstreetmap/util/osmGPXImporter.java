@@ -13,8 +13,8 @@ import org.apache.xmlrpc.*;
 
 public class osmGPXImporter extends DefaultHandler{
 
-  private PrintStream out = null;
-  
+  private PrintWriter out = null;
+ 
   private double lat = 0;
   private double lon = 0;
   private double ele = 0;
@@ -45,9 +45,9 @@ public class osmGPXImporter extends DefaultHandler{
 
   }
   
-  public osmGPXImporter(OutputStream o, String u, String p)
+  public osmGPXImporter(PrintWriter o, String u, String p)
   {
-    out = new PrintStream(o);
+    out = o;
 
     connectToServer(u,p);
 
@@ -277,39 +277,14 @@ public class osmGPXImporter extends DefaultHandler{
 
   
 
-  public static void main(String[] args)
-  {
-
-    try{
-    
-      osmGPXImporter handler = new osmGPXImporter(System.out, args[0], args[1]);
-
-
-      SAXParserFactory factory = SAXParserFactory.newInstance();
-
-      SAXParser saxParser = factory.newSAXParser();
-
-      saxParser.parse( new File(args[2]), handler );
-    }
-    catch(Exception e)
-    {
-      System.out.println("usage: osmGPXImporter user pass file");
-      System.out.println(e);
-      e.printStackTrace();
-
-    }
-
-  } // main
-
-
   
-  public void upload(InputStream gpxInputStream, OutputStream out, String user, String pass)
+  public void upload(InputStream gpxInputStream, Writer out, String user, String pass)
   {
-    PrintStream o = new PrintStream(out);
+    PrintWriter o = new PrintWriter(out);
 
     try{
     
-      osmGPXImporter handler = new osmGPXImporter(out, user, pass);
+      osmGPXImporter handler = new osmGPXImporter(o, user, pass);
 
 
       SAXParserFactory factory = SAXParserFactory.newInstance();

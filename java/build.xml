@@ -6,7 +6,7 @@
 <property name="lib" location="lib"/>
 <property name="icons" location="icons"/>
 <property name="jsp" location="jsp"/>
-
+<property name="edit" location="/var/lib/tomcat4/webapps/edit/"/>
 
 <target name="init">
 <tstamp/>
@@ -58,12 +58,14 @@ destdir="${build}"
 
 <copy file="${jsp}/xml.jsp" tofile="/var/lib/tomcat4/webapps/api/xml.jsp" />
 
-<copy file="${jsp}/newUser.jsp" tofile="/var/lib/tomcat4/webapps/edit/newUser.jsp" />
-<copy file="${jsp}/uploadGPX.jsp" tofile="/var/lib/tomcat4/webapps/edit/uploadGPX.jsp" />
-<copy file="${jsp}/login.jsp" tofile="/var/lib/tomcat4/webapps/edit/login.jsp" />
-<copy file="${jsp}/applet.jsp" tofile="/var/lib/tomcat4/webapps/edit/applet.jsp" />
-<copy file="${jsp}/logout.jsp" tofile="/var/lib/tomcat4/webapps/edit/logout.jsp" />
-<copy file="${jsp}/editKeys.jsp" tofile="/var/lib/tomcat4/webapps/edit/editKeys.jsp" />
+<copy file="${jsp}/newUser.jsp" tofile="${edit}/newUser.jsp" />
+<copy file="${jsp}/uploadGPX.jsp" tofile="${edit}/uploadGPX.jsp" />
+<copy file="${jsp}/login.jsp" tofile="${edit}/login.jsp" />
+<copy file="${jsp}/applet.jsp" tofile="${edit}/applet.jsp" />
+<copy file="${jsp}/logout.jsp" tofile="${edit}/logout.jsp" />
+<copy file="${jsp}/editKeys.jsp" tofile="${edit}/editKeys.jsp" />
+<copy file="${jsp}/viewMap.jsp" tofile="${edit}/viewMap.jsp" />
+<copy file="${jsp}/viewMapImage.jsp" tofile="${edit}/viewMapImage.jsp" />
 <!-- includes -->
 
 <copy todir="/var/lib/tomcat4/webapps/edit/include/">
@@ -83,6 +85,13 @@ destdir="${build}"
 </copy>
 
 <copy file="html-images/favicon.ico" tofile="/var/www/openstreetmap/favicon.ico" />
+
+<copy file="icons/left.png" tofile="/var/www/openstreetmap/images/map_left.png" />
+<copy file="icons/right.png" tofile="/var/www/openstreetmap/images/map_right.png" />
+<copy file="icons/up.png" tofile="/var/www/openstreetmap/images/map_up.png" />
+<copy file="icons/down.png" tofile="/var/www/openstreetmap/images/map_down.png" />
+<copy file="icons/zoomin.png" tofile="/var/www/openstreetmap/images/map_zoomin.png" />
+<copy file="icons/zoomout.png" tofile="/var/www/openstreetmap/images/map_zoomout.png" />
 <!-- css -->
 
 <copy file="css/style.css" tofile="/var/www/openstreetmap/css/style.css" />

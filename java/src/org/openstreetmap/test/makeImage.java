@@ -18,21 +18,20 @@ public class makeImage
 
   public static void main(String[] args)
   {
-    new makeImage().go();
-
 
   } // main
 
-  public void go()
+  public BufferedImage getImageFromCoord(float latitude, float longitude, float scale)
   {
 
     MapBean mb = new MapBean();
-    mb.setScale(10404.917f);
-    mb.setCenter(51.526447f, -0.14746371f);
+//    mb.setScale(10404.917f);
+//    mb.setCenter(51.526447f, -0.14746371f);
+
+    mb.setScale(scale);
+    mb.setCenter(latitude, longitude);
 
     OMGraphicList gl = getGraphics(mb.getProjection());
-
-    gl.add( new OMCircle(51.526447f, -0.14746371f,10f,com.bbn.openmap.proj.Length.METER) );
 
     BufferedImage bi = new BufferedImage(600,600, BufferedImage.TYPE_INT_RGB);
 
@@ -44,7 +43,7 @@ public class makeImage
     g.setColor(Color.BLACK);
     gl.render(g);
 
-
+    /*
     try
     {
       // Save as PNG
@@ -57,6 +56,9 @@ public class makeImage
       e.printStackTrace();
 
     }
+    */
+
+    return bi;
 
   }
 
@@ -80,10 +82,10 @@ public class makeImage
 
       int id = ((Integer)e.nextElement()).intValue();
 
-      float lon1 = (float)((Double)e.nextElement()).doubleValue();
-      float lat1 = (float)((Double)e.nextElement()).doubleValue();
-      float lon2 = (float)((Double)e.nextElement()).doubleValue();
-      float lat2 = (float)((Double)e.nextElement()).doubleValue();
+      float lon1 = ((Float)e.nextElement()).floatValue();
+      float lat1 = ((Float)e.nextElement()).floatValue();
+      float lon2 = ((Float)e.nextElement()).floatValue();
+      float lat2 = ((Float)e.nextElement()).floatValue();
 
       System.out.println("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
 
@@ -95,13 +97,41 @@ public class makeImage
       omgl.add(oml);
     }
 
+    v = osmSH.getPoints("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());
+
+    e = v.elements();
+
+    while( e.hasMoreElements() )
+    {
+      float lat = ((Float)e.nextElement()).floatValue();
+      float lon = ((Float)e.nextElement()).floatValue();
+      
+
+      OMCircle omc = new OMCircle( lat,
+          lon,
+          5f,
+          com.bbn.openmap.proj.Length.METER
+          );
+
+      omc.setLinePaint(Color.gray);
+      omc.setSelectPaint(Color.red);
+      omc.setFillPaint(OMGraphic.clear);
+
+      
+      omgl.add(omc);
+    }
+
+
     omgl.generate(proj);
+
+
+    osmSH.closeDatabase();
 
     return omgl;
 
 
-
   } // getGraphics
+
 
 
 } // makeImage

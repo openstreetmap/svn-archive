@@ -50,8 +50,12 @@ public class osmServerClient
         
         StringTokenizer st = new StringTokenizer(sLine);
 
+        String a = st.nextToken();
+        String b = st.nextToken();
+        String c = st.nextToken();
+        String d = st.nextToken();
 
-        gpsPoints.add( new gpspoint(st.nextToken(), st.nextToken(), st.nextToken(), st.nextToken() ) );
+        gpsPoints.add( new gpspoint(a,b,c,d) );
       
         
       }

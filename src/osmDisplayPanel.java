@@ -134,7 +134,6 @@ public class osmDisplayPanel extends JPanel{
   public void mouseClicked(MouseEvent e)
   {
 
-    System.out.println("mouseClicked");
     
     Enumeration en = gpsPoints.elements();
 
@@ -180,7 +179,12 @@ public class osmDisplayPanel extends JPanel{
   
     closestPoint.setHighlight(true);
 
-    osmA.setStatusLabel("closest point is " + closestPoint);
+    osmA.setStatusLabel("closest point is at" +
+                        "lat " + closestPoint.getLatitude() +
+                        " lon " + closestPoint.getLongitude() +
+                        " alt " + closestPoint.getAltitude() +
+                        " recorded at " + new Date(closestPoint.getTime()));
+                       
     repaint();
 
   } // mouseClicked

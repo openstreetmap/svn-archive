@@ -28,7 +28,6 @@ public class osmApplet extends JApplet {
     
     public void setStatusLabel(String s)
     {
-      System.out.println("setting status label to " +  s);
 
       label.setText(s);
 

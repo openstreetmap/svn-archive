@@ -144,8 +144,6 @@ public class gpspoint{
 
       g.setColor(Color.black);
 
-      g.drawString("" + this,nOffsetX + (int)p2.getX(),
-                        nOffsetY + (int)p2.getY());
     }
 
     g.drawLine(nOffsetX + (int)p2.getX(),

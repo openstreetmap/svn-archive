@@ -799,6 +799,7 @@ public class osmServerSQLHandler extends Thread
   } // addUser
 
 
+ 
   public synchronized boolean confirmUser(String user, String token)
   {
 
@@ -841,11 +842,8 @@ public class osmServerSQLHandler extends Thread
 
         return true;
       }
-      else
-      {
-        return false;
 
-      }
+      return false;
 
     }
     catch(Exception e)
@@ -861,5 +859,52 @@ public class osmServerSQLHandler extends Thread
 
 
   } // confirmUser
+
+
+  
+  
+  public synchronized boolean userExists(String user)
+  {
+
+    System.out.println("user exists " + user );
+
+    if( user.length() < 5 ||
+        user.length() > 30 ||
+        user.indexOf(" ") != -1 )
+    {
+      return false;
+
+    }
+
+
+    try{
+
+      Class.forName("com.mysql.jdbc.Driver").newInstance(); 
+
+
+      Connection conn = DriverManager.getConnection(sSQLConnection,
+          sUser,
+          sPass);
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid,active from user where user='" + user +"'";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      return rs.next();
+      
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+      return false;
+    }
+
+  } // userExists
 
 } // osmServerSQLHandler

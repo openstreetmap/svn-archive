@@ -57,12 +57,24 @@ public class osmServerHandler
 
 
  
+ 
   public boolean confirmUser(String user, String token)
   {
     
     osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
 
     return  osmSQLH.confirmUser(user,token);
+
+     
+  } // addUser
+
+  
+  public boolean userExists(String user)
+  {
+    
+    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
+
+    return  osmSQLH.userExists(user);
 
      
   } // addUser

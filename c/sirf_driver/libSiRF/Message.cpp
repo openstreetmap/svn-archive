@@ -22,9 +22,9 @@ namespace SiRF {
     static char buffer[BUF_LEN+1];
 
     strncpy(buffer, prefix, BUF_LEN);
-    snprintf(&buffer[strlen(prefix)], 
-	     BUF_LEN - strlen(prefix), 
-	     msg, arg);
+    vsnprintf(&buffer[strlen(prefix)], 
+	      BUF_LEN - strlen(prefix), 
+	      msg, arg);
     buffer[BUF_LEN] = '\0';
 
     if (m->handler == NULL) {

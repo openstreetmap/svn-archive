@@ -17,10 +17,21 @@ namespace SiRF {
     }
 
     /**
+     *
+     */
+    inline static bool isSingleThreaded() {
+      return isSingle;
+    }
+
+    /**
      * set the debug flag
      */
-    inline void set(bool b) {
+    inline static void setDebug(bool b) {
       isSet = b;
+    }
+
+    inline static void setSingleThreaded(bool b) {
+      isSingle = b;
     }
 
   private:
@@ -28,6 +39,7 @@ namespace SiRF {
      * variable declaration
      */
     static bool isSet;
+    static bool isSingle;
   };
 
 }

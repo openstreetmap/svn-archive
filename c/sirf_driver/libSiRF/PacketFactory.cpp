@@ -69,16 +69,22 @@ namespace SiRF {
   /* enter the threaded event loop
    */
   void PacketFactory::eventLoop() {
-    ::sem_init(&lock, 0, 0);
-    ::pthread_create(&thread, NULL, &stupidHackedUpPthreadFunction, this);
+    if (Debug::isSingleThreaded()) {
+      threadedEventLoop();
+    } else {
+      ::sem_init(&lock, 0, 0);
+      ::pthread_create(&thread, NULL, &stupidHackedUpPthreadFunction, this);
+    }
   }
 
   /* exit the threaded event loop
    */
   void PacketFactory::exitLoop() {
-    ::sem_post(&lock);
-    ::pthread_join(thread, NULL);
-    ::sem_destroy(&lock);
+    if (!Debug::isSingleThreaded()) {
+      ::sem_post(&lock);
+      ::pthread_join(thread, NULL);
+      ::sem_destroy(&lock);
+    }
   }
 
   void *PacketFactory::stupidHackedUpPthreadFunction(void *ptr) {
@@ -143,7 +149,11 @@ namespace SiRF {
   bool PacketFactory::goodToContinue() {
     int i;
 
-    ::sem_getvalue(&lock, &i);
+    if (Debug::isSingleThreaded()) {
+      i = 0;
+    } else {
+      ::sem_getvalue(&lock, &i);
+    }
 
     return (i == 0);
   }

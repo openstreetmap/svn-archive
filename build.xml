@@ -26,14 +26,15 @@
 
 
 <target name="dist" depends="compile">
-  
+
+   <copy todir="${build}">
+    <fileset dir="${icons}"/>
+  </copy>
+
   <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
   <copy file="${src}/index.html" tofile="${dist}/index.html"/>
   <copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
-  <copy todir="${dist}">
-    <fileset dir="${icons}"/>
-  </copy>
-</target>
+ </target>
 
 
 

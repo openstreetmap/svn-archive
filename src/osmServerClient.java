@@ -55,6 +55,8 @@ public class osmServerClient
         String c = st.nextToken();
         String d = st.nextToken();
 
+        System.out.println("|" + a + "|" + b + "|" + c + "|" + d);
+        
         gpsPoints.add( new gpspoint(a,b,c,d) );
       
         

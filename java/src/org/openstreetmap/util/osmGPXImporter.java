@@ -40,6 +40,11 @@ public class osmGPXImporter extends DefaultHandler{
   String sUser;
   String sPass;
 
+  public osmGPXImporter()
+  {
+
+  }
+  
   public osmGPXImporter(OutputStream o, String u, String p)
   {
     out = new PrintStream(o);

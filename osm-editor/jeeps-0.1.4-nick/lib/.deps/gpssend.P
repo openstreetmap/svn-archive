@@ -1,0 +1,65 @@
+gpssend.lo gpssend.o : gpssend.c gps.h gpsport.h /usr/include/time.h \
+  /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/gnu/stubs.h \
+  /usr/lib/gcc/i586-mandrake-linux-gnu/3.4.1/include/stddef.h \
+  /usr/include/bits/time.h /usr/include/bits/types.h \
+  /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h gpsserial.h \
+  gpssend.h gpsread.h gpsutil.h gpsapp.h gpsprot.h gpscom.h gpsfmt.h \
+  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+  /usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h \
+  /usr/lib/gcc/i586-mandrake-linux-gnu/3.4.1/include/stdarg.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/bits/stdio.h gpsmath.h gpsnmea.h gpsmem.h gpsrqst.h \
+  gpsinput.h gpsproj.h gpsnmeafmt.h gpsnmeaget.h /usr/include/unistd.h \
+  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+  /usr/include/getopt.h /usr/include/errno.h /usr/include/bits/errno.h \
+  /usr/include/linux/errno.h /usr/include/asm/errno.h \
+  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h
+gpssend.c :
+gps.h :
+gpsport.h :
+/usr/include/time.h :
+/usr/include/features.h :
+/usr/include/sys/cdefs.h :
+/usr/include/gnu/stubs.h :
+/usr/lib/gcc/i586-mandrake-linux-gnu/3.4.1/include/stddef.h :
+/usr/include/bits/time.h :
+/usr/include/bits/types.h :
+/usr/include/bits/wordsize.h :
+/usr/include/bits/typesizes.h :
+gpsserial.h :
+gpssend.h :
+gpsread.h :
+gpsutil.h :
+gpsapp.h :
+gpsprot.h :
+gpscom.h :
+gpsfmt.h :
+/usr/include/stdio.h :
+/usr/include/libio.h :
+/usr/include/_G_config.h :
+/usr/include/wchar.h :
+/usr/include/bits/wchar.h :
+/usr/include/gconv.h :
+/usr/lib/gcc/i586-mandrake-linux-gnu/3.4.1/include/stdarg.h :
+/usr/include/bits/stdio_lim.h :
+/usr/include/bits/sys_errlist.h :
+/usr/include/bits/stdio.h :
+gpsmath.h :
+gpsnmea.h :
+gpsmem.h :
+gpsrqst.h :
+gpsinput.h :
+gpsproj.h :
+gpsnmeafmt.h :
+gpsnmeaget.h :
+/usr/include/unistd.h :
+/usr/include/bits/posix_opt.h :
+/usr/include/bits/confname.h :
+/usr/include/getopt.h :
+/usr/include/errno.h :
+/usr/include/bits/errno.h :
+/usr/include/linux/errno.h :
+/usr/include/asm/errno.h :
+/usr/include/asm-generic/errno.h :
+/usr/include/asm-generic/errno-base.h :

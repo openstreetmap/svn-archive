@@ -1,0 +1,72 @@
+dnl Configure template for the AJB GPS package.
+dnl Process this file with autoconf to produce a configure script.
+
+#if you want to force configure to use the default C compiler cc
+## then uncomment the following line.
+#CC=cc
+
+AC_INIT(lib/gpsserial.c)
+AM_INIT_AUTOMAKE(JEEPS, 0.1.3)
+
+dnl Use libtool to make a shared library.
+AM_PROG_LIBTOOL
+
+dnl Program checks
+AC_PROG_CXX
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+
+dnl Check for header files
+AC_PATH_XTRA
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(unistd.h)
+
+dnl Check for typedefs, structures and compiler characteristics
+AC_C_CONST
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_STRUCT_TM
+
+dnl Check for library functions
+AC_FUNC_GETPGRP
+AC_FUNC_STRFTIME
+AC_FUNC_VFORK
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(memmove)
+
+dnl Library checks
+AC_CHECK_LIB(m, main)
+
+CFLAGS="-O"
+
+dnl Test if --enable-debug given
+AC_ARG_ENABLE(debug,
+[  --enable-debug          debug (-g option on compiler)])
+if test "${enable_debug}" = "yes" ; then
+  CFLAGS="-g"
+fi          
+
+
+
+dnl Test if --enable-debug given
+AC_ARG_ENABLE(warnings,
+[  --enable-warnings          warnings (-Wall option on compiler)])
+if test "${enable_warnings}" = "yes" ; then
+  CFLAGS="$CFLAGS -Wall"
+fi          
+
+dnl Set extra needed compiler flags
+AC_CANONICAL_HOST
+if test "$CC" = "cc"; then
+  case "$host" in
+    alpha*-dec-osf*) CFLAGS="$CFLAGS -ieee";;
+  esac
+fi
+
+AC_OUTPUT(lib/Makefile src/Makefile Makefile)

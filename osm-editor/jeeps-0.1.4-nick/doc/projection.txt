@@ -1,0 +1,969 @@
+	Documentation for the JEEPS Library  0.1.3
+		      Alan Bleasby
+		       July 2000
+		  ableasby@hgmp.mrc.ac.uk
+
+C: The map projection functions
+
+These functions  convert latitudes and longitudes to  map eastings and
+northings  and  vice  versa.  There  are currently  19  different  map
+projections  and  therefore  38  functions.
+
+Note that, with the exception of the transverse marcator functions,
+these are distinct from the specific projections and map functions
+already described in the jeeps.txt document (gpsmath.c).
+
+The functions are listed below, the documentation being lifted from
+the source code (gpsproj.c)
+
+Discussions of projections is beyond the scope (etc:-) although the
+functions are simple to use, just a pig to code.
+A suitable reference is:
+   Map Projections - A Working Manual. USGS Professional Paper 1395
+                     Snyder, J.P.
+
+
+1.
+/* @func GPS_Math_Albers_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Albers projection easting and
+** northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi1 [double] standard latitude (parallel) 1 (deg)
+** @param [r] phi2 [double] standard latitude (parallel) 2 (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Albers_LatLon_To_EN(double phi, double lambda, double *E,
+				  double *N, double phi1, double phi2,
+				  double phi0, double M0, double E0,
+				  double N0, double a, double b)
+
+
+
+
+2.
+/* @func GPS_Math_Albers_EN_To_LatLon **********************************
+**
+** Convert Albers easting and northing to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi1 [double] standard latitude (parallel) 1 (deg)
+** @param [r] phi2 [double] standard latitude (parallel) 2 (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Albers_EN_To_LatLon(double E, double N, double *phi,
+				  double *lambda, double phi1, double phi2,
+				  double phi0, double M0, double E0,
+				  double N0, double a, double b)
+
+
+3.
+/* @func GPS_Math_LambertCC_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Lambert Conformal Conic projection
+** easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi1 [double] standard latitude (parallel) 1 (deg)
+** @param [r] phi2 [double] standard latitude (parallel) 2 (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_LambertCC_LatLon_To_EN(double phi, double lambda, double *E,
+				     double *N, double phi1, double phi2,
+				     double phi0, double M0, double E0,
+				     double N0, double a, double b)
+
+
+4.
+
+/* @func GPS_Math_LambertCC_EN_To_LatLon **********************************
+**
+** Convert Lambert Conformal Conic  easting and northing to latitude and
+** longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi1 [double] standard latitude (parallel) 1 (deg)
+** @param [r] phi2 [double] standard latitude (parallel) 2 (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_LambertCC_EN_To_LatLon(double E, double N, double *phi,
+				     double *lambda, double phi1, double phi2,
+				     double phi0, double M0, double E0,
+				     double N0, double a, double b)
+
+
+
+5.
+/* @func GPS_Math_Miller_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Miller Cylindrical projection easting and
+** northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Miller_LatLon_To_EN(double phi, double lambda, double *E,
+				  double *N, double M0, double E0,
+				  double N0, double a, double b)
+
+
+6.
+/* @func GPS_Math_Miller_EN_To_LatLon **********************************
+**
+** Convert latitude and longitude to Miller Cylindrical projection easting and
+** northing
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Miller_EN_To_LatLon(double E, double N, double *phi,
+				  double *lambda, double M0, double E0,
+				  double N0, double a, double b)
+
+
+7.
+/* @func GPS_Math_Bonne_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Bonne pseudoconic equal area  projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Bonne_LatLon_To_EN(double phi, double lambda, double *E,
+				  double *N, double phi0, double M0, double E0,
+				  double N0, double a, double b)
+
+
+
+8.
+/* @func GPS_Math_Bonne_EN_To_LatLon **********************************
+**
+** Convert Bonne pseudoconic equal area easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Bonne_EN_To_LatLon(double E, double N, double *phi,
+				 double *lambda, double phi0, double M0,
+				 double E0, double N0, double a, double b)
+
+
+
+9.
+/* @func GPS_Math_Cassini_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Cassini transverse cylindrical projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
+				   double *N, double phi0, double M0,
+				   double E0, double N0, double a, double b)
+
+
+
+10.
+/* @func GPS_Math_Cassini_EN_To_LatLon **********************************
+**
+** Convert Cassini transverse cylindrical easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Cassini_EN_To_LatLon(double E, double N, double *phi,
+				   double *lambda, double phi0, double M0,
+				   double E0, double N0, double a, double b)
+
+
+
+
+11.
+/* @func GPS_Math_Cylea_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Cylindrical equal area  projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Cylea_LatLon_To_EN(double phi, double lambda, double *E,
+				 double *N, double phi0, double M0,
+				 double E0, double N0, double a, double b)
+
+
+
+12.
+/* @func GPS_Math_Cylea_EN_To_LatLon **********************************
+**
+** Convert Cylindrical equal area  easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Cylea_EN_To_LatLon(double E, double N, double *phi,
+				 double *lambda, double phi0, double M0,
+				 double E0, double N0, double a, double b)
+
+
+
+13.
+/* @func GPS_Math_EckertIV_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Eckert IV equal area elliptical
+** pseudocylindrical projection easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_EckertIV_LatLon_To_EN(double phi, double lambda, double *E,
+				    double *N, double M0, double E0, double N0,
+				    double a, double b)
+
+
+
+
+14.
+/* @func GPS_Math_EckertIV_EN_To_LatLon **********************************
+**
+** Convert Eckert IV equal area elliptical pseudocylindrical projection
+** easting and northing to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_EckertIV_EN_To_LatLon(double E, double N, double *phi,
+				    double *lambda, double M0, double E0,
+				    double N0, double a, double b)
+
+
+
+15.
+/* @func GPS_Math_EckertVI_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Eckert VI equal area
+** pseudocylindrical projection easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_EckertVI_LatLon_To_EN(double phi, double lambda, double *E,
+				    double *N, double M0, double E0, double N0,
+				    double a, double b)
+
+
+16.
+/* @func GPS_Math_EckertVI_EN_To_LatLon **********************************
+**
+** Convert Eckert VI equal area pseudocylindrical projection
+** easting and northing to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_EckertVI_EN_To_LatLon(double E, double N, double *phi,
+				    double *lambda, double M0, double E0,
+				    double N0, double a, double b)
+
+
+
+17.
+/* @func GPS_Math_Cyled_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to cylindrical equidistant projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Cyled_LatLon_To_EN(double phi, double lambda, double *E,
+				 double *N, double phi0, double M0, double E0,
+				 double N0, double a, double b)
+
+
+
+18.
+/* @func GPS_Math_Cyled_EN_To_LatLon **********************************
+**
+** Convert cylindrical equidistant easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Cyled_EN_To_LatLon(double E, double N, double *phi,
+				 double *lambda, double phi0, double M0,
+				 double E0, double N0, double a, double b)
+
+
+
+19.
+/* @func GPS_Math_VderGrinten_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Van der Grinten polyconic projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_VderGrinten_LatLon_To_EN(double phi, double lambda, double *E,
+				       double *N, double M0, double E0,
+				       double N0, double a, double b)
+
+
+
+20.
+/* @func GPS_Math_VderGrinten_EN_To_LatLon **********************************
+**
+** Convert Van der Grinten polyconic easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_VderGrinten_EN_To_LatLon(double E, double N, double *phi,
+				       double *lambda, double M0, double E0,
+				       double N0, double a, double b)
+
+
+
+21.
+/* @func GPS_Math_Bonne_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Bonne pseudoconic equal area  projection
+** easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi1 [double] latitude of true scale (deg)
+** @param [r] lambda1 [double] longitude from pole (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_PolarSt_LatLon_To_EN(double phi, double lambda, double *E,
+				   double *N, double phi1, double lambda1,
+				   double E0, double N0, double a, double b)
+
+
+
+22.
+/* @func GPS_Math_PolarSt_EN_To_LatLon **********************************
+**
+** Convert Polar Stereographic easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi1 [double] latitude of true scale (deg)
+** @param [r] lambda1 [double] longitude from pole (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_PolarSt_EN_To_LatLon(double E, double N, double *phi,
+				   double *lambda, double phi1, double lambda1,
+				   double E0, double N0, double a, double b)
+
+
+23.
+/* @func GPS_Math_Mollweide_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Mollweide projection easting and
+** northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Mollweide_LatLon_To_EN(double phi, double lambda, double *E,
+				     double *N, double M0, double E0,
+				     double N0, double a, double b)
+
+
+24.
+/* @func GPS_Math_Mollweide_EN_To_LatLon **********************************
+**
+** Convert latitude and longitude to Mollweide projection easting and
+** northing
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Mollweide_EN_To_LatLon(double E, double N, double *phi,
+				     double *lambda, double M0, double E0,
+				     double N0, double a, double b)
+
+
+
+25.
+/* @func GPS_Math_Orthog_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to orthographic projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] lambda0 [double] longitude of origin (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Orthog_LatLon_To_EN(double phi, double lambda, double *E,
+				  double *N, double phi0, double lambda0,
+				  double E0, double N0, double a, double b)
+
+
+
+26.
+/* @func GPS_Math_Orthog_EN_To_LatLon **********************************
+**
+** Convert Orthogonal easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] lambda0 [double] longitude of origin (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Orthog_EN_To_LatLon(double E, double N, double *phi,
+				  double *lambda, double phi0, double lambda0,
+				  double E0, double N0, double a, double b)
+
+
+
+
+27.
+/* @func GPS_Math_Polycon_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Polyconic  projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Polycon_LatLon_To_EN(double phi, double lambda, double *E,
+				   double *N, double phi0, double M0,
+				   double E0, double N0, double a, double b)
+
+
+
+28.
+/* @func GPS_Math_Polycon_EN_To_LatLon **********************************
+**
+** Convert Polyconic easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Polycon_EN_To_LatLon(double E, double N, double *phi,
+				   double *lambda, double phi0, double M0,
+				   double E0, double N0, double a, double b)
+
+
+
+29.
+/* @func GPS_Math_Sinusoid_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to Sinusoidal projection easting and
+** northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Sinusoid_LatLon_To_EN(double phi, double lambda, double *E,
+				    double *N, double M0, double E0,
+				    double N0, double a, double b)
+
+
+
+30.
+/* @func GPS_Math_Sinusoid_EN_To_LatLon **********************************
+**
+** Convert latitude and longitude to Sinusoidal projection easting and
+** northing
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Sinusoid_EN_To_LatLon(double E, double N, double *phi,
+				    double *lambda, double M0, double E0,
+				    double N0, double a, double b)
+
+
+
+31.
+/* @func GPS_Math_TCylEA_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to transverse cylindrical  equal area
+** projection easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_TCylEA_LatLon_To_EN(double phi, double lambda, double *E,
+				  double *N, double phi0, double M0, double E0,
+				  double N0, double a, double b)
+
+
+
+32.
+/* @func GPS_Math_TCylEA_EN_To_LatLon **********************************
+**
+** Convert transverse cylindrical equal area easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] M0 [double] central meridian (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_TCylEA_EN_To_LatLon(double E, double N, double *phi,
+				  double *lambda, double phi0, double M0,
+				  double E0, double N0, double a, double b)
+
+
+
+33.
+/* @func GPS_Math_Mercator_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to standard Mercator projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] lambda0 [double] longitude of origin (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Mercator_LatLon_To_EN(double phi, double lambda, double *E,
+				    double *N, double phi0, double lambda0,
+				    double E0, double N0, double a, double b)
+
+
+
+34.
+/* @func GPS_Math_Mercator_EN_To_LatLon **********************************
+**
+** Convert standard Mercator easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] lambda0 [double] longitude of origin (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Mercator_EN_To_LatLon(double E, double N, double *phi,
+				    double *lambda, double phi0,
+				    double lambda0, double E0, double N0,
+				    double a, double b)
+
+
+
+35.
+/* @func GPS_Math_TMerc_LatLon_To_EN **********************************
+**
+** Convert latitude and longitude to transverse Mercator projection
+**  easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] lambda0 [double] longitude of origin (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] F0 [double] scale factor
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_TMerc_LatLon_To_EN(double phi, double lambda, double *E,
+				 double *N, double phi0, double lambda0,
+				 double E0, double N0, double F0,
+				 double a, double b)
+
+
+
+
+36.
+/* @func GPS_Math_TMerc_EN_To_LatLon **********************************
+**
+** Convert transverse Mercator easting and northing projection
+** to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude of origin (deg)
+** @param [r] lambda0 [double] longitude of origin (deg)
+** @param [r] E0 [double] false easting
+** @param [r] N0 [double] false northing
+** @param [r] F0 [double] scale factor
+** @param [r] a [double] semi-major axis
+** @param [r] b [double] semi-minor axis
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_TMerc_EN_To_LatLon(double E, double N, double *phi,
+				 double *lambda, double phi0, double lambda0,
+				 double E0, double N0, double F0,
+				 double a, double b)
+
+
+37.
+/* @func GPS_Math_Swiss_LatLon_To_EN ***********************************
+**
+** Convert latitude and longitude to Swiss grid easting and northing
+**
+** @param [r] phi [double] latitude (deg)
+** @param [r] lambda [double] longitude (deg)
+** @param [w] E [double *] easting (metre)
+** @param [w] N [double *] northing (metre)
+** @param [r] phi0 [double] latitude origin (deg)     [normally 46.95240556]
+** @param [r] lambda0 [double] longitude origin (deg) [normally  7.43958333]
+** @param [r] a [double] semi-major axis              [normally 6377397.000]
+** @param [r] b [double] semi-minor axis              [normally 6356078.823]
+**
+** @return [void]
+***************************************************************************/
+void GPS_Math_Swiss_Latlon_To_EN(double phi, double lambda, double *E,
+				 double *N,double phi0,double lambda0,
+				 double a, double b)
+
+
+
+38.
+/* @func GPS_Math_Swiss_EN_To_LatLon ************************************
+**
+** Convert Swiss Grid easting and northing to latitude and longitude
+**
+** @param [r] E [double] easting (metre)
+** @param [r] N [double] northing (metre)
+** @param [w] phi [double *] latitude (deg)
+** @param [w] lambda [double *] longitude (deg)
+** @param [r] phi0 [double] latitude origin (deg)     [normally 46.95240556]
+** @param [r] lambda0 [double] longitude origin (deg) [normally  7.43958333]
+** @param [r] a [double] semi-major axis              [normally 6377397.000]
+** @param [r] b [double] semi-minor axis              [normally 6356078.823]
+**
+** @return [void]
+*************************************************************************/
+
+void GPS_Math_Swiss_EN_To_LatLon(double N, double E, double *phi,
+				 double *lambda, double phi0, double lambda0,
+				 double a, double b)

@@ -1,0 +1,518 @@
+	Documentation for the JEEPS Library  0.1.3
+		      Alan Bleasby
+		       July 2000
+		  ableasby@hgmp.mrc.ac.uk
+
+B: The NMEA Interface
+
+1. Introduction
+
+JEEPS  also supports  routines for  data capture  using the  NMEA 0183
+protocol  (http://www.nmea.org, http://www.vancouver-webpages.com/pub/
+peter/nmeafaq.txt).
+
+As of 0.1.1 the routines are in their infancy. They have been added
+by demand. Note the following.
+
+ a) They have been written for Garmin GPS devices. To be more
+    accurate they have been written using a GPS II+ although
+    they should work on most Garmins. If not then please
+    let the author know (see Reporting Bugs).
+ b) They may work on other devices sending NMEA although there
+    is no guarantee. Again, let the author know  (Reporting Bugs).
+ c) The library is written using information gleaned from the WWW.
+    The author is not in possession of the official NMEA
+    specification therefore sentences whose syntax is unknown are
+    not included. If you would like them added and know the syntax
+    then again contact the author.
+ d) This section of the library will be extended. It will
+    eventually include methods to access the information over
+    a network. However, The basic model of library usage by the
+    programmer will not change.
+
+The routines are written in standard C for a Linux platform but should
+be portable to most platforms. If you do port them to another platform
+then please contact the author detailing your modifications.
+
+2. Communication mode and what does my GPS transmit
+
+Make sure your GPS is in NMEA/NMEA?  mode (or
+equivalent). Communication is fixed at 4800 baud, 8 data bits, 1 stop
+bit, no parity. This is the default rate of Garmin devices.
+To see what your GPS is transmitting you can use the NMEDIAG program
+supplied with the library. Its use is described in the Reporting Bugs
+section.
+
+3. A Sample program using Nmea
+
+The following is a silly example but does show the principles of use
+succinctly. Note the bad programming practice of not checking
+return values. This is done for clarity. The program is called
+with the port device (e.g. /dev/ttyS0 as an argument). This is the
+program "datum.c" in the src directory. (Apologies to non-Garmin
+owners)
+
+#include "../lib/gps.h"
+
+
+int main(int argc, char **argv)
+{
+    GPS_PRmm obj;
+    
+    if(argc<2)
+    {
+	fprintf(stderr,"Usage: datum port\n");
+	exit(0);
+    }
+
+    obj = GPS_Rmm_New();
+    
+
+    GPS_NMEA_Init(argv[1]);
+
+    while(strcmp(obj->datum,"Ord Srvy GB"))
+    {
+	if(GPS_NMEA_Get_Rmm(&obj))
+	    fprintf(stdout,"%s\n",obj->datum);
+	sleep(1);
+    }
+
+    GPS_NMEA_Exit();
+    GPS_Rmm_Del(&obj);
+    
+    return 0;
+}
+
+This program will print out what datum is in use until you enter
+the Ord Srvy GB datum from the Garmin Nav menu, at which point the
+program will stop. Try it on your Garmin (remembering to set the
+NMEA communication mode!) Note that there will be a slight pause
+while the Garmin sends the first datum line.
+
+Ignoring the standard C code for getting the port argument, the first
+interesting line is:
+
+    GPS_PRmm obj;
+
+As with the Garmin protocol interface, all communication is done
+through objects. This line creates a pointer to an RMM object and
+calls it "obj". An RMM object contains information from the $GPRMM
+NMEA sentence sent by Garmin devices to give datum information. As
+this is just a pointer you must create a new object for it to point
+to. This is done by the line:
+
+    obj = GPS_Rmm_New();
+
+At the end of the program, for neatness, the memory occupied by
+the object is deleted.
+
+    GPS_Rmm_Del(&obj);
+
+The next line hides a wealth of activity:
+
+    GPS_NMEA_Init(argv[1]);
+
+As its name suggests it initialises communication with the GPS. It
+is called with the port (e.g. "/dev/ttyS0") as an argument. After
+this call is made the library will automatically be slurping data
+from your GPS once per second no matter (within reason) what you
+do in the rst of the program. Once per second is reasonable as
+the unit only sends information at that speed.
+[ for the expert: this is currently achieved by using a SIGALRM
+  signal in the library. Other initialisations using daemons
+  will be added. This is more than adequate for the moment]
+
+The loop of the program simply keeps getting the current value
+of the object:
+
+    GPS_NMEA_Get_Rmm(&obj)
+
+and testing the relevant data element "obj->datum" to see whether
+it equals the Ord Srvy GB character string.
+
+    strcmp(obj->datum,"Ord Srvy GB")
+
+Why is there a test (if) when getting the object? The answer is
+that the GPS may just have been turned on and might not have
+sent any datum information yet. The GET functions return false
+if there is no valid data in the library storage.
+
+The sleep statement is unnecessary except to stop the computer
+unnecessarily whizzing around the loop more than necessary.
+Remember that the GPS only sends NMEA sentences once per second.
+
+Finally the program tidies up by stopping the library receiving data
+from the GPS and closing the serial connection.
+
+    GPS_NMEA_Exit();
+
+
+
+
+4. Program structure and function use
+
+As seen from the example program in 3, every program follows the
+following general principles.
+
+ a) Definition of the objects to be used (e.g. GPS_PRmz fred)
+ b) Construction of the objects (e.g. fred=GPS_Rmz_New())
+ c) Initialise the serial connection and automatic
+    data gathering (GPS_NMEA_Init(port))
+    N.B. This function will return a negative value on error.
+ d) Get whatever object you require (e.g. GPS_NMEA_Get_Rmz(&fred))
+    N.B. These functions return false if the data is invalid
+ e) Select what elements of the object you want to use
+    (e.g. feet=fred->height)
+ f) Close down the communication (GPS_NMEA_Exit())
+ g) Delete the objects (e.g. GPS_Rmz_Del(&fred))
+
+Of course, c can occur before a or b and g can happen before f
+(objects can be defined, created or deleted anywhere).
+Try to test return values!
+
+5. The Data Objects
+
+These  are  listed  below.  There  is one  object  per  NMEA  sentence
+recognised by  JEEPS. They  are listed by  giving their  pointers, and
+retrieval  function, then  a description  and the  elements  and their
+types.  Note that each object has a "valid" flag.  This is used by the
+library to  determine whether  the object has  been filled. It  may be
+used by  the programmer although it  is the same value  as returned by
+the GET functions.
+
+5.1 GPS_PApb, GPS_NMEA_Get_Apb
+    Automatic Pilot format B
+    Untested by author
+
+    char blink;			blink/snr warning (Loran C)
+    char warn;			cycle warning (Loran C)
+    double edist;		cross track error dist
+    char steer;			R or L to correct steering
+    char unit;			Units N=nautical miles
+    char alarmc;		circle arrival alarm
+    char alarmp;		perpendicular arrival alarm
+    double od;			mag bearing (origin to destination)
+    char wpt[83];		destination waypoint name
+    double pd;			mag bearing (present pos to destination)
+    double hdg;			mag heading to steer
+    int32  valid;		Is the data valid? false=no
+
+5.2 GPS_PBod, GPS_NMEA_Get_Bod
+    Bearing, origin to destination waypoint
+
+    double true;		true bearing orig to dest
+    double mag;			magnetic bearing
+    char   dest[83];		destination waypoint name
+    char   start[83];		origin waypoint name
+    int32  valid;
+
+5.3 GPS_PBwc, GPS_NMEA_Get_Bwc
+    Bearing and distance to waypoint (great circle)
+    Untested by author
+
+    time_t time;		time of fix
+    double lat;			latitute of waypoint
+    double lon;			longitude of waypoint
+    double true;		bearing to waypoint
+    double mag;			magnetic bearing to waypoint
+    double dist;		distance to waypoint (nautical miles)
+    char wpt[83];		waypoint name
+    int32 valid;
+
+5.4 GPS_PBwr, GPS_NMEA_Get_Bwr
+    Bearing and distance to waypoint (rhumb line)
+    Untested by author
+
+    time_t time;		time of fix
+    double lat;			latitute of waypoint
+    double lon;			longitude of waypoint
+    double true;		bearing to waypoint
+    double mag;			magnetic bearing to waypoint
+    double dist;		distance to waypoint (nautical miles)
+    char wpt[83];		waypoint name
+    int32 valid;
+
+5.5 GPS_PDbt, GPS_NMEA_Get_Dbt
+    Depth below transducer
+    Untested by author
+
+    double f;			feet
+    double m;			metres
+    int32  valid;
+
+5.6 GPS_PGga, GPS_NMEA_Get_Gga
+    GPS Fix data
+
+    time_t time;		Time of fix
+    double lat;			latitude
+    double lon;			longitude
+    int32  qual;		quality 0=invalid 1=GPS 2=DGPS
+    int32  nsat;		number of satellites tracked
+    double hdil;		horizontal dilution
+    double alt;			altitude (metres above sea level)
+    double galt;		height of geoid above WGS84
+    int32  last;		seconds since last DGPS update
+    int32  dgpsid;		DGPS station ID
+    int32  valid;
+
+5.7 GPS_PGll, GPS_NMEA_Get_Gll
+    Geographic latitude and longitude
+
+    double lat;		        latitude
+    double lon;			longitude
+    time_t time;		time of fix
+    char   dv;			data valid
+    int32  valid;		Is there data?
+
+5.8 GPS_PGsa, GPS_NMEA_Get_Gsa
+    Dilution of precision and active satellites
+
+    char type;			A=auto M=manual 2d or 3d fix
+    int32 fix;			3 = 3d
+    int32 nsat;			see prn
+    int32 prn[12];		prns of satellites indexed 0 to nsat-1
+    double pdop;		dilution of precision
+    double hdop;		horizontal dilution
+    double vdop;		vertical dilution
+    int32  valid;
+
+5.9 GPS_PGsv, GPS_NMEA_Get_Gsv
+    Satellites in view
+
+    int32 inview;		satellites in view
+    int32 prn[32];		satellite number indexed from 0 to inview-1
+    int32 elevation[32];	elevation in degrees
+    int32 azimuth[32];		azimuth in degrees
+    int32 strength[32];		signal strength low=poor high=good
+    int32 valid;
+
+5.10 GPS_PHdm, GPS_NMEA_Get_Hdm
+     Magnetic heading
+     Untested by author
+
+    double hdg;			magnetic heading (degrees)
+    int32 valid;
+
+5.11 GPS_PHsc, GPS_NMEA_Get_Hsc
+     Command heading to steer
+     Untested by author
+
+    double true;		true heading (degrees)
+    double mag;			magnetic heading
+    int32  valid;
+
+5.12 GPS_PMtw, GPS_NMEA_Get_Mtw
+     Water temperature
+     Untested by author
+
+    double T;			Celsius temperature
+    int32  valid;
+
+5.13 GPS_PR00, GPS_NMEA_Get_R00
+     Waypoint list for routes (non-NMEA 2.0)
+
+    char wpts[83];		List of waypoint names in active route
+    int32 valid;
+
+    Sent by (e.g.) Garmin 65. RTE is the approved sentence
+
+5.14 GPS_PRmb, GPS_NMEA_Get_Rmb
+     Recommended minimum nav info
+
+    char warn;		        data status A=OK V=warning
+    double cross;		cross track error (nautical miles)
+    char correct;		L or R to correct steering
+    char owpt[83];		origin waypoint name
+    char dwpt[83];		destination waypoint name
+    double lat;			dest waypoint latitude
+    double lon;			dest waypointb longitude
+    double range;		range to destination (nautical miles)
+    double true;		true bearing to destination 
+    double velocity;		velocity towards destination (knots)
+    char   alarm;		arrival alarm A=arrived V=not arrived
+    int32  valid;
+
+5.15 GPS_PRmc, GPS_NMEA_Get_Rmc
+     Recommended minimum GPS data
+
+    time_t time;	        Time of fix
+    char   warn;		receiver warning A=OK V=warning
+    double lat;			latitude
+    double lon;			longitude
+    double speed;		speed over ground (knots)
+    double cmg;			course made good (true)
+    char   date[83];		date of fix
+    double magvar;		magnetic variation (degrees +ve=east)
+    int32  valid;
+
+5.16 GPS_PRte, GPS_NMEA_Get_Rte
+     Waypoints in active route
+
+    char type;			c=complete w=first is start of current leg
+    int32 rte;			route number
+    char *wpts;			comma separated waypoint names
+    int32 valid;
+
+    N.B. The wpts array is automatically dynamically allocated by the
+    library
+
+5.17 GPS_PVhw, GPS_NMEA_Get_Vhw
+     Water speed and heading
+     Untested by author
+
+    double true;		true heading (degrees)
+    double mag;			magnetic heading
+    double wspeed;		speed through water (knots)
+    double speed;		speed (kph)
+    int32  valid;
+
+5.18 GPS_PVwr, GPS_NMEA_Get_Vwr
+     Relative wind speed and direction
+     Untested by author
+
+    double wind;		wind direction (degrees)
+    char   wdir;		from L or R of bow
+    double knots;		wind speed (knots)
+    double ms;			wind speed (metre/second)
+    double khr;			wind speed (kilometre/hr)
+    int32  valid;
+
+5.19 GPS_PVtg, GPS_NMEA_Get_Vtg
+     Ground speed and track made good
+     Untested by author
+
+    double true;		true track made good
+    double mag;			magnetic track made good
+    double knots;		ground speed (metre/second)
+    double khr;			ground speed (kilometre/mr)
+    int32  valid;
+
+5.20 GPS_PWpl, GPS_NMEA_Get_Wpl
+     Waypoint location
+
+    double lat;			latitude of waypoint
+    double lon;			longitude of waypoint
+    char wpt[83];		name of waypoint
+    int32 valid;
+
+    N.B. If active route is set then wpls will be sent one per
+    one-second-group followed by an R00 in a one-second-group.
+    It is currently up to the programmer to extract and
+    organise this data. It may be done automatically in future
+    library versions.
+
+5.21 GPS_PXte, GPS_NMEA_Get_Xte
+     Measured cross track error
+     Untested by author
+
+    char warn;			general warning A=OK
+    char cycle;			cycle lock (not used by GPS)
+    double dist;		cross track error distance
+    char steer;			L or R to steer
+    char unit;			units (N=nautical miles)
+    int32 valid;
+
+5.22 GPS_PXtr, GPS_NMEA_Get_Xtr
+     Dead reckoning cross track error
+     Untested by author
+
+    double dist;		cross track error distance
+    char steer;			L or R to steer
+    char unit;			units (N=nautical miles)
+    int32 valid;
+
+5.23 GPS_PRme, GPS_NMEA_Get_Rme
+     Estimated positional error
+
+    double hpe;			horizontal (metre)
+    double vpe;			vertical   (metre)
+    double spe;			spherical
+    int32 valid;
+
+5.24 GPS_PRmz, GPS_NMEA_Get_Rmz
+     Altitude
+
+    int32 height;		altitude (ft)
+    int32 dim;			2=user altitude 3=GPS altitude
+    int32 valid;
+
+5.25 GPS_PRmm, GPS_NMEA_Get_Rmm
+     Datum
+
+    char datum[83];		name of datum
+    int32 valid;
+
+5.26 GPS_PLib, GPS_NMEA_Get_Lib
+     Link information for DGPS
+     Not tested by author
+
+    double freq;		frequency
+    double baud;		baud rate
+    char rqst;			blank=tuning J=stat rqst K=config rqst
+    int32 valid;
+
+
+6. Considerations
+
+From the descriptions above you can deduce two things.
+
+a) This is primarily a data capture facility
+b) The GET functions return "what the library already has".
+   If you turn the power off on the GPS then the library will
+   continue to report the last information sent.
+
+NMEA is continually being sent but the GPS sends this information
+slowly.  Given a sentence $xxYYY... the library skips the xx
+characters.  This is an attempt to make the code more portable by
+ignoring types and proprietary symbols e.g. GP for GPS, LC for Loran,
+PG for propriatary Garmin etc. Only the Y characters are tested.
+
+7. Sending NMEA sentences
+
+It is possible that non-Garmin GPS devices may need to receive an
+NMEA sentence, either before they will transmit or for some other
+reason (you'll have gathered I am not an NMEA expert).
+
+The function:
+
+     GPS_NMEA_Send(char *sentence, int32 flag)
+
+is provided for this purpose. If the flag is non-zero the library will
+add a "*Checksum"  to the end of the  line.  Carriage return/line feed
+characters will be  added automatically and should not  be part of the
+sentence  given.   Communication   must  have  been  established  with
+GPS_NMEA_Init  beforehand. It  is up  to the  programmer  to determine
+which devices require checksums.
+
+
+8. Reporting Bugs
+
+The library will ignore sentences it doesn't recognise. Anything could
+happen with sentences I have been unable to test (although all functions
+have been checked with example sentences given on the WWW).
+
+To aid  diagnosis a  simple utility program  has been  provided called
+NMEADIAG. This  program will report  the NMEA sentences  received from
+your  GPS.  It does  this  for  a minute.  When  reporting  a bug  (if
+appropriate)  please send  the output  of this  program to  the author
+along with  a description of  the problem. This  can be done  with the
+command:
+
+     nmeadiag port > filename
+
+where port is e.g. /dev/ttyS0. It is likely that the last sentence
+reported is the one that is causing the library problems.
+[you can check this by commenting out the relevant "scan" function
+ in the GPS_NMEA_Load function in gpsnmea.c and recompiling to be
+ sure. If all then works you'll have some functionality but
+ please report the bug and the sentence AND some context. i.e.
+ send the output of NMEDIAG!]
+
+
+9. Closing comments
+
+If you wish new sentences to be added to the library then by all means
+send them to  me. However, please give example  sentences and annotate
+them describing the fields and any intricacies.
+I will, of course,  be delighted to receive any code contributions.
+

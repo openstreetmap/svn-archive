@@ -1,0 +1,11 @@
+The recommended reading order is:
+
+jeeps.txt:	The library design - objects and dynamic allocation
+        	The Garmin communication protocol
+                Map and geodetic conversions
+		Compiling the library
+                How to use JEEPS as a programming environment
+
+nmea.txt:       The NMEA data capture interface
+
+projection.txt: Map projection functions

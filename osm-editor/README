@@ -1,0 +1,20 @@
+OpenStreetMap Editor
+====================
+
+Notes:
+- Requires Qt3 and the modified Jeeps library to compile. Jeeps can be 
+found in the jeeps-0.1.4-nick subdirectory.
+- There are three real GPX files to play with. Look at the lats and longs
+therein and start osmeditor with the appropriate options.
+- No instructions as yet, only the source...
+
+Definite problems at time of initial commit to Subversion:
+
+- will only run in the source directory as it requires a subdirectory "images" 
+containing the icons.
+- GPX timestamps are numeric rather than the standard XML timestamp format.
+- probably some others :-)
+- crashes after GPS read.
+
+Nick
+05/04/05

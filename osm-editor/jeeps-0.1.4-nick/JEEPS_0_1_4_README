@@ -1,0 +1,8 @@
+This development branch (0.1.4) is based on the newest version of jeeps
+(0.1.3).
+
+Changes so far:
+- Variables named "true"(!!) renamed to "tru" for C++ compatibility.
+
+Likely future changes:
+- Make compatible with other GPS models by back-porting gpsbabel code.

@@ -1,0 +1,1724 @@
+	Documentation for the JEEPS Library  0.1.3
+		      Alan Bleasby
+		       July 2000
+		  ableasby@hgmp.mrc.ac.uk
+
+A: The Garmin Protocol Interface
+
+1. Introduction
+
+The  JEEPS library is  intended as  both a  library and  a development
+system for GPS and related  software. It was developed under the LINUX
+operating system but  is self-porting to other UNIX  systems using the
+standard GNU configuration software provided.
+
+It consists  of documented C  functions for communication  with GARMIN
+GPS devices  and for post-processing of the  information received. The
+library  also  contains  functions  for  conversion  of  datums  using
+Molodensky  and   cartesian  methods  and   approximately  20  mapping
+functions   including  transverse   mercator  projections.    The  UTM
+coordinate system  is implemented as are other  more parochial systems
+including the UK Ordnance Survey  national grid (with map codes).
+
+An application (program)  is distributed with the library  in order to
+show the  library functionality and  how to use  it. It is  hoped that
+other  developers  will  contribute  other  applications  and  perhaps
+library functions, in  the GPL spirit, to the  author for inclusion in
+JEEPS.
+
+The library  is written  in ANSI/POSIX C  using concepts from  C++, in
+particular its use of objects. The library allows for linking with C++
+applications. The communication routines are for use as a host but the
+library  automatically responds  to GPS  requests associated  with the
+JEEPS  commands functions. JEEPS  also automatically  converts between
+GPS data types  and UNIX data types. The  library also detects whether
+the machine architecture is little or big endian and acts accordingly.
+All  funcions in  the library  source code  are  self-documenting i.e.
+their interface  specification and  descriptions are given  above each
+one. The JEEPS maths routines  can, of course, be used separately from
+the communication routines.
+
+
+			 SECTION A
+		JEEPS and GPS Communication
+
+A1. Communication with Garmin GPS Devices
+
+The means of communication is  meant to be transparent to a programmer
+using  JEEPS  library calls.   Calls  for  requesting GPS  information
+result  in the  creation of  object arrays  (specifically arrays  of C
+structures). There is therefore a waypoint object, a track log object,
+an  almanac object etc.   These objects  are the  same no  matter what
+GARMIN GPS is used, although different parts of the structures will be
+filled depending on the model.  For example, the GPS II+ will not have
+city, state and country filled in the waypoint structure (object). All
+objects are  dynamically allocated by  the JEEPS library  as required.
+There are therefore no built-in  program limits and you are restricted
+only  to the  amount of  available memory  in the  machine  being used
+(which is unlikely to be a consideration.)
+
+This design  philosophy allows the same  function calls to  be used no
+matter what model is connected  and furthermore means that the library
+supports all GARMIN GPS models.
+
+
+A2. Communication considerations
+
+N.B. The Garmin GPS must be in "Garmin communication mode" and
+     Simulator mode must be off.
+
+Communication is  performed using the Garmin GPS  Interface as defined
+in their December 6th  1999 document (001-00063-00 Rev.3).  In reality
+this  consists  of several  protocols  depending  on  the model.   For
+example, there are three  link protocols, two device command protocols
+and  thirteen  different  waypoint  data definitions!   As  previously
+stated, JEEPS hides all this but  you do need to know the capabilities
+of  the model  connected in  order that  you can  use  the information
+retrieved by  the library  calls to the  full.
+
+
+A2.1 The serial port
+
+Communication with the GPS is done via a serial port. The library will
+set this port to 9600 baud, no parity and one stop bit. Library
+communication calls require you to specify this port. It will
+generally be called something like:
+
+	  /dev/ttyS0
+    or    /dev/ttyS1
+
+depending on the operating system and peripherals connected.
+
+
+A3. Communication Error Codes
+
+It  is  bad  practice  for   any  library  to  terminate  an  external
+application even on severe errors.  JEEPS will always try to return an
+error code.   Unlike the  mathematical functions described  later, the
+communications numbers return  a negative value upon error  (zero is a
+valid return value for some of the functions, for example there may be
+no  waypoints  stored).  The  error   codes  are  common  to  all  the
+communication functions and are given in Appendix A.
+
+
+A4. The Communications interface
+
+A4.1     int32 GPS_Init(const char *port)
+
+This call  must be  made before any  other communication with  the GPS
+device is done with JEEPS calls.
+
+The purpose of the call  is to determine which protocols are supported
+by  the model  connected. This  is achieved  by using  the  basic link
+protocol (L000) to send a Pid_Product_Rqst call via the A000 protocol.
+This returns a product data  structure to JEEPS from which the library
+is able to  determine the model ID and  software version. Newer models
+(or even older models with the most recent firmware upgrade) will also
+transmit their full protocol  capabilities using the A001 protocol. If
+the model does not support the A001 protocol then JEEPS uses a look-up
+table to find the supported protocols.
+
+The  library  design keeps  global  variables  to  a minimum  but  the
+following  are  set   after  the  init  call  and   show  the  machine
+capabilities:
+
+  int32 gps_link type;			Link mode
+					pL001 or pL002
+  int32 gps_device_command;             Device command protocol
+                                        pA010 or pA011
+  int32 gps_waypt_transfer;             Waypoint transfer protocol
+                                        pA100
+  int32 gps_route_transfer;             Route transfer protocol
+                                        pA200 or pA201
+  int32 gps_trk_transfer;               Track log transfer protocol
+					pA300 or pA301
+  int32 gps_prx_waypt_transfer          Proximity waypoint protocol
+					pA400
+  int32 gps_almanac_transfer;           Almanac transfer protocol
+					pA500
+  int32 gps_date_time_transfer          Time transfer protocol
+                                        pA600
+  int32 gps_position_transfer;          Position transfer protocol
+                                        pA700
+  int32 gps_pvt_transfer;               PVT transfer protocol
+                                        pA800
+
+N.B: If the GPS  model does not support one or more  of the above high
+level  protocols  the value  of  the  corresponding  variable will  be
+negative.
+
+Note  that the  specified protocols  (e.g. pA500)  are defined  by the
+library and are imported along with the library interface (gps.h). This
+is also true of the data types as described later.
+
+The final global variables also define the model:
+
+  int32  gps_save_id;		       The model ID number
+  double gps_save_vesion;	       The software version
+  char   *gps_save_string;	       The model description
+
+The initialisation function also queries the GPS for time and position
+(see later). These are held in the variables:
+
+  time_t gps_save_time;			GPS time
+  double gps_save_lat;			GPS latitude
+  double gps_save_lon;			GPS longitude
+
+The  initialisation function  also makes  sure the  PVT  capability is
+turned off (for those  models/software versions that support it). This
+is to prevent the serial input buffer becoming flooded.
+
+
+A4.2 Time retrieval and setting
+
+A4.2.1  time_t GPS_Command_Get_Time(char *port)
+
+This  function  returns  the GPS  time  in  the  UNIX time  data  type
+"time_t".  This  value can be  used in conjunction  with any of  the C
+standard library functions. It is  usually the number of seconds since
+the epoch  1st January 1970.  Note that  a return value of  zero is an
+error condition  for this function as,  of course, are  the Appendix A
+codes. A return  value of zero implies an error which  is not a system
+error i.e. a programmer may have set the GPS time to an illegal value.
+
+All GPSs  use the pA600 protocol  at the time of  writing. However, as
+with all protocols, capability for future GARMIN protocols is designed
+into JEEPS.
+
+Note  that   the  GPS   stores  time  from   the  epoch   1st  January
+1990. Conversion to UNIX time  is performed automatically by the JEEPS
+library.
+
+
+
+A4.2.2  int32 GPS_Command_Send_Time(char * port, time_t Time)
+
+The  antithesis of  the  GPS_Command_Get_Time function.  Sets the  GPS
+time. A positive return value indicates success.
+
+N.B. Some  Garmin GPS  models request that  a position  is transmitted
+after the time  is sent. This is handled by  the library. However, the
+position  sent by  the library  is that  which the  GPS held  when the
+GPS_Init function was  called. If the position has  been altered since
+the time of initialisation  the position must be retransmitted (unless
+the gps_save_lat  and gps_save_lon variables have  been updated) using
+the call described in a subsequent section.
+
+
+
+
+A4.3 Position retrieval and setting
+
+A4.3.1  int32 GPS_Command_Get_Position(char *port, double *lat, double *lon)
+
+Retrieves the  current latitude and  longitude from the  GPS. Although
+the  GPS stores  these  internally as  semicircles  the JEEPS  library
+always stores them as decimal degrees; negative longitudes are west of
+the  zero meridian and  negative latitudes  are sub  equatorial. These
+conversions  are  performed  automatically.  The  JEEPS  math  library
+contains  routines  for  converting  position specifications  e.g.  as
+degrees  and  minutes or  degrees,  minutes  and  seconds. An  example
+program appears below:
+
+#include "gps.h"
+
+int main()
+{
+  double lat = 0.0;
+  double lon = 0.0;
+  static const char *port="/dev/ttyS1";
+
+  if(GPS_Init(port) < 0)
+  {
+    (void) fprintf(stderr,"Initialisation Error\n");
+    exit(0);
+  }
+
+  if(GPS_Command_Get_Position("port",&lat,&lon) < 0)
+  {
+    (void) fprintf("Error getting position\n");
+    exit(0);
+  }
+
+  (void) fprintf(stdout,"Latitude = %f  Longitude = %f\n", lat, lon);
+  return 1;
+}
+
+
+This  example  shows  the   importing  of  the  JEEPS  interface  (the
+#include),  the  initialisation  command  and  a  JEEPS  communication
+command call.  All  other examples in this text  will be code segments
+and   assume  that   the  interface   has  been   imported   and  that
+initialisation  has been  performed.  The GPS  interface also  imports
+other common interfaces such as stdio.
+
+[ Note that  return types from the library are  checked for error. The
+  explicit ignoring of other function  return types and the setting of
+  possibly  unused variables  is  of course  optional,  but good  ANSI
+  practice! ]
+
+All models use the pA700 protocol  at the time of writing. This is, of
+course, shielded from the programmer.
+
+
+A4.3.2  int32 GPS_Command_Send_Position(char *port, double lat, double lon)
+
+Used for setting the latitude and longitude of the GPS.
+
+N.B. Some Garmin  GPS models request that a  time is transmitted after
+the position  is sent.  This is handled  by the library.  However, the
+time sent by the library is  that which the GPS held when the GPS_Init
+function was called. If the time has been altered since initialisation
+the time must be  retransmitted (unless the gps_save_time variable has
+been updated) using the call described in a previous section.
+
+
+
+
+A4.4  Turning the GPS off
+
+A4.4.1   int32 GPS_Command_Off(char *port)
+
+This  command will switch  the GPS  off. Note  that once  switched off
+there can be no (reliable) further communication with the GPS until it
+is switched back on and the GPS_Init function called once again.
+
+
+
+A4.5 Data as dynamically allocated Objects
+
+The previously described section 4  commands are simple in the respect
+that they  either have  no parameters (other  than the port)  or their
+parameters  can be  easily represented  by simple  existing  UNIX data
+types  such as  doubles  or  time_t values.  All  other JEEPS  library
+command functions  need to  retrieve more complex  data and  these are
+represented as objects (C structures).
+
+There are 4 GPS objects used by JEEPS, specifically:
+
+  Waypoint object:  GPS_OWay      object data type
+                    GPS_PWay      pointer to object
+  Track object:     GPS_OTrack    object data type
+                    GPS_PTrack    pointer to object
+  Almanac object:   GPS_OAlmanac  object data type
+                    GPS_PAlmanac  pointer to object
+  PVT object:       GPS_OPvt_Data object data type
+		    GPS_PPvt_Data pointer to object
+
+You should restrict  yourself to using only the  'P' versions of these
+objects  i.e.  pointers. The  library  deals  exclusively with  object
+pointers.    There  are   library  functions   for   creating  objects
+(constructor functions) and for deleting them (destructor functions).
+
+To describe the principles we'll  use the simplest of these objects as
+an  example. This  is the  Track object.  It looks  like this  and, of
+course, is imported with the JEEPS interface:
+
+typedef struct GPS_STrack
+{
+  double lat;			/* Latitude in degrees        */
+  double lon;			/* Longitude in degrees       */
+  time_t Time;			/* Time (UNIX form)           */
+  int32  tnew;			/* Start of new track boolean */
+  float  alt;			/* Altitude (pD301)           */
+  float  dpth;			/* Depth (pD301)              */
+  int32  ishdr;                 /* Header boolean (pA301)     */
+  int32  dspl;			/* Display (pD310)            */
+  int32  colour;                /* pD310                      */
+  char   trk_ident[256];        /* pD310                      */
+} GPS_OTrack, *GPS_PTrack;
+                    
+The   "int32  GPS_Command_Get_Track(char  *port,   GPS_PTrack  **trk)"
+function, as its  name suggests returns the GPS  track log. Its return
+value  is the  number  of track  data  pointers (GPS_PTrack)  returned
+i.e. the number of track log entries in the GPS.
+
+These entries are returned as an array of GPS_PTrack objects. Here is
+a code segment (without error checking!).
+
+  int32 ntracks;
+  GPS_PTrack *array;
+
+  ntracks = GPS_Command_Get_Track(port, &array);
+
+Note that the declaration list defines an array of GPS_PTrack objects.
+There is no need to reserve space as the library will dynamically
+create the objects. Also note that the address of the track object
+array pointer is passed. The curious can read the note below as to
+why this is done, the rest can just do it! So, to print out all the
+latitudes and longitudes returned by the call the example code would
+look something like the following:
+
+  for(i=0; i < ntracks; ++i)
+    (void) fprintf(stdout,"Lat=%f Lon=%f\n", array[i]->lat, array[i]->lon);
+
+[ For the curious: Do your best to forget this if it confuses!
+  The reason a pointer to the array pointer is passed is just in case
+  the library needs to realloc the array internally. As it happens
+  it never needs to yet! In keeping with the JEEPS design for
+  possible future extensions by Garmin it might need to at some
+  stage. The possibility is therefore catered for ]
+
+Note  that  while it  would  be legal  (for  the  compiler) to  define
+GPS_PTrack **array and just pass  "array" to the function, it is *NOT*
+the same thing  as the above and would undoubtedly  cause a crash. You
+must define  GPS_PTrack *array  and pass a  pointer to  the definition
+i.e. "&array"
+
+
+A4.5.1 Destructors
+
+Tha above code segment command (unless there are no tracks in the GPS)
+has allocated memory for the track data leaving the programmer with an
+array  of ponters  which  can be  used  easily as  above. Having  done
+whatever the  program needs  to do the  programmer should be  tidy and
+free  the  memory.  This  is  done  using  the appropriate  DESTRUCTOR
+function for the object. In the case of tracks it is the GPS_Track_Del
+function. A code segment for use with the above would be:
+
+	for(i=0; i < ntracks; ++i)
+           GPS_Track_Del(&array[i]);
+	if(ntracks)
+           free((void *)array);
+
+Destructor functions in JEEPS are;
+
+	   GPS_Track_Del(GPS_PTrack *track)
+           GPS_Way_Del(GPS_PWay *waypoint)
+           GPS_Almanac_Del(GPS_PAlmanac *waypoint)
+           GPS_Pvt_Del(GPS_PPvt_Data *pvt)
+
+
+A4.5.2 Constructors
+
+Whereas the library _Get_ functions allocate the memory transparently,
+the corresponding _Send_ functions require the arrays of objects to be
+created and filled  before they are called. If you  use the JEEPS file
+input routines  (see later) then the  arrays will also  be created and
+filled automatically. There are occasions when you will want to create
+them  yourself. Assuming  you wish  to create  an array  of  ten track
+objects using the JEEPS constructors here is an code segment that will
+do it (without error checking):
+
+   int32 i;
+   GPS_PTrack *array;
+
+   array = (GPS_PTrack *) malloc(10 * sizeof(GPS_PTrack))
+   for(i=0; i < 10; ++i)
+      array[i] = GPS_Track_New();
+
+Constructor functions in JEEPS are;
+
+	   GPS_Track_New(void)
+           GPS_Way_New(void)
+           GPS_Almanac_New(void)
+           GPS_Pvt_New(void)
+
+The _Send_ functions  are just passed the array (and  not a pointer to
+it.)
+
+
+A4.6 Almanac Commands
+
+   int32 GPS_Command_Get_Almanac(char *port, GPS_PAlmanac **array)
+   int32 GPS_Command_Send_Almanac(char *port, GPS_PAlmanac *array)
+
+The  _Get_ command  dynamically  creates and  fills  an almanac  entry
+array. It returns  the number of almanac entries.  For some GPS models
+this will  always be  32.  If this  is the case  then unhealthy/unused
+entries have the week number value set negative.
+
+If your GPS is one which always returns 32 entries then, when sending,
+you must  always _Send_  32 entries  to it in  the order  of satellite
+number.   With other models  you may  send just  one or  more entries.
+Mark  any invalid  entries  with the  week  number set  to a  negative
+value. The Almanac object contains the following fields.
+
+
+    UC    svid;		/* Satellite ID: pD550 & pD551 models   */
+    short wn;		/* Week number: -ve for invalid entries */
+    float toa;		/* Reference time                       */
+    float af0;		/* Clock correction 1                   */
+    float af1;		/* Clock correction 2                   */
+    float e;		/* Eccentricity                         */
+    float sqrta;	/* Semi-major ellipse axis ^ 0.5        */
+    float m0;		/* mean anomaly                         */
+    float w;		/* perigee                              */
+    float omg0;		/* Right ascension                      */
+    float odot;		/* Rate of omg0                         */
+    float i;		/* Inclination angle                    */
+    UC    hlth;		/* Health: pD501 and pD551 models       */
+
+where UC = unsigned char
+
+Most GPS models will request the time and position after an almanac is
+sent. This is  performed automatically by the library.  See a previous
+discussion of gps_save_time, gps_save_lat and gps_save_lon.
+
+All GPS models to date use the A500 communication protocol.
+
+
+
+A4.7 Data structures
+
+The above mentions data types (e.g. pD501) for the first time.  Almost
+every protocol  (e.g. the pA500  almanac protocol) use data  types and
+these  vary in  capabilities between  models. These  model differences
+cannot be reproduced here for copyright reasons however the data types
+are clearly  documented in  "GARMIN GPS Interface  Specification" from
+http://www.garmin.com. For  example, my GPS  II+ uses data  type pD103
+for waypoints, pD300 for track logs and pD501 for almanacs.
+
+The  possible data  types (e.g.   pD501) are  imported with  the JEEPS
+interface.   The following global  variables are  set by  the GPS_Init
+command and  tell you  which data types  the connected GPS  uses. Each
+variable can have one of the associated values.
+
+
+int32 gps_waypt_type;	   pD100,pD101,pD102,pD103,pD104,pD105,pD106,pD107
+			   pD108,pD150,pD151,pD152,pD154,pD155
+int32 gps_rte_hdr_type;	   pD200,pD201,pD203
+int32 gps_rte_type;	   pD100,pD101,pD102,pD103,pD104,pD105,pD106,pD107
+			   pD108,pD150,pD151,pD152,pD154,pD155
+int32 gps_rte_link_type:   pD210
+int32 gps_trk_type;	   pD300,pD301
+int32 gps_trk_hdr_type:    pD310
+int32 gps_prx_waypt_type;  pD400,pD101,pD102,pD403,pD104,pD105,pD106,pD107
+			   pD108,pD450,pD151,pD152,pD154,pD155
+int32 gps_almanac_type;	   pD500,pD501,pD550,pD551
+int32 gps_date_time_type;  pD600
+int32 gps_position_type;   pD700
+int32 gps_pvt_type;	   pD800
+
+If the  model connected  does not support  a particular class  of data
+type  then the  corresponding  variable will  have  a negative  value,
+otherwise it will have the value  of the data type (e.g. pD201). It is
+up to the programmer to query these values and take appropriate action
+depending on the application.
+
+
+
+A4.8 Waypoints
+
+   int32 GPS_Command_Get_Waypoint(char *port, GPS_PWay **array)
+   int32 GPS_Command_Send_Waypoint(char *port, GPS_PWay *array)
+
+The  _Get_ command dynamically  creates and  fills the  waypoint entry
+array. It returns the number of waypoint entries.  All GPS models send
+all their stored waypoints when this command is used. Using the _Send_
+command you can selectively send however many waypoints you wish.
+
+The  waypoint  object looks  like  this  (check  the GARMIN  interface
+specification  to  see which  values  are  appropriate  for the  model
+connected):
+
+    char ident[256];		  /* Name: all except pD105 and pD106  */
+    double lat;			  /* Latitude: all                     */
+    double lon;			  /* Longitude: all                    */
+    char   cmnt[256];		  /* Comment: all except pD105 & pD106 */
+    float  dst;                   /* PROXIMITY: SEE LATER              */
+    int32  smbl;                  /* Symbol number                     */
+    int32  dspl;		  /* Display: pD103,104,107,155        */
+    char   wpt_ident[256];	  /* pD105, pD106                      */
+    char   lnk_ident[256];        /* pD106                             */
+    UC     subclass[18];	  /* pD106                             */
+    int32  colour;		  /* pD107                             */
+    char   cc[2];		  /* pD150 and above                   */
+    UC     wpt_class;		  /* pD106, pD150 and above            */
+    int32  alt;			  /* pD150 and above                   */
+    char   city[24];		  /* pD150 and above                   */
+    char   state[2];		  /* pD150 and above                   */
+    char   name[30];		  /* pD150 and above                   */
+    char   facility[32];          /* pD108 only                        */
+    char   addr[52];              /* pD108 only                        */
+    char   cross_road[52];        /* pD108 only                        */
+    int32  attr;                  /* pD108 only                        */
+    float  dpth;                  /* pD108 only                        */
+    int32  idx;			  /* PROXIMITY INDEX: SEE LATER        */
+    int32  prot;		  /* The data type being used e.g. 100 */
+    int32  isrte;		  /* ROUTE BOOLEAN: SEE LATER          */
+    int32  rte_prot;		  /* ROUTE PROTOCOL: SEE LATER         */
+    UC     rte_num;		  /* ROUTE NUMBER: SEE LATER           */
+    char   rte_cmnt[20];	  /* ROUTE COMMENT: SEE LATER          */
+    char   rte_ident[256];	  /* ROUTE IDENT: SEE LATER            */
+    int32  islink;                /* ROUTE LINK BOOLEAN                */
+    char   rte_link_class[256];   /* ROUTE LINK CLASS                  */
+    char   rte_link_subclass[18]; /* ROUTE LINK SUBCLASS               */
+    char   rte_link_ident[256];   /* ROUTE LINK IDENTIFIER             */
+
+The  library will know  from the  type variable  (e.g. gps_waypt_type)
+which  data type is  in operation  and will  only use  the appropriate
+fields of the waypoint object. All other fields will be undefined! The
+waypoint  object  is  also  used  for  route  and  proximity  waypoint
+operations.  When used just  for waypoint  transfer these  fields will
+also be undefined.
+
+N.B. The types of some  fields e.g. ident, subclass, city, state, name
+(and  for routes  rte_cmnt, rte_link_subclass)  are as  stated  in the
+GARMIN   Interface   Specification  in   that   they   are  not   NULL
+terminated. They are padded with space characters.
+
+All  GPS  models   to  date  use  the  pA100   protocol  for  waypoint
+communication.
+
+
+
+A4.9 Track log operations
+
+   int32 GPS_Command_Get_Track(char *port, GPS_PTrack **array)
+   int32 GPS_Command_Send_Track(char *port, GPS_PTrack *array)
+
+The  _Get_ command  will send  all track  information  (catenating any
+non-active logs to  the active log) on all  models. The _Send_ command
+sends track log information to  the active log thereby overwriting it.
+The track object has already been shown but is repeated below.
+
+  double lat;			/* Latitude in degrees        */
+  double lon;			/* Longitude in degrees       */
+  time_t Time;			/* Time (UNIX form)           */
+  int32  tnew;			/* Start of new track boolean */
+  float  alt;			/* Altitude (pD301)           */
+  float  dpth;			/* Depth (pD301)              */
+  int32  ishdr;                 /* Header boolean (pA301)     */
+  int32  dspl;			/* Display (pD310)            */
+  int32  colour;                /* pD310                      */
+  char   trk_ident[256];        /* pD310                      */
+
+The tnew boolean is  set to true (non zero) is the  entry is the start
+of a new track. The Time entry is special in the way the GPS marks it.
+If a track  has been recorded by the GPS and  is retrieved using _Get_
+then the Time entry will contain the time it was recorded. However, if
+the log has been previously sent  to the GPS from a host computer then
+the time entry will be zero!  The GPS does this so you can distinguish
+tracks which might have been recorded on someone elses GPS.
+
+
+All  GPS models  to date  use  the pA300  or pA301  protocols and  the
+pD300/pD301 data  type for track  log communication. If pA301  is used
+then the pD310 link data type is also used.
+
+
+
+A4.10 Proximity waypoint operations
+
+   int32 GPS_Command_Get_Proximity(char *port, GPS_PWay **array)
+   int32 GPS_Command_Send_Proximity(char *port, GPS_PWay *array)
+
+These  commands   are  exactly  the   same  as  for   normal  waypoint
+communication.   The only  difference is  that  the DST  entry of  the
+waypoint object is  filled. Distances in JEEPS are  always reported in
+metres.  For  models with  the  pD450 data  type  a  field called  the
+proximity index (IDX) is also filled.
+
+All GPS models  to date use the pA400  protocol for proximity waypoint
+communication.
+
+
+
+
+A4.11 Route waypoint operations
+
+   int32 GPS_Command_Get_Route(char *port, GPS_PWay **array)
+   int32 GPS_Command_Send_Route(char *port, GPS_PWay *array)
+
+These   commands  are   again   almost  identical   to  the   waypoint
+communication ones with the following exceptions.
+
+The boolean field  ISRTE will be set true for  the route header packet
+(this is mainly for the benefit of the optional output routines).
+
+The RTE_PROT  field will  be set, for  waypoint packets, to  the route
+header data type  used by the model i.e.  pD200,  pD201 or pD202. This
+is to  enable the programmer to  select which of  the following fields
+are defined.
+
+rte_num	   The route number (used by pD200 & pD201 only)
+rte_cmnt   Comment used by pD201 only
+rte_ident  Used by pD202 only
+
+If the pA201/pD210 protocol is in use then, if the data is a link, the
+following fields will be set.
+
+islink		        True (1)
+rte_link_class		line,link,net,direct,snap
+rte_link_subclass       Set if class is not direct or snap
+rte_link_ident          Null terminated string
+
+
+The GPS will  always send all its stored routes.  You can be selective
+when sending.
+
+All GPS  models to  date use  the pA200 or  pA201 protocols  for route
+communication. If pA201 is in effect then so is the pD210 data type.
+
+
+
+A4.12 PVT operations
+
+     int32 GPS_Command_Pvt_On(char *port, int32 *fd)
+     int32 GPS_Command_Pvt_Off(char *port, int32 *fd)
+     int32 GPS_Command_Pvt_Get(int32 *fd, GPS_PPvt_Data *pvt)
+
+Those models supporting this pA800 protocol and pD800 data type can be
+told to  send position, velocity  and time data  to the host  once per
+second. In fact  some GPS models don't need telling  to do so, they'll
+do it anyway once a fix has been achieved. The library makes sure this
+is turned off during initialisation  and also flushes the serial line.
+Commands  are  provided to  turn  it on,  off  and  also retrieve  the
+information (which  must be  done when it  is turned on  otherwise the
+serial buffer will fill.) An  example code segment follows (taken from
+the JEEPS program supplied with the library):
+
+    GPS_PPvt_Data pvt;
+    int32 fd;
+    char line[256];
+    int32 ret;
+    
+    if(!(pvt = GPS_Pvt_New()))
+	fprintf(stderr,"Memory error\n");
+    
+    if((ret=GPS_Command_Pvt_On(port,&fd)) > 0)
+    {
+	GPS_Util_Canon(1);
+	(void) GPS_Util_Block(0,0);
+	while(read(0,line,1)!=-1);  /* Make sure input buffer is empty */
+	while(read(0,line,1)==-1)
+	    if(GPS_Serial_Chars_Ready(fd))
+	    {
+		/* Add a system specific screen clear here if you wish */
+		(void) GPS_Command_Pvt_Get(&fd,&pvt);
+		GPS_Fmt_Print_Pvt(pvt,stdout);
+	    }
+	GPS_Command_Pvt_Off(port,&fd);
+	(void) GPS_Util_Block(0,1);
+	GPS_Util_Canon(0);
+    }
+    else
+	(void) fprintf(stderr,"Error\n");
+    
+    GPS_Pvt_Del(&pvt);
+
+Note that the Canon and Block  library routines are there just so that
+pressing any key  on the keyboard will terminate  PVT transfer AND SET
+THE KEYBOARD  BACK TO NORMAL OPERATION!  The GPS_Fmt call  is from the
+optional library output functions.
+
+The PVT object looks like this:
+
+    float alt;		  /* Altitude  above WGS84 (m)      */
+    float epe;		  /* Estimated positional error (m) */
+    float eph;		  /* EPE horizontal                 */
+    float epv;		  /* EPE vertical                   */
+    short fix;		  /* Type of fix e.g. 3 = 3D        */
+    double tow;		  /* Time of week (s)               */
+    double lat;		  /* Latitude (deg)                 */
+    double lon;		  /* Longitude (deg)                */
+    float east;		  /* East velocity (m/s)            */
+    float north;	  /* North velocity (m/s)           */
+    float up;		  /* Up velocity (m/s)              */
+    float msl_hght;	  /* Height of WGS84 above MSL      */
+    short leap_scnds;	  /* Diff between GPS and UTC       */
+    int32 wn_days;	  /* Week number days               */
+
+
+
+A5. The JEEPS Object Input and Output functions
+
+
+   void   GPS_Fmt_Print_Time(time_t Time, FILE *outf);
+   void   GPS_Fmt_Print_Position(double lat, double lon, FILE *outf);    
+   void   GPS_Fmt_Print_Pvt(GPS_PPvt_Data pvt, FILE *outf);
+   void   GPS_Fmt_Print_Almanac(GPS_PAlmanac *alm, int32 n, FILE *outf);
+   void   GPS_Fmt_Print_Track(GPS_PTrack *trk, int32 n, FILE *outf);
+   int32  GPS_Fmt_Print_Waypoint(GPS_PWay *way, int32 n, FILE *outf);
+   int32  GPS_Fmt_Print_Proximity(GPS_PWay *way, int32 n, FILE *outf);
+   int32  GPS_Fmt_Print_Route(GPS_PWay *way, int32 n, FILE *outf);
+
+   int32  GPS_Input_Get_Almanac(GPS_PAlmanac **alm, FILE *inf);
+   int32  GPS_Input_Get_Waypoint(GPS_PWay **way, FILE *inf);
+   int32  GPS_Input_Get_Proximity(GPS_PWay **way, FILE *inf);
+   int32  GPS_Input_Get_Track(GPS_PTrack **trk, FILE *inf);
+   int32  GPS_Input_Get_Route(GPS_PWay **way, FILE *inf);
+
+These routines  serve two purposes. First  they are a  useful means of
+displaying the JEEPS objects  for either testing purposes or permanent
+storage and secondly  they show how the objects  are used depending on
+the model connected. The  output routines will only output information
+from an object that is  relevant to the model connected. Therefore the
+output from use with one model should not normally be used as input to
+another model. There are few exceptions to this rule.
+
+As  these routines know  about the  model connected  some of  them can
+return  an  error code.  Any  errors will  usually  be  caused by  not
+observing the rule above.
+
+The output routines  are passed an array of  objects as retrieved from
+the  command  _Get_  functions  and  the number  of  elements  in  the
+array. The output file descriptor can, of course, be stdout or an open
+file.
+
+The input routines will read  files produced from the output functions
+and  automatically dynamically  create  the object  arrays. They  will
+return the  number of elements in  the array. This  information can be
+directly passed to the _Send_ communication functions.
+
+All output  is as ASCII  text. The output information  will frequently
+contain the data types used by the model connected.
+
+The input and output routines are also used by the JEEPS program which
+is supplied along with the library.
+
+
+
+A6. Other useful communication functions
+
+These can be used by  the adventurous programmer. The library has been
+designed so that only the  JEEPS command functions should ever need to
+be used.
+
+A6.1   time_t GPS_Time_Now(void)
+
+Returns the current system time in a form suitable for the _Send_ function,
+
+A6.2   int32 GPS_Packet_Read(int32 fd, GPS_PPacket *packet)
+
+All communication with the GPS is performed with packets. Packets have
+their   own   constructor   and   deconstructor   GPS_Packet_New   and
+GPS_Packet_Del. Packets have the following structure.
+
+typedef struct GPS_SPacket
+{
+    UC dle;		/* Data start */
+    UC type;		/* Packet type */
+    UC n;		/* Number of data bytes */
+    UC *data;		/* The data received or transmitted */
+    UC chk;		/* Checksum */
+    UC edle;		/* End */
+    UC etx;		/* End */
+    UC bytes;		/* Actual number of bytes (for sending only) */    
+} GPS_OPacket, *GPS_PPacket;
+
+A description of the these fields (or something very similar) is given
+in the GARMIN Interface Specification document. Suffice it to say that
+if a  GPS is transmitting an  unexpected packet then you  can use this
+function to receive it and  inspect the contents.  You can then modify
+the  program accordingly.  Of course  the serial  line must  have been
+opened before using this call.
+
+A6.3 int32 GPS_Get_Ack(int32 fd, GPS_PPacket *tra, GPS_PPacket *rec)
+
+Checks to  see if a  packet just transmitted  (in the tra  packed) has
+been  acknowledged  (received  in  the  rec packet).  Gives  an  error
+otherwise,
+
+A6.4 int32 GPS_Serial_On(char *port, int32 *fd)
+    int32 GPS_Serial_Off(char *port, int32 fd)
+
+Open and close the serial port
+
+A6.5 int32 GPS_Serial_Flush(int32 fd)
+
+Flushes all input and output.
+
+A6.6 int32 GPS_Serial_Chars_Ready(int32 fd)
+
+Returns true if a packet has been sent by the GPS and is waiting to be
+read.
+
+A6.7 int32 GPS_Serial_Wait(int32 fd)
+
+Like  GPS_Serial_Chars_Ready  but  waits  for 80  milliseconds  before
+testing.  This is to allow time for the GPS to decide whether it has a
+request to  make e.g. asking for  time and position  after the almanac
+has been sent.
+
+A6.8 void GPS_Make_Packet(GPS_PPacket *packet, UC type, UC *data, short n)
+
+Make a  data packet  for use with  the GPS_Write_Packet  function. The
+packet  types are  discussed  in the  GARMIN Interface  Specification.
+Library routines  handle them automatically but  the programmer should
+note that the  codes for the same kinds  of operation differ depending
+on  which  link/command protocol  is  in  operation!   The data  field
+contains the  data to write  and the "n"  field is the number  of data
+bytes.
+
+A6.9  int32 GPS_Write_Packet(int32 fd, GPS_PPacket packet)
+
+Send a packet to the GPS which has been constructed by the GPS_Make_Packet
+function.
+
+A6.10 int32 GPS_Send_Ack(int32 fd, GPS_PPacket *tra, GPS_PPacket *rec)
+
+Acknowledge a packet received (in  the rec packet) by constructing and
+sending  an acknowledge  command (in  the tra  packet). The  GPS won't
+normally transmit further information unless it gets acknowledged.
+
+
+A7. Communication Utility Functions
+
+A7.1 int32    GPS_Util_Little(void);
+
+This function returns true if the host architecture is little endian.
+
+A7.2 Data Conversion
+
+    US     GPS_Util_Get_Short(const UC *s);
+    void   GPS_Util_Put_Short(UC *s, const US v);
+    int32  GPS_Util_Get_Int(const UC *s);
+    void   GPS_Util_Put_Int(UC *s, const int32 v);
+    double GPS_Util_Get_Double(const UC *s);
+    void   GPS_Util_Put_Double(UC *s, const double v);
+    float  GPS_Util_Get_Float(const UC *s);
+    void   GPS_Util_Put_Float(UC *s, const float v);
+    void   GPS_Util_Put_Uint(UC *s, const uint32 v);
+    uint32 GPS_Util_Get_Uint(const UC *s);
+
+These  routines read  or create  variable data  from or  into unsigned
+character  data fields.  They observe  the endian  nature of  the host
+architecture. Note that GPS_Util_Little must have been called first.
+
+A7.3 Terminal setup
+
+    void   GPS_Util_Canon(int32 state);
+    int32  GPS_Util_Block(int32 fd, int32 state);
+
+These routines set or disable canonical terminal modes and blocking e.g.
+
+GPS_Util_Canon(1)     Sets the keyboard so that any key press implies
+		      a carriage return
+GPS_Util_Canon(0)     Sets the keyboard back into line mode
+
+GPS_Util_Block(0,0)   Will set stdin to be non-blocking i.e. any input
+		      will be acted on immediately
+GPS_Util_Block(0,1)   Sets stdin back to normal operation
+
+It is  very important that  you remember to  set the keyboard  back to
+normal operation  before terminating a program. Otherwise  you may end
+up having to reboot!
+
+
+A7.4 Errors, Warnings, information and diagnosis
+
+It is bad practice to have  a library printing out warning messages to
+the screen, it  should and normally does return  error codes. However,
+the library does contain print statements to both stderr and stdout if
+they are emabled. This is done with the following functions:
+
+     void   GPS_Enable_Error(void);
+     void   GPS_Enable_Warning(void);
+     void   GPS_Disable_Error(void);
+     void   GPS_Disable_Warning(void);
+     void   GPS_Disable_User(void);
+     void   GPS_Enable_User(void);
+     void   GPS_Enable_Diagnose(void);
+     void   GPS_Disable_Diagnose(void);
+
+If these are enabled then  the following functions will print messages
+to the screen.
+
+      void   GPS_Warning(char *s);
+      void   GPS_Error(char *s);
+      void   GPS_Fatal(char *s);
+      void   GPS_User(char *s);
+      void   GPS_Diagnose(int32 c);
+
+The  enabling functions  are useful  for fault  diagnosis. If  you are
+feeling perverse you  can enable diagnosis mode and  see all the bytes
+transmitted by the GPS scrolling up your screen,
+
+The fatal error message function is not used by the library.
+
+A routine is provided to print to stdout any protocols found in the
+initialisation which are unknown to the library (which are therefore
+probably undocumented by Garmin):
+
+	void GPS_Unknown_Protocol_Print(void);
+
+
+
+A8. Design Architecture
+
+The communication part of the library has been designed to enable easy
+future expansion.
+
+Low level serial functions (gpsserial.c): These control the serial port and
+  terminal I/O modifications and restorations. Unix system commands
+  are shielded from the application programmer by this interface.
+
+High level serial functions (gpsread.c gpssend.c): These control packet
+  reading, creation and sending. They are one level up from the low
+  level serial functions.
+
+Command functions (gpscom.c): These contain the calls an application
+  programmer will most frequently use. They analyse the transfer
+  protocol, make sure the protocol is supported and call the relevant
+  function in the application protocol layer. For example, if a GPS II+
+  is being used and a Get_Waypoints command is used then the command layer
+  will analyse gps_waypt_transfer and call the GPS_A100_Get function.
+
+Application protocol layer (gpsapp.c): These contain the application
+  protocols and data type protocols. For example, if a GPS II+ is in use
+  and a GPS_A100_Get request has been made by the command layer then the
+  GPS_A100_Get function will examine the gps_waypt_type and call the
+  GPS_D103_Get function.
+  The A100_Get function will communicate with the high level serial
+  functions in its operation. It communicates with the memory layer
+  to dynamically allocate objects.
+
+  There are _Get_ and _Send_ functions for all known protocols and
+  protocol data types.
+
+Memory Layer (gpsmem.c): This controls memory allocation and deallocation
+  for objects. It has some knowledge of packet requirements. For example,
+  when an almanac packet is created it automatically sets the week number
+  to a negative value. When waypoint objects are produced any character
+  arrays are initialised to space characters etc.
+
+Input/Output layer (gpsfmt.c gpsinput.c): Highest level I/O functions
+  dealing with ASCII text. They have knowledge of GPS packet data types.
+  Input routines communicate with the memory layer to dynamically allocate
+  objects
+
+Request layer (gpsrqst.c): Deals with any requests made by the GPS e.g.
+  time and position.
+
+
+The mathematics  layer (gpsmath.c) is isolated  from the communication
+part  of the  library and  is the  domain of  conversions,  datums and
+projections described in the next section.
+
+All these layers are imported with just one #include statement i.e.
+
+   #include "gps.h"
+
+All variables and function prototypes are defined by this statement.
+
+
+
+
+
+
+			   SECTION B
+		JEEPS and GPS Calculations
+
+
+B1 Introduction
+
+These   functions  are   in  many   ways  separate   from   the  JEEPS
+communications but  are essential in providing  a complete environment
+for programming GPS related utilities.
+
+The functions  can be split  into sections containing  data conversion
+routines, datum conversion routines  and mapping routines. All general
+purpose  routines are  included  however some  parts  have a  slightly
+parochial feel  (e.g. UK Ordnance Survey National  Grid) which reflect
+the  authors latitude  and longitude!  These  can just  be ignored  by
+anyone outside the UK.
+
+I  state here  quite  clearly that  I  am not  a cartographic  expert.
+However, if any cartographers out there wish to contribute source code
+to JEEPS I am more than happy to incorporate it.
+
+The library tends to standardise on the WGS84 datum as a form of glue.
+There are therefore more specific conversion routines to and from this
+datum. One can convert directly from any one datum to another however.
+As a worldwide mapping system JEEPS provides routines for UTM.
+
+It is  hoped that other authors  will contribute functions  in the GPL
+spirit of  JEEPS whether they be  of general or  parochial utility. As
+the  library grows the  sections can  easily be  and probably  will be
+subdivided.  Currently all such functions are coded into gpsmath.c and
+data held  in gpsdatum.h.  However, the interface  is included  by the
+same #include as used for the communication routines i.e.
+
+      #include "gps.h"
+
+A following Section will show how to use the interface in the supplied
+programming environment.
+
+As with all  JEEPS functions their interface is  documented before the
+definitions in the source code.
+
+
+
+
+B2 Simple conversion routines
+
+JEEPS  standardises   on  decimal  degrees  to   allow  latitudes  and
+longitudes to be held in the  standard C double data type. Most of the
+datum routines  use radians but  are supplied with degrees  and return
+degrees.  Distance measurements  are always  performed in  metres. The
+following conversion routines are therefore supplied.
+
+
+These routines interconvert between degrees and radians:
+
+	  double GPS_Math_Deg_To_Rad(double v);
+	  double GPS_Math_Rad_To_Deg(double v);
+
+These routines interconvert metres and feet:
+
+	  double GPS_Math_Metres_To_Feet(double v);
+	  double GPS_Math_Feet_To_Metres(double v);
+
+These routines interconvert degrees and semicircles. This is primarily
+for communication with the GPS and are not currently used by the datum
+or mapping functions:
+
+	  int32  GPS_Math_Deg_To_Semi(double v);
+	  double GPS_Math_Semi_To_Deg(int32 v);
+
+Similarly, these routines interchange  GPS and UNIX time formats. They
+are not used by the datum or mapping functions:
+
+	  time_t GPS_Math_Utime_To_Gtime(time_t v);
+	  time_t GPS_Math_Gtime_To_Utime(time_t v);    
+
+The following routines are of great utility in pre and postprocessing
+of latitudes and longitudes for the datum and mapping routines.
+
+	  void   GPS_Math_Deg_To_DegMin(double v, int32 *d, double *m);
+	  void   GPS_Math_DegMin_To_Deg(int32 d, double m, double *deg);
+	  void   GPS_Math_Deg_To_DegMinSec(double v, int32 *d, int32 *m,
+                                           double *s);
+          void   GPS_Math_DegMinSec_To_Deg(int32 d, int32 m, double s,
+                                           double *deg);
+
+
+These above  functions are so simple  that their use  is obvious. They
+are described more fully in the function headers of the source code.
+
+
+
+
+B3 Datum conversion routines
+
+
+The ellipsoids  and datums known by  JEEPS at the time  of writing are
+given in appendices B and C.  Some of the functions use the semi major
+and  semi minor  axes  whilst others  accept  inverse flattening.  The
+conversion equation is:
+
+    semi-minor = semi-major - (semi-major / inverse-flattening)
+
+This will be standardised after the alpha test phase of the library.
+
+
+B3.1 General latitude, longitude and height conversion
+
+B3.1.1 Molodensky transformation
+
+This transformation  can be used to transform  latitude, longitude and
+height  from one  datum into  the values  used in  another  datum. The
+underlying algorithm is provided in the following function. The higher
+level functions that use it are described later.
+
+void GPS_Math_Molodensky(double Sphi, double Slam, double SH, double Sa,
+			 double Sif, double *Dphi, double *Dlam,
+			 double *DH, double Da, double Dif, double dx,
+			 double dy, double dz);
+The parameters are:
+
+Source latitude, longitude, height above ellipsoid, semi-major axis of
+source ellipsoid, inverse flattening of the source ellipsoid. The
+destination latitude, longitude and height are returned.
+The destination datum ellipsoid semi-major axis and inverse flattening
+are passed along with the difference in x, y, & z.
+
+
+B3.1.2 Cartesian conversions
+
+
+The following  functions will convert between  latitude, longitude and
+height above ellipsoid to X,Y & Z coordinates and back. Latitude
+is given in the phi parameter and longitude in the lambda parameter.
+Ellipsoid parameters for the semi-major (a) and semi-minor (b) are
+passed.
+
+
+	void GPS_Math_LatLonH_To_XYZ(double phi, double lambda, double H,
+				     double *x, double *y, double *z,
+			             double a, double b);
+
+        void GPS_Math_XYZ_To_LatLonH(double *phi, double *lambda, double *H,
+			             double x, double y, double z,
+			             double a, double b);
+
+They  can be  used for  latitude/longitude and  height  conversions by
+using  them  as a  pair  and  altering the  x,y  and  z  values as  an
+intermediate  step (with  the obvious  proviso that  rotation  isn't a
+factor etc.)
+
+B3.1.2.1 Specific cartesian conversians
+
+For GPS standard use conversions are provided for WGS84 and back.
+
+void GPS_Math_WGS84LatLonH_To_XYZ(double phi, double lambda, double H,
+				  double *x, double *y, double *z);
+void GPS_Math_XYZ_To_WGS84LatLonH(double *phi, double *lambda, double *H,
+				  double x, double y, double z);
+
+
+B3.1.2.2 Parochial conversions
+
+The following functions assume the lat/lon is with respect to the
+UK Airy 1830 Ellipsoid.
+
+void GPS_Math_Airy1830LatLonH_To_XYZ(double phi, double lambda, double H,
+				     double *x, double *y, double *z);
+void GPS_Math_XYZ_To_Airy1830LatLonH(double *phi, double *lambda, double *H,
+				     double x, double y, double z);
+
+
+
+B3.2 Direct Datum conversions
+
+Conversion between  a datum  and WGS84 and  back are performed  by the
+following    four   functions.     Sphi/Slam/SH    are   the    source
+latitude/longitude and  ellipsoid height.  The  destination values are
+returned.  The  datum to  convert to/from is  passed as its  number as
+given in the datum array  (see Appendix C).  The functions ending with
+_M  use a  Molodensky transformation,  those with  _C use  a cartesian
+transformation.
+
+
+void GPS_Math_Known_Datum_To_WGS84_M(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH,
+				     int32 n);
+void GPS_Math_WGS84_To_Known_Datum_M(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH,
+				     int32 n);
+void GPS_Math_Known_Datum_To_WGS84_C(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH,
+				     int32 n);
+void GPS_Math_WGS84_To_Known_Datum_C(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH,
+				     int32 n);
+
+More  general versions  of these  are  provided by  the following  two
+functions,  which  interconvert   datums  directly.   The  first  uses
+Molodensky  and the  second cartesian.  For both  functions n1  is the
+datum number  of the source lat/lon/H  and n2 is the  datum number for
+the destination lat/lon/H (see Appendix C).
+
+
+void GPS_Math_Known_Datum_To_Known_Datum_M(double Sphi, double Slam, double SH,
+					   double *Dphi, double *Dlam,
+					   double *DH, int32 n1, int32 n2);
+void GPS_Math_Known_Datum_To_Known_Datum_C(double Sphi, double Slam, double SH,
+					   double *Dphi, double *Dlam,
+					   double *DH, int32 n1, int32 n2);
+
+
+
+B4 Projection functions
+
+These convert latitude/longitude pairs into Eastings and Northings for
+a given system.
+
+
+B4.1 Transverse mercator functions
+
+B4.1.1 General transverse mercator functions
+
+These are provided by the following two functions. The first converting
+lat/lon to E/N and the second back.
+
+E0 & N0 = map coordinates of the true origin
+phi0 & lamdba0 = True origin latitude and longitude
+F0 = scale factor on the central meridian
+a & b = semi-major and semi-minor axes of ellipsoid
+
+
+void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
+			   double lambda, double N0, double E0,
+			   double phi0, double lambda0,
+			   double F0, double a, double b);
+
+void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
+			   double *lambda, double N0, double E0,
+			   double phi0, double lambda0,
+			   double F0, double a, double b);
+
+
+B4.1.2 UTM transverse mercator functions
+
+The  following two  functions convert  NAD83 and  WGS84  latitudes and
+longitudes to  UTM zone eastings  and northings. They also  return the
+zone number and the zone character.
+
+
+int32 GPS_Math_NAD83_To_UTM_EN(double lat, double lon, double *E,
+			       double *N, int32 *zone, char *zc);
+int32 GPS_Math_WGS84_To_UTM_EN(double lat, double lon, double *E,
+			       double *N, int32 *zone, char *zc);
+
+e.g.
+	double lat;
+	double lon;
+	double E;
+	double W;
+	int32  zone;
+        char   zc;
+
+	lat = 52.0;
+	lon = 0.0;
+	GPS_Math_NAD83_To_UTM_EN(lat,lon,&E,&N,&zone,&zc);
+	(void) fprintf(stdout,"%d%c %fE %fN\n",zone,zc,E,N);
+
+There are two functions to convert back:
+
+int32 GPS_Math_UTM_EN_To_NAD83(double *lat, double *lon, double E,
+			       double N, int32 zone, char zc);
+int32 GPS_Math_UTM_EN_To_WGS84(double *lat, double *lon, double E,
+			       double N, int32 zone, char zc);
+
+
+
+
+B4.1.2 Parochial Eastings and Northings
+
+B4.1.2.1 UK and Northern Ireland
+
+The following two functions assume Airy 1830 lat/lon for the UK.
+They convert just the lat/lons & E/Ns .
+
+     void GPS_Math_NGENToAiry1830LatLon(double E, double N, double *phi,
+	          			double *lambda);
+     void GPS_Math_Airy1830LatLonToNGEN(double phi, double lambda, double *E,
+				        double *N);
+
+Similarly for the Irish national grid using the modified Airy 1830.
+
+     void GPS_Math_INGENToAiry1830MLatLon(double E, double N, double *phi,
+				          double *lambda);
+
+     void GPS_Math_Airy1830M_LatLonToINGEN(double phi, double lambda,
+				           double *E, double *N);
+
+Two further functions are provided to work out the true OS map code
+and map northings and eastings from the full easting and northing
+values (and back)
+
+     int32  GPS_Math_EN_To_UKOSNG_Map(double E, double N, double *mE,
+	        		      double *mN, char *map);
+     int32  GPS_Math_UKOSNG_Map_To_EN(char *map, double mapE, double mapN,
+                                      double *E, double *N);
+
+The full UK OS map codes and partial eastings can also be converted
+directly to latitudes and longitudes (and back) using the following
+four functions (two for Molodensky conversion and two for cartesian
+conversion.
+
+	int32 GPS_Math_WGS84_To_UKOSMap_M(double lat, double lon, double *mE,
+        				  double *mN, char *map);
+        int32 GPS_Math_UKOSMap_To_WGS84_M(char *map, double mE, double mN,
+				          double *lat, double *lon);
+
+        int32 GPS_Math_WGS84_To_UKOSMap_C(double lat, double lon, double *mE,
+				          double *mN, char *map);
+        int32 GPS_Math_UKOSMap_To_WGS84_C(char *map, double mE, double mN,
+				          double *lat, double *lon);
+
+
+
+
+
+
+				SECTION C
+			     Compiling JEEPS
+
+You will already have gunzip'd and untarred the distribution file
+as you are reading this document.
+
+You must now decide whether you  want to create a shareable library or
+a static library. There are many advantages and disadvanrages to both.
+Shareable  libraries allow smaller  executables but  compiled programs
+can only be  run on another machine if that machine  itself has a copy
+of the shareable library.  Static libraries allow compiled programs to
+be passed between machines without need of the library. The executable
+images are much larger though.
+
+For a shareable library type:
+
+    ./configure
+    make
+
+For a static library type:
+
+    ./configure --disable-shared
+    make
+
+You can optionally follow this with:
+
+    make install
+
+The library will be copied  to /usr/local/lib, the sample program will
+be put in /usr/local/bin. If you are using a csh variant you will then
+need to "rehash" after the install.
+
+If there are problems with the installation then make sure you type:
+
+    rm config.cache
+
+before  reconfiguring,  otherwise   values  found  from  the  previous
+configure  will be used  as defaults  which is  probably not  what you
+need.
+
+
+
+			SECTION D
+	   JEEPS as a programming environment
+
+The JEEPS  distribution allows you to easily  develop new applications
+in the "src"  directory. Let us assume you have  a program source file
+called fubar.c with an associated header file called fubar.h. Put these
+files in the src directory and then edit the file
+
+    Makefile.am
+
+Never edit the Makefile as it is itself constructed from Makefile.am.
+The Makefile.am file supplied with the distribution in the src
+directory looks like this:
+
+
+SUBDIRS =
+
+bin_PROGRAMS = jeeps
+
+noinst_HEADERS = jeeps.h
+
+FLAGS =
+
+INCLUDES = -I../lib
+
+jeeps_SOURCES = jeeps.c
+
+LDADD = ../lib/libjeeps.la
+
+
+To  incorporate  your program  add  the name  of  the  program to  the
+bin_PROGRAMS line, the header file  to the noinst-HEADERS line and add
+a new  SOURCES line for the  source file. Your  Makefile.am should now
+look like this:
+
+SUBDIRS =
+
+bin_PROGRAMS = jeeps fubar
+
+noinst_HEADERS = jeeps.h fubar.h
+
+FLAGS =
+
+INCLUDES = -I../lib
+
+jeeps_SOURCES = jeeps.c
+fubar_SOURCES = fubar.c
+
+LDADD = ../lib/libjeeps.la
+
+
+When you next  type "make" the environment will  recognise that you've
+changed  the Makefile.am  file, create  a new  Makefile and  perform a
+"make".
+
+The advantages of this approach are that your application will compile
+without  you having  to worry  about the  command line  flags  for the
+compiler. Also, whenever  you change your source files  (or indeed the
+library) the system  will know all the dependencies  between files and
+recompile those  elements that need recompiling. It  is therefore easy
+to add new applications. But don't forget to #include "gps.h"
+
+
+
+			 SECTION E
+	      An example JEEPS application
+	             The JEEPS program
+
+
+The JEEPS program source is supplied  in the src directory and will be
+compiled during the installation. This  is not supposed to be a pretty
+program but is completely functional.  It is supposed to be an example
+of how the JEEPS library can be used.
+
+The program is menu driven and its use should be obvious. It allows
+you to:
+
+1. Send and receive time
+2. Send and receive position
+3. Send and receive waypoints
+4. Send and receive routes
+5. Send and receive tracks
+6. Send and receive proximity waypoints
+7. Send and receive almanacs
+8. Send and receive track logs.
+
+It also displays  information about the model of  GARMIN GPS connected
+including all  the protocols  and data types  known by the  model. Any
+entries marked  with "-1"  (e.g. A-1) means  that the protocol  is not
+supported.
+
+To use  the program FIRST TURN  THE GPS ON. If  you've already started
+JEEPS before turning on the GPS then exit from JEEPS.
+
+N.B. The Garmin GPS must be in "Garmin communication mode" and
+     Simulator mode must be off.
+
+The first time the program is run it will ask you for the name of the
+serial port device to which the GPS is connected. You should answer
+this question with something like:
+
+   /dev/ttyS1
+
+depending  on your  machine  and  setup. Now  select  option 17  (Save
+Preferences) and  the name  of the  port will be  saved into  the file
+~/.jeepsrc and will be used the next time you start the JEEPS program.
+
+
+The JEEPS  program is a powerful  little utility. By using  it you can
+craete or edit waypoints in your GPS by editing the files created when
+you receive input from the machine or simply use JEEPS to make backups
+of your  GPS information.  Be  careful to stick  to the format  of the
+output  files  if you're  going  to alter  them.   The  format is  not
+described  here  as  you  can  simply  command the  GPS  to  send  the
+information and look at the  files yourself. Any line beginning with a
+'#' is treated as a comment. You can therefore add as many comments as
+you like to the data files.
+
+
+
+
+
+
+
+			 APPENDIX A
+	    Communication function error codes
+
+  -1: A high level protocol occurred. Typically the library
+      has received an unexpected packet.
+
+  -2: The library has been asked to use a protocol which
+      it does not know of. This is only likely
+      to happen with new Garmin models. If this is the case
+      then report the model and the error to the author.
+
+  -3: A Unix system call has failed
+
+  -4: A low level serial communication error. Typically returned if
+      the GPS device is off or becomes disconnected.
+
+  -5: The host computer has run out of memory (or other memory
+      allocation error)
+
+  -6: The library has been asked to perform a high level operation
+      (e.g. PVT transfer) which the model does not support.
+
+  -7: Corrupt or wrong format data file (when using the optional
+      library file reading routines.)
+
+
+
+			   APPENDIX B
+		   Ellipsoids Known by JEEPS
+
+
+These are all held in an array of structures called GPS_Ellipse
+The structure is of the form:
+
+
+    typedef struct ellipse_structure
+    {
+        char   *name;		/* Name of ellipse          */
+	double a;		/* Semi major axis (metres) */
+	double invf;		/* Inverse flattening       */
+    }
+
+and the GPS_Ellipse values are:
+
+    { "Airy 1830",               6377563.396, 299.3249646 },
+    { "Airy 1830 Modified",      6377340.189, 299.3249646 },
+    { "Australian National",     6378160.000, 298.25 },
+    { "Bessel 1841 (Namibia)",   6377483.865, 299.1528128 },
+    { "Bessel 1841",             6377397.155, 299.1528128 },
+    { "Clarke 1866",             6378206.400, 294.9786982 },
+    { "Clarke 1880",             6378249.145, 293.465 },
+    { "Everest (India 1830)",    6377276.345, 300.8017 },
+    { "Everest (Sabah Sarawak)", 6377298.556, 300.8017 },
+    { "Everest (India 1956)",    6377301.243, 300.8017 },
+    { "Everest (Malaysia 1969)", 6377295.664, 300.8017 },
+    { "Everest (Malay & Sing)",  6377304.063, 300.8017 },
+    { "Everest (Pakistan)",      6377309.613, 300.8017 },
+    { "Modified Fischer 1960",   6378155.000, 298.3 },
+    { "Helmert 1906",            6378200.000, 298.3 },
+    { "Hough 1960",              6378270.000, 297.0 },
+    { "Indonesian 1974",         6378160.000, 298.247 },
+    { "International 1924",      6378388.000, 297.0 },
+    { "Krassovsky 1940",         6378245.000, 298.3 },
+    { "GRS67",                   6378160.000, 6356774.516 },
+    { "GRS75",                   6378140.000, 6356755.288 },
+    { "GRS80",                   6378137.000, 298.257222101 },
+    { "S. American 1969",        6378160.000, 298.25 },
+    { "WGS60",                   6378165.000, 298.3 },
+    { "WGS66",                   6378145.000, 298.25 },
+    { "WGS72",                   6378135.000, 298.26 },
+    { "WGS84",                   6378137.000, 298.257223563 }
+};
+
+
+As the Airy 1830 ellipse is the first array element you access
+its semi major access value as follows:
+
+     smaxis = GPS_Ellipse[0].a;
+
+
+
+			APPENDIX C
+		  Datums known by JEEPS
+
+
+These are all held in an array of structures called GPS_Datum
+The structure is of the form:
+
+
+    typedef struct datum_structure
+    {
+        char   *name;		/* Name of datum              */
+	in32   ellipse;		/* GPS_Ellipse ellipsoid used */
+	double dx;		/* X difference (metres)      */
+	double dy;		/* Y difference (metres)      */
+	double dz;		/* Z difference (metres)      */
+    }
+
+The values are:
+
+/* 000 */    { "Adindan",  		6,	-166,  	-15,	204 	},
+/* 001 */    { "AFG",     		18,	-43,   	-163,  	45 	},
+/* 002 */    { "Ain-El-Abd",  		17,	-150,  	-251,  	-2 	},
+/* 003 */    { "Alaska-NAD27",    	5,	-5,    	135,  	172 	},
+/* 004 */    { "Alaska-Canada",   	6,	-9,    	151,  	185 	},
+/* 005 */    { "Anna-1-Astro",    	2,	-491,  	-22,  	435 	},
+/* 006 */    { "ARC 1950 Mean",   	6,	-143,  	-90, 	-294 	},
+/* 007 */    { "ARC 1960 Mean",   	6,	-160,  	-8,  	-300 	},
+/* 008 */    { "Asc Island 58",  	17,	-207,  	107,   	52 	},
+/* 009 */    { "Astro B4",       	17,	114,  	-116,	-333 	},
+/* 010 */    { "Astro Beacon E", 	17,	145,  	75,  	-272 	},
+/* 011 */    { "Astro pos 71/4", 	17,	-320,  	550, 	-494 	},
+/* 012 */    { "Astro stn 52",   	17,	124,  	-234, 	-25 	},
+/* 013 */    { "Australia Geo 1984",  	2,	-134,  	-48,  	149 	},
+/* 014 */    { "Bahamas NAD27",   	6,	-4,    	154,  	178 	},
+/* 015 */    { "Bellevue IGN",   	17,	-127,  	-769, 	472 	},
+/* 016 */    { "Bermuda 1957",   	6,	-73,   	213,  	296 	},
+/* 017 */    { "Bukit Rimpah", 	 	4,	-384,  	664,  	-48 	},
+/* 018 */    { "Camp_Area_Astro",	17,     -104, 	-129,  	239 	},
+/* 019 */    { "Campo_Inchauspe",	17,     -148, 	136,    90 	},
+/* 020 */    { "Canada_Mean(NAD27)", 	5,  	-10,  	158,   	187 	},
+/* 021 */    { "Canal_Zone_(NAD27)", 	5,  	0,    	125,   	201 	},
+/* 022 */    { "Canton_Island_1966", 	17, 	298, 	-304,  	-375 	},
+/* 023 */    { "Cape",           	6,      -136, 	-108,  	-292 	},
+/* 024 */    { "Cape_Canaveral_mean", 	5, 	-2,    	150,   	181 	},
+/* 025 */    { "Carribean NAD27", 	5,     	-7,    	152,   	178 	},
+/* 026 */    { "Carthage",        	6,     	-263,  	6,     	431 	},
+/* 027 */    { "Cent America NAD27", 	5 , 	0,     	125,   	194 	},
+/* 028 */    { "Chatham 1971",   	17,     175,   	-38,   	113 	},
+/* 029 */    { "Chua Astro",     	17,     -134,  	229,   	-29 	},
+/* 030 */    { "Corrego Alegre", 	17,     -206,  	172,    -6 	},
+/* 031 */    { "Cuba NAD27",         	5,  	-9,    	152,   	178 	},
+/* 032 */    { "Cyprus",         	17,     -104, 	-101,  	-140 	},
+/* 033 */    { "Djakarta(Batavia)",  	4,  	-377,  	681,   	-50 	},
+/* 034 */    { "DOS 1968",          	17,     230,  	-199,  	-752 	},
+/* 035 */    { "Easter lsland 1967", 	17, 	211,   	147,   	111 	},
+/* 036 */    { "Egypt",             	17,  	-130, 	-117,  	-151 	},
+/* 037 */    { "European 1950",     	17,  	-87,  	-96,   	-120 	},
+/* 038 */    { "European 1950 mean",	17,  	-87,  	-98,   	-121 	},
+/* 039 */    { "European 1979 mean",	17,  	-86,  	-98,   	-119 	},
+/* 040 */    { "Finnish Nautical",  	17,  	-78, 	-231,   -97 	},
+/* 041 */    { "Gandajika Base",    	17,  	-133,	-321,   50 	},
+/* 042 */    { "Geodetic Datum 49", 	17,  	84,  	-22,    209 	},
+/* 043 */    { "Ghana",             	26,  	0,  	0,      0 	},
+/* 044 */    { "Greenland NAD27",    	5,  	11,  	114,    195 	},
+/* 045 */    { "Guam 1963",          	5,  	-100,	-248,   259 	},
+/* 046 */    { "Gunung Segara",      	4,  	-403,	684,    41 	},
+/* 047 */    { "Gunung Serindung 1962",	26, 	0,     	0,     	0 	},
+/* 048 */    { "GUX1 Astro",        	17,  	252, 	-209,   -751 	},
+/* 049 */    { "Herat North",       	17,  	-333,	-222,   114 	},
+/* 050 */    { "Hjorsey 1955",      	17,  	-73,  	46,     86 	},
+/* 051 */    { "Hong Kong 1963",    	17,  	-156, 	-271,  	-189 	},
+/* 052 */    { "Hu-Tzu-Shan",       	17,  	-634, 	-549,  	-201 	},
+/* 053 */    { "Indian",             	9,  	289,  	734,    257 	},
+/* 054 */    { "Iran",              	17,  	-117, 	-132,  	-164 	},
+/* 055 */    { "Ireland 1965",       	1,  	506,  	-122,   611 	},
+/* 056 */    { "ISTS 073 Astro 69", 	17,  	208,  	-435,  	-229 	},
+/* 057 */    { "Johnston Island 61",	17,  	191,   	-77,  	-204 	},
+/* 058 */    { "Kandawala",          	7,  	-97,   	787,    86 	},
+/* 059 */    { "Kerguelen Island",  	17,  	145,  	-187,   103 	},
+/* 060 */    { "Kertau 48",         	11,  	-11,   	851,    5 	},
+/* 061 */    { "L.C. 5 Astro",       	5,  	42,   	124,   	147 	},
+/* 062 */    { "La Reunion",        	17,  	94,  	-948, 	-1262 	},
+/* 063 */    { "Liberia 1964",       	6,  	-90,    40,    	88 	},
+/* 064 */    { "Luzon",              	5,  	-133,   -77,   	-51 	},
+/* 065 */    { "Mahe 1971",          	6,  	41,  	-220,  	-134 	},
+/* 066 */    { "Marco Astro",       	17,  	-289,  	-124,   60 	},
+/* 067 */    { "Masirah Is. Nahrwan", 	6, 	-247,  	-148,   369 	},
+/* 068 */    { "Massawa",            	4,   	639,   	405,    60 	},
+/* 069 */    { "Merchich",           	6,  	31,   	146,    47 	},
+/* 070 */    { "Mexico NAD27",       	5,  	-12,   	130,   	190 	},
+/* 071 */    { "Midway Astro 61",   	17,  	912,   	-58,  	1227 	},
+/* 072 */    { "Mindanao",           	5,  	-133,   -79,   	-72 	},
+/* 073 */    { "Minna",              	6,  	-92,   	-93,   	122 	},
+/* 074 */    { "Montjong Lowe",     	26,  	0,     	0,     	0 	},
+/* 075 */    { "Nahrwan",            	6,  	-231,  	-196,   482 	},
+/* 076 */    { "Naparima BWI",      	17,  	-2,   	374,   	172 	},
+/* 077 */    { "North America 83",  	21,  	0,     	0,     	0 	},
+/* 078 */    { "N. America 1927 mean",	5, 	-8,   	160,   	176 	},
+/* 079 */    { "Observatorio 1966", 	17,  	-425,  	-169,   81 	},
+/* 080 */    { "Old Egyptian",      	14,  	-130,   110,   	-13 	},
+/* 081 */    { "Old Hawaiian_mean",   	5, 	89,  	-279,  	-183 	},
+/* 082 */    { "Old Hawaiian Kauai", 	5,  	45,  	-290,  	-172 	},
+/* 083 */    { "Old Hawaiian Maui",  	5,  	65,  	-290,  	-190 	},
+/* 084 */    { "Old Hawaiian Oahu",  	5,  	56,  	-284,  	-181 	},
+/* 085 */    { "Oman",               	6,  	-346,   -1,   	224 	},
+/* 086 */    { "OSGB36",             	0,  	375,  	-111,   431 	},
+/* 087 */    { "Pico De Las Nieves",	17,  	-307,   -92,   	127 	},
+/* 088 */    { "Pitcairn Astro 67", 	17,  	185,   	165,    42 	},
+/* 089 */    { "S. Am. 1956 mean(P)",	17, 	-288,   175,  	-376 	},
+/* 090 */    { "S. Chilean 1963 (P)",	17, 	16,   	196,    93 	},
+/* 091 */    { "Puerto Rico",        	5,  	11,    	72,  	-101 	},
+/* 092 */    { "Pulkovo 1942",      	18,  	28,  	-130,   -95 	},
+/* 093 */    { "Qornoq",            	17,  	164,   	138,  	-189 	},
+/* 094 */    { "Quatar National",   	17,  	-128,  	-283,   22 	},
+/* 095 */    { "Rome 1940",         	17,  	-225,  	-65,    9 	},
+/* 096 */    { "S-42(Pulkovo1942)", 	18,  	28,  	-121,   -77 	},
+/* 097 */    { "S.E.Asia_(Indian)",  	7,  	173,   	750,   	264 	},
+/* 098 */    { "SAD-69/Brazil",     	22,  	-60,    -2,   	-41 	},
+/* 099 */    { "Santa Braz",        	17,  	-203,   141,    53 	},
+/* 100 */    { "Santo (DOS)",       	17,  	170,    42,    	84 	},
+/* 101 */    { "Sapper Hill 43",    	17,  	-355,   16,    	74 	},
+/* 102 */    { "Schwarzeck",         	3,  	616,    97,  	-251 	},
+/* 103 */    { "Sicily",            	17,  	-97,   	-88,  	-135 	},
+/* 104 */    { "Sierra Leone 1960", 	26,  	0,     	0,     	0 	},
+/* 105 */    { "S. Am. 1969 mean",  	22,  	-57,    1,   	-41 	},
+/* 106 */    { "South Asia",        	13,  	7,   	-10,   	-26 	},
+/* 107 */    { "Southeast Base",    	17,  	-499,  	-249,   314 	},
+/* 108 */    { "Southwest Base",    	17,  	-104,   167,   	-38 	},
+/* 109 */    { "Tananarive Obs 25", 	17,  	-189,  	-242,   -91 	},
+/* 110 */    { "Thai/Viet (Indian)", 	7,  	214,   	836,   	303 	},
+/* 111 */    { "Timbalai 1948",      	7,  	-689,   691,   	-45 	},
+/* 112 */    { "Tokyo mean",         	4,  	-128,   481,   	664 	},
+/* 113 */    { "Tristan Astro 1968",	17,  	-632,   438,  	-609 	},
+/* 114 */    { "Unites Arab Emirates",	6, 	-249, 	-156,   381 	},
+/* 115 */    { "Viti Levu 1916",     	6,  	51,  	391,   	-36 	},
+/* 116 */    { "Wake Eniwetok 60",  	15,  	101,   	52,   	-39 	},
+/* 117 */    { "WGS 72",            	25,  	0,    	0,     	5 	},
+/* 118 */    { "WGS 84",            	26,  	0,    	0,     	0 	},
+/* 119 */    { "Yacare",            	17,  	-155,  	171,    37 	},
+/* 120 */    { "Zanderij",          	17,  	-265,  	120,  	-358 	},
+/* 121 */    { "Sweden",          	4,  	424.3, 	-80.5, 	613.1 	}
+
+
+Therefore to access the X value of the WGS84 datum you use:
+
+	  x = GPS_Datum[118].dx;
+
+To access the ellipsoid inverse flattening of the WGS84 dataum use:
+
+	  iflat = GPS_Ellipse[GPS_Datum[118].ellipse].invf;

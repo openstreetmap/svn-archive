@@ -771,8 +771,8 @@ public class osmServerSQLHandler extends Thread
       }
 
       String sSQL = "insert into user (user, pass, timeout, token) values (" +
-        "'" + sUser + "', " +
-        "'" + sPass + "', " +
+        "'" + user + "', " +
+        "'" + pass + "', " +
         " " + System.currentTimeMillis() + ", " +
         " '" + token + "')";
 

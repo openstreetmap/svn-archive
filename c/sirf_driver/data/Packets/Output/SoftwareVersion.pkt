@@ -1,0 +1,5 @@
+// gives the software version
+// rate: response to poll
+output packet SoftwareVersion (6) {
+  int8 Message[20] /* software version message in ASCII */;
+}

@@ -1,0 +1,12 @@
+// this is interesting - i have no idea what it is. apparently there is
+// some sort of very low bandwidth channel piggybacked on top of GPS
+// signals... does it contain anything interesting?
+// NOTE: data is logged in ICD format available from www.navcen.uscg.mil
+// there are 30 bytes per frame, 40 per sub-frame and 5 subframes to the
+// page. now how many shekels to my rupee?
+// rate: as downloaded ~12.5 minutes
+output packet SubframeData (8) {
+  uint8 Channel /* the channel this was downloaded from */;
+  uint8 SVID /* the satellite this was downloaded from */;
+  uint32 Data[40] /* the data payload */;
+}

@@ -1,0 +1,8 @@
+// further navigation data - tracker
+// rate: 1 Hz
+output packet MeasuredTrackerDataOut (4) {
+  uint16 Week /* GPS week */;
+  uint32 TimeOfWeek = float / 100.0 /* GPS time of week (seconds) */;
+  uint8 Channels /* Number of channels */;
+  TrackerSatelliteData Satellites[12] /* Tracker data of the satellites */;
+}

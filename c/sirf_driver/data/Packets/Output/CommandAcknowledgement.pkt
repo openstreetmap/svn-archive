@@ -1,0 +1,4 @@
+// response to a successful command
+output packet CommandAcknowledgement (11) {
+  uint8 ID /* the ID of the successful command, presumably */;
+}

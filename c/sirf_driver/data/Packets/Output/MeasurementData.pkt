@@ -1,0 +1,19 @@
+// Navigation library measurement data
+// rate: 1 Hz or every "measurement cycle"
+output packet MeasurementData (28) {
+  uint8 Channel /* channel number */;
+  uint32 TimeTage /* time tag? in milliseconds */;
+  uint8 ID /* satellite ID */;
+  uint64 SoftwareTime /* GPS software time in milliseconds */;
+  uint64 PseudoRange /* PR in meters */;
+  uint32 CarrierFrequency /* presumably in Hz - apparently in m/sec */;
+  uint64 CarrierPhase /* some conversion here? - in meters?? */;
+  uint16 TimeInTrack /* in milliseconds */;
+  uint8 SyncFlags /* some flags */;
+  uint8 CarrierToNoise[10] /* SNR (for carrier) in dB-Hz */;
+  uint16 DeltaRangeInterval /* change in PR (meters) */;
+  uint16 MeanDeltaRangeTime /* ??? in milli-seconds */;
+  uint16 ExtrapolationTime /* extrapolation of delta-PR to the TimeTag value in milli-seconds */;
+  uint8 PhaseErrorCount /* number of phase error greater than 60 degrees in the preceding second */;
+  uint8 LowPowerCount /* number of measurements less than 28 dB-Hz in the last second */;
+}

@@ -1,0 +1,4 @@
+// this packet requests the software version from the unit
+input packet PollSoftwareVersion (132) {
+  uint8 Reserved /* not used */;
+}

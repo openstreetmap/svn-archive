@@ -1,0 +1,17 @@
+// standard navigation packet 
+// rate: 1 Hz
+output packet MeasuredNavigationDataOut (2) {
+  int32 X /* X position in metres */;
+  int32 Y /* Y position in metres */;
+  int32 Z /* Z position in metres */;
+  int16 Vx = float / 8.0 /* X velocity in m/sec */;
+  int16 Vy = float / 8.0 /* Y velocity in m/sec */;
+  int16 Vz = float / 8.0 /* Z velocity in m/sec */;
+  uint8 Mode1 /*  */;
+  uint8 DOP = float / 5.0 /* Dilution of precision (metres) */;
+  uint8 Mode2 /*  */;
+  uint16 Week /* GPS week number */;
+  uint32 TimeOfWeek = float / 100.0 /* GPS time of week (seconds) */;
+  uint8 Satellites /* Number of satellites in fix */;
+  uint8 Channels[12] /* Satellite PRNs */;
+}

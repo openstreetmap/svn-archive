@@ -1,0 +1,12 @@
+// Diffrerential data
+// same as above
+output packet DifferentialData (29) {
+  uint16 ID /* satellite ID */;
+  uint16 IOD /* */;
+  uint8 Source /* 0=none, 1=WAAS, 2=external, 3=internal, 4=supplied by user */;
+  uint32 Correction /* the pseudo-range correction (meters) */;
+  uint32 RateCorrection /* PR rate correction (m/sec) */;
+  uint32 CorrectionAge /* */;
+  uint32 Reserved /* */;
+  uint32 Reserved /* */;
+}

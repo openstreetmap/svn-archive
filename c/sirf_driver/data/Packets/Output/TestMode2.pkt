@@ -1,0 +1,19 @@
+// testing packet
+// rate: as requested by input packet 150
+output packet TestMode2 (20) {
+  uint16 ID /* satellite ID */;
+  uint16 Period /* number of seconds (in the test period) we've been tracking this satellite */;
+  uint16 BitSyncTime /* time to bit-sync - i.e: get a channel status of 37 */;
+  uint16 BitCount /* number of bits received in the test period */;
+  uint16 PoorStatus /* number of poor status? */;
+  uint16 GoodStatus /* number of good status? */;
+  uint16 ParityErrorCount /* number of parity errors */;
+  uint16 LostVCOCount /* number of times we've lost VCO lock (?) */;
+  uint16 FrameSyncTime /* seconds */;
+  uint16 CarrierNoiseMean = float / 10.0 /* */;
+  uint16 CarrierNoiseSigma = float / 10.0 /* */;
+  uint16 ClockDrift = float / 10.0 /* Hz */;
+  uint16 ClockOffset = float / 10.0 /* Hz */;
+  uint16 Reserved /* */;
+  uint32 Reserved[5] /* */;
+}

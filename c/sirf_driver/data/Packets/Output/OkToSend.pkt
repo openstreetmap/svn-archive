@@ -1,0 +1,5 @@
+// its ok to send!
+// rate: on cpu trickle power on/off
+output packet OkToSend (18) {
+  uint8 OK /* a value of 0=NOT OK, a value of 1=OK */;
+}

@@ -1,0 +1,12 @@
+// testing packet
+// rate: as requested by packet 150
+output packet TestMode1 (16) {
+  uint16 ID /* satellite ID */;
+  uint16 Period /* number of seconds (in the test period) we've been tracking this satellite */;
+  uint16 BitSyncTime /* time to bit-sync - i.e: get a channel status of 37 */;
+  uint16 BitCount /* number of bits received in the test period */;
+  uint16 PoorStatus /* number of poor status? */;
+  uint16 GoodStatus /* number of good status? */;
+  uint16 ParityErrorCount /* number of parity errors */;
+  uint16 LostVCOCount /* number of times we've lost VCO lock (?) */;
+}

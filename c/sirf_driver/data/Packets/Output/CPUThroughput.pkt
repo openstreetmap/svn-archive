@@ -1,0 +1,8 @@
+// not really sure what this is for...
+// rate: 1 Hz
+output packet CPUThroughput (9) {
+  uint16 SegStatMax = float / 186.0 /* some timing in milliseconds */;
+  uint16 SegStatLat = float / 186.0 /* some timing in milliseconds */;
+  uint16 AveTrkTime = float / 186.0 /* some timing in milliseconds */;
+  uint16 LastMS /* some timing in milliseconds */;
+}

@@ -1,0 +1,10 @@
+// does just what it says on the tin
+// 1 Hz, or response to poll
+output packet ClockStatus (7) {
+  uint16 Week /* GPS Week number */;
+  uint32 TimeOfWeek = float / 100.0 /* time of week (seconds) */;
+  uint8 SVS /* no documentation for this - dunno what it is */;
+  int32 Drift /* clock drift in nanoseconds (i think it can be negative) */;
+  int32 Bias /* clock bias in seconds */;
+  uint32 EstimatedGPSTime /* estimated GPS time in milliseconds */;
+}

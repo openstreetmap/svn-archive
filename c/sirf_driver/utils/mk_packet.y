@@ -128,7 +128,7 @@ pfields: OBRACE fields CBRACE { $$ = $2; }
 
 name:	NAME
 	{
-		char *name = (char *)malloc(sizeof(char) * strlen($1));
+		char *name = (char *)malloc(sizeof(char) * (strlen($1) + 1));
 		if (name == NULL) { fprintf(stderr, "name == NULL!\n"); }
 		strcpy(name, $1);
 		$$ = name;

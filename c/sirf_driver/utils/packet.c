@@ -81,7 +81,7 @@ void make_hpp_file(struct packet *p, FILE *fh) {
 	   (strcmp(fptr->record, "uint64") != 0) &&
 	   (strcmp(fptr->record, "float") != 0) ) {
 	// new type
-	fprintf(fh, "#include \"%s.hpp\"\n", fptr->record);
+	fprintf(fh, "#include <%s.hpp>\n", fptr->record);
       }
     }
     fprintf(fh, "\nnamespace SiRF {\n\n", define_name);

@@ -44,7 +44,7 @@ utils/mk_packet: utils/packet.o utils/mk_packet.tab.o utils/lex.yy.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 %.tab.c: %.y
-	$(BISON) -dv $<
+	$(BISON) -dv -o $@ $<
 
 utils/lex.yy.c: utils/mk_packet.l
 	$(FLEX) -o$@ $<
@@ -63,5 +63,5 @@ src/%.cpp: data/%.pkt include/%.hpp utils/mk_packet
 	utils/mk_packet -c $@ $<
 
 Makefile.dep: $(SOURCES)
-	$(CXX) -MM $(CXXFLAGS) $(INC) -E $^ > $@
+	$(CXX) -MM -MG $(CXXFLAGS) $(INC) -E $^ > $@
 

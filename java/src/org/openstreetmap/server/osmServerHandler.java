@@ -300,6 +300,17 @@ public class osmServerHandler
   } // getStreets
 
 
+  public boolean validateToken(String sToken)
+  {
+    if( osmSQLH.validateToken(sToken) == -1)
+    { 
+      return false;
+    }
+
+    return true;
+
+  } // validateToken
+   
 
 
   public Vector getPoints(

@@ -79,6 +79,7 @@ destdir="${build}"
   </fileset>
 </copy>
 
+<copy file="html-images/favicon.ico" tofile="/var/www/openstreetmap/favicon.ico" />
 <!-- css -->
 
 <copy file="css/style.css" tofile="/var/www/openstreetmap/css/style.css" />

@@ -61,6 +61,10 @@ namespace SiRF {
      */
     void throwAwayPacketsUntilNice();
 
+    pthread_t threadID() {
+      return thread;
+    }
+
   private:
 
     /* allocate and return the right packet type

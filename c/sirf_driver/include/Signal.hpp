@@ -20,6 +20,31 @@ namespace SiRF {
      */
     static void resetWatchdog();
 
+    /**
+     * whether or not we're shutting down now
+     */
+    static bool shuttingDown;
+
+    /**
+     * which thread called to exit
+     */
+    static pthread_t toldMainThread();
+
+    /**
+     * wait to be told
+     */
+    static void waitToBeTold();
+
+    static void tellMainThread();
+    
+  private:
+    /**
+     * main thread for signalling
+     */
+    static pthread_t mainThread;
+    static pthread_t waitFor;
+
+    static void killme(int);
   };
 
 }

@@ -2,6 +2,7 @@
 #include <SiRFDevice.hpp>
 #include <Message.hpp>
 #include <Signal.hpp>
+#include <Exception.hpp>
 
 // need std::cerr
 #include <iostream>
@@ -106,7 +107,7 @@ namespace SiRF {
   // refills the buffer from the serial port
   void SiRFDevice::refillReadBuffer() {
     // shouldn't take more than 30s to get more data, right?
-    Signal::setWatchdog(30);
+    Signal::setWatchdog(10);
     // we need some more data
     do {
       read_buf_len = ::read(fd, read_buffer, read_buf_size);
@@ -114,6 +115,12 @@ namespace SiRF {
 	if (errno != EAGAIN) {
 	  // some error other than time-out on data
 	  Message::critical("Error reading data from serial port!");
+	}
+	if (Signal::shuttingDown) {
+	  // interrupted while reading, we should exit cleanly
+	  read_buf_len = 0;
+	  read_buf_pos = 0;
+	  Message::info("about to throw interrupted exception");
 	}
 	usleep(100000); // sleep - maybe it will all go away!
       }

@@ -2,10 +2,14 @@
 #include "Coordinates.hpp"
 #include "config.h"
 
+#include <Message.hpp>
+
 #ifdef HAVE_CURSES_H
 extern "C" {
 #include <curses.h>
 #include <string.h>
+#include <errno.h>
+  extern int errno;
 }
 #else
 #error You must have a Curses library installed to compile this file!
@@ -146,11 +150,29 @@ void GPXReporterUI::updateUI() const {
   refresh();
 }
 
+void *GPXReporterUI::pthreadFunction(void *ptr) {
+  ((GPXReporterUI*)ptr)->waitToQuit();
+  return NULL;
+}
+
+void GPXReporterUI::startThread() {
+  pthread_create(&thread, NULL, &pthreadFunction, this);
+}
+
+void GPXReporterUI::joinThread() {
+  pthread_join(thread, NULL);
+}
+ 
 void GPXReporterUI::waitToQuit() {
   int i;
 
   while (i != 'q') {
     i = getch();
+
+    if (i == ERR) {
+      // tell whats happening
+      Message::info("getch() returned ERR, errno = %d\n", errno);
+    }
 
     if (i == 'u') {
       // update the screen!
@@ -158,6 +180,8 @@ void GPXReporterUI::waitToQuit() {
       refresh();
     }
   }
+
+  Signal::tellMainThread();
 }
 
 void GPXReporterUI::shutdownDisplay() {

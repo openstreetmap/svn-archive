@@ -8,7 +8,6 @@
 
 #include "AuthorInfo.hpp"
 #include "GPXHandler.hpp"
-#include "SetupGPX.hpp"
 
 #include <iostream>
 #include <pthread.h>
@@ -22,7 +21,7 @@ int main(int argc, char *argv[]) {
   /* check for correct usage
    */
   if (argc < 3) {
-    std::cerr << "Usage: sirf2gpx <input source> <output file> [baud]" 
+    std::cerr << "Usage: sirfheadless <input source> <output file> [baud]" 
 	      << std::endl;
     return -1;
   }
@@ -43,26 +42,12 @@ int main(int argc, char *argv[]) {
    */
   PacketFactory factory(stream);
 
-  /* add the handlers
-   */
-  //factory.registerHandler(new PrintPacketHandler<VisibleList>);
-  //factory.registerHandler(new PrintPacketHandler<OkToSend>);
-  //factory.registerDefaultHandler(new WarnPacketHandler);
-
   /* add the GPX writer handler
    */
   AuthorInfo author_info("Matt Amos", "matt@matt-amos.uklinux.net");
   GPXHandler gpx(argv[2], author_info);
-  GPXReporterUI ui;
-#ifdef USE_SETUP_GPX
-  SetupGPX setup(factory, gpx, ui);
-  factory.registerHandler(&setup);
-#else /* USE_SETUP_GPX */
+
   factory.registerHandler(&gpx);
-  factory.registerHandler(static_cast<PacketHandler<MeasuredNavigationDataOut>*>(&ui));
-  factory.registerHandler(static_cast<PacketHandler<MeasuredTrackerDataOut>*>(&ui));
-  ui.setStatus("GPS system set up");
-#endif /* USE_SETUP_GPX */
 
   /* get good packets
    */
@@ -72,22 +57,10 @@ int main(int argc, char *argv[]) {
    */
   factory.eventLoop();
 
-  // wait to quit
-  ui.startThread();
-
   Signal::waitToBeTold();
-  if (pthread_equal(Signal::toldMainThread(), factory.threadID()) != 0) {
-    factory.exitLoop();
-  }
-  if (pthread_equal(Signal::toldMainThread(), ui.threadID()) != 0) {
-    ui.joinThread();
-  }
 
   // rejoin the other thread
-  //factory.exitLoop();
-
-  // rejoin the ui thread
-  //ui.joinThread();
+  factory.exitLoop();
 
   /* return
    */

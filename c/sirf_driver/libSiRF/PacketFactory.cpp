@@ -8,6 +8,7 @@
 #include <DifferentialData.hpp>
 #include <Message.hpp>
 #include <Debug.hpp>
+#include <Signal.hpp>
 
 #include <vector>
 #include <iostream>
@@ -72,7 +73,6 @@ namespace SiRF {
     if (Debug::isSingleThreaded()) {
       threadedEventLoop();
     } else {
-      ::sem_init(&lock, 0, 0);
       ::pthread_create(&thread, NULL, &stupidHackedUpPthreadFunction, this);
     }
   }
@@ -81,9 +81,7 @@ namespace SiRF {
    */
   void PacketFactory::exitLoop() {
     if (!Debug::isSingleThreaded()) {
-      ::sem_post(&lock);
       ::pthread_join(thread, NULL);
-      ::sem_destroy(&lock);
     }
   }
 
@@ -134,6 +132,9 @@ namespace SiRF {
 	  extractors[type]->handle();
 	}
 
+      } catch (InterruptedReadException &e) {
+	Message::critical("Caught an interrupted read");
+	break;
       } catch (std::exception &e) {
 	Message::warn("PacketFactory::eventLoop: caught exception!");
 	Message::warn(e.what());
@@ -147,15 +148,7 @@ namespace SiRF {
   /* is it good to continue?
    */
   bool PacketFactory::goodToContinue() {
-    int i;
-
-    if (Debug::isSingleThreaded()) {
-      i = 0;
-    } else {
-      ::sem_getvalue(&lock, &i);
-    }
-
-    return (i == 0);
+    return (Signal::shuttingDown == false);
   }
 
   /* throw away packets until we have 5 nice ones in a row

@@ -2,12 +2,25 @@
 #include <Signal.hpp>
 #include <signal.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <semaphore.h>
 
 namespace SiRF {
 
-  static void killme(int signo) {
-    Message::critical("timeout. possible device disconnect?\n");
-    exit(-1);
+  static sem_t lock;
+  pthread_t Signal::mainThread;
+  pthread_t Signal::waitFor;
+  bool Signal::shuttingDown;
+
+  void Signal::killme(int signo) {
+    Message::critical("timeout. possible device disconnect?");
+    tellMainThread();
+  }
+
+  void Signal::tellMainThread() {
+    shuttingDown = true;
+    waitFor = pthread_self();
+    sem_post(&lock);
   }
 
   void Signal::setup() {
@@ -23,6 +36,14 @@ namespace SiRF {
       Message::critical("unable to install a signal handler!\n");
       exit(-1);
     }
+
+    sem_init(&lock, 0, 0);
+
+    // the thread calling this has to be the main thread
+    mainThread = pthread_self();
+
+    // we're not shutting down yet
+    shuttingDown = false;
   }
 
   void Signal::setWatchdog(unsigned int timeout) {
@@ -33,4 +54,12 @@ namespace SiRF {
     alarm(0);
   }
 
+  pthread_t Signal::toldMainThread() {
+    return waitFor;
+  }
+
+  void Signal::waitToBeTold() {
+    sem_wait(&lock);
+    sem_destroy(&lock);
+  }
 }

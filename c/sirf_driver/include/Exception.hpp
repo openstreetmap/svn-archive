@@ -78,4 +78,12 @@ namespace SiRF {
     char message[60];
   };
 
+  class InterruptedReadException : public std::exception {
+  public:
+    InterruptedReadException() {}
+    ~InterruptedReadException() throw() {}
+    const char *what() const throw() {
+      return "Interruped during serial port read";
+    }
+  };
 }

@@ -1,6 +1,6 @@
 SUBDIRS = 
 
-bin_PROGRAMS = sirf2gpx sirfdebug
+bin_PROGRAMS = sirf2gpx sirfdebug sirfheadless
 
 INCLUDES = -I$(top_srcdir)/include \
 	-I$(top_srcdir)/include/Packets/Input \
@@ -18,3 +18,8 @@ sirf2gpx_SOURCES = AuthorInfo.cpp AuthorInfo.hpp \
 	main.cpp
 
 sirfdebug_SOURCES = sirfdebug.cpp
+
+sirfheadless_SOURCES = headless.cpp \
+	AuthorInfo.cpp AuthorInfo.hpp \
+	GPXHandler.cpp GPXHandler.hpp \
+	Coordinates.cpp Coordinates.hpp

@@ -5,6 +5,7 @@
 #include <MeasuredTrackerDataOut.hpp>
 #include <PacketHandler.hpp>
 #include <Message.hpp>
+#include <Signal.hpp>
 
 using namespace SiRF;
 
@@ -22,7 +23,13 @@ public:
   void handleMessage(const char *);
   void shutdownDisplay();
   void setStatus(const std::string &str);
+  static void *pthreadFunction(void *);
+  void startThread();
+  void joinThread();
   void waitToQuit();
+  pthread_t threadID() {
+    return thread;
+  }
 private:
   void updateUI() const;
 
@@ -33,6 +40,7 @@ private:
   std::list<std::string> messages;
   bool inTrack;
   MeasuredTrackerDataOut lastTracker;
+  pthread_t thread;
 };
 
 #endif /* GPX_REPORTER_UI_H */

@@ -54,11 +54,11 @@ public class osmPointsLayer extends Layer
     OMCircle omc;
 
     // H
-    
+
     osmServerClient osc = new osmServerClient();
 
     Vector v = osc.getPoints();
-    
+
     Enumeration e = v.elements();
 
     while( list.size() < 1000 &&  e.hasMoreElements() )
@@ -66,22 +66,18 @@ public class osmPointsLayer extends Layer
       gpspoint p = (gpspoint)e.nextElement();
 
       omc = new OMCircle( p.getLatitude(),
-                          p.getLongitude(),
-                          1f,
-                          com.bbn.openmap.proj.Length.METER
-                         );
-    
+          p.getLongitude(),
+          100000f,
+          com.bbn.openmap.proj.Length.METER
+          );
+      omc.setLinePaint(Color.black);
+      omc.setFillPaint(OMGraphic.clear);
+
       list.add(omc);
     }
-    
+
 
   }
-
-
-
-
-
-
 
 
 

@@ -155,7 +155,7 @@ else
             + "Someone (maybe you) has requested an openstreetmap.org user account.\n"
             + "\n"
             + "To activate it, click this link\n"
-            + "http://www.openstreetmap.org/edit/newUser.jsp?action=confirm&email=" + email + "&token=" + sToken + "\n"
+            + "http://www.openstreetmap.org/edit/newUser.jsp?action=confirm&email=" + email + "&token=" + sAddUserToken + "\n"
             + "\n"
             + "To report abuse, please mail webmaster@openstreetmap.org";
 

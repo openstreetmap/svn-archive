@@ -50,7 +50,6 @@ else
       && sPassedToken != null
       && email != null)
   {
-    out.print("got here");
     try
     {
 
@@ -105,6 +104,12 @@ else
         Vector v = new Vector();
 
         v.addElement(email);
+
+        boolean bUserExists = ((Boolean)xmlrpc.execute("openstreetmap.userExists",v)).booleanValue();
+
+        v = new Vector();
+
+        v.addElement(email);
         v.addElement(pass1);
 
         String sToken = (String)xmlrpc.execute("openstreetmap.addUser",v);
@@ -116,7 +121,7 @@ else
 
         }
 
-        if( bXmlSuccess)
+        if( !bUserExists && bXmlSuccess)
         {
 
 

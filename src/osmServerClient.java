@@ -65,6 +65,7 @@ public class osmServerClient
     catch(Exception e)
     {
       System.out.println("oh de-ar " + e);
+      
       System.exit(-1);
 
     }

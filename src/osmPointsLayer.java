@@ -61,7 +61,7 @@ public class osmPointsLayer extends Layer
     
     Enumeration e = v.elements();
 
-    while( e.hasMoreElements() )
+    while( list.size() < 1000 &&  e.hasMoreElements() )
     {
       gpspoint p = (gpspoint)e.nextElement();
 

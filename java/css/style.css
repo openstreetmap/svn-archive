@@ -116,9 +116,12 @@ body {
 
 #keyvalue {
   font-size: small;
-  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  border-width: 0;
 }
 
 #keyvalue.th {
   font-weight: bold;
 }
+

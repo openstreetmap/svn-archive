@@ -431,7 +431,7 @@ public class osmServerHandler
   } // dropPointsInArea
 
 
-  public Vector getAllKeys(String token)
+  public Vector getAllKeys(String token, boolean bVisibleOrNot)
   {
     
     int uid = osmSQLH.validateToken(token);
@@ -442,9 +442,89 @@ public class osmServerHandler
 
     }
 
-    return osmSQLH.getAllKeys();
+    return osmSQLH.getAllKeys(bVisibleOrNot);
 
-  }
+  } // getAllKeys
 
+
+  public Vector getKeyHistory(String token, int nKeyNum)
+  {
+    
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return new Vector();
+
+    }
+
+    return osmSQLH.getKeyHistory(nKeyNum);
+
+  } // getKeyHistory
+  
+
+
+  public boolean deleteKey(String token, int nKeyNum)
+  {
+
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+
+    }
+
+    return osmSQLH.deleteKey(nKeyNum, uid);
+
+  } // deleteKey
+
+
+  
+  public boolean undeleteKey(String token, int nKeyNum)
+  {
+
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+
+    }
+
+    return osmSQLH.undeleteKey(nKeyNum, uid);
+
+  } // undeleteKey
+
+
+  public boolean setNewKeyName(String token, String sNewKeyName, int nKeyNum)
+  {
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return false;
+
+    }
+
+
+    return osmSQLH.newKeyName(sNewKeyName, nKeyNum, uid);
+
+  } // setNewKeyName
+
+
+  public boolean getKeyVisible(String sToken, int nKeyNum)
+  {
+    int uid = osmSQLH.validateToken(sToken);
+
+    if( uid == -1)
+    {
+      return false;
+
+    }
+
+    return osmSQLH.getKeyVisible(nKeyNum);
+
+  } // getKeyVisible
 
 } // osmServerHandler

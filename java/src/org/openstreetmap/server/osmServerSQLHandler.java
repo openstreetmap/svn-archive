@@ -347,6 +347,7 @@ public class osmServerSQLHandler extends Thread
     System.out.println("addStreetSegment");
 
     try{
+      // FIXME need to check streetuid exists!
 
       Statement stmt = conn.createStatement();
 
@@ -978,7 +979,7 @@ public class osmServerSQLHandler extends Thread
   } // largestTrackID
 
 
-  public Vector getAllKeys()
+  public synchronized Vector getAllKeys(boolean bVisibleOrNot)
   {
 
     Vector v = new Vector();
@@ -987,8 +988,7 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = " select j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid) as j  where h.uid=j.uid and h.visible=1 group by h.uid";
-
+      String sSQL = "select h.uid, j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid) as j  where h.uid=j.uid and h.visible=" + bVisibleOrNot + " group by h.uid";
       
       System.out.println("querying with sql \n " + sSQL);
 
@@ -999,7 +999,7 @@ public class osmServerSQLHandler extends Thread
         v.add( rs.getString(1) );
         v.add( rs.getString(2) );
         v.add( rs.getString(3) );
-
+        v.add( rs.getString(4) );
       }
 
 
@@ -1014,5 +1014,263 @@ public class osmServerSQLHandler extends Thread
     return v;
 
   } // getAllKeys
+
+
+  public synchronized Vector getKeyHistory(int nKey)
+  {
+     Vector v = new Vector();
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select osmKeys.name, osmKeys.timestamp, osmKeys.visible, user.user from osmKeys left join user on user_uid=user.uid where osmKeys.uid=" + nKey + " order by timestamp desc";
+      
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      while ( rs.next() )
+      {
+        v.add( rs.getString(1) );
+        v.add( rs.getString(2) );
+        v.add( rs.getString(3) );
+        v.add( rs.getString(4) );
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return v;
+
+  } // getKeyHistory
+
+  
+  public synchronized boolean newKeyName(String sNewKeyName, int nKeyNum, int nUserUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid from key_meta_table where uid=" + nKeyNum;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+
+        // that key does exist
+
+        sSQL = "insert into osmKeys (uid,name,timestamp,user_uid,visible) values ("
+          + " " + nKeyNum + ", "
+          + "'" + sNewKeyName + "', "
+          + System.currentTimeMillis() + ", "
+          + nUserUID + ", "
+          + "1)";
+
+          stmt.execute(sSQL);
+
+        return true;
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // newKeyName
+
+
+ 
+  public synchronized boolean deleteKey(int nKeyNum, int nUserUID)
+  {
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select name, visible from osmKeys where uid=" + nKeyNum + " order by timestamp desc limit 1";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+
+        // that key does exist
+
+        if( rs.getString("visible").equals("0") )
+        {
+          // the key is already deleted
+          return false;
+        }
+
+        return updateKeyVisibility(nKeyNum, false, rs.getString("name"), nUserUID);
+
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+
+
+  } // deleteKey
+
+
+  public synchronized boolean undeleteKey(int nKeyNum, int nUserUID)
+  {
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select name, visible from osmKeys where uid=" + nKeyNum + " order by timestamp desc limit 1";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+
+        // that key does exist
+
+        if( rs.getString("visible").equals("1") )
+        {
+          
+          // the key is already undeleted
+          return false;
+        }
+
+        return updateKeyVisibility(nKeyNum, true, rs.getString("name"), nUserUID);
+
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // undeleteKey
+
+
+  private synchronized boolean updateKeyVisibility(int nKeyNum, boolean bVisible, String sKeyName, int nUserUID)
+  {
+
+
+    try
+    {
+      String sVisible = "0";
+      if(bVisible)
+      {
+        sVisible = "1";
+      }
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction; ";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      stmt.execute(sSQL);
+
+      sSQL = "insert into osmKeys (uid,name,timestamp,user_uid,visible) values ("
+        + " " + nKeyNum + ", "
+        + "'" + sKeyName + "', "
+        + System.currentTimeMillis() + ", "
+        + nUserUID + ", "
+        + sVisible + ");";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "update key_meta_table set visible=" + sVisible + " where uid=" +nKeyNum;
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      return true;
+
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+
+
+
+  } // updateKeyVisibility
+
+  
+  public synchronized boolean getKeyVisible(int nKeyNum)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select visible from key_meta_table where uid=" + nKeyNum;
+      
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return rs.getString("visible").equals("1");
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // getKeyVisible
+
 
 } // osmServerSQLHandler

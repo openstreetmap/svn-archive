@@ -1,3 +1,5 @@
+package org.openstreetmap.applet;
+
 import java.awt.*;
 import java.lang.*;
 import java.awt.event.*;

@@ -17,6 +17,7 @@
 
  */
 
+package org.openstreetmap.client;
 
 import java.util.*;
 import java.net.*;
@@ -24,6 +25,8 @@ import java.lang.*;
 import java.io.*;
 import com.bbn.openmap.LatLonPoint;
 import org.apache.xmlrpc.applet.*;
+
+import org.openstreetmap.util.*;
 
 public class osmServerClient
 {

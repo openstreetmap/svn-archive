@@ -16,7 +16,7 @@
    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
  */
-
+package org.openstreetmap.applet;
 
 import java.util.*;
 import java.lang.*;
@@ -35,6 +35,7 @@ import com.bbn.openmap.omGraphics.*;
 import com.bbn.openmap.proj.*;
 import com.bbn.openmap.util.*;
 
+import org.openstreetmap.client.*;
 
 public class osmSelectLayer extends Layer
 {

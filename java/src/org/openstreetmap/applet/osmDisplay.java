@@ -17,6 +17,7 @@
 
  */
 
+package org.openstreetmap.applet;
 
 import java.lang.*;
 import java.util.*;
@@ -31,7 +32,7 @@ import com.bbn.openmap.layer.shape.ShapeLayer;
 
 import java.util.Properties;
 
-
+import org.openstreetmap.client.*;
 
 public class osmDisplay
 {

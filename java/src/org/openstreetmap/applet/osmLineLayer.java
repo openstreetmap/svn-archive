@@ -17,6 +17,7 @@
 
  */
 
+package org.openstreetmap.applet;
 
 import java.util.*;
 import java.lang.*;
@@ -35,6 +36,7 @@ import com.bbn.openmap.omGraphics.*;
 import com.bbn.openmap.proj.*;
 import com.bbn.openmap.util.*;
 
+import org.openstreetmap.client.*;
 
 public class osmLineLayer extends Layer
 {

@@ -1,3 +1,6 @@
+
+package org.openstreetmap.applet;
+
 import java.util.*;
 import java.lang.*;
 import com.bbn.openmap.event.*;

@@ -17,6 +17,7 @@
 
  */
 
+package org.openstreetmap.applet;
 
 import java.util.*;
 import java.lang.*;
@@ -34,6 +35,9 @@ import com.bbn.openmap.layer.OMGraphicHandlerLayer;
 import com.bbn.openmap.omGraphics.*;
 import com.bbn.openmap.proj.*;
 import com.bbn.openmap.util.*;
+
+import org.openstreetmap.client.*;
+import org.openstreetmap.util.gpspoint;
 
 
 public class osmPointsLayer extends Layer

@@ -4,6 +4,7 @@
 <property name="build" location="build"/>
 <property name="dist" location="dist"/>
 <property name="lib" location="lib"/>
+<property name="icons" location="icons"/>
 
 
 <target name="init">
@@ -29,6 +30,9 @@
   <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
   <copy file="${src}/index.html" tofile="${dist}/index.html"/>
   <copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
+  <copy todir="${dist}">
+    <fileset dir="${icons}"/>
+  </copy>
 </target>
 
 

@@ -325,7 +325,7 @@ public class osmServerSQLHandler extends Thread
         + " timestamp, "
         + " hor_dilution, "
         + " vert_dilution, "
-        + " track_id, "
+        + " trackid, "
         + " quality, "
         + " satellites, "
         + " user, "
@@ -361,7 +361,7 @@ public class osmServerSQLHandler extends Thread
         v.add( new java.util.Date(rs.getLong("timestamp") )); // time point was taken
         v.add( new Double( rs.getDouble("hor_dilution")));
         v.add( new Double( rs.getDouble("vert_dilution")));
-        v.add( new Long( rs.getLong("track_id")));
+        v.add( new Long( rs.getLong("trackid")));
         v.add( new Integer( rs.getInt("quality")));
         v.add( new Integer( rs.getInt("satellites")));
         v.add( rs.getString("user"));

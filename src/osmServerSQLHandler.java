@@ -56,10 +56,10 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "select Y(g),X(g),altitude,timestamp from tempPoints"
-                    + " where X(g) > " + p1lat
-                    + " and X(g) < " + p2lat
-                    + " and Y(g) > " + p1lon
+                    + " where X(g) < " + p1lat
+                    + " and X(g) > " + p2lat
                     + " and Y(g) < " + p2lon
+                    + " and Y(g) > " + p2lon
                     + " limit 2000";
 
       System.out.println("querying with sql \n " + sSQL);

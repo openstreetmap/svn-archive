@@ -1,3 +1,6 @@
+
+package org.openstreetmap.util;
+
 import java.util.*;
 import java.lang.*;
 import org.apache.xmlrpc.*;

@@ -17,6 +17,7 @@
 
  */
 
+package org.openstreetmap.server;
 
 import java.util.*;
 import java.lang.*;

@@ -2,6 +2,7 @@
 #define UNKNOWN_PACKET_H
 
 #include "OutputPacket.hpp"
+#include <vector>
 
 namespace SiRF {
   
@@ -17,6 +18,9 @@ namespace SiRF {
     // standard printing function
     void output(std::ostream &out) const;
 
+    // binary printing function
+    void outputBinary(std::ostream &out) const;
+
     // input from a stream
     void input(OutputStream &in);
 
@@ -28,6 +32,10 @@ namespace SiRF {
     /* our type, as read from the stream
      */
     uint8 type;
+
+    /* hold the payload data
+     */
+    std::vector<uint8> payload;
 
   };
 

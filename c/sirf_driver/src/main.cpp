@@ -15,6 +15,7 @@
 #include "PrintPacketHandler.hpp"
 #include "WarnPacketHandler.hpp"
 #include "NullPacketHandler.hpp"
+#include "DumpPacketHandler.hpp"
 
 #include <iostream>
 
@@ -44,6 +45,7 @@ int main(int argc, char *argv[]) {
   //factory.registerHandler(new NullPacketHandler<MeasuredTrackerDataOut>);
   //factory.registerHandler(new PrintPacketHandler<CPUThroughput>);
   factory.registerDefaultHandler(new WarnPacketHandler);
+  factory.registerDefaultHandler(new DumpPacketHandler("dump.out"));
   factory.registerHandler(new PrintPacketHandler<SoftwareVersion>);
 
   factory.throwAwayPacketsUntilNice();

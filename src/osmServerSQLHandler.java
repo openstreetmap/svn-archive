@@ -61,12 +61,11 @@ public class osmServerSQLHandler extends Thread
     
     System.out.println("login " + user + " " + pass);
 
-    if( user.length() < 5 ||
+    if( 
           user.length() > 30 ||
           pass.length() < 5 ||
           pass.length() > 30 ||
-          user.indexOf(" ") == -1 ||
-          user.indexOf("@") == -1 )
+          user.indexOf(" ") != -1 )
     {
        return "ERROR";
        

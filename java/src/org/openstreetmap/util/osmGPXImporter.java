@@ -51,6 +51,12 @@ public class osmGPXImporter extends DefaultHandler{
   {
 
   } // osmGPXImporter
+
+  public void closeDatabase()
+  {
+    osmh.closeDatabase();
+
+  } // closeDatabase
   
 
   public osmGPXImporter(PrintWriter o, String token)
@@ -308,6 +314,8 @@ public class osmGPXImporter extends DefaultHandler{
         SAXParser saxParser = factory.newSAXParser();
 
         saxParser.parse( is, handler );
+
+        handler.closeDatabase();
       }
       else
       {
@@ -321,6 +329,7 @@ public class osmGPXImporter extends DefaultHandler{
     }
 
     o.print("upload done.<br>");
+
 
   } // upload
 

@@ -55,6 +55,9 @@ else
   You need to log in to use the tools :-)
   <%
 }
+
+osmSH.closeDatabase();
+
 %>
 </div>
 

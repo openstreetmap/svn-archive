@@ -48,7 +48,6 @@ else
         
       }
 
-        osmServerHandler osmSH = new osmServerHandler();
 
     %>
       <h1>Edit key</h1>
@@ -224,7 +223,6 @@ else
   }
   else
   {
-    osmServerHandler osmSH = new osmServerHandler();
 
     if( sAction != null && sAction.equals("addNewKey") )
     {

@@ -5,6 +5,8 @@ Cookie cookies [] = request.getCookies ();
 Cookie myCookie = null;
 boolean bLoggedIn = false;
 String sToken = "";
+  
+osmServerHandler osmSH = new osmServerHandler();
 
 if (cookies != null)
 {
@@ -22,8 +24,6 @@ if(myCookie != null)
 {
   sToken = myCookie.getValue();
 
-  osmServerHandler osmSH = new osmServerHandler();
-
   bLoggedIn = osmSH.validateToken(sToken);
 
   if( bLoggedIn )
@@ -36,6 +36,7 @@ if(myCookie != null)
     response.addCookie(cookie);
     bLoggedIn = true;
   }
+
 
 }
 

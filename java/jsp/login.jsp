@@ -38,7 +38,6 @@ else
       && email != null)
   {
 
-    osmServerHandler osmSH = new osmServerHandler();
 
     String token = osmSH.login(email, pass);
 

@@ -6,14 +6,10 @@
 <%@ page import="org.apache.xmlrpc.*" %>
 <%@ page contentType="text/html" %>
 
-<%!
-
-
-%>
 
 <html>
 
-<jsp:include page="include/top.jsp" />
+<%@ include file="include/top.jsp" %>
 
 <%
 
@@ -175,6 +171,6 @@ else
 
 %>
 
+<%@ include file="include/bottom.jsp" %>
 
-<jsp:include page="include/bottom.jsp" />
 </html>

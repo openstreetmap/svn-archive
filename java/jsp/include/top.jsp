@@ -5,5 +5,8 @@
 </tr>
 
 <tr>
-<jsp:include page="leftMenu.jsp">
+
+
+
+<td>this is a test left menu</td>
 

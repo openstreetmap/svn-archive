@@ -91,7 +91,7 @@ public class osmServerHandler implements Runnable
       
       System.out.println("Something went screwy " + e);
     
-      System.exit(-1);
+//      System.exit(-1);
     }
     
     

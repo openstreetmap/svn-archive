@@ -180,9 +180,9 @@ public class osmDisplayPanel extends JPanel{
     closestPoint.setHighlight(true);
 
     osmA.setStatusLabel("closest point is at" +
-                        "lat " + closestPoint.getLatitude() +
-                        " lon " + closestPoint.getLongitude() +
-                        " alt " + closestPoint.getAltitude() +
+                        " lat: " + closestPoint.getLatitude() +
+                        " lon: " + closestPoint.getLongitude() +
+                        " alt: " + closestPoint.getAltitude() +
                         " recorded at " + new Date(closestPoint.getTime()));
                        
     repaint();

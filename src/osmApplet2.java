@@ -30,8 +30,6 @@ public class osmApplet2 extends JApplet {
         shapeLayerProps.put("prettyName", "Political Solid");
         shapeLayerProps.put("lineColor", "000000");
         shapeLayerProps.put("fillColor", "BDDE83");
-        shapeLayerProps.put("shapeFile", "data/shape/dcwpo-browse.shp");
-        shapeLayerProps.put("spatialIndex", "data/shape/dcwpo-browse.ssx");
         shapeLayer.setProperties(shapeLayerProps);
 
         // Add the political layer to the map

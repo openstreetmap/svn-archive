@@ -100,12 +100,12 @@ public class osmServerSQLHandler extends Thread
           
         }
         int uid = rs.getInt(1);
-         sSQL = "update tempPoints set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
+         sSQL = "update user set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
           + " where uid = " + uid;
 
         stmt.execute(sSQL);
 
-        sSQL = "update tempPoints set token='" + token + "' where uid = " + uid;
+        sSQL = "update user set token='" + token + "' where uid = " + uid;
 
         stmt.execute(sSQL);
 
@@ -161,7 +161,7 @@ public class osmServerSQLHandler extends Thread
       {
         int uid = rs.getInt(1);
 
-        sSQL = "update tempPoints set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
+        sSQL = "update user set timeout=" + (System.currentTimeMillis() + (1000 * 10)) 
           + " where uid = " + uid;
 
         stmt.execute(sSQL);

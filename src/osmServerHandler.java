@@ -78,6 +78,7 @@ public class osmServerHandler implements Runnable
 
       out.flush();
 
+      System.out.println("wrote END");
     }
     catch(Exception e)
     {

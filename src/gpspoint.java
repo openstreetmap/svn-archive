@@ -36,8 +36,8 @@ public class gpspoint{
   {
 
     m_lat = Float.parseFloat(x);
-    m_long = Float.parseFloat(x);
-    m_altitude = Float.parseFloat(x);
+    m_long = Float.parseFloat(y);
+    m_altitude = Float.parseFloat(a);
     m_time = Long.parseLong(millis);
   } // gpspoint
 

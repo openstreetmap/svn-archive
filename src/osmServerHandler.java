@@ -65,7 +65,13 @@ public class osmServerHandler implements Runnable
               
               out.flush();
             }
-              
+        
+            out.write("END\n");
+
+            out.flush();
+
+            System.out.println("write end");
+            
             
 
           }
@@ -75,8 +81,11 @@ public class osmServerHandler implements Runnable
             out.write("ERROR\n");
             bKeepTalking = false;
           }
+
+          System.out.println("a");
         }
 
+        System.out.println("b");
       }
 
       out.write("END\n");

@@ -54,7 +54,7 @@ public class osmDisplay
   
   
   
-  public osmDisplay(Container cp)
+  public osmDisplay(float fScale, float fLat, float fLon, Container cp)
   {
 
     MapHandler mh = new MapHandler();
@@ -102,9 +102,9 @@ public class osmDisplay
     cp.add( mapBean, BorderLayout.CENTER);
     cp.add(label,    BorderLayout.SOUTH);
 
-    mapBean.setScale(10404.917f);
+    mapBean.setScale(fScale);
 
-    mapBean.setCenter(51.526447f, -0.14746371f);
+    mapBean.setCenter(fLat, fLon);
 
     bStartingUp = false;
 

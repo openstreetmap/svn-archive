@@ -31,7 +31,7 @@ if(bLoggedIn)
   %>
   <ul>
     <li>
-      <img src="/images/stock_edit-16.png"><a href="applet.jsp">Edit map</a>
+      <img src="/images/stock_edit-16.png"><a href="viewMap.jsp">View map</a>
     </li>
     <li>
       <img src="/images/icon_key.png"><a href="editKeys.jsp">Edit keys</a>
@@ -52,7 +52,13 @@ if(bLoggedIn)
 else
 {
   %>
-  You need to log in to use the tools :-)
+   <ul>
+    <li>
+      <img src="/images/stock_edit-16.png"><a href="viewMap.jsp">View map</a>
+    </li>
+   </ul>
+ 
+  You need to <a href="login.jsp">log in</a> to use more tools :-)
   <%
 }
 

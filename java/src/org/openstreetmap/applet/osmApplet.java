@@ -29,8 +29,11 @@ import java.awt.*;
 public class osmApplet extends JApplet {
 
   public void init() {
+    float fScale = Float.parseFloat(this.getParameter("scale"));
+    float fLat = Float.parseFloat(this.getParameter("lat"));
+    float fLon = Float.parseFloat(this.getParameter("lon"));
 
-    new osmDisplay( getContentPane() );       
+    new osmDisplay(fScale, fLat, fLon, getContentPane() );       
 
 
   } // init
@@ -54,8 +57,12 @@ public class osmApplet extends JApplet {
     JFrame jf = new JFrame("OpenStreetMap");
 
     jf.show();
+    
+    float fScale = 10404.917f;
+    float fLat = 51.526447f;
+    float fLon = -0.14746371f;
 
-    new osmDisplay(jf.getContentPane());
+    new osmDisplay(fScale, fLat, fLon, jf.getContentPane());
 
     jf.pack();
 

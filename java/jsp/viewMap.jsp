@@ -58,7 +58,7 @@ float p2lat = p.getLowerRight().getLatitude();
 float p2lon = p.getLowerRight().getLongitude();
 
 String sURL = "viewMapImage.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
-String sURL = "applet.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
+String sAppletURL = "applet.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
 
 String sLeftURL = getURL(fScale,fLat, fLon - (p2lon - p1lon)/4);
 String sRightURL = getURL(fScale,fLat, fLon + (p2lon - p1lon)/4);

@@ -53,9 +53,9 @@ archive= "osm.jar , openmap.jar , xmlrpc-applet.jar , commons-codec-1.1.jar"
 width  = "600"
 height = "600"
 >
-<param name="lat" value = "<%=fLat>">
-<param name="lon" value = "<%=fLon>">
-<param name="scale" value = "<%=fScale>">
+<param name="lat" value = "<%=fLat%>">
+<param name="lon" value = "<%=fLon%>">
+<param name="scale" value = "<%=fScale%>">
 </applet>
 </div>
 <%@ include file="include/bottom.jsp" %>

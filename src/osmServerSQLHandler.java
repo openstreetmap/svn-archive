@@ -60,7 +60,7 @@ public class osmServerSQLHandler extends Thread
                     + " and X(g) > " + p2lat
                     + " and Y(g) > " + p1lon
                     + " and Y(g) < " + p2lon
-                    + " limit 2000";
+                    + " limit 6000";
 
       System.out.println("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);

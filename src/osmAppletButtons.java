@@ -14,7 +14,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
 
     setLayout(new FlowLayout());
 
-    JButton bLeft = new JButton("left");
+    JButton bLeft = new JButton( new ImageIcon("left.png"));
     bLeft.setActionCommand("left");
     bLeft.addActionListener(this);
     add(bLeft);

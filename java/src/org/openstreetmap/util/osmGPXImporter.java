@@ -196,7 +196,7 @@ public class osmGPXImporter extends DefaultHandler{
 
     if( qName.equals("gpx"))
     {
-      out.print("Total added points = " + (nPointTempCount + lPointsAdded) + "<br>");
+      out.print("Total added points: " + (nPointTempCount + lPointsAdded) + ", all done! :-)<br>");
 
     }
     
@@ -245,7 +245,7 @@ public class osmGPXImporter extends DefaultHandler{
       {
         lPointsAdded += 100;
 
-        out.print("Added " + lPointsAdded + " points...<br>");
+        out.print("Added " + lPointsAdded + " points so far...<br>");
 
       } 
 

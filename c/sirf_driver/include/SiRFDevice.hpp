@@ -16,6 +16,12 @@ namespace SiRF {
     // get a byte from the SiRF device
     SiRFDevice &operator>>(unsigned char &c);
 
+    // get a byte from the SiRF device
+    SiRFDevice &operator<<(unsigned char &c);
+
+    // flush data to the device
+    void flush();
+
   private:
     // file descriptor
     int fd;
@@ -31,11 +37,15 @@ namespace SiRF {
      */
 
     // buffer of incoming data
-    unsigned char *buffer;
+    unsigned char *read_buffer, *write_buffer;
 
     // current buffer size and position
-    unsigned int buf_size;
-    int buf_len, buf_pos;
+    // read
+    unsigned int read_buf_size;
+    int read_buf_len, read_buf_pos;
+    // write
+    unsigned int write_buf_size;
+    int write_buf_pos;
 
     // default constructor is private, so you can't copy this object
     SiRFDevice(const SiRFDevice &other) {}
@@ -50,7 +60,11 @@ namespace SiRF {
     void close();
 
     // get some more data and put it in the buffer
-    void refillBuffer();
+    void refillReadBuffer();
+
+    // flush the write buffer (thats _our_ write buffer, not the OS'ses)
+    void SiRFDevice::flushWriteBuffer();
+    
   };
 
 }

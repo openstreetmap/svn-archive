@@ -21,10 +21,15 @@ all: sirfdump
 
 clean:
 	rm -f sirfdump Makefile.dep src/*.o \
+	 utils/*.o utils/lex.yy.c utils/*.tab.c \
 	 $(patsubst data/%.pkt,include/%.hpp,$(PKT_FILES)) \
-	 $(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES))
+	 $(patsubst data/%.pkt,src/%.cpp,$(PKT_FILES)) \
+	 $(patsubst data/%.pkt,src/%.o,$(PKT_FILES))
 
-.PHONY: all clean
+veryclean: clean
+	find `pwd` -name "*.o" -exec rm -f \{\} \;
+
+.PHONY: all clean veryclean
 
 # include dependancy makefile
 ifneq ($(NODEP),yes)
@@ -40,8 +45,8 @@ utils/mk_packet: utils/packet.o utils/mk_packet.tab.o utils/lex.yy.o
 %.tab.c: %.y
 	$(BISON) -dv $<
 
-lex.yy.c: mk_packet.l
-	$(FLEX) $<
+utils/lex.yy.c: utils/mk_packet.l
+	$(FLEX) -o$@ $<
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INC) -o $@ -c $<

@@ -8,7 +8,7 @@ namespace SiRF {
   }
   
   // input from a stream
-  void UnknownPacket::input(Stream &in) {
+  void UnknownPacket::input(OutputStream &in) {
     uint8 c;
     // gobble all the bytes from the stream
     while (in.remainingLength() > 0) {

@@ -1,7 +1,7 @@
 #ifndef PACKET_FACTORY_H
 #define PACKET_FACTORY_H
 
-#include "Stream.hpp"
+#include "OutputStream.hpp"
 #include "OutputPacket.hpp"
 #include "UnknownPacket.hpp"
 #include "PacketHandler.hpp"
@@ -18,7 +18,7 @@ namespace SiRF {
 
     /* initialise self on basis of existing stream
      */
-    PacketFactory(Stream &_in);
+    PacketFactory(OutputStream &_in);
 
     /* get a packet
      */
@@ -56,7 +56,7 @@ namespace SiRF {
 
     /* the stream used as input
      */
-    Stream &in;
+    OutputStream &in;
 
     /* map the packet types to packet handlers
      */

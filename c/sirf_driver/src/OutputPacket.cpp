@@ -2,7 +2,7 @@
 
 namespace SiRF {
 
-  Stream &operator>>(Stream &in, OutputPacket &p) {
+  OutputStream &operator>>(OutputStream &in, OutputPacket &p) {
     p.input(in);
     return in;
   }

@@ -14,7 +14,7 @@ namespace SiRF {
 
   /* construct self using the given stream
    */
-  PacketFactory::PacketFactory(Stream &_in) : in(_in) {
+  PacketFactory::PacketFactory(OutputStream &_in) : in(_in) {
     /* code here to initialise the sirf device?
      * or should that go in Stream?
      */

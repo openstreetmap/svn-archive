@@ -1,27 +1,14 @@
-#include "Stream.hpp"
+#include "OutputStream.hpp"
 #include "Exception.hpp"
 
 namespace SiRF {
 
-  /* use a standard io stream
-   */
-  Stream::Stream(const char *devicename, int baud) :
-    SiRFDevice::SiRFDevice(devicename, baud) {
-    /* do nothing else for the time being...
-     */
-  }
-  
-  /* has to close the stream when done
-   */
-  Stream::~Stream() {
-  }
-  
   /* input and output functions 
    */
   
   /* read an unsigned char
    */
-  Stream &Stream::operator>>(uint8 &c) {
+  OutputStream &OutputStream::operator>>(uint8 &c) {
     /* this is dead easy! we read only unsigned chars from the
      * SiRFDevice anyway
      */
@@ -40,7 +27,7 @@ namespace SiRF {
   
   /* read an unsigned int (16 bits)
    */
-  Stream &Stream::operator>>(uint16 &s) {
+  OutputStream &OutputStream::operator>>(uint16 &s) {
     /* slightly more difficult - we have to pay attention to byte
      * ordering. for the SiRF this is msb first
      */
@@ -53,7 +40,7 @@ namespace SiRF {
   
   /* read an unsigned int (32 bits)
    */
-  Stream &Stream::operator>>(uint32 &i) {
+  OutputStream &OutputStream::operator>>(uint32 &i) {
     /* just an extension of the unsigned short 
      */
     uint16 msb, lsb;
@@ -65,7 +52,7 @@ namespace SiRF {
 
   /* read an unsigned 64 bit (8-byte) value
    */
-  Stream &Stream::operator>>(uint64 &i) {
+  OutputStream &OutputStream::operator>>(uint64 &i) {
     /* just an extension of the unsigned short 
      */
     uint32 msb, lsb;
@@ -77,7 +64,7 @@ namespace SiRF {
   
   /* read in a signed byte value
    */
-  Stream &Stream::operator>>(int8 &i) {
+  OutputStream &OutputStream::operator>>(int8 &i) {
     /* this has the same bit-structure as an unsigned value,
      * so just manipulate the types to get an answer
      */
@@ -91,7 +78,7 @@ namespace SiRF {
 
   /* read a signed int (16 bits)
    */
-  Stream &Stream::operator>>(int16 &s) {
+  OutputStream &OutputStream::operator>>(int16 &s) {
     /* we read in the first (msb) byte signed and the second
      * unsigned
      */
@@ -105,7 +92,7 @@ namespace SiRF {
   
   /* read a signed int (32 bits)
    */
-  Stream &Stream::operator>>(int32 &i) {
+  OutputStream &OutputStream::operator>>(int32 &i) {
     /* just an extension of the signed short 
      */
     int16 msb;
@@ -118,7 +105,7 @@ namespace SiRF {
 
   /* read a signed 64 bit (8-byte) value
    */
-  Stream &Stream::operator>>(int64 &i) {
+  OutputStream &OutputStream::operator>>(int64 &i) {
     /* just an extension of the signed int32
      */
     int32 msb;
@@ -131,7 +118,7 @@ namespace SiRF {
   
   /* read a float
    */
-  Stream &Stream::operator>>(float32 &f) {
+  OutputStream &OutputStream::operator>>(float32 &f) {
     /* this is more difficult... i don't know if the SiRF buggers
      * about with the IEEE endian-ness... have to look in the docs
      * somewhere.
@@ -144,8 +131,8 @@ namespace SiRF {
   
   /* read a packet boundary - also sets up state
    */
-  Stream &Stream::operator>>(const Boundary b) {
-    unsigned short marker;
+  OutputStream &OutputStream::operator>>(const Boundary b) {
+    unsigned short marker, original_length;
     int i;
 
     /* looking for a starting marker

@@ -1,7 +1,7 @@
 /* standard little main program
  */
 
-#include "Stream.hpp"
+#include "IOStream.hpp"
 #include "OutputPacket.hpp"
 
 #include <MeasuredNavigationDataOut.hpp>
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
   /* get the file name from the first argument
    * initialise the SiRF stream
    */
-  SiRF::Stream stream(argv[1]);
+  SiRF::IOStream stream(argv[1]);
 
   /* make the packet factory
    */

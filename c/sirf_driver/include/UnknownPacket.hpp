@@ -18,7 +18,7 @@ namespace SiRF {
     void output(std::ostream &out) const;
 
     // input from a stream
-    void input(Stream &in);
+    void input(OutputStream &in);
 
     // set the given type
     void setType(uint8 t) { type = t; }

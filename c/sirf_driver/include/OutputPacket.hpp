@@ -6,7 +6,7 @@
  */
 
 #include "Packet.hpp"
-#include "Stream.hpp"
+#include "OutputStream.hpp"
 
 namespace SiRF {
 
@@ -15,14 +15,14 @@ namespace SiRF {
 
     /* input a packet from a Stream
      */
-    virtual void input(Stream &in) = 0;
+    virtual void input(OutputStream &in) = 0;
 
   };
 
   /* allow operator use with virtual. this seems the cleanest way
    * to do it.
    */
-  Stream &operator>>(Stream &in, OutputPacket &p);
+  OutputStream &operator>>(OutputStream &in, OutputPacket &p);
 
 }
 

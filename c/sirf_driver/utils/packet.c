@@ -64,10 +64,11 @@ void make_hpp_file(struct packet *p, FILE *fh) {
     fprintf(fh, "#include <Types.hpp>\n");
     if (pptr->input == 1) {
       fprintf(fh, "#include <InputPacket.hpp>\n");
+      fprintf(fh, "#include <InputStream.hpp>\n");
     } else {
       fprintf(fh, "#include <OutputPacket.hpp>\n");
+      fprintf(fh, "#include <OutputStream.hpp>\n");
     }
-    fprintf(fh, "#include <Stream.hpp>\n");
     for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
       // include any other header files
       if ( (strcmp(fptr->record, "int8") != 0) &&
@@ -105,10 +106,10 @@ void make_hpp_file(struct packet *p, FILE *fh) {
     }
     // inserters
     if (pptr->input != 1) {
-      fprintf(fh, "  void input(Stream &in);\n");
+      fprintf(fh, "  void input(OutputStream &in);\n");
     } else {
       // extractors
-      fprintf(fh, "  friend Stream &operator<<(Stream &out, const %s &p);\n",
+      fprintf(fh, "  friend InputStream &operator<<(InputStream &out, const %s &p);\n",
 	      pptr->name);
     }
     fprintf(fh, "  void output(std::ostream &out) const;\n\n");
@@ -179,7 +180,7 @@ void make_cpp_file(struct packet *p, FILE *fh) {
     fprintf(fh, "\nnamespace SiRF {\n\n");
     if (pptr->input == 1) { 
       // implementation of inserter
-      fprintf(fh, " Stream &operator<<(Stream &out, const %s &p) {\n",
+      fprintf(fh, " InputStream &operator<<(InputStream &out, const %s &p) {\n",
 	      pptr->name);
       for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
 	if (strcmp(fptr->name,"Reserved") != 0) {
@@ -205,7 +206,7 @@ void make_cpp_file(struct packet *p, FILE *fh) {
       fprintf(fh, "  return out;\n }\n\n");
     } else {
       // implementation of extractor
-      fprintf(fh, " void %s::input(Stream &in) {\n",
+      fprintf(fh, " void %s::input(OutputStream &in) {\n",
 	      pptr->name);
       for (fptr = pptr->fields; fptr != NULL; fptr = fptr->next) {
 	if (strcmp(fptr->name,"Reserved") != 0) {

@@ -1,0 +1,6 @@
+29/11/2004 - Matt Amos
+======================
+added writing ability by splitting Stream into Input- and OutputStream
+classes. this means i can do more interesting stuff, like asking for
+versions of the firmware. this is good because it gives a warning at
+the beginning if the version response is never received.

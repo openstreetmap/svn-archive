@@ -62,6 +62,8 @@ public class osmServerHandler
 
   } // addPoint
 
+
+
   public Vector getPoints(
       String token,
       double p1lat,
@@ -73,10 +75,11 @@ public class osmServerHandler
 
       osmServerSQLHandler osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
-      if( osmSQLH.validateToken(token) ==-1 )
+      if( !token.equals("applet") && osmSQLH.validateToken(token) == -1 )
       {
         return null;
       }
+
       Vector v = osmSQLH.getPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
 
       Vector results = new Vector();

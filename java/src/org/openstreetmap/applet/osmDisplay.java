@@ -106,6 +106,8 @@ public class osmDisplay
 
     mapBean.setCenter(fLat, fLon);
 
+    mapBean.setBackgroundColor(new Color(231,231,214));
+    
     bStartingUp = false;
 
     setMode(MODE_DRAW_LINES);

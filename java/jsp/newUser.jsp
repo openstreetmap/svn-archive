@@ -17,8 +17,8 @@ String smtpServer = "localhost";
 // get the message parameters from the HTML page
 String from = "bounce@openstreetmap.org";
 String subject = "Your openstreetmap.org account request";
-String to = "steve@vr.ucl.ac.uk";
-String text = "hum"; //req.getParameter("text");
+String to = "";
+String text = ""; //req.getParameter("text");
 
 String action = request.getParameter("action");
 String email = request.getParameter("email");
@@ -139,7 +139,7 @@ else
           // set the to address
           if (to != null) {
             Address[] toAddress = InternetAddress.parse(email);
-            Address[] openstreetmapAddress = InternetAddress.parse("steve@openstreetmap.org");
+            Address[] openstreetmapAddress = InternetAddress.parse("dev@openstreetmap.org");
             message.setRecipients(Message.RecipientType.TO, toAddress);
             message.setRecipients(Message.RecipientType.BCC, openstreetmapAddress);
           }
@@ -171,7 +171,7 @@ else
     }
     catch (Exception e) {
       %>
-        Something went wrong with that email address, if the problem persists please <a href="mailto:steve@fractalus.com">report it</a>.<br><br><a href="http://www.openstreetmap.org/">back to openstreetmap</a>
+        Something went wrong with that email address, if the problem persists please <a href="mailto:dev@openstreetmap.org">report it</a>.<br><br><a href="http://www.openstreetmap.org/">back to openstreetmap</a>
         <%
     }
   }

@@ -32,7 +32,7 @@ if( action == null)
     <h1>Create a user account</h1><br>
     Fill in the form, we'll send you an email to confirm you're you and activate your account.<br><br>
     By creating an account, you agree that all work uploaded to openstreetmap.org and all data created by use of any tools on openstreetmap.org is to be licensed under <a href="http://creativecommons.org/licenses/by-sa/2.0/">this</a> Creative Commons license.<br><br>
-    <form action="http://www.openstreetmap.org/api/newUser.jsp">
+    <form action="http://www.openstreetmap.org/edit/newUser.jsp">
     <table>
     <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
     <tr><td>password:</td><td><input type="password" name="pass1"></td></tr>
@@ -155,7 +155,7 @@ else
             + "Someone (maybe you) has requested an openstreetmap.org user account.\n"
             + "\n"
             + "To activate it, click this link\n"
-            + "http://www.openstreetmap.org/api/newUser.jsp?action=confirm&email=" + email + "&token=" + sToken + "\n"
+            + "http://www.openstreetmap.org/edit/newUser.jsp?action=confirm&email=" + email + "&token=" + sToken + "\n"
             + "\n"
             + "To report abuse, please mail webmaster@openstreetmap.org";
 

@@ -15,7 +15,8 @@ namespace SiRF {
     };
     /* use a standard io stream
      */
-    Stream(const char *devicename, int baud) : SiRFDevice(devicename, baud) {}
+    Stream(const char *devicename, unsigned int baud) : 
+      SiRFDevice(devicename, baud) {}
 
     /* has to close the stream when done
      */

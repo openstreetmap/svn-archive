@@ -10,9 +10,10 @@ namespace SiRF {
 
   public:
     // hopefully this doesnt cause everything to happen twice...
-    IOStream(char *devicename, int baud = 4800) : Stream(devicename, baud),
-						  InputStream(devicename, baud),
-						  OutputStream(devicename, baud) {
+    IOStream(char *devicename, unsigned int baud = 4800) : 
+      Stream(devicename, baud),
+      InputStream(devicename, baud),
+      OutputStream(devicename, baud) {
     }
     
   };

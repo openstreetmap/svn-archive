@@ -1,6 +1,8 @@
 #ifndef SIRF_DEVICE_H
 #define SIRF_DEVICE_H
 
+#include "Types.hpp"
+
 namespace SiRF {
 
   class SiRFDevice {
@@ -8,16 +10,16 @@ namespace SiRF {
     // construct a SiRF device from the serial port, i.e: /dev/ttyUSB0
     // or something, and the baud speed (literally, as in 9600, not
     // B9600). 
-    SiRFDevice(const char *devicename, int baud);
+    SiRFDevice(const char *devicename, unsigned int baud);
 
     // destory the SiRF device
     ~SiRFDevice();
 
     // get a byte from the SiRF device
-    SiRFDevice &operator>>(unsigned char &c);
+    SiRFDevice &operator>>(uint8 &c);
 
     // get a byte from the SiRF device
-    SiRFDevice &operator<<(unsigned char &c);
+    SiRFDevice &operator<<(uint8 &c);
 
     // flush data to the device
     void flush();
@@ -37,7 +39,7 @@ namespace SiRF {
      */
 
     // buffer of incoming data
-    unsigned char *read_buffer, *write_buffer;
+    uint8 *read_buffer, *write_buffer;
 
     // current buffer size and position
     // read

@@ -10,7 +10,8 @@ namespace SiRF {
   class OutputStream : public virtual Stream {
   public:
 
-    OutputStream(const char *devicename, int baud) : Stream(devicename, baud) {
+    OutputStream(const char *devicename, unsigned int baud) : 
+      Stream(devicename, baud) {
     }
 
     /* input and output functions 

@@ -103,7 +103,7 @@ public class osmServerHandler
         return null;
       }
 
-      Vector v = osmSQLH.getPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
+      Vector v = osmSQLH.getStreets((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
 
       if( osmSQLH.SQLSuccessful() )
       {
@@ -113,9 +113,12 @@ public class osmServerHandler
       }
       else
       {
+     
         System.out.println("error....");
+      
       }
 
+      
     }
     catch(Exception e)
     {

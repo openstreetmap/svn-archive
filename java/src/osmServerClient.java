@@ -204,7 +204,7 @@ public class osmServerClient
       params.addElement( new Double((double)llp2.getLatitude()) );
       params.addElement( new Double((double)llp2.getLongitude()) );
 
-      streets = (Vector) xmlrpc.execute("openstreetmap.getStreets",params);
+      streets = (Vector)xmlrpc.execute("openstreetmap.getStreets",params);
 
 
       System.out.println("done getting streets");

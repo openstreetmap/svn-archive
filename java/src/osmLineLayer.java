@@ -43,16 +43,21 @@ public class osmLineLayer extends Layer
   protected OMGraphicList graphics;
   osmAppletLineDrawListener oLDL;
   osmDisplay od;
+  boolean bStartingUp = false;
 
+  
   public osmLineLayer(osmDisplay oDisplay)
   {
 
     super();
 
     od = oDisplay;
+    osc = od.getServerClient();
     oLDL = new osmAppletLineDrawListener(od,this); 
 
     graphics = new OMGraphicList(4);
+
+    createGraphics();
 
     //graphics.add( new OMLine(51.526394f,-0.14697807f,51.529114f,-0.15060599f,
     //   com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
@@ -71,6 +76,8 @@ public class osmLineLayer extends Layer
   public void projectionChanged(com.bbn.openmap.event.ProjectionEvent pe) {
     Projection proj = setProjection(pe);
     if (proj != null) {
+
+      createGraphics();
 
       graphics.generate(pe.getProjection());
       
@@ -92,6 +99,56 @@ public class osmLineLayer extends Layer
      } // projectionChanged
 
    */
+
+  
+  protected void createGraphics()
+  {
+    // NOTE: all this is very non-optimized...
+
+    graphics.clear();
+
+    OMLine oml;
+
+    Projection proj = getProjection(); 
+
+    if( proj != null )
+    {
+
+      Vector v = new Vector();
+
+      if( proj!= null && !od.startingUp() )
+      {
+        LatLonPoint a = proj.getUpperLeft();
+        LatLonPoint b = proj.getLowerRight();
+        
+        v = osc.getStreets(a,b);
+      }
+
+      Enumeration e = v.elements();
+
+      System.out.println("reading streets...");
+      
+      while( e.hasMoreElements() )
+      {
+        
+        Integer id = (Integer)e.nextElement();
+        
+        float lon1 = (float)((Double)e.nextElement()).doubleValue();
+        float lat1 = (float)((Double)e.nextElement()).doubleValue();
+        float lon2 = (float)((Double)e.nextElement()).doubleValue();
+        float lat2 = (float)((Double)e.nextElement()).doubleValue();
+
+
+        oml = new OMLine(lon1, lat1, lon2, lat2,
+            com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT       
+            );
+
+
+        graphics.add(oml);
+      }
+
+    }
+  }
 
 
   public void paint (Graphics g) {
@@ -149,4 +206,4 @@ public class osmLineLayer extends Layer
   } // setLine
 
 
-} // osmPointsLayer
+} // osmLineLayer

@@ -39,7 +39,8 @@ public class osmDisplay
 {
   public static final int MODE_DRAW_LINES = 1;
   public static final int MODE_DROP_POINTS = 2;
-  
+
+  boolean bStartingUp = true;
   
   int nCurrentMode = MODE_DRAW_LINES;
 
@@ -51,6 +52,7 @@ public class osmDisplay
   osmPointsLayer pointsLayer;
   osmSelectLayer selectLayer;
   osmLineLayer lineLayer;
+  
   
   
   public osmDisplay(Container cp)
@@ -105,11 +107,17 @@ public class osmDisplay
 
     mapBean.setCenter(51.526447f, -0.14746371f);
 
-    pointsLayer.setStartingUp(false);
+    bStartingUp = false;
 
     setMode(MODE_DRAW_LINES);
 
   }
+
+  public boolean startingUp()
+  {
+    return bStartingUp;
+
+  } // startingUp
 
 
 

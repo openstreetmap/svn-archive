@@ -4,9 +4,8 @@
 <%@ page import="org.openstreetmap.server.osmServerHandler" %>
 
 <%@ page contentType="text/html" %>
-<html>
-
 <%@ include file="include/top.jsp" %>
+
 <%
 
 String action = request.getParameter("action");

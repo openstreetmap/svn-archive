@@ -7,12 +7,9 @@
 
 <%@ page contentType="text/html" %>
 <%!
+
+
 String smtpServer = "localhost";
-
-%>
-<html>
-<%
-
 
 // get the message parameters from the HTML page
 String from = "bounce@openstreetmap.org";

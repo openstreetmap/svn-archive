@@ -8,8 +8,6 @@
 <%@ page contentType="text/html" %>
 
 
-<html>
-
 <%@ include file="include/top.jsp" %>
 
 <%@ include file="include/loggedin.jsp" %>

@@ -40,15 +40,16 @@ public class osmGPXImporter extends DefaultHandler{
   String sUser;
   String sPass;
 
+  
   public osmGPXImporter()
   {
 
   }
   
+  
   public osmGPXImporter(PrintWriter o, String token)
   {
     out = o;
-
 
     sToken = token;
 
@@ -202,10 +203,11 @@ public class osmGPXImporter extends DefaultHandler{
     }
     catch(Exception e)
     {
-      out.println(e);
+      out.println("problem in connecting to server: " + e);
     }
     
   } // connectToServer
+
 
   
   private void addPoint()
@@ -217,66 +219,65 @@ public class osmGPXImporter extends DefaultHandler{
     }
     catch(Exception e)
     {
+      
 
     }
-        
 
-   
     Vector v = new Vector();
 
-      v.addElement(sToken);
-      v.addElement(new Double(lat)); // lat
-      v.addElement(new Double(lon)); // lon
-      v.addElement(new Double(ele)); // alt
-      v.addElement( new Date(timestamp) ); // timestamp for point
-      v.addElement(new Double(-1)); // hor_dilution
-      v.addElement(new Double(-1)); // vert_dilution
-      v.addElement(new Integer(-1)); // track_id
-      v.addElement(new Integer(255)); // quality
-      v.addElement(new Integer(fix)); // satellites
-      
-      
-      boolean b = false;
-        
-      try{
-        
-        
-        b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
-      }
-      catch(Exception e)
-      {
-        b = false;
+    v.addElement(sToken);
+    v.addElement(new Double(lat)); // lat
+    v.addElement(new Double(lon)); // lon
+    v.addElement(new Double(ele)); // alt
+    v.addElement( new Date(timestamp) ); // timestamp for point
+    v.addElement(new Double(-1)); // hor_dilution
+    v.addElement(new Double(-1)); // vert_dilution
+    v.addElement(new Integer(-1)); // track_id
+    v.addElement(new Integer(255)); // quality
+    v.addElement(new Integer(fix)); // satellites
 
-        out.println(e);
 
-      }
+    boolean b = false;
 
-        
+    try{
 
-      if( !b )
-      {
-      
-        out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp));
 
-        out.println("this is bad, quiting");
+      b = ((Boolean)xmlrpc.execute("openstreetmap.addPoint", v)).booleanValue();
+    }
+    catch(Exception e)
+    {
+      b = false;
 
-      }
-      else
-      {
-        out.print(".");
+      out.print("problem in addpoint: " + e);
 
-      }
+    }
+
+
+
+    if( !b )
+    {
+
+      out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp));
+
+      out.println("this is bad, quiting");
+
+    }
+    else
+    {
+      out.print(".");
+
+    }
   } // addPoint
 
-  
 
-  
+
+
   public void upload(BufferedInputStream is, Writer out, String token)
   {
     PrintWriter o = new PrintWriter(out);
 
     try{
-    
+
       osmGPXImporter handler = new osmGPXImporter(o, token);
 
 
@@ -288,7 +289,7 @@ public class osmGPXImporter extends DefaultHandler{
     }
     catch(Exception e)
     {
-      o.print(e);
+      o.print("prblem in upload!: " + e);
     }
 
   }

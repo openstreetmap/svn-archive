@@ -42,8 +42,6 @@ public class osmServer extends Thread
   public osmServer()
   {
     new Thread(this).start();
-    
-  //  osmSQLH = new osmServerSQLHandler("jdbc:mysql://127.0.0.1/openstreetmap", "openstreetmap","openstreetmap");
 
   } // osmServer
 

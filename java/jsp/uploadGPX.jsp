@@ -6,12 +6,10 @@
 <%@ page import="org.apache.commons.fileupload.*" %>
 <%@ page import="org.apache.xmlrpc.*" %>
 <%@ page contentType="text/html" %>
-
-
 <%@ include file="include/top.jsp" %>
 
-
 <div id="main_area">
+
 <%
 
 

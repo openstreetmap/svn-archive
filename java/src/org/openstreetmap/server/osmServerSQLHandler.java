@@ -21,6 +21,7 @@ package org.openstreetmap.server;
 
 import java.util.*;
 import java.lang.*;
+import java.io.*;
 import java.sql.*;
 
 import org.openstreetmap.util.gpspoint;
@@ -136,6 +137,7 @@ public class osmServerSQLHandler extends Thread
 
         }
         int uid = rs.getInt(1);
+       
         sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
           + " where uid = " + uid;
 
@@ -154,7 +156,6 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
-      System.exit(-1);
 
     }
 
@@ -555,7 +556,6 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
-      System.exit(-1);
 
     }
 
@@ -617,14 +617,12 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
-      System.exit(-1);
 
     }
 
     return null;
 
   } // getPoints
-
 
   public synchronized Vector getFullPoints(
       float p1lat,
@@ -707,6 +705,8 @@ public class osmServerSQLHandler extends Thread
     return null;
 
   } // getPoints
+
+
 
 
   public synchronized boolean dropPoint(
@@ -828,7 +828,6 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
-      System.exit(-1);
 
     }
 
@@ -884,7 +883,6 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
-      System.exit(-1);
 
     }
 
@@ -896,7 +894,7 @@ public class osmServerSQLHandler extends Thread
 
 
 
- 
+
   public synchronized boolean userExists(String user)
   {
 
@@ -934,13 +932,13 @@ public class osmServerSQLHandler extends Thread
 
   } // userExists
 
-  
-  
+
+
   public synchronized int largestTrackID(String token)
   {
-    
+
     int uid = validateToken(token);
-   
+
 
     try{
 
@@ -961,7 +959,7 @@ public class osmServerSQLHandler extends Thread
 
       }
       else{
-      
+
         trackID = rs.getInt(1);
       }
 
@@ -978,5 +976,43 @@ public class osmServerSQLHandler extends Thread
 
     return -1;
   } // largestTrackID
+
+
+  public Vector getAllKeys()
+  {
+
+    Vector v = new Vector();
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = " select j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid) as j  where h.uid=j.uid and h.visible=1 group by h.uid";
+
+      
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      while ( rs.next() )
+      {
+        v.add( rs.getString(1) );
+        v.add( rs.getString(2) );
+        v.add( rs.getString(3) );
+
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return v;
+
+  } // getAllKeys
 
 } // osmServerSQLHandler

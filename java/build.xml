@@ -63,6 +63,7 @@ destdir="${build}"
 <copy file="${jsp}/login.jsp" tofile="/var/lib/tomcat4/webapps/edit/login.jsp" />
 <copy file="${jsp}/applet.jsp" tofile="/var/lib/tomcat4/webapps/edit/applet.jsp" />
 <copy file="${jsp}/logout.jsp" tofile="/var/lib/tomcat4/webapps/edit/logout.jsp" />
+<copy file="${jsp}/editKeys.jsp" tofile="/var/lib/tomcat4/webapps/edit/editKeys.jsp" />
 <!-- includes -->
 
 <copy todir="/var/lib/tomcat4/webapps/edit/include/">

@@ -1,4 +1,4 @@
-<% 
+<%
 
 String cookieName = "openstreetmap";
 Cookie cookies [] = request.getCookies ();
@@ -26,8 +26,17 @@ if(myCookie != null)
 
   bLoggedIn = osmSH.validateToken(sToken);
 
+  if( bLoggedIn )
+  {
+    String sCookieName = "openstreetmap";
+    java.util.Date now = new java.util.Date();
+    String timestamp = now.toString();
+    Cookie cookie = new Cookie (sCookieName, sToken);
+    cookie.setMaxAge(10 * 60);
+    response.addCookie(cookie);
+    bLoggedIn = true;
+  }
+
 }
-
-
 
 %>

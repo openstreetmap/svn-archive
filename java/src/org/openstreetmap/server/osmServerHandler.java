@@ -29,7 +29,7 @@ import org.openstreetmap.util.gpspoint;
 
 public class osmServerHandler
 {
-  private String sJDBC = "jdbc:mysql://128.40.59.181/openstreetmap";
+  private String sJDBC = "jdbc:mysql://128.40.59.181/openstreetmap?useUnicode=true&characterEncoding=latin1";
 
   
   private osmServerSQLHandler osmSQLH;
@@ -430,6 +430,21 @@ public class osmServerHandler
 
   } // dropPointsInArea
 
+
+  public Vector getAllKeys(String token)
+  {
+    
+    int uid = osmSQLH.validateToken(token);
+
+    if( uid == -1)
+    {
+      return new Vector();
+
+    }
+
+    return osmSQLH.getAllKeys();
+
+  }
 
 
 } // osmServerHandler

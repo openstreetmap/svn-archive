@@ -92,6 +92,11 @@ public class osmAppletButtons extends JPanel implements ActionListener
     bLogin.addActionListener(this);
     loginButtons.add(bLogin);
 
+    JButton bDeletePoints = new JButton("dp");
+    bDeletePoints.setActionCommand("delpoints");
+    bDeletePoints.addActionListener(this);
+    loginButtons.add(bDeletePoints);
+
   } // osmAppletButtons
 
 
@@ -105,7 +110,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
       od.left();
       return;
     }  
-  
+
     if( e.getActionCommand().equals("right") )
     {
       od.right();
@@ -130,9 +135,9 @@ public class osmAppletButtons extends JPanel implements ActionListener
       od.zoomin();
       return;
     }
-    
 
-     if( e.getActionCommand().equals("zoomout") )
+
+    if( e.getActionCommand().equals("zoomout") )
     {
       od.zoomout();
       return;
@@ -146,6 +151,12 @@ public class osmAppletButtons extends JPanel implements ActionListener
     }
 
 
+    if( e.getActionCommand().equals("delpoints"))
+    {
+      od.deletePoints();
+      return;
+
+    }
 
 
   }

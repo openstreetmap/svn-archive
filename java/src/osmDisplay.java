@@ -43,6 +43,8 @@ public class osmDisplay
 
   osmServerClient osc = new osmServerClient();
   
+  osmPointsLayer pointsLayer;
+  
   public osmDisplay(Container cp)
   {
 
@@ -63,16 +65,17 @@ public class osmDisplay
     mouseDelegator.setActive(selectMouseMode);
     
 
-    osmPointsLayer shapeLayer = new osmPointsLayer(this);
+    pointsLayer = new osmPointsLayer(this);
+    
     Properties shapeLayerProps = new Properties();
 
-    shapeLayerProps.put("prettyName", "temporary points");
+    shapeLayerProps.put("prettyName", "Recorded points");
     shapeLayerProps.put("lineColor", "000000");
     shapeLayerProps.put("fillColor", "BDDE83");
-    shapeLayer.setProperties(shapeLayerProps);
+    pointsLayer.setProperties(shapeLayerProps);
 
     //mapBean.add(shapeLayer);
-    mapBean.add(shapeLayer);
+    mapBean.add(pointsLayer);
 
     // Add the map to the frame
 
@@ -86,11 +89,12 @@ public class osmDisplay
 
     mapBean.setCenter(51.526447f, -0.14746371f);
 
-    shapeLayer.setStartingUp(false);
+    pointsLayer.setStartingUp(false);
 
   }
 
 
+  
   public osmServerClient getServerClient()
   {
     return osc;
@@ -172,13 +176,34 @@ public class osmDisplay
   } // zoomout
 
 
-  public void login()
+  public void deletePoints()
   {
+    if( checkLogin() )
+    {
+      pointsLayer.deleteSelectedPoints();
+
+    }
+    
+
+  } // deletePoints
 
 
-  }
+  public boolean checkLogin()
+  {
+    if( osc.loggedIn() )
+    {
+      return true;
 
+    }
 
+    JOptionPane.showMessageDialog((JFrame)null,
+        "Not logged in, or login timeout",
+        "Login",
+        JOptionPane.WARNING_MESSAGE);
+
+    return false;
+    
+  } // checkLogin
 
 
 } // osmDisplay

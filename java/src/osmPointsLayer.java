@@ -139,6 +139,47 @@ public class osmPointsLayer extends Layer
   } // selectArea
 
 
+
+  public synchronized void deleteSelectedPoints()
+  {
+    Iterator i = graphics.iterator();
+
+    Vector v = new Vector();
+    
+    while( i.hasNext() )
+    {
+      OMCircle omc = (OMCircle)i.next();
+
+      if( omc.isSelected() )
+      {
+        LatLonPoint p = omc.getLatLon();
+
+        if(osc.deletePoint(p.getLatitude(), p.getLongitude()))
+        {
+        
+              v.add(omc);
+        }
+      }
+
+    }
+
+    Enumeration e = v.elements();
+
+    while(e.hasMoreElements())
+    {
+      OMCircle omc = (OMCircle)e.nextElement();
+
+      graphics.remove(omc);
+
+    }
+
+    repaint();
+
+  } // deleteSelectedPoints
+  
+
+  
+
   protected void createGraphics (OMGraphicList list)
   {
     // NOTE: all this is very non-optimized...

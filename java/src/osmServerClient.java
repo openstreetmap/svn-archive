@@ -58,6 +58,38 @@ public class osmServerClient
   } // osmServerClient
 
 
+  public synchronized boolean deletePoint(double lat, double lon)
+  {
+    Vector params = new Vector();
+
+    params.addElement(sLoginToken);
+    params.addElement(new Double(lon));
+    params.addElement(new Double(lat));
+
+    Boolean bYesNo;
+    
+    try{
+      
+      bYesNo = (Boolean)xmlrpc.execute("openstreetmap.dropPoint", params);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      return false;
+
+    }
+
+    return  bYesNo.booleanValue();
+
+
+    
+  } // deletePoint
+
+
+  
   public synchronized boolean login(String user, String pass)
   {
     System.out.println("trying to login with '" + user + "' , '" + pass +"'...");

@@ -19,7 +19,9 @@
 
 
 <target name="dist" depends="compile">
+  
   <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
+  <copy file="${src}/index.html" tofile="${dist}/index.html"/>
 </target>
 
 

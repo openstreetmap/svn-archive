@@ -19,7 +19,8 @@ if(FileUpload.isMultipartContent(request))
 
   String email = "";
   String pass = "";
-  String sFileName = "";
+  String sSaveFileName = "";
+  String sUploadFileNeme = "";
   File fUploadedFile = null;
 
   out.print("Attempting to insert file...<br>");
@@ -68,7 +69,7 @@ if(FileUpload.isMultipartContent(request))
         uploadedStream = new BufferedInputStream(item.getInputStream());
 
         String fieldName = item.getFieldName();
-        String fileName = item.getName();
+        sUploadFileName = item.getName();
         String contentType = item.getContentType();
         boolean isInMemory = item.isInMemory();
         long sizeInBytes = item.getSize();
@@ -79,9 +80,9 @@ if(FileUpload.isMultipartContent(request))
         out.print("isInMemory: " + isInMemory + "<br>");
         out.print("sizeInBytes: " + sizeInBytes + "<br>");
  
-        sFileName = "/tmp/" + System.currentTimeMillis() + ".osm";
+        sSaveFileName = "/tmp/" + System.currentTimeMillis() + ".osm";
        
-        fUploadedFile = new File(sFileName);
+        fUploadedFile = new File(sUploadSaveName);
         
         item.write(
             fUploadedFile);
@@ -122,8 +123,19 @@ if(FileUpload.isMultipartContent(request))
 
         osmGPXImporter gpxImporter = new osmGPXImporter();
         
-        gpxImporter.upload(uploadedStream, out, sLoginToken);
+
+        if( sUploadSaveName.endsWith(".gz") )
+        {
+          
+          gpxImporter.upload( new GzIPInputStream(uploadedStream), out, sLoginToken);
+
+        }
+        else
+        {
         
+          gpxImporter.upload(uploadedStream, out, sLoginToken);
+ 
+        }
 
       }
 

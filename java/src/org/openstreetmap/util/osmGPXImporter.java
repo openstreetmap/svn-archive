@@ -248,7 +248,7 @@ public class osmGPXImporter extends DefaultHandler{
     {
       b = false;
 
-      out.print("problem in addpoint: " + e);
+      out.print("problem in addpoint: " + e + "<br>");
 
     }
 
@@ -257,9 +257,9 @@ public class osmGPXImporter extends DefaultHandler{
     if( !b )
     {
 
-      out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp));
+      out.println("failed to add point " + lat + "," + lon + "," + ele + ": " + fix + " @" + new Date(timestamp) + "<br>");
 
-      out.println("this is bad, quiting");
+      out.println("this is bad, quiting <br>");
 
     }
     else
@@ -267,6 +267,8 @@ public class osmGPXImporter extends DefaultHandler{
       out.print(".");
 
     }
+
+    
   } // addPoint
 
 

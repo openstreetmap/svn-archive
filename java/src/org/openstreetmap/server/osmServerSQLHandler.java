@@ -407,15 +407,18 @@ public class osmServerSQLHandler extends Thread
       System.out.println(e);
       e.printStackTrace();
 
+      System.out.println("uh-oh!");
       return false;
     }
+
+    System.out.println("added point ok, returning");
 
     return true;
 
   } // addPoint
 
  
-  
+  /*
   
   public synchronized boolean addPoints(
       float[] lat,
@@ -477,7 +480,7 @@ public class osmServerSQLHandler extends Thread
     return true;
 
   } // addPoints
-
+*/
 
   public synchronized Vector getStreets(
       float p1lat,

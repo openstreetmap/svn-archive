@@ -37,6 +37,7 @@ public class osmServerHandler implements Runnable
       while( (sLine = in.readLine()) != null && bKeepTalking)
       {
 
+        System.out.println("client said " + sLine);
        
         if(sLine.equals("LOGIN"))
         {
@@ -72,6 +73,10 @@ public class osmServerHandler implements Runnable
         }
 
       }
+
+      out.write("END\n");
+
+      out.flush();
 
     }
     catch(Exception e)

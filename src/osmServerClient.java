@@ -30,11 +30,17 @@ public class osmServerClient
 
       out.write("GETPOINTS\n");
 
-      String sLine;
+      out.flush();
 
+      System.out.println("reading POINTS");
+      
+      String sLine = in.readLine();
+
+      System.out.println("Server said " + sLine);
 
       while( (sLine = in.readLine()) != null)
       {
+        System.out.println("Server said " + sLine);
         if(sLine.equals("END"))
         {
           break;
@@ -55,6 +61,7 @@ public class osmServerClient
     }
 
     return gpsPoints;
+  
   } // getPoints
 
 

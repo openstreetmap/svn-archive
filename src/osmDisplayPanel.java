@@ -33,7 +33,7 @@ public class osmDisplayPanel extends JPanel{
 //    this.pack();
 
 
-    System.out.println("Grabbing stuff from SQL");
+    System.out.println("Grabbing stuff from server");
 
     gpsPoints = new osmServerClient().getPoints();
       

@@ -218,9 +218,18 @@ public class osmServerSQLHandler extends Thread
   
       long l = System.currentTimeMillis();
       
-      String sSQL = "lock table streets write, streetSegments write; start transaction; ";
+      String sSQL = "lock table streets write, streetSegments write;";
       
-      sSQL += 
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      
+      sSQL = "start transaction; ";
+      
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      
+      sSQL = 
         "insert into streets(name, timestamp, user_uid, visible) values ("
         + " '" + street_name + "', "
         + " " + l + ", "
@@ -228,9 +237,15 @@ public class osmServerSQLHandler extends Thread
         + " true "
         + "); ";
 
-      sSQL += "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      
+      sSQL = "set @id = last_insert_id(); ";
 
-      sSQL += "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      
+      sSQL = "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
         + "  last_insert_id() , "
         + " " + lon1 + ", "
         + " " + lat1 + ", "
@@ -241,7 +256,15 @@ public class osmServerSQLHandler extends Thread
         + " true "
         + "); ";
 
-      sSQL += "commit; unlock tables; ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      
+      sSQL = "commit;";
+      
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+      
+      sSQL = "unlock tables; ";
 
 
 

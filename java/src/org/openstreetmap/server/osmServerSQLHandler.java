@@ -22,6 +22,8 @@ import java.util.*;
 import java.lang.*;
 import java.sql.*;
 
+import org.openstreetmap.util.gpspoint;
+
 public class osmServerSQLHandler extends Thread
 {
   String sSQLConnection;

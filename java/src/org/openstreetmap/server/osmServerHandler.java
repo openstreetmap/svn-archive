@@ -24,6 +24,7 @@ import java.net.*;
 import java.io.*;
 import org.apache.xmlrpc.*;
 
+import org.openstreetmap.util.gpspoint;
 
 public class osmServerHandler
 {

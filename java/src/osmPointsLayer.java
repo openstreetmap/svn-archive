@@ -50,12 +50,14 @@ public class osmPointsLayer extends Layer
     super();
     osc = od.getServerClient();
 
+    
     osmAML = new osmAppletMouseListener(od, this);
     graphics = new OMGraphicList(2000);
     createGraphics(graphics);
 
   } // osmPointsLayer
 
+  
   public void setStartingUp(boolean bYesNo)
   {
     bStartingUp = bYesNo;
@@ -211,7 +213,8 @@ public class osmPointsLayer extends Layer
             com.bbn.openmap.proj.Length.METER
             );
 
-        omc.setLinePaint(Color.red);
+        omc.setLinePaint(Color.black);
+        omc.setSelectPaint(Color.red);
         omc.setFillPaint(OMGraphic.clear);
 
         list.add(omc);

@@ -32,23 +32,17 @@ public class osmAppletButtons extends JPanel implements ActionListener
   {
     od = osmdisp;
 
-    setLayout(new FlowLayout());
+    setLayout(new GridLayout(1,10));
 
     JPanel mp = new JPanel();
     mp.setLayout(new BorderLayout());
     
-    add(mp);
-
+    
     JPanel zoomButtons = new JPanel();
     zoomButtons.setLayout(new BorderLayout());
     
-    add(zoomButtons);
 
-    JPanel loginButtons = new JPanel();
-    loginButtons.setLayout(new GridLayout(1,2));
-    
-    add(loginButtons);
-    
+   
     java.net.URL imageURL;
     
     imageURL = osmAppletButtons.class.getResource("left.png");
@@ -87,16 +81,40 @@ public class osmAppletButtons extends JPanel implements ActionListener
     bZoomin.addActionListener(this);
     zoomButtons.add(bZoomin, BorderLayout.NORTH);
 
+
+    JPanel navPanel = new JPanel();
+
+    navPanel.add(mp);
+    navPanel.add(zoomButtons);
+
+    add(navPanel);
+
+    add(Box.createHorizontalGlue());
+
+    JPanel loginButtons = new JPanel();
+    loginButtons.setLayout(new FlowLayout(FlowLayout.RIGHT));
+    
+    
+    loginButtons.add(Box.createHorizontalGlue());
+    
     JButton bLogin = new JButton("Login");
     bLogin.setActionCommand("login");
     bLogin.addActionListener(this);
     loginButtons.add(bLogin);
 
-    JButton bDeletePoints = new JButton("dp");
+     JButton bDeletePoints = new JButton("dp");
     bDeletePoints.setActionCommand("delpoints");
     bDeletePoints.addActionListener(this);
     loginButtons.add(bDeletePoints);
 
+    JButton bAddLine = new JButton("al");
+    bAddLine.setActionCommand("addline");
+    bAddLine.addActionListener(this);
+    loginButtons.add(bAddLine);
+
+    
+    add(loginButtons);
+    
   } // osmAppletButtons
 
 

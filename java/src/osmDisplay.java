@@ -44,6 +44,7 @@ public class osmDisplay
   osmServerClient osc = new osmServerClient();
   
   osmPointsLayer pointsLayer;
+  osmSelectLayer selectLayer;
   
   public osmDisplay(Container cp)
   {
@@ -65,18 +66,25 @@ public class osmDisplay
     mouseDelegator.setActive(selectMouseMode);
     
 
+    selectLayer = new osmSelectLayer(this);
     pointsLayer = new osmPointsLayer(this);
+    
     
     Properties shapeLayerProps = new Properties();
 
     shapeLayerProps.put("prettyName", "Recorded points");
     shapeLayerProps.put("lineColor", "000000");
-    shapeLayerProps.put("fillColor", "BDDE83");
+//    shapeLayerProps.put("fillColor", "BDDE83");
     pointsLayer.setProperties(shapeLayerProps);
 
+//    selectLayer.setProperties(shapeLayerProps);
+    selectLayer.setVisible(true);
     //mapBean.add(shapeLayer);
     mapBean.add(pointsLayer);
 
+    mapBean.add(selectLayer);
+
+    mapBean.add(new osmLineLayer(this));
     // Add the map to the frame
 
     osmAppletButtons buttons = new osmAppletButtons(this);
@@ -103,6 +111,15 @@ public class osmDisplay
 
 
 
+
+  public osmSelectLayer getSelectLayer()
+  {
+    return selectLayer;
+
+  } // osmSelectLayer
+
+
+  
   public void left()
   {
 

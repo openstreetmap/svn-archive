@@ -24,6 +24,7 @@ import java.util.*;
 import java.lang.*;
 import java.awt.event.*;
 
+
 public class osmAppletLoginWindow extends JDialog implements ActionListener
 {
 
@@ -31,7 +32,8 @@ public class osmAppletLoginWindow extends JDialog implements ActionListener
   JPasswordField pass = new JPasswordField(20);
   
   osmServerClient osc;
-   
+
+  
   public osmAppletLoginWindow(JFrame j, boolean bYesNo, osmDisplay od)
   {
     super(j,bYesNo);

@@ -44,6 +44,20 @@ public class osmServerSQLHandler extends Thread
 
   boolean bConnectSuccess = false;
 
+  public void closeDatabase()
+  {
+    try{
+      conn.close();
+    }
+    catch(Exception e)
+    {
+      System.out.println("try as we might, the f'ing thing wont close");
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+  } // closeDatabase
 
   public osmServerSQLHandler(String sTSQLConnection,
       String sTUser,
@@ -120,7 +134,7 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "select uid,active from user where user='" + user + "' and pass='" + pass + "'";
+      String sSQL = "select uid,active from user where user='" + user + "' and pass_crypt=md5('" + pass + "')";
 
       System.out.println("querying with sql \n " + sSQL);
 
@@ -137,7 +151,7 @@ public class osmServerSQLHandler extends Thread
 
         }
         int uid = rs.getInt(1);
-       
+
         sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
           + " where uid = " + uid;
 
@@ -171,7 +185,7 @@ public class osmServerSQLHandler extends Thread
     if( bTokenValidated
         && System.currentTimeMillis() < lValidationTimeout)
     {
-//      System.out.println("validated cached token returning " + nLastUID);
+      //      System.out.println("validated cached token returning " + nLastUID);
       return nLastUID;
 
     }
@@ -401,8 +415,9 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "insert into tempPoints values ("
-        + " GeomFromText('Point("  + lon + " " + lat + ")'),"
+      String sSQL = "insert into tempPoints (latitude,longitude,altitude,timestamp,uid,hor_dilution,vert_dilution,trackid,quality,satellites,last_time,visible,dropped_by) values ("
+        + " " + lat + ", "
+        + " " + lon + ", "
         + " " + alt + ", "
         + " " + timestamp + ", "
         + " " + uid + ", "
@@ -565,9 +580,7 @@ public class osmServerSQLHandler extends Thread
   } // getStreets
 
 
-
-
-  public synchronized Vector getPoints(float p1lat,
+  public synchronized Vector getPointsWithDate(float p1lat,
       float p1lon,
       float p2lat,
       float p2lon
@@ -580,14 +593,14 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "select Y(g),X(g),altitude,timestamp from tempPoints"
-        + " where X(g) < " + p1lat
-        + " and X(g) > " + p2lat
-        + " and Y(g) > " + p1lon
-        + " and Y(g) < " + p2lon
+      String sSQL = "select longitude,latitude,altitude,timestamp from tempPoints"
+        + " where latitude < " + p1lat
+        + " and latitude > " + p2lat
+        + " and longitude > " + p1lon
+        + " and longitude < " + p2lon
         + " and visible=1 limit 10000";
 
-      //System.out.println("querying with sql \n " + sSQL);
+      System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -625,6 +638,65 @@ public class osmServerSQLHandler extends Thread
 
   } // getPoints
 
+
+
+  public synchronized Vector getPoints(float p1lat,
+      float p1lon,
+      float p2lat,
+      float p2lon
+      )
+  {
+
+    System.out.println("getPoints");
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select latitude,longitude from tempPoints"
+        + " where latitude < " + p1lat
+        + " and latitude > " + p2lat
+        + " and longitude > " + p1lon
+        + " and longitude < " + p2lon
+        + " and visible=1 limit 10000";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      boolean bFirst = true;
+
+      gpspoint gpFirst = new gpspoint(0,0,0,0);
+
+      gpspoint gpLastPoint = new gpspoint(0,0,0,0);
+
+      Vector v = new Vector();
+
+      while(rs.next())
+      {
+        v.add(new Float(rs.getFloat(1)));
+        v.add(new Float(rs.getFloat(2)));
+
+      }
+
+      bSQLSuccess = true;
+
+      return v;
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+
+    }
+
+    return null;
+
+  } // getPoints
+
+
   public synchronized Vector getFullPoints(
       float p1lat,
       float p1lon,
@@ -639,8 +711,8 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "select X(g) as lat,"
-        + " Y(g) as lon,"
+      String sSQL = "select latitude,"
+        + " longitude,"
         + " altitude,"
         + " timestamp, "
         + " hor_dilution, "
@@ -653,10 +725,10 @@ public class osmServerSQLHandler extends Thread
 
         + " from tempPoints, user"
 
-        + " where X(g) < " + p1lat
-        + " and X(g) > " + p2lat
-        + " and Y(g) > " + p1lon
-        + " and Y(g) < " + p2lon
+        + " where latitude < " + p1lat
+        + " and latitude > " + p2lat
+        + " and longitude > " + p1lon
+        + " and longitude < " + p2lon
         + " and tempPoints.uid = user.uid"
         + " and visible = 1"
         + " limit 10000";
@@ -676,8 +748,8 @@ public class osmServerSQLHandler extends Thread
       while(rs.next())
       {
 
-        v.add( new Double(rs.getDouble("lat")) ); // lat
-        v.add( new Double(rs.getDouble("lon")) ); // lon
+        v.add( new Double(rs.getDouble("latitude")) ); // lat
+        v.add( new Double(rs.getDouble("longitude")) ); // lon
         v.add( new Double(rs.getDouble("altitude")) ); // alt
         v.add( new java.util.Date(rs.getLong("timestamp") )); // time point was taken
         v.add( new Double( rs.getDouble("hor_dilution")));
@@ -721,8 +793,8 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
-        + " X(g) = " + lat 
-        + " and Y(g) = " + lon;
+        + " latitude = " + lat 
+        + " and longitude = " + lon;
 
       System.out.println("querying with sql \n " + sSQL);
 
@@ -756,10 +828,10 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
-        + " X(g) <= " + lat1
-        + " and X(g) >= " + lat2
-        + " and Y(g) >= " + lon1
-        + " and Y(g) <= " + lon2;
+        + " latitude <= " + lat1
+        + " and latitude >= " + lat2
+        + " and longitude >= " + lon1
+        + " and longitude <= " + lon2;
 
       System.out.println("querying with sql \n " + sSQL);
 
@@ -812,9 +884,9 @@ public class osmServerSQLHandler extends Thread
 
       }
 
-      String sSQL = "insert into user (user, pass, timeout, token) values (" +
+      String sSQL = "insert into user (user, pass_crypt, timeout, token) values (" +
         "'" + user + "', " +
-        "'" + pass + "', " +
+        "md5('" + pass + "'), " +
         " " + System.currentTimeMillis() + ", " +
         " '" + token + "')";
 
@@ -989,7 +1061,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "select h.uid, j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid order by timestamp desc) as j  where h.uid=j.uid and h.visible=" + bVisibleOrNot + " group by h.uid";
-      
+
       System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
@@ -1018,14 +1090,14 @@ public class osmServerSQLHandler extends Thread
 
   public synchronized Vector getKeyHistory(int nKey)
   {
-     Vector v = new Vector();
+    Vector v = new Vector();
 
     try{
 
       Statement stmt = conn.createStatement();
 
       String sSQL = "select osmKeys.name, osmKeys.timestamp, osmKeys.visible, user.user from osmKeys left join user on user_uid=user.uid where osmKeys.uid=" + nKey + " order by timestamp desc";
-      
+
       System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
@@ -1051,8 +1123,8 @@ public class osmServerSQLHandler extends Thread
 
   } // getKeyHistory
 
-  
- 
+
+
   public synchronized int newKey(String sNewKeyName, int nUserUID)
   {
     if(!isStringSQLClean(sNewKeyName) || sNewKeyName.length() == 0)
@@ -1069,7 +1141,7 @@ public class osmServerSQLHandler extends Thread
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
-      
+
       sSQL = "insert into key_meta_table (timestamp, user_uid,visible) values ("
         + System.currentTimeMillis() 
         + ", " + nUserUID
@@ -1340,7 +1412,7 @@ public class osmServerSQLHandler extends Thread
 
   } // getKeyVisible
 
-  
+
   private boolean isStringSQLClean(String s)
   {
     int nSpace = s.indexOf(' ');

@@ -320,38 +320,17 @@ public class osmServerHandler
       double p2lat,
       double p2lon)
   {
-    try{
+    try
+    {
 
       if( !token.equals("applet") && osmSQLH.validateToken(token) == -1 )
       {
         return null;
       }
 
-      Vector v = osmSQLH.getPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
 
-      Vector results = new Vector();
+      return osmSQLH.getPoints((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
 
-      if( osmSQLH.SQLSuccessful() )
-      {
-
-        Enumeration e = v.elements();
-
-        while(e.hasMoreElements())
-        {
-          gpspoint g = (gpspoint)e.nextElement();
-
-          results.addElement( new Double(g.getLatitude()) );
-          results.addElement( new Double(g.getLongitude()) );
-
-        }
-
-
-        return results;
-      }
-      else
-      {
-        System.out.println("error....");
-      }
     }
     catch(Exception e)
     {
@@ -433,7 +412,7 @@ public class osmServerHandler
 
   public Vector getAllKeys(String token, boolean bVisibleOrNot)
   {
-    
+
     int uid = osmSQLH.validateToken(token);
 
     if( uid == -1)
@@ -449,7 +428,7 @@ public class osmServerHandler
 
   public Vector getKeyHistory(String token, int nKeyNum)
   {
-    
+
     int uid = osmSQLH.validateToken(token);
 
     if( uid == -1)
@@ -461,7 +440,7 @@ public class osmServerHandler
     return osmSQLH.getKeyHistory(nKeyNum);
 
   } // getKeyHistory
-  
+
 
 
   public boolean deleteKey(String token, int nKeyNum)
@@ -480,7 +459,7 @@ public class osmServerHandler
   } // deleteKey
 
 
-  
+
   public boolean undeleteKey(String token, int nKeyNum)
   {
 
@@ -513,7 +492,7 @@ public class osmServerHandler
   } // setNewKeyName
 
 
-  
+
   public int newKey(String sToken, String sNewKeyName)
   {
     int uid = osmSQLH.validateToken(sToken);
@@ -542,5 +521,11 @@ public class osmServerHandler
     return osmSQLH.getKeyVisible(nKeyNum);
 
   } // getKeyVisible
+
+  public void closeDatabase()
+  {
+    osmSQLH.closeDatabase();
+
+  } // finalise
 
 } // osmServerHandler

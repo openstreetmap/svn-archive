@@ -1,7 +1,8 @@
 <%@ page import="java.io.*" %><%@ page import="java.util.zip.*" %><%@ page import="org.apache.xmlrpc.*" %><%@ page import="org.openstreetmap.server.osmServerHandler" %><%@ page contentType="text/xml" %><%!
 XmlRpcServer xmlrpc = new XmlRpcServer();%><%
 
-xmlrpc.addHandler("openstreetmap", new osmServerHandler());
+osmServerHandler osmSH = new osmServerHandler();
+xmlrpc.addHandler("openstreetmap", osmSH);
 
 ServletInputStream in = pageContext.getRequest().getInputStream();
 
@@ -36,5 +37,8 @@ else
   out.flush();
 
 }
+
+
+osmSH.closeDatabase();
 
 %>

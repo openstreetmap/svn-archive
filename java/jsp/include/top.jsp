@@ -6,16 +6,16 @@
 
 <table border="0">
 <tr>
-<td>The top</td>
+<td></td>
 <td></td>
 </tr>
 
 <tr>
-<td>
+<td valign="top">
 
 Menu<br>
 <a href="login.jsp">login</a><br>
 <a href="uploadGPX.jsp">upload GPX</a><br>
 
 </td>
-<td>
+<td valign="top">

@@ -49,8 +49,7 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 AC_PROG_INSTALL
-AC_CONFIG_FILES([ 
-po/Makefile.in 
+AC_CONFIG_FILES([ po/Makefile.in 
 m4/Makefile 
 Makefile
 include/Makefile

@@ -40,14 +40,15 @@ public class osmServerClient
 
       out.flush();
 
-      System.out.println("reading POINTS");
-      
-      String sLine = in.readLine();
-
-      System.out.println("Server said " + sLine);
-
       BufferedReader br = new BufferedReader(new InputStreamReader(
           new GZIPInputStream(s.getInputStream())));
+
+
+      System.out.println("reading POINTS");
+      
+      String sLine = br.readLine();
+
+      System.out.println("Server said " + sLine);
 
       while( (sLine = br.readLine()) != null)
       {

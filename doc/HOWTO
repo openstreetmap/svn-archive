@@ -1,0 +1,77 @@
+SteveC's openstreetmap HOWTO
+
+Last edited Wed Oct  6 13:46:45 BST 2004
+
+This howto tells how I record my gps routes. I requires some familiarity with Linux and the ability to go fix things.
+
+My setup looks like this:
+
+An old DELL laptop.
+  Two Batteries (long life being important)
+  GPS Mouse (off eBay, 30 UKP)
+  WIFI card
+An old Zaurus SL-5500 with a wifi CF card.
+
+The Laptop resides in my backpack and the gps mouse is secured on the top of the rucksack with a good view of the sky. This setup is essentially water proof.
+
+Assuming you have similar set up this is what I would do:
+
+Install the basic machine
+-------------------------
+
+Install Debian (debian.org)
+Make sure pcmcia, USB and whatnot work.
+
+Get the GPS up
+--------------
+
+apt-get install gpsdrive. get gpsdrive running and talking to your gps. This confirms that gpsd will work
+
+
+Get Database working
+--------------------
+
+get the latest MySQL >= 4.1. This needs the OpenGIS extensions. Not really needed for recording simple routes, but things might get added that'll require this and anyway it will become the stable version some time soon.
+
+create the database and tables:
+
+#mysqladmin create openstreetmap
+#mysql
+mysql> create table tempPoints( g geometry, altitude float, timestamp bigint(20));
+mysql> create table tempNotes( note varchar(255), timestamp bigint(20));
+mysql> grant all privileges on openstreetmap.* to 'openstreetmap'@'localhost' identified by 'openstreetmap';
+
+Install subversion
+------------------
+
+apt-get install subversion
+
+or get from source
+
+
+Install Java
+------------
+
+apt-get install kaffe ant tomcat4
+
+Or get a JDK from IBM or blackdown.org. Up to you, but then you have to make sure debian puts a holder package for java in and so on. I've not had any problems with kaffe, since we're not doing GUI stuff its ok.
+
+
+Create an openstreetmap user
+----------------------------
+
+adduser openstreetmap
+
+You don't have to do this, but its nice to keep all the openstreetmap stuff in one place.
+
+
+Get the openstreetmap source
+----------------------------
+
+$svn co svn://128.40.59.140/openstreetmap
+$cd openstreetmap
+$ant
+
+
+Test openstreetmap
+-----------------

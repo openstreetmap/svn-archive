@@ -46,7 +46,6 @@ if( action == null)
 }
 else
 {
-  out.print("got abc " + email + " "+ sPassedToken + " " + action);
   if( action.equals("confirm")
       && sPassedToken != null
       && email != null)

@@ -223,7 +223,7 @@ public class osmServerSQLHandler extends Thread
         + " " + lat2 + ", "
         + " " + System.currentTimeMillis() + ", "
         + " " + uid + ", "
-        + " true, "
+        + " true "
         + ");";
 
 

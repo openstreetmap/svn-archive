@@ -8,16 +8,18 @@
 <target name="init">
   <tstamp/>
   <mkdir dir="${build}"/>
+  <mkdir dir="${dist}"/>
 </target>
 
 
 <target name="compile" depends="init">
   <javac srcdir="${src}" debug="true" optimize="off" destdir="${build}"/>
+
 </target>
 
 
 <target name="dist" depends="compile">
-  
+  <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
 </target>
 
 

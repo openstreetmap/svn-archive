@@ -52,6 +52,7 @@ public class gpsShowWindow extends JFrame{
   }//end constructor
 
 
+
   public void translate(int x, int y)
   {
     //System.out.println("asked to translate by " + x + "," + y);
@@ -74,6 +75,8 @@ public class gpsShowWindow extends JFrame{
   } // scale
 
 
+
+  
   public void update(Graphics g)
   {
     Graphics gr; 
@@ -90,18 +93,24 @@ public class gpsShowWindow extends JFrame{
     paint(gr);
     
     g.drawImage(offScreenBuffer, 0, 0, this);
-  }
+  
+  } // update
 
+
+  
   public void paint(Graphics g)
   {
     super.paint(g);
 
+    int nWindowCentreX = this.getWidth() / 2;
+    int nWindowCentreY = this.getHeight() / 2;
+    
     if( gpsPoints != null )
     {
 
       g.setColor(Color.white);
 
-      g.fillRect(0,0,600,600);
+      g.fillRect(0,0,this.getWidth(),this.getHeight());
 
       g.setColor(Color.black);
       
@@ -109,25 +118,71 @@ public class gpsShowWindow extends JFrame{
 
       Enumeration e = gpsPoints.elements();
 
-      Point2D.Float p1 = new Point2D.Float();
-      Point2D.Float p2 = new Point2D.Float();
-
       while( e.hasMoreElements() )
       {
         gpspoint p = (gpspoint)e.nextElement();
 
-        p1.setLocation(p.getLongitude(), p.getLatitude());
-
-        at.transform(p1,p2);
-
-        g.drawLine(300 + (int)p2.getX(),
-            300 + (int)p2.getY(),
-            300 + (int)p2.getX(),
-            300 + (int)p2.getY());
-
+        p.paintPoint(g, nWindowCentreX, nWindowCentreY, at);
       }
 
     }
-  }
+
+  } // paint
+
+  
+
+  public void mouseClicked(MouseEvent e)
+  {
+
+    System.out.println("mouseClicked");
+    
+    Enumeration en = gpsPoints.elements();
+
+    gpspoint closestPoint = new gpspoint(0,0,0,0);
+    double closestDistance = 10000000;
+ 
+    Point2D p1 = new Point2D.Double(e.getX() - (this.getWidth()/2),
+                                    e.getY() - (this.getHeight()/2)); 
+    Point2D p2 = new Point2D.Double(0,0);
+    
+    try{
+      at.inverseTransform(p1,p2);
+    }
+    catch(Exception ex)
+    {
+      System.out.println("ouch " + ex);
+      ex.printStackTrace();
+      System.exit(-1);
+    }
+   
+    while( en.hasMoreElements() )
+    {
+      gpspoint p = (gpspoint)en.nextElement();
+      
+      
+      double myDis = p2.distanceSq(
+                      new Point2D.Double(p.getLongitude(),
+                                         p.getLatitude()));
+
+      
+    
+      p.setHighlight(false);
+      
+      if( myDis < closestDistance )
+      {
+
+        closestDistance = myDis;
+
+        closestPoint = p;
+      }
+      
+    }    
+  
+    closestPoint.setHighlight(true);
+
+    repaint();
+
+  } // mouseClicked
+
 
 } // 

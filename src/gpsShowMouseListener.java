@@ -66,7 +66,9 @@ public class gpsShowMouseListener extends MouseInputAdapter{
   }
 
   public void mouseClicked(MouseEvent e){
-
+    
+    gsw.mouseClicked(e);
+    
   }
 
 } // gpsShowmouseListener

@@ -1,3 +1,8 @@
+2005-03-29  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (EXTRA_DIST): Add config.rpath mkinstalldirs.
+	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in.
+
 29/11/2004 - Matt Amos
 ======================
 added writing ability by splitting Stream into Input- and OutputStream

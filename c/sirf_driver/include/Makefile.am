@@ -22,4 +22,5 @@ EXTRA_DIST = DumpPacketHandler.hpp \
 	PacketExtractorBase.hpp \
 	Message.hpp \
 	Debug.hpp \
+	Signal.hpp \
 	PrintAllHandler.hpp

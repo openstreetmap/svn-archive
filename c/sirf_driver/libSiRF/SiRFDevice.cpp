@@ -1,6 +1,7 @@
 // include the header file
 #include <SiRFDevice.hpp>
 #include <Message.hpp>
+#include <Signal.hpp>
 
 // need std::cerr
 #include <iostream>
@@ -22,12 +23,16 @@ namespace SiRF {
 
   // initialise
   SiRFDevice::SiRFDevice(const char *devicename, unsigned int baud) {
+    // setup a time-out for 60 s
+    Signal::setWatchdog(60);
     // open the device
     open(devicename);
     // initialise
     lowlevel_init(fd, baud);
     // synchronise
     lowlevel_sync(fd, baud);
+    // all done, reset watchdog
+    Signal::resetWatchdog();
     // set up the buffer
     read_buf_size = 4096;
     write_buf_size = 4096;
@@ -100,6 +105,8 @@ namespace SiRF {
 
   // refills the buffer from the serial port
   void SiRFDevice::refillReadBuffer() {
+    // shouldn't take more than 30s to get more data, right?
+    Signal::setWatchdog(30);
     // we need some more data
     do {
       read_buf_len = ::read(fd, read_buffer, read_buf_size);
@@ -118,6 +125,8 @@ namespace SiRF {
     }
     // buf_len > 0
     read_buf_pos = 0;
+    // mission complete.
+    Signal::resetWatchdog();
   }
 
   // flushes the write buffer to the device

@@ -4,6 +4,7 @@
 #include <PacketFactory.hpp>
 #include <PrintPacketHandler.hpp>
 #include <WarnPacketHandler.hpp>
+#include <Signal.hpp>
 
 #include "AuthorInfo.hpp"
 #include "GPXHandler.hpp"
@@ -26,6 +27,10 @@ int main(int argc, char *argv[]) {
   if (argc > 3) {
     baud = atoi(argv[3]);
   }
+
+  /* set up signal handling
+   */
+  Signal::setup();
 
   /* get the file name from the first argument
    * initialise the SiRF stream

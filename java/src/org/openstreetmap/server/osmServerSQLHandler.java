@@ -1598,8 +1598,216 @@ public class osmServerSQLHandler extends Thread
 
     return false;
 
-  } // addNewStreet
+  } // dropGPX
 
 
+
+
+  public synchronized int newNode(double latitude, double longitude, int nUserUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "insert into node_meta_table (timestamp, user_uid, visible) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID
+        + ", 1)";
+      
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "insert into nodes (uid, latitude, longitude, timestamp, user_uid, visible) values ("
+        + " last_insert_id(), "
+        + "" + latitude + ", "
+        + "" + longitude + ", "
+        + System.currentTimeMillis() + ", "
+        + nUserUID + ", "
+        + "1)";
+
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "select @id;";
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newNode
+
+
+  public synchronized boolean moveNode(int nNodeNum, double latitude, double longitude, int nUserUID)
+  {
+    
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+
+        // that key does exist
+
+        sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values ("
+          + " " + nNodeNum + ", "
+          + " " + latitude + ", "
+          + " " + longitude + ", "
+          + System.currentTimeMillis() + ", "
+          + nUserUID + ", "
+          + "1)";
+
+        stmt.execute(sSQL);
+
+        return true;
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // moveNode
+
+
+  public synchronized int newStreetSegment(int node_a, int node_b, int nUserUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "insert into street_segment_meta_table (timestamp, user_uid, visible) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID
+        + ", 1)";
+      
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values ("
+        + " last_insert_id(), "
+        + "" + node_a + ", "
+        + "" + node_b + ", "
+        + System.currentTimeMillis() + ", "
+        + nUserUID + ", "
+        + "1)";
+
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "select @id;";
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newNode
+
+
+  public synchronized Vector getNodes(double lat1, double lon1, double lat2, double lon2)
+  {
+
+    Vector v = new Vector();
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid,latitude,longitude,max(timestamp) from nodes where "
+        + "latitude < " + lat1 + " and "
+        + "latitude > " + lat2 + " and "
+        + "longitude > " + lon1 + " and "
+        + "longitude < " + lon1 + " and "
+        + "and visible=true group by uid";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      while ( rs.next() )
+      {
+        v.add( new Integer(rs.getInt("uid")) );
+        v.add( new Double(rs.getDouble("latitude")) );
+        v.add( new Double(rs.getDouble("longitude")) );
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return v;
+
+  } // getAllNodes
+
+  
 
 } // osmServerSQLHandler

@@ -551,6 +551,69 @@ public class osmServerHandler
 
   }
 
+
+  public int newNode(String sToken, double latitude, double longitude)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return -1;
+
+    }
+     
+    return osmSQLH.newNode(latitude, longitude, nUID);
+
+  } // newNode
+  
+
+  public boolean moveNode(String sToken, int nNodeID, double latitude, double longitude)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return false;
+
+    }
+     
+    return osmSQLH.moveNode(nNodeID, latitude, longitude, nUID);
+
+  } // moveNode
+
+  
+  public int newStreetSegment(String sToken, int node_a, int node_b)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return -1;
+
+    }
+     
+    return osmSQLH.newStreetSegment(node_a, node_b, nUID);
+
+  } // newNode
+ 
+
+  
+  public Vector getNodes(String sToken, double lat1, double lon1, double lat2, double lon2)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return new Vector();
+
+    }
+     
+    return osmSQLH.getNodes(lat1, lon1, lat2, lon2);
+
+  } // getNodes
+  
+
+  
   public void closeDatabase()
   {
     osmSQLH.closeDatabase();

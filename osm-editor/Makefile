@@ -3,13 +3,15 @@ TESTGPSOBJ = testgps.o GPSDevice.o
 OBJ = main.o MainWindow.o GPSDevice.o Segment.o functions.o \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
 	  moc_MainWindow.o
-PARSEROBJ = testparser.o GPXParser.o Components.o Track.o Waypoint.o
 LIBS = -ljeeps 
+LIBPATH = -L/usr/local/lib
 
 QTINCPATH = /usr/lib/qt3/include
 QTLIB = -lqt-mt 
 QTLIBPATH = -L/usr/lib/qt3/lib
-CXXFLAGS = -I$(QTINCPATH)
+CXXFLAGS = -I$(QTINCPATH) -I/usr/local/include
+
+JEEPSSRC = jeeps-0.1.4-nick
 
 MOC=/usr/lib/qt3/bin/moc
 
@@ -17,7 +19,8 @@ moc_%.cpp : %.h
 	${MOC} $< -o $@
 
 osmeditor: $(OBJ)
-	g++ -o osmeditor $(OBJ) $(QTLIBPATH) $(LIBS) $(QTLIB) 
+	cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
+	g++ -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) 
 
 testgps: $(TESTGPSOBJ)
 	g++ -o testgps $(TESTGPSOBJ) $(LIBS)

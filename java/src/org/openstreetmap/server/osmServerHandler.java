@@ -581,6 +581,22 @@ public class osmServerHandler
 
   } // moveNode
 
+  public boolean deleteNode(String sToken, int nNodeID)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return false;
+
+    }
+     
+    return osmSQLH.deleteNode(nNodeID, nUID);
+
+   
+
+  } // deleteNode
+
   
   public int newStreetSegment(String sToken, int node_a, int node_b)
   {

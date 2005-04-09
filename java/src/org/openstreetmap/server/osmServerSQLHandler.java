@@ -1782,7 +1782,7 @@ public class osmServerSQLHandler extends Thread
         + "latitude > " + lat2 + " and "
         + "longitude > " + lon1 + " and "
         + "longitude < " + lon2 
-        +" and visible = true) as f, (select uid,visible,max(timestamp) as mtime from nodes where visible = true group by uid) as g where g.uid = f.uid and f.timestamp = g.mtime";
+        +" and visible = true) as f, (select uid,visible,max(timestamp) as mtime from nodes group by uid) as g where g.uid = f.uid and f.timestamp = g.mtime and f.visible = g.visible";
 
 
       System.out.println("querying with sql \n " + sSQL);
@@ -1811,5 +1811,59 @@ public class osmServerSQLHandler extends Thread
   } // getNodes
 
 
+  public synchronized boolean deleteNode(int nNodeNum, int nUserUID)
+  {
+    
+    try
+    {
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select latitude,longitude,max(timestamp) from nodes where uid=" + nNodeNum + " group by uid";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        System.out.println("found uid ok");
+
+        // that key does exist
+
+        sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values ("
+          + " " + nNodeNum + ", "
+          + " " + rs.getString("latitude") + ", "
+          + " " + rs.getString("longitude") + ", "
+          + System.currentTimeMillis() + ", "
+          + nUserUID + ", "
+          + "0)";
+
+        stmt.execute(sSQL);
+
+        return true;
+
+      }
+      else
+      {
+        System.out.println("didnt find that uid guvnor!");
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // deleteNode
+
+
+
+  
 
 } // osmServerSQLHandler

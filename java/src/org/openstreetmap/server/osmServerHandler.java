@@ -594,7 +594,7 @@ public class osmServerHandler
      
     return osmSQLH.newStreetSegment(node_a, node_b, nUID);
 
-  } // newNode
+  } // newStreetSegment
  
 
   
@@ -602,18 +602,21 @@ public class osmServerHandler
   {
     int nUID = osmSQLH.validateToken(sToken);
 
-    if( nUID == -1)
+    if( !sToken.equals("applet"))
     {
-      return new Vector();
+      if(  nUID == -1)
+      {
+        return new Vector();
 
+      }
     }
-     
+
     return osmSQLH.getNodes(lat1, lon1, lat2, lon2);
 
   } // getNodes
-  
 
-  
+
+
   public void closeDatabase()
   {
     osmSQLH.closeDatabase();

@@ -1777,12 +1777,13 @@ public class osmServerSQLHandler extends Thread
 
       Statement stmt = conn.createStatement();
 
-      String sSQL = "select uid,latitude,longitude,max(timestamp) from nodes where "
+      String sSQL = "select * from (select uid,latitude,longitude,timestamp,visible from nodes where "
         + "latitude < " + lat1 + " and "
         + "latitude > " + lat2 + " and "
         + "longitude > " + lon1 + " and "
-        + "longitude < " + lon1 + " and "
-        + "and visible=true group by uid";
+        + "longitude < " + lon2 
+        +" and visible = true) as f, (select uid,visible,max(timestamp) as mtime from nodes where visible = true group by uid) as g where g.uid = f.uid and f.timestamp = g.mtime";
+
 
       System.out.println("querying with sql \n " + sSQL);
 
@@ -1793,6 +1794,7 @@ public class osmServerSQLHandler extends Thread
         v.add( new Integer(rs.getInt("uid")) );
         v.add( new Double(rs.getDouble("latitude")) );
         v.add( new Double(rs.getDouble("longitude")) );
+
       }
 
 
@@ -1806,8 +1808,8 @@ public class osmServerSQLHandler extends Thread
 
     return v;
 
-  } // getAllNodes
+  } // getNodes
 
-  
+
 
 } // osmServerSQLHandler

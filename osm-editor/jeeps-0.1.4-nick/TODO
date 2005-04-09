@@ -1,4 +1,0 @@
-Remove some unneeded constant calculation from the projection routines.
-Network communication and daemons.
-Add more asynchronicity.
-Improve "if the lead is pulled" code for the Garmin protocol.

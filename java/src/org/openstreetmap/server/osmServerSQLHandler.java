@@ -244,157 +244,6 @@ public class osmServerSQLHandler extends Thread
   } // validateLoginToken
 
 
-
-
-  public synchronized Integer addNewStreet(
-      String street_name,
-      float lat1,
-      float lon1,
-      float lat2,
-      float lon2,
-      int uid)
-  {
-    // creates a new street
-    // returns the street_uid created
-
-    System.out.println("addNewStreet");
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
-      long l = System.currentTimeMillis();
-
-      String sSQL = "lock table streets write, streetSegments write;";
-
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-
-      sSQL = "start transaction; ";
-
-
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-
-      sSQL = 
-        "insert into streets(name, timestamp, user_uid, visible) values ("
-        + " '" + street_name + "', "
-        + " " + l + ", "
-        + " " + uid + ", "
-        + " true "
-        + "); ";
-
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-
-      sSQL = "set @id = last_insert_id(); ";
-
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-
-      sSQL = "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
-        + "  last_insert_id() , "
-        + " " + lon1 + ", "
-        + " " + lat1 + ", "
-        + " " + lon2 + ", "
-        + " " + lat2 + ", "
-        + " " + l + ", "
-        + " " + uid + ", "
-        + " true "
-        + "); ";
-
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-
-      sSQL = "commit;";
-
-      System.out.println("querying with sql \n " + sSQL);
-      stmt.execute(sSQL);
-
-      sSQL = "unlock tables; ";
-
-
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      stmt.execute(sSQL);
-
-      sSQL = "select @id; ";
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      rs.next();
-
-      Integer i = new Integer(rs.getInt(1));
-
-      System.out.println("returned int on insert street was = " + i);
-
-      return i;
-
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-    }
-
-    return new Integer(-1);
-
-  } // addNewStreet
-
-
-
-
-
-  public synchronized boolean addStreetSegment(
-      int street_uid,
-      float lat1,
-      float lon1,
-      float lat2,
-      float lon2,
-      int uid)
-  {
-
-    System.out.println("addStreetSegment");
-
-    try{
-      // FIXME need to check streetuid exists!
-
-      Statement stmt = conn.createStatement();
-
-      String sSQL = "insert into streetSegments(uid_of_street, lon1, lat1, lon2, lat2, timestamp, user_uid, visible ) values ("
-        + " " + street_uid + ", "
-        + " " + lon1 + ", "
-        + " " + lat1 + ", "
-        + " " + lon2 + ", "
-        + " " + lat2 + ", "
-        + " " + System.currentTimeMillis() + ", "
-        + " " + uid + ", "
-        + " true "
-        + ");";
-
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      stmt.execute(sSQL);
-
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-      return false;
-    }
-
-    return true;
-
-  } // addStreetSegment
-
-
   public synchronized int getGPXID(int nUID, String sFilename)
   {
     try{
@@ -488,136 +337,6 @@ public class osmServerSQLHandler extends Thread
     return true;
 
   } // addPoint
-
-
-  /*
-
-     public synchronized boolean addPoints(
-     float[] lat,
-     float[] lon,
-     float[] alt,
-     long[] timestamp,
-     float[] hor_dilution,
-     float[] vert_dilution,
-     int[] trackid,
-     int[] quality,
-     int[] satellites,
-     int nPoints,
-     int uid
-     )
-     {
-
-     System.out.println("addPoint");
-
-     try{
-
-     Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-
-     Connection conn = DriverManager.getConnection(sSQLConnection,
-     sUser,
-     sPass);
-
-     Statement stmt = conn.createStatement();
-
-     for(int i = 0; i< nPoints; i++)
-     {
-
-     String sSQL = "insert into tempPoints values ("
-     + " GeomFromText('Point("  + lon[i] + " " + lat[i] + ")'),"
-     + " " + alt[i] + ", "
-     + " " + timestamp[i] + ", "
-     + " " + uid + ", "
-     + " " + hor_dilution[i] + ", "
-     + " " + vert_dilution[i] + ", "
-     + " " + trackid[i] + ", "
-     + " " + quality[i] + ", "
-     + " " + satellites[i] + ", "
-     + " " + System.currentTimeMillis() + ", 1,0);";
-
-
-  //System.out.println("querying with sql \n " + sSQL);
-
-  stmt.execute(sSQL);
-  }
-  }
-  catch(Exception e)
-  {
-  System.out.println(e);
-  e.printStackTrace();
-
-  return false;
-  }
-
-  return true;
-
-  } // addPoints
-   */
-
-  public synchronized Vector getStreets(
-      float p1lat,
-      float p1lon,
-      float p2lat,
-      float p2lon
-      )
-  {
-
-    System.out.println("getStreets");
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
-      String sSQL = "select uid_of_street, lon1, lat1, lon2, lat2 from streetSegments"
-        + " where ( "
-        + "     lat1 < " + p1lat
-        + " and lat1 > " + p2lat
-        + " and lon1 > " + p1lon
-        + " and lon1 < " + p2lon
-        + " ) or ( "
-        + "     lat2 < " + p1lat
-        + " and lat2 > " + p2lat
-        + " and lon2 > " + p1lon
-        + " and lon2 < " + p2lon
-        + " ) "
-        + " and visible=1 limit 10000";
-
-
-      System.out.println("querying with sql \n " + sSQL);
-
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      Vector v = new Vector();
-
-      while(rs.next())
-      {
-        v.add( new Integer( rs.getInt(1) ) );
-        v.add( new Float( rs.getDouble(2)));
-        v.add( new Float( rs.getDouble(3)));
-        v.add( new Float( rs.getDouble(4)));
-        v.add( new Float( rs.getDouble(5)));
-
-      }
-
-      bSQLSuccess = true;
-
-      return v;
-
-    }
-    catch(Exception e)
-    {
-
-
-      System.out.println(e);
-      e.printStackTrace();
-
-
-    }
-
-    return null;
-
-  } // getStreets
 
 
   public synchronized Vector getPointsWithDate(float p1lat,
@@ -1045,6 +764,71 @@ public class osmServerSQLHandler extends Thread
 
   } // userExists
 
+  public synchronized Vector getStreets(
+      float p1lat,
+      float p1lon,
+      float p2lat,
+      float p2lon
+      )
+  {
+
+    System.out.println("getStreets");
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid_of_street, lon1, lat1, lon2, lat2 from streetSegments"
+        + " where ( "
+        + "     lat1 < " + p1lat
+        + " and lat1 > " + p2lat
+        + " and lon1 > " + p1lon
+        + " and lon1 < " + p2lon
+        + " ) or ( "
+        + "     lat2 < " + p1lat
+        + " and lat2 > " + p2lat
+        + " and lon2 > " + p1lon
+        + " and lon2 < " + p2lon
+        + " ) "
+        + " and visible=1 limit 10000";
+
+
+      System.out.println("querying with sql \n " + sSQL);
+
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      Vector v = new Vector();
+
+      while(rs.next())
+      {
+        v.add( new Integer( rs.getInt(1) ) );
+        v.add( new Float( rs.getDouble(2)));
+        v.add( new Float( rs.getDouble(3)));
+        v.add( new Float( rs.getDouble(4)));
+        v.add( new Float( rs.getDouble(5)));
+
+      }
+
+      bSQLSuccess = true;
+
+      return v;
+
+    }
+    catch(Exception e)
+    {
+
+
+      System.out.println(e);
+      e.printStackTrace();
+
+
+    }
+
+    return null;
+
+  } // getStreets
+
 
 
   public synchronized int largestTrackID(String token)
@@ -1466,7 +1250,7 @@ public class osmServerSQLHandler extends Thread
 
   } // isStringSQLClean
 
-  
+
   public synchronized int newGPX(String sNewGPXName, int nUserUID)
   {
     if(!isStringSQLClean(sNewGPXName) || sNewGPXName.length() == 0)
@@ -1517,7 +1301,7 @@ public class osmServerSQLHandler extends Thread
   {
 
     Vector v = new Vector();
-    
+
 
     try{
 
@@ -1527,7 +1311,7 @@ public class osmServerSQLHandler extends Thread
       String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID;
 
       System.out.println("querying with sql \n " + sSQL);
-      
+
       ResultSet rs = stmt.executeQuery(sSQL);
 
       while(rs.next())
@@ -1571,7 +1355,7 @@ public class osmServerSQLHandler extends Thread
       sSQL = "delete from points_meta_table where user_uid = "
         + nUID 
         + " and uid = " + nGPXUID;
-      
+
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
@@ -1618,7 +1402,7 @@ public class osmServerSQLHandler extends Thread
         + System.currentTimeMillis() 
         + ", " + nUserUID
         + ", 1)";
-      
+
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
@@ -1665,7 +1449,7 @@ public class osmServerSQLHandler extends Thread
 
   public synchronized boolean moveNode(int nNodeNum, double latitude, double longitude, int nUserUID)
   {
-    
+
     try{
 
       Statement stmt = conn.createStatement();
@@ -1723,7 +1507,7 @@ public class osmServerSQLHandler extends Thread
         + System.currentTimeMillis() 
         + ", " + nUserUID
         + ", 1)";
-      
+
       System.out.println("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
@@ -1813,7 +1597,7 @@ public class osmServerSQLHandler extends Thread
 
   public synchronized boolean deleteNode(int nNodeNum, int nUserUID)
   {
-    
+
     try
     {
 
@@ -1863,7 +1647,165 @@ public class osmServerSQLHandler extends Thread
   } // deleteNode
 
 
+  private synchronized boolean nodeExists(int nNodeNum)
+  {
+
+    try
+    {
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      return rs.next();
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+
+  } // nodeExists
+
+
+
+  private synchronized boolean checkNewLine(int node_a, int node_b)
+  {
+    if(nodeExists(node_a) && nodeExists(node_b))
+    {
+      // do some more checks like if the link is 100 miles long and if they're visible
+
+      return true;
+
+    }
+
+    return false;
+
+  } // checkNewLine
+
+
+  public synchronized int newLine(int node_a, int node_b, int nUserUID)
+  {
+    if( checkNewLine(node_a, node_b) )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "start transaction;";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "insert into street_segment_meta_table (timestamp, user_uid, visible) values ("
+          + System.currentTimeMillis() 
+          + ", " + nUserUID
+          + ", 1)";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "set @id = last_insert_id(); ";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+
+        sSQL = "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values ("
+          + " last_insert_id(), "
+          + "" + node_a + ", "
+          + "" + node_b + ", "
+          + System.currentTimeMillis() + ", "
+          + nUserUID + ", "
+          + "1)";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "commit;";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+
+        sSQL = "select @id;";
+        System.out.println("querying with sql \n " + sSQL);
+        ResultSet rs = stmt.executeQuery(sSQL);
+
+        rs.next();
+
+        return rs.getInt(1);
+
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+    }
+
+    return -1;
+
+  } // newLine
 
   
+  public synchronized Vector getLines(int nnUID[])
+  {
+
+    Vector v = new Vector();
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
+      
+      for(int i = 0; i < nnUID.length; i++)
+      {
+        sSQL = sSQL + " node_a = " + nnUID[i] + " or node_b=" + nnUID[i];
+
+        if(i != nnUID.length -1 )
+        {
+          sSQL = sSQL + " or ";
+
+        }
+
+      }
+      
+      sSQL = sSQL + ") ) as f, (select uid,visible,max(timestamp) as mtime from street_segments group by uid) as h where h.mtime = f.timestamp and h.uid = f.uid" ;
+      
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      while ( rs.next() )
+      {
+        v.add( new Integer(rs.getInt("node_a")) );
+        v.add( new Integer(rs.getInt("node_b")) );
+
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return v;
+
+  } // getLines
+
+
 
 } // osmServerSQLHandler

@@ -96,165 +96,7 @@ public class osmServerHandler
      
   } // addUser
 
- 
- 
-  public Integer addNewStreet(String token,
-      String sStreetName,
-      double lat1,
-      double lon1,
-      double lat2,
-      double lon2
-      )
-  {
 
- 
-    int uid = osmSQLH.validateToken(token);
-
-    if( uid == -1)
-    {
-      return new Integer(-1);
-    }
-
-    return osmSQLH.addNewStreet(
-        sStreetName,
-        (float)lat1,
-        (float)lon1,
-        (float)lat2,
-        (float)lon2,
-        uid);
-
-  } // addNewStreet
-
-
-
-  public boolean addStreetSegment(String token,
-      int street_uid,
-      double lat1,
-      double lon1,
-      double lat2,
-      double lon2
-      )
-  {
-
- 
-    int uid = osmSQLH.validateToken(token);
-
-    if( uid == -1)
-    {
-      return false;
-    }
-
-    return osmSQLH.addStreetSegment(
-        street_uid,
-        (float)lat1,
-        (float)lon1,
-        (float)lat2,
-        (float)lon2,
-        uid);
-
-  } // addStreetSegment
-
-
-
-/*
-  public boolean addPoint(String token,
-      double lat,
-      double lon,
-      double alt,
-      Date date,
-      double hor_dilution,
-      double vert_dilution,
-      int track_id,
-      int quality,
-      int satellites
-      )
-  {
-    
-
-//    System.out.println("adding point");
-    if(
-        date == null
-      )
-    {
-      //FIXME: add more data checks
-      return false;
-
-    }
-
-    int uid = osmSQLH.validateToken(token);
-
-    if( uid == -1)
-    {
-      return false;
-    }
-
-//    System.out.println("handing over to addPoint sql handler");
-  
-    return osmSQLH.addPoint(
-        (float)lat,
-        (float)lon,
-        (float)alt,
-        date.getTime(),
-        (float)hor_dilution,
-        (float)vert_dilution,
-        track_id,
-        quality,
-        satellites,
-        uid);
-
-  } // addPoint
-*/
-/* 
-  public boolean addPoints(String token,
-      double lat[],
-      double lon[],
-      double alt[],
-      Date date[],
-      double hor_dilution[],
-      double vert_dilution[],
-      int track_id[],
-      int quality[],
-      int satellites[]
-      )
-  {
-
-
-    osmServerSQLHandler osmSQLH = new osmServerSQLHandler(sJDBC, "openstreetmap","openstreetmap");
-
-    int uid = osmSQLH.validateToken(token);
-
-    if( uid == -1)
-    {
-      return false;
-    }
-
-
-    long[] times = new long[date.length];
-    float[] lats = new float[date.length];
-//    float[] lons = new 
-    
-    for(int i = 0; i < date.length; i++)
-    {
-
-      times[i] = date[i].getTime();
-
-    }
-    
-    return osmSQLH.addPoint(
-        (float)lat,
-        (float)lon,
-        (float)alt,
-        times,
-        (float)hor_dilution,
-        (float)vert_dilution,
-        track_id,
-        quality,
-        satellites,
-        uid);
-
-  
-  } // addPoints
-*/
 
   public Vector getStreets(
       String token,
@@ -581,6 +423,7 @@ public class osmServerHandler
 
   } // moveNode
 
+
   public boolean deleteNode(String sToken, int nNodeID)
   {
     int nUID = osmSQLH.validateToken(sToken);
@@ -592,13 +435,13 @@ public class osmServerHandler
     }
      
     return osmSQLH.deleteNode(nNodeID, nUID);
-
    
 
   } // deleteNode
 
   
-  public int newStreetSegment(String sToken, int node_a, int node_b)
+
+  public int newLine(String sToken, int node_a, int node_b)
   {
     int nUID = osmSQLH.validateToken(sToken);
 
@@ -608,10 +451,64 @@ public class osmServerHandler
 
     }
      
-    return osmSQLH.newStreetSegment(node_a, node_b, nUID);
+    return osmSQLH.newLine(node_a, node_b, nUID);
 
-  } // newStreetSegment
+  } // newLine
  
+
+  public Vector getLines(String sToken, Vector v)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( !sToken.equals("applet"))
+    {
+      if(  nUID == -1)
+      {
+        return new Vector();
+
+      }
+    }
+
+    if( v.size() <1 )
+    {
+      return new Vector();
+    }
+
+    int nnUID[] = new int[v.size()];
+
+    Enumeration e = v.elements();
+
+    for(int i = 0; i < v.size(); i++)
+    {
+      try
+      {
+        Integer num = (Integer)e.nextElement();
+        int nNum = num.intValue();
+        
+        if(nNum < 1)
+        {
+          return new Vector();
+
+        }
+
+        nnUID[i] = nNum;
+
+
+      }
+      catch(Exception ex)
+      {
+        //something went wrong casting so its dodgy input
+        return new Vector();
+
+      }
+        
+
+    }
+    
+
+    return osmSQLH.getLines(nnUID);
+
+  } // getNodes
 
   
   public Vector getNodes(String sToken, double lat1, double lon1, double lat2, double lon2)

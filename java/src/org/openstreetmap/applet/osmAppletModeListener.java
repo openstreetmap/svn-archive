@@ -2,9 +2,10 @@ package org.openstreetmap.applet;
 
 import java.awt.*;
 import java.lang.*;
-import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
-public class osmAppletModeListener implements ItemListener
+public class osmAppletModeListener implements ChangeListener
 {
   osmDisplay od;
 
@@ -16,30 +17,31 @@ public class osmAppletModeListener implements ItemListener
   } // osmAppletModeListener
 
   
-  public void itemStateChanged(ItemEvent e)
+  public void stateChanged(ChangeEvent e)
   {
-    if( e.getStateChange() == ItemEvent.DESELECTED)
-    {
-      return;
-
-    }
-    String s = (String)e.getItem();
- 
+    JTabbedPane pane = (JTabbedPane)e.getSource();
     
-    if( s.equals("add lines") )
-    {
-      od.setMode(od.MODE_DRAW_LINES);
+    int sel = pane.getSelectedIndex();
 
-    }
-
-    if( s.equals("drop points") )
-    {
-      od.setMode(od.MODE_DROP_POINTS);
-
-    }
     
+    System.out.println(sel);
+
+    switch(sel)
+    {
+      case 0:
+        od.setMode(od.MODE_POINTS);
+
+      case 1:
+        od.setMode(od.MODE_LINES);
+
+      case 2:
+        od.setMode(od.MODE_AREAS);
+
+
+    }
+
   } // itemStateChanged
-   
+
 
 
 } // osmAppletModeListener

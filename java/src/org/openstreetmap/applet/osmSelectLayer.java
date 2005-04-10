@@ -52,6 +52,8 @@ public class osmSelectLayer extends Layer
   
   boolean bDisplayRect = false;
   boolean bDisplayLine = false;
+
+  private LatLonPoint lineStart = new LatLonPoint();
  
   
   public osmSelectLayer(osmDisplay oDisplay)
@@ -89,17 +91,23 @@ public class osmSelectLayer extends Layer
 
   } // setRect
 
+
+  public void setLineStart(LatLonPoint a)
+  {
+    lineStart = a;
+
+  } // setLineStart
   
  
-  public void setLine(LatLonPoint a, LatLonPoint b)
+  public void setLine(LatLonPoint p)
   {
     graphics.clear();
     
     OMLine l = new OMLine(
-        a.getLatitude(),
-        a.getLongitude(),
-        b.getLatitude(),
-        b.getLongitude(),
+        lineStart.getLatitude(),
+        lineStart.getLongitude(),
+        p.getLatitude(),
+        p.getLongitude(),
         com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
         );
     
@@ -111,7 +119,30 @@ public class osmSelectLayer extends Layer
 
   } // setLine
 
-  
+
+  public void setNode(LatLonPoint p)
+  {
+    graphics.clear();
+
+    Node n = new Node(-1, (double)p.getLatitude(), (double)p.getLongitude() );
+
+    n.generate( getProjection ());
+
+    graphics.add(n);
+
+    repaint();
+
+  } // setNode
+
+ 
+  public void clearLayer()
+  {
+    graphics.clear();
+
+    repaint();
+
+  } // setNode
+ 
   
 
   public void projectionChanged(com.bbn.openmap.event.ProjectionEvent pe) {

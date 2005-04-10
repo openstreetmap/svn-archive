@@ -38,16 +38,24 @@ import com.bbn.openmap.util.*;
 
 import org.openstreetmap.client.*;
 
+
 public class osmLineLayer extends Layer
 {
+  private int nodeSelected = -1;
 
-  osmServerClient osc;
-  protected OMGraphicList graphics;
-  osmAppletLineDrawListener oLDL;
-  osmDisplay od;
-  boolean bStartingUp = false;
+  private osmServerClient osc;
+  protected OMGraphicList nodeGraphics;
+  protected OMGraphicList lineGraphics;
+  private osmAppletLineDrawListener oLDL;
+  private osmDisplay od;
+  private boolean bStartingUp = false;
+  private Hashtable htNodes = new Hashtable();
 
-  
+  public osmAppletLineDrawListener getMouseListener()
+  {
+    return oLDL;
+  } // getMouseListener
+
   public osmLineLayer(osmDisplay oDisplay)
   {
 
@@ -57,9 +65,10 @@ public class osmLineLayer extends Layer
     osc = od.getServerClient();
     oLDL = new osmAppletLineDrawListener(od,this); 
 
-    graphics = new OMGraphicList(4);
+    nodeGraphics = new OMGraphicList(4);
+    lineGraphics = new OMGraphicList(4);
 
-      //createGraphics();
+    //createGraphics();
 
     //graphics.add( new OMLine(51.526394f,-0.14697807f,51.529114f,-0.15060599f,
     //   com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT
@@ -68,89 +77,104 @@ public class osmLineLayer extends Layer
   } // osmPointsLayer
 
 
-  public void setProperties(String prefix, java.util.Properties props) {
+  public void setProperties(String prefix, java.util.Properties props)
+  {
 
     super.setProperties(prefix, props);
 
   } // setProperties
 
 
-  public void projectionChanged(com.bbn.openmap.event.ProjectionEvent pe) {
+  public void projectionChanged(com.bbn.openmap.event.ProjectionEvent pe)
+  {
+
+
     Projection proj = setProjection(pe);
+
+
+    System.out.println("proj change on line layer to" + proj);
+
     if (proj != null) {
 
       System.out.println("projection changed...");
-      createGraphics();
+      createGraphicsAndRepaint();
 
-      System.out.println("projection changed... here");
-      graphics.generate(pe.getProjection());
-      
-      repaint();
     }
+
 
     fireStatusUpdate(LayerStatusEvent.FINISH_WORKING);
   }
 
 
 
-  protected void createGraphics()
+  protected void createGraphicsAndRepaint()
   {
+    System.out.println("line createGraphics called");
     // NOTE: all this is very non-optimized...
 
-    graphics.clear();
+    nodeGraphics.clear();
+    lineGraphics.clear();
 
     osmStreetSegment oml;
 
     Projection proj = getProjection(); 
 
-    if( proj != null )
+    htNodes = new Hashtable();
+    Vector v = new Vector();
+
+    if(  !od.startingUp() )
     {
+      LatLonPoint a = proj.getUpperLeft();
+      LatLonPoint b = proj.getLowerRight();
 
-      Vector v = new Vector();
+      System.out.println(a);
+      System.out.println(b);
 
-      if( proj!= null && !od.startingUp() )
-      {
-        LatLonPoint a = proj.getUpperLeft();
-        LatLonPoint b = proj.getLowerRight();
+      htNodes = osc.getNodes(a,b);
 
-        System.out.println(a);
-        System.out.println(b);
-        
-        v = osc.getStreets(a,b);
-      }
+      v = osc.getLines(htNodes);
+    }
+    // do lines
 
-      Enumeration e = v.elements();
+    Enumeration e = v.elements();
 
-      System.out.println("reading streets...");
-      
-      while( e.hasMoreElements() )
-      {
-        
-        int id = ((Integer)e.nextElement()).intValue();
-        
-        float lon1 = (float)((Double)e.nextElement()).doubleValue();
-        float lat1 = (float)((Double)e.nextElement()).doubleValue();
-        float lon2 = (float)((Double)e.nextElement()).doubleValue();
-        float lat2 = (float)((Double)e.nextElement()).doubleValue();
+    while( e.hasMoreElements() )
+    {
+      OMLine l = (OMLine)e.nextElement();
 
-        System.out.println("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
-
-        oml = new osmStreetSegment(lat1, lon1, lat2, lon2,
-            com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
-            id
-            );
-
-
-        graphics.add(oml);
-      }
+      lineGraphics.add(l);
 
     }
+
+    // do nodes
+
+    e = htNodes.elements();
+
+    System.out.println("reading streets...");
+
+    while( e.hasMoreElements() )
+    {
+      Node n = (Node)e.nextElement();
+      System.out.println("got a node: " + n);
+
+      nodeGraphics.add( n );
+
+    }
+
+    nodeGraphics.generate(getProjection());
+    lineGraphics.generate(getProjection());
+
+    repaint();
+
   } // createGraphics
 
 
-  public void paint (Graphics g) {
 
-    graphics.render(g);
+  public void paint (Graphics g)
+  {
+
+    lineGraphics.render(g);
+    nodeGraphics.render(g);
 
   } // paint
 
@@ -169,191 +193,267 @@ public class osmLineLayer extends Layer
 
   }
 
+  /*
+     public LatLonPoint findClosestLineEnding(LatLonPoint p)
+     {
+  // return the nearest endpoint
+  // if too far return the given point
 
-  public LatLonPoint findClosestLineEnding(LatLonPoint p)
-  {
-    // return the nearest endpoint
-    // if too far return the given point
-    
-    Iterator i = graphics.iterator();
+  Iterator i = graphics.iterator();
 
-    double cx = 0;
-    double cy = 0;
+  double cx = 0;
+  double cy = 0;
 
-    double d = 0.00025;
-    
-    while(i.hasNext())
-    {
+  double d = 0.00025;
 
-      OMLine oml = (OMLine)i.next();
-
-      float pos[] = oml.getLL();
-      
-
-      if( distance(pos[0], pos[1], p.getLatitude(), p.getLongitude()) < 
-          distance(cx,cy,p.getLatitude(), p.getLongitude()))
-      {
-        cx = pos[0];
-        cy = pos[1];
-
-      }
-
-      if( distance(pos[2], pos[3], p.getLatitude(), p.getLongitude()) <
-          distance(cx,cy,p.getLatitude(), p.getLongitude()))
-      {
-        cx = pos[2];
-
-        cy = pos[3];
-
-      }
-
-
-    }
-
-    if( cx != 0 && cy != 0 && 
-        distance(cx,cy,p.getLatitude(), p.getLongitude()) <d
-      )
-    {
-    
-      return new LatLonPoint(cx,cy);
-
-    }
-
-    return p;
-
-  } // findClosestLineEnding
-
-
-
-
-  private int findUidOfLineWithPoint(LatLonPoint p)
+  while(i.hasNext())
   {
 
-    Iterator i = graphics.iterator();
+  OMLine oml = (OMLine)i.next();
 
-    while( i.hasNext())
-    {
-
-      osmStreetSegment oms = (osmStreetSegment)i.next();
-
-      float pos[] = oms.getLL();
-
-      if( (pos[0] == p.getLatitude() && pos[1] == p.getLongitude() )
-          || (pos[2] == p.getLatitude() && pos[3] == p.getLongitude() )
-        )
-      {
-        // found a line ending at that point
-
-        return oms.getUid();
+  float pos[] = oml.getLL();
 
 
-      }
+  if( distance(pos[0], pos[1], p.getLatitude(), p.getLongitude()) < 
+  distance(cx,cy,p.getLatitude(), p.getLongitude()))
+  {
+  cx = pos[0];
+  cy = pos[1];
+
+  }
+
+  if( distance(pos[2], pos[3], p.getLatitude(), p.getLongitude()) <
+  distance(cx,cy,p.getLatitude(), p.getLongitude()))
+  {
+  cx = pos[2];
+
+  cy = pos[3];
+
+  }
 
 
-    }
+  }
 
-    return -1; // not found
-
-  } // findUidOfLineWithPoint
-
-
-  
-  private double distance(double x1, double y1, double x2, double y2)
+  if( cx != 0 && cy != 0 && 
+  distance(cx,cy,p.getLatitude(), p.getLongitude()) <d
+  )
   {
 
-    double a = Math.sqrt( Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+  return new LatLonPoint(cx,cy);
 
-    return a;
-  } // distance
+  }
+
+  return p;
+
+     } // findClosestLineEnding
 
 
 
 
-  public void setLine(LatLonPoint a, LatLonPoint b)
+     private int findUidOfLineWithPoint(LatLonPoint p)
+     {
+
+     Iterator i = graphics.iterator();
+
+     while( i.hasNext())
+     {
+
+     osmStreetSegment oms = (osmStreetSegment)i.next();
+
+     float pos[] = oms.getLL();
+
+     if( (pos[0] == p.getLatitude() && pos[1] == p.getLongitude() )
+     || (pos[2] == p.getLatitude() && pos[3] == p.getLongitude() )
+     )
   {
-    if( !od.checkLogin() )
-    {
-      // not logged in
+    // found a line ending at that point
 
-      return;
+    return oms.getUid();
+
+
+  }
+
+
+     }
+
+return -1; // not found
+
+     } // findUidOfLineWithPoint
+
+
+
+private double distance(double x1, double y1, double x2, double y2)
+{
+
+  double a = Math.sqrt( Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
+
+  return a;
+} // distance
+*/
+
+
+
+public void addNode(LatLonPoint p)
+{
+  if( !od.checkLogin() )
+  {
+    // not logged in
+
+    return;
+
+  }
+
+
+  System.out.println("trying to add node  " +p.getLatitude() + "," + p.getLongitude());
+
+
+
+  int uid = osc.addNode(
+      (double)p.getLatitude(),
+      (double)p.getLongitude()
+      );
+
+  if( uid != -1 )
+  {
+    Node n = new Node(uid, (double)p.getLatitude(), (double)p.getLongitude());
+
+    htNodes.put("" + n.getUID(), n);
+
+    nodeGraphics.add( n );
+
+    nodeGraphics.generate( getProjection(), true);
+
+
+    repaint();
+
+    od.paintBean();
+  }
+} // addNode
+
+
+
+public void moveNode(LatLonPoint p)
+{
+  int x = (int)getProjection().forward(p).getX();
+  int y = (int)getProjection().forward(p).getY();
+
+  if( nodeSelected != -1)
+  {
+    System.out.println("moving node..." + nodeSelected);
+    // move it
+
+
+    if( osc.moveNode(
+          nodeSelected,
+          (double)p.getLatitude(),
+          (double)p.getLongitude() ) )
+    {
+
+      createGraphicsAndRepaint();
 
     }
 
+    nodeSelected = -1;
 
-    System.out.println("trying to adding line  "+
-        +a.getLatitude()+","
-        +a.getLongitude() + " "
-        +b.getLatitude() + ","
-        +b.getLongitude());
 
-    int uid = findUidOfLineWithPoint(a);
+  }
+  else
+  {
+    // find a node to move!
+    OMCircle g = (OMCircle)nodeGraphics.findClosest(x,y,10);
 
-    if(uid == -1)
+    if( g != null)
     {
-      uid = findUidOfLineWithPoint(b);
-
-      
+      nodeSelected = ((Node)g).getUID();
+      System.out.println("selected a node! " + nodeSelected);
     }
 
-    boolean bSQLSuccess = false;
+  }
 
-    if(uid == -1)
+} // moveNode
+
+
+
+public void deleteNode(LatLonPoint p)
+{
+
+  //FIXME : put up a 'r u sure?' dialog
+
+  int x = (int)getProjection().forward(p).getX();
+  int y = (int)getProjection().forward(p).getY();
+
+
+  OMCircle g = (OMCircle)nodeGraphics.findClosest(x,y,10);
+
+  if( g != null)    
+  {
+    osc.deleteNode(((Node)g).getUID()); 
+  }
+
+  createGraphicsAndRepaint();
+
+} // deleteNode
+
+
+
+public boolean newLine(LatLonPoint p)
+{
+
+  int x = (int)getProjection().forward(p).getX();
+  int y = (int)getProjection().forward(p).getY();
+
+  if( nodeSelected != -1)
+  {
+    System.out.println("linking node..." + nodeSelected);
+    // move it
+
+    OMCircle g = (OMCircle)nodeGraphics.findClosest(x,y,10);
+
+    if( g != null)
     {
-      // not attached to an existing line, create a new one
+      int n = ((Node)g).getUID();
 
-      int i = osc.addNewStreet(
-          "",
-          a.getLatitude(),
-          a.getLongitude(),
-          b.getLatitude(),
-          b.getLongitude()
-          );
-
-      if( i!= -1)
+      if(n != -1 && n != nodeSelected)
       {
-        uid = i;
-        bSQLSuccess = true;
 
+        int nLineUID = osc.newLine(
+            nodeSelected,
+            n);
+
+        if( nLineUID != -1)
+        {
+
+          createGraphicsAndRepaint();
+
+        }
       }
+
     }
-    else
+    nodeSelected = -1;
+
+    return false;
+
+
+  }
+  else
+  {
+    // find a node to move!
+    OMCircle g = (OMCircle)nodeGraphics.findClosest(x,y,10);
+
+    if( g != null)
     {
-      // attached to an existing line. yay.
-
-      bSQLSuccess = osc.addStreetSegment(
-          uid,
-          a.getLatitude(),
-          a.getLongitude(),
-          b.getLatitude(),
-          b.getLongitude()
-          );
+      nodeSelected = ((Node)g).getUID();
+      System.out.println("selected a node! " + nodeSelected);
+      return true;
     }
 
-    if( bSQLSuccess )
-    {
-      // one of the sql queries worked so add it to our private list
-      // if it got added to the database then add it to our list too
+  }
 
-      osmStreetSegment l = new osmStreetSegment(
-          a.getLatitude(),
-          a.getLongitude(),
-          b.getLatitude(),
-          b.getLongitude(),
-          com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
-          uid
-          );
 
-      graphics.add( l);
+  return false;
 
-      graphics.generate( getProjection(), true);
+}
 
-      repaint();
-
-      System.out.println(graphics.size());
-
-      od.paintBean();
-    }
-  } // setLine
 
 
 } // osmLineLayer

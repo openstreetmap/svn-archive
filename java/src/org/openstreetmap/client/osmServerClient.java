@@ -24,9 +24,11 @@ import java.net.*;
 import java.lang.*;
 import java.io.*;
 import com.bbn.openmap.LatLonPoint;
+import com.bbn.openmap.omGraphics.*;
 import org.apache.xmlrpc.applet.*;
 
 import org.openstreetmap.util.*;
+import org.openstreetmap.applet.*;
 
 public class osmServerClient
 {
@@ -34,7 +36,6 @@ public class osmServerClient
   private String sPassword = "";
   private String sLoginToken = "";
   private long loginTime = 0;
-
 
   SimpleXmlRpcClient xmlrpc;
 
@@ -368,5 +369,286 @@ public class osmServerClient
 
   } // getPoints
 
+  
+  public synchronized Hashtable getNodes(LatLonPoint llp1,
+      LatLonPoint llp2)
+  {
+    System.out.println("grabbing nodes...");
+    Hashtable htNodes = new Hashtable();
 
+    try
+    {
+
+      Vector params = new Vector();
+
+      params.addElement( "applet" );
+      params.addElement( new Double((double)llp1.getLatitude()) );
+      params.addElement( new Double((double)llp1.getLongitude()) );
+      params.addElement( new Double((double)llp2.getLatitude()) );
+      params.addElement( new Double((double)llp2.getLongitude()) );
+
+      Vector results = (Vector) xmlrpc.execute("openstreetmap.getNodes",params);
+
+      System.out.println("reading Nodes...");
+
+      Enumeration e = results.elements();
+
+      while(e.hasMoreElements())
+      {
+
+
+        int uid = ((Integer)e.nextElement()).intValue();
+        double lat = ((Double)e.nextElement()).doubleValue();
+        double lon = ((Double)e.nextElement()).doubleValue();
+
+        Node n = new Node(uid, lat, lon);
+
+        htNodes.put("" + uid, n );
+
+        System.out.println("adding node " + n);
+
+      }
+
+      System.out.println("done getting nodes!");
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return htNodes;
+
+  } // getNodes
+
+  
+  public synchronized int addNode(double latitude,
+      double longitude)
+  {
+    try
+    {
+
+      Vector params = new Vector();
+
+      params.addElement( sLoginToken );
+      params.addElement( new Double(latitude) );
+      params.addElement( new Double(longitude) );
+
+      Integer nResult = (Integer) xmlrpc.execute("openstreetmap.newNode",params);
+
+      int i = nResult.intValue();
+
+      System.out.println("added node " + i);
+      return i;
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return -1;
+
+  } // addNode
+
+
+  public synchronized boolean moveNode(int nUID, double latitude,
+      double longitude)
+  {
+    try
+    {
+
+      Vector params = new Vector();
+
+      params.addElement( sLoginToken );
+      params.addElement( new Integer(nUID) );
+      params.addElement( new Double(latitude) );
+      params.addElement( new Double(longitude) );
+
+      Boolean nResult = (Boolean) xmlrpc.execute("openstreetmap.moveNode",params);
+
+      boolean b = nResult.booleanValue();
+
+      return b;
+
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return false;
+
+  } // moveNode
+
+
+  
+  public synchronized boolean deleteNode(int nUID)
+  {
+    try
+    {
+      
+      Vector params = new Vector();
+
+      params.addElement( sLoginToken );
+      params.addElement( new Integer(nUID) );
+
+      Boolean nResult = (Boolean)xmlrpc.execute("openstreetmap.deleteNode",params);
+
+      boolean b = nResult.booleanValue();
+
+      return b;
+
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return false;
+
+  } // deleteNode
+ 
+  
+
+  public synchronized int newLine(int nUIDa, int nUIDb)
+  {
+
+    try
+    {
+      
+      Vector params = new Vector();
+
+      params.addElement( sLoginToken );
+      params.addElement( new Integer(nUIDa) );
+      params.addElement( new Integer(nUIDb) );
+
+      Integer nResult = (Integer)xmlrpc.execute("openstreetmap.newLine",params);
+
+      int i = nResult.intValue();
+
+      return i;
+
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return -1;
+
+  } // newLine
+ 
+  
+  public synchronized Vector getLines(Hashtable htNodes)
+  {
+    System.out.println("grabbing lines...");
+
+    Vector v = new Vector();
+
+    
+    try
+    {
+
+      Vector params = new Vector();
+
+      params.addElement( "applet" );
+
+      Enumeration e = htNodes.elements();
+
+      Vector uids = new Vector();
+
+      while(e.hasMoreElements())
+      {
+        uids.addElement( new Integer( ((Node)e.nextElement()).getUID() ) ) ;
+
+      }
+
+      params.addElement( uids );
+
+
+      Vector results = (Vector) xmlrpc.execute("openstreetmap.getLines",params);
+
+      System.out.println("reading Lines...");
+
+      e = results.elements();
+
+      while(e.hasMoreElements())
+      {
+        Integer ia = (Integer)e.nextElement();
+        Integer ib = (Integer)e.nextElement();
+
+        int na = ia.intValue();
+        int nb = ib.intValue();
+
+        Node nodeA = (Node)htNodes.get("" + na);
+        Node nodeB = (Node)htNodes.get("" + nb);
+
+        if( nodeA != null && nodeB != null)
+        {
+          LatLonPoint llpA = nodeA.getLatLon();
+          LatLonPoint llpB = nodeB.getLatLon();
+
+          v.add( 
+              new OMLine(
+                llpA.getLatitude(),
+                llpA.getLongitude(),
+                llpB.getLatitude(),
+                llpB.getLongitude(),
+                OMLine.STRAIGHT_LINE
+                )
+              );
+          
+          System.out.println("adding line between " + llpA + ", " + llpB);
+          
+        }
+
+      }
+
+      System.out.println("done getting lines!");
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println("oh de-ar " + e);
+      e.printStackTrace();
+
+      System.exit(-1);
+
+    }
+
+    return v;
+
+  } // getNodes
+
+  
 } // osmServerClient

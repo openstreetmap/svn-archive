@@ -24,14 +24,19 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import org.openstreetmap.applet.*;
 
 public class osmAppletButtons extends JPanel implements ActionListener
 {
-  osmDisplay od;
+  private osmDisplay od;
+  private osmAppletLineDrawListener osmLDL;
 
-  public osmAppletButtons(osmDisplay osmdisp)
+  
+  public osmAppletButtons(osmDisplay osmdisp, osmAppletLineDrawListener oLDL)
   {
+    
     od = osmdisp;
+    osmLDL = oLDL;
 
     setLayout(new GridLayout(1,10));
 
@@ -90,39 +95,82 @@ public class osmAppletButtons extends JPanel implements ActionListener
 
     add(navPanel);
 
-    add(Box.createHorizontalGlue());
+    JTabbedPane tabbedPane = new JTabbedPane();
+  
+    tabbedPane.addChangeListener(new osmAppletModeListener(od));
+    
+    JPanel editPoints = new JPanel();
+    JPanel editLines = new JPanel();
 
-    JPanel loginButtons = new JPanel();
-    loginButtons.setLayout(new FlowLayout(FlowLayout.RIGHT));
+    ButtonGroup buttonGroup = new ButtonGroup();
+
     
-    
-    loginButtons.add(Box.createHorizontalGlue());
+    imageURL = osmAppletButtons.class.getResource("/move-node.png");
+    JToggleButton moveNode = new JToggleButton( new ImageIcon(imageURL));
+    moveNode.setActionCommand("LINE_MOVE_NODE");
+    moveNode.setToolTipText("Move a node");
+    moveNode.addActionListener(this);
+
+    imageURL = osmAppletButtons.class.getResource("/new-node.png");
+    JToggleButton addNode = new JToggleButton( new ImageIcon(imageURL), true );
+    addNode.setActionCommand("LINE_ADD_NODE");
+    addNode.setToolTipText("Add a node");
+    addNode.addActionListener(this);
+
+    imageURL = osmAppletButtons.class.getResource("/del-node.png");
+    JToggleButton deleteNode = new JToggleButton( new ImageIcon(imageURL));
+    deleteNode.setActionCommand("LINE_DELETE_NODE");
+    deleteNode.setToolTipText("Delete a node");
+    deleteNode.addActionListener(this);
+
+    imageURL = osmAppletButtons.class.getResource("/new-line.png");
+    JToggleButton newLine = new JToggleButton( new ImageIcon(imageURL));
+    newLine.setActionCommand("LINE_NEW_LINE");
+    newLine.setToolTipText("Join two nodes to form a street segment");
+    newLine.addActionListener(this);
+
+    imageURL = osmAppletButtons.class.getResource("/del-line.png");
+    JToggleButton deleteLine = new JToggleButton( new ImageIcon(imageURL));
+    deleteLine.setActionCommand("LINE_NEW_LINE");
+    deleteLine.setToolTipText("Break the join between two nodes to delete a street segment");
+    deleteLine.addActionListener(this);
+   
+
+    buttonGroup.add(moveNode);
+    buttonGroup.add(addNode);
+    buttonGroup.add(deleteNode);
+    buttonGroup.add(newLine);
+    buttonGroup.add(deleteLine);
+
+    editLines.add(moveNode);
+    editLines.add(addNode);
+    editLines.add(deleteNode);
+    editLines.add(newLine);
+    editLines.add(deleteLine);
+
+    JPanel editAreas = new JPanel();
+
+
+    JPanel loginTools = new JPanel();
     
     JButton bLogin = new JButton("Login");
     bLogin.setActionCommand("login");
     bLogin.addActionListener(this);
-    loginButtons.add(bLogin);
-
-    JButton bDeletePoints = new JButton("dp");
-    bDeletePoints.setActionCommand("delpoints");
-    bDeletePoints.addActionListener(this);
-    loginButtons.add(bDeletePoints);
-
-
-    loginButtons.add( new JLabel("Mode:"));
+    loginTools.add(bLogin);
 
     
-    String[] sModes = { "add lines" , "drop points" };
-    JComboBox comboModes = new JComboBox(sModes);
-    comboModes.setActionCommand("addline");
-    ItemListener modeListener = new osmAppletModeListener(od);
-    comboModes.addItemListener(modeListener);
-    loginButtons.add(comboModes);
+    tabbedPane.add("Points", editPoints);
+    tabbedPane.add("Lines", editLines);
+    tabbedPane.add("Areas", editAreas);
+    tabbedPane.add("Server", loginTools);
 
-    
-    add(loginButtons);
-    
+    tabbedPane.setSelectedIndex(1);
+
+    add(tabbedPane);
+    //    add(loginButtons);
+
   } // osmAppletButtons
+
 
 
   public void actionPerformed(ActionEvent e)
@@ -176,15 +224,40 @@ public class osmAppletButtons extends JPanel implements ActionListener
     }
 
 
-    if( e.getActionCommand().equals("delpoints"))
+    if( e.getActionCommand().equals("LINE_ADD_NODE"))
     {
-      od.deletePoints();
+
+      osmLDL.setMode(osmLDL.MODE_ADD_NODE);
       return;
 
     }
 
+    if( e.getActionCommand().equals("LINE_MOVE_NODE"))
+    {
 
+      osmLDL.setMode(osmLDL.MODE_MOVE_NODE);
+      return;
 
+    }
+ 
+    if( e.getActionCommand().equals("LINE_DELETE_NODE"))
+    {
+
+      osmLDL.setMode(osmLDL.MODE_DELETE_NODE);
+      return;
+
+    }
+ 
+    
+    if( e.getActionCommand().equals("LINE_NEW_LINE"))
+    {
+
+      osmLDL.setMode(osmLDL.MODE_NEW_LINE);
+      return;
+
+    }
+ 
 
   }
+
 } // osmAppletButtons

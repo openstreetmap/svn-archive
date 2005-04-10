@@ -36,12 +36,13 @@ import org.openstreetmap.client.*;
 
 public class osmDisplay
 {
-  public static final int MODE_DRAW_LINES = 1;
-  public static final int MODE_DROP_POINTS = 2;
+  public static final int MODE_POINTS = 1;
+  public static final int MODE_LINES = 2;
+  public static final int MODE_AREAS = 3;
 
   boolean bStartingUp = true;
   
-  int nCurrentMode = MODE_DRAW_LINES;
+  int nCurrentMode = MODE_LINES;
 
   JLabel label = new JLabel("OpenStreetMap pre-pre-pre alpha");
   MapBean mapBean;
@@ -51,7 +52,6 @@ public class osmDisplay
   osmPointsLayer pointsLayer;
   osmSelectLayer selectLayer;
   osmLineLayer lineLayer;
-  
   
   
   public osmDisplay(float fScale, float fLat, float fLon, Container cp)
@@ -90,13 +90,9 @@ public class osmDisplay
   
     //mapBean.add(shapeLayer);
 
-    mapBean.add(selectLayer);
-
-    mapBean.add(lineLayer);
-    mapBean.add(pointsLayer);
     // Add the map to the frame
 
-    osmAppletButtons buttons = new osmAppletButtons(this);
+    osmAppletButtons buttons = new osmAppletButtons(this, lineLayer.getMouseListener());
 
     cp.add( buttons, BorderLayout.NORTH);    
     cp.add( mapBean, BorderLayout.CENTER);
@@ -105,12 +101,16 @@ public class osmDisplay
     mapBean.setScale(fScale);
 
     mapBean.setCenter(fLat, fLon);
+    mapBean.add(selectLayer);
+
+    mapBean.add(lineLayer);
+    mapBean.add(pointsLayer);
 
     mapBean.setBackgroundColor(new Color(231,231,214));
     
     bStartingUp = false;
 
-    setMode(MODE_DRAW_LINES);
+    setMode(MODE_LINES);
 
   }
 
@@ -259,12 +259,8 @@ public class osmDisplay
     System.out.println("switching to mode " + n);
     switch(nCurrentMode)
     {
-      case MODE_DROP_POINTS:
-        pointsLayer.setMouseListen(true);
-        lineLayer.setMouseListen(false);  
-        break;
 
-      case MODE_DRAW_LINES:
+      case MODE_LINES:
         pointsLayer.setMouseListen(false);
         lineLayer.setMouseListen(true);  
 

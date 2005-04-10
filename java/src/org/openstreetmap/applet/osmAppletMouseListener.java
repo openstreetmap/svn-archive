@@ -117,6 +117,7 @@ public class osmAppletMouseListener extends MapMouseAdapter
 
   public boolean mouseClicked(java.awt.event.MouseEvent e)
   {
+    System.out.println("got a click");
     if( !bCatchEvents )
     {
       return false;

@@ -12,9 +12,9 @@ Definite problems at time of initial commit to Subversion:
 
 - will only run in the source directory as it requires a subdirectory "images" 
 containing the icons.
-- GPX timestamps are numeric rather than the standard XML timestamp format.
+- GPX timestamps are numeric rather than the standard XML timestamp format. SORTED.
 - probably some others :-)
-- crashes after GPS read.
+- crashes after GPS read. SORTED. 
 
 Nick
 05/04/05

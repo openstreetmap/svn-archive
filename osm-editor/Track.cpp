@@ -28,8 +28,7 @@ void Track::toGPX(std::ostream &outfile,const vector<SegDef> &segdefs)
 {
 	int segcount=0;
 
-	outfile << "points.size()" << points.size()<<endl;
-	outfile<<"<trk>" << endl << "<name>" << id << "</name>" << endl;
+	outfile<<"<trk>" << endl << "<name>"  << id << "</name>" << endl;
 
 	for(int count=0; count<points.size(); count++)
 	{
@@ -82,6 +81,14 @@ bool Track::deletePoints(int start, int end)
 	}
 
 	return false;
+}
+
+TrackPoint Track::getPoint(int i) throw (QString)
+{ 
+	if(i<0 || i>=points.size())
+		throw QString("No track point at index " + i);
+	
+ 	return points[i]; 
 }
 
 }

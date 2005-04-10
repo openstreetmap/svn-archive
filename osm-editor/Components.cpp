@@ -39,8 +39,8 @@ void Components::toGPX(const char* filename)
 		   <<"creator=\"Hogweed Software Freemap::Components class\" " 
 		   <<"xmlns=\"http://www.topografix.com/GPX/1/0\">" << endl;
 
-	if(track)track->toGPX(outfile,segdefs);
 	if(waypoints)waypoints->toGPX(outfile);
+	if(track)track->toGPX(outfile,segdefs);
 
 	outfile<<"</gpx>"<<endl;
 }
@@ -131,7 +131,7 @@ bool Components::addWaypoint(const Waypoint& w)
 	return false;
 }
 
-bool Components::addTrackpoint(time_t timestamp,double lat,double lon)
+bool Components::addTrackpoint(const QString& timestamp,double lat,double lon)
 {
 	if(track)
 	{
@@ -141,14 +141,22 @@ bool Components::addTrackpoint(time_t timestamp,double lat,double lon)
 	return false;
 }
 
-Waypoint Components::getWaypoint(int i)
+Waypoint Components::getWaypoint(int i) throw(QString)
 {
-	return(waypoints)? waypoints->getWaypoint(i):Waypoint();
+	if(!waypoints)
+	{
+		throw QString("No waypoints defined!");
+	}
+	return waypoints->getWaypoint(i);
 }
 
-TrackPoint Components::getTrackpoint(int i)
+TrackPoint Components::getTrackpoint(int i) throw(QString)
 {
-	return(track)? track->getPoint(i):TrackPoint();
+	if(!track)
+	{
+		throw QString("No track defined!");
+	}
+	return track->getPoint(i);
 }
 
 bool Components::setTrackID(const char* i)

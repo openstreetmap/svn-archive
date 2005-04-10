@@ -158,7 +158,7 @@ bool GPXParser::characters(const QString& characters)
 	else if(inType)
 		curType = characters; 
 	else if(inTime)
-		curTimestamp = atoi(characters.ascii());
+		curTimestamp = characters; // 10/04/05 timestamp now string 
 	return true;
 }
 

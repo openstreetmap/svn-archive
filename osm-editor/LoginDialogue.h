@@ -16,51 +16,27 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
-#ifndef WAYPOINT_H
-#define WAYPOINT_H
+#ifndef LOGINDIALOGUE_H
+#define LOGINDIALOGUE_H
 
-#include <vector>
-#include <fstream>
-#include <qstring.h>
 
-using std::vector;
-
+#include <qdialog.h>
+#include <qlineedit.h>
 
 namespace OpenStreetMap 
 {
 
-struct WaypointMap
-{
-	int garmin;
-	QString type;
-};
 
-struct Waypoint
+class LoginDialogue: public QDialog 
 {
-	double lat, lon;
-	QString name; 
-	QString type;
-		 
-	static WaypointMap waypointMap[];
-
-	Waypoint(){ lat=lon=0; }	
-	Waypoint(const QString& nm, double lt, double ln, const QString& tp)
-		{ name=nm; lat=lt; lon=ln; type=tp; }
-	static QString garminToType(int);
-};
-
-class Waypoints
-{
+		
 private:
-	vector<Waypoint> waypoints;
+	QLineEdit * usernameEdit, *passwordEdit;
 
 public:
-	Waypoints() { }
-	void addWaypoint(const Waypoint& wp) { waypoints.push_back(wp);}
-	Waypoint getWaypoint(int i) throw (QString); 
-	void toGPX(std::ostream&);
-	int size() { return waypoints.size(); }
-	bool alterWaypoint(int,const QString&,const QString&);
+	LoginDialogue(QWidget*);
+	QString getUsername() { return usernameEdit->text(); }
+	QString getPassword() { return passwordEdit->text(); }
 };
 
 }

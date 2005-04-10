@@ -32,11 +32,12 @@ struct SegDef;
 
 struct TrackPoint
 {
-	time_t timestamp;
+	// 10/04/05 now storing the timestamp as the standard GPX format
+	QString timestamp;
 	double lat, lon;
 
-	TrackPoint(){timestamp=0; lat=lon=0; }
-	TrackPoint(time_t t, double lt, double ln)
+	TrackPoint(){lat=lon=0; timestamp=""; }
+	TrackPoint(const QString& t, double lt, double ln)
 		{ timestamp=t; lat=lt; lon=ln; }
 };
 
@@ -47,13 +48,14 @@ private:
 	QString id;	
 	
 public:
+	Track() { id=""; }
 	void setID(const QString& i)
 		{ id=i; }
 	QString getID() 
 		{ return id; }
-	void addTrackpt(time_t t, double lat, double lon)
+	void addTrackpt(const QString& t, double lat, double lon)
 		{ points.push_back(TrackPoint(t,lat,lon)); }
-	TrackPoint getPoint(int i) { return points[i]; }
+	TrackPoint getPoint(int i) throw(QString);
 	void toGPX(std::ostream&,const vector<SegDef>&);
 	int size(){ return points.size(); }
 	bool deletePoints(int,int);

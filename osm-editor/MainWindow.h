@@ -26,6 +26,7 @@
 #include "Polygon.h"
 #include "Segment.h"
 #include "Components.h"
+#include "Map.h"
 #include <map>
 #include <vector>
 
@@ -46,13 +47,6 @@ enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON };
 namespace OpenStreetMap 
 {
 
-struct ScreenPos
-{
-	int x,y;
-
-	ScreenPos() { x=y=0; }
-	ScreenPos(int x1,int y1) { x=x1; y=y1; }
-};
 
 struct ImgLabelData 
 {
@@ -107,8 +101,9 @@ class MainWindow : public QMainWindow
 Q_OBJECT
 
 private:
-	GridRef topleft;
-	double scale;
+	//GridRef topleft;
+	//double scale;
+	Map map;
 	
 	// key data
 	Components * components;
@@ -138,17 +133,6 @@ private:
 	QToolButton* modeButtons[4];
 
 	QComboBox * modes;
-	ScreenPos getScreenPos(const GridRef& pos)
-		{ return ScreenPos ((pos.e-topleft.e)*scale,
-						(topleft.n-pos.n)*scale); }
-
-	ScreenPos getScreenPos(double lat,double lon)
-		{ return getScreenPos(ll_to_gr(lat,lon)); }
-
-	GridRef getGridRef(const ScreenPos& pos)
-		{ return GridRef(topleft.e+((double)pos.x)/scale,
-						  topleft.n-((double)pos.y)/scale); }
-
 	void drawTrackpoint(QPainter&,const QPen&,int,int);
 	void drawTrackpoint(QPainter&,int,int,int,int);
 	void saveFile(const QString&);
@@ -165,8 +149,6 @@ public:
 			 		double=3.2,double=3.2);
 	~MainWindow();
 	Components * doOpen(const QString&);
-	void move(double edis,double ndis)
-			{ topleft.e += edis*1000; topleft.n += ndis*1000; update(); }
 
 	void paintEvent(QPaintEvent*);
 	void mousePressEvent(QMouseEvent*);
@@ -192,6 +174,7 @@ public slots:
 	void changePolygonRes();
 	void setMode(int);
 	void setSegType(const QString&);
+	void grabTracks();
 };
 
 }

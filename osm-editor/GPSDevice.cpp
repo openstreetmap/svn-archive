@@ -20,6 +20,7 @@
 #include "gps.h"
 
 #include "Segment.h"
+#include "functions.h"
 
 #include <map>
 #include <iostream>
@@ -81,6 +82,8 @@ int GPSDevice::garminGetTrack(const char* port,Track* track)
 	int32 ntrackpts;
 	GPS_PTrack *trackpts;
 
+	char gpx_timestamp[1024];
+
 	std::cerr<< "calling GPS_Init"<<std::endl;
 	if(GPS_Init(port) < 0)
 	{
@@ -99,7 +102,10 @@ int GPSDevice::garminGetTrack(const char* port,Track* track)
 	{
 		if(!count)
 			track->setID(trackpts[count]->trk_ident);
-		track->addTrackpt(trackpts[count]->Time,
+
+		// 10/04/05 now timestamps are stored in trackpoints in GPX format
+		mkgpxtime(gpx_timestamp, trackpts[count]->Time);
+		track->addTrackpt(gpx_timestamp,
 						  trackpts[count]->lat,
 						  trackpts[count]->lon);
 

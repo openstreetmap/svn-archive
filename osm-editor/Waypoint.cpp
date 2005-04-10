@@ -29,8 +29,10 @@ namespace OpenStreetMap
 WaypointMap Waypoint::waypointMap[] = { { 10, "farm" },
 					 { 11, "restaurant" },
 					 { 13, "pub" },
+					 { 18, "waypoint" },
 					 { 151, "campsite" },
 					 { 158, "car park" },
+					 { 159, "country park" },
 					 { 166, "caution" },
 					 { 8198, "hamlet" },
 					 { 8199, "village" },
@@ -77,5 +79,12 @@ bool Waypoints::alterWaypoint(int idx, const QString& newName,
 	return false;
 }
 
+Waypoint Waypoints::getWaypoint(int i) throw (QString)
+{ 
+	if(i<0 || i>=waypoints.size())
+		throw QString("No waypoint at index " + i);
+	
+ 	return waypoints[i]; 
+}
 
 }

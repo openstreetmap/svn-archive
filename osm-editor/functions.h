@@ -27,6 +27,8 @@
 #include <vector>
 using std::vector;
 
+#include <ctime>
+
 namespace OpenStreetMap 
 {
 
@@ -38,6 +40,15 @@ struct GridRef
 	bool isNullLoc() { return e==-1 && n==-1; }
 	GridRef(double e1,double n1) { e=e1; n=n1; }
 };
+
+struct LatLon 
+{
+	double lat, lon;
+
+	LatLon() { }
+	LatLon(double lt,double ln) { lat=lt; lon=ln; }
+};
+
 
 const int SEG_FOOTPATH = 0, 
 	  	  SEG_PERMISSIVE_FOOTPATH = 1,
@@ -80,11 +91,12 @@ const int WAYPOINT_FARM = 10,
 		  WAYPOINT_TEASHOP = 24581;
 
 GridRef ll_to_gr ( double lat, double lng );
+GridRef ll_to_gr ( const LatLon& );
 void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 			   double lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b);
-void gr_to_ll(const GridRef& gridref, double *lat, double *lng);
+LatLon gr_to_ll(const GridRef& gridref);
 void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
 			   double *lambda, double N0, double E0,
 			   double phi0, double lambda0,
@@ -93,7 +105,7 @@ void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
 
 double dist (double, double, double, double);
 
+void mkgpxtime (char *, time_t );
 
 }
-
 #endif // FUNCTIONS_H

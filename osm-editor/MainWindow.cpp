@@ -36,9 +36,15 @@
 #include <qtextstream.h>
 
 #include "WaypointDialogue.h"
+#include "LoginDialogue.h"
 
 #include <qxml.h>
 #include "GPXParser.h"
+
+#ifdef XMLRPC
+#include <string>
+#include <XmlRpcCpp.h>
+#endif
 
 
 
@@ -82,28 +88,26 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 }
 
 MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
-									scale(s/1000), curPolygonType(POLYGON_WOOD),
+									map(lat,lon,s/1000), 
+									curPolygonType(POLYGON_WOOD),
 									polygonRes(0.1)
 {
 	setCaption("OpenStreetMap Editor");
 	resize ( w*s, h*s );	
 
-	cout<<"lat " << lat << " lon  "<<lon <<endl;
-	topleft = ll_to_gr(lat,lon);
-	cout << "topleft " << topleft.e << " " << topleft.n << endl;
 	actionMode = ACTION_TRACK;
 	curSegType = "A road"; 
 	selectedTrackpoint = -1;
 
 	segpens["footpath"]= QPen (Qt::green, 2);
-	segpens["permissive footpath"]= QPen (Qt::green, 1);
+	segpens["cycle path"]= QPen (Qt::magenta, 2);
+	segpens["bridleway"]=QPen(QColor(192,96,0),2);
 	segpens["byway"] = QPen (Qt::red, 2);
-	segpens["estate road"] = QPen (Qt::black, 1);
-	segpens["minor road"]= QPen (Qt::black, 2);
+	segpens["minor road"]= QPen (Qt::black, 1);
 	segpens["B road"]= QPen (Qt::black, 3);
 	segpens["A road"]= QPen (Qt::black, 4);
-	segpens["bridleway"]=QPen(QColor(192,96,0),2);
-	segpens["permissive bridleway"]= QPen(QColor(192,96,0),1);
+	segpens["motorway"]= QPen (Qt::black, 6);
+	segpens["railway"]= QPen (Qt::gray, 4);
 
 	polydata.push_back(PolyData("wood",QColor(192,224,192)));
 	polydata.push_back(PolyData("lake",QColor(192,192,255))); 
@@ -118,6 +122,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
+	fileMenu->insertItem("&Grab tracks",this,SLOT(grabTracks()),CTRL+Key_G);
 	menuBar()->insertItem("&File",fileMenu);
 
 	QPopupMenu* editMenu = new QPopupMenu(this);
@@ -205,13 +210,11 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	waypointReps["large town"] = new WaypointRep(
 					"images/place.png","Helvetica",24, Qt::black);
 	waypointReps["car park"] = new WaypointRep(
-					"images/carpark.png");
+					"images/carpark.png", "Helvetica",8,Qt::blue);
 	waypointReps["station"] = new WaypointRep(
 					"images/station.png", "Helvetica",10,Qt::red);
 	waypointReps["mast"] = new WaypointRep(
 					"images/mast.png");
-/*	waypointReps[WAYPOINT_RAILWAY] = new WaypointRep("railway",
-					"images/crossing.png"); */
 	waypointReps["locality"] = new WaypointRep(
 					"Helvetica",12,Qt::black);
 	waypointReps["point of interest"] = new WaypointRep
@@ -234,6 +237,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	waypointReps["tunnel"] = new WaypointRep("images/tunnel.png");
 	waypointReps["tea shop"] = new WaypointRep(
 					"images/teashop.png","Helvetica",8,Qt::magenta);
+	waypointReps["country park"] = new WaypointRep("images/park.png",
+							"Helvetica",8,QColor(0,192,0));
 	curFilename = "";
 
 	trackpoints=true;
@@ -405,7 +410,7 @@ void MainWindow::drawTrack(QPainter& p)
 	QPen trackPen(Qt::darkGray,2); 
 	int curSeg = 0;
 	TrackPoint curPt = components->getTrackpoint(0);
-	ScreenPos lastPos = getScreenPos(curPt.lat,curPt.lon), curPos;
+	ScreenPos lastPos = map.getScreenPos(curPt.lat,curPt.lon), curPos;
 	QPen curPen=trackPen;
 	SegDef segdef;
 
@@ -427,7 +432,7 @@ void MainWindow::drawTrack(QPainter& p)
 		}
 
 		curPt = components->getTrackpoint(count);	
-		curPos = getScreenPos(curPt.lat,curPt.lon);	
+		curPos = map.getScreenPos(curPt.lat,curPt.lon);	
 		p.setPen(curPen);
 		p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
 		if(count==selectedTrackpoint)
@@ -456,7 +461,7 @@ void MainWindow::drawWaypoint(QPainter& p,const Waypoint &waypoint)
 {
 	if(components->hasWaypoints())
 	{
-	ScreenPos pos = getScreenPos(waypoint.lat,waypoint.lon);
+	ScreenPos pos = map.getScreenPos(waypoint.lat,waypoint.lon);
 	WaypointRep* img=waypointReps[waypoint.type];
 	img->draw(p,pos.x,pos.y,waypoint.name);
 	}
@@ -489,7 +494,7 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 
 	for(Polygon::iterator i=polygon->begin(); i!=polygon->end(); i++)
 	{
-		current = getScreenPos(*i);
+		current = map.getScreenPos(*i);
 		qpointarray.setPoint(count++,current.x,current.y);
 	}
 
@@ -500,14 +505,6 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 
 }
 
-void MainWindow::rescale(double factor)
-{
-	GridRef middle = getGridRef ( ScreenPos (width()/2,height()/2) );
-	scale *= factor;
-	topleft.e = middle.e - (width()/2)/scale;
-	topleft.n = middle.n + (height()/2)/scale;
-	update();
-}
 
 void MainWindow::mousePressEvent(QMouseEvent* ev)
 {
@@ -599,7 +596,7 @@ int MainWindow::findNearestTrackpoint(int x,int y,int limit)
 		for(int count=0; count<components->nTrackpoints(); count++)
 		{
 			curPt = components->getTrackpoint(count);
-			curPos = getScreenPos(curPt.lat,curPt.lon);	
+			curPos = map.getScreenPos(curPt.lat,curPt.lon);	
 			if((dist=OpenStreetMap::dist(x,y,curPos.x,curPos.y))<limit)
 			{
 				if(dist<prevDist)
@@ -628,7 +625,7 @@ void MainWindow::editWaypoint(int x,int y,int limit)
 		for(int count=0; count<components->nWaypoints(); count++)
 		{
 			curPt = components->getWaypoint(count);
-			curPos = getScreenPos(curPt.lat,curPt.lon);	
+			curPos = map.getScreenPos(curPt.lat,curPt.lon);	
 			if((dist=OpenStreetMap::dist(x,y,curPos.x,curPos.y))<limit)
 			{
 				if(dist<prevDist)
@@ -672,7 +669,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent* ev)
 			// points !!!
 			// 0.1 maybe a tad too coarse, 0.05 more definitely too fine.
 			if(OpenStreetMap::dist (prev.x,prev.y,ev->x(),ev->y())
-				>= polygonRes*1000*scale) 
+				>= polygonRes*1000*map.getScale()) 
 			{
 				curPolygonPts.push_back
 						(ScreenPos(ev->x(),ev->y()));
@@ -703,7 +700,7 @@ void MainWindow::endPolygon(int x,int y)
 	curPolygon = new Polygon;
 
 	for(i=curPolygonPts.begin(); i!=curPolygonPts.end(); i++)
-		curPolygon->push_back(getGridRef(*i));	
+		curPolygon->push_back(map.getGridRef(*i));	
 
 	curPolygon->setType(curPolygonType);
 	polygons.push_back(curPolygon);
@@ -717,12 +714,88 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 	cerr<<"keyPressEvent"<<endl;
 	switch(ev->key())
 	{
-		case Qt::Key_Left  : move (-0.5,   0); break;
-		case Qt::Key_Right : move ( 0.5,   0); break;
-		case Qt::Key_Up    : move (   0, 0.5); break;
-		case Qt::Key_Down  : move (   0,-0.5); break;
-		case Qt::Key_Plus  : rescale(2);	 	 break;
-		case Qt::Key_Minus : rescale(0.5);	 break;
+		case Qt::Key_Left  : map.move (-0.5,   0); update(); break;
+		case Qt::Key_Right : map.move ( 0.5,   0); update(); break;
+		case Qt::Key_Up    : map.move (   0, 0.5); update(); break;
+		case Qt::Key_Down  : map.move (   0,-0.5); update(); break;
+		case Qt::Key_Plus  : map.rescale(2,width(),height());	   
+							 update(); 
+							 break;
+		case Qt::Key_Minus : map.rescale(0.5,width(),height());	   
+							 update(); 
+							 break;
+	}
+}
+
+void MainWindow::grabTracks()
+{
+	QString username, password;
+	LoginDialogue *d = new LoginDialogue(this);
+	if(d->exec())
+	{
+		username = d->getUsername();
+		password = d->getPassword();
+#ifdef XMLRPC
+		std::string token;
+		XmlRpcValue result;
+		XmlRpcValue param_array;
+		XmlRpcClient::Initialize("test","0.1");
+		try
+		{
+			XmlRpcClient client("http://www.openstreetmap.org/api/xml.jsp");
+			param_array = XmlRpcValue::makeArray();
+			param_array.arrayAppendItem
+					(XmlRpcValue::makeString(username.ascii()));
+			param_array.arrayAppendItem
+					(XmlRpcValue::makeString(password.ascii()));
+
+			result = client.call("openstreetmap.login",param_array);
+			if((token=result.getString())!="ERROR")
+			{
+				QMessageBox::information(this,"Login successful",
+											"Login successful");
+				LatLon llNW = map.getTopLeftLL();
+				LatLon llSE = map.getLatLon(ScreenPos(width(),height()));
+				
+				
+				param_array = XmlRpcValue::makeArray();
+				param_array.arrayAppendItem(XmlRpcValue::makeString(token));
+				param_array.arrayAppendItem
+						(XmlRpcValue::makeDouble(llNW.lat));
+				param_array.arrayAppendItem
+						(XmlRpcValue::makeDouble(llNW.lon));
+				param_array.arrayAppendItem
+						(XmlRpcValue::makeDouble(llSE.lat));
+				param_array.arrayAppendItem
+						(XmlRpcValue::makeDouble(llSE.lon));
+				result=client.call("openstreetmap.getPoints",param_array);
+				XmlRpcValue array=result.getArray();
+				cerr << "array size : " << array.arraySize() << endl;
+				QString wpName;
+				for(int count=0; count<array.arraySize(); count+=2)
+				{
+					XmlRpcValue value = array.arrayGetItem(count);
+					double curLat = value.getDouble();
+					value = array.arrayGetItem(count+1);
+					double curLon = value.getDouble();
+					wpName.sprintf("OSM-%03d",count);	
+					cout << "lat:" << curLat << " lon:" << curLon  << endl;
+					components->addWaypoint
+							(Waypoint(wpName,curLat,curLon,"waypoint"));
+				}
+				update();	
+			}
+			else
+			{
+				QMessageBox::warning(this,"Can't login",
+								"OpenStreetMap did not recognise your login");
+			}
+		}
+		catch (XmlRpcFault& fault)
+		{
+			QMessageBox::warning(this,"Fault",fault.getFaultString().c_str());
+		}
+#endif
 	}
 }
 

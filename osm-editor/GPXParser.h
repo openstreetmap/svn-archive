@@ -51,7 +51,7 @@ private:
 	Track* curTrack; 
 	QString curName, curType; 
 	double curLat, curLong;
-	time_t curTimestamp;
+	QString curTimestamp; // 10/04/05 timestamp now string
 	int segStart, trkptCount;
 
 public:

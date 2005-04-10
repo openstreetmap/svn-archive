@@ -70,6 +70,11 @@ GridRef ll_to_gr ( double lat, double lng )
     return GridRef(e,n);
 }
 
+GridRef ll_to_gr(const LatLon& pos)
+{
+	return ll_to_gr(pos.lat,pos.lon);
+}
+
 /* @func  GPS_Math_LatLon_To_EN **********************************
 **
 ** Convert latitude and longitude to eastings and northings
@@ -194,8 +199,10 @@ void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 // - Grid reference passed as a struct of type GridRef.
 // - Lat/long parameters renamed from "phi" and "lambda" to "lat" and "lng".
 
-void gr_to_ll(const GridRef& gridref, double *lat, double *lng)
+LatLon gr_to_ll(const GridRef& gridref)
 {
+	LatLon pos;
+
     double N0      = -100000;
     double E0      =  400000;
     double F0      = 0.9996012717;
@@ -204,10 +211,10 @@ void gr_to_ll(const GridRef& gridref, double *lat, double *lng)
     double a       = 6377563.396;
     double b       = 6356256.910;
 
-    GPS_Math_EN_To_LatLon(gridref.e,gridref.n,lat,lng,N0,E0,phi0,lambda0,F0,
-					a,b);
+    GPS_Math_EN_To_LatLon(gridref.e,gridref.n,&pos.lat,&pos.lon,N0,E0,phi0,
+					lambda0,F0, a,b);
     
-    return;
+    return pos;
 }
 
 /* @func  GPS_Math_EN_To_LatLon **************************************
@@ -368,6 +375,12 @@ double dist (double x1, double y1, double x2, double y2)
 {
 	double dx=x1-x2, dy=y1-y2;
 	return sqrt (dx*dx + dy*dy);
+}
+
+// Make a GPX timestamp from a plain Unix timestamp
+void mkgpxtime (char *gpx_timestamp, time_t timestamp)
+{
+	strftime(gpx_timestamp,1024,"%Y-%m-%dT%H:%M:%SZ",gmtime(&timestamp));
 }
 
 }

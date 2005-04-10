@@ -61,14 +61,14 @@ public:
 	~Components() { clearAll(); }
 	bool addWaypoint (const Waypoint&) ;
 
-	bool addTrackpoint (time_t timestamp, double lat, double lon);
+	bool addTrackpoint (const QString& timestamp, double lat, double lon);
 	void addTrack(Track * t) { track=t; }
 
 	void setWaypoints(Waypoints * w) { waypoints=w; }
 	bool hasTrack() { return track && (track->size()>0); }
 	bool hasWaypoints() { return waypoints && (waypoints->size()>0); }
- 	Waypoint getWaypoint (int i); 
-	TrackPoint getTrackpoint(int i);
+ 	Waypoint getWaypoint (int i) throw(QString);
+	TrackPoint getTrackpoint(int i) throw(QString);
 	int nWaypoints() { return waypoints ? waypoints->size(): 0; }
 	int nTrackpoints() { return track ? track->size():0 ; }
 	int nSegdefs() { return segdefs.size(); }

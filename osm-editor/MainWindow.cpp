@@ -103,7 +103,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	segpens["cycle path"]= QPen (Qt::magenta, 2);
 	segpens["bridleway"]=QPen(QColor(192,96,0),2);
 	segpens["byway"] = QPen (Qt::red, 2);
-	segpens["minor road"]= QPen (Qt::black, 1);
+	segpens["minor road"]= QPen (Qt::black, 2);
 	segpens["B road"]= QPen (Qt::black, 3);
 	segpens["A road"]= QPen (Qt::black, 4);
 	segpens["motorway"]= QPen (Qt::black, 6);
@@ -239,6 +239,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 					"images/teashop.png","Helvetica",8,Qt::magenta);
 	waypointReps["country park"] = new WaypointRep("images/park.png",
 							"Helvetica",8,QColor(0,192,0));
+	waypointReps["industrial area"] = new WaypointRep("images/industry.png",
+							"Helvetica",8,Qt::darkGray);
 	curFilename = "";
 
 	trackpoints=true;
@@ -413,22 +415,23 @@ void MainWindow::drawTrack(QPainter& p)
 	ScreenPos lastPos = map.getScreenPos(curPt.lat,curPt.lon), curPos;
 	QPen curPen=trackPen;
 	SegDef segdef;
+	if(components->nSegdefs()) segdef=components->getSegdef(0);
 
 	for(int count=1; count<components->nTrackpoints(); count++)
 	{
-		if(curSeg<components->nSegdefs())
+		if(count-1 == segdef.end)
 		{
-			segdef=components->getSegdef(curSeg);
-
-			if(count-1 == segdef.start)
+			curPen=trackPen;
+			if(curSeg<components->nSegdefs()-1)
 			{
-				curPen=segpens[segdef.type];
-			}
-			else if(count-1 == segdef.end)
-			{
-				curPen=trackPen;
 				curSeg++;
+				segdef=components->getSegdef(curSeg);
 			}
+		}
+
+		if(count-1 == segdef.start)
+		{
+			curPen=segpens[segdef.type];
 		}
 
 		curPt = components->getTrackpoint(count);	
@@ -438,7 +441,7 @@ void MainWindow::drawTrack(QPainter& p)
 		if(count==selectedTrackpoint)
 			drawTrackpoint(p,Qt::red,curPos.x,curPos.y);
 		else if(trackpoints)
-			drawTrackpoint(p,curPos.x,curPos.y,1,count);
+			drawTrackpoint(p,curPen,curPos.x,curPos.y,1,count);
 		lastPos = curPos;
 	}
 	}
@@ -474,9 +477,10 @@ void MainWindow::drawTrackpoint (QPainter& p,const QPen& pen,int x,int y)
 	p.drawEllipse ( x-2, y-2, 5, 5 );
 }
 	
-void MainWindow::drawTrackpoint (QPainter& p,int x,int y, int id,int point)
+void MainWindow::drawTrackpoint (QPainter& p,const QPen& pen,
+									int x,int y, int id,int point)
 {
-	drawTrackpoint(p,Qt::darkGray,x,y);
+	drawTrackpoint(p,pen,x,y);
 	QString label;
 	label.sprintf("%d",point);
 	p.setFont(QFont("Helvetica",8));
@@ -711,13 +715,15 @@ void MainWindow::endPolygon(int x,int y)
 	
 void MainWindow::keyPressEvent(QKeyEvent* ev)
 {
-	cerr<<"keyPressEvent"<<endl;
+	// 11/04/05 prevent movement being too far at large scales
+	double dis = 0.1/map.getScale();
+
 	switch(ev->key())
 	{
-		case Qt::Key_Left  : map.move (-0.5,   0); update(); break;
-		case Qt::Key_Right : map.move ( 0.5,   0); update(); break;
-		case Qt::Key_Up    : map.move (   0, 0.5); update(); break;
-		case Qt::Key_Down  : map.move (   0,-0.5); update(); break;
+		case Qt::Key_Left  : map.move (-dis,   0); update(); break;
+		case Qt::Key_Right : map.move ( dis,   0); update(); break;
+		case Qt::Key_Up    : map.move (   0, dis); update(); break;
+		case Qt::Key_Down  : map.move (   0,-dis); update(); break;
 		case Qt::Key_Plus  : map.rescale(2,width(),height());	   
 							 update(); 
 							 break;

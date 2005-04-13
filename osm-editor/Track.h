@@ -46,7 +46,9 @@ class Track
 private:
 	vector<TrackPoint> points;
 	QString id;	
+	void writeTrkpt(std::ostream&, int);
 	
+
 public:
 	Track() { id=""; }
 	void setID(const QString& i)

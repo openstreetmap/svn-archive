@@ -57,8 +57,9 @@ public:
 
 	double getScale()
 		{ return scale; }
+
 };
-			
+
 }
 
 #endif

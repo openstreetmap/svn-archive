@@ -28,7 +28,7 @@ namespace OpenStreetMap
 
 struct SegDef
 {
-	SegDef(){}
+	SegDef(){start=end=-1;}
 	SegDef(int s,int e,const QString& t) { start=s; end=e; type=t; }
 	int start,
 		end;

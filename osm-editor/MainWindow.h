@@ -134,7 +134,7 @@ private:
 
 	QComboBox * modes;
 	void drawTrackpoint(QPainter&,const QPen&,int,int);
-	void drawTrackpoint(QPainter&,int,int,int,int);
+	void drawTrackpoint(QPainter&,const QPen&,int,int,int,int);
 	void saveFile(const QString&);
 
 	void initSegmentSelection(int,int);

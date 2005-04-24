@@ -27,6 +27,12 @@ import org.apache.xmlrpc.*;
 
 import org.openstreetmap.util.gpspoint;
 
+
+/** 
+ * osmServerHandler is whats exposed over XMLRPC to client apps
+ * @author Steve Coast
+ * @version .00000000001
+ */
 public class osmServerHandler
 {
   private String sJDBC = "jdbc:mysql://128.40.59.181/openstreetmap?useUnicode=true&characterEncoding=latin1";
@@ -34,6 +40,9 @@ public class osmServerHandler
   
   private osmServerSQLHandler osmSQLH;
 
+  /**
+   * instantiates the handler
+   */
   public osmServerHandler()
   {
 
@@ -44,7 +53,10 @@ public class osmServerHandler
   } // osmServerSQLHandler
   
 
-  
+  /**
+   * checks to see if we connected to the databse ok
+   * @return whether we connected ok
+   */
   public boolean SQLConnectSuccess()
   {
     return osmSQLH.SQLConnectSuccess();
@@ -52,6 +64,11 @@ public class osmServerHandler
   } // SQLConnectSuccess
   
  
+  /**
+   * gets the largest gpx upload for user associate with given token
+   * @param token the token
+   * @return the largest GPX number uploaded by you so far
+   */
   public int largestTrackID(String token)
   {
     return osmSQLH.largestTrackID(token);
@@ -59,6 +76,12 @@ public class osmServerHandler
   } // largestTrackID
 
 
+  /**
+   * logs you in
+   * @param user your username
+   * @param pass your password
+   * @return a token to be used when manipulating data
+   */
   public String login(String user, String pass)
   {
     return( osmSQLH.login(user,pass) );
@@ -67,7 +90,12 @@ public class osmServerHandler
   } // login
  
 
- 
+  /**
+   * adds a user
+   * @param user the username
+   * @param pass the password
+   * @return the confirmation string to be used
+   */
   public String addUser(String user, String pass)
   {
     
@@ -77,8 +105,12 @@ public class osmServerHandler
   } // addUser
 
 
- 
- 
+  /**
+   * confirms a user
+   * @param user the username
+   * @param token the confirmation token they got emailed
+   * @return whether they were successfully confirmed
+   */
   public boolean confirmUser(String user, String token)
   {
     
@@ -87,7 +119,11 @@ public class osmServerHandler
      
   } // addUser
 
-  
+  /**
+   * checks to see if given user exists
+   * @param user the username
+   * @return whether they exist or not
+   */
   public boolean userExists(String user)
   {
     
@@ -96,7 +132,11 @@ public class osmServerHandler
      
   } // addUser
 
-
+  /**
+   * makes sure that token is currently valid and renews it for another 10 minutes
+   * @param sToken the token
+   * @return true if that token exists and is valid
+   */
   public boolean validateToken(String sToken)
   {
     if( osmSQLH.validateToken(sToken) == -1)
@@ -109,7 +149,15 @@ public class osmServerHandler
   } // validateToken
    
 
-
+  /**
+   * get the uploaded gpx points from the database given in range where the first two points specify the north-east and the latter two the south-west points of a box.
+   * @param token the token
+   * @param p1lat the north-west latitude
+   * @param p1lon the north-west longitude
+   * @param p2lat the south-east latitude
+   * @param p2lon the south-east longitude
+   * @return a list of lats and lons. should be a list of lists, FIXME.
+   */
   public Vector getPoints(
       String token,
       double p1lat,
@@ -141,6 +189,15 @@ public class osmServerHandler
   } // getPoints
 
 
+  /**
+   * same as getPoints but gets all the data like satellite fix accuracy and stuff. FIXME more documentation
+   * @param token the token
+   * @param p1lat the north-west latitude
+   * @param p1lon the north-west longitude
+   * @param p2lat the south-east latitude
+   * @param p2lon the south-east longitude
+   * @return a list of lats and lons and properties. should be a list of lists, FIXME.
+   */
   public Vector getFullPoints(
       String token,
       double p1lat,
@@ -166,44 +223,6 @@ public class osmServerHandler
     return null;
 
   } // getFullPoints
-
-
-  public boolean dropPoint(String token, double lon, double lat)
-  {
-
-    int uid = osmSQLH.validateToken(token);
-
-    if( uid == -1)
-    {
-      return false;
-    }
-
-    return osmSQLH.dropPoint(
-        (float)lon,
-        (float)lat,
-        uid);
-
-  } // dropPoint
-
-
-  public boolean dropPointsInArea(String token, double lon1, double lat1, double lon2, double lat2)
-  {
-
-    int uid = osmSQLH.validateToken(token);
-
-    if( uid == -1)
-    {
-      return false;
-    }
-
-    return osmSQLH.dropPointsInArea(
-        (float)lon1,
-        (float)lat1,
-        (float)lon2,
-        (float)lat2,
-        uid);
-
-  } // dropPointsInArea
 
 
   public Vector getAllKeys(String token, boolean bVisibleOrNot)

@@ -509,4 +509,50 @@ public class osmServerHandler
 
   } // closeDatabase
 
+
+  public Vector getStreets(
+      String token,
+      double p1lat,
+      double p1lon,
+      double p2lat,
+      double p2lon)
+  {
+    try{
+
+      if( !token.equals("applet") && osmSQLH.validateToken(token) == -1 )
+      {
+        return null;
+      }
+
+      Vector v = osmSQLH.getStreets((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
+
+      if( osmSQLH.SQLSuccessful() )
+      {
+
+        return v;
+
+      }
+      else
+      {
+
+        System.out.println("error....");
+
+      }
+
+
+    }
+    catch(Exception e)
+    {
+
+      System.out.println(e);
+      e.printStackTrace();
+      System.exit(-1);
+
+    }
+
+    return null;
+  } // getStreets
+
+
+
 } // osmServerHandler

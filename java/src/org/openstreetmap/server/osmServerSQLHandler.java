@@ -619,9 +619,9 @@ public class osmServerSQLHandler extends Thread
     System.out.println("addUser " + user + " " + pass);
 
     if( user.length() < 4 ||
-        user.length() > 30 ||
+        user.length() > 35 ||
         pass.length() < 5 ||
-        pass.length() > 30 ||
+        pass.length() > 35 ||
         user.indexOf(" ") != -1 )
     {
       System.out.println("returning error");

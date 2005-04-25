@@ -13,6 +13,7 @@
 <tstamp/>
 <mkdir dir="${build}"/>
 <mkdir dir="${dist}"/>
+<mkdir dir="${dist}/api"/>
 </target>
 
 
@@ -39,6 +40,8 @@ destdir="${build}"
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev-applet.jar" tofile="${dist}/xmlrpc-applet.jar"/>
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
+
+<javadoc sourcepath="${src}" destdir="${dist}/api" packagenames="org.openstreetmap.*"/>
 
 </target>
 
@@ -112,6 +115,9 @@ destdir="${build}"
 <copy file="${dist}/xmlrpc-applet.jar" tofile="/var/lib/tomcat4/webapps/edit/xmlrpc-applet.jar" />
 <copy file="${dist}/commons-codec-1.1.jar" tofile="/var/lib/tomcat4/webapps/edit/commons-codec-1.1.jar" />
 
+<copy todir="/var/www/openstreetmap/javadoc">
+<fileset dir="${dist}/api"/>
+</copy>
 
 </target>
 

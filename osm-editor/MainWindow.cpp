@@ -23,6 +23,7 @@
 #include <sstream>
 #include <cstdlib>
 
+#include <qapplication.h>
 #include <qpainter.h>
 #include <qfontmetrics.h>
 #include <qpopupmenu.h>
@@ -123,6 +124,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
 	fileMenu->insertItem("&Grab tracks",this,SLOT(grabTracks()),CTRL+Key_G);
+	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
 	menuBar()->insertItem("&File",fileMenu);
 
 	QPopupMenu* editMenu = new QPopupMenu(this);
@@ -329,6 +331,11 @@ void MainWindow::saveFile(const QString& filename)
 {
 	components->toGPX(filename);
 	curFilename = filename;
+}
+
+void MainWindow::quit()
+{
+	QApplication::exit(0);
 }
 
 void MainWindow::setMode(int m)

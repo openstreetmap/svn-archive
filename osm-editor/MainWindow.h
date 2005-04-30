@@ -168,6 +168,7 @@ public slots:
 	void save();
 	void saveAs();
 	void readGPS();
+	void quit();
 	void renameFeature();
 	void toggleWaypoints();
 	void undo();

@@ -79,7 +79,7 @@ int GPSDevice::garminGetTrack(const char* port,Track* track)
 	std::cerr << "garminGetTrack() " << std::endl;
 	std::cerr << "port" << port << std::endl;
 
-	int32 ntrackpts;
+	int32_t ntrackpts;
 	GPS_PTrack *trackpts;
 
 	char gpx_timestamp[1024];

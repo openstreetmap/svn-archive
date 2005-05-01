@@ -742,13 +742,16 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 
 void MainWindow::grabTracks()
 {
+#if !defined(XMLRPC)
+	QMessageBox::information(this,"XMLRPC not enabled",
+				 "Not able to log into OpenStreetmap, as XMLRPC support was not compiled into the program.");
+#else
 	QString username, password;
 	LoginDialogue *d = new LoginDialogue(this);
 	if(d->exec())
 	{
 		username = d->getUsername();
 		password = d->getPassword();
-#ifdef XMLRPC
 		std::string token;
 		XmlRpcValue result;
 		XmlRpcValue param_array;
@@ -808,8 +811,13 @@ void MainWindow::grabTracks()
 		{
 			QMessageBox::warning(this,"Fault",fault.getFaultString().c_str());
 		}
-#endif
 	}
+	else
+	{
+		QMessageBox::warning(this,"Login dialog box failed",
+				     "Unable to log in");
+	}
+#endif
 }
 
 // ripped off from Mapmaker

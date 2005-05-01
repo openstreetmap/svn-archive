@@ -55,7 +55,7 @@ public class osmAppletLoginWindow extends JDialog implements ActionListener
 
     userPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-    userPane.add(new JLabel("User:", JLabel.RIGHT));
+    userPane.add(new JLabel("Email address:", JLabel.RIGHT));
 
     userPane.add(user);
 

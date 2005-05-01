@@ -1,4 +1,4 @@
-CXX = g++
+CXX = c++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = main.o MainWindow.o GPSDevice.o Segment.o functions.o \

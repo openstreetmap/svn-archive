@@ -1,3 +1,4 @@
+CXX=g++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = main.o MainWindow.o GPSDevice.o Segment.o functions.o \
@@ -29,13 +30,13 @@ moc_%.cpp : %.h
 
 osmeditor: $(OBJ)
 	#cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
-	g++ -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(XMLRPCLIBS)
+	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(XMLRPCLIBS)
 
 testgps: $(TESTGPSOBJ)
-	g++ -o testgps $(TESTGPSOBJ) $(LIBS)
+	$(CXX) -o testgps $(TESTGPSOBJ) $(LIBS)
 
 testparser : $(PARSEROBJ)
-	g++ -o testparser $(PARSEROBJ) $(QTLIBPATH) $(LIBS) $(QTLIB)
+	$(CXX) -o testparser $(PARSEROBJ) $(QTLIBPATH) $(LIBS) $(QTLIB)
 
 clean:
 	rm -f *.o *~

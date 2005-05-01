@@ -32,7 +32,7 @@ LoginDialogue::LoginDialogue(QWidget* parent)
 	QGridLayout *layout = new QGridLayout(topL,2,2);
 	layout->setMargin(10);
 	layout->setSpacing(20);
-	layout->addWidget(new QLabel("Username:",this),0,0);
+	layout->addWidget(new QLabel("Email address:",this),0,0);
 	usernameEdit = new QLineEdit(this);
 	layout->addWidget(usernameEdit,0,1);
 	layout->addWidget(new QLabel("Password:",this),1,0);

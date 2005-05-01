@@ -14,7 +14,11 @@ QTLIBPATH = -L/usr/lib/qt3/lib
 MOC=/usr/lib/qt3/bin/moc
 
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
-CXXFLAGS = -I$(QTINCPATH) -I/usr/local/include $(OPTS)
+#OPTS       = -DXMLRPC
+WARNFLAGS  = -W -Wall
+DEBUGFLAGS = -g
+CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) \
+	-I/usr/local/include $(OPTS)
 
 JEEPSSRC = jeeps-0.1.4-nick
 

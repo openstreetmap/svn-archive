@@ -1,0 +1,414 @@
+<gpx>
+<wpt lat="51.073" lon="-0.735205">
+<name>2</name>
+<type>car park</type>
+</wpt>
+<wpt lat="51.0703" lon="-0.73135">
+<name></name>
+<type>car park</type>
+</wpt>
+<wpt lat="51.0244" lon="-0.869705">
+<name></name>
+<type>car park</type>
+</wpt>
+<wpt lat="51.0227" lon="-0.849342">
+<name></name>
+<type>car park</type>
+</wpt>
+<wpt lat="51.0281" lon="-0.87418">
+<name></name>
+<type>car park</type>
+</wpt>
+<wpt lat="51.1045" lon="-0.724929">
+<name>09</name>
+<type>car park</type>
+</wpt>
+<wpt lat="51.093" lon="-0.711466">
+<name>01</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.0899" lon="-0.721174">
+<name>25</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.0886" lon="-0.726701">
+<name>25</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.0406" lon="-0.772039">
+<name>Lynch Church</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.0475" lon="-0.824389">
+<name>Milland Church</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.071" lon="-0.760038">
+<name>Lynchmere Church</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.0868" lon="-0.736445">
+<name>6</name>
+<type>church</type>
+</wpt>
+<wpt lat="51.1038" lon="-0.705235">
+<name>KEFFOLDS</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0504" lon="-0.791362">
+<name>Home Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0554" lon="-0.803102">
+<name>01</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0382" lon="-0.79331">
+<name>Alfords Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0392" lon="-0.836986">
+<name>Combeland Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.027" lon="-0.791322">
+<name>Lyford Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0416" lon="-0.811698">
+<name>Milland Farmhouse</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0412" lon="-0.789143">
+<name>North End Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0473" lon="-0.734758">
+<name>Park House Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0352" lon="-0.782062">
+<name>Slathurst Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0326" lon="-0.806096">
+<name>Waldergrove Farm</name>
+<type>farm</type>
+</wpt>
+<wpt lat="51.0233" lon="-0.726046">
+<name>Henley</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0171" lon="-0.820249">
+<name>Borden</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0011" lon="-0.800288">
+<name>Chithurst</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="50.9984" lon="-0.758012">
+<name>Woolbeding</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51" lon="-0.786332">
+<name>Iping</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0407" lon="-0.771498">
+<name>Lynch</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0146" lon="-0.836553">
+<name>Terwick Common</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0274" lon="-0.77167">
+<name>Redford</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0676" lon="-0.723331">
+<name>Kingsley Green</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.1154" lon="-0.715802">
+<name>Gibbet Hill</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.115" lon="-0.706784">
+<name>Hurthill</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0304" lon="-0.763574">
+<name>Older Hill</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0304" lon="-0.75964">
+<name>Telegraph Hill</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0582" lon="-0.689596">
+<name>Blackdown</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0597" lon="-0.728886">
+<name>Marley Heights</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0223" lon="-0.786192">
+<name>Dunner Hill</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0566" lon="-0.776607">
+<name>Iron Down</name>
+<type>summit</type>
+</wpt>
+<wpt lat="51.0738" lon="-0.708655">
+<name>Valewood Park</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.112" lon="-0.731166">
+<name>Tyndalls Wood</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0583" lon="-0.701828">
+<name>Ridge Hill</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0668" lon="-0.698687">
+<name>Ridden Corner</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0722" lon="-0.725954">
+<name>Marley Hanger</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0736" lon="-0.733896">
+<name>Marley Common</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.105" lon="-0.73759">
+<name>Craig's Wood</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0248" lon="-0.880491">
+<name>Durford Wood</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0715" lon="-0.692346">
+<name>Boarden Door Bottom</name>
+<type>locality</type>
+</wpt>
+<wpt lat="50.989" lon="-0.737956">
+<name>MBS</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.1098" lon="-0.708736">
+<name>Inval</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0498" lon="-0.808215">
+<name>Hatch Hanger</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0534" lon="-0.796423">
+<name>Wardley Hanger</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0571" lon="-0.80963">
+<name>Hatch Firs</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.047" lon="-0.806018">
+<name>Hatch Copse</name>
+<type>locality</type>
+</wpt>
+<wpt lat="51.0421" lon="-0.811513">
+<name>MP</name>
+<type>point of interest</type>
+</wpt>
+<wpt lat="51.0348" lon="-0.724817">
+<name>Kings Arms</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0439" lon="-0.854807">
+<name>Flying Bull</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0244" lon="-0.726259">
+<name>Duke of Cumberland</name>
+<type>pub</type>
+</wpt>
+<wpt lat="50.9932" lon="-0.779671">
+<name>Hamilton Arms</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0306" lon="-0.877072">
+<name>Jolly Drover</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0433" lon="-0.855621">
+<name>Sun Inn</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0495" lon="-0.71755">
+<name>Red Lion</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0547" lon="-0.817319">
+<name>Black Fox</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0359" lon="-0.805648">
+<name>Rising Sun</name>
+<type>pub</type>
+</wpt>
+<wpt lat="51.0713" lon="-0.800229">
+<name>Liphook Station</name>
+<type>station</type>
+</wpt>
+<wpt lat="51.0887" lon="-0.719594">
+<name>Haslemere Station</name>
+<type>station</type>
+</wpt>
+<wpt lat="51.0069" lon="-0.941934">
+<name>Petersfield</name>
+<type>station</type>
+</wpt>
+<wpt lat="50.987" lon="-0.739621">
+<name>Midhurst</name>
+<type>small town</type>
+</wpt>
+<wpt lat="51.0876" lon="-0.709305">
+<name>Haslemere</name>
+<type>small town</type>
+</wpt>
+<wpt lat="51.0613" lon="-0.691833">
+<name></name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0551" lon="-0.687957">
+<name>Temple of the Winds</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0301" lon="-0.765208">
+<name>Older Hill Spur</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.1121" lon="-0.706946">
+<name></name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.1098" lon="-0.720422">
+<name></name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.1136" lon="-0.717801">
+<name>3</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.1156" lon="-0.715881">
+<name>2</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.115" lon="-0.706773">
+<name></name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0631" lon="-0.727399">
+<name>6</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0566" lon="-0.687627">
+<name>5</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0586" lon="-0.692069">
+<name>4</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0685" lon="-0.728877">
+<name>3</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0722" lon="-0.726663">
+<name>2</name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0702" lon="-0.731603">
+<name></name>
+<type>viewpoint</type>
+</wpt>
+<wpt lat="51.0488" lon="-0.722735">
+<name>Fernhurst</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.1139" lon="-0.733128">
+<name>Hindhead</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.036" lon="-0.805924">
+<name>Milland</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.0768" lon="-0.802916">
+<name>Liphook</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.0731" lon="-0.762452">
+<name>Lynchmere</name>
+<type>hamlet</type>
+</wpt>
+<wpt lat="51.0844" lon="-0.752768">
+<name>Hammer</name>
+<type>village</type>
+</wpt>
+<wpt lat="50.9941" lon="-0.772464">
+<name>Stedham</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.0082" lon="-0.850782">
+<name>Rogate</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.0439" lon="-0.854679">
+<name>Rake</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.0305" lon="-0.87726">
+<name>Hill Brow</name>
+<type>village</type>
+</wpt>
+<wpt lat="51.0878" lon="-0.73416">
+<name>Shottermill</name>
+<type>village</type>
+</wpt>
+<trk>
+<trkseg>
+<extensions>
+<type>footpath</type>
+</extensions>
+<trkpt lat="51.0494" lon="-0.717439">
+<name>1</name>
+</trkpt>
+<trkpt lat="51.0485" lon="-0.713626">
+<name>2</name>
+</trkpt>
+<trkpt lat="51.0499" lon="-0.710604">
+<name>3</name>
+</trkpt>
+<trkpt lat="51.0498" lon="-0.708495">
+<name>4</name>
+</trkpt>
+<trkpt lat="51.0501" lon="-0.708002">
+<name>5</name>
+</trkpt>
+<trkpt lat="51.0531" lon="-0.70294">
+<name>6</name>
+</trkpt>
+<trkpt lat="51.0535" lon="-0.699689">
+<name>7</name>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

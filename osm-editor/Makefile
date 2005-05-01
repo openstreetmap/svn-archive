@@ -1,9 +1,9 @@
 CXX = c++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
-OBJ = main.o MainWindow.o GPSDevice.o Segment.o functions.o \
+OBJ = main.o MainWindow.o GPSDevice.o Segment.o  \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
-	  Permissions.o LoginDialogue.o moc_MainWindow.o
+	  Permissions.o LoginDialogue.o moc_MainWindow.o grab_landsat.o
 LIBS = -ljeeps 
 LIBPATH = -L/usr/local/lib
 
@@ -13,11 +13,14 @@ QTLIB = -lqt-mt
 QTLIBPATH = -L/usr/lib/qt3/lib
 MOC=/usr/lib/qt3/bin/moc
 
+CURLLIBS = `curl-config --libs`
+CURLCFLAGS = `curl-config --cflags`
+
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
 #OPTS       = -DXMLRPC
 WARNFLAGS  = -W -Wall
 DEBUGFLAGS = -g
-CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) \
+CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
 	-I/usr/local/include $(OPTS)
 
 JEEPSSRC = jeeps-0.1.4-nick
@@ -34,7 +37,7 @@ moc_%.cpp : %.h
 
 osmeditor: $(OBJ)
 	#cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
-	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(XMLRPCLIBS)
+	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS) 
 
 testgps: $(TESTGPSOBJ)
 	$(CXX) -o testgps $(TESTGPSOBJ) $(LIBS)

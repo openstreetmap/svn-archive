@@ -129,10 +129,14 @@ private:
 	bool trackpoints;
 	QString curFilename; 
 	bool mouseDown;
+	bool doDrawLandsat;
 
 	QToolButton* modeButtons[4];
 
 	QComboBox * modes;
+
+	QPixmap landsatPixmap;
+
 	void drawTrackpoint(QPainter&,const QPen&,int,int);
 	void drawTrackpoint(QPainter&,const QPen&,int,int,int,int);
 	void saveFile(const QString&);
@@ -143,6 +147,8 @@ private:
 	void endPolygon(int,int);
 
 	int findNearestTrackpoint(int,int,int);
+
+	LatLon landsatTopLeft, landsatBottomRight;
 
 public:
 	MainWindow (double=51.0,double=-1.0,double=100,
@@ -160,6 +166,7 @@ public:
 	void drawWaypoint(QPainter&,const Waypoint&);
 	void drawPolygons(QPainter&);
 	void drawPolygon(QPainter&,Polygon*);
+	void drawLandsat(QPainter&);
 	void rescale(double);
 	void editWaypoint(int,int,int);
 
@@ -171,11 +178,13 @@ public slots:
 	void quit();
 	void renameFeature();
 	void toggleWaypoints();
+	void toggleLandsat();
 	void undo();
 	void changePolygonRes();
 	void setMode(int);
 	void setSegType(const QString&);
 	void grabTracks();
+	void grabLandsat();
 };
 
 }

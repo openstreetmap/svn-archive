@@ -43,13 +43,19 @@ public:
 
 	void rescale(double factor,int w,int h)
 	{
-		GridRef middle = getGridRef ( ScreenPos (w/2,h/2) );
+		LatLon middle = getLatLon ( ScreenPos (w/2,h/2) );
 		scale *= factor;
-		topLeft.e = middle.e - (w/2)/scale;
-		topLeft.n = middle.n + (h/2)/scale;
+		topLeft.e = middle.lon - (w/2)/scale;
+		topLeft.n = middle.lat + (h/2)/scale;
+	}
+
+	LatLon getCentre(int w,int h)
+	{
+		return getLatLon(ScreenPos(w/2,h/2));
 	}
 
 	GridRef getTopLeftGR()
+
 		{ return topLeft; }
 
 	LatLon getTopLeftLL()

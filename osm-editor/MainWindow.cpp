@@ -47,7 +47,7 @@
 #include <XmlRpcCpp.h>
 #endif
 
-
+#include "landsat.h"
 
 using std::cout;
 using std::endl;
@@ -100,6 +100,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	curSegType = "A road"; 
 	selectedTrackpoint = -1;
 
+	doDrawLandsat = false;
+
 	segpens["footpath"]= QPen (Qt::green, 2);
 	segpens["cycle path"]= QPen (Qt::magenta, 2);
 	segpens["bridleway"]=QPen(QColor(192,96,0),2);
@@ -123,7 +125,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
-	fileMenu->insertItem("&Grab tracks",this,SLOT(grabTracks()),CTRL+Key_G);
+	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
 	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
 	menuBar()->insertItem("&File",fileMenu);
 
@@ -133,6 +135,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 					SLOT(renameFeature()),CTRL+Key_N);
 	editMenu->insertItem("&Toggle waypoints",this,SLOT(toggleWaypoints()),
 						CTRL+Key_T);
+	editMenu->insertItem("Toggle &Landsat",this,SLOT(toggleLandsat()),
+						CTRL+Key_L);
 	editMenu->insertItem("Undo",this,SLOT(undo()),CTRL+Key_Z);
 	editMenu->insertItem("Change pol&ygon resolution",this,
 							SLOT(changePolygonRes()),CTRL+Key_Y);
@@ -379,6 +383,12 @@ void MainWindow::toggleWaypoints()
 	update();
 }
 
+void MainWindow::toggleLandsat()
+{
+	doDrawLandsat = !doDrawLandsat;
+	update();
+}
+
 // 
 void MainWindow::undo()
 {
@@ -398,9 +408,20 @@ void MainWindow::paintEvent(QPaintEvent* ev)
 {
 	QPainter p (this);
 
+	drawLandsat(p);
 	drawPolygons(p);
 	drawTrack(p);
 	drawWaypoints(p);
+}
+
+void MainWindow::drawLandsat(QPainter& p)
+{
+	if(doDrawLandsat)
+	{
+		ScreenPos lsPos = map.getScreenPos(landsatTopLeft.lat,
+						landsatTopLeft.lon);
+		p.drawPixmap(0,0,landsatPixmap,-lsPos.x,-lsPos.y,width(),height());
+	}
 }
 
 void MainWindow::drawPolygons(QPainter& p)
@@ -473,7 +494,7 @@ void MainWindow::drawWaypoint(QPainter& p,const Waypoint &waypoint)
 	{
 	ScreenPos pos = map.getScreenPos(waypoint.lat,waypoint.lon);
 	WaypointRep* img=waypointReps[waypoint.type];
-	img->draw(p,pos.x,pos.y,waypoint.name);
+	if(img)img->draw(p,pos.x,pos.y,waypoint.name);
 	}
 }
 
@@ -820,6 +841,44 @@ void MainWindow::grabTracks()
 #endif
 }
 
+void MainWindow::grabLandsat()
+{
+	LatLon topLeftLL=map.getTopLeftLL(),
+		   bottomRightLL = map.getLatLon(ScreenPos(width(),height()));
+
+	/*
+	airyToWgs(topLeftLL.lat,topLeftLL.lon);
+	airyToWgs(bottomRightLL.lat,bottomRightLL.lon);
+	*/
+
+	// 01/05/05 grab three times current screen width and height (i.e. 9 
+	// times screen area) and centre at current
+	// map centre. This will be configurable.
+	
+			   landsatTopLeft = map.getLatLon
+				(ScreenPos(-width(),-height())),
+		landsatBottomRight = map.getLatLon
+				(ScreenPos(width()*2,height()*2));
+
+	/*
+	LS_LOAD_DATA * landsatData = grab_landsat(topLeftLL.lon, bottomRightLL.lat,
+										bottomRightLL.lon, topLeftLL.lat,
+										width(), height() );
+
+	*/
+	LS_LOAD_DATA * landsatData = grab_landsat(landsatTopLeft.lon, 
+					landsatBottomRight.lat,
+				landsatBottomRight.lon, landsatTopLeft.lat,
+										width()*3, height()*3 );
+	landsatPixmap.loadFromData((const uchar*)landsatData->data,
+								landsatData->nbytes);
+
+	doDrawLandsat = true;
+	update();
+
+	free(landsatData->data);
+	free(landsatData);
+}
 // ripped off from Mapmaker
 
 QPixmap mmLoadPixmap(const QString& directory, const QString& filename) 

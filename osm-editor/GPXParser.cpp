@@ -126,9 +126,11 @@ bool GPXParser::endElement(const QString&,const QString&,
 	
 	else if(inWpt && element=="wpt")
 	{
+			/*
 		cerr<<"adding waypoint:" <<
 				curName <<" " << curLat << " " << curLong << " "
 				<< atoi(curType.ascii()) << endl;
+				*/
 		components->addWaypoint(Waypoint(curName,curLat,curLong,curType));
 		inWpt = false;
 	}

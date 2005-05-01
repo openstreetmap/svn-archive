@@ -21,7 +21,7 @@
 
 int main(int argc, char* argv[])
 {
-	double lat = 51, lon = -1, scale = 100, w = 3.2, h = 3.2;
+	double lat = 51, lon = -1, scale = 4000000, w = 3.2, h = 3.2;
 
 	while(argc>2 && strlen(argv[1])>1 && argv[1][0] == '-')
 	{

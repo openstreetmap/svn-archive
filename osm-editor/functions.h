@@ -32,6 +32,9 @@ using std::vector;
 namespace OpenStreetMap 
 {
 
+void		wgsToAiry(double &lat, double &lon);
+void		airyToWgs(double &lat, double &lon);
+
 struct GridRef
 {
 	double e, n;

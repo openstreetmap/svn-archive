@@ -1,4 +1,4 @@
-CXX=g++
+CXX = g++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = main.o MainWindow.o GPSDevice.o Segment.o functions.o \
@@ -7,9 +7,11 @@ OBJ = main.o MainWindow.o GPSDevice.o Segment.o functions.o \
 LIBS = -ljeeps 
 LIBPATH = -L/usr/local/lib
 
+# Configure Qt paths
 QTINCPATH = /usr/lib/qt3/include
 QTLIB = -lqt-mt 
 QTLIBPATH = -L/usr/lib/qt3/lib
+MOC=/usr/lib/qt3/bin/moc
 
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
 CXXFLAGS = -I$(QTINCPATH) -I/usr/local/include $(OPTS)
@@ -22,8 +24,6 @@ JEEPSSRC = jeeps-0.1.4-nick
 			-lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir \
 			-lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils\
 			-lmd5 -ldl -lz -lssl -lcrypto -lxmlrpc_client
-
-MOC=/usr/lib/qt3/bin/moc
 
 moc_%.cpp : %.h
 	${MOC} $< -o $@

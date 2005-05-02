@@ -40,6 +40,12 @@ public class osmServerSQLHandler extends Thread
   
   long lTimeout = 1000 * 60 * 10; // ten mins
 
+  static final int MIN_USERNAME_LENGTH = 5;
+  static final int MAX_USERNAME_LENGTH = 50;
+  static final int MIN_PASSWORD_LENGTH = 5;
+  static final int MAX_PASSWORD_LENGTH = 35;
+  static final int MAX_TOKEN_LENGTH = 30;
+  
   boolean bSQLSuccess = false;
 
   boolean bConnectSuccess = false;
@@ -120,9 +126,10 @@ public class osmServerSQLHandler extends Thread
     System.out.println("login " + user + " " + pass);
 
     if( 
-        user.length() > 30 ||
-        pass.length() < 5 ||
-        pass.length() > 30 ||
+        user.length() < MIN_USERNAME_LENGTH ||
+        user.length() > MAX_USERNAME_LENGTH ||
+        pass.length() < MIN_PASSWORD_LENGTH ||
+        pass.length() > MAX_PASSWORD_LENGTH ||
         user.indexOf(" ") != -1 )
     {
       return "ERROR";
@@ -191,7 +198,7 @@ public class osmServerSQLHandler extends Thread
     }
 
 
-    if(token.length() > 30 || token.indexOf(" ") != -1)
+    if(token.length() > MAX_TOKEN_LENGTH || token.indexOf(" ") != -1)
     {
       System.out.println("didnt validate " + token );
       bTokenValidated = false;
@@ -618,10 +625,10 @@ public class osmServerSQLHandler extends Thread
     String token = "";
     System.out.println("addUser " + user + " " + pass);
 
-    if( user.length() < 4 ||
-        user.length() > 50 ||
-        pass.length() < 5 ||
-        pass.length() > 35 ||
+    if( user.length() < MIN_USERNAME_LENGTH ||
+        user.length() > MAX_USERNAME_LENGTH ||
+        pass.length() < MIN_PASSWORD_LENGTH ||
+        pass.length() > MAX_PASSWORD_LENGTH ||
         user.indexOf(" ") != -1 )
     {
       System.out.println("returning error");
@@ -676,8 +683,8 @@ public class osmServerSQLHandler extends Thread
 
     System.out.println("confirm " + user + " " + token);
 
-    if( user.length() < 5 ||
-        user.length() > 30 ||
+    if( user.length() < MIN_USERNAME_LENGTH ||
+        user.length() > MAX_USERNAME_LENGTH ||
         user.indexOf(" ") != -1 )
     {
       return false;
@@ -732,8 +739,8 @@ public class osmServerSQLHandler extends Thread
 
     System.out.println("user exists " + user );
 
-    if( user.length() < 5 ||
-        user.length() > 30 ||
+    if( user.length() < MIN_USERNAME_LENGTH ||
+        user.length() > MAX_USERNAME_LENGTH ||
         user.indexOf(" ") != -1 )
     {
       return false;

@@ -227,7 +227,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
     if( e.getActionCommand().equals("LINE_ADD_NODE"))
     {
 
-      osmLDL.setMode(osmLDL.MODE_ADD_NODE);
+      osmLDL.setMode(osmAppletLineDrawListener.MODE_ADD_NODE);
       return;
 
     }
@@ -235,7 +235,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
     if( e.getActionCommand().equals("LINE_MOVE_NODE"))
     {
 
-      osmLDL.setMode(osmLDL.MODE_MOVE_NODE);
+      osmLDL.setMode(osmAppletLineDrawListener.MODE_MOVE_NODE);
       return;
 
     }
@@ -243,7 +243,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
     if( e.getActionCommand().equals("LINE_DELETE_NODE"))
     {
 
-      osmLDL.setMode(osmLDL.MODE_DELETE_NODE);
+      osmLDL.setMode(osmAppletLineDrawListener.MODE_DELETE_NODE);
       return;
 
     }
@@ -252,7 +252,7 @@ public class osmAppletButtons extends JPanel implements ActionListener
     if( e.getActionCommand().equals("LINE_NEW_LINE"))
     {
 
-      osmLDL.setMode(osmLDL.MODE_NEW_LINE);
+      osmLDL.setMode(osmAppletLineDrawListener.MODE_NEW_LINE);
       return;
 
     }

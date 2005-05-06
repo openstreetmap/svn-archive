@@ -1,0 +1,5 @@
+These are files I have created with the aim of producing a standalone
+version of the OpenStreetMap applet which can also handle loading and saving
+GPX. The java files from the openstreetmap applet package are all here but
+all have been depackaged for the moment.  You will need the openstreetmap and
+openmap JAR files to compile.

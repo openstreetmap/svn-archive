@@ -91,7 +91,8 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 									map(lat,lon,s/1000), 
 									curPolygonType(POLYGON_WOOD),
-									polygonRes(0.1)
+									polygonRes(0.1),
+									landsatManager(this)
 {
 	setCaption("OpenStreetMap Editor");
 	resize ( w*s, h*s );	
@@ -100,7 +101,6 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	curSegType = "A road"; 
 	selectedTrackpoint = -1;
 
-	doDrawLandsat = false;
 
 	segpens["footpath"]= QPen (Qt::green, 2);
 	segpens["cycle path"]= QPen (Qt::magenta, 2);
@@ -385,7 +385,7 @@ void MainWindow::toggleWaypoints()
 
 void MainWindow::toggleLandsat()
 {
-	doDrawLandsat = !doDrawLandsat;
+	landsatManager.toggleDisplay();
 	update();
 }
 
@@ -416,12 +416,7 @@ void MainWindow::paintEvent(QPaintEvent* ev)
 
 void MainWindow::drawLandsat(QPainter& p)
 {
-	if(doDrawLandsat)
-	{
-		ScreenPos lsPos = map.getScreenPos(landsatTopLeft.lat,
-						landsatTopLeft.lon);
-		p.drawPixmap(0,0,landsatPixmap,-lsPos.x,-lsPos.y,width(),height());
-	}
+	landsatManager.draw(p);
 }
 
 void MainWindow::drawPolygons(QPainter& p)
@@ -732,7 +727,7 @@ void MainWindow::endPolygon(int x,int y)
 	curPolygon = new Polygon;
 
 	for(i=curPolygonPts.begin(); i!=curPolygonPts.end(); i++)
-		curPolygon->push_back(map.getGridRef(*i));	
+		curPolygon->push_back(map.getLatLon(*i));	
 
 	curPolygon->setType(curPolygonType);
 	polygons.push_back(curPolygon);
@@ -748,19 +743,32 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 
 	switch(ev->key())
 	{
-		case Qt::Key_Left  : map.move (-dis,   0); update(); break;
-		case Qt::Key_Right : map.move ( dis,   0); update(); break;
-		case Qt::Key_Up    : map.move (   0, dis); update(); break;
-		case Qt::Key_Down  : map.move (   0,-dis); update(); break;
+		case Qt::Key_Left  : map.move (-dis,   0); 
+							 updateWithLandsatCheck(); break;
+		case Qt::Key_Right : map.move ( dis,   0); 
+							 updateWithLandsatCheck(); break;
+		case Qt::Key_Up    : map.move (   0, dis); 
+							 updateWithLandsatCheck(); break;
+		case Qt::Key_Down  : map.move (   0,-dis); 
+							 updateWithLandsatCheck(); break;
 		case Qt::Key_Plus  : map.rescale(2,width(),height());	   
+							 landsatManager.grab();
 							 update(); 
 							 break;
 		case Qt::Key_Minus : map.rescale(0.5,width(),height());	   
+							 landsatManager.grab();
 							 update(); 
 							 break;
 	}
 }
 
+void MainWindow::updateWithLandsatCheck()
+{
+	if(landsatManager.needMoreData())
+		landsatManager.forceGrab();
+
+	update();
+}
 void MainWindow::grabTracks()
 {
 #if !defined(XMLRPC)
@@ -843,41 +851,15 @@ void MainWindow::grabTracks()
 
 void MainWindow::grabLandsat()
 {
-	LatLon topLeftLL=map.getTopLeftLL(),
-		   bottomRightLL = map.getLatLon(ScreenPos(width(),height()));
-
-	/*
-	airyToWgs(topLeftLL.lat,topLeftLL.lon);
-	airyToWgs(bottomRightLL.lat,bottomRightLL.lon);
-	*/
-
 	// 01/05/05 grab three times current screen width and height (i.e. 9 
 	// times screen area) and centre at current
 	// map centre. This will be configurable.
 	
-			   landsatTopLeft = map.getLatLon
-				(ScreenPos(-width(),-height())),
-		landsatBottomRight = map.getLatLon
-				(ScreenPos(width()*2,height()*2));
 
-	/*
-	LS_LOAD_DATA * landsatData = grab_landsat(topLeftLL.lon, bottomRightLL.lat,
-										bottomRightLL.lon, topLeftLL.lat,
-										width(), height() );
-
-	*/
-	LS_LOAD_DATA * landsatData = grab_landsat(landsatTopLeft.lon, 
-					landsatBottomRight.lat,
-				landsatBottomRight.lon, landsatTopLeft.lat,
-										width()*3, height()*3 );
-	landsatPixmap.loadFromData((const uchar*)landsatData->data,
-								landsatData->nbytes);
-
-	doDrawLandsat = true;
+	landsatManager.forceGrab();
 	update();
 
-	free(landsatData->data);
-	free(landsatData);
+
 }
 // ripped off from Mapmaker
 

@@ -17,25 +17,45 @@
 
  */
 
-#ifndef POLYGON_H
-#define POLYGON_H
+import com.bbn.openmap.omGraphics.OMRaster;
+import java.io.PrintWriter;
 
-#include <vector>
-#include "functions.h"
-using std::vector;
-
-namespace OpenStreetMap
+class Waypoint extends OMRaster
 {
+	String name, type;
+		 
+	public Waypoint(String name,float lat,float lon,String type)
+	{ 
+		//super(lat,lon,LookAndFeel.getImageIcon(type));
+		super(lat,lon,LookAndFeel.getImageIcon(type));
+		this.name=name; 
+		this.type=type;
+	}
 
-class Polygon: public vector<LatLon>
-{
-private:
-	int type;
-public:
-	Polygon(){}
-	void setType(int t){type=t;}
-	int getType(){return type; }
-};
+	public String getName()
+	{
+		return name;
+	}
+	public String getType()
+	{
+		return type;
+	}
+
+	public void alter( String newName, String newType)
+	{
+		name=newName;
+		type=newType;
+		setImageIcon(LookAndFeel.getImageIcon(newType));
+	}
+
+	public void toGPX(PrintWriter pw)
+	{
+		pw.println( "<wpt lat=\"" + getLat() + 
+				"\" lon=\"" + getLon()+ "\">");
+		pw.println("<name>"+name+"</name>");
+		pw.println("<type>"+type+"</type>");
+		pw.println("</wpt>");
+	}
+
 }
 
-#endif

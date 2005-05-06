@@ -16,26 +16,33 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+import com.bbn.openmap.omGraphics.OMPoint;
+import java.awt.Color;
+import java.io.PrintWriter;
+import com.bbn.openmap.LatLonPoint;
 
-#ifndef POLYGON_H
-#define POLYGON_H
-
-#include <vector>
-#include "functions.h"
-using std::vector;
-
-namespace OpenStreetMap
+class TrackPoint extends OMPoint
 {
+	// 10/04/05 now storing the timestamp as the standard GPX format
+	String timestamp;
 
-class Polygon: public vector<LatLon>
-{
-private:
-	int type;
-public:
-	Polygon(){}
-	void setType(int t){type=t;}
-	int getType(){return type; }
-};
+	public TrackPoint(String t, float lt, float ln)
+	{ 
+		super(lt,ln,2);
+		timestamp=t; 
+		setLinePaint(Color.gray);
+		setFillPaint(Color.gray);
+	}
+	public String getTimestamp() 
+	{ 
+		return timestamp; 
+	}
+
+	public void toGPX(PrintWriter pw)
+	{
+		pw.println( "<trkpt lat=\"" + getLat() + 
+				"\" lon=\"" + getLon()+ "\">");
+		pw.println("<time>"+timestamp+"</name>");
+		pw.println("</trkpt>");
+	}
 }
-
-#endif

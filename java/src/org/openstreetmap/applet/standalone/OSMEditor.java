@@ -16,26 +16,29 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+import javax.swing.JFrame;
 
-#ifndef POLYGON_H
-#define POLYGON_H
-
-#include <vector>
-#include "functions.h"
-using std::vector;
-
-namespace OpenStreetMap
+public class OSMEditor extends JFrame
 {
 
-class Polygon: public vector<LatLon>
-{
-private:
-	int type;
-public:
-	Polygon(){}
-	void setType(int t){type=t;}
-	int getType(){return type; }
-};
+	public OSMEditor(float scale,float lat,float lon)
+	{
+    	super("OpenStreetMap");
+		pack();
+		setVisible(true);
+
+		osmDisplay hd = new osmDisplay(scale,lat,lon,getContentPane());
+	}
+	public static void main(String args[])
+	{
+		
+
+    //	float fScale = 10404.917f;
+		float scale=Float.parseFloat(args[0]),
+			   lat = Float.parseFloat(args[1]),
+			   lon = Float.parseFloat(args[2]);
+
+		new OSMEditor(scale,lat,lon);
+
+	}
 }
-
-#endif

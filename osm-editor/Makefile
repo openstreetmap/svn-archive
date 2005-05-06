@@ -1,7 +1,7 @@
 CXX = c++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
-OBJ = main.o MainWindow.o GPSDevice.o Segment.o  \
+OBJ = main.o MainWindow.o GPSDevice.o Segment.o LandsatManager.o \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
 	  Permissions.o LoginDialogue.o moc_MainWindow.o grab_landsat.o
 LIBS = -ljeeps 
@@ -36,7 +36,7 @@ moc_%.cpp : %.h
 	${MOC} $< -o $@
 
 osmeditor: $(OBJ)
-	#cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
+	cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
 	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS) 
 
 testgps: $(TESTGPSOBJ)
@@ -51,7 +51,8 @@ clean:
 main.o : MainWindow.h
 GPSDevice.o : GPSDevice.h Track.h Waypoint.h functions.h
 MainWindow.o : WaypointDialogue.h GPXParser.h Components.h Track.h Polygon.h\
-	Waypoint.h functions.h MainWindow.h Permissions.h LoginDialogue.h Map.h
+	Waypoint.h functions.h MainWindow.h Permissions.h LoginDialogue.h Map.h\
+	LandsatManager.h
 Components.o : Components.h Track.h Waypoint.h Segment.h functions.h
 Track.o : Track.h Segment.h
 Segment.o : Track.h Segment.h

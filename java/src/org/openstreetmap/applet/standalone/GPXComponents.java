@@ -17,25 +17,20 @@
 
  */
 
-#ifndef POLYGON_H
-#define POLYGON_H
-
-#include <vector>
-#include "functions.h"
-using std::vector;
-
-namespace OpenStreetMap
+public interface GPXComponents
 {
+	// Set a track ID. 
+	public void setTrackID(String id);
 
-class Polygon: public vector<LatLon>
-{
-private:
-	int type;
-public:
-	Polygon(){}
-	void setType(int t){type=t;}
-	int getType(){return type; }
-};
+	// Add a trackpoint
+	public void addTrackpoint(int seg,String timestamp, float lat, float lon);
+
+	// Add a waypoint
+	public void addWaypoint(String name,float lat,float lon,String type);
+
+	// Set segment type
+	public void setSegType(int seg,String type);
+
+	// Add a new segment
+	public void newSegment();
 }
-
-#endif

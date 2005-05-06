@@ -27,6 +27,7 @@
 #include "Segment.h"
 #include "Components.h"
 #include "Map.h"
+#include "LandsatManager.h"
 #include <map>
 #include <vector>
 
@@ -129,7 +130,6 @@ private:
 	bool trackpoints;
 	QString curFilename; 
 	bool mouseDown;
-	bool doDrawLandsat;
 
 	QToolButton* modeButtons[4];
 
@@ -148,7 +148,7 @@ private:
 
 	int findNearestTrackpoint(int,int,int);
 
-	LatLon landsatTopLeft, landsatBottomRight;
+	LandsatManager landsatManager;
 
 public:
 	MainWindow (double=51.0,double=-1.0,double=100,
@@ -169,6 +169,9 @@ public:
 	void drawLandsat(QPainter&);
 	void rescale(double);
 	void editWaypoint(int,int,int);
+
+	void updateWithLandsatCheck();
+	Map getMap() { return map; }
 
 public slots:
 	void open();

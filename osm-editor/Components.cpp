@@ -42,6 +42,9 @@ void Components::toGPX(const char* filename)
 	if(waypoints)waypoints->toGPX(outfile);
 	if(track)track->toGPX(outfile,segdefs);
 
+	for(int count=0; count<polygons.size(); count++)
+		polygons[count]->toGPX(outfile);
+
 	outfile<<"</gpx>"<<endl;
 }
 
@@ -50,6 +53,9 @@ void Components::clearAll()
 {
 	if(track){delete track; track=NULL;}
 	if(waypoints){delete waypoints; waypoints=NULL; } 
+
+	for(vector<Polygon*>::iterator i=polygons.begin(); i!=polygons.end(); i++)
+		delete *i;
 }
 
 void Components::addSegdef(int start, int end, const QString& type)
@@ -168,4 +174,10 @@ bool Components::setTrackID(const char* i)
 	}
 	return false;
 }
+
+Polygon *Components::getPolygon (int i)
+{
+	return (i>=0 && i<polygons.size()) ? polygons[i] : NULL;
+}
+
 }

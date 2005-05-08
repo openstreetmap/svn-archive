@@ -50,7 +50,7 @@ private:
 	
 
 public:
-	Track() { id=""; }
+	Track() { id="noname"; }
 	void setID(const QString& i)
 		{ id=i; }
 	QString getID() 

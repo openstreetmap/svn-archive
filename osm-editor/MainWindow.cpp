@@ -89,13 +89,12 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 }
 
 MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
-									map(lat,lon,s/1000), 
-									curPolygonType(POLYGON_WOOD),
+									map(lat,lon,s), 
 									polygonRes(0.1),
 									landsatManager(this)
 {
 	setCaption("OpenStreetMap Editor");
-	resize ( w*s, h*s );	
+	resize ( w, h );	
 
 	actionMode = ACTION_TRACK;
 	curSegType = "A road"; 
@@ -112,11 +111,11 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	segpens["motorway"]= QPen (Qt::black, 6);
 	segpens["railway"]= QPen (Qt::gray, 4);
 
-	polydata.push_back(PolyData("wood",QColor(192,224,192)));
-	polydata.push_back(PolyData("lake",QColor(192,192,255))); 
-	polydata.push_back(PolyData("heath",QColor (255,224,192)));
-	polydata.push_back(PolyData("urban",QColor (128,128,128)));
-	polydata.push_back(PolyData("access land",QColor (192,0,192)));
+	polydata["wood"]=QColor(192,224,192);
+	polydata["lake"]=QColor(192,192,255); 
+	polydata["heath"]=QColor (255,224,192);
+	polydata["urban"]=QColor (128,128,128);
+	polydata["access land"]=QColor (192,0,192);
 
 
 	// Construct the menus.
@@ -131,13 +130,11 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 
 	QPopupMenu* editMenu = new QPopupMenu(this);
 	
-	editMenu->insertItem("Re&name feature",this,
-					SLOT(renameFeature()),CTRL+Key_N);
 	editMenu->insertItem("&Toggle waypoints",this,SLOT(toggleWaypoints()),
 						CTRL+Key_T);
 	editMenu->insertItem("Toggle &Landsat",this,SLOT(toggleLandsat()),
 						CTRL+Key_L);
-	editMenu->insertItem("Undo",this,SLOT(undo()),CTRL+Key_Z);
+//	editMenu->insertItem("Undo",this,SLOT(undo()),CTRL+Key_Z);
 	editMenu->insertItem("Change pol&ygon resolution",this,
 							SLOT(changePolygonRes()),CTRL+Key_Y);
 	menuBar()->insertItem("&Edit",editMenu);
@@ -152,8 +149,19 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	{
 		r->insertItem(i->first);
 	}
+
+	new QLabel("Polygon: ", toolbar);
+	QComboBox* seg = new QComboBox(toolbar);
+	for(std::map<QString,QPen>::iterator i=polydata.begin();i!=polydata.end();
+		i++)
+	{
+		seg->insertItem(i->first);
+	}
+
 	QObject::connect(r,SIGNAL(activated(const QString&)),
 						this,SLOT(setSegType(const QString&)));	
+	QObject::connect(seg,SIGNAL(activated(const QString&)),
+						this,SLOT(setPolygonType(const QString&)));	
 	// Do the toolbar buttons to change the mode.
 	//
 	// Construct a signal mapper so that each mode button can be mapped to
@@ -162,6 +170,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	// enabling a range of buttons representing values to be mapped to one
 	// slot which takes an int.
 	
+
 	QSignalMapper* mapper = new QSignalMapper(this);
 
 
@@ -169,6 +178,22 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	QPixmap two = mmLoadPixmap("images","two.png");
 	QPixmap wp = mmLoadPixmap("images","waypoint.png");
 	QPixmap three = mmLoadPixmap("images","three.png");
+	QPixmap left_pixmap = mmLoadPixmap("images","arrow_left.png");
+	QPixmap right_pixmap = mmLoadPixmap("images","arrow_right.png");
+	QPixmap up_pixmap = mmLoadPixmap("images","arrow_up.png");
+	QPixmap down_pixmap = mmLoadPixmap("images","arrow_down.png");
+	QPixmap magnify_pixmap = mmLoadPixmap("images","magnify.png");
+	QPixmap shrink_pixmap = mmLoadPixmap("images","shrink.png");
+
+	new QToolButton(left_pixmap,"Move left","",this,SLOT(left()),toolbar);
+	new QToolButton(right_pixmap,"Move right","",this,SLOT(right()),toolbar);
+	new QToolButton(up_pixmap,"Move up","",this,SLOT(up()),toolbar);
+	new QToolButton(down_pixmap,"Move down","",this,SLOT(down()),toolbar);
+	new QToolButton(magnify_pixmap,"Zoom in","",this,SLOT(magnify()),toolbar);
+	new QToolButton(shrink_pixmap,"Zoom out","",this,SLOT(shrink()),toolbar);
+
+	toolbar->setStretchableWidget(new QLabel(toolbar));
+
 	modeButtons[ACTION_TRACK] = new QToolButton
 			(one,"Create Segments","",mapper,SLOT(map()),toolbar);
 	modeButtons[ACTION_DELETE] = new QToolButton
@@ -177,15 +202,17 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 			(wp,"Edit Waypoints","",mapper,SLOT(map()),toolbar);
 	modeButtons[ACTION_POLYGON]= new QToolButton
 			(three,"Create Polygons","",mapper,SLOT(map()),toolbar);
+
+
+
 	// Setting a blank label as the stretchable widget means that one can
 	// stretch the toolbar while keeping the tool buttons bunched up to the 
 	// left.
-	toolbar->setStretchableWidget(new QLabel(toolbar));
 
 	// Turn the "mode" toolbar buttons into toggle buttons, and set their
 	// mapping index for the signal mapper.
 	
-	for (int count=0; count<3; count++)
+	for (int count=0; count<4; count++)
 	{
 		modeButtons[count]->setToggleButton(true);
 		mapper->setMapping(modeButtons[count],count);
@@ -196,7 +223,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	// The final stage of implementing the signal mapper: connect mapped()
 	// to setMode(). The value set in setMapping() above will be used.
 	QObject::connect(mapper,SIGNAL(mapped(int)),this,SLOT(setMode(int)));
-	curPolygon=NULL;
+	polygon=new Polygon("wood");
+	curPolygonType = "wood";
 
 
 	waypointReps["pub"] = new WaypointRep 
@@ -264,8 +292,6 @@ MainWindow::~MainWindow()
 		delete i->second;
 	}
 
-	for(vector<Polygon*>::iterator i=polygons.begin(); i!=polygons.end(); i++)
-		delete *i;
 
 	delete components;
 }
@@ -298,6 +324,8 @@ Components * MainWindow::doOpen(const QString& filename)
 	reader.setContentHandler(&parser);
 	reader.parse(source);
 	comp = parser.getComponents();	
+	
+
 
 	return comp;
 }
@@ -349,7 +377,7 @@ void MainWindow::setMode(int m)
 
 	// Display the appropriate mode toolbar button and menu item checked, and
 	// all the others turned off.
-	for (int count=0; count<3; count++)
+	for (int count=0; count<4; count++)
 		modeButtons[count]->setOn(count==m);
 }
 
@@ -359,21 +387,9 @@ void MainWindow::setSegType(const QString &t)
 	cerr << curSegType << endl;
 }
 
-void MainWindow::renameFeature()
+void MainWindow::setPolygonType(const QString &t)
 {
-	if(1)
-	{
-		QString oldname = QInputDialog::getText("Old name:","Old name:");
-		if(oldname!="")
-		{
-			QString newname = QInputDialog::getText("New name:","New name:");
-			if(newname!="")
-			{
-				// TODO	
-			}
-		}
-	}
-	update();
+	curPolygonType =   t;
 }
 
 // 
@@ -421,10 +437,9 @@ void MainWindow::drawLandsat(QPainter& p)
 
 void MainWindow::drawPolygons(QPainter& p)
 {
-	for(vector<Polygon*>::const_iterator i= polygons.begin();
-		i != polygons.end(); i++)
+	for(int count=0; count<components->nPolygons(); count++)
 	{
-		drawPolygon(p,*i);
+		drawPolygon(p,components->getPolygon(count));
 	}
 }
 
@@ -517,16 +532,15 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 
 	QPointArray qpointarray(polygon->size());
 
-	int count=0;
 
-	for(Polygon::iterator i=polygon->begin(); i!=polygon->end(); i++)
+	for(int count=0; count<polygon->size(); count++)
 	{
-		current = map.getScreenPos(*i);
-		qpointarray.setPoint(count++,current.x,current.y);
+		current = map.getScreenPos(polygon->getPoint(count));
+		qpointarray.setPoint(count,current.x,current.y);
 	}
 
-	p.setPen(polydata[polygon->getType()].colour);
-	p.setBrush(QBrush(polydata[polygon->getType()].colour,Qt::SolidPattern));
+	p.setPen(polydata[polygon->getType()]);
+	p.setBrush(QBrush(polydata[polygon->getType()].color(),Qt::SolidPattern));
 	p.drawPolygon(qpointarray);
 	p.setBrush(Qt::NoBrush);
 
@@ -684,7 +698,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent* ev)
 	if(actionMode==ACTION_POLYGON && mouseDown)
 	{
 		QPainter p (this);
-		p.setPen(polydata[curPolygonType].colour);
+		p.setPen(polydata[polygon->getType()]);
 		if(curPolygonPts.size()>=1)
 		{
 			ScreenPos prev = *(curPolygonPts.end()-1);
@@ -695,12 +709,14 @@ void MainWindow::mouseMoveEvent(QMouseEvent* ev)
 			// otherwise Freemap will be overloaded with polygon 
 			// points !!!
 			// 0.1 maybe a tad too coarse, 0.05 more definitely too fine.
+			/*
 			if(OpenStreetMap::dist (prev.x,prev.y,ev->x(),ev->y())
 				>= polygonRes*1000*map.getScale()) 
 			{
+			*/
 				curPolygonPts.push_back
 						(ScreenPos(ev->x(),ev->y()));
-			}
+			//}
 		}
 		else
 		{
@@ -724,13 +740,12 @@ void MainWindow::endPolygon(int x,int y)
 {
 	vector<ScreenPos>::iterator i;
 	curPolygonPts.push_back(ScreenPos(x,y));
-	curPolygon = new Polygon;
+	polygon = new Polygon(curPolygonType);
 
 	for(i=curPolygonPts.begin(); i!=curPolygonPts.end(); i++)
-		curPolygon->push_back(map.getLatLon(*i));	
+		polygon->addPoint(map.getLatLon(*i));	
 
-	curPolygon->setType(curPolygonType);
-	polygons.push_back(curPolygon);
+	components->addPolygon(polygon);
 
 	update();
 }
@@ -743,23 +758,55 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 
 	switch(ev->key())
 	{
-		case Qt::Key_Left  : map.move (-dis,   0); 
-							 updateWithLandsatCheck(); break;
-		case Qt::Key_Right : map.move ( dis,   0); 
-							 updateWithLandsatCheck(); break;
-		case Qt::Key_Up    : map.move (   0, dis); 
-							 updateWithLandsatCheck(); break;
-		case Qt::Key_Down  : map.move (   0,-dis); 
-							 updateWithLandsatCheck(); break;
-		case Qt::Key_Plus  : map.rescale(2,width(),height());	   
-							 landsatManager.grab();
-							 update(); 
-							 break;
-		case Qt::Key_Minus : map.rescale(0.5,width(),height());	   
-							 landsatManager.grab();
-							 update(); 
-							 break;
+		case Qt::Key_Left  : left(); break; 
+		case Qt::Key_Right : right(); break; 
+		case Qt::Key_Up    : up(); break; 
+		case Qt::Key_Down  : down(); break; 
+		case Qt::Key_Plus  : magnify(); break; 
+		case Qt::Key_Minus : shrink(); break; 
 	}
+}
+
+void MainWindow::left()
+{
+	double dis = 0.1/map.getScale();
+	map.move(-dis,0);
+	updateWithLandsatCheck();
+}
+
+void MainWindow::right()
+{
+	double dis = 0.1/map.getScale();
+	map.move(dis,0);
+	updateWithLandsatCheck();
+}
+
+void MainWindow::up()
+{
+	double dis = 0.1/map.getScale();
+	map.move(0,dis);
+	updateWithLandsatCheck();
+}
+
+void MainWindow::down()
+{
+	double dis = 0.1/map.getScale();
+	map.move(0,-dis);
+	updateWithLandsatCheck();
+}
+
+void MainWindow::magnify()
+{
+	map.rescale(2,width(),height());
+	landsatManager.grab();
+	update();
+}
+
+void MainWindow::shrink()
+{
+	map.rescale(0.5,width(),height());
+	landsatManager.grab();
+	update();
 }
 
 void MainWindow::updateWithLandsatCheck()
@@ -861,6 +908,7 @@ void MainWindow::grabLandsat()
 
 
 }
+
 // ripped off from Mapmaker
 
 QPixmap mmLoadPixmap(const QString& directory, const QString& filename) 

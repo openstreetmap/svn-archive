@@ -21,21 +21,35 @@
 #define POLYGON_H
 
 #include <vector>
+#include <fstream>
 #include "functions.h"
 using std::vector;
+
+#include <qstring.h>
 
 namespace OpenStreetMap
 {
 
-class Polygon: public vector<LatLon>
+class Polygon
 {
 private:
-	int type;
+	QString type;
+	vector<LatLon> points;
+
 public:
 	Polygon(){}
-	void setType(int t){type=t;}
-	int getType(){return type; }
+	Polygon(const QString& t) { type=t; }
+	void setType(const QString &t){type=t;}
+	QString getType(){return type; }
+	void addPoint(double lat,double lon)
+		{ points.push_back(LatLon(lat,lon)); }
+	void addPoint(LatLon ll)
+		{ points.push_back(ll); }
+	int size(){ return points.size(); }
+	void toGPX(std::ostream&);
+	LatLon getPoint(int i){ return points[i]; }
 };
+
 }
 
 #endif

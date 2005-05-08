@@ -31,21 +31,19 @@ namespace OpenStreetMap
 GPXParser::GPXParser(  )
 {
 	inDoc = inWpt = inTrk = inName = inTrkpt = inType = 
-	inTrkseg = foundSegType = false;
+	inTrkseg = foundSegType = inPolygon = false;
 	components = new Components;
 	trkptCount = 0;
 }
 
 bool GPXParser::startDocument()
 {
-	cerr<<"startDocument()"<<endl;	
 	inDoc = true;
 	return true;
 }
 
 bool GPXParser::endDocument()
 {
-	cerr<<"endDocument()"<<endl;	
 	inDoc = false;
 	return true;
 }
@@ -54,7 +52,6 @@ bool GPXParser::startElement(const QString&,const QString&,
 						const QString& element,
 						const QXmlAttributes& attributes)
 {
-	cerr<<"startElement(): element: "<<element<<endl;
 	if(inDoc)
 	{
 		if(element=="wpt")
@@ -70,9 +67,14 @@ bool GPXParser::startElement(const QString&,const QString&,
 			inTrkseg=true;
 			segStart=trkptCount;
 		}
+		else if (element=="polygon")
+		{
+			inPolygon = true;
+			curPolygon = new Polygon;
+		}
 		else if (element=="name" && (inWpt||inTrkpt||inTrk))
 			inName=true;
-		else if (element=="type" && (inWpt||inTrk||inTrkseg))
+		else if (element=="type" && (inWpt||inTrk||inTrkseg||inPolygon))
 		{
 			inType=true;
 			if(inTrkseg) foundSegType=true;
@@ -94,6 +96,11 @@ bool GPXParser::startElement(const QString&,const QString&,
 				else if(attributes.qName(count)=="lon")
 					curLong = atof (attributes.value(count).ascii());
 			}
+
+			if(element=="polypt" && inPolygon)
+			{
+				curPolygon->addPoint(curLat,curLong);	
+			}
 		}
 	}
 	return true;
@@ -102,7 +109,6 @@ bool GPXParser::startElement(const QString&,const QString&,
 bool GPXParser::endElement(const QString&,const QString&,
 						const QString&	element)
 {
-	cerr<<"endElement(): element: "<<element<<endl;
 	if(inTrkpt && element=="trkpt")
 	{
 		components->addTrackpoint(curTimestamp,curLat,curLong);
@@ -111,11 +117,16 @@ bool GPXParser::endElement(const QString&,const QString&,
 
 	else if(inTrk && element=="trk")
 	{
-		cerr<<"setting track ID: " << curName << endl;
 		components->setTrackID (curName);
 		inTrk = false;
 	}
 
+	else if(inPolygon && element=="polygon")
+	{
+		curPolygon->setType(curType);
+		components->addPolygon(curPolygon);
+		inPolygon=false;
+	}
 	else if(inName && element=="name")
 		inName=false;
 
@@ -143,19 +154,15 @@ bool GPXParser::endElement(const QString&,const QString&,
 		inTrkseg = foundSegType = false;
 	}
 
-	cerr<<"endElement done" << endl;
 	return true;
 }
 
 bool GPXParser::characters(const QString& characters)
 {
-	cerr<<"characters(): " << characters << endl;
 	if(characters=="\n") return true;
-	cerr<<"inName: " << inName << endl;
 	if(inName)
 	{
 		curName = characters;
-		cerr << "curName set to " << curName << endl;
 	}
 	else if(inType)
 		curType = characters; 

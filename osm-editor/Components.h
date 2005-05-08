@@ -30,6 +30,7 @@
 #include "Track.h"
 #include "Waypoint.h"
 #include "Segment.h"
+#include "Polygon.h"
 
 #include <iostream>
 using std::cout;
@@ -49,6 +50,7 @@ private:
 	Track * track;
 	Waypoints * waypoints;
 	vector<SegDef> segdefs;
+	vector<Polygon*> polygons;
 
 	vector<SegDef>::iterator findPlace(int);
 
@@ -81,6 +83,10 @@ public:
 
 	bool alterWaypoint(int i,const QString& name,const QString& type)
 		{ return (waypoints) ? waypoints->alterWaypoint(i,name,type): false; }
+
+	void addPolygon(Polygon* p) { polygons.push_back(p); }
+	int nPolygons() { return polygons.size(); }
+	Polygon *getPolygon(int);
 };
 
 

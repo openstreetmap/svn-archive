@@ -108,12 +108,13 @@ private:
 	
 	// key data
 	Components * components;
-	vector<Polygon*> polygons;
+	Polygon *polygon;
 
 	// on-screen data representations 
 	std::map<QString,WaypointRep*> waypointReps; 
 	std::map<QString,QPen> segpens;
-	vector<PolyData> polydata;
+	//vector<PolyData> polydata;
+	std::map<QString,QPen> polydata;
 
 	// currently selected trackpoints
 	int selectedTrackpoint, selectedTrackpoint2;
@@ -122,9 +123,9 @@ private:
 	int actionMode;
 
 	// other stuff
+	QString curPolygonType;
 	std::vector<ScreenPos> curPolygonPts;
 	QString curSegType; 
-	int curPolygonType; 
 	double polygonRes;
 	Polygon * curPolygon;
 	bool trackpoints;
@@ -151,8 +152,8 @@ private:
 	LandsatManager landsatManager;
 
 public:
-	MainWindow (double=51.0,double=-1.0,double=100,
-			 		double=3.2,double=3.2);
+	MainWindow (double=51.0,double=-1.0,double=4000,
+			 		double=640,double=480);
 	~MainWindow();
 	Components * doOpen(const QString&);
 
@@ -179,15 +180,21 @@ public slots:
 	void saveAs();
 	void readGPS();
 	void quit();
-	void renameFeature();
 	void toggleWaypoints();
 	void toggleLandsat();
 	void undo();
 	void changePolygonRes();
 	void setMode(int);
 	void setSegType(const QString&);
+	void setPolygonType(const QString&);
 	void grabTracks();
 	void grabLandsat();
+	void up();
+	void down();
+	void left();
+	void right();
+	void magnify();
+	void shrink();
 };
 
 }

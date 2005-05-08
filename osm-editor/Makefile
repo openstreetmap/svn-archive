@@ -37,7 +37,7 @@ moc_%.cpp : %.h
 	${MOC} $< -o $@
 
 osmeditor: $(OBJ)
-	#cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
+	cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
 	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS) 
 
 testgps: $(TESTGPSOBJ)

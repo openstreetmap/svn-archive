@@ -4,7 +4,7 @@ require 'osm'
 include OSM
 
 # TODO
-# check for merging of streets (i.e. many 5th Ave)
+# merge streets like 5th Ave
 
 def read_rt1(path)
   rt1 = {}
@@ -90,7 +90,8 @@ begin
   if (ARGV.length != 2) || (! File.exists?(File.expand_path(ARGV.first))) || (! File.exists?(File.expand_path(ARGV[1])))
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second"
   end
-  import_tiger(osm, ARGV.first, ARGV[1])
+  osm.newStreet("2nd Ave", [[40.800874, -73.935041], [40.801515, -73.934561], [40.80602, -73.932583]], 10035, 10035)
+#  import_tiger(osm, ARGV.first, ARGV[1])
 ensure
   osm.close if osm
 end

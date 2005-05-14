@@ -429,6 +429,8 @@ public class osmServerHandler
   } // newLine
  
 
+  /**
+   * Get the 
   public Vector getLines(String sToken, Vector v)
   {
     int nUID = osmSQLH.validateToken(sToken);
@@ -503,7 +505,7 @@ public class osmServerHandler
 
 
   /**
-   * FIXME need to call this when you're done talking to the XMLRPC to make sure the database gets closed. This should be replaced with a timer to close it...
+   * Attempts to close the sb connection, although it happens automagically when you close the XMLRPC connection.
    */
   public void closeDatabase()
   {

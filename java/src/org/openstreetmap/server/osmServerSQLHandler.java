@@ -1824,7 +1824,8 @@ public class osmServerSQLHandler extends Thread
 
 
   /**
-   * Deprecated! Only here till the static png code gets updated to use the new street system
+   * Gets the visible lines associated with the list of nodes you give
+   * @param nnUID a list of UIDs...
    */
   public synchronized Vector getLines(int nnUID[])
   {

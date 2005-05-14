@@ -3,7 +3,7 @@ package org.openstreetmap.util;
 
 import java.util.*;
 import java.lang.*;
-import org.apache.xmlrpc.*;
+import org.apache.xmlrpc.applet.*;
 
 class osmTestServer
 {
@@ -18,7 +18,7 @@ class osmTestServer
   {
     try
     {
-      XmlRpcClient xmlrpc = new XmlRpcClient("www.openstreetmap.org/api/xml.jsp");
+      SimpleXmlRpcClient xmlrpc = new SimpleXmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
 
       Vector v = new Vector();
 
@@ -27,21 +27,46 @@ class osmTestServer
      
       String token = (String)xmlrpc.execute("openstreetmap.login", v);
 
+      System.out.println("logged in with token " + token);
 
-      v.addElement(token);
-      v.addElement(new Boolean(true));
-
-
-      Vector vResults = (Vector)xmlrpc.execute("openstreetmap.getAllKeys",v);
-
-      Enumeration e = vResults.elements();
-
-      while(e.hasMoreElements())
-      {
-        String sA = (String)e.nextElement();
-        System.out.println(sA);
-      }
+      v = new Vector();
       
+      v.addElement(token);
+      v.addElement(new Integer(1373));
+
+      Integer nR = (Integer)xmlrpc.execute("openstreetmap.newStreet",v);
+
+      System.out.println(nR);
+
+      v = new Vector();
+      
+      v.addElement(token);
+      v.addElement(nR);
+      v.addElement(new Integer(1374));
+
+      Boolean bR = (Boolean)xmlrpc.execute("openstreetmap.addSegmentToStreet",v);
+
+      System.out.println(bR);
+ 
+      v = new Vector();
+      
+      v.addElement(token);
+      v.addElement(nR);
+      v.addElement(new Integer(1374));
+
+      bR = (Boolean)xmlrpc.execute("openstreetmap.dropSegmentFromStreet",v);
+
+      System.out.println(bR);
+
+      v = new Vector();
+      
+      v.addElement(token);
+      v.addElement(nR);
+      v.addElement(new Integer(1373));
+
+      bR = (Boolean)xmlrpc.execute("openstreetmap.dropSegmentFromStreet",v);
+
+      System.out.println(bR);
 
     }
     catch(Exception e)

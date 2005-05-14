@@ -29,12 +29,13 @@ import org.openstreetmap.util.gpspoint;
 
 
 /** 
- * osmServerHandler is whats exposed over XMLRPC to client apps
+ * osmServerHandler is whats exposed over XMLRPC to client apps. This documentation is incomplete. FIXME!
  * @author Steve Coast
  * @version .1
  */
 public class osmServerHandler
 {
+  
   private String sJDBC = "jdbc:mysql://128.40.59.181/openstreetmap?useUnicode=true&characterEncoding=latin1";
 
   
@@ -384,7 +385,10 @@ public class osmServerHandler
   } // deleteNode
 
   
-
+  /**
+   * create a new street segment between the two given nodes
+   * @return the uid of the created segment
+   */
   public int newLine(String sToken, int node_a, int node_b)
   {
     int nUID = osmSQLH.validateToken(sToken);
@@ -473,7 +477,9 @@ public class osmServerHandler
   } // getNodes
 
 
-
+  /**
+   * FIXME need to call this when you're done talking to the XMLRPC to make sure the database gets closed. This should be replaced with a timer to close it...
+   */
   public void closeDatabase()
   {
     osmSQLH.closeDatabase();
@@ -481,6 +487,9 @@ public class osmServerHandler
   } // closeDatabase
 
 
+  /**
+   * deprecated! this is the old method that the static png generator uses, which needs to be rewritten to use the Line methods
+   */
   public Vector getStreets(
       String token,
       double p1lat,
@@ -525,5 +534,78 @@ public class osmServerHandler
   } // getStreets
 
 
+  /**
+   * Create a new street with an initial street segment in it
+   * @param sToken your login token from login()
+   * @param line_segment_uid the uid of the first segment you want in the street
+   * @return the uid of the street
+   */
+  public int newStreet(String sToken, int line_segment_uid)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return -1;
+
+    }
+     
+    return osmSQLH.newStreet(nUID, line_segment_uid);
+
+  } // newLine
+
+
+  /**
+   * Add a segment to a street that already exists
+   * @param sToken your login token from login()
+   * @param nStreetUID the uid of the street
+   * @param nStreetSegmentUID the uid of the segment
+   * @return true if successful, eg if that street and segment exist and that segment isn't already a visible part of that street
+   */
+  public boolean addSegmentToStreet(
+      String sToken,
+      int nStreetUID,
+      int nStreetSegmentUID)
+  {
+
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return false;
+
+    }
+     
+    return osmSQLH.addSegmentToStreet(nUID, nStreetUID, nStreetSegmentUID);
+
+  } // addSegmentToStreet
+
+  /**
+   * Drop a segment from a street
+   * @param sToken your login token from login()
+   * @param nStreetUID the uid of the street
+   * @param nStreetSegmentUID the uid of the street segment
+   * @return true if we managed to drop that segment, eg the street-segment pair exists, is visible, and we managed to convince the databse to add another row
+   */
+  public boolean dropSegmentFromStreet(
+      String sToken,
+      int nStreetUID,
+      int nStreetSegmentUID)
+  {
+
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return false;
+
+    }
+     
+    return osmSQLH.dropSegmentFromStreet(nUID, nStreetUID, nStreetSegmentUID);
+
+
+  } // dropSegmentFromStreet
+
+  
 
 } // osmServerHandler

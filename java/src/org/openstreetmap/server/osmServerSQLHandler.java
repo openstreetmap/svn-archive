@@ -1578,7 +1578,7 @@ public class osmServerSQLHandler extends Thread
 
     return -1;
 
-  } // newNode
+  } // newStreetSegment
 
 
   public synchronized Vector getNodes(double lat1, double lon1, double lat2, double lon2)
@@ -1711,7 +1711,7 @@ public class osmServerSQLHandler extends Thread
   {
     if(nodeExists(node_a) && nodeExists(node_b))
     {
-      // do some more checks like if the link is 100 miles long and if they're visible
+      // FIXME do some more checks like if the link is 100 miles long and if they're visible
 
       return true;
 
@@ -1786,6 +1786,9 @@ public class osmServerSQLHandler extends Thread
   } // newLine
 
 
+  /**
+   * Deprecated! Only here till the static png code gets updated to use the new street system
+   */
   public synchronized Vector getLines(int nnUID[])
   {
 
@@ -1835,6 +1838,261 @@ public class osmServerSQLHandler extends Thread
 
   } // getLines
 
+
+  public synchronized int newStreet(int nUserUID, int street_segment)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "insert into street_meta_table (timestamp, user_uid, visible) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID
+        + ", 1)";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values ("
+        + " last_insert_id(), "
+        + "" + street_segment + ", "
+        + System.currentTimeMillis() + ", "
+        + nUserUID + ", "
+        + "1)";
+
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "select @id;";
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newStreet
+
+
+  private boolean doesStreetExist(int nStreetUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select * from street_meta_table where uid=" + nStreetUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return true;
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+    }
+
+    return false;
+
+  } // doesStreetExist
+
+  
+  private boolean doesStreetSegmentExist(int nStreetSegmentUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select * from street_segment_meta_table where uid=" + nStreetSegmentUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return true;
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+    }
+
+    return false;
+
+  } // doesStreetSegmentExist
+
+  
+  private boolean doesStreetHaveSegmentVisible(
+      int nStreetUID,
+      int nStreetSegmentUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select visible from street_table where"
+        + " uid=" + nStreetUID
+        + " and segment_uid=" + nStreetSegmentUID
+        + " order by timestamp desc limit 1";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        int nVisible = rs.getInt("visible");
+        if( nVisible == 1 )
+        {
+          return true;
+        }
+
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+    }
+
+    return false;
+
+  } // doesStreetHaveSegmentVisible
+
+
+  public synchronized boolean addSegmentToStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID)
+  {
+    
+    if( doesStreetExist(nStreetUID)
+        && doesStreetSegmentExist(nStreetSegmentUID)
+        && !doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)
+        )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "start transaction;";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values ("
+          + "" + nStreetUID + ", "
+          + "" + nStreetSegmentUID + ", "
+          + System.currentTimeMillis() + ", "
+          + nUserUID + ", "
+          + "1)";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "commit;";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+
+
+    }      
+
+    return false;
+
+  } // addSegmentToStreet
+
+  
+
+  public synchronized boolean dropSegmentFromStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID)
+  {
+    
+    if(    doesStreetExist(nStreetUID)
+        && doesStreetSegmentExist(nStreetSegmentUID)
+        && doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)
+        )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "start transaction;";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values ("
+          + "" + nStreetUID + ", "
+          + "" + nStreetSegmentUID + ", "
+          + System.currentTimeMillis() + ", "
+          + nUserUID + ", "
+          + "0)";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        sSQL = "commit;";
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        return true;
+
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+
+    }      
+
+    return false;
+
+  } // dropSegmentFromStreet
 
 
 } // osmServerSQLHandler

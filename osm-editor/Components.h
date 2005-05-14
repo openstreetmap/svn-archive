@@ -29,7 +29,6 @@
 #include "functions.h"
 #include "Track.h"
 #include "Waypoint.h"
-#include "Segment.h"
 #include "Polygon.h"
 
 #include <iostream>
@@ -49,10 +48,8 @@ class Components
 private:
 	Track * track;
 	Waypoints * waypoints;
-	vector<SegDef> segdefs;
 	vector<Polygon*> polygons;
 
-	vector<SegDef>::iterator findPlace(int);
 
 public:
 	Components() { waypoints=new Waypoints; track=new Track;}
@@ -63,23 +60,18 @@ public:
 	~Components() { clearAll(); }
 	bool addWaypoint (const Waypoint&) ;
 
-	bool addTrackpoint (const QString& timestamp, double lat, double lon);
+	bool addTrackpoint (int seg,const QString& timestamp, double lat, 
+					double lon);
 	void addTrack(Track * t) { track=t; }
 
 	void setWaypoints(Waypoints * w) { waypoints=w; }
-	bool hasTrack() { return track && (track->size()>0); }
+	bool hasTrack() { return track && track->hasPoints() ; }
 	bool hasWaypoints() { return waypoints && (waypoints->size()>0); }
  	Waypoint getWaypoint (int i) throw(QString);
-	TrackPoint getTrackpoint(int i) throw(QString);
 	int nWaypoints() { return waypoints ? waypoints->size(): 0; }
-	int nTrackpoints() { return track ? track->size():0 ; }
-	int nSegdefs() { return segdefs.size(); }
 	bool setTrackID(const char*); 
-	SegDef getSegdef(int i) { return segdefs[i]; }
 	void addSegdef(int ,int , const QString& );
-	void printSegDefs();
 
-	bool deleteTrackpoints(int,int);
 
 	bool alterWaypoint(int i,const QString& name,const QString& type)
 		{ return (waypoints) ? waypoints->alterWaypoint(i,name,type): false; }
@@ -87,6 +79,16 @@ public:
 	void addPolygon(Polygon* p) { polygons.push_back(p); }
 	int nPolygons() { return polygons.size(); }
 	Polygon *getPolygon(int);
+
+	int nSegs() { return track->nSegs(); }
+	TrackSeg *getSeg(int i) { return track->getSeg(i); }
+	bool deleteTrackpoints(const LatLon& p1, const LatLon& p2, double limit)
+		{ return track->deletePoints(p1,p2,limit);}
+	bool segmentiseTrack(const QString& newType, const LatLon& p1,
+						const LatLon& p2, double limit)
+		{ return track->segmentise(newType,p1,p2,limit); }
+	void newSegment() { track->newSegment(); }
+	bool setSegType(int i,const QString& t) { return track->setSegType(i,t); }
 };
 
 

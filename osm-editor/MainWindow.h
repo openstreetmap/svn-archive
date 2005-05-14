@@ -24,7 +24,6 @@
 #include "functions.h"
 #include "GPSDevice.h"
 #include "Polygon.h"
-#include "Segment.h"
 #include "Components.h"
 #include "Map.h"
 #include "LandsatManager.h"
@@ -151,6 +150,9 @@ private:
 
 	LandsatManager landsatManager;
 
+	LatLon p1, p2;
+	int nSelectedPoints;
+	
 public:
 	MainWindow (double=51.0,double=-1.0,double=4000,
 			 		double=640,double=480);

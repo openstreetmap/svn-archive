@@ -1,10 +1,10 @@
 CXX = c++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
-OBJ = main.o MainWindow.o GPSDevice.o Segment.o LandsatManager.o \
+OBJ = main.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
 	  Permissions.o LoginDialogue.o moc_MainWindow.o grab_landsat.o \
-	  Polygon.o
+	  Polygon.o TrackSeg.o
 LIBS = -ljeeps 
 LIBPATH = -L/usr/local/lib
 
@@ -53,18 +53,18 @@ main.o : MainWindow.h
 GPSDevice.o : GPSDevice.h Track.h Waypoint.h functions.h
 MainWindow.o : WaypointDialogue.h GPXParser.h Components.h Track.h Polygon.h\
 	Waypoint.h functions.h MainWindow.h Permissions.h LoginDialogue.h Map.h\
-	LandsatManager.h
-Components.o : Components.h Track.h Waypoint.h Segment.h Polygon.h functions.h
-Track.o : Track.h Segment.h
-Segment.o : Track.h Segment.h
+	LandsatManager.h TrackSeg.h
+Components.o : Components.h Track.h Waypoint.h Polygon.h functions.h
+Track.o : Track.h TrackSeg.h
 Waypoint.o : Waypoint.h
 Polygon.o : Polygon.h functions.h
 WaypointDialogue.o : WaypointDialogue.h
 functions.o: functions.h
 GPXParser.o: GPXParser.h Components.h 
-GPSDevice.o: Track.h Waypoint.h Segment.h
+GPSDevice.o: Track.h Waypoint.h 
 Permissions.o: Permissions.h
 LoginDialogue.o : LoginDialogue.h
 Polygon.o : Polygon.h
 LandsatManager.o : LandsatManager.h landsat.h
+TrackSeg.o : TrackSeg.h functions.h
 grab_landsat.o : landsat.h

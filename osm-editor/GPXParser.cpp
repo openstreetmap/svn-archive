@@ -31,9 +31,9 @@ namespace OpenStreetMap
 GPXParser::GPXParser(  )
 {
 	inDoc = inWpt = inTrk = inName = inTrkpt = inType = 
-	inTrkseg = foundSegType = inPolygon = false;
+	inTrkseg = inPolygon = false;
 	components = new Components;
-	trkptCount = 0;
+	curSeg = 0;
 }
 
 bool GPXParser::startDocument()
@@ -65,7 +65,8 @@ bool GPXParser::startElement(const QString&,const QString&,
 		else if (element=="trkseg")
 		{
 			inTrkseg=true;
-			segStart=trkptCount;
+			curType = "track";
+			components->newSegment();
 		}
 		else if (element=="polygon")
 		{
@@ -77,14 +78,14 @@ bool GPXParser::startElement(const QString&,const QString&,
 		else if (element=="type" && (inWpt||inTrk||inTrkseg||inPolygon))
 		{
 			inType=true;
-			if(inTrkseg) foundSegType=true;
 		}
 		else if (element=="time" && (inWpt||inTrkpt))
+		{
 			inTime=true;
+		}
 		else if (element=="trkpt" && inTrk)
 		{
 			inTrkpt = true;
-			trkptCount++;
 		}
 
 		if(element=="wpt"||element=="trkpt"||element=="polypt")
@@ -111,7 +112,7 @@ bool GPXParser::endElement(const QString&,const QString&,
 {
 	if(inTrkpt && element=="trkpt")
 	{
-		components->addTrackpoint(curTimestamp,curLat,curLong);
+		components->addTrackpoint(curSeg,curTimestamp,curLat,curLong);
 		inTrkpt = false;
 	}
 
@@ -133,6 +134,8 @@ bool GPXParser::endElement(const QString&,const QString&,
 	else if(inType && element=="type")
 		inType=false;
 
+	else if(inTime && element=="time")
+		inTime=false;
 
 	
 	else if(inWpt && element=="wpt")
@@ -149,9 +152,8 @@ bool GPXParser::endElement(const QString&,const QString&,
 	// If the segment had a type, add the segment to the segment table.
 	else if (inTrkseg && element=="trkseg")
 	{
-		if(foundSegType)
-			components->addSegdef(segStart,trkptCount-1,curType);
-		inTrkseg = foundSegType = false;
+		components->setSegType(curSeg++,curType);
+		inTrkseg = false;
 	}
 
 	return true;
@@ -167,7 +169,11 @@ bool GPXParser::characters(const QString& characters)
 	else if(inType)
 		curType = characters; 
 	else if(inTime)
+	{
 		curTimestamp = characters; // 10/04/05 timestamp now string 
+//		cerr<<curTimestamp<<endl;
+	}
+
 	return true;
 }
 

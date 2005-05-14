@@ -25,7 +25,6 @@
 #include "GPSDevice.h"
 #include "gps.h"
 
-#include "Segment.h"
 #include "functions.h"
 
 #include <map>
@@ -103,6 +102,8 @@ int GPSDevice::garminGetTrack(const char* port,Track* track)
 	std::cerr << "init was successful" << std::endl;	
 	ntrackpts = GPS_Command_Get_Track(port,&trackpts);
 
+	track->newSegment();
+
 	// NB the first track point from a Garmin appears to contain nonsense 
 	// information, so trash it. It's only the *first track point*. Switching
 	// the GPS off and on again, or losing the signal, doesn't have the 
@@ -114,7 +115,7 @@ int GPSDevice::garminGetTrack(const char* port,Track* track)
 
 		// 10/04/05 now timestamps are stored in trackpoints in GPX format
 		mkgpxtime(gpx_timestamp, trackpts[count]->Time);
-		track->addTrackpt(gpx_timestamp,
+		track->addTrackpt(0, gpx_timestamp,
 						  trackpts[count]->lat,
 						  trackpts[count]->lon);
 

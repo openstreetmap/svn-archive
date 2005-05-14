@@ -27,6 +27,8 @@ using std::setfill;
 using std::setprecision;
 using std::cerr;
 
+using std::cout;
+
 namespace OpenStreetMap 
 {
 
@@ -40,7 +42,7 @@ void Components::toGPX(const char* filename)
 		   <<"xmlns=\"http://www.topografix.com/GPX/1/0\">" << endl;
 
 	if(waypoints)waypoints->toGPX(outfile);
-	if(track)track->toGPX(outfile,segdefs);
+	if(track)track->toGPX(outfile);
 
 	for(int count=0; count<polygons.size(); count++)
 		polygons[count]->toGPX(outfile);
@@ -58,75 +60,6 @@ void Components::clearAll()
 		delete *i;
 }
 
-void Components::addSegdef(int start, int end, const QString& type)
-{
-	segdefs.insert(findPlace(start),SegDef(start,end,type));
-}
-
-vector<SegDef>::iterator Components::findPlace(int start)
-{	
-	for(vector<SegDef>::iterator i=segdefs.begin(); i!=segdefs.end(); i++)
-	{
-		if(i->start > start)
-			return i;
-	}
-	return segdefs.end();
-}
-
-void Components::printSegDefs()
-{
-	cout<<"SegDefs::print()"<<endl;
-	for(vector<SegDef>::iterator i=segdefs.begin(); i!=segdefs.end(); i++)
-	{
-		cout << i->start << " " << i->end <<" " << i->type << endl;
-	}
-}
-
-bool Components::deleteTrackpoints(int start,int end)
-{
-	if(track->deletePoints(start,end))
-	{
-		cerr<<"Deletion= "<< start << " " << end << endl;
-		vector<SegDef>::iterator j;
-		int deletedPoints = (end-start)+1;
-		bool startSegment;
-
-		for(vector<SegDef>::iterator i=segdefs.begin(); i!=segdefs.end(); i++)
-		{
-			startSegment = false;
-
-			// The current segment contains the deletion start...
-			if(start>=i->start && start<=i->end)
-			{
-				cerr<<"Segment start: " << i->start << " end " 
-						<< i->end << " contains deletion start: " << start
-						<< endl;
-
-				i->end = (end > i->end) ? start-1: i->end - deletedPoints;
-				startSegment=true;
-			}
-
-			if(i->start>=start && i->end<=end)
-			{
-				cerr<<"Whole of segment " 
-					<< i->start << "," << i->end << "is in deletion" << endl;
-				j=i-1;			
-				segdefs.erase(i);
-				i=j;
-			}
-			else if(i->start > start)
-			{
-				cerr<<"Reducing points in non-start segment" << endl;
-				cerr<<"Old: " << i->start << "," << i->end << endl;
-				i->start = (i->start < end) ? start:i->start - deletedPoints;
-				i->end -= deletedPoints;
-				cerr<<"New: " << i->start << "," << i->end << endl;
-			}
-		}
-	}
-	return false;	
-}
-
 bool Components::addWaypoint(const Waypoint& w)
 {
 	if(waypoints)
@@ -137,11 +70,12 @@ bool Components::addWaypoint(const Waypoint& w)
 	return false;
 }
 
-bool Components::addTrackpoint(const QString& timestamp,double lat,double lon)
+bool Components::addTrackpoint(int seg,
+				const QString& timestamp,double lat,double lon)
 {
-	if(track)
+	if(track && seg>=0 && seg<track->nSegs())
 	{
-		track->addTrackpt(timestamp,lat,lon);
+		track->getSeg(seg)->addPoint(timestamp,lat,lon);
 		return true;
 	}
 	return false;
@@ -154,15 +88,6 @@ Waypoint Components::getWaypoint(int i) throw(QString)
 		throw QString("No waypoints defined!");
 	}
 	return waypoints->getWaypoint(i);
-}
-
-TrackPoint Components::getTrackpoint(int i) throw(QString)
-{
-	if(!track)
-	{
-		throw QString("No track defined!");
-	}
-	return track->getPoint(i);
 }
 
 bool Components::setTrackID(const char* i)

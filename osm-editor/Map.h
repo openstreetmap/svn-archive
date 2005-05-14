@@ -35,6 +35,9 @@ public:
 		{ return LatLon(topLeft.lat-((double)pos.y)/scale,
 						  topLeft.lon+((double)pos.x)/scale); }
 
+	double latLonDist(double pixelDist)
+		{ return pixelDist/scale; }
+
 	void move(double edis,double ndis)
 		{ topLeft.lon += edis*1000; topLeft.lat += ndis*1000; }
 

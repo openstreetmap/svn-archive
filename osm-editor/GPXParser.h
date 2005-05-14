@@ -54,6 +54,7 @@ private:
 	QString curTimestamp; // 10/04/05 timestamp now string
 	int segStart, trkptCount;
 	Polygon *curPolygon;
+	int curSeg;
 
 public:
 	bool startDocument();

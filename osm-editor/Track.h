@@ -22,45 +22,41 @@
 #include <vector>
 #include <qstring.h>
 #include <fstream>
+#include "TrackSeg.h"
 using std::vector;
 
+#include<iostream>
+using namespace std;
 
 namespace OpenStreetMap 
 {
-	
-struct SegDef;
 
-struct TrackPoint
-{
-	// 10/04/05 now storing the timestamp as the standard GPX format
-	QString timestamp;
-	double lat, lon;
-
-	TrackPoint(){lat=lon=0; timestamp=""; }
-	TrackPoint(const QString& t, double lt, double ln)
-		{ timestamp=t; lat=lt; lon=ln; }
-};
 
 class Track 
 {
 private:
-	vector<TrackPoint> points;
 	QString id;	
+	vector<TrackSeg*> segs;
 	void writeTrkpt(std::ostream&, int);
-	
+	vector<SegPointInfo> findNearestSeg(const LatLon& p, double limit);
 
 public:
 	Track() { id="noname"; }
+	~Track();
+	void newSegment() {segs.push_back(new TrackSeg); }
 	void setID(const QString& i)
 		{ id=i; }
 	QString getID() 
 		{ return id; }
-	void addTrackpt(const QString& t, double lat, double lon)
-		{ points.push_back(TrackPoint(t,lat,lon)); }
-	TrackPoint getPoint(int i) throw(QString);
-	void toGPX(std::ostream&,const vector<SegDef>&);
-	int size(){ return points.size(); }
-	bool deletePoints(int,int);
+	bool addTrackpt(int seg,const QString& t, double lat, double lon);
+	void toGPX(std::ostream&);
+	bool deletePoints(const LatLon& p1, const LatLon& p2, double limit);
+	bool segmentise(const QString& newType, const LatLon& p1,
+						const LatLon& p2, double limit);
+	int nSegs() { return segs.size(); }
+	TrackSeg *getSeg(int i) { return (i>=0 && i<segs.size()) ? segs[i]: NULL;  }
+	bool setSegType(int i,const QString& t); 
+	bool hasPoints();
 };
 
 

@@ -1,9 +1,114 @@
-<!-- This data is copyright Nick Whitelegg and licenced under the
-     Creative Commons Licence (Attribution/ShareAlike) v2.0. -->
 <gpx version="1.0" creator="Hogweed Software Freemap::Components class" xmlns="http://www.topografix.com/GPX/1/0">
+<wpt lat="50.896" lon="-1.60613">
+<name>001</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8975" lon="-1.60883">
+<name>002</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.896" lon="-1.61533">
+<name>003</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8936" lon="-1.6135">
+<name>004</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.894" lon="-1.62137">
+<name>005</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8908" lon="-1.61586">
+<name>006</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8871" lon="-1.61917">
+<name>007</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8858" lon="-1.62224">
+<name>008</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8864" lon="-1.62669">
+<name>009</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8953" lon="-1.63308">
+<name>010</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8954" lon="-1.66004">
+<name>011</name>
+<type>tunnel</type>
+</wpt>
+<wpt lat="50.9022" lon="-1.6538">
+<name>012</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.9051" lon="-1.646">
+<name>013</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.9069" lon="-1.62868">
+<name>015</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.9067" lon="-1.62016">
+<name>016</name>
+<type>tunnel</type>
+</wpt>
+<wpt lat="50.9024" lon="-1.61289">
+<name>017</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.8875" lon="-1.61834">
+<name>ACRDN</name>
+<type>restaurant</type>
+</wpt>
+<wpt lat="50.8864" lon="-1.62084">
+<name>ACRES DOWN</name>
+<type>car park</type>
+</wpt>
+<wpt lat="50.8884" lon="-1.61709">
+<name>FORD</name>
+<type>caution</type>
+</wpt>
+<wpt lat="50.8912" lon="-1.6513">
+<name>FORD2</name>
+<type>caution</type>
+</wpt>
+<wpt lat="50.8971" lon="-1.61454">
+<name>GROVE FM</name>
+<type>farm</type>
+</wpt>
+<wpt lat="50.8892" lon="-1.62879">
+<name>MEML SEAT</name>
+<type>waypoint</type>
+</wpt>
+<wpt lat="50.9058" lon="-1.64612">
+<name>OCKNELL</name>
+<type>campsite</type>
+</wpt>
+<wpt lat="50.8901" lon="-1.6167">
+<name>ROBINS Bush FM</name>
+<type>farm</type>
+</wpt>
+<wpt lat="50.8911" lon="-1.62987">
+<name>TRIG PT</name>
+<type>summit</type>
+</wpt>
+<wpt lat="50.8982" lon="-1.60112">
+<name>Trusty Servant</name>
+<type>pub</type>
+</wpt>
 <trk>
 <name>ACTIVE LOG</name>
 <trkseg>
+<extensions>
+<type>track</type>
+</extensions>
 <trkpt lat="50.8982" lon="-1.60115">
 <time>1111237167</time>
 </trkpt>
@@ -1872,108 +1977,4 @@
 </trkpt>
 </trkseg>
 </trk>
-<wpt lat="50.896" lon="-1.60613">
-<name>001</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8975" lon="-1.60883">
-<name>002</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.896" lon="-1.61533">
-<name>003</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8936" lon="-1.6135">
-<name>004</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.894" lon="-1.62137">
-<name>005</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8908" lon="-1.61586">
-<name>006</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8871" lon="-1.61917">
-<name>007</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8858" lon="-1.62224">
-<name>008</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8864" lon="-1.62669">
-<name>009</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8953" lon="-1.63308">
-<name>010</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8954" lon="-1.66004">
-<name>011</name>
-<type>tunnel</type>
-</wpt>
-<wpt lat="50.9022" lon="-1.6538">
-<name>012</name>
-<type>bridge</type>
-</wpt>
-<wpt lat="50.9051" lon="-1.646">
-<name>013</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.9069" lon="-1.62868">
-<name>015</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.9067" lon="-1.62016">
-<name>016</name>
-<type>tunnel</type>
-</wpt>
-<wpt lat="50.9024" lon="-1.61289">
-<name>017</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.8875" lon="-1.61834">
-<name>ACRDN</name>
-<type>restaurant</type>
-</wpt>
-<wpt lat="50.8864" lon="-1.62084">
-<name>ACRES DOWN</name>
-<type>car park</type>
-</wpt>
-<wpt lat="50.8884" lon="-1.61709">
-<name>FORD</name>
-<type>caution</type>
-</wpt>
-<wpt lat="50.8912" lon="-1.6513">
-<name>FORD2</name>
-<type>caution</type>
-</wpt>
-<wpt lat="50.8971" lon="-1.61454">
-<name>GROVE FM</name>
-<type>farm</type>
-</wpt>
-<wpt lat="50.8892" lon="-1.62879">
-<name>MEML SEAT</name>
-<type>waypoint</type>
-</wpt>
-<wpt lat="50.9058" lon="-1.64612">
-<name>OCKNELL</name>
-<type>campsite</type>
-</wpt>
-<wpt lat="50.8901" lon="-1.6167">
-<name>ROBINS Bush FM</name>
-<type>farm</type>
-</wpt>
-<wpt lat="50.8911" lon="-1.62987">
-<name>TRIG PT</name>
-<type>summit</type>
-</wpt>
-<wpt lat="50.8982" lon="-1.60112">
-<name>Trusty Servant</name>
-<type>pub</type>
-</wpt>
 </gpx>

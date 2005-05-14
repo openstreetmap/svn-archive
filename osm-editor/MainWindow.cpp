@@ -99,6 +99,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	actionMode = ACTION_TRACK;
 	curSegType = "A road"; 
 	selectedTrackpoint = -1;
+	nSelectedPoints = 0;
 
 
 	segpens["footpath"]= QPen (Qt::green, 2);
@@ -110,6 +111,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	segpens["A road"]= QPen (Qt::black, 4);
 	segpens["motorway"]= QPen (Qt::black, 6);
 	segpens["railway"]= QPen (Qt::gray, 4);
+	segpens["track"]= QPen (Qt::darkGray, 2);
 
 	polydata["wood"]=QColor(192,224,192);
 	polydata["lake"]=QColor(192,192,255); 
@@ -309,6 +311,8 @@ void MainWindow::open()
 			components = newComponents;
 			curFilename = filename;
 			update();
+
+			components->toGPX("dump.gpx");
 		}
 	}
 }
@@ -316,6 +320,7 @@ void MainWindow::open()
 Components * MainWindow::doOpen(const QString& filename)
 {
 	Components * comp;
+
 
 	GPXParser parser;
 	QFile file(filename);
@@ -325,8 +330,6 @@ Components * MainWindow::doOpen(const QString& filename)
 	reader.parse(source);
 	comp = parser.getComponents();	
 	
-
-
 	return comp;
 }
 
@@ -373,7 +376,6 @@ void MainWindow::quit()
 void MainWindow::setMode(int m)
 {
 	actionMode=  m;
-	cout << "New mode: "<< m << endl;
 
 	// Display the appropriate mode toolbar button and menu item checked, and
 	// all the others turned off.
@@ -384,7 +386,6 @@ void MainWindow::setMode(int m)
 void MainWindow::setSegType(const QString &t)
 {
 	curSegType =   t;
-	cerr << curSegType << endl;
 }
 
 void MainWindow::setPolygonType(const QString &t)
@@ -447,41 +448,31 @@ void MainWindow::drawTrack(QPainter& p)
 {
 	if(components->hasTrack())
 	{
-	QPen trackPen(Qt::darkGray,2); 
-	int curSeg = 0;
-	TrackPoint curPt = components->getTrackpoint(0);
-	ScreenPos lastPos = map.getScreenPos(curPt.lat,curPt.lon), curPos;
-	QPen curPen=trackPen;
-	SegDef segdef;
-	if(components->nSegdefs()) segdef=components->getSegdef(0);
+		QPen trackPen(Qt::darkGray,2); 
+		TrackPoint curPt;
+		TrackSeg *curSeg;
+		ScreenPos lastPos = map.getScreenPos(curPt.lat,curPt.lon), curPos;
+		QPen curPen=trackPen;
 
-	for(int count=1; count<components->nTrackpoints(); count++)
-	{
-		if(count-1 == segdef.end)
+		for(int seg=0; seg<components->nSegs(); seg++)
 		{
-			curPen=trackPen;
-			if(curSeg<components->nSegdefs()-1)
+			curSeg = components->getSeg(seg);
+			curPen = segpens[curSeg->getType()];
+			curPt = curSeg->getPoint(0);
+			lastPos = map.getScreenPos(curPt.lat,curPt.lon);
+			for(int pt=1; pt<curSeg->nPoints(); pt++)
 			{
-				curSeg++;
-				segdef=components->getSegdef(curSeg);
+				curPt = curSeg->getPoint(pt);	
+				curPos = map.getScreenPos(curPt.lat,curPt.lon);	
+				p.setPen(curPen);
+				p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
+				if(pt==selectedTrackpoint)
+					drawTrackpoint(p,Qt::red,curPos.x,curPos.y);
+				else if(trackpoints)
+					drawTrackpoint(p,curPen,curPos.x,curPos.y,1,pt);
+				lastPos = curPos;
 			}
 		}
-
-		if(count-1 == segdef.start)
-		{
-			curPen=segpens[segdef.type];
-		}
-
-		curPt = components->getTrackpoint(count);	
-		curPos = map.getScreenPos(curPt.lat,curPt.lon);	
-		p.setPen(curPen);
-		p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
-		if(count==selectedTrackpoint)
-			drawTrackpoint(p,Qt::red,curPos.x,curPos.y);
-		else if(trackpoints)
-			drawTrackpoint(p,curPen,curPos.x,curPos.y,1,count);
-		lastPos = curPos;
-	}
 	}
 }
 
@@ -550,21 +541,22 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 void MainWindow::mousePressEvent(QMouseEvent* ev)
 {
 	int nearest;
+	double LIMIT=map.latLonDist(10);
 
 	switch(actionMode)
 	{
 		case ACTION_TRACK:
-			if(selectedTrackpoint==-1)
-				initSegmentSelection(ev->x(),ev->y());
+			if(nSelectedPoints==0)
+			{
+				p1 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				nSelectedPoints++;
+			}
 			else
 			{
-				endSegmentSelection(ev->x(),ev->y());
-
-				components->addSegdef(selectedTrackpoint,selectedTrackpoint2, 
-					curSegType);
-				components->printSegDefs();
+				p2 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				components->segmentiseTrack(curSegType,p1,p2,LIMIT);
 				update();
-				selectedTrackpoint = -1;
+				nSelectedPoints=0;
 			}
 			break;
 
@@ -573,16 +565,17 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 			break;
 
 		case ACTION_DELETE:
-			if(selectedTrackpoint==-1)
-				initSegmentSelection(ev->x(),ev->y());
+			if(nSelectedPoints==0)
+			{
+				p1 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				nSelectedPoints++;
+			}
 			else
 			{
-				endSegmentSelection(ev->x(),ev->y());
-				components->deleteTrackpoints(selectedTrackpoint,
-											selectedTrackpoint2);
-				components->printSegDefs();
+				p2 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				components->deleteTrackpoints(p1,p2,LIMIT);
 				update();
-				selectedTrackpoint = -1;
+				nSelectedPoints=0;
 			}
 			break;
 
@@ -598,58 +591,6 @@ void MainWindow::initPolygon()
 	mouseDown=true;
 }
 
-void MainWindow::initSegmentSelection(int x,int y)
-{
-	int nearest = findNearestTrackpoint(x,y,10); 
-
-	if(nearest>=0) 
-	{
-		cout << "initSegmentSelection():Found track point:" << nearest << endl;
-		selectedTrackpoint = nearest;
-		update();
-	}
-}
-
-void MainWindow::endSegmentSelection(int x,int y)
-{
-	if(selectedTrackpoint >= 0)
-	{
-		int nearest = findNearestTrackpoint(x,y,10); 
-
-		if(nearest>=0) 
-		{
-			cout << "endSegmentSelection(): Found track point:" 
-											<< nearest << endl;
-			selectedTrackpoint2 = nearest;
-		}
-	}
-}
-
-
-int MainWindow::findNearestTrackpoint(int x,int y,int limit)
-{
-	ScreenPos curPos;
-	double prevDist = limit, dist;
-	int nearest=-1;
-	TrackPoint curPt;
-	if(components->hasTrack())
-	{
-		for(int count=0; count<components->nTrackpoints(); count++)
-		{
-			curPt = components->getTrackpoint(count);
-			curPos = map.getScreenPos(curPt.lat,curPt.lon);	
-			if((dist=OpenStreetMap::dist(x,y,curPos.x,curPos.y))<limit)
-			{
-				if(dist<prevDist)
-				{
-					prevDist=dist;
-					nearest=count;
-				}
-			}
-		}
-	}
-	return nearest;
-}
 
 // TODO: the first part of this is doing almost exactly the same as 
 // findNearestTrackpoint(), above. Investigate the possibility of doing this
@@ -862,7 +803,6 @@ void MainWindow::grabTracks()
 						(XmlRpcValue::makeDouble(llSE.lon));
 				result=client.call("openstreetmap.getPoints",param_array);
 				XmlRpcValue array=result.getArray();
-				cerr << "array size : " << array.arraySize() << endl;
 				QString wpName;
 				for(int count=0; count<array.arraySize(); count+=2)
 				{
@@ -871,7 +811,6 @@ void MainWindow::grabTracks()
 					value = array.arrayGetItem(count+1);
 					double curLon = value.getDouble();
 					wpName.sprintf("OSM-%03d",count);	
-					cout << "lat:" << curLat << " lon:" << curLon  << endl;
 					components->addWaypoint
 							(Waypoint(wpName,curLat,curLon,"waypoint"));
 				}

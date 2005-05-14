@@ -17,102 +17,139 @@
 
  */
 #include "Track.h"
-#include "Segment.h"
 
+#include <cstdio>
 
 using std::endl;
+
+
+#include <iostream>
+using namespace std;
 
 namespace OpenStreetMap
 {
 
-void Track::writeTrkpt(std::ostream& outfile, int count)
+Track::~Track()
 {
-		outfile << "<trkpt lat=\"" << points[count].lat << 
-				"\" lon=\"" << points[count].lon << "\">"
-				<< endl << "<time>"<<points[count].timestamp<<"</time>"<<endl
-				<<"</trkpt>"<<endl;
+	for(int count=0; count<segs.size(); count++)
+		delete segs[count];
 }
 
 // Write a track to GPX.
-// Quick whinge: I've been forced to endlessly check for array overflows
-// in this method. This adds considerably to the code and reduces its 
-// elegance significantly...
-void Track::toGPX(std::ostream &outfile,const vector<SegDef> &segdefs)
+void Track::toGPX(std::ostream &outfile)
 {
-	int segcount=0;
-	bool clone=false;
-
 	outfile<<"<trk>" << endl << "<name>" << id << "</name>" << endl;
 
-	for(int count=0; count<points.size(); count++)
-	{
-		// Start of a defined path segment
-		if(clone||(segcount<segdefs.size() && count == segdefs[segcount].start))
-		{
-			outfile << "<trkseg><extensions>" << endl
-				    << "<type>" << segdefs[segcount].type << "</type>"<<endl
-					<< "</extensions>" << endl;
+	for(int count=0; count<segs.size(); count++)
+		segs[count]->toGPX(outfile);
 
-			// Write the last track point if we're cloning
-			if(clone)
+	outfile<<"</trk>"<<endl;
+}
+
+vector<SegPointInfo> Track::findNearestSeg(const LatLon& p, double limit)
+{
+	vector<SegPointInfo>lowest;
+	SegPointInfo a;
+	double lowestDist = limit;
+
+	for(int count=0; count<segs.size(); count++)
+	{
+		a=segs[count]->findNearestTrackpoint(p,limit);
+		if(a.point>=0 && a.dist<=lowestDist)
+		{
+			a.seg=count;
+			lowest.push_back(a);
+			lowestDist=a.dist;
+		}
+	}
+	return lowest;
+}
+
+bool Track::deletePoints(const LatLon& p1, const LatLon& p2, double limit)
+{
+	vector<SegPointInfo> a1 = findNearestSeg(p1,limit), a2 = findNearestSeg(p2,limit);
+	for(int count=0; count<a1.size(); count++)
+	{
+		for(int count2=0; count2<a2.size(); count2++)
+		{
+			if(a1[count].seg==a2[count2].seg && a1[count].seg>=0)
 			{
-				writeTrkpt(outfile,count-1);
-				clone=false;
+				segs[a1[count].seg]->deletePoints(a1[count].point,
+													a2[count2].point);
+				return true;
 			}
 		}
-		// Start of an undefined segment
-		else if ( (segcount>0 && count==segdefs[segcount-1].end+1) ||
-				  count==0)
-		{
-			outfile << "<trkseg>" << endl;
-		}
-
-		writeTrkpt(outfile,count);
-
-		// End of a defined path segment
-		if(segcount<segdefs.size() && count==segdefs[segcount].end)
-		{
-			outfile << "</trkseg>" << endl;
-			segcount++;
-
-			// If the new defined segment starts with the current point
-			// (the same as the end point of the old defined segment)
-			// we will clone the point between the two segments.
-			if(segcount<segdefs.size() && count==segdefs[segcount].start)
-				clone=true;
-		}
-
-		// End of an undefined segment
-		else if ( count==points.size()-1 || 
-				 (segcount<segdefs.size()&& count==segdefs[segcount].start-1))
-		{
-			outfile << "</trkseg>" << endl;
-		}
 	}
-	outfile << "</trk>"<<endl;
-}
-bool Track::deletePoints(int start, int end)
-{
-	if(start>=0&&start<points.size()&&end>=0&&end<points.size())
-	{
-		vector<TrackPoint>::iterator i; 
-		for(int count=0; count<(end-start)+1; count++)
-		{
-			i=points.begin()+start;	
-			points.erase(i);
-		}
-		return true;
-	}
-
 	return false;
 }
 
-TrackPoint Track::getPoint(int i) throw (QString)
-{ 
-	if(i<0 || i>=points.size())
-		throw QString("No track point at index " + i);
-	
- 	return points[i]; 
+bool Track::segmentise(const QString& newType, const LatLon& p1,
+						const LatLon& p2, double limit)
+{
+	vector<SegPointInfo> a1 = findNearestSeg(p1,limit), a2 = findNearestSeg(p2,limit);
+
+	for(int count=0; count<a1.size(); count++)
+	{
+		for(int count2=0; count2<a2.size(); count2++)
+		{
+			if(a1[count].seg==a2[count2].seg && a1[count].seg>=0)
+			{
+				int start = (a1[count].point> a2[count2].point) ? 
+								a2[count2].point : a1[count].point, 
+					end = (a1[count].point>a2[count2].point) ? 
+								a1[count].point: a2[count2].point;
+		
+				TrackSeg *newSeg=new TrackSeg, *postSeg=new TrackSeg, 
+				 		*curSeg = segs[a1[count].seg];
+
+				for(int count=start; count<=end; count++)
+					newSeg->addPoint(curSeg->getPoint(count));
+
+				for(int count=end; count<curSeg->nPoints(); count++)
+					postSeg->addPoint(curSeg->getPoint(count));
+		
+				postSeg->setType(curSeg->getType());
+				newSeg->setType(newType);		
+
+				curSeg->deletePoints(start+1,curSeg->nPoints()-1);
+
+				segs.push_back(newSeg);
+				segs.push_back(postSeg);
+
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
+bool Track::hasPoints()
+{
+	for(int count=0; count<segs.size(); count++)
+	{
+		if(segs[count]->nPoints())
+			return true;
+	}
+	return false;
+}
+
+bool Track::setSegType(int i,const QString& t)
+{ 
+	if(i>=0 && i<segs.size())
+	{
+		segs[i]->setType(t); 
+		return true;
+	}
+	return false;
+}
+
+bool Track::addTrackpt(int seg,const QString& t, double lat, double lon)
+{ 
+	if(seg>=0 && seg<segs.size())
+	{
+		segs[seg]->addPoint(t,lat,lon); 
+		return true;
+	}
+	return false;
+}
 }

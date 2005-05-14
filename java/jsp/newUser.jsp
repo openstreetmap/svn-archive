@@ -3,23 +3,23 @@
 <%@ page import="javax.mail.*" %>
 <%@ page import="javax.mail.internet.*" %>
 <%@ page import="org.apache.xmlrpc.*" %>
+<%@ page import="org.openstreetmap.server.osmServerSQLHandler" %>
 <%@ page import="org.openstreetmap.server.osmServerHandler" %>
 
 <%@ page contentType="text/html" %>
 <%@ include file="include/top.jsp" %>
 <div id="main_area">
-
 <%
 
 
 String smtpServer = "localhost";
 
-// get the message parameters from the HTML page
 String from = "bounce@openstreetmap.org";
 String subject = "Your openstreetmap.org account request";
 String to = "";
 String text = ""; //req.getParameter("text");
 
+// get the message parameters from the HTML page
 String action = request.getParameter("action");
 String email = request.getParameter("email");
 String pass1 = request.getParameter("pass1");
@@ -53,17 +53,9 @@ else
   {
     try
     {
+      osmServerSQLHandler osmSQLH = new osmServerSQLHandler();
 
-      XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
-
-      Vector v = new Vector();
-
-      v.addElement(email);
-      v.addElement(sPassedToken);
-
-      Boolean bReturn = (Boolean)xmlrpc.execute("openstreetmap.confirmUser",v);
-
-      if( bReturn.booleanValue() )
+      if(osmSQLH.confirmUser(email, sPassedToken))
       {
         %>
          Thanks, all done! Your account is now active.<br><br>You can <a href="login.jsp">login</a> now!
@@ -74,6 +66,8 @@ else
         throw new Exception();
 
       }
+
+      osmSQLH.closeDatabase();
 
 
     } 
@@ -98,32 +92,24 @@ else
 
       try {
 
-        boolean bXmlSuccess = false;
+        osmServerSQLHandler osmSQLH = new osmServerSQLHandler();
 
+        boolean bServerSuccess = false;
 
-        XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
-
-        Vector v = new Vector();
-
-        v.addElement(email);
-
-        boolean bUserExists = ((Boolean)xmlrpc.execute("openstreetmap.userExists",v)).booleanValue();
-
-        v = new Vector();
-
-        v.addElement(email);
-        v.addElement(pass1);
-
-        String sAddUserToken = (String)xmlrpc.execute("openstreetmap.addUser",v);
+        boolean bUserExists = osmSQLH.userExists(email);
+        
+        String sAddUserToken = osmSQLH.addUser(email, pass1);
+        
+        osmSQLH.closeDatabase();
 
         if( !sAddUserToken.equals("ERROR"))
         {
 
-          bXmlSuccess = true;
+          bServerSuccess = true;
 
         }
 
-        if( !bUserExists && bXmlSuccess)
+        if( !bUserExists && bServerSuccess)
         {
 
 

@@ -31,7 +31,7 @@ import org.openstreetmap.util.gpspoint;
 /** 
  * osmServerHandler is whats exposed over XMLRPC to client apps
  * @author Steve Coast
- * @version .00000000001
+ * @version .1
  */
 public class osmServerHandler
 {
@@ -77,10 +77,10 @@ public class osmServerHandler
 
 
   /**
-   * logs you in
+   * Logs you in
    * @param user your username
    * @param pass your password
-   * @return a token to be used when manipulating data
+   * @return a token to be used when manipulating data. Returns "ERROR" if there was something wrong with your user/pass.
    */
   public String login(String user, String pass)
   {
@@ -89,35 +89,6 @@ public class osmServerHandler
      
   } // login
  
-
-  /**
-   * adds a user
-   * @param user the username
-   * @param pass the password
-   * @return the confirmation string to be used
-   */
-  public String addUser(String user, String pass)
-  {
-    
-    return  osmSQLH.addUser(user,pass);
-
-     
-  } // addUser
-
-
-  /**
-   * confirms a user
-   * @param user the username
-   * @param token the confirmation token they got emailed
-   * @return whether they were successfully confirmed
-   */
-  public boolean confirmUser(String user, String token)
-  {
-    
-    return  osmSQLH.confirmUser(user,token);
-
-     
-  } // addUser
 
   /**
    * checks to see if given user exists

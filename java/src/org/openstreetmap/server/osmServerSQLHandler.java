@@ -65,6 +65,21 @@ public class osmServerSQLHandler extends Thread
 
   } // closeDatabase
 
+
+  public osmServerSQLHandler()
+  {
+
+    sSQLConnection = "jdbc:mysql://128.40.59.181/openstreetmap?useUnicode=true&characterEncoding=latin1";
+
+    sUser = "openstreetmap";
+    sPass = "openstreetmap";
+    
+    connect();
+    
+
+  } // osmServerSQLHandler
+
+
   public osmServerSQLHandler(String sTSQLConnection,
       String sTUser,
       String sTPass)
@@ -74,6 +89,13 @@ public class osmServerSQLHandler extends Thread
     sSQLConnection = sTSQLConnection;
     sUser = sTUser;
     sPass = sTPass;
+
+    connect();
+
+  }
+
+  private void connect()
+  {
 
     try{
 
@@ -304,7 +326,7 @@ public class osmServerSQLHandler extends Thread
       int gpx_id)
   {
 
-    
+
 
     try{
 
@@ -1763,7 +1785,7 @@ public class osmServerSQLHandler extends Thread
 
   } // newLine
 
-  
+
   public synchronized Vector getLines(int nnUID[])
   {
 
@@ -1774,7 +1796,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "select node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
-      
+
       for(int i = 0; i < nnUID.length; i++)
       {
         sSQL = sSQL + " node_a = " + nnUID[i] + " or node_b=" + nnUID[i];
@@ -1786,9 +1808,9 @@ public class osmServerSQLHandler extends Thread
         }
 
       }
-      
+
       sSQL = sSQL + ") ) as f, (select uid,visible,max(timestamp) as mtime from street_segments group by uid) as h where h.mtime = f.timestamp and h.uid = f.uid" ;
-      
+
       System.out.println("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);

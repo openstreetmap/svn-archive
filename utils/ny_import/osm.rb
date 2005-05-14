@@ -21,7 +21,7 @@ module OSM
       open_journal
       @zip_key_id = get_key_id(ZIP_CODE_KEY_NAME)
       @name_key_id = get_key_id(NAME_KEY_NAME)
-      $stderr.puts "read keys, ZIP = #{@zip_key_id}, name = #{@name_key_id}"
+      $stderr.puts "Retrieved keys: name = #{@name_key_id}, ZIP = #{@zip_key_id}"
     end
     
     def get_key_id(key_name)
@@ -50,7 +50,7 @@ module OSM
     end
     
     def close_journal
-      @journal.close
+      @journal.close unless @journal.nil? || @journal.closed?
     end
     
     def journal(s)
@@ -61,9 +61,12 @@ module OSM
       close_journal
       File.open(JOURNAL_PATH, File::RDONLY) do |f|
         f.readlines.each do |line|
-          code_snippet = line.strip.to_i
-          success = eval("call#{code_snippet}")
-          $stderr.puts "Could not rollback on line \"#{code_snippet}\"" unless success
+          code_snippet = line.strip
+          begin
+            success = eval("call#{code_snippet}")
+          rescue XMLRPC::FaultException => ex
+            $stderr.puts "Could not rollback on line \"#{code_snippet}\"" unless success
+          end
         end
       end
       File.delete(JOURNAL_PATH)
@@ -80,7 +83,7 @@ module OSM
     def newLine(from_lat, from_long, to_lat, to_long)
       from = newNode(from_lat, from_long)
       to = newNode(to_lat, to_long)
-      line = call("openstreetmap.newLine", @token, from, to)
+      line = call("newLine", @token, from, to)
       raise "Could not create line from (#{lat1} #{long1}) to (#{lat2} #{long2})" if line == -1
       journal("(\"openstreetmap.deleteLine\", @token, #{line})")
       return line
@@ -92,6 +95,7 @@ module OSM
     
     def newStreet(name, coords, from_zip = nil, to_zip = nil)
       raise "Attempt to create street with less than three coordinates" unless coords.length >= 3
+      street_id = nil
       (0..(coords.length - 2)).each do |i|
         from_lat, from_long = coords[i]
         to_lat, to_long = coords[i + 1]

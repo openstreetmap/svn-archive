@@ -83,8 +83,8 @@ end
 begin
   osm = OpenStreetMap.new("b@gimpert.com", "january")
   if ARGV == ["--reset"]
-    osm.reset
-    puts "reset nodes"
+    osm.rollback
+    puts "Rolled back the changes"
     exit
   end
   if (ARGV.length != 2) || (! File.exists?(File.expand_path(ARGV.first))) || (! File.exists?(File.expand_path(ARGV[1])))

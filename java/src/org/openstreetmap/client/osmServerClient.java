@@ -271,7 +271,15 @@ public class osmServerClient
 
   }
 
-
+  // Petter Reinholdtsen's sticky username/password patch
+ 
+  /**
+   * Make it possible to get the last username/password, for use
+   * when reconnecting the applet to the server.
+   */
+  public synchronized String getUsername() { return sUsername; }
+  public synchronized String getPassword() { return sPassword; }
+  // EOF patch
 
 
   public synchronized Vector getStreets(

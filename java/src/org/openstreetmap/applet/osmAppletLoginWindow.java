@@ -42,6 +42,11 @@ public class osmAppletLoginWindow extends JDialog implements ActionListener
 
     osc = od.getServerClient();
 
+    // Petter Reinholdtsen's sticky username/password patch
+    user.setText(osc.getUsername());
+    pass.setText(osc.getPassword());
+    // EOF patch
+
     System.out.println("login window created");
 
 

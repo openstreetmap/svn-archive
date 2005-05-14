@@ -53,7 +53,7 @@ module OSM
         f.readlines.each do |line|
           code_snippet = line.strip.to_i
           success = eval("@osm.call#{code_snippet}")
-          raise "Could not rollback on line \"#{code_snippet}\"" unless success
+          $stderr.puts "Could not rollback on line \"#{code_snippet}\"" unless success
         end
       end
       File.delete(JOURNAL_PATH)
@@ -72,7 +72,7 @@ module OSM
       to = newNode(to_lat, to_long)
       line = @osm.call("openstreetmap.newLine", @token, from, to)
       raise "Could not create line from (#{lat1} #{long1}) to (#{lat2} #{long2})" if line == -1
-      # journal("(\"openstreetmap.deleteLine\", @token, #{line})")
+      journal("(\"openstreetmap.deleteLine\", @token, #{line})")
       return line
     end
     

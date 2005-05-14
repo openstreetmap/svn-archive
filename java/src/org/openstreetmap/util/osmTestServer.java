@@ -32,11 +32,28 @@ class osmTestServer
       v = new Vector();
       
       v.addElement(token);
-      v.addElement(new Double(1));
-      v.addElement(new Double(1));
 
-      Integer nR = (Integer)xmlrpc.execute("openstreetmap.newPointOfInterest",v);
+      Vector v2 = new Vector();
 
+      v2.addElement(new Integer(1458));
+      v2.addElement(new Integer(1459));
+      v2.addElement(new Integer(1460));
+      v.addElement(v2);
+
+      Integer nR = (Integer)xmlrpc.execute("openstreetmap.newArea",v);
+
+      System.out.println(nR);
+
+      v = new Vector();
+
+      v.addElement(token);
+      v.addElement(nR);
+      v.addElement(new Integer(14));
+      v.addElement("blah park");
+      
+      Boolean bob = (Boolean)xmlrpc.execute("openstreetmap.updateAreaKeyValue",v);
+      
+      System.out.println(bob);
     }
     catch(Exception e)
     {

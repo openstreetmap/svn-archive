@@ -1935,6 +1935,7 @@ public class osmServerSQLHandler extends Thread
   } // newStreet
 
 
+ 
   private boolean doesStreetExist(int nStreetUID)
   {
 
@@ -1963,6 +1964,66 @@ public class osmServerSQLHandler extends Thread
     return false;
 
   } // doesStreetExist
+
+
+  private boolean doesAreaExist(int nAreaUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select * from area_meta_table where uid=" + nAreaUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return true;
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+    }
+
+    return false;
+
+  } // doesAreaExist
+
+  
+  private boolean doesNodeExist(int nNodeUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select uid from nodes where uid=" + nNodeUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return true;
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+    }
+
+    return false;
+
+  } // doesNodeExist
 
 
   private boolean doesStreetSegmentExist(int nStreetSegmentUID)
@@ -2176,7 +2237,54 @@ public class osmServerSQLHandler extends Thread
     return false;
 
 
-  } // setStreetKeyValue
+  } // updateStreetKeyValue
+
+
+  public synchronized boolean updateAreaKeyValue(
+      int nUID,
+      int nAreaUID,
+      int nKeyUID,
+      String sValue
+      )
+  {
+
+
+    if(    doesAreaExist(nAreaUID)
+        && doesKeyExist(nKeyUID) 
+      )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "insert into area_values (user_uid, area_uid, key_uid, val, timestamp) values ("
+          + "" + nUID + ", "
+          + "" + nAreaUID + ", "
+          + "" + nKeyUID + ", "
+          + "'"  + sValue + "', "
+          + System.currentTimeMillis() +")";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+
+
+    }
+
+    return false;
+
+
+  } // updateAreaKeyValue
+
 
   
  
@@ -2223,7 +2331,7 @@ public class osmServerSQLHandler extends Thread
     return false;
 
 
-  } // setStreetSegmentKeyValue
+  } // updateStreetSegmentKeyValue
 
   
   public synchronized int newPointOfInterest(double latitude, double longitude, int nUserUID)
@@ -2283,6 +2391,226 @@ public class osmServerSQLHandler extends Thread
     return -1;
 
   } // newPointOfInterest
+
+
+
+  public synchronized boolean updatePoIKeyValue(
+      int nUID,
+      int nPoIUID,
+      int nKeyUID,
+      String sValue
+      )
+  {
+
+    if(    doesPoIExist(nPoIUID)
+        && doesKeyExist(nKeyUID) 
+      )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "insert into poi_values (user_uid, poi_uid, key_uid, val, timestamp) values ("
+          + "" + nUID + ", "
+          + "" + nPoIUID + ", "
+          + "" + nKeyUID + ", "
+          + "'" + sValue + "', "
+          + System.currentTimeMillis() +")";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+
+
+    }      
+
+    return false;
+
+
+  } // updatePoIKeyValue
+
+  private boolean doesPoIExist(int nPoIUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select * from points_of_interest_meta_table where uid=" + nPoIUID;
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() )
+      {
+        return true;
+      }
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+    }
+
+    return false;
+
+  } // doesPoIExist
+
+
+ 
+  public synchronized int newArea(int nUserUID, Vector nodes)
+  {
+    if(nodes.size() < 3)
+    {
+      return -1;
+    }
+
+    try
+    {
+      Enumeration e = nodes.elements();
+
+      Hashtable ht = new Hashtable();
+
+      while(e.hasMoreElements())
+      {
+        Integer i = (Integer)e.nextElement();
+        
+        int n = i.intValue();
+        
+        if(n < 1)
+        {
+          return -1;
+
+        }
+
+        if( ht.contains("" + n) )
+        {
+          return -1; //we have seen this one before
+
+        }
+        else
+        {
+          ht.put(""+n,""+n); //put it in the list so we can check if we see it again later
+
+        }
+
+        
+
+        if( !doesNodeExist(n) )
+        {
+          return -1;
+
+        }
+
+      }
+      
+    }
+    catch(Exception e)
+    {
+      //fuck that input, I'm dieing...
+
+      return -1;
+
+    }
+
+    //vector appears to be a well-formed list of nodes that exist!
+
+    
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "insert into area_meta_table (timestamp, user_uid) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID + ")";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "insert into area (uid, user_uid, timestamp, node_a, node_b, visible) values ";
+
+
+      boolean bFirst = true;
+
+      Enumeration e = nodes.elements();
+      int lastNode = -1;
+
+      Integer i = (Integer)e.nextElement();
+
+      while(e.hasMoreElements())
+      {
+        if( !bFirst )
+        {
+          sSQL = sSQL +",";
+        }
+        else
+        {
+          
+          bFirst = false;
+        }
+
+        Integer p = (Integer)e.nextElement();
+
+        sSQL = sSQL + "("
+          + " last_insert_id(), "
+          + nUserUID + ", " 
+          + System.currentTimeMillis() + ", "
+          + "" + i + ", "
+          + "" + p + ", "
+          + "1)";
+
+        i = new Integer(p.intValue()); // make sure we dereference.. might be a good idea to test this one day
+
+      }
+
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "select @id;";
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newArea
+
 
 
 } // osmServerSQLHandler

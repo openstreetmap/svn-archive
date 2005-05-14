@@ -698,7 +698,8 @@ public class osmServerHandler
         safeSQLString(sValue)
         );
 
-  } // updateStreetKeyValue
+  } // updateStreetSegmentKeyValue
+
 
   /**
    * Creates a new point of interest. This is like a node, in that its just a lat/lon point but it can't be linked to other points of interest like nodes are. This is for things like train stations, churches or other points.
@@ -721,5 +722,94 @@ public class osmServerHandler
 
   } // newPointOfInterest
 
+   /**
+   * Sets the value for a key associated with a point of interest. Set an empty string if you dont want a key/value to show up with it anymore..
+   * @param sToken the login token from login()
+   * @param nPoIUID the point of interest UID
+   * @param nKeyUID the UID of the key
+   * @param sValue the value
+   * @return true if the key was successfully associated
+   */
+  public boolean updatePoIKeyValue(
+      String sToken,
+      int nPoIUID,
+      int nKeyUID,
+      String sValue)
+  {
+
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1 || sValue.length() > 255)
+    {
+      return false;
+
+    }
+    
+
+    return osmSQLH.updatePoIKeyValue(
+        nUID,
+        nPoIUID,
+        nKeyUID,
+        safeSQLString(sValue)
+        );
+
+  } // updatePoIKeyValue
+
+
+  /**
+   * Create an area
+   * @param sToken your login token from login()
+   * @param nodes a list of node uid's. Must all exist, be different from each other and the length of the list must be bigger than 2.
+   * @return the uid of the area if successful, -1 otherwise.
+   */
+  public int newArea(String sToken, Vector nodes)
+  {
+ 
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return -1;
+
+    }
+    
+    return osmSQLH.newArea(nUID, nodes);
+
+  } // newArea
+ 
   
+  /**
+   * Sets the value for a key associated with an area. Set an empty string if you dont want a key/value to show up with it anymore..
+   * @param sToken the login token from login()
+   * @param nAreaUID the area uid
+   * @param nKeyUID the UID of the key
+   * @param sValue the value
+   * @return true if the key was successfully associated
+   */
+  public boolean updateAreaKeyValue(
+      String sToken,
+      int nAreaUID,
+      int nKeyUID,
+      String sValue)
+  {
+
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1 || sValue.length() > 255)
+    {
+      return false;
+
+    }
+    
+
+    return osmSQLH.updateAreaKeyValue(
+        nUID,
+        nAreaUID,
+        nKeyUID,
+        safeSQLString(sValue)
+        );
+
+  } // updatePoIKeyValue
+
+
 } // osmServerHandler

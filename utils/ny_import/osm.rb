@@ -21,7 +21,6 @@ module OSM
       open_journal
       @zip_key_id = get_key_id(ZIP_CODE_KEY_NAME)
       @name_key_id = get_key_id(NAME_KEY_NAME)
-      $stderr.puts "Retrieved keys: name = #{@name_key_id}, ZIP = #{@zip_key_id}"
     end
     
     def get_key_id(key_name)
@@ -37,11 +36,6 @@ module OSM
     end
     
     def close
-      begin
-#        call("closeDatabase")
-      rescue XMLRPC::FaultException => ex
-        $stderr.puts "Exception \"#{ex}\" when closing XMLRPC session"
-      end
       close_journal
     end
     
@@ -81,12 +75,20 @@ module OSM
     end
     
     def newLine(from_lat, from_long, to_lat, to_long)
-      from = newNode(from_lat, from_long)
-      to = newNode(to_lat, to_long)
-      line = call("newLine", @token, from, to)
-      raise "Could not create line from (#{lat1} #{long1}) to (#{lat2} #{long2})" if line == -1
-      journal("(\"openstreetmap.deleteLine\", @token, #{line})")
-      return line
+      from_id = newNode(from_lat, from_long)
+      to_id = newNode(to_lat, to_long)
+      line_id = call("newLine", @token, from_id, to_id)
+      raise "Could not create line from (#{from_lat} #{from_long}) to (#{to_lat} #{to_long})" if line_id == -1
+      journal("(\"openstreetmap.deleteLine\", @token, #{line_id})")
+      return line_id, to_id
+    end
+    
+    def newExtendedLine(from_node_id, to_lat, to_long)
+      to_id = newNode(to_lat, to_long)
+      line_id = call("newLine", @token, from_node_id, to_id)
+      raise "Could not create line from ID #{from_node_id} to (#{to_lat} #{to_long})" if line_id == -1
+      journal("(\"openstreetmap.deleteLine\", @token, #{line_id})")
+      return line_id, to_id
     end
     
     def assoc_zip(line_id, zip)
@@ -95,24 +97,20 @@ module OSM
     
     def newStreet(name, coords, from_zip = nil, to_zip = nil)
       raise "Attempt to create street with less than three coordinates" unless coords.length >= 3
-      street_id = nil
-      (0..(coords.length - 2)).each do |i|
-        from_lat, from_long = coords[i]
-        to_lat, to_long = coords[i + 1]
-        line_id = newLine(from_lat, from_long, to_lat, to_long)
-        if i.zero?
-          street_id = call("newStreet", @token, line_id)
-          raise "Could not create new street" if street_id == -1
-          journal("(\"deleteStreet\", @token, #{street_id})")
-          success = call("updateStreetKeyValue", @token, street_id, @name_key_id, name)
-          raise "Could not name street #{street_id} \"#{name}\"" unless success
-        else
-          success = call("addSegmentToStreet", @token, street_id, line_id)
-          journal("(\"dropSegmentFromStreet\", @token, #{street_id}, #{line_id})")
-          raise "Could not add segment #{line_id} to street #{street_id}" unless success
-        end
-        assoc_zip(line_id, from_zip) if i.zero? && (! from_zip.nil?)
-        assoc_zip(line_id, to_zip) if (i == (coords.length - 2)) && (! to_zip.nil?)
+      line_id, prev_node_id = newLine(coords.first.first, coords.first[1], coords[1].first, coords[1][1])
+      street_id = call("newStreet", @token, line_id)
+      raise "Could not create new street" if street_id == -1
+      journal("(\"deleteStreet\", @token, #{street_id})")
+      success = call("updateStreetKeyValue", @token, street_id, @name_key_id, name)
+      raise "Could not name street #{street_id} \"#{name}\"" unless success
+      assoc_zip(line_id, from_zip) unless from_zip.nil?
+      (2..(coords.length - 1)).each do |i|
+        to_lat, to_long = coords[i]
+        line_id, prev_node_id = newExtendedLine(prev_node_id, to_lat, to_long)
+        success = call("addSegmentToStreet", @token, street_id, line_id)
+        raise "Could not add segment #{line_id} to street #{street_id}" unless success
+        journal("(\"dropSegmentFromStreet\", @token, #{street_id}, #{line_id})")
+        assoc_zip(line_id, to_zip) unless to_zip.nil? || (i < (coords.length - 1))
       end
     end
     

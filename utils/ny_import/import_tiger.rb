@@ -84,13 +84,13 @@ begin
   osm = OpenStreetMap.new("b@gimpert.com", "january")
   if ARGV == ["--reset"]
     osm.rollback
-    puts "Rolled back the changes"
+    puts "Reset finished."
     exit
   end
   if (ARGV.length != 2) || (! File.exists?(File.expand_path(ARGV.first))) || (! File.exists?(File.expand_path(ARGV[1])))
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second"
   end
-  osm.newStreet("2nd Ave", [[40.800874, -73.935041], [40.801515, -73.934561], [40.80602, -73.932583]], 10035, 10035)
+  osm.newStreet("Foo Street", [[40.774422, -73.996779], [40.775735, -74.000426], [40.815539, -73.956999]], 60606, 60601)
 #  import_tiger(osm, ARGV.first, ARGV[1])
 ensure
   osm.close if osm

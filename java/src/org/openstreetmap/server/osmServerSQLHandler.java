@@ -33,11 +33,11 @@ public class osmServerSQLHandler extends Thread
   String sPass;
 
   Connection conn;
-  
+
   boolean bTokenValidated = false;
   long lValidationTimeout = 0;
   int nLastUID = -1;
-  
+
   long lTimeout = 1000 * 60 * 10; // ten mins
 
   static final int MIN_USERNAME_LENGTH = 5;
@@ -45,7 +45,7 @@ public class osmServerSQLHandler extends Thread
   static final int MIN_PASSWORD_LENGTH = 5;
   static final int MAX_PASSWORD_LENGTH = 35;
   static final int MAX_TOKEN_LENGTH = 30;
-  
+
   boolean bSQLSuccess = false;
 
   boolean bConnectSuccess = false;
@@ -73,9 +73,9 @@ public class osmServerSQLHandler extends Thread
 
     sUser = "openstreetmap";
     sPass = "openstreetmap";
-    
+
     connect();
-    
+
 
   } // osmServerSQLHandler
 
@@ -902,6 +902,43 @@ public class osmServerSQLHandler extends Thread
 
     return -1;
   } // largestTrackID
+
+
+  private boolean doesKeyExist(int nKeyUID)
+  {
+
+    Vector v = new Vector();
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "select * from osmKeys where " 
+        + " uid = " + nKeyUID 
+        + " order by timestamp desc limit 1";
+
+      System.out.println("querying with sql \n " + sSQL);
+
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      if( rs.next() && rs.getInt("visible") == 1 )
+      {
+        return true;
+      }
+
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return false;
+
+  } // getAllKeys
+
 
 
   public synchronized Vector getAllKeys(boolean bVisibleOrNot)
@@ -1927,7 +1964,7 @@ public class osmServerSQLHandler extends Thread
 
   } // doesStreetExist
 
-  
+
   private boolean doesStreetSegmentExist(int nStreetSegmentUID)
   {
 
@@ -1957,7 +1994,7 @@ public class osmServerSQLHandler extends Thread
 
   } // doesStreetSegmentExist
 
-  
+
   private boolean doesStreetHaveSegmentVisible(
       int nStreetUID,
       int nStreetSegmentUID)
@@ -2000,11 +2037,11 @@ public class osmServerSQLHandler extends Thread
 
   public synchronized boolean addSegmentToStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID)
   {
-    
+
     if( doesStreetExist(nStreetUID)
         && doesStreetSegmentExist(nStreetSegmentUID)
         && !doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)
-        )
+      )
     {
 
       try{
@@ -2045,15 +2082,15 @@ public class osmServerSQLHandler extends Thread
 
   } // addSegmentToStreet
 
-  
+
 
   public synchronized boolean dropSegmentFromStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID)
   {
-    
+
     if(    doesStreetExist(nStreetUID)
         && doesStreetSegmentExist(nStreetSegmentUID)
         && doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)
-        )
+      )
     {
 
       try{
@@ -2093,6 +2130,159 @@ public class osmServerSQLHandler extends Thread
     return false;
 
   } // dropSegmentFromStreet
+
+
+
+  public synchronized boolean updateStreetKeyValue(
+      int nUID,
+      int nStreetUID,
+      int nKeyUID,
+      String sValue
+      )
+  {
+
+
+    if(    doesStreetExist(nStreetUID)
+        && doesKeyExist(nKeyUID) 
+      )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "insert into street_values (user_uid, street_uid, key_uid, val, timestamp) values ("
+          + "" + nUID + ", "
+          + "" + nStreetUID + ", "
+          + "" + nKeyUID + ", "
+          + "'"  + sValue + "', "
+          + System.currentTimeMillis() +")";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+
+
+    }      
+
+    return false;
+
+
+  } // setStreetKeyValue
+
+  
+ 
+  public synchronized boolean updateStreetSegmentKeyValue(
+      int nUID,
+      int nStreetSegmentUID,
+      int nKeyUID,
+      String sValue
+      )
+  {
+
+
+    if(    doesStreetSegmentExist(nStreetSegmentUID)
+        && doesKeyExist(nKeyUID) 
+      )
+    {
+
+      try{
+
+        Statement stmt = conn.createStatement();
+
+        String sSQL = "insert into street_segment_values (user_uid, street_segment_uid, key_uid, val, timestamp) values ("
+          + "" + nUID + ", "
+          + "" + nStreetSegmentUID + ", "
+          + "" + nKeyUID + ", "
+          + "'" + sValue + "', "
+          + System.currentTimeMillis() +")";
+
+        System.out.println("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+
+        return true;
+      }
+      catch(Exception e)
+      {
+        System.out.println(e);
+        e.printStackTrace();
+
+      }
+
+
+    }      
+
+    return false;
+
+
+  } // setStreetSegmentKeyValue
+
+  
+  public synchronized int newPointOfInterest(double latitude, double longitude, int nUserUID)
+  {
+
+    try{
+
+      Statement stmt = conn.createStatement();
+
+      String sSQL = "start transaction;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "insert into points_of_interest_meta_table (timestamp, user_uid) values ("
+        + System.currentTimeMillis() 
+        + ", " + nUserUID + ")";
+
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+      sSQL = "set @id = last_insert_id(); ";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "insert into point_of_interest (uid, latitude, longitude, timestamp, user_uid, visible) values ("
+        + " last_insert_id(), "
+        + "" + latitude + ", "
+        + "" + longitude + ", "
+        + System.currentTimeMillis() + ", "
+        + nUserUID + ", "
+        + "1)";
+
+      stmt.execute(sSQL);
+
+      sSQL = "commit;";
+      System.out.println("querying with sql \n " + sSQL);
+      stmt.execute(sSQL);
+
+
+      sSQL = "select @id;";
+      System.out.println("querying with sql \n " + sSQL);
+      ResultSet rs = stmt.executeQuery(sSQL);
+
+      rs.next();
+
+      return rs.getInt(1);
+
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      e.printStackTrace();
+
+    }
+
+    return -1;
+
+  } // newPointOfInterest
 
 
 } // osmServerSQLHandler

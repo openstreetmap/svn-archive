@@ -41,6 +41,15 @@ public class osmServerHandler
   
   private osmServerSQLHandler osmSQLH;
 
+  private String safeSQLString(String s)
+  {
+    // makes a string SQL safe. hopefully.
+
+    return s.replace('\'', '`');
+
+
+  } // safeSQLString
+
   /**
    * instantiates the handler
    */
@@ -339,6 +348,13 @@ public class osmServerHandler
   }
 
 
+  /**
+   * Creates a new node given a lat/lon position. The node can then be linked to others to form street segments.
+   * @param sToken the login token from login()
+   * @param latitude the latitude of the point
+   * @param longitude the longitude of the point
+   * @return the uid of the node, if added. If not then you get -1
+   */
   public int newNode(String sToken, double latitude, double longitude)
   {
     int nUID = osmSQLH.validateToken(sToken);
@@ -354,6 +370,13 @@ public class osmServerHandler
   } // newNode
   
 
+  /**
+   * move a node
+   * @param sToken your login token from login()
+   * @param nNodeID the uid of the node
+   * @param latitude the lat to move the node to
+   * @param longitude the lon to move the node to
+   */
   public boolean moveNode(String sToken, int nNodeID, double latitude, double longitude)
   {
     int nUID = osmSQLH.validateToken(sToken);
@@ -387,7 +410,9 @@ public class osmServerHandler
   
   /**
    * create a new street segment between the two given nodes
-   * @return the uid of the created segment
+   * @param node_a the first node
+   * @param node_b the second node
+   * @return the uid of the created segment. -1 if something went wrong.
    */
   public int newLine(String sToken, int node_a, int node_b)
   {
@@ -580,6 +605,7 @@ public class osmServerHandler
 
   } // addSegmentToStreet
 
+  
   /**
    * Drop a segment from a street
    * @param sToken your login token from login()
@@ -606,6 +632,94 @@ public class osmServerHandler
 
   } // dropSegmentFromStreet
 
-  
 
+  /**
+   * Sets the value for a key associated with a street (not a street segment). This will update the value whether there was a value for this key associated with this street before or not. so find the uid for the key and the street, say 'name' is 42 and your street has uid 23 then you might do something like updateStreetKeyValue(sToken, 23,42, "baker street"). An empty string means the key wont show up (you're deleting it).
+   * @param sToken the login token from login()
+   * @param nStreetUID the street UID
+   * @param nKeyUID the UID of the key
+   * @param sValue the value
+   * @return true if the key was successfully associated
+   */
+  public boolean updateStreetKeyValue(
+      String sToken,
+      int nStreetUID,
+      int nKeyUID,
+      String sValue)
+  {
+
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1 || sValue.length() > 255)
+    {
+      return false;
+
+    }
+    
+
+    return osmSQLH.updateStreetKeyValue(
+        nUID,
+        nStreetUID,
+        nKeyUID,
+        safeSQLString(sValue)
+        );
+
+  } // updateStreetKeyValue
+
+
+  /**
+   * Sets the value for a key associated with a street segment (not a street). This will update the value whether there was a value for this key associated with this street before or not. so find the uid for the key and the street segment, say 'name' is 42 and your street segment has uid 50 then you might do something like updateStreetSegmentKeyValue(sToken, 50,42, "baker street"). An empty string means the key wont show up (you're deleting it).
+   * @param sToken the login token from login()
+   * @param nStreetSegmentUID the street segment UID
+   * @param nKeyUID the UID of the key
+   * @param sValue the value
+   * @return true if the key was successfully associated
+   */
+  public boolean updateStreetSegmentKeyValue(
+      String sToken,
+      int nStreetSegmentUID,
+      int nKeyUID,
+      String sValue)
+  {
+
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1 || sValue.length() > 255)
+    {
+      return false;
+
+    }
+    
+
+    return osmSQLH.updateStreetSegmentKeyValue(
+        nUID,
+        nStreetSegmentUID,
+        nKeyUID,
+        safeSQLString(sValue)
+        );
+
+  } // updateStreetKeyValue
+
+  /**
+   * Creates a new point of interest. This is like a node, in that its just a lat/lon point but it can't be linked to other points of interest like nodes are. This is for things like train stations, churches or other points.
+   * @param sToken the login token from login()
+   * @param latitude the latitude for the point
+   * @param longitude the longitude for the point
+   * @return the uid of the point of interest if added ok, -1 otherwise
+   */
+  public int newPointOfInterest(String sToken, double latitude, double longitude)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return -1;
+
+    }
+     
+    return osmSQLH.newPointOfInterest(latitude, longitude, nUID);
+
+  } // newPointOfInterest
+
+  
 } // osmServerHandler

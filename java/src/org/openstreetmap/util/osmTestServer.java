@@ -32,41 +32,10 @@ class osmTestServer
       v = new Vector();
       
       v.addElement(token);
-      v.addElement(new Integer(1373));
+      v.addElement(new Double(1));
+      v.addElement(new Double(1));
 
-      Integer nR = (Integer)xmlrpc.execute("openstreetmap.newStreet",v);
-
-      System.out.println(nR);
-
-      v = new Vector();
-      
-      v.addElement(token);
-      v.addElement(nR);
-      v.addElement(new Integer(1374));
-
-      Boolean bR = (Boolean)xmlrpc.execute("openstreetmap.addSegmentToStreet",v);
-
-      System.out.println(bR);
- 
-      v = new Vector();
-      
-      v.addElement(token);
-      v.addElement(nR);
-      v.addElement(new Integer(1374));
-
-      bR = (Boolean)xmlrpc.execute("openstreetmap.dropSegmentFromStreet",v);
-
-      System.out.println(bR);
-
-      v = new Vector();
-      
-      v.addElement(token);
-      v.addElement(nR);
-      v.addElement(new Integer(1373));
-
-      bR = (Boolean)xmlrpc.execute("openstreetmap.dropSegmentFromStreet",v);
-
-      System.out.println(bR);
+      Integer nR = (Integer)xmlrpc.execute("openstreetmap.newPointOfInterest",v);
 
     }
     catch(Exception e)

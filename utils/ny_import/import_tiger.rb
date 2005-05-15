@@ -56,12 +56,11 @@ def append_rt2(rt1, rt2_path)
   rt2.keys.each do |line_id|
     rt2_coords = rt2[line_id].compact
     if rt1.has_key?(line_id)
-      coords = [rt1[line_id][2].first]
-      end_coord = [rt1[line_id][2][1]]
-      rt2_coords.each do |rt2_coord|
-        coords << rt2_coord
-      end
-      coords << end_coord
+      rt1_coords = rt1[line_id][2]
+      coords = []
+      coords << rt1_coords.first
+      coords = coords.concat(rt2_coords)
+      coords << rt1_coords[-1]
       rt1[line_id][2] = coords
     end
   end
@@ -70,13 +69,7 @@ end
 def import_tiger(osm, rt1_path, rt2_path)
   rt = read_rt1(rt1_path)
   append_rt2(rt, rt2_path)
-  rt.keys.each do |line_id|
-    name = rt[line_id].first
-    from_zip, to_zip = rt[line_id][1]
-    coords = rt[line_id][2]
-    $stderr.puts "id = #{line_id}, name = [#{name}], ZIPs = (#{from_zip} to #{to_zip}), coords = (#{coords.join(", ")})"
-  end
-  $stderr.puts "number of RT records = #{rt.keys.length}"
+  $stderr.puts "Parsed #{rt.keys.length} RT chain records."
   return rt
 end
 
@@ -96,7 +89,7 @@ begin
     name = street.first
     from_zip, to_zip = street[1]
     coords = street[2]
-    osm.newStreet(name, coords, from_zip, to_zip) 
+    osm.newStreet(name, coords, from_zip, to_zip)
   end
 ensure
   osm.close if osm

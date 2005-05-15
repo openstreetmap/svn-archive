@@ -9,9 +9,21 @@ module OSM
     ZIP_CODE_KEY_NAME = "zipCode"
     NAME_KEY_NAME = "name"
     
+    def coords_to_s(coords)
+      return coords.map do |coord|
+        "(#{coord.first}, #{coord[1]})"
+      end.join(" -> ")
+    end
+    
     def call(method, *args)
-      $stderr.puts "openstreetmap.#{method}(#{args.join(", ")})"
-      return @osm.call("openstreetmap.#{method}", *args)
+      result = @osm.call("openstreetmap.#{method}", *args)
+      if method == "login"
+        $stderr.puts "openstreetmap.login(#{args.join(", ")}) -> #{result}"
+      else
+        # don't display the token, redundant
+        $stderr.puts "    #{method}(#{args[1..-1].join(", ")}) -> #{result}"
+      end
+      return result
     end
     
     def initialize(username, password)
@@ -30,7 +42,7 @@ module OSM
         return keys[i - 1].to_i if keys[i] == key_name
       end
       key_id = call("newKey", @token, key_name)
-      raise "Could not create ZIP code key \"#{key_name}\"" if key_id == -1
+      raise "Could not create ZIP code key [#{key_name}]" if key_id == -1
       journal("(\"deleteKey\", @token, #{key_id})")
       return key_id
     end
@@ -59,7 +71,7 @@ module OSM
           begin
             success = eval("call#{code_snippet}")
           rescue XMLRPC::FaultException => ex
-            $stderr.puts "Could not rollback on line \"#{code_snippet}\"" unless success
+            $stderr.puts "Could not rollback on line [#{code_snippet}]" unless success
           end
         end
       end
@@ -68,6 +80,8 @@ module OSM
     end
     
     def newNode(lat, long)
+      raise "Invalid latitude [#{lat}] in newNode" if lat.nil? || (! lat.respond_to?(:to_f))
+      raise "Invalid longitude [#{long}] in newNode" if long.nil? || (! long.respond_to?(:to_f))
       node = call("newNode", @token, lat, long)
       raise "Could not create node at (#{lat} #{long})" if node == -1
       journal("(\"deleteNode\", @token, #{node})")
@@ -96,6 +110,7 @@ module OSM
     end
     
     def newStreet(name, coords, from_zip = nil, to_zip = nil)
+      $stderr.puts "Creating new street [#{name}], ZIPs: #{from_zip} to #{to_zip}, coords: #{coords_to_s(coords)}" 
       raise "Attempt to create street with less than two coordinates" if coords.nil? || (coords.length < 2)
       line_id, prev_node_id = newLine(coords.first.first, coords.first[1], coords[1].first, coords[1][1])
       street_id = call("newStreet", @token, line_id)

@@ -102,12 +102,15 @@ begin
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second"
   end
   tiger = import_tiger(osm, ARGV.first, ARGV[1])
-  tiger.keys.each do |line_id|
+  line_ids = tiger.keys
+  line_ids.each_index do |i|
+    line_id = line_ids[i]
     street = tiger[line_id]
     name = street.first
     from_zip, to_zip = street[1]
     coords = street[2]
     osm.newStreet(name, coords, from_zip, to_zip)
+    $stderr.puts "*** Created street #{i + 1} of #{line_ids.length}, #{((i + 1).to_f / line_ids.length).to_s[0..4]}%"
   end
 ensure
   osm.close if osm

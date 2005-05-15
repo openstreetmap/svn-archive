@@ -116,9 +116,11 @@ module OSM
       street_id = call("newStreet", @token, line_id)
       raise "Could not create new street" if street_id == -1
       journal("(\"deleteStreet\", @token, #{street_id})")
-      success = call("updateStreetKeyValue", @token, street_id, @name_key_id, name)
-      raise "Could not name street #{street_id} \"#{name}\"" unless success
-      assoc_zip(line_id, from_zip) unless from_zip.nil?
+      unless name.nil? || name.empty?
+        success = call("updateStreetKeyValue", @token, street_id, @name_key_id, name)
+        raise "Could not name street #{street_id} \"#{name}\"" unless success
+      end
+      assoc_zip(line_id, from_zip) unless from_zip.nil? || from_zip.empty?
       if coords.length > 2
         (2..(coords.length - 1)).each do |i|
           to_lat, to_long = coords[i]
@@ -126,7 +128,7 @@ module OSM
           success = call("addSegmentToStreet", @token, street_id, line_id)
           raise "Could not add segment #{line_id} to street #{street_id}" unless success
           journal("(\"dropSegmentFromStreet\", @token, #{street_id}, #{line_id})")
-          assoc_zip(line_id, to_zip) unless to_zip.nil? || (i < (coords.length - 1))
+          assoc_zip(line_id, to_zip) unless to_zip.nil? || to_zip.empty? || (i < (coords.length - 1))
         end
       end
     end

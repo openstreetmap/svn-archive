@@ -96,7 +96,7 @@ module OSM
     end
     
     def newStreet(name, coords, from_zip = nil, to_zip = nil)
-      raise "Attempt to create street with less than three coordinates" unless coords.length >= 3
+      raise "Attempt to create street with less than two coordinates" if coords.nil? || (coords.length < 2)
       line_id, prev_node_id = newLine(coords.first.first, coords.first[1], coords[1].first, coords[1][1])
       street_id = call("newStreet", @token, line_id)
       raise "Could not create new street" if street_id == -1
@@ -104,13 +104,15 @@ module OSM
       success = call("updateStreetKeyValue", @token, street_id, @name_key_id, name)
       raise "Could not name street #{street_id} \"#{name}\"" unless success
       assoc_zip(line_id, from_zip) unless from_zip.nil?
-      (2..(coords.length - 1)).each do |i|
-        to_lat, to_long = coords[i]
-        line_id, prev_node_id = newExtendedLine(prev_node_id, to_lat, to_long)
-        success = call("addSegmentToStreet", @token, street_id, line_id)
-        raise "Could not add segment #{line_id} to street #{street_id}" unless success
-        journal("(\"dropSegmentFromStreet\", @token, #{street_id}, #{line_id})")
-        assoc_zip(line_id, to_zip) unless to_zip.nil? || (i < (coords.length - 1))
+      if coords.length > 2
+        (2..(coords.length - 1)).each do |i|
+          to_lat, to_long = coords[i]
+          line_id, prev_node_id = newExtendedLine(prev_node_id, to_lat, to_long)
+          success = call("addSegmentToStreet", @token, street_id, line_id)
+          raise "Could not add segment #{line_id} to street #{street_id}" unless success
+          journal("(\"dropSegmentFromStreet\", @token, #{street_id}, #{line_id})")
+          assoc_zip(line_id, to_zip) unless to_zip.nil? || (i < (coords.length - 1))
+        end
       end
     end
     

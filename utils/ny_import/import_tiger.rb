@@ -91,7 +91,8 @@ begin
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second"
   end
   tiger = import_tiger(osm, ARGV.first, ARGV[1])
-  tiger.each do |street|
+  tiger.keys.each do |line_id|
+    street = tiger[line_id]
     name = street.first
     from_zip, to_zip = street[1]
     coords = street[2]

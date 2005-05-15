@@ -98,12 +98,18 @@ begin
     puts "Reset finished."
     exit
   end
-  if (ARGV.length != 2) || (! File.exists?(File.expand_path(ARGV.first))) || (! File.exists?(File.expand_path(ARGV[1])))
-    raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second"
+  if (ARGV.length < 2) ||
+     (ARGV.length > 3) ||
+     (! File.exists?(File.expand_path(ARGV.first))) ||
+     (! File.exists?(File.expand_path(ARGV[1])))
+
+    raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second, with an optional starting index as the third."
   end
   tiger = import_tiger(osm, ARGV.first, ARGV[1])
+  start_i = 0
+  start_i = ARGV.length[2].to_i - 1 if ARGV.length == 3
   line_ids = tiger.keys
-  line_ids.each_index do |i|
+  (start_i..line_ids.length).each do |i|
     line_id = line_ids[i]
     street = tiger[line_id]
     name = street.first

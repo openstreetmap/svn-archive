@@ -91,10 +91,13 @@ def import_tiger(osm, rt1_path, rt2_path)
   return rt
 end
 
+def open_osm
+  return OpenStreetMap.new("b@gimpert.com", "january")
+end
+
 begin
-  osm = OpenStreetMap.new("b@gimpert.com", "january")
   if ARGV == ["--reset"]
-    osm.rollback
+    open_osm.rollback
     puts "Reset finished."
     exit
   end
@@ -105,6 +108,7 @@ begin
 
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second, with an optional starting index as the third."
   end
+  osm = open_osm
   tiger = import_tiger(osm, ARGV.first, ARGV[1])
   start_i = 0
   start_i = ARGV.length[2].to_i - 1 if ARGV.length == 3

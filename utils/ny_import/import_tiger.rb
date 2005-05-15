@@ -77,7 +77,7 @@ def import_tiger(osm, rt1_path, rt2_path)
     $stderr.puts "id = #{line_id}, name = [#{name}], ZIPs = (#{from_zip} to #{to_zip}), coords = (#{coords.join(", ")})"
   end
   $stderr.puts "number of RT records = #{rt.keys.length}"
-  
+  return rt
 end
 
 begin
@@ -90,8 +90,13 @@ begin
   if (ARGV.length != 2) || (! File.exists?(File.expand_path(ARGV.first))) || (! File.exists?(File.expand_path(ARGV[1])))
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second"
   end
-  osm.newStreet("Foo Street", [[40.774422, -73.996779], [40.775735, -74.000426], [40.815539, -73.956999]], 60606, 60601)
-#  import_tiger(osm, ARGV.first, ARGV[1])
+  tiger = import_tiger(osm, ARGV.first, ARGV[1])
+  tiger.each do |street|
+    name = street.first
+    from_zip, to_zip = street[1]
+    coords = street[2]
+    osm.newStreet(name, coords, from_zip, to_zip) 
+  end
 ensure
   osm.close if osm
 end

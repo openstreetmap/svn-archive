@@ -110,7 +110,7 @@ begin
     from_zip, to_zip = street[1]
     coords = street[2]
     osm.newStreet(name, coords, from_zip, to_zip)
-    $stderr.puts "*** Created street #{i + 1} of #{line_ids.length}, #{((i + 1).to_f / line_ids.length).to_s[0..4]}%"
+    $stderr.puts "*** Created street #{i + 1} of #{line_ids.length}, #{((i + 1).to_f / line_ids.length * 100).to_s[0..4]}%"
   end
 ensure
   osm.close if osm

@@ -47,106 +47,76 @@ public class osmServerSQLHandler extends Thread
   static final int MAX_TOKEN_LENGTH = 30;
 
   boolean bSQLSuccess = false;
-
   boolean bConnectSuccess = false;
 
-  public void closeDatabase()
-  {
-    try{
+  private static void LOG(String s) {
+      System.err.println(s);
+  }
+  
+  private static void LOG(Throwable t) {
+      LOG(t.getMessage());
+      t.printStackTrace(System.err);
+  }
+
+  public void closeDatabase() {
+    try {
       conn.close();
     }
-    catch(Exception e)
-    {
-      System.out.println("try as we might, the f'ing thing wont close");
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch (Exception ex) {
+        LOG("try as we might, the f'ing thing wont close");
+        LOG(ex);
     }
+  }
 
-  } // closeDatabase
-
-
-  public osmServerSQLHandler()
-  {
-
+  public osmServerSQLHandler() {
     sSQLConnection = "jdbc:mysql://128.40.59.181/openstreetmap?useUnicode=true&characterEncoding=latin1";
-
     sUser = "openstreetmap";
     sPass = "openstreetmap";
 
     connect();
+  }
 
-
-  } // osmServerSQLHandler
-
-
-  public osmServerSQLHandler(String sTSQLConnection,
-      String sTUser,
-      String sTPass)
-
-  {
-
+  public osmServerSQLHandler(String sTSQLConnection, String sTUser, String sTPass) {
     sSQLConnection = sTSQLConnection;
     sUser = sTUser;
     sPass = sTPass;
 
     connect();
-
   }
 
-  private void connect()
-  {
-
-    try{
-
-
+  private void connect() {
+    try {
       Class.forName("com.mysql.jdbc.Driver").newInstance(); 
-
-      conn = DriverManager.getConnection(sSQLConnection,
-          sUser,
-          sPass);
-
+      conn = DriverManager.getConnection(sSQLConnection, sUser, sPass);
       bConnectSuccess = true;
-
       System.out.println("sql connect apparently successful in sql handler");
-
     }
-    catch(Exception e)
-    {
-      System.out.println("sql connect failure");
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch(Exception ex) {
+        LOG("sql connect failure");
+        LOG(ex);
     }
+  }
 
-
-    //    System.out.println("osmSQLHandler instantiated");
-  } // osmServerSQLHandler
-
-
-  public boolean SQLConnectSuccess()
-  {
+  public boolean SQLConnectSuccess() {
     return bConnectSuccess;
+  }
 
-  } // SQLConnectSuccess;
-
-
-  public boolean SQLSuccessful()
-  {
-
+  public boolean SQLSuccessful() {
     return bSQLSuccess;
+  }
+  
+  private String createToken() {
+      final String tokenLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; 
+      Random rand = new Random();
+      StringBuffer tokenStringBuffer = new StringBuffer();
+      for (int i = 0; i < 30; i++) {
+          tokenStringBuffer.append(tokenLetters.charAt(rand.nextInt(tokenLetters.length())));
+      }
+      return tokenStringBuffer.toString();
+  }
 
-  } // SQLSuccessful
-
-
-
-  public synchronized String login(String user, String pass)
-  {
-    // FIXME: add all the letters plus upper case etc
-    char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' , 'i' , 'j'};
-
-    System.out.println("login " + user + " " + pass);
-
+  public synchronized String login(String user, String pass) {
+    LOG("login " + user + " " + pass);
     if( 
         user.length() < MIN_USERNAME_LENGTH ||
         user.length() > MAX_USERNAME_LENGTH ||
@@ -155,160 +125,115 @@ public class osmServerSQLHandler extends Thread
         user.indexOf(" ") != -1 )
     {
       return "ERROR";
-
     }
 
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
-      String sSQL = "select uid,active from user where user='" + user + "' and pass_crypt=md5('" + pass + "')";
-
-      System.out.println("querying with sql \n " + sSQL);
-
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
+      String sSQL = "select uid, active from user where user='" + user + "' and pass_crypt=md5('" + pass + "')";
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
-
-      if( rs.next() && rs.getInt("active") == 1)
-      {
-        String token = "";
-        Random r = new Random();
-
-        for(int i = 1; i < 30; i++)
-        {
-          token = token + letters[ 1 + r.nextInt(letters.length -1)];
-
-        }
-        int uid = rs.getInt(1);
-
-        sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
-          + " where uid = " + uid;
-
-        stmt.execute(sSQL);
-
-        sSQL = "update user set token='" + token + "' where uid = " + uid;
-
-        stmt.execute(sSQL);
-
-        return token;
+      try {
+          if (rs.next() && rs.getInt("active") == 1) {
+            String token = createToken();
+            int uid = rs.getInt(1);
+            sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
+              + " where uid = " + uid;
+            stmt.execute(sSQL);
+            sSQL = "update user set token='" + token + "' where uid = " + uid;
+            stmt.execute(sSQL);
+            return token;
+          }
       }
-
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-
+    catch(Exception e) {
+        LOG(e);
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return "ERROR";
-
-
-  } // login
-
-
+  }
 
   public synchronized int validateToken(String token)
   {
     if( bTokenValidated
-        && System.currentTimeMillis() < lValidationTimeout)
-    {
-      //      System.out.println("validated cached token returning " + nLastUID);
+        && System.currentTimeMillis() < lValidationTimeout) {
       return nLastUID;
-
     }
 
-
-    if(token.length() > MAX_TOKEN_LENGTH || token.indexOf(" ") != -1)
-    {
+    if(token.length() > MAX_TOKEN_LENGTH || token.indexOf(" ") != -1) {
       System.out.println("didnt validate " + token );
       bTokenValidated = false;
       return -1;
-
-
     }
 
-    try{
-
-      Statement stmt = conn.createStatement();
-
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select uid from user where token='" + token +"' and timeout > "+System.currentTimeMillis();
-
-      System.out.println("querying with sql \n " + sSQL);
-
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
-
-      if( rs.next() )
-      {
-        int uid = rs.getInt(1);
-
-        sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) 
-          + " where uid = " + uid;
-
-        stmt.execute(sSQL);
-
-        System.out.println("validated token " + token);
-
-        lValidationTimeout = System.currentTimeMillis() + (1000 * 60 * 1); // timeout in 1 minute
-        bTokenValidated = true;
-        nLastUID = uid;
-
-        return uid;
-
+      try {
+          if (rs.next()) {
+            int uid = rs.getInt(1);
+            sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) + " where uid = " + uid;
+            stmt.execute(sSQL);
+            System.out.println("validated token " + token);
+            lValidationTimeout = System.currentTimeMillis() + (1000 * 60 * 1); // timeout in 1 minute
+            bTokenValidated = true;
+            nLastUID = uid;
+            return uid;
+          }
       }
-
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch(Exception ex) {
+        LOG(ex);
+    }
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
     }
 
     bTokenValidated = false;
     return -1;
-
-
-  } // validateLoginToken
-
+  }
 
   public synchronized int getGPXID(int nUID, String sFilename)
   {
-    try{
-
-      Statement stmt = conn.createStatement();
-
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select uid from points_meta_table where "
         + "user_uid = " + nUID
         + " and name='" + sFilename + "'";
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      if( rs.next() )
-      {
-        return rs.getInt("uid");
-
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            return rs.getInt("uid");
+          }
+          else {
+            return -1;
+          }
       }
-      else
-      {
-        return -1;
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
       }
-
     }
-    catch(Exception e)
-    {
-
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch(Exception ex){
+        LOG(ex);
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return -1;
-
-
   }
 
 
@@ -325,13 +250,9 @@ public class osmServerSQLHandler extends Thread
       int uid,
       int gpx_id)
   {
-
-
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "insert into tempPoints (gpx_id,latitude,longitude,altitude,timestamp,uid,hor_dilution,vert_dilution,trackid,quality,satellites,last_time,visible,dropped_by) values ("
         + " " + gpx_id + ", "
         + " " + lat + ", "
@@ -345,160 +266,105 @@ public class osmServerSQLHandler extends Thread
         + " " + quality + ", "
         + " " + satellites + ", "
         + " " + System.currentTimeMillis() + ", 1,0);";
-
-
-      //      System.out.println("querying with sql \n " + sSQL);
-
       stmt.execute(sSQL);
-
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-      System.out.println("uh-oh!");
+    catch (Exception ex) {
+      LOG(ex);
+      LOG("uh-oh!");
       return false;
     }
-
-    //    System.out.println("added point ok, returning");
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return true;
+  }
 
-  } // addPoint
-
-
-  public synchronized Vector getPointsWithDate(float p1lat,
-      float p1lon,
-      float p2lat,
-      float p2lon
-      )
-  {
-
-    System.out.println("getPoints");
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+  public synchronized Vector getPointsWithDate(float p1lat, float p1lon, float p2lat, float p2lon) {
+    LOG("getPoints");
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select longitude,latitude,altitude,timestamp from tempPoints"
         + " where latitude < " + p1lat
         + " and latitude > " + p2lat
         + " and longitude > " + p1lon
         + " and longitude < " + p2lon
         + " and visible=1 limit 50000";
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      boolean bFirst = true;
-
-      gpspoint gpFirst = new gpspoint(0,0,0,0);
-
-      gpspoint gpLastPoint = new gpspoint(0,0,0,0);
-
-      Vector v = new Vector();
-
-      while(rs.next())
-      {
-        v.add( new gpspoint(rs.getFloat(2),
-              rs.getFloat(1),
-              rs.getFloat(3),
-              rs.getLong(4) ));
-
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          boolean bFirst = true;
+          gpspoint gpFirst = new gpspoint(0,0,0,0);
+          gpspoint gpLastPoint = new gpspoint(0,0,0,0);
+          Vector v = new Vector();
+          while (rs.next()) {
+            v.add( new gpspoint(rs.getFloat(2),
+                  rs.getFloat(1),
+                  rs.getFloat(3),
+                  rs.getLong(4) ));
+    
+          }
+          bSQLSuccess = true;
+          return v;
       }
-
-      bSQLSuccess = true;
-
-      return v;
-
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-
+    catch(Exception ex){
+        LOG(ex);
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return null;
+  }
 
-  } // getPoints
-
-
-
-  public synchronized Vector getPoints(float p1lat,
-      float p1lon,
-      float p2lat,
-      float p2lon
-      )
-  {
-
-    System.out.println("getPoints");
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+  public synchronized Vector getPoints(float p1lat, float p1lon, float p2lat, float p2lon) {
+    LOG("getPoints");
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select latitude,longitude from tempPoints"
         + " where latitude < " + p1lat
         + " and latitude > " + p2lat
         + " and longitude > " + p1lon
         + " and longitude < " + p2lon
         + " and visible=1 limit 50000";
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      boolean bFirst = true;
-
-      gpspoint gpFirst = new gpspoint(0,0,0,0);
-
-      gpspoint gpLastPoint = new gpspoint(0,0,0,0);
-
-      Vector v = new Vector();
-
-      while(rs.next())
-      {
-        v.add(new Float(rs.getFloat(1)));
-        v.add(new Float(rs.getFloat(2)));
-
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+        rs = stmt.executeQuery(sSQL);
+        boolean bFirst = true;
+        gpspoint gpFirst = new gpspoint(0,0,0,0);
+        gpspoint gpLastPoint = new gpspoint(0,0,0,0);
+        Vector v = new Vector();
+        while(rs.next()) {
+          v.add(new Float(rs.getFloat(1)));
+          v.add(new Float(rs.getFloat(2)));
+        }
+        bSQLSuccess = true;
+        return v;
       }
-
-      bSQLSuccess = true;
-
-      return v;
-
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-
+    catch (Exception ex) {
+        LOG(ex);
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return null;
+  }
 
-  } // getPoints
-
-
-  public synchronized Vector getFullPoints(
-      float p1lat,
-      float p1lon,
-      float p2lat,
-      float p2lon
-      )
-  {
-
-    System.out.println("getPoints");
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+  public synchronized Vector getFullPoints(float p1lat, float p1lon, float p2lat, float p2lon) {
+    LOG("getPoints");
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select latitude,"
         + " longitude,"
         + " altitude,"
@@ -510,9 +376,7 @@ public class osmServerSQLHandler extends Thread
         + " satellites, "
         + " user, "
         + " last_time "
-
         + " from tempPoints, user"
-
         + " where latitude < " + p1lat
         + " and latitude > " + p2lat
         + " and longitude > " + p1lon
@@ -521,131 +385,92 @@ public class osmServerSQLHandler extends Thread
         + " and visible = 1"
         + " limit 10000";
 
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      boolean bFirst = true;
-
-      gpspoint gpFirst = new gpspoint(0,0,0,0);
-
-      gpspoint gpLastPoint = new gpspoint(0,0,0,0);
-
-      Vector v = new Vector();
-
-      while(rs.next())
-      {
-
-        v.add( new Double(rs.getDouble("latitude")) ); // lat
-        v.add( new Double(rs.getDouble("longitude")) ); // lon
-        v.add( new Double(rs.getDouble("altitude")) ); // alt
-        v.add( new java.util.Date(rs.getLong("timestamp") )); // time point was taken
-        v.add( new Double( rs.getDouble("hor_dilution")));
-        v.add( new Double( rs.getDouble("vert_dilution")));
-        v.add( new Integer( rs.getInt("trackid")));
-        v.add( new Integer( rs.getInt("quality")));
-        v.add( new Integer( rs.getInt("satellites")));
-        v.add( rs.getString("user"));
-        v.add( new java.util.Date(rs.getLong("last_time")));
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          boolean bFirst = true;
+          gpspoint gpFirst = new gpspoint(0,0,0,0);
+          gpspoint gpLastPoint = new gpspoint(0,0,0,0);
+          Vector v = new Vector();
+          while(rs.next()) {
+            v.add( new Double(rs.getDouble("latitude")) ); // lat
+            v.add( new Double(rs.getDouble("longitude")) ); // lon
+            v.add( new Double(rs.getDouble("altitude")) ); // alt
+            v.add( new java.util.Date(rs.getLong("timestamp") )); // time point was taken
+            v.add( new Double( rs.getDouble("hor_dilution")));
+            v.add( new Double( rs.getDouble("vert_dilution")));
+            v.add( new Integer( rs.getInt("trackid")));
+            v.add( new Integer( rs.getInt("quality")));
+            v.add( new Integer( rs.getInt("satellites")));
+            v.add( rs.getString("user"));
+            v.add( new java.util.Date(rs.getLong("last_time")));
+          }
+    
+          bSQLSuccess = true;
+    
+          return v;
       }
-
-      bSQLSuccess = true;
-
-      return v;
-
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
     catch(Exception e)
     {
-      System.out.println(e);
-      e.printStackTrace();
-
+      LOG(e);
       System.exit(-1);
-
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return null;
+  }
 
-  } // getPoints
-
-
-
-
-  public synchronized boolean dropPoint(
-      float lon,
-      float lat,
-      int uid)
-  {
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+  public synchronized boolean dropPoint(float lon, float lat, int uid) {
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
         + " latitude = " + lat 
         + " and longitude = " + lon;
-
-      System.out.println("querying with sql \n " + sSQL);
-
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch(Exception e) {
+      LOG(e);
       return false;
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return true;
-  } // dropPoint
+  }
 
-
-
-  public synchronized boolean dropPointsInArea(
-      float lon1,
-      float lat1,
-      float lon2,
-      float lat2,
-
-      int uid)
-  {
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+  public synchronized boolean dropPointsInArea(float lon1, float lat1, float lon2, float lat2, int uid) {
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "update tempPoints set visible=0, dropped_by=" +uid+"  where "
         + " latitude <= " + lat1
         + " and latitude >= " + lat2
         + " and longitude >= " + lon1
         + " and longitude <= " + lon2;
-
-      System.out.println("querying with sql \n " + sSQL);
-
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-
     }
     catch(Exception e)
     {
-      System.out.println(e);
-      e.printStackTrace();
-
+      LOG(e);
       return false;
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return true;
-  } // dropPoint
+  }
 
-
-
-  public synchronized String addUser(String user, String pass)
-  {
-    // FIXME: add all the letters plus upper case etc
-    char letters[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' , 'i' , 'j'};
-
-    String token = "";
-    System.out.println("addUser " + user + " " + pass);
+  public synchronized String addUser(String user, String pass) {
+    LOG("addUser " + user + " " + pass);
 
     if( user.length() < MIN_USERNAME_LENGTH ||
         user.length() > MAX_USERNAME_LENGTH ||
@@ -653,113 +478,80 @@ public class osmServerSQLHandler extends Thread
         pass.length() > MAX_PASSWORD_LENGTH ||
         user.indexOf(" ") != -1 )
     {
-      System.out.println("returning error");
+      LOG("returning error");
       return "ERROR";
-
     }
 
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
-
-      Random r = new Random();
-
-      for(int i = 1; i < 30; i++)
-      {
-        token = token + letters[ 1 + r.nextInt(letters.length -1)];
-
-      }
-
+    String token = createToken();
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "insert into user (user, pass_crypt, timeout, token) values (" +
         "'" + user + "', " +
         "md5('" + pass + "'), " +
         " " + System.currentTimeMillis() + ", " +
         " '" + token + "')";
-
-      System.out.println("querying with sql \n " + sSQL);
-
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
-
-
     }
     catch(Exception e)
     {
-      System.out.println(e);
-      e.printStackTrace();
-
-
+      LOG(e);
+    }
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
     }
 
-    System.out.println("returning token " + token);
+    LOG("returning token " + token);
     return token;
+  }
 
-
-  } // addUser
-
-
-
-  public synchronized boolean confirmUser(String user, String token)
-  {
-
-    System.out.println("confirm " + user + " " + token);
-
+  public synchronized boolean confirmUser(String user, String token) {
+    LOG("confirm " + user + " " + token);
     if( user.length() < MIN_USERNAME_LENGTH ||
         user.length() > MAX_USERNAME_LENGTH ||
         user.indexOf(" ") != -1 )
     {
       return false;
-
     }
-
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select uid,active from user where user='" + user + "' and token='" + token + "'";
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      if( rs.next() && rs.getInt("active") == 0)
-      {
-        sSQL = "update user set active=1" 
-          + " where uid = " + rs.getInt("uid");
-
-        System.out.println("executing sql " + sSQL);
-
-        stmt.execute(sSQL);
-
-        return true;
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          if( rs.next() && rs.getInt("active") == 0)
+          {
+            sSQL = "update user set active=1" 
+              + " where uid = " + rs.getInt("uid");
+    
+            LOG("executing sql " + sSQL);
+    
+            stmt.execute(sSQL);
+    
+            return true;
+          }
+    
+          return false;
       }
-
-      return false;
-
+      finally {
+        if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
-
+    catch(Exception e) {
+      LOG(e);
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return false;
+  }
 
+  public synchronized boolean userExists(String user) {
 
-  } // confirmUser
-
-
-
-
-
-  public synchronized boolean userExists(String user)
-  {
-
-    System.out.println("user exists " + user );
+    LOG("user exists " + user );
 
     if( user.length() < MIN_USERNAME_LENGTH ||
         user.length() > MAX_USERNAME_LENGTH ||
@@ -769,44 +561,37 @@ public class osmServerSQLHandler extends Thread
 
     }
 
-
-    try{
-
-      Statement stmt = conn.createStatement();
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
 
       String sSQL = "select uid,active from user where user='" + user +"'";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      return rs.next();
-
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          return rs.next();
+      }
+      finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch(Exception e) {
+      LOG(e);
       return false;
     }
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
+  }
 
-  } // userExists
-
-  public synchronized Vector getStreets(
-      float p1lat,
-      float p1lon,
-      float p2lat,
-      float p2lon
-      )
-  {
-
-    System.out.println("getStreets");
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+  public synchronized Vector getStreets(float p1lat, float p1lon, float p2lat, float p2lon) {
+    LOG("getStreets");
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select uid_of_street, lon1, lat1, lon2, lat2 from streetSegments"
         + " where ( "
         + "     lat1 < " + p1lat
@@ -820,89 +605,65 @@ public class osmServerSQLHandler extends Thread
         + " and lon2 < " + p2lon
         + " ) "
         + " and visible=1 limit 10000";
-
-
-      System.out.println("querying with sql \n " + sSQL);
-
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      Vector v = new Vector();
-
-      while(rs.next())
-      {
-        v.add( new Integer( rs.getInt(1) ) );
-        v.add( new Float( rs.getDouble(2)));
-        v.add( new Float( rs.getDouble(3)));
-        v.add( new Float( rs.getDouble(4)));
-        v.add( new Float( rs.getDouble(5)));
-
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          Vector v = new Vector();
+          while(rs.next()) {
+            v.add( new Integer( rs.getInt(1) ) );
+            v.add( new Float( rs.getDouble(2)));
+            v.add( new Float( rs.getDouble(3)));
+            v.add( new Float( rs.getDouble(4)));
+            v.add( new Float( rs.getDouble(5)));
+          }
+          bSQLSuccess = true;
+          return v;
       }
-
-      bSQLSuccess = true;
-
-      return v;
-
+      finally {
+        if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
     }
-    catch(Exception e)
-    {
-
-
-      System.out.println(e);
-      e.printStackTrace();
-
-
+    catch(Exception e) {
+      LOG(e);
     }
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return null;
+  }
 
-  } // getStreets
-
-
-
-  public synchronized int largestTrackID(String token)
-  {
-
+  public synchronized int largestTrackID(String token) {
     int uid = validateToken(token);
-
-
-    try{
-
-      Statement stmt = conn.createStatement();
-
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
       String sSQL = "select max(trackid) from tempPoints where uid=" + uid;
-
-      System.out.println("querying with sql \n " + sSQL);
-
-      ResultSet rs = stmt.executeQuery(sSQL);
-
-      rs.next();
-
-      int trackID = -1;
-
-      if( rs.getString(1).equals("NULL"))
-      {
-
+      LOG("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+          rs = stmt.executeQuery(sSQL);
+          rs.next();
+          int trackID = -1;
+          if (! rs.getString(1).equals("NULL")) {
+            trackID = rs.getInt(1);
+          }
+          return trackID;
       }
-      else{
-
-        trackID = rs.getInt(1);
+      finally {
+        if (rs != null) try { rs.close(); } catch (Exception ex) { }
       }
-
-      return trackID;
-
     }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-
+    catch(Exception e) {
+      LOG(e);
     }
-
-
+    finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return -1;
-  } // largestTrackID
+  }
 
+  // EOF Ben's refactoring
 
   private boolean doesKeyExist(int nKeyUID)
   {
@@ -917,7 +678,7 @@ public class osmServerSQLHandler extends Thread
         + " uid = " + nKeyUID 
         + " order by timestamp desc limit 1";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -930,7 +691,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -952,7 +713,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select h.uid, j.name, j.user,j.timestamp from (select * from key_meta_table) as h, (select * from osmKeys left join user on user.uid=osmKeys.user_uid order by timestamp desc) as j  where h.uid=j.uid and h.visible=" + bVisibleOrNot + " group by h.uid";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -968,7 +729,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -988,7 +749,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select osmKeys.name, osmKeys.timestamp, osmKeys.visible, user.user from osmKeys left join user on user_uid=user.uid where osmKeys.uid=" + nKey + " order by timestamp desc";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1004,7 +765,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1028,7 +789,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "start transaction;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -1036,11 +797,11 @@ public class osmServerSQLHandler extends Thread
         + System.currentTimeMillis() 
         + ", " + nUserUID
         + ", 1)";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "set @id = last_insert_id(); ";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -1055,12 +816,12 @@ public class osmServerSQLHandler extends Thread
 
 
       sSQL = "commit;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
       sSQL = "select @id;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -1070,7 +831,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1093,7 +854,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select uid from key_meta_table where uid=" + nKeyNum;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1118,7 +879,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1137,7 +898,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select name, visible from osmKeys where uid=" + nKeyNum + " order by timestamp desc limit 1";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1160,7 +921,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1180,7 +941,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select name, visible from osmKeys where uid=" + nKeyNum + " order by timestamp desc limit 1";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1204,7 +965,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1228,7 +989,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "start transaction; ";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       stmt.execute(sSQL);
 
@@ -1239,17 +1000,17 @@ public class osmServerSQLHandler extends Thread
         + nUserUID + ", "
         + sVisible + ");";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "update key_meta_table set visible=" + sVisible + " where uid=" +nKeyNum;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "commit;";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
       return true;
 
@@ -1258,7 +1019,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1280,7 +1041,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select visible from key_meta_table where uid=" + nKeyNum;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1293,7 +1054,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1336,24 +1097,24 @@ public class osmServerSQLHandler extends Thread
         + ", 1"
         + ", '"  + sNewGPXName + "')";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "select last_insert_id(); ";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
 
-      System.out.println("new gpx returning " + rs.getInt(1));
+      LOG("new gpx returning " + rs.getInt(1));
 
       return rs.getInt(1);
 
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1376,7 +1137,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1393,7 +1154,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1415,25 +1176,25 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "start transaction; ";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "delete from points_meta_table where user_uid = "
         + nUID 
         + " and uid = " + nGPXUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "delete from tempPoints where uid="+ nUID
         + " and gpx_id=" + nGPXUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "commit;";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       return true;
@@ -1441,7 +1202,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1461,7 +1222,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "start transaction;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "insert into node_meta_table (timestamp, user_uid, visible) values ("
@@ -1469,11 +1230,11 @@ public class osmServerSQLHandler extends Thread
         + ", " + nUserUID
         + ", 1)";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "set @id = last_insert_id(); ";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -1488,12 +1249,12 @@ public class osmServerSQLHandler extends Thread
       stmt.execute(sSQL);
 
       sSQL = "commit;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
       sSQL = "select @id;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -1503,7 +1264,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1522,7 +1283,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1548,7 +1309,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1566,7 +1327,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "start transaction;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "insert into street_segment_meta_table (timestamp, user_uid, visible) values ("
@@ -1574,11 +1335,11 @@ public class osmServerSQLHandler extends Thread
         + ", " + nUserUID
         + ", 1)";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "set @id = last_insert_id(); ";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -1593,12 +1354,12 @@ public class osmServerSQLHandler extends Thread
       stmt.execute(sSQL);
 
       sSQL = "commit;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
       sSQL = "select @id;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -1608,7 +1369,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1635,7 +1396,7 @@ public class osmServerSQLHandler extends Thread
         +" and visible = true) as f, (select uid,visible,max(timestamp) as mtime from nodes group by uid) as g where g.uid = f.uid and f.timestamp = g.mtime and f.visible = g.visible";
 
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1651,7 +1412,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1671,13 +1432,13 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select latitude,longitude,max(timestamp) from nodes where uid=" + nNodeNum + " group by uid";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
       if( rs.next() )
       {
-        System.out.println("found uid ok");
+        LOG("found uid ok");
 
         // that key does exist
 
@@ -1696,14 +1457,14 @@ public class osmServerSQLHandler extends Thread
       }
       else
       {
-        System.out.println("didnt find that uid guvnor!");
+        LOG("didnt find that uid guvnor!");
 
       }
 
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1723,7 +1484,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1732,7 +1493,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1769,7 +1530,7 @@ public class osmServerSQLHandler extends Thread
         Statement stmt = conn.createStatement();
 
         String sSQL = "start transaction;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "insert into street_segment_meta_table (timestamp, user_uid, visible) values ("
@@ -1777,11 +1538,11 @@ public class osmServerSQLHandler extends Thread
           + ", " + nUserUID
           + ", 1)";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "set @id = last_insert_id(); ";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
 
@@ -1793,16 +1554,16 @@ public class osmServerSQLHandler extends Thread
           + nUserUID + ", "
           + "1)";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "commit;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
 
         sSQL = "select @id;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         ResultSet rs = stmt.executeQuery(sSQL);
 
         rs.next();
@@ -1812,7 +1573,7 @@ public class osmServerSQLHandler extends Thread
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -1852,7 +1613,7 @@ public class osmServerSQLHandler extends Thread
 
       sSQL = sSQL + ") ) as f, (select uid,visible,max(timestamp) as mtime from street_segments group by uid) as h where h.mtime = f.timestamp and h.uid = f.uid" ;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1867,7 +1628,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1885,7 +1646,7 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "start transaction;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "insert into street_meta_table (timestamp, user_uid, visible) values ("
@@ -1893,11 +1654,11 @@ public class osmServerSQLHandler extends Thread
         + ", " + nUserUID
         + ", 1)";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "set @id = last_insert_id(); ";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -1911,12 +1672,12 @@ public class osmServerSQLHandler extends Thread
       stmt.execute(sSQL);
 
       sSQL = "commit;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
       sSQL = "select @id;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -1926,7 +1687,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -1946,7 +1707,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select * from street_meta_table where uid=" + nStreetUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1958,7 +1719,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
     }
 
@@ -1976,7 +1737,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select * from area_meta_table where uid=" + nAreaUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -1988,7 +1749,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
     }
 
@@ -2006,7 +1767,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select uid from nodes where uid=" + nNodeUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -2018,7 +1779,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
     }
 
@@ -2036,7 +1797,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select * from street_segment_meta_table where uid=" + nStreetSegmentUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -2048,7 +1809,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
     }
 
@@ -2071,7 +1832,7 @@ public class osmServerSQLHandler extends Thread
         + " and segment_uid=" + nStreetSegmentUID
         + " order by timestamp desc limit 1";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -2088,7 +1849,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
     }
 
@@ -2111,7 +1872,7 @@ public class osmServerSQLHandler extends Thread
         Statement stmt = conn.createStatement();
 
         String sSQL = "start transaction;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values ("
@@ -2121,18 +1882,18 @@ public class osmServerSQLHandler extends Thread
           + nUserUID + ", "
           + "1)";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "commit;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         return true;
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -2160,7 +1921,7 @@ public class osmServerSQLHandler extends Thread
         Statement stmt = conn.createStatement();
 
         String sSQL = "start transaction;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values ("
@@ -2170,11 +1931,11 @@ public class osmServerSQLHandler extends Thread
           + nUserUID + ", "
           + "0)";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         sSQL = "commit;";
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         return true;
@@ -2182,7 +1943,7 @@ public class osmServerSQLHandler extends Thread
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -2220,14 +1981,14 @@ public class osmServerSQLHandler extends Thread
           + "'"  + sValue + "', "
           + System.currentTimeMillis() +")";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         return true;
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -2266,14 +2027,14 @@ public class osmServerSQLHandler extends Thread
           + "'"  + sValue + "', "
           + System.currentTimeMillis() +")";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         return true;
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -2314,14 +2075,14 @@ public class osmServerSQLHandler extends Thread
           + "'" + sValue + "', "
           + System.currentTimeMillis() +")";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         return true;
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -2343,18 +2104,18 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "start transaction;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "insert into points_of_interest_meta_table (timestamp, user_uid) values ("
         + System.currentTimeMillis() 
         + ", " + nUserUID + ")";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "set @id = last_insert_id(); ";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -2369,12 +2130,12 @@ public class osmServerSQLHandler extends Thread
       stmt.execute(sSQL);
 
       sSQL = "commit;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
       sSQL = "select @id;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -2384,7 +2145,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }
@@ -2419,14 +2180,14 @@ public class osmServerSQLHandler extends Thread
           + "'" + sValue + "', "
           + System.currentTimeMillis() +")";
 
-        System.out.println("querying with sql \n " + sSQL);
+        LOG("querying with sql \n " + sSQL);
         stmt.execute(sSQL);
 
         return true;
       }
       catch(Exception e)
       {
-        System.out.println(e);
+        LOG(e);
         e.printStackTrace();
 
       }
@@ -2448,7 +2209,7 @@ public class osmServerSQLHandler extends Thread
 
       String sSQL = "select * from points_of_interest_meta_table where uid=" + nPoIUID;
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
 
       ResultSet rs = stmt.executeQuery(sSQL);
 
@@ -2460,7 +2221,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
     }
 
@@ -2534,18 +2295,18 @@ public class osmServerSQLHandler extends Thread
       Statement stmt = conn.createStatement();
 
       String sSQL = "start transaction;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "insert into area_meta_table (timestamp, user_uid) values ("
         + System.currentTimeMillis() 
         + ", " + nUserUID + ")";
 
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
       sSQL = "set @id = last_insert_id(); ";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
@@ -2588,12 +2349,12 @@ public class osmServerSQLHandler extends Thread
       stmt.execute(sSQL);
 
       sSQL = "commit;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       stmt.execute(sSQL);
 
 
       sSQL = "select @id;";
-      System.out.println("querying with sql \n " + sSQL);
+      LOG("querying with sql \n " + sSQL);
       ResultSet rs = stmt.executeQuery(sSQL);
 
       rs.next();
@@ -2603,7 +2364,7 @@ public class osmServerSQLHandler extends Thread
     }
     catch(Exception e)
     {
-      System.out.println(e);
+      LOG(e);
       e.printStackTrace();
 
     }

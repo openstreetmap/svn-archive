@@ -17,7 +17,7 @@
 
  */
 package org.openstreetmap.server;
-// check synch, add delete*
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import org.openstreetmap.util.gpspoint;
 
+// TODO confirm that read-only and transaction-ed methods are not synchronized 
 public class osmServerSQLHandler extends Thread {
 
     static final int MIN_USERNAME_LENGTH = 5;
@@ -1043,6 +1044,16 @@ public class osmServerSQLHandler extends Thread {
             if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return v;
+    }
+
+    public synchronized boolean deleteLine(int nLineNum, int nUserUID) {
+        // TODO
+        return false;
+    }
+
+    public synchronized boolean deleteStreet(int nStreetNum, int nUserUID) {
+        // TODO
+        return false;
     }
 
     public synchronized boolean deleteNode(int nNodeNum, int nUserUID) {

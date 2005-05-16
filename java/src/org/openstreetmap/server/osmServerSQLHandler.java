@@ -17,7 +17,7 @@
 
  */
 package org.openstreetmap.server;
-
+// check synch, add delete*
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -85,7 +85,7 @@ public class osmServerSQLHandler extends Thread {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(sSQLConnection, sUser, sPass);
             bConnectSuccess = true;
-            System.out.println("sql connect apparently successful in sql handler");
+            LOG("sql connect apparently successful in sql handler");
         }
         catch (Exception ex) {
             LOG("sql connect failure");
@@ -134,22 +134,14 @@ public class osmServerSQLHandler extends Thread {
                 }
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return "ERROR";
     }
@@ -159,7 +151,7 @@ public class osmServerSQLHandler extends Thread {
             return nLastUID;
         }
         if (token.length() > MAX_TOKEN_LENGTH || token.indexOf(" ") != -1) {
-            System.out.println("didnt validate " + token);
+            LOG("didnt validate " + token);
             bTokenValidated = false;
             return -1;
         }
@@ -174,32 +166,23 @@ public class osmServerSQLHandler extends Thread {
                     int uid = rs.getInt(1);
                     sSQL = "update user set timeout=" + (System.currentTimeMillis() + lTimeout) + " where uid = " + uid;
                     stmt.execute(sSQL);
-                    System.out.println("validated token " + token);
+                    LOG("validated token " + token);
                     lValidationTimeout = System.currentTimeMillis() + (1000 * 60 * 1); // timeout
-                    // in 1
-                    // minute
+                    // in 1 minute
                     bTokenValidated = true;
                     nLastUID = uid;
                     return uid;
                 }
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         bTokenValidated = false;
         return -1;
@@ -222,22 +205,14 @@ public class osmServerSQLHandler extends Thread {
                 }
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return -1;
     }
@@ -255,11 +230,7 @@ public class osmServerSQLHandler extends Thread {
             return false;
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return true;
     }
@@ -285,22 +256,14 @@ public class osmServerSQLHandler extends Thread {
                 return v;
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return null;
     }
@@ -327,22 +290,14 @@ public class osmServerSQLHandler extends Thread {
                 return v;
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return null;
     }
@@ -366,9 +321,7 @@ public class osmServerSQLHandler extends Thread {
                     v.add(new Double(rs.getDouble("longitude"))); // lon
                     v.add(new Double(rs.getDouble("altitude"))); // alt
                     v.add(new java.util.Date(rs.getLong("timestamp"))); // time
-                    // point
-                    // was
-                    // taken
+                    // point was taken
                     v.add(new Double(rs.getDouble("hor_dilution")));
                     v.add(new Double(rs.getDouble("vert_dilution")));
                     v.add(new Integer(rs.getInt("trackid")));
@@ -381,11 +334,7 @@ public class osmServerSQLHandler extends Thread {
                 return v;
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
@@ -393,11 +342,7 @@ public class osmServerSQLHandler extends Thread {
             System.exit(-1);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return null;
     }
@@ -415,11 +360,7 @@ public class osmServerSQLHandler extends Thread {
             return false;
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return true;
     }
@@ -437,11 +378,7 @@ public class osmServerSQLHandler extends Thread {
             return false;
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return true;
     }
@@ -464,11 +401,7 @@ public class osmServerSQLHandler extends Thread {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         LOG("returning token " + token);
         return token;
@@ -496,22 +429,14 @@ public class osmServerSQLHandler extends Thread {
                 return false;
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return false;
     }
@@ -532,11 +457,7 @@ public class osmServerSQLHandler extends Thread {
                 return rs.next();
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
@@ -544,11 +465,7 @@ public class osmServerSQLHandler extends Thread {
             return false;
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
     }
 
@@ -574,22 +491,14 @@ public class osmServerSQLHandler extends Thread {
                 return v;
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return null;
     }
@@ -612,22 +521,14 @@ public class osmServerSQLHandler extends Thread {
                 return trackID;
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return -1;
     }
@@ -647,22 +548,14 @@ public class osmServerSQLHandler extends Thread {
                 }
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return false;
     }
@@ -685,22 +578,14 @@ public class osmServerSQLHandler extends Thread {
                 }
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return v;
     }
@@ -723,22 +608,14 @@ public class osmServerSQLHandler extends Thread {
                 }
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return v;
     }
@@ -773,22 +650,14 @@ public class osmServerSQLHandler extends Thread {
                 return rs.getInt(1);
             }
             finally {
-                if (rs != null)
-                    try {
-                        rs.close();
-                    }
-                    catch (Exception ex) { }
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
         finally {
-            if (stmt != null)
-                try {
-                    stmt.close();
-                }
-                catch (Exception ex) { }
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return -1;
     }
@@ -797,73 +666,104 @@ public class osmServerSQLHandler extends Thread {
         if (!isStringSQLClean(sNewKeyName) || sNewKeyName.length() == 0) {
             return false;
         }
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select uid from key_meta_table where uid=" + nKeyNum;
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                // that key does exist
-                sSQL = "insert into osmKeys (uid,name,timestamp,user_uid,visible) values (" + " " + nKeyNum + ", " + "'" + sNewKeyName + "', " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
-                stmt.execute(sSQL);
-                return true;
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    // that key does exist
+                    sSQL = "insert into osmKeys (uid,name,timestamp,user_uid,visible) values (" + " " + nKeyNum + ", " + "'" + sNewKeyName + "', " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
+                    stmt.execute(sSQL);
+                    return true;
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // newKeyName
+    }
 
     public synchronized boolean deleteKey(int nKeyNum, int nUserUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select name, visible from osmKeys where uid=" + nKeyNum + " order by timestamp desc limit 1";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                // that key does exist
-                if (rs.getString("visible").equals("0")) {
-                    // the key is already deleted
-                    return false;
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    // that key does exist
+                    if (rs.getString("visible").equals("0")) {
+                        // the key is already deleted
+                        return false;
+                    }
+                    return updateKeyVisibility(nKeyNum, false, rs.getString("name"), nUserUID);
                 }
-                return updateKeyVisibility(nKeyNum, false, rs.getString("name"), nUserUID);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // deleteKey
+    }
 
     public synchronized boolean undeleteKey(int nKeyNum, int nUserUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select name, visible from osmKeys where uid=" + nKeyNum + " order by timestamp desc limit 1";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                // that key does exist
-                if (rs.getString("visible").equals("1")) {
-                    // the key is already undeleted
-                    return false;
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    // that key does exist
+                    if (rs.getString("visible").equals("1")) {
+                        // the key is already undeleted
+                        return false;
+                    }
+                    return updateKeyVisibility(nKeyNum, true, rs.getString("name"), nUserUID);
                 }
-                return updateKeyVisibility(nKeyNum, true, rs.getString("name"), nUserUID);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // undeleteKey
+    }
 
     private synchronized boolean updateKeyVisibility(int nKeyNum, boolean bVisible, String sKeyName, int nUserUID) {
+        Statement stmt = null;
         try {
             String sVisible = "0";
             if (bVisible) {
                 sVisible = "1";
             }
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction; ";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -881,24 +781,37 @@ public class osmServerSQLHandler extends Thread {
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // updateKeyVisibility
+    }
 
     public synchronized boolean getKeyVisible(int nKeyNum) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select visible from key_meta_table where uid=" + nKeyNum;
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                return rs.getString("visible").equals("1");
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    return rs.getString("visible").equals("1");
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // getKeyVisible
+    }
 
     private boolean isStringSQLClean(String s) {
         int nSpace = s.indexOf(' ');
@@ -906,52 +819,73 @@ public class osmServerSQLHandler extends Thread {
             return true;
         }
         return false;
-    } // isStringSQLClean
+    }
 
     public synchronized int newGPX(String sNewGPXName, int nUserUID) {
         if (!isStringSQLClean(sNewGPXName) || sNewGPXName.length() == 0) {
             return -1;
         }
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "insert into points_meta_table (timestamp, user_uid, visible, name) values (" + System.currentTimeMillis() + ", " + nUserUID + ", 1" + ", '" + sNewGPXName + "')";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
             sSQL = "select last_insert_id(); ";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            rs.next();
-            LOG("new gpx returning " + rs.getInt(1));
-            return rs.getInt(1);
-        }
-        catch (Exception ex) {
-            LOG(ex);
-        }
-        return -1;
-    } // newKey
-
-    public synchronized Vector getGPXFileInfo(int nUID) {
-        Vector v = new Vector();
-        try {
-            Statement stmt = conn.createStatement();
-            String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            while (rs.next()) {
-                v.addElement(rs.getString("name"));
-                v.addElement(new java.util.Date(Long.parseLong(rs.getString("timestamp"))));
-                v.addElement(new Integer(rs.getInt("uid")));
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                rs.next();
+                LOG("new gpx returning " + rs.getInt(1));
+                return rs.getInt(1);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+        return -1;
+    }
+
+    public synchronized Vector getGPXFileInfo(int nUID) {
+        Vector v = new Vector();
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID;
+            LOG("querying with sql \n " + sSQL);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                while (rs.next()) {
+                    v.addElement(rs.getString("name"));
+                    v.addElement(new java.util.Date(Long.parseLong(rs.getString("timestamp"))));
+                    v.addElement(new Integer(rs.getInt("uid")));
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
+        }
+        catch (Exception ex) {
+            LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return v;
-    } // getGPXFileInfo
+    }
 
     public synchronized boolean dropGPX(int nUID, int nGPXUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction; ";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -969,12 +903,16 @@ public class osmServerSQLHandler extends Thread {
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // dropGPX
+    }
 
     public synchronized int newNode(double latitude, double longitude, int nUserUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction;";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -991,38 +929,58 @@ public class osmServerSQLHandler extends Thread {
             stmt.execute(sSQL);
             sSQL = "select @id;";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            rs.next();
-            return rs.getInt(1);
-        }
-        catch (Exception ex) {
-            LOG(ex);
-        }
-        return -1;
-    } // newNode
-
-    public synchronized boolean moveNode(int nNodeNum, double latitude, double longitude, int nUserUID) {
-        try {
-            Statement stmt = conn.createStatement();
-            String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                // that key does exist
-                sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (" + " " + nNodeNum + ", " + " " + latitude + ", " + " " + longitude + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
-                stmt.execute(sSQL);
-                return true;
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                rs.next();
+                return rs.getInt(1);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+        return -1;
+    }
+
+    public synchronized boolean moveNode(int nNodeNum, double latitude, double longitude, int nUserUID) {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
+            LOG("querying with sql \n " + sSQL);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    // that key does exist
+                    sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (" + " " + nNodeNum + ", " + " " + latitude + ", " + " " + longitude + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
+                    stmt.execute(sSQL);
+                    return true;
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
+        }
+        catch (Exception ex) {
+            LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // moveNode
+    }
 
     public synchronized int newStreetSegment(int node_a, int node_b, int nUserUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction;";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -1039,71 +997,110 @@ public class osmServerSQLHandler extends Thread {
             stmt.execute(sSQL);
             sSQL = "select @id;";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            rs.next();
-            return rs.getInt(1);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                rs.next();
+                return rs.getInt(1);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return -1;
-    } // newStreetSegment
+    }
 
     public synchronized Vector getNodes(double lat1, double lon1, double lat2, double lon2) {
         Vector v = new Vector();
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select * from (select uid,latitude,longitude,timestamp,visible from nodes where " + "latitude < " + lat1 + " and " + "latitude > " + lat2 + " and " + "longitude > " + lon1 + " and " + "longitude < " + lon2 + " and visible = true) as f, (select uid,visible,max(timestamp) as mtime from nodes group by uid) as g where g.uid = f.uid and f.timestamp = g.mtime and f.visible = g.visible";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            while (rs.next()) {
-                v.add(new Integer(rs.getInt("uid")));
-                v.add(new Double(rs.getDouble("latitude")));
-                v.add(new Double(rs.getDouble("longitude")));
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                while (rs.next()) {
+                    v.add(new Integer(rs.getInt("uid")));
+                    v.add(new Double(rs.getDouble("latitude")));
+                    v.add(new Double(rs.getDouble("longitude")));
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return v;
-    } // getNodes
+    }
 
     public synchronized boolean deleteNode(int nNodeNum, int nUserUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select latitude,longitude,max(timestamp) from nodes where uid=" + nNodeNum + " group by uid";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                LOG("found uid ok");
-                // that key does exist
-                sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (" + " " + nNodeNum + ", " + " " + rs.getString("latitude") + ", " + " " + rs.getString("longitude") + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "0)";
-                stmt.execute(sSQL);
-                return true;
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    LOG("found uid ok");
+                    // that key does exist
+                    sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (" + " " + nNodeNum + ", " + " " + rs.getString("latitude") + ", " + " " + rs.getString("longitude") + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "0)";
+                    stmt.execute(sSQL);
+                    return true;
+                }
+                else {
+                    LOG("didnt find that uid guvnor!");
+                }
             }
-            else {
-                LOG("didnt find that uid guvnor!");
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // deleteNode
+    }
 
     private synchronized boolean nodeExists(int nNodeNum) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select uid from node_meta_table where uid=" + nNodeNum;
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            return rs.next();
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                return rs.next();
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // nodeExists
+    }
 
     private synchronized boolean checkNewLine(int node_a, int node_b) {
         if (nodeExists(node_a) && nodeExists(node_b)) {
@@ -1112,12 +1109,13 @@ public class osmServerSQLHandler extends Thread {
             return true;
         }
         return false;
-    } // checkNewLine
+    }
 
     public synchronized int newLine(int node_a, int node_b, int nUserUID) {
         if (checkNewLine(node_a, node_b)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "start transaction;";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1135,16 +1133,25 @@ public class osmServerSQLHandler extends Thread {
                 stmt.execute(sSQL);
                 sSQL = "select @id;";
                 LOG("querying with sql \n " + sSQL);
-                ResultSet rs = stmt.executeQuery(sSQL);
-                rs.next();
-                return rs.getInt(1);
+                ResultSet rs = null;
+                try {
+                    rs = stmt.executeQuery(sSQL);
+                    rs.next();
+                    return rs.getInt(1);
+                }
+                finally {
+                    if (rs != null) try { rs.close(); } catch (Exception ex) { }
+                }
             }
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return -1;
-    } // newLine
+    }
 
     /**
      * Gets the visible lines associated with the list of nodes you give
@@ -1154,8 +1161,9 @@ public class osmServerSQLHandler extends Thread {
      */
     public synchronized Vector getLines(int nnUID[]) {
         Vector v = new Vector();
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
             for (int i = 0; i < nnUID.length; i++) {
                 sSQL = sSQL + " node_a = " + nnUID[i] + " or node_b=" + nnUID[i];
@@ -1165,21 +1173,31 @@ public class osmServerSQLHandler extends Thread {
             }
             sSQL = sSQL + ") ) as f, (select uid,visible,max(timestamp) as mtime from street_segments group by uid) as h where h.mtime = f.timestamp and h.uid = f.uid";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            while (rs.next()) {
-                v.add(new Integer(rs.getInt("node_a")));
-                v.add(new Integer(rs.getInt("node_b")));
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                while (rs.next()) {
+                    v.add(new Integer(rs.getInt("node_a")));
+                    v.add(new Integer(rs.getInt("node_b")));
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return v;
-    } // getLines
+    }
 
     public synchronized int newStreet(int nUserUID, int street_segment) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction;";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -1196,103 +1214,163 @@ public class osmServerSQLHandler extends Thread {
             stmt.execute(sSQL);
             sSQL = "select @id;";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            rs.next();
-            return rs.getInt(1);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                rs.next();
+                return rs.getInt(1);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
         }
         catch (Exception ex) {
             LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return -1;
-    } // newStreet
+    }
 
     private boolean doesStreetExist(int nStreetUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select * from street_meta_table where uid=" + nStreetUID;
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                return true;
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
-        }
-        return false;
-    } // doesStreetExist
-
-    private boolean doesAreaExist(int nAreaUID) {
-        try {
-            Statement stmt = conn.createStatement();
-            String sSQL = "select * from area_meta_table where uid=" + nAreaUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                return true;
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
-        }
-        return false;
-    } // doesAreaExist
-
-    private boolean doesNodeExist(int nNodeUID) {
-        try {
-            Statement stmt = conn.createStatement();
-            String sSQL = "select uid from nodes where uid=" + nNodeUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                return true;
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
-        }
-        return false;
-    } // doesNodeExist
-
-    private boolean doesStreetSegmentExist(int nStreetSegmentUID) {
-        try {
-            Statement stmt = conn.createStatement();
-            String sSQL = "select * from street_segment_meta_table where uid=" + nStreetSegmentUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                return true;
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
-        }
-        return false;
-    } // doesStreetSegmentExist
-
-    private boolean doesStreetHaveSegmentVisible(int nStreetUID, int nStreetSegmentUID) {
-        try {
-            Statement stmt = conn.createStatement();
-            String sSQL = "select visible from street_table where" + " uid=" + nStreetUID + " and segment_uid=" + nStreetSegmentUID + " order by timestamp desc limit 1";
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                int nVisible = rs.getInt("visible");
-                if (nVisible == 1) {
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
                     return true;
                 }
             }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // doesStreetHaveSegmentVisible
+    }
+
+    private boolean doesAreaExist(int nAreaUID) {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            String sSQL = "select * from area_meta_table where uid=" + nAreaUID;
+            LOG("querying with sql \n " + sSQL);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    return true;
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
+        }
+        catch (Exception ex) {
+            LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+        return false;
+    }
+
+    private boolean doesNodeExist(int nNodeUID) {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            String sSQL = "select uid from nodes where uid=" + nNodeUID;
+            LOG("querying with sql \n " + sSQL);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    return true;
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
+        }
+        catch (Exception ex) {
+            LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+        return false;
+    }
+
+    private boolean doesStreetSegmentExist(int nStreetSegmentUID) {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            String sSQL = "select * from street_segment_meta_table where uid=" + nStreetSegmentUID;
+            LOG("querying with sql \n " + sSQL);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    return true;
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
+        }
+        catch (Exception ex) {
+            LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+        return false;
+    }
+
+    private boolean doesStreetHaveSegmentVisible(int nStreetUID, int nStreetSegmentUID) {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            String sSQL = "select visible from street_table where" + " uid=" + nStreetUID + " and segment_uid=" + nStreetSegmentUID + " order by timestamp desc limit 1";
+            LOG("querying with sql \n " + sSQL);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    int nVisible = rs.getInt("visible");
+                    if (nVisible == 1) {
+                        return true;
+                    }
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
+        }
+        catch (Exception ex) {
+            LOG(ex);
+        }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+        return false;
+    }
 
     public synchronized boolean addSegmentToStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID) {
         if (doesStreetExist(nStreetUID) && doesStreetSegmentExist(nStreetSegmentUID) && !doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "start transaction;";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1307,14 +1385,18 @@ public class osmServerSQLHandler extends Thread {
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return false;
-    } // addSegmentToStreet
+    }
 
     public synchronized boolean dropSegmentFromStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID) {
         if (doesStreetExist(nStreetUID) && doesStreetSegmentExist(nStreetSegmentUID) && doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "start transaction;";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1329,14 +1411,18 @@ public class osmServerSQLHandler extends Thread {
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return false;
-    } // dropSegmentFromStreet
+    }
 
     public synchronized boolean updateStreetKeyValue(int nUID, int nStreetUID, int nKeyUID, String sValue) {
         if (doesStreetExist(nStreetUID) && doesKeyExist(nKeyUID)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "insert into street_values (user_uid, street_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nStreetUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1345,14 +1431,18 @@ public class osmServerSQLHandler extends Thread {
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return false;
-    } // updateStreetKeyValue
+    }
 
     public synchronized boolean updateAreaKeyValue(int nUID, int nAreaUID, int nKeyUID, String sValue) {
         if (doesAreaExist(nAreaUID) && doesKeyExist(nKeyUID)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "insert into area_values (user_uid, area_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nAreaUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1361,14 +1451,18 @@ public class osmServerSQLHandler extends Thread {
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return false;
-    } // updateAreaKeyValue
+    }
 
     public synchronized boolean updateStreetSegmentKeyValue(int nUID, int nStreetSegmentUID, int nKeyUID, String sValue) {
         if (doesStreetSegmentExist(nStreetSegmentUID) && doesKeyExist(nKeyUID)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "insert into street_segment_values (user_uid, street_segment_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nStreetSegmentUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1377,13 +1471,17 @@ public class osmServerSQLHandler extends Thread {
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return false;
-    } // updateStreetSegmentKeyValue
+    }
 
     public synchronized int newPointOfInterest(double latitude, double longitude, int nUserUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction;";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -1400,20 +1498,30 @@ public class osmServerSQLHandler extends Thread {
             stmt.execute(sSQL);
             sSQL = "select @id;";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            rs.next();
-            return rs.getInt(1);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                rs.next();
+                return rs.getInt(1);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return -1;
-    } // newPointOfInterest
+    }
 
     public synchronized boolean updatePoIKeyValue(int nUID, int nPoIUID, int nKeyUID, String sValue) {
         if (doesPoIExist(nPoIUID) && doesKeyExist(nKeyUID)) {
+            Statement stmt = null;
             try {
-                Statement stmt = conn.createStatement();
+                stmt = conn.createStatement();
                 String sSQL = "insert into poi_values (user_uid, poi_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nPoIUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
                 LOG("querying with sql \n " + sSQL);
                 stmt.execute(sSQL);
@@ -1422,25 +1530,38 @@ public class osmServerSQLHandler extends Thread {
             catch (Exception ex) {
                 LOG(ex);
             }
+            finally {
+                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+            }
         }
         return false;
-    } // updatePoIKeyValue
+    }
 
     private boolean doesPoIExist(int nPoIUID) {
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "select * from points_of_interest_meta_table where uid=" + nPoIUID;
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            if (rs.next()) {
-                return true;
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                if (rs.next()) {
+                    return true;
+                }
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return false;
-    } // doesPoIExist
+    }
 
     public synchronized int newArea(int nUserUID, Vector nodes) {
         if (nodes.size() < 3) {
@@ -1472,8 +1593,9 @@ public class osmServerSQLHandler extends Thread {
             return -1;
         }
         // vector appears to be a well-formed list of nodes that exist!
+        Statement stmt = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             String sSQL = "start transaction;";
             LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
@@ -1498,8 +1620,7 @@ public class osmServerSQLHandler extends Thread {
                 Integer p = (Integer) e.nextElement();
                 sSQL = sSQL + "(" + " last_insert_id(), " + nUserUID + ", " + System.currentTimeMillis() + ", " + "" + i + ", " + "" + p + ", " + "1)";
                 i = new Integer(p.intValue()); // make sure we dereference..
-                // might be a good idea to test
-                // this one day
+                // TODO might be a good idea to test this one day
             }
             stmt.execute(sSQL);
             sSQL = "commit;";
@@ -1507,14 +1628,23 @@ public class osmServerSQLHandler extends Thread {
             stmt.execute(sSQL);
             sSQL = "select @id;";
             LOG("querying with sql \n " + sSQL);
-            ResultSet rs = stmt.executeQuery(sSQL);
-            rs.next();
-            return rs.getInt(1);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery(sSQL);
+                rs.next();
+                return rs.getInt(1);
+            }
+            finally {
+                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+            }
         }
         catch (Exception ex) {
             LOG(ex);
         }
+        finally {
+            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
         return -1;
-    } // newArea
+    }
 
 } // osmServerSQLHandler

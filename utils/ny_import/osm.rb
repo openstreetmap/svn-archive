@@ -37,14 +37,15 @@ module OSM
     def last_response; @last_response; end
     
     def call(method, *args)
-      result = @osm.call("openstreetmap.#{method}", *args)
-      @last_response = @osm.http_last_response
       if method == "login"
-        $stderr.puts "openstreetmap.login(#{args.join(", ")}) -> #{result}"
+        $stderr.print "openstreetmap.login(#{args.join(", ")}) -> "
       else
         # don't display the token, redundant
-        $stderr.puts "    #{method}(#{args[1..-1].join(", ")}) -> #{result}"
+        $stderr.print "    #{method}(#{args[1..-1].join(", ")}) -> "
       end
+      result = @osm.call("openstreetmap.#{method}", *args)
+      @last_response = @osm.http_last_response
+	  $stderr.puts "#{result}"
       return result
     end
     

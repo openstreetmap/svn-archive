@@ -126,12 +126,12 @@ begin
       begin
         osm.newStreet(name, coords, from_zip, to_zip)
         $stderr.puts "*** Created street #{i + 1} of #{line_ids.length}, #{((i + 1).to_f / line_ids.length * 100).to_s[0..4]}%"
-	break  # success
+        break  # success
       rescue =>ex
         $stderr.puts "*** FAILED [#{ex}], on attempt number #{attempt_count}"
-	$stderr.puts "*** response from server: #{osm.last_response.body}"
+        $stderr.puts "*** response from server: #{osm.last_response.body}"
         attempt_count += 1
-	raise "Exiting after #{attempt_count} attempts" if attempt_count >= NUM_ATTEMPTS
+	    raise "Exiting after #{attempt_count} attempts" if attempt_count >= NUM_ATTEMPTS
       end
     end
     sleep(0.05)

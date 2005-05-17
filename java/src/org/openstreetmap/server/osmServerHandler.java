@@ -430,7 +430,8 @@ public class osmServerHandler
  
 
   /**
-   * Get the 
+   * Get the
+   */
   public Vector getLines(String sToken, Vector v)
   {
     int nUID = osmSQLH.validateToken(sToken);

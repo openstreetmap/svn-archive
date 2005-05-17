@@ -73,6 +73,7 @@ def append_rt2(rt1, rt2_path)
       end
     end
   end
+  $stderr.puts "Parsed #{rt.keys.length} RT2 internal chain records."
   rt2.keys.each do |line_id|
     rt2_coords = rt2[line_id].compact
     if rt1.has_key?(line_id)
@@ -89,7 +90,7 @@ end
 def import_tiger(osm, rt1_path, rt2_path)
   rt = read_rt1(rt1_path)
   append_rt2(rt, rt2_path)
-  $stderr.puts "Parsed #{rt.keys.length} RT chain records."
+  $stderr.puts "Parsed #{rt.keys.length} RT1 chain records."
   return rt
 end
 
@@ -109,7 +110,7 @@ begin
   osm = open_osm
   if ARGV.first == "--reset"
     osm.rollback
-    puts "Reset finished."
+    puts "*** Reset finished"
     exit
   end
   tiger = import_tiger(osm, ARGV.first, ARGV[1])

@@ -133,7 +133,7 @@ module OSM
     end
     
     def newStreet(name, coords, from_zip = nil, to_zip = nil)
-      $stderr.puts "Creating new street [#{name}], ZIPs: #{from_zip} to #{to_zip}, coords: #{coords_to_s(coords)}" 
+      $stderr.puts "newStreet [#{name}], ZIPs: [#{from_zip}] to [#{to_zip}], coords: #{coords_to_s(coords)}" 
       raise "Attempt to create street with less than two coordinates" if coords.nil? || (coords.length < 2)
       line_id, prev_node_id = newLine(coords.first.first, coords.first[1], coords[1].first, coords[1][1])
       street_id = call("newStreet", @token, line_id)

@@ -98,11 +98,11 @@ def open_osm
 end
 
 begin
-  if ((ARGV.length == 1) && (ARGV.first != "--reset")) ||
-     (ARGV.length < 2) ||
-     (ARGV.length > 3) ||
-     (! File.exists?(File.expand_path(ARGV.first))) ||
-     (! File.exists?(File.expand_path(ARGV[1])))
+  if ((ARGV != ["--reset"]) &&
+      ((ARGV.length < 2) ||
+       (ARGV.length > 3) ||
+       (! File.exists?(File.expand_path(ARGV.first))) ||
+       (! File.exists?(File.expand_path(ARGV[1])))))
 
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second, with an optional starting index as the third."
   end

@@ -24,6 +24,7 @@ module OSM
     
     JOURNAL_PATH = "osm-journal.txt"
     OSM_XMLRPC_URL = "http://www.openstreetmap.org/api/xml.jsp"
+    XMLRPC_TIMEOUT = 60 * 10  # ten minutes
     ZIP_CODE_KEY_NAME = "zipCode"
     NAME_KEY_NAME = "name"
     
@@ -32,9 +33,12 @@ module OSM
         "(#{coord.first}, #{coord[1]})"
       end.join(" -> ")
     end
+
+    def last_response; @last_response; end
     
     def call(method, *args)
       result = @osm.call("openstreetmap.#{method}", *args)
+      @last_response = @osm.http_last_response
       if method == "login"
         $stderr.puts "openstreetmap.login(#{args.join(", ")}) -> #{result}"
       else
@@ -45,7 +49,7 @@ module OSM
     end
     
     def initialize(username, password)
-      @osm = XMLRPC::Client.new2(OSM_XMLRPC_URL)
+      @osm = XMLRPC::Client.new2(OSM_XMLRPC_URL, nil, XMLRPC_TIMEOUT)
       @token = call("login", username, password)
       raise "Invalid username and/or password" if @token =~ /^ERROR/
       open_journal

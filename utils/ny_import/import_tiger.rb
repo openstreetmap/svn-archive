@@ -73,7 +73,7 @@ def append_rt2(rt1, rt2_path)
       end
     end
   end
-  $stderr.puts "Parsed #{rt.keys.length} RT2 internal chain records."
+  $stderr.puts "Parsed #{rt2.keys.length} RT2 internal chain records."
   rt2.keys.each do |line_id|
     rt2_coords = rt2[line_id].compact
     if rt1.has_key?(line_id)

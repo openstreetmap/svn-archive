@@ -132,6 +132,7 @@ begin
       rescue =>ex
         $stderr.puts "*** FAILED [#{ex}], on attempt number #{attempt_count}"
         $stderr.puts "*** response from server: #{osm.last_response.body}"
+        osm = open_osm  # bounce the XMLRPC connection
         attempt_count += 1
         raise "Exiting after #{attempt_count} attempts" if attempt_count >= NUM_ATTEMPTS
       end

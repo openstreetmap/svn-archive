@@ -116,7 +116,6 @@ begin
   start_i = ARGV[2].to_i - 1 if ARGV.length == 3
   line_ids = tiger.keys
   (start_i..line_ids.length).each do |i|
-puts "starting on i = #{i}"; exit
     line_id = line_ids[i]
     street = tiger[line_id]
     name = street.first
@@ -132,7 +131,7 @@ puts "starting on i = #{i}"; exit
         $stderr.puts "*** FAILED [#{ex}], on attempt number #{attempt_count}"
         $stderr.puts "*** response from server: #{osm.last_response.body}"
         attempt_count += 1
-	    raise "Exiting after #{attempt_count} attempts" if attempt_count >= NUM_ATTEMPTS
+        raise "Exiting after #{attempt_count} attempts" if attempt_count >= NUM_ATTEMPTS
       end
     end
     sleep(0.05)

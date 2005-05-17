@@ -117,7 +117,7 @@ begin
   start_i = 0
   start_i = ARGV[2].to_i - 1 if ARGV.length == 3
   line_ids = tiger.keys
-  (start_i..line_ids.length).each do |i|
+  (start_i...line_ids.length).each do |i|
     line_id = line_ids[i]
     street = tiger[line_id]
     name = street.first

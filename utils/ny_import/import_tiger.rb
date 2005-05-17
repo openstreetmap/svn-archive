@@ -98,12 +98,8 @@ def open_osm
 end
 
 begin
-  if ARGV == ["--reset"]
-    open_osm.rollback
-    puts "Reset finished."
-    exit
-  end
-  if (ARGV.length < 2) ||
+  if ((ARGV.length == 1) && (ARGV.first != "--reset")) ||
+     (ARGV.length < 2) ||
      (ARGV.length > 3) ||
      (! File.exists?(File.expand_path(ARGV.first))) ||
      (! File.exists?(File.expand_path(ARGV[1])))
@@ -111,6 +107,11 @@ begin
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second, with an optional starting index as the third."
   end
   osm = open_osm
+  if ARGV.first == "--reset"
+    osm.rollback
+    puts "Reset finished."
+    exit
+  end
   tiger = import_tiger(osm, ARGV.first, ARGV[1])
   start_i = 0
   start_i = ARGV[2].to_i - 1 if ARGV.length == 3

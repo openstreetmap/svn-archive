@@ -18,39 +18,59 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 =end
 
-require 'osm'
-include OSM
+require 'csv'
 
-# TODO
-# merge streets like 5th Ave
-
-NUM_ATTEMPTS = 5
-
-def read_rt1(path)
-  rt1 = {}
-  File.open(path, File::RDONLY) do |f|
+def get_zips(base_path)
+  rtz = {}
+  File.open("#{base_path}.RTZ", File::RDONLY) do |f|
     until f.eof?
       line = " " + f.gets.chomp  # spacer for 1-based indexing
       line_id = line[6..15].strip.to_i
-      prefix = line[18..19].strip; prefix = nil if prefix.empty?
-      base_name = line[20..49].strip; base_name = nil if base_name.empty?
-      line_type = line[50..53].strip; line_type = nil if line_type.empty?
-      suffix = line[54..55].strip; suffix = nil if suffix.empty?
-      name = [prefix, base_name, line_type, suffix].compact.join(" ")
-      from_zip = line[107..111].strip; from_zip = nil if from_zip.empty?
-      from_lat = line[201..209].strip.to_f / 1000000
-      from_long = line[191..200].strip.to_f / 1000000
-      to_zip = line[112..116].strip; to_zip = nil if to_zip.empty?
-      to_lat = line[220..228].strip.to_f / 1000000
-      to_long = line[210..219].strip.to_f / 1000000
-      rt1[line_id] = [name, [from_zip, to_zip], [[from_lat, from_long], [to_lat, to_long]]]
+      left_zip4 = line[19..22].strip; left_zip4 = nil if left_zip4.empty? || left_zip4.to_i.zero?
+      right_zip4 = line[23..26].strip; right_zip4 = nil if right_zip4.empty? || right_zip4.to_i.zero?
+      rtz[line_id] = [] unless rtz.has_key?(line_id)
+      rtz[line_id] << [left_zip4, right_zip4]
     end
   end
-  return rt1
+  zips = {}
+  File.open("#{base_path}.RT1", File::RDONLY) do |f|
+    until f.eof?
+      line = " " + f.gets.chomp  # spacer for 1-based indexing
+      line_id = line[6..15].strip.to_i
+      left_zip = line[107..111].strip; left_zip = nil if left_zip.empty? || left_zip.to_i.zero?
+      left_lat = line[201..209].strip.to_f / 1000000
+      left_long = line[191..200].strip.to_f / 1000000
+      right_zip = line[112..116].strip; right_zip = nil if right_zip.empty? || right_zip.to_i.zero?
+      right_lat = line[220..228].strip.to_f / 1000000
+      right_long = line[210..219].strip.to_f / 1000000
+      left_zips = []
+      left_zips << left_zip unless left_zip.nil?
+      right_zips = []
+      right_zips << right_zip unless right_zip.nil?
+      if rtz.has_key?(line_id)
+        rtz[line_id].each do |zip4|
+          left_zip4, right_zip4 = zip4
+          left_zips << "#{left_zip}-#{left_zip4}" unless left_zip4.nil?
+          right_zips << "#{right_zip}-#{right_zip4}" unless right_zip4.nil?
+        end
+      end
+      left_zips.each do |zip|
+        next if zips.has_key?(zip)
+        zips[zip] = [left_lat, left_long]
+      end
+      right_zips.each do |zip|
+        next if zips.has_key?(zip)
+        zips[zip] = [right_lat, right_long]
+      end
+    end
+  end
+  return zips
 end
 
-if (ARGV.length != 1) || (! File.exists?(File.expand_path(ARGV.first)))
-  raise "Pass a TIGER .RT1 file as the first argument"
+raise "Pass the path to any TIGER RT file, with the .RTx extension" if ARGV.length != 1
+
+zips = get_zips(ARGV.first)
+zips.keys.sort.each do |zip|
+  puts CSV.generate_line([zip, zips[zip]].flatten)
 end
-zips = read_rt1(ARGV.first)
 

@@ -77,37 +77,35 @@ def http_get(host, path)
 end
 
 data = http_get("www.census.gov", "/geo/www/tiger/tiger2004fe/tgr2004fe.html")
-states = []
 YmHTML::Parser.new.parse(data) do |type, tag, contents|
   if (type == :START_ELEM) &&
      (tag =~ /^a$/i) &&
      (contents['href'] =~ /^http:\/\/www2?\.census\.gov\/geo\/tiger\/tiger2004fe\/([A-Z]{2})\//)
-    states << $1
-  end
-end
-counties = []
-states.sort.each do |state|
-  data = http_get("www2.census.gov", "/geo/tiger/tiger2004fe/#{state}/")
-  YmHTML::Parser.new.parse(data) do |type, tag, contents|
-    if (type == :START_ELEM) &&
-       (tag =~ /^a$/i) &&
-       (contents['href'] =~ /^(tgr\d+\.zip)/)
-       counties << "/geo/tiger/tiger2004fe/#{state}/#$1"
+    state = $1
+    $stderr.puts "Parsed state #{state}"
+    state_data = http_get("www2.census.gov", "/geo/tiger/tiger2004fe/#{state}/")
+    YmHTML::Parser.new.parse(state_data) do |type, tag, contents|
+      if (type == :START_ELEM) &&
+         (tag =~ /^a$/i) &&
+         (contents['href'] =~ /^(tgr\d+\.zip)/)
+        county = $1
+        $stderr.puts "Parsed county [#{county}] in #{state}"
+        county_url = "http://www2.census.gov/geo/tiger/tiger2004fe/#{state}/#$1"
+        `rm -rf tmp/`
+        `mkdir tmp/`
+        `wget #{county_url} -o /dev/null -O tmp/tiger_county.zip`
+        `unzip -d tmp/ tmp/tiger_county.zip`
+        $stderr.puts "Unzipped county for URL [#{county_url}]"
+        base_path = File.new(Dir["tmp/TGR*"].first).path[0..-5]
+        $stderr.puts "Extracted base path [#{base_path}]"
+        zips = get_zips(base_path)
+        $stderr.puts "Parsed ZIP codes out of the TIGER data"
+        zips.keys.sort.each do |zip|
+          $stdout.puts CSV.generate_line([zip, zips[zip]].flatten)
+        end
+        $stderr.puts "Output #{zips.keys.length} ZIP codes"
+      end
     end
   end
-break  # remove later
-end
-counties.each do |county|
-  data = http_get("www2.census.gov", county)
-  File.open("test.zip", "w+") do |f|
-    f.print(data)
-  end
-end
-exit
-raise "Pass the path to any TIGER RT file, with the .RTx extension" if ARGV.length != 1
-
-zips = get_zips(ARGV.first)
-zips.keys.sort.each do |zip|
-  puts CSV.generate_line([zip, zips[zip]].flatten)
 end
 

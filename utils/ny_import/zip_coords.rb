@@ -71,19 +71,16 @@ def get_zips(base_path)
   return zips
 end
 
-def http_get(host, path)
-	resp, data = Net::HTTP.new(host, 80).get(path, "Host" => host)
-	return data
-end
-
-data = http_get("www.census.gov", "/geo/www/tiger/tiger2004fe/tgr2004fe.html")
+data = `wget 'http://www.census.gov/geo/www/tiger/tiger2004fe/tgr2004fe.html' -q -O /dev/stdout`
+raise "Could not retrieve states page" unless $?.to_i.zero?
 YmHTML::Parser.new.parse(data) do |type, tag, contents|
   if (type == :START_ELEM) &&
      (tag =~ /^a$/i) &&
      (contents['href'] =~ /^http:\/\/www2?\.census\.gov\/geo\/tiger\/tiger2004fe\/([A-Z]{2})\//)
     state = $1
     $stderr.puts "Parsed state #{state}"
-    state_data = http_get("www2.census.gov", "/geo/tiger/tiger2004fe/#{state}/")
+    state_data = `wget 'http://www2.census.gov/geo/tiger/tiger2004fe/#{state}/' -q -O /dev/stdout`
+    raise "Could not retrieve counties page for state #{state}" unless $?.to_i.zero?
     YmHTML::Parser.new.parse(state_data) do |type, tag, contents|
       if (type == :START_ELEM) &&
          (tag =~ /^a$/i) &&
@@ -91,10 +88,12 @@ YmHTML::Parser.new.parse(data) do |type, tag, contents|
         county = $1
         $stderr.puts "Parsed county [#{county}] in #{state}"
         county_url = "http://www2.census.gov/geo/tiger/tiger2004fe/#{state}/#$1"
-        `rm -rf tmp/`
+        `rm -rf tmp/` if File.exists?("tmp/")
         `mkdir tmp/`
-        `wget #{county_url} -o /dev/null -O tmp/tiger_county.zip`
-        `unzip -d tmp/ tmp/tiger_county.zip`
+        `wget #{county_url} -q -O tmp/tiger_county.zip`
+        raise "Could not retrieve county file at [#{county_url}]" unless $?.to_i.zero?
+        `unzip -d tmp/ tmp/tiger_county.zip 2>&1`
+        raise "Could not unzip county file" unless $?.to_i.zero?
         $stderr.puts "Unzipped county for URL [#{county_url}]"
         base_path = File.new(Dir["tmp/TGR*"].first).path[0..-5]
         $stderr.puts "Extracted base path [#{base_path}]"

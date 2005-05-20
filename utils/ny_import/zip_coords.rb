@@ -19,6 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 =end
 
 require 'csv'
+require 'net/http'
+
+# from "http://www.yoshidam.net/diary/ymhtml.rb-0.1.7"
+require 'ymhtml'
 
 def get_zips(base_path)
   rtz = {}
@@ -67,6 +71,39 @@ def get_zips(base_path)
   return zips
 end
 
+def http_get(host, path)
+	resp, data = Net::HTTP.new(host, 80).get(path, "Host" => host)
+	return data
+end
+
+data = http_get("www.census.gov", "/geo/www/tiger/tiger2004fe/tgr2004fe.html")
+states = []
+YmHTML::Parser.new.parse(data) do |type, tag, contents|
+  if (type == :START_ELEM) &&
+     (tag =~ /^a$/i) &&
+     (contents['href'] =~ /^http:\/\/www2?\.census\.gov\/geo\/tiger\/tiger2004fe\/([A-Z]{2})\//)
+    states << $1
+  end
+end
+counties = []
+states.sort.each do |state|
+  data = http_get("www2.census.gov", "/geo/tiger/tiger2004fe/#{state}/")
+  YmHTML::Parser.new.parse(data) do |type, tag, contents|
+    if (type == :START_ELEM) &&
+       (tag =~ /^a$/i) &&
+       (contents['href'] =~ /^(tgr\d+\.zip)/)
+       counties << "/geo/tiger/tiger2004fe/#{state}/#$1"
+    end
+  end
+break  # remove later
+end
+counties.each do |county|
+  data = http_get("www2.census.gov", county)
+  File.open("test.zip", "w+") do |f|
+    f.print(data)
+  end
+end
+exit
 raise "Pass the path to any TIGER RT file, with the .RTx extension" if ARGV.length != 1
 
 zips = get_zips(ARGV.first)

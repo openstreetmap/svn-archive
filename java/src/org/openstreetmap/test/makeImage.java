@@ -147,12 +147,12 @@ public class makeImage
 	      nodes.add(id);
 	      float lat = ((Float)e.nextElement()).floatValue();
 	      float lon = ((Float)e.nextElement()).floatValue();
+	      if (logging) log(id + " " + lat + " " + lon);
       }
       catch (Exception e) {
 	if (logging) e.printStackTrace();
       }
       
-      if (logging) log(id + " " + lat + " " + lon);
 /*      nodesToPoints.put(id,new LatLonPoint(lat,lon));
       
       OMCircle omc = new OMCircle( lat,

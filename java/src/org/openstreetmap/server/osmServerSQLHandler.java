@@ -1100,6 +1100,8 @@ public class osmServerSQLHandler extends Thread {
   }
 
   public synchronized boolean deleteNode(int nNodeNum, int nUserUID) {
+
+    LOG( "deleteNode called for node " + nNodeNum);
     Statement stmt = null;
     try {
       stmt = conn.createStatement();

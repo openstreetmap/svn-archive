@@ -27,12 +27,6 @@ public class makeImage
   
   private boolean logging = false;
 
-  private MapBean mb;
- 
-  public makeImage() {
-    mb = new MapBean();
-  }
-  
   /** convenience method uses DEFAULT_WIDTH and DEFAULT_HEIGHT */
   public BufferedImage getImageFromCoord(float latitude, float longitude, float scale) 
   {
@@ -41,13 +35,7 @@ public class makeImage
   
   public BufferedImage getImageFromCoord(int width, int height, float latitude, float longitude, float scale)
   {
-    mb.setScale(scale);
-    mb.setCenter(latitude, longitude);
-
-    Proj projection = (Proj)mb.getProjection();
-    projection.setWidth(width);
-    projection.setHeight(height);
-    mb.setProjection(projection);
+    Proj projection = new Mercator(new LatLonPoint(latitude, longitude), scale, width, height);
     
     OMGraphicList gl = getGraphics(projection);
 

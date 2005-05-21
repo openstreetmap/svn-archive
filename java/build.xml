@@ -80,7 +80,7 @@ destdir="${build}"
   </fileset>
 </copy>
 
-<copy file="${jsp}/include/loginmessage.jsp" tofile="/var/lib/tomcat4/webapps/edit/include/loginmessage.jsp" />
+<copy file="${jsp}/include/loginMessage.jsp" tofile="/var/lib/tomcat4/webapps/edit/include/loginMessage.jsp" />
 
 <!-- images -->
 

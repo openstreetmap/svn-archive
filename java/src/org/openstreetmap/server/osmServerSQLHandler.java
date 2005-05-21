@@ -1179,7 +1179,7 @@ public class osmServerSQLHandler extends Thread {
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
-            String sSQL = "select uid,node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
+            String sSQL = "select f.uid,node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
             for (int i = 0; i < nnUID.length; i++) {
                 sSQL = sSQL + " node_a = " + nnUID[i] + " or node_b=" + nnUID[i];
                 if (i != nnUID.length - 1) {

@@ -82,9 +82,12 @@ public class makeImage
     LatLonPoint a = proj.getUpperLeft();
     LatLonPoint b = proj.getLowerRight();
 
-    Vector v = osmSH.getStreets("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());
+    Vector v;
+    Enumeration e;
+    /*
+    v = osmSH.getStreets("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());
 
-    Enumeration e = v.elements();
+    e = v.elements();
 
     if (logging) log("reading streets...");
 
@@ -107,7 +110,8 @@ public class makeImage
 
       omgl.add(oml);
     }
-
+    */
+    /*
     v = osmSH.getPoints("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());
 
     e = v.elements();
@@ -129,7 +133,7 @@ public class makeImage
 
       omgl.add(omc);
     }
-
+    */
     // start nodes
 
     v = osmSH.getNodes("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());

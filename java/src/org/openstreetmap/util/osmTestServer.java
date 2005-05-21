@@ -31,8 +31,8 @@ class osmTestServer
 
       v = new Vector();
 
-      v.addElement(new Integer(1));
       v.addElement(token);
+      v.addElement("1");
       
       Vector bob = (Vector)xmlrpc.execute("openstreetmap.getNode",v);
       

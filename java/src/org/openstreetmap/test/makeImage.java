@@ -142,13 +142,18 @@ public class makeImage
 	    
     while( e.hasMoreElements() )
     {
-      Integer id = (Integer)e.nextElement();
-      nodes.add(id);
-      float lat = ((Float)e.nextElement()).floatValue();
-      float lon = ((Float)e.nextElement()).floatValue();
+      try {	    
+	      Integer id = (Integer)e.nextElement();
+	      nodes.add(id);
+	      float lat = ((Float)e.nextElement()).floatValue();
+	      float lon = ((Float)e.nextElement()).floatValue();
+      }
+      catch (Exception e) {
+	if (logging) e.printStackTrace();
+      }
       
       if (logging) log(id + " " + lat + " " + lon);
-      nodesToPoints.put(id,new LatLonPoint(lat,lon));
+/*      nodesToPoints.put(id,new LatLonPoint(lat,lon));
       
       OMCircle omc = new OMCircle( lat,
           lon,
@@ -160,10 +165,10 @@ public class makeImage
       omc.setSelectPaint(Color.red);
       omc.setFillPaint(OMGraphic.clear);
 
-      omgl.add(omc);
+      omgl.add(omc); */
     }
 
-    if (logging) log("done adding nodes");
+    if (logging) log("done adding nodes, got " + nodes.size() + " node ids");
     // finish nodes
 
     // start lines

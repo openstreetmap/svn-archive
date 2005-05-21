@@ -26,7 +26,7 @@ public class makeImage
   public static final float DEFAULT_LONGITUDE = -0.14746371f;
   public static final float DEFAULT_SCALE = 10404.917f;
   
-  private boolean logging = false;
+  private boolean logging = true;
 
   /** convenience method uses DEFAULT_WIDTH and DEFAULT_HEIGHT */
   public BufferedImage getImageFromCoord(float latitude, float longitude, float scale) 
@@ -70,7 +70,7 @@ public class makeImage
   }
 
   private void log(String s) {
-    System.out.println(s);
+    System.out.println("makeImage: " + s);
   }
   
   private OMGraphicList getGraphics(Projection proj)
@@ -130,6 +130,65 @@ public class makeImage
       omgl.add(omc);
     }
 
+    // start nodes
+
+    v = osmSH.getNodes("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());
+    e = v.elements();
+    
+    if (logging) log("got " + v.size() + " nodes";
+
+    Vector nodes = new Vector();
+    Hashtable nodesToPoints = new Hashtable();
+	    
+    while( e.hasMoreElements() )
+    {
+      Integet id = e.nextElement();
+      nodes.add(id);
+      float lat = ((Float)e.nextElement()).floatValue();
+      float lon = ((Float)e.nextElement()).floatValue();
+      
+      nodesToPoints.put(id,new LatLonPoint(lat,lon));
+      
+      OMCircle omc = new OMCircle( lat,
+          lon,
+          5f,
+          com.bbn.openmap.proj.Length.METER
+          );
+
+      omc.setLinePaint(Color.black);
+      omc.setSelectPaint(Color.red);
+      omc.setFillPaint(OMGraphic.clear);
+
+      omgl.add(omc);
+    }
+
+    // finish nodes
+
+    // start lines
+    
+    v = osmSH.getLines("applet", nodes);
+    e = v.elements();    
+
+    if (logging) log("got " + v.size() + " lines";
+    
+    while( e.hasMoreElements() )
+    {
+      int id = ((Integer)e.nextElement()).intValue();
+
+      LatLonPoint n1 = nodesToPoints.get(e.nextElement());
+      LatLonPoint n2 = nodesToPoints.get(e.nextElement());
+
+      osmStreetSegment oml = new osmStreetSegment(
+          n1.getLatitude(), n1.getLongitude(), 
+	  n2.getLatitude(), n2.getLongitude(),
+          com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
+          id );
+
+      omgl.add(oml);
+    }
+
+    // end lines
+    
     omgl.generate(proj);
 
     osmSH.closeDatabase();

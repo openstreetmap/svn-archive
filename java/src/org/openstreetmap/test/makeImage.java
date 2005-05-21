@@ -135,7 +135,7 @@ public class makeImage
     v = osmSH.getNodes("applet",a.getLatitude(),a.getLongitude(),b.getLatitude(),b.getLongitude());
     e = v.elements();
     
-    if (logging) log("got " + v.size() + " nodes";
+    if (logging) log("got " + v.size() + " nodes");
 
     Vector nodes = new Vector();
     Hashtable nodesToPoints = new Hashtable();
@@ -169,7 +169,7 @@ public class makeImage
     v = osmSH.getLines("applet", nodes);
     e = v.elements();    
 
-    if (logging) log("got " + v.size() + " lines";
+    if (logging) log("got " + v.size() + " lines");
     
     while( e.hasMoreElements() )
     {

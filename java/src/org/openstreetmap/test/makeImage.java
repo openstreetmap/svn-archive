@@ -182,24 +182,24 @@ public class makeImage
     while( e.hasMoreElements() )
     {
       try {
-	     Vector v2 = (Vector)e.nextElement();
-	     Enumeration e2 = v2.elements(); 
-	     
-     	     int id = ((Integer)e2.nextElement()).intValue();
-     	     LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
-     	     LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
-
-      osmStreetSegment oml = new osmStreetSegment(
-          n1.getLatitude(), n1.getLongitude(), 
-	  n2.getLatitude(), n2.getLongitude(),
-          com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
-          id );
-
-      omgl.add(oml);
-      }
-      catch (Exception ex) {
-	if (logging) ex.printStackTrace();
-      }
+ 	      Vector v2 = (Vector)e.nextElement();
+ 	      Enumeration e2 = v2.elements();
+ 
+	      int id = ((Integer)e2.nextElement()).intValue();
+ 	      LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
+ 	      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
+ 
+	      if (n1 != null && n2 != null) {
+ 		      osmStreetSegment oml = new osmStreetSegment(
+ 				      n1.getLatitude(), n1.getLongitude(), 
+ 				      n2.getLatitude(), n2.getLongitude(),
+ 				      com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
+ 				      id );
+ 		      omgl.add(oml);
+ 	      }
+       catch (Exception ex) {
+       		      if (logging) ex.printStackTrace();
+       }
     }
 
     // end lines

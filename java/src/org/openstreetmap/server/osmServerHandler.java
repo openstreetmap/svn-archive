@@ -815,41 +815,6 @@ public class osmServerHandler
   } // updatePoIKeyValue
 
 
-  /**
-   * Gets the currently active keys and values associated with a street segment, given its UID.
-   * @param sStreetSegmentUID the street segment uid
-   * @param sToken the login token returned by login()
-   * @return a Vector of Vectors which each has the key uid, the value for that key and the timestamp that this pair was last set/edited. So you might get back something like [[14, 3, Tue May 17 12:44:26 BST 2005], [30, 1, Tue May 17 12:44:26 BST 2005]]
-   */
-  public Vector getStreetSegmentValues(String sStreetSegmentUID, String sToken)
-  {
-    int nUID = osmSQLH.validateToken(sToken);
-
-    if( nUID == -1 )
-    {
-      return new Vector();
-    }
-
-    long lVal = 0;
-    try
-    {
-
-      lVal = turnStringToLong(sStreetSegmentUID);
-    }
-    catch( Exception e)
-    {
-      //number format fucked
-      return new Vector();
-    }
-    
-    return osmSQLH.getStreetSegmentValues(
-        lVal,
-        (long)nUID
-        );
-
-  } // getStreetSegmentValues
-
-
   private long turnStringToLong(String sVal) throws Exception
   {
     long lVal = Long.parseLong(sVal);
@@ -862,5 +827,42 @@ public class osmServerHandler
 
     return lVal;
   } // turnStringToLong
+
+
+  /**
+   * Gets the currently active keys and values associated with a feature, given its type and UID.
+   * @param nFeatureType the type of feature, see org.openstreetmap.server.osmServerSQLHandler's static types like TYPE_STREET_SEGMENT
+   * @param sFeatureUID the feature uid
+   * @param sToken the login token returned by login()
+   * @return a Vector of Vectors which each has the key uid, the value for that key and the timestamp that this pair was last set/edited. So you might get back something like [[14, 3, Tue May 17 12:44:26 BST 2005], [30, 1, Tue May 17 12:44:26 BST 2005]]
+   */
+  public Vector getFeatureValues(int nFeatureType, String sAreaUID, String sToken)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1 )
+    {
+      return new Vector();
+    }
+
+    long lVal = 0;
+    try
+    {
+
+      lVal = turnStringToLong(sAreaUID);
+    }
+    catch( Exception e)
+    {
+      //number format fucked
+      return new Vector();
+    }
+    
+    return osmSQLH.getFeatureValues(
+        nFeatureType,
+        lVal,
+        (long)nUID
+        );
+
+  } // getFeatureValues
 
 } // osmServerHandler

@@ -31,10 +31,10 @@ class osmTestServer
 
       v = new Vector();
 
-      v.addElement("38137");
+      v.addElement("29277");
       v.addElement(token);
       
-      Vector bob = (Vector)xmlrpc.execute("openstreetmap.getStreetSegmentValues",v);
+      Vector bob = (Vector)xmlrpc.execute("openstreetmap.getStreetValues",v);
       
       System.out.println(bob);
     }

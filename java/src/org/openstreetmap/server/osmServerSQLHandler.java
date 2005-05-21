@@ -32,6 +32,10 @@ import org.openstreetmap.util.gpspoint;
 // TODO confirm that read-only and transaction-ed methods are not synchronized 
 public class osmServerSQLHandler extends Thread {
 
+  public static final int TYPE_STREET_SEGMENT = 0;
+  public static final int TYPE_STREET = 1;
+  public static final int TYPE_POI = 2;
+  public static final int TYPE_AREA = 3;
     static final int MIN_USERNAME_LENGTH = 5;
     static final int MAX_USERNAME_LENGTH = 50;
     static final int MIN_PASSWORD_LENGTH = 5;
@@ -1664,18 +1668,43 @@ public class osmServerSQLHandler extends Thread {
     }
 
 
-    public Vector getStreetSegmentValues(long lStreetSegmentUID, long lUserUID)
+    public Vector getFeatureValues(int nFeatureType, long lFeatureUID, long lUserUID)
+    {
+      //FIXME: put all the feature types in the same database table?
+
+      switch(nFeatureType)
+      {
+        case TYPE_STREET_SEGMENT:
+          return getValues("street_segment_values", lFeatureUID, lUserUID);
+        case TYPE_STREET:
+          return getValues("street_values", lFeatureUID, lUserUID);
+
+        case TYPE_POI:
+          return getValues("poi_values", lFeatureUID, lUserUID);
+
+        case TYPE_AREA:
+          return getValues("area_values", lFeatureUID, lUserUID);
+
+      }
+
+      return new Vector();
+
+    } // getFeatureValues
+
+
+
+    private Vector getValues(String sTableName, long lFeatureUID, long lUserUID)
     {
       Vector v = new Vector();
-      
-      //select * from (select * from street_segment_values where street_segment_uid = 38137 order by timestamp desc) as h group by key_uid;
+
 
       Statement stmt = null;
       try
       {
         stmt = conn.createStatement();
-        String sSQL = "select * from (select * from street_segment_values where"
-          + " street_segment_uid = " + 38137
+        String sSQL = "select * from (select * from "
+          + sTableName + " where "
+          + " street_uid = " + lFeatureUID
           + " order by timestamp desc) as h group by key_uid;";
 
         LOG("querying with sql \n " + sSQL);
@@ -1698,12 +1727,12 @@ public class osmServerSQLHandler extends Thread {
             vKey.add( dDate );
 
             v.add(vKey);
-           
+
           }
 
           return v;
-              
-        
+
+
         }
         finally {
           if (rs != null) try { rs.close(); } catch (Exception ex) { }
@@ -1718,6 +1747,6 @@ public class osmServerSQLHandler extends Thread {
 
       return new Vector();
 
-    } // getStreetSegmentValues
+    } // getValues
 
 } // osmServerSQLHandler

@@ -1218,14 +1218,14 @@ public class osmServerSQLHandler extends Thread {
       try {
           stmt = conn.createStatement();
           StringBuffer inClauseBuffer = new StringBuffer();
-          inClauseBuffer.append("[");
+          inClauseBuffer.append("(");
           for (int i=0; i < nnUID.length; i++) {
               inClauseBuffer.append(nnUID[i]);
               if (i < (nnUID.length - 1)) {
                   inClauseBuffer.append(", ");
               }
           }
-          inClauseBuffer.append("]");
+          inClauseBuffer.append(")");
           String sSQL = "select uid, node_a, node_b from (select uid, node_a, node_b, timestamp, visible from street_segments where visible = true and (node_a in " + inClauseBuffer + " or node_b in " + inClauseBuffer + ") order by timestamp desc) as a group by uid";
         LOG("querying with sql \n " + sSQL);
         ResultSet rs = null;

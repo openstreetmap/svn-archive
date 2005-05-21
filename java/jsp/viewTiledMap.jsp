@@ -124,10 +124,10 @@ String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
 // |              |             |
 // +----------------------------+
 //
-String sURL1 = "viewMapImage.jsp?lat=" + p1lat + "&lon=" + p1lon + "&scale=" +fScale;
-String sURL2 = "viewMapImage.jsp?lat=" + p2lat + "&lon=" + p1lon + "&scale=" +fScale;
-String sURL3 = "viewMapImage.jsp?lat=" + p1lat + "&lon=" + p2lon + "&scale=" +fScale;
-String sURL4 = "viewMapImage.jsp?lat=" + p2lat + "&lon=" + p2lon + "&scale=" +fScale;
+String sURL1 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p1lon + "&scale=" +fScale;
+String sURL2 = "viewMapImage.jsp?width=150&height=150&lat=" + p2lat + "&lon=" + p1lon + "&scale=" +fScale;
+String sURL3 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p2lon + "&scale=" +fScale;
+String sURL4 = "viewMapImage.jsp?width=150&height=150&lat=" + p2lat + "&lon=" + p2lon + "&scale=" +fScale;
 
 %>
   <%!
@@ -197,8 +197,8 @@ private String getURL(float fScale, float fLat, float fLon)
 
 <!-- img src="<%=sURL%>" width="600" height="600" alt="Your map" -->
 
-<img src="<%=sURL1%>" width="600" height="600" alt="Your map"><img src="<%=sURL2%>" width="600" height="600" alt="Your map"><br>
-<img src="<%=sURL3%>" width="600" height="600" alt="Your map"><img src="<%=sURL4%>" width="600" height="600" alt="Your map">
+<img src="<%=sURL1%>" width="150" height="150" alt="Your map"><img src="<%=sURL2%>" width="150" height="150" alt="Your map"><br>
+<img src="<%=sURL3%>" width="150" height="150" alt="Your map"><img src="<%=sURL4%>" width="150" height="150" alt="Your map">
 
 <div id="mapEpilog">
 Latitude=<%=fLat%>, Longitude=<%=fLon%>, Scale=<%=fScale%><br>

@@ -203,9 +203,13 @@ public class osmServerClient {
         Hashtable htNodes = new Hashtable();
         Enumeration enum = results.elements();
         while (enum.hasMoreElements()) {
-            int uid = ((Integer) enum.nextElement()).intValue();
-            double lat = ((Double) enum.nextElement()).doubleValue();
-            double lon = ((Double) enum.nextElement()).doubleValue();
+          
+            Vector vNode = (Vector) enum.nextElement(); 
+            
+            int uid = ((Integer)vNode.get(0)).intValue();
+            double lat = ((Double)vNode.get(1)).doubleValue();
+            double lon = ((Double)vNode.get(2)).doubleValue();
+            
             Node n = new Node(uid, lat, lon);
             htNodes.put("" + uid, n);
         }

@@ -1068,9 +1068,11 @@ public class osmServerSQLHandler extends Thread {
         try {
           rs = stmt.executeQuery(sSQL);
           while (rs.next()) {
-            v.add(new Integer(rs.getInt("uid")));
-            v.add(new Double(rs.getDouble("latitude")));
-            v.add(new Double(rs.getDouble("longitude")));
+            Vector vNode = new Vector();
+            vNode.add(new Integer(rs.getInt("uid")));
+            vNode.add(new Double(rs.getDouble("latitude")));
+            vNode.add(new Double(rs.getDouble("longitude")));
+            v.add(vNode);
           }
         }
         finally {

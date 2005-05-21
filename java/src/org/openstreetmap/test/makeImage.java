@@ -44,7 +44,7 @@ public class makeImage
     mb.setScale(scale);
     mb.setCenter(latitude, longitude);
 
-    Proj projection = mb.getProjection();
+    Proj projection = (Proj)mb.getProjection();
     projection.setWidth(width);
     projection.setHeight(height);
     mb.setProjection(projection);

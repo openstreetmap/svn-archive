@@ -98,7 +98,7 @@ public class makeImage
       float lon2 = ((Float)e.nextElement()).floatValue();
       float lat2 = ((Float)e.nextElement()).floatValue();
 
-      if (logging) log("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
+//      if (logging) log("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
 
       osmStreetSegment oml = new osmStreetSegment(lat1, lon1, lat2, lon2,
           com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
@@ -147,6 +147,7 @@ public class makeImage
       float lat = ((Float)e.nextElement()).floatValue();
       float lon = ((Float)e.nextElement()).floatValue();
       
+      if (logging) log(id + " " + lat + " " lon);
       nodesToPoints.put(id,new LatLonPoint(lat,lon));
       
       OMCircle omc = new OMCircle( lat,
@@ -162,6 +163,7 @@ public class makeImage
       omgl.add(omc);
     }
 
+    if (logging) log("done adding nodes";
     // finish nodes
 
     // start lines

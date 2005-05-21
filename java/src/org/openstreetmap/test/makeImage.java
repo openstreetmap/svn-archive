@@ -155,7 +155,7 @@ public class makeImage
       catch (Exception ex) {
 	if (logging) ex.printStackTrace();
       }
-      
+ /*     
       OMCircle omc = new OMCircle( lat,
           lon,
           5f,

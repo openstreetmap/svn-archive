@@ -142,7 +142,7 @@ public class makeImage
 	    
     while( e.hasMoreElements() )
     {
-      Integet id = e.nextElement();
+      Integer id = e.nextElement();
       nodes.add(id);
       float lat = ((Float)e.nextElement()).floatValue();
       float lon = ((Float)e.nextElement()).floatValue();

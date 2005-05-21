@@ -86,11 +86,12 @@ else
 
 MapBean mb = new MapBean();
 
-mb.setSize(150,150);
 mb.setScale(fScale);
 mb.setCenter(fLat, fLon);
 
 Projection p = mb.getProjection();
+p.setWidth(150);
+p.setHeight(150);
 
 float p1lat = p.getUpperLeft().getLatitude();
 float p1lon = p.getUpperLeft().getLongitude();

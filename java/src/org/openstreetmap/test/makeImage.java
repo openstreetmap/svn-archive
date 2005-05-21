@@ -147,8 +147,8 @@ public class makeImage
 	     Enumeration e2 = v2.elements(); 
 	      Integer id = (Integer)e2.nextElement();
 	      nodes.add(id);
-	      float lat = ((Float)e2.nextElement()).floatValue();
-	      float lon = ((Float)e2.nextElement()).floatValue();
+	      float lat = ((Double)e2.nextElement()).doubleValue();
+	      float lon = ((Double)e2.nextElement()).doubleValue();
 	      if (logging) log(id + " " + lat + " " + lon);
               nodesToPoints.put(id,new LatLonPoint(lat,lon));
       }

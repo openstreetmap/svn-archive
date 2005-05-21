@@ -82,16 +82,7 @@ else
 
 }
 
-
-
-MapBean mb = new MapBean();
-
-mb.setScale(fScale);
-mb.setCenter(fLat, fLon);
-
-Proj p = (Proj)mb.getProjection();
-p.setWidth(150);
-p.setHeight(150);
+Proj p = new Mercator(new LatLonPoint(fLat, fLon), fScale, 150, 150);
 
 float p1lat = p.getUpperLeft().getLatitude();
 float p1lon = p.getUpperLeft().getLongitude();

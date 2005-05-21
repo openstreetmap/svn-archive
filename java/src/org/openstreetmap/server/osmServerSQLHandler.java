@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
+import java.util.Date;
 
 import org.openstreetmap.util.gpspoint;
 
@@ -53,7 +54,7 @@ public class osmServerSQLHandler extends Thread {
     boolean bConnectSuccess = false;
 
     private static void LOG(String s) {
-        System.err.println(s);
+        System.err.println(new Date() + " " + s);
     }
 
     private static void LOG(Throwable t) {
@@ -1111,6 +1112,9 @@ public class osmServerSQLHandler extends Thread {
             LOG("found uid ok");
             // that key does exist
             sSQL = "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (" + " " + nNodeNum + ", " + " " + rs.getString("latitude") + ", " + " " + rs.getString("longitude") + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "0)";
+            
+        
+            LOG("querying with sql \n " + sSQL);
             stmt.execute(sSQL);
             return true;
           }

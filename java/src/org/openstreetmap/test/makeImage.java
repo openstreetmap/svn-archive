@@ -149,8 +149,8 @@ public class makeImage
 	      float lon = ((Float)e.nextElement()).floatValue();
 	      if (logging) log(id + " " + lat + " " + lon);
       }
-      catch (Exception e) {
-	if (logging) e.printStackTrace();
+      catch (Exception ex) {
+	if (logging) ex.printStackTrace();
       }
       
 /*      nodesToPoints.put(id,new LatLonPoint(lat,lon));

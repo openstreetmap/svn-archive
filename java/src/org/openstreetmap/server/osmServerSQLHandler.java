@@ -1063,7 +1063,7 @@ public class osmServerSQLHandler extends Thread {
     Statement stmt = null;
     try {
       stmt = conn.createStatement();
-      String sSQL = "select uid, latitude, longitude from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < " + lat1 + " and latitude > " + lat2 + " and longitude > " + lon1 + " and longitude < " + lon2 + " and order by timestamp desc) as a group by uid) as b where b.visible = false";
+      String sSQL = "select uid, latitude, longitude from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < " + lat1 + " and latitude > " + lat2 + " and longitude > " + lon1 + " and longitude < " + lon2 + " order by timestamp desc) as a group by uid) as b where b.visible = 1";
       LOG("querying with sql \n " + sSQL);
       ResultSet rs = null;
       try {

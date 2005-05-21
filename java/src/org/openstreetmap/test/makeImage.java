@@ -12,28 +12,42 @@ import javax.imageio.*;
 import org.openstreetmap.server.osmServerHandler;
 import org.openstreetmap.applet.osmStreetSegment;
 
-
+// TODO rename this to something sensible, like ImageMaker?
 public class makeImage
 {
 
-  public static void main(String[] args)
+  /* added these so tiles can be smaller - TomC */
+  public static final int DEFAULT_WIDTH = 600;
+  public static final int DEFAULT_HEIGHT = 600;
+  
+  /* not sure these are needed, but they were magic numbers before - TomC */
+  public static final float DEFAULT_LATITUDE = 51.526447f;
+  public static final float DEFAULT_LONGITUDE = -0.14746371f;
+  public static final float DEFAULT_SCALE = 10404.917f;
+  
+  private boolean logging = false;
+
+  private MapBean mb;
+ 
+  public makeImage() {
+    mb = new MapBean();
+  }
+  
+  /** convenience method uses DEFAULT_WIDTH and DEFAULT_HEIGHT */
+  public BufferedImage getImageFromCoord(float latitude, float longitude, float scale) 
   {
-
-  } // main
-
-  public BufferedImage getImageFromCoord(float latitude, float longitude, float scale)
+	return getImageFromCoord(DEFAULT_WIDTH,DEFAULT_HEIGHT,latitude,longitude,scale);
+  }
+  
+  public BufferedImage getImageFromCoord(int width, int height, float latitude, float longitude, float scale)
   {
-
-    MapBean mb = new MapBean();
-//    mb.setScale(10404.917f);
-//    mb.setCenter(51.526447f, -0.14746371f);
 
     mb.setScale(scale);
     mb.setCenter(latitude, longitude);
 
     OMGraphicList gl = getGraphics(mb.getProjection());
 
-    BufferedImage bi = new BufferedImage(600,600, BufferedImage.TYPE_INT_RGB);
+    BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
     Graphics g = bi.getGraphics();
 
@@ -62,6 +76,10 @@ public class makeImage
 
   }
 
+  private void log(String s) {
+    if (logging) System.out.println(s);
+  }
+  
   private OMGraphicList getGraphics(Projection proj)
   {
     OMGraphicList omgl = new OMGraphicList(1000);
@@ -75,7 +93,7 @@ public class makeImage
 
     Enumeration e = v.elements();
 
-    System.out.println("reading streets...");
+    log("reading streets...");
 
     while( e.hasMoreElements() )
     {
@@ -87,7 +105,7 @@ public class makeImage
       float lon2 = ((Float)e.nextElement()).floatValue();
       float lat2 = ((Float)e.nextElement()).floatValue();
 
-      System.out.println("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
+      log("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
 
       osmStreetSegment oml = new osmStreetSegment(lat1, lon1, lat2, lon2,
           com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
@@ -121,17 +139,14 @@ public class makeImage
       omgl.add(omc);
     }
 
-
     omgl.generate(proj);
-
 
     osmSH.closeDatabase();
 
     return omgl;
 
-
   } // getGraphics
 
-
-
 } // makeImage
+
+

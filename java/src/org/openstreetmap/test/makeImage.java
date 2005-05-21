@@ -41,6 +41,7 @@ public class makeImage
   
   public BufferedImage getImageFromCoord(int width, int height, float latitude, float longitude, float scale)
   {
+    mb.setSize(width,height);
 
     mb.setScale(scale);
     mb.setCenter(latitude, longitude);
@@ -52,7 +53,7 @@ public class makeImage
     Graphics g = bi.getGraphics();
 
     g.setColor(new Color(231,231,214));
-    g.fillRect(0,0,600,600);
+    g.fillRect(0,0,width,height);
 
     g.setColor(Color.BLACK);
     gl.render(g);
@@ -135,7 +136,6 @@ public class makeImage
       omc.setSelectPaint(Color.red);
       omc.setFillPaint(OMGraphic.clear);
 
-      
       omgl.add(omc);
     }
 

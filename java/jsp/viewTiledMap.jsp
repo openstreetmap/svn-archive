@@ -1,3 +1,8 @@
+<%
+// This is just me hacking around with viewMap.jsp to see
+// what happens if I make really naive tiles - Tom.
+%>
+
 <%@ page import="java.util.*"%>
 <%@ page import="org.openstreetmap.server.*"%>
 <%@ page import="com.bbn.openmap.*"%>

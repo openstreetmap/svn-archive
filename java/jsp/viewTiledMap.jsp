@@ -103,19 +103,19 @@ String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
 
 // attempting to get naive tiles
 //
-// +----------------------------+
+// +--------------+-------------+
 // |              |             |
 // |     sURL1    |    sURL2    |
 // |       +------+------+      |
-// |       |      |      |      |
-// |       |      |      |      |
-// +-------+-----sURL----+------+
-// |       |      |      |      |
-// |       |      |      |      |
+// |       |             |      |
+// |       |             |      |
+// +-------+     sURL    +------+
+// |       |             |      |
+// |       |             |      |
 // |       +------+------+      |
 // |     sURL3    |    sURL4    |
 // |              |             |
-// +----------------------------+
+// +--------------+-------------+
 //
 String sURL1 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p1lon + "&scale=" +fScale;
 String sURL2 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p2lon + "&scale=" +fScale;

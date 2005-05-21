@@ -89,7 +89,7 @@ MapBean mb = new MapBean();
 mb.setScale(fScale);
 mb.setCenter(fLat, fLon);
 
-Projection p = mb.getProjection();
+Proj p = (Proj)mb.getProjection();
 p.setWidth(150);
 p.setHeight(150);
 

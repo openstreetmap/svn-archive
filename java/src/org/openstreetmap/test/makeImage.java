@@ -197,9 +197,10 @@ public class makeImage
  				      id );
  		      omgl.add(oml);
  	      }
-       catch (Exception ex) {
-       		      if (logging) ex.printStackTrace();
-       }
+      }
+      catch (Exception ex) {
+	      if (logging) ex.printStackTrace();
+      }
     }
 
     // end lines

@@ -175,8 +175,8 @@ public class makeImage
     {
       int id = ((Integer)e.nextElement()).intValue();
 
-      LatLonPoint n1 = nodesToPoints.get(e.nextElement());
-      LatLonPoint n2 = nodesToPoints.get(e.nextElement());
+      LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(e.nextElement());
+      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(e.nextElement());
 
       osmStreetSegment oml = new osmStreetSegment(
           n1.getLatitude(), n1.getLongitude(), 

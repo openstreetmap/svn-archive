@@ -50,7 +50,7 @@ public class osmServerClient {
             long before = System.currentTimeMillis();
             Object result = xmlrpc.execute("openstreetmap." + method, args);
             float time = System.currentTimeMillis() - before;
-            System.err.println("Calling " + method + " took " + time + "ms");
+            Logger.log("Calling " + method + " took " + time + "ms");
             return result;
         }
         catch (Exception ex) {
@@ -270,7 +270,7 @@ public class osmServerClient {
             if (nodeA != null && nodeB != null) {
                 LatLonPoint llpA = nodeA.getLatLon();
                 LatLonPoint llpB = nodeB.getLatLon();
-                v.add(new OMLine(llpA.getLatitude(), llpA.getLongitude(), llpB.getLatitude(), llpB.getLongitude(), OMLine.STRAIGHT_LINE));
+                v.add(new OMLine(llpA.getLatitude(), llpA.getLongitude(), llpB.getLatitude(), llpB.getLongitude(), OMLine.LINETYPE_STRAIGHT));
                 Logger.log("adding line between " + llpA + ", " + llpB);
             }
         }

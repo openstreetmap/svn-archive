@@ -118,8 +118,8 @@ String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
 // +----------------------------+
 //
 String sURL1 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p1lon + "&scale=" +fScale;
-String sURL2 = "viewMapImage.jsp?width=150&height=150&lat=" + p2lat + "&lon=" + p1lon + "&scale=" +fScale;
-String sURL3 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p2lon + "&scale=" +fScale;
+String sURL2 = "viewMapImage.jsp?width=150&height=150&lat=" + p1lat + "&lon=" + p2lon + "&scale=" +fScale;
+String sURL3 = "viewMapImage.jsp?width=150&height=150&lat=" + p2lat + "&lon=" + p1lon + "&scale=" +fScale;
 String sURL4 = "viewMapImage.jsp?width=150&height=150&lat=" + p2lat + "&lon=" + p2lon + "&scale=" +fScale;
 
 %>

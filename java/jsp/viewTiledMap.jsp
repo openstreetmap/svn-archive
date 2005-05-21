@@ -86,6 +86,7 @@ else
 
 MapBean mb = new MapBean();
 
+mb.setSize(150,150);
 mb.setScale(fScale);
 mb.setCenter(fLat, fLon);
 

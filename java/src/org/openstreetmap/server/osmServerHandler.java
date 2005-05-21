@@ -41,6 +41,7 @@ public class osmServerHandler
   
   private osmServerSQLHandler osmSQLH;
 
+  
   private String safeSQLString(String s)
   {
     // makes a string SQL safe. hopefully.
@@ -101,7 +102,7 @@ public class osmServerHandler
  
 
   /**
-   * checks to see if given user exists
+   * Checks to see if a given user exists
    * @param user the username
    * @return whether they exist or not
    */
@@ -131,13 +132,13 @@ public class osmServerHandler
    
 
   /**
-   * get the uploaded gpx points from the database given in range where the first two points specify the north-east and the latter two the south-west points of a box.
+   * Get the uploaded gpx points from the database in the given area range, where the first two points specify the north-west and the latter two the south-east points of a box.
    * @param token the token
    * @param p1lat the north-west latitude
    * @param p1lon the north-west longitude
    * @param p2lat the south-east latitude
    * @param p2lon the south-east longitude
-   * @return a list of lats and lons. should be a list of lists, FIXME.
+   * @return A one-dimensional list of lats and lons. Should really be a list of lists, FIXME.
    */
   public Vector getPoints(
       String token,
@@ -171,7 +172,7 @@ public class osmServerHandler
 
 
   /**
-   * same as getPoints but gets all the data like satellite fix accuracy and stuff. FIXME more documentation
+   * Same as getPoints but gets all the data like satellite fix accuracy and stuff. FIXME more documentation
    * @param token the token
    * @param p1lat the north-west latitude
    * @param p1lon the north-west longitude
@@ -206,6 +207,9 @@ public class osmServerHandler
   } // getFullPoints
 
 
+  /**
+   * Gets the list of keys. FIXME: more docs
+   */
   public Vector getAllKeys(String token, boolean bVisibleOrNot)
   {
 
@@ -487,9 +491,18 @@ public class osmServerHandler
 
     return osmSQLH.getLines(nnUID);
 
-  } // getNodes
+  } // getLines
 
-  
+
+  /**
+   * Get the nodes for a specified area.
+   * @param sToken your login token from login()
+   * @param lat1 the north-west latitude
+   * @param lon1 the north-west longitude
+   * @param lat2 the south-east latitude
+   * @param lon2 the south-east longitude
+   * @return a list of lists with the nude UID, the latitude and longitude, something like: [[1, 10.342, 13.343],[2, 5.423, 3.234]] where in this example 2 nodes are returned.
+   */
   public Vector getNodes(String sToken, double lat1, double lon1, double lat2, double lon2)
   {
     int nUID = osmSQLH.validateToken(sToken);
@@ -507,9 +520,45 @@ public class osmServerHandler
 
   } // getNodes
 
+  /**
+   * Get the details on a single node
+   * @param sToken your login token from login()
+   * @param sNodeUID
+   * @return a one-dimensional list with the node's latitude and longitude
+   */
+   public Vector getNode(String sToken, String sNodeUID)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( !sToken.equals("applet"))
+    {
+      if(  nUID == -1)
+      {
+        return new Vector();
+
+      }
+    }
+
+    long lVal = 0;
+    try
+    {
+
+      lVal = turnStringToLong(sNodeUID);
+    }
+    catch( Exception e)
+    {
+      //number format fucked
+      return new Vector();
+    }
+ 
+    return osmSQLH.getNode(lVal);
+
+  } // getNode
+ 
+
 
   /**
-   * Attempts to close the sb connection, although it happens automagically when you close the XMLRPC connection.
+   * Attempts to close the sb connection, although it happens automagically when you close the XMLRPC connection. This is required if you're doing server side stuff and instantiating this directly.
    */
   public void closeDatabase()
   {

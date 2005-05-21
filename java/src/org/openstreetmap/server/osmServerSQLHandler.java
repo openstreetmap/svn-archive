@@ -1179,7 +1179,7 @@ public class osmServerSQLHandler extends Thread {
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
-            String sSQL = "select node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
+            String sSQL = "select uid,node_a, node_b from (select uid,node_a,node_b,timestamp,visible from street_segments where visible = true and (";
             for (int i = 0; i < nnUID.length; i++) {
                 sSQL = sSQL + " node_a = " + nnUID[i] + " or node_b=" + nnUID[i];
                 if (i != nnUID.length - 1) {
@@ -1189,482 +1189,488 @@ public class osmServerSQLHandler extends Thread {
             sSQL = sSQL + ") ) as f, (select uid,visible,max(timestamp) as mtime from street_segments group by uid) as h where h.mtime = f.timestamp and h.uid = f.uid";
             LOG("querying with sql \n " + sSQL);
             ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                while (rs.next()) {
-                    v.add(new Integer(rs.getInt("node_a")));
-                    v.add(new Integer(rs.getInt("node_b")));
-                }
+            try
+            {
+           
+              rs = stmt.executeQuery(sSQL);
+              while (rs.next())
+              {
+                Vector vSegment = new Vector();
+                vSegment.add(new Integer(rs.getInt("uid")));
+                vSegment.add(new Integer(rs.getInt("node_a")));
+                vSegment.add(new Integer(rs.getInt("node_b")));
+                v.add(vSegment);
+              }
             }
             finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
+              if (rs != null) try { rs.close(); } catch (Exception ex) { }
             }
         }
         catch (Exception ex) {
-            LOG(ex);
+          LOG(ex);
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
         }
         return v;
     }
 
     public synchronized int newStreet(int nUserUID, int street_segment) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "start transaction;";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "insert into street_meta_table (timestamp, user_uid, visible) values (" + System.currentTimeMillis() + ", " + nUserUID + ", 1)";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "set @id = last_insert_id(); ";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values (" + " last_insert_id(), " + "" + street_segment + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
+        stmt.execute(sSQL);
+        sSQL = "commit;";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "select @id;";
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "start transaction;";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "insert into street_meta_table (timestamp, user_uid, visible) values (" + System.currentTimeMillis() + ", " + nUserUID + ", 1)";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "set @id = last_insert_id(); ";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values (" + " last_insert_id(), " + "" + street_segment + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
-            stmt.execute(sSQL);
-            sSQL = "commit;";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "select @id;";
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                rs.next();
-                return rs.getInt(1);
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          rs.next();
+          return rs.getInt(1);
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return -1;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return -1;
     }
 
     private boolean doesStreetExist(int nStreetUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "select * from street_meta_table where uid=" + nStreetUID;
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "select * from street_meta_table where uid=" + nStreetUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                if (rs.next()) {
-                    return true;
-                }
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            return true;
+          }
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return false;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return false;
     }
 
     private boolean doesAreaExist(int nAreaUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "select * from area_meta_table where uid=" + nAreaUID;
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "select * from area_meta_table where uid=" + nAreaUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                if (rs.next()) {
-                    return true;
-                }
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            return true;
+          }
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return false;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return false;
     }
 
     private boolean doesNodeExist(int nNodeUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "select uid from nodes where uid=" + nNodeUID;
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "select uid from nodes where uid=" + nNodeUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                if (rs.next()) {
-                    return true;
-                }
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            return true;
+          }
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return false;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return false;
     }
 
     private boolean doesStreetSegmentExist(int nStreetSegmentUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "select * from street_segment_meta_table where uid=" + nStreetSegmentUID;
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "select * from street_segment_meta_table where uid=" + nStreetSegmentUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                if (rs.next()) {
-                    return true;
-                }
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            return true;
+          }
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return false;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return false;
     }
 
     private boolean doesStreetHaveSegmentVisible(int nStreetUID, int nStreetSegmentUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "select visible from street_table where" + " uid=" + nStreetUID + " and segment_uid=" + nStreetSegmentUID + " order by timestamp desc limit 1";
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "select visible from street_table where" + " uid=" + nStreetUID + " and segment_uid=" + nStreetSegmentUID + " order by timestamp desc limit 1";
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                if (rs.next()) {
-                    int nVisible = rs.getInt("visible");
-                    if (nVisible == 1) {
-                        return true;
-                    }
-                }
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            int nVisible = rs.getInt("visible");
+            if (nVisible == 1) {
+              return true;
             }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          }
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return false;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return false;
     }
 
     public synchronized boolean addSegmentToStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID) {
-        if (doesStreetExist(nStreetUID) && doesStreetSegmentExist(nStreetSegmentUID) && !doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
-                String sSQL = "start transaction;";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values (" + "" + nStreetUID + ", " + "" + nStreetSegmentUID + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                sSQL = "commit;";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                return true;
-            }
-            catch (Exception ex) {
-                LOG(ex);
-            }
-            finally {
-                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-            }
+      if (doesStreetExist(nStreetUID) && doesStreetSegmentExist(nStreetSegmentUID) && !doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)) {
+        Statement stmt = null;
+        try {
+          stmt = conn.createStatement();
+          String sSQL = "start transaction;";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values (" + "" + nStreetUID + ", " + "" + nStreetSegmentUID + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          sSQL = "commit;";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
         }
-        return false;
+        catch (Exception ex) {
+          LOG(ex);
+        }
+        finally {
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+      }
+      return false;
     }
 
     public synchronized boolean dropSegmentFromStreet(int nUserUID, int nStreetUID, int nStreetSegmentUID) {
-        if (doesStreetExist(nStreetUID) && doesStreetSegmentExist(nStreetSegmentUID) && doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
-                String sSQL = "start transaction;";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values (" + "" + nStreetUID + ", " + "" + nStreetSegmentUID + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "0)";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                sSQL = "commit;";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                return true;
-            }
-            catch (Exception ex) {
-                LOG(ex);
-            }
-            finally {
-                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-            }
+      if (doesStreetExist(nStreetUID) && doesStreetSegmentExist(nStreetSegmentUID) && doesStreetHaveSegmentVisible(nStreetUID, nStreetSegmentUID)) {
+        Statement stmt = null;
+        try {
+          stmt = conn.createStatement();
+          String sSQL = "start transaction;";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          sSQL = "insert into street_table (uid, segment_uid, timestamp, user_uid, visible) values (" + "" + nStreetUID + ", " + "" + nStreetSegmentUID + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "0)";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          sSQL = "commit;";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
         }
-        return false;
+        catch (Exception ex) {
+          LOG(ex);
+        }
+        finally {
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+      }
+      return false;
     }
 
     public synchronized boolean updateStreetKeyValue(int nUID, int nStreetUID, int nKeyUID, String sValue) {
-        if (doesStreetExist(nStreetUID) && doesKeyExist(nKeyUID)) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
-                String sSQL = "insert into street_values (user_uid, street_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nStreetUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                return true;
-            }
-            catch (Exception ex) {
-                LOG(ex);
-            }
-            finally {
-                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-            }
+      if (doesStreetExist(nStreetUID) && doesKeyExist(nKeyUID)) {
+        Statement stmt = null;
+        try {
+          stmt = conn.createStatement();
+          String sSQL = "insert into street_values (user_uid, street_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nStreetUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
         }
-        return false;
+        catch (Exception ex) {
+          LOG(ex);
+        }
+        finally {
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+      }
+      return false;
     }
 
     public synchronized boolean updateAreaKeyValue(int nUID, int nAreaUID, int nKeyUID, String sValue) {
-        if (doesAreaExist(nAreaUID) && doesKeyExist(nKeyUID)) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
-                String sSQL = "insert into area_values (user_uid, area_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nAreaUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                return true;
-            }
-            catch (Exception ex) {
-                LOG(ex);
-            }
-            finally {
-                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-            }
+      if (doesAreaExist(nAreaUID) && doesKeyExist(nKeyUID)) {
+        Statement stmt = null;
+        try {
+          stmt = conn.createStatement();
+          String sSQL = "insert into area_values (user_uid, area_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nAreaUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
         }
-        return false;
+        catch (Exception ex) {
+          LOG(ex);
+        }
+        finally {
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+      }
+      return false;
     }
 
     public synchronized boolean updateStreetSegmentKeyValue(int nUID, int nStreetSegmentUID, int nKeyUID, String sValue) {
-        if (doesStreetSegmentExist(nStreetSegmentUID) && doesKeyExist(nKeyUID)) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
-                String sSQL = "insert into street_segment_values (user_uid, street_segment_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nStreetSegmentUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                return true;
-            }
-            catch (Exception ex) {
-                LOG(ex);
-            }
-            finally {
-                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-            }
+      if (doesStreetSegmentExist(nStreetSegmentUID) && doesKeyExist(nKeyUID)) {
+        Statement stmt = null;
+        try {
+          stmt = conn.createStatement();
+          String sSQL = "insert into street_segment_values (user_uid, street_segment_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nStreetSegmentUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
         }
-        return false;
+        catch (Exception ex) {
+          LOG(ex);
+        }
+        finally {
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+      }
+      return false;
     }
 
     public synchronized int newPointOfInterest(double latitude, double longitude, int nUserUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "start transaction;";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "insert into points_of_interest_meta_table (timestamp, user_uid) values (" + System.currentTimeMillis() + ", " + nUserUID + ")";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "set @id = last_insert_id(); ";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "insert into point_of_interest (uid, latitude, longitude, timestamp, user_uid, visible) values (" + " last_insert_id(), " + "" + latitude + ", " + "" + longitude + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
+        stmt.execute(sSQL);
+        sSQL = "commit;";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "select @id;";
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "start transaction;";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "insert into points_of_interest_meta_table (timestamp, user_uid) values (" + System.currentTimeMillis() + ", " + nUserUID + ")";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "set @id = last_insert_id(); ";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "insert into point_of_interest (uid, latitude, longitude, timestamp, user_uid, visible) values (" + " last_insert_id(), " + "" + latitude + ", " + "" + longitude + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "1)";
-            stmt.execute(sSQL);
-            sSQL = "commit;";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "select @id;";
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                rs.next();
-                return rs.getInt(1);
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          rs.next();
+          return rs.getInt(1);
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return -1;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return -1;
     }
 
     public synchronized boolean updatePoIKeyValue(int nUID, int nPoIUID, int nKeyUID, String sValue) {
 
-    
-      
-        if (doesPoIExist(nPoIUID) && doesKeyExist(nKeyUID)) {
-            Statement stmt = null;
-            try {
-                stmt = conn.createStatement();
-                String sSQL = "insert into poi_values (user_uid, poi_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nPoIUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
-                LOG("querying with sql \n " + sSQL);
-                stmt.execute(sSQL);
-                return true;
-            }
-            catch (Exception ex) {
-                LOG(ex);
-            }
-            finally {
-                if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-            }
+
+
+      if (doesPoIExist(nPoIUID) && doesKeyExist(nKeyUID)) {
+        Statement stmt = null;
+        try {
+          stmt = conn.createStatement();
+          String sSQL = "insert into poi_values (user_uid, poi_uid, key_uid, val, timestamp) values (" + "" + nUID + ", " + "" + nPoIUID + ", " + "" + nKeyUID + ", " + "'" + sValue + "', " + System.currentTimeMillis() + ")";
+          LOG("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
         }
-        return false;
+        catch (Exception ex) {
+          LOG(ex);
+        }
+        finally {
+          if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+        }
+      }
+      return false;
     }
 
 
-    
+
     private boolean doesPoIExist(int nPoIUID) {
-        Statement stmt = null;
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "select * from points_of_interest_meta_table where uid=" + nPoIUID;
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "select * from points_of_interest_meta_table where uid=" + nPoIUID;
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                if (rs.next()) {
-                    return true;
-                }
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          if (rs.next()) {
+            return true;
+          }
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return false;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return false;
     }
 
     public synchronized int newArea(int nUserUID, Vector nodes) {
-        if (nodes.size() < 3) {
+      if (nodes.size() < 3) {
+        return -1;
+      }
+      try {
+        Enumeration e = nodes.elements();
+        Hashtable ht = new Hashtable();
+        while (e.hasMoreElements()) {
+          Integer i = (Integer) e.nextElement();
+          int n = i.intValue();
+          if (n < 1) {
             return -1;
-        }
-        try {
-            Enumeration e = nodes.elements();
-            Hashtable ht = new Hashtable();
-            while (e.hasMoreElements()) {
-                Integer i = (Integer) e.nextElement();
-                int n = i.intValue();
-                if (n < 1) {
-                    return -1;
-                }
-                if (ht.contains("" + n)) {
-                    return -1; // we have seen this one before
-                }
-                else {
-                    ht.put("" + n, "" + n); // put it in the list so we can
-                    // check if we see it again later
-                }
-                if (!doesNodeExist(n)) {
-                    return -1;
-                }
-            }
-        }
-        catch (Exception ex) {
-            // fuck that input, I'm dieing...
+          }
+          if (ht.contains("" + n)) {
+            return -1; // we have seen this one before
+          }
+          else {
+            ht.put("" + n, "" + n); // put it in the list so we can
+            // check if we see it again later
+          }
+          if (!doesNodeExist(n)) {
             return -1;
+          }
         }
-        // vector appears to be a well-formed list of nodes that exist!
-        Statement stmt = null;
+      }
+      catch (Exception ex) {
+        // fuck that input, I'm dieing...
+        return -1;
+      }
+      // vector appears to be a well-formed list of nodes that exist!
+      Statement stmt = null;
+      try {
+        stmt = conn.createStatement();
+        String sSQL = "start transaction;";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "insert into area_meta_table (timestamp, user_uid) values (" + System.currentTimeMillis() + ", " + nUserUID + ")";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "set @id = last_insert_id(); ";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "insert into area (uid, user_uid, timestamp, node_a, node_b, visible) values ";
+        boolean bFirst = true;
+        Enumeration e = nodes.elements();
+        int lastNode = -1;
+        Integer i = (Integer) e.nextElement();
+        while (e.hasMoreElements()) {
+          if (!bFirst) {
+            sSQL = sSQL + ",";
+          }
+          else {
+            bFirst = false;
+          }
+          Integer p = (Integer) e.nextElement();
+          sSQL = sSQL + "(" + " last_insert_id(), " + nUserUID + ", " + System.currentTimeMillis() + ", " + "" + i + ", " + "" + p + ", " + "1)";
+          i = new Integer(p.intValue()); // make sure we dereference..
+          // TODO might be a good idea to test this one day
+        }
+        stmt.execute(sSQL);
+        sSQL = "commit;";
+        LOG("querying with sql \n " + sSQL);
+        stmt.execute(sSQL);
+        sSQL = "select @id;";
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
         try {
-            stmt = conn.createStatement();
-            String sSQL = "start transaction;";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "insert into area_meta_table (timestamp, user_uid) values (" + System.currentTimeMillis() + ", " + nUserUID + ")";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "set @id = last_insert_id(); ";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "insert into area (uid, user_uid, timestamp, node_a, node_b, visible) values ";
-            boolean bFirst = true;
-            Enumeration e = nodes.elements();
-            int lastNode = -1;
-            Integer i = (Integer) e.nextElement();
-            while (e.hasMoreElements()) {
-                if (!bFirst) {
-                    sSQL = sSQL + ",";
-                }
-                else {
-                    bFirst = false;
-                }
-                Integer p = (Integer) e.nextElement();
-                sSQL = sSQL + "(" + " last_insert_id(), " + nUserUID + ", " + System.currentTimeMillis() + ", " + "" + i + ", " + "" + p + ", " + "1)";
-                i = new Integer(p.intValue()); // make sure we dereference..
-                // TODO might be a good idea to test this one day
-            }
-            stmt.execute(sSQL);
-            sSQL = "commit;";
-            LOG("querying with sql \n " + sSQL);
-            stmt.execute(sSQL);
-            sSQL = "select @id;";
-            LOG("querying with sql \n " + sSQL);
-            ResultSet rs = null;
-            try {
-                rs = stmt.executeQuery(sSQL);
-                rs.next();
-                return rs.getInt(1);
-            }
-            finally {
-                if (rs != null) try { rs.close(); } catch (Exception ex) { }
-            }
-        }
-        catch (Exception ex) {
-            LOG(ex);
+          rs = stmt.executeQuery(sSQL);
+          rs.next();
+          return rs.getInt(1);
         }
         finally {
-            if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
         }
-        return -1;
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return -1;
     }
 
 

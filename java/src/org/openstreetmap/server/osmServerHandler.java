@@ -51,7 +51,7 @@ public class osmServerHandler
   } // safeSQLString
 
   /**
-   * instantiates the handler
+   * Instantiates the handler
    */
   public osmServerHandler()
   {
@@ -64,7 +64,7 @@ public class osmServerHandler
   
 
   /**
-   * Checks to see if we connected to the database ok
+   * Checks to see if we connected to the database OK
    * @return whether we connected ok
    */
   public boolean SQLConnectSuccess()
@@ -75,9 +75,9 @@ public class osmServerHandler
   
  
   /**
-   * gets the largest gpx upload for user associate with given token
-   * @param token the token
-   * @return the largest GPX number uploaded by you so far
+   * Finds the largest gpx upload for user associated with the given token
+   * @param token the login token returned by login()
+   * @return the largest GPX UID uploaded by you so far
    */
   public int largestTrackID(String token)
   {
@@ -87,14 +87,14 @@ public class osmServerHandler
 
 
   /**
-   * Logs you in
-   * @param user your username
-   * @param pass your password
+   * Logs you in to OpenStreetMap and gives you a token to use with methods in future
+   * @param sUsername your username
+   * @param sPassword your password
    * @return a token to be used when manipulating data. Returns "ERROR" if there was something wrong with your user/pass.
    */
-  public String login(String user, String pass)
+  public String login(String sUsername, String sPassword)
   {
-    return( osmSQLH.login(user,pass) );
+    return( osmSQLH.login(sUsername,sPassword) );
 
      
   } // login
@@ -430,9 +430,12 @@ public class osmServerHandler
  
 
   /**
-   * Get the
+   * Get the street segments associated with a list of nodes.
+   * @param sToken the login token returned by login()
+   * @param vNodes a one-dimensional list of int's which are node UID's
+   * @return a list of lists with the street segment uid, the first node and then the second. Eg [[1,2,3],[4,5,6]] shows street segments 1 and 4. 1 links nodes 2 and 3, and street segment 4 links 5 and 6
    */
-  public Vector getLines(String sToken, Vector v)
+  public Vector getLines(String sToken, Vector vNodes)
   {
     int nUID = osmSQLH.validateToken(sToken);
 
@@ -445,16 +448,16 @@ public class osmServerHandler
       }
     }
 
-    if( v.size() <1 )
+    if( vNodes.size() <1 )
     {
       return new Vector();
     }
 
-    int nnUID[] = new int[v.size()];
+    int nnUID[] = new int[vNodes.size()];
 
-    Enumeration e = v.elements();
+    Enumeration e = vNodes.elements();
 
-    for(int i = 0; i < v.size(); i++)
+    for(int i = 0; i < vNodes.size(); i++)
     {
       try
       {

@@ -20,9 +20,9 @@
 #include <iostream>
 #include <cmath>
 #include <cfloat>
+#include <cstdlib>
 using namespace std;
 
-#include "Map.h"
 
 struct Point
 {
@@ -143,14 +143,23 @@ void findNearestA1B1 (Point *a1s, Point *b1s, Point *a1, Point *b1)
 // main is licenced under GPL. All other code comes under the LGPL.
 int main(int argc,char* argv[])
 {
+
+	if(argc<9)
+	{
+		cerr<<"usage: O.lat O.lon A.lat A.lon B.lat B.lon OA.width OB.width"<<endl;
+		exit(1);
+	}
+
 	// Define our three points
-	Point o(51,-1), a(51,-1.02), b(51.01,-1.01);
+	Point o(atoi(argv[1]),atoi(argv[2])), 
+		  a(atoi(argv[3]),atoi(argv[4])), 
+		  b(atoi(argv[5]),atoi(argv[6]));
 
 	// The number of pixels per lat/lon unit
 	double scale = 4000;
 
 	// Define our road thicknesses in lat/lon units
-	double wa = 5/scale, wb = 2/scale;
+	double wa = atoi(argv[7])/scale, wb = atoi(argv[8])/scale;
 	
 	Point intersection=getIntersection(o,a,b,wa,wb);
 

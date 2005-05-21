@@ -71,6 +71,7 @@ destdir="${build}"
 <copy file="${jsp}/editKeys.jsp" tofile="${edit}/editKeys.jsp" />
 <copy file="${jsp}/viewMap.jsp" tofile="${edit}/viewMap.jsp" />
 <copy file="${jsp}/viewMapImage.jsp" tofile="${edit}/viewMapImage.jsp" />
+<copy file="${jsp}/viewTiledMap.jsp" tofile="${edit}/viewTiledMap.jsp" />
 <!-- includes -->
 
 <copy todir="/var/lib/tomcat4/webapps/edit/include/">

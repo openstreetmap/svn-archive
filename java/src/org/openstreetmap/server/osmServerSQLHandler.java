@@ -1026,7 +1026,7 @@ public class osmServerSQLHandler extends Thread {
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
-            String sSQL = "select * from (select uid,latitude,longitude,timestamp,visible from nodes where " + "latitude < " + lat1 + " and " + "latitude > " + lat2 + " and " + "longitude > " + lon1 + " and " + "longitude < " + lon2 + " and visible = true) as f, (select uid,visible,max(timestamp) as mtime from nodes group by uid) as g where g.uid = f.uid and f.timestamp = g.mtime and f.visible = g.visible";
+            String sSQL = "select uid, latitude, longitude from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < " + lat1 + " and latitude > " + lat2 + " and longitude > " + lon1 + " and longitude < " + lon2 + " and visible = true order by timestamp desc) as a group by uid";
             LOG("querying with sql \n " + sSQL);
             ResultSet rs = null;
             try {

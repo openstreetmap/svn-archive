@@ -815,4 +815,46 @@ public class osmServerHandler
   } // updatePoIKeyValue
 
 
+  public Vector getStreetSegmentValues(String sStreetSegmentUID, String sToken)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1 )
+    {
+      return new Vector();
+    }
+
+    long lVal = 0;
+    try
+    {
+
+      lVal = turnStringToLong(sStreetSegmentUID);
+    }
+    catch( Exception e)
+    {
+      //number format fucked
+      return new Vector();
+    }
+    
+    return osmSQLH.getStreetSegmentValues(
+        lVal,
+        (long)nUID
+        );
+
+  } // getStreetSegmentValues
+
+
+  private long turnStringToLong(String sVal) throws Exception
+  {
+    long lVal = Long.parseLong(sVal);
+
+    if( lVal < 0 )
+    {
+      throw new Exception("all longs (eg UIDs) must be positive");
+
+    }
+
+    return lVal;
+  } // turnStringToLong
+
 } // osmServerHandler

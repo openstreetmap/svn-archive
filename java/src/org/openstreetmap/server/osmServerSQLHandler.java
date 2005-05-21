@@ -1529,6 +1529,9 @@ public class osmServerSQLHandler extends Thread {
     }
 
     public synchronized boolean updatePoIKeyValue(int nUID, int nPoIUID, int nKeyUID, String sValue) {
+
+    
+      
         if (doesPoIExist(nPoIUID) && doesKeyExist(nKeyUID)) {
             Statement stmt = null;
             try {
@@ -1548,6 +1551,8 @@ public class osmServerSQLHandler extends Thread {
         return false;
     }
 
+
+    
     private boolean doesPoIExist(int nPoIUID) {
         Statement stmt = null;
         try {
@@ -1657,5 +1662,62 @@ public class osmServerSQLHandler extends Thread {
         }
         return -1;
     }
+
+
+    public Vector getStreetSegmentValues(long lStreetSegmentUID, long lUserUID)
+    {
+      Vector v = new Vector();
+      
+      //select * from (select * from street_segment_values where street_segment_uid = 38137 order by timestamp desc) as h group by key_uid;
+
+      Statement stmt = null;
+      try
+      {
+        stmt = conn.createStatement();
+        String sSQL = "select * from (select * from street_segment_values where"
+          + " street_segment_uid = " + 38137
+          + " order by timestamp desc) as h group by key_uid;";
+
+        LOG("querying with sql \n " + sSQL);
+        ResultSet rs = null;
+
+        try {
+          rs = stmt.executeQuery(sSQL);
+
+          while(rs.next())
+          {
+            String sKeyNum = rs.getString("key_uid");
+            String sValue = rs.getString("val");
+            java.util.Date dDate = new java.util.Date(
+                rs.getLong( "timestamp" ) );
+
+            Vector vKey = new Vector();
+
+            vKey.add( sKeyNum );
+            vKey.add( sValue );
+            vKey.add( dDate );
+
+            v.add(vKey);
+           
+          }
+
+          return v;
+              
+        
+        }
+        finally {
+          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+        }
+      }
+      catch (Exception ex) {
+        LOG(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+
+      return new Vector();
+
+    } // getStreetSegmentValues
 
 } // osmServerSQLHandler

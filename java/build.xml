@@ -41,14 +41,14 @@ destdir="${build}"
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
 
-<javadoc sourcepath="${src}" destdir="${dist}/api" packagenames="org.openstreetmap.*"/>
-
 </target>
 
 
 <target name="install" depends="dist">
 
-<!--svn up && ant clean && ant dist && cp dist/*.jar /var/lib/tomcat4/webapps/api/WEB-INF/lib/ && cp -r jsp/* /var/lib/tomcat4/webapps/api/ -->
+  <javadoc sourcepath="${src}" destdir="${dist}/api" packagenames="org.openstreetmap.*"/>
+
+
 <copy todir="/var/lib/tomcat4/webapps/api/WEB-INF/lib/">
   <fileset dir="${dist}" casesensitive="yes">
     <include name="**/*.jar"/>

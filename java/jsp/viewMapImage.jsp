@@ -34,5 +34,4 @@ OutputStream os = response.getOutputStream();
 ImageIO.write(bi, "png", os);
 os.close();
 
-
 %>

@@ -13,6 +13,7 @@ import org.openstreetmap.server.osmServerHandler;
 import org.openstreetmap.applet.osmStreetSegment;
 
 // TODO rename this to something sensible, like ImageMaker?
+// TODO sanity check for width and height?
 public class makeImage
 {
 
@@ -69,7 +70,7 @@ public class makeImage
   }
 
   private void log(String s) {
-    if (logging) System.out.println(s);
+    System.out.println(s);
   }
   
   private OMGraphicList getGraphics(Projection proj)
@@ -85,7 +86,7 @@ public class makeImage
 
     Enumeration e = v.elements();
 
-    log("reading streets...");
+    if (logging) log("reading streets...");
 
     while( e.hasMoreElements() )
     {
@@ -97,7 +98,7 @@ public class makeImage
       float lon2 = ((Float)e.nextElement()).floatValue();
       float lat2 = ((Float)e.nextElement()).floatValue();
 
-      log("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
+      if (logging) log("adding street " + lon1 + "," + lat1 + " " + lon2 + "," + lat2);
 
       osmStreetSegment oml = new osmStreetSegment(lat1, lon1, lat2, lon2,
           com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
@@ -116,7 +117,6 @@ public class makeImage
       float lat = ((Float)e.nextElement()).floatValue();
       float lon = ((Float)e.nextElement()).floatValue();
       
-
       OMCircle omc = new OMCircle( lat,
           lon,
           5f,

@@ -147,7 +147,7 @@ public class makeImage
       float lat = ((Float)e.nextElement()).floatValue();
       float lon = ((Float)e.nextElement()).floatValue();
       
-      if (logging) log(id + " " + lat + " " lon);
+      if (logging) log(id + " " + lat + " " + lon);
       nodesToPoints.put(id,new LatLonPoint(lat,lon));
       
       OMCircle omc = new OMCircle( lat,
@@ -163,7 +163,7 @@ public class makeImage
       omgl.add(omc);
     }
 
-    if (logging) log("done adding nodes";
+    if (logging) log("done adding nodes");
     // finish nodes
 
     // start lines

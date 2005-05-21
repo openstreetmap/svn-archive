@@ -261,8 +261,9 @@ public class osmServerClient {
         Logger.log("reading Lines...");
         enum = results.elements();
         while (enum.hasMoreElements()) {
-            Integer ia = (Integer) enum.nextElement();
-            Integer ib = (Integer) enum.nextElement();
+            Vector line = (Vector) enum.nextElement();
+            Integer ia = (Integer) line.get(1);
+            Integer ib = (Integer) line.get(2);
             int na = ia.intValue();
             int nb = ib.intValue();
             Node nodeA = (Node) htNodes.get("" + na);

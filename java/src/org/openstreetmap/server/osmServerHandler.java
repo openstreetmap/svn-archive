@@ -64,7 +64,7 @@ public class osmServerHandler
   
 
   /**
-   * checks to see if we connected to the databse ok
+   * Checks to see if we connected to the database ok
    * @return whether we connected ok
    */
   public boolean SQLConnectSuccess()
@@ -815,6 +815,12 @@ public class osmServerHandler
   } // updatePoIKeyValue
 
 
+  /**
+   * Gets the currently active keys and values associated with a street segment, given its UID.
+   * @param sStreetSegmentUID the street segment uid
+   * @param sToken the login token returned by login()
+   * @return a Vector of Vectors which each has the key uid, the value for that key and the timestamp that this pair was last set/edited. So you might get back something like [[14, 3, Tue May 17 12:44:26 BST 2005], [30, 1, Tue May 17 12:44:26 BST 2005]]
+   */
   public Vector getStreetSegmentValues(String sStreetSegmentUID, String sToken)
   {
     int nUID = osmSQLH.validateToken(sToken);

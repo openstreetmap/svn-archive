@@ -142,11 +142,13 @@ public class makeImage
 	    
     while( e.hasMoreElements() )
     {
-      try {	    
-	      Integer id = (Integer)e.nextElement();
+      try {	   
+	     Vector v2 = (Vector)e.nextElement();
+	     Enumeration e2 = v2.elements(); 
+	      Integer id = (Integer)e2.nextElement();
 	      nodes.add(id);
-	      float lat = ((Float)e.nextElement()).floatValue();
-	      float lon = ((Float)e.nextElement()).floatValue();
+	      float lat = ((Float)e2.nextElement()).floatValue();
+	      float lon = ((Float)e2.nextElement()).floatValue();
 	      if (logging) log(id + " " + lat + " " + lon);
       }
       catch (Exception ex) {
@@ -180,10 +182,13 @@ public class makeImage
     
     while( e.hasMoreElements() )
     {
-      int id = ((Integer)e.nextElement()).intValue();
-
-      LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(e.nextElement());
-      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(e.nextElement());
+      try {
+	     Vector v2 = (Vector)e.nextElement();
+	     Enumeration e2 = v2.elements(); 
+	     
+     	     int id = ((Integer)e2.nextElement()).intValue();
+     	     LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
+     	     LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
 
       osmStreetSegment oml = new osmStreetSegment(
           n1.getLatitude(), n1.getLongitude(), 
@@ -192,6 +197,10 @@ public class makeImage
           id );
 
       omgl.add(oml);
+      }
+      catch (Exception ex) {
+	if (logging) ex.printStackTrace();
+      }
     }
 
     // end lines

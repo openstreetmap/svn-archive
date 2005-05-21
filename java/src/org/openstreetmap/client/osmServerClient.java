@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.applet.SimpleXmlRpcClient;
 import org.openstreetmap.applet.Node;
+import org.openstreetmap.util.Logger;
 import org.openstreetmap.util.gpspoint;
 import com.bbn.openmap.LatLonPoint;
 import com.bbn.openmap.omGraphics.OMLine;
@@ -35,21 +36,12 @@ public class osmServerClient {
     private long loginTime = 0;
     SimpleXmlRpcClient xmlrpc;
 
-    private static void LOG(String s) {
-        System.err.println(s);
-    }
-
-    private static void LOG(Throwable t) {
-        LOG(t.getMessage());
-        t.printStackTrace(System.err);
-    }
-
    public osmServerClient() {
         try {
             xmlrpc = new SimpleXmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
         }
         catch (Exception ex) {
-            LOG(ex);
+            Logger.log(ex);
         }
     }
  
@@ -62,7 +54,7 @@ public class osmServerClient {
             return result;
         }
         catch (Exception ex) {
-            LOG(ex);
+            Logger.log(ex);
         }
         return null;
     }
@@ -132,7 +124,7 @@ public class osmServerClient {
     }
 
     public synchronized boolean login(String user, String pass) {
-        LOG("trying to login with '" + user + "' , '" + pass + "'...");
+        Logger.log("trying to login with '" + user + "' , '" + pass + "'...");
         Vector params = new Vector();
         params.addElement(user);
         params.addElement(pass);
@@ -169,7 +161,7 @@ public class osmServerClient {
     // EOF patch
 
     public synchronized Vector getStreets(LatLonPoint llp1, LatLonPoint llp2) {
-        LOG("getting streets...");
+        Logger.log("getting streets...");
         Vector params = new Vector();
         params.addElement("applet");
         params.addElement(new Double((double) llp1.getLatitude()));
@@ -187,7 +179,7 @@ public class osmServerClient {
         params.addElement(new Double((double) llp2.getLatitude()));
         params.addElement(new Double((double) llp2.getLongitude()));
         Vector results = vector_callServer("getPoints", params);
-        LOG("reading points...");
+        Logger.log("reading points...");
         Vector gpsPoints = new Vector();
         Enumeration enum = results.elements();
         while (enum.hasMoreElements()) {
@@ -195,12 +187,12 @@ public class osmServerClient {
             float lon = (float) ((Double) enum.nextElement()).doubleValue();
             gpsPoints.add(new gpspoint(lat, lon, 0, 0));
         }
-        LOG("done getting points");
+        Logger.log("done getting points");
         return gpsPoints;
     }
 
     public synchronized Hashtable getNodes(LatLonPoint llp1, LatLonPoint llp2) {
-        LOG("grabbing nodes...");
+        Logger.log("grabbing nodes...");
         Vector params = new Vector();
         params.addElement("applet");
         params.addElement(new Double((double) llp1.getLatitude()));
@@ -208,7 +200,6 @@ public class osmServerClient {
         params.addElement(new Double((double) llp2.getLatitude()));
         params.addElement(new Double((double) llp2.getLongitude()));
         Vector results = vector_callServer("getNodes", params);
-        LOG("reading Nodes...");
         Hashtable htNodes = new Hashtable();
         Enumeration enum = results.elements();
         while (enum.hasMoreElements()) {
@@ -217,9 +208,7 @@ public class osmServerClient {
             double lon = ((Double) enum.nextElement()).doubleValue();
             Node n = new Node(uid, lat, lon);
             htNodes.put("" + uid, n);
-            LOG("adding node " + n);
         }
-        LOG("done getting nodes!");
         return htNodes;
     }
 
@@ -229,7 +218,7 @@ public class osmServerClient {
         params.addElement(new Double(latitude));
         params.addElement(new Double(longitude));
         int i = int_callServer("newNode", params);
-        LOG("added node " + i);
+        Logger.log("added node " + i);
         return i;
     }
 
@@ -258,7 +247,7 @@ public class osmServerClient {
     }
 
     public synchronized Vector getLines(Hashtable htNodes) {
-        LOG("grabbing lines...");
+        Logger.log("grabbing lines...");
         Vector v = new Vector();
         Vector params = new Vector();
         params.addElement("applet");
@@ -269,7 +258,7 @@ public class osmServerClient {
         }
         params.addElement(uids);
         Vector results = vector_callServer("getLines", params);
-        LOG("reading Lines...");
+        Logger.log("reading Lines...");
         enum = results.elements();
         while (enum.hasMoreElements()) {
             Integer ia = (Integer) enum.nextElement();
@@ -282,10 +271,10 @@ public class osmServerClient {
                 LatLonPoint llpA = nodeA.getLatLon();
                 LatLonPoint llpB = nodeB.getLatLon();
                 v.add(new OMLine(llpA.getLatitude(), llpA.getLongitude(), llpB.getLatitude(), llpB.getLongitude(), OMLine.STRAIGHT_LINE));
-                LOG("adding line between " + llpA + ", " + llpB);
+                Logger.log("adding line between " + llpA + ", " + llpB);
             }
         }
-        LOG("done getting lines!");
+        Logger.log("done getting lines!");
         return v;
     }
 

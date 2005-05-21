@@ -41,12 +41,15 @@ public class makeImage
   
   public BufferedImage getImageFromCoord(int width, int height, float latitude, float longitude, float scale)
   {
-    mb.setSize(width,height);
-
     mb.setScale(scale);
     mb.setCenter(latitude, longitude);
 
-    OMGraphicList gl = getGraphics(mb.getProjection());
+    Proj projection = mb.getProjection();
+    projection.setWidth(width);
+    projection.setHeight(height);
+    mb.setProjection(projection);
+    
+    OMGraphicList gl = getGraphics(projection);
 
     BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 

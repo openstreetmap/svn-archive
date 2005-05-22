@@ -242,12 +242,15 @@ public class osmDisplay
 
     }
 
+    osmAppletLoginWindow loginWindow =
+       new osmAppletLoginWindow((JFrame)null,true,this);
+    /*
     JOptionPane.showMessageDialog((JFrame)null,
         "Not logged in, or login timeout",
         "Login",
         JOptionPane.WARNING_MESSAGE);
-
-    return false;
+    */
+    return osc.loggedIn();
     
   } // checkLogin
 

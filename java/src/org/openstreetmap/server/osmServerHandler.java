@@ -558,7 +558,7 @@ public class osmServerHandler
 
 
   /**
-   * Attempts to close the sb connection, although it happens automagically when you close the XMLRPC connection. This is required if you're doing server side stuff and instantiating this directly.
+   * Attempts to close the db connection, although it happens automagically when you close the XMLRPC connection. This is required if you're doing server side stuff and instantiating this directly.
    */
   public void closeDatabase()
   {
@@ -566,52 +566,6 @@ public class osmServerHandler
 
   } // closeDatabase
 
-
-  /**
-   * deprecated! this is the old method that the static png generator uses, which needs to be rewritten to use the Line methods
-   */
-  public Vector getStreets(
-      String token,
-      double p1lat,
-      double p1lon,
-      double p2lat,
-      double p2lon)
-  {
-    try{
-
-      if( !token.equals("applet") && osmSQLH.validateToken(token) == -1 )
-      {
-        return null;
-      }
-
-      Vector v = osmSQLH.getStreets((float)p1lat, (float)p1lon, (float)p2lat, (float)p2lon);
-
-      if( osmSQLH.SQLSuccessful() )
-      {
-
-        return v;
-
-      }
-      else
-      {
-
-        System.out.println("error....");
-
-      }
-
-
-    }
-    catch(Exception e)
-    {
-
-      System.out.println(e);
-      e.printStackTrace();
-      System.exit(-1);
-
-    }
-
-    return null;
-  } // getStreets
 
 
   /**

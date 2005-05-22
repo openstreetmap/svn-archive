@@ -475,39 +475,6 @@ public class osmServerSQLHandler extends Thread {
     }
   }
 
-  public synchronized Vector getStreets(float p1lat, float p1lon, float p2lat, float p2lon) {
-    LOG("getStreets");
-    Statement stmt = null;
-    try {
-      stmt = conn.createStatement();
-      String sSQL = "select uid_of_street, lon1, lat1, lon2, lat2 from streetSegments" + " where ( " + "     lat1 < " + p1lat + " and lat1 > " + p2lat + " and lon1 > " + p1lon + " and lon1 < " + p2lon + " ) or ( " + "     lat2 < " + p1lat + " and lat2 > " + p2lat + " and lon2 > " + p1lon + " and lon2 < " + p2lon + " ) " + " and visible=1 limit 10000";
-      LOG("querying with sql \n " + sSQL);
-      ResultSet rs = null;
-      try {
-        rs = stmt.executeQuery(sSQL);
-        Vector v = new Vector();
-        while (rs.next()) {
-          v.add(new Integer(rs.getInt(1)));
-          v.add(new Float(rs.getDouble(2)));
-          v.add(new Float(rs.getDouble(3)));
-          v.add(new Float(rs.getDouble(4)));
-          v.add(new Float(rs.getDouble(5)));
-        }
-        bSQLSuccess = true;
-        return v;
-      }
-      finally {
-        if (rs != null) try { rs.close(); } catch (Exception ex) { }
-      }
-    }
-    catch (Exception ex) {
-      LOG(ex);
-    }
-    finally {
-      if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
-    }
-    return null;
-  }
 
   public synchronized int largestTrackID(String token) {
     int uid = validateToken(token);

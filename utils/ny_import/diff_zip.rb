@@ -21,12 +21,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require 'csv'
 
 $stderr.print "Reading the new TIGER Zip codes..."
-big_zips = {}
+new_zips = {}
 File.open("zip_coords.csv", File::RDONLY) do |f|
   CSV::Reader.parse(f) do |row|
     zip, lt, lg = row.first.to_s, row[1].to_s.to_f, row[2].to_s.to_f
     next if zip =~ /^\d{5}-\d{4}/
-    big_zips{zip} = [lt, lg]
+    new_zips{zip} = [lt, lg]
   end
 end
 $stderr.puts " done."
@@ -40,4 +40,12 @@ File.open("zip_coords.old.csv", File::RDONLY) do |f|
   end
 end
 $stderr.puts " done."
+
+old_zips.keys.each do |old_zip|
+  raise "Could not find #{old_zip} in new Zip codes" unless new_zips.has_key?(old_zip)
+  new_pos = new_zips[old_zip]
+  old_pos = old_zips[old_zip]
+  dist = ((new_pos.first - old_pos.first) ** 2 + (new_pos[1] - old_pos[1]) ** 2) ** 0.5
+  puts "#{old_zip}, distance = #{dist}"
+end
 

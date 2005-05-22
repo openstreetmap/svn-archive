@@ -44,7 +44,7 @@ public class makeImage
 
     Graphics g = bi.getGraphics();
 
-    g.setColor(new Color(231,231,214));
+    g.setColor(Color.white);
     g.fillRect(0,0,width,height);
 
     g.setColor(Color.BLACK);

@@ -106,7 +106,7 @@ public class osmDisplay
     mapBean.add(lineLayer);
     mapBean.add(pointsLayer);
 
-    mapBean.setBackgroundColor(new Color(231,231,214));
+    mapBean.setBackgroundColor(Color.white);
     
     bStartingUp = false;
 

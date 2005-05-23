@@ -20,32 +20,40 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require 'csv'
 
-$stderr.print "Reading the new TIGER Zip codes..."
-new_zips = {}
-File.open("zip_coords.csv", File::RDONLY) do |f|
-  CSV::Reader.parse(f) do |row|
-    zip, lt, lg = row.first.to_s, row[1].to_s.to_f, row[2].to_s.to_f
-    next if zip =~ /^\d{5}-\d{4}/
-    new_zips{zip} = [lt, lg]
-  end
+def dist(a, b)
+  alt, alg = a
+  blt, blg = b
+  return ((alt.to_f - blt.to_f) ** 2 + (alg.to_f - blg.to_f) ** 2) ** 0.5
 end
-$stderr.puts " done."
 
-$stderr.print "Reading the old Zip codes..."
+$stderr.print "Reading the old Zip codes"
 old_zips = {}
 File.open("zip_coords.old.csv", File::RDONLY) do |f|
-  CSV::Reader.parse(f) do |row|
-    zip, lt, lg = row.first.to_s, row[1].to_s.to_f, row[2].to_s.to_f
-    old_zips{zip} = [lt, lg]
+  until f.eof?
+    zip, lt, lg = f.gets.split(/,/).map do |x| eval(x) end   # eval to lose double quotes
+    old_zips[zip] = [lt, lg]
+    $stderr.print "." if (old_zips.keys.length % 100).zero?
   end
 end
-$stderr.puts " done."
+$stderr.puts
 
-old_zips.keys.each do |old_zip|
-  raise "Could not find #{old_zip} in new Zip codes" unless new_zips.has_key?(old_zip)
-  new_pos = new_zips[old_zip]
-  old_pos = old_zips[old_zip]
-  dist = ((new_pos.first - old_pos.first) ** 2 + (new_pos[1] - old_pos[1]) ** 2) ** 0.5
-  puts "#{old_zip}, distance = #{dist}"
+$stderr.print "Reading the new Zip codes"
+new_zips = {}
+File.open("zip_coords_base.csv", File::RDONLY) do |f|
+  until f.eof?
+    zip, lt, lg = f.gets.split(/,/).map do |x| eval(x) end   # eval to lose double quotes
+    new_zips[zip] = [lt, lg]
+    $stderr.print "." if (old_zips.keys.length % 100).zero?
+  end
+end
+$stderr.puts
+
+common_zips = old_zips.keys & new_zips.keys
+puts "Number of old Zip codes: #{old_zips.keys.length}"
+puts "Number of new Zip codes: #{new_zips.keys.length}"
+puts "Number of Zip codes in common: #{common_zips.length}"
+puts "Common Zip codes:"
+common_zips.each do |zip|
+  puts "    #{zip}, distance = #{dist(new_zips[zip], old_zips[zip])}"
 end
 

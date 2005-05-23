@@ -26,6 +26,17 @@ def dist(a, b)
   return ((alt.to_f - blt.to_f) ** 2 + (alg.to_f - blg.to_f) ** 2) ** 0.5
 end
 
+$stderr.print "Reading the new Zip codes"
+new_zips = {}
+File.open("zip_coords_base.csv", File::RDONLY) do |f|
+  until f.eof?
+    zip, lt, lg = f.gets.split(/,/)
+    new_zips[zip] = [lt, lg]
+    $stderr.print "." if (new_zips.keys.length % 100).zero?
+  end
+end
+$stderr.puts
+
 $stderr.print "Reading the old Zip codes"
 old_zips = {}
 File.open("zip_coords.old.csv", File::RDONLY) do |f|
@@ -37,23 +48,12 @@ File.open("zip_coords.old.csv", File::RDONLY) do |f|
 end
 $stderr.puts
 
-$stderr.print "Reading the new Zip codes"
-new_zips = {}
-File.open("zip_coords_base.csv", File::RDONLY) do |f|
-  until f.eof?
-    zip, lt, lg = f.gets.split(/,/).map do |x| eval(x) end   # eval to lose double quotes
-    new_zips[zip] = [lt, lg]
-    $stderr.print "." if (old_zips.keys.length % 100).zero?
-  end
-end
-$stderr.puts
-
 common_zips = old_zips.keys & new_zips.keys
 puts "Number of old Zip codes: #{old_zips.keys.length}"
 puts "Number of new Zip codes: #{new_zips.keys.length}"
 puts "Number of Zip codes in common: #{common_zips.length}"
 puts "Common Zip codes:"
-common_zips.each do |zip|
+common_zips.sort.each do |zip|
   puts "    #{zip}, distance = #{dist(new_zips[zip], old_zips[zip])}"
 end
 

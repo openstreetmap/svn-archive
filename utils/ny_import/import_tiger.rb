@@ -31,6 +31,8 @@ def read_rt1(path)
   File.open(path, File::RDONLY) do |f|
     until f.eof?
       line = " " + f.gets.chomp  # spacer for 1-based indexing
+      cfcc = line[56..58].strip
+      next unless cfcc =~ /^A|P/  # A is a road, P is a provisional (unverified) road
       line_id = line[6..15].strip.to_i
       prefix = line[18..19].strip; prefix = nil if prefix.empty?
       base_name = line[20..49].strip; base_name = nil if base_name.empty?

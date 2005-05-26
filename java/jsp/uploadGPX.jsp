@@ -169,7 +169,7 @@ else
         Enumeration e = v.elements();
 
         %>
-          <h2>Previously uploaded GPX files:</h2><br>
+          <h3>Previously uploaded GPX files:</h3>
           <table id="keyvalue">
           <tr>
           <th>Filename</th>

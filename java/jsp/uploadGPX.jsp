@@ -112,8 +112,8 @@ else
     %>
 
       <h1>Upload a GPX File</h1>
-      <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. To get help using on this form and more information on GPX files, click <a href="http://www.openstreetmap.org/newwiki/index.php/Upload">here</a>.<br>
-      <form action="http://www.openstreetmap.org/edit/uploadGPX.jsp" enctype="multipart/form-data" method="post">
+      <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. To get help on this form and more information on GPX files, click <a href="/newwiki/index.php/Upload">here</a>.<br><br>
+      <form action="/edit/uploadGPX.jsp" enctype="multipart/form-data" method="post">
       <table>
       <tr><td>file:</td><td><input type="file" name="file"></td></tr>
       <tr><td></td><td><input type="submit" value="Go!"></td></tr>
@@ -169,6 +169,7 @@ else
         Enumeration e = v.elements();
 
         %>
+          <h2>Previously uploaded GPX files:</h2><br>
           <table id="keyvalue">
           <tr>
           <th>Filename</th>

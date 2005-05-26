@@ -30,21 +30,15 @@ else
     String sUploadFileName = "";
     File fUploadedFile = null;
 
-    out.print("Attempting to insert file...<br>");
+    out.print("Attempting to upload your file, please wait. Progress is indicated below:<br>");
+    
 
     if(FileUpload.isMultipartContent(request))
     {
 
-      out.print("multipart ok<br>");
-      // is it a multipart post?
-
       DiskFileUpload upload = new DiskFileUpload();
 
-      out.print("diskupload ok<br>");
-
       List items = upload.parseRequest(request);
-
-      out.print("list ok<br>");
 
       Iterator iter = items.iterator();
 
@@ -72,13 +66,6 @@ else
           String contentType = item.getContentType();
           boolean isInMemory = item.isInMemory();
           long sizeInBytes = item.getSize();
-          /*
-             out.print("fieldName: " + fieldName + "<br>");
-             out.print("fileName: " + sUploadFileName + "<br>");
-             out.print("contentType: " +  contentType + "<br>");
-             out.print("isInMemory: " + isInMemory + "<br>");
-             out.print("sizeInBytes: " + sizeInBytes + "<br>");
-             */
           sSaveFileName = "/tmp/" + System.currentTimeMillis() + ".osm";
 
           fUploadedFile = new File(sSaveFileName);
@@ -94,33 +81,26 @@ else
       XmlRpcClient xmlrpc = new XmlRpcClient("http://www.openstreetmap.org/api/xml.jsp");
 
 
-      out.print("login success!<br>");
 
       if( uploadedStream != null)
       {
 
-        out.print("now trying to upload it...<br>");
 
         osmGPXImporter gpxImporter = new osmGPXImporter();
 
-        out.print("created importer ok at " + new java.util.Date() + "<br>");
 
 
         if( sUploadFileName.endsWith(".gz") )
         {
-          out.print("looks like a gzip file...<br>");
 
           gpxImporter.upload( new GZIPInputStream(uploadedStream), out, sToken, sUploadFileName);
 
         }
         else
         {
-
-          out.print("looks like a gpx file...<br>");
           gpxImporter.upload(uploadedStream, out, sToken,sUploadFileName);
         }
 
-        out.println("All done at " + new java.util.Date());
       }
 
     }
@@ -132,7 +112,7 @@ else
     %>
 
       <h1>Upload a GPX File</h1>
-      <br>Here, you can upload a plain gpx file or a gzipped one.<br>
+      <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. To get help using on this form and more information on GPX files, click <a href="http://www.openstreetmap.org/newwiki/index.php/Upload">here</a>.<br>
       <form action="http://www.openstreetmap.org/edit/uploadGPX.jsp" enctype="multipart/form-data" method="post">
       <table>
       <tr><td>file:</td><td><input type="file" name="file"></td></tr>
@@ -157,14 +137,14 @@ else
               if( bSuccess)
               {
                 %>
-                  Dropped GPX successfully... 
+                  Deleted GPX file successfully... 
                   <%
 
               }
               else
               {
                 %>
-                  Error dropping that GPX... 
+                  Error deleting that GPX file...
                   <%
 
               }

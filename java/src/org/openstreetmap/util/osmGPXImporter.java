@@ -1,4 +1,3 @@
-
 package org.openstreetmap.util;
 
 import java.util.*;
@@ -88,9 +87,7 @@ public class osmGPXImporter extends DefaultHandler{
 
         }
       }
-      System.out.println("got uid and gpx uid: " + nUID + ", "+  nGPXUID);
 
-      o.print("Starting at trackid " + nLastTrackID + "<br>");
 
     }
 
@@ -132,7 +129,6 @@ public class osmGPXImporter extends DefaultHandler{
     if( qName.equals("trkseg"))
     {
       nLastTrackID++;
-      out.print("Found a new track, id incremented to " + nLastTrackID + "<br>");
     }
 
 
@@ -250,7 +246,7 @@ public class osmGPXImporter extends DefaultHandler{
 
     if( qName.equals("gpx"))
     {
-      out.print("Total added points: " + (nPointTempCount + lPointsAdded) + ", all done! :-)<br>");
+      out.print("Added a total of " + (nPointTempCount + lPointsAdded) + " points, upload complete.<br>");
 
     }
 
@@ -296,12 +292,12 @@ public class osmGPXImporter extends DefaultHandler{
     {
       nPointTempCount++;
 
-      if( nPointTempCount == 500 )
+      if( nPointTempCount == 1000 )
       {
-        lPointsAdded += 500;
+        lPointsAdded += 1000;
         nPointTempCount = 0;
 
-        out.print("Added " + lPointsAdded + " points so far...<br>");
+        out.print("Added " + lPointsAdded + " points so far, more to come...<br>");
 
         out.flush();
       } 
@@ -332,8 +328,6 @@ public class osmGPXImporter extends DefaultHandler{
   {
     PrintWriter o = new PrintWriter(out);
 
-    System.out.println("asked to upload");
-
 
     try{
 
@@ -342,7 +336,6 @@ public class osmGPXImporter extends DefaultHandler{
       if( handler.SQLConnectSuccess() )
       {
 
-        o.print("Success connecting to database<br>");
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
         SAXParser saxParser = factory.newSAXParser();
@@ -354,15 +347,15 @@ public class osmGPXImporter extends DefaultHandler{
       else
       {
 
-        o.print("Something went wrong connecting to the database. Sorry.<br>");
+        o.print("Something went wrong connecting to the database and your track has not been uploaded.<br>");
       }
     }
     catch(Exception e)
     {
-      o.print("problem in upload!: " + e + "<br>");
+      o.print("We encountered a problem in uploading your track. Please report this to web@openstreetmap.org:" + new Date() + ": " + e + "<br>");
     }
 
-    o.print("upload done.<br>");
+    o.print("<a href=\"uploadGPX.jsp\">Click here to return to your GPX files</a><br>");
 
 
   } // upload

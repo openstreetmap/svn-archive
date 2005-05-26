@@ -57,7 +57,6 @@ else
         }
         else
         {
-          out.print("got a file<br>");
 
           uploadedStream = new BufferedInputStream(item.getInputStream());
 

@@ -27,11 +27,10 @@ catch (Exception e) {
 }
 
 makeImage mi = new makeImage();
-
 BufferedImage bi = mi.getImageFromCoord(w,h,lat,lon,scale);
-
 OutputStream os = response.getOutputStream();
 ImageIO.write(bi, "png", os);
-os.close();
 
+out.clear();
+out = pageContext.pushBody();
 %>

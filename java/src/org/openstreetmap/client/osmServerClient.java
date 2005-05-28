@@ -27,6 +27,7 @@ import org.openstreetmap.util.Logger;
 import org.openstreetmap.util.gpspoint;
 import com.bbn.openmap.LatLonPoint;
 import com.bbn.openmap.omGraphics.OMLine;
+import com.bbn.openmap.omGraphics.OMText;
 
 public class osmServerClient {
 
@@ -203,13 +204,10 @@ public class osmServerClient {
         Hashtable htNodes = new Hashtable();
         Enumeration enum = results.elements();
         while (enum.hasMoreElements()) {
-          
             Vector vNode = (Vector) enum.nextElement(); 
-            
             int uid = ((Integer)vNode.get(0)).intValue();
             double lat = ((Double)vNode.get(1)).doubleValue();
             double lon = ((Double)vNode.get(2)).doubleValue();
-            
             Node n = new Node(uid, lat, lon);
             htNodes.put("" + uid, n);
         }
@@ -272,10 +270,12 @@ public class osmServerClient {
             int nb = ib.intValue();
             Node nodeA = (Node) htNodes.get("" + na);
             Node nodeB = (Node) htNodes.get("" + nb);
+            String name = (String) line.get(3);
             if (nodeA != null && nodeB != null) {
                 LatLonPoint llpA = nodeA.getLatLon();
                 LatLonPoint llpB = nodeB.getLatLon();
                 v.add(new OMLine(llpA.getLatitude(), llpA.getLongitude(), llpB.getLatitude(), llpB.getLongitude(), OMLine.LINETYPE_STRAIGHT));
+                v.add(new OMText(llpA.getLatitude(), llpA.getLongitude(), name, OMText.JUSTIFY_LEFT));
                 Logger.log("adding line between " + llpA + ", " + llpB);
             }
         }

@@ -1207,7 +1207,7 @@ public class osmServerSQLHandler extends Thread {
               }
           }
           inClauseBuffer.append(")");
-          String sSQL = "SELECT street.segment_uid, k.val AS name FROM (SELECT uid, segment_uid FROM street_table WHERE visible = TRUE AND segment_uid IN " + inClauseBuffer + " ORDER BY timestamp DESC) AS street, (SELECT street_uid, val FROM street_values WHERE key_uid = 14 ORDER BY timestamp DESC) as k WHERE street.uid = k.street_uid";
+          String sSQL = "SELECT street.segment_uid, street_key.val AS name FROM (SELECT uid, segment_uid FROM street_table WHERE visible = TRUE AND segment_uid IN " + inClauseBuffer + " ORDER BY timestamp DESC) AS street, (SELECT street_uid, key_uid, val FROM street_values ORDER BY timestamp DESC) as street_key, (SELECT uid FROM osmKeys WHERE name = 'name' AND visible = TRUE  ORDER BY timestamp DESC) as k WHERE street.uid = street_key.street_uid AND street_key.key_uid = k.uid";
           Logger.log("getLines(), querying street names with SQL: " + sSQL);
 	      ResultSet rs = null;
 	      try {

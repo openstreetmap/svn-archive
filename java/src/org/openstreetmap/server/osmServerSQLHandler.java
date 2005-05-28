@@ -1154,6 +1154,31 @@ public class osmServerSQLHandler extends Thread {
     }
     return -1;
   }
+  
+  public synchronized String getStreetName(int streetUid) {
+      Statement stmt = null;
+      try {
+          stmt = conn.createStatement();
+          String sql = "SELECT val as name FROM street_values WHERE street_uid = " + streetUid;
+          ResultSet rs = null;
+          try {
+              rs = stmt.executeQuery(sql);
+              if (rs.next()) {
+                  return rs.getString("name");
+              }
+          }
+          finally {
+              if (rs != null) try { rs.close(); } catch (Exception ex) { }
+          }
+      }
+      catch (Exception ex) {
+        Logger.log(ex);
+      }
+      finally {
+        if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+      }
+      return null;
+  }
 
   /**
    * Gets the visible lines associated with the list of nodes you give
@@ -1175,8 +1200,7 @@ public class osmServerSQLHandler extends Thread {
         }
       }
       inClauseBuffer.append(")");
-      String sSQL = "select a.uid, a.node_a, a.node_b, b.val as name from ((select uid, node_a, node_b, timestamp, visible from street_segments where visible = true and (node_a in " + inClauseBuffer + " or node_b in " + inClauseBuffer + ") order by timestamp desc) as a group by uid), (select street_uid, val from street_values order by timestamp desc) as b where a.uid = b.street_uid";
-      //String sSQL = "select uid, node_a, node_b from (select uid, node_a, node_b, timestamp, visible from street_segments where visible = true and (node_a in " + inClauseBuffer + " or node_b in " + inClauseBuffer + ") order by timestamp desc) as a group by uid";
+      String sSQL = "select uid, node_a, node_b from (select uid, node_a, node_b, timestamp, visible from street_segments where visible = true and (node_a in " + inClauseBuffer + " or node_b in " + inClauseBuffer + ") order by timestamp desc) as a group by uid";
       Logger.log("getLines(), querying with SQL:");
       Logger.log(sSQL);
       ResultSet rs = null;
@@ -1184,10 +1208,11 @@ public class osmServerSQLHandler extends Thread {
         rs = stmt.executeQuery(sSQL);
         while (rs.next()) {
           Vector vSegment = new Vector();
-          vSegment.add(new Integer(rs.getInt("uid")));
+          int uid = rs.getInt("uid");
+          vSegment.add(new Integer(uid));
           vSegment.add(new Integer(rs.getInt("node_a")));
           vSegment.add(new Integer(rs.getInt("node_b")));
-          vSegment.add(rs.getString("name"));
+          vSegment.add(getStreetName(uid));
           v.add(vSegment);
         }
       }

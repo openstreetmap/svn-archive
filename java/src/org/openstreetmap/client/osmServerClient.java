@@ -37,7 +37,7 @@ import com.bbn.openmap.omGraphics.OMText;
 
 public class osmServerClient {
     
-    public static final Font STREET_NAME_FONT = new Font("Arial,Helvetica,Verdana,Sans-serif", Font.PLAIN, 8);
+    public static final Font STREET_NAME_FONT = new Font("Arial,Helvetica,Verdana,Sans-serif", Font.BOLD, 9);
 
     private String sUsername = "";
     private String sPassword = "";

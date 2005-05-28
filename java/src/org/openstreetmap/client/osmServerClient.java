@@ -19,8 +19,13 @@
 package org.openstreetmap.client;
 
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import org.apache.xmlrpc.applet.SimpleXmlRpcClient;
 import org.openstreetmap.applet.Node;
@@ -32,7 +37,7 @@ import com.bbn.openmap.omGraphics.OMText;
 
 public class osmServerClient {
     
-    public static final Font STREET_NAME_FONT = new Font("Arial,Helvetica,Verdana,Sans-serif", Font.PLAIN, 6);
+    public static final Font STREET_NAME_FONT = new Font("Arial,Helvetica,Verdana,Sans-serif", Font.PLAIN, 8);
 
     private String sUsername = "";
     private String sPassword = "";
@@ -253,8 +258,8 @@ public class osmServerClient {
     }
 
     public synchronized Vector getLines(Hashtable htNodes) {
-        Logger.log("grabbing lines...");
         Vector v = new Vector();
+        Logger.log("reading Lines...");
         Vector params = new Vector();
         params.addElement("applet");
         Vector uids = new Vector();
@@ -263,8 +268,8 @@ public class osmServerClient {
             uids.addElement(new Integer(((Node) enum.nextElement()).getUID()));
         }
         params.addElement(uids);
+        Map streetNameCache = new HashMap();
         Vector results = vector_callServer("getLines", params);
-        Logger.log("reading Lines...");
         enum = results.elements();
         while (enum.hasMoreElements()) {
             Vector line = (Vector) enum.nextElement();
@@ -275,15 +280,42 @@ public class osmServerClient {
             Node nodeA = (Node) htNodes.get("" + na);
             Node nodeB = (Node) htNodes.get("" + nb);
             if (nodeA != null && nodeB != null) {
-                String name = (String) line.get(3);
                 float ltA = nodeA.getLatLon().getLatitude();
                 float lnA = nodeA.getLatLon().getLongitude();
                 float ltB = nodeB.getLatLon().getLatitude();
                 float lnB = nodeB.getLatLon().getLongitude();
                 v.add(new OMLine(ltA, lnA, ltB, lnB, OMLine.LINETYPE_STRAIGHT));
+
+                String name = (String) line.get(3);
                 float midLt = (ltA + ltB) / 2;
                 float midLn = (lnA + lnB) / 2;
-                OMText nameGraphic = new OMText(midLt, midLn, name, OMText.JUSTIFY_CENTER);
+                if (streetNameCache.containsKey(name)) {
+                    List segmentMidpoints = (List) streetNameCache.get(name);
+                    segmentMidpoints.add(new float[] { midLt, midLn });
+                }
+                else {
+                    List segmentMidpoints = new ArrayList();
+                    segmentMidpoints.add(new float[] { midLt, midLn });
+                    streetNameCache.put(name, segmentMidpoints);
+                }
+            }
+        }
+        {
+            Iterator iter = streetNameCache.keySet().iterator();
+            while (iter.hasNext()) {
+                String nameKey = (String) iter.next();
+                List segmentMidpoints = (List) streetNameCache.get(nameKey);
+                float totalLt = 0;
+                float totalLn = 0;
+                Iterator midpointIter = segmentMidpoints.iterator();
+                while (midpointIter.hasNext()) {
+                    float[] point = (float[]) midpointIter.next();
+                    totalLt += point[0];
+                    totalLn += point[1];
+                }
+                float avLt = totalLt / segmentMidpoints.size();
+                float avLn = totalLn / segmentMidpoints.size();
+                OMText nameGraphic = new OMText(avLt, avLn, nameKey, OMText.JUSTIFY_CENTER);
                 nameGraphic.setFont(STREET_NAME_FONT);
                 v.add(nameGraphic);
             }

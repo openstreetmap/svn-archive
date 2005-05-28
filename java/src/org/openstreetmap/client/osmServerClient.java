@@ -285,18 +285,19 @@ public class osmServerClient {
                 float ltB = nodeB.getLatLon().getLatitude();
                 float lnB = nodeB.getLatLon().getLongitude();
                 v.add(new OMLine(ltA, lnA, ltB, lnB, OMLine.LINETYPE_STRAIGHT));
-
                 String name = (String) line.get(3);
-                float midLt = (ltA + ltB) / 2;
-                float midLn = (lnA + lnB) / 2;
-                if (streetNameCache.containsKey(name)) {
-                    List segmentMidpoints = (List) streetNameCache.get(name);
-                    segmentMidpoints.add(new float[] { midLt, midLn });
-                }
-                else {
-                    List segmentMidpoints = new ArrayList();
-                    segmentMidpoints.add(new float[] { midLt, midLn });
-                    streetNameCache.put(name, segmentMidpoints);
+                if (! "".equals(name)) {
+	                float midLt = (ltA + ltB) / 2;
+	                float midLn = (lnA + lnB) / 2;
+	                if (streetNameCache.containsKey(name)) {
+	                    List segmentMidpoints = (List) streetNameCache.get(name);
+	                    segmentMidpoints.add(new float[] { midLt, midLn });
+	                }
+	                else {
+	                    List segmentMidpoints = new ArrayList();
+	                    segmentMidpoints.add(new float[] { midLt, midLn });
+	                    streetNameCache.put(name, segmentMidpoints);
+	                }
                 }
             }
         }

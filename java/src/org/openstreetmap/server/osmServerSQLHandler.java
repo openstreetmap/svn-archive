@@ -23,7 +23,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 import org.openstreetmap.util.Logger;
@@ -1156,7 +1159,8 @@ public class osmServerSQLHandler extends Thread {
   }
   
   /**
-   * Gets the visible lines associated with the list of nodes you give
+   * Gets the visible lines associated with the list of nodes you give, and also returns their street
+   * names (key "name") if appropriate
    * 
    * @param nnUID
    *            a list of UIDs...
@@ -1166,32 +1170,72 @@ public class osmServerSQLHandler extends Thread {
     Statement stmt = null;
     try {
       stmt = conn.createStatement();
-      StringBuffer inClauseBuffer = new StringBuffer();
-      inClauseBuffer.append("(");
-      for (int i=0; i < nnUID.length; i++) {
-        inClauseBuffer.append(nnUID[i]);
-        if (i < (nnUID.length - 1)) {
-          inClauseBuffer.append(", ");
-        }
+      Map segmentMap = new HashMap();
+      {
+          StringBuffer inClauseBuffer = new StringBuffer();
+          inClauseBuffer.append("(");
+          for (int i=0; i < nnUID.length; i++) {
+            inClauseBuffer.append(nnUID[i]);
+            if (i < (nnUID.length - 1)) {
+              inClauseBuffer.append(", ");
+            }
+          }
+          inClauseBuffer.append(")");
+          String sSQL = "SELECT segment.uid, segment.node_a, segment.node_b FROM (SELECT uid, node_a, node_b FROM street_segments WHERE visible = TRUE AND (node_a IN " + inClauseBuffer + " OR node_b IN " + inClauseBuffer + ") ORDER BY timestamp DESC) as segment";
+          Logger.log("getLines(), querying segments with SQL: " + sSQL);
+	      ResultSet rs = null;
+	      try {
+	        rs = stmt.executeQuery(sSQL);
+	        while (rs.next()) {
+	            segmentMap.put(new Integer(rs.getInt("uid")), new int[] { rs.getInt("node_a"), rs.getInt("node_b") });
+	        }
+	      }
+	      finally {
+	          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+	      }
       }
-      inClauseBuffer.append(")");
-      String sSQL = "SELECT segment.uid, segment.node_a, segment.node_b, k.val AS name FROM (SELECT uid, node_a, node_b FROM street_segments WHERE visible = TRUE AND (node_a IN " + inClauseBuffer + " OR node_b IN " + inClauseBuffer + ") ORDER BY timestamp DESC) AS segment, (SELECT uid, segment_uid FROM street_table WHERE visible = TRUE ORDER BY timestamp DESC) AS street, (SELECT street_uid, val FROM street_values WHERE key_uid = 14 ORDER BY timestamp DESC) as k WHERE segment.uid = street.segment_uid AND street.uid = k.street_uid";
-      Logger.log("getLines(), querying with SQL:");
-      Logger.log(sSQL);
-      ResultSet rs = null;
-      try {
-        rs = stmt.executeQuery(sSQL);
-        while (rs.next()) {
-          Vector vSegment = new Vector();
-          vSegment.add(new Integer(rs.getInt("uid")));
-          vSegment.add(new Integer(rs.getInt("node_a")));
-          vSegment.add(new Integer(rs.getInt("node_b")));
-          vSegment.add(rs.getString("name"));
-          v.add(vSegment);
-        }
+      Map streetNameMap = new HashMap();
+      {
+          StringBuffer inClauseBuffer = new StringBuffer();
+          inClauseBuffer.append("(");
+          Object[] keys = segmentMap.keySet().toArray();
+          for (int i=0; i < keys.length; i++) {
+              Integer segmentUid = (Integer) keys[i];
+              inClauseBuffer.append(segmentUid);
+              if (i < (keys.length - 1)) {
+                  inClauseBuffer.append(", ");
+              }
+          }
+          inClauseBuffer.append(")");
+          String sSQL = "SELECT street.segment_uid, k.val AS name FROM (SELECT uid, segment_uid FROM street_table WHERE visible = TRUE AND segment_uid IN " + inClauseBuffer + " ORDER BY timestamp DESC) AS street, (SELECT street_uid, val FROM street_values WHERE key_uid = 14 ORDER BY timestamp DESC) as k WHERE street.uid = k.street_uid";
+          Logger.log("getLines(), querying street names with SQL: " + sSQL);
+	      ResultSet rs = null;
+	      try {
+	        rs = stmt.executeQuery(sSQL);
+	        while (rs.next()) {
+	            streetNameMap.put(new Integer(rs.getInt("segment_uid")), rs.getString("name"));
+	        }
+	      }
+	      finally {
+	          if (rs != null) try { rs.close(); } catch (Exception ex) { }
+	      }
       }
-      finally {
-        if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      {
+          Iterator iter = segmentMap.keySet().iterator();
+          while (iter.hasNext()) {
+              Integer uid = (Integer) iter.next();
+              int[] nodes = (int[]) segmentMap.get(uid);
+              Vector vSegment = new Vector();
+              vSegment.add(uid);
+              vSegment.add(new Integer(nodes[0]));
+              vSegment.add(new Integer(nodes[1]));
+              String name = "";
+              if (streetNameMap.containsKey(uid)) {
+                  name = (String) streetNameMap.get(uid);
+              }
+              vSegment.add(name);
+              v.add(vSegment);
+          }
       }
     }
     catch (Exception ex) {

@@ -1177,7 +1177,7 @@ public class osmServerSQLHandler extends Thread {
       finally {
         if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
       }
-      return null;
+      return "";
   }
 
   /**

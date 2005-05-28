@@ -18,6 +18,7 @@
  */
 package org.openstreetmap.client;
 
+import java.awt.Font;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -30,6 +31,8 @@ import com.bbn.openmap.omGraphics.OMLine;
 import com.bbn.openmap.omGraphics.OMText;
 
 public class osmServerClient {
+    
+    public static final Font STREET_NAME_FONT = new Font("Arial,Helvetica,Verdana,Sans-serif", Font.PLAIN, 6);
 
     private String sUsername = "";
     private String sPassword = "";
@@ -271,13 +274,18 @@ public class osmServerClient {
             int nb = ib.intValue();
             Node nodeA = (Node) htNodes.get("" + na);
             Node nodeB = (Node) htNodes.get("" + nb);
-            String name = (String) line.get(3);
             if (nodeA != null && nodeB != null) {
-                LatLonPoint llpA = nodeA.getLatLon();
-                LatLonPoint llpB = nodeB.getLatLon();
-                v.add(new OMLine(llpA.getLatitude(), llpA.getLongitude(), llpB.getLatitude(), llpB.getLongitude(), OMLine.LINETYPE_STRAIGHT));
-                v.add(new OMText(llpA.getLatitude(), llpA.getLongitude(), name, OMText.JUSTIFY_LEFT));
-                Logger.log("adding line between " + llpA + ", " + llpB);
+                String name = (String) line.get(3);
+                float ltA = nodeA.getLatLon().getLatitude();
+                float lnA = nodeA.getLatLon().getLongitude();
+                float ltB = nodeB.getLatLon().getLatitude();
+                float lnB = nodeB.getLatLon().getLongitude();
+                v.add(new OMLine(ltA, lnA, ltB, lnB, OMLine.LINETYPE_STRAIGHT));
+                float midLt = (ltA + ltB) / 2;
+                float midLn = (lnA + lnB) / 2;
+                OMText nameGraphic = new OMText(midLt, midLn, name, OMText.JUSTIFY_CENTER);
+                nameGraphic.setFont(STREET_NAME_FONT);
+                v.add(nameGraphic);
             }
         }
         Logger.log("done getting lines!");

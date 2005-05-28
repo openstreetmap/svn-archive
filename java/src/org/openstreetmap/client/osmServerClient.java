@@ -73,7 +73,8 @@ public class osmServerClient {
     }
 
     private Vector vector_callServer(String method, Vector args) {
-        return (Vector) callServer(method, args);
+        Object result = callServer(method, args);
+        return (Vector) result;
     }
 
     private boolean boolean_callServer(String method, Vector args) {

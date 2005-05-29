@@ -191,10 +191,10 @@ public class osmServerClient {
         Vector results = vector_callServer("getPoints", params);
         Logger.log("reading points...");
         Vector gpsPoints = new Vector();
-        Enumeration enum = results.elements();
-        while (enum.hasMoreElements()) {
-            float lat = (float) ((Double) enum.nextElement()).doubleValue();
-            float lon = (float) ((Double) enum.nextElement()).doubleValue();
+        Enumeration en = results.elements();
+        while (en.hasMoreElements()) {
+            float lat = (float) ((Double) en.nextElement()).doubleValue();
+            float lon = (float) ((Double) en.nextElement()).doubleValue();
             gpsPoints.add(new gpspoint(lat, lon, 0, 0));
         }
         Logger.log("done getting points");
@@ -211,9 +211,9 @@ public class osmServerClient {
         params.addElement(new Double((double) llp2.getLongitude()));
         Vector results = vector_callServer("getNodes", params);
         Hashtable htNodes = new Hashtable();
-        Enumeration enum = results.elements();
-        while (enum.hasMoreElements()) {
-            Vector vNode = (Vector) enum.nextElement(); 
+        Enumeration en = results.elements();
+        while (en.hasMoreElements()) {
+            Vector vNode = (Vector) en.nextElement(); 
             int uid = ((Integer)vNode.get(0)).intValue();
             double lat = ((Double)vNode.get(1)).doubleValue();
             double lon = ((Double)vNode.get(2)).doubleValue();
@@ -263,16 +263,16 @@ public class osmServerClient {
         Vector params = new Vector();
         params.addElement("applet");
         Vector uids = new Vector();
-        Enumeration enum = htNodes.elements();
-        while (enum.hasMoreElements()) {
-            uids.addElement(new Integer(((Node) enum.nextElement()).getUID()));
+        Enumeration en = htNodes.elements();
+        while (en.hasMoreElements()) {
+            uids.addElement(new Integer(((Node) en.nextElement()).getUID()));
         }
         params.addElement(uids);
         Map streetNameCache = new HashMap();
         Vector results = vector_callServer("getLines", params);
-        enum = results.elements();
-        while (enum.hasMoreElements()) {
-            Vector line = (Vector) enum.nextElement();
+        en = results.elements();
+        while (en.hasMoreElements()) {
+            Vector line = (Vector) en.nextElement();
             Integer ia = (Integer) line.get(1);
             Integer ib = (Integer) line.get(2);
             int na = ia.intValue();

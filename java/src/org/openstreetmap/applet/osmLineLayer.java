@@ -79,17 +79,17 @@ public class osmLineLayer extends Layer {
         LatLonPoint lowerRight = proj.getLowerRight();
         nodeHashTable = serverClient.getNodes(upperLeft, lowerRight);
         {
-	        Enumeration enum = nodeHashTable.elements();
-	        while (enum.hasMoreElements()) {
-	            Node n = (Node) enum.nextElement();
+	        Enumeration en = nodeHashTable.elements();
+	        while (en.hasMoreElements()) {
+	            Node n = (Node) en.nextElement();
 	            nodeGraphics.add(n);
 	        }
         }
         {
             Vector lines = serverClient.getLines(nodeHashTable);
-	        Enumeration enum = lines.elements();
-	        while (enum.hasMoreElements()) {
-	            OMGraphic g = (OMGraphic) enum.nextElement();
+	        Enumeration en = lines.elements();
+	        while (en.hasMoreElements()) {
+	            OMGraphic g = (OMGraphic) en.nextElement();
 	            lineGraphics.add(g);
 	        }
         }

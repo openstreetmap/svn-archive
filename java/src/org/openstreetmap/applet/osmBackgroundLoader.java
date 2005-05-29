@@ -33,9 +33,9 @@ public class osmBackgroundLoader extends Thread {
         long lLastTime = System.currentTimeMillis();
         Vector v = new Vector();
         v = osc.getPoints(llTopLeft, llBotRight);
-        Enumeration enum = v.elements();
-        while (enum.hasMoreElements()) {
-            gpspoint p = (gpspoint) enum.nextElement();
+        Enumeration en = v.elements();
+        while (en.hasMoreElements()) {
+            gpspoint p = (gpspoint) en.nextElement();
             omc = new OMCircle(p.getLatitude(), p.getLongitude(), 5f, com.bbn.openmap.proj.Length.METER);
             omc.setLinePaint(Color.gray);
             omc.setSelectPaint(Color.red);

@@ -178,7 +178,10 @@ public class osmServerHandler
    * @param p1lon the north-west longitude
    * @param p2lat the south-east latitude
    * @param p2lon the south-east longitude
-   * @return a list of lats and lons and properties. should be a list of lists, FIXME.
+   * @return flattened list of point attributees, like point_1_latitude (double), point_1_longitude (double), point_1_altitude (Date),
+   * point_1_timestamp (double), point_1_horizontal_dilution (double), point_1_vertical_dilution (double), point_1_track_ID (int),
+   * point_1_quality (int), point_1_satellites (int), point_1_user (String), point_1_last_time (Date), point_2_latitude (double),
+   * point_2_longitude (double), point_2_altitude (Date)... Should be a list of lists, FIXME.
    */
   public Vector getFullPoints(
       String token,

@@ -190,17 +190,36 @@ public class makeImage
  	      Enumeration e2 = v2.elements();
  
 	      int id = ((Integer)e2.nextElement()).intValue();
- 	      LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
- 	      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(e2.nextElement());
+	      
+	      Integer nid1 = (Integer)e2.nextElement();
+	      Integer nid2 = (Integer)e2.nextElement();
+	      
+ 	      LatLonPoint n1 = (LatLonPoint)nodesToPoints.get(nid1);
+ 	      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(nid2);
  
-	      if (n1 != null && n2 != null) {
- 		      osmStreetSegment oml = new osmStreetSegment(
- 				      n1.getLatitude(), n1.getLongitude(), 
- 				      n2.getLatitude(), n2.getLongitude(),
- 				      com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
- 				      id );
- 		      omgl.add(oml);
- 	      }
+	      if (n1 == null) { // n1 is outside the current projection, so wasn't included by getNodes
+		     Vector v3 = osmSH.getNode("applet",nid1);
+		     Enumeration e3 = v3.elements();
+	       	     float lat = ((Float)e3.nextElement()).floatValue();
+		     float lon = ((Float)e3.nextElement()).floatValue();
+		     n1 = new LatLonPoint(lat,lon);
+		     nodesToPoints.add(nid1,n1); // not strictly necessary, but might be used later so I'll be consistent
+		     nodes.add(nid1); // ditto
+	      }
+	      if (n2 == null) { // n2 is outside the current projection, so wasn't included by getNodes
+		     Vector v3 = osmSH.getNode("applet",nid2);
+		     Enumeration e3 = v3.elements();
+	       	     float lat = ((Float)e3.nextElement()).floatValue();
+		     float lon = ((Float)e3.nextElement()).floatValue();
+		     n2 = new LatLonPoint(lat,lon);
+		     nodesToPoints.add(nid2,n2);
+		     nodes.add(nid2);
+	      }
+	      osmStreetSegment oml = new osmStreetSegment( n1.getLatitude(), n1.getLongitude(), 
+							   n2.getLatitude(), n2.getLongitude(),
+			     				   com.bbn.openmap.omGraphics.geom.BasicGeometry.LINETYPE_STRAIGHT,
+							   id );
+	      omgl.add(oml);
       }
       catch (Exception ex) {
 	      if (logging) ex.printStackTrace();

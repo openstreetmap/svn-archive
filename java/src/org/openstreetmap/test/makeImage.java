@@ -153,7 +153,7 @@ public class makeImage
 	      nodes.add(id);
 	      double lat = ((Double)e2.nextElement()).doubleValue();
 	      double lon = ((Double)e2.nextElement()).doubleValue();
-	      if (logging) log(id + " " + lat + " " + lon);
+	      //if (logging) log(id + " " + lat + " " + lon);
               nodesToPoints.put(id,new LatLonPoint(lat,lon));
       }
       catch (Exception ex) {
@@ -198,19 +198,21 @@ public class makeImage
  	      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(nid2);
  
 	      if (n1 == null) { // n1 is outside the current projection, so wasn't included by getNodes
+		     if (logging) log("fetching clipped node " + nid1);
 		     Vector v3 = osmSH.getNode("applet",nid1.toString());
 		     Enumeration e3 = v3.elements();
-	       	     float lat = ((Float)e3.nextElement()).floatValue();
-		     float lon = ((Float)e3.nextElement()).floatValue();
+	       	     double lat = ((Double)e3.nextElement()).doubleValue();
+		     double lon = ((Double)e3.nextElement()).doubleValue();
 		     n1 = new LatLonPoint(lat,lon);
 		     nodesToPoints.put(nid1,n1); // not strictly necessary, but might be used later so I'll be consistent
 		     nodes.add(nid1); // ditto
 	      }
 	      if (n2 == null) { // n2 is outside the current projection, so wasn't included by getNodes
+		     if (logging) log("fetching clipped node " + nid2);
 		     Vector v3 = osmSH.getNode("applet",nid2.toString());
 		     Enumeration e3 = v3.elements();
-	       	     float lat = ((Float)e3.nextElement()).floatValue();
-		     float lon = ((Float)e3.nextElement()).floatValue();
+	       	     double lat = ((Double)e3.nextElement()).doubleValue();
+		     double lon = ((Double)e3.nextElement()).doubleValue();
 		     n2 = new LatLonPoint(lat,lon);
 		     nodesToPoints.put(nid2,n2);
 		     nodes.add(nid2);

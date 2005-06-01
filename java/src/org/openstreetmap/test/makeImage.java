@@ -198,7 +198,7 @@ public class makeImage
  	      LatLonPoint n2 = (LatLonPoint)nodesToPoints.get(nid2);
  
 	      if (n1 == null) { // n1 is outside the current projection, so wasn't included by getNodes
-		     Vector v3 = osmSH.getNode("applet",nid1);
+		     Vector v3 = osmSH.getNode("applet",nid1.toString());
 		     Enumeration e3 = v3.elements();
 	       	     float lat = ((Float)e3.nextElement()).floatValue();
 		     float lon = ((Float)e3.nextElement()).floatValue();
@@ -207,7 +207,7 @@ public class makeImage
 		     nodes.add(nid1); // ditto
 	      }
 	      if (n2 == null) { // n2 is outside the current projection, so wasn't included by getNodes
-		     Vector v3 = osmSH.getNode("applet",nid2);
+		     Vector v3 = osmSH.getNode("applet",nid2.toString());
 		     Enumeration e3 = v3.elements();
 	       	     float lat = ((Float)e3.nextElement()).floatValue();
 		     float lon = ((Float)e3.nextElement()).floatValue();

@@ -203,7 +203,7 @@ public class makeImage
 	       	     float lat = ((Float)e3.nextElement()).floatValue();
 		     float lon = ((Float)e3.nextElement()).floatValue();
 		     n1 = new LatLonPoint(lat,lon);
-		     nodesToPoints.add(nid1,n1); // not strictly necessary, but might be used later so I'll be consistent
+		     nodesToPoints.put(nid1,n1); // not strictly necessary, but might be used later so I'll be consistent
 		     nodes.add(nid1); // ditto
 	      }
 	      if (n2 == null) { // n2 is outside the current projection, so wasn't included by getNodes
@@ -212,7 +212,7 @@ public class makeImage
 	       	     float lat = ((Float)e3.nextElement()).floatValue();
 		     float lon = ((Float)e3.nextElement()).floatValue();
 		     n2 = new LatLonPoint(lat,lon);
-		     nodesToPoints.add(nid2,n2);
+		     nodesToPoints.put(nid2,n2);
 		     nodes.add(nid2);
 	      }
 	      osmStreetSegment oml = new osmStreetSegment( n1.getLatitude(), n1.getLongitude(), 

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./import_tiger.rb --reset
-rm ./import_tiger.log
+./tiger_to_osm.rb --reset
+rm ./tiger_to_osm.log
 

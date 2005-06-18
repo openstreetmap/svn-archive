@@ -22,7 +22,7 @@ module Geometry
 
   class Point
   
-    SAME_THRESHOLD = 0.000005  # decent for Manhattan's lat/long points 
+    SAME_THRESHOLD = 0.0000005  # decent for Manhattan's lat/long points 
     SAME_THRESHOLD2 = SAME_THRESHOLD ** 2
     
     def initialize(x, y)

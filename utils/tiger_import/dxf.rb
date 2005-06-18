@@ -22,9 +22,8 @@ require "net/http"
 require "tempfile"
 require "uri"
 
-require "geometry"
-require "tiger"
-require "utm"
+require "tiger/tiger"
+require "tiger/geometry"
 
 DEFAULT_SOURCE = "http://www2.census.gov/geo/tiger/tiger2004fe/NY/tgr36061.zip"
 

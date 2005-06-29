@@ -31,10 +31,12 @@
 #include <sstream>
 #include <cctype>
 
+namespace OpenStreetMap
+{
 
 // ll_to_gr()
 // Slightly modified version of:
-/* @func GPS_Math_Airy1830LatLonToNGEN **************************************
+/* @func modGPS_Math_Airy1830LatLonToNGEN **************************************
 **
 ** Convert Airy 1830 datum latitude and longitude to UK Ordnance Survey
 ** National Grid Eastings and Northings
@@ -51,7 +53,12 @@
 // - Returns a Location structure.
 // - Parameters renamed from "phi" and "lambda" to "lat" and "lng".
 
-GridRef ll_to_gr ( LatLon& ll )
+EarthPoint ll_to_gr ( const EarthPoint& ll )
+{
+	return ll_to_gr(ll.y,ll.x);
+}
+
+EarthPoint ll_to_gr ( double lat, double lon ) 
 {
 
     double N0      = -100000;
@@ -63,13 +70,13 @@ GridRef ll_to_gr ( LatLon& ll )
     double b       = 6356256.910;
 	double e, n;
 
-    GPS_Math_LatLon_To_EN(&e,&n,ll.lat,ll.lon,N0,E0,phi0,lambda0,F0,
+    modGPS_Math_LatLon_To_EN(&e,&n,lat,lon,N0,E0,phi0,lambda0,F0,
 							a,b);
 
-    return GridRef(e,n);
+    return EarthPoint(e,n);
 }
 
-/* @func  GPS_Math_LatLon_To_EN **********************************
+/* @func  modGPS_Math_LatLon_To_EN **********************************
 **
 ** Convert latitude and longitude to eastings and northings
 ** Standard Gauss-Kruger Transverse Mercator
@@ -88,7 +95,7 @@ GridRef ll_to_gr ( LatLon& ll )
 **
 ** @return [void]
 ************************************************************************/
-void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
+void modGPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 			   double lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b)
@@ -176,7 +183,7 @@ void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 
 // gr_to_ll()
 // Slightly modified version of:
-/* @func GPS_Math_NGENToAiry1830LatLon **************************************
+/* @func modGPS_Math_NGENToAiry1830LatLon **************************************
 **
 ** Convert  to UK Ordnance Survey National Grid Eastings and Northings to
 ** Airy 1830 datum latitude and longitude
@@ -193,7 +200,7 @@ void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 // - Grid reference passed as a struct of type Location.
 // - Lat/long parameters renamed from "phi" and "lambda" to "lat" and "lng".
 
-LatLon gr_to_ll(const GridRef& gridref)
+EarthPoint gr_to_ll(const EarthPoint& gridref)
 {
     double N0      = -100000;
     double E0      =  400000;
@@ -203,15 +210,15 @@ LatLon gr_to_ll(const GridRef& gridref)
     double a       = 6377563.396;
     double b       = 6356256.910;
 
-	LatLon retval;
+	EarthPoint retval;
 
-    GPS_Math_EN_To_LatLon(gridref.e,gridref.n,&retval.lat,&retval.lon,N0,E0,
+    modGPS_Math_EN_To_LatLon(gridref.x,gridref.y,&retval.y,&retval.x,N0,E0,
 					phi0,lambda0,F0, a,b);
     
     return retval;
 }
 
-/* @func  GPS_Math_EN_To_LatLon **************************************
+/* @func  modGPS_Math_EN_To_LatLon **************************************
 **
 ** Convert Eastings and Northings to latitude and longitude
 **
@@ -229,7 +236,7 @@ LatLon gr_to_ll(const GridRef& gridref)
 **
 ** @return [void]
 ************************************************************************/
-void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
+void modGPS_Math_EN_To_LatLon(double E, double N, double *phi,
 			   double *lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b)
@@ -342,4 +349,6 @@ void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
     *lambda *= (180.0/M_PI); 
 
     return;
+}
+
 }

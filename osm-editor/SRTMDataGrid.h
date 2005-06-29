@@ -21,6 +21,9 @@
 
 #include "SRTMGeneral.h"
 
+namespace OpenStreetMap
+{
+
 struct SRTM_SAMPLE_POINT
 {
 	double hgt;
@@ -39,10 +42,11 @@ private:
 	static void addContour
 		(LINE *lines,LINE line,int edge1,int edge2,int *prevedges,int *go,
  		int *n_lines);
-	static void getHgtFilename(char *filename,LatLon&);
+	static void getHgtFilename(char *filename,EarthPoint&);
+	Colour doGetHeightShading(double ht,double shadingres);
 
 public:
-	SRTMDataGrid(LATLON_TILE **rects,int w, int h, Map& map);
+	SRTMDataGrid(LATLON_TILE **rects,int w, int h, Map& map, int f);
 	~SRTMDataGrid();
 	void doLoad(LATLON_TILE *rect,Map& map,int index);
 	void setPoint (int row,int col);
@@ -53,6 +57,13 @@ public:
 	int hgtptDistance(vector<int>& prevs);
 	int getHeight() { return sampleheight; }
 	int getWidth() { return samplewidth; }
+	Colour getHeightShading (double shadingres);
+	ScreenPos getTopLeft() { return points[pt].screenPos; }
+	ScreenPos getTopRight() { return points[pt+f].screenPos; }
+	ScreenPos getBottomLeft() { return points[pt+samplewidth*f].screenPos; }
+	ScreenPos getBottomRight() { return points[pt+samplewidth*f+f].screenPos; }
 };
+
+}
 
 #endif

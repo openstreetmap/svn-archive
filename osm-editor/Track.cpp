@@ -31,8 +31,28 @@ namespace OpenStreetMap
 
 Track::~Track()
 {
-	for(int count=0; count<segs.size(); count++)
-		delete segs[count];
+	removeSegs();
+}
+
+Track::Track(Track* t)
+{
+	copySegsFrom(t);
+}
+
+void Track::copySegsFrom(Track* t)
+{
+	for(int count=0; count<t->segs.size(); count++)
+		segs.push_back(new TrackSeg(*(t->segs[count])));
+}
+
+void Track::removeSegs()
+{
+	for(vector<TrackSeg*>::iterator i=segs.begin(); i!=segs.end(); i++)
+	{
+		delete *i;
+		segs.erase(i);
+		i--;
+	}
 }
 
 // Write a track to GPX.
@@ -46,7 +66,7 @@ void Track::toGPX(std::ostream &outfile)
 	outfile<<"</trk>"<<endl;
 }
 
-vector<SegPointInfo> Track::findNearestSeg(const LatLon& p, double limit)
+vector<SegPointInfo> Track::findNearestSeg(const EarthPoint& p, double limit)
 {
 	vector<SegPointInfo>lowest;
 	SegPointInfo a;
@@ -65,7 +85,7 @@ vector<SegPointInfo> Track::findNearestSeg(const LatLon& p, double limit)
 	return lowest;
 }
 
-bool Track::deletePoints(const LatLon& p1, const LatLon& p2, double limit)
+bool Track::deletePoints(const EarthPoint& p1, const EarthPoint& p2, double limit)
 {
 	vector<SegPointInfo> a1 = findNearestSeg(p1,limit), a2 = findNearestSeg(p2,limit);
 	for(int count=0; count<a1.size(); count++)
@@ -83,8 +103,8 @@ bool Track::deletePoints(const LatLon& p1, const LatLon& p2, double limit)
 	return false;
 }
 
-bool Track::segmentise(const QString& newType, const LatLon& p1,
-						const LatLon& p2, double limit)
+bool Track::segmentise(const QString& newType, const EarthPoint& p1,
+						const EarthPoint& p2, double limit)
 {
 	vector<SegPointInfo> a1 = findNearestSeg(p1,limit), a2 = findNearestSeg(p2,limit);
 
@@ -152,4 +172,31 @@ bool Track::addTrackpt(int seg,const QString& t, double lat, double lon)
 	}
 	return false;
 }
+
+bool Track::nameTrackSeg(const EarthPoint& p1, const QString& name,double limit)
+{
+	cerr<<p1.y<<endl;
+	cerr<<p1.x<<endl;
+	cerr<<name<<endl;
+	// find nearest track segment
+	cerr<<"finding nearest seg"<<endl;
+	vector<SegPointInfo> a1 = findNearestSeg(p1,limit);
+	cerr<<"done"<<endl;
+
+
+	// only take the first track segment if two are equal distance
+	if(a1.size() && a1[0].seg>=0)
+	{
+		segs[a1[0].seg]->setID(name);
+		return true;
+	}
+	return false;
+}
+
+void Track::deleteExcessPoints (double angle, double distance)
+{
+	for(int count=0; count<segs.size(); count++)
+		segs[count]->deleteExcessPoints (angle, distance);
+}
+
 }

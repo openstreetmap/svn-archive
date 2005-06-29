@@ -43,7 +43,7 @@ struct Waypoint
 		 
 	static WaypointMap waypointMap[];
 
-	Waypoint(){ lat=lon=0; }	
+	Waypoint(){ lat=lon=0;name="none";type="waypoint"; }	
 	Waypoint(const QString& nm, double lt, double ln, const QString& tp)
 		{ name=nm; lat=lt; lon=ln; type=tp; }
 	static QString garminToType(int);
@@ -57,6 +57,7 @@ private:
 public:
 	Waypoints() { }
 	void addWaypoint(const Waypoint& wp) { waypoints.push_back(wp);}
+	bool deleteWaypoint(int i);
 	Waypoint getWaypoint(int i) throw (QString); 
 	void toGPX(std::ostream&);
 	int size() { return waypoints.size(); }

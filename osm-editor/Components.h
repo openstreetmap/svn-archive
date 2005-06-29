@@ -46,13 +46,14 @@ namespace OpenStreetMap
 class Components 
 {
 private:
-	Track * track;
+	Track * track, *clonedTrack, *activeTrack;
 	Waypoints * waypoints;
 	vector<Polygon*> polygons;
 
 
 public:
-	Components() { waypoints=new Waypoints; track=new Track;}
+	Components() { waypoints=new Waypoints; track=new Track; clonedTrack=NULL;
+					activeTrack = track;}
 	void clearAll();
 
 	void toGPX(const char*);
@@ -62,7 +63,7 @@ public:
 
 	bool addTrackpoint (int seg,const QString& timestamp, double lat, 
 					double lon);
-	void addTrack(Track * t) { track=t; }
+	void addTrack(Track * t) { track=t; activeTrack = track; }
 
 	void setWaypoints(Waypoints * w) { waypoints=w; }
 	bool hasTrack() { return track && track->hasPoints() ; }
@@ -72,7 +73,6 @@ public:
 	bool setTrackID(const char*); 
 	void addSegdef(int ,int , const QString& );
 
-
 	bool alterWaypoint(int i,const QString& name,const QString& type)
 		{ return (waypoints) ? waypoints->alterWaypoint(i,name,type): false; }
 
@@ -81,14 +81,29 @@ public:
 	Polygon *getPolygon(int);
 
 	int nSegs() { return track->nSegs(); }
-	TrackSeg *getSeg(int i) { return track->getSeg(i); }
-	bool deleteTrackpoints(const LatLon& p1, const LatLon& p2, double limit)
+	TrackSeg *getSeg(int i) { return activeTrack->getSeg(i); }
+	bool deleteTrackpoints(const EarthPoint& p1, const EarthPoint& p2, 
+					double limit)
 		{ return track->deletePoints(p1,p2,limit);}
-	bool segmentiseTrack(const QString& newType, const LatLon& p1,
-						const LatLon& p2, double limit)
+	bool segmentiseTrack(const QString& newType, const EarthPoint& p1,
+						const EarthPoint& p2, double limit)
 		{ return track->segmentise(newType,p1,p2,limit); }
 	void newSegment() { track->newSegment(); }
 	bool setSegType(int i,const QString& t) { return track->setSegType(i,t); }
+	bool nameTrackSeg(const EarthPoint& p1, const QString& name, double limit)
+			{ return track->nameTrackSeg(p1,name,limit); }
+	bool deleteWaypoint(int index);
+	void cloneTrack() { if(clonedTrack==NULL) clonedTrack=new Track(track); 
+			else restoreClonedTrack(); }
+	void deleteExcessTrackPoints (double angle, double distance)
+		{ clonedTrack->deleteExcessPoints(angle,distance); }
+	void updateTrack() { track->removeSegs(); track->copySegsFrom(clonedTrack);
+							delete clonedTrack; clonedTrack=NULL;  }
+	void restoreClonedTrack() { clonedTrack->removeSegs();
+								clonedTrack->copySegsFrom(track); } 
+	void setActiveNormal() { activeTrack=track; }
+	void setActiveCloned() { activeTrack=clonedTrack; }
+	bool isCloned() { return clonedTrack!=NULL; }
 };
 
 

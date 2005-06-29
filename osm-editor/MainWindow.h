@@ -27,6 +27,7 @@
 #include "Components.h"
 #include "Map.h"
 #include "LandsatManager.h"
+#include "SRTMGeneral.h"
 #include <map>
 #include <vector>
 
@@ -42,7 +43,8 @@
 using std::vector;
 
 // Mouse action modes
-enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON };
+// N_ACTIONS should always be the last
+enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON, ACTION_NAME_TRACK, ACTION_MOVE_WAYPOINT, N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -95,7 +97,7 @@ public:
 	const QPixmap& getImage(){ return image; }
 };
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, public DrawSurface
 {
 
 Q_OBJECT
@@ -127,7 +129,7 @@ private:
 	QString curSegType; 
 	double polygonRes;
 	Polygon * curPolygon;
-	bool trackpoints;
+	bool trackpoints, contours;
 	QString curFilename; 
 	bool mouseDown;
 
@@ -137,8 +139,8 @@ private:
 
 	QPixmap landsatPixmap;
 
-	void drawTrackpoint(QPainter&,const QPen&,int,int);
-	void drawTrackpoint(QPainter&,const QPen&,int,int,int,int);
+	void drawTrackpoint(QPainter&,const QBrush&,int,int,int);
+	void drawTrackpoint(QPainter&,const QBrush&,int,int,int,int);
 	void saveFile(const QString&);
 
 	void initSegmentSelection(int,int);
@@ -148,11 +150,19 @@ private:
 
 	int findNearestTrackpoint(int,int,int);
 
+	int findNearestWaypoint(int,int,int);
 	LandsatManager landsatManager;
 
-	LatLon p1, p2;
+	EarthPoint p1, p2;
 	int nSelectedPoints;
-	
+
+	QPainter *curPainter;
+
+	Waypoint savedWpt;
+	bool wptSaved;
+
+	void doDrawTrack(QPainter&,bool);
+
 public:
 	MainWindow (double=51.0,double=-1.0,double=4000,
 			 		double=640,double=480);
@@ -163,6 +173,7 @@ public:
 	void mousePressEvent(QMouseEvent*);
 	void mouseReleaseEvent(QMouseEvent*);
 	void mouseMoveEvent(QMouseEvent*);
+	void resizeEvent(QResizeEvent * ev);
 	void keyPressEvent(QKeyEvent*);
 	void drawTrack(QPainter&);
 	void drawWaypoints(QPainter&);
@@ -170,11 +181,18 @@ public:
 	void drawPolygons(QPainter&);
 	void drawPolygon(QPainter&,Polygon*);
 	void drawLandsat(QPainter&);
+	void drawContours();
 	void rescale(double);
 	void editWaypoint(int,int,int);
 
 	void updateWithLandsatCheck();
 	Map getMap() { return map; }
+
+	void drawContour(int,int,int,int,int,int,int);
+	void drawAngleText(int,double,int,int,int,int,int,char*);
+	void heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
+							int x4,int y4,int r,int g,int b);
+
 
 public slots:
 	void open();
@@ -184,6 +202,7 @@ public slots:
 	void quit();
 	void toggleWaypoints();
 	void toggleLandsat();
+	void toggleContours();
 	void undo();
 	void changePolygonRes();
 	void setMode(int);
@@ -197,6 +216,8 @@ public slots:
 	void right();
 	void magnify();
 	void shrink();
+	void removeExcessPoints();
+	void commitExcessPoints();
 };
 
 }

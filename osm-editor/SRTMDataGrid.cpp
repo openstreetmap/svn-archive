@@ -17,7 +17,10 @@
 
  */
 #include "SRTMDataGrid.h"
+#include "functions.h"
 
+namespace OpenStreetMap
+{
 
 // DataGrid constructor 
 // Loads heights from one or more .hgt files.
@@ -30,14 +33,14 @@
 //
 // Returns an array of all the heights indexed nationally.
 
-SRTMDataGrid::SRTMDataGrid(LATLON_TILE **rects,int w, int h, Map& map)
+SRTMDataGrid::SRTMDataGrid(LATLON_TILE **rects,int w, int h, Map& map, int f)
 {
 	// Do each input rectangle
-	int index_w=0, index_h=0,pts_w;
+	int index_w=0, index_h=0,pts_w,pts_h;
 	samplewidth=0; 
 	sampleheight=0;
 
-	f=1;
+	this->f=f;
 
 	for(int hcount=0;hcount<h; hcount++)
 	{
@@ -56,13 +59,14 @@ SRTMDataGrid::SRTMDataGrid(LATLON_TILE **rects,int w, int h, Map& map)
 	for(int hcount=0; hcount<h; hcount++)
 	{
 		index_w = index_h;
+		pts_h = (rects[hcount][0].bottom-rects[hcount][0].top)+1;
 		for(int wcount=0; wcount<w; wcount++)
 		{
 			pts_w = (rects[hcount][wcount].right-rects[hcount][wcount].left)+1;
 			doLoad(&rects[hcount][wcount],map,index_w);
 			index_w += pts_w;
 		}
-		index_h += index_w; 
+		index_h += pts_h*samplewidth; 
 	}
 }
 
@@ -75,59 +79,66 @@ void SRTMDataGrid::doLoad(LATLON_TILE *rect,Map& map,int index)
 	SRTMDataGrid::getHgtFilename(hgtfile,rect->origin);
 	FILE *fp=fopen(hgtfile,"rb");	
 
-	int width = (rect->right-rect->left)+1;
-	unsigned char *data = new unsigned char[width*2];
-
-	int datacount; 
-	double h;
-	LatLon curLatLon;
-
-	double frac = 0.0008333333333*f;
-	curLatLon.lon=rect->origin.lon+(((double)rect->left)/1200);
-	curLatLon.lat=(rect->origin.lat+1)-(((double)rect->top)/1200);
-	double origlong=curLatLon.lon;
-	int i;
-
-	for(int row=rect->top; row<=rect->bottom; row++)
+	if(fp)
 	{
-		curLatLon.lon = origlong; 
 
-		// 20/02/05 Only do every 'f' rows
-		if((row-rect->top)%f == 0)
+		int width = (rect->right-rect->left)+1;
+		unsigned char *data = new unsigned char[width*2];
+
+		int datacount; 
+		double h;
+		EarthPoint curLatLon;
+
+		double frac = 0.0008333333333*f;
+		curLatLon.x=rect->origin.x+(((double)rect->left)/1200);
+		curLatLon.y=(rect->origin.y+1)-(((double)rect->top)/1200);
+		double origlong=curLatLon.x;
+		int i;
+
+		for(int row=rect->top; row<=rect->bottom; row++)
 		{
-			fseek(fp,(row*1201+rect->left)*2, SEEK_SET);
-			fread (data,1,width*2,fp);
-			datacount=0;
-			i=0;
-			for(int pt=row*1201+rect->left;pt<=row*1201+rect->right; pt++)
+			curLatLon.x = origlong; 
+
+			// 20/02/05 Only do every 'f' rows
+			if((row-rect->top)%f == 0)
 			{
-				// 20/02/05 Only do every 'f' columns
-				if( (pt-(row*1201+rect->left) )%f == 0) 
+				fseek(fp,(row*1201+rect->left)*2, SEEK_SET);
+				fread (data,1,width*2,fp);
+				datacount=0;
+				i=0;
+				for(int pt=row*1201+rect->left;pt<=row*1201+rect->right; pt++)
 				{
-					h=
-		 			( ((double)data[datacount])*256+((double)data[datacount+1]) ) 
-					* 3.28084;
-					points[index+i].hgt = 
+					// 20/02/05 Only do every 'f' columns
+					if( (pt-(row*1201+rect->left) )%f == 0) 
+					{
+						h=
+		 				( ((double)data[datacount])*256+
+						  ((double)data[datacount+1]) ) * 3.28084;
+						points[index+i].hgt = 
 							(h>=1 && h<4500) ? h: 1;
-					points[index+i].screenPos=
-							map.getScreenPos (curLatLon);
-					i++;
+						points[index+i].screenPos=
+							(map.isGridRef()) ?
+								map.getScreenPos(ll_to_gr(curLatLon)):
+								map.getScreenPos (curLatLon);
+						i++;
+					}
+					datacount+=2;
+					curLatLon.x +=  frac;
 				}
-				datacount+=2;
-				curLatLon.lon +=  frac;
+				index+=samplewidth;
 			}
-			index+=samplewidth;
+			curLatLon.y -= frac;
 		}
-		curLatLon.lat -= frac;
+		delete[] data;
+		fclose(fp);
 	}
-	delete[] data;
 }
 	
-void SRTMDataGrid::getHgtFilename(char *hgtfile,LatLon& latlon)
+void SRTMDataGrid::getHgtFilename(char *hgtfile,EarthPoint& latlon)
 {
-	sprintf ( hgtfile,"/var/www/data/N%02d%s%03d.hgt",
-						int(latlon.lat),(latlon.lon<0 ? "W":"E"),
-						abs(int(latlon.lon)));
+	sprintf ( hgtfile,"data/N%02d%s%03d.hgt",
+						int(latlon.y),(latlon.x<0 ? "W":"E"),
+						abs(int(latlon.x)));
 }
 
 
@@ -309,4 +320,36 @@ int SRTMDataGrid::hgtptDistance(vector<int>& prevs)
 		dist = (result<dist) ? result:dist;
 	}
 	return dist;
+}
+
+Colour SRTMDataGrid::getHeightShading (double shadingres)
+{
+	double est_ht = floor (((points[pt].hgt+points[pt+samplewidth*f+f].hgt)/2+
+			 (points[pt+f].hgt+points[pt+samplewidth*f].hgt)/2 
+		   ) / 2);
+	return doGetHeightShading(est_ht,shadingres);
+}
+
+Colour SRTMDataGrid::doGetHeightShading(double ht,double shadingres)
+{
+	Colour colour;
+	ht=round(ht/shadingres);
+	double a=1250/shadingres,
+	b=250/shadingres,
+	c=2000/shadingres,
+	d=500/shadingres,
+	e=1750/shadingres;
+	
+	colour.r = (ht<a) ? 191+(ht*(64/a)) : 
+	((ht<c) ? 255-((ht-(1250/shadingres))*(16/b)) : 
+				  255-((ht-d)*(16/d)) );
+
+	colour.g=(ht<c) ? 255-(ht*(16/b)) : 255-((ht+c)*(16/d));
+
+	colour.b = (ht<e) ? 191-(ht*(16/b)) :
+	((ht<c) ? 95+((ht-e)*(16/b)) :
+				  95+((ht-(1500/shadingres))*(16/d)) );
+	return colour;
+}
+
 }

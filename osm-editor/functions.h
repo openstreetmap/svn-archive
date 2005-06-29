@@ -29,8 +29,11 @@ using std::vector;
 
 #include <ctime>
 
+#include "EarthPoint.h"
+
 namespace OpenStreetMap 
 {
+
 
 void		wgsToAiry(double &lat, double &lon);
 void		airyToWgs(double &lat, double &lon);
@@ -93,13 +96,13 @@ const int WAYPOINT_FARM = 10,
 	  	  WAYPOINT_POINT_OF_INTEREST = 24580,
 		  WAYPOINT_TEASHOP = 24581;
 
-GridRef ll_to_gr ( double lat, double lng );
-GridRef ll_to_gr ( const LatLon& );
+EarthPoint ll_to_gr ( double lat, double lng );
+EarthPoint ll_to_gr ( const EarthPoint& );
 void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 			   double lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b);
-LatLon gr_to_ll(const GridRef& gridref);
+EarthPoint gr_to_ll(const EarthPoint& gridref);
 void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
 			   double *lambda, double N0, double E0,
 			   double phi0, double lambda0,
@@ -107,6 +110,7 @@ void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
 
 
 double dist (double, double, double, double);
+double getAngle(double o, double a, double b);
 
 void mkgpxtime (char *, time_t );
 

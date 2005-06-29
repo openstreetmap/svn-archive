@@ -18,6 +18,8 @@
  */
 #include "MainWindow.h"
 #include "functions.h"
+#include "SRTMConGen.h"
+#include "RemoveExcessDialogue.h"
 
 #include <iostream>
 #include <sstream>
@@ -89,12 +91,18 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 }
 
 MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
-									map(lat,lon,s), 
+									map(lon,lat,s,w,h), 
 									polygonRes(0.1),
 									landsatManager(this)
 {
+	cerr<<lat<<" "<<lon<<endl;
+	cerr<<map.getBottomLeft().x<<endl;
+	cerr<<map.getBottomLeft().y<<endl;
 	setCaption("OpenStreetMap Editor");
 	resize ( w, h );	
+
+	contours = false;
+	wptSaved = false;
 
 	actionMode = ACTION_TRACK;
 	curSegType = "A road"; 
@@ -111,6 +119,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	segpens["A road"]= QPen (Qt::black, 4);
 	segpens["motorway"]= QPen (Qt::black, 6);
 	segpens["railway"]= QPen (Qt::gray, 4);
+	segpens["permissive footpath"]= QPen (Qt::green, 1);
+	segpens["permissive bridleway"]= QPen (QColor(192,96,0), 1);
 	segpens["track"]= QPen (Qt::darkGray, 2);
 
 	polydata["wood"]=QColor(192,224,192);
@@ -136,7 +146,13 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 						CTRL+Key_T);
 	editMenu->insertItem("Toggle &Landsat",this,SLOT(toggleLandsat()),
 						CTRL+Key_L);
+	editMenu->insertItem("Toggle &contours",this,SLOT(toggleContours()),
+						CTRL+Key_C);
 //	editMenu->insertItem("Undo",this,SLOT(undo()),CTRL+Key_Z);
+	editMenu->insertItem("Remove e&xcess trackpoints",
+					this,SLOT(removeExcessPoints()),CTRL+Key_X);
+	editMenu->insertItem("Co&mmit excess trackpoint changes",this,
+							SLOT(commitExcessPoints()),CTRL+Key_M);
 	editMenu->insertItem("Change pol&ygon resolution",this,
 							SLOT(changePolygonRes()),CTRL+Key_Y);
 	menuBar()->insertItem("&Edit",editMenu);
@@ -180,6 +196,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	QPixmap two = mmLoadPixmap("images","two.png");
 	QPixmap wp = mmLoadPixmap("images","waypoint.png");
 	QPixmap three = mmLoadPixmap("images","three.png");
+	QPixmap nametracks = mmLoadPixmap("images","nametracks.png");
+	QPixmap objectmanip = mmLoadPixmap("images","objectmanip.png");
 	QPixmap left_pixmap = mmLoadPixmap("images","arrow_left.png");
 	QPixmap right_pixmap = mmLoadPixmap("images","arrow_right.png");
 	QPixmap up_pixmap = mmLoadPixmap("images","arrow_up.png");
@@ -194,7 +212,6 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	new QToolButton(magnify_pixmap,"Zoom in","",this,SLOT(magnify()),toolbar);
 	new QToolButton(shrink_pixmap,"Zoom out","",this,SLOT(shrink()),toolbar);
 
-	toolbar->setStretchableWidget(new QLabel(toolbar));
 
 	modeButtons[ACTION_TRACK] = new QToolButton
 			(one,"Create Segments","",mapper,SLOT(map()),toolbar);
@@ -204,8 +221,13 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 			(wp,"Edit Waypoints","",mapper,SLOT(map()),toolbar);
 	modeButtons[ACTION_POLYGON]= new QToolButton
 			(three,"Create Polygons","",mapper,SLOT(map()),toolbar);
+	modeButtons[ACTION_NAME_TRACK]= new QToolButton
+			(nametracks,"Name tracks","",mapper,SLOT(map()),toolbar);
+	modeButtons[ACTION_MOVE_WAYPOINT]= new QToolButton
+			(objectmanip,"Move Waypoint","",mapper,SLOT(map()),toolbar);
 
 
+	toolbar->setStretchableWidget(new QLabel(toolbar));
 
 	// Setting a blank label as the stretchable widget means that one can
 	// stretch the toolbar while keeping the tool buttons bunched up to the 
@@ -214,7 +236,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	// Turn the "mode" toolbar buttons into toggle buttons, and set their
 	// mapping index for the signal mapper.
 	
-	for (int count=0; count<4; count++)
+	for (int count=0; count<N_ACTIONS; count++)
 	{
 		modeButtons[count]->setToggleButton(true);
 		mapper->setMapping(modeButtons[count],count);
@@ -277,6 +299,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 							"Helvetica",8,QColor(0,192,0));
 	waypointReps["industrial area"] = new WaypointRep("images/industry.png",
 							"Helvetica",8,Qt::darkGray);
+	waypointReps["barn"] = new WaypointRep("images/barn.png");
 	curFilename = "";
 
 	trackpoints=true;
@@ -379,7 +402,7 @@ void MainWindow::setMode(int m)
 
 	// Display the appropriate mode toolbar button and menu item checked, and
 	// all the others turned off.
-	for (int count=0; count<4; count++)
+	for (int count=0; count<N_ACTIONS; count++)
 		modeButtons[count]->setOn(count==m);
 }
 
@@ -406,6 +429,12 @@ void MainWindow::toggleLandsat()
 	update();
 }
 
+void MainWindow::toggleContours()
+{
+	contours = !contours;
+	update();
+}
+
 // 
 void MainWindow::undo()
 {
@@ -421,14 +450,37 @@ void MainWindow::changePolygonRes()
 						0,1,2);
 }
 
+void MainWindow::removeExcessPoints()
+{
+	RemoveExcessDialogue *rex=new RemoveExcessDialogue(this);
+	if(rex->exec())
+	{
+		double angle=rex->getAngle(), distance=rex->getDistance();
+		if(distance<0) cerr<<"DIST LESS THAN 0"<<endl;
+		if(rex->reset() || !components->isCloned())
+			components->cloneTrack();
+		components->deleteExcessTrackPoints(angle*(M_PI/180),distance);
+	}
+	delete rex;
+	update();
+}
+
+void MainWindow::commitExcessPoints()
+{
+	components->updateTrack();
+	update();
+}
+
 void MainWindow::paintEvent(QPaintEvent* ev)
 {
-	QPainter p (this);
-
+	QPainter p(this);
 	drawLandsat(p);
 	drawPolygons(p);
+	curPainter = &p; // needed for the contour "callback"
+	drawContours();
 	drawTrack(p);
 	drawWaypoints(p);
+	curPainter = NULL;
 }
 
 void MainWindow::drawLandsat(QPainter& p)
@@ -444,34 +496,119 @@ void MainWindow::drawPolygons(QPainter& p)
 	}
 }
 
+void MainWindow::drawContours()
+{
+	if(contours)
+	{
+		SRTMConGen congen(map,1);
+		congen.generate(this);
+	}
+}
+
+void MainWindow::drawContour(int x1,int y1,int x2,int y2,int r,int g,int b)
+{
+	if(curPainter)
+	{
+		curPainter->setPen(QColor(r,g,b));
+		curPainter->drawLine(x1,y1,x2,y2);
+	}
+}
+
+void MainWindow::drawAngleText(int fontsize,double angle,int x,int y,int r,
+								int g, int b, char *text)
+{
+	if(curPainter)
+	{
+		angle*=-180/M_PI;
+		curPainter->translate(x,y);
+		curPainter->rotate(angle);
+		curPainter->setFont(QFont("Helvetica",fontsize));
+		curPainter->drawText(0,0,text);
+		curPainter->rotate(-angle);
+		curPainter->translate(-x,-y);
+	}
+}
+
+void MainWindow::heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
+								int x4,int y4,int r,int g, int b)
+{
+
+}
+
 void MainWindow::drawTrack(QPainter& p)
+{
+	doDrawTrack(p,false);
+	if(components->isCloned())
+	{
+		components->setActiveCloned();
+		doDrawTrack(p,true);
+		components->setActiveNormal();
+	}
+}
+
+void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 {
 	if(components->hasTrack())
 	{
 		QPen trackPen(Qt::darkGray,2); 
 		TrackPoint curPt;
 		TrackSeg *curSeg;
-		ScreenPos lastPos = map.getScreenPos(curPt.lat,curPt.lon), curPos;
-		QPen curPen=trackPen;
+		ScreenPos lastPos = map.getScreenPos(curPt.lon,curPt.lat), curPos,
+				  avPos;
+		QPen curPen=(doingClonedTrack) ? QPen(QColor(255,0,128),2): 
+												trackPen;
+		QFont f("Helvetica",8);
+		QFontMetrics fm(f);
+		QString segname;
 
 		for(int seg=0; seg<components->nSegs(); seg++)
 		{
 			curSeg = components->getSeg(seg);
-			curPen = segpens[curSeg->getType()];
+			if(!doingClonedTrack) curPen = segpens[curSeg->getType()];
 			curPt = curSeg->getPoint(0);
-			lastPos = map.getScreenPos(curPt.lat,curPt.lon);
+			lastPos = map.getScreenPos(curPt.lon,curPt.lat);
 			for(int pt=1; pt<curSeg->nPoints(); pt++)
 			{
 				curPt = curSeg->getPoint(pt);	
-				curPos = map.getScreenPos(curPt.lat,curPt.lon);	
+				curPos = map.getScreenPos(curPt.lon,curPt.lat);	
 				p.setPen(curPen);
 				p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
-				if(pt==selectedTrackpoint)
-					drawTrackpoint(p,Qt::red,curPos.x,curPos.y);
-				else if(trackpoints)
-					drawTrackpoint(p,curPen,curPos.x,curPos.y,1,pt);
+				if(pt==curSeg->nPoints()/2 && (segname=curSeg->getID())!="")
+				{
+					QRect r=fm.boundingRect(segname);
+					avPos.x = (curPos.x+lastPos.x)/2;
+					avPos.y = (curPos.y+lastPos.y)/2;
+					p.fillRect(avPos.x-r.width()/2-2,
+								avPos.y-fm.ascent()-2,
+								r.width()+4,
+								fm.height()+4,Qt::yellow);
+//								curPen.color());
+					p.setPen(QColor(128,0,0));
+					p.setFont(f);
+					p.drawText(avPos.x-r.width()/2,
+								avPos.y,
+								segname);
+				}
+				/*
+				if(curPt.lon==p1.x && curPt.lat==p1.y)//=selectedTrackpoint)
+					drawTrackpoint(p,Qt::red,curPos.x,curPos.y,10);
+				else  */
+				if(trackpoints)
+				{
+					if(doingClonedTrack)
+						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,8);
+					else
+						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,1,pt);
+				}
 				lastPos = curPos;
+
 			}
+		}
+
+		if(nSelectedPoints)
+		{
+			ScreenPos sp=map.getScreenPos(p1);
+			drawTrackpoint(p,Qt::red,sp.x,sp.y,10);
 		}
 	}
 }
@@ -493,27 +630,28 @@ void MainWindow::drawWaypoint(QPainter& p,const Waypoint &waypoint)
 {
 	if(components->hasWaypoints())
 	{
-	ScreenPos pos = map.getScreenPos(waypoint.lat,waypoint.lon);
+	ScreenPos pos = map.getScreenPos(waypoint.lon,waypoint.lat);
 	WaypointRep* img=waypointReps[waypoint.type];
 	if(img)img->draw(p,pos.x,pos.y,waypoint.name);
 	}
 }
 
 
-void MainWindow::drawTrackpoint (QPainter& p,const QPen& pen,int x,int y) 
+void MainWindow::drawTrackpoint (QPainter& p,const QBrush& brush,int x,int y,
+				int d) 
 {
-	p.setPen (pen);
-	p.drawEllipse ( x-2, y-2, 5, 5 );
+	p.setBrush (brush);
+	p.drawEllipse ( x-d/2, y-d/2, d, d);
 }
 	
-void MainWindow::drawTrackpoint (QPainter& p,const QPen& pen,
+void MainWindow::drawTrackpoint (QPainter& p,const QBrush& brush,
 									int x,int y, int id,int point)
 {
-	drawTrackpoint(p,pen,x,y);
+	drawTrackpoint(p,brush,x,y,5);
 	QString label;
 	label.sprintf("%d",point);
 	p.setFont(QFont("Helvetica",8));
-	p.setPen(QColor(128,0,255));
+//	p.setPen(QColor(128,0,255));
 	p.drawText ( x+5, y+5, label);
 }
 
@@ -540,20 +678,23 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 
 void MainWindow::mousePressEvent(QMouseEvent* ev)
 {
+	EarthPoint p;
+	QString name;
+	double LIMIT=map.earthDist(10);
 	int nearest;
-	double LIMIT=map.latLonDist(10);
 
 	switch(actionMode)
 	{
 		case ACTION_TRACK:
 			if(nSelectedPoints==0)
 			{
-				p1 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				p1 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+				update();
 				nSelectedPoints++;
 			}
 			else
 			{
-				p2 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				p2 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
 				components->segmentiseTrack(curSegType,p1,p2,LIMIT);
 				update();
 				nSelectedPoints=0;
@@ -567,12 +708,12 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 		case ACTION_DELETE:
 			if(nSelectedPoints==0)
 			{
-				p1 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				p1 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
 				nSelectedPoints++;
 			}
 			else
 			{
-				p2 = map.getLatLon(ScreenPos(ev->x(),ev->y()));
+				p2 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
 				components->deleteTrackpoints(p1,p2,LIMIT);
 				update();
 				nSelectedPoints=0;
@@ -582,7 +723,32 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 		case ACTION_WAYPOINT:
 			editWaypoint(ev->x(),ev->y(),10);	
 			break;
+
+		case ACTION_MOVE_WAYPOINT:
+			if(wptSaved)
+			{
+				p = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+				savedWpt.lat = p.y;
+				savedWpt.lon = p.x;
+				components->addWaypoint(savedWpt);
+				wptSaved=false;
+				update();
+			}
+			else if((nearest=findNearestWaypoint(ev->x(),ev->y(),10))!=-1)
+			{
+				savedWpt = components->getWaypoint(nearest);
+				components->deleteWaypoint(nearest);
+				wptSaved=true;
+				update();
+			}
+			break;
 	}			
+}
+
+void MainWindow::resizeEvent(QResizeEvent * ev)
+{
+	map.resizeTopLeft(width(), height());
+	update();
 }
 
 void MainWindow::initPolygon()
@@ -597,40 +763,60 @@ void MainWindow::initPolygon()
 // more elegantly.
 void MainWindow::editWaypoint(int x,int y,int limit)
 {
-	ScreenPos curPos;
-	double prevDist = limit, dist;
 	int nearest=-1;
-	Waypoint curPt, nearestPt;
+	WaypointDialogue *d;
 
 	if(components->hasWaypoints())
 	{
-		for(int count=0; count<components->nWaypoints(); count++)
+		if((nearest=findNearestWaypoint(x,y,limit)) != -1)
 		{
-			curPt = components->getWaypoint(count);
-			curPos = map.getScreenPos(curPt.lat,curPt.lon);	
-			if((dist=OpenStreetMap::dist(x,y,curPos.x,curPos.y))<limit)
-			{
-				if(dist<prevDist)
-				{
-					prevDist=dist;
-					nearest=count;
-					nearestPt = curPt;
-				}
-			}
-		}
-		if(nearest>=0)
-		{
-			WaypointDialogue* d = new WaypointDialogue
+			d = new WaypointDialogue
 					(this,waypointReps,"Edit waypoint",
-					nearestPt.type,nearestPt.name);
+					components->getWaypoint(nearest).type,
+					components->getWaypoint(nearest).name);
 			if(d->exec())
 			{
-				components->alterWaypoint(nearest,d->getName(),d->getType());
-				update();
+				components->alterWaypoint(nearest,d->getName(), d->getType());
 			}
-			delete d;
+		}
+		else
+		{
+			d = new WaypointDialogue
+					(this,waypointReps,"Add waypoint","waypoint","");
+			if(d->exec())
+			{
+				EarthPoint p = map.getEarthPoint(ScreenPos(x,y));
+				components->addWaypoint(Waypoint(d->getName(),p.y,p.x,
+										d->getType()));
+			}
+		}
+		update();
+		delete d;
+	}
+}
+
+int MainWindow::findNearestWaypoint(int x,int y,int limit)
+{
+	ScreenPos curPos;
+	double prevDist = limit, dist;
+	int nearest=-1;
+	Waypoint curPt;
+
+	for(int count=0; count<components->nWaypoints(); count++)
+	{
+		curPt = components->getWaypoint(count);
+		curPos = map.getScreenPos(curPt.lon,curPt.lat);	
+		if((dist=OpenStreetMap::dist(x,y,curPos.x,curPos.y))<limit)
+		{
+			if(dist<prevDist)
+			{
+				prevDist=dist;
+				nearest=count;
+			}
 		}
 	}
+
+	return nearest;
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* ev)
@@ -668,11 +854,20 @@ void MainWindow::mouseMoveEvent(QMouseEvent* ev)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
 {
+	EarthPoint p;
+	QString name;
+	double LIMIT=map.earthDist(10);
+	cout<<"action mode:" << actionMode<<endl;
 	switch(actionMode)
 	{
 
 		case ACTION_POLYGON:
 			endPolygon(ev->x(),ev->y());
+			break;
+		case ACTION_NAME_TRACK:
+			p = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+			name=QInputDialog::getText("Enter track name","Enter track name");
+			components->nameTrackSeg(p,name,LIMIT);
 			break;
 	}
 }
@@ -684,7 +879,7 @@ void MainWindow::endPolygon(int x,int y)
 	polygon = new Polygon(curPolygonType);
 
 	for(i=curPolygonPts.begin(); i!=curPolygonPts.end(); i++)
-		polygon->addPoint(map.getLatLon(*i));	
+		polygon->addPoint(map.getEarthPoint(*i));	
 
 	components->addPolygon(polygon);
 
@@ -738,14 +933,14 @@ void MainWindow::down()
 
 void MainWindow::magnify()
 {
-	map.rescale(2,width(),height());
+	map.rescale(2);
 	landsatManager.grab();
 	update();
 }
 
 void MainWindow::shrink()
 {
-	map.rescale(0.5,width(),height());
+	map.rescale(0.5);
 	landsatManager.grab();
 	update();
 }
@@ -787,20 +982,20 @@ void MainWindow::grabTracks()
 			{
 				QMessageBox::information(this,"Login successful",
 											"Login successful");
-				LatLon llNW = map.getTopLeftLL();
-				LatLon llSE = map.getLatLon(ScreenPos(width(),height()));
+				EarthPoint llSW=map.getBottomLeft();
+				EarthPoint llNE=map.getEarthPoint(ScreenPos(width(),height()));
 				
 				
 				param_array = XmlRpcValue::makeArray();
 				param_array.arrayAppendItem(XmlRpcValue::makeString(token));
 				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llNW.lat));
+						(XmlRpcValue::makeDouble(llSW.y));
 				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llNW.lon));
+						(XmlRpcValue::makeDouble(llSW.x));
 				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llSE.lat));
+						(XmlRpcValue::makeDouble(llNE.y));
 				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llSE.lon));
+						(XmlRpcValue::makeDouble(llNE.x));
 				result=client.call("openstreetmap.getPoints",param_array);
 				XmlRpcValue array=result.getArray();
 				QString wpName;

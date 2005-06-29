@@ -38,25 +38,30 @@ private:
 	QString id;	
 	vector<TrackSeg*> segs;
 	void writeTrkpt(std::ostream&, int);
-	vector<SegPointInfo> findNearestSeg(const LatLon& p, double limit);
+	vector<SegPointInfo> findNearestSeg(const EarthPoint& p, double limit);
 
 public:
 	Track() { id="noname"; }
 	~Track();
 	void newSegment() {segs.push_back(new TrackSeg); }
+	Track(Track* t);
 	void setID(const QString& i)
 		{ id=i; }
 	QString getID() 
 		{ return id; }
 	bool addTrackpt(int seg,const QString& t, double lat, double lon);
 	void toGPX(std::ostream&);
-	bool deletePoints(const LatLon& p1, const LatLon& p2, double limit);
-	bool segmentise(const QString& newType, const LatLon& p1,
-						const LatLon& p2, double limit);
+	bool deletePoints(const EarthPoint& p1, const EarthPoint& p2, double limit);
+	bool segmentise(const QString& newType, const EarthPoint& p1,
+						const EarthPoint& p2, double limit);
 	int nSegs() { return segs.size(); }
 	TrackSeg *getSeg(int i) { return (i>=0 && i<segs.size()) ? segs[i]: NULL;  }
 	bool setSegType(int i,const QString& t); 
 	bool hasPoints();
+	bool nameTrackSeg(const EarthPoint& p1, const QString& name, double);
+	void deleteExcessPoints (double angle,  double distance);
+	void removeSegs();
+	void copySegsFrom(Track *);
 };
 
 

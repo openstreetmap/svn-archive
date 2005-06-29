@@ -16,41 +16,48 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+#ifndef CANVAS_H
+#define CANVAS_H
 
-#ifndef POLYGON_H
-#define POLYGON_H
-
-#include <vector>
-#include <fstream>
-#include "functions.h"
 #include "Map.h"
-using std::vector;
+#include "SRTMConGen.h"
+#include <gd.h>
 
-#include <qstring.h>
+using namespace std;
 
-namespace OpenStreetMap
+
+struct MapView
 {
-
-class Polygon
-{
-private:
-	QString type;
-	vector<EarthPoint> points;
-
 public:
-	Polygon(){}
-	Polygon(const QString& t) { type=t; }
-	void setType(const QString &t){type=t;}
-	QString getType(){return type; }
-	void addPoint(double lat,double lon)
-		{ points.push_back(EarthPoint(lon,lat)); }
-	void addPoint(EarthPoint ll)
-		{ points.push_back(ll); }
-	int size(){ return points.size(); }
-	void toGPX(std::ostream&);
-	EarthPoint getPoint(int i){ return points[i]; }
+	double scale;
+	int defaultmode;
+	double contourres;
+	double shadingres;
+	bool classified;
+	bool unclassified;
+	bool paths;
 };
 
-}
+class Canvas : public OpenStreetMap::DrawSurface
+{
+private:
+	gdImagePtr image;
+	Map map;
+	int backg;
+	int shadingres;
+
+public:
+	Canvas(double,double,double,int=320,int=320,int=0);
+	~Canvas();
+	void draw();
+
+	void drawContour(int,int,int,int,int,int,int);
+	void drawAngleText(int,double,int,int,int,int,int,char*);
+	void heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
+							int x4,int y4,int r,int g,int b);
+
+	void drawCoast();
+
+};
 
 #endif

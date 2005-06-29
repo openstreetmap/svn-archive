@@ -16,41 +16,36 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+#ifndef LOGINDIALOGUE_H
+#define LOGINDIALOGUE_H
 
-#ifndef POLYGON_H
-#define POLYGON_H
 
-#include <vector>
-#include <fstream>
-#include "functions.h"
-#include "Map.h"
-using std::vector;
+#include <iostream>
+using namespace std;
+#include <qdialog.h>
+#include <qlineedit.h>
+#include <qcheckbox.h>
+#include <cstdlib>
 
-#include <qstring.h>
-
-namespace OpenStreetMap
+namespace OpenStreetMap 
 {
 
-class Polygon
+
+class RemoveExcessDialogue: public QDialog 
 {
+		
 private:
-	QString type;
-	vector<EarthPoint> points;
+	QLineEdit * distanceEdit, *angleEdit;
+	QCheckBox * resetCheckbox;
 
 public:
-	Polygon(){}
-	Polygon(const QString& t) { type=t; }
-	void setType(const QString &t){type=t;}
-	QString getType(){return type; }
-	void addPoint(double lat,double lon)
-		{ points.push_back(EarthPoint(lon,lat)); }
-	void addPoint(EarthPoint ll)
-		{ points.push_back(ll); }
-	int size(){ return points.size(); }
-	void toGPX(std::ostream&);
-	EarthPoint getPoint(int i){ return points[i]; }
+	RemoveExcessDialogue(QWidget*);
+	double getAngle() { return atof(angleEdit->text().ascii()); }
+	double getDistance() { 
+			return distanceEdit->text().stripWhiteSpace().isEmpty() ? 
+			-1 : atof(distanceEdit->text().ascii()); }
+	bool reset() { return resetCheckbox->isChecked(); }
 };
 
 }
-
 #endif

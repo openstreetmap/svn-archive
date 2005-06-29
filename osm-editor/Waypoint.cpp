@@ -87,4 +87,16 @@ Waypoint Waypoints::getWaypoint(int i) throw (QString)
  	return waypoints[i]; 
 }
 
+bool Waypoints::deleteWaypoint(int index)
+{
+	if(index>=0&&index<waypoints.size())
+	{
+		vector<Waypoint>::iterator i = waypoints.begin()+index;
+		waypoints.erase(i);
+		return true;
+	}
+
+	return false;
+}
+
 }

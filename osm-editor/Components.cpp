@@ -70,6 +70,16 @@ bool Components::addWaypoint(const Waypoint& w)
 	return false;
 }
 
+bool Components::deleteWaypoint(int index)
+{
+	if(waypoints)
+	{
+		waypoints->deleteWaypoint(index);
+		return true;
+	}
+	return false;
+}
+
 bool Components::addTrackpoint(int seg,
 				const QString& timestamp,double lat,double lon)
 {

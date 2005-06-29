@@ -22,12 +22,17 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string>
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::vector;
+using std::string;
 
 #include "Map.h"
+
+namespace OpenStreetMap
+{
 
 // these are fairly crap but get the thing working first then refine...
 double min(double a,double b);
@@ -35,6 +40,8 @@ double max(double a,double b);
 double between(double a, double b, double c);
 double slope_angle(double x1,double y1,double x2,double y2);
 
+vector<vector<EarthPoint> > readcoast (char* filename,
+				EarthPoint bottomLeft, EarthPoint topRight) throw(string);
 
 struct LINE
 {
@@ -43,7 +50,7 @@ struct LINE
 
 struct LATLON_TILE
 {
-	LatLon origin;
+	EarthPoint origin;
 	int top, left, right, bottom;
 };
 
@@ -66,9 +73,12 @@ public:
 	virtual void drawContour(int x1,int y1,int x2,int y2,
 								int r,int g,int b) = 0;
 
-	virtual void drawHeight(int fontsize, double angle, 
-						int x,int y,int r,int g,int b, int ht) = 0;
+	virtual void drawAngleText(int fontsize, double angle, 
+						int x,int y,int r,int g,int b, char*) = 0;
+
+	virtual void heightShading(int,int,int,int,int,int,int,int,int,int,int) = 0;
 };
 
+}
 
 #endif

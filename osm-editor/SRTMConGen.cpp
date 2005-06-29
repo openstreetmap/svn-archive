@@ -17,8 +17,13 @@
 
  */
 #include "SRTMConGen.h"
+#include "Map.h"
+#include "llgr.h"
 
-SRTMConGen::SRTMConGen(Map& map)
+namespace OpenStreetMap
+{
+
+SRTMConGen::SRTMConGen(Map& map, int f)
 {
 	int w, h;
 
@@ -26,7 +31,7 @@ SRTMConGen::SRTMConGen(Map& map)
 	LATLON_TILE **tiles = get_latlon_tiles (map,&w,&h);
 
 	// Get the sampled heights from the .hgt file, and the screen coordinates
-	sampledata = new SRTMDataGrid(tiles,w,h,map);
+	sampledata = new SRTMDataGrid(tiles,w,h,map,f);
 
 	for(int hcount=0; hcount<h; hcount++)
 		delete[] tiles[hcount];
@@ -41,14 +46,20 @@ SRTMConGen::SRTMConGen(Map& map)
 LATLON_TILE ** SRTMConGen::get_latlon_tiles(Map& map,int *w,int *h)
 {
 
-	LatLon bottomleft=map.getBottomLeftLL(),
-		   topright=map.getTopRightLL();
+	EarthPoint bottomleft= (map.isGridRef()) ? gr_to_ll(map.getBottomLeft()) :
+			map.getBottomLeft(),
+		   topright= (map.isGridRef()) ? gr_to_ll(map.getTopRight()):
+				   map.getTopRight();
 
-	
+
+	cerr<<bottomleft.x<<endl;
+	cerr<<bottomleft.y<<endl;
+	cerr<<topright.x<<endl;
+	cerr<<topright.y<<endl;
 
 	// Get the latitude/longitude square of each rectangle
 	LATLON_TILE **rect=getrects(bottomleft,topright,w,h);
-	LatLon llsq;
+	EarthPoint llsq;
 
 	// Fill in the actual bounds
 	for(int hcount=0; hcount<*h; hcount++)
@@ -56,18 +67,24 @@ LATLON_TILE ** SRTMConGen::get_latlon_tiles(Map& map,int *w,int *h)
 		for(int wcount=0; wcount<*w; wcount++)
 		{
 			llsq = rect[hcount][wcount].origin;
-			rect[hcount][wcount].left =  bottomleft.lon> llsq.lon  ?
-					floor((bottomleft.lon - llsq.lon)*1200): 0;
-			rect[hcount][wcount].right = (topright.lon < llsq.lon+1) ?
-					1+floor((topright.lon - llsq.lon)*1200) :  
+			rect[hcount][wcount].left =  bottomleft.x> llsq.x  ?
+					floor((bottomleft.x - llsq.x)*1200): 0;
+			rect[hcount][wcount].right = (topright.x < llsq.x+1) ?
+					1+floor((topright.x - llsq.x)*1200) :  
 							1200;
 	
-			rect[hcount][wcount].top =(topright.lat < llsq.lat+1 ) ?
-					floor(((llsq.lat+1)-topright.lat)*1200) :  0;
-			rect[hcount][wcount].bottom = bottomleft.lat > llsq.lat  ?
-					1+floor(((llsq.lat+1)-bottomleft.lat)*1200) :
+			rect[hcount][wcount].top =(topright.y < llsq.y+1 ) ?
+					floor(((llsq.y+1)-topright.y)*1200) :  0;
+			rect[hcount][wcount].bottom = bottomleft.y > llsq.y  ?
+					1+floor(((llsq.y+1)-bottomleft.y)*1200) :
 				  		1200;
 
+			cerr<<hcount<<","<<wcount<<":";
+			cerr<<rect[hcount][wcount].left << " ";
+			cerr<<rect[hcount][wcount].right << " ";
+			cerr<<rect[hcount][wcount].top << " ";
+			cerr<<rect[hcount][wcount].bottom << " ";
+			cerr<<endl;
 		}
 	}
 
@@ -82,21 +99,21 @@ LATLON_TILE ** SRTMConGen::get_latlon_tiles(Map& map,int *w,int *h)
 // and longitude are filled in at this stage. The dimensions of each rectangle
 // within the visible area are filled in by the calling function.
 LATLON_TILE** SRTMConGen::getrects
-	(const LatLon& bottomleft,const LatLon& topright, int *w,int *h)
+	(const EarthPoint& bottomleft,const EarthPoint& topright, int *w,int *h)
 {
 	LATLON_TILE** rects;
 	*h=0;
-	rects=new LATLON_TILE* [int(floor(topright.lat)-floor(bottomleft.lat))+1];
+	rects=new LATLON_TILE* [int(floor(topright.y)-floor(bottomleft.y))+1];
 
-	for(int lat=floor(topright.lat); lat>=floor(bottomleft.lat); lat--)
+	for(int lat=floor(topright.y); lat>=floor(bottomleft.y); lat--)
 	{
 		*w=0;
 		rects[*h]=new LATLON_TILE
-				[int(floor(topright.lon)-floor(bottomleft.lon))+1];
-		for(int lon=floor(bottomleft.lon); lon<=floor(topright.lon); lon++)
+				[int(floor(topright.x)-floor(bottomleft.x))+1];
+		for(int lon=floor(bottomleft.x); lon<=floor(topright.x); lon++)
 		{
-			rects[*h][*w].origin.lat=lat;
-			rects[*h][*w].origin.lon=lon;
+			rects[*h][*w].origin.y=lat;
+			rects[*h][*w].origin.x=lon;
 			(*w)++;
 		}
 		(*h)++;
@@ -129,6 +146,7 @@ void SRTMConGen::do_contours (DrawSurface *ds,int row,int col,
 
 	LINE lines[2];
 	int n_line_pts;
+	char htstr[1024];
 
 	Colour colour, contour_colour(192,192,0), mint(0,192,64);
 
@@ -154,9 +172,10 @@ void SRTMConGen::do_contours (DrawSurface *ds,int row,int col,
 									lines[count].p[1].x,
 									lines[count].p[1].y);
 					int i = (lines[count].p[1].x > lines[count].p[0].x) ? 0:1;
-					ds->drawHeight(8, angle, 
+					sprintf(htstr,"%d",ht);
+					ds->drawAngleText(8, angle, 
 						lines[count].p[i].x, lines[count].p[i].y, colour.r,
-						colour.g, colour.b, ht);
+						colour.g, colour.b, htstr);
 					last_pt[ht].push_back(sampledata->getPoint());
 				}
 					
@@ -168,4 +187,29 @@ void SRTMConGen::do_contours (DrawSurface *ds,int row,int col,
 			}	
 		}
 	}
+}
+
+void SRTMConGen::generateShading(DrawSurface *ds,double shadingres)
+{
+	Colour colour;
+	for(int row=0; row<sampledata->getHeight()-1; row++)
+	{
+		// Do each point of the current row
+		for(int col=0; col<sampledata->getWidth()-1; col++)
+		{
+			sampledata->setPoint(row,col);	
+			colour = sampledata->getHeightShading(shadingres);
+			ds->heightShading(sampledata->getTopLeft().x,
+							  sampledata->getTopLeft().y,
+							  sampledata->getTopRight().x,
+							  sampledata->getTopRight().y,
+							  sampledata->getBottomRight().x,
+							  sampledata->getBottomRight().y,
+							  sampledata->getBottomLeft().x,
+							  sampledata->getBottomLeft().y, 
+							  colour.r,colour.g,colour.b);
+		}
+	}
+}
+
 }

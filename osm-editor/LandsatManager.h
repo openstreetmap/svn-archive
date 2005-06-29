@@ -18,7 +18,7 @@ private:
 	MainWindow *widget;
 	QPixmap pixmap;
 	bool dataLoaded, dataDisplayed;
-	LatLon topLeft, bottomRight;
+	EarthPoint topLeft, bottomRight;
 
 public:
 	LandsatManager(MainWindow *p) { widget=p; 

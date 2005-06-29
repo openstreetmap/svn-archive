@@ -82,11 +82,13 @@ public:
 		{ points.push_back(pt); }
 
 	void toGPX(ostream&);
-	SegPointInfo findNearestTrackpoint(const LatLon& p,double limit);
+	SegPointInfo findNearestTrackpoint(const EarthPoint& p,double limit);
 	bool deletePoints(int start, int end);
 
 	int nPoints() { return points.size(); }
 	TrackPoint getPoint(int i) throw(QString); 
+
+	void deleteExcessPoints (double angle, double distance);
 };
 
 }

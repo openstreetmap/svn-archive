@@ -11,10 +11,10 @@ void Polygon::toGPX(std::ostream& outfile)
 	outfile << "<polygon>" << endl << "<type>"<<
 			type<<"</type>"<<endl;
 
-	for(vector<LatLon>::iterator i=points.begin(); i!=points.end(); i++)
+	for(vector<EarthPoint>::iterator i=points.begin(); i!=points.end(); i++)
 	{
-		outfile << "<polypt lat=\"" << i->lat << "\" lon=\"" 
-				<< i->lon << "\" />" << endl;
+		outfile << "<polypt lat=\"" << i->y << "\" lon=\"" 
+				<< i->x << "\" />" << endl;
 	}
 
 	outfile << "</polygon>" << endl << "</extensions>" << endl;

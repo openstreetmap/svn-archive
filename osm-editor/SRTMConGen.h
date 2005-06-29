@@ -16,27 +16,32 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
-#include "SRTMGeneral.h"
+#ifndef SRTMCONGEN_H
+#define SRTMCONGEN_H
 
+#include "SRTMDataGrid.h"
 
-double min(double a,double b) { return (a<b) ? a:b; }
-double max(double a,double b) { return (a>b) ? a:b; }
-double between(double a, double b, double c) 
-{ return a>=min(b,c) && a<=max(b,c); }
-
-
-// Returns the slope angle of a contour line; 
-// always in the range -90 -> 0 -> +90.
-// 08/02/05 made more generalised by passing parameters as x1,x2,y1,y2
-// rather than the line array.
-double slope_angle(double x1,double y1,double x2,double y2)
+namespace OpenStreetMap
 {
-	double dy = y2-y1;
-	double dx = x2-x1;
-	double a = dx ? atan(dy/dx) : M_PI/2;
 
-	// minus to convert computer coord scheme (origin top left) to mathematical 
-	// scheme (origin bottom left)
-	cerr<<"-a="<<(-a*(180/M_PI))<<endl;
-	return -a;  
+class SRTMConGen
+{
+private:
+	SRTMDataGrid *sampledata;
+	int f;
+
+	LATLON_TILE ** get_latlon_tiles(Map& map,int *w,int *h);
+	LATLON_TILE** getrects
+		(const EarthPoint& bottomleft,const EarthPoint& topright,int *w,int *h);
+	void do_contours (DrawSurface *ds,int row,int col, 
+				int interval, std::map<int,vector<int> >&last_pt );
+
+public:
+	SRTMConGen(Map& map, int f);
+	~SRTMConGen() { delete sampledata; }
+	void generate(DrawSurface *ds);
+	void SRTMConGen::generateShading(DrawSurface *ds,double shadingres);
+};
+
 }
+#endif

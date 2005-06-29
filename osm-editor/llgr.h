@@ -20,36 +20,27 @@
  */
 #ifndef LLGR_H
 #define LLGR_H
+#include "EarthPoint.h"
 
-struct GridRef
+namespace OpenStreetMap
 {
-	double e, n;
 
-	GridRef() { e=n=-1; }
-	bool isNullLoc() { return e==-1 && n==-1; }
-	GridRef(double e1,double n1) { e=e1; n=n1; }
-};
 
-struct LatLon 
-{
-	double lat, lon;
+EarthPoint ll_to_gr ( const EarthPoint& ll );
+EarthPoint ll_to_gr ( double lat, double lon );
 
-	LatLon() { }
-	LatLon(double lt,double ln) { lat=lt; lon=ln; }
-};
-
-GridRef ll_to_gr ( LatLon& ll );
-
-void GPS_Math_LatLon_To_EN(double *E, double *N, double phi,
+void modGPS_Math_LatLon_To_EN(double *E, double *N, double phi,
 			   double lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b);
 
-LatLon gr_to_ll(const GridRef& gridref);
+EarthPoint gr_to_ll(const EarthPoint& gridref);
 
-void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
+void modGPS_Math_EN_To_LatLon(double E, double N, double *phi,
 			   double *lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b);
+
+}
 
 #endif

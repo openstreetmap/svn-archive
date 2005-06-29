@@ -1,10 +1,26 @@
+/*
+    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any yer version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    axg with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
+
+ */
 #ifndef MAP_H
 #define MAP_H
 
-#include "functions.h"
-
-namespace OpenStreetMap
-{
+#include "EarthPoint.h"
+#include "llgr.h"
 
 struct ScreenPos
 {
@@ -14,54 +30,96 @@ struct ScreenPos
 	ScreenPos(int x1,int y1) { x=x1; y=y1; }
 };
 
+
 class Map
 {
 private:
-	LatLon topLeft;
+	EarthPoint bottomLeft;
 	double scale;
+	int width, height;
+	bool gridref;
 
 public:
-	Map(double lat, double lon, double s)
-		{ topLeft=LatLon(lat,lon); scale=s; }
+	Map(double x,double y, double s, int w, int h)
+		{ bottomLeft=EarthPoint(x,y); scale=s; width=w; height=h;
+		  gridref=false; }
 
-	ScreenPos getScreenPos(const LatLon& pos)
-		{ return ScreenPos ((pos.lon-topLeft.lon)*scale,
-						(topLeft.lat-pos.lat)*scale); }
+	ScreenPos getScreenPos(const EarthPoint& pos)
+		{ return ScreenPos ((pos.x-bottomLeft.x)*scale,
+						height-((pos.y-bottomLeft.y)*scale)); }
 
-	ScreenPos getScreenPos(double lat,double lon)
-		{ return getScreenPos(LatLon(lat,lon)); }
+	ScreenPos getScreenPos(double x,double y)
+		{ return getScreenPos(EarthPoint(x,y)); }
 
-	LatLon getLatLon(const ScreenPos& pos)
-		{ return LatLon(topLeft.lat-((double)pos.y)/scale,
-						  topLeft.lon+((double)pos.x)/scale); }
-
-	double latLonDist(double pixelDist)
-		{ return pixelDist/scale; }
+	EarthPoint getEarthPoint(const ScreenPos& pos)
+		{ return EarthPoint( bottomLeft.x+(((double)pos.x)/scale),
+						bottomLeft.y+(((double)(height-pos.y))/scale)); }
 
 	void move(double edis,double ndis)
-		{ topLeft.lon += edis*1000; topLeft.lat += ndis*1000; }
+		{ bottomLeft.x += edis*1000; bottomLeft.y += ndis*1000; }
 
-	void rescale(double factor,int w,int h)
+	EarthPoint getTopLeft() { return getEarthPoint(ScreenPos(0,0)); }
+	EarthPoint getBottomRight() 
+		{ return getEarthPoint(ScreenPos(width,height)); }
+	EarthPoint getTopRight() { return getEarthPoint(ScreenPos(width,0)); }
+	
+	void rescale(double factor)
 	{
-		LatLon middle = getCentre ( w,h );
+		EarthPoint middle = getCentre (  );
 		scale *= factor;
-		topLeft.lon = middle.lon - (w/2)/scale;
-		topLeft.lat = middle.lat + (h/2)/scale;
+		bottomLeft.x = middle.x - (width/2)/scale;
+		bottomLeft.y = middle.y - (height/2)/scale;
 	}
 
-	LatLon getCentre(int w,int h)
+	EarthPoint getCentre()
 	{
-		return getLatLon(ScreenPos(w/2,h/2));
+		return getEarthPoint(ScreenPos(width/2,height/2));
 	}
 
-	LatLon getTopLeftLL()
-		{ return topLeft; }
+	EarthPoint getBottomLeft()
+		{ return bottomLeft; }
 
 	double getScale()
 		{ return scale; }
 
+	bool pt_within_map(const ScreenPos& pos)
+		{ return pos.x>=0 && pos.y>=0 &&
+			pos.x<width && pos.y<height; }
+
+	int getWidth(){return width;}
+	int getHeight(){return height;}
+
+	double earthDist(double pixelDist)
+		{ return pixelDist/scale; }
+
+	void rescale(double factor,int w,int h)
+	{
+		EarthPoint middle = getCentre ( w,h );
+		scale *= factor;
+		bottomLeft.x = middle.x - (w/2)/scale;
+		bottomLeft.y = middle.y - (h/2)/scale;
+	}
+
+	EarthPoint getCentre(int w,int h)
+	{
+		return getEarthPoint(ScreenPos(w/2,h/2));
+	}
+
+	void resize(int newWidth,int newHeight)
+	{
+		width = newWidth;
+		height = newHeight;
+	}
+
+	void resizeTopLeft(int newWidth,int newHeight)
+	{
+		bottomLeft.y -= earthDist(newHeight-height); 
+		resize(newWidth,newHeight);
+	}
+
+	bool isGridRef() { return gridref; }
+	bool setGridRef(bool g) { gridref=g; }
 };
 
-}
 
 #endif

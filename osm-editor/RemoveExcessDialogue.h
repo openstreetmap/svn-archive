@@ -16,8 +16,8 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
-#ifndef LOGINDIALOGUE_H
-#define LOGINDIALOGUE_H
+#ifndef REMOVEEXCESSDIALOGUE_H
+#define REMOVEEXCESSDIALOGUE_H
 
 
 #include <iostream>

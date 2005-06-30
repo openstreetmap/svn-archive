@@ -118,7 +118,7 @@ public:
 	}
 
 	bool isGridRef() { return gridref; }
-	bool setGridRef(bool g) { gridref=g; }
+	void setGridRef(bool g) { gridref=g; }
 };
 
 

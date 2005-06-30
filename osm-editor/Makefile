@@ -1,4 +1,4 @@
-CXX = c++
+XX = c++
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
@@ -32,11 +32,11 @@ CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
 
 
 # Uncomment for XMLRPC. You need xmlrpc-c for XMLRPC support.
-#XMLRPCLIBS= -lxmlrpc_cpp -lxmlrpc_server -lxmlrpc -lwwwxml -lxmltok -lxmlparse\
-			-lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews \
-			-lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir \
-			-lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils\
-			-lmd5 -ldl -lz -lssl -lcrypto -lxmlrpc_client
+#XMLRPCLIBS= -lxmlrpc_cpp  -lxmlrpc -lwwwxml -lxmltok -lxmlparse\
+#			-lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews \
+#			-lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir \
+#			-lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils\
+#			-lmd5 -ldl -lz -lssl -lcrypto -lxmlrpc_client
 
 moc_%.cpp : %.h
 	${MOC} $< -o $@

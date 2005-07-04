@@ -15,9 +15,9 @@ SRTMOBJ = srtm.o Canvas.o SRTMGeneral.o SRTMDataGrid.o SRTMConGen.o llgr.o
 
 # Configure Qt paths
 QTINCPATH = /usr/include/qt3
-QTLIB = -lqt 
+QTLIB = -lqt
 QTLIBPATH = -L/usr/lib
-MOC=/usr/bin/moc
+MOC=moc
 
 CURLLIBS = `curl-config --libs`
 CURLCFLAGS = `curl-config --cflags`

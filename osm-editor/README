@@ -34,7 +34,7 @@ Building
 
 To build on Debian/sarge, one need to install the following dependencies:
 
-  libqt3-mt-dev libwww-ssl-dev libxmlrpc-c3-dev libcurl3-dev
+  libqt3-dev libwww-ssl-dev libxmlrpc-c3-dev libcurl3-dev
 
 Nick Whitelegg
 05/04/05

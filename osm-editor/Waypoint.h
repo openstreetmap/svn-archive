@@ -65,4 +65,4 @@ public:
 };
 
 }
-#endif
+#endif /* not WAYPOINT_H */

@@ -51,4 +51,4 @@ public:
 };
 
 }
-#endif
+#endif /* not CHOOSERDIALOGUE_H */

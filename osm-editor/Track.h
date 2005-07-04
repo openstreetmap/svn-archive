@@ -67,4 +67,4 @@ public:
 
 }
 
-#endif
+#endif /* not TRACK_H */

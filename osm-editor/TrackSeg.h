@@ -92,4 +92,4 @@ public:
 };
 
 }
-#endif 
+#endif /* not TRACKSEG_H */

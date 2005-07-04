@@ -7,7 +7,8 @@ OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  Polygon.o TrackSeg.o SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
 	  RemoveExcessDialogue.o
 LIBS = -ljeeps 
-LIBPATH = -L/usr/local/lib
+JEEPSSRC = jeeps-0.1.4-nick
+LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
 
 SRTMOBJ = srtm.o Canvas.o SRTMGeneral.o SRTMDataGrid.o SRTMConGen.o llgr.o
 
@@ -26,7 +27,6 @@ CURLCFLAGS = `curl-config --cflags`
 #OPTS       = -DXMLRPC
 WARNFLAGS  = -W -Wall
 DEBUGFLAGS = -g
-JEEPSSRC = jeeps-0.1.4-nick
 CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
 	-I/usr/local/include $(OPTS) -I$(JEEPSSRC)
 
@@ -42,7 +42,7 @@ moc_%.cpp : %.h
 	${MOC} $< -o $@
 
 osmeditor: $(OBJ)
-	cd $(JEEPSSRC); make INSTROOT=/usr/local; make install
+	$(MAKE) -C $(JEEPSSRC)
 	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS) 
 
 srtm: $(SRTMOBJ)

@@ -32,11 +32,7 @@ CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
 
 
 # Uncomment for XMLRPC. You need xmlrpc-c for XMLRPC support.
-#XMLRPCLIBS= -lxmlrpc_cpp  -lxmlrpc -lwwwxml -lxmltok -lxmlparse\
-#			-lwwwzip -lwwwinit -lwwwapp -lwwwhtml -lwwwtelnet -lwwwnews \
-#			-lwwwhttp -lwwwmime -lwwwgopher -lwwwftp -lwwwfile -lwwwdir \
-#			-lwwwcache -lwwwstream -lwwwmux -lwwwtrans -lwwwcore -lwwwutils\
-#			-lmd5 -ldl -lz -lssl -lcrypto -lxmlrpc_client
+#XMLRPCLIBS = `xmlrpc-c-config c++ libwww-client --libs`
 
 moc_%.cpp : %.h
 	${MOC} $< -o $@

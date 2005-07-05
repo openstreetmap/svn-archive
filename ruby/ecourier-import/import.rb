@@ -16,7 +16,6 @@ oldid = 'blah'
 
 while line = gets
     
-  puts line
   linearray = line.split(/,/)
   timestamp = linearray[0].gsub('  ','T').gsub('/','-') + 'Z'
   latitude = linearray[2]

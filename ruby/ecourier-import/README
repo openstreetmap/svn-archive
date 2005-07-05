@@ -14,4 +14,8 @@ speed and heading are thrown away
 
 id is used to start new <trk>'s
 
+to run it:
+
+cat data | import.rb > mygpx.gpx
+
 

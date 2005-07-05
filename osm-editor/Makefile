@@ -1,4 +1,10 @@
-XX = c++
+DESTDIR =
+prefix  = /usr/local
+bindir  = $(prefix)/bin
+
+CXX     = c++
+RM      = rm -f
+INSTALL = install -m 755
 
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
@@ -39,7 +45,11 @@ moc_%.cpp : %.h
 
 osmeditor: $(OBJ)
 	$(MAKE) -C $(JEEPSSRC)
-	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS) 
+	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS)
+
+install: osmeditor
+	$(INSTALL) -d $(DESTDIR)$(bindir)
+	$(INSTALL) osmeditor $(DESTDIR)$(bindir)/osmeditor
 
 srtm: $(SRTMOBJ)
 	$(CXX) -o srtm $(SRTMOBJ) -lgd -lpng -lz -ljpeg -lfreetype -lm 
@@ -51,7 +61,10 @@ testparser : $(PARSEROBJ)
 	$(CXX) -o testparser $(PARSEROBJ) $(QTLIBPATH) $(LIBS) $(QTLIB)
 
 clean:
-	rm -f *.o *~
+	$(RM) *.o *~
+
+distclean: clean
+	$(RM) osmeditor
 
 osmeditor.o : MainWindow.h
 GPSDevice.o : GPSDevice.h Track.h Waypoint.h functions.h

@@ -1,0 +1,3 @@
+To run the gpx file rss generator:
+
+gpx_files.rb > /some/path/gpx_files.gpx

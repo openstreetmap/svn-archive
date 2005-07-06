@@ -26,8 +26,7 @@ namespace OpenStreetMap
 // BTW did a good walk in the New Forest from the sprawling, skyscraper-
 // dominated __CITY__ of Minstead yesterday, passing near the neighbouring 
 // megapolises of Emery Down and Stoney Cross.... :-)
-WaypointMap Waypoint::waypointMap[] = { { 0, "unknown" },
-					 { 10, "farm" },
+WaypointMap Waypoint::waypointMap[] = { { 10, "farm" },
 					 { 11, "restaurant" },
 					 { 13, "pub" },
 					 { 18, "waypoint" },

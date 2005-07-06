@@ -13,7 +13,6 @@ import com.bbn.openmap.omGraphics.OMGraphicList;
 
 public class osmBackgroundLoader extends Thread {
 
-    public static final float POINT_RADIUS = 5f; /* meter */
     OMGraphicList graphics;
     osmPointsLayer osmPL;
     LatLonPoint llTopLeft;
@@ -37,8 +36,7 @@ public class osmBackgroundLoader extends Thread {
         Enumeration en = v.elements();
         while (en.hasMoreElements()) {
             gpspoint p = (gpspoint) en.nextElement();
-            omc = new OMCircle(p.getLatitude(), p.getLongitude(), POINT_RADIUS,
-			       com.bbn.openmap.proj.Length.METER);
+            omc = new OMCircle(p.getLatitude(), p.getLongitude(), 5f, com.bbn.openmap.proj.Length.METER);
             omc.setLinePaint(Color.gray);
             omc.setSelectPaint(Color.red);
             omc.setFillPaint(OMGraphic.clear);

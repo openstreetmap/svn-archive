@@ -1,0 +1,63 @@
+#!/bin/sh
+
+logfile=/var/log/gpsd.gpx
+oldlogs=""
+compressedlogs=""
+
+setlogstart() {
+    logstart=`date +%f` # XXX Select good format for this
+}
+
+istimefornewlog() {
+    logstart="$1"
+    false # XXX Need to figure out good logic for this
+}
+
+# Test if we can contact OSM, and return true if we can
+isOSMreacable() {
+    false
+}
+
+# Check current speed, and return true if we are stipped
+isgpsstopped() {
+    false
+}
+
+# Start logger
+gpxlogger $logfile &
+logpid=$!
+setlogstart()
+
+while true ; do
+
+    # if new day/week, mv logfile logfile.new && kill -HUP $logpid
+    if istimefornewlog "$logstart" ; then
+	mv $logfile $logfile."$logstart" && kill -HUP $logpid
+	oldlogs="$oldlogs $logfile.$logstart"
+	setlogstart()
+    fi
+
+
+    # if wifi zone, and speed == 0, try to submit new files to osm
+    if isOSMreacable() && isgpsstopped() ; then
+	# Compress old logs, if they include the gpx footer,
+	# indicating that gpxlogger started on a new track in a new
+	# file.
+	for log in $oldlogs ; do
+	    if tail $log | grep -q '</gpx>' ; then
+		gzip -9 $log
+		compressedlogs="$compressedlogs $log.gz"
+	    fi
+	done
+
+	# Try to submit one compressed log file
+	if [ "$compessedlogs" ] ; then
+
+	    if osmsubmit $log ; then
+		sentlogs="$sentlogs $logs"
+	    else
+	    fi
+	fi
+    fi
+    sleep 5
+done

@@ -30,7 +30,7 @@ CURLLIBS = `curl-config --libs`
 CURLCFLAGS = `curl-config --cflags`
 
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
-#OPTS       = -DXMLRPC
+OPTS       = -DXMLRPC
 WARNFLAGS  = -W -Wall
 DEBUGFLAGS = -g
 CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
@@ -38,7 +38,7 @@ CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
 
 
 # Uncomment for XMLRPC. You need xmlrpc-c for XMLRPC support.
-#XMLRPCLIBS = `xmlrpc-c-config c++ libwww-client --libs`
+XMLRPCLIBS = `xmlrpc-c-config c++ libwww-client --libs`
 
 moc_%.cpp : %.h
 	${MOC} $< -o $@

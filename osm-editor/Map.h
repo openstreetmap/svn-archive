@@ -45,8 +45,8 @@ public:
 		  gridref=false; }
 
 	ScreenPos getScreenPos(const EarthPoint& pos)
-		{ return ScreenPos ((pos.x-bottomLeft.x)*scale,
-						height-((pos.y-bottomLeft.y)*scale)); }
+		{ return ScreenPos (int((pos.x-bottomLeft.x)*scale),
+						int(height-((pos.y-bottomLeft.y)*scale))); }
 
 	ScreenPos getScreenPos(double x,double y)
 		{ return getScreenPos(EarthPoint(x,y)); }

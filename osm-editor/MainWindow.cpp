@@ -136,6 +136,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
+	fileMenu->insertItem("&Grab OSM track",this,SLOT(grabTracks()),0);
 	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
 	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
 	menuBar()->insertItem("&File",fileMenu);

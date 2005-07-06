@@ -101,6 +101,7 @@ public class osmDisplay {
         float left = p.getUpperLeft().getLongitude();
         float right = p.getLowerRight().getLongitude();
         mapBean.setCenter(mapBean.getCenter().getLatitude(), mapBean.getCenter().getLongitude() - (right - left) / 4);
+	updateLabel();
     }
 
     public void right() {
@@ -108,6 +109,7 @@ public class osmDisplay {
         float left = p.getUpperLeft().getLongitude();
         float right = p.getLowerRight().getLongitude();
         mapBean.setCenter(mapBean.getCenter().getLatitude(), mapBean.getCenter().getLongitude() + (right - left) / 4);
+	updateLabel();
     }
 
     public void up() {
@@ -122,14 +124,17 @@ public class osmDisplay {
         float up = p.getUpperLeft().getLatitude();
         float down = p.getLowerRight().getLatitude();
         mapBean.setCenter(mapBean.getCenter().getLatitude() - (up - down) / 4, mapBean.getCenter().getLongitude());
+	updateLabel();
     }
 
     public void zoomin() {
         mapBean.setScale(mapBean.getScale() / 1.5f);
+	updateLabel();
     }
     
     public void zoomout() {
         mapBean.setScale(mapBean.getScale() * 1.5f);
+	updateLabel();
     }
 
     public void deletePoints() {
@@ -145,6 +150,19 @@ public class osmDisplay {
         osmAppletLoginWindow loginWindow = new osmAppletLoginWindow((JFrame) null, true, this);
         return osc.loggedIn();
     }
+
+    boolean updateLabel()
+    {
+	float lat = mapBean.getCenter().getLatitude();
+	float lon = mapBean.getCenter().getLongitude();
+	float scale = mapBean.getScale();
+	String labeltext =
+	    new String("lat=") + Double.toString(lat) +
+	    new String(" lon=") + Double.toString(lon) +
+	    new String(" scale=") + Double.toString(scale);
+	label.setText(labeltext);
+	return true;
+    } // updateLabel
 
     public void setMode(int n) {
         nCurrentMode = n;

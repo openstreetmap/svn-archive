@@ -307,6 +307,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	components = new Components;
 
 	setFocusPolicy(QWidget::ClickFocus);
+
+	showPosition();
 }
 
 MainWindow::~MainWindow()
@@ -935,6 +937,7 @@ void MainWindow::magnify()
 {
 	map.rescale(2);
 	landsatManager.grab();
+	showPosition();
 	update();
 }
 
@@ -942,6 +945,7 @@ void MainWindow::shrink()
 {
 	map.rescale(0.5);
 	landsatManager.grab();
+	showPosition();
 	update();
 }
 
@@ -949,7 +953,7 @@ void MainWindow::updateWithLandsatCheck()
 {
 	if(landsatManager.needMoreData())
 		landsatManager.forceGrab();
-
+	showPosition();
 	update();
 }
 void MainWindow::grabTracks()

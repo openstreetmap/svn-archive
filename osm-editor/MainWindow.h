@@ -39,6 +39,7 @@
 #include <qevent.h>
 #include <qcombobox.h>
 #include <qtoolbutton.h>
+#include <qstatusbar.h>
 
 using std::vector;
 
@@ -193,6 +194,13 @@ public:
 	void heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
 							int x4,int y4,int r,int g,int b);
 
+	void showPosition()
+	{
+		QString msg; 
+		msg.sprintf("Lat %lf Long %lf",
+						map.getBottomLeft().y, map.getBottomLeft().x);
+		statusBar()->message(msg);
+	}
 
 public slots:
 	void open();

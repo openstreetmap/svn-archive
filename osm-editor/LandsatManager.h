@@ -17,17 +17,18 @@ class LandsatManager
 private:
 	MainWindow *widget;
 	QPixmap pixmap;
-	bool dataLoaded, dataDisplayed;
+	bool dataDisplayed;
 	EarthPoint topLeft, bottomRight;
+
+	bool doNeedMoreData();
 
 public:
 	LandsatManager(MainWindow *p) { widget=p; 
-			dataLoaded=false; dataDisplayed=false; }
+			dataDisplayed=false; }
 	void grab();
 	void forceGrab();
-	bool needMoreData();
-	void turnOff() { dataLoaded=false; }
-	void toggleDisplay() { dataDisplayed=!dataDisplayed; }	
+	bool needMoreData() { return dataDisplayed && doNeedMoreData(); }
+	void toggleDisplay();
 	void draw(QPainter&);
 };
 

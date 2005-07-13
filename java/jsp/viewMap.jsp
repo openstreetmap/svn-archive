@@ -30,7 +30,7 @@ if(from != null && from.equals("frontpage"))
       StringTokenizer st = new StringTokenizer( searchTerm );
       fLat = Float.parseFloat(st.nextToken());
       fLon = Float.parseFloat(st.nextToken());
-      fScale = 10404.917f;
+      fScale = 0.0001f;
       bSuccessParsing = true;
     }
 
@@ -79,25 +79,13 @@ else
 
 
 
-MapBean mb = new MapBean();
-mb.setScale(fScale);
-mb.setCenter(fLat, fLon);
+String sURL = "/map/map.png?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
+String sAppletURL = "/edit/applet.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=10404.917";
 
-Projection p = mb.getProjection();
-
-float p1lat = p.getUpperLeft().getLatitude();
-float p1lon = p.getUpperLeft().getLongitude();
-
-float p2lat = p.getLowerRight().getLatitude();
-float p2lon = p.getLowerRight().getLongitude();
-
-String sURL = "viewMapImage.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
-String sAppletURL = "applet.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
-
-String sLeftURL = getURL(fScale,fLat, fLon - (p2lon - p1lon)/4);
-String sRightURL = getURL(fScale,fLat, fLon + (p2lon - p1lon)/4);
-String sUpURL = getURL(fScale,fLat + (p1lat - p2lat)/4, fLon);
-String sDownURL = getURL(fScale,fLat - (p1lat - p2lat)/4, fLon);
+String sLeftURL = getURL(fScale,fLat, fLon - fScale * 300);
+String sRightURL = getURL(fScale,fLat, fLon + fScale * 300);
+String sUpURL = getURL(fScale,fLat + fScale * 300 , fLon);
+String sDownURL = getURL(fScale,fLat - fScale * 300, fLon);
 String sZoominURL = getURL(fScale / 1.5f ,fLat, fLon);
 String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
 
@@ -107,7 +95,7 @@ String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
   <%!
 private String getURL(float fScale, float fLat, float fLon)
 {
-  return "viewMap.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
+  return "viewMap2.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
 
 }
 %>
@@ -168,7 +156,7 @@ private String getURL(float fScale, float fLat, float fLon)
 </div>
 
 <div id="mapImage">
-<img src="<%=sURL%>" width="600" height="600" alt="Your map">
+<img src="<%=sURL%>" width="700" height="500" alt="Your map">
 
 <div id="mapEpilog">
 Latitude=<%=fLat%>, Longitude=<%=fLon%>, Scale=<%=fScale%><br>

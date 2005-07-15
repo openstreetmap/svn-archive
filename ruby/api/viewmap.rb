@@ -72,8 +72,8 @@ class Mercator
 end
 
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 700
+HEIGHT = 500
 BARPX = 20
 BASELINE = -1
 OFFSET = 1
@@ -86,24 +86,33 @@ dao = OSM::Dao.new
 #pixelindegrees = 0.00005
 
 dlon = WIDTH / 2 * scale
-dlat = HEIGHT / 2 * scale
+dlat = HEIGHT / 2 * scale  * Math.cos(clat * PI / 180)
 
 
 nodes = dao.getnodes(clat + dlat, clon - dlon, clat - dlat, clon + dlon)
 
-linesegments = dao.getlines(nodes)
+$stderr.puts (clat + dlat).to_s 
+$stderr.puts (clon - dlon).to_s 
+$stderr.puts (clat - dlat).to_s 
+$stderr.puts (clon + dlon).to_s
 
+if nodes && nodes.length > 0
+  linesegments = dao.getlines(nodes)
+end
 
-linesegments.each do |key, l|
-  #the next 2 lines of code are just so unbelievably sexy its just not funny. Fuck that java shit!
-  nodes[l.node_a_uid] = dao.getnode(l.node_a_uid) unless nodes[l.node_a_uid]
-  nodes[l.node_b_uid] = dao.getnode(l.node_b_uid) unless nodes[l.node_b_uid]
-
+if linesegments
+  linesegments.each do |key, l|
+    #the next 2 lines of code are just so unbelievably sexy its just not funny. Fuck that java shit!
+    nodes[l.node_a_uid] = dao.getnode(l.node_a_uid) unless nodes[l.node_a_uid]
+    nodes[l.node_b_uid] = dao.getnode(l.node_b_uid) unless nodes[l.node_b_uid]
+  end
 end
 
 #get the file etc
 
 fname = '/tmp/' + rand.to_s  + '_tmpimg'
+
+$stderr.puts clat.to_s + ',' + clon.to_s #+ ' ' + linesegments.length.to_s + ' ' + nodes.length.to_s
 
 File.open(fname, "wb") {|stream|
   begin
@@ -114,21 +123,35 @@ File.open(fname, "wb") {|stream|
 
 
   #paint a white background
-  cr.new_path
-  cr.rectangle(0, 0, WIDTH, HEIGHT)
-  cr.set_rgb_color(1.0, 1.0, 1.0)
-  cr.fill
+#  icr.new_path
+#  cr.rectangle(0, 0, WIDTH, HEIGHT)
+#  cr.set_rgb_color(1.0, 1.0, 1.0)
+#  cr.fill
 
+  if linesegments
+    linesegments.each do |key, l|    
+      cr.new_path
+      cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
+      cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
+      cr.close_path
+      cr.set_rgb_color(0.0, 0.0, 0.0)
+      cr.line_join = LINE_JOIN_MITER
+      cr.line_width = 3
+      cr.stroke
+    end
 
-  linesegments.each do |key, l|    
-    cr.new_path
-    cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
-    cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
-    cr.close_path
-    cr.set_rgb_color(0.0, 0.0, 0.0)
-    cr.line_join = LINE_JOIN_MITER
-    cr.line_width = 1
-    cr.stroke
+    linesegments.each do |key, l|    
+      cr.new_path
+      cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
+      cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
+      cr.close_path
+      cr.set_rgb_color(1.0, 1.0, 1.0)
+      cr.line_join = LINE_JOIN_MITER
+      cr.line_width = 1
+      cr.stroke
+    end
+
+    
   end
 
   len = proj.kilometerinpixels * WIDTH  / 2.0
@@ -182,4 +205,3 @@ File::open( fname, 'r' ) {|ofh|
 
 #now delete it. sigh
 File::delete( fname )
-

@@ -4,19 +4,28 @@
 <%@ page import="com.bbn.openmap.proj.*"%>
 <%@ page contentType="text/html" %>
 <%@ include file="include/top.jsp" %>
+
 <div id="main_area">
+
+<!--
+
+This code is getting increasingly horrible and hacky. Don't worry about it.
+We will replace it all with nice ruby at some point soon.
+
+-->
+
 
 <%
 String lat = request.getParameter("lat");
 String lon = request.getParameter("lon");
-String scale = request.getParameter("scale");
+String sScale = request.getParameter("scale");
 String from = request.getParameter("from");
 String searchTerm = request.getParameter("searchTerm");
 boolean bSuccessParsing = false;
 
-float fLon = 0;
-float fLat = 0;
-float fScale = 0;
+double clon = 0;
+double clat = 0;
+double scale = 0;
 
 if(from != null && from.equals("frontpage"))
 {
@@ -28,9 +37,9 @@ if(from != null && from.equals("frontpage"))
     if( searchTerm.indexOf(' ') != -1 )
     {
       StringTokenizer st = new StringTokenizer( searchTerm );
-      fLat = Float.parseFloat(st.nextToken());
-      fLon = Float.parseFloat(st.nextToken());
-      fScale = 0.0001f;
+      clat = Double.parseDouble(st.nextToken());
+      clon = Double.parseDouble(st.nextToken());
+      scale = 0.0001;
       bSuccessParsing = true;
     }
 
@@ -38,20 +47,20 @@ if(from != null && from.equals("frontpage"))
   }
   catch(Exception e)
   {
-    fScale = 10404.917f;
-    fLat = 51.526447f;
-    fLon = -0.14746371f;
+    scale = 0.001;
+    clat = 51.526447f;
+    clon = -0.14746371f;
 
   }
 }
 else
 {
-  if(lat == null || lon == null || scale == null)
+  if(lat == null || lon == null || sScale == null)
   {
 
-    fScale = 10404.917f;
-    fLat = 51.526447f;
-    fLon = -0.14746371f;
+    scale = 0.001;
+    clat = 51.526447;
+    clon = -0.14746371;
 
   }
   else
@@ -59,17 +68,17 @@ else
     try
     {
       // try and parse the stuff
-      fScale = Float.parseFloat(scale);
-      fLat = Float.parseFloat(lat);
-      fLon = Float.parseFloat(lon);
+      scale = Double.parseDouble(sScale);
+      clat = Double.parseDouble(lat);
+      clon = Double.parseDouble(lon);
       bSuccessParsing = true;
 
     }
     catch(Exception e)
     {
-      fScale = 10404.917f;
-      fLat = 51.526447f;
-      fLon = -0.14746371f;
+      scale = 0.001;
+      clat = 51.526447;
+      clon = -0.14746371;
 
 
     }
@@ -79,23 +88,38 @@ else
 
 
 
-String sURL = "/map/map.png?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
-String sAppletURL = "/edit/applet.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=10404.917";
+String sURL = "/map/map.png?lat=" + clat + "&lon=" + clon + "&scale=" +scale;
+String sAppletURL = "/edit/applet.jsp?lat=" + clat + "&lon=" + clon + "&scale=10404.917";
 
-String sLeftURL = getURL(fScale,fLat, fLon - fScale * 300);
-String sRightURL = getURL(fScale,fLat, fLon + fScale * 300);
-String sUpURL = getURL(fScale,fLat + fScale * 300 , fLon);
-String sDownURL = getURL(fScale,fLat - fScale * 300, fLon);
-String sZoominURL = getURL(fScale / 1.5f ,fLat, fLon);
-String sZoomoutURL = getURL(fScale * 1.5f ,fLat, fLon);
+String sLeftURL = getURL(scale,clat, clon - scale * 300);
+String sRightURL = getURL(scale,clat, clon + scale * 300);
+String sUpURL = getURL(scale,clat + scale * 300 , clon);
+String sDownURL = getURL(scale,clat - scale * 300, clon);
+String sZoominURL = getURL(scale / 1.5f ,clat, clon);
+String sZoomoutURL = getURL(scale * 1.5f ,clat, clon);
 
+double width = 700;
+double height  = 500;
+
+double dlon = width / 2 * scale;
+double dlat = height / 2 * scale * Math.cos(clat * Math.PI / 180);
+
+String sLandsatURL = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=" + 700 
+  + "&height=" + 500
+  + "&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg&bbox="
+  + (clon - dlon ) + ","
+  + (clat - dlat ) + ","
+  + (clon + dlon ) + ","
+  + (clat + dlat );
+  
+  
 
 
 %>
   <%!
-private String getURL(float fScale, float fLat, float fLon)
+private String getURL(double dScale, double dLat, double dLon)
 {
-  return "viewMap2.jsp?lat=" + fLat + "&lon=" + fLon + "&scale=" +fScale;
+  return "viewMap.jsp?lat=" + dLat + "&lon=" + dLon + "&scale=" +dScale;
 
 }
 %>
@@ -156,11 +180,26 @@ private String getURL(float fScale, float fLat, float fLon)
 </div>
 
 <div id="mapImage">
-<img src="<%=sURL%>" width="700" height="500" alt="Your map">
 
-<div id="mapEpilog">
-Latitude=<%=fLat%>, Longitude=<%=fLon%>, Scale=<%=fScale%><br>
+ <div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700
+ px; padding: 1em;">
+ 
+  <img src="<%=sLandsatURL%>" width="700" height="500" alt="Your map">
 
+ </div>
+
+<div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700
+ px; padding: 1em;">
+ 
+  <img src="<%=sURL%>" width="700" height="500" alt="Your map">
+
+ </div>
+
+
+ 
+<div style="position: absolute; left: 0px; top: 500px; height: 20px; width: 700
+ px; padding: 1em;">
+Latitude=<%=clat%>, Longitude=<%=clon%>, Scale=<%=scale%><br>
 <%
 if( !bSuccessParsing )
 {

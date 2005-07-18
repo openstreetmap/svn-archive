@@ -91,18 +91,19 @@ else
 String sURL = "/map/map.png?lat=" + clat + "&lon=" + clon + "&scale=" +scale;
 String sAppletURL = "/edit/applet.jsp?lat=" + clat + "&lon=" + clon + "&scale=10404.917";
 
-String sLeftURL = getURL(scale,clat, clon - scale * 300);
-String sRightURL = getURL(scale,clat, clon + scale * 300);
-String sUpURL = getURL(scale,clat + scale * 300 , clon);
-String sDownURL = getURL(scale,clat - scale * 300, clon);
-String sZoominURL = getURL(scale / 1.5f ,clat, clon);
-String sZoomoutURL = getURL(scale * 1.5f ,clat, clon);
-
 double width = 700;
 double height  = 500;
 
 double dlon = width / 2 * scale;
 double dlat = height / 2 * scale * Math.cos(clat * Math.PI / 180);
+
+
+String sLeftURL = getURL(scale,clat, clon - dlon);
+String sRightURL = getURL(scale,clat, clon + dlon);
+String sUpURL = getURL(scale,clat + dlat, clon);
+String sDownURL = getURL(scale,clat - dlat, clon);
+String sZoominURL = getURL(scale / 1.5 ,clat, clon);
+String sZoomoutURL = getURL(scale * 1.5 ,clat, clon);
 
 String sLandsatURL = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=" + 700 
   + "&height=" + 500
@@ -111,9 +112,6 @@ String sLandsatURL = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width="
   + (clat - dlat ) + ","
   + (clon + dlon ) + ","
   + (clat + dlat );
-  
-  
-
 
 %>
   <%!

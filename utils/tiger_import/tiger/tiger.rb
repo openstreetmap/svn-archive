@@ -62,13 +62,14 @@ module Tiger
     merged_streets = []
     by_name.each_key do |name|
 	  $stderr.puts "\tstreet name \"#{name}\""
+	  $stderr.puts "\t\tinstantiating SegmentChain's"
       same_named_streets = by_name[name]
       chains = same_named_streets.map do |st|
         street_points = st.points
         Geometry::SegmentChain.new([st], street_points)
       end
-	  $stderr.puts "\t\tsegment chains instantiated"
       merged_chains = Geometry::SegmentChain.merge(chains)
+	  $stderr.puts "\t\tinstantiating the Street's"
       merged_streets += merged_chains.map do |chain|
         first_tagged_chain = chain.tags.first
         last_tagged_chain = chain.tags.last
@@ -136,7 +137,7 @@ module Tiger
         rt1[line_id][2] = coords
       end
     end
-	$stderr.puts "converting into Street class instances"
+	$stderr.puts "converting into Street instances"
     streets = rt1.keys.map do |line_id|
       name, zips, coords = rt1[line_id]
       from_zip, to_zip = zips

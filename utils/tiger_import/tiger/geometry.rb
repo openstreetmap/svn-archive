@@ -128,6 +128,7 @@ module Tiger
           end
           break unless merged_something
         end
+		$stderr.puts "\t\t\treturning #{chains.length} chains post-merge"
         return chains
       end
   

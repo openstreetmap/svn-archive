@@ -62,14 +62,14 @@ module Tiger
     merged_streets = []
     by_name.each_key do |name|
 	  $stderr.puts "\tstreet name \"#{name}\""
-	  $stderr.puts "\t\tinstantiating SegmentChain's"
+	  $stderr.puts "\t\tinstantiating SegmentChains"
       same_named_streets = by_name[name]
       chains = same_named_streets.map do |st|
         street_points = st.points
         Geometry::SegmentChain.new([st], street_points)
       end
       merged_chains = Geometry::SegmentChain.merge(chains)
-	  $stderr.puts "\t\tinstantiating the Street's"
+	  $stderr.puts "\t\tinstantiating the Streets"
       merged_streets += merged_chains.map do |chain|
         first_tagged_chain = chain.tags.first
         last_tagged_chain = chain.tags.last

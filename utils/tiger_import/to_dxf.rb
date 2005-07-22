@@ -108,8 +108,8 @@ __EOF__
   all_utm_points = tiger.map { |st| st.utm_points }.flatten
   all_utm_x_points = all_utm_points.map { |pt| pt.x }
   all_utm_y_points = all_utm_points.map { |pt| pt.y }
-  min = Geometry::Point.new(all_utm_x_points.min, all_utm_y_points.min)
-  max = Geometry::Point.new(all_utm_x_points.max, all_utm_y_points.max)
+  min = Tiger::Geometry::Point.new(all_utm_x_points.min, all_utm_y_points.min)
+  max = Tiger::Geometry::Point.new(all_utm_x_points.max, all_utm_y_points.max)
   return [s, min, max]
 end
 

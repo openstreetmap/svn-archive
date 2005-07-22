@@ -63,10 +63,9 @@ module Tiger
       :wgs_72 => ["WGS-72", 6378135, 0.006694318],
       :wgs_84 => ["WGS-84", 6378137, 0.00669438],
     }
-  
+
     def Utm.utm_letter_designator(lat)
       # This routine determines the correct UTM letter designator for the given latitude
-      # returns 'Z' if latitude is outside the UTM limits of 84N to 80S
       # Written by Chuck Gantz- chuck.gantz@globalstar.com
       # ported to Ruby by Ben Gimpert- ben@somethingmodern.com
       if ((84 >= lat) && (lat >= 72))
@@ -115,10 +114,9 @@ module Tiger
     end
   
     def Utm.to_utm(lat, long, reference_ellipsoid_symbol = :wgs_84)
-  
-      # converts lat/long to UTM coords.  Equations from USGS Bulletin 1532
-      # East longitudes are positive, West longitudes are negative. 
+      # converts lat/long to UTM coords. Equations from USGS Bulletin 1532
       # North latitudes are positive, South latitudes are negative
+      # East longitudes are positive, West longitudes are negative
       # lat and long are in decimal degrees
       # Written by Chuck Gantz- chuck.gantz@globalstar.com
       # ported to Ruby by Ben Gimpert- ben@somethingmodern.com
@@ -170,7 +168,6 @@ module Tiger
     end
   
     def Utm.to_ll(utm_easting, utm_northing, utm_zone, reference_ellipsoid_symbol = :wgs_84)
-  
       # converts UTM coords to lat/long.  Equations from USGS Bulletin 1532 
       # East longitudes are positive, West longitudes are negative. 
       # North latitudes are positive, South latitudes are negative
@@ -216,4 +213,3 @@ module Tiger
   end
 
 end
-

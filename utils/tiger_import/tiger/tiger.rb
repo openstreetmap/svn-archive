@@ -40,15 +40,14 @@ module Tiger
 
     def utm_points
       return @points.map do |pt|
-        easting, northing, zone = Utm::to_utm(pt.y, pt.x)
+        easting, northing, zone = Utm::to_utm(pt.lat, pt.long)
         Geometry::Point.new(easting, northing)
       end
     end
 
     def to_s
       return "#{@name}(#{@line_id}), from #{if @from_zip.nil?; "?" else @from_zip end} to #{if @to_zip.nil?; "?" else @to_zip end}, #{@points.join(" -> ")}"
-    end
-
+    
   end
 
   def Tiger.merge(streets)
@@ -125,7 +124,7 @@ module Tiger
         coords = []
         coords << rt1_coords.first
         coords = coords.concat(rt2_coords)
-        coords << rt1_coords[-1]
+        coords << rt1_coords.last
         rt1[line_id][2] = coords
       end
     end
@@ -134,7 +133,10 @@ module Tiger
       from_zip, to_zip = zips
       points = coords.map do |coord|
         lat, long = coord
-        Geometry::Point.new(lat, long)
+        pt = Geometry::Point.new
+        pt.lat = lat
+        pt.long = long
+        pt
       end
       Street.new(line_id, name, from_zip, to_zip, points)
     end
@@ -143,4 +145,3 @@ module Tiger
   end
 
 end
-

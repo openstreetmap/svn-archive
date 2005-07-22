@@ -36,6 +36,11 @@ module Tiger
       def y; @y; end
       def y=(n); @y = n; end
     
+      def lat; @x; end
+      def lat=(n); @x = n; end
+      def long; @y; end
+      def long=(n); @y = n; end
+
       def Point.same?(a, b)
         return ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) <= SAME_THRESHOLD2
       end
@@ -73,7 +78,7 @@ module Tiger
                Point.same?(a.head, b.head) ||
                Point.same?(a.head, b.tail)
       end
-  
+
       def SegmentChain.merge_two(a, b)
         raise "Cannot merge two fully separate segment chains" unless SegmentChain.mergeable?(a, b)
         points = []

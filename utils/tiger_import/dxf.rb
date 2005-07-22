@@ -67,7 +67,7 @@ EOF
 __EOF__
 end
 
-def line(x1, y1, x2, y2)
+def line(a, b)
   return <<__EOF__
   0
 LINE
@@ -78,15 +78,15 @@ AcDbLine
   8
 0
   10
-#{x1}
+#{a.x}
   20
-#{y1}
+#{a.y}
   30
 0.0
   11
-#{x2}
+#{b.x}
   21
-#{y2}
+#{b.y}
   31
 0.0
 __EOF__
@@ -103,7 +103,7 @@ __EOF__
     utm_points = street.utm_points
     prev_point = utm_points.first
     utm_points[1..-1].each do |pt|
-      s += line(prev_point.x, prev_point.y, pt.x, pt.y)
+      s += line(prev_point, pt)
       prev_point = pt
     end
   end
@@ -147,4 +147,3 @@ buffer += header(min, max)
 buffer += lines_dxf
 buffer += closer
 $stdout.print buffer
-

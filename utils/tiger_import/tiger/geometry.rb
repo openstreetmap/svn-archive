@@ -27,7 +27,7 @@ module Tiger
       SAME_THRESHOLD = 0.0000005  # decent for Manhattan's lat/long points 
       SAME_THRESHOLD2 = SAME_THRESHOLD ** 2
       
-      def initialize(x, y)
+      def initialize(x = 0, y = 0)
         @x, @y = x, y
       end
     

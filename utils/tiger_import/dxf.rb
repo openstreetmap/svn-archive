@@ -134,12 +134,14 @@ zip = wget(tiger_url)
 tmp = Tempfile.new("t2dxf")
 tmp.print(zip)
 tmp.close
+$stderr.puts "extracting TIGER archive"
 rt1 = `/usr/bin/env unzip -qq -p #{tmp.path} *.RT1`
 raise "Could not extract .RT1 file" unless $?.to_i.zero?
 rt2 = `/usr/bin/env unzip -qq -p #{tmp.path} *.RT2`
 raise "Could not extract .RT2 file" unless $?.to_i.zero?
 tmp.unlink
 
+$stderr.puts "importing TIGER data"
 tiger = Tiger.import(rt1, rt2)
 lines_dxf, min, max = lines(tiger)
 buffer = ''
@@ -147,3 +149,4 @@ buffer += header(min, max)
 buffer += lines_dxf
 buffer += closer
 $stdout.print buffer
+

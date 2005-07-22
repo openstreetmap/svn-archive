@@ -47,22 +47,27 @@ module Tiger
 
     def to_s
       return "#{@name}(#{@line_id}), from #{if @from_zip.nil?; "?" else @from_zip end} to #{if @to_zip.nil?; "?" else @to_zip end}, #{@points.join(" -> ")}"
-    
+    end
+
   end
 
   def Tiger.merge(streets)
+	$stderr.puts "sorting streets by name"
     by_name = {}
     streets.each do |st|
       by_name[st.name] = [] unless by_name.has_key?(st.name)
       by_name[st.name] << st
     end
+	$stderr.puts "merging #{by_name.keys.length} streets:"
     merged_streets = []
     by_name.each_key do |name|
+	  $stderr.puts "\tstreet name \"#{name}\""
       same_named_streets = by_name[name]
       chains = same_named_streets.map do |st|
         street_points = st.points
         Geometry::SegmentChain.new([st], street_points)
       end
+	  $stderr.puts "\t\tsegment chains instantiated"
       merged_chains = Geometry::SegmentChain.merge(chains)
       merged_streets += merged_chains.map do |chain|
         first_tagged_chain = chain.tags.first
@@ -79,6 +84,7 @@ module Tiger
   end
 
   def Tiger.import(rt1_s, rt2_s)
+	$stderr.puts "parsing primary streets"
     rt1 = {}
     rt1_s.split(/\n/).each do |base_line|
       line = " " + base_line.chomp  # spacer for 1-based indexing
@@ -98,6 +104,7 @@ module Tiger
       to_long = line[210..219].strip.to_f / 1000000
       rt1[line_id] = [name, [from_zip, to_zip], [[from_lat, from_long], [to_lat, to_long]]]
     end
+	$stderr.puts "parsing secondary streets"
     rt2 = {}
     rt2_s.split(/\n/).each do |base_line|
       line = " " + base_line.chomp  # spacer for 1-based indexing
@@ -117,6 +124,7 @@ module Tiger
         end
       end
     end
+	$stderr.puts "merging primary and secondary streets"
     rt2.keys.each do |line_id|
       rt2_coords = rt2[line_id].compact
       if rt1.has_key?(line_id)
@@ -128,6 +136,7 @@ module Tiger
         rt1[line_id][2] = coords
       end
     end
+	$stderr.puts "converting into Street class instances"
     streets = rt1.keys.map do |line_id|
       name, zips, coords = rt1[line_id]
       from_zip, to_zip = zips
@@ -141,6 +150,7 @@ module Tiger
       Street.new(line_id, name, from_zip, to_zip, points)
     end
     merged_streets = merge(streets)
+	$stderr.puts "returning finished streets"
     return merged_streets
   end
 

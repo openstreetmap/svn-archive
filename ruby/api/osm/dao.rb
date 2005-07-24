@@ -1,7 +1,7 @@
 module OSM
 
   require 'mysql'
-
+  require 'singleton'
 
   class Point
 
@@ -32,13 +32,12 @@ module OSM
   end #Linesegment
 
   class Dao
+    include Singleton
 
     MYSQL_SERVER = "128.40.59.181"
     MYSQL_USER = "openstreetmap"
     MYSQL_PASS = "openstreetmap"
     MYSQL_DATABASE = "openstreetmap"
-    TOKEN_LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    
 
     def mysql_error(e)
       print "Error code: ", e.errno, "\n"

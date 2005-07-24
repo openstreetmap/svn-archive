@@ -1,3 +1,29 @@
 rewrite rule for the node api:
 
 RewriteRule   /api/0.1/node/([0-9]+) /ruby/node.rb?nodeid=$1 [PT,T=text/plain]
+
+rules for the ruby authentication:
+
+<IfModule mod_ruby.c>
+	# for Apache::RubyRun
+	RubyAddPath ...paths...
+
+	RubyRequire apache/ruby-run
+	RubyRequire apache/simple-auth
+	RubyRequire mysql
+
+	# exec files under /ruby as ruby scripts.
+	<Location /ruby>
+		SetHandler ruby-object
+
+		RubyHandler Apache::RubyRun.instance
+		RubyAuthenHandler Apache::SimpleAuth.instance
+
+		AuthType Basic
+		AuthName "Ruby Auth"
+		Require valid-user
+
+		DirectoryIndex index.rbx
+		Options +ExecCGI
+	</Location>
+</IfModule>

@@ -1,5 +1,5 @@
 require 'singleton'
-require 'osm/db'
+require 'osm/dao'
 
 module Apache
 
@@ -19,7 +19,7 @@ module Apache
       server = r.server
       begin
         # check against the database
-        if OSM::DB.instance.check_user?(name, pw)
+        if OSM::Dao.instance.check_user?(name, pw)
           server.log_info("SimpleAuth: OK");
           return OK
         else

@@ -57,105 +57,40 @@ module OSM
       
     end
 
+    ## quote
+    # escape characters in the string which might affect the
+    # mysql query
+    def quote(string)
+      return Mysql.quote(string)
+    end
+
     
     def sanitize(string, *rest)
+      Mysql.quote!(string)
       
-      string.gsub!(';', '')
-      string.gsub!('\'', '`')
-
       if rest
         rest.each do |s|
-          s.gsub!(';', '')
-          s.gsub!('\'', '`')
+          Mysql.quote!(s)
         end
+      end 
+    end
+
+
+    ## check_user?
+    # returns whether the given username and password are
+    # correct and active
+    def check_user?(name, pass)
+      dbh = get_connection
+      # sanitise the incoming variables
+      name = quote(name)
+      pass = quote(pass)
+      # get the result
+      result = dbh.query("select uid from user where user='#{name}' and pass_crypt=md5('#{pass}') and active = true")
+      # should only be one result, as user name is unique
+      if result.num_rows == 1
+        return true
       end
-      
-    end
-
-
-    def create_token
-      #FIXME make me nicer! get rid of TOKEN_LETTERS or something
-    
-      token = ''
-      for i in 1..30
-        token += TOKEN_LETTERS[ rand(TOKEN_LETTERS.length) ].chr
-      end
-
-      return token
-    end
-
-    def get_timeout
-      # return ten minutes hence in milliseconds since last epoch
-      # FIXME make the database use date columns and everything else too
-      return (Time.now + (60 * 10)).to_i * 1000
-    end
-
-    def get_time_now
-      return Time.now.to_i * 1000
-    end
-
-
-    def login(user, pass)
-      
-      sanitize(user, pass)
-
-      begin
-
-        conn = get_connection
-        q = "select uid,active from user where user='#{user}' and pass_crypt=md5('#{pass}')"
-        res = conn.query(q)
-
-        if res.num_rows() == 1
-
-          res.each_hash do |row|
-            token = create_token
-          
-            q = "update user set timeout=#{get_timeout}, token='#{token}' where uid=#{row['uid']}"
-            conn.query(q)
-
-            return token
-
-          end
-        end
-
-      rescue MysqlError => e
-        mysql_error(e)
-        
-      ensure
-        conn.close if conn
-      end
-
-      return 'ERROR'
-    end
-
-    
-    def validate_token(token)
-
-      sanitize(token)
-    
-      begin
-        conn = get_connection
-        q = "select uid from user where token='#{token}' and timeout > #{get_time_now}"
-
-        res = conn.query(q)
-
-        if res.num_rows() == 1
-          res.each_hash do |row|
-            token = create_token
-            q = "update user set timeout=#{get_timeout} where uid=#{row['uid']}"
-            conn.query(q)
-            return true
-
-          end
-        end
-
-      rescue MysqlError => e
-        mysql_error(e)
-        
-      ensure
-        conn.close if conn
-      end
-
+      # otherwise, return false
       return false
     end
 

@@ -78,7 +78,7 @@ BARPX = 20
 BASELINE = -1
 OFFSET = 1
 
-dao = OSM::Dao.new
+dao = OSM::Dao.instance
 
 #clat = 51.5356450000 #center lat and lon
 #clon = -0.1405966667

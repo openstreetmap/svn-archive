@@ -5,13 +5,14 @@ module OSM
 
   class Point
 
-    def initialize(latitude, longitude, uid)
+    def initialize(latitude, longitude, uid, visible)
       @latitude = latitude
       @longitude = longitude
       @uid = uid
+      @visible = visible
     end
 
-    attr_reader :latitude, :longitude, :uid
+    attr_reader :latitude, :longitude, :uid, :visible
 
   end # Point
 
@@ -104,10 +105,10 @@ module OSM
         q = "select uid, latitude, longitude from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < #{lat1} and latitude > #{lat2}  and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc) as a group by uid) as b where b.visible = 1 limit 5000"
 
         res = conn.query(q)
-        
+        visible = true
         res.each_hash do |row|
           uid = row['uid'].to_i
-          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid)
+          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
         end
 
         return nodes
@@ -167,12 +168,16 @@ module OSM
       begin
         conn = get_connection
 
-        q = "select latitude,longitude from nodes where uid=#{uid} order by timestamp desc limit 1"
+        q = "select latitude, longitude, visible from nodes where uid=#{uid} order by timestamp desc limit 1"
 
         res = conn.query(q)
 
         res.each_hash do |row|
-          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid)
+          visible = false
+
+          if row['visible'] = '1' then visible = true end
+          
+          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
 
         end
 

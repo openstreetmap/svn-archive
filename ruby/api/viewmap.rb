@@ -91,11 +91,6 @@ dlat = HEIGHT / 2 * scale  * Math.cos(clat * PI / 180)
 
 nodes = dao.getnodes(clat + dlat, clon - dlon, clat - dlat, clon + dlon)
 
-$stderr.puts (clat + dlat).to_s 
-$stderr.puts (clon - dlon).to_s 
-$stderr.puts (clat - dlat).to_s 
-$stderr.puts (clon + dlon).to_s
-
 if nodes && nodes.length > 0
   linesegments = dao.getlines(nodes)
 end
@@ -112,8 +107,6 @@ end
 
 fname = '/tmp/' + rand.to_s  + '_tmpimg'
 
-$stderr.puts clat.to_s + ',' + clon.to_s #+ ' ' + linesegments.length.to_s + ' ' + nodes.length.to_s
-
 File.open(fname, "wb") {|stream|
   begin
   cr = Context.new
@@ -129,26 +122,36 @@ File.open(fname, "wb") {|stream|
 #  cr.fill
 
   if linesegments
-    linesegments.each do |key, l|    
-      cr.new_path
-      cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
-      cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
-      cr.close_path
-      cr.set_rgb_color(0.0, 0.0, 0.0)
-      cr.line_join = LINE_JOIN_MITER
-      cr.line_width = 3
-      cr.stroke
+    linesegments.each do |key, l|
+      node_a = nodes[l.node_a_uid]
+      node_b = nodes[l.node_b_uid]
+      
+      if node_a.visible == true && node_b.visible == true
+        cr.new_path
+        cr.move_to(proj.x(node_a.longitude) , proj.y(node_a.latitude) )
+        cr.line_to(proj.x(node_b.longitude) , proj.y(node_b.latitude) )
+        cr.close_path
+        cr.set_rgb_color(0.0, 0.0, 0.0)
+        cr.line_join = LINE_JOIN_MITER
+        cr.line_width = 3
+        cr.stroke
+      end
     end
 
-    linesegments.each do |key, l|    
-      cr.new_path
-      cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
-      cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
-      cr.close_path
-      cr.set_rgb_color(1.0, 1.0, 1.0)
-      cr.line_join = LINE_JOIN_MITER
-      cr.line_width = 1
-      cr.stroke
+    linesegments.each do |key, l|
+      node_a = nodes[l.node_a_uid]
+      node_b = nodes[l.node_b_uid]
+      
+      if node_a.visible == true && node_b.visible == true
+        cr.new_path
+        cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
+        cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
+        cr.close_path
+        cr.set_rgb_color(1.0, 1.0, 1.0)
+        cr.line_join = LINE_JOIN_MITER
+        cr.line_width = 1
+        cr.stroke
+      end
     end
 
     

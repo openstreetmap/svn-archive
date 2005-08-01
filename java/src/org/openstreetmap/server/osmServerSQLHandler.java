@@ -780,14 +780,24 @@ public class osmServerSQLHandler extends Thread {
   }
 
   private boolean isStringSQLClean(String s) {
-    int nSpace = s.indexOf(' ');
+
+    // this is totally broken and shit
+    
+    int nSpace = s.indexOf(';');
+    if (nSpace == -1) {
+      return true;
+    }
+
+    nSpace = s.indexOf('\'');
     if (nSpace == -1) {
       return true;
     }
     return false;
+        
   }
 
   public synchronized int newGPX(String sNewGPXName, int nUserUID) {
+
     if (!isStringSQLClean(sNewGPXName) || sNewGPXName.length() == 0) {
       return -1;
     }

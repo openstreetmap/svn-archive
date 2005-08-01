@@ -824,7 +824,7 @@ public class osmServerSQLHandler extends Thread {
     Statement stmt = null;
     try {
       stmt = conn.createStatement();
-      String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID;
+      String sSQL = "select name,timestamp,uid from points_meta_table where user_uid=" + nUID + " order by timestamp desc";
       Logger.log("querying with sql \n " + sSQL);
       ResultSet rs = null;
       try {

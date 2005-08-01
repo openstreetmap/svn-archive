@@ -25,20 +25,24 @@ else
 
 <div id="left_menu">
   <h1><img src="/images/toolbox.png">Toolbox:</h1>
-<%
-if(bLoggedIn)
-{
-  %>
+
   <ul>
     <li>
       <img src="/images/stock_edit-16.png"><a href="viewMap.jsp">View map</a>
     </li>
+<%
+if(bLoggedIn)
+{
+  %>
     <li>
       <img src="/images/icon_key.png"><a href="editKeys.jsp">Edit keys</a>
     </li>
     <li>
       <img src="/images/stock_save-16.png"><a href="uploadGPX.jsp">Upload GPX</a>
     </li>
+    <%
+}
+%>
     <li>
       <img src="/images/stock_help-16.png"><a href="/wiki/">Help</a>
     </li>
@@ -47,21 +51,13 @@ if(bLoggedIn)
     </li>
     
   </ul>
-  Internet Explorer has known problems with this site.
-  <%
-}
-else
+ 
+  Internet Explorer has known problems with this site.<br><br>
+<%
+if(bLoggedIn)
 {
   %>
-   <ul>
-    <li>
-      <img src="/images/stock_edit-16.png"><a href="viewMap.jsp">View map</a>
-    </li>
-   </ul>
- 
   You need to <a href="login.jsp">log in</a> to use more tools :-)<br><br>
-
-  Internet Explorer has known problems with this site.
   <%
 }
 

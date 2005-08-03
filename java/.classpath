@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="org/openstreetmap/applet/standalone/" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/org/openstreetmap/applet/standalone"/>
+	<classpathentry kind="lib" path="lib/commons-fileupload-1.0/commons-fileupload-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-jdbc.jar"/>
+	<classpathentry kind="lib" path="lib/openmap.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-cvs/ws-xmlrpc/lib/commons-httpclient-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-cvs/ws-xmlrpc/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev-applet.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-1.2-b1/xmlrpc-1.2-b1-applet.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

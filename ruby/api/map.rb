@@ -19,9 +19,12 @@ bllon = bbox[1].to_f
 trlat = bbox[2].to_f
 trlon = bbox[3].to_f
 
+
 dao = OSM::Dao.instance
 
 nodes = dao.getnodes(trlat, bllon, bllat, trlon)
+
+#FIXME: if there are nodes not connected to lines, then these need to be sent!
 
 if nodes && nodes.length > 0
   linesegments = dao.getlines(nodes)
@@ -32,16 +35,16 @@ if linesegments
     nodes[l.node_a_uid] = dao.getnode(l.node_a_uid) unless nodes[l.node_a_uid]
     nodes[l.node_b_uid] = dao.getnode(l.node_b_uid) unless nodes[l.node_b_uid]
   end
+
+
+  gpx = OSM::Gpx.new
+
+  linesegments.each do |key, l|
+    node_a = nodes[l.node_a_uid]
+    node_b = nodes[l.node_b_uid]
+
+    gpx.addline(key, node_a, node_b)
+  end
+
+  puts gpx.to_s_pretty
 end
-
-gpx = OSM::Gpx.new
-
-linesegments.each do |key, l|
-  node_a = nodes[l.node_a_uid]
-  node_b = nodes[l.node_b_uid]
-
-  gpx.addline(key, node_a, node_b)
-end
-
-puts gpx.to_s_pretty
-

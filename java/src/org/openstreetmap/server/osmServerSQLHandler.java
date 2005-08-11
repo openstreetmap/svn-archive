@@ -273,7 +273,7 @@ public class osmServerSQLHandler extends Thread {
     Statement stmt = null;
     try {
       stmt = conn.createStatement();
-      String sSQL = "select latitude,longitude from tempPoints" + " where latitude < " + p1lat + " and latitude > " + p2lat + " and longitude > " + p1lon + " and longitude < " + p2lon + " and visible=1 limit 50000";
+      String sSQL = "select latitude,longitude from tempPoints" + " where latitude < " + p1lat + " and latitude > " + p2lat + " and longitude > " + p1lon + " and longitude < " + p2lon + " and visible=1 order by timestamp desc limit 50000";
       Logger.log("querying with sql \n " + sSQL);
       ResultSet rs = null;
       try {

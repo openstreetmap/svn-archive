@@ -10,7 +10,7 @@ module OSM
   
     def initialize
       @root = Element.new 'gpx'
-      @root.attributes['version'] = '1.0'
+      @root.attributes['version'] = "1.0"
     end
 
     def addnode(node)
@@ -21,8 +21,48 @@ module OSM
       @root.add el1
     end
 
+    def addline(line, node_a, node_b)
+      el1 = Element.new('trk')
+      el2 = Element.new('name')
+      el2.text = line.to_s
+      el1.add el2
+
+      el3 = Element.new('trkseg')
+      
+      el4 = Element.new('trkpt')
+      el4.attributes['lat'] = node_a.latitude
+      el4.attributes['lon'] = node_a.longitude
+      el5 = Element.new('name')
+      el5.text = node_a.uid.to_s
+
+      el4.add el5
+      el3.add el4
+
+      el6 = Element.new('trkpt')
+      el6.attributes['lat'] = node_a.latitude
+      el6.attributes['lon'] = node_a.longitude
+      el7 = Element.new('name')
+      el7.text = node_a.uid.to_s
+
+      el6.add el7
+
+      el3.add el6
+
+      el1.add el3
+
+      @root.add el1
+
+    end
+
     def to_s
       return @root.to_s
+    end
+
+    def to_s_pretty
+      hum = ''
+
+      @root.write(hum, 0)
+      return hum
     end
 
   end

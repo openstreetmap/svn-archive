@@ -24,11 +24,18 @@ module OSM
       @node_b_uid = node_b_uid
     end
 
+    def initialize(uid, node_a, node_b, visible)
+      @uid = uid
+      @node_a = node_a
+      @node_b = node_b
+      @visible = visible
+    end
+
     def to_s
       "Linesegment #@uid between #@node_a_uid and #@node_b_uid"
     end
 
-    attr_reader :uid, :node_a_uid, :node_b_uid
+    attr_reader :uid, :node_a_uid, :node_b_uid, :visible, :node_a, :node_b
 
   end #Linesegment
 
@@ -102,11 +109,14 @@ module OSM
 
         conn = get_connection
 
-        q = "select uid, latitude, longitude from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < #{lat1} and latitude > #{lat2}  and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc) as a group by uid) as b where b.visible = 1 limit 5000"
+        q = "select uid, latitude, longitude, visible from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < #{lat1} and latitude > #{lat2}  and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc) as a group by uid) as b where b.visible = 1 limit 5000"
 
         res = conn.query(q)
+        
         visible = true
+        
         res.each_hash do |row|
+          
           uid = row['uid'].to_i
           nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
         end
@@ -176,9 +186,33 @@ module OSM
           visible = false
 
           if row['visible'] = '1' then visible = true end
-          
-          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
 
+          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
+        end
+
+      rescue MysqlError => e
+        mysql_error(e)
+      ensure
+        conn.close if conn
+      end
+
+    end
+
+
+    def getsegment(uid)
+      begin
+        conn = get_connection
+
+        q = "select node_a, node_b, visible from street_segments where uid=#{uid} order by timestamp desc limit 1"
+
+        res = conn.query(q)
+
+        res.each_hash do |row|
+          visible = false
+
+          if row['visible'] = '1' then visible = true end
+
+          return Linesegment.new(uid, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible)
         end
 
       rescue MysqlError => e

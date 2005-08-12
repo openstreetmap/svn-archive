@@ -39,10 +39,10 @@ module OSM
       el3.add el4
 
       el6 = Element.new('trkpt')
-      el6.attributes['lat'] = node_a.latitude
-      el6.attributes['lon'] = node_a.longitude
+      el6.attributes['lat'] = node_b.latitude
+      el6.attributes['lon'] = node_b.longitude
       el7 = Element.new('name')
-      el7.text = node_a.uid.to_s
+      el7.text = node_b.uid.to_s
 
       el6.add el7
 

@@ -22,4 +22,7 @@ function correctPNG() // correctly handle PNG transparency in Win IE 5.5 or high
       }
   }
 }
-window.attachEvent("onload", correctPNG);
+if (browserName=="Microsoft Internet Explorer")
+{
+	window.attachEvent("onload", correctPNG);
+}

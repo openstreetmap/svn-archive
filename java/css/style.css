@@ -176,3 +176,6 @@ top: 100px;
   font-weight: bold;
 }
 
+.emphasized {
+	background-color: #82bcff;
+}

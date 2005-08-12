@@ -186,11 +186,11 @@ else
           String sEmphasisColour = "";
           if( (nCount & 1) != 1)
           {
-            sEmphasisColour = "<td bgcolor=\"#82bcff\">";
+            sEmphasisColour = "<td class=\"emphasized\">";
           }
           else
           {
-            sEmphasisColour = "<td bgcolor=\"#ffffff\">";
+            sEmphasisColour = "<td>";
           }
           nCount++;
 

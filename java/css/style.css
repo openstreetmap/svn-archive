@@ -10,7 +10,7 @@ font-family: sans-serif;
 #frontpage_MAIN h1 {
 
   font-size: xx-large;
-  font-weight normal;
+  font-weight: normal;
 
 }
 
@@ -105,7 +105,7 @@ color: #000000;
        text-decoration: none;
 }
 
-#left_menu a:new {
+#left_menu a:link {
 color: #000000;
        font-weight: bold;
        text-decoration: none;

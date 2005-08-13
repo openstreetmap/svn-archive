@@ -7,9 +7,6 @@ require 'osm/gpx'
 
 include Apache
 
-#puts ENV['REMOTE_USER']
-
-r = Apache.request
 cgi = CGI.new
 
 nodeid = cgi['nodeid'].to_i
@@ -21,7 +18,10 @@ if nodeid != 0
 
   node = dao.getnode(nodeid)
 
-  gpx.addnode(node)
-  puts gpx
+  if node
+    gpx.addnode(node)
+    puts gpx.to_s_pretty
+  else
+    exit HTTP_NOT_FOUND
+  end
 end
-

@@ -12,18 +12,17 @@ module OSM
       @visible = visible
     end
 
+    def to_s
+      "Point #@uid at #@latitude, #@longitude, #@visible"
+    end
+
     attr_reader :latitude, :longitude, :uid, :visible
 
   end # Point
 
-  class Linesegment
-    
-    def initialize(uid, node_a_uid, node_b_uid)
-      @uid = uid
-      @node_a_uid = node_a_uid
-      @node_b_uid = node_b_uid
-    end
-
+ 
+ class Linesegment
+    # this is a holding class for holding a segment and its nodes
     def initialize(uid, node_a, node_b, visible)
       @uid = uid
       @node_a = node_a
@@ -32,12 +31,29 @@ module OSM
     end
 
     def to_s
-      "Linesegment #@uid between #@node_a_uid and #@node_b_uid"
+      "Linesegment #@uid between #{@node_a.to_s} and #{@node_b.to_s}"
     end
 
-    attr_reader :uid, :node_a_uid, :node_b_uid, :visible, :node_a, :node_b
+    attr_reader :uid, :visible, :node_a, :node_b
 
   end #Linesegment
+ 
+ 
+  class UIDLinesegment
+    # this is a holding class for just a segment and it's node UID's
+    def initialize(uid, node_a_uid, node_b_uid)
+      @uid = uid
+      @node_a_uid = node_a_uid
+      @node_b_uid = node_b_uid
+    end
+
+    def to_s
+      "UIDLinesegment #@uid between #@node_a_uid and #@node_b_uid"
+    end
+
+    attr_reader :uid, :node_a_uid, :node_b_uid
+
+  end #UIDLinesegment
 
   class Dao
     include Singleton
@@ -160,7 +176,7 @@ module OSM
         
         res.each_hash do |row|
           uid = row['uid'].to_i
-          segments[uid] = Linesegment.new(uid, row['node_a'].to_i, row['node_b'].to_i)
+          segments[uid] = UIDLinesegment.new(uid, row['node_a'].to_i, row['node_b'].to_i)
 
         end
 
@@ -190,6 +206,8 @@ module OSM
           return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
         end
 
+        return nil
+
       rescue MysqlError => e
         mysql_error(e)
       ensure
@@ -208,12 +226,15 @@ module OSM
         res = conn.query(q)
 
         res.each_hash do |row|
+
           visible = false
 
           if row['visible'] = '1' then visible = true end
 
           return Linesegment.new(uid, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible)
         end
+
+        return nil
 
       rescue MysqlError => e
         mysql_error(e)

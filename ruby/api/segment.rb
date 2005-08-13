@@ -1,14 +1,11 @@
 #!/usr/bin/ruby -w
 
-
 require 'cgi'
 require 'osm/dao'
 require 'osm/gpx'
 
 include Apache
 
-
-r = Apache.request
 cgi = CGI.new
 
 segmentid = cgi['segmentid'].to_i
@@ -20,8 +17,11 @@ if segmentid != 0
 
   segment = dao.getsegment(segmentid)
 
-  
-  gpx.addline(segment.uid, segment.node_a, segment.node_b)
-  puts gpx.to_s_pretty
+  if segment
+    gpx.addline(segment.uid, segment.node_a, segment.node_b)
+    puts gpx.to_s_pretty
+  else
+    exit HTTP_NOT_FOUND
+  end
 end
 

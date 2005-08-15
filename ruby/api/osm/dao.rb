@@ -81,27 +81,15 @@ module OSM
     end
 
     ## quote
-    # escape characters in the string which might affect the
+      # escape characters in the string which might affect the
     # mysql query
     def quote(string)
       return Mysql.quote(string)
     end
 
     
-    def sanitize(string, *rest)
-      Mysql.quote!(string)
-      
-      if rest
-        rest.each do |s|
-          Mysql.quote!(s)
-        end
-      end 
-    end
-
-
     ## check_user?
-    # returns whether the given username and password are
-    # correct and active
+    # returns whether the given username and password are correct and active
     def check_user?(name, pass)
       dbh = get_connection
       # sanitise the incoming variables
@@ -117,17 +105,38 @@ module OSM
       return false
     end
 
+
+    def useruidfromemail(email)
+      email = quote(email)
+      
+      begin
+        dbh = get_connection
+        res = dbh.query("select uid from user where user='#{email}' and active = true")
+
+        res.each_hash do |row|
+          return row['uid'].to_i
+        end
+
+        return -1
+       rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+    end
+
     
     def getnodes(lat1, lon1, lat2, lon2)
       nodes = {}
 
       begin
 
-        conn = get_connection
+        dbh = get_connection
 
         q = "select uid, latitude, longitude, visible from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < #{lat1} and latitude > #{lat2}  and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc) as a group by uid) as b where b.visible = 1 limit 5000"
 
-        res = conn.query(q)
+        res = dbh.query(q)
         
         visible = true
         
@@ -143,7 +152,7 @@ module OSM
         mysql_error(e)
 
       ensure
-        conn.close if conn
+        dbh.close if dbh
       end
 
 
@@ -190,6 +199,8 @@ module OSM
 
     end
 
+
+
     def getnode(uid)
       begin
         conn = get_connection
@@ -201,7 +212,7 @@ module OSM
         res.each_hash do |row|
           visible = false
 
-          if row['visible'] = '1' then visible = true end
+          if row['visible'] == '1' then visible = true end
 
           return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
         end
@@ -214,6 +225,27 @@ module OSM
         conn.close if conn
       end
 
+    end
+
+    def delete_node?(uid, user_uid)
+
+      begin
+        dbh = get_connection
+        res = dbh.query("select latitude, longitude from nodes where uid = #{uid} order by timestamp desc limit 1")
+
+        res.each_hash do |row|
+          dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (#{uid} , #{row['latitude']}, #{row['longitude']}, #{Time.new.to_i * 1000}, #{user_uid}, 0)")
+          return true
+        end
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
     end
 
 
@@ -229,7 +261,7 @@ module OSM
 
           visible = false
 
-          if row['visible'] = '1' then visible = true end
+          if row['visible'] == '1' then visible = true end
 
           return Linesegment.new(uid, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible)
         end
@@ -242,7 +274,31 @@ module OSM
         conn.close if conn
       end
 
-    end
+    end # getsegment
+
+
+    def delete_segment?(uid, user_uid)
+      
+      begin
+        dbh = get_connection
+        res = dbh.query("select node_a, node_b from street_segments where uid = #{uid} order by timestamp desc limit 1")
+
+        res.each_hash do |row|
+          dbh.query("insert into street_segments (uid,node_a,node_b,timestamp,user_uid,visible) values (#{uid} , #{row['node_a']}, #{row['node_b']}, #{Time.new.to_i * 1000}, #{user_uid}, 0)")
+          return true
+        end
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+    end # deletesegment
+
+
 
   end
 end

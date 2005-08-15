@@ -6,7 +6,7 @@ require 'osm/dao'
 require 'bigdecimal'
 require 'osm/gpx'
 
-include Math
+include Apache
 
 
 r = Apache.request
@@ -19,6 +19,9 @@ bllon = bbox[1].to_f
 trlat = bbox[2].to_f
 trlon = bbox[3].to_f
 
+if bllat > trlat || bllon > trlon
+  exit BAD_REQUEST
+end
 
 dao = OSM::Dao.instance
 

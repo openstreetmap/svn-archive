@@ -180,7 +180,7 @@ module OSM
         dbh = get_connection
 
         
-        q = "select latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} limit #{page}, #{page + 5000}"
+        q = "select latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, #{page + 5000}"
 
         res = dbh.query(q)
         
@@ -278,6 +278,26 @@ module OSM
           dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (#{uid} , #{row['latitude']}, #{row['longitude']}, #{Time.new.to_i * 1000}, #{user_uid}, 0)")
           return true
         end
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+    end
+
+
+    def update_node?(uid, user_uid, latitude, longitude)
+
+      begin
+        dbh = get_connection
+
+        dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1)")
+
+        return true
 
       rescue MysqlError => e
         mysql_error(e)

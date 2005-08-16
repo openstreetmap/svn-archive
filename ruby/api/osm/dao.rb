@@ -20,6 +20,17 @@ module OSM
 
   end # Point
 
+  class Trackpoint
+  
+    def initialize(latitude, longitude)
+      @latitude = latitude
+      @longitude = longitude
+    end
+
+    attr_reader :latitude, :longitude
+
+  end
+
  
  class Linesegment
     # this is a holding class for holding a segment and its nodes
@@ -155,6 +166,36 @@ module OSM
         dbh.close if dbh
       end
 
+    end
+
+
+
+    def get_track_points(lat1, lon1, lat2, lon2, page)
+      points = Array.new
+
+      page = page * 5000
+
+      begin
+
+        dbh = get_connection
+
+        
+        q = "select latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} limit #{page}, #{page + 5000}"
+
+        res = dbh.query(q)
+        
+        res.each_hash do |row|
+          points.push Trackpoint.new(row['latitude'].to_f, row['longitude'].to_f)
+        end
+
+        return points
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
 
     end
 

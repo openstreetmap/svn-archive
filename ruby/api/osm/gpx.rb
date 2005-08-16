@@ -21,6 +21,22 @@ module OSM
       @root.add el1
     end
 
+    def addtrk(trk)
+      el1 = Element.new 'trk'
+      el2 = Element.new 'trkseg'
+
+      trk.each do |p|
+        el3 = Element.new 'trkpt'
+        el3.attributes['lat'] = p.latitude
+        el3.attributes['lon'] = p.longitude
+        el2.add el3
+      end
+
+      el1.add el2
+      @root.add el1
+      
+    end
+
     def addline(line, node_a, node_b)
       el1 = Element.new('trk')
       el2 = Element.new('name')

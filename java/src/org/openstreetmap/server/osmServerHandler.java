@@ -415,6 +415,22 @@ public class osmServerHandler
   } // deleteNode
 
   
+  public boolean deleteLine(String sToken, int nLineID)
+  {
+    int nUID = osmSQLH.validateToken(sToken);
+
+    if( nUID == -1)
+    {
+      return false;
+
+    }
+     
+    return osmSQLH.deleteLine(nLineID, nUID);
+   
+
+  } // deleteNode
+
+  
   /**
    * create a new street segment between the two given nodes
    * @param node_a the first node

@@ -1047,7 +1047,40 @@ public class osmServerSQLHandler extends Thread {
   }
 
   public synchronized boolean deleteLine(int nLineNum, int nUserUID) {
-    // TODO
+    Logger.log( "deleteLine called for LineID " + nLineNum);
+    Statement stmt = null;
+    try {
+      stmt = conn.createStatement();
+      String sSQL = "select node_a, node_b from street_segments uid=" + nLineNum + " order by timestamp desc limit 1";
+
+      Logger.log("querying with sql \n " + sSQL);
+      ResultSet rs = null;
+      try {
+        rs = stmt.executeQuery(sSQL);
+        if (rs.next()) {
+          Logger.log("found uid ok");
+          // that key does exist
+          sSQL = "insert into street_segments (uid,node_a, node_b,timestamp,user_uid,visible) values (" + nLineNum + ", " + " " + rs.getString("node_a") + ", " + " " + rs.getString("node_b") + ", " + System.currentTimeMillis() + ", " + nUserUID + ", " + "0)";
+
+
+          Logger.log("querying with sql \n " + sSQL);
+          stmt.execute(sSQL);
+          return true;
+        }
+        else {
+          Logger.log("didnt find that uid guvnor!");
+        }
+      }
+      finally {
+        if (rs != null) try { rs.close(); } catch (Exception ex) { }
+      }
+    }
+    catch (Exception ex) {
+      Logger.log(ex);
+    }
+    finally {
+      if (stmt != null) try { stmt.close(); } catch (Exception ex) { }
+    }
     return false;
   }
 

@@ -289,6 +289,7 @@ module OSM
       return false
     end
 
+    
 
     def update_node?(uid, user_uid, latitude, longitude)
 
@@ -296,6 +297,26 @@ module OSM
         dbh = get_connection
 
         dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1)")
+
+        return true
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+    end
+
+    
+    def update_segment?(uid, user_uid, node_a, node_b)
+
+      begin
+        dbh = get_connection
+
+        dbh.query("insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1)")
 
         return true
 

@@ -4,8 +4,11 @@ require 'cgi'
 #require 'osm/dao'
 load 'osm/dao.rb'
 require 'osm/gpx'
+require 'rexml/document'
 
 include Apache
+include REXML
+
 
 r = Apache.request
 
@@ -37,7 +40,42 @@ if r.request_method == "GET"
 else
 
   if r.request_method == "PUT"
-    puts 'put'
+
+    r.setup_cgi_env
+    segmentid = r.args.match(/segmentid=([0-9]+)/).captures.first.to_i
+    userid = dao.useruidfromemail(r.user)
+    doc = Document.new $stdin.read
+    gpxsegmentid = -1
+
+    doc.elements.each('gpx/trk/name') do |n|
+      gpxsegmentid = n.get_text.value.to_i
+    end
+
+    exit BAD_REQUEST unless gpxsegmentid == segmentid
+    exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible == true
+
+    points = Array.new
+
+    count = 0
+
+    doc.elements.each('gpx/trk/trkseg/trkpt') do |p|
+      points.push p.attributes['lat'].to_f
+      points.push p.attributes['lon'].to_f
+      p.elements.each('name') do |n|
+        count += 1
+        exit HTTP_NOT_FOUND unless dao.getnode(n.get_text.value.to_i).visible == true 
+        points.push n.get_text.value.to_i
+      end
+    end
+
+    exit BAD_REQUEST unless count == 2
+
+    if dao.update_segment?(segmentid, userid, points[2], points[5])
+      exit
+    else
+      exit HTTP_INTERNAL_SERVER_ERROR
+    end
+
   else
     if r.request_method == "DELETE"
       userid = dao.useruidfromemail(r.user)

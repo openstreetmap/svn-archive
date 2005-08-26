@@ -20,6 +20,8 @@
 #include "Components.h"
 #include <iostream>
 #include <iomanip>
+#include <string>
+#include <sstream>
 
 using std::endl;
 using std::setw;
@@ -36,7 +38,18 @@ namespace OpenStreetMap
 void Components::toGPX(const char* filename)
 {
 	std::ofstream outfile(filename);
+	doToGPX(outfile);
+}
 
+std::string Components::toGPX()
+{
+	std::ostringstream strm; 
+	doToGPX(strm);
+	return strm.str();
+}
+
+void Components::doToGPX(std::ostream &outfile)
+{
 	outfile<<"<gpx version=\"1.0\" " 
 		   <<"creator=\"Hogweed Software Freemap::Components class\" " 
 		   <<"xmlns=\"http://www.topografix.com/GPX/1/0\">" << endl;
@@ -113,6 +126,21 @@ bool Components::setTrackID(const char* i)
 Polygon *Components::getPolygon (int i)
 {
 	return (i>=0 && i<polygons.size()) ? polygons[i] : NULL;
+}
+
+// Merges these Components with another set
+// Note that deep copying is done so the other Components can be subsequently
+// trashed if desired.
+bool Components::merge(Components *comp)
+{
+	if(track&&waypoints)
+	{
+		track->copySegsFrom(comp->track);
+		for(int count=0; count<comp->nWaypoints(); count++)
+			waypoints->addWaypoint ( comp->getWaypoint(count) );
+		return true;
+	}
+	return false;
 }
 
 }

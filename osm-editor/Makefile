@@ -9,7 +9,7 @@ INSTALL = install -m 755
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
-	  Permissions.o LoginDialogue.o moc_MainWindow.o grab_landsat.o \
+	  Permissions.o LoginDialogue.o moc_MainWindow.o curlstuff.o \
 	  Polygon.o TrackSeg.o SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
 	  RemoveExcessDialogue.o
 LIBS = -ljeeps 
@@ -31,7 +31,8 @@ CURLCFLAGS = `curl-config --cflags`
 
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
 #OPTS       = -DXMLRPC
-WARNFLAGS  = -W -Wall
+#WARNFLAGS  = -W -Wall
+WARNFLAGS = -w
 DEBUGFLAGS = -g
 CXXFLAGS = $(WARNFLAGS) $(DEBUGFLAGS) -I$(QTINCPATH) $(CURLCFLAGS) \
 	-I/usr/local/include $(OPTS) -I$(JEEPSSRC)
@@ -81,7 +82,7 @@ GPSDevice.o: Track.h Waypoint.h
 Permissions.o: Permissions.h
 LoginDialogue.o : LoginDialogue.h
 Polygon.o : Polygon.h
-LandsatManager.o : LandsatManager.h landsat.h
+LandsatManager.o : LandsatManager.h curlstuff.h
 TrackSeg.o : TrackSeg.h functions.h
 RemoveExcessDialogue.o : RemoveExcessDialogue.h
 srtm.o : srtm.cpp Canvas.h
@@ -90,4 +91,4 @@ SRTMGeneral.o : SRTMGeneral.h Map.h EarthPoint.h
 SRTMDataGrid.o : SRTMDataGrid.h Map.h EarthPoint.h
 SRTMConGen.o : SRTMConGen.h SRTMDataGrid.h Map.h EarthPoint.h
 llgr.o : llgr.h EarthPoint.h
-grab_landsat.o : landsat.h
+curlstuff.o : curlstuff.h

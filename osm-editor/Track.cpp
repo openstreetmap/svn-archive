@@ -55,6 +55,19 @@ void Track::removeSegs()
 	}
 }
 
+void Track::removeSegs(const QString& type)
+{
+	for(vector<TrackSeg*>::iterator i=segs.begin(); i!=segs.end(); i++)
+	{
+		if((*i)->getType()==type)
+		{
+			delete *i;
+			segs.erase(i);
+			i--;
+		}
+	}
+}
+
 // Write a track to GPX.
 void Track::toGPX(std::ostream &outfile)
 {
@@ -66,36 +79,37 @@ void Track::toGPX(std::ostream &outfile)
 	outfile<<"</trk>"<<endl;
 }
 
-vector<SegPointInfo> Track::findNearestSeg(const EarthPoint& p, double limit)
+TrackSeg * Track::findNearestSeg(const EarthPoint& p, double limit)
 {
-	vector<SegPointInfo>lowest;
-	SegPointInfo a;
-	double lowestDist = limit;
+	double lowestDist = 9999, dist;
+	int pidx;
+	TrackSeg *lowest = NULL;
+	TrackPoint pt;
 
 	for(int count=0; count<segs.size(); count++)
 	{
-		a=segs[count]->findNearestTrackpoint(p,limit);
-		if(a.point>=0 && a.dist<=lowestDist)
+		pidx = segs[count]->findNearestTrackpoint(p,9999,&dist);
+		if(dist<lowestDist)
 		{
-			a.seg=count;
-			lowest.push_back(a);
-			lowestDist=a.dist;
+			lowest=segs[count];
+			lowestDist=dist;
+			cout << "**Updating**"<<endl;
 		}
 	}
 	return lowest;
 }
 
-bool Track::deletePoints(const EarthPoint& p1, const EarthPoint& p2, double limit)
+bool Track::deletePoints(const RetrievedTrackPoint& p1, const RetrievedTrackPoint& p2,
+								double limit)
 {
-	vector<SegPointInfo> a1 = findNearestSeg(p1,limit), a2 = findNearestSeg(p2,limit);
-	for(int count=0; count<a1.size(); count++)
+	for(int count=0; count<p1.size(); count++)
 	{
-		for(int count2=0; count2<a2.size(); count2++)
+		for(int count2=0; count2<p2.size(); count2++)
 		{
-			if(a1[count].seg==a2[count2].seg && a1[count].seg>=0)
+			if(p1.getSeg(count)==p2.getSeg(count2))
 			{
-				segs[a1[count].seg]->deletePoints(a1[count].point,
-													a2[count2].point);
+				p1.getSeg(count)->deletePoints(p1.getPointIdx(count),
+													p2.getPointIdx(count2));
 				return true;
 			}
 		}
@@ -103,24 +117,24 @@ bool Track::deletePoints(const EarthPoint& p1, const EarthPoint& p2, double limi
 	return false;
 }
 
-bool Track::segmentise(const QString& newType, const EarthPoint& p1,
-						const EarthPoint& p2, double limit)
-{
-	vector<SegPointInfo> a1 = findNearestSeg(p1,limit), a2 = findNearestSeg(p2,limit);
 
-	for(int count=0; count<a1.size(); count++)
+bool Track::segmentise(const QString& newType, const RetrievedTrackPoint& p1,
+						const RetrievedTrackPoint& p2, double limit)
+{
+
+	for(int count=0; count<p1.size(); count++)
 	{
-		for(int count2=0; count2<a2.size(); count2++)
-		{
-			if(a1[count].seg==a2[count2].seg && a1[count].seg>=0)
+		for(int count2=0; count2<p2.size(); count2++)
+		{	
+			if(p1.getSeg(count)==p2.getSeg(count2))
 			{
-				int start = (a1[count].point> a2[count2].point) ? 
-								a2[count2].point : a1[count].point, 
-					end = (a1[count].point>a2[count2].point) ? 
-								a1[count].point: a2[count2].point;
+				int start = (p1.getPointIdx(count)> p2.getPointIdx(count2)) ? 
+								p2.getPointIdx(count2) : p1.getPointIdx(count), 
+					end = (p1.getPointIdx(count)>p2.getPointIdx(count2)) ? 
+								p1.getPointIdx(count): p2.getPointIdx(count2);
 		
 				TrackSeg *newSeg=new TrackSeg, *postSeg=new TrackSeg, 
-				 		*curSeg = segs[a1[count].seg];
+				 		*curSeg = p1.getSeg(count);
 
 				for(int count=start; count<=end; count++)
 					newSeg->addPoint(curSeg->getPoint(count));
@@ -143,6 +157,43 @@ bool Track::segmentise(const QString& newType, const EarthPoint& p1,
 	return false;
 }
 
+bool Track::formNewSeg(const QString& newType, const RetrievedTrackPoint& a1,
+						const RetrievedTrackPoint& a2, double limit)
+{
+	if(a1.size() && a2.size())
+	{
+		TrackSeg *newSeg = new TrackSeg;
+		newSeg->addPoint ( a1.getPoint(0) );
+		newSeg->addPoint ( a2.getPoint(0) );
+		newSeg->setType(newType);
+		segs.push_back(newSeg);
+	}
+}
+
+bool Track::linkNewPoint(const RetrievedTrackPoint& a1, const RetrievedTrackPoint& a2, 
+				const RetrievedTrackPoint & a3,double limit)
+{
+	for(int count=0; count<a1.size(); count++)
+	{
+		for(int count2=0; count2<a2.size(); count2++)
+		{
+			if(a1.getSeg(count)==a2.getSeg(count2) && a3.size()>0)
+			{
+				TrackPoint p = a3.getPoint(0);
+				int i = (a2.getPointIdx(count2) > a1.getPointIdx(count)) ?
+							a2.getPointIdx(count2) : a2.getPointIdx(count2)-1; 
+				//cout << "i is: " << i << endl;
+				cout << "a2.getPointIdx(count2):" << a2.getPointIdx(count2)
+													 <<endl;
+				cout << "a.getPointIdx(count):" << a1.getPointIdx(count)
+													 <<endl;
+
+				a2.getSeg(count2)->addPoint(p,i);
+			}
+		}
+	}
+}
+				
 bool Track::hasPoints()
 {
 	for(int count=0; count<segs.size(); count++)
@@ -162,6 +213,15 @@ bool Track::setSegType(int i,const QString& t)
 	}
 	return false;
 }
+bool Track::setSegName(int i,const QString& t)
+{ 
+	if(i>=0 && i<segs.size())
+	{
+		segs[i]->setID(t); 
+		return true;
+	}
+	return false;
+}
 
 bool Track::addTrackpt(int seg,const QString& t, double lat, double lon)
 { 
@@ -173,30 +233,31 @@ bool Track::addTrackpt(int seg,const QString& t, double lat, double lon)
 	return false;
 }
 
-bool Track::nameTrackSeg(const EarthPoint& p1, const QString& name,double limit)
-{
-	cerr<<p1.y<<endl;
-	cerr<<p1.x<<endl;
-	cerr<<name<<endl;
-	// find nearest track segment
-	cerr<<"finding nearest seg"<<endl;
-	vector<SegPointInfo> a1 = findNearestSeg(p1,limit);
-	cerr<<"done"<<endl;
-
-
-	// only take the first track segment if two are equal distance
-	if(a1.size() && a1[0].seg>=0)
-	{
-		segs[a1[0].seg]->setID(name);
-		return true;
-	}
-	return false;
-}
-
 void Track::deleteExcessPoints (double angle, double distance)
 {
 	for(int count=0; count<segs.size(); count++)
 		segs[count]->deleteExcessPoints (angle, distance);
 }
+
+RetrievedTrackPoint Track::findNearestTrackpoint
+	(const EarthPoint &pt, double limit)
+{
+	RetrievedTrackPoint rtp; 
+	int tpidx;
+
+	for(int count=0; count<segs.size(); count++)
+	{
+		tpidx = segs[count]->findNearestTrackpoint(pt,limit);
+		if(tpidx>=0)
+		{
+			rtp.add(segs[count],tpidx);
+		}
+	}
+
+	return rtp;
+}
+
+	
+
 
 }

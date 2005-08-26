@@ -165,6 +165,13 @@ bool GPXParser::characters(const QString& characters)
 	if(inName)
 	{
 		curName = characters;
+		if(inTrk)
+		{
+			if(inTrkseg)
+				components->setSegName(curSeg,curName);
+			else
+				components->setTrackID (curName);
+		}
 	}
 	else if(inType)
 		curType = characters; 

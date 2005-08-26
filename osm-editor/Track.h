@@ -38,7 +38,6 @@ private:
 	QString id;	
 	vector<TrackSeg*> segs;
 	void writeTrkpt(std::ostream&, int);
-	vector<SegPointInfo> findNearestSeg(const EarthPoint& p, double limit);
 
 public:
 	Track() { id="noname"; }
@@ -51,17 +50,27 @@ public:
 		{ return id; }
 	bool addTrackpt(int seg,const QString& t, double lat, double lon);
 	void toGPX(std::ostream&);
-	bool deletePoints(const EarthPoint& p1, const EarthPoint& p2, double limit);
-	bool segmentise(const QString& newType, const EarthPoint& p1,
-						const EarthPoint& p2, double limit);
+	bool deletePoints(const RetrievedTrackPoint& p1, 
+					const RetrievedTrackPoint& p2, double limit);
+	bool segmentise(const QString& newType, const RetrievedTrackPoint& p1,
+						const RetrievedTrackPoint& p2, double limit);
 	int nSegs() { return segs.size(); }
 	TrackSeg *getSeg(int i) { return (i>=0 && i<segs.size()) ? segs[i]: NULL;  }
 	bool setSegType(int i,const QString& t); 
+	bool setSegName(int i,const QString& t); 
 	bool hasPoints();
-	bool nameTrackSeg(const EarthPoint& p1, const QString& name, double);
 	void deleteExcessPoints (double angle,  double distance);
 	void removeSegs();
+	void removeSegs(const QString&);
 	void copySegsFrom(Track *);
+	bool formNewSeg(const QString& newType, const RetrievedTrackPoint& a1,
+						const RetrievedTrackPoint& a2, double limit);
+	bool linkNewPoint(const RetrievedTrackPoint& a1, 
+					const RetrievedTrackPoint& a2, 
+				const RetrievedTrackPoint & a3,double limit);
+	TrackSeg *findNearestSeg(const EarthPoint& p, double limit);
+
+	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &, double);
 };
 
 

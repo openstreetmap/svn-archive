@@ -17,10 +17,18 @@ void LandsatManager::grab()
 void LandsatManager::forceGrab()
 {
 	int w=widget->width(), h=widget->height();
+	/*
 	topLeft = widget->getMap().getEarthPoint (ScreenPos(-w,-h));
 	bottomRight = widget->getMap().getEarthPoint (ScreenPos(w*2,h*2));
-	LS_LOAD_DATA *landsatData = grab_landsat
+	*/
+	topLeft = widget->getMap().getEarthPoint (ScreenPos(-w*0.5,-h*0.5));
+	bottomRight = widget->getMap().getEarthPoint (ScreenPos(w*1.5,h*1.5));
+	/*
+	CURL_LOAD_DATA *landsatData = grab_landsat
 			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*3,h*3);
+			*/
+	CURL_LOAD_DATA *landsatData = grab_landsat
+			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*2,h*2);
 	pixmap.loadFromData((const uchar*)landsatData->data,landsatData->nbytes);
 	free(landsatData->data);
 	free(landsatData);

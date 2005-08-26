@@ -45,7 +45,7 @@ using std::vector;
 
 // Mouse action modes
 // N_ACTIONS should always be the last
-enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON, ACTION_NAME_TRACK, ACTION_MOVE_WAYPOINT, N_ACTIONS };
+enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON, ACTION_NAME_TRACK, ACTION_MOVE_WAYPOINT, ACTION_LINK, ACTION_NEW_SEG, N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -121,6 +121,9 @@ private:
 	// currently selected trackpoints
 	int selectedTrackpoint, selectedTrackpoint2;
 
+	// selected segment
+	TrackSeg *selectedSeg;
+
 	// current mouse action mode
 	int actionMode;
 
@@ -134,7 +137,7 @@ private:
 	QString curFilename; 
 	bool mouseDown;
 
-	QToolButton* modeButtons[4];
+	QToolButton* modeButtons[N_ACTIONS]; 
 
 	QComboBox * modes;
 
@@ -154,13 +157,18 @@ private:
 	int findNearestWaypoint(int,int,int);
 	LandsatManager landsatManager;
 
-	EarthPoint p1, p2;
+	RetrievedTrackPoint pts[3];
 	int nSelectedPoints;
 
 	QPainter *curPainter;
 
 	Waypoint savedWpt;
 	bool wptSaved;
+
+	double nameAngle;
+	bool doingName;
+	ScreenPos namePos, curNamePos;
+	QString trackName;
 
 	void doDrawTrack(QPainter&,bool);
 
@@ -169,6 +177,9 @@ public:
 			 		double=640,double=480);
 	~MainWindow();
 	Components * doOpen(const QString&);
+
+	void grabGPXFromNet(const QString& url);
+	void postGPX(const QString& url);
 
 	void paintEvent(QPaintEvent*);
 	void mousePressEvent(QMouseEvent*);
@@ -194,6 +205,8 @@ public:
 	void heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
 							int x4,int y4,int r,int g,int b);
 
+	void doDrawAngleText(QPainter *p,int originX,int originY,int x,int y,
+					double angle, const char * text);
 	void showPosition()
 	{
 		QString msg; 
@@ -226,6 +239,9 @@ public slots:
 	void shrink();
 	void removeExcessPoints();
 	void commitExcessPoints();
+	void grabGPXFromNet();
+	void postGPX();
+	void removePlainTracks();
 };
 
 }

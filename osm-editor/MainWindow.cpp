@@ -49,7 +49,7 @@
 #include <XmlRpcCpp.h>
 #endif
 
-#include "landsat.h"
+#include "curlstuff.h"
 
 using std::cout;
 using std::endl;
@@ -109,6 +109,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	selectedTrackpoint = -1;
 	nSelectedPoints = 0;
 
+	doingName = false;
 
 	segpens["footpath"]= QPen (Qt::green, 2);
 	segpens["cycle path"]= QPen (Qt::magenta, 2);
@@ -137,6 +138,9 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
 	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
+	fileMenu->insertItem("Grab GPX from Net",this,SLOT(grabGPXFromNet()),
+								CTRL+Key_N);
+	fileMenu->insertItem("Post GPX",this,SLOT(postGPX()),CTRL+Key_P);
 	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
 	menuBar()->insertItem("&File",fileMenu);
 
@@ -155,6 +159,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 							SLOT(commitExcessPoints()),CTRL+Key_M);
 	editMenu->insertItem("Change pol&ygon resolution",this,
 							SLOT(changePolygonRes()),CTRL+Key_Y);
+	editMenu->insertItem("Remove plain trac&ks",this,SLOT(removePlainTracks()),
+						CTRL+Key_K);
 	menuBar()->insertItem("&Edit",editMenu);
 
 	QToolBar* toolbar=new QToolBar(this);
@@ -198,6 +204,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	QPixmap three = mmLoadPixmap("images","three.png");
 	QPixmap nametracks = mmLoadPixmap("images","nametracks.png");
 	QPixmap objectmanip = mmLoadPixmap("images","objectmanip.png");
+	QPixmap linknewpoint = mmLoadPixmap("images","linknewpoint.png");
+	QPixmap formnewseg = mmLoadPixmap("images","formnewseg.png");
 	QPixmap left_pixmap = mmLoadPixmap("images","arrow_left.png");
 	QPixmap right_pixmap = mmLoadPixmap("images","arrow_right.png");
 	QPixmap up_pixmap = mmLoadPixmap("images","arrow_up.png");
@@ -225,6 +233,10 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 			(nametracks,"Name tracks","",mapper,SLOT(map()),toolbar);
 	modeButtons[ACTION_MOVE_WAYPOINT]= new QToolButton
 			(objectmanip,"Move Waypoint","",mapper,SLOT(map()),toolbar);
+	modeButtons[ACTION_LINK]= new QToolButton
+			(linknewpoint,"Link point to seg","",mapper,SLOT(map()),toolbar);
+	modeButtons[ACTION_NEW_SEG]= new QToolButton
+			(formnewseg,"New segment","",mapper,SLOT(map()),toolbar);
 
 
 	toolbar->setStretchableWidget(new QLabel(toolbar));
@@ -336,8 +348,6 @@ void MainWindow::open()
 			components = newComponents;
 			curFilename = filename;
 			update();
-
-			components->toGPX("dump.gpx");
 		}
 	}
 }
@@ -356,6 +366,61 @@ Components * MainWindow::doOpen(const QString& filename)
 	comp = parser.getComponents();	
 	
 	return comp;
+}
+
+void MainWindow::grabGPXFromNet()
+{
+	QString url=QInputDialog::getText("Enter URL",
+										"Enter URL of GPX server:");
+	Components * netComponents; 
+	statusBar()->message("Grabbing GPX...");
+	EarthPoint bottomLeft = map.getBottomLeft(),
+			   topRight = map.getTopRight();
+	CURL_LOAD_DATA *httpResponse = grab_gpx(url.ascii(),
+					bottomLeft.x,bottomLeft.y,topRight.x,topRight.y);
+	if(httpResponse)
+	{
+		statusBar()->message("Done.");
+		char *strdata = new char[httpResponse->nbytes+1];
+		memcpy(strdata,httpResponse->data,httpResponse->nbytes);
+		strdata[httpResponse->nbytes]='\0';
+		free(httpResponse->data);
+		free(httpResponse);
+
+		QString gpx(strdata);
+		QXmlInputSource source;
+		source.setData(gpx);
+
+		GPXParser parser;
+		QXmlSimpleReader reader;
+		reader.setContentHandler(&parser);
+		reader.parse(source);
+		netComponents = parser.getComponents();	
+
+		components->merge(netComponents);
+		delete netComponents;
+		delete[] strdata;
+	}
+}
+
+void MainWindow::postGPX()
+{
+	QString url=QInputDialog::getText("Enter URL",
+										"Enter URL of GPX server:");
+	std::string gpx = components->toGPX();
+	char *cgpx = new char[gpx.size()+1];
+	strcpy(cgpx,gpx.c_str()); // necessary because a curl function has no const
+
+	statusBar()->message("Posting map data...");
+	post_gpx(url,cgpx); 
+	statusBar()->message("Done.");
+	delete[] cgpx;
+}
+
+void MainWindow::removePlainTracks()
+{
+	components->removeSegs("track");
+	update();
 }
 
 void MainWindow::readGPS()
@@ -406,6 +471,9 @@ void MainWindow::setMode(int m)
 	// all the others turned off.
 	for (int count=0; count<N_ACTIONS; count++)
 		modeButtons[count]->setOn(count==m);
+
+	// Wipe any currently selected points
+	nSelectedPoints = 0;
 }
 
 void MainWindow::setSegType(const QString &t)
@@ -521,14 +589,21 @@ void MainWindow::drawAngleText(int fontsize,double angle,int x,int y,int r,
 {
 	if(curPainter)
 	{
-		angle*=-180/M_PI;
-		curPainter->translate(x,y);
-		curPainter->rotate(angle);
+		//angle*=-180/M_PI;
 		curPainter->setFont(QFont("Helvetica",fontsize));
-		curPainter->drawText(0,0,text);
-		curPainter->rotate(-angle);
-		curPainter->translate(-x,-y);
+		doDrawAngleText(curPainter,x,y,x,y,angle,text);
 	}
+}
+
+void MainWindow::doDrawAngleText(QPainter *p,int originX,int originY,int x,
+				int y,double angle, const char * text)
+{
+	angle *= 180/M_PI;
+	p->translate(originX,originY);
+	p->rotate(angle);
+	p->drawText(x-originX,y-originY,text);
+	p->rotate(-angle);
+	p->translate(-originX,-originY);
 }
 
 void MainWindow::heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
@@ -550,51 +625,72 @@ void MainWindow::drawTrack(QPainter& p)
 
 void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 {
+
+	double speed = 10; // reasonable max walking km/h
+
 	if(components->hasTrack())
 	{
 		QPen trackPen(Qt::darkGray,2); 
-		TrackPoint curPt;
+		TrackPoint curPt,prevPt;
 		TrackSeg *curSeg;
-		ScreenPos lastPos = map.getScreenPos(curPt.lon,curPt.lat), curPos,
-				  avPos;
+		ScreenPos lastPos , curPos,
+				  avPos,
+				  maxP1, maxP2;
+
 		QPen curPen=(doingClonedTrack) ? QPen(QColor(255,0,128),2): 
 												trackPen;
-		QFont f("Helvetica",8);
+		QFont f("Helvetica",10,QFont::Bold,true);
 		QFontMetrics fm(f);
 		QString segname;
+
+		double dx, dy, dist, maxDist=0;
 
 		for(int seg=0; seg<components->nSegs(); seg++)
 		{
 			curSeg = components->getSeg(seg);
-			if(!doingClonedTrack) curPen = segpens[curSeg->getType()];
+			if(!doingClonedTrack) 
+			{
+				curPen = (curSeg==selectedSeg) ? QPen(Qt::yellow,5) :
+						segpens[curSeg->getType()];
+			}
+
+			maxDist = 0;
 			curPt = curSeg->getPoint(0);
+			prevPt = curPt;
 			lastPos = map.getScreenPos(curPt.lon,curPt.lat);
-			for(int pt=1; pt<curSeg->nPoints(); pt++)
+
+			for(int pt=0; pt<curSeg->nPoints(); pt++)
 			{
 				curPt = curSeg->getPoint(pt);	
 				curPos = map.getScreenPos(curPt.lon,curPt.lat);	
 				p.setPen(curPen);
-				p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
-				if(pt==curSeg->nPoints()/2 && (segname=curSeg->getID())!="")
+
+				if(pt)
 				{
-					QRect r=fm.boundingRect(segname);
-					avPos.x = (curPos.x+lastPos.x)/2;
-					avPos.y = (curPos.y+lastPos.y)/2;
-					p.fillRect(avPos.x-r.width()/2-2,
-								avPos.y-fm.ascent()-2,
-								r.width()+4,
-								fm.height()+4,Qt::yellow);
-//								curPen.color());
-					p.setPen(QColor(128,0,0));
-					p.setFont(f);
-					p.drawText(avPos.x-r.width()/2,
-								avPos.y,
-								segname);
+
+				/** NEW  */
+				// Disconnect tracks surveyed over separate occasions
+				if(curSeg->getType()!="track" || curPt.connected(prevPt,speed))
+					p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
+				
+				dy = curPos.y - lastPos.y; 
+				dx = curPos.x - lastPos.x;
+
+				dist = sqrt(dy*dy + dx*dx);
+
+				// To find the maximum inter-point length in the current 
+				// segment, for displaying the segment name. Only count
+				// if in the middle half of the segment, to avoid the name
+				// "hanging off the end"
+				if(dist>maxDist 
+					&& pt>=curSeg->nPoints()/4 && pt<curSeg->nPoints()*3/4)
+				{
+					maxDist = dist;
+					maxP1 = lastPos; 
+					maxP2 = curPos;
 				}
-				/*
-				if(curPt.lon==p1.x && curPt.lat==p1.y)//=selectedTrackpoint)
-					drawTrackpoint(p,Qt::red,curPos.x,curPos.y,10);
-				else  */
+				}
+
 				if(trackpoints)
 				{
 					if(doingClonedTrack)
@@ -602,19 +698,29 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 					else
 						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,1,pt);
 				}
+
+				for (int selPt=0; selPt<nSelectedPoints; selPt++)
+				{
+					if(pts[selPt]==curPt)
+						drawTrackpoint(p,Qt::red,curPos.x,curPos.y,10);
+				}
 				lastPos = curPos;
-
+				prevPt = curPt;
 			}
-		}
 
-		if(nSelectedPoints)
-		{
-			ScreenPos sp=map.getScreenPos(p1);
-			drawTrackpoint(p,Qt::red,sp.x,sp.y,10);
+			// Write name of segment on longest line  
+			if((segname=curSeg->getID())!="")
+			{
+				dy=maxP2.y-maxP1.y;
+				dx=maxP2.x-maxP1.x;
+				double angle = atan2(dy,dx);
+				p.setFont(f);
+				doDrawAngleText(&p,maxP1.x,maxP1.y,maxP1.x,maxP1.y,
+								angle,segname.ascii());
+			}
 		}
 	}
 }
-
 
 void MainWindow::drawWaypoints(QPainter& p)
 {
@@ -680,7 +786,7 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 
 void MainWindow::mousePressEvent(QMouseEvent* ev)
 {
-	EarthPoint p;
+	EarthPoint pt;
 	QString name;
 	double LIMIT=map.earthDist(10);
 	int nearest;
@@ -690,14 +796,15 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 		case ACTION_TRACK:
 			if(nSelectedPoints==0)
 			{
-				p1 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+				pts[0] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
 				update();
 				nSelectedPoints++;
 			}
 			else
 			{
-				p2 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-				components->segmentiseTrack(curSegType,p1,p2,LIMIT);
+				pts[1] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				components->segmentiseTrack(curSegType,pts[0],pts[1],LIMIT);
 				update();
 				nSelectedPoints=0;
 			}
@@ -710,13 +817,14 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 		case ACTION_DELETE:
 			if(nSelectedPoints==0)
 			{
-				p1 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+				pts[0] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				update();
 				nSelectedPoints++;
 			}
 			else
 			{
-				p2 = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-				components->deleteTrackpoints(p1,p2,LIMIT);
+				pts[1] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				components->deleteTrackpoints(pts[0],pts[1],LIMIT);
 				update();
 				nSelectedPoints=0;
 			}
@@ -729,9 +837,9 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 		case ACTION_MOVE_WAYPOINT:
 			if(wptSaved)
 			{
-				p = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-				savedWpt.lat = p.y;
-				savedWpt.lon = p.x;
+				pt = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+				savedWpt.lat = pt.y;
+				savedWpt.lon = pt.x;
 				components->addWaypoint(savedWpt);
 				wptSaved=false;
 				update();
@@ -744,14 +852,50 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 				update();
 			}
 			break;
+
+		case ACTION_LINK:
+			if(nSelectedPoints<2)
+			{
+				pts[nSelectedPoints++] = 
+						components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				update();
+			}
+			else
+			{
+				pts[2] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				components->linkNewPoint(pts[0],pts[1],pts[2],LIMIT);
+				update();
+				nSelectedPoints=0;
+			}
+			break;
+
+		case ACTION_NEW_SEG:
+			if(nSelectedPoints==0)
+			{
+				pts[0] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				update();
+				nSelectedPoints++;
+			}
+			else
+			{
+				pts[1] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				components->formNewSeg(curSegType,pts[0],pts[1],LIMIT);
+				update();
+				nSelectedPoints=0;
+			}
+			break;
+
 	}			
 }
 
 void MainWindow::resizeEvent(QResizeEvent * ev)
 {
 	map.resizeTopLeft(width(), height());
+	landsatManager.grab();
 	update();
 }
+
+
 
 void MainWindow::initPolygon()
 {
@@ -868,8 +1012,24 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
 			break;
 		case ACTION_NAME_TRACK:
 			p = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-			name=QInputDialog::getText("Enter track name","Enter track name");
-			components->nameTrackSeg(p,name,LIMIT);
+			selectedSeg = components->getNearestSeg(p,LIMIT);
+			if(selectedSeg)
+			{
+			trackName = "";
+			int tp = selectedSeg->findNearestTrackpoint(p,LIMIT);
+			if(tp>=0 && tp<selectedSeg->nPoints()-1)
+			{
+				TrackPoint pt1 = selectedSeg->getPoint(tp),
+						   pt2 = selectedSeg->getPoint(tp+1);
+				double dy=pt2.lat-pt1.lat;
+				double dx=pt2.lon-pt1.lon;
+				nameAngle = atan2(dy,dx);
+				doingName = true;
+				namePos = map.getScreenPos (pt1.lon,pt1.lat);
+				curNamePos = namePos;
+			}
+			update();
+			}
 			break;
 	}
 }
@@ -891,17 +1051,46 @@ void MainWindow::endPolygon(int x,int y)
 	
 void MainWindow::keyPressEvent(QKeyEvent* ev)
 {
-	// 11/04/05 prevent movement being too far at large scales
-	double dis = 0.1/map.getScale();
-
-	switch(ev->key())
+	if(actionMode==ACTION_NAME_TRACK && doingName)
 	{
-		case Qt::Key_Left  : left(); break; 
-		case Qt::Key_Right : right(); break; 
-		case Qt::Key_Up    : up(); break; 
-		case Qt::Key_Down  : down(); break; 
-		case Qt::Key_Plus  : magnify(); break; 
-		case Qt::Key_Minus : shrink(); break; 
+		if(ev->ascii()>=32 && ev->ascii()<=127)
+		{
+			trackName += ev->text();
+			QPainter p(this);
+			p.setPen(Qt::black);
+			QFont f ("Helvetica",10,QFont::Bold,true);
+			p.setFont(f);
+			QFontMetrics fm(f);
+
+			cerr << "calling doDrawAngleText " << endl;
+			doDrawAngleText(&p,namePos.x,namePos.y,curNamePos.x,
+							curNamePos.y,
+							-nameAngle,ev->text());
+			curNamePos.x += fm.width(ev->text());
+
+		}
+		else if (ev->key()==Key_Return)
+		{
+			doingName = false;
+			selectedSeg->setID(trackName);
+			selectedSeg = NULL;
+			update();
+		}
+	}
+	else
+	{
+		// 11/04/05 prevent movement being too far at large scales
+		double dis = 0.1/map.getScale();
+
+		switch(ev->key())
+		{
+			case Qt::Key_Left  : left(); break; 
+			case Qt::Key_Right : right(); break; 
+			case Qt::Key_Up    : up(); break; 
+			case Qt::Key_Down  : down(); break; 
+			case Qt::Key_Plus  : magnify(); break; 
+			case Qt::Key_Minus : shrink(); break; 
+		}
 	}
 }
 

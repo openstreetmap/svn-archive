@@ -25,6 +25,7 @@
 #include <fstream>
 #include <algorithm>
 #include <map>
+#include <string>
 
 #include "functions.h"
 #include "Track.h"
@@ -51,12 +52,15 @@ private:
 	vector<Polygon*> polygons;
 
 
+	void doToGPX(std::ostream &outfile);
+
 public:
 	Components() { waypoints=new Waypoints; track=new Track; clonedTrack=NULL;
 					activeTrack = track;}
 	void clearAll();
 
 	void toGPX(const char*);
+	std::string toGPX();
 
 	~Components() { clearAll(); }
 	bool addWaypoint (const Waypoint&) ;
@@ -82,16 +86,24 @@ public:
 
 	int nSegs() { return track->nSegs(); }
 	TrackSeg *getSeg(int i) { return activeTrack->getSeg(i); }
-	bool deleteTrackpoints(const EarthPoint& p1, const EarthPoint& p2, 
+	bool deleteTrackpoints(const RetrievedTrackPoint& p1, 
+					const RetrievedTrackPoint& p2, 
 					double limit)
 		{ return track->deletePoints(p1,p2,limit);}
-	bool segmentiseTrack(const QString& newType, const EarthPoint& p1,
-						const EarthPoint& p2, double limit)
+	bool segmentiseTrack(const QString& newType, const RetrievedTrackPoint& p1,
+						const RetrievedTrackPoint& p2, double limit)
 		{ return track->segmentise(newType,p1,p2,limit); }
+	bool formNewSeg(const QString& newType, const RetrievedTrackPoint& p1,
+						const RetrievedTrackPoint& p2, double limit)
+		{ return track->formNewSeg(newType,p1,p2,limit); }
+	bool linkNewPoint(const RetrievedTrackPoint& p1,
+						const RetrievedTrackPoint& p2, 
+						const RetrievedTrackPoint & p3,
+						double limit)
+		{ return track->linkNewPoint(p1,p2,p3,limit); }
 	void newSegment() { track->newSegment(); }
 	bool setSegType(int i,const QString& t) { return track->setSegType(i,t); }
-	bool nameTrackSeg(const EarthPoint& p1, const QString& name, double limit)
-			{ return track->nameTrackSeg(p1,name,limit); }
+	bool setSegName(int i,const QString& t) { return track->setSegName(i,t); }
 	bool deleteWaypoint(int index);
 	void cloneTrack() { if(clonedTrack==NULL) clonedTrack=new Track(track); 
 			else restoreClonedTrack(); }
@@ -104,6 +116,14 @@ public:
 	void setActiveNormal() { activeTrack=track; }
 	void setActiveCloned() { activeTrack=clonedTrack; }
 	bool isCloned() { return clonedTrack!=NULL; }
+	TrackSeg* getNearestSeg(const EarthPoint& p, double limit)
+		{ return track->findNearestSeg(p,limit); }
+	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &p, 
+					double limit)
+		{ return track->findNearestTrackpoint(p,limit); }
+	bool merge(Components *);
+	void removeSegs(const QString& type)
+		{ track->removeSegs(type); }
 };
 
 

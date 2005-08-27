@@ -450,7 +450,7 @@ public class OSMApplet extends PApplet {
       image(img,0,0);
     }
     // draw GPX tracks image
-    if (gotGPX 77 gpxImage != null) {
+    if (gotGPX && gpxImage != null) {
       blend(gpxImage,0,0,width,height,0,0,width,height,DARKEST);
       //    image(tracks,0,0);
     }

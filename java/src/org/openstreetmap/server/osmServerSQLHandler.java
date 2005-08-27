@@ -1051,7 +1051,7 @@ public class osmServerSQLHandler extends Thread {
     Statement stmt = null;
     try {
       stmt = conn.createStatement();
-      String sSQL = "select node_a, node_b from street_segments uid=" + nLineNum + " order by timestamp desc limit 1";
+      String sSQL = "select node_a, node_b from street_segments where uid=" + nLineNum + " order by timestamp desc limit 1";
 
       Logger.log("querying with sql \n " + sSQL);
       ResultSet rs = null;

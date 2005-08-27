@@ -112,8 +112,8 @@ import java.util.Hashtable;
 public class OSMApplet extends PApplet {
 
   /* set these for testing without needing to log in to the website - for deployment they should be set to null */
-  String USERNAME = "tom@tom-carden.co.uk";
-  String PASSWORD = "spandex";
+  String USERNAME = null;
+  String PASSWORD = null;
 
   /* handles XML-RPC etc */
   OSMAdapter osm;
@@ -304,6 +304,15 @@ public class OSMApplet extends PApplet {
       e.printStackTrace();
     }
 
+    // check webpage applet parameters for a user/pass
+    try {
+      USERNAME = param("user");
+      PASSWORD = param("pass");
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    
     // try to connect to OSM
     osm = new OSMAdapter(lines,nodes,token,USERNAME,PASSWORD);
 

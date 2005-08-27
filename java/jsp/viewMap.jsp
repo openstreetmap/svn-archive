@@ -105,16 +105,16 @@ String sDownURL = getURL(scale,clat - dlat, clon);
 String sZoominURL = getURL(scale / 1.5 ,clat, clon);
 String sZoomoutURL = getURL(scale * 1.5 ,clat, clon);
 
-String sLandsatURL = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=" + 700 
+
+String sLandsatURL = "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/steve.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat&width=" + 700 
   + "&height=" + 500
-  + "&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg&bbox="
+  + "&bbox="
   + (clon - dlon ) + ","
   + (clat - dlat ) + ","
   + (clon + dlon ) + ","
   + (clat + dlat );
-
 %>
-  <%!
+<%!
 private String getURL(double dScale, double dLat, double dLon)
 {
   return "viewMap.jsp?lat=" + dLat + "&lon=" + dLon + "&scale=" +dScale;
@@ -173,7 +173,19 @@ private String getURL(double dScale, double dLat, double dLon)
 </div>
 
 <div id="mapToolbarRight">
+
+<% if(bLoggedIn)
+{
+%>
 <img src="/images/stock_edit.png" border="0"><a href="<%=sAppletURL%>">edit this map...</a>
+<%
+} else {
+%>
+Log in to edit map
+<%
+}
+%>
+
 
 </div>
 

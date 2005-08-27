@@ -56,6 +56,9 @@ height = "600"
 <param name="lat" value = "<%=fLat%>">
 <param name="lon" value = "<%=fLon%>">
 <param name="scale" value = "<%=fScale%>">
+<param name="token" value = "<%=sToken%>">
+<param name="wmsurl" value= "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/steve.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat">
+
 </applet>
 </div>
 <%@ include file="include/bottom.jsp" %>

@@ -41,6 +41,8 @@ destdir="${build}"
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
 
+<jar destfile="${dist}/OSMApplet.jar" basedir="${src/org/openstreetmap/processing/}">
+
 </target>
 
 

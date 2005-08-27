@@ -1,5 +1,5 @@
 #include "LandsatManager.h"
-#include "landsat.h"
+#include "curlstuff.h"
 #include "MainWindow.h"
 
 #include <iostream>

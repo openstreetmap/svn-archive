@@ -432,7 +432,6 @@ public class OSMApplet extends PApplet {
 
   }
 
-  boolean blendingDone = false;
   boolean gotGPX = false;
 
   public void draw() {
@@ -447,22 +446,13 @@ public class OSMApplet extends PApplet {
     }
 
     // draw background satellite image
-    if (img != null && gpxImage != null && gotGPX) {
-      if (!blendingDone) {
-        img.blend(gpxImage,0,0,width,height,0,0,width,height,DARKEST);
-        blendingDone = true;
-      }
+    if (img != null) {
       image(img,0,0);
     }
-    else {
-      if (img != null) {
-        image(img,0,0);
-      }
-      // draw GPX tracks image
-      if (gpxImage != null) {
-        blend(gpxImage,0,0,width,height,0,0,width,height,DARKEST);
-        //    image(tracks,0,0);
-      }
+    // draw GPX tracks image
+    if (gotGPX 77 gpxImage != null) {
+      blend(gpxImage,0,0,width,height,0,0,width,height,DARKEST);
+      //    image(tracks,0,0);
     }
 
     noFill();

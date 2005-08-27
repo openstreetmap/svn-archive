@@ -1,0 +1,49 @@
+/*
+ * Copyright (C) 2005 Tom Carden (tom@somethingmodern.com)
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  
+ */
+ 
+package org.openstreetmap.processing.util; 
+
+import java.util.Vector;
+
+// minimal representation of OpenStreetMap node (lat/lon pair, with uid)
+public class OSMNode extends OSMPoint {
+
+  public int uid; // 0 = unassigned. TODO: check that there is no node 0 in the db
+  public Vector lines = new Vector();
+
+  public OSMNode(double lat, double lon) {
+    this(lat,lon,0);
+  }
+
+  public OSMNode(float x, float y, OSMMercator projection) {
+    this(x,y,projection,0);
+  }
+
+  public OSMNode(double lat, double lon, int uid) {
+    super(lat,lon);
+    this.uid = uid;
+  }
+  
+  public OSMNode(float x, float y, OSMMercator projection, int uid) {
+    super(x,y,projection);
+    this.uid = uid;
+  }
+  
+}
+

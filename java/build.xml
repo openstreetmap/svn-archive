@@ -133,10 +133,10 @@ destdir="${build}"
 
 <!-- new applett -->
 
-<copy file="${dist}/OSMApplet.jar" tofile="${dist}/OSMApplet.jar" />
-<copy file="${lib}/commons-codec-1.3.jar" tofile="${dist}/commons-codec-1.3.jar" />
-<copy file="${lib}/xmlrpc-2.0-beta.jar" tofile="${dist}/xmlrpc-2.0-beta.jar" />
-<copy file="${lib}/core.jar" tofile="${dist}core.jar" />
+<copy file="${dist}/OSMApplet.jar" tofile="/var/lib/tomcat4/webapps/edit/OSMApplet.jar" />
+<copy file="${lib}/commons-codec-1.3.jar" tofile="/var/lib/tomcat4/webapps/edit/commons-codec-1.3.jar" />
+<copy file="${lib}/xmlrpc-2.0-beta.jar" tofile="/var/lib/tomcat4/webapps/edit/xmlrpc-2.0-beta.jar" />
+<copy file="${lib}/core.jar" tofile="/var/lib/tomcat4/webapps/edit/core.jar" />
 
 
 </target>

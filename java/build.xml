@@ -14,6 +14,9 @@
 <mkdir dir="${build}"/>
 <mkdir dir="${dist}"/>
 <mkdir dir="${dist}/api"/>
+<mkdir dir="${dist}/rc1/org"/>
+<mkdir dir="${dist}/rc1/org/openstreetmap"/>
+<mkdir dir="${dist}/rc1/org/openstreetmap/processing"/>
 </target>
 
 
@@ -42,7 +45,11 @@ destdir="${build}"
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
 
-<jar destfile="${dist}/OSMApplet.jar" basedir="${src}/org/openstreetmap/processing" />
+<copy todir="${dist}/rc1/org/openstreetmap/processing/">
+  <fileset dir="${build}/org/openstreetmap/processing"/>
+</copy>
+
+<jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />
 
 </target>
 
@@ -126,10 +133,10 @@ destdir="${build}"
 
 <!-- new applett -->
 
-<copy file="${dist}/OSMApplet.jar" tofile="/var/www/tile/applet/rc1/OSMApplet.jar" />
-<copy file="${dist}/commons-codec-1.3.jar" tofile="/var/www/tile/applet/rc1/commons-codec-1.3.jar" />
-<copy file="${dist}/xmlrpc-2.0-beta.jar" tofile="/var/www/tile/applet/rc1/xmlrpc-2.0-beta.jar" />
-<copy file="${lib}/core.jar" tofile="/var/www/tile/applet/rc1/core.jar" />
+<copy file="${dist}/OSMApplet.jar" tofile="${dist}/OSMApplet.jar" />
+<copy file="${lib}/commons-codec-1.3.jar" tofile="${dist}/commons-codec-1.3.jar" />
+<copy file="${lib}/xmlrpc-2.0-beta.jar" tofile="${dist}/xmlrpc-2.0-beta.jar" />
+<copy file="${lib}/core.jar" tofile="${dist}core.jar" />
 
 
 </target>

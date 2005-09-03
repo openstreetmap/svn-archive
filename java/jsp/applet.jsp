@@ -58,7 +58,7 @@ height="500"
 <param name="clon" value="<%=fLon%>">
 <param name="scale" value="<%=fScale%>">
 <param name="token" value="<%=sToken%>">
-<param name="wmsurl" value="http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/steve.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat">
+<param name="wmsurl" value="http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx">
 
 </applet>
 </div>

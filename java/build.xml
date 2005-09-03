@@ -49,7 +49,7 @@ destdir="${build}"
   <fileset dir="${build}/org/openstreetmap/processing"/>
 </copy>
 
-<copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/LucidaSansUnicode-11.vlw" />
+<copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="/var/lib/tomcat4/webapps/edit/org/openstreetmap/processing/LucidaSansUnicode-11.vlw" />
 
 <jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />
 

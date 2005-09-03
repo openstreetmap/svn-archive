@@ -129,7 +129,7 @@ public class OSMApplet extends PApplet {
   Hashtable nodeMap = new Hashtable(); 
 
   /* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
-  PImage gpxImage;
+//  PImage gpxImage;
 
   /* width of line segments - TODO: modulate based on scale, and road type */
   float strokeWeight = 11.0f;
@@ -408,6 +408,11 @@ public class OSMApplet extends PApplet {
 
         ready = true;
 
+/*
+  
+   below grabs gpx points but thats in the image now
+
+   
         print("getting gpx points... ");
         Vector osmPoints = osm.getPoints(projection.getTopLeft(),projection.getBottomRight());
         println(osmPoints.size() + " points received");
@@ -429,7 +434,7 @@ public class OSMApplet extends PApplet {
         println("done drawing gpx points");
 
         gotGPX = true;
-
+*/
       }
 
     }
@@ -458,12 +463,14 @@ public class OSMApplet extends PApplet {
     if (img != null) {
       image(img,0,0);
     }
+
+    /*
     // draw GPX tracks image
     if (gotGPX && gpxImage != null) {
       blend(gpxImage,0,0,width,height,0,0,width,height,DARKEST);
       //    image(tracks,0,0);
     }
-
+*/
     noFill();
     strokeWeight(strokeWeight+2.0f);
     stroke(0);

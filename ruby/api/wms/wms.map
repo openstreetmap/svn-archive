@@ -1,0 +1,89 @@
+map
+	size 	 640 480
+	imagetype	jpeg
+	projection	"init=epsg:4326" end
+	debug on
+  transparent on
+  status on
+
+	WEB
+		IMAGEPATH '/tmp/'
+    IMAGEURL '/tmp/'
+	END
+
+
+LAYER # LandSat WMS map from JPL (or from USGS)
+	debug on
+	NAME landsat
+  group foo
+	TYPE RASTER
+	OFFSITE 0 0 0
+	STATUS off
+	CONNECTIONTYPE WMS
+
+	
+	CONNECTION "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	METADATA
+#		"wms_title" "LandSat"
+		"wms_name" "us_landsat7"
+		"wms_server_version" "1.0.0"
+		"wms_srs" "epsg:4326"
+		"wms_format" "image/png"
+	END
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+END # LandSat WMS image ends here
+
+
+LAYER 
+	debug on
+	NAME gpx
+  group foo
+	TYPE RASTER
+	OFFSITE 255 255 255
+	STATUS off
+	CONNECTIONTYPE WMS
+
+	
+	CONNECTION "http://tile.openstreetmap.org/ruby/gpx.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	METADATA
+#		"wms_title" "gpx2"
+		"wms_name" "gpx"
+		"wms_server_version" "1.0.0"
+		"wms_srs" "epsg:4326"
+		"wms_format" "image/png"
+	END
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+	END # LandSat WMS image ends here
+
+
+LAYER 
+	debug on
+	NAME streets
+  group foo
+	TYPE RASTER
+	OFFSITE 255 255 0
+	STATUS off
+	CONNECTIONTYPE WMS
+
+	
+	CONNECTION "http://tile.openstreetmap.org/ruby/streets.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	METADATA
+#		"wms_title" "gpx2"
+		"wms_name" "streets"
+		"wms_server_version" "1.0.0"
+		"wms_srs" "epsg:4326"
+		"wms_format" "image/png"
+	END
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+END
+
+end

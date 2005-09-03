@@ -89,7 +89,7 @@ else
 
 
 String sURL = "/map/map.png?lat=" + clat + "&lon=" + clon + "&scale=" +scale;
-String sAppletURL = "/edit/applet.jsp?lat=" + clat + "&lon=" + clon + "&scale=10404.917";
+String sAppletURL = "/edit/applet.jsp?lat=" + clat + "&lon=" + clon + "&scale=" + scale;
 
 double width = 700;
 double height  = 500;
@@ -106,7 +106,7 @@ String sZoominURL = getURL(scale / 1.5 ,clat, clon);
 String sZoomoutURL = getURL(scale * 1.5 ,clat, clon);
 
 
-String sLandsatURL = "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/steve.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat&width=" + 700 
+String sLandsatURL = "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets&width=" + 700 
   + "&height=" + 500
   + "&bbox="
   + (clon - dlon ) + ","
@@ -197,14 +197,6 @@ Log in to edit map
   <img src="<%=sLandsatURL%>" width="700" height="500" alt="Your map">
 
  </div>
-
-<div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700
- px; padding: 1em;">
- 
-  <img src="<%=sURL%>" width="700" height="500" alt="Your map">
-
- </div>
-
 
  
 <div style="position: absolute; left: 0px; top: 500px; height: 20px; width: 700

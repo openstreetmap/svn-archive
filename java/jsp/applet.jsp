@@ -48,16 +48,17 @@ else
 
 <div id="main_area">
 <applet
-code   = "org/openstreetmap/applet/osmApplet.class"
-archive= "osm.jar , openmap.jar , xmlrpc-applet.jar , commons-codec-1.1.jar"
-width  = "600"
-height = "600"
+code="org/openstreetmap/processing/OSMApplet.class"
+archive="OSMApplet.jar, xmlrpc-2.0-beta.jar, commons-codec-1.3.jar, core.jar"
+width="700"
+height="500"
+
 >
-<param name="lat" value = "<%=fLat%>">
-<param name="lon" value = "<%=fLon%>">
-<param name="scale" value = "<%=fScale%>">
-<param name="token" value = "<%=sToken%>">
-<param name="wmsurl" value= "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/steve.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat">
+<param name="clat" value="<%=fLat%>">
+<param name="clon" value="<%=fLon%>">
+<param name="scale" value="<%=fScale%>">
+<param name="token" value="<%=sToken%>">
+<param name="wmsurl" value="http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/steve.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat">
 
 </applet>
 </div>

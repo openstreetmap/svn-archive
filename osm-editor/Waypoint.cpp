@@ -43,7 +43,7 @@ WaypointMap Waypoint::waypointMap[] = { { 10, "farm" },
 					 { 8233, "bridge" },
 					 { 8236, "church" },
 					 { 8243, "tunnel" },
-					 { 8246, "summit" },
+					 { 8246, "hill" },
 					 { 16391,"mast" } };
 
 QString Waypoint::garminToType(int smbl)
@@ -58,11 +58,20 @@ QString Waypoint::garminToType(int smbl)
 
 void Waypoints::toGPX(std::ostream& outfile)
 {
+	QString name="";
 	for(int count=0; count<waypoints.size(); count++)
 	{
+			
+		if(waypoints[count].id)
+			name.sprintf("%d:%s",waypoints[count].id,
+				waypoints[count].name.ascii());
+		else
+			name = waypoints[count].name;
+			
+
 		outfile << "<wpt lat=\"" << waypoints[count].lat << 
 				"\" lon=\"" << waypoints[count].lon << "\">"
-				<< endl << "<name>"<<waypoints[count].name<<"</name>"<<endl
+				<< endl << "<name>"<<name<<"</name>"<<endl
 			<<"<type>"<<waypoints[count].type<<"</type>"<<endl<<"</wpt>"<<endl;
 	}
 }

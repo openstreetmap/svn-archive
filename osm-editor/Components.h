@@ -67,9 +67,11 @@ public:
 
 	bool addTrackpoint (int seg,const QString& timestamp, double lat, 
 					double lon);
-	void addTrack(Track * t) { track=t; activeTrack = track; }
+	void addTrack(Track * t) { if(track) delete track; 
+								track=t; activeTrack = track; }
 
-	void setWaypoints(Waypoints * w) { waypoints=w; }
+	void setWaypoints(Waypoints * w) { if(waypoints)delete waypoints;
+			waypoints=w; }
 	bool hasTrack() { return track && track->hasPoints() ; }
 	bool hasWaypoints() { return waypoints && (waypoints->size()>0); }
  	Waypoint getWaypoint (int i) throw(QString);
@@ -103,6 +105,7 @@ public:
 		{ return track->linkNewPoint(p1,p2,p3,limit); }
 	void newSegment() { track->newSegment(); }
 	bool setSegType(int i,const QString& t) { return track->setSegType(i,t); }
+	bool setSegId(int i,int id) { return track->setSegId(i,id); }
 	bool setSegName(int i,const QString& t) { return track->setSegName(i,t); }
 	bool deleteWaypoint(int index);
 	void cloneTrack() { if(clonedTrack==NULL) clonedTrack=new Track(track); 

@@ -40,12 +40,15 @@ struct Waypoint
 	double lat, lon;
 	QString name; 
 	QString type;
+	int id;
 		 
 	static WaypointMap waypointMap[];
 
 	Waypoint(){ lat=lon=0;name="none";type="waypoint"; }	
 	Waypoint(const QString& nm, double lt, double ln, const QString& tp)
-		{ name=nm; lat=lt; lon=ln; type=tp; }
+		{ name=nm; lat=lt; lon=ln; type=tp; id=0; }
+	Waypoint(const QString& nm, double lt, double ln, const QString& tp,int i)
+		{ name=nm; lat=lt; lon=ln; type=tp; id=i; }
 	static QString garminToType(int);
 };
 

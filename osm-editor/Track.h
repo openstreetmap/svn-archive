@@ -57,6 +57,7 @@ public:
 	int nSegs() { return segs.size(); }
 	TrackSeg *getSeg(int i) { return (i>=0 && i<segs.size()) ? segs[i]: NULL;  }
 	bool setSegType(int i,const QString& t); 
+	bool setSegId(int i,int id); 
 	bool setSegName(int i,const QString& t); 
 	bool hasPoints();
 	void deleteExcessPoints (double angle,  double distance);

@@ -133,14 +133,15 @@ Polygon *Components::getPolygon (int i)
 // trashed if desired.
 bool Components::merge(Components *comp)
 {
-	if(track&&waypoints)
-	{
-		track->copySegsFrom(comp->track);
-		for(int count=0; count<comp->nWaypoints(); count++)
-			waypoints->addWaypoint ( comp->getWaypoint(count) );
-		return true;
-	}
-	return false;
+	if(!track)  { track=new Track; activeTrack = track; }
+	if(!waypoints) waypoints = new Waypoints;
+
+	track->copySegsFrom(comp->track);
+
+	for(int count=0; count<comp->nWaypoints(); count++)
+		waypoints->addWaypoint ( comp->getWaypoint(count) );
+
+	return true;
 }
 
 }

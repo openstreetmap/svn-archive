@@ -45,7 +45,7 @@ namespace OpenStreetMap
 class GPXParser : public QXmlDefaultHandler
 {
 private:
-	bool inDoc, inWpt, inTrk, inName, inTrkpt, 
+	bool inDoc, inWpt, inTrk, inName, inTrkpt, inId,
 		inType,  inTime, inTrkseg, foundSegType, inPolygon;
 	Components* components;
 	Track* curTrack; 
@@ -54,7 +54,7 @@ private:
 	QString curTimestamp; // 10/04/05 timestamp now string
 	int segStart, trkptCount;
 	Polygon *curPolygon;
-	int curSeg;
+	int curSeg, curId;
 
 public:
 	bool startDocument();

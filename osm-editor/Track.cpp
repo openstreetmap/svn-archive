@@ -36,6 +36,7 @@ Track::~Track()
 
 Track::Track(Track* t)
 {
+	id=t->id;
 	copySegsFrom(t);
 }
 
@@ -213,11 +214,20 @@ bool Track::setSegType(int i,const QString& t)
 	}
 	return false;
 }
+bool Track::setSegId(int i,int id)
+{ 
+	if(i>=0 && i<segs.size())
+	{
+		segs[i]->setId(id); 
+		return true;
+	}
+	return false;
+}
 bool Track::setSegName(int i,const QString& t)
 { 
 	if(i>=0 && i<segs.size())
 	{
-		segs[i]->setID(t); 
+		segs[i]->setName(t); 
 		return true;
 	}
 	return false;

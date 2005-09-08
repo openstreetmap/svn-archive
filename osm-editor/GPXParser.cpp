@@ -25,15 +25,18 @@ using std::cout;
 using std::endl;
 using std::cerr;
 
+#include <qregexp.h>
+
 namespace OpenStreetMap 
 {
 
 GPXParser::GPXParser(  )
 {
 	inDoc = inWpt = inTrk = inName = inTrkpt = inType = 
-	inTrkseg = inPolygon = false;
+	inTrkseg = inPolygon = inId = false;
 	components = new Components;
-	curSeg = 0;
+	curSeg = curId = 0;
+	curName = curType = curTimestamp = "";
 }
 
 bool GPXParser::startDocument()
@@ -78,6 +81,11 @@ bool GPXParser::startElement(const QString&,const QString&,
 		else if (element=="type" && (inWpt||inTrk||inTrkseg||inPolygon))
 		{
 			inType=true;
+		}
+		else if (element=="id" && inTrkseg)
+		{
+			inId = true;
+			curId = 0;
 		}
 		else if (element=="time" && (inWpt||inTrkpt))
 		{
@@ -134,6 +142,9 @@ bool GPXParser::endElement(const QString&,const QString&,
 	else if(inType && element=="type")
 		inType=false;
 
+	else if(inId && element=="id")
+		inId = false;
+
 	else if(inTime && element=="time")
 		inTime=false;
 
@@ -145,13 +156,15 @@ bool GPXParser::endElement(const QString&,const QString&,
 				curName <<" " << curLat << " " << curLong << " "
 				<< atoi(curType.ascii()) << endl;
 				*/
-		components->addWaypoint(Waypoint(curName,curLat,curLong,curType));
+		components->addWaypoint(Waypoint(curName,curLat,curLong,curType,curId));
 		inWpt = false;
+		curId = 0;
 	}
 
 	// If the segment had a type, add the segment to the segment table.
 	else if (inTrkseg && element=="trkseg")
 	{
+		components->setSegId(curSeg,curId);
 		components->setSegType(curSeg++,curType);
 		inTrkseg = false;
 	}
@@ -161,10 +174,12 @@ bool GPXParser::endElement(const QString&,const QString&,
 
 bool GPXParser::characters(const QString& characters)
 {
+	QString chr=characters;
+	if(characters==QString::null) chr="NULL";
 	if(characters=="\n") return true;
 	if(inName)
 	{
-		curName = characters;
+		curName = chr;
 		if(inTrk)
 		{
 			if(inTrkseg)
@@ -172,12 +187,34 @@ bool GPXParser::characters(const QString& characters)
 			else
 				components->setTrackID (curName);
 		}
+		else if (inWpt)
+		{
+			cerr << "PARSING: " << curName << "--> "; 
+			// Parse a name of the form ID:name, as exported by Freemap.
+			QRegExp regexp("^(\\d+):(.*)$");
+			if(regexp.search(curName)>=0)
+			{
+				cerr << "THERE WAS A MATCH " << endl;
+				curName = regexp.cap(2);
+				if(curName==QString::null) {curName="NULL";}
+				cerr << "curName now = " << curName << endl;
+				curId = atoi( regexp.cap(1).ascii() );
+				cerr << "curId now = " << curId << endl;
+			}
+			else
+			{
+				cerr << "NO MATCH" << endl;
+			}
+			
+		}
 	}
 	else if(inType)
-		curType = characters; 
+		curType = chr; 
+	else if(inId)
+		curId = atoi(chr.ascii());
 	else if(inTime)
 	{
-		curTimestamp = characters; // 10/04/05 timestamp now string 
+		curTimestamp = chr; // 10/04/05 timestamp now string 
 //		cerr<<curTimestamp<<endl;
 	}
 

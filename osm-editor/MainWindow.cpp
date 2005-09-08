@@ -269,7 +269,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	waypointReps["viewpoint"] = new WaypointRep("images/viewpoint.png");
 	waypointReps["farm"] = new WaypointRep("images/farm.png",
 					"Helvetica",8,Qt::red);
-	waypointReps["summit"] = new WaypointRep(
+	waypointReps["hill"] = new WaypointRep(
 					"images/peak.png","Helvetica",10, Qt::magenta);
 	waypointReps["hamlet"] = new WaypointRep(
 					"images/place.png","Helvetica",12, Qt::black);
@@ -281,7 +281,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 					"images/place.png","Helvetica",24, Qt::black);
 	waypointReps["car park"] = new WaypointRep(
 					"images/carpark.png", "Helvetica",8,Qt::blue);
-	waypointReps["station"] = new WaypointRep(
+	waypointReps["railway station"] = new WaypointRep(
 					"images/station.png", "Helvetica",10,Qt::red);
 	waypointReps["mast"] = new WaypointRep(
 					"images/mast.png");
@@ -374,8 +374,8 @@ void MainWindow::grabGPXFromNet()
 										"Enter URL of GPX server:");
 	Components * netComponents; 
 	statusBar()->message("Grabbing GPX...");
-	EarthPoint bottomLeft = map.getBottomLeft(),
-			   topRight = map.getTopRight();
+	EarthPoint bottomLeft = ll_to_gr(map.getBottomLeft()),
+			   topRight = ll_to_gr(map.getTopRight());
 	CURL_LOAD_DATA *httpResponse = grab_gpx(url.ascii(),
 					bottomLeft.x,bottomLeft.y,topRight.x,topRight.y);
 	if(httpResponse)
@@ -387,6 +387,9 @@ void MainWindow::grabGPXFromNet()
 		free(httpResponse->data);
 		free(httpResponse);
 
+//		cout << "Response:" << endl << strdata << endl;
+
+		
 		QString gpx(strdata);
 		QXmlInputSource source;
 		source.setData(gpx);
@@ -397,8 +400,18 @@ void MainWindow::grabGPXFromNet()
 		reader.parse(source);
 		netComponents = parser.getComponents();	
 
-		components->merge(netComponents);
-		delete netComponents;
+		if(components)
+		{
+			components->merge(netComponents);
+			delete netComponents;
+		}
+		else
+		{
+			components = netComponents;
+		}
+		
+		
+
 		delete[] strdata;
 	}
 }
@@ -412,9 +425,19 @@ void MainWindow::postGPX()
 	strcpy(cgpx,gpx.c_str()); // necessary because a curl function has no const
 
 	statusBar()->message("Posting map data...");
-	post_gpx(url,cgpx); 
+	CURL_LOAD_DATA *resp = post_gpx(url,cgpx); 
 	statusBar()->message("Done.");
 	delete[] cgpx;
+
+		char *strdata = new char[resp->nbytes+1];
+		memcpy(strdata,resp->data,resp->nbytes);
+		strdata[resp->nbytes]='\0';
+		free(resp->data);
+		free(resp);
+
+		cout << "Response:" << endl << strdata << endl;
+		delete[] strdata;
+
 }
 
 void MainWindow::removePlainTracks()
@@ -626,8 +649,6 @@ void MainWindow::drawTrack(QPainter& p)
 void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 {
 
-	double speed = 10; // reasonable max walking km/h
-
 	if(components->hasTrack())
 	{
 		QPen trackPen(Qt::darkGray,2); 
@@ -670,7 +691,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 
 				/** NEW  */
 				// Disconnect tracks surveyed over separate occasions
-				if(curSeg->getType()!="track" || curPt.connected(prevPt,speed))
+				if(curSeg->getType()!="track" || curPt.connected(prevPt,750,1))
 					p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
 				
 				dy = curPos.y - lastPos.y; 
@@ -709,7 +730,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			}
 
 			// Write name of segment on longest line  
-			if((segname=curSeg->getID())!="")
+			if((segname=curSeg->getName())!="")
 			{
 				dy=maxP2.y-maxP1.y;
 				dx=maxP2.x-maxP1.x;
@@ -1072,7 +1093,7 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 		else if (ev->key()==Key_Return)
 		{
 			doingName = false;
-			selectedSeg->setID(trackName);
+			selectedSeg->setName(trackName);
 			selectedSeg = NULL;
 			update();
 		}

@@ -2,11 +2,15 @@
 #include "SRTMGeneral.h"
 
 #include <ctime>
+#include <cmath>
 
 #include <iostream>
+#include <iomanip>
 using std::endl;
 
 using std::cerr;
+
+using std::setprecision;
 
 namespace OpenStreetMap
 {
@@ -25,18 +29,19 @@ bool RetrievedTrackPoint::operator==(const TrackPoint& tp) const
 
 void TrackPoint::toGPX(std::ostream& outfile)
 {
-	outfile << "<trkpt lat=\"" << lat << 
-				"\" lon=\"" << lon << "\">"
+	outfile << "<trkpt lat=\"" << setprecision(10) << lat << 
+				"\" lon=\"" << setprecision(10) << lon << "\">"
 				<< endl << "<time>"<<timestamp<<"</time>"<<endl
 				<<"</trkpt>"<<endl;
 }
 
-// Determines whether two track points are connected.
-// A maximum reasonable speed is supplied; if it is not possible to get from
-// one track point to the next at the given speed, it's assumed that the two
-// points are not connected.
+// Determines whether two track points are connected, for the purposes of 
+// drawing the track. 
+// They are determined NOT to be connected if both the time and distance
+// between them is greater than the supplied threshold.
 
-bool TrackPoint::connected(const TrackPoint& pt, double speed)
+bool TrackPoint::connected(const TrackPoint& pt, double timeThreshold,
+							double distThreshold)
 {
 	// Convert the points to grid refs
 	EarthPoint gridref = ll_to_gr(lat,lon),
@@ -58,10 +63,10 @@ bool TrackPoint::connected(const TrackPoint& pt, double speed)
 	time_t time = mktime(&this_tm), othertime = mktime(&other_tm);
 
 	// Get speed in KM/H
-	double spd = distKM/ ((othertime - time) / 3600.0);
+	double spd = distKM/ ((fabs(othertime - time)) / 3600.0);
 
-	// Is the speed less than the threshold speed?
-	return spd<=speed;
+	// Is the speed less than the threshold speed or distance?
+	return fabs(othertime-time) <= timeThreshold || distKM <= distThreshold;
 }
 
 void TrackSeg::toGPX(std::ostream& outfile)
@@ -72,8 +77,9 @@ void TrackSeg::toGPX(std::ostream& outfile)
 		points[count].toGPX(outfile);
 	outfile <<"<extensions>"<<endl<<"<type>"
 			<<type<<"</type>"<<endl;
-	if(id!="")
-		outfile<<"<name>"<<id<<"</name>"<<endl;
+	if(name!="")
+		outfile<<"<name>"<<name<<"</name>"<<endl;
+	outfile<<"<id>"<<id<<"</id>"<<endl;
 	outfile<<"</extensions>"<<endl;
 
 

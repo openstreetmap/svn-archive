@@ -47,7 +47,7 @@ struct TrackPoint
 	TrackPoint(const QString& t, double lt, double ln)
 		{ timestamp=t; lat=lt; lon=ln; }
 	void toGPX(ostream&);
-	bool connected(const TrackPoint& pt, double speed);
+	bool connected(const TrackPoint& pt, double , double);
 	bool operator==(const TrackPoint& tp)
 		{ return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); }
 };
@@ -57,24 +57,26 @@ class RetrievedTrackPoint;
 class TrackSeg
 {
 private:
-	QString id, type;
+	QString name, type;
+	int id;
 	vector<TrackPoint> points;
 
 
 
 public:
 	TrackSeg() 
-		{ id=""; type="track";  }
+		{ name=""; type="track"; id=0;  }
 
 	 TrackSeg(const QString& i,const QString& t)
-		{ id=i; type=t;  }
+		{ name=i; type=t; id=0; }
 
-	 void setID(const QString& i) { id=i; }
-	 QString getID() { return id; }
+	 void setName(const QString& i) { name=i; }
+	 QString getName() { return name; }
 	 QString getType() { return type; }
 
 	
 	void setType(const QString& t) { type=t; }
+	void setId(int i) { id=i; }
 
 	void addPoint(const QString& ts,double lat,double lon) 
 		{ points.push_back(TrackPoint(ts,lat,lon)); }

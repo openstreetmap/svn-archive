@@ -48,7 +48,7 @@ CURL_LOAD_DATA  *grab_gpx(const char *urlbase,
 					double west,double south,double east,double north)
 {
 	char url[1024];
-	sprintf(url,"%s?input=latlon&output=gpx&w=%lf&s=%lf&e=%lf&n=%lf",
+	sprintf(url,"%s?w=%lf&s=%lf&e=%lf&n=%lf",
 					urlbase,west,south,east,north);
 	return grab_http_response(url);
 }
@@ -56,27 +56,35 @@ CURL_LOAD_DATA  *grab_gpx(const char *urlbase,
 CURL_LOAD_DATA *grab_http_response(const char *url)
 {
 	CURL *curl;
-	CURLcode res;
-	CURL_LOAD_DATA  * data = (CURL_LOAD_DATA *)malloc(sizeof(CURL_LOAD_DATA));
-   	data->data = NULL;
-	data->nbytes = 0;
+	CURL_LOAD_DATA *data;
+
+	printf("grab_http_response(): URL=%s\n",url);
 
 	curl=curl_easy_init();
 	if(curl)
 	{
-		curl_easy_setopt(curl,CURLOPT_URL,url);
-		curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,response_callback);
-		curl_easy_setopt(curl,CURLOPT_WRITEDATA,data);
-
-		res=curl_easy_perform(curl);
-
+		data = Do(curl,url);
 		curl_easy_cleanup(curl);
-
-		fprintf(stderr,"Got data.\n");
 		return data;
 	}
-	free(data);
 	return NULL;
+}
+
+CURL_LOAD_DATA *Do(CURL *curl,const char *url)
+{
+	CURLcode res;
+	CURL_LOAD_DATA *data = (CURL_LOAD_DATA *)malloc(sizeof(CURL_LOAD_DATA));
+	data->data = NULL;
+	data->nbytes = 0;
+	
+	curl_easy_setopt(curl,CURLOPT_URL,url);
+	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,response_callback);
+	curl_easy_setopt(curl,CURLOPT_WRITEDATA,data);
+
+	res=curl_easy_perform(curl);
+
+	fprintf(stderr,"Got data.\n");
+	return data;
 }
 
 size_t response_callback(void *ptr,size_t size,size_t nmemb, void *d)
@@ -92,10 +100,11 @@ size_t response_callback(void *ptr,size_t size,size_t nmemb, void *d)
 	return rsize;
 }
 
-bool post_gpx(const char *url, char* gpx)
+CURL_LOAD_DATA *post_gpx(const char *url, char* gpx)
 {
 	CURL *curl;
 	CURLcode res;
+	CURL_LOAD_DATA *resp;
 
 	curl=curl_easy_init();
 	if(curl)
@@ -103,16 +112,16 @@ bool post_gpx(const char *url, char* gpx)
 		char *urlencoded=curl_escape(gpx,strlen(gpx));
 		char *data = new char[strlen(urlencoded)+5];
 		sprintf(data,"gpx=%s",urlencoded);
+		printf("Sending: %s\n", data);
 		curl_easy_setopt(curl,CURLOPT_POSTFIELDS,data);
-		curl_easy_setopt(curl,CURLOPT_URL,url);
 
-		res=curl_easy_perform(curl);
+		resp=Do(curl,url);
 
 		delete[] data;
 		curl_free(urlencoded);
 		curl_easy_cleanup(curl);
-		return true; 
+		return resp; 
 	}
-	return false; 
+	return NULL; 
 }
 

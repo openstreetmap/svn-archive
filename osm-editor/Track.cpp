@@ -171,7 +171,8 @@ bool Track::formNewSeg(const QString& newType, const RetrievedTrackPoint& a1,
 	}
 }
 
-bool Track::linkNewPoint(const RetrievedTrackPoint& a1, const RetrievedTrackPoint& a2, 
+bool Track::linkNewPoint(const RetrievedTrackPoint& a1, 
+				const RetrievedTrackPoint& a2, 
 				const RetrievedTrackPoint & a3,double limit)
 {
 	for(int count=0; count<a1.size(); count++)
@@ -180,21 +181,42 @@ bool Track::linkNewPoint(const RetrievedTrackPoint& a1, const RetrievedTrackPoin
 		{
 			if(a1.getSeg(count)==a2.getSeg(count2) && a3.size()>0)
 			{
-				TrackPoint p = a3.getPoint(0);
-				int i = (a2.getPointIdx(count2) > a1.getPointIdx(count)) ?
-							a2.getPointIdx(count2) : a2.getPointIdx(count2)-1; 
-				//cout << "i is: " << i << endl;
-				cout << "a2.getPointIdx(count2):" << a2.getPointIdx(count2)
-													 <<endl;
-				cout << "a.getPointIdx(count):" << a1.getPointIdx(count)
-													 <<endl;
-
-				a2.getSeg(count2)->addPoint(p,i);
+				doLinkNewPoint (a1,count,a2,count2,a3.getPoint(0));
+				return  true;
 			}
 		}
 	}
+	return false;
 }
 				
+bool Track::linkNewPoint(const RetrievedTrackPoint& a1, 
+				const RetrievedTrackPoint& a2, 
+				const EarthPoint & ep,double limit)
+{
+	for(int count=0; count<a1.size(); count++)
+	{
+		for(int count2=0; count2<a2.size(); count2++)
+		{
+			if(a1.getSeg(count)==a2.getSeg(count2))
+			{
+				doLinkNewPoint(a1,count,a2,count2,TrackPoint  (ep.y, ep.x));
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void Track::doLinkNewPoint(const RetrievedTrackPoint& p1,int idx1,
+							const RetrievedTrackPoint& p2,int idx2,
+							const TrackPoint& p)
+{
+	int i = (p2.getPointIdx(idx2) > p1.getPointIdx(idx1)) ?
+					p2.getPointIdx(idx2) : p2.getPointIdx(idx2)-1; 
+
+	p2.getSeg(idx2)->addPoint(p,i);
+}
+
 bool Track::hasPoints()
 {
 	for(int count=0; count<segs.size(); count++)

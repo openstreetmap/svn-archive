@@ -883,8 +883,16 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 			}
 			else
 			{
-				pts[2] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
-				components->linkNewPoint(pts[0],pts[1],pts[2],LIMIT);
+				EarthPoint ep=map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
+				pts[2] = components->findNearestTrackpoint(ep,LIMIT);
+				if(pts[2].null())
+				{
+					components->linkNewPoint(pts[0],pts[1],ep,LIMIT);
+				}
+				else
+				{
+					components->linkNewPoint(pts[0],pts[1],pts[2],LIMIT);
+				}
 				update();
 				nSelectedPoints=0;
 			}

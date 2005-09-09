@@ -103,6 +103,11 @@ public:
 						const RetrievedTrackPoint & p3,
 						double limit)
 		{ return track->linkNewPoint(p1,p2,p3,limit); }
+	bool linkNewPoint(const RetrievedTrackPoint& p1,
+						const RetrievedTrackPoint& p2, 
+						const EarthPoint & ep,
+						double limit)
+		{ return track->linkNewPoint(p1,p2,ep,limit); }
 	void newSegment() { track->newSegment(); }
 	bool setSegType(int i,const QString& t) { return track->setSegType(i,t); }
 	bool setSegId(int i,int id) { return track->setSegId(i,id); }

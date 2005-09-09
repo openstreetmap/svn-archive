@@ -44,6 +44,7 @@ struct TrackPoint
 	double lat, lon;
 
 	TrackPoint(){lat=lon=0; timestamp=""; }
+	TrackPoint(double lt, double ln){lat=lt; lon=ln; timestamp=""; }
 	TrackPoint(const QString& t, double lt, double ln)
 		{ timestamp=t; lat=lt; lon=ln; }
 	void toGPX(ostream&);
@@ -51,8 +52,6 @@ struct TrackPoint
 	bool operator==(const TrackPoint& tp)
 		{ return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); }
 };
-
-class RetrievedTrackPoint;
 
 class TrackSeg
 {
@@ -120,6 +119,7 @@ public:
 	bool operator==(const TrackPoint& tp) const;
 	void print(){for(int count=0; count<size(); count++) 
 					cout<<segs[count].point<<endl; }
+	bool null() { return segs.size()==0; }
 };
 
 }

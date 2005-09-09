@@ -39,6 +39,10 @@ private:
 	vector<TrackSeg*> segs;
 	void writeTrkpt(std::ostream&, int);
 
+	void doLinkNewPoint(const RetrievedTrackPoint& p1,int idx1,
+							const RetrievedTrackPoint& p2,int idx2,
+							const TrackPoint& p);
+
 public:
 	Track() { id="noname"; }
 	~Track();
@@ -69,6 +73,9 @@ public:
 	bool linkNewPoint(const RetrievedTrackPoint& a1, 
 					const RetrievedTrackPoint& a2, 
 				const RetrievedTrackPoint & a3,double limit);
+	bool linkNewPoint(const RetrievedTrackPoint& a1, 
+					const RetrievedTrackPoint& a2, 
+				const EarthPoint & ep,double limit);
 	TrackSeg *findNearestSeg(const EarthPoint& p, double limit);
 
 	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &, double);

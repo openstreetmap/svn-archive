@@ -116,6 +116,119 @@ module OSM
       return false
     end
 
+    
+    ## check_user?
+    # checks a user token to see if it is active
+    def check_user?(token)
+      dbh = get_connection
+      token = quote(token)
+
+      res = dbh.query("select uid from user where active = 1 and token = '#{token}' and timeout > #{Time.new.to_i * 1000}")
+      if res.num_rows == 1
+        res.each_hash do |row|
+          return row['uid'].to_i
+        end
+      end
+      # otherwise, return false
+      return nil
+    end
+    
+
+    def gpx_details_for_user(user_uid)
+  
+      begin
+        dbh = get_connection
+
+        res = dbh.query("select uid, timestamp, name from points_meta_table where user_uid = #{user_uid} and visible = 1 order by timestamp desc")
+      
+        return res
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+       
+    end
+
+
+    def does_user_own_gpx?(user_uid, gpx_uid)
+      begin
+        dbh = get_connection
+
+        res = dbh.query("select uid from points_meta_table where user_uid = #{user_uid} and uid = #{gpx_uid} and visible = 1")
+      
+        return res.num_rows == 1
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+      
+      return false
+
+    end
+
+
+    def schedule_gpx_delete(gpx_uid)
+      begin
+        dbh = get_connection
+
+        res = dbh.query("update points_meta_table set visible = false where uid = #{gpx_uid}")
+        
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+
+    end
+
+
+    def schedule_gpx_upload?(originalname, tmpname, user_uid)
+      originalname = quote(originalname)
+      begin
+        dbh = get_connection
+
+        dbh.query("insert into gpx_to_insert (originalname, tmpname, user_uid) values ('#{originalname}', '#{tmpname}', #{user_uid})")
+
+        return true
+        
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+
+    end
+
+
+   def get_scheduled_gpx_uploads()
+      originalname = quote(originalname)
+      begin
+        dbh = get_connection
+
+        return dbh.query('select * from gpx_to_insert')
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+
+    end
+
 
     def useruidfromemail(email)
       email = quote(email)

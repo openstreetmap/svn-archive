@@ -1,0 +1,132 @@
+
+<div id="main_area">
+<%
+
+require 'stringio'
+
+dao = nil
+cgi = nil
+loggedin = false
+uid = -1
+
+#include Math
+
+ERuby.import('include/top.rhtml')
+
+
+
+if !loggedin
+  ERuby.import('include/login_fail_msg.rhtml')
+else
+  # We are logged in, wha-hay
+
+%>
+
+  <h1>Upload a GPX File</h1>
+  <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. To get help on this form and more information on GPX files, click <a href="/wiki/index.php/Upload">here</a>.<br><br>
+  <form action="/edit/upload-gpx.html" enctype="multipart/form-data" method="post">
+    <table>
+      <tr><td>file:</td><td><input type="file" name="gpxfile"></td></tr>
+      <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+    </table>
+  </form>
+
+<%
+
+  gpxfile = cgi['gpxfile']
+
+  if gpxfile != ''
+    # hrm... something to upload
+    
+    # get uri of tx'd file (in tmp normally)
+    tmpfile = cgi.params['gpxfile'].first.path
+    
+    # create a Tempfile reference
+    fromfile = cgi.params['gpxfile'].first
+
+    # create output file reference as original filename in our chosen directory
+    tofile = '/home/osm/' + rand.to_s
+
+    File.open(tofile.untaint, 'w') { |file| file << fromfile.read}
+
+    if dao.schedule_gpx_upload?(fromfile.original_filename, tofile, uid)
+      %>
+      Uploaded gpx file scheduled for insertion.<br>
+      <%
+    else
+      %>
+      Something went wrong scheduling that file, please report this as a bug.<br>
+      <%
+
+    end
+
+  else
+    
+    action = cgi['action']
+
+    if action != ''
+      # hrm, probably a delete
+
+      if action == 'delete'
+        gpx_uid = cgi['gpxuid'].to_i
+        if dao.does_user_own_gpx?(uid, gpx_uid)
+          dao.schedule_gpx_delete(gpx_uid)
+          %>
+          The gpx file has been scheduled for deletion.<br>
+          <%
+        else
+        %>
+          Something went wrong deleting that gpx file<br>
+        <%
+        
+        end
+      else
+        %>
+          I didn't understand the action you gave me *shrug*<br>
+        <%
+      end
+      
+    end
+
+
+  end
+
+# show previously uploaded files
+%>
+  <h3>Previously uploaded GPX files:</h3>
+    <table id="keyvalue">
+    <tr>
+      <th>Filename</th>
+      <th>Uploaded at</th>
+      <th>actions</th>
+    </tr>
+<%
+
+  gpxfiles = dao.gpx_details_for_user(uid)
+  if gpxfiles
+    gpxfiles.each_hash do |row|
+      %>
+      <tr>
+        <td><%=row['name']%></td>
+        <td><%=Time.at(row['timestamp'].to_i / 1000)%></td>
+        <td><a href="upload-gpx.html?action=delete&gpxuid=<%=row['uid']%>">delete</a></td>
+      </tr>
+    
+      <%
+      
+    end
+  end
+
+end
+
+%>
+
+</table>
+<%=uid%>
+stuff
+
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+
+%>

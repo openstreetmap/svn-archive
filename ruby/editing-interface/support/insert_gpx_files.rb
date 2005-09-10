@@ -1,9 +1,9 @@
 #!/usr/bin/ruby
 
-# TODO:
+# FIXME:
 # set a flag that we are running so we don't get more than one instance trying to upload the same file
 # mail the user when the file has completed
-
+# reject points which go too quickly
 
 require 'osm/dao'
 require 'time'

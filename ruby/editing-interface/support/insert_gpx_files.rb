@@ -1,5 +1,10 @@
 #!/usr/bin/ruby
 
+# TODO:
+# set a flag that we are running so we don't get more than one instance trying to upload the same file
+# mail the user when the file has completed
+
+
 require 'osm/dao'
 require 'time'
 require 'zlib'
@@ -76,6 +81,10 @@ files.each_hash do |row|
 
     trackseg += 1
   end
+
+  #get rid of the file so we don't insert it again
+
+  dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
 
 end
 

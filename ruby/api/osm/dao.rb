@@ -212,7 +212,6 @@ module OSM
 
 
    def get_scheduled_gpx_uploads()
-      originalname = quote(originalname)
       begin
         dbh = get_connection
 
@@ -229,6 +228,47 @@ module OSM
 
     end
 
+
+    def delete_sheduled_gpx_files()
+      begin
+        dbh = get_connection
+
+        dbh.query('delete from points_meta_table, tempPoints using points_meta_table, tempPoints where points_meta_table.uid = tempPoints.gpx_id and points_meta_table.visible = false')
+
+        return true
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+
+    end    
+
+
+    def new_gpx_file(user_uid, filename)
+      
+      begin
+        dbh = get_connection
+        dbh.query("insert into points_meta_table (timestamp, user_uid, visible, name) values (#{Time.new.to_i * 1000}, #{user_uid}, 1, '#{filename}')")
+        res = dbh.query('select last_insert_id()') 
+        
+        res.each do |row|
+          return row[0]
+        end
+
+        return -1
+       rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+      return nil
+    end
 
     def useruidfromemail(email)
       email = quote(email)

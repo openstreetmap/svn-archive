@@ -1,14 +1,28 @@
 #!/usr/bin/ruby
 
 # FIXME:
-# set a flag that we are running so we don't get more than one instance trying to upload the same file
-# mail the user when the file has completed
 # reject points which go too quickly
 
 require 'osm/dao'
 require 'time'
 require 'zlib'
 require "rexml/document"
+require 'net/smtp'
+
+begin
+  File.open('/tmp/gpx_insert_running', 'r') do |file|
+     
+
+  end
+  puts 'GPX insert already running, exiting...'
+  exit! #file was there, lets exit
+rescue Exception => e
+  puts 'gpx_insert_running file not there, creating...'
+  File.open('/tmp/gpx_insert_running', 'w') do |file|
+    file << 'eh-oh'
+  end
+
+end
 
 dao = OSM::Dao.instance
 
@@ -16,10 +30,11 @@ dao.delete_sheduled_gpx_files
 
 files = dao.get_scheduled_gpx_uploads
 
+
 files.each_hash do |row|
   filename = row['tmpname']
-  tfile = File.new( filename )
-
+  tfile = File.new(filename)
+  points = 0
   doc = ''
   
   begin
@@ -72,7 +87,7 @@ files.each_hash do |row|
 
       if lat < 90 && lat > -90 && lon > -180 && lon < 180
         sql = "insert into tempPoints (latitude, longitude, altitude, timestamp, uid, hor_dilution, vert_dilution, trackid, quality, satellites, last_time, visible, dropped_by, gpx_id) values (#{lat}, #{lon}, #{ele}, #{Time.parse(date).to_i * 1000}, #{user_uid}, -1, -1, #{trackseg}, 255, 0, #{Time.new.to_i * 1000}, 1, 0, #{gpx_uid})"
-       
+        points += 1
         dbh.query(sql)
 
       end
@@ -85,6 +100,38 @@ files.each_hash do |row|
   #get rid of the file so we don't insert it again
 
   dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
+  File.delete(filename)
+
+  #send them an email indicating success
+
+  email_address = dao.email_from_user_uid(user_uid)
+
+  if email_address && email_address != ''
+    msgstr = <<END_OF_MESSAGE
+From: webmaster <webmaster@openstreetmap.org>
+To: #{email_address}
+Bcc: steve@fractalus.com
+Subject: Your gpx file
+
+Hi,
+
+It looks like your gpx file, #{original_name}, uploaded to OpenStreetMap's
+database ok with #{points} points.
+
+Have fun
+
+
+END_OF_MESSAGE
+    Net::SMTP.start('127.0.0.1', 25) do |smtp|
+      smtp.send_message msgstr.untaint,
+                       'webmaster@openstreetmap.org'.untaint,
+                        email_address.untaint
+    end
+                                                    
+  
+  end
 
 end
+
+File.delete('/tmp/gpx_insert_running')
 

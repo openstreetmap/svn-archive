@@ -119,7 +119,7 @@ module OSM
     
     ## check_user?
     # checks a user token to see if it is active
-    def check_user?(token)
+    def check_user_token?(token)
       dbh = get_connection
       token = quote(token)
 
@@ -131,6 +131,28 @@ module OSM
       end
       # otherwise, return false
       return nil
+    end
+
+
+    def email_from_user_uid(user_uid)
+       begin
+        dbh = get_connection
+
+        res = dbh.query("select user from user where active = 1 and uid = #{user_uid}")
+      
+        if res.num_rows == 1
+          res.each_hash do |row|
+            return row['user']
+          end
+        end
+        
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+      return false
     end
     
 

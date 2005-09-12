@@ -45,7 +45,7 @@ files.each_hash do |row|
   rescue Zlib::Error => e
     tfile.close
     file = File.new( filename )
-    parser = REXML::SAX2Parser.new( file )
+    parser = REXML::Parsers::SAX2Parser.new( file )
     $stderr << 'looks like a plain file'
   end 
 

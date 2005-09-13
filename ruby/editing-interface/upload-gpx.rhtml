@@ -23,7 +23,7 @@ else
 %>
 
   <h1>Upload a GPX File</h1>
-  <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. To get help on this form and more information on GPX files, click <a href="/wiki/index.php/Upload">here</a>.<br><br>
+  <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. Because GPX files can be very large creation and deletion is done in the background. To get help on this form and more information on GPX files, click <a href="/wiki/index.php/Upload">here</a>.<br><br>
   <form action="/edit/upload-gpx.html" enctype="multipart/form-data" method="post">
     <table>
       <tr><td>file:</td><td><input type="file" name="gpxfile"></td></tr>
@@ -47,15 +47,18 @@ else
     # create output file reference as original filename in our chosen directory
     tofile = '/home/osm/' + rand.to_s
 
-    File.open(tofile.untaint, 'w') { |file| file << fromfile.read}
+    File.open(tofile.untaint, 'w') do |file|
+      file.chmod(0666)
+      file << fromfile.read
+    end
 
     if dao.schedule_gpx_upload?(fromfile.original_filename, tofile, uid)
       %>
-      Uploaded gpx file scheduled for insertion.<br>
+      <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i><br>
       <%
     else
       %>
-      Something went wrong scheduling that file, please report this as a bug.<br>
+      <i>Something went wrong scheduling that file, please report this as a bug.</i><br>
       <%
 
     end
@@ -72,17 +75,17 @@ else
         if dao.does_user_own_gpx?(uid, gpx_uid)
           dao.schedule_gpx_delete(gpx_uid)
           %>
-          The gpx file has been scheduled for deletion.<br>
+          <i>The gpx file has been scheduled for deletion.</i><br>
           <%
         else
         %>
-          Something went wrong deleting that gpx file<br>
+          <i>Something went wrong deleting that gpx file</i><br>
         <%
         
         end
       else
         %>
-          I didn't understand the action you gave me *shrug*<br>
+          <i>I didn't understand the action you gave me *shrug*</i><br>
         <%
       end
       
@@ -122,8 +125,6 @@ end
 %>
 
 </table>
-<%=uid%>
-stuff
 
 </div>
 <%

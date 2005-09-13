@@ -1,0 +1,123 @@
+<div id="main_area">
+<%
+
+require 'net/smtp'
+
+loggedin = false
+cgi = nil
+dao = nil
+
+ERuby.import('include/top.rhtml')
+
+formhtml = '<h1>Create a user account</h1><br>
+  Fill in the form, we\'ll send you an email to confirm you\'re you and activate your account.<br><br>
+  By creating an account, you agree that all work uploaded to openstreetmap.org and all data created by use of any tools on openstreetmap.org is to be licensed under <a href="http://creativecommons.org/licen
+  ses/by-sa/2.0/">this</a> Creative Commons license.<br><br>
+  <form action="http://www.openstreetmap.org/edit/create-account.html">
+  <table>
+  <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
+  <tr><td>password:</td><td><input type="password" name="pass1"></td></tr>
+  <tr><td>retype password:</td><td><input type="password" name="pass2"></td></tr>
+  <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+  </table>
+  <input type="hidden" name="action" value="create">
+  </form>'
+
+action = cgi['action']
+email = cgi['email'].untaint
+pass1 = cgi['pass1']
+pass2 = cgi['pass2']
+
+if action == ''
+  %>
+  <%=formhtml%>
+  <%
+else
+  if action == 'create'
+    email = email.downcase.match(/\b[a-z0-9._%-]+@[a-z0-9._%-]+\.[a-z]{2,4}\b/)
+    if email && email.length < 45
+      #email looks good
+      email = email.to_s
+
+      if pass1 != '' && pass1.length > 5 && pass1 == pass2 && !pass1.index(' ')
+        #password looks good
+        if dao.does_user_exist?(email)
+          %>
+          Sorry, there is already an account with that email address.<br>
+          <%=formhtml%>
+          <%
+        else
+          token = dao.create_account(email, pass1)
+
+          if token && token != ''
+msgstr = <<END_OF_MESSAGE
+From: webmaster <webmaster@openstreetmap.org>
+To: #{email.untaint}
+Subject: Your OpenStreetMap account 
+
+Hi,
+
+Someone (hopefully you) has requested an openstreetmap.org account for
+the email address #{email.untaint}.
+
+To activate it, please click the link below:
+
+http://www.openstreetmap.org/edit/create-account.html?action=confirm&email=#{email.untaint}&token=#{token}
+
+Please report abuse to abuse@openstreetmap.org
+
+END_OF_MESSAGE
+            Net::SMTP.start('127.0.0.1', 25) do |smtp|
+              smtp.send_message msgstr.untaint,
+              'webmaster@openstreetmap.org'.untaint,
+              email.untaint
+            end
+
+            %>
+            Congratulations, an email is on it's way. Click the link within it to confirm your account.
+            <%
+          end
+
+        end
+      
+      else
+        %>
+        Please enter your password twice and ensure it's at least 6 characters long.<br>
+        <%=formhtml%>
+        <%
+      end
+    
+    else
+      %>
+      Invalid email address, please try again.<br>
+      <%=formhtml%>
+      <%
+    end
+
+  else
+    if action == 'confirm'
+      token = cgi['token']
+      if dao.activate_account(email, token)
+        %>
+
+        Congratulations, your account has been created!
+        <%
+
+      else
+        %>
+        Sorry, something went wrong confirming your account. Please email bugs@openstreetmap.org the problem, giving as much detail as possible.
+        <%
+
+      end
+
+    end
+
+  end
+end
+
+%>
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+
+%>

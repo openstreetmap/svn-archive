@@ -101,21 +101,171 @@ module OSM
     
     ## check_user?
     # returns whether the given username and password are correct and active
-    def check_user?(name, pass)
+    def check_user?(email, pass)
       dbh = get_connection
       # sanitise the incoming variables
-      name = quote(name)
+      name = quote(email)
       pass = quote(pass)
       # get the result
-      result = dbh.query("select uid from user where user='#{name}' and pass_crypt=md5('#{pass}') and active = true")
+      result = dbh.query("select uid from user where user='#{email}' and pass_crypt=md5('#{pass}') and active = true")
       # should only be one result, as user name is unique
       if result.num_rows == 1
+        set_timeout(email)
         return true
       end
       # otherwise, return false
       return false
     end
 
+    def make_token
+      chars = 'abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+      confirmstring = ''
+      
+      for i in 1..30
+        confirmstring += chars[(rand * chars.length).to_i].chr
+      end
+
+      return confirmstring
+    end
+
+
+    def set_timeout(email)
+      email = quote(email)
+
+      begin
+        dbh = get_connection
+        token = make_token
+
+        dbh.query("update user set timeout = #{(Time.new.to_i * 1000) + (1000 * 60 * 60 * 24)} where user = '#{email}' and active = true")
+
+        return token
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+    end
+ 
+
+    def logout(user_uid)
+      begin
+        dbh = get_connection
+        token = make_token
+
+        dbh.query("update user set token = '#{make_token()}' where uid = '#{user_uid}' and active = true")
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+    end
+
+
+    def activate_account(email, token)
+      email = quote(email)
+      token = quote(token)
+      
+      begin
+        dbh = get_connection
+
+        dbh.query("update user set active = true where user = '#{email}' and token = '#{token}' and active = false")
+
+        result = dbh.query("select * from user where user = '#{email}' and token = '#{token}' and active = true")
+
+        return result.num_rows == 1
+        
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+
+    end
+
+
+    def create_account(email, pass)
+      email = quote(email)
+      pass = quote(pass)
+
+      if !does_user_exist?(email)
+        begin
+          dbh = get_connection
+          token = make_token
+          sql = "insert into user(user, timeout, token, active, pass_crypt, creation_time) values ('#{email}', #{Time.new.to_i * 1000}, '#{token}', false, md5('#{pass}'), NOW())"
+          dbh.query(sql)
+
+          return token
+
+        rescue MysqlError => e
+          mysql_error(e)
+
+        ensure
+          dbh.close if dbh
+        end
+
+
+      end
+
+      return ''
+
+    end
+
+
+    def login(email, pass)
+      email = quote(email)
+      pass = quote(pass)
+
+      if check_user?(email,pass)
+        begin
+          dbh = get_connection
+          token = make_token
+          
+          dbh.query("update user set token = '#{token}' where user = '#{email}' and pass_crypt=md5('#{pass}') and active = true")
+          set_timeout(email)
+
+          return token
+
+        rescue MysqlError => e
+          mysql_error(e)
+
+        ensure
+          dbh.close if dbh
+        end
+
+
+      end
+
+      return ''
+
+    end
+
+    
+    def does_user_exist?(email)
+      email = quote(email)
+
+      begin
+        dbh = get_connection
+
+        res = dbh.query("select uid from user where user = '#{email}' and active = true")
+        return res.num_rows == 1
+
+      rescue MysqlError => e
+        mysql_error(e)
+      end
+
+      return false
+
+    end
+    
     
     ## check_user?
     # checks a user token to see if it is active

@@ -6,7 +6,7 @@ cvalues = cgi.cookies['openstreetmap']
 if !cvalues.empty?
   token = cvalues[0]
   if token
-    uid = dao.check_user?(token)
+    uid = dao.check_user_token?(token)
     if uid
       loggedin = true
     end

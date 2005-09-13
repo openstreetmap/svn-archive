@@ -6,11 +6,11 @@
 
 if loggedin
   %>
-    <a href="logout.jsp">logout</a>
+    <a href="logout.html">logout</a>
   <%
 else
   %>
-    <a href="login.jsp">Login</a> or <a href="newUser.jsp">create an account</a>
+    <a href="login.html">Login</a> or <a href="create-account.html">create an account</a>
   <%
 end
 
@@ -37,9 +37,6 @@ end
 if loggedin
   %>
     <li>
-    <img src="/images/icon_key.png"><a href="editKeys.jsp">Edit keys</a>
-    </li>
-    <li>
     <img src="/images/stock_save-16.png"><a href="upload-gpx.html">Upload GPX</a>
     </li>
     <%
@@ -62,7 +59,7 @@ This site is licensed under a <a href="http://creativecommons.org/licenses/by-sa
 <%
 if loggedin
 %>
-  You need to <a href="login.jsp">log in</a> to use more tools :-)<br><br>
+  You need to <a href="login.html">log in</a> to use more tools :-)<br><br>
 <%
 end
 

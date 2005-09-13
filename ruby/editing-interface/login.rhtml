@@ -1,0 +1,78 @@
+
+<div id="main_area">
+<%
+
+include Math
+include Apache
+
+r = Apache.request
+
+loggedin = false
+cgi = nil
+dao = nil
+
+ERuby.import('include/top.rhtml')
+
+action = cgi['action']
+
+loginhtml = '<h1>Login:</h1><br>
+    Please login or <a href="newUser.jsp">create an account</a>.<br>
+    <form action="/edit/login.html">
+    <table>
+    <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
+    <tr><td>password:</td><td><input type="password" name="pass"></td></tr>
+    <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+    </table>
+    <input type="hidden" name="action" value="login">
+    </form>'
+
+if loggedin
+  %>
+  You're already logged in :-)
+  <%
+
+else
+  if action == ''
+    %>
+    <%=loginhtml%>
+    <%
+  end
+
+
+  if action == 'login'
+    pass = cgi['pass']
+    email = cgi['email']
+
+    if pass != '' && email != ''
+      token = dao.login(email, pass)
+      if token && token != ''
+
+        cookie = CGI::Cookie.new('openstreetmap', token)
+        ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
+        r.headers_out.add('Set-Cookie', 'openstreetmap=' + token + '; path=/edit/; expires=' + ed)
+        r.send_http_header
+
+       
+        loggedin = true
+        %>
+        <i>Login successful!</i>
+        <%
+      else
+        %>
+        <i>Login failed</i><br>
+        <%=loginhtml%>
+        <%
+      end
+
+    end
+
+  end
+
+end
+%>
+
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+
+%>

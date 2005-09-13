@@ -1,0 +1,39 @@
+
+<div id="main_area">
+<%
+
+include Math
+include Apache
+
+r = Apache.request
+
+loggedin = false
+cgi = nil
+dao = nil
+uid = -1
+
+ERuby.import('include/top.rhtml')
+
+if !loggedin
+  %>
+  You're not logged in anyway...
+  <%
+
+else
+  dao.logout(uid)
+  ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
+  r.headers_out.add('Set-Cookie', 'openstreetmap=loggedout; path=/edit/; expires=' + ed)
+  r.send_http_header
+  loggedin = false
+  %>
+  You have been logged out
+  <%
+
+end
+%>
+
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+
+%>

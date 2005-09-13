@@ -14,6 +14,7 @@ include Math
 
 cgi = nil
 loggedin = false
+token = ''
 
 ERuby.import('include/top.rhtml')
 
@@ -50,7 +51,7 @@ dlon = MAP_WIDTH / 2 * scale
 dlat = MAP_HEIGHT / 2 * scale * Math.cos(clat * PI / 180)
 
 def get_url(lat, lon, scale)
-  return '/edit/view-map.html?lat=' + lat.to_s + '&lon=' + lon.to_s + '&scale=' + scale.to_s
+  return '/edit/edit-map.html?lat=' + lat.to_s + '&lon=' + lon.to_s + '&scale=' + scale.to_s
 end
 
 
@@ -110,7 +111,7 @@ end
 <%
 if loggedin
   %>
-  <img src="/images/stock_edit.png" border="0"><a href="<%='/edit/edit-map.html?lat=' + clat.to_s + '&lon=' + clon.to_s + '&scale=' + scale.to_s%>">edit this map...</a>
+  <img src="/images/stock_edit.png" border="0"><a href="<%='/edit/applet.jsp?lat=' + clat.to_s + '&lon=' + clon.to_s + '&scale=' + scale.to_s%>">edit this map...</a>
   <%
 else
   %>
@@ -125,7 +126,21 @@ end
 <div id="mapImage">
 
   <div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700px; padding: 1em;">
-    <img src="<%= 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets&width=' + MAP_WIDTH.to_s + '&height=' + MAP_HEIGHT.to_s + '&bbox=' + (clon - dlon).to_s + ',' + (clat - dlat).to_s + ','  + (clon + dlon).to_s + ',' + (clat + dlat).to_s %>" width="<%=MAP_WIDTH%>" height="<%=MAP_HEIGHT%>" alt="Your map">
+<applet
+code="org/openstreetmap/processing/OSMApplet.class"
+archive="OSMApplet.jar, xmlrpc-2.0-beta.jar, commons-codec-1.3.jar, core.jar"
+width="700"
+height="500"
+
+>
+<param name="clat" value="<%=clat%>">
+<param name="clon" value="<%=clon%>">
+<param name="scale" value="<%=scale%>">
+<param name="token" value="<%=token%>">
+<param name="wmsurl" value="http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx">
+
+</applet>
+
     <br>Lat:<%=clat%> Lon:<%=clon%> Scale:<%=scale%>
   </div>
 

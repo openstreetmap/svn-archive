@@ -1,0 +1,143 @@
+<div id="main_area">
+<%
+
+DEFAULT_LAT = 51.526447
+DEFAULT_LON = -0.14746371
+DEFAULT_SCALE = 0.000066666666
+
+MAP_WIDTH = 700
+MAP_HEIGHT = 500
+
+require 'stringio'
+
+include Math
+
+cgi = nil
+loggedin = false
+
+ERuby.import('include/top.rhtml')
+
+clat = cgi['lat']
+clon = cgi['lon']
+scale = cgi['scale']
+
+if clat=='' || clon=='' || scale==''
+  puts  cgi['searchType']
+  if cgi['searchType'] == 'Lat/Lon'
+    term = cgi['searchTerm'].split(' ')
+    if term[0] != '' && term[1] != ''
+      clat = term[0].to_f
+      clon = term[1].to_f
+      scale = DEFAULT_SCALE
+
+    end
+
+    %>cool
+
+    <%
+
+  else
+    clat = DEFAULT_LAT
+    clon = DEFAULT_LON
+    scale = DEFAULT_SCALE
+  end
+
+else
+  clat = clat.to_f
+  clon = clon.to_f
+  scale = scale.to_f
+
+
+end
+
+
+dlon = MAP_WIDTH / 2 * scale
+dlat = MAP_HEIGHT / 2 * scale * Math.cos(clat * PI / 180)
+
+def get_url(lat, lon, scale)
+  return '/edit/view-map.html?lat=' + lat.to_s + '&lon=' + lon.to_s + '&scale=' + scale.to_s
+end
+
+
+%>
+
+<div id="mapToolbar">
+<table border="0">
+<tr><td>
+
+<table border="0">
+<tr>
+<td colspan="2" align="center">
+
+<a href="<%=get_url(clat+dlat, clon, scale)%>">
+<img src="/images/map_up.png" border="0">
+</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="<%=get_url(clat,clon - dlon, scale)%>">
+<img src="/images/map_left.png" border="0">
+</a>
+</td>
+<td>
+
+<a href="<%=get_url(clat,clon + dlon, scale)%>">
+<img src="/images/map_right.png" border="0">
+</a>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+
+<a href="<%=get_url(clat-dlat, clon, scale)%>">
+<img src="/images/map_down.png" border="0">
+</a>
+</td>
+</tr>
+</table>
+
+</td>
+<td>
+
+<a href="<%=get_url(clat, clon, scale / 1.5)%>"><img src="/images/map_zoomin.png" border="0"></a>
+<br><br>
+<a href="<%=get_url(clat, clon, scale *  1.5)%>"><img src="/images/map_zoomout.png" border="0"></a>
+</td>
+
+</td>
+</table>
+</div>
+
+
+<div id="mapToolbarRight">
+
+<%
+if loggedin
+  %>
+  <img src="/images/stock_edit.png" border="0"><a href="<%='/edit/applet.jsp?lat=' + clat.to_s + '&lon=' + clon.to_s + '&scale=' + scale.to_s%>">edit this map...</a>
+  <%
+else
+  %>
+  Log in to edit map
+  <%
+end
+%>
+
+
+</div>
+
+<div id="mapImage">
+
+  <div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700px; padding: 1em;">
+    <img src="<%= 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets&width=' + MAP_WIDTH.to_s + '&height=' + MAP_HEIGHT.to_s + '&bbox=' + (clon - dlon).to_s + ',' + (clat - dlat).to_s + ','  + (clon + dlon).to_s + ',' + (clat + dlat).to_s %>" width="<%=MAP_WIDTH%>" height="<%=MAP_HEIGHT%>" alt="Your map">
+    <br>Lat:<%=clat%> Lon:<%=clon%> Scale:<%=scale%>
+  </div>
+
+</div>
+
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+
+%>

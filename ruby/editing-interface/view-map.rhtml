@@ -22,7 +22,6 @@ clon = cgi['lon']
 scale = cgi['scale']
 
 if clat=='' || clon=='' || scale==''
-  puts  cgi['searchType']
   if cgi['searchType'] == 'Lat/Lon'
     term = cgi['searchTerm'].split(' ')
     if term[0] != '' && term[1] != ''
@@ -31,10 +30,6 @@ if clat=='' || clon=='' || scale==''
       scale = DEFAULT_SCALE
 
     end
-
-    %>cool
-
-    <%
 
   else
     clat = DEFAULT_LAT

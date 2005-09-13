@@ -28,7 +28,7 @@ else
 
   <ul>
     <li>
-      <img src="/images/stock_edit-16.png"><a href="viewMap.jsp">View map</a>
+      <img src="/images/stock_edit-16.png"><a href="view-map.html">View map</a>
     </li>
 <%
 if(bLoggedIn)

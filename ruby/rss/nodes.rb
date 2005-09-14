@@ -50,7 +50,7 @@ begin
     end
 
     item.title = state + ' node'
-    item.link = "http://www.openstreetmap.org/edit/viewMap.jsp?lat=#{row['latitude']}&lon=#{row['longitude']}&scale=10404.917"
+    item.link = "http://www.openstreetmap.org/edit/view-map.html?lat=#{row['latitude']}&lon=#{row['longitude']}&scale=6.6666666e-05"
     
     item.description = state + " node at #{row['latitude']}/#{row['longitude']} last edited by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} "
     item.date = Time.at( row["timestamp"].to_i / 1000 )

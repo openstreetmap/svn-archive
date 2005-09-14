@@ -111,7 +111,7 @@ end
 <%
 if loggedin
   %>
-  <img src="/images/stock_edit.png" border="0"><a href="<%='/edit/applet.jsp?lat=' + clat.to_s + '&lon=' + clon.to_s + '&scale=' + scale.to_s%>">edit this map...</a>
+  <a href="<%='/edit/view-map.html?lat=' + clat.to_s + '&lon=' + clon.to_s + '&scale=' + scale.to_s%>">view this map statically</a>
   <%
 else
   %>

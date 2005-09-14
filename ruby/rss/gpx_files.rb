@@ -37,7 +37,7 @@ begin
     
     item = RSS::Rss::Channel::Item.new
     item.title = row['name']
-    item.link = "http://www.openstreetmap.org/edit/applet.jsp?lat=#{row['latitude']}&lon=#{row['longitude']}&scale=10404.917"
+    item.link = "http://www.openstreetmap.org/edit/edit-map.html?lat=#{row['latitude']}&lon=#{row['longitude']}&scale=6.6666666e-05"
     item.description = "GPX file made by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."
     item.date = Time.at( row["timestamp"].to_i / 1000 )
     chan.items << item 

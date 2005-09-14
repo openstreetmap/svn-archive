@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# This script copies the eruby, ruby, html, css and images
+# to the right places on www.openstreetmap
+
+ROOT=/var/www/openstreetmap/
+
+# eruby
+cp ruby/editing-interface/*.rhtml $ROOT/eruby/
+
+# includes for eruby
+cp -r ruby/editing-interface/include $ROOT/eruby/
+
+# html
+
+cp html/index.html $ROOT
+
+# css
+
+cp html/css/style.css $ROOT
+
+#images
+
+#FIXME
+
+

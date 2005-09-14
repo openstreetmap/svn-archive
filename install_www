@@ -9,7 +9,7 @@ ROOT=/var/www/openstreetmap/
 cp ruby/editing-interface/*.rhtml $ROOT/eruby/
 
 # includes for eruby
-cp -r ruby/editing-interface/include $ROOT/eruby/
+cp ruby/editing-interface/include/*.rhtml $ROOT/eruby/include/
 
 # html
 
@@ -26,9 +26,14 @@ cp html/css/style.css $ROOT
 # applet
 
 cp java/dist/OSMApplet.jar $ROOT/edit/
-cp java/dist/xmlrpc-2.0-beta.jar $ROOT/edit/
-cp java/dist/commons-codec-1.3.jar $ROOT/edit/
+cp java/lib/xmlrpc-2.0-beta.jar $ROOT/edit/
+cp java/lib/commons-codec-1.3.jar $ROOT/edit/
 cp java/dist/core.jar $ROOT/edit/
 
+
+# REST
+
+cp ruby/api/*.rb $ROOT/ruby/api/
+cp ruby/api/osm/*.rb $ROOT/ruby/api/osm/
 
 

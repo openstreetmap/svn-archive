@@ -19,8 +19,16 @@ cp html/index.html $ROOT
 
 cp html/css/style.css $ROOT
 
-#images
+#images FIXME
 
-#FIXME
+
+
+# applet
+
+cp java/dist/OSMApplet.jar $ROOT/edit/
+cp java/dist/xmlrpc-2.0-beta.jar $ROOT/edit/
+cp java/dist/commons-codec-1.3.jar $ROOT/edit/
+cp java/dist/core.jar $ROOT/edit/
+
 
 

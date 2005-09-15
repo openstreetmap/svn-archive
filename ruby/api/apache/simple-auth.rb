@@ -19,7 +19,14 @@ module Apache
       server = r.server
       begin
         # check against the database
-        if OSM::Dao.instance.check_user?(name, pw)
+        dao_validates = false
+        if name == 'token'
+          dao_validates = OSM::Dao.instance.check_user_token?(pw)
+        else
+          dao_validates = OSM::Dao.instance.check_user?(name, pw)
+        end
+
+        if dao_validates
           server.log_info("SimpleAuth: OK");
           return OK
         else

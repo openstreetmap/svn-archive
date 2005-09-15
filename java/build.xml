@@ -42,6 +42,8 @@ destdir="${build}"
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
 
+<copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/org/openstreetmap/processing/LucidaSansUnicode-11.vlw"/>
+
 <copy todir="${dist}/rc1/org/openstreetmap/processing/">
   <fileset dir="${build}/org/openstreetmap/processing"/>
 </copy>

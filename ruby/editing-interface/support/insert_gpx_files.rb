@@ -15,10 +15,10 @@ begin
      
 
   end
-  $stderr << 'GPX insert already running, exiting...'
+  #$stderr << 'GPX insert already running, exiting...'
   exit! #file was there, lets exit
 rescue Exception => e
-  $stderr << 'gpx_insert_running file not there, creating...'
+  #$stderr << 'gpx_insert_running file not there, creating...'
   File.open('/tmp/gpx_insert_running', 'w') do |file|
     file << 'eh-oh'
   end
@@ -89,8 +89,17 @@ files.each_hash do |row|
   end
 
   parser.listen( :characters, %w{ time } ) do |text|
-    date = Time.parse(text).to_i * 1000
-    gotdate = true
+    if text && text != ''
+      if text.match(/[0-9]{10}/).to_s == text
+        #looks like a unix timestamp
+        # This is an invalid gpx but we'll accept it to be nice.
+        date = text.to_i * 1000
+        gotdate = true
+      else
+        date = Time.parse(text).to_i * 1000
+        gotdate = true
+      end
+    end
   end
 
   parser.listen( :end_element, %w{ trkseg } ) do |uri, localname, qname|
@@ -98,7 +107,8 @@ files.each_hash do |row|
   end
   
   parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname| 
-    if gotlatlon && gotele && gotdate
+    if gotlatlon && gotdate
+      ele = 0 unless gotele
       if lat < 90 && lat > -90 && lon > -180 && lon < 180
         sql = "insert into tempPoints (latitude, longitude, altitude, timestamp, uid, hor_dilution, vert_dilution, trackid, quality, satellites, last_time, visible, dropped_by, gpx_id) values (#{lat}, #{lon}, #{ele}, #{date}, #{user_uid}, -1, -1, #{trackseg}, 255, 0, #{Time.new.to_i * 1000}, 1, 0, #{gpx_uid})"
         points += 1

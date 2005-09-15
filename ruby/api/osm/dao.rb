@@ -266,8 +266,8 @@ module OSM
 
     end
     
-    
-    ## check_user?
+
+    ## check_user_token?
     # checks a user token to see if it is active
     def check_user_token?(token)
       dbh = get_connection
@@ -280,7 +280,7 @@ module OSM
         end
       end
       # otherwise, return false
-      return nil
+      return false
     end
 
 

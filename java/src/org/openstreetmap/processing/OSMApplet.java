@@ -320,6 +320,7 @@ public class OSMApplet extends PApplet {
 
       public void run() {
 
+/*
         print("getting nodes... ");
         Vector osmNodes = osm.getNodes(projection.getTopLeft(),projection.getBottomRight());
         for (int i = 0; i < osmNodes.size(); i++) {
@@ -401,41 +402,14 @@ public class OSMApplet extends PApplet {
           lines.addElement(line);
         }
         println(lines.size()-linesSizeBeforeFetch + " extra lines completed");
-
+*/
         // could be heavy for lots of lines - perhap start in another thread?
         // or automate on the server and use getStreets like Steve originally planned?
         //      mergeSegments();
 
         ready = true;
 
-/*
-  
-   below grabs gpx points but thats in the image now
-
-   
-        print("getting gpx points... ");
-        Vector osmPoints = osm.getPoints(projection.getTopLeft(),projection.getBottomRight());
-        println(osmPoints.size() + " points received");
-        print("plotting points: ");
-        gpxImage = new PImage(width,height);
-        gpxImage.loadPixels();
-        for (int i = 0; i < gpxImage.pixels.length; i++) {
-          gpxImage.pixels[i] = 0xffffffff;
-        }
-        for (int i = 0; i < osmPoints.size(); i++) {
-          if (i%max(1,osmPoints.size()/100) == 0) print("#"); 
-          OSMPoint osmpoint = (OSMPoint)osmPoints.elementAt(i);
-          osmpoint.project(projection);
-          gpxImage.set((int)osmpoint.x,(int)osmpoint.y,0xffff0000);
-        }
-        gpxImage.updatePixels();
-        osmPoints.clear();
-        osmPoints = null;
-        println("done drawing gpx points");
-
-        gotGPX = true;
-*/
-      }
+     }
 
     }
     );
@@ -464,13 +438,6 @@ public class OSMApplet extends PApplet {
       image(img,0,0);
     }
 
-    /*
-    // draw GPX tracks image
-    if (gotGPX && gpxImage != null) {
-      blend(gpxImage,0,0,width,height,0,0,width,height,DARKEST);
-      //    image(tracks,0,0);
-    }
-*/
     noFill();
     strokeWeight(strokeWeight+2.0f);
     stroke(0);

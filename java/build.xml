@@ -36,7 +36,6 @@ destdir="${build}"
 </copy>
 
 <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
-<copy file="${lib}/openmap.jar" tofile="${dist}/openmap.jar"/>
 <copy file="${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar" tofile="${dist}/xmlrpc-1.2-b1.jar"/>
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev-applet.jar" tofile="${dist}/xmlrpc-applet.jar"/>
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>

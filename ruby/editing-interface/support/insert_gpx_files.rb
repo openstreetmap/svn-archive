@@ -79,7 +79,7 @@ files.each_hash do |row|
 
   parser.listen( :start_element,  %w{ trkpt }) do |uri,localname,qname,attributes| 
     lat = attributes['lat'].to_f
-    lon = attributes['lat'].to_f
+    lon = attributes['lon'].to_f
     gotlatlon = true
   end
   

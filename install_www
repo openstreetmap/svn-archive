@@ -40,3 +40,11 @@ cp ruby/api/osm/*.rb $ROOT/ruby/api/osm/
 cp ruby/api/apache/simple-auth.rb /var/www/openstreetmap/ruby/api/apache/
 
 
+# GPX RSS maker
+
+cp ruby/rss/gpx_files.rb ../bin/
+
+# GPX parser
+
+cp ruby/editing-interface/support/insert_gpx_files.rb ../bin/
+

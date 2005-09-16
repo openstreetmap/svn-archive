@@ -308,6 +308,8 @@ public class OSMApplet extends PApplet {
     try {
       USERNAME = param("user");
       PASSWORD = param("pass");
+
+      System.out.println("Got user/pass: " + USERNAME + "/" + PASSWORD);
     }
     catch (Exception e) {
       e.printStackTrace();

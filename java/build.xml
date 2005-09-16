@@ -43,6 +43,7 @@ destdir="${build}"
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
 <copy file="${lib}/commons-logging.jar" tofile="${dist}/commons-logging.jar"/>
 <copy file="${lib}/commons-httpclient-3.0-rc3.jar" tofile="${dist}/commons-httpclient-3.0-rc3.jar"/>
+<copy file="${lib}/core.jar" tofile="${dist}/core.jar"/>
 <copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
 
 <copy file="${lib}/applet-test.html" tofile="${dist}/applet-test.html"/>
@@ -54,6 +55,9 @@ destdir="${build}"
 </copy>
 <copy todir="${dist}/rc1/org/openstreetmap/client/">
   <fileset dir="${build}/org/openstreetmap/client"/>
+</copy>
+<copy todir="${dist}/rc1/org/openstreetmap/util/">
+  <fileset dir="${build}/org/openstreetmap/util"/>
 </copy>
 
 <jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />

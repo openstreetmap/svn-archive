@@ -21,7 +21,7 @@
 
 <target name="compile" depends="init">
 <javac srcdir="${src}"
-  classpath="${lib}/core.jar:${lib}/openmap.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc.jar"
+  classpath="${lib}/core.jar:${lib}/xmlrpc-1.2-b1/xmlrpc-1.2-b1.jar:${lib}/xmlrpc.jar:${lib}/commons-httpclient-3.0-rc3.jar:${lib}/commons-logging.jar:${lib}/commons-codec-1.1.jar:${lib}/MinML2.jar"
 debug="true"
 optimize="off"
 destdir="${build}"
@@ -41,11 +41,19 @@ destdir="${build}"
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/target/xmlrpc-2.0-a1-dev-applet.jar" tofile="${dist}/xmlrpc-applet.jar"/>
 <copy file="${lib}/xmlrpc-cvs/ws-xmlrpc/lib/commons-codec-1.1.jar" tofile="${dist}/commons-codec-1.1.jar"/>
 <copy file="${lib}/commons-fileupload-1.0/commons-fileupload-1.0.jar" tofile="${dist}/commons-fileupload-1.0.jar"/>
+<copy file="${lib}/commons-logging.jar" tofile="${dist}/commons-logging.jar"/>
+<copy file="${lib}/commons-httpclient-3.0-rc3.jar" tofile="${dist}/commons-httpclient-3.0-rc3.jar"/>
+<copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
+
+<copy file="${lib}/applet-test.html" tofile="${dist}/applet-test.html"/>
 
 <copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/org/openstreetmap/processing/LucidaSansUnicode-11.vlw"/>
 
 <copy todir="${dist}/rc1/org/openstreetmap/processing/">
   <fileset dir="${build}/org/openstreetmap/processing"/>
+</copy>
+<copy todir="${dist}/rc1/org/openstreetmap/client/">
+  <fileset dir="${build}/org/openstreetmap/client"/>
 </copy>
 
 <jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />
@@ -77,7 +85,5 @@ destdir="${build}"
 <delete dir="${build}"/>
 <delete dir="${dist}"/>
 </target>
-
-
 
 </project>

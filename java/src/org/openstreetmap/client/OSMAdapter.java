@@ -18,26 +18,28 @@
  *  
  */
 
-package org.openstreetmap.processing.util;
+package org.openstreetmap.client;
 
 import java.util.Vector;
 import java.util.Iterator;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcClientLite;
 
+import org.openstreetmap.util.*;
+
 public class OSMAdapter {
 
   XmlRpcClient xmlrpc;
   String token = "";
   Vector lines,nodes;
-  
+
   public OSMAdapter(Vector lines, Vector nodes, String token, String username, String password) {
 
     this.lines = lines;
     this.nodes = nodes;
 
     this.token = token;    
-    
+
     // initialise Apache XML-RPC client
     try {
       xmlrpc = new XmlRpcClientLite("http://www.openstreetmap.org/api/xml.jsp");
@@ -52,23 +54,23 @@ public class OSMAdapter {
         login(username, password);
       }
       else {
-	System.err.println("no username or password and invalid token given");
+        System.err.println("no username or password and invalid token given");
       }
     }
 
     /* uncomment this to print current key/value details... 
-    try {
-      Vector params = new Vector();
-      params.addElement(token);
-      params.addElement(new Boolean(true));
-      Vector keys = (Vector)xmlrpc.execute ("openstreetmap.getAllKeys", params);
-      System.err.println(keys); // uid, keyname, user, timestamp -> "name" uid = 14, "zipCode" uid = 30
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }*/
-    
-      
+       try {
+       Vector params = new Vector();
+       params.addElement(token);
+       params.addElement(new Boolean(true));
+       Vector keys = (Vector)xmlrpc.execute ("openstreetmap.getAllKeys", params);
+       System.err.println(keys); // uid, keyname, user, timestamp -> "name" uid = 14, "zipCode" uid = 30
+       }
+       catch (Exception e) {
+       e.printStackTrace();
+       }*/
+
+
   } // OSMAdapter
 
   public void login(String username, String password) {
@@ -83,44 +85,16 @@ public class OSMAdapter {
       e.printStackTrace();
     }
   }
-  
-/*
-  String getNameForLine(int uid) {
-    String name = "";
-    int TYPE_STREET_SEGMENT = 0; // voodoo to get Line metadata, I think
-    //getFeatureValues(int nFeatureType, java.lang.String sAreaUID, java.lang.String sToken)
-    try {
-      Vector params = new Vector();
-      params.addElement(new Integer(TYPE_STREET_SEGMENT));
-      params.addElement(new Integer(uid).toString());
-      params.addElement(token);
-      Vector stuff = (Vector)xmlrpc.execute ("openstreetmap.getFeatureValues", params);
-      if (stuff.size() > 0) {
-        Iterator iter = stuff.iterator();
-        while (iter.hasNext()) {
-          String thing = (String)iter.next();
-          if (thing != null) {
-            name = thing;
-            break;
-          }
-        }
-      }
-      System.err.println(stuff); // uid, keyname, user, timestamp -> "name" uid = 14, "zipCode" uid = 30
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return name;
-  } */
+
 
   /** top left and bottom right corners of bounding box */
-  public Vector getNodes(OSMPoint topLeft, OSMPoint bottomRight) {
+  public Vector getNodes(Point topLeft, Point bottomRight) {
     return getNodes(topLeft.lat,topLeft.lon,bottomRight.lat,bottomRight.lon);
   }
 
   /** top left and bottom right corners of bounding box */
   public Vector getNodes(double lat1, double lon1, double lat2, double lon2) {
- 
+
     Vector osmNodes = new Vector();
 
     try {
@@ -144,7 +118,7 @@ public class OSMAdapter {
           int uid = ((Integer)iter2.next()).intValue();
           double lat = ((Double)iter2.next()).doubleValue();
           double lon = ((Double)iter2.next()).doubleValue();
-          OSMNode node = new OSMNode(lat,lon,uid);
+          Node node = new Node(lat,lon,uid);
           osmNodes.addElement(node);
         }
       }
@@ -157,13 +131,13 @@ public class OSMAdapter {
   }
 
   /** top left and bottom right corners of bounding box */
-  public Vector getPoints(OSMPoint topLeft, OSMPoint bottomRight) {
+  public Vector getPoints(Point topLeft, Point bottomRight) {
     return getPoints(topLeft.lat,topLeft.lon,bottomRight.lat,bottomRight.lon);
   }
 
   /** top left and bottom right corners of bounding box */
   public Vector getPoints(double lat1, double lon1, double lat2, double lon2) {
- 
+
     Vector osmPoints = new Vector();
 
     try {
@@ -184,11 +158,11 @@ public class OSMAdapter {
         while (iter.hasNext()) {
           double lat = ((Double)iter.next()).doubleValue();
           double lon = ((Double)iter.next()).doubleValue();
-          OSMPoint pt = new OSMPoint(lat,lon);
+          Point pt = new Point(lat,lon);
           osmPoints.addElement(pt);
         }
       }
-      
+
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -199,15 +173,15 @@ public class OSMAdapter {
 
 
   /** return an OSMNode for the given id, can return null */
-  public OSMNode getNode(Integer id) {
- 
-    OSMNode node = null;
+  public Node getNode(Integer id) {
+
+    Node node = null;
 
     if (id == null) {
       System.err.println("null id sent to getNode");
       return null;
     }
-  
+
     try {
 
       Vector params = new Vector();
@@ -219,13 +193,13 @@ public class OSMAdapter {
         Iterator iter = result.iterator();
         double lat = ((Double)iter.next()).doubleValue();
         double lon = ((Double)iter.next()).doubleValue();
-        node = new OSMNode(lat,lon,id.intValue());
+        node = new Node(lat,lon,id.intValue());
       }
       else {
         System.err.println(result.size() + " results from getNode");
         return null;
       }
-      
+
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -233,34 +207,34 @@ public class OSMAdapter {
 
     return node; 
   }
-
+/*
   // utility method
   public Vector getIDs(Vector points) {
     Vector ids = new Vector();
     Iterator iter = points.iterator();
     while(iter.hasNext()) {
-      OSMNode node = (OSMNode)iter.next();
+      Node node = (Node)iter.next();
       ids.addElement(new Integer(node.uid));
     }
     return ids;
   }
-
-  public void deleteNode(OSMNode node) {
+*/
+  public void deleteNode(Node node) {
     new Thread(new NodeDeleter(node)).start();
   }
-  public void deleteLine(OSMLine line) {
+  public void deleteLine(Line line) {
     new Thread(new LineDeleter(line)).start();
   }
-  public void createNode(OSMNode node) {
+  public void createNode(Node node) {
     new Thread(new NodeCreator(node)).start();
   }
-  public void moveNode(OSMNode node) {
+  public void moveNode(Node node) {
     new Thread(new NodeMover(node)).start();
   }
-  public void createLine(OSMLine line) {
+  public void createLine(Line line) {
     new Thread(new LineCreator(line)).start();
   }
-  public void updateLineName(OSMLine line) {
+  public void updateLineName(Line line) {
     new Thread(new LineUpdater(line)).start();
   }
 
@@ -283,7 +257,7 @@ public class OSMAdapter {
     }
     return osmlines;
   }
-  
+
   public boolean revalidateToken() {
     try {
       Vector params = new Vector();
@@ -300,26 +274,27 @@ public class OSMAdapter {
 
   class NodeDeleter implements Runnable {
 
-    OSMNode node;
+    Node node;
 
-    NodeDeleter(OSMNode node) {
+    NodeDeleter(Node node) {
       this.node = node;
     }
 
     public void run() {
+      /*
       try {
         nodes.remove(node);
         for (int i = 0; i < node.lines.size(); i++) {
-          OSMLine line = (OSMLine)node.lines.elementAt(i);
+          Line line = (Line)node.lines.elementAt(i);
           lines.remove(line);
           // TODO - does the database do this automagically?
           // deleteLine(line);
         }
-        
+
         Vector params = new Vector();
         params.addElement (token);
         params.addElement (new Integer(node.uid));
-      
+
         Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.deleteNode", params);
         System.err.println(result + " result from deleteNode");
 
@@ -330,7 +305,7 @@ public class OSMAdapter {
           System.err.println("error removing node: " + node);
           nodes.add(node);
           for (int i = 0; i < node.lines.size(); i++) {
-            OSMLine line = (OSMLine)node.lines.elementAt(i);
+            Line line = (Line)node.lines.elementAt(i);
             lines.add(line);
           }
         }
@@ -340,195 +315,207 @@ public class OSMAdapter {
         e.printStackTrace();
         nodes.add(node);
         for (int i = 0; i < node.lines.size(); i++) {
-          OSMLine line = (OSMLine)node.lines.elementAt(i);
+          Line line = (Line)node.lines.elementAt(i);
           lines.add(line);
         }
-      }  
+      } 
+      */
     }
 
   }
 
 
-class LineDeleter implements Runnable {
+  class LineDeleter implements Runnable {
 
-  OSMLine line;
+    Line line;
 
-  LineDeleter(OSMLine line) {
-    this.line = line;
-  }
-  
-  public void run() {
-    try {
-      lines.remove(line);
-    
-      Vector params = new Vector();
-      params.addElement (token);
-      params.addElement (new Integer(line.uid));
-      
-      Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.deleteLine", params);
-      System.err.println(result + " result from deleteLine");
+    LineDeleter(Line line) {
+      this.line = line;
+    }
 
-      if (result.booleanValue()) {
-        System.err.println("line removed successfully: " + line);
+    public void run() {
+      /*
+      try {
+        
+        lines.remove(line);
+
+        Vector params = new Vector();
+        params.addElement (token);
+        params.addElement (new Integer(line.uid));
+
+        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.deleteLine", params);
+        System.err.println(result + " result from deleteLine");
+
+        if (result.booleanValue()) {
+          System.err.println("line removed successfully: " + line);
+        }
+        else {
+          System.err.println("error removing line: " + line);
+          lines.add(line);
+        }
       }
-      else {
+      catch (Exception e) {
         System.err.println("error removing line: " + line);
-        lines.add(line);
+        e.printStackTrace();
       }
+      */
     }
-    catch (Exception e) {
-      System.err.println("error removing line: " + line);
-      e.printStackTrace();
-    }
+
   }
 
-}
+  class NodeCreator implements Runnable {
 
-class NodeCreator implements Runnable {
+    Node node;
 
-  OSMNode node;
+    NodeCreator(Node node) {
+      this.node = node;
+    }
 
-  NodeCreator(OSMNode node) {
-    this.node = node;
-  }
+    public void run() {
+      /*
+      try {
+        Vector params = new Vector();
+        params.addElement (token);
+        params.addElement (new Double(node.lat));
+        params.addElement (new Double(node.lon));
 
-  public void run() {
-    try {
-      Vector params = new Vector();
-      params.addElement (token);
-      params.addElement (new Double(node.lat));
-      params.addElement (new Double(node.lon));
-      
-      Integer result = (Integer)xmlrpc.execute ("openstreetmap.newNode", params);
-      System.err.println(result + " result from newNode");
+        Integer result = (Integer)xmlrpc.execute ("openstreetmap.newNode", params);
+        System.err.println(result + " result from newNode");
 
-      int id = result.intValue();
-      if (id != -1) {
-        node.uid = id;
-        System.err.println("node created successfully: " + node);
+        int id = result.intValue();
+        if (id != -1) {
+          node.uid = id;
+          System.err.println("node created successfully: " + node);
+        }
+        else {
+          System.err.println("error creating node: " + node);
+          nodes.remove(node);
+        }
       }
-      else {
+      catch (Exception e) {
         System.err.println("error creating node: " + node);
+        e.printStackTrace();
         nodes.remove(node);
       }
+      */
     }
-    catch (Exception e) {
-      System.err.println("error creating node: " + node);
-      e.printStackTrace();
-      nodes.remove(node);
-    }
+
   }
 
-}
+  class NodeMover implements Runnable {
 
-class NodeMover implements Runnable {
+    Node node;
 
-  OSMNode node;
+    NodeMover(Node node) {
+      this.node = node;
+    }
 
-  NodeMover(OSMNode node) {
-    this.node = node;
-  }
+    public void run() {
+      /*
+      try{
+        Vector params = new Vector();
+        params.addElement (token);
+        params.addElement (new Integer(node.uid));
+        params.addElement (new Double(node.lat));
+        params.addElement (new Double(node.lon));
 
-  public void run() {
-    try{
-      Vector params = new Vector();
-      params.addElement (token);
-      params.addElement (new Integer(node.uid));
-      params.addElement (new Double(node.lat));
-      params.addElement (new Double(node.lon));
+        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.moveNode", params);
+        System.err.println(result + " result from moveNode");
 
-      Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.moveNode", params);
-      System.err.println(result + " result from moveNode");
-
-      if (!result.booleanValue()) {
+        if (!result.booleanValue()) {
+          System.err.println("error moving node: " + node);
+          // TODO: error handling... (restore the old node position?)
+        }
+      }
+      catch (Exception e) {
         System.err.println("error moving node: " + node);
-        // TODO: error handling... (restore the old node position?)
+        e.printStackTrace();
       }
+      */
     }
-    catch (Exception e) {
-      System.err.println("error moving node: " + node);
-      e.printStackTrace();
-    }
+
   }
 
-}
+  class LineCreator implements Runnable {
 
-class LineCreator implements Runnable {
+    Line line;
 
-  OSMLine line;
+    LineCreator(Line line) {
+      this.line = line;
+    }
 
-  LineCreator(OSMLine line) {
-    this.line = line;
-  }
-  
-  public void run() {
-    try{
-      Vector params = new Vector();
-      params.addElement (token);
-      params.addElement (new Integer(line.a.uid));
-      params.addElement (new Integer(line.b.uid));
+    public void run() {
+      /*
+      try{
+        Vector params = new Vector();
+        params.addElement (token);
+        params.addElement (new Integer(line.a.uid));
+        params.addElement (new Integer(line.b.uid));
 
-      Integer result = (Integer)xmlrpc.execute ("openstreetmap.newLine", params);
-      System.err.println(result + " results from newLine");
+        Integer result = (Integer)xmlrpc.execute ("openstreetmap.newLine", params);
+        System.err.println(result + " results from newLine");
 
-      int id = result.intValue();
-      if (id != -1) {
-        line.uid = id;
-        System.err.println("line created successfully: " + line);
+        int id = result.intValue();
+        if (id != -1) {
+          line.uid = id;
+          System.err.println("line created successfully: " + line);
+        }
+        else {
+          System.err.println("error creating line: " + line);
+          lines.remove(line);
+          // TODO: error handling...
+        }
       }
-      else {
+      catch(Exception e) {
         System.err.println("error creating line: " + line);
+        e.printStackTrace();
         lines.remove(line);
-        // TODO: error handling...
       }
+      */
     }
-    catch(Exception e) {
-      System.err.println("error creating line: " + line);
-      e.printStackTrace();
-      lines.remove(line);
-    }
-  }
-  
-}
 
-
-class LineUpdater implements Runnable {
-
-  OSMLine line;
-
-  LineUpdater(OSMLine line) {
-    this.line = line;
   }
 
-  public void run() {
-    try{
-      System.err.println("updating line: " + line + " to: " + line.name);
-      line.nameChanged = false;
-      
-      Vector params = new Vector();
-      params.addElement (token);
-      params.addElement (new Integer(line.uid));
-      params.addElement (new Integer(14)); // name, believe me
-      params.addElement (new String(line.name));
-      
-      Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.updateStreetSegmentKeyValue", params);
 
-      if (result.booleanValue()) {
-        System.err.println("line renamed successfully: " + line + ": " + line.name);
+  class LineUpdater implements Runnable {
+
+    Line line;
+
+    LineUpdater(Line line) {
+      this.line = line;
+    }
+
+    public void run() {
+      /*
+      try{
+        System.err.println("updating line: " + line + " to: " + line.name);
+        line.nameChanged = false;
+
+        Vector params = new Vector();
+        params.addElement (token);
+        params.addElement (new Integer(line.uid));
+        params.addElement (new Integer(14)); // name, believe me
+        params.addElement (new String(line.name));
+
+        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.updateStreetSegmentKeyValue", params);
+
+        if (result.booleanValue()) {
+          System.err.println("line renamed successfully: " + line + ": " + line.name);
+        }
+        else {
+          System.err.println("error renaming line: " + line + ": " + line.name);
+          line.nameChanged = true;
+        }
       }
-      else {
+      catch(Exception e) {
         System.err.println("error renaming line: " + line + ": " + line.name);
+        e.printStackTrace();
         line.nameChanged = true;
       }
+      */
     }
-    catch(Exception e) {
-      System.err.println("error renaming line: " + line + ": " + line.name);
-      e.printStackTrace();
-      line.nameChanged = true;
-    }
+
   }
-  
-}
 
 
 }

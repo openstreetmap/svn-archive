@@ -99,11 +99,11 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PFont;
 
-import org.openstreetmap.processing.util.OSMAdapter; 
-import org.openstreetmap.processing.util.OSMPoint; 
-import org.openstreetmap.processing.util.OSMNode; 
-import org.openstreetmap.processing.util.OSMLine; 
-import org.openstreetmap.processing.util.OSMMercator; 
+import org.openstreetmap.client.Adapter;
+import org.openstreetmap.util.Point;
+import org.openstreetmap.util.Node;
+import org.openstreetmap.util.Line;
+import org.openstreetmap.util.Mercator;
 
 import java.util.Vector;
 import java.util.Iterator;
@@ -116,10 +116,10 @@ public class OSMApplet extends PApplet {
   String PASSWORD = null;
 
   /* handles XML-RPC etc */
-  OSMAdapter osm;
+  Adapter osm;
 
   /* converts from lat/lon into screen space */
-  OSMMercator projection;
+  Mercator projection;
 
   /* collection of OSMNodes (may or may not be projected into screen space) */
   Vector nodes = new Vector();
@@ -135,19 +135,19 @@ public class OSMApplet extends PApplet {
   float strokeWeight = 11.0f;
 
   /* for displaying new lines whilst drawing (between start and mouseX/Y) */
-  OSMLine tempLine = new OSMLine(null,null);
+  Line tempLine = new Line(null,null);
 
   /* current line, for editing street names - 
    * TODO: 
    *   change to array of lines and apply text to all (save as a new street?) 
    *   track this in editmode, and make line.selected flag */
-  OSMLine selectedLine;
+  Line selectedLine;
 
   /* current node, for moving nodes - TODO: track this in editmode, and make node.selected flag */
-  OSMNode selectedNode = null;
+  Node selectedNode = null;
 
   /* selected start point when drawing lines */
-  OSMNode start = null;
+  Node start = null;
 
   /* font for street names - 
    * TODO:
@@ -262,12 +262,12 @@ public class OSMApplet extends PApplet {
     // initialise projection at given centre and scale
     // TODO - consider fixing scale to be one of N pre-determined values  
     //      - or allow "zoom level" as well as scale
-    projection = new OSMMercator(clat,clon,sc,width,height);
+    projection = new Mercator(clat,clon,sc,width,height);
 
     strokeWeight = max((float)(0.005f/projection.kilometersPerPixel()),1.0f); // 5m roads, but min 1px width
 
-    OSMPoint tl = projection.getTopLeft();
-    OSMPoint br = projection.getBottomRight();
+    Point tl = projection.getTopLeft();
+    Point br = projection.getBottomRight();
 
     if (wmsURL.indexOf("?") > 0) {
       wmsURL += "&bbox="+tl.lon+","+br.lat+","+br.lon+","+tl.lat+"&width="+width+"&height="+height;
@@ -314,7 +314,7 @@ public class OSMApplet extends PApplet {
     }
     
     // try to connect to OSM
-    osm = new OSMAdapter(lines,nodes,token,USERNAME,PASSWORD);
+    osm = new Adapter(lines,nodes,USERNAME,PASSWORD);
 
     Thread dataFetcher = new Thread(new Runnable() {
 
@@ -442,18 +442,18 @@ public class OSMApplet extends PApplet {
     strokeWeight(strokeWeight+2.0f);
     stroke(0);
     for (int i = 0; i < lines.size(); i++) {
-      OSMLine line = (OSMLine)lines.elementAt(i);
+      Line line = (Line)lines.elementAt(i);
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     strokeWeight(strokeWeight);
     stroke(255);
     for (int i = 0; i < lines.size(); i++) {
-      OSMLine line = (OSMLine)lines.elementAt(i);
+      Line line = (Line)lines.elementAt(i);
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     boolean gotOne = false;
     for (int i = 0; i < lines.size(); i++) {
-      OSMLine line = (OSMLine)lines.elementAt(i);
+      Line line = (Line)lines.elementAt(i);
       if (modeManager.currentMode == nameMode && !gotOne) {
         // highlight first line under mouse
         if (line.mouseOver(mouseX,mouseY,strokeWeight)) {
@@ -468,7 +468,7 @@ public class OSMApplet extends PApplet {
     // draw temp line
     if (start != null) {
       tempLine.a = start;
-      tempLine.b = new OSMNode(mouseX,mouseY,projection);
+      tempLine.b = new Node(mouseX,mouseY,projection);
       stroke(0,80);
       strokeWeight(strokeWeight+2);
       line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
@@ -488,7 +488,7 @@ public class OSMApplet extends PApplet {
     noStroke();
     ellipseMode(CENTER);
     for (int i = 0; i < nodes.size(); i++) {
-      OSMNode node = (OSMNode)nodes.elementAt(i);
+      Node node = (Node)nodes.elementAt(i);
       if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
         fill(0xffff0000);
       }
@@ -529,7 +529,7 @@ public class OSMApplet extends PApplet {
     textSize(strokeWeight);
     textAlign(CENTER);
     for (int i = 0; i < lines.size(); i++) {
-      OSMLine l = (OSMLine)lines.elementAt(i);
+      Line l = (Line)lines.elementAt(i);
       if (l.name != null) {
         pushMatrix();
         if (l.a.x <= l.b.x) {
@@ -547,12 +547,17 @@ public class OSMApplet extends PApplet {
 
     // draw all buttons
     modeManager.draw();
-
+/*
+ 
+   dont need this with REST
+ 
     if (millis() > validCount * 9 * 60 * 1000) {
       osm.revalidateToken();
       validCount++;
     }
 
+    
+*/
     if (online) {
       status("lat: " + projection.lat(mouseY) + ", lon: " + projection.lon(mouseX));
     }
@@ -591,8 +596,8 @@ public class OSMApplet extends PApplet {
     }
   }
 
-  // bit crufty - TODO tidy up and move into OSMPoint
-  public boolean mouseOverPoint(OSMPoint p) {
+  // bit crufty - TODO tidy up and move into Point
+  public boolean mouseOverPoint(Point p) {
     if (p.projected) {
       return sqrt(sq(p.x-mouseX)+sq(p.y-mouseY)) < strokeWeight/2.0f;
     }
@@ -602,7 +607,7 @@ public class OSMApplet extends PApplet {
   }
 
   // bit crufty - TODO tidy up and move into draw()?
-  public void drawPoint(OSMPoint p) {
+  public void drawPoint(Point p) {
     if (p.projected) {
       ellipseMode(CENTER);
       ellipse(p.x,p.y,strokeWeight-1,strokeWeight-1);
@@ -747,10 +752,10 @@ public class OSMApplet extends PApplet {
       }
     }
     public void mouseReleased() {
-      OSMLine previousSelection = selectedLine;
+      Line previousSelection = selectedLine;
       selectedLine = null;
       for (int i = 0; i < lines.size(); i++) {
-        OSMLine l = (OSMLine)lines.elementAt(i);
+        Line l = (Line)lines.elementAt(i);
         if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
           selectedLine = l;
           break;
@@ -778,14 +783,14 @@ public class OSMApplet extends PApplet {
     public void mouseReleased() {
       boolean overOne = false; // points can't overlap
       for (int i = 0; i < nodes.size(); i++) {
-        OSMNode p = (OSMNode)nodes.elementAt(i);
+        Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
           overOne = true;
           break;
         }
       }    
       if (!overOne) {
-        OSMNode node = new OSMNode(mouseX,mouseY,projection); 
+        Node node = new Node(mouseX,mouseY,projection); 
         if (osm != null) {
           osm.createNode(node); 
         }
@@ -804,7 +809,7 @@ public class OSMApplet extends PApplet {
   class LineMode extends EditMode {
     public void mousePressed() {
       for (int i = 0; i < nodes.size(); i++) {
-        OSMNode p = (OSMNode)nodes.elementAt(i);
+        Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
           start = p;
           break;
@@ -814,10 +819,10 @@ public class OSMApplet extends PApplet {
     public void mouseReleased() {
       boolean gotOne = false;
       for (int i = 0; i < nodes.size(); i++) {
-        OSMNode p = (OSMNode)nodes.elementAt(i);
+        Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
           if (start != null) {
-            OSMLine line = new OSMLine(start,p);
+            Line line = new Line(start,p);
             if (osm != null) {
               osm.createLine(line); 
               // TODO assign ID, asynchronously?
@@ -850,7 +855,7 @@ public class OSMApplet extends PApplet {
     public void mousePressed() {
       println("nousePressed in node move mode");
       for (int i = 0; i < nodes.size(); i++) {
-        OSMNode p = (OSMNode)nodes.elementAt(i);
+        Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
           selectedNode = p;
           //println("selected: " + selectedNode);
@@ -901,7 +906,7 @@ public class OSMApplet extends PApplet {
     public void mouseReleased() {
       boolean gotOne = false;
       for (int i = 0; i < nodes.size(); i++) {
-        OSMNode p = (OSMNode)nodes.elementAt(i);
+        Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
           boolean delete = true;
           // TODO prompt for delete
@@ -918,7 +923,7 @@ public class OSMApplet extends PApplet {
       }
       if (!gotOne) {
         for (int i = 0; i < lines.size(); i++) {
-          OSMLine l = (OSMLine)lines.elementAt(i);
+          Line l = (Line)lines.elementAt(i);
           if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
             boolean delete = true;
             // TODO prompt for delete

@@ -24,7 +24,7 @@ import java.util.Vector;
 // minimal representation of OpenStreetMap node (lat/lon pair, with uid)
 public class Node extends Point {
 
-  public int uid; // 0 = unassigned. TODO: check that there is no node 0 in the db
+  public long uid; // 0 = unassigned. TODO: check that there is no node 0 in the db
   public Vector lines = new Vector();
 
   public Node(double lat, double lon) {
@@ -35,7 +35,7 @@ public class Node extends Point {
     this(x,y,projection,0);
   }
 
-  public Node(double lat, double lon, int uid) {
+  public Node(double lat, double lon, long uid) {
     super(lat,lon);
     this.uid = uid;
   }
@@ -44,6 +44,11 @@ public class Node extends Point {
     super(x,y,projection);
     this.uid = uid;
   }
+
+  public long getUID()
+  {
+    return uid;
+  } // getUID
   
 }
 

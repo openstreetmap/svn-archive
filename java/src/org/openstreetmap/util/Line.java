@@ -26,7 +26,7 @@ import java.util.Vector;
 public class Line {
 
   public Node a,b;
-  public int uid;
+  public long uid;
   public String name = "";
   public boolean nameChanged = false;
 
@@ -34,7 +34,7 @@ public class Line {
     this(a,b,0);
   }
     
-  public Line(Node a, Node b, int uid) {
+  public Line(Node a, Node b, long uid) {
     if (a != null && b != null) {
       this.a=a; this.b=b;
     }

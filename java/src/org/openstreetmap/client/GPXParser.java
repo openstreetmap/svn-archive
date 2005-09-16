@@ -44,6 +44,7 @@ public class GPXParser extends MinML2 {
 
 
   public GPXParser(InputStream i) {
+    System.out.println("GPX parser started...");
     try {
       parse(new InputStreamReader(new BufferedInputStream(i, 1024)));
     }
@@ -184,8 +185,8 @@ public class GPXParser extends MinML2 {
 
       if(qName.equals("trkpt") &&  latfound && lonfound && uidfound )
       {
-        System.out.println("got node: " + uid + ": " + lon + "," + lat);
-        nodes.add(new Node(lat, lon, uid));
+//        System.out.println("got node: " + uid + ": " + lon + "," + lat);
+        nodes.addElement(new Node(lat, lon, uid));
         lonfound = false;
         latfound = false;
         uidfound = false;
@@ -213,13 +214,13 @@ public class GPXParser extends MinML2 {
       {
 //        System.out.println("got line: " + uid_a + " -> " + uid_b);
     
-        lines.add(new Line(getNode(uid_a), getNode(uid_b), line_uid));
+        lines.addElement(new Line(getNode(uid_a), getNode(uid_b), line_uid));
       }
 
       if(qName.equals("wpt"))
       {
 //        System.out.println("got hanging node: " + uid + ": " + lon + "," + lat);
-        nodes.add(new Node(lat, lon, uid));
+        nodes.addElement(new Node(lat, lon, uid));
       }
 
 

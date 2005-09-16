@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
+import org.openstreetmap.util.Point;
 
 public class Adapter
 {
@@ -17,23 +18,44 @@ public class Adapter
   private String URLBASE = "http://www.openstreetmap.org/api/0.1/";
   String user, pass;
 
-  Vector lines,nodes;
+  Vector lines = new Vector();
+  Vector nodes = new Vector();
   
   Credentials creds = null;
 
 
-  public Adapter(Vector lines, Vector nodes, String username, String password)
+  public Adapter(String username, String password)
   {
-    this.lines = lines;
-    this.nodes = nodes;
-    this.user = user;
-    this.pass = pass;
+//    System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+  //  System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+    //System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
+//    System.out.println("started OSM Adapter");
+    this.user = username;
+    this.pass = password;
 
 //    String url = "http://www.openstreetmap.org/api/0.1/map?bbox=-0.149512178200823,51.5255366704934,-0.145415241799177,51.5273573295066";
 
     creds = new UsernamePasswordCredentials(user, pass);
+    System.out.println("Adapter started");
 
   }
+
+  public void getNodesAndLines(Point topLeft, Point bottomRight)
+  {
+    System.out.println("getting nodes and lines");
+    getNodesAndLines(topLeft.lon,bottomRight.lat,bottomRight.lon,topLeft.lat);
+  }
+
+  public Vector getNodes()
+  {
+    return nodes;
+  } // getNodes
+
+  public Vector getLines()
+  {
+    return lines;
+
+  } // getLines
 
 
   public void getNodesAndLines(double bllon, double bllat, double trlon, double trlat)
@@ -41,6 +63,7 @@ public class Adapter
 
     String url = URLBASE + "map?bbox=" + bllon + "," + bllat + "," + trlon + "," + trlat;
 
+    System.out.println("trying url: " + url);
     //create a singular HttpClient object
     HttpClient client = new HttpClient();
 
@@ -73,10 +96,8 @@ public class Adapter
 
     GPXParser gpxp = new GPXParser(responseStream);
 
-    Vector nodes = gpxp.getNodes();
-    Vector lines = gpxp.getLines();
-
-    
+    nodes = gpxp.getNodes();
+    lines = gpxp.getLines();    
 
     //clean up the connection resources
     method.releaseConnection();

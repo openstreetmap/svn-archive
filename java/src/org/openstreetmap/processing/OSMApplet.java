@@ -89,12 +89,12 @@
  * <li>Fix status/println to use browser status bar
  * <li>GPL everything
  * <li>Choose line width and node size based on scale 
- * </ul>
- * 
- **/
+* </ul>
+* 
+**/
 
 package org.openstreetmap.processing; 
- 
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PFont;
@@ -106,6 +106,7 @@ import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Mercator;
 
 import java.util.Vector;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Hashtable;
 
@@ -126,10 +127,10 @@ public class OSMApplet extends PApplet {
   /* collection of OSMLines */
   Vector lines = new Vector();
   /* Integer id -> OSMNode */
-  Hashtable nodeMap = new Hashtable(); 
+//  Hashtable nodeMap = new Hashtable(); 
 
   /* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
-//  PImage gpxImage;
+  //  PImage gpxImage;
 
   /* width of line segments - TODO: modulate based on scale, and road type */
   float strokeWeight = 11.0f;
@@ -170,7 +171,7 @@ public class OSMApplet extends PApplet {
   EditMode deleteMode   = new DeleteMode();
 
   /* if !ready, a wait cursor is shown and input doesn't do anything 
-     TODO: disable button mouseover highlighting when !ready */
+TODO: disable button mouseover highlighting when !ready */
   boolean ready = false;
 
   /* for revalidating token with OSM server */
@@ -218,7 +219,7 @@ public class OSMApplet extends PApplet {
       }
     }
     else {
-    
+
       // traditional OSM Regent's Park London default
       clat = 51.526447f;
       clon = -0.14746371f;
@@ -238,7 +239,7 @@ public class OSMApplet extends PApplet {
       //clat = 45.186; 
       //clon = 5.733;
       //sc = 0.0003;
-    
+
     }
 
     if (online) {
@@ -314,104 +315,36 @@ public class OSMApplet extends PApplet {
     catch (Exception e) {
       e.printStackTrace();
     }
-    
+
     // try to connect to OSM
-    osm = new Adapter(lines,nodes,USERNAME,PASSWORD);
+    osm = new Adapter(USERNAME,PASSWORD);
 
     Thread dataFetcher = new Thread(new Runnable() {
 
-      public void run() {
+    public void run()
+    {
 
-/*
-        print("getting nodes... ");
-        Vector osmNodes = osm.getNodes(projection.getTopLeft(),projection.getBottomRight());
-        for (int i = 0; i < osmNodes.size(); i++) {
-          if (i%max(1,osmNodes.size()/100) == 0) print("#"); 
-          OSMNode node = (OSMNode)osmNodes.elementAt(i);
-          node.project(projection);
-          nodes.addElement(node);
-          nodeMap.put(new Integer(node.uid),node);
-        }
-        println("got " + nodes.size() + " nodes, getting lines...");
+        osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight());
 
-        Vector osmLines = osm.getLines(osm.getIDs(osmNodes));
-        Vector incompleteLines = new Vector();
-        Vector nodesToFetch = new Vector();
-        print("parsing lines");
-        for (int i = 0; i < osmLines.size(); i++) {
-          if (i%max(1,osmLines.size()/100) == 0) print("#"); 
-          Vector linedata = (Vector)osmLines.elementAt(i);
-          //println(linedata);
-          Integer uid = (Integer)linedata.elementAt(0);
-          Integer a = (Integer)linedata.elementAt(1);
-          Integer b = (Integer)linedata.elementAt(2);
-          String name = (String)linedata.elementAt(3);
-          OSMNode pa = (OSMNode)nodeMap.get(a);
-          OSMNode pb = (OSMNode)nodeMap.get(b);
-          if (pa != null && pb != null) {
-            OSMLine osmline = new OSMLine(pa,pb,uid.intValue());
-            osmline.name = name;
-            lines.addElement(osmline);
-          }
-          else {
-            if (pa == null) {
-              if (a != null) {
-                nodesToFetch.addElement(a);
-              }
-              else {
-                println("a is null for line " + uid);
-              }
-            }
-            if (pb == null) {
-              if (b != null) {
-                nodesToFetch.addElement(b);
-              }
-              else {
-                println("b is null for line " + uid);
-              }
-            }
-            incompleteLines.addElement(linedata);
-          }
-        }
-        println(lines.size() + " lines (" + incompleteLines.size() + " incomplete lines, " + nodesToFetch.size() + " nodes to fetch)");
+        Enumeration e = osm.getNodes().elements();
 
-        int nodesSizeBeforeFetch = nodes.size();
-        for (int i = 0; i < nodesToFetch.size(); i++) {
-          Integer id = (Integer)nodesToFetch.elementAt(i);
-          OSMNode node = osm.getNode(id);
-          if (node != null) {
-            node.project(projection);
-            nodes.addElement(node);
-            nodeMap.put(new Integer(node.uid),node);
-          }
-          else {
-            println("problem fetching node " + i + " with id " + id);
-          }
-        }
-        println(nodes.size()-nodesSizeBeforeFetch + " extra nodes fetched, completing incomplete lines...");
+        while(e.hasMoreElements())
+        {
+          Node n = (Node)e.nextElement();
 
-        int linesSizeBeforeFetch = lines.size();
-        for (int i = 0; i < incompleteLines.size(); i++) {
-          Vector linedata = (Vector)incompleteLines.elementAt(i);
-          Integer uid = (Integer)linedata.elementAt(0);
-          Integer a = (Integer)linedata.elementAt(1);
-          Integer b = (Integer)linedata.elementAt(2);
-          String name = (String)linedata.elementAt(3);
-          OSMNode pa = (OSMNode)nodeMap.get(a);
-          OSMNode pb = (OSMNode)nodeMap.get(b);
-          OSMLine line = new OSMLine(pa,pb,uid.intValue());
-          line.name = name;
-          lines.addElement(line);
+          n.project(projection);
+
+          nodes.addElement(n);
+          
         }
-        println(lines.size()-linesSizeBeforeFetch + " extra lines completed");
-*/
-        // could be heavy for lots of lines - perhap start in another thread?
-        // or automate on the server and use getStreets like Steve originally planned?
-        //      mergeSegments();
+
+        lines = osm.getLines();
+
+        System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
 
         ready = true;
 
-     }
+      }
 
     }
     );
@@ -445,6 +378,7 @@ public class OSMApplet extends PApplet {
     stroke(0);
     for (int i = 0; i < lines.size(); i++) {
       Line line = (Line)lines.elementAt(i);
+      //System.out.println("Doing line " + line.a.x + "," + line.a.y + " - " + line.b.x + "," + line.a.y);
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     strokeWeight(strokeWeight);
@@ -549,17 +483,17 @@ public class OSMApplet extends PApplet {
 
     // draw all buttons
     modeManager.draw();
-/*
- 
-   dont need this with REST
- 
-    if (millis() > validCount * 9 * 60 * 1000) {
-      osm.revalidateToken();
-      validCount++;
-    }
+    /*
 
-    
-*/
+       dont need this with REST
+
+       if (millis() > validCount * 9 * 60 * 1000) {
+       osm.revalidateToken();
+       validCount++;
+       }
+
+
+     */
     if (online) {
       status("lat: " + projection.lat(mouseY) + ", lon: " + projection.lon(mouseX));
     }

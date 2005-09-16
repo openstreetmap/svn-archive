@@ -17,30 +17,30 @@
  *  
  */
  
-package org.openstreetmap.processing.util; 
+package org.openstreetmap.util; 
 
 import java.util.Vector;
 
 // minimal representation of OpenStreetMap node (lat/lon pair, with uid)
-public class OSMNode extends OSMPoint {
+public class Node extends Point {
 
   public int uid; // 0 = unassigned. TODO: check that there is no node 0 in the db
   public Vector lines = new Vector();
 
-  public OSMNode(double lat, double lon) {
+  public Node(double lat, double lon) {
     this(lat,lon,0);
   }
 
-  public OSMNode(float x, float y, OSMMercator projection) {
+  public Node(float x, float y, Mercator projection) {
     this(x,y,projection,0);
   }
 
-  public OSMNode(double lat, double lon, int uid) {
+  public Node(double lat, double lon, int uid) {
     super(lat,lon);
     this.uid = uid;
   }
   
-  public OSMNode(float x, float y, OSMMercator projection, int uid) {
+  public Node(float x, float y, Mercator projection, int uid) {
     super(x,y,projection);
     this.uid = uid;
   }

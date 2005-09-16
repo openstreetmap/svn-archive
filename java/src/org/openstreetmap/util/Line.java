@@ -17,24 +17,24 @@
  *  
  */
 
-package org.openstreetmap.processing.util;
+package org.openstreetmap.util;
 
    
 import java.util.Vector;
 
 // minimal representation of OpenStreetMap line (node id -> node id, with uid)
-public class OSMLine {
+public class Line {
 
-  public OSMNode a,b;
+  public Node a,b;
   public int uid;
   public String name = "";
   public boolean nameChanged = false;
 
-  public OSMLine(OSMNode a, OSMNode b) {
+  public Line(Node a, Node b) {
     this(a,b,0);
   }
     
-  public OSMLine(OSMNode a, OSMNode b, int uid) {
+  public Line(Node a, Node b, int uid) {
     if (a != null && b != null) {
       this.a=a; this.b=b;
     }
@@ -48,7 +48,7 @@ public class OSMLine {
   }
   
   public void reverse() {
-    OSMNode temp = a;
+    Node temp = a;
     a = b;
     b = temp;
   }
@@ -65,7 +65,7 @@ public class OSMLine {
   }
 
   // pixel distance, if projected  
-  public float distance(OSMNode c) {
+  public float distance(Node c) {
     return distance(c.x,c.y);
   }
 

@@ -17,21 +17,21 @@
  *  
  */
 
-package org.openstreetmap.processing.util;
+package org.openstreetmap.util;
 
 // minimal representation of OpenStreetMap GPX point (lat/lon pair)
-public class OSMPoint {
+public class Point {
 
   public double lat, lon;
   public float x,y;
   public boolean projected = false;
 
-  public OSMPoint(double lat, double lon) {
+  public Point(double lat, double lon) {
     this.lat = lat;
     this.lon = lon;
   }
 
-  public OSMPoint(float x, float y, OSMMercator projection) {
+  public Point(float x, float y, Mercator projection) {
     this.x = x;
     this.y = y;
     this.lat = projection.lat(y);
@@ -39,18 +39,18 @@ public class OSMPoint {
     projected = true;
   }
         
-  public void project(OSMMercator projection){
+  public void project(Mercator projection){
     x = (float)projection.x(lon);
     y = (float)projection.y(lat);
     projected = true;
   }
   
-  public void unproject(OSMMercator projection){
+  public void unproject(Mercator projection){
     this.lat = projection.lat(y);
     this.lon = projection.lon(x);
   }
     
-  public float distance(OSMPoint other) {
+  public float distance(Point other) {
     return distance(other.x,other.y);
   }
   

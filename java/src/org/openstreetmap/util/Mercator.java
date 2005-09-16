@@ -17,11 +17,11 @@
  *  
  */
 
-package org.openstreetmap.processing.util;
+package org.openstreetmap.util;
 
 /** based up OpenStreetMap's Ruby implementation of the Mercator projection, originally by Steve Coast. */
 
-public class OSMMercator {
+public class Mercator {
 
   protected double clat, clon;
   protected double dlat, dlon;
@@ -34,10 +34,10 @@ public class OSMMercator {
   protected double xdiv, ydiv;
 
   // topleft, bottomright 
-  protected OSMPoint tl,br;
+  protected Point tl,br;
 
   /* init me with your centre lat/lon, the number of degrees per pixel and the size of your image */
-  public OSMMercator(double clat, double clon, double degrees_per_pixel, int w, int h) {
+  public Mercator(double clat, double clon, double degrees_per_pixel, int w, int h) {
     this.w = w;
     this.h = h;
     this.degrees_per_pixel = degrees_per_pixel;
@@ -61,8 +61,8 @@ public class OSMMercator {
     bx = xsheet(clon + dlon);
     by = ysheet(clat + dlat);
 
-    tl = new OSMPoint(clat + dlat,clon - dlon);
-    br = new OSMPoint(clat - dlat,clon + dlon);
+    tl = new Point(clat + dlat,clon - dlon);
+    br = new Point(clat - dlat,clon + dlon);
 
     xdiv = 1.0 / (bx - tx) * w;
     ydiv = 1.0 / (by - ty) * h;
@@ -117,11 +117,11 @@ public class OSMMercator {
     return lat < clat + dlat && lon > clon - dlon && lat > clat - dlat && lon < clon + dlon;
   }
 
-  public OSMPoint getTopLeft() {
+  public Point getTopLeft() {
     return tl;
   }
   
-  public OSMPoint getBottomRight() {
+  public Point getBottomRight() {
     return br;
   }
   

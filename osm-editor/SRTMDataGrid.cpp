@@ -18,6 +18,7 @@
  */
 #include "SRTMDataGrid.h"
 #include "functions.h"
+#include <cmath>
 
 namespace OpenStreetMap
 {

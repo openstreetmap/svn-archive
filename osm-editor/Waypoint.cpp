@@ -91,7 +91,12 @@ bool Waypoints::alterWaypoint(int idx, const QString& newName,
 Waypoint Waypoints::getWaypoint(int i) throw (QString)
 { 
 	if(i<0 || i>=waypoints.size())
-		throw QString("No waypoint at index " + i);
+	{
+		// corrected + operator bug 17/09/05
+		QString error;
+		error.sprintf("No waypoint at index %d", i);
+		throw error;
+	}
 	
  	return waypoints[i]; 
 }

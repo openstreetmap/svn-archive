@@ -18,6 +18,7 @@
  */
 #include "SRTMGeneral.h"
 #include <fstream>
+#include <cmath>
 
 namespace OpenStreetMap
 {

@@ -19,6 +19,7 @@
 #include "SRTMConGen.h"
 #include "Map.h"
 #include "llgr.h"
+#include <cmath>
 
 namespace OpenStreetMap
 {

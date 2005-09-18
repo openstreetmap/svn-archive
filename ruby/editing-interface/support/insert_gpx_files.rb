@@ -49,6 +49,7 @@ files.each_hash do |row|
     $stderr << 'looks like a plain file'
   end 
 
+  
   # got a file, we hope
 
   user_uid = row['user_uid'].to_i
@@ -126,8 +127,16 @@ files.each_hash do |row|
     #puts lat.to_s + ' ' + lon.to_s + ' ' + ele.to_s + ' ' + date.to_s
   end
 
-  parser.parse
+  error = false;
+  error_msg = ''
+  begin
+    parser.parse
+
+  rescue Exception => e
+    error = true
+    error_msg = e.to_s
    
+  end
   
   #get rid of the file so we don't insert it again
 
@@ -139,7 +148,9 @@ files.each_hash do |row|
   email_address = dao.email_from_user_uid(user_uid)
 
   if email_address && email_address != ''
-    msgstr = <<END_OF_MESSAGE
+    msgstr = ''
+    if !error
+      msgstr = <<END_OF_MESSAGE
 From: webmaster <webmaster@openstreetmap.org>
 To: #{email_address}
 Bcc: steve@fractalus.com
@@ -154,6 +165,30 @@ Have fun
 
 
 END_OF_MESSAGE
+    
+    else
+      error = false
+      msgstr = <<END_OF_MESSAGE
+From: webmaster <webmaster@openstreetmap.org>
+To: #{email_address}
+Bcc: steve@fractalus.com
+Subject: Your gpx file
+
+Hi,
+
+It looks like your gpx file, #{original_name}, failed to get parsed ok.
+Please consult the error message below. If you think this is a bug please
+email bugs@openstreetmap.org.
+
+#{error_msg}
+
+Have fun
+
+
+END_OF_MESSAGE
+
+
+    end
    Net::SMTP.start('127.0.0.1', 25) do |smtp|
       smtp.send_message msgstr.untaint,
                        'webmaster@openstreetmap.org'.untaint,

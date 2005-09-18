@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	
+	<head>
+		<title>Free The Postcode!</title>
+		
+		<style type="text/css">
+			body {
+				font: 100%/1.5 sans-serif;
+				margin: 0 0 100px 0;
+			}
+			h1 {
+				font: bold 300%/1.5 serif;
+				border-bottom: 2px solid #800
+			}
+			h3 {
+				font: bold 100%/1.5 serif;
+			}
+			h1, h3 {
+				text-align: center;
+				color: #800;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+			}
+			div {
+				width: 75%;
+				max-width: 800px;
+				margin: 0px auto;
+			}
+			div#smallprint p {
+				font: 80%/1.0 sans-serif;
+				color: #444;
+	  		}
+			div#content {
+				background: #ff8;
+				border: 1px solid #dda;
+				padding: 20px;
+				text-align: center;
+			}
+			div#content form p {
+				line-height: 2.0;
+			}
+			strong {
+				background: #ff0;
+				border: 1px solid #da0;
+			}
+			div#head p img {
+				float: left;
+				margin: 0 10px 10px 0;
+			}
+
+		</style>
+
+		<script type="text/javascript">
+			function clearText(thefield) {
+				if (thefield.defaultValue == thefield.value) {
+					thefield.value = "";
+				}
+			}
+		</script>
+		
+	</head>
+  
+	<body>
+	  
+		<div id="head">
+			<h1>Free the postcode!</h1>	
+			<p><img src="rmail.jpg">
+			The postcode database - which turns a <a href="http://en.wikipedia.org/wiki/Postcode#UK_Postcodes">postcode</a> to a 
+			latitude/longitude and back - is not free in the UK. In fact, it's very expensive. The 
+			<a href="http://en.wikipedia.org/wiki/Royal_Mail">Post Office</a> owns it and sells it to various companies that make 
+			use of it for things like insurance or parcel tracking. There are however many people who'd like to use it for 
+			non-profit purposes. Say you want to lay out events like free concerts / gigs on a map and you only have the postcode... 
+			you have to buy the database.
+			</p>
+			<p>
+			Instead, wouldn't it be nice if it was free like zipcodes are in the US? To do this, you have to have a number of people 
+			collaborating with GPS units who note positions and postcodes. Hence this site to collect that data.
+			</p>
+		</div>
+		
+		<div id="content">
+			<form action="http://www.freethepostcode.org/submit">
+			<p>
+			I, <input type="text" onclick="clearText(this);" name="email" size="23" value="someone@example.com"/> submit the following 
+			position:<br />
+			<label for="lat">latitude</label> <input type="text" onclick="clearText(this);" id="lat" name="lat" size="10" value="1.234567890"/>, 
+			<label for="lon">longitude</label> <input type="text" onclick="clearText(this);" name="lon" id="lon" size="10" value="1.234567890"/> 
+			<br />(which I personally collected with a GPS) for the postcode:<br />
+			<input type="text" onclick="clearText(this);" name="postcode1" id="postcode1" size="7" value="SW1A"/>&nbsp;
+			<input type="text" onclick="clearText(this);" name="postcode2" id="postcode2" size="7" value="0AA"/>
+			<br />
+			and place the information in the public domain. 
+			</p>
+			<p>
+			<input type="submit" value="Submit"/>
+			</p>
+			</form>
+			<p>
+			<strong>PLEASE ONLY ENTER DATA YOU YOURSELF HAVE COLLECTED WITH A GPS <br />Other data may be copyrighted!</strong>
+			</p>
+
+		</div>
+		
+		<div id="smallprint">
+			<h3>The small print</h3>
+			<p>
+			If you'd like a copy of the current public domain list, it is <a href="http://www.freethepostcode.org/currentlist">here</a>.
+			Or, there is an RSS feed <a href="rss">here</a>
+      </p>
+			<p>
+			If you're interested in free geodata you should check out <a href="http://www.openstreetmap.org">openstreetmap</a> 
+			(which this site is a side project of). Sign <a href="http://www.pledgebank.com/postcode">this pledge</a> to collect postcodes for a week!
+			</p>
+			<p>
+			We'll put up a geocoder when we have a significant number of postcodes. Data accuracy will be looked into as postcodes 
+			are received. We're looking at ways of letting you find your postcode without a GPS, stay tuned.
+			</p>
+			<p>
+			For problems, questions or rants please <a href="mailto:steve@asklater.com">mail me</a>, or see the <a href="http://www.openstreetmap.org/wiki/index.php/FreeThePostcode">wiki page</a>
+			</p>
+		</div>
+		
+	</body>
+	
+</html>
+

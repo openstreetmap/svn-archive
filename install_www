@@ -25,11 +25,14 @@ cp html/css/style.css $ROOT
 
 # applet
 
-cp java/dist/OSMApplet.jar $ROOT/edit/
+cp java/dist/OSMApplet.jar $ROOT/edit/OSMApplet2.jar
 cp java/lib/xmlrpc-2.0-beta.jar $ROOT/edit/
 cp java/lib/commons-codec-1.3.jar $ROOT/edit/
+cp java/dist/commons-httpclient-3.0-rc3.jar $ROOT/edit/
+cp java/dist/commons-logging.jar $ROOT/edit/
+cp java/dist/MinML2.jar $ROOT/edit/
 cp java/dist/core.jar $ROOT/edit/
-
+cp java/lib/applet-test.html $ROOT/edit/
 
 # REST
 

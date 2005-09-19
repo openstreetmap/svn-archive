@@ -108,6 +108,7 @@ public class Adapter
     new Thread(new NodeDeleter(node)).start();
   }
   public void deleteLine(Line line) {
+    System.out.println("Deleting line " + line.uid);
     new Thread(new LineDeleter(line)).start();
   }
   public void createNode(Node node) {

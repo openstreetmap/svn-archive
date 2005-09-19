@@ -42,6 +42,7 @@ public class GPXParser extends MinML2 {
 
   boolean line_uid_found = false;
 
+  String buffered_string = "";
 
   public GPXParser(InputStream i) {
     System.out.println("GPX parser started...");
@@ -223,33 +224,36 @@ public class GPXParser extends MinML2 {
         nodes.addElement(new Node(lat, lon, uid));
       }
 
+      if(qName.equals("name"))
+      {
+        
+        long tmpuid = Long.parseLong(buffered_string);
+        buffered_string = "";        
+        if( looking_for_uid )
+        {
+          looking_for_uid = false;
+          uid = tmpuid;
+          uidfound = true;
+        }
+
+        if( looking_for_line_uid )
+        {
+          looking_for_line_uid = false;
+          line_uid = tmpuid;
+          line_uid_found = true; 
+        }
+
+      }
 
     }
-  }
+  } // endElement
 
   public void characters (char ch[], int start, int length) {
     String in = new String(ch, start, length);
 
-    if( looking_for_uid )
-    {
-      looking_for_uid = false;
+    buffered_string += in;
 
-      uid = Long.parseLong(in);        
-
-      uidfound = true;
-
-    }
-
-    if( looking_for_line_uid )
-    {
-      looking_for_line_uid = false;
-
-      line_uid = Long.parseLong(in);
-
-      line_uid_found = true; 
-
-    }
-  }
+  } // characters
 
   public void fatalError (SAXParseException e) throws SAXException {
     System.out.println("Error: " + e);
@@ -267,12 +271,12 @@ public class GPXParser extends MinML2 {
       {
         return n;
       }
-      
+
 
     }
 
     return null;
-      
+
   } // getNode
 
   public Vector getNodes()

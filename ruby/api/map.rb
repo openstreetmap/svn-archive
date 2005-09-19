@@ -45,11 +45,13 @@ if linesegments
   linesegments.each do |key, l|
     node_a = nodes[l.node_a_uid]
     node_b = nodes[l.node_b_uid]
-
-    used_nodes[l.node_a_uid] = node_a
-    used_nodes[l.node_b_uid] = node_b
-
-    gpx.addline(key, node_a, node_b)
+    
+    if node_a.visible && node_b.visible
+      used_nodes[l.node_a_uid] = node_a
+      used_nodes[l.node_b_uid] = node_b
+    
+      gpx.addline(key, node_a, node_b)
+    end
   end
 
   dangling_nodes = nodes.to_a - used_nodes.to_a

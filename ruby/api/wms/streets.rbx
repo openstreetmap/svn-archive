@@ -128,7 +128,6 @@ fname = '/tmp/' + rand.to_s  + '_tmpimg'
 
 
 File.open(fname, "wb") {|stream|
-  begin
   cr = Context.new
   cr.set_target_png(stream, FORMAT_ARGB32, width, height);
 
@@ -168,48 +167,7 @@ File.open(fname, "wb") {|stream|
     
   end
 
-=begin
-  len = proj.kilometerinpixels * WIDTH  / 2.0
-
-
-  hum =  BigDecimal::new(len.to_s).exponent - 1
-
-  
-  len = (10.0 ** hum ) / proj.kilometerinpixels
-
-  cr.new_path
-  cr.rectangle(WIDTH - OFFSET - len, HEIGHT + BASELINE - BARPX, len, BARPX)
-  cr.set_rgb_color(0.8,0.8,0.8)
-  cr.close_path
-  cr.fill
-
-  cr.new_path
-  cr.select_font "Sans", Cairo::FONT_WEIGHT_NORMAL, Cairo::FONT_SLANT_NORMAL
-  cr.scale_font 20
-  cr.move_to(WIDTH - ((OFFSET + OFFSET + len) / 2) - 20, HEIGHT + BASELINE - 5 ).text_path("#{10.0 ** hum} km")
-  cr.close_path
-  cr.set_rgb_color(0.0,0.0,0.0)
-  cr.fill
-
-  cr.new_path
-  cr.line_to(WIDTH - OFFSET, HEIGHT + BASELINE)
-  cr.line_to(WIDTH - OFFSET, HEIGHT + BASELINE - BARPX)
-  cr.line_to(WIDTH - OFFSET, HEIGHT + BASELINE)
-  cr.line_to(WIDTH - OFFSET - len, HEIGHT + BASELINE)
-  cr.line_to(WIDTH - OFFSET - len, HEIGHT + BASELINE - BARPX)
-  cr.line_to(WIDTH - OFFSET - len, HEIGHT + BASELINE)
-  
-  cr.close_path
-  cr.set_rgb_color(0.0,0.0,0.0)
-  cr.line_join = LINE_JOIN_MITER
-  cr.line_width = 1
-  cr.stroke
-  
-=end
-  cr.show_page
-#  ensure
-#    stream.close
-  end
+ cr.show_page
 }
 
 File::open( fname, 'r' ) {|ofh|
@@ -218,5 +176,8 @@ File::open( fname, 'r' ) {|ofh|
 
 #now delete it. sigh
 File::delete( fname )
-  
+
+GC.start
+
+exit
 

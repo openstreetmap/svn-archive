@@ -46,7 +46,7 @@ if linesegments
     node_a = nodes[l.node_a_uid]
     node_b = nodes[l.node_b_uid]
     
-    if node_a.visible && node_b.visible
+    if node_a.visible ==true && node_b.visible == true
       used_nodes[l.node_a_uid] = node_a
       used_nodes[l.node_b_uid] = node_b
     

@@ -41,12 +41,12 @@ files.each_hash do |row|
   begin
     gfile = Zlib::GzipReader.new(tfile)
     parser = REXML::Parsers::SAX2Parser.new( gfile.read )
-    $stderr << 'looks like a gzipped file\n'
+    $stderr << "looks like a gzipped file\n"
   rescue Zlib::Error => e
     tfile.close
     file = File.new( filename )
     parser = REXML::Parsers::SAX2Parser.new( file )
-    $stderr << 'looks like a plain file\n'
+    $stderr << "looks like a plain file\n"
   end 
 
   
@@ -55,20 +55,20 @@ files.each_hash do |row|
   user_uid = row['user_uid'].to_i
   original_name = row['originalname']
 
-  $stderr << 'Inserting ' + original_name + ' for user ' + user_uid.to_s + ' from file ' + filename + '\n'
+  $stderr << 'Inserting ' + original_name + ' for user ' + user_uid.to_s + ' from file ' + filename + "\n"
   
   
   trackseg = 0
   gpx_uid = dao.new_gpx_file(user_uid, original_name)
 
   if gpx_uid == 0
-    $stderr << 'bad gpx number!\n'
+    $stderr << "bad gpx number!\n"
     exit
   end
 
   dbh = dao.get_connection #bit hacky, but we need a connection
 
-  $stderr << 'new gpx file uid: ' + gpx_uid.to_s + '\n'
+  $stderr << 'new gpx file uid: ' + gpx_uid.to_s + "\n"
 
   lat = -1
   lon = -1

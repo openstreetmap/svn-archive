@@ -34,10 +34,13 @@ if action == ''
   <%
 else
   if action == 'create'
-    email = email.downcase.match(/\b[a-z0-9._%-]+@[a-z0-9._%-]+\.[a-z]{2,4}\b/)
-    if email && email.length < 45
+    
+    email2 = email.downcase.match(/\b[a-z0-9._%+-]+@[a-z0-9._%+-]+\.[a-z]{2,4}\b/).to_s
+    
+    email.downcase!
+    
+    if email == email2 && email.length < 45
       #email looks good
-      email = email.to_s
 
       if pass1 != '' && pass1.length > 5 && pass1 == pass2 && !pass1.index(' ')
         #password looks good
@@ -74,7 +77,7 @@ END_OF_MESSAGE
             end
 
             %>
-            Congratulations, an email is on it's way. Click the link within it to confirm your account.
+            Congratulations, an email is on its way to <%=email%>. Click the link within it to confirm your account.
             <%
           end
 

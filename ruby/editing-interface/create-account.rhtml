@@ -35,11 +35,9 @@ if action == ''
 else
   if action == 'create'
     
-    email2 = email.downcase.match(/\b[a-z0-9._%+-]+@[a-z0-9._%+-]+\.[a-z]{2,4}\b/).to_s
+    email = email.downcase.match(/\b[a-z0-9._%+-]+@[a-z0-9._%+-]+\.[a-z]{2,4}\b/).to_s
     
-    email.downcase!
-    
-    if email == email2 && email.length < 45
+    if email && email == cgi['email'].downcase && email.length < 45
       #email looks good
 
       if pass1 != '' && pass1.length > 5 && pass1 == pass2 && !pass1.index(' ')

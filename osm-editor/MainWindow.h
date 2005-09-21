@@ -145,7 +145,7 @@ private:
 
 	void drawTrackpoint(QPainter&,const QBrush&,int,int,int);
 	void drawTrackpoint(QPainter&,const QBrush&,int,int,int,int);
-	void saveFile(const QString&);
+	void saveFile(const QString&,bool=false);
 
 	void initSegmentSelection(int,int);
 	void initPolygon();
@@ -176,8 +176,9 @@ public:
 	MainWindow (double=51.0,double=-1.0,double=4000,
 			 		double=640,double=480);
 	~MainWindow();
-	Components * doOpen(const QString&);
+	Components * doOpen(const QString&, bool=false);
 
+	void open2(bool=false);
 	void grabGPXFromNet(const QString& url);
 	void postGPX(const QString& url);
 
@@ -217,8 +218,10 @@ public:
 
 public slots:
 	void open();
+	void openOSM();
 	void save();
 	void saveAs();
+	void saveOSM();
 	void readGPS();
 	void quit();
 	void toggleWaypoints();
@@ -236,6 +239,10 @@ public slots:
 	void left();
 	void right();
 	void magnify();
+	void screenUp();
+	void screenDown();
+	void screenLeft();
+	void screenRight();
 	void shrink();
 	void removeExcessPoints();
 	void commitExcessPoints();

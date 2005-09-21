@@ -24,6 +24,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+#include <cmath>
 
 #include <qapplication.h>
 #include <qpainter.h>
@@ -43,6 +44,7 @@
 
 #include <qxml.h>
 #include "GPXParser.h"
+
 
 #ifdef XMLRPC
 #include <string>
@@ -134,8 +136,10 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	// Construct the menus.
 	QPopupMenu* fileMenu = new QPopupMenu(this);
 	fileMenu->insertItem("&Open",this,SLOT(open()),CTRL+Key_O);
+	fileMenu->insertItem("Open OSM",this,SLOT(openOSM()));
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
+	fileMenu->insertItem("Save OSM...",this,SLOT(saveOSM()));
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
 	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
 	fileMenu->insertItem("Grab GPX from Net",this,SLOT(grabGPXFromNet()),
@@ -335,12 +339,22 @@ MainWindow::~MainWindow()
 	delete components;
 }
 
-void MainWindow::open()
+void MainWindow::open() 
+{
+	open2(false);
+}
+
+void MainWindow::openOSM()
+{
+	open2(true);
+}
+
+void MainWindow::open2(bool osm)
 {
 	QString filename = QFileDialog::getOpenFileName("","*.gpx",this);
 	if(filename!="")
 	{
-		Components *newComponents = doOpen(filename);
+		Components *newComponents = doOpen(filename,osm);
 		if(newComponents)
 		{
 			cout << "!!! Deleting existing components !!!" << endl;
@@ -352,12 +366,13 @@ void MainWindow::open()
 	}
 }
 
-Components * MainWindow::doOpen(const QString& filename)
+Components * MainWindow::doOpen(const QString& filename, bool osm)
 {
 	Components * comp;
 
 
 	GPXParser parser;
+	parser.setOSM(osm);
 	QFile file(filename);
 	QXmlInputSource source(&file);
 	QXmlSimpleReader reader;
@@ -475,9 +490,16 @@ void MainWindow::saveAs()
 		saveFile(filename);
 }
 
-void MainWindow::saveFile(const QString& filename)
+void MainWindow::saveOSM()
 {
-	components->toGPX(filename);
+	QString filename = QFileDialog::getSaveFileName("","*.gpx",this);
+	if(filename!="")
+		saveFile(filename,true);
+}
+
+void MainWindow::saveFile(const QString& filename, bool osm)
+{
+	components->toGPX(filename,osm);
 	curFilename = filename;
 }
 
@@ -654,7 +676,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 		QPen trackPen(Qt::darkGray,2); 
 		TrackPoint curPt,prevPt;
 		TrackSeg *curSeg;
-		ScreenPos lastPos , curPos,
+		ScreenPos lastPos , curPos, lastDrawnPos,
 				  avPos,
 				  maxP1, maxP2;
 
@@ -663,6 +685,8 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 		QFont f("Helvetica",10,QFont::Bold,true);
 		QFontMetrics fm(f);
 		QString segname;
+
+		bool onScreen, overlappingPts = false;
 
 		double dx, dy, dist, maxDist=0;
 
@@ -679,6 +703,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			curPt = curSeg->getPoint(0);
 			prevPt = curPt;
 			lastPos = map.getScreenPos(curPt.lon,curPt.lat);
+			lastDrawnPos = lastPos;
 
 			for(int pt=0; pt<curSeg->nPoints(); pt++)
 			{
@@ -686,38 +711,67 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 				curPos = map.getScreenPos(curPt.lon,curPt.lat);	
 				p.setPen(curPen);
 
+
 				if(pt)
 				{
+					onScreen = 
+					((curPos.x>=0 && curPos.x<width() &&
+					  curPos.y>=0 && curPos.y<height()) ||
+					 (lastPos.x>=0 && lastPos.x<width() &&
+					  lastPos.y>=0 && lastPos.y<height()));
+		
+					// Overlapping points are those for which the difference
+					// in both x and y is 2 or less.
+					overlappingPts = 
+							abs(curPos.x-lastDrawnPos.x)<=2 && 
+							 abs(curPos.y-lastDrawnPos.y) <= 2;
 
-				/** NEW  */
-				// Disconnect tracks surveyed over separate occasions
-				if(curSeg->getType()!="track" || curPt.connected(prevPt,750,1))
-					p.drawLine(lastPos.x,lastPos.y,curPos.x,curPos.y);
 				
-				dy = curPos.y - lastPos.y; 
-				dx = curPos.x - lastPos.x;
 
-				dist = sqrt(dy*dy + dx*dx);
+					/** NEW  */
+					// Disconnect tracks surveyed over separate occasions
+				
 
-				// To find the maximum inter-point length in the current 
-				// segment, for displaying the segment name. Only count
-				// if in the middle half of the segment, to avoid the name
-				// "hanging off the end"
-				if(dist>maxDist 
-					&& pt>=curSeg->nPoints()/4 && pt<curSeg->nPoints()*3/4)
-				{
-					maxDist = dist;
-					maxP1 = lastPos; 
-					maxP2 = curPos;
+					// 21/09/05 Only draw line if at least one point is on 
+					// screen and the two points are not occupying the same 
+					// screen position
+
+					if( onScreen && !overlappingPts && 
+					(curSeg->getType()!="track"||curPt.connected(prevPt,750,1)))
+					{
+						p.drawLine(lastDrawnPos.x,lastDrawnPos.y,
+									curPos.x,curPos.y);
+					}
+				
+					dy = curPos.y - lastPos.y; 
+					dx = curPos.x - lastPos.x;
+
+					dist = sqrt(dy*dy + dx*dx);
+
+					// To find the maximum inter-point length in the current 
+					// segment, for displaying the segment name. Only count
+					// if in the middle half of the segment, to avoid the name
+					// "hanging off the end"
+					if(dist>maxDist 
+						&& pt>=curSeg->nPoints()/4 && pt<curSeg->nPoints()*3/4)
+					{
+						maxDist = dist;
+						maxP1 = lastPos; 
+						maxP2 = curPos;
+					}
 				}
-				}
 
-				if(trackpoints)
+				// 21/09/05 Don't draw the point if its screen position is the
+				// same as the last one
+				if(trackpoints && !overlappingPts &&
+					curPos.x>=0 && curPos.x<width() && curPos.y>=0 &&
+					curPos.y<height())
 				{
 					if(doingClonedTrack)
 						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,8);
 					else
 						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,1,pt);
+					lastDrawnPos = curPos;
 				}
 
 				for (int selPt=0; selPt<nSelectedPoints; selPt++)
@@ -1119,6 +1173,10 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 			case Qt::Key_Down  : down(); break; 
 			case Qt::Key_Plus  : magnify(); break; 
 			case Qt::Key_Minus : shrink(); break; 
+			case Qt::Key_H     : screenLeft(); break;
+			case Qt::Key_J     : screenDown(); break;
+			case Qt::Key_K     : screenUp(); break;
+			case Qt::Key_L     : screenRight(); break;
 		}
 	}
 }
@@ -1149,6 +1207,34 @@ void MainWindow::down()
 	double dis = 0.1/map.getScale();
 	map.move(0,-dis);
 	updateWithLandsatCheck();
+}
+
+void MainWindow::screenLeft()
+{
+	map.movePx(-width(),0);
+	landsatManager.grab(1.0);	
+	update();
+}
+
+void MainWindow::screenRight()
+{
+	map.movePx(width(),0);
+	landsatManager.grab(1.0);	
+	update();
+}
+
+void MainWindow::screenUp()
+{
+	map.movePx(0,-height());
+	landsatManager.grab(1.0);	
+	update();
+}
+
+void MainWindow::screenDown()
+{
+	map.movePx(0,height());
+	landsatManager.grab(1.0);	
+	update();
 }
 
 void MainWindow::magnify()

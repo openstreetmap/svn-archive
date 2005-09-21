@@ -52,15 +52,15 @@ private:
 	vector<Polygon*> polygons;
 
 
-	void doToGPX(std::ostream &outfile);
+	void doToGPX(std::ostream &outfile,bool=false);
 
 public:
 	Components() { waypoints=new Waypoints; track=new Track; clonedTrack=NULL;
 					activeTrack = track;}
 	void clearAll();
 
-	void toGPX(const char*);
-	std::string toGPX();
+	void toGPX(const char*,bool=false);
+	std::string toGPX(bool=false);
 
 	~Components() { clearAll(); }
 	bool addWaypoint (const Waypoint&) ;

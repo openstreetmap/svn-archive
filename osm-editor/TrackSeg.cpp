@@ -69,8 +69,14 @@ bool TrackPoint::connected(const TrackPoint& pt, double timeThreshold,
 	return fabs(othertime-time) <= timeThreshold || distKM <= distThreshold;
 }
 
-void TrackSeg::toGPX(std::ostream& outfile)
+// 21/09/05 osm flag stipulates whether to export as OpenStreetMap-format
+// GPX, i.e. each segment is within its own <trk> tag.
+
+void TrackSeg::toGPX(std::ostream& outfile, bool osm)
 {
+	if(osm) 
+		outfile << "<trk>" << endl << "<name>" << id << "</name>" << endl;
+
 	outfile<<"<trkseg>"<<endl;
 	
 	for(int count=0; count<points.size(); count++)
@@ -79,11 +85,12 @@ void TrackSeg::toGPX(std::ostream& outfile)
 			<<type<<"</type>"<<endl;
 	if(name!="")
 		outfile<<"<name>"<<name<<"</name>"<<endl;
-	outfile<<"<id>"<<id<<"</id>"<<endl;
+	if(!osm) outfile<<"<id>"<<id<<"</id>"<<endl;
 	outfile<<"</extensions>"<<endl;
 
 
 	outfile<<"</trkseg>"<<endl;
+	if(osm) outfile << "</trk>" << endl;
 }
 
 bool TrackSeg::deletePoints(int start, int end)

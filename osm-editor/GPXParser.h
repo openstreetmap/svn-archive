@@ -46,7 +46,7 @@ class GPXParser : public QXmlDefaultHandler
 {
 private:
 	bool inDoc, inWpt, inTrk, inName, inTrkpt, inId,
-		inType,  inTime, inTrkseg, foundSegType, inPolygon;
+		inType,  inTime, inSegment, foundSegType, inPolygon, osm;
 	Components* components;
 	Track* curTrack; 
 	QString curName, curType; 
@@ -63,6 +63,8 @@ public:
 									const QXmlAttributes&);
 	bool endElement(const QString&,const QString&, const QString&);
 	bool characters(const QString& characters);
+
+	void setOSM(bool osm) { this->osm = osm; }
 
 	
 	GPXParser();

@@ -53,7 +53,7 @@ public:
 	QString getID() 
 		{ return id; }
 	bool addTrackpt(int seg,const QString& t, double lat, double lon);
-	void toGPX(std::ostream&);
+	void toGPX(std::ostream&,bool=false);
 	bool deletePoints(const RetrievedTrackPoint& p1, 
 					const RetrievedTrackPoint& p2, double limit);
 	bool segmentise(const QString& newType, const RetrievedTrackPoint& p1,

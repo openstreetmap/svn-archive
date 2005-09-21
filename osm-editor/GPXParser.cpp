@@ -33,10 +33,11 @@ namespace OpenStreetMap
 GPXParser::GPXParser(  )
 {
 	inDoc = inWpt = inTrk = inName = inTrkpt = inType = 
-	inTrkseg = inPolygon = inId = false;
+	inSegment = inPolygon = inId = false;
 	components = new Components;
 	curSeg = curId = 0;
 	curName = curType = curTimestamp = "";
+	osm = false;
 }
 
 bool GPXParser::startDocument()
@@ -65,9 +66,11 @@ bool GPXParser::startElement(const QString&,const QString&,
 		{
 			inTrk=true;
 		}
-		else if (element=="trkseg")
+		// 21/09/05 handle the OpenStreetMap GPX format
+		else if ((element=="trk"&&osm) || element=="trkseg")
 		{
-			inTrkseg=true;
+			cerr<<"Starting a trk" << endl;
+			inSegment=true;
 			curType = "track";
 			components->newSegment();
 		}
@@ -78,11 +81,11 @@ bool GPXParser::startElement(const QString&,const QString&,
 		}
 		else if (element=="name" && (inWpt||inTrkpt||inTrk))
 			inName=true;
-		else if (element=="type" && (inWpt||inTrk||inTrkseg||inPolygon))
+		else if (element=="type" && (inWpt||inTrk||inSegment||inPolygon))
 		{
 			inType=true;
 		}
-		else if (element=="id" && inTrkseg)
+		else if (element=="id" && inSegment)
 		{
 			inId = true;
 			curId = 0;
@@ -128,6 +131,11 @@ bool GPXParser::endElement(const QString&,const QString&,
 	{
 		components->setTrackID (curName);
 		inTrk = false;
+		if(osm) 
+		{
+			inSegment = false;
+			curSeg++;
+		}
 	}
 
 	else if(inPolygon && element=="polygon")
@@ -162,11 +170,15 @@ bool GPXParser::endElement(const QString&,const QString&,
 	}
 
 	// If the segment had a type, add the segment to the segment table.
-	else if (inTrkseg && element=="trkseg")
+	else if (inSegment && element=="trkseg")
 	{
-		components->setSegId(curSeg,curId);
-		components->setSegType(curSeg++,curType);
-		inTrkseg = false;
+		components->setSegType(curSeg,curType);
+		if(!osm)
+		{
+			components->setSegId(curSeg,curId);
+			inSegment = false;
+			curSeg++;
+		}
 	}
 
 	return true;
@@ -182,8 +194,10 @@ bool GPXParser::characters(const QString& characters)
 		curName = chr;
 		if(inTrk)
 		{
-			if(inTrkseg)
+			if(inSegment && !osm)
 				components->setSegName(curSeg,curName);
+			else if (inSegment && osm)
+				components->setSegId(curSeg,atoi(curName.ascii()));
 			else
 				components->setTrackID (curName);
 		}
@@ -223,6 +237,4 @@ bool GPXParser::characters(const QString& characters)
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-
 

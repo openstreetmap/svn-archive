@@ -86,7 +86,7 @@ public:
 	bool addPoint(const TrackPoint& pt, int pos);
 	
 	
-	void toGPX(ostream&);
+	void toGPX(ostream&,bool=false);
 	int findNearestTrackpoint(const EarthPoint& p,double limit,double* = NULL);
 	bool deletePoints(int start, int end);
 

@@ -70,14 +70,16 @@ void Track::removeSegs(const QString& type)
 }
 
 // Write a track to GPX.
-void Track::toGPX(std::ostream &outfile)
+void Track::toGPX(std::ostream &outfile, bool osm)
 {
-	outfile<<"<trk>" << endl << "<name>" << id << "</name>" << endl;
+	if(!osm)
+		outfile<<"<trk>" << endl << "<name>" << id << "</name>" << endl;
 
 	for(int count=0; count<segs.size(); count++)
-		segs[count]->toGPX(outfile);
+		segs[count]->toGPX(outfile,osm);
 
-	outfile<<"</trk>"<<endl;
+	if(!osm)
+		outfile<<"</trk>"<<endl;
 }
 
 TrackSeg * Track::findNearestSeg(const EarthPoint& p, double limit)

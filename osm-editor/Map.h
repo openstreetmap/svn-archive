@@ -58,6 +58,9 @@ public:
 	void move(double edis,double ndis)
 		{ bottomLeft.x += edis*1000; bottomLeft.y += ndis*1000; }
 
+	void movePx(double xdis, double ydis)
+		{ move(earthDist(xdis/1000), -earthDist(ydis/1000)); }
+
 	EarthPoint getTopLeft() { return getEarthPoint(ScreenPos(0,0)); }
 	EarthPoint getBottomRight() 
 		{ return getEarthPoint(ScreenPos(width,height)); }

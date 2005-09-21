@@ -8,27 +8,21 @@ using namespace std;
 namespace OpenStreetMap
 {
 
-void LandsatManager::grab()
+void LandsatManager::grab(double nScr)
 {
 	if(dataDisplayed)
-		forceGrab();
+		forceGrab(nScr);
 }
 
-void LandsatManager::forceGrab()
+void LandsatManager::forceGrab(double nScr)
 {
 	int w=widget->width(), h=widget->height();
-	/*
-	topLeft = widget->getMap().getEarthPoint (ScreenPos(-w,-h));
-	bottomRight = widget->getMap().getEarthPoint (ScreenPos(w*2,h*2));
-	*/
-	topLeft = widget->getMap().getEarthPoint (ScreenPos(-w*0.5,-h*0.5));
-	bottomRight = widget->getMap().getEarthPoint (ScreenPos(w*1.5,h*1.5));
-	/*
+	topLeft = widget->getMap().getEarthPoint (ScreenPos(-w*(nScr/2-0.5),
+														-h*(nScr/2-0.5)));
+	bottomRight = widget->getMap().getEarthPoint (ScreenPos(w*(nScr/2+0.5),
+															h*(nScr/2+0.5)));
 	CURL_LOAD_DATA *landsatData = grab_landsat
-			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*3,h*3);
-			*/
-	CURL_LOAD_DATA *landsatData = grab_landsat
-			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*2,h*2);
+			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*nScr,h*nScr);
 	pixmap.loadFromData((const uchar*)landsatData->data,landsatData->nbytes);
 	free(landsatData->data);
 	free(landsatData);

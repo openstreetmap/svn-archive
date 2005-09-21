@@ -35,27 +35,27 @@ namespace OpenStreetMap
 {
 
 
-void Components::toGPX(const char* filename)
+void Components::toGPX(const char* filename, bool osm)
 {
 	std::ofstream outfile(filename);
-	doToGPX(outfile);
+	doToGPX(outfile,osm);
 }
 
-std::string Components::toGPX()
+std::string Components::toGPX(bool osm)
 {
 	std::ostringstream strm; 
-	doToGPX(strm);
+	doToGPX(strm,osm);
 	return strm.str();
 }
 
-void Components::doToGPX(std::ostream &outfile)
+void Components::doToGPX(std::ostream &outfile, bool osm)
 {
 	outfile<<"<gpx version=\"1.0\" " 
 		   <<"creator=\"Hogweed Software Freemap::Components class\" " 
 		   <<"xmlns=\"http://www.topografix.com/GPX/1/0\">" << endl;
 
 	if(waypoints)waypoints->toGPX(outfile);
-	if(track)track->toGPX(outfile);
+	if(track)track->toGPX(outfile,osm);
 
 	for(int count=0; count<polygons.size(); count++)
 		polygons[count]->toGPX(outfile);

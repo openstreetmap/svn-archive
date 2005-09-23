@@ -34,6 +34,7 @@ GPXParser::GPXParser(  )
 {
 	inDoc = inWpt = inTrk = inName = inTrkpt = inType = 
 	inSegment = inPolygon = inId = false;
+	inFoot = inHorse = inCar = inBike = inClass = false;
 	components = new Components;
 	curSeg = curId = 0;
 	curName = curType = curTimestamp = "";
@@ -58,21 +59,23 @@ bool GPXParser::startElement(const QString&,const QString&,
 {
 	if(inDoc)
 	{
+		if(element=="trk") inTrk = true;
+
 		if(element=="wpt")
 		{
 			inWpt=true;
 		}
-		else if (element=="trk")
-		{
-			inTrk=true;
-		}
 		// 21/09/05 handle the OpenStreetMap GPX format
-		else if ((element=="trk"&&osm) || element=="trkseg")
+		else if ((element=="trk"&&osm) || (element=="trkseg"&&!osm))
 		{
-			cerr<<"Starting a trk" << endl;
 			inSegment=true;
 			curType = "track";
 			components->newSegment();
+			if(osm)
+			{
+				metaData.foot=metaData.car=metaData.horse=metaData.bike="";
+				metaData.routeClass = "";
+			}
 		}
 		else if (element=="polygon")
 		{
@@ -85,7 +88,7 @@ bool GPXParser::startElement(const QString&,const QString&,
 		{
 			inType=true;
 		}
-		else if (element=="id" && inSegment)
+		else if ((element=="id"&&!osm || element=="number"&&osm) && inSegment)
 		{
 			inId = true;
 			curId = 0;
@@ -98,6 +101,64 @@ bool GPXParser::startElement(const QString&,const QString&,
 		{
 			inTrkpt = true;
 		}
+		else if (element=="foot" && inSegment)
+		{
+			inFoot = true;
+		}
+		else if (element=="horse" && inSegment)
+		{
+			inHorse = true;
+		}
+		else if (element=="bike" && inSegment)
+		{
+			inBike = true;
+		}
+		else if (element=="car" && inSegment)
+		{
+			inCar = true;
+		}
+		else if (element=="class" && inSegment)
+		{
+			inClass = true;
+		}
+		else if (element=="property")
+		{
+			QString keyName = ""; 
+			QString keyValue = "";
+
+			for (int count=0; count<attributes.length(); count++)
+			{
+				if(attributes.qName(count)=="key")
+					keyName = attributes.value(count);
+				else if (attributes.qName(count)=="value")
+					keyValue = attributes.value(count);
+			
+			}
+
+
+			if(keyName=="foot")
+			{
+				metaData.foot = keyValue;
+			}
+			else if (keyName=="horse")
+			{
+				metaData.horse = keyValue;
+			}
+			else if (keyName=="bike")
+			{
+				metaData.bike = keyValue;
+			}
+			else if (keyName == "car")
+			{
+				metaData.car = keyValue;
+			}
+			else if(keyName == "class")
+			{
+				metaData.routeClass = keyValue;
+			}
+
+		}
+
 
 		if(element=="wpt"||element=="trkpt"||element=="polypt")
 		{
@@ -133,6 +194,9 @@ bool GPXParser::endElement(const QString&,const QString&,
 		inTrk = false;
 		if(osm) 
 		{
+			RouteMetaDataHandler handler;
+			components->setSegType(curSeg,handler.getRouteType(metaData));
+			components->setSegId(curSeg,curId);
 			inSegment = false;
 			curSeg++;
 		}
@@ -150,35 +214,41 @@ bool GPXParser::endElement(const QString&,const QString&,
 	else if(inType && element=="type")
 		inType=false;
 
-	else if(inId && element=="id")
+	else if(inId && ((!osm && element=="id") || (osm && element=="number")))
 		inId = false;
 
 	else if(inTime && element=="time")
 		inTime=false;
 
-	
+	else if(inFoot && element=="foot")
+		inFoot = false;
+
+	else if(inHorse && element=="horse")
+		inHorse = false;
+
+	else if (inBike && element=="bike")
+		inBike = false;
+
+	else if (inCar && element=="car")
+		inCar = false;
+
+	else if(inClass && element=="class")
+		inClass = false;
+
 	else if(inWpt && element=="wpt")
 	{
-			/*
-		cerr<<"adding waypoint:" <<
-				curName <<" " << curLat << " " << curLong << " "
-				<< atoi(curType.ascii()) << endl;
-				*/
 		components->addWaypoint(Waypoint(curName,curLat,curLong,curType,curId));
 		inWpt = false;
 		curId = 0;
 	}
 
 	// If the segment had a type, add the segment to the segment table.
-	else if (inSegment && element=="trkseg")
+	else if (inSegment && element=="trkseg" && !osm)
 	{
+		components->setSegId(curSeg,curId);
 		components->setSegType(curSeg,curType);
-		if(!osm)
-		{
-			components->setSegId(curSeg,curId);
-			inSegment = false;
-			curSeg++;
-		}
+		inSegment = false;
+		curSeg++;
 	}
 
 	return true;
@@ -194,30 +264,25 @@ bool GPXParser::characters(const QString& characters)
 		curName = chr;
 		if(inTrk)
 		{
-			if(inSegment && !osm)
+			if(inSegment)
+			{
 				components->setSegName(curSeg,curName);
-			else if (inSegment && osm)
-				components->setSegId(curSeg,atoi(curName.ascii()));
+			}
 			else
 				components->setTrackID (curName);
 		}
 		else if (inWpt)
 		{
-			cerr << "PARSING: " << curName << "--> "; 
 			// Parse a name of the form ID:name, as exported by Freemap.
 			QRegExp regexp("^(\\d+):(.*)$");
 			if(regexp.search(curName)>=0)
 			{
-				cerr << "THERE WAS A MATCH " << endl;
 				curName = regexp.cap(2);
 				if(curName==QString::null) {curName="NULL";}
-				cerr << "curName now = " << curName << endl;
 				curId = atoi( regexp.cap(1).ascii() );
-				cerr << "curId now = " << curId << endl;
 			}
 			else
 			{
-				cerr << "NO MATCH" << endl;
 			}
 			
 		}
@@ -226,10 +291,19 @@ bool GPXParser::characters(const QString& characters)
 		curType = chr; 
 	else if(inId)
 		curId = atoi(chr.ascii());
+	else if(inFoot)
+		metaData.foot = chr;
+	else if(inHorse)
+		metaData.horse = chr;
+	else if(inBike)
+		metaData.bike = chr;
+	else if(inCar)
+		metaData.car =chr;
+	else if(inClass)
+		metaData.routeClass = chr; 
 	else if(inTime)
 	{
 		curTimestamp = chr; // 10/04/05 timestamp now string 
-//		cerr<<curTimestamp<<endl;
 	}
 
 	return true;

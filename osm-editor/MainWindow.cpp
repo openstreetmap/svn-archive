@@ -377,9 +377,11 @@ Components * MainWindow::doOpen(const QString& filename, bool osm)
 	QXmlInputSource source(&file);
 	QXmlSimpleReader reader;
 	reader.setContentHandler(&parser);
+	cerr<<"PARSING GPX"<<endl;
 	reader.parse(source);
+	cerr<<"DONE PARSING GPX"<<endl;
 	comp = parser.getComponents();	
-	
+	cerr<<"DONE doOpen"<<endl;	
 	return comp;
 }
 

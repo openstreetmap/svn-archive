@@ -1,5 +1,6 @@
 #include "TrackSeg.h"
 #include "SRTMGeneral.h"
+#include "RouteMetaDataHandler.h"
 
 #include <ctime>
 #include <cmath>
@@ -75,19 +76,56 @@ bool TrackPoint::connected(const TrackPoint& pt, double timeThreshold,
 void TrackSeg::toGPX(std::ostream& outfile, bool osm)
 {
 	if(osm) 
-		outfile << "<trk>" << endl << "<name>" << id << "</name>" << endl;
+	{
+		outfile << "<trk>" << endl 
+				<< "<number>" << id << "</number>" << endl;
+		if(name!="")
+			outfile << "<name>" << name << "</name>" << endl;
+		outfile << "<extensions>" << endl;
+		RouteMetaDataHandler mdh;
+		try
+		{
+			RouteMetaData metaData = mdh.getMetaData(type);
+			/*
+			outfile << "<foot>" << metaData.foot << "</foot>"<<endl;
+			outfile << "<horse>" << metaData.horse << "</horse>"<<endl;
+			outfile << "<bike>" << metaData.bike << "</bike>"<<endl;
+			outfile << "<car>" << metaData.car << "</car>"<<endl;
+			outfile << "<class>" << metaData.routeClass << "</class>"<<endl;
+			*/
+			outfile << "<property key=\"foot\" value=\"" << metaData.foot << 
+					"\"/>"<<endl;
+			outfile << "<property key=\"horse\" value=\"" << metaData.horse<< 
+					"\"/>"<<endl;
+			outfile << "<property key=\"bike\" value=\"" << metaData.bike << 
+					"\"/>"<<endl;
+			outfile << "<property key=\"car\" value=\"" << metaData.car << 
+					"\"/>"<<endl;
+			outfile << "<property key=\"class\" value=\"" << 
+					metaData.routeClass << "\"/>"<<endl;
+		}
+		catch (QString str)
+		{
+			cerr << "Unknown route type: " << str << endl;
+		}
+		outfile << "</extensions>" << endl;
+	}
+
 
 	outfile<<"<trkseg>"<<endl;
 	
 	for(int count=0; count<points.size(); count++)
 		points[count].toGPX(outfile);
-	outfile <<"<extensions>"<<endl<<"<type>"
-			<<type<<"</type>"<<endl;
-	if(name!="")
-		outfile<<"<name>"<<name<<"</name>"<<endl;
-	if(!osm) outfile<<"<id>"<<id<<"</id>"<<endl;
-	outfile<<"</extensions>"<<endl;
 
+	if(!osm)
+	{
+		outfile <<"<extensions>"<<endl<<"<type>"
+			<<type<<"</type>"<<endl;
+		if(name!="")
+			outfile<<"<name>"<<name<<"</name>"<<endl;
+		outfile<<"<id>"<<id<<"</id>"<<endl;
+		outfile<<"</extensions>"<<endl;
+	}
 
 	outfile<<"</trkseg>"<<endl;
 	if(osm) outfile << "</trk>" << endl;

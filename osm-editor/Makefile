@@ -9,7 +9,7 @@ INSTALL = install -m 755
 TESTGPSOBJ = testgps.o GPSDevice.o 
 OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
-	  Permissions.o LoginDialogue.o moc_MainWindow.o curlstuff.o \
+	  RouteMetaDataHandler.o LoginDialogue.o moc_MainWindow.o curlstuff.o \
 	  Polygon.o TrackSeg.o SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
 	  RemoveExcessDialogue.o
 LIBS = -ljeeps 
@@ -70,7 +70,7 @@ distclean: clean
 osmeditor.o : MainWindow.h
 GPSDevice.o : GPSDevice.h Track.h Waypoint.h functions.h
 MainWindow.o : WaypointDialogue.h GPXParser.h Components.h Track.h Polygon.h\
-	Waypoint.h functions.h MainWindow.h Permissions.h LoginDialogue.h Map.h\
+	Waypoint.h functions.h MainWindow.h RouteMetaDataHandler.h LoginDialogue.h Map.h\
 	LandsatManager.h TrackSeg.h SRTMConGen.h SRTMDataGrid.h SRTMGeneral.h
 Components.o : Components.h Track.h Waypoint.h Polygon.h functions.h
 Track.o : Track.h TrackSeg.h
@@ -79,7 +79,7 @@ Polygon.o : Polygon.h functions.h
 WaypointDialogue.o : WaypointDialogue.h
 GPXParser.o: GPXParser.h Components.h 
 GPSDevice.o: Track.h Waypoint.h 
-Permissions.o: Permissions.h
+RouteMetaDataHandler.o: RouteMetaDataHandler.h
 LoginDialogue.o : LoginDialogue.h
 Polygon.o : Polygon.h
 LandsatManager.o : LandsatManager.h curlstuff.h

@@ -38,6 +38,7 @@
 
 #include <qxml.h>
 #include "Components.h"
+#include "RouteMetaDataHandler.h"
 
 namespace OpenStreetMap 
 {
@@ -46,7 +47,8 @@ class GPXParser : public QXmlDefaultHandler
 {
 private:
 	bool inDoc, inWpt, inTrk, inName, inTrkpt, inId,
-		inType,  inTime, inSegment, foundSegType, inPolygon, osm;
+		inType,  inTime, inSegment, foundSegType, inPolygon, osm,
+		inFoot, inCar, inBike, inHorse, inClass;
 	Components* components;
 	Track* curTrack; 
 	QString curName, curType; 
@@ -55,6 +57,8 @@ private:
 	int segStart, trkptCount;
 	Polygon *curPolygon;
 	int curSeg, curId;
+	RouteMetaData metaData;
+
 
 public:
 	bool startDocument();

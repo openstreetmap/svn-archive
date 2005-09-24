@@ -44,30 +44,36 @@ void TrackPoint::toGPX(std::ostream& outfile)
 bool TrackPoint::connected(const TrackPoint& pt, double timeThreshold,
 							double distThreshold)
 {
-	// Convert the points to grid refs
-	EarthPoint gridref = ll_to_gr(lat,lon),
+	if(timestamp!="" && pt.timestamp!="")
+	{
+		// Convert the points to grid refs
+		EarthPoint gridref = ll_to_gr(lat,lon),
 			   otherGridref = ll_to_gr(pt.lat,pt.lon);
 
-	// Get distance in km
-	double dx = (otherGridref.x - gridref.x) / 1000,
-		   dy = (otherGridref.y - gridref.y) / 1000;
+		// Get distance in km
+		double dx = (otherGridref.x - gridref.x) / 1000,
+		   	    dy = (otherGridref.y - gridref.y) / 1000;
 
-	double distKM = sqrt(dx*dx + dy*dy);
+		double distKM = sqrt(dx*dx + dy*dy);
 
-	// Parse the timestamps
-	struct tm  this_tm,other_tm;
+		// Parse the timestamps
+		struct tm  this_tm,other_tm;
 	
-	strptime(timestamp,"%Y-%m-%dT%H:%M:%SZ",&this_tm);
-	strptime(pt.timestamp,"%Y-%m-%dT%H:%M:%SZ",&other_tm);
+		strptime(timestamp,"%Y-%m-%dT%H:%M:%SZ",&this_tm);
+		strptime(pt.timestamp,"%Y-%m-%dT%H:%M:%SZ",&other_tm);
 
-	// Convert to secs since the year dot
-	time_t time = mktime(&this_tm), othertime = mktime(&other_tm);
+		// Convert to secs since the year dot
+		time_t time = mktime(&this_tm), othertime = mktime(&other_tm);
 
-	// Get speed in KM/H
-	double spd = distKM/ ((fabs(othertime - time)) / 3600.0);
+		// Get speed in KM/H
+		double spd = distKM/ ((fabs(othertime - time)) / 3600.0);
 
-	// Is the speed less than the threshold speed or distance?
-	return fabs(othertime-time) <= timeThreshold || distKM <= distThreshold;
+		// Is the speed less than the threshold speed or distance?
+		return fabs(othertime-time) <= timeThreshold || distKM <= distThreshold;
+	}
+	// If one point has no timestamp, assume it's been inserted later, and
+	// that they ARE connected.
+	return true;
 }
 
 // 21/09/05 osm flag stipulates whether to export as OpenStreetMap-format

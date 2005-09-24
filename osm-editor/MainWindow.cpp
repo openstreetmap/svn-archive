@@ -94,7 +94,7 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 
 MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 									map(lon,lat,s,w,h), 
-									polygonRes(0.1),
+									polygonRes(0.05),
 									landsatManager(this)
 {
 	cerr<<lat<<" "<<lon<<endl;
@@ -412,6 +412,7 @@ void MainWindow::grabGPXFromNet()
 		source.setData(gpx);
 
 		GPXParser parser;
+		parser.setOSM(true);
 		QXmlSimpleReader reader;
 		reader.setContentHandler(&parser);
 		reader.parse(source);
@@ -437,7 +438,7 @@ void MainWindow::postGPX()
 {
 	QString url=QInputDialog::getText("Enter URL",
 										"Enter URL of GPX server:");
-	std::string gpx = components->toGPX();
+	std::string gpx = components->toGPX(true);
 	char *cgpx = new char[gpx.size()+1];
 	strcpy(cgpx,gpx.c_str()); // necessary because a curl function has no const
 
@@ -677,6 +678,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 	{
 		QPen trackPen(Qt::darkGray,2); 
 		TrackPoint curPt,prevPt;
+		TrackPoint junk;
 		TrackSeg *curSeg;
 		ScreenPos lastPos , curPos, lastDrawnPos,
 				  avPos,
@@ -704,6 +706,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			maxDist = 0;
 			curPt = curSeg->getPoint(0);
 			prevPt = curPt;
+			junk = curPt;
 			lastPos = map.getScreenPos(curPt.lon,curPt.lat);
 			lastDrawnPos = lastPos;
 
@@ -739,7 +742,8 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 					// screen position
 
 					if( onScreen && !overlappingPts && 
-					(curSeg->getType()!="track"||curPt.connected(prevPt,750,1)))
+					(curSeg->getType()!="track"||
+					 curPt.connected(junk,750,2)))
 					{
 						p.drawLine(lastDrawnPos.x,lastDrawnPos.y,
 									curPos.x,curPos.y);
@@ -765,15 +769,21 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 
 				// 21/09/05 Don't draw the point if its screen position is the
 				// same as the last one
-				if(trackpoints && !overlappingPts &&
+				if( !overlappingPts &&
 					curPos.x>=0 && curPos.x<width() && curPos.y>=0 &&
 					curPos.y<height())
 				{
-					if(doingClonedTrack)
-						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,8);
-					else
-						drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,1,pt);
+					if(trackpoints)
+					{
+						if(doingClonedTrack)
+							drawTrackpoint(p,curPen.color(),curPos.x,
+											curPos.y,8);
+						else
+							drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,
+											1,pt);
+					}
 					lastDrawnPos = curPos;
+					junk = curPt;
 				}
 
 				for (int selPt=0; selPt<nSelectedPoints; selPt++)
@@ -846,7 +856,6 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 
 	QPointArray qpointarray(polygon->size());
 
-
 	for(int count=0; count<polygon->size(); count++)
 	{
 		current = map.getScreenPos(polygon->getPoint(count));
@@ -857,7 +866,6 @@ void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
 	p.setBrush(QBrush(polydata[polygon->getType()].color(),Qt::SolidPattern));
 	p.drawPolygon(qpointarray);
 	p.setBrush(Qt::NoBrush);
-
 }
 
 
@@ -1057,30 +1065,37 @@ void MainWindow::mouseMoveEvent(QMouseEvent* ev)
 	{
 		QPainter p (this);
 		p.setPen(polydata[polygon->getType()]);
+
+		
 		if(curPolygonPts.size()>=1)
 		{
-			ScreenPos prev = *(curPolygonPts.end()-1);
+			EarthPoint prevLL = *(curPolygonPts.end()-1),
+					   prevGR = ll_to_gr(prevLL),
+					   currentLL = map.getEarthPoint(ev->x(),ev->y()),
+					   curGR = ll_to_gr(currentLL);
+			ScreenPos  prevScreenPos = map.getScreenPos(prevLL);
 
-			p.drawLine(prev.x,prev.y,ev->x(),ev->y());	
+			p.drawLine(prevScreenPos.x,prevScreenPos.y,ev->x(),ev->y());	
 
 			// Only add if a given distance to last point -
 			// otherwise Freemap will be overloaded with polygon 
 			// points !!!
 			// 0.1 maybe a tad too coarse, 0.05 more definitely too fine.
-			/*
-			if(OpenStreetMap::dist (prev.x,prev.y,ev->x(),ev->y())
-				>= polygonRes*1000*map.getScale()) 
+			
+			if(OpenStreetMap::dist (prevGR.x,prevGR.y,curGR.x,curGR.y)
+				>= polygonRes*1000) 
 			{
-			*/
-				curPolygonPts.push_back
-						(ScreenPos(ev->x(),ev->y()));
-			//}
+			
+				curPolygonPts.push_back(currentLL);
+			}
 		}
 		else
 		{
-			curPolygonPts.push_back (ScreenPos(ev->x(),ev->y()));
+			curPolygonPts.push_back (map.getEarthPoint(ev->x(),ev->y()));
 		}
 	}
+
+	
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
@@ -1101,8 +1116,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
 			if(selectedSeg)
 			{
 			trackName = "";
-			int tp = selectedSeg->findNearestTrackpoint(p,LIMIT);
-			if(tp>=0 && tp<selectedSeg->nPoints()-1)
+			int tp = selectedSeg->findNearestTrackpoint(p,map.earthDist(100));
+			if (tp>=0 && tp<selectedSeg->nPoints()-1)
 			{
 				TrackPoint pt1 = selectedSeg->getPoint(tp),
 						   pt2 = selectedSeg->getPoint(tp+1);
@@ -1121,12 +1136,13 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
 
 void MainWindow::endPolygon(int x,int y)
 {
-	vector<ScreenPos>::iterator i;
-	curPolygonPts.push_back(ScreenPos(x,y));
+	vector<EarthPoint>::iterator i;
+	curPolygonPts.push_back(map.getEarthPoint(x,y));
 	polygon = new Polygon(curPolygonType);
 
 	for(i=curPolygonPts.begin(); i!=curPolygonPts.end(); i++)
-		polygon->addPoint(map.getEarthPoint(*i));	
+//		polygon->addPoint(map.getEarthPoint(*i));	
+		polygon->addPoint(*i);	
 
 	components->addPolygon(polygon);
 

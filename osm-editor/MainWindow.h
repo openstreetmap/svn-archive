@@ -129,7 +129,7 @@ private:
 
 	// other stuff
 	QString curPolygonType;
-	std::vector<ScreenPos> curPolygonPts;
+	std::vector<EarthPoint> curPolygonPts;
 	QString curSegType; 
 	double polygonRes;
 	Polygon * curPolygon;

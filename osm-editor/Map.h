@@ -52,8 +52,11 @@ public:
 		{ return getScreenPos(EarthPoint(x,y)); }
 
 	EarthPoint getEarthPoint(const ScreenPos& pos)
-		{ return EarthPoint( bottomLeft.x+(((double)pos.x)/scale),
-						bottomLeft.y+(((double)(height-pos.y))/scale)); }
+		{ return getEarthPoint(pos.x,pos.y); }
+
+	EarthPoint getEarthPoint(int x, int y)
+		{ return EarthPoint( bottomLeft.x+(((double)x)/scale),
+						bottomLeft.y+(((double)(height-y))/scale)); }
 
 	void move(double edis,double ndis)
 		{ bottomLeft.x += edis*1000; bottomLeft.y += ndis*1000; }

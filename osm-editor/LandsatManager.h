@@ -25,8 +25,8 @@ private:
 public:
 	LandsatManager(MainWindow *p) { widget=p; 
 			dataDisplayed=false; }
-	void grab(double=2.0);
-	void forceGrab(double=2.0);
+	void grab(double=1.0);
+	void forceGrab(double=1.0);
 	bool needMoreData() { return dataDisplayed && doNeedMoreData(); }
 	void toggleDisplay();
 	void draw(QPainter&);

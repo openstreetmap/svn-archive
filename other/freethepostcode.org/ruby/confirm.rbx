@@ -56,7 +56,7 @@ if connection
       sql = "update codes set confirmed = true where confirmed = false and email = '#{email}' and confirmstring = '#{confirmstring}'"
       connection.query(sql) 
 
-      puts 'Thanks, we seem to have confirmed your submission!<br>'
+      puts 'Thanks, we seem to have confirmed your submission!<br> Go back to <a href="http://www.freethepostcode.org/">freethepostcode.org</a>.'
     else
       puts 'Whoops, something went wrong confirming that submition<br>'
     end

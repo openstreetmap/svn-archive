@@ -44,7 +44,7 @@ else
     doc = Document.new $stdin.read
 
     doc.elements.each('gpx/wpt') do |pt|
-      lat = pt.attributes['lat'].to_F
+      lat = pt.attributes['lat'].to_f
       lon = pt.attributes['lon'].to_f
       gpxnodeid = pt.get_text.value.to_i
 

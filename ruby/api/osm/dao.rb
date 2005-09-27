@@ -656,6 +656,36 @@ module OSM
       return false
     end
 
+
+    def create_node(lat, lon, user_uid)
+      begin
+        dbh = get_connection
+
+        sql = "insert into node_meta_table (timestamp, user_uid, visible) values (#{Time.new.to_i * 1000}, #{user_uid}, 1)"
+        dbh.query(sql)
+
+        sql = "set @id = last_insert_id(); "
+        dbh.query(sql)
+        
+        sql = "insert into nodes (uid, latitude, longitude, timestamp, user_uid, visible) values ( last_insert_id(), #{lat}, #{lon}, #{Time.new.to_i * 1000}, #{user_uid}, 1)"
+        dbh.query(sql)
+        
+        res = dbh.query('select @id') 
+        
+        res.each do |row|
+          return row[0]
+        end
+
+        return -1
+       rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+      return nil
+    end
+
     
     def update_segment?(uid, user_uid, node_a, node_b)
 

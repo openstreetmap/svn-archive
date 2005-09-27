@@ -442,6 +442,20 @@ module OSM
       return nil
     end
 
+    def useruidfromcreds(user, pass)
+      if user == 'token'
+        uid = check_user_token?(pass)
+        if uid
+          return uid
+        else
+          return -1
+        end
+      else
+        useruidfromemail(user)
+      end
+    end
+
+
     def useruidfromemail(email)
       email = quote(email)
       

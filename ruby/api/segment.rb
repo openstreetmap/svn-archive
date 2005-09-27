@@ -43,7 +43,7 @@ else
 
     r.setup_cgi_env
     segmentid = r.args.match(/segmentid=([0-9]+)/).captures.first.to_i
-    userid = dao.useruidfromemail(r.user)
+    userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
     doc = Document.new $stdin.read
     gpxsegmentid = -1
 
@@ -78,7 +78,7 @@ else
 
   else
     if r.request_method == "DELETE"
-      userid = dao.useruidfromemail(r.user)
+      userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
       #cgi doesnt work with DELETE so extract manually:
       segmentid = r.args.match(/segmentid=([0-9]+)/).captures.first.to_i
 

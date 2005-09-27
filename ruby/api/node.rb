@@ -13,6 +13,7 @@ r = Apache.request
 
 dao = OSM::Dao.instance
 
+
 if r.request_method == "GET"
   cgi = CGI.new
   nodeid = cgi['nodeid'].to_i
@@ -39,7 +40,7 @@ else
   if r.request_method == "PUT"
     r.setup_cgi_env
     nodeid = r.args.match(/nodeid=([0-9]+)/).captures.first.to_i
-    userid = dao.useruidfromemail(r.user)
+    userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
     doc = Document.new $stdin.read
 
     doc.elements.each('gpx/wpt') do |pt|
@@ -68,11 +69,11 @@ else
     
   else
     if r.request_method == "DELETE"
-      userid = dao.useruidfromemail(r.user)
+      userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
       #cgi doesnt work with DELETE so extract manually:
       nodeid = r.args.match(/nodeid=([0-9]+)/).captures.first.to_i
 
-      if userid != 0 && nodeid != 0
+      if userid > 0 && nodeid != 0
         node = dao.getnode(nodeid)
         if node
           if node.visible  

@@ -561,7 +561,10 @@ module OSM
       begin
         conn = get_connection
 
-        q = "SELECT segment.uid, segment.node_a, segment.node_b FROM (SELECT uid, node_a, node_b FROM street_segments WHERE visible = TRUE AND (node_a IN #{clausebuffer} OR node_b IN #{clausebuffer}) ORDER BY timestamp DESC) as segment"
+        q = "SELECT segment.uid, segment.node_a, segment.node_b FROM (
+               select * from
+                  (SELECT * FROM street_segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
+               as a group by uid) as segment where visible = true"
 
         res = conn.query(q)
         

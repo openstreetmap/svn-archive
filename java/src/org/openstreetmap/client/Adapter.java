@@ -389,8 +389,9 @@ public class Adapter
     }
 
     public void run() {
-      /*
+      
       try{
+        /*
         Vector params = new Vector();
         params.addElement (token);
         params.addElement (new Integer(line.a.uid));
@@ -400,6 +401,40 @@ public class Adapter
         System.err.println(result + " results from newLine");
 
         int id = result.intValue();
+        */
+ 
+        String xml = "<gpx version='1.0'><trk><trkseg><trkpt><name>" + line.a.uid + "</name></trkpt><trkpt><name>" + line.b.uid + "</name></trkpt></trkseg></trk></gpx>";
+
+        String url = URLBASE + "newsegment";
+
+        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        
+        HttpClient client = new HttpClient();
+
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        client.getState().setCredentials(AuthScope.ANY, creds);
+
+        PutMethod put = new PutMethod(url);
+        put.setRequestBody(xml);
+          
+        client.executeMethod(put);
+
+        int rCode = put.getStatusCode();
+        long id = -1;
+
+        System.out.println("Got response code " + rCode);
+        if( rCode == 200 )
+        {
+          String response = put.getResponseBodyAsString();
+          System.out.println("got reponse " + response);
+          id = Long.parseLong(response);
+        }
+        
+        put.releaseConnection();
+
+ 
+
+        
         if (id != -1) {
           line.uid = id;
           System.err.println("line created successfully: " + line);
@@ -415,7 +450,7 @@ public class Adapter
         e.printStackTrace();
         lines.remove(line);
       }
-      */
+      
     }
 
   } // LineCreator

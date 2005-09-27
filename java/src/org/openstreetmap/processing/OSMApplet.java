@@ -317,28 +317,14 @@ TODO: disable button mouseover highlighting when !ready */
     }
 
     // try to connect to OSM
-    osm = new Adapter(USERNAME,PASSWORD);
+    osm = new Adapter(USERNAME,PASSWORD, this.lines, nodes);
 
     Thread dataFetcher = new Thread(new Runnable() {
 
     public void run()
     {
 
-        osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight());
-
-        Enumeration e = osm.getNodes().elements();
-
-        while(e.hasMoreElements())
-        {
-          Node n = (Node)e.nextElement();
-
-          n.project(projection);
-
-          nodes.addElement(n);
-          
-        }
-
-        lines = osm.getLines();
+        osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight(), projection);
 
         System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
 

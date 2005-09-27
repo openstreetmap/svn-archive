@@ -2,15 +2,19 @@ package org.openstreetmap.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Point;
+import org.openstreetmap.util.Mercator;
 
 public class Adapter
 {
@@ -18,33 +22,33 @@ public class Adapter
   private String URLBASE = "http://www.openstreetmap.org/api/0.1/";
   String user, pass;
 
-  Vector lines = new Vector();
-  Vector nodes = new Vector();
+  Vector lines;
+  Vector nodes;
   
   Credentials creds = null;
 
-
-  public Adapter(String username, String password)
+  public Adapter(String username, String password, Vector l, Vector n)
   {
-//    System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-  //  System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-    //System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "debug");
-//    System.out.println("started OSM Adapter");
+    
     this.user = username;
     this.pass = password;
 
-//    String url = "http://www.openstreetmap.org/api/0.1/map?bbox=-0.149512178200823,51.5255366704934,-0.145415241799177,51.5273573295066";
+    this.lines = l;
+    this.nodes = n;
 
     creds = new UsernamePasswordCredentials(user, pass);
     System.out.println("Adapter started");
 
-  }
+  } // Adapter
+  
 
-  public void getNodesAndLines(Point topLeft, Point bottomRight)
+  public void getNodesAndLines(Point topLeft, Point bottomRight, Mercator projection)
   {
     System.out.println("getting nodes and lines");
-    getNodesAndLines(topLeft.lon,bottomRight.lat,bottomRight.lon,topLeft.lat);
-  }
+    getNodesAndLines(topLeft.lon,bottomRight.lat,bottomRight.lon,topLeft.lat, projection);
+    
+  } // getNodesAndLines
+  
 
   public Vector getNodes()
   {
@@ -58,7 +62,7 @@ public class Adapter
   } // getLines
 
 
-  public void getNodesAndLines(double bllon, double bllat, double trlon, double trlat)
+  public void getNodesAndLines(double bllon, double bllat, double trlon, double trlat, Mercator projection)
   {
 
     String url = URLBASE + "map?bbox=" + bllon + "," + bllat + "," + trlon + "," + trlat;
@@ -96,13 +100,35 @@ public class Adapter
 
     GPXParser gpxp = new GPXParser(responseStream);
 
-    nodes = gpxp.getNodes();
-    lines = gpxp.getLines();    
+    //nodes = gpxp.getNodes();
+    
+    Vector vnodes = gpxp.getNodes();
+    Enumeration e = vnodes.elements();
+    
+    while(e.hasMoreElements())
+    {
+       Node n = (Node)e.nextElement();
+       n.project(projection);
+       nodes.addElement(n);
+    }
+
+    e = gpxp.getLines().elements();
+
+    while(e.hasMoreElements())
+    {
+      lines.addElement(e.nextElement());
+      
+    }
+
+    
+
+//    System.out.println("nabbed " + lines.size() + " lines"); 
 
     //clean up the connection resources
     method.releaseConnection();
 
-  } // getMap
+  } // getNodesAndLines
+
 
   public void deleteNode(Node node) {
     new Thread(new NodeDeleter(node)).start();
@@ -133,8 +159,10 @@ public class Adapter
       this.node = node;
     }
 
+
     public void run() {
-      /*
+      System.out.println("tyring to delete node with " + node.lines.size() + " lines");
+            
       try {
         nodes.remove(node);
         for (int i = 0; i < node.lines.size(); i++) {
@@ -144,18 +172,29 @@ public class Adapter
           // deleteLine(line);
         }
 
-        Vector params = new Vector();
-        params.addElement (token);
-        params.addElement (new Integer(node.uid));
+        String url = URLBASE + "node/" + node.uid;
+        System.out.println("trying to delete node by throwing HTTP DELETE at " + url);
+  
+        HttpClient client = new HttpClient();
 
-        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.deleteNode", params);
-        System.err.println(result + " result from deleteNode");
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        client.getState().setCredentials(AuthScope.ANY, creds);
 
-        if (result.booleanValue()) {
+
+        DeleteMethod del = new DeleteMethod(url);
+          
+        client.executeMethod(del);
+        int rCode = del.getStatusCode();
+        
+        del.releaseConnection();
+
+        if (rCode == 200) {
           System.err.println("node removed successfully: " + node);
         }
         else {
           System.err.println("error removing node: " + node);
+          System.err.println("HTTP DELETE got response " + rCode + " back from the abyss");
+          
           nodes.add(node);
           for (int i = 0; i < node.lines.size(); i++) {
             Line line = (Line)node.lines.elementAt(i);
@@ -172,10 +211,10 @@ public class Adapter
           lines.add(line);
         }
       }
-      */
+      
     }
 
-  }
+  } // NodeDeleter
 
 
   class LineDeleter implements Runnable {
@@ -187,18 +226,28 @@ public class Adapter
     }
 
     public void run() {
-      /*
+      
+      System.out.println("Trying to delete line " + line);
+      
       try {
         lines.remove(line);
 
-        Vector params = new Vector();
-        params.addElement (token);
-        params.addElement (new Integer(line.uid));
+        String url = URLBASE + "segment/" + line.uid;
+        System.out.println("trying to delete line by throwing HTTP DELETE at " + url);
+  
+        HttpClient client = new HttpClient();
 
-        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.deleteLine", params);
-        System.err.println(result + " result from deleteLine");
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        client.getState().setCredentials(AuthScope.ANY, creds);
 
-        if (result.booleanValue()) {
+        DeleteMethod del = new DeleteMethod(url);
+          
+        client.executeMethod(del);
+        int rCode = del.getStatusCode();
+        
+        del.releaseConnection();
+
+        if (rCode == 200) {
           System.err.println("line removed successfully: " + line);
         }
         else {
@@ -210,7 +259,7 @@ public class Adapter
         System.err.println("error removing line: " + line);
         e.printStackTrace();
       }
-      */
+            
     }
 
   }
@@ -224,9 +273,9 @@ public class Adapter
     }
 
     public void run() {
-      /*
+      
       try {
-        Vector params = new Vector();
+     /*   Vector params = new Vector();
         params.addElement (token);
         params.addElement (new Double(node.lat));
         params.addElement (new Double(node.lon));
@@ -235,6 +284,38 @@ public class Adapter
         System.err.println(result + " result from newNode");
 
         int id = result.intValue();
+        */
+ 
+        String xml = "<gpx version='1.0'><wpt lon='" + node.lon +  "' lat='" + node.lat + "'></wpt></gpx>";
+
+        String url = URLBASE + "newnode";
+
+        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        
+        HttpClient client = new HttpClient();
+
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        client.getState().setCredentials(AuthScope.ANY, creds);
+
+        PutMethod put = new PutMethod(url);
+        put.setRequestBody(xml);
+          
+        client.executeMethod(put);
+
+        int rCode = put.getStatusCode();
+        long id = -1;
+
+        System.out.println("Got response code " + rCode);
+        if( rCode == 200 )
+        {
+          String response = put.getResponseBodyAsString();
+          System.out.println("got reponse " + response);
+          id = Long.parseLong(response);
+        }
+        
+        put.releaseConnection();
+
+       
         if (id != -1) {
           node.uid = id;
           System.err.println("node created successfully: " + node);
@@ -249,10 +330,10 @@ public class Adapter
         e.printStackTrace();
         nodes.remove(node);
       }
-      */
     }
 
-  }
+  } // NodeCreator
+
 
   class NodeMover implements Runnable {
 
@@ -263,30 +344,41 @@ public class Adapter
     }
 
     public void run() {
-      /*
+  
       try{
-        Vector params = new Vector();
-        params.addElement (token);
-        params.addElement (new Integer(node.uid));
-        params.addElement (new Double(node.lat));
-        params.addElement (new Double(node.lon));
+        String xml = "<gpx version='1.0'><wpt lon='" + node.lon +  "' lat='" + node.lat + "'>" + node.uid + "</wpt></gpx>";
 
-        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.moveNode", params);
-        System.err.println(result + " result from moveNode");
+        String url = URLBASE + "node/" + node.uid;
 
-        if (!result.booleanValue()) {
-          System.err.println("error moving node: " + node);
+        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        
+        HttpClient client = new HttpClient();
+
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        client.getState().setCredentials(AuthScope.ANY, creds);
+
+        PutMethod put = new PutMethod(url);
+        put.setRequestBody(xml);
+          
+        client.executeMethod(put);
+        int rCode = put.getStatusCode();
+        
+        put.releaseConnection();
+
+        if (rCode != 200) { 
+          System.err.println("error moving node: " + node + ", got response " + rCode + " from the abyss");
           // TODO: error handling... (restore the old node position?)
         }
+        
       }
       catch (Exception e) {
         System.err.println("error moving node: " + node);
         e.printStackTrace();
       }
-      */
+      
     }
 
-  }
+  } // NodeMover
 
   class LineCreator implements Runnable {
 
@@ -326,7 +418,7 @@ public class Adapter
       */
     }
 
-  }
+  } // LineCreator
 
 
   class LineUpdater implements Runnable {
@@ -367,9 +459,7 @@ public class Adapter
       */
     }
 
-  }
-
-
+  } // LineUpdater
 
   
 } // Adapter

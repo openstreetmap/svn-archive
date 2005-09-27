@@ -213,18 +213,13 @@ public class GPXParser extends MinML2 {
 
       if(qName.equals("trkseg") && line_uid_found)
       {
+
 //        System.out.println("got line: " + uid_a + " -> " + uid_b);
     
         lines.addElement(new Line(getNode(uid_a), getNode(uid_b), line_uid));
       }
 
-      if(qName.equals("wpt"))
-      {
-//        System.out.println("got hanging node: " + uid + ": " + lon + "," + lat);
-        nodes.addElement(new Node(lat, lon, uid));
-      }
-
-      if(qName.equals("name"))
+      if(qName.equals("name") || qName.equals("wpt"))
       {
         
         long tmpuid = Long.parseLong(buffered_string);
@@ -245,6 +240,15 @@ public class GPXParser extends MinML2 {
 
       }
 
+      if(qName.equals("wpt"))
+      {
+//        System.out.println("got hanging node: " + uid + ": " + lon + "," + lat);
+        nodes.addElement(new Node(lat, lon, uid));
+      }
+
+
+
+      
     }
   } // endElement
 
@@ -267,7 +271,7 @@ public class GPXParser extends MinML2 {
     while(e.hasMoreElements() )
     {
       Node n = (Node)(e.nextElement());
-      if( n.getUID() == node_uid)
+      if( n.uid == node_uid)
       {
         return n;
       }

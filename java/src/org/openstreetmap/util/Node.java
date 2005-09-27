@@ -45,10 +45,12 @@ public class Node extends Point {
     this.uid = uid;
   }
 
-  public long getUID()
+  public String toString()
   {
-    return uid;
-  } // getUID
-  
+    return "[Node " + uid + " lat:" + lat + " lon:" + lon + "]";
+
+  } // toString
+
+
 }
 

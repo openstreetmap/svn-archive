@@ -93,6 +93,12 @@ public class Line {
   public boolean mouseOver(float mouseX, float mouseY, float strokeWeight) {
     return distance(mouseX,mouseY) < strokeWeight/2.0;
   }
+
+  public String toString()
+  {
+    return "[Line " + uid + " from " + a + " to " + b + "]";
+
+  } // toString
   
 }
 

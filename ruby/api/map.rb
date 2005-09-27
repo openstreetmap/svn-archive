@@ -2,7 +2,7 @@
 
 
 require 'cgi'
-require 'osm/dao'
+load 'osm/dao.rb'
 require 'bigdecimal'
 require 'osm/gpx'
 
@@ -57,7 +57,7 @@ if linesegments
   dangling_nodes = nodes.to_a - used_nodes.to_a
 
   dangling_nodes.each do |i,n|
-    gpx.addnode(n)
+    gpx.addnode(n) unless n.visible == false
   end
   
 

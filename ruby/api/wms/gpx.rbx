@@ -107,7 +107,7 @@ proj = Mercator.new((bllat + trlat) / 2, (bllon + trlon) / 2, (trlon - bllon) / 
 
 dao = OSM::Dao.instance
 
-points = dao.get_track_points(bllon, bllat, trlon, trlat, 0)
+points = dao.get_track_points(bllat, bllon, trlat, trlon, 0)
 
 fname = '/tmp/' + rand.to_s  + '_tmpimg'
 

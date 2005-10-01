@@ -14,6 +14,8 @@ cgi = CGI.new
 
 bbox = cgi['bbox'].split(',')
 
+#bllon, bllat, trlong, trlat = bbox.map { |elem| elem.to_f }
+
 bllon = bbox[0].to_f
 bllat = bbox[1].to_f
 trlon = bbox[2].to_f

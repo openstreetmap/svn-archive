@@ -97,6 +97,7 @@ module OSM
     def quote(string)
       return Mysql.quote(string)
     end
+	def q(s); quote(s); end
 
     
     ## check_user?
@@ -104,7 +105,7 @@ module OSM
     def check_user?(email, pass)
       dbh = get_connection
       # sanitise the incoming variables
-      name = quote(email)
+      email = quote(email)
       pass = quote(pass)
       # get the result
       result = dbh.query("select uid from user where user='#{email}' and pass_crypt=md5('#{pass}') and active = true")
@@ -122,33 +123,31 @@ module OSM
 
       confirmstring = ''
       
-      for i in 1..30
+      30.times do
         confirmstring += chars[(rand * chars.length).to_i].chr
       end
 
       return confirmstring
     end
 
+	def call_sql
+		dbh = nil
+		begin
+			dbh = get_connection
+			return dbh.query(yield)
+		rescue MysqlError =>ex
+			mysql_error(ex)
+		ensure
+			dbh.close unless dbh.nil?
+		end
+		nil
+	end
+
 
     def set_timeout(email)
-      email = quote(email)
-
-      begin
-        dbh = get_connection
-        token = make_token
-
-        dbh.query("update user set timeout = #{(Time.new.to_i * 1000) + (1000 * 60 * 60 * 24)} where user = '#{email}' and active = true")
-
-        return token
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-    end
- 
+		token = make_token
+		call_sql { "update user set timeout = #{(Time.new.to_i * 1000) + (1000 * 60 * 60 * 24)} where user = '#{q(email)}' and active = true" }
+	end
 
     def logout(user_uid)
       begin
@@ -492,12 +491,10 @@ module OSM
 
         res = dbh.query(q)
         
-        visible = true
-        
         res.each_hash do |row|
           
           uid = row['uid'].to_i
-          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
+          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, true)
         end
 
         return nodes
@@ -719,22 +716,7 @@ module OSM
 
     
     def update_segment?(uid, user_uid, node_a, node_b)
-
-      begin
-        dbh = get_connection
-
-        dbh.query("insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1)")
-
-        return true
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-
-      return false
+		call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1)" }
     end
 
 

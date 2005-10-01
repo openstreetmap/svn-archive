@@ -86,7 +86,7 @@ dao = OSM::Dao.instance
 #pixelindegrees = 0.00005
 
 dlon = WIDTH / 2 * scale
-dlat = HEIGHT / 2 * scale  * Math.cos(clat * PI / 180)
+dlat = HEIGHT / 2 * scale  * cos(clat * PI / 180)
 
 
 nodes = dao.getnodes(clat + dlat, clon - dlon, clat - dlat, clon + dlon)

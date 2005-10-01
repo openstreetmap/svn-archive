@@ -23,11 +23,11 @@
 ** Boston, MA  02111-1307, USA.
 ********************************************************************/
 #include "gps.h"
+// #include "garminusb.h"
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
 #include <limits.h>
-
 
 /* @func GPS_Packet_New ***********************************************
 **
@@ -39,15 +39,15 @@
 GPS_PPacket GPS_Packet_New(void)
 {
     GPS_PPacket ret;
+    int hdr_size = sizeof(GPS_OPacket) ;
+    if(!(ret=(GPS_PPacket )malloc(hdr_size)))
     
-    if(!(ret=(GPS_PPacket )malloc(sizeof(GPS_OPacket))))
     {
 	perror("malloc");
 	fprintf(stderr,"GPS_Packet_New: Insufficient memory");
 	fflush(stderr);
 	return NULL;
     }
-
     if(!(ret->data = (UC *)malloc(MAX_GPS_PACKET_SIZE*sizeof(UC))))
     {
 	perror("malloc");
@@ -182,7 +182,7 @@ GPS_PTrack GPS_Track_New(void)
 {
     GPS_PTrack ret;
     
-    if(!(ret=(GPS_PTrack)malloc(sizeof(GPS_OTrack))))
+    if(!(ret=(GPS_PTrack)calloc(1,sizeof(GPS_OTrack))))
     {
 	perror("malloc");
 	fprintf(stderr,"GPS_Track_New: Insufficient memory");
@@ -225,7 +225,8 @@ GPS_PWay GPS_Way_New(void)
     GPS_PWay ret;
     int32 i;
     
-    if(!(ret=(GPS_PWay)malloc(sizeof(GPS_OWay))))
+	// NW replace xcalloc by calloc
+    if(!(ret=(GPS_PWay)calloc(sizeof(GPS_OWay),1)))
     {
 	perror("malloc");
 	fprintf(stderr,"GPS_Way_New: Insufficient memory");
@@ -233,26 +234,51 @@ GPS_PWay GPS_Way_New(void)
 	return NULL;
     }
 
-    /* Mark all as "unused" */
-    for(i=0;i<6;++i) ret->ident[i]=' ';
-    for(i=0;i<2;++i) ret->cc[i]=' ';
-    for(i=0;i<18;++i) ret->subclass[i]=' ';
-    for(i=0;i<40;++i) ret->cmnt[i]=' ';
-    for(i=0;i<24;++i) ret->city[i]=' ';
-    for(i=0;i<2;++i) ret->state[i]=' ';
-    for(i=0;i<30;++i) ret->name[i]=' ';
-    for(i=0;i<18;++i) ret->rte_link_subclass[i]=' ';
-    for(i=0;i<256;++i) ret->wpt_ident[i]=' ';
-    for(i=0;i<256;++i) ret->lnk_ident[i]=' ';
-    for(i=0;i<256;++i) ret->rte_link_ident[i]=' ';
+    /*
+     * It turns out that the Way struct, initialized with zeros (not the
+     * random stuff that we got with malloc, but REALLY initialized with
+     * zeros from the calloc above actually does use C strings and it's
+     * up to the various way_blah_send functions to zero/string pad things
+     * as it goes.   So neutralize this.
+     */
+#if 0
+
+    /* 
+     * Mark all as "unused".  These appear in the same order as in the struct.
+     */
+#define BLANK(x)   memset(x, ' ',sizeof(x))
+    BLANK(ret->ident);
+    BLANK(ret->cmnt);
+    BLANK(ret->wpt_ident);
+    BLANK(ret->lnk_ident);
+    BLANK(ret->subclass);
+    BLANK(ret->name);
+    BLANK(ret->facility);
+    BLANK(ret->addr);
+    BLANK(ret->cross_road);
+    BLANK(ret->city);
+    BLANK(ret->rte_cmnt);
+    BLANK(ret->rte_ident);
+    BLANK(ret->rte_link_subclass);
+    BLANK(ret->rte_link_ident);
+    BLANK(ret->state);
+    BLANK(ret->cc);
+
+    ret->facility[0] = 0;
+    ret->addr[0] = 0;
+    ret->wpt_ident[0] = 0;
+#endif
     
-    ret->dst = ret->lat = ret->lon = GPS_FLTMAX;
+    ret->lat = ret->lon = GPS_FLTMAX;
+    ret->dst = 0;
     ret->smbl = ret->dspl = ret->colour = ret->alt = ret->prot = INT_MAX;
 
     if(gps_waypt_type==pD108)
     {
 	ret->dst  = 0;
 	ret->attr = 0x60;
+	for(i=0;i<7;++i) ret->subclass[i] = 0;
+	for(i=6;i<18;++i) ret->subclass[i] = 0xff;
     }
         
     return ret;
@@ -271,6 +297,7 @@ GPS_PWay GPS_Way_New(void)
 
 void GPS_Way_Del(GPS_PWay *thys)
 {
+	// NW replace xfree by free
     free((void *)*thys);
 
     return;
@@ -543,7 +570,7 @@ GPS_PBod GPS_Bod_New(void)
 
     ret->valid = 0;
     *ret->dest = *ret->start = '\0';
-    ret->tru = ret->mag = (double)0.;
+    ret->True = ret->mag = (double)0.;
     
     return ret;
 }
@@ -673,7 +700,7 @@ GPS_PRmb GPS_Rmb_New(void)
 
     ret->valid = 0;
     *ret->owpt = *ret->dwpt = ret->warn = ret->correct = ret->alarm = '\0';
-    ret->cross = ret->lat = ret->lon = ret->range = ret->tru = ret->velocity =
+    ret->cross = ret->lat = ret->lon = ret->range = ret->True = ret->velocity =
 	(double)0.;
     
     return ret;
@@ -844,7 +871,7 @@ GPS_PBwc GPS_Bwc_New(void)
     *ret->wpt = '\0';
     ret->time = (time_t)0;
     ret->valid = 0;
-    ret->lat = ret->lon = ret->tru = ret->mag = ret->dist = (double)0.;
+    ret->lat = ret->lon = ret->True = ret->mag = ret->dist = (double)0.;
     
     return ret;
 }
@@ -887,7 +914,7 @@ GPS_PBwr GPS_Bwr_New(void)
     *ret->wpt = '\0';
     ret->time = (time_t)0;
     ret->valid = 0;
-    ret->lat = ret->lon = ret->tru = ret->mag = ret->dist = (double)0.;
+    ret->lat = ret->lon = ret->True = ret->mag = ret->dist = (double)0.;
     
     return ret;
 }
@@ -1010,7 +1037,7 @@ GPS_PHsc GPS_Hsc_New(void)
 	return NULL;
 
     ret->valid = 0;
-    ret->tru = ret->mag = (double)0.;
+    ret->True = ret->mag = (double)0.;
     
     return ret;
 }
@@ -1133,7 +1160,7 @@ GPS_PVhw GPS_Vhw_New(void)
 	return NULL;
 
     ret->valid = 0;
-    ret->tru = ret->mag = ret->wspeed = ret->speed = (double)0.;
+    ret->True = ret->mag = ret->wspeed = ret->speed = (double)0.;
     
     return ret;
 }
@@ -1216,7 +1243,7 @@ GPS_PVtg GPS_Vtg_New(void)
 	return NULL;
 
     ret->valid = 0;
-    ret->tru = ret->mag = ret->knots = ret->khr = (double)0.;
+    ret->True = ret->mag = ret->knots = ret->khr = (double)0.;
     
     return ret;
 }

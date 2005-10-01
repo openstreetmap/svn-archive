@@ -12,13 +12,14 @@ OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  RouteMetaDataHandler.o LoginDialogue.o moc_MainWindow.o curlstuff.o \
 	  Polygon.o TrackSeg.o SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
 	  RemoveExcessDialogue.o
+JEEPSSRC = jeeps-gpsbabel-1.2.7
 LIBS = -ljeeps 
-JEEPSSRC = jeeps-0.1.4-nick
 LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
 
 SRTMOBJ = srtm.o Canvas.o SRTMGeneral.o SRTMDataGrid.o SRTMConGen.o llgr.o
 
-
+# Comment out if you want USB support in jeeps.
+USB='USBOPT=-DNO_USB'
 
 # Configure Qt paths
 QTINCPATH = /usr/include/qt3
@@ -45,7 +46,7 @@ moc_%.cpp : %.h
 	${MOC} $< -o $@
 
 osmeditor: $(OBJ)
-	$(MAKE) -C $(JEEPSSRC)
+	$(MAKE) $(USB) -C $(JEEPSSRC)
 	$(CXX) -o osmeditor $(OBJ) $(LIBPATH) $(QTLIBPATH) $(LIBS) $(QTLIB) $(CURLLIBS) $(XMLRPCLIBS)
 
 install: osmeditor

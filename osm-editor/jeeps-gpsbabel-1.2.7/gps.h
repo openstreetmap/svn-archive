@@ -6,6 +6,7 @@ extern "C"
 #ifndef gps_h
 #define gps_h
 
+#include "defs.h"
 #include "gpsport.h"
 #include <time.h>
 
@@ -85,6 +86,7 @@ typedef struct GPS_STrack
     time_t   Time;		/* Unix time */
     float    alt;		/* Altitude */
     float    dpth;		/* Depth    */
+    int32    heartrate;		/* Heatrate as in Garmin 301 */
     int32    tnew;		/* New track? */
     int32    ishdr;		/* Track header? */
     int32    dspl;		/* Display on map? */
@@ -128,7 +130,7 @@ typedef struct GPS_SWay
     int32  colour;
     char   cc[2];
     UC     wpt_class;
-    int32  alt;
+    float  alt;
     char   city[24];
     char   state[2];
     char   name[30];
@@ -148,6 +150,9 @@ typedef struct GPS_SWay
     int32  rte_link_class;
     char   rte_link_subclass[18];
     char   rte_link_ident[256];
+
+    char     Time_populated;	/* 1 if true */
+    time_t   Time;		/* Unix time */
 } GPS_OWay, *GPS_PWay;
 
 
@@ -176,7 +181,7 @@ double gps_save_lon;
 extern int32  gps_save_id;
 extern double gps_save_version;
 extern char   gps_save_string[GPS_ARB_LEN];
-
+extern int gps_is_usb;
 
 extern struct COMMANDDATA COMMAND_ID[2];
 extern struct LINKDATA LINK_ID[3];
@@ -186,7 +191,6 @@ extern char *gps_marine_sym[];
 extern char *gps_land_sym[];
 extern char *gps_aviation_sym[];
 extern char *gps_16_sym[];
-
 
 
 #endif

@@ -39,6 +39,10 @@ int32 GPS_Command_Off(const char *port)
     GPS_PPacket tra;
     GPS_PPacket rec;
 
+    GPS_Util_Little();
+
+    gps_is_usb = (0 == strncmp(port, "usb:", 4));
+
     if(!GPS_Serial_On(port, &fd))
 	return gps_errno;
 
@@ -46,8 +50,9 @@ int32 GPS_Command_Off(const char *port)
 	return MEMORY_ERROR;
 
     GPS_Util_Put_Short(data,COMMAND_ID[gps_device_command].Cmnd_Turn_Off_Pwr);
-    
-    GPS_Make_Packet(&tra, LINK_ID[gps_link_type].Pid_Command_Data,
+   
+    /* robertl - LINK_ID isn't set yet.  Hardcode it to Garmin spec value */ 
+    GPS_Make_Packet(&tra, 10, /* LINK_ID[gps_link_type].Pid_Command_Data, */
 		    data,2);
     if(!GPS_Write_Packet(fd,tra))
 	return gps_errno;
@@ -79,14 +84,14 @@ int32 GPS_Command_Off(const char *port)
 ** @return [int32] number of waypoint entries
 ************************************************************************/
 
-int32 GPS_Command_Get_Waypoint(const char *port, GPS_PWay **way)
+int32 GPS_Command_Get_Waypoint(const char *port, GPS_PWay **way, int (*cb)(int, struct GPS_SWay **))
 {
     int32 ret=0;
 
     switch(gps_waypt_transfer)
     {
     case pA100:
-	ret = GPS_A100_Get(port,way);
+	ret = GPS_A100_Get(port,way, cb);
 	break;
     default:
 	GPS_Error("Get_Waypoint: Unknown waypoint protocol");
@@ -109,14 +114,14 @@ int32 GPS_Command_Get_Waypoint(const char *port, GPS_PWay **way)
 ** @return [int32] success
 ************************************************************************/
 
-int32 GPS_Command_Send_Waypoint(const char *port, GPS_PWay *way, int32 n)
+int32 GPS_Command_Send_Waypoint(const char *port, GPS_PWay *way, int32 n, int (*cb)(struct GPS_SWay **))
 {
     int32 ret=0;
 
     switch(gps_waypt_transfer)
     {
     case pA100:
-	ret = GPS_A100_Send(port, way, n);
+	ret = GPS_A100_Send(port, way, n, cb);
 	break;
     default:
 	GPS_Error("Send_Waypoint: Unknown waypoint protocol");
@@ -215,6 +220,7 @@ int32 GPS_Command_Get_Track(const char *port, GPS_PTrack **trk)
 	ret = GPS_A300_Get(port,trk);
 	break;
     case pA301:
+    case pA302:
 	ret = GPS_A301_Get(port,trk);
 	break;
     default:

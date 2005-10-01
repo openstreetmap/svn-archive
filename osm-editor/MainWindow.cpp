@@ -710,6 +710,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			lastPos = map.getScreenPos(curPt.lon,curPt.lat);
 			lastDrawnPos = lastPos;
 
+			maxP1  = maxP2 =  lastPos;
 			for(int pt=0; pt<curSeg->nPoints(); pt++)
 			{
 				curPt = curSeg->getPoint(pt);	

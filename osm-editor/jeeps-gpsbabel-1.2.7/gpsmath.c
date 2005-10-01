@@ -22,6 +22,7 @@
 ** Boston, MA  02111-1307, USA.
 ********************************************************************/
 #include "gps.h"
+#include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include "gpsdatum.h"
@@ -217,7 +218,7 @@ void GPS_Math_DegMinSec_To_Deg(int32 d, int32 m, double s, double *deg)
 
 double GPS_Math_Metres_To_Feet(double v)
 {
-    return v*(double)2.7432;
+    return v/0.3048;
 }
 
 
@@ -233,7 +234,7 @@ double GPS_Math_Metres_To_Feet(double v)
 
 double GPS_Math_Feet_To_Metres(double v)
 {
-    return v/(double)2.7432;
+    return v * 0.3048;
 }
 
 
@@ -249,7 +250,7 @@ double GPS_Math_Feet_To_Metres(double v)
 
 int32 GPS_Math_Deg_To_Semi(double v)
 {
-    return (int32) (((double)2.147483e9/(double)180)*(double)v);
+    return ((1U<<31) / 180) * v;
 }
 
 
@@ -265,7 +266,7 @@ int32 GPS_Math_Deg_To_Semi(double v)
 
 double GPS_Math_Semi_To_Deg(int32 v)
 {
-    return (double) (((double)v/(double)2.147483e9) * (double)180);
+    return (double) (((double)v/(double)(1U<<31)) * (double)180);
 }
 
 

@@ -1,5 +1,3 @@
-// NW 12/03/05 replaced "true" by "tru" -- use of true completely breaks C++
-// compatibility !!!
 #ifdef __cplusplus
 extern "C"
 {
@@ -54,7 +52,7 @@ typedef struct GPS_SRmm
 
 typedef struct GPS_SBod
 {
-    double tru;
+    double True;
     double mag;
     char   dest[83];
     char   start[83];
@@ -100,7 +98,7 @@ typedef struct GPS_SRmb
     double lat;
     double lon;
     double range;
-    double tru;
+    double True;
     double velocity;
     char   alarm;
     int32  valid;
@@ -154,7 +152,7 @@ typedef struct GPS_SBwc
     time_t time;
     double lat;
     double lon;
-    double tru;
+    double True;
     double mag;
     double dist;
     char wpt[83];
@@ -166,7 +164,7 @@ typedef struct GPS_SBwr
     time_t time;
     double lat;
     double lon;
-    double tru;
+    double True;
     double mag;
     double dist;
     char wpt[83];
@@ -188,7 +186,7 @@ typedef struct GPS_SHdm
 
 typedef struct GPS_SHsc
 {
-    double tru;
+    double True;
     double mag;
     int32  valid;
 } GPS_OHsc,*GPS_PHsc;
@@ -207,7 +205,7 @@ typedef struct GPS_SR00
 
 typedef struct GPS_SVhw
 {
-    double tru;
+    double True;
     double mag;
     double wspeed;
     double speed;
@@ -226,7 +224,7 @@ typedef struct GPS_SVwr
 
 typedef struct GPS_SVtg
 {
-    double tru;
+    double True;
     double mag;
     double knots;
     double khr;

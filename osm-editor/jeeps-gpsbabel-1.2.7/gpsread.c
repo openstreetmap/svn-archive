@@ -22,11 +22,11 @@
 ** Boston, MA  02111-1307, USA.
 ********************************************************************/
 #include "gps.h"
+#include "gpsusbint.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <errno.h>
-#include <unistd.h>
 
 
 /* @func GPS_Time_Now ***********************************************
@@ -77,17 +77,24 @@ int32 GPS_Packet_Read(int32 fd, GPS_PPacket *packet)
     UC     *p;
     int32  i;
     UC     chk=0;
+    const char *m1;
+    const char *m2;
     
     len = 0;
     isDLE = gpsFalse;
     p = (*packet)->data;
+
+    if (gps_is_usb) {
+	    return GPS_Packet_Read_usb(fd, packet);
+    }
     
     start = GPS_Time_Now();
+    GPS_Diag("Rx Data:");
     while(GPS_Time_Now() < start+GPS_TIME_OUT)
     {
 	if((n=GPS_Serial_Chars_Ready(fd)))
 	{
-	    if(read(fd,&u,1)==-1)
+	    if(GPS_Serial_Read(fd,&u,1)==-1)
 	    {
 		perror("read");
 		GPS_Error("GPS_Packet_Read: Read error");
@@ -95,7 +102,7 @@ int32 GPS_Packet_Read(int32 fd, GPS_PPacket *packet)
 		return 0;
 	    }
 
-	    GPS_Diagnose(u);
+	    GPS_Diag("%02x ", u);
 
 	    if(!len)
 	    {
@@ -158,6 +165,8 @@ int32 GPS_Packet_Read(int32 fd, GPS_PPacket *packet)
 			return 0;
 		    }
 		    
+		    m1 = Get_Pkt_Type((*packet)->type, (*packet)->data[0], &m2);
+		    GPS_Diag("(%-8s%s)\n", m1, m2 ? m2 : "");
 		    return (*packet)->n;
 		}
 		
@@ -187,13 +196,17 @@ int32 GPS_Packet_Read(int32 fd, GPS_PPacket *packet)
 
 int32 GPS_Get_Ack(int32 fd, GPS_PPacket *tra, GPS_PPacket *rec)
 {
+    if (gps_is_usb) {
+	    return 1;
+    }
+
     if(!GPS_Packet_Read(fd, rec))
 	return 0;
 
     if(LINK_ID[0].Pid_Ack_Byte != (*rec)->type)
     {
 	gps_error = FRAMING_ERROR;
-	return 0;
+/* rjl	return 0; */
     }
     
     if(*(*rec)->data != (*tra)->type)
@@ -203,33 +216,4 @@ int32 GPS_Get_Ack(int32 fd, GPS_PPacket *tra, GPS_PPacket *rec)
     }
 
     return 1;
-}
-
-
-
-
-
-
-
-int32 ajb(int32 fd)
-{
-    UC     u;
-    int32  n;
-    
-    while(1)
-    {
-	if((n=GPS_Serial_Chars_Ready(fd)))
-	{
-	    if(read(fd,&u,1)==-1)
-	    {
-		perror("read");
-		GPS_Error("NMEA Read: Read error");
-		gps_errno = FRAMING_ERROR;
-		return 0;
-	    }
-	    printf("%d %c\n",u,u);
-	}
-    }
-
-    return 0;
 }

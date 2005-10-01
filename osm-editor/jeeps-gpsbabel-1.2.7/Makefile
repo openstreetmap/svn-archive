@@ -5,11 +5,13 @@
 #
 # Nick 09/04/05
 
-OBJ = gpsapp.o gpscom.o gpsfmt.o gpsinput.o gpsmath.o gpsmem.o gpsnmea.o \
-	  gpsnmeafmt.o gpsnmeaget.o gpsproj.o gpsprot.o gpsread.o gpsrqst.o \
-	  gpssend.o gpsserial.o gpsutil.o 
+OBJ = gpsapp.o gpscom.o gpsfmt.o gpslibusb.o gpsmath.o gpsmem.o gpsprot.o \
+	  gpsread.o gpsrqst.o gpssend.o gpsserial.o gpsusbread.o gpsusbsend.o \
+      gpsusbstub.o gpsusbwin.o gpsutil.o babelfuncs.o
 
 LIB = libjeeps.a 
+
+CFLAGS = $(USBOPT)
 
 INSTROOT = /usr/local
 
@@ -22,3 +24,4 @@ install:
 
 clean:
 	rm -f *.o $(LIB) *~
+

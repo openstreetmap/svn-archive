@@ -135,7 +135,13 @@ int GPSDevice::garminGetWaypoints(const char* port, Waypoints* waypoints)
 	if(GPS_Init(port) < 0)
 		return 1;
 
-	nwaypoints = GPS_Command_Get_Waypoint(port,&waypts);
+	/* The GPSBabel version of this function specifies a callback as a third
+	 * parameter. From what I gather this is a progress function (to monitor
+	 * the reading of the waypoints from the GPS? it's not clear) but if it's 
+	 * NULL it won't attempt to call it. So just set it to NULL. 
+	 */
+
+	nwaypoints = GPS_Command_Get_Waypoint(port,&waypts, NULL);
 
 	for(int count=0; count<nwaypoints; count++)
 	{

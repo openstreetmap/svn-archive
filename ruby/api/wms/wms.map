@@ -11,6 +11,17 @@ map
     IMAGEURL '/tmp/'
 	END
 
+  OUTPUTFORMAT
+    NAME jpeg
+    DRIVER "GD/JPEG"
+    MIMETYPE "image/jpeg"
+    IMAGEMODE RGB
+    EXTENSION "jpg"
+    FORMATOPTION "INTERLACE=OFF"
+  END
+
+
+
 
 LAYER # LandSat WMS map from JPL (or from USGS)
 	debug on
@@ -76,6 +87,32 @@ LAYER
 	METADATA
 #		"wms_title" "gpx2"
 		"wms_name" "streets"
+		"wms_server_version" "1.0.0"
+		"wms_srs" "epsg:4326"
+		"wms_format" "image/png"
+	END
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+END
+
+
+
+LAYER 
+	debug on
+	NAME test
+  group foo
+	TYPE RASTER
+	OFFSITE 255 255 0
+	STATUS off
+	CONNECTIONTYPE WMS
+
+	
+	CONNECTION "http://tile.openstreetmap.org/ruby/streets1.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	METADATA
+#		"wms_title" "gpx2"
+		"wms_name" "test"
 		"wms_server_version" "1.0.0"
 		"wms_srs" "epsg:4326"
 		"wms_format" "image/png"

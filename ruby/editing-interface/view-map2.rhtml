@@ -1,0 +1,38 @@
+<%
+
+ERuby.import('include/top-viewmap.rhtml')
+
+%>
+
+<div id="main_area">
+
+<div id="mapImage">
+
+  <div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700px; padding: 1em;">
+ 
+<div id="tiles1" style="border: gray 2px; WIDTH: 768px; HEIGHT: 512px;"></div>
+<!-- pimp out my div! supply: div, hints, rss feed to map, wms source, lon, lat, zoom, optional width, optional height -->
+<script type="text/javascript">//<!--
+Get_URLParts();
+lon = Get_Parameter("lon") - 0;
+lat = Get_Parameter("lat") - 0;
+zoom = Get_Parameter("zoom") - 0;
+new tile_engine_new('tiles1','FULL','','http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets',lon,lat,zoom,0,0);
+//-->
+</script>
+<!--  this is the end of the snippet that you will want -->
+
+
+<a href="javascript:document.engine.link();">Link to this map</a>
+<div id="editlinkdiv" style="visibility:hidden; display:none;"><a href="javascript:document.engine.editlink();">Edit this map</a></div>
+
+
+</div></div>
+
+</div>
+<%
+
+
+ERuby.import('include/bottom.rhtml')
+
+%>

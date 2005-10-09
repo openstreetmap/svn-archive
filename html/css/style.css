@@ -10,8 +10,6 @@
   font-weight: normal;
 }
 
-
-
 body {
   font-family: sans-serif;
   color: Black;
@@ -50,79 +48,73 @@ background: #DDDDDD;
 }
 
 #logo h1 {
-  font-style: italic;
   font-size: 1em;
   text-align: center;
-
 }
 
 #left_menu {
-width: 150px;
-margin: 0;
-padding: 1px 0 0 0;
-position: absolute;
-left: 0px;
-top: 220px;
-background: #EEEEEE;
-            line-height: 1.2em;
-            text-align: Left;
+  width: 150px;
+  margin: 0;
+  padding: 1px 0 0 0;
+  position: absolute;
+  left: 0px;
+  top: 220px;
+  background: #EEEEEE;
+  line-height: 1.2em;
+  text-align: Left;
 }
 
 #left_menu h1 {
   font-style: normal;
-  font-size: 1em;
-  text-decoration: underline;
-padding: 0 0 0 1em;
-         text-align: left;
+  font-size: 15px;
+  padding: 0 0 0 1em;
+  text-align: left;
 }
 
 
 #left_menu ul {
   list-style: none;
-padding: 0em 1em 1em 1em;
+  padding: 0em 1em 1em 1em;
 }
 
 
 #left_menu a {
-color: #000000;
-       font-weight: bold;
-       text-decoration: none;
+  color: #000000;
+  text-decoration: none;
 }
 
 #left_menu a:visited {
 color: #000000;
-       font-weight: bold;
        text-decoration: none;
 }
 
 #left_menu a:active {
-color: #000000;
-       font-weight: bold;
-       text-decoration: none;
+  color: #000000;
+  text-decoration: none;
 }
 
 #left_menu a:link {
-color: #000000;
-       font-weight: bold;
-       text-decoration: none;
+  color: #000000;
+  text-decoration: none;
 }
 
 #left_menu a:hover {
-color: #000000;
-       font-weight: bold;
-       text-decoration: underline;
+  color: #000000;
+  text-decoration: underline;
 }
 
 
 #main_area {
-width: 600px;
-padding: 0;
-margin: 0;
-position: absolute;
-left: 150px;
-top: 21px;
-background: none;
+  width: 600px;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  left: 150px;
+  top: 21px;
+  background: none;
             line-height: 1.2em;
+       font-weight: bold;
+       font-weight: bold;
             text-align: left;
 }
 

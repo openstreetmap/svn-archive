@@ -17,7 +17,7 @@ cp html/index.html $ROOT
 
 # css
 
-cp html/css/style.css $ROOT
+cp html/css/style.css $ROOT/css/
 
 #images FIXME
 

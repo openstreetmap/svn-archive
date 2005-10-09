@@ -115,18 +115,13 @@ File.open(fname, "wb") {|stream|
   cr = Context.new
   cr.set_target_png(stream, FORMAT_ARGB32, width, height);
 
-
-#  paint a white background
-#  cr.new_path
-#  cr.rectangle(0, 0, width, height)
-#  cr.set_rgb_color(1.0, 1.0, 1.0)
-#  cr.fill
-
   points.each do |p|
     
     cr.new_path
-    cr.move_to(proj.x(p.longitude) , proj.y(p.latitude) )
-    cr.line_to(proj.x(p.longitude)+1 , proj.y(p.latitude)+1 )
+    cr.move_to(proj.x(p.longitude) , proj.y(p.latitude)-1 )
+    cr.line_to(proj.x(p.longitude)+1 , proj.y(p.latitude) )
+    cr.line_to(proj.x(p.longitude) , proj.y(p.latitude)+1 )
+    cr.line_to(proj.x(p.longitude)-1 , proj.y(p.latitude) )
     cr.close_path
     cr.set_rgb_color(1.0, 0.0, 0.0)
     cr.line_join = LINE_JOIN_MITER

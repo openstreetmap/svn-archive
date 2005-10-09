@@ -1,44 +1,40 @@
 #frontpage_main {
-width: 100%;
-text-align: center;
-font-family: sans-serif;
-
-
+  width: 100%;
+  text-align: center;
+  font-family: sans-serif;
 }
 
 
 #frontpage_MAIN h1 {
-
   font-size: xx-large;
   font-weight: normal;
-
 }
 
 
 
 body {
   font-family: sans-serif;
-color: Black;
-margin: 0;
-padding: 0;
+  color: Black;
+  margin: 0;
+  padding: 0;
 }
 
 
 #top_bar {
-width:100%;
-height: 21px;
-        white-space:nowrap;
-padding: 0;
-margin: 0;
-position:absolute;
-left:0px;
-top:0px;
-    z-index: 0;
-border: none;
-background: #CCCCCC;
-overflow: visible;
-          line-height: 1.2em;
-          text-align: right;
+  width:100%;
+  height: 21px;
+  white-space:nowrap;
+  padding: 0;
+  margin: 0;
+  position:absolute;
+  left:0px;
+  top:0px;
+  z-index: 0;
+  border: none;
+  background: #CCCCCC;
+  overflow: visible;
+  line-height: 1.2em;
+  text-align: right;
 }
 
 #logo {
@@ -123,7 +119,7 @@ width: 600px;
 padding: 0;
 margin: 0;
 position: absolute;
-left: 151px;
+left: 150px;
 top: 21px;
 background: none;
             line-height: 1.2em;

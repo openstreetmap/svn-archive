@@ -12,6 +12,8 @@ now = Time.new
 puts '<html><head><title>OpenStreetmap stats</title></head><body>'
 puts '<h2>OpenStreetmap stats report run at ' + now.to_s + '</h2>'
 
+millis =  now.to_i * 1000
+
 begin
 
   #connect to the MySQL server
@@ -36,6 +38,32 @@ begin
   end
   
   puts '</table>'
+
+
+
+  puts '<h2>Number of users editing over the past...</h2><table><tr>
+  <td><b>Data type</b></td>
+  <td><b>Day</b></td>
+  <td><b>Week</b></td>
+  <td><b>Month</b></td>
+  </tr>'
+
+  res = dbh.query("select * from (select count(*) as day from (select user_uid from points_meta_table where timestamp > #{millis} - (1000 * 60 *  60 * 24) group by user_uid) as a) as b, (select count(*) as week from (select user_uid from points_meta_table where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7) group by user_uid) as c) as d, (select count(*) as month from (select user_uid from points_meta_table where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7 * 4) group by user_uid) as e) as f;")
+
+  res.each_hash do |row|
+    puts "<tr><td><b>GPX Files</b></td> <td>#{row['day']}</td><td>#{row['week']}</td><td>#{row['month']}</td> </tr>"
+  end
+ 
+
+  res = dbh.query("select * from (select count(*) as day from (select user_uid from nodes where timestamp > #{millis} - (1000 * 60 *  60 * 24) group by user_uid) as a) as b, (select count(*) as week from (select user_uid from nodes where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7) group by user_uid) as c) as d, (select count(*) as month from (select user_uid from nodes where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7 * 4) group by user_uid) as e) as f;")
+
+  res.each_hash do |row|
+    puts "<tr><td><b>Nodes</b></td> <td>#{row['day']}</td><td>#{row['week']}</td><td>#{row['month']}</td> </tr>"
+  end
+ 
+  puts '</table>'
+  
+  
 
 rescue MysqlError => e
   print "Error code: ", e.errno, "\n"

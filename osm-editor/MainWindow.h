@@ -41,6 +41,7 @@
 #include <qtoolbutton.h>
 #include <qstatusbar.h>
 
+
 using std::vector;
 
 // Mouse action modes
@@ -143,6 +144,7 @@ private:
 
 	QPixmap landsatPixmap;
 
+
 	void drawTrackpoint(QPainter&,const QBrush&,int,int,int);
 	void drawTrackpoint(QPainter&,const QBrush&,int,int,int,int);
 	void saveFile(const QString&,bool=false);
@@ -232,7 +234,6 @@ public slots:
 	void setMode(int);
 	void setSegType(const QString&);
 	void setPolygonType(const QString&);
-	void grabTracks();
 	void grabLandsat();
 	void up();
 	void down();
@@ -249,6 +250,7 @@ public slots:
 	void grabGPXFromNet();
 	void postGPX();
 	void removePlainTracks();
+//	void login();
 };
 
 }

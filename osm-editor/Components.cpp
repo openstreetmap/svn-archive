@@ -141,6 +141,10 @@ bool Components::merge(Components *comp)
 	for(int count=0; count<comp->nWaypoints(); count++)
 		waypoints->addWaypoint ( comp->getWaypoint(count) );
 
+	
+	for(int count=0; count<comp->nPolygons(); count++)
+		addPolygon(new Polygon(*(comp->getPolygon(count))));	
+
 	return true;
 }
 

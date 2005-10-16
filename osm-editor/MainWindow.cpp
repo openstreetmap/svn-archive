@@ -145,6 +145,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("Grab GPX from Net",this,SLOT(grabGPXFromNet()),
 								CTRL+Key_N);
 	fileMenu->insertItem("Post GPX",this,SLOT(postGPX()),CTRL+Key_P);
+//	fileMenu->insertItem("Login",this,SLOT(login()),CTRL+Key_I);
 	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
 	menuBar()->insertItem("&File",fileMenu);
 
@@ -325,6 +326,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	setFocusPolicy(QWidget::ClickFocus);
 
 	showPosition();
+
 }
 
 MainWindow::~MainWindow()
@@ -434,18 +436,24 @@ void MainWindow::grabGPXFromNet()
 	}
 }
 
+/* UPDATED 151005 not present in Windows version 141005 */
 void MainWindow::postGPX()
 {
-	QString url=QInputDialog::getText("Enter URL",
-										"Enter URL of GPX server:");
-	std::string gpx = components->toGPX(true);
-	char *cgpx = new char[gpx.size()+1];
-	strcpy(cgpx,gpx.c_str()); // necessary because a curl function has no const
+	LoginDialogue *ld=new LoginDialogue(this);
+	if(ld->exec())
+	{
+		QString url=ld->getURL(), username=ld->getUsername(),
+					password=ld->getPassword();
+		std::string gpx = components->toGPX(true);
+		char *cgpx = new char[gpx.size()+1];
 
-	statusBar()->message("Posting map data...");
-	CURL_LOAD_DATA *resp = post_gpx(url,cgpx); 
-	statusBar()->message("Done.");
-	delete[] cgpx;
+		// necessary because a curl function has no const
+		strcpy(cgpx,gpx.c_str()); 
+
+		statusBar()->message("Posting map data...");
+		CURL_LOAD_DATA *resp = post_gpx(url,cgpx,username,password);
+		statusBar()->message("Done.");
+		delete[] cgpx;
 
 		char *strdata = new char[resp->nbytes+1];
 		memcpy(strdata,resp->data,resp->nbytes);
@@ -453,10 +461,12 @@ void MainWindow::postGPX()
 		free(resp->data);
 		free(resp);
 
-		cout << "Response:" << endl << strdata << endl;
+//		cout << "Response:" << endl << strdata << endl;
 		delete[] strdata;
-
+	}
+	delete ld;
 }
+/* END UPDATE */
 
 void MainWindow::removePlainTracks()
 {
@@ -699,8 +709,12 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			curSeg = components->getSeg(seg);
 			if(!doingClonedTrack) 
 			{
+				/* UPDATE 15/10/05 not present in Windows 141005 */
 				curPen = (curSeg==selectedSeg) ? QPen(Qt::yellow,5) :
-						segpens[curSeg->getType()];
+						(curSeg->isLocked()) ? 
+							QPen(QColor(255,200,138),2)	 : 
+								segpens[curSeg->getType()];
+				/* END UPDATE */
 			}
 
 			maxDist = 0;
@@ -1278,83 +1292,6 @@ void MainWindow::updateWithLandsatCheck()
 		landsatManager.forceGrab();
 	showPosition();
 	update();
-}
-void MainWindow::grabTracks()
-{
-#if !defined(XMLRPC)
-	QMessageBox::information(this,"XMLRPC not enabled",
-				 "Not able to log into OpenStreetmap, as XMLRPC support was not compiled into the program.");
-#else
-	QString username, password;
-	LoginDialogue *d = new LoginDialogue(this);
-	if(d->exec())
-	{
-		username = d->getUsername();
-		password = d->getPassword();
-		std::string token;
-		XmlRpcValue result;
-		XmlRpcValue param_array;
-		XmlRpcClient::Initialize("test","0.1");
-		try
-		{
-			XmlRpcClient client("http://www.openstreetmap.org/api/xml.jsp");
-			param_array = XmlRpcValue::makeArray();
-			param_array.arrayAppendItem
-					(XmlRpcValue::makeString(username.ascii()));
-			param_array.arrayAppendItem
-					(XmlRpcValue::makeString(password.ascii()));
-
-			result = client.call("openstreetmap.login",param_array);
-			if((token=result.getString())!="ERROR")
-			{
-				QMessageBox::information(this,"Login successful",
-											"Login successful");
-				EarthPoint llSW=map.getBottomLeft();
-				EarthPoint llNE=map.getEarthPoint(ScreenPos(width(),height()));
-				
-				
-				param_array = XmlRpcValue::makeArray();
-				param_array.arrayAppendItem(XmlRpcValue::makeString(token));
-				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llSW.y));
-				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llSW.x));
-				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llNE.y));
-				param_array.arrayAppendItem
-						(XmlRpcValue::makeDouble(llNE.x));
-				result=client.call("openstreetmap.getPoints",param_array);
-				XmlRpcValue array=result.getArray();
-				QString wpName;
-				for(int count=0; count<array.arraySize(); count+=2)
-				{
-					XmlRpcValue value = array.arrayGetItem(count);
-					double curLat = value.getDouble();
-					value = array.arrayGetItem(count+1);
-					double curLon = value.getDouble();
-					wpName.sprintf("OSM-%03d",count);	
-					components->addWaypoint
-							(Waypoint(wpName,curLat,curLon,"waypoint"));
-				}
-				update();	
-			}
-			else
-			{
-				QMessageBox::warning(this,"Can't login",
-								"OpenStreetMap did not recognise your login");
-			}
-		}
-		catch (XmlRpcFault& fault)
-		{
-			QMessageBox::warning(this,"Fault",fault.getFaultString().c_str());
-		}
-	}
-	else
-	{
-		QMessageBox::warning(this,"Login dialog box failed",
-				     "Unable to log in");
-	}
-#endif
 }
 
 void MainWindow::grabLandsat()

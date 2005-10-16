@@ -26,6 +26,7 @@
 
  */
 
+
 /* CREDIT: The approach taken (of a struct storing the read-in-data and its
  * size) is inspired by the callback example on the cURL web site. */
 
@@ -34,14 +35,17 @@
  * Returns the data as an array of bytes in JPEG format for further
  * processing. */
 
-CURL_LOAD_DATA *grab_landsat(double  west,double south,double east,double north,
+CURL_LOAD_DATA *grab_landsat(
+					double  west,double south,double east,double north,
 					int width_px, int height_px)
 {
 	char url[1024];
 	sprintf(url,"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=%d&height=%d&layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg&bbox=%lf,%lf,%lf,%lf",width_px,height_px,west,south,east,north);
 
 	fprintf(stderr,"URL = %s\n", url);
-	return grab_http_response(url);
+	CURL_LOAD_DATA *resp =  grab_http_response(url);
+	//fprintf(stderr,"%s", resp->data);
+	return resp;
 }
 
 CURL_LOAD_DATA  *grab_gpx(const char *urlbase,
@@ -55,12 +59,11 @@ CURL_LOAD_DATA  *grab_gpx(const char *urlbase,
 
 CURL_LOAD_DATA *grab_http_response(const char *url)
 {
-	CURL *curl;
 	CURL_LOAD_DATA *data;
 
 	printf("grab_http_response(): URL=%s\n",url);
+	CURL *curl =  curl_easy_init(); 
 
-	curl=curl_easy_init();
 	if(curl)
 	{
 		data = Do(curl,url);
@@ -100,28 +103,33 @@ size_t response_callback(void *ptr,size_t size,size_t nmemb, void *d)
 	return rsize;
 }
 
-CURL_LOAD_DATA *post_gpx(const char *url, char* gpx)
+CURL_LOAD_DATA *post_gpx(const char *url, char* gpx,
+				const char* username, const char* password)
 {
-	CURL *curl;
 	CURLcode res;
 	CURL_LOAD_DATA *resp;
+	CURL *curl =curl_easy_init();
 
-	curl=curl_easy_init();
 	if(curl)
 	{
 		char *urlencoded=curl_escape(gpx,strlen(gpx));
-		char *data = new char[strlen(urlencoded)+5];
-		sprintf(data,"gpx=%s",urlencoded);
-		printf("Sending: %s\n", data);
+		char *urlencoded_username=curl_escape(username,strlen(username));
+		char *urlencoded_password=curl_escape(password,strlen(password));
+		char *data = new char[strlen(urlencoded)+
+				strlen(urlencoded_username)+strlen(urlencoded_password)+16];
+		sprintf(data,"username=%s&p=%s&gpx=%s",
+						urlencoded_username,urlencoded_password,urlencoded);
+		//printf("Sending: %s\n", data);
 		curl_easy_setopt(curl,CURLOPT_POSTFIELDS,data);
 
 		resp=Do(curl,url);
 
 		delete[] data;
 		curl_free(urlencoded);
+		curl_free(urlencoded_username);
+		curl_free(urlencoded_password);
 		curl_easy_cleanup(curl);
 		return resp; 
 	}
 	return NULL; 
 }
-

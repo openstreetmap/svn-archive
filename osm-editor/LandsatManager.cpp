@@ -22,7 +22,8 @@ void LandsatManager::forceGrab(double nScr)
 	bottomRight = widget->getMap().getEarthPoint (ScreenPos(w*(nScr/2+0.5),
 															h*(nScr/2+0.5)));
 	CURL_LOAD_DATA *landsatData = grab_landsat
-			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*nScr,h*nScr);
+			(topLeft.x,bottomRight.y,bottomRight.x,topLeft.y,w*nScr,
+			 h*nScr);
 	pixmap.loadFromData((const uchar*)landsatData->data,landsatData->nbytes);
 	free(landsatData->data);
 	free(landsatData);

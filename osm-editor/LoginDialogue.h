@@ -31,12 +31,13 @@ class LoginDialogue: public QDialog
 {
 		
 private:
-	QLineEdit * usernameEdit, *passwordEdit;
+	QLineEdit * usernameEdit, *passwordEdit, *urlEdit;
 
 public:
 	LoginDialogue(QWidget*);
 	QString getUsername() { return usernameEdit->text(); }
 	QString getPassword() { return passwordEdit->text(); }
+	QString getURL() { return urlEdit->text(); }
 };
 
 }

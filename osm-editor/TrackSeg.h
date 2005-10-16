@@ -74,6 +74,12 @@ public:
 	 QString getType() { return type; }
 
 	
+	bool isNew() { return !id; }
+	/* UPDATE 151005 not present in Win */
+	bool isCheckedOut() { return id>0; }
+	bool isLocked() { return id<0; }
+	/* END UPDATE */
+
 	void setType(const QString& t) { type=t; }
 	void setId(int i) { id=i; }
 

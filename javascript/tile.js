@@ -314,6 +314,33 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	}
 
 	///
+	/// update permalinks using DOM rather than using a JS link
+	/// (so they can be copied and pasted)
+	///
+
+	this.update_perma_link = function() {
+		var editlink = document.getElementById('editlink');
+		var permalink = document.getElementById('permalink');
+		var debuginfo = document.getElementById('debuginfo');
+		var editlinkscale = (360.0/Math.pow(2.0,this.zoom))/512.0;
+		var linklat = 180 / 3.141592 * (2 * Math.atan(Math.exp(this.lat * 3.141592 / 180)) - 3.141592 / 2); // because we're using mercator
+		if (permalink) {
+			permalink.href = "http://" + urlbase + urlpath + "?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + linklat;
+		}
+		if (editlink) {
+			editlink.href = "http://www.openstreetmap.org/edit/edit-map.html?lat=" + linklat + "&lon=" + this.lon + "&scale=" + editlinkscale;
+		}
+		if (debuginfo) {
+			debuginfo.innerHTML = "<p>Latitude: " + linklat + "<br>Longitude: " + this.lon + "<br>Zoom: " + this.zoom + "<br>Scale: " + editlinkscale 
+					      + "<br><a href=\"http://www.openstreetmap.org/edit/view-map.html?lat=" 
+								+ linklat + "&lon=" + this.lon + "&scale=" + editlinkscale + "\" target=\"_new\">test link</a>" 
+					      + "<br>" + this.centerx + " " + this.centery
+					      + "</p>";
+		}
+		//alert("Latitude: " + this.lat + " Longitude: " + this.lon + " Zoom: " + this.zoom + " Scale: " + editlinkscale);
+	}
+
+	///
 	/// draw the spanning lon/lat range
 	/// drag is simply the mouse delta in pixels
 	///
@@ -327,6 +354,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 		// update where we think the user is actually focused
 		this.lon = ( this.lon_round - ( this.lon_max - this.lon_min ) / ( this.right - this.left ) * this.centerx ) / this.scale;
 		this.lat = - ( this.lat_round - ( this.lat_max - this.lat_min ) / ( this.bot - this.top ) * this.centery ) / this.scale;
+
+		this.update_perma_link();
 
 		// show it
 		var helper = this.navhelp; //document.getElementById( this.parentname + "_helper");
@@ -422,18 +451,13 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 				var bt = -tp;
 				var tp = -temp;
 
+				// modify for mercator-projected tiles: 
+				tp = 180 / 3.141592 * (2 * Math.atan(Math.exp(tp * 3.141592 / 180)) - 3.141592 / 2);
+				bt = 180 / 3.141592 * (2 * Math.atan(Math.exp(bt * 3.141592 / 180)) - 3.141592 / 2);
+				
 				// make a key
-				var key = this.url + "&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)
-							  + "&BBOX=" + lt + "," + 180 / 3.141592 * (2 * Math.atan(Math.exp(tp * 3.141592 / 180)) - 3.141592 /2)  + "," + rt + "," + 180 / 3.141592 * (2 * Math.atan(Math.exp(bt * 3.141592 / 180 )) - 3.141592 /2)  ;
+				var key = this.url + "&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)+"&BBOX="+lt+","+tp+","+rt+","+bt;
 
-
-//				var key = this.url + "&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)
-	//						  + "&BBOX=" + lt + "," + tp + "," + rt + "," + bt;
-
-
-
-//        alert(tp);
-  //      alert(Math.cos(tp * 3.14159 / 180.0));
 				// see if our tile is already present
 				var node = document.getElementById(key);
 
@@ -487,6 +511,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 			containery = containeryreset;
 			containerx += this.tilewidth;
 		}
+
 	}
 
 	function getfield(content,field) {
@@ -822,6 +847,39 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	}
 
 	///
+	/// catch double click (use to center map)
+	///
+
+	this.event_double_click = function(e) {
+
+		var hostengine = null;
+		if( window && window.event && window.event.srcElement ) {
+			hostengine = window.event.srcElement.tile_engine;
+		} else if( e.target ) {
+			hostengine = e.target.tile_engine;
+		} else if( e.srcElement ) {
+			hostengine = e.srcElement.tile_engine;
+		}
+
+		if( hostengine ) {
+			if( netscape ) {
+				hostengine.mousex = parseInt(e.pageX) + 0.0;
+				hostengine.mousey = parseInt(e.pageY) + 0.0;
+			} else {
+				hostengine.mousex = parseInt(window.event.clientX) + 0.0;
+				hostengine.mousey = parseInt(window.event.clientY) + 0.0;
+			}
+			var dx = hostengine.mousex-(hostengine.displaywidth/2)-hostengine.parent_x;
+			var dy = hostengine.mousey-(hostengine.displayheight/2)-hostengine.parent_y;
+			hostengine.drag(-dx,-dy); // TODO smooth
+		}
+
+		// must return false to prevent operating system drag and drop from handling events
+		return false;
+
+	}
+
+	///
 	/// catch mouse up
 	///
 
@@ -845,6 +903,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 				hostengine.mousey = parseInt(window.event.clientY) + 0.0;
 			}
 			hostengine.mousedown = 0;
+			hostengine.update_perma_link();
 		}
 
 		// must return false to prevent operating system drag and drop from handling events
@@ -875,6 +934,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 				hostengine.mousey = parseInt(window.event.clientY) + 0.0;
 			}
 			hostengine.mousedown = 0;
+			hostengine.update_perma_link();
 		}
 
 		// must return false to prevent operating system drag and drop from handling events
@@ -907,13 +967,14 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							0,0
 							);
 		}
+
 	}
 
 	///
 	/// zoom a tile group
 	///
 	this.tile_engine_zoomin = function(e) {
-	 	var amount = 2;
+		var amount = 2;
 		var hostengine = this.tile_engine;
 
 		if( window && window.event && window.event.srcElement ) {
@@ -935,6 +996,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							0,0
 							);
 		}
+
 	}
 
 	///
@@ -954,6 +1016,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 			component.onmouseup = this.event_mouse_up;
 			//component.onmouseout = this.event_mouse_out;
 			component.onkeypress = this.event_key;
+			window.ondblclick = this.event_double_click;
 		}
 
 		if( window ) {
@@ -962,6 +1025,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 			window.onmouseup = this.event_mouse_up;
 			//window.onmouseout = this.event_mouse_out;
 			window.onkeypress = this.event_key;
+			window.ondblclick = this.event_double_click;
 		}
 
 		//document.onkeypress = this.event_key;
@@ -991,7 +1055,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.navout.src = "/images/map_zoomout.png";
 	this.navout.value = "out";
 	this.navout.style.zIndex = 99;
-	this.navout.onclick = this.tile_engine_zoomout;
+	this.navout.style.cursor = this.zoom <= 0 ? 'arrow' : 'hand';
+	this.navout.onclick = this.zoom == 0 ? 0 : this.tile_engine_zoomout;
 	this.navout.tile_engine = this;
 	this.navform.appendChild(this.navout);
 
@@ -999,20 +1064,22 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.navin.name = parentname + "_in";
 	this.navin.type = "image";
 	this.navin.src = "/images/map_zoomin.png";
-	this.navin.style.zIndex = 99;
 	this.navin.value = "in";
-	this.navin.onclick = this.tile_engine_zoomin;
+	this.navin.style.zIndex = 99;
+	this.navin.style.cursor = this.zoom >= 20 ? 'arrow' : 'hand';
+	this.navin.onclick = this.zoom >= 20 ? 0 : this.tile_engine_zoomin;
 	this.navin.tile_engine = this;
 	this.navform.appendChild(this.navin);
 
-	this.navhelp = document.createElement('div');
-	this.navhelp.name = parentname + "_helper";
-	this.navhelp.style.display = 'inline';
-	this.navhelp.style.color = 'white';
-	this.navhelp.innerHTML = '[ Please select and drag to move map ]'
+//	this.navhelp = document.createElement('div');
+//	this.navhelp.name = parentname + "_helper";
+//	this.navhelp.style.display = 'inline';
+//	this.navhelp.style.color = 'white';
+//	this.navhelp.innerHTML = '[ Please select and drag to move map ]'
 //	this.navform.appendChild(this.navhelp);
 
 	this.parent.appendChild(this.navform);
 
-
 }
+
+

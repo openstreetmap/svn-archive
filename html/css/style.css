@@ -112,10 +112,8 @@ color: #000000;
   left: 150px;
   top: 21px;
   background: none;
-            line-height: 1.2em;
-       font-weight: bold;
-       font-weight: bold;
-            text-align: left;
+  line-height: 1.2em;
+  text-align: left;
 }
 
 #bottom_bar {

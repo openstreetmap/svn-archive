@@ -165,14 +165,13 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.debug = 0;
 	this.parent.tile_engine = this;
 
-
 	// for firefox keyboard
 	defaultEngine = this;
 	document.engine = this;
 
 
 	this.seteditvis = function() {
-		if (this.zoom >= 10) {
+		if (this.zoom >= 13) {
 			showhide("editlinkdiv", true);
 		} else {
 			showhide("editlinkdiv", false);
@@ -319,24 +318,38 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	///
 
 	this.update_perma_link = function() {
-		var editlink = document.getElementById('editlink');
-		var permalink = document.getElementById('permalink');
+		//var editlink = document.getElementById('editlink');
+		//var permalink = document.getElementById('permalink');
 		var debuginfo = document.getElementById('debuginfo');
 		var editlinkscale = (360.0/Math.pow(2.0,this.zoom))/512.0;
 		var linklat = 180 / 3.141592 * (2 * Math.atan(Math.exp(this.lat * 3.141592 / 180)) - 3.141592 / 2); // because we're using mercator
-		if (permalink) {
-			permalink.href = "http://" + urlbase + urlpath + "?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + linklat;
-		}
-		if (editlink) {
-			editlink.href = "http://www.openstreetmap.org/edit/edit-map.html?lat=" + linklat + "&lon=" + this.lon + "&scale=" + editlinkscale;
-		}
+		//if (permalink) {
+		//	permalink.href = "http://" + urlbase + urlpath + "?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + linklat;
+		//}
+		//if (editlink) {
+		//	editlink.href = "http://www.openstreetmap.org/edit/edit-map.html?lat=" + linklat + "&lon=" + this.lon + "&scale=" + editlinkscale;
+		//}
 		if (debuginfo) {
-			debuginfo.innerHTML = "<p>Latitude: " + linklat + "<br>Longitude: " + this.lon + "<br>Zoom: " + this.zoom + "<br>Scale: " + editlinkscale 
-					      + "<br><a href=\"http://www.openstreetmap.org/edit/view-map.html?lat=" 
-								+ linklat + "&lon=" + this.lon + "&scale=" + editlinkscale + "\" target=\"_new\">test link</a>" 
-					      + "<br>" + this.centerx + " " + this.centery
-					      + "</p>";
+			debuginfo.innerHTML = "lat/lon: " + linklat + " " + this.lon;
 		}
+
+    var myhtml = "<a href=\"http://www.openstreetmap.org/edit/view-map2.html?lat=" 
+           								+ linklat + "&lon=" + this.lon + "&scale=" + editlinkscale + "\" target=\"_new\">link to this map</a>";
+
+    if( this.zoom >=14 )
+    {
+      myhtml +=  ", <a href=\"http://www.openstreetmap.org/edit/edit-map.html?lat=" 
+           								+ linklat + "&lon=" + this.lon + "&scale=" + editlinkscale + "\" target=\"_new\">edit this map</a>";
+
+    }
+    else
+    {
+      myhtml += " (zoom in to edit map)";
+    
+    }
+    var linksdiv = document.getElementById('linksdiv');
+    linksdiv.innerHTML = myhtml;
+    
 		//alert("Latitude: " + this.lat + " Longitude: " + this.lon + " Zoom: " + this.zoom + " Scale: " + editlinkscale);
 	}
 
@@ -1056,8 +1069,11 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.navout.value = "out";
 	this.navout.style.zIndex = 99;
 	this.navout.style.cursor = this.zoom <= 0 ? 'arrow' : 'hand';
-	this.navout.onclick = this.zoom == 0 ? 0 : this.tile_engine_zoomout;
-	this.navout.tile_engine = this;
+	//this.navout.onclick = this.zoom == 0 ? 0 : this.tile_engine_zoomout;
+
+  this.navout.onclick = this.tile_engine_zoomout;
+
+  this.navout.tile_engine = this;
 	this.navform.appendChild(this.navout);
 
 	this.navin = document.createElement('input');
@@ -1067,8 +1083,13 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.navin.value = "in";
 	this.navin.style.zIndex = 99;
 	this.navin.style.cursor = this.zoom >= 20 ? 'arrow' : 'hand';
-	this.navin.onclick = this.zoom >= 20 ? 0 : this.tile_engine_zoomin;
-	this.navin.tile_engine = this;
+
+
+  // this.navin.onclick = this.zoom >= 20 ? 0 : this.tile_engine_zoomin;
+
+  this.navin.onclick = this.tile_engine_zoomin;
+  
+  this.navin.tile_engine = this;
 	this.navform.appendChild(this.navin);
 
 //	this.navhelp = document.createElement('div');

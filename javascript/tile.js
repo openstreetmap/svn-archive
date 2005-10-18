@@ -981,6 +981,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							);
 		}
 
+    return false; // or safari falls over
+
 	}
 
 	///
@@ -1009,7 +1011,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							0,0
 							);
 		}
-
+  
+    return false; // or safari falls over
 	}
 
 	///

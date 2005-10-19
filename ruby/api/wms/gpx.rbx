@@ -123,7 +123,7 @@ File.open(fname, "wb") {|stream|
     cr.line_to(proj.x(p.longitude) , proj.y(p.latitude)+1 )
     cr.line_to(proj.x(p.longitude)-1 , proj.y(p.latitude) )
     cr.close_path
-    cr.set_rgb_color(1.0, 0.0, 0.8125)
+    cr.set_rgb_color(1.0, 0.8125, 0.0)
     cr.line_join = LINE_JOIN_MITER
     cr.line_width = 1
     cr.stroke

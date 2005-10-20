@@ -64,4 +64,20 @@ if linesegments
   
 
   puts gpx.to_s_pretty
+else
+  gpx = OSM::Gpx.new
+  
+  if nodes && nodes.length > 0
+    
+    nodes.to_a.each do |i,n|
+      gpx.addnode(n) unless n.visible == false
+    end
+
+  else
+    # nuffin there guv
+
+  end
+
+  puts gpx.to_s_pretty
+
 end

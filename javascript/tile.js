@@ -15,6 +15,8 @@ var xmlDoc;
 var xmlHttp;
 var defaultEngine = null; // xxx for firefox keyboard events.
 
+var PI = 3.14159265358979323846;
+
 //
 // Utility - get div position - may not be accurate
 //
@@ -322,7 +324,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 		//var permalink = document.getElementById('permalink');
 		var debuginfo = document.getElementById('debuginfo');
 		var editlinkscale = (360.0/Math.pow(2.0,this.zoom))/512.0;
-		var linklat = 180 / 3.141592 * (2 * Math.atan(Math.exp(this.lat * 3.141592 / 180)) - 3.141592 / 2); // because we're using mercator
+		var linklat = 180 / PI * (2 * Math.atan(Math.exp(this.lat * PI / 180)) - PI / 2); // because we're using mercator
 		//if (permalink) {
 		//	permalink.href = "http://" + urlbase + urlpath + "?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + linklat;
 		//}
@@ -465,8 +467,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 				var tp = -temp;
 
 				// modify for mercator-projected tiles: 
-				tp = 180 / 3.141592 * (2 * Math.atan(Math.exp(tp * 3.141592 / 180)) - 3.141592 / 2);
-				bt = 180 / 3.141592 * (2 * Math.atan(Math.exp(bt * 3.141592 / 180)) - 3.141592 / 2);
+				tp = 180 / PI * (2 * Math.atan(Math.exp(tp * PI / 180)) - PI / 2);
+				bt = 180 / PI * (2 * Math.atan(Math.exp(bt * PI / 180)) - PI / 2);
 				
 				// make a key
 				var key = this.url + "&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)+"&BBOX="+lt+","+tp+","+rt+","+bt;

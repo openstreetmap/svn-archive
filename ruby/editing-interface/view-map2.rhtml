@@ -18,7 +18,8 @@ lat = Get_Parameter("lat") - 0;
 
 if( lat != 0.0)
 {
-  lat = Math.log( Math.tan( (Math.PI / 4) + (lat / 180.0 * Math.PI / 2))) * 180.0 / Math.PI ;
+  var lpi =  3.14159265358979323846;
+  lat = Math.log( Math.tan( (lpi / 4.0) + (lat / 180.0 * lpi / 2.0))) * 180.0 / lpi ;
 }
 
 //alert( Get_Parameter("scale") );

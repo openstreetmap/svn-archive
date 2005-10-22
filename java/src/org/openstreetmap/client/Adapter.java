@@ -19,7 +19,7 @@ import org.openstreetmap.util.Mercator;
 public class Adapter
 {
 
-  private String URLBASE = "http://www.openstreetmap.org/api/0.1/";
+  private String URLBASE = "http://www.openstreetmap.org/api/0.2/";
   String user, pass;
 
   Vector lines;
@@ -286,7 +286,7 @@ public class Adapter
         int id = result.intValue();
         */
  
-        String xml = "<gpx version='1.0'><wpt lon='" + node.lon +  "' lat='" + node.lat + "'></wpt></gpx>";
+        String xml = "<osm><node lon='" + node.lon +  "' lat='" + node.lat + "' /></osm>";
 
         String url = URLBASE + "newnode";
 
@@ -346,7 +346,7 @@ public class Adapter
     public void run() {
   
       try{
-        String xml = "<gpx version='1.0'><wpt lon='" + node.lon +  "' lat='" + node.lat + "'>" + node.uid + "</wpt></gpx>";
+        String xml = "<osm><node lon='" + node.lon +  "' lat='" + node.lat + "' uid='" + node.uid + "' /></osm>";
 
         String url = URLBASE + "node/" + node.uid;
 
@@ -403,7 +403,7 @@ public class Adapter
         int id = result.intValue();
         */
  
-        String xml = "<gpx version='1.0'><trk><trkseg><trkpt><name>" + line.a.uid + "</name></trkpt><trkpt><name>" + line.b.uid + "</name></trkpt></trkseg></trk></gpx>";
+        String xml = "<osm><segment from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
 
         String url = URLBASE + "newsegment";
 

@@ -3,7 +3,7 @@
 require 'cgi'
 #require 'osm/dao'
 load 'osm/dao.rb'
-require 'osm/gpx'
+load 'osm/ox.rb'
 require 'rexml/document'
 
 include Apache
@@ -21,14 +21,14 @@ if r.request_method == "GET"
  
 
   if segmentid != 0
-    gpx = OSM::Gpx.new
+    ox = OSM::Ox.new
 
     segment = dao.getsegment(segmentid)
 
     if segment
       if segment.visible && segment.node_a.visible && segment.node_b.visible
-        gpx.addline(segment.uid, segment.node_a, segment.node_b)
-        puts gpx.to_s_pretty
+        ox.add_segment(segment)
+        puts ox.to_s_pretty
       else
         exit HTTP_GONE
       end
@@ -47,33 +47,24 @@ else
     doc = Document.new $stdin.read
     gpxsegmentid = -1
 
-    doc.elements.each('gpx/trk/name') do |n|
-      gpxsegmentid = n.get_text.value.to_i
-    end
+    doc.elements.each('osm/segment') do |seg|
+      gpxsegmentid = seg.attributes['uid'].to_i
+      
+      exit BAD_REQUEST unless gpxsegmentid == segmentid
+      exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible == true
 
-    exit BAD_REQUEST unless gpxsegmentid == segmentid
-    exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible == true
+      node_a_uid = seg.attributes['from'].to_i
+      node_b_uid = seg.attributes['to'].to_i
 
-    points = Array.new
+      exit HTTP_NOT_FOUND unless dao.getnode(node_a_uid).visible == true 
+      exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true 
 
-    count = 0
-
-    doc.elements.each('gpx/trk/trkseg/trkpt') do |p|
-      points.push p.attributes['lat'].to_f
-      points.push p.attributes['lon'].to_f
-      p.elements.each('name') do |n|
-        count += 1
-        exit HTTP_NOT_FOUND unless dao.getnode(n.get_text.value.to_i).visible == true 
-        points.push n.get_text.value.to_i
+      if dao.update_segment?(segmentid, userid, node_a_uid, node_b_uid)
+        exit
+      else
+        exit HTTP_INTERNAL_SERVER_ERROR
       end
-    end
 
-    exit BAD_REQUEST unless count == 2
-
-    if dao.update_segment?(segmentid, userid, points[2], points[5])
-      exit
-    else
-      exit HTTP_INTERNAL_SERVER_ERROR
     end
 
   else

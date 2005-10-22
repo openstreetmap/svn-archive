@@ -3,7 +3,7 @@
 
 require 'cgi'
 load 'osm/dao.rb'
-require 'osm/gpx'
+load 'osm/ox.rb'
 require 'rexml/document'
 
 include Apache
@@ -16,15 +16,13 @@ dao = OSM::Dao.instance
 cgi = CGI.new
 nodes = cgi['nodes']
 
-gpx = OSM::Gpx.new
+ox = OSM::Ox.new
 nodes.scan(/[0-9]+/){ |nodeid|
 
   node = dao.getnode(nodeid)
   
-  if node
-    if node.visible
-      gpx.addnode(node)
-    end
+  if node && node.visible
+    ox.add_node(node)
   end
 }
 

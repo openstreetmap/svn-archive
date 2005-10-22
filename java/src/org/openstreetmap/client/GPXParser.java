@@ -23,24 +23,13 @@ public class GPXParser extends MinML2 {
   private Vector nodes = new Vector();
   private Vector lines = new Vector();
   
-  double lat = 0.0;
-  double lon = 0.0;
-  long uid = 0;
+  double node_lat = 0.0;
+  double node_lon = 0.0;
+  long node_uid = 0;
+
   long line_uid = 0;
-  boolean latfound = false;
-  boolean lonfound = false;
-  boolean uidfound = false;
-  
-  long uid_a = 0;
-  long uid_b = 0;
-
-  boolean looking_for_uid = false;
-  boolean looking_for_node_a = false;
-  boolean looking_for_node_b = false;
-
-  boolean looking_for_line_uid = false;
-
-  boolean line_uid_found = false;
+  long line_from_uid = 0;
+  long line_to_uid = 0;
 
   String buffered_string = "";
 
@@ -86,171 +75,48 @@ public class GPXParser extends MinML2 {
       final Attributes atts)
     throws SAXException
   {
-    /*
-       System.out.println("Start of Element: qName = \"" + qName + "\"");
-       System.out.println("Start of Element: localName = \"" + localName + "\"");
-       System.out.println("Start of Element: namespaceURI = \"" + namespaceURI + "\"");
-       System.out.println("Start of Attributes");
 
-       for (int i = 0; i < atts.getLength(); i++)
-       System.out.println("qName: \"" + atts.getQName(i)
-       + "\" localName: \"" + atts.getLocalName(i)
-       + "\" uri: \"" + atts.getURI(i)
-       + "\" Type: " + atts.getType(i)
-       + " Value: \"" + atts.getValue(i) + "\"");
-
-       System.out.println("End of Attributes");
-     */
-    if(qName != null)
+    if( qName.equals("node") )
     {
-      if(qName.equals("trkpt"))
-      {
-        String val = atts.getValue("lat");
-
-        if(val != null)
-        {
-          lat = Double.parseDouble(val);
-          latfound = true;      
-        }
-
-        val = atts.getValue("lon");
-
-        if(val != null)
-        {
-          lon = Double.parseDouble(val);
-          lonfound = true;
-        }
-      }
-
-      if(qName.equals("name"))
-      {
-        looking_for_uid = true;
-      }
-
-      if(qName.equals("trkseg"))
-      {
-        looking_for_node_a = true;
-        looking_for_node_b = false;
-      }
-
-      if(qName.equals("wpt"))
-      {
-        looking_for_uid = true;
-        
-        String val = atts.getValue("lat");
-
-        if(val != null)
-        {
-          lat = Double.parseDouble(val);
-          latfound = true;      
-        }
-
-        val = atts.getValue("lon");
-
-        if(val != null)
-        {
-          lon = Double.parseDouble(val);
-          lonfound = true;
-          
-        }
-
-      }
-
-      if( qName.equals("trk"))
-      {
-        looking_for_line_uid = true;
-
-      }
-
+      node_lat = Double.parseDouble( atts.getValue("lat") );
+      node_lon = Double.parseDouble( atts.getValue("lon") );
+      node_uid = Long.parseLong( atts.getValue("uid") );
     }
 
-   
-
+    if( qName.equals("segment") )
+    {
+      line_uid = Long.parseLong( atts.getValue("uid") );
+      line_from_uid = Long.parseLong( atts.getValue("from") );
+      line_to_uid = Long.parseLong( atts.getValue("to") );
+    }
+  
   } // startElement
 
+  
   public void endElement(final String namespaceURI,
       final String localName,
       final String qName)
     throws SAXException
   {
-    /*
-       System.out.println("End of Element: qName = \"" + qName + "\"");
-       System.out.println("End of Element: localName = \"" + localName + "\"");
-       System.out.println("End of Element: namespaceURI = \"" + namespaceURI + "\"");
-     */
 
     if(qName != null)
     {
 
-
-
-      if(qName.equals("trkpt") &&  latfound && lonfound && uidfound )
+      if(qName.equals("node"))
       {
-//        System.out.println("got node: " + uid + ": " + lon + "," + lat);
-        nodes.addElement(new Node(lat, lon, uid));
-        lonfound = false;
-        latfound = false;
-        uidfound = false;
-
-        if( looking_for_node_a )
-        {
-          uid_a = uid;
-          looking_for_node_a = false;
-          looking_for_node_b = true;
-        }
-        else
-        {
-
-          if( looking_for_node_b )
-          {
-            uid_b = uid;
-            looking_for_node_a = false;
-            looking_for_node_b = false;
-          }
-        }
-
+        //System.out.println("adding node " + node_uid + " at " + node_lat + "," + node_lon);
+        nodes.addElement(new Node(node_lat, node_lon, node_uid));
       }
 
-      if(qName.equals("trkseg") && line_uid_found)
+      if(qName.equals("segment"))
       {
 
-//        System.out.println("got line: " + uid_a + " -> " + uid_b);
-    
-        lines.addElement(new Line(getNode(uid_a), getNode(uid_b), line_uid));
+        //System.out.println("adding seg " + line_uid + " from " + line_from_uid + " -> " + line_to_uid);
+        lines.addElement(new Line(getNode(line_from_uid), getNode(line_to_uid), line_uid));
       }
-
-      if(qName.equals("name") || qName.equals("wpt"))
-      {
-        
-        long tmpuid = Long.parseLong(buffered_string);
-        buffered_string = "";        
-        if( looking_for_uid )
-        {
-          looking_for_uid = false;
-          uid = tmpuid;
-          uidfound = true;
-        }
-
-        if( looking_for_line_uid )
-        {
-          looking_for_line_uid = false;
-          line_uid = tmpuid;
-          line_uid_found = true; 
-        }
-
-      }
-
-      if(qName.equals("wpt"))
-      {
-//        System.out.println("got hanging node: " + uid + ": " + lon + "," + lat);
-        nodes.addElement(new Node(lat, lon, uid));
-      }
-
-
-
-      
     }
   } // endElement
+
 
   public void characters (char ch[], int start, int length) {
     String in = new String(ch, start, length);
@@ -275,7 +141,6 @@ public class GPXParser extends MinML2 {
       {
         return n;
       }
-
 
     }
 

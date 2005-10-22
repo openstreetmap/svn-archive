@@ -3,7 +3,6 @@
 
 require 'cgi'
 load 'osm/dao.rb'
-require 'osm/gpx'
 require 'rexml/document'
 
 include Apache
@@ -17,7 +16,7 @@ if r.request_method == "PUT"
   r.setup_cgi_env
   userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
   doc = Document.new $stdin.read
-  doc.elements.each('gpx/wpt') do |pt|
+  doc.elements.each('osm/node') do |pt|
     lat = pt.attributes['lat'].to_f
     lon = pt.attributes['lon'].to_f
 

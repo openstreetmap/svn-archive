@@ -3,7 +3,7 @@
 
 require 'cgi'
 load 'osm/dao.rb'
-require 'osm/gpx'
+load 'osm/ox.rb'
 require 'rexml/document'
 
 include Apache
@@ -19,14 +19,14 @@ if r.request_method == "GET"
   nodeid = cgi['nodeid'].to_i
 
   if nodeid != 0
-    gpx = OSM::Gpx.new
+    ox = OSM::Ox.new
 
     node = dao.getnode(nodeid)
 
     if node
       if node.visible
-        gpx.addnode(node)
-        puts gpx.to_s_pretty
+        ox.add_node(node)
+        puts ox.to_s_pretty
       else
         exit HTTP_GONE
       end
@@ -43,10 +43,10 @@ else
     userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
     doc = Document.new $stdin.read
 
-    doc.elements.each('gpx/wpt') do |pt|
+    doc.elements.each('osm/node') do |pt|
       lat = pt.attributes['lat'].to_f
       lon = pt.attributes['lon'].to_f
-      gpxnodeid = pt.get_text.value.to_i
+      gpxnodeid = pt.attributes['uid'].to_i
 
       if gpxnodeid == nodeid && userid != 0
         node = dao.getnode(nodeid)

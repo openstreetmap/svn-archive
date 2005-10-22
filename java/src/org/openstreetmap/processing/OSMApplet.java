@@ -265,8 +265,10 @@ TODO: disable button mouseover highlighting when !ready */
     //      - or allow "zoom level" as well as scale
     projection = new Mercator(clat,clon,sc,width,height);
 
-    strokeWeight = max((float)(0.005f/projection.kilometersPerPixel()),1.0f); // 5m roads, but min 1px width
+    strokeWeight = max((float)(0.01f/projection.kilometersPerPixel()),1.0f); // 5m roads, but min 1px width
 
+    System.out.println("Selected strokeWeight of " + strokeWeight );
+    
     Point tl = projection.getTopLeft();
     Point br = projection.getBottomRight();
 
@@ -521,7 +523,7 @@ TODO: disable button mouseover highlighting when !ready */
   // bit crufty - TODO tidy up and move into Point
   public boolean mouseOverPoint(Point p) {
     if (p.projected) {
-      return sqrt(sq(p.x-mouseX)+sq(p.y-mouseY)) < strokeWeight/2.0f;
+      return sqrt(sq(p.x-mouseX)+sq(p.y-mouseY)) < strokeWeight; // /2.0f;  so you don't have to be directly on a node for it to light up
     }
     else {
       return false;

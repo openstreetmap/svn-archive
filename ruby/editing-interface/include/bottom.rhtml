@@ -1,24 +1,5 @@
 
 
-<div id="top_bar">
-<img src="/images/user.png">
-<%
-
-if loggedin
-  %>
-    <a href="logout.html">logout</a>
-  <%
-else
-  %>
-    <a href="login.html">Login</a> or <a href="create-account.html">create an account</a>
-  <%
-end
-
-%>
-
-</div>
-
-
 <div id="logo">
 <h1>OpenStreetMap</h1>
 <img src="/images/mag_map_medium.png" width="150" height="150">
@@ -37,9 +18,21 @@ end
 if loggedin
   %>
     <li>
+    <img src="/images/user.png"><a href="logout.html">logout</a>
+    </li>
+    <li>
     <img src="/images/stock_save-16.png"><a href="upload-gpx.html">Upload GPX</a>
     </li>
     <%
+else
+  %>
+    <li>
+    <img src="/images/user.png"><a href="login.html">Login</a>
+    </li>
+    <li>
+    <img src="/images/user.png"><a href="create-account.html">Create acct</a>
+    </li>
+  <%
 end
 %>
 <li>

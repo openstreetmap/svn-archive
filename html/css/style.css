@@ -18,23 +18,6 @@ body {
 }
 
 
-#top_bar {
-  width:100%;
-  height: 21px;
-  white-space:nowrap;
-  padding: 0;
-  margin: 0;
-  position:absolute;
-  left:0px;
-  top:0px;
-  z-index: 0;
-  border: none;
-  background: #CCCCCC;
-  overflow: visible;
-  line-height: 1.2em;
-  text-align: right;
-}
-
 #logo {
 width : 150px;
 padding: 0 0 0 0;

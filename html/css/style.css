@@ -36,15 +36,16 @@ body {
 }
 
 #logo {
-width : 150px;
-padding: 10px;
-margin: 10px;
+min-width : 150px;
+width: 10em;
+padding: 1em;
+margin: 1em;
 position: absolute;
 top: 0px;
 left: 0px;
-height: 275px;
+height: 220px;
 background: #ddddff;
-border: 2px solid #ccccdd;
+border: 0.1em solid #ccccdd;
 }
 
 #logo h1 {
@@ -53,14 +54,14 @@ border: 2px solid #ccccdd;
 }
 
 #left_menu {
-  width: 150px;
-  margin: 10px;
-  padding: 10px;
-  border: 2px solid #dddddd;
+  width: 10em;
+  margin: 1em;
+  padding: 1em;
+  border: 0.1em solid #ccc;
   position: absolute;
   left: 0px;
-  top: 310px;
-  background: #EEEEEE;
+  top: 270px;
+  background: #ddd;
   line-height: 1.2em;
   text-align: Left;
 }
@@ -74,7 +75,13 @@ border: 2px solid #ccccdd;
 
 #left_menu ul {
   list-style: none;
-  padding: 0em 1em 1em 1em;
+  padding: 0;
+  margin: 0;
+}
+
+#left_menu li {
+  margin:0;
+  padding:0;
 }
 
 #left_menu img {
@@ -112,8 +119,8 @@ color: #000000;
   padding: 0;
   margin: 0;
   position: absolute;
-  left: 194px;
-  top: 10px;
+  left: 14.1em;
+  top: 1em;
   background: none;
   line-height: 1.2em;
   text-align: left;

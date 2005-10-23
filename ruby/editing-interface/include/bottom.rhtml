@@ -12,26 +12,24 @@
 <ul>
 <li>
 <img src="/images/stock_edit-16.png"><a href="view-map.html">View map</a>
-</li>
-
-<%
+</li><%
 if loggedin
-  %>
-    <li>
-    <img src="/images/user.png"><a href="logout.html">Logout</a>
-    </li>
-    <li>
-    <img src="/images/stock_save-16.png"><a href="upload-gpx.html">Upload GPX</a>
-    </li>
+%>
+<li>
+<img src="/images/user.png"><a href="logout.html">logout</a>
+</li>
+<li>
+<img src="/images/stock_save-16.png"><a href="upload-gpx.html">Upload GPX</a>
+</li>
     <%
 else
   %>
-    <li>
-    <img src="/images/user.png"><a href="login.html">Login</a>
-    </li>
-    <li>
-    <img src="/images/user.png"><a href="create-account.html">Create acct</a>
-    </li>
+<li>
+<img src="/images/user.png"><a href="login.html">Login</a>
+</li>
+<li>
+<img src="/images/user.png"><a href="create-account.html">Create acct</a>
+</li>
   <%
 end
 %>
@@ -42,13 +40,13 @@ end
 <img src="/images/stock_stop-16.png"><a href="http://www.openstreetmap.org/wiki/index.php/Bug_Reporting">Report bug</a>
 </li>
 <li>
-<a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/images/somerights20.png" border="0"></a>
+<a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/images/somerights20.png" border="0"></a><br>
 </li>
 </ul>
 <%
 if !loggedin
 %>
-  <p><a href="login.html">Login</a> to use more tools.</p>
+  <a href="login.html">Login</a> to see more<br><br>
 <%
 end
 

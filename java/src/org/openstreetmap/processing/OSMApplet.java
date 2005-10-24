@@ -127,7 +127,7 @@ public class OSMApplet extends PApplet {
   /* collection of OSMLines */
   Vector lines = new Vector();
   /* Integer id -> OSMNode */
-//  Hashtable nodeMap = new Hashtable(); 
+  //  Hashtable nodeMap = new Hashtable(); 
 
   /* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
   //  PImage gpxImage;
@@ -268,7 +268,7 @@ TODO: disable button mouseover highlighting when !ready */
     strokeWeight = max((float)(0.01f/projection.kilometersPerPixel()),1.0f); // 5m roads, but min 1px width
 
     System.out.println("Selected strokeWeight of " + strokeWeight );
-    
+
     Point tl = projection.getTopLeft();
     Point br = projection.getBottomRight();
 
@@ -286,6 +286,10 @@ TODO: disable button mouseover highlighting when !ready */
           img = loadImage(wmsURL);
           if (img == null || img.width == 0 || height == 0) {
             throw new Exception("bad image from: " + wmsURL);
+          }
+          else
+          {
+            redraw();
           }
         }
         catch (Exception e) {
@@ -323,16 +327,18 @@ TODO: disable button mouseover highlighting when !ready */
 
     Thread dataFetcher = new Thread(new Runnable() {
 
-    public void run()
+      public void run()
     {
 
-        osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight(), projection);
+      osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight(), projection);
 
-        System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
+      System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
 
-        ready = true;
+      ready = true;
 
-      }
+      redraw();
+
+    }
 
     }
     );
@@ -341,7 +347,9 @@ TODO: disable button mouseover highlighting when !ready */
       dataFetcher.start();
     }
 
-  }
+    noLoop(); // SteveC
+    redraw();
+  } // setup
 
   boolean gotGPX = false;
 
@@ -511,10 +519,12 @@ TODO: disable button mouseover highlighting when !ready */
         case '+':
         case '=':
           strokeWeight += 1.0f;
+          redraw();
           break;
         case '-':
         case '_':
           if (strokeWeight >= 2.0f) strokeWeight -= 1.0f;
+          redraw();
           break;
       }
     }
@@ -621,30 +631,36 @@ TODO: disable button mouseover highlighting when !ready */
       if (currentMode != null && !overButton) {
         currentMode.mouseReleased();
       }
+      redraw();
     }
     public void mousePressed() {
       if (currentMode != null && !overButton) {
         currentMode.mousePressed();
+        redraw();
       }
     }
     public void mouseMoved() {
       if (currentMode != null) {
         currentMode.mouseMoved();
+        redraw();
       }
     }
     public void mouseDragged() {
       if (currentMode != null) {
         currentMode.mouseDragged();
+        redraw();
       }
     }
     public void keyPressed() {
       if (currentMode != null) {
         currentMode.keyPressed();
+        redraw();
       }
     }
     public void keyReleased() {
       if (currentMode != null) {
         currentMode.keyReleased();
+        redraw();
       }
     }
 
@@ -710,6 +726,7 @@ TODO: disable button mouseover highlighting when !ready */
         Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
           overOne = true;
+          redraw();
           break;
         }
       }    

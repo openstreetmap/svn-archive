@@ -170,8 +170,10 @@ typedef struct GPS_SWay
 #include "gpsnmea.h"
 #include "gpsmem.h"
 #include "gpsrqst.h"
+/* NW 291005 Remove - these caused problems I think and aren't needed anyhow
 #include "gpsinput.h"
 #include "gpsproj.h"
+*/
 #include "gpsnmeafmt.h"
 #include "gpsnmeaget.h"
 

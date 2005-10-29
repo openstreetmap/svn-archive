@@ -2,27 +2,27 @@
      Creative Commons Licence (Attribution/ShareAlike) v2.0. -->
 <gpx version="1.0" creator="Hogweed Software Freemap::Components class" xmlns="http://www.topografix.com/GPX/1/0">
 <wpt lat="50.9161" lon="-1.39608">
-<name>001</name>
+<name>Bevois/Mt Pleasant</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.912" lon="-1.38778">
-<name>002</name>
+<name>Northam/Princes St</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.9087" lon="-1.38693">
-<name>003</name>
+<name>Millbank/Belvedere</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.9019" lon="-1.39102">
-<name>004</name>
+<name>Marine Parade/Albert Rd N</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.898" lon="-1.37922">
-<name>005</name>
+<name>Woolston Crossroads</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.89" lon="-1.38292">
-<name>006</name>
+<name>Start of cycle path</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8865" lon="-1.37436">
@@ -30,11 +30,11 @@
 <type>car park</type>
 </wpt>
 <wpt lat="50.8863" lon="-1.37365">
-<name>008</name>
+<name>End of cycle path</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8768" lon="-1.35702">
-<name>009</name>
+<name>Abbey Hill/Victoria Rd</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8699" lon="-1.35105">
@@ -62,7 +62,7 @@
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8802" lon="-1.3646">
-<name>BDRY</name>
+<name>Soton/Eastleigh Boundary</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.853" lon="-1.31543">
@@ -70,31 +70,31 @@
 <type>caution</type>
 </wpt>
 <wpt lat="50.9058" lon="-1.38946">
-<name>FB</name>
-<type>waypoint</type>
+<name>Southampton Football Club</name>
+<type>amenity</type>
 </wpt>
 <wpt lat="50.8713" lon="-1.32869">
-<name>HAM</name>
-<type>waypoint</type>
+<name>Hamble Station</name>
+<type>station</type>
 </wpt>
 <wpt lat="50.8566" lon="-1.31415">
-<name>HAM CMN</name>
+<name>Hamble Common</name>
 <type>car park</type>
 </wpt>
 <wpt lat="50.8589" lon="-1.31481">
-<name>HAMBLE</name>
-<type>hamlet</type>
+<name>Hamble</name>
+<type>village</type>
 </wpt>
 <wpt lat="50.8789" lon="-1.35781">
-<name>N ABBEY</name>
+<name>Netley Abbey</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8729" lon="-1.35321">
-<name>NETLEY</name>
-<type>hamlet</type>
+<name>Netley</name>
+<type>village</type>
 </wpt>
 <wpt lat="50.8549" lon="-1.32578">
-<name>OIL TERM</name>
+<name>Hamble Oil Terminal</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8704" lon="-1.35112">
@@ -102,23 +102,25 @@
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.9143" lon="-1.39161">
-<name>RLY</name>
+<name>Mt Pleasant Railway Crossing</name>
 <type>waypoint</type>
 </wpt>
 <wpt lat="50.8665" lon="-1.34177">
-<name>VIC C PARK</name>
+<name>Royal Victoria Country Park</name>
 <type>country park</type>
 </wpt>
 <wpt lat="50.883" lon="-1.36781">
-<name>WES S</name>
+<name>Weston Shore</name>
 <type>car park</type>
 </wpt>
 <wpt lat="50.8827" lon="-1.36694">
-<name>WESTWOOD</name>
+<name>Westwood</name>
 <type>car park</type>
 </wpt>
 <trk>
-<name></name>
+<number>0</number>
+<extensions>
+</extensions>
 <trkseg>
 <trkpt lat="50.917" lon="-1.39683">
 <time>2005-04-09T15:34:39Z</time>
@@ -603,6 +605,18 @@
 <trkpt lat="50.8902" lon="-1.38305">
 <time>2005-04-09T16:25:41Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="unofficial"/>
+<property key="horse" value="unofficial"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
 <trkpt lat="50.89" lon="-1.38293">
 <time>2005-04-09T16:25:59Z</time>
 </trkpt>
@@ -678,6 +692,21 @@
 <trkpt lat="50.8863" lon="-1.37374">
 <time>2005-04-09T16:34:54Z</time>
 </trkpt>
+<trkpt lat="50.8863" lon="-1.37357">
+<time>2005-04-09T16:35:11Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
 <trkpt lat="50.8863" lon="-1.37357">
 <time>2005-04-09T16:35:11Z</time>
 </trkpt>
@@ -765,6 +794,21 @@
 <trkpt lat="50.8802" lon="-1.3646">
 <time>2005-04-09T16:45:50Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.8802" lon="-1.3646">
+<time>2005-04-09T16:45:50Z</time>
+</trkpt>
 <trkpt lat="50.8802" lon="-1.36432">
 <time>2005-04-09T16:46:10Z</time>
 </trkpt>
@@ -773,24 +817,6 @@
 </trkpt>
 <trkpt lat="50.8801" lon="-1.36361">
 <time>2005-04-09T16:46:49Z</time>
-</trkpt>
-<trkpt lat="50.8802" lon="-1.36342">
-<time>2005-04-09T16:47:13Z</time>
-</trkpt>
-<trkpt lat="50.8805" lon="-1.36321">
-<time>2005-04-09T16:47:48Z</time>
-</trkpt>
-<trkpt lat="50.881" lon="-1.36321">
-<time>2005-04-09T16:48:31Z</time>
-</trkpt>
-<trkpt lat="50.881" lon="-1.36336">
-<time>2005-04-09T16:49:05Z</time>
-</trkpt>
-<trkpt lat="50.8805" lon="-1.36344">
-<time>2005-04-09T16:49:37Z</time>
-</trkpt>
-<trkpt lat="50.8801" lon="-1.36357">
-<time>2005-04-09T16:50:03Z</time>
 </trkpt>
 <trkpt lat="50.8801" lon="-1.36321">
 <time>2005-04-09T16:50:25Z</time>
@@ -828,9 +854,6 @@
 <trkpt lat="50.8786" lon="-1.35819">
 <time>2005-04-09T16:54:48Z</time>
 </trkpt>
-<trkpt lat="50.8787" lon="-1.35812">
-<time>2005-04-09T16:55:34Z</time>
-</trkpt>
 <trkpt lat="50.8784" lon="-1.35806">
 <time>2005-04-09T16:56:54Z</time>
 </trkpt>
@@ -852,6 +875,21 @@
 <trkpt lat="50.8768" lon="-1.35707">
 <time>2005-04-09T16:58:59Z</time>
 </trkpt>
+<trkpt lat="50.8768" lon="-1.35703">
+<time>2005-04-09T16:59:15Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
 <trkpt lat="50.8768" lon="-1.35703">
 <time>2005-04-09T16:59:15Z</time>
 </trkpt>
@@ -957,9 +995,28 @@
 <trkpt lat="50.8699" lon="-1.35119">
 <time>2005-04-09T17:10:23Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+</extensions>
+<trkseg>
 <trkpt lat="50.8699" lon="-1.35115">
 <time>2005-04-09T17:12:05Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
 <trkpt lat="50.8699" lon="-1.3511">
 <time>2005-04-09T17:12:08Z</time>
 </trkpt>
@@ -1058,51 +1115,6 @@
 </trkpt>
 <trkpt lat="50.8654" lon="-1.34359">
 <time>2005-04-09T17:22:49Z</time>
-</trkpt>
-<trkpt lat="50.8654" lon="-1.34362">
-<time>2005-04-09T17:23:07Z</time>
-</trkpt>
-<trkpt lat="50.8654" lon="-1.34357">
-<time>2005-04-09T17:24:08Z</time>
-</trkpt>
-<trkpt lat="50.8657" lon="-1.34319">
-<time>2005-04-09T17:24:29Z</time>
-</trkpt>
-<trkpt lat="50.8659" lon="-1.34278">
-<time>2005-04-09T17:24:51Z</time>
-</trkpt>
-<trkpt lat="50.866" lon="-1.34248">
-<time>2005-04-09T17:25:09Z</time>
-</trkpt>
-<trkpt lat="50.8663" lon="-1.34213">
-<time>2005-04-09T17:25:29Z</time>
-</trkpt>
-<trkpt lat="50.8664" lon="-1.34183">
-<time>2005-04-09T17:25:52Z</time>
-</trkpt>
-<trkpt lat="50.8665" lon="-1.34162">
-<time>2005-04-09T17:26:15Z</time>
-</trkpt>
-<trkpt lat="50.8665" lon="-1.34166">
-<time>2005-04-09T17:26:50Z</time>
-</trkpt>
-<trkpt lat="50.8665" lon="-1.34177">
-<time>2005-04-09T17:27:07Z</time>
-</trkpt>
-<trkpt lat="50.8665" lon="-1.34179">
-<time>2005-04-09T17:27:22Z</time>
-</trkpt>
-<trkpt lat="50.8663" lon="-1.34205">
-<time>2005-04-09T17:27:39Z</time>
-</trkpt>
-<trkpt lat="50.8661" lon="-1.34248">
-<time>2005-04-09T17:28:04Z</time>
-</trkpt>
-<trkpt lat="50.8659" lon="-1.34282">
-<time>2005-04-09T17:28:23Z</time>
-</trkpt>
-<trkpt lat="50.8656" lon="-1.34321">
-<time>2005-04-09T17:28:45Z</time>
 </trkpt>
 <trkpt lat="50.8654" lon="-1.34351">
 <time>2005-04-09T17:29:06Z</time>
@@ -1302,38 +1314,11 @@
 <trkpt lat="50.8591" lon="-1.33447">
 <time>2005-04-09T17:48:36Z</time>
 </trkpt>
-<trkpt lat="50.8591" lon="-1.33437">
-<time>2005-04-09T17:48:53Z</time>
-</trkpt>
 <trkpt lat="50.8591" lon="-1.33443">
 <time>2005-04-09T17:48:59Z</time>
 </trkpt>
 <trkpt lat="50.859" lon="-1.33447">
 <time>2005-04-09T17:49:01Z</time>
-</trkpt>
-<trkpt lat="50.859" lon="-1.33445">
-<time>2005-04-09T17:49:12Z</time>
-</trkpt>
-<trkpt lat="50.8591" lon="-1.33441">
-<time>2005-04-09T17:49:21Z</time>
-</trkpt>
-<trkpt lat="50.8591" lon="-1.33439">
-<time>2005-04-09T17:49:24Z</time>
-</trkpt>
-<trkpt lat="50.8591" lon="-1.3343">
-<time>2005-04-09T17:49:28Z</time>
-</trkpt>
-<trkpt lat="50.859" lon="-1.33394">
-<time>2005-04-09T17:49:48Z</time>
-</trkpt>
-<trkpt lat="50.8591" lon="-1.33362">
-<time>2005-04-09T17:50:04Z</time>
-</trkpt>
-<trkpt lat="50.8591" lon="-1.33353">
-<time>2005-04-09T17:50:17Z</time>
-</trkpt>
-<trkpt lat="50.859" lon="-1.33355">
-<time>2005-04-09T17:50:23Z</time>
 </trkpt>
 <trkpt lat="50.8587" lon="-1.33385">
 <time>2005-04-09T17:50:47Z</time>
@@ -1632,21 +1617,6 @@
 <trkpt lat="50.853" lon="-1.31409">
 <time>2005-04-09T18:29:11Z</time>
 </trkpt>
-<trkpt lat="50.8532" lon="-1.31396">
-<time>2005-04-09T18:29:33Z</time>
-</trkpt>
-<trkpt lat="50.8532" lon="-1.31388">
-<time>2005-04-09T18:29:52Z</time>
-</trkpt>
-<trkpt lat="50.8532" lon="-1.31383">
-<time>2005-04-09T18:30:26Z</time>
-</trkpt>
-<trkpt lat="50.8532" lon="-1.31383">
-<time>2005-04-09T18:32:32Z</time>
-</trkpt>
-<trkpt lat="50.8532" lon="-1.3139">
-<time>2005-04-09T18:32:36Z</time>
-</trkpt>
 <trkpt lat="50.853" lon="-1.31411">
 <time>2005-04-09T18:32:56Z</time>
 </trkpt>
@@ -1776,6 +1746,13 @@
 <trkpt lat="50.857" lon="-1.31407">
 <time>2005-04-09T18:44:43Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+</extensions>
+<trkseg>
 <trkpt lat="50.857" lon="-1.31407">
 <time>2005-04-09T18:44:47Z</time>
 </trkpt>
@@ -1830,6 +1807,18 @@
 <trkpt lat="50.8589" lon="-1.31473">
 <time>2005-04-09T18:52:07Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="secondary"/>
+</extensions>
+<trkseg>
 <trkpt lat="50.8589" lon="-1.31482">
 <time>2005-04-09T18:52:21Z</time>
 </trkpt>
@@ -1986,44 +1975,15 @@
 <trkpt lat="50.8709" lon="-1.32819">
 <time>2005-04-09T19:10:11Z</time>
 </trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+</extensions>
+<trkseg>
 <trkpt lat="50.8709" lon="-1.32819">
 <time>2005-04-09T19:10:17Z</time>
-</trkpt>
-<trkpt lat="50.8712" lon="-1.32829">
-<time>2005-04-09T19:10:40Z</time>
-</trkpt>
-<trkpt lat="50.8713" lon="-1.32834">
-<time>2005-04-09T19:10:56Z</time>
-</trkpt>
-<trkpt lat="50.8713" lon="-1.32817">
-<time>2005-04-09T19:11:04Z</time>
-</trkpt>
-<trkpt lat="50.8714" lon="-1.32819">
-<time>2005-04-09T19:11:11Z</time>
-</trkpt>
-<trkpt lat="50.8715" lon="-1.32823">
-<time>2005-04-09T19:11:16Z</time>
-</trkpt>
-<trkpt lat="50.8714" lon="-1.32838">
-<time>2005-04-09T19:11:27Z</time>
-</trkpt>
-<trkpt lat="50.8714" lon="-1.32838">
-<time>2005-04-09T19:11:32Z</time>
-</trkpt>
-<trkpt lat="50.8715" lon="-1.32827">
-<time>2005-04-09T19:11:39Z</time>
-</trkpt>
-<trkpt lat="50.8713" lon="-1.32823">
-<time>2005-04-09T19:11:50Z</time>
-</trkpt>
-<trkpt lat="50.8713" lon="-1.32825">
-<time>2005-04-09T19:11:54Z</time>
-</trkpt>
-<trkpt lat="50.8712" lon="-1.32855">
-<time>2005-04-09T19:12:13Z</time>
-</trkpt>
-<trkpt lat="50.8712" lon="-1.32868">
-<time>2005-04-09T19:12:27Z</time>
 </trkpt>
 </trkseg>
 </trk>

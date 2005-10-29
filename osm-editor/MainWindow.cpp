@@ -139,11 +139,12 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 
 	// Construct the menus.
 	QPopupMenu* fileMenu = new QPopupMenu(this);
+	// 29/10/05 Only open "OSM" now
 	fileMenu->insertItem("&Open",this,SLOT(open()),CTRL+Key_O);
-	fileMenu->insertItem("Open OSM",this,SLOT(openOSM()));
+//	fileMenu->insertItem("Open OSM",this,SLOT(openOSM()));
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
-	fileMenu->insertItem("Save OSM...",this,SLOT(saveOSM()));
+//	fileMenu->insertItem("Save OSM...",this,SLOT(saveOSM()));
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
 	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
 	fileMenu->insertItem("Grab GPX from Net",this,SLOT(grabGPXFromNet()),
@@ -345,15 +346,12 @@ MainWindow::~MainWindow()
 	delete components;
 }
 
+// 29/10/05 only reading 'OSM' gpx now
 void MainWindow::open() 
-{
-	open2(false);
-}
-
-void MainWindow::openOSM()
 {
 	open2(true);
 }
+
 
 void MainWindow::open2(bool osm)
 {
@@ -535,13 +533,6 @@ void MainWindow::save()
 }
 
 void MainWindow::saveAs()
-{
-	QString filename = QFileDialog::getSaveFileName("","*.gpx",this);
-	if(filename!="")
-		saveFile(filename);
-}
-
-void MainWindow::saveOSM()
 {
 	QString filename = QFileDialog::getSaveFileName("","*.gpx",this);
 	if(filename!="")

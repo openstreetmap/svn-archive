@@ -27,7 +27,7 @@
 </wpt>
 <wpt lat="50.8651" lon="-1.57337">
 <name>007</name>
-<type></type>
+<type>car park</type>
 </wpt>
 <wpt lat="50.8634" lon="-1.56993">
 <name>008</name>
@@ -90,7 +90,9 @@
 <type>waypoint</type>
 </wpt>
 <trk>
-<name></name>
+<number>0</number>
+<extensions>
+</extensions>
 <trkseg>
 <trkpt lat="50.8898" lon="-1.52641">
 <time>2005-05-01T13:56:57Z</time>

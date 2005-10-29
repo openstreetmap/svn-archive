@@ -6,6 +6,9 @@
 <type>waypoint</type>
 </wpt>
 <trk>
+<number>0</number>
+<extensions>
+</extensions>
 <trkseg>
 <trkpt lat="50.9064" lon="-1.41475">
 <time>2005-05-08T14:03:36Z</time>

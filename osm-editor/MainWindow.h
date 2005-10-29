@@ -220,10 +220,8 @@ public:
 
 public slots:
 	void open();
-	void openOSM();
 	void save();
 	void saveAs();
-	void saveOSM();
 	void readGPS();
 	void quit();
 	void toggleWaypoints();

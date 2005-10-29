@@ -30,7 +30,9 @@
 <type>small town</type>
 </wpt>
 <trk>
-<name></name>
+<number>0</number>
+<extensions>
+</extensions>
 <trkseg>
 <trkpt lat="51.0338" lon="-1.10908">
 <time>2005-05-07T13:44:01Z</time>
@@ -1583,4 +1585,6 @@
 <trkpt lat="50.9463" lon="-1.40563">
 <time>2005-05-07T16:37:55Z</time>
 </trkpt>
+</trkseg>
+</trk>
 </gpx>

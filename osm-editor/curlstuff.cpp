@@ -42,7 +42,7 @@ CURL_LOAD_DATA *grab_landsat(
 	char url[1024];
 	sprintf(url,"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=%d&height=%d&layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg&bbox=%lf,%lf,%lf,%lf",width_px,height_px,west,south,east,north);
 
-	fprintf(stderr,"URL = %s\n", url);
+//	fprintf(stderr,"URL = %s\n", url);
 	CURL_LOAD_DATA *resp =  grab_http_response(url);
 	//fprintf(stderr,"%s", resp->data);
 	return resp;
@@ -61,7 +61,7 @@ CURL_LOAD_DATA *grab_http_response(const char *url)
 {
 	CURL_LOAD_DATA *data;
 
-	printf("grab_http_response(): URL=%s\n",url);
+//	printf("grab_http_response(): URL=%s\n",url);
 	CURL *curl =  curl_easy_init(); 
 
 	if(curl)

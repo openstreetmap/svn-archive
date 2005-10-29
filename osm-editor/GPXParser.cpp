@@ -59,23 +59,32 @@ bool GPXParser::startElement(const QString&,const QString&,
 {
 	if(inDoc)
 	{
-		if(element=="trk") inTrk = true;
+		// 28/10/05 changed round to only call newSegment() if trkseg
+		// is encountered - even in OSM mode
+		if (element=="trk"&&osm)
+		{
+			inTrk = true;
+			if (osm)
+			{
+				curType = "track";
+				curName = "";
+				metaData.foot=metaData.car=metaData.horse=metaData.bike="";
+				metaData.routeClass = "";
+			}
+		}
 
-		if(element=="wpt")
+		else if(element=="wpt")
 		{
 			inWpt=true;
 		}
 		// 21/09/05 handle the OpenStreetMap GPX format
-		else if ((element=="trk"&&osm) || (element=="trkseg"&&!osm))
+
+		else if (element=="trkseg")
 		{
-			inSegment=true;
-			curType = "track";
+			inSegment = true;
+			if(!osm)
+				curType="track";
 			components->newSegment();
-			if(osm)
-			{
-				metaData.foot=metaData.car=metaData.horse=metaData.bike="";
-				metaData.routeClass = "";
-			}
 		}
 		else if (element=="polygon")
 		{
@@ -101,27 +110,27 @@ bool GPXParser::startElement(const QString&,const QString&,
 		{
 			inTrkpt = true;
 		}
-		else if (element=="foot" && inSegment)
+		else if (element=="foot" && inTrk)
 		{
 			inFoot = true;
 		}
-		else if (element=="horse" && inSegment)
+		else if (element=="horse" && inTrk)
 		{
 			inHorse = true;
 		}
-		else if (element=="bike" && inSegment)
+		else if (element=="bike" && inTrk)
 		{
 			inBike = true;
 		}
-		else if (element=="car" && inSegment)
+		else if (element=="car" && inTrk)
 		{
 			inCar = true;
 		}
-		else if (element=="class" && inSegment)
+		else if (element=="class" && inTrk)
 		{
 			inClass = true;
 		}
-		else if (element=="property")
+		else if (element=="property" && inTrk)
 		{
 			QString keyName = ""; 
 			QString keyValue = "";
@@ -192,14 +201,6 @@ bool GPXParser::endElement(const QString&,const QString&,
 	{
 		components->setTrackID (curName);
 		inTrk = false;
-		if(osm) 
-		{
-			RouteMetaDataHandler handler;
-			components->setSegType(curSeg,handler.getRouteType(metaData));
-			components->setSegId(curSeg,curId);
-			inSegment = false;
-			curSeg++;
-		}
 	}
 
 	else if(inPolygon && element=="polygon")
@@ -243,12 +244,21 @@ bool GPXParser::endElement(const QString&,const QString&,
 	}
 
 	// If the segment had a type, add the segment to the segment table.
-	else if (inSegment && element=="trkseg" && !osm)
+	else if (inSegment && element=="trkseg")
 	{
-		components->setSegId(curSeg,curId);
-		components->setSegType(curSeg,curType);
+		if(osm)
+		{
+			RouteMetaDataHandler handler;
+			components->setSegType(curSeg,handler.getRouteType(metaData));
+		}
+		else
+		{
+			components->setSegType(curSeg,curType);
+		}
+
 		inSegment = false;
 		curSeg++;
+		components->setSegId(curSeg,curId);
 	}
 
 	return true;

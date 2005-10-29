@@ -185,6 +185,26 @@ TrackPoint TrackSeg::getPoint (int i) throw (QString)
 	return points[i];
 }
 
+EarthPoint TrackSeg::getAveragePoint() throw (QString)
+{
+	EarthPoint avg;
+
+	if(points.size()==0)
+		throw QString("Empty TrackSeg");
+
+	for(int count=0; count<points.size(); count++)
+	{
+		avg.x += points[count].lon;
+		avg.y += points[count].lat;
+	}
+
+	avg.x /= points.size();
+	avg.y /= points.size();
+
+
+	return avg;
+}
+	
 void TrackSeg::deleteExcessPoints (double angle, double distance)
 {
 	double da,db,dc, angleA;

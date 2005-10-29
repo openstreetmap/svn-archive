@@ -132,6 +132,9 @@ public:
 	bool merge(Components *);
 	void removeSegs(const QString& type)
 		{ track->removeSegs(type); }
+	EarthPoint getAveragePoint() throw (QString)
+		{ return track->getAveragePoint(); }
+
 };
 
 

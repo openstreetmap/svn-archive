@@ -102,8 +102,7 @@ public:
 	{
 		EarthPoint middle = getCentre ( w,h );
 		scale *= factor;
-		bottomLeft.x = middle.x - (w/2)/scale;
-		bottomLeft.y = middle.y - (h/2)/scale;
+		centreAt (middle);
 	}
 
 	EarthPoint getCentre(int w,int h)
@@ -121,6 +120,12 @@ public:
 	{
 		bottomLeft.y -= earthDist(newHeight-height); 
 		resize(newWidth,newHeight);
+	}
+
+	void centreAt(const EarthPoint& centre)
+	{
+		bottomLeft.x = centre.x - (width/2)/scale;
+		bottomLeft.y = centre.y - (height/2)/scale;
 	}
 
 	bool isGridRef() { return gridref; }

@@ -99,6 +99,7 @@ public:
 	int nPoints() { return points.size(); }
 	TrackPoint getPoint(int i) throw(QString); 
 
+	EarthPoint getAveragePoint() throw(QString);
 	void deleteExcessPoints (double angle, double distance);
 
 };

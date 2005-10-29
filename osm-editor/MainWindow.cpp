@@ -95,13 +95,17 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 									map(lon,lat,s,w,h), 
 									polygonRes(0.05),
-									landsatManager(this)
+									landsatManager(this,w,h,100)
 {
+	cerr<<"lat lon"<<endl;
 	cerr<<lat<<" "<<lon<<endl;
 	cerr<<map.getBottomLeft().x<<endl;
 	cerr<<map.getBottomLeft().y<<endl;
+	cerr<<"done"<<endl;
 	setCaption("OpenStreetMap Editor");
+	cerr<<"resize"<<endl;
 	resize ( w, h );	
+	cerr<<"done"<<endl;
 
 	contours = false;
 	wptSaved = false;
@@ -326,7 +330,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	setFocusPolicy(QWidget::ClickFocus);
 
 	showPosition();
-
+	cerr<<"Constructor done"<<endl;
 }
 
 MainWindow::~MainWindow()
@@ -359,11 +363,21 @@ void MainWindow::open2(bool osm)
 		Components *newComponents = doOpen(filename,osm);
 		if(newComponents)
 		{
-			cout << "!!! Deleting existing components !!!" << endl;
-			delete components;	
-			components = newComponents;
-			curFilename = filename;
-			update();
+			try
+			{
+				cout << "!!! Deleting existing components !!!" << endl;
+				delete components;	
+				components = newComponents;
+				curFilename = filename;
+				map.centreAt(components->getAveragePoint());
+				showPosition();
+				update();
+			}
+			catch(QString str)
+			{
+				// blank track, trackseg etc
+				cerr<<str<<endl;
+			}
 		}
 	}
 }
@@ -431,6 +445,16 @@ void MainWindow::grabGPXFromNet()
 		}
 		
 		
+		try
+		{
+			map.centreAt(components->getAveragePoint());
+			showPosition();
+			update();
+		}
+		catch(QString str)
+		{
+			cerr<<str<<endl;
+		}
 
 		delete[] strdata;
 	}
@@ -462,6 +486,11 @@ void MainWindow::postGPX()
 		free(resp);
 
 //		cout << "Response:" << endl << strdata << endl;
+		if(!strncmp(strdata,"ERROR",5))
+		{
+			QMessageBox::warning(this,"Error!",strdata);
+		}
+
 		delete[] strdata;
 	}
 	delete ld;
@@ -476,16 +505,25 @@ void MainWindow::removePlainTracks()
 
 void MainWindow::readGPS()
 {
-	GPSDevice device ("Garmin", "/dev/ttyS0");
-	Track *track = device.getTrack();
-	cerr << "GPS read of track done. " << std::endl;
-	Waypoints *waypoints = device.getWaypoints();
-	cerr << "GPS read of waypoints done. " << std::endl;
-	components->clearAll();
-	components->addTrack(track);
-	components->setWaypoints(waypoints);
-	cerr<<"readGPS() done"<<endl;
-	update();
+	try
+	{
+		GPSDevice device ("Garmin", "/dev/ttyS0");
+		Track *track = device.getTrack();
+		cerr << "GPS read of track done. " << std::endl;
+		Waypoints *waypoints = device.getWaypoints();
+		cerr << "GPS read of waypoints done. " << std::endl;
+		components->clearAll();
+		components->addTrack(track);
+		components->setWaypoints(waypoints);
+		cerr<<"readGPS() done"<<endl;
+		map.centreAt(components->getAveragePoint());
+		showPosition();
+		update();
+	}
+	catch(QString str)
+	{
+		cerr<<str<<endl;
+	}
 }
 
 void MainWindow::save()
@@ -613,7 +651,7 @@ void MainWindow::paintEvent(QPaintEvent* ev)
 
 void MainWindow::drawLandsat(QPainter& p)
 {
-	landsatManager.draw(p);
+	landsatManager.drawTiles(p);
 }
 
 void MainWindow::drawPolygons(QPainter& p)
@@ -683,12 +721,14 @@ void MainWindow::drawTrack(QPainter& p)
 
 void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 {
+	// 21/10/05 added triedOffScrn
+	bool triedOffScrn=false;
 
 	if(components->hasTrack())
 	{
 		QPen trackPen(Qt::darkGray,2); 
 		TrackPoint curPt,prevPt;
-		TrackPoint junk;
+		TrackPoint lastDrawnPt;
 		TrackSeg *curSeg;
 		ScreenPos lastPos , curPos, lastDrawnPos,
 				  avPos,
@@ -707,6 +747,10 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 		for(int seg=0; seg<components->nSegs(); seg++)
 		{
 			curSeg = components->getSeg(seg);
+			// 28/10/05 lack of this check caused empty tracksegs to crash
+			if(curSeg->nPoints()>=1) // 28/10/05
+			{
+
 			if(!doingClonedTrack) 
 			{
 				/* UPDATE 15/10/05 not present in Windows 141005 */
@@ -720,7 +764,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			maxDist = 0;
 			curPt = curSeg->getPoint(0);
 			prevPt = curPt;
-			junk = curPt;
+			lastDrawnPt = curPt;
 			lastPos = map.getScreenPos(curPt.lon,curPt.lat);
 			lastDrawnPos = lastPos;
 
@@ -758,7 +802,8 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 
 					if( onScreen && !overlappingPts && 
 					(curSeg->getType()!="track"||
-					 curPt.connected(junk,750,2)))
+					 curPt.connected(lastDrawnPt,750,2)) &&
+					(!triedOffScrn) )
 					{
 						p.drawLine(lastDrawnPos.x,lastDrawnPos.y,
 									curPos.x,curPos.y);
@@ -784,21 +829,29 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 
 				// 21/09/05 Don't draw the point if its screen position is the
 				// same as the last one
-				if( !overlappingPts &&
-					curPos.x>=0 && curPos.x<width() && curPos.y>=0 &&
-					curPos.y<height())
+				if( !overlappingPts)
 				{
-					if(trackpoints)
+					if(	curPos.x>=0 && curPos.x<width() && curPos.y>=0 &&
+					curPos.y<height())
 					{
-						if(doingClonedTrack)
-							drawTrackpoint(p,curPen.color(),curPos.x,
+						if(trackpoints)
+						{
+							if(doingClonedTrack)
+								drawTrackpoint(p,curPen.color(),curPos.x,
 											curPos.y,8);
-						else
-							drawTrackpoint(p,curPen.color(),curPos.x,curPos.y,
-											1,pt);
+							else
+								drawTrackpoint(p,curPen.color(),curPos.x,
+												curPos.y, 1,pt);
+						}
+						lastDrawnPos = curPos;
+						triedOffScrn=false;
+						lastDrawnPt = curPt;
 					}
-					lastDrawnPos = curPos;
-					junk = curPt;
+					else
+					/*if non overlapping points off screen set triedOffScrn to 
+					 * true so we don't try to draw a line between two ON 
+					 * screen points separating the off screen region */
+						triedOffScrn=true;
 				}
 
 				for (int selPt=0; selPt<nSelectedPoints; selPt++)
@@ -820,6 +873,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 				doDrawAngleText(&p,maxP1.x,maxP1.y,maxP1.x,maxP1.y,
 								angle,segname.ascii());
 			}
+		}
 		}
 	}
 }
@@ -998,8 +1052,13 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 
 void MainWindow::resizeEvent(QResizeEvent * ev)
 {
+	//map.resizeTopLeft(ev->size().width(), ev->size().height());
 	map.resizeTopLeft(width(), height());
-	landsatManager.grab();
+	cerr<<"map width: " << map.getWidth() << " height: " << map.getHeight()
+			<<endl;
+	//landsatManager.grab();
+	//landsatManager.resize(ev->size().width(), ev->size().height());
+	landsatManager.resize(width(), height());
 	update();
 }
 
@@ -1075,7 +1134,6 @@ int MainWindow::findNearestWaypoint(int x,int y,int limit)
 
 void MainWindow::mouseMoveEvent(QMouseEvent* ev)
 {
-
 	if(actionMode==ACTION_POLYGON && mouseDown)
 	{
 		QPainter p (this);
@@ -1216,74 +1274,82 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 
 void MainWindow::left()
 {
-	double dis = 0.1/map.getScale();
-	map.move(-dis,0);
-	updateWithLandsatCheck();
+	map.movePx(-landsatManager.getTileSize(),0);
+	landsatManager.left();
+    showPosition();
+	update();
 }
 
 void MainWindow::right()
 {
-	double dis = 0.1/map.getScale();
-	map.move(dis,0);
-	updateWithLandsatCheck();
+	map.movePx(landsatManager.getTileSize(),0);
+	landsatManager.right();
+    showPosition();
+	update();
 }
 
 void MainWindow::up()
 {
-	double dis = 0.1/map.getScale();
-	map.move(0,dis);
-	updateWithLandsatCheck();
+	map.movePx(0,-landsatManager.getTileSize());
+	landsatManager.up();
+    showPosition();
+	update();
 }
 
 void MainWindow::down()
 {
-	double dis = 0.1/map.getScale();
-	map.move(0,-dis);
-	updateWithLandsatCheck();
+	map.movePx(0,landsatManager.getTileSize());
+	landsatManager.down();
+    showPosition();
+	update();
 }
 
 void MainWindow::screenLeft()
 {
 	map.movePx(-width(),0);
-	landsatManager.grab(1.0);	
+	landsatManager.grabAll();
+    showPosition();
 	update();
 }
 
 void MainWindow::screenRight()
 {
 	map.movePx(width(),0);
-	landsatManager.grab(1.0);	
+	landsatManager.grabAll();
+    showPosition();
 	update();
 }
 
 void MainWindow::screenUp()
 {
 	map.movePx(0,-height());
-	landsatManager.grab(1.0);	
+	landsatManager.grabAll();
+    showPosition();
 	update();
 }
 
 void MainWindow::screenDown()
 {
 	map.movePx(0,height());
-	landsatManager.grab(1.0);	
+	landsatManager.grabAll();
+    showPosition();
 	update();
 }
 
 void MainWindow::magnify()
 {
 	map.rescale(2);
-	landsatManager.grab();
-	showPosition();
-	update();
+    landsatManager.grabAll();
+    showPosition();
+    update();
 }
 
 void MainWindow::shrink()
 {
-	map.rescale(0.5);
-	landsatManager.grab();
-	showPosition();
-	update();
+    map.rescale(0.5);
+    landsatManager.grabAll();
+    showPosition();
+    update();
 }
 
 void MainWindow::updateWithLandsatCheck()
@@ -1301,7 +1367,8 @@ void MainWindow::grabLandsat()
 	// map centre. This will be configurable.
 	
 
-	landsatManager.forceGrab();
+	//landsatManager.forceGrab();
+	landsatManager.forceGrabAll();
 	update();
 
 

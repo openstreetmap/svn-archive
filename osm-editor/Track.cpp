@@ -291,7 +291,37 @@ RetrievedTrackPoint Track::findNearestTrackpoint
 	return rtp;
 }
 
-	
+EarthPoint Track::getAveragePoint() throw(QString)
+{
+	EarthPoint avg, segAvg;
+	int nRealSegs = 0;
+
+
+	for(int count=0; count<segs.size(); count++)
+	{
+		try
+		{
+			segAvg = segs[count]->getAveragePoint();
+			avg.x += segAvg.x;
+			avg.y += segAvg.y;
+			nRealSegs++;
+		}
+		catch (QString str)
+		{
+			// zero length segments are ignored
+			cerr << "WARNING: " << str << endl;
+		}
+	}
+
+	if(!nRealSegs)
+		throw QString("No segments in track, so won't average");
+
+	avg.x /= nRealSegs; 
+	avg.y /= nRealSegs; 
+
+
+	return avg;
+}
 
 
 }

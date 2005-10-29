@@ -79,6 +79,7 @@ public:
 	TrackSeg *findNearestSeg(const EarthPoint& p, double limit);
 
 	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &, double);
+	EarthPoint getAveragePoint() throw (QString);
 };
 
 

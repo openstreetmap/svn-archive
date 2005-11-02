@@ -46,13 +46,15 @@ else
     doc.elements.each('osm/node') do |pt|
       lat = pt.attributes['lat'].to_f
       lon = pt.attributes['lon'].to_f
-      gpxnodeid = pt.attributes['uid'].to_i
+      xmlnodeid = pt.attributes['uid'].to_i
+      tags = pt.attributes['tags']
+      tags = '' unless tags
 
-      if gpxnodeid == nodeid && userid != 0
+      if xmlnodeid == nodeid && userid != 0
         node = dao.getnode(nodeid)
         if node
           #FIXME: need to check the node hasn't moved too much
-          if dao.update_node?(nodeid, userid, lat, lon)
+          if dao.update_node?(nodeid, userid, lat, lon, tags)
             exit
           else
             exit HTTP_INTERNAL_SERVER_ERROR

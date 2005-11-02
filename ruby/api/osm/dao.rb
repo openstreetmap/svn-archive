@@ -5,18 +5,15 @@ module OSM
 
   class Point
 
-    def initialize(latitude, longitude, uid, visible)
-      @latitude = latitude
-      @longitude = longitude
-      @uid = uid
-      @visible = visible
+    def initialize(latitude, longitude, uid, visible, tags)
+      @latitude, @longitude, @uid, @visible = [latitude, longitude, uid, visible, tags]
     end
 
     def to_s
       "Point #@uid at #@latitude, #@longitude, #@visible"
     end
 
-    attr_reader :latitude, :longitude, :uid, :visible
+    attr_reader :latitude, :longitude, :uid, :visible, :tags
 
   end # Point
 
@@ -485,7 +482,7 @@ module OSM
 
 #        q = "select uid, latitude, longitude, visible from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < #{lat1} and latitude > #{lat2}  and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc) as a group by uid) as b where b.visible = 1 limit 5000"
 
-        q = "select uid, latitude, longitude, visible from (select * from (select nodes.uid, nodes.latitude, nodes.longitude, nodes.visible from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and nodes.uid = a.uid order by nodes.timestamp desc) as b group by uid) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}"
+        q = "select uid, latitude, longitude, visible, tags from (select * from (select nodes.uid, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and nodes.uid = a.uid order by nodes.timestamp desc) as b group by uid) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}"
 
 
 
@@ -494,7 +491,7 @@ module OSM
         res.each_hash do |row|
           
           uid = row['uid'].to_i
-          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, true)
+          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, true, row['tags'])
         end
 
         return nodes
@@ -520,7 +517,7 @@ module OSM
         dbh = get_connection
 
         
-        q = "select latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, #{page + 5000}"
+        q = "select latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit 5000, #{page + 5000}"
 
         res = dbh.query(q)
         
@@ -589,7 +586,7 @@ module OSM
       begin
         conn = get_connection
 
-        q = "select latitude, longitude, visible from nodes where uid=#{uid} order by timestamp desc limit 1"
+        q = "select latitude, longitude, visible, tags from nodes where uid=#{uid} order by timestamp desc limit 1"
 
         res = conn.query(q)
 
@@ -598,7 +595,7 @@ module OSM
 
           if row['visible'] == '1' then visible = true end
 
-          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible)
+          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible, row['tags'])
         end
 
         return nil
@@ -630,16 +627,14 @@ module OSM
       end
 
       return false
-    end
+    end 
 
-    
-
-    def update_node?(uid, user_uid, latitude, longitude)
+    def update_node?(uid, user_uid, latitude, longitude, tags)
 
       begin
         dbh = get_connection
 
-        dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1)")
+        dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible,tags) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{quote(tags)}')")
 
         return true
 

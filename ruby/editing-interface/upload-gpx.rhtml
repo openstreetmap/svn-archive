@@ -94,6 +94,34 @@ else
 
   end
 
+  # show pending files
+
+  pendingfiles = dao.gpx_pending_details_for_user(uid)
+
+  if pendingfiles.num_rows != 0
+%>
+    <h3>Pending files</h3>
+    The following file(s) are pending insertion:<br><br>
+    <%
+    first = true
+    pendingfiles.each_hash do |row|
+      
+      %>
+      
+      <b><%=row['originalname']%></b><br>
+      <%
+      first = false
+    end
+    
+    %>
+    <br>Please be patient, it can take some time to insert large files that you or other users have uploaded.
+    <%
+
+  end
+
+
+
+
 # show previously uploaded files
 %>
   <h3>Previously uploaded GPX files:</h3>
@@ -129,5 +157,4 @@ end
 </div>
 <%
 ERuby.import('include/bottom.rhtml')
-
 %>

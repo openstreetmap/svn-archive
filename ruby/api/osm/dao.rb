@@ -94,7 +94,8 @@ module OSM
     def quote(string)
       return Mysql.quote(string)
     end
-	def q(s); quote(s); end
+
+    def q(s); quote(s); end
 
     
     ## check_user?
@@ -141,28 +142,17 @@ module OSM
 	end
 
 
-    def set_timeout(email)
-		token = make_token
+  def set_timeout(email)
 		call_sql { "update user set timeout = #{(Time.new.to_i * 1000) + (1000 * 60 * 60 * 24)} where user = '#{q(email)}' and active = true" }
 	end
 
-    def logout(user_uid)
-      begin
-        dbh = get_connection
-        token = make_token
 
-        dbh.query("update user set token = '#{make_token()}' where uid = '#{user_uid}' and active = true")
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-    end
+  def logout(user_uid)
+    call_sql { "update user set token = '#{make_token()}' where uid = '#{user_uid}' and active = true" }
+  end
 
 
-    def activate_account(email, token)
+  def activate_account(email, token)
       email = quote(email)
       token = quote(token)
       
@@ -303,20 +293,18 @@ module OSM
     
 
     def gpx_details_for_user(user_uid)
-  
-      begin
-        dbh = get_connection
+      return call_sql { "select uid, timestamp, name from points_meta_table where user_uid = #{user_uid} and visible = 1 order by timestamp desc" }
+    end
 
-        res = dbh.query("select uid, timestamp, name from points_meta_table where user_uid = #{user_uid} and visible = 1 order by timestamp desc")
-      
-        return res
-      rescue MysqlError => e
-        mysql_error(e)
+    def gpx_pending_details_for_user(user_uid)
+      return call_sql { "select originalname from gpx_to_insert where user_uid = #{user_uid}" }
+    end
 
-      ensure
-        dbh.close if dbh
+    def gpx_size(gpx_id)
+      res = call_sql { "select count(*) as count from tempPoints where gpx_id = #{gpx_id}" }
+      res.each_hash do |row|
+        return row['count']
       end
-       
     end
 
 
@@ -437,6 +425,11 @@ module OSM
       end
       return nil
     end
+
+    def update_gpx_size(gpx_uid)
+      call_sql { "update points_meta_table set size = (select count(*) from tempPoints where tempPoints.gpx_id = #{gpx_uid}) where uid = #{gpx_uid};" }
+    end
+
 
     def useruidfromcreds(user, pass)
       if user == 'token'
@@ -711,7 +704,7 @@ module OSM
 
     
     def update_segment?(uid, user_uid, node_a, node_b)
-		call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1)" }
+		  call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1)" }
     end
 
 

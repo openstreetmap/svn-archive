@@ -293,7 +293,7 @@ module OSM
     
 
     def gpx_details_for_user(user_uid)
-      return call_sql { "select uid, timestamp, name from points_meta_table where user_uid = #{user_uid} and visible = 1 order by timestamp desc" }
+      return call_sql { "select uid, timestamp, name, size from points_meta_table where user_uid = #{user_uid} and visible = 1 order by timestamp desc" }
     end
 
     def gpx_pending_details_for_user(user_uid)

@@ -128,6 +128,7 @@ else
     <table id="keyvalue">
     <tr>
       <th>Filename</th>
+      <th>Points</th>
       <th>Uploaded at</th>
       <th>actions</th>
     </tr>
@@ -139,6 +140,7 @@ else
       %>
       <tr>
         <td><%=row['name']%></td>
+        <td><%=row['size']%></td>
         <td><%=Time.at(row['timestamp'].to_i / 1000)%></td>
         <td><a href="upload-gpx.html?action=delete&gpxuid=<%=row['uid']%>">delete</a></td>
       </tr>

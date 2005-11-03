@@ -131,6 +131,7 @@ files.each_hash do |row|
   error_msg = ''
   begin
     parser.parse
+    dao.update_gpx_size(gpx_uid)
 
   rescue Exception => e
     error = true

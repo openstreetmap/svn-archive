@@ -13,7 +13,6 @@ require 'net/smtp'
 begin
   File.open('/tmp/gpx_insert_running', 'r') do |file|
      
-
   end
   #$stderr << 'GPX insert already running, exiting...'
   exit! #file was there, lets exit
@@ -34,21 +33,25 @@ files = dao.get_scheduled_gpx_uploads
 
 files.each_hash do |row|
   filename = row['tmpname']
-  tfile = File.new(filename)
-  points = 0
-  parser =  ''
-  
-  begin
-    gfile = Zlib::GzipReader.new(tfile)
-    parser = REXML::Parsers::SAX2Parser.new( gfile.read )
-    $stderr << "looks like a gzipped file\n"
-  rescue Zlib::Error => e
-    tfile.close
-    file = File.new( filename )
-    parser = REXML::Parsers::SAX2Parser.new( file )
-    $stderr << "looks like a plain file\n"
-  end 
+  #copy the file here
+  `scp 128.40.59.140:#{filename} .#{filename}`
 
+  `zcat /home/steve/bin#{filename} > /home/steve/bin#{filename}.yeah`
+
+  realfile = ''
+  puts 'file exists: ' + File.file?('.' + filename + '.yeah').to_s
+
+  if File.file?('.' + filename + '.yeah') && File.size('.' + filename + '.yeah') > 0
+    realfile = '.' + filename + '.yeah'
+  else
+    realfile = '.' + filename
+  end
+
+  puts realfile
+
+  points = 0
+  file = File.new( realfile )
+  parser = REXML::Parsers::SAX2Parser.new( file )
   
   # got a file, we hope
 
@@ -85,21 +88,14 @@ files.each_hash do |row|
   end
   
   parser.listen( :characters, %w{ ele } ) do |text|
-    ele = text.to_f
+    ele = text
     gotele = true
   end
 
   parser.listen( :characters, %w{ time } ) do |text|
     if text && text != ''
-      if text.match(/[0-9]{10}/).to_s == text
-        #looks like a unix timestamp
-        # This is an invalid gpx but we'll accept it to be nice.
-        date = text.to_i * 1000
-        gotdate = true
-      else
-        date = Time.parse(text).to_i * 1000
-        gotdate = true
-      end
+      date = Time.parse(text).to_i * 1000
+      gotdate = true
     end
   end
 
@@ -109,12 +105,11 @@ files.each_hash do |row|
   
   parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname| 
     if gotlatlon && gotdate
-      ele = 0 unless gotele
+      ele = '0' unless gotele
       if lat < 90 && lat > -90 && lon > -180 && lon < 180
         sql = "insert into tempPoints (latitude, longitude, altitude, timestamp, uid, hor_dilution, vert_dilution, trackid, quality, satellites, last_time, visible, dropped_by, gpx_id) values (#{lat}, #{lon}, #{ele}, #{date}, #{user_uid}, -1, -1, #{trackseg}, 255, 0, #{Time.new.to_i * 1000}, 1, 0, #{gpx_uid})"
         points += 1
         dbh.query(sql)
-  #      puts sql
 
       end
  
@@ -142,7 +137,9 @@ files.each_hash do |row|
   #get rid of the file so we don't insert it again
 
   dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
-  File.delete(filename)
+  File.delete('/home/steve/bin' + filename)
+  File.delete('/home/steve/bin' + filename + '.yeah')
+  `ssh 128.40.59.140 rm #{filename}`
 
   #send them an email indicating success
 
@@ -179,12 +176,11 @@ Hi,
 
 It looks like your gpx file, #{original_name}, failed to get parsed ok.
 Please consult the error message below. If you think this is a bug please
-email bugs@openstreetmap.org.
+have a look at how to report it:
+
+  http://www.openstreetmap.org/wiki/index.php/Bug_Reporting
 
 #{error_msg}
-
-Have fun
-
 
 END_OF_MESSAGE
 

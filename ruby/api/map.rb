@@ -54,8 +54,7 @@ end
 
 
 if linesegments
-
-   linesegments.each do |key, l|
+  linesegments.each do |key, l|
     node_a = nodes[l.node_a_uid]
     node_b = nodes[l.node_b_uid]
     

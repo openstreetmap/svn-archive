@@ -55,11 +55,13 @@ else
 
       node_a_uid = seg.attributes['from'].to_i
       node_b_uid = seg.attributes['to'].to_i
+      tags = seg.attributes['tags']
 
       exit HTTP_NOT_FOUND unless dao.getnode(node_a_uid).visible == true 
-      exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true 
+      exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true
+      exit BAD_REQUEST unless tags
 
-      if dao.update_segment?(segmentid, userid, node_a_uid, node_b_uid)
+      if dao.update_segment?(segmentid, userid, node_a_uid, node_b_uid, tags)
         exit
       else
         exit HTTP_INTERNAL_SERVER_ERROR

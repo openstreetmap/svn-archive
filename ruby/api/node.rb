@@ -48,7 +48,7 @@ else
       lon = pt.attributes['lon'].to_f
       xmlnodeid = pt.attributes['uid'].to_i
       tags = pt.attributes['tags']
-      tags = '' unless tags
+      exit BAD_REQUEST unless tags
 
       if xmlnodeid == nodeid && userid != 0
         node = dao.getnode(nodeid)

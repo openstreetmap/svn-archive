@@ -10,7 +10,7 @@ module OSM
   
     def initialize
       @root = Element.new 'osm'
-      @root.attributes['version'] = "0.2"
+      @root.attributes['version'] = '0.2'
     end
 
     def add_node(node)
@@ -28,6 +28,8 @@ module OSM
       el1.attributes['uid'] = line.uid
       el1.attributes['from'] = line.node_a_uid
       el1.attributes['to'] = line.node_b_uid
+      el1.attributes['tags'] = line.tags
+
       @root.add el1
     end
 

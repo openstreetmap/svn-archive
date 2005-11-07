@@ -6,7 +6,7 @@ module OSM
   class Point
 
     def initialize(latitude, longitude, uid, visible, tags)
-      @latitude, @longitude, @uid, @visible = [latitude, longitude, uid, visible, tags]
+      @latitude, @longitude, @uid, @visible, @tags = [latitude, longitude, uid, visible, tags]
     end
 
     def to_s
@@ -31,35 +31,30 @@ module OSM
  
  class Linesegment
     # this is a holding class for holding a segment and its nodes
-    def initialize(uid, node_a, node_b, visible)
-      @uid = uid
-      @node_a = node_a
-      @node_b = node_b
-      @visible = visible
+    # FIXME this should inherit from UIDLinesegment or something
+    def initialize(uid, node_a, node_b, visible, tags)
+      @uid, @node_a, @node_b, @visible, @node_a_uid, @node_b_uid, @tags = [uid, node_a, node_b, visible, node_a.uid, node_b.uid, tags]
     end
 
     def to_s
       "Linesegment #@uid between #{@node_a.to_s} and #{@node_b.to_s}"
     end
 
-    attr_reader :uid, :visible, :node_a, :node_b
-
+    attr_reader :uid, :visible, :node_a, :node_b, :node_a_uid, :node_b_uid, :tags
   end #Linesegment
  
  
   class UIDLinesegment
     # this is a holding class for just a segment and it's node UID's
-    def initialize(uid, node_a_uid, node_b_uid)
-      @uid = uid
-      @node_a_uid = node_a_uid
-      @node_b_uid = node_b_uid
+    def initialize(uid, node_a_uid, node_b_uid, tags)
+      @uid, @node_a_uid, @node_b_uid, @tags = [uid, node_a_uid, node_b_uid, tags]
     end
 
     def to_s
       "UIDLinesegment #@uid between #@node_a_uid and #@node_b_uid"
     end
 
-    attr_reader :uid, :node_a_uid, :node_b_uid
+    attr_reader :uid, :node_a_uid, :node_b_uid, :tags
 
   end #UIDLinesegment
 
@@ -75,7 +70,6 @@ module OSM
       print "Error code: ", e.errno, "\n"
       print "Error message: ", e.error, "\n"
     end
-
 
     def get_connection
       begin
@@ -236,20 +230,8 @@ module OSM
 
     
     def does_user_exist?(email)
-      email = quote(email)
-
-      begin
-        dbh = get_connection
-
-        res = dbh.query("select uid from user where user = '#{email}' and active = true")
-        return res.num_rows == 1
-
-      rescue MysqlError => e
-        mysql_error(e)
-      end
-
-      return false
-
+      res = call_sql { "select uid from user where user = '#{q(email)}' and active = true" }
+      return res.num_rows == 1
     end
     
 
@@ -548,7 +530,7 @@ module OSM
       begin
         conn = get_connection
 
-        q = "SELECT segment.uid, segment.node_a, segment.node_b FROM (
+        q = "SELECT segment.uid, segment.node_a, segment.node_b, segment.tags FROM (
                select * from
                   (SELECT * FROM street_segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
                as a group by uid) as segment where visible = true"
@@ -559,7 +541,7 @@ module OSM
         
         res.each_hash do |row|
           uid = row['uid'].to_i
-          segments[uid] = UIDLinesegment.new(uid, row['node_a'].to_i, row['node_b'].to_i)
+          segments[uid] = UIDLinesegment.new(uid, row['node_a'].to_i, row['node_b'].to_i, row['tags'])
 
         end
 
@@ -623,22 +605,8 @@ module OSM
     end 
 
     def update_node?(uid, user_uid, latitude, longitude, tags)
-
-      begin
-        dbh = get_connection
-
-        dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible,tags) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{quote(tags)}')")
-
-        return true
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-
-      return false
+      call_sql { "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible,tags) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')" }
+    
     end
 
 
@@ -701,38 +669,21 @@ module OSM
       return nil
     end
 
-
     
-    def update_segment?(uid, user_uid, node_a, node_b)
-		  call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1)" }
+    def update_segment?(uid, user_uid, node_a, node_b, tags)
+		  call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1, #{q(tags)}" }
     end
 
 
     def getsegment(uid)
-      begin
-        conn = get_connection
+      res = call_sql { "select node_a, node_b, visible, tags from street_segments where uid=#{uid} order by timestamp desc limit 1" }
 
-        q = "select node_a, node_b, visible from street_segments where uid=#{uid} order by timestamp desc limit 1"
-
-        res = conn.query(q)
-
-        res.each_hash do |row|
-
-          visible = false
-
-          if row['visible'] == '1' then visible = true end
-
-          return Linesegment.new(uid, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible)
-        end
-
-        return nil
-
-      rescue MysqlError => e
-        mysql_error(e)
-      ensure
-        conn.close if conn
+      res.each_hash do |row|
+        visible = false
+        if row['visible'] == '1' then visible = true end
+        return Linesegment.new(uid, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'])
       end
-
+      return nil
     end # getsegment
 
 

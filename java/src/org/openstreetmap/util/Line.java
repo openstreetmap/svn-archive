@@ -26,15 +26,15 @@ import java.util.Vector;
 public class Line {
 
   public Node a,b;
+  public String tags="";
   public long uid;
-  public String name = "";
-  public boolean nameChanged = false;
+  public boolean tagsChanged = false;
 
   public Line(Node a, Node b) {
-    this(a,b,0);
+    this(a,b,0,"");
   }
     
-  public Line(Node a, Node b, long uid) {
+  public Line(Node a, Node b, long uid, String sTags) {
     if (a != null && b != null) {
       this.a=a; this.b=b;
     }
@@ -45,6 +45,7 @@ public class Line {
       b.lines.addElement(this);
     }
     this.uid=uid;
+    this.tags = "test"; //sTags;
   }
   
   public void reverse() {

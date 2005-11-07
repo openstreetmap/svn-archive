@@ -25,11 +25,13 @@ public class GPXParser extends MinML2 {
   
   double node_lat = 0.0;
   double node_lon = 0.0;
-  long node_uid = 0;
+  long   node_uid = 0;
+  String node_tags = "";
 
-  long line_uid = 0;
-  long line_from_uid = 0;
-  long line_to_uid = 0;
+  long   line_uid = 0;
+  long   line_from_uid = 0;
+  long   line_to_uid = 0;
+  String line_tags = "";
 
   String buffered_string = "";
 
@@ -81,6 +83,7 @@ public class GPXParser extends MinML2 {
       node_lat = Double.parseDouble( atts.getValue("lat") );
       node_lon = Double.parseDouble( atts.getValue("lon") );
       node_uid = Long.parseLong( atts.getValue("uid") );
+      node_tags = atts.getValue("tags");
     }
 
     if( qName.equals("segment") )
@@ -88,6 +91,7 @@ public class GPXParser extends MinML2 {
       line_uid = Long.parseLong( atts.getValue("uid") );
       line_from_uid = Long.parseLong( atts.getValue("from") );
       line_to_uid = Long.parseLong( atts.getValue("to") );
+      line_tags = atts.getValue("tags");
     }
   
   } // startElement
@@ -105,14 +109,14 @@ public class GPXParser extends MinML2 {
       if(qName.equals("node"))
       {
         //System.out.println("adding node " + node_uid + " at " + node_lat + "," + node_lon);
-        nodes.addElement(new Node(node_lat, node_lon, node_uid));
+        nodes.addElement(new Node(node_lat, node_lon, node_uid, node_tags));
       }
 
       if(qName.equals("segment"))
       {
 
         //System.out.println("adding seg " + line_uid + " from " + line_from_uid + " -> " + line_to_uid);
-        lines.addElement(new Line(getNode(line_from_uid), getNode(line_to_uid), line_uid));
+        lines.addElement(new Line(getNode(line_from_uid), getNode(line_to_uid), line_uid, line_tags ) );
       }
     }
   } // endElement

@@ -25,23 +25,26 @@ import java.util.Vector;
 public class Node extends Point {
 
   public long uid; // 0 = unassigned. TODO: check that there is no node 0 in the db
+  public String tags;
   public Vector lines = new Vector();
 
   public Node(double lat, double lon) {
-    this(lat,lon,0);
+    this(lat,lon,0,"");
   }
 
   public Node(float x, float y, Mercator projection) {
-    this(x,y,projection,0);
+    this(x,y,projection,0,"");
   }
 
-  public Node(double lat, double lon, long uid) {
+  public Node(double lat, double lon, long uid, String sTags) {
     super(lat,lon);
     this.uid = uid;
+    this.tags = sTags;
   }
   
-  public Node(float x, float y, Mercator projection, int uid) {
+  public Node(float x, float y, Mercator projection, int uid, String sTags) {
     super(x,y,projection);
+    tags = sTags;
     this.uid = uid;
   }
 

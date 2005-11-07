@@ -286,7 +286,7 @@ public class Adapter
         int id = result.intValue();
         */
  
-        String xml = "<osm><node lon='" + node.lon +  "' lat='" + node.lat + "' /></osm>";
+        String xml = "<osm><node tags='' lon='" + node.lon +  "' lat='" + node.lat + "' /></osm>";
 
         String url = URLBASE + "newnode";
 
@@ -346,7 +346,7 @@ public class Adapter
     public void run() {
   
       try{
-        String xml = "<osm><node lon='" + node.lon +  "' lat='" + node.lat + "' uid='" + node.uid + "' /></osm>";
+        String xml = "<osm><node tags='" + node.tags + "' lon='" + node.lon +  "' lat='" + node.lat + "' uid='" + node.uid + "' /></osm>";
 
         String url = URLBASE + "node/" + node.uid;
 
@@ -403,7 +403,7 @@ public class Adapter
         int id = result.intValue();
         */
  
-        String xml = "<osm><segment from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
+        String xml = "<osm><segment tags='' from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
 
         String url = URLBASE + "newsegment";
 

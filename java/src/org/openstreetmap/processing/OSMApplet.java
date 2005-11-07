@@ -166,7 +166,7 @@ public class OSMApplet extends PApplet {
   ModeManager modeManager;
   EditMode nodeMode     = new NodeMode();
   EditMode lineMode     = new LineMode();
-  EditMode nameMode     = new NameMode();
+  EditMode tagsMode     = new NameMode();
   EditMode nodeMoveMode = new NodeMoveMode();
   EditMode deleteMode   = new DeleteMode();
 
@@ -190,7 +190,7 @@ TODO: disable button mouseover highlighting when !ready */
     modeManager = new ModeManager();
     modeManager.addMode(nodeMode);
     modeManager.addMode(lineMode);
-    modeManager.addMode(nameMode);
+    modeManager.addMode(tagsMode);
     modeManager.addMode(nodeMoveMode);
     modeManager.addMode(deleteMode);
 
@@ -386,7 +386,7 @@ TODO: disable button mouseover highlighting when !ready */
     boolean gotOne = false;
     for (int i = 0; i < lines.size(); i++) {
       Line line = (Line)lines.elementAt(i);
-      if (modeManager.currentMode == nameMode && !gotOne) {
+      if (modeManager.currentMode == tagsMode && !gotOne) {
         // highlight first line under mouse
         if (line.mouseOver(mouseX,mouseY,strokeWeight)) {
           strokeWeight(strokeWeight);
@@ -455,14 +455,14 @@ TODO: disable button mouseover highlighting when !ready */
       drawPoint(node);
     }
 
-    // draw street segment names
+    // draw street segment tags
     fill(0);
     textFont(font);
-    textSize(strokeWeight);
+    textSize(strokeWeight + 4);
     textAlign(CENTER);
     for (int i = 0; i < lines.size(); i++) {
       Line l = (Line)lines.elementAt(i);
-      if (l.name != null) {
+      if (l.tags != null) {
         pushMatrix();
         if (l.a.x <= l.b.x) {
           translate(l.a.x,l.a.y);
@@ -472,7 +472,7 @@ TODO: disable button mouseover highlighting when !ready */
           translate(l.b.x,l.b.y);
           rotate(PI+l.angle());      
         }
-        text(l.name,l.length()/2.0f,4);
+        text(l.tags,l.length()/2.0f,4);
         popMatrix();
       }
     }
@@ -513,7 +513,7 @@ TODO: disable button mouseover highlighting when !ready */
   }
 
   public void keyPressed() {
-    if (ready) {
+    if (ready && modeManager.currentMode != tagsMode ) {
       modeManager.keyPressed();
       switch(key) {
         case '+':
@@ -668,16 +668,19 @@ TODO: disable button mouseover highlighting when !ready */
 
   class NameMode extends EditMode {
     public void keyPressed() {
+//      System.out.println(key == CODED);
+//      System.out.println(java.lang.Character.getNumericValue(key));
+//      System.out.println("keyCode= " + keyCode);
       if (selectedLine != null) {
-        if(key == CODED) { 
-          if (keyCode == BACKSPACE) {
-            if (selectedLine.name.length() > 0) {
-              selectedLine.name = selectedLine.name.substring(0,selectedLine.name.length()-1);
-              selectedLine.nameChanged = true;
-            }
+        if(keyCode == 8 ) { // backspace
+          //System.out.println(keyCode);
+          //System.out.println(BACKSPACE);
+          if (selectedLine.tags.length() > 0) {
+            selectedLine.tags = selectedLine.tags.substring(0,selectedLine.tags.length()-1);
+            selectedLine.tagsChanged = true;
           }
           else if (keyCode == ENTER) {
-            if (selectedLine.nameChanged) {
+            if (selectedLine.tagsChanged) {
               if (osm != null) {
                 osm.updateLineName(selectedLine);
               }
@@ -686,8 +689,8 @@ TODO: disable button mouseover highlighting when !ready */
           }
         }
         else {
-          selectedLine.name += key;
-          selectedLine.nameChanged = true;
+          selectedLine.tags += key;
+          selectedLine.tagsChanged = true;
         }
       }
     }
@@ -702,7 +705,7 @@ TODO: disable button mouseover highlighting when !ready */
         }
       }
       if (previousSelection != null && previousSelection != selectedLine) {
-        if (previousSelection.nameChanged) {
+        if (previousSelection.tagsChanged) {
           if (osm != null) {
             osm.updateLineName(previousSelection);
           }

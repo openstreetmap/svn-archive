@@ -67,8 +67,8 @@ module OSM
     MYSQL_DATABASE = "openstreetmap"
 
     def mysql_error(e)
-      print "Error code: ", e.errno, "\n"
-      print "Error message: ", e.error, "\n"
+      puts "Error code: ", e.errno, "\n"
+      puts "Error message: ", e.error, "\n"
     end
 
     def get_connection
@@ -126,7 +126,8 @@ module OSM
 		dbh = nil
 		begin
 			dbh = get_connection
-			return dbh.query(yield)
+			res = dbh.query(yield)
+      if res.nil? then return true else return res end
 		rescue MysqlError =>ex
 			mysql_error(ex)
 		ensure
@@ -671,7 +672,7 @@ module OSM
 
     
     def update_segment?(uid, user_uid, node_a, node_b, tags)
-		  call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (#{uid} , #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1, #{q(tags)}" }
+       call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (#{uid}, #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')" }
     end
 
 

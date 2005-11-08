@@ -59,7 +59,8 @@ else
 
       exit HTTP_NOT_FOUND unless dao.getnode(node_a_uid).visible == true 
       exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true
-      exit BAD_REQUEST unless tags
+      #exit BAD_REQUEST unless tags
+      tags = '' unless tags
 
       if dao.update_segment?(segmentid, userid, node_a_uid, node_b_uid, tags)
         exit

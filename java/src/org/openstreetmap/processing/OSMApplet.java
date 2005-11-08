@@ -166,7 +166,7 @@ public class OSMApplet extends PApplet {
   ModeManager modeManager;
   EditMode nodeMode     = new NodeMode();
   EditMode lineMode     = new LineMode();
-  EditMode tagsMode     = new NameMode();
+  EditMode nameMode     = new NameMode();
   EditMode nodeMoveMode = new NodeMoveMode();
   EditMode deleteMode   = new DeleteMode();
 
@@ -189,7 +189,7 @@ TODO: disable button mouseover highlighting when !ready */
     modeManager = new ModeManager();
     modeManager.addMode(nodeMode);
     modeManager.addMode(lineMode);
-    modeManager.addMode(tagsMode);
+    modeManager.addMode(nameMode);
     modeManager.addMode(nodeMoveMode);
     modeManager.addMode(deleteMode);
 
@@ -214,7 +214,7 @@ TODO: disable button mouseover highlighting when !ready */
       catch (Exception e) {
         println(e.toString());
         e.printStackTrace();
-        sc   = 0.0001f;
+        sc   = 8.77914943209873e-06f;
       }
     }
     else {
@@ -222,7 +222,7 @@ TODO: disable button mouseover highlighting when !ready */
       // traditional OSM Regent's Park London default
       clat = 51.526447f;
       clon = -0.14746371f;
-      sc   = 0.0001f;
+      sc   = 8.77914943209873e-06f;
 
       // Manhattan for testing street names
       //clat = 40.7621;
@@ -396,7 +396,7 @@ TODO: disable button mouseover highlighting when !ready */
     boolean gotOne = false;
     for (int i = 0; i < lines.size(); i++) {
       Line line = (Line)lines.elementAt(i);
-      if (modeManager.currentMode == tagsMode && !gotOne) {
+      if (modeManager.currentMode == nameMode && !gotOne) {
         // highlight first line under mouse
         if (line.mouseOver(mouseX,mouseY,strokeWeight)) {
           strokeWeight(strokeWeight);
@@ -465,14 +465,14 @@ TODO: disable button mouseover highlighting when !ready */
       drawPoint(node);
     }
 
-    // draw street segment tags
+    // draw street segment names
     fill(0);
     textFont(font);
     textSize(strokeWeight + 4);
     textAlign(CENTER);
     for (int i = 0; i < lines.size(); i++) {
       Line l = (Line)lines.elementAt(i);
-      if (l.tags != null) {
+      if (l.getName() != null) {
         pushMatrix();
         if (l.a.x <= l.b.x) {
           translate(l.a.x,l.a.y);
@@ -482,7 +482,7 @@ TODO: disable button mouseover highlighting when !ready */
           translate(l.b.x,l.b.y);
           rotate(PI+l.angle());      
         }
-        text(l.tags,l.length()/2.0f,4);
+        text(l.getName(),l.getName().length()/2.0f,4);
         popMatrix();
       }
     }
@@ -536,7 +536,7 @@ TODO: disable button mouseover highlighting when !ready */
           redraw();
           break;
       }
-      if (modeManager.currentMode == tagsMode) {
+      if (modeManager.currentMode == nameMode) {
         //println(key == CODED);
         //println(java.lang.Character.getNumericValue(key));
         //println("key= \"" + key + "\"");
@@ -687,13 +687,13 @@ TODO: disable button mouseover highlighting when !ready */
   class NameMode extends EditMode {
     public void keyPressed() {
       if (selectedLine != null) {
-	if(java.lang.Character.getNumericValue(key) == -1) { // should check for key == CODED but there's a Processing bug 
-          if (keyCode == BACKSPACE && selectedLine.tags.length() > 0) {
-            selectedLine.tags = selectedLine.tags.substring(0,selectedLine.tags.length()-1);
-            selectedLine.tagsChanged = true;
+        if(java.lang.Character.getNumericValue(key) == -1) { // should check for key == CODED but there's a Processing bug 
+          if (keyCode == BACKSPACE && selectedLine.getName().length() > 0) {
+            selectedLine.setName( selectedLine.getName().substring(0,selectedLine.getName().length()-1) );
+            selectedLine.nameChanged = true;
           }
           else if (keyCode == ENTER) {
-            if (selectedLine.tagsChanged) {
+            if (selectedLine.nameChanged) {
               if (osm != null) {
                 osm.updateLineName(selectedLine);
               }
@@ -702,8 +702,8 @@ TODO: disable button mouseover highlighting when !ready */
           }
         }
         else {
-          selectedLine.tags += key;
-          selectedLine.tagsChanged = true;
+          selectedLine.setName(selectedLine.getName() + key);
+          selectedLine.nameChanged = true;
         }
       }
     }
@@ -718,7 +718,7 @@ TODO: disable button mouseover highlighting when !ready */
         }
       }
       if (previousSelection != null && previousSelection != selectedLine) {
-        if (previousSelection.tagsChanged) {
+        if (previousSelection.nameChanged) {
           if (osm != null) {
             osm.updateLineName(previousSelection);
           }
@@ -909,7 +909,7 @@ TODO: disable button mouseover highlighting when !ready */
   static public void main(String args[]) {
     PApplet.main(new String[] { "--present", "--display=1", "org.openstreetmap.processing.OSMApplet" });
   } 
-  
+
 
 } // OSMApplet
 

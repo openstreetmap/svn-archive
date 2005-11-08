@@ -18,17 +18,17 @@
  */
 
 package org.openstreetmap.util;
-
-   
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 // minimal representation of OpenStreetMap line (node id -> node id, with uid)
 public class Line {
 
   public Node a,b;
-  public String tags="";
+  private String name="";
+  private String tags="";
   public long uid;
-  public boolean tagsChanged = false;
+  public boolean nameChanged = false;
 
   public Line(Node a, Node b) {
     this(a,b,0,"");
@@ -45,7 +45,8 @@ public class Line {
       b.lines.addElement(this);
     }
     this.uid=uid;
-    this.tags = "test"; //sTags;
+    this.name = "test"; //sTags;
+    this.tags = "";
   }
   
   public void reverse() {
@@ -93,13 +94,50 @@ public class Line {
   
   public boolean mouseOver(float mouseX, float mouseY, float strokeWeight) {
     return distance(mouseX,mouseY) < strokeWeight/2.0;
-  }
+  } // mouseOver
 
+  
   public String toString()
   {
     return "[Line " + uid + " from " + a + " to " + b + "]";
 
   } // toString
-  
-}
+
+  public String getTags()
+  {
+    return "name=" + name + "; " + tags;
+
+  } // getTags
+
+  public synchronized void setName(String sName)
+  {
+    name = sName;
+  }
+
+  public synchronized String getName()
+  {
+    return name;
+  } // getName
+
+  private void splitTags(String sTags)
+  {
+    StringTokenizer st = new StringTokenizer(sTags, ";");
+
+    while( st.hasMoreTokens() )
+    {
+      String t = st.nextToken();
+      t = t.trim();
+      if(t.startsWith("name="))
+      {
+        name = t.substring(5);
+      }
+      else
+      {
+        tags = tags + t + "; ";
+      }
+    }
+
+  } // splitTags
+ 
+} // Line
 

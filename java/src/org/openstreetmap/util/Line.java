@@ -45,8 +45,7 @@ public class Line {
       b.lines.addElement(this);
     }
     this.uid=uid;
-    this.name = "test"; //sTags;
-    this.tags = "";
+    splitTags(sTags);
   }
   
   public void reverse() {
@@ -129,11 +128,11 @@ public class Line {
       t = t.trim();
       if(t.startsWith("name="))
       {
-        name = t.substring(5);
+        this.name = t.substring(5);
       }
       else
       {
-        tags = tags + t + "; ";
+        this.tags = this.tags + t + "; ";
       }
     }
 

@@ -391,18 +391,7 @@ public class Adapter
     public void run() {
       
       try{
-        /*
-        Vector params = new Vector();
-        params.addElement (token);
-        params.addElement (new Integer(line.a.uid));
-        params.addElement (new Integer(line.b.uid));
 
-        Integer result = (Integer)xmlrpc.execute ("openstreetmap.newLine", params);
-        System.err.println(result + " results from newLine");
-
-        int id = result.intValue();
-        */
- 
         String xml = "<osm><segment tags='' from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
 
         String url = URLBASE + "newsegment";
@@ -432,8 +421,6 @@ public class Adapter
         
         put.releaseConnection();
 
- 
-
         
         if (id != -1) {
           line.uid = id;
@@ -456,6 +443,7 @@ public class Adapter
   } // LineCreator
 
 
+
   class LineUpdater implements Runnable {
 
     Line line;
@@ -465,33 +453,49 @@ public class Adapter
     }
 
     public void run() {
-      /*
+      
       try{
-        System.err.println("updating line: " + line + " to: " + line.name);
-        line.nameChanged = false;
+         
+        String xml = "<osm><segment uid='" + line.uid + "' tags='" + line.getTags() + "' from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
 
-        Vector params = new Vector();
-        params.addElement (token);
-        params.addElement (new Integer(line.uid));
-        params.addElement (new Integer(14)); // name, believe me
-        params.addElement (new String(line.name));
+        String url = URLBASE + "segment/" + line.uid;
 
-        Boolean result = (Boolean)xmlrpc.execute ("openstreetmap.updateStreetSegmentKeyValue", params);
+        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        
+        HttpClient client = new HttpClient();
 
-        if (result.booleanValue()) {
-          System.err.println("line renamed successfully: " + line + ": " + line.name);
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+        client.getState().setCredentials(AuthScope.ANY, creds);
+
+        PutMethod put = new PutMethod(url);
+        put.setRequestBody(xml);
+          
+        client.executeMethod(put);
+
+        int rCode = put.getStatusCode();
+        long id = -1;
+
+        System.out.println("Got response code " + rCode);
+
+        if( rCode == 200 )
+        {
+          String response = put.getResponseBodyAsString();
+          System.out.println("got reponse " + response);
         }
-        else {
-          System.err.println("error renaming line: " + line + ": " + line.name);
-          line.nameChanged = true;
+        else
+        {
+          System.err.println("error updating line: " + line + ", got code " + rCode);
+          lines.remove(line);
         }
+        
+        put.releaseConnection();   
       }
       catch(Exception e) {
-        System.err.println("error renaming line: " + line + ": " + line.name);
+        System.err.println("error updating line: " + line);
         e.printStackTrace();
-        line.nameChanged = true;
+        lines.remove(line);
       }
-      */
+      
     }
 
   } // LineUpdater

@@ -160,7 +160,7 @@ public class OSMApplet extends PApplet {
   PImage img = null;
 
   /* URL for mapserver... will have bbx,width,height appended */
-  String wmsURL = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
+  String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx"; //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
 
   /* modes - input is passed to the current mode, assigned by node manager */
   ModeManager modeManager;
@@ -482,24 +482,13 @@ TODO: disable button mouseover highlighting when !ready */
           translate(l.b.x,l.b.y);
           rotate(PI+l.angle());      
         }
-        text(l.getName(),l.getName().length()/2.0f,4);
+        text(l.getName(),l.length()/2.0f,4);
         popMatrix();
       }
     }
 
     // draw all buttons
     modeManager.draw();
-    /*
-
-       dont need this with REST
-
-       if (millis() > validCount * 9 * 60 * 1000) {
-       osm.revalidateToken();
-       validCount++;
-       }
-
-
-     */
     if (online) {
       status("lat: " + projection.lat(mouseY) + ", lon: " + projection.lon(mouseX));
     }
@@ -686,8 +675,9 @@ TODO: disable button mouseover highlighting when !ready */
 
   class NameMode extends EditMode {
     public void keyPressed() {
+      System.out.println("got key " + key + " with keyCode " + keyCode + " and numeric val " + java.lang.Character.getNumericValue(key));
       if (selectedLine != null) {
-        if(java.lang.Character.getNumericValue(key) == -1) { // should check for key == CODED but there's a Processing bug 
+        if(java.lang.Character.getNumericValue(key) == -1 && keyCode != 32) { // should check for key == CODED but there's a Processing bug 
           if (keyCode == BACKSPACE && selectedLine.getName().length() > 0) {
             selectedLine.setName( selectedLine.getName().substring(0,selectedLine.getName().length()-1) );
             selectedLine.nameChanged = true;

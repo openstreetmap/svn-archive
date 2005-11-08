@@ -523,8 +523,7 @@ TODO: disable button mouseover highlighting when !ready */
   }
 
   public void keyPressed() {
-    if (ready && modeManager.currentMode != tagsMode ) {
-      modeManager.keyPressed();
+    if (ready) {
       switch(key) {
         case '+':
         case '=':
@@ -536,6 +535,15 @@ TODO: disable button mouseover highlighting when !ready */
           if (strokeWeight >= 2.0f) strokeWeight -= 1.0f;
           redraw();
           break;
+      }
+      if (modeManager.currentMode == tagsMode) {
+        //println(key == CODED);
+        //println(java.lang.Character.getNumericValue(key));
+        //println("key= \"" + key + "\"");
+        //println("keyCode= \"" + keyCode + "\"");
+        //println("BACKSPACE= \"" + BACKSPACE + "\"");
+        //println("CODED= \"" + CODED + "\"");
+        modeManager.keyPressed();
       }
     }
   }
@@ -678,14 +686,9 @@ TODO: disable button mouseover highlighting when !ready */
 
   class NameMode extends EditMode {
     public void keyPressed() {
-//      System.out.println(key == CODED);
-//      System.out.println(java.lang.Character.getNumericValue(key));
-//      System.out.println("keyCode= " + keyCode);
       if (selectedLine != null) {
-        if(keyCode == 8 ) { // backspace
-          //System.out.println(keyCode);
-          //System.out.println(BACKSPACE);
-          if (selectedLine.tags.length() > 0) {
+	if(java.lang.Character.getNumericValue(key) == -1) { // should check for key == CODED but there's a Processing bug 
+          if (keyCode == BACKSPACE && selectedLine.tags.length() > 0) {
             selectedLine.tags = selectedLine.tags.substring(0,selectedLine.tags.length()-1);
             selectedLine.tagsChanged = true;
           }

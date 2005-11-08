@@ -35,12 +35,11 @@ cp java/lib/applet-test.html $ROOT/edit/
 
 # REST
 
-cp ruby/api/*.rb $ROOT/ruby/api/
-cp ruby/api/osm/*.rb $ROOT/ruby/api/osm/
+cp ruby/api/*.rb $ROOT/ruby/api/0.2/
+cp ruby/api/osm/*.rb $ROOT/ruby/api/0.2/osm/
 
 # Apache simple-auth for REST
 cp ruby/api/apache/simple-auth.rb /var/www/openstreetmap/ruby/api/apache/
-
 
 # GPX RSS maker
 

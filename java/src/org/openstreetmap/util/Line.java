@@ -104,7 +104,13 @@ public class Line {
 
   public String getTags()
   {
-    return "name=" + name + "; " + tags;
+    if( tags.equals(" ") ||  tags.equals("; ") )
+    {
+      return "name=" + name;
+    else
+    {
+      return "name=" + name + "; " + tags;
+    }
 
   } // getTags
 

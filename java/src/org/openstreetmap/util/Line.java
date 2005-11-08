@@ -139,7 +139,10 @@ public class Line {
       }
       else
       {
-        this.tags = this.tags + t + "; ";
+        if( ! (t.equals(" ") || t.equals("")) )
+        {
+          this.tags = this.tags + t + "; ";
+        }
       }
     }
 

@@ -107,6 +107,7 @@ public class Line {
     if( tags.equals(" ") ||  tags.equals("; ") )
     {
       return "name=" + name;
+    }
     else
     {
       return "name=" + name + "; " + tags;

@@ -177,12 +177,11 @@ TODO: disable button mouseover highlighting when !ready */
   /* for revalidating token with OSM server */
   int validCount = 1;
 
-
   public void setup() {
 
     size(700,500);
     smooth();
-
+    
     // this font should have all special characters - open to suggestions for changes though
     font = loadFont("LucidaSansUnicode-11.vlw");
 
@@ -265,7 +264,7 @@ TODO: disable button mouseover highlighting when !ready */
     //      - or allow "zoom level" as well as scale
     projection = new Mercator(clat,clon,sc,width,height);
 
-    strokeWeight = max((float)(0.01f/projection.kilometersPerPixel()),1.0f); // 5m roads, but min 1px width
+    strokeWeight = max((float)(0.010f/projection.kilometersPerPixel()),2.0f); // 10m roads, but min 2px width
 
     System.out.println("Selected strokeWeight of " + strokeWeight );
 
@@ -311,7 +310,7 @@ TODO: disable button mouseover highlighting when !ready */
       e.printStackTrace();
     }
 
-    // check webpage applet parameters for a user/pass
+    println("check webpage applet parameters for a user/pass");
     try {
       USERNAME = param("user");
       PASSWORD = param("pass");
@@ -322,26 +321,36 @@ TODO: disable button mouseover highlighting when !ready */
       e.printStackTrace();
     }
 
+    if (USERNAME == null && PASSWORD == null) {
+      println("check command line arguments for a user/pass");
+      try {
+        USERNAME = args[0];
+        PASSWORD = args[1];
+      
+        System.out.println("Got user/pass: " + USERNAME + "/" + PASSWORD);
+      }
+      catch (Exception e2) {
+        e2.printStackTrace();
+      }
+    }
+
     // try to connect to OSM
     osm = new Adapter(USERNAME,PASSWORD, this.lines, nodes);
 
     Thread dataFetcher = new Thread(new Runnable() {
 
-      public void run()
-    {
+      public void run() {
 
-      osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight(), projection);
+        osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight(), projection);
 
-      System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
+        System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
 
-      ready = true;
+        ready = true;
 
-      redraw();
+        redraw();
+      }
 
-    }
-
-    }
-    );
+    });
 
     if (osm != null) {
       dataFetcher.start();
@@ -355,18 +364,19 @@ TODO: disable button mouseover highlighting when !ready */
 
   public void draw() {
 
-    background(200);
+    // draw background satellite image
+    if (img != null) {
+      background(img);
+    }
+    else {
+      background(200);
+    }
 
     if (!ready) {
       cursor(WAIT);
     }
     else {
       cursor(ARROW);
-    }
-
-    // draw background satellite image
-    if (img != null) {
-      image(img,0,0);
     }
 
     noFill();
@@ -852,9 +862,9 @@ TODO: disable button mouseover highlighting when !ready */
       for (int i = 0; i < nodes.size(); i++) {
         Node p = (Node)nodes.elementAt(i);
         if(mouseOverPoint(p)) {
-          boolean delete = true;
+          boolean del = true;
           // TODO prompt for delete
-          if (delete) {
+          if (del) {
             println("deleting " + p);
             osm.deleteNode(p);
           }
@@ -869,9 +879,9 @@ TODO: disable button mouseover highlighting when !ready */
         for (int i = 0; i < lines.size(); i++) {
           Line l = (Line)lines.elementAt(i);
           if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
-            boolean delete = true;
+            boolean del = true;
             // TODO prompt for delete
-            if (delete) {
+            if (del) {
               println("deleting " + l);
               osm.deleteLine(l);
             }
@@ -893,6 +903,10 @@ TODO: disable button mouseover highlighting when !ready */
 
   /////////////////////////////////////// END BUTTON STUFF ///////////////////////////////////////
 
+  static public void main(String args[]) {
+    PApplet.main(new String[] { "--present", "--display=1", "org.openstreetmap.processing.OSMApplet" });
+  } 
+  
 
 } // OSMApplet
 

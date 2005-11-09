@@ -15,10 +15,10 @@ page = cgi['page'].to_i
 
 bbox = cgi['bbox'].split(',')
 
-bllat = bbox[0].to_f
-bllon = bbox[1].to_f
-trlat = bbox[2].to_f
-trlon = bbox[3].to_f
+bllon = bbox[0].to_f
+bllat = bbox[1].to_f
+trlon = bbox[2].to_f
+trlat = bbox[3].to_f
 
 if bllat > trlat || bllon > trlon
   exit BAD_REQUEST

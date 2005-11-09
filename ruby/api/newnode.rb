@@ -27,7 +27,7 @@ if r.request_method == "PUT"
       new_node_uid = dao.create_node(lat, lon, userid, tags)
          
       if new_node_uid
-        print new_node_uid
+        puts new_node_uid
       else
         exit HTTP_INTERNAL_SERVER_ERROR
       end

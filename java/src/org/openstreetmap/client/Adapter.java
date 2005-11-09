@@ -90,11 +90,11 @@ public class Adapter
       //            responseBody = method.getResponseBodyAsString();
       responseStream = method.getResponseBodyAsStream();
     } catch (HttpException he) {
-      System.err.println("Http error connecting to '" + url + "'");
+      System.err.println("Http error connecting to \"" + url + "\"");
       System.err.println(he.getMessage());
       System.exit(-4);
     } catch (IOException ioe){
-      System.err.println("Unable to connect to '" + url + "'");
+      System.err.println("Unable to connect to \"" + url + "\"");
       System.exit(-3);
     }
 
@@ -286,11 +286,11 @@ public class Adapter
         int id = result.intValue();
         */
  
-        String xml = "<osm><node tags='' lon='" + node.lon +  "' lat='" + node.lat + "' /></osm>";
+        String xml = "<osm><node tags=\"\" lon=\"" + node.lon +  "\" lat=\"" + node.lat + "\" /></osm>";
 
         String url = URLBASE + "newnode";
 
-        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url );
         
         HttpClient client = new HttpClient();
 
@@ -346,11 +346,11 @@ public class Adapter
     public void run() {
   
       try{
-        String xml = "<osm><node tags='" + node.tags + "' lon='" + node.lon +  "' lat='" + node.lat + "' uid='" + node.uid + "' /></osm>";
+        String xml = "<osm><node tags=\"" + node.tags + "\" lon=\"" + node.lon +  "\" lat=\"" + node.lat + "\" uid=\"" + node.uid + "\" /></osm>";
 
         String url = URLBASE + "node/" + node.uid;
 
-        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url );
         
         HttpClient client = new HttpClient();
 
@@ -392,11 +392,11 @@ public class Adapter
       
       try{
 
-        String xml = "<osm><segment tags='' from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
+        String xml = "<osm><segment tags=\"\" from=\"" + line.a.uid + "\" to=\"" + line.b.uid + "\" /></osm>";
 
         String url = URLBASE + "newsegment";
 
-        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url );
         
         HttpClient client = new HttpClient();
 
@@ -456,11 +456,11 @@ public class Adapter
       
       try{
          
-        String xml = "<osm><segment uid='" + line.uid + "' tags='" + line.getTags() + "' from='" + line.a.uid + "' to='" + line.b.uid + "' /></osm>";
+        String xml = "<osm><segment uid=\"" + line.uid + "\" tags=\"" + line.getTags() + "\" from=\"" + line.a.uid + "\" to=\"" + line.b.uid + "\" /></osm>";
 
         String url = URLBASE + "segment/" + line.uid;
 
-        System.out.println("Trying to PUT xml '" + xml + "' to URL " + url );
+        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url );
         
         HttpClient client = new HttpClient();
 

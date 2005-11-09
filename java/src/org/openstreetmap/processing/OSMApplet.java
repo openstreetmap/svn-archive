@@ -677,7 +677,7 @@ TODO: disable button mouseover highlighting when !ready */
     public void keyPressed() {
       System.out.println("got key " + key + " with keyCode " + keyCode + " and numeric val " + java.lang.Character.getNumericValue(key));
       if (selectedLine != null) {
-        if(java.lang.Character.getNumericValue(key) == -1 && keyCode != 32) { // should check for key == CODED but there's a Processing bug 
+        if(java.lang.Character.getNumericValue(key) == -1 && keyCode != 32 && keyCode != 222) { // should check for key == CODED but there's a Processing bug 
           if (keyCode == BACKSPACE && selectedLine.getName().length() > 0) {
             selectedLine.setName( selectedLine.getName().substring(0,selectedLine.getName().length()-1) );
             selectedLine.nameChanged = true;

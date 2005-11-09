@@ -20,10 +20,13 @@ if r.request_method == "PUT"
   doc.elements.each('osm/segment') do |seg|
     node_a_uid = seg.attributes['from'].to_i
     node_b_uid = seg.attributes['to'].to_i
+    tags = seg.attributes['tags']
+    tags = '' unless tags
+    
     exit HTTP_NOT_FOUND unless dao.getnode(node_a_uid).visible == true 
     exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true 
 
-    new_seg_id = dao.create_segment(node_a_uid, node_b_uid, userid).to_i
+    new_seg_id = dao.create_segment(node_a_uid, node_b_uid, userid, tags).to_i
 
     if new_seg_id && new_seg_id > 0
       print new_seg_id

@@ -19,10 +19,12 @@ if r.request_method == "PUT"
   doc.elements.each('osm/node') do |pt|
     lat = pt.attributes['lat'].to_f
     lon = pt.attributes['lon'].to_f
+    tags = pt.attributes['tags']
+    tags = '' unless tags
 
     if userid > 0
       #FIXME: need to check the node hasn't moved too much
-      new_node_uid = dao.create_node(lat, lon, userid)
+      new_node_uid = dao.create_node(lat, lon, userid, tags)
          
       if new_node_uid
         print new_node_uid

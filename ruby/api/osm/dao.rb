@@ -611,7 +611,7 @@ module OSM
     end
 
 
-    def create_node(lat, lon, user_uid)
+    def create_node(lat, lon, user_uid, tags)
       begin
         dbh = get_connection
 
@@ -621,7 +621,7 @@ module OSM
         sql = "set @id = last_insert_id(); "
         dbh.query(sql)
         
-        sql = "insert into nodes (uid, latitude, longitude, timestamp, user_uid, visible) values ( last_insert_id(), #{lat}, #{lon}, #{Time.new.to_i * 1000}, #{user_uid}, 1)"
+        sql = "insert into nodes (uid, latitude, longitude, timestamp, user_uid, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')"
         dbh.query(sql)
         
         res = dbh.query('select @id') 
@@ -641,7 +641,7 @@ module OSM
     end
 
 
-    def create_segment(node_a_uid, node_b_uid, user_uid)
+    def create_segment(node_a_uid, node_b_uid, user_uid, tags)
       begin
         dbh = get_connection
 
@@ -651,7 +651,7 @@ module OSM
         sql = "set @id = last_insert_id(); "
         dbh.query(sql)
         
-        sql = "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible) values (last_insert_id(), #{node_a_uid}, #{node_b_uid}, #{Time.new.to_i * 1000}, #{user_uid},1)"
+        sql = "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (last_insert_id(), #{node_a_uid}, #{node_b_uid}, #{Time.new.to_i * 1000}, #{user_uid},1, '#{q(tags)}')"
         dbh.query(sql)
 
         res = dbh.query('select @id') 

@@ -310,6 +310,7 @@ public class Adapter
         {
           String response = put.getResponseBodyAsString();
           System.out.println("got reponse " + response);
+	  response = response.trim(); // get rid of leading and trailing whitespace
           id = Long.parseLong(response);
         }
         

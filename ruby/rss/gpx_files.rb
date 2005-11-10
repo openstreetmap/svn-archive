@@ -16,7 +16,11 @@ begin
   dbh = Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
   # get server version string and display it
 
-  res = dbh.query('select a.timestamp, a.name, b.count, b.latitude, b.longitude,c.user from (select * from points_meta_table where visible = true order by timestamp desc limit 20) as a, (select count(*) as count ,gpx_id,latitude, longitude from tempPoints group by gpx_id) as b, (select * from user) as c where a.uid = b.gpx_id and a.user_uid = c.uid order by timestamp desc;')
+  res = dbh.query('select a.timestamp, a.name, a.size as count, b.latitude, b.longitude,c.user from 
+    (select * from points_meta_table where visible = true order by timestamp desc limit 20) as a, 
+    (select gpx_id,latitude, longitude from tempPoints group by gpx_id) as b,
+    (select * from user) as c 
+      where a.uid = b.gpx_id and a.user_uid = c.uid order by timestamp desc;')
 
   rss = RSS::Rss.new("2.0")
   chan = RSS::Rss::Channel.new

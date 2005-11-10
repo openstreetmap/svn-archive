@@ -409,8 +409,9 @@ module OSM
       return nil
     end
 
-    def update_gpx_size(gpx_uid)
+    def update_gpx_meta(gpx_uid)
       call_sql { "update points_meta_table set size = (select count(*) from tempPoints where tempPoints.gpx_id = #{gpx_uid}) where uid = #{gpx_uid};" }
+      call_sql { "update points_meta_table set latitude = (select latitude from tempPoints where tempPoints.gpx_id = #{gpx_uid} limit 1), longitude = (select longitude from tempPoints where tempPoints.gpx_id = #{gpx_uid}) where uid = #{gpx_uid};" }
     end
 
 

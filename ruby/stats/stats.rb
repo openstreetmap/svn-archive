@@ -35,7 +35,7 @@ begin
   res = dbh.query('select sum(size) as size, user from points_meta_table, user where user_uid = user.uid group by user_uid order by size desc limit 10;')
 
   res.each_hash do |row|
-    puts "<tr><td>#{row['user']}</td><td>#{row['size']}</td></tr>"
+    puts "<tr><td>#{row['user'].gsub('@',' at ').gsub('.',' dot ')}</td><td>#{row['size']}</td></tr>"
   end
   
   puts '</table>'

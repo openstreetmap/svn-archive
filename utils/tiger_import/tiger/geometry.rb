@@ -23,10 +23,15 @@ module Tiger
   module Geometry
   
     class Point
+
+		@@same_threshold = 0.0000005  # default, decent for Manhattan
+		@@same_threshold2 = @@same_threshold ** 2
+
+		def Point.same_threshold=(n)
+			@@same_threshold = n
+			@@same_threshold2 = @@same_threshold ** 2
+		end
     
-      SAME_THRESHOLD = 0.0000005  # decent for Manhattan's lat/long points 
-      SAME_THRESHOLD2 = SAME_THRESHOLD ** 2
-      
       def initialize(x = 0, y = 0)
         @x, @y = x, y
       end
@@ -42,7 +47,7 @@ module Tiger
       def long=(n); @y = n; end
 
       def Point.same?(a, b)
-        return ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) <= SAME_THRESHOLD2
+        return ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) <= @@same_threshold2
       end
   
       def to_s

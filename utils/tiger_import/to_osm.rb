@@ -22,8 +22,6 @@ require "osm"
 include OSM
 require "tiger/tiger"
 
-NUM_ATTEMPTS = 5
-
 def open_osm
   return OpenStreetMap.new("b@gimpert.com", "january")
 end
@@ -38,11 +36,6 @@ begin
     raise "Pass a TIGER .RT1 file as the first argument, and an .RT2 as the second, with an optional starting index as the third."
   end
   osm = open_osm
-  if ARGV.first == "--reset"
-    osm.rollback
-    puts "*** Reset finished"
-    exit
-  end
   rt1_s, rt2_s = nil, nil
   File.open(ARGV.first, File::RDONLY) do |f| rt1_s = f.read end
   File.open(ARGV[1], File::RDONLY) do |f| rt2_s = f.read end
@@ -51,26 +44,14 @@ begin
   start_i = ARGV[2].to_i - 1 if ARGV.length == 3
   line_ids = streets.map { |street| street.line_id }.sort
   (start_i...line_ids.length).each do |i|
-    line_id = line_ids[i]
-    street = streets.find { |street| street.line_id == line_id }
-    coords = street.points.map { |pt| [pt.x, pt.y] }
-    attempt_count = 1
-    loop do
-      begin
-        osm.newStreet(street.name, coords, street.from_zip, street.to_zip)
-        $stderr.puts "*** Created street #{i + 1} of #{line_ids.length}, #{((i + 1).to_f / line_ids.length * 100).to_s[0..4]}%"
-        break  # success
-      rescue =>ex
-        $stderr.puts "*** FAILED [#{ex}], on attempt number #{attempt_count}"
-        $stderr.puts "*** response from server: #{osm.last_response.body}"
-        osm = open_osm  # bounce the XMLRPC connection
-        attempt_count += 1
-        raise "Exiting after #{attempt_count} attempts" if attempt_count >= NUM_ATTEMPTS
-      end
-    end
-    sleep(0.05)
+		line_id = line_ids[i]
+		street = streets.find { |street| street.line_id == line_id }
+		coords = street.points.map { |pt| [pt.x, pt.y] }
+		osm.newStreet(street.name, coords, street.from_zip, street.to_zip)
+		$stderr.puts "*** Created street #{i + 1} of #{line_ids.length}, #{((i + 1).to_f / line_ids.length * 100).to_s[0..4]}%"
+		sleep(0.05)
   end
 ensure
-  osm.close if osm
+	osm.close if osm
 end
 

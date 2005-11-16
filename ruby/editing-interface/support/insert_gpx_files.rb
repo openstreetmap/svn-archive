@@ -52,6 +52,7 @@ files.each_hash do |row|
   user_uid = row['user_uid'].to_i
   original_name = row['originalname']
   email_address = dao.email_from_user_uid(user_uid)
+  dbh = dao.get_connection #bit hacky, but we need a connection
 
   if File.file?( realfile ) && File.size( realfile ) > 0
     file = File.new( realfile )
@@ -72,8 +73,6 @@ files.each_hash do |row|
       $stderr << "bad gpx number!\n"
       exit
     end
-
-    dbh = dao.get_connection #bit hacky, but we need a connection
 
     $stderr << 'new gpx file uid: ' + gpx_uid.to_s + "\n"
 

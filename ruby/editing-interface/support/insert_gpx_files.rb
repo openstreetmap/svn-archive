@@ -140,13 +140,6 @@ files.each_hash do |row|
   
     #get rid of the file so we don't insert it again
 
-    if !DEBUG
-      dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
-      File.delete('/home/steve/bin' + filename)
-      File.delete('/home/steve/bin' + filename + '.yeah')
-      `ssh 128.40.59.140 rm #{filename}`
-    end
-
     #send them an email indicating success
 
   if email_address && email_address != ''
@@ -246,6 +239,13 @@ END_OF_MESSAGE
       puts msgstr
     end
 
+  end
+
+  if !DEBUG
+    dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
+    File.delete('/home/steve/bin' + filename)
+    File.delete('/home/steve/bin' + filename + '.yeah')
+   `ssh 128.40.59.140 rm #{filename}`
   end
 
 end

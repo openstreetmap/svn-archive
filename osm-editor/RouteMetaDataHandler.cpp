@@ -35,11 +35,10 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 }
 
 RouteMetaData RouteMetaDataHandler::getMetaData(const QString& type) 
-							throw (QString)
 {
 	std::map<QString,RouteMetaData>::iterator i = rData.find(type);
 	if (i==rData.end())
-		throw QString("Unknown segment type: " + type); 
+		return RouteMetaData("no","no","no","no","");
 	return i->second;
 }
 

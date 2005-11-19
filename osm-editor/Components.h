@@ -52,21 +52,22 @@ private:
 	vector<Polygon*> polygons;
 
 
-	void doToGPX(std::ostream &outfile,bool=false);
+	void doToGPX(std::ostream &outfile);
 
 public:
 	Components() { waypoints=new Waypoints; track=new Track; clonedTrack=NULL;
 					activeTrack = track;}
 	void clearAll();
 
-	void toGPX(const char*,bool=false);
-	std::string toGPX(bool=false);
+	void toGPX(const char*);
+	std::string toGPX();
 
 	~Components() { clearAll(); }
 	bool addWaypoint (const Waypoint&) ;
 
 	bool addTrackpoint (int seg,const QString& timestamp, double lat, 
 					double lon);
+	bool addTrackpoint (int,const TrackPoint&);
 	void addTrack(Track * t) { if(track) delete track; 
 								track=t; activeTrack = track; }
 
@@ -134,6 +135,9 @@ public:
 		{ track->removeSegs(type); }
 	EarthPoint getAveragePoint() throw (QString)
 		{ return track->getAveragePoint(); }
+	void uploadToOSM(char* username,char* password)
+		{ track->uploadToOSM(username,password);
+		  waypoints->uploadToOSM(username,password); }
 
 };
 

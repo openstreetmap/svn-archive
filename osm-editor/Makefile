@@ -11,7 +11,7 @@ OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  Track.o Waypoint.o Components.o  GPXParser.o WaypointDialogue.o \
 	  RouteMetaDataHandler.o LoginDialogue.o moc_MainWindow.o curlstuff.o \
 	  Polygon.o TrackSeg.o SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
-	  RemoveExcessDialogue.o
+	  RemoveExcessDialogue.o OSMParser.o
 JEEPSSRC = jeeps-gpsbabel-1.2.7
 LIBS = -ljeeps 
 LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
@@ -71,14 +71,16 @@ distclean: clean
 osmeditor.o : MainWindow.h
 GPSDevice.o : GPSDevice.h Track.h Waypoint.h functions.h
 MainWindow.o : WaypointDialogue.h GPXParser.h Components.h Track.h Polygon.h\
-	Waypoint.h functions.h MainWindow.h RouteMetaDataHandler.h LoginDialogue.h Map.h\
-	LandsatManager.h TrackSeg.h SRTMConGen.h SRTMDataGrid.h SRTMGeneral.h
+	Waypoint.h functions.h MainWindow.h RouteMetaDataHandler.h LoginDialogue.h\
+	Map.h LandsatManager.h TrackSeg.h SRTMConGen.h SRTMDataGrid.h\
+	SRTMGeneral.h OSMParser.h
 Components.o : Components.h Track.h Waypoint.h Polygon.h functions.h
 Track.o : Track.h TrackSeg.h
 Waypoint.o : Waypoint.h
 Polygon.o : Polygon.h functions.h
 WaypointDialogue.o : WaypointDialogue.h
 GPXParser.o: GPXParser.h Components.h 
+OSMParser.o: OSMParser.h Components.h 
 GPSDevice.o: Track.h Waypoint.h 
 RouteMetaDataHandler.o: RouteMetaDataHandler.h
 LoginDialogue.o : LoginDialogue.h

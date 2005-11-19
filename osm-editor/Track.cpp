@@ -69,17 +69,13 @@ void Track::removeSegs(const QString& type)
 	}
 }
 
-// Write a track to GPX.
-void Track::toGPX(std::ostream &outfile, bool osm)
+// Write a track log to GPX.
+void Track::toGPX(std::ostream &outfile)
 {
-	if(!osm)
-		outfile<<"<trk>" << endl << "<name>" << id << "</name>" << endl;
 
 	for(int count=0; count<segs.size(); count++)
-		segs[count]->toGPX(outfile,osm);
+		segs[count]->toGPX(outfile);
 
-	if(!osm)
-		outfile<<"</trk>"<<endl;
 }
 
 TrackSeg * Track::findNearestSeg(const EarthPoint& p, double limit)
@@ -240,6 +236,8 @@ bool Track::setSegType(int i,const QString& t)
 }
 bool Track::setSegId(int i,int id)
 { 
+	cerr<<"Track::setSegId: i="<<i<<" id="<< id<<endl;
+	cerr<<"segs.size()="<<segs.size()<<endl;
 	if(i>=0 && i<segs.size())
 	{
 		segs[i]->setId(id); 
@@ -324,4 +322,11 @@ EarthPoint Track::getAveragePoint() throw(QString)
 }
 
 
+void Track::uploadToOSM(char* username,char* password)
+{
+	for(int count=0; count<segs.size(); count++)
+	{ 
+		segs[count]->uploadToOSM(username,password); 
+	}
+}
 }

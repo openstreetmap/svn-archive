@@ -1,5 +1,5 @@
-#ifndef GPXPARSER_H
-#define GPXPARSER_H
+#ifndef OSMPARSER_H
+#define OSMPARSER_H
 
 /*
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
@@ -20,61 +20,46 @@
 
  */
 
-// 19/03/05 convert to using the Qt XML parser. This might be seen to have
-// reusability issues but:
-//
-// a) Try as I might I could not get libxml++ to compile on Windows/MinGW.
-// Gave all sorts of weird linker errors that even posting to the libxml++
-// mailing list could not solve....
-//
-// b) The new Qt4 is modularising its components, so it will be possible to
-// link the XML bit only in a non GUI application
-//
-// c) Qt4 will be GPL for Windows, hence no issues on that platform.
-//
-// GPX parser
-// Returns a list of FreemapComponents, ready for Freemap software.
-// Licence LGPL
-
 #include <qxml.h>
 #include "Components.h"
 #include "RouteMetaDataHandler.h"
 
+#include <map>
+
 namespace OpenStreetMap 
 {
 
-class GPXParser : public QXmlDefaultHandler
+struct ReadNode
+{
+	double lat,lon;
+	QString tags;
+	bool inSeg;
+
+	ReadNode() { inSeg=false; }
+};
+
+class OSMParser : public QXmlDefaultHandler
 {
 private:
-	bool inDoc, inWpt, inTrk, inName, inTrkpt, inId,
-		inType,  inTime, inSegment, foundSegType, inPolygon, 
-		inFoot, inCar, inBike, inHorse, inClass;
+	bool inDoc;
+	int curSeg;
 	Components* components;
-	Track* curTrack; 
-	QString curName, curType; 
-	double curLat, curLong;
-	QString curTimestamp; // 10/04/05 timestamp now string
-	int segStart, trkptCount;
-	Polygon *curPolygon;
-	int curSeg, curId;
-	RouteMetaData metaData;
-
+	std::map<int,ReadNode> readNodes;
 
 public:
 	bool startDocument();
 	bool endDocument();
 	bool startElement(const QString& , const QString&, const QString&,	
 									const QXmlAttributes&);
-	bool endElement(const QString&,const QString&, const QString&);
-	bool characters(const QString& characters);
 
 
 	
-	GPXParser();
+	OSMParser();
 	Components* getComponents() const { return components; }
 
 	// it's the recipient of the components' responsibility to delete them!
-	~GPXParser() {} 
+	~OSMParser() {} 
+	QString getSegType(const QString &tags);
 };
 
 }

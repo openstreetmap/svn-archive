@@ -7,11 +7,15 @@
 
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 using std::endl;
 
 using std::cerr;
 
 using std::setprecision;
+
+#include <qstringlist.h>
+#include "curlstuff.h"
 
 namespace OpenStreetMap
 {
@@ -34,6 +38,19 @@ void TrackPoint::toGPX(std::ostream& outfile)
 				"\" lon=\"" << setprecision(10) << lon << "\">"
 				<< endl << "<time>"<<timestamp<<"</time>"<<endl
 				<<"</trkpt>"<<endl;
+}
+
+void TrackPoint::toOSM(std::ostream& outfile)
+{
+	// Temporary hack, we only want to put new nodes to the server
+	if(!osm_id)
+	{
+		outfile << "<node lat='" << setprecision(10) << lat << 
+				"' lon='" << setprecision(10) << lon << "'";
+		if(osm_id)
+			outfile << " uid='" << osm_id << "'";
+		outfile << " tags=''/>" << endl;
+	}
 }
 
 // Determines whether two track points are connected, for the purposes of 
@@ -76,22 +93,16 @@ bool TrackPoint::connected(const TrackPoint& pt, double timeThreshold,
 	return true;
 }
 
-// 21/09/05 osm flag stipulates whether to export as OpenStreetMap-format
-// GPX, i.e. each segment is within its own <trk> tag.
 
-void TrackSeg::toGPX(std::ostream& outfile, bool osm)
+void TrackSeg::toGPX(std::ostream& outfile)
 {
-	if(osm) 
-	{
 		outfile << "<trk>" << endl 
 				<< "<number>" << id << "</number>" << endl;
 		if(name!="")
 			outfile << "<name>" << name << "</name>" << endl;
 		outfile << "<extensions>" << endl;
 		RouteMetaDataHandler mdh;
-		try
-		{
-			RouteMetaData metaData = mdh.getMetaData(type);
+		RouteMetaData metaData = mdh.getMetaData(type);
 			/*
 			outfile << "<foot>" << metaData.foot << "</foot>"<<endl;
 			outfile << "<horse>" << metaData.horse << "</horse>"<<endl;
@@ -109,13 +120,7 @@ void TrackSeg::toGPX(std::ostream& outfile, bool osm)
 					"\"/>"<<endl;
 			outfile << "<property key=\"class\" value=\"" << 
 					metaData.routeClass << "\"/>"<<endl;
-		}
-		catch (QString str)
-		{
-			cerr << "Unknown route type: " << str << endl;
-		}
 		outfile << "</extensions>" << endl;
-	}
 
 
 	outfile<<"<trkseg>"<<endl;
@@ -123,18 +128,98 @@ void TrackSeg::toGPX(std::ostream& outfile, bool osm)
 	for(int count=0; count<points.size(); count++)
 		points[count].toGPX(outfile);
 
-	if(!osm)
-	{
-		outfile <<"<extensions>"<<endl<<"<type>"
-			<<type<<"</type>"<<endl;
-		if(name!="")
-			outfile<<"<name>"<<name<<"</name>"<<endl;
-		outfile<<"<id>"<<id<<"</id>"<<endl;
-		outfile<<"</extensions>"<<endl;
-	}
 
 	outfile<<"</trkseg>"<<endl;
-	if(osm) outfile << "</trk>" << endl;
+	outfile << "</trk>" << endl;
+}
+
+void TrackSeg::nodesToOSM(ostream& outfile)
+{
+	outfile << "<osm version='0.2'>"<<endl;
+	for(int count=0; count<points.size(); count++)
+	{
+		cerr<<"count="<<count<<endl;
+		points[count].toOSM(outfile);
+	}
+	outfile << "</osm>"<<endl;
+}
+
+void TrackSeg::segsToOSM(ostream& outfile)
+{
+	outfile << "<osm version='0.2'>"<<endl;
+	for(int count=1; count<points.size(); count++)
+	{
+		//temporary hack to avoid uploading 0 to 0 segs
+		if(points[count-1].osm_id && points[count].osm_id)
+		{
+		outfile << "<segment from='"
+				<< points[count-1].osm_id  << 
+				   "' to='"
+				<< points[count].osm_id;
+		QString tags;
+		//  avoid dumping the name too many times
+		if(name!="" && count==points.size()/2) 
+			tags += "name="+name+";";
+		RouteMetaDataHandler mdh;
+		RouteMetaData metaData = mdh.getMetaData(type);
+		if(metaData.foot=="yes")
+			tags += "foot=yes;";
+		if(metaData.horse=="yes")
+			tags += "horse=yes;";
+		if(metaData.bike=="yes")
+			tags += "bike=yes;";
+		if(metaData.car=="yes")
+			tags += "car=yes;";
+		if(metaData.routeClass!="")
+			tags += "class="+metaData.routeClass;
+
+		outfile << "' tags='" << tags << "'/>" << endl;
+		}
+	}
+	outfile << "</osm>"<<endl;
+}
+
+void TrackSeg::uploadNodes(char* nodeXML,char* username,char* password)
+{
+	char * resp = put_data(nodeXML,
+					"http://www.openstreetmap.org/api/0.2/newnode",
+					username,password);
+	if(resp)
+	{
+		QString resp2 = resp;
+		QStringList ids = QStringList::split("\n", resp2);
+		int count=0;
+		for(QStringList::Iterator i = ids.begin(); i!=ids.end(); i++)
+		{
+			if(atoi((*i).ascii()) != 0)
+				points[count++].osm_id = atoi((*i).ascii());
+			cerr << "parsing response: count: " << count << " current id: " <<
+					(*i) << endl;
+		}
+		delete[] resp;
+	}
+}
+
+
+void TrackSeg::uploadToOSM(char* username,char* password)
+{
+	std::ostringstream str;
+	nodesToOSM(str);
+	char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
+	strcpy(nonconst,str.str().c_str());
+	uploadNodes(nonconst,username,password);
+	std::ostringstream str2;
+	segsToOSM(str2);
+	cerr<<"segstoOSM returned: "<<str2.str() << endl;
+	delete[] nonconst;
+	nonconst = new char[ strlen(str2.str().c_str()) + 1];	
+	strcpy(nonconst,str2.str().c_str());
+
+	char * resp = put_data(nonconst,
+					"http://www.openstreetmap.org/api/0.2/newsegment",
+					username,password);
+	if(resp) delete[] resp;
+	delete[] nonconst;
 }
 
 bool TrackSeg::deletePoints(int start, int end)

@@ -17,7 +17,6 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
-
 #ifndef LANDSAT_H
 #define LANDSAT_H
 
@@ -42,10 +41,14 @@ CURL_LOAD_DATA *grab_landsat(
 					int width_px, int height_px);
 CURL_LOAD_DATA  *grab_gpx(const char *urlbase,
 					double west,double south,double east,double north);
-CURL_LOAD_DATA *grab_http_response(const char *url);
+CURL_LOAD_DATA  *grab_osm(const char *urlbase,
+					double west,double south,double east,double north,
+					const char* username,const char* password);
+CURL_LOAD_DATA *grab_http_response(const char *url,const char* = NULL, const char* = NULL);
 size_t response_callback(void *ptr,size_t size,size_t nmemb, void *data);
-CURL_LOAD_DATA *post_gpx(const char *url, char* gpx,const char*,const char*);
-CURL_LOAD_DATA *Do(CURL *curl,const char *url);
+CURL_LOAD_DATA *Do(CURL *curl,const char *url,const char* = NULL, const char* = NULL);
+char* put_data(char* idata,char* url,char* username,char* password);
+size_t infunc (void *bufptr,size_t size, size_t nitems, void *userp);
 
 /*
 #ifdef __cplusplus

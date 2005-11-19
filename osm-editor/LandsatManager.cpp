@@ -13,7 +13,6 @@ LandsatManager::LandsatManager(MainWindow *p, int w, int h, int ts)
 {
 	widget=p; dataDisplayed = false; tileSize = ts;
 	nRows = ((h-1)/tileSize) + 1; nCols = ((w-1)/tileSize) + 1;
-	cerr<<"nRows = "<<nRows << " nCols="<<nCols<<endl;
 	tiles = new QPixmap[nRows*nCols];	
 	
 	for(int count=0; count<nRows*nCols; count++)

@@ -29,19 +29,16 @@ LoginDialogue::LoginDialogue(QWidget* parent)
 {
 	setCaption("Please login to OpenStreetMap");
 	QVBoxLayout *topL = new QVBoxLayout(this);
-	QGridLayout *layout = new QGridLayout(topL,3,2);
+	QGridLayout *layout = new QGridLayout(topL,2,2);
 	layout->setMargin(10);
 	layout->setSpacing(20);
-	urlEdit = new QLineEdit("http://www.free-map.org.uk/wpinp.php",this);
-	layout->addWidget(new QLabel("URL:",this),0,0);
-	layout->addWidget(urlEdit,0,1);
-	layout->addWidget(new QLabel("Email address:",this),1,0);
+	layout->addWidget(new QLabel("Email address:",this),0,0);
 	usernameEdit = new QLineEdit(this);
-	layout->addWidget(usernameEdit,1,1);
-	layout->addWidget(new QLabel("Password:",this),2,0);
+	layout->addWidget(usernameEdit,0,1);
+	layout->addWidget(new QLabel("Password:",this),1,0);
 	passwordEdit = new QLineEdit(this);
 	passwordEdit->setEchoMode(QLineEdit::Password);
-	layout->addWidget(passwordEdit,2,1);
+	layout->addWidget(passwordEdit,1,1);
 	QHBoxLayout *okcL=new QHBoxLayout(topL);
 	QPushButton *ok=new QPushButton("OK",this),
 				*cancel=new QPushButton("Cancel",this);

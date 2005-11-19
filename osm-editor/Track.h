@@ -53,7 +53,7 @@ public:
 	QString getID() 
 		{ return id; }
 	bool addTrackpt(int seg,const QString& t, double lat, double lon);
-	void toGPX(std::ostream&,bool=false);
+	void toGPX(std::ostream&);
 	bool deletePoints(const RetrievedTrackPoint& p1, 
 					const RetrievedTrackPoint& p2, double limit);
 	bool segmentise(const QString& newType, const RetrievedTrackPoint& p1,
@@ -80,6 +80,7 @@ public:
 
 	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &, double);
 	EarthPoint getAveragePoint() throw (QString);
+	void uploadToOSM(char* username,char* password);
 };
 
 

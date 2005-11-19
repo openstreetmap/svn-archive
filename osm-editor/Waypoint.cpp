@@ -17,8 +17,11 @@
 
  */
 #include "Waypoint.h"
+#include <sstream>
+#include "curlstuff.h"
 
-using std::endl;
+#include <iostream>
+using namespace std; 
 namespace OpenStreetMap 
 {
 
@@ -56,17 +59,32 @@ QString Waypoint::garminToType(int smbl)
 	return "";
 }
 
+// output in OSM node format
+// tags will be 'class=poi;type=[the node's type]'
+
+void Waypoint::toOSM(std::ostream& outfile)
+{
+	// Plain "waypoints" will not be sent to OSM - only waypoints with a
+	// defined type i.e. points of interest.
+	// Also do not send if the waypoint has an osm_id (temporary hack)
+	// In other words points already in OSM will not be sent.
+	if(type!="waypoint" && !osm_id)
+	{
+		outfile << "<node lat='" << lat << "' lon='" << lon << 
+					"' tags='";
+		if(name != "")
+			outfile << "name=" << name << ";";
+		outfile << "class=" << type << "' />" << endl;
+	}
+}
+
 void Waypoints::toGPX(std::ostream& outfile)
 {
 	QString name="";
 	for(int count=0; count<waypoints.size(); count++)
 	{
 			
-		if(waypoints[count].id)
-			name.sprintf("%d:%s",waypoints[count].id,
-				waypoints[count].name.ascii());
-		else
-			name = waypoints[count].name;
+		name = waypoints[count].name;
 			
 
 		outfile << "<wpt lat=\"" << waypoints[count].lat << 
@@ -74,6 +92,28 @@ void Waypoints::toGPX(std::ostream& outfile)
 				<< endl << "<name>"<<name<<"</name>"<<endl
 			<<"<type>"<<waypoints[count].type<<"</type>"<<endl<<"</wpt>"<<endl;
 	}
+}
+
+void Waypoints::toOSM(std::ostream& outfile)
+{
+	outfile << "<osm version='0.2'>" << endl;
+	for(int count=0; count<waypoints.size(); count++)
+		waypoints[count].toOSM(outfile);
+	outfile << "</osm>" << endl;
+}
+
+void Waypoints::uploadToOSM(char* username,char* password)
+{
+	std::ostringstream str;
+	toOSM(str);
+	char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
+	strcpy(nonconst,str.str().c_str());
+
+	char * resp = put_data(nonconst,
+					"http://www.openstreetmap.org/api/0.2/newnode",
+					username,password);
+	if(resp) delete[] resp;
+	delete[] nonconst;
 }
 
 bool Waypoints::alterWaypoint(int idx, const QString& newName,

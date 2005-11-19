@@ -35,27 +35,27 @@ namespace OpenStreetMap
 {
 
 
-void Components::toGPX(const char* filename, bool osm)
+void Components::toGPX(const char* filename)
 {
 	std::ofstream outfile(filename);
-	doToGPX(outfile,osm);
+	doToGPX(outfile);
 }
 
-std::string Components::toGPX(bool osm)
+std::string Components::toGPX()
 {
 	std::ostringstream strm; 
-	doToGPX(strm,osm);
+	doToGPX(strm);
 	return strm.str();
 }
 
-void Components::doToGPX(std::ostream &outfile, bool osm)
+void Components::doToGPX(std::ostream &outfile)
 {
 	outfile<<"<gpx version=\"1.0\" " 
 		   <<"creator=\"Hogweed Software Freemap::Components class\" " 
 		   <<"xmlns=\"http://www.topografix.com/GPX/1/0\">" << endl;
 
 	if(waypoints)waypoints->toGPX(outfile);
-	if(track)track->toGPX(outfile,osm);
+	if(track)track->toGPX(outfile);
 
 	for(int count=0; count<polygons.size(); count++)
 		polygons[count]->toGPX(outfile);
@@ -96,14 +96,18 @@ bool Components::deleteWaypoint(int index)
 bool Components::addTrackpoint(int seg,
 				const QString& timestamp,double lat,double lon)
 {
+	addTrackpoint(seg,TrackPoint(timestamp,lat,lon));
+}
+
+bool Components::addTrackpoint(int seg,const TrackPoint &tp)
+{
 	if(track && seg>=0 && seg<track->nSegs())
 	{
-		track->getSeg(seg)->addPoint(timestamp,lat,lon);
+		track->getSeg(seg)->addPoint(tp);
 		return true;
 	}
 	return false;
 }
-
 Waypoint Components::getWaypoint(int i) throw(QString)
 {
 	if(!waypoints)

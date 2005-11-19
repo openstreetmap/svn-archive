@@ -16,7 +16,7 @@ struct RouteMetaData
 
 	QString routeClass; 
 
-	RouteMetaData() {}
+	RouteMetaData() {foot=horse=bike=car="no"; routeClass="unknown";}
 	RouteMetaData(QString f, QString b, QString h, QString c, QString cl )
 		{ foot=f; horse=h; bike=b; car=c; routeClass = cl; }
 	bool operator==(const RouteMetaData& md2)
@@ -32,7 +32,7 @@ private:
 
 public:
 	RouteMetaDataHandler();
-	RouteMetaData getMetaData(const QString& type) throw (QString);
+	RouteMetaData getMetaData(const QString& type);
 	QString getRouteType(const RouteMetaData &rData);
 };
 

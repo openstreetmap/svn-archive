@@ -44,6 +44,7 @@
 
 #include <qxml.h>
 #include "GPXParser.h"
+#include "OSMParser.h"
 
 
 #ifdef XMLRPC
@@ -97,15 +98,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 									polygonRes(0.05),
 									landsatManager(this,w,h,100)
 {
-	cerr<<"lat lon"<<endl;
-	cerr<<lat<<" "<<lon<<endl;
-	cerr<<map.getBottomLeft().x<<endl;
-	cerr<<map.getBottomLeft().y<<endl;
-	cerr<<"done"<<endl;
 	setCaption("OpenStreetMap Editor");
-	cerr<<"resize"<<endl;
 	resize ( w, h );	
-	cerr<<"done"<<endl;
 
 	contours = false;
 	wptSaved = false;
@@ -141,16 +135,13 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	QPopupMenu* fileMenu = new QPopupMenu(this);
 	// 29/10/05 Only open "OSM" now
 	fileMenu->insertItem("&Open",this,SLOT(open()),CTRL+Key_O);
-//	fileMenu->insertItem("Open OSM",this,SLOT(openOSM()));
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
-//	fileMenu->insertItem("Save OSM...",this,SLOT(saveOSM()));
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
 	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
-	fileMenu->insertItem("Grab GPX from Net",this,SLOT(grabGPXFromNet()),
+	fileMenu->insertItem("Grab OSM from &Net",this,SLOT(grabOSMFromNet()),
 								CTRL+Key_N);
-	fileMenu->insertItem("Post GPX",this,SLOT(postGPX()),CTRL+Key_P);
-//	fileMenu->insertItem("Login",this,SLOT(login()),CTRL+Key_I);
+	fileMenu->insertItem("&Upload OSM",this,SLOT(uploadOSM()),CTRL+Key_U);
 	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
 	menuBar()->insertItem("&File",fileMenu);
 
@@ -331,7 +322,6 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	setFocusPolicy(QWidget::ClickFocus);
 
 	showPosition();
-	cerr<<"Constructor done"<<endl;
 }
 
 MainWindow::~MainWindow()
@@ -346,19 +336,12 @@ MainWindow::~MainWindow()
 	delete components;
 }
 
-// 29/10/05 only reading 'OSM' gpx now
 void MainWindow::open() 
-{
-	open2(true);
-}
-
-
-void MainWindow::open2(bool osm)
 {
 	QString filename = QFileDialog::getOpenFileName("","*.gpx",this);
 	if(filename!="")
 	{
-		Components *newComponents = doOpen(filename,osm);
+		Components *newComponents = doOpen(filename);
 		if(newComponents)
 		{
 			try
@@ -374,126 +357,91 @@ void MainWindow::open2(bool osm)
 			catch(QString str)
 			{
 				// blank track, trackseg etc
-				cerr<<str<<endl;
 			}
 		}
 	}
 }
 
-Components * MainWindow::doOpen(const QString& filename, bool osm)
+Components * MainWindow::doOpen(const QString& filename)
 {
 	Components * comp;
 
 
 	GPXParser parser;
-	parser.setOSM(osm);
 	QFile file(filename);
 	QXmlInputSource source(&file);
 	QXmlSimpleReader reader;
 	reader.setContentHandler(&parser);
-	cerr<<"PARSING GPX"<<endl;
 	reader.parse(source);
-	cerr<<"DONE PARSING GPX"<<endl;
 	comp = parser.getComponents();	
-	cerr<<"DONE doOpen"<<endl;	
 	return comp;
 }
 
-void MainWindow::grabGPXFromNet()
+void MainWindow::grabOSMFromNet()
 {
-	QString url=QInputDialog::getText("Enter URL",
-										"Enter URL of GPX server:");
+	QString url="http://www.openstreetmap.org/api/0.2/map";
 	Components * netComponents; 
-	statusBar()->message("Grabbing GPX...");
-	EarthPoint bottomLeft = ll_to_gr(map.getBottomLeft()),
-			   topRight = ll_to_gr(map.getTopRight());
-	CURL_LOAD_DATA *httpResponse = grab_gpx(url.ascii(),
-					bottomLeft.x,bottomLeft.y,topRight.x,topRight.y);
-	if(httpResponse)
-	{
-		statusBar()->message("Done.");
-		char *strdata = new char[httpResponse->nbytes+1];
-		memcpy(strdata,httpResponse->data,httpResponse->nbytes);
-		strdata[httpResponse->nbytes]='\0';
-		free(httpResponse->data);
-		free(httpResponse);
-
-//		cout << "Response:" << endl << strdata << endl;
-
-		
-		QString gpx(strdata);
-		QXmlInputSource source;
-		source.setData(gpx);
-
-		GPXParser parser;
-		parser.setOSM(true);
-		QXmlSimpleReader reader;
-		reader.setContentHandler(&parser);
-		reader.parse(source);
-		netComponents = parser.getComponents();	
-
-		if(components)
-		{
-			components->merge(netComponents);
-			delete netComponents;
-		}
-		else
-		{
-			components = netComponents;
-		}
-		
-		
-		try
-		{
-			map.centreAt(components->getAveragePoint());
-			showPosition();
-			update();
-		}
-		catch(QString str)
-		{
-			cerr<<str<<endl;
-		}
-
-		delete[] strdata;
-	}
-}
-
-/* UPDATED 151005 not present in Windows version 141005 */
-void MainWindow::postGPX()
-{
+	statusBar()->message("Grabbing data from OSM...");
+	EarthPoint bottomLeft = map.getBottomLeft(),
+			   topRight = map.getTopRight();
 	LoginDialogue *ld=new LoginDialogue(this);
 	if(ld->exec())
 	{
-		QString url=ld->getURL(), username=ld->getUsername(),
+		QString username=ld->getUsername(),
 					password=ld->getPassword();
-		std::string gpx = components->toGPX(true);
-		char *cgpx = new char[gpx.size()+1];
-
-		// necessary because a curl function has no const
-		strcpy(cgpx,gpx.c_str()); 
-
-		statusBar()->message("Posting map data...");
-		CURL_LOAD_DATA *resp = post_gpx(url,cgpx,username,password);
-		statusBar()->message("Done.");
-		delete[] cgpx;
-
-		char *strdata = new char[resp->nbytes+1];
-		memcpy(strdata,resp->data,resp->nbytes);
-		strdata[resp->nbytes]='\0';
-		free(resp->data);
-		free(resp);
-
-//		cout << "Response:" << endl << strdata << endl;
-		if(!strncmp(strdata,"ERROR",5))
+		CURL_LOAD_DATA *httpResponse = grab_osm(url.ascii(),
+					bottomLeft.x,bottomLeft.y,topRight.x,topRight.y,
+					username.ascii(), password.ascii());
+		if(httpResponse)
 		{
-			QMessageBox::warning(this,"Error!",strdata);
-		}
+			statusBar()->message("Done.");
+			char *strdata = new char[httpResponse->nbytes+1];
+			memcpy(strdata,httpResponse->data,httpResponse->nbytes);
+			strdata[httpResponse->nbytes]='\0';
+			free(httpResponse->data);
+			free(httpResponse);
 
-		delete[] strdata;
+			//cout << "Response:" << endl << strdata << endl;
+
+		
+			QString gpx(strdata);
+			QXmlInputSource source;
+			source.setData(gpx);
+
+			OSMParser parser;
+			QXmlSimpleReader reader;
+			reader.setContentHandler(&parser);
+			reader.parse(source);
+			netComponents = parser.getComponents();	
+
+			if(components)
+			{
+				components->merge(netComponents);
+				delete netComponents;
+			}
+			else
+			{
+				components = netComponents;
+			}
+		
+			delete[] strdata;
+		}
 	}
 	delete ld;
 }
-/* END UPDATE */
+
+void MainWindow::uploadOSM()
+{
+	LoginDialogue *ld=new LoginDialogue(this);
+	char a[1024],b[1024];
+	if(ld->exec())
+	{
+		strcpy(a,ld->getUsername());
+		strcpy(b,ld->getPassword());
+		components->uploadToOSM(a,b);
+	}
+	delete ld;
+}
 
 void MainWindow::removePlainTracks()
 {
@@ -536,12 +484,12 @@ void MainWindow::saveAs()
 {
 	QString filename = QFileDialog::getSaveFileName("","*.gpx",this);
 	if(filename!="")
-		saveFile(filename,true);
+		saveFile(filename);
 }
 
-void MainWindow::saveFile(const QString& filename, bool osm)
+void MainWindow::saveFile(const QString& filename)
 {
-	components->toGPX(filename,osm);
+	components->toGPX(filename);
 	curFilename = filename;
 }
 
@@ -613,7 +561,6 @@ void MainWindow::removeExcessPoints()
 	if(rex->exec())
 	{
 		double angle=rex->getAngle(), distance=rex->getDistance();
-		if(distance<0) cerr<<"DIST LESS THAN 0"<<endl;
 		if(rex->reset() || !components->isCloned())
 			components->cloneTrack();
 		components->deleteExcessTrackPoints(angle*(M_PI/180),distance);
@@ -746,8 +693,6 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			{
 				/* UPDATE 15/10/05 not present in Windows 141005 */
 				curPen = (curSeg==selectedSeg) ? QPen(Qt::yellow,5) :
-						(curSeg->isLocked()) ? 
-							QPen(QColor(255,200,138),2)	 : 
 								segpens[curSeg->getType()];
 				/* END UPDATE */
 			}
@@ -764,6 +709,13 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			{
 				curPt = curSeg->getPoint(pt);	
 				curPos = map.getScreenPos(curPt.lon,curPt.lat);	
+
+				// hack for OSM data while we can't edit it
+				curPen = (prevPt.osm_id && curPt.osm_id) ?
+						QPen(Qt::lightGray,2) : 
+							segpens[curSeg->getType()];
+
+				
 				p.setPen(curPen);
 
 
@@ -1045,8 +997,6 @@ void MainWindow::resizeEvent(QResizeEvent * ev)
 {
 	//map.resizeTopLeft(ev->size().width(), ev->size().height());
 	map.resizeTopLeft(width(), height());
-	cerr<<"map width: " << map.getWidth() << " height: " << map.getHeight()
-			<<endl;
 	//landsatManager.grab();
 	//landsatManager.resize(ev->size().width(), ev->size().height());
 	landsatManager.resize(width(), height());
@@ -1167,7 +1117,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
 	EarthPoint p;
 	QString name;
 	double LIMIT=map.earthDist(10);
-	cout<<"action mode:" << actionMode<<endl;
 	switch(actionMode)
 	{
 
@@ -1227,7 +1176,6 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 			p.setFont(f);
 			QFontMetrics fm(f);
 
-			cerr << "calling doDrawAngleText " << endl;
 			doDrawAngleText(&p,namePos.x,namePos.y,curNamePos.x,
 							curNamePos.y,
 							-nameAngle,ev->text());

@@ -42,12 +42,16 @@ struct TrackPoint
 	// 10/04/05 now storing the timestamp as the standard GPX format
 	QString timestamp;
 	double lat, lon;
+	int osm_id;
 
-	TrackPoint(){lat=lon=0; timestamp=""; }
-	TrackPoint(double lt, double ln){lat=lt; lon=ln; timestamp=""; }
+	TrackPoint(){lat=lon=0; timestamp=""; osm_id = 0; }
+	TrackPoint(double lt, double ln){lat=lt; lon=ln; timestamp=""; osm_id=0; }
 	TrackPoint(const QString& t, double lt, double ln)
-		{ timestamp=t; lat=lt; lon=ln; }
+		{ timestamp=t; lat=lt; lon=ln; osm_id=0; }
+	TrackPoint(double lt, double ln,int i)
+		{lat=lt; lon=ln; timestamp=""; osm_id=i; }
 	void toGPX(ostream&);
+	void toOSM(ostream&);
 	bool connected(const TrackPoint& pt, double , double);
 	bool operator==(const TrackPoint& tp)
 		{ return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); }
@@ -81,7 +85,7 @@ public:
 	/* END UPDATE */
 
 	void setType(const QString& t) { type=t; }
-	void setId(int i) { id=i; }
+	void setId(int i) { cerr<<"TrakcSeg::setId: setting id to "<<i<<endl;id=i; }
 
 	void addPoint(const QString& ts,double lat,double lon) 
 		{ points.push_back(TrackPoint(ts,lat,lon)); }
@@ -92,7 +96,11 @@ public:
 	bool addPoint(const TrackPoint& pt, int pos);
 	
 	
-	void toGPX(ostream&,bool=false);
+	void toGPX(ostream&);
+	void nodesToOSM(ostream&);
+	void segsToOSM(ostream&);
+	void uploadNodes(char*,char*,char*);
+	void uploadToOSM(char*,char*);
 	int findNearestTrackpoint(const EarthPoint& p,double limit,double* = NULL);
 	bool deletePoints(int start, int end);
 

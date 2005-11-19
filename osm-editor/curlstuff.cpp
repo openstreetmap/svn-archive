@@ -57,29 +57,49 @@ CURL_LOAD_DATA  *grab_gpx(const char *urlbase,
 	return grab_http_response(url);
 }
 
-CURL_LOAD_DATA *grab_http_response(const char *url)
+CURL_LOAD_DATA  *grab_osm(const char *urlbase,
+					double west,double south,double east,double north,
+					const char* username,const char* password)
+{
+	char url[1024];
+	sprintf(url,"%s?bbox=%lf,%lf,%lf,%lf",
+					urlbase,west,south,east,north);
+	return grab_http_response(url,username,password);
+}
+
+CURL_LOAD_DATA *grab_http_response(const char *url,
+									const char *username,const char *password)
 {
 	CURL_LOAD_DATA *data;
 
-//	printf("grab_http_response(): URL=%s\n",url);
+	fprintf(stderr, "grab_http_response(): URL=%s\n",url);
 	CURL *curl =  curl_easy_init(); 
+
 
 	if(curl)
 	{
-		data = Do(curl,url);
+		data = Do(curl,url,username,password);
 		curl_easy_cleanup(curl);
 		return data;
 	}
 	return NULL;
 }
 
-CURL_LOAD_DATA *Do(CURL *curl,const char *url)
+CURL_LOAD_DATA *Do(CURL *curl,const char *url,
+					const char* username,const char* password)
 {
+	char uname_pwd[1024];
 	CURLcode res;
 	CURL_LOAD_DATA *data = (CURL_LOAD_DATA *)malloc(sizeof(CURL_LOAD_DATA));
 	data->data = NULL;
 	data->nbytes = 0;
 	
+	if(username && password)
+	{
+		sprintf(uname_pwd,"%s:%s",username,password);
+		curl_easy_setopt(curl,CURLOPT_USERPWD,uname_pwd);
+	}
+
 	curl_easy_setopt(curl,CURLOPT_URL,url);
 	curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,response_callback);
 	curl_easy_setopt(curl,CURLOPT_WRITEDATA,data);
@@ -103,33 +123,55 @@ size_t response_callback(void *ptr,size_t size,size_t nmemb, void *d)
 	return rsize;
 }
 
-CURL_LOAD_DATA *post_gpx(const char *url, char* gpx,
-				const char* username, const char* password)
+size_t infunc (void *bufptr,size_t size, size_t nitems, void *userp)
 {
-	CURLcode res;
-	CURL_LOAD_DATA *resp;
-	CURL *curl =curl_easy_init();
+	char *p1= (char*)bufptr, *p2=(char*)userp;
+	size_t retcode;
+//	fprintf(stderr,"callback: userp=%s\n",(char *)userp);
+	strcpy(p1,p2);
+	return strlen(p1)+1;
+}
 
+char* put_data(char* idata,char* url,char* username,char* password)
+{
+	CURL *curl;
+	CURLcode res;
+
+	char *odata2 = NULL;
+	char uname_pwd[1024];
+	sprintf(uname_pwd,"%s:%s",username,password);
+
+	CURL_LOAD_DATA *odata = (CURL_LOAD_DATA *)malloc(sizeof(CURL_LOAD_DATA));
+	odata->data = NULL;
+	odata->nbytes = 0;
+
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl = curl_easy_init();
+	
 	if(curl)
 	{
-		char *urlencoded=curl_escape(gpx,strlen(gpx));
-		char *urlencoded_username=curl_escape(username,strlen(username));
-		char *urlencoded_password=curl_escape(password,strlen(password));
-		char *data = new char[strlen(urlencoded)+
-				strlen(urlencoded_username)+strlen(urlencoded_password)+16];
-		sprintf(data,"username=%s&p=%s&gpx=%s",
-						urlencoded_username,urlencoded_password,urlencoded);
-		//printf("Sending: %s\n", data);
-		curl_easy_setopt(curl,CURLOPT_POSTFIELDS,data);
+		curl_easy_setopt(curl,CURLOPT_READFUNCTION,infunc);
+		curl_easy_setopt(curl,CURLOPT_UPLOAD, true);
+		curl_easy_setopt(curl,CURLOPT_PUT, true);
+		curl_easy_setopt(curl,CURLOPT_URL, url);
+//					http://www.openstreetmap.org/api/0.2/newnode
+		curl_easy_setopt(curl,CURLOPT_USERPWD,uname_pwd);
+		curl_easy_setopt(curl,CURLOPT_READDATA,idata);
+		curl_easy_setopt(curl,CURLOPT_INFILESIZE,(long)(strlen(idata)+1));
+		curl_easy_setopt(curl,CURLOPT_WRITEFUNCTION,response_callback);
+		curl_easy_setopt(curl,CURLOPT_WRITEDATA,odata);
 
-		resp=Do(curl,url);
-
-		delete[] data;
-		curl_free(urlencoded);
-		curl_free(urlencoded_username);
-		curl_free(urlencoded_password);
+		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
-		return resp; 
+		odata2 = new char[odata->nbytes+1];
+		memcpy(odata2,odata->data,odata->nbytes);
+		odata2[odata->nbytes]='\0';
+		free(odata->data);
+		free(odata);
+	
+		fprintf(stderr,"Response: %s\n", odata2);
 	}
-	return NULL; 
+
+	curl_global_cleanup();
+	return odata2;
 }

@@ -5,48 +5,39 @@ ERuby.import('include/top-viewmap.rhtml')
 %>
 
 <div id="main_area">
-
-<!--  <div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700px; padding: 1em;">-->
  
-	  <div id="drag" style="border: gray 2px; WIDTH: 700px; HEIGHT: 500px;"></div>
-<!-- pimp out my div! supply: div, hints, rss feed to map, wms source, lon, lat, zoom, optional width, optional height -->
-<script type="text/javascript">//<!--
-Get_URLParts();
-lon = Get_Parameter("lon") - 0;
-lat = Get_Parameter("lat") - 0;
-
-if( lat != 0.0)
-{
-  var lpi =  3.14159265358979323846;
-  lat = Math.log( Math.tan( (lpi / 4.0) + (lat / 180.0 * lpi / 2.0))) * 180.0 / lpi ;
-}
-
-//alert( Get_Parameter("scale") );
-
-
-//if (Get_Parameter("zoom")) {
-  zoom = Get_Parameter("zoom") - 0;
-//}
-//else
-if (Get_Parameter("scale")) {
-	zoom = Math.log(360.0/((Get_Parameter("scale")-0) * 512.0)) / Math.log(2.0);
-//  alert(zoom)
-}
-new tile_engine_new('drag','FULL','','http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets',lon,lat,zoom,0,0);
-//-->
-</script>
-<!--  this is the end of the snippet that you will want -->
+<div id="drag" style="border: gray 2px; WIDTH: 700px; HEIGHT: 500px;"></div>
 
 <div id="linksdiv"></div>
 
 <div id="debuginfo"></div>
 
-
 </div>
 
+<script type="text/javascript">
 
+  Get_URLParts();
 
-<!--</div>-->
+  lon = Get_Parameter("lon") - 0;
+  lat = Get_Parameter("lat") - 0;
+
+  if( lat != 0.0)
+  {
+    var lpi =  3.14159265358979323846;
+    lat = Math.log( Math.tan( (lpi / 4.0) + (lat / 180.0 * lpi / 2.0))) * 180.0 / lpi ;
+  }
+
+  zoom = Get_Parameter("zoom") - 0;
+  if (Get_Parameter("scale")) {
+    zoom = Math.log(360.0/((Get_Parameter("scale")-0) * 512.0)) / Math.log(2.0);
+  }
+
+  var tileURL = 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets';
+
+  new tile_engine_new('drag','FULL','',tileURL,lon,lat,zoom,0,0);
+
+</script>
+
 
 
 <%

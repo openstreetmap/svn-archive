@@ -397,7 +397,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 		}
 		while( this.bot + this.centery < this.displayheight/2 && this.lat_max < this.lat_max_clamp ) {
 			this.bot += this.tileheight;
-			this.lat_max += this.lon_quant;
+			this.lat_max += this.lat_quant;
 			dirty = true;
 		}
 

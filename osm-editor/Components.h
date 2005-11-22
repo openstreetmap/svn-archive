@@ -74,7 +74,9 @@ public:
 	void setWaypoints(Waypoints * w) { if(waypoints)delete waypoints;
 			waypoints=w; }
 	bool hasTrack() { return track && track->hasPoints() ; }
-	bool hasWaypoints() { return waypoints && (waypoints->size()>0); }
+
+	// 22/11/05 checks for validity of waypoints pointer, but not size
+	bool hasWaypoints() { return waypoints; } 
  	Waypoint getWaypoint (int i) throw(QString);
 	int nWaypoints() { return waypoints ? waypoints->size(): 0; }
 	bool setTrackID(const char*); 

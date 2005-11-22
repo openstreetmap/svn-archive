@@ -712,7 +712,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 
 				// hack for OSM data while we can't edit it
 				curPen = (prevPt.osm_id && curPt.osm_id) ?
-						QPen(Qt::lightGray,2) : 
+						QPen(Qt::lightGray,6) : 
 							segpens[curSeg->getType()];
 
 				

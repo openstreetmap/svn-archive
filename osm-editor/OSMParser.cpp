@@ -40,7 +40,7 @@ bool OSMParser::startDocument()
 
 bool OSMParser::endDocument()
 {
-	QString name, type;
+	QString name="", type;
 	inDoc = false;
 	for(std::map<int,ReadNode>::iterator i=readNodes.begin(); 
 					i!=readNodes.end(); i++)

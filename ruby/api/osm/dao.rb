@@ -199,53 +199,60 @@ module OSM
       return ''
 
     end
-
-
-    def login(email, pass)
-      email = quote(email)
-      pass = quote(pass)
-
-      if check_user?(email,pass)
-        begin
-          dbh = get_connection
-          token = make_token
-          
-          dbh.query("update user set token = '#{token}' where user = '#{email}' and pass_crypt=md5('#{pass}') and active = true")
-          set_timeout(email)
-
-          return token
-
-        rescue MysqlError => e
-          mysql_error(e)
-
-        ensure
-          dbh.close if dbh
-        end
-
-
-      end
-
-      return ''
-
-    end
-
+  
+  def set_token_for_user(email)
+    token = make_token
+    call_sql { "update user set token = '#{token}' where user = '#{q(email)}' and active = true" }
+    return token
     
-    def does_user_exist?(email)
-      res = call_sql { "select uid from user where user = '#{q(email)}' and active = true" }
-      return res.num_rows == 1
+  end 
+
+  def login(email, pass)
+    if check_user?(email,pass)
+      begin
+        dbh = get_connection
+        token = make_token
+        dbh.query("update user set token = '#{token}' where user = '#{q(email)}' and pass_crypt=md5('#{q(pass)}') and active = true")
+        set_timeout(email)
+        return token
+      rescue MysqlError => e
+        mysql_error(e)
+      ensure
+        dbh.close if dbh
+      end
     end
+    return ''
+  end
+
+  def set_password_for_user(email, pass, token)
+    return call_sql { "update user set pass_crypt = md5('#{q(pass)}') where user = '#{q(email)}' and token = '#{q(token)}' and active = true" }
+  end
+
+  def does_user_exist?(email)
+    res = call_sql { "select uid from user where user = '#{q(email)}' and active = true" }
+    return res.num_rows == 1
+  end
     
 
     ## check_user_token?
     # checks a user token to see if it is active
     def check_user_token?(token)
-      dbh = get_connection
-      token = quote(token)
-
-      res = dbh.query("select uid from user where active = 1 and token = '#{token}' and timeout > #{Time.new.to_i * 1000}")
+      res = call_sql { "select uid from user where active = 1 and token = '#{q(token)}' and timeout > #{Time.new.to_i * 1000}" }
       if res.num_rows == 1
         res.each_hash do |row|
           return row['uid'].to_i
+        end
+      end
+      # otherwise, return false
+      return false
+    end
+
+
+    def email_from_token(token)
+      res = call_sql { "select user from user where active = 1 and token = '#{q(token)}'" }
+      if res.num_rows == 1
+        res.each_hash do |row|
+          return row['user']
         end
       end
       # otherwise, return false
@@ -409,9 +416,8 @@ module OSM
       return nil
     end
 
-    def update_gpx_meta(gpx_uid)
+    def update_gpx_size(gpx_uid)
       call_sql { "update points_meta_table set size = (select count(*) from tempPoints where tempPoints.gpx_id = #{gpx_uid}) where uid = #{gpx_uid};" }
-      call_sql { "update points_meta_table set latitude = (select latitude from tempPoints where tempPoints.gpx_id = #{gpx_uid} limit 1), longitude = (select longitude from tempPoints where tempPoints.gpx_id = #{gpx_uid} limit 1) where uid = #{gpx_uid};" }
     end
 
 

@@ -3,6 +3,28 @@ module OSM
   require 'mysql'
   require 'singleton'
 
+  class StringIO
+  # helper class for gzip encoding
+    attr_reader :buf
+    def initialize
+      @buf = ''
+    end
+
+    def write(s = '')
+      unless (s.nil?)
+        @buf << s
+        s.length
+      end
+    end
+
+    def length
+      @buf.length
+    end
+    def to_s
+      @buf
+    end
+  end
+
   class Point
 
     def initialize(latitude, longitude, uid, visible, tags)

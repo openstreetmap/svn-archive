@@ -5,6 +5,7 @@ require 'cgi'
 load 'osm/dao.rb'
 load 'osm/ox.rb'
 require 'bigdecimal'
+require 'zlib'
 
 include Apache
 
@@ -66,5 +67,17 @@ if linesegments
 
 end
  
-
-puts ox.to_s_pretty
+if r.headers_in['Accept-Encoding'] && r.headers_in['Accept-Encoding'].match(/gzip/)
+  buffer = OSM::StringIO.new
+  z = Zlib::GzipWriter.new(buffer, 9)
+  z.write ox.to_s
+  z.close
+  str = buffer.to_s
+  r.headers_out['Content-Encoding'] = 'gzip'
+  r.headers_out['Content-Length'] = str.length.to_s
+  r.content_type = 'text/html'
+  r.send_http_header
+  print str
+else
+  puts ox.to_s_pretty
+end

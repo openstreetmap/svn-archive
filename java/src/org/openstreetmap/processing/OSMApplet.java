@@ -197,48 +197,34 @@ TODO: disable button mouseover highlighting when !ready */
     float clat, clon, sc;
 
     if (online) {
-      try {
-        clat = Float.parseFloat(param("clat"));
-        clon = Float.parseFloat(param("clon"));
-      }
-      catch (Exception e) {
-        println(e.toString());
-        e.printStackTrace();
-        // traditional OSM Regent's Park London default
+      
+      if( param_float_exists("clat") ) {
+        clat = parse_param_float("clat");  
+      } else {
         clat = 51.526447f;
+      }
+  
+      if( param_float_exists("clon") ) {
+        clon = parse_param_float("clon");  
+      } else {
         clon = -0.14746371f;
       }
-      try {
-        sc   = Float.parseFloat(param("scale"));
-      }
-      catch (Exception e) {
-        println(e.toString());
-        e.printStackTrace();
-        sc   = 8.77914943209873e-06f;
-      }
-    }
-    else {
 
+      if( param_float_exists("scale") ) {
+        sc = parse_param_float("scale");  
+      } else {
+        sc = 8.77914943209873e-06f;
+      }
+
+      if( param_float_exists("zoom") ) {
+        int zoom = parse_param_int("zoom");
+        sc = 45f * (float)Math.pow(2f, -6 -zoom);
+      }
+    } else {
       // traditional OSM Regent's Park London default
       clat = 51.526447f;
       clon = -0.14746371f;
       sc   = 8.77914943209873e-06f;
-
-      // Manhattan for testing street names
-      //clat = 40.7621;
-      //clon = -73.983765;
-      //sc   = 0.0003;
-
-      // slightly empty bit of London, for live testing...
-      //clat = 51.53681622214006;
-      //clon = -0.11829704333333334;
-      //sc  = 6.666666666666667E-5;
-
-      // Grenoble?
-      //clat = 45.186; 
-      //clon = 5.733;
-      //sc = 0.0003;
-
     }
 
     if (online) {
@@ -356,9 +342,34 @@ TODO: disable button mouseover highlighting when !ready */
       dataFetcher.start();
     }
 
-    noLoop(); // SteveC
+    noLoop();
     redraw();
   } // setup
+
+  
+  private boolean param_float_exists(String sParamName)
+  {
+    try
+    {
+      float foo = Float.parseFloat(param(sParamName));
+      return true;
+    }
+    catch(Exception e)
+    {
+
+    }
+    return false;
+  } // param_float_exists
+
+  private float parse_param_float(String sParamName)
+  {
+    return Float.parseFloat(param(sParamName));
+  } // parse_param_float
+
+  private int parse_param_int(String sParamName)
+  {
+    return Integer.parseInt(param(sParamName));
+  } // parse_param_float
 
   boolean gotGPX = false;
 

@@ -7,7 +7,6 @@ import java.util.Vector;
 
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 
@@ -15,6 +14,7 @@ import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Point;
 import org.openstreetmap.util.Mercator;
+import org.openstreetmap.util.GZIPAwareGetMethod;
 
 public class Adapter
 {
@@ -79,7 +79,7 @@ public class Adapter
     HttpMethod method = null;
 
     //create a method object
-    method = new GetMethod(url);
+    method = new GZIPAwareGetMethod(url);
     method.setFollowRedirects(true);
 
     //execute the method

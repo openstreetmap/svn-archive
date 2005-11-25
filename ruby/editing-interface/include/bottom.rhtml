@@ -1,3 +1,48 @@
+<span id="greeting">
+<% if loggedin %>
+Welcome <%=email %> 
+<a id="logoutanchor" href="logout.html">Logout</a>
+<% else %>
+<a id="loginanchor" href="login.html">Login</a> /
+<a id="registeranchor" href="create-account.html">Register</a>
+<% end %>
+</span>
+
+<%
+	editattr = ''
+	uploadattr=''
+	indexattr=''
+	if ENV['REQUEST_URI'].index('/edit.html') == 0 then
+		editattr = 'class="active"' 
+	elsif ENV['REQUEST_URI'].index('/upload.html') == 0 then
+		uploadattr = 'class="active"'
+	elsif ENV['REQUEST_URI'].index('/index.html') == 0 || 
+		ENV['REQUEST_URI'].index('/?') == 0 ||
+		ENV['REQUEST_URI'] == '/' then
+		indexattr = 'class="active"' 
+	end
+%>
+
+<div>
+  <ul id="tabnav">
+    <li><a <%=indexattr %> id="viewanchor" href="/index.html">View</a></li>
+    <li>
+    <% if loggedin then %> 
+    <a <%=editattr %> id="editanchor" href="/edit.html">Edit</a>
+    <% else %>
+    <a <%=editattr %> style="font-style:italic" >Edit</a>
+    <% end %>
+    </li>
+    <li >
+    <% if loggedin then %>
+    <a <%=uploadattr %> href="/upload.html">GPS traces</a>
+    <% else %>
+    <a <%=uploadattr %> style="font-style:italic">GPS traces</a>
+    <% end %>
+    </li>
+</ul>
+</div>
+
 <div id="left">
 
 <div id="logo">
@@ -44,4 +89,3 @@ OpenStreetMap allows you to view, edit and use geographical data in a collaborat
 
 </body>
 </html>
-

@@ -333,6 +333,7 @@ MainWindow::~MainWindow()
 	}
 
 
+	delete polygon;
 	delete components;
 }
 

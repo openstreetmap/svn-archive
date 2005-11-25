@@ -1,5 +1,3 @@
-
-<div id="main_area">
 <%
 
 require 'stringio'
@@ -12,7 +10,9 @@ uid = -1
 #include Math
 
 ERuby.import('include/top.rhtml')
-
+%>
+<div id="main_area">
+<%
 
 
 if !loggedin
@@ -24,7 +24,7 @@ else
 
   <h1>Upload a GPX File</h1>
   <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. Because GPX files can be very large creation and deletion is done in the background. To get help on this form and more information on GPX files, click <a href="/wiki/index.php/Upload">here</a>.<br><br>
-  <form action="/edit/upload-gpx.html" enctype="multipart/form-data" method="post">
+  <form action="/upload-gpx.html" enctype="multipart/form-data" method="post">
     <table>
       <tr><td>file:</td><td><input type="file" name="gpxfile"></td></tr>
       <tr><td></td><td><input type="submit" value="Go!"></td></tr>

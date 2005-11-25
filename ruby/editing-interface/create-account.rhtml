@@ -1,24 +1,34 @@
-<div id="main_area">
 <%
 
+include Apache
 require 'net/smtp'
 
 loggedin = false
 cgi = nil
 dao = nil
 
-ERuby.import('include/top.rhtml')
+r = Apache.request
 
+ERuby.import('include/top.rhtml')
+%>
+<div id="main_area">
+<%
 formhtml = '<h1>Create a user account</h1><br>
   Fill in the form, we\'ll send you an email to confirm you\'re you and activate your account.<br><br>
-  By creating an account, you agree that all work uploaded to openstreetmap.org and all data created by use of any tools on openstreetmap.org is to be licensed under <a href="http://creativecommons.org/licen
-  ses/by-sa/2.0/">this</a> Creative Commons license.<br><br>
-  <form action="http://www.openstreetmap.org/edit/create-account.html">
+  By creating an account, you agree that all work uploaded to openstreetmap.org and all data created by use of any tools on openstreetmap.org is to be licensed under <a href="http://creativecommons.org/licenses/by-sa/2.0/">this</a> Creative Commons license.<br><br>
+  <form action="/create-account.html" method="post">
   <table>
   <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
   <tr><td>password:</td><td><input type="password" name="pass1"></td></tr>
-  <tr><td>retype password:</td><td><input type="password" name="pass2"></td></tr>
-  <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+  <tr><td>retype password:</td><td><input type="password" name="pass2"></td></tr>'
+
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+  formhtml += '<input type="hidden" name="lat" value="' + cgi['lat'] + '">
+    <input type="hidden" name="lon" value="' + cgi['lon'] + '">
+    <input type="hidden" name="zoom" value="' + cgi['zoom'] + '">'
+end
+
+formhtml += '<tr><td></td><td><input type="submit" value="Go!"></td></tr>
   </table>
   <input type="hidden" name="action" value="create">
   </form>'
@@ -63,7 +73,7 @@ the email address #{email.untaint}.
 
 To activate it, please click the link below:
 
-http://www.openstreetmap.org/edit/create-account.html?action=confirm&email=#{email.untaint}&token=#{token}
+http://www.openstreetmap.org/create-account.html?action=confirm&email=#{email.untaint}&token=#{token}
 
 Please report abuse to abuse@openstreetmap.org
 
@@ -102,7 +112,11 @@ END_OF_MESSAGE
         %>
 
         Congratulations, your account has been created!
-        <%
+
+	<%
+	dao.set_timeout(email)
+	dao.set_cookie(r,token);
+	loggedin = true
 
       else
         %>

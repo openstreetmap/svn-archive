@@ -1,4 +1,3 @@
-<div id="main_area">
 <%
 
 include Math
@@ -11,21 +10,37 @@ cgi = nil
 dao = nil
 
 ERuby.import('include/top.rhtml')
-
+%>
+<div id="main_area">
+<%
 action = cgi['action']
 
+args = '';
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+	args = '?lat=' + cgi['lat'] + '&lon=' + cgi['lon'] + '&zoom=' + cgi['zoom']
+end
+
 loginhtml = '<h1>Login:</h1><br>
-    Please login or <a href="create-account.html">create an account</a>.<br>
-    <form action="/edit/login.html">
+    Please login or <a href="create-account.html' + args + '">create an account</a>.<br>
+    <form method="post" action="/login.html">
     <table>
     <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
-    <tr><td>password:</td><td><input type="password" name="pass"></td></tr>
-    <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+    <tr><td>password:</td><td><input type="password" name="pass"></td></tr>'
+
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+
+	loginhtml += '<input type="hidden" name="lat" value="' + cgi['lat'] + '">
+    <input type="hidden" name="lon" value="' + cgi['lon'] + '">
+    <input type="hidden" name="zoom" value="' + cgi['zoom'] + '">'
+
+end
+
+loginhtml += '<tr><td></td><td><input type="submit" value="Go!"></td></tr>
     </table>
     <input type="hidden" name="action" value="login">
-    </form><br><a href="forgot-password.html">Forgotten password?</a>'
+    </form><br><a href="forgot-password.html' + args + '">Forgotten password?</a>'
 
-if loggedin
+if loggedin 
   %>
   You're already logged in :-)
   <%
@@ -46,23 +61,28 @@ else
       token = dao.login(email, pass)
       if token && token != ''
 
-        cookie = CGI::Cookie.new('openstreetmap', token)
-        ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
-        r.headers_out.add('Set-Cookie', 'openstreetmap=' + token + '; path=/edit/; expires=' + ed)
-        r.send_http_header
+        dao.set_cookie(r, token);
 
-       
-        loggedin = true
-        %>
-        <i>Login successful!</i>
-        <%
+	r.status_line = '302 Found'
+	redirect = '/index.html'
+	if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+		redirect += '?lat=' + cgi['lat'] + '&lon=' + cgi['lon'] + '&zoom=' + cgi['zoom']
+	end
+	r.headers_out.add('Location', redirect)
+        r.send_http_header
+	exit
+
       else
         %>
         <i>Login failed</i><br>
         <%=loginhtml%>
         <%
       end
-
+    else
+    %>
+    <i>Login failed</i><br>
+    <%=loginhtml%>
+    <%
     end
 
   end
@@ -73,5 +93,4 @@ end
 </div>
 <%
 ERuby.import('include/bottom.rhtml')
-
 %>

@@ -1,53 +1,46 @@
+<div id="left">
+
 <div id="logo">
-OpenStreetMap
-<img src="/images/mag_map_medium.png" width="150" height="150">
+<center>
+<h1>OpenStreetMap</h1>
+<img src="/images/mag_map-120x120.png" width="120" height="120"/><br/>
+<nobr><h2>The Free Wiki World Map</h2></nobr>
+</center>
 </div>
-
-
+<% if ! loggedin then %>
+<div id="intro">
+OpenStreetMap is a free editable map of the whole world. It is made by people like you.
+<p/>
+OpenStreetMap allows you to view, edit and use geographical data in a collaborative way from anywhere on Earth.
+</div>
+<% end %>
 <div id="left_menu">
-<h1><img src="/images/toolbox.png">Toolbox:</h1>
-
-<ul>
-<li>
-<img src="/images/stock_edit-16.png"><a href="view-map.html">View map</a>
-</li><%
-if loggedin
-%>
-<li>
-<img src="/images/user.png"><a href="logout.html">logout</a>
-</li>
-<li>
-<img src="/images/stock_save-16.png"><a href="upload-gpx.html">GPS traces...</a>
-</li><%
-else
-%><li>
-<img src="/images/user.png"><a href="login.html">Login</a>
-</li>
-<li>
-<img src="/images/user.png"><a href="create-account.html">Create acct</a>
-</li>
-  <%
-end
-%>
-<li>
-<img src="/images/stock_help-16.png"><a href="/wiki/">Help / Wiki</a>
-</li>
-<li>
-<img src="/images/stock_stop-16.png"><a href="http://www.openstreetmap.org/wiki/index.php/Bug_Reporting">Report bug</a>
-</li>
-<li>
+<table><tr><td>
+<a href="/wiki/">Help/Wiki</a>
+</td><td>
+<nobr><a href="/wiki/index.php/GettingInvolved">Get Involved</a></nobr>
+</td><tr><tr><td>
+<a href="/news/">News</a>
+</td><td>
+<a href="/wiki/index.php/Contact">Contact</a>
+</td></tr><tr><td>
+<a href="/wiki/index.php/Partners">Partners</a>
+</td><td>
+<a href="http://www.openstreetmap.org/wiki/index.php/Bug_Reporting">Report bug</a>
+</td></tr></table>
+<p/>
+<center>
 <a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/images/somerights20.png" border="0"></a><br>
-</li>
-</ul>
-<%
-if !loggedin
-%>
-  <a href="login.html">Login</a> to see more<br><br>
-<%
-end
-
-%>
+</center>
 </div>
+
+</div>
+
+<script type="text/javascript">
+	if ((lat != undefined) && (lon != undefined) && (zoom != undefined)) {
+		updatelinks(lon,lat,zoom);
+	}
+</script>
 
 </body>
 </html>

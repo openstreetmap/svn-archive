@@ -1,3 +1,25 @@
+
+a {
+  color: #0000ff;
+  text-decoration: none;
+}
+a:visited {
+  color: #0000ff;
+       text-decoration: none;
+}
+a:active {
+  color: #0000ff;
+  text-decoration: none;
+}
+a:link {
+  color: #0000ff;
+  text-decoration: none;
+}
+a:hover {
+  color: #0000ff;
+  text-decoration: underline;
+}
+
 #frontpage_main {
   width: 100%;
   text-align: center;
@@ -11,44 +33,70 @@
 }
 
 body {
-  font-family: sans-serif;
+  font-family: Arial,sans-serif;
   color: Black;
   margin: 0;
   padding: 0;
 }
 
-
-#logo {
-min-width : 150px;
-width: 9em;
-padding: 1em;
-margin: 1em;
+#left {
 position: absolute;
-top: 0px;
-left: 0px;
-height: 10em;
-background: #ddddff;
-border: 0.1em solid #ccccdd;
+top: -8px;
+min-width: 150px;
 }
 
+#logo {
+width: 150px;
+min-width: 150px;
+padding: 10px;
+margin: 10px;
+height: 150px;
+background: #ffffff;
+border: 1px solid #ccccdd;
+}
 #logo h1 {
-  font-size: 1.2em;
+  font-size: 14px;
   text-align: center;
+  margin: 0;
+}
+#logo h2 {
+  font-size: 10px;
+  margin: 0;
+}
+
+#greeting {
+  float: right;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 7px;
+  font-size: 10px;
+  background: url(tab_bottom.gif) repeat-x bottom;
+}
+
+#intro {
+  width: 150px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-size: 11px;
 }
 
 #left_menu {
-  width: 9em;
-  margin: 1em;
-  padding: 1em;
-  border: 0.1em solid #ccc;
-  position: absolute;
+  width: 150px;
+  min-width: 150px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
   left: 0px;
-  top: 13em;
   background: #ddd;
   line-height: 1.2em;
   text-align: Left;
+  font-size: 12px;
 }
-
+#left_menu td {
+  font-size: 12px;
+  padding-right: 4px;
+}
 #left_menu h1 {
   font-style: normal;
   font-size: 15px;
@@ -57,8 +105,8 @@ border: 0.1em solid #ccccdd;
 }
 
 #left_menu ul {
-  list-style: none;
-  padding: 0;
+  //list-style: none;
+  padding-left: 10px;
   margin: 0;
 }
 
@@ -100,10 +148,11 @@ color: #000000;
 #main_area {
   width: 700px;
   padding: 0;
+  //padding-left: 1em;
   margin: 0;
   position: absolute;
-  left: 14.1em;
-  top: 1em;
+  left: 192px;
+  top: 35px;
   background: none;
   line-height: 1.2em;
   text-align: left;
@@ -119,26 +168,28 @@ width: 100%;
 
 #mapToolbar {
 position: absolute;
-left: 0px;
-top: 0px;
-width: 200px;
+//left: 710px;
+left: 30px;
+top: 350px;
        border-width: 0;
 }
 
 #mapToolbarRight {
 position: absolute;
-left: 200px;
+//left: 200px;
 top: 50px;
-width: 400px;
+//width: 400px;
        text-align: right;
 }
 
 #mapImage {
 position: absolute;
 left: 0px;
-top: 100px;
 }
-
+#drag {
+top: 14px;
+left: 14px;
+}
 #mapEpilog {
   font-size: x-small;
 
@@ -160,4 +211,90 @@ top: 100px;
 }
 
 
+#header {
+  float:left;
+  width:100%;
+  background:#DAE0D2 url("bg.gif") repeat-x bottom;
+  font-size:93%;
+  line-height:normal;
+  }
+#header ul {
+  margin:0;
+  padding:10px 10px 0px 215px;
+  list-style:none;
+  }
+#header li {
+  float:left;
+  //background:url("left.gif") no-repeat left top;
+  margin:0;
+  padding:0 0 0 9px;
+  }
+#header li a {
+  float:left;
+  display:block;
+  //background:url("right.gif") no-repeat right top;
+  padding:5px 15px 4px 6px;
+  text-decoration:none;
+  font-weight:bold;
+  color:#765;
+  }
+/* Commented Backslash Hack
+   hides rule from IE5-Mac \*/
+#header li a {float:none;}
+/* End IE5-Mac hack */
+#header li a:hover {
+  color:#333;
+  }
+#header #current {
+ // background-image:url("left_on.gif");
+  }
+#header #current a {
+  background-image:url("right_on.gif");
+  color:#333;
+  padding-bottom:5px;
+  }
 
+#tabnav
+{
+height: 20px;
+margin: 0;
+padding-left: 215px;
+padding-top: 5px;
+background: url(tab_bottom.gif) repeat-x bottom;
+}
+										#tabnav li
+{
+margin: 0; 
+padding: 0;
+display: inline;
+list-style-type: none;
+}
+#tabnav a, #tabnav a:link, #tabnav a:visited 
+{
+float: left;
+background: #f3f3f3;
+font-size: 10px;
+line-height: 14px;
+font-weight: bold;
+padding: 2px 10px 2px 10px;
+margin-right: 4px;
+border: 1px solid #ccc;
+text-decoration: none;
+color: #333;
+}
+#tabnav a:link.active, #tabnav a:visited.active
+{
+border-bottom: 1px solid #fff;
+background: #fff;
+color: #000;
+}
+#tabnav a:link:hover
+{
+background: #fff;
+}
+
+#geocoder {
+ font-size: 12px;
+ padding-top: 16px;
+ padding-left: 14px;
+}

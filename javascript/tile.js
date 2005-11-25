@@ -172,15 +172,6 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	document.engine = this;
 
 
-	this.seteditvis = function() {
-		if (this.zoom >= 13) {
-			showhide("editlinkdiv", true);
-		} else {
-			showhide("editlinkdiv", false);
-		}
-	}
-	this.seteditvis();
-
 	//
 	// decide on display width and height
 	//
@@ -200,6 +191,10 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.displaywidth = w;
 	this.displayheight = h;
 
+	this.minzoom = 0;
+	this.maxzoom = 20;
+	if (this.zoom < this.minzoom) { this.zoom = this.minzoom; }
+	if (this.zoom > this.maxzoom) { this.zoom = this.maxzoom; }
 
 	//
 	// enforce parent div style?
@@ -255,7 +250,6 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	///
 
 	this.performzoom = function(lon,lat,z) {
-
 		// setup for zoom
 		// this engine operates at * scale to try avoid tile errors thrashing server cache
 	
@@ -320,39 +314,9 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	///
 
 	this.update_perma_link = function() {
-		//var editlink = document.getElementById('editlink');
-		//var permalink = document.getElementById('permalink');
-		var debuginfo = document.getElementById('debuginfo');
-		var editlinkscale = (360.0/Math.pow(2.0,this.zoom))/512.0;
 		var linklat = 180 / PI * (2 * Math.atan(Math.exp(this.lat * PI / 180)) - PI / 2); // because we're using mercator
-		//if (permalink) {
-		//	permalink.href = "http://" + urlbase + urlpath + "?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + linklat;
-		//}
-		//if (editlink) {
-		//	editlink.href = "http://www.openstreetmap.org/edit/edit-map.html?lat=" + linklat + "&lon=" + this.lon + "&scale=" + editlinkscale;
-		//}
-		if (debuginfo) {
-			debuginfo.innerHTML = "lat/lon: " + linklat + " " + this.lon;
-		}
 
-    var myhtml = "<a href=\"http://www.openstreetmap.org/edit/view-map2.html?lat=" 
-           								+ linklat + "&lon=" + this.lon + "&scale=" + editlinkscale + "\" target=\"_new\">link to this map</a>";
-
-    if( this.zoom >=14 )
-    {
-      myhtml +=  ", <a href=\"http://www.openstreetmap.org/edit/edit-map.html?lat=" 
-           								+ linklat + "&lon=" + this.lon + "&scale=" + editlinkscale + "\" target=\"_new\">edit this map</a>";
-
-    }
-    else
-    {
-      myhtml += " (zoom in to edit map)";
-    
-    }
-    var linksdiv = document.getElementById('linksdiv');
-    linksdiv.innerHTML = myhtml;
-    
-		//alert("Latitude: " + this.lat + " Longitude: " + this.lon + " Zoom: " + this.zoom + " Scale: " + editlinkscale);
+		updatelinks(this.lon,linklat,this.zoom);
 	}
 
 	///
@@ -513,6 +477,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 						}
 					}
 					node.src = key;
+					node.alt = "loading tile..";
+					node.style.color = "#ffffff";
 					this.tiles.appendChild(node);
 				}
 				// adjust if using active style
@@ -700,6 +666,8 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 		this.drag(0,0);
 	}
 
+	this.update_perma_link();
+
 	///
 	/// intercept context events to minimize out-of-browser interruptions
 	///
@@ -775,7 +743,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							hostengine.url,
 							hostengine.lon,
 							hostengine.lat,
-							hostengine.zoom + 2,
+							hostengine.zoom + 1,
 							0,0
 							);
 				break;
@@ -786,7 +754,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							hostengine.url,
 							hostengine.lon,
 							hostengine.lat,
-							hostengine.zoom - 2,
+							hostengine.zoom - 1,
 							0,0
 							);
 				break;
@@ -960,7 +928,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	/// zoom a tile group
 	///
 	this.tile_engine_zoomout = function(e) {
-	 	var amount = -2;
+	 	var amount = -1;
 		var hostengine = this.tile_engine;
 
 		if( window && window.event && window.event.srcElement ) {
@@ -991,7 +959,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	/// zoom a tile group
 	///
 	this.tile_engine_zoomin = function(e) {
-		var amount = 2;
+		var amount = 1;
 		var hostengine = this.tile_engine;
 
 		if( window && window.event && window.event.srcElement ) {
@@ -1039,10 +1007,10 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 
 		if( window ) {
 			window.onmousemove = this.event_mouse_move;
-			window.onmousedown = this.event_mouse_down;
+			//window.onmousedown = this.event_mouse_down;
 			window.onmouseup = this.event_mouse_up;
 			//window.onmouseout = this.event_mouse_out;
-			window.onkeypress = this.event_key;
+			//window.onkeypress = this.event_key;
 			window.ondblclick = this.event_double_click;
 		}
 
@@ -1050,11 +1018,102 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 		//document.addEventListener('keypress', this.key_handler, true);
 	}
 
-	this.link = function() {
-		document.location = "http://" + urlbase + urlpath + "?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + this.lat;
+	this.geocoder = function(type,addr,city,country) {
+	    if (this.geocoderequest != false && this.geocoderequest != null)  { return; }
+	    this.geocoderequest = type;
+	    var node = document.getElementById("GeocoderDialogue");
+	    if (node) { node.innerHTML = "Querying..."; }
+	    if (! this.xmlhttp) {
+		this.loadXMLHTTP();
+	    }
+	    if (this.geocoderequest == "us") {
+		url = "http://geocoder.us/service/rest/?address=" + encodeURI(addr);
+	    } else {
+		url = "http://brainoff.com/geocoder/rest/?city=" + encodeURI(city+","+country);
+	    }
+	    this.xmlhttp.open("GET","proxy.php?"+url,true);
+	    this.xmlhttp.onreadystatechange=geocoder_cb;
+	    this.xmlhttp.send(null);
 	}
-	this.editlink = function() {
-		document.location = "http://openstreetmap.org/?zoom=" + this.zoom + "&lon=" + this.lon + "&lat=" + this.lat;
+
+	this.loadXMLHTTP = function() {
+	    /*@cc_on @*/
+	    /*@if (@_jscript_version >= 5)
+	    // JScript gives us Conditional compilation, we can cope with old IE versions.
+	    // and security blocked creation of the objects.
+	    try {
+	    this.xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+	    } catch (e) {
+	    try {
+	    this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	    } catch (E) {
+	    this.xmlhttp = false;
+	    }
+	    }
+	    @end @*/
+	    if (!this.xmlhttp && typeof XMLHttpRequest!='undefined') {
+		this.xmlhttp = new XMLHttpRequest();
+	    }
+	}
+
+	/* Warning this must match div id of map */
+	function geocoder_cb() {
+	    e = document.getElementById("drag");
+	    e.tile_engine.geocoder_callback();
+	}
+
+	this.getNodeValue = function(obj, nodeName) {
+	    var st = "";
+	    if (obj.hasChildNodes()) {
+		var i = 0;
+		while ((st == "") && (i < obj.childNodes.length)) {
+		    st = (obj.childNodes[i].nodeName == nodeName) ? obj.childNodes[i].firstChild.nodeValue : this.getNodeValue(obj.childNodes[i], nodeName);
+		    i++;
+		}
+	    }
+	    return st;
+	}
+
+	this.geocoder_callback = function() {
+	    if (this.xmlhttp.readyState==4) {
+		lat = false; lon = false;
+		if (this.xmlhttp.status == "200") {
+		    if (this.xmlhttp.responseXML && this.xmlhttp.responseXML.hasChildNodes()) {
+			try {
+			    lat = this.getNodeValue(this.xmlhttp.responseXML, "geo:lat");
+			    lon = this.getNodeValue(this.xmlhttp.responseXML, "geo:long");
+			} catch(e) {
+			}
+		    }
+		}
+
+		var msg;
+		if (lat != false && lon != false) {
+		    msg = "";
+		    var node = document.getElementById("GeocoderDialogue");
+		    if (node) { node.innerHTML = msg; }
+
+    		    lat = Math.log( Math.tan( (PI / 4.0) + (lat / 180.0 * PI / 2.0))) * 180.0 / PI;
+		    //if (this.geocoderequest == "us") { z = 10; }
+		    //else { z = 10; }
+		    //this.performzoom(lon,lat,this.zoom);
+		    //this.map.centerAndZoom(new GPoint(lon,lat),z);
+
+			new tile_engine_new(this.parentname,
+							"FULL",
+							this.feedurl, // xxx hrm, cache this?
+							this.url,
+							lon,
+							lat,
+							10,
+							0,0);
+		} else {
+		    msg = "Lookup Failed";
+		    var node = document.getElementById("GeocoderDialogue");
+		    if (node) { node.innerHTML = msg; }
+		}
+		this.geocoderequest = false;
+	    }
 	}
 
 	// attach event capture parent div
@@ -1107,5 +1166,3 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.parent.appendChild(this.navform);
 
 }
-
-

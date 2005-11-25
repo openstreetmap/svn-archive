@@ -2,6 +2,7 @@ module OSM
 
   require 'mysql'
   require 'singleton'
+  require 'time'
 
   class StringIO
   # helper class for gzip encoding
@@ -267,6 +268,23 @@ module OSM
       end
       # otherwise, return false
       return false
+    end
+
+
+    def set_cookie(r,token)
+	ed = (Time.now + (60 * 60 * 24)).rfc2822()
+	r.headers_out.add('Set-Cookie', 'openstreetmap=' + token + '; path=/; expires=' + ed)
+    end
+
+    def check_cookie?(cgi)
+	cvalues = cgi.cookies['openstreetmap']
+	if !cvalues.empty?
+  		token = cvalues[0]
+  		if token
+    			uid = check_user_token?(token)
+    		end
+  	end
+	return [token,uid]
     end
 
 
@@ -742,4 +760,4 @@ module OSM
 
   end
 end
- 
+

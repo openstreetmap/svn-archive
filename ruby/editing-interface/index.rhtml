@@ -1,0 +1,35 @@
+<%
+
+loggedin = false
+
+ERuby.import('include/top.rhtml')
+
+%>
+
+<div id="main_area">
+ 
+<div id="drag" style="WIDTH: 700px; HEIGHT: 500px;"></div>
+
+<div id="debuginfo"></div>
+
+<% 
+ERuby.import('include/geocode.rhtml')
+%>
+<script type="text/javascript">
+
+  var lpi =  3.14159265358979323846;
+  mlat = Math.log( Math.tan( (lpi / 4.0) + (lat / 180.0 * lpi / 2.0))) * 180.0 / lpi ;
+
+  var tileURL = 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets';
+
+  new tile_engine_new('drag','FULL','',tileURL,lon,mlat,zoom,0,0);
+</script>
+
+
+
+</div>
+
+<%
+ERuby.import('include/bottom.rhtml')
+
+%>

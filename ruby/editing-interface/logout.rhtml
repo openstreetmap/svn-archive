@@ -1,39 +1,33 @@
-
-<div id="main_area">
 <%
+require 'cgi'
+load 'osm/dao.rb'
+cgi = CGI.new
+dao = OSM::Dao.instance
 
 include Math
 include Apache
 
 r = Apache.request
+r.status_line = "302 Found"
+
+url = '/index.html'
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != ''
+	url += '?lat=' + cgi['lat'] + '&lon=' + cgi['lon'] + '&zoom=' + cgi['zoom']
+end
+
+r.headers_out.add('Location', url)
 
 loggedin = false
-cgi = nil
-dao = nil
 uid = -1
 
-ERuby.import('include/top.rhtml')
+token,uid = dao.check_cookie?(cgi);
 
-if !loggedin
-  %>
-  You're not logged in anyway...
-  <%
-
-else
+if uid then
   dao.logout(uid)
-  ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
-  r.headers_out.add('Set-Cookie', 'openstreetmap=loggedout; path=/edit/; expires=' + ed)
-  r.send_http_header
-  loggedin = false
-  %>
-  You have been logged out
-  <%
-
 end
-%>
 
-</div>
-<%
-ERuby.import('include/bottom.rhtml')
-
+ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
+r.headers_out.add('Set-Cookie', 'openstreetmap=loggedout; path=/; expires=' + ed)
+r.send_http_header
+exit
 %>

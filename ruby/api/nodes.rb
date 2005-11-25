@@ -1,6 +1,5 @@
 #!/usr/bin/ruby -w
 
-
 require 'cgi'
 load 'osm/dao.rb'
 load 'osm/ox.rb'
@@ -26,4 +25,4 @@ nodes.scan(/[0-9]+/){ |nodeid|
   end
 }
 
-puts gpx.to_s_pretty
+puts ox.to_s_pretty

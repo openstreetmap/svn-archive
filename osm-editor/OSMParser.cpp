@@ -113,7 +113,7 @@ bool OSMParser::startElement(const QString&, const QString&,
 		else if(element=="segment")
 		{
 			//cerr << "Found a segment" << endl;
-			components->newSegment();
+			uid=0;
 			for(int count=0; count<attributes.length(); count++)
 			{
 				if(attributes.qName(count)=="from")
@@ -125,6 +125,8 @@ bool OSMParser::startElement(const QString&, const QString&,
 				else if(attributes.qName(count)=="tags")
 					type = getSegType(attributes.value(count));
 			}
+
+			components->newSegment();
 
 			//cerr << " from= " <<from; 
 			//cerr << " to= " << to;
@@ -138,6 +140,7 @@ bool OSMParser::startElement(const QString&, const QString&,
 			components->addTrackpoint(curSeg, 
 							TrackPoint
 								(readNodes[to].lat,readNodes[to].lon,to));
+			components->getSeg(curSeg)->setOSMID(uid);
 			components->setSegType(curSeg++,type);
 		}
 	}

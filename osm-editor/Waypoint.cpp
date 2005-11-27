@@ -62,20 +62,20 @@ QString Waypoint::garminToType(int smbl)
 // output in OSM node format
 // tags will be 'class=poi;type=[the node's type]'
 
-void Waypoint::toOSM(std::ostream& outfile)
+int Waypoint::toOSM(std::ostream& outfile)
 {
-	// Plain "waypoints" will not be sent to OSM - only waypoints with a
-	// defined type i.e. points of interest.
-	// Also do not send if the waypoint has an osm_id (temporary hack)
+	// Do not send if the waypoint has an osm_id (temporary hack)
 	// In other words points already in OSM will not be sent.
-	if(type!="waypoint" && !osm_id)
+	if(!osm_id)
 	{
 		outfile << "<node lat='" << lat << "' lon='" << lon << 
 					"' tags='";
 		if(name != "")
 			outfile << "name=" << name << ";";
 		outfile << "class=" << type << "' />" << endl;
+		return 1;
 	}
+	return 0;
 }
 
 void Waypoints::toGPX(std::ostream& outfile)
@@ -94,26 +94,35 @@ void Waypoints::toGPX(std::ostream& outfile)
 	}
 }
 
-void Waypoints::toOSM(std::ostream& outfile)
+int Waypoints::toOSM(std::ostream& outfile)
 {
+	int nWpts=0;
 	outfile << "<osm version='0.2'>" << endl;
 	for(int count=0; count<waypoints.size(); count++)
-		waypoints[count].toOSM(outfile);
+		nWpts += waypoints[count].toOSM(outfile);
 	outfile << "</osm>" << endl;
+	return nWpts;
 }
 
 void Waypoints::uploadToOSM(char* username,char* password)
 {
 	std::ostringstream str;
-	toOSM(str);
-	char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
-	strcpy(nonconst,str.str().c_str());
+	int nWpts = toOSM(str);
+	cerr << "Here are the uploaded waypoints:" << str << endl;
+	if(nWpts)
+	{
+		
+			char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
+			strcpy(nonconst,str.str().c_str());
 
-	char * resp = put_data(nonconst,
+			char * resp = put_data(nonconst,
 					"http://www.openstreetmap.org/api/0.2/newnode",
 					username,password);
-	if(resp) delete[] resp;
-	delete[] nonconst;
+		if(resp) delete[] resp;
+		delete[] nonconst;
+	}
+	else
+		cerr << "No new waypoints so not attempting to upload." << endl;
 }
 
 bool Waypoints::alterWaypoint(int idx, const QString& newName,

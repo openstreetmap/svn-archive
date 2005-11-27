@@ -40,7 +40,7 @@ void TrackPoint::toGPX(std::ostream& outfile)
 				<<"</trkpt>"<<endl;
 }
 
-void TrackPoint::toOSM(std::ostream& outfile)
+int TrackPoint::toOSM(std::ostream& outfile)
 {
 	// Temporary hack, we only want to put new nodes to the server
 	if(!osm_id)
@@ -50,7 +50,9 @@ void TrackPoint::toOSM(std::ostream& outfile)
 		if(osm_id)
 			outfile << " uid='" << osm_id << "'";
 		outfile << " tags=''/>" << endl;
+		return 1;
 	}
+	return 0;
 }
 
 // Determines whether two track points are connected, for the purposes of 
@@ -133,15 +135,24 @@ void TrackSeg::toGPX(std::ostream& outfile)
 	outfile << "</trk>" << endl;
 }
 
-void TrackSeg::nodesToOSM(ostream& outfile)
+void TrackSeg::toOSM(ostream& outfile)
 {
+	outfile << "NODES: " << endl;
+	nodesToOSM(outfile);
+	outfile << "SEGS: " << endl;
+	segsToOSM(outfile);
+}
+
+int TrackSeg::nodesToOSM(ostream& outfile)
+{
+	int nPts = 0;
 	outfile << "<osm version='0.2'>"<<endl;
 	for(int count=0; count<points.size(); count++)
 	{
-		cerr<<"count="<<count<<endl;
-		points[count].toOSM(outfile);
+		nPts += points[count].toOSM(outfile);
 	}
 	outfile << "</osm>"<<endl;
+	return nPts;
 }
 
 void TrackSeg::segsToOSM(ostream& outfile)
@@ -150,7 +161,7 @@ void TrackSeg::segsToOSM(ostream& outfile)
 	for(int count=1; count<points.size(); count++)
 	{
 		//temporary hack to avoid uploading 0 to 0 segs
-		if(points[count-1].osm_id && points[count].osm_id)
+		if(points[count-1].osm_id && points[count].osm_id && !osm_id)
 		{
 		outfile << "<segment from='"
 				<< points[count-1].osm_id  << 
@@ -203,8 +214,14 @@ void TrackSeg::uploadNodes(char* nodeXML,char* username,char* password)
 
 void TrackSeg::uploadToOSM(char* username,char* password)
 {
+	cerr<<"Here is the OSM code that would be uploaded:" << endl;
+	toOSM(cerr);
+	cerr<<"END." << endl;
+
 	std::ostringstream str;
-	nodesToOSM(str);
+	int nPts = nodesToOSM(str);
+	if (nPts)
+	{
 	char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
 	strcpy(nonconst,str.str().c_str());
 	uploadNodes(nonconst,username,password);
@@ -220,6 +237,8 @@ void TrackSeg::uploadToOSM(char* username,char* password)
 					username,password);
 	if(resp) delete[] resp;
 	delete[] nonconst;
+	}
+	
 }
 
 bool TrackSeg::deletePoints(int start, int end)

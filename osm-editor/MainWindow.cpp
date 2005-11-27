@@ -712,6 +712,7 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 				curPos = map.getScreenPos(curPt.lon,curPt.lat);	
 
 				// hack for OSM data while we can't edit it
+				if(!doingClonedTrack)
 				curPen = (prevPt.osm_id && curPt.osm_id) ?
 						QPen(Qt::lightGray,6) : 
 							segpens[curSeg->getType()];

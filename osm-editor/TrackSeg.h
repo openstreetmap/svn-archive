@@ -51,7 +51,7 @@ struct TrackPoint
 	TrackPoint(double lt, double ln,int i)
 		{lat=lt; lon=ln; timestamp=""; osm_id=i; }
 	void toGPX(ostream&);
-	void toOSM(ostream&);
+	int toOSM(ostream&);
 	bool connected(const TrackPoint& pt, double , double);
 	bool operator==(const TrackPoint& tp)
 		{ return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); }
@@ -61,19 +61,20 @@ class TrackSeg
 {
 private:
 	QString name, type;
-	int id;
+	int id, osm_id;
 	vector<TrackPoint> points;
 
 
 
 public:
 	TrackSeg() 
-		{ name=""; type="track"; id=0;  }
+		{ name=""; type="track"; id=0; osm_id=0; }
 
 	 TrackSeg(const QString& i,const QString& t)
-		{ name=i; type=t; id=0; }
+		{ name=i; type=t; id=0; osm_id=0; }
 
 	 void setName(const QString& i) { name=i; }
+	 void setOSMID(int oid) { osm_id=oid; }
 	 QString getName() { return name; }
 	 QString getType() { return type; }
 
@@ -97,8 +98,9 @@ public:
 	
 	
 	void toGPX(ostream&);
-	void nodesToOSM(ostream&);
+	int nodesToOSM(ostream&);
 	void segsToOSM(ostream&);
+	void toOSM(ostream&);
 	void uploadNodes(char*,char*,char*);
 	void uploadToOSM(char*,char*);
 	int findNearestTrackpoint(const EarthPoint& p,double limit,double* = NULL);

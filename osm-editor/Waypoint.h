@@ -48,7 +48,7 @@ struct Waypoint
 	Waypoint(const QString& nm, double lt, double ln, const QString& tp)
 		{ name=nm; lat=lt; lon=ln; type=tp;  osm_id=0; }
 	static QString garminToType(int);
-	void toOSM(std::ostream&);
+	int toOSM(std::ostream&);
 	void uploadToOSM(char*,char*);
 };
 
@@ -63,7 +63,7 @@ public:
 	bool deleteWaypoint(int i);
 	Waypoint getWaypoint(int i) throw (QString); 
 	void toGPX(std::ostream&);
-	void toOSM(std::ostream&);
+	int toOSM(std::ostream&);
 	int size() { return waypoints.size(); }
 	bool alterWaypoint(int,const QString&,const QString&);
 	void uploadToOSM(char*,char*);

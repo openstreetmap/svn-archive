@@ -108,7 +108,7 @@ void Waypoints::uploadToOSM(char* username,char* password)
 {
 	std::ostringstream str;
 	int nWpts = toOSM(str);
-	cerr << "Here are the uploaded waypoints:" << str << endl;
+	cerr << "Here are the uploaded waypoints:" << str.str() << endl;
 	if(nWpts)
 	{
 		

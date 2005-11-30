@@ -104,7 +104,6 @@ import org.openstreetmap.util.Point;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Mercator;
-import org.openstreetmap.util.TileManager;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -122,9 +121,6 @@ public class OSMApplet extends PApplet {
 
   /* converts from lat/lon into screen space */
   Mercator projection;
-
-  /* does wot it says on the tin*/
-  TileManager tm;
 
   /* collection of OSMNodes (may or may not be projected into screen space) */
   Vector nodes = new Vector();
@@ -220,8 +216,6 @@ TODO: disable button mouseover highlighting when !ready */
         sc = 8.77914943209873e-06f;
       }
 
-      // if zoom exists then we can get scale from that
-
       if( param_float_exists("zoom") ) {
         int zoom = parse_param_int("zoom");
         sc = 45f * (float)Math.pow(2f, -6 -zoom);
@@ -256,8 +250,6 @@ TODO: disable button mouseover highlighting when !ready */
     //      - or allow "zoom level" as well as scale
     projection = new Mercator(clat,clon,sc,width,height);
 
-    tm = new TileManager(projection);
-
     strokeWeight = max((float)(0.010f/projection.kilometersPerPixel()),2.0f); // 10m roads, but min 2px width
 
     System.out.println("Selected strokeWeight of " + strokeWeight );
@@ -277,7 +269,7 @@ TODO: disable button mouseover highlighting when !ready */
         try {
           print("loading: " + wmsURL);
           img = loadImage(wmsURL);
-          if (img == null || img.width == 0 || img.height == 0) {
+          if (img == null || img.width == 0 || height == 0) {
             throw new Exception("bad image from: " + wmsURL);
           }
           else
@@ -292,7 +284,6 @@ TODO: disable button mouseover highlighting when !ready */
       }
     }
     );
-
     imageFetcher.start();
 
     String token = null;

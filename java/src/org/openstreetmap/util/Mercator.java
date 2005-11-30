@@ -25,9 +25,9 @@ public class Mercator {
 
   protected double clat, clon;
   protected double dlat, dlon;
-  public double degrees_per_pixel;
+  protected double degrees_per_pixel;
   protected double tx, ty, bx, by;
-  public double w, h;
+  protected double w, h;
   protected double QUARTER_PI = Math.PI / 4.0;
   protected double PIby360 = Math.PI / 360.0;
 
@@ -47,7 +47,7 @@ public class Mercator {
   /* the idea with this is that you can maintain an accurate projection when you pan around an interactive map 
      though obviously any cached points will need re-caching.
      TODO: work out what change in lat/lon is significant enough to warrant re-caching */
-  public synchronized void setCentre(double clat, double clon) {
+  public void setCentre(double clat, double clon) {
   
     this.clat = clat;
     this.clon = clon;
@@ -69,62 +69,64 @@ public class Mercator {
     
   }
 
-  public synchronized double kilometersPerPixel() {
+  public double kilometersPerPixel() {
     return (40008.0 / 360.0) * degrees_per_pixel;
   }
 
   // the following two functions will give you the x/y on the entire sheet
   // FIXME: Steve you should explain this a bit
 
-  public synchronized double ysheet(double lat) {
+  public double ysheet(double lat) {
     return Math.log(Math.tan(QUARTER_PI + (lat * PIby360)));
   }
   
-  public synchronized double xsheet(double lon) {
+  public double xsheet(double lon) {
     return lon;
   }
 
   // and these two will give you the right points on your image. all the constants can be reduced to speed things up. FIXME
 
-  public synchronized double y(double lat) {
+  public double y(double lat) {
     return h - ((ysheet(lat) - ty) * ydiv);
   }
 
-  public synchronized double x(double lon) {
+  public double x(double lon) {
     return (xsheet(lon) - tx) * xdiv;
   }
 
   // this is my attempt at a reverse transform... we'll see, TomC
   
-  public synchronized double lat(double y) {
+  public double lat(double y) {
     return iysheet(((h - y) / ydiv) + ty);
   }
   
-  public synchronized double lon(double x) {
+  public double lon(double x) {
     return (x / xdiv) + tx;
   }
 
   // does the inverse of ysheet, whatever that does
-  public synchronized double iysheet(double y) {
+  public double iysheet(double y) {
     return (Math.atan(Math.pow(Math.E,y)) - QUARTER_PI)/PIby360;
   }
 
 
   // is a point inside width and height?
 
-  public synchronized boolean projectable(double lat, double lon) {
+  public boolean projectable(double lat, double lon) {
     // top left?                                     bottom right?
     return lat < clat + dlat && lon > clon - dlon && lat > clat - dlat && lon < clon + dlon;
   }
 
-  public synchronized Point getTopLeft() {
+  public Point getTopLeft() {
     return tl;
   }
   
-  public synchronized Point getBottomRight() {
+  public Point getBottomRight() {
     return br;
   }
-
+  
   // TODO transform convenience methods for Point2f->OSMPoint and back again
 
 }
+
+

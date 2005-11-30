@@ -23,7 +23,7 @@ USB='USBOPT=-DNO_USB'
 
 # Configure Qt paths
 QTINCPATH = /usr/include/qt3
-QTLIB = -lqt
+QTLIB = -lqt-mt
 QTLIBPATH = -L/usr/lib
 MOC=moc
 

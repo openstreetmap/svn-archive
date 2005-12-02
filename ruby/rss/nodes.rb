@@ -75,12 +75,12 @@ begin
     lon = sprintf("%0.10f", row['longitude'])
 
     title = Element.new 'title', item
-    item.text = state + ' node'
+    title.text = state + ' node'
     link = Element.new 'link', item
     link.text = "http://www.openstreetmap.org/edit/view-map.html?lat=#{lat}&lon=#{lon}&scale=6.6666666e-05"
    
     description = Element.new 'description', item
-    description.text = state + " node at #{lat}/#{lon} last edited by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} "
+    description.text = state + " node at #{lat}/#{lon} last edited by #{row['user'].gsub('.',' dot ').gsub('@',' at ')}, " + Time.at( row["timestamp"].to_i / 1000 ).to_s
     pubDate = Element.new 'pubDate', item
     pubDate.text = Time.at( row["timestamp"].to_i / 1000 )
 

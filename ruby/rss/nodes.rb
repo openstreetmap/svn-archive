@@ -1,14 +1,9 @@
 #!/usr/bin/ruby
 require 'cgi'
-require "mysql"
 require 'rexml/document'
+load 'osm/dao.rb'
 
 include REXML
-
-MYSQL_SERVER = "128.40.59.181"
-MYSQL_USER = "openstreetmap"
-MYSQL_PASS = "openstreetmap"
-MYSQL_DATABASE = "openstreetmap"
 
 cgi = CGI.new
 
@@ -25,9 +20,6 @@ end
 
 begin
 
-  #connect to the MySQL server
-  dbh = Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
-  # get server version string and display it
 
   if ! mostrecent then
   	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user  from (select * from nodes where latitude < #{latitude} + .01 and latitude > #{latitude} - .01 and longitude <  #{longitude} + .01 and longitude > #{longitude} - .01 order by timestamp desc) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid limit 40;"
@@ -37,7 +29,8 @@ begin
 	description = "OpenStreetMap most recently edited nodes"
   end
 
-  res = dbh.query(query)
+  dao = OSM::Dao.instance
+  res = dao.call_sql { query }
 
   rss = Element.new 'rss'
   rss.attributes['version'] = "2.0"

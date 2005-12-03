@@ -1,60 +1,68 @@
 #!/usr/bin/ruby
-require "mysql"
-require 'rss/2.0'
+load 'osm/dao.rb'
+require 'rexml/document'
 
-# FIXME use and xml or rss library
-# FIXME use an a
-
-MYSQL_SERVER = "128.40.59.181"
-MYSQL_USER = "openstreetmap"
-MYSQL_PASS = "openstreetmap"
-MYSQL_DATABASE = "openstreetmap"
+include REXML
 
 begin
 
-  #connect to the MySQL server
-  dbh = Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
-  # get server version string and display it
+  dao = OSM::Dao.instance
 
-  res = dbh.query('select a.timestamp, a.name, a.size as count, b.latitude, b.longitude,c.user from 
+  res = dao.call_sql { 'select a.timestamp, a.name, a.size as count, a.latitude, a.longitude,c.user from 
     (select * from points_meta_table where visible = true order by timestamp desc limit 20) as a, 
-    (select gpx_id,latitude, longitude from tempPoints group by gpx_id) as b,
     (select * from user) as c 
-      where a.uid = b.gpx_id and a.user_uid = c.uid order by timestamp desc;')
+      where a.user_uid = c.uid order by timestamp desc;' }
 
-  rss = RSS::Rss.new("2.0")
-  chan = RSS::Rss::Channel.new
-  chan.title = 'OpenStreetMap GPX Uploads'
-  chan.description = 'This is a list of the most recent GPX file uploads to openstreetmap.org'
-  chan.link = 'http://www.openstreetmap.org/'
-  rss.channel = chan
+  rss = Element.new 'rss'
+  rss.attributes['version'] = "2.0"
+  rss.attributes['xmlns:geo'] = "http://www.w3.org/2003/01/geo/wgs84_pos#"
+  channel = Element.new 'channel', rss
+  title = Element.new 'title', channel
+  title.text =  'OpenStreetMap GPX Uploads'
+  description_el = Element.new 'description', channel
+  description_el.text = 'OpenStreetMap GPX Uploads'
+  link = Element.new 'link', channel
+  link.text = 'http://www.openstreetmap.org/'
 
-  image = RSS::Rss::Channel::Image.new
-  image.url = "http://www.openstreetmap.org/feeds/mag_map-rss2.0.png"
-  image.title = "OpenStreetMap"
-  image.width = 100
-  image.height = 100
-  image.link = chan.link
-  chan.image = image
-  
+  image = Element.new 'image', channel
+  url = Element.new 'url', image
+  url.text = "http://www.openstreetmap.org/feeds/mag_map-rss2.0.png"
+  title = Element.new 'title', image
+  title.text = "OpenStreetMap"
+  width = Element.new 'width', image
+  width.text = 100
+  height = Element.new 'height', image
+  height.text = 100
+  link = Element.new 'link', image
+  link.text = 'http://www.openstreetmap.org/'
+ 
   res.each_hash do |row|
-    
-    item = RSS::Rss::Channel::Item.new
-    item.title = row['name']
-    item.link = "http://www.openstreetmap.org/edit.html?lat=#{row['latitude']}&lon=#{row['longitude']}&zoom=14"
-    item.description = "GPX file made by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."
-    item.date = Time.at( row["timestamp"].to_i / 1000 )
-    chan.items << item 
+    item = Element.new 'item', channel
 
+    lat = sprintf("%0.10f", row['latitude'])
+    lon = sprintf("%0.10f", row['longitude'])
+
+    title = Element.new 'title', item
+    title.text = row['name']
+    link = Element.new 'link', item
+    link.text = "http://www.openstreetmap.org/edit.html?lat=#{lat}&lon=#{lon}}&zoom=14"
+   
+    description = Element.new 'description', item
+    description.text = "GPX file made by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."
+    pubDate = Element.new 'pubDate', item
+    pubDate.text = Time.at( row["timestamp"].to_i / 1000 )
+
+    lat_el = Element.new 'geo:lat', item
+    lat_el.text = lat
+    lon_el = Element.new 'geo:lon', item
+    lon_el.text = lon
   end
 
   puts rss.to_s
+
 
 rescue MysqlError => e
   print "Error code: ", e.errno, "\n"
   print "Error message: ", e.error, "\n"
 
-ensure
-  # disconnect from server
-  dbh.close if dbh
 end

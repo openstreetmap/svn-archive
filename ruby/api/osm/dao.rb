@@ -540,7 +540,7 @@ module OSM
         dbh = get_connection
 
         
-        q = "select distinct latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000"
+        q = "select distinctrow latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000"
 
         res = dbh.query(q)
         

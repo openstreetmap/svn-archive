@@ -11,7 +11,7 @@ module OSM
     def initialize
       @root = Element.new 'gpx'
       @root.attributes['version'] = "1.0"
-      @root.attributes['xmlns'] = "http://www.topografix.com/GPX/1/0/gpx.xsd"
+      @root.attributes['xmlns'] = "http://www.topografix.com/GPX/1/0/"
       @root.attributes['creator'] = "OpenStreetMap.org"
     end
 

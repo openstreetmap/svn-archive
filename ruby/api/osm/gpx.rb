@@ -12,6 +12,7 @@ module OSM
       @root = Element.new 'gpx'
       @root.attributes['version'] = "1.0"
       @root.attributes['xmlns'] = "http://www.topografix.com/GPX/1/0/gpx.xsd"
+      @root.attributes['creator'] = "OpenStreetMap.org"
     end
 
     def addnode(node)

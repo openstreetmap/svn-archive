@@ -125,7 +125,7 @@ else
 # show previously uploaded files
 %>
   <h3>Previously uploaded GPX files:</h3>
-    <table id="keyvalue">
+    <table id="keyvalue" cellpadding="3">
     <tr>
       <th>Filename</th>
       <th>Points</th>
@@ -139,8 +139,8 @@ else
     gpxfiles.each_hash do |row|
       %>
       <tr>
-        <td><%=row['name']%></td>
-        <td><%=row['size']%></td>
+        <td><a href="get-gpx.html?gpx_id=<%=row['uid']%>"><%=row['name']%></a></td>
+        <td align="right"><%=row['size']%></td>
         <td><%=Time.at(row['timestamp'].to_i / 1000).strftime('%d-%b-%Y')%></td>
         <td>
           <a href="edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14">edit</a>, 

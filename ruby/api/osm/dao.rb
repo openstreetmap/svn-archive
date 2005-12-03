@@ -559,6 +559,33 @@ module OSM
 
     end
 
+
+    def get_gpx_points(gpx_id)
+      points = Array.new
+
+      begin
+
+        dbh = get_connection
+        
+        q = "select latitude, longitude, timestamp from tempPoints where gpx_id = #{gpx_id} limit 5000"
+
+        res = dbh.query(q)
+        
+        res.each_hash do |row|
+          points.push Trackpoint.new(row['latitude'].to_f, row['longitude'].to_f)
+        end
+
+        return points
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+    end
+
     
     def getlines(nodes)
       clausebuffer = '('

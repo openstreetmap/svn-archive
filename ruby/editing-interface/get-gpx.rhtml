@@ -1,0 +1,46 @@
+<%
+
+require 'stringio'
+
+dao = nil
+cgi = nil
+loggedin = false
+uid = -1
+
+require 'cgi'
+load 'osm/dao.rb'
+load 'osm/gpx.rb'
+cgi = CGI.new
+dao = OSM::Dao.instance
+
+r = Apache.request
+r.content_type = 'text/plain'
+
+token,uid = dao.check_cookie?(cgi)
+if uid 
+  loggedin = true
+  email = dao.email_from_user_uid(uid)
+end
+
+gpxid = cgi['gpx_id'].to_i
+
+filename = "/home/osm/gpx/#{gpxid}.gpx".untaint
+
+if dao.does_user_own_gpx?(uid, gpxid)
+  if loggedin && gpxid != 0
+    if File.exists?(filename) && File.size(filename) > 0
+       File.new(filename).each do |line|
+        puts line
+      end
+    else
+      points = dao.get_gpx_points(gpxid)
+      gpx = OSM::Gpx.new
+      gpx.addtrk points
+      puts gpx.to_s_pretty
+    end
+  end
+else
+  puts "Sorry, that gpx is owned by another user."
+end
+
+%>

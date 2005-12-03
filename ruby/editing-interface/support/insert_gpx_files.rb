@@ -159,6 +159,13 @@ It looks like your gpx file,
 uploaded to OpenStreetMap's database ok with #{points} out of
 a possible #{poss_points} track points in the GPX.
 
+Please see the link below to find out more about uploading GPX
+files to OpenStreetMap.
+
+  http://www.openstreetmap.org/wiki/index.php/Upload
+
+
+
 Have fun
 
 
@@ -179,6 +186,10 @@ Please consult the error message below. If you think this is a bug please
 have a look at how to report it:
 
   http://www.openstreetmap.org/wiki/index.php/Bug_Reporting
+
+and about uploading in general:
+
+  http://www.openstreetmap.org/wiki/index.php/Upload
 
 #{error_msg}
 
@@ -223,6 +234,10 @@ This can happen, try it again. If errors persist, please report a bug:
 
   http://www.openstreetmap.org/wiki/index.php/Bug_Reporting
 
+and learn about uploading in general:
+
+  http://www.openstreetmap.org/wiki/index.php/Upload
+
 have fun
 
 
@@ -242,6 +257,8 @@ END_OF_MESSAGE
 
   if !DEBUG
     dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
+    puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_uid}.gpx"
+    `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_uid}.gpx`
     File.delete('/home/steve/bin' + filename)
     File.delete('/home/steve/bin' + filename + '.yeah')
    `ssh 128.40.59.140 rm #{filename}`

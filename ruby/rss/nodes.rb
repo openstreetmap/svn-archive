@@ -5,6 +5,9 @@ load 'osm/dao.rb'
 
 include REXML
 
+# FIXME: abstract the rss in to its own class like the ruby rss library
+# FIXME: handle sql errors that don't get caught *here* because of call_sql
+
 cgi = CGI.new
 
 if cgi['latitude'].length > 0 then
@@ -89,7 +92,4 @@ rescue MysqlError => e
   print "Error code: ", e.errno, "\n"
   print "Error message: ", e.error, "\n"
 
-ensure
-  # disconnect from server
-  dbh.close if dbh
 end

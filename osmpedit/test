@@ -1,0 +1,139 @@
+#    Copyright (C) 2005 Tommy Persson, tpe@ida.liu.se
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
+
+use strict;
+use osmutil;
+
+use vars qw ($opt_getnode $opt_getsegment $opt_createsegment $opt_from 
+	     $opt_to $opt_deletesegment $opt_createnode);
+use Getopt::Mixed;
+Getopt::Mixed::getOptions("getnode=s getsegment createsegment from=s to=s
+                           deletesegment=s createnode");
+
+
+my $username = "tpe\@ida.liu.se";
+my $password = "marvin";
+my $lat = 58.408306;
+my $lon = 15.558601;
+
+if (defined $opt_createnode) {
+    my $uid = osmutil::create_node ($lat, $lon, "name=TommyPersson",
+				    $username, $password);
+    print STDERR "UID: $uid\n";
+    exit 0;
+}
+
+if (defined $opt_getnode) {
+    my $node = osmutil::get_node ($opt_getnode, $username, $password);
+    print "NODE: $node\n";
+    exit 0;
+}
+
+if (defined $opt_createsegment) {
+    if (not defined $opt_from) {
+	print STDERR "--from must be defined\n";
+	exit 1;
+    }
+    if (not defined $opt_to) {
+	print STDERR "--to must be defined\n";
+	exit 1;
+    }
+    my $resp = osmutil::create_segment ($opt_from, $opt_to, "", $username,
+					$password);
+    print "Segment created: $resp\n";
+    exit 0;
+}
+
+if (defined $opt_deletesegment) {
+    my $uid = $opt_deletesegment;
+    my $resp = osmutil::delete_segment ($uid, $username, $password);
+    if ($resp < 0) {
+	print "DELETE FAILED: $uid\n";
+    } else {
+	print "Segment $uid deleted\n";;
+    }
+    exit 0;
+}
+
+
+
+my $uid = osmutil::create_node ($lat, $lon, "name=TommyPersson",
+				$username, $password);
+print STDERR "UID: $uid\n";
+
+if ($uid < 0) {
+    print STDERR "Failure creating node\n";
+    exit 0;
+}
+
+my $node = osmutil::get_node ($uid, $username, $password);
+print STDERR "NODE: $node\n";
+
+if (not osmutil::update_node ($uid, $lat, $lon, "name=Tommy", 
+			      $username, $password)) {
+    print STDERR "Update failed\n";
+}
+
+if (not osmutil::update_node ($uid, $lat, $lon, "name=TommyUpd", 
+			      $username, $password)) {
+    print STDERR "Update failed\n";
+}
+
+my $node = osmutil::get_node ($uid, $username, $password);
+print STDERR "NODE: $node\n";
+
+if (not osmutil::update_node_tags ($uid, "name=TommyUpdate", 
+				   $username, $password)) {
+    print STDERR "Update tags failed\n";
+}
+
+my $node = osmutil::get_node ($uid, $username, $password);
+print STDERR "NODE: $node\n";
+
+
+my $resp = osmutil::delete_node ($uid, $username, $password);
+if ($resp < 0) {
+    print "DELETE FAILED: $uid\n";
+} else {
+    print "Node $uid deleted\n";;
+}
+
+
+my $nodes = osmutil::get_nodes ($username, $password, "247989,264385,270534");
+print STDERR "NODE: $nodes\n";
+
+exit 0;
+
+my $data = "<osm version='0.2'>
+<node lon='15.558601' tags='' lat='58.408306'/>
+</osm>";
+
+my $uid = curl::put_data ("newnode", $data, "tpe\@ida.liu.se", "marvin");
+
+##my $uid = 275900;
+
+my $resp = curl::get ("node/$uid", "tpe\@ida.liu.se", "marvin");
+
+print "RESP: $resp\n";
+
+$resp = curl::delete ("node/$uid", "tpe\@ida.liu.se", "marvin");
+
+print "RESP: $resp\n";
+
+my $resp = curl::get ("node/$uid", "tpe\@ida.liu.se", "marvin");
+
+print "RESP: $resp\n";
+

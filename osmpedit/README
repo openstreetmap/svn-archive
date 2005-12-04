@@ -1,0 +1,19 @@
+
+The following Perl modules are needed for osmpedit:
+
+    WWW::Curl::easy
+    XML::TokeParser
+    Tk
+    Tk::JPEG
+    Image::Size
+    Getopt::Mixed
+
+In Debian unstable I had to install Tk::JPEG and XML::TokeParser using
+CPAN.  In stable I think I also had to install XML::TokeParser this
+way.  Tk::JPEG seems to install a new Tk also.
+
+For documentation of osmpedit do
+
+    perldoc osmpedit
+
+

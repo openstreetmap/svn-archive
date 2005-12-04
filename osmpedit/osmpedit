@@ -1,0 +1,683 @@
+#!/usr/bin/env perl
+
+#    Copyright (C) 2005 Tommy Persson, tpe@ida.liu.se
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
+
+
+use landsat;
+use trackcollection;
+use osm;
+
+use strict;
+
+my $trackcollection = new trackcollection;
+
+use Tk;
+use Tk::JPEG;
+use Image::Size;
+
+
+use vars qw ($opt_lat $opt_lon $opt_petersfield $opt_passwd $opt_user);
+use Getopt::Mixed;
+Getopt::Mixed::getOptions("lat=s lon=s petersfield passwd=s user=s");
+
+my $password = $ENV{OSMPASSWD};
+my $user = $ENV{OSMUSER};
+
+$user = $opt_user if defined $opt_user;
+$password = $opt_passwd if defined $opt_passwd;
+
+
+if (not $user or not $password) {
+    print STDERR "\nOSM user and passsword has to be specified using the\n";
+    print STDERR "environment variables OSMUSER and OSMPASSWD or using\n";
+    print STDERR "the options --user and --passwd.\n";
+    exit 0;
+}
+
+$opt_lat = 51.015 if defined $opt_petersfield;
+$opt_lon = -0.95 if defined $opt_petersfield;
+
+my $editmode = "segment";
+##my $editmode = "create";
+my $movedid = 0;
+my $from_node_uid = 0;
+my $segment_create_id = 0;
+my $marked_item_id = 0;
+my $marked_item_colour = "white";
+
+my $x_motionimage = 0;
+my $y_motionimage = 0;
+
+my $lat_motionimage = 0;
+my $lon_motionimage = 0;
+
+
+
+my $main = new MainWindow;
+$main->title ("OSMEDIT");
+
+my $tbframe = $main->Frame ()->pack (-side => "top");
+
+my $can_frame  = $main->Frame->pack (-side => "top");
+
+my $can = $can_frame->Canvas (-width => 600,
+			      -height => 500)->pack (-side => "left");
+
+my $classframe = $can_frame->Frame->pack (-side => "left");
+
+create_events ($can);
+
+my $landsat = new landsat ();
+$landsat->set_frame ($can_frame);
+$landsat->set_canvas ($can);
+$landsat->set_class_frame ($classframe);
+
+foreach my $filename (@ARGV) {
+#    print STDERR "TRACK FILE: $filename\n";
+    my $track = new track ();
+#    $track->parse_file ("/home/tompe/GPS/Walk014_cGPS_00000001.gpx");
+    $track->parse_file ($filename);
+    $trackcollection->add_track ($track);
+}
+
+$landsat->set_track_collection ($trackcollection);
+
+my ($start_lat, $start_lon) = (58.4, 15.6);
+print "NTRACKS: ", $trackcollection->get_n_tracks (), "\n";
+
+if ($trackcollection->get_n_tracks () > 0) {
+    ($start_lat, $start_lon) = $trackcollection->get_center ();
+    print STDERR "CENTER: $start_lat $start_lon\n";
+}
+
+$start_lat = $opt_lat if defined $opt_lat;
+$start_lon = $opt_lon if defined $opt_lon;
+
+my $scale = 100;
+
+#my ($clamp_lat, $clamp_lon) =
+#    $landsat->clamp_to_center_of_tile ($start_lat, $start_lon, $scale);
+#print STDERR "CLAMP: $start_lat $start_lon\n";
+
+my $osm = new osm ();
+$osm->set_username ($user);
+$osm->set_password ($password);
+$osm->parse ($landsat);
+
+$landsat->set_osm ($osm);
+$landsat->set_center ($start_lat, $start_lon);
+$landsat->set_scale ($scale);
+
+##$landsat->display_tile (58.4090, 15.561, 100);
+##$landsat->display_tile ($lat, $lon, $scale);
+$landsat->display ();
+$landsat->update_tracks ();
+$landsat->update_osm ();
+
+
+my $bframe = $main->Frame ()->pack ();
+
+$bframe->Button (-text => "Reset View",
+		 -command => sub { 
+		     $landsat->set_center ($start_lat, $start_lon);
+		     $landsat->set_scale ($scale);
+		     $landsat->display ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		     }
+		 )->pack (-side => "left");
+
+
+$bframe->Button (-text => "North",
+		 -command => sub { 
+		     $landsat->north ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		     }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "South",
+		 -command => sub {
+		     $landsat->south ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		 }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "West",
+		 -command => sub { 
+		     $landsat->west ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		 }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "East",
+		 -command => sub {
+		     $landsat->east ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		 }
+		 )->pack (-side => "left");
+
+
+$bframe->Button (-text => "ZoomIn",
+		 -command => sub { 
+		     $landsat->zoomin ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		     }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "ZoomOut",
+		 -command => sub { 
+		     $landsat->zoomout ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		 }
+		 )->pack (-side => "left");
+
+
+$bframe->Button (-text => "Reload OSM",
+		 -command => sub { $landsat->load_osm ()}
+		 )->pack (-side => "left");
+
+
+$tbframe->Button (-text => "Toggle tracks",
+		  -command => sub { $landsat->toggle_tracks ()}
+		  )->pack (-side => "left");
+
+
+$tbframe->Button (-text => "Toggle nodes",
+		  -command => sub { $landsat->toggle_nodes ()}
+		  )->pack (-side => "left");
+
+$tbframe->Button (-text => "Toggle segments",
+		  -command => sub { $landsat->toggle_segments ()}
+		  )->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Move",
+                       -value => "move",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Create",
+                       -value => "create",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Delete",
+                       -value => "delete",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Segment",
+                       -value => "segment",
+                       -state => "normal")->pack (-side => "left");
+
+create_class_menu ($tbframe);
+
+
+
+
+
+MainLoop;
+
+
+
+#
+# Buttons
+#
+
+sub button1 {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+##    print "Item: $id\n";
+    $x = $can->canvasx($x);
+    $y = $can->canvasy($y);
+
+##    print STDERR "CANPOS: $x $y\n";
+    my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
+    print STDERR "POSITION: $lat $lon\n";
+
+    if ($editmode eq "create") {
+	my $uid = $osm->create_node ($lat, $lon, "");
+	if ($uid) {
+	    my $item = $osm->draw_node ($can, $x, $y, 0);
+	    $osm->connect_uid_item ($uid, $item);
+	} else {
+	    print STDERR "WARNING: Failed to create node: $uid\n";
+	}
+    }
+
+    if ($editmode eq "delete") {
+	if ($osm->delete ($id)) {
+	    $can->delete ($id);
+	} else {
+	    print STDERR "WARNING: Delete failed\n";
+	}
+    }
+
+    if ($editmode eq "segment" and not $from_node_uid) {
+	$from_node_uid = 0;
+	my $node = $osm->get_node_from_item ($id);
+	if ($node) {
+	    $from_node_uid = $node->get_uid ();
+	    my ($x0, $y0, $x1, $y1) = $can->coords ($id);
+	    my $xx = ($x0+$x1)/2;
+	    my $yy = ($y0+$y1)/2;
+	    $segment_create_id = 
+		$can->create ('line', $xx, $yy, $xx, $yy,
+#                      -arrow => "last",
+			      -fill => "white",
+			      -width => 2,
+			      -tag => "osmsegment");
+	    $can->raise ("osmnode", "osmsegment");
+
+	}
+	my $seg = $osm->get_segment_from_item ($id);
+	if ($seg) {
+	    print STDERR "Update class for segment\n";
+	    $osm->update_segment_class ($id);
+	    $osm->update_segment_colour ($id, $can);
+	    $marked_item_colour = $can->itemcget ($id, "-fill");
+	}
+	return;
+    }
+
+    if ($editmode eq "segment" and $from_node_uid) {
+	my $tonode = $osm->get_node_from_item ($id);
+	if ($tonode and $from_node_uid) {
+	    my $touid = $tonode->get_uid ();
+	    print STDERR "CREATE SEGMENT: $from_node_uid -> $touid\n";
+	    my $suid = $osm->create_segment ($from_node_uid, $touid);
+	    if ($suid) {
+		$osm->connect_uid_item ($suid, $segment_create_id);
+		$osm->update_segment_colour ($segment_create_id, $can);
+	    } else {
+		$can->delete ($segment_create_id);
+	    }
+	} else {
+	    $can->delete ($segment_create_id);
+	}
+	$segment_create_id = 0;
+	$from_node_uid = 0;
+	return;
+    }
+
+
+}
+
+sub button1release {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+##    print "Item: $id\n";
+    $x = $can->canvasx($x);
+    $y = $can->canvasy($y);
+
+##    print STDERR "CANPOS: $x $y\n";
+    my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
+    print STDERR "$lat $lon\n";
+
+    if ($editmode eq "move") {
+	if ($editmode eq "move" and $movedid) {
+	    if (not $osm->update_node ($movedid, $lat, $lon)) {
+		print STDERR "WARNING UPDATE OF NODE FAILED\n";
+	    }
+	}
+	$movedid = 0;
+    }
+
+}
+
+
+sub button2 {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+}
+
+sub button3 {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+
+##    print "Info for Item: $id\n";
+
+    my $node = $osm->get_node_from_item ($id);
+
+    if ($node) {
+	$node->print ();
+    }
+
+    my $seg = $osm->get_segment_from_item ($id);
+
+    if ($seg) {
+	$seg->print ();
+    }
+
+#    my $keyvalues = $osm->key_value_hash ($id);
+#    if ($keyvalues) {
+#	foreach my $k (keys %{$keyvalues}) {
+#	    print STDERR "$k - $keyvalues->{$k}\n";
+#	}
+#   }
+}
+
+sub motion {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+    $x = $can->canvasx($x);
+    $y = $can->canvasy($y);
+
+##    print "MOTION: $id\n";
+    my $node = $osm->get_node_from_item ($id);
+    my $seg = $osm->get_segment_from_item ($id);
+
+    if ($marked_item_id) {
+	$can->itemconfigure ($marked_item_id, -fill => $marked_item_colour);
+    }
+    if ($node or $seg) {
+	$marked_item_id = $id;
+	$marked_item_colour = $can->itemcget ($id, "-fill");
+	$can->itemconfigure ($id, -fill => "red");
+    } 
+
+    if ($editmode eq "segment" and $from_node_uid) {
+##	print STDERR "Bt-motion: $id $x $y\n";
+	if ($segment_create_id) {
+	    my ($x0, $y0, $x1, $y1) = $can->coords ($segment_create_id);
+	    $can->coords ($segment_create_id, $x0, $y0, $x, $y);
+	}
+
+    }
+
+
+##    $x = $can->canvasx($x);
+##    $y = $can->canvasy($y);
+##    $can->itemconfigure ($x, $y);
+#    ($global_xpos, $global_ypos) = $viewinfo->ctom ($x, $y);
+}
+
+sub b1motion {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+
+    if ($editmode eq "move") {
+	my $node = $osm->get_node_from_item ($id);
+	if ($node) {
+	    $movedid = $id;
+	    $x = $can->canvasx($x);
+	    $y = $can->canvasy($y);
+##	print STDERR "Bt-motion: $id $x $y\n";
+	    $osm->move_node ($id, $x, $y, $can);
+	}
+    }
+
+}
+
+
+sub b1motionimage {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'image');
+    my $id = $item[0];
+
+    my $dx = $x - $x_motionimage;
+    my $dy = $y - $y_motionimage;
+
+    my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
+    my $dlat = ($lat_motionimage - $lat)/10;
+    my $dlon = ($lon_motionimage - $lon)/10;
+
+###    print STDERR "btmotionimage: $dx $dy  --- $dlat $dlon\n";
+
+    $landsat->add_to_center ($dlat, $dlon);
+    $landsat->display ();
+
+#    foreach my $item (@item) {
+#	my ($x0, $y0) = $can->coords ($id);
+#	$x0 += $dx;
+#	$y0 += $dy;
+#	$can->coords ($id, $x0, $y0);
+#    }
+
+    $x_motionimage = $x;
+    $y_motionimage = $y;
+
+}
+
+sub start_motionimage {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+
+##    print STDERR "startmotionimage: $x $y\n";
+    
+    $x_motionimage = $x;
+    $y_motionimage = $y;
+
+    ($lat_motionimage, $lon_motionimage) = $landsat->ctowgs84 ($x, $y);
+    $can->delete ("track");
+    $can->delete ("osmnode");
+    $can->delete ("osmsegment");
+}
+
+sub release_motionimage {
+##    print STDERR "RELEASE_MOTIONIMAGE\n";
+    $landsat->update_tracks ();
+    $landsat->update_osm ();
+    $landsat->fix_order ();
+}
+
+
+
+sub create_events {
+    my $can = shift;
+
+    $can->CanvasBind('<1>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button1 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<ButtonRelease-1>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button1release ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<2>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button2 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<Shift 2>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        shift_button2 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<3>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button3 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<Motion>' => sub {
+	motion ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->CanvasBind('<B1-Motion>' => sub {
+	b1motion ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->bind("image", '<B1-Motion>' => sub {
+	b1motionimage ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->bind("image", '<1>' => sub {
+	start_motionimage ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->bind("image", '<ButtonRelease-1>' => sub {
+	release_motionimage ($Tk::event->x, $Tk::event->y);
+    });
+}
+
+
+sub create_class_menu {
+    my $frame = shift;
+    my $mb = $frame->Menubutton (-text => "none",
+                                 -relief => 'raised',
+				 -bg => "white",
+				 -width => 20,
+                                 );
+    $mb->pack (-side => 'left',
+               -fill => "x",
+               -expand => 1);
+
+    foreach my $k ($osm->get_segment_classes ()) {
+###	print "CLASS KEY: $k\n";
+	$mb->command (-label => $k,
+		      -command => sub { 
+			  $osm->set_default_class ($k);
+			  $mb->configure (-text => $k);
+			  $mb->configure (-bg => $osm->get_segment_colour ($k, "yes", "yes", "yes"));
+		      });
+
+    }
+    return $mb;
+}
+
+
+=pod
+
+=head1 NAME
+
+osmpedit - Editor for Open Street Map data
+
+=head1 SYNOPSIS
+
+osmpedit [--lat lat] [--lon lon] [--user user] [--passwd passwd] 
+         [track1.gpx track2.gpx ...]
+
+=head1 DESCRIPTION
+
+Editor for Open Street Map data.  You need to have an internet connection
+to be able to edit the data.
+
+If track files are given they are read in and the start position for
+the editor is centered on the tracks.
+
+Landsat tiles will be loaded and cached in $HOME/.osmpedit/cache/.
+You navigate by pressing B<North>, B<South>, B<West>, B<East>,
+B<ZoomIn> and B<ZoomOut>.  You can also move the navigate by pressing
+the left button on the background image and move the mouse.
+
+To load the OSM data press B<Reload OSM>.  This data is cached in
+$HOME/.osmpedit/cache/lastosm.xml and the nodes and segments in this
+file will be shown when B<osmpedit> is started.
+
+B<Toggle tracks>, B<Toggle nodes> and B<Toggle segments> toggles what
+is shown in the editing area.
+
+Pressing the right button on some item often print some information
+about the item in the window where B<osmpedit> was started. The left
+button is used for most of the editing.
+
+There are for editing modes: B<Move>, B<Create>, B<Delete> and
+B<Segment>.
+
+In B<Move> mode you can move a node by pressing the left button, move
+the mouse and then release the button at the wanted position.  When
+you release the button the data is updated in the OSM server.
+
+In B<Create> mode pressing the left button will create a new node in
+the OSM server and display it in the editing area.
+
+In B<Delete> mode pressing the left button over a node will delete it.
+Pressing it over a segment will delete the segment.  It is probably
+best to delete segments before nodes.
+
+In B<Segment> mode pressing the left button over segment will change
+its class to the class selected by the menu button to the right of the
+B<Segment> choice.  Different classes of segment will be displayed in
+different colours.  The colour used for a class is the same as the
+background colour for the menu button when that class is selected.  A
+new segment is created by pressing and releasing the left button over
+the B<from> node.  Then move the cursor to the B<to> node and press
+and release the left button.  The new segment is created in the OSM
+server when the left button is pressed over the B<to> node.
+
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--lat latitude>
+
+Latitude for start position.  This overrides the value computed from input
+tracks.
+
+=item B<--lon longitude>
+
+Longitude for start position.  This overrides the value computed from input
+tracks.
+
+=item B<--user username>
+
+Specify the OSM user name.  This value overrides the value of the enviroment
+variable OSMUSER.
+
+=item B<--passwd password>
+
+Specify the OSM user name.  This value overrides the value of the enviroment
+variable OSMPASSWD.
+
+=back
+
+=head1 EXAMPLES
+
+   osmpedit --lat 58.4 --lon 16.6
+
+   osmpedit --user tpe@ida.liu.se --passwd secret buss213.gpx
+
+   env OSMUSER=tpe@ida.liu.se OSMPASSWD=secret osmpedit buss213.gpx
+
+=head1 AUTHOR
+
+Tommy Persson (tpe@ida.liu.se)
+
+=cut
+

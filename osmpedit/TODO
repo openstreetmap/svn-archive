@@ -1,15 +1,15 @@
 
+- upload track file button
 
-- Scroll bug in London
-51.55-0.15.jpg
-/osmpedit --user tpe@ida.liu.se --passwd marvin --lat 51.6 --lon -0.2
+- lat, lon display
 
+- goto specified lat, lon
+
+- save navigation points that you can jump to
 
 - Save where you are in file
 
 - --no-landsat
-
-- scrolling a la webbsite??
 
 - Remove cache???  Toggle may solve this problem.
 
@@ -21,7 +21,7 @@
 
 - Filter on HDOP value (throw away points with value less than 4?).
 
-- Road type: Motorväg, Motorled, 4-fältsväg, Vanlig väg
+- Road type Sweden: Motorväg, Motorled, 4-fältsväg, Vanlig väg
 
-- Road category: Europaväg, Riksväg, Primär länsväg, Sekundär länsväg, 
+- Road category Sweden: Europaväg, Riksväg, Primär länsväg, Sekundär länsväg, 
                  Sekundär länsväg, Tertiär länsväg, Sek-tert länsväg,

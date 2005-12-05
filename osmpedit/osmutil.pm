@@ -85,9 +85,10 @@ sub update_node_tags {
     my $password = shift;
 
     my $data = get_node ($uid, $username, $password);
+    print STDERR "UPDATE DATA $tags: $data\n";
     if ($data) {
-	$data =~ s/tags=\\'(.*?)\\'/$tags/;
-##	print STDERR "UPDATE DATA: $data\n";
+	$data =~ s/tags.*?\s/$tags /;
+	print STDERR "UPDATE DATA: $data\n";
 	return update_node_data ($uid, $data, $username, $password);
     } else {
 	return 0;

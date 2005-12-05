@@ -18,14 +18,17 @@ use strict;
 use osmutil;
 
 use vars qw ($opt_getnode $opt_getsegment $opt_createsegment $opt_from 
-	     $opt_to $opt_deletesegment $opt_createnode);
+	     $opt_to $opt_deletesegment $opt_createnode $opt_passwd $opt_user
+	     $opt_nodetagupdate);
+
 use Getopt::Mixed;
 Getopt::Mixed::getOptions("getnode=s getsegment createsegment from=s to=s
-                           deletesegment=s createnode");
+                           deletesegment=s createnode passwd=s user=s
+			   nodetagupdate");
 
 
-my $username = "tpe\@ida.liu.se";
-my $password = "marvin";
+my $username = $opt_user;
+my $password = $opt_passwd;
 my $lat = 58.408306;
 my $lon = 15.558601;
 
@@ -68,52 +71,56 @@ if (defined $opt_deletesegment) {
     exit 0;
 }
 
+if (defined $opt_nodetagupdate) {
 
+    my $uid = osmutil::create_node ($lat, $lon, "", $username, $password);
+    print STDERR "UID: $uid\n";
 
-my $uid = osmutil::create_node ($lat, $lon, "name=TommyPersson",
-				$username, $password);
-print STDERR "UID: $uid\n";
-
-if ($uid < 0) {
-    print STDERR "Failure creating node\n";
+    if ($uid < 0) {
+	print STDERR "Failure creating node\n";
+	exit 0;
+    }
+    
+    my $node = osmutil::get_node ($uid, $username, $password);
+    print STDERR "NODE: $node\n";
+    
+    if (not osmutil::update_node ($uid, $lat, $lon, "name=Tommy1;", 
+				  $username, $password)) {
+	print STDERR "Update failed\n";
+    }
+    
+    $node = osmutil::get_node ($uid, $username, $password);
+    print STDERR "UPDATED NODE 1: $node\n";
+    
+    if (not osmutil::update_node ($uid, $lat, $lon, "name=Tommy2;", 
+				  $username, $password)) {
+	print STDERR "Update failed\n";
+    }
+    
+    my $node = osmutil::get_node ($uid, $username, $password);
+    print STDERR "UPDATED NODE 2: $node\n";
+    
+#    if (not osmutil::update_node_tags ($uid, "name=Tommy3;", 
+#				       $username, $password)) {
+#	print STDERR "Update tags failed\n";
+#    }
+    
+#    my $node = osmutil::get_node ($uid, $username, $password);
+#    print STDERR "UPDATED NODE 3: $node\n";
+    
+    
+    my $resp = osmutil::delete_node ($uid, $username, $password);
+    if ($resp < 0) {
+	print "DELETE FAILED: $uid\n";
+    } else {
+	print "Node $uid deleted\n";;
+    }
     exit 0;
 }
 
-my $node = osmutil::get_node ($uid, $username, $password);
-print STDERR "NODE: $node\n";
 
-if (not osmutil::update_node ($uid, $lat, $lon, "name=Tommy", 
-			      $username, $password)) {
-    print STDERR "Update failed\n";
-}
-
-if (not osmutil::update_node ($uid, $lat, $lon, "name=TommyUpd", 
-			      $username, $password)) {
-    print STDERR "Update failed\n";
-}
-
-my $node = osmutil::get_node ($uid, $username, $password);
-print STDERR "NODE: $node\n";
-
-if (not osmutil::update_node_tags ($uid, "name=TommyUpdate", 
-				   $username, $password)) {
-    print STDERR "Update tags failed\n";
-}
-
-my $node = osmutil::get_node ($uid, $username, $password);
-print STDERR "NODE: $node\n";
-
-
-my $resp = osmutil::delete_node ($uid, $username, $password);
-if ($resp < 0) {
-    print "DELETE FAILED: $uid\n";
-} else {
-    print "Node $uid deleted\n";;
-}
-
-
-my $nodes = osmutil::get_nodes ($username, $password, "247989,264385,270534");
-print STDERR "NODE: $nodes\n";
+#my $nodes = osmutil::get_nodes ($username, $password, "247989,264385,270534");
+#print STDERR "NODE: $nodes\n";
 
 exit 0;
 
@@ -121,19 +128,19 @@ my $data = "<osm version='0.2'>
 <node lon='15.558601' tags='' lat='58.408306'/>
 </osm>";
 
-my $uid = curl::put_data ("newnode", $data, "tpe\@ida.liu.se", "marvin");
+my $uid = curl::put_data ("newnode", $data, "$username", $password);
 
 ##my $uid = 275900;
 
-my $resp = curl::get ("node/$uid", "tpe\@ida.liu.se", "marvin");
+my $resp = curl::get ("node/$uid", "$username", $password);
 
 print "RESP: $resp\n";
 
-$resp = curl::delete ("node/$uid", "tpe\@ida.liu.se", "marvin");
+$resp = curl::delete ("node/$uid", "$username", $password);
 
 print "RESP: $resp\n";
 
-my $resp = curl::get ("node/$uid", "tpe\@ida.liu.se", "marvin");
+my $resp = curl::get ("node/$uid", "$username", $password);
 
 print "RESP: $resp\n";
 

@@ -10,26 +10,24 @@ include REXML
 
 cgi = CGI.new
 
-if cgi['latitude'].length > 0 then
+if cgi['latitude'].length == 0 || cgi['longitude'].length == 0
+  mostrecent = true
+else
 	latitude = cgi['latitude'].to_f
-else
-	mostrecent = true
-end
-if cgi['longitude'].length > 0 then
 	longitude = cgi['longitude'].to_f
-else
-	mostrecent = true
 end
 
 begin
 
 
-  if ! mostrecent then
-  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user  from (select * from nodes where latitude < #{latitude} + .01 and latitude > #{latitude} - .01 and longitude <  #{longitude} + .01 and longitude > #{longitude} - .01 order by timestamp desc) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid limit 40;"
-  	description = "OpenStreetMap nodes near #{latitude}/#{longitude}"
-  else
-	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user from (select * from nodes order by timestamp desc limit 40) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid limit 40;"
 	description = "OpenStreetMap most recently edited nodes"
+  
+  if mostrecent then
+  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user from (select * from nodes order by timestamp desc limit 40) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid limit 40;"
+  else
+  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user from (select * from nodes where latitude < #{latitude} + .2 and latitude > #{latitude} - .2 and longitude <  #{longitude} + .2 and longitude > #{longitude} - .2 order by timestamp desc limit 40) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid;"
+
+  	description += " near #{latitude}/#{longitude}"
   end
 
   dao = OSM::Dao.instance
@@ -73,7 +71,7 @@ begin
     title = Element.new 'title', item
     title.text = state + ' node'
     link = Element.new 'link', item
-    link.text = "http://www.openstreetmap.org/edit/view-map.html?lat=#{lat}&lon=#{lon}&scale=6.6666666e-05"
+    link.text = "http://www.openstreetmap.org/index.html?lat=#{lat}&lon=#{lon}&zoom=15"
    
     description = Element.new 'description', item
     description.text = state + " node at #{lat}/#{lon} last edited by #{row['user'].gsub('.',' dot ').gsub('@',' at ')}, " + Time.at( row["timestamp"].to_i / 1000 ).to_s
@@ -89,7 +87,7 @@ begin
   puts rss.to_s
 
 rescue MysqlError => e
-  print "Error code: ", e.errno, "\n"
-  print "Error message: ", e.error, "\n"
-
+  puts "Error code: ", e.errno, "\n"
+  puts "Error message: ", e.error, "\n"
 end
+

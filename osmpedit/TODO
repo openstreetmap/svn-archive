@@ -1,4 +1,21 @@
 
+- Try to recreate the testcase where a node without tag as created and
+  then the adding of tag could fail.  Add it as a test case to test.
+
+- Houses as closed loops of segments.  Generate .osg?
+
+- Enter and display street names.  How to handle street numbers?
+
+- Split segment and keeping tags when adding a node on a segment
+
+- Offline editing?  Maybe saving all transactions and then replaying
+  them.
+
+- prefetch landsat tiles
+
+- Prefetch osm data and save it in a named file that can be found
+  automatically.
+
 - upload track file button
 
 - lat, lon display

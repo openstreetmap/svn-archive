@@ -65,6 +65,12 @@ my $y_motionimage = 0;
 my $lat_motionimage = 0;
 my $lon_motionimage = 0;
 
+my $point_lat = 0;
+my $point_lon = 0;
+
+my $goto_lat = 51.5;
+my $goto_lon = 0;
+
 
 
 my $main = new MainWindow;
@@ -73,6 +79,8 @@ $main->title ("OSMEDIT");
 my $tbframe = $main->Frame ()->pack (-side => "top");
 
 my $can_frame  = $main->Frame->pack (-side => "top");
+
+my $left_side_frame = $can_frame->Frame->pack (-side => "left");
 
 my $can = $can_frame->Canvas (-width => 600,
 			      -height => 500)->pack (-side => "left");
@@ -128,6 +136,57 @@ $landsat->display ();
 $landsat->update_tracks ();
 $landsat->update_osm ();
 
+
+#
+# Left side
+#
+
+my $fwidth = 8;
+my $entrywidth = 10;
+my $tmpframe;
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Lat:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$point_lat,
+		  -width => $entrywidth,
+		  -state => "disabled")->pack (-side => "left");
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Lon:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$point_lon,
+		  -width => $entrywidth,
+		  -state => "disabled")->pack (-side => "left");
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Goto Lat:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$goto_lat,
+		  -width => $entrywidth)->pack (-side => "left");
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Goto Lon:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$goto_lon,
+		  -width => $entrywidth)->pack (-side => "left");
+
+$left_side_frame->Button (-text => "GOTO",
+		 -command => sub { 
+		     $landsat->set_center ($goto_lat, $goto_lon);
+		     $landsat->set_scale ($scale);
+		     $landsat->display ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		     }
+		 )->pack (-side => "top");
+
+
+
+#
+# Bottom button row
+#
 
 my $bframe = $main->Frame ()->pack ();
 
@@ -203,6 +262,10 @@ $bframe->Button (-text => "Reload OSM",
 		 -command => sub { $landsat->load_osm ()}
 		 )->pack (-side => "left");
 
+
+#
+# Top button row
+#
 
 $tbframe->Button (-text => "Toggle tracks",
 		  -command => sub { $landsat->toggle_tracks ()}
@@ -395,6 +458,8 @@ sub motion {
     my $id = $item[0];
     $x = $can->canvasx($x);
     $y = $can->canvasy($y);
+
+    ($point_lat, $point_lon) = $landsat->ctowgs84 ($x, $y);
 
 ##    print "MOTION: $id\n";
     my $node = $osm->get_node_from_item ($id);

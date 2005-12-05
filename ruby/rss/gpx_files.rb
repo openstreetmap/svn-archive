@@ -38,9 +38,10 @@ begin
  
   res.each_hash do |row|
     item = Element.new 'item', channel
-
-    lat = sprintf("%0.10f", row['latitude'])
-    lon = sprintf("%0.10f", row['longitude'])
+    lat = 0
+    lon = 0
+    lat = sprintf("%0.10f", row['latitude']) unless row['latitude'].to_i == 0
+    lon = sprintf("%0.10f", row['longitude']) unless row ['longitude'].to_i == 0
 
     title = Element.new 'title', item
     title.text = row['name']

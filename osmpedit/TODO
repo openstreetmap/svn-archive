@@ -1,4 +1,8 @@
 
+- Problem with Curl::Easy and Curl::easy
+
+- Fetch data for segment befor changing tags.  Merge it
+
 - Try to recreate the testcase where a node without tag as created and
   then the adding of tag could fail.  Add it as a test case to test.
 

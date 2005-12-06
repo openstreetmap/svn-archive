@@ -19,9 +19,30 @@ package curl;
 use FindBin qw($RealBin);
 use lib "$RealBin/../perl";
 
-use WWW::Curl::easy;
-
 use strict;
+
+BEGIN {
+    my $easy = 1;
+    foreach my $prefix (@INC) {
+##	print STDERR "PREFIX:$prefix\n";
+	if (-f "$prefix/WWW/Curl/Easy.pm") {
+	    print STDERR "Easy.pm found: $prefix\n";
+	    $easy = 0;
+	}
+    }
+    if ($easy) {
+	require WWW::Curl::easy;
+	import WWW::Curl::easy;
+	sub neweasy { return WWW::Curl::easy->new(); };
+    } else {
+	require WWW::Curl::Easy;
+	import WWW::Curl::Easy;
+	sub neweasy { return WWW::Curl::Easy->new(); };
+    }
+}
+
+##use WWW::Curl::easy;
+
 
 sub chunk { 
     my ($data,$pointer)=@_; 
@@ -51,7 +72,8 @@ sub grab_landsat {
 #    my $url = "http://www.ida.liu.se/~tompe/";
     print STDERR "URL:$url\n";
 
-    my $curl = WWW::Curl::easy->new();
+#    my $curl = WWW::Curl::easy->new();
+    my $curl = neweasy ();
 
     my $headers = "";
     my $body = "";
@@ -92,7 +114,9 @@ sub grab_osm {
     print STDERR "URL:$url\n";
 ##    print STDERR "$username:$password";
 
-    my $curl = WWW::Curl::easy->new();
+##    my $curl = WWW::Curl::easy->new();
+    print STDERR "CURLCLASS:curl::CURLCLASS\n";
+    my $curl = neweasy ();
 
     my $headers = "";
     my $body = "";
@@ -123,7 +147,8 @@ sub get {
     print STDERR "URL:$url\n";
 ##    print STDERR "$username:$password";
 
-    my $curl = WWW::Curl::easy->new();
+#    my $curl = WWW::Curl::easy->new();
+    my $curl = neweasy ();
 
     my $header = "";
     my $body = "";
@@ -162,7 +187,8 @@ sub delete {
     print STDERR "URL:$url\n";
 ##    print STDERR "$username:$password";
 
-    my $curl = WWW::Curl::easy->new();
+##    my $curl = WWW::Curl::easy->new();
+    my $curl = neweasy ();
 
     my $header = "";
     my $body = "";
@@ -213,7 +239,8 @@ sub put_data {
     print STDERR "URL:$url\n";
 ##    print STDERR "$username:$password";
 
-    my $curl = WWW::Curl::easy->new();
+##    my $curl = WWW::Curl::easy->new();
+    my $curl = neweasy ();
 
     $curl->setopt (CURLOPT_READFUNCTION, \&read_callback);
     $curl->setopt (CURLOPT_UPLOAD, 1);

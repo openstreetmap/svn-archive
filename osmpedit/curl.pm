@@ -21,28 +21,42 @@ use lib "$RealBin/../perl";
 
 use strict;
 
-BEGIN {
-    my $easy = 1;
-    foreach my $prefix (@INC) {
-##	print STDERR "PREFIX:$prefix\n";
-	if (-f "$prefix/WWW/Curl/Easy.pm") {
-	    print STDERR "Easy.pm found: $prefix\n";
-	    $easy = 0;
-	}
-    }
-    if ($easy) {
-	require WWW::Curl::easy;
-	import WWW::Curl::easy;
-	sub neweasy { return WWW::Curl::easy->new(); };
-    } else {
-	require WWW::Curl::Easy;
-	import WWW::Curl::Easy;
-##	sub neweasy { return WWW::Curl::Easy->new(); };
-    }
-}
+#BEGIN {
+#    my $easy = 1;
+#    foreach my $prefix (@INC) {
+#	print STDERR "PREFIX:$prefix\n";
+#	if (-f "$prefix/WWW/Curl/Easy.pm") {
+#	    print STDERR "Easy.pm found: $prefix\n";
+#	    $easy = 0;
+#	}
+#    }
+#    if ($easy) {
+#	eval {
+#	    require WWW::Curl::easy;
+#	    import WWW::Curl::easy;
+#	    sub neweasy { return WWW::Curl::easy->new(); };
+#	}
+#    } else {
+#	eval {
+#	    require WWW::Curl::Easy;
+#	    import WWW::Curl::Easy;
+#	    sub neweasy { return WWW::Curl::Easy->new(); };
+#	}
+#    }
+#}
 
 ##use WWW::Curl::easy;
 
+sub neweasy {
+  eval { require "WWW/Curl/Easy.pm"; import WWW::Curl::easy; };
+  unless ($@) {
+      return WWW::Curl::Easy->new();
+  }
+  eval { require "WWW/Curl/easy.pm"; import WWW::Curl::easy; };
+  unless ($@) {
+      return WWW::Curl::easy->new();
+  }
+}
 
 sub chunk { 
     my ($data,$pointer)=@_; 
@@ -78,12 +92,12 @@ sub grab_landsat {
     my $headers = "";
     my $body = "";
     
-    $curl->setopt (CURLOPT_HEADERFUNCTION, \&hchunk );
-    $curl->setopt (CURLOPT_WRITEFUNCTION, \&chunk );
-    $curl->setopt (CURLOPT_WRITEHEADER, \$headers );
+    $curl->setopt ($curl->CURLOPT_HEADERFUNCTION, \&hchunk );
+    $curl->setopt ($curl->CURLOPT_WRITEFUNCTION, \&chunk );
+    $curl->setopt ($curl->CURLOPT_WRITEHEADER, \$headers );
 #    $curl->setopt (CURLOPT_WRITEDATA, \$body );
-    $curl->setopt (CURLOPT_FILE, \$body );
-    $curl->setopt (CURLOPT_URL, $url);
+    $curl->setopt ($curl->CURLOPT_FILE, \$body );
+    $curl->setopt ($curl->CURLOPT_URL, $url);
 ##    $curl->setopt (CURLOPT_VERBOSE, 1);
 ##    $curl->setopt (CURLOPT_HEADER, 0);
 
@@ -121,12 +135,12 @@ sub grab_osm {
     my $headers = "";
     my $body = "";
     
-    $curl->setopt (CURLOPT_HEADERFUNCTION, \&hchunk );
-    $curl->setopt (CURLOPT_WRITEFUNCTION, \&chunk );
-    $curl->setopt (CURLOPT_FILE, \$body );
-    $curl->setopt (CURLOPT_URL, $url);
-    $curl->setopt (CURLOPT_HEADER, 0);
-    $curl->setopt (CURLOPT_USERPWD, "$username:$password");
+    $curl->setopt ($curl->CURLOPT_HEADERFUNCTION, \&hchunk );
+    $curl->setopt ($curl->CURLOPT_WRITEFUNCTION, \&chunk );
+    $curl->setopt ($curl->CURLOPT_FILE, \$body );
+    $curl->setopt ($curl->CURLOPT_URL, $url);
+    $curl->setopt ($curl->CURLOPT_HEADER, 0);
+    $curl->setopt ($curl->CURLOPT_USERPWD, "$username:$password");
 
     if ($curl->perform() != 0) {
 	print "STDERR Failed ::".$curl->errbuf."\n";
@@ -153,13 +167,13 @@ sub get {
     my $header = "";
     my $body = "";
     
-    $curl->setopt (CURLOPT_HEADERFUNCTION, \&hchunk );
-    $curl->setopt (CURLOPT_WRITEFUNCTION, \&chunk );
-    $curl->setopt (CURLOPT_FILE, \$body );
-    $curl->setopt (CURLOPT_URL, $url);
-    $curl->setopt (CURLOPT_HEADER, 0);
-    $curl->setopt (CURLOPT_USERPWD, "$username:$password");
-    $curl->setopt (CURLOPT_WRITEHEADER, \$header);
+    $curl->setopt ($curl->CURLOPT_HEADERFUNCTION, \&hchunk );
+    $curl->setopt ($curl->CURLOPT_WRITEFUNCTION, \&chunk );
+    $curl->setopt ($curl->CURLOPT_FILE, \$body );
+    $curl->setopt ($curl->CURLOPT_URL, $url);
+    $curl->setopt ($curl->CURLOPT_HEADER, 0);
+    $curl->setopt ($curl->CURLOPT_USERPWD, "$username:$password");
+    $curl->setopt ($curl->CURLOPT_WRITEHEADER, \$header);
 ##    $curl->setopt (CURLOPT_VERBOSE, 1);
 
     if ($curl->perform() != 0) {
@@ -193,14 +207,14 @@ sub delete {
     my $header = "";
     my $body = "";
     
-    $curl->setopt (CURLOPT_HEADERFUNCTION, \&hchunk );
-    $curl->setopt (CURLOPT_WRITEFUNCTION, \&chunk );
-    $curl->setopt (CURLOPT_FILE, \$body );
-    $curl->setopt (CURLOPT_URL, $url);
-    $curl->setopt (CURLOPT_HEADER, 0);
-    $curl->setopt (CURLOPT_USERPWD, "$username:$password");
-    $curl->setopt (CURLOPT_WRITEHEADER, \$header);
-    $curl->setopt (CURLOPT_CUSTOMREQUEST, "DELETE");
+    $curl->setopt ($curl->CURLOPT_HEADERFUNCTION, \&hchunk );
+    $curl->setopt ($curl->CURLOPT_WRITEFUNCTION, \&chunk );
+    $curl->setopt ($curl->CURLOPT_FILE, \$body );
+    $curl->setopt ($curl->CURLOPT_URL, $url);
+    $curl->setopt ($curl->CURLOPT_HEADER, 0);
+    $curl->setopt ($curl->CURLOPT_USERPWD, "$username:$password");
+    $curl->setopt ($curl->CURLOPT_WRITEHEADER, \$header);
+    $curl->setopt ($curl->CURLOPT_CUSTOMREQUEST, "DELETE");
 ##    $curl->setopt (CURLOPT_VERBOSE, 1);
 
     if ($curl->perform() != 0) {
@@ -242,20 +256,20 @@ sub put_data {
 ##    my $curl = WWW::Curl::easy->new();
     my $curl = neweasy ();
 
-    $curl->setopt (CURLOPT_READFUNCTION, \&read_callback);
-    $curl->setopt (CURLOPT_UPLOAD, 1);
-    $curl->setopt (CURLOPT_PUT, 1);
-    $curl->setopt (CURLOPT_URL, $url);
-    $curl->setopt (CURLOPT_USERPWD, "$username:$password");
+    $curl->setopt ($curl->CURLOPT_READFUNCTION, \&read_callback);
+    $curl->setopt ($curl->CURLOPT_UPLOAD, 1);
+    $curl->setopt ($curl->CURLOPT_PUT, 1);
+    $curl->setopt ($curl->CURLOPT_URL, $url);
+    $curl->setopt ($curl->CURLOPT_USERPWD, "$username:$password");
 #    $curl->setopt (CURLOPT_READDATA, \$data );
-    $curl->setopt (CURLOPT_INFILE, \$data );
-    $curl->setopt (CURLOPT_INFILESIZE, length ($data) );
+    $curl->setopt ($curl->CURLOPT_INFILE, \$data );
+    $curl->setopt ($curl->CURLOPT_INFILESIZE, length ($data) );
 
-    $curl->setopt (CURLOPT_HEADERFUNCTION, \&hchunk );
-    $curl->setopt (CURLOPT_HEADER, 0);
-    $curl->setopt (CURLOPT_WRITEFUNCTION, \&chunk );
-    $curl->setopt (CURLOPT_FILE, \$body );
-    $curl->setopt (CURLOPT_WRITEHEADER, \$header);
+    $curl->setopt ($curl->CURLOPT_HEADERFUNCTION, \&hchunk );
+    $curl->setopt ($curl->CURLOPT_HEADER, 0);
+    $curl->setopt ($curl->CURLOPT_WRITEFUNCTION, \&chunk );
+    $curl->setopt ($curl->CURLOPT_FILE, \$body );
+    $curl->setopt ($curl->CURLOPT_WRITEHEADER, \$header);
 
 ###    $curl->setopt (CURLOPT_VERBOSE, 1);
 

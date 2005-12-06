@@ -24,7 +24,7 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 	rData["bridleway"] = RouteMetaData ("yes", "yes", "yes", "no",  "path"); 
 	rData["permissive bridleway"] = RouteMetaData ("unofficial", "unofficial", 
 												 "no", "no",  "path");
-	rData["cycle path"] = RouteMetaData ("unofficial", "no", "unofficial",  
+	rData["cycle path"] = RouteMetaData ("unofficial",  "unofficial", "no",
 										"no", "path");
 	rData["byway"] = RouteMetaData ("yes", "yes", "yes", "yes",  "unsurfaced");
 	rData["minor road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "minor");
@@ -32,6 +32,10 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 	rData["A road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "primary");
 	rData["motorway"] = RouteMetaData ("no", "no", "no", "yes",  "motorway");
 	rData["railway"] = RouteMetaData ("no", "no", "no", "no",  "railway");
+	rData["new forest track"] = RouteMetaData ("yes", "no", "yes", "no",  
+												"unsurfaced"); 
+	rData["new forest cycle path"] = RouteMetaData ("yes", "yes", "yes", "no",  
+												"unsurfaced"); 
 }
 
 RouteMetaData RouteMetaDataHandler::getMetaData(const QString& type) 

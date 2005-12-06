@@ -46,7 +46,7 @@ using std::vector;
 
 // Mouse action modes
 // N_ACTIONS should always be the last
-enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON, ACTION_NAME_TRACK, ACTION_MOVE_WAYPOINT, ACTION_LINK, ACTION_NEW_SEG, N_ACTIONS };
+enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON, ACTION_MOVE_WAYPOINT, ACTION_SEL_SEG, ACTION_NEW_SEG, N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -123,7 +123,7 @@ private:
 	int selectedTrackpoint, selectedTrackpoint2;
 
 	// selected segment
-	TrackSeg *selectedSeg;
+	TrackSeg *selSeg;
 
 	// current mouse action mode
 	int actionMode;
@@ -171,6 +171,9 @@ private:
 	bool doingName;
 	ScreenPos namePos, curNamePos;
 	QString trackName;
+
+	QString username, password;
+	bool liveUpdate;
 
 	void doDrawTrack(QPainter&,bool);
 
@@ -246,6 +249,12 @@ public slots:
 	void uploadOSM();
 	void removePlainTracks();
 //	void login();
+	void _deleteSeg();
+	void _setSegType();
+	void _nameTrack();
+	void nfconv();
+	void loginToLiveUpdate();
+	void logoutFromLiveUpdate();
 };
 
 }

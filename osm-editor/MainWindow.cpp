@@ -16,6 +16,8 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+
+
 #include "MainWindow.h"
 #include "functions.h"
 #include "SRTMConGen.h"
@@ -98,6 +100,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 									polygonRes(0.05),
 									landsatManager(this,w,h,100)
 {
+	cerr<<"constructor"<<endl;
 	setCaption("OpenStreetMap Editor");
 	resize ( w, h );	
 
@@ -123,6 +126,8 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	segpens["permissive footpath"]= QPen (Qt::green, 1);
 	segpens["permissive bridleway"]= QPen (QColor(192,96,0), 1);
 	segpens["track"]= QPen (Qt::darkGray, 2);
+	segpens["new forest track"]=QPen(QColor(128,64,0),2);
+	segpens["new forest cycle path"]= QPen (QColor(128,0,0), 2);
 
 	polydata["wood"]=QColor(192,224,192);
 	polydata["lake"]=QColor(192,192,255); 
@@ -143,6 +148,10 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 								CTRL+Key_N);
 	fileMenu->insertItem("&Upload OSM",this,SLOT(uploadOSM()),CTRL+Key_U);
 	fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
+	fileMenu->insertItem("Login to live update",this,
+						SLOT(loginToLiveUpdate()));
+	fileMenu->insertItem("Logout from live update",this,
+						SLOT(logoutFromLiveUpdate()));
 	menuBar()->insertItem("&File",fileMenu);
 
 	QPopupMenu* editMenu = new QPopupMenu(this);
@@ -162,6 +171,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 							SLOT(changePolygonRes()),CTRL+Key_Y);
 	editMenu->insertItem("Remove plain trac&ks",this,SLOT(removePlainTracks()),
 						CTRL+Key_K);
+	editMenu->insertItem("nfconv",this,SLOT(nfconv()));
 	menuBar()->insertItem("&Edit",editMenu);
 
 	QToolBar* toolbar=new QToolBar(this);
@@ -213,6 +223,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	QPixmap down_pixmap = mmLoadPixmap("images","arrow_down.png");
 	QPixmap magnify_pixmap = mmLoadPixmap("images","magnify.png");
 	QPixmap shrink_pixmap = mmLoadPixmap("images","shrink.png");
+	QPixmap selseg_pixmap = mmLoadPixmap("images","selseg.png");
 
 	new QToolButton(left_pixmap,"Move left","",this,SLOT(left()),toolbar);
 	new QToolButton(right_pixmap,"Move right","",this,SLOT(right()),toolbar);
@@ -221,26 +232,29 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	new QToolButton(magnify_pixmap,"Zoom in","",this,SLOT(magnify()),toolbar);
 	new QToolButton(shrink_pixmap,"Zoom out","",this,SLOT(shrink()),toolbar);
 
+	QToolBar  *toolbar2 = new QToolBar(this);
+	toolbar2->setHorizontalStretchable(true);
+//	moveDockWindow (toolbar2,Qt::DockLeft);
+
 
 	modeButtons[ACTION_TRACK] = new QToolButton
-			(one,"Create Segments","",mapper,SLOT(map()),toolbar);
+			(one,"Create Segments","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_DELETE] = new QToolButton
-			(two,"Delete Trackpoints","",mapper,SLOT(map()),toolbar);
+			(two,"Delete Trackpoints","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_WAYPOINT]= new QToolButton
-			(wp,"Edit Waypoints","",mapper,SLOT(map()),toolbar);
+			(wp,"Edit Waypoints","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_POLYGON]= new QToolButton
-			(three,"Create Polygons","",mapper,SLOT(map()),toolbar);
-	modeButtons[ACTION_NAME_TRACK]= new QToolButton
-			(nametracks,"Name tracks","",mapper,SLOT(map()),toolbar);
+			(three,"Create Polygons","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_MOVE_WAYPOINT]= new QToolButton
-			(objectmanip,"Move Waypoint","",mapper,SLOT(map()),toolbar);
-	modeButtons[ACTION_LINK]= new QToolButton
-			(linknewpoint,"Link point to seg","",mapper,SLOT(map()),toolbar);
+			(objectmanip,"Move Waypoint","",mapper,SLOT(map()),toolbar2);
+	modeButtons[ACTION_SEL_SEG]= new QToolButton
+			(selseg_pixmap,"Select segment","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_NEW_SEG]= new QToolButton
-			(formnewseg,"New segment","",mapper,SLOT(map()),toolbar);
+			(formnewseg,"New segment","",mapper,SLOT(map()),toolbar2);
 
 
 	toolbar->setStretchableWidget(new QLabel(toolbar));
+	toolbar2->setStretchableWidget(new QLabel(toolbar2));
 
 	// Setting a blank label as the stretchable widget means that one can
 	// stretch the toolbar while keeping the tool buttons bunched up to the 
@@ -319,9 +333,18 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 
 	components = new Components;
 
+	selSeg = NULL;
+
 	setFocusPolicy(QWidget::ClickFocus);
 
 	showPosition();
+
+	username = "";
+	password = "";
+
+	liveUpdate = false;
+
+	cerr<<"end constructor"<<endl;
 }
 
 MainWindow::~MainWindow()
@@ -378,21 +401,59 @@ Components * MainWindow::doOpen(const QString& filename)
 	return comp;
 }
 
+void MainWindow::loginToLiveUpdate()
+{
+	QString str = "WARNING!!! You will remain logged in until\n " \
+				"you select Logout or exit osm-editor. If you\n "\
+				"leave the computer, someone else will be able to modify\n "\
+				"OSM data!!! Press Cancel next if you're unhappy!";
+	QMessageBox::warning(this,"Warning!",str);
+	LoginDialogue *ld=new LoginDialogue(this);
+	if(ld->exec())
+	{
+		username = ld->getUsername();
+		password = ld->getPassword();
+		liveUpdate = true;
+	}
+	delete ld;
+}
+
+void MainWindow::logoutFromLiveUpdate()
+{
+	username = "";
+	password = "";
+	liveUpdate = false;
+}
+
 void MainWindow::grabOSMFromNet()
 {
 	QString url="http://www.openstreetmap.org/api/0.2/map";
+	QString uname="", pwd="";
 	Components * netComponents; 
 	statusBar()->message("Grabbing data from OSM...");
 	EarthPoint bottomLeft = map.getBottomLeft(),
 			   topRight = map.getTopRight();
-	LoginDialogue *ld=new LoginDialogue(this);
-	if(ld->exec())
+	if(username=="" || password=="")
 	{
-		QString username=ld->getUsername(),
-					password=ld->getPassword();
+		LoginDialogue *ld=new LoginDialogue(this);
+		if(ld->exec())
+		{
+			uname=ld->getUsername(),
+			pwd=ld->getPassword();
+		}
+		delete ld;
+	}
+	else
+	{
+		uname=username;
+		pwd = password;
+	}
+
+	if(uname!="" && pwd!="")
+	{
 		CURL_LOAD_DATA *httpResponse = grab_osm(url.ascii(),
 					bottomLeft.x,bottomLeft.y,topRight.x,topRight.y,
-					username.ascii(), password.ascii());
+					uname.ascii(), pwd.ascii());
 		if(httpResponse)
 		{
 			statusBar()->message("Done.");
@@ -428,7 +489,6 @@ void MainWindow::grabOSMFromNet()
 			delete[] strdata;
 		}
 	}
-	delete ld;
 }
 
 void MainWindow::uploadOSM()
@@ -510,11 +570,16 @@ void MainWindow::setMode(int m)
 
 	// Wipe any currently selected points
 	nSelectedPoints = 0;
+
+	selSeg = NULL;
+	doingName = false;
+	update();
 }
 
 void MainWindow::setSegType(const QString &t)
 {
 	curSegType =   t;
+	_setSegType(); // live change of selected segment
 }
 
 void MainWindow::setPolygonType(const QString &t)
@@ -693,8 +758,8 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			if(!doingClonedTrack) 
 			{
 				/* UPDATE 15/10/05 not present in Windows 141005 */
-				curPen = (curSeg==selectedSeg) ? QPen(Qt::yellow,5) :
-								segpens[curSeg->getType()];
+				curPen = (curSeg==selSeg) ? 
+						QPen(Qt::yellow,5) : segpens[curSeg->getType()];
 				/* END UPDATE */
 			}
 
@@ -711,13 +776,11 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 				curPt = curSeg->getPoint(pt);	
 				curPos = map.getScreenPos(curPt.lon,curPt.lat);	
 
-				// hack for OSM data while we can't edit it
-				if(!doingClonedTrack)
-				curPen = (prevPt.osm_id && curPt.osm_id) ?
-						QPen(Qt::lightGray,6) : 
-							segpens[curSeg->getType()];
+				// display OSM data in dotted lines 
+				curPen.setStyle
+						(curSeg->shouldUpload() || doingClonedTrack ?  
+						 	Qt::SolidLine: Qt::DotLine );
 
-				
 				p.setPen(curPen);
 
 
@@ -811,6 +874,10 @@ void MainWindow::doDrawTrack(QPainter& p, bool doingClonedTrack)
 			// Write name of segment on longest line  
 			if((segname=curSeg->getName())!="")
 			{
+				maxP1  = map.getScreenPos(curSeg->getPoint(0).lon,
+											curSeg->getPoint(0).lat);
+				maxP2  = map.getScreenPos(curSeg->getPoint(1).lon,
+											curSeg->getPoint(1).lat);
 				dy=maxP2.y-maxP1.y;
 				dx=maxP2.x-maxP1.x;
 				double angle = atan2(dy,dx);
@@ -861,7 +928,7 @@ void MainWindow::drawTrackpoint (QPainter& p,const QBrush& brush,
 	label.sprintf("%d",point);
 	p.setFont(QFont("Helvetica",8));
 //	p.setPen(QColor(128,0,255));
-	p.drawText ( x+5, y+5, label);
+//	p.drawText ( x+5, y+5, label);
 }
 
 void MainWindow::drawPolygon(QPainter & p, Polygon * polygon)
@@ -916,13 +983,15 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 		case ACTION_DELETE:
 			if(nSelectedPoints==0)
 			{
-				pts[0] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				pts[0] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
 				update();
 				nSelectedPoints++;
 			}
 			else
 			{
-				pts[1] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				pts[1] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
 				components->deleteTrackpoints(pts[0],pts[1],LIMIT);
 				update();
 				nSelectedPoints=0;
@@ -951,12 +1020,13 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 				update();
 			}
 			break;
-
-		case ACTION_LINK:
+/*
+		case ACTION_SEL_SEG:
 			if(nSelectedPoints<2)
 			{
 				pts[nSelectedPoints++] = 
-						components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+						components->findNearestTrackpoint
+					(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
 				update();
 			}
 			else
@@ -975,23 +1045,51 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 				nSelectedPoints=0;
 			}
 			break;
-
+*/
 		case ACTION_NEW_SEG:
 			if(nSelectedPoints==0)
 			{
-				pts[0] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				pts[0] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
 				update();
 				nSelectedPoints++;
 			}
 			else
 			{
-				pts[1] = components->findNearestTrackpoint(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				pts[1] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
 				components->formNewSeg(curSegType,pts[0],pts[1],LIMIT);
 				update();
 				nSelectedPoints=0;
 			}
 			break;
+		case  ACTION_SEL_SEG:
+			if(nSelectedPoints==0)
+			{
+				pts[0] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				update();
+				nSelectedPoints++;
+			}
+			else
+			{
+				pts[1] = components->findNearestTrackpoint
+						(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
+				// SELECT THE SEG
+				cerr<<"trying to select seg" << endl;
+				selSeg = RetrievedTrackPoint::commonSeg(pts[0],pts[1]);	
+				if(selSeg) 
+				{
+						cerr<<"found a selected seg" << endl;
 
+						// Naming always on when in selected segment mode
+						_nameTrack();
+				}
+
+				update();
+				nSelectedPoints=0;
+			}
+			break;
 	}			
 }
 
@@ -1125,27 +1223,6 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* ev)
 		case ACTION_POLYGON:
 			endPolygon(ev->x(),ev->y());
 			break;
-		case ACTION_NAME_TRACK:
-			p = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-			selectedSeg = components->getNearestSeg(p,LIMIT);
-			if(selectedSeg)
-			{
-			trackName = "";
-			int tp = selectedSeg->findNearestTrackpoint(p,map.earthDist(100));
-			if (tp>=0 && tp<selectedSeg->nPoints()-1)
-			{
-				TrackPoint pt1 = selectedSeg->getPoint(tp),
-						   pt2 = selectedSeg->getPoint(tp+1);
-				double dy=pt2.lat-pt1.lat;
-				double dx=pt2.lon-pt1.lon;
-				nameAngle = atan2(dy,dx);
-				doingName = true;
-				namePos = map.getScreenPos (pt1.lon,pt1.lat);
-				curNamePos = namePos;
-			}
-			update();
-			}
-			break;
 	}
 }
 
@@ -1167,7 +1244,7 @@ void MainWindow::endPolygon(int x,int y)
 	
 void MainWindow::keyPressEvent(QKeyEvent* ev)
 {
-	if(actionMode==ACTION_NAME_TRACK && doingName)
+	if(doingName)
 	{
 		if(ev->ascii()>=32 && ev->ascii()<=127)
 		{
@@ -1186,9 +1263,13 @@ void MainWindow::keyPressEvent(QKeyEvent* ev)
 		}
 		else if (ev->key()==Key_Return)
 		{
-			doingName = false;
-			selectedSeg->setName(trackName);
-			selectedSeg = NULL;
+			selSeg->setName(trackName);
+			selSeg->setAltered(true);
+//			selSeg = NULL;
+//			UPLOAD IF IN LIVE MODE
+			if(liveUpdate)
+				selSeg->uploadToOSM(username,password);
+			trackName = "";
 			update();
 		}
 	}
@@ -1315,6 +1396,48 @@ void MainWindow::grabLandsat()
 
 }
 
+void MainWindow::_deleteSeg()
+{
+	if(selSeg)
+		components->_removeSeg(selSeg);
+	update();
+}
+
+void MainWindow::_setSegType()
+{
+	if(selSeg)
+	{
+		selSeg->setType(curSegType);
+		selSeg->setAltered(true);
+		// UPLOAD IF IN LIVE MODE
+		if(liveUpdate)
+			selSeg->uploadToOSM(username,password);
+	}
+	update();
+}
+
+
+void MainWindow::_nameTrack()
+{
+	if(selSeg)
+	{
+		TrackPoint pt1 = selSeg->getPoint(0), pt2 = selSeg->getPoint(1);
+		double dy=pt2.lat-pt1.lat;
+		double dx=pt2.lon-pt1.lon;
+		nameAngle = atan2(dy,dx);
+		doingName = true;
+		namePos = map.getScreenPos (pt1.lon,pt1.lat);
+		curNamePos = namePos;
+		trackName="";
+		update();
+	}
+}
+
+void MainWindow::nfconv()
+{
+	components->nfconv();
+}
+
 // ripped off from Mapmaker
 
 QPixmap mmLoadPixmap(const QString& directory, const QString& filename) 
@@ -1337,5 +1460,6 @@ QPixmap mmLoadPixmap(const QString& directory, const QString& filename)
 
 	return pixmap;
 }
+
 
 }

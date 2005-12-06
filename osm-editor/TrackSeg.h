@@ -22,6 +22,7 @@
 
 
 #include <qstring.h>
+#include <qstringlist.h>
 #include <vector>
 #include <fstream>
 #include "functions.h"
@@ -55,6 +56,8 @@ struct TrackPoint
 	bool connected(const TrackPoint& pt, double , double);
 	bool operator==(const TrackPoint& tp)
 		{ return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); }
+	bool isFromOSM() { return osm_id>0; }
+	void setOSMID(int i ) { osm_id  = i; }
 };
 
 class TrackSeg
@@ -63,20 +66,25 @@ private:
 	QString name, type;
 	int id, osm_id;
 	vector<TrackPoint> points;
+	bool altered;
 
 
 
 public:
 	TrackSeg() 
-		{ name=""; type="track"; id=0; osm_id=0; }
-
+		{ name=""; type="track"; id=0; osm_id=0; altered=false; }
 	 TrackSeg(const QString& i,const QString& t)
-		{ name=i; type=t; id=0; osm_id=0; }
+		{ name=i; type=t; id=0; osm_id=0; altered=false; }
 
 	 void setName(const QString& i) { name=i; }
 	 void setOSMID(int oid) { osm_id=oid; }
+	 bool isFromOSM() { return osm_id > 0; }
+	 bool shouldUpload() { return osm_id<=0 || altered; }
 	 QString getName() { return name; }
 	 QString getType() { return type; }
+	 void setAltered(bool a) { altered=a; }
+	 bool isAltered() { return altered; }
+	 int getOSMID() { return osm_id; }
 
 	
 	bool isNew() { return !id; }
@@ -85,7 +93,7 @@ public:
 	bool isLocked() { return id<0; }
 	/* END UPDATE */
 
-	void setType(const QString& t) { type=t; }
+	void setType(const QString& t) { type=t;  }
 	void setId(int i) { cerr<<"TrakcSeg::setId: setting id to "<<i<<endl;id=i; }
 
 	void addPoint(const QString& ts,double lat,double lon) 
@@ -99,10 +107,10 @@ public:
 	
 	void toGPX(ostream&);
 	int nodesToOSM(ostream&);
+	int newNodesToOSM(ostream& outfile);
 	void segsToOSM(ostream&);
 	void toOSM(ostream&);
-	void uploadNodes(char*,char*,char*);
-	void uploadToOSM(char*,char*);
+	void uploadToOSM(const char*,const char*);
 	int findNearestTrackpoint(const EarthPoint& p,double limit,double* = NULL);
 	bool deletePoints(int start, int end);
 
@@ -137,7 +145,21 @@ public:
 	void print(){for(int count=0; count<size(); count++) 
 					cout<<segs[count].point<<endl; }
 	bool null() { return segs.size()==0; }
+	static TrackSeg* commonSeg(RetrievedTrackPoint& rtp1,
+							RetrievedTrackPoint& rtp2)
+		{
+			for(int count=0;count<rtp1.segs.size(); count++)
+			{
+				for(int count2=count; count2<rtp2.segs.size(); count2++)
+				{
+					if(rtp1.segs[count].seg==rtp2.segs[count2].seg)
+						return rtp1.segs[count].seg;
+				}
+			}
+			return NULL;
+		}
 };
+
 
 }
 #endif /* not TRACKSEG_H */

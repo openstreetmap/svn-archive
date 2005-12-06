@@ -66,6 +66,7 @@ public:
 	bool hasPoints();
 	void deleteExcessPoints (double angle,  double distance);
 	void removeSegs();
+	void _removeSeg(TrackSeg*);
 	void removeSegs(const QString&);
 	void copySegsFrom(Track *);
 	bool formNewSeg(const QString& newType, const RetrievedTrackPoint& a1,
@@ -81,6 +82,7 @@ public:
 	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &, double);
 	EarthPoint getAveragePoint() throw (QString);
 	void uploadToOSM(char* username,char* password);
+	void nfconv();
 };
 
 

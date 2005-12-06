@@ -6,6 +6,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#include <iostream>
+using namespace std;
+
 
 /*
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
@@ -132,7 +135,8 @@ size_t infunc (void *bufptr,size_t size, size_t nitems, void *userp)
 	return strlen(p1)+1;
 }
 
-char* put_data(char* idata,char* url,char* username,char* password)
+char* put_data(char* idata,char* url,
+				const char* username,const char* password)
 {
 	CURL *curl;
 	CURLcode res;
@@ -174,4 +178,19 @@ char* put_data(char* idata,char* url,char* username,char* password)
 
 	curl_global_cleanup();
 	return odata2;
+}
+
+QStringList putToOSM(char* nodeXML,char *url,
+				const char* username,const char* password)
+{
+	QStringList ids;
+	char * resp = put_data(nodeXML, url, username,password);
+	if(resp)
+	{
+		QString resp2 = resp;
+		cerr << "resp2:" << resp2 << endl;
+		ids = QStringList::split("\n", resp2);
+		delete[] resp;
+	}
+	return ids; 
 }

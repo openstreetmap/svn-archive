@@ -69,6 +69,36 @@ void Track::removeSegs(const QString& type)
 	}
 }
 
+void Track::nfconv()
+{
+	for(vector<TrackSeg*>::iterator i=segs.begin(); i!=segs.end(); i++)
+	{
+		if((*i)->getType()=="byway")
+		{
+			(*i)->setType("new forest cycle path");
+			(*i)->setAltered(true);
+		}
+		else if((*i)->getType()=="bridleway")
+		{
+			(*i)->setType("new forest track");
+			(*i)->setAltered(true);
+		}
+	}
+}
+void Track::_removeSeg(TrackSeg* seg)
+{
+
+	for(vector<TrackSeg*>::iterator i=segs.begin(); i!=segs.end(); i++)
+	{
+		if((*i)==seg)
+		{
+			delete *i;
+			segs.erase(i);
+			i--;
+		}
+	}
+}
+
 // Write a track log to GPX.
 void Track::toGPX(std::ostream &outfile)
 {
@@ -240,7 +270,8 @@ bool Track::setSegId(int i,int id)
 	cerr<<"segs.size()="<<segs.size()<<endl;
 	if(i>=0 && i<segs.size())
 	{
-		segs[i]->setId(id); 
+		// 04/12/05 *OpenStreetMap* seg id
+		segs[i]->setOSMID(id); 
 		return true;
 	}
 	return false;
@@ -329,4 +360,93 @@ void Track::uploadToOSM(char* username,char* password)
 		segs[count]->uploadToOSM(username,password); 
 	}
 }
+
+
+/*
+
+void Track::uploadToOSMInOneGo(char* username,char* password)
+{
+	QStringList nodeIDs, segIDs;
+	int node=0, seg=0;
+	char *nonconst=NULL, *resp=NULL;
+	std::ostringstream str;
+	str << "<osm version='0.2'>" << endl;
+
+	for(int count=0; count<segs.size(); count++)
+	{
+		if(!segs[count]->isFromOSM())
+		{	
+			segs[count]->newNodesToOSM(str);
+		}
+	}
+	str << "</osm>" << endl;
+
+	nonconst = new char[ strlen(str.str().c_str()) + 1];	
+	strcpy(nonconst,str.str().c_str());
+	nodeIDs = putToOSM(nonconst,
+					"http://www.openstreetmap.org/api/0.2/newnode",
+					username,password);
+	delete[] nonconst;
+
+	std::ostringstream str2;
+	str2 << "<osm version='0.2'>" << endl;
+
+	for(int count=0; count<segs.size(); count++)
+	{
+		if(!segs[count]->isFromOSM())
+		{
+			for(int count2=0; count<segs[count]->nPoints(); count2++)
+			{
+				if(!segs[count]->getPoint(count2).isFromOSM())
+				{
+					segs[count]->getPoint(count2).setOSMID
+						(atoi(nodeIDs[node++]).ascii());
+					segs[count]->getPoint(count2).setAltered (false); 
+				}
+			}
+
+			segs[count]->segsToOSM(str2);
+		}
+	}
+
+	str2 << "</osm>" << endl;
+	cerr<<"segstoOSM returned: "<<str2.str() << endl;
+	nonconst = new char[ strlen(str2.str().c_str()) + 1];	
+	strcpy(nonconst,str2.str().c_str());
+	segIDs = putToOSM(nonconst,
+					"http://www.openstreetmap.org/api/0.2/newsegment",
+					username,password);
+
+	delete[] nonconst;
+	altered=false;
+
+	for(int count=0; count<segs.size(); count++)
+	{
+		if(segs[count]->isAltered() && segs[count]->isFromOSM())
+		{
+			std::ostrstream stream;
+			stream << "<osm version='0.2'>" << endl;
+			int osm_id = segs[count]->getOSMID();
+			segs[count]->segsToOSM(stream);
+			nonconst = new char[ strlen(stream.str().c_str()) + 1];	
+			strcpy(nonconst,stream.str().c_str());
+			char url[1024];	
+			sprintf(url,"http://www.openstreetmap.org/api/0.2/segment/%d", 
+							osm_id);
+			resp = put_data(nonconst,url,username,password);
+			cerr<<"URL:" << url << endl;
+			delete[] nonconst;
+			if(resp)
+			{
+				delete[] resp;
+				resp=NULL;
+			}
+		}
+		else if (!segs[count]->isFromOSM())
+		{
+			segs[count]->setOSMID(atoi(segIDs[seg++].ascii()));
+		}
+	}
+}
+*/
 }

@@ -19,6 +19,7 @@
 #include "Waypoint.h"
 #include <sstream>
 #include "curlstuff.h"
+#include <qstringlist.h>
 
 #include <iostream>
 using namespace std; 
@@ -60,22 +61,19 @@ QString Waypoint::garminToType(int smbl)
 }
 
 // output in OSM node format
-// tags will be 'class=poi;type=[the node's type]'
+// tags will be 'class=[the node's type]'
 
 int Waypoint::toOSM(std::ostream& outfile)
 {
-	// Do not send if the waypoint has an osm_id (temporary hack)
-	// In other words points already in OSM will not be sent.
-	if(!osm_id)
-	{
-		outfile << "<node lat='" << lat << "' lon='" << lon << 
+	outfile << "<node lat='" << lat << "' lon='" << lon << 
 					"' tags='";
-		if(name != "")
-			outfile << "name=" << name << ";";
-		outfile << "class=" << type << "' />" << endl;
-		return 1;
-	}
-	return 0;
+	if(name != "")
+		outfile << "name=" << name << ";";
+	outfile << "class=" << type << "' ";
+	if(osm_id)
+		outfile << "uid='" << osm_id << "' ";
+	outfile << "/>";
+	return 1;
 }
 
 void Waypoints::toGPX(std::ostream& outfile)
@@ -104,25 +102,75 @@ int Waypoints::toOSM(std::ostream& outfile)
 	return nWpts;
 }
 
+// new waypoints only
+int Waypoints::newToOSM(std::ostream& outfile)
+{
+	int nWpts=0;
+	outfile << "<osm version='0.2'>" << endl;
+	for(int count=0; count<waypoints.size(); count++)
+	{
+		if(!waypoints[count].osm_id)
+			nWpts += waypoints[count].toOSM(outfile);
+	}
+	outfile << "</osm>" << endl;
+	return nWpts;
+}
+
 void Waypoints::uploadToOSM(char* username,char* password)
 {
+	char *nonconst, *resp;
+
+	// existing points
+	for(int count=0; count<waypoints.size(); count++)
+	{
+		if(waypoints[count].osm_id && waypoints[count].altered)
+		{
+			std::ostringstream str;
+			str<<"<osm version='0.2'>"<<endl;
+			waypoints[count].toOSM(str);
+			str<<"</osm>"<<endl;
+			nonconst = new char[ strlen(str.str().c_str()) + 1];	
+			strcpy(nonconst,str.str().c_str());
+
+			char url[1024];	
+			sprintf(url,"http://www.openstreetmap.org/api/0.2/node/%d", 
+							waypoints[count].osm_id);
+			cerr<<"URL:" << url << endl;
+			delete[] nonconst;
+
+			resp = put_data(nonconst,url,username,password);
+			if(resp)
+			{
+				waypoints[count].altered = false;
+				delete[] resp;
+			}
+		}
+	}	
+
+	// new points
 	std::ostringstream str;
-	int nWpts = toOSM(str);
+	int nWpts = newToOSM(str);
 	cerr << "Here are the uploaded waypoints:" << str.str() << endl;
 	if(nWpts)
 	{
 		
-			char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
-			strcpy(nonconst,str.str().c_str());
+		nonconst = new char[ strlen(str.str().c_str()) + 1];	
+		strcpy(nonconst,str.str().c_str());
 
-			char * resp = put_data(nonconst,
+		QStringList ids = putToOSM(nonconst,
 					"http://www.openstreetmap.org/api/0.2/newnode",
 					username,password);
-		if(resp) delete[] resp;
 		delete[] nonconst;
+
+		int count=0;
+		for(QStringList::Iterator i = ids.begin(); i!=ids.end(); i++)
+		{
+			if(atoi((*i).ascii())  && !waypoints[count].osm_id)
+				waypoints[count++].osm_id = atoi((*i).ascii());
+			cerr << "parsing response: count: " << count << 
+						" current id: " << (*i) << endl;
+		}
 	}
-	else
-		cerr << "No new waypoints so not attempting to upload." << endl;
 }
 
 bool Waypoints::alterWaypoint(int idx, const QString& newName,
@@ -132,6 +180,7 @@ bool Waypoints::alterWaypoint(int idx, const QString& newName,
 	{
 		waypoints[idx].name = newName;
 		waypoints[idx].type = newType;
+		waypoints[idx].altered=true;
 		return true;
 	}
 	return false;

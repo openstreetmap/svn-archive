@@ -140,6 +140,8 @@ public:
 	void uploadToOSM(char* username,char* password)
 		{ track->uploadToOSM(username,password);
 		  waypoints->uploadToOSM(username,password); }
+	void _removeSeg(TrackSeg* seg) { track->_removeSeg(seg); }
+	void nfconv() { track->nfconv(); }
 
 };
 

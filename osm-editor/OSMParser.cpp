@@ -82,7 +82,7 @@ bool OSMParser::startElement(const QString&, const QString&,
 {
 	double lat, lon;
 	int uid, from, to;
-	QString tags, type;
+	QString tags, type="", name="";
 
 	//cerr << "startElement: element=" << element << endl;
 	if(inDoc)
@@ -123,8 +123,11 @@ bool OSMParser::startElement(const QString&, const QString&,
 				else if(attributes.qName(count)=="uid")
 					uid = atoi(attributes.value(count).ascii());
 				else if(attributes.qName(count)=="tags")
-					type = getSegType(attributes.value(count));
+				{
+					readTags(attributes.value(count), name, type);
+				}
 			}
+
 
 			components->newSegment();
 
@@ -141,13 +144,15 @@ bool OSMParser::startElement(const QString&, const QString&,
 							TrackPoint
 								(readNodes[to].lat,readNodes[to].lon,to));
 			components->getSeg(curSeg)->setOSMID(uid);
+			components->getSeg(curSeg)->setName(name);
 			components->setSegType(curSeg++,type);
 		}
 	}
 	return true;
 }
 
-QString OSMParser::getSegType(const QString &tags)
+void OSMParser::readTags(const QString &tags,  QString& name,
+							 QString& type)
 {
 	QStringList tagList = QStringList::split(";" , tags);
 	QStringList keyval;
@@ -165,9 +170,12 @@ QString OSMParser::getSegType(const QString &tags)
 			metaData.car = keyval[1];
 		else if(keyval[0] == "class")
 			metaData.routeClass = keyval[1];
+		else if(keyval[0] == "name")
+			name = keyval[1];
 	}
 	RouteMetaDataHandler handler;
-	return handler.getRouteType(metaData);
+	type = handler.getRouteType(metaData);
 }
+
 
 }

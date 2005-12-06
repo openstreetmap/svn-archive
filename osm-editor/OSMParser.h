@@ -59,7 +59,7 @@ public:
 
 	// it's the recipient of the components' responsibility to delete them!
 	~OSMParser() {} 
-	QString getSegType(const QString &tags);
+	void readTags(const QString &tags, QString&, QString&);
 };
 
 }

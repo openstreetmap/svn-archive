@@ -42,17 +42,12 @@ void TrackPoint::toGPX(std::ostream& outfile)
 
 int TrackPoint::toOSM(std::ostream& outfile)
 {
-	// Temporary hack, we only want to put new nodes to the server
-	if(!osm_id)
-	{
 		outfile << "<node lat='" << setprecision(10) << lat << 
 				"' lon='" << setprecision(10) << lon << "'";
 		if(osm_id)
 			outfile << " uid='" << osm_id << "'";
 		outfile << " tags=''/>" << endl;
 		return 1;
-	}
-	return 0;
 }
 
 // Determines whether two track points are connected, for the purposes of 
@@ -99,7 +94,7 @@ bool TrackPoint::connected(const TrackPoint& pt, double timeThreshold,
 void TrackSeg::toGPX(std::ostream& outfile)
 {
 		outfile << "<trk>" << endl 
-				<< "<number>" << id << "</number>" << endl;
+				<< "<number>" << osm_id << "</number>" << endl;
 		if(name!="")
 			outfile << "<name>" << name << "</name>" << endl;
 		outfile << "<extensions>" << endl;
@@ -137,108 +132,134 @@ void TrackSeg::toGPX(std::ostream& outfile)
 
 void TrackSeg::toOSM(ostream& outfile)
 {
-	outfile << "NODES: " << endl;
 	nodesToOSM(outfile);
-	outfile << "SEGS: " << endl;
 	segsToOSM(outfile);
 }
 
 int TrackSeg::nodesToOSM(ostream& outfile)
 {
 	int nPts = 0;
-	outfile << "<osm version='0.2'>"<<endl;
 	for(int count=0; count<points.size(); count++)
 	{
 		nPts += points[count].toOSM(outfile);
 	}
-	outfile << "</osm>"<<endl;
+	return nPts;
+}
+
+int TrackSeg::newNodesToOSM(ostream& outfile)
+{
+	int nPts = 0;
+	for(int count=0; count<points.size(); count++)
+	{
+		if(!points[count].osm_id)
+			nPts += points[count].toOSM(outfile);
+	}
 	return nPts;
 }
 
 void TrackSeg::segsToOSM(ostream& outfile)
 {
-	outfile << "<osm version='0.2'>"<<endl;
 	for(int count=1; count<points.size(); count++)
 	{
 		//temporary hack to avoid uploading 0 to 0 segs
-		if(points[count-1].osm_id && points[count].osm_id && !osm_id)
+		if(points[count-1].osm_id && points[count].osm_id)
 		{
-		outfile << "<segment from='"
+			outfile << "<segment from='"
 				<< points[count-1].osm_id  << 
 				   "' to='"
-				<< points[count].osm_id;
-		QString tags;
-		//  avoid dumping the name too many times
-		if(name!="" && count==points.size()/2) 
-			tags += "name="+name+";";
-		RouteMetaDataHandler mdh;
-		RouteMetaData metaData = mdh.getMetaData(type);
-		if(metaData.foot=="yes")
+				<< points[count].osm_id << "' ";
+
+			if(osm_id)
+				outfile << " uid='" << osm_id   << "' ";
+
+			QString tags;
+			//  avoid dumping the name too many times
+			if(name!="")
+				tags += "name="+name+";";
+			RouteMetaDataHandler mdh;
+			RouteMetaData metaData = mdh.getMetaData(type);
+			if(metaData.foot=="yes")
 			tags += "foot=yes;";
-		if(metaData.horse=="yes")
-			tags += "horse=yes;";
-		if(metaData.bike=="yes")
-			tags += "bike=yes;";
-		if(metaData.car=="yes")
-			tags += "car=yes;";
-		if(metaData.routeClass!="")
-			tags += "class="+metaData.routeClass;
+			if(metaData.horse=="yes")
+				tags += "horse=yes;";
+			if(metaData.bike=="yes")
+				tags += "bike=yes;";
+			if(metaData.car=="yes")
+				tags += "car=yes;";
+			if(metaData.routeClass!="")
+				tags += "class="+metaData.routeClass;
 
-		outfile << "' tags='" << tags << "'/>" << endl;
+			outfile << " tags='" << tags << "'/>" << endl;
 		}
 	}
-	outfile << "</osm>"<<endl;
 }
 
-void TrackSeg::uploadNodes(char* nodeXML,char* username,char* password)
+void TrackSeg::uploadToOSM(const char* username,const char* password)
 {
-	char * resp = put_data(nodeXML,
-					"http://www.openstreetmap.org/api/0.2/newnode",
-					username,password);
-	if(resp)
+	char *nonconst=NULL, *resp=NULL;
+	if(shouldUpload())
 	{
-		QString resp2 = resp;
-		QStringList ids = QStringList::split("\n", resp2);
-		int count=0;
-		for(QStringList::Iterator i = ids.begin(); i!=ids.end(); i++)
+		cerr<<"Here is the OSM code that would be uploaded:" << endl;
+		toOSM(cerr);
+		cerr<<"END." << endl;
+
+		std::ostringstream str;
+		str << "<osm version='0.2'>" << endl;
+		int nPts = newNodesToOSM(str);
+		str << "</osm>" << endl;
+
+		if(!osm_id && nPts)
 		{
-			if(atoi((*i).ascii()) != 0)
-				points[count++].osm_id = atoi((*i).ascii());
-			cerr << "parsing response: count: " << count << " current id: " <<
-					(*i) << endl;
+			nonconst = new char[ strlen(str.str().c_str()) + 1];	
+			strcpy(nonconst,str.str().c_str());
+
+			cerr<<"Putting nodes to OSM"<<endl;
+			QStringList ids = putToOSM(nonconst,
+					"http://www.openstreetmap.org/api/0.2/newnode",
+							username,password);
+
+			cerr<<"done."<<endl;
+			delete[] nonconst;
+
+			int count=0;
+			for(QStringList::Iterator i = ids.begin(); i!=ids.end(); i++)
+			{
+				if(atoi((*i).ascii()) && !points[count].osm_id) 
+					points[count++].setOSMID (atoi((*i).ascii()));
+				cerr << "parsing response: count: " << count << 
+						" current id: " << (*i) << endl;
+			}
 		}
-		delete[] resp;
-	}
-}
 
+		std::ostringstream str2;
+		str2 << "<osm version='0.2'>" << endl;
+		segsToOSM(str2);
+		str2 << "</osm>" << endl;
+		cerr<<"segstoOSM returned: "<<str2.str() << endl;
+		nonconst = new char[ strlen(str2.str().c_str()) + 1];	
+		strcpy(nonconst,str2.str().c_str());
 
-void TrackSeg::uploadToOSM(char* username,char* password)
-{
-	cerr<<"Here is the OSM code that would be uploaded:" << endl;
-	toOSM(cerr);
-	cerr<<"END." << endl;
-
-	std::ostringstream str;
-	int nPts = nodesToOSM(str);
-	if (nPts)
-	{
-	char* nonconst = new char[ strlen(str.str().c_str()) + 1];	
-	strcpy(nonconst,str.str().c_str());
-	uploadNodes(nonconst,username,password);
-	std::ostringstream str2;
-	segsToOSM(str2);
-	cerr<<"segstoOSM returned: "<<str2.str() << endl;
-	delete[] nonconst;
-	nonconst = new char[ strlen(str2.str().c_str()) + 1];	
-	strcpy(nonconst,str2.str().c_str());
-
-	char * resp = put_data(nonconst,
+		cerr<<" osm_id is : "<< osm_id << endl;
+		if(osm_id)
+		{
+			char url[1024];	
+			sprintf(url,"http://www.openstreetmap.org/api/0.2/segment/%d", 
+							osm_id);
+			resp = put_data(nonconst,url,username,password);
+			if(resp) delete[] resp;
+			cerr<<"URL:" << url << endl;
+		}
+		else
+		{
+				
+			QStringList ids=putToOSM(nonconst,
 					"http://www.openstreetmap.org/api/0.2/newsegment",
 					username,password);
-	if(resp) delete[] resp;
-	delete[] nonconst;
+			osm_id = atoi(ids[0]);
+		}
+		delete[] nonconst;
+		altered=false;
 	}
-	
 }
 
 bool TrackSeg::deletePoints(int start, int end)

@@ -20,6 +20,8 @@
 #ifndef LANDSAT_H
 #define LANDSAT_H
 
+#include <qstringlist.h>
+
 /*
 #ifdef __cplusplus
 extern "C"
@@ -47,7 +49,7 @@ CURL_LOAD_DATA  *grab_osm(const char *urlbase,
 CURL_LOAD_DATA *grab_http_response(const char *url,const char* = NULL, const char* = NULL);
 size_t response_callback(void *ptr,size_t size,size_t nmemb, void *data);
 CURL_LOAD_DATA *Do(CURL *curl,const char *url,const char* = NULL, const char* = NULL);
-char* put_data(char* idata,char* url,char* username,char* password);
+char* put_data(char* idata,char* url,const char* username,const char* password);
 size_t infunc (void *bufptr,size_t size, size_t nitems, void *userp);
 
 /*
@@ -56,4 +58,6 @@ size_t infunc (void *bufptr,size_t size, size_t nitems, void *userp);
 #endif
 */
 
+QStringList putToOSM(char* nodeXML,char *url,
+						const char* username,const char* password);
 #endif

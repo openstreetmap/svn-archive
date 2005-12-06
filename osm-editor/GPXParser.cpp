@@ -251,6 +251,7 @@ bool GPXParser::endElement(const QString&,const QString&,
 	{
 		RouteMetaDataHandler handler;
 		components->setSegType(curSeg,handler.getRouteType(metaData));
+		components->setSegName(curSeg,curName);
 
 		inSegment = false;
 		cerr<<"new seg: setting curId: "<< curId << endl;

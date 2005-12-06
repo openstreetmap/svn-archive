@@ -37,7 +37,7 @@ BEGIN {
     } else {
 	require WWW::Curl::Easy;
 	import WWW::Curl::Easy;
-	sub neweasy { return WWW::Curl::Easy->new(); };
+##	sub neweasy { return WWW::Curl::Easy->new(); };
     }
 }
 

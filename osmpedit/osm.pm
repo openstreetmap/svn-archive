@@ -22,8 +22,6 @@ use lib "$RealBin/../perl";
 
 use strict;
 
-use WWW::Curl::easy;
-
 use osmnode;
 use osmsegment;
 use osmutil;

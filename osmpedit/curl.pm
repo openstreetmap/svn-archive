@@ -129,7 +129,6 @@ sub grab_osm {
 ##    print STDERR "$username:$password";
 
 ##    my $curl = WWW::Curl::easy->new();
-    print STDERR "CURLCLASS:curl::CURLCLASS\n";
     my $curl = neweasy ();
 
     my $headers = "";

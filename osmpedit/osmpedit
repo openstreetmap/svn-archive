@@ -731,7 +731,11 @@ the mouse and then release the button at the wanted position.  When
 you release the button the data is updated in the OSM server.
 
 In B<Create> mode pressing the left button will create a new node in
-the OSM server and display it in the editing area.
+the OSM server and display it in the editing area.  If you try to
+create a node on a segment the segment will be split into two parts
+and the two parts will be connected to the new node.  Two new segments
+will be created and the old segment will be deleted from the OSM
+server.
 
 In B<Delete> mode pressing the left button over a node will delete it.
 Pressing it over a segment will delete the segment.  It is probably

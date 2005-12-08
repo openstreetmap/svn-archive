@@ -71,6 +71,9 @@ my $point_lon = 0;
 my $goto_lat = 51.5;
 my $goto_lon = 0;
 
+my $segment_key = "name";
+my $segment_value = "";
+
 
 
 my $main = new MainWindow;
@@ -85,23 +88,20 @@ my $left_side_frame = $can_frame->Frame->pack (-side => "left");
 my $can = $can_frame->Canvas (-width => 600,
 			      -height => 500)->pack (-side => "left");
 
-my $classframe = $can_frame->Frame->pack (-side => "left");
+my $right_side_frame = $can_frame->Frame->pack (-side => "left");
 
 create_events ($can);
 
 my $landsat = new landsat ();
 $landsat->set_frame ($can_frame);
 $landsat->set_canvas ($can);
-$landsat->set_class_frame ($classframe);
 
 foreach my $filename (@ARGV) {
 #    print STDERR "TRACK FILE: $filename\n";
     my $track = new track ();
-#    $track->parse_file ("/home/tompe/GPS/Walk014_cGPS_00000001.gpx");
     $track->parse_file ($filename);
     $trackcollection->add_track ($track);
 }
-
 $landsat->set_track_collection ($trackcollection);
 
 my ($start_lat, $start_lon) = (58.4, 15.6);
@@ -182,6 +182,35 @@ $left_side_frame->Button (-text => "GOTO",
 		     }
 		 )->pack (-side => "top");
 
+#
+# Right side
+#
+
+$entrywidth = 15;
+
+$right_side_frame->Label (-text => "Segment")->pack (-side => "top");
+
+$tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Key:",
+		  -width => $fwidth)->pack (-side => "left");
+create_segment_key_menu ($tmpframe);
+
+$tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "New key:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$segment_value,
+		  -width => $entrywidth)->pack (-side => "left");
+
+$tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Value:",
+		  -width => $fwidth)->pack (-side => "left");
+create_segment_value_menu ($tmpframe);
+
+$tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "New value:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$segment_value,
+		  -width => $entrywidth)->pack (-side => "left");
 
 
 #
@@ -676,6 +705,67 @@ sub create_class_menu {
 }
 
 
+sub create_segment_key_menu {
+    my $frame = shift;
+    my $mb = $frame->Menubutton (-text => "name",
+                                 -relief => 'raised',
+				 -bg => "white",
+				 -width => 20,
+                                 );
+    $mb->pack (-side => 'left',
+               -fill => "x",
+               -expand => 1);
+
+    $mb->command (-label => "NEW",
+		  -command => sub { 
+		      $osm->update_segments_key_colour ("NEW", $can);
+		      $mb->configure (-text => "NEW");
+		  });
+
+    foreach my $k ($osm->get_segment_keys ()) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_segments_key_colour ($k, $can);
+			  $mb->configure (-text => $k);
+		      },
+		      );
+
+    }
+    $osm->update_segments_key_colour ("name", $can);
+    return $mb;
+}
+
+
+sub create_segment_value_menu {
+    my $frame = shift;
+    my $mb = $frame->Menubutton (-text => "NEW",
+                                 -relief => 'raised',
+				 -bg => "white",
+				 -width => 20,
+                                 );
+    $mb->pack (-side => 'left',
+               -fill => "x",
+               -expand => 1);
+
+    $mb->command (-label => "NEW",
+		  -command => sub { 
+		      $osm->update_segments_value_colour ("NEW", $can);
+		      $mb->configure (-text => "NEW");
+		  });
+
+    foreach my $k ($osm->get_segment_values ()) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_segments_value_colour ($k, $can);
+			  $mb->configure (-text => $k);
+		      },
+		      );
+
+    }
+    return $mb;
+}
+
+
 sub create_segment_item {
     my ($x0, $y0, $x1, $y1) = @_;
     my $id = $can->create ('line', $x0, $y0, $x1, $y1,
@@ -686,6 +776,48 @@ sub create_segment_item {
     $can->raise ("osmnode", "osmsegment");
     return $id;
 }
+
+
+
+    #
+    # Fix buttons, code should maybe be somewhere else
+    #
+
+##    my @nodes = $self->get_osm ()->get_nodes ();
+##    foreach my $node (@nodes) {
+##	my $keyvalues = $node->key_value_hash ();
+##	if ($keyvalues) {
+##	    foreach my $k (keys %{$keyvalues}) {
+#####		print STDERR "$k - $keyvalues->{$k}\n";
+##		if ($k eq "class") {
+##		    my $value = $keyvalues->{$k};
+##		    if (not defined $self->{CLASSBUTTONMAP}->{$value}) {
+##			$self->{CLASSBUTTONMAP}->{$value} = 1;
+##			$self->make_class_button ($value);
+##		    }
+##		}
+##	    }
+##	}
+##    }
+##
+##    $self->fix_order ();
+
+
+sub make_class_button {
+    my $self = shift;
+    my $name = shift;
+    my $frame = shift;
+    $frame->Button (-text => $name,
+		    -width => 20,
+		    -command => sub { 
+			print "CLASS: $name\n"; 
+			my $can = $self->get_canvas ();
+			$self->get_osm ()->toggle_colour ($can, $name);
+		    }
+		  )->pack (-side => "top");
+
+}
+
 
 
 =pod

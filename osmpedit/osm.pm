@@ -112,8 +112,32 @@ sub get_segment_colour {
 
 sub get_segment_classes {
     my $self = shift;
-    my $class = shift;
     return keys %{$self->{SEGCOLOUR}};
+}
+
+sub get_segment_keys {
+    my $self = shift;
+    my %keys;
+    foreach my $s ($self->get_segments ()) {
+	foreach my $k ($s->get_keys ()) {
+	    $keys{$k} = 1;
+	}
+    }
+    return keys %keys;
+}
+
+
+sub get_segment_values {
+    my $self = shift;
+    my $key = $self->{SEGMENTKEY};
+    my %values;
+    foreach my $s ($self->get_segments ()) {
+	my $v = $s->get_key_value ($key);
+	if ($v) {
+	    $values{$v} = 1;
+	}
+    }
+    return keys %values;
 }
 
 
@@ -499,6 +523,43 @@ sub update_segment_colour {
 	my $bike = $s->get_bike ();
 	my $c = $self->get_segment_colour ($class, $car, $bike, $foot);
 	$can->itemconfigure ($item, "-fill", $c);
+    }
+}
+
+sub update_segments_key_colour {
+    my $self = shift;
+    my $key = shift;
+    my $can = shift;
+    $self->{SEGMENTKEY} = $key;
+    foreach my $s ($self->get_segments ()) {
+	my $uid = $s->get_uid ();
+	my $item = $self->{UIDTOITEM}->{$uid};
+	if ($s->is_key ($key)) {
+	    my $tags = $s->get_tags ();
+	    print STDERR "IS KEY! $key - $tags\n";
+	    $can->itemconfigure ($item, "-fill", "yellow");
+	} else {
+##	    print STDERR "IS NOT KEY! $key\n";
+	    $self->update_segment_colour ($item, $can);
+	}
+    }
+
+}
+
+sub update_segments_value_colour {
+    my $self = shift;
+    my $value = shift;
+    my $can = shift;
+    my $key = $self->{SEGMENTKEY};
+    $self->update_segments_key_colour ($key, $can);
+    foreach my $s ($self->get_segments ()) {
+	my $uid = $s->get_uid ();
+	my $item = $self->{UIDTOITEM}->{$uid};
+	if ($s->get_key_value ($key) eq $value) {
+	    my $tags = $s->get_tags ();
+	    print STDERR "IS VALUE! $value - $tags\n";
+	    $can->itemconfigure ($item, "-fill", "green");
+	}
     }
 }
 

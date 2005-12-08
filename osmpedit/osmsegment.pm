@@ -60,6 +60,22 @@ sub add_key_value {
     }
 }
 
+sub get_key_value {
+    my $self = shift;
+    my $key = shift;
+    return $self->{KEYVALUE}->{$key};
+}
+
+sub is_key {
+    my $self = shift;
+    my $key = shift;
+    if (defined $self->{KEYVALUE}->{$key}) {
+	return 1;
+    } else {
+	return 0;
+    }
+}
+
 sub key_value_hash {
     my $self = shift;
     return $self->{KEYVALUE}
@@ -115,8 +131,12 @@ sub set_tags {
     my @items = split (";", $val);
     foreach my $item (@items) {
 ##	print STDERR "TAG ITEM: $item\n";
+	$item =~ s/^\s*//;
+	$item =~ s/\s*$//;
 	my ($name, $val) = split ("=", $item);
-	$self->add_key_value ($name, $val);
+	if ($name and $val) {
+	    $self->add_key_value ($name, $val);
+	}
     }
 }
 
@@ -128,6 +148,11 @@ sub get_tags {
 	$res .= "$k=$val;";
     }
     return $res;
+}
+
+sub get_keys {
+    my $self = shift;
+    return keys %{$self->{KEYVALUE}};
 }
 
 sub get_class {

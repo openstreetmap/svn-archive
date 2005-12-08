@@ -37,7 +37,6 @@ sub new {
 	SEGMENTSHIDDEN => 0,
 	TRACKCOLLECTION => 0,
 	FRAME => 0,
-	CLASSFRAME => 0,
 	CANVAS => 0,
 	CURRENTTILE => 0,
 	SCALE => 100,
@@ -143,17 +142,6 @@ sub get_frame {
     return $self->{FRAME};;
 }
 
-sub set_class_frame {
-    my $self = shift;
-    my $val = shift;
-    $self->{CLASSFRAME} = $val;
-}
-
-sub get_class_frame {
-    my $self = shift;
-    return $self->{CLASSFRAME};;
-}
-
 sub set_canvas {
     my $self = shift;
     my $val = shift;
@@ -255,28 +243,6 @@ sub display_tile {
     #
 
 
-    #
-    # Fix buttons, code should maybe be somewhere else
-    #
-
-##    my @nodes = $self->get_osm ()->get_nodes ();
-##    foreach my $node (@nodes) {
-##	my $keyvalues = $node->key_value_hash ();
-##	if ($keyvalues) {
-##	    foreach my $k (keys %{$keyvalues}) {
-#####		print STDERR "$k - $keyvalues->{$k}\n";
-##		if ($k eq "class") {
-##		    my $value = $keyvalues->{$k};
-##		    if (not defined $self->{CLASSBUTTONMAP}->{$value}) {
-##			$self->{CLASSBUTTONMAP}->{$value} = 1;
-##			$self->make_class_button ($value);
-##		    }
-##		}
-##	    }
-##	}
-##    }
-##
-##    $self->fix_order ();
 }
 
 sub load_osm {
@@ -287,20 +253,6 @@ sub load_osm {
     $self->update_osm ();
 }
 
-sub make_class_button {
-    my $self = shift;
-    my $name = shift;
-    my $frame = $self->get_class_frame ();
-    $frame->Button (-text => $name,
-		    -width => 20,
-		    -command => sub { 
-			print "CLASS: $name\n"; 
-			my $can = $self->get_canvas ();
-			$self->get_osm ()->toggle_colour ($can, $name);
-		    }
-		  )->pack (-side => "top");
-
-}
 
 #sub display () {
 #    my $self = shift;

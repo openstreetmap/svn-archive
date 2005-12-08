@@ -59,6 +59,7 @@ sub clean {
     $self->{UIDTOSEGMENTMAP} = {};
     $self->{UIDTONODEMAP} = {};
     $self->{ITEMTOUID} = {};
+    $self->{UIDTOITEM} = {};
 }
 
 sub connect_uid_item {
@@ -99,12 +100,12 @@ sub get_segment_colour {
     my $foot = shift;
     my $res = "white";
     if ($self->{SEGCOLOUR}->{$class}) {
-	if ($car eq "yes" or $bike eq "yes" or $foot eq "yes") {
+#	if ($car eq "yes" or $bike eq "yes" or $foot eq "yes") {
 	    $res =  $self->{SEGCOLOUR}->{$class};
-	}
-	if ($class eq "train") {
-	    $res = $self->{SEGCOLOUR}->{$class};
-	}
+#	}
+#	if ($class eq "train") {
+#	    $res = $self->{SEGCOLOUR}->{$class};
+#	}
     }
 ##    print "COL for:$class:$res:\n";
     return $res;
@@ -497,18 +498,34 @@ sub draw {
     }
 }
 
-sub update_segment_class {
+sub update_segment_key_value {
     my $self = shift;
     my $item = shift;
+    my $key = shift;
+    my $value = shift;
     my $s = $self->get_segment_from_item ($item);
     if ($s) {
-	$s->add_key_value ("class", $self->{DEFAULTCLASS});
+##	$s->add_key_value ("class", $self->{DEFAULTCLASS});
+	$s->add_key_value ($key, $value);
 	$s->print ();
 	my $username  = $self->get_username ();
 	my $password  = $self->get_password ();
 	$s->update_osm_segment ($username, $password);
     }
 }
+
+##sub update_segment_class {
+##    my $self = shift;
+##    my $item = shift;
+##    my $s = $self->get_segment_from_item ($item);
+##    if ($s) {
+##	$s->add_key_value ("class", $self->{DEFAULTCLASS});
+##	$s->print ();
+##	my $username  = $self->get_username ();
+##	my $password  = $self->get_password ();
+##	$s->update_osm_segment ($username, $password);
+##    }
+##}
 
 sub update_segment_colour {
     my $self = shift;
@@ -536,10 +553,9 @@ sub update_segments_key_colour {
 	my $item = $self->{UIDTOITEM}->{$uid};
 	if ($s->is_key ($key)) {
 	    my $tags = $s->get_tags ();
-	    print STDERR "IS KEY! $key - $tags\n";
+##	    print STDERR "IS KEY! $key - $tags\n";
 	    $can->itemconfigure ($item, "-fill", "yellow");
 	} else {
-##	    print STDERR "IS NOT KEY! $key\n";
 	    $self->update_segment_colour ($item, $can);
 	}
     }

@@ -212,36 +212,28 @@ $bframe->Button (-text => "Reset View",
 $bframe->Button (-text => "North",
 		 -command => sub { 
 		     $landsat->north ();
-		     $landsat->update_tracks ();
-		     $landsat->update_osm ();
-		     $landsat->fix_order ();
-		     }
+		     update_display ();
+		 }
 		 )->pack (-side => "left");
 
 $bframe->Button (-text => "South",
 		 -command => sub {
 		     $landsat->south ();
-		     $landsat->update_tracks ();
-		     $landsat->update_osm ();
-		     $landsat->fix_order ();
+		     update_display ();
 		 }
 		 )->pack (-side => "left");
 
 $bframe->Button (-text => "West",
 		 -command => sub { 
 		     $landsat->west ();
-		     $landsat->update_tracks ();
-		     $landsat->update_osm ();
-		     $landsat->fix_order ();
+		     update_display ();
 		 }
 		 )->pack (-side => "left");
 
 $bframe->Button (-text => "East",
 		 -command => sub {
 		     $landsat->east ();
-		     $landsat->update_tracks ();
-		     $landsat->update_osm ();
-		     $landsat->fix_order ();
+		     update_display ();
 		 }
 		 )->pack (-side => "left");
 
@@ -249,18 +241,14 @@ $bframe->Button (-text => "East",
 $bframe->Button (-text => "ZoomIn",
 		 -command => sub { 
 		     $landsat->zoomin ();
-		     $landsat->update_tracks ();
-		     $landsat->update_osm ();
-		     $landsat->fix_order ();
+		     update_display ();
 		     }
 		 )->pack (-side => "left");
 
 $bframe->Button (-text => "ZoomOut",
 		 -command => sub { 
 		     $landsat->zoomout ();
-		     $landsat->update_tracks ();
-		     $landsat->update_osm ();
-		     $landsat->fix_order ();
+		     update_display ();
 		 }
 		 )->pack (-side => "left");
 
@@ -462,7 +450,7 @@ sub key_value_frame {
 		      -width => $fwidth)->pack (-side => "left");
 
     my $segment_key_menu =  $tmpframe->Menubutton (-relief => 'raised',
-						   -bg => "white",
+						   -bg => "yellow",
 						   -width => 20,
 						   );
     $segment_key_menu->configure (-text => "none");
@@ -498,7 +486,7 @@ sub key_value_frame {
     
     my $segment_value_menu = $tmpframe->Menubutton (-text => "name",
 						    -relief => 'raised',
-						    -bg => "white",
+						    -bg => "green",
 						    -width => 20,
 						    );
 
@@ -694,10 +682,7 @@ sub start_motionimage {
 }
 
 sub release_motionimage {
-##    print STDERR "RELEASE_MOTIONIMAGE\n";
-    $landsat->update_tracks ();
-    $landsat->update_osm ();
-    $landsat->fix_order ();
+    update_display ();
 }
 
 
@@ -757,29 +742,29 @@ sub create_events {
 }
 
 
-sub create_class_menu {
-    my $frame = shift;
-    my $mb = $frame->Menubutton (-text => "none",
-                                 -relief => 'raised',
-				 -bg => "white",
-				 -width => 20,
-                                 );
-    $mb->pack (-side => 'left',
-               -fill => "x",
-               -expand => 1);
-
-    foreach my $k ($osm->get_segment_classes ()) {
-###	print "CLASS KEY: $k\n";
-	$mb->command (-label => $k,
-		      -command => sub { 
-			  $osm->set_default_class ($k);
-			  $mb->configure (-text => $k);
-			  $mb->configure (-bg => $osm->get_segment_colour ($k, "yes", "yes", "yes"));
-		      });
-
-    }
-    return $mb;
-}
+##sub create_class_menu {
+##    my $frame = shift;
+##    my $mb = $frame->Menubutton (-text => "none",
+##                                 -relief => 'raised',
+##				 -bg => "white",
+##				 -width => 20,
+##                                 );
+##    $mb->pack (-side => 'left',
+##               -fill => "x",
+##               -expand => 1);
+##
+##    foreach my $k ($osm->get_segment_classes ()) {
+#####	print "CLASS KEY: $k\n";
+##	$mb->command (-label => $k,
+##		      -command => sub { 
+##			  $osm->set_default_class ($k);
+##			  $mb->configure (-text => $k);
+##			  $mb->configure (-bg => $osm->get_segment_colour ($k, "yes", "yes", "yes"));
+##		      });
+##
+##    }
+##    return $mb;
+##}
 
 
 sub update_segment_key_menu {
@@ -802,7 +787,6 @@ sub update_segment_key_menu {
 			  $segment_key = $k;
 		      },
 		      );
-
     }
 }
 
@@ -824,7 +808,6 @@ sub update_segment_value_menu {
 			  $segment_value = $k;
 		      },
 		      );
-
     }
 }
 
@@ -832,12 +815,19 @@ sub update_segment_value_menu {
 sub create_segment_item {
     my ($x0, $y0, $x1, $y1) = @_;
     my $id = $can->create ('line', $x0, $y0, $x1, $y1,
-#                      -arrow => "last",
 			   -fill => "white",
 			   -width => 2,
 			   -tag => "osmsegment");
     $can->raise ("osmnode", "osmsegment");
     return $id;
+}
+
+sub update_display {
+    $landsat->update_tracks ();
+    $landsat->update_osm ();
+    $landsat->fix_order ();
+    $osm->update_segments_key_colour ($segment_key, $can);
+    $osm->update_segments_value_colour ($segment_value, $can);
 }
 
 

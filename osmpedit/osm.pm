@@ -422,35 +422,6 @@ sub draw {
 	my $uid = $segment->get_uid ();
 	
 
-#¨	my $from = $segment->get_from ();
-#¨	my $to = $segment->get_to ();
-#¨
-#¨	my ($flat, $flon) = $self->get_position ($from);
-#¨	my ($tlat, $tlon) = $self->get_position ($to);
-#¨
-#¨	my $fromoutside = 0;
-#¨	my $tooutside = 0;
-#¨	if ($flat > $north or $flat < $south or $flon > $east or $flon<$west) {
-#¨	    $fromoutside = 1;
-#¨	}
-#¨
-#¨	if ($tlat > $north or $tlat < $south or $tlon > $east or $tlon<$west) {
-#¨	    $tooutside = 1;
-#¨	}
-#¨
-#¨	if ($fromoutside or $tooutside) { # change when clamping works...
-#¨	    next;
-#¨	}
-#¨
-#¨
-#¨##	print STDERR "DRAW SEGMENT: $flat $flon $tlat $tlon\n";
-#¨
-#¨	my $x0 = ($flon-$west)/$dx*$w;
-#¨	my $y0 = $h-($flat-$south)/$dy*$h;
-#¨	my $x1 = ($tlon-$west)/$dx*$w;
-#¨	my $y1 = $h-($tlat-$south)/$dy*$h;
-#¨
-
 	my ($x0, $y0, $x1, $y1) = $self->get_segment_canvas_coords ($landsat,
 								    $segment);
 	next unless ($x0);
@@ -483,13 +454,9 @@ sub draw {
 	my $lat = $node->get_lat ();
 	my $lon = $node->get_lon ();
 	my $uid = $node->get_uid ();
-#	if ($uid ne "275622") {
-#	    next;
-#	}
 	if ($lat > $north or $lat < $south or $lon > $east or $lon < $west) {
 	    next;
 	}
-
 #	print STDERR "DRAW NODE: $lat $lon\n";
 	my $x = ($lon-$west)/$dx*$w;
 	my $y = $h-($lat-$south)/$dy*$h;
@@ -573,7 +540,7 @@ sub update_segments_value_colour {
 	my $item = $self->{UIDTOITEM}->{$uid};
 	if ($s->get_key_value ($key) eq $value) {
 	    my $tags = $s->get_tags ();
-	    print STDERR "IS VALUE! $value - $tags\n";
+##	    print STDERR "IS VALUE! $value - $tags\n";
 	    $can->itemconfigure ($item, "-fill", "green");
 	}
     }

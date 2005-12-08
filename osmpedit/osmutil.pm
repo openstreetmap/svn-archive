@@ -146,6 +146,9 @@ sub delete_segment {
     my $password = shift;
 
     my $resp = curl::delete ("segment/$uid", $username, $password);
+    if (not $resp) {
+	print STDERR "WARNING osmutil: Deletion of segment $uid failed\n";
+    }
     return $resp;
 }
 

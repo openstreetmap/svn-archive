@@ -327,7 +327,44 @@ sub button1 {
     print STDERR "POSITION: $lat $lon\n";
 
     if ($editmode eq "create") {
+	my $segment = $osm->get_segment_from_item ($id);
 	my $uid = $osm->create_node ($lat, $lon, "");
+	if ($segment and $uid) {
+	    my $seguid = $segment->get_uid ();
+	    # Create new segments
+	    my $from = $segment->get_from ();
+	    my $to = $segment->get_to ();
+
+	    my $suid0 = $osm->create_segment ($from, $uid);
+	    my $suid1 = $osm->create_segment ($uid, $to);
+
+	    if ($suid0 and $suid1) {
+		# delete the old segment
+		osmutil::delete_segment ($seguid, $user, $password);
+		  my $sid0 = create_segment_item (0, 0, 0, 0);
+		  my $sid1 = create_segment_item (0, 0, 0, 0);
+		  my $s0 = $osm->get_segment ($suid0);
+		  my $s1 = $osm->get_segment ($suid1);
+
+		  $s0->set_tags ($segment->get_tags ());
+		  $s1->set_tags ($segment->get_tags ());
+
+		  $osm->connect_uid_item ($suid0, $sid0);
+		  $osm->connect_uid_item ($suid1, $sid1);
+
+		  $osm->update_segment_colour ($sid0, $can);
+		  $osm->update_segment_colour ($sid1, $can);
+
+		  $can->coords ($sid0, $osm->get_segment_canvas_coords ($landsat, $s0));
+		  $can->coords ($sid1, $osm->get_segment_canvas_coords ($landsat, $s1));
+
+		  $can->delete ($id);
+	      } else {
+		# Failed to create two new segments.  Cleanup.
+		osmutil::delete_segment ($suid0, $user, $password) if ($suid0);
+		osmutil::delete_segment ($suid1, $user, $password) if ($suid1);
+	    }
+	}
 	if ($uid) {
 	    my $item = $osm->draw_node ($can, $x, $y, 0);
 	    $osm->connect_uid_item ($uid, $item);
@@ -352,14 +389,7 @@ sub button1 {
 	    my ($x0, $y0, $x1, $y1) = $can->coords ($id);
 	    my $xx = ($x0+$x1)/2;
 	    my $yy = ($y0+$y1)/2;
-	    $segment_create_id = 
-		$can->create ('line', $xx, $yy, $xx, $yy,
-#                      -arrow => "last",
-			      -fill => "white",
-			      -width => 2,
-			      -tag => "osmsegment");
-	    $can->raise ("osmnode", "osmsegment");
-
+	    $segment_create_id = create_segment_item ($xx, $yy, $xx, $yy);
 	}
 	my $seg = $osm->get_segment_from_item ($id);
 	if ($seg) {
@@ -643,6 +673,18 @@ sub create_class_menu {
 
     }
     return $mb;
+}
+
+
+sub create_segment_item {
+    my ($x0, $y0, $x1, $y1) = @_;
+    my $id = $can->create ('line', $x0, $y0, $x1, $y1,
+#                      -arrow => "last",
+			   -fill => "white",
+			   -width => 2,
+			   -tag => "osmsegment");
+    $can->raise ("osmnode", "osmsegment");
+    return $id;
 }
 
 

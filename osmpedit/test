@@ -63,7 +63,7 @@ if (defined $opt_createsegment) {
 if (defined $opt_deletesegment) {
     my $uid = $opt_deletesegment;
     my $resp = osmutil::delete_segment ($uid, $username, $password);
-    if ($resp < 0) {
+    if (not $resp) {
 	print "DELETE FAILED: $uid\n";
     } else {
 	print "Segment $uid deleted\n";;
@@ -110,7 +110,7 @@ if (defined $opt_nodetagupdate) {
     
     
     my $resp = osmutil::delete_node ($uid, $username, $password);
-    if ($resp < 0) {
+    if (not $resp) {
 	print "DELETE FAILED: $uid\n";
     } else {
 	print "Node $uid deleted\n";;

@@ -261,10 +261,14 @@ sub fetch {
 			       $username, $password);
 ##    print STDERR "$data\n";
 
-    my $filename = "$ENV{HOME}/.osmpedit/cache/lastosm.xml";
-    open XML, ">$filename" or die "Could not open $filename: $!";
-    print XML "$data";
-    close XML;
+    if ($data) {
+	my $filename = "$ENV{HOME}/.osmpedit/cache/lastosm.xml";
+	open XML, ">$filename" or die "Could not open $filename: $!";
+	print XML "$data";
+	close XML;
+    } else {
+	print STDERR "WARNING: Failed to read OSM data from server\n";
+    }
 }
 
 sub parse {
@@ -277,7 +281,7 @@ sub parse {
     $self->clean ();
 
     my $filename = "$ENV{HOME}/.osmpedit/cache/lastosm.xml";
-    if (-f "$filename") {
+    if (-e "$filename" and -s "$filename") {
 	my $p = XML::TokeParser->new("$filename");
 	if (not $p) {
 	    print STDERR "WARNING: Could not parse osm data\n";
@@ -328,6 +332,49 @@ sub parse {
 }
 
 
+sub get_segment_canvas_coords {
+    my $self = shift;
+    my $landsat = shift;
+    my $segment = shift;
+
+    my $w = $landsat->get_pixel_width ();
+    my $h = $landsat->get_pixel_height ();
+    my ($west, $south, $east, $north) = $landsat->get_area ();
+    my $dx = $east-$west;
+    my $dy = $north-$south;
+
+    my $from = $segment->get_from ();
+    my $to = $segment->get_to ();
+    my $uid = $segment->get_uid ();
+
+    my ($flat, $flon) = $self->get_position ($from);
+    my ($tlat, $tlon) = $self->get_position ($to);
+
+    my $fromoutside = 0;
+    my $tooutside = 0;
+    if ($flat > $north or $flat < $south or $flon > $east or $flon<$west) {
+	$fromoutside = 1;
+    }
+
+    if ($tlat > $north or $tlat < $south or $tlon > $east or $tlon<$west) {
+	$tooutside = 1;
+    }
+
+    if ($fromoutside or $tooutside) { # change when clamping works...
+	return ();
+    }
+
+
+##	print STDERR "DRAW SEGMENT: $flat $flon $tlat $tlon\n";
+
+    my $x0 = ($flon-$west)/$dx*$w;
+    my $y0 = $h-($flat-$south)/$dy*$h;
+    my $x1 = ($tlon-$west)/$dx*$w;
+    my $y1 = $h-($tlat-$south)/$dy*$h;
+    return ($x0, $y0, $x1, $y1);
+}
+
+
 sub draw {
     my $self = shift;
     my $landsat = shift;
@@ -347,34 +394,41 @@ sub draw {
     $can->delete ("osmnode");
 
     foreach my $segment ($self->get_segments ()) {
-	my $from = $segment->get_from ();
-	my $to = $segment->get_to ();
 	my $uid = $segment->get_uid ();
+	
 
-	my ($flat, $flon) = $self->get_position ($from);
-	my ($tlat, $tlon) = $self->get_position ($to);
+#¨	my $from = $segment->get_from ();
+#¨	my $to = $segment->get_to ();
+#¨
+#¨	my ($flat, $flon) = $self->get_position ($from);
+#¨	my ($tlat, $tlon) = $self->get_position ($to);
+#¨
+#¨	my $fromoutside = 0;
+#¨	my $tooutside = 0;
+#¨	if ($flat > $north or $flat < $south or $flon > $east or $flon<$west) {
+#¨	    $fromoutside = 1;
+#¨	}
+#¨
+#¨	if ($tlat > $north or $tlat < $south or $tlon > $east or $tlon<$west) {
+#¨	    $tooutside = 1;
+#¨	}
+#¨
+#¨	if ($fromoutside or $tooutside) { # change when clamping works...
+#¨	    next;
+#¨	}
+#¨
+#¨
+#¨##	print STDERR "DRAW SEGMENT: $flat $flon $tlat $tlon\n";
+#¨
+#¨	my $x0 = ($flon-$west)/$dx*$w;
+#¨	my $y0 = $h-($flat-$south)/$dy*$h;
+#¨	my $x1 = ($tlon-$west)/$dx*$w;
+#¨	my $y1 = $h-($tlat-$south)/$dy*$h;
+#¨
 
-	my $fromoutside = 0;
-	my $tooutside = 0;
-	if ($flat > $north or $flat < $south or $flon > $east or $flon<$west) {
-	    $fromoutside = 1;
-	}
-
-	if ($tlat > $north or $tlat < $south or $tlon > $east or $tlon<$west) {
-	    $tooutside = 1;
-	}
-
-	if ($fromoutside or $tooutside) { # change when clamping works...
-	    next;
-	}
-
-
-##	print STDERR "DRAW SEGMENT: $flat $flon $tlat $tlon\n";
-
-	my $x0 = ($flon-$west)/$dx*$w;
-	my $y0 = $h-($flat-$south)/$dy*$h;
-	my $x1 = ($tlon-$west)/$dx*$w;
-	my $y1 = $h-($tlat-$south)/$dy*$h;
+	my ($x0, $y0, $x1, $y1) = $self->get_segment_canvas_coords ($landsat,
+								    $segment);
+	next unless ($x0);
 
 	my $colour = "white";
 	my $class = $segment->get_class ();

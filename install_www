@@ -34,6 +34,10 @@ cp javascript/* $ROOT/javascript/
 
 # images FIXME
 
+mkdir $ROOT/images
+
+cp html/images/somerights20.png $ROOT/images/
+cp html/images/mag_map-120x120.png $ROOT/images/
 
 # applet
 cd java

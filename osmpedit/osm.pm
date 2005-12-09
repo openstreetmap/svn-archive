@@ -39,7 +39,6 @@ sub new {
 	ITEMTOUID => {},
 	UIDTOITEM => {},
 	SEGCOLOUR => {},
-	DEFAULTCLASS => "none", 
         @_
 	}, $class;
     $obj->{SEGCOLOUR}->{"none"} = "white";
@@ -232,13 +231,6 @@ sub get_position {
     }
     return @res;
 }
-
-sub set_default_class {
-    my $self = shift;
-    my $val = shift;
-    $self->{DEFAULTCLASS} = $val;
-}
-
 
 sub set_username {
     my $self = shift;
@@ -472,7 +464,6 @@ sub update_segment_key_value {
     my $value = shift;
     my $s = $self->get_segment_from_item ($item);
     if ($s) {
-##	$s->add_key_value ("class", $self->{DEFAULTCLASS});
 	$s->add_key_value ($key, $value);
 	$s->print ();
 	my $username  = $self->get_username ();
@@ -486,7 +477,6 @@ sub update_segment_key_value {
 ##    my $item = shift;
 ##    my $s = $self->get_segment_from_item ($item);
 ##    if ($s) {
-##	$s->add_key_value ("class", $self->{DEFAULTCLASS});
 ##	$s->print ();
 ##	my $username  = $self->get_username ();
 ##	my $password  = $self->get_password ();
@@ -629,9 +619,9 @@ sub create_segment {
     my $self = shift;
     my $from = shift;
     my $to = shift;
+    my $class = shift;
     my $username  = $self->get_username ();
     my $password  = $self->get_password ();
-    my $class = $self->{DEFAULTCLASS};
     my $s = new osmsegment;
     $s->set_from ($from);
     $s->set_to ($to);

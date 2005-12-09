@@ -51,6 +51,8 @@ if (not $user or not $password) {
 $opt_lat = 51.015 if defined $opt_petersfield;
 $opt_lon = -0.95 if defined $opt_petersfield;
 
+my $move_image_state = 0;
+
 my $editmode = "segment";
 ##my $editmode = "create";
 my $movedid = 0;
@@ -319,11 +321,8 @@ sub button1 {
     my($c, $x, $y) = @_;
     my @item = $can->find ('withtag', 'current');
     my $id = $item[0];
-##    print "Item: $id\n";
     $x = $can->canvasx($x);
     $y = $can->canvasy($y);
-
-##    print STDERR "CANPOS: $x $y\n";
     my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
     print STDERR "POSITION: $lat $lon\n";
 
@@ -336,8 +335,8 @@ sub button1 {
 	    my $from = $segment->get_from ();
 	    my $to = $segment->get_to ();
 
-	    my $suid0 = $osm->create_segment ($from, $uid);
-	    my $suid1 = $osm->create_segment ($uid, $to);
+	    my $suid0 = $osm->create_segment ($from, $uid, "");
+	    my $suid1 = $osm->create_segment ($uid, $to, "");
 
 	    if ($suid0 and $suid1) {
 		# delete the old segment
@@ -415,7 +414,11 @@ sub button1 {
 	if ($tonode and $from_node_uid) {
 	    my $touid = $tonode->get_uid ();
 	    print STDERR "CREATE SEGMENT: $from_node_uid -> $touid\n";
-	    my $suid = $osm->create_segment ($from_node_uid, $touid);
+	    my $class = "";
+	    if ($segment_key eq "class") {
+		$class = $segment_value;
+	    }
+	    my $suid = $osm->create_segment ($from_node_uid, $touid, $class);
 	    if ($suid) {
 		$osm->connect_uid_item ($suid, $segment_create_id);
 		$osm->update_segment_colour ($segment_create_id, $can);
@@ -469,6 +472,8 @@ sub key_value_frame {
 			   push @extra_keys, $skey;
 			   $seg_key_menu->menu ()->delete (0, "end");
 			   update_segment_key_menu ($seg_key_menu);
+			   $seg_key_menu->menu ()->invoke ("$skey");
+##			   print STDERR "SEGMENT_KEY: $segment_key\n";
 		       },
 		       -width => $fwidth
 		       )->pack (-side => "left");
@@ -508,6 +513,7 @@ sub key_value_frame {
 			   push @extra_values, $svalue;
 			   $seg_value_menu->menu ()->delete (0, "end");
 			   update_segment_value_menu ($seg_value_menu);
+			   $seg_value_menu->menu ()->invoke ("$svalue");
 		       },
 		       -width => $fwidth
 		       )->pack (-side => "left");
@@ -647,6 +653,14 @@ sub b1motionimage {
     my $dlat = ($lat_motionimage - $lat)/10;
     my $dlon = ($lon_motionimage - $lon)/10;
 
+    if ($move_image_state == 1) {
+	$move_image_state = 2;
+	$can->delete ("track");
+	$can->delete ("osmnode");
+	$can->delete ("osmsegment");
+    }
+
+
 ###    print STDERR "btmotionimage: $dx $dy  --- $dlat $dlon\n";
 
     $landsat->add_to_center ($dlat, $dlon);
@@ -676,13 +690,14 @@ sub start_motionimage {
     $y_motionimage = $y;
 
     ($lat_motionimage, $lon_motionimage) = $landsat->ctowgs84 ($x, $y);
-    $can->delete ("track");
-    $can->delete ("osmnode");
-    $can->delete ("osmsegment");
+    $move_image_state = 1;
 }
 
 sub release_motionimage {
-    update_display ();
+    if ($move_image_state == 2) {
+	update_display ();
+    }
+    $move_image_state = 0;
 }
 
 
@@ -826,8 +841,12 @@ sub update_display {
     $landsat->update_tracks ();
     $landsat->update_osm ();
     $landsat->fix_order ();
-    $osm->update_segments_key_colour ($segment_key, $can);
-    $osm->update_segments_value_colour ($segment_value, $can);
+    if ($segment_key) {
+	$osm->update_segments_key_colour ($segment_key, $can);
+	if ($segment_value) {
+	    $osm->update_segments_value_colour ($segment_value, $can);
+	}
+    }
 }
 
 
@@ -894,8 +913,8 @@ the editor is centered on the tracks.
 
 Landsat tiles will be loaded and cached in $HOME/.osmpedit/cache/.
 You navigate by pressing B<North>, B<South>, B<West>, B<East>,
-B<ZoomIn> and B<ZoomOut>.  You can also move the navigate by pressing
-the left button on the background image and move the mouse.
+B<ZoomIn> and B<ZoomOut>.  You can also navigate by pressing the left
+button on the background image and move the mouse.
 
 To load the OSM data press B<Reload OSM>.  This data is cached in
 $HOME/.osmpedit/cache/lastosm.xml and the nodes and segments in this
@@ -920,21 +939,35 @@ the OSM server and display it in the editing area.  If you try to
 create a node on a segment the segment will be split into two parts
 and the two parts will be connected to the new node.  Two new segments
 will be created and the old segment will be deleted from the OSM
-server.
+server.  The two new segments will have the same value of their tags
+field as the deleted segment.
 
 In B<Delete> mode pressing the left button over a node will delete it.
 Pressing it over a segment will delete the segment.  It is probably
 best to delete segments before nodes.
 
-In B<Segment> mode pressing the left button over segment will change
-its class to the class selected by the menu button to the right of the
-B<Segment> choice.  Different classes of segment will be displayed in
-different colours.  The colour used for a class is the same as the
-background colour for the menu button when that class is selected.  A
-new segment is created by pressing and releasing the left button over
-the B<from> node.  Then move the cursor to the B<to> node and press
-and release the left button.  The new segment is created in the OSM
-server when the left button is pressed over the B<to> node.
+In B<Segment> mode a new segment is created by pressing and releasing
+the left button over the B<from> node.  Then move the cursor to the
+B<to> node and press and release the left button.  The new segment is
+created in the OSM server when the left button is pressed over the
+B<to> node.  If a value for key "class" is specified (see below) then
+the segment will be created with the key class set to this value.
+Also some other key values will be set (e.g, car=yes for roads where
+cars usually travels).
+
+B<Segment> mode is also used for editing key/values for a segment.
+When the OSM data is loaded the B<Key> menu is initialized with an
+entry for all the keys used in the data.  Selecting one key will
+change the colour of all segments containing that key to yellow and
+initalize the B<Value> menu with an entry for each value used in the
+data for the selected key.  Choosing one value will change the colour
+of the segments with this key/value pair to green.  Pressing the left
+button on a segment will set the key value in the server.  This is a
+very efficient way to for example set the name of a street by setting
+it for each segment.  The B<New key> button is used to create a new
+key and the B<New value> button is used to create a new values.  These
+new keys and values will be available in the key and value menues.
+
 
 
 =head1 OPTIONS

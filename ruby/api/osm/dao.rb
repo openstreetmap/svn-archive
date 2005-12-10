@@ -3,7 +3,8 @@ module OSM
   require 'mysql'
   require 'singleton'
   require 'time'
-
+  require 'osm/servinfo.rb'
+  
   class StringIO
   # helper class for gzip encoding
     attr_reader :buf
@@ -84,11 +85,6 @@ module OSM
   class Dao
     include Singleton
 
-    MYSQL_SERVER = "128.40.59.181"
-    MYSQL_USER = "openstreetmap"
-    MYSQL_PASS = "openstreetmap"
-    MYSQL_DATABASE = "openstreetmap"
-
     def mysql_error(e)
       puts "Error code: ", e.errno, "\n"
       puts "Error message: ", e.error, "\n"
@@ -96,7 +92,7 @@ module OSM
 
     def get_connection
       begin
-        return Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
+        return Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
       
       rescue MysqlError => e
         mysql_error(e)

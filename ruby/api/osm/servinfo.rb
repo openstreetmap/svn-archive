@@ -1,0 +1,5 @@
+$DBSERVER = 'localhost'
+$DATABASE= 'steve'
+$USERNAME = 'steve'
+$PASSWORD = 'HB9XrDs'
+$SERVER_NAME = 'steve.dev.openstreetmap.org'

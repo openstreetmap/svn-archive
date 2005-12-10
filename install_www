@@ -38,6 +38,18 @@ mkdir $ROOT/images
 
 cp html/images/somerights20.png $ROOT/images/
 cp html/images/mag_map-120x120.png $ROOT/images/
+cp html/images/map_up.png $ROOT/images/
+cp html/images/map_down.png $ROOT/images/
+cp html/images/map_left.png $ROOT/images/
+cp html/images/map_right.png $ROOT/images/
+cp html/images/map_zoomin.png $ROOT/images/
+cp html/images/map_zoomout.png $ROOT/images/
+cp html/images/bg.gif $ROOT/css/
+cp html/images/left.gif $ROOT/css/
+cp html/images/left_on.gif $ROOT/css/
+cp html/images/right.gif $ROOT/css/
+cp html/images/right_on.gif $ROOT/css/
+cp html/images/tab_bottom.gif $ROOT/css/
 
 # applet
 cd java
@@ -60,6 +72,8 @@ mkdir -p $ROOT/ruby/api/apache
 
 cp ruby/api/*.rb $ROOT/ruby/api/0.2/
 cp ruby/api/osm/*.rb $ROOT/ruby/api/osm/
+
+ln -s $ROOT/ruby/api/osm $ROOT/ruby/osm
 
 # Apache simple-auth for REST
 cp ruby/api/apache/simple-auth.rb $ROOT/ruby/api/apache/

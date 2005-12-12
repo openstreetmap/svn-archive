@@ -46,7 +46,7 @@ begin
     title = Element.new 'title', item
     title.text = row['name']
     link = Element.new 'link', item
-    link.text = "http://www.openstreetmap.org/edit.html?lat=#{lat}&lon=#{lon}}&zoom=14"
+    link.text = "http://www.openstreetmap.org/edit.html?lat=#{lat}&lon=#{lon}&zoom=14"
    
     description = Element.new 'description', item
     description.text = "GPX file made by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."

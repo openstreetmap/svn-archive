@@ -28,7 +28,7 @@ use osmutil;
 sub new {
     my $this = shift;
     my $class = ref($this) || $this;
-    bless {
+    my $obj = bless {
 	LAT => 0,
 	LON => 0,
 	UID => 0,
@@ -38,6 +38,7 @@ sub new {
 	KEYVALUE => {},
         @_
 	}, $class;
+    return $obj;
 }
 
 
@@ -104,14 +105,24 @@ sub set_tags {
     my @items = split (";", $val);
     foreach my $item (@items) {
 #	print STDERR "ITEM:$item\n";
+	$item =~ s/^\s*//;
+	$item =~ s/\s*$//;
 	my ($name, $val) = split ("=", $item);
-	$self->add_key_value ($name, $val);
+	if ($name and $val) {
+	    $self->add_key_value ($name, $val);
+	}
     }
 }
 
 sub get_tags {
     my $self = shift;
-    return $self->{TAGS};;
+    my $res = "";
+    foreach my $k (keys %{$self->{KEYVALUE}}) {
+	my $val = $self->{KEYVALUE}->{$k};
+	$res .= "$k=$val;";
+    }
+    return $res;
+
 }
 
 sub add_from {

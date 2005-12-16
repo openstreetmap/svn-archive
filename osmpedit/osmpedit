@@ -328,7 +328,7 @@ sub button1 {
 
     if ($editmode eq "create") {
 	my $segment = $osm->get_segment_from_item ($id);
-	my $uid = $osm->create_node ($lat, $lon, "");
+	my $uid = $osm->create_node ($lat, $lon);
 	if ($segment and $uid) {
 	    my $seguid = $segment->get_uid ();
 	    # Create new segments

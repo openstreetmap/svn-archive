@@ -545,11 +545,11 @@ sub draw_node {
     my $r = 2;
     my $colour = "black";
     my $tag = "osmnode";
-    if ($node and $node->have_key_values ()) {
-	$colour = "yellow";
-	$r = 4;
-	$tag = "osmwp";
-    }
+#    if ($node and $node->have_key_values ()) {
+#	$colour = "yellow";
+#	$r = 4;
+#	$tag = "osmwp";
+#    }
     my $obj = $can->create ('oval', $x-$r, $y-$r, $x+$r, $y+$r,
 			    -fill => $colour,
 			    -outline => $colour,
@@ -600,16 +600,17 @@ sub create_node {
     my $self = shift;
     my $lat = shift;
     my $lon = shift;
-    my $tags = shift;
     my $username  = $self->get_username ();
     my $password  = $self->get_password ();
+    my $node = new osmnode;
+    $node->set_lat ($lat);
+    $node->set_lon ($lon);
+    $node->add_key_value ("editor", "osmpedit-svn");
+    my $tags = $node->get_tags ();
+
     my $uid = osmutil::create_node ($lat, $lon, $tags, $username, $password);
     if ($uid) {
-	my $node = new osmnode;
-	$node->set_lat ($lat);
-	$node->set_lon ($lon);
 	$node->set_uid ($uid);
-	$node->set_tags ($tags);
 	$self->add_node ($node);
     }
     return $uid;
@@ -631,6 +632,7 @@ sub create_segment {
     if ($class) {
 	$s->add_key_value ("class", $class);
     }
+    $s->add_key_value ("editor", "osmpedit-svn");
 
     my $tags = $s->get_tags ();
     
@@ -657,6 +659,7 @@ sub update_node {
 
     $node->set_lat ($lat);
     $node->set_lon ($lon);
+    $node->add_key_value ("editor", "osmpedit-svn");
 
     return $node->upload_osm_node ($username, $password);
 }

@@ -76,6 +76,34 @@ int Waypoint::toOSM(std::ostream& outfile)
 	return 1;
 }
 
+void Waypoint::uploadToOSM(const char* username, const char* password)
+{
+	char *nonconst, *resp;
+
+		if(osm_id)
+		{
+			std::ostringstream str;
+			str<<"<osm version='0.2'>"<<endl;
+			toOSM(str);
+			str<<"</osm>"<<endl;
+			nonconst = new char[ strlen(str.str().c_str()) + 1];	
+			strcpy(nonconst,str.str().c_str());
+
+			char url[1024];	
+			sprintf(url,"http://www.openstreetmap.org/api/0.2/node/%d", 
+							osm_id);
+			cerr<<"URL:" << url << endl;
+			delete[] nonconst;
+
+			resp = put_data(nonconst,url,username,password);
+			if(resp)
+			{
+				altered = false;
+				delete[] resp;
+			}
+		}
+}	
+
 void Waypoints::toGPX(std::ostream& outfile)
 {
 	QString name="";
@@ -116,36 +144,10 @@ int Waypoints::newToOSM(std::ostream& outfile)
 	return nWpts;
 }
 
-void Waypoints::uploadToOSM(char* username,char* password)
+void Waypoints::newUploadToOSM(char* username,char* password)
 {
 	char *nonconst, *resp;
 
-	// existing points
-	for(int count=0; count<waypoints.size(); count++)
-	{
-		if(waypoints[count].osm_id && waypoints[count].altered)
-		{
-			std::ostringstream str;
-			str<<"<osm version='0.2'>"<<endl;
-			waypoints[count].toOSM(str);
-			str<<"</osm>"<<endl;
-			nonconst = new char[ strlen(str.str().c_str()) + 1];	
-			strcpy(nonconst,str.str().c_str());
-
-			char url[1024];	
-			sprintf(url,"http://www.openstreetmap.org/api/0.2/node/%d", 
-							waypoints[count].osm_id);
-			cerr<<"URL:" << url << endl;
-			delete[] nonconst;
-
-			resp = put_data(nonconst,url,username,password);
-			if(resp)
-			{
-				waypoints[count].altered = false;
-				delete[] resp;
-			}
-		}
-	}	
 
 	// new points
 	std::ostringstream str;
@@ -181,6 +183,17 @@ bool Waypoints::alterWaypoint(int idx, const QString& newName,
 		waypoints[idx].name = newName;
 		waypoints[idx].type = newType;
 		waypoints[idx].altered=true;
+		return true;
+	}
+	return false;
+}
+
+bool Waypoints::uploadToOSM(int idx, const char * username, 
+								const char * password)
+{
+	if(idx>=0 && idx<waypoints.size())
+	{
+		waypoints[idx].uploadToOSM(username,password);
 		return true;
 	}
 	return false;

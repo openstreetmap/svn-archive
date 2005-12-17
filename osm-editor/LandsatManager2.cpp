@@ -1,4 +1,3 @@
-
 /*
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
 
@@ -17,9 +16,9 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
-#include "LandsatManager.h"
+#include "LandsatManager2.h"
 #include "curlstuff.h"
-#include "MainWindow.h"
+#include "MainWindow2.h"
 
 #include <iostream>
 using namespace std;
@@ -28,7 +27,7 @@ namespace OpenStreetMap
 {
 
 
-LandsatManager::LandsatManager(MainWindow *p, int w, int h, int ts)
+LandsatManager2::LandsatManager2(MainWindow2 *p, int w, int h, int ts)
 {
 	widget=p; dataDisplayed = false; tileSize = ts;
 	nRows = ((h-1)/tileSize) + 1; nCols = ((w-1)/tileSize) + 1;
@@ -38,13 +37,13 @@ LandsatManager::LandsatManager(MainWindow *p, int w, int h, int ts)
 		tiles[count].resize(tileSize,tileSize);
 }
 
-void LandsatManager::grab(double nScr)
+void LandsatManager2::grab(double nScr)
 {
 	if(dataDisplayed)
 		forceGrab(nScr);
 }
 
-void LandsatManager::forceGrab(double nScr)
+void LandsatManager2::forceGrab(double nScr)
 {
 	int w=widget->width(), h=widget->height();
 	topLeft = widget->getMap().getEarthPoint (ScreenPos(-w*(nScr/2-0.5),
@@ -60,7 +59,7 @@ void LandsatManager::forceGrab(double nScr)
 	dataDisplayed=true;
 }
 
-QPixmap LandsatManager::doGrab(double w,double s,double e,double n,
+QPixmap LandsatManager2::doGrab(double w,double s,double e,double n,
 							int width, int height)
 {
 	QPixmap pixmap(tileSize,tileSize);
@@ -71,7 +70,7 @@ QPixmap LandsatManager::doGrab(double w,double s,double e,double n,
 	return pixmap;
 }
 
-bool LandsatManager::doNeedMoreData()
+bool LandsatManager2::doNeedMoreData()
 
 {
 	ScreenPos topLeftPos=widget->getMap().getScreenPos
@@ -85,7 +84,7 @@ bool LandsatManager::doNeedMoreData()
 }
 
 
-void LandsatManager::draw(QPainter& p)
+void LandsatManager2::draw(QPainter& p)
 {
 	if(dataDisplayed) 
 	{
@@ -97,7 +96,7 @@ void LandsatManager::draw(QPainter& p)
 	}
 }
 
-void LandsatManager::drawTiles(QPainter& p)
+void LandsatManager2::drawTiles(QPainter& p)
 {
 	if(dataDisplayed)
 	{
@@ -114,7 +113,7 @@ void LandsatManager::drawTiles(QPainter& p)
 }
 
 
-void LandsatManager::toggleDisplay()
+void LandsatManager2::toggleDisplay()
 {
 	/*
 	if(doNeedMoreData()&&!dataDisplayed) 
@@ -129,7 +128,7 @@ void LandsatManager::toggleDisplay()
 	}
 }
 
-void LandsatManager::left()
+void LandsatManager2::left()
 {
 	if(dataDisplayed)
 	{
@@ -147,7 +146,7 @@ void LandsatManager::left()
 	}
 }
 
-void LandsatManager::right()
+void LandsatManager2::right()
 {
 	if(dataDisplayed)
 	{
@@ -164,7 +163,7 @@ void LandsatManager::right()
 	}
 }
 
-void LandsatManager::up()
+void LandsatManager2::up()
 {
 	if(dataDisplayed)
 	{
@@ -181,7 +180,7 @@ void LandsatManager::up()
 	}
 }
 
-void LandsatManager::down()
+void LandsatManager2::down()
 {
 	if(dataDisplayed)
 	{
@@ -198,7 +197,7 @@ void LandsatManager::down()
 	}
 }
 
-void LandsatManager::resize(int w,int h)
+void LandsatManager2::resize(int w,int h)
 {
 	nRows = ((h-1)/tileSize) + 1,
 	nCols = ((w-1)/tileSize) + 1;
@@ -221,7 +220,7 @@ void LandsatManager::resize(int w,int h)
 
 }
 
-void LandsatManager::grabTiles(int x1,int y1,int x2,int y2)
+void LandsatManager2::grabTiles(int x1,int y1,int x2,int y2)
 {
 	EarthPoint bottomLeft = widget->getMap().getEarthPoint
 			(x1*tileSize, y2*tileSize),

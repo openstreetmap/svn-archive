@@ -28,6 +28,8 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 										"no", "path");
 	rData["byway"] = RouteMetaData ("yes", "yes", "yes", "yes",  "unsurfaced");
 	rData["minor road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "minor");
+	rData["residential road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
+												"residential");
 	rData["B road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "secondary");
 	rData["A road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "primary");
 	rData["motorway"] = RouteMetaData ("no", "no", "no", "yes",  "motorway");

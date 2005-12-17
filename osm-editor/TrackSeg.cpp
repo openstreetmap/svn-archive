@@ -178,14 +178,14 @@ void TrackSeg::segsToOSM(ostream& outfile)
 				tags += "name="+name+";";
 			RouteMetaDataHandler mdh;
 			RouteMetaData metaData = mdh.getMetaData(type);
-			if(metaData.foot=="yes")
-			tags += "foot=yes;";
-			if(metaData.horse=="yes")
-				tags += "horse=yes;";
-			if(metaData.bike=="yes")
-				tags += "bike=yes;";
-			if(metaData.car=="yes")
-				tags += "car=yes;";
+			if(metaData.foot!="no")
+				tags += "foot="+metaData.foot+";";
+			if(metaData.horse!="no")
+				tags += "horse="+metaData.horse+";";
+			if(metaData.bike!="no")
+				tags += "bike="+metaData.bike+";";
+			if(metaData.car!="no")
+				tags += "car="+metaData.car+";";
 			if(metaData.routeClass!="")
 				tags += "class="+metaData.routeClass;
 
@@ -194,11 +194,14 @@ void TrackSeg::segsToOSM(ostream& outfile)
 	}
 }
 
-void TrackSeg::uploadToOSM(const char* username,const char* password)
+void TrackSeg::newUploadToOSM(const char* username,const char* password)
 {
 	char *nonconst=NULL, *resp=NULL;
-	if(shouldUpload())
+
+	// Only upload a new segment (one with OSM ID 0)
+	if(!osm_id)
 	{
+		// Get the OSM XML of the nodes in the segment
 		cerr<<"Here is the OSM code that would be uploaded:" << endl;
 		toOSM(cerr);
 		cerr<<"END." << endl;
@@ -208,7 +211,9 @@ void TrackSeg::uploadToOSM(const char* username,const char* password)
 		int nPts = newNodesToOSM(str);
 		str << "</osm>" << endl;
 
-		if(!osm_id && nPts)
+
+		// Upload the nodes and receive a list of node IDs
+		if(nPts)
 		{
 			nonconst = new char[ strlen(str.str().c_str()) + 1];	
 			strcpy(nonconst,str.str().c_str());
@@ -221,6 +226,7 @@ void TrackSeg::uploadToOSM(const char* username,const char* password)
 			cerr<<"done."<<endl;
 			delete[] nonconst;
 
+			// Allocate the returned IDs to the new nodes in the segment
 			int count=0;
 			for(QStringList::Iterator i = ids.begin(); i!=ids.end(); i++)
 			{
@@ -231,6 +237,7 @@ void TrackSeg::uploadToOSM(const char* username,const char* password)
 			}
 		}
 
+		// Form the OSM XML for the segment
 		std::ostringstream str2;
 		str2 << "<osm version='0.2'>" << endl;
 		segsToOSM(str2);
@@ -239,25 +246,40 @@ void TrackSeg::uploadToOSM(const char* username,const char* password)
 		nonconst = new char[ strlen(str2.str().c_str()) + 1];	
 		strcpy(nonconst,str2.str().c_str());
 
+		// Upload the segment
 		cerr<<" osm_id is : "<< osm_id << endl;
-		if(osm_id)
-		{
-			char url[1024];	
-			sprintf(url,"http://www.openstreetmap.org/api/0.2/segment/%d", 
-							osm_id);
-			resp = put_data(nonconst,url,username,password);
-			if(resp) delete[] resp;
-			cerr<<"URL:" << url << endl;
-		}
-		else
-		{
-				
-			QStringList ids=putToOSM(nonconst,
+		QStringList ids=putToOSM(nonconst,
 					"http://www.openstreetmap.org/api/0.2/newsegment",
 					username,password);
-			osm_id = atoi(ids[0]);
-		}
+
+		// Receive the allocated ID
+		osm_id = atoi(ids[0]);
 		delete[] nonconst;
+	}
+}
+
+// Upload an existing segment to OSM
+
+void TrackSeg::uploadToOSM(const char* username, const char* password)
+{
+	// Check it's an existing segment
+	if(osm_id)
+	{
+		char *nonconst, *resp;
+		std::ostringstream str2;
+		str2 << "<osm version='0.2'>" << endl;
+		segsToOSM(str2);
+		str2 << "</osm>" << endl;
+		cerr<<"segstoOSM returned: "<<str2.str() << endl;
+		nonconst = new char[ strlen(str2.str().c_str()) + 1];	
+		strcpy(nonconst,str2.str().c_str());
+		char url[1024];	
+		sprintf(url,"http://www.openstreetmap.org/api/0.2/segment/%d", 
+							osm_id);
+		resp = put_data(nonconst,url,username,password);
+		if(resp) delete[] resp;
+		delete[] nonconst;
+		cerr<<"URL:" << url << endl;
 		altered=false;
 	}
 }

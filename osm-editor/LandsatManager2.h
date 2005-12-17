@@ -1,4 +1,3 @@
-
 /*
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
 
@@ -29,12 +28,12 @@
 namespace OpenStreetMap
 {
 
-class MainWindow;
+class MainWindow2;
 
-class LandsatManager
+class LandsatManager2
 {
 private:
-	MainWindow *widget;
+	MainWindow2 *widget;
 	QPixmap pixmap;
 	QPixmap* tiles;
 	bool dataDisplayed;
@@ -44,10 +43,10 @@ private:
 	bool doNeedMoreData();
 
 public:
-	LandsatManager(MainWindow *p) { widget=p; 
+	LandsatManager2(MainWindow2 *p) { widget=p; 
 			dataDisplayed=false; }
-	LandsatManager(MainWindow*,int,int,int);
-	~LandsatManager() { delete[] tiles; }
+	LandsatManager2(MainWindow2*,int,int,int);
+	~LandsatManager2() { delete[] tiles; }
 
 	void grab(double=1.0);
 	void forceGrab(double=1.0);

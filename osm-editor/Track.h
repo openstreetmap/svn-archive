@@ -81,7 +81,7 @@ public:
 
 	RetrievedTrackPoint findNearestTrackpoint(const EarthPoint &, double);
 	EarthPoint getAveragePoint() throw (QString);
-	void uploadToOSM(char* username,char* password);
+	void newUploadToOSM(char* username,char* password);
 	void nfconv();
 };
 

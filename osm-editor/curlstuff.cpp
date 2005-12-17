@@ -145,6 +145,7 @@ char* put_data(char* idata,char* url,
 	char uname_pwd[1024];
 	sprintf(uname_pwd,"%s:%s",username,password);
 
+	fprintf(stderr,"idata=%s\n", idata);
 	CURL_LOAD_DATA *odata = (CURL_LOAD_DATA *)malloc(sizeof(CURL_LOAD_DATA));
 	odata->data = NULL;
 	odata->nbytes = 0;

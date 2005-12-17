@@ -119,6 +119,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	segpens["bridleway"]=QPen(QColor(192,96,0),2);
 	segpens["byway"] = QPen (Qt::red, 2);
 	segpens["minor road"]= QPen (Qt::black, 2);
+	segpens["residential road"]= QPen (Qt::black, 1);
 	segpens["B road"]= QPen (Qt::black, 3);
 	segpens["A road"]= QPen (Qt::black, 4);
 	segpens["motorway"]= QPen (Qt::black, 6);
@@ -356,7 +357,6 @@ MainWindow::~MainWindow()
 	}
 
 
-	delete polygon;
 	delete components;
 }
 
@@ -491,6 +491,7 @@ void MainWindow::grabOSMFromNet()
 	}
 }
 
+// uploads new segments only
 void MainWindow::uploadOSM()
 {
 	LoginDialogue *ld=new LoginDialogue(this);
@@ -499,7 +500,7 @@ void MainWindow::uploadOSM()
 	{
 		strcpy(a,ld->getUsername());
 		strcpy(b,ld->getPassword());
-		components->uploadToOSM(a,b);
+		components->newUploadToOSM(a,b);
 	}
 	delete ld;
 }
@@ -1020,32 +1021,6 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
 				update();
 			}
 			break;
-/*
-		case ACTION_SEL_SEG:
-			if(nSelectedPoints<2)
-			{
-				pts[nSelectedPoints++] = 
-						components->findNearestTrackpoint
-					(map.getEarthPoint(ScreenPos(ev->x(),ev->y())),LIMIT);
-				update();
-			}
-			else
-			{
-				EarthPoint ep=map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-				pts[2] = components->findNearestTrackpoint(ep,LIMIT);
-				if(pts[2].null())
-				{
-					components->linkNewPoint(pts[0],pts[1],ep,LIMIT);
-				}
-				else
-				{
-					components->linkNewPoint(pts[0],pts[1],pts[2],LIMIT);
-				}
-				update();
-				nSelectedPoints=0;
-			}
-			break;
-*/
 		case ACTION_NEW_SEG:
 			if(nSelectedPoints==0)
 			{
@@ -1131,6 +1106,8 @@ void MainWindow::editWaypoint(int x,int y,int limit)
 			if(d->exec())
 			{
 				components->alterWaypoint(nearest,d->getName(), d->getType());
+				if(liveUpdate)
+					components->uploadWaypointToOSM(nearest,username,password);
 			}
 		}
 		else

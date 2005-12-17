@@ -35,6 +35,7 @@ WaypointDialogue::WaypointDialogue(QWidget* parent,
 								 const QString& origName) : 
 				QDialog(parent,"",true)
 {
+	cerr<<"waypoint dialogue constructor" << endl;
 	setCaption(caption);
 	QVBoxLayout *topL = new QVBoxLayout(this);
 	QGridLayout *layout = new QGridLayout(topL,2,2);
@@ -46,6 +47,7 @@ WaypointDialogue::WaypointDialogue(QWidget* parent,
 	for(std::map<QString,WaypointRep*>::const_iterator i=waypointReps.begin();
 		i!=waypointReps.end(); i++)
 	{
+		cerr<<"XXX"<<endl;
 		typeComboBox->insertItem (i->second->getImage(),i->first);
 		if(i->first == origType)
 			typeComboBox->setCurrentItem(index);

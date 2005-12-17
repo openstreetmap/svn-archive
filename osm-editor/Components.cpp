@@ -93,6 +93,14 @@ bool Components::deleteWaypoint(int index)
 	return false;
 }
 
+bool Components::uploadWaypointToOSM(int index, const char* username,
+										const char* password)
+{
+	if(waypoints)
+		return waypoints->uploadToOSM(index,username,password);
+	return false;
+}
+
 bool Components::addTrackpoint(int seg,
 				const QString& timestamp,double lat,double lon)
 {

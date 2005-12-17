@@ -352,12 +352,13 @@ EarthPoint Track::getAveragePoint() throw(QString)
 	return avg;
 }
 
+// Upload NEW segments only
 
-void Track::uploadToOSM(char* username,char* password)
+void Track::newUploadToOSM(char* username,char* password)
 {
 	for(int count=0; count<segs.size(); count++)
 	{ 
-		segs[count]->uploadToOSM(username,password); 
+		segs[count]->newUploadToOSM(username,password); 
 	}
 }
 

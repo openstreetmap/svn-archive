@@ -137,11 +137,13 @@ public:
 		{ track->removeSegs(type); }
 	EarthPoint getAveragePoint() throw (QString)
 		{ return track->getAveragePoint(); }
-	void uploadToOSM(char* username,char* password)
-		{ track->uploadToOSM(username,password);
-		  waypoints->uploadToOSM(username,password); }
+	void newUploadToOSM(char* username,char* password)
+		{ track->newUploadToOSM(username,password);
+		  waypoints->newUploadToOSM(username,password); }
 	void _removeSeg(TrackSeg* seg) { track->_removeSeg(seg); }
 	void nfconv() { track->nfconv(); }
+	bool uploadWaypointToOSM(int index, const char* username,
+										const char* password);
 
 };
 

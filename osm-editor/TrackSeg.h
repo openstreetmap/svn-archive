@@ -111,6 +111,7 @@ public:
 	void segsToOSM(ostream&);
 	void toOSM(ostream&);
 	void uploadToOSM(const char*,const char*);
+	void newUploadToOSM(const char*,const char*);
 	int findNearestTrackpoint(const EarthPoint& p,double limit,double* = NULL);
 	bool deletePoints(int start, int end);
 

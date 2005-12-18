@@ -17,7 +17,7 @@ OBJ2 = osmeditor2.o MainWindow2.o GPSDevice2.o LandsatManager2.o \
 	  Components2.o Node.o Segment.o WaypointDialogue.o \
 	  RouteMetaDataHandler.o LoginDialogue.o moc_MainWindow2.o curlstuff.o \
 	  SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
-	  OSMParser2.o
+	  OSMParser2.o qmdcodec.o HTTPHandler.o moc_HTTPHandler.o
 JEEPSSRC = jeeps-gpsbabel-1.2.7
 LIBS = -ljeeps 
 LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
@@ -114,3 +114,5 @@ llgr.o : llgr.h EarthPoint.h
 curlstuff.o : curlstuff.h
 Node.o : Node.h
 Segment.o : Segment.h
+qmdcodec.o: qmdcodec.h
+HTTPHandler.o : HTTPHandler.h

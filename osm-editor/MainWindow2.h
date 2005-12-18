@@ -41,6 +41,8 @@
 #include <qstatusbar.h>
 
 
+#include <qhttp.h>
+
 using std::vector;
 
 // Mouse action modes
@@ -108,7 +110,9 @@ private:
 	//GridRef topleft;
 	//double scale;
 	Map map;
-	
+
+	double LIMIT;
+
 	// key data
 	Components2 * components;
 
@@ -157,6 +161,8 @@ private:
 
 	QString username, password;
 	bool liveUpdate;
+
+	QHttp *http;
 
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
@@ -227,6 +233,7 @@ public slots:
 	void uploadOSM();
 	void logoutFromLiveUpdate();
 	void removeTrackPoints();
+	void test();
 };
 
 }

@@ -39,6 +39,7 @@
 #include <qlabel.h>
 #include <qsignalmapper.h>
 #include <qtextstream.h>
+#include <qcstring.h>
 
 #include "WaypointDialogue.h"
 #include "LoginDialogue.h"
@@ -47,6 +48,7 @@
 //#include "GPXParser.h"
 #include "OSMParser2.h"
 
+#include "qmdcodec.h"
 
 #ifdef XMLRPC
 #include <string>
@@ -102,6 +104,8 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 	setCaption("OpenStreetMap Editor");
 	resize ( w, h );	
 
+	LIMIT=map.earthDist(10);
+
 	contours = false;
 	wptSaved = false;
 
@@ -145,6 +149,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 						SLOT(loginToLiveUpdate()));
 	fileMenu->insertItem("Logout from live update",this,
 						SLOT(logoutFromLiveUpdate()));
+	fileMenu->insertItem("qt http data retrieval",this, SLOT(test()));
 	menuBar()->insertItem("&File",fileMenu);
 	QPopupMenu* editMenu = new QPopupMenu(this);
 	
@@ -707,6 +712,26 @@ void MainWindow2::drawNode(QPainter& p,Node* node)
 	WaypointRep* img=nodeReps[node->getType()];
 	if(img) img->draw(p,pos.x,pos.y,node->getName()); 
 
+	if(!selSeg && (ptsv[0].size() || ptsv[1].size()))
+	{
+		for(int count=0; count<ptsv[0].size(); count++)
+		{
+			if(node==ptsv[0][count])
+			{
+				p.setPen(QPen(Qt::yellow,3));
+				p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+			}
+		}
+		for(int count=0; count<ptsv[1].size(); count++)
+		{
+			if(node==ptsv[1][count])
+			{
+				p.setPen(QPen(Qt::yellow,3));
+				p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+			}
+		}
+	}
+
 	if(node==pts[0] || node==pts[1])
 	{
 		p.setPen(QPen(Qt::red,3));
@@ -724,13 +749,12 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 {
 	EarthPoint pt;
 	QString name;
-	double LIMIT=map.earthDist(10);
 	int nearest;
 
 	switch(actionMode)
 	{
 		case ACTION_NODE:
-			editNode(ev->x(),ev->y(),10);	
+			editNode(ev->x(),ev->y(),LIMIT);	
 			break;
 
 		case ACTION_MOVE_NODE:
@@ -785,6 +809,7 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 				ptsv[0] = components->getNearestNodes (p.y,p.x,LIMIT);
 				if(ptsv[0].size())
 				{
+					selSeg = NULL;
 					cerr<<"SELSEG: FOUND A FIRST POINT "<< endl;
 					cerr << ptsv[0][0]->getLat() << endl;
 					cerr << ptsv[0][0]->getLon() << endl;
@@ -807,11 +832,14 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 					if(selSeg) 
 					{
 						cerr<<"found a selected seg" << endl;
-
+						
 						// Naming always on when in selected segment mode
 						nameTrackOn();
 					}
 				
+					ptsv[0].clear();
+					ptsv[1].clear();
+
 					update();
 					nSelectedPoints=0;
 				}
@@ -828,6 +856,7 @@ void MainWindow2::resizeEvent(QResizeEvent * ev)
 	//landsatManager.resize(ev->size().width(), ev->size().height());
 	landsatManager.resize(width(), height());
 	update();
+	LIMIT=map.earthDist(10);
 }
 
 
@@ -837,7 +866,7 @@ void MainWindow2::editNode(int x,int y,int limit)
 	WaypointDialogue *d;
 
 	EarthPoint p = map.getEarthPoint(ScreenPos(x,y));
-	if((nearest=components->getNearestNode(p.y,p.x,limit)) != NULL)
+	if((nearest=components->getNearestNode(p.y,p.x,LIMIT)) != NULL)
 	{
 		cerr<<"creating waypoint dialogue" << endl;
 		d = new WaypointDialogue
@@ -1009,6 +1038,7 @@ void MainWindow2::magnify()
     landsatManager.grabAll();
     showPosition();
     update();
+	LIMIT=map.earthDist(10);
 }
 
 void MainWindow2::shrink()
@@ -1017,6 +1047,7 @@ void MainWindow2::shrink()
     landsatManager.grabAll();
     showPosition();
     update();
+	LIMIT=map.earthDist(10);
 }
 
 void MainWindow2::updateWithLandsatCheck()
@@ -1081,5 +1112,16 @@ QPixmap mmLoadPixmap(const QString& directory, const QString& filename)
 	return pixmap;
 }
 
+void MainWindow2::test()
+{
+	statusBar()->message("Grabbing data from OSM...");
+	EarthPoint bottomLeft = map.getBottomLeft(),
+			   topRight = map.getTopRight();
+	QString url;
+	url.sprintf("/api/0.2/map?bbox=%lf,%lf,%lf,%lf",
+							bottomLeft.x,bottomLeft.y,
+							topRight.x,topRight.y);
+	cerr<<"SENDING URL: "<<url<<endl;
+}
 
 }

@@ -1130,6 +1130,9 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.navout.name = parentname + "_out";
 	this.navout.type = "image";
 	this.navout.src = "/images/map_zoomout.png";
+	if( this.navout.runtimeStyle ) {
+		this.navout.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/map_zoomout.png',sizingMethod='scale')";
+	}
 	this.navout.value = "out";
 	this.navout.style.zIndex = 99;
 	this.navout.style.cursor = this.zoom <= 0 ? 'arrow' : 'hand';
@@ -1144,6 +1147,9 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 	this.navin.name = parentname + "_in";
 	this.navin.type = "image";
 	this.navin.src = "/images/map_zoomin.png";
+	if( this.navin.runtimeStyle ) {
+		this.navin.runtimeStyle.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/map_zoomin.png',sizingMethod='scale')";
+	}
 	this.navin.value = "in";
 	this.navin.style.zIndex = 99;
 	this.navin.style.cursor = this.zoom >= 20 ? 'arrow' : 'hand';

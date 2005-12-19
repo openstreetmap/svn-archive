@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm xmlns="http://www.openstreetmap.org"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.openstreetmap.org osm.xsd">
+  <node uid="12345" lat="42.0" lon="23.0" />
+  <node uid="15" lat="17.01234" lon="33.6" />
+  <node uid="5478" lat="-2.0" lon="123.0" />
+  <segment uid="565" from="12345" to="15" />
+  <segment uid="53123" from="15" to="12345" />
+  <track uid="678">
+	<segmentRef uid="565" />
+	<segmentRef uid="53123" />
+  </track>
+  <node uid="5523" lat="23.12" lon="-0.112" />
+  <area uid="688">
+	<nodeRef uid="12345" />
+	<nodeRef uid="5523" />
+	<nodeRef uid="5478" />
+  </area>
+  <property uid="111" object="678" key="name" value="Baker Street" />
+  <property uid="155" object="15" key="pub" value="cheap beer" />
+</osm>

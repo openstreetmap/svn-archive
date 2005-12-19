@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm xmlns="http://www.openstreetmap.org"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.openstreetmap.org osm.xsd">
+  <node uid="0" lat="0.0" lon="0.0" />
+  <node uid="1" lat="0.0" lon="0.0" />
+  <node uid="2" lat="0.0" lon="0.0" />
+  <node uid="3" lat="0.0" lon="0.0" />
+  <node uid="4" lat="0.0" lon="0.0" />
+  <node uid="4" lat="0.0" lon="0.0" />
+  <segment uid="4" from="3" to="4" />
+  <area uid="6">
+	<nodeRef uid="0" />
+	<nodeRef uid="1" />
+	<nodeRef uid="7" />
+  </area>
+</osm>

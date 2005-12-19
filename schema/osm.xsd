@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   targetNamespace="http://www.openstreetmap.org"
+		   xmlns:osm="http://www.openstreetmap.org" 
+		   xmlns="http://www.openstreetmap.org" >
+  <xs:annotation>
+	<xs:documentation>
+	  <![CDATA[
+			   OpenStreetMap REST API Schema
+			   
+			   See the wiki page for more information:
+			   http://www.openstreetmap.org/wiki/index.php/XML_Schema
+
+			   $Id$
+	  ]]>
+	</xs:documentation>
+  </xs:annotation>
+  <!--
+	  This is the top level <osm> element, which contains all the other
+	  elements. In this case, the other elements are of type <object>,
+	  which is declared later.
+  -->
+  <xs:element name="osm">
+	<xs:complexType>
+	  <xs:sequence>
+		<xs:element ref="object" minOccurs="1" maxOccurs="unbounded" />
+	  </xs:sequence>
+	</xs:complexType>
+	<!--
+		Make the uids unique. This declares that the "uid" attribute of the
+		node, segment, track, area and property elements are all in the same
+		"ID space" and have to be unique. It also allows us to reference
+		them below.
+	-->
+	<xs:key name="objectID">
+	  <xs:selector xpath="osm:node|osm:segment|osm:track|osm:area|osm:property" />
+	  <xs:field xpath="@uid" />
+	</xs:key>
+	<!--
+		This says that the nodeRef type references an existing object UID,
+		and will provide an error if that UID does not exist.
+	-->
+	<xs:keyref name="nodeUIDRef" refer="objectID">
+	  <xs:selector xpath="osm:area/osm:nodeRef" />
+	  <xs:field xpath="@uid" />
+	</xs:keyref>
+	<!--
+		This says that the segmentRef type references an existing object 
+		UID, and will provide an error if that UID does not exist.
+	-->
+	<xs:keyref name="segmentUIDRef" refer="objectID">
+	  <xs:selector xpath="osm:track/osm:segmentRef" />
+	  <xs:field xpath="@uid" />
+	</xs:keyref>
+	<!--
+		State that the from and to attributes of the segment tag also
+		reference the UIDs
+	-->
+	<xs:keyref name="segmentFromRef" refer="objectID">
+	  <xs:selector xpath="osm:segment" />
+	  <xs:field xpath="@from" />
+	</xs:keyref>
+	<xs:keyref name="segmentToRef" refer="objectID">
+	  <xs:selector xpath="osm:segment" />
+	  <xs:field xpath="@to" />
+	</xs:keyref>
+	<!--
+		The final key reference constraint is on the property tag. The
+		object attribute must reference an existing UID.
+	-->
+	<xs:keyref name="propertyObjectRef" refer="objectID">
+	  <xs:selector xpath="osm:property" />
+	  <xs:field xpath="@object" />
+	</xs:keyref>
+  </xs:element>
+  <!--
+	  This is the <object> type, which forms the base of all the other
+	  elements. It declares that all derived elements of object must
+	  have an integer uid property.
+  -->
+  <xs:element name="object" abstract="true" type="objectType" />
+  <!--
+	  The node element 
+  -->
+  <xs:element name="node" substitutionGroup="object" type="nodeType" />
+  <!--
+	  The segment element
+  -->
+  <xs:element name="segment" substitutionGroup="object" type="segmentType" />
+  <!--
+	  The track element
+  -->
+  <xs:element name="track" substitutionGroup="object" type="trackType" />
+  <!--
+	  The area element
+  -->
+  <xs:element name="area" substitutionGroup="object" type="areaType" />
+  <!--
+	  The property element
+  -->
+  <xs:element name="property" substitutionGroup="object" type="propertyType" />
+  <!--
+	  The object base type requires the uid. Note that this is an 
+	  "empty content" element - i.e: it cannot contain any further 
+	  elements.
+  -->
+  <xs:complexType name="objectType">
+	<xs:attribute name="uid" type="uidType" use="required" />
+  </xs:complexType>
+  <!--
+	  The node type extends the object type to require lat and lon
+	  coordinates.
+  -->
+  <xs:complexType name="nodeType">
+	<xs:complexContent>
+	  <xs:extension base="objectType">
+		<xs:attribute name="lat" type="xs:decimal" />
+		<xs:attribute name="lon" type="xs:decimal" />
+	  </xs:extension>
+	</xs:complexContent>
+  </xs:complexType>
+  <!--
+	  The segment type extends the object type to reference two node
+	  uids.
+  -->
+  <xs:complexType name="segmentType">
+	<xs:complexContent>
+	  <xs:extension base="objectType">
+		<xs:attribute name="from" type="uidType" />
+		<xs:attribute name="to" type="uidType" />
+	  </xs:extension>
+	</xs:complexContent>
+  </xs:complexType>
+  <!--
+	  The track type extends the object type to require several references
+	  to segment uids. The sub-element "segment" here, I hope does not
+	  clash with the one defined externally...
+  -->
+  <xs:complexType name="trackType">
+	<xs:complexContent>
+	  <xs:extension base="objectType">
+		<xs:sequence>
+		  <xs:element ref="segmentRef" 
+					  minOccurs="1" 
+					  maxOccurs="unbounded" />
+		</xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
+  </xs:complexType>
+  <!--
+	  The area type extends the object type to require references to the
+	  nodes bounding the area. Again, this includes sub-elements, which I'm
+	  not sure is allowed...
+  -->
+  <xs:complexType name="areaType">
+	<xs:complexContent>
+	  <xs:extension base="objectType">
+		<xs:sequence>
+		  <xs:element ref="nodeRef" 
+					  minOccurs="1" 
+					  maxOccurs="unbounded" />
+		</xs:sequence>
+	  </xs:extension>
+	</xs:complexContent>
+  </xs:complexType>
+  <!--
+	  The property element extends the object element with key and value
+	  types. These have to be untyped, so the parsing program will have to
+	  determine whether they are integers or whatever.
+  -->
+  <xs:complexType name="propertyType">
+	<xs:complexContent>
+	  <xs:extension base="objectType">
+		<!-- The object uid to which this property is attached -->
+		<xs:attribute name="object" type="uidType" />
+		<!-- The key of this property -->
+		<xs:attribute name="key" type="xs:string" />
+		<!-- The value of this property -->
+		<xs:attribute name="value" type="xs:string" />
+	  </xs:extension>
+	</xs:complexContent>
+  </xs:complexType>
+  <!--
+	  Node reference element
+  -->
+  <xs:element name="nodeRef">
+	<xs:complexType>
+	  <xs:attribute name="uid" type="uidType" />
+	</xs:complexType>
+  </xs:element>
+  <!--
+	  Segment reference element
+  -->
+  <xs:element name="segmentRef">
+	<xs:complexType>
+	  <xs:attribute name="uid" type="uidType" />
+	</xs:complexType>
+  </xs:element>
+  <!--
+	  The uid type is a simple type, basically a nonNegativeInteger
+  -->
+  <xs:simpleType name="uidType">
+	<xs:restriction base="xs:nonNegativeInteger">
+	</xs:restriction>
+  </xs:simpleType>
+</xs:schema>

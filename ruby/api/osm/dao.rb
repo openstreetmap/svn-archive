@@ -167,7 +167,7 @@ module OSM
 
 
   def logout(user_uid)
-    @@log.log('logging out user ' + user_uid)
+    @@log.log("logging out user #{user_uid}")
     call_sql { "update user set token = '#{make_token()}' where uid = '#{user_uid}' and active = true" }
   end
 
@@ -694,22 +694,32 @@ module OSM
         dbh = get_connection
 
         sql = "insert into node_meta_table (timestamp, user_uid, visible) values (#{Time.new.to_i * 1000}, #{user_uid}, 1)"
+
+        @@log.log(sql)
         dbh.query(sql)
 
         sql = "set @id = last_insert_id(); "
+
+        @@log.log(sql)
         dbh.query(sql)
         
         sql = "insert into nodes (uid, latitude, longitude, timestamp, user_uid, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')"
+
+        @@log.log(sql)
         dbh.query(sql)
         
         res = dbh.query('select @id') 
         
+
+        @@log.log(res.to_s)
         res.each do |row|
+          @@log.log(row[0].to_s)
           return row[0]
         end
 
         return -1
        rescue MysqlError => e
+        @@log.log(e.to_s)
         mysql_error(e)
 
       ensure

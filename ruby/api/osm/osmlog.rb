@@ -8,7 +8,6 @@ class Osmlog
   @@l = Logger.new('/tmp/' + $SERVER_NAME, shift_age = 'daily')
 
   def log(s)
-    puts s
     @@l.info(s)
   end
 

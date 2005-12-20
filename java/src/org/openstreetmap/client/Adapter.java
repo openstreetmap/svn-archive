@@ -419,6 +419,11 @@ public class Adapter
           System.out.println("got reponse " + response);
           id = Long.parseLong(response);
         }
+        else
+        {
+          System.err.println("error creating line: " + line);
+          lines.remove(line);
+        }
         
         put.releaseConnection();
 

@@ -17,10 +17,6 @@ cp ruby/editing-interface/*.rhtml $ROOT/eruby/
 mkdir $ROOT/eruby/include
 cp ruby/editing-interface/include/*.rhtml $ROOT/eruby/include/
 
-# html
-
-cp html/index.html $ROOT
-
 # css
 
 mkdir $ROOT/css

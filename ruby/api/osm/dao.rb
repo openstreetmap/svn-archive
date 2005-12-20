@@ -4,6 +4,7 @@ module OSM
   require 'singleton'
   require 'time'
   require 'osm/servinfo.rb'
+  load 'osm/osmlog.rb'
   
   class StringIO
   # helper class for gzip encoding
@@ -85,6 +86,8 @@ module OSM
   class Dao
     include Singleton
 
+    @@log = Osmlog.instance
+
     def mysql_error(e)
       puts "Error code: ", e.errno, "\n"
       puts "Error message: ", e.error, "\n"
@@ -114,6 +117,8 @@ module OSM
     ## check_user?
     # returns whether the given username and password are correct and active
     def check_user?(email, pass)
+      @@log.log('checking user ' + email)
+
       dbh = get_connection
       # sanitise the incoming variables
       email = quote(email)
@@ -162,6 +167,7 @@ module OSM
 
 
   def logout(user_uid)
+    @@log.log('logging out user ' + user_uid)
     call_sql { "update user set token = '#{make_token()}' where uid = '#{user_uid}' and active = true" }
   end
 
@@ -682,6 +688,8 @@ module OSM
 
 
     def create_node(lat, lon, user_uid, tags)
+
+      @@log.log("creating node at #{lat},#{lon} for user #{user_uid} with tags '#{tags}'")
       begin
         dbh = get_connection
 
@@ -712,6 +720,7 @@ module OSM
 
 
     def create_segment(node_a_uid, node_b_uid, user_uid, tags)
+      @@log.log("Creating segment #{node_a_uid} -> #{node_b_uid} for user #{user_uid} with tags '#{tags}'")
       begin
         dbh = get_connection
 
@@ -742,7 +751,7 @@ module OSM
 
     
     def update_segment?(uid, user_uid, node_a, node_b, tags)
-       call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (#{uid}, #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')" }
+      call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (#{uid}, #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')" }
     end
 
 

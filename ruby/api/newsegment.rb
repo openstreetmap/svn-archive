@@ -23,8 +23,10 @@ if r.request_method == "PUT"
     tags = seg.attributes['tags']
     tags = '' unless tags
     
-    exit HTTP_NOT_FOUND unless dao.getnode(node_a_uid).visible == true 
-    exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true 
+    n = dao.getnode(node_a_uid)
+    exit HTTP_NOT_FOUND if n.nil? || n.visible
+    n = dao.getnode(node_b_uid)
+    exit HTTP_NOT_FOUND if n.nil? || n.visible
 
     new_seg_id = dao.create_segment(node_a_uid, node_b_uid, userid, tags).to_i
 

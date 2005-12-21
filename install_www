@@ -6,8 +6,20 @@
 USER=$1
 ROOT=/var/www/$USER
 
-rm -rf $ROOT/*
-rm -rf ../bin
+if [ "$1" = "" ]; then
+  echo Usage: install_www some-user-name
+  exit
+fi
+
+
+if [ "$USER" = "openstreetmap" ]; then
+  echo "Won't delete things as we're deploying the real thing"
+else
+  echo "Deleting things"
+  rm -rf $ROOT/*
+  rm -rf ../bin
+fi
+
 
 # eruby
 mkdir $ROOT/eruby
@@ -73,6 +85,10 @@ ln -s $ROOT/ruby/api/osm $ROOT/ruby/osm
 
 # Apache simple-auth for REST
 cp ruby/api/apache/simple-auth.rb $ROOT/ruby/api/apache/
+
+# RSS
+
+cp ruby/rss/nodes.rb $ROOT/ruby/
 
 # GPX RSS maker
 

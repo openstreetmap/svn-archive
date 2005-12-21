@@ -15,10 +15,10 @@
   <script type="text/javascript" src="/javascript/tile.js"></script>
   <script type="text/javascript" src="/javascript/site.js"></script>
   <script type="text/javascript">
-	lon = <% print cgi['lon'].to_f() %>;
-	lat = <% print cgi['lat'].to_f() %>;
-	zoom = <% print cgi['zoom'].to_i() %>;
-	<% if cgi['scale'] != '' then %>
+	lon = <% if cgi['lon'].length > 0 then print cgi['lon'].to_f else print '0' end %>;
+	lat = <% if cgi['lat'].length > 0 then print cgi['lat'].to_f else print '0' end %>;
+	zoom = <% if cgi['zoom'].length > 0 then print cgi['zoom'].to_f else print '0' end %>;
+	<% if cgi['scale'].length > 0 then %>
     	zoom = Math.log(360.0/(( <% print cgi['scale'].to_f() %> ) * 512.0)) / Math.log(2.0);
 	<% end %>
   </script>

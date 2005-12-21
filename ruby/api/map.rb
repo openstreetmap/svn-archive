@@ -1,6 +1,5 @@
 #!/usr/bin/ruby -w
 
-
 require 'cgi'
 load 'osm/dao.rb'
 load 'osm/ox.rb'
@@ -81,3 +80,5 @@ if r.headers_in['Accept-Encoding'] && r.headers_in['Accept-Encoding'].match(/gzi
 else
   puts ox.to_s_pretty
 end
+
+GC.start

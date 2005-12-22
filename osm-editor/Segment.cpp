@@ -61,6 +61,17 @@ void Segment::segToOSM(QTextStream &outfile, bool allUid)
 	outfile << " tags='" << tags << "'/>" << endl;
 }
 
+QByteArray Segment::toOSM()
+{
+	QByteArray xml;
+	QTextStream str(xml, IO_WriteOnly);
+	str<<"<osm version='0.2'>"<<endl;
+	segToOSM(str);
+	str<<"</osm>"<<endl;
+	str<<'\0';
+	return xml;
+}
+
 // Upload an existing (or new) segment to OSM
 
 void Segment::uploadToOSM(const char* username, const char* password)

@@ -21,9 +21,12 @@
 
 #include <qhttp.h>
 #include <qstring.h>
+#include <qcstring.h>
 
 namespace OpenStreetMap
 {
+
+class MainWindow2;
 
 class HTTPHandler  : public QObject
 {
@@ -31,23 +34,30 @@ Q_OBJECT
 
 private:
 	QHttp* http;
-	QString host;
+	QString host, method;
 	QString username, password;
-	bool makingRequest;
+	bool makingRequest, httpError;
+	int curReqId;
 
 public:
 	HTTPHandler(const QString& host)
 		{ this->host=host; http=new QHttp; username=password="";
-			makingRequest=false;}
+			makingRequest=false; curReqId = 0;}
 	~HTTPHandler()
 		{ delete http; }
-	void setAuthorisation(const QString& u, const QString &p)
+	void setAuthentication(const QString& u, const QString &p)
 		{ username=u; password=p; }
-	void sendRequest(const QString&, const QString&);
-
+	void sendRequest(const QString&, const QString&,
+					const QByteArray& b = QByteArray());
+	bool isMakingRequest()
+		{ return makingRequest; }
 public slots:
 	void responseHeaderReceived(const QHttpResponseHeader&);	
 	void responseReceived(int,bool);
+
+signals:
+	void responseReceived(const QByteArray&);
+	void httpErrorOccurred(const QString&);
 };
 
 }

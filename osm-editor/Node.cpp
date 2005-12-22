@@ -36,6 +36,17 @@ int Node::toOSM(QTextStream& outfile, bool allUid)
 	outfile << "'/>" << endl;
 }
 
+QByteArray Node::toOSM()
+{
+	QByteArray xml;
+	QTextStream str(xml, IO_WriteOnly);
+	str<<"<osm version='0.2'>"<<endl;
+	toOSM(str);
+	str<<"</osm>"<<endl;
+	str<<'\0';
+	return xml;
+}
+	
 void Node::uploadToOSM(const char* username, const char* password)
 {
 	char *nonconst, *resp;

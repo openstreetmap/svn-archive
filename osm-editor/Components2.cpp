@@ -209,4 +209,58 @@ void Components2::removeTrackPoints()
 		}
 	}
 }
+
+// 'delete' a node
+// note it doesn't actually erase it from memory - just removes it from
+// the list
+bool Components2::deleteNode(Node *n)
+{
+	for(vector<Node*>::iterator i=nodes.begin(); i!=nodes.end(); i++)
+	{
+		if((*i)==n)
+		{
+			nodes.erase(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+// 'delete' a segment
+// note it doesn't actually erase it from memory - just removes it from
+// the list
+bool Components2::deleteSegment(Segment *s)
+{
+	cerr<<"in deleteSegments()"<<endl;
+	cerr<<"Segment: osmid=" << s->getOSMID() << endl;
+	for(vector<Segment*>::iterator i=segments.begin(); i!=segments.end(); i++)
+	{
+		cerr<<"Trying segment: " << (*i)->getOSMID() << endl;
+		if((*i)==s)
+		{
+			cerr<<"****FOUND THE SEGMENT****" << endl;
+			segments.erase(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+EarthPoint Components2::getAveragePoint() 
+{
+	EarthPoint avg;
+	avg.x=avg.y=0.0;	
+
+	for(int count=0; count<nodes.size(); count++)
+	{
+		avg.y += nodes[count]->getLat();
+		avg.x += nodes[count]->getLon();
+	}
+
+	avg.y /= nodes.size();
+	avg.x /= nodes.size();
+
+	return avg;
+}
+
 }

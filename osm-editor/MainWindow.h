@@ -48,6 +48,7 @@ using std::vector;
 // N_ACTIONS should always be the last
 enum { ACTION_TRACK, ACTION_DELETE, ACTION_WAYPOINT, ACTION_POLYGON, ACTION_MOVE_WAYPOINT, ACTION_SEL_SEG, ACTION_NEW_SEG, N_ACTIONS };
 
+
 namespace OpenStreetMap 
 {
 

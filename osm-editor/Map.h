@@ -91,6 +91,13 @@ public:
 	bool pt_within_map(const ScreenPos& pos)
 		{ return pos.x>=0 && pos.y>=0 &&
 			pos.x<width && pos.y<height; }
+	
+	bool pt_within_map(const EarthPoint& ep)
+	{
+		EarthPoint topRight=getTopRight();
+		return ep.x>=bottomLeft.x && ep.y>=bottomLeft.y&&
+			   ep.x<=topRight.x && ep.y<=topRight.y; 
+	}
 
 	int getWidth(){return width;}
 	int getHeight(){return height;}

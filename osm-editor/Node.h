@@ -22,6 +22,7 @@
 
 
 #include <qstring.h>
+#include <qcstring.h>
 #include <qstringlist.h>
 #include <vector>
 #include <fstream>
@@ -128,7 +129,10 @@ public:
 	double getLat() { return lat; }
 	double getLon() { return lon; }
 
+	void setCoords(double lat,double lon)
+		{ this->lat=lat; this->lon=lon; }
 	void trackpointToNode();
+	QByteArray toOSM();
 };
 
 }

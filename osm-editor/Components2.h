@@ -56,6 +56,11 @@ public:
 		return newNode;
 	}
 
+	void addNode (Node *n)
+	{
+		nodes.push_back(n);
+	}
+
 	Node *getNearestNode (double lat, double lon,double);
 	vector<Node*> getNearestNodes (double lat, double lon, double limit);
 
@@ -116,6 +121,10 @@ public:
 
 	void toOSM(QTextStream &strm,bool);
 	void removeTrackPoints();
+
+	bool deleteNode(Node*);
+	bool deleteSegment(Segment*);
+	EarthPoint getAveragePoint(); 
 };
 
 

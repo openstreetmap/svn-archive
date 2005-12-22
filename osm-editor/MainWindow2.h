@@ -27,6 +27,7 @@
 #include "Map.h"
 #include "LandsatManager2.h"
 #include "SRTMGeneral.h"
+#include "HTTPHandler.h"
 #include <map>
 #include <vector>
 
@@ -39,7 +40,7 @@
 #include <qcombobox.h>
 #include <qtoolbutton.h>
 #include <qstatusbar.h>
-
+#include <qcstring.h>
 
 #include <qhttp.h>
 
@@ -47,8 +48,8 @@ using std::vector;
 
 // Mouse action modes
 // N_ACTIONS should always be the last
-enum { ACTION_NODE, ACTION_MOVE_NODE, ACTION_SEL_SEG, ACTION_NEW_SEG, 
-		N_ACTIONS };
+enum { ACTION_NODE, ACTION_MOVE_NODE, ACTION_DELETE_NODE,
+		ACTION_SEL_SEG, ACTION_NEW_SEG, N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -162,7 +163,10 @@ private:
 	QString username, password;
 	bool liveUpdate;
 
-	QHttp *http;
+	HTTPHandler osmhttp;
+
+	Node *newUploadedNode, *savedNode;
+	Segment *newUploadedSegment;
 
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
@@ -233,7 +237,11 @@ public slots:
 	void uploadOSM();
 	void logoutFromLiveUpdate();
 	void removeTrackPoints();
-	void test();
+	void newNodeAdded(const QByteArray& array);
+	void newSegmentAdded(const QByteArray& array);
+	void loadComponents(const QByteArray&);
+	void deleteSelectedSeg();
+	void handleHttpError(const QString& error);
 };
 
 }

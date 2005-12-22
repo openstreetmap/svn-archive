@@ -18,6 +18,7 @@
  */
 #include "HTTPHandler.h"
 #include "qmdcodec.h"
+#include "MainWindow2.h"
 
 #include <iostream>
 using namespace std;
@@ -26,13 +27,22 @@ namespace OpenStreetMap
 {
 
 void HTTPHandler::sendRequest(const QString& requestType, 
-							const QString& url)
+							const QString& url,
+							const QByteArray& b)
 {
 	if(!makingRequest)
 	{
+		cerr<<"Making request:" 
+				<< " host: " << host
+				<< " requestType: " <<requestType <<
+				"URL :" << url << endl;
+		method = requestType;
 		QHttpRequestHeader header(requestType,url);
 		header.setValue("Host",host);
-	
+
+		httpError = false;
+
+
 		if(username!="" && password!="")
 		{
 			QString userpwd=QCodecs::base64Encode
@@ -41,18 +51,21 @@ void HTTPHandler::sendRequest(const QString& requestType,
 		}
 
 		http->setHost(host);
-		http->request(header);
+		if(b.size())
+			curReqId = http->request(header,b);
+		else
+			curReqId = http->request(header);
 
-		if(this)
-		{
-			QObject::connect(http,
+		cerr<<"curReqId is  " << curReqId << endl;
+		QObject::connect(http,
 					SIGNAL(responseHeaderReceived (const QHttpResponseHeader&)),
 					this,
 					SLOT(responseHeaderReceived(const QHttpResponseHeader&))
 					);
-			QObject::connect(http,SIGNAL(requestFinished(int,bool)),
+
+		QObject::connect(http,SIGNAL(requestFinished(int,bool)),
 					this,SLOT(responseReceived(int,bool)));
-		}
+
 		makingRequest=true;
 	}
 	else
@@ -63,20 +76,38 @@ void HTTPHandler::sendRequest(const QString& requestType,
 
 void HTTPHandler::responseHeaderReceived(const QHttpResponseHeader& header)
 {
-		cerr<<"Status code:" << header.statusCode() << endl;
-		cerr<<"Reason phrase:" << header.reasonPhrase() << endl;
+	cerr<<"Status code:" << header.statusCode() << endl;
+	cerr<<"Reason phrase:" << header.reasonPhrase() << endl;
+	httpError = header.statusCode()!=200;	
+	QString errMsg;
+	errMsg.sprintf("Error: %d ",header.statusCode());
+	errMsg += header.reasonPhrase();
+	if(httpError)
+	{
+		makingRequest = false;
+		curReqId = 0;
+		emit httpErrorOccurred(errMsg);
+	}
 }
 
 void HTTPHandler::responseReceived(int id, bool error)
 {
-	cerr<<"response: id=" << id << " error=" << error << endl;
-	if(id==2)
+	if(id==curReqId)
 	{
-		QByteArray array = http->readAll();
-		for(int count=0; count<array.size(); count++)
-			cerr << array[count];
-		cerr<<endl;
+		if(!httpError && !error)
+		{
+			cerr<<"response: id=" << id << " error=" << error << endl;
+	//		if(!(id%2))
+			cerr<<"RESPONSE RECEIVED!" << endl;
+			emit responseReceived(http->readAll());
+		}
+		else
+		{
+			cerr<<"Error encountered" << endl;
+		}
 		makingRequest = false;
+		curReqId = 0;
 	}
 }
+
 }

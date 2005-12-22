@@ -98,13 +98,17 @@ void WaypointRep::draw(QPainter & p,int x,int y, const QString& label)
 
 MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 									map(lon,lat,s,w,h), 
-									landsatManager(this,w,h,100)
+									landsatManager(this,w,h,100),
+									osmhttp("www.openstreetmap.org")
 {
 	cerr<<"constructor"<<endl;
 	setCaption("OpenStreetMap Editor");
 	resize ( w, h );	
 
 	LIMIT=map.earthDist(10);
+
+	newUploadedNode =NULL;
+	newUploadedSegment = NULL;
 
 	contours = false;
 	wptSaved = false;
@@ -149,7 +153,6 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 						SLOT(loginToLiveUpdate()));
 	fileMenu->insertItem("Logout from live update",this,
 						SLOT(logoutFromLiveUpdate()));
-	fileMenu->insertItem("qt http data retrieval",this, SLOT(test()));
 	menuBar()->insertItem("&File",fileMenu);
 	QPopupMenu* editMenu = new QPopupMenu(this);
 	
@@ -193,6 +196,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 
 	QPixmap one = mmLoadPixmap("images","one.png");
 	QPixmap two = mmLoadPixmap("images","two.png");
+	QPixmap deleteseg = mmLoadPixmap("images","deleteseg.png");
 	QPixmap wp = mmLoadPixmap("images","waypoint.png");
 	QPixmap three = mmLoadPixmap("images","three.png");
 	QPixmap nametracks = mmLoadPixmap("images","nametracks.png");
@@ -224,10 +228,15 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 			(wp,"Edit Nodes","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_MOVE_NODE]= new QToolButton
 			(objectmanip,"Move Node","",mapper,SLOT(map()),toolbar2);
+	modeButtons[ACTION_DELETE_NODE]= new QToolButton
+			(two,"Delete Node","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_SEL_SEG]= new QToolButton
 			(selseg_pixmap,"Select segment","",mapper,SLOT(map()),toolbar2);
 	modeButtons[ACTION_NEW_SEG]= new QToolButton
 			(formnewseg,"New segment","",mapper,SLOT(map()),toolbar2);
+	new QToolButton
+			(deleteseg,"Delete Segment","",this,
+			 SLOT(deleteSelectedSeg()),toolbar2);
 
 	
 	toolbar->setStretchableWidget(new QLabel(toolbar));
@@ -326,6 +335,10 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 	liveUpdate = false;
 
 	cerr<<"end constructor"<<endl;
+	savedNode = NULL;	
+
+	QObject::connect(&osmhttp,SIGNAL(httpErrorOccurred(const QString&)),
+					this,SLOT(handleHttpError(const QString&)));
 }
 
 MainWindow2::~MainWindow2()
@@ -355,7 +368,7 @@ void MainWindow2::open()
 				delete components;	
 				components = newComponents;
 				curFilename = filename;
-				//map.centreAt(components->getAveragePoint());
+				map.centreAt(components->getAveragePoint());
 				showPosition();
 				update();
 			}
@@ -387,7 +400,10 @@ Components2 * MainWindow2::doOpen(const QString& filename)
 
 void MainWindow2::loginToLiveUpdate()
 {
-	QString str = "WARNING!!! You will remain logged in until\n " \
+	QString str = "WARNING!!! The login and password you supply will be\n"\
+				  "stored in osm-editor's memory and sent to the server\n"\
+				  "each time you perform a live update action.\n"\
+				  "This will happen until\n"\
 				"you select Logout or exit osm-editor. If you\n "\
 				"leave the computer, someone else will be able to modify\n "\
 				"OSM data!!! Press Cancel next if you're unhappy!";
@@ -435,45 +451,52 @@ void MainWindow2::grabOSMFromNet()
 
 	if(uname!="" && pwd!="")
 	{
-		CURL_LOAD_DATA *httpResponse = grab_osm(url.ascii(),
-					bottomLeft.x,bottomLeft.y,topRight.x,topRight.y,
-					uname.ascii(), pwd.ascii());
-		if(httpResponse)
+		statusBar()->message("Grabbing data from OSM...");
+		EarthPoint bottomLeft = map.getBottomLeft(),
+			   topRight = map.getTopRight();
+		QString url;
+		url.sprintf("/api/0.2/map?bbox=%lf,%lf,%lf,%lf",
+							bottomLeft.x,bottomLeft.y,
+							topRight.x,topRight.y);
+		cerr<<"SENDING URL: "<<url<<endl;
+
+		if(!osmhttp.isMakingRequest())
 		{
-			statusBar()->message("Done.");
-			char *strdata = new char[httpResponse->nbytes+1];
-			memcpy(strdata,httpResponse->data,httpResponse->nbytes);
-			strdata[httpResponse->nbytes]='\0';
-			free(httpResponse->data);
-			free(httpResponse);
-
-			cerr << "Response:" << endl << strdata << endl;
-
-		
-			QString gpx(strdata);
-			QXmlInputSource source;
-			source.setData(gpx);
-
-			OSMParser2 parser;
-			QXmlSimpleReader reader;
-			reader.setContentHandler(&parser);
-			reader.parse(source);
-			netComponents = parser.getComponents();	
-
-			if(components)
-			{
-				components->merge(netComponents);
-				delete netComponents;
-			}
-			else
-			{
-				components = netComponents;
-			}
-		
-			delete[] strdata;
+	    	osmhttp.disconnect (SIGNAL(responseReceived(const QByteArray&)));
+			QObject::connect
+					(&osmhttp,SIGNAL(responseReceived(const QByteArray&)),
+						 this, SLOT(loadComponents(const QByteArray&)));
+			osmhttp.setAuthentication(uname,pwd);
+			osmhttp.sendRequest("GET", url);
 		}
 	}
 }
+
+void MainWindow2::loadComponents(const QByteArray& array)
+{
+	Components2 *netComponents;
+
+	QXmlInputSource source;
+	source.setData(array);
+
+	OSMParser2 parser;
+	QXmlSimpleReader reader;
+	reader.setContentHandler(&parser);
+	reader.parse(source);
+	netComponents = parser.getComponents();	
+
+	if(components)
+	{
+		components->merge(netComponents);
+		delete netComponents;
+	}
+	else
+	{
+		components = netComponents;
+	}
+	update();
+}
+
 
 // uploads new segments only
 void MainWindow2::uploadOSM()
@@ -498,7 +521,7 @@ void MainWindow2::readGPS()
 		cerr << "GPS read done. " << std::endl;
 		if(components) {components->destroy();delete components;}
 		components = c;
-//		map.centreAt(components->getAveragePoint());
+		map.centreAt(components->getAveragePoint());
 		showPosition();
 		update();
 	}
@@ -554,6 +577,10 @@ void MainWindow2::setMode(int m)
 	nSelectedPoints = 0;
 
 	selSeg = NULL;
+	savedNode = NULL;
+	pts[0]=pts[1]=NULL;
+	ptsv[0].clear();
+	ptsv[1].clear();
 	doingName = false;
 	update();
 }
@@ -567,7 +594,14 @@ void MainWindow2::setSegType(const QString &t)
 		selSeg->setType(curSegType);
 		// UPLOAD IF IN LIVE MODE
 		if(liveUpdate)
-			selSeg->uploadToOSM(username,password);
+		{
+		//	selSeg->uploadToOSM(username,password);
+			QByteArray xml = selSeg->toOSM();
+			QString url;
+			url.sprintf ("/api/0.2/segment/%d", selSeg->getOSMID());
+			osmhttp.setAuthentication(username, password);
+			osmhttp.sendRequest("PUT", url, xml);
+		}
 	}
 	update();
 }
@@ -679,18 +713,24 @@ void MainWindow2::drawSegments(QPainter& p)
 
 		curPen.setStyle ((curSeg->getOSMID()>0) ?  Qt::SolidLine: Qt::DotLine );
 		p.setPen(curPen);
-		pt1=map.getScreenPos(curSeg->firstNode()->getLon(),
-								curSeg->firstNode()->getLat());
-		pt2=map.getScreenPos(curSeg->secondNode()->getLon(),
-								curSeg->secondNode()->getLat());
-		p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
-		if(curSeg->getName()!="")
+		if(curSeg->hasNodes())
 		{
-			dy=pt2.y-pt1.y;
-			dx=pt2.x-pt1.x;
-			double angle = atan2(dy,dx);
-			doDrawAngleText(&p,pt1.x,pt1.y,pt1.x,pt1.y,
+			pt1=map.getScreenPos(curSeg->firstNode()->getLon(),
+								curSeg->firstNode()->getLat());
+			pt2=map.getScreenPos(curSeg->secondNode()->getLon(),
+								curSeg->secondNode()->getLat());
+			if(map.pt_within_map(pt1) || map.pt_within_map(pt2))
+			{
+				p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+				if(curSeg->getName()!="")
+				{
+					dy=pt2.y-pt1.y;
+					dx=pt2.x-pt1.x;
+					double angle = atan2(dy,dx);
+					doDrawAngleText(&p,pt1.x,pt1.y,pt1.x,pt1.y,
 								angle,curSeg->getName().ascii());
+				}
+			}
 		}
 	}
 }
@@ -709,33 +749,36 @@ void MainWindow2::drawNodes(QPainter& p)
 void MainWindow2::drawNode(QPainter& p,Node* node)
 {
 	ScreenPos pos = map.getScreenPos(node->getLon(),node->getLat());
-	WaypointRep* img=nodeReps[node->getType()];
-	if(img) img->draw(p,pos.x,pos.y,node->getName()); 
-
-	if(!selSeg && (ptsv[0].size() || ptsv[1].size()))
+	if(map.pt_within_map(pos))
 	{
-		for(int count=0; count<ptsv[0].size(); count++)
+		WaypointRep* img=nodeReps[node->getType()];
+		if(img) img->draw(p,pos.x,pos.y,node->getName()); 
+
+		if(!selSeg && (ptsv[0].size() || ptsv[1].size()))
 		{
-			if(node==ptsv[0][count])
+			for(int count=0; count<ptsv[0].size(); count++)
 			{
-				p.setPen(QPen(Qt::yellow,3));
-				p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+				if(node==ptsv[0][count])
+				{
+					p.setPen(QPen(Qt::yellow,3));
+					p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+				}
+			}
+			for(int count=0; count<ptsv[1].size(); count++)
+			{
+				if(node==ptsv[1][count])
+				{
+					p.setPen(QPen(Qt::yellow,3));
+					p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+				}
 			}
 		}
-		for(int count=0; count<ptsv[1].size(); count++)
-		{
-			if(node==ptsv[1][count])
-			{
-				p.setPen(QPen(Qt::yellow,3));
-				p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
-			}
-		}
-	}
 
-	if(node==pts[0] || node==pts[1])
-	{
-		p.setPen(QPen(Qt::red,3));
-		p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+		if(node==pts[0] || node==pts[1])
+		{
+			p.setPen(QPen(Qt::red,3));
+			p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+		}
 	}
 }
 
@@ -747,10 +790,12 @@ void MainWindow2::removeTrackPoints()
 
 void MainWindow2::mousePressEvent(QMouseEvent* ev)
 {
-	EarthPoint pt;
+	EarthPoint p = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
 	QString name;
 	int nearest;
+	Node *n;
 
+	cerr<<"actionMode="<<actionMode<<endl;
 	switch(actionMode)
 	{
 		case ACTION_NODE:
@@ -758,29 +803,50 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 			break;
 
 		case ACTION_MOVE_NODE:
-			/*
-			if(wptSaved)
+			if(savedNode)
 			{
-				pt = map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-				savedWpt.lat = pt.y;
-				savedWpt.lon = pt.x;
-				components->addNode(savedWpt);
-				wptSaved=false;
+				savedNode->setCoords(p.y,p.x);
+				components->addNode(savedNode);
+				if(liveUpdate && savedNode->getOSMID()>0)
+				{
+					QByteArray xml = savedNode->toOSM();
+					QString url;
+					url.sprintf ("/api/0.2/node/%d", savedNode->getOSMID());
+					osmhttp.setAuthentication(username, password);
+					osmhttp.sendRequest("PUT", url, xml);
+				}
+				savedNode = NULL;	
 				update();
 			}
-			else if((nearest=findNearestNode(ev->x(),ev->y(),10))!=-1)
+			else 
 			{
-				savedWpt = components->getNode(nearest);
-				components->deleteNode(nearest);
-				wptSaved=true;
+				savedNode = components->getNearestNode(p.y,p.x,LIMIT);
+				if(savedNode)
+				{
+					components->deleteNode(savedNode);
+					update();
+				}
+			}
+			break;
+		case ACTION_DELETE_NODE:
+			n = components->getNearestNode(p.y,p.x,LIMIT);
+			if(n)
+			{
+				components->deleteNode(n);
+				if(liveUpdate && n->getOSMID()>0)
+				{
+					QString url;
+					url.sprintf ("/api/0.2/node/%d", n->getOSMID());
+					osmhttp.setAuthentication(username, password);
+					osmhttp.sendRequest("DELETE", url);
+				}
+				delete n;
 				update();
 			}
-			*/
 			break;
 		case ACTION_NEW_SEG:
 			if(nSelectedPoints==0)
 			{
-				EarthPoint p=map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
 				pts[0] = components->getNearestNode(p.y,p.x,LIMIT);
 				if(!pts[0])
 					pts[0]=components->addNewNode(p.y,p.x,"","node");
@@ -789,14 +855,27 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 			}
 			else
 			{
-				EarthPoint p=map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
 				pts[1] = components->getNearestNode(p.y,p.x,LIMIT);
 				if(!pts[1])
 					pts[1]=components->addNewNode(p.y,p.x,"","node");
 				Segment *seg=
 						components->addNewSegment(pts[0],pts[1],"",curSegType);
-				if(liveUpdate)
-					seg->uploadToOSM(username,password);
+				if(liveUpdate && !osmhttp.isMakingRequest())
+				{
+					//seg->uploadToOSM(username,password);
+					QByteArray xml = seg->toOSM();
+					cerr<<"xml is: "<<xml<<endl;
+					QString url = "/api/0.2/newsegment";
+					osmhttp.disconnect
+							(SIGNAL(responseReceived(const QByteArray&)));
+					QObject::connect
+							(&osmhttp,
+							 SIGNAL(responseReceived(const QByteArray&)),
+						 		this, SLOT(newSegmentAdded(const QByteArray&)));
+					newUploadedSegment = seg;
+					osmhttp.setAuthentication(username, password);
+					osmhttp.sendRequest("PUT", url, xml);
+				}
 				pts[0]=pts[1]=NULL;
 				update();
 				nSelectedPoints=0;
@@ -878,7 +957,14 @@ void MainWindow2::editNode(int x,int y,int limit)
 			nearest->setName(d->getName());
 			nearest->setType(d->getType());
 			if(liveUpdate)
-				nearest->uploadToOSM(username,password);
+			{
+				//nearest->uploadToOSM(username,password);
+				QByteArray xml = nearest->toOSM();
+				QString url;
+				url.sprintf ("/api/0.2/node/%d", nearest->getOSMID());
+				osmhttp.setAuthentication(username, password);
+				osmhttp.sendRequest("PUT", url, xml);
+			}
 		}
 
 		update();
@@ -891,8 +977,20 @@ void MainWindow2::editNode(int x,int y,int limit)
 		if(d->exec())
 		{
 			Node *n = components->addNewNode(p.y,p.x,d->getName(),d->getType());
-			if(liveUpdate)
-				n->uploadToOSM(username,password);
+			if(liveUpdate && !osmhttp.isMakingRequest())
+			{
+				//n->uploadToOSM(username,password);
+				QByteArray xml = n->toOSM();
+				QString url = "/api/0.2/newnode";
+			    osmhttp.disconnect
+							(SIGNAL(responseReceived(const QByteArray&)));
+				QObject::connect
+						(&osmhttp,SIGNAL(responseReceived(const QByteArray&)),
+						 this, SLOT(newNodeAdded(const QByteArray&)));
+				osmhttp.setAuthentication(username, password);
+				newUploadedNode = n;
+				osmhttp.sendRequest("PUT", url, xml);
+			}
 		}
 
 		update();
@@ -941,7 +1039,14 @@ void MainWindow2::keyPressEvent(QKeyEvent* ev)
 			selSeg->setName(trackName);
 //			UPLOAD IF IN LIVE MODE
 			if(liveUpdate)
-				selSeg->uploadToOSM(username,password);
+			{
+				//selSeg->uploadToOSM(username,password);
+				QByteArray xml = selSeg->toOSM();
+				QString url;
+				url.sprintf ("/api/0.2/segment/%d", selSeg->getOSMID());
+				osmhttp.setAuthentication(username, password);
+				osmhttp.sendRequest("PUT", url, xml);
+			}
 			trackName = "";
 			typingName = true;
 			update();
@@ -1112,16 +1217,63 @@ QPixmap mmLoadPixmap(const QString& directory, const QString& filename)
 	return pixmap;
 }
 
-void MainWindow2::test()
+
+void MainWindow2::newNodeAdded(const QByteArray& array)
 {
-	statusBar()->message("Grabbing data from OSM...");
-	EarthPoint bottomLeft = map.getBottomLeft(),
-			   topRight = map.getTopRight();
-	QString url;
-	url.sprintf("/api/0.2/map?bbox=%lf,%lf,%lf,%lf",
-							bottomLeft.x,bottomLeft.y,
-							topRight.x,topRight.y);
-	cerr<<"SENDING URL: "<<url<<endl;
+	QString str = array;
+	QStringList ids;
+
+	cerr<<"**** HANDLING A NEW NODE RESPONSE ****" << endl;
+	cerr<<"STR=" << str << endl;
+	ids = QStringList::split("\n", str);
+	cerr<<"ids[0]="<<ids[0]<<endl;			
+	if(newUploadedNode)
+	{
+		cerr<<"NEW UPLOADED NODE IS NOT NULL::SETTING ID"<<endl;
+		newUploadedNode->setOSMID(atoi(ids[0].ascii()));
+		newUploadedNode = NULL;
+		cerr<<"DONE."<<endl;
+	}
+	else
+		cerr<<"NEW UPLAODED NODE IS NULL" << endl;
 }
 
+void MainWindow2::newSegmentAdded(const QByteArray& array)
+{
+	QString str = array;
+	QStringList ids;
+	ids = QStringList::split("\n", str);
+	if(newUploadedSegment)
+	{
+		cerr<<"NEW UPLOADED SEGMENT IS NOT NULL::SETTING ID"<<endl;
+		newUploadedSegment->setOSMID(atoi(ids[0].ascii()));
+		newUploadedSegment = NULL;
+		cerr<<"DONE."<<endl;
+	}
+}
+
+void MainWindow2::deleteSelectedSeg()
+{
+	if(selSeg)
+	{
+		cerr<<"selseg exists" << endl;
+		components->deleteSegment(selSeg);
+		if(liveUpdate && selSeg->getOSMID()>0)
+		{
+			QString url;
+			url.sprintf ("/api/0.2/segment/%d", selSeg->getOSMID());
+			osmhttp.setAuthentication(username, password);
+			osmhttp.sendRequest("DELETE", url);
+		}
+		delete selSeg;
+		selSeg = NULL;
+		update();
+	}
+}
+
+void MainWindow2::handleHttpError(const QString& error)
+{
+	QMessageBox::information(this,"An error occurred communicating with OSM",
+								error);
+}
 }

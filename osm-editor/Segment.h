@@ -120,6 +120,12 @@ public:
 	}
 
 	void uploadToOSM(const char* username, const char* password);
+	QByteArray toOSM();
+
+	bool hasNodes()
+	{
+		return nodes[0] && nodes[1];
+	}
 };
 
 }

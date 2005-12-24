@@ -9,8 +9,8 @@ MYSQL_DATABASE = "openstreetmap"
 
 now = Time.new
 
-puts '<html><head><title>OpenStreetmap stats</title></head><body>'
-puts '<h2>OpenStreetmap stats report run at ' + now.to_s + '</h2>'
+puts '<html><head><title>OpenStreetMap stats</title></head><body>'
+puts '<h2>OpenStreetMap stats report run at ' + now.to_s + '</h2>'
 
 millis =  now.to_i * 1000
 

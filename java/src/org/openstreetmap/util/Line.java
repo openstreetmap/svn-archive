@@ -147,6 +147,11 @@ public class Line {
     }
 
   } // splitTags
+
+  public String key()
+  {
+    return "line_" + uid;
+  } // key
  
 } // Line
 

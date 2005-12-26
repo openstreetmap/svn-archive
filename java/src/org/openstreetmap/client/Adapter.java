@@ -3,6 +3,7 @@ package org.openstreetmap.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.commons.httpclient.*;
@@ -10,10 +11,10 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 
+import org.openstreetmap.client.Tile;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Point;
-import org.openstreetmap.util.Mercator;
 import org.openstreetmap.util.GZIPAwareGetMethod;
 
 public class Adapter
@@ -22,12 +23,12 @@ public class Adapter
   private String URLBASE = "http://www.openstreetmap.org/api/0.2/";
   String user, pass;
 
-  Vector lines;
-  Vector nodes;
+  Hashtable lines;
+  Hashtable nodes;
   
   Credentials creds = null;
 
-  public Adapter(String username, String password, Vector l, Vector n)
+  public Adapter(String username, String password, Hashtable l, Hashtable n)
   {
     
     this.user = username;
@@ -42,7 +43,7 @@ public class Adapter
   } // Adapter
   
 
-  public void getNodesAndLines(Point topLeft, Point bottomRight, Mercator projection)
+  public void getNodesAndLines(Point topLeft, Point bottomRight, Tile projection)
   {
     System.out.println("getting nodes and lines");
     getNodesAndLines(topLeft.lon,bottomRight.lat,bottomRight.lon,topLeft.lat, projection);
@@ -50,19 +51,19 @@ public class Adapter
   } // getNodesAndLines
   
 
-  public Vector getNodes()
+  public Hashtable getNodes()
   {
     return nodes;
   } // getNodes
 
-  public Vector getLines()
+  public Hashtable getLines()
   {
     return lines;
 
   } // getLines
 
 
-  public void getNodesAndLines(double bllon, double bllat, double trlon, double trlat, Mercator projection)
+  public void getNodesAndLines(double bllon, double bllat, double trlon, double trlat, Tile projection)
   {
 
     String url = URLBASE + "map?bbox=" + bllon + "," + bllat + "," + trlon + "," + trlat;
@@ -109,14 +110,15 @@ public class Adapter
     {
        Node n = (Node)e.nextElement();
        n.project(projection);
-       nodes.addElement(n);
+       nodes.put("node_" + n.uid, n);
     }
 
     e = gpxp.getLines().elements();
 
     while(e.hasMoreElements())
     {
-      lines.addElement(e.nextElement());
+      Line l = (Line)e.nextElement();
+      lines.put("line_" + l.uid, l);
       
     }
 
@@ -164,10 +166,10 @@ public class Adapter
       System.out.println("tyring to delete node with " + node.lines.size() + " lines");
             
       try {
-        nodes.remove(node);
+        nodes.remove(node.key());
         for (int i = 0; i < node.lines.size(); i++) {
           Line line = (Line)node.lines.elementAt(i);
-          lines.remove(line);
+          lines.remove(line.key());
           // TODO - does the database do this automagically?
           // deleteLine(line);
         }
@@ -195,20 +197,20 @@ public class Adapter
           System.err.println("error removing node: " + node);
           System.err.println("HTTP DELETE got response " + rCode + " back from the abyss");
           
-          nodes.add(node);
+          nodes.put(node.key(),node);
           for (int i = 0; i < node.lines.size(); i++) {
             Line line = (Line)node.lines.elementAt(i);
-            lines.add(line);
+            lines.put(line.key(), line);
           }
         }
       }
       catch (Exception e) {
         System.err.println("error removing node: " + node);
         e.printStackTrace();
-        nodes.add(node);
+        nodes.put(node.key(),node);
         for (int i = 0; i < node.lines.size(); i++) {
           Line line = (Line)node.lines.elementAt(i);
-          lines.add(line);
+          lines.put(line.key(),line);
         }
       }
       
@@ -230,7 +232,7 @@ public class Adapter
       System.out.println("Trying to delete line " + line);
       
       try {
-        lines.remove(line);
+        lines.remove(line.key());
 
         String url = URLBASE + "segment/" + line.uid;
         System.out.println("trying to delete line by throwing HTTP DELETE at " + url);
@@ -252,7 +254,7 @@ public class Adapter
         }
         else {
           System.err.println("error removing line: " + line);
-          lines.add(line);
+          lines.put(line.key(),line);
         }
       }
       catch (Exception e) {
@@ -323,13 +325,13 @@ public class Adapter
         }
         else {
           System.err.println("error creating node: " + node);
-          nodes.remove(node);
+          nodes.remove(node.key());
         }
       }
       catch (Exception e) {
         System.err.println("error creating node: " + node);
         e.printStackTrace();
-        nodes.remove(node);
+        nodes.remove(node.key());
       }
     }
 
@@ -422,7 +424,7 @@ public class Adapter
         else
         {
           System.err.println("error creating line: " + line);
-          lines.remove(line);
+          lines.remove(line.key());
         }
         
         put.releaseConnection();
@@ -434,14 +436,14 @@ public class Adapter
         }
         else {
           System.err.println("error creating line: " + line);
-          lines.remove(line);
+          lines.remove(line.key());
           // TODO: error handling...
         }
       }
       catch(Exception e) {
         System.err.println("error creating line: " + line);
         e.printStackTrace();
-        lines.remove(line);
+        lines.remove(line.key());
       }
       
     }
@@ -491,7 +493,7 @@ public class Adapter
         else
         {
           System.err.println("error updating line: " + line + ", got code " + rCode);
-          lines.remove(line);
+          lines.remove(line.key());
         }
         
         put.releaseConnection();   
@@ -499,7 +501,7 @@ public class Adapter
       catch(Exception e) {
         System.err.println("error updating line: " + line);
         e.printStackTrace();
-        lines.remove(line);
+        lines.remove(line.key());
       }
       
     }

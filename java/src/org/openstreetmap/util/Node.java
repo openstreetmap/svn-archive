@@ -19,6 +19,7 @@
  
 package org.openstreetmap.util; 
 
+import org.openstreetmap.client.Tile;
 import java.util.Vector;
 
 // minimal representation of OpenStreetMap node (lat/lon pair, with uid)
@@ -32,7 +33,7 @@ public class Node extends Point {
     this(lat,lon,0,"");
   }
 
-  public Node(float x, float y, Mercator projection) {
+  public Node(float x, float y, Tile projection) {
     this(x,y,projection,0,"");
   }
 
@@ -42,7 +43,7 @@ public class Node extends Point {
     this.tags = sTags;
   }
   
-  public Node(float x, float y, Mercator projection, int uid, String sTags) {
+  public Node(float x, float y, Tile projection, int uid, String sTags) {
     super(x,y,projection);
     tags = sTags;
     this.uid = uid;
@@ -55,5 +56,9 @@ public class Node extends Point {
   } // toString
 
 
+  public String key()
+  {
+    return "node_" + uid;
+  }
 }
 

@@ -19,6 +19,8 @@
 
 package org.openstreetmap.util;
 
+import org.openstreetmap.client.Tile;
+
 // minimal representation of OpenStreetMap GPX point (lat/lon pair)
 public class Point {
 
@@ -31,7 +33,7 @@ public class Point {
     this.lon = lon;
   }
 
-  public Point(float x, float y, Mercator projection) {
+  public Point(float x, float y, Tile projection) {
     this.x = x;
     this.y = y;
     this.lat = projection.lat(y);
@@ -39,13 +41,13 @@ public class Point {
     projected = true;
   }
         
-  public void project(Mercator projection){
+  public void project(Tile projection){
     x = (float)projection.x(lon);
     y = (float)projection.y(lat);
     projected = true;
   }
   
-  public void unproject(Mercator projection){
+  public void unproject(Tile projection){
     this.lat = projection.lat(y);
     this.lon = projection.lon(x);
   }

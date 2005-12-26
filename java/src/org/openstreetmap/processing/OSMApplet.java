@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 Tom Carden (tom@somethingmodern.com)
+ * Copyright (C) 2005 Tom Carden (tom@somethingmodern.com), Steve Coast (steve@asklater.com)
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -25,9 +25,7 @@
  * <li>Save line segment names back to OSM
  * <li>Stop hard-coding my username and password (just use params)
  * <li>Report useful errors, somehow.
- * <li>Implement a redirect or something so we can load NASA satellite data in the applet 
  * <li>Prompt for delete yes/no
- * <li>Make deployment scripts, compile with command line, etc.
  * 
  * <p>GENERAL TODO
  * 
@@ -44,7 +42,6 @@
  * <li>Allow cut and paste for street names 
  * <li>Test non-ascii characters in street names (may need a font change)
  * <li>Package standalone full screen app for demos
- * <li>Revalidate token after x minutes (9?)
  * <li>Draw streets instead of lines, once streets are computed (still edit lines though)
  * <li>Copious refactoring opportunities in the point/line/latlon classes once it all works
  * <li>use off screen images for picking nodes/lines (use uid as colour?)
@@ -53,25 +50,13 @@
  * <p>APPLET BUGS:
  * 
  * <ul>
- * <li>Login prompt sucks. Seems broken at the moment. Do a nicer one with AWT myself instead of stealing a bad one.
- * <li>Remote images aren't shown due to security things
- * <li>CPU usage is obnoxious - lots of layer-caching optimisation to do once the interaction is right
- * <li>Text on vertical lines is strange
- * </ul>
- * 
- * <p>OSM/XML-RPC show-stoppers:
- * 
- * <ul>
- * <li>GPS points returned are limited to 50000.  Maybe we need to pre-render the images / put them into MapServer and cache them with Squid?
- * <li>Mopping up "off-screen" nodes to complete lines is hella-slow.  Need a getLines(lat,lon,lat,lon) to call first, or at least a getNodes(uids).
- * <li>No deleteLine or getStreets
+ * <li>Text on vertical lines is strange?
  * </ul>
  * 
  * <p>DONE:
  * 
  * <ul>
  * <li>Allow deletion of nodes/lines 
- * <li>Log in to OSM, or use a given token
  * <li>Load and display nodes and lines using Mercator transform
  * <li>Eliminate depency on OpenMap
  * <li>Load NASA images
@@ -100,10 +85,10 @@ import processing.core.PImage;
 import processing.core.PFont;
 
 import org.openstreetmap.client.Adapter;
+import org.openstreetmap.client.Tile;
 import org.openstreetmap.util.Point;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
-import org.openstreetmap.util.Mercator;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -112,20 +97,31 @@ import java.util.Hashtable;
 
 public class OSMApplet extends PApplet {
 
+  Tile tiles;
+
+  private static final int WINDOW_WIDTH = 700;
+  private static final int WINDOW_HEIGHT = 500;
+
+  int zoom;
+  boolean shiftDown = false;
+
+  int lastmX;
+  int lastmY;
+
   /* set these for testing without needing to log in to the website - for deployment they should be set to null */
   String USERNAME = null;
   String PASSWORD = null;
 
   /* handles XML-RPC etc */
-  Adapter osm;
+  public Adapter osm;
 
   /* converts from lat/lon into screen space */
-  Mercator projection;
+  //Mercator projection;
 
   /* collection of OSMNodes (may or may not be projected into screen space) */
-  Vector nodes = new Vector();
+  public Hashtable nodes = new Hashtable();
   /* collection of OSMLines */
-  Vector lines = new Vector();
+  public Hashtable lines = new Hashtable();
   /* Integer id -> OSMNode */
   //  Hashtable nodeMap = new Hashtable(); 
 
@@ -157,10 +153,11 @@ public class OSMApplet extends PApplet {
   PFont font;
 
   /* background image - TODO: layers of images from different mapservers? */
-  PImage img = null;
+//  PImage img = null;
 
   /* URL for mapserver... will have bbx,width,height appended */
-  String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx"; //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
+  String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx"; 
+  //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
 
   /* modes - input is passed to the current mode, assigned by node manager */
   ModeManager modeManager;
@@ -171,15 +168,15 @@ public class OSMApplet extends PApplet {
   EditMode deleteMode   = new DeleteMode();
 
   /* if !ready, a wait cursor is shown and input doesn't do anything 
-TODO: disable button mouseover highlighting when !ready */
+  TODO: disable button mouseover highlighting when !ready */
   boolean ready = false;
 
-  /* for revalidating token with OSM server */
-  int validCount = 1;
+  long lastmove;
+  boolean moved = true;
 
   public void setup() {
 
-    size(700,500);
+    size(WINDOW_WIDTH, WINDOW_HEIGHT);
     smooth();
     
     // this font should have all special characters - open to suggestions for changes though
@@ -192,6 +189,8 @@ TODO: disable button mouseover highlighting when !ready */
     modeManager.addMode(nameMode);
     modeManager.addMode(nodeMoveMode);
     modeManager.addMode(deleteMode);
+
+    modeManager.draw(); // make modeManager set up things
 
     // for centre lat/lon and scale (degrees per pixel)
     float clat, clon, sc;
@@ -217,14 +216,16 @@ TODO: disable button mouseover highlighting when !ready */
       }
 
       if( param_float_exists("zoom") ) {
-        int zoom = parse_param_int("zoom");
+        zoom = parse_param_int("zoom");
         sc = 45f * (float)Math.pow(2f, -6 -zoom);
       }
     } else {
       // traditional OSM Regent's Park London default
       clat = 51.526447f;
       clon = -0.14746371f;
-      sc   = 8.77914943209873e-06f;
+      zoom = 15;
+      //      sc   = 8.77914943209873e-06f;
+      sc = 45f * (float)Math.pow(2f, -6 -zoom);
     }
 
     if (online) {
@@ -245,56 +246,14 @@ TODO: disable button mouseover highlighting when !ready */
       }
     }
 
-    // initialise projection at given centre and scale
-    // TODO - consider fixing scale to be one of N pre-determined values  
-    //      - or allow "zoom level" as well as scale
-    projection = new Mercator(clat,clon,sc,width,height);
+    tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
+    tiles.start();
 
-    strokeWeight = max((float)(0.010f/projection.kilometersPerPixel()),2.0f); // 10m roads, but min 2px width
+    System.out.println(tiles);
+
+    strokeWeight = max(0.010f/tiles.kilometersPerPixel(),2.0f); // 10m roads, but min 2px width
 
     System.out.println("Selected strokeWeight of " + strokeWeight );
-
-    Point tl = projection.getTopLeft();
-    Point br = projection.getBottomRight();
-
-    if (wmsURL.indexOf("?") > 0) {
-      wmsURL += "&bbox="+tl.lon+","+br.lat+","+br.lon+","+tl.lat+"&width="+width+"&height="+height;
-    }
-    else {
-      wmsURL += "?bbox="+tl.lon+","+br.lat+","+br.lon+","+tl.lat+"&width="+width+"&height="+height;
-    }
-
-    Thread imageFetcher = new Thread(new Runnable() {
-      public void run() {
-        try {
-          print("loading: " + wmsURL);
-          img = loadImage(wmsURL);
-          if (img == null || img.width == 0 || height == 0) {
-            throw new Exception("bad image from: " + wmsURL);
-          }
-          else
-          {
-            redraw();
-          }
-        }
-        catch (Exception e) {
-          img = null;
-          e.printStackTrace();
-        }
-      }
-    }
-    );
-    imageFetcher.start();
-
-    String token = null;
-
-    // check webpage applet parameters for a token
-    try {
-      token = param("token");
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
 
     println("check webpage applet parameters for a user/pass");
     try {
@@ -321,13 +280,13 @@ TODO: disable button mouseover highlighting when !ready */
     }
 
     // try to connect to OSM
-    osm = new Adapter(USERNAME,PASSWORD, this.lines, nodes);
+    osm = new Adapter(USERNAME,PASSWORD, lines, nodes);
 
     Thread dataFetcher = new Thread(new Runnable() {
 
       public void run() {
 
-        osm.getNodesAndLines(projection.getTopLeft(),projection.getBottomRight(), projection);
+        osm.getNodesAndLines(tiles.getTopLeft(),tiles.getBotRight(), tiles);
 
         System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
 
@@ -335,7 +294,6 @@ TODO: disable button mouseover highlighting when !ready */
 
         redraw();
       }
-
     });
 
     if (osm != null) {
@@ -375,13 +333,7 @@ TODO: disable button mouseover highlighting when !ready */
 
   public void draw() {
 
-    // draw background satellite image
-    if (img != null) {
-      background(img);
-    }
-    else {
-      background(200);
-    }
+    tiles.draw();
 
     if (!ready) {
       cursor(WAIT);
@@ -393,20 +345,24 @@ TODO: disable button mouseover highlighting when !ready */
     noFill();
     strokeWeight(strokeWeight+2.0f);
     stroke(0);
-    for (int i = 0; i < lines.size(); i++) {
-      Line line = (Line)lines.elementAt(i);
+    Enumeration e = lines.elements();
+    while(e.hasMoreElements()){
+      Line line = (Line)e.nextElement();
       //System.out.println("Doing line " + line.a.x + "," + line.a.y + " - " + line.b.x + "," + line.a.y);
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     strokeWeight(strokeWeight);
     stroke(255);
-    for (int i = 0; i < lines.size(); i++) {
-      Line line = (Line)lines.elementAt(i);
+    e = lines.elements();
+    while(e.hasMoreElements()){
+      Line line = (Line)e.nextElement();
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     boolean gotOne = false;
-    for (int i = 0; i < lines.size(); i++) {
-      Line line = (Line)lines.elementAt(i);
+
+    e = lines.elements();
+    while(e.hasMoreElements()){
+      Line line = (Line)e.nextElement();
       if (modeManager.currentMode == nameMode && !gotOne) {
         // highlight first line under mouse
         if (line.mouseOver(mouseX,mouseY,strokeWeight)) {
@@ -421,7 +377,7 @@ TODO: disable button mouseover highlighting when !ready */
     // draw temp line
     if (start != null) {
       tempLine.a = start;
-      tempLine.b = new Node(mouseX,mouseY,projection);
+      tempLine.b = new Node(mouseX,mouseY,tiles);
       stroke(0,80);
       strokeWeight(strokeWeight+2);
       line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
@@ -440,8 +396,10 @@ TODO: disable button mouseover highlighting when !ready */
     // draw nodes
     noStroke();
     ellipseMode(CENTER);
-    for (int i = 0; i < nodes.size(); i++) {
-      Node node = (Node)nodes.elementAt(i);
+
+    e = nodes.elements();
+    while(e.hasMoreElements()){
+      Node node = (Node)e.nextElement();
       if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
         fill(0xffff0000);
       }
@@ -481,8 +439,10 @@ TODO: disable button mouseover highlighting when !ready */
     textFont(font);
     textSize(strokeWeight + 4);
     textAlign(CENTER);
-    for (int i = 0; i < lines.size(); i++) {
-      Line l = (Line)lines.elementAt(i);
+
+    e = lines.elements();
+    while(e.hasMoreElements()){
+      Line l = (Line)e.nextElement();
       if (l.getName() != null) {
         pushMatrix();
         if (l.a.x <= l.b.x) {
@@ -501,7 +461,7 @@ TODO: disable button mouseover highlighting when !ready */
     // draw all buttons
     modeManager.draw();
     if (online) {
-      status("lat: " + projection.lat(mouseY) + ", lon: " + projection.lon(mouseX));
+      status("lat: " + tiles.lat(mouseY) + ", lon: " + tiles.lon(mouseX));
     }
 
   }
@@ -511,10 +471,26 @@ TODO: disable button mouseover highlighting when !ready */
   }
 
   public void mouseDragged() {
-    if (ready) modeManager.mouseDragged();
-  }
+    if(shiftDown)
+    {
+      tiles.drag(lastmX - mouseX, mouseY - lastmY);
+      lastmX = mouseX;
+      lastmY = mouseY;
+    }
+    else
+    {
+      if (ready) modeManager.mouseDragged();
+    }
+  } // mouseDragged
 
   public void mousePressed() {
+    if(keyCode == SHIFT)
+    {
+      lastmX = mouseX;
+      lastmY = mouseY;
+      return;
+    }
+   
     if (ready) modeManager.mousePressed();
   }
 
@@ -523,8 +499,24 @@ TODO: disable button mouseover highlighting when !ready */
   }
 
   public void keyPressed() {
+    if( key == CODED )
+    {
+      if(keyCode == SHIFT)
+      {
+        shiftDown = true;
+      }
+
+    }
     if (ready) {
       switch(key) {
+        case 'i':
+          lastmove = System.currentTimeMillis();
+          tiles.zoomin();
+          break;
+        case 'o':
+          tiles.zoomout();
+          break;
+
         case '+':
         case '=':
           strokeWeight += 1.0f;
@@ -548,6 +540,19 @@ TODO: disable button mouseover highlighting when !ready */
     }
   }
 
+  
+  public void keyReleased() {
+    if( key == CODED )
+    {
+      if(keyCode == SHIFT)
+      {
+        shiftDown = false;
+        return;
+      }
+
+    }
+  } // keyReleased
+
   // bit crufty - TODO tidy up and move into Point
   public boolean mouseOverPoint(Point p) {
     if (p.projected) {
@@ -558,6 +563,19 @@ TODO: disable button mouseover highlighting when !ready */
     }
   }
 
+  public synchronized void reProject()
+  {
+    Enumeration e = nodes.elements();
+    while(e.hasMoreElements())
+    {
+      Node n = (Node) e.nextElement();
+      n.project(tiles);
+    }
+
+  } // reproject
+
+
+  
   // bit crufty - TODO tidy up and move into draw()?
   public void drawPoint(Point p) {
     if (p.projected) {
@@ -614,6 +632,7 @@ TODO: disable button mouseover highlighting when !ready */
     }
 
     public void draw() {
+      //System.out.println("draw() START in ModeManager: overButton="+overButton);
 
       overButton = false;
 
@@ -624,7 +643,8 @@ TODO: disable button mouseover highlighting when !ready */
         strokeWeight(1);
         fill(200);
         mode.over = mouseX > x+(i*buttonWidth) && mouseX < buttonWidth+x+(i*buttonWidth) && mouseY < y+buttonHeight && mouseY > y;
-        stroke(mode.over || currentMode == mode ? 255 : 0);
+        stroke(0);
+        fill(mode.over || currentMode == mode ? 255 : 200);
         rect(0,0,buttonWidth,buttonHeight);
         mode.draw();
         overButton = overButton || mode.over;
@@ -632,6 +652,7 @@ TODO: disable button mouseover highlighting when !ready */
       }
       popMatrix();
 
+      //System.out.println("draw() END in ModeManager: overButton="+overButton);
     }
 
     public void mouseReleased() {
@@ -652,6 +673,7 @@ TODO: disable button mouseover highlighting when !ready */
       redraw();
     }
     public void mousePressed() {
+      System.out.println("mousePressed in ModeManager with currentMode=" + currentMode + " and overButton=" + overButton);
       if (currentMode != null && !overButton) {
         currentMode.mousePressed();
         redraw();
@@ -661,6 +683,13 @@ TODO: disable button mouseover highlighting when !ready */
       if (currentMode != null) {
         currentMode.mouseMoved();
         redraw();
+      }
+      else
+      {
+        if(mouseY < buttonHeight && mouseX < (x + getNumModes()*buttonWidth))
+        {
+          redraw();
+        }
       }
     }
     public void mouseDragged() {
@@ -711,8 +740,9 @@ TODO: disable button mouseover highlighting when !ready */
     public void mouseReleased() {
       Line previousSelection = selectedLine;
       selectedLine = null;
-      for (int i = 0; i < lines.size(); i++) {
-        Line l = (Line)lines.elementAt(i);
+      Enumeration e = lines.elements();
+      while(e.hasMoreElements()){
+        Line l = (Line)e.nextElement();
         if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
           selectedLine = l;
           break;
@@ -732,15 +762,16 @@ TODO: disable button mouseover highlighting when !ready */
       textFont(font);
       textSize(11);
       textAlign(CENTER);
-      text("A",buttonWidth*0.5f,5+(buttonHeight*0.5f));
+      text("A",1+buttonWidth*0.5f,5+(buttonHeight*0.5f));
     }
   } 
 
   class NodeMode extends EditMode {
     public void mouseReleased() {
       boolean overOne = false; // points can't overlap
-      for (int i = 0; i < nodes.size(); i++) {
-        Node p = (Node)nodes.elementAt(i);
+      Enumeration e = nodes.elements();
+      while(e.hasMoreElements()){
+        Node p = (Node)e.nextElement();
         if(mouseOverPoint(p)) {
           overOne = true;
           redraw();
@@ -748,11 +779,11 @@ TODO: disable button mouseover highlighting when !ready */
         }
       }    
       if (!overOne) {
-        Node node = new Node(mouseX,mouseY,projection); 
+        Node node = new Node(mouseX,mouseY,tiles); 
         if (osm != null) {
           osm.createNode(node); 
         }
-        nodes.addElement(node);
+        nodes.put(node.key(),node);
       }
     }
     public void draw() {
@@ -766,8 +797,9 @@ TODO: disable button mouseover highlighting when !ready */
 
   class LineMode extends EditMode {
     public void mousePressed() {
-      for (int i = 0; i < nodes.size(); i++) {
-        Node p = (Node)nodes.elementAt(i);
+      Enumeration e = nodes.elements();
+      while(e.hasMoreElements()){
+        Node p = (Node)e.nextElement();
         if(mouseOverPoint(p)) {
           start = p;
           break;
@@ -776,8 +808,10 @@ TODO: disable button mouseover highlighting when !ready */
     }
     public void mouseReleased() {
       boolean gotOne = false;
-      for (int i = 0; i < nodes.size(); i++) {
-        Node p = (Node)nodes.elementAt(i);
+
+      Enumeration e = nodes.elements();
+      while(e.hasMoreElements()){
+        Node p = (Node)e.nextElement();
         if(mouseOverPoint(p)) {
           if (start != null) {
             Line line = new Line(start,p);
@@ -785,7 +819,7 @@ TODO: disable button mouseover highlighting when !ready */
               osm.createLine(line); 
               // TODO assign ID, asynchronously?
             }
-            lines.addElement(line);
+            lines.put(line.key(),line);
           }
           gotOne = true;
           break;
@@ -811,9 +845,10 @@ TODO: disable button mouseover highlighting when !ready */
     float lastOffsetX = 0.0f;
     float lastOffsetY = 0.0f;
     public void mousePressed() {
-      println("nousePressed in node move mode");
-      for (int i = 0; i < nodes.size(); i++) {
-        Node p = (Node)nodes.elementAt(i);
+      println("mousePressed in node move mode");
+      Enumeration e = nodes.elements();
+      while(e.hasMoreElements()){
+        Node p = (Node)e.nextElement();
         if(mouseOverPoint(p)) {
           selectedNode = p;
           //println("selected: " + selectedNode);
@@ -836,7 +871,7 @@ TODO: disable button mouseover highlighting when !ready */
     }
     public void mouseReleased() {
       if (selectedNode != null) {
-        selectedNode.unproject(projection);
+        selectedNode.unproject(tiles);
         osm.moveNode(selectedNode); 
         selectedNode = null;
       }
@@ -852,7 +887,7 @@ TODO: disable button mouseover highlighting when !ready */
     }
     public void unset() {
       if (selectedNode != null) {
-        selectedNode.unproject(projection);
+        selectedNode.unproject(tiles);
         osm.moveNode(selectedNode);
         selectedNode = null;
       }
@@ -863,8 +898,9 @@ TODO: disable button mouseover highlighting when !ready */
   class DeleteMode extends EditMode {
     public void mouseReleased() {
       boolean gotOne = false;
-      for (int i = 0; i < nodes.size(); i++) {
-        Node p = (Node)nodes.elementAt(i);
+      Enumeration e = nodes.elements();
+      while(e.hasMoreElements()){
+        Node p = (Node)e.nextElement();
         if(mouseOverPoint(p)) {
           boolean del = true;
           // TODO prompt for delete
@@ -880,8 +916,9 @@ TODO: disable button mouseover highlighting when !ready */
         }
       }
       if (!gotOne) {
-        for (int i = 0; i < lines.size(); i++) {
-          Line l = (Line)lines.elementAt(i);
+        Enumeration ll = nodes.elements();
+        while(ll.hasMoreElements()){
+          Line l = (Line)ll.nextElement();
           if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
             boolean del = true;
             // TODO prompt for delete
@@ -911,6 +948,5 @@ TODO: disable button mouseover highlighting when !ready */
     PApplet.main(new String[] { "--present", "--display=1", "org.openstreetmap.processing.OSMApplet" });
   } 
 
-
-} // OSMApplet
-
+ // OSMApplet
+}

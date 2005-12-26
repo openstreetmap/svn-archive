@@ -374,6 +374,8 @@ public class Tile extends Thread
    
     updateChange();
 
+    applet.recalcStrokeWeight();
+
     widthOfWorld = 512 * (long)Math.pow(2, (double)zoom);
     heightOfWorld = 512 * (long)Math.pow(2, (double)zoom);
 
@@ -398,6 +400,10 @@ public class Tile extends Thread
   public void zoomout()
   {
     zoom--;
+    if(zoom < 14)
+    {
+      zoom = 14;
+    }
     zoom();
   }
 
@@ -502,7 +508,7 @@ class VFetch extends Thread
     while (true)
     {
       wait(1000);
-      if(tiles.viewChanged && tiles.timeChanged < System.currentTimeMillis() - 3000)
+      if(tiles.viewChanged && tiles.timeChanged < System.currentTimeMillis() - 10000)
       {
         tiles.viewChanged = false;
         tiles.applet.lines.clear();

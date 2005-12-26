@@ -251,7 +251,7 @@ public class OSMApplet extends PApplet {
 
     System.out.println(tiles);
 
-    strokeWeight = max(0.010f/tiles.kilometersPerPixel(),2.0f); // 10m roads, but min 2px width
+    recalcStrokeWeight();
 
     System.out.println("Selected strokeWeight of " + strokeWeight );
 
@@ -465,6 +465,11 @@ public class OSMApplet extends PApplet {
     }
 
   }
+
+  public void recalcStrokeWeight()
+  {
+    strokeWeight = max(0.010f/tiles.kilometersPerPixel(),2.0f); // 10m roads, but min 2px width
+  } // recalcStrokeWeight
 
   public void mouseMoved() {
     if (ready) modeManager.mouseMoved();

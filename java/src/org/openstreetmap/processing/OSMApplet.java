@@ -921,7 +921,7 @@ public class OSMApplet extends PApplet {
         }
       }
       if (!gotOne) {
-        Enumeration ll = nodes.elements();
+        Enumeration ll = lines.elements();
         while(ll.hasMoreElements()){
           Line l = (Line)ll.nextElement();
           if (l.mouseOver(mouseX,mouseY,strokeWeight)) {

@@ -484,18 +484,22 @@ public class OSMApplet extends PApplet {
     }
     else
     {
-      if (ready) modeManager.mouseDragged();
+      if(ready) 
+      {
+        System.out.println(",,,");
+        modeManager.mouseDragged();
+      }
     }
   } // mouseDragged
 
   public void mousePressed() {
-    if(keyCode == SHIFT)
+    if(shiftDown)
     {
       lastmX = mouseX;
       lastmY = mouseY;
       return;
     }
-   
+
     if (ready) modeManager.mousePressed();
   }
 
@@ -789,6 +793,8 @@ public class OSMApplet extends PApplet {
           osm.createNode(node); 
         }
         nodes.put(node.key(),node);
+
+        println(node);
       }
     }
     public void draw() {
@@ -850,13 +856,12 @@ public class OSMApplet extends PApplet {
     float lastOffsetX = 0.0f;
     float lastOffsetY = 0.0f;
     public void mousePressed() {
-      println("mousePressed in node move mode");
       Enumeration e = nodes.elements();
       while(e.hasMoreElements()){
         Node p = (Node)e.nextElement();
         if(mouseOverPoint(p)) {
           selectedNode = p;
-          //println("selected: " + selectedNode);
+          println("selected: " + selectedNode);
           lastOffsetX = selectedNode.x - mouseX;
           lastOffsetY = selectedNode.y - mouseY;
           break;

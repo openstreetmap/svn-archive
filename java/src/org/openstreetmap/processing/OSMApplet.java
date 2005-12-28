@@ -542,11 +542,11 @@ public class OSMApplet extends PApplet {
     }
     if (ready) {
       switch(key) {
-        case 'i':
+        case '[':
           lastmove = System.currentTimeMillis();
           tiles.zoomin();
           break;
-        case 'o':
+        case ']':
           tiles.zoomout();
           break;
 

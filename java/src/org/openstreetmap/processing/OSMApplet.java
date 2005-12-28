@@ -334,6 +334,7 @@ public class OSMApplet extends PApplet {
   public void draw() {
 
     tiles.draw();
+    try{
 
     if (!ready) {
       cursor(WAIT);
@@ -349,6 +350,14 @@ public class OSMApplet extends PApplet {
     while(e.hasMoreElements()){
       Line line = (Line)e.nextElement();
       //System.out.println("Doing line " + line.a.x + "," + line.a.y + " - " + line.b.x + "," + line.a.y);
+      if(line.uid == 0)
+      {
+        stroke(0,80);
+      }
+      else
+      {
+        stroke(0);
+      }
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     strokeWeight(strokeWeight);
@@ -356,6 +365,15 @@ public class OSMApplet extends PApplet {
     e = lines.elements();
     while(e.hasMoreElements()){
       Line line = (Line)e.nextElement();
+      if(line.uid == 0)
+      {
+        stroke(255,80);
+      }
+      else
+      {
+        stroke(255);
+      }
+
       line(line.a.x,line.a.y,line.b.x,line.b.y);
     }
     boolean gotOne = false;
@@ -365,7 +383,7 @@ public class OSMApplet extends PApplet {
       Line line = (Line)e.nextElement();
       if (modeManager.currentMode == nameMode && !gotOne) {
         // highlight first line under mouse
-        if (line.mouseOver(mouseX,mouseY,strokeWeight)) {
+        if (line.mouseOver(mouseX,mouseY,strokeWeight) && line.uid != 0) {
           strokeWeight(strokeWeight);
           stroke(0xffffff80);
           line(line.a.x,line.a.y,line.b.x,line.b.y);
@@ -375,6 +393,7 @@ public class OSMApplet extends PApplet {
     }
 
     // draw temp line
+
     if (start != null) {
       tempLine.a = start;
       tempLine.b = new Node(mouseX,mouseY,tiles);
@@ -385,7 +404,6 @@ public class OSMApplet extends PApplet {
       strokeWeight(strokeWeight);
       line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
     }
-
     // draw selected line
     stroke(255,0,0,80);
     strokeWeight(strokeWeight);
@@ -463,6 +481,13 @@ public class OSMApplet extends PApplet {
     if (online) {
       status("lat: " + tiles.lat(mouseY) + ", lon: " + tiles.lon(mouseX));
     }
+
+
+    }catch(NullPointerException npe)
+    {
+      println("caught null exception...");
+    }
+
 
   }
 
@@ -911,7 +936,7 @@ public class OSMApplet extends PApplet {
       Enumeration e = nodes.elements();
       while(e.hasMoreElements()){
         Node p = (Node)e.nextElement();
-        if(mouseOverPoint(p)) {
+        if(mouseOverPoint(p) && p.uid != 0) {
           boolean del = true;
           // TODO prompt for delete
           if (del) {
@@ -929,7 +954,7 @@ public class OSMApplet extends PApplet {
         Enumeration ll = lines.elements();
         while(ll.hasMoreElements()){
           Line l = (Line)ll.nextElement();
-          if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
+          if (l.mouseOver(mouseX,mouseY,strokeWeight) && l.uid != 0) {
             boolean del = true;
             // TODO prompt for delete
             if (del) {

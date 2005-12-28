@@ -232,6 +232,8 @@ public class Adapter
       System.out.println("Trying to delete line " + line);
       
       try {
+        line.a.lines.remove(line);
+        line.b.lines.remove(line);
         lines.remove(line.key());
 
         String url = URLBASE + "segment/" + line.uid;
@@ -255,6 +257,7 @@ public class Adapter
         else {
           System.err.println("error removing line: " + line);
           lines.put(line.key(),line);
+          
         }
       }
       catch (Exception e) {

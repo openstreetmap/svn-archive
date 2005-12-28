@@ -139,14 +139,14 @@ public class Adapter
     System.out.println("Deleting line " + line.uid);
     new Thread(new LineDeleter(line)).start();
   }
-  public void createNode(Node node) {
-    new Thread(new NodeCreator(node)).start();
+  public void createNode(Node node, String tempKey) {
+    new Thread(new NodeCreator(node, tempKey)).start();
   }
   public void moveNode(Node node) {
     new Thread(new NodeMover(node)).start();
   }
-  public void createLine(Line line) {
-    new Thread(new LineCreator(line)).start();
+  public void createLine(Line line, String tempKey) {
+    new Thread(new LineCreator(line, tempKey)).start();
   }
   public void updateLineName(Line line) {
     new Thread(new LineUpdater(line)).start();
@@ -269,24 +269,16 @@ public class Adapter
   class NodeCreator implements Runnable {
 
     Node node;
+    String tempKey;
 
-    NodeCreator(Node node) {
+    NodeCreator(Node node, String t) {
       this.node = node;
+      this.tempKey = t;
     }
 
     public void run() {
       
       try {
-     /*   Vector params = new Vector();
-        params.addElement (token);
-        params.addElement (new Double(node.lat));
-        params.addElement (new Double(node.lon));
-
-        Integer result = (Integer)xmlrpc.execute ("openstreetmap.newNode", params);
-        System.err.println(result + " result from newNode");
-
-        int id = result.intValue();
-        */
  
         String xml = "<osm><node tags=\"\" lon=\"" + node.lon +  "\" lat=\"" + node.lat + "\" /></osm>";
 
@@ -317,21 +309,22 @@ public class Adapter
         }
         
         put.releaseConnection();
-
        
         if (id != -1) {
           node.uid = id;
+          nodes.remove(tempKey);
+          nodes.put(node.key(), node);
           System.err.println("node created successfully: " + node);
         }
         else {
           System.err.println("error creating node: " + node);
-          nodes.remove(node.key());
+          nodes.remove(tempKey);
         }
       }
       catch (Exception e) {
         System.err.println("error creating node: " + node);
         e.printStackTrace();
-        nodes.remove(node.key());
+        nodes.remove(tempKey);
       }
     }
 
@@ -386,9 +379,11 @@ public class Adapter
   class LineCreator implements Runnable {
 
     Line line;
+    String tempKey;
 
-    LineCreator(Line line) {
+    LineCreator(Line line, String t) {
       this.line = line;
+      this.tempKey = t;
     }
 
     public void run() {
@@ -432,18 +427,20 @@ public class Adapter
         
         if (id != -1) {
           line.uid = id;
+          lines.remove(tempKey);
+          lines.put(line.key(), line);
           System.err.println("line created successfully: " + line);
         }
         else {
           System.err.println("error creating line: " + line);
-          lines.remove(line.key());
+          lines.remove(tempKey);
           // TODO: error handling...
         }
       }
       catch(Exception e) {
         System.err.println("error creating line: " + line);
         e.printStackTrace();
-        lines.remove(line.key());
+        lines.remove(tempKey);
       }
       
     }

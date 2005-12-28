@@ -486,7 +486,6 @@ public class OSMApplet extends PApplet {
     {
       if(ready) 
       {
-        System.out.println(",,,");
         modeManager.mouseDragged();
       }
     }
@@ -788,11 +787,12 @@ public class OSMApplet extends PApplet {
         }
       }    
       if (!overOne) {
-        Node node = new Node(mouseX,mouseY,tiles); 
+        Node node = new Node(mouseX,mouseY,tiles);
+        String tempKey = "temp_" + Math.random();
         if (osm != null) {
-          osm.createNode(node); 
+          osm.createNode(node, tempKey); 
         }
-        nodes.put(node.key(),node);
+        nodes.put(tempKey, node);
 
         println(node);
       }
@@ -826,11 +826,11 @@ public class OSMApplet extends PApplet {
         if(mouseOverPoint(p)) {
           if (start != null) {
             Line line = new Line(start,p);
+            String tempKey = "temp_" + Math.random();
             if (osm != null) {
-              osm.createLine(line); 
-              // TODO assign ID, asynchronously?
+              osm.createLine(line, tempKey); 
             }
-            lines.put(line.key(),line);
+            lines.put(tempKey,line);
           }
           gotOne = true;
           break;

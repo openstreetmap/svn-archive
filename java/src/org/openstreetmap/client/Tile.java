@@ -66,7 +66,7 @@ public class Tile extends Thread
   ImFetch imf;
   VFetch vf;
 
-  boolean viewChanged = false;
+  public boolean viewChanged = false;
   long timeChanged;
   
   public Tile(OSMApplet p, String url, double la, double lo, int wW, int wH, int z)

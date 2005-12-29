@@ -528,7 +528,7 @@ public class OSMApplet extends PApplet {
   }
 
   public void mouseReleased() {
-    if (ready) modeManager.mouseReleased();
+    if (ready && !shiftDown && !tiles.viewChanged) modeManager.mouseReleased();
   }
 
   public void keyPressed() {

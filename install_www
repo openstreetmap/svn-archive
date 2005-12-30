@@ -69,6 +69,7 @@ cp dist/commons-httpclient-3.0-rc3.jar $ROOT/
 cp dist/commons-logging.jar $ROOT/
 cp dist/MinML2.jar $ROOT/
 cp dist/core.jar $ROOT/
+cp dist/plugin.jar $ROOT/
 
 cd ..
 

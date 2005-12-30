@@ -95,12 +95,16 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Hashtable;
 
+import netscape.javascript.*;
+
 public class OSMApplet extends PApplet {
 
   Tile tiles;
 
   private static final int WINDOW_WIDTH = 700;
   private static final int WINDOW_HEIGHT = 500;
+
+  JSObject js;
 
   int zoom;
   boolean shiftDown = false;
@@ -158,6 +162,8 @@ public class OSMApplet extends PApplet {
   /* URL for mapserver... will have bbx,width,height appended */
   String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx"; 
   //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
+
+  String apiURL = "http://www.openstreetmap.org/api/0.2/";
 
   /* modes - input is passed to the current mode, assigned by node manager */
   ModeManager modeManager;
@@ -246,6 +252,26 @@ public class OSMApplet extends PApplet {
       }
     }
 
+    if (online) {
+      try {
+        String apiURLfromParam = param("apiurl");
+        if (apiURLfromParam != null) {
+          if (!apiURLfromParam.equals("")) {
+            apiURL = apiURLfromParam;
+            if (apiURL.indexOf("http://") < 0) {
+              apiURL = "http://" + apiURL;
+            }
+          }
+        }
+      }
+      catch (Exception e) {
+        println(e.toString());
+        e.printStackTrace();
+      }
+    }
+
+    js = (JSObject) JSObject.getWindow(this);
+
     tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
     tiles.start();
 
@@ -280,7 +306,7 @@ public class OSMApplet extends PApplet {
     }
 
     // try to connect to OSM
-    osm = new Adapter(USERNAME,PASSWORD, lines, nodes);
+    osm = new Adapter(USERNAME,PASSWORD, lines, nodes, apiURL);
 
     Thread dataFetcher = new Thread(new Runnable() {
 
@@ -504,6 +530,7 @@ public class OSMApplet extends PApplet {
     if(shiftDown)
     {
       tiles.drag(lastmX - mouseX, mouseY - lastmY);
+      updatelinks();
       lastmX = mouseX;
       lastmY = mouseY;
     }
@@ -545,9 +572,11 @@ public class OSMApplet extends PApplet {
         case '[':
           lastmove = System.currentTimeMillis();
           tiles.zoomin();
+	  updatelinks();
           break;
         case ']':
           tiles.zoomout();
+	  updatelinks();
           break;
 
         case '+':
@@ -615,6 +644,10 @@ public class OSMApplet extends PApplet {
       ellipseMode(CENTER);
       ellipse(p.x,p.y,strokeWeight-1,strokeWeight-1);
     }
+  }
+
+  public void updatelinks() {
+    js.eval("updatelinks(" + tiles.lon( WINDOW_WIDTH/2 ) + "," + tiles.lat( WINDOW_HEIGHT/2 ) + "," + tiles.getzoom() + ")");
   }
 
   ////////////////////////////////////// BUTTON STUFF ////////////////////////////////////////////

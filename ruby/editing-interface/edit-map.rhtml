@@ -81,10 +81,10 @@ end
   <div style="position: absolute; left: 0px; top: 0px; height: 500px; width: 700px; padding: 1em;">
 <applet
 code="org/openstreetmap/processing/OSMApplet.class"
-archive="OSMApplet.jar, commons-codec-1.3.jar, core.jar, commons-logging.jar, commons-httpclient-3.0-rc3.jar, MinML2.jar"
+archive="OSMApplet.jar, commons-codec-1.3.jar, core.jar, commons-logging.jar, commons-httpclient-3.0-rc3.jar, MinML2.jar, plugin.jar"
 width="700"
 height="500"
-
+MAYSCRIPT="true"
 >
 <param name="clat" value="<%=clat%>">
 <param name="clon" value="<%=clon%>">
@@ -92,7 +92,7 @@ height="500"
 <param name="user" value="token">
 <param name="pass" value="<%=token%>">
 <param name="wmsurl" value="http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx">
-
+<param name="apiurl" value="http://<%=$SERVER_NAME%>/api/0.2/">
 </applet>
 
   </div>

@@ -406,6 +406,10 @@ public class Tile extends Thread
     }
     zoom();
   }
+  public long getzoom() 
+  {
+    return zoom;
+  }
 
   private void updateChange()
   {

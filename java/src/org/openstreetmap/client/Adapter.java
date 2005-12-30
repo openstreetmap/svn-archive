@@ -28,7 +28,7 @@ public class Adapter
   
   Credentials creds = null;
 
-  public Adapter(String username, String password, Hashtable l, Hashtable n)
+  public Adapter(String username, String password, Hashtable l, Hashtable n, String apiURL)
   {
     
     this.user = username;
@@ -36,6 +36,8 @@ public class Adapter
 
     this.lines = l;
     this.nodes = n;
+
+    URLBASE = apiURL;
 
     creds = new UsernamePasswordCredentials(user, pass);
     System.out.println("Adapter started");

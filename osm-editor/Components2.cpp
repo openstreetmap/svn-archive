@@ -1,4 +1,5 @@
 /*
+ 
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
 
     This program is free software; you can redistribute it and/or modify
@@ -80,6 +81,7 @@ vector<Node*> Components2::getNearestNodes(double lat, double lon,double limit)
 	return nearestNodes;
 }
 
+// find the segment which is common to two nodes
 Segment* Components2::getSeg(vector<Node*> &n1, vector<Node*> &n2)
 {
 	bool found;
@@ -108,63 +110,89 @@ Segment* Components2::getSeg(vector<Node*> &n1, vector<Node*> &n2)
 	return NULL;
 }
 
-void Components2::newUploadToOSM(const char* username,const char* password)
+// get a vector of segments containing a node
+vector<Segment*> Components2::getSegs(Node * n)
 {
-	char *nonconst=NULL, *resp=NULL;
+	vector<Segment*> foundSegs;
 
-	int nPts = 0;
+	for(int count=0; count<segments.size(); count++)
+	{
+		if(segments[count]->contains(n))
+			foundSegs.push_back(segments[count]);
+	}
+	return foundSegs;
+}
 
-	QString xml="";
-	QTextStream stream (&xml, IO_WriteOnly);
+// gets the new nodes
+QByteArray Components2::getNewNodes()
+{
+	QByteArray xml;
+	QTextStream stream (xml, IO_WriteOnly);
 	stream<<"<osm version='0.2'>";
 	for(int count=0; count<nodes.size(); count++)
 	{
 		if(nodes[count]->getOSMID()<0)
 		{
 			nodes[count]->toOSM(stream);
-			nPts++;
 		}
 	}
 	stream<<"</osm>";
+	return xml;
+}
 
-	// Upload the nodes and receive a list of node IDs
-	// Note we do not call Node::uploadToOSM() as we want to send all
-	// of them as a batch (to save time)
-	if(nPts)
+// gets the new segments 
+QByteArray Components2::getNewSegments()
+{
+	QByteArray xml;
+	QTextStream stream (xml, IO_WriteOnly);
+	stream<<"<osm version='0.2'>";
+	for(int count=0; count<segments.size(); count++)
 	{
-		cerr<<"Nodes: XML to be uploaded: "<<xml << endl;
-		nonconst = new char[ strlen(xml.ascii()) + 1];	
-		strcpy(nonconst,xml.ascii());
-
-		cerr<<"Putting nodes to OSM"<<endl;
-		QStringList ids = putToOSM(nonconst,
-					"http://www.openstreetmap.org/api/0.2/newnode",
-							username,password);
-
-		cerr<<"done."<<endl;
-		delete[] nonconst;
-
-		// Allocate the returned IDs to the new nodes in the segment
-		QStringList::Iterator i=ids.begin();
-		for(int count=0; count<nodes.size(); count++)
+		if(segments[count]->getOSMID()<0)
 		{
-			if(nodes[count]->getOSMID()<0 && i!=ids.end() && 
-				atoi((*i).ascii())) 
-			{
-				nodes[count]->setOSMID (atoi((*i).ascii()));
-				i++;
-			}
-			cerr << "parsing response: count: " << count << 
-						" allocated id: " << (*i) << endl;
+			segments[count]->segToOSM(stream);
 		}
+	}
+	stream<<"</osm>";
+	return xml;
+}
 
-		// Upload the segments
-		for(int count=0; count<segments.size(); count++)
+// allocate new node IDs to new segments.
+// This is called after the new nodes have been created in OSM when we do
+// a batch upload of new nodes and segments.
+// This is hacky in the extreme but is a stopgap measure as there will be
+// a server routine to take a load of new nodes and segments and add them to
+// the database.
+
+void Components2::hackySetNodeIDs(QStringList& ids)
+{
+	// Allocate the returned IDs to the new nodes in the segment
+	QStringList::Iterator i=ids.begin();
+	for(int count=0; count<nodes.size(); count++)
+	{
+		if(nodes[count]->getOSMID()<0 && i!=ids.end() && 
+				atoi((*i).ascii())) 
 		{
-			// We have to upload one at a time as the newsegment API
-			// does not yet have one ID per line
-			if(segments[count]->getOSMID()<0)
-				segments[count]->uploadToOSM(username,password);
+			nodes[count]->setOSMID (atoi((*i).ascii()));
+			i++;
+		}
+	}
+}
+
+// WARNING!! Very hacky!
+// Assumes segment IDs will be 6-digit.
+void Components2::hackySetSegIDs(const QString& segs)
+{
+	// Allocate the returned IDs to the new nodes in the segment
+	int index = 0;
+	for(int count=0; count<segments.size(); count++)
+	{
+		if(segments[count]->getOSMID()<0 && index<=segs.length()-6)
+		{
+			int id = atoi(segs.mid(index, 6).ascii());
+			if(id>=100000&&id<=999999)
+				segments[count]->setOSMID (id);
+			index+=6;
 		}
 	}
 }
@@ -172,16 +200,28 @@ void Components2::newUploadToOSM(const char* username,const char* password)
 // Merges these Components with another set
 bool Components2::merge(Components2 *comp)
 {
+	int segIdx = minSegID(), nodeIdx = minNodeID();
+	Node *curNode;
+	Segment *curSeg;
 	comp->rewindNodes();
 	while(!comp->endNode())
 	{
-		nodes.push_back(comp->nextNode());
+		curNode = comp->nextNode();
+		if(curNode->getOSMID()<0)
+			curNode->setOSMID(--nodeIdx);
+		nodes.push_back(curNode);
 	}
 	comp->rewindSegments();
 	while(!comp->endSegment())
 	{
-		segments.push_back(comp->nextSegment());
+		curSeg = comp->nextSegment();
+		if(curSeg->getOSMID()<0)
+			curSeg->setOSMID(--segIdx);
+		segments.push_back(curSeg);
 	}
+
+	nextNodeId = nodeIdx-1; 
+	nextSegId = segIdx-1; 
 
 	return true;
 }
@@ -261,6 +301,49 @@ EarthPoint Components2::getAveragePoint()
 	avg.x /= nodes.size();
 
 	return avg;
+}
+
+Node *Components2::addOSMNode(int id,double lat, double lon,const QString& name,
+			const QString& type)
+{
+	Node *newNode = new Node(id,lat,lon,name,type);
+	nodes.push_back(newNode);
+	if(id-1<nextNodeId)
+		nextNodeId = id-1;
+	return newNode;
+}
+Segment * Components2::addOSMSegment (int id,Node *n1, Node *n2, 
+										const QString& name,const QString& type)
+{
+	n1->trackpointToNode();
+	n2->trackpointToNode();
+	Segment *seg = new Segment(id,n1,n2,name,type);
+	segments.push_back(seg);
+	if(id-1<nextSegId)
+		nextSegId = id-1;
+	return seg;
+}
+
+int Components2::minNodeID()
+{
+	int id=0;
+	for(int count=0; count<nodes.size(); count++)
+	{
+		if(nodes[count]->getOSMID() < id)
+			id = nodes[count]->getOSMID();
+	}
+	return id;
+}
+
+int Components2::minSegID()
+{
+	int id=0;
+	for(int count=0; count<segments.size(); count++)
+	{
+		if(segments[count]->getOSMID() < id)
+			id = segments[count]->getOSMID();
+	}
+	return id;
 }
 
 }

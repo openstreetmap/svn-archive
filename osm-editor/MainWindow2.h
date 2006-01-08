@@ -148,6 +148,7 @@ private:
 
 	Node *pts[2];
 	vector<Node*> ptsv[2];
+	vector<Node*> movingNodes;
 	int nSelectedPoints;
 
 	QPainter *curPainter;
@@ -161,12 +162,15 @@ private:
 
 
 	QString username, password;
+	QString hackyUsername, hackyPassword;
 	bool liveUpdate;
 
 	HTTPHandler osmhttp;
 
-	Node *newUploadedNode, *savedNode;
+	Node *newUploadedNode, *movingNode;
+	vector<Segment*> movingNodeSegs;
 	Segment *newUploadedSegment;
+	QPixmap savedPixmap;
 
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
@@ -195,17 +199,12 @@ public:
 
 	void doDrawAngleText(QPainter *p,int originX,int originY,int x,int y,
 					double angle, const char * text);
-	void showPosition()
-	{
-		QString msg; 
-		msg.sprintf("Lat %lf Long %lf",
-						map.getBottomLeft().y, map.getBottomLeft().x);
-		statusBar()->message(msg);
-	}
-
+	void showPosition();
 	void drawSegments(QPainter&);
+	void drawSegment(QPainter&,Segment*);
 	void drawNodes(QPainter&);
 	void drawNode(QPainter&,Node*);
+	void drawMoving(QPainter&);
 	void editNode(int,int,int);
 	void nameTrackOn();
 
@@ -241,7 +240,11 @@ public slots:
 	void newSegmentAdded(const QByteArray& array);
 	void loadComponents(const QByteArray&);
 	void deleteSelectedSeg();
-	void handleHttpError(const QString& error);
+	void handleHttpError(int,const QString&);
+	void handleNetCommError(const QString& error);
+
+	void hackyNewNodesUploaded(const QByteArray&);
+	void hackyNewSegmentsUploaded(const QByteArray&);
 };
 
 }

@@ -53,10 +53,6 @@ LATLON_TILE ** SRTMConGen::get_latlon_tiles(Map& map,int *w,int *h)
 				   map.getTopRight();
 
 
-	cerr<<bottomleft.x<<endl;
-	cerr<<bottomleft.y<<endl;
-	cerr<<topright.x<<endl;
-	cerr<<topright.y<<endl;
 
 	// Get the latitude/longitude square of each rectangle
 	LATLON_TILE **rect=getrects(bottomleft,topright,w,h);
@@ -79,13 +75,6 @@ LATLON_TILE ** SRTMConGen::get_latlon_tiles(Map& map,int *w,int *h)
 			rect[hcount][wcount].bottom = bottomleft.y > llsq.y  ?
 					1+floor(((llsq.y+1)-bottomleft.y)*1200) :
 				  		1200;
-
-			cerr<<hcount<<","<<wcount<<":";
-			cerr<<rect[hcount][wcount].left << " ";
-			cerr<<rect[hcount][wcount].right << " ";
-			cerr<<rect[hcount][wcount].top << " ";
-			cerr<<rect[hcount][wcount].bottom << " ";
-			cerr<<endl;
 		}
 	}
 

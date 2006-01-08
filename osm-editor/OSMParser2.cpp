@@ -32,7 +32,6 @@ OSMParser2::OSMParser2()
 
 bool OSMParser2::startDocument()
 {
-	cerr << "startDocument()" << endl;
 	inDoc = true;
 	return true;
 }
@@ -50,13 +49,11 @@ bool OSMParser2::startElement(const QString&, const QString&,
 	int uid, from, to;
 	QString tags, type="", name="";
 
-	cerr<<"startElement:" << element << endl;
 	if(inDoc)
 	{
 		if(element=="node")
 		{
 			type = "node";
-			cerr << "Found a node" << endl;
 			for(int count=0; count<attributes.length(); count++)
 			{
 				if(attributes.qName(count)=="lat")
@@ -72,42 +69,32 @@ bool OSMParser2::startElement(const QString&, const QString&,
 			readNodeTags (tags, name, type);
 
 			readNodes[uid] = components->addOSMNode(uid,lat,lon,name,type);
-			if(readNodes[uid]!=NULL)
-				cerr<<"node: " << uid <<" is not null" << endl;
 		}
 		else if(element=="segment")
 		{
 			uid=0;
-			cerr<<"found a segment" << endl;
 			for(int count=0; count<attributes.length(); count++)
 			{
 				if(attributes.qName(count)=="from")
 				{
 					from = atoi(attributes.value(count).ascii());
-					cerr<<"found from: "<< from << endl;
 				}
 				else if(attributes.qName(count)=="to")
 				{
 					to = atof(attributes.value(count).ascii());
-					cerr<<"found to: "<< to << endl;
 				}
 				else if(attributes.qName(count)=="uid")
 				{
 					uid = atoi(attributes.value(count).ascii());
-					cerr<<"found uid: "<< uid << endl;
 				}
 				else if(attributes.qName(count)=="tags")
 				{
-					cerr<<"found tags: "<<attributes.value(count) << endl;
 					readSegTags(attributes.value(count), name, type);
-					if(name!="") cerr<<"name="<<name<<endl;
-					if(type!="") cerr<<"type="<<type<<endl;
 				}
 			}
 
 			if(readNodes[from]&&readNodes[to])
 			{
-				cerr<<"Non null nodes" << endl;
 			components->addOSMSegment(uid,readNodes[from],readNodes[to],
 										name, type);
 			}

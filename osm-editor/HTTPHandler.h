@@ -22,6 +22,8 @@
 #include <qhttp.h>
 #include <qstring.h>
 #include <qcstring.h>
+#include <vector>
+using std::vector;
 
 namespace OpenStreetMap
 {
@@ -37,12 +39,13 @@ private:
 	QString host, method;
 	QString username, password;
 	bool makingRequest, httpError;
-	int curReqId;
+	vector<int> curReqIDs;
+	bool locked;
 
 public:
 	HTTPHandler(const QString& host)
 		{ this->host=host; http=new QHttp; username=password="";
-			makingRequest=false; curReqId = 0;}
+			makingRequest=false; locked=true; }
 	~HTTPHandler()
 		{ delete http; }
 	void setAuthentication(const QString& u, const QString &p)
@@ -51,13 +54,16 @@ public:
 					const QByteArray& b = QByteArray());
 	bool isMakingRequest()
 		{ return makingRequest; }
+	void lock() { locked=true; }
+	void unlock() { locked=false; }
 public slots:
 	void responseHeaderReceived(const QHttpResponseHeader&);	
 	void responseReceived(int,bool);
 
 signals:
 	void responseReceived(const QByteArray&);
-	void httpErrorOccurred(const QString&);
+	void httpErrorOccurred(int,const QString&);
+	void errorOccurred(const QString&);
 };
 
 }

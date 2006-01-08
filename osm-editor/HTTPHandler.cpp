@@ -30,7 +30,8 @@ void HTTPHandler::sendRequest(const QString& requestType,
 							const QString& url,
 							const QByteArray& b)
 {
-	if(!makingRequest)
+	int curReqId;
+	if(curReqIDs.empty() || !locked)
 	{
 		cerr<<"Making request:" 
 				<< " host: " << host
@@ -67,10 +68,13 @@ void HTTPHandler::sendRequest(const QString& requestType,
 					this,SLOT(responseReceived(int,bool)));
 
 		makingRequest=true;
+		curReqIDs.push_back(curReqId);
 	}
 	else
 	{
 		cerr<<"already making a request!" << endl;
+		emit errorOccurred
+			("Already making a request to the server. Please try again later");
 	}
 }
 
@@ -79,25 +83,34 @@ void HTTPHandler::responseHeaderReceived(const QHttpResponseHeader& header)
 	cerr<<"Status code:" << header.statusCode() << endl;
 	cerr<<"Reason phrase:" << header.reasonPhrase() << endl;
 	httpError = header.statusCode()!=200;	
-	QString errMsg;
-	errMsg.sprintf("Error: %d ",header.statusCode());
-	errMsg += header.reasonPhrase();
 	if(httpError)
 	{
-		makingRequest = false;
-		curReqId = 0;
-		emit httpErrorOccurred(errMsg);
+		emit httpErrorOccurred(header.statusCode(), header.reasonPhrase());
 	}
 }
 
 void HTTPHandler::responseReceived(int id, bool error)
 {
-	if(id==curReqId)
+	bool found=false;
+	cerr<<"responseReceived(): id=" << id << endl;
+	for(vector<int>::iterator i=curReqIDs.begin(); i!=curReqIDs.end(); i++)
 	{
+		if(id==*i)
+		{
+			cerr<<"doing erase" << endl;
+			curReqIDs.erase(i);	
+			cerr<<"done" << endl;
+			found=true;
+			break;
+		}
+	}
+
+	if(found)
+	{
+		makingRequest = false;
 		if(!httpError && !error)
 		{
 			cerr<<"response: id=" << id << " error=" << error << endl;
-	//		if(!(id%2))
 			cerr<<"RESPONSE RECEIVED!" << endl;
 			emit responseReceived(http->readAll());
 		}
@@ -105,8 +118,7 @@ void HTTPHandler::responseReceived(int id, bool error)
 		{
 			cerr<<"Error encountered" << endl;
 		}
-		makingRequest = false;
-		curReqId = 0;
+		//curReqId = 0;
 	}
 }
 

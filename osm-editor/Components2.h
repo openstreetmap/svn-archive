@@ -38,6 +38,9 @@ private:
 	vector<Segment*>::iterator si;
 	int nextNodeId, nextSegId;
 
+	int minNodeID();
+	int minSegID();
+
 public:
 	Components2() { nextNodeId = nextSegId = -1; }
 	void destroy();
@@ -49,12 +52,7 @@ public:
 	}
 
 	Node *addOSMNode(int id,double lat, double lon, const QString& name, 
-					const QString& type)
-	{
-		Node *newNode = new Node(id,lat,lon,name,type);
-		nodes.push_back(newNode);
-		return newNode;
-	}
+					const QString& type);
 
 	void addNode (Node *n)
 	{
@@ -71,16 +69,10 @@ public:
 	}
 
 	Segment * addOSMSegment (int id,Node *n1, Node *n2, const QString& name,
-							const QString& type)
-	{
-		n1->trackpointToNode();
-		n2->trackpointToNode();
-		Segment *seg = new Segment(id,n1,n2,name,type);
-		segments.push_back(seg);
-		return seg;
-	}
+							const QString& type);
 
 	Segment *getSeg(vector<Node*>& n1, vector<Node*>& n2);
+	vector<Segment*> getSegs(Node*);
 
 	void rewindNodes()
 	{
@@ -117,7 +109,6 @@ public:
 	}
 
 	bool merge(Components2 *comp);
-	void newUploadToOSM(const char* username,const char* password);
 
 	void toOSM(QTextStream &strm,bool);
 	void removeTrackPoints();
@@ -125,6 +116,11 @@ public:
 	bool deleteNode(Node*);
 	bool deleteSegment(Segment*);
 	EarthPoint getAveragePoint(); 
+
+	QByteArray getNewNodes();
+	QByteArray getNewSegments();
+	void hackySetNodeIDs(QStringList&);
+	void hackySetSegIDs(const QString&);
 };
 
 

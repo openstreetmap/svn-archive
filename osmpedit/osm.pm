@@ -682,9 +682,17 @@ sub delete {
 	my $resp = "";
 	
 	if ($node) {
-	    print STDERR "Trying to delete node\n";
-	    $resp = osmutil::delete_node ($uid, $username, $password);
-	    $self->{UIDTONODEMAP}->{$uid} = 0;
+	    my @froms = $node->get_froms ();
+	    my @tos = $node->get_tos ();
+	    if ($self->one_segment_exists (@froms) or 
+		$self->one_segment_exists (@tos)) {
+		print STDERR "Cannot delete node that is connected to a segment\n";
+		return 0;
+	    } else {
+		print STDERR "Trying to delete node\n";
+		$resp = osmutil::delete_node ($uid, $username, $password);
+		$self->{UIDTONODEMAP}->{$uid} = 0;
+	    }
 	} else {
 	    my $seg = $self->get_segment ($uid);
 	    if ($seg) {
@@ -740,6 +748,18 @@ sub toggle_colour {
 	    $can->itemconfigure ($item, -fill => $col);
 	}
     }
+}
+
+sub one_segment_exists {
+    my $self = shift;
+    my @sids = @_;
+    foreach my $uid (@sids) {
+	print STDERR "CHECKID: $uid\n";
+	if ($self->{UIDTOSEGMENTMAP}->{"$uid"}) {
+	    return 1;
+	}
+    }
+    return 0;
 }
 
 return 1;

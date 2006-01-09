@@ -82,7 +82,7 @@ my @extra_values = ();
 
 
 my $main = new MainWindow;
-$main->title ("OSMEDIT");
+$main->title ("OSMPEDIT");
 
 my $tbframe = $main->Frame ()->pack (-side => "top");
 

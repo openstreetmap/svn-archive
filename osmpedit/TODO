@@ -1,7 +1,7 @@
 
-- Add names by using menues and colours and clicking.
+- Add timestamp in key/value?
 
-- Fetch data for segment befor changing tags.  Merge it
+- Fetch data for segment before changing tags.  Merge it
 
 - Houses as closed loops of segments.  Generate .osg?
 
@@ -24,8 +24,6 @@
 - --no-landsat
 
 - Remove cache???  Toggle may solve this problem.
-
-- taghandling in osmnode
 
 - Fix bug with segments end point outside of tile area.
 

@@ -93,11 +93,10 @@ cp ruby/rss/nodes.rb $ROOT/ruby/
 
 # GPX RSS maker
 
-mkdir -p ../bin
-
-cp ruby/rss/gpx_files.rb ../bin/
+cp ruby/rss/gpx_files.rb $ROOT/ruby/
 
 # GPX parser
 
+mkdir -p ../bin
 cp ruby/editing-interface/support/insert_gpx_files.rb ../bin/
 

@@ -32,6 +32,8 @@
 
 #include <iostream>
 
+#include <cmath>
+
 using std::ostream;
 
 namespace OpenStreetMap

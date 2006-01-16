@@ -129,6 +129,7 @@ public class Tile extends Thread
 
   public void drag(int dx, int dy)
   {
+    System.out.println(dx + "," + dy);
     updateChange();
     centerX += dx;
     centerY += dy;
@@ -395,22 +396,24 @@ public class Tile extends Thread
 
   public synchronized ImBundle getEle()
   {
-    int n = 0;
-    Enumeration e = imv.elements();  // send back a gpx tile by preference
-    while( e.hasMoreElements() ) 
+
+    Object[] t = imv.toArray();
+
+    Arrays.sort( t, new IMBComparator( ((double)rightX + (double)leftX)/2.0, ((double)botY + (double)topY)/2.0 ));
+ 
+    for(int n = 0; n < t.length; n++)
     {
-      ImBundle i = (ImBundle)e.nextElement();
+      ImBundle i = (ImBundle)t[n];
       if(i.key.startsWith("gpx"))
       {
         System.out.println("returning and removing " + i.key);
-        imv.removeElementAt(n);
+        imv.remove(i);
         return i;
       }
-      n++;
     }
 
-    ImBundle ib = (ImBundle)imv.elementAt(0);
-    imv.removeElementAt(0);
+    ImBundle ib = (ImBundle)t[0];
+    imv.remove(ib);
     
     //System.out.println("getEle " + ib.key);
     return ib;
@@ -548,7 +551,50 @@ class ImBundle
     return x == other.x && y == other.y && type.equals(other.type);
   }
 
+  public double distance(double xx, double yy)
+  {
+     return Math.pow( ((double)x-xx),2) + Math.pow( ((double)y-yy),2);
+  }
+
 } // ImBundle
+
+class IMBComparator implements java.util.Comparator
+{
+  double cx;
+  double cy;
+  
+  public IMBComparator(double x, double y)
+  {
+    cx = x;
+    cy = y;
+  }
+  public int compare(Object a, Object b)
+  {
+    ImBundle aa = (ImBundle)a;
+    ImBundle bb = (ImBundle)b;
+
+    double ad = aa.distance(cx,cy);
+    double bd = bb.distance(cx,cy);
+
+    if(ad == bd)
+    {
+      return 0;
+    }
+
+    if(ad < bd)
+    {
+      return -1;
+    }
+    else
+    {
+      return 1;
+    }
+
+  } // compare
+
+} // IMBComparator
+
+
 
 class VFetch extends Thread
 {

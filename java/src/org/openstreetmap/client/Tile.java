@@ -129,7 +129,6 @@ public class Tile extends Thread
 
   public void drag(int dx, int dy)
   {
-    System.out.println(dx + "," + dy);
     updateChange();
     centerX += dx;
     centerY += dy;
@@ -355,7 +354,7 @@ public class Tile extends Thread
   public synchronized void draw()
   {
     //System.out.println("Drawing tiles...");
-    applet.background(0);
+    applet.background(100);
     for(long x = leftX; x < rightX + 1; x++)
     {
       for(long y = topY; y < botY + 1; y++)
@@ -406,7 +405,6 @@ public class Tile extends Thread
       ImBundle i = (ImBundle)t[n];
       if(i.key.startsWith("gpx"))
       {
-        System.out.println("returning and removing " + i.key);
         imv.remove(i);
         return i;
       }

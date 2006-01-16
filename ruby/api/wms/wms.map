@@ -58,7 +58,7 @@ LAYER
 	CONNECTIONTYPE WMS
 
 	
-	CONNECTION "http://tile.openstreetmap.org/ruby/gpx.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	CONNECTION "http://tile.openstreetmap.org:81/ruby/gpx.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
 	METADATA
 #		"wms_title" "gpx2"
 		"wms_name" "gpx"
@@ -83,7 +83,7 @@ LAYER
 	CONNECTIONTYPE WMS
 
 	
-	CONNECTION "http://tile.openstreetmap.org/ruby/streets.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	CONNECTION "http://tile.openstreetmap.org:81/ruby/streets.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
 	METADATA
 #		"wms_title" "gpx2"
 		"wms_name" "streets"
@@ -109,7 +109,7 @@ LAYER
 	CONNECTIONTYPE WMS
 
 	
-	CONNECTION "http://tile.openstreetmap.org/ruby/streets1.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
+	CONNECTION "http://tile.openstreetmap.org:81/ruby/streets1.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
 	METADATA
 #		"wms_title" "gpx2"
 		"wms_name" "test"

@@ -112,7 +112,6 @@ public class OSMApplet extends PApplet {
   int lastmX;
   int lastmY;
 
-  boolean run_from_command_line = true; // set me to run from the command line
 
   /* set these for testing without needing to log in to the website - for deployment they should be set to null */
   String USERNAME = null;
@@ -272,7 +271,7 @@ public class OSMApplet extends PApplet {
       }
     }
 
-    if(!run_from_command_line)
+    if(online)
     {
       js = (JSObject) JSObject.getWindow(this);
     }
@@ -537,7 +536,7 @@ public class OSMApplet extends PApplet {
       tiles.drag(lastmX - mouseX, mouseY - lastmY);
       lastmX = mouseX;
       lastmY = mouseY;
-      if(!run_from_command_line)
+      if(online)
       {
         updatelinks();
       }

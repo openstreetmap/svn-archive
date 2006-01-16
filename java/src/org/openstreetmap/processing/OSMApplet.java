@@ -112,6 +112,8 @@ public class OSMApplet extends PApplet {
   int lastmX;
   int lastmY;
 
+  boolean run_from_command_line = false; // set me to run from the command line
+
   /* set these for testing without needing to log in to the website - for deployment they should be set to null */
   String USERNAME = null;
   String PASSWORD = null;
@@ -160,7 +162,7 @@ public class OSMApplet extends PApplet {
 //  PImage img = null;
 
   /* URL for mapserver... will have bbx,width,height appended */
-  String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx"; 
+  String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&format=png&LAYERS=landsat"; 
   //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
 
   String apiURL = "http://www.openstreetmap.org/api/0.2/";
@@ -270,7 +272,10 @@ public class OSMApplet extends PApplet {
       }
     }
 
-    js = (JSObject) JSObject.getWindow(this);
+    if(!run_from_command_line)
+    {
+      js = (JSObject) JSObject.getWindow(this);
+    }
 
     tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
     tiles.start();

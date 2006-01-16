@@ -55,7 +55,9 @@ public class Tile extends Thread
   private long topY;
   private long botY;
 
-  private String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx"; 
+  // we're ignoring the wms URL provided by the <applet> tag at the moment
+  // FIXME make it take a set of wms URLs to plot
+  private String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE";
 
   OSMApplet applet;
 
@@ -73,7 +75,7 @@ public class Tile extends Thread
   {
     
     applet = p;
-    wmsURL = url;
+//    wmsURL = url;
     
   	// NOTE:
 	  // lat is actually the Mercator "y" value
@@ -148,8 +150,16 @@ public class Tile extends Thread
       {
         //System.out.println("would grab tile " + x + ", " + y + " (" + pXtoLon(x*tileWidth) + ", " + pYtoLat(y*tileHeight) + ") -> (" + pXtoLon((1+x)*tileWidth) + ", " + pYtoLat((1+y)*tileHeight) + ")"  + " would put tile at (" + ((x*tileWidth)-centerX+(windowWidth/2)) + ", " + ((y*tileHeight)-centerY+(windowHeight/2)) + ")");
 
-        String u = wmsURL + "&bbox="+ pXtoLon(x*tileWidth) +","+ pYtoLat((y-1)*tileHeight) +","+ pXtoLon((1+x)*tileWidth) +","+pYtoLat(y*tileHeight)+"&width="+tileWidth+"&height="+tileHeight;
-        ImBundle ib = new ImBundle(x,y,u);
+        String u = wmsURL + "&LAYERS=landsat" + "&bbox="+ pXtoLon(x*tileWidth) +","+ pYtoLat((y-1)*tileHeight) +","+ pXtoLon((1+x)*tileWidth) +","+pYtoLat(y*tileHeight)+"&width="+tileWidth+"&height="+tileHeight;
+        ImBundle ib = new ImBundle(x,y,u,"landsat");
+        if( !contains( ib ) )
+        {
+          imv.add( ib );
+        }
+
+        u = wmsURL + "&format=png&LAYERS=gpx" + "&bbox="+ pXtoLon(x*tileWidth) +","+ pYtoLat((y-1)*tileHeight) +","+ pXtoLon((1+x)*tileWidth) +","+pYtoLat(y*tileHeight)+"&width="+tileWidth+"&height="+tileHeight;
+
+        ib = new ImBundle(x,y,u,"gpx");
         if( !contains( ib ) )
         {
           imv.add( ib );
@@ -231,15 +241,30 @@ public class Tile extends Thread
     {
       for(long y = topY; y < botY + 1; y++)
       {
-        if( images.containsKey(x + "," + y))
+        String mykey = "landsat_" + x + "," + y;
+        
+        if( images.containsKey(mykey))
         {
-          PImage pi = (PImage)images.get(x + "," + y);
-          ht.put(x + "," + y, pi);
+          PImage pi = (PImage)images.get(mykey);
+          ht.put(mykey, pi);
         }
         else
         {
-           imf.remove(x + "," + y);
+           imf.remove(mykey);
         }
+
+        mykey = "gpx_" + x + "," + y;
+
+        if( images.containsKey(mykey))
+        {
+          PImage pi = (PImage)images.get(mykey);
+          ht.put(mykey, pi);
+        }
+        else
+        {
+           imf.remove(mykey);
+        }
+
       }
     }
 
@@ -329,27 +354,39 @@ public class Tile extends Thread
   public synchronized void draw()
   {
     //System.out.println("Drawing tiles...");
-    applet.background(200);
+    applet.background(0);
     for(long x = leftX; x < rightX + 1; x++)
     {
       for(long y = topY; y < botY + 1; y++)
       {
-        PImage p = getImage(x + "," + y);
-        if( p != null)
+        
+
+        PImage p_gpx = getImage("gpx_" + x + "," + y);
+        PImage p_landsat = getImage("landsat_" + x + "," + y);
+        if( p_gpx == null && p_landsat == null)
         {
-          applet.image(p, (x*tileWidth)-(long)centerX+(windowWidth/2), windowHeight - ((y*tileHeight)-(long)centerY+(windowHeight/2)) );
+          applet.stroke(255);
+          applet.fill(255);
+          applet.text("Loading tile...", (int)(((x+.5)*tileWidth)-(long)centerX+(windowWidth/2)), (int)(windowHeight - (  ((y+.5)*tileHeight) -(long)centerY+(windowHeight/2)) ));
         }
         else
-        {
-          applet.stroke(0);
-          applet.fill(0);
-          applet.text("Loading tile...", (int)(((x+.5)*tileWidth)-(long)centerX+(windowWidth/2)), (int)(windowHeight - (  ((y+.5)*tileHeight) -(long)centerY+(windowHeight/2)) ));
+        {   
+          if(p_landsat != null)
+          {
+            applet.image(p_landsat, (x*tileWidth)-(long)centerX+(windowWidth/2), windowHeight - ((y*tileHeight)-(long)centerY+(windowHeight/2)) );
+          }
+
+          if(p_gpx != null)
+          {
+            applet.image(p_gpx, (x*tileWidth)-(long)centerX+(windowWidth/2), windowHeight - ((y*tileHeight)-(long)centerY+(windowHeight/2)) );
+          }
         }
          
       }
     }
 
   } // draw
+
 
   public float kilometersPerPixel()
   {
@@ -358,6 +395,20 @@ public class Tile extends Thread
 
   public synchronized ImBundle getEle()
   {
+    int n = 0;
+    Enumeration e = imv.elements();  // send back a gpx tile by preference
+    while( e.hasMoreElements() ) 
+    {
+      ImBundle i = (ImBundle)e.nextElement();
+      if(i.key.startsWith("gpx"))
+      {
+        System.out.println("returning and removing " + i.key);
+        imv.removeElementAt(n);
+        return i;
+      }
+      n++;
+    }
+
     ImBundle ib = (ImBundle)imv.elementAt(0);
     imv.removeElementAt(0);
     
@@ -474,6 +525,7 @@ class ImBundle
   long y;
   String s;
   String key;
+  String type;
 
   public ImBundle(long xx, long yy)
   {
@@ -482,17 +534,18 @@ class ImBundle
     key = x + "," + y;
   } // ImBundle
 
-  public ImBundle(long xx, long yy, String ss)
+  public ImBundle(long xx, long yy, String ss, String t)
   {
     x = xx;
     y = yy;
     s = ss;
-    key = x + "," + y;
+    type = t; 
+    key = t + "_" + x + "," + y;
   } // ImBundle
 
   public boolean equals(ImBundle other)
   {
-    return x == other.x && y == other.y;
+    return x == other.x && y == other.y && type.equals(other.type);
   }
 
 } // ImBundle
@@ -529,7 +582,6 @@ class VFetch extends Thread
   {
     try {sleep(milliseconds);} catch(Exception e){}
   }
-
 
 } // VFetch
 

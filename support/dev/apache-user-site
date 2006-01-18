@@ -54,7 +54,7 @@ RubyRequire apache/eruby-run
 
 RewriteEngine on
 RewriteRule   ^/feeds/nodes.rss$  /ruby/nodes.rb  [PT,T=application/rss+xml]
-RewriteRule   ^/feeds/geoaggregate.rss$  /ruby/georss.rb  [PT,T=application/rss+xml]
+RewriteRule   ^/feeds/gpx_files.rss$  /ruby/gpx_files.rb  [PT,T=application/rss+xml]
 
 RewriteRule   /api/0.2/node/([0-9]+) /ruby/api/0.2/node.rb?nodeid=$1 [PT,T=text/plain]
 RewriteRule   /api/0.2/segment/([0-9]+) /ruby/api/0.2/segment.rb?segmentid=$1 [PT,T=text/plain]

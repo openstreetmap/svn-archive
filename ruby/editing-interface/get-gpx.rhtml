@@ -5,7 +5,7 @@ require 'stringio'
 dao = nil
 cgi = nil
 loggedin = false
-uid = -1
+user_id = -1
 
 require 'cgi'
 load 'osm/dao.rb'
@@ -16,17 +16,17 @@ dao = OSM::Dao.instance
 r = Apache.request
 r.content_type = 'text/plain'
 
-token,uid = dao.check_cookie?(cgi)
-if uid 
+token,user_id = dao.check_cookie?(cgi)
+if user_id 
   loggedin = true
-  email = dao.email_from_user_uid(uid)
+  email = dao.email_from_user_id(user_id)
 end
 
 gpxid = cgi['gpx_id'].to_i
 
 filename = "/home/osm/gpx/#{gpxid}.gpx".untaint
 
-if dao.does_user_own_gpx?(uid, gpxid)
+if dao.does_user_own_gpx?(user_id, gpxid)
   if loggedin && gpxid != 0
     if File.exists?(filename) && File.size(filename) > 0
        File.new(filename).each do |line|

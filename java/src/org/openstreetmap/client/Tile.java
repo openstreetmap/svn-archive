@@ -75,7 +75,7 @@ public class Tile extends Thread
   {
     
     applet = p;
-//    wmsURL = url;
+    wmsURL = url;
     
   	// NOTE:
 	  // lat is actually the Mercator "y" value

@@ -43,7 +43,7 @@ else
 
     r.setup_cgi_env
     segmentid = r.args.match(/segmentid=([0-9]+)/).captures.first.to_i
-    userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
+    userid = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
     doc = Document.new $stdin.read
     gpxsegmentid = -1
 
@@ -53,16 +53,16 @@ else
       exit BAD_REQUEST unless gpxsegmentid == segmentid
       exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible == true
 
-      node_a_uid = seg.attributes['from'].to_i
-      node_b_uid = seg.attributes['to'].to_i
+      node_a_id = seg.attributes['from'].to_i
+      node_b_id = seg.attributes['to'].to_i
       tags = seg.attributes['tags']
 
-      exit HTTP_NOT_FOUND unless dao.getnode(node_a_uid).visible == true 
-      exit HTTP_NOT_FOUND unless dao.getnode(node_b_uid).visible == true
+      exit HTTP_NOT_FOUND unless dao.getnode(node_a_id).visible == true 
+      exit HTTP_NOT_FOUND unless dao.getnode(node_b_id).visible == true
       #exit BAD_REQUEST unless tags
       tags = '' unless tags
 
-      if dao.update_segment?(segmentid, userid, node_a_uid, node_b_uid, tags)
+      if dao.update_segment?(segmentid, userid, node_a_id, node_b_id, tags)
         exit
       else
         exit HTTP_INTERNAL_SERVER_ERROR
@@ -72,7 +72,7 @@ else
 
   else
     if r.request_method == "DELETE"
-      userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
+      userid = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
       #cgi doesnt work with DELETE so extract manually:
       segmentid = r.args.match(/segmentid=([0-9]+)/).captures.first.to_i
 

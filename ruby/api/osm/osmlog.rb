@@ -4,8 +4,12 @@ load 'servinfo.rb'
 
 class Osmlog
   include Singleton
-
-  @@l = Logger.new('/tmp/' + $SERVER_NAME, shift_age = 'daily')
+  
+  begin
+    @@l = Logger.new('/tmp/' + $SERVER_NAME, shift_age = 'daily')
+  rescue
+    @@l = Logger.new('/tmp/' + $SERVER_NAME + '-non_apache', shift_age = 'daily')
+  end
 
   def log(s)
     @@l.info(s)

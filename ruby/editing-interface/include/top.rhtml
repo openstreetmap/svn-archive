@@ -3,10 +3,10 @@
 % cgi = CGI.new
 % dao = OSM::Dao.instance
 
-%token,uid = dao.check_cookie?(cgi)
-%if uid 
+%token,user_id = dao.check_cookie?(cgi)
+%if user_id 
 %  loggedin = true
-%  email = dao.email_from_user_uid(uid)
+%  email = dao.email_from_user_id(user_id)
 %end
 %
 <html>

@@ -40,7 +40,7 @@ else
   if r.request_method == "PUT"
     r.setup_cgi_env
     nodeid = r.args.match(/nodeid=([0-9]+)/).captures.first.to_i
-    userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
+    userid = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
     doc = Document.new $stdin.read
 
     doc.elements.each('osm/node') do |pt|
@@ -71,7 +71,7 @@ else
     
   else
     if r.request_method == "DELETE"
-      userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
+      userid = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
       #cgi doesnt work with DELETE so extract manually:
       nodeid = r.args.match(/nodeid=([0-9]+)/).captures.first.to_i
 

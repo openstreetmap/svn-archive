@@ -15,7 +15,7 @@ module OSM
 
     def add_node(node)
       el1 = Element.new 'node'
-      el1.attributes['uid'] = node.uid
+      el1.attributes['uid'] = node.id
       el1.attributes['lat'] = node.latitude
       el1.attributes['lon'] = node.longitude
       el1.attributes['tags'] = node.tags
@@ -25,9 +25,9 @@ module OSM
     def add_segment(line)
       el1 = Element.new('segment')
 
-      el1.attributes['uid'] = line.uid
-      el1.attributes['from'] = line.node_a_uid
-      el1.attributes['to'] = line.node_b_uid
+      el1.attributes['uid'] = line.id
+      el1.attributes['from'] = line.node_a_id
+      el1.attributes['to'] = line.node_b_id
       el1.attributes['tags'] = line.tags
 
       @root.add el1

@@ -30,17 +30,18 @@ module OSM
 
   class Point
 
-    def initialize(latitude, longitude, uid, visible, tags)
-      @latitude, @longitude, @uid, @visible, @tags = [latitude, longitude, uid, visible, tags]
+    def initialize(latitude, longitude, id, visible, tags)
+      @latitude, @longitude, @id, @visible, @tags = [latitude, longitude, id, visible, tags]
     end
 
     def to_s
-      "Point #@uid at #@latitude, #@longitude, #@visible"
+      "Point #@id at #@latitude, #@longitude, #@visible"
     end
 
-    attr_reader :latitude, :longitude, :uid, :visible, :tags
+    attr_reader :latitude, :longitude, :id, :visible, :tags
 
   end # Point
+
 
   class Trackpoint
   
@@ -54,34 +55,37 @@ module OSM
   end
 
  
- class Linesegment
-    # this is a holding class for holding a segment and its nodes
-    # FIXME this should inherit from UIDLinesegment or something
-    def initialize(uid, node_a, node_b, visible, tags)
-      @uid, @node_a, @node_b, @visible, @node_a_uid, @node_b_uid, @tags = [uid, node_a, node_b, visible, node_a.uid, node_b.uid, tags]
-    end
+   class Linesegment
+      # this is a holding class for holding a segment and its nodes
+      # FIXME this should inherit from UIDLinesegment or something
+      def initialize(id, node_a, node_b, visible, tags)
+        @id, @node_a, @node_b, @visible, @node_a_id, @node_b_id, @tags = [id, node_a, node_b, visible, node_a.id, node_b.id, tags]
+      end
 
-    def to_s
-      "Linesegment #@uid between #{@node_a.to_s} and #{@node_b.to_s}"
-    end
+      def to_s
+        "Linesegment #@id between #{@node_a.to_s} and #{@node_b.to_s}"
+      end
 
-    attr_reader :uid, :visible, :node_a, :node_b, :node_a_uid, :node_b_uid, :tags
-  end #Linesegment
+      attr_reader :id, :visible, :node_a, :node_b, :node_a_id, :node_b_id, :tags
+    end #Linesegment
+ 
  
  
   class UIDLinesegment
     # this is a holding class for just a segment and it's node UID's
-    def initialize(uid, node_a_uid, node_b_uid, tags)
-      @uid, @node_a_uid, @node_b_uid, @tags = [uid, node_a_uid, node_b_uid, tags]
+    def initialize(id, node_a_id, node_b_id, tags)
+      @id, @node_a_id, @node_b_id, @tags = [id, node_a_id, node_b_id, tags]
     end
 
     def to_s
-      "UIDLinesegment #@uid between #@node_a_uid and #@node_b_uid"
+      "UIDLinesegment #@id between #@node_a_id and #@node_b_id"
     end
 
-    attr_reader :uid, :node_a_uid, :node_b_uid, :tags
+    attr_reader :id, :node_a_id, :node_b_id, :tags
 
   end #UIDLinesegment
+
+
 
   class Dao
     include Singleton
@@ -91,6 +95,8 @@ module OSM
     def mysql_error(e)
       puts "Error code: ", e.errno, "\n"
       puts "Error message: ", e.error, "\n"
+      @@log.log("Error code: " + e.errno.to_s)
+      @@log.log("Error message: "+ e.error)
     end
 
     def get_connection
@@ -119,20 +125,16 @@ module OSM
     def check_user?(email, pass)
       @@log.log('checking user ' + email)
 
-      dbh = get_connection
-      # sanitise the incoming variables
-      email = quote(email)
-      pass = quote(pass)
-      # get the result
-      result = dbh.query("select uid from user where user='#{email}' and pass_crypt=md5('#{pass}') and active = true")
+      res = call_sql { "select id from users where email='#{q(email)}' and pass_crypt=md5('#{q(pass)}') and active = true" }
       # should only be one result, as user name is unique
-      if result.num_rows == 1
+      if res.num_rows == 1
         set_timeout(email)
         return true
       end
       # otherwise, return false
       return false
     end
+    
 
     def make_token
       chars = 'abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -145,43 +147,46 @@ module OSM
 
       return confirmstring
     end
+    
 
-	def call_sql
-		dbh = nil
-		begin
-			dbh = get_connection
-			res = dbh.query(yield)
-      if res.nil? then return true else return res end
-		rescue MysqlError =>ex
-			mysql_error(ex)
-		ensure
-			dbh.close unless dbh.nil?
-		end
-		nil
-	end
-
-
-  def set_timeout(email)
-		call_sql { "update user set timeout = #{(Time.new.to_i * 1000) + (1000 * 60 * 60 * 24)} where user = '#{q(email)}' and active = true" }
-	end
+  	def call_sql
+	  	dbh = nil
+		  begin
+  			dbh = get_connection
+        sql = yield
+        @@log.log sql
+	  		res = dbh.query(sql)
+        if res.nil? then return true else return res end
+  		rescue MysqlError =>ex
+	  		mysql_error(ex)
+		  ensure
+  			dbh.close unless dbh.nil?
+	  	end
+		  nil
+  	end
 
 
-  def logout(user_uid)
-    @@log.log("logging out user #{user_uid}")
-    call_sql { "update user set token = '#{make_token()}' where uid = '#{user_uid}' and active = true" }
-  end
+    def set_timeout(email)
+	  	call_sql { "update users set timeout = NOW() + INTERVAL 1 DAY where email = '#{q(email)}' and active = true" }
+  	end
 
 
-  def activate_account(email, token)
+    def logout(user_id)
+      @@log.log("logging out user #{user_id}")
+      call_sql { "update users set token = '#{make_token()}' where id = '#{user_id}' and active = true" }
+    end
+
+
+    def activate_account(email, token)
       email = quote(email)
       token = quote(token)
       
       begin
         dbh = get_connection
 
-        dbh.query("update user set active = true where user = '#{email}' and token = '#{token}' and active = false")
+        dbh.query("update users set active = true where email = '#{email}' and token = '#{token}' and active = false")
 
-        result = dbh.query("select * from user where user = '#{email}' and token = '#{token}' and active = true")
+        result = dbh.query("select * from users where email = '#{email}' and token = '#{token}' and active = true")
 
         return result.num_rows == 1
         
@@ -199,73 +204,62 @@ module OSM
 
 
     def create_account(email, pass)
-      email = quote(email)
-      pass = quote(pass)
-
+      @@log.log 'creating account for ' + email.to_s
       if !does_user_exist?(email)
-        begin
-          dbh = get_connection
-          token = make_token
-          sql = "insert into user(user, timeout, token, active, pass_crypt, creation_time) values ('#{email}', #{Time.new.to_i * 1000}, '#{token}', false, md5('#{pass}'), NOW())"
-          dbh.query(sql)
-
-          return token
-
-        rescue MysqlError => e
-          mysql_error(e)
-
-        ensure
-          dbh.close if dbh
-        end
-
-
-      end
-
-      return ''
-
-    end
-  
-  def set_token_for_user(email)
-    token = make_token
-    call_sql { "update user set token = '#{token}' where user = '#{q(email)}' and active = true" }
-    return token
-    
-  end 
-
-  def login(email, pass)
-    if check_user?(email,pass)
-      begin
-        dbh = get_connection
         token = make_token
-        dbh.query("update user set token = '#{token}' where user = '#{q(email)}' and pass_crypt=md5('#{q(pass)}') and active = true")
-        set_timeout(email)
-        return token
-      rescue MysqlError => e
-        mysql_error(e)
-      ensure
-        dbh.close if dbh
+        res = call_sql { "insert into users(email, timeout, token, active, pass_crypt, creation_time) values ('#{q(email)}', NOW(), '#{q(token)}', false, md5('#{pass}'), NOW())" }
+          
+        if res.nil?
+          return ''
+        else
+          return token
+        end
       end
+      return ''
     end
-    return ''
-  end
 
-  def set_password_for_user(email, pass, token)
-    return call_sql { "update user set pass_crypt = md5('#{q(pass)}') where user = '#{q(email)}' and token = '#{q(token)}' and active = true" }
-  end
 
-  def does_user_exist?(email)
-    res = call_sql { "select uid from user where user = '#{q(email)}' and active = true" }
-    return res.num_rows == 1
-  end
+    def set_token_for_user(email)
+      token = make_token
+      call_sql { "update users set token = '#{token}' where email = '#{q(email)}' and active = true" }
+      return token
+    end 
+
+
+    def login(email, pass)
+      if check_user?(email,pass)
+        token = make_token
+        res = call_sql { "update users set token = '#{token}' where email = '#{q(email)}' and pass_crypt=md5('#{q(pass)}') and active = true" }
+        
+        if res.nil?
+          return ''
+        else
+          set_timeout(email)
+          return token
+        end
+      end
+      return ''
+    end
+
+
+    def set_password_for_user(email, pass, token)
+      return call_sql { "update users set pass_crypt = md5('#{q(pass)}') where email = '#{q(email)}' and token = '#{q(token)}' and active = true" }
+    end
+
+
+    def does_user_exist?(email)
+      res = call_sql { "select id from users where email = '#{q(email)}' and active = true" }
+      return res.num_rows == 1
+    end
     
 
     ## check_user_token?
     # checks a user token to see if it is active
     def check_user_token?(token)
-      res = call_sql { "select uid from user where active = 1 and token = '#{q(token)}' and timeout > #{Time.new.to_i * 1000}" }
+      res = call_sql { "select id from users where active = 1 and token = '#{q(token)}' and timeout > NOW()" }
       if res.num_rows == 1
         res.each_hash do |row|
-          return row['uid'].to_i
+          return row['id'].to_i
         end
       end
       # otherwise, return false
@@ -274,154 +268,100 @@ module OSM
 
 
     def set_cookie(r,token)
-	ed = (Time.now + (60 * 60 * 24)).rfc2822()
-	r.headers_out.add('Set-Cookie', 'openstreetmap=' + token + '; path=/; expires=' + ed)
+      ed = (Time.now + (60 * 60 * 24)).rfc2822()
+	    r.headers_out.add('Set-Cookie', 'openstreetmap=' + token + '; path=/; expires=' + ed)
     end
 
+
     def check_cookie?(cgi)
-	cvalues = cgi.cookies['openstreetmap']
-	if !cvalues.empty?
-  		token = cvalues[0]
-  		if token
-    			uid = check_user_token?(token)
-    		end
-  	end
-	return [token,uid]
+      cvalues = cgi.cookies['openstreetmap']
+        if !cvalues.empty?
+      		token = cvalues[0]
+  	    	if token
+    		  	user_id = check_user_token?(token)
+      		end
+      	end
+      return [token,user_id]
     end
 
 
     def email_from_token(token)
-      res = call_sql { "select user from user where active = 1 and token = '#{q(token)}'" }
+      res = call_sql { "select email from users where active = 1 and token = '#{q(token)}'" }
+  
+      if res.nil?
+        return nil
+      end
+      
       if res.num_rows == 1
         res.each_hash do |row|
-          return row['user']
+          return row['email']
         end
       end
-      # otherwise, return false
-      return false
+    
     end
 
 
-    def email_from_user_uid(user_uid)
-       begin
-        dbh = get_connection
-
-        res = dbh.query("select user from user where active = 1 and uid = #{user_uid}")
+    def email_from_user_id(user_id)
+      res = call_sql { "select email from users where active = 1 and id = #{user_id}" }
       
-        if res.num_rows == 1
-          res.each_hash do |row|
-            return row['user']
-          end
-        end
-        
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
+      if res.nil?
+        return nil
       end
-      return false
+      
+      if res.num_rows == 1
+        res.each_hash do |row|
+          return row['email']
+        end
+      end
     end
     
 
-    def gpx_details_for_user(user_uid)
-      return call_sql { "select uid, timestamp, name, size, latitude, longitude from points_meta_table where user_uid = #{user_uid} and visible = 1 order by timestamp desc" }
+    def gpx_details_for_user(user_id)
+      return call_sql { "select id, timestamp, name, size, latitude, longitude from gpx_files where user_id = #{q(user_id.to_s)} and visible = 1 order by timestamp desc" }
     end
 
-    def gpx_pending_details_for_user(user_uid)
-      return call_sql { "select originalname from gpx_to_insert where user_uid = #{user_uid}" }
+    def gpx_pending_details_for_user(user_id)
+      @@log.log('getting gpx files for user ' + user_id.to_s)
+      return call_sql { "select originalname from gpx_pending_files where user_id = #{q(user_id.to_s)}" }
     end
+
 
     def gpx_size(gpx_id)
-      res = call_sql { "select count(*) as count from tempPoints where gpx_id = #{gpx_id}" }
+      res = call_sql { "select count(*) as count from gps_points where gpx_id = #{q(gpx_id.to_s)}" }
       res.each_hash do |row|
         return row['count']
       end
     end
 
 
-    def does_user_own_gpx?(user_uid, gpx_uid)
-      begin
-        dbh = get_connection
-
-        res = dbh.query("select uid from points_meta_table where user_uid = #{user_uid} and uid = #{gpx_uid} and visible = 1")
-      
-        return res.num_rows == 1
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-      
-      return false
-
-    end
-
-
-    def schedule_gpx_delete(gpx_uid)
-      begin
-        dbh = get_connection
-
-        res = dbh.query("update points_meta_table set visible = false where uid = #{gpx_uid}")
-        
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-
-      return false
-
-    end
-
-
-    def schedule_gpx_upload?(originalname, tmpname, user_uid)
-      originalname = quote(originalname)
-      begin
-        dbh = get_connection
-
-        dbh.query("insert into gpx_to_insert (originalname, tmpname, user_uid) values ('#{originalname}', '#{tmpname}', #{user_uid})")
-
+    def does_user_own_gpx?(user_id, gpx_id)
+      res = call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
+      if res && res.num_rows ==1
         return true
-        
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
       end
-
-      return false
-
+      false
     end
 
 
-   def get_scheduled_gpx_uploads()
-      begin
-        dbh = get_connection
-
-        return dbh.query('select * from gpx_to_insert')
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-
-      return false
-
+    def schedule_gpx_delete(gpx_id)
+      call_sql { "update gpx_files set visible = false where id = #{q(gpx_id.to_s)}" }
     end
 
+
+    def schedule_gpx_upload?(originalname, tmpname, user_id)
+      call_sql { "insert into gpx_pending_files (originalname, tmpname, user_id) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id})" }
+    end
+
+
+    def get_scheduled_gpx_uploads()
+      call_sql { "select * from gpx_pending_files" }
+    end
 
     def delete_sheduled_gpx_files()
       begin
         dbh = get_connection
 
-        dbh.query('delete from points_meta_table, tempPoints using points_meta_table, tempPoints where points_meta_table.uid = tempPoints.gpx_id and points_meta_table.visible = false')
+        dbh.query('delete from gpx_files, gps_points using gpx_files, gps_points where gpx_files.id = gps_points.gpx_id and gpx_files.visible = false')
 
         return true
 
@@ -437,11 +377,11 @@ module OSM
     end    
 
 
-    def new_gpx_file(user_uid, filename)
+    def new_gpx_file(user_id, filename)
       
       begin
         dbh = get_connection
-        dbh.query("insert into points_meta_table (timestamp, user_uid, visible, name) values (#{Time.new.to_i * 1000}, #{user_uid}, 1, '#{filename}')")
+        dbh.query("insert into gpx_files (timestamp, user_id, visible, name) values (NOW(), #{q(user_id.to_s)}, 1, '#{q(filename.to_s)}')")
         res = dbh.query('select last_insert_id()') 
         
         res.each do |row|
@@ -458,34 +398,36 @@ module OSM
       return nil
     end
 
-    def update_gpx_size(gpx_uid)
-      call_sql { "update points_meta_table set size = (select count(*) from tempPoints where tempPoints.gpx_id = #{gpx_uid}) where uid = #{gpx_uid};" }
+    def update_gpx_meta(gpx_id)
+      call_sql { "update gpx_files set size = (select count(*) from gps_points where gps_points.gpx_id = #{gpx_id}) where id = #{gpx_id};" }
+      call_sql { "update gpx_files set latitude = (select latitude from gps_points where gps_points.gpx_id = #{gpx_id} limit 1),
+                    longitude = (select longitude from gps_points where gps_points.gpx_id = #{gpx_id} limit 1) where id = #{gpx_id};" }
     end
+                    
 
-
-    def useruidfromcreds(user, pass)
-      if user == 'token'
-        uid = check_user_token?(pass)
-        if uid
-          return uid
+    def useridfromcreds(email, pass)
+      if email == 'token'
+        id = check_user_token?(pass)
+        if id
+          return id
         else
           return -1
         end
       else
-        useruidfromemail(user)
+        useridfromemail(email)
       end
     end
 
 
-    def useruidfromemail(email)
+    def useridfromemail(email)
       email = quote(email)
       
       begin
         dbh = get_connection
-        res = dbh.query("select uid from user where user='#{email}' and active = true")
+        res = dbh.query("select id from users where email='#{email}' and active = true")
 
         res.each_hash do |row|
-          return row['uid'].to_i
+          return row['id'].to_i
         end
 
         return -1
@@ -501,35 +443,19 @@ module OSM
     def getnodes(lat1, lon1, lat2, lon2)
       nodes = {}
 
-      begin
+      res = call_sql { "select id, latitude, longitude, visible, tags from (select * from (select nodes.id, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and nodes.id = a.id order by nodes.timestamp desc) as b group by id) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}" }
 
-        dbh = get_connection
-
-#        q = "select uid, latitude, longitude, visible from (select * from (select uid,latitude,longitude,timestamp,visible from nodes where latitude < #{lat1} and latitude > #{lat2}  and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc) as a group by uid) as b where b.visible = 1 limit 5000"
-
-        q = "select uid, latitude, longitude, visible, tags from (select * from (select nodes.uid, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and nodes.uid = a.uid order by nodes.timestamp desc) as b group by uid) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}"
-
-
-
-        res = dbh.query(q)
-        
+      if !res.nil? 
         res.each_hash do |row|
           
-          uid = row['uid'].to_i
-          nodes[uid] = Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, true, row['tags'])
+          node_id = row['id'].to_i
+          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, true, row['tags'])
         end
 
         return nodes
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
       end
 
     end
-
 
 
     def get_track_points(lat1, lon1, lat2, lon2, page)
@@ -542,7 +468,7 @@ module OSM
         dbh = get_connection
 
         
-        q = "select distinctrow latitude, longitude from tempPoints where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000"
+        q = "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000"
 
         res = dbh.query(q)
         
@@ -569,7 +495,7 @@ module OSM
 
         dbh = get_connection
         
-        q = "select latitude, longitude, timestamp from tempPoints where gpx_id = #{gpx_id} limit 5000"
+        q = "select latitude, longitude from gps_points where gpx_id = #{gpx_id} limit 5000"
 
         res = dbh.query(q)
         
@@ -588,16 +514,17 @@ module OSM
 
     end
 
-    
+
+
     def getlines(nodes)
       clausebuffer = '('
       first = true
 
-      nodes.each do |uid, p|
+      nodes.each do |node_id, p|
         if !first
-          clausebuffer += ',' + uid.to_s
+          clausebuffer += ',' + node_id.to_s
         else
-          clausebuffer += uid.to_s
+          clausebuffer += node_id.to_s
           first = false
         end
         
@@ -607,19 +534,18 @@ module OSM
       begin
         conn = get_connection
 
-        q = "SELECT segment.uid, segment.node_a, segment.node_b, segment.tags FROM (
+        q = "SELECT segment.id, segment.node_a, segment.node_b, segment.tags FROM (
                select * from
-                  (SELECT * FROM street_segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
-               as a group by uid) as segment where visible = true"
+                  (SELECT * FROM segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
+               as a group by id) as segment where visible = true"
 
         res = conn.query(q)
         
         segments = {}
         
         res.each_hash do |row|
-          uid = row['uid'].to_i
-          segments[uid] = UIDLinesegment.new(uid, row['node_a'].to_i, row['node_b'].to_i, row['tags'])
-
+          segment_id = row['id'].to_i
+          segments[segment_id] = UIDLinesegment.new(segment_id, row['node_a'].to_i, row['node_b'].to_i, row['tags'])
         end
 
         return segments
@@ -634,40 +560,32 @@ module OSM
 
 
 
-    def getnode(uid)
-      begin
-        conn = get_connection
+    def getnode(node_id)
+      res = call_sql {"select latitude, longitude, visible, tags from nodes where id=#{node_id} order by timestamp desc limit 1" }
 
-        q = "select latitude, longitude, visible, tags from nodes where uid=#{uid} order by timestamp desc limit 1"
-
-        res = conn.query(q)
-
+      if !res.nil?
         res.each_hash do |row|
           visible = false
 
           if row['visible'] == '1' then visible = true end
 
-          return Point.new(row['latitude'].to_f, row['longitude'].to_f, uid, visible, row['tags'])
+          return Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, visible, row['tags'])
         end
 
         return nil
 
-      rescue MysqlError => e
-        mysql_error(e)
-      ensure
-        conn.close if conn
       end
-
     end
+    
 
-    def delete_node?(uid, user_uid)
+    def delete_node?(node_id, user_id)
 
       begin
         dbh = get_connection
-        res = dbh.query("select latitude, longitude from nodes where uid = #{uid} order by timestamp desc limit 1")
+        res = dbh.query("select latitude, longitude from nodes where id = #{node_id} order by timestamp desc limit 1")
 
         res.each_hash do |row|
-          dbh.query("insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible) values (#{uid} , #{row['latitude']}, #{row['longitude']}, #{Time.new.to_i * 1000}, #{user_uid}, 0)")
+          dbh.query("insert into nodes (id,latitude,longitude,timestamp,user_id,visible) values (#{node_id} , #{row['latitude']}, #{row['longitude']}, NOW(), #{user_id}, 0)")
           return true
         end
 
@@ -681,69 +599,50 @@ module OSM
       return false
     end 
 
-    def update_node?(uid, user_uid, latitude, longitude, tags)
-      call_sql { "insert into nodes (uid,latitude,longitude,timestamp,user_uid,visible,tags) values (#{uid} , #{latitude}, #{longitude}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')" }
-    
+
+    def update_node?(node_id, user_id, latitude, longitude, tags)
+      call_sql { "insert into nodes (id,latitude,longitude,timestamp,user_id,visible,tags) values (#{node_id} , #{latitude}, #{longitude}, NOW(), #{user_id}, 1, '#{q(tags)}')" }
     end
 
 
-    def create_node(lat, lon, user_uid, tags)
-
-      @@log.log("creating node at #{lat},#{lon} for user #{user_uid} with tags '#{tags}'")
+    def create_node(lat, lon, user_id, tags)
+      @@log.log("creating node at #{lat},#{lon} for user #{user_id} with tags '#{tags}'")
       begin
         dbh = get_connection
 
-        sql = "insert into node_meta_table (timestamp, user_uid, visible) values (#{Time.new.to_i * 1000}, #{user_uid}, 1)"
-
-        @@log.log(sql)
-        dbh.query(sql)
-
-        sql = "set @id = last_insert_id(); "
-
-        @@log.log(sql)
-        dbh.query(sql)
-        
-        sql = "insert into nodes (uid, latitude, longitude, timestamp, user_uid, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')"
-
-        @@log.log(sql)
-        dbh.query(sql)
-        
-        res = dbh.query('select @id') 
-        
-
-        @@log.log(res.to_s)
-        res.each do |row|
-          @@log.log(row[0].to_s)
-          return row[0]
-        end
-
-        return -1
-       rescue MysqlError => e
-        @@log.log(e.to_s)
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-      return nil
-    end
-
-
-    def create_segment(node_a_uid, node_b_uid, user_uid, tags)
-      @@log.log("Creating segment #{node_a_uid} -> #{node_b_uid} for user #{user_uid} with tags '#{tags}'")
-      begin
-        dbh = get_connection
-
-        sql = "insert into street_segment_meta_table (timestamp, user_uid, visible) values ( #{Time.new.to_i * 1000} , #{user_uid}, 1)"
-        dbh.query(sql)
+        dbh.query( "insert into meta_nodes (timestamp, user_id) values (NOW(), #{user_id})" )
+      
+        dbh.query( "insert into nodes (id, latitude, longitude, timestamp, user_id, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, NOW(), #{user_id}, 1, '#{q(tags)}')" )
  
-        sql = "set @id = last_insert_id(); "
+        res = dbh.query( "select last_insert_id() " )
+
+        res.each do |row|
+          @@log.log 'returning new node id ' + row[0].to_s
+          return row[0]
+        end
+
+      rescue MysqlError =>ex
+	  		mysql_error(ex)
+		  ensure
+  			dbh.close unless dbh.nil?
+	  	end
+
+      return -1
+    end
+
+
+    def create_segment(node_a_id, node_b_id, user_id, tags)
+      @@log.log("Creating segment #{node_a_id} -> #{node_b_id} for user #{user_id} with tags '#{tags}'")
+      begin
+        dbh = get_connection
+
+        sql = "insert into meta_segments (timestamp, user_id) values (NOW() , #{user_id})"
         dbh.query(sql)
         
-        sql = "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (last_insert_id(), #{node_a_uid}, #{node_b_uid}, #{Time.new.to_i * 1000}, #{user_uid},1, '#{q(tags)}')"
+        sql = "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (last_insert_id(), #{node_a_id}, #{node_b_id}, NOW(), #{user_id},1, '#{q(tags)}')"
         dbh.query(sql)
 
-        res = dbh.query('select @id') 
+        res = dbh.query('select last_insert_id()')
         
         res.each do |row|
           return row[0]
@@ -760,31 +659,31 @@ module OSM
     end
 
     
-    def update_segment?(uid, user_uid, node_a, node_b, tags)
-      call_sql { "insert into street_segments (uid, node_a, node_b, timestamp, user_uid, visible, tags) values (#{uid}, #{node_a}, #{node_b}, #{Time.new.to_i * 1000}, #{user_uid}, 1, '#{q(tags)}')" }
+    def update_segment?(segment_id, user_id, node_a, node_b, tags)
+      call_sql { "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (#{q(segment_id.to_s)}, #{q(node_a.to_s)}, #{q(node_b.to_s)}, NOW(), #{q(user_id.to_s)}, 1, '#{q(tags)}')" }
     end
 
 
-    def getsegment(uid)
-      res = call_sql { "select node_a, node_b, visible, tags from street_segments where uid=#{uid} order by timestamp desc limit 1" }
+    def getsegment(segment_id)
+      res = call_sql { "select node_a, node_b, visible, tags from segments where id=#{segment_id} order by timestamp desc limit 1" }
 
       res.each_hash do |row|
         visible = false
         if row['visible'] == '1' then visible = true end
-        return Linesegment.new(uid, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'])
+        return Linesegment.new(id, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'])
       end
       return nil
     end # getsegment
 
 
-    def delete_segment?(uid, user_uid)
+    def delete_segment?(segment_id, user_id)
       
       begin
         dbh = get_connection
-        res = dbh.query("select node_a, node_b from street_segments where uid = #{uid} order by timestamp desc limit 1")
+        res = dbh.query("select node_a, node_b from segments where id = #{q(segment_id.to_s)} order by timestamp desc limit 1")
 
         res.each_hash do |row|
-          dbh.query("insert into street_segments (uid,node_a,node_b,timestamp,user_uid,visible) values (#{uid} , #{row['node_a']}, #{row['node_b']}, #{Time.new.to_i * 1000}, #{user_uid}, 0)")
+          dbh.query("insert into segments (id,node_a,node_b,timestamp,user_id,visible) values (#{q(segment_id.to_s)} , #{row['node_a']}, #{row['node_b']}, NOW(), #{user_id}, 0)")
           return true
         end
 

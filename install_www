@@ -98,5 +98,7 @@ cp ruby/rss/gpx_files.rb $ROOT/ruby/
 # GPX parser
 
 mkdir -p ../bin
+mkdir -p ../bin/osm
 cp ruby/editing-interface/support/insert_gpx_files.rb ../bin/
+cp ruby/api/osm/* ../bin/osm
 

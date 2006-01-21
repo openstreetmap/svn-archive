@@ -11,14 +11,18 @@ require 'rexml/text'
 require 'net/smtp'
 
 DEBUG = false
+USER = 'openstreetmap'
 
 # exit if the lockfile is there
-if File.file?('/tmp/gpx_insert_running')
+
+lockfile = "/tmp/gpx_insert_running.#{USER}"
+
+if File.file?(lockfile)
   $stderr << 'exiting, lock file present'
   exit!
 else
   #otherwise make one
-  File.open('/tmp/gpx_insert_running', 'w') do |file|
+  File.open(lockfile, 'w') do |file|
     file << 'eh-oh'
   end
 end
@@ -30,9 +34,15 @@ dao.delete_sheduled_gpx_files unless DEBUG
 files = dao.get_scheduled_gpx_uploads
 
 files.each_hash do |row|
+
   filename = row['tmpname']
   #copy the file here
-  `scp 128.40.59.140:#{filename} .#{filename}`
+  if DEBUG
+    puts "execing: cp #{filename} #{filename}"
+    `cp #{filename} .#{filename}`
+  else
+    `scp 128.40.59.140:#{filename} .#{filename}`
+  end
 
   `zcat /home/steve/bin#{filename} > /home/steve/bin#{filename}.yeah`
 
@@ -49,9 +59,9 @@ files.each_hash do |row|
 
   points = 0
   poss_points = 0
-  user_uid = row['user_uid'].to_i
+  user_id = row['user_id'].to_i
   original_name = row['originalname']
-  email_address = dao.email_from_user_uid(user_uid)
+  email_address = dao.email_from_user_id(user_id)
   dbh = dao.get_connection #bit hacky, but we need a connection
 
   if File.file?( realfile ) && File.size( realfile ) > 0
@@ -60,26 +70,23 @@ files.each_hash do |row|
   
     # got a file, we hope
 
-    $stderr << 'Inserting ' + original_name + ' for user ' + user_uid.to_s + ' from file ' + filename + "\n"
+    $stderr << 'Inserting ' + original_name + ' for user ' + user_id.to_s + ' from file ' + filename + "\n"
   
     trackseg = 0
-    if DEBUG
-      gpx_uid = -1
-    else
-      gpx_uid = dao.new_gpx_file(user_uid, original_name) 
-    end
+    
+    gpx_id = dao.new_gpx_file(user_id, original_name) 
 
-    if gpx_uid == 0
+    if gpx_id == 0
       $stderr << "bad gpx number!\n"
       exit
     end
 
-    $stderr << 'new gpx file uid: ' + gpx_uid.to_s + "\n"
+    $stderr << 'new gpx file id: ' + gpx_id.to_s + "\n"
 
     lat = -1
     lon = -1
     ele = -1
-    date = -1
+    date = Time.now();
     gotlatlon = false
     gotele = false
     gotdate = false
@@ -98,7 +105,7 @@ files.each_hash do |row|
 
     parser.listen( :characters, %w{ time } ) do |text|
       if text && text != ''
-        date = Time.parse(text).to_i * 1000
+        date = Time.parse(text)
         gotdate = true
       end
     end
@@ -107,13 +114,13 @@ files.each_hash do |row|
       trackseg += 1
     end
   
-    parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname| 
+    parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname|
       if gotlatlon && gotdate
         ele = '0' unless gotele
         if lat < 90 && lat > -90 && lon > -180 && lon < 180
-          sql = "insert into tempPoints (latitude, longitude, altitude, timestamp, uid, hor_dilution, vert_dilution, trackid, quality, satellites, last_time, visible, dropped_by, gpx_id) values (#{lat}, #{lon}, #{ele}, #{date}, #{user_uid}, -1, -1, #{trackseg}, 255, 0, #{Time.new.to_i * 1000}, 1, 0, #{gpx_uid})"
+          sql = "insert into gps_points (latitude, longitude, altitude, timestamp, user_id, trackid, gpx_id) values (#{lat}, #{lon}, #{ele}, '#{date.strftime('%Y-%m-%d %H:%M:%S')}', #{user_id}, #{trackseg}, #{gpx_id})"
           points += 1
-          dbh.query(sql) unless DEBUG
+          dbh.query(sql)
         end
  
       end
@@ -128,7 +135,7 @@ files.each_hash do |row|
     error_msg = ''
     begin
       parser.parse
-      dao.update_gpx_meta(gpx_uid) unless DEBUG
+      dao.update_gpx_meta(gpx_id)
 
     rescue Exception => e
       error = true
@@ -190,6 +197,8 @@ have a look at how to report it:
 and about uploading in general:
 
   http://www.openstreetmap.org/wiki/index.php/Upload
+
+Error message:
 
 #{error_msg}
 
@@ -257,8 +266,8 @@ END_OF_MESSAGE
 
   if !DEBUG
     dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
-    puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_uid}.gpx"
-    `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_uid}.gpx`
+    puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx"
+    `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx`
     File.delete('/home/steve/bin' + filename)
     File.delete('/home/steve/bin' + filename + '.yeah')
    `ssh 128.40.59.140 rm #{filename}`
@@ -266,5 +275,5 @@ END_OF_MESSAGE
 
 end
 
-File.delete('/tmp/gpx_insert_running')
+File.delete(lockfile)
 

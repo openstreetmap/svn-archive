@@ -91,7 +91,7 @@ MAYSCRIPT="true"
 <param name="zoom" value="<%=zoom%>">
 <param name="user" value="token">
 <param name="pass" value="<%=token%>">
-<param name="wmsurl" value="http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,gpx">
+<param name="wmsurl" value="http://<%=$SERVER_NAME%>/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE">
 <param name="apiurl" value="http://<%=$SERVER_NAME%>/api/0.2/">
 </applet>
 

@@ -7,23 +7,20 @@ MYSQL_USER = "openstreetmap"
 MYSQL_PASS = "openstreetmap"
 MYSQL_DATABASE = "openstreetmap"
 
-now = Time.new
 
 puts '<html><head><title>OpenStreetMap stats</title></head><body>'
-puts '<h2>OpenStreetMap stats report run at ' + now.to_s + '</h2>'
-
-millis =  now.to_i * 1000
+puts '<h2>OpenStreetMap stats report run at ' + Time.new.to_s + '</h2>'
 
 begin
 
   #connect to the MySQL server
   dbh = Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
-  q = 'select * from (select count(*) as users from user where active = true) as h, (select count(*) as gpspoints from tempPoints) as j, (select count(*) as nodes from node_meta_table) as k, (select count(*) as segments from street_segment_meta_table) as l, (select count(*) as seg_names from street_segments where tags != \'\') as m;'
+  q = 'select * from (select count(*) as no_of_users from users where active = true) as h, (select count(*) as gpspoints from gps_points) as j, (select count(*) as nodes from meta_nodes) as k, (select count(*) as segments from meta_segments) as l, (select count(*) as seg_names from segments where tags != \'\') as m;'
 #  puts q
   res = dbh.query(q)
   res.each_hash do |row|
     puts "<table>
-      <tr><td>Number of users</td><td>#{row['users']}</td></tr>
+      <tr><td>Number of users</td><td>#{row['no_of_users']}</td></tr>
       <tr><td>Number of uploaded GPS points</td><td>#{row['gpspoints']}</td></tr>
       <tr><td>Number of nodes</td><td>#{row['nodes']}</td></tr>
       <tr><td>Number of line segments</td><td>#{row['segments']}</td></tr>
@@ -32,14 +29,13 @@ begin
   end
 
   puts '<h2>Top 10 users for uploads of gps data</h2><table><tr><td><b>User</b></td><td><b>No. of points</b></td></tr>'
-  res = dbh.query('select sum(size) as size, user from points_meta_table, user where user_uid = user.uid group by user_uid order by size desc limit 10;')
+  res = dbh.query('select sum(size) as size, user from gpx_files, user where user_id = users.id group by user_id order by size desc limit 10;')
 
   res.each_hash do |row|
     puts "<tr><td>#{row['user'].gsub('@',' at ').gsub('.',' dot ')}</td><td>#{row['size']}</td></tr>"
   end
   
   puts '</table>'
-
 
 
   puts '<h2>Number of users editing over the past...</h2><table><tr>
@@ -49,14 +45,18 @@ begin
   <td><b>Month</b></td>
   </tr>'
 
-  res = dbh.query("select * from (select count(*) as day from (select user_uid from points_meta_table where timestamp > #{millis} - (1000 * 60 *  60 * 24) group by user_uid) as a) as b, (select count(*) as week from (select user_uid from points_meta_table where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7) group by user_uid) as c) as d, (select count(*) as month from (select user_uid from points_meta_table where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7 * 4) group by user_uid) as e) as f;")
+  res = dbh.query("select * from (select count(*) as day from (select user_id from gpx_files where timestamp > NOW() - INTERVAL 1 DAY group by user_id) as a) as b,
+                                 (select count(*) as week from (select user_id from gpx_files where timestamp > NOW() - INTERVAL 7 DAY group by user_id) as c) as d,
+                                 (select count(*) as month from (select user_id from gpx_files where timestamp > NOW() - INTERVAL 28 DAY group by user_id) as e) as f;")
 
   res.each_hash do |row|
     puts "<tr><td><b>GPX Files</b></td> <td>#{row['day']}</td><td>#{row['week']}</td><td>#{row['month']}</td> </tr>"
   end
  
 
-  res = dbh.query("select * from (select count(*) as day from (select user_uid from nodes where timestamp > #{millis} - (1000 * 60 *  60 * 24) group by user_uid) as a) as b, (select count(*) as week from (select user_uid from nodes where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7) group by user_uid) as c) as d, (select count(*) as month from (select user_uid from nodes where timestamp > #{millis} - (1000 * 60 *  60 * 24 * 7 * 4) group by user_uid) as e) as f;")
+  res = dbh.query("select * from (select count(*) as day from (select user_id from nodes where timestamp > NOW() - INTERVAL 1 DAY group by user_id) as a) as b,
+                                 (select count(*) as week from (select user_id from nodes where timestamp > NOW() - INTERVAL 7 DAY group by user_uid) as c) as d,
+                                 (select count(*) as month from (select user_id from nodes where timestamp > NOW() - INTERVAL 28 DAY group by user_uid) as e) as f;")
 
   res.each_hash do |row|
     puts "<tr><td><b>Nodes</b></td> <td>#{row['day']}</td><td>#{row['week']}</td><td>#{row['month']}</td> </tr>"

@@ -37,8 +37,8 @@ end
 if linesegments # get nodes we dont have yet
   
   linesegments.each do |key, l|
-    nodes[l.node_a_uid] = dao.getnode(l.node_a_uid) unless nodes[l.node_a_uid]
-    nodes[l.node_b_uid] = dao.getnode(l.node_b_uid) unless nodes[l.node_b_uid]
+    nodes[l.node_a_id] = dao.getnode(l.node_a_id) unless nodes[l.node_a_id]
+    nodes[l.node_b_id] = dao.getnode(l.node_b_id) unless nodes[l.node_b_id]
   end
 
 end
@@ -55,8 +55,8 @@ end
 
 if linesegments
   linesegments.each do |key, l|
-    node_a = nodes[l.node_a_uid]
-    node_b = nodes[l.node_b_uid]
+    node_a = nodes[l.node_a_id]
+    node_b = nodes[l.node_b_id]
     
     if node_a.visible ==true && node_b.visible == true
  

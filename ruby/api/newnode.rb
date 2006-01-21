@@ -14,7 +14,7 @@ dao = OSM::Dao.instance
 
 if r.request_method == "PUT"
   r.setup_cgi_env
-  userid = dao.useruidfromcreds(r.user, r.get_basic_auth_pw)
+  userid = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
   doc = Document.new $stdin.read
   doc.elements.each('osm/node') do |pt|
     lat = pt.attributes['lat'].to_f
@@ -24,10 +24,10 @@ if r.request_method == "PUT"
 
     if userid > 0
       #FIXME: need to check the node hasn't moved too much
-      new_node_uid = dao.create_node(lat, lon, userid, tags)
+      new_node_id = dao.create_node(lat, lon, userid, tags)
          
-      if new_node_uid
-        puts new_node_uid
+      if new_node_id
+        puts new_node_id
       else
         exit HTTP_INTERNAL_SERVER_ERROR
       end

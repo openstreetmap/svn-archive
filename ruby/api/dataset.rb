@@ -38,7 +38,7 @@ dao = OSM::Dao.instance
 
 if r.request_method == "PUT"
 	r.setup_cgi_env
-	userid = dao.useruidfromcreds(r.user,r.get_basic_auth_pw)
+	userid = dao.useridfromcreds(r.user,r.get_basic_auth_pw)
 	if userid > 0
 
 		id_conv_table = {}
@@ -61,19 +61,19 @@ if r.request_method == "PUT"
 			# If the supplied ID of the node is 0 or less, it's a new node so 
 			# act accordingly.
 			if nodeid <= 0 
-				new_node_uid = dao.create_node(lat,lon,userid,tags)
-				if not new_node_uid
+				new_node_id = dao.create_node(lat,lon,userid,tags)
+				if not new_node_id
 					exit HTTP_INTERNAL_SERVER_ERROR
 				end
 
 				# Map the supplied nodeid to the allocated real nodeid 
 				# We'll use this later when doing segments
 				if nodeid < 0 
-					id_conv_table[nodeid] = new_node_uid
+					id_conv_table[nodeid] = new_node_id
 				end
 				
 				# Write out the allocated real node ID
-				puts new_node_uid
+				puts new_node_id
 			else
 				# If the nodeid is greater than 0, we want to do an update
 				if not dao.update_node?(nodeid,userid,lat,lon,tags)

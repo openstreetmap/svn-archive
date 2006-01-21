@@ -18,12 +18,12 @@ end
 r.headers_out.add('Location', url)
 
 loggedin = false
-uid = -1
+user_id = -1
 
-token,uid = dao.check_cookie?(cgi);
+token,user_id = dao.check_cookie?(cgi);
 
-if uid then
-  dao.logout(uid)
+if user_id then
+  dao.logout(user_id)
 end
 
 ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))

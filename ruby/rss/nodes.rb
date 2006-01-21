@@ -19,13 +19,12 @@ end
 
 begin
 
-
 	description = "OpenStreetMap most recently edited nodes"
   
   if mostrecent then
-  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user from (select * from nodes order by timestamp desc limit 40) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid limit 40;"
+  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.email from (select * from nodes order by timestamp desc limit 40) as a, (select * from users) as b where a.user_id = b.id group by a.id limit 40;"
   else
-  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.user from (select * from nodes where latitude < #{latitude} + .2 and latitude > #{latitude} - .2 and longitude <  #{longitude} + .2 and longitude > #{longitude} - .2 order by timestamp desc limit 40) as a, (select * from user) as b where a.user_uid = b.uid group by a.uid;"
+  	query = "select a.latitude, a.longitude, a.timestamp, a.visible, b.email from (select * from nodes where latitude < #{latitude} + .2 and latitude > #{latitude} - .2 and longitude <  #{longitude} + .2 and longitude > #{longitude} - .2 order by timestamp desc limit 40) as a, (select * from users) as b where a.user_id = b.id group by a.id;"
 
   	description += " near #{latitude}/#{longitude}"
   end
@@ -33,6 +32,7 @@ begin
   dao = OSM::Dao.instance
   res = dao.call_sql { query }
 
+ 
   rss = Element.new 'rss'
   rss.attributes['version'] = "2.0"
   rss.attributes['xmlns:geo'] = "http://www.w3.org/2003/01/geo/wgs84_pos#"
@@ -74,9 +74,9 @@ begin
     link.text = "http://www.openstreetmap.org/index.html?lat=#{lat}&lon=#{lon}&zoom=15"
    
     description = Element.new 'description', item
-    description.text = state + " node at #{lat}/#{lon} last edited by #{row['user'].gsub('.',' dot ').gsub('@',' at ')}, " + Time.at( row["timestamp"].to_i / 1000 ).to_s
+    description.text = state + " node at #{lat}/#{lon} last edited by #{row['email'].gsub('.',' dot ').gsub('@',' at ')}, " + Time.parse( row["timestamp"]).to_s
     pubDate = Element.new 'pubDate', item
-    pubDate.text = Time.at( row["timestamp"].to_i / 1000 )
+    pubDate.text = Time.parse( row["timestamp"])
 
     lat_el = Element.new 'geo:lat', item
     lat_el.text = lat

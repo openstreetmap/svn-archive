@@ -5,7 +5,7 @@ require 'stringio'
 dao = nil
 cgi = nil
 loggedin = false
-uid = -1
+user_id = -1
 
 #include Math
 
@@ -52,7 +52,7 @@ else
       file << fromfile.read
     end
 
-    if dao.schedule_gpx_upload?(fromfile.original_filename, tofile, uid)
+    if dao.schedule_gpx_upload?(fromfile.original_filename, tofile, user_id)
       %>
       <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i><br>
       <%
@@ -71,9 +71,9 @@ else
       # hrm, probably a delete
 
       if action == 'delete'
-        gpx_uid = cgi['gpxuid'].to_i
-        if dao.does_user_own_gpx?(uid, gpx_uid)
-          dao.schedule_gpx_delete(gpx_uid)
+        gpx_id = cgi['gpx_id'].to_i
+        if dao.does_user_own_gpx?(user_id, gpx_id)
+          dao.schedule_gpx_delete(gpx_id)
           %>
           <i>The gpx file has been scheduled for deletion.</i><br>
           <%
@@ -96,7 +96,7 @@ else
 
   # show pending files
 
-  pendingfiles = dao.gpx_pending_details_for_user(uid)
+  pendingfiles = dao.gpx_pending_details_for_user(user_id)
 
   if pendingfiles.num_rows != 0
 %>
@@ -130,21 +130,21 @@ else
       <th>Filename</th>
       <th>Points</th>
       <th>Uploaded at</th>
-      <th>actions</th>
+      <th>Actions</th>
     </tr>
 <%
 
-  gpxfiles = dao.gpx_details_for_user(uid)
+  gpxfiles = dao.gpx_details_for_user(user_id)
   if gpxfiles
     gpxfiles.each_hash do |row|
       %>
       <tr>
-        <td><a href="get-gpx.html?gpx_id=<%=row['uid']%>"><%=row['name']%></a></td>
+        <td><a href="get-gpx.html?gpx_id=<%=row['id']%>"><%=row['name']%></a></td>
         <td align="right"><%=row['size']%></td>
-        <td><%=Time.at(row['timestamp'].to_i / 1000).strftime('%d-%b-%Y')%></td>
+        <td><%=Time.parse(row['timestamp']).strftime('%d-%b-%Y')%></td>
         <td>
           <a href="edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14">edit</a>, 
-          <a href="upload.html?action=delete&gpxuid=<%=row['uid']%>">delete</a>
+          <a href="upload.html?action=delete&gpx_id=<%=row['id']%>">delete</a>
         </td>
       </tr>
     

@@ -8,10 +8,10 @@ begin
 
   dao = OSM::Dao.instance
 
-  res = dao.call_sql { 'select a.timestamp, a.name, a.size as count, a.latitude, a.longitude,c.user from 
-    (select * from points_meta_table where visible = true order by timestamp desc limit 20) as a, 
-    (select * from user) as c 
-      where a.user_uid = c.uid order by timestamp desc;' }
+  res = dao.call_sql { 'select a.timestamp, a.name, a.size as count, a.latitude, a.longitude,c.email from 
+    (select * from gpx_files where visible = true order by timestamp desc limit 20) as a, 
+    (select * from users) as c
+      where a.user_id = c.id order by timestamp desc;' }
 
   rss = Element.new 'rss'
   rss.attributes['version'] = "2.0"
@@ -49,9 +49,9 @@ begin
     link.text = "http://www.openstreetmap.org/edit.html?lat=#{lat}&lon=#{lon}&zoom=14"
    
     description = Element.new 'description', item
-    description.text = "GPX file made by #{row['user'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."
+    description.text = "GPX file made by #{row['email'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."
     pubDate = Element.new 'pubDate', item
-    pubDate.text = Time.at( row["timestamp"].to_i / 1000 )
+    pubDate.text = Time.parse(row["timestamp"])
 
     lat_el = Element.new 'geo:lat', item
     lat_el.text = lat

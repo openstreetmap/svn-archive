@@ -367,7 +367,7 @@ public class Tile extends Thread
         {
           applet.stroke(255);
           applet.fill(255);
-          applet.text("Loading tile...", (int)(((x+.5)*tileWidth)-(long)centerX+(windowWidth/2)), (int)(windowHeight - (  ((y+.5)*tileHeight) -(long)centerY+(windowHeight/2)) ));
+          applet.text("Loading tile...", (int)(((x+.5)*tileWidth)-(long)centerX+(windowWidth/2)), (int)(windowHeight - (  ((y-.5)*tileHeight) -(long)centerY+(windowHeight/2)) ));
         }
         else
         {   

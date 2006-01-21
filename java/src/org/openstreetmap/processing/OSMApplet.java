@@ -74,9 +74,9 @@
  * <li>Fix status/println to use browser status bar
  * <li>GPL everything
  * <li>Choose line width and node size based on scale 
-* </ul>
-* 
-**/
+ * </ul>
+ * 
+ **/
 
 package org.openstreetmap.processing; 
 
@@ -107,11 +107,8 @@ public class OSMApplet extends PApplet {
   JSObject js;
 
   int zoom;
-  boolean shiftDown = false;
 
-  int lastmX;
-  int lastmY;
-
+  boolean mouseDown = false;
 
   /* set these for testing without needing to log in to the website - for deployment they should be set to null */
   String USERNAME = null;
@@ -158,7 +155,7 @@ public class OSMApplet extends PApplet {
   PFont font;
 
   /* background image - TODO: layers of images from different mapservers? */
-//  PImage img = null;
+  //  PImage img = null;
 
   /* URL for mapserver... will have bbx,width,height appended */
   String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE"; 
@@ -173,9 +170,10 @@ public class OSMApplet extends PApplet {
   EditMode nameMode     = new NameMode();
   EditMode nodeMoveMode = new NodeMoveMode();
   EditMode deleteMode   = new DeleteMode();
+  EditMode moveMode     = new MoveMode();
 
   /* if !ready, a wait cursor is shown and input doesn't do anything 
-  TODO: disable button mouseover highlighting when !ready */
+TODO: disable button mouseover highlighting when !ready */
   boolean ready = false;
 
   long lastmove;
@@ -185,12 +183,13 @@ public class OSMApplet extends PApplet {
 
     size(WINDOW_WIDTH, WINDOW_HEIGHT);
     smooth();
-    
+
     // this font should have all special characters - open to suggestions for changes though
     font = loadFont("LucidaSansUnicode-11.vlw");
 
     // initialise node manager and add buttons in desired order
     modeManager = new ModeManager();
+    modeManager.addMode(moveMode);
     modeManager.addMode(nodeMode);
     modeManager.addMode(lineMode);
     modeManager.addMode(nameMode);
@@ -203,13 +202,13 @@ public class OSMApplet extends PApplet {
     float clat, clon, sc;
 
     if (online) {
-      
+
       if( param_float_exists("clat") ) {
         clat = parse_param_float("clat");  
       } else {
         clat = 51.526447f;
       }
-  
+
       if( param_float_exists("clon") ) {
         clon = parse_param_float("clon");  
       } else {
@@ -301,7 +300,7 @@ public class OSMApplet extends PApplet {
       try {
         USERNAME = args[0];
         PASSWORD = args[1];
-      
+
         System.out.println("Got user/pass: " + USERNAME + "/" + PASSWORD);
       }
       catch (Exception e2) {
@@ -334,7 +333,7 @@ public class OSMApplet extends PApplet {
     redraw();
   } // setup
 
-  
+
   private boolean param_float_exists(String sParamName)
   {
     try
@@ -366,151 +365,172 @@ public class OSMApplet extends PApplet {
     tiles.draw();
     try{
 
-    if (!ready) {
-      cursor(WAIT);
-    }
-    else {
-      cursor(ARROW);
-    }
 
-    noFill();
-    strokeWeight(strokeWeight+2.0f);
-    stroke(0);
-    Enumeration e = lines.elements();
-    while(e.hasMoreElements()){
-      Line line = (Line)e.nextElement();
-      //System.out.println("Doing line " + line.a.x + "," + line.a.y + " - " + line.b.x + "," + line.a.y);
-      if(line.uid == 0)
+      if(modeManager.currentMode == moveMode)
       {
-        stroke(0,80);
-      }
-      else
-      {
-        stroke(0);
-      }
-      line(line.a.x,line.a.y,line.b.x,line.b.y);
-    }
-    strokeWeight(strokeWeight);
-    stroke(255);
-    e = lines.elements();
-    while(e.hasMoreElements()){
-      Line line = (Line)e.nextElement();
-      if(line.uid == 0)
-      {
-        stroke(255,80);
-      }
-      else
-      {
-        stroke(255);
-      }
-
-      line(line.a.x,line.a.y,line.b.x,line.b.y);
-    }
-    boolean gotOne = false;
-
-    e = lines.elements();
-    while(e.hasMoreElements()){
-      Line line = (Line)e.nextElement();
-      if (modeManager.currentMode == nameMode && !gotOne) {
-        // highlight first line under mouse
-        if (line.mouseOver(mouseX,mouseY,strokeWeight) && line.uid != 0) {
-          strokeWeight(strokeWeight);
-          stroke(0xffffff80);
-          line(line.a.x,line.a.y,line.b.x,line.b.y);
-          gotOne = true;
+        if(!mouseDown && mouseY < buttonHeight + 5 && mouseY > 5 && mouseX > 5 && mouseX < 5 + buttonWidth * modeManager.getNumModes())
+        {
+          if(ready && !tiles.viewChanged)
+          {
+            cursor(ARROW);
+          }
+          else
+          {
+            cursor(WAIT);
+          }
+        }
+        else
+        {
+          cursor(MOVE);
         }
       }
-    }
-
-    // draw temp line
-
-    if (start != null) {
-      tempLine.a = start;
-      tempLine.b = new Node(mouseX,mouseY,tiles);
-      stroke(0,80);
-      strokeWeight(strokeWeight+2);
-      line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
-      stroke(255,80);
+      else{
+        if (!ready) {
+          cursor(WAIT);
+        }
+        else {
+          cursor(ARROW);
+        }
+      }
+      noFill();
+      strokeWeight(strokeWeight+2.0f);
+      stroke(0);
+      Enumeration e = lines.elements();
+      while(e.hasMoreElements()){
+        Line line = (Line)e.nextElement();
+        //System.out.println("Doing line " + line.a.x + "," + line.a.y + " - " + line.b.x + "," + line.a.y);
+        if(line.uid == 0)
+        {
+          stroke(0,80);
+        }
+        else
+        {
+          stroke(0);
+        }
+        line(line.a.x,line.a.y,line.b.x,line.b.y);
+      }
       strokeWeight(strokeWeight);
-      line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
-    }
-    // draw selected line
-    stroke(255,0,0,80);
-    strokeWeight(strokeWeight);
-    if (selectedLine != null) {
-      line(selectedLine.a.x,selectedLine.a.y,selectedLine.b.x,selectedLine.b.y);
-    }
+      stroke(255);
+      e = lines.elements();
+      while(e.hasMoreElements()){
 
-    // draw nodes
-    noStroke();
-    ellipseMode(CENTER);
-
-    e = nodes.elements();
-    while(e.hasMoreElements()){
-      Node node = (Node)e.nextElement();
-      if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
-        fill(0xffff0000);
-      }
-      else if (modeManager.currentMode == nodeMoveMode) {
-        if (node == selectedNode) {
-          fill(0xff00ff00);    
+        Line line = (Line)e.nextElement();
+        if(line.uid == 0)
+        {
+          stroke(255,80);
         }
-        else if (mouseOverPoint(node)) {
+        else
+        {
+          stroke(255);
+        }
+
+        line(line.a.x,line.a.y,line.b.x,line.b.y);
+      }
+      boolean gotOne = false;
+
+      e = lines.elements();
+      while(e.hasMoreElements()){
+        Line line = (Line)e.nextElement();
+        if (modeManager.currentMode == nameMode && !gotOne) {
+          // highlight first line under mouse
+          if (line.mouseOver(mouseX,mouseY,strokeWeight) && line.uid != 0) {
+            strokeWeight(strokeWeight);
+            stroke(0xffffff80);
+            line(line.a.x,line.a.y,line.b.x,line.b.y);
+            gotOne = true;
+          }
+        }
+      }
+
+      // draw temp line
+
+      if (start != null) {
+        tempLine.a = start;
+        tempLine.b = new Node(mouseX,mouseY,tiles);
+        stroke(0,80);
+        strokeWeight(strokeWeight+2);
+        line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
+        stroke(255,80);
+        strokeWeight(strokeWeight);
+        line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
+      }
+      // draw selected line
+      stroke(255,0,0,80);
+      strokeWeight(strokeWeight);
+      if (selectedLine != null) {
+        line(selectedLine.a.x,selectedLine.a.y,selectedLine.b.x,selectedLine.b.y);
+      }
+
+      // draw nodes
+      noStroke();
+      ellipseMode(CENTER);
+
+      e = nodes.elements();
+      while(e.hasMoreElements()){
+        Node node = (Node)e.nextElement();
+        if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
           fill(0xffff0000);
+        }
+        else if (modeManager.currentMode == nodeMoveMode) {
+          if (node == selectedNode) {
+            fill(0xff00ff00);    
+          }
+          else if (mouseOverPoint(node)) {
+            fill(0xffff0000);
+          }
+          else {
+            fill(0xff000000);
+          }
+        }
+        else if (modeManager.currentMode == deleteMode) {
+          if (mouseOverPoint(node)) {
+            fill(0xffff0000);
+          }
+          else {
+            fill(0xff000000);
+          }
+        }
+        else if(node == tempLine.a || node == tempLine.b) {
+          fill(0xff000000);
+        }
+        else if (node.lines.size() > 0) {
+          fill(0xffffffff);
         }
         else {
           fill(0xff000000);
         }
+        drawPoint(node);
       }
-      else if (modeManager.currentMode == deleteMode) {
-        if (mouseOverPoint(node)) {
-          fill(0xffff0000);
-        }
-        else {
-          fill(0xff000000);
-        }
-      }
-      else if(node == tempLine.a || node == tempLine.b) {
-        fill(0xff000000);
-      }
-      else if (node.lines.size() > 0) {
-        fill(0xffffffff);
-      }
-      else {
-        fill(0xff000000);
-      }
-      drawPoint(node);
-    }
 
-    // draw street segment names
-    fill(0);
-    textFont(font);
-    textSize(strokeWeight + 4);
-    textAlign(CENTER);
+      // draw street segment names
+      fill(0);
+      textFont(font);
+      textSize(strokeWeight + 4);
+      textAlign(CENTER);
 
-    e = lines.elements();
-    while(e.hasMoreElements()){
-      Line l = (Line)e.nextElement();
-      if (l.getName() != null) {
-        pushMatrix();
-        if (l.a.x <= l.b.x) {
-          translate(l.a.x,l.a.y);
-          rotate(l.angle());
+      e = lines.elements();
+      while(e.hasMoreElements()){
+        Line l = (Line)e.nextElement();
+        if (l.getName() != null) {
+          pushMatrix();
+          if (l.a.x <= l.b.x) {
+            translate(l.a.x,l.a.y);
+            rotate(l.angle());
+          }
+          else {
+            translate(l.b.x,l.b.y);
+            rotate(PI+l.angle());      
+          }
+          text(l.getName(),l.length()/2.0f,4);
+          popMatrix();
         }
-        else {
-          translate(l.b.x,l.b.y);
-          rotate(PI+l.angle());      
-        }
-        text(l.getName(),l.length()/2.0f,4);
-        popMatrix();
       }
-    }
 
-    // draw all buttons
-    modeManager.draw();
-    if (online) {
-      status("lat: " + tiles.lat(mouseY) + ", lon: " + tiles.lon(mouseX));
-    }
+      // draw all buttons
+      modeManager.draw();
+      if (online) {
+        status("lat: " + tiles.lat(mouseY) + ", lon: " + tiles.lon(mouseX));
+      }
 
 
     }catch(NullPointerException npe)
@@ -531,59 +551,38 @@ public class OSMApplet extends PApplet {
   }
 
   public void mouseDragged() {
-    if(shiftDown)
+    if(ready) 
     {
-      tiles.drag(lastmX - mouseX, mouseY - lastmY);
-      lastmX = mouseX;
-      lastmY = mouseY;
-      if(online)
-      {
-        updatelinks();
-      }
-    }
-    else
-    {
-      if(ready) 
-      {
-        modeManager.mouseDragged();
-      }
+      modeManager.mouseDragged();
     }
   } // mouseDragged
 
   public void mousePressed() {
-    if(shiftDown)
-    {
-      lastmX = mouseX;
-      lastmY = mouseY;
-      return;
-    }
-
+    mouseDown = true;
     if (ready) modeManager.mousePressed();
   }
 
   public void mouseReleased() {
-    if (ready && !shiftDown && !tiles.viewChanged) modeManager.mouseReleased();
+    mouseDown = false;
+
+    if(ready)
+    {
+      if (!tiles.viewChanged) modeManager.mouseReleased();
+    }
+    
   }
 
   public void keyPressed() {
-    if( key == CODED )
-    {
-      if(keyCode == SHIFT)
-      {
-        shiftDown = true;
-      }
-
-    }
     if (ready) {
       switch(key) {
         case '[':
           lastmove = System.currentTimeMillis();
           tiles.zoomin();
-	  updatelinks();
+          updatelinks();
           break;
         case ']':
           tiles.zoomout();
-	  updatelinks();
+          updatelinks();
           break;
 
         case '+':
@@ -609,17 +608,8 @@ public class OSMApplet extends PApplet {
     }
   }
 
-  
-  public void keyReleased() {
-    if( key == CODED )
-    {
-      if(keyCode == SHIFT)
-      {
-        shiftDown = false;
-        return;
-      }
 
-    }
+  public void keyReleased() {
   } // keyReleased
 
   // bit crufty - TODO tidy up and move into Point
@@ -644,7 +634,7 @@ public class OSMApplet extends PApplet {
   } // reproject
 
 
-  
+
   // bit crufty - TODO tidy up and move into draw()?
   public void drawPoint(Point p) {
     if (p.projected) {
@@ -729,6 +719,7 @@ public class OSMApplet extends PApplet {
     }
 
     public void mouseReleased() {
+      System.out.println("mouse relesed in mode manager");
       for (int i = 0; i < getNumModes(); i++) {
         EditMode mode = getMode(i);
         if (mode.over) {
@@ -743,8 +734,11 @@ public class OSMApplet extends PApplet {
       if (currentMode != null && !overButton) {
         currentMode.mouseReleased();
       }
+      print(currentMode);
+      print("ready:" + ready);
       redraw();
     }
+    
     public void mousePressed() {
       System.out.println("mousePressed in ModeManager with currentMode=" + currentMode + " and overButton=" + overButton);
       if (currentMode != null && !overButton) {
@@ -840,6 +834,7 @@ public class OSMApplet extends PApplet {
   } 
 
   class NodeMode extends EditMode {
+    
     public void mouseReleased() {
       boolean overOne = false; // points can't overlap
       Enumeration e = nodes.elements();
@@ -864,9 +859,46 @@ public class OSMApplet extends PApplet {
     }
     public void draw() {
       fill(0);
-      noStroke();
+      stroke(0);
       ellipseMode(CENTER);
       ellipse(buttonWidth/2.0f,buttonHeight/2.0f,5,5);
+    }
+  }
+
+
+  class MoveMode extends EditMode {
+    int lastmX;
+    int lastmY;
+    PImage hand = loadImage("hand.png");
+
+    public void mouseReleased()
+    {
+      cursor(ARROW);
+    }
+
+    public void mousePressed()
+    {
+      lastmX = mouseX;
+      lastmY = mouseY;
+    }
+
+    public void mouseDragged() {
+      tiles.drag(lastmX - mouseX, mouseY - lastmY);
+      lastmX = mouseX;
+      lastmY = mouseY;
+      if(online)
+      {
+        updatelinks();
+      }
+    }
+
+    public void draw() {
+      //imagehere 
+      noFill();
+      stroke(0);
+      strokeWeight(1);
+      image(hand,1,1);
+        
     }
   }
 
@@ -1023,5 +1055,5 @@ public class OSMApplet extends PApplet {
     PApplet.main(new String[] { "--present", "--display=1", "org.openstreetmap.processing.OSMApplet" });
   } 
 
- // OSMApplet
+  // OSMApplet
 }

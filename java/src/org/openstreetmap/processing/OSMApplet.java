@@ -869,7 +869,7 @@ TODO: disable button mouseover highlighting when !ready */
   class MoveMode extends EditMode {
     int lastmX;
     int lastmY;
-    PImage hand = loadImage("hand.png");
+    PImage hand = loadImage("/data/hand.png");
 
     public void mouseReleased()
     {
@@ -897,8 +897,7 @@ TODO: disable button mouseover highlighting when !ready */
       noFill();
       stroke(0);
       strokeWeight(1);
-      image(hand,1,1);
-        
+      image(hand,1,2);
     }
   }
 

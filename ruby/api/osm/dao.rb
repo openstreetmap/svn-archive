@@ -457,7 +457,28 @@ module OSM
 
     end
 
+    
+    
+    def getnodesbydate(lat1, lon1, lat2, lon2, date)
+      nodes = {}
 
+      res = call_sql { "select id, latitude, longitude, visible, tags from (select * from (select nodes.id, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and date < #{date.strftime('%Y-%m-%d %H:%M:%S')} and nodes.id = a.id order by nodes.timestamp desc) as b group by id) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2} and date < #{date.strftime('%Y-%m-%d %H:%M:%S')}" }
+
+      if !res.nil? 
+        res.each_hash do |row|
+          
+          node_id = row['id'].to_i
+          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, true, row['tags'])
+        end
+
+        return nodes
+      end
+
+    end
+
+    #{date.strftime('%Y-%m-%d %H:%M:%S')}
+
+    
     def get_track_points(lat1, lon1, lat2, lon2, page)
       points = Array.new
 
@@ -558,6 +579,48 @@ module OSM
 
     end
 
+
+    def getlinesbydate(nodes, date)
+      clausebuffer = '('
+      first = true
+
+      nodes.each do |node_id, p|
+        if !first
+          clausebuffer += ',' + node_id.to_s
+        else
+          clausebuffer += node_id.to_s
+          first = false
+        end
+        
+      end
+      clausebuffer += ')'
+
+      begin
+        conn = get_connection
+
+        q = "SELECT segment.id, segment.node_a, segment.node_b, segment.tags FROM (
+               select * from
+                  (SELECT * FROM segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
+               as a group by id) as segment where visible = true and date < #{date.strftime('%Y-%m-%d %H:%M:%S')}"
+
+        res = conn.query(q)
+        
+        segments = {}
+        
+        res.each_hash do |row|
+          segment_id = row['id'].to_i
+          segments[segment_id] = UIDLinesegment.new(segment_id, row['node_a'].to_i, row['node_b'].to_i, row['tags'])
+        end
+
+        return segments
+
+      rescue MysqlError => e
+        mysql_error(e)
+      ensure
+        conn.close if conn
+      end
+
+    end
 
 
     def getnode(node_id)

@@ -573,6 +573,7 @@ TODO: disable button mouseover highlighting when !ready */
   }
 
   public void keyPressed() {
+    //print("keyPressed!");
     if (ready) {
       switch(key) {
         case '[':
@@ -606,6 +607,7 @@ TODO: disable button mouseover highlighting when !ready */
         modeManager.keyPressed();
       }
     }
+    key = 0; // catch when key = escape otherwise processing dies
   }
 
 

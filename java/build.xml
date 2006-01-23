@@ -29,16 +29,12 @@
   </target>
 
   <target name="dist" depends="compile">
-
-    <jar destfile="${dist}/osm.jar" basedir="${build}"/>  
     <copy file="${lib}/commons-codec-1.3.jar" tofile="${dist}/commons-codec-1.3.jar"/>
     <copy file="${lib}/commons-logging.jar" tofile="${dist}/commons-logging.jar"/>
     <copy file="${lib}/commons-httpclient-3.0-rc3.jar" tofile="${dist}/commons-httpclient-3.0-rc3.jar"/>
     <copy file="${lib}/core.jar" tofile="${dist}/core.jar"/>
     <copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
     <copy file="${lib}/plugin.jar" tofile="${dist}/plugin.jar"/>
-
-    <copy file="${lib}/applet-test.html" tofile="${dist}/applet-test.html"/>
 
     <copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/org/openstreetmap/processing/LucidaSansUnicode-11.vlw"/>
 

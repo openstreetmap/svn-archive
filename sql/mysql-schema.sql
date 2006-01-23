@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: openstreetmap
 -- ------------------------------------------------------
--- Server version	4.1.11-Debian_4-log
+-- Server version	4.1.15-Debian_1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,79 +14,73 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `area`
+-- Table structure for table `gps_points`
 --
 
-DROP TABLE IF EXISTS `area`;
-CREATE TABLE `area` (
-  `uid` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `timestamp` bigint(32) default NULL,
-  `node_a` bigint(20) default NULL,
-  `node_b` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL
+DROP TABLE IF EXISTS `gps_points`;
+CREATE TABLE `gps_points` (
+  `altitude` float default NULL,
+  `user_id` bigint(20) default NULL,
+  `trackid` int(11) default NULL,
+  `latitude` double default NULL,
+  `longitude` double default NULL,
+  `gpx_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  KEY `points_idx` (`latitude`,`longitude`,`user_id`),
+  KEY `points_uid_idx` (`user_id`),
+  KEY `points_gpxid_idx` (`gpx_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `area_meta_table`
+-- Table structure for table `gpx_files`
 --
 
-DROP TABLE IF EXISTS `area_meta_table`;
-CREATE TABLE `area_meta_table` (
-  `uid` bigint(20) NOT NULL auto_increment,
-  `user_uid` bigint(20) default NULL,
-  `timestamp` bigint(32) default NULL,
-  PRIMARY KEY  (`uid`)
+DROP TABLE IF EXISTS `gpx_files`;
+CREATE TABLE `gpx_files` (
+  `id` bigint(64) NOT NULL auto_increment,
+  `user_id` bigint(20) default NULL,
+  `visible` tinyint(1) NOT NULL default '1',
+  `name` varchar(255) NOT NULL default '',
+  `size` bigint(20) default NULL,
+  `latitude` double default NULL,
+  `longitude` double default NULL,
+  `timestamp` datetime default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `area_values`
+-- Table structure for table `gpx_pending_files`
 --
 
-DROP TABLE IF EXISTS `area_values`;
-CREATE TABLE `area_values` (
-  `user_uid` bigint(20) default NULL,
-  `area_uid` bigint(20) default NULL,
-  `key_uid` bigint(20) default NULL,
-  `val` varchar(255) default NULL,
-  `timestamp` bigint(32) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `gpx_to_insert`
---
-
-DROP TABLE IF EXISTS `gpx_to_insert`;
-CREATE TABLE `gpx_to_insert` (
+DROP TABLE IF EXISTS `gpx_pending_files`;
+CREATE TABLE `gpx_pending_files` (
   `originalname` varchar(255) default NULL,
   `tmpname` varchar(255) default NULL,
-  `user_uid` bigint(20) default NULL
+  `user_id` bigint(20) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `key_meta_table`
+-- Table structure for table `meta_nodes`
 --
 
-DROP TABLE IF EXISTS `key_meta_table`;
-CREATE TABLE `key_meta_table` (
-  `uid` bigint(64) NOT NULL auto_increment,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL,
-  PRIMARY KEY  (`uid`)
+DROP TABLE IF EXISTS `meta_nodes`;
+CREATE TABLE `meta_nodes` (
+  `id` bigint(64) NOT NULL auto_increment,
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `node_meta_table`
+-- Table structure for table `meta_segments`
 --
 
-DROP TABLE IF EXISTS `node_meta_table`;
-CREATE TABLE `node_meta_table` (
-  `uid` bigint(64) NOT NULL auto_increment,
-  `timestamp` bigint(32) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL,
-  PRIMARY KEY  (`uid`)
+DROP TABLE IF EXISTS `meta_segments`;
+CREATE TABLE `meta_segments` (
+  `id` bigint(64) NOT NULL auto_increment,
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -95,237 +89,49 @@ CREATE TABLE `node_meta_table` (
 
 DROP TABLE IF EXISTS `nodes`;
 CREATE TABLE `nodes` (
-  `uid` bigint(64) default NULL,
+  `id` bigint(64) default NULL,
   `latitude` double default NULL,
   `longitude` double default NULL,
-  `timestamp` bigint(32) default NULL,
-  `user_uid` bigint(20) default NULL,
+  `user_id` bigint(20) default NULL,
   `visible` tinyint(1) default NULL,
   `tags` text NOT NULL,
-  KEY `nodes_uid_idx` (`uid`),
+  `timestamp` datetime default NULL,
+  KEY `nodes_uid_idx` (`id`),
   KEY `nodes_latlon_idx` (`latitude`,`longitude`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `osmKeys`
+-- Table structure for table `segments`
 --
 
-DROP TABLE IF EXISTS `osmKeys`;
-CREATE TABLE `osmKeys` (
-  `uid` bigint(64) default NULL,
-  `name` varchar(255) default NULL,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `osmLineValues`
---
-
-DROP TABLE IF EXISTS `osmLineValues`;
-CREATE TABLE `osmLineValues` (
-  `line_uid` bigint(64) default NULL,
-  `key_uid` bigint(64) default NULL,
-  `value` varchar(255) default NULL,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `poi_values`
---
-
-DROP TABLE IF EXISTS `poi_values`;
-CREATE TABLE `poi_values` (
-  `user_uid` bigint(20) default NULL,
-  `poi_uid` bigint(20) default NULL,
-  `key_uid` bigint(20) default NULL,
-  `val` varchar(255) default NULL,
-  `timestamp` bigint(32) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `point_of_interest`
---
-
-DROP TABLE IF EXISTS `point_of_interest`;
-CREATE TABLE `point_of_interest` (
-  `uid` bigint(20) default NULL,
-  `latitude` double default NULL,
-  `longitude` double default NULL,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `points_meta_table`
---
-
-DROP TABLE IF EXISTS `points_meta_table`;
-CREATE TABLE `points_meta_table` (
-  `uid` bigint(64) NOT NULL auto_increment,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) NOT NULL default '1',
-  `name` varchar(255) NOT NULL default '',
-  `size` bigint(20) default NULL,
-  `latitude` double default NULL,
-  `longitude` double default NULL,
-  PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `points_of_interest_meta_table`
---
-
-DROP TABLE IF EXISTS `points_of_interest_meta_table`;
-CREATE TABLE `points_of_interest_meta_table` (
-  `uid` bigint(20) NOT NULL auto_increment,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `street_meta_table`
---
-
-DROP TABLE IF EXISTS `street_meta_table`;
-CREATE TABLE `street_meta_table` (
-  `uid` bigint(20) NOT NULL auto_increment,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL,
-  PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `street_segment_meta_table`
---
-
-DROP TABLE IF EXISTS `street_segment_meta_table`;
-CREATE TABLE `street_segment_meta_table` (
-  `uid` bigint(64) NOT NULL auto_increment,
-  `timestamp` bigint(32) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL,
-  PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `street_segment_values`
---
-
-DROP TABLE IF EXISTS `street_segment_values`;
-CREATE TABLE `street_segment_values` (
-  `user_uid` bigint(20) default NULL,
-  `street_segment_uid` bigint(20) default NULL,
-  `key_uid` bigint(20) default NULL,
-  `val` varchar(255) default NULL,
-  `timestamp` bigint(20) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `street_segments`
---
-
-DROP TABLE IF EXISTS `street_segments`;
-CREATE TABLE `street_segments` (
-  `uid` bigint(64) default NULL,
+DROP TABLE IF EXISTS `segments`;
+CREATE TABLE `segments` (
+  `id` bigint(64) default NULL,
   `node_a` bigint(64) default NULL,
   `node_b` bigint(64) default NULL,
-  `timestamp` bigint(32) default NULL,
-  `user_uid` bigint(20) default NULL,
+  `user_id` bigint(20) default NULL,
   `visible` tinyint(1) default NULL,
   `tags` text NOT NULL,
+  `timestamp` datetime default NULL,
   KEY `street_segments_nodea_idx` (`node_a`),
   KEY `street_segments_nodeb_idx` (`node_b`),
-  KEY `street_segment_uid_idx` (`uid`)
+  KEY `street_segment_uid_idx` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Table structure for table `street_table`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `street_table`;
-CREATE TABLE `street_table` (
-  `uid` bigint(20) default NULL,
-  `segment_uid` bigint(20) default NULL,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` bigint(20) default NULL,
-  `visible` tinyint(1) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `street_values`
---
-
-DROP TABLE IF EXISTS `street_values`;
-CREATE TABLE `street_values` (
-  `user_uid` bigint(20) default NULL,
-  `street_uid` bigint(20) default NULL,
-  `key_uid` bigint(20) default NULL,
-  `val` varchar(255) default NULL,
-  `timestamp` bigint(20) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `streets`
---
-
-DROP TABLE IF EXISTS `streets`;
-CREATE TABLE `streets` (
-  `name` varchar(255) character set latin1 default NULL,
-  `uid` bigint(20) NOT NULL auto_increment,
-  `timestamp` bigint(20) default NULL,
-  `user_uid` mediumint(9) default NULL,
-  `visible` tinyint(1) default NULL,
-  PRIMARY KEY  (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `tempPoints`
---
-
-DROP TABLE IF EXISTS `tempPoints`;
-CREATE TABLE `tempPoints` (
-  `altitude` float default NULL,
-  `timestamp` bigint(20) default NULL,
-  `uid` mediumint(9) default NULL,
-  `hor_dilution` float default NULL,
-  `vert_dilution` float default NULL,
-  `trackid` int(11) default NULL,
-  `quality` tinyint(3) unsigned default NULL,
-  `satellites` tinyint(3) unsigned default NULL,
-  `last_time` bigint(20) default NULL,
-  `visible` tinyint(4) NOT NULL default '0',
-  `dropped_by` mediumint(9) NOT NULL default '0',
-  `latitude` double default NULL,
-  `longitude` double default NULL,
-  `gpx_id` bigint(20) default NULL,
-  KEY `points_idx` (`latitude`,`longitude`,`timestamp`,`uid`),
-  KEY `points_uid_idx` (`uid`),
-  KEY `points_gpxid_idx` (`gpx_id`),
-  KEY `points_time_idx` (`timestamp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `user` varchar(255) default NULL,
-  `uid` mediumint(9) NOT NULL auto_increment,
-  `timeout` bigint(20) default NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `email` varchar(255) default NULL,
+  `id` bigint(20) NOT NULL auto_increment,
   `token` varchar(255) default NULL,
   `active` int(11) NOT NULL default '0',
   `pass_crypt` varchar(255) default NULL,
   `creation_time` datetime default NULL,
-  PRIMARY KEY  (`uid`)
+  `timeout` datetime default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

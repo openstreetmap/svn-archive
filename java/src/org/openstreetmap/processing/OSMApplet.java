@@ -158,7 +158,7 @@ public class OSMApplet extends PApplet {
   //  PImage img = null;
 
   /* URL for mapserver... will have bbx,width,height appended */
-  String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE"; 
+  String wmsURL = "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE"; 
   //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
 
   String apiURL = "http://www.openstreetmap.org/api/0.2/";

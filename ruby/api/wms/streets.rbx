@@ -116,8 +116,8 @@ end
 if linesegments
   linesegments.each do |key, l|
     #the next 2 lines of code are just so unbelievably sexy its just not funny. Fuck that java shit!
-    nodes[l.node_a_uid] = dao.getnode(l.node_a_uid) unless nodes[l.node_a_uid]
-    nodes[l.node_b_uid] = dao.getnode(l.node_b_uid) unless nodes[l.node_b_uid]
+    nodes[l.node_a_id] = dao.getnode(l.node_a_id) unless nodes[l.node_a_id]
+    nodes[l.node_b_id] = dao.getnode(l.node_b_id) unless nodes[l.node_b_id]
   end
 end
 
@@ -133,8 +133,8 @@ File.open(fname, "wb") {|stream|
 
   if linesegments
     linesegments.each do |key, l|
-      node_a = nodes[l.node_a_uid]
-      node_b = nodes[l.node_b_uid]
+      node_a = nodes[l.node_a_id]
+      node_b = nodes[l.node_b_id]
       
       if node_a.visible == true && node_b.visible == true
         cr.new_path
@@ -149,13 +149,13 @@ File.open(fname, "wb") {|stream|
     end
 
     linesegments.each do |key, l|
-      node_a = nodes[l.node_a_uid]
-      node_b = nodes[l.node_b_uid]
+      node_a = nodes[l.node_a_id]
+      node_b = nodes[l.node_b_id]
       
       if node_a.visible == true && node_b.visible == true
         cr.new_path
-        cr.move_to(proj.x(nodes[l.node_a_uid].longitude) , proj.y(nodes[l.node_a_uid].latitude) )
-        cr.line_to(proj.x(nodes[l.node_b_uid].longitude) , proj.y(nodes[l.node_b_uid].latitude) )
+        cr.move_to(proj.x(nodes[l.node_a_id].longitude) , proj.y(nodes[l.node_a_id].latitude) )
+        cr.line_to(proj.x(nodes[l.node_b_id].longitude) , proj.y(nodes[l.node_b_id].latitude) )
         cr.close_path
         cr.set_rgb_color(1.0, 1.0, 1.0)
         cr.line_join = LINE_JOIN_MITER

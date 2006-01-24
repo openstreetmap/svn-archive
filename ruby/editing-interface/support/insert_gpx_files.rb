@@ -265,7 +265,7 @@ END_OF_MESSAGE
   end
 
   if !DEBUG
-    dbh.query("delete from gpx_to_insert where tmpname = '#{filename}'")
+    dbh.query("delete from gpx_pending_files where tmpname = '#{filename}'")
     puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx"
     `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx`
     File.delete('/home/steve/bin' + filename)

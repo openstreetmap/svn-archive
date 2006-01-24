@@ -2,6 +2,8 @@
 require "mysql"
 require 'rss/2.0'
 
+start_time = Time.now
+
 MYSQL_SERVER = "128.40.59.181"
 MYSQL_USER = "openstreetmap"
 MYSQL_PASS = "openstreetmap"
@@ -29,10 +31,10 @@ begin
   end
 
   puts '<h2>Top 10 users for uploads of gps data</h2><table><tr><td><b>User</b></td><td><b>No. of points</b></td></tr>'
-  res = dbh.query('select sum(size) as size, user from gpx_files, user where user_id = users.id group by user_id order by size desc limit 10;')
+  res = dbh.query('select sum(size) as size, email from gpx_files, users where user_id = users.id group by user_id order by size desc limit 10;')
 
   res.each_hash do |row|
-    puts "<tr><td>#{row['user'].gsub('@',' at ').gsub('.',' dot ')}</td><td>#{row['size']}</td></tr>"
+    puts "<tr><td>#{row['email'].gsub('@',' at ').gsub('.',' dot ')}</td><td>#{row['size']}</td></tr>"
   end
   
   puts '</table>'
@@ -55,8 +57,8 @@ begin
  
 
   res = dbh.query("select * from (select count(*) as day from (select user_id from nodes where timestamp > NOW() - INTERVAL 1 DAY group by user_id) as a) as b,
-                                 (select count(*) as week from (select user_id from nodes where timestamp > NOW() - INTERVAL 7 DAY group by user_uid) as c) as d,
-                                 (select count(*) as month from (select user_id from nodes where timestamp > NOW() - INTERVAL 28 DAY group by user_uid) as e) as f;")
+                                 (select count(*) as week from (select user_id from nodes where timestamp > NOW() - INTERVAL 7 DAY group by user_id) as c) as d,
+                                 (select count(*) as month from (select user_id from nodes where timestamp > NOW() - INTERVAL 28 DAY group by user_id) as e) as f;")
 
   res.each_hash do |row|
     puts "<tr><td><b>Nodes</b></td> <td>#{row['day']}</td><td>#{row['week']}</td><td>#{row['month']}</td> </tr>"
@@ -75,6 +77,6 @@ ensure
   dbh.close if dbh
 end
 
-puts '<br>Report took ' + (Time.new - now).to_s + ' seconds to run.'
+puts '<br>Report took ' + (Time.new - start_time).to_s + ' seconds to run.'
 puts '</body></html>'
 

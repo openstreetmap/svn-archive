@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# This script copies the eruby, ruby, html, css and images
+# to the right places on www.openstreetmap
+
+mkdir deploy
+CURDIR=`pwd`
+cd deploy
+
+# eruby
+ln -s $CURDIR/ruby/editing-interface eruby
+
+# css
+mkdir css
+ln -s $CURDIR/html/css/style.css css/style.css
+
+# javascript
+ln -s $CURDIR/javascript javascript
+
+# images FIXME
+ln -s $CURDIR/html/images images
+ln -s $CURDIR/html/images/bg.gif css/bg.gif
+ln -s $CURDIR/html/images/left.gif css/left.gif
+ln -s $CURDIR/html/images/left_on.gif css/left_on.gif
+ln -s $CURDIR/html/images/right.gif css/right.gif
+ln -s $CURDIR/html/images/right_on.gif css/right_on.gif
+ln -s $CURDIR/html/images/tab_bottom.gif css/tab_bottom.gif
+
+# applet
+cd $CURDIR/java
+ant
+cd $CURDIR/deploy
+ln -s $CURDIR/java/dist/OSMApplet.jar OSMApplet.jar
+ln -s $CURDIR/java/lib/commons-codec-1.3.jar commons-codec-1.3.jar
+ln -s $CURDIR/java/dist/commons-httpclient-3.0-rc3.jar commons-httpclient-3.0-rc3.jar
+ln -s $CURDIR/java/dist/commons-logging.jar commons-logging.jar
+ln -s $CURDIR/java/dist/MinML2.jar MinML2.jar
+ln -s $CURDIR/java/dist/core.jar core.jar
+ln -s $CURDIR/java/dist/plugin.jar plugin.jar
+
+
+# REST
+mkdir -p ruby/api
+ln -s $CURDIR/ruby/api ruby/api/0.2
+ln -s $CURDIR/ruby/api/osm ruby/api/osm
+ln -s $CURDIR/ruby/api/osm ruby/osm
+
+# Apache simple-auth for REST
+ln -s $CURDIR/ruby/api/apache ruby/api/apache
+
+# RSS
+ln -s $CURDIR/ruby/rss/nodes.rb ruby/nodes.rb
+
+# GPX RSS maker
+ln -s $CURDIR/ruby/rss/gpx_files.rb ruby/gpx_files.rb
+
+# GPX parser
+# TODO: looks broken
+#mkdir -p $CURDIR/bin
+#mkdir -p $CURDIR/bin/osm
+#cp ruby/editing-interface/support/insert_gpx_files.rb $CURDIR/bin/
+#cp ruby/api/osm/* $CURDIR/bin/osm
+

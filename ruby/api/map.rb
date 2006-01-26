@@ -55,7 +55,7 @@ if gzipped
 end
 
 #now send nodes first, segments after
-out.puts "<osm version='0.2'"
+out.puts "<osm version='0.2'>"
 
 if nodes
   nodes.each do |i,n|

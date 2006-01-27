@@ -6,9 +6,7 @@ load 'osm/ox.rb'
 require 'bigdecimal'
 require 'zlib'
 
-
 include Apache
-include REXML
 
 r = Apache.request
 cgi = CGI.new
@@ -44,30 +42,9 @@ if linesegments # get nodes we dont have yet
 
 end
 
-#if gzip encoding, use gzip stream instead of plain
-out = $stdout
-gzipped = r.headers_in['Accept-Encoding'] && r.headers_in['Accept-Encoding'].match(/gzip/)
-if gzipped
-  r.headers_out['Content-Encoding'] = 'gzip'
-  r.content_type = 'text/html'
-  r.send_http_header
-  out = Zlib::GzipWriter.new $stdout
-end
-
-#now send nodes first, segments after
-out.puts "<osm version='0.2'>"
-
 if nodes
   nodes.each do |i,n|
-    if n.visible == true
-      e = Element.new 'node'
-      e.attributes['uid'] = n.id
-      e.attributes['lat'] = n.latitude
-      e.attributes['lon'] = n.longitude
-      e.attributes['tags'] = n.tags
-      e.write out
-      out.puts "\n"
-    end
+	  ox.add_node(n) unless n.visible == false
   end
 end
 
@@ -78,20 +55,33 @@ if linesegments
     node_b = nodes[l.node_b_id]
     
     if node_a.visible ==true && node_b.visible == true
-      e = Element.new 'segment'
-      e.attributes['uid'] = l.id
-      e.attributes['from'] = l.node_a_id
-      e.attributes['to'] = l.node_b_id
-      e.attributes['tags'] = l.tags
-      e.write out
-      out.puts "\n"
+			ox.add_segment(l)
     end
   end
 
 end
 
-out.puts "</osm>"
+#if gzip encoding, use gzip stream instead of plain
+out = $stdout
+gzipped = r.headers_in['Accept-Encoding'] && r.headers_in['Accept-Encoding'].match(/gzip/)
+
+if gzipped
+
+  buffer = OSM::StringIO.new
+  z = Zlib::GzipWriter.new(buffer, 9)
+  z.write ox.to_s
+  z.close
+  str = buffer.to_s
+  r.headers_out['Content-Encoding'] = 'gzip'
+  r.headers_out['Content-Length'] = str.length.to_s
+  r.content_type = 'text/html'
+  r.send_http_header
+  print str
+
+
+else
+  ox.dump($stdout)
+
+end
 
 GC.start
-
-out.close unless not gzipped

@@ -1,47 +1,44 @@
 module OSM
 
-  require 'rexml/document'
-
-  #include REXML
+require 'xml/libxml'
 
   class Ox # Ox == osm xml ? ugh
 
-    include REXML
+    include XML
   
     def initialize
-      @root = Element.new 'osm'
-      @root.attributes['version'] = '0.2'
+		  @doc = Document.new
+      @root = Node.new 'osm'
+      @root['version'] = '0.2'
+			@doc.root = @root
     end
 
     def add_node(node)
-      el1 = Element.new 'node'
-      el1.attributes['uid'] = node.id
-      el1.attributes['lat'] = node.latitude
-      el1.attributes['lon'] = node.longitude
-      el1.attributes['tags'] = node.tags
-      @root.add el1
+      el1 = Node.new 'node'
+      el1['uid'] = node.id.to_s
+      el1['lat'] = node.latitude.to_s
+      el1['lon'] = node.longitude.to_s
+      el1['tags'] = node.tags
+      @root << el1
     end
 
     def add_segment(line)
-      el1 = Element.new('segment')
+      el1 = Node.new('segment')
 
-      el1.attributes['uid'] = line.id
-      el1.attributes['from'] = line.node_a_id
-      el1.attributes['to'] = line.node_b_id
-      el1.attributes['tags'] = line.tags
+      el1['uid'] = line.id.to_s
+      el1['from'] = line.node_a_id.to_s
+      el1['to'] = line.node_b_id.to_s
+      el1['tags'] = line.tags
 
-      @root.add el1
+      @root << el1
     end
 
     def to_s
-      return @root.to_s
+      return @doc.to_s
     end
 
-    def to_s_pretty
-      hum = ''
-
-      @root.write(hum, 0)
-      return hum
+		def dump(out)
+		  @doc.dump(out)
     end
 
   end

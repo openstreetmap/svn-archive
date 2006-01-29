@@ -127,21 +127,33 @@ public class Tile extends Thread
     */
   } // recalc
 
+
   public void drag(int dx, int dy)
   {
     updateChange();
     centerX += dx;
     centerY += dy;
 
+//    lat = Math.log(Math.tan( (PI / 4.0) + (PI * la / 360.0) ) );
+    
+  //  lon = PI * lo / 180.0;
+
+    
+    lat =  Math.log(Math.tan( (PI / 4.0) + (PI * lat(windowHeight / 2) / 360.0 )));
+    lon = PI * lon(windowWidth / 2) / 180.0;
+
     recalc();
     removeUnusedTiles();
     applet.reProject();
     grabTiles();
 
+    System.out.println(lat + "," + lon);
+
     applet.redraw();
 
   } // drag
 
+  
   private void grabTiles()
   {
     for(long x = leftX; x < rightX + 1; x++)
@@ -431,7 +443,6 @@ public class Tile extends Thread
     widthOfWorld = 512 * (long)Math.pow(2, (double)zoom);
     heightOfWorld = 512 * (long)Math.pow(2, (double)zoom);
 
-
     centerX = (double)(lon / lon_range * (double)(widthOfWorld / 2));
     centerY = (double)(lat / lat_range * (double)(heightOfWorld / 2));
    
@@ -449,6 +460,7 @@ public class Tile extends Thread
     zoom++;
     zoom();
   }
+  
   public void zoomout()
   {
     zoom--;
@@ -458,6 +470,7 @@ public class Tile extends Thread
     }
     zoom();
   }
+
   public long getzoom() 
   {
     return zoom;

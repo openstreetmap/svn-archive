@@ -1,3 +1,6 @@
+- Take care of the case with wrong username or password.  Now it
+  leaves a bad file     in the cache and you cannot start osmpedit
+  without removing the file.
 
 - Add timestamp in key/value?
 

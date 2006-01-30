@@ -29,6 +29,7 @@
   </target>
 
   <target name="dist" depends="compile">
+    <copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/org/openstreetmap/processing/LucidaSansUnicode-11.vlw"/>
     <copy todir="${dist}/rc1/org/openstreetmap/processing/">
       <fileset dir="${build}/org/openstreetmap/processing"/>
     </copy>

@@ -61,15 +61,10 @@ cp html/images/tab_bottom.gif $ROOT/css/
 
 # applet
 cd java
-ant
+ant clean
+ant dist
 
 cp dist/OSMApplet.jar $ROOT/
-cp lib/commons-codec-1.3.jar $ROOT/
-cp dist/commons-httpclient-3.0-rc3.jar $ROOT/
-cp dist/commons-logging.jar $ROOT/
-cp dist/MinML2.jar $ROOT/
-cp dist/core.jar $ROOT/
-cp dist/plugin.jar $ROOT/
 
 cd ..
 

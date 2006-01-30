@@ -80,7 +80,7 @@ if gzipped
 
 
 else
-  ox.dump($stdout)
+  puts ox.to_s
 
 end
 

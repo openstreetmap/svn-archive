@@ -4,7 +4,7 @@ module OSM
   require 'singleton'
   require 'time'
   require 'osm/servinfo.rb'
-  load 'osm/osmlog.rb'
+  require 'osm/osmlog.rb'
 
   class Mercator
     include Math

@@ -8,8 +8,8 @@ loggedin = false
 user_id = -1
 
 require 'cgi'
-load 'osm/dao.rb'
-load 'osm/gpx.rb'
+require 'osm/dao.rb'
+require 'osm/gpx.rb'
 cgi = CGI.new
 dao = OSM::Dao.instance
 

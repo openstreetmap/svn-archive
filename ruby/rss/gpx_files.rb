@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-load 'osm/dao.rb'
+require 'osm/dao.rb'
 require 'rexml/document'
 
 include REXML

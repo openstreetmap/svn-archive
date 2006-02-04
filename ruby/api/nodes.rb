@@ -1,8 +1,8 @@
 #!/usr/bin/ruby -w
 
 require 'cgi'
-load 'osm/dao.rb'
-load 'osm/ox.rb'
+require 'osm/dao.rb'
+require 'osm/ox.rb'
 require 'rexml/document'
 
 include Apache

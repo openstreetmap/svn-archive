@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 require 'cgi'
 require 'rexml/document'
-load 'osm/dao.rb'
+require 'osm/dao.rb'
 
 include REXML
 

@@ -26,7 +26,7 @@
 # negative IDs) will be returned as standard output.
 
 require 'cgi'
-load 'osm/dao.rb'
+require 'osm/dao.rb'
 require 'rexml/document'
 
 include Apache

@@ -99,39 +99,38 @@ if height == 0
   height = cgi['HEIGHT'].to_i
 end
 
+# test if the box is too big
 
-# now can actually draw a fucking dot
+tile_too_big = width > 256 || height > 256 || ( (trlon - bllon) * (trlat - bllat) ) > 0.0025
 
+if !tile_too_big 
+  proj = Mercator.new((bllat + trlat) / 2, (bllon + trlon) / 2, (trlon - bllon) / width, width, height)
 
-proj = Mercator.new((bllat + trlat) / 2, (bllon + trlon) / 2, (trlon - bllon) / width, width, height)
+  dao = OSM::Dao.instance
 
-dao = OSM::Dao.instance
+  nodes = dao.getnodes(trlat, bllon, bllat, trlon)
 
-nodes = dao.getnodes(trlat, bllon, bllat, trlon)
+  if nodes && nodes.length > 0
+    linesegments = dao.getlines(nodes)
+  end
 
-if nodes && nodes.length > 0
-  linesegments = dao.getlines(nodes)
-end
-
-if linesegments
-  linesegments.each do |key, l|
-    #the next 2 lines of code are just so unbelievably sexy its just not funny. Fuck that java shit!
-    nodes[l.node_a_id] = dao.getnode(l.node_a_id) unless nodes[l.node_a_id]
-    nodes[l.node_b_id] = dao.getnode(l.node_b_id) unless nodes[l.node_b_id]
+  if linesegments
+    linesegments.each do |key, l|
+      #the next 2 lines of code are just so unbelievably sexy its just not funny. Fuck that java shit!
+      nodes[l.node_a_id] = dao.getnode(l.node_a_id) unless nodes[l.node_a_id]
+      nodes[l.node_b_id] = dao.getnode(l.node_b_id) unless nodes[l.node_b_id]
+    end
   end
 end
 
-
 fname = '/tmp/' + rand.to_s  + '_tmpimg'
-
-
 
 
 File.open(fname, "wb") {|stream|
   cr = Context.new
   cr.set_target_png(stream, FORMAT_ARGB32, width, height);
 
-  if linesegments
+  if linesegments && !tile_too_big
     linesegments.each do |key, l|
       node_a = nodes[l.node_a_id]
       node_b = nodes[l.node_b_id]
@@ -163,8 +162,6 @@ File.open(fname, "wb") {|stream|
         cr.stroke
       end
     end
-
-    
   end
 
  cr.show_page

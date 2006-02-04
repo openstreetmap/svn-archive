@@ -5,6 +5,55 @@ module OSM
   require 'time'
   require 'osm/servinfo.rb'
   load 'osm/osmlog.rb'
+
+  class Mercator
+    include Math
+
+    def initialize(lat, lon, degrees_per_pixel, width, height)
+      #init me with your centre lat/lon, the number of degrees per pixel and the size of your image
+      @clat = lat
+      @clon = lon
+      @degrees_per_pixel = degrees_per_pixel
+      @width = width
+      @height = height
+      @dlon = width / 2 * degrees_per_pixel 
+      @dlat = height / 2 * degrees_per_pixel  * cos(@clat * PI / 180)
+
+      @tx = xsheet(@clon - @dlon)
+      @ty = ysheet(@clat - @dlat)
+
+      @bx = xsheet(@clon + @dlon)
+      @by = ysheet(@clat + @dlat)
+
+    end
+  
+    #the following two functions will give you the x/y on the entire sheet
+
+    def kilometerinpixels
+      return 40008.0  / 360.0 * @degrees_per_pixel
+    end
+
+    def ysheet(lat)
+      log(tan(PI / 4 +  (lat  * PI / 180 / 2)))
+    end
+
+    def xsheet(lon)
+      lon
+    end
+
+    #and these two will give you the right points on your image. all the constants can be reduced to speed things up. FIXME
+  
+    def y(lat)
+      return @height - ((ysheet(lat) - @ty) / (@by - @ty) * @height) 
+    end
+
+    def x(lon)
+      return  ((xsheet(lon) - @tx) / (@bx - @tx) * @width)  
+    end
+  end
+
+
+
   
   class StringIO
   # helper class for gzip encoding
@@ -484,28 +533,14 @@ module OSM
 
       page = page * 5000
 
-      begin
-
-        dbh = get_connection
-
+      res = call_sql { "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000" }
+      
+      return nil unless res
         
-        q = "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000"
-
-        res = dbh.query(q)
-        
-        res.each_hash do |row|
-          points.push Trackpoint.new(row['latitude'].to_f, row['longitude'].to_f)
-        end
-
-        return points
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
+      res.each_hash do |row|
+        points.push Trackpoint.new(row['latitude'].to_f, row['longitude'].to_f)
       end
-
+      return points
     end
 
 
@@ -560,6 +595,7 @@ module OSM
                   (SELECT * FROM segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
                as a group by id) as segment where visible = true"
 
+        @@log.log q
         res = conn.query(q)
         
         segments = {}

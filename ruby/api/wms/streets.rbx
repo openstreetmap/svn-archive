@@ -86,8 +86,11 @@ end
 canvas = Magick::Image.new(width, height) {
         self.background_color = 'pink'
      }
- 
-gc.draw(canvas)
+
+begin 
+	gc.draw(canvas)
+rescue ArgumentError
+end
 
 transparent_canvas = canvas.transparent('pink', Magick::TransparentOpacity)
 

@@ -32,7 +32,7 @@ width = cgi['WIDTH'].to_i if width == 0
 height = cgi['height'].to_i
 height = cgi['HEIGHT'].to_i if height == 0
 
-tile_too_big = width > 256 || height > 256 || ( (trlon - bllon) * (trlat - bllat) ) > 0.0025
+tile_too_big = width > 256 || height > 256 || ( (trlon - bllon) * (trlat - bllat) ) > 0.0035
 
 gc = Magick::Draw.new
 

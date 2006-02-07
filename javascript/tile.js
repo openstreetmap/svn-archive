@@ -1105,7 +1105,7 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 							this.url,
 							lon,
 							lat,
-							10,
+							11,
 							0,0);
 		} else {
 		    msg = "Lookup Failed";

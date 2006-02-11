@@ -37,8 +37,9 @@ tile_too_big = width > 256 || height > 256 || ( (trlon - bllon) * (trlat - bllat
 gc = Magick::Draw.new
 
 if !tile_too_big 
-  gc.stroke_linejoin('miter')
-
+  gc.stroke_linejoin('round')
+  gc.stroke_linecap('round')
+  gc.stroke_antialias(false)
   proj = OSM::Mercator.new((bllat + trlat) / 2, (bllon + trlon) / 2, (trlon - bllon) / width, width, height)
 
   dao = OSM::Dao.instance
@@ -49,6 +50,7 @@ if !tile_too_big
     linesegments = dao.getlines(nodes)
   end
 
+
   if linesegments
     linesegments.each do |key, l|
       nodes[l.node_a_id] = dao.getnode(l.node_a_id) unless nodes[l.node_a_id]
@@ -57,7 +59,7 @@ if !tile_too_big
   
     if !tile_too_big # draw things
       gc.stroke('black')
-      gc.stroke_width(4)
+      gc.stroke_width(3)
       
       # draw black lines
       linesegments.each do |key, l|
@@ -70,7 +72,7 @@ if !tile_too_big
       
       #draw white lines on top
       gc.stroke('white')
-      gc.stroke_width(0)
+      gc.stroke_width(1)
       linesegments.each do |key, l|
         node_a = nodes[l.node_a_id]
         node_b = nodes[l.node_b_id]

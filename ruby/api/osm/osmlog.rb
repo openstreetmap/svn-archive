@@ -12,7 +12,11 @@ class Osmlog
   end
 
   def log(s)
-    @@l.info(s)
+    begin
+      @@l.info(s)
+    rescue Error =>ex
+      
+    end
   end
 
 end

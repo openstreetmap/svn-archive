@@ -299,13 +299,19 @@ sub parse {
 
     my $filename = "$ENV{HOME}/.osmpedit/cache/lastosm.xml";
     if (-e "$filename" and -s "$filename") {
+	print STDERR "Parsing file: $filename\n";
 	my $p = XML::TokeParser->new("$filename");
 	if (not $p) {
 	    print STDERR "WARNING: Could not parse osm data\n";
 	    return;
 	}
 	my $t;
-	while ($t = $p->get_tag()) {
+	while (1) {
+	    eval {$t = $p->get_tag() };
+	    if ($@) {
+		print STDERR "Could not parse file: $@\n";
+	    }
+	    last unless $t;
 	    if ($t->is_start_tag) {
 		my $name = "$t->[0]";
 #	    print STDERR "$name\n";
@@ -317,7 +323,7 @@ sub parse {
 		    my $tags = $attr->{tags};
 ##		    print STDERR "NODE $lat $lon $uid $tags\n";
 		    if ($tags) {
-			print STDERR "Node tags: $tags\n";
+#			print STDERR "Node tags: $tags\n";
 		    }
 		    my $node = new osmnode;
 		    $node->set_lat ($lat);

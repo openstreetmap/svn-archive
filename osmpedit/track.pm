@@ -14,6 +14,8 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
+use Carp qw(confess);
+
 package track;
 
 use FindBin qw($RealBin);
@@ -66,13 +68,25 @@ sub parse_file {
     my $self = shift;
     my $filename = shift;
     print STDERR "Parse track: $filename\n";
-    my $p = XML::TokeParser->new("$filename");
+    my $p;
+    eval {
+       $p = XML::TokeParser->new("$filename");
+    };
+    if ( $@ ) {
+       print STDERR "WARNING: Could not parse file: $filename: $@\n";
+       return;
+    }
     if (not $p) {
 	print STDERR "WARNING: Could not parse file: $filename\n";
 	return;
     }
     my $trkpt;
-    while ($trkpt = $p->get_tag("trkpt")) {
+    while (1) {
+	eval {
+	    $trkpt = $p->get_tag("trkpt");
+	};
+	warn "error in gttrck(): $@" if $@;
+	last unless $trkpt;
 	my $attr = $trkpt->attr;
 	my $lat = $attr->{lat};
 	my $lon = $attr->{lon};

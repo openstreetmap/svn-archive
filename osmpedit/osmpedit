@@ -135,6 +135,14 @@ $landsat->set_osm ($osm);
 $landsat->set_center ($start_lat, $start_lon);
 $landsat->set_scale ($scale);
 
+
+$can_frame->after( 10000,
+                   sub{
+                       printf "Timer %s\n",''.localtime(time());
+                       $landsat->fill_cache(1,$can_frame);
+                    });
+
+
 ##$landsat->display_tile (58.4090, 15.561, 100);
 ##$landsat->display_tile ($lat, $lon, $scale);
 $landsat->display ();

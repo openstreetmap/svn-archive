@@ -66,7 +66,22 @@ begin
  
   puts '</table>'
   
-  
+puts '<h2>Top users editing over the past...</h2><table><tr>
+  <td><b>Day</b></td>
+  <td><b>Week</b></td>
+  <td><b>Month</b></td>
+  </tr><tr>'
+
+[1, 7, 28].each do |n|
+  res = dbh.query( "select email, count from users, (select user_id, count(*) as count from nodes where timestamp > NOW() - INTERVAL #{n} DAY group by user_id order by count desc limit 30) as a where a.user_id = users.id")
+  puts '<td>'
+  res.each_hash do |row|
+    puts row['count'] + " " + row['email'].gsub('@',' at ').gsub('.',' dot ') + "<br />"
+  end
+  puts '</td>'
+end
+
+puts '</tr></table>'
 
 rescue MysqlError => e
   print "Error code: ", e.errno, "\n"

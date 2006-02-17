@@ -187,7 +187,7 @@ position: absolute;
 left: 0px;
 }
 #drag {
-top: 14px;
+top: 0px;
 left: 14px;
 }
 #mapEpilog {
@@ -293,8 +293,16 @@ color: #000;
 background: #fff;
 }
 
+#gads {
+/*  position: absolute; */
+  left: 100px;
+  width: 700px;
+  text-align: center;
+  font-size: 10px;
+}
+
 #geocoder {
  font-size: 12px;
- padding-top: 16px;
+ padding-top: 5px;
  padding-left: 14px;
 }

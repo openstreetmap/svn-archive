@@ -24,6 +24,7 @@ import org.openstreetmap.util.Point;
 import org.openstreetmap.processing.OSMApplet;
 import java.lang.*;
 import java.util.*;
+import java.io.*;
 import processing.core.PImage;
 
 public class Tile extends Thread
@@ -57,8 +58,10 @@ public class Tile extends Thread
 
   // we're ignoring the wms URL provided by the <applet> tag at the moment
   // FIXME make it take a set of wms URLs to plot
-  private String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE";
-
+  //private String wmsURL = "http://www.openstreetmap.org/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE";
+  
+  private String[] wmsURL;
+    
   OSMApplet applet;
 
   Hashtable images = new Hashtable();
@@ -75,7 +78,7 @@ public class Tile extends Thread
   {
     
     applet = p;
-    wmsURL = url;
+    wmsURL = url.split(";");
     
   	// NOTE:
 	  // lat is actually the Mercator "y" value
@@ -160,27 +163,17 @@ public class Tile extends Thread
     {
       for(long y = topY; y < botY + 1; y++)
       {
-        //System.out.println("would grab tile " + x + ", " + y + " (" + pXtoLon(x*tileWidth) + ", " + pYtoLat(y*tileHeight) + ") -> (" + pXtoLon((1+x)*tileWidth) + ", " + pYtoLat((1+y)*tileHeight) + ")"  + " would put tile at (" + ((x*tileWidth)-centerX+(windowWidth/2)) + ", " + ((y*tileHeight)-centerY+(windowHeight/2)) + ")");
-
-        String u = wmsURL + "&LAYERS=landsat" + "&bbox="+ pXtoLon(x*tileWidth) +","+ pYtoLat((y-1)*tileHeight) +","+ pXtoLon((1+x)*tileWidth) +","+pYtoLat(y*tileHeight)+"&width="+tileWidth+"&height="+tileHeight;
-        ImBundle ib = new ImBundle(x,y,u,"landsat");
-        if( !contains( ib ) )
-        {
-          imv.add( ib );
-        }
-
-        u = wmsURL + "&format=png&LAYERS=gpx" + "&bbox="+ pXtoLon(x*tileWidth) +","+ pYtoLat((y-1)*tileHeight) +","+ pXtoLon((1+x)*tileWidth) +","+pYtoLat(y*tileHeight)+"&width="+tileWidth+"&height="+tileHeight;
-
-        ib = new ImBundle(x,y,u,"gpx");
-        if( !contains( ib ) )
-        {
-          imv.add( ib );
-        }
-
+	  for (int i = 0; i <= wmsURL.length-1; i++) {
+	      //System.out.println("would grab tile " + x + ", " + y + " (" + pXtoLon(x*tileWidth) + ", " + pYtoLat(y*tileHeight) + ") -> (" + pXtoLon((1+x)*tileWidth) + ", " + pYtoLat((1+y)*tileHeight) + ")"  + " would put tile at (" + ((x*tileWidth)-centerX+(windowWidth/2)) + ", " + ((y*tileHeight)-centerY+(windowHeight/2)) + ")");
+	      String u = wmsURL[i] + "&BBOX="+ pXtoLon(x*tileWidth) +","+ pYtoLat((y-1)*tileHeight) +","+ pXtoLon((1+x)*tileWidth) +","+pYtoLat(y*tileHeight)+"&WIDTH="+tileWidth+"&HEIGHT="+tileHeight;
+	      ImBundle ib = new ImBundle(x,y,u,""+i);
+	      if( !contains( ib ) )
+		  {
+		      imv.add( ib );
+		  }
+	  }
       }
     }
-
-
   } // grabTiles
 
   public void downloadImage(ImBundle ib)
@@ -253,29 +246,21 @@ public class Tile extends Thread
     {
       for(long y = topY; y < botY + 1; y++)
       {
-        String mykey = "landsat_" + x + "," + y;
+
+	  for (int i = 0; i <= wmsURL.length-1; i++) {
+	 
+	      String mykey = i + "_" + x + "," + y;
         
-        if( images.containsKey(mykey))
-        {
-          PImage pi = (PImage)images.get(mykey);
-          ht.put(mykey, pi);
-        }
-        else
-        {
-           imf.remove(mykey);
-        }
-
-        mykey = "gpx_" + x + "," + y;
-
-        if( images.containsKey(mykey))
-        {
-          PImage pi = (PImage)images.get(mykey);
-          ht.put(mykey, pi);
-        }
-        else
-        {
-           imf.remove(mykey);
-        }
+	      if( images.containsKey(mykey))
+		  {
+		      PImage pi = (PImage)images.get(mykey);
+		      ht.put(mykey, pi);
+		  }
+	      else
+		  {
+		      imf.remove(mykey);
+		  }
+	  }
 
       }
     }
@@ -371,29 +356,20 @@ public class Tile extends Thread
     {
       for(long y = topY; y < botY + 1; y++)
       {
-        
-
-        PImage p_gpx = getImage("gpx_" + x + "," + y);
-        PImage p_landsat = getImage("landsat_" + x + "," + y);
-        if( p_gpx == null && p_landsat == null)
-        {
-          applet.stroke(255);
-          applet.fill(255);
-          applet.text("Loading tile...", (int)(((x+.5)*tileWidth)-(long)centerX+(windowWidth/2)), (int)(windowHeight - (  ((y-.5)*tileHeight) -(long)centerY+(windowHeight/2)) ));
-        }
-        else
-        {   
-          if(p_landsat != null)
-          {
-            applet.image(p_landsat, (x*tileWidth)-(long)centerX+(windowWidth/2), windowHeight - ((y*tileHeight)-(long)centerY+(windowHeight/2)) );
-          }
-
-          if(p_gpx != null)
-          {
-            applet.image(p_gpx, (x*tileWidth)-(long)centerX+(windowWidth/2), windowHeight - ((y*tileHeight)-(long)centerY+(windowHeight/2)) );
-          }
-        }
-         
+	  int c=0;
+	  for (int i = wmsURL.length-1; i >= 0; i--) {
+	      PImage p = getImage(i + "_" + x + "," + y);
+	      if (p != null) {
+		  c++;
+		  applet.image(p, (x*tileWidth)-(long)centerX+(windowWidth/2), windowHeight - ((y*tileHeight)-(long)centerY+(windowHeight/2)) );
+	      }
+	  }
+	  if (c == 0) {
+	      applet.stroke(255);
+	      applet.fill(255);
+	      applet.text("Loading tile...", (int)(((x+.5)*tileWidth)-(long)centerX+(windowWidth/2)), (int)(windowHeight - (  ((y-.5)*tileHeight) -(long)centerY+(windowHeight/2)) ));
+	  }
+          
       }
     }
 
@@ -412,16 +388,6 @@ public class Tile extends Thread
 
     Arrays.sort( t, new IMBComparator( ((double)rightX + (double)leftX)/2.0, ((double)botY + (double)topY)/2.0 ));
  
-    for(int n = 0; n < t.length; n++)
-    {
-      ImBundle i = (ImBundle)t[n];
-      if(i.key.startsWith("gpx"))
-      {
-        imv.remove(i);
-        return i;
-      }
-    }
-
     ImBundle ib = (ImBundle)t[0];
     imv.remove(ib);
     
@@ -584,12 +550,21 @@ class IMBComparator implements java.util.Comparator
     ImBundle aa = (ImBundle)a;
     ImBundle bb = (ImBundle)b;
 
+    int ai = (int) aa.key.charAt(0);
+    int bi = (int) bb.key.charAt(0);
+
+    if (ai < bi) {
+	return -1;
+    } else if (ai > bi) {
+	return 1;
+    }
+    
     double ad = aa.distance(cx,cy);
     double bd = bb.distance(cx,cy);
 
-    if(ad == bd)
+    if (ad == bd) 
     {
-      return 0;
+	return 0;
     }
 
     if(ad < bd)

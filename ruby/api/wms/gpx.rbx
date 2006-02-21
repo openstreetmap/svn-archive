@@ -39,7 +39,7 @@ gc = Magick::Draw.new
 if !tile_too_big 
   gc.stroke_linejoin('miter')
   gc.stroke('#ffcc00')
-  gc.stroke_width(4)
+  gc.stroke_width(3)
   
   proj = OSM::Mercator.new((bllat + trlat) / 2, (bllon + trlon) / 2, (trlon - bllon) / width, width, height)
 

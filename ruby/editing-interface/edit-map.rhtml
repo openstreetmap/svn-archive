@@ -91,8 +91,10 @@ MAYSCRIPT="true"
 <param name="zoom" value="<%=zoom%>">
 <param name="user" value="token">
 <param name="pass" value="<%=token%>">
-<param name="wmsurl" value="http://<%=$SERVER_NAME%>/tile/0.1/wms?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE">
+<param name="wmsurl" value="http://mikel.dev.openstreetmap.org/tile/0.2/gpx?;http://mikel.dev.openstreetmap.org/tile/0.2/landsat?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&FORMAT=image/jpeg">
 <param name="apiurl" value="http://<%=$SERVER_NAME%>/api/0.2/">
+Your browser needs to support Java to edit maps.<br>
+<a href="http://java.com/en/download/index.jsp">Download Java here</a>
 </applet>
 
   </div>

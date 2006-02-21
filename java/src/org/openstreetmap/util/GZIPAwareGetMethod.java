@@ -14,13 +14,12 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 
 /**
-  *
-  * @author aleem
-  */
-public class GZIPAwareGetMethod extends GetMethod {
+ * @author aleem
+ */
+public class GzipAwareGetMethod extends GetMethod {
 
      /** Creates a new instance of GZIPAwareGetMethod */
-     public GZIPAwareGetMethod() {
+     public GzipAwareGetMethod() {
          super();
      }
 
@@ -31,7 +30,7 @@ public class GZIPAwareGetMethod extends GetMethod {
       *
       * @since 1.0
       */
-     public GZIPAwareGetMethod(String uri) {
+     public GzipAwareGetMethod(String uri) {
          super(uri);
      }
 
@@ -45,8 +44,8 @@ public class GZIPAwareGetMethod extends GetMethod {
       * @since 1.0
       */
 //     public GZIPAwareGetMethod(String uri, String tempDir) {
-  //       super(uri, tempDir);
-    // }
+//         super(uri, tempDir);
+//     }
 
      /**
       * Constructor specifying a URI, tempDir and tempFile.
@@ -59,8 +58,8 @@ public class GZIPAwareGetMethod extends GetMethod {
       * @since 1.0
       */
 //     public GZIPAwareGetMethod(String uri, String tempDir, String tempFile) {
-  //       super(uri, tempDir, tempFile);
-    // }
+//         super(uri, tempDir, tempFile);
+//     }
 
      /**
       * Overrides method in {@link HttpMethodBase}.
@@ -69,9 +68,7 @@ public class GZIPAwareGetMethod extends GetMethod {
       * sending the request.
       *
       */
-     public int execute(HttpState state, HttpConnection conn) throws HttpException, HttpRecoverableException,
-
-IOException {
+     public int execute(HttpState state, HttpConnection conn) throws HttpException, HttpRecoverableException, IOException {
          // Tell the server that we can handle GZIP-compressed data in the response body
          addRequestHeader("Accept-Encoding", "gzip");
 
@@ -85,8 +82,7 @@ IOException {
       * wrapping the original InputStream used by the superclass.
       *
       */
-     protected void readResponseBody(HttpState state, HttpConnection conn) throws IOException,
-HttpException {
+     protected void readResponseBody(HttpState state, HttpConnection conn) throws IOException, HttpException {
          super.readResponseBody(state, conn);
 
          Header contentEncodingHeader = getResponseHeader("Content-Encoding");

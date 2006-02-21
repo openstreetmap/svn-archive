@@ -1,0 +1,52 @@
+/**
+ * 
+ */
+package org.openstreetmap.processing;
+
+
+import processing.core.PImage;
+
+/**
+ * Edit mode to move objects around in the applet.
+ */
+public class MoveMode extends EditMode {
+
+	/**
+	 * Back reference to the applet
+	 */
+	private final OsmApplet applet;
+
+	public MoveMode(OsmApplet applet) {
+		this.applet = applet;
+		hand = applet.loadImage("/data/hand.png");
+	}
+
+	int lastmX, lastmY;
+	PImage hand;
+
+	public void mouseReleased() {
+		applet.cursor(OsmApplet.ARROW);
+	}
+
+	public void mousePressed() {
+		lastmX = applet.mouseX;
+		lastmY = applet.mouseY;
+	}
+
+	public void mouseDragged() {
+		applet.tiles.drag(lastmX - applet.mouseX, applet.mouseY - lastmY);
+		lastmX = applet.mouseX;
+		lastmY = applet.mouseY;
+		if (applet.online) {
+			applet.updatelinks();
+		}
+	}
+
+	public void draw() {
+		// imagehere
+		applet.noFill();
+		applet.stroke(0);
+		applet.strokeWeight(1);
+		applet.image(hand, 1, 2);
+	}
+}

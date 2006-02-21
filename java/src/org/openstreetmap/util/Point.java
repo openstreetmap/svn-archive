@@ -21,49 +21,48 @@ package org.openstreetmap.util;
 
 import org.openstreetmap.client.Tile;
 
-// minimal representation of OpenStreetMap GPX point (lat/lon pair)
+/**
+ * Minimal representation of OpenStreetMap GPX point (lat/lon pair)
+ */
 public class Point {
 
-  public double lat, lon;
-  public float x,y;
-  public boolean projected = false;
+	public double lat, lon;
+	public float x,y;
+	public boolean projected = false;
 
-  public Point(double lat, double lon) {
-    this.lat = lat;
-    this.lon = lon;
-  }
+	public Point(double lat, double lon) {
+		this.lat = lat;
+		this.lon = lon;
+	}
 
-  public Point(float x, float y, Tile projection) {
-    this.x = x;
-    this.y = y;
-    this.lat = projection.lat(y);
-    this.lon = projection.lon(x);
-    projected = true;
-  }
-        
-  public void project(Tile projection){
-    x = (float)projection.x(lon);
-    y = (float)projection.y(lat);
-    projected = true;
-  }
-  
-  public void unproject(Tile projection){
-    this.lat = projection.lat(y);
-    this.lon = projection.lon(x);
-  }
-    
-  public float distance(Point other) {
-    return distance(other.x,other.y);
-  }
-  
-  public float distance(float x, float y) {
-    if (projected && this.x != x && this.y != y) {
-      return (float)Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
-    }
-    else {
-      return 0.0f;
-    }
-  }
+	public Point(float x, float y, Tile projection) {
+		this.x = x;
+		this.y = y;
+		this.lat = projection.lat(y);
+		this.lon = projection.lon(x);
+		projected = true;
+	}
 
+	public void project(Tile projection){
+		x = (float)projection.x(lon);
+		y = (float)projection.y(lat);
+		projected = true;
+	}
+
+	public void unproject(Tile projection){
+		this.lat = projection.lat(y);
+		this.lon = projection.lon(x);
+	}
+
+	public float distance(Point other) {
+		return distance(other.x,other.y);
+	}
+
+	public float distance(float x, float y) {
+		if (projected && this.x != x && this.y != y) {
+			return (float)Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
+		}
+		return 0.0f;
+	}
 }
 

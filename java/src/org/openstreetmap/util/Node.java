@@ -16,49 +16,57 @@
  * Place - Suite 330, Boston, MA 02111-1307, USA.
  *  
  */
- 
-package org.openstreetmap.util; 
 
-import org.openstreetmap.client.Tile;
+package org.openstreetmap.util;
+
+import java.util.Collection;
 import java.util.Vector;
 
-// minimal representation of OpenStreetMap node (lat/lon pair, with uid)
+import org.openstreetmap.client.Tile;
+
+/**
+ * Minimal representation of OpenStreetMap node (lat/lon pair, with uid)
+ */
 public class Node extends Point {
 
-  public long uid; // 0 = unassigned. TODO: check that there is no node 0 in the db
-  public String tags;
-  public Vector lines = new Vector();
+	/**
+	 * The id of this node. Unique among other nodes. id=0 means an unknown id.
+	 * TODO: check that there is no node 0 in the db
+	 */
+	public long id = 0;
 
-  public Node(double lat, double lon) {
-    this(lat,lon,0,"");
-  }
+	/**
+	 * The tag string for this node.
+	 */
+	public String tags = "";
 
-  public Node(float x, float y, Tile projection) {
-    this(x,y,projection,0,"");
-  }
+	/**
+	 * All lines in this node.
+	 */
+	public Collection lines = new Vector();
 
-  public Node(double lat, double lon, long uid, String sTags) {
-    super(lat,lon);
-    this.uid = uid;
-    this.tags = sTags;
-  }
-  
-  public Node(float x, float y, Tile projection, int uid, String sTags) {
-    super(x,y,projection);
-    tags = sTags;
-    this.uid = uid;
-  }
+	/**
+	 * Create the node from projected values.
+	 */
+	public Node(float x, float y, Tile projection) {
+		super(x, y, projection);
+	}
 
-  public String toString()
-  {
-    return "[Node " + uid + " lat:" + lat + " lon:" + lon + "]";
+	/**
+	 * Create the node with all information given.
+	 */
+	public Node(double lat, double lon, long uid, String tags) {
+		super(lat, lon);
+		this.id = uid;
+		this.tags = tags;
+	}
 
-  } // toString
+	public String toString() {
+		return "[Node " + id + " lat:" + lat + " lon:" + lon + "]";
 
+	}
 
-  public String key()
-  {
-    return "node_" + uid;
-  }
+	public String key() {
+		return "node_" + id;
+	}
 }
-

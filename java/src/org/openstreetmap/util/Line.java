@@ -18,140 +18,175 @@
  */
 
 package org.openstreetmap.util;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
-// minimal representation of OpenStreetMap line (node id -> node id, with uid)
+import java.util.StringTokenizer;
+
+/**
+ * Minimal representation of OpenStreetMap line segment (node id -> node id with uid)
+ */
 public class Line {
 
-  public Node a,b;
-  private String name="";
-  private String tags="";
-  public long uid;
-  public boolean nameChanged = false;
+	/**
+	 * The nodes this line points from and to.
+	 */
+	public Node from, to;
 
-  public Line(Node a, Node b) {
-    this(a,b,0,"");
-  }
-    
-  public Line(Node a, Node b, long uid, String sTags) {
-    if (a != null && b != null) {
-      this.a=a; this.b=b;
-    }
-    if (a != null) {
-      a.lines.addElement(this);
-    }
-    if (b != null) {
-      b.lines.addElement(this);
-    }
-    this.uid=uid;
-    splitTags(sTags);
-  }
-  
-  public void reverse() {
-    Node temp = a;
-    a = b;
-    b = temp;
-  }
-  
-  // screen angle, if projected
-  public float angle() {
-    return (float)Math.atan2(b.y-a.y,b.x-a.x);
-  }
-  
-  // pixel length, if projected
-  public float length() {
-    // TODO check != 0
-    return a.distance(b);
-  }
+	/**
+	 * The name-part of the properties.
+	 */
+	private String name = "";
+	/**
+	 * The additional tags (beside the name) this line segment has. 
+	 */
+	private String tags = "";
+	/**
+	 * The unique id (among all other line segments) of this line.
+	 */
+	public long id;
+	/**
+	 * True, if the user changed the name.
+	 */
+	public boolean nameChanged = false;
 
-  // pixel distance, if projected  
-  public float distance(Node c) {
-    return distance(c.x,c.y);
-  }
+	/**
+	 * Create a line from node "from" to node "to" without tags and with unknown id=0. 
+	 */
+	public Line(Node from, Node to) {
+		this(from, to, 0, "");
+	}
 
-  // pixel distance, if projected  
-  public float distance(float x, float y) {
-    // project x/y onto line a->b
-    // first find parameter (how far along a->b are we?
-    float u = ( ((x-a.x)*(b.x-a.x)) + ((y-a.y)*(b.y-a.y)) ) / ((b.y-a.y)*(b.y-a.y)+(b.x-a.x)*(b.x-a.x));
-    float d = 0.0f;
-    if(u <= 0.0f) {
-      d = a.distance(x,y);
-    }
-    else if (u >= 1.0f) {
-      d = b.distance(x,y);    
-    }
-    else {
-      // project x/y onto line a->b
-      float px = a.x + (u * (b.x-a.x));
-      float py = a.y + (u * (b.y-a.y));
-      d = (float)Math.sqrt((x-px)*(x-px)+(y-py)*(y-py));
-    }
-    return d;
-  }
-  
-  public boolean mouseOver(float mouseX, float mouseY, float strokeWeight) {
-    return distance(mouseX,mouseY) < strokeWeight/2.0;
-  } // mouseOver
+	/**
+	 * Create a line.
+	 * @param from	Node the line starts.
+	 * @param to	Node the line ends in.
+	 * @param id	Unique id for this line.
+	 * @param tags	Encoded string of all properties for this line segment. 
+	 */
+	public Line(Node from, Node to, long id, String tags) {
+		if (from != null && to != null) {
+			this.from = from;
+			this.to = to;
+		}
+		if (from != null)
+			from.lines.add(this);
+		if (to != null)
+			to.lines.add(this);
+		this.id = id;
+		splitTags(tags);
+	}
 
-  
-  public String toString()
-  {
-    return "[Line " + uid + " from " + a + " to " + b + "]";
+	/**
+	 * Turn the line segment around so that it now points in the reverse direction.
+	 */
+	public void reverse() {
+		Node temp = from;
+		from = to;
+		to = temp;
+	}
 
-  } // toString
+	/**
+	 * @return The screen angle as float, if projected.
+	 */
+	public float angle() {
+		return (float)Math.atan2(to.y - from.y, to.x - from.x);
+	}
 
-  public String getTags()
-  {
-    if( tags.equals(" ") ||  tags.equals("; ") )
-    {
-      return "name=" + name;
-    }
-    else
-    {
-      return "name=" + name + "; " + tags;
-    }
+	/**
+	 * @return The pixel length, if projected.
+	 */
+	public float length() {
+		// TODO check != 0
+		return from.distance(to);
+	}
 
-  } // getTags
+	
+	/**
+	 * @return The pixel distance to node c, if projected.
+	 */
+	public float distance(Node c) {
+		return distance(c.x, c.y);
+	}
 
-  public synchronized void setName(String sName)
-  {
-    name = sName;
-  }
+	/**
+	 * @return The pixel distance to point x,y, if projected.
+	 */
+	public float distance(float x, float y) {
+		// project x/y onto line a->b
+		// first find parameter (how far along a->b are we?
+		float u = (((x - from.x) * (to.x - from.x)) + ((y - from.y) * (to.y - from.y)))
+				/ ((to.y - from.y) * (to.y - from.y) + (to.x - from.x) * (to.x - from.x));
+		float d = 0.0f;
+		if (u <= 0.0f) {
+			d = from.distance(x, y);
+		} else if (u >= 1.0f) {
+			d = to.distance(x, y);
+		} else {
+			// project x/y onto line a->b
+			float px = from.x + (u * (to.x - from.x));
+			float py = from.y + (u * (to.y - from.y));
+			d = (float)Math.sqrt((x - px) * (x - px) + (y - py) * (y - py));
+		}
+		return d;
+	}
 
-  public synchronized String getName()
-  {
-    return name;
-  } // getName
+	/**
+	 * @return Whether the given coordinates is "over" this line segment. 
+	 */
+	public boolean mouseOver(float mouseX, float mouseY, float strokeWeight) {
+		return distance(mouseX, mouseY) < strokeWeight / 2.0;
+	}
 
-  private void splitTags(String sTags)
-  {
-    StringTokenizer st = new StringTokenizer(sTags, ";");
+	/**
+	 * @return The encoded property string for this line segment.
+	 */
+	public String getTags() {
+		if (tags.equals(" ") || tags.equals("; ")) {
+			return "name=" + name;
+		}
+		return "name=" + name + "; " + tags;
+	}
 
-    while( st.hasMoreTokens() )
-    {
-      String t = st.nextToken();
-      t = t.trim();
-      if(t.startsWith("name="))
-      {
-        this.name = t.substring(5);
-      }
-      else
-      {
-        if( ! (t.equals(" ") || t.equals("")) )
-        {
-          this.tags = this.tags + t + "; ";
-        }
-      }
-    }
+	/**
+	 * @return A string specifier used in tables when this line is used as key.
+	 * Consisting of "line_" and the id.
+	 */
+	public String key() {
+		return "line_" + id;
+	} // key
 
-  } // splitTags
+	public synchronized void setName(String sName) {
+		name = sName;
+	}
 
-  public String key()
-  {
-    return "line_" + uid;
-  } // key
- 
-} // Line
+	public synchronized String getName() {
+		return name;
+	}
+
+	/**
+	 * A debug string representation of this line segment.
+	 */
+	public String toString() {
+		return "[Line " + id + " from " + from + " to " + to + "]";
+	}
+
+	/**
+	 * Split the tag string into name part and others and assign the own member
+	 * variables accordingly.
+	 * @param tags The property string in encoded form.
+	 */
+	private void splitTags(String tags) {
+		StringTokenizer st = new StringTokenizer(tags, ";");
+		while (st.hasMoreTokens()) {
+			String t = st.nextToken();
+			t = t.trim();
+			if (t.startsWith("name=")) {
+				this.name = t.substring(5);
+			} else {
+				if (!(t.equals(" ") || t.equals(""))) {
+					this.tags = this.tags + t + "; ";
+				}
+			}
+		}
+	}
+}
 

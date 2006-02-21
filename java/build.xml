@@ -36,7 +36,7 @@
     <copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
     <copy file="${lib}/plugin.jar" tofile="${dist}/plugin.jar"/>
 
-    <copy file="${lib}/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/org/openstreetmap/processing/LucidaSansUnicode-11.vlw"/>
+    <copy file="${lib}/data/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/data/LucidaSansUnicode-11.vlw"/>
 
     <copy todir="${dist}/rc1/org/openstreetmap/processing/">
       <fileset dir="${build}/org/openstreetmap/processing"/>
@@ -49,7 +49,7 @@
     </copy>
 
     <mkdir dir="${dist}/rc1/data"/>
-    <copy file="lib/hand.png" tofile="${dist}/rc1/data/hand.png"/>
+    <copy file="${lib}/data/hand.png" tofile="${dist}/rc1/data/hand.png"/>
 
     <jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />
 

@@ -78,983 +78,548 @@
  * 
  **/
 
-package org.openstreetmap.processing; 
+package org.openstreetmap.processing;
 
-import processing.core.PApplet;
-import processing.core.PImage;
-import processing.core.PFont;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
+import netscape.javascript.JSObject;
 
 import org.openstreetmap.client.Adapter;
 import org.openstreetmap.client.Tile;
-import org.openstreetmap.util.Point;
-import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Line;
-
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Hashtable;
-
-import netscape.javascript.*;
-
-public class OSMApplet extends PApplet {
-
-  Tile tiles;
-
-  private static final int WINDOW_WIDTH = 700;
-  private static final int WINDOW_HEIGHT = 500;
-
-  JSObject js;
-
-  int zoom;
-
-  boolean mouseDown = false;
-
-  /* set these for testing without needing to log in to the website - for deployment they should be set to null */
-  String USERNAME = null;
-  String PASSWORD = null;
-
-  /* handles XML-RPC etc */
-  public Adapter osm;
-
-  /* converts from lat/lon into screen space */
-  //Mercator projection;
-
-  /* collection of OSMNodes (may or may not be projected into screen space) */
-  public Hashtable nodes = new Hashtable();
-  /* collection of OSMLines */
-  public Hashtable lines = new Hashtable();
-  /* Integer id -> OSMNode */
-  //  Hashtable nodeMap = new Hashtable(); 
-
-  /* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
-  //  PImage gpxImage;
-
-  /* width of line segments - TODO: modulate based on scale, and road type */
-  float strokeWeight = 11.0f;
-
-  /* for displaying new lines whilst drawing (between start and mouseX/Y) */
-  Line tempLine = new Line(null,null);
-
-  /* current line, for editing street names - 
-   * TODO: 
-   *   change to array of lines and apply text to all (save as a new street?) 
-   *   track this in editmode, and make line.selected flag */
-  Line selectedLine;
-
-  /* current node, for moving nodes - TODO: track this in editmode, and make node.selected flag */
-  Node selectedNode = null;
-
-  /* selected start point when drawing lines */
-  Node start = null;
-
-  /* font for street names - 
-   * TODO:
-   *   create on the fly? (investigate standard available fonts)
-   *   modulate based on scale, and road type? */
-  PFont font;
-
-  /* background image - TODO: layers of images from different mapservers? */
-  //  PImage img = null;
-
-  /* URL for mapserver... will have bbx,width,height appended */
-  String wmsURL = "http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE"; 
-  //"http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
-
-  String apiURL = "http://www.openstreetmap.org/api/0.2/";
-
-  /* modes - input is passed to the current mode, assigned by node manager */
-  ModeManager modeManager;
-  EditMode nodeMode     = new NodeMode();
-  EditMode lineMode     = new LineMode();
-  EditMode nameMode     = new NameMode();
-  EditMode nodeMoveMode = new NodeMoveMode();
-  EditMode deleteMode   = new DeleteMode();
-  EditMode moveMode     = new MoveMode();
-
-  /* if !ready, a wait cursor is shown and input doesn't do anything 
-TODO: disable button mouseover highlighting when !ready */
-  boolean ready = false;
-
-  long lastmove;
-  boolean moved = true;
-
-  public void setup() {
-
-    size(WINDOW_WIDTH, WINDOW_HEIGHT);
-    smooth();
-
-    // this font should have all special characters - open to suggestions for changes though
-    font = loadFont("LucidaSansUnicode-11.vlw");
-
-    // initialise node manager and add buttons in desired order
-    modeManager = new ModeManager();
-    modeManager.addMode(moveMode);
-    modeManager.addMode(nodeMode);
-    modeManager.addMode(lineMode);
-    modeManager.addMode(nameMode);
-    modeManager.addMode(nodeMoveMode);
-    modeManager.addMode(deleteMode);
-
-    modeManager.draw(); // make modeManager set up things
-
-    // for centre lat/lon and scale (degrees per pixel)
-    float clat, clon, sc;
-
-    if (online) {
-
-      if( param_float_exists("clat") ) {
-        clat = parse_param_float("clat");  
-      } else {
-        clat = 51.526447f;
-      }
-
-      if( param_float_exists("clon") ) {
-        clon = parse_param_float("clon");  
-      } else {
-        clon = -0.14746371f;
-      }
-
-      if( param_float_exists("scale") ) {
-        sc = parse_param_float("scale");  
-      } else {
-        sc = 8.77914943209873e-06f;
-      }
-
-      if( param_float_exists("zoom") ) {
-        zoom = parse_param_int("zoom");
-        sc = 45f * (float)Math.pow(2f, -6 -zoom);
-      }
-    } else {
-      // traditional OSM Regent's Park London default
-      clat = 51.526447f;
-      clon = -0.14746371f;
-      zoom = 15;
-      //      sc   = 8.77914943209873e-06f;
-      sc = 45f * (float)Math.pow(2f, -6 -zoom);
-    }
-
-    if (online) {
-      try {
-        String wmsURLfromParam = param("wmsurl");
-        if (wmsURLfromParam != null) {
-          if (!wmsURLfromParam.equals("")) {
-            wmsURL = wmsURLfromParam;
-            if (wmsURL.indexOf("http://") < 0) {
-              wmsURL = "http://" + wmsURL;
-            }
-          }
-        }
-      }
-      catch (Exception e) {
-        println(e.toString());
-        e.printStackTrace();
-      }
-    }
-
-    if (online) {
-      try {
-        String apiURLfromParam = param("apiurl");
-        if (apiURLfromParam != null) {
-          if (!apiURLfromParam.equals("")) {
-            apiURL = apiURLfromParam;
-            if (apiURL.indexOf("http://") < 0) {
-              apiURL = "http://" + apiURL;
-            }
-          }
-        }
-      }
-      catch (Exception e) {
-        println(e.toString());
-        e.printStackTrace();
-      }
-    }
-
-    if(online)
-    {
-      js = (JSObject) JSObject.getWindow(this);
-    }
-
-    tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
-    tiles.start();
-
-    System.out.println(tiles);
-
-    recalcStrokeWeight();
-
-    System.out.println("Selected strokeWeight of " + strokeWeight );
-
-    println("check webpage applet parameters for a user/pass");
-    try {
-      USERNAME = param("user");
-      PASSWORD = param("pass");
-
-      System.out.println("Got user/pass: " + USERNAME + "/" + PASSWORD);
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    if (USERNAME == null && PASSWORD == null) {
-      println("check command line arguments for a user/pass");
-      try {
-        USERNAME = args[0];
-        PASSWORD = args[1];
-
-        System.out.println("Got user/pass: " + USERNAME + "/" + PASSWORD);
-      }
-      catch (Exception e2) {
-        e2.printStackTrace();
-      }
-    }
-
-    // try to connect to OSM
-    osm = new Adapter(USERNAME,PASSWORD, lines, nodes, apiURL);
-
-    Thread dataFetcher = new Thread(new Runnable() {
-
-      public void run() {
-
-        osm.getNodesAndLines(tiles.getTopLeft(),tiles.getBotRight(), tiles);
-
-        System.out.println("Got " + nodes.size() + " nodes and " + lines.size() + " lines.");
-
-        ready = true;
-
-        redraw();
-      }
-    });
-
-    if (osm != null) {
-      dataFetcher.start();
-    }
-
-    noLoop();
-    redraw();
-  } // setup
-
-
-  private boolean param_float_exists(String sParamName)
-  {
-    try
-    {
-      float foo = Float.parseFloat(param(sParamName));
-      return true;
-    }
-    catch(Exception e)
-    {
-
-    }
-    return false;
-  } // param_float_exists
-
-  private float parse_param_float(String sParamName)
-  {
-    return Float.parseFloat(param(sParamName));
-  } // parse_param_float
-
-  private int parse_param_int(String sParamName)
-  {
-    return Integer.parseInt(param(sParamName));
-  } // parse_param_float
-
-  boolean gotGPX = false;
-
-  public void draw() {
-
-    tiles.draw();
-    try{
-
-
-      if(modeManager.currentMode == moveMode)
-      {
-        if(!mouseDown && mouseY < buttonHeight + 5 && mouseY > 5 && mouseX > 5 && mouseX < 5 + buttonWidth * modeManager.getNumModes())
-        {
-          if(ready && !tiles.viewChanged)
-          {
-            cursor(ARROW);
-          }
-          else
-          {
-            cursor(WAIT);
-          }
-        }
-        else
-        {
-          cursor(MOVE);
-        }
-      }
-      else{
-        if (!ready) {
-          cursor(WAIT);
-        }
-        else {
-          cursor(ARROW);
-        }
-      }
-      noFill();
-      strokeWeight(strokeWeight+2.0f);
-      stroke(0);
-      Enumeration e = lines.elements();
-      while(e.hasMoreElements()){
-        Line line = (Line)e.nextElement();
-        //System.out.println("Doing line " + line.a.x + "," + line.a.y + " - " + line.b.x + "," + line.a.y);
-        if(line.uid == 0)
-        {
-          stroke(0,80);
-        }
-        else
-        {
-          stroke(0);
-        }
-        line(line.a.x,line.a.y,line.b.x,line.b.y);
-      }
-      strokeWeight(strokeWeight);
-      stroke(255);
-      e = lines.elements();
-      while(e.hasMoreElements()){
-
-        Line line = (Line)e.nextElement();
-        if(line.uid == 0)
-        {
-          stroke(255,80);
-        }
-        else
-        {
-          stroke(255);
-        }
-
-        line(line.a.x,line.a.y,line.b.x,line.b.y);
-      }
-      boolean gotOne = false;
-
-      e = lines.elements();
-      while(e.hasMoreElements()){
-        Line line = (Line)e.nextElement();
-        if (modeManager.currentMode == nameMode && !gotOne) {
-          // highlight first line under mouse
-          if (line.mouseOver(mouseX,mouseY,strokeWeight) && line.uid != 0) {
-            strokeWeight(strokeWeight);
-            stroke(0xffffff80);
-            line(line.a.x,line.a.y,line.b.x,line.b.y);
-            gotOne = true;
-          }
-        }
-      }
-
-      // draw temp line
-
-      if (start != null) {
-        tempLine.a = start;
-        tempLine.b = new Node(mouseX,mouseY,tiles);
-        stroke(0,80);
-        strokeWeight(strokeWeight+2);
-        line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
-        stroke(255,80);
-        strokeWeight(strokeWeight);
-        line(tempLine.a.x,tempLine.a.y,tempLine.b.x,tempLine.b.y);
-      }
-      // draw selected line
-      stroke(255,0,0,80);
-      strokeWeight(strokeWeight);
-      if (selectedLine != null) {
-        line(selectedLine.a.x,selectedLine.a.y,selectedLine.b.x,selectedLine.b.y);
-      }
-
-      // draw nodes
-      noStroke();
-      ellipseMode(CENTER);
-
-      e = nodes.elements();
-      while(e.hasMoreElements()){
-        Node node = (Node)e.nextElement();
-        if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
-          fill(0xffff0000);
-        }
-        else if (modeManager.currentMode == nodeMoveMode) {
-          if (node == selectedNode) {
-            fill(0xff00ff00);    
-          }
-          else if (mouseOverPoint(node)) {
-            fill(0xffff0000);
-          }
-          else {
-            fill(0xff000000);
-          }
-        }
-        else if (modeManager.currentMode == deleteMode) {
-          if (mouseOverPoint(node)) {
-            fill(0xffff0000);
-          }
-          else {
-            fill(0xff000000);
-          }
-        }
-        else if(node == tempLine.a || node == tempLine.b) {
-          fill(0xff000000);
-        }
-        else if (node.lines.size() > 0) {
-          fill(0xffffffff);
-        }
-        else {
-          fill(0xff000000);
-        }
-        drawPoint(node);
-      }
-
-      // draw street segment names
-      fill(0);
-      textFont(font);
-      textSize(strokeWeight + 4);
-      textAlign(CENTER);
-
-      e = lines.elements();
-      while(e.hasMoreElements()){
-        Line l = (Line)e.nextElement();
-        if (l.getName() != null) {
-          pushMatrix();
-          if (l.a.x <= l.b.x) {
-            translate(l.a.x,l.a.y);
-            rotate(l.angle());
-          }
-          else {
-            translate(l.b.x,l.b.y);
-            rotate(PI+l.angle());      
-          }
-          text(l.getName(),l.length()/2.0f,4);
-          popMatrix();
-        }
-      }
-
-      // draw all buttons
-      modeManager.draw();
-      if (online) {
-        status("lat: " + tiles.lat(mouseY) + ", lon: " + tiles.lon(mouseX));
-      }
-
-
-    }catch(NullPointerException npe)
-    {
-      println("caught null exception...");
-    }
-
-
-  }
-
-  public void recalcStrokeWeight()
-  {
-    strokeWeight = max(0.010f/tiles.kilometersPerPixel(),2.0f); // 10m roads, but min 2px width
-  } // recalcStrokeWeight
-
-  public void mouseMoved() {
-    if (ready) modeManager.mouseMoved();
-  }
-
-  public void mouseDragged() {
-    if(ready) 
-    {
-      modeManager.mouseDragged();
-    }
-  } // mouseDragged
-
-  public void mousePressed() {
-    mouseDown = true;
-    if (ready) modeManager.mousePressed();
-  }
-
-  public void mouseReleased() {
-    mouseDown = false;
-
-    if(ready)
-    {
-      if (!tiles.viewChanged) modeManager.mouseReleased();
-    }
-    
-  }
-
-  public void keyPressed() {
-    //print("keyPressed!");
-    if (ready) {
-      switch(key) {
-        case '[':
-          lastmove = System.currentTimeMillis();
-          tiles.zoomin();
-          updatelinks();
-          break;
-        case ']':
-          tiles.zoomout();
-          updatelinks();
-          break;
-
-        case '+':
-        case '=':
-          strokeWeight += 1.0f;
-          redraw();
-          break;
-        case '-':
-        case '_':
-          if (strokeWeight >= 2.0f) strokeWeight -= 1.0f;
-          redraw();
-          break;
-      }
-      if (modeManager.currentMode == nameMode) {
-        //println(key == CODED);
-        //println(java.lang.Character.getNumericValue(key));
-        //println("key= \"" + key + "\"");
-        //println("keyCode= \"" + keyCode + "\"");
-        //println("BACKSPACE= \"" + BACKSPACE + "\"");
-        //println("CODED= \"" + CODED + "\"");
-        modeManager.keyPressed();
-      }
-    }
-    key = 0; // catch when key = escape otherwise processing dies
-  }
-
-
-  public void keyReleased() {
-  } // keyReleased
-
-  // bit crufty - TODO tidy up and move into Point
-  public boolean mouseOverPoint(Point p) {
-    if (p.projected) {
-      return sqrt(sq(p.x-mouseX)+sq(p.y-mouseY)) < strokeWeight; // /2.0f;  so you don't have to be directly on a node for it to light up
-    }
-    else {
-      return false;
-    }
-  }
-
-  public synchronized void reProject()
-  {
-    Enumeration e = nodes.elements();
-    while(e.hasMoreElements())
-    {
-      Node n = (Node) e.nextElement();
-      n.project(tiles);
-    }
-
-  } // reproject
-
-
-
-  // bit crufty - TODO tidy up and move into draw()?
-  public void drawPoint(Point p) {
-    if (p.projected) {
-      ellipseMode(CENTER);
-      ellipse(p.x,p.y,strokeWeight-1,strokeWeight-1);
-    }
-  }
-
-  public void updatelinks() {
-    js.eval("updatelinks(" + tiles.lon( WINDOW_WIDTH/2 ) + "," + tiles.lat( WINDOW_HEIGHT/2 ) + "," + tiles.getzoom() + ")");
-  }
-
-  ////////////////////////////////////// BUTTON STUFF ////////////////////////////////////////////
-
-
-
-  float buttonWidth = 15.0f;
-  float buttonHeight = 15.0f;
-  // TODO PFont buttonFont; // for tool-tips
-
-  class EditMode {
-    boolean over = false;
-
-    public void mouseReleased() {}
-    public void mousePressed() {}
-    public void mouseMoved() {}
-    public void mouseDragged() {}
-    public void keyPressed() {}
-    public void keyReleased() {}
-    public void draw() {}
-    public void set() {}
-    public void unset() {}
-  }
-
-
-  class ModeManager {
-
-    Vector modes;
-    boolean overButton;
-    EditMode currentMode;
-    int x,y;
-
-    ModeManager() {
-      modes = new Vector();
-      overButton = false;  
-      x = 5;
-      y = 5;
-    }
-
-    public void addMode(EditMode mode) {
-      modes.addElement(mode);
-    }
-    public EditMode getMode(int i) {
-      return (EditMode)modes.elementAt(i);
-    }
-    public int getNumModes() {
-      return modes.size();
-    }
-
-    public void draw() {
-      //System.out.println("draw() START in ModeManager: overButton="+overButton);
-
-      overButton = false;
-
-      pushMatrix();
-      translate(x,y);
-      for (int i = 0; i < getNumModes(); i++) {
-        EditMode mode = getMode(i);
-        strokeWeight(1);
-        fill(200);
-        mode.over = mouseX > x+(i*buttonWidth) && mouseX < buttonWidth+x+(i*buttonWidth) && mouseY < y+buttonHeight && mouseY > y;
-        stroke(0);
-        fill(mode.over || currentMode == mode ? 255 : 200);
-        rect(0,0,buttonWidth,buttonHeight);
-        mode.draw();
-        overButton = overButton || mode.over;
-        translate(buttonWidth,0);
-      }
-      popMatrix();
-
-      //System.out.println("draw() END in ModeManager: overButton="+overButton);
-    }
-
-    public void mouseReleased() {
-      System.out.println("mouse relesed in mode manager");
-      for (int i = 0; i < getNumModes(); i++) {
-        EditMode mode = getMode(i);
-        if (mode.over) {
-          if (currentMode != null) {
-            currentMode.unset();
-          }
-          currentMode = mode;
-          currentMode.set();
-          break;
-        }
-      }
-      if (currentMode != null && !overButton) {
-        currentMode.mouseReleased();
-      }
-      print(currentMode);
-      print("ready:" + ready);
-      redraw();
-    }
-    
-    public void mousePressed() {
-      System.out.println("mousePressed in ModeManager with currentMode=" + currentMode + " and overButton=" + overButton);
-      if (currentMode != null && !overButton) {
-        currentMode.mousePressed();
-        redraw();
-      }
-    }
-    public void mouseMoved() {
-      if (currentMode != null) {
-        currentMode.mouseMoved();
-        redraw();
-      }
-      else
-      {
-        if(mouseY < buttonHeight && mouseX < (x + getNumModes()*buttonWidth))
-        {
-          redraw();
-        }
-      }
-    }
-    public void mouseDragged() {
-      if (currentMode != null) {
-        currentMode.mouseDragged();
-        redraw();
-      }
-    }
-    public void keyPressed() {
-      if (currentMode != null) {
-        currentMode.keyPressed();
-        redraw();
-      }
-    }
-    public void keyReleased() {
-      if (currentMode != null) {
-        currentMode.keyReleased();
-        redraw();
-      }
-    }
-
-  }
-
-  class NameMode extends EditMode {
-    public void keyPressed() {
-      System.out.println("got key " + key + " with keyCode " + keyCode + " and numeric val " + java.lang.Character.getNumericValue(key));
-      if (selectedLine != null) {
-        if(java.lang.Character.getNumericValue(key) == -1 && keyCode != 32 && keyCode != 222) { // should check for key == CODED but there's a Processing bug 
-          if (keyCode == BACKSPACE && selectedLine.getName().length() > 0) {
-            selectedLine.setName( selectedLine.getName().substring(0,selectedLine.getName().length()-1) );
-            selectedLine.nameChanged = true;
-          }
-          else if (keyCode == ENTER) {
-            if (selectedLine.nameChanged) {
-              if (osm != null) {
-                osm.updateLineName(selectedLine);
-              }
-            }
-            selectedLine = null;
-          }
-        }
-        else {
-          selectedLine.setName(selectedLine.getName() + key);
-          selectedLine.nameChanged = true;
-        }
-      }
-    }
-    public void mouseReleased() {
-      Line previousSelection = selectedLine;
-      selectedLine = null;
-      Enumeration e = lines.elements();
-      while(e.hasMoreElements()){
-        Line l = (Line)e.nextElement();
-        if (l.mouseOver(mouseX,mouseY,strokeWeight)) {
-          selectedLine = l;
-          break;
-        }
-      }
-      if (previousSelection != null && previousSelection != selectedLine) {
-        if (previousSelection.nameChanged) {
-          if (osm != null) {
-            osm.updateLineName(previousSelection);
-          }
-        }
-        selectedLine = null;
-      }
-    }
-    public void draw() {
-      fill(0);
-      textFont(font);
-      textSize(11);
-      textAlign(CENTER);
-      text("A",1+buttonWidth*0.5f,5+(buttonHeight*0.5f));
-    }
-  } 
-
-  class NodeMode extends EditMode {
-    
-    public void mouseReleased() {
-      boolean overOne = false; // points can't overlap
-      Enumeration e = nodes.elements();
-      while(e.hasMoreElements()){
-        Node p = (Node)e.nextElement();
-        if(mouseOverPoint(p)) {
-          overOne = true;
-          redraw();
-          break;
-        }
-      }    
-      if (!overOne) {
-        Node node = new Node(mouseX,mouseY,tiles);
-        String tempKey = "temp_" + Math.random();
-        if (osm != null) {
-          osm.createNode(node, tempKey); 
-        }
-        nodes.put(tempKey, node);
-
-        println(node);
-      }
-    }
-    public void draw() {
-      fill(0);
-      stroke(0);
-      ellipseMode(CENTER);
-      ellipse(buttonWidth/2.0f,buttonHeight/2.0f,5,5);
-    }
-  }
-
-
-  class MoveMode extends EditMode {
-    int lastmX;
-    int lastmY;
-    PImage hand = loadImage("/data/hand.png");
-
-    public void mouseReleased()
-    {
-      cursor(ARROW);
-    }
-
-    public void mousePressed()
-    {
-      lastmX = mouseX;
-      lastmY = mouseY;
-    }
-
-    public void mouseDragged() {
-      tiles.drag(lastmX - mouseX, mouseY - lastmY);
-      lastmX = mouseX;
-      lastmY = mouseY;
-      if(online)
-      {
-        updatelinks();
-      }
-    }
-
-    public void draw() {
-      //imagehere 
-      noFill();
-      stroke(0);
-      strokeWeight(1);
-      image(hand,1,2);
-    }
-  }
-
-
-  class LineMode extends EditMode {
-    public void mousePressed() {
-      Enumeration e = nodes.elements();
-      while(e.hasMoreElements()){
-        Node p = (Node)e.nextElement();
-        if(mouseOverPoint(p)) {
-          start = p;
-          break;
-        }
-      }    
-    }
-    public void mouseReleased() {
-      boolean gotOne = false;
-
-      Enumeration e = nodes.elements();
-      while(e.hasMoreElements()){
-        Node p = (Node)e.nextElement();
-        if(mouseOverPoint(p)) {
-          if (start != null) {
-            Line line = new Line(start,p);
-            String tempKey = "temp_" + Math.random();
-            if (osm != null) {
-              osm.createLine(line, tempKey); 
-            }
-            lines.put(tempKey,line);
-          }
-          gotOne = true;
-          break;
-        }
-      }
-      start = null;
-      tempLine.a = null;
-      tempLine.b = null;
-    }
-    public void draw() {
-      noFill();
-      stroke(0);
-      strokeWeight(5);
-      line(2,2,buttonWidth-2,buttonHeight-2);
-      stroke(255);
-      strokeWeight(4);
-      line(2,2,buttonWidth-2,buttonHeight-2);
-    }
-  }
-
-
-  class NodeMoveMode extends EditMode {
-    float lastOffsetX = 0.0f;
-    float lastOffsetY = 0.0f;
-    public void mousePressed() {
-      Enumeration e = nodes.elements();
-      while(e.hasMoreElements()){
-        Node p = (Node)e.nextElement();
-        if(mouseOverPoint(p)) {
-          selectedNode = p;
-          println("selected: " + selectedNode);
-          lastOffsetX = selectedNode.x - mouseX;
-          lastOffsetY = selectedNode.y - mouseY;
-          break;
-        }
-      }
-      println("selected: " + selectedNode);
-    }
-    public void mouseDragged() {
-      if (selectedNode != null) {
-        selectedNode.x = mouseX + lastOffsetX;
-        selectedNode.y = mouseY + lastOffsetY;
-        //println("node moved:" + selectedNode.x + " " + selectedNode.y);
-      }
-      else {
-        println("no selectedNode");
-      }
-    }
-    public void mouseReleased() {
-      if (selectedNode != null) {
-        selectedNode.unproject(tiles);
-        osm.moveNode(selectedNode); 
-        selectedNode = null;
-      }
-      else {
-        println("no selectedNode on mouse release");
-      }
-    }
-    public void draw() {
-      stroke(0);
-      noFill();
-      line(buttonWidth/2.0f,buttonHeight*0.2f,buttonWidth/2.0f,buttonHeight*0.8f);
-      line(buttonWidth*0.2f,buttonHeight/2.0f,buttonWidth*0.8f,buttonHeight/2.0f);
-    }
-    public void unset() {
-      if (selectedNode != null) {
-        selectedNode.unproject(tiles);
-        osm.moveNode(selectedNode);
-        selectedNode = null;
-      }
-    }
-  }
-
-
-  class DeleteMode extends EditMode {
-    public void mouseReleased() {
-      boolean gotOne = false;
-      Enumeration e = nodes.elements();
-      while(e.hasMoreElements()){
-        Node p = (Node)e.nextElement();
-        if(mouseOverPoint(p) && p.uid != 0) {
-          boolean del = true;
-          // TODO prompt for delete
-          if (del) {
-            println("deleting " + p);
-            osm.deleteNode(p);
-          }
-          else {
-            println("not deleting " + p);
-          }
-          gotOne = true;
-          break;
-        }
-      }
-      if (!gotOne) {
-        Enumeration ll = lines.elements();
-        while(ll.hasMoreElements()){
-          Line l = (Line)ll.nextElement();
-          if (l.mouseOver(mouseX,mouseY,strokeWeight) && l.uid != 0) {
-            boolean del = true;
-            // TODO prompt for delete
-            if (del) {
-              println("deleting " + l);
-              osm.deleteLine(l);
-            }
-            else {
-              println("not deleting " + l);
-            }
-            break;
-          }
-        }
-      }
-    }
-    public void draw() {
-      stroke(0);
-      noFill();
-      line(buttonWidth*0.2f,buttonHeight*0.2f,buttonWidth*0.8f,buttonHeight*0.8f);
-      line(buttonWidth*0.8f,buttonHeight*0.2f,buttonWidth*0.2f,buttonHeight*0.8f);
-    }
-  }
-
-  /////////////////////////////////////// END BUTTON STUFF ///////////////////////////////////////
-
-  static public void main(String args[]) {
-    PApplet.main(new String[] { "--present", "--display=1", "org.openstreetmap.processing.OSMApplet" });
-  } 
-
-  // OSMApplet
+import org.openstreetmap.util.Node;
+import org.openstreetmap.util.Point;
+
+import processing.core.PApplet;
+import processing.core.PFont;
+
+public class OsmApplet extends PApplet {
+
+	/**
+	 * Window standard width in pixel
+	 */
+	private static final int WINDOW_WIDTH = 700;
+	/**
+	 * Window standard height in pixel
+	 */
+	private static final int WINDOW_HEIGHT = 500;
+
+	Tile tiles;
+
+	private JSObject js;
+
+	/**
+	 * Current zoom level
+	 */
+	private int zoom = 15;
+
+	/**
+	 * Whether the left mouse button is pressed down.
+	 */
+	private boolean mouseDown = false;
+
+	/**
+	 * The username given as an applet parameter. To set this in test environments,
+	 * pass user=(here your email) as parameter to the applet runner.
+	 */
+	private String userName = null;
+	/**
+	 * The password in cleartext given as an applet parameter. 
+	 * To set this in test environments, set pass=(here your password) as parameter 
+	 * to the applet runner. Do not encode the password (cleartext only).
+	 */
+	private String password = null;
+
+	/**
+	 * Handles most communication with the server.
+	 */
+	public Adapter osm;
+
+	/**
+	 * Map of OSMNodes (may or may not be projected into screen space).
+	 * Type: String -> Node
+	 */
+	public Map nodes = new Hashtable();
+
+	/**
+	 * Collection of OSMLines
+	 * Type: String -> Line
+	 */
+	public Map lines = new Hashtable();
+
+	/* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
+	// private PImage gpxImage;
+
+	/**
+	 * Width of line segments
+	 * TODO: modulate based on scale, and road type
+	 */
+	float strokeWeight = 11.0f;
+
+	/**
+	 * For displaying new lines whilst drawing (between start and mouseX/Y)
+	 */
+	Line tempLine = new Line(null, null);
+
+	/*
+	 * current line, for editing street names - TODO: change to array of lines
+	 * and apply text to all (save as a new street?) track this in editmode, and
+	 * make line.selected flag
+	 */
+	Line selectedLine;
+
+	/*
+	 * current node, for moving nodes - TODO: track this in editmode, and make
+	 * node.selected flag
+	 */
+	Node selectedNode = null;
+
+	/* selected start point when drawing lines */
+	Node start = null;
+
+	/*
+	 * font for street names - TODO: create on the fly? (investigate standard
+	 * available fonts) modulate based on scale, and road type?
+	 */
+	PFont font;
+
+	/* background image - TODO: layers of images from different mapservers? */
+	// PImage img = null;
+	/* URL for mapserver... will have bbx,width,height appended */
+	String wmsURL = "http://www.openstreetmap.org/tile/0.2/gpx?;http://www.openstreetmap.org/api/wms/0.2/landsat/?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&FORMAT=image/jpeg";
+
+	// "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
+
+	String apiURL = "http://www.openstreetmap.org/api/0.2/";
+
+	/* modes - input is passed to the current mode, assigned by node manager */
+	ModeManager modeManager;
+
+	EditMode nodeMode = new NodeMode(this);
+	EditMode lineMode = new LineMode(this);
+	EditMode nameMode = new NameMode(this);
+	EditMode nodeMoveMode = new NodeMoveMode(this);
+	EditMode deleteMode = new DeleteMode(this);
+	EditMode moveMode = new MoveMode(this);
+
+	/*
+	 * if !ready, a wait cursor is shown and input doesn't do anything TODO:
+	 * disable button mouseover highlighting when !ready
+	 */
+	boolean ready = false;
+
+	long lastmove;
+
+	boolean moved = true;
+
+	boolean gotGPX = false;
+
+	public void setup() {
+
+		size(WINDOW_WIDTH, WINDOW_HEIGHT);
+		smooth();
+
+		// this font should have all special characters - open to suggestions
+		// for changes though
+		font = loadFont("/data/LucidaSansUnicode-11.vlw");
+
+		// initialise node manager and add buttons in desired order
+		modeManager = new ModeManager(this);
+		modeManager.addMode(moveMode);
+		modeManager.addMode(nodeMode);
+		modeManager.addMode(lineMode);
+		modeManager.addMode(nameMode);
+		modeManager.addMode(nodeMoveMode);
+		modeManager.addMode(deleteMode);
+
+		modeManager.draw(); // make modeManager set up things
+
+		// for centre lat/lon and scale (degrees per pixel)
+		float clat = 51.526447f, clon = -0.14746371f;
+
+		if (online) {
+			if (param_float_exists("clat"))
+				clat = parse_param_float("clat");
+			if (param_float_exists("clon"))
+				clon = parse_param_float("clon");
+			if (param_float_exists("zoom"))
+				zoom = parse_param_int("zoom");
+
+			try {
+				String wmsURLfromParam = param("wmsurl");
+				if (wmsURLfromParam != null && !wmsURLfromParam.equals("")) {
+					wmsURL = wmsURLfromParam;
+					if (wmsURL.indexOf("http://") < 0)
+						wmsURL = "http://" + wmsURL;
+				}
+			} catch (Exception e) {
+				println(e.toString());
+				e.printStackTrace();
+			}
+
+			try {
+				String apiURLfromParam = param("apiurl");
+				if (apiURLfromParam != null) {
+					if (!apiURLfromParam.equals("")) {
+						apiURL = apiURLfromParam;
+						if (apiURL.indexOf("http://") < 0) {
+							apiURL = "http://" + apiURL;
+						}
+					}
+				}
+			} catch (Exception e) {
+				println(e.toString());
+				e.printStackTrace();
+			}
+
+			js = JSObject.getWindow(this);
+		}
+
+		tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
+		tiles.start();
+
+		System.out.println(tiles);
+
+		recalcStrokeWeight();
+
+		System.out.println("Selected strokeWeight of " + strokeWeight);
+
+		println("check webpage applet parameters for a user/pass");
+		try {
+			userName = param("user");
+			password = param("pass");
+
+			System.out.println("Got user/pass: " + userName + "/" + password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (userName == null && password == null) {
+			println("check command line arguments for a user/pass");
+			for (int i = 0; i < args.length; ++i) {
+				if (args[i].startsWith("--user") && args[i].indexOf('=') != -1) {
+					userName = args[i].substring(args[i].indexOf('=')+1);
+				}
+				if (args[i].startsWith("--pass") && args[i].indexOf('=') != -1) {
+					password = args[i].substring(args[i].indexOf('=')+1);
+				}
+				if (userName != null && password != null)
+					System.out.println("Got user/pass: " + userName + "/" + password);
+			}
+		}
+
+		// try to connect to OSM
+		osm = new Adapter(userName, password, lines, nodes, apiURL);
+
+		Thread dataFetcher = new Thread(new Runnable() {
+
+			public void run() {
+
+				osm.getNodesAndLines(tiles.getTopLeft(), tiles.getBotRight(),
+						tiles);
+
+				System.out.println("Got " + nodes.size() + " nodes and "
+						+ lines.size() + " lines.");
+
+				ready = true;
+
+				redraw();
+			}
+		});
+
+		if (osm != null) {
+			dataFetcher.start();
+		}
+
+		noLoop();
+		redraw();
+	} // setup
+
+	
+	private boolean param_float_exists(String paramName) {
+		try {
+			Float.parseFloat(param(paramName));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private float parse_param_float(String paramName) {
+		return Float.parseFloat(param(paramName));
+	}
+
+	private int parse_param_int(String paramName) {
+		return Integer.parseInt(param(paramName));
+	}
+
+	public void draw() {
+		tiles.draw();
+		try {
+			if (modeManager.currentMode == moveMode) {
+				if (!mouseDown && mouseY < buttonHeight + 5 && mouseY > 5
+						&& mouseX > 5
+						&& mouseX < 5 + buttonWidth * modeManager.getNumModes()) {
+					if (ready && !tiles.viewChanged) {
+						cursor(ARROW);
+					} else {
+						cursor(WAIT);
+					}
+				} else {
+					cursor(MOVE);
+				}
+			} else {
+				if (!ready) {
+					cursor(WAIT);
+				} else {
+					cursor(ARROW);
+				}
+			}
+			noFill();
+			strokeWeight(strokeWeight + 2.0f);
+			stroke(0);
+			for (Iterator it = lines.values().iterator(); it.hasNext();) {
+				Line line = (Line)it.next();
+				// System.out.println("Doing line " + line.a.x + "," + line.a.y
+				// + " - " + line.b.x + "," + line.a.y);
+				if (line.id == 0) {
+					stroke(0, 80);
+				} else {
+					stroke(0);
+				}
+				line(line.from.x, line.from.y, line.to.x, line.to.y);
+			}
+			strokeWeight(strokeWeight);
+			stroke(255);
+			for (Iterator it = lines.values().iterator(); it.hasNext();) {
+				Line line = (Line)it.next();
+				if (line.id == 0) {
+					stroke(255, 80);
+				} else {
+					stroke(255);
+				}
+
+				line(line.from.x, line.from.y, line.to.x, line.to.y);
+			}
+			boolean gotOne = false;
+
+			for (Iterator it = lines.values().iterator(); it.hasNext();) {
+				Line line = (Line)it.next();
+				if (modeManager.currentMode == nameMode && !gotOne) {
+					// highlight first line under mouse
+					if (line.mouseOver(mouseX, mouseY, strokeWeight)
+							&& line.id != 0) {
+						strokeWeight(strokeWeight);
+						stroke(0xffffff80);
+						line(line.from.x, line.from.y, line.to.x, line.to.y);
+						gotOne = true;
+					}
+				}
+			}
+
+			// draw temp line
+
+			if (start != null) {
+				tempLine.from = start;
+				tempLine.to = new Node(mouseX, mouseY, tiles);
+				stroke(0, 80);
+				strokeWeight(strokeWeight + 2);
+				line(tempLine.from.x, tempLine.from.y, tempLine.to.x,
+						tempLine.to.y);
+				stroke(255, 80);
+				strokeWeight(strokeWeight);
+				line(tempLine.from.x, tempLine.from.y, tempLine.to.x,
+						tempLine.to.y);
+			}
+			// draw selected line
+			stroke(255, 0, 0, 80);
+			strokeWeight(strokeWeight);
+			if (selectedLine != null) {
+				line(selectedLine.from.x, selectedLine.from.y,
+						selectedLine.to.x, selectedLine.to.y);
+			}
+
+			// draw nodes
+			noStroke();
+			ellipseMode(CENTER);
+
+			for (Iterator it = nodes.values().iterator(); it.hasNext();) {
+				Node node = (Node)it.next();
+				if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
+					fill(0xffff0000);
+				} else if (modeManager.currentMode == nodeMoveMode) {
+					if (node == selectedNode) {
+						fill(0xff00ff00);
+					} else if (mouseOverPoint(node)) {
+						fill(0xffff0000);
+					} else {
+						fill(0xff000000);
+					}
+				} else if (modeManager.currentMode == deleteMode) {
+					if (mouseOverPoint(node)) {
+						fill(0xffff0000);
+					} else {
+						fill(0xff000000);
+					}
+				} else if (node == tempLine.from || node == tempLine.to) {
+					fill(0xff000000);
+				} else if (node.lines.size() > 0) {
+					fill(0xffffffff);
+				} else {
+					fill(0xff000000);
+				}
+				drawPoint(node);
+			}
+
+			// draw street segment names
+			fill(0);
+			textFont(font);
+			textSize(strokeWeight + 4);
+			textAlign(CENTER);
+
+			for (Iterator e = lines.values().iterator(); e.hasNext();) {
+				Line l = (Line)e.next();
+				if (l.getName() != null) {
+					pushMatrix();
+					if (l.from.x <= l.to.x) {
+						translate(l.from.x, l.from.y);
+						rotate(l.angle());
+					} else {
+						translate(l.to.x, l.to.y);
+						rotate(PI + l.angle());
+					}
+					text(l.getName(), l.length() / 2.0f, 4);
+					popMatrix();
+				}
+			}
+
+			// draw all buttons
+			modeManager.draw();
+			if (online) {
+				status("lat: " + tiles.lat(mouseY) + ", lon: "
+						+ tiles.lon(mouseX));
+			}
+
+		} catch (NullPointerException npe) {
+			println("caught null exception...");
+		}
+
+	}
+
+	public void recalcStrokeWeight() {
+		// 10m roads, but min 2px width
+		strokeWeight = max(0.010f / tiles.kilometersPerPixel(), 2.0f); 
+	}
+
+	public void mouseMoved() {
+		if (ready)
+			modeManager.mouseMoved();
+	}
+
+	public void mouseDragged() {
+		if (ready) {
+			modeManager.mouseDragged();
+		}
+	}
+
+	public void mousePressed() {
+		mouseDown = true;
+		if (ready)
+			modeManager.mousePressed();
+	}
+
+	public void mouseReleased() {
+		mouseDown = false;
+		if (ready) {
+			if (!tiles.viewChanged)
+				modeManager.mouseReleased();
+		}
+	}
+
+	public void keyPressed() {
+		// print("keyPressed!");
+		if (ready) {
+			switch (key) {
+			case '[':
+				lastmove = System.currentTimeMillis();
+				tiles.zoomin();
+				updatelinks();
+				break;
+			case ']':
+				tiles.zoomout();
+				updatelinks();
+				break;
+
+			case '+':
+			case '=':
+				strokeWeight += 1.0f;
+				redraw();
+				break;
+			case '-':
+			case '_':
+				if (strokeWeight >= 2.0f)
+					strokeWeight -= 1.0f;
+				redraw();
+				break;
+			}
+			if (modeManager.currentMode == nameMode) {
+				// println(key == CODED);
+				// println(java.lang.Character.getNumericValue(key));
+				// println("key= \"" + key + "\"");
+				// println("keyCode= \"" + keyCode + "\"");
+				// println("BACKSPACE= \"" + BACKSPACE + "\"");
+				// println("CODED= \"" + CODED + "\"");
+				modeManager.keyPressed();
+			}
+		}
+		key = 0; // catch when key = escape otherwise processing dies
+	}
+
+	public void keyReleased() {
+	} // keyReleased
+
+	// bit crufty - TODO tidy up and move into Point
+	public boolean mouseOverPoint(Point p) {
+		if (p.projected) {
+			// /2.0f; so you don't have to be directly on a node for it to light up
+			return sqrt(sq(p.x - mouseX) + sq(p.y - mouseY)) < strokeWeight; 
+		}
+		return false;
+	}
+
+	public synchronized void reProject() {
+		for (Iterator it = nodes.values().iterator(); it.hasNext();)
+			((Node)it.next()).project(tiles);
+	}
+
+	// bit crufty - TODO tidy up and move into draw()?
+	public void drawPoint(Point p) {
+		if (p.projected) {
+			ellipseMode(CENTER);
+			ellipse(p.x, p.y, strokeWeight - 1, strokeWeight - 1);
+		}
+	}
+
+	public void updatelinks() {
+		js.eval("updatelinks(" + tiles.lon(WINDOW_WIDTH / 2) + "," + tiles.lat(WINDOW_HEIGHT / 2) + "," + tiles.getZoom() + ")");
+	}
+
+
+	///////////////////////////// BUTTON STUFF //////////////////////////////////
+
+	float buttonWidth = 15.0f;
+	float buttonHeight = 15.0f;
+
+	// TODO PFont buttonFont; // for tool-tips
+
+	static public void main(String args[]) {
+		String[] params = new String[args.length+3];
+		params[0] = "--present";
+		params[1] = "--display=1";
+		params[2] = "org.openstreetmap.processing.OsmApplet";
+		System.arraycopy(args, 0, params, 3, args.length);
+		PApplet.main(params);
+	}
 }

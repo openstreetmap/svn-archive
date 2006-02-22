@@ -64,4 +64,8 @@ public class DeleteMode extends EditMode {
 		applet.line(applet.buttonWidth * 0.8f, applet.buttonHeight * 0.2f, applet.buttonWidth * 0.2f,
 				applet.buttonHeight * 0.8f);
 	}
+
+	public String getDescription() {
+		return "Click to delete an object";
+	}
 }

@@ -73,4 +73,8 @@ public class NodeMoveMode extends EditMode {
 			applet.selectedNode = null;
 		}
 	}
+
+	public String getDescription() {
+		return "Drag to move nodes";
+	}
 }

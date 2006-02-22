@@ -20,7 +20,7 @@ public class ModeManager {
 	boolean overButton;
 	EditMode currentMode;
 	int x, y;
-
+	
 	ModeManager(OsmApplet applet) {
 		this.applet = applet;
 		modes = new Vector();
@@ -42,31 +42,29 @@ public class ModeManager {
 	}
 
 	public void draw() {
-		// System.out.println("draw() START in ModeManager:
-		// overButton="+overButton);
+		// System.out.println("draw() START in ModeManager: overButton="+overButton);
 
 		overButton = false;
 
-		this.applet.pushMatrix();
-		this.applet.translate(x, y);
+		applet.pushMatrix();
+		applet.translate(x, y);
 		for (int i = 0; i < getNumModes(); i++) {
 			EditMode mode = getMode(i);
-			this.applet.strokeWeight(1);
-			this.applet.fill(200);
-			mode.over = this.applet.mouseX > x + (i * this.applet.buttonWidth)
-					&& this.applet.mouseX < this.applet.buttonWidth + x + (i * this.applet.buttonWidth)
-					&& this.applet.mouseY < y + this.applet.buttonHeight && this.applet.mouseY > y;
-			this.applet.stroke(0);
-			this.applet.fill(mode.over || currentMode == mode ? 255 : 200);
-			this.applet.rect(0, 0, this.applet.buttonWidth, this.applet.buttonHeight);
+			applet.strokeWeight(1);
+			applet.fill(200);
+			mode.over = applet.mouseX > x + (i * applet.buttonWidth)
+					&& applet.mouseX < applet.buttonWidth + x + (i * applet.buttonWidth)
+					&& applet.mouseY < y + applet.buttonHeight && applet.mouseY > y;
+			applet.stroke(0);
+			applet.fill(mode.over || currentMode == mode ? 255 : 200);
+			applet.rect(0, 0, applet.buttonWidth, applet.buttonHeight);
 			mode.draw();
 			overButton = overButton || mode.over;
-			this.applet.translate(this.applet.buttonWidth, 0);
+			applet.translate(applet.buttonWidth, 0);
 		}
-		this.applet.popMatrix();
+		applet.popMatrix();
 
-		// System.out.println("draw() END in ModeManager:
-		// overButton="+overButton);
+		// System.out.println("draw() END in ModeManager: overButton="+overButton);
 	}
 
 	public void mouseReleased() {
@@ -86,8 +84,8 @@ public class ModeManager {
 			currentMode.mouseReleased();
 		}
 		OsmApplet.print(currentMode);
-		OsmApplet.print("ready:" + this.applet.ready);
-		this.applet.redraw();
+		OsmApplet.print("ready:" + applet.ready);
+		applet.redraw();
 	}
 
 	public void mousePressed() {
@@ -95,18 +93,18 @@ public class ModeManager {
 				+ currentMode + " and overButton=" + overButton);
 		if (currentMode != null && !overButton) {
 			currentMode.mousePressed();
-			this.applet.redraw();
+			applet.redraw();
 		}
 	}
 
 	public void mouseMoved() {
 		if (currentMode != null) {
 			currentMode.mouseMoved();
-			this.applet.redraw();
+			applet.redraw();
 		} else {
-			if (this.applet.mouseY < this.applet.buttonHeight
-					&& this.applet.mouseX < (x + getNumModes() * this.applet.buttonWidth)) {
-				this.applet.redraw();
+			if (applet.mouseY < applet.buttonHeight
+					&& applet.mouseX < (x + getNumModes() * applet.buttonWidth)) {
+				applet.redraw();
 			}
 		}
 	}
@@ -114,21 +112,21 @@ public class ModeManager {
 	public void mouseDragged() {
 		if (currentMode != null) {
 			currentMode.mouseDragged();
-			this.applet.redraw();
+			applet.redraw();
 		}
 	}
 
 	public void keyPressed() {
 		if (currentMode != null) {
 			currentMode.keyPressed();
-			this.applet.redraw();
+			applet.redraw();
 		}
 	}
 
 	public void keyReleased() {
 		if (currentMode != null) {
 			currentMode.keyReleased();
-			this.applet.redraw();
+			applet.redraw();
 		}
 	}
 

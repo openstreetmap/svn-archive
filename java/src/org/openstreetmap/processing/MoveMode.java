@@ -7,7 +7,7 @@ package org.openstreetmap.processing;
 import processing.core.PImage;
 
 /**
- * Edit mode to move objects around in the applet.
+ * Edit mode to move the applet view.
  */
 public class MoveMode extends EditMode {
 
@@ -48,5 +48,9 @@ public class MoveMode extends EditMode {
 		applet.stroke(0);
 		applet.strokeWeight(1);
 		applet.image(hand, 1, 2);
+	}
+
+	public String getDescription() {
+		return "Move the displayed area";
 	}
 }

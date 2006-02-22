@@ -63,4 +63,8 @@ public class LineMode extends EditMode {
 		applet.strokeWeight(4);
 		applet.line(2, 2, applet.buttonWidth - 2, applet.buttonHeight - 2);
 	}
+
+	public String getDescription() {
+		return "Drag to draw a line segment";
+	}
 }

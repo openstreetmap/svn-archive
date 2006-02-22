@@ -6,7 +6,7 @@ package org.openstreetmap.processing;
 /**
  * Base class for all edit modes in the applet.
  */
-public class EditMode {
+abstract public class EditMode {
 	boolean over = false;
 
 	public void mouseReleased() {}
@@ -18,4 +18,6 @@ public class EditMode {
 	public void draw() {}
 	public void set() {}
 	public void unset() {}
+	
+	abstract public String getDescription(); 
 }

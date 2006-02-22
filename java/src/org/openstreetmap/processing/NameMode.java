@@ -82,4 +82,8 @@ public class NameMode extends EditMode {
 		this.applet.textAlign(OsmApplet.CENTER);
 		this.applet.text("A", 1 + this.applet.buttonWidth * 0.5f, 5 + (this.applet.buttonHeight * 0.5f));
 	}
+
+	public String getDescription() {
+		return "Change the name of objects";
+	}
 }

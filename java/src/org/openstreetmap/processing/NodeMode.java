@@ -49,4 +49,8 @@ public class NodeMode extends EditMode {
 		applet.ellipseMode(OsmApplet.CENTER);
 		applet.ellipse(applet.buttonWidth / 2.0f, applet.buttonHeight / 2.0f, 5, 5);
 	}
+
+	public String getDescription() {
+		return "Click to add new nodes";
+	}
 }

@@ -27,6 +27,11 @@ public class Adapter {
 	private String apiUrl = "http://www.openstreetmap.org/api/0.2/";
 
 	/**
+	 * The server command manager to deploy server commands.
+	 */
+	public final CommandManager commandManager = new CommandManager();
+	
+	/**
 	 * A map from the key identifier for line segments to the real line segments.
 	 * Type: String -> Line 
 	 */
@@ -129,7 +134,7 @@ public class Adapter {
 	 * Queue the deletion of the node. Return immediatly.
 	 */
 	public void deleteNode(Node node) {
-		new Thread(new NodeDeleter(node)).start();
+		commandManager.add(new NodeDeleter(node));
 	}
 
 	/**
@@ -137,344 +142,365 @@ public class Adapter {
 	 */
 	public void deleteLine(Line line) {
 		System.out.println("Deleting line " + line.id);
-		new Thread(new LineDeleter(line)).start();
+		commandManager.add(new LineDeleter(line));
 	}
 
 	/**
 	 * Queue the creation of the node. Return immediatly.
 	 */
 	public void createNode(Node node, String tempKey) {
-		new Thread(new NodeCreator(node, tempKey)).start();
+		commandManager.add(new NodeCreator(node, tempKey));
 	}
 
 	/**
 	 * Queue the movement of the node. Return immediatly.
 	 */
-	public void moveNode(Node node) {
-		new Thread(new NodeMover(node)).start();
+	public void moveNode(Node node, double newLat, double newLon, float newX, float newY) {
+		commandManager.add(new NodeMover(node, newLat, newLon, newX, newY));
 	}
 
 	/**
 	 * Queue the creation of the line segment. Return immediatly.
 	 */
 	public void createLine(Line line, String tempKey) {
-		new Thread(new LineCreator(line, tempKey)).start();
+		commandManager.add(new LineCreator(line, tempKey));
 	}
 
 	/**
 	 * Queue the change of the line segments name. Return immediatly.
 	 */
-	public void updateLineName(Line line) {
-		new Thread(new LineUpdater(line)).start();
+	public void updateLineName(Line line, String newName) {
+		commandManager.add(new LineUpdater(line, newName));
 	}
 
 	/**
 	 * Delete a specific node in the intern node list.
 	 */
-	private class NodeDeleter implements Runnable {
+	private class NodeDeleter implements ServerCommand {
 		private Node node;
 		public NodeDeleter(Node node) {this.node = node;}
-		public void run() {
+		public void preConnectionModifyData() {
 			System.out.println("tyring to delete node with " + node.lines.size() + " lines");
-
-			try {
-				nodes.remove(node.key());
-				for (Iterator it = node.lines.iterator(); it.hasNext();) {
-					Line line = (Line)it.next();
-					lines.remove(line.key());
-					// TODO - does the database do this automagically?
-					// deleteLine(line);
-				}
-
-				String url = apiUrl + "node/" + node.id;
-				System.out.println("trying to delete node by throwing HTTP DELETE at " + url);
-
-				HttpClient client = new HttpClient();
-
-				client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-				client.getState().setCredentials(AuthScope.ANY, creds);
-
-				DeleteMethod del = new DeleteMethod(url);
-
-				client.executeMethod(del);
-				int rCode = del.getStatusCode();
-
-				del.releaseConnection();
-
-				if (rCode == 200) {
-					System.err.println("node removed successfully: " + node);
-				} else {
-					System.err.println("error removing node: " + node);
-					System.err.println("HTTP DELETE got response " + rCode + " back from the abyss");
-
-					nodes.put(node.key(), node);
-					for (Iterator it = node.lines.iterator(); it.hasNext();) {
-						Line line = (Line)it.next();
-						lines.put(line.key(), line);
-					}
-				}
-			} catch (Exception e) {
-				System.err.println("error removing node: " + node);
-				e.printStackTrace();
-				nodes.put(node.key(), node);
-				for (Iterator it = node.lines.iterator(); it.hasNext();) {
-					Line line = (Line)it.next();
-					lines.put(line.key(), line);
-				}
+			nodes.remove(node.key());
+			for (Iterator it = node.lines.iterator(); it.hasNext();) {
+				Line line = (Line)it.next();
+				lines.remove(line.key());
+				// TODO - does the database do this automagically?
+				// deleteLine(line);
 			}
 		}
-	} // NodeDeleter
+		public boolean connectToServer() throws IOException {
+			String url = apiUrl + "node/" + node.id;
+			System.out.println("trying to delete node by throwing HTTP DELETE at " + url);
+
+			HttpClient client = new HttpClient();
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+			DeleteMethod del = new DeleteMethod(url);
+			client.executeMethod(del);
+			int rCode = del.getStatusCode();
+			del.releaseConnection();
+
+			if (rCode == 200) {
+				System.err.println("node removed successfully: " + node);
+				return true;
+			}
+			System.err.println("error removing node: " + node);
+			System.err.println("HTTP DELETE got response " + rCode + " back from the abyss");
+			return false;
+		}
+		public void undoModifyData() {
+			nodes.put(node.key(), node);
+			for (Iterator it = node.lines.iterator(); it.hasNext();) {
+				Line line = (Line)it.next();
+				lines.put(line.key(), line);
+			}
+		}
+		public void postConnectionModifyData() {}
+	}
 
 	
 	/**
 	 * Delete a specific line segment from the intern map.
 	 */
-	private class LineDeleter implements Runnable {
+	private class LineDeleter implements ServerCommand {
 		private Line line;
 		public LineDeleter(Line line) {this.line = line;}
-		public void run() {
+		public void preConnectionModifyData() {
 			System.out.println("Trying to delete line " + line);
-
-			try {
-				line.from.lines.remove(line);
-				line.to.lines.remove(line);
-				lines.remove(line.key());
-
-				String url = apiUrl + "segment/" + line.id;
-				System.out.println("trying to delete line by throwing HTTP DELETE at " + url);
-
-				HttpClient client = new HttpClient();
-
-				client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-				client.getState().setCredentials(AuthScope.ANY, creds);
-
-				DeleteMethod del = new DeleteMethod(url);
-
-				client.executeMethod(del);
-				int rCode = del.getStatusCode();
-
-				del.releaseConnection();
-
-				if (rCode == 200) {
-					System.err.println("line removed successfully: " + line);
-				} else {
-					System.err.println("error removing line: " + line);
-					lines.put(line.key(), line);
-				}
-			} catch (Exception e) {
-				System.err.println("error removing line: " + line);
-				e.printStackTrace();
-			}
+			line.from.lines.remove(line);
+			line.to.lines.remove(line);
+			lines.remove(line.key());
 		}
+		public boolean connectToServer() throws IOException {
+			String url = apiUrl + "segment/" + line.id;
+			System.out.println("trying to delete line by throwing HTTP DELETE at " + url);
+			HttpClient client = new HttpClient();
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+			DeleteMethod del = new DeleteMethod(url);
+			client.executeMethod(del);
+			int rCode = del.getStatusCode();
+			del.releaseConnection();
+			if (rCode == 200) {
+				System.err.println("line removed successfully: " + line);
+				return true;
+			}
+			System.err.println("error removing line: " + line);
+			return false;
+		}
+		public void undoModifyData() {
+			lines.put(line.key(), line);
+			line.to.lines.add(line);
+			line.from.lines.add(line);
+		}
+		public void postConnectionModifyData() {}
 	}
 
 	/**
 	 * Create a node in the intern node list.
 	 */
-	private class NodeCreator implements Runnable {
+	private class NodeCreator implements ServerCommand {
 		private Node node;
 		private String tempKey;
+		private long id = -1;
 		
 		public NodeCreator(Node node, String t) {
 			this.node = node;
 			this.tempKey = t;
 		}
 
-		public void run() {
-			try {
-				String xml = "<osm><node tags=\"\" lon=\"" + node.lon + "\" lat=\"" + node.lat + "\" /></osm>";
-				String url = apiUrl + "newnode";
-
-				System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
-
-				HttpClient client = new HttpClient();
-
-				client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-				client.getState().setCredentials(AuthScope.ANY, creds);
-
-				PutMethod put = new PutMethod(url);
-				put.setRequestBody(xml);
-
-				client.executeMethod(put);
-
-				int rCode = put.getStatusCode();
-				long id = -1;
-
-				System.out.println("Got response code " + rCode);
-				if (rCode == 200) {
-					String response = put.getResponseBodyAsString();
-					System.out.println("got reponse " + response);
-					response = response.trim(); // get rid of leading and trailing whitespace
-					id = Long.parseLong(response);
-				}
-
-				put.releaseConnection();
-
-				if (id != -1) {
-					node.id = id;
-					nodes.remove(tempKey);
-					nodes.put(node.key(), node);
-					System.err.println("node created successfully: " + node);
-				} else {
-					System.err.println("error creating node: " + node);
-					nodes.remove(tempKey);
-				}
-			} catch (Exception e) {
-				System.err.println("error creating node: " + node);
-				e.printStackTrace();
-				nodes.remove(tempKey);
-			}
+		public void preConnectionModifyData() {
+			nodes.put(tempKey, node);
 		}
-	} // NodeCreator
 
-	
+		public boolean connectToServer() throws IOException {
+			String xml = "<osm><node tags=\"\" lon=\"" + node.lon + "\" lat=\"" + node.lat + "\" /></osm>";
+			String url = apiUrl + "newnode";
+
+			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+
+			HttpClient client = new HttpClient();
+
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+
+			PutMethod put = new PutMethod(url);
+			put.setRequestBody(xml);
+
+			client.executeMethod(put);
+
+			int rCode = put.getStatusCode();
+			System.out.println("Got response code " + rCode);
+			if (rCode == 200) {
+				String response = put.getResponseBodyAsString();
+				System.out.println("got reponse " + response);
+				response = response.trim(); // get rid of leading and trailing whitespace
+				id = Long.parseLong(response);
+			}
+
+			put.releaseConnection();
+
+			if (id != -1) {
+				System.err.println("node created successfully: " + node);
+				return true;
+			}
+			System.err.println("error creating node: " + node);
+			return false;
+		}
+
+		public void undoModifyData() {
+			nodes.remove(tempKey);
+		}
+
+		public void postConnectionModifyData() {
+			node.id = id;
+			nodes.remove(tempKey);
+			nodes.put(node.key(), node);
+		}
+	}
+
+
 	/**
 	 * Move a node.
 	 */
-	private class NodeMover implements Runnable {
-		private Node node;
-		public NodeMover(Node node) {this.node = node;}
-		public void run() {
-			try {
-				String xml = "<osm><node tags=\"" + node.tags + "\" lon=\""
-						+ node.lon + "\" lat=\"" + node.lat + "\" uid=\""
-						+ node.id + "\" /></osm>";
+	private class NodeMover implements ServerCommand {
+		private final Node node;
+		private final double newLat;
+		private final double newLon;
+		private final float newX;
+		private final float newY;
+		private final double oldLat;
+		private final double oldLon;
+		private final float oldX;
+		private final float oldY;
 
-				String url = apiUrl + "node/" + node.id;
-
-				System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
-
-				HttpClient client = new HttpClient();
-
-				client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-				client.getState().setCredentials(AuthScope.ANY, creds);
-
-				PutMethod put = new PutMethod(url);
-				put.setRequestBody(xml);
-
-				client.executeMethod(put);
-				int rCode = put.getStatusCode();
-
-				put.releaseConnection();
-
-				if (rCode != 200) {
-					System.err.println("error moving node: " + node + ", got response " + rCode + " from the abyss");
-					// TODO: error handling... (restore the old node position?)
-				}
-			} catch (Exception e) {
-				System.err.println("error moving node: " + node);
-				e.printStackTrace();
-			}
+		public NodeMover(Node node, double newLat, double newLon, float newX, float newY) {
+			this.node = node;
+			this.newLat = newLat;
+			this.newLon = newLon;
+			this.newX = newX;
+			this.newY = newY;
+			oldLat = node.lat;
+			oldLon = node.lon;
+			oldX = node.x;
+			oldY = node.y;
 		}
-	} // NodeMover
+		
+		public void preConnectionModifyData() {
+			node.lat = newLat;
+			node.lon = newLon;
+			node.x = newX;
+			node.y = newY;
+		}
+		public boolean connectToServer() throws IOException {
+			String xml = "<osm><node tags=\"" + node.tags + "\" lon=\""
+			+ node.lon + "\" lat=\"" + node.lat + "\" uid=\""
+			+ node.id + "\" /></osm>";
+
+			String url = apiUrl + "node/" + node.id;
+
+			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+
+			HttpClient client = new HttpClient();
+
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+
+			PutMethod put = new PutMethod(url);
+			put.setRequestBody(xml);
+
+			client.executeMethod(put);
+			int rCode = put.getStatusCode();
+
+			put.releaseConnection();
+
+			if (rCode != 200) {
+				System.err.println("error moving node: " + node + ", got response " + rCode + " from the abyss");
+				return false;
+			}
+			return true;
+		}
+		public void undoModifyData() {
+			node.lat = oldLat;
+			node.lon = oldLon;
+			node.x = oldX;
+			node.y = oldY;
+		}
+		public void postConnectionModifyData() {}
+	}
 
 	/**
 	 * Create a line segment in the intern map.
 	 */
-	private class LineCreator implements Runnable {
+	private class LineCreator implements ServerCommand {
 		private Line line;
 		private String tempKey;
+		private long id = -1;
 		
 		public LineCreator(Line line, String t) {
 			this.line = line;
 			this.tempKey = t;
 		}
 
-		public void run() {
+		public void preConnectionModifyData() {
+			lines.put(tempKey, line);
+		}
+		public boolean connectToServer() throws IOException {
+			String xml = "<osm><segment tags=\"\" from=\"" + line.from.id + "\" to=\"" + line.to.id + "\" /></osm>";
+			String url = apiUrl + "newsegment";
+
+			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+
+			HttpClient client = new HttpClient();
+
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+
+			PutMethod put = new PutMethod(url);
 			try {
-				String xml = "<osm><segment tags=\"\" from=\"" + line.from.id
-						+ "\" to=\"" + line.to.id + "\" /></osm>";
-				String url = apiUrl + "newsegment";
-
-				System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
-
-				HttpClient client = new HttpClient();
-
-				client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-				client.getState().setCredentials(AuthScope.ANY, creds);
-
-				PutMethod put = new PutMethod(url);
 				put.setRequestBody(xml);
-
 				client.executeMethod(put);
-
 				int rCode = put.getStatusCode();
-				long id = -1;
-
+				String response = put.getResponseBodyAsString();
 				System.out.println("Got response code " + rCode);
+
 				if (rCode == 200) {
-					String response = put.getResponseBodyAsString();
 					System.out.println("got reponse " + response);
 					id = Long.parseLong(response);
-				} else {
-					System.err.println("error creating line: " + line);
-					lines.remove(line.key());
-				}
-
-				put.releaseConnection();
-
-				if (id != -1) {
-					line.id = id;
-					lines.remove(tempKey);
-					lines.put(line.key(), line);
 					System.err.println("line created successfully: " + line);
-				} else {
-					System.err.println("error creating line: " + line);
-					lines.remove(tempKey);
-					// TODO: error handling...
+					return true;
 				}
-			} catch (Exception e) {
 				System.err.println("error creating line: " + line);
-				e.printStackTrace();
-				lines.remove(tempKey);
+				return false;
+			} finally {
+				put.releaseConnection();
 			}
 		}
-	} // LineCreator
+		public void undoModifyData() {
+			lines.remove(tempKey);
+		}
+		public void postConnectionModifyData() {
+			line.id = id;
+			lines.remove(tempKey);
+			lines.put(line.key(), line);
+		}
+	}
 
 	/**
 	 * Update (upload) a line segment to the server.
 	 */
-	private class LineUpdater implements Runnable {
+	private class LineUpdater implements ServerCommand {
 		private Line line;
-		public LineUpdater(Line line) {this.line = line;}
+		private String newName;
+		private String oldName;
+		public LineUpdater(Line line, String newName) {
+			this.line = line;
+			this.newName = newName;
+			oldName = line.getName();
+		}
 
-		public void run() {
+		public void preConnectionModifyData() {
+			line.setName(newName);
+		}
+		public boolean connectToServer() throws IOException {
+			String xml = "<osm><segment uid=\"" + line.id + "\" tags=\""
+					+ line.getTags() + "\" from=\"" + line.from.id
+					+ "\" to=\"" + line.to.id + "\" /></osm>";
+
+			String url = apiUrl + "segment/" + line.id;
+
+			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+
+			HttpClient client = new HttpClient();
+
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+
+			PutMethod put = new PutMethod(url);
 			try {
-				String xml = "<osm><segment uid=\"" + line.id + "\" tags=\""
-						+ line.getTags() + "\" from=\"" + line.from.id
-						+ "\" to=\"" + line.to.id + "\" /></osm>";
-
-				String url = apiUrl + "segment/" + line.id;
-
-				System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
-
-				HttpClient client = new HttpClient();
-
-				client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-				client.getState().setCredentials(AuthScope.ANY, creds);
-
-				PutMethod put = new PutMethod(url);
 				put.setRequestBody(xml);
 
 				client.executeMethod(put);
 
 				int rCode = put.getStatusCode();
+
 				System.out.println("Got response code " + rCode);
 
 				if (rCode == 200) {
 					String response = put.getResponseBodyAsString();
 					System.out.println("got reponse " + response);
-					//TODO: Update the intern id?
-				} else {
-					System.err.println("error updating line: " + line + ", got code " + rCode);
-					lines.remove(line.key());
+					return true;
 				}
+				System.err.println("error updating line: " + line + ", got code " + rCode);
+				return false;
+			} finally {
 				put.releaseConnection();
-			} catch (Exception e) {
-				System.err.println("error updating line: " + line);
-				e.printStackTrace();
-				lines.remove(line.key());
 			}
 		}
-	} // LineUpdater
-} // Adapter
+		public void undoModifyData() {
+			line.setName(oldName);
+		}
+		public void postConnectionModifyData() {}
+	}
+}

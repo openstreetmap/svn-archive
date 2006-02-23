@@ -102,8 +102,7 @@ public class ModeManager {
 			currentMode.mouseMoved();
 			applet.redraw();
 		} else {
-			if (applet.mouseY < applet.buttonHeight
-					&& applet.mouseX < (x + getNumModes() * applet.buttonWidth)) {
+			if (applet.mouseY < applet.buttonHeight && applet.mouseX < (x + getNumModes() * applet.buttonWidth)) {
 				applet.redraw();
 			}
 		}

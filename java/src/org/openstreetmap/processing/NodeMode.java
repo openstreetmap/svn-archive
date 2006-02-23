@@ -37,7 +37,6 @@ public class NodeMode extends EditMode {
 			if (applet.osm != null) {
 				applet.osm.createNode(node, tempKey);
 			}
-			applet.nodes.put(tempKey, node);
 
 			OsmApplet.println(node);
 		}

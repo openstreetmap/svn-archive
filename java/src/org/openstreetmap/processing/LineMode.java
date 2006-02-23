@@ -44,7 +44,6 @@ public class LineMode extends EditMode {
 					if (applet.osm != null) {
 						applet.osm.createLine(line, tempKey);
 					}
-					applet.lines.put(tempKey, line);
 				}
 				break;
 			}

@@ -16,20 +16,31 @@ public class NodeMoveMode extends EditMode {
 	 */
 	private final OsmApplet applet;
 
+	/**
+	 * Offset between mouse position and the nodes x/y at the time, the node started
+	 * to move.
+	 */
+	private float lastOffsetX = 0.0f, lastOffsetY = 0.0f;
+	
+	/**
+	 * Original position of the node
+	 */
+	private float origX, origY;
+
 	public NodeMoveMode(OsmApplet applet) {
 		this.applet = applet;
 	}
-
-	float lastOffsetX = 0.0f, lastOffsetY = 0.0f;
 
 	public void mousePressed() {
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
 			if (applet.mouseOverPoint(p)) {
 				applet.selectedNode = p;
-				OsmApplet.println("selected: " + applet.selectedNode);
-				lastOffsetX = applet.selectedNode.x - applet.mouseX;
-				lastOffsetY = applet.selectedNode.y - applet.mouseY;
+				OsmApplet.println("selected: " + p);
+				lastOffsetX = p.x - applet.mouseX;
+				lastOffsetY = p.y - applet.mouseY;
+				origX = p.x;
+				origY = p.y;
 				break;
 			}
 		}
@@ -48,13 +59,7 @@ public class NodeMoveMode extends EditMode {
 	}
 
 	public void mouseReleased() {
-		if (applet.selectedNode != null) {
-			applet.selectedNode.unproject(applet.tiles);
-			applet.osm.moveNode(applet.selectedNode);
-			applet.selectedNode = null;
-		} else {
-			OsmApplet.println("no selectedNode on mouse release");
-		}
+		unset();
 	}
 
 	public void draw() {
@@ -68,9 +73,21 @@ public class NodeMoveMode extends EditMode {
 
 	public void unset() {
 		if (applet.selectedNode != null) {
+			double origLat = applet.selectedNode.lat;
+			double origLon = applet.selectedNode.lon;
 			applet.selectedNode.unproject(applet.tiles);
-			applet.osm.moveNode(applet.selectedNode);
+			double newLat = applet.selectedNode.lat;
+			double newLon = applet.selectedNode.lon;
+			float newX = applet.selectedNode.x;
+			float newY = applet.selectedNode.y;
+			applet.selectedNode.lat = origLat;
+			applet.selectedNode.lon = origLon;
+			applet.selectedNode.x = origX;
+			applet.selectedNode.y = origY;
+			applet.osm.moveNode(applet.selectedNode, newLat, newLon, newX, newY);
 			applet.selectedNode = null;
+		} else {
+			OsmApplet.println("no selectedNode on mouse release");
 		}
 	}
 

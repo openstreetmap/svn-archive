@@ -87,6 +87,8 @@ import java.util.Map;
 import netscape.javascript.JSObject;
 
 import org.openstreetmap.client.Adapter;
+import org.openstreetmap.client.CommandManager;
+import org.openstreetmap.client.ServerCommand;
 import org.openstreetmap.client.Tile;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
@@ -237,7 +239,9 @@ public class OsmApplet extends PApplet {
 		modeManager.draw(); // make modeManager set up things
 
 		// for centre lat/lon and scale (degrees per pixel)
-		float clat = 51.526447f, clon = -0.14746371f;
+		//float clat = 51.526447f, clon = -0.14746371f;
+		float clat = -37.526763645918486f, clon = 144.14729439306237f;
+		zoom = 13;
 
 		if (online) {
 			if (param_float_exists("clat"))
@@ -312,6 +316,13 @@ public class OsmApplet extends PApplet {
 
 		// try to connect to OSM
 		osm = new Adapter(userName, password, lines, nodes, apiURL);
+		
+		// register as listener of finished commands (to redraw)
+		osm.commandManager.addListener(new CommandManager.Listener(){
+			public void commandFinished(ServerCommand command) {
+				redraw();
+			}
+		});
 
 		Thread dataFetcher = new Thread(new Runnable() {
 
@@ -497,6 +508,8 @@ public class OsmApplet extends PApplet {
 
 			// draw all buttons
 			modeManager.draw();
+			
+			// set status text
 			EditMode mouseOverMode = null;
 			for (int i = 0; i < modeManager.getNumModes(); ++i) {
 				if (((EditMode)modeManager.modes.get(i)).over) {
@@ -511,6 +524,14 @@ public class OsmApplet extends PApplet {
 						+ tiles.lon(mouseX));
 			}
 
+			// draw command queue icon
+			//TODO: Replace this with a beautiful icon
+			if (osm.commandManager.size() > 0) {
+				pushMatrix();
+				translate(getWidth()-textWidth("uploading..."),getHeight()-45);
+				text("uploading...");
+				popMatrix();
+			}
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 		}

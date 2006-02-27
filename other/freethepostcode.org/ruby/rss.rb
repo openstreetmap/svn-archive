@@ -4,9 +4,9 @@ require "mysql"
 require 'rss/2.0'
 
 
-MYSQL_SERVER = "128.40.59.181"
+MYSQL_SERVER = "127.0.0.1"
 MYSQL_USER = "postcode"
-MYSQL_PASS = "postcode"
+MYSQL_PASS = "kc8dFusmw"
 MYSQL_DATABASE = "postcode"
 
 cgi = CGI.new
@@ -20,7 +20,7 @@ begin
   dbh = Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
   # get server version string and display it
 
-  res = dbh.query("select part1, part2, lat, lon, date from codes where confirmed = true order by date desc limit 10;")
+  res = dbh.query("select part1, part2, lat, lon, date from codes where confirmed = 1 order by date desc limit 10;")
   rss = RSS::Rss.new("2.0")
   chan = RSS::Rss::Channel.new
   chan.title = "Free the postcode!"

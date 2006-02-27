@@ -57,9 +57,9 @@ else
   exit
 end
 
-MYSQL_SERVER = '128.40.59.181'
+MYSQL_SERVER = '127.0.0.1'
 MYSQL_USER = 'postcode'
-MYSQL_PASS = 'postcode'
+MYSQL_PASS = 'kc8dFusmw'
 MYSQL_DATABASE = 'postcode'
 
 def mysql_error(e)
@@ -86,7 +86,7 @@ if connection
     confirmstring += chars[(rand * chars.length).to_i].chr
   end
 
-  sql = "insert into codes values ('#{email}', #{lat}, #{lon}, '#{postcode1}', '#{postcode2}', NOW(), '#{confirmstring}', false);"
+  sql = "insert into codes values ('#{email}', #{lat}, #{lon}, '#{postcode1}', '#{postcode2}', NOW(), '#{confirmstring}', 0);"
 
   connection.query(sql)
 

@@ -23,9 +23,9 @@ end
 
 confirmstring = Mysql.quote(confirmstring)
 
-MYSQL_SERVER = '128.40.59.181'
+MYSQL_SERVER = '127.0.0.1'
 MYSQL_USER = 'postcode'
-MYSQL_PASS = 'postcode'
+MYSQL_PASS = 'kc8dFusmw'
 MYSQL_DATABASE = 'postcode'
 
 def mysql_error(e)
@@ -48,12 +48,12 @@ connection = get_connection
 email = email.to_s.downcase
 
 if connection
-  sql = "select count(*) as count from codes where confirmed = false and email = '#{email}' and confirmstring = '#{confirmstring}' limit 1"
+  sql = "select count(*) as count from codes where confirmed = 0 and email = '#{email}' and confirmstring = '#{confirmstring}' limit 1"
   res = connection.query(sql)
   
   res.each_hash do |row|
     if row['count'] == '1'
-      sql = "update codes set confirmed = true where confirmed = false and email = '#{email}' and confirmstring = '#{confirmstring}'"
+      sql = "update codes set confirmed = 1 where confirmed = 0 and email = '#{email}' and confirmstring = '#{confirmstring}'"
       connection.query(sql) 
 
       puts 'Thanks, we seem to have confirmed your submission!<br> Go back to <a href="http://www.freethepostcode.org/">freethepostcode.org</a>.'

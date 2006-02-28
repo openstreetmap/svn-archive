@@ -465,7 +465,6 @@ sub set_area {
     $self->{NORTH} = $north;
 }
 
-
 sub fill_cache ($$$) {
     my $self = shift;
     my $max_new = shift || 1;
@@ -476,56 +475,57 @@ sub fill_cache ($$$) {
     my $deltalon = $self->get_deltalon ();
     my $lat = $self->get_lat ();
     my $lon = $self->get_lon ();
-    my $size = 50;
+    my $size = 10;
     my $anz_seen=0;
     my $anz_new=0;
 
     print STDERR "Fill Cache for: $scale ($lat,$lon) +- $size tiles, max_new_tiles: $max_new\n";
 
-    for my $scale_fac ( qw( 1 2 4 8 16 32 64 128 256 512 1024 2048 4096 )){
-       for my $dist ( 0..$size ) { # Start from actual position and get larger area in each loop
-           for my $la ( (-$dist,$dist) ) {
-               for my $lo ( (-$dist,$dist) ) {
-                   for my $test_scale ( ( $scale / $scale_fac,
-                                          $scale * $scale_fac )
-                                        ) {
-                       #( 10,25,50,100,200,400,800,
-                       # 1600,3200,6400,12800,25600,51200 )
-                       last if $anz_new >= $max_new;
-                       $test_scale=10 if $test_scale<25;
-                       my ($la1, $lo1) = $self->clamp_to_center_of_tile
-                           (
-                            $lat+($deltalat*$test_scale*$la),
-                            $lon+($deltalon*$test_scale*$lo),
-                            $scale);
-                       $la1 = "+$la1" if $la1>0;
-                       $lo1 = "+$lo1" if $lo1>0;
-                       my $filename =
-			   sprintf( "$ENV{HOME}/.osmpedit/cache/landsat-%d%s%s.jpg", $test_scale,$la1,$lo1);
-                       #print STDERR "Check File:  $filename\n";
-                       if ( -s $filename ) {
-                           $anz_seen++;
-                           next;
-                       }
-
-                       print STDERR "Fill Cache(new:$anz_new,seen:$anz_seen,max_new:$max_new)(dist:$dist): scale:$test_scale ($la1,$lo1)\n";
-                       my $tile = $self->get_tile ($la1+0.0, $lo1+0.0, $test_scale);
-                       $anz_new++;
-                       $anz_seen++;
-                   }
-               }
-           }
-       }
+    for my $scale_fac ( qw( 1 2 4 8 16 32 )){
+	for my $test_scale ( ( $scale / $scale_fac, 
+			       $scale * $scale_fac )
+			     ) {
+	    for my $dist ( 0..$size ) { # Start from actual position and get larger area in each loop
+		for my $la ( (-$dist..$dist) ) {
+		    for my $lo ( (-$dist..$dist) ) {
+			#( 10,25,50,100,200,400,800,
+			# 1600,3200,6400,12800,25600,51200 ) 
+			last if $anz_new >= $max_new;
+			$test_scale=10 if $test_scale<25;
+			my ($la1, $lo1) = $self->clamp_to_center_of_tile
+			    (
+			     $lat+($deltalat*$test_scale*$la),
+			     $lon+($deltalon*$test_scale*$lo),
+			     $scale);
+			$la1 = "+$la1" if $la1>0;
+			$lo1 = "+$lo1" if $lo1>0;
+			my $filename = 
+			sprintf( "$ENV{HOME}/.osmpedit/cache/landsat-%d%s%s.jpg",
+				 $test_scale,$la1,$lo1);
+			#print STDERR "Check File:  $filename\n";
+			if ( -s $filename ) {
+			    $anz_seen++; # This number is wrong since the inner 
+			    # tiles are looked at multiple times
+			    next;
+			}
+			print STDERR "Fill Cache(new:$anz_new,seen:$anz_seen,max_new:$max_new)(dist:$dist): scale:$test_scale ($la1,$lo1)\n";
+			my $tile = $self->get_tile ($la1+0.0, $lo1+0.0, $test_scale);
+			$anz_new++;
+			$anz_seen++;
+		    }
+		}
+	    }
+	}
     }
     $self->set_scale ($scale);
     $self->set_center ($lat, $lon);
     $self->display ();
     print STDERR "Fill Cache: existing: $anz_seen\n";
-    $can_frame->after( 100000,
-                 sub{
-                     printf "Timer %s\n",''.localtime(time());
-                     $self->fill_cache(4,$can_frame);
-                 });
+    $can_frame->after( 100000, 
+		  sub{ 
+		      printf "Timer %s\n",''.localtime(time());
+		      $self->fill_cache(4,$can_frame);
+		  });
 }
 
 

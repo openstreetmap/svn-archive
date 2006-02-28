@@ -1,0 +1,29 @@
+<html><body>
+
+<%
+require 'cgi'
+require 'dao.rb'
+dao = OSM::Dao.instance
+cgi = CGI.new
+email = cgi['email']
+confirmstring = cgi['confirmstring']
+%>
+
+%if dao.email_address?(email)
+  Email address looks reasonably formatted<br>
+%else
+  Sorry, your email address does not look good, please go back and try again<br>
+% exit
+%end
+
+
+%email = email.to_s.downcase
+
+%if dao.confirm?(email, confirmstring)
+  Thanks, we seem to have confirmed your submission!<br>
+%else
+  Whoops, something went wrong confirming that submition. It might have already been confirmed by your email account caching this page.<br>
+%end
+
+Go back to <a href="http://www.freethepostcode.org/">freethepostcode.org</a>.
+</body></html>

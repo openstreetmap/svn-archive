@@ -435,7 +435,14 @@ function tile_engine_new(parentname,hints,feedurl,url,lon,lat,zoom,w,h) {
 				bt = 180 / PI * (2 * Math.atan(Math.exp(bt * PI / 180)) - PI / 2);
 				
 				// make a key
-				var key = this.url + "&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)+"&BBOX="+lt+","+tp+","+rt+","+bt;
+        if( zoom < 11 )
+        {
+		  		var key = this.url + "&LAYERS=landsat&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)+"&BBOX="+lt+","+tp+","+rt+","+bt;
+        }
+        else
+        {
+  				var key = this.url + "&LAYERS=landsat,streets&WIDTH="+(this.tilewidth)+"&HEIGHT="+(this.tileheight)+"&BBOX="+lt+","+tp+","+rt+","+bt;
+        }
 
 				// see if our tile is already present
 				var node = document.getElementById(key);

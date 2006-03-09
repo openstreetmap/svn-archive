@@ -21,7 +21,7 @@ ERuby.import('include/geocode.rhtml')
   var lpi =  3.14159265358979323846;
   mlat = Math.log( Math.tan( (lpi / 4.0) + (lat / 180.0 * lpi / 2.0))) * 180.0 / lpi ;
 
-  var tileURL = 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE&LAYERS=landsat,streets';
+  var tileURL = 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE';
 
   new tile_engine_new('drag','FULL','',tileURL,lon,mlat,zoom,0,0);
 </script>

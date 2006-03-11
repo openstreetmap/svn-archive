@@ -25,4 +25,4 @@ nodes.scan(/[0-9]+/){ |nodeid|
   end
 }
 
-puts ox.to_s_pretty
+puts ox.to_s

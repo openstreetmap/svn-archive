@@ -27,7 +27,7 @@ if r.request_method == "GET"
     if segment
       if segment.visible && segment.node_a.visible && segment.node_b.visible
         ox.add_segment(segment)
-        puts ox.to_s_pretty
+        puts ox.to_s
       else
         exit HTTP_GONE
       end

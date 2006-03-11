@@ -31,5 +31,5 @@ gpx = OSM::Gpx.new
 
 gpx.addtrk points
 
-puts gpx.to_s_pretty
+puts gpx.to_s
 

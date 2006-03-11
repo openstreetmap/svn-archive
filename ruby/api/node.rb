@@ -25,7 +25,7 @@ if r.request_method == "GET"
     if node
       if node.visible
         ox.add_node(node)
-        puts ox.to_s_pretty
+        puts ox.to_s
       else
         exit HTTP_GONE
       end

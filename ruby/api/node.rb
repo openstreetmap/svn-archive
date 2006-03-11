@@ -50,16 +50,25 @@ else
 #      exit BAD_REQUEST unless tags
       tags = '' unless tags
       if xmlnodeid == nodeid && userid != 0
-        node = dao.getnode(nodeid)
-        if node
-          #FIXME: need to check the node hasn't moved too much
-          if dao.update_node?(nodeid, userid, lat, lon, tags)
-            exit
+        if nodeid == 0
+          new_node_id = dao.create_node(lat, lon, userid, tags)
+          if new_node_id
+            puts new_node_id
           else
             exit HTTP_INTERNAL_SERVER_ERROR
           end
         else
-          exit HTTP_NOT_FOUND
+          node = dao.getnode(nodeid)
+          if node
+            #FIXME: need to check the node hasn't moved too much
+            if dao.update_node?(nodeid, userid, lat, lon, tags)
+              exit
+            else
+              exit HTTP_INTERNAL_SERVER_ERROR
+            end
+          else
+            exit HTTP_NOT_FOUND
+          end
         end
 
       else

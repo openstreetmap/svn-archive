@@ -61,10 +61,20 @@ else
       #exit BAD_REQUEST unless tags
       tags = '' unless tags
 
-      if dao.update_segment?(segmentid, userid, node_a_id, node_b_id, tags)
-        exit
+      if segmentid == 0
+        new_seg_id = dao.create_segment(node_a_id, node_b_id, userid, tags).to_i
+
+        if new_seg_id && new_seg_id > 0
+          puts new_seg_id
+        else
+          exit HTTP_INTERNAL_SERVER_ERROR
+        end
       else
-        exit HTTP_INTERNAL_SERVER_ERROR
+        if dao.update_segment?(segmentid, userid, node_a_id, node_b_id, tags)
+          exit
+        else
+          exit HTTP_INTERNAL_SERVER_ERROR
+        end
       end
 
     end

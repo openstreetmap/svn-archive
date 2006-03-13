@@ -21,6 +21,7 @@ package org.openstreetmap.util;
 
 import java.util.Collection;
 import java.util.Vector;
+import java.util.Hashtable;
 
 import org.openstreetmap.client.Tile;
 
@@ -36,14 +37,14 @@ public class Node extends Point {
 	public long id = 0;
 
 	/**
-	 * The tag string for this node.
-	 */
-	public String tags = "";
-
-	/**
 	 * All lines in this node.
 	 */
 	public Collection lines = new Vector();
+
+  /**
+	 * All tags in this npde
+	 */
+	public Hashtable tags = new Hashtable();
 
 	/**
 	 * Create the node from projected values.
@@ -55,10 +56,9 @@ public class Node extends Point {
 	/**
 	 * Create the node with all information given.
 	 */
-	public Node(double lat, double lon, long uid, String tags) {
+	public Node(double lat, double lon, long uid) {
 		super(lat, lon);
 		this.id = uid;
-		this.tags = tags;
 	}
 
 	public String toString() {

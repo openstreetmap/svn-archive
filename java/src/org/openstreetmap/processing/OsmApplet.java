@@ -194,7 +194,7 @@ public class OsmApplet extends PApplet {
 
 	// "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
 
-	String apiURL = "http://www.openstreetmap.org/api/0.2/";
+	String apiURL = "http://www.openstreetmap.org/api/0.3/";
 
 	/* modes - input is passed to the current mode, assigned by node manager */
 	ModeManager modeManager;
@@ -239,8 +239,8 @@ public class OsmApplet extends PApplet {
 		modeManager.draw(); // make modeManager set up things
 
 		// for centre lat/lon and scale (degrees per pixel)
-		//float clat = 51.526447f, clon = -0.14746371f;
-		float clat = -37.526763645918486f, clon = 144.14729439306237f;
+		float clat = 51.526447f, clon = -0.14746371f;
+		//float clat = -37.526763645918486f, clon = 144.14729439306237f;
 		zoom = 13;
 
 		if (online) {

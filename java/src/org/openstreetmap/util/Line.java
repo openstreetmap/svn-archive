@@ -18,6 +18,7 @@
  */
 
 package org.openstreetmap.util;
+import java.util.Hashtable;
 
 import java.util.StringTokenizer;
 
@@ -35,11 +36,13 @@ public class Line {
 	 * The name-part of the properties.
 	 */
 	private String name = "";
-	/**
-	 * The additional tags (beside the name) this line segment has. 
+
+  /** The additional tags (beside the name) this line segment has.  
+   * FIXME should really be a hash
 	 */
-	private String tags = "";
-	/**
+  public Hashtable tags = new Hashtable();
+	
+  /**
 	 * The unique id (among all other line segments) of this line.
 	 */
 	public long id;
@@ -52,7 +55,7 @@ public class Line {
 	 * Create a line from node "from" to node "to" without tags and with unknown id=0. 
 	 */
 	public Line(Node from, Node to) {
-		this(from, to, 0, "");
+		this(from, to, 0);
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class Line {
 	 * @param id	Unique id for this line.
 	 * @param tags	Encoded string of all properties for this line segment. 
 	 */
-	public Line(Node from, Node to, long id, String tags) {
+	public Line(Node from, Node to, long id) {
 		if (from != null && to != null) {
 			this.from = from;
 			this.to = to;
@@ -72,7 +75,6 @@ public class Line {
 		if (to != null)
 			to.lines.add(this);
 		this.id = id;
-		splitTags(tags);
 	}
 
 	/**
@@ -137,16 +139,6 @@ public class Line {
 	}
 
 	/**
-	 * @return The encoded property string for this line segment.
-	 */
-	public String getTags() {
-		if (tags.equals(" ") || tags.equals("; ")) {
-			return "name=" + name;
-		}
-		return "name=" + name + "; " + tags;
-	}
-
-	/**
 	 * @return A string specifier used in tables when this line is used as key.
 	 * Consisting of "line_" and the id.
 	 */
@@ -155,11 +147,27 @@ public class Line {
 	} // key
 
 	public synchronized void setName(String sName) {
-		name = sName;
-	}
+    Tag name = (Tag)tags.get("name");
+    if(name != null)
+    {
+      name.value = sName;
+    }
+    else
+    {
+      tags.put("name", new Tag("name", sName));
+    }
+	} // setName
 
 	public synchronized String getName() {
-		return name;
+    Tag name = (Tag)tags.get("name");
+    if(name != null)
+    {
+      return name.value;
+    }
+    else
+    {
+      return "";
+    }
 	}
 
 	/**
@@ -169,24 +177,5 @@ public class Line {
 		return "[Line " + id + " from " + from + " to " + to + "]";
 	}
 
-	/**
-	 * Split the tag string into name part and others and assign the own member
-	 * variables accordingly.
-	 * @param tags The property string in encoded form.
-	 */
-	private void splitTags(String tags) {
-		StringTokenizer st = new StringTokenizer(tags, ";");
-		while (st.hasMoreTokens()) {
-			String t = st.nextToken();
-			t = t.trim();
-			if (t.startsWith("name=")) {
-				this.name = t.substring(5);
-			} else {
-				if (!(t.equals(" ") || t.equals(""))) {
-					this.tags = this.tags + t + "; ";
-				}
-			}
-		}
-	}
 }
 

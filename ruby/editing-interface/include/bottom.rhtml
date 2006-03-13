@@ -30,14 +30,14 @@ Welcome <%=email %>
     <% if loggedin then %> 
     <a <%=editattr %> id="editanchor" href="/edit.html">Edit</a>
     <% else %>
-    <a <%=editattr %> style="font-style:italic" >Edit</a>
+    <a <%=editattr %> style="font-style:italic" href="/login.html">Edit</a>
     <% end %>
     </li>
     <li >
     <% if loggedin then %>
     <a <%=uploadattr %> href="/upload.html">GPS traces</a>
     <% else %>
-    <a <%=uploadattr %> style="font-style:italic">GPS traces</a>
+    <a <%=uploadattr %> style="font-style:italic" href="/login.html">GPS traces</a>
     <% end %>
     </li>
 </ul>
@@ -68,7 +68,6 @@ OpenStreetMap's hosting is kindly supported by the <a href="http://www.vr.ucl.ac
 <a href="http://shop.openstreetmap.org/">Shop</a><br /><br />
 
 <center>
-<a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/images/somerights20.png" border="0"></a><br /><br />
 
 <script type="text/javascript"><!--
 var detect = navigator.userAgent.toLowerCase();
@@ -82,6 +81,23 @@ if (detect.indexOf('msie') >= 0) {
   
 
 </center>
+</div>
+<% if tags != [] %>
+<div id="tags">
+  <span class="tagheader">tags</span><br /><br />
+  <%tags.each do |tag|
+  %>
+    <%=tag%><br />
+    <%
+    end
+  %>
+
+</div>
+<% end %>
+<div id="cclogo">
+  <center>
+    <a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/images/somerights20.png" border="0"></a>
+  </center>
 </div>
 
 </div>

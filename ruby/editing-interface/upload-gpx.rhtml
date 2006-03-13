@@ -11,7 +11,12 @@ user_id = -1
 
 ERuby.import('include/top.rhtml')
 %>
+
 <div id="main_area">
+  <h1>Your GPS Traces</h1>
+
+  
+
 <%
 
 
@@ -20,19 +25,20 @@ if !loggedin
 else
   # We are logged in, wha-hay
 
+  if cgi['action'] != 'edit'
 %>
 
-  <h1>Upload a GPX File</h1>
-  <br>A GPX file contains a trail recorded by GPS receivers and uploaded to your computer. From your computer you can upload the GPX file to OpenStreetMap for editing. A plain gpx file or a gzipped one can be uploaded using the form below. Because GPX files can be very large creation and deletion is done in the background. To get help on this form and more information on GPX files, click <a href="/wiki/index.php/Upload">here</a>.<br><br>
   <form action="/upload.html" enctype="multipart/form-data" method="post">
     <table>
-      <tr><td>file:</td><td><input type="file" name="gpxfile"></td></tr>
-      <tr><td></td><td><input type="submit" value="Go!"></td></tr>
+      <tr><td>upload GPX file:</td><td><input type="file" name="gpxfile"></td></tr>
+      <tr><td></td><td><input type="submit" value="Upload">
+      <a href="http://wiki.openstreetmap.org/index.php/Upload">help</a>
+      </td></tr>
     </table>
   </form>
 
 <%
-
+end
   gpxfile = cgi['gpxfile']
 
   if gpxfile != ''
@@ -65,33 +71,45 @@ else
 
   else
     
-    action = cgi['action']
-
-    if action != ''
-      # hrm, probably a delete
-
-      if action == 'delete'
-        gpx_id = cgi['gpx_id'].to_i
-        if dao.does_user_own_gpx?(user_id, gpx_id)
-          dao.schedule_gpx_delete(gpx_id)
-          %>
-          <i>The gpx file has been scheduled for deletion.</i><br>
-          <%
-        else
+    case cgi['action']
+    when 'update'
+    dao.gpx_details_for_user(user_id).each_hash do |row|
+      id = row['id']
+      rm = cgi["rm_#{id}"] == 'on'
+      priv = cgi["priv_#{id}"] == 'on'
+      if rm
+        dao.schedule_gpx_delete(id.to_i)
         %>
-          <i>Something went wrong deleting that gpx file</i><br>
-        <%
-        
-        end
-      else
-        %>
-          <i>I didn't understand the action you gave me *shrug*</i><br>
+        <i>The gpx file <%= row['name'] %> has been scheduled for deletion.</i><br>
         <%
       end
-      
+      dao.gpx_set_private(id.to_i, !priv) if dao.does_user_own_gpx?(user_id, id.to_i)
     end
-
-
+    when 'edit'
+      gpx_id = cgi['gpx_id'].to_i
+      if gpx_id != 0 
+        dao.gpx_get(user_id, gpx_id).each_hash do |gpx|
+        %>
+        <h2>Editing the trace <%=gpx['name']%></h2>
+        <form>
+          <table border="0">
+            <tr><td>filename:</td><td><%=gpx['name']%></td></tr>
+            <tr><td>uploaded:</td><td><%=gpx['timestamp']%></td></tr>
+            <tr><td>description:</td><td><input type="text" name="description" value="<%=gpx['description']%>" size="60" maxlength="255" /></td></tr>
+            <tr><td>tags:</td><td><input type="text" name="tags" value="<%=dao.gpx_tags(gpx_id).join(' ')%>" size="60" maxlength="255" /></td></tr>
+          </table>
+          <input type="hidden" name="gpx_id" value="<%=gpx_id%>" />
+          <input type="hidden" name="action" value="save" />
+          <input type="submit" value="Save" />
+        </form>
+        <%
+        end
+      end
+    when 'save'
+      dao.gpx_update_desc(cgi['gpx_id'].to_i, cgi['description'], cgi['tags'])
+      
+    
+    end
   end
 
   # show pending files
@@ -100,8 +118,8 @@ else
 
   if pendingfiles.num_rows != 0
 %>
-    <h3>Pending files</h3>
-    The following file(s) are pending insertion:<br><br>
+    <h3>Pending tracs</h3>
+    The following GPX file(s) are pending upload:<br><br>
     <%
     first = true
     pendingfiles.each_hash do |row|
@@ -114,7 +132,7 @@ else
     end
     
     %>
-    <br>Please be patient, it can take some time to insert large files that you or other users have uploaded.
+    <br>Please be patient, it can take some time to insert large files that you or other users have uploaded. You'll receive an email on completion, usually within 15 minutes.
     <%
 
   end
@@ -124,42 +142,82 @@ else
 
 # show previously uploaded files
 %>
-  <h3>Previously uploaded GPX files:</h3>
+<h3>Existing traces:</h3>
+<form action="/upload.html" method="post">
+  <input type="hidden" name="action" value="update" />
+ 
     <table id="keyvalue" cellpadding="3">
     <tr>
       <th>Filename</th>
-      <th>Points</th>
-      <th>Uploaded at</th>
-      <th>Actions</th>
+      <th>Public?</th>
+      <th>Delete?</th>
     </tr>
 <%
 
   gpxfiles = dao.gpx_details_for_user(user_id)
   if gpxfiles
+    odd_or_even = 1
     gpxfiles.each_hash do |row|
+      timestamp = Time.parse(row['timestamp'])
+      time = timestamp.strftime("on %d-%b")
+      time += timestamp.strftime("-%Y") if timestamp.strftime("%Y") != Time.now.strftime("%Y")
+      hours_ago = ((Time.now - timestamp) / 60 / 60).to_i
+      time = "#{hours_ago} hours ago" if hours_ago < 24 
+      odd_or_even = 1 - odd_or_even
+      background = "table#{odd_or_even}"
       %>
       <tr>
-        <td><a href="get-gpx.html?gpx_id=<%=row['id']%>"><%=row['name']%></a></td>
-        <td align="right"><%=row['size']%></td>
-        <td><%=Time.parse(row['timestamp']).strftime('%d-%b-%Y')%></td>
-        <td>
-          <a href="edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14">edit</a>, 
-          <a href="upload.html?action=delete&gpx_id=<%=row['id']%>">delete</a>
-        </td>
-      </tr>
-    
+        <td class="<%=background%>"><a href="get-gpx.html?gpx_id=<%=row['id']%>"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=row['size']%> points) ... <%=time%></span>
+          <a href="upload.html?action=edit&gpx_id=<%=row['id']%>" title="edit description / tags" >edit</a> /
+          <a href="edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14" title="create maps">map</a>
+          <% 
+      if row['description'] != ''  %>
+        <br /><span class="gpxdesc"><%= row['description'] %></span>
+      <% end 
+          
+      tags = dao.gpx_tags(row['id'].to_i)
+      if tags != []
+      %>
+      <br /><span class="gpxtags">in: <%= tags.join(' ') %></span>
       <%
-      
+      end
+      %>
+        </td>
+        <td class="<%=background%>"><center>
+        <% if row['private'] == '1' %>
+        <input type="checkbox" name="priv_<%=row['id']%>">
+        <% else %>
+        <input type="checkbox" name="priv_<%=row['id']%>" checked>
+        <% end %>
+        </center></td>
+        <td class="<%=background%>"><center><input type="checkbox" name="rm_<%=row['id']%>" /></center></td>
+      </tr>
+      <%
+     
     end
   end
-
 end
 
 %>
 
 </table>
+<br />
+<input type="submit" value="Update">
+</form>
+
+<%
+tags = []
+  dao.gpx_user_tags(user_id).each do |tag|
+   tags << tag[0]
+  end
+
+  %>
+
+</div>
 
 </div>
 <%
+
+
 ERuby.import('include/bottom.rhtml')
 %>

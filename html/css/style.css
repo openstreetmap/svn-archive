@@ -5,7 +5,7 @@ a {
 }
 a:visited {
   color: #0000ff;
-       text-decoration: none;
+  text-decoration: none;
 }
 a:active {
   color: #0000ff;
@@ -40,19 +40,19 @@ body {
 }
 
 #left {
-position: absolute;
-top: -8px;
-min-width: 150px;
+  position: absolute;
+  top: -8px;
+  min-width: 150px;
 }
 
 #logo {
-width: 150px;
-min-width: 150px;
-padding: 10px;
-margin: 10px;
-height: 150px;
-background: #ffffff;
-border: 1px solid #ccccdd;
+  width: 150px;
+  min-width: 150px;
+  padding: 10px;
+  margin: 10px;
+  height: 150px;
+  background: #ffffff;
+  border: 1px solid #ccccdd;
 }
 #logo h1 {
   font-size: 14px;
@@ -91,7 +91,8 @@ border: 1px solid #ccccdd;
   background: #ddd;
   line-height: 1.2em;
   text-align: Left;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: bold;
 }
 #left_menu td {
   font-size: 12px;
@@ -125,8 +126,8 @@ border: 1px solid #ccccdd;
 }
 
 #left_menu a:visited {
-color: #000000;
-       text-decoration: none;
+  color: #000000;
+  text-decoration: none;
 }
 
 #left_menu a:active {
@@ -159,36 +160,36 @@ color: #000000;
 }
 
 #bottom_bar {
-position: absolute;
-bottom: 0px;
-width: 100%;
-       font-size: x-small;
-       text-align: center;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  font-size: x-small;
+  text-align: center;
 }
 
 #mapToolbar {
-position: absolute;
-//left: 710px;
-left: 30px;
-top: 350px;
-       border-width: 0;
+  position: absolute;
+  //left: 710px;
+  left: 30px;
+  top: 350px;
+  border-width: 0;
 }
 
 #mapToolbarRight {
-position: absolute;
-//left: 200px;
-top: 50px;
-//width: 400px;
-       text-align: right;
+  position: absolute;
+  //left: 200px;
+  top: 50px;
+  //width: 400px;
+  text-align: right;
 }
 
 #mapImage {
-position: absolute;
-left: 0px;
+  position: absolute;
+  left: 0px;
 }
 #drag {
-top: 0px;
-left: 14px;
+  top: 0px;
+  left: 14px;
 }
 #mapEpilog {
   font-size: x-small;
@@ -207,7 +208,7 @@ left: 14px;
 }
 
 .emphasized {
-	background-color: #82bcff;
+  background-color: #82bcff;
 }
 
 
@@ -217,18 +218,18 @@ left: 14px;
   background:#DAE0D2 url("bg.gif") repeat-x bottom;
   font-size:93%;
   line-height:normal;
-  }
+}
 #header ul {
   margin:0;
   padding:10px 10px 0px 215px;
   list-style:none;
-  }
+}
 #header li {
   float:left;
   //background:url("left.gif") no-repeat left top;
   margin:0;
   padding:0 0 0 9px;
-  }
+}
 #header li a {
   float:left;
   display:block;
@@ -237,64 +238,64 @@ left: 14px;
   text-decoration:none;
   font-weight:bold;
   color:#765;
-  }
+}
 /* Commented Backslash Hack
-   hides rule from IE5-Mac \*/
+hides rule from IE5-Mac \*/
 #header li a {float:none;}
 /* End IE5-Mac hack */
 #header li a:hover {
   color:#333;
-  }
+}
 #header #current {
- // background-image:url("left_on.gif");
-  }
+  // background-image:url("left_on.gif");
+}
 #header #current a {
   background-image:url("right_on.gif");
   color:#333;
   padding-bottom:5px;
-  }
+}
 
 #tabnav
 {
-height: 20px;
-margin: 0;
-padding-left: 215px;
-padding-top: 5px;
-background: url(tab_bottom.gif) repeat-x bottom;
+  height: 20px;
+  margin: 0;
+  padding-left: 215px;
+  padding-top: 5px;
+  background: url(tab_bottom.gif) repeat-x bottom;
 }
-										#tabnav li
+#tabnav li
 {
-margin: 0; 
-padding: 0;
-display: inline;
-list-style-type: none;
+  margin: 0; 
+  padding: 0;
+  display: inline;
+  list-style-type: none;
 }
 #tabnav a, #tabnav a:link, #tabnav a:visited 
 {
-float: left;
-background: #f3f3f3;
-font-size: 10px;
-line-height: 14px;
-font-weight: bold;
-padding: 2px 10px 2px 10px;
-margin-right: 4px;
-border: 1px solid #ccc;
-text-decoration: none;
-color: #333;
+  float: left;
+  background: #f3f3f3;
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: bold;
+  padding: 2px 10px 2px 10px;
+  margin-right: 4px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: #333;
 }
 #tabnav a:link.active, #tabnav a:visited.active
 {
-border-bottom: 1px solid #fff;
-background: #fff;
-color: #000;
+  border-bottom: 1px solid #fff;
+  background: #fff;
+  color: #000;
 }
 #tabnav a:link:hover
 {
-background: #fff;
+  background: #fff;
 }
 
 #gads {
-/*  position: absolute; */
+  /*  position: absolute; */
   left: 100px;
   width: 700px;
   text-align: center;
@@ -302,7 +303,56 @@ background: #fff;
 }
 
 #geocoder {
- font-size: 12px;
- padding-top: 5px;
- padding-left: 14px;
+  font-size: 12px;
+  padding-top: 5px;
+  padding-left: 14px;
 }
+
+.gpxsummary {
+  font-size: 12px;
+  color: gray;
+}
+
+.gpxdesc {
+  font-style: italic;
+}
+
+.table0 { 
+  background: #f6f6f6;
+}
+
+.table1 { 
+  background: #fff;
+}
+
+
+#tags {
+  width: 150px;
+  min-width: 150px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  left: 0px;
+  line-height: 1.2em;
+  text-align: Left;
+  font-size: 12px;
+  background: #eee;
+}
+
+.tagheader {
+  font-size: 18px;
+}
+
+#cclogo {
+  width: 150px;
+  min-width: 150px;
+  margin: 10px;
+  padding: 10px;
+  left: 0px;
+  line-height: 1.2em;
+  text-align: Left;
+  font-size: 14px;
+  font-weight: bold;
+  background: #fff;
+}
+

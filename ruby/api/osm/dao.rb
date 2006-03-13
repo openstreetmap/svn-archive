@@ -379,7 +379,31 @@ module OSM
 
 
     def gpx_details_for_user(user_id)
-      return call_sql { "select id, timestamp, name, size, latitude, longitude from gpx_files where user_id = #{q(user_id.to_s)} and visible = 1 order by timestamp desc" }
+      return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and visible = 1 order by timestamp desc" }
+    end
+
+    def gpx_get(user_id, gpx_id)
+      return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
+    end
+
+    def gpx_tags(gpx_id)
+      res = call_sql { "select tag from gpx_file_tags where gpx_id = #{q(gpx_id.to_s)} order by sequence_id asc" }
+      tags = []
+      res.each { |tag| tags << tag[0] }
+      return tags
+    end
+
+    def gpx_user_tags(user_id)
+      return call_sql { "select tag from gpx_file_tags where gpx_id in (select id from gpx_files where user_id = #{q(user_id.to_s)}) order by tag;" }
+    end
+
+    def gpx_update_desc(gpx_id, description='', tags=[])
+      call_sql { "update gpx_files set description = '#{q(description)}' where id = #{q(gpx_id.to_s)}" }
+      call_sql { "delete from gpx_file_tags where gpx_id = #{q(gpx_id.to_s)}" }
+
+      tags.split.each do |tag|
+        call_sql { "insert into gpx_file_tags (gpx_id, tag) values (#{q(gpx_id.to_s)}, '#{q(tag.to_s)}')" }
+      end
     end
 
     def gpx_pending_details_for_user(user_id)
@@ -387,6 +411,9 @@ module OSM
       return call_sql { "select originalname from gpx_pending_files where user_id = #{q(user_id.to_s)}" }
     end
 
+    def gpx_set_private(gpx_id, private=false)
+      call_sql { "update gpx_files set private=#{q(private.to_s)} where id=#{q(gpx_id.to_s)}" }
+    end
 
     def gpx_size(gpx_id)
       res = call_sql { "select count(*) as count from gps_points where gpx_id = #{q(gpx_id.to_s)}" }
@@ -398,10 +425,7 @@ module OSM
 
     def does_user_own_gpx?(user_id, gpx_id)
       res = call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
-      if res && res.num_rows ==1
-        return true
-      end
-      false
+      return res && res.num_rows == 1
     end
 
 

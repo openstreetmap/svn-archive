@@ -3,8 +3,8 @@
 require 'cgi'
 require 'time'
 require 'date'
-load 'osm/dao.rb'
-load 'osm/ox.rb'
+require 'osm/dao.rb'
+require 'osm/ox.rb'
 require 'rexml/document'
 
 include Apache

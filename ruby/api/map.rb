@@ -1,8 +1,8 @@
 #!/usr/bin/ruby -w
 
 require 'cgi'
-load 'osm/dao.rb'
-load 'osm/ox.rb'
+require 'osm/dao.rb'
+require 'osm/ox.rb'
 require 'bigdecimal'
 include Apache
 
@@ -34,10 +34,13 @@ if nodes && nodes.length > 0
   linesegments = dao.getlines(nodes, to)
 end
 
+seg_ids = []
+
 if linesegments # get nodes we dont have yet
   nodes_missing = []
   
   linesegments.each do |key, l|
+    seg_ids << key
     nodes_missing << l.node_a_id unless nodes[l.node_a_id]
     nodes_missing << l.node_b_id unless nodes[l.node_b_id]
   end
@@ -45,13 +48,17 @@ if linesegments # get nodes we dont have yet
   nodes.merge!(dao.get_nodes_by_ids(nodes_missing, to))
 end
 
+[:way, :area].each do |type|
+  dao.get_multis_from_segments(seg_ids, type).each do |n|
+    ox.add_multi(n,type)
+  end
+end
 
 if nodes
   nodes.each do |i,n|
 	  ox.add_node(n) unless !n.visible
   end
 end
-
 
 if linesegments
   linesegments.each do |key, l|

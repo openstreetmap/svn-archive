@@ -50,7 +50,6 @@ else
       gpxsegmentid = seg.attributes['uid'].to_i
       
       exit BAD_REQUEST unless gpxsegmentid == segmentid
-      exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible
 
       node_a_id = seg.attributes['from'].to_i
       node_b_id = seg.attributes['to'].to_i
@@ -76,6 +75,7 @@ else
           exit HTTP_INTERNAL_SERVER_ERROR
         end
       else
+        exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible
         if dao.update_segment?(segmentid, userid, node_a_id, node_b_id, tags)
           exit
         else

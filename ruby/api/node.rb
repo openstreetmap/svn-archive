@@ -60,6 +60,7 @@ else
           new_node_id = dao.create_node(lat, lon, userid, tags)
           if new_node_id
             puts new_node_id
+            exit
           else
             exit HTTP_INTERNAL_SERVER_ERROR
           end

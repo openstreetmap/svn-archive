@@ -1,8 +1,8 @@
 #!/usr/bin/ruby -w
 
 require 'cgi'
-load 'osm/dao.rb'
-load 'osm/ox.rb'
+require 'osm/dao.rb'
+require 'osm/ox.rb'
 require 'rexml/document'
 
 include Apache
@@ -34,7 +34,7 @@ if r.request_method == "GET"
 else
   user_id = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
   multi_id = r.args.match(/multiid=([0-9]+)/).captures.first.to_i
-  type = :area if r.args.match(/multitype=area/)
+  type = :area if r.args.match(/type=area/)
   if r.request_method == "PUT"
 
     r.setup_cgi_env

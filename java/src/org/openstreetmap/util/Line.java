@@ -32,11 +32,6 @@ public class Line {
 	 */
 	public Node from, to;
 
-	/**
-	 * The name-part of the properties.
-	 */
-	private String name = "";
-
   /** The additional tags (beside the name) this line segment has.  
    * FIXME should really be a hash
 	 */

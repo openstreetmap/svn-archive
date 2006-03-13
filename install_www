@@ -70,11 +70,11 @@ cd ..
 
 # REST
 
-mkdir -p $ROOT/ruby/api/0.2
+mkdir -p $ROOT/ruby/api/0.3
 mkdir -p $ROOT/ruby/api/osm
 mkdir -p $ROOT/ruby/api/apache
 
-cp ruby/api/*.rb $ROOT/ruby/api/0.2/
+cp ruby/api/*.rb $ROOT/ruby/api/0.3/
 cp ruby/api/osm/*.rb $ROOT/ruby/api/osm/
 
 ln -s $ROOT/ruby/api/osm $ROOT/ruby/osm

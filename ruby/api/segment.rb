@@ -27,7 +27,7 @@ if r.request_method == "GET"
     if segment
       if segment.visible && segment.node_a.visible && segment.node_b.visible
         ox.add_segment(segment)
-        puts ox.to_s
+        ox.print_http(r)
       else
         exit HTTP_GONE
       end
@@ -50,14 +50,20 @@ else
       gpxsegmentid = seg.attributes['uid'].to_i
       
       exit BAD_REQUEST unless gpxsegmentid == segmentid
-      exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible == true
+      exit HTTP_NOT_FOUND unless dao.getsegment(gpxsegmentid).visible
 
       node_a_id = seg.attributes['from'].to_i
       node_b_id = seg.attributes['to'].to_i
-      tags = seg.attributes['tags']
 
-      exit HTTP_NOT_FOUND unless dao.getnode(node_a_id).visible == true 
-      exit HTTP_NOT_FOUND unless dao.getnode(node_b_id).visible == true
+      tags = []
+      seg.elements.each('tag') do |tag|
+        tags << [tag.attributes['k'],tag.attributes['v']]
+      end
+      
+      tags = tags.collect { |k,v| "#{k}=#{v}" }.join(';')
+
+      exit HTTP_NOT_FOUND unless dao.getnode(node_a_id).visible 
+      exit HTTP_NOT_FOUND unless dao.getnode(node_b_id).visible
       #exit BAD_REQUEST unless tags
       tags = '' unless tags
 

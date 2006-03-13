@@ -12,50 +12,54 @@ r = Apache.request
 
 dao = OSM::Dao.instance
 
+type = :way
+
 if r.request_method == "GET"
-
   cgi = CGI.new
-  street_id = cgi['streetid'].to_i
 
-  if street_id != 0
+  multi_id = cgi['multiid'].to_i
+  type = :area if cgi['type'] == 'area'
+
+  if multi_id != 0
     ox = OSM::Ox.new
 
-    street = dao.get_street(street_id)
+    multi = dao.get_multi(multi_id, type)
 
-    if street
-      exit HTTP_NOT_FOUND unless street.visible
-      ox.add_street(street)
-      puts ox.to_s
+    if multi
+      exit HTTP_NOT_FOUND unless multi.visible
+      ox.add_multi(multi, type)
+      ox.print_http(r)
     end
   end
 else
   user_id = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
-  street_id = r.args.match(/streetid=([0-9]+)/).captures.first.to_i
+  multi_id = r.args.match(/multiid=([0-9]+)/).captures.first.to_i
+  type = :area if r.args.match(/multitype=area/)
   if r.request_method == "PUT"
 
     r.setup_cgi_env
     doc = Document.new $stdin.read
-    xml_street_id = -1
+    xml_multi_id = -1
 
-    doc.elements.each('osm/street') do |street|
-      xml_street_id = street.attributes['id'].to_i
+    doc.elements.each("osm/#{type.to_s}") do |multi|
+      xml_multi_id = multi.attributes['id'].to_i
 
-      exit BAD_REQUEST unless xml_street_id == street_id
+      exit BAD_REQUEST unless xml_multi_id == multi_id
 
       tags = []
-      street.elements.each('tag') do |tag|
+      multi.elements.each('tag') do |tag|
         tags << [tag.attributes['k'],tag.attributes['v']]
       end
 
       segs = []
-      street.elements.each('seg') do |seg|
+      multi.elements.each('seg') do |seg|
         segs << seg.attributes['id'].to_i
       end
 
-      if street_id == 0 #new street
-        puts dao.new_street(user_id, tags, segs)
+      if multi_id == 0 #new multi
+        puts dao.new_multi(user_id, tags, segs, type)
       else
-        if dao.update_street(user_id, tags, segs, false, street_id)
+        if dao.update_multi(user_id, tags, segs, type, false, multi_id)
           exit
         else
           exit HTTP_INTERNAL_SERVER_ERROR
@@ -66,12 +70,12 @@ else
 
   else
     if r.request_method == "DELETE"
-      if user_id != 0 && street_id != 0
-        street = dao.get_street(street_id)
+      if user_id != 0 && multi_id != 0
+        multi = dao.get_multi(multi_id, type)
         
-        if street
-          exit HTTP_GONE unless street.visible
-          if dao.delete_street(street_id, user_id)
+        if multi
+          exit HTTP_GONE unless multi.visible
+          if dao.delete_multi(multi_id, user_id, type)
             exit
           else
             exit HTTP_INTERNAL_SERVER_ERROR

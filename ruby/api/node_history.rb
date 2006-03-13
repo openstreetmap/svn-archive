@@ -28,5 +28,5 @@ dao.get_node_history(node_id, from, to).each do |n|
   ox.add_node(n)
 end
 
-puts ox.to_s
+ox.print_http(r)
 

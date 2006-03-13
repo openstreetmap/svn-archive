@@ -15,6 +15,10 @@ r = Apache.request
 dao = OSM::Dao.instance
 
 cgi = CGI.new
+
+type = :way
+type = :area if cgi['type'] == 'area'
+
 segment_ids = cgi['segmentids'].split(',')
 
 segs = []
@@ -25,9 +29,9 @@ end
 
 ox = OSM::Ox.new
 
-dao.get_streets_from_segments(segs).each do |n|
-  ox.add_street(n)
+dao.get_multis_from_segments(segs).each do |n|
+  ox.add_multi(n,type)
 end
 
-puts ox.to_s
+ox.print_http(r)
 

@@ -331,12 +331,12 @@ module OSM
 
     def set_cookie(r,token)
       ed = (Time.now + (60 * 60 * 24)).rfc2822()
-      r.headers_out.add('Set-Cookie', 'openstreetmap=' + token + '; path=/; expires=' + ed)
+      r.headers_out.add('Set-Cookie', 'openwaymap=' + token + '; path=/; expires=' + ed)
     end
 
 
     def check_cookie?(cgi)
-      cvalues = cgi.cookies['openstreetmap']
+      cvalues = cgi.cookies['openwaymap']
       if !cvalues.empty?
         token = cvalues[0]
         if token
@@ -502,10 +502,12 @@ module OSM
     end
 
 
-    def getnodes(lat1, lon1, lat2, lon2)
+    def getnodes(lat1, lon1, lat2, lon2, to=nil)
       nodes = {}
 
-      res = call_sql { "select id, latitude, longitude, visible, tags from (select * from (select nodes.id, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and nodes.id = a.id order by nodes.timestamp desc) as b group by id) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}" }
+      timeclause = get_time_clause(nil, to).gsub('timestamp','nodes.timestamp')
+
+      res = call_sql { "select id, latitude, longitude, visible, tags from (select * from (select nodes.id, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} #{timeclause} and nodes.id = a.id order by nodes.timestamp desc) as b group by id) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}" }
 
       if !res.nil? 
         res.each_hash do |row|
@@ -518,6 +520,28 @@ module OSM
       end
 
     end
+
+
+    def get_nodes_by_ids(node_ids, to=nil)
+       nodes = {}
+       timeclause = get_time_clause(nil, to)
+
+       res = call_sql { "select id, latitude, longitude, visible, tags from 
+         (select * from 
+          (select id, latitude, longitude, visible, tags from nodes where nodes.id in (#{node_ids.join(',')}) #{timeclause} order by id, timestamp desc) as a group by id) as b" }
+
+      if !res.nil? 
+        res.each_hash do |row|
+          node_id = row['id'].to_i
+          vis = '1' == row['visible']
+          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, vis, row['tags'])
+        end
+
+        return nodes
+      end 
+
+    end
+    
 
 
 
@@ -585,27 +609,17 @@ module OSM
 
 
 
-    def getlines(nodes)
-      clausebuffer = '('
-      first = true
+    def getlines(nodes, to=nil)
 
-      nodes.each do |node_id, p|
-        if !first
-          clausebuffer += ',' + node_id.to_s
-        else
-          clausebuffer += node_id.to_s
-          first = false
-        end
-
-      end
-      clausebuffer += ')'
-
+      timeclause = get_time_clause(nil, to)
+      ids = nodes.collect { |id, node| id }
+      cbuff = "(#{ids.join(',')})"
       begin
         conn = get_connection
 
         q = "SELECT segment.id, segment.node_a, segment.node_b, segment.tags FROM (
                select * from
-                  (SELECT * FROM segments where node_a IN #{clausebuffer} OR node_b IN #{clausebuffer} ORDER BY timestamp DESC)
+                  (SELECT * FROM segments where (node_a IN #{cbuff} OR node_b IN #{cbuff}) #{timeclause} ORDER BY timestamp DESC)
                as a group by id) as segment where visible = true"
 
         @@log.log q
@@ -630,7 +644,7 @@ module OSM
 
 
     def getlinesbydate(nodes, date)
-      clausebuffer = '('
+      clausebuffer = "("
       first = true
 
       nodes.each do |node_id, p|
@@ -810,11 +824,10 @@ module OSM
     end # deletesegment
 
 
-    def get_street(street_id, version=nil)
-      @@log.log 'getting street ' + street_id.to_s
+    def get_multi(multi_id, type=:way, version=nil)
       clause = ' order by version desc limit 1;'
       clause = " and version = #{version} " unless version.nil?
-      res = call_sql { "select version, visible, timestamp from streets where id = #{q(street_id.to_s)} " + clause }
+      res = call_sql { "select version, visible, timestamp from #{type}s where id = #{q(multi_id.to_s)} " + clause }
 
       version = 0
       visible = true
@@ -827,26 +840,26 @@ module OSM
 
       return nil unless version != 0
 
-      res = call_sql { "select k,v from street_tags where id = #{q(street_id.to_s)} and version = #{version};" }
+      res = call_sql { "select k,v from #{type}_tags where id = #{q(multi_id.to_s)} and version = #{version};" }
 
       tags = []
       res.each_hash do |row|
         tags << [row['k'],row['v']]
       end
 
-      res = call_sql { "select segment_id as n from street_segments where id = #{q(street_id.to_s)} and version = #{version};" }
+      res = call_sql { "select segment_id as n from #{type}_segments where id = #{q(multi_id.to_s)} and version = #{version};" }
 
       segs = []
       res.each_hash do |row|
         segs << [row['n'].to_i]
       end
 
-      return Street.new(street_id, tags, segs, visible, timestamp)
-    end # get_street
+      return Street.new(multi_id, tags, segs, visible, timestamp)
+    end # get_multi
 
 
+    def update_multi(user_id, tags, segs, type=:way, new=false, multi_id=0)
 
-    def update_street(user_id, tags, segs, new=false, street_id=0)
       begin
         dbh = get_connection
         dbh.query( "set @ins_time = NOW();" )
@@ -854,17 +867,17 @@ module OSM
 
 
         if new
-          dbh.query( "insert into meta_streets (user_id, timestamp) values (@user_id, @ins_time)" )
+          dbh.query( "insert into meta_#{type}s (user_id, timestamp) values (@user_id, @ins_time)" )
           dbh.query( "set @id = last_insert_id() ")
         else
-          return nil unless get_street(street_id)
-          dbh.query("set @id = #{street_id}")
+          return nil unless get_multi(multi_id, type)
+          dbh.query("set @id = #{multi_id}")
         end
 
-        dbh.query( "insert into streets (id, user_id, timestamp) values (@id, @user_id, @ins_time)" )
+        dbh.query( "insert into #{type}s (id, user_id, timestamp) values (@id, @user_id, @ins_time)" )
         dbh.query( "set @version = last_insert_id()")
 
-        tags_sql = "insert into street_tags(id, k, v, version) values "
+        tags_sql = "insert into #{type}_tags(id, k, v, version) values "
         first = true
         tags.each do |k,v|
           tags_sql += ',' unless first
@@ -874,7 +887,7 @@ module OSM
 
         dbh.query( tags_sql )
 
-        segs_sql = "insert into street_segments (id, segment_id, version) values "
+        segs_sql = "insert into #{type}_segments (id, segment_id, version) values "
 
         first = true
         segs.each do |n|
@@ -900,21 +913,20 @@ module OSM
 
     end
 
-    def new_street(user_id, tags, segs)
-      return update_street(user_id, tags, segs, true)
+    def new_multi(user_id, tags, segs, type=:way)
+      return update_multi(user_id, tags, segs, type, true)
     end
 
-    def delete_street(street_id, user_id)
-      street = get_street(street_id)
-      call_sql { "insert into streets (id, user_id, timestamp, visible) values (#{q(street_id.to_s)}, #{q(user_id.to_s)},NOW(),0)" }
+    def delete_multi(multi_id, user_id, type=:way)
+      multi = get_multi(multi_id, type)
+      call_sql { "insert into #{type}s (id, user_id, timestamp, visible) values (#{q(multi_id.to_s)}, #{q(user_id.to_s)},NOW(),0)" }
     end
 
     def get_node_history(node_id, from=nil, to=nil)
       res = call_sql { "select latitude as lat, longitude as lon, visible, tags, timestamp from nodes where id = #{node_id} " + get_time_clause(from, to) }
       history = []
       res.each_hash do |row|
-        visible = true
-        visible = false unless row['visible'] == '1'
+        visible = '1' == row['visible']
         history << Point.new( row['lat'], row['lon'], node_id, visible, row['tags'], row['timestamp'] )
       end
       return history
@@ -925,20 +937,18 @@ module OSM
       res = call_sql { "select node_a, node_b, visible, tags, timestamp from segments where id = #{segment_id} " + get_time_clause(from,to) }
       history = []
       res.each_hash do |row|
-        visible = true
-        visible = false unless row['visible'] == '1'
+        visible = '1' == row['visible']
         history << UIDLinesegment.new(segment_id, row['node_a'], row['node_b'], row['tags'], visible, row['timestamp'] )
       end
       return history
     end 
 
-    def get_street_history(street_id, from=nil, to=nil) 
-      res = call_sql { "select version from streets where id = #{street_id} " + get_time_clause(from,to) }
+    def get_multi_history(multi_id, type=:way, from=nil, to=nil) 
+      res = call_sql { "select version from #{type}s where id = #{multi_id} " + get_time_clause(from,to) }
       history = []
       res.each_hash do |row|
-        visible = true
-        visible = false unless row['visible'] == '1'
-        history << get_street(street_id, row['version'].to_i)
+        visible = '1' == row['visible']
+        history << get_multi(multi_id, type, row['version'].to_i)
       end
       return history
     end
@@ -950,24 +960,15 @@ module OSM
       return clause   
     end
 
-    def get_streets_from_segments(segment_ids)
-      segment_clause = '('
-      first = true
-      segment_ids.each do |n|
-        segment_clause += ',' unless first
-        first = false
-        segment_clause += n.to_s
-      end
-
-      segment_clause += ')'
-      
-      res = call_sql { "select distinct a.id from (select id, max(version) as version from street_segments where id in (select id from street_segments where segment_id in #{segment_clause}) group by id) as a, street_segments where a.id = street_segments.id and a.version = street_segments.version and segment_id in #{segment_clause};" }
-      streets = []
+    def get_multis_from_segments(segment_ids, type=:way)
+      segment_clause = "(#{segment_ids.join(',')})"
+      res = call_sql { "select distinct a.id from (select id, max(version) as version from #{type}_segments where id in (select id from #{type}_segments where segment_id in #{segment_clause}) group by id) as a, #{type}_segments where a.id = #{type}_segments.id and a.version = #{type}_segments.version and segment_id in #{segment_clause};" }
+      multis = []
 
       res.each_hash do |row|
-        streets << get_street( row['id'].to_i )
+        multis << get_multi( row['id'].to_i, type )
       end
-      return streets
+      return multis
     end
 
   end

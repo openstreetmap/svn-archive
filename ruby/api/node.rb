@@ -25,7 +25,7 @@ if r.request_method == "GET"
     if node
       if node.visible
         ox.add_node(node)
-        puts ox.to_s
+        ox.print_http(r)
       else
         exit HTTP_GONE
       end
@@ -46,8 +46,14 @@ else
       lat = pt.attributes['lat'].to_f
       lon = pt.attributes['lon'].to_f
       xmlnodeid = pt.attributes['uid'].to_i
-      tags = pt.attributes['tags']
-#      exit BAD_REQUEST unless tags
+
+      tags = []
+      pt.elements.each('tag') do |tag|
+        tags << [tag.attributes['k'],tag.attributes['v']]
+      end
+      
+      tags = tags.collect { |k,v| "#{k}=#{v}" }.join(';')
+
       tags = '' unless tags
       if xmlnodeid == nodeid && userid != 0
         if nodeid == 0

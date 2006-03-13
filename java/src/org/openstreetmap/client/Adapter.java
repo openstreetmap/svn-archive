@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.Map;
 
 import org.apache.commons.httpclient.Credentials;
@@ -18,13 +19,14 @@ import org.openstreetmap.util.GzipAwareGetMethod;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Point;
+import org.openstreetmap.util.Tag;
 
 public class Adapter {
 
 	/**
 	 * Base url string to connect to the osm server api.
 	 */
-	private String apiUrl = "http://www.openstreetmap.org/api/0.2/";
+	private String apiUrl = "http://www.openstreetmap.org/api/0.3/";
 
 	/**
 	 * The server command manager to deploy server commands.
@@ -109,7 +111,7 @@ public class Adapter {
 			System.exit(-3);
 		}
 		
-		GpxParser gpxp = new GpxParser(responseStream);
+		OxParser gpxp = new OxParser(responseStream);
 		Collection vnodes = gpxp.getNodes();
 		Iterator it = vnodes.iterator();
 		while (it.hasNext()) {
@@ -275,8 +277,8 @@ public class Adapter {
 		}
 
 		public boolean connectToServer() throws IOException {
-			String xml = "<osm><node tags=\"\" lon=\"" + node.lon + "\" lat=\"" + node.lat + "\" /></osm>";
-			String url = apiUrl + "newnode";
+			String xml = "<osm><node id=\"0\" tags=\"\" lon=\"" + node.lon + "\" lat=\"" + node.lat + "\" /></osm>";
+			String url = apiUrl + "node/0";
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
@@ -407,8 +409,8 @@ public class Adapter {
 			lines.put(tempKey, line);
 		}
 		public boolean connectToServer() throws IOException {
-			String xml = "<osm><segment tags=\"\" from=\"" + line.from.id + "\" to=\"" + line.to.id + "\" /></osm>";
-			String url = apiUrl + "newsegment";
+			String xml = "<osm><segment id=\"0\" tags=\"\" from=\"" + line.from.id + "\" to=\"" + line.to.id + "\" /></osm>";
+			String url = apiUrl + "segment/0";
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
@@ -427,7 +429,7 @@ public class Adapter {
 
 				if (rCode == 200) {
 					System.out.println("got reponse " + response);
-					id = Long.parseLong(response);
+					id = Long.parseLong(response.trim());
 					System.err.println("line created successfully: " + line);
 					return true;
 				}
@@ -464,9 +466,16 @@ public class Adapter {
 			line.setName(newName);
 		}
 		public boolean connectToServer() throws IOException {
-			String xml = "<osm><segment uid=\"" + line.id + "\" tags=\""
-					+ line.getTags() + "\" from=\"" + line.from.id
-					+ "\" to=\"" + line.to.id + "\" /></osm>";
+			String xml = "<osm><segment uid=\"" + line.id + "\" from=\"" + line.from.id
+					+ "\" to=\"" + line.to.id + "\">";
+
+      Enumeration e = line.tags.elements();
+      while(e.hasMoreElements()) {
+        Tag tag = (Tag)e.nextElement();
+        xml = xml + "<tag k=\"" + tag.key + "\" v=\"" + tag.value + "\" />";
+      }
+
+      xml = xml + "</segment></osm>";
 
 			String url = apiUrl + "segment/" + line.id;
 

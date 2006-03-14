@@ -25,19 +25,19 @@ Welcome <%=email %>
 
 <div>
   <ul id="tabnav">
-    <li><a <%=indexattr %> id="viewanchor" href="/index.html">View</a></li>
+    <li><a <%=indexattr %> id="viewanchor" href="/index.html" title="view maps">View</a></li>
     <li>
     <% if loggedin then %> 
-    <a <%=editattr %> id="editanchor" href="/edit.html">Edit</a>
+    <a <%=editattr %> id="editanchor" href="/edit.html" title="edit maps">Edit</a>
     <% else %>
-    <a <%=editattr %> style="font-style:italic" href="/login.html">Edit</a>
+    <a <%=editattr %> style="font-style:italic" href="/login.html" title="edit maps">Edit</a>
     <% end %>
     </li>
     <li >
     <% if loggedin then %>
-    <a <%=uploadattr %> href="/upload.html">GPS traces</a>
+    <a <%=uploadattr %> href="/upload.html" title="manage GPS data">GPS traces</a>
     <% else %>
-    <a <%=uploadattr %> style="font-style:italic" href="/login.html">GPS traces</a>
+    <a <%=uploadattr %> style="font-style:italic" href="/login.html" title="manage gps data">GPS traces</a>
     <% end %>
     </li>
 </ul>

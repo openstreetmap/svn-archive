@@ -48,12 +48,6 @@ if linesegments # get nodes we dont have yet
   nodes.merge!(dao.get_nodes_by_ids(nodes_missing, to))
 end
 
-[:way, :area].each do |type|
-  dao.get_multis_from_segments(seg_ids, type).each do |n|
-    ox.add_multi(n,type)
-  end
-end
-
 if nodes
   nodes.each do |i,n|
 	  ox.add_node(n) unless !n.visible
@@ -67,6 +61,14 @@ if linesegments
     end
   end
 end
+
+[:way, :area].each do |type|
+  dao.get_multis_from_segments(seg_ids, type).each do |n|
+    ox.add_multi(n,type)
+  end
+end
+
+
 
 ox.print_http(r)
 

@@ -4,6 +4,7 @@
 % dao = OSM::Dao.instance
 
 %token,user_id = dao.check_cookie?(cgi)
+%tags =[]
 %if user_id 
 %  loggedin = true
 %  email = dao.email_from_user_id(user_id)

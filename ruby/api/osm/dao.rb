@@ -987,10 +987,13 @@ module OSM
     def get_multis_from_segments(segment_ids, type=:way)
       segment_clause = "(#{segment_ids.join(',')})"
       res = call_sql { "
-        select id from #{type}_segments as b, 
-        (select distinct a.id as id from (select id, max(version) as version from #{type}_segments where id in (select id from #{type}_segments where segment_id in #{segment_clause}) group by id) as a, #{type}_segments where a.id = #{type}_segments.id and a.version = #{type}_segments.version and segment_id in #{segment_clause}) as c
-        where b.id = c.id and b.version = c.version and b.visible = true;" }
-
+      select g.id from #{type}s as g, 
+        (select id, max(version) as version from #{type}s where id in 
+          (select distinct a.id from
+            (select id, max(version) as version from #{type}_segments where id in (select id from #{type}_segments where segment_id in #{segment_clause}) group by id) as a
+          ) group by id
+         ) as b where g.id = b.id and g.version = b.version and g.visible = 1 "}
+          
       multis = []
 
       res.each_hash do |row|

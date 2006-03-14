@@ -167,7 +167,7 @@ end
       background = "table#{odd_or_even}"
       %>
       <tr>
-        <td class="<%=background%>"><a href="get-gpx.html?gpx_id=<%=row['id']%>"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=row['size']%> points) ... <%=time%></span>
+        <td class="<%=background%>"><a href="get-gpx.html?gpx_id=<%=row['id']%>"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=dao.commify(row['size'].to_i)%> points) ... <%=time%></span>
           <a href="upload.html?action=edit&gpx_id=<%=row['id']%>" title="edit description / tags" >edit</a> /
           <a href="edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14" title="create maps">map</a>
           <% 

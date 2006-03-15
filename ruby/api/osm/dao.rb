@@ -398,7 +398,7 @@ module OSM
       clause = ''
       clause += " and gpx_files.user_id in (select id from users where display_name='#{q(display_name)}') " if display_name != ''
       clause += " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " if tag != ''
-      return call_sql { "select gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where gpx_files.private=0 and visible = 1 and gpx_files.user_id = users.id #{clause} order by timestamp desc" }
+      return call_sql { "select gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where gpx_files.private=0 and visible = 1 and gpx_files.user_id = users.id and users.display_name != '' #{clause} order by timestamp desc" }
     end
 
     def gpx_get(user_id, gpx_id)

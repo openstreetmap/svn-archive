@@ -142,26 +142,6 @@ end
     
 # show pending files
 
-pendingfiles = dao.gpx_pending_details_for_user(user_id)
-
-if pendingfiles.num_rows != 0
-%>
-  <h3>Pending tracs</h3>
-  The following GPX file(s) are pending upload:<br><br>
-  <%
-  first = true
-  pendingfiles.each_hash do |row|
-  %>
-    <b><%=row['originalname']%></b><br>
-    <%
-    first = false
-  end
-  %>
-  <br>Please be patient, it can take some time to insert large files that you or other users have uploaded. You'll receive an email on completion, usually within 15 minutes.
-  <%
-end
-
-# show previously uploaded files
 
 gpxfiles = []
 

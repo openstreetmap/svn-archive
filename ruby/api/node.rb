@@ -45,7 +45,7 @@ else
     doc.elements.each('osm/node') do |pt|
       lat = pt.attributes['lat'].to_f
       lon = pt.attributes['lon'].to_f
-      xmlnodeid = pt.attributes['uid'].to_i
+      xmlnodeid = pt.attributes['id'].to_i
 
       tags = []
       pt.elements.each('tag') do |tag|

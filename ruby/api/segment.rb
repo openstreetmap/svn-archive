@@ -47,7 +47,7 @@ else
     gpxsegmentid = -1
 
     doc.elements.each('osm/segment') do |seg|
-      gpxsegmentid = seg.attributes['uid'].to_i
+      gpxsegmentid = seg.attributes['id'].to_i
       
       exit BAD_REQUEST unless gpxsegmentid == segmentid
 

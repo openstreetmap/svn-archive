@@ -207,7 +207,7 @@ if loggedin %>
     <tr>
       <td class="<%=background%>"><a href="<%=getlink%><%=row['id']%>/download" title="download <%=row['name']%>" target="_blank"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=dao.commify(row['size'].to_i)%> points) ... <%=time%></span>
         <a href="<%=getlink%><%=row['id']%>" title="more detail..." >more</a> /
-        <a href="edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14" title="create maps">map</a>
+        <a href="/edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14" title="create maps">map</a>
         <% 
     if row['description'] != ''  %>
       <br /><span class="gpxdesc"><%= row['description'] %></span>

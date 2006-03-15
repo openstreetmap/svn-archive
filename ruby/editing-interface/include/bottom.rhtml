@@ -102,7 +102,7 @@ if (detect.indexOf('msie') >= 0) {
 <span class="oboxheader">User</span><br /><br />
 
       <% 
-      if cgi['action'] == 'savedisplayname'
+      if cgi['dn_action'] == 'savedisplayname'
         saved = dao.save_display_name(user_id, cgi['display_name'])
         if saved
           user = dao.details_from_user_id(user_id)
@@ -120,10 +120,10 @@ if (detect.indexOf('msie') >= 0) {
         end
         %>
 
-  <form action="/traces" method="post">
+  <form action="/traces/mine" method="get">
     display name:<br />
     <input type="text" name="display_name" size="10" maxlength="255" value="<%=user['display_name']%>" /><input type="submit" value="save" />
-    <input type="hidden" name="action" value="savedisplayname" />
+    <input type="hidden" name="dn_action" value="savedisplayname" />
   </form>
 </div>
 <% end %>

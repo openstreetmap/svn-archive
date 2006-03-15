@@ -16,7 +16,7 @@ ERuby.import('include/top.rhtml')
 
 <div id="main_area">
 
-<% if loggedin %>
+<% if loggedin && (cgi['action'] == 'mytraces' || cgi['action'] == 'mytag')%>
   <h1>Your GPS Traces</h1>
 <% else %>
 <h1>Public GPS Traces</h1>
@@ -121,7 +121,7 @@ if loggedin
       dao.gpx_get(user_id, gpx_id).each_hash do |gpx|
       %>
       <h2>Editing the trace <%=gpx['name']%></h2>
-      <form action="/traces">
+      <form action="/traces/mine">
         <table border="0">
           <tr><td>filename:</td><td><%=gpx['name']%></td></tr>
           <tr><td>uploaded:</td><td><%=gpx['timestamp']%></td></tr>
@@ -152,11 +152,13 @@ if loggedin
     if cgi['action'] == 'mytraces'  
       gpxfiles = dao.gpx_details_for_user(user_id)
     else
-      gpxfiles = dao.gpx_public_files(cgi['display_name'], cgi['tag'], cgi['page'].to_i)
+      if cgi['action'] != 'edit'
+        gpxfiles = dao.gpx_public_files(cgi['display_name'], cgi['tag'], cgi['page'].to_i)
+      end
     end
   end
 else
-  if cgi['action'] != 'onetrace'  
+  if cgi['action'] != 'onetrace' && cgi['action'] != 'edit'
     gpxfiles = dao.gpx_public_files(cgi['display_name'], cgi['tag'], cgi['page'].to_i)
   end
 end
@@ -212,7 +214,9 @@ if loggedin %>
     if loggedin
     %> <br / > <%
     else 
+      if row['display_name'] != ''
     %> <br / >by <a href="/traces/user/<%=row['display_name']%>" title="see all traces by <%=row['display_name']%>"><%=row['display_name']%></a> <%
+      end
     end
     
     if tags != []
@@ -229,7 +233,7 @@ if loggedin %>
     </td>
     <td class="<%=background%>"><center>
         <% 
-        if loggedin
+        if loggedin && cgi['action'] == 'mytraces'
         if row['private'] == '1' %>
       <input type="checkbox" name="priv_<%=row['id']%>">
  <% else %>
@@ -245,7 +249,7 @@ if loggedin %>
   %>
 </table>
 <%
-  if loggedin %>
+  if loggedin && cgi['action'] == 'mytraces'%>
 <br />
 <input type="submit" value="Update">
 </form>

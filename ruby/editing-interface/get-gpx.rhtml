@@ -25,8 +25,8 @@ gpx_id = cgi['gpx_id'].to_i
 
 filename = "/home/osm/gpx/#{gpx_id}.gpx".untaint
 
-if dao.does_user_own_gpx?(user_id, gpx_id) || dao.gpx_public?(gpx_id)
-  if loggedin && gpx_id != 0
+if dao.gpx_public?(gpx_id) || dao.does_user_own_gpx?(user_id, gpx_id)
+  if gpx_id != 0
     if File.exists?(filename) && File.size(filename) > 0
        File.new(filename).each do |line|
         puts line

@@ -363,8 +363,18 @@ module OSM
     end
 
 
-    def email_from_user_id(user_id)
-      res = call_sql { "select email from users where active = 1 and id = #{user_id}" }
+    def save_display_name(user_id, display_name)    
+      res = call_sql { "select id from users where display_name = '#{q(display_name)}'" }
+      rows = false
+      res.each {|row| rows = true}
+      return false if rows
+      call_sql {"update users set display_name = '#{q(display_name)}' where id = #{user_id}"}
+      return true  
+    end
+
+    
+    def details_from_user_id(user_id)
+      res = call_sql { "select email, display_name from users where active = 1 and id = #{user_id}" }
 
       if res.nil?
         return nil
@@ -372,18 +382,31 @@ module OSM
 
       if res.num_rows == 1
         res.each_hash do |row|
-          return row['email']
+          return {'display_name' => row['display_name'], 'email' => row['email'] }
         end
       end
     end
 
 
-    def gpx_details_for_user(user_id)
-      return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and visible = 1 order by timestamp desc" }
+    def gpx_details_for_user(user_id, tag=nil)
+      clause = ''
+      clause = " and id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " unless tag.nil?
+      return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and visible = 1 #{clause} order by timestamp desc" }
+    end
+
+    def gpx_public_files(display_name, tag, page=0)
+      clause = ''
+      clause += " and gpx_files.user_id in (select id from users where display_name='#{q(display_name)}') " if display_name != ''
+      clause += " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " if tag != ''
+      return call_sql { "select gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where gpx_files.private=0 and visible = 1 and gpx_files.user_id = users.id #{clause} order by timestamp desc" }
     end
 
     def gpx_get(user_id, gpx_id)
       return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
+    end
+
+    def gpx_public_get(gpx_id)
+      return call_sql { "select users.display_name, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description from gpx_files, users  where gpx_files.id = #{q(gpx_id.to_s)} and gpx_files.visible = 1 and gpx_files.private = 0 and gpx_files.user_id = users.id" }
     end
 
     def gpx_tags(gpx_id)
@@ -394,7 +417,7 @@ module OSM
     end
 
     def gpx_user_tags(user_id)
-      return call_sql { "select tag from gpx_file_tags where gpx_id in (select id from gpx_files where user_id = #{q(user_id.to_s)}) order by tag;" }
+      return call_sql { "select distinct tag from gpx_file_tags where gpx_id in (select id from gpx_files where user_id = #{q(user_id.to_s)} and visible=1) order by tag;" }
     end
 
     def gpx_update_desc(gpx_id, description='', tags=[])
@@ -428,14 +451,40 @@ module OSM
       return res && res.num_rows == 1
     end
 
+    def gpx_public?(gpx_id)
+      res = call_sql { "select id from gpx_files where id = #{q(gpx_id.to_s)} and private = 0 and visible = 1" }
+      return res && res.num_rows == 1
+    end
+
+
 
     def schedule_gpx_delete(gpx_id)
       call_sql { "update gpx_files set visible = false where id = #{q(gpx_id.to_s)}" }
     end
 
 
-    def schedule_gpx_upload?(originalname, tmpname, user_id)
-      call_sql { "insert into gpx_pending_files (originalname, tmpname, user_id) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id})" }
+    def schedule_gpx_upload(originalname, tmpname, user_id, description, tags)
+      begin
+        dbh = get_connection
+
+        dbh.query( "insert into gpx_files (name, tmpname, user_id, description, visible, inserted, timestamp, size) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id}, '#{description}', 1, 0, NOW(), 0)")
+        res = dbh.query( "select last_insert_id()")
+
+        gpx_id = -1
+
+        res.each do |row|
+          gpx_id = row[0].to_i
+        end
+        
+        gpx_update_desc(gpx_id, description, tags) unless gpx_id == -1
+        
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+       
     end
 
 
@@ -444,22 +493,7 @@ module OSM
     end
 
     def delete_sheduled_gpx_files()
-      begin
-        dbh = get_connection
-
-        dbh.query('delete from gpx_files, gps_points using gpx_files, gps_points where gpx_files.id = gps_points.gpx_id and gpx_files.visible = false')
-
-        return true
-
-      rescue MysqlError => e
-        mysql_error(e)
-
-      ensure
-        dbh.close if dbh
-      end
-
-      return false
-
+      call_sql { 'delete from gpx_files, gps_points using gpx_files, gps_points where gpx_files.id = gps_points.gpx_id and gpx_files.visible = false' }
     end    
 
 

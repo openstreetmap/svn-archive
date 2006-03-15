@@ -19,28 +19,27 @@ r.content_type = 'text/plain'
 token,user_id = dao.check_cookie?(cgi)
 if user_id 
   loggedin = true
-  email = dao.email_from_user_id(user_id)
 end
 
-gpxid = cgi['gpx_id'].to_i
+gpx_id = cgi['gpx_id'].to_i
 
-filename = "/home/osm/gpx/#{gpxid}.gpx".untaint
+filename = "/home/osm/gpx/#{gpx_id}.gpx".untaint
 
-if dao.does_user_own_gpx?(user_id, gpxid)
-  if loggedin && gpxid != 0
+if dao.does_user_own_gpx?(user_id, gpx_id) || dao.gpx_public?(gpx_id)
+  if loggedin && gpx_id != 0
     if File.exists?(filename) && File.size(filename) > 0
        File.new(filename).each do |line|
         puts line
       end
     else
-      points = dao.get_gpx_points(gpxid)
+      points = dao.get_gpx_points(gpx_id)
       gpx = OSM::Gpx.new
       gpx.addtrk points
       puts gpx.to_s_pretty
     end
   end
 else
-  puts "Sorry, that gpx is owned by another user."
+  puts "Sorry, that gpx is owned by another user or is not public."
 end
 
 %>

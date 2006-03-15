@@ -326,7 +326,7 @@ hides rule from IE5-Mac \*/
 }
 
 
-#tags {
+.optionalbox {
   width: 150px;
   min-width: 150px;
   margin: 10px;
@@ -339,7 +339,7 @@ hides rule from IE5-Mac \*/
   background: #eee;
 }
 
-.tagheader {
+.oboxheader {
   font-size: 18px;
 }
 

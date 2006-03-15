@@ -1,9 +1,9 @@
 <span id="greeting">
 <% if loggedin %>
-Welcome <%=email %> 
-<a id="logoutanchor" href="logout.html">Logout</a>
+Welcome <%=user['email'] %> 
+<a id="logoutanchor" href="/logout.html">Logout</a>
 <% else %>
-<a id="loginanchor" href="login.html">Login</a> /
+<a id="loginanchor" href="/login.html">Login</a> /
 <a id="registeranchor" href="create-account.html">Register</a>
 <% end %>
 </span>
@@ -14,7 +14,7 @@ Welcome <%=email %>
 	indexattr=''
 	if ENV['REQUEST_URI'].index('/edit.html') == 0 then
 		editattr = 'class="active"' 
-	elsif ENV['REQUEST_URI'].index('/upload.html') == 0 then
+	elsif ENV['REQUEST_URI'].index('/traces') == 0 then
 		uploadattr = 'class="active"'
 	elsif ENV['REQUEST_URI'].index('/index.html') == 0 || 
 		ENV['REQUEST_URI'].index('/?') == 0 ||
@@ -34,10 +34,11 @@ Welcome <%=email %>
     <% end %>
     </li>
     <li >
-    <% if loggedin then %>
-    <a <%=uploadattr %> href="/upload.html" title="manage GPS data">GPS traces</a>
+    
+    <% if loggedin then %> 
+    <a <%=uploadattr %> href="/traces/mine" title="manage traces">GPS traces</a>
     <% else %>
-    <a <%=uploadattr %> style="font-style:italic" href="/login.html" title="manage gps data">GPS traces</a>
+    <a <%=uploadattr %> href="/traces" title="manage traces">GPS traces</a>
     <% end %>
     </li>
 </ul>
@@ -81,18 +82,53 @@ if (detect.indexOf('msie') >= 0) {
 
 </center>
 </div>
-<% if tags != [] %>
-<div id="tags">
-  <span class="tagheader">tags</span><br /><br />
-  <%tags.each do |tag|
-  %>
-    <%=tag%><br />
-    <%
-    end
-  %>
+<% if alltags != [] %>
+<div class="optionalbox">
+  <span class="oboxheader">tags</span><br /><br />
+  
+  <% 
+  
+    alltags.uniq.each do |tag| %>
+        <a href="/traces/tag/<%=tag%>" title="find traces with tag <%=tag%>"><%=tag%></a><br />
+        <% 
+    end 
+ 
+        
+        %>
+      </div>
+      
+      <% if loggedin %>
+<div class="optionalbox">
+<span class="oboxheader">User</span><br /><br />
 
+      <% 
+      if cgi['action'] == 'savedisplayname'
+        saved = dao.save_display_name(user_id, cgi['display_name'])
+        if saved
+          user = dao.details_from_user_id(user_id)
+        else
+        %>
+        Sorry, that name is in use.
+        <%
+        end
+        end
+
+        if user['display_name'] == ''
+        %>
+        <i>Your display name is blank. If you make a display name then people will be able to link to your gps traces using it.</i><br /><br />
+        <%
+        end
+        %>
+
+  <form action="/traces" method="post">
+    display name:<br />
+    <input type="text" name="display_name" size="10" maxlength="255" value="<%=user['display_name']%>" /><input type="submit" value="save" />
+    <input type="hidden" name="action" value="savedisplayname" />
+  </form>
 </div>
 <% end %>
+<% end %>
+
 <div id="cclogo">
   <center>
     <a href="http://creativecommons.org/licenses/by-sa/2.0/"><img src="/images/somerights20.png" border="0"></a>

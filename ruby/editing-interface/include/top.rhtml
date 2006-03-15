@@ -2,14 +2,13 @@
 % load 'osm/dao.rb'
 % cgi = CGI.new
 % dao = OSM::Dao.instance
-
 %token,user_id = dao.check_cookie?(cgi)
-%tags =[]
+%alltags =[]
 %if user_id 
 %  loggedin = true
-%  email = dao.email_from_user_id(user_id)
+%  user = dao.details_from_user_id(user_id)
 %end
-%
+
 <html>
 <head>
   <script type="text/javascript" src="/javascript/pngfix.js"></script>

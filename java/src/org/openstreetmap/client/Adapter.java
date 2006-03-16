@@ -357,7 +357,7 @@ public class Adapter {
 		}
 		public boolean connectToServer() throws IOException {
 			String xml = "<osm><node tags=\"" + node.tags + "\" lon=\""
-			+ node.lon + "\" lat=\"" + node.lat + "\" uid=\""
+			+ node.lon + "\" lat=\"" + node.lat + "\" id=\""
 			+ node.id + "\" /></osm>";
 
 			String url = apiUrl + "node/" + node.id;
@@ -466,7 +466,7 @@ public class Adapter {
 			line.setName(newName);
 		}
 		public boolean connectToServer() throws IOException {
-			String xml = "<osm><segment uid=\"" + line.id + "\" from=\"" + line.from.id
+			String xml = "<osm><segment id=\"" + line.id + "\" from=\"" + line.from.id
 					+ "\" to=\"" + line.to.id + "\">";
 
       Enumeration e = line.tags.elements();

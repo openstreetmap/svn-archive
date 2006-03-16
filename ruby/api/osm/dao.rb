@@ -365,9 +365,7 @@ module OSM
 
     def save_display_name(user_id, display_name)    
       res = call_sql { "select id from users where display_name = '#{q(display_name)}'" }
-      rows = false
-      res.each {|row| rows = true}
-      return false if rows
+      return false if res.num_rows > 0
       call_sql {"update users set display_name = '#{q(display_name)}' where id = #{user_id}"}
       return true  
     end
@@ -390,8 +388,8 @@ module OSM
 
     def gpx_details_for_user(user_id, tag=nil)
       clause = ''
-      clause = " and id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " unless tag.nil?
-      return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and visible = 1 #{clause} order by timestamp desc" }
+      clause = " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " unless tag.nil?
+      return call_sql { "select gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where gpx_files.user_id = #{q(user_id.to_s)} and users.id = gpx_files.user_id and gpx_files.visible = 1 #{clause} order by timestamp desc" }
     end
 
     def gpx_public_files(display_name, tag, page=0)

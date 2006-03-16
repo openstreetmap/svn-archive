@@ -104,6 +104,7 @@ if (detect.indexOf('msie') >= 0) {
       <% 
       if cgi['dn_action'] == 'savedisplayname'
         saved = dao.save_display_name(user_id, cgi['display_name'])
+        
         if saved
           user = dao.details_from_user_id(user_id)
         else

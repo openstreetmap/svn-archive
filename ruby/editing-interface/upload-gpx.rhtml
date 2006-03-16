@@ -16,15 +16,22 @@ ERuby.import('include/top.rhtml')
 
 <div id="main_area">
 
-<% if loggedin && (cgi['action'] == 'mytraces' || cgi['action'] == 'mytag')%>
+<% if loggedin
+  if (cgi['action'] == 'mytraces' || cgi['action'] == 'mytag')%>
   <h1>Your GPS Traces</h1>
+  <% else %>
+  <h1>Public GPS Traces</h1>
+  <a href="/traces/mine" title="see only your traces">your traces</a>
+  <% end %>
+  | <a href="/traces" title="all traces">all traces</a>
 <% else %>
 <h1>Public GPS Traces</h1>
-(Log in to see just your traces)
-<% end %>
-<a href="/traces" title="all traces">all traces</a><br /><br />
+(Log in to see your traces)
+<% 
+end%>
 
 
+<br /><br />
 
 <%
 if cgi['action'] == 'mytraces' && loggedin
@@ -43,7 +50,6 @@ if cgi['action'] == 'mytraces' && loggedin
 
 <%
 end
-
 
 gpxfile = cgi['gpxfile']
 
@@ -172,7 +178,7 @@ if loggedin %>
 <table id="keyvalue" cellpadding="3">
 <tr>
 <th>Trace</th>
-<% if loggedin %>
+<% if loggedin && cgi['action'] == 'mytraces'%>
   <th>Public?</th>
   <th>Delete?</th>
 <% end %>

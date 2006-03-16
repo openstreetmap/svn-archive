@@ -219,7 +219,7 @@ if loggedin %>
       <br /><span class="gpxdesc"><%= row['description'] %></span>
  <% end 
 
-    tags = dao.gpx_tags(row['id'].to_i)
+    tags = row['tags'].split() #dao.gpx_tags(row['id'].to_i)
     alltags += tags
     if row['display_name'] != ''
     %> 

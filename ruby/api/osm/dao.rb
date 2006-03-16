@@ -389,14 +389,15 @@ module OSM
     def gpx_details_for_user(user_id, tag=nil)
       clause = ''
       clause = " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " unless tag.nil?
-      return call_sql { "select gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where gpx_files.user_id = #{q(user_id.to_s)} and users.id = gpx_files.user_id and gpx_files.visible = 1 #{clause} order by timestamp desc" }
+      return call_sql { "select t.tags, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users, (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t 
+      where gpx_files.user_id = #{q(user_id.to_s)} and users.id = gpx_files.user_id and gpx_files.id=t.gpx_id and gpx_files.visible = 1 #{clause} order by timestamp desc" }
     end
 
     def gpx_public_files(display_name, tag, page=0)
       clause = ''
       clause += " and gpx_files.user_id in (select id from users where display_name='#{q(display_name)}') " if display_name != ''
       clause += " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " if tag != ''
-      return call_sql { "select gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where gpx_files.private=0 and visible = 1 and gpx_files.user_id = users.id and users.display_name != '' #{clause} order by timestamp desc" }
+      return call_sql { "select t.tags, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users, (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t where gpx_files.private=0 and visible = 1 and gpx_files.user_id = users.id and gpx_files.id=t.gpx_id and users.display_name != '' #{clause} order by timestamp desc" }
     end
 
     def gpx_get(user_id, gpx_id)

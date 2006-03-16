@@ -853,7 +853,7 @@ module OSM
       res.each_hash do |row|
         visible = false
         if row['visible'] == '1' then visible = true end
-        return Linesegment.new(id, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'])
+        return Linesegment.new(segment_id, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'])
       end
       return nil
     end # getsegment

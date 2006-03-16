@@ -96,6 +96,7 @@ import org.openstreetmap.util.Point;
 
 import processing.core.PApplet;
 import processing.core.PFont;
+import thinlet.Thinlet;
 
 public class OsmApplet extends PApplet {
 
@@ -201,6 +202,7 @@ public class OsmApplet extends PApplet {
 
 	EditMode nodeMode = new NodeMode(this);
 	EditMode lineMode = new LineMode(this);
+	EditMode wayMode = new WayMode(this);
 	EditMode nameMode = new NameMode(this);
 	EditMode nodeMoveMode = new NodeMoveMode(this);
 	EditMode deleteMode = new DeleteMode(this);
@@ -232,6 +234,7 @@ public class OsmApplet extends PApplet {
 		modeManager.addMode(moveMode);
 		modeManager.addMode(nodeMode);
 		modeManager.addMode(lineMode);
+		modeManager.addMode(wayMode);
 		modeManager.addMode(nameMode);
 		modeManager.addMode(nodeMoveMode);
 		modeManager.addMode(deleteMode);
@@ -393,25 +396,23 @@ public class OsmApplet extends PApplet {
 			stroke(0);
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
-				// System.out.println("Doing line " + line.a.x + "," + line.a.y
-				// + " - " + line.b.x + "," + line.a.y);
-				if (line.id == 0) {
+				if (line.id == 0)
 					stroke(0, 80);
-				} else {
+				else
 					stroke(0);
-				}
 				line(line.from.x, line.from.y, line.to.x, line.to.y);
 			}
 			strokeWeight(strokeWeight);
 			stroke(255);
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
-				if (line.id == 0) {
+				if (line.id == 0)
 					stroke(255, 80);
-				} else {
+				else
 					stroke(255);
-				}
-
+				if (line.selected)
+					stroke(255,100,100);
+				
 				line(line.from.x, line.from.y, line.to.x, line.to.y);
 			}
 			boolean gotOne = false;
@@ -568,6 +569,16 @@ public class OsmApplet extends PApplet {
 		}
 	}
 
+	class T extends Thinlet {
+		T() {
+			try {
+				add(parse("demo.xml"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void keyPressed() {
 		// print("keyPressed!");
 		if (ready) {
@@ -614,7 +625,7 @@ public class OsmApplet extends PApplet {
 	public boolean mouseOverPoint(Point p) {
 		if (p.projected) {
 			// /2.0f; so you don't have to be directly on a node for it to light up
-			return sqrt(sq(p.x - mouseX) + sq(p.y - mouseY)) < strokeWeight; 
+			return sq(p.x - mouseX) + sq(p.y - mouseY) < (strokeWeight*strokeWeight); 
 		}
 		return false;
 	}

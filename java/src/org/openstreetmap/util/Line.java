@@ -20,8 +20,6 @@
 package org.openstreetmap.util;
 import java.util.Hashtable;
 
-import java.util.StringTokenizer;
-
 /**
  * Minimal representation of OpenStreetMap line segment (node id -> node id with uid)
  */
@@ -32,12 +30,15 @@ public class Line {
 	 */
 	public Node from, to;
 
-  /** The additional tags (beside the name) this line segment has.  
-   * FIXME should really be a hash
+	/** The additional tags (beside the name) this line segment has.  
+	 * FIXME should really be a hash
+	 * Imi: What does the above mean? It is a *hash* table, right?
+	 * 
+	 * Key: String  Value: Tag
 	 */
-  public Hashtable tags = new Hashtable();
-	
-  /**
+	public Hashtable tags = new Hashtable();
+
+	/**
 	 * The unique id (among all other line segments) of this line.
 	 */
 	public long id;
@@ -45,6 +46,10 @@ public class Line {
 	 * True, if the user changed the name.
 	 */
 	public boolean nameChanged = false;
+	/**
+	 * <code>true</code>, if the line is currently selected.
+	 */
+	public boolean selected = false;
 
 	/**
 	 * Create a line from node "from" to node "to" without tags and with unknown id=0. 
@@ -142,27 +147,20 @@ public class Line {
 	} // key
 
 	public synchronized void setName(String sName) {
-    Tag name = (Tag)tags.get("name");
-    if(name != null)
-    {
-      name.value = sName;
-    }
-    else
-    {
-      tags.put("name", new Tag("name", sName));
-    }
+		Tag name = (Tag)tags.get("name");
+		if(name != null)
+		{
+			name.value = sName;
+		}
+		else
+		{
+			tags.put("name", new Tag("name", sName));
+		}
 	} // setName
 
 	public synchronized String getName() {
-    Tag name = (Tag)tags.get("name");
-    if(name != null)
-    {
-      return name.value;
-    }
-    else
-    {
-      return "";
-    }
+		Tag name = (Tag)tags.get("name");
+		return name!=null ? name.value : "";
 	}
 
 	/**

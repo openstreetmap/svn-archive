@@ -32,17 +32,18 @@ public class Node extends Point {
 
 	/**
 	 * The id of this node. Unique among other nodes. id=0 means an unknown id.
-	 * TODO: check that there is no node 0 in the db
 	 */
 	public long id = 0;
 
 	/**
 	 * All lines in this node.
+	 * Type: Line
 	 */
 	public Collection lines = new Vector();
 
-  /**
-	 * All tags in this npde
+	/**
+	 * All tags in this node
+	 * Key: String  Value: Tag
 	 */
 	public Hashtable tags = new Hashtable();
 
@@ -56,9 +57,9 @@ public class Node extends Point {
 	/**
 	 * Create the node with all information given.
 	 */
-	public Node(double lat, double lon, long uid) {
+	public Node(double lat, double lon, long id) {
 		super(lat, lon);
-		this.id = uid;
+		this.id = id;
 	}
 
 	public String toString() {

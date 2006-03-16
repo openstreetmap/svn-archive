@@ -59,7 +59,7 @@ public class Point {
 	}
 
 	public float distance(float x, float y) {
-		if (projected && this.x != x && this.y != y) {
+		if (projected && (this.x != x || this.y != y)) {
 			return (float)Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
 		}
 		return 0.0f;

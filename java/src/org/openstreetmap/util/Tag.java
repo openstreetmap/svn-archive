@@ -26,18 +26,18 @@ public class Tag {
 	/**
 	 * The tag string for this node.
 	 */
-	public String key = "";
+	public String key;
 
-  /**
+	/**
 	 * The tag string for this node.
 	 */
-	public String value = "";
+	public String value;
 
-  public Tag(String k, String v)
-  {
-    key = k;
-    value = v;
-  }
+	public Tag(String key, String value)
+	{
+		this.key = key;
+		this.value = value;
+	}
 
 	public String toString() {
 		return "[tag " + key + "=" + value + "]";

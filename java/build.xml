@@ -20,7 +20,7 @@
 
   <target name="compile" depends="init">
     <javac srcdir="${src}"
-      classpath="${lib}/core.jar:${lib}/commons-httpclient-3.0-rc3.jar:${lib}/commons-logging.jar:${lib}/commons-codec-1.3.jar:${lib}/MinML2.jar:${lib}/plugin.jar"
+      classpath="${lib}/core.jar:${lib}/commons-httpclient-3.0-rc3.jar:${lib}/commons-logging.jar:${lib}/commons-codec-1.3.jar:${lib}/MinML2.jar:${lib}/plugin.jar:${lib}/thinlet.jar"
       debug="true"
       optimize="off"
       destdir="${build}"
@@ -35,9 +35,14 @@
     <copy file="${lib}/core.jar" tofile="${dist}/core.jar"/>
     <copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
     <copy file="${lib}/plugin.jar" tofile="${dist}/plugin.jar"/>
+    <copy file="${lib}/thinlet.jar" tofile="${dist}/thinlet.jar"/>
 
     <copy file="${lib}/data/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/data/LucidaSansUnicode-11.vlw"/>
 
+    <copy todir="${dist}/rc1/data">
+      <fileset dir="${build}/gui"/>
+    </copy>
+  	
     <copy todir="${dist}/rc1/org/openstreetmap/processing/">
       <fileset dir="${build}/org/openstreetmap/processing"/>
     </copy>

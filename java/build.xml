@@ -40,7 +40,7 @@
     <copy file="${lib}/data/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/data/LucidaSansUnicode-11.vlw"/>
 
     <copy todir="${dist}/rc1/data">
-      <fileset dir="${build}/gui"/>
+      <fileset dir="gui"/>
     </copy>
   	
     <copy todir="${dist}/rc1/org/openstreetmap/processing/">

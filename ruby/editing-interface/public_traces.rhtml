@@ -14,6 +14,19 @@ ERuby.import('include/top.rhtml')
 
   <h1>Public GPS Traces</h1>
 
+  <% if cgi['display_name'] != '' %>
+  <a href="/traces/user/<%=cgi['display_name']%>/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for user <%=cgi['display_name']%>"></a> | 
+  <% end %> 
+
+  <% if cgi['tag'] != '' %>
+  <a href="/traces/tag/<%=cgi['tag']%>/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for tag <%=cgi['tag']%>"></a> | 
+  <% end %> 
+
+  <% if cgi['tag'] == '' && cgi['display_name'] == '' %>
+  <a href="/traces/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for all public traaces"></a> | 
+  <% end %> 
+
+  
   <% if loggedin %>
  <a href="/traces/mine" title="see only your traces">see only your traces</a>
   <% else %>

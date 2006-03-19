@@ -1,5 +1,5 @@
 % require 'cgi'
-% load 'osm/dao.rb'
+% require 'osm/dao'
 % cgi = CGI.new
 % dao = OSM::Dao.instance
 %token,user_id = dao.check_cookie?(cgi)

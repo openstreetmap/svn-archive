@@ -11,7 +11,7 @@ require 'rexml/parsers/sax2parser'
 require 'rexml/text'
 require 'net/smtp'
 
-DEBUG = true
+DEBUG = false
 USER = 'openstreetmap'
 
 # exit if the lockfile is there

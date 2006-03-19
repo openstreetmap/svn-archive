@@ -414,7 +414,8 @@ module OSM
       clause += " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " if tag != ''
 
       limit = ''
-      limit = ' limit 20 ' if limit 
+      limit = ' limit 20 ' if limit==true
+      
       return call_sql { "
         select * from (
         select gpx_files.inserted, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where visible = 1 and gpx_files.user_id = users.id and users.display_name != '' #{clause} order by timestamp desc) as a left join (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t  on a.id=t.gpx_id #{limit}" }

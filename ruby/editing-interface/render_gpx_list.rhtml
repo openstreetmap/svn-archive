@@ -5,13 +5,14 @@ page = cgi['page'].to_i
 rangestart = 20 * page
 rangeend = rangestart + 19
 
-url = "/traces/mine/page/"
+url = "/traces/page/"
 url = "/traces/tag/#{cgi['tag']}/page/" if cgi['action'] == 'publictag'
 url = "/traces/user/#{cgi['display_name']}/page/" if cgi['action'] == 'public'
 url = "/traces/mine/tag/#{cgi['tag']}/page/" if cgi['action'] == 'mytag'
+url = "/traces/mine/page/" if cgi['action'] == 'mytraces'
 %>
 
-Showing page <%=page%> |
+Showing page <%=page%> (<%=rangestart+1 %> - <%=rangeend+1%> of <%=gpxfiles.num_rows%>) |
 <% if page > 0 %>
 <a href="<%=url%><%=page-1%>">previous page</a> |
 <% end %>

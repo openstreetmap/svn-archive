@@ -107,7 +107,7 @@ if loggedin
     end
   end
     
-  if cgi['description'] != ''
+  if cgi['gpxfile'] == '' && cgi['description'] != ''
     dao.gpx_update_desc(cgi['gpx_id'].to_i, cgi['description'], cgi['tags']) if dao.does_user_own_gpx?(user_id, cgi['gpx_id'].to_i)
   end
 end
@@ -125,7 +125,11 @@ if loggedin
     gpxfiles = dao.gpx_files(false, '','',user_id)
   when 'edit'
   else 
-    gpxfiles = dao.gpx_files(false, cgi['display_name'], cgi['tag'], user_id, cgi['page'].to_i)
+    if cgi['gpxfile'] == ''
+      gpxfiles = dao.gpx_files(false, cgi['display_name'], cgi['tag'], user_id, cgi['page'].to_i)
+    else
+#      gpxfiles = dao.gpx_files(false, '','',user_id)
+    end
   end
 end
 

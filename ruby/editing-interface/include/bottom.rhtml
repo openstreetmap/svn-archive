@@ -92,12 +92,14 @@ if (detect.indexOf('msie') >= 0) {
         <a href="/traces/tag/<%=tag%>" title="find traces with tag <%=tag%>"><%=tag%></a><br />
         <% 
     end 
- 
-        
-        %>
+  %>
       </div>
       
-      <% if loggedin %>
+      <%
+      
+      end
+      
+      if loggedin %>
 <div class="optionalbox">
 <span class="oboxheader">User</span><br /><br />
 
@@ -127,7 +129,6 @@ if (detect.indexOf('msie') >= 0) {
     <input type="hidden" name="dn_action" value="savedisplayname" />
   </form>
 </div>
-<% end %>
 <% end %>
 
 <div id="cclogo">

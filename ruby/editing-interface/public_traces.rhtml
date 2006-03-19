@@ -15,15 +15,15 @@ ERuby.import('include/top.rhtml')
   <h1>Public GPS Traces</h1>
 
   <% if cgi['display_name'] != '' %>
-  <a href="/traces/user/<%=cgi['display_name']%>/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for user <%=cgi['display_name']%>"></a> | 
+  <span class="rsssmall"><a href="/traces/user/<%=cgi['display_name']%>/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for user <%=cgi['display_name']%>"></a></span> | 
   <% end %> 
 
   <% if cgi['tag'] != '' %>
-  <a href="/traces/tag/<%=cgi['tag']%>/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for tag <%=cgi['tag']%>"></a> | 
+  <span class="rsssmall"><a href="/traces/tag/<%=cgi['tag']%>/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for tag <%=cgi['tag']%>"></a></span> | 
   <% end %> 
 
   <% if cgi['tag'] == '' && cgi['display_name'] == '' %>
-  <a href="/traces/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for all public traces"></a> | 
+  <span class="rsssmall"><a href="/traces/rss"><img src="/images/RSS.gif" border="0" title="RSS feed for all public traces"></a></span> | 
   <% end %> 
 
   

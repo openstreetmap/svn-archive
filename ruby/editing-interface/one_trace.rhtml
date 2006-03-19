@@ -22,6 +22,7 @@ ERuby.import('include/top.rhtml')
   dao.gpx_public_get(gpx_id).each_hash do |gpx|
   %>
   <h2>Viewing trace <%=gpx['name']%></h2>
+  <img src="/traces/user/<%=gpx['display_name']%>/<%=gpx['id']%>/image.png" /><br />
   <table border="0">
     <tr><td>filename:</td><td><a href="/traces/user/<%=gpx['display_name']%>/<%=gpx['id']%>/download" title="download <%=gpx['name']%>"><%=gpx['name']%></a></td></tr>
     <tr><td>uploaded:</td><td><%=gpx['timestamp']%></td></tr>

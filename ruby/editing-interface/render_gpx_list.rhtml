@@ -5,6 +5,10 @@ page = cgi['page'].to_i
 rangestart = 20 * page
 rangeend = rangestart + 19
 
+nice_rangeend = rangeend +1
+
+nice_rangeend = gpxfiles.num_rows if gpxfiles.num_rows < nice_rangeend
+
 url = "/traces/page/"
 url = "/traces/tag/#{cgi['tag']}/page/" if cgi['action'] == 'publictag'
 url = "/traces/user/#{cgi['display_name']}/page/" if cgi['action'] == 'public'
@@ -12,7 +16,7 @@ url = "/traces/mine/tag/#{cgi['tag']}/page/" if cgi['action'] == 'mytag'
 url = "/traces/mine/page/" if cgi['action'] == 'mytraces'
 %>
 
-Showing page <%=page%> (<%=rangestart+1 %> - <%=rangeend+1%> of <%=gpxfiles.num_rows%>) |
+Showing page <%=page%> (<%=rangestart+1 %> - <%=nice_rangeend%> of <%=gpxfiles.num_rows%>) |
 <% if page > 0 %>
 <a href="<%=url%><%=page-1%>">previous page</a> |
 <% end %>
@@ -29,7 +33,8 @@ if loggedin %>
 <% end  %>
 <table id="keyvalue" cellpadding="3">
 <tr>
-  <th>Trace</th>
+  <th></th>
+  <th></th>
   
 <% if loggedin && editable%>
   <th>Public?</th>
@@ -49,6 +54,7 @@ if loggedin %>
     time += timestamp.strftime("-%Y") if timestamp.strftime("%Y") != Time.now.strftime("%Y")
     hours_ago = ((Time.now - timestamp) / 60 / 60).to_i
     time = "#{hours_ago} hours ago" if hours_ago < 24 
+    time = "1 hour ago" if hours_ago == 1
     odd_or_even = 1 - odd_or_even
     background = "table#{odd_or_even}"
 
@@ -66,6 +72,7 @@ if loggedin %>
     
     %>
     <tr>
+      <td class="<%=background%>"><img src="<%=getlink%><%=row['id']%>/image-icon.png"></td>
       <td class="<%=background%>"><a href="<%=getlink%><%=row['id']%>/download" title="download <%=row['name']%>" target="_blank"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=dao.commify(row['size'].to_i)%> points) ... <%=time%></span>
         <% if !pending %>
         <a href="<%=getlink%><%=row['id']%>" title="more detail..." >more</a> /

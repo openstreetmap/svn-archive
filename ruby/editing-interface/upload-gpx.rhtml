@@ -91,6 +91,7 @@ if loggedin
       dao.gpx_get(user_id, gpx_id).each_hash do |gpx|
       %>
       <h2>Editing the trace <%=gpx['name']%></h2>
+      <img src="/traces/mine/<%=gpx['id']%>/image.png" /><br />
       <form action="/traces/mine">
         <table border="0">
           <tr><td>filename:</td><td><%=gpx['name']%></td></tr>

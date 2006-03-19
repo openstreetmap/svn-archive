@@ -385,6 +385,23 @@ module OSM
       end
     end
 
+    def details_from_email(email)
+      res = call_sql { "select email, display_name from users where active = 1 and email = '#{email}'" }
+
+      if res.nil?
+        return nil
+      end
+
+      if res.num_rows == 1
+        res.each_hash do |row|
+          return {'display_name' => row['display_name'], 'email' => row['email'] }
+        end
+      end
+    end
+
+
+
+    
     def gpx_ids_for_user(user_id)
       return call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)}" }
     end

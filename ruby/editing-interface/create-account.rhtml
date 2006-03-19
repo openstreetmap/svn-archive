@@ -116,7 +116,8 @@ END_OF_MESSAGE
 	<%
 	dao.set_timeout(email)
 	dao.set_cookie(r,token);
-	loggedin = true
+  loggedin = true
+  user = dao.details_from_email(email)
 
       else
         %>

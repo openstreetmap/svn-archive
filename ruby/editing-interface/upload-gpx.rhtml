@@ -9,27 +9,13 @@ user = {}
 user_id = -1
 alltags = []
 
-#include Math
-
 ERuby.import('include/top.rhtml')
 %>
 
 <div id="main_area">
 
-<% if loggedin
-  if (cgi['action'] == 'mytraces' || cgi['action'] == 'mytag')%>
   <h1>Your GPS Traces</h1>
-  <% else %>
-  <h1>Public GPS Traces</h1>
-  <a href="/traces/mine" title="see only your traces">your traces</a>
-  <% end %>
-  | <a href="/traces" title="all traces">all traces</a>
-<% else %>
-<h1>Public GPS Traces</h1>
-(Log in to see your traces)
-<% 
-end%>
-
+  <a href="/traces" title="all traces">see traces from all users</a>
 
 <br /><br />
 
@@ -37,12 +23,12 @@ end%>
 if cgi['action'] == 'mytraces' && loggedin
 %>
 
-  <form action="/traces" enctype="multipart/form-data" method="post">
+  <form action="/traces/mine" enctype="multipart/form-data" method="post">
     <table>
       <tr><td align="right">upload GPX file:</td><td><input type="file" name="gpxfile" size="60"></td></tr>
       <tr><td align="right">description:</td><td><input type="text" name="description" size="60" maxlength="255"></td></tr>
       <tr><td align="right">tags:</td><td><input type="text" name="tags" size="60" maxlength="255"></td></tr>
-      <tr><td></td><td><input type="submit" value="Upload">
+      <tr><td></td><td><input type="submit" value="Upload"> | 
       <a href="http://wiki.openstreetmap.org/index.php/Upload">help</a>
       </td></tr>
     </table>
@@ -83,33 +69,9 @@ if gpxfile != '' && loggedin
 end
 
 
-if cgi['action'] == 'onetrace'
-      gpx_id = cgi['gpx_id']
-      dao.gpx_public_get(gpx_id).each_hash do |gpx|
-      %>
-      <h2>Viewing trace <%=gpx['name']%></h2>
-        <table border="0">
-          <tr><td>filename:</td><td><a href="/traces/user/<%=gpx['display_name']%>/<%=gpx['id']%>/download" title="download <%=gpx['name']%>"><%=gpx['name']%></a></td></tr>
-          <tr><td>uploaded:</td><td><%=gpx['timestamp']%></td></tr>
-          <tr><td>points:</td><td><%=dao.commify(gpx['size'].to_i)%></td></tr>
-          <tr><td>start coordinate:</td><td><%=gpx['latitude']%>, <%=gpx['longitude']%></td></tr>
-          <tr><td>description:</td><td><%=gpx['description']%></td></tr>
-          <tr><td>tags:</td><td>          
-                <% dao.gpx_tags(gpx_id).each do |tag| %>
-        <a href="/traces/tag/<%=tag%>" title="find traces with tag <%=tag%>"><%=tag%></a>
-      <% end %>
-           </td></tr>
-        </table>
-      <%
-      end
-end
-
-
-
 if loggedin
-  case cgi['action']
-  when 'update'
-    dao.gpx_details_for_user(user_id).each_hash do |row|
+  if cgi['action'] == 'update'
+    dao.gpx_ids_for_user(user_id).each_hash do |row|
       id = row['id']
       rm = cgi["rm_#{id}"] == 'on'
       priv = cgi["priv_#{id}"] == 'on'
@@ -121,7 +83,9 @@ if loggedin
       end
       dao.gpx_set_private(id.to_i, !priv) if dao.does_user_own_gpx?(user_id, id.to_i)
     end
-  when 'edit'
+  end
+
+  if cgi['action'] == 'edit'
     gpx_id = cgi['gpx_id'].to_i
     if gpx_id != 0 
       dao.gpx_get(user_id, gpx_id).each_hash do |gpx|
@@ -141,8 +105,10 @@ if loggedin
       <%
       end
     end
-  when 'save'
-    dao.gpx_update_desc(cgi['gpx_id'].to_i, cgi['description'], cgi['tags'])
+  end
+    
+  if cgi['description'] != ''
+    dao.gpx_update_desc(cgi['gpx_id'].to_i, cgi['description'], cgi['tags']) if dao.does_user_own_gpx?(user_id, cgi['gpx_id'].to_i)
   end
 end
     
@@ -152,126 +118,20 @@ end
 gpxfiles = []
 
 if loggedin
-  if cgi['action'] == 'mytag'
-    gpxfiles = dao.gpx_details_for_user(user_id, cgi['tag'])
-  else
-    if cgi['action'] == 'mytraces'  
-      gpxfiles = dao.gpx_details_for_user(user_id)
-    else
-      if cgi['action'] != 'edit'
-        gpxfiles = dao.gpx_public_files(cgi['display_name'], cgi['tag'], cgi['page'].to_i)
-      end
-    end
-  end
-else
-  if cgi['action'] != 'onetrace' && cgi['action'] != 'edit'
-    gpxfiles = dao.gpx_public_files(cgi['display_name'], cgi['tag'], cgi['page'].to_i)
+  case cgi['action']
+  when 'mytag'
+    gpxfiles = dao.gpx_files(false, '', cgi['tag'], user_id)
+  when 'mytraces'
+    gpxfiles = dao.gpx_files(false, '','',user_id)
+  when 'edit'
+  else 
+    gpxfiles = dao.gpx_files(false, cgi['display_name'], cgi['tag'], user_id, cgi['page'].to_i)
   end
 end
 
 if gpxfiles != []
-
-if loggedin %>
-  <form action="/traces" method="post">
-    <input type="hidden" name="action" value="update" />
-<% end  %>
-<table id="keyvalue" cellpadding="3">
-<tr>
-<th>Trace</th>
-<% if loggedin && cgi['action'] == 'mytraces'%>
-  <th>Public?</th>
-  <th>Delete?</th>
-<% end %>
-</tr>
-      
-<%
-
-
-  odd_or_even = 1
+ ERuby.import('render_gpx_list.rhtml')
  
-  gpxfiles.each_hash do |row|
-    timestamp = Time.parse(row['timestamp'])
-    time = timestamp.strftime("on %d-%b")
-    time += timestamp.strftime("-%Y") if timestamp.strftime("%Y") != Time.now.strftime("%Y")
-    hours_ago = ((Time.now - timestamp) / 60 / 60).to_i
-    time = "#{hours_ago} hours ago" if hours_ago < 24 
-    odd_or_even = 1 - odd_or_even
-    background = "table#{odd_or_even}"
-
-  getlink = ''
-  taglink = ''
-  if loggedin && cgi['action'] == 'mytraces'
-    getlink = '/traces/mine/'
-    taglink = '/traces/mine/tag/'
-  else
-    taglink = '/traces/tag/'
-    getlink = "/traces/user/#{row['display_name']}/"
-  end
- 
-    
-    %>
-    <tr>
-      <td class="<%=background%>"><a href="<%=getlink%><%=row['id']%>/download" title="download <%=row['name']%>" target="_blank"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=dao.commify(row['size'].to_i)%> points) ... <%=time%></span>
-        <a href="<%=getlink%><%=row['id']%>" title="more detail..." >more</a> /
-        <a href="/edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=14" title="create maps">map</a>
-        <% 
-    if row['description'] != ''  %>
-      <br /><span class="gpxdesc"><%= row['description'] %></span>
- <% end 
-
-    tags = row['tags'].split() #dao.gpx_tags(row['id'].to_i)
-    alltags += tags
-    if row['display_name'] != ''
-    %> 
-    <br / >by <a href="/traces/user/<%=row['display_name']%>" title="see all traces by <%=row['display_name']%>"><%=row['display_name']%></a> 
-    <%
-      
-    end
-    
-    if tags != []
-    %>
-    <span class="gpxtags">in:
-      <% tags.each do |tag| %>
-      <a href="<%=taglink%><%=tag%>" title="find traces with tag <%=tag%>"><%=tag%></a>
-      <% end %>
-    
-    </span>
-    <%
-    end
-    %>
-    </td>
-    <td class="<%=background%>"><center>
-        <% 
-        if loggedin && cgi['action'] == 'mytraces'
-        if row['private'] == '1' %>
-      <input type="checkbox" name="priv_<%=row['id']%>">
- <% else %>
-      <input type="checkbox" name="priv_<%=row['id']%>" checked>
-      <% end  %>
-  </center></td>
-  
-    <td class="<%=background%>"><center><input type="checkbox" name="rm_<%=row['id']%>" /></center></td>
-    </tr>
-    <%
-    end
-  end
-  %>
-</table>
-<%
-  if loggedin && cgi['action'] == 'mytraces'%>
-<br />
-<input type="submit" value="Update">
-</form>
-
-<%
-  end
-end
-
-if loggedin
-  tags = []
-  dao.gpx_user_tags(user_id).each do |tag|
-    tags << tag[0]
-  end
 end
   %>
 </div>

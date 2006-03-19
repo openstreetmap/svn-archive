@@ -1,0 +1,40 @@
+<%
+
+dao = nil
+cgi = nil
+loggedin = false
+user = {}
+user_id = -1
+alltags = []
+
+ERuby.import('include/top.rhtml')
+%>
+
+<div id="main_area">
+
+  <h1>Public GPS Traces</h1>
+
+  <% if loggedin %>
+ <a href="/traces/mine" title="see only your traces">see only your traces</a>
+  <% else %>
+   <a href="/login.html">login</a> to see you traces
+   <% end %>
+
+<br /><br />
+
+<%
+gpxfiles = dao.gpx_files(true, cgi['display_name'], cgi['tag'], '', cgi['page'].to_i)
+
+if gpxfiles != []
+ ERuby.import('render_gpx_list.rhtml')
+end
+
+%>
+</div>
+
+</div>
+<%
+
+
+ERuby.import('include/bottom.rhtml')
+%>

@@ -1,0 +1,44 @@
+<%
+
+require 'stringio'
+
+dao = nil
+cgi = nil
+loggedin = false
+user = {}
+user_id = -1
+alltags = []
+
+#include Math
+
+ERuby.import('include/top.rhtml')
+%>
+
+<div id="main_area">
+
+  <% 
+
+  gpx_id = cgi['gpx_id']
+  dao.gpx_public_get(gpx_id).each_hash do |gpx|
+  %>
+  <h2>Viewing trace <%=gpx['name']%></h2>
+  <table border="0">
+    <tr><td>filename:</td><td><a href="/traces/user/<%=gpx['display_name']%>/<%=gpx['id']%>/download" title="download <%=gpx['name']%>"><%=gpx['name']%></a></td></tr>
+    <tr><td>uploaded:</td><td><%=gpx['timestamp']%></td></tr>
+    <tr><td>points:</td><td><%=dao.commify(gpx['size'].to_i)%></td></tr>
+    <tr><td>start coordinate:</td><td><%=gpx['latitude']%>, <%=gpx['longitude']%></td></tr>
+    <tr><td>description:</td><td><%=gpx['description']%></td></tr>
+    <tr><td>tags:</td><td>          
+        <% dao.gpx_tags(gpx_id).each do |tag| %>
+        <a href="/traces/tag/<%=tag%>" title="find traces with tag <%=tag%>"><%=tag%></a>
+        <% end %>
+    </td></tr>
+  </table>
+  <%
+  end %>
+</div>
+<%
+
+
+ERuby.import('include/bottom.rhtml')
+%>

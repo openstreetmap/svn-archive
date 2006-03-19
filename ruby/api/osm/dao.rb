@@ -385,19 +385,20 @@ module OSM
       end
     end
 
-
-    def gpx_details_for_user(user_id, tag=nil)
-      clause = ''
-      clause = " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " unless tag.nil?
-      return call_sql { "select t.tags, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users, (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t 
-      where gpx_files.user_id = #{q(user_id.to_s)} and users.id = gpx_files.user_id and gpx_files.id=t.gpx_id and gpx_files.visible = 1 #{clause} order by timestamp desc" }
+    def gpx_ids_for_user(user_id)
+      return call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)}" }
     end
 
-    def gpx_public_files(display_name, tag, page=0)
+    def gpx_files(bpublic, display_name, tag, user_id, page=0)
       clause = ''
+      clause += ' and private = 0 ' if bpublic
+      clause += " and user_id = #{q(user_id.to_s)} " if user_id.to_i != 0
       clause += " and gpx_files.user_id in (select id from users where display_name='#{q(display_name)}') " if display_name != ''
       clause += " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " if tag != ''
-      return call_sql { "select t.tags, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users, (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t where gpx_files.private=0 and visible = 1 and gpx_files.user_id = users.id and gpx_files.id=t.gpx_id and users.display_name != '' #{clause} order by timestamp desc" }
+      return call_sql { "
+        select * from (
+        select gpx_files.inserted, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where visible = 1 and gpx_files.user_id = users.id and users.display_name != '' #{clause} order by timestamp desc) as a left join (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t  on a.id=t.gpx_id " }
+        
     end
 
     def gpx_get(user_id, gpx_id)
@@ -475,7 +476,7 @@ module OSM
           gpx_id = row[0].to_i
         end
         
-        gpx_update_desc(gpx_id, description, tags) unless gpx_id == -1
+        gpx_update_desc(gpx_id, description, tags) unless gpx_id == 0
         
       rescue MysqlError => e
         mysql_error(e)

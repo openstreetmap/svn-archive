@@ -11,7 +11,7 @@ fi
 
 distdir=`dirname $0`/dist
 
-OSMCLASSPATH="$distdir/OSMApplet.jar:$distdir/MinML2.jar:$distdir/commons-codec-1.3.jar:$distdir/commons-httpclient-3.0-rc3.jar:$distdir/commons-logging.jar:$distdir/core.jar:$distdir/plugin.jar"
+OSMCLASSPATH="$distdir/OSMApplet.jar:$distdir/MinML2.jar:$distdir/commons-codec-1.3.jar:$distdir/commons-httpclient-3.0-rc3.jar:$distdir/commons-logging.jar:$distdir/core.jar:$distdir/plugin.jar:$distdir/thinlet.jar"
 
 exec $JAVA $JAVAOPTS \
     -cp $OSMCLASSPATH \

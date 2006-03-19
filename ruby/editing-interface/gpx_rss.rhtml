@@ -1,5 +1,5 @@
-#!/usr/bin/ruby
-require 'osm/dao.rb'
+<%
+load 'osm/dao.rb'
 require 'rexml/document'
 
 include REXML
@@ -67,3 +67,4 @@ rescue MysqlError => e
   print "Error message: ", e.error, "\n"
 
 end
+%>

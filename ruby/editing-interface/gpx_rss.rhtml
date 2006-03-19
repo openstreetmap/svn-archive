@@ -55,7 +55,12 @@ begin
     link.text = "http://www.openstreetmap.org/traces/user/#{row['display_name']}/#{row['id']}"
    
     description = Element.new 'description', item
-    description.text = "#{row['name']} bu #{row['display_name']} (#{row['size']} points) in #{row['tags']}. Description: #{row['description']}"
+
+    
+    description = "#{row['name']} by #{row['display_name']} (#{row['size']} points)"
+    description += " in #{row['tags']}" if row['tags'] != ''
+    description += " Description: #{row['description']}" if row['description'] != ''
+    description.text = description
     pubDate = Element.new 'pubDate', item
     pubDate.text = Time.parse(row["timestamp"])
 

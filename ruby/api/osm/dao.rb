@@ -389,15 +389,18 @@ module OSM
       return call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)}" }
     end
 
-    def gpx_files(bpublic, display_name, tag, user_id, page=0)
+    def gpx_files(bpublic, display_name, tag, user_id, page=0, limit=false)
       clause = ''
       clause += ' and private = 0 ' if bpublic
       clause += " and user_id = #{q(user_id.to_s)} " if user_id.to_i != 0
       clause += " and gpx_files.user_id in (select id from users where display_name='#{q(display_name)}') " if display_name != ''
       clause += " and gpx_files.id in (select gpx_id from gpx_file_tags where tag='#{q(tag)}') " if tag != ''
+
+      limit = ''
+      limit = ' limit 20 ' if limit 
       return call_sql { "
         select * from (
-        select gpx_files.inserted, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where visible = 1 and gpx_files.user_id = users.id and users.display_name != '' #{clause} order by timestamp desc) as a left join (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t  on a.id=t.gpx_id " }
+        select gpx_files.inserted, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where visible = 1 and gpx_files.user_id = users.id and users.display_name != '' #{clause} order by timestamp desc) as a left join (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t  on a.id=t.gpx_id #{limit}" }
         
     end
 

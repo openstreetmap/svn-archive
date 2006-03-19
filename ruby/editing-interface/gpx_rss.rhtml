@@ -1,6 +1,10 @@
 <%
 load 'osm/dao.rb'
 require 'rexml/document'
+require 'cgi'
+
+
+cgi = CGI.new
 
 include REXML
 
@@ -8,10 +12,7 @@ begin
 
   dao = OSM::Dao.instance
 
-  res = dao.call_sql { 'select a.timestamp, a.name, a.size as count, a.latitude, a.longitude,c.email from 
-    (select * from gpx_files where visible = true order by timestamp desc limit 20) as a, 
-    (select * from users) as c
-      where a.user_id = c.id order by timestamp desc;' }
+  res = dao.gpx_files(true, cgi['display_name'], cgi['tag'], '', cgi['page'].to_i, true)
 
   rss = Element.new 'rss'
   rss.attributes['version'] = "2.0"
@@ -20,7 +21,12 @@ begin
   title = Element.new 'title', channel
   title.text =  'OpenStreetMap GPX Uploads'
   description_el = Element.new 'description', channel
-  description_el.text = 'OpenStreetMap GPX Uploads'
+
+  description = 'OpenStreetMap GPX Uploads'
+  description += " for tag #{cgi['tag']}" if cgi['tag'] != ''
+  description += " for user #{cgi['display_name']}" if cgi['display_name'] != ''
+  
+  description_el.text = description
   link = Element.new 'link', channel
   link.text = 'http://www.openstreetmap.org/'
 
@@ -46,10 +52,10 @@ begin
     title = Element.new 'title', item
     title.text = row['name']
     link = Element.new 'link', item
-    link.text = "http://www.openstreetmap.org/edit.html?lat=#{lat}&lon=#{lon}&zoom=14"
+    link.text = "http://www.openstreetmap.org/traces/user/#{row['display_name']}/#{row['id']}"
    
     description = Element.new 'description', item
-    description.text = "GPX file made by #{row['email'].gsub('.',' dot ').gsub('@',' at ')} with #{row['count']} points."
+    description.text = "#{row['name']} bu #{row['display_name']} (#{row['size']} points) in #{row['tags']}. Description: #{row['description']}"
     pubDate = Element.new 'pubDate', item
     pubDate.text = Time.parse(row["timestamp"])
 

@@ -52,6 +52,7 @@ cp html/images/map_left.png $ROOT/images/
 cp html/images/map_right.png $ROOT/images/
 cp html/images/map_zoomin.png $ROOT/images/
 cp html/images/map_zoomout.png $ROOT/images/
+cp html/images/RSS.gif $ROOT/images/
 cp html/images/bg.gif $ROOT/css/
 cp html/images/left.gif $ROOT/css/
 cp html/images/left_on.gif $ROOT/css/
@@ -85,10 +86,6 @@ cp ruby/api/apache/simple-auth.rb $ROOT/ruby/api/apache/
 # RSS
 
 cp ruby/rss/nodes.rb $ROOT/ruby/
-
-# GPX RSS maker
-
-cp ruby/rss/gpx_files.rb $ROOT/ruby/
 
 # GPX parser
 

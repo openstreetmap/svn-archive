@@ -1,18 +1,25 @@
 package org.openstreetmap.processing;
 
+import java.awt.Point;
 import java.util.Iterator;
 
+import org.openstreetmap.gui.GuiLauncher;
+import org.openstreetmap.gui.WayHandler;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.Way;
 
 /**
  * Edit mode to select objects then draw a new way between them.
  */
 public class WayMode extends EditMode {
+
 	/**
 	 * Back reference to the applet. 
 	 */
 	private final OsmApplet applet;
+	private GuiLauncher dlg;
+	private Point location;
 
 	public WayMode(OsmApplet applet) {
 		this.applet = applet;
@@ -31,8 +38,23 @@ public class WayMode extends EditMode {
 			}
 		}
 		if (nearDist < 20) {
-			nearLine.selected = !nearLine.selected;
-			applet.repaint();
+			if (applet.selectedLine.contains(nearLine)) {
+				applet.selectedLine.remove(nearLine);
+				if (applet.selectedLine.isEmpty() && dlg != null) {
+					dlg.setVisible(false);
+				}
+			} else {
+				applet.selectedLine.add(nearLine);
+				if (applet.selectedLine.size() == 1)
+					openProperties();
+			}
+			if (dlg != null) {
+				Way way = (Way)dlg.handler.osm;
+				way.removeAll();
+				way.addAll(applet.selectedLine);
+				((WayHandler)dlg.handler).updateSegmentsFromList();
+			}
+			applet.redraw();
 		}
 	}
 
@@ -50,5 +72,37 @@ public class WayMode extends EditMode {
 
 	public String getDescription() {
 		return "Select line segments by clicking and click mode button again to create way.";
+	}
+	
+	public void openProperties() {
+		if (applet.selectedLine.isEmpty())
+			return;
+		final Way way = new Way(0);
+		final WayHandler wayHandler = new WayHandler(way, applet);
+
+		if (dlg != null) {
+			location = dlg.getLocation();
+			dlg.setVisible(false);
+		}
+		dlg = new GuiLauncher("New way properties", wayHandler){
+			public void setVisible(final boolean visible) {
+				if (!visible) {
+					if (dlg != null)
+						location = dlg.getLocation();
+					if (handler != null && !handler.cancelled) {
+						applet.osm.createWay(way);
+						handler = null;
+					} else
+						way.removeAll(); // clean up the line segment references
+					applet.selectedLine.clear();
+					applet.redraw();
+					dlg = null;
+				}
+				super.setVisible(visible);
+			}
+		};
+		if (location != null)
+			dlg.setLocation(location);
+		dlg.setVisible(true);
 	}
 }

@@ -58,6 +58,9 @@ public class Point {
 		return distance(other.x,other.y);
 	}
 
+	/**
+	 * @deprecated Imi thinks, Node.distanceSq is better.
+	 */
 	public float distance(float x, float y) {
 		if (projected && (this.x != x || this.y != y)) {
 			return (float)Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));

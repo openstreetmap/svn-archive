@@ -285,7 +285,7 @@ public class Tile extends Thread {
 		return new Point(lat(0), lon(0));
 	}
 
-	public Point getBotRight() {
+	public Point getBottomRight() {
 		return new Point(lat(windowHeight), lon(windowWidth));
 	}
 
@@ -489,9 +489,10 @@ class VFetch extends Thread {
 				tiles.viewChanged = false;
 				tiles.applet.lines.clear();
 				tiles.applet.nodes.clear();
+				tiles.applet.ways.clear();
 
 				tiles.applet.redraw();
-				tiles.applet.osm.getNodesAndLines(tiles.getTopLeft(), tiles.getBotRight(), tiles);
+				tiles.applet.osm.getNodesLinesWays(tiles.getTopLeft(), tiles.getBottomRight(), tiles);
 				tiles.applet.redraw();
 			}
 		}

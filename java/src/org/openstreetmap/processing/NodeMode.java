@@ -25,7 +25,7 @@ public class NodeMode extends EditMode {
 		boolean overOne = false; // points can't overlap
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
-			if (applet.mouseOverPoint(p)) {
+			if (applet.mouseOverPoint(p.coor)) {
 				overOne = true;
 				applet.redraw();
 				break;

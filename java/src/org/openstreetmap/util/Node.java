@@ -20,21 +20,22 @@
 package org.openstreetmap.util;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Vector;
-import java.util.Hashtable;
 
 import org.openstreetmap.client.Tile;
+import org.openstreetmap.processing.OsmApplet;
 
 /**
  * Minimal representation of OpenStreetMap node (lat/lon pair, with uid)
  */
-public class Node extends Point {
+public class Node extends OsmPrimitive {
 
 	/**
-	 * The id of this node. Unique among other nodes. id=0 means an unknown id.
+	 * The coordinates of this node
 	 */
-	public long id = 0;
-
+	public Point coor;
+	
 	/**
 	 * All lines in this node.
 	 * Type: Line
@@ -42,32 +43,47 @@ public class Node extends Point {
 	public Collection lines = new Vector();
 
 	/**
-	 * All tags in this node
-	 * Key: String  Value: Tag
-	 */
-	public Hashtable tags = new Hashtable();
-
-	/**
 	 * Create the node from projected values.
 	 */
 	public Node(float x, float y, Tile projection) {
-		super(x, y, projection);
+		coor = new Point(x, y, projection);
 	}
 
 	/**
 	 * Create the node with all information given.
 	 */
 	public Node(double lat, double lon, long id) {
-		super(lat, lon);
+		coor = new Point(lat, lon);
 		this.id = id;
 	}
 
 	public String toString() {
-		return "[Node " + id + " lat:" + lat + " lon:" + lon + "]";
+		return "[Node " + id + " lat:" + coor.lat + " lon:" + coor.lon + "]";
 
 	}
 
 	public String key() {
 		return "node_" + id;
+	}
+	
+	/**
+	 * Note, that it is almost anytime the SQUARED distance is what you need.
+	 * It is faster to calculate, does not suffer as much from rounding issues and
+	 * is equal good when it comes to comparing to other squared distances.
+	 * 
+	 * @return The squared distance to x,y.
+	 */
+	public float distanceSq(float x, float y) {
+		final float xabs = Math.abs(coor.x-x);
+		final float yabs = Math.abs(coor.y-y);
+		return xabs*xabs + yabs*yabs;
+	}
+
+	public Map getMainTable(OsmApplet applet) {
+		return applet.nodes;
+	}
+
+	public String getTypeName() {
+		return "node";
 	}
 }

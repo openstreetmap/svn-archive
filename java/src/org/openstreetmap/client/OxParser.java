@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
-import org.openstreetmap.util.Tag;
+import org.openstreetmap.util.OsmPrimitive;
+import org.openstreetmap.util.Way;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -18,11 +20,21 @@ import org.xml.sax.SAXParseException;
 import uk.co.wilson.xml.MinML2;
 
 public class OxParser extends MinML2 {
-	private Collection nodes = new LinkedList();
-	private Collection lines = new LinkedList();
-  private Node currentNode = null;
-  private Line currentSegment = null;
-  private String tagsfor = "node";
+	/**
+	 * The current processed primitive
+	 */
+	private OsmPrimitive current = null;
+	/**
+	 * Maps id to already read nodes.
+	 * Key: Long   Value: Node
+	 */
+	private Map nodes = new HashMap();
+	/**
+	 * Maps id to already read lines.
+	 * Key: Long   Value: Line
+	 */
+	private Map lines = new HashMap();
+	private Collection ways = new LinkedList();
 
 	public OxParser(InputStream i) {
 		System.out.println("OSM XML parser started...");
@@ -34,7 +46,7 @@ public class OxParser extends MinML2 {
 		} catch (SAXException e) {
 			System.out.println("SAXException: " + e);
 			e.printStackTrace();
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			System.out.println("Other Exception: " + e);
 			e.printStackTrace();
 		}
@@ -52,66 +64,64 @@ public class OxParser extends MinML2 {
 		if (qName.equals("node")) {
 			double node_lat = Double.parseDouble(atts.getValue("lat"));
 			double node_lon = Double.parseDouble(atts.getValue("lon"));
-			long node_id = Long.parseLong(atts.getValue("id"));
-			currentNode = new Node(node_lat, node_lon, node_id);
-      tagsfor = "node";
+			long id = Long.parseLong(atts.getValue("id"));
+			current = new Node(node_lat, node_lon, id);
 		}
 
 		if (qName.equals("segment")) {
-			long line_id = Long.parseLong(atts.getValue("id"));
 			long line_from_id = Long.parseLong(atts.getValue("from"));
 			long line_to_id = Long.parseLong(atts.getValue("to"));
-			currentSegment = new Line(getNode(line_from_id), getNode(line_to_id), line_id);
-      tagsfor = "segment";
+			long id = Long.parseLong(atts.getValue("id"));
+			current = new Line((Node)nodes.get(Long.valueOf(line_from_id)), (Node)nodes.get(Long.valueOf(line_to_id)), id);
+		}
+		
+		if (qName.equals("way")) {
+			long id = Long.parseLong(atts.getValue("id"));
+			current = new Way(id);
 		}
 
-    if(qName.equals("tag")) {
-      String key = atts.getValue("k");
-      String val = atts.getValue("v");
-      if( tagsfor.equals("node") ) {
-        currentNode.tags.put(key, new Tag(key,val));
-      }
-      if( tagsfor.equals("segment") ) {
-        currentSegment.tags.put(key, new Tag(key,val));
-      }
-    }
+		if (qName.equals("seg")) {
+			long id = Long.parseLong(atts.getValue("id"));
+			((Way)current).add((Line)lines.get(Long.valueOf(id)));
+		}
 
-  } // startElement
+		if(qName.equals("tag")) {
+			String key = atts.getValue("k");
+			String val = atts.getValue("v");
+			current.tags.put(key, val);
+		}
+
+	} // startElement
 
 	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
-    if (qName.equals("node")) {
-      nodes.add(currentNode);
-    }
+		if (qName.equals("node")) {
+			nodes.put(Long.valueOf(current.id), current);
+			current = null;
+		} else if (qName.equals("segment")) {
+			lines.put(Long.valueOf(current.id), current);
+			current = null;
+		} else if (qName.equals("way")) {
+			ways.add(current);
+			current = null;
+		}
 
-    if (qName.equals("segment")) {
-      lines.add(currentSegment);
-    }
 
-    
 	} // endElement
-
-	public void characters(char ch[], int start, int length) {
-	}
 
 	public void fatalError(SAXParseException e) throws SAXException {
 		System.out.println("Error: " + e);
 		throw e;
 	}
 
-	public Node getNode(long node_id) {
-		for (Iterator it = nodes.iterator(); it.hasNext();) {
-			Node n = (Node)(it.next());
-			if (n.id == node_id)
-				return n;
-		}
-		return null;
-	}
-
 	public Collection getNodes() {
-		return nodes;
+		return nodes.values();
 	}
 
 	public Collection getLines() {
-		return lines;
+		return lines.values();
+	}
+	
+	public Collection getWays() {
+		return ways;
 	}
 }

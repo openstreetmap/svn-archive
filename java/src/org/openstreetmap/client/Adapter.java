@@ -2,10 +2,9 @@ package org.openstreetmap.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Enumeration;
-import java.util.Map;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
@@ -15,11 +14,14 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.GzipAwareGetMethod;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
+import org.openstreetmap.util.OsmWriter;
 import org.openstreetmap.util.Point;
-import org.openstreetmap.util.Tag;
+import org.openstreetmap.util.Way;
 
 public class Adapter {
 
@@ -34,15 +36,9 @@ public class Adapter {
 	public final CommandManager commandManager = new CommandManager();
 	
 	/**
-	 * A map from the key identifier for line segments to the real line segments.
-	 * Type: String -> Line 
+	 * Back reference to the main applet.
 	 */
-	Map lines;
-	/**
-	 * A map from all nodes identifiers to their actual nodes.
-	 * Type: String -> Node
-	 */
-	Map nodes;
+	private OsmApplet applet;
 	/**
 	 * The apache http credentials for the username and password.
 	 */
@@ -52,24 +48,14 @@ public class Adapter {
 	 * Create the adapter.
 	 * @param username	The username used to connect to the osm server
 	 * @param password	The password used to connect to the osm server
-	 * @param lines		The map of all line segments (String -> Line)
-	 * @param nodes		The map of all nodes (String -> Node)
+	 * @param applet	The applet back reference
 	 * @param apiUrl	The base url of the osm server api.
 	 */
-	public Adapter(String username, String password, Map lines, Map nodes, String apiUrl) {
-		this.lines = lines;
-		this.nodes = nodes;
+	public Adapter(String username, String password, OsmApplet applet, String apiUrl) {
+		this.applet = applet;
 		this.apiUrl = apiUrl;
 		creds = new UsernamePasswordCredentials(username, password);
 		System.out.println("Adapter started");
-	}
-
-	public Map getNodes() {
-		return nodes;
-	}
-
-	public Map getLines() {
-		return lines;
 	}
 
 	/**
@@ -78,10 +64,10 @@ public class Adapter {
 	 * @param br The bottom right point of the rectangle to fetch.
 	 * @param projection The projection algorithm to use.
 	 */
-	public void getNodesAndLines(Point tl, Point br, Tile projection) {
+	public void getNodesLinesWays(Point tl, Point br, Tile projection) {
 		System.out.println("getting nodes and lines");
 		String url = apiUrl + "map?bbox=" + tl.lon+","+br.lat+","+br.lon+","+tl.lat;
-		
+
 		System.out.println("trying url: " + url);
 		// create a singular HttpClient object
 		HttpClient client = new HttpClient();
@@ -110,24 +96,30 @@ public class Adapter {
 			System.err.println("Unable to connect to \"" + url + "\"");
 			System.exit(-3);
 		}
-		
+
 		OxParser gpxp = new OxParser(responseStream);
 		Collection vnodes = gpxp.getNodes();
 		Iterator it = vnodes.iterator();
 		while (it.hasNext()) {
 			Node n = (Node)it.next();
-			n.project(projection);
-			nodes.put(n.key(), n);
+			n.coor.project(projection);
+			applet.nodes.put(n.key(), n);
 		}
-		
+
 		it = gpxp.getLines().iterator();
 		while (it.hasNext()) {
 			Line l = (Line)it.next();
-			lines.put(l.key(), l);
+			applet.lines.put(l.key(), l);
 		}
-		
+
+		it = gpxp.getWays().iterator();
+		while (it.hasNext()) {
+			Way w = (Way)it.next();
+			applet.ways.put(w.key(), w);
+		}
+
 		// System.out.println("nabbed " + lines.size() + " lines");
-		
+
 		// clean up the connection resources
 		method.releaseConnection();
 	}
@@ -171,8 +163,15 @@ public class Adapter {
 	/**
 	 * Queue the change of the line segments name. Return immediatly.
 	 */
-	public void updateLineName(Line line, String newName) {
-		commandManager.add(new LineUpdater(line, newName));
+	public void updateProperty(OsmPrimitive oldPrimitive, OsmPrimitive newPrimitive) {
+		commandManager.add(new PropertyUpdater(oldPrimitive, newPrimitive));
+	}
+
+	/**
+	 * Queue the creation of a new way. Return immediatly.
+	 */
+	public void createWay(Way way) {
+		commandManager.add(new WayCreator(way));
 	}
 
 	/**
@@ -183,10 +182,10 @@ public class Adapter {
 		public NodeDeleter(Node node) {this.node = node;}
 		public void preConnectionModifyData() {
 			System.out.println("tyring to delete node with " + node.lines.size() + " lines");
-			nodes.remove(node.key());
+			applet.nodes.remove(node.key());
 			for (Iterator it = node.lines.iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
-				lines.remove(line.key());
+				applet.lines.remove(line.key());
 				// TODO - does the database do this automagically?
 				// deleteLine(line);
 			}
@@ -212,10 +211,10 @@ public class Adapter {
 			return false;
 		}
 		public void undoModifyData() {
-			nodes.put(node.key(), node);
+			applet.nodes.put(node.key(), node);
 			for (Iterator it = node.lines.iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
-				lines.put(line.key(), line);
+				applet.lines.put(line.key(), line);
 			}
 		}
 		public void postConnectionModifyData() {}
@@ -232,7 +231,7 @@ public class Adapter {
 			System.out.println("Trying to delete line " + line);
 			line.from.lines.remove(line);
 			line.to.lines.remove(line);
-			lines.remove(line.key());
+			applet.lines.remove(line.key());
 		}
 		public boolean connectToServer() throws IOException {
 			String url = apiUrl + "segment/" + line.id;
@@ -252,7 +251,7 @@ public class Adapter {
 			return false;
 		}
 		public void undoModifyData() {
-			lines.put(line.key(), line);
+			applet.lines.put(line.key(), line);
 			line.to.lines.add(line);
 			line.from.lines.add(line);
 		}
@@ -273,11 +272,11 @@ public class Adapter {
 		}
 
 		public void preConnectionModifyData() {
-			nodes.put(tempKey, node);
+			applet.nodes.put(tempKey, node);
 		}
 
 		public boolean connectToServer() throws IOException {
-			String xml = "<osm><node id=\"0\" tags=\"\" lon=\"" + node.lon + "\" lat=\"" + node.lat + "\" /></osm>";
+			String xml = "<osm><node id=\"0\" tags=\"\" lon=\"" + node.coor.lon + "\" lat=\"" + node.coor.lat + "\" /></osm>";
 			String url = apiUrl + "node/0";
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
@@ -312,13 +311,13 @@ public class Adapter {
 		}
 
 		public void undoModifyData() {
-			nodes.remove(tempKey);
+			applet.nodes.remove(tempKey);
 		}
 
 		public void postConnectionModifyData() {
 			node.id = id;
-			nodes.remove(tempKey);
-			nodes.put(node.key(), node);
+			applet.nodes.remove(tempKey);
+			applet.nodes.put(node.key(), node);
 		}
 	}
 
@@ -343,21 +342,21 @@ public class Adapter {
 			this.newLon = newLon;
 			this.newX = newX;
 			this.newY = newY;
-			oldLat = node.lat;
-			oldLon = node.lon;
-			oldX = node.x;
-			oldY = node.y;
+			oldLat = node.coor.lat;
+			oldLon = node.coor.lon;
+			oldX = node.coor.x;
+			oldY = node.coor.y;
 		}
 		
 		public void preConnectionModifyData() {
-			node.lat = newLat;
-			node.lon = newLon;
-			node.x = newX;
-			node.y = newY;
+			node.coor.lat = newLat;
+			node.coor.lon = newLon;
+			node.coor.x = newX;
+			node.coor.y = newY;
 		}
 		public boolean connectToServer() throws IOException {
 			String xml = "<osm><node tags=\"" + node.tags + "\" lon=\""
-			+ node.lon + "\" lat=\"" + node.lat + "\" id=\""
+			+ node.coor.lon + "\" lat=\"" + node.coor.lat + "\" id=\""
 			+ node.id + "\" /></osm>";
 
 			String url = apiUrl + "node/" + node.id;
@@ -384,10 +383,10 @@ public class Adapter {
 			return true;
 		}
 		public void undoModifyData() {
-			node.lat = oldLat;
-			node.lon = oldLon;
-			node.x = oldX;
-			node.y = oldY;
+			node.coor.lat = oldLat;
+			node.coor.lon = oldLon;
+			node.coor.x = oldX;
+			node.coor.y = oldY;
 		}
 		public void postConnectionModifyData() {}
 	}
@@ -406,7 +405,7 @@ public class Adapter {
 		}
 
 		public void preConnectionModifyData() {
-			lines.put(tempKey, line);
+			applet.lines.put(tempKey, line);
 		}
 		public boolean connectToServer() throws IOException {
 			String xml = "<osm><segment id=\"0\" tags=\"\" from=\"" + line.from.id + "\" to=\"" + line.to.id + "\" /></osm>";
@@ -440,44 +439,39 @@ public class Adapter {
 			}
 		}
 		public void undoModifyData() {
-			lines.remove(tempKey);
+			applet.lines.remove(tempKey);
 		}
 		public void postConnectionModifyData() {
 			line.id = id;
-			lines.remove(tempKey);
-			lines.put(line.key(), line);
+			applet.lines.remove(tempKey);
+			applet.lines.put(line.key(), line);
 		}
 	}
 
 	/**
 	 * Update (upload) a line segment to the server.
 	 */
-	private class LineUpdater implements ServerCommand {
-		private Line line;
-		private String newName;
-		private String oldName;
-		public LineUpdater(Line line, String newName) {
-			this.line = line;
-			this.newName = newName;
-			oldName = line.getName();
+	private class PropertyUpdater implements ServerCommand {
+		private OsmPrimitive oldPrimitive;
+		private OsmPrimitive newPrimitive;
+		public PropertyUpdater(OsmPrimitive oldPrimitive, OsmPrimitive newPrimitive) {
+			if (oldPrimitive.getClass() != newPrimitive.getClass())
+				throw new IllegalArgumentException("Class mismatch");
+			if (oldPrimitive.id != newPrimitive.id)
+				throw new IllegalArgumentException("Cannot change id");
+			this.oldPrimitive = oldPrimitive;
+			this.newPrimitive = newPrimitive;
 		}
 
 		public void preConnectionModifyData() {
-			line.setName(newName);
+			oldPrimitive.getMainTable(applet).remove(oldPrimitive.key());
+			newPrimitive.getMainTable(applet).put(newPrimitive.key(), newPrimitive);
 		}
 		public boolean connectToServer() throws IOException {
-			String xml = "<osm><segment id=\"" + line.id + "\" from=\"" + line.from.id
-					+ "\" to=\"" + line.to.id + "\">";
-
-      Enumeration e = line.tags.elements();
-      while(e.hasMoreElements()) {
-        Tag tag = (Tag)e.nextElement();
-        xml = xml + "<tag k=\"" + tag.key + "\" v=\"" + tag.value + "\" />";
-      }
-
-      xml = xml + "</segment></osm>";
-
-			String url = apiUrl + "segment/" + line.id;
+			StringWriter s = new StringWriter();
+			OsmWriter.output(s, newPrimitive);
+			String xml = s.getBuffer().toString();
+			String url = apiUrl + newPrimitive.getTypeName()+"/" + newPrimitive.id;
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
@@ -501,15 +495,80 @@ public class Adapter {
 					System.out.println("got reponse " + response);
 					return true;
 				}
-				System.err.println("error updating line: " + line + ", got code " + rCode);
+				System.err.println("error updating line: " + newPrimitive + ", got code " + rCode);
 				return false;
 			} finally {
 				put.releaseConnection();
 			}
 		}
 		public void undoModifyData() {
-			line.setName(oldName);
+			newPrimitive.getMainTable(applet).remove(newPrimitive.key());
+			oldPrimitive.getMainTable(applet).put(oldPrimitive.key(), oldPrimitive);
+			if (newPrimitive instanceof Way)
+				((Way)newPrimitive).removeAll();
 		}
-		public void postConnectionModifyData() {}
+		public void postConnectionModifyData() {
+			if (oldPrimitive instanceof Way)
+				((Way)oldPrimitive).removeAll();
+		}
+	}
+
+	/**
+	 * Create a line segment in the intern map.
+	 */
+	private class WayCreator implements ServerCommand {
+		private Way way;
+		private String tempKey = "temp_"+Math.random();
+		private long id = -1;
+		
+		public WayCreator(Way way) {
+			this.way = way;
+		}
+
+		public void preConnectionModifyData() {
+			applet.ways.put(tempKey, way);
+		}
+		public boolean connectToServer() throws IOException {
+			StringWriter s = new StringWriter();
+			OsmWriter.output(s, way);
+			String xml = s.getBuffer().toString();
+			String url = apiUrl + "way/0";
+
+			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+
+			HttpClient client = new HttpClient();
+
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+
+			PutMethod put = new PutMethod(url);
+			try {
+				put.setRequestBody(xml);
+				client.executeMethod(put);
+				int rCode = put.getStatusCode();
+				String response = put.getResponseBodyAsString();
+				System.out.println("Got response code " + rCode);
+
+				if (rCode == 200) {
+					System.out.println("got reponse " + response);
+					id = Long.parseLong(response.trim());
+					System.err.println("way created successfully: " + way);
+					return true;
+				}
+				System.err.println("error creating way: " + way);
+				return false;
+			} finally {
+				put.releaseConnection();
+			}
+		}
+		public void undoModifyData() {
+			applet.lines.remove(tempKey);
+			((Way)applet.lines.get(tempKey)).removeAll();
+		}
+		public void postConnectionModifyData() {
+			way.id = id;
+			applet.lines.remove(tempKey);
+			applet.ways.put(way.key(), way);
+		}
 	}
 }

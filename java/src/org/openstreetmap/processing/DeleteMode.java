@@ -25,7 +25,7 @@ public class DeleteMode extends EditMode {
 		boolean gotOne = false;
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
-			if (applet.mouseOverPoint(p) && p.id != 0) {
+			if (applet.mouseOverPoint(p.coor) && p.id != 0) {
 				boolean del = true;
 				// TODO prompt for delete
 				if (del) {

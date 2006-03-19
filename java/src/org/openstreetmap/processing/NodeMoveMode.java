@@ -34,13 +34,13 @@ public class NodeMoveMode extends EditMode {
 	public void mousePressed() {
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
-			if (applet.mouseOverPoint(p)) {
+			if (applet.mouseOverPoint(p.coor)) {
 				applet.selectedNode = p;
 				OsmApplet.println("selected: " + p);
-				lastOffsetX = p.x - applet.mouseX;
-				lastOffsetY = p.y - applet.mouseY;
-				origX = p.x;
-				origY = p.y;
+				lastOffsetX = p.coor.x - applet.mouseX;
+				lastOffsetY = p.coor.y - applet.mouseY;
+				origX = p.coor.x;
+				origY = p.coor.y;
 				break;
 			}
 		}
@@ -49,8 +49,8 @@ public class NodeMoveMode extends EditMode {
 
 	public void mouseDragged() {
 		if (applet.selectedNode != null) {
-			applet.selectedNode.x = applet.mouseX + lastOffsetX;
-			applet.selectedNode.y = applet.mouseY + lastOffsetY;
+			applet.selectedNode.coor.x = applet.mouseX + lastOffsetX;
+			applet.selectedNode.coor.y = applet.mouseY + lastOffsetY;
 			// println("node moved:" + selectedNode.x + " " +
 			// selectedNode.y);
 		} else {
@@ -73,17 +73,17 @@ public class NodeMoveMode extends EditMode {
 
 	public void unset() {
 		if (applet.selectedNode != null) {
-			double origLat = applet.selectedNode.lat;
-			double origLon = applet.selectedNode.lon;
-			applet.selectedNode.unproject(applet.tiles);
-			double newLat = applet.selectedNode.lat;
-			double newLon = applet.selectedNode.lon;
-			float newX = applet.selectedNode.x;
-			float newY = applet.selectedNode.y;
-			applet.selectedNode.lat = origLat;
-			applet.selectedNode.lon = origLon;
-			applet.selectedNode.x = origX;
-			applet.selectedNode.y = origY;
+			double origLat = applet.selectedNode.coor.lat;
+			double origLon = applet.selectedNode.coor.lon;
+			applet.selectedNode.coor.unproject(applet.tiles);
+			double newLat = applet.selectedNode.coor.lat;
+			double newLon = applet.selectedNode.coor.lon;
+			float newX = applet.selectedNode.coor.x;
+			float newY = applet.selectedNode.coor.y;
+			applet.selectedNode.coor.lat = origLat;
+			applet.selectedNode.coor.lon = origLon;
+			applet.selectedNode.coor.x = origX;
+			applet.selectedNode.coor.y = origY;
 			applet.osm.moveNode(applet.selectedNode, newLat, newLon, newX, newY);
 			applet.selectedNode = null;
 		} else {

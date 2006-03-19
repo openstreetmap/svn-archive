@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel columns="1" gap="10" top="10" left="10" right="10" bottom="10" width="250" height="300">
+	<tabbedpane weightx="1" weighty="1">
+		<tab text="Basic">
+			<panel columns="2" gap="4" top="10" left="10" right="10" bottom="10">
+				<label text="Name" />
+				<textfield name="name" weightx="1" action="nameChanged" />
+			
+				<label text="Class" />
+				<combobox name="class" weightx="1" action="classChanged" >
+					<choice text="wlan" />
+					<choice text="bus stop" />
+					<choice text="roundabout" />
+					<choice text="pub" />
+				</combobox>
+			</panel>
+		</tab>
+		<tab text="Advanced">
+			<panel columns="1" gap="5">
+				<table name="advanced_table" weightx="1" weighty="1" action="tableSelectionChanged">
+					<header>
+						<column text="Key" />
+						<column text="Value" />
+					</header>
+				</table>
+				<panel columns="3" gap="5" halign="right">
+					<button text="Add" action="propAdd" />
+					<button text="Delete" action="propDelete" />
+				</panel>
+				<panel columns="2" gap="5" top="5" left="5" bottom="5" right="5">
+					<label text="Key" />
+					<textfield name="edit_key" action="keyChanged" weightx="1" />
+					<label text="Value" />
+					<textfield name="edit_value" action="valueChanged" weightx="1" />
+				</panel>
+			</panel>			
+		</tab>
+	</tabbedpane>
+
+	<panel colspan="2" columns="2" gap="10" top="5" halign="center">
+		<button text="OK" type="default" action="ok" />
+		<button text="Cancel" type="cancel" action="cancel" />
+	</panel>
+</panel>

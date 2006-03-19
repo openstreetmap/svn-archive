@@ -27,7 +27,7 @@ public class LineMode extends EditMode {
 	public void mousePressed() {
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
-			if (applet.mouseOverPoint(p)) {
+			if (applet.mouseOverPoint(p.coor)) {
 				applet.start = p;
 				break;
 			}
@@ -37,7 +37,7 @@ public class LineMode extends EditMode {
 	public void mouseReleased() {
 		for (Iterator e = applet.nodes.values().iterator(); e.hasNext();) {
 			Node p = (Node)e.next();
-			if (applet.mouseOverPoint(p)) {
+			if (applet.mouseOverPoint(p.coor)) {
 				if (applet.start != null) {
 					Line line = new Line(applet.start, p);
 					String tempKey = "temp_" + Math.random();

@@ -19,5 +19,5 @@ abstract public class EditMode {
 	public void set() {}
 	public void unset() {}
 	
-	abstract public String getDescription(); 
+	abstract public String getDescription();
 }

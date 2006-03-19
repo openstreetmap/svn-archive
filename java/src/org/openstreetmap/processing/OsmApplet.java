@@ -80,8 +80,10 @@
 
 package org.openstreetmap.processing;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import netscape.javascript.JSObject;
@@ -92,11 +94,12 @@ import org.openstreetmap.client.ServerCommand;
 import org.openstreetmap.client.Tile;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
 import org.openstreetmap.util.Point;
+import org.openstreetmap.util.Way;
 
 import processing.core.PApplet;
 import processing.core.PFont;
-import thinlet.Thinlet;
 
 public class OsmApplet extends PApplet {
 
@@ -151,6 +154,12 @@ public class OsmApplet extends PApplet {
 	 * Type: String -> Line
 	 */
 	public Map lines = new Hashtable();
+	
+	/**
+	 * Collection of OSM ways
+	 * Type: String -> Way
+	 */
+	public Map ways = new Hashtable();
 
 	/* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
 	// private PImage gpxImage;
@@ -166,12 +175,11 @@ public class OsmApplet extends PApplet {
 	 */
 	Line tempLine = new Line(null, null);
 
-	/*
-	 * current line, for editing street names - TODO: change to array of lines
-	 * and apply text to all (save as a new street?) track this in editmode, and
-	 * make line.selected flag
+	/**
+	 * Current selected lines, for creating streets
+	 * Type: Line
 	 */
-	Line selectedLine;
+	public List selectedLine = new ArrayList();
 
 	/*
 	 * current node, for moving nodes - TODO: track this in editmode, and make
@@ -203,7 +211,7 @@ public class OsmApplet extends PApplet {
 	EditMode nodeMode = new NodeMode(this);
 	EditMode lineMode = new LineMode(this);
 	EditMode wayMode = new WayMode(this);
-	EditMode nameMode = new NameMode(this);
+	EditMode nameMode = new PropertiesMode(this);
 	EditMode nodeMoveMode = new NodeMoveMode(this);
 	EditMode deleteMode = new DeleteMode(this);
 	EditMode moveMode = new MoveMode(this);
@@ -244,7 +252,7 @@ public class OsmApplet extends PApplet {
 		// for centre lat/lon and scale (degrees per pixel)
 		float clat = 51.526447f, clon = -0.14746371f;
 		//float clat = -37.526763645918486f, clon = 144.14729439306237f;
-		zoom = 13;
+		zoom = 15;
 
 		if (online) {
 			if (param_float_exists("clat"))
@@ -318,7 +326,7 @@ public class OsmApplet extends PApplet {
 		}
 
 		// try to connect to OSM
-		osm = new Adapter(userName, password, lines, nodes, apiURL);
+		osm = new Adapter(userName, password, this, apiURL);
 		
 		// register as listener of finished commands (to redraw)
 		osm.commandManager.addListener(new CommandManager.Listener(){
@@ -331,8 +339,7 @@ public class OsmApplet extends PApplet {
 
 			public void run() {
 
-				osm.getNodesAndLines(tiles.getTopLeft(), tiles.getBotRight(),
-						tiles);
+				osm.getNodesLinesWays(tiles.getTopLeft(), tiles.getBottomRight(), tiles);
 
 				System.out.println("Got " + nodes.size() + " nodes and "
 						+ lines.size() + " lines.");
@@ -392,6 +399,8 @@ public class OsmApplet extends PApplet {
 				}
 			}
 			noFill();
+			
+			// draw the small black border for every line segment
 			strokeWeight(strokeWeight + 2.0f);
 			stroke(0);
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
@@ -400,23 +409,37 @@ public class OsmApplet extends PApplet {
 					stroke(0, 80);
 				else
 					stroke(0);
-				line(line.from.x, line.from.y, line.to.x, line.to.y);
+				line(line.from.coor.x, line.from.coor.y, line.to.coor.x, line.to.coor.y);
 			}
+
+			// draw pending lines (lines that do not belong to a way)
 			strokeWeight(strokeWeight);
 			stroke(255);
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
-				if (line.id == 0)
-					stroke(255, 80);
-				else
-					stroke(255);
-				if (line.selected)
-					stroke(255,100,100);
-				
-				line(line.from.x, line.from.y, line.to.x, line.to.y);
+				if (line.ways.isEmpty()) {
+					if (line.id == 0)
+						stroke(200, 255, 200, 80);
+					else
+						stroke(200, 255, 200);
+					line(line.from.coor.x, line.from.coor.y, line.to.coor.x, line.to.coor.y);
+				}
 			}
-			boolean gotOne = false;
 
+			// draw all ways
+			for (Iterator it = ways.values().iterator(); it.hasNext();) {
+				Way way = (Way)it.next();
+				for (int i = 0; i < way.size(); ++i) {
+					Line line = way.get(i);
+					if (way.id == 0)
+						stroke(255, 80);
+					else
+						stroke(255);
+					line(line.from.coor.x, line.from.coor.y, line.to.coor.x, line.to.coor.y);
+				}
+			}
+			
+			boolean gotOne = false;
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
 				if (modeManager.currentMode == nameMode && !gotOne) {
@@ -425,7 +448,7 @@ public class OsmApplet extends PApplet {
 							&& line.id != 0) {
 						strokeWeight(strokeWeight);
 						stroke(0xffffff80);
-						line(line.from.x, line.from.y, line.to.x, line.to.y);
+						line(line.from.coor.x, line.from.coor.y, line.to.coor.x, line.to.coor.y);
 						gotOne = true;
 					}
 				}
@@ -438,19 +461,17 @@ public class OsmApplet extends PApplet {
 				tempLine.to = new Node(mouseX, mouseY, tiles);
 				stroke(0, 80);
 				strokeWeight(strokeWeight + 2);
-				line(tempLine.from.x, tempLine.from.y, tempLine.to.x,
-						tempLine.to.y);
+				line(tempLine.from.coor.x, tempLine.from.coor.y, tempLine.to.coor.x, tempLine.to.coor.y);
 				stroke(255, 80);
 				strokeWeight(strokeWeight);
-				line(tempLine.from.x, tempLine.from.y, tempLine.to.x,
-						tempLine.to.y);
+				line(tempLine.from.coor.x, tempLine.from.coor.y, tempLine.to.coor.x, tempLine.to.coor.y);
 			}
 			// draw selected line
 			stroke(255, 0, 0, 80);
 			strokeWeight(strokeWeight);
-			if (selectedLine != null) {
-				line(selectedLine.from.x, selectedLine.from.y,
-						selectedLine.to.x, selectedLine.to.y);
+			for (Iterator it = selectedLine.iterator(); it.hasNext();) {
+				Line l = (Line)it.next();
+				line(l.from.coor.x, l.from.coor.y, l.to.coor.x, l.to.coor.y);
 			}
 
 			// draw nodes
@@ -459,18 +480,18 @@ public class OsmApplet extends PApplet {
 
 			for (Iterator it = nodes.values().iterator(); it.hasNext();) {
 				Node node = (Node)it.next();
-				if (modeManager.currentMode == lineMode && mouseOverPoint(node)) {
+				if (modeManager.currentMode == lineMode && mouseOverPoint(node.coor)) {
 					fill(0xffff0000);
 				} else if (modeManager.currentMode == nodeMoveMode) {
 					if (node == selectedNode) {
 						fill(0xff00ff00);
-					} else if (mouseOverPoint(node)) {
+					} else if (mouseOverPoint(node.coor)) {
 						fill(0xffff0000);
 					} else {
 						fill(0xff000000);
 					}
 				} else if (modeManager.currentMode == deleteMode) {
-					if (mouseOverPoint(node)) {
+					if (mouseOverPoint(node.coor)) {
 						fill(0xffff0000);
 					} else {
 						fill(0xff000000);
@@ -482,10 +503,10 @@ public class OsmApplet extends PApplet {
 				} else {
 					fill(0xff000000);
 				}
-				drawPoint(node);
+				drawPoint(node.coor);
 			}
 
-			// draw street segment names
+			// draw way and segment names
 			fill(0);
 			textFont(font);
 			textSize(strokeWeight + 4);
@@ -495,14 +516,32 @@ public class OsmApplet extends PApplet {
 				Line l = (Line)e.next();
 				if (l.getName() != null) {
 					pushMatrix();
-					if (l.from.x <= l.to.x) {
-						translate(l.from.x, l.from.y);
+					if (l.from.coor.x <= l.to.coor.x) {
+						translate(l.from.coor.x, l.from.coor.y);
 						rotate(l.angle());
 					} else {
-						translate(l.to.x, l.to.y);
+						translate(l.to.coor.x, l.to.coor.y);
 						rotate(PI + l.angle());
 					}
 					text(l.getName(), l.length() / 2.0f, 4);
+					popMatrix();
+				}
+			}
+			for (Iterator e = ways.values().iterator(); e.hasNext();) {
+				Way w = (Way)e.next();
+				if (w.getName() != null) {
+					Line l = w.getNameLineSegment();
+					if (l == null)
+						continue;
+					pushMatrix();
+					if (l.from.coor.x <= l.to.coor.x) {
+						translate(l.from.coor.x, l.from.coor.y);
+						rotate(l.angle());
+					} else {
+						translate(l.to.coor.x, l.to.coor.y);
+						rotate(PI + l.angle());
+					}
+					text(w.getName(), l.length() / 2.0f, 4);
 					popMatrix();
 				}
 			}
@@ -526,7 +565,6 @@ public class OsmApplet extends PApplet {
 			}
 
 			// draw command queue icon
-			//TODO: Replace this with a beautiful icon
 			if (osm.commandManager.size() > 0) {
 				pushMatrix();
 				translate(getWidth()-textWidth("uploading..."),getHeight()-45);
@@ -536,7 +574,6 @@ public class OsmApplet extends PApplet {
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 		}
-
 	}
 
 	public void recalcStrokeWeight() {
@@ -569,16 +606,6 @@ public class OsmApplet extends PApplet {
 		}
 	}
 
-	class T extends Thinlet {
-		T() {
-			try {
-				add(parse("demo.xml"));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public void keyPressed() {
 		// print("keyPressed!");
 		if (ready) {
@@ -618,9 +645,6 @@ public class OsmApplet extends PApplet {
 		key = 0; // catch when key = escape otherwise processing dies
 	}
 
-	public void keyReleased() {
-	} // keyReleased
-
 	// bit crufty - TODO tidy up and move into Point
 	public boolean mouseOverPoint(Point p) {
 		if (p.projected) {
@@ -630,9 +654,45 @@ public class OsmApplet extends PApplet {
 		return false;
 	}
 
+	/**
+	 * Get the node or line segment that is nearest to the given coordinates 
+	 * or <code>null</code>, if nothing is in range
+	 */
+	public OsmPrimitive getNearest(float x, float y) {
+		float minDistanceSq = Float.MAX_VALUE;
+		OsmPrimitive min = null;
+		// first search for nodes
+		for (Iterator it = nodes.values().iterator(); it.hasNext();) {
+			Node n = (Node)it.next();
+			float distSq = n.distanceSq(x,y);
+			if (distSq < minDistanceSq) {
+				minDistanceSq = distSq;
+				min = n;
+			}
+		}
+		if (minDistanceSq < 20)
+			return min;
+		minDistanceSq = Float.MAX_VALUE;
+		// search for line segments
+		for (Iterator it = lines.values().iterator(); it.hasNext();) {
+			Line l = (Line)it.next();
+			float c = l.from.distanceSq(l.to.coor.x, l.to.coor.y);
+			float a = l.to.distanceSq(x,y);
+			float b = l.from.distanceSq(x,y);
+			float distSq = a-(a-b+c)*(a-b+c)/4/c;
+			if (distSq < 20 && distSq < minDistanceSq && a < c+20 && b < c+20) {
+				minDistanceSq = distSq;
+				min = l;
+			}
+		}
+		if (minDistanceSq < 20)
+			return min;
+		return null; // nothing within range
+	}
+	
 	public synchronized void reProject() {
 		for (Iterator it = nodes.values().iterator(); it.hasNext();)
-			((Node)it.next()).project(tiles);
+			((Node)it.next()).coor.project(tiles);
 	}
 
 	// bit crufty - TODO tidy up and move into draw()?

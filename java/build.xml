@@ -10,7 +10,7 @@
   <target name="init">
     <tstamp/>
     <mkdir dir="${build}"/>
-    <mkdir dir="${dist}"/>
+  	<mkdir dir="${dist}"/>
     <mkdir dir="${dist}/api"/>
     <mkdir dir="${dist}/rc1/org"/>
     <mkdir dir="${dist}/rc1/org/openstreetmap"/>
@@ -39,12 +39,11 @@
 
     <copy file="${lib}/data/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/data/LucidaSansUnicode-11.vlw"/>
 
-    <copy todir="${dist}/rc1/data">
-      <fileset dir="gui"/>
-    </copy>
-  	
     <copy todir="${dist}/rc1/org/openstreetmap/processing/">
       <fileset dir="${build}/org/openstreetmap/processing"/>
+    </copy>
+    <copy todir="${dist}/rc1/org/openstreetmap/gui/">
+      <fileset dir="${build}/org/openstreetmap/gui"/>
     </copy>
     <copy todir="${dist}/rc1/org/openstreetmap/client/">
       <fileset dir="${build}/org/openstreetmap/client"/>
@@ -55,6 +54,9 @@
 
     <mkdir dir="${dist}/rc1/data"/>
     <copy file="${lib}/data/hand.png" tofile="${dist}/rc1/data/hand.png"/>
+    <copy file="${lib}/data/way.xml" tofile="${dist}/rc1/data/way.xml"/>
+    <copy file="${lib}/data/segment.xml" tofile="${dist}/rc1/data/segment.xml"/>
+    <copy file="${lib}/data/node.xml" tofile="${dist}/rc1/data/node.xml"/>
 
     <jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />
 

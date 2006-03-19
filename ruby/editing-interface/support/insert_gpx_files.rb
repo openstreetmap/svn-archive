@@ -4,13 +4,14 @@
 # reject points which go too quickly
 
 require 'osm/dao'
+require 'osm/servinfo'
 require 'time'
 require 'zlib'
 require 'rexml/parsers/sax2parser'
 require 'rexml/text'
 require 'net/smtp'
 
-DEBUG = false
+DEBUG = true
 USER = 'openstreetmap'
 
 # exit if the lockfile is there
@@ -60,8 +61,8 @@ files.each_hash do |row|
   points = 0
   poss_points = 0
   user_id = row['user_id'].to_i
-  original_name = row['originalname']
-  email_address = dao.email_from_user_id(user_id)
+  name = row['name']
+  email_address = dao.details_from_user_id(user_id)['email']
   dbh = dao.get_connection #bit hacky, but we need a connection
 
   if File.file?( realfile ) && File.size( realfile ) > 0
@@ -70,11 +71,11 @@ files.each_hash do |row|
   
     # got a file, we hope
 
-    $stderr << 'Inserting ' + original_name + ' for user ' + user_id.to_s + ' from file ' + filename + "\n"
+    $stderr << "Inserting #{name} for user #{user_id.to_s} from file #{filename} \n"
   
     trackseg = 0
     
-    gpx_id = dao.new_gpx_file(user_id, original_name) 
+    gpx_id = row['id'].to_i
 
     if gpx_id == 0
       $stderr << "bad gpx number!\n"
@@ -161,7 +162,7 @@ Hi,
 
 It looks like your gpx file, 
   
-  #{original_name},
+  #{name},
 
 uploaded to OpenStreetMap's database ok with #{points} out of
 a possible #{poss_points} track points in the GPX.
@@ -188,15 +189,15 @@ Subject: Your gpx file
 
 Hi,
 
-It looks like your gpx file, #{original_name}, failed to get parsed ok.
+It looks like your gpx file, #{name}, failed to get parsed ok.
 Please consult the error message below. If you think this is a bug please
 have a look at how to report it:
 
-  http://www.openstreetmap.org/wiki/index.php/Bug_Reporting
+  http://wiki.openstreetmap.org/index.php/Bug_Reporting
 
 and about uploading in general:
 
-  http://www.openstreetmap.org/wiki/index.php/Upload
+  http://wiki.openstreetmap.org/index.php/Upload
 
 Error message:
 
@@ -223,10 +224,10 @@ END_OF_MESSAGE
   else
     # nil file encountered
     errortext = ''
-      if original_name == ''
+      if name == ''
         errortext = '(blank file name)'
       else
-        errortext = original_name
+        errortext = name
       end
       
       msgstr = <<END_OF_MESSAGE
@@ -265,7 +266,7 @@ END_OF_MESSAGE
   end
 
   if !DEBUG
-    dbh.query("delete from gpx_pending_files where tmpname = '#{filename}'")
+    dbh.query("update gpx_files set inserted = 1 where tmpname = '#{filename}'")
     puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx"
     `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx`
     File.delete('/home/steve/bin' + filename)

@@ -489,7 +489,7 @@ module OSM
 
 
     def get_scheduled_gpx_uploads()
-      call_sql { "select * from gpx_pending_files" }
+      call_sql { "select * from gpx_files where inserted = 0" }
     end
 
     def delete_sheduled_gpx_files()

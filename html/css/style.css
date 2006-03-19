@@ -343,6 +343,11 @@ hides rule from IE5-Mac \*/
   font-size: 18px;
 }
 
+.rsssmall {
+  position: relative;
+  top: 4px;
+}
+
 #cclogo {
   width: 150px;
   min-width: 150px;

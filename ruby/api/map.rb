@@ -63,8 +63,10 @@ if linesegments
 end
 
 [:way, :area].each do |type|
-  dao.get_multis_from_segments(seg_ids, type).each do |n|
-    ox.add_multi(n,type)
+  if seg_ids != []
+    dao.get_multis_from_segments(seg_ids, type).each do |n|
+      ox.add_multi(n,type)
+    end
   end
 end
 

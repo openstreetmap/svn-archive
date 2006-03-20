@@ -72,7 +72,7 @@ public class OxParser extends MinML2 {
 			long line_from_id = Long.parseLong(atts.getValue("from"));
 			long line_to_id = Long.parseLong(atts.getValue("to"));
 			long id = Long.parseLong(atts.getValue("id"));
-			current = new Line((Node)nodes.get(Long.valueOf(line_from_id)), (Node)nodes.get(Long.valueOf(line_to_id)), id);
+			current = new Line((Node)nodes.get(new Long(line_from_id)), (Node)nodes.get(new Long(line_to_id)), id);
 		}
 		
 		if (qName.equals("way")) {
@@ -82,7 +82,7 @@ public class OxParser extends MinML2 {
 
 		if (qName.equals("seg")) {
 			long id = Long.parseLong(atts.getValue("id"));
-			((Way)current).add((Line)lines.get(Long.valueOf(id)));
+			((Way)current).add((Line)lines.get(new Long(id)));
 		}
 
 		if(qName.equals("tag")) {
@@ -95,10 +95,10 @@ public class OxParser extends MinML2 {
 
 	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 		if (qName.equals("node")) {
-			nodes.put(Long.valueOf(current.id), current);
+			nodes.put(new Long(current.id), current);
 			current = null;
 		} else if (qName.equals("segment")) {
-			lines.put(Long.valueOf(current.id), current);
+			lines.put(new Long(current.id), current);
 			current = null;
 		} else if (qName.equals("way")) {
 			ways.add(current);

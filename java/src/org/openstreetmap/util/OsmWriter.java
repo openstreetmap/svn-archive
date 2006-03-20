@@ -20,14 +20,14 @@ public class OsmWriter {
 
 	private final static HashMap encoding = new HashMap();
 	static {
-		encoding.put(Character.valueOf('<'), "&lt;");
-		encoding.put(Character.valueOf('>'), "&gt;");
-		encoding.put(Character.valueOf('"'), "&quot;");
-		encoding.put(Character.valueOf('\''), "&apos;");
-		encoding.put(Character.valueOf('&'), "&amp;");
-		encoding.put(Character.valueOf('\n'), "&#xA;");
-		encoding.put(Character.valueOf('\r'), "&#xD;");
-		encoding.put(Character.valueOf('\t'), "&#x9;");
+		encoding.put(new Character('<'), "&lt;");
+		encoding.put(new Character('>'), "&gt;");
+		encoding.put(new Character('"'), "&quot;");
+		encoding.put(new Character('\''), "&apos;");
+		encoding.put(new Character('&'), "&amp;");
+		encoding.put(new Character('\n'), "&#xA;");
+		encoding.put(new Character('\r'), "&#xD;");
+		encoding.put(new Character('\t'), "&#x9;");
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class OsmWriter {
 	public String encode(String unencoded) {
 		StringBuilder buffer = null;
 		for (int i = 0; i < unencoded.length(); ++i) {
-			String encS = (String)encoding.get(Character.valueOf(unencoded.charAt(i)));
+			String encS = (String)encoding.get(new Character(unencoded.charAt(i)));
 			if (encS != null) {
 				if (buffer == null)
 					buffer = new StringBuilder(unencoded.substring(0,i));

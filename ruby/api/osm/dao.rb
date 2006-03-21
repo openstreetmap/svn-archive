@@ -482,11 +482,11 @@ module OSM
     end
 
 
-    def schedule_gpx_upload(originalname, tmpname, user_id, description, tags)
+    def schedule_gpx_upload(originalname, tmpname, user_id, description, tags, pub)
       begin
         dbh = get_connection
 
-        dbh.query( "insert into gpx_files (name, tmpname, user_id, description, visible, inserted, timestamp, size) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id}, '#{description}', 1, 0, NOW(), 0)")
+        dbh.query( "insert into gpx_files (name, tmpname, user_id, description, visible, inserted, timestamp, size, private) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id}, '#{description}', 1, 0, NOW(), 0, #{!pub})")
         res = dbh.query( "select last_insert_id()")
 
         gpx_id = -1
@@ -924,7 +924,12 @@ module OSM
         tags << [row['k'],row['v']]
       end
 
-      res = call_sql { "select segment_id as n from #{type}_segments where id = #{q(multi_id.to_s)} and version = #{version};" }
+      # if looking at an old version then get segments as they were then
+      tclause = ''
+      tclasue = " and timestamp <= '#{timestamp}' " unless version.nil?
+
+      res = call_sql { " 
+        select id as n from (select * from (select segments.id, visible, timestamp from #{type}_segments left join segments on #{type}_segments.segment_id = segments.id where #{type}_segments.id = #{q(multi_id.to_s)} and version = #{version} #{tclause} order by id, timestamp desc) as a group by id) as b where visible = 1;" }
 
       segs = []
       res.each_hash do |row|

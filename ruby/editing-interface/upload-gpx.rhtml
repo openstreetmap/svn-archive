@@ -28,6 +28,7 @@ if cgi['action'] == 'mytraces' && loggedin
       <tr><td align="right">upload GPX file:</td><td><input type="file" name="gpxfile" size="60"></td></tr>
       <tr><td align="right">description:</td><td><input type="text" name="description" size="60" maxlength="255"></td></tr>
       <tr><td align="right">tags:</td><td><input type="text" name="tags" size="60" maxlength="255"></td></tr>
+      <tr><td align="right">public?</td><td><input type="checkbox" name="public" checked></td></tr>
       <tr><td></td><td><input type="submit" value="Upload"> | 
       <a href="http://wiki.openstreetmap.org/index.php/Upload">help</a>
       </td></tr>
@@ -42,12 +43,11 @@ gpxfile = cgi['gpxfile']
 if gpxfile != '' && loggedin
   # get uri of tx'd file (in tmp normally)
   tmpfile = cgi.params['gpxfile'].first.path
-    
   # create a Tempfile reference
   fromfile = cgi.params['gpxfile'].first
   description = cgi.params['description'][0].string
   tags = cgi.params['tags'][0].string
-
+  pub = !cgi.params['public'][0].nil? && cgi.params['public'][0].string
   # create output file reference as original filename in our chosen directory
   tofile = '/home/osm/' + rand.to_s
 
@@ -56,13 +56,13 @@ if gpxfile != '' && loggedin
     file << fromfile.read
   end
 
-  if dao.schedule_gpx_upload(fromfile.original_filename, tofile, user_id, description, tags)
+  if !tmpfile.nil? && dao.schedule_gpx_upload(fromfile.original_filename, tofile, user_id, description, tags, pub)
     %>
     <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i><br>
     <%
   else
     %>
-    <i>Something went wrong scheduling that file, please report this as a bug.</i><br>
+    <i>Something went wrong scheduling that file. See the wiki / mailing list for help.</i><br>
     <%
   end
 

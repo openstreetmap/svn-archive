@@ -17,7 +17,7 @@ begin
 
   #connect to the MySQL server
   dbh = Mysql.real_connect(MYSQL_SERVER, MYSQL_USER, MYSQL_PASS, MYSQL_DATABASE)
-  q = 'select * from (select count(*) as no_of_users from users where active = true) as h, (select count(*) as gpspoints from gps_points) as j, (select count(*) as nodes from meta_nodes) as k, (select count(*) as segments from meta_segments) as l, (select count(*) as seg_names from segments where tags != \'\') as m;'
+  q = 'select * from (select count(*) as no_of_users from users where active = true) as h, (select count(*) as gpspoints from gps_points) as j, (select count(*) as nodes from meta_nodes) as k, (select count(*) as segments from meta_segments) as l, (select count(*) as seg_names from segments where tags != \'\') as m, (select count(*) as way_count from ways where version = 1) as n, (select count(*) as area_count from areas where version = 1) as o'
 #  puts q
   res = dbh.query(q)
   res.each_hash do |row|
@@ -27,6 +27,8 @@ begin
       <tr><td>Number of nodes</td><td>#{row['nodes']}</td></tr>
       <tr><td>Number of line segments</td><td>#{row['segments']}</td></tr>
       <tr><td>Number of segments with tags</td><td>#{row['seg_names']}</td></tr>
+      <tr><td>Number of ways</td><td>#{row['way_count']}</td></tr>
+      <tr><td>Number of areas</td><td>#{row['area_count']}</td></tr>
       </table><br>"
   end
 

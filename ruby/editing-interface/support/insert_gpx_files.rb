@@ -266,7 +266,7 @@ END_OF_MESSAGE
   end
 
   if !DEBUG
-    `./make_trace_pic.rb #{#{gpx_id}`
+    `./make_trace_pic.rb #{gpx_id}`
     dbh.query("update gpx_files set inserted = 1 where tmpname = '#{filename}'")
     puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx"
     `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx`

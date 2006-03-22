@@ -50,8 +50,8 @@ public class WayMode extends EditMode {
 			}
 			if (dlg != null) {
 				Way way = (Way)dlg.handler.osm;
-				way.removeAll();
-				way.addAll(applet.selectedLine);
+				way.lines.clear();
+				way.lines.addAll(applet.selectedLine);
 				((WayHandler)dlg.handler).updateSegmentsFromList();
 			}
 			applet.redraw();
@@ -78,7 +78,7 @@ public class WayMode extends EditMode {
 		if (applet.selectedLine.isEmpty())
 			return;
 		final Way way = new Way(0);
-		final WayHandler wayHandler = new WayHandler(way, applet);
+		final WayHandler wayHandler = new WayHandler(way, applet, null);
 
 		if (dlg != null) {
 			location = dlg.getLocation();
@@ -92,8 +92,7 @@ public class WayMode extends EditMode {
 					if (handler != null && !handler.cancelled) {
 						applet.osm.createWay(way);
 						handler = null;
-					} else
-						way.removeAll(); // clean up the line segment references
+					}
 					applet.selectedLine.clear();
 					applet.redraw();
 					dlg = null;

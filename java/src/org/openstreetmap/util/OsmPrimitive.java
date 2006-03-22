@@ -48,4 +48,14 @@ abstract public class OsmPrimitive implements Cloneable {
 			throw new Error("FATAL: Clonable interface ignored by VM", e);
 		}
 	}
+	
+	/**
+	 * Register itself on every dependend objects (lines register on their nodes, ways
+	 * on their lines etc..)
+	 */
+	abstract public void register();
+	/**
+	 * Unregister itself from dependend objects.
+	 */
+	abstract public void unregister();
 }

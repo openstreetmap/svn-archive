@@ -62,6 +62,8 @@ public class OsmWriter {
 	}
 
 	public void visit(Line ls) {
+		if (ls instanceof LineOnlyId)
+			throw new IllegalArgumentException("Cannot osmwrite an incomplete line segment.");
 		out.print("  <"+"segment"+" id='"+ls.id+"'");
 		out.print(" from='"+ls.from.id+"' to='"+ls.to.id+"'");
 		addTags(ls.tags, "segment", true);
@@ -70,8 +72,8 @@ public class OsmWriter {
 	public void visit(Way w) {
 		out.print("  <"+"way"+" id='"+w.id+"'");
 		out.println(">");
-		for (int i = 0; i < w.size(); ++i)
-			out.println("    <seg id='"+w.get(i).id+"' />");
+		for (Iterator it = w.lines.iterator(); it.hasNext();)
+			out.println("    <seg id='"+((Line)it.next()).id+"' />");
 		addTags(w.tags, "way", false);
 	}
 
@@ -96,12 +98,12 @@ public class OsmWriter {
 	 * Optimized to fast pass strings that don't need encoding (normal case).
 	 */
 	public String encode(String unencoded) {
-		StringBuilder buffer = null;
+		StringBuffer buffer = null;
 		for (int i = 0; i < unencoded.length(); ++i) {
 			String encS = (String)encoding.get(new Character(unencoded.charAt(i)));
 			if (encS != null) {
 				if (buffer == null)
-					buffer = new StringBuilder(unencoded.substring(0,i));
+					buffer = new StringBuffer(unencoded.substring(0,i));
 				buffer.append(encS);
 			} else if (buffer != null)
 				buffer.append(unencoded.charAt(i));

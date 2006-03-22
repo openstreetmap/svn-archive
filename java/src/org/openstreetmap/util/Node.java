@@ -86,4 +86,7 @@ public class Node extends OsmPrimitive {
 	public String getTypeName() {
 		return "node";
 	}
+
+	public void register() {}
+	public void unregister() {}
 }

@@ -93,6 +93,7 @@ import org.openstreetmap.client.CommandManager;
 import org.openstreetmap.client.ServerCommand;
 import org.openstreetmap.client.Tile;
 import org.openstreetmap.util.Line;
+import org.openstreetmap.util.LineOnlyId;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.OsmPrimitive;
 import org.openstreetmap.util.Point;
@@ -180,6 +181,10 @@ public class OsmApplet extends PApplet {
 	 * Type: Line
 	 */
 	public List selectedLine = new ArrayList();
+	/**
+	 * Extra bold highlighted for marking up lines on a way during creation.
+	 */
+	public Line extraHighlightedLine = null;
 
 	/*
 	 * current node, for moving nodes - TODO: track this in editmode, and make
@@ -429,8 +434,10 @@ public class OsmApplet extends PApplet {
 			// draw all ways
 			for (Iterator it = ways.values().iterator(); it.hasNext();) {
 				Way way = (Way)it.next();
-				for (int i = 0; i < way.size(); ++i) {
-					Line line = way.get(i);
+				for (Iterator itw = way.lines.iterator(); itw.hasNext();) {
+					Line line = (Line)itw.next();
+					if (line instanceof LineOnlyId)
+						continue; // do not draw id-only line segments
 					if (way.id == 0)
 						stroke(255, 80);
 					else
@@ -471,8 +478,14 @@ public class OsmApplet extends PApplet {
 			strokeWeight(strokeWeight);
 			for (Iterator it = selectedLine.iterator(); it.hasNext();) {
 				Line l = (Line)it.next();
-				line(l.from.coor.x, l.from.coor.y, l.to.coor.x, l.to.coor.y);
+				if (!l.equals(extraHighlightedLine))
+					line(l.from.coor.x, l.from.coor.y, l.to.coor.x, l.to.coor.y);
 			}
+			if (extraHighlightedLine != null && !(extraHighlightedLine instanceof LineOnlyId)) {
+				stroke(0, 0, 255, 80);
+				line(extraHighlightedLine.from.coor.x, extraHighlightedLine.from.coor.y, extraHighlightedLine.to.coor.x, extraHighlightedLine.to.coor.y);
+			}
+
 
 			// draw nodes
 			noStroke();
@@ -531,7 +544,7 @@ public class OsmApplet extends PApplet {
 				Way w = (Way)e.next();
 				if (w.getName() != null) {
 					Line l = w.getNameLineSegment();
-					if (l == null)
+					if (l == null || l instanceof LineOnlyId)
 						continue;
 					pushMatrix();
 					if (l.from.coor.x <= l.to.coor.x) {

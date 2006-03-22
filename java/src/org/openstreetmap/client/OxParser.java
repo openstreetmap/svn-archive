@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.openstreetmap.util.Line;
+import org.openstreetmap.util.LineOnlyId;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.OsmPrimitive;
 import org.openstreetmap.util.Way;
@@ -82,7 +83,12 @@ public class OxParser extends MinML2 {
 
 		if (qName.equals("seg")) {
 			long id = Long.parseLong(atts.getValue("id"));
-			((Way)current).add((Line)lines.get(new Long(id)));
+			Line line = (Line)lines.get(new Long(id));
+			if (line == null) {
+				line = new LineOnlyId(id);
+				lines.put(new Long(id), line);
+			}
+			((Way)current).lines.add(line);
 		}
 
 		if(qName.equals("tag")) {
@@ -96,12 +102,15 @@ public class OxParser extends MinML2 {
 	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 		if (qName.equals("node")) {
 			nodes.put(new Long(current.id), current);
+			current.register();
 			current = null;
 		} else if (qName.equals("segment")) {
 			lines.put(new Long(current.id), current);
+			current.register();
 			current = null;
 		} else if (qName.equals("way")) {
 			ways.add(current);
+			current.register();
 			current = null;
 		}
 

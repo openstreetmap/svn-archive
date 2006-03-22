@@ -62,10 +62,6 @@ public class Line extends OsmPrimitive {
 			this.from = from;
 			this.to = to;
 		}
-		if (from != null)
-			from.lines.add(this);
-		if (to != null)
-			to.lines.add(this);
 		this.id = id;
 	}
 
@@ -156,6 +152,16 @@ public class Line extends OsmPrimitive {
 
 	public String key() {
 		return "line_" + id;
+	}
+
+	public void register() {
+		from.lines.add(this);
+		to.lines.add(this);
+	}
+
+	public void unregister() {
+		from.lines.remove(this);
+		to.lines.remove(this);
 	}
 }
 

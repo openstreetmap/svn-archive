@@ -4,10 +4,13 @@
 package org.openstreetmap.gui;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.openstreetmap.processing.OsmApplet;
+import org.openstreetmap.processing.PropertiesMode;
 import org.openstreetmap.util.Line;
+import org.openstreetmap.util.LineOnlyId;
 import org.openstreetmap.util.Way;
 
 import thinlet.Thinlet;
@@ -20,6 +23,7 @@ import thinlet.Thinlet;
 public final class WayHandler extends GuiHandler {
 
 	private final OsmApplet applet;
+	private PropertiesMode mode = null;
 	
 	/**
 	 * Update the basic tab (name, class or oneway)
@@ -37,12 +41,15 @@ public final class WayHandler extends GuiHandler {
 	public void updateSegmentsFromList() {
 		Object segments = find("segments");
 		removeAll(segments);
-		for (int i = 0; i < ((Way)osm).size(); ++i) {
-			Line line = ((Way)osm).get(i);
+		for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();) {
+			Line line = (Line)it.next();
 			Object item = Thinlet.create("item");
-			if (line.getName().equals(""))
-				setString(item, "text", line.id+" ("+line.from.id+" -> "+line.to.id+")");
-			else
+			if (line.getName().equals("")) {
+				if (line instanceof LineOnlyId)
+					setString(item, "text", line.id+" (incomplete)");
+				else
+					setString(item, "text", line.id+" ("+line.from.id+" -> "+line.to.id+")");
+			} else
 				setString(item, "text", line.getName());
 			add(segments, item);
 			putProperty(item, "line_object", line);
@@ -53,16 +60,27 @@ public final class WayHandler extends GuiHandler {
 	 * Updates the selected segment list from the gui thinlet list
 	 */
 	private void updateListFromSegments() {
-		((Way)osm).removeAll();
+		((Way)osm).lines.clear();
 		Object[] segs = getItems(find("segments"));
 		for (int i = 0; i < segs.length; ++i)
-			((Way)osm).add((Line)getProperty(segs[i], "line_object"));
+			((Way)osm).lines.add(getProperty(segs[i], "line_object"));
 		applet.redraw();
 	}
 	
-	public WayHandler(Way way, OsmApplet applet) {
+	/**
+	 * @param way The way to handle with this property page
+	 * @param applet The applet to redraw and set several properties from
+	 * @param mode The property mode to change the "Change segment" flag. <code>null</code>
+	 * 		means do not modify anything.
+	 */
+	public WayHandler(Way way, OsmApplet applet, PropertiesMode mode) {
 		super(way);
 		this.applet = applet;
+		this.mode = mode;
+		if (mode == null) {
+			setBoolean(find("changeSegment"), "selected", true);
+			setBoolean(find("changeSegment"), "enabled", false);
+		}
 		updateSegmentsFromList();
 		updateBasic();
 	}
@@ -70,11 +88,17 @@ public final class WayHandler extends GuiHandler {
 	public void ok() {
 		Object seg = find("segments");
 		Object[] segmentArr = getItems(seg);
-		((Way)osm).removeAll();
+		((Way)osm).lines.clear();
 		for (int i = 0; i < segmentArr.length; ++i)
-			((Way)osm).add((Line)getProperty(segmentArr[i], "line_object"));
-
+			((Way)osm).lines.add(getProperty(segmentArr[i], "line_object"));
+		applet.extraHighlightedLine = null;
 		super.ok();
+	}
+
+	public void cancel() {
+		applet.extraHighlightedLine = null;
+		applet.selectedLine.clear();
+		super.cancel();
 	}
 
 	public void onewayChanged() {
@@ -116,7 +140,30 @@ public final class WayHandler extends GuiHandler {
 			return;
 		remove(sel);
 		updateListFromSegments();
-		if (getCount(list) == 0)
+		if (getCount(list) == 0 && mode == null)
 			cancel();
+	}
+
+	/**
+	 * Go into the select-deselect line segments modus.
+	 */
+	public void changeSegment() {
+		applet.selectedLine.clear();
+		boolean sel = getBoolean(find("changeSegment"), "selected");
+		if (mode != null)
+			mode.changeSegmentMode = sel;
+		if (sel)
+			for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();)
+				applet.selectedLine.add(it.next());
+		applet.redraw();
+	}
+	
+	public void segmentSelectionChanged() {
+		Object sel = getSelectedItem(find("segments"));
+		if (sel != null)
+			applet.extraHighlightedLine = (Line)getProperty(sel, "line_object");
+		else
+			applet.extraHighlightedLine = null;
+		applet.redraw();
 	}
 }

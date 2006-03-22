@@ -46,7 +46,7 @@ public class DeleteMode extends EditMode {
 					// TODO prompt for delete
 					if (del) {
 						OsmApplet.println("deleting " + l);
-						applet.osm.deleteLine(l);
+						applet.osm.removePrimitive(l);
 					} else {
 						OsmApplet.println("not deleting " + l);
 					}

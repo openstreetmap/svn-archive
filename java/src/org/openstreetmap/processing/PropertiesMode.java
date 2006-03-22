@@ -34,6 +34,15 @@ public class PropertiesMode extends EditMode {
 	 * closed first.
 	 */
 	private GuiLauncher dlg;
+	/**
+	 * <code>true</code>, if we are in "change segments" mode (then this mode behaves
+	 * almost exactly like the WayMode, except that it does not launch WayCreate command)
+	 */
+	public boolean changeSegmentMode = false;
+	/**
+	 * The current changed primitive (if any). May be <code>null</code>.
+	 */
+	private OsmPrimitive primitive;
 	
 	public PropertiesMode(OsmApplet applet) {
 		this.applet = applet;
@@ -43,21 +52,37 @@ public class PropertiesMode extends EditMode {
 		OsmPrimitive primitive = applet.getNearest(applet.mouseX, applet.mouseY);
 		if (primitive == null)
 			return;
-
-		// cycle through all ways and the line segment if subsequent selecting 
-		// the point
-		if (primitive instanceof Line && !((Line)primitive).ways.isEmpty()) {
-			Line line = (Line)primitive;
-			if (lastSelected != line.ways.get(line.ways.size()-1)) {
-				int i = line.ways.indexOf(lastSelected);
-				if (i != -1 && i < line.ways.size()-1)
-					primitive = (OsmPrimitive)line.ways.get(i+1);
-				else
-					primitive = (OsmPrimitive)line.ways.get(0);
+		if (changeSegmentMode) {
+			if (!(primitive instanceof Line))
+				return;
+			if (applet.selectedLine.contains(primitive)) {
+				applet.selectedLine.remove(primitive);
+				if (this.primitive instanceof Way)
+					((Way)this.primitive).lines.remove(primitive);
+			} else {
+				applet.selectedLine.add(primitive);
+				if (this.primitive instanceof Way)
+					((Way)this.primitive).lines.add(primitive);
 			}
+			if (dlg != null)
+				((WayHandler)dlg.handler).updateSegmentsFromList();
+			applet.redraw();
+		} else {
+			// cycle through all ways and the line segment if subsequent selecting 
+			// the point
+			if (primitive instanceof Line && !((Line)primitive).ways.isEmpty()) {
+				Line line = (Line)primitive;
+				if (lastSelected != line.ways.get(line.ways.size()-1)) {
+					int i = line.ways.indexOf(lastSelected);
+					if (i != -1 && i < line.ways.size()-1)
+						primitive = (OsmPrimitive)line.ways.get(i+1);
+					else
+						primitive = (OsmPrimitive)line.ways.get(0);
+				}
+			}
+			lastSelected = primitive;
+			openProperties(primitive);
 		}
-		lastSelected = primitive;
-		openProperties(primitive);
 	}
 
 	/**
@@ -69,9 +94,9 @@ public class PropertiesMode extends EditMode {
 		String name;
 		if (old == null)
 			return;
-		final OsmPrimitive primitive = (OsmPrimitive)old.clone();
+		primitive = (OsmPrimitive)old.clone();
 		if (primitive instanceof Way) {
-			guiHandler = new WayHandler((Way)primitive, applet);
+			guiHandler = new WayHandler((Way)primitive, applet, this);
 			name = ((Way)primitive).getName();
 		} else if (primitive instanceof Line) {
 			guiHandler = new LineHandler((Line)primitive);
@@ -94,19 +119,21 @@ public class PropertiesMode extends EditMode {
 		dlg = new GuiLauncher(name, guiHandler){
 			public void setVisible(boolean visible) {
 				if (!visible) {
-					if (!handler.cancelled)
-						applet.osm.updateProperty(old, primitive);
-					else {
-						if (primitive instanceof Way) {
-							((Way)primitive).removeAll();
-							((Way)old).removeAll();
-						}
+					if (!handler.cancelled) {
+						if (primitive instanceof Way && ((Way)primitive).lines.isEmpty())
+							applet.osm.removePrimitive(primitive);
+						else
+							applet.osm.updateProperty(old, primitive);
 					}
 					dlg = null;
+					changeSegmentMode = false;
+					applet.selectedLine.clear();
+					applet.redraw();
 				}
 				super.setVisible(visible);
 			}
 		};
+		changeSegmentMode = false;
 		if (location != null)
 			dlg.setLocation(location);
 		dlg.setVisible(true);

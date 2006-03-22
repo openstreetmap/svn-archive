@@ -45,8 +45,9 @@
 		<tab text="Segments">
 			<panel columns="1" gap="3" top="3">
 				<label text="Segments" />
-				<list name="segments" weightx="1" weighty="1" />
-				<panel columns="3" gap="5" halign="right" bottom="5">
+				<list name="segments" weightx="1" weighty="1" action="segmentSelectionChanged" />
+				<panel columns="4" gap="5" halign="right" bottom="5">
+					<checkbox name="changeSegment" text="Change" action="changeSegment" />
 					<button text="Up" action="up" />
 					<button text="Down" action="down" />
 					<button text="Delete" action="deleteSegment" />

@@ -132,14 +132,6 @@ public class Adapter {
 	}
 
 	/**
-	 * Queue the deletion of the line segment. Return immediatly.
-	 */
-	public void deleteLine(Line line) {
-		System.out.println("Deleting line " + line.id);
-		commandManager.add(new LineDeleter(line));
-	}
-
-	/**
 	 * Queue the creation of the node. Return immediatly.
 	 */
 	public void createNode(Node node, String tempKey) {
@@ -165,6 +157,13 @@ public class Adapter {
 	 */
 	public void updateProperty(OsmPrimitive oldPrimitive, OsmPrimitive newPrimitive) {
 		commandManager.add(new PropertyUpdater(oldPrimitive, newPrimitive));
+	}
+
+	/**
+	 * Queue the removal of the primitive.
+	 */
+	public void removePrimitive(OsmPrimitive osm) {
+		commandManager.add(new Remover(osm));
 	}
 
 	/**
@@ -216,44 +215,6 @@ public class Adapter {
 				Line line = (Line)it.next();
 				applet.lines.put(line.key(), line);
 			}
-		}
-		public void postConnectionModifyData() {}
-	}
-
-	
-	/**
-	 * Delete a specific line segment from the intern map.
-	 */
-	private class LineDeleter implements ServerCommand {
-		private Line line;
-		public LineDeleter(Line line) {this.line = line;}
-		public void preConnectionModifyData() {
-			System.out.println("Trying to delete line " + line);
-			line.from.lines.remove(line);
-			line.to.lines.remove(line);
-			applet.lines.remove(line.key());
-		}
-		public boolean connectToServer() throws IOException {
-			String url = apiUrl + "segment/" + line.id;
-			System.out.println("trying to delete line by throwing HTTP DELETE at " + url);
-			HttpClient client = new HttpClient();
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-			DeleteMethod del = new DeleteMethod(url);
-			client.executeMethod(del);
-			int rCode = del.getStatusCode();
-			del.releaseConnection();
-			if (rCode == 200) {
-				System.err.println("line removed successfully: " + line);
-				return true;
-			}
-			System.err.println("error removing line: " + line);
-			return false;
-		}
-		public void undoModifyData() {
-			applet.lines.put(line.key(), line);
-			line.to.lines.add(line);
-			line.from.lines.add(line);
 		}
 		public void postConnectionModifyData() {}
 	}
@@ -406,6 +367,7 @@ public class Adapter {
 
 		public void preConnectionModifyData() {
 			applet.lines.put(tempKey, line);
+			line.register();
 		}
 		public boolean connectToServer() throws IOException {
 			String xml = "<osm><segment id=\"0\" tags=\"\" from=\"" + line.from.id + "\" to=\"" + line.to.id + "\" /></osm>";
@@ -440,6 +402,7 @@ public class Adapter {
 		}
 		public void undoModifyData() {
 			applet.lines.remove(tempKey);
+			line.unregister();
 		}
 		public void postConnectionModifyData() {
 			line.id = id;
@@ -465,7 +428,9 @@ public class Adapter {
 
 		public void preConnectionModifyData() {
 			oldPrimitive.getMainTable(applet).remove(oldPrimitive.key());
+			oldPrimitive.unregister();
 			newPrimitive.getMainTable(applet).put(newPrimitive.key(), newPrimitive);
+			newPrimitive.register();
 		}
 		public boolean connectToServer() throws IOException {
 			StringWriter s = new StringWriter();
@@ -503,14 +468,11 @@ public class Adapter {
 		}
 		public void undoModifyData() {
 			newPrimitive.getMainTable(applet).remove(newPrimitive.key());
+			newPrimitive.unregister();
 			oldPrimitive.getMainTable(applet).put(oldPrimitive.key(), oldPrimitive);
-			if (newPrimitive instanceof Way)
-				((Way)newPrimitive).removeAll();
+			oldPrimitive.register();
 		}
-		public void postConnectionModifyData() {
-			if (oldPrimitive instanceof Way)
-				((Way)oldPrimitive).removeAll();
-		}
+		public void postConnectionModifyData() {}
 	}
 
 	/**
@@ -527,6 +489,7 @@ public class Adapter {
 
 		public void preConnectionModifyData() {
 			applet.ways.put(tempKey, way);
+			way.register();
 		}
 		public boolean connectToServer() throws IOException {
 			StringWriter s = new StringWriter();
@@ -562,13 +525,51 @@ public class Adapter {
 			}
 		}
 		public void undoModifyData() {
-			applet.lines.remove(tempKey);
-			((Way)applet.lines.get(tempKey)).removeAll();
+			applet.ways.remove(tempKey);
+			way.unregister();
 		}
 		public void postConnectionModifyData() {
 			way.id = id;
-			applet.lines.remove(tempKey);
+			applet.ways.remove(tempKey);
 			applet.ways.put(way.key(), way);
 		}
+	}
+
+	/**
+	 * Remove (delete) any primitive from the server.
+	 */
+	private class Remover implements ServerCommand {
+		private OsmPrimitive osm;
+		
+		public Remover(OsmPrimitive osm) {
+			this.osm = osm;
+		}
+		
+		public void preConnectionModifyData() {
+			osm.getMainTable(applet).remove(new Long(osm.id));
+			osm.unregister();
+		}
+		public boolean connectToServer() throws IOException {
+			String url = apiUrl + osm.getTypeName() + "/" + osm.id;
+			System.out.println("trying to delete object HTTP DELETE at " + url);
+			HttpClient client = new HttpClient();
+			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+			client.getState().setCredentials(AuthScope.ANY, creds);
+			DeleteMethod del = new DeleteMethod(url);
+			client.executeMethod(del);
+			int rCode = del.getStatusCode();
+			del.releaseConnection();
+			if (rCode == 200) {
+				System.err.println("removed successfully: " + osm);
+				return true;
+			}
+			System.err.println("error removing: " + osm);
+			return false;
+		}
+		public void undoModifyData() {
+			osm.getMainTable(applet).put(new Long(osm.id), osm);
+			osm.register();
+		}
+		public void postConnectionModifyData() {}
 	}
 }

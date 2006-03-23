@@ -76,4 +76,8 @@ public class Way extends OsmPrimitive {
 		way.lines = new ArrayList(lines); 
 		return way;
 	}
+
+	public void doCopyFrom(OsmPrimitive other) {
+		lines = ((Way)other).lines;
+	}
 }

@@ -60,10 +60,13 @@ public final class WayHandler extends GuiHandler {
 	 * Updates the selected segment list from the gui thinlet list
 	 */
 	private void updateListFromSegments() {
-		((Way)osm).lines.clear();
+		Way way = ((Way)osm);
+		way.unregister();
+		way.lines.clear();
 		Object[] segs = getItems(find("segments"));
 		for (int i = 0; i < segs.length; ++i)
-			((Way)osm).lines.add(getProperty(segs[i], "line_object"));
+			way.lines.add(getProperty(segs[i], "line_object"));
+		way.register();
 		applet.redraw();
 	}
 	
@@ -86,11 +89,7 @@ public final class WayHandler extends GuiHandler {
 	}
 
 	public void ok() {
-		Object seg = find("segments");
-		Object[] segmentArr = getItems(seg);
-		((Way)osm).lines.clear();
-		for (int i = 0; i < segmentArr.length; ++i)
-			((Way)osm).lines.add(getProperty(segmentArr[i], "line_object"));
+		updateListFromSegments();
 		applet.extraHighlightedLine = null;
 		super.ok();
 	}
@@ -138,6 +137,10 @@ public final class WayHandler extends GuiHandler {
 		Object sel = getSelectedItem(list);
 		if (sel == null)
 			return;
+		Object segment = getProperty(sel, "line_object");
+		if (applet.extraHighlightedLine == segment)
+			applet.extraHighlightedLine = null;
+		applet.selectedLine.remove(segment);
 		remove(sel);
 		updateListFromSegments();
 		if (getCount(list) == 0 && mode == null)
@@ -157,7 +160,7 @@ public final class WayHandler extends GuiHandler {
 				applet.selectedLine.add(it.next());
 		applet.redraw();
 	}
-	
+
 	public void segmentSelectionChanged() {
 		Object sel = getSelectedItem(find("segments"));
 		if (sel != null)

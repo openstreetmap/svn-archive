@@ -40,11 +40,6 @@ public class Line extends OsmPrimitive {
 	public List ways = new LinkedList();
 	
 	/**
-	 * True, if the user changed the name.
-	 */
-	public boolean nameChanged = false;
-
-	/**
 	 * Create a line from node "from" to node "to" without tags and with unknown id=0. 
 	 */
 	public Line(Node from, Node to) {
@@ -162,6 +157,11 @@ public class Line extends OsmPrimitive {
 	public void unregister() {
 		from.lines.remove(this);
 		to.lines.remove(this);
+	}
+
+	public void doCopyFrom(OsmPrimitive other) {
+		from = ((Line)other).from;
+		to = ((Line)other).to;
 	}
 }
 

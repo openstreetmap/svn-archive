@@ -427,10 +427,9 @@ public class Adapter {
 		}
 
 		public void preConnectionModifyData() {
-			oldPrimitive.getMainTable(applet).remove(oldPrimitive.key());
-			oldPrimitive.unregister();
-			newPrimitive.getMainTable(applet).put(newPrimitive.key(), newPrimitive);
-			newPrimitive.register();
+			OsmPrimitive backup = (OsmPrimitive)newPrimitive.clone();
+			newPrimitive.copyFrom(oldPrimitive);
+			oldPrimitive = backup;
 		}
 		public boolean connectToServer() throws IOException {
 			StringWriter s = new StringWriter();
@@ -467,10 +466,7 @@ public class Adapter {
 			}
 		}
 		public void undoModifyData() {
-			newPrimitive.getMainTable(applet).remove(newPrimitive.key());
-			newPrimitive.unregister();
-			oldPrimitive.getMainTable(applet).put(oldPrimitive.key(), oldPrimitive);
-			oldPrimitive.register();
+			newPrimitive.copyFrom(oldPrimitive);
 		}
 		public void postConnectionModifyData() {}
 	}
@@ -546,7 +542,7 @@ public class Adapter {
 		}
 		
 		public void preConnectionModifyData() {
-			osm.getMainTable(applet).remove(new Long(osm.id));
+			osm.getMainTable(applet).remove(osm.key());
 			osm.unregister();
 		}
 		public boolean connectToServer() throws IOException {
@@ -567,9 +563,11 @@ public class Adapter {
 			return false;
 		}
 		public void undoModifyData() {
-			osm.getMainTable(applet).put(new Long(osm.id), osm);
+			osm.getMainTable(applet).put(osm.key(), osm);
 			osm.register();
 		}
-		public void postConnectionModifyData() {}
+		public void postConnectionModifyData() {
+			applet.redraw();
+		}
 	}
 }

@@ -535,6 +535,8 @@ public class OsmApplet extends PApplet {
 
 			for (Iterator e = lines.values().iterator(); e.hasNext();) {
 				Line l = (Line)e.next();
+				if (l instanceof LineOnlyId)
+					continue;
 				if (l.getName() != null) {
 					pushMatrix();
 					if (l.from.coor.x <= l.to.coor.x) {
@@ -697,6 +699,8 @@ public class OsmApplet extends PApplet {
 		// search for line segments
 		for (Iterator it = lines.values().iterator(); it.hasNext();) {
 			Line l = (Line)it.next();
+			if (l instanceof LineOnlyId)
+				continue;
 			float c = l.from.distanceSq(l.to.coor.x, l.to.coor.y);
 			float a = l.to.distanceSq(x,y);
 			float b = l.from.distanceSq(x,y);

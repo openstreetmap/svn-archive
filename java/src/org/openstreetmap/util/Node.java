@@ -89,4 +89,8 @@ public class Node extends OsmPrimitive {
 
 	public void register() {}
 	public void unregister() {}
+
+	protected void doCopyFrom(OsmPrimitive other) {
+		coor = ((Node)other).coor;
+	}
 }

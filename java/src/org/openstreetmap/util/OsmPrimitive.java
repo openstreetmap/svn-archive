@@ -58,4 +58,47 @@ abstract public class OsmPrimitive implements Cloneable {
 	 * Unregister itself from dependend objects.
 	 */
 	abstract public void unregister();
+
+	/**
+	 * Equal, if the id (and class) is equal. If both ids are 0, use the super classes
+	 * equal instead.
+	 * 
+	 * An primitive is equal to its incomplete counter part.
+	 */
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass() || id == 0 || ((OsmPrimitive)obj).id == 0)
+			return super.equals(obj);
+		return id == ((OsmPrimitive)obj).id;
+	}
+
+	/**
+	 * Return the id as hashcode or supers hashcode if 0.
+	 * 
+	 * An primitive has the same hashcode as its incomplete counter part.
+	 */
+	public int hashCode() {
+		return id == 0 ? super.hashCode() : (int)id;
+	}
+
+	/**
+	 * Copy the content of the given primitive over ourself. All back references are 
+	 * updated correctly.
+	 * 
+	 * @param other This primitive will not be touched, but its data is copied into this
+	 * 		primitive.
+	 */
+	final public void copyFrom(OsmPrimitive other) {
+		unregister();
+		id = other.id;
+		tags = other.tags;
+		doCopyFrom(other);
+		register();
+	}
+
+	/**
+	 * Implementation of subclasses must copy the references of the other object to itself.
+	 * They may assume that the class of the parameter match their own class.
+	 * @return 
+	 */
+	abstract protected void doCopyFrom(OsmPrimitive other);
 }

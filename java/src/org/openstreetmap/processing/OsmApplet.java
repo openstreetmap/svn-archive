@@ -410,6 +410,8 @@ public class OsmApplet extends PApplet {
 			stroke(0);
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
+				if (line instanceof LineOnlyId)
+					continue;
 				if (line.id == 0)
 					stroke(0, 80);
 				else
@@ -422,6 +424,8 @@ public class OsmApplet extends PApplet {
 			stroke(255);
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
+				if (line instanceof LineOnlyId)
+					continue;
 				if (line.ways.isEmpty()) {
 					if (line.id == 0)
 						stroke(200, 255, 200, 80);
@@ -449,6 +453,8 @@ public class OsmApplet extends PApplet {
 			boolean gotOne = false;
 			for (Iterator it = lines.values().iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
+				if (line instanceof LineOnlyId)
+					continue;
 				if (modeManager.currentMode == nameMode && !gotOne) {
 					// highlight first line under mouse
 					if (line.mouseOver(mouseX, mouseY, strokeWeight)
@@ -478,6 +484,8 @@ public class OsmApplet extends PApplet {
 			strokeWeight(strokeWeight);
 			for (Iterator it = selectedLine.iterator(); it.hasNext();) {
 				Line l = (Line)it.next();
+				if (l instanceof LineOnlyId)
+					continue;
 				if (!l.equals(extraHighlightedLine))
 					line(l.from.coor.x, l.from.coor.y, l.to.coor.x, l.to.coor.y);
 			}

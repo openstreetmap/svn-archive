@@ -45,7 +45,7 @@ if linesegments # get nodes we dont have yet
     nodes_missing << l.node_b_id unless nodes[l.node_b_id]
   end
 
-  nodes.merge!(dao.get_nodes_by_ids(nodes_missing, to))
+  nodes.merge!(dao.get_nodes_by_ids(nodes_missing, to)) unless nodes_missing.empty?
 end
 
 if nodes

@@ -62,10 +62,7 @@ cp html/images/tab_bottom.gif $ROOT/css/
 
 # applet
 cd java
-ant clean
-ant dist
-
-cp dist/OSMApplet.jar $ROOT/
+ant clean && ant clean && cp dist/*.jar $ROOT/
 
 cd ..
 

@@ -404,11 +404,15 @@ public class OsmApplet extends PApplet {
 				}
 			}
 			noFill();
-			
-			// draw the small black border for every line segment
+
+      // Cache as we want to iterate even though another thread
+      // might be editing it.
+      ArrayList allLines = new ArrayList(lines.values());
+
+      // draw the small black border for every line segment
 			strokeWeight(strokeWeight + 2.0f);
 			stroke(0);
-			for (Iterator it = lines.values().iterator(); it.hasNext();) {
+			for (Iterator it = allLines.iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
 				if (line instanceof LineOnlyId)
 					continue;
@@ -422,7 +426,7 @@ public class OsmApplet extends PApplet {
 			// draw pending lines (lines that do not belong to a way)
 			strokeWeight(strokeWeight);
 			stroke(255);
-			for (Iterator it = lines.values().iterator(); it.hasNext();) {
+			for (Iterator it = allLines.iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
 				if (line instanceof LineOnlyId)
 					continue;
@@ -451,7 +455,7 @@ public class OsmApplet extends PApplet {
 			}
 			
 			boolean gotOne = false;
-			for (Iterator it = lines.values().iterator(); it.hasNext();) {
+			for (Iterator it = allLines.iterator(); it.hasNext();) {
 				Line line = (Line)it.next();
 				if (line instanceof LineOnlyId)
 					continue;
@@ -533,7 +537,7 @@ public class OsmApplet extends PApplet {
 			textSize(strokeWeight + 4);
 			textAlign(CENTER);
 
-			for (Iterator e = lines.values().iterator(); e.hasNext();) {
+			for (Iterator e = allLines.iterator(); e.hasNext();) {
 				Line l = (Line)e.next();
 				if (l instanceof LineOnlyId)
 					continue;

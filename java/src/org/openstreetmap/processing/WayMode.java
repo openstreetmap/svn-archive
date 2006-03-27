@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.openstreetmap.gui.GuiLauncher;
 import org.openstreetmap.gui.WayHandler;
 import org.openstreetmap.util.Line;
+import org.openstreetmap.util.LineOnlyId;
 import org.openstreetmap.util.Node;
 import org.openstreetmap.util.Way;
 
@@ -25,11 +26,14 @@ public class WayMode extends EditMode {
 		this.applet = applet;
 	}
 
+	//TODO: There should be already a near* function in OsmApplet. Use this.
 	public void mouseReleased() {
 		Line nearLine = null;
 		float nearDist = Float.MAX_VALUE;
 		for (Iterator it = applet.lines.values().iterator(); it.hasNext();) {
 			Line line = (Line)it.next();
+			if (line instanceof LineOnlyId)
+				continue;
 			Node n = new Node(applet.mouseX, applet.mouseY, applet.tiles);
 			float dist = line.distance(n);
 			if (dist < nearDist) {

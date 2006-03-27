@@ -34,7 +34,7 @@ public class Adapter {
 	 * The server command manager to deploy server commands.
 	 */
 	public final CommandManager commandManager = new CommandManager();
-	
+
 	/**
 	 * Back reference to the main applet.
 	 */
@@ -71,7 +71,7 @@ public class Adapter {
 		System.out.println("trying url: " + url);
 		// create a singular HttpClient object
 		HttpClient client = new HttpClient();
-		
+
 		// establish a connection within 5 seconds
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
 		client.getState().setCredentials(AuthScope.ANY, creds);

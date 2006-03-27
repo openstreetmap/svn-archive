@@ -140,7 +140,7 @@ public final class WayHandler extends GuiHandler {
 		Object segment = getProperty(sel, "line_object");
 		if (applet.extraHighlightedLine == segment)
 			applet.extraHighlightedLine = null;
-		applet.selectedLine.remove(segment);
+		applet.selectedLine.remove(((Line)segment).key());
 		remove(sel);
 		updateListFromSegments();
 		if (getCount(list) == 0 && mode == null)
@@ -157,7 +157,7 @@ public final class WayHandler extends GuiHandler {
 			mode.changeSegmentMode = sel;
 		if (sel)
 			for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();)
-				applet.selectedLine.add(it.next());
+				applet.selectedLine.add(((Line)it.next()).key());
 		applet.redraw();
 	}
 

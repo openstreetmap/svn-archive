@@ -1,5 +1,8 @@
 /*
- * Copyright (C) 2005 Tom Carden (tom@somethingmodern.com), Steve Coast (steve@asklater.com)
+ * Copyright (C) 2005 
+ * Tom Carden (tom@somethingmodern.com)
+ * Steve Coast (steve@asklater.com)
+ * Immanuel Scholz (immanuel.scholz@gmx.de)
  * 
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -177,8 +180,8 @@ public class OsmApplet extends PApplet {
 	Line tempLine = new Line(null, null);
 
 	/**
-	 * Current selected lines, for creating streets
-	 * Type: Line
+	 * Ids of current selected lines, for creating streets
+	 * Type: String (key of a line)
 	 */
 	public List selectedLine = new ArrayList();
 	/**
@@ -487,8 +490,8 @@ public class OsmApplet extends PApplet {
 			stroke(255, 0, 0, 80);
 			strokeWeight(strokeWeight);
 			for (Iterator it = selectedLine.iterator(); it.hasNext();) {
-				Line l = (Line)it.next();
-				if (l instanceof LineOnlyId)
+				Line l = (Line)lines.get(it.next());
+				if (l == null || l instanceof LineOnlyId)
 					continue;
 				if (!l.equals(extraHighlightedLine))
 					line(l.from.coor.x, l.from.coor.y, l.to.coor.x, l.to.coor.y);
@@ -537,8 +540,8 @@ public class OsmApplet extends PApplet {
 			textSize(strokeWeight + 4);
 			textAlign(CENTER);
 
-			for (Iterator e = allLines.iterator(); e.hasNext();) {
-				Line l = (Line)e.next();
+			for (Iterator it = allLines.iterator(); it.hasNext();) {
+				Line l = (Line)it.next();
 				if (l instanceof LineOnlyId)
 					continue;
 				if (l.getName() != null) {

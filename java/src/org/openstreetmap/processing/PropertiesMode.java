@@ -55,14 +55,14 @@ public class PropertiesMode extends EditMode {
 		if (changeSegmentMode) {
 			if (!(released instanceof Line))
 				return;
-			if (applet.selectedLine.contains(released)) {
-				applet.selectedLine.remove(released);
+			if (applet.selectedLine.contains(released.key())) {
+				applet.selectedLine.remove(released.key());
 				if (primitive instanceof Way) {
 					((Way)primitive).lines.remove(released);
 					((Line)released).ways.remove(primitive);
 				}
 			} else {
-				applet.selectedLine.add(released);
+				applet.selectedLine.add(released.key());
 				if (primitive instanceof Way) {
 					((Way)primitive).lines.add(released);
 					((Line)released).ways.add(primitive);

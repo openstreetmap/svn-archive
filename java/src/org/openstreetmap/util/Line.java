@@ -149,6 +149,13 @@ public class Line extends OsmPrimitive {
 		return "line_" + id;
 	}
 
+	/** 
+	 * @return the id out of a key string.
+	 */
+	public static long getIdFromKey(String lineKey) {
+		return Long.parseLong(lineKey.substring(lineKey.indexOf('_')+1));
+	}
+
 	public void register() {
 		from.lines.add(this);
 		to.lines.add(this);

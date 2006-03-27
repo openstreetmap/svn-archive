@@ -42,20 +42,26 @@ public class WayMode extends EditMode {
 			}
 		}
 		if (nearDist < 20) {
-			if (applet.selectedLine.contains(nearLine)) {
-				applet.selectedLine.remove(nearLine);
-				if (applet.selectedLine.isEmpty() && dlg != null) {
+			if (applet.selectedLine.contains(nearLine.key())) {
+				applet.selectedLine.remove(nearLine.key());
+				if (applet.selectedLine.isEmpty() && dlg != null)
 					dlg.setVisible(false);
-				}
 			} else {
-				applet.selectedLine.add(nearLine);
+				applet.selectedLine.add(nearLine.key());
 				if (applet.selectedLine.size() == 1)
 					openProperties();
 			}
 			if (dlg != null) {
 				Way way = (Way)dlg.handler.osm;
 				way.lines.clear();
-				way.lines.addAll(applet.selectedLine);
+				for (Iterator it = applet.selectedLine.iterator(); it.hasNext();) {
+					String lineKey = (String)it.next();
+					Line line = (Line)applet.lines.get(lineKey);
+					if (line != null)
+						way.lines.add(line);
+					else
+						way.lines.add(new LineOnlyId(Line.getIdFromKey(lineKey)));
+				}
 				((WayHandler)dlg.handler).updateSegmentsFromList();
 			}
 			applet.redraw();

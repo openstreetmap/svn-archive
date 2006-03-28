@@ -144,6 +144,8 @@ public:
 	void nfconv() { track->nfconv(); }
 	bool uploadWaypointToOSM(int index, const char* username,
 										const char* password);
+	void toOSM(ostream& outfile)
+		{ track->toOSM(outfile); waypoints->toOSM(outfile); }
 
 };
 

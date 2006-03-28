@@ -28,6 +28,8 @@
 #include "LandsatManager2.h"
 #include "SRTMGeneral.h"
 #include "HTTPHandler.h"
+#include "NodeHandler.h"
+#include "Way.h"
 #include <map>
 #include <vector>
 
@@ -49,7 +51,7 @@ using std::vector;
 // Mouse action modes
 // N_ACTIONS should always be the last
 enum { ACTION_NODE, ACTION_MOVE_NODE, ACTION_DELETE_NODE,
-		ACTION_SEL_SEG, ACTION_NEW_SEG, N_ACTIONS };
+		ACTION_SEL_SEG, ACTION_NEW_SEG, ACTION_BREAK_SEG,N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -123,8 +125,9 @@ private:
 
 	// currently selected trackpoints
 
-	// selected segment
-	Segment *selSeg;
+	// selected segment(s)
+	vector<Segment*> selSeg;
+	int segCount;
 
 	// current mouse action mode
 	int actionMode;
@@ -136,6 +139,7 @@ private:
 	bool mouseDown;
 
 	QToolButton* modeButtons[N_ACTIONS]; 
+	QToolButton *wayButton;
 
 	QComboBox * modes;
 
@@ -162,15 +166,29 @@ private:
 
 
 	QString username, password;
-	QString hackyUsername, hackyPassword;
 	bool liveUpdate;
 
 	HTTPHandler osmhttp;
+	NodeHandler nodeHandler;
 
 	Node *newUploadedNode, *movingNode;
 	vector<Segment*> movingNodeSegs;
 	Segment *newUploadedSegment;
+	Way *newUploadedWay;
 	QPixmap savedPixmap;
+
+	bool makingWay;
+
+	QString serialPort;
+
+	QPixmap tpPixmap;
+
+	void clearSegments()
+	{
+		selSeg.clear();
+		selSeg.push_back(NULL);
+		segCount = 0;
+	}
 
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
@@ -204,14 +222,19 @@ public:
 	void drawSegment(QPainter&,Segment*);
 	void drawNodes(QPainter&);
 	void drawNode(QPainter&,Node*);
+	void drawTrackPoints(QPainter &p);
+	void drawTrackPoint(QPainter &p,TrackPoint *tp);
 	void drawMoving(QPainter&);
 	void editNode(int,int,int);
 	void nameTrackOn();
+	Node * doAddNewNode(double lat,double lon,const QString &name,
+									const QString& type);
 
 public slots:
 	void open();
 	void save();
 	void saveAs();
+	void saveGPX();
 	void readGPS();
 	void quit();
 	void toggleLandsat();
@@ -236,15 +259,23 @@ public slots:
 	void uploadOSM();
 	void logoutFromLiveUpdate();
 	void removeTrackPoints();
-	void newNodeAdded(const QByteArray& array);
-	void newSegmentAdded(const QByteArray& array);
-	void loadComponents(const QByteArray&);
+	void newSegmentAdded(const QByteArray& array,void*);
+	void newWayAdded(const QByteArray& array,void*);
+	void loadComponents(const QByteArray&,void*);
 	void deleteSelectedSeg();
 	void handleHttpError(int,const QString&);
 	void handleNetCommError(const QString& error);
+	void toggleWays();
+	void uploadWay();
+	void deleteWay();
+	void addSplitSegs(void*);
+	void doaddseg(void*);
+	void changeSerialPort();
+	Components2 * openGPX();
+	void uploadNewWaypoints();
 
-	void hackyNewNodesUploaded(const QByteArray&);
-	void hackyNewSegmentsUploaded(const QByteArray&);
+signals:
+	void newNodeAddedSig();
 };
 
 }

@@ -44,7 +44,7 @@ class Node
 private:
 	double lat, lon;
 	int osm_id;
-	QString name, type;
+	QString name, type, timestamp;
 
 public:
 	Node()
@@ -52,6 +52,7 @@ public:
 		lat=lon=0; 
 		name=type=""; 
 		osm_id = 0; 
+		timestamp="";
 	}
 
 	Node(double lt, double ln)
@@ -60,6 +61,7 @@ public:
 		lon=ln; 
 		osm_id=0; 
 		name=type=""; 
+		timestamp="";
 	}
 	Node(int i,double lt, double ln)
 	{
@@ -67,6 +69,7 @@ public:
 		lon=ln; 
 		osm_id=i; 
 		name=type=""; 
+		timestamp="";
 	}
 
 	Node(int i,double lt, double ln,const QString& n, const QString& t)
@@ -76,6 +79,7 @@ public:
 		name=n; 
 		type=t; 
 		osm_id=i; 
+		timestamp="";
 	}
 
 	Node(double lt, double ln,const QString& n, const QString& t)
@@ -85,8 +89,18 @@ public:
 		name=n; 
 		type=t; 
 		osm_id=0; 
+		timestamp="";
 	}
 
+	Node(int i,double lt, double ln,const QString& n, const QString& t,const QString& ts)
+	{
+		lat=lt; 
+		lon=ln; 
+		name=n; 
+		type=t; 
+		osm_id=i; 
+		timestamp=ts;
+	}
 	int toOSM(QTextStream&,bool allUid=false);
 
 	bool operator==(const Node& tp)
@@ -130,11 +144,33 @@ public:
 
 	double getLat() { return lat; }
 	double getLon() { return lon; }
+	QString getTimestamp() { return timestamp; }
 
 	void setCoords(double lat,double lon)
 		{ this->lat=lat; this->lon=lon; }
 	void trackpointToNode();
 	QByteArray toOSM();
+};
+
+class TrackPoint
+{
+private:
+	double lat, lon; 
+	QString timestamp;
+
+public:
+	TrackPoint() { lat=lon=0;
+				timestamp=""; }
+	TrackPoint(double lt, double lg, const QString &ts)
+	{
+		lat=lt;
+		lon=lg;
+		timestamp=ts;
+	}
+
+	double getLat() { return lat; }
+	double getLon() { return lon; }
+	QString getTimestamp() { return timestamp; }
 };
 
 }

@@ -21,8 +21,10 @@
 
 #include "Node.h"
 #include "Segment.h"
+#include "Way.h"
 #include <qtextstream.h>
 #include <vector>
+#include <utility>
 using std::vector;
 
 namespace OpenStreetMap 
@@ -34,8 +36,12 @@ class Components2
 private:
 	vector<Node*> nodes;
 	vector<Segment*> segments;
+	vector<Way*> ways;
+	vector<TrackPoint*> trackpoints;
 	vector<Node*>::iterator ni; 
 	vector<Segment*>::iterator si;
+	vector<Way*>::iterator wi;
+	vector<TrackPoint*>::iterator ti;
 	int nextNodeId, nextSegId;
 
 	int minNodeID();
@@ -46,13 +52,13 @@ public:
 	void destroy();
 
 	Node *addNewNode(double lat, double lon, const QString& name, 
-					const QString& type)
+					const QString& type, const QString& timestamp="")
 	{
-		return addOSMNode(nextNodeId--,lat,lon,name,type);
+		return addOSMNode(nextNodeId--,lat,lon,name,type,timestamp);
 	}
 
 	Node *addOSMNode(int id,double lat, double lon, const QString& name, 
-					const QString& type);
+					const QString& type,const QString& timestamp="");
 
 	void addNode (Node *n)
 	{
@@ -84,6 +90,16 @@ public:
 		si=segments.begin();
 	}
 
+	void rewindWays()
+	{
+		wi=ways.begin();
+	}
+
+	void rewindTrackPoints()
+	{
+		ti=trackpoints.begin();
+	}
+
 	Node *nextNode()
 	{
 		Node *n  = *ni;
@@ -98,6 +114,20 @@ public:
 		return s;
 	}
 
+	Way *nextWay()
+	{
+		Way *w = *wi;
+		wi++;
+		return w;
+	}
+
+	TrackPoint *nextTrackPoint()
+	{
+		TrackPoint *t = *ti;
+		ti++;
+		return t;
+	}
+
 	bool endNode()
 	{
 		return ni==nodes.end();
@@ -106,6 +136,16 @@ public:
 	bool endSegment()
 	{
 		return si==segments.end();
+	}
+
+	bool endWay()
+	{
+		return wi==ways.end();
+	}
+
+	bool endTrackPoint()
+	{
+		return ti==trackpoints.end();
 	}
 
 	bool merge(Components2 *comp);
@@ -117,10 +157,26 @@ public:
 	bool deleteSegment(Segment*);
 	EarthPoint getAveragePoint(); 
 
-	QByteArray getNewNodes();
-	QByteArray getNewSegments();
+	QByteArray getNewNodesXML();
+	QByteArray getNewSegmentsXML();
+	vector<Node*> getNewNodes();
+	vector<Segment*> getNewSegments();
 	void hackySetNodeIDs(QStringList&);
 	void hackySetSegIDs(const QString&);
+
+	void addWay (Way *w)
+	{
+		cerr<<"*****ADDING WAY TO COMPONENTS*****"<<endl;
+		ways.push_back(w);
+		cerr<<ways.size()<<endl;
+	}
+
+	std::pair<Segment*,Segment*>* breakSegment(Segment *s, Node *newNode);
+	void toGPX(QTextStream& stream);
+	vector<Node*> getWaypoints();
+
+	TrackPoint *addTrackPoint(double lat, double lon,
+				const QString& timestamp);
 };
 
 

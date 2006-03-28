@@ -37,6 +37,9 @@ void HTTPHandler::sendRequest(const QString& requestType,
 				<< " host: " << host
 				<< " requestType: " <<requestType <<
 				"URL :" << url << endl;
+		QString s = b;
+		if(!s.isNull())
+		cerr<<"SENDING: "<< s<<endl;
 		method = requestType;
 		QHttpRequestHeader header(requestType,url);
 		header.setValue("Host",host);
@@ -52,6 +55,11 @@ void HTTPHandler::sendRequest(const QString& requestType,
 		}
 
 		http->setHost(host);
+
+		// 280306 prevent the error being received about 20 million times, one
+		// for each HTTP response chunk, presumably
+		doEmitErrorOccurred = true;
+
 		if(b.size())
 			curReqId = http->request(header,b);
 		else
@@ -80,19 +88,23 @@ void HTTPHandler::sendRequest(const QString& requestType,
 
 void HTTPHandler::responseHeaderReceived(const QHttpResponseHeader& header)
 {
-	cerr<<"Status code:" << header.statusCode() << endl;
-	cerr<<"Reason phrase:" << header.reasonPhrase() << endl;
+//	cerr<<"Status code:" << header.statusCode() << endl;
+//	cerr<<"Reason phrase:" << header.reasonPhrase() << endl;
 	httpError = header.statusCode()!=200;	
-	if(httpError)
+	if(httpError && doEmitErrorOccurred)
 	{
 		emit httpErrorOccurred(header.statusCode(), header.reasonPhrase());
+
+		// 280306 prevents emitting the error about 20 times. This must be 
+		// something to do with chunked http responses, I guess.
+		doEmitErrorOccurred = false;
 	}
 }
 
 void HTTPHandler::responseReceived(int id, bool error)
 {
 	bool found=false;
-	cerr<<"responseReceived(): id=" << id << endl;
+//	cerr<<"responseReceived(): id=" << id << endl;
 	for(vector<int>::iterator i=curReqIDs.begin(); i!=curReqIDs.end(); i++)
 	{
 		if(id==*i)
@@ -112,11 +124,44 @@ void HTTPHandler::responseReceived(int id, bool error)
 		{
 			cerr<<"response: id=" << id << " error=" << error << endl;
 			cerr<<"RESPONSE RECEIVED!" << endl;
-			emit responseReceived(http->readAll());
+			if(requests.size())
+			{
+				cerr<<"popping the front request"<<endl;
+
+				if(requests[0].callback)
+					emit responseReceived(http->readAll(),requests[0].recObj);
+				requests.pop_front();
+				cerr << "length of requests now=" << requests.size() << endl;
+				if(requests.size())
+				{
+					if(requests[0].receiver && requests[0].callback)
+					{
+						QObject::connect(this,
+						SIGNAL(responseReceived(const QByteArray&,void*)),
+							requests[0].receiver,requests[0].callback);
+					}
+
+					cerr<<"responseReceived(): sending the next request:" <<
+								 requests[0].requestType << " " 
+								 << requests[0].apicall << endl;
+
+					cerr<<"length of requests now="<<requests.size()<<endl;
+					sendRequest(requests[0].requestType,
+							requests[0].apicall,
+							requests[0].data);
+				}
+			}
+			else
+			{
+				emit responseReceived(http->readAll(),NULL);
+			}
 		}
 		else
 		{
 			cerr<<"Error encountered" << endl;
+
+			// Clear all pending requests - the error might affect them
+			requests.clear();
 		}
 		//curReqId = 0;
 	}

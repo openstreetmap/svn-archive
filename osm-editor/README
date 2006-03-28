@@ -1,20 +1,26 @@
 OpenStreetMap Editor
 ====================
 
+Current version: osmeditor2. Build with "make osmeditor2".
+
+IMPORTANT
+=========
+
+If you get a linker error 'cannot find -lqt' change the following line:
+
+QTLIB = -lqt
+
+to
+
+QTLIB = -lqt-mt
+
+===============================================================================
 Notes:
-- Requires Qt3 and the modified Jeeps library to compile. Jeeps can be 
-found in the jeeps-0.1.4-nick subdirectory.
-- There are three real GPX files to play with. Look at the lats and longs
-therein and start osmeditor with the appropriate options.
-- No instructions as yet, only the source...
+- Requires Qt3 and cURL to compile. 
+- There are some real GPX files to play with. Look at the lats and longs
+therein and start osmeditor2 with the appropriate options.
+- Instructions on the OSM wiki. 
 
-Definite problems at time of initial commit to Subversion:
-
-- will only run in the source directory as it requires a subdirectory "images" 
-containing the icons.
-- GPX timestamps are numeric rather than the standard XML timestamp format. SORTED.
-- probably some others :-)
-- crashes after GPS read. SORTED. 
 
 Loading SRTM height data
 ------------------------
@@ -34,7 +40,7 @@ Building
 
 To build on Debian/sarge, one need to install the following dependencies:
 
-  libqt3-dev libwww-ssl-dev libxmlrpc-c3-dev libcurl3-dev
+  libqt3-dev libcurl3-dev
 
 Nick Whitelegg
-05/04/05
+26/03/06

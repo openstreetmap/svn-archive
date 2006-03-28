@@ -83,6 +83,9 @@ public:
 	EarthPoint getAveragePoint() throw (QString);
 	void newUploadToOSM(char* username,char* password);
 	void nfconv();
+	void toOSM(ostream& outfile)
+		{for(int count=0; count<segs.size(); count++)
+			segs[count]->toOSM(outfile); }
 };
 
 

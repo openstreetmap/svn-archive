@@ -31,6 +31,7 @@ private:
 	Node *nodes[2];
 	QString type, name;
 	int osm_id;
+	bool wayStatus;
 
 public:
 	Segment()
@@ -38,6 +39,7 @@ public:
 		nodes[0] = nodes[1] = NULL;
 		osm_id = 0;
 		name = type = "";
+		wayStatus = false;
 	}
 
 	Segment(Node *n1, Node *n2)
@@ -46,6 +48,7 @@ public:
 		nodes[1] = n2;
 		osm_id = 0;
 		name = type = "";
+		wayStatus = false;
 	}
 
 	Segment(int id,Node *n1, Node *n2)
@@ -54,6 +57,7 @@ public:
 		nodes[1] = n2;
 		osm_id = id;
 		name = type = "";
+		wayStatus = false;
 	}
 
 	Segment(int id,Node *n1, Node *n2, const QString& n,
@@ -64,6 +68,7 @@ public:
 		osm_id = id;
 		name = n;
 		type = t;
+		wayStatus = false;
 	}
 	Segment(Node *n1, Node *n2, const QString& n,
 					const QString& t)
@@ -73,7 +78,9 @@ public:
 		osm_id = 0;
 		name = n;
 		type = t;
+		wayStatus = false;
 	}
+
 	void setName(const QString& n) 
 	{
 		name = n;
@@ -125,6 +132,16 @@ public:
 	bool hasNodes()
 	{
 		return nodes[0] && nodes[1];
+	}
+
+	void setWayStatus(bool ws)
+	{
+		wayStatus = ws;
+	}
+
+	bool belongsToWay()
+	{
+		return wayStatus;
 	}
 };
 

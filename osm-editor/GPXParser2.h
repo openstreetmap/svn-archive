@@ -1,8 +1,8 @@
-#ifndef OSMPARSER_H
-#define OSMPARSER_H
+#ifndef GPXPARSER_H
+#define GPXPARSER_H
 
 /*
-    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
+    Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org 
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -20,45 +20,54 @@
 
  */
 
+// 19/03/05 convert to using the Qt XML parser. This might be seen to have
+// reusability issues but:
+//
+// a) Try as I might I could not get libxml++ to compile on Windows/MinGW.
+// Gave all sorts of weird linker errors that even posting to the libxml++
+// mailing list could not solve....
+//
+// b) The new Qt4 is modularising its components, so it will be possible to
+// link the XML bit only in a non GUI application
+//
+// c) Qt4 will be GPL for Windows, hence no issues on that platform.
+//
+// GPX parser
+// Returns a list of FreemapComponents, ready for Freemap software.
+// Licence LGPL
+
 #include <qxml.h>
 #include "Components2.h"
-#include "RouteMetaDataHandler.h"
-
-#include <map>
 
 namespace OpenStreetMap 
 {
 
-class OSMParser2 : public QXmlDefaultHandler
+class GPXParser2 : public QXmlDefaultHandler
 {
 private:
-	bool inDoc, inNode, inSegment, inWay;
+	bool inDoc, inWpt, inTrk, inName, inTrkpt, 
+		inType,  inTime;
 	Components2* components;
-	std::map<int,Node*> readNodes;
-	std::map<int,Segment*> readSegments;
-	QString curName, curType;
-	int curID;
-	RouteMetaData metaData;
-	Way *curWay;
+	QString curName, curType; 
+	double curLat, curLong;
+	QString curTimestamp; // 10/04/05 timestamp now string
+
 
 public:
 	bool startDocument();
 	bool endDocument();
 	bool startElement(const QString& , const QString&, const QString&,	
 									const QXmlAttributes&);
-	bool endElement(const QString&, const QString&,
-							const QString& element);
+	bool endElement(const QString&,const QString&, const QString&);
+	bool characters(const QString& characters);
+
 
 	
-	OSMParser2();
+	GPXParser2();
 	Components2* getComponents() const { return components; }
 
 	// it's the recipient of the components' responsibility to delete them!
-	~OSMParser2() {} 
-	static void readSegTags(const QString &key, const QString& value,
-							RouteMetaData&);
-	static void readNodeTags(const QString& key, const QString& value,
-									QString& name,QString &type);
+	~GPXParser2() {} 
 };
 
 }

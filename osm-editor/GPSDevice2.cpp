@@ -99,8 +99,8 @@ int GPSDevice2::garminGetTrack(const char* port,Components2 *c)
 		c->addNewNode( 
 						trackpts[count]->lat, 
 						trackpts[count]->lon,
-				  		"",
-						"trackpoint"
+						"", "trackpoint",
+						gpx_timestamp
 					 );
 
 		GPS_Track_Del(&trackpts[count]);

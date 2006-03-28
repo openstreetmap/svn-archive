@@ -14,10 +14,11 @@ OBJ = osmeditor.o MainWindow.o GPSDevice.o LandsatManager.o \
 	  RemoveExcessDialogue.o OSMParser.o
 
 OBJ2 = osmeditor2.o MainWindow2.o GPSDevice2.o LandsatManager2.o \
-	  Components2.o Node.o Segment.o WaypointDialogue.o \
+	  Components2.o Node.o Segment.o WaypointDialogue.o WayDialogue.o \
 	  RouteMetaDataHandler.o LoginDialogue.o moc_MainWindow2.o curlstuff.o \
-	  SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o \
-	  OSMParser2.o qmdcodec.o HTTPHandler.o moc_HTTPHandler.o
+	  SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o GPXParser2.o \
+	  OSMParser2.o qmdcodec.o HTTPHandler.o moc_HTTPHandler.o Way.o \
+	  NodeHandler.o moc_NodeHandler.o
 JEEPSSRC = jeeps-gpsbabel-1.2.7
 LIBS = -ljeeps 
 LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
@@ -29,7 +30,7 @@ USB='USBOPT=-DNO_USB'
 
 # Configure Qt paths
 QTINCPATH = /usr/include/qt3
-QTLIB = -lqt
+QTLIB = -lqt 
 QTLIBPATH = -L/usr/lib
 MOC=moc
 
@@ -87,16 +88,18 @@ MainWindow.o : WaypointDialogue.h GPXParser.h Components.h Track.h Polygon.h\
 MainWindow2.o : WaypointDialogue.h Components2.h \
 	functions.h MainWindow2.h RouteMetaDataHandler.h LoginDialogue.h\
 	Map.h LandsatManager.h Node.h Segment.h SRTMConGen.h SRTMDataGrid.h\
-	SRTMGeneral.h OSMParser2.h GPSDevice2.h
+	SRTMGeneral.h OSMParser2.h GPSDevice2.h Way.h WayDialogue.h NodeHandler.h
 Components.o : Components.h Track.h Waypoint.h Polygon.h functions.h
 Components2.o : Components2.h Node.h Segment.h functions.h
 Track.o : Track.h TrackSeg.h
 Waypoint.o : Waypoint.h
 Polygon.o : Polygon.h functions.h
 WaypointDialogue.o : WaypointDialogue.h
+WayDialogue.o : WayDialogue.h
 GPXParser.o: GPXParser.h Components.h 
 OSMParser.o: OSMParser.h Components.h 
 OSMParser2.o: OSMParser2.h Components2.h 
+GPXParser2.o: GPXParser2.h Components2.h 
 GPSDevice.o: Track.h Waypoint.h 
 GPSDevice2.o: Components2.h 
 RouteMetaDataHandler.o: RouteMetaDataHandler.h
@@ -114,5 +117,7 @@ llgr.o : llgr.h EarthPoint.h
 curlstuff.o : curlstuff.h
 Node.o : Node.h
 Segment.o : Segment.h
+Way.o : Way.h
 qmdcodec.o: qmdcodec.h
 HTTPHandler.o : HTTPHandler.h
+NodeHandler.o : NodeHandler.h

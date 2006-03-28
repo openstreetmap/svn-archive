@@ -143,6 +143,7 @@ MainWindow::MainWindow(double lat,double lon, double s,double w,double h) :
 	fileMenu->insertItem("&Open",this,SLOT(open()),CTRL+Key_O);
 	fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
 	fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
+	fileMenu->insertItem("Save OSM",this,SLOT(saveOSM()));
 	fileMenu->insertItem("&Read GPS",this,SLOT(readGPS()),CTRL+Key_R);
 	fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
 	fileMenu->insertItem("Grab OSM from &Net",this,SLOT(grabOSMFromNet()),
@@ -553,6 +554,13 @@ void MainWindow::saveFile(const QString& filename)
 {
 	components->toGPX(filename);
 	curFilename = filename;
+}
+
+void MainWindow::saveOSM()
+{
+	QString filename = QFileDialog::getSaveFileName("","*.osm",this);
+	ofstream outfile(filename.ascii());
+	components->toOSM(outfile);
 }
 
 void MainWindow::quit()

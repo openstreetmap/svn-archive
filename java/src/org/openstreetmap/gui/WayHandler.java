@@ -138,7 +138,7 @@ public final class WayHandler extends GuiHandler {
 		if (sel == null)
 			return;
 		Object segment = getProperty(sel, "line_object");
-		if (applet.extraHighlightedLine == segment)
+		if (applet.extraHighlightedLine == ((Line)segment).key())
 			applet.extraHighlightedLine = null;
 		applet.selectedLine.remove(((Line)segment).key());
 		remove(sel);
@@ -164,7 +164,7 @@ public final class WayHandler extends GuiHandler {
 	public void segmentSelectionChanged() {
 		Object sel = getSelectedItem(find("segments"));
 		if (sel != null)
-			applet.extraHighlightedLine = (Line)getProperty(sel, "line_object");
+			applet.extraHighlightedLine = ((Line)getProperty(sel, "line_object")).key();
 		else
 			applet.extraHighlightedLine = null;
 		applet.redraw();

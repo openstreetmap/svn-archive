@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="lib/core.jar"/>
 	<classpathentry kind="lib" path="lib/MinML2.jar"/>
-	<classpathentry kind="lib" path="lib/thinlet.jar"/>
 	<classpathentry kind="lib" path="lib/plugin.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/thinlet"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

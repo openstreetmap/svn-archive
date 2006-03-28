@@ -5,8 +5,10 @@ package org.openstreetmap.processing;
 
 import java.util.Iterator;
 
+import org.openstreetmap.gui.MsgBox;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
 
 /**
  * Edit mode to delete some objects.
@@ -22,36 +24,27 @@ public class DeleteMode extends EditMode {
 	}
 
 	public void mouseReleased() {
-		boolean gotOne = false;
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
 			if (applet.mouseOverPoint(p.coor) && p.id != 0) {
-				boolean del = true;
-				// TODO prompt for delete
-				if (del) {
-					OsmApplet.println("deleting " + p);
-					applet.osm.deleteNode(p);
-				} else {
-					OsmApplet.println("not deleting " + p);
-				}
-				gotOne = true;
-				break;
+				int answer = MsgBox.show("Really delete the node "+p.getName()+"?", new String[]{"OK", "Cancel"});
+				if (answer == 1)
+					return;
+				OsmApplet.println("deleting " + p);
+				applet.osm.deleteNode(p);
+				return;
 			}
 		}
-		if (!gotOne) {
-			for (Iterator ll = applet.lines.values().iterator(); ll.hasNext();) {
-				Line l = (Line)ll.next();
-				if (l.mouseOver(applet.mouseX, applet.mouseY, applet.strokeWeight) && l.id != 0) {
-					boolean del = true;
-					// TODO prompt for delete
-					if (del) {
-						OsmApplet.println("deleting " + l);
-						applet.osm.removePrimitive(l);
-					} else {
-						OsmApplet.println("not deleting " + l);
-					}
-					break;
-				}
+		for (Iterator it = applet.lines.values().iterator(); it.hasNext();) {
+			Line l = (Line)it.next();
+			if (l.id != 0 && l.mouseOver(applet.mouseX, applet.mouseY, applet.strokeWeight)) {
+				OsmPrimitive del = l.ways.isEmpty() ? l : (OsmPrimitive)l.ways.get(0);
+				int answer = MsgBox.show("Really delete the "+del.getTypeName()+" "+del.getName()+"?", new String[]{"OK", "Cancel"});
+				if (answer == 1)
+					return;
+				OsmApplet.println("deleting " + l);
+				applet.osm.removePrimitive(l.ways.isEmpty() ? l : (OsmPrimitive)l.ways.get(0));
+				return;
 			}
 		}
 	}

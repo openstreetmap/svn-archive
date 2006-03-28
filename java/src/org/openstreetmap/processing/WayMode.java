@@ -3,6 +3,7 @@ package org.openstreetmap.processing;
 import java.awt.Point;
 import java.util.Iterator;
 
+import org.openstreetmap.gui.GuiHandler;
 import org.openstreetmap.gui.GuiLauncher;
 import org.openstreetmap.gui.WayHandler;
 import org.openstreetmap.util.Line;
@@ -52,7 +53,7 @@ public class WayMode extends EditMode {
 					openProperties();
 			}
 			if (dlg != null) {
-				Way way = (Way)dlg.handler.osm;
+				Way way = (Way)((GuiHandler)dlg.handler).osm;
 				way.lines.clear();
 				for (Iterator it = applet.selectedLine.iterator(); it.hasNext();) {
 					String lineKey = (String)it.next();
@@ -99,7 +100,7 @@ public class WayMode extends EditMode {
 				if (!visible) {
 					if (dlg != null)
 						location = dlg.getLocation();
-					if (handler != null && !handler.cancelled) {
+					if (handler != null && !((GuiHandler)handler).cancelled) {
 						applet.osm.createWay(way);
 						handler = null;
 					}

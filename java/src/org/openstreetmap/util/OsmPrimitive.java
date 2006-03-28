@@ -36,6 +36,11 @@ abstract public class OsmPrimitive implements Cloneable {
 	abstract public String getTypeName();
 
 	/**
+	 * Return a human readible string for this object. Do not include the type.
+	 */
+	abstract public String getName();
+	
+	/**
 	 * @return A string specifier used in tables when this line is used as key.
 	 * Consisting of "line_" and the id.
 	 */

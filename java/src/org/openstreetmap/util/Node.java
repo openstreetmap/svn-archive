@@ -87,6 +87,11 @@ public class Node extends OsmPrimitive {
 		return "node";
 	}
 
+	public String getName() {
+		String name = (String)tags.get("name");
+		return name!=null ? name : "";
+	}
+
 	public void register() {}
 	public void unregister() {}
 

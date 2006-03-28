@@ -10,6 +10,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.Method;
 
+import thinlet.Thinlet;
+
 
 
 /**
@@ -19,7 +21,7 @@ import java.lang.reflect.Method;
  */
 public class GuiLauncher extends Dialog implements WindowListener {
 
-	public GuiHandler handler;
+	public Thinlet handler;
 
 	/**
 	 * Create a modal dialog from the xmlfile. The dialog will have exactly one
@@ -29,7 +31,7 @@ public class GuiLauncher extends Dialog implements WindowListener {
 	 * 
 	 * @param title The title of the dialog.
 	 */
-	public GuiLauncher(String title, GuiHandler handler) {
+	public GuiLauncher(String title, Thinlet handler) {
 		super(new Frame(), title, false);
 		this.handler = handler;
 
@@ -46,7 +48,8 @@ public class GuiLauncher extends Dialog implements WindowListener {
 		y = (screen.height-getPreferredSize().height)/2;
 		setLocation(x,y);
 
-		handler.dlg = this;
+		if (handler instanceof GuiHandler)
+			((GuiHandler)handler).dlg = this;
 
 		// setAlwaysOnTop is only for 1.5. Call it if it is available.
 		try {

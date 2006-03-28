@@ -187,7 +187,7 @@ public class OsmApplet extends PApplet {
 	/**
 	 * Extra bold highlighted for marking up lines on a way during creation.
 	 */
-	public Line extraHighlightedLine = null;
+	public String extraHighlightedLine = null;
 
 	/*
 	 * current node, for moving nodes - TODO: track this in editmode, and make
@@ -496,9 +496,12 @@ public class OsmApplet extends PApplet {
 				if (!l.equals(extraHighlightedLine))
 					line(l.from.coor.x, l.from.coor.y, l.to.coor.x, l.to.coor.y);
 			}
-			if (extraHighlightedLine != null && !(extraHighlightedLine instanceof LineOnlyId)) {
-				stroke(0, 0, 255, 80);
-				line(extraHighlightedLine.from.coor.x, extraHighlightedLine.from.coor.y, extraHighlightedLine.to.coor.x, extraHighlightedLine.to.coor.y);
+			if (extraHighlightedLine != null) {
+				Line ehl = (Line)lines.get(extraHighlightedLine);
+				if (ehl != null && ehl instanceof LineOnlyId) {
+					stroke(0, 0, 255, 80);
+					line(ehl.from.coor.x, ehl.from.coor.y, ehl.to.coor.x, ehl.to.coor.y);
+				}
 			}
 
 

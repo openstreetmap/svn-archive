@@ -126,7 +126,7 @@ public class PropertiesMode extends EditMode {
 		dlg = new GuiLauncher(name, guiHandler){
 			public void setVisible(boolean visible) {
 				if (!visible)
-					doDone(old, handler);
+					doDone(old, (GuiHandler)handler);
 				super.setVisible(visible);
 			}
 		};

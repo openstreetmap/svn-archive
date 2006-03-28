@@ -14,6 +14,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.openstreetmap.gui.MsgBox;
 import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.GzipAwareGetMethod;
 import org.openstreetmap.util.Line;
@@ -86,15 +87,15 @@ public class Adapter {
 		InputStream responseStream = null;
 		try {
 			client.executeMethod(method);
-			// responseBody = method.getResponseBodyAsString();
 			responseStream = method.getResponseBodyAsStream();
 		} catch (HttpException he) {
-			System.err.println("Http error connecting to \"" + url + "\"");
-			System.err.println(he.getMessage());
-			System.exit(-4);
+			he.printStackTrace();
 		} catch (IOException ioe) {
-			System.err.println("Unable to connect to \"" + url + "\"");
-			System.exit(-3);
+			ioe.printStackTrace();
+		}
+		if (responseStream == null) {
+			MsgBox.msg("Could not download the main data. The server may be busy. Try again later.");
+			return;
 		}
 
 		OxParser gpxp = new OxParser(responseStream);
@@ -117,8 +118,6 @@ public class Adapter {
 			Way w = (Way)it.next();
 			applet.ways.put(w.key(), w);
 		}
-
-		// System.out.println("nabbed " + lines.size() + " lines");
 
 		// clean up the connection resources
 		method.releaseConnection();

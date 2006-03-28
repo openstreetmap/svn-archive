@@ -1,5 +1,6 @@
 package org.openstreetmap.client;
 
+import java.awt.EventQueue;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -7,8 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
-import javax.swing.SwingUtilities;
 
 /**
  * This class manages all communication commands to the server.
@@ -101,7 +100,7 @@ public class CommandManager {
 			}
 			final boolean finalSucceeded = succeeded;
 
-			SwingUtilities.invokeAndWait(new Runnable() {
+			EventQueue.invokeAndWait(new Runnable() {
 				public void run() {
 					if (finalSucceeded)
 						command.postConnectionModifyData();

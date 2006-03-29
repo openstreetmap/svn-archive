@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: openstreetmap
 -- ------------------------------------------------------
--- Server version	4.1.15-Debian_1-log
+-- Server version	4.1.11-Debian_4-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -12,6 +12,50 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `area_segments`
+--
+
+DROP TABLE IF EXISTS `area_segments`;
+CREATE TABLE `area_segments` (
+  `id` bigint(64) NOT NULL default '0',
+  `segment_id` int(11) default NULL,
+  `version` bigint(20) NOT NULL default '0',
+  `sequence_id` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`id`,`version`,`sequence_id`),
+  KEY `area_segments_id_idx` (`id`),
+  KEY `area_segments_segment_id_idx` (`segment_id`),
+  KEY `area_segments_id_version_idx` (`id`,`version`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `area_tags`
+--
+
+DROP TABLE IF EXISTS `area_tags`;
+CREATE TABLE `area_tags` (
+  `id` bigint(64) NOT NULL default '0',
+  `k` varchar(255) default NULL,
+  `v` varchar(255) default NULL,
+  `version` bigint(20) NOT NULL default '0',
+  `sequence_id` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`id`,`version`,`sequence_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `areas`
+--
+
+DROP TABLE IF EXISTS `areas`;
+CREATE TABLE `areas` (
+  `id` bigint(64) NOT NULL default '0',
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  `version` bigint(20) NOT NULL auto_increment,
+  `visible` tinyint(1) default '1',
+  PRIMARY KEY  (`id`,`version`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `gps_points`
@@ -28,7 +72,20 @@ CREATE TABLE `gps_points` (
   `timestamp` datetime default NULL,
   KEY `points_idx` (`latitude`,`longitude`,`user_id`),
   KEY `points_uid_idx` (`user_id`),
-  KEY `points_gpxid_idx` (`gpx_id`)
+  KEY `points_gpxid_idx` (`gpx_id`),
+  KEY `gps_points_timestamp_idx` (`timestamp`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `gpx_file_tags`
+--
+
+DROP TABLE IF EXISTS `gpx_file_tags`;
+CREATE TABLE `gpx_file_tags` (
+  `gpx_id` bigint(64) NOT NULL default '0',
+  `tag` varchar(255) default NULL,
+  `sequence_id` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`gpx_id`,`sequence_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -45,6 +102,10 @@ CREATE TABLE `gpx_files` (
   `latitude` double default NULL,
   `longitude` double default NULL,
   `timestamp` datetime default NULL,
+  `private` tinyint(1) default '1',
+  `description` varchar(255) default '',
+  `tmpname` varchar(255) default NULL,
+  `inserted` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -58,6 +119,18 @@ CREATE TABLE `gpx_pending_files` (
   `tmpname` varchar(255) default NULL,
   `user_id` bigint(20) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `meta_areas`
+--
+
+DROP TABLE IF EXISTS `meta_areas`;
+CREATE TABLE `meta_areas` (
+  `id` bigint(64) NOT NULL auto_increment,
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `meta_nodes`
@@ -82,6 +155,18 @@ CREATE TABLE `meta_segments` (
   `timestamp` datetime default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `meta_ways`
+--
+
+DROP TABLE IF EXISTS `meta_ways`;
+CREATE TABLE `meta_ways` (
+  `id` bigint(64) NOT NULL auto_increment,
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `nodes`
@@ -131,8 +216,53 @@ CREATE TABLE `users` (
   `pass_crypt` varchar(255) default NULL,
   `creation_time` datetime default NULL,
   `timeout` datetime default NULL,
+  `display_name` varchar(255) default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `way_segments`
+--
+
+DROP TABLE IF EXISTS `way_segments`;
+CREATE TABLE `way_segments` (
+  `id` bigint(64) NOT NULL default '0',
+  `segment_id` int(11) default NULL,
+  `version` bigint(20) NOT NULL default '0',
+  `sequence_id` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`id`,`version`,`sequence_id`),
+  KEY `way_segments_id_idx` (`id`),
+  KEY `way_segments_segment_id_idx` (`segment_id`),
+  KEY `way_segments_id_version_idx` (`id`,`version`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `way_tags`
+--
+
+DROP TABLE IF EXISTS `way_tags`;
+CREATE TABLE `way_tags` (
+  `id` bigint(64) NOT NULL default '0',
+  `k` varchar(255) default NULL,
+  `v` varchar(255) default NULL,
+  `version` bigint(20) NOT NULL default '0',
+  `sequence_id` int(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`id`,`version`,`sequence_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `ways`
+--
+
+DROP TABLE IF EXISTS `ways`;
+CREATE TABLE `ways` (
+  `id` bigint(64) NOT NULL default '0',
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  `version` bigint(20) NOT NULL auto_increment,
+  `visible` tinyint(1) default '1',
+  PRIMARY KEY  (`id`,`version`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

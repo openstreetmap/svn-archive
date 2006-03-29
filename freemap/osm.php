@@ -176,6 +176,8 @@ function on_end_element($parser, $element)
 		$inWay = false;
 		$ways[$curID] = $curWay;
 
+		//290306 keep a record of the IDs of the segment within a way
+		$ways[$curID]['segs'] = $waySegs;
 		# segments belonging to a way take on the way's attributes
 		foreach($waySegs as $segID)
 			$segments[$segID]['tags'] = $curWay['tags'];

@@ -1,4 +1,10 @@
 <?php
+################################################################################
+# This file forms part of the Freemap source code.                             #
+# (c) 2004-06 Nick Whitelegg (Hogweed Software)                                #
+# Licenced under the Lesser GNU General Public Licence; see COPYING            #
+# for details.                                                                 #
+################################################################################
 
 
 require_once('osm.php');
@@ -201,6 +207,7 @@ class Image
 			$this->draw_contours();
 		$this->draw_routes();
 		$this->draw_points_of_interest();
+		$this->draw_way_names();
 
 		ImagePNG($this->im);
 		ImageDestroy($this->im);
@@ -272,7 +279,7 @@ class Image
 				}
 
 				// do something with segment names here...
-				$this->draw_segment_name ($segment["name"], $p);
+				$this->draw_segment_name ($segment["name"], $p, false);
 			}
 		}	
 	}
@@ -596,9 +603,11 @@ class Image
 	} 
 
 	// name drawing stuff
-	//if($current['name']!=null)
-	function draw_segment_name ($name, $p)
+	// 290306 add true/false success code, also add $force to force drawing
+	// even if the segment isn't long enough
+	function draw_segment_name ($name, $p, $force)
 	{
+		$succ=false;
 		if($name)
 		{
 			$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$name);
@@ -620,10 +629,56 @@ class Image
 				ImageTTFText($this->im, 8, 0,  
 							$x1, $y2, $this->gold,
 							TRUETYPE_FONT, $name);
+				$succ=true;
 			}
-			elseif($len*1.25>=$text_width)
+			elseif($len*1.25>=$text_width || $force)
 			{
 				$this->angle_text($p, 8, $this->black, $name);
+				$succ=true;
+			}
+		}
+		return $succ;
+	}
+
+	function draw_way_names()
+	{
+		foreach($this->mapdata['ways'] as $way)
+		{
+			if($way['name'])
+				$this->draw_way_name($way);
+		}
+	}
+				
+	// Draw the name of a way
+	function draw_way_name ($way)
+	{
+		$i = count($way['segs']) / 2;
+		$curseg = $this->mapdata['segments'][$way['segs'][$i]];
+
+		// this is the data that draw_seg_name is expecting
+		$p[0] = $this->map->get_point($curseg['from']);
+		$p[1] = $this->map->get_point($curseg['to']);
+
+		// try to draw name on whole segment
+		// if fail, then loop through segments starting at the current one,
+		// drawing a different word on each
+
+		if(!$this->draw_segment_name($curseg[$i],$way['name'],false))
+		{
+			$namewords = explode(" ",$way['name']);
+			$wc=0;
+			$cont=true;
+			while($cont)	
+			{
+				$curseg = $this->mapdata['segments'][$way['segs'][$i]];
+				// this is the data that draw_seg_name is expecting
+				$p[0] = $this->map->get_point($curseg['from']);
+				$p[1] = $this->map->get_point($curseg['to']);
+
+				$this->draw_segment_name($curseg[$i],$namewords[$wc],true);
+
+				if (++$i>=count($way['segs']) || ++$wc==count($namewords))
+					$cont=false;
 			}
 		}
 	}

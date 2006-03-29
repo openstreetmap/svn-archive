@@ -508,8 +508,12 @@ public class Adapter {
 				System.out.println("Got response code " + rCode);
 
 				if (rCode == 200) {
-					System.out.println("got reponse " + response);
-					id = Long.parseLong(response.trim());
+					try {
+						id = Long.parseLong(response.trim());
+					} catch (NumberFormatException e) {
+						System.out.println("got strange reponse " + response);
+						return false;
+					}
 					System.err.println("way created successfully: " + way);
 					return true;
 				}

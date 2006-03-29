@@ -68,7 +68,6 @@ public class ModeManager {
 	}
 
 	public void mouseReleased() {
-		System.out.println("mouse relesed in mode manager");
 		for (int i = 0; i < getNumModes(); i++) {
 			EditMode mode = getMode(i);
 			if (mode.over) {
@@ -89,8 +88,6 @@ public class ModeManager {
 	}
 
 	public void mousePressed() {
-		System.out.println("mousePressed in ModeManager with currentMode="
-				+ currentMode + " and overButton=" + overButton);
 		if (currentMode != null && !overButton) {
 			currentMode.mousePressed();
 			applet.redraw();

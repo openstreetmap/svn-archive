@@ -14,6 +14,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.openstreetmap.gui.MsgBox;
 import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.GzipAwareGetMethod;
@@ -28,6 +29,7 @@ public class Adapter {
 
 	/**
 	 * Base url string to connect to the osm server api.
+     * Default value not used.
 	 */
 	private String apiUrl = "http://www.openstreetmap.org/api/0.3/";
 
@@ -43,7 +45,7 @@ public class Adapter {
 	/**
 	 * The apache http credentials for the username and password.
 	 */
-	Credentials creds = null;
+	private Credentials creds = null;
 
 	/**
 	 * Create the adapter.
@@ -70,18 +72,11 @@ public class Adapter {
 		String url = apiUrl + "map?bbox=" + tl.lon+","+br.lat+","+br.lon+","+tl.lat;
 
 		System.out.println("trying url: " + url);
-		// create a singular HttpClient object
-		HttpClient client = new HttpClient();
+        HttpClient client = getClient();
 
-		// establish a connection within 5 seconds
-		client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-		client.getState().setCredentials(AuthScope.ANY, creds);
-		
-		HttpMethod method = null;
-		
-		// create a method object
-		method = new GzipAwareGetMethod(url);
-		method.setFollowRedirects(true);
+        // create a method object
+        HttpMethod method = new GzipAwareGetMethod(url);
+        method.setFollowRedirects(true);
 		
 		// execute the method
 		InputStream responseStream = null;
@@ -95,7 +90,8 @@ public class Adapter {
 		}
 		if (responseStream == null) {
 			MsgBox.msg("Could not download the main data. The server may be busy. Try again later.");
-			return;
+            method.releaseConnection();
+            return;
 		}
 
 		OxParser gpxp = new OxParser(responseStream);
@@ -123,12 +119,13 @@ public class Adapter {
 		method.releaseConnection();
 	}
 
-	/**
-	 * Queue the deletion of the node. Return immediatly.
-	 */
-	public void deleteNode(Node node) {
-		commandManager.add(new NodeDeleter(node));
-	}
+
+    /**
+     * Queue the deletion of the node. Return immediatly.
+     */
+    public void deleteNode(Node node) {
+        commandManager.add(new NodeDeleter(node));
+    }
 
 	/**
 	 * Queue the creation of the node. Return immediatly.
@@ -172,7 +169,52 @@ public class Adapter {
 		commandManager.add(new WayCreator(way));
 	}
 
-	/**
+    /**
+     * Helper method used by the inner classes. Takes XML, and the URL to upload it to and uploads it with a PUT.
+     * If the URL returns 200, it returns the body of the response as a string, otherwise it returns null.
+     *
+     *
+     * @param xml The XML to put.
+     * @param url The URL to put it to.
+     * @return The response sent by the server (if it had a code of 200), null otherwise.
+     * @throws IOException If there is some sort of network error.
+     */
+    private String putXMLtoURL(final String xml, final String url) throws IOException {
+        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+
+        HttpClient client = getClient();
+
+        PutMethod put = new PutMethod(url);
+        put.setRequestEntity(new StringRequestEntity(xml));
+
+        client.executeMethod(put);
+
+        int rCode = put.getStatusCode();
+        System.out.println("Got response code " + rCode);
+        String body = null;
+        if (rCode == 200) {
+            body = put.getResponseBodyAsString();
+        }
+        put.releaseConnection();
+        return body;
+    }
+
+    /**
+     * Create the HttpClient with our credentials and default timeout.
+     * @return The client object.
+     */
+    private HttpClient getClient() {
+         // create a singular HttpClient object
+         HttpClient client = new HttpClient();
+
+         // establish a connection within 5 seconds
+         client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+         client.getState().setCredentials(AuthScope.ANY, creds);
+         return client;
+     }
+
+
+    /**
 	 * Delete a specific node in the intern node list.
 	 */
 	private class NodeDeleter implements ServerCommand {
@@ -192,10 +234,9 @@ public class Adapter {
 			String url = apiUrl + "node/" + node.id;
 			System.out.println("trying to delete node by throwing HTTP DELETE at " + url);
 
-			HttpClient client = new HttpClient();
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-			DeleteMethod del = new DeleteMethod(url);
+			HttpClient client = getClient();
+
+            DeleteMethod del = new DeleteMethod(url);
 			client.executeMethod(del);
 			int rCode = del.getStatusCode();
 			del.releaseConnection();
@@ -241,26 +282,12 @@ public class Adapter {
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
-			HttpClient client = new HttpClient();
-
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-
-			PutMethod put = new PutMethod(url);
-			put.setRequestBody(xml);
-
-			client.executeMethod(put);
-
-			int rCode = put.getStatusCode();
-			System.out.println("Got response code " + rCode);
-			if (rCode == 200) {
-				String response = put.getResponseBodyAsString();
+            String response = putXMLtoURL(xml, url);
+            if (response != null) {
 				System.out.println("got reponse " + response);
 				response = response.trim(); // get rid of leading and trailing whitespace
 				id = Long.parseLong(response);
 			}
-
-			put.releaseConnection();
 
 			if (id != -1) {
 				System.err.println("node created successfully: " + node);
@@ -270,9 +297,11 @@ public class Adapter {
 			return false;
 		}
 
-		public void undoModifyData() {
-			applet.nodes.remove(tempKey);
-		}
+
+
+        public void undoModifyData() {
+            applet.nodes.remove(tempKey);
+        }
 
 		public void postConnectionModifyData() {
 			node.id = id;
@@ -323,21 +352,9 @@ public class Adapter {
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
-			HttpClient client = new HttpClient();
-
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-
-			PutMethod put = new PutMethod(url);
-			put.setRequestBody(xml);
-
-			client.executeMethod(put);
-			int rCode = put.getStatusCode();
-
-			put.releaseConnection();
-
-			if (rCode != 200) {
-				System.err.println("error moving node: " + node + ", got response " + rCode + " from the abyss");
+            String response = putXMLtoURL(xml, url);
+            if (response == null) {
+                System.err.println("error moving node: " + node + ", got response '" + response + "' from the abyss");
 				return false;
 			}
 			return true;
@@ -374,30 +391,15 @@ public class Adapter {
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
-			HttpClient client = new HttpClient();
-
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-
-			PutMethod put = new PutMethod(url);
-			try {
-				put.setRequestBody(xml);
-				client.executeMethod(put);
-				int rCode = put.getStatusCode();
-				String response = put.getResponseBodyAsString();
-				System.out.println("Got response code " + rCode);
-
-				if (rCode == 200) {
-					System.out.println("got reponse " + response);
-					id = Long.parseLong(response.trim());
-					System.err.println("line created successfully: " + line);
-					return true;
-				}
-				System.err.println("error creating line: " + line);
-				return false;
-			} finally {
-				put.releaseConnection();
-			}
+			String response = putXMLtoURL(xml, url);
+            if (response != null) {
+                System.out.println("got reponse " + response);
+                id = Long.parseLong(response.trim());
+                System.err.println("line created successfully: " + line);
+                return true;
+            }
+            System.err.println("error creating line: " + line);
+            return false;
 		}
 		public void undoModifyData() {
 			applet.lines.remove(tempKey);
@@ -438,31 +440,13 @@ public class Adapter {
 
 			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
-			HttpClient client = new HttpClient();
-
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-
-			PutMethod put = new PutMethod(url);
-			try {
-				put.setRequestBody(xml);
-
-				client.executeMethod(put);
-
-				int rCode = put.getStatusCode();
-
-				System.out.println("Got response code " + rCode);
-
-				if (rCode == 200) {
-					String response = put.getResponseBodyAsString();
+			String response = putXMLtoURL(xml, url);
+            if (response != null) {
 					System.out.println("got reponse " + response);
 					return true;
-				}
-				System.err.println("error updating line: " + newPrimitive + ", got code " + rCode);
-				return false;
-			} finally {
-				put.releaseConnection();
-			}
+            }
+            System.err.println("error updating line: " + newPrimitive );
+            return false;
 		}
 		public void undoModifyData() {
 			newPrimitive.copyFrom(oldPrimitive);
@@ -492,38 +476,23 @@ public class Adapter {
 			String xml = s.getBuffer().toString();
 			String url = apiUrl + "way/0";
 
-			System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
-			HttpClient client = new HttpClient();
-
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-
-			PutMethod put = new PutMethod(url);
-			try {
-				put.setRequestBody(xml);
-				client.executeMethod(put);
-				int rCode = put.getStatusCode();
-				String response = put.getResponseBodyAsString();
-				System.out.println("Got response code " + rCode);
-
-				if (rCode == 200) {
-					try {
-						id = Long.parseLong(response.trim());
-					} catch (NumberFormatException e) {
-						System.out.println("got strange reponse " + response);
-						return false;
-					}
-					System.err.println("way created successfully: " + way);
-					return true;
-				}
-				System.err.println("error creating way: " + way);
-				return false;
-			} finally {
-				put.releaseConnection();
-			}
+			String response = putXMLtoURL(xml, url);
+            if (response != null) {
+                try {
+                    id = Long.parseLong(response.trim());
+                } catch (NumberFormatException e) {
+                    System.out.println("got strange reponse " + response);
+                    return false;
+                }
+                System.err.println("way created successfully: " + way);
+                return true;
+            }
+            System.err.println("error creating way: " + way);
+            return false;
 		}
-		public void undoModifyData() {
+
+        public void undoModifyData() {
 			applet.ways.remove(tempKey);
 			way.unregister();
 		}
@@ -551,10 +520,9 @@ public class Adapter {
 		public boolean connectToServer() throws IOException {
 			String url = apiUrl + osm.getTypeName() + "/" + osm.id;
 			System.out.println("trying to delete object HTTP DELETE at " + url);
-			HttpClient client = new HttpClient();
-			client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
-			client.getState().setCredentials(AuthScope.ANY, creds);
-			DeleteMethod del = new DeleteMethod(url);
+			HttpClient client = getClient();
+
+            DeleteMethod del = new DeleteMethod(url);
 			client.executeMethod(del);
 			int rCode = del.getStatusCode();
 			del.releaseConnection();

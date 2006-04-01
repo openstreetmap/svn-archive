@@ -1,63 +1,43 @@
 #!/bin/bash
-#
-# This script copies the eruby, ruby, html, css and images
-# to the right places on www.openstreetmap
 
-mkdir deploy
+# Execute this script and you get a directory deploy/ with symbolic links
+# Then copy the directory anywhere
+
+
 CURDIR=`pwd`
-cd deploy
 
-# eruby
-ln -s $CURDIR/ruby/editing-interface eruby
+echo "clean old"
+rm -rf deploy
 
-# css
-mkdir css
-ln -s $CURDIR/html/css/style.css css/style.css
+echo "link new"
+mkdir -p deploy/eruby/include
+for i in $CURDIR/ruby/editing-interface/*.rhtml; do ln -s $i deploy/eruby/; done
+for i in $CURDIR/ruby/editing-interface/include/*.rhtml; do ln -s $i deploy/eruby/include/; done
 
-# javascript
-ln -s $CURDIR/javascript javascript
+mkdir deploy/css
+for i in $CURDIR/html/css/*.css; do ln -s $i deploy/css/; done
+for i in $CURDIR/html/images/*.gif; do ln -s $i deploy/css/; done
 
-# images FIXME
-ln -s $CURDIR/html/images images
-ln -s $CURDIR/html/images/bg.gif css/bg.gif
-ln -s $CURDIR/html/images/left.gif css/left.gif
-ln -s $CURDIR/html/images/left_on.gif css/left_on.gif
-ln -s $CURDIR/html/images/right.gif css/right.gif
-ln -s $CURDIR/html/images/right_on.gif css/right_on.gif
-ln -s $CURDIR/html/images/tab_bottom.gif css/tab_bottom.gif
+mkdir deploy/javascript
+for i in $CURDIR/javascript/*; do ln -s $i deploy/javascript/; done
 
-# applet
-cd $CURDIR/java
-ant
-cd $CURDIR/deploy
-ln -s $CURDIR/java/dist/OSMApplet.jar OSMApplet.jar
-ln -s $CURDIR/java/lib/commons-codec-1.3.jar commons-codec-1.3.jar
-ln -s $CURDIR/java/dist/commons-httpclient-3.0-rc3.jar commons-httpclient-3.0-rc3.jar
-ln -s $CURDIR/java/dist/commons-logging.jar commons-logging.jar
-ln -s $CURDIR/java/dist/MinML2.jar MinML2.jar
-ln -s $CURDIR/java/dist/core.jar core.jar
-ln -s $CURDIR/java/dist/plugin.jar plugin.jar
+mkdir deploy/images
+for i in $CURDIR/html/images/*; do ln -s $i deploy/images/; done
 
 
-# REST
-mkdir -p ruby/api
-ln -s $CURDIR/ruby/api ruby/api/0.2
-ln -s $CURDIR/ruby/api/osm ruby/api/osm
-ln -s $CURDIR/ruby/api/osm ruby/osm
+# API
+mkdir -p deploy/ruby/api/0.3
+for i in $CURDIR/ruby/api/*.rb; do ln -s $i deploy/ruby/api/0.3/; done
+mkdir deploy/ruby/api/osm
+for i in $CURDIR/ruby/api/osm/*.rb; do ln -s $i deploy/ruby/api/osm/; done
+cd deploy/ruby; ln -s api/osm osm; cd ../..
+mkdir deploy/ruby/api/apache
+for i in $CURDIR/ruby/api/apache/*.rb; do ln -s $i deploy/ruby/api/apache/; done
 
-# Apache simple-auth for REST
-ln -s $CURDIR/ruby/api/apache ruby/api/apache
+cp $CURDIR/ruby/api/osm/servinfo.rb-TESTSERVER deploy/ruby/api/osm/servinfo.rb
 
-# RSS
-ln -s $CURDIR/ruby/rss/nodes.rb ruby/nodes.rb
 
-# GPX RSS maker
-ln -s $CURDIR/ruby/rss/gpx_files.rb ruby/gpx_files.rb
+for i in $CURDIR/ruby/rss/*.rb; do ln -s $i deploy/ruby/; done
 
-# GPX parser
-# TODO: looks broken
-#mkdir -p $CURDIR/bin
-#mkdir -p $CURDIR/bin/osm
-#cp ruby/editing-interface/support/insert_gpx_files.rb $CURDIR/bin/
-#cp ruby/api/osm/* $CURDIR/bin/osm
-
+# link applet
+for i in $CURDIR/java/dist/*.jar; do ln -s $i deploy/; done

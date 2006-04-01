@@ -11,7 +11,7 @@
 		# for Apache::RubyRun
 		RubyAddPath /var/www/ruby/osm
 		RubyAddPath /var/www/ruby/api/apache
-		RubyAddPath /var/www/ruby/api/0.2
+		RubyAddPath /var/www/ruby/api/0.3
 		RubyAddPath /var/www/ruby/api
 		
 		RubyRequire apache/ruby-run

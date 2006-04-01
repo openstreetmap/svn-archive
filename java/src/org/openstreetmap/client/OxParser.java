@@ -61,7 +61,7 @@ public class OxParser extends MinML2 {
 		System.out.println("End of Document");
 	}
 
-	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
 		if (qName.equals("node")) {
 			double node_lat = Double.parseDouble(atts.getValue("lat"));
 			double node_lon = Double.parseDouble(atts.getValue("lon"));
@@ -99,7 +99,7 @@ public class OxParser extends MinML2 {
 
 	} // startElement
 
-	public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+	public void endElement(String namespaceURI, String localName, String qName) {
 		if (qName.equals("node")) {
 			nodes.put(new Long(current.id), current);
 			current.register();

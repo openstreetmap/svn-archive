@@ -3,6 +3,10 @@
 # This script copies the eruby, ruby, html, css and images
 # to the right places on www.openstreetmap
 
+# This is for dev.openstreetmap.org only. Use the Makefile to set up
+# your server at home.
+
+
 USER=$1
 ROOT=/var/www/$USER
 
@@ -62,7 +66,7 @@ cp html/images/tab_bottom.gif $ROOT/css/
 
 # applet
 cd java
-ant clean && ant clean && cp dist/*.jar $ROOT/
+ant clean && ant && cp dist/*.jar $ROOT/
 
 cd ..
 
@@ -85,6 +89,7 @@ cp ruby/api/apache/simple-auth.rb $ROOT/ruby/api/apache/
 cp ruby/rss/nodes.rb $ROOT/ruby/
 
 # GPX parser
+
 
 mkdir -p ../bin
 mkdir -p ../bin/osm

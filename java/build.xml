@@ -10,6 +10,7 @@
   <target name="init">
     <tstamp/>
     <mkdir dir="${build}"/>
+    <mkdir dir="${build}/gui"/>
   	<mkdir dir="${dist}"/>
     <mkdir dir="${dist}/api"/>
     <mkdir dir="${dist}/rc1/org"/>

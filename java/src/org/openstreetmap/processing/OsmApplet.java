@@ -241,8 +241,8 @@ public class OsmApplet extends PApplet {
 		size(WINDOW_WIDTH, WINDOW_HEIGHT);
 		smooth();
 
-		// this font should have all special characters - open to suggestions
-		// for changes though
+		// this font should have all special characters - open
+		// to suggestions for changes though
 		font = loadFont("/data/LucidaSansUnicode-11.vlw");
 
 		// initialise node manager and add buttons in desired order

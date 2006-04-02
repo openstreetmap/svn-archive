@@ -7,22 +7,23 @@ if [ -z "$2" ] ; then
     exit 1
 fi
 
+user="$1"; shift
+pass="$1"; shift
 
 if [ ! -d ./dist ] ; then
     echo "You must first build the applet using ant"
     nothing=`which ant`
     if [ $? -ne 0 ] ; then 
-        echo "It appears you don't have ant installed. Install ant then run ant in the current directory"
+        echo "It appears you don't have ant installed."
+        echo "Install ant then run ant in the current directory"
     fi
     nothing=`which javac`
     if [ $? -ne 0 ] ; then
-         echo "It appears you don't have a java development kit installed. Install a java development kit before running ant in the current directory"
+        echo "It appears you don't have a java development kit installed."
+        echo "Install a java development kit before running ant in the current directory"
     fi    
-	exit 1   
+    exit 1   
 fi
-
-
-
 
 [ -n "$JAVA" ] || JAVA=java
 
@@ -36,4 +37,4 @@ exec $JAVA $JAVAOPTS \
     -cp $OSMCLASSPATH \
     processing.core.PApplet \
     org.openstreetmap.processing.OsmApplet \
-    --user=$1 --pass=$2
+    --user="$user" --pass="$pass" $@

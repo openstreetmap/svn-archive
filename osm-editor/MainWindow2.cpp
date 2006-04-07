@@ -146,7 +146,6 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QPopupMenu* fileMenu = new QPopupMenu(this);
     // 29/10/05 Only open "OSM" now
     fileMenu->insertItem("&Open",this,SLOT(open()),CTRL+Key_O);
-    fileMenu->insertItem("Open GPX",this,SLOT(openGPX()));
     fileMenu->insertItem("&Save",this,SLOT(save()),CTRL+Key_S);
     fileMenu->insertItem("Save &as...",this,SLOT(saveAs()),CTRL+Key_A);
     fileMenu->insertItem("Save GPX...",this,SLOT(saveGPX()),CTRL+Key_X);
@@ -389,9 +388,25 @@ MainWindow2::~MainWindow2()
 
 void MainWindow2::open()
 {
-    QString filename = QFileDialog::getOpenFileName("","*.osm",this);
-    if(filename!="")
-    {
+    QFileDialog* fd = new QFileDialog( this,"openbox",true );
+    fd->setViewMode( QFileDialog::List );
+    fd->setCaption(tr("Open osm or gpx...")); 
+    fd->setFilter("GPS Exchange (*.gpx)");
+    fd->addFilter("Openstreetmap data (*.osm)");
+    fd->setMode( QFileDialog::ExistingFile );
+
+    QString filename;
+    if ( fd->exec() != QDialog::Accepted )
+    {   delete fd;
+        return;
+    }
+    filename = fd->selectedFile();
+    if (filename.isEmpty())
+    {   delete fd;
+        return;
+    }
+    if (fd->selectedFilter().contains("osm"))
+    {  // OSM DATA
         Components2 *newComponents = doOpen(filename);
         if(newComponents)
         {
@@ -417,35 +432,10 @@ void MainWindow2::open()
             }
         }
     }
-}
-
-Components2 * MainWindow2::doOpen(const QString& filename)
-{
-    cerr<<"doOpen"<<endl;
-    Components2 * comp;
-
-   
-    OSMParser2 parser;
-    cerr<<"filename=" << filename<<endl;
-    QFile file(filename);
-    QXmlInputSource source(&file);
-    QXmlSimpleReader reader;
-    reader.setContentHandler(&parser);
-    reader.parse(source);
-    comp = parser.getComponents(); 
-    return comp;
-   
-}
-
-Components2 * MainWindow2::openGPX()
-{
-    cerr<<"doOpen"<<endl;
-    Components2 * comp;
-    QString filename = QFileDialog::getOpenFileName("","*.osm",this);
-
-	if(filename!="")
-	{
-    	GPXParser2 parser;
+    else   
+    {   // GPX Data
+        Components2 * comp;
+	GPXParser2 parser;
     	cerr<<"filename=" << filename<<endl;
     	QFile file(filename);
     	QXmlInputSource source(&file);
@@ -465,7 +455,26 @@ Components2 * MainWindow2::openGPX()
 		}
 		showPosition();
 		update();
-	}
+    }
+    /* Delete fd; ? */
+}
+
+Components2 * MainWindow2::doOpen(const QString& filename)
+{
+    cerr<<"doOpen"<<endl;
+    Components2 * comp;
+
+   
+    OSMParser2 parser;
+    cerr<<"filename=" << filename<<endl;
+    QFile file(filename);
+    QXmlInputSource source(&file);
+    QXmlSimpleReader reader;
+    reader.setContentHandler(&parser);
+    reader.parse(source);
+    comp = parser.getComponents(); 
+    return comp;
+   
 }
 
 void MainWindow2::loginToLiveUpdate()

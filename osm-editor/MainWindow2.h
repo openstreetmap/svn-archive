@@ -271,7 +271,6 @@ public slots:
 	void addSplitSegs(void*);
 	void doaddseg(void*);
 	void changeSerialPort();
-	Components2 * openGPX();
 	void uploadNewWaypoints();
 
 signals:

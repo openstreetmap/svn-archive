@@ -1,9 +1,9 @@
 <?php
 
 define ('DB_HOST','localhost');
-define ('DB_DBASE','fmapdb2');
-define ('DB_USERNAME','');
-define ('DB_PASSWORD','');
+define ('DB_DBASE','nick');
+define ('DB_USERNAME','nick');
+define ('DB_PASSWORD','??????????????????????');
 define ('BRUSH_SUPPORTED', 1);
 define ('MAP_WIDTH',400);
 define ('MAP_HEIGHT',320);

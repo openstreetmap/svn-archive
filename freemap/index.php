@@ -9,7 +9,7 @@ session_start();
 
 require_once('functions.php');
 
-$vars = array ("lat"=>51.05,"lon"=>-0.72,"zoom"=>12);
+$vars = array ("lat"=>50.9,"lon"=>-1.4,"zoom"=>12);
 
 foreach ($vars as $var=>$default)
 {
@@ -27,8 +27,8 @@ $trk = (isset($_SESSION['ngatekeeper'])) ? 1: 0;
   <script type="text/javascript" src="main.js"></script>
   <script type="text/javascript" src="tile.js"></script>
   <script type="text/javascript" src="latlong.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/freemap.css" />
-  <title>freemap-osm</title>
+  <link rel="stylesheet" type="text/css" href="css/osmtest.css" />
+  <title>OSM map tester</title>
 </head>
 <?php
 echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
@@ -36,7 +36,6 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
  
 <div id="freemap">
 
-<?php writeNavbar(); ?>
 
 <div id="vpcontainer">
 		
@@ -312,28 +311,11 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 		</div>
 
 
-		<div class="panel">
-
-		<h1>Distance</h1>
-
-			<div id="milometer">
-			<span id="distUnits">000</span>.<span id="distTenths">0
-			</span>
-			</div>
-			<span id="units">miles</span>
-
-			<div id="distcontrol">
-			<span class='toolbarentry' id='reset'>Reset dist</span>
-			<span class='toolbarentry' id='distchange'>Use km</span>
-			</div>
-	
-		</div>
 		<?php showScaleControl(); ?>
 </div>
 <div id="mapdiv4">
 		<div class="panel">
 		<h1>Go to</h1>
-<!--		<form method="post" action=""> -->
 			<div>
 
 			<label for="txtLat">Latitude:</label>
@@ -342,7 +324,6 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 			<input name="txtLon" id="txtLon" class="inputelement"/>
 			<input type="button" value="Go!" id="btnLL"/>
 			</div>
-<!--		</form> -->
 		</div>
 
 		<div class="panel">
@@ -355,17 +336,6 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 		<option value="1">tracks</option>
 		</select>
 
-		<label for="segtype">Segment type</label>
-		<select id='segtype' class="inputelement">
-		<option selected='selected'>footpath</option>
-		<option>bridleway</option>
-		<option>byway</option>
-		<option>residential road</option>
-		<option>minor road</option>
-		<option>B road</option>
-		<option>A road</option>
-		<option>motorway</option>
-		</select>
 
 		<label for="action">Action</label>
 		<select id='action' class="inputelement">
@@ -375,28 +345,14 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 		<option>featureupdate</option>
 		<option>featurequery</option>
 		<option>distance</option>
-		<option>draw</option>
 		</select>
 		</div>
 </div>
 
 <div id="bottomarea">
-<div id="commands">
-		<span id='uploadway' class='command'>upload way</span> | 
-		<span id='reload' class='command'>reload map</span>
-</div>
 <div id='status'>
-<h3>Freemap-OSM v0.0.4</h3>
-<p>The result of the combination of 
-<a href="http://www.free-map.org.uk">Freemap</a>
-code with <a href="http://www.openstreetmap.org">OpenStreetMap</a> data,
-and the first (?) OpenStreetMap web client.  All the data you see has been
-fetched from the OpenStreetMap database. <strong>NEW!</strong> Now 
-with slippy map!
-(Note contours will only work in the UK and immediately adjoining parts of
-France).</p>
-<p><strong>For version without slippy map (and JavaScript), please go
-<a href="index003.php">here</a></strong></p>
+<h3>OSM drawing client testing</h3>
+<p> This page is a testing page for new OSM map-drawing code.</p>
 </div>
 </div>
 
@@ -414,101 +370,18 @@ France).</p>
 
 </body>
 </html>
+
 <?php
 function showScaleControl()
 {
 	echo "<div class='panel'>\n";
 
-		/*
-		if($_SESSION['zoom']<14)
-		{
-		*/
-//			echo "<a href='index.php?zoom=".($_SESSION['zoom']+1)."'>";
 			echo '<img class="scaleimg" id="magnify" '.
 			'src="images/magnify.png" alt="Increase scale 2x" />';
-		//	echo '</a>'."\n";
-//		}
 
-		/*
-		if($_SESSION['zoom']>1) // only 5-11 available atm 24/07/05
-		{
-		*/
-		//	echo "<a href='index.php?zoom=".($_SESSION['zoom']-1)."'>";
 			echo '<img class="scaleimg" id="shrink" '.
 			'src="images/shrink.png" alt="Increase scale 2x" />';
-//			echo '</a>'."\n";
-//		}
 	echo "</div>\n";
 }
 
-function writeNavbar()
-{
-		# 08/01/05 Now there is a login box in the navbar. 
-		# Note that according to the PHP documentation, there is no reliable
-		# way of getting the referrer from the superglobal variables, so we
-		# have to pass it in as a hidden variable.
-		?>
-		<div id="navbar">
-		<img id="logodiv" src="images/freemap_small.png" alt="Freemap logo"/>
-		<a class="navbarentry" href="index.php">Home</a>
-		<!--
-		<a class="navbarentry" href="about.php">About</a>
-		<a class="navbarentry" href="instructions.php">Instructions</a>
-		<a class="navbarentry" href="news.php">News</a>
-		<a class="navbarentry" href="roadmap.php">Future</a>
-		<a class="navbarentry" href="signup.php">Signup</a>
-		<a class="navbarentry" href="contribute.php">Contribute!</a>
-		<a class="navbarentry" href="gpsmap.php">GPS Maps</a>
-		<a class="navbarentry" href="downloads.php">Downloads</a>
-		<a class="navbarentry" href="links.php">Links</a>
-		-->
-
-		<?php 
-		doLogin(); 
-		?>
-
-		
-		<a href="http://www.spreadfirefox.com/?q=affiliates&amp;id=0&amp;t=70">
-		<img id="firefox" alt="Get Firefox!" title="Get Firefox!" 
-		src="http://sfx-images.mozilla.org/affiliates/Buttons/88x31/get.gif"/>
-		</a>
-		
-		</div><!--navbar-->
-		<?php
-}
-
-function doLogin()
-{
-		?>
-		<div id="login"> 
-		<?php
-		if(!isset($_SESSION['ngatekeeper']))
-		{
-        	?>
-			
-        	<form id="loginform" method="post" action="login.php">
-			L O G I N
-			<span>Email:</span><span><input name="username" id="username"/>
-			</span>
-			<span>Password:</span>
-			<span> <input name="password" type="password" id="password"/> 
-			</span>
-			<input type="hidden" name="referrer" 
-			value="<?php echo $_SERVER['PHP_SELF'] ?>"/>
-			<input type="submit" id="loginsubmit" value="Go!" />
-        	</form>
-			
-        	<?php
-		}
-		else
-		{
-			echo "<em>Logged in as ".$_SESSION['ngatekeeper']."</em>";
-			echo "<a href='logout.php?referrer=".
-					$_SERVER['PHP_SELF']."'>Logout</a>";
-		}
-		
-		?>
-		</div><!--login-->
-		<?php
-}
 ?>

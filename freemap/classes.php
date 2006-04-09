@@ -13,6 +13,10 @@ require_once('defines.php');
 require_once('contours.php');
 require_once('gpxnew.php');
 
+
+// 070406 changed ['name'] to ['tags']['name'] for nodes, segments and ways
+// 070406 changed ['type'] to ['tags']['class'] for nodes
+
 ///////////////////// CLASS DEFINITIONS /////////////////////////
 
 class Map
@@ -161,7 +165,12 @@ class Image
 		$this->mv=$zoom;
 
 
-		$this->mapdata = grabOSM($w,$s,$e,$n);
+		$this->mapdata = grabOSM($w-(($e-$w)/2),
+								$s, $e, 
+								$n+(($n-$s)/2), 2);
+		
+		// Make all segments inherit tags from their parent way
+		give_segs_waytags($this->mapdata["ways"],$this->mapdata["segments"]);
 
 		$this->trackpoints = ($tp) ? grabGPX($w,$s,$e,$n) : null;
 		$this->tp = $tp;
@@ -174,6 +183,7 @@ class Image
 			# (The icons are s)
 			$this->im = ImageCreateTrueColor
 					($this->map->width,$this->map->height);
+		
 			$this->backcol = ImageColorAllocate($this->im,220,220,220);
 //			$this->darkred = ImageColorAllocate($this->im,255,0,128);
 			$this->gold = ImageColorAllocate($this->im,255,255,0);
@@ -203,11 +213,16 @@ class Image
 			$this->draw_trackpoints();
 		if($this->landsat>=1)
 			$this->draw_landsat();
-		if($this->mv>=12 && ($this->landsat==0 || $this->landsat==2))
+		
+		if($this->mv>=12 && $this->mv<=13)
 			$this->draw_contours();
+			
+		$this->draw_route_outlines();
 		$this->draw_routes();
 		$this->draw_points_of_interest();
-		$this->draw_way_names();
+
+		if($this->mv >= 13)
+			$this->draw_way_names();
 
 		ImagePNG($this->im);
 		ImageDestroy($this->im);
@@ -216,14 +231,10 @@ class Image
 	
 	function draw_routes()
 	{
-
-
-
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		foreach ($this->mapdata['segments'] as $segment)
+		foreach ($this->mapdata['segments'] as $id=>$segment)
 		{
-			//print_r($segment['tags']);
 			$segment["type"] = allocatetype($segment["tags"]);
 
 			if(!isset($this->routetypes[$segment["type"]]))
@@ -231,33 +242,28 @@ class Image
 
 			//echo "TYPE: $segment[type]<br/>";
 
-			$p[0] = $this->map->get_point($segment['from']);
-			$p[1] = $this->map->get_point($segment['to']);
 
-			//print_r($p);
-			//echo "<br/>";
-			if ( $this->map->pt_within_map ($p[0]) || 
-				     $this->map->pt_within_map ($p[1]) )
+			$p[0] = $this->map->get_point
+				($this->mapdata['nodes'][$segment['from']]);
+			$p[1] = $this->map->get_point
+				($this->mapdata['nodes'][$segment['to']]);
+
+			
+			if ( (isset($this->mapdata['nodes'][$segment['to']]) &&
+				 isset($this->mapdata['nodes'][$segment['from']]) ) &&
+			
+			($this->map->pt_within_map ($p[0]) || 
+				     $this->map->pt_within_map ($p[1]) ) 
+					 )
 
 			{
-			
+		
 				// 07/06/05 Changed this to reflect the new way
 				// that dashed lines are stored in the database.
 				if(!isset($this->routetypes [$segment['type']]['pathstyle']))
 				{
 
-					if(isset($this->routetypes[$segment['type']]['scolour']))
-					{
-
-						ImageSetThickness($this->im,
-								$this->routetypes[$segment['type']]['width']+2);
-
-						$colour=$this->routetypes [$segment['type']]['scolour'];
-
-						ImageLine($this->im,$p[0]['x'],$p[0]['y'],
-								$p[1]['x'],$p[1]['y'],$colour);
-					}
-
+					// 090406 outlines now done in their own function
 					ImageSetThickness($this->im,
 								$this->routetypes[$segment['type']]['width']);
 
@@ -279,7 +285,53 @@ class Image
 				}
 
 				// do something with segment names here...
-				$this->draw_segment_name ($segment["name"], $p, false);
+				// now only draw way names
+				/*
+				$this->draw_segment_name ($segment, 
+								$segment['tags']['name'], false);
+				*/
+			}
+		}	
+	}
+
+	// 090406 draw route outlines first
+	function draw_route_outlines()
+	{
+		# Only attempt to draw the line if at least one of the points
+		# is within the map
+		foreach ($this->mapdata['segments'] as $id=>$segment)
+		{
+			$segment["type"] = allocatetype($segment["tags"]);
+
+			if(!isset($this->routetypes[$segment["type"]]))
+				$segment["type"] = 0;
+
+			$p[0] = $this->map->get_point
+				($this->mapdata['nodes'][$segment['from']]);
+			$p[1] = $this->map->get_point
+				($this->mapdata['nodes'][$segment['to']]);
+
+			
+			if ( (isset($this->mapdata['nodes'][$segment['to']]) &&
+				 isset($this->mapdata['nodes'][$segment['from']]) ) &&
+			
+			($this->map->pt_within_map ($p[0]) || 
+				     $this->map->pt_within_map ($p[1]) ) 
+					 )
+
+			{
+				if(isset($this->routetypes[$segment['type']]['outlinecolour']))
+				{
+
+					ImageSetThickness($this->im,
+								$this->routetypes[$segment['type']]['width']+2);
+
+					$colour=
+						$this->routetypes [$segment['type']]['outlinecolour'];
+
+					ImageLine($this->im,$p[0]['x'],$p[0]['y'],
+								$p[1]['x'],$p[1]['y'],$colour);
+				}
 			}
 		}	
 	}
@@ -322,7 +374,7 @@ class Image
 		// residential 010 1 10 10 10 = 2+8+32+64+256 = 362 
 			362 => array ("typename"=>"residential",
 						"colour"=>$this->backcol,
-						"scolour"=>ImageColorAllocate($this->im,0,0,0),
+						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
 						"width"=>1,
 						"dashon"=>0,
 						"dashoff"=>0 ),
@@ -332,7 +384,7 @@ class Image
 		//				"colour"=>ImageColorAllocate($this->im,240,255,0),
 						"colour"=>ImageColorAllocate($this->im,192,192,192),
 //						"colour"=>$this->ltyellow,
-						"scolour"=>ImageColorAllocate($this->im,0,0,0),
+						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
 						"width"=>2,
 						"dashon"=>0,
 						"dashoff"=>0 ),
@@ -340,7 +392,7 @@ class Image
 		// B road 101 1 10 10 10 = 2+8+32+64+128+512 = 746 
 			746 => array ("typename"=>"B road",
 						"colour"=>ImageColorAllocate($this->im,253,191,111),
-						"scolour"=>ImageColorAllocate($this->im,0,0,0),
+						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
 						"width"=>4,
 						"dashon"=>0,
 						"dashoff"=>0 ),
@@ -348,7 +400,7 @@ class Image
 		// A road 110 1 10 10 10 = 2+8+32+64+256+512 = 874 
 			874 => array ("typename"=>"A road",
 						"colour"=>ImageColorAllocate($this->im,251,128,95),
-						"scolour"=>ImageColorAllocate($this->im,0,0,0),
+						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
 						"width"=>4,
 						"dashon"=>0,
 						"dashoff"=>0 ),
@@ -370,7 +422,7 @@ class Image
 		// motorway 111 1 00 00 00 = 64+128+256+512= 960 
 			960 => array ("typename"=>"motorway",
 						"colour"=>ImageColorAllocate($this->im,128,155,192),
-						"scolour"=>ImageColorAllocate($this->im,0,0,0),
+						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
 						"width"=>4,
 						"dashon"=>0,
 						"dashoff"=>0 ) ,
@@ -399,6 +451,9 @@ class Image
 						IMG_COLOR_TRANSPARENT;	
 				}
 			}
+
+			if($this->mv>=13)
+				$routetypes[$i]['width']+=($this->mv-11)*2;
 		}
 
 
@@ -420,6 +475,7 @@ class Image
 	function draw_points_of_interest()
 	{
 		$allnamedata=array();
+		$usedscale = ($this->mv > 14) ? 14: $this->mv;
 
 		$images = array
 			("hill" => array("images/peak_small.png",
@@ -480,44 +536,46 @@ class Image
 				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,14,14,14))
 			);
 
+		// 070406 changed 'type' to ['tags']['class'] for nodes
 		foreach ($this->mapdata['nodes'] as $node)
 		{
-			if($node['type']!=null)
+			if($node['tags']['class']!=null)
 			{
 				$p = $this->map->get_point($node);
 
 				//if ( $this->map->pt_within_map ($p))
 				if(1)
 				{
-					if(array_key_exists($node['type'],$images))
+					if(array_key_exists($node['tags']['class'],$images))
 					{
-						$fs = $images[$node['type']][1][$this->mv-1];
-						$imgfile=$images[$node['type']][0];
+						$fs = $images[$node['tags']['class']][1][$usedscale-1];
+						$imgfile=$images[$node['tags']['class']][0];
 						$imgsize = getimagesize($imgfile);		
 						$w = $imgsize[0];
 						$h = $imgsize[1];
 						$this->draw_image($p['x'],$p['y'], $w,$h,$imgfile,
-										$node['name'], $fs);
+										$node['tags']['name'], $fs);
 						if($fs>0)
 						{
-							$namedata['name'] = $node['name'];
+							$namedata['name'] = $node['tags']['name'];
 							$namedata['fs'] = $fs;
 							$namedata['x']= $p['x']+$w/2;
 							$namedata['y']= $p['y']+$h/2;
 							$allnamedata[] = $namedata;
 						}
 					}
-					elseif(array_key_exists($node['type'],$places))
+					elseif(array_key_exists($node['tags']['class'],$places))
 					{
-						$size = $places[$node['type']][0];
-						$fs = $places[$node['type']][1][$this->mv-1];
+						$size = $places[$node['tags']['class']][0];
+						$fs = $places[$node['tags']['class']][1][$usedscale-1];
+
 						/*
 						$this->draw_place_disc($p['x'],$p['y'],$size,
-									$node['name'],$fs);
+									$node['tags']['name'],$fs);
 									*/
 						if($fs>0)
 						{
-							$namedata['name'] = $node['name'];
+							$namedata['name'] = $node['tags']['name'];
 							$namedata['fs'] = $fs;
 							$namedata['x']=$p['x']+$size/2;
 							$namedata['y']=$p['y']+$size/2;
@@ -605,19 +663,39 @@ class Image
 	// name drawing stuff
 	// 290306 add true/false success code, also add $force to force drawing
 	// even if the segment isn't long enough
-	function draw_segment_name ($name, $p, $force)
+	//
+	// Parameters: segment, name and force (force the name to be written even
+	// if it occupies more screen space than the segment)
+	// 
+	// name not necessarily the segment name: it may be just one word of a 
+	// way name. 
+	// eg. in a way, draw different words of the way name on different segments
+
+	function draw_segment_name (&$seg, $name, $force)
 	{
+
+
 		$succ=false;
+
 		if($name)
 		{
 			$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$name);
 			$text_width = line_length($bbox[6],$bbox[7],$bbox[4],$bbox[5]);
 			$text_height = line_length($bbox[6],$bbox[7],$bbox[0],$bbox[1]);
 
+			// Work out position from provided segment
+			$p = array();
+			$p[0] = $this->map->get_point
+				($this->mapdata['nodes'][$seg['from']]);
+			$p[1] = $this->map->get_point
+				($this->mapdata['nodes'][$seg['to']]);
 			$len = line_length($p[0]['x'],$p[0]['y'],$p[1]['x'],$p[1]['y']);
 
 			$av['x'] = $p[0]['x'] + (($p[1]['x'] - $p[0]['x'])/2);
 			$av['y'] = $p[0]['y'] + (($p[1]['y'] - $p[0]['y'])/2);
+
+			$segtype=$seg["type"];
+			$segwidth=$this->routetypes[$segtype]['width']+2;
 
 			if(preg_match("/^[A-Z]+[0-9]+$/",$name))
 			{
@@ -633,54 +711,99 @@ class Image
 			}
 			elseif($len*1.25>=$text_width || $force)
 			{
-				$this->angle_text($p, 8, $this->black, $name);
+				$this->interior_angle_text($p, 8, $this->black, $name,
+							$segwidth, $text_height);
 				$succ=true;
 			}
 		}
 		return $succ;
 	}
 
+	// For drawing angle text within a segment
+	// For this, we need the segment width and the text height to correctly
+	// centre the text within the segment
+	function interior_angle_text ($p, $fontsize, $colour, $text,
+								$segwidth, $text_height)
+	{
+		$i = ($p[1]['x'] > $p[0]['x']) ? 0:1;
+		$p[$i]['y'] = $p[$i]['y'] + $segwidth/2 + $text_height/2;
+		$this->angle_text($p,$fontsize,$colour,$text);
+	}
+
 	function draw_way_names()
 	{
 		foreach($this->mapdata['ways'] as $way)
 		{
-			if($way['name'])
+			if($way['tags']['name'] && $way['tags']['name']!="")
 				$this->draw_way_name($way);
 		}
 	}
 				
 	// Draw the name of a way
-	function draw_way_name ($way)
+	function draw_way_name (&$way)
 	{
+		// middle segment
 		$i = count($way['segs']) / 2;
-		$curseg = $this->mapdata['segments'][$way['segs'][$i]];
+		//$curseg = $this->mapdata['segments'][$way['segs'][$i]];
 
-		// this is the data that draw_seg_name is expecting
-		$p[0] = $this->map->get_point($curseg['from']);
-		$p[1] = $this->map->get_point($curseg['to']);
+		// quick and messy way to get the most suitable segment
+		$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$name);
+		$text_width = line_length($bbox[6],$bbox[7],$bbox[4],$bbox[5]);
+		$text_height = line_length($bbox[6],$bbox[7],$bbox[0],$bbox[1]);
+
+		$maxlength=0;
+		$longestseg=null;
+		$p = array();
+		$segcount=0;
+		$lastdiff=99999;
+
+		foreach ($way['segs'] as $seg)
+		{
+			$segment = $this->mapdata['segments'][$seg];
+			// Work out position from provided segment
+			$p[0] = $this->map->get_point ($segment['from']);
+			$p[1] = $this->map->get_point ($segment['to']);
+			$length = line_length($p[0]['x'],$p[0]['y'],$p[1]['x'],$p[1]['y']);
+
+			// how near the middle of the way are we?
+			$diff = abs($i-$segcount);
+
+			// we're trying to find a suitably long segment near the middle of
+			// the way
+			if ($diff<$lastdiff && $length>=$text_width)
+			{
+				$maxlength=$length;
+				$longestseg=$segment;
+				$lastdiff=$diff;
+			}
+
+			$segcount++;
+		}
+
+		if($longestseg)
+			$this->draw_segment_name($longestseg,$way['tags']['name'],false);
 
 		// try to draw name on whole segment
 		// if fail, then loop through segments starting at the current one,
 		// drawing a different word on each
 
-		if(!$this->draw_segment_name($curseg[$i],$way['name'],false))
+		/*
+		if(!$this->draw_segment_name($curseg,$way['tags']['name'],false))
 		{
-			$namewords = explode(" ",$way['name']);
+			$namewords = explode(" ",$way['tags']['name']);
 			$wc=0;
 			$cont=true;
 			while($cont)	
 			{
 				$curseg = $this->mapdata['segments'][$way['segs'][$i]];
-				// this is the data that draw_seg_name is expecting
-				$p[0] = $this->map->get_point($curseg['from']);
-				$p[1] = $this->map->get_point($curseg['to']);
 
-				$this->draw_segment_name($curseg[$i],$namewords[$wc],true);
+				$this->draw_segment_name($curseg,$namewords[$wc],true);
 
 				if (++$i>=count($way['segs']) || ++$wc==count($namewords))
 					$cont=false;
 			}
 		}
+		*/
 	}
 
 	function angle_text ($p, $fontsize, $colour, $text)
@@ -835,8 +958,7 @@ class Image
 					{
 						# 08/02/05 changed parameters for slope_angle()
 						# 12/02/05 put all the text drawing code in angle_text()
-						$this->angle_text ($line_pts[$count],
-											8, $colour, $ht);
+						$this->angle_text ($line_pts[$count], 8, $colour, $ht);
 
 						$last_pt[$ht][] = $pt;
 					}
@@ -855,7 +977,7 @@ class Image
 	}
 }
 
-function allocatetype($metaData)
+function allocatetype(&$metaData)
 {
 	$types["yes,no,no,no,path"] =  2;
 
@@ -872,14 +994,24 @@ function allocatetype($metaData)
 
 	$k = array("foot","horse","bike","car","class");
 
+	
+	/*
+	for($count=0; $count<5; $count++)
+		if(!isset($metaData[$k[$count]]))
+			$metaData[$k[$count]]=($k[$count]=="class" ? "" :"no");
+			*/
+
 	foreach($types as $t=>$v)
 	{
 		$match = true;
 
+			
 		$ta = explode(",",$t);
 		for($count=0; $count<5; $count++)
 		{
-			if(!($metaData[$k[$count]]==$ta[$count] || $ta[$count]=="*"))
+			if(!($ta[$count]=="*" || 
+		 	(!isset($metaData[$k[$count]])&&$ta[$count]=="no") || 	
+			$metaData[$k[$count]]==$ta[$count]  ))
 			{
 				$match=false;
 			}
@@ -891,7 +1023,19 @@ function allocatetype($metaData)
 		}
 	}
 
-	return 0; 
+	// default type - residential road
+	return 362; 
 }
 
+function give_segs_waytags(&$ways, &$segments)
+{
+	foreach($ways as $way)
+	{
+		foreach($way["segs"] as $wayseg)
+		{
+			$segments[$wayseg]["tags"] = $way["tags"];
+		}
+	}
+}
+			
 ?>

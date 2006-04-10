@@ -135,9 +135,9 @@ files.each_hash do |row|
     error = false;
     error_msg = ''
     begin
-      parser.parse
+      parser.parse  
       dao.update_gpx_meta(gpx_id)
-
+      dao.schedule_gpx_delete(gpx_id) if points == 0
     rescue Exception => e
       error = true
       error_msg = e.to_s
@@ -148,7 +148,7 @@ files.each_hash do |row|
     #get rid of the file so we don't insert it again
 
     #send them an email indicating success
-
+  error = error || points == 0
   if email_address && email_address != ''
     msgstr = ''
     if !error
@@ -170,9 +170,7 @@ a possible #{poss_points} track points in the GPX.
 Please see the link below to find out more about uploading GPX
 files to OpenStreetMap.
 
-  http://www.openstreetmap.org/wiki/index.php/Upload
-
-
+  http://wiki.openstreetmap.org/index.php/Upload
 
 Have fun
 
@@ -190,8 +188,9 @@ Subject: Your gpx file
 Hi,
 
 It looks like your gpx file, #{name}, failed to get parsed ok.
-Please consult the error message below. If you think this is a bug please
-have a look at how to report it:
+Please consult the error message below If there is no error then
+there may be no points in your file, or it isn't a GPX. If you
+think this is a bug please have a look at how to report it:
 
   http://wiki.openstreetmap.org/index.php/Bug_Reporting
 
@@ -242,11 +241,11 @@ Your gpx file, '#{errortext}' didn't get uploaded because it was
 empty. This usually means it didn't upload from your browser correctly.
 This can happen, try it again. If errors persist, please report a bug:
 
-  http://www.openstreetmap.org/wiki/index.php/Bug_Reporting
+  http://wiki.openstreetmap.org/index.php/Bug_Reporting
 
 and learn about uploading in general:
 
-  http://www.openstreetmap.org/wiki/index.php/Upload
+  http://wiki.openstreetmap.org/index.php/Upload
 
 have fun
 

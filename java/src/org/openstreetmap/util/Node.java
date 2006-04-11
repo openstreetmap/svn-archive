@@ -63,9 +63,13 @@ public class Node extends OsmPrimitive {
 	}
 
 	public String key() {
-		return "node_" + id;
+		return key(id);
 	}
-	
+
+    public static String key(long id) {
+	    return "node_" + id;
+	}
+
 	/**
 	 * Note, that it is almost anytime the SQUARED distance is what you need.
 	 * It is faster to calculate, does not suffer as much from rounding issues and

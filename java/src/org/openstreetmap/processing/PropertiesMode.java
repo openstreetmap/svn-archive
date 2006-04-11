@@ -109,10 +109,10 @@ public class PropertiesMode extends EditMode {
 			guiHandler = new WayHandler((Way)primitive, applet, this);
 			name = ((Way)primitive).getName();
 		} else if (primitive instanceof Line) {
-			guiHandler = new LineHandler((Line)primitive);
+			guiHandler = new LineHandler((Line)primitive, applet);
 			name = ((Line)primitive).getName();
 		} else if (primitive instanceof Node) {
-			guiHandler = new NodeHandler((Node)primitive);
+			guiHandler = new NodeHandler((Node)primitive, applet);
 			name = (String)primitive.tags.get("name");
 		} else
 			throw new IllegalArgumentException("unknown class "+primitive.getClass().getName());

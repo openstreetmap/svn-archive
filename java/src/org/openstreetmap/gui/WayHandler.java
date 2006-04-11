@@ -22,7 +22,6 @@ import thinlet.Thinlet;
  */
 public final class WayHandler extends GuiHandler {
 
-	private final OsmApplet applet;
 	private PropertiesMode mode = null;
 	
 	/**
@@ -77,8 +76,7 @@ public final class WayHandler extends GuiHandler {
 	 * 		means do not modify anything.
 	 */
 	public WayHandler(Way way, OsmApplet applet, PropertiesMode mode) {
-		super(way);
-		this.applet = applet;
+		super(way, applet);
 		this.mode = mode;
 		if (mode == null) {
 			setBoolean(find("changeSegment"), "selected", true);

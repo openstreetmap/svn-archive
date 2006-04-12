@@ -29,9 +29,9 @@ function init(lt,ln,zm,t)
 	view=t;
 	document.getElementById('view').selectedIndex = view;
 
-	tileURL = 'http://www.free-map.org.uk/osm/drawmap.php';
-  tile_engine = new tile_engine_new("drag",'FULL','',tileURL,lon,lat,zoom,400,
-  						320);
+	tileURL = 'http://nick.dev.openstreetmap.org/test/drawmap.php';
+  tile_engine = new tile_engine_new("drag",'FULL','',tileURL,lon,lat,zoom,800,
+  						640);
 //  initTileEngine("drag"); 
   document.getElementById("magnify").onclick = zoomIn; 
   document.getElementById("shrink").onclick =  zoomOut; 
@@ -140,7 +140,7 @@ function readPosition()
 // freemap stuff
 
 
-var mapWidth = 400, mapHeight = 320;
+var mapWidth = 800, mapHeight = 640;
 var mapPos;
 var routeString="", drag2 = -1, mapID=0;
 var action="distance", polygontype=1 ;
@@ -813,7 +813,7 @@ function startDrawing()
 	document.getElementById("canvas1").style.visibility="visible";
 	document.getElementById("canvas1").onclick = canvasDraw;
 	var ctx=document.getElementById("canvas1").getContext("2d");
-	ctx.clearRect(0,0,400,320);
+	ctx.clearRect(0,0,800,640);
 	drawNodes(ctx);
 	ctx.stroke();
 	document.getElementById("newline").style.visibility="visible";

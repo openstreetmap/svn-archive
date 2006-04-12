@@ -12,6 +12,7 @@ require_once('latlong.php');
 require_once('defines.php');
 require_once('contours.php');
 require_once('gpxnew.php');
+require_once('dataset.php');
 
 
 // 070406 changed ['name'] to ['tags']['name'] for nodes, segments and ways
@@ -63,7 +64,8 @@ class Map
 	function get_latlon($pt)
 	{
 		$lon = $this->bottomleft['long'] +$pt['x']/$this->lonscale;
-		$lat = $this->bottomleft['lat'] + ($this->height-$pt['y'])/$this->latscale;
+		$lat = $this->bottomleft['lat'] + 
+			($this->height-$pt['y'])/$this->latscale;
 		return array ('long' => $lon, 'lat' => $lat); 
 	}
 
@@ -155,7 +157,6 @@ class Image
 	var $debug;
 
 	var $mapdata;
-	var $trackpoints;
 	var $tp;
 
 	function Image ($w, $s, $e, $n, $width, $height,  $zoom, $ls=0, 
@@ -165,56 +166,48 @@ class Image
 		$this->mv=$zoom;
 
 
-		$this->mapdata = grabOSM($w-(($e-$w)/2),
-								$s, $e, 
-								$n+(($n-$s)/2), 2);
+		$this->mapdata = new Dataset();
+		$this->mapdata->grab_direct_from_database($w, $s, $e, $n);
 		
 		// Make all segments inherit tags from their parent way
-		give_segs_waytags($this->mapdata["ways"],$this->mapdata["segments"]);
+		$this->mapdata->give_segs_waytags();
 
-		$this->trackpoints = ($tp) ? grabGPX($w,$s,$e,$n) : null;
-		$this->tp = $tp;
 
 		$this->landsat = $ls;
 
-			# 14/11/04 changed ImageCreate() to ImageCreateTrueColor();
-			# in GD2, when copying images (as we do for the icons), both source
-			# and destination image must be either paletted or true colour.
-			# (The icons are s)
-			$this->im = ImageCreateTrueColor
-					($this->map->width,$this->map->height);
+		# 14/11/04 changed ImageCreate() to ImageCreateTrueColor();
+		# in GD2, when copying images (as we do for the icons), both source
+		# and destination image must be either paletted or true colour.
+		# (The icons are s)
+		$this->im = ImageCreateTrueColor($this->map->width,$this->map->height);
 		
-			$this->backcol = ImageColorAllocate($this->im,220,220,220);
-//			$this->darkred = ImageColorAllocate($this->im,255,0,128);
-			$this->gold = ImageColorAllocate($this->im,255,255,0);
-			$this->black = ImageColorAllocate($this->im,0,0,0);
-			$this->darkred = $this->black;
-			$this->ltyellow = ImageColorAllocate($this->im,255,255,192);
-			$this->ltgreen = ImageColorAllocate($this->im,192,255,192);
-			$this->contour_colour = ImageColorAllocate($this->im,192,192,0);
-			$this->mint = ImageColorAllocate($this->im,0,192,64);
+		$this->backcol = ImageColorAllocate($this->im,220,220,220);
+		$this->gold = ImageColorAllocate($this->im,255,255,0);
+		$this->black = ImageColorAllocate($this->im,0,0,0);
+		$this->darkred = $this->black;
+		$this->ltyellow = ImageColorAllocate($this->im,255,255,192);
+		$this->ltgreen = ImageColorAllocate($this->im,192,255,192);
+		$this->contour_colour = ImageColorAllocate($this->im,192,192,0);
+		$this->mint = ImageColorAllocate($this->im,0,192,64);
 
 
-			//06/06/05 Replaced old brush loading with the following call
-			$this->routetypes=$this->load_route_types();
+		//06/06/05 Replaced old brush loading with the following call
+		$this->routetypes=$this->load_route_types();
 
-			ImageFill($this->im,100,100,$this->backcol);
-			$this->is_valid = true;
+		ImageFill($this->im,100,100,$this->backcol);
+		$this->is_valid = true;
 
-			// 06/06/05 removed hacky path style stuff: 
-			// now in load_route_types()
-
+		// 06/06/05 removed hacky path style stuff: 
+		// now in load_route_types()
 		$this->debug = $dbg;
 	}
 
 	function draw()
 	{
-		if($this->trackpoints)
-			$this->draw_trackpoints();
 		if($this->landsat>=1)
 			$this->draw_landsat();
 		
-		if($this->mv>=12 && $this->mv<=13)
+		if($this->mv>=112 && $this->mv<=113)
 			$this->draw_contours();
 			
 		$this->draw_route_outlines();
@@ -233,24 +226,21 @@ class Image
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		foreach ($this->mapdata['segments'] as $id=>$segment)
+		foreach ($this->mapdata->segments as $id=>$segment)
 		{
 			$segment["type"] = allocatetype($segment["tags"]);
 
 			if(!isset($this->routetypes[$segment["type"]]))
 				$segment["type"] = 0;
 
-			//echo "TYPE: $segment[type]<br/>";
-
-
 			$p[0] = $this->map->get_point
-				($this->mapdata['nodes'][$segment['from']]);
+				($this->mapdata->nodes[$segment['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata['nodes'][$segment['to']]);
+				($this->mapdata->nodes[$segment['to']]);
 
 			
-			if ( (isset($this->mapdata['nodes'][$segment['to']]) &&
-				 isset($this->mapdata['nodes'][$segment['from']]) ) &&
+			if ( (isset($this->mapdata->nodes[$segment['to']]) &&
+				 isset($this->mapdata->nodes[$segment['from']]) ) &&
 			
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
@@ -299,7 +289,7 @@ class Image
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		foreach ($this->mapdata['segments'] as $id=>$segment)
+		foreach ($this->mapdata->segments as $id=>$segment)
 		{
 			$segment["type"] = allocatetype($segment["tags"]);
 
@@ -307,13 +297,13 @@ class Image
 				$segment["type"] = 0;
 
 			$p[0] = $this->map->get_point
-				($this->mapdata['nodes'][$segment['from']]);
+				($this->mapdata->nodes[$segment['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata['nodes'][$segment['to']]);
+				($this->mapdata->nodes[$segment['to']]);
 
 			
-			if ( (isset($this->mapdata['nodes'][$segment['to']]) &&
-				 isset($this->mapdata['nodes'][$segment['from']]) ) &&
+			if ( (isset($this->mapdata->nodes[$segment['to']]) &&
+				 isset($this->mapdata->nodes[$segment['from']]) ) &&
 			
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
@@ -467,7 +457,11 @@ class Image
 		$bottomleft_ll = $this->map->bottomleft;
 		$topright_ll = $this->map->get_top_right();
 		$img = ImageCreateFromJPEG
-			("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=".$this->map->width."&height=".$this->map->height."&layers=global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg&bbox=$bottomleft_ll[lon],$bottomleft_ll[lat],$topright_ll[lon],$topright_ll[lat]");
+			("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=".
+			$this->map->width."&height=".$this->map->height.
+			"&layers=global_mosaic&styles=&srs=EPSG:4326&".
+			"format=image/jpeg&bbox=$bottomleft_ll[lon],$bottomleft_ll[lat],".
+			"$topright_ll[lon],$topright_ll[lat]");
 		ImageCopy($this->im,$img,0,0,0,0,MAP_WIDTH,MAP_HEIGHT);
 		*/
 	}
@@ -502,9 +496,9 @@ class Image
 				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
 			"waypoint" => array("images/waypoint.png",
 				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-				($this->tp) ? 0: -1,
-				($this->tp) ? 0: -1,
-				($this->tp) ? 0: -1)),
+				 -1,
+				 -1,
+				-1)),
 			"node" => array("images/waypoint.png",
 				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1)),
 			"tea shop" => array("images/teashop.png",
@@ -537,7 +531,7 @@ class Image
 			);
 
 		// 070406 changed 'type' to ['tags']['class'] for nodes
-		foreach ($this->mapdata['nodes'] as $node)
+		foreach ($this->mapdata->nodes as $node)
 		{
 			if($node['tags']['class']!=null)
 			{
@@ -588,18 +582,6 @@ class Image
 		$this->draw_names($allnamedata);
 	}
 
-	function draw_trackpoints()
-	{
-		foreach($this->trackpoints as $trackpoint)
-		{
-			$p = $this->map->get_point($trackpoint);
-
-			ImageFilledEllipse($this->im,$p['x'],$p['y'],
-						 	5,5,$this->gold);
-
-		}
-	}
-
 	function draw_image($x,$y,$w,$h,$imgfile,$name, $fs)
 	{
 		if($fs>=0)
@@ -627,8 +609,6 @@ class Image
 
 	function draw_names(&$namedata)
 	{
-		
-		
 		foreach($namedata as $name)
 		{
 			$this->draw_name($name['x'],$name['y'],
@@ -673,8 +653,6 @@ class Image
 
 	function draw_segment_name (&$seg, $name, $force)
 	{
-
-
 		$succ=false;
 
 		if($name)
@@ -686,9 +664,9 @@ class Image
 			// Work out position from provided segment
 			$p = array();
 			$p[0] = $this->map->get_point
-				($this->mapdata['nodes'][$seg['from']]);
+				($this->mapdata->nodes[$seg['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata['nodes'][$seg['to']]);
+				($this->mapdata->nodes[$seg['to']]);
 			$len = line_length($p[0]['x'],$p[0]['y'],$p[1]['x'],$p[1]['y']);
 
 			$av['x'] = $p[0]['x'] + (($p[1]['x'] - $p[0]['x'])/2);
@@ -732,7 +710,7 @@ class Image
 
 	function draw_way_names()
 	{
-		foreach($this->mapdata['ways'] as $way)
+		foreach($this->mapdata->ways as $way)
 		{
 			if($way['tags']['name'] && $way['tags']['name']!="")
 				$this->draw_way_name($way);
@@ -744,7 +722,7 @@ class Image
 	{
 		// middle segment
 		$i = count($way['segs']) / 2;
-		//$curseg = $this->mapdata['segments'][$way['segs'][$i]];
+		//$curseg = $this->mapdata->segments[$way['segs'][$i]];
 
 		// quick and messy way to get the most suitable segment
 		$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$name);
@@ -759,7 +737,7 @@ class Image
 
 		foreach ($way['segs'] as $seg)
 		{
-			$segment = $this->mapdata['segments'][$seg];
+			$segment = $this->mapdata->segments[$seg];
 			// Work out position from provided segment
 			$p[0] = $this->map->get_point ($segment['from']);
 			$p[1] = $this->map->get_point ($segment['to']);
@@ -795,7 +773,7 @@ class Image
 			$cont=true;
 			while($cont)	
 			{
-				$curseg = $this->mapdata['segments'][$way['segs'][$i]];
+				$curseg = $this->mapdata->segments[$way['segs'][$i]];
 
 				$this->draw_segment_name($curseg,$namewords[$wc],true);
 
@@ -1027,15 +1005,5 @@ function allocatetype(&$metaData)
 	return 362; 
 }
 
-function give_segs_waytags(&$ways, &$segments)
-{
-	foreach($ways as $way)
-	{
-		foreach($way["segs"] as $wayseg)
-		{
-			$segments[$wayseg]["tags"] = $way["tags"];
-		}
-	}
-}
 			
 ?>

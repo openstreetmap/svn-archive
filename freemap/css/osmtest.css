@@ -128,8 +128,8 @@ form
 	margin-left:auto;
 	margin-right:auto;
 	
-	width: 903px;
-	height: 538px;
+	width: 960px;
+	height: 656px;
 	color:black;
 	z-index: 2;
 	background-color:#400070;
@@ -180,9 +180,9 @@ form
 {
 	position:absolute;
 	top:0%;
-	left:603px;
-	width:150px;
-	height:434px;
+	left:816px;
+	width:144px;
+	height:640px;
 }
 
 
@@ -308,9 +308,9 @@ form
 	margin-top: auto;
 	margin-bottom: auto;
 	*/
-	top: 0px; left:147px; position:absolute;
-	width: 434px; /* 372 */
-	height: 374px;
+	top: 0px; left:0px; position:absolute;
+	width: 816px; /* 372 */
+	height: 656px;
 }
 	
 .viewport
@@ -621,11 +621,11 @@ strong
 
 #drag
 {
-	top: 14px;
-	left: 14px;
+	top: 8px;
+	left: 8px;
 	position:absolute;
-	width:400px;
-	height:320px;
+	width:800px;
+	height:640px;
 
 }
 

@@ -28,7 +28,6 @@ $w = null;
 $s = null;
 $e = null;
 $n = null;
-$writeout=false;
 #end globals
 
 /*
@@ -43,8 +42,7 @@ print_r($stuff);
 // $location is either an API URL or a local XML file
 
 function grabOSM($w0, $s0, $e0, $n0, $datamode=0, 
-				$location="http://www.openstreetmap.org/api/0.3/map",
-				$wo=false)
+				$location="http://www.openstreetmap.org/api/0.3/map")
 {
 	// Pull out half of tiles above and to left of current tile to avoid
 	// cutting off labels
@@ -54,7 +52,7 @@ function grabOSM($w0, $s0, $e0, $n0, $datamode=0,
 	switch($datamode)
 	{
 		case 1:
-			$resp2 = parseOSM($location,$w0,$s0,$e0,$n0,$wo);
+			$resp2 = parseOSM($location,$w0,$s0,$e0,$n0);
 			break;
 
 		case 0:
@@ -77,10 +75,9 @@ function grabOSM($w0, $s0, $e0, $n0, $datamode=0,
 	return $resp2;
 }
 
-function parseOSM($osm,$west=null,$south=null,$east=null,$north=null,
-					$wo=false)
+function parseOSM($osm,$west=null,$south=null,$east=null,$north=null)
 {
-	global $segments, $nodes, $ways, $w, $s, $e, $n, $writeout;
+	global $segments, $nodes, $ways, $w, $s, $e, $n; 
 //	echo "parseOSM: osm = $osm<br/>";
 
 	// 030406 setup bounding box for XML
@@ -90,13 +87,6 @@ function parseOSM($osm,$west=null,$south=null,$east=null,$north=null,
 	$s=$south;
 	$e=$east;
 	$n=$north;
-
-	// Write OSM to stdout rather than store in memory?
-	$writeout=$wo;
-	/*
-	if($writeout)
-		echo "<osm version='0.3'>\n";
-		*/
 
 	$parser = xml_parser_create();
 	xml_set_element_handler($parser,"on_start_element","on_end_element");
@@ -128,14 +118,6 @@ function parseOSM($osm,$west=null,$south=null,$east=null,$north=null,
 	}
 
 	xml_parser_free($parser);
-
-	/*
-	if($writeout)
-	{
-		echo "</osm>\n";
-		return false;
-	}
-	*/
 
 	return array("segments"=>$segments, "nodes"=>$nodes, "ways"=>$ways);
 }
@@ -266,17 +248,13 @@ function on_start_element($parser,$element,$attrs)
 function on_end_element($parser, $element)
 {
 	global $inNode, $nodes, $inSegment, $segments, $curSeg, $curNode, $curID,
-			$inWay, $curWay, $ways, $waySegs, $writeout;
+			$inWay, $curWay, $ways, $waySegs;
 
 	if($element=='NODE')
 	{
 		$inNode = false;
 		if($curNode)
 		{
-			if($writeout)
-				//nodeToOSM($curID,$curNode);
-				write_sql_node($curID, $curNode['lat'], $curNode['long'], 
-									1, tagstring($curNode['tags']));
 			$nodes[$curID] = $curNode; // 0.3 UID->ID
 		}
 	}
@@ -285,14 +263,7 @@ function on_end_element($parser, $element)
 		$inSegment = false;
 		if($curSeg)
 		{
-			if($writeout)
-			{
-				write_sql_segment($curID, $curSeg['from'], $curSeg['to'], 
-									1, tagstring($curSeg['tags']));
-				//segToOSM($curID,$curSeg);
-			}
-			else
-				$segments[$curID] = $curSeg;
+			$segments[$curID] = $curSeg;
 		}
 	}
 	elseif($element=='WAY')
@@ -308,30 +279,13 @@ function on_end_element($parser, $element)
 		foreach($waySegs as $segID)
 			$segments[$segID]['tags'] = $curWay['tags'];
 			*/
-		if($writeout)
-			write_sql_multi($curID, 1, $curWay['tags'],
-									$curWay['segs']);
-
-			//wayToOSM($curID,$curWay);
-		else
-			$ways[$curID] = $curWay;
+		$ways[$curID] = $curWay;
 	}
 }
 
 
 function on_characters ($parser, $characters)
 {
-}
-
-function get_meta_data(&$metaData,$tags)
-{
-
-	$tags_arr = explode(";", $tags);
-	foreach($tags_arr as $tag)
-	{
-		$keyval = explode("=", $tag);
-		$metaData[$keyval[0]] = $keyval[1];
-	}
 }
 
 function include_data($lat, $lon, $w, $s, $e, $n)
@@ -346,135 +300,4 @@ function include_data($lat, $lon, $w, $s, $e, $n)
 	return true;
 }
 
-function toOSM($osmver,$dataset)
-{
-	echo "<?xml version='1.0'?>\n";
-	echo "<osm version='$osmver'>\n";
-	foreach($dataset['nodes'] as $id=>$node)
-		nodeToOSM($id,$node);
-	foreach($dataset['segments'] as $id=>$seg)
-		segToOSM($id,$seg);
-	foreach($dataset['ways'] as $id=>$way)
-		wayToOSM($id,$way);
-	echo "</osm>\n";
-}
-
-
-function nodeToOSM($id,$node)
-{
-	echo "<node id='$id' lat='$node[lat]' lon='$node[long]'>\n";
-	foreach ($node['tags'] as $k=>$v)
-		echo "<tag k='$k' v='$v' />\n";
-	echo "</node>\n";
-}
-
-function segToOSM($id,$seg)
-{
-	echo "<segment id='$id' from='$seg[from]' to='$seg[to]'>\n";
-	foreach ($seg['tags'] as $k=>$v)
-		echo "<tag k='$k' v='$v' />\n";
-	echo "</segment>\n";
-}
-
-function wayToOSM($id, $way)
-{
-	echo "<way id='$id'>\n";
-	foreach ($way['tags'] as $k=>$v)
-		echo "<tag k='$k' v='$v' />\n";
-	foreach ($way['segs'] as $seg)
-		echo "<seg id='$seg' />\n";
-	echo "</way>\n";
-}
-
-function write_sql_node($id, $lat, $lon, $user_id, $tags)
-{
-
-   	$q= 
-	("insert into meta_nodes (timestamp, user_id) values (NOW(), ${user_id})" );
-
-	echo "$q;\n";
-
-    $q=( "insert into nodes (id, latitude, longitude, timestamp, user_id, visible, tags) values ( $id, ${lat}, ${lon}, NOW(), ${user_id}, 1, '$tags')" );
-	echo "$q;\n";
-}
-
-function write_sql_segment($id, $node_a_id, $node_b_id, $user_id, $tags)
-{
-
-    $sql = 
-		"insert into meta_segments (timestamp, user_id) values (NOW() , ".
-		"${user_id})";
-	echo "$sql;\n";
-
-    $sql = "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values ($id, ${node_a_id}, ${node_b_id}, NOW(), ${user_id},1, '$tags')";
-
-	echo "$sql;\n";
-
-}
-
-function write_sql_multi($id, $user_id, $tags, $segs, $type="way",$multi_id=0)
-{
-    echo ( "set @ins_time = NOW();" );
-	echo "\n";
-    echo( "set @user_id = ${user_id};" );
-	echo "\n";
-
-
-    echo( "insert into meta_${type}s (user_id, timestamp) values (@user_id, @ins_time)" );
-	echo ";\n";
-    echo( "set @id = $id ");
-	echo ";\n";
-
-    echo( "insert into ${type}s (id, user_id, timestamp) values (@id, @user_id, @ins_time)" );
-	echo ";\n";
-    echo( "set @version = last_insert_id()");
-	echo ";\n";
-
-    $tags_sql = "insert into ${type}_tags(id, k, v, version) values ";
-    $first = true;
-	foreach($tags as $k=>$v)
-	{
-	  if(!$first)
-      	$tags_sql .= ',';
-	  else
-      	$first = false;
-	  $tags_sql .= "(@id, '$k', '$v', @version)";
-	}
-
-    echo( $tags_sql );
-	echo ";\n";
-
-    $segs_sql="insert into ${type}_segments (id, segment_id, version) values ";
-
-    $first = true;
-	foreach($segs as $n)
-	{
-	  if(!$first)
-      	$segs_sql .= ',' ;
-	  else
-      	$first = false;
-      $segs_sql .= "(@id, '$n', @version)";
-	}
-
-    echo( $segs_sql );
-	echo ";\n";
-}
-function tagstring($tags)
-{
-	$first=true;
-	$ts="";
-	if(is_array($tags))
-	{
-		foreach($tags as $k=>$v)
-		{
-			if(!$first)
-				$ts.=";";
-			else
-				$first=false;
-		
-			$ts .= "$k=$v";
-		}
-	}
-	return $ts;
-}
 ?>

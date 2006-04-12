@@ -113,8 +113,9 @@ module Tiger
         else
           chains = chains_ar.first.dup
         end
-		$stderr.puts "\t\tmerging #{chains.length} chains"
+		$stderr.print "\t\tmerging #{chains.length} chains"
         return chains if chains.length == 1
+		big_set = (chains.length > 100)
         loop do
           merged_something = false
           chains.each_index do |i|
@@ -130,9 +131,12 @@ module Tiger
               end
             end
             break if merged_something  # to "continue" the outer loop
+			$stderr.print "." if big_set
           end
           break unless merged_something
+		  $stderr.print "x" if big_set
         end
+		$stderr.puts
 		$stderr.puts "\t\t\treturning #{chains.length} chains post-merge"
         return chains
       end

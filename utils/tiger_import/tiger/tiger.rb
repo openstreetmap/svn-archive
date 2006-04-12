@@ -22,7 +22,7 @@ module Tiger
 
   require "tiger/geometry"
   require "tiger/utm"
-  
+
   class Street
 
     def initialize(line_id, name, from_zip, to_zip, points)
@@ -38,6 +38,10 @@ module Tiger
     def to_zip; @to_zip; end
     def points; @points; end
 
+	def <=>(o)
+		@line_id <=> o.line_id
+	end
+
     def utm_points
       return @points.map do |pt|
         easting, northing, zone = Utm::to_utm(pt.lat, pt.long)
@@ -51,7 +55,12 @@ module Tiger
 
   end
 
-  def Tiger.merge(streets)
+	def Tiger.merge(streets, min_lat, max_lat, min_long, max_long)
+		$stderr.puts "calculating \"degree area\""
+		degree_area = (max_lat - min_lat) * (max_long - min_long)
+		same_threshold = degree_area * 0.0000214623246424551  # HACK based upon same of Manhattan streets
+		$stderr.puts "\t= #{degree_area}, same_threshold = #{same_threshold}"
+		#Geometry::Point.same_threshold = same_threshold
 	$stderr.puts "sorting streets by name"
     by_name = {}
     streets.each do |st|
@@ -138,11 +147,16 @@ module Tiger
       end
     end
 	$stderr.puts "converting into Street instances"
+	min_lat, max_lat, min_long, max_long = nil, nil, nil, nil
     streets = rt1.keys.map do |line_id|
       name, zips, coords = rt1[line_id]
       from_zip, to_zip = zips
       points = coords.map do |coord|
         lat, long = coord
+		min_lat = lat if min_lat.nil? || lat < min_lat
+		max_lat = lat if max_lat.nil? || lat > max_lat
+		min_long = long if min_long.nil? || long < min_long
+		max_long = long if max_long.nil? || long > max_long
         pt = Geometry::Point.new
         pt.lat = lat
         pt.long = long
@@ -150,9 +164,9 @@ module Tiger
       end
       Street.new(line_id, name, from_zip, to_zip, points)
     end
-    merged_streets = merge(streets)
+    merged_streets = Tiger.merge(streets, min_lat, max_lat, min_long, max_long)
 	$stderr.puts "returning finished streets"
-    return merged_streets
+	[merged_streets, min_lat, max_lat, min_long, max_long]
   end
 
 end

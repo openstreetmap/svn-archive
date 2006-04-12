@@ -1,0 +1,219 @@
+#!/usr/bin/env ruby
+
+=begin Copyright (C) 2005 Ben Gimpert (ben@somethingmodern.com)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+=end
+
+require "cgi"
+require "fileutils"
+require "find"
+require "net/http"
+require "rexml/document"
+require "uri"
+
+require "tiger/tiger"
+
+LOGIN = "ben_tiger@somethingmodern.com"
+PASSWORD = "january"
+
+TMP_DIR = File.expand_path(File.dirname(__FILE__) + "/tmp")
+
+def usage
+	$stderr.print <<EOF
+Pass the root of the TIGER 2005 download as the first argument, with
+an optional starting street number as the second.
+
+Usage: $ ./to_osm /some_dir/tiger2005fe/ [street-num]
+
+EOF
+	exit(1)
+end
+
+def read_rt(zip)
+	FileUtils.rm_rf(TMP_DIR) if File.exist?(TMP_DIR)
+	FileUtils.mkdir_p(TMP_DIR)
+	$stderr.puts "reading RT1 and RT2 from \"#{zip}\""
+	FileUtils.cp(zip, "#{TMP_DIR}/current.zip")
+	rt1_s, rt2_s = nil, nil
+	Dir.chdir(TMP_DIR) do
+		`/usr/bin/unzip ./current.zip`
+		Dir["*.RT1"].each { |rt1_f| rt1_s = IO.read(rt1_f) }
+		Dir["*.RT2"].each { |rt2_f| rt2_s = IO.read(rt2_f) }
+	end
+	[rt1_s, rt2_s]
+end
+
+def osm(method_class, url_snippet, req_body = nil)
+	$stderr.puts "GETting URL snippet \"#{url_snippet}\""
+	Net::HTTP.start("www.openstreetmap.org") do |http|
+		req = method_class.new("/api/0.3/#{url_snippet}")
+		req.basic_auth(LOGIN, PASSWORD)
+		req.body = req_body unless req_body.nil?
+		resp = http.request(req)
+		case resp.code.to_i
+		when 400
+			throw "Bad Request(400) on \"#{url_snippet}\""
+		when 401
+			throw "Authorization Required(401) on \"#{url_snippet}\" with #{LOGIN}/#{PASSWORD}"
+		when 404
+			throw "Not Found(404) on \"#{url_snippet}\""
+		when 410
+			throw "Gone(410) on \"#{url_snippet}\""
+		when 500
+			throw "Internal Server Error(500) on \"#{url_snippet}\""
+		when 200
+			$stderr.puts "response is #{resp.body.length} bytes, before parsing"
+			return REXML::Document.new(resp.body)
+		end
+	end
+end
+
+def osm_get(url_snippet)
+	osm(Net::HTTP::Get, url_snippet)
+end
+
+def osm_put(url_snippet, req_body)
+	osm(Net::HTTP::Put, url_snippet)
+end
+
+def hash_to_tags(h)
+	s = ''
+	h.each_pair do |key, value|
+		s += "<tag k=\"#{key}\" v=\"#{value}\"/>\n"
+	end
+	s
+end
+
+def osm_xml
+	<<EOF
+<?xml version="1.0"?>
+<osm version="0.3" generator="Tiger Import">
+#{yield}
+</osm>
+EOF
+end
+
+def create_node(lat, long, tags = {})
+	xml = osm_xml do
+		"<node lat=\"#{lat}\" lon=\"#{long}\" id=\"0\">\n" +
+		hash_to_tags(tags) +
+		"</node>\n"
+	end
+	doc = put_osm("node/0", xml)
+	doc.elements.each("osm/node") do |elem|
+		return elem.attributes["id"].to_i
+	end
+	throw "Could not extract new node ID out of response XML"
+end
+
+def create_segment(from_node, to_node, tags = {})
+	xml = osm_xml do
+		"<segment from=\"#{from_node}\" to=\"#{to_node}\" id=\"0\">\n" +
+		hash_to_tags(tags) +
+		"</segment>\n"
+	end
+	put_osm("segment/0", xml)
+	doc.elements.each("osm/segment") do |elem|
+		return elem.attributes["id"].to_i
+	end
+	throw "Could not extract new segment ID out of response XML"
+end
+
+def create_way(seg_ids, tags = {})
+	xml = osm_xml do
+		"<way id=\"0\">\n" +
+		segs.map { |seg_id| "<seg id=\"#{seg_id}\"/>\n" }.join +
+		hash_to_tags(tags) +
+		"</way>\n"
+	end
+	put_osm("way/0", xml)
+	doc.elements.each("osm/way") do |elem|
+		return elem.attributes["id"].to_i
+	end
+	throw "Could not extract new way ID out of response XML"
+end
+
+def backoff
+	delay = 1.5  # seconds
+	loop do
+		begin
+			result = yield
+			return result
+		rescue =>ex
+			# problem in the block, so try again after a delay
+		end
+		sleep(delay)
+		delay = delay ** 2  # exponential backoff
+		throw "Backoff delay over an hour" if delay > 60 * 60
+	end
+end
+
+def create_street_raw(street)
+	prev_node_id = nil
+	seg_ids = []
+	street.coords.each do |coord|
+		lat, long = coord
+		if prev_node_id.nil?
+			prev_node_id = create_node(lat, long)
+		else
+			next_node_id = create_node(lat, long)
+			seg_ids << create_segment(prev_node_id, next_node_id)
+			prev_node_id = next_node_id
+		end
+	end
+	tags = {
+		"name" => street.name,
+		"from_zip" => street.from_zip,
+		"to_zip" => street.to_zip,
+	}
+	way_id = create_way(seg_ids, tags)
+end
+
+def create_street(street)
+	# with error checking and backoff
+	throw "Attempt to create nil street" if street.nil?
+	throw "Attempt to create street with less than two coordinates" if street.coords.nil? || (street.coords.length < 2)
+	way_id = backoff { create_street_raw(street) }
+	$stderr.puts "\tcreated way with ID #{way_id}"
+	way_id
+end
+
+usage unless ARGV.length >= 1
+path = ARGV.first
+usage unless File.exist?(path) && File.directory?(path)
+start_i = 0
+start_i = ARGV[1].to_i if ARGV.length > 1
+zips = []
+Find.find(path) { |f| zips << f if f =~ /\.zip$/i }
+i = 0
+zips.sort!
+zips.each do |zip|
+	rt1, rt2 = read_rt(zip)
+	$stderr.puts "\tRT1 file length = #{rt1.length}"
+	$stderr.puts "\tRT2 file length = #{rt2.length}"
+	streets = Tiger::import(rt1, rt2)
+	streets.sort!
+	streets.each do |street|
+		if i <= start_i
+			create_street(street)
+			$stderr.puts "created street number #{i}"
+		end
+	end
+	i += 1
+break  # TODO remove after debugging
+end
+

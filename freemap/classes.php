@@ -207,7 +207,7 @@ class Image
 		if($this->landsat>=1)
 			$this->draw_landsat();
 		
-		if($this->mv>=112 && $this->mv<=113)
+		if($this->mv>=12 && $this->mv<=13)
 			$this->draw_contours();
 			
 		$this->draw_route_outlines();

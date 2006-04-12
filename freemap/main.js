@@ -29,7 +29,7 @@ function init(lt,ln,zm,t)
 	view=t;
 	document.getElementById('view').selectedIndex = view;
 
-	tileURL = 'http://nick.dev.openstreetmap.org/test/drawmap.php';
+	tileURL = 'http://nick.dev.openstreetmap.org/drawmap.php';
   tile_engine = new tile_engine_new("drag",'FULL','',tileURL,lon,lat,zoom,800,
   						640);
 //  initTileEngine("drag"); 

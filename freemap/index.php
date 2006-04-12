@@ -39,9 +39,7 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 
 <div id="vpcontainer">
 		
-	<div id="drag" style='width:400px; height: 320px'></div>
-	<canvas id="canvas1" width="400" height="320">
-	</canvas>
+	<div id="drag" style='width:800px; height: 640px'></div>
 	
 </div>
 
@@ -312,8 +310,6 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 
 
 		<?php showScaleControl(); ?>
-</div>
-<div id="mapdiv4">
 		<div class="panel">
 		<h1>Go to</h1>
 			<div>
@@ -348,14 +344,6 @@ echo "<body onload='init($_SESSION[lat],$_SESSION[lon],$_SESSION[zoom],$trk)'>";
 		</select>
 		</div>
 </div>
-
-<div id="bottomarea">
-<div id='status'>
-<h3>OSM drawing client testing</h3>
-<p> This page is a testing page for new OSM map-drawing code.</p>
-</div>
-</div>
-
 
 <div id="promptbox">
 <h3>Enter details</h3>

@@ -113,7 +113,7 @@ module Tiger
 				else
 					chains = chains_ar.first.dup
 				end
-				$stderr.print "\t\tmerging #{chains.length} chains"
+				$stderr.puts "\t\tmerging #{chains.length} chains"
 				return chains if chains.length == 1
 				big_set = (chains.length > 100)
 				loop do

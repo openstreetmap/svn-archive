@@ -22,7 +22,7 @@ require "cgi"
 require "fileutils"
 require "find"
 require "net/http"
-require "rexml/document"
+#require "rexml/document"  # until Christian installs librexml-ruby
 require "uri"
 
 require "tiger/tiger"
@@ -30,7 +30,8 @@ require "tiger/tiger"
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
 
-TMP_DIR = File.expand_path(File.dirname(__FILE__) + "/tmp")
+THIS_DIR = File.expand_path(File.dirname(__FILE__))
+TMP_DIR = "#{THIS_DIR}/tmp"
 
 def usage
 	$stderr.print <<EOF
@@ -41,6 +42,20 @@ Usage: $ ./to_osm /some_dir/tiger2005fe/ [street-num]
 
 EOF
 	exit(1)
+end
+
+def demonize
+	# from "http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/87467"
+	exit if fork                   # Parent exits, child continues.
+	Process.setsid                 # Become session leader.
+	exit if fork                   # Zap session leader.
+	Dir.chdir "/"                  # Release old working directory.
+	File.umask 0000                # Ensure sensible umask.
+	STDIN.reopen "/dev/null"       # Free file descriptors and point them at the log.
+	STDOUT.reopen "#{THIS_DIR}/to_osm.log", "a"
+	STDERR.reopen STDOUT
+	File.open("#{THIS_DIR}/to_osm.pid", "w") { |f| f.puts $$ }
+	yield
 end
 
 def read_rt(zip)
@@ -154,11 +169,11 @@ def backoff
 			result = yield
 			return result
 		rescue =>ex
-			# problem in the block, so try again after a delay
+			$stderr.puts "problem in backoff block, \"#{ex.message}\" #{ex.backtrace.join(" -> ")}"
 		end
 		sleep(delay)
 		delay = delay ** 2  # exponential backoff
-		throw "Backoff delay over an hour" if delay > 60 * 60
+		throw "Backoff delay over three hours" if delay > 60 * 60 * 3
 	end
 end
 
@@ -197,23 +212,26 @@ path = ARGV.first
 usage unless File.exist?(path) && File.directory?(path)
 start_i = 0
 start_i = ARGV[1].to_i if ARGV.length > 1
-zips = []
-Find.find(path) { |f| zips << f if f =~ /\.zip$/i }
-i = 0
-zips.sort!
-zips.each do |zip|
-	rt1, rt2 = read_rt(zip)
-	$stderr.puts "\tRT1 file length = #{rt1.length}"
-	$stderr.puts "\tRT2 file length = #{rt2.length}"
-	streets = Tiger::import(rt1, rt2)
-	streets.sort!
-	streets.each do |street|
-		if i <= start_i
-			create_street(street)
-			$stderr.puts "created street number #{i}"
+
+#demonize do
+	zips = []
+	Find.find(path) { |f| zips << f if f =~ /\.zip$/i }
+	i = 0
+	zips.sort!
+	zips.each do |zip|
+		rt1, rt2 = read_rt(zip)
+		$stderr.puts "\tRT1 file length = #{rt1.length}"
+		$stderr.puts "\tRT2 file length = #{rt2.length}"
+		streets = Tiger::import(rt1, rt2)
+		streets.sort!
+		streets.each do |street|
+			if i <= start_i
+				create_street(street)
+				$stderr.puts "created street number #{i}"
+			end
 		end
-	end
-	i += 1
+		i += 1
 break  # TODO remove after debugging
-end
+	end
+#end
 

@@ -29,7 +29,9 @@ require "tiger/tiger"
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
+DEBUG = true
 
+DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
 TMP_DIR = "#{THIS_DIR}/tmp"
 
@@ -45,16 +47,18 @@ EOF
 end
 
 def demonize
-	# from "http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/87467"
-	exit if fork                   # Parent exits, child continues.
-	Process.setsid                 # Become session leader.
-	exit if fork                   # Zap session leader.
-	Dir.chdir "/"                  # Release old working directory.
-	File.umask 0000                # Ensure sensible umask.
-	STDIN.reopen "/dev/null"       # Free file descriptors and point them at the log.
-	STDOUT.reopen "#{THIS_DIR}/to_osm.log", "a"
-	STDERR.reopen STDOUT
-	File.open("#{THIS_DIR}/to_osm.pid", "w") { |f| f.puts $$ }
+	if DEMONIZE
+		# from "http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-talk/87467"
+		exit if fork                   # Parent exits, child continues.
+		Process.setsid                 # Become session leader.
+		exit if fork                   # Zap session leader.
+		Dir.chdir "/"                  # Release old working directory.
+		File.umask 0000                # Ensure sensible umask.
+		STDIN.reopen "/dev/null"       # Free file descriptors and point them at the log.
+		STDOUT.reopen "#{THIS_DIR}/to_osm.log", "a"
+		STDERR.reopen STDOUT
+		File.open("#{THIS_DIR}/to_osm.pid", "w") { |f| f.puts $$ }
+	end
 	yield
 end
 
@@ -128,7 +132,7 @@ def create_node(lat, long, tags = {})
 		hash_to_tags(tags) +
 		"</node>\n"
 	end
-	doc = put_osm("node/0", xml)
+	doc = osm_put("node/0", xml)
 	doc.elements.each("osm/node") do |elem|
 		return elem.attributes["id"].to_i
 	end
@@ -141,7 +145,7 @@ def create_segment(from_node, to_node, tags = {})
 		hash_to_tags(tags) +
 		"</segment>\n"
 	end
-	put_osm("segment/0", xml)
+	osm_put("segment/0", xml)
 	doc.elements.each("osm/segment") do |elem|
 		return elem.attributes["id"].to_i
 	end
@@ -155,7 +159,7 @@ def create_way(seg_ids, tags = {})
 		hash_to_tags(tags) +
 		"</way>\n"
 	end
-	put_osm("way/0", xml)
+	osm_put("way/0", xml)
 	doc.elements.each("osm/way") do |elem|
 		return elem.attributes["id"].to_i
 	end
@@ -163,11 +167,10 @@ def create_way(seg_ids, tags = {})
 end
 
 def backoff
-	delay = 1.5  # seconds
+	delay = 1.25  # seconds, must be > 1
 	loop do
 		begin
-			result = yield
-			return result
+			return yield
 		rescue =>ex
 			$stderr.puts "problem in backoff block, \"#{ex.message}\" #{ex.backtrace.join(" -> ")}"
 		end
@@ -180,8 +183,8 @@ end
 def create_street_raw(street)
 	prev_node_id = nil
 	seg_ids = []
-	street.coords.each do |coord|
-		lat, long = coord
+	street.points.each do |pt|
+		lat, long = pt.lat, pt.long
 		if prev_node_id.nil?
 			prev_node_id = create_node(lat, long)
 		else
@@ -201,19 +204,19 @@ end
 def create_street(street)
 	# with error checking and backoff
 	throw "Attempt to create nil street" if street.nil?
-	throw "Attempt to create street with less than two coordinates" if street.coords.nil? || (street.coords.length < 2)
+	throw "Attempt to create street with less than two coordinates" if street.points.nil? || (street.points.length < 2)
 	way_id = backoff { create_street_raw(street) }
 	$stderr.puts "\tcreated way with ID #{way_id}"
 	way_id
 end
 
 usage unless ARGV.length >= 1
-path = ARGV.first
+path = File.expand_path(ARGV.first)
 usage unless File.exist?(path) && File.directory?(path)
 start_i = 0
 start_i = ARGV[1].to_i if ARGV.length > 1
 
-#demonize do
+demonize do
 	zips = []
 	Find.find(path) { |f| zips << f if f =~ /\.zip$/i }
 	i = 0
@@ -231,7 +234,7 @@ start_i = ARGV[1].to_i if ARGV.length > 1
 			end
 		end
 		i += 1
-break  # TODO remove after debugging
+		break if DEBUG
 	end
-#end
+end
 

@@ -165,10 +165,11 @@ module Tiger
 		end
 		if should_merge_streets
 			merged_streets = Tiger.merge(streets, min_lat, max_lat, min_long, max_long)
-			$stderr.puts "returning finished streets"
-			[merged_streets, min_lat, max_lat, min_long, max_long]
+			$stderr.puts "returning merged, finished streets"
+			merged_streets
 		else
-			[streets, min_lat, max_lat, min_long, max_long]
+			$stderr.puts "returning (just) finished streets"
+			streets
 		end
 	end
 

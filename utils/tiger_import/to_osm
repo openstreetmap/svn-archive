@@ -84,7 +84,7 @@ def osm(method_class, url_snippet, req_body = nil)
 		req.basic_auth(LOGIN, PASSWORD)
 		resp = http.request(req, req_body)
 		$stderr.puts "request(\"#{url_snippet}\") =\n#{req_body}" if DEBUG
-		$stderr.puts "resp.body =\n#{resp.body}" if DEBUG
+		$stderr.puts "resp.body = #{resp.body}" if DEBUG
 		case resp.code.to_i
 		when 400
 			throw "Bad Request(400) on \"#{url_snippet}\""
@@ -97,8 +97,7 @@ def osm(method_class, url_snippet, req_body = nil)
 		when 500
 			throw "Internal Server Error(500) on \"#{url_snippet}\""
 		when 200
-			$stderr.puts "response is #{resp.body.length} bytes, before parsing"
-			return REXML::Document.new(resp.body)
+			return resp.body
 		end
 	end
 end
@@ -134,11 +133,8 @@ def create_node(lat, long, tags = {})
 		hash_to_tags(tags) +
 		"</node>"
 	end
-	doc = osm_put("node/0", xml)
-	doc.elements.each("osm/node") do |elem|
-		return elem.attributes["id"].to_i
-	end
-	throw "Could not extract new node ID out of response XML"
+	node = osm_put("node/0", xml)
+	node.to_i
 end
 
 def create_segment(from_node, to_node, tags = {})
@@ -147,25 +143,19 @@ def create_segment(from_node, to_node, tags = {})
 		hash_to_tags(tags) +
 		"</segment>"
 	end
-	osm_put("segment/0", xml)
-	doc.elements.each("osm/segment") do |elem|
-		return elem.attributes["id"].to_i
-	end
-	throw "Could not extract new segment ID out of response XML"
+	segment = osm_put("segment/0", xml)
+	segment.to_i
 end
 
 def create_way(seg_ids, tags = {})
 	xml = osm_xml do
 		"<way id=\"0\">\n" +
-		segs.map { |seg_id| "<seg id=\"#{seg_id}\"/>\n" }.join +
+		seg_ids.map { |seg_id| "<seg id=\"#{seg_id}\"/>\n" }.join +
 		hash_to_tags(tags) +
 		"</way>"
 	end
-	osm_put("way/0", xml)
-	doc.elements.each("osm/way") do |elem|
-		return elem.attributes["id"].to_i
-	end
-	throw "Could not extract new way ID out of response XML"
+	way = osm_put("way/0", xml)
+	way.to_i
 end
 
 def backoff
@@ -233,6 +223,7 @@ demonize do
 			if i <= start_i
 				create_street(street)
 				$stderr.puts "created street number #{i}"
+				sleep(3)  # let the server catch up
 			end
 		end
 		i += 1

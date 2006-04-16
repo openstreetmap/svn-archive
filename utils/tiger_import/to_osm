@@ -175,8 +175,11 @@ end
 def create_street_raw(street)
 	prev_node_id = nil
 	seg_ids = []
+	total_lat, total_long = 0, 0
 	street.points.each do |pt|
 		lat, long = pt.lat, pt.long
+		total_lat += lat
+		total_long += long
 		if prev_node_id.nil?
 			prev_node_id = create_node(lat, long)
 		else
@@ -185,6 +188,9 @@ def create_street_raw(street)
 			prev_node_id = next_node_id
 		end
 	end
+	av_lat = total_lat / street.points.length
+	av_long = total_long / street.points.length
+	$stderr.puts "\tcenter lat, long = #{av_lat}, #{av_long}"
 	tags = {
 		"name" => street.name,
 		"from_zip" => street.from_zip,

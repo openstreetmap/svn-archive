@@ -29,7 +29,7 @@ require "tiger/tiger"
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
-DEBUG = false
+DEBUG = true
 
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -214,13 +214,15 @@ demonize do
 	i = 0
 	zips.sort!
 	zips.each do |zip|
+		$stderr.puts "reading ZIP file \"#{zip}\""
 		rt1, rt2 = read_rt(zip)
 		$stderr.puts "\tRT1 file length = #{rt1.length}"
 		$stderr.puts "\tRT2 file length = #{rt2.length}"
 		streets = Tiger::import(rt1, rt2)
 		streets.sort!
+		$stderr.puts "\tnumber of streest = #{streets.length}"
 		streets.each do |street|
-			if i <= start_i
+			if i >= start_i
 				create_street(street)
 				$stderr.puts "created street number #{i}"
 				sleep(3)  # let the server catch up

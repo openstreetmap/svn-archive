@@ -29,7 +29,7 @@ require "tiger/tiger"
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
-DEBUG = true
+DEBUG = false
 
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -225,8 +225,8 @@ demonize do
 				$stderr.puts "created street number #{i}"
 				sleep(3)  # let the server catch up
 			end
+			i += 1
 		end
-		i += 1
 		break if DEBUG
 	end
 end

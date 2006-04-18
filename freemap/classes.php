@@ -13,6 +13,7 @@ require_once('defines.php');
 require_once('contours.php');
 require_once('gpxnew.php');
 require_once('dataset.php');
+require_once('rules.php');
 
 
 // 070406 changed ['name'] to ['tags']['name'] for nodes, segments and ways
@@ -144,9 +145,7 @@ class Image
 		$map, 
 		$backcol, 
 		$mapview,
-		$routetypes,
-		$mv,
-		$darkred,
+		$zoom,
 		$black,
 		$gold,
 		$ltyellow,
@@ -163,7 +162,7 @@ class Image
 					$tp=0, $dbg=0)
 	{
 		$this->map = new Map ($w,$s,$e,$n, $width, $height);
-		$this->mv=$zoom;
+		$this->zoom=$zoom;
 
 
 		$this->mapdata = new Dataset();
@@ -184,7 +183,6 @@ class Image
 		$this->backcol = ImageColorAllocate($this->im,220,220,220);
 		$this->gold = ImageColorAllocate($this->im,255,255,0);
 		$this->black = ImageColorAllocate($this->im,0,0,0);
-		$this->darkred = $this->black;
 		$this->ltyellow = ImageColorAllocate($this->im,255,255,192);
 		$this->ltgreen = ImageColorAllocate($this->im,192,255,192);
 		$this->contour_colour = ImageColorAllocate($this->im,192,192,0);
@@ -192,14 +190,26 @@ class Image
 
 
 		//06/06/05 Replaced old brush loading with the following call
-		$this->routetypes=$this->load_route_types();
+		//$this->segmenttypes=$this->load_segment_types();
+		//130406 replaced again with style rules
+		$this->styleRules = readStyleRules("freemap.xml");
 
 		ImageFill($this->im,100,100,$this->backcol);
 		$this->is_valid = true;
 
 		// 06/06/05 removed hacky path style stuff: 
-		// now in load_route_types()
+		// now in load_segment_types()
 		$this->debug = $dbg;
+		if($this->debug==1)
+		{
+			echo "<h1>Before processing</h1>\n";
+			print_r($this->styleRules);
+			echo "<br/>";
+//			$this->processStyleRules();
+			echo "<h1>After processing</h1>\n";
+			print_r($this->styleRules);
+			echo "<br/>";
+		}
 	}
 
 	function draw()
@@ -207,14 +217,15 @@ class Image
 		if($this->landsat>=1)
 			$this->draw_landsat();
 		
-		if($this->mv>=12 && $this->mv<=13)
+		if($this->zoom>=12 && $this->zoom<=13)
 			$this->draw_contours();
 			
-		$this->draw_route_outlines();
-		$this->draw_routes();
+		$this->draw_segment_outlines();
+		$this->draw_segments();
 		$this->draw_points_of_interest();
 
-		if($this->mv >= 13)
+
+		if($this->zoom >= 113)
 			$this->draw_way_names();
 
 		ImagePNG($this->im);
@@ -222,56 +233,65 @@ class Image
 	}
 
 	
-	function draw_routes()
+	function draw_segments()
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		foreach ($this->mapdata->segments as $id=>$segment)
-		{
-			$segment["type"] = allocatetype($segment["tags"]);
 
-			if(!isset($this->routetypes[$segment["type"]]))
-				$segment["type"] = 0;
+		$ids = array_keys($this->mapdata->segments);
+		foreach ($ids as $id)
+		{
 
 			$p[0] = $this->map->get_point
-				($this->mapdata->nodes[$segment['from']]);
+				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata->nodes[$segment['to']]);
+				($this->mapdata->nodes[$this->mapdata->segments[$id]['to']]);
 
 			
-			if ( (isset($this->mapdata->nodes[$segment['to']]) &&
-				 isset($this->mapdata->nodes[$segment['from']]) ) &&
+			if ( (isset($this->mapdata->nodes
+					[$this->mapdata->segments[$id]['to']]) 
+						&&
+				 isset($this->mapdata->nodes
+				 	[$this->mapdata->segments[$id]['from']]) ) &&
 			
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
 					 )
 
 			{
-		
-				// 07/06/05 Changed this to reflect the new way
-				// that dashed lines are stored in the database.
-				if(!isset($this->routetypes [$segment['type']]['pathstyle']))
+				$rgb=explode(",",
+						$this->mapdata->segments[$id]["style"]["colour"]);
+
+				if(count($rgb)==3)
 				{
+					$colour = ImageColorAllocate
+							($this->im, $rgb[0],$rgb[1],$rgb[2]);
+					$width = $this->getZoomLevelValue
+							($this->mapdata->segments[$id]["style"]["width"]);
 
-					// 090406 outlines now done in their own function
-					ImageSetThickness($this->im,
-								$this->routetypes[$segment['type']]['width']);
+					ImageSetThickness($this->im, $width);
+					// 07/06/05 Changed this to reflect the new way
+					// that dashed lines are stored in the database.
+					if(isset($this->mapdata->segments[$id]["style"]["dash"]))
+					{
 
-					$colour=$this->routetypes [$segment['type']]['colour'];
+						$dash = 
+							$this->makeDashPattern
+							($this->mapdata->segments[$id]["style"]["dash"],
+							$colour);
+						ImageSetStyle($this->im,  $dash);
 
-					ImageLine($this->im,$p[0]['x'],$p[0]['y'],
-								$p[1]['x'],$p[1]['y'],$colour);
-				}
-				else
-				{
-					ImageSetStyle($this->im, 
-								$this->routetypes 
-								[$segment['type']]['pathstyle']);
-					ImageSetThickness($this->im, 
-							$this->routetypes[$segment['type']]['width']);
-					ImageLine($this->im,$p[0]['x'],$p[0]['y'],
+
+						ImageLine($this->im,$p[0]['x'],$p[0]['y'],
 							$p[1]['x'],$p[1]['y'],
 							IMG_COLOR_STYLED);
+					}
+					else
+					{
+						// 090406 outlines now done in their own function
+						ImageLine($this->im,$p[0]['x'],$p[0]['y'],
+								$p[1]['x'],$p[1]['y'],$colour);
+					}
 				}
 
 				// do something with segment names here...
@@ -284,41 +304,47 @@ class Image
 		}	
 	}
 
-	// 090406 draw route outlines first
-	function draw_route_outlines()
+	// 090406 draw segment outlines first
+	function draw_segment_outlines()
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		foreach ($this->mapdata->segments as $id=>$segment)
+		$ids = array_keys($this->mapdata->segments);
+		foreach ($ids as $id)
 		{
-			$segment["type"] = allocatetype($segment["tags"]);
-
-			if(!isset($this->routetypes[$segment["type"]]))
-				$segment["type"] = 0;
-
+					
+			$this->mapdata->segments[$id]["style"] = 
+				getStyle($this->styleRules,
+							$this->mapdata->segments[$id]["tags"]);
 			$p[0] = $this->map->get_point
-				($this->mapdata->nodes[$segment['from']]);
+				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata->nodes[$segment['to']]);
+				($this->mapdata->nodes[$this->mapdata->segments[$id]['to']]);
 
-			
-			if ( (isset($this->mapdata->nodes[$segment['to']]) &&
-				 isset($this->mapdata->nodes[$segment['from']]) ) &&
+
+			if ( (isset($this->mapdata->nodes[$this->mapdata->segments
+								[$id]['to']]) &&
+				 isset($this->mapdata->nodes[$this->mapdata->segments
+				 						[$id]['from']]) ) &&
 			
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
 					 )
 
 			{
-				if(isset($this->routetypes[$segment['type']]['outlinecolour']))
+				if($this->mapdata->segments[$id]["style"]["casing"]!=null)	
 				{
-
-					ImageSetThickness($this->im,
-								$this->routetypes[$segment['type']]['width']+2);
-
-					$colour=
-						$this->routetypes [$segment['type']]['outlinecolour'];
-
+					$rgb=explode(",",
+						$this->mapdata->segments[$id]["style"]["casing"]);
+					if(count($rgb)==3)
+					{
+						$colour = ImageColorAllocate
+						($this->im, $rgb[0],$rgb[1],$rgb[2]);
+						$width = $this->getZoomLevelValue
+							($this->mapdata->segments[$id]["style"]["width"])
+							+2;
+					}
+					ImageSetThickness($this->im, $width);
 					ImageLine($this->im,$p[0]['x'],$p[0]['y'],
 								$p[1]['x'],$p[1]['y'],$colour);
 				}
@@ -326,285 +352,67 @@ class Image
 		}	
 	}
 
-	// 06/06/05 New function. Comments for load_reps(), above, also apply 
-	// here.
-	function load_route_types()
-	{
-
-		// Bits 0,1 foot permissions (no=0, unofficial=1, yes=2)
-		// Bits 2,3 horse permissions (ditto)
-		// Bits 4,5 cycle permissions (ditto)
-		// Bits 6 car permissions (off or on only)
-		// Bits 7-9 class (path, unsurfaced, estate, minor, street, B, A, 
-		// motorway) 
-
-		$routetypes = array (
-		// footpath 000 0 00 00 10 = 2
-			2 => array ("typename"=>"footpath",
-						"colour"=>ImageColorAllocate($this->im,255,0,0),
-						"width"=>1,
-						"dashon"=>2,
-						"dashoff"=>2 ),
-
-		
-		// bridleway 000 0 10 10 10 = 42
-			42 => array ("typename"=>"bridleway",
-						"colour"=>ImageColorAllocate($this->im,255,0,0),
-						"width"=>2,
-						"dashon"=>6,
-						"dashoff"=>6 ),
-
-		// byway 001 1 10 10 10 = 2+8+32+64+128 = 234
-			234 => array ("typename"=>"byway",
-						"colour"=>ImageColorAllocate($this->im,255,0,0),
-						"width"=>2,
-						"dashon"=>0,
-						"dashoff"=>0 ),
-
-		// residential 010 1 10 10 10 = 2+8+32+64+256 = 362 
-			362 => array ("typename"=>"residential",
-						"colour"=>$this->backcol,
-						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
-						"width"=>1,
-						"dashon"=>0,
-						"dashoff"=>0 ),
-
-		// minor road 011 1 10 10 10 = 2+8+32+64+128+256= 490
-			490 => array ("typename"=>"minor road",
-		//				"colour"=>ImageColorAllocate($this->im,240,255,0),
-						"colour"=>ImageColorAllocate($this->im,192,192,192),
-//						"colour"=>$this->ltyellow,
-						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
-						"width"=>2,
-						"dashon"=>0,
-						"dashoff"=>0 ),
-
-		// B road 101 1 10 10 10 = 2+8+32+64+128+512 = 746 
-			746 => array ("typename"=>"B road",
-						"colour"=>ImageColorAllocate($this->im,253,191,111),
-						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
-						"width"=>4,
-						"dashon"=>0,
-						"dashoff"=>0 ),
-
-		// A road 110 1 10 10 10 = 2+8+32+64+256+512 = 874 
-			874 => array ("typename"=>"A road",
-						"colour"=>ImageColorAllocate($this->im,251,128,95),
-						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
-						"width"=>4,
-						"dashon"=>0,
-						"dashoff"=>0 ),
-
-		// permissive footpath 000 0 00 00 01 = 1
-			1 => array ("typename"=>"permissive footpath",
-						"colour"=>ImageColorAllocate($this->im,192,96,0),
-						"width"=>1,
-						"dashon"=>1,
-						"dashoff"=>2 ),
-
-		// permissive bridleway 000 0 01 01 01 = 21 
-			21 => array ("typename"=>"permissive bridleway",
-						"colour"=>ImageColorAllocate($this->im,192,96,0),
-						"width"=>1,
-						"dashon"=>1,
-						"dashoff"=>6 ),
-
-		// motorway 111 1 00 00 00 = 64+128+256+512= 960 
-			960 => array ("typename"=>"motorway",
-						"colour"=>ImageColorAllocate($this->im,128,155,192),
-						"outlinecolour"=>ImageColorAllocate($this->im,0,0,0),
-						"width"=>4,
-						"dashon"=>0,
-						"dashoff"=>0 ) ,
-
-			0 => array ("typename"=>"unknown",
-						"colour"=>ImageColorAllocate($this->im,128,128,128),
-						"width"=>2,
-						"dashon"=>0,
-						"dashoff"=>0 )
-		);
-
-		foreach($routetypes as $i => $routetype)
-		{
-			if($routetypes[$i]['dashon'] && $routetypes[$i]['dashoff'])
-			{
-				$routetypes[$i]['pathstyle']=array();
-				for($count2=0; $count2<$routetypes[$i]['dashon']; $count2++)
-				{
-					$routetypes[$i]['pathstyle'][$count2] = 
-						$routetypes[$i]['colour'];
-				}
-				for($count2=0; $count2<$routetypes[$i]['dashoff'];$count2++)
-				{
-					$routetypes[$i]['pathstyle']
-						[$routetypes[$i]['dashon']+$count2] = 
-						IMG_COLOR_TRANSPARENT;	
-				}
-			}
-
-			if($this->mv>=13)
-				$routetypes[$i]['width']+=($this->mv-11)*2;
-		}
-
-
-		return $routetypes;
-	}
-
- 
 	function draw_landsat()
 	{
-		/*
-		$bottomleft_ll = $this->map->bottomleft;
-		$topright_ll = $this->map->get_top_right();
-		$img = ImageCreateFromJPEG
-			("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=".
-			$this->map->width."&height=".$this->map->height.
-			"&layers=global_mosaic&styles=&srs=EPSG:4326&".
-			"format=image/jpeg&bbox=$bottomleft_ll[lon],$bottomleft_ll[lat],".
-			"$topright_ll[lon],$topright_ll[lat]");
-		ImageCopy($this->im,$img,0,0,0,0,MAP_WIDTH,MAP_HEIGHT);
-		*/
 	}
 
 	function draw_points_of_interest()
 	{
 		$allnamedata=array();
-		$usedscale = ($this->mv > 14) ? 14: $this->mv;
-
-		$images = array
-			("hill" => array("images/peak_small.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,10,10)),
-			"farm" => array("images/farm.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
-			"pub" => array("images/pub.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,8,8)),
-			"viewpoint" => array("images/viewpoint.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0)),
-			"church" => array("images/church.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0)),
-			"railway station" => array("images/station.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,8,8,8)),
-			"mast" => array("images/mast.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0)),
-			"car park" => array("images/carpark.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
-			"point of interest" => array("images/interest.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
-			"caution" => array("images/caution.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1)),
-			"amenity" => array("images/amenity.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
-			"waypoint" => array("images/waypoint.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-				 -1,
-				 -1,
-				-1)),
-			"node" => array("images/waypoint.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1)),
-			"tea shop" => array("images/teashop.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
-			"restaurant" => array("images/restaurant.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8)),
-			"campsite" => array("images/campsite.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,8,8,8)),
-			"bridge" => array("images/bridge.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0)),
-			"tunnel" => array("images/tunnel.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0)),
-			"barn" => array("images/barn.png",
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0))
-			);
-		$places = array
-			("hamlet" => array(2,
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,12,12,12)),
-			"village" => array(5,
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,14,14,14)),
-
-			"small town" => array(10,
-				array(-1,-1,-1,-1,-1,-1,8,8,8,10,14,18,18,18)),
-			"large town" => array(20,
-				array(-1,-1,-1,8,8,8,10,10,10,14,18,24,24,24)),
-			"town" => array(20,
-				array(-1,-1,-1,8,8,8,10,10,10,14,18,24,24,24)),
-			"suburb" => array(0,
-				array(-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,14,14,14))
-			);
 
 		// 070406 changed 'type' to ['tags']['class'] for nodes
-		foreach ($this->mapdata->nodes as $node)
+		$ids = array_keys($this->mapdata->nodes);
+		foreach ($ids as $id)
 		{
-			if($node['tags']['class']!=null)
+			$this->mapdata->nodes[$id]["style"] = 
+					getStyle($this->styleRules,
+								$this->mapdata->nodes[$id]["tags"]);
+			$p = $this->map->get_point($this->mapdata->nodes[$id]);
+
+			//if ( $this->map->pt_within_map ($p))
+			if(isset($this->mapdata->nodes[$id]["style"]["text"]))
 			{
-				$p = $this->map->get_point($node);
+				$text = $this->getZoomLevelValue
+							($this->mapdata->nodes[$id]["style"]["text"]);
 
-				//if ( $this->map->pt_within_map ($p))
-				if(1)
+				if($this->mapdata->nodes[$id]["style"]["image"])
 				{
-					if(array_key_exists($node['tags']['class'],$images))
-					{
-						$fs = $images[$node['tags']['class']][1][$usedscale-1];
-						$imgfile=$images[$node['tags']['class']][0];
-						$imgsize = getimagesize($imgfile);		
-						$w = $imgsize[0];
-						$h = $imgsize[1];
-						$this->draw_image($p['x'],$p['y'], $w,$h,$imgfile,
-										$node['tags']['name'], $fs);
-						if($fs>0)
-						{
-							$namedata['name'] = $node['tags']['name'];
-							$namedata['fs'] = $fs;
-							$namedata['x']= $p['x']+$w/2;
-							$namedata['y']= $p['y']+$h/2;
-							$allnamedata[] = $namedata;
-						}
-					}
-					elseif(array_key_exists($node['tags']['class'],$places))
-					{
-						$size = $places[$node['tags']['class']][0];
-						$fs = $places[$node['tags']['class']][1][$usedscale-1];
+					$imgfile=$this->mapdata->nodes[$id]["style"]["image"];
+					$imgsize=getimagesize($imgfile);
+					$w = $imgsize[0];
+					$h = $imgsize[1];
 
-						/*
-						$this->draw_place_disc($p['x'],$p['y'],$size,
-									$node['tags']['name'],$fs);
-									*/
-						if($fs>0)
-						{
-							$namedata['name'] = $node['tags']['name'];
-							$namedata['fs'] = $fs;
-							$namedata['x']=$p['x']+$size/2;
-							$namedata['y']=$p['y']+$size/2;
-							$allnamedata[] = $namedata;
-						}
+
+					if($text>=0)
+					{
+						$this->draw_image($p['x'],$p['y'], $w,$h,$imgfile,
+										$this->mapdata->nodes
+											[$id]['tags']['name']);
 					}
+				}
+				// Names are displayed after everything else, so save 
+				// them now, and draw them later in one go
+				if($text>0)
+				{
+					$namedata['name'] = 
+							$this->mapdata->nodes[$id]['tags']['name'];
+					$namedata['fontsize'] = $text; 
+					$namedata['x']= $p['x']+$w/2;
+					$namedata['y']= $p['y']+$h/2;
+					$allnamedata[] = $namedata;
 				}
 			}
 		}
 		$this->draw_names($allnamedata);
 	}
 
-	function draw_image($x,$y,$w,$h,$imgfile,$name, $fs)
+	function draw_image($x,$y,$w,$h,$imgfile,$name)
 	{
-		if($fs>=0)
-		{
-			$icon = ImageCreateFromPNG($imgfile);
+		
+		$icon = ImageCreateFromPNG($imgfile);
 
-			ImageCopy($this->im,$icon,$x-$w/2,$y-$h/2,0,0,$w,$h);
-			ImageDestroy($icon);
-		}
-    }
-
-	function draw_place_disc($x,$y,$size,$name,$fs)
-	{
-		if($fs>=0)
-		{
-			ImageArc($this->im,$x,$y,
-						 	$size*$this->map->scale*100,
-						   	$size*$this->map->scale*100,
-						   	0,360,$this->ltyellow); 
-
-			ImageFillToBorder ($this->im,$x,$y,
-							$this->ltyellow,$this->ltyellow);	
-		}
+		ImageCopy($this->im,$icon,$x-$w/2,$y-$h/2,0,0,$w,$h);
+		ImageDestroy($icon);
     }
 
 	function draw_names(&$namedata)
@@ -612,14 +420,14 @@ class Image
 		foreach($namedata as $name)
 		{
 			$this->draw_name($name['x'],$name['y'],
-								$name['name'],$name['fs'],$this->darkred);
+								$name['name'],$name['fontsize'],
+								$this->black);
 		}
 	}
 
 	# 16/11/04 new version for truetype fonts.
 	function draw_name($x,$y,$name,$fontsize,$colour)
 	{
-
 		
 		$name_arr = explode(' ',$name);
 		
@@ -672,8 +480,7 @@ class Image
 			$av['x'] = $p[0]['x'] + (($p[1]['x'] - $p[0]['x'])/2);
 			$av['y'] = $p[0]['y'] + (($p[1]['y'] - $p[0]['y'])/2);
 
-			$segtype=$seg["type"];
-			$segwidth=$this->routetypes[$segtype]['width']+2;
+			$segwidth=$seg["style"]["width"]+2;
 
 			if(preg_match("/^[A-Z]+[0-9]+$/",$name))
 			{
@@ -792,6 +599,68 @@ class Image
 						$colour, TRUETYPE_FONT, $text);
 
 		return $i;
+	}
+
+	// goes through all the style rules and makes the colours and text size
+	// for this zoom level
+	// do here, rather than in the rules file parser, to avoid having to
+	// messily pass the image reference and zoom level over to the parser
+	function processStyleRules()
+	{
+		for($count=0; $count<count($this->styleRules); $count++)
+		{
+			if($this->styleRules[$count]["colour"])
+			{
+				$rgb=explode(",",$this->styleRules[$count]["colour"]);
+
+				$this->styleRules[$count]["colour"]=
+					ImageColorAllocate($this->im, $rgb[0],$rgb[1],$rgb[2]);
+				$this->styleRules[$count]["dash"]=
+						$this->makeDashPattern
+							($this->styleRules[$count]["dash"],
+							$this->styleRules[$count]["colour"]);
+			}
+			if($this->styleRules[$count]["casing"])
+			{	
+				$rgb=explode(",",$this->styleRules[$count]["casing"]);
+				$this->styleRules[$count]["casing"]=
+					ImageColorAllocate($this->im, $rgb[0],$rgb[1],$rgb[2]);
+			}
+			if($this->styleRules[$count]["width"])
+			{
+				$this->styleRules[$count]["width"] = $this->getZoomLevelValue
+							($this->styleRules[$count]["width"]);
+			}
+			if($this->styleRules[$count]["text"])
+			{
+				$this->styleRules[$count]["text"] = $this->getZoomLevelValue
+						($this->styleRules[$count]["text"]);
+			}
+		}
+	}
+
+	function makeDashPattern($dash, $colour)
+	{
+		if($dash && $colour)
+		{
+			list($on,$off)=explode(",",$dash);
+			$dashpattern=array();
+			for($count2=0; $count2<$on; $count2++)
+				$dashpattern[$count2] = $colour;
+			for($count2=0; $count2<$off;$count2++)
+				$dashpattern[$on+$count2] = IMG_COLOR_TRANSPARENT;
+			return $dashpattern;
+		}
+		return null;
+	}
+
+	// for attributes which vary depending on zoom level,
+	// e.g. line width, feature text
+	function getZoomLevelValue($valuelist)
+	{
+		$values=explode(",",$valuelist);
+		return ($this->zoom<=count($values)) ? $values[$this->zoom-1]:
+												$values[count($values)-1];
 	}
 
 	function draw_contours()
@@ -955,55 +824,4 @@ class Image
 	}
 }
 
-function allocatetype(&$metaData)
-{
-	$types["yes,no,no,no,path"] =  2;
-
-	$types["unofficial,no,no,no,path"] =  1;
-	$types["yes,yes,yes,no,path"] = 42; 
-	$types["unofficial,unofficial,unofficial,no,path"] = 21; 
-	$types["yes,yes,yes,yes,unsurfaced"] = 234; 
-	$types["*,*,*,*,residential"] = 362; 
-	$types["*,*,*,*,minor"] = 490; 
-	$types["*,*,*,*,street"] = 618; 
-	$types["*,*,*,*,secondary"] = 746; 
-	$types["*,*,*,*,primary"] = 874; 
-	$types["*,*,*,*,motorway"] = 960; 
-
-	$k = array("foot","horse","bike","car","class");
-
-	
-	/*
-	for($count=0; $count<5; $count++)
-		if(!isset($metaData[$k[$count]]))
-			$metaData[$k[$count]]=($k[$count]=="class" ? "" :"no");
-			*/
-
-	foreach($types as $t=>$v)
-	{
-		$match = true;
-
-			
-		$ta = explode(",",$t);
-		for($count=0; $count<5; $count++)
-		{
-			if(!($ta[$count]=="*" || 
-		 	(!isset($metaData[$k[$count]])&&$ta[$count]=="no") || 	
-			$metaData[$k[$count]]==$ta[$count]  ))
-			{
-				$match=false;
-			}
-		}
-
-		if($match)
-		{
-			return $v;
-		}
-	}
-
-	// default type - residential road
-	return 362; 
-}
-
-			
 ?>

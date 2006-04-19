@@ -23,7 +23,7 @@ require 'fileutils'
 require 'find'
 require 'net/http'
 require 'timeout'
-require "uri'
+require 'uri'
 
 require 'tiger/tiger'
 

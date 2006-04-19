@@ -486,7 +486,7 @@ module OSM
       begin
         dbh = get_connection
 
-        dbh.query( "insert into gpx_files (name, tmpname, user_id, description, visible, inserted, timestamp, size, private) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id}, '#{description}', 1, 0, NOW(), 0, #{!pub})")
+        dbh.query( "insert into gpx_files (name, tmpname, user_id, description, visible, inserted, timestamp, size, private) values ('#{q(originalname)}', '#{q(tmpname)}', #{user_id}, '#{q(description)}', 1, 0, NOW(), 0, #{!pub})")
         res = dbh.query( "select last_insert_id()")
 
         gpx_id = -1

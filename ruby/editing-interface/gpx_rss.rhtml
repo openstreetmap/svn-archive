@@ -19,16 +19,16 @@ begin
   rss.attributes['xmlns:geo'] = "http://www.w3.org/2003/01/geo/wgs84_pos#"
   channel = Element.new 'channel', rss
   title = Element.new 'title', channel
-  title.text =  'OpenStreetMap GPX Uploads'
+  title.text =  'OpenStreetMap GPS Traces'
   description_el = Element.new 'description', channel
 
-  description = 'OpenStreetMap GPX Uploads'
+  description = 'OpenStreetMap GPS Traces'
   description += " for tag #{cgi['tag']}" if cgi['tag'] != ''
   description += " for user #{cgi['display_name']}" if cgi['display_name'] != ''
   
   description_el.text = description
   link = Element.new 'link', channel
-  link.text = 'http://www.openstreetmap.org/'
+  link.text = 'http://www.openstreetmap.org/traces/'
 
   image = Element.new 'image', channel
   url = Element.new 'url', image
@@ -40,7 +40,7 @@ begin
   height = Element.new 'height', image
   height.text = 100
   link = Element.new 'link', image
-  link.text = 'http://www.openstreetmap.org/'
+  link.text = 'http://www.openstreetmap.org/traces/'
  
   res.each_hash do |row|
     item = Element.new 'item', channel
@@ -56,7 +56,7 @@ begin
    
     description = Element.new 'description', item
     
-    description_t = "#{row['name']} by #{row['display_name']} (#{row['size']} points)"
+    description_t = "<img src=\"/traces/user/#{row['display_name']}/#{row['id']}/image-icon.png\" border=\"0\" align=\"left\"> #{row['name']} by #{row['display_name']} (#{row['size']} points)"
     description_t += " in #{row['tags']}" if row['tags'] != ''
     description_t += " Description: #{row['description']}" if row['description'] != ''
     description.text = description_t

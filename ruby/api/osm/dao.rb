@@ -1048,16 +1048,32 @@ module OSM
       select g.id from #{type}s as g, 
         (select id, max(version) as version from #{type}s where id in 
           (select distinct a.id from
-            (select id, max(version) as version from #{type}_segments where id in (select id from #{type}_segments where segment_id in #{segment_clause}) group by id) as a
+            (select id, max(version) as version from #{type}_segments where segment_id in #{segment_clause} group by id) as a
           ) group by id
          ) as b where g.id = b.id and g.version = b.version and g.visible = 1 "}
           
+          
       multis = []
-
+      ids = []
+      
       res.each_hash do |row|
-        multis << get_multi( row['id'].to_i, type )
+        ids << row['id'].to_i
+      end
+
+      return [] if ids == []
+      
+      sql = "select c.id, timestamp, group_concat(segment_id) as segs, tags, visible from (select b.version, b.id, b.visible, b.timestamp, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select * from (select * from #{type}s where id in (#{ids.join(',')}) order by version desc, id) as a group by id) as b join #{type}_tags on #{type}_tags.id = b.id and #{type}_tags.version = b.version group by id) as c join #{type}_segments on #{type}_segments.id = c.id and #{type}_segments.version = c.version group by c.id"
+
+      @@log.log('calling SQL ___________________' + sql)
+      ress = call_sql { sql }
+      ress.each_hash do |row|
+        tags = row['tags'].split('|||').collect {|x| x.split('===')}
+        segs = row['segs'].split(',').collect {|x| x}
+        visible = row['visible'] == '1'
+        multis <<  Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
       end
       return multis
+
     end
 
     def commify(number)

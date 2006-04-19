@@ -72,7 +72,7 @@ if loggedin %>
     
     %>
     <tr>
-      <td class="<%=background%>"><img src="<%=getlink%><%=row['id']%>/image-icon.png"></td>
+      <td class="<%=background%>"><a href="<%=getlink%><%=row['id']%>" title="more detail..." ><img src="<%=getlink%><%=row['id']%>/image-icon.png" border="0"></a></td>
       <td class="<%=background%>"><a href="<%=getlink%><%=row['id']%>/download" title="download <%=row['name']%>" target="_blank"><%=row['name']%></a><span class="gpxsummary" title="<%=timestamp%>"> ... (<%=dao.commify(row['size'].to_i)%> points) ... <%=time%></span>
         <% if !pending %>
         <a href="<%=getlink%><%=row['id']%>" title="more detail..." >more</a> /

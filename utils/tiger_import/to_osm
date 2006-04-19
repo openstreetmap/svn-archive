@@ -18,14 +18,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 =end
 
-require "cgi"
-require "fileutils"
-require "find"
-require "net/http"
-require "rexml/document"
-require "uri"
+require 'cgi'
+require 'fileutils'
+require 'find'
+require 'net/http'
+require 'timeout'
+require "uri'
 
-require "tiger/tiger"
+require 'tiger/tiger'
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
@@ -163,6 +163,8 @@ def backoff
 	loop do
 		begin
 			return yield
+		rescue TimeoutError =>ex
+			$stderr.puts "timeout in backoff block, \"#{ex.message}\" #{ex.backtrace.join(" -> ")}"
 		rescue =>ex
 			$stderr.puts "problem in backoff block, \"#{ex.message}\" #{ex.backtrace.join(" -> ")}"
 		end
@@ -231,7 +233,7 @@ demonize do
 			if i >= start_i
 				create_street(street)
 				$stderr.puts "created street number #{i} at #{Time.now}"
-				sleep(3)  # let the server catch up
+				sleep(1)  # let the server catch up
 			end
 			i += 1
 		end

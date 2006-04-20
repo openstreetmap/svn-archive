@@ -166,7 +166,7 @@ class Image
 
 
 		$this->mapdata = new Dataset();
-		$this->mapdata->grab_direct_from_database($w, $s, $e, $n);
+		$this->mapdata->grab_direct_from_database($w, $s, $e, $n, $zoom);
 		
 		// Make all segments inherit tags from their parent way
 		$this->mapdata->give_segs_waytags();
@@ -178,7 +178,9 @@ class Image
 		# in GD2, when copying images (as we do for the icons), both source
 		# and destination image must be either paletted or true colour.
 		# (The icons are s)
-		$this->im = ImageCreateTrueColor($this->map->width,$this->map->height);
+		//AAA
+		$this->im = ImageCreateTrueColor($this->map->width*2,
+											$this->map->height*2);
 		
 		$this->backcol = ImageColorAllocate($this->im,220,220,220);
 		$this->gold = ImageColorAllocate($this->im,255,255,0);
@@ -219,7 +221,12 @@ class Image
 		
 		if($this->zoom>=12 && $this->zoom<=13)
 			$this->draw_contours();
-			
+		
+		$this->load_segment_styles();
+
+		usort($this->mapdata->segments,"zIndexCmp");
+
+						
 		$this->draw_segment_outlines();
 		$this->draw_segments();
 		$this->draw_points_of_interest();
@@ -228,7 +235,16 @@ class Image
 		if($this->zoom >= 113)
 			$this->draw_way_names();
 
-		ImagePNG($this->im);
+		$im2 = ImageCreateTrueColor($this->map->width,
+											$this->map->height);
+
+		ImageFill($im2,100,100,$this->backcol);
+		ImageCopy($im2,$this->im,0,0,$this->map->width/2,
+					$this->map->height/2,
+					$this->map->width,
+					$this->map->height);
+		ImagePNG($im2);
+		ImageDestroy($im2);
 		ImageDestroy($this->im);
 	}
 
@@ -253,9 +269,11 @@ class Image
 						&&
 				 isset($this->mapdata->nodes
 				 	[$this->mapdata->segments[$id]['from']]) ) &&
-			
+		1
+		/*
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
+					 */
 					 )
 
 			{
@@ -282,26 +300,51 @@ class Image
 						ImageSetStyle($this->im,  $dash);
 
 
-						ImageLine($this->im,$p[0]['x'],$p[0]['y'],
-							$p[1]['x'],$p[1]['y'],
+						ImageLine($this->im,$this->cnvX($p[0]['x']),
+									$this->cnvY($p[0]['y']),
+							$this->cnvX($p[1]['x']),$this->cnvY($p[1]['y']),
 							IMG_COLOR_STYLED);
 					}
 					else
 					{
 						// 090406 outlines now done in their own function
-						ImageLine($this->im,$p[0]['x'],$p[0]['y'],
-								$p[1]['x'],$p[1]['y'],$colour);
+						ImageLine($this->im,$this->cnvX($p[0]['x']),
+									$this->cnvY($p[0]['y']),
+								$this->cnvX($p[1]['x']),$this->cnvY($p[1]['y']),
+								$colour);
 					}
 				}
 
+				/*
+				ImageSetThickness($this->im,20);
+				ImageLine($this->im,-52,48,48,-52,$this->black);
+				*/
+
 				// do something with segment names here...
 				// now only draw way names
-				/*
-				$this->draw_segment_name ($segment, 
-								$segment['tags']['name'], false);
-				*/
+				if($this->zoom >= 13)	
+				{
+					$this->draw_segment_name ($this->mapdata->segments[$id], 
+								$this->mapdata->segments[$id]['tags']['name'], 
+								false);
+				}
+				
 			}
 		}	
+	}
+
+	function load_segment_styles()
+	{
+		# Only attempt to draw the line if at least one of the points
+		# is within the map
+		$ids = array_keys($this->mapdata->segments);
+		foreach ($ids as $id)
+		{
+					
+			$this->mapdata->segments[$id]["style"] = 
+				getStyle($this->styleRules,
+							$this->mapdata->segments[$id]["tags"]);
+		}
 	}
 
 	// 090406 draw segment outlines first
@@ -313,9 +356,6 @@ class Image
 		foreach ($ids as $id)
 		{
 					
-			$this->mapdata->segments[$id]["style"] = 
-				getStyle($this->styleRules,
-							$this->mapdata->segments[$id]["tags"]);
 			$p[0] = $this->map->get_point
 				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
 			$p[1] = $this->map->get_point
@@ -326,9 +366,11 @@ class Image
 								[$id]['to']]) &&
 				 isset($this->mapdata->nodes[$this->mapdata->segments
 				 						[$id]['from']]) ) &&
-			
+		1
+		/*
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
+					 */
 					 )
 
 			{
@@ -345,8 +387,8 @@ class Image
 							+2;
 					}
 					ImageSetThickness($this->im, $width);
-					ImageLine($this->im,$p[0]['x'],$p[0]['y'],
-								$p[1]['x'],$p[1]['y'],$colour);
+					ImageLine($this->im,$this->cnvX($p[0]['x']),$this->cnvY($p[0]['y']),
+								$this->cnvX($p[1]['x']),$this->cnvY($p[1]['y']),$colour);
 				}
 			}
 		}	
@@ -411,7 +453,7 @@ class Image
 		
 		$icon = ImageCreateFromPNG($imgfile);
 
-		ImageCopy($this->im,$icon,$x-$w/2,$y-$h/2,0,0,$w,$h);
+		ImageCopy($this->im,$icon,$this->cnvX($x-$w/2),$this->cnvY($y-$h/2),0,0,$w,$h);
 		ImageDestroy($icon);
     }
 
@@ -433,7 +475,8 @@ class Image
 		
 		for($count=0; $count<count($name_arr)-1; $count++)
 		{
-			ImageTTFText($this->im, $fontsize, 0, $x, $y, $colour, 
+			ImageTTFText($this->im, $fontsize, 0, $this->cnvX($x), 
+								$this->cnvY($y), $colour, 
 							TRUETYPE_FONT,
 							$name_arr[$count]);
 
@@ -444,7 +487,8 @@ class Image
 		}
 			
 		// Finally draw the last word
-		@ImageTTFText($this->im, $fontsize, 0, $x, $y, $colour, 
+		@ImageTTFText($this->im, $fontsize, 0, $this->cnvX($x), 
+								$this->cnvY($y), $colour, 
 							TRUETYPE_FONT, $name_arr[$count]);
 	} 
 
@@ -488,9 +532,10 @@ class Image
 				$y1=$av['y']-$text_height/2;
 				$x2=$av['x']+$text_width/2;
 				$y2=$av['y']+$text_height/2;
-				ImageFilledRectangle($this->im,$x1,$y1,$x2,$y2, $this->black);
+				ImageFilledRectangle($this->im,$this->cnvX($x1),$this->cnvY($y1),
+										$this->cnvX($x2),$this->cnvY($y2), $this->black);
 				ImageTTFText($this->im, 8, 0,  
-							$x1, $y2, $this->gold,
+							$this->cnvX($x1), $this->cnvY($y2), $this->gold,
 							TRUETYPE_FONT, $name);
 				$succ=true;
 			}
@@ -595,7 +640,8 @@ class Image
 	{
 		$angle=slope_angle($p[0]['x'], $p[0]['y'], $p[1]['x'], $p[1]['y']);
 		$i = ($p[1]['x'] > $p[0]['x']) ? 0:1;
-		ImageTTFText($this->im, $fontsize, -$angle, $p[$i]['x'], $p[$i]['y'],
+		ImageTTFText($this->im, $fontsize, -$angle, $this->cnvX($p[$i]['x']), 
+			$this->cnvY($p[$i]['y']),
 						$colour, TRUETYPE_FONT, $text);
 
 		return $i;
@@ -810,10 +856,11 @@ class Image
 						$last_pt[$ht][] = $pt;
 					}
 					
-					ImageLine($this->im,$line_pts[$count][0]['x'],
-						$line_pts[$count][0]['y'],
-						$line_pts[$count][1]['x'],
-						$line_pts[$count][1]['y'], $colour); 
+					ImageLine($this->im,
+						$this->cnvX($line_pts[$count][0]['x']),
+						$this->cnvY($line_pts[$count][0]['y']),
+						$this->cnvX($line_pts[$count][1]['x']),
+						$this->cnvY($line_pts[$count][1]['y']), $colour); 
 					ImageSetThickness($this->im,1);
 				}
 			}	
@@ -822,6 +869,20 @@ class Image
 		}
 		if($this->debug) echo "</p>";
 	}
+
+	function cnvX($x)
+	{
+		return $x+$this->map->width/2;
+	}
+
+	function cnvY($y)
+	{
+		return $y+$this->map->height/2;
+	}
 }
 
+function zIndexCmp($a,$b)
+{
+	return ($a["style"]["z-index"] > $b["style"]["z-index"]) ? 1:-1;
+}
 ?>

@@ -3,17 +3,20 @@
 <rule>
 <condition k="foot" v="yes" />
 <condition k="class" v="path" />
-<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" dash="2,2" />
+<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" dash="2,2" 
+z-index="2"/>
 </rule>
 
 <rule>
 <condition k="highway" v="footway" />
-<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" dash="2,2" />
+<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" dash="2,2"
+z-index="2"/>
 </rule>
 
 <rule>
 <condition k="highway" v="pathway" />
-<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" dash="2,2" />
+<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" dash="2,2" 
+z-index="2"/>
 </rule>
 
 <rule>
@@ -21,7 +24,8 @@
 <condition k="horse" v="yes" />
 <condition k="bike" v="yes" />
 <condition k="class" v="path" />
-<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" dash="6,6" />
+<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,0,2,2,4,4,6" dash="6,6" 
+z-index="3"/>
 </rule>
 
 
@@ -31,90 +35,104 @@
 <condition k="bike" v="yes" />
 <condition k="car" v="yes" />
 <condition k="class" v="unsurfaced" />
-<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,2,2,2,2,2" />
+<style colour="255,0,0" width="0,0,0,0,0,0,0,0,0,2,2,2,4,4,6" z-index="4" />
 </rule>
 
 <rule>
 <condition k="class" v="residential" />
-<style colour="220,220,220" width="0,0,0,0,0,0,0,0,0,1,1,1,1,1" casing="0,0,0"/>
+<style colour="220,220,220" width="0,0,0,0,0,0,0,0,0,1,1,1,4,6,8" 
+casing="0,0,0" z-index="5"/>
 </rule>
 
 <rule>
 <condition k="highway" v="residential" />
-<style colour="220,220,220" width="0,0,0,0,0,0,0,0,0,1,1,1,1,1" casing="0,0,0"/>
+<style colour="220,220,220" width="0,0,0,0,0,0,0,0,0,1,1,1,4,6,8" 
+casing="0,0,0" z-index="5"/>
 </rule>
 
 <rule>
 <condition k="class" v="minor" />
-<style colour="192,192,192" width="0,0,0,0,0,0,0,0,1,2,2,2,2,2" casing="0,0,0"/>
+<style colour="192,192,192" width="0,0,0,0,0,0,0,0,1,2,2,2,6,8,10" 
+casing="0,0,0" z-index="6"/>
 </rule>
 
 <rule>
 <condition k="highway" v="unclassified" />
-<style colour="192,192,192" width="0,0,0,0,0,0,0,0,1,2,2,2,2,2" casing="0,0,0"/>
+<style colour="192,192,192" width="0,0,0,0,0,0,0,0,1,2,2,2,6,8,10" 
+casing="0,0,0" z-index="6"/>
 </rule>
 
 <rule>
 <condition k="railway" v="rail" />
-<style colour="0,0,0" width="0,0,0,0,0,0,0,0,1,2,2,2,2,2" casing="0,0,0"/>
+<style colour="0,0,0" width="0,0,0,0,0,0,0,0,1,2,2,2,2,2" casing="0,0,0"
+z-index="1"/>
 </rule>
 
 <rule>
 <condition k="class" v="secondary" />
-<style colour="253,191,111" width="0,0,0,0,0,0,0,1,2,4,4,4,4,4" casing="0,0,0"/>
+<style colour="253,191,111" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="0,0,0" z-index="7"/>
 </rule>
 
 <rule>
 <condition k="class" v="primary" />
-<style colour="251,128,95" width="0,0,0,0,0,0,0,1,2,4,4,4,4,4" casing="0,0,0"/>
+<style colour="251,128,95" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="0,0,0" z-index="8"/>
 </rule>
 
 <rule>
 <condition k="highway" v="primary" />
-<style colour="251,128,95" width="0,0,0,0,0,0,0,1,2,4,4,4,4,4" casing="0,0,0"/>
+<style colour="251,128,95" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="0,0,0" z-index="8"/>
 </rule>
 
 <rule>
 <condition k="highway" v="trunk" />
-<style colour="0,192,0" width="0,0,0,0,0,0,0,1,2,4,4,4,4,4" casing="0,0,0"/>
+<style colour="127,201,127" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="0,0,0" z-index="9"/>
 </rule>
 
 <rule>
 <condition k="waterway" v="river" />
-<style colour="0,0,255" width="0,0,0,0,0,0,0,1,2,2,2,2,2,2"/>
+<style colour="0,0,255" width="0,0,0,0,0,0,0,1,2,2,2,2,2,2" z-index="0"/>
 </rule>
 
 <rule>
 <condition k="waterway" v="canal" />
-<style colour="0,0,255" width="0,0,0,0,0,0,0,1,2,2,2,2,2,2"/>
+<style colour="0,0,255" width="0,0,0,0,0,0,0,1,2,2,2,2,2,2" z-index="0"/>
 </rule>
 
 <rule>
 <condition k="highway" v="secondary" />
-<style colour="253,191,111" width="0,0,0,0,0,0,0,1,2,4,4,4,4,4" casing="0,0,0"/>
+<style colour="253,191,111" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="0,0,0"/>
 </rule>
 
 <rule>
 <condition k="class" v="motorway" />
-<style colour="128,155,192" width="0,0,0,0,0,0,1,2,4,4,4,4,4,4" casing="0,0,0"/>
+<style colour="128,155,192" width="0,0,0,0,0,0,1,2,4,4,4,4,8,10,12" 
+casing="0,0,0" z-index="9"/>
 </rule>
 
 <rule>
 <condition k="highway" v="motorway" />
-<style colour="128,155,192" width="0,0,0,0,0,0,1,2,4,4,4,4,4,4" casing="0,0,0"/>
+<style colour="128,155,192" width="0,0,0,0,0,0,1,2,4,4,4,4,8,10,12" 
+casing="0,0,0" z-index="9"/>
 </rule>
 
 <rule>
 <condition k="foot" v="unofficial" />
 <condition k="class" v="path" />
-<style colour="192,96,0" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" dash="1,2" />
+<style colour="192,96,0" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" dash="1,2" 
+z-index="2"/>
 </rule>
 
 <rule>
 <condition k="foot" v="unofficial" />
 <condition k="horse" v="unofficial" />
 <condition k="class" v="path" />
-<style colour="192,96,0" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" dash="3,6" />
+<style colour="192,96,0" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
+dash="3,6" z-index="2"/>
 </rule>
 
 <rule>
@@ -298,6 +316,11 @@ text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0" />
 <rule>
 <condition k="place" v="town" />
 <style text="-1,-1,-1,8,8,8,10,10,10,14,18,24,24,24" />
+</rule>
+
+<rule>
+<condition k="place" v="city" />
+<style text="-1,-1,8,10,10,10,14,14,14,18,24,28,32,32" />
 </rule>
 
 <rule>

@@ -15,15 +15,19 @@ class Dataset
 		$this->nodes = $this->segments = $this->ways = array();
 	}
 
-	function grab_direct_from_database ($west, $south, $east, $north)
+	function grab_direct_from_database ($west, $south, $east, $north, $zoom)
 	{
 
 		// Pull out half of tiles above and to left of current tile to avoid
 		// cutting off labels
-		$west = $west - ($east-$west)/2;
-		$north = $north + ($north-$south)/2;
-		$east = $east + ($east-$west)/2;
-		$sout = $south - ($north-$south)/2;
+
+		// 0.5 is acceptable at zoom 13 and less
+		$factor = ($zoom<13) ? 0.5 : 0.5*pow(2,$zoom-13);
+
+		$west = $west - ($east-$west)*$factor;
+		$north = $north + ($north-$south)*$factor;
+		$east = $east + ($east-$west)*$factor;
+		$south = $south - ($north-$south)*$factor;
 
 		$conn=mysql_connect("localhost",DB_USERNAME,DB_PASSWORD);
 		mysql_select_db(DB_DBASE);
@@ -77,7 +81,8 @@ class Dataset
 
 		$result = mysql_query($sql);
 
-		while($row=mysql_fetch_array($result))
+		// suppress error message
+		while($row=@mysql_fetch_array($result))
 		{
 			$curSeg["from"] = $row["node_a"];
 			$curSeg["to"] = $row["node_b"];
@@ -91,7 +96,9 @@ class Dataset
 		// This query should get segments which pass through the bbox - but have
 		// no nodes within it - see mailing list discussion 30/03/06
 		// NOT in any pre-existing OSM code!
+
 /*
+
 		$result = mysql_query(
     		"SELECT s.id,s.node_a,s.node_b,s.tags FROM segments as s, nodes ".
 			"as a, nodes as b where s.node_a=a.id and s.node_b=b.id and ".
@@ -103,7 +110,7 @@ class Dataset
 			"b.longitude>$east) or (b.longitude<$west and a.longitude>$east)))"
 						 );
 
-		while($row=mysql_fetch_array($result))
+		while($row=@mysql_fetch_array($result))
 		{
 			$curSeg["from"] = $row["node_a"];
 			$curSeg["to"] = $row["node_b"];
@@ -136,8 +143,8 @@ class Dataset
 			$curNode["tags"] = $this->get_tag_array($row["tags"]);
 			$this->nodes[$row["id"]] = $curNode;
 		}
-		*/
-		$this->get_ways_from_segments(array_keys($this->segments));
+*/		
+		//$this->get_ways_from_segments(array_keys($this->segments));
 
 	}
 

@@ -19,7 +19,8 @@ header("Location: index.php?lat=$pos[lat]&lon=$pos[long]");
 function geocoder($place, $country)
 {
 	global $lat, $long;
-	$url = "http://brainoff.com/geocoder/rest/?city=$place,$country";
+	$url = "http://brainoff.com/geocoder/rest/?city=".urlencode($place).
+				",$country";
 	$ch=curl_init ($url);
 	curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 	curl_setopt($ch,CURLOPT_HEADER,false);

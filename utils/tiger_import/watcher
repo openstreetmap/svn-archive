@@ -8,7 +8,7 @@ def tiger_import_running?
 	$?.to_i.zero?
 end
 
-#exit if tiger_import_running?
+exit if tiger_import_running?
 
 all_streets = `/bin/grep '^created street number ' #{THIS_DIR}/to_osm.log`
 all_streets = all_streets.split(/\n/)

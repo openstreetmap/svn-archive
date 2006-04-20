@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+THIS_DIR = File.expand_path(File.dirname(__FILE__))
+
+def tiger_import_running?
+	pid = IO.read("#{THIS_DIR}/to_osm.pid").strip.to_i
+	`/bin/ps -p #{pid}`
+	$?.to_i.zero?
+end
+
+#exit if tiger_import_running?
+
+all_streets = `/bin/grep '^created street number ' #{THIS_DIR}/to_osm.log`
+all_streets = all_streets.split(/\n/)
+throw "Could not find street ID's in log" if all_streets.empty?
+all_streets = all_streets.map { |s| s =~ /(\d+)/; $1.to_i }
+start_street = all_streets[-2]
+
+`#{THIS_DIR}/to_osm #{THIS_DIR}/spider/tiger2005fe #{start_street}`
+

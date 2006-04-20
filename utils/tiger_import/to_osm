@@ -217,6 +217,7 @@ start_i = 0
 start_i = ARGV[1].to_i if ARGV.length > 1
 
 demonize do
+	$stderr.puts "restarting the TIGER OSM import on #{start_i} at #{Time.now}"
 	zips = []
 	Find.find(path) { |f| zips << f if f =~ /\.zip$/i }
 	i = 0
@@ -228,7 +229,7 @@ demonize do
 		$stderr.puts "\tRT2 file length = #{rt2.length}"
 		streets = Tiger::import(rt1, rt2)
 		streets.sort!
-		$stderr.puts "\tnumber of streest = #{streets.length}"
+		$stderr.puts "\tnumber of streets = #{streets.length}"
 		streets.each do |street|
 			if i >= start_i
 				create_street(street)

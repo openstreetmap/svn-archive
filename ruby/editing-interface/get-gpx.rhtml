@@ -14,7 +14,7 @@ cgi = CGI.new
 dao = OSM::Dao.instance
 
 r = Apache.request
-r.content_type = 'text/plain'
+r.content_type = 'application/xml'
 
 token,user_id = dao.check_cookie?(cgi)
 if user_id 

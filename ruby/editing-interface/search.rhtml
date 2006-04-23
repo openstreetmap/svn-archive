@@ -1,0 +1,97 @@
+<%
+
+include Math
+include Apache
+
+r = Apache.request
+
+loggedin = false
+cgi = nil
+dao = nil
+
+ERuby.import('include/top.rhtml')
+query = cgi['query']
+
+%>
+<div id="main_area">
+
+<br />
+<font size="+3">Search</font><i>(++beta)</i> Search is very beta right now, see <a href="http://wiki.openstreetmap.org/index.php/Search">here</a> to discuss.
+<br /><br />
+
+<% if cgi['action'] == 'citysearch' 
+  %>
+  <form action="/search.html">
+  <input type="text" name="query" value="<%=query%>">
+  <input type="hidden" name="action" value="citysearch">
+  <input type="submit" value="City Search">
+  </form>
+  <a href="/search.html?query=<%=query%>">search OSM data</a><br>
+  Contacting <a href="http://www.geonames.org/export/#ws">geonames.org</a>...
+  <%
+  require 'net/http'
+  require 'rexml/document'
+  Net::HTTP.start('ws.geonames.org') do |http|
+    res = http.get("/search?q=#{query}&maxRows=10")
+    %> <%=res.code%> <%=res.message%><br /><br /><%
+    xml = REXML::Document.new(res.body)
+    xml.elements.each("/geonames/geoname") do |ele|
+      name = ''
+      country = ''
+      lat = ''
+      lon = ''
+      ele.elements.each("name"){ |n| name = n.text }
+      ele.elements.each("countryCode"){ |n| country = n.text }
+      ele.elements.each("lat"){ |n| lat = n.text }
+      ele.elements.each("lng"){ |n| lon= n.text }
+      %> 
+      <a href="index.html?lat=<%=lat%>&lon=<%=lon%>&zoom=12"><%=name %> (<%=country%>)</a><br />
+      <%
+    end
+  end
+
+%>
+<% else%>
+<form action="/search.html">
+<input type="text" name="query" value="<%=query%>">
+<input type="submit" value="Search">
+</form>
+Would you like to perform a <a href="/search.html?action=citysearch&query=<%=query%>">city search</a>?<br>
+
+<%
+
+#FIXME this should be in the API
+
+if query != ''
+  res = dao.call_sql { "select k,v,way_id, latitude, longitude from (select * from (select * from (select k,v,way_tags.id as way_id, way_segments.segment_id from way_tags join way_segments on way_segments.id = way_tags.id where match(v) against  ('#{dao.q(query)}') limit 100) as a group by way_id) as b, segments where segment_id = segments.id) as c, nodes where node_a = nodes.id group by way_id 
+  limit 10;" }
+%> <%=res.num_rows%> results<table border="0"> <%
+
+
+res.each_hash do |row|
+%>
+<tr>
+<td>
+<a href="/index.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=15">
+<%=row['k']%>=<%=row['v']%></a><br>
+<font size="-2">
+Way <%=row['way_id']%></a> ( <%=row['latitude']%>,  <%=row['longitude']%>)</a><br />
+
+<a href="/index.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=15">Map</a> - 
+<a href="/edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=15">Edit</a> - 
+<a href="/api/0.3/way/<%=row['way_id']%>">API</a>
+<br /><br/ >
+</font>
+</td></tr>
+<%
+end
+else
+  %>0 results<%
+end
+end
+%>
+</table>
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+%>

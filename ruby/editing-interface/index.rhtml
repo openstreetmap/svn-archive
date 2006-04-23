@@ -7,14 +7,19 @@ ERuby.import('include/top.rhtml')
 %>
 
 <div id="main_area">
+<div id="geocoder">
 
+<form action="/search.html">
+<input type="text" name="query" value="" size="60">
+<input type="submit" value="Search">
+</form>
+</div>
 
 <div id="drag" style="WIDTH: 700px; HEIGHT: 500px;"></div>
 
 <div id="debuginfo"></div>
-
 <% 
-ERuby.import('include/geocode.rhtml')
+#ERuby.import('include/geocode.rhtml')
 %>
 <script type="text/javascript">
 

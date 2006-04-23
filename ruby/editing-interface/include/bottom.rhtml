@@ -18,6 +18,7 @@ Welcome <%=user['email'] %>
 		uploadattr = 'class="active"'
 	elsif ENV['REQUEST_URI'].index('/index.html') == 0 || 
 		ENV['REQUEST_URI'].index('/?') == 0 ||
+		ENV['REQUEST_URI'].index('/search.html') == 0 ||
 		ENV['REQUEST_URI'] == '/' then
 		indexattr = 'class="active"' 
 	end

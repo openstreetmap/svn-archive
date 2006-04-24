@@ -56,7 +56,7 @@ if gpxfile != '' && loggedin
     file << fromfile.read
   end
 
-  if !tmpfile.nil? && dao.schedule_gpx_upload(fromfile.original_filename, tofile, user_id, description, tags, pub)
+  if (!tmpfile.nil? || fromfile.length != 0) && dao.schedule_gpx_upload(fromfile.original_filename, tofile, user_id, description, tags, pub)
     %>
     <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i><br>
     <%

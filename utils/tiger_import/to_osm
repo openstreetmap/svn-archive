@@ -234,7 +234,6 @@ demonize do
 			if i >= start_i
 				create_street(street)
 				$stderr.puts "created street number #{i} at #{Time.now}"
-				sleep(1)  # let the server catch up
 			end
 			i += 1
 		end

@@ -1,0 +1,52 @@
+This is an simple and primitive OSM server, aimed to be executed at anyone's home machine.
+
+Short:
+
+  Apache users (need apache2 and mod_ruby):
+   - edit conf/httpd.conf to point to this installation directory
+   - cat conf/httpd.conf >> /path/to/your/apache/config/httpd.conf
+   - restart apache
+
+  WEBrick users (server will be at http://localhost:3000/api):
+   - ruby lib/osm/server.rb
+
+Long:
+
+The current OSM server can hardly stand all the requests. Caches are needed. So 
+little-osm is a start for any users that just want to read the data in their favourite
+application.
+
+little-osm is intended as a read only server!
+
+Installation:
+- chmod all files under lib/osm/api to +x (please tell me howto do it with gems)
+- Get the fixed planet.osm from somewhere. (http://wiki.eigenheimstrasse.de/wiki/JOSM/Mirrors)
+- run lib/osm/readxml.rb. This will take awile. If you get errors after an hour, 
+  you have the wrong planet.osm :-(
+- either config your apache (add conf/httpd.conf) or run WEBrick with lib/osm/server.rb
+- point your favourite programm to http://localhost:3000/api  (if running webrick)
+
+
+Some files of interest:
+
+lib/osm/readxml.rb - Script to convert a planet.osm into a sqlite database
+lib/osm/planet.osm - here, you have to copy the planet.osm to read in. Make sure, it
+                     is the fixed version without the incomplete segments. My
+                     filesize is 82125276 bytes.
+lib/osm/planet.db  - This will be the generated sqlite database (will be about 130 MB)
+conf/httpd.conf    - Attach this to your apache conf if using apache
+test/*             - Some unit tests.
+lib/osm/api        - All API files reside here.
+
+
+ (in an very 
+optimized format for map-queries) and some other scripts to call these as 
+CGI-bin from any webserver. 
+
+An webrick server start script is provided as well (for those who don't have apache).
+For Apache users, an example httpd.conf is provided (it is intended to be "include"d in the
+main script, not as replacement)
+
+License of the whole stuff: GPL 2.0, Ruby license or both (at your choice).
+
+Ciao, Imi.

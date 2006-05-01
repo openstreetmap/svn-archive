@@ -41,3 +41,5 @@ for i in $CURDIR/ruby/rss/*.rb; do ln -s $i deploy/ruby/; done
 
 # link applet
 for i in $CURDIR/java/dist/*.jar; do ln -s $i deploy/; done
+
+ln -s $CURDIR/html/images/favicon.ico deploy/

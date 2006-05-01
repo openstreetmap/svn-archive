@@ -1,0 +1,11 @@
+#!/usr/bin/ruby
+
+$stdout.sync = true
+
+print "content-type: text/plain\r\n\r\n"
+
+99.downto(0) do |i|
+	print "#{i} bottles of beer standing on a wall. Take one down...\r\n"
+	sleep 1
+end
+

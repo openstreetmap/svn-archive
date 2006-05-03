@@ -1,21 +1,26 @@
 #!/usr/bin/ruby
 
-$: << '..'
+$: << '../..'
 
 require 'data/core'
 require 'data/xml'
 require 'sqlite3'
 require 'cgi'
 
+def to_id s
+  s.to_i >> 3
+end
+
 def make_osm q
   case q[0].to_i & 0x7
   when 0
-    Node.new q[4], q[5], (q[0].to_i>>3), q[2]
+    Node.new q[4], q[5], to_id(q[0]), q[2]
   when 1
     from, to = q[3].split ','
-    Segment.new(from, to, (q[0].to_i>>3), q[2])
+    Segment.new(to_id(from), to_id(to), to_id(q[0]), q[2])
   when 2
-    Way.new q[3].split(','), (q[0].to_i>>3), q[2]
+    segs = q[3].split(',').collect do |x| to_id(x) end
+    Way.new segs, to_id(q[0]), q[2]
   end
 end
 
@@ -25,11 +30,11 @@ cgi = CGI.new
 bbox = cgi['bbox'].split ','
 
 print "\r\n\r\n"
-puts %Q{<?xml version="1.0"?>\n<osm version="0.3" generator="OSM Proxy">}
+puts %Q{<?xml version="1.0"?>\n<osm version="0.3" generator="little-osm">}
 
 if bbox.size == 4
-  db = SQLite3::Database.new '../planet.db'
-  db.execute "select * from data where minlat < #{bbox[2]} and minlon < #{bbox[3]} and maxlat > #{bbox[0]} and maxlon > #{bbox[1]}" do |line|
+  db = SQLite3::Database.new '../../planet.db'
+  db.execute "select * from data where minlat < #{bbox[3]} and minlon < #{bbox[2]} and maxlat > #{bbox[1]} and maxlon > #{bbox[0]}" do |line|
     make_osm(line).to_xml.write
     puts
   end

@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 require 'data/core'
 require 'rexml/document'
 require 'sqlite3'
@@ -24,7 +26,9 @@ def Segment.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
   Segment.new(Node.from_db_id(fid.to_i), Node.from_db_id(tid.to_i), ((uid.to_i)>>3).to_s, time)
 end
 def Segment.from_db_id uid
-  Segment.from_db(*$db.execute("select * from data where uid=#{uid};")[0].to_a)
+  q = $db.execute("select * from data where uid=#{uid};")[0].to_a
+  throw :incomplete_way if q.empty?
+  Segment.from_db(*q)
 end
 
 class Segment < OsmPrimitive
@@ -80,7 +84,9 @@ class XmlReader
   end
   
   def tag_end name
-    write_sql @current if name =~ /node|segment|way/
+    catch :incomplete_way do
+      write_sql @current if name =~ /node|segment|way/
+    end
   end
 end
 

@@ -13,7 +13,6 @@ class OsmServerTest < Test::Unit::TestCase
       assert_equal HTTPServlet::CGIHandler, x[1][0]
       assert File.exist?(x[1][1][0])
     end
-
   end
 
 end

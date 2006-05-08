@@ -29,7 +29,7 @@ require 'tiger/tiger'
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
-DEBUG = true
+DEBUG = false
 
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -208,10 +208,10 @@ def create_street_raw(street)
 	$stderr.puts "\tcenter lat, long = #{av_lat}, #{av_long}"
 	tags = {
 		"name" => street.name,
-		"highway" => street.road_type,
 		"from_zip" => street.from_zip,
 		"to_zip" => street.to_zip,
 	}
+	tags["highway"] = street.road_type unless street.road_type.nil?
 	way_id = create_way(seg_ids, tags)
 end
 

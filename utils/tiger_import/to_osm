@@ -34,6 +34,18 @@ DEBUG = false
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
 TMP_DIR = "#{THIS_DIR}/tmp"
+FIPS_DB_PATH = "#{THIS_DIR}/fips_db.txt"
+FINISHED_DB_PATH = "#{THIS_DIR}/finished_db.txt"
+FIRST_FIPS = [
+	"06075",  # San Francisco
+	"06041",  # Marin (greater San Francisco, CA)
+	"06001",  # Alameda (greater San Francisco, CA)
+	"06085",  # Santa Clara (greater San Francisco, CA)
+	"06081",  # San Mateo (greater San Francisco, CA)
+	"17031",  # Cook (Chicago, IL)
+	"36061",  # New York (Manhattan)
+	"11001",  # District of Columbia (Washington DC)
+]
 
 def usage
 	$stderr.print <<EOF
@@ -168,9 +180,10 @@ def backoff
 		rescue =>ex
 			$stderr.puts "problem in backoff block, \"#{ex.message}\" #{ex.backtrace.join(" -> ")}"
 		end
+		$stderr.puts "sleeping #{delay} seconds at #{Time.now}"
 		sleep(delay)
 		delay = delay ** 2  # exponential backoff
-		throw "Backoff delay over three hours" if delay > 60 * 60 * 3
+		throw "Backoff delay over four hours" if delay > 60 * 60 * 4
 	end
 end
 
@@ -210,34 +223,193 @@ def create_street(street)
 	way_id
 end
 
+def read_tiger_county_zip(zip)
+	$stderr.puts "reading county ZIP file \"#{zip}\""
+	rt1, rt2 = read_rt(zip)
+	streets = Tiger::import(rt1, rt2).sort
+	$stderr.puts "\tnumber of streets = #{streets.length}"
+	streets
+end
+
+def include_num_in_ranges(num, ranges)
+	new_ranges = []
+	ranges.each_index do |i|
+		new_ranges = ranges[i]
+	end
+	new_ranges.each_index do |i|
+		if new_ranges[i].last == num - 1
+			new_ranges[i] = (new_ranges[i].first..num)
+			return new_ranges
+		end
+	end
+	new_ranges << (num..num)
+end
+
+class Indices
+
+	def Indices.from_files(fips_db_path, finished_db_path)
+		indices = Indices.new
+		if File.exist?(fips_db_path)
+			$stderr.puts "reading TIGER county database from \"#{fips_db_path}\""
+			from_index = 0
+			File.open(fips_db_path) do |f|
+				f.readlines.each do |line|
+					next if line.strip.empty?
+					fips, num_streets = line.split("\t")
+					num_streets = num_streets.to_i
+					range = from_index..(from_index + num_streets - 1))
+					indices.set_range(fips, range)
+					from_index += num_streets - 1
+				end
+			end
+		end
+		if File.exist?(finished_db_path)
+			$stderr.puts "reading finished street database from \"#{finished_db_path}\""
+			File.open(finished_db_path) do |f|
+				f.readlines.each do |line|
+					next if line.strip.empty?
+					finished_range = eval(line)
+					indices.add_finished(finished_range)
+				end
+			end
+		end
+		indices
+	end
+
+	def initialize
+		@map = {}  # FIPS county code => range of street indices
+		@reverse_map = {}  # range of street indices => FIPS county code
+		@finished = []  # array of ranges of indices already finished
+	end
+
+	def set_range(fips, range)
+		throw "Already have a range for FIPS code \"#{fips}\"" if @map.has_key?(fips)
+		@map[fips] = range
+		@reverse_map[range] = fips
+	end
+
+	def add_finished(range)
+		if range.is_a?(Numeric)
+			num = range
+			@finished = include_num_in_ranges(num, @finished)
+		else
+			@finished << range
+		end
+	end
+
+	def finished?(i)
+		@finished.each do |range|
+			return true if range.member?(i)
+		end
+		false
+	end
+
+	def index_to_fips(i)
+		@reverse_map.keys.each do |range|
+			return @reverse_map[range] if range.memeber?(i)
+		end
+		throw "Could not find FIPS code for index #{i}"
+	end
+
+	def fips_to_range(fips)
+		@map.keys.each do |sub_fips|
+			return @map[sub_fips] if sub_fips == fips
+		end
+		throw "Could not find range for FIPS code \"#{fips}\""
+	end
+
+	def num_streets
+		range_maxes = []
+		@reverse_map.keys.each do |range|
+			range_maxes << range.max
+		end
+		range_maxes.max + 1
+	end
+
+	def num_finished
+		num = 0
+		@finished.each do |range|
+			num += range.last - range.first
+		end
+		num
+	end
+
+	def percent_finised
+		((num_finished.to_f / num_streets) * 100).to_s[0..5].to_f
+	end
+
+	def each
+		fips_a = []
+		FIRST_FIPS.each do |fips|
+			fips_a << fips
+		end
+		@map.keys.each do |fips|
+			fips_a << fips
+		end
+		fips_a = fips_a.uniq
+		fips_a.each do |fips|
+			fips_to_range(fips).each do |i|
+				next if finished?(i)
+				just_finished = yield(i, fips)
+				add_finished(i) if just_finished
+			end
+		end
+	end
+
+end
+
 usage unless ARGV.length >= 1
 path = File.expand_path(ARGV.first)
 usage unless File.exist?(path) && File.directory?(path)
-start_i = 0
-start_i = ARGV[1].to_i if ARGV.length > 1
 
 demonize do
-	$stderr.puts "restarting the TIGER OSM import on #{start_i} at #{Time.now}"
-	zips = []
-	Find.find(path) { |f| zips << f if f =~ /\.zip$/i }
-	i = 0
-	zips.sort!
-	zips.each do |zip|
-		$stderr.puts "reading ZIP file \"#{zip}\""
-		rt1, rt2 = read_rt(zip)
-		$stderr.puts "\tRT1 file length = #{rt1.length}"
-		$stderr.puts "\tRT2 file length = #{rt2.length}"
-		streets = Tiger::import(rt1, rt2)
-		streets.sort!
-		$stderr.puts "\tnumber of streets = #{streets.length}"
-		streets.each do |street|
-			if i >= start_i
-				create_street(street)
-				$stderr.puts "created street number #{i} at #{Time.now}"
-			end
-			i += 1
+	$stderr.puts "starting the TIGER -> OSM import at #{Time.now}"
+	unless File.exist?(FIPS_DB_PATH)
+		$stderr.puts "creating the TIGER county database"
+		zip_paths = []
+		Find.find(path) do |f|
+			zip_paths << f if f =~ /\.zip$/i
 		end
-		break if DEBUG
+		File.open(FIPS_DB_PATH, "w") do |f|
+			zip_paths.sort.each do |zip_path|
+				zip_path  =~ /tgr(\d{5})\.zip$/i
+				fips = $1
+				streets = read_tiger_county_zip(zip_path)
+				f.puts [fips, streets.length].join("\t")
+				f.flush
+			end
+		end
+	end
+	indices = Indices.from_files(FIPS_DB_PATH, FINISHED_DB_PATH)
+	File.open(FINISHED_DB_PATH, "a") do |finished_io|
+		finished_index_ranges = []
+		begin
+			fips, streets = nil
+			indices.each do |i, i_fips|
+				if fips.nil? || (i_fips != fips)
+					fips = i_fips
+					streets = nil
+					Find.find(path) do |f|
+						if f =~ /#{fips}\.zip$/i
+							streets = read_tiger_county_zip(f)
+							break
+						end
+					end
+					throw "Could not find TIGER ZIP for FIPS \"#{fips}\"" if streets.nil?
+				end
+				street = streets[i - indicies.fips_to_range(fips).first]
+				create_street(street) unless DEBUG
+				$stderr.puts "created street number #{i} at #{Time.now}"
+				$stderr.puts "overall TIGER -> OSM import is #{indices.percent_finished}% complete" if (i % 10).zero?
+				finished_index_ranges = include_num_in_ranges(i, finished_index_ranges)
+				true  # we've finished this street
+			end
+		ensure
+			$stderr.puts "writing #{finished_index_ranges.length} finished index range(s) to database"
+			finished_index_ranges.each do |range|
+				finished_io.puts "(#{range})"
+			end
+		end
 	end
 end
 

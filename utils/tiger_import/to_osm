@@ -49,10 +49,10 @@ FIRST_FIPS = [
 
 def usage
 	$stderr.print <<EOF
-Pass the root of the TIGER 2005 download as the first argument, with
-an optional starting street number as the second.
+TIGER -> OSM Import
 
-Usage: $ ./to_osm /some_dir/tiger2005fe/ [street-num]
+Pass the root of the TIGER 2005 download as the first argument.
+Usage: $ ./to_osm /some_dir/tiger2005fe/
 
 EOF
 	exit(1)

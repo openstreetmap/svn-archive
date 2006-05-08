@@ -257,7 +257,7 @@ class Indices
 					next if line.strip.empty?
 					fips, num_streets = line.split("\t")
 					num_streets = num_streets.to_i
-					range = from_index..(from_index + num_streets - 1))
+					range = (from_index..(from_index + num_streets - 1))
 					indices.set_range(fips, range)
 					from_index += num_streets - 1
 				end

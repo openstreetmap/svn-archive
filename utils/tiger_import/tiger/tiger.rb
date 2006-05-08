@@ -25,14 +25,16 @@ module Tiger
 
 	class Street
 
-		def initialize(line_id, name, from_zip, to_zip, points)
+		def initialize(line_id, road_type, name, from_zip, to_zip, points)
 			@line_id = line_id
+			@road_type = road_type
 			@name = name
 			@from_zip, @to_zip = from_zip, to_zip
 			@points = points
 		end
 
 		def line_id; @line_id; end
+		def road_type; @road_type; end
 		def name; @name; end
 		def from_zip; @from_zip; end
 		def to_zip; @to_zip; end
@@ -50,7 +52,7 @@ module Tiger
 		end
 
 		def to_s
-			return "#{@name}(#{@line_id}), from #{if @from_zip.nil?; "?" else @from_zip end} to #{if @to_zip.nil?; "?" else @to_zip end}, #{@points.join(" -> ")}"
+			return "#{@name}(#{@line_id}), type \"#{@road_type}\", from #{if @from_zip.nil?; "?" else @from_zip end} to #{if @to_zip.nil?; "?" else @to_zip end}, #{@points.join(" -> ")}"
 		end
 	
 	end
@@ -84,6 +86,7 @@ module Tiger
 				Street.new(
 					first_tagged_chain.line_id,
 					first_tagged_chain.name,
+					first_tagged_chain.road_type,  # assume first in chain is the representative road type
 					first_tagged_chain.from_zip,
 					last_tagged_chain.to_zip,
 					chain.points)
@@ -99,6 +102,24 @@ module Tiger
 			line = " " + base_line.chomp  # spacer for 1-based indexing
 			cfcc = line[56..58].strip
 			next unless cfcc =~ /^A|P/  # A is a road, P is a provisional (unverified) road
+			road_type = case cfcc
+			when /^[AP]00/
+				"unclassified"
+			when /^[AP]1/
+				"motorway"
+			when /^[AP]2/
+				"primary"
+			when /^[AP]3/
+				"secondary"
+			when /^[AP]00/
+				"unclassified"
+			when /^[AP]4/
+				"residential"
+			when /^[AP]7[12]/
+				"footway"
+			else
+				nil
+			end
 			line_id = line[6..15].strip.to_i
 			prefix = line[18..19].strip; prefix = nil if prefix.empty?
 			base_name = line[20..49].strip; base_name = nil if base_name.empty?
@@ -111,7 +132,7 @@ module Tiger
 			to_zip = line[112..116].strip; to_zip = nil if to_zip.empty?
 			to_lat = line[220..228].strip.to_f / 1000000
 			to_long = line[210..219].strip.to_f / 1000000
-			rt1[line_id] = [name, [from_zip, to_zip], [[from_lat, from_long], [to_lat, to_long]]]
+			rt1[line_id] = [name, road_type, [from_zip, to_zip], [[from_lat, from_long], [to_lat, to_long]]]
 		end
 		$stderr.puts "parsing secondary streets"
 		rt2 = {}
@@ -137,18 +158,18 @@ module Tiger
 		rt2.keys.each do |line_id|
 			rt2_coords = rt2[line_id].compact
 			if rt1.has_key?(line_id)
-				rt1_coords = rt1[line_id][2]
+				rt1_coords = rt1[line_id][3]
 				coords = []
 				coords << rt1_coords.first
 				coords = coords.concat(rt2_coords)
 				coords << rt1_coords.last
-				rt1[line_id][2] = coords
+				rt1[line_id][3] = coords
 			end
 		end
 		$stderr.puts "converting into Street instances"
 		min_lat, max_lat, min_long, max_long = nil, nil, nil, nil
 		streets = rt1.keys.map do |line_id|
-			name, zips, coords = rt1[line_id]
+			name, road_type, zips, coords = rt1[line_id]
 			from_zip, to_zip = zips
 			points = coords.map do |coord|
 				lat, long = coord
@@ -161,7 +182,7 @@ module Tiger
 				pt.long = long
 				pt
 			end
-			Street.new(line_id, name, from_zip, to_zip, points)
+			Street.new(line_id, name, road_type, from_zip, to_zip, points)
 		end
 		if should_merge_streets
 			merged_streets = Tiger.merge(streets, min_lat, max_lat, min_long, max_long)

@@ -29,7 +29,7 @@ require 'tiger/tiger'
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
-DEBUG = false
+DEBUG = true
 
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -408,7 +408,7 @@ demonize do
 					end
 					throw "Could not find TIGER ZIP for FIPS \"#{fips}\"" if streets.nil?
 				end
-				street = streets[i - indicies.fips_to_range(fips).first]
+				street = streets[i - indices.fips_to_range(fips).first]
 				create_street(street) unless DEBUG
 				$stderr.puts "created street number #{i} [#{Time.now}]"
 				if (i % 50).zero?

@@ -38,6 +38,7 @@ FIPS_DB_PATH = "#{THIS_DIR}/fips_db.txt"
 FINISHED_DB_PATH = "#{THIS_DIR}/finished_db.txt"
 FIRST_FIPS = [
 	"06075",  # San Francisco
+	"06097",  # Sonoma (greater San Francisco, CA)
 	"06041",  # Marin (greater San Francisco, CA)
 	"06001",  # Alameda (greater San Francisco, CA)
 	"06085",  # Santa Clara (greater San Francisco, CA)

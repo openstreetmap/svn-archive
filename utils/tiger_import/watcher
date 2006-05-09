@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
+PID_PATH = "#{THIS_DIR}/to_osm.pid"
 
 def tiger_import_running?
-	pid = IO.read("#{THIS_DIR}/to_osm.pid").strip.to_i
+	return false unless File.exist?(PID_PATH)
+	pid = IO.read(PID_PATH).strip.to_i
 	`/bin/ps -p #{pid}`
 	$?.to_i.zero?
 end

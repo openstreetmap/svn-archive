@@ -29,7 +29,7 @@ require 'tiger/tiger'
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
-DEBUG = true
+DEBUG = false
 
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -264,7 +264,7 @@ class Indices
 					num_streets = num_streets.to_i
 					range = (from_index..(from_index + num_streets - 1))
 					indices.set_range(fips, range)
-					$stderr.puts "\tstreet index range for FIPS code #{fips} = (#{range})"
+					$stderr.puts "\tstreet index range for FIPS code #{fips} = (#{range})" if DEBUG
 					from_index += num_streets
 				end
 				$stderr.puts "\ttotal number of streets = #{from_index}"
@@ -332,40 +332,6 @@ class Indices
 			return @map[sub_fips] if sub_fips == fips
 		end
 		throw "Could not find range for FIPS code \"#{fips}\""
-	end
-
-	def num_streets(fips_re = //)
-		range_maxes = []
-		@map.keys.each do |fips|
-			range_maxes << @map[fips].max if fips =~ fips_re
-		end
-		range_maxes.max + 1
-	end
-
-	def num_finished(fips_re = //)
-		num = 0
-		if fips_re == //
-			@finished.each do |range|
-				num += range.last - range.first + 1
-			end
-		else
-			@finished.each do |range|
-				first_fips = index_to_fips(range.first)
-				last_fips = index_to_fips(range.last)
-				if (first_fips == last_fips) && (first_fips =~ fips_re)
-					num += range.last - range.first + 1
-				else
-					range.each do |i|
-						num += 1 if index_to_fips(i) =~ fips_re
-					end
-				end
-			end
-		end
-		num
-	end
-
-	def percent_finished(fips_re = //)
-		((num_finished(fips_re).to_f / num_streets(fips_re)) * 100).to_s[0..5].to_f
 	end
 
 	def finished_to_file(path)
@@ -437,14 +403,9 @@ demonize do
 			end
 			throw "Could not find TIGER ZIP for FIPS \"#{fips}\"" if streets.nil?
 		end
-		street = streets[i - indices.fips_to_range(fips).first]
-		create_street(street) unless DEBUG
-		$stderr.puts "[#{Time.now}] created street number #{i}"
-		if (i % 100).zero?
-			fips_re = /#{fips[0..1]}\d{3}/
-			$stderr.puts "this state's TIGER -> OSM import is #{indices.percent_finished(fips_re)}% complete"
-			$stderr.puts "overall TIGER -> OSM import is #{indices.percent_finished}% complete"
-		end
+		streets_i = i - indices.fips_to_range(fips).first
+		create_street(streets[streets_i]) unless DEBUG
+		$stderr.puts "[#{Time.now}] created street[#{i}], #{streets_i+1} / #{streets.length} in FIPS #{fips}"
 		true  # we've finished this street
 	end
 end

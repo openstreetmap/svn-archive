@@ -29,7 +29,7 @@ require 'tiger/tiger'
 
 LOGIN = "ben_tiger@somethingmodern.com"
 PASSWORD = "january"
-DEBUG = false
+DEBUG = true
 
 DEMONIZE = ! DEBUG
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -181,7 +181,7 @@ def backoff
 		rescue =>ex
 			$stderr.puts "problem in backoff block, \"#{ex.message}\" #{ex.backtrace.join(" -> ")}"
 		end
-		$stderr.puts "sleeping #{delay} seconds [#{Time.now}]"
+		$stderr.puts "[#{Time.now}] sleeping #{delay} seconds"
 		sleep(delay)
 		delay = delay ** 2  # exponential backoff
 		throw "Backoff delay over four hours" if delay > 60 * 60 * 4
@@ -234,9 +234,12 @@ def read_tiger_county_zip(zip)
 end
 
 def include_num_in_ranges(num, ranges)
+	ranges.each do |range|
+		return ranges if range.member?(num)
+	end
 	new_ranges = []
 	ranges.each_index do |i|
-		new_ranges = ranges[i]
+		new_ranges[i] = ranges[i]
 	end
 	new_ranges.each_index do |i|
 		if new_ranges[i].last == num - 1
@@ -261,8 +264,10 @@ class Indices
 					num_streets = num_streets.to_i
 					range = (from_index..(from_index + num_streets - 1))
 					indices.set_range(fips, range)
-					from_index += num_streets - 1
+					$stderr.puts "\tstreet index range for FIPS code #{fips} = (#{range})"
+					from_index += num_streets
 				end
+				$stderr.puts "\ttotal number of streets = #{from_index}"
 			end
 		end
 		if File.exist?(finished_db_path)
@@ -317,7 +322,7 @@ class Indices
 
 	def index_to_fips(i)
 		@reverse_map.keys.each do |range|
-			return @reverse_map[range] if range.memeber?(i)
+			return @reverse_map[range] if range.member?(i)
 		end
 		throw "Could not find FIPS code for index #{i}"
 	end
@@ -339,16 +344,37 @@ class Indices
 
 	def num_finished(fips_re = //)
 		num = 0
-		@finished.each do |range|
-			range.each do |i|
-				num += 1 if index_to_fips(i) =~ fips_re
+		if fips_re == //
+			@finished.each do |range|
+				num += range.last - range.first + 1
+			end
+		else
+			@finished.each do |range|
+				first_fips = index_to_fips(range.first)
+				last_fips = index_to_fips(range.last)
+				if (first_fips == last_fips) && (first_fips =~ fips_re)
+					num += range.last - range.first + 1
+				else
+					range.each do |i|
+						num += 1 if index_to_fips(i) =~ fips_re
+					end
+				end
 			end
 		end
 		num
 	end
 
-	def percent_finised(fips_re = //)
+	def percent_finished(fips_re = //)
 		((num_finished(fips_re).to_f / num_streets(fips_re)) * 100).to_s[0..5].to_f
+	end
+
+	def finished_to_file(path)
+		File.open(path, "w") do |f|
+			$stderr.puts "writing #{@finished.length} finished index range(s) to database"
+			@finished.each do |range|
+				f.puts "(#{range})"
+			end
+		end
 	end
 
 	def each
@@ -376,7 +402,7 @@ path = File.expand_path(ARGV.first)
 usage unless File.exist?(path) && File.directory?(path)
 
 demonize do
-	$stderr.puts "starting the TIGER -> OSM import [#{Time.now}]"
+	$stderr.puts "[#{Time.now}] starting the TIGER -> OSM import"
 	unless File.exist?(FIPS_DB_PATH)
 		$stderr.puts "creating the TIGER county database"
 		zip_paths = []
@@ -394,39 +420,32 @@ demonize do
 		end
 	end
 	indices = Indices.from_files(FIPS_DB_PATH, FINISHED_DB_PATH)
-	File.open(FINISHED_DB_PATH, "a") do |finished_io|
-		begin
-			fips, streets = nil
-			indices.each do |i, i_fips|
-				if fips.nil? || (i_fips != fips)
-					fips = i_fips
-					streets = nil
-					Find.find(path) do |f|
-						if f =~ /#{fips}\.zip$/i
-							streets = read_tiger_county_zip(f)
-							break
-						end
-					end
-					throw "Could not find TIGER ZIP for FIPS \"#{fips}\"" if streets.nil?
+	trap("INT") do
+		indices.finished_to_file(FINISHED_DB_PATH) unless indices.nil?
+		exit
+	end
+	fips, streets = nil
+	indices.each do |i, i_fips|
+		if fips.nil? || (i_fips != fips)
+			fips = i_fips
+			streets = nil
+			Find.find(path) do |f|
+				if f =~ /#{fips}\.zip$/i
+					streets = read_tiger_county_zip(f)
+					break
 				end
-				street = streets[i - indices.fips_to_range(fips).first]
-				create_street(street) unless DEBUG
-				$stderr.puts "created street number #{i} [#{Time.now}]"
-				if (i % 50).zero?
-					fips_re = /#{fips[0..1]}\d{3}/
-					$stderr.puts "this state's TIGER -> OSM import is #{indices.percent_finished(fips_re)}% complete"
-					$stderr.puts "overall TIGER -> OSM import is #{indices.percent_finished}% complete"
-				end
-				include_num_in_ranges(i, finished_index_ranges)
-				true  # we've finished this street
 			end
-		ensure
-			finished_index_ranges = indices.finished_ranges
-			$stderr.puts "writing #{finished_index_ranges.length} finished index range(s) to database"
-			finished_index_ranges.each do |range|
-				finished_io.puts "(#{range})"
-			end
+			throw "Could not find TIGER ZIP for FIPS \"#{fips}\"" if streets.nil?
 		end
+		street = streets[i - indices.fips_to_range(fips).first]
+		create_street(street) unless DEBUG
+		$stderr.puts "[#{Time.now}] created street number #{i}"
+		if (i % 100).zero?
+			fips_re = /#{fips[0..1]}\d{3}/
+			$stderr.puts "this state's TIGER -> OSM import is #{indices.percent_finished(fips_re)}% complete"
+			$stderr.puts "overall TIGER -> OSM import is #{indices.percent_finished}% complete"
+		end
+		true  # we've finished this street
 	end
 end
 

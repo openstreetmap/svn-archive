@@ -1,0 +1,44 @@
+<%
+require 'cgi'
+require 'dao.rb'
+dao = OSM::Dao.instance
+cgi = CGI.new
+lat = cgi['lat'].to_f
+lon = cgi['lon'].to_f
+
+if lat != lon && lon != 0.0
+
+  res =dao.call_sql { "select lat, lon, part1, part2, pow((lat - #{lat.to_s}),2) + pow((lon - #{lon.to_s}),2) as distance from codes where confirmed = 1 order by distance asc limit 1;" }
+
+  res.each_hash do |row|
+    puts "#{row['lat']} #{row['lon']} #{row['part1']} #{row['part2']}"
+  end
+  exit
+end
+
+
+postcode = dao.q(cgi['postcode'][0])
+
+puts "# looking up postcode #{postcode}"
+
+start = 0
+
+start = 1 if postcode[0] >= 65
+start = 2 if postcode[0] >= 65 && postcode[1] >= 65
+
+variations = (postcode.length -  start)
+
+postcode_start = postcode[0,start]
+
+variations.times do |n|
+  sql =  "select lat,lon,part1,part2 from codes where concat(part1, ' ', part2) like '#{postcode_start + postcode[start,variations - n]}%' limit 1;"
+  res = dao.call_sql { sql }
+  if res.num_rows != 0
+    res.each_hash do |row|
+      puts "#{row['lat']} #{row['lon']} #{row['part1']} #{row['part2']}"
+      exit
+    end
+  end
+end
+%>
+

@@ -384,6 +384,33 @@ public class OsmApplet extends PApplet {
 		return Integer.parseInt(param(paramName));
 	}
 
+	private void draw_scale_bar() {
+		int dist_bottom = 70;
+		int dist_right = 20;
+		int bar_length = getWidth() / 5;
+		int ending_bar_length = getHeight() / 30;
+		fill(0);
+    strokeWeight(10);
+    textSize(10);
+		pushMatrix();
+		/* Horizonthal bar */
+		line(getWidth() - bar_length - dist_right, getHeight() - dist_bottom,
+		     getWidth() - dist_right, getHeight() - dist_bottom);
+		/* Left ending bar */
+		line(getWidth() - bar_length - dist_right, getHeight() - dist_bottom + ending_bar_length / 2,
+		     getWidth() - bar_length - dist_right, getHeight() - dist_bottom - ending_bar_length / 2);
+		/* Right ending bar */
+		line(getWidth() - dist_right, getHeight() - dist_bottom + ending_bar_length / 2,
+		     getWidth() - dist_right, getHeight() - dist_bottom - ending_bar_length / 2);
+
+		String meters = String.format ("%10.5f m", tiles.kilometersPerPixel()
+							   * bar_length * 1000.0f);
+		translate(getWidth() - dist_right - bar_length + (bar_length - textWidth(meters))/2,
+			  getHeight() - dist_bottom + 5);
+    text(meters);
+		popMatrix();
+	}
+
 	public void draw() {
 		tiles.draw();
 		try {
@@ -604,6 +631,9 @@ public class OsmApplet extends PApplet {
 				text("uploading...");
 				popMatrix();
 			}
+
+			// finally draw a scale bar
+			draw_scale_bar();
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 		}

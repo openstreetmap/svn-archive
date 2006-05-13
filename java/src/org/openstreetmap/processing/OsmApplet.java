@@ -403,8 +403,7 @@ public class OsmApplet extends PApplet {
 		line(getWidth() - dist_right, getHeight() - dist_bottom + ending_bar_length / 2,
 		     getWidth() - dist_right, getHeight() - dist_bottom - ending_bar_length / 2);
 
-		String meters = String.format ("%10.5f m", tiles.kilometersPerPixel()
-							   * bar_length * 1000.0f);
+		String meters = "" + (tiles.kilometersPerPixel() * bar_length * 1000.0f);
 		translate(getWidth() - dist_right - bar_length + (bar_length - textWidth(meters))/2,
 			  getHeight() - dist_bottom + 5);
     text(meters);

@@ -17,6 +17,7 @@ url = "/traces/user/#{cgi['display_name']}/page/" if cgi['action'] == 'public'
 url = "/traces/mine/tag/#{cgi['tag']}/page/" if cgi['action'] == 'mytag'
 url = "/traces/mine/page/" if cgi['action'] == 'mytraces'
 %>
+
 <% if !nofiles %>
 Showing page <%=page%> (<%=rangestart+1 %> - <%=nice_rangeend%> of <%=gpxfiles.num_rows%>) |
 <% end %>
@@ -138,6 +139,20 @@ if loggedin && !nofiles %>
 <br />
 <input type="submit" value="Update">
 </form>
+<br />
+<% if !nofiles %>
+Showing page <%=page%> (<%=rangestart+1 %> - <%=nice_rangeend%> of <%=gpxfiles.num_rows%>) |
+<% end %>
+
+<% if page > 0 %>
+<a href="<%=url%><%=page-1%>">previous page</a> |
+<% end %>
+
+<% if rangeend < gpxfiles.num_rows %>
+<a href="<%=url%><%=page+1%>">next page</a>
+<% end %>
+
+
 
 <%
   

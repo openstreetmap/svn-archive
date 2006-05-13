@@ -59,7 +59,6 @@
 #include <XmlRpcCpp.h>
 #endif
 
-#include "curlstuff.h"
 
 using std::cout;
 using std::endl;
@@ -117,6 +116,8 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 
     contours = false;
     wptSaved = false;
+	displayOSM = true;
+	displayGPX = true;
 
     actionMode = ACTION_NODE;
     curSegType = "A road";
@@ -125,6 +126,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     doingName = false;
 
     segpens["footpath"]= QPen (Qt::green, 2);
+    segpens["path"]= QPen (QColor(0,128,0), 2);
     segpens["cycle path"]= QPen (Qt::magenta, 2);
     segpens["bridleway"]=QPen(QColor(192,96,0),2);
     segpens["byway"] = QPen (Qt::red, 2);
@@ -153,6 +155,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     fileMenu->insertItem("&Grab Landsat",this,SLOT(grabLandsat()),CTRL+Key_G);
     fileMenu->insertItem("Grab OSM from &Net",this,SLOT(grabOSMFromNet()),
                                 CTRL+Key_N);
+    fileMenu->insertItem("Grab OSM GPX tracks",this,SLOT(grabGPXFromNet()));
     fileMenu->insertItem("&Upload OSM",this,SLOT(uploadOSM()),CTRL+Key_U);
     fileMenu->insertItem("&Quit", this, SLOT(quit()), ALT+Key_Q);
     fileMenu->insertItem("Login to live update",this,
@@ -222,6 +225,11 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QPixmap magnify_pixmap = mmLoadPixmap("images","magnify.png");
     QPixmap shrink_pixmap = mmLoadPixmap("images","shrink.png");
     QPixmap selseg_pixmap = mmLoadPixmap("images","selseg.png");
+    QPixmap selway_pixmap = mmLoadPixmap("images","selway.png");
+    QPixmap osm = mmLoadPixmap("images","osm.png");
+    QPixmap gpx = mmLoadPixmap("images","gpx.png");
+    QPixmap landsat = mmLoadPixmap("images","landsat.png");
+    QPixmap contours = mmLoadPixmap("images","contours.png");
 
     new QToolButton(left_pixmap,"Move left","",this,SLOT(left()),toolbar);
     new QToolButton(right_pixmap,"Move right","",this,SLOT(right()),toolbar);
@@ -244,15 +252,17 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
             (two,"Delete Node","",mapper,SLOT(map()),toolbar2);
     modeButtons[ACTION_SEL_SEG]= new QToolButton
             (selseg_pixmap,"Select segment","",mapper,SLOT(map()),toolbar2);
+    modeButtons[ACTION_SEL_WAY]= new QToolButton
+            (selway_pixmap,"Select way","",mapper,SLOT(map()),toolbar2);
     modeButtons[ACTION_NEW_SEG]= new QToolButton
             (formnewseg,"New segment","",mapper,SLOT(map()),toolbar2);
     modeButtons[ACTION_BREAK_SEG]= new QToolButton
             (breakseg,"Break segment","",mapper,SLOT(map()),toolbar2);
     new QToolButton
-            (deleteseg,"Delete Segment","",this,
+            (deleteseg,"Delete Selected Segment/Way","",this,
              SLOT(deleteSelectedSeg()),toolbar2);
     wayButton = new QToolButton
-            (ways,"Ways on/off","",this,
+            (ways,"Way construction on/off","",this,
              SLOT(toggleWays()),toolbar2);
 	wayButton->setToggleButton(true);
 	wayButton->setOn(false);
@@ -261,10 +271,34 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
             (uploadways,"Upload current way","",this,
              SLOT(uploadWay()),toolbar2);
 	
+	/*
     new QToolButton
             (waydelete,"Delete Way","",this,SLOT(deleteWay()),toolbar2);
+			*/
 			
+    osmButton = new QToolButton
+            (osm,"OSM Data On/Off","",this,
+             SLOT(toggleOSM()),toolbar2);
+	osmButton->setToggleButton(true);
+	osmButton->setOn(true);
 
+    gpxButton = new QToolButton
+            (gpx,"OSM GPX Tracks On/Off","",this,
+             SLOT(toggleGPX()),toolbar2);
+	gpxButton->setToggleButton(true);
+	gpxButton->setOn(true);
+
+    landsatButton = new QToolButton
+            (landsat,"Landsat On/Off","",this,
+             SLOT(toggleLandsat()),toolbar2);
+	landsatButton->setToggleButton(true);
+	landsatButton->setOn(false);
+
+    contoursButton = new QToolButton
+            (contours,"SRTM Contours On/Off","",this,
+             SLOT(toggleContours()),toolbar2);
+	contoursButton->setToggleButton(true);
+	contoursButton->setOn(false);
    
     toolbar->setStretchableWidget(new QLabel(toolbar));
     toolbar2->setStretchableWidget(new QLabel(toolbar2));
@@ -349,6 +383,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     trackpoints=true;
 
     components = new Components2;
+    osmtracks = new Components2;
 
 	clearSegments();
 
@@ -372,6 +407,8 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
                     this,SLOT(handleNetCommError(const QString&)));
 
 	serialPort = "/dev/ttyS0";
+
+	selWay = NULL;
 }
 
 MainWindow2::~MainWindow2()
@@ -457,6 +494,7 @@ void MainWindow2::open()
 		update();
     }
     /* Delete fd; ? */
+	delete fd;
 }
 
 Components2 * MainWindow2::doOpen(const QString& filename)
@@ -541,16 +579,49 @@ void MainWindow2::grabOSMFromNet()
                             topRight.x,topRight.y);
         cerr<<"SENDING URL: "<<url<<endl;
 
-        if(!osmhttp.isMakingRequest())
+		osmhttp.setAuthentication(uname,pwd);
+		osmhttp.scheduleCommand("GET",url,QByteArray(),
+								this,
+								SLOT(loadComponents(const QByteArray&,void*)));
+    }
+}
+
+void MainWindow2::grabGPXFromNet()
+{
+    QString url;
+    QString uname="", pwd="";
+    EarthPoint bottomLeft = map.getBottomLeft(), topRight = map.getTopRight();
+    if(username=="" || password=="")
+    {
+        LoginDialogue *ld=new LoginDialogue(this);
+        if(ld->exec())
         {
-        	osmhttp.disconnect 
-				(SIGNAL(responseReceived(const QByteArray&,void*)));
-            QObject::connect
-                    (&osmhttp,SIGNAL(responseReceived(const QByteArray&,void*)),
-                         this, SLOT(loadComponents(const QByteArray&,void*)));
-            osmhttp.setAuthentication(uname,pwd);
-            osmhttp.sendRequest("GET", url);
+            uname=ld->getUsername(),
+            pwd=ld->getPassword();
         }
+        delete ld;
+    }
+    else
+    {
+        uname=username;
+        pwd = password;
+    }
+
+    if(uname!="" && pwd!="")
+    {
+        statusBar()->message("Grabbing tracks from OSM...");
+        EarthPoint bottomLeft = map.getBottomLeft(),
+               topRight = map.getTopRight();
+        QString url;
+        url.sprintf("/api/0.3/trackpoints?bbox=%lf,%lf,%lf,%lf&page=0",
+                            bottomLeft.x,bottomLeft.y,
+                            topRight.x,topRight.y);
+        cerr<<"SENDING URL: "<<url<<endl;
+
+		osmhttp.setAuthentication(uname,pwd);
+		osmhttp.scheduleCommand("GET",url,QByteArray(),
+								this,
+								SLOT(loadOSMTracks(const QByteArray&,void*)));
     }
 }
 
@@ -676,39 +747,54 @@ void MainWindow2::setMode(int m)
     nSelectedPoints = 0;
 
 	if(m!=ACTION_BREAK_SEG)
+	{
+		cerr<<"setMode(): CLEARING SEGMENTS" << endl;
 		clearSegments();
+	}	
 
     movingNode = NULL;
     pts[0]=pts[1]=NULL;
-    ptsv[0].clear();
-    ptsv[1].clear();
     doingName = false;
     update();
 }
 
 void MainWindow2::setSegType(const QString &t)
 {
-    curSegType =   t;
     // live change of selected segment
-	for(int count=0; count<selSeg.size(); count++)
+    curSegType =   t;
+
+	// Now set the type of the way if a way is selected, rather than a segment
+	if(selWay)
+		selWay->setType(curSegType);
+	else
 	{
-		if(selSeg[count])
+		for(int count=0; count<selSeg.size(); count++)
 			selSeg[count]->setType(curSegType);
 	}
 
-	if(!makingWay)	
-    {
         // UPLOAD IF IN LIVE MODE
-        if(liveUpdate && selSeg[segCount])
+        if(liveUpdate)
         {
-        //      selSeg->uploadToOSM(username,password);
-            QByteArray xml = selSeg[segCount]->toOSM();
-            QString url;
-            url.sprintf ("/api/0.3/segment/%d", selSeg[segCount]->getOSMID());
-            osmhttp.setAuthentication(username, password);
-            osmhttp.sendRequest("PUT", url, xml);
+			if(selWay)
+			{
+            	QByteArray xml = selWay->toOSM();
+            	QString url;
+            	url.sprintf ("/api/0.3/way/%d", selWay->getOSMID());
+            	osmhttp.setAuthentication(username, password);
+				osmhttp.scheduleCommand("PUT",url,xml);
+			}
+			else if(!makingWay)
+			{
+				for(int ct=0; ct<selSeg.size(); ct++)
+				{
+            		QByteArray xml = selSeg[ct]->toOSM();
+            		QString url;
+            		url.sprintf("/api/0.3/segment/%d",selSeg[ct]->getOSMID());
+            		osmhttp.setAuthentication(username, password);
+					osmhttp.scheduleCommand("PUT",url,xml);
+				}
+			}
         }
-    }
     update();
 }
 
@@ -720,13 +806,28 @@ void MainWindow2::toggleNodes()
 
 void MainWindow2::toggleLandsat()
 {
-    landsatManager.toggleDisplay();
+	landsatButton->setOn(landsatManager.toggleDisplay());
+    update();
+}
+
+void MainWindow2::toggleOSM()
+{
+	displayOSM = !displayOSM;
+	osmButton->setOn(displayOSM);
+    update();
+}
+
+void MainWindow2::toggleGPX()
+{
+	displayGPX = !displayGPX;
+	gpxButton->setOn(displayGPX);
     update();
 }
 
 void MainWindow2::toggleContours()
 {
     contours = !contours;
+	contoursButton->setOn(contours);
     update();
 }
 
@@ -740,9 +841,9 @@ void MainWindow2::paintEvent(QPaintEvent* ev)
 {
     QPainter p(this);
     drawLandsat(p);
+	drawGPX(p);
     curPainter = &p; // needed for the contour "callback"
     drawContours();
-	//drawTrackPoints(p);
     drawSegments(p);
     drawNodes(p);
     curPainter = NULL;
@@ -758,7 +859,7 @@ void MainWindow2::paintEvent(QPaintEvent* ev)
 
 void MainWindow2::drawLandsat(QPainter& p)
 {
-    landsatManager.drawTiles(p);
+    landsatManager.drawTilesNew(p);
 }
 
 void MainWindow2::drawContours()
@@ -809,16 +910,19 @@ void MainWindow2::heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
 
 void MainWindow2::drawSegments(QPainter& p)
 {
-    Segment *curSeg;
-    QString segname;
+	if(displayOSM)
+	{
+    	Segment *curSeg;
+    	QString segname;
 
-    components->rewindSegments();
+    	components->rewindSegments();
 
-    while(!components->endSegment())
-    {
-        curSeg = components->nextSegment();
-        drawSegment(p,curSeg);
-    }
+    	while(!components->endSegment())
+    	{
+        	curSeg = components->nextSegment();
+        	drawSegment(p,curSeg);
+    	}
+	}
 }
 
 void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
@@ -829,7 +933,7 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
         QFontMetrics fm(f);
         p.setFont(f);
 
-		bool found = false;
+		bool found = false, foundWay = false;
 
 		for(int count=0; count<selSeg.size(); count++)
 		{
@@ -840,13 +944,16 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 			}
 		}
 
-
-        QPen curPen = (found) ?
-                        QPen(Qt::yellow,5) : segpens[curSeg->getType()];
+		if(selWay && components->getWay(curSeg->getWayID())==selWay)
+		{
+			foundWay=true;
+		}
+        QPen curPen = (foundWay) ? QPen(QColor(255,170,0),5) : ( (found) ?
+                        QPen(Qt::yellow,5) : segpens[curSeg->getType()]);
 
         curPen.setStyle ((curSeg->getOSMID()>0) ?  Qt::SolidLine: Qt::DotLine );
 		
-		if(curSeg->belongsToWay())
+		if(curSeg->belongsToWay() && !found && !foundWay)
 		{
 			//cerr<<"segment belongs to a way"<<endl;
 			curPen.setWidth(4);
@@ -873,14 +980,28 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
         }
 }
 
+void MainWindow2::drawGPX(QPainter& p)
+{
+	if(displayGPX)
+	{
+		osmtracks->rewindNodes();
+    	while(!osmtracks->endNode())
+    	{
+        	drawNode(p,osmtracks->nextNode());
+    	}
+	}
+}
+
 void MainWindow2::drawNodes(QPainter& p)
 {
-    int count=0;
-    components->rewindNodes();
-    while(!components->endNode())
-    {
-        drawNode(p,components->nextNode());
-    }
+	if(displayOSM)
+	{
+    	components->rewindNodes();
+    	while(!components->endNode())
+    	{
+        	drawNode(p,components->nextNode());
+    	}
+	}
 }
 
 void MainWindow2::drawTrackPoints(QPainter& p)
@@ -908,26 +1029,6 @@ void MainWindow2::drawNode(QPainter& p,Node* node)
         WaypointRep* img=nodeReps[node->getType()];
         if(img) img->draw(p,pos.x,pos.y,node->getName());
 
-        if(!selSeg[segCount] && (ptsv[0].size() || ptsv[1].size()))
-        {
-            for(int count=0; count<ptsv[0].size(); count++)
-            {
-                if(node==ptsv[0][count])
-                {
-                    p.setPen(QPen(Qt::yellow,3));
-                    p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
-                }
-            }
-            for(int count=0; count<ptsv[1].size(); count++)
-            {
-                if(node==ptsv[1][count])
-                {
-                    p.setPen(QPen(Qt::yellow,3));
-                    p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
-                }
-            }
-        }
-
         if(node==pts[0] || node==pts[1] || node==movingNode)
         {
             p.setPen(QPen(Qt::red,3));
@@ -954,6 +1055,7 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
     QString name;
     int nearest;
     Node *n;
+	Segment *s1;
 
     switch(actionMode)
     {
@@ -990,13 +1092,12 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
             if(n)
             {
                 QString url;
-                osmhttp.unlock();
                 components->deleteNode(n);
                 if(liveUpdate && n->getOSMID()>0)
                 {
                     url.sprintf ("/api/0.3/node/%d", n->getOSMID());
                     osmhttp.setAuthentication(username, password);
-                    osmhttp.sendRequest("DELETE", url);
+                    osmhttp.scheduleCommand("DELETE", url);
                 }
                
                 // If this node is part of any segments, delete the segments
@@ -1011,13 +1112,12 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
                         {
                             url.sprintf ("/api/0.2/segment/%d",
                                     containingSegs[count]->getOSMID());
-                            osmhttp.sendRequest("DELETE", url);
+                            osmhttp.scheduleCommand("DELETE", url);
                         }
                         */
                         delete containingSegs[count];
                 }
                
-                osmhttp.lock();
                 delete n;
                 update();
             }
@@ -1041,13 +1141,10 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 							(pts[0],pts[1],"",curSegType);
 					nodeHandler.setEmit
 							(segx,this,SLOT(doaddseg(void*)));
-					if(liveUpdate && !osmhttp.isMakingRequest())
+					if(liveUpdate)
 					{
 						QByteArray xml = pts[1]->toOSM();
 						QString url = "/api/0.3/node/0";
-						osmhttp.disconnect 
-								(SIGNAL(responseReceived(const QByteArray&,
-														 void*)));
 						osmhttp.setAuthentication(username, password);
 						newUploadedNode = pts[1];
 						osmhttp.scheduleCommand("PUT",url,xml,
@@ -1073,27 +1170,16 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 					
             break;
 		case ACTION_BREAK_SEG:
-			if(selSeg[segCount])
+			if(selSeg.size()==1)
 			{
                 n = components->getNearestNode(p.y,p.x,LIMIT);
                 if(!n)
                     n=components->addNewNode(p.y,p.x,"","node");
 				std::pair<Segment*,Segment*>* segments = 
-						components->breakSegment(selSeg[segCount],n);
+						components->breakSegment(selSeg[0],n);
 				QString url = "/api/0.3/segment/0";
-				osmhttp.disconnect
-					(SIGNAL(responseReceived(const QByteArray&,void*)));
-				/*
-				QObject::connect
-					(&osmhttp,
-					 SIGNAL(responseReceived(const QByteArray&,void*)),
-						this, SLOT(newSegmentAdded(const QByteArray&,void*)));
-						*/
 				osmhttp.setAuthentication(username, password);
 
-				//osmhttp.sendRequest("PUT", url, xml);
-				
-			
 				nodeHandler.setEmit(segments,this,SLOT(addSplitSegs(void*)));
 
 				if(n->getOSMID()<=0)
@@ -1104,78 +1190,66 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 						n);
 				}
 
-				url.sprintf("/api/0.3/segment/%d",selSeg[segCount]->getOSMID());
+				url.sprintf("/api/0.3/segment/%d",selSeg[0]->getOSMID());
 				cerr<<"DELETE: URL is: " << url << endl;
 				osmhttp.scheduleCommand("DELETE",url);
 		
 
+				cerr<<"breakSeg(): CLEARING SEGMENTS"<<endl;
 				clearSegments();
 
 			}
 			break;
 
         case  ACTION_SEL_SEG:
-            if(nSelectedPoints==0)
-            {
-                EarthPoint p=map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-                ptsv[0] = components->getNearestNodes (p.y,p.x,LIMIT);
-                if(ptsv[0].size())
-                {
-					// 280306 only push back the new segment if we're making a
-					// way if the current last segment is not NULL. In this
-					// way, we can re-use the current last segment if selection
-					// of the last segment was unsuccessful.
+		case  ACTION_SEL_WAY:
 
-					if(makingWay && segCount!=0 && 
-						selSeg[segCount]!=NULL)
+			/* NEW CODE TO SELECT SEGMENT DIRECTLY RATHER THAN VIA NODES */
+
+			// 280306 only push back the new segment if we're making a
+			// way if the current last segment is not NULL. In this
+			// way, we can re-use the current last segment if selection
+			// of the last segment was unsuccessful.
+			
+			/*
+			if(makingWay && segCount!=0 && selSeg[segCount]!=NULL)
+				selSeg.push_back(NULL);
+			*/
+
+			s1= components->getNearestSegment(p.y,p.x,LIMIT);
+			if(s1)
+			{
+				cerr<<"getNearestSegment: ID=" << s1->getOSMID() << endl;
+					
+				// If we're in way select mode, select the whole
+				// parent way of the segment
+				if(actionMode==ACTION_SEL_WAY)
+				{
+					cerr<<"mode=ACTION_SEL_WAY" << endl;
+					clearSegments();
+					int wayID = s1->getWayID();
+					if(wayID)
 					{
-						cerr<<"*************ADDING NEW SEG"<<endl;
-						selSeg.push_back(NULL);
+						cerr<<"wayID=" << wayID << endl;
+						selWay = components->getWay(wayID);
 					}
-					else
-						selSeg[segCount] = NULL;
-
-                    cerr<<"SELSEG: FOUND A FIRST POINT "<< endl;
-                    cerr << ptsv[0][0]->getLat() << endl;
-                    cerr << ptsv[0][0]->getLon() << endl;
-                    update();
-                    nSelectedPoints++;
-                }
-            }
-            else
-            {
-                EarthPoint p=map.getEarthPoint(ScreenPos(ev->x(),ev->y()));
-                ptsv[1] = components->getNearestNodes(p.y,p.x,LIMIT);
-                // SELECT THE SEG
-                cerr<<"trying to select seg" << endl;
-                if(ptsv[1].size())
-                {
-                    cerr<<"SELSEG: SECOND POINT "<< endl;
-                    cerr << ptsv[1][0]->getLat() << endl;
-                    cerr << ptsv[1][0]->getLon() << endl;
-                    selSeg[segCount] = components->getSeg(ptsv[0],ptsv[1]);   
-                    if(selSeg[segCount])
-                    {
-                        cerr<<"found a selected seg" << endl;
-                       
-                        // Naming always on when in selected segment mode
-                        nameTrackOn();
-                    }
-               
-                    ptsv[0].clear();
-                    ptsv[1].clear();
-
-                    update();
-                    nSelectedPoints=0;
-					
-					// If we are making a way, increase segCount to allow
-					// storage of multiple selected segments
-					// 280306 only do this if we found a selected segment
-					
-					if(makingWay && selSeg[segCount])
-						segCount++;
-                }
-            }
+				}
+				// Otherwise, just select the segment
+				else
+				{
+					if(!makingWay)
+						clearSegments();
+					selWay = NULL;
+					selSeg.push_back(s1);
+					if(makingWay)
+					{
+						for(int ct=0; ct<selSeg.size(); ct++)
+							if(selSeg[ct])cerr<< selSeg[ct]->getOSMID() << " ";
+						cerr<<endl;
+					}
+				}
+			}
+			update();
             break;
     }               
 }
@@ -1209,14 +1283,14 @@ void MainWindow2::editNode(int x,int y,int limit)
         {
             nearest->setName(d->getName());
             nearest->setType(d->getType());
-            if(liveUpdate)
+            if(liveUpdate && nearest->getOSMID()>0)
             {
                 //nearest->uploadToOSM(username,password);
                 QByteArray xml = nearest->toOSM();
                 QString url;
                 url.sprintf ("/api/0.3/node/%d", nearest->getOSMID());
                 osmhttp.setAuthentication(username, password);
-                osmhttp.sendRequest("PUT", url, xml);
+                osmhttp.scheduleCommand("PUT", url, xml);
             }
         }
 
@@ -1288,7 +1362,7 @@ void MainWindow2::mouseReleaseEvent(QMouseEvent* ev)
                     QString url;
                     url.sprintf ("/api/0.3/node/%d", movingNode->getOSMID());
                     osmhttp.setAuthentication(username, password);
-                    osmhttp.sendRequest("PUT", url, xml);
+                    osmhttp.scheduleCommand("PUT", url, xml);
                 }
                 movingNode = NULL;     
                 movingNodeSegs.clear();
@@ -1318,19 +1392,19 @@ void MainWindow2::keyPressEvent(QKeyEvent* ev)
             curNamePos.x += fm.width(ev->text());
             typingName = true;
         }
-        else if (ev->key()==Key_Return)
+        else if (ev->key()==Key_Return && selSeg.size()==1)
         {
-            selSeg[segCount]->setName(trackName);
+            selSeg[0]->setName(trackName);
 //              UPLOAD IF IN LIVE MODE
             if(liveUpdate)
             {
                 //selSeg->uploadToOSM(username,password);
-                QByteArray xml = selSeg[segCount]->toOSM();
+                QByteArray xml = selSeg[0]->toOSM();
                 QString url;
                 url.sprintf ("/api/0.3/segment/%d", 
-					selSeg[segCount]->getOSMID());
+					selSeg[0]->getOSMID());
                 osmhttp.setAuthentication(username, password);
-                osmhttp.sendRequest("PUT", url, xml);
+                osmhttp.scheduleCommand("PUT", url, xml);
             }
             trackName = "";
             typingName = true;
@@ -1434,6 +1508,7 @@ void MainWindow2::screenDown()
 void MainWindow2::magnify()
 {
     map.rescale(2);
+	landsatManager.clearTiles();
     landsatManager.grabAll();
     showPosition();
     update();
@@ -1443,6 +1518,7 @@ void MainWindow2::magnify()
 void MainWindow2::shrink()
 {
     map.rescale(0.5);
+	landsatManager.clearTiles();
     landsatManager.grabAll();
     showPosition();
     update();
@@ -1451,10 +1527,12 @@ void MainWindow2::shrink()
 
 void MainWindow2::updateWithLandsatCheck()
 {
+		/*
     if(landsatManager.needMoreData())
         landsatManager.forceGrab();
     showPosition();
     update();
+	*/
 }
 
 void MainWindow2::grabLandsat()
@@ -1474,10 +1552,10 @@ void MainWindow2::grabLandsat()
 void MainWindow2::nameTrackOn()
 {
 
-    if(selSeg[segCount])
+    if(selSeg.size()==1)
     {
-        Node *n1 = selSeg[segCount]->firstNode(), 
-			*n2 = selSeg[segCount]->secondNode();
+        Node *n1 = selSeg[0]->firstNode(), 
+			*n2 = selSeg[0]->secondNode();
         double dy=n2->getLat()-n1->getLat();
         double dx=n2->getLon()-n1->getLon();
         nameAngle = atan2(dy,dx);
@@ -1555,21 +1633,37 @@ void MainWindow2::newWayAdded(const QByteArray& array,void *way)
 
 void MainWindow2::deleteSelectedSeg()
 {
-    if(selSeg[segCount])
+	// Now deletes a way if a way is selected
+    if(selSeg.size()==1)
     {
         cerr<<"selseg exists" << endl;
-        components->deleteSegment(selSeg[segCount]);
-        if(liveUpdate && selSeg[segCount]->getOSMID()>0)
+        components->deleteSegment(selSeg[0]);
+        if(liveUpdate && selSeg[0]->getOSMID()>0)
         {
             QString url;
-            url.sprintf ("/api/0.3/segment/%d", selSeg[segCount]->getOSMID());
+            url.sprintf ("/api/0.3/segment/%d", selSeg[0]->getOSMID());
             osmhttp.setAuthentication(username, password);
-            osmhttp.sendRequest("DELETE", url);
+            osmhttp.scheduleCommand("DELETE", url);
         }
-        delete selSeg[segCount];
-        selSeg[segCount] = NULL;
+		cerr<<"deleteSelectedSeg(): setting segmnet to NULL" << endl;
+        delete selSeg[0];
+        selSeg.clear();
         update();
     }
+	else if (selWay)
+	{
+        components->deleteWay(selWay);
+        if(liveUpdate && selWay->getOSMID()>0)
+        {
+            QString url;
+            url.sprintf ("/api/0.3/way/%d", selWay->getOSMID());
+            osmhttp.setAuthentication(username, password);
+            osmhttp.scheduleCommand("DELETE", url);
+        }
+        delete selWay;
+        selWay = NULL;
+        update();
+	}
 }
 
 void MainWindow2::handleHttpError(int code,const QString& reasonPhrase)
@@ -1605,6 +1699,7 @@ void MainWindow2::toggleWays()
 {
 	makingWay = !makingWay; 
 	wayButton->setOn(makingWay);
+	cerr<<"toggleWays(): CLEARING SEGMENTS"<<endl;
 	clearSegments();
 }
 
@@ -1634,12 +1729,11 @@ void MainWindow2::uploadWay()
 		QByteArray xml = way->toOSM();
 		cerr<<"way xml is: "<<xml<<endl;
 		components->addWay(way);
+		cerr<<"uploadWay(): CLEARING SEGMENTS"<<endl;
 		clearSegments();
 		if(liveUpdate)
 		{
 			QString url = "/api/0.3/way/0";
-			osmhttp.disconnect
-				(SIGNAL(responseReceived(const QByteArray&,void*)));
 
 			newUploadedWay = way;
 			osmhttp.setAuthentication(username, password);
@@ -1659,22 +1753,16 @@ Node *MainWindow2::doAddNewNode(double lat,double lon,const QString &name,
 									const QString& type)
 {
 	Node *n = components->addNewNode(lat,lon,name,type);
-	if(liveUpdate && !osmhttp.isMakingRequest())
+	if(liveUpdate)
 	{
 		//n->uploadToOSM(username,password);
 		QByteArray xml = n->toOSM();
 		QString url = "/api/0.3/node/0";
-		osmhttp.disconnect (SIGNAL(responseReceived(const QByteArray&,void*)));
-		/*
-		QObject::connect (&osmhttp,
-						SIGNAL(responseReceived(const QByteArray&,void*)),
-                         this, SLOT(newNodeAdded(const QByteArray&,void*)));
-						 */
 		osmhttp.setAuthentication(username, password);
 		newUploadedNode = n;
-		//osmhttp.sendRequest("PUT", url, xml);
 		osmhttp.scheduleCommand("PUT",url,xml,
-						&nodeHandler,SLOT(newNodeAdded(const QByteArray&,void*)),
+						&nodeHandler,
+						SLOT(newNodeAdded(const QByteArray&,void*)),
 						newUploadedNode);
 	}
 	return n;
@@ -1712,13 +1800,11 @@ void MainWindow2::doaddseg(void *sg)
 	nodeHandler.discnnect();
 	Segment *segx = (Segment*) sg;
 	cerr<<"doaddseg()"<<endl;
-	if(segx && liveUpdate && !osmhttp.isMakingRequest())
+	if(segx && liveUpdate)
 	{
 		QByteArray xml = segx->toOSM();
 		cerr<<"xml is: "<<xml<<endl;
 		QString url = "/api/0.3/segment/0";
-		osmhttp.disconnect
-					(SIGNAL(responseReceived(const QByteArray&,void*)));
 		osmhttp.setAuthentication(username, password);
 		osmhttp.scheduleCommand("PUT",url,xml,
 						this,SLOT(newSegmentAdded(const QByteArray&,void*)),
@@ -1737,12 +1823,21 @@ void MainWindow2::changeSerialPort()
 	
 void MainWindow2::deleteWay()
 {
+	/*
 	QMessageBox::information(this,
                         "Not implemented yet!",
                         "Not implemented yet!");
-	osmhttp.disconnect
-			(SIGNAL(responseReceived(const QByteArray&,void*)));
+	*/
+
+	QString url;
+
+	QString wayID = QInputDialog::getText("Enter way ID",
+						"Enter way ID to delete: ");
+	cerr<<"wayID=" << wayID << endl;
+	url = "/api/0.3/way/" + wayID;
+	cerr<<"URL=" << url << endl;
 	osmhttp.setAuthentication(username, password);
+	osmhttp.scheduleCommand("DELETE", url);
 }
 
 void MainWindow2::uploadNewWaypoints()
@@ -1750,7 +1845,6 @@ void MainWindow2::uploadNewWaypoints()
 	vector<Node*> newNodes = components->getNewNodes();
 
 	QString url = "/api/0.3/node/0";
-	osmhttp.disconnect (SIGNAL(responseReceived(const QByteArray&,void*)));
 	osmhttp.setAuthentication(username, password);
 
 	for(int count=0; count<newNodes.size(); count++)
@@ -1766,4 +1860,27 @@ void MainWindow2::uploadNewWaypoints()
 	}
 }
 
+void MainWindow2::loadOSMTracks(const QByteArray& array,void*)
+{
+	Components2 * comp;
+	GPXParser2 parser;
+    QXmlInputSource source;
+
+    source.setData(array);
+	QXmlSimpleReader reader;
+	reader.setContentHandler(&parser);
+	reader.parse(source);
+	comp = parser.getComponents(); 
+	if(osmtracks)
+	{
+		osmtracks->merge(comp);
+		delete comp;
+	}
+	else
+	{
+		osmtracks = comp;
+	}
+	showPosition();
+	update();
+}
 }

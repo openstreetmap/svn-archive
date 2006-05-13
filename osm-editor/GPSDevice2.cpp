@@ -33,6 +33,9 @@
 #include <cmath>
 #include <sstream>
 #include <cctype>
+
+#include <float.h>
+
 namespace OpenStreetMap 
 {
 
@@ -167,6 +170,19 @@ double dist (double x1, double y1, double x2, double y2)
 {
 	double dx=x1-x2, dy=y1-y2;
 	return sqrt (dx*dx + dy*dy);
+}
+
+
+// find the distance from a point to a line
+// based on theory at: 
+// astronomy.swin.edu.au/~pbourke/geometry/pointline/
+// given equation was proven starting with dot product
+
+double distp (double px,double py,double x1,double y1, double x2, double y2)
+{
+	double u = ((px-x1)*(x2-x1)+(py-y1)*(y2-y1)) / (pow(x2-x1,2)+pow(y2-y1,2));
+	double xintersection = x1+u*(x2-x1), yintersection=y1+u*(y2-y1);
+	return (u>=0&&u<=1) ? dist(px,py,xintersection,yintersection) : DBL_MAX;
 }
 
 // Angle function (cosine rule)

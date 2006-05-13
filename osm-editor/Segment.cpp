@@ -1,6 +1,5 @@
 #include "Segment.h"
 #include "RouteMetaDataHandler.h"
-#include "curlstuff.h"
 
 /*
 Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
@@ -50,6 +49,7 @@ void Segment::segToOSM(QTextStream &outfile, bool allUid)
 	// if it does, the segment will be assumed to have the same type as the way
 	if(!wayStatus)
 	{
+		// 130506 change to use the new styles of tag (highway etc)
     	RouteMetaDataHandler mdh;
     	RouteMetaData metaData = mdh.getMetaData(type);
     	if(metaData.foot!="no")
@@ -57,12 +57,17 @@ void Segment::segToOSM(QTextStream &outfile, bool allUid)
    		if(metaData.horse!="no")
        		outfile << "<tag k='horse' v='" << metaData.horse << "' />" << endl;
    		if(metaData.bike!="no")
-       		outfile << "<tag k='bike' v='" << metaData.bike << "' />" << endl;
+       		outfile << "<tag k='bicycle' v='" << metaData.bike << "' />" 
+					<< endl;
    		if(metaData.car!="no")
-       		outfile << "<tag k='car' v='" << metaData.car << "' />" << endl;
+       		outfile << "<tag k='motorcar' v='" << metaData.car 
+					<< "' />" << endl;
    		if(metaData.routeClass!="")
-       		outfile << "<tag k='class' v='" << metaData.routeClass << "' />" << 
-       		endl;
+       		outfile << "<tag k='highway' v='" << metaData.routeClass << 
+					"' />" << endl;
+   		if(metaData.railway!="")
+       		outfile << "<tag k='railway' v='" << metaData.railway << 
+					"' />" << endl;
 	}
 
 
@@ -83,38 +88,6 @@ QByteArray Segment::toOSM()
 }
 
 // Upload an existing (or new) segment to OSM
-
-void Segment::uploadToOSM(const char* username, const char* password)
-{
-    char *nonconst, *resp;
-    QString xml="";
-    QTextStream str2(&xml, IO_WriteOnly);
-    str2 << "<osm version='0.2'>" << endl;
-    segToOSM(str2);
-    str2 << "</osm>" << endl;
-    cerr<<"segstoOSM returned: "<<xml << endl;
-    nonconst = new char[ strlen(xml.ascii()) + 1]; 
-    strcpy(nonconst,xml.ascii());
-    char url[1024];
-    // Check it's an existing segment
-    if(osm_id>0)
-    {
-        sprintf(url,"http://www.openstreetmap.org/api/0.2/segment/%d",
-                            osm_id);
-        resp = put_data(nonconst,url,username,password);
-        if(resp) delete[] resp;
-        cerr<<"URL:" << url << endl;
-    }
-    else
-    {
-        cerr<<"***ADDING A NEW SEGMENT***"<<endl;
-        QStringList ids = putToOSM(nonconst,
-                    "http://www.openstreetmap.org/api/0.2/newsegment",
-                            username,password);
-        if(atoi(ids[0].ascii()))
-            osm_id = atoi(ids[0].ascii());
-    }
-    delete[] nonconst;
-}
+// 130506 removed this old curl way of doing it
 
 }

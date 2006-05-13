@@ -92,8 +92,12 @@ public:
 		if(type!="")
 			s->setType(type);
 		s->setWayStatus(true);
+		s->setWayID(osm_id);
 		segments.push_back(s);
 	}
+
+	int Way::removeSegment(Segment *s);
+	bool addSegmentAt(int index, Segment *s);
 };
 
 }

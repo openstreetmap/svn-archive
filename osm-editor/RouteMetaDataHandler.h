@@ -7,21 +7,26 @@
 namespace OpenStreetMap
 {
 
-struct RouteMetaData
+class RouteMetaData
 {
+	public:
 	QString foot, 
 		 horse, 
 		 bike,
 		 car;
 
 	QString routeClass; 
+	QString railway;
 
-	RouteMetaData() {foot=horse=bike=car="no"; routeClass="unknown";}
-	RouteMetaData(QString f, QString b, QString h, QString c, QString cl )
-		{ foot=f; horse=h; bike=b; car=c; routeClass = cl; }
-	bool operator==(const RouteMetaData& md2)
-		{ return foot==md2.foot && horse==md2.horse && bike==md2.bike 
-				&& car==md2.car && routeClass==md2.routeClass; }
+	RouteMetaData() {foot=horse=bike=car="no"; routeClass="unknown"; 
+						railway=""; }
+	RouteMetaData(QString f, QString b, QString h, QString c, QString cl,
+					QString r="")
+		{ foot=f; horse=h; bike=b; car=c; routeClass = cl; railway=r; }
+	bool testmatch(const RouteMetaData& indata);
+	bool testmatch(const QString& requiredCriteria, const QString& indata);
+	RouteMetaData preferred();
+	QString preferred(const QString& property);
 };
 
 // Class for obtaining the permissions on a particular 

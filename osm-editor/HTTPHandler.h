@@ -59,22 +59,35 @@ private:
 	QString host, method;
 	QString username, password;
 	bool makingRequest, httpError;
-	vector<int> curReqIDs;
+//	vector<int> curReqIDs;
+	int curReqId;
 	bool locked;
 	int respCount;
 	std::deque<Request> requests;
 	bool doEmitErrorOccurred;
 
+	void sendRequest(const QString&, const QString&,
+					const QByteArray& b = QByteArray());
+
 public:
 	HTTPHandler(const QString& host)
 		{ this->host=host; http=new QHttp; username=password="";
-			makingRequest=false; locked=true; respCount=0; }
+			makingRequest=false; locked=true; respCount=0;
+			curReqId=0;
+		
+		QObject::connect(http,
+					SIGNAL(responseHeaderReceived (const QHttpResponseHeader&)),
+					this,
+					SLOT(responseHeaderReceived(const QHttpResponseHeader&))
+					);
+
+		QObject::connect(http,SIGNAL(requestFinished(int,bool)),
+					this,SLOT(responseReceived(int,bool)));
+		}
 	~HTTPHandler()
 		{ delete http; }
 	void setAuthentication(const QString& u, const QString &p)
 		{ username=u; password=p; }
-	void sendRequest(const QString&, const QString&,
-					const QByteArray& b = QByteArray());
 	bool isMakingRequest()
 		{ return makingRequest; }
 	void lock() { locked=true; }
@@ -84,30 +97,14 @@ public:
 					const QString& apicall,const QByteArray& data=QByteArray(),
 							QObject *receiver=NULL,
 							const char* callback=NULL, 
-							void* transferObject=NULL)
-	{
-		if (requests.empty())
-		{
-			if(receiver&&callback)
-			{
-				QObject::connect(this,
-						SIGNAL(responseReceived(const QByteArray&,void*)),
-						receiver,callback);
-			}
-
-			sendRequest(requestType,apicall,data);
-		}
-
-		cerr<<"scheduleCommand(): pushing back a request:" <<
-								 requestType << " " << apicall << endl;
-
-		cerr << "before push_back: length of requests now=" << requests.size() << endl;
-		requests.push_back
-					(Request(requestType,apicall,data,receiver,callback,
-								transferObject));
-		cerr << "after push_back: length of requests now=" << requests.size() << endl;
-
-	}
+							void* transferObject=NULL);
+	void scheduleCommand(const QString& requestType,
+					const QString& apicall,
+							QObject *receiver,
+							const char* callback, 
+							void* transferObject)
+		{ scheduleCommand(requestType,apicall,QByteArray(),
+								receiver,callback,transferObject); }
 
 public slots:
 	void responseHeaderReceived(const QHttpResponseHeader&);	

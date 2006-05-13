@@ -60,6 +60,9 @@ void NodeHandler::newNodeAdded(const QByteArray& array, void *node)
         cerr<<"DONE."<<endl;
 		cerr<<"***********emitting signal**************"<<endl;
 		emit newNodeAddedSig(emitdata);
+
+		// 290406 disconnect as soon as the signal is emitted
+		discnnect();
     }
     else
         cerr<<"NEW UPLAODED NODE IS NULL" << endl;

@@ -119,6 +119,7 @@ bool OSMParser2::startElement(const QString&, const QString&,
 				}
 			}
 			curWay = new Way;
+			curWay->setOSMID(curID);
 		}
 		else if (element=="seg" && inWay)
 		{
@@ -194,8 +195,6 @@ bool OSMParser2::endElement(const QString&, const QString&,
 	else if (element=="way")
 	{
 		RouteMetaDataHandler handler;
-		cerr<<"Adding way to components : type=" << handler.getRouteType(metaData) << endl;
-		curWay->setOSMID(curID);
 		curWay->setName(curName);
 		curWay->setType(handler.getRouteType(metaData));
 		components->addWay(curWay);
@@ -204,6 +203,7 @@ bool OSMParser2::endElement(const QString&, const QString&,
 	return true;
 }
 
+// 130506 reads new style keys such as 'bicycle' and 'highway'
 void OSMParser2::readSegTags(const QString &key, const QString& value,
 							RouteMetaData& metaData)
 {
@@ -211,11 +211,11 @@ void OSMParser2::readSegTags(const QString &key, const QString& value,
 		metaData.foot = value;
 	else if(key == "horse")
 		metaData.horse = value;
-	else if(key == "bike")
+	else if(key == "bike" || key == "bicycle")
 		metaData.bike = value;
-	else if(key == "car")
+	else if(key == "car" || key == "motorcar")
 		metaData.car = value;
-	else if(key == "class")
+	else if(key == "class" || key == "highway")
 		metaData.routeClass = value;
 }
 

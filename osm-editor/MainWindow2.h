@@ -49,9 +49,11 @@
 using std::vector;
 
 // Mouse action modes
+// These need to match the order that the toolbar buttons are added
 // N_ACTIONS should always be the last
 enum { ACTION_NODE, ACTION_MOVE_NODE, ACTION_DELETE_NODE,
-		ACTION_SEL_SEG, ACTION_NEW_SEG, ACTION_BREAK_SEG,N_ACTIONS };
+		ACTION_SEL_SEG, ACTION_SEL_WAY, ACTION_NEW_SEG, ACTION_BREAK_SEG,
+		N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -118,6 +120,7 @@ private:
 
 	// key data
 	Components2 * components;
+	Components2 * osmtracks;
 
 	// on-screen data representations 
 	std::map<QString,WaypointRep*> nodeReps; 
@@ -129,17 +132,20 @@ private:
 	vector<Segment*> selSeg;
 	int segCount;
 
+	Way *selWay;
+
 	// current mouse action mode
 	int actionMode;
 
 	// other stuff
 	QString curSegType; 
-	bool trackpoints, contours;
+	bool trackpoints, contours, displayOSM, displayGPX;
 	QString curFilename; 
 	bool mouseDown;
 
 	QToolButton* modeButtons[N_ACTIONS]; 
-	QToolButton *wayButton;
+	QToolButton *wayButton, *landsatButton, *osmButton, *gpxButton,
+						*contoursButton;
 
 	QComboBox * modes;
 
@@ -186,8 +192,8 @@ private:
 	void clearSegments()
 	{
 		selSeg.clear();
-		selSeg.push_back(NULL);
-		segCount = 0;
+		//selSeg.push_back(NULL);
+		//segCount = 0;
 	}
 
 public:
@@ -218,6 +224,7 @@ public:
 	void doDrawAngleText(QPainter *p,int originX,int originY,int x,int y,
 					double angle, const char * text);
 	void showPosition();
+	void drawGPX(QPainter&);
 	void drawSegments(QPainter&);
 	void drawSegment(QPainter&,Segment*);
 	void drawNodes(QPainter&);
@@ -239,6 +246,8 @@ public slots:
 	void quit();
 	void toggleLandsat();
 	void toggleContours();
+	void toggleOSM();
+	void toggleGPX();
 	void undo();
 	void setMode(int);
 	void setSegType(const QString&);
@@ -272,6 +281,8 @@ public slots:
 	void doaddseg(void*);
 	void changeSerialPort();
 	void uploadNewWaypoints();
+	void grabGPXFromNet();
+	void loadOSMTracks(const QByteArray& array,void*);
 
 signals:
 	void newNodeAddedSig();

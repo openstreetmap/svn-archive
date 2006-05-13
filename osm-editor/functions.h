@@ -111,6 +111,7 @@ void GPS_Math_EN_To_LatLon(double E, double N, double *phi,
 
 double dist (double, double, double, double);
 double getAngle(double o, double a, double b);
+double distp (double px,double py,double x1,double y1, double x2, double y2);
 
 void mkgpxtime (char *, time_t );
 

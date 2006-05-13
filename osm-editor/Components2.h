@@ -66,6 +66,7 @@ public:
 	}
 
 	Node *getNearestNode (double lat, double lon,double);
+	Segment *getNearestSegment (double lat, double lon,double);
 	vector<Node*> getNearestNodes (double lat, double lon, double limit);
 
 	Segment * addNewSegment (Node *n1, Node *n2, const QString& name,
@@ -77,6 +78,8 @@ public:
 	Segment * addOSMSegment (int id,Node *n1, Node *n2, const QString& name,
 							const QString& type);
 
+
+	Way *getWay(int id);
 	Segment *getSeg(vector<Node*>& n1, vector<Node*>& n2);
 	vector<Segment*> getSegs(Node*);
 
@@ -155,15 +158,17 @@ public:
 
 	bool deleteNode(Node*);
 	bool deleteSegment(Segment*);
+	bool deleteWay(Way*);
 	EarthPoint getAveragePoint(); 
 
 	QByteArray getNewNodesXML();
 	QByteArray getNewSegmentsXML();
 	vector<Node*> getNewNodes();
 	vector<Segment*> getNewSegments();
-	void hackySetNodeIDs(QStringList&);
-	void hackySetSegIDs(const QString&);
 
+	// 130506 removed hacky crap for doing multiple nodes/segs at once - the
+	// scheduler should now handle this (at least it has been so far....)
+	
 	void addWay (Way *w)
 	{
 		cerr<<"*****ADDING WAY TO COMPONENTS*****"<<endl;

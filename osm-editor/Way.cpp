@@ -44,6 +44,8 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
     //  avoid dumping the name too many times
     if(name!="")
         outfile << "<tag k='name' v='" << name << "' />" << endl;
+
+	// 130506 use new style tags e.g. highway
     RouteMetaDataHandler mdh;
     RouteMetaData metaData = mdh.getMetaData(type);
     if(metaData.foot!="no")
@@ -51,12 +53,15 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
    if(metaData.horse!="no")
        outfile << "<tag k='horse' v='" << metaData.horse << "' />" << endl;
    if(metaData.bike!="no")
-       outfile << "<tag k='bike' v='" << metaData.bike << "' />" << endl;
+       outfile << "<tag k='bicycle' v='" << metaData.bike << "' />" << endl;
    if(metaData.car!="no")
-       outfile << "<tag k='car' v='" << metaData.car << "' />" << endl;
+       outfile << "<tag k='motorcar' v='" << metaData.car << "' />" << endl;
    if(metaData.routeClass!="")
-       outfile << "<tag k='class' v='" << metaData.routeClass << "' />" << 
+       outfile << "<tag k='highway' v='" << metaData.routeClass << "' />" << 
        endl;
+	if(metaData.railway!="")
+		outfile << "<tag k='railway' v='" << metaData.railway << 
+			"' />" << endl;
 
    outfile << "<tag k='created_by' v='osmeditor2'/>" << endl;
 
@@ -78,6 +83,33 @@ QByteArray Way::toOSM()
     str<<"</osm>"<<endl;
     str<<'\0';
     return xml;
+}
+
+// remove a segment - returns its position
+int Way::removeSegment(Segment *s)
+{
+	for(vector<Segment*>::iterator i=segments.begin(); i!=segments.end(); i++)
+	{
+		if(*i==s)
+		{
+			int index = i-segments.begin();
+			segments.erase(i);
+			return index;
+		}
+	}
+	return -1;
+}
+
+// Insert a segment at position 'index'
+bool Way::addSegmentAt(int index, Segment *s)
+{
+	vector<Segment*>::iterator i = segments.begin() + index;
+	if(i!=segments.end())
+	{
+		segments.insert(i,s);
+		return true;
+	}
+	return false;
 }
 
 }

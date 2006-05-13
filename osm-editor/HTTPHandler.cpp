@@ -26,20 +26,46 @@ using namespace std;
 namespace OpenStreetMap
 {
 
+void HTTPHandler::scheduleCommand(const QString& requestType,
+					const QString& apicall,const QByteArray& data,
+							QObject *receiver,
+							const char* callback, 
+							void* transferObject)
+{
+	if (requests.empty())
+	{
+		if(receiver&&callback)
+		{
+        	this->disconnect 
+				(SIGNAL(responseReceived(const QByteArray&,void*)));
+			QObject::connect(this,
+						SIGNAL(responseReceived(const QByteArray&,void*)),
+						receiver,callback);
+		}
+
+		sendRequest(requestType,apicall,data);
+	}
+
+	requests.push_back
+					(Request(requestType,apicall,data,receiver,callback,
+								transferObject));
+
+}
+
 void HTTPHandler::sendRequest(const QString& requestType, 
 							const QString& url,
 							const QByteArray& b)
 {
-	int curReqId;
-	if(curReqIDs.empty() || !locked)
+	if(!makingRequest)
 	{
+		makingRequest=true;
 		cerr<<"Making request:" 
 				<< " host: " << host
 				<< " requestType: " <<requestType <<
 				"URL :" << url << endl;
 		QString s = b;
 		if(!s.isNull())
-		cerr<<"SENDING: "<< s<<endl;
+		cerr<<"SENDING REQUEST: "<< s<<endl;
 		method = requestType;
 		QHttpRequestHeader header(requestType,url);
 		header.setValue("Host",host);
@@ -60,23 +86,22 @@ void HTTPHandler::sendRequest(const QString& requestType,
 		// for each HTTP response chunk, presumably
 		doEmitErrorOccurred = true;
 
+		//cerr<<"curReqId is  " << curReqId << endl;
+
 		if(b.size())
+		{
+			//cerr<<"sending request with b " << endl;
 			curReqId = http->request(header,b);
+		}
 		else
+		{
+			//cerr<<"sending request" << endl;
 			curReqId = http->request(header);
+		}
+		//cerr<<"curReqId returned from request()=" << curReqId << endl;
 
-		cerr<<"curReqId is  " << curReqId << endl;
-		QObject::connect(http,
-					SIGNAL(responseHeaderReceived (const QHttpResponseHeader&)),
-					this,
-					SLOT(responseHeaderReceived(const QHttpResponseHeader&))
-					);
 
-		QObject::connect(http,SIGNAL(requestFinished(int,bool)),
-					this,SLOT(responseReceived(int,bool)));
-
-		makingRequest=true;
-		curReqIDs.push_back(curReqId);
+		//curReqIDs.push_back(curReqId);
 	}
 	else
 	{
@@ -104,38 +129,30 @@ void HTTPHandler::responseHeaderReceived(const QHttpResponseHeader& header)
 void HTTPHandler::responseReceived(int id, bool error)
 {
 	bool found=false;
-//	cerr<<"responseReceived(): id=" << id << endl;
-	for(vector<int>::iterator i=curReqIDs.begin(); i!=curReqIDs.end(); i++)
-	{
-		if(id==*i)
-		{
-			cerr<<"doing erase" << endl;
-			curReqIDs.erase(i);	
-			cerr<<"done" << endl;
-			found=true;
-			break;
-		}
-	}
+	//cerr<<"responseReceived(): id="<<id << ", curReqId=" << curReqId << endl;
 
-	if(found)
+	if(id==curReqId)
 	{
 		makingRequest = false;
 		if(!httpError && !error)
 		{
-			cerr<<"response: id=" << id << " error=" << error << endl;
+			//cerr<<"response: id=" << id << " error=" << error << endl;
 			cerr<<"RESPONSE RECEIVED!" << endl;
+			cerr << "Size of requests : " << requests.size() << endl;
 			if(requests.size())
 			{
-				cerr<<"popping the front request"<<endl;
+				//cerr<<"popping the front request"<<endl;
 
 				if(requests[0].callback)
 					emit responseReceived(http->readAll(),requests[0].recObj);
 				requests.pop_front();
-				cerr << "length of requests now=" << requests.size() << endl;
+				//cerr << "length of requests now=" << requests.size() << endl;
 				if(requests.size())
 				{
 					if(requests[0].receiver && requests[0].callback)
 					{
+        				this->disconnect 
+							(SIGNAL(responseReceived(const QByteArray&,void*)));
 						QObject::connect(this,
 						SIGNAL(responseReceived(const QByteArray&,void*)),
 							requests[0].receiver,requests[0].callback);
@@ -145,7 +162,7 @@ void HTTPHandler::responseReceived(int id, bool error)
 								 requests[0].requestType << " " 
 								 << requests[0].apicall << endl;
 
-					cerr<<"length of requests now="<<requests.size()<<endl;
+					//cerr<<"length of requests now="<<requests.size()<<endl;
 					sendRequest(requests[0].requestType,
 							requests[0].apicall,
 							requests[0].data);
@@ -159,7 +176,8 @@ void HTTPHandler::responseReceived(int id, bool error)
 		else
 		{
 			cerr<<"Error encountered" << endl;
-
+			emit errorOccurred
+				("An unknown error occurred trying to connect.");
 			// Clear all pending requests - the error might affect them
 			requests.clear();
 		}

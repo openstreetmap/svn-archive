@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 #include <string>
 #include <sstream>
 
-#include "curlstuff.h"
 
 using std::endl;
 using std::setw;
@@ -82,7 +81,8 @@ vector<Node*> Components2::getNearestNodes(double lat, double lon,double limit)
         if((dist=OpenStreetMap::dist(lat,lon,
                     nodes[count]->getLat(),nodes[count]->getLon()))<limit)
         {
-            nearestNodes.push_back(nodes[count]);
+			if(nodes[count]->getType()=="node")
+            	nearestNodes.push_back(nodes[count]);
         }
     }
     return nearestNodes;
@@ -195,38 +195,8 @@ vector<Segment*>  Components2::getNewSegments()
 // a server routine to take a load of new nodes and segments and add them to
 // the database.
 
-void Components2::hackySetNodeIDs(QStringList& ids)
-{
-    // Allocate the returned IDs to the new nodes in the segment
-    QStringList::Iterator i=ids.begin();
-    for(int count=0; count<nodes.size(); count++)
-    {
-        if(nodes[count]->getOSMID()<0 && i!=ids.end() &&
-                atoi((*i).ascii()))
-        {
-            nodes[count]->setOSMID (atoi((*i).ascii()));
-            i++;
-        }
-    }
-}
-
-// WARNING!! Very hacky!
-// Assumes segment IDs will be 6-digit.
-void Components2::hackySetSegIDs(const QString& segs)
-{
-    // Allocate the returned IDs to the new nodes in the segment
-    int index = 0;
-    for(int count=0; count<segments.size(); count++)
-    {
-        if(segments[count]->getOSMID()<0 && index<=segs.length()-6)
-        {
-            int id = atoi(segs.mid(index, 6).ascii());
-            if(id>=100000&&id<=999999)
-                segments[count]->setOSMID (id);
-            index+=6;
-        }
-    }
-}
+// 130506 removed hacky crap for doing multiple nodes/segs at once - the
+// scheduler should now handle this (at least it has been so far....)
 
 // Merges these Components with another set
 bool Components2::merge(Components2 *comp)
@@ -321,15 +291,32 @@ bool Components2::deleteNode(Node *n)
 // the list
 bool Components2::deleteSegment(Segment *s)
 {
-    cerr<<"in deleteSegments()"<<endl;
-    cerr<<"Segment: osmid=" << s->getOSMID() << endl;
     for(vector<Segment*>::iterator i=segments.begin(); i!=segments.end(); i++)
     {
-        cerr<<"Trying segment: " << (*i)->getOSMID() << endl;
         if((*i)==s)
         {
-            cerr<<"****FOUND THE SEGMENT****" << endl;
             segments.erase(i);
+            return true;
+        }
+    }
+    return false;
+}
+
+// 'delete' a way 
+// note it doesn't actually erase it from memory - just removes it from
+// the list
+bool Components2::deleteWay(Way *w)
+{
+    for(vector<Way*>::iterator i=ways.begin(); i!=ways.end(); i++)
+    {
+        if((*i)==w)
+        {
+            ways.erase(i);
+			for(int count=0; count<segments.size(); count++)
+			{
+				if(segments[count]->getWayID()==w->getOSMID())
+					segments[count]->setWayID(0);
+			}
             return true;
         }
     }
@@ -410,12 +397,29 @@ int Components2::minSegID()
 std::pair<Segment*,Segment*>*
 	Components2::breakSegment(Segment *s, Node *newNode)
 {
+	int wayID;
 	std::pair<Segment*,Segment*>* p = new std::pair<Segment*,Segment*>;
 	p->first = new Segment(s->firstNode(),newNode,"",s->getType());
 	p->second =	new Segment(s->secondNode(),newNode,"",s->getType());
+	p->first->setWayID(s->getWayID());
+	p->second->setWayID(s->getWayID());
 
 	segments.push_back(p->first);
 	segments.push_back(p->second);
+
+	// If the segment is in a way, remove it from the way and add the two
+	// new segments to the way at the appropriate position
+	if(wayID=s->getWayID())
+	{
+		Way *w = getWay(wayID);
+		int i = w->removeSegment(s);
+		if(i>=0)
+		{
+			w->addSegmentAt(i,p->second);
+			w->addSegmentAt(i,p->first);
+		}
+	}
+
 	deleteSegment(s);
 
 	return p;
@@ -476,4 +480,39 @@ void Components2::toGPX(QTextStream& stream)
 	}
 	stream << "</gpx>" << endl;
 }
+
+Way * Components2::getWay(int id)
+{
+	for(int count=0; count<ways.size(); count++)
+	{
+		if(ways[count]->getOSMID()==id)
+			return ways[count];
+	}
+	return NULL;
+}
+
+Segment *Components2::getNearestSegment(double lat, double lon,double limit)
+{
+    double mindist=limit, dist, lat1,lon1,lat2,lon2;
+    Segment *nearest = NULL;
+    for(int count=0; count<segments.size(); count++)
+    {
+		lat1 = segments[count]->firstNode()->getLat();
+		lon1 = segments[count]->firstNode()->getLon();
+		lat2 = segments[count]->secondNode()->getLat();
+		lon2 = segments[count]->secondNode()->getLon();
+	
+		// Find distance from point to this segment
+        if((dist=OpenStreetMap::distp(lon,lat,lon1,lat1,lon2,lat2))<limit)
+        {
+            if(dist<mindist)
+            {
+                mindist=dist;
+                nearest = segments[count];
+            }
+        }
+    }
+    return nearest;
+}
+
 }

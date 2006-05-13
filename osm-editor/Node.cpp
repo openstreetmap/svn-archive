@@ -1,5 +1,4 @@
 #include "Node.h"
-#include "curlstuff.h"
 
 /*
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
@@ -51,43 +50,7 @@ QByteArray Node::toOSM()
     return xml;
 }
 // 180306 not changed as this is the old curl way of doing it
-void Node::uploadToOSM(const char* username, const char* password)
-{
-    char *nonconst, *resp;
-
-    QString xml="";
-    QTextStream str(&xml, IO_WriteOnly);
-    str<<"<osm version='0.2'>"<<endl;
-    toOSM(str);
-    str<<"</osm>"<<endl;
-    cerr<<"XML to be uploaded: "<<xml << endl;
-    nonconst = new char[ strlen(xml.ascii()) + 1]; 
-    strcpy(nonconst,xml.ascii());
-
-    char url[1024];
-    if(osm_id>0)
-    {
-        sprintf(url,"http://www.openstreetmap.org/api/0.2/node/%d",
-                            osm_id);
-        cerr<<"URL:" << url << endl;
-
-        resp = put_data(nonconst,url,username,password);
-        if(resp)
-        {
-            delete[] resp;
-        }
-    }
-    else
-    {
-        cerr<<"***ADDING A NEW NODE***"<<endl;
-        QStringList ids = putToOSM(nonconst,
-                    "http://www.openstreetmap.org/api/0.2/newnode",
-                            username,password);
-        if(atoi(ids[0].ascii()))
-            osm_id = atoi(ids[0].ascii());
-    }
-    delete[] nonconst;
-}       
+// 130506 took out the old curl way of doing it
 
 // Used when creating segments from trackpoints
 void Node::trackpointToNode()

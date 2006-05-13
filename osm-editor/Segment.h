@@ -30,7 +30,7 @@ class Segment
 private:
 	Node *nodes[2];
 	QString type, name;
-	int osm_id;
+	int osm_id, way_id;
 	bool wayStatus;
 
 public:
@@ -40,6 +40,7 @@ public:
 		osm_id = 0;
 		name = type = "";
 		wayStatus = false;
+		way_id = 0;
 	}
 
 	Segment(Node *n1, Node *n2)
@@ -49,6 +50,7 @@ public:
 		osm_id = 0;
 		name = type = "";
 		wayStatus = false;
+		way_id = 0;
 	}
 
 	Segment(int id,Node *n1, Node *n2)
@@ -58,6 +60,7 @@ public:
 		osm_id = id;
 		name = type = "";
 		wayStatus = false;
+		way_id = 0;
 	}
 
 	Segment(int id,Node *n1, Node *n2, const QString& n,
@@ -69,6 +72,7 @@ public:
 		name = n;
 		type = t;
 		wayStatus = false;
+		way_id = 0;
 	}
 	Segment(Node *n1, Node *n2, const QString& n,
 					const QString& t)
@@ -79,6 +83,7 @@ public:
 		name = n;
 		type = t;
 		wayStatus = false;
+		way_id = 0;
 	}
 
 	void setName(const QString& n) 
@@ -126,7 +131,6 @@ public:
 		osm_id = i;
 	}
 
-	void uploadToOSM(const char* username, const char* password);
 	QByteArray toOSM();
 
 	bool hasNodes()
@@ -142,6 +146,16 @@ public:
 	bool belongsToWay()
 	{
 		return wayStatus;
+	}
+
+	void setWayID(int id)
+	{
+		way_id = id;
+	}
+
+	int getWayID()
+	{
+		return way_id;
 	}
 };
 

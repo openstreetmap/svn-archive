@@ -140,7 +140,6 @@ public:
 		return osm_id;
 	}
 
-	void uploadToOSM(const char*,const char*);
 
 	double getLat() { return lat; }
 	double getLon() { return lon; }

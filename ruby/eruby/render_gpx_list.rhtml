@@ -9,14 +9,18 @@ nice_rangeend = rangeend +1
 
 nice_rangeend = gpxfiles.num_rows if gpxfiles.num_rows < nice_rangeend
 
+nofiles = gpxfiles.num_rows == 0
+
 url = "/traces/page/"
 url = "/traces/tag/#{cgi['tag']}/page/" if cgi['action'] == 'publictag'
 url = "/traces/user/#{cgi['display_name']}/page/" if cgi['action'] == 'public'
 url = "/traces/mine/tag/#{cgi['tag']}/page/" if cgi['action'] == 'mytag'
 url = "/traces/mine/page/" if cgi['action'] == 'mytraces'
 %>
-
+<% if !nofiles %>
 Showing page <%=page%> (<%=rangestart+1 %> - <%=nice_rangeend%> of <%=gpxfiles.num_rows%>) |
+<% end %>
+
 <% if page > 0 %>
 <a href="<%=url%><%=page-1%>">previous page</a> |
 <% end %>
@@ -27,7 +31,7 @@ Showing page <%=page%> (<%=rangestart+1 %> - <%=nice_rangeend%> of <%=gpxfiles.n
 
 <%
 
-if loggedin %>
+if loggedin && !nofiles %>
   <form action="/traces/mine" method="post">
     <input type="hidden" name="action" value="update" />
 <% end  %>
@@ -36,7 +40,7 @@ if loggedin %>
   <th></th>
   <th></th>
   
-<% if loggedin && editable%>
+<% if loggedin && editable && !nofiles%>
   <th>Public?</th>
   <th>Delete?</th>
 <% end %>
@@ -130,7 +134,7 @@ if loggedin %>
   %>
 </table>
 <%
-  if loggedin && editable%>
+  if loggedin && editable && !nofiles%>
 <br />
 <input type="submit" value="Update">
 </form>

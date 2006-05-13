@@ -1,4 +1,283 @@
-<VirtualHost 128.40.59.220>
+<VirtualHost 128.40.58.205>
+ServerName USER.dev.openstreetmap.org
+ServerAdmin steve@asklater.com
+DocumentRoot /var/www/USER
+ErrorLog /var/log/apache2/dev.USER.error.log
+CustomLog /var/log/apache2/dev.USER.access.log combined
+
+
+Redirect permanent /wiki/ http://wiki.openstreetmap.org/
+Redirect permanent /trac http://trac.openstreetmap.org
+Redirect permanent /news/ http://www.opengeodata.org/
+
+DirectoryIndex index.html index.php
+
+<Directory /var/www/openstreetmap/gmblog>
+
+	AuthUserFile /etc/apache2/gmblog.htpass
+	AuthName "Toolbox Example"
+	AuthType Basic
+
+	<Limit GET>
+		require valid-user
+	</Limit>
+
+</Directory>
+
+#<Directory /var/www/openstreetmap/bugzilla>
+#AddHandler cgi-script .cgi
+#Options +Indexes +ExecCGI
+#DirectoryIndex index.cgi
+#AllowOverride Limit
+#</Directory>
+
+#<Location /svn>
+
+  # Uncomment this to enable the repository,
+#  DAV svn
+
+  # Set this to the path to your repository
+#  SVNPath /var/lib/svn/repos/openstreetmap
+
+#  AuthType Basic
+#  AuthName "Subversion Repository"
+#  AuthUserFile /etc/apache2/svn.passwd
+
+#  <LimitExcept GET PROPFIND OPTIONS REPORT>
+#    Require valid-user
+#  </LimitExcept> 
+
+#</Location>
+
+<IfModule mod_ruby.c>
+	# for Apache::RubyRun
+
+	RubyAddPath /var/www/USER/ruby/osm
+	RubyAddPath /var/www/USER/ruby/api/apache
+	RubyAddPath /var/www/USER/ruby/api/0.2
+	RubyAddPath /var/www/USER/ruby/api
+
+	RubyRequire apache/ruby-run
+
+	RubyRequire apache/simple-auth
+	RubyRequire mysql
+	 
+
+	# exec files under /ruby as ruby scripts.
+	<Location /ruby>
+		SetHandler ruby-object
+		RubyHandler Apache::RubyRun.instance
+		Options +ExecCGI 
+	</Location>
+	
+	<Location /ruby/api>
+		SetHandler ruby-object
+		RubyHandler Apache::RubyRun.instance
+                RubyAuthenHandler Apache::SimpleAuth.instance
+                AuthType Basic
+                AuthName "Ruby Auth"
+                Require valid-user
+		Options +ExecCGI
+	</Location>
+
+#	<Location /trac/login>
+#		RubyHandler Apache::RubyRun.instance
+#                RubyAuthenHandler Apache::SimpleAuth.instance
+#                AuthType Basic
+#                AuthName "Trac"
+#                Require valid-user
+#	</Location>
+
+
+
+	# exec *.rbx as ruby scripts.
+	<Files *.rbx>
+		SetHandler ruby-object
+		RubyHandler Apache::RubyRun.instance
+	</Files>
+
+	# # for Apache::ERubyRun
+	RubyRequire apache/eruby-run
+	#
+	# # handle files under /eruby as eRuby files by eruby.
+	 <Location /eruby>
+	   SetHandler ruby-object
+	   RubyHandler Apache::ERubyRun.instance
+	 </Location>
+	#
+	# # handle *.rhtml as eruby files.
+	# <Files *.rhtml>
+	#   SetHandler ruby-object
+	#   RubyHandler Apache::ERubyRun.instance
+	# </Files>
+
+	# # for Apache::ERbRun
+	# RubyRequire apache/erb-run
+	#
+	# # handle files under /erb as eRuby files by ERb.
+	# <Location /erb>
+	#   SetHandler ruby-object
+	#   RubyHandler Apache::ERbRun.instance
+	# </Location>
+
+	# # for debug
+#	RubyRequire auto-reload
+</IfModule>
+
+
+RewriteEngine on
+RewriteRule   ^/feeds/nodes.rss$  /ruby/nodes.rb  [PT,T=application/rss+xml]
+
+RewriteRule   ^/map/map.png$  /ruby/viewmap.rb  [PT,T=image/png]
+
+
+RewriteRule   /api/0.3/node/([0-9]+)/history    /ruby/api/0.3/node_history.rb?nodeid=$1&%{QUERY_STRING}         [PT,T=text/plain]
+RewriteRule   /api/0.3/segment/([0-9]+)/history         /ruby/api/0.3/segment_history.rb?segmentid=$1&%{QUERY_STRING}           [PT,T=text/plain]
+RewriteRule   /api/0.3/way/([0-9]+)/history     /ruby/api/0.3/multi_history.rb?type=way&multiid=$1&%{QUERY_STRING}              [PT,T=text/plain]
+RewriteRule   /api/0.3/area/([0-9]+)/history    /ruby/api/0.3/multi_history.rb?type=area&multiid=$1&%{QUERY_STRING}             [PT,T=text/plain]
+
+RewriteRule   /api/0.3/segment/([0-9]+)/ways    /ruby/api/0.3/multis_by_segments.rb?type=way&segmentids=$1              [PT,T=text/plain]
+RewriteRule   /api/0.3/segment/([0-9]+)/areas   /ruby/api/0.3/multis_by_segments.rb?type=area&segmentids=$1             [PT,T=text/plain]
+RewriteRule   /api/0.3/ways     /ruby/api/0.3/multis_by_segments.rb?type=way&%{QUERY_STRING}            [PT,T=text/plain]
+RewriteRule   /api/0.3/areas    /ruby/api/0.3/multis_by_segments.rb?type=area&%{QUERY_STRING}           [PT,T=text/plain]
+
+RewriteRule   /api/0.3/node/([0-9]+)    /ruby/api/0.3/node.rb?nodeid=$1                 [PT,T=text/plain]
+RewriteRule   /api/0.3/segment/([0-9]+) /ruby/api/0.3/segment.rb?segmentid=$1           [PT,T=text/plain]
+RewriteRule   /api/0.3/way/([0-9]+)     /ruby/api/0.3/multi.rb?type=way&multiid=$1              [PT,T=text/plain]
+RewriteRule   /api/0.3/area/([0-9]+)    /ruby/api/0.3/multi.rb?type=area&multiid=$1             [PT,T=text/plain]
+RewriteRule   ^/api/0.3/map$            /ruby/api/0.3/map.rb                            [PT,T=text/plain]
+RewriteRule   ^/api/0.3/trackpoints$    /ruby/api/0.3/trackpoints.rb                    [PT,T=text/plain]
+RewriteRule   ^/api/0.3/nodes$          /ruby/api/0.3/nodes.rb                          [PT,T=text/plain]
+#RewriteRule   ^/api/0.3/newnode$       /ruby/api/0.3/newnode.rb                        [PT,T=text/plain]
+#RewriteRule   ^/api/0.3/newsegment$    /ruby/api/0.3/newsegment.rb                     [PT,T=text/plain]
+
+
+RewriteRule   /api/0.2/node/([0-9]+) /ruby/api/0.2/node.rb?nodeid=$1 [PT,T=text/plain]
+RewriteRule   /api/0.2/segment/([0-9]+) /ruby/api/0.2/segment.rb?segmentid=$1 [PT,T=text/plain]
+RewriteRule   ^/api/0.2/map$  /ruby/api/0.2/map.rb  [PT,T=text/plain]
+RewriteRule   ^/api/0.2/trackpoints$  /ruby/api/0.2/trackpoints.rb  [PT,T=text/plain]
+RewriteRule   ^/api/0.2/nodes$  /ruby/api/0.2/nodes.rb  [PT,T=text/plain]
+RewriteRule   ^/api/0.2/newnode$  /ruby/api/0.2/newnode.rb  [PT,T=text/plain]
+RewriteRule   ^/api/0.2/newsegment$  /ruby/api/0.2/newsegment.rb  [PT,T=text/plain]
+
+
+RewriteRule   ^/index.html$  /eruby/index.rhtml  [PT]
+RewriteRule   ^/search.html$  /eruby/search.rhtml  [PT]
+RewriteRule   ^/edit.html$  /eruby/edit-map.rhtml  [PT]
+RewriteRule   ^/upload.html$  /eruby/upload-gpx.rhtml  [PT]
+RewriteRule   ^/get-gpx.html$  /eruby/get-gpx.rhtml  [PT]
+RewriteRule   ^/login.html$  /eruby/login.rhtml  [PT]
+RewriteRule   ^/logout.html$  /eruby/logout.rhtml  [PT]
+RewriteRule   ^/forgot-password.html$  /eruby/forgot-password.rhtml  [PT]
+RewriteRule   ^/create-account.html$  /eruby/create-account.rhtml  [PT]
+
+#RewriteRule ^/bugzilla$ /trac [R]
+#RewriteRule ^/websvn$   /trac [R]
+#RewriteRule ^/bugzilla/(.*)$ /trac [R]
+#RewriteRule ^/websvn/(.*)$   /trac [R]
+
+#backward compatibility:
+
+RewriteRule   ^/edit/viewMap.jsp$  /index.html  [R]
+
+RewriteRule   ^/edit/view-map.html$  /index.html  [R]
+RewriteRule   ^/edit/edit-map.html$  /edit.html  [R]
+RewriteRule   ^/edit/login.html$  /login.html  [R]
+RewriteRule   ^/edit/logout.html$  /logout.html  [R]
+RewriteRule   ^/edit/create-account.html$  /create-account.html  [R]
+RewriteRule   ^/edit/forgot-password.html$  /forgot-password.html  [R]
+
+
+RewriteRule   ^/traces/rss$  /eruby/gpx_rss.rhtml  [PT,T=application/rss+xml]
+RewriteRule   ^/traces/tag/(.*)/rss$  /eruby/gpx_rss.rhtml?tag=$1  [PT,T=application/rss+xml]
+RewriteRule   ^/traces/user/(.*)/rss$  /eruby/gpx_rss.rhtml?display_name=$1  [PT,T=application/rss+xml]
+
+RewriteRule   ^/traces/mine/([0-9]+)/download$  /eruby/get-gpx.rhtml?gpx_id=$1  [PT]
+RewriteRule   ^/traces/user/(.*)/([0-9]+)/download$  /eruby/get-gpx.rhtml?display_name=$1&gpx_id=$2  [PT]
+
+RewriteRule   ^/traces/mine/([0-9]+)/image.png$  /eruby/get-gpx-image.rhtml?gpx_id=$1  [PT]
+RewriteRule   ^/traces/mine/([0-9]+)/image-icon.png$  /eruby/get-gpx-image.rhtml?icon=-icon&gpx_id=$1  [PT]
+
+RewriteRule   ^/traces/user/(.*)/([0-9]+)/image.png$  /eruby/get-gpx-image.rhtml?gpx_id=$2  [PT]
+RewriteRule   ^/traces/user/(.*)/([0-9]+)/image-icon.png$  /eruby/get-gpx-image.rhtml?icon=-icon&gpx_id=$2  [PT]
+
+RewriteRule   ^/traces/user/(.*)/([0-9]+)$  /eruby/one_trace.rhtml?action=onetrace&gpx_id=$2  [PT]
+
+RewriteRule   ^/traces/mine/tag/(.*)$  /eruby/upload-gpx.rhtml?action=mytag&tag=$1  [PT]
+RewriteRule   ^/traces/mine/tag/(.*)/page/([0-9]+)$  /eruby/upload-gpx.rhtml?action=mytag&tag=$1&page=$2  [PT]
+RewriteRule   ^/traces/mine/([0-9]+)$  /eruby/upload-gpx.rhtml?action=edit&gpx_id=$1  [PT]
+RewriteRule   ^/traces/mine/([0-9]+)/page/([0-9]+)$  /eruby/upload-gpx.rhtml?action=edit&gpx_id=$1&page=$2  [PT]
+
+
+RewriteRule   ^/traces/mine/page/([0-9]+)$  /eruby/upload-gpx.rhtml?action=mytraces&page=$1&%{QUERY_STRING}  [PT]
+RewriteRule   ^/traces/mine$  /eruby/upload-gpx.rhtml?action=mytraces&%{QUERY_STRING}  [PT]
+
+RewriteRule   ^/traces/$  /eruby/public_traces.rhtml?%{QUERY_STRING}  [PT]
+RewriteRule   ^/traces/page/([0-9]+)$  /eruby/public_traces.rhtml?page=$1&%{QUERY_STRING}  [PT]
+RewriteRule   ^/traces$  /eruby/public_traces.rhtml?%{QUERY_STRING}  [PT]
+RewriteRule   ^/traces/user/(.*)$  /eruby/public_traces.rhtml?action=public&display_name=$1  [PT]
+RewriteRule   ^/traces/user/(.*)/page/([0-9]+)$  /eruby/public_traces.rhtml?action=public&display_name=$1&page=$2  [PT]
+RewriteRule   ^/traces/tag/(.*)$  /eruby/public_traces.rhtml?action=publictag&tag=$1  [PT]
+RewriteRule   ^/traces/tag/(.*)/page/([0-9]+)$  /eruby/public_traces.rhtml?action=publictag&tag=$1&page=$2  [PT]
+
+<Location /tile/0.1/wms>
+  RequestHeader unset Cache-control
+  RequestHeader unset Pragma
+</Location>
+
+<Location /tile/0.2/wms>
+  RequestHeader unset Cache-control
+  RequestHeader unset Pragma
+</Location>
+
+<Location /tile/0.2/gpx>
+  RequestHeader unset Cache-control
+  RequestHeader unset Pragma
+</Location>
+
+<Location /tile/0.2/landsat>
+  RequestHeader unset Cache-control
+  RequestHeader unset Pragma
+</Location>
+
+ProxyPass /tile/0.1/wms http://tile.openstreetmap.org/cgi-bin/steve/mapserv
+ProxyPassReverse /tile/0.1/wms http://tile.openstreetmap.org/cgi-bin/steve/mapserv
+
+ProxyPass /tile/0.2/wms http://tile.openstreetmap.org/cgi-bin/steve/mapserv
+ProxyPassReverse /tile/0.2/wms http://tile.openstreetmap.org/cgi-bin/steve/mapserv
+
+ProxyPass /tile/0.2/gpx http://tile.openstreetmap.org/ruby/gpx.rbx
+ProxyPassReverse /tile/0.2/gpx http://tile.openstreetmap.org/ruby/gpx.rbx
+
+ProxyPass /api/wms/0.2/landsat/ http://landsat.openstreetmap.org:3128/wms.cgi
+ProxyPassReverse /api/wms/0.2/landsat/ http://landsat.openstreetmap.org:3128/wms.cgi
+
+
+
+# trac
+#Alias /trac/chrome/common /usr/share/trac/htdocs
+#<Directory "/usr/share/trac/htdocs">
+#  Order allow,deny
+#  Allow from all
+#</Directory>
+#
+#ScriptAlias /trac /usr/share/trac/cgi-bin/trac.cgi
+#<Location "/trac">
+#  SetEnv TRAC_ENV "/var/lib/trac"
+#</Location>
+
+
+</VirtualHost>
+
+
+
+
+
+
+
+
+
+<VirtualHost 128.40.58.205>
 ServerName USER.dev.openstreetmap.org
 ServerAdmin steve@asklater.com
 DocumentRoot /var/www/USER/

@@ -27,11 +27,11 @@ fi
 
 # eruby
 mkdir $ROOT/eruby
-cp ruby/editing-interface/*.rhtml $ROOT/eruby/
+cp ruby/eruby/*.rhtml $ROOT/eruby/
 
 # includes for eruby
 mkdir $ROOT/eruby/include
-cp ruby/editing-interface/include/*.rhtml $ROOT/eruby/include/
+cp ruby/eruby/include/*.rhtml $ROOT/eruby/include/
 
 # css
 
@@ -93,6 +93,6 @@ cp ruby/rss/nodes.rb $ROOT/ruby/
 
 mkdir -p ../bin
 mkdir -p ../bin/osm
-cp ruby/editing-interface/support/insert_gpx_files.rb ../bin/
+cp ruby/eruby/support/insert_gpx_files.rb ../bin/
 cp ruby/api/osm/* ../bin/osm
 

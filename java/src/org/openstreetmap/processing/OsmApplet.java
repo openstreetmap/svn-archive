@@ -300,6 +300,41 @@ public class OsmApplet extends PApplet {
 			js = JSObject.getWindow(this);
 		}
 
+		println("check webpage applet parameters for a user/pass");
+		try {
+			userName = param("user");
+			password = param("pass");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (args != null) {
+			println("Parsing command line arguments");
+			for (int i = 0; i < args.length; ++i) {
+				if (args[i].startsWith("--user=")) {
+					userName = args[i].substring(args[i].indexOf('=')+1);
+				}
+				if (args[i].startsWith("--pass=")) {
+					password = args[i].substring(args[i].indexOf('=')+1);
+				}
+				if (args[i].startsWith("--clon=")) {
+					clon = Float.parseFloat(args[i].substring(args[i].indexOf('=')+1));
+				}
+				if (args[i].startsWith("--clat=")) {
+					clat = Float.parseFloat(args[i].substring(args[i].indexOf('=')+1));
+				}
+				if (args[i].startsWith("--zoom=")) {
+					clat = Integer.parseInt(args[i].substring(args[i].indexOf('=')+1));
+				}
+			}
+		}
+
+		System.out.println("Got userName: " + userName);
+		System.out.println("Got password: " + password);
+		System.out.println("Got clon: " + clon);
+		System.out.println("Got clat: " + clat);
+		System.out.println("Got zoom: " + zoom);
+
 		tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
 		tiles.start();
 
@@ -309,33 +344,9 @@ public class OsmApplet extends PApplet {
 
 		System.out.println("Selected strokeWeight of " + strokeWeight);
 
-		println("check webpage applet parameters for a user/pass");
-		try {
-			userName = param("user");
-			password = param("pass");
-
-			System.out.println("Got user/pass: " + userName + "/" + password);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		if (userName == null && password == null && args != null) {
-			println("check command line arguments for a user/pass");
-			for (int i = 0; i < args.length; ++i) {
-				if (args[i].startsWith("--user") && args[i].indexOf('=') != -1) {
-					userName = args[i].substring(args[i].indexOf('=')+1);
-				}
-				if (args[i].startsWith("--pass") && args[i].indexOf('=') != -1) {
-					password = args[i].substring(args[i].indexOf('=')+1);
-				}
-				if (userName != null && password != null)
-					System.out.println("Got user/pass: " + userName + "/" + password);
-			}
-		}
-
 		// try to connect to OSM
 		osm = new Adapter(userName, password, this, apiURL);
-		
+
 		// register as listener of finished commands (to redraw)
 		osm.commandManager.addListener(new CommandManager.Listener(){
 			public void commandFinished(ServerCommand command) {

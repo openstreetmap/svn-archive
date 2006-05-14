@@ -413,8 +413,12 @@ public class OsmApplet extends PApplet {
 			double rest;
 			double log_value;
 
-			log_value = Math.log10(tiles.metersPerPixel()
-					       * min_length / factor[i]);
+      // log_10(x) == log_e(x) / log_e(10)
+      // log_e(10) == 2.30259
+      
+			log_value = Math.log(tiles.metersPerPixel()
+					       * min_length / factor[i])  / 2.30259;
+      
 			if ((rest = log_value - Math.floor(log_value)) < remains) {
 				remains = rest;
 				used_factor = i;

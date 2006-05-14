@@ -1,0 +1,654 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
+
+<!-- Rules for OSM Map Features 0.3 -->
+<!-- This file implements a sub-set of the items described at http://wiki.openstreetmap.org/index.php/Map_Features -->
+
+<rules 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  data="data.osm"
+  scale="1">
+
+
+  <!-- draw segment shading first -->
+  <rule k="highway" v="residential">
+    <line class='abutters-residential'/> 
+  </rule>
+  <rule k="abutters" v="residential">
+    <line class='abutters-residential'/> 
+  </rule>
+  <rule k="abutters" v="retail">
+    <line class='abutters-retail'/> 
+  </rule>
+  <rule k="abutters" v="industrial">
+    <line class='abutters-industrial'/> 
+  </rule>
+  <rule k="abutters" v="commercial">
+    <line class='abutters-commercial'/> 
+  </rule>
+  <rule k="abutters" v="mixed">
+    <line class='abutters-mixed'/> 
+  </rule>
+
+
+  <!-- For debugging this rule draws a one pixel wide trace of *all* segments.  This enables segments that have no
+       tags to be identified. Comment it out to hide the debug trace. --> 
+  <!--<rule k="~" v="~">  
+    <line class='debug'/>
+  </rule>-->
+
+
+  <!-- draw waterway casings -->
+  <rule k="waterway" v="river">
+    <line class='waterway-river-casing'/> 
+  </rule>
+  <rule k="waterway" v="canal">
+    <line class='waterway-canal-casing'/> 
+  </rule>
+  <rule k="waterway" v="drain">
+    <line class='waterway-drain-casing'/> 
+  </rule>
+
+
+  <!-- draw waterway cores -->
+  <rule k="waterway" v="river">
+    <line class='waterway-river-core'/> 
+  </rule>
+  <rule k="waterway" v="canal">
+    <line class='waterway-canal-core'/> 
+  </rule>
+  <rule k="waterway" v="drain">
+    <line class='waterway-drain-core'/> 
+  </rule>
+
+
+  <!-- next draw paths -->
+  <rule k="highway" v="footway">
+    <line class='highway-footway' /> 
+    <text k="ref" class='highway-footway-ref' y-offset='-4' x-offset='4'/>
+  </rule>
+
+  <rule k="highway" v="cycleway">
+    <line class='highway-cycleway' /> 
+    <text k="ref" class='highway-cycleway-ref' y-offset='-4' x-offset='4'/>
+  </rule>
+
+  <rule k="highway" v="bridleway">
+    <line class='highway-bridleway' /> 
+    <text k="ref" class='highway-bridleway-ref' y-offset='-4' x-offset='4'/>
+  </rule>
+
+
+  <!-- draw highway casings for minor roads -->
+  <rule k="highway" v="unclassified">
+    <line class='highway-unclassified-casing'/>
+  </rule>
+  <rule k="highway" v="residential">
+    <line class='highway-unclassified-casing'/>
+  </rule>
+
+
+  <!-- draw highway cores for minor roads -->
+  <rule k="highway" v="unclassified">
+    <line class='highway-unclassified-core'/>
+    <rule k="oneway" v="1">
+      <line class='highway-unclassified-core oneway' />  
+    </rule>
+    <rule k="oneway" v="-1">
+      <line class='highway-unclassified-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-unclassified-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='40%' dy='1' k="name" class="highway-unclassified-name"/>
+  </rule>
+  
+  <rule k="highway" v="residential">
+    <line class='highway-unclassified-core'/>
+    <rule k="oneway" v="1">
+      <line class='highway-unclassified-core oneway' />  
+    </rule>    
+    <rule k="oneway" v="-1">
+      <line class='highway-unclassified-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-unclassified-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='40%' dy='1' k="name" class="highway-unclassified-name"/>
+  </rule>
+
+
+  <!-- draw railway lines -->
+  <rule k="railway" v="rail">
+    <line class='railway-rail'/>
+  </rule>
+
+
+  <!-- draw highway casings for major roads -->
+  <rule k="highway" v="secondary">
+      <line class='highway-secondary-casing'/>
+  </rule>
+  <rule k="highway" v="primary">
+      <line class='highway-primary-casing'/>
+  </rule>
+  <rule k="highway" v="trunk">
+      <line class='highway-trunk-casing'/>
+  </rule>
+  <rule k="highway" v="motorway">
+      <line class='highway-motorway-casing'/>
+  </rule>
+  <rule k="highway" v="motorway_link">
+      <line class='highway-motorway-casing'/>
+  </rule>
+
+
+  <!-- draw highway cores for major roads -->
+  <rule k="highway" v="secondary">
+    <line class='highway-secondary-core' />  
+    <rule k="oneway" v="1">
+      <line class='highway-secondary-core oneway' />  
+    </rule>    
+    <rule k="oneway" v="-1">
+      <line class='highway-secondary-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-secondary-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='40%' dy='1' k="name" class="highway-secondary-name"/>
+  </rule>
+
+  <rule k="highway" v="primary">
+    <line class='highway-primary-core'/>
+    <rule k="oneway" v="1">
+      <line class='highway-primary-core oneway' />  
+    </rule>
+    <rule k="oneway" v="-1">
+      <line class='highway-primary-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-primary-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='40%' dy='1' k="name" class="highway-primary-name"/>
+  </rule>
+
+  <rule k="highway" v="trunk">
+    <line class='highway-trunk-core'/>
+    <rule k="oneway" v="1">
+      <line class='highway-trunk-core oneway' />  
+    </rule>
+    <rule k="oneway" v="-1">
+      <line class='highway-trunk-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-trunk-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='40%' dy='1' k="name" class="highway-trunk-name"/>
+  </rule>
+
+  <rule k="highway" v="motorway">
+    <line class='highway-motorway-core'/>
+    <rule k="oneway" v="1">
+      <line class='highway-motorway-core oneway' />  
+    </rule>
+    <rule k="oneway" v="-1">
+      <line class='highway-motorway-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-motorway-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='40%' dy='1' k="name" class="highway-motorway-name"/>
+  </rule>
+
+  <rule k="highway" v="motorway_link">
+    <line class='highway-motorway-core'/>
+    <rule k="oneway" v="1">
+      <line class='highway-motorway-core oneway' />  
+    </rule>
+    <rule k="oneway" v="-1">
+      <line class='highway-motorway-core otherway' />    
+    </rule>    
+    <text k="ref" class='highway-motorway-ref' y-offset='-5' x-offset='5'/>
+    <textPath startOffset='10%' dy='1' k="name" class="highway-motorway-name"/>
+  </rule>
+
+
+  <!-- draw non-pysical routes -->
+  <rule k="route" v="ferry">
+    <line class='route-ferry'/>
+  </rule>
+  
+
+  <!-- draw nodes -->
+  <rule k="place" v="continent">
+    <text k="name" class='continent-caption'/>
+  </rule>
+
+  <rule k="place" v="country">
+    <text k="name" class='country-caption'/>
+  </rule>
+
+  <rule k="place" v="state">
+    <text k="name" class='state-caption'/>
+  </rule>
+
+  <rule k="place" v="region">
+    <text k="name" class='region-caption'/>
+  </rule>
+
+  <rule k="place" v="county">
+    <text k="name" class='county-caption'/>
+  </rule>
+
+  <rule k="place" v="city">
+    <text k="name" class='city-caption'/>
+  </rule>
+
+  <rule k="place" v="town">
+    <text k="name" class='town-caption'/>
+  </rule>
+
+  <rule k="place" v="village">
+    <text k="name" class='village-caption'/>
+  </rule>
+
+  <rule k="place" v="hamlet">
+    <text k="name" class='hamlet-caption'/>
+  </rule>
+
+  <rule k="railway" v="station">
+    <circle r="3" class="railway-station" />
+    <text k="name" class='railway-station-caption' x-offset='5' y-offset='3' />
+  </rule>
+
+  <rule k="amenity" v="place_of_worship">
+    <symbol xlink:href="#church" width='5' height='10' x-offset='-5' y-offset='-10'/>
+  </rule>
+
+
+  <!-- Use this rule to highlight tags that you want to get rid of, or change -->
+  <!--<rule k="someKey" v="someValue">
+    <line class='error'/> 
+  </rule>-->
+
+
+  <!-- SVG Definitions - markers, symbols etc go here -->
+  <defs xmlns:svg="http://www.w3.org/2000/svg">
+
+    <svg:style type="text/css">
+      .debug {
+        stroke-width: 1;
+        stroke-linecap: round;
+        stroke: red;
+        }
+    
+      .error {
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke: red;
+        }
+
+      .abutters-residential {
+        stroke-width: 18;
+        stroke-linecap: round;
+        stroke: #f2f2f2;
+        }
+
+      .abutters-retail {
+        stroke-width: 18;
+        stroke-linecap: round;
+        stroke: #ffebeb;
+        }
+
+      .abutters-industrial {
+        stroke-width: 18;
+        stroke-linecap: round;
+        stroke: #ecd8ff;
+        }
+
+      .abutters-commercial {
+        stroke-width: 18;
+        stroke-linecap: round;
+        stroke: #fcffc9;
+        }
+        
+      .abutters-mixed {
+        stroke-width: 18;
+        stroke-linecap: round;
+        stroke: #d8feff;
+        }
+
+      /* Highways */
+      .highway-motorway-casing {
+        stroke-width: 5; 
+        stroke-linecap: round; 
+        stroke: #000000;
+        }
+
+      .highway-motorway-core {
+        stroke-width: 3; 
+        stroke-linecap: round; 
+        stroke: #809BC0;
+        }
+
+      .highway-motorway-name {
+        fill: black;
+        font-family: verdana;
+        font-size: 5px;
+        font-weight: normal;
+        }
+
+      .highway-motorway-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 14px;
+        font-weight: bolder;
+        }      
+
+      .highway-trunk-casing {
+        stroke-width: 5; 
+        stroke-linecap: round; 
+        stroke: #000000;
+        }
+
+      .highway-trunk-core {
+        stroke-width: 3; 
+        stroke-linecap: round; 
+        stroke: #e46d71;
+        }
+
+      .highway-trunk-name {
+        fill: black;
+        font-family: verdana;
+        font-size: 5px;
+        font-weight: normal;
+        }
+
+      .highway-trunk-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bolder;
+        }      
+
+      .highway-primary-casing {
+        stroke-width: 4; 
+        stroke-linecap: round; 
+        stroke: #000000;
+        }
+
+      .highway-primary-core {
+        stroke-width: 2; 
+        stroke-linecap: round; 
+        stroke: #7FC97F;
+        }
+
+      .highway-primary-name {
+        fill: black;
+        font-family: verdana;
+        font-size: 3px;
+        font-weight: normal;
+        }
+
+      .highway-primary-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 10px;
+        font-weight: bolder;
+        }      
+
+      .highway-secondary-casing {
+        stroke-width: 4; 
+        stroke-linecap: round; 
+        stroke: #000000;
+        }
+
+      .highway-secondary-core {
+        stroke-width: 2; 
+        stroke-linecap: round; 
+        stroke: #FDBF6F;
+        }
+
+      .highway-secondary-name {
+        fill: black;
+        font-family: verdana;
+        font-size: 3px;
+        font-weight: normal;
+        }
+
+      .highway-secondary-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 10px;
+        font-weight: bolder;
+        }      
+
+      .highway-unclassified-casing {
+        stroke-width: 3; 
+        stroke-linecap: round; 
+        stroke: #000000;
+        }
+
+      .highway-unclassified-core {
+        stroke-width: 2; 
+        stroke-linecap: round; 
+        stroke: #E6E6E6;
+        }
+
+      .highway-unclassified-name {
+        fill: black;
+        font-family: verdana;
+        font-size: 3px;
+        font-weight: normal;
+        }
+
+      .highway-unclassified-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 9px;
+        font-weight: bolder;
+        }      
+
+      .highway-bridleway {
+        stroke-width: 2; 
+        stroke-linecap: round; 
+        stroke: #70b971;
+        }
+
+      .highway-bridleway-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 8px;
+        font-weight: bolder;
+        }      
+
+      .highway-cycleway {
+        stroke-width: 2; 
+        stroke-linecap: round; 
+        stroke: #008102;
+        }
+
+      .highway-cycleway-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 8px;
+        font-weight: bolder;
+        }      
+
+      .highway-footway {
+        stroke-width: 1; 
+        stroke-linecap: round; 
+        stroke: #d79331;
+        }
+
+      .highway-footway-ref {
+        fill: black;
+        font-family: verdana;
+        font-size: 8px;
+        font-weight: bolder;
+        }      
+
+      /* Waterways */
+      .waterway-river-casing {
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke: #aaaaaa;
+        }
+        
+      .waterway-river-core {
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke: #89bac6;
+        }
+
+      .waterway-canal-casing {
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke: #aaaaaa;
+        }
+        
+      .waterway-canal-core {
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke: #89bac6;
+        }
+        
+      .waterway-drain-casing {
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke: #aaaaaa;
+        }
+        
+      .waterway-drain-core {
+        stroke-width: 1;
+        stroke-linecap: round;
+        stroke: #89bac6;
+        }
+
+      .railway-rail {
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke: #000000;
+        }
+        
+      .railway-station {
+        fill: red;
+        stroke: black;
+        stroke-width: 1;
+      }
+
+      .railway-station-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 8px;
+        font-weight: bolder;
+      }
+
+      .route-ferry {
+        stroke-width: 1;
+        stroke-linecap: round;
+        stroke: #777777;
+        }
+        
+      .point-of-interest {
+        fill: red;
+        stroke: black;
+        stroke-width: 1;
+      }
+
+      
+      /* Place names */            
+      .continent-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 24px;
+        font-weight: bolder;
+        }
+      .country-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 22px;
+        font-weight: bolder;
+        }
+      .state-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 20px;
+        font-weight: bolder;
+        }
+      .region-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 18px;
+        font-weight: bolder;
+        }
+      .county-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 16px;
+        font-weight: bolder;
+        }
+      .city-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 14px;
+        font-weight: bolder;
+        }
+      .town-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 12px;
+        font-weight: bolder;
+        }
+      .village-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 10px;
+        font-weight: bolder;
+        }
+      .hamlet-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 8px;
+        font-weight: bolder;
+        }
+      .church-caption {
+        fill: black;
+        font-family: verdana;
+        font-size: 10px;
+        font-weight: bold;
+        }
+        
+      .oneway {
+        marker-end: url(#triangle)
+        }
+
+      .otherway {
+        marker-start: url(#invertedTriangle) 
+        }
+    </svg:style>
+  
+    <svg:marker 
+      id="triangle"
+      viewBox="0 0 10 10"
+      refX="10" refY="5" 
+      markerUnits="userSpaceOnUse"
+      fill='#ffffff'
+      stroke-width='1'
+      stroke='#000000'
+      markerWidth="7"
+      markerHeight="7"
+      orient="auto">
+      <svg:path d="M 0 0 L 10 5 L 0 10 z" />
+    </svg:marker>  
+
+    <svg:marker 
+      id="invertedTriangle"
+      viewBox="0 0 10 10"
+      refX="0" refY="5" 
+      markerUnits="userSpaceOnUse"
+      fill='#ffffff'
+      stroke-width='1'
+      stroke='#000000'
+      markerWidth="7"
+      markerHeight="7"
+      orient="auto">
+      <svg:path d="M 10 0 L 0 5 L 10 10 z" />
+    </svg:marker>  
+
+    <svg:symbol id="church"
+     viewBox="0 0 5 10"
+     fill='#000000'>
+      <svg:path d="M 0 10 L 0 5 L 5 5 L 5 10 z M 0 2 L 5 2 L 5 3 L 0 3 z M 2 0 L 2 5 L 3 5 L 3 0 z" />
+    </svg:symbol>  
+
+  </defs>
+  
+</rules>

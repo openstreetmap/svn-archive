@@ -313,8 +313,10 @@ public class Tile extends Thread {
 		}
 	}
 
-	public float kilometersPerPixel() {
-		return (float)((40008.0 / 360.0) * 45.0 * (float)Math.pow(2.0, -6 - (double)zoom));
+	public float metersPerPixel() {
+		return (float)((40008.0 / 360.0) * 45.0
+			       * (float)Math.pow(2.0, -6 - (double)zoom))
+			       * 1000.0f;
 	}
 
 	public synchronized ImBundle getEle() {

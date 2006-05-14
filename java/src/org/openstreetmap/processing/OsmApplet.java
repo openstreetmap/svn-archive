@@ -397,8 +397,7 @@ public class OsmApplet extends PApplet {
 	}
 
 	private void draw_scale_bar() {
-		int num_factors = 3;
-		double factor[] = { 1.0f, 2.5f, 5.0f, };
+		double factor[] = { 1.0f, 2.5f, 5.0f };
 		int exponent = 0;
 		int used_factor = 0;
 		double remains = 1.0f;
@@ -410,11 +409,11 @@ public class OsmApplet extends PApplet {
 		int ending_bar_length = getHeight() / 30;
 
 		/* Find the nearest factor */
-		for (i = 0; i < num_factors; i++) {
+		for (i = 0; i < factor.length; i++) {
 			double rest;
 			double log_value;
 
-			log_value = Math.log10(1000.0f * tiles.kilometersPerPixel()
+			log_value = Math.log10(tiles.metersPerPixel()
 					       * min_length / factor[i]);
 			if ((rest = log_value - Math.floor(log_value)) < remains) {
 				remains = rest;
@@ -425,7 +424,7 @@ public class OsmApplet extends PApplet {
 
 		/* Calculate the exact bar length */
 		bar_length = (int) (factor[used_factor] * Math.pow(10.0, exponent)
-				    / (1000.0f * tiles.kilometersPerPixel()));
+				    / tiles.metersPerPixel());
 
 		fill(0);
 		strokeWeight(2);
@@ -680,7 +679,7 @@ public class OsmApplet extends PApplet {
 
 	public void recalcStrokeWeight() {
 		// 10m roads, but min 2px width
-		strokeWeight = max(0.010f / tiles.kilometersPerPixel(), 2.0f); 
+		strokeWeight = max(20.0f / tiles.metersPerPixel(), 2.0f);
 	}
 
 	public void mouseMoved() {

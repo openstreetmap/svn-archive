@@ -678,7 +678,7 @@ public class OsmApplet extends PApplet {
 	}
 
 	public void recalcStrokeWeight() {
-		// 10m roads, but min 2px width
+		// 20m roads, but min 2px width
 		strokeWeight = max(20.0f / tiles.metersPerPixel(), 2.0f);
 	}
 

@@ -83,6 +83,7 @@
 
 package org.openstreetmap.processing;
 
+import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -396,13 +397,39 @@ public class OsmApplet extends PApplet {
 	}
 
 	private void draw_scale_bar() {
+		int num_factors = 3;
+		double factor[] = { 1.0f, 2.5f, 5.0f, };
+		int exponent = 0;
+		int used_factor = 0;
+		double remains = 1.0f;
+		int i;
+		int min_length = getWidth() / 6;
+		int bar_length;
 		int dist_bottom = 70;
 		int dist_right = 20;
-		int bar_length = getWidth() / 5;
 		int ending_bar_length = getHeight() / 30;
+
+		/* Find the nearest factor */
+		for (i = 0; i < num_factors; i++) {
+			double rest;
+			double log_value;
+
+			log_value = Math.log10(1000.0f * tiles.kilometersPerPixel()
+					       * min_length / factor[i]);
+			if ((rest = log_value - Math.floor(log_value)) < remains) {
+				remains = rest;
+				used_factor = i;
+				exponent = (int)Math.floor(log_value);
+			}
+		}
+
+		/* Calculate the exact bar length */
+		bar_length = (int) (factor[used_factor] * Math.pow(10.0, exponent)
+				    / (1000.0f * tiles.kilometersPerPixel()));
+
 		fill(0);
-    strokeWeight(10);
-    textSize(10);
+		strokeWeight(2);
+		textSize(10);
 		pushMatrix();
 		/* Horizonthal bar */
 		line(getWidth() - bar_length - dist_right, getHeight() - dist_bottom,
@@ -414,10 +441,12 @@ public class OsmApplet extends PApplet {
 		line(getWidth() - dist_right, getHeight() - dist_bottom + ending_bar_length / 2,
 		     getWidth() - dist_right, getHeight() - dist_bottom - ending_bar_length / 2);
 
-		String meters = "" + (tiles.kilometersPerPixel() * bar_length * 1000.0f);
+		/* Print the numeric scale value */
+		String meters = "" + Math.round(factor[used_factor]
+				     * Math.pow(10.0, exponent)) + "m";
 		translate(getWidth() - dist_right - bar_length + (bar_length - textWidth(meters))/2,
 			  getHeight() - dist_bottom + 5);
-    text(meters);
+		text(meters);
 		popMatrix();
 	}
 

@@ -216,7 +216,7 @@ module OSM
       begin
         dbh = get_connection
         sql = yield
-        @@log.log sql
+        #@@log.log sql
         res = dbh.query(sql)
         if res.nil? then return true else return res end
       rescue MysqlError =>ex

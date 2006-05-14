@@ -58,11 +58,11 @@ if gpxfile != '' && loggedin
 
   if (!tmpfile.nil? || fromfile.length != 0) && dao.schedule_gpx_upload(fromfile.original_filename, tofile, user_id, description, tags, pub)
     %>
-    <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i> <a href="/traces/mine/">Uoload another</a>.<br>
+    <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i> <a href="/traces/mine">Upload another</a>.<br>
     <%
   else
     %>
-    <i>Something went wrong scheduling that file. See the wiki / mailing list for help.</i><a href="/traces/mine/">Go back</a>.<br>
+    <i>Something went wrong scheduling that file. See the wiki / mailing list for help.</i><a href="/traces/mine">Go back</a>.<br>
     <%
   end
 

@@ -6,6 +6,7 @@
 # for details.                                                                 #
 ################################################################################
 
+# 15/05/06 zoom no longer required: calculated from other input parameters
 
 require_once('classes.php');
 require_once('functions.php');
@@ -14,8 +15,7 @@ require_once('functions.php');
 
 $defaults = array("WIDTH" => 400, 
 			"HEIGHT" => 320,
-			"zoom" => 12,
-			"landsat" => 0,
+			"landsat" => 1,
 			"tp" => 0,
 			"debug" => 0 );
 
@@ -48,7 +48,7 @@ else
 if(!isset($error))
 {
 	$image = new Image($bbox[0], $bbox[1], $bbox[2], $bbox[3],
-						$inp["WIDTH"],$inp["HEIGHT"], $inp["zoom"], 
+						$inp["WIDTH"],$inp["HEIGHT"], 
 						$inp["landsat"],$inp["tp"],$inp["debug"]);
 }
 

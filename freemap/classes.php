@@ -7,13 +7,14 @@
 ################################################################################
 
 
-require_once('osm.php');
+require_once('osmxml.php');
 require_once('latlong.php');
 require_once('defines.php');
 require_once('contours.php');
 require_once('gpxnew.php');
 require_once('dataset.php');
 require_once('rules.php');
+require_once('Map.php');
 
 
 // 070406 changed ['name'] to ['tags']['name'] for nodes, segments and ways
@@ -21,123 +22,6 @@ require_once('rules.php');
 
 ///////////////////// CLASS DEFINITIONS /////////////////////////
 
-class Map
-{
-	var $bottomleft, 
-		$topright,
-		$latscale, // pixels per latitude unit
-		$lonscale, // pixels per longitude unit
-		$width, // pixels
-		$height; // pixels
-
-	function Map ($w, $s, $e, $n, $width, $height)
-	{
-		$this->bottomleft["long"] = $w;
-		$this->bottomleft["lat"] = $s;
-		$this->lonscale = $width/($e-$w);
-		$this->latscale = $height/($n-$s);
-		$this->width = $width; 
-		$this->height = $height; 
-	}
-
-	function is_valid()
-	{
-		return $this->width>0 && $this->height>0;
-	}
-
-	function get_x($e)
-	{
-		return round(($e - $this->bottomleft['long']) * $this->lonscale);
-	}
-	
-	function get_y($n)
-	{
-		return $this->height-
-				round(($n-$this->bottomleft['lat']) * $this->latscale);
-	}
-
-	function get_point($ll)
-	{
-		return array ("x" => $this->get_x($ll["long"]), 
-						"y" => $this->get_y($ll["lat"]) );
-	}
-
-	function get_latlon($pt)
-	{
-		$lon = $this->bottomleft['long'] +$pt['x']/$this->lonscale;
-		$lat = $this->bottomleft['lat'] + 
-			($this->height-$pt['y'])/$this->latscale;
-		return array ('long' => $lon, 'lat' => $lat); 
-	}
-
-	function get_centre()
-	{
-		return $this->get_latlon
-				(array('x'=>$this->width/2,'y'=>$this->height/2));
-	}
-
-	function within_map($latlon)
-	{
-		$pt['x'] = round($this->get_x($latlon['long']));
-		$pt['y'] = round($this->get_y($latlon['lat']));
-		return $this->pt_within_map($pt);
-	}
-
-	function pt_within_map($pt)
-	{
-		return $pt['x']>=0 && $pt['y']>=0 && 
-				$pt['x']<$this->width && $pt['y']<$this->height;
-	}
-
-	function pt_right_of_map ($pt)
-	{
-		return $pt['x'] >= $this->width;
-	}
-
-	function pt_below_map ($pt)
-	{
-		return $pt['y'] >= $this->height;
-	}
-
-	function set_scale($newlonscale, $newlatscale)
-	{
-		$this->lonscale = $newlonscale;
-		$this->latscale = $newlatscale;
-	}
-
-	// Return the lat-lon of the bottom left coordinate at a new scale
-	// while keeping the centre constant
-	function get_new_bottom_left($newlonscale, $newlatscale)
-	{
-		// Get the centre as a lat-lon
-		$centre=$this->get_centre();
-			// Coordinates of the new bottom left with respect to the centre
-			// as the origin
-			$pt['x'] = -$this->width/2; 
-			$pt['y'] = $this->height/2;
-
-			// Convert these to a lat-lon and return
-			$new_bottom_left['long']=
-				$centre['long']+round($pt['x']/($newlonscale/1000));
-			$new_bottom_left['lat']=$centre['lat']-
-				round($pt['y']/($newlatscale/1000));
-		return $new_bottom_left; 
-	}
-
-	function centreToBottomLeft()
-	{
-		$pt['x'] = -$this->width/2; 
-		$pt['y'] = 3*($this->height/2);
-
-		// Convert these to a lat-lon and return
-		return $this->get_latlon($pt);
-	}
-
-	function get_top_right()
-	{
-		return $this->get_latlon(array("x"=>$this->width,"y"=>0));
-	}
-}
 
 class Image
 {
@@ -158,18 +42,16 @@ class Image
 	var $mapdata;
 	var $tp;
 
-	function Image ($w, $s, $e, $n, $width, $height,  $zoom, $ls=0, 
+	function Image ($w, $s, $e, $n, $width, $height,  $ls=0, 
 					$tp=0, $dbg=0)
 	{
 		$this->map = new Map ($w,$s,$e,$n, $width, $height);
-		$this->zoom=$zoom;
+		//$this->zoom=$zoom;
 
+		// 150506 recalculate zoom from input pixel and longitude width
+		// see Steve's email of 01/02/06
+		$this->zoom = round(log((360*$width)/($e-$w),2)-9);
 
-		$this->mapdata = new Dataset();
-		$this->mapdata->grab_direct_from_database($w, $s, $e, $n, $zoom);
-		
-		// Make all segments inherit tags from their parent way
-		$this->mapdata->give_segs_waytags();
 
 
 		$this->landsat = $ls;
@@ -178,9 +60,10 @@ class Image
 		# in GD2, when copying images (as we do for the icons), both source
 		# and destination image must be either paletted or true colour.
 		# (The icons are s)
-		//AAA
-		$this->im = ImageCreateTrueColor($this->map->width*2,
-											$this->map->height*2);
+		$this->im = ImageCreateTrueColor($this->map->width*
+				(2*$this->extensionFactor()+1),
+									$this->map->height*
+				(2*$this->extensionFactor()+1));
 		
 		$this->backcol = ImageColorAllocate($this->im,220,220,220);
 		$this->gold = ImageColorAllocate($this->im,255,255,0);
@@ -191,11 +74,18 @@ class Image
 		$this->mint = ImageColorAllocate($this->im,0,192,64);
 
 
+		if($this->zoom>=10)
+		{
+		$this->mapdata = new Dataset();
+		$this->mapdata->grab_direct_from_database($w, $s, $e, $n, $zoom);
+		
+		// Make all segments inherit tags from their parent way
+		$this->mapdata->give_segs_waytags();
 		//06/06/05 Replaced old brush loading with the following call
 		//$this->segmenttypes=$this->load_segment_types();
 		//130406 replaced again with style rules
 		$this->styleRules = readStyleRules("freemap.xml");
-
+		}
 		ImageFill($this->im,100,100,$this->backcol);
 		$this->is_valid = true;
 
@@ -216,9 +106,12 @@ class Image
 
 	function draw()
 	{
+		
 		if($this->landsat>=1)
 			$this->draw_landsat();
 		
+		if($this->zoom>=10)
+		{
 		if($this->zoom>=12 && $this->zoom<=13)
 			$this->draw_contours();
 		
@@ -235,12 +128,19 @@ class Image
 		if($this->zoom >= 113)
 			$this->draw_way_names();
 
+		}
+		
 		$im2 = ImageCreateTrueColor($this->map->width,
 											$this->map->height);
 
 		ImageFill($im2,100,100,$this->backcol);
-		ImageCopy($im2,$this->im,0,0,$this->map->width/2,
-					$this->map->height/2,
+		/*
+		ImageTTFText($im2, 8, 0, $this->map->width/2, 
+								$this->map->height/2, $this->black, 
+							TRUETYPE_FONT, $this->zoom);
+							*/
+		ImageCopy($im2,$this->im,0,0,$this->map->width*$this->extensionFactor(),
+					$this->map->height*$this->extensionFactor(),
 					$this->map->width,
 					$this->map->height);
 		ImagePNG($im2);
@@ -251,6 +151,7 @@ class Image
 	
 	function draw_segments()
 	{
+
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
 
@@ -258,6 +159,8 @@ class Image
 		foreach ($ids as $id)
 		{
 
+			$width = $this->getZoomLevelValue
+							($this->mapdata->segments[$id]["style"]["width"]);
 			$p[0] = $this->map->get_point
 				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
 			$p[1] = $this->map->get_point
@@ -269,7 +172,7 @@ class Image
 						&&
 				 isset($this->mapdata->nodes
 				 	[$this->mapdata->segments[$id]['from']]) ) &&
-		1
+				$width>0	
 		/*
 			($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
@@ -284,8 +187,6 @@ class Image
 				{
 					$colour = ImageColorAllocate
 							($this->im, $rgb[0],$rgb[1],$rgb[2]);
-					$width = $this->getZoomLevelValue
-							($this->mapdata->segments[$id]["style"]["width"]);
 
 					ImageSetThickness($this->im, $width);
 					// 07/06/05 Changed this to reflect the new way
@@ -312,6 +213,7 @@ class Image
 									$this->cnvY($p[0]['y']),
 								$this->cnvX($p[1]['x']),$this->cnvY($p[1]['y']),
 								$colour);
+
 					}
 				}
 
@@ -355,6 +257,8 @@ class Image
 		$ids = array_keys($this->mapdata->segments);
 		foreach ($ids as $id)
 		{
+			$width = $this->getZoomLevelValue
+							($this->mapdata->segments[$id]["style"]["width"]);
 					
 			$p[0] = $this->map->get_point
 				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
@@ -362,13 +266,13 @@ class Image
 				($this->mapdata->nodes[$this->mapdata->segments[$id]['to']]);
 
 
-			if ( (isset($this->mapdata->nodes[$this->mapdata->segments
+			if ($width>0 &&  
+				(isset($this->mapdata->nodes[$this->mapdata->segments
 								[$id]['to']]) &&
 				 isset($this->mapdata->nodes[$this->mapdata->segments
-				 						[$id]['from']]) ) &&
-		1
+				 						[$id]['from']]) ) 
 		/*
-			($this->map->pt_within_map ($p[0]) || 
+			&& ($this->map->pt_within_map ($p[0]) || 
 				     $this->map->pt_within_map ($p[1]) ) 
 					 */
 					 )
@@ -382,13 +286,13 @@ class Image
 					{
 						$colour = ImageColorAllocate
 						($this->im, $rgb[0],$rgb[1],$rgb[2]);
-						$width = $this->getZoomLevelValue
-							($this->mapdata->segments[$id]["style"]["width"])
-							+2;
 					}
-					ImageSetThickness($this->im, $width);
-					ImageLine($this->im,$this->cnvX($p[0]['x']),$this->cnvY($p[0]['y']),
-								$this->cnvX($p[1]['x']),$this->cnvY($p[1]['y']),$colour);
+					ImageSetThickness($this->im, $width+2);
+					ImageLine($this->im,$this->cnvX($p[0]['x']),
+								$this->cnvY($p[0]['y']),
+								$this->cnvX($p[1]['x']),
+								$this->cnvY($p[1]['y']),$colour);
+
 				}
 			}
 		}	
@@ -396,6 +300,18 @@ class Image
 
 	function draw_landsat()
 	{
+		$bottomleft_ll = $this->map->bottomleft;
+		$topright_ll = $this->map->get_top_right();
+		$img = ImageCreateFromJPEG
+//				("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=".
+		("http://landsat.openstreetmap.org:3128/wms.cgi?request=GetMap&width=".
+	 	                        $this->map->width."&height=".$this->map->height.
+	 	                        "&layers=modis,global_mosaic&styles=".
+								"&srs=EPSG:4326&".
+	 	                        "format=image/jpeg&bbox=$bottomleft_ll[long],$bottomleft_ll[lat],".
+		"$topright_ll[long],$topright_ll[lat]");
+		ImageCopy($this->im,$img,$this->cnvX(0),$this->cnvY(0),0,0,
+						$this->map->width,$this->map->height);
 	}
 
 	function draw_points_of_interest()
@@ -722,30 +638,35 @@ class Image
 		// Get the sampled heights from the .hgt file
 		$sampling_pts=array();
 		$sampled_hgts=load_hgt2($rects,$sampling_pts, $this->debug, 1);
-		// Get the screen coordinates of the sampling points
-		$screen_pts = $this->get_screen_pts ($sampling_pts, $rects[0]);
 
-		if($this->debug)
+		// 250406 test for false return if hgt file couldn't be loaded
+		if($sampled_hgts!==false)
 		{
-			echo "DIMENSIONS : ";
-			print_r($sampling_pts);
-		}
+			// Get the screen coordinates of the sampling points
+			$screen_pts = $this->get_screen_pts ($sampling_pts, $rects[0]);
 
-		// Do each row of the sampling points
-
-		$last_pt = array();	
-	
-		for($row=$sampling_pts['topleft']; 
-			$row<$sampling_pts['topleft']+$sampling_pts['height']*10801;
-			$row+=10801*$sampling_pts['resolution'])
-		{
-			// Do each point of the current row
-			for($pt=$row; $pt<$row+$sampling_pts['width']; 
-					$pt+=$sampling_pts['resolution']) 
+			if($this->debug)
 			{
+				echo "DIMENSIONS : ";
+				print_r($sampling_pts);
+			}
+
+			// Do each row of the sampling points
+
+			$last_pt = array();	
+	
+			for($row=$sampling_pts['topleft']; 
+				$row<$sampling_pts['topleft']+$sampling_pts['height']*10801;
+				$row+=10801*$sampling_pts['resolution'])
+			{
+				// Do each point of the current row
+				for($pt=$row; $pt<$row+$sampling_pts['width']; 
+					$pt+=$sampling_pts['resolution']) 
 				{
-					$this->do_contours($pt,$sampled_hgts,$screen_pts, 50,
+					{
+						$this->do_contours($pt,$sampled_hgts,$screen_pts, 50,
 									$last_pt, $sampling_pts['resolution']);
+					}
 				}
 			}
 		}
@@ -872,13 +793,18 @@ class Image
 
 	function cnvX($x)
 	{
-		return $x+$this->map->width/2;
+		return $x+$this->map->width*$this->extensionFactor();
 	}
 
 	function cnvY($y)
 	{
-		return $y+$this->map->height/2;
+		return $y+$this->map->height*$this->extensionFactor();
 	}
+
+	function extensionFactor()
+	{
+		return ($this->zoom<13) ? 0.5 : 0.5*pow(2,$this->zoom-13);
+	}	
 }
 
 function zIndexCmp($a,$b)

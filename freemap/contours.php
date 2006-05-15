@@ -16,6 +16,8 @@
 # sampling points; this function fills it in.
 #
 # Returns an array of all the heights indexed nationally.
+#
+# 250406 return false if at least one hgt file doesn't exist
 
 function load_hgt2($rects,&$sampling_pts,$dbg,$f)
 {
@@ -24,7 +26,11 @@ function load_hgt2($rects,&$sampling_pts,$dbg,$f)
 	# Do each input rectangle
 	foreach($rects as $rect)
 	{
-		$gb[]=read_hgts2($rect,$sampled_hgts,$dbg,$f);
+		$a=read_hgts2($rect,$sampled_hgts,$dbg,$f);
+		if($a!==false)
+			$gb[] = $a;
+		else
+			return false;
 	}
 
 	# Set the bounds of the aggregated area
@@ -47,12 +53,15 @@ function get_hgt_file2($ll)
 	return $hgtfile;
 }
 
+// 250405 return false if couldn't open file
 function read_hgts2($rect,&$hgt,$dbg,$f)
 {
 	# Get the .hgt file for the current rectangle
 	$hgtfile=get_hgt_file2($rect);
-	$fp=fopen($hgtfile,"r");	
+	$fp=@fopen($hgtfile,"r");	
 
+	if($fp!==false)	
+	{
 	# Get the national index for the top left of this rectangle
 	$gb=gbidx($rect,$rect['top'],$rect['left']);
 
@@ -99,6 +108,8 @@ function read_hgts2($rect,&$hgt,$dbg,$f)
 
 	# Return an array of the nationally-indexed corner points
 	return array("topleft"=>$topleft,"bottomright"=>$bottomright);
+	}
+	return false;
 }
 	
 # Return the "GB index" of a given SRTM sampling point. The "GB index" is

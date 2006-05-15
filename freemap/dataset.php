@@ -4,7 +4,7 @@
 # class representing the set of nodes, segments and ways
 
 require_once('defines.php');
-require_once('osm.php');
+require_once('osmxml.php');
 
 class Dataset
 {

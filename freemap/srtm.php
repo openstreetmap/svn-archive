@@ -278,8 +278,7 @@ else
 if(!isset($error))
 {
 	$image = new SRTMRenderer($bbox[0], $bbox[1], $bbox[2], $bbox[3],
-						$inp["WIDTH"],$inp["HEIGHT"], 
-						$inp["landsat"],$inp["tp"],$inp["debug"]);
+						$inp["WIDTH"],$inp["HEIGHT"], $inp["debug"]);
 }
 
 if (isset($error))

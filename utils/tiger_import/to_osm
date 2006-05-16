@@ -46,6 +46,10 @@ FIRST_FIPS = [
 	"17031",  # Cook (Chicago, IL)
 	"36061",  # New York (Manhattan)
 	"11001",  # District of Columbia (Washington DC)
+	"48201",  # Harris (Houston, TX)
+	"48167",  # Galveston (greater Houston, TX)
+	"48039",  # Brazoria (greater Houston, TX)
+	"48071",  # Chambers (greater Houston, TX)
 ]
 
 def usage

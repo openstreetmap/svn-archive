@@ -87,6 +87,7 @@ class Image
 		$this->styleRules = readStyleRules("freemap.xml");
 		}
 		ImageFill($this->im,100,100,$this->backcol);
+		ImageColorTransparent($this->im,$this->backcol);
 		$this->is_valid = true;
 
 		// 06/06/05 removed hacky path style stuff: 
@@ -128,6 +129,7 @@ class Image
 											$this->map->height);
 
 		ImageFill($im2,100,100,$this->backcol);
+		ImageColorTransparent($im2,$this->backcol);
 		/*
 		ImageTTFText($im2, 8, 0, $this->map->width/2, 
 								$this->map->height/2, $this->black, 

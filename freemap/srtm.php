@@ -56,6 +56,7 @@ class SRTMRenderer
 		$this->contour_colour = ImageColorAllocate($this->im,192,192,0);
 		$this->mint = ImageColorAllocate($this->im,0,192,64);
 		ImageFill($this->im,100,100,$this->backcol);
+		ImageColorTransparent($this->im,$this->backcol);
 	}
 
 	function draw()

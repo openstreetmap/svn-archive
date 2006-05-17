@@ -135,10 +135,11 @@ class Image
 								$this->map->height/2, $this->black, 
 							TRUETYPE_FONT, $this->zoom);
 							*/
-		ImageCopy($im2,$this->im,0,0,$this->map->width*$this->extensionFactor(),
+		ImageCopyMergr($im2,$this->im,0,0,
+					$this->map->width*$this->extensionFactor(),
 					$this->map->height*$this->extensionFactor(),
 					$this->map->width,
-					$this->map->height);
+					$this->map->height, 100);
 		ImagePNG($im2);
 		ImageDestroy($im2);
 		ImageDestroy($this->im);

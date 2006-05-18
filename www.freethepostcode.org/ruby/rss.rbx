@@ -14,8 +14,8 @@ longitude = cgi['longitude'].to_f
 res = dao.call_sql { "select part1, part2, lat, lon, date from codes where confirmed = 1 order by date desc limit 10;" }
 
 
-description = 'New postcodes entered at freethepostcode.org'
- 
+  description = 'New postcodes entered at freethepostcode.org'
+
   rss = Element.new 'rss'
   rss.attributes['version'] = "2.0"
   rss.attributes['xmlns:geo'] = "http://www.w3.org/2003/01/geo/wgs84_pos#"
@@ -47,7 +47,7 @@ description = 'New postcodes entered at freethepostcode.org'
     postcode = row['part1'] + ' ' + row['part2']
 
     title = Element.new 'title', item
-    title.text = 'freethepostcode.org'
+    title.text = postcode
 
     link = Element.new 'link', item
     link.text = "http://www.freethepostcode.org/geocode?lat=#{lat}&lon=#{lon}"

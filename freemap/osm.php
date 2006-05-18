@@ -135,7 +135,7 @@ class Image
 								$this->map->height/2, $this->black, 
 							TRUETYPE_FONT, $this->zoom);
 							*/
-		ImageCopyMergr($im2,$this->im,0,0,
+		ImageCopyMerge($im2,$this->im,0,0,
 					$this->map->width*$this->extensionFactor(),
 					$this->map->height*$this->extensionFactor(),
 					$this->map->width,

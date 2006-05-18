@@ -1,4 +1,0 @@
-// response to a command which failed
-output packet CommandNAcknowledgement (12) {
-  uint8 ID /* the ID of the failing command */;
-}

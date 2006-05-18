@@ -1,3 +1,0 @@
-input packet StaticNavigation (143) {
-	uint8 Enabled /* 0 = no static nav, 1 = static nav mode */;
-}

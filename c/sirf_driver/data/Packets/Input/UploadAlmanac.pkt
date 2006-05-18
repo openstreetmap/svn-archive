@@ -1,3 +1,0 @@
-input packet UploadAlmanac (130) {
-  uint8 Almanac[896] /* Almanac data */;
-}

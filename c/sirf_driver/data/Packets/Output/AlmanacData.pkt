@@ -1,8 +1,0 @@
-// almanac data from the satellites
-// rate: request
-output packet AlmanacData (14) {
-  uint8 ID /* satellite ID */;
-  uint16 Week /* Almanac week (first 10 bits, then 5 zero bits then one one bit) */;
-  uint16 Data[12] /* payload */;
-  uint16 CheckSum /* checksum the data by summing the preceding 13 16-bit words (inc. Week) */;
-}

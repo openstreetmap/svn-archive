@@ -1,5 +1,0 @@
-input packet SetTricklePower (151) {
-	uint16 PushToFixMode /* 0 = no, 1 = wake every 30s */;
-	uint16 DutyCycle = int / 10.0 /* percentage wake time */;
-	uint32 OnTime /* milliseconds on-time per second */;
-}

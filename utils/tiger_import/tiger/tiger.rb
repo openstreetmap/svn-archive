@@ -85,8 +85,8 @@ module Tiger
 				last_tagged_chain = chain.tags.last
 				Street.new(
 					first_tagged_chain.line_id,
-					first_tagged_chain.name,
 					first_tagged_chain.road_type,  # assume first in chain is the representative road type
+					first_tagged_chain.name,
 					first_tagged_chain.from_zip,
 					last_tagged_chain.to_zip,
 					chain.points)
@@ -182,7 +182,7 @@ module Tiger
 				pt.long = long
 				pt
 			end
-			Street.new(line_id, name, road_type, from_zip, to_zip, points)
+			Street.new(line_id, road_type, name, from_zip, to_zip, points)
 		end
 		if should_merge_streets
 			merged_streets = Tiger.merge(streets, min_lat, max_lat, min_long, max_long)

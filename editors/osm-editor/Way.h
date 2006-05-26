@@ -32,14 +32,14 @@ class Way
 {
 private:
 	vector<Segment*> segments;
-	QString type, name;
+	QString type, name, ref;
 	int osm_id;
 
 public:
 	Way()
 	{
 		osm_id = 0;
-		name = type = "";
+		name = type = ref = "";
 	}
 
 	void setSegments(vector<Segment*>&);
@@ -47,6 +47,10 @@ public:
 	void setName(const QString& n) 
 	{
 		name = n;
+	}
+	void setRef(const QString& r) 
+	{
+		ref = r;
 	}
 	void setType(const QString& t) 
 	{
@@ -71,6 +75,10 @@ public:
 	{
 		return type;
 	}
+	QString getRef()
+	{
+		return ref; // eg road number 
+	}
 
 	void wayToOSM(QTextStream&, bool allUid=false);
 
@@ -81,7 +89,10 @@ public:
 
 	void setOSMID(int i)
 	{
+		cerr << "SETTING OSM ID TO " << i << endl;
 		osm_id = i;
+		for(int count=0; count<segments.size(); count++)
+			segments[count]->setWayID(i);
 	}
 
 	QByteArray toOSM();

@@ -224,8 +224,10 @@ void OSMParser2::readNodeTags(const QString& key, const QString& value,
 {
 	if(key=="name")
 		name = value;
-	else if (key=="class")
+	else if(key=="class")
 		type = value;
+	else if (nodeHandler.keyExists(key))
+		type=nodeHandler.getNodeType(key,value);
 }
 
 }

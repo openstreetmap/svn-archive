@@ -22,6 +22,8 @@
 #include <iostream>
 using namespace std;
 
+#include <cmath>
+
 namespace OpenStreetMap
 {
 
@@ -295,10 +297,10 @@ void LandsatManager2::grabTilesNew()
 			<< endl;
 	cerr << "topRight: lon=" << topRight.x << " lat=" <<topRight.y
 			<< endl;
-	int lonmin = ( (int)((bottomLeft.x*1000000) / llstep)) * llstep,
-	    lonmax = ( (int)((topRight.x*1000000) / llstep)) * llstep,
-	    latmin = ( (int)((bottomLeft.y*1000000) / llstep)) * llstep,
-	    latmax = ( (int)((topRight.y*1000000) / llstep)) * llstep;
+	int lonmin = ( floor((bottomLeft.x*1000000) / llstep)) * llstep,
+	    lonmax = ( ceil((topRight.x*1000000) / llstep)) * llstep,
+	    latmin = ( floor((bottomLeft.y*1000000) / llstep)) * llstep,
+	    latmax = ( ceil((topRight.y*1000000) / llstep)) * llstep;
 
 
 	cerr << "lonmin:" << lonmin << endl;

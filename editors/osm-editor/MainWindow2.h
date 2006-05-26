@@ -30,6 +30,7 @@
 #include "HTTPHandler.h"
 #include "NodeHandler.h"
 #include "Way.h"
+#include "SegSplitter.h"
 #include <map>
 #include <vector>
 
@@ -183,6 +184,8 @@ private:
 	Way *newUploadedWay;
 	QPixmap savedPixmap;
 
+	SegSplitter *splitter;
+
 	bool makingWay;
 
 	QString serialPort;
@@ -276,13 +279,13 @@ public slots:
 	void handleNetCommError(const QString& error);
 	void toggleWays();
 	void uploadWay();
-	void deleteWay();
-	void addSplitSegs(void*);
 	void doaddseg(void*);
 	void changeSerialPort();
 	void uploadNewWaypoints();
 	void grabGPXFromNet();
 	void loadOSMTracks(const QByteArray& array,void*);
+	void splitterDone();
+	void changeWayDetails();
 
 signals:
 	void newNodeAddedSig();

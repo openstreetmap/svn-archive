@@ -44,9 +44,11 @@ WaypointDialogue::WaypointDialogue(QWidget* parent,
 	typeComboBox = new QComboBox(this);
 	int index=0;
 	layout->addWidget(new QLabel("Waypoint type:",this),0,0);
+	cerr<<"going through waypoint types"<<endl;
 	for(std::map<QString,WaypointRep*>::const_iterator i=waypointReps.begin();
 		i!=waypointReps.end(); i++)
 	{
+		cerr<<"first: " << i->first << endl;
 		typeComboBox->insertItem (i->second->getImage(),i->first);
 		if(i->first == origType)
 			typeComboBox->setCurrentItem(index);

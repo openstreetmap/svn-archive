@@ -145,7 +145,7 @@ public:
 
 	bool belongsToWay()
 	{
-		return wayStatus;
+		return way_id>0;
 	}
 
 	void setWayID(int id)

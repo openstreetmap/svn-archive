@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "NodeMetaDataHandler.h"
 
 /*
     Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
@@ -33,8 +34,15 @@ int Node::toOSM(QTextStream& outfile, bool allUid)
     
     if(name != "")
         outfile << "<tag k='name' v='" << name << "'/>" << endl;
+
+	// 180506 handle new style keys (ie. not class)
     if(type != "")
-        outfile << "<tag k='class' v='" << type << "'/>" << endl;
+	{
+		NodeMetaDataHandler mdh;
+		NodeMetaData md = mdh.getMetaData(type);
+		if(md.key!="" || md.value!="")
+        	outfile << "<tag k='"<<md.key<<"' v='" << md.value << "'/>" << endl;
+	}
     outfile << "</node>" << endl;
 }
 

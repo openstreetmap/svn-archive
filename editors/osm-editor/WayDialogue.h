@@ -34,13 +34,16 @@ class WayDialogue: public QDialog
 		
 private:
 	QComboBox * typeComboBox;
-	QLineEdit * nameEdit;
+	QLineEdit * nameEdit, *refEdit;
 
 public:
-	WayDialogue(QWidget* parent, const vector<QString>&);
+	WayDialogue(QWidget* parent, const vector<QString>&,
+					const QString& name="",const QString& type="",
+					const QString& ref="");
 
 	QString getType() { return typeComboBox->currentText(); }
 	QString getName() { return nameEdit->text(); }
+	QString getRef() { return refEdit->text(); }
 
 };
 

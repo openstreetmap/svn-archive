@@ -230,6 +230,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QPixmap gpx = mmLoadPixmap("images","gpx.png");
     QPixmap landsat = mmLoadPixmap("images","landsat.png");
     QPixmap contours = mmLoadPixmap("images","contours.png");
+    QPixmap editway = mmLoadPixmap("images","help.png");
 
     new QToolButton(left_pixmap,"Move left","",this,SLOT(left()),toolbar);
     new QToolButton(right_pixmap,"Move right","",this,SLOT(right()),toolbar);
@@ -271,10 +272,11 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
             (uploadways,"Upload current way","",this,
              SLOT(uploadWay()),toolbar2);
 	
-	/*
+	
     new QToolButton
-            (waydelete,"Delete Way","",this,SLOT(deleteWay()),toolbar2);
-			*/
+            (editway,"Way Details/Edit Way","",this,
+             SLOT(changeWayDetails()),toolbar2);
+
 			
     osmButton = new QToolButton
             (osm,"OSM Data On/Off","",this,
@@ -347,17 +349,10 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
                     "images/station.png", "Helvetica",10,Qt::red);
     nodeReps["mast"] = new WaypointRep(
                     "images/mast.png");
-    nodeReps["locality"] = new WaypointRep("images/node.png",
-                    "Helvetica",12,Qt::black);
     nodeReps["point of interest"] = new WaypointRep
             ("images/interest.png");
     nodeReps["suburb"] = new WaypointRep(
             "images/place.png","Helvetica",16, Qt::black);
-    nodeReps["caution"] = new WaypointRep(
-                    "images/caution.png");
-    nodeReps["amenity"] = new WaypointRep(
-                    "images/amenity.png","Helvetica",8, Qt::red);
-
     nodeReps["trackpoint"] = new WaypointRep(
                     "images/trackpoint.png","Helvetica",8,Qt::black);
     nodeReps["node"] = new WaypointRep(
@@ -370,7 +365,6 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     nodeReps["restaurant"] = new WaypointRep(
                     "images/restaurant.png","Helvetica",8,QColor(128,0,0));
     nodeReps["bridge"] = new WaypointRep("images/bridge.png");
-    nodeReps["tunnel"] = new WaypointRep("images/tunnel.png");
     nodeReps["tea shop"] = new WaypointRep(
                     "images/teashop.png","Helvetica",8,Qt::magenta);
     nodeReps["country park"] = new WaypointRep("images/park.png",
@@ -409,6 +403,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 	serialPort = "/dev/ttyS0";
 
 	selWay = NULL;
+	splitter = NULL;
 }
 
 MainWindow2::~MainWindow2()
@@ -1026,14 +1021,17 @@ void MainWindow2::drawNode(QPainter& p,Node* node)
     ScreenPos pos = map.getScreenPos(node->getLon(),node->getLat());
     if(map.pt_within_map(pos))
     {
-        WaypointRep* img=nodeReps[node->getType()];
-        if(img) img->draw(p,pos.x,pos.y,node->getName());
+		if(nodeReps.find(node->getType()) != nodeReps.end())
+		{
+        	WaypointRep* img=nodeReps[node->getType()];
+        	if(img) img->draw(p,pos.x,pos.y,node->getName());
 
-        if(node==pts[0] || node==pts[1] || node==movingNode)
-        {
-            p.setPen(QPen(Qt::red,3));
-            p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
-        }
+        	if(node==pts[0] || node==pts[1] || node==movingNode)
+        	{
+            	p.setPen(QPen(Qt::red,3));
+            	p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
+        	}
+		}
     }
 }
 
@@ -1170,34 +1168,14 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 					
             break;
 		case ACTION_BREAK_SEG:
-			if(selSeg.size()==1)
+			if(selSeg.size()==1 && splitter==NULL)
 			{
-                n = components->getNearestNode(p.y,p.x,LIMIT);
-                if(!n)
-                    n=components->addNewNode(p.y,p.x,"","node");
-				std::pair<Segment*,Segment*>* segments = 
-						components->breakSegment(selSeg[0],n);
-				QString url = "/api/0.3/segment/0";
-				osmhttp.setAuthentication(username, password);
-
-				nodeHandler.setEmit(segments,this,SLOT(addSplitSegs(void*)));
-
-				if(n->getOSMID()<=0)
-				{
-					osmhttp.scheduleCommand("PUT","/api/0.3/node/0",n->toOSM(),
-						&nodeHandler,
-						SLOT(newNodeAdded(const QByteArray&,void*)),
-						n);
-				}
-
-				url.sprintf("/api/0.3/segment/%d",selSeg[0]->getOSMID());
-				cerr<<"DELETE: URL is: " << url << endl;
-				osmhttp.scheduleCommand("DELETE",url);
-		
-
-				cerr<<"breakSeg(): CLEARING SEGMENTS"<<endl;
-				clearSegments();
-
+				splitter = new SegSplitter;
+				splitter->setComponents(components);
+				splitter->setHTTPHandler(&osmhttp);
+				splitter->splitSeg(selSeg[0],p,LIMIT);
+				QObject::connect(splitter,SIGNAL(done()),this,
+									SLOT(splitterDone()));
 			}
 			break;
 
@@ -1275,6 +1253,8 @@ void MainWindow2::editNode(int x,int y,int limit)
     if((nearest=components->getNearestNode(p.y,p.x,LIMIT)) != NULL)
     {
         cerr<<"creating waypoint dialogue" << endl;
+		cerr<<"nearest->getName()=" << nearest->getName() << endl;
+		cerr<<"nearest->getType()=" << nearest->getType() << endl;
         d = new WaypointDialogue
                     (this,nodeReps,"Edit node",
                     nearest->getType(),nearest->getName());
@@ -1641,9 +1621,20 @@ void MainWindow2::deleteSelectedSeg()
         if(liveUpdate && selSeg[0]->getOSMID()>0)
         {
             QString url;
+			int wayID;
             url.sprintf ("/api/0.3/segment/%d", selSeg[0]->getOSMID());
             osmhttp.setAuthentication(username, password);
             osmhttp.scheduleCommand("DELETE", url);
+
+			// 180506 If the segment is in a way, remove the segment from the
+			// way and upload the changes to OSM
+			if(wayID=selSeg[0]->getWayID())
+			{
+				Way *w = components->getWay(wayID);
+				w->removeSegment(selSeg[0]);
+            	url.sprintf ("/api/0.3/way/%d", wayID);
+				osmhttp.scheduleCommand("PUT",url);
+			}
         }
 		cerr<<"deleteSelectedSeg(): setting segmnet to NULL" << endl;
         delete selSeg[0];
@@ -1726,6 +1717,7 @@ void MainWindow2::uploadWay()
 	{
 		way->setName(wd->getName());
 		way->setType(wd->getType());
+		way->setRef(wd->getRef());
 		QByteArray xml = way->toOSM();
 		cerr<<"way xml is: "<<xml<<endl;
 		components->addWay(way);
@@ -1745,6 +1737,39 @@ void MainWindow2::uploadWay()
 	}
 }
 
+void MainWindow2::changeWayDetails()
+{
+	vector<QString> segTypes;
+
+	cerr<<"filling segTypes"<<endl;
+    for(std::map<QString,QPen>::iterator i=segpens.begin(); i!=segpens.end();
+        i++)
+    {
+        segTypes.push_back(i->first);
+    }
+
+	if(selWay)
+	{
+		WayDialogue *wd = new WayDialogue(this,segTypes,selWay->getName(),
+									selWay->getType(),selWay->getRef());
+		if(wd->exec())
+		{
+			selWay->setName(wd->getName());
+			selWay->setType(wd->getType());
+			selWay->setRef(wd->getRef());
+			QByteArray xml = selWay->toOSM();
+			if(liveUpdate)
+			{
+				QString url;
+				url.sprintf("/api/0.3/way/%d", selWay->getOSMID());
+				osmhttp.setAuthentication(username, password);
+				osmhttp.scheduleCommand("PUT",url,xml);
+			}
+		}
+		delete wd;
+	}
+}
+
 // doAddNewNode()
 // 240306
 // adds a new node to the components and uploads it if in live update mode.
@@ -1752,6 +1777,7 @@ void MainWindow2::uploadWay()
 Node *MainWindow2::doAddNewNode(double lat,double lon,const QString &name,
 									const QString& type)
 {
+	cerr<<"doAddNewNode: name=" << name << " type=" << type<<endl;
 	Node *n = components->addNewNode(lat,lon,name,type);
 	if(liveUpdate)
 	{
@@ -1759,40 +1785,19 @@ Node *MainWindow2::doAddNewNode(double lat,double lon,const QString &name,
 		QByteArray xml = n->toOSM();
 		QString url = "/api/0.3/node/0";
 		osmhttp.setAuthentication(username, password);
-		newUploadedNode = n;
 		osmhttp.scheduleCommand("PUT",url,xml,
 						&nodeHandler,
 						SLOT(newNodeAdded(const QByteArray&,void*)),
-						newUploadedNode);
+						n);
 	}
 	return n;
 }
 
-
-void MainWindow2::addSplitSegs(void *splitsegs)
+void MainWindow2::splitterDone()
 {
-		nodeHandler.discnnect();
-
-		std::pair<Segment*,Segment*>* segments = 
-				(std::pair<Segment*,Segment*>*)splitsegs;
-
-		cerr<<"addSplitSegs()"<<endl;
-		QString a = segments->first->toOSM();
-		QString b = segments->second->toOSM();
-		cerr<<"segments->first->toOSM()" << a << endl;
-		cerr<<"segments->second->toOSM()" << b << endl;
-		osmhttp.scheduleCommand("PUT","/api/0.3/segment/0",
-								segments->first->toOSM(),
-						this,SLOT(newSegmentAdded(const QByteArray&,void*)),
-						segments->first);
-
-		osmhttp.scheduleCommand("PUT","/api/0.3/segment/0",
-								segments->second->toOSM(),
-						this,SLOT(newSegmentAdded(const QByteArray&,void*)),
-						segments->second);
-
-		delete splitsegs; // the pair was originally dynamically allocated
-
+	delete splitter;
+	splitter = NULL;
+	update();
 }
 
 void MainWindow2::doaddseg(void *sg)
@@ -1821,25 +1826,6 @@ void MainWindow2::changeSerialPort()
 						QLineEdit::Normal, serialPort);
 }
 	
-void MainWindow2::deleteWay()
-{
-	/*
-	QMessageBox::information(this,
-                        "Not implemented yet!",
-                        "Not implemented yet!");
-	*/
-
-	QString url;
-
-	QString wayID = QInputDialog::getText("Enter way ID",
-						"Enter way ID to delete: ");
-	cerr<<"wayID=" << wayID << endl;
-	url = "/api/0.3/way/" + wayID;
-	cerr<<"URL=" << url << endl;
-	osmhttp.setAuthentication(username, password);
-	osmhttp.scheduleCommand("DELETE", url);
-}
-
 void MainWindow2::uploadNewWaypoints()
 {
 	vector<Node*> newNodes = components->getNewNodes();
@@ -1850,7 +1836,9 @@ void MainWindow2::uploadNewWaypoints()
 	for(int count=0; count<newNodes.size(); count++)
 	{
 		if(newNodes[count]->getType()!="trackpoint" &&
-			newNodes[count]->getType()!="node")
+			newNodes[count]->getType()!="node" &&
+			// Stop people uploading those ****** Garmin waypoints !!!!
+			newNodes[count]->getName().left(3)!="GRM") 
 		{
 			osmhttp.scheduleCommand("PUT",url,newNodes[count]->toOSM(),
 								&nodeHandler,

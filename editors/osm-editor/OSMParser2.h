@@ -23,6 +23,7 @@
 #include <qxml.h>
 #include "Components2.h"
 #include "RouteMetaDataHandler.h"
+#include "NodeMetaDataHandler.h"
 
 #include <map>
 
@@ -40,6 +41,7 @@ private:
 	int curID;
 	RouteMetaData metaData;
 	Way *curWay;
+	NodeMetaDataHandler nodeHandler;
 
 public:
 	bool startDocument();
@@ -57,7 +59,7 @@ public:
 	~OSMParser2() {} 
 	static void readSegTags(const QString &key, const QString& value,
 							RouteMetaData&);
-	static void readNodeTags(const QString& key, const QString& value,
+	void readNodeTags(const QString& key, const QString& value,
 									QString& name,QString &type);
 };
 

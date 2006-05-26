@@ -44,6 +44,8 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
     //  avoid dumping the name too many times
     if(name!="")
         outfile << "<tag k='name' v='" << name << "' />" << endl;
+    if(ref!="")
+        outfile << "<tag k='ref' v='" << ref << "' />" << endl;
 
 	// 130506 use new style tags e.g. highway
     RouteMetaDataHandler mdh;
@@ -106,6 +108,10 @@ bool Way::addSegmentAt(int index, Segment *s)
 	vector<Segment*>::iterator i = segments.begin() + index;
 	if(i!=segments.end())
 	{
+		s->setWayID(osm_id);
+		if(type!="")
+			s->setType(type);
+		s->setWayStatus(true);
 		segments.insert(i,s);
 		return true;
 	}

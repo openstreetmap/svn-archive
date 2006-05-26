@@ -13,7 +13,8 @@ OBJ2 = osmeditor2.o MainWindow2.o GPSDevice2.o LandsatManager2.o \
 	  RouteMetaDataHandler.o LoginDialogue.o moc_MainWindow2.o \
 	  SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o GPXParser2.o \
 	  OSMParser2.o qmdcodec.o HTTPHandler.o moc_HTTPHandler.o Way.o \
-	  NodeHandler.o moc_NodeHandler.o moc_LandsatManager2.o
+	  NodeHandler.o moc_NodeHandler.o moc_LandsatManager2.o SegSplitter.o \
+	  moc_SegSplitter.o NodeMetaDataHandler.o
 JEEPSSRC = jeeps-gpsbabel-1.2.7
 LIBS = -ljeeps 
 LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
@@ -95,3 +96,5 @@ Way.o : Way.h
 qmdcodec.o: qmdcodec.h
 HTTPHandler.o : HTTPHandler.h
 NodeHandler.o : NodeHandler.h
+SegSplitter.o : SegSplitter.h Segment.h Node.h Way.h Components2.h HTTPHandler.h
+NodeMetaDataHandler.o : NodeMetaDataHandler.h

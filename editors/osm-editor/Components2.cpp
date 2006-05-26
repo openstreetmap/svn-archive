@@ -400,25 +400,16 @@ std::pair<Segment*,Segment*>*
 	int wayID;
 	std::pair<Segment*,Segment*>* p = new std::pair<Segment*,Segment*>;
 	p->first = new Segment(s->firstNode(),newNode,"",s->getType());
-	p->second =	new Segment(s->secondNode(),newNode,"",s->getType());
-	p->first->setWayID(s->getWayID());
-	p->second->setWayID(s->getWayID());
+	p->second =	new Segment(newNode,s->secondNode(),"",s->getType());
 
 	segments.push_back(p->first);
 	segments.push_back(p->second);
 
 	// If the segment is in a way, remove it from the way and add the two
 	// new segments to the way at the appropriate position
-	if(wayID=s->getWayID())
-	{
-		Way *w = getWay(wayID);
-		int i = w->removeSegment(s);
-		if(i>=0)
-		{
-			w->addSegmentAt(i,p->second);
-			w->addSegmentAt(i,p->first);
-		}
-	}
+	
+	// 180506 no longer do this, do separately as it makes code which also
+	// uploads the changes to OSM easier
 
 	deleteSegment(s);
 

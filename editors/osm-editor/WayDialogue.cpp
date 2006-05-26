@@ -26,25 +26,39 @@ namespace OpenStreetMap
 {
 
 WayDialogue::WayDialogue(QWidget* parent,
-								 const vector<QString>& segTypes) : 
+								 const vector<QString>& segTypes,
+								 const QString& name,const QString& type,
+								 const QString& ref) : 
 				QDialog(parent,"",true)
 {
 	setCaption("Enter way details");
 
+	int itemIndex=0;
+
 	QVBoxLayout *topL = new QVBoxLayout(this);
-	QGridLayout *layout = new QGridLayout(topL,2,2);
+	QGridLayout *layout = new QGridLayout(topL,3,2);
 	layout->setMargin(10);
 	layout->setSpacing(20);
 
 	typeComboBox = new QComboBox(this);
 	layout->addWidget(new QLabel("Way type:",this),0,0);
 	for(int count=0; count<segTypes.size(); count++)
+	{
 		typeComboBox->insertItem (segTypes[count]);
+		if(segTypes[count]==type)
+			itemIndex = count;
+	}
+	typeComboBox->setCurrentItem(itemIndex);
 
 	layout->addWidget(typeComboBox,0,1);
 	layout->addWidget(new QLabel("Name:",this),1,0);
 	nameEdit = new QLineEdit(this);
+	nameEdit->setText(name);
 	layout->addWidget(nameEdit,1,1);
+	layout->addWidget(new QLabel("Number:",this),2,0);
+	refEdit = new QLineEdit(this);
+	refEdit->setText(ref);
+	layout->addWidget(refEdit,2,1);
 	QHBoxLayout *okcL=new QHBoxLayout(topL);
 	QPushButton *ok=new QPushButton("OK",this),
 				*cancel=new QPushButton("Cancel",this);

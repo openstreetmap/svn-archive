@@ -408,6 +408,7 @@ demonize do
 			throw "Could not find TIGER ZIP for FIPS \"#{fips}\"" if streets.nil?
 		end
 		streets_i = i - indices.fips_to_range(fips).first
+		sleep(3)  # let the server breath
 		create_street(streets[streets_i]) unless DEBUG
 		$stderr.puts "[#{Time.now}] created street[#{i}], #{streets_i+1} / #{streets.length} in FIPS #{fips}"
 		true  # we've finished this street

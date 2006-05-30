@@ -399,6 +399,7 @@ demonize do
 					out.puts way_id
 					out.flush
 				}
+				sleep(3)  # let the server catch its breath
 			end
 		end
 	end

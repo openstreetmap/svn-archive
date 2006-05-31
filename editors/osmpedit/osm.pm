@@ -306,6 +306,7 @@ sub parse {
 	    return;
 	}
 	my $t;
+	my $current_node_or_segment = 0;
 	while (1) {
 	    eval {$t = $p->get_tag() };
 	    if ($@) {
@@ -314,40 +315,44 @@ sub parse {
 	    last unless $t;
 	    if ($t->is_start_tag) {
 		my $name = "$t->[0]";
-#	    print STDERR "$name\n";
+##		print STDERR "$name\n";
 		if ($name eq "node") {
 		    my $attr = $t->attr;
 		    my $lat = $attr->{lat};
 		    my $lon = $attr->{lon};
 		    my $uid = $attr->{uid};
-		    my $tags = $attr->{tags};
-##		    print STDERR "NODE $lat $lon $uid $tags\n";
-		    if ($tags) {
+		    print STDERR "NODE $lat $lon $uid\n";
+##		    if ($tags) {
 #			print STDERR "Node tags: $tags\n";
-		    }
+##		    }
 		    my $node = new osmnode;
 		    $node->set_lat ($lat);
 		    $node->set_lon ($lon);
 		    $node->set_uid ($uid);
-		    $node->set_tags ($tags);
 		    $self->add_node ($node);
+		    $current_node_or_segment = $node;
+		}
+		if ($name eq "tag") {
+		    my $attr = $t->attr;
+		    my $k = $attr->{k};
+		    my $v = $attr->{v};
+		    print STDERR "TAG $k: $v\n";
+#		    $node->set_tags ($tags);
+		    $current_node_or_segment->add_key_value ($k, $v);
 		}
 		if ($name eq "segment") {
 		    my $attr = $t->attr;
 		    my $from = $attr->{from};
 		    my $to = $attr->{to};
 		    my $uid = $attr->{uid};
-		    my $tags = $attr->{tags};
-##		    print STDERR "SEGMENT $from $to $uid\n";
-		    if ($tags) {
-###			print STDERR "Segment tags: $tags\n";
-		    }
+		    print STDERR "SEGMENT $from $to $uid\n";
 		    my $s = new osmsegment;
 		    $s->set_from ($from);
 		    $s->set_to ($to);
 		    $s->set_uid ($uid);
-		    $s->set_tags ($tags);
+##		    $s->set_tags ($tags);
 		    $self->add_segment ($s);
+		    $current_node_or_segment = $s;
 		}
 	    }
 	}

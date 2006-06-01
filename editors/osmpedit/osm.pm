@@ -320,11 +320,8 @@ sub parse {
 		    my $attr = $t->attr;
 		    my $lat = $attr->{lat};
 		    my $lon = $attr->{lon};
-		    my $uid = $attr->{uid};
-		    print STDERR "NODE $lat $lon $uid\n";
-##		    if ($tags) {
-#			print STDERR "Node tags: $tags\n";
-##		    }
+		    my $uid = $attr->{id};
+##		    print STDERR "NODE $lat $lon $uid\n";
 		    my $node = new osmnode;
 		    $node->set_lat ($lat);
 		    $node->set_lon ($lon);
@@ -336,7 +333,7 @@ sub parse {
 		    my $attr = $t->attr;
 		    my $k = $attr->{k};
 		    my $v = $attr->{v};
-		    print STDERR "TAG $k: $v\n";
+##		    print STDERR "TAG $k: $v\n";
 #		    $node->set_tags ($tags);
 		    $current_node_or_segment->add_key_value ($k, $v);
 		}
@@ -344,8 +341,8 @@ sub parse {
 		    my $attr = $t->attr;
 		    my $from = $attr->{from};
 		    my $to = $attr->{to};
-		    my $uid = $attr->{uid};
-		    print STDERR "SEGMENT $from $to $uid\n";
+		    my $uid = $attr->{id};
+#		    print STDERR "SEGMENT $from $to $uid\n";
 		    my $s = new osmsegment;
 		    $s->set_from ($from);
 		    $s->set_to ($to);
@@ -423,8 +420,8 @@ sub draw {
 
     foreach my $segment ($self->get_segments ()) {
 	my $uid = $segment->get_uid ();
-	
 
+	
 	my ($x0, $y0, $x1, $y1) = $self->get_segment_canvas_coords ($landsat,
 								    $segment);
 	next unless ($x0);

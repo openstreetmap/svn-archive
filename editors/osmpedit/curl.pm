@@ -21,6 +21,8 @@ use lib "$RealBin/../perl";
 
 use strict;
 
+my $urlbase = "http://www.openstreetmap.org/api/0.3/";
+
 #BEGIN {
 #    my $easy = 1;
 #    foreach my $prefix (@INC) {
@@ -122,9 +124,7 @@ sub grab_osm {
     my $username = shift;
     my $password = shift;
 
-#    my $urlbase = "http://www.openstreetmap.org/api/0.2/map";
-    my $urlbase = "http://www.openstreetmap.org/api/0.3/map";
-    my $url = "$urlbase?bbox=$west,$south,$east,$north";
+    my $url = "$urlbase/map?bbox=$west,$south,$east,$north";
 
     print STDERR "URL:$url\n";
 ##    print STDERR "$username:$password";
@@ -155,8 +155,6 @@ sub get {
     my $username = shift;
     my $password = shift;
 
-#    my $urlbase = "http://www.openstreetmap.org/api/0.2/";
-    my $urlbase = "http://www.openstreetmap.org/api/0.3/";
     my $url = "$urlbase$suffixdata";
 
     print STDERR "URL:$url\n";
@@ -196,8 +194,6 @@ sub delete {
     my $username = shift;
     my $password = shift;
 
-#    my $urlbase = "http://www.openstreetmap.org/api/0.2/";
-    my $urlbase = "http://www.openstreetmap.org/api/0.3/";
     my $url = "$urlbase$suffixdata";
 
     print STDERR "URL:$url\n";
@@ -249,8 +245,6 @@ sub put_data {
     my $body = "";
     my $header = "";
 
-#    my $urlbase = "http://www.openstreetmap.org/api/0.2/";
-    my $urlbase = "http://www.openstreetmap.org/api/0.3/";
     my $url = "$urlbase$suffixdata";
 
     print STDERR "URL:$url\n";

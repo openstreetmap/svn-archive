@@ -32,11 +32,11 @@ sub create_node {
 
 ##    print STDERR "NEW NODE: $lat $lon\n";
     my $data = "<osm version='0.2'>
-<node lon='$lon' tags='$tags' lat='$lat'/>
+<node id='0' lon='$lon' tags='$tags' lat='$lat'/>
 </osm>";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";
-    my $uid = curl::put_data ("newnode", $data, $username, $password);
+    my $uid = curl::put_data ("node/0", $data, $username, $password);
     if ($uid < 0) {
 	$uid = 0;
     }
@@ -129,11 +129,11 @@ sub create_segment {
     my $username = shift;
     my $password = shift;
     my $data = "<osm version='0.2'>
-<segment tags='$tags' from='$from' to='$to'/>
+<segment id='0' tags='$tags' from='$from' to='$to'/>
 </osm>";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";
-    my $uid = curl::put_data ("newsegment", $data, $username, $password);
+    my $uid = curl::put_data ("segment/0", $data, $username, $password);
     if ($uid < 0) {
 	$uid = 0;
     }

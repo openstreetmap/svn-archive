@@ -144,7 +144,7 @@ class Dataset
 			$this->nodes[$row["id"]] = $curNode;
 		}
 */		
-		//$this->get_ways_from_segments(array_keys($this->segments));
+		$this->get_ways_from_segments(array_keys($this->segments));
 
 	}
 
@@ -154,19 +154,28 @@ class Dataset
 	{
 		$type="way";
 		$segment_clause = "(".implode(",",$segment_ids).")";
+		/* 
 		$sql =  
      		"select g.id from ${type}s as g, 
-        (select id, max(version) as version from ${type}s where id in ".
+        (select id, tags, max(version) as version from ${type}s where id in ".
 		" (select distinct a.id from ".
             "(select id, max(version) as version from ${type}_segments where ".
 			"id in (select id from ${type}_segments where segment_id in ".
 			"${segment_clause}) group by id) as a ".
           ") group by id".
          ") as b where g.id = b.id and g.version = b.version and g.visible=1 ";
-          
-		$result=mysql_query($sql);
+		 */
+         
+		 /* This can be simplified enormously for our purposes */
+
+		$sql = "select id from ${type}_segments where segment_id in ".
+				"${segment_clause} group by id";
+
+		$result=mysql_query($sql) or die(mysql_error());
 		while($row=mysql_fetch_array($result))
+		{
 			$this->get_way($row["id"]); 
+		}
 	}
 
 	// Adapted from same function in dao.rb
@@ -174,6 +183,10 @@ class Dataset
 	function get_way($way_id,$version=null) 
 	{
 		$type="way";
+		$this->ways[$way_id] = array();
+
+		/* this stuff is not necessary for our purposes....
+
       	$clause = ' order by version desc limit 1;';
 	  	if($version)
       		$clause = " and version = ${version} ";
@@ -193,14 +206,21 @@ class Dataset
 	  	}
 
       	if(!$version) return null;
+		*/
+		
 
-	  	$sql= "select k,v from ${type}_tags where id = $way_id and ".
-	  		"version = $version";
+	  	$sql= "select k,v from ${type}_tags where id = $way_id";
+		
+		// again remove version stuff and ".  "version = $version";
 
       	$result = mysql_query($sql);
       	$this->ways[$way_id]["tags"] = array();
 	  	while($row=mysql_fetch_array($result))
 			$this->ways[$way_id]["tags"][$row["k"]]=$row["v"];
+	
+		// might this be quicker?  - NO
+		//$this->ways[$way_id]["tags"] =$this->get_tag_array($row["tags"]);
+		
 
       	# if looking at an old version then get segments as they were then
       	$tclause = '';
@@ -208,12 +228,26 @@ class Dataset
 	  	// not sure about this
       	//$tclause = " and timestamp <= '${timestamp}' " unless version.nil?
 
+		// this gets the segments so is necessary
+		// but take version stuff out
+		/*
       	$result = mysql_query( 
 	  	"select id as n from (select * from (select segments.id, visible, ".
 		"timestamp from ${type}_segments left join segments on ".
 		"${type}_segments.segment_id = segments.id where ${type}_segments.id ".
-		"= $way_id and version = ${version} ${tclause} order by id, ".
+		"= $way_id order by id, ".
 		"timestamp desc) as a group by id) as b where visible = 1;" );
+		*/
+
+		/*
+	
+		The above can be simplified enormously if we aren't doing
+		versioning !!!
+
+		*/
+
+		$result = mysql_query("select segment_id as n from ${type}_segments where id = $way_id");
+
 
 	  	$this->ways[$way_id]["segs"]=array();
 	  	while($row=mysql_fetch_array($result))
@@ -233,16 +267,6 @@ class Dataset
 		return $tags;
 	}
 
-	function give_segs_waytags()
-	{
-		foreach($this->ways as $way)
-		{
-			foreach($way["segs"] as $wayseg)
-			{
-				$this->segments[$wayseg]["tags"] = $way["tags"];
-			}
-		}
-	}
 
 	function dump()
 	{
@@ -322,6 +346,17 @@ class Dataset
 		$this->nodes = $data["nodes"];
 		$this->segments = $data["segments"];
 		$this->ways = $data["ways"];
+	}
+
+	function give_segs_waytags()
+	{
+		foreach($this->ways as $way)
+		{
+			foreach($way["segs"] as $wayseg)
+			{
+				$this->segments[$wayseg]["tags"] = $way["tags"];
+			}
+		}
 	}
 }
 ?>

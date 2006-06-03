@@ -18,6 +18,7 @@ use HTTP::Request;
 use IO::File;
 use Pod::Usage;
 use Storable ();
+use POSIX qw(ceil floor);
 
 my $current_file ="planet-2006-05-01.osm.bz2";
 
@@ -527,8 +528,8 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
 	$max_dist=max($dist,$max_dist);
    	$min_dist=min($dist,$min_dist);
 	my $dist_range = int($dist/1)*1;
-	$dist_range = int($dist*10)/10 if $dist < 1;
-	$dist_range = int($dist*100)/100 if $dist < 0.1;
+	$dist_range = floor($dist*10)/10 if $dist < 1;
+	$dist_range = floor($dist*100)/100 if $dist < 0.1;
 	$dist_ranges->{$dist_range}++;
     }
 
@@ -562,7 +563,7 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
 	my $count =0;
 	for my $v ( sort keys %{$values}){
 	    html_out("statistics-segments","$v($values->{$v}), ");
-	    if ( $count++ > 20 ){ html_out("statistics-segments","..."); last};
+	    if ( $count++ > 100 ){ html_out("statistics-segments","..."); last};
 	}
 	html_out("statistics-segments","</td>");
 	html_out("statistics-segments","</tr>\n");
@@ -653,7 +654,7 @@ sub check_osm_nodes() {
 	my $count =0;
 	for my $v ( sort keys %{$values}){
 	    html_out("statistics-nodes","$v($values->{$v}), ");
-	    if ( $count++ > 20 ){ html_out("statistics-nodes","..."); last};
+	    if ( $count++ > 100 ){ html_out("statistics-nodes","..."); last};
 	}
 	html_out("statistics-nodes","</td>");
 	html_out("statistics-nodes","</tr>\n");
@@ -680,8 +681,8 @@ sub check_osm_nodes() {
 	my $node0=$osm_nodes->{$nodes->[0]};
 	my $node_lat = $node0->{lat};
 	my $node_lon = $node0->{lon};
-	my $lat = int($node_lat/10)*10;
-	my $lon = int($node_lon/10)*10;
+	my $lat = floor($node_lat/5)*5;
+	my $lon = floor($node_lon/5)*5;
 	$count->{"node-$lat-$lon"}->{points}++;
 	if ( @{$nodes} > 1 ) {
 	    $count->{"node-$lat-$lon"}->{err}++;
@@ -715,8 +716,9 @@ sub check_osm_nodes() {
 	     "<th>File Size</th>".
 	     "<th>Errors</th>".
 	     "</tr>\n");
-    for  ( my $lat=-180 ; $lat<180 ; $lat+=10 ) {
-	for  ( my $lon=-90 ; $lon<90 ; $lon+=10 ) {
+    my $step=5;
+    for  ( my $lat=-180 ; $lat<180 ; $lat+=$step ) {
+	for  ( my $lon=-90 ; $lon<90 ; $lon+=$step ) {
 	    my $count_err    = $count->{"node-$lat-$lon"}->{err};
 	    my $count_points = $count->{"node-$lat-$lon"}->{points};
 	    next unless $count_points;
@@ -738,9 +740,9 @@ sub check_osm_nodes() {
 	    }
 	    
 	    html_out("node","<tr>");
-	    html_out("node","<td>$size $link ($lat,$lon) $size_end</td>");
+	    html_out("node","<td>$size $link $lat,$lon $size_end</td>");
 	    html_out("node","<td>... </td>");
-	    html_out("node","<td>$size (".($lat+10).",".($lon+10).") $link_e$size_end</td>");
+	    html_out("node","<td>$size ".($lat+$step).",".($lon+$step)." $link_e$size_end</td>");
 	    html_out("node","<td align=right>$size $count_points $size_end</td>");
 	    if ( $count_err ) {
 		html_out("node","<td align=right> $link $count_err $link_e </td>");
@@ -896,7 +898,7 @@ sub check_osm_ways() {
 	my $count =0;
 	for my $v ( sort keys %{$values}){
 	    html_out("statistics-ways","$v($values->{$v}), ");
-	    if ( $count++ > 20 ){ html_out("statistics-ways","..."); last};
+	    if ( $count++ > 100 ){ html_out("statistics-ways","..."); last};
 	}
 	html_out("statistics-ways","</td>");
 	html_out("statistics-ways","</tr>\n");

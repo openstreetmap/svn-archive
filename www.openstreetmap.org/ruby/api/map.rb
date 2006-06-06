@@ -21,9 +21,11 @@ trlat = bbox[3].to_f
 to = nil
 to = Time.parse(cgi['to']) unless cgi['to'] == ''
 
-if bllat > trlat || bllon > trlon
+if bllat > trlat || bllon > trlon # ||  ( (trlon - bllon) * (trlat - bllat) ) > (0.0035 * 4)
   exit BAD_REQUEST
 end
+
+
 
 dao = OSM::Dao.instance
 ox = OSM::Ox.new

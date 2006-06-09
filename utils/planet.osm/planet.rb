@@ -20,7 +20,7 @@ end
 def print_kv(kv)
 	kv.each do |k,v|
 		unless v==nil
-			v1 = v.gsub(/['"]/,"&quot;") # escape quotes
+			v1 = v.gsub(/[']/,"&apos;") # escape quotes
 			v2 = v1.gsub(/</,"&lt;") # escape <
 			v3 = v2.gsub(/>/,"&gt;") # escape >
 			puts "<tag k='#{k}' v='#{v3}' />"

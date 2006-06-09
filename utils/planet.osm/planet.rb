@@ -1,7 +1,5 @@
 #!/usr/bin/ruby -w
 
-# Script to dump all OSM data within a given bounding box
-
 #require 'cgi'
 require 'osm/dao.rb'
 require 'bigdecimal'
@@ -21,10 +19,12 @@ end
 		
 def print_kv(kv)
 	kv.each do |k,v|
-		v1 = v.gsub(/'/,"&apos;") # escape quotes
-		v2 = v1.gsub(/</,"&lt;") # escape <
-		v3 = v2.gsub(/>/,"&gt;") # escape >
-		puts "<tag k='#{k}' v='#{v3}' />"
+		unless v==nil
+			v1 = v.gsub(/['"]/,"&quot;") # escape quotes
+			v2 = v1.gsub(/</,"&lt;") # escape <
+			v3 = v2.gsub(/>/,"&gt;") # escape >
+			puts "<tag k='#{k}' v='#{v3}' />"
+		end
 	end
 end
 

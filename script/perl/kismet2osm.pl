@@ -239,7 +239,7 @@ sub read_gps_file($) {
 	print STDERR "WARNING: Could not parse osm data\n";
 	return;
     }
-    if ( $verbose) {
+    if ( $debug ) {
 	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
     }
     my $track=[];
@@ -274,6 +274,8 @@ use Date::Parse;
 use Geo::Gpsdrive::Utils;
 use Data::Dumper;
 use Date::Parse;
+use Date::Manip;
+
 # -----------------------------------------------------------------------------
 # Read GPS Data from GPX - File
 sub read_gpx_file($) { 
@@ -375,9 +377,9 @@ sub write_gpx_file($$) { # Write an gpx File
 		print $fh "       <ele>$elem->{ele}</ele>\n";
 	    };
 	    if ( defined ( $elem->{time} ) ) {
-		my $time = localtime($elem->{time});
+		my $time = UnixDate("epoch ".$elem->{time},"%OZ");
 		#$time = "2004-11-12T15:04:40Z";
-		print $fh "       <time>$time</time>\n";
+		print $fh "       <time>".$time."</time>\n";
 	    }
 	    print $fh "     </trkpt>\n";
 	}
@@ -488,7 +490,7 @@ sub read_gpsdrive_track_file($) {
 	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
     }
 
-    return $content;
+    return [$content];
 }
 
 ##################################################################
@@ -617,11 +619,11 @@ sub enrich_data($$){
 		    my $num_elem=scalar(@{$new_track});
 		    if ( $num_elem  > 1) {
 			push(@{$new_tracks},$new_track);
-			print "--------------- Splitting" if $verbose;
+			print "--------------- Splitting" if $debug;
 		    } else {
-			print "--------------- Dropping" if $verbose;
+			print "--------------- Dropping" if $debug;
 		    }
-		    if ( $verbose ) {
+		    if ( $debug ) {
 			printf "\tTrack Part (%4d Points)\t$split_track\n",$num_elem;
 		    }
 		    $new_track=[];
@@ -1045,7 +1047,7 @@ sub convert_Data(){
     printf "Summary:  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
     GPX::write_gpx_file($all_tracks,"__combination.gpx");
     if ( $verbose) {
-	printf "Reading $count  OSM Files in  %.0f sec\n",time()-$start_time;
+	printf "Converting $count  OSM Files in  %.0f sec\n",time()-$start_time;
     }
 }
 

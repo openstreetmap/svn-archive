@@ -484,7 +484,7 @@ sub read_gpsdrive_track_file($) {
 	$line =~ s/^\s*//;
 	#my ($lat,$lon,$alt,$time) = ($line =~ m/\s*([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+(.*)/);
 	my ($lat,$lon,$alt,$time) = split(/\s+/,$line,4);
-	#print "($lat,$lon,$alt,$time)\n" if $debug;
+	print "($lat,$lon,$alt,$time)\n" if $debug;
 	my $elem = {
 	    lat => $lat, 
 	    lon => $lon, 
@@ -541,7 +541,7 @@ sub check_allowed_area($){
 		 #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
 		 #[ 48.22  , 12.0  , 49.0    , 13.0    ], # Dorfen-Sued
 		 [ 48.15  , 11.85  , 48.45    , 12.36    ], # Anzing - Vilsbiburg
-		 [ -180.0  , -90  , 180.0    , 90   ], # World
+		 [ -90.0  , -180  , 90.0    , 180   ], # World
 		 ];
     for my $area ( @{$areas} ) {
 	my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
@@ -559,17 +559,21 @@ sub enrich_data($$){
     my $tracks      = shift; # reference to tracks list
     my $comment     = shift;
     my $new_tracks = [];
+    my $deleted_points=0;
 
+    my $track_number=0;
     for my $track ( @{$tracks} ) {
 	my $prev_elem=0;
 	my $min_dist=999999999999999;
 	my $max_dist=0;
+	$track_number++;
 	next if !$track;
-	next if  (scalar(@{$track})||0) <20;
 	my $new_track = [];
 	for my $elem ( @{$track} ) {
-	    next 
-		unless defined($elem->{lat}) && defined($elem->{lon});
+	    unless ( defined($elem->{lat}) && defined($elem->{lon})){
+		$deleted_points++;
+		next;
+	    }
 
 	    $elem->{time} = 0 unless defined $elem->{time};
 
@@ -631,6 +635,7 @@ sub enrich_data($$){
 			print "--------------- Splitting" if $debug;
 		    } else {
 			print "--------------- Dropping" if $debug;
+			$deleted_points+=$num_elem;
 		    }
 		    if ( $debug ) {
 			printf "\tTrack Part (%4d Points)\t$split_track\n",$num_elem;
@@ -643,14 +648,22 @@ sub enrich_data($$){
 	}
 
 
-	if ( scalar( @{$new_track} ) >1 ) {
+	my $num_elm_in_track = scalar(@{$new_track})||0;
+	if ( $num_elm_in_track > 5 ) {
 	    push(@{$new_tracks},$new_track);
+	} else {
+	    $deleted_points += $num_elm_in_track;
 	}
 	
 	if ( $debug || $verbose ) {
-	    printf "$comment: Distance: %8.2fm .. %8.2fKm \t in ".(scalar(@{$track}))." Elements\n",
-	    $min_dist*1000,$max_dist;
+	    printf "Enrich Data: Track $track_number from $comment\n";
+	    printf "	Distance: %8.2f m .. %8.2f Km \n", $min_dist*1000,$max_dist;
+	    printf "	Elements: ".(scalar(@{$track}))."\n",
 	}
+    }
+    if ( $debug || $verbose ) {
+	printf "Enrich Data: $comment:\n";
+	printf "	Deleted Points: $deleted_points\n"
     }
     #print Dumper(\$new_tracks);
     @{$tracks}=@{$new_tracks};
@@ -708,8 +721,8 @@ sub filter_data_by_area($){
 	    $good_tracks++;
 	}
     }
-    print "Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points\n"
-	if $debug;
+    print "Filter by Area: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points\n"
+	if $debug || $verbose;
     @{$tracks}=@{$new_tracks};
 }
 
@@ -1011,13 +1024,13 @@ sub convert_Data(){
 	    } elsif ( $filename =~ m/\.sav$/ ) {
 		$new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	    }
-	    if ( $verbose && $debug) {
+	    if ( $verbose || $debug) {
 		($track_count,$point_count) =   GPS::count_data($new_tracks);
 		printf "Read %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
 	    }
 	    GPS::enrich_data($new_tracks,$filename);
 	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    if ( $verbose && $debug) {
+	    if ( $verbose || $debug) {
 		printf "Results in  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
 	    }
 

@@ -359,7 +359,11 @@ sub write_gpx_file($$) { # Write an gpx File
     print("Writing GPS File $file_name\n") if $verbose || $debug;
 
     my $fh = IO::File->new(">$file_name");
-    print $fh "<gpx version=\"1.0\" creator=\"kismet2osm Converter\" xmlns=\"http://www.ostertag.name\">\n";
+    print $fh "<gpx \n";
+    print $fh "    version=\"1.0\"\n";
+    print $fh "    creator=\"kismet2osm Converter\"\n";
+    print $fh "    xmlns=\"http://www.ostertag.name\"\n";
+    print $fh "    >\n";
     my $track_id=0;
     for my $track ( @{$tracks} ) {
 	$track_id++;
@@ -377,10 +381,13 @@ sub write_gpx_file($$) { # Write an gpx File
 		print $fh "       <ele>$elem->{ele}</ele>\n";
 	    };
 	    if ( defined ( $elem->{time} ) ) {
-		my $time = UnixDate("epoch ".$elem->{time},"%OZ");
+		my $time = UnixDate("epoch ".$elem->{time},"%m/%d/%Y %H:%M:%S");
 		#$time = "2004-11-12T15:04:40Z";
 		print $fh "       <time>".$time."</time>\n";
 	    }
+	    if( defined $elem->{fix} ) {
+		print $fh "       <fix>$elem->{fix}</fix>\n";
+	    };
 	    print $fh "     </trkpt>\n";
 	}
 	print $fh "    </trkseg>\n";
@@ -474,8 +481,10 @@ sub read_gpsdrive_track_file($) {
     while ( my $line = $fh->getline() ) {
 	chomp $line;
 	#print "$line\n";
-	my ($lat,$lon,$alt,$time) = ($line =~ m/\s*([\d\.\-]+)\s+([\d\.\-]+)\s+([\d\.\-]+)\s+(.*)/);
-	#print "($lat,$lon,$alt,$time)\n";
+	$line =~ s/^\s*//;
+	#my ($lat,$lon,$alt,$time) = ($line =~ m/\s*([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+(.*)/);
+	my ($lat,$lon,$alt,$time) = split(/\s+/,$line,4);
+	#print "($lat,$lon,$alt,$time)\n" if $debug;
 	my $elem = {
 	    lat => $lat, 
 	    lon => $lon, 

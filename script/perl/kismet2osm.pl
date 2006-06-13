@@ -1,8 +1,20 @@
 #!/usr/bin/perl
-# Konvert Data 
-#   from Kismet-*.gps or GpsDrive-*.sav
-#   to osm ( http://openstreetmap.org/) Format
-# Joerg Ostertag <Ostertag@openstreetmap.org>
+# This Script converts/filters GPS-Track-Data 
+# Input is one of the folowing:
+#   - Kismet-GPS File *.gps 
+#   - GpsDrive-Track  *.sav
+#   - GPX File        *.gpx
+# Standars Filters:
+#	- are points are inside [ -90.0  , -180  , 90.0    , 180   ], # World
+#	- minimum good points          > 5 Points/Track
+#	- distance between trackpoints < 1 Km
+#	- speed between Trackpoints    < 200 Km/h
+# Output is:
+#   - OSM File for josm *.osm ( http://openstreetmap.org/)
+#   - GPX File for josm *.gpx
+#   - _collection.gpx, _collection.osm (one File wit all good tracks)
+#
+# Joerg Ostertag <openstreetmap@ostertag.name>
 
 use strict;
 use warnings;

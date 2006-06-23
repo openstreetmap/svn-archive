@@ -21,7 +21,9 @@ MA  02111-1307, USA.
 
 require 'cgi'
 require 'cgi/session'
-require 'open3'
+require 'stringio'
+
+require 'ns1togpx'
 
 THIS_URL = "http://ns1togpx.somethingmodern.com/"
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
@@ -47,47 +49,54 @@ $cgi.params.each do |param|
 	params[key].untaint
 end
 
-errors, gpx = '', nil
+errors = ''
+gpx = nil
 unless params["ns1_file"].empty?
-	IO.popen("#{THIS_DIR}/ns1togpx", "w+") do |io|
-#	Open3.popen3("#{THIS_DIR}/ns1togpx") do |stdin, stdout, stderr|
-		io.print params["ns1_file"]
-		io.close_write
-		gpx = io.read
-errors = gpx
+	begin
+		rd = StringIO.new(params["ns1_file"])
+		wr = StringIO.new
+		Ns1togpx::Converter.new.convert(rd, wr)
+		gpx = wr.string
+	rescue =>ex
+		errors =
+			"<p><font face=\"Courier New,Courier,Monospace\" color=\"red\">" +
+			"ERROR(" + CGI::escapeHTML(ex.message) + ")" + $cgi.br +
+			ex.backtrace.map { |line| ("&nbsp;" * 4) + CGI::escapeHTML(line) }.join($cgi.br) +
+			"</font></p>"
 	end
-	Process.wait
 end
-errors = "<p><font face=\"Courier New,Courier,Monospace\" color=\"red\">" + errors.split(/\n/).join("<br>") + "</font></p>" unless errors.empty?
 
-$cgi.out { $cgi.html {
-	$cgi.head { $cgi.title { "ns1togpx" } + style } +
-	$cgi.body("bgcolor" => "#A0A0C0", "link" => "white", "vlink" => "white") { $cgi.multipart_form(THIS_URL) {
-		"<font face='Arial,Helvetica,Verdana,Sans-serif'>" +
-		$cgi.h2 { $cgi.a(THIS_URL) { "ns1togpx" } } +
-		$cgi.h5 { <<EOF
+if gpx.nil?
+	$cgi.out { $cgi.html {
+		$cgi.head { $cgi.title { "ns1togpx" } + style } +
+		$cgi.body("bgcolor" => "#A0A0C0", "link" => "white", "vlink" => "white") { $cgi.multipart_form(THIS_URL) {
+			"<font face='Arial,Helvetica,Verdana,Sans-serif'>" +
+			$cgi.h2 { $cgi.a(THIS_URL) { "ns1togpx" } } +
+			$cgi.h5 { <<EOF
 Online conversion of a NetStumbler (.NS1) log file into the GPS Exchange Format
 (.GPX) for use in mapping software.  This converter effectively strips the
 wireless access point information from the NetStumbler file, leaving just a
 track of GPS &ldquo;breadcrumbs&rdquo; for community mapping projects like
 <a href="http://www.openstreetmap.org/">OpenStreetMap</a>.
 EOF
-		} +
-		$cgi.hr +
-		errors +
-		$cgi.p {
-			$cgi.file_field("ns1_file", 80) + $cgi.br + $cgi.br +
-			$cgi.submit("Upload & Convert Your .NS1 File")
-		} +
-		$cgi.p("align" => "right") {
-			"<font size='-2'>" +
-			$cgi.a("http://svn.openstreetmap.org/utils/ns1togpx/") { "GPL'ed source code" } +
-			" by " +
-			$cgi.a("mailto:ben@somethingmodern.com") { "Ben Gimpert" } +
-			", 2006" +
+			} +
+			$cgi.hr +
+			errors +
+			$cgi.p {
+				$cgi.file_field("ns1_file", 80) + $cgi.br + $cgi.br +
+				$cgi.submit("Upload & Convert Your .NS1 File")
+			} +
+			$cgi.p("align" => "right") {
+				"<font size='-2'>" +
+				$cgi.a("http://svn.openstreetmap.org/utils/ns1togpx/") { "GPL'ed source code" } +
+				" by " +
+				$cgi.a("mailto:ben@somethingmodern.com") { "Ben Gimpert" } +
+				", 2006" +
+				"</font>"
+			} +
 			"</font>"
-		} +
-		"</font>"
+		} }
 	} }
-} }
-
+else
+	$cgi.out("type" => "text/xml") { gpx }
+end

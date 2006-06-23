@@ -19,6 +19,8 @@ MA  02111-1307, USA.
 
 =end
 
+module Ns1togpx
+
 class Converter
 
 	def initialize
@@ -174,26 +176,34 @@ EOF
 
 end
 
-if (ARGV.length >= 1) && (ARGV.first =~ /(-h)|(--help)/i)
-	$stderr.print <<EOF
+end  # of module
+
+if __FILE__ == $0
+
+	require 'ns1togpx'
+
+	if (ARGV.length >= 1) && (ARGV.first =~ /(-h)|(--help)/i)
+		$stderr.print <<EOF
 ns1togpx Converter
 
 Usage:
 	$ ./ns1togpx <some_file.ns1 >another_file.gpx
 
 EOF
-	exit(1)
-end
+		exit(1)
+	end
 
-source = $stdin
-if (ARGV.length >= 1) && (ARGV.first != "-") && File.exists?(ARGV.first)
-	source = File.open(ARGV.first)
-end
+	source = $stdin
+	if (ARGV.length >= 1) && (ARGV.first != "-") && File.exists?(ARGV.first)
+		source = File.open(ARGV.first)
+	end
 
-begin
-	source.binmode
-	Converter.new.convert(source, $stdout)
-ensure
-	source.close
+	begin
+		source.binmode
+		Ns1togpx::Converter.new.convert(source, $stdout)
+	ensure
+		source.close
+	end
+
 end
 

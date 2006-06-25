@@ -51,7 +51,7 @@ end
 
 errors = ''
 gpx = nil
-unless params["ns1_file"].empty?
+if (! params["ns1_file"].nil?) && (! params["ns1_file"].empty?)
 	begin
 		rd = StringIO.new(params["ns1_file"])
 		wr = StringIO.new

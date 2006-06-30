@@ -44,6 +44,7 @@ my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
 my $out_osm           = 0;
 my $use_area_limit    = 0;
+my $draw_check_areas  = 0;
 
 my $first_id=100000000;
 my $next_osm_node_number    = $first_id;
@@ -294,7 +295,14 @@ sub read_file($$) {
     my $file_name     = shift;
     my $gpsbabel_type = shift;
 
+    print("Reading $file_name\n") if $verbose || $debug;
+    print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
+
     my $fh = IO::File->new("gpsbabel  -i $gpsbabel_type -f \"$file_name\" -o gpx -F - |");
+    if ( !$fh )  {
+	warn "Cannot Convert $file_name as Type $gpsbabel_type\n";
+	return [];
+    }
     GPX::read_gpx_file($fh);
 }
 
@@ -555,11 +563,11 @@ sub get_waypoint($) {
     $WAYPT_FILE = "$CONFIG_DIR/$WAYPT_FILE" unless ($WAYPT_FILE =~ /\//);
     
     open(WAYPT,"$WAYPT_FILE") || die "ERROR: get_waypoint Can't open: $WAYPT_FILE: $!\n";
-    my ($name,$lat,$lon);
+    my ($name,$lat,$lon, $typ,$wlan, $action, $sqlnr, $proximity);
     while (<WAYPT>) {
 	chomp;
 	next unless (/$waypoint_name/);
-	($name,$lat,$lon) = split(/\s+/);
+	($name,$lat,$lon, $typ, $wlan, $action, $sqlnr, $proximity) = split(/\s+/);
     }
     close(WAYPT);
     unless (($lat) && ($lon)) {
@@ -567,7 +575,7 @@ sub get_waypoint($) {
 	exit;
     }
     $waypoints->{$waypoint_name} = [$lat,$lon];
-    return($lat,$lon);
+    return ($lat,$lon,$proximity/1000);
 } #End get_waypoint
 
 ##################################################################
@@ -576,54 +584,53 @@ package GPS;
 use Date::Parse;
 use Geo::Gpsdrive::Utils;
 use Data::Dumper;
+use Math::Trig;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
 my $areas_allowed_squares = 
-    [
-     # min_lat,min_lon max_lat,max_lon,     (y,x)
-     #[ 48.1758, 11.7654 , 48.18095 , 11.7695 ], # Test - Kirchheim Gewerbegebiet
-     #[ 48.169, 11.66  , 48.184 , 11.774 ], # Kirchheim
-     #[ 48.147, 11.74  , 48.172 , 11.781 ], # Heimstetten
-     #[ 48.154, 11.693 , 48.196 , 11.735 ], # Aschheim
-     #[ 48.1  , 11.68  , 48.24  , 11.82  ], # Muc-N-O
-     #[ 48.1  , 11.68  , 48.4  , 12.2  ], # Muc-N-O++
-     #[ 48.0136 , 11.4211  , 48.2644  , 11.684  ], # Muc-O
-     #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
-     #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
-     [ 48.22  , 12.0  , 49.0    , 13.0    ], # Dorfen-Sued
-     [ 48.15  , 11.85  , 48.45    , 12.36    ], # Anzing - Vilsbiburg
-     #[ -90.0  , -180  , 90.0    , 180   ], # World
- { wp => "Dorfen"  ,circle => 100  },
-     ];
-my $area_block_circles=
-    [ 
-  { lat =>  48.175921 	,lon => 11.754312  ,circle => .030 },
-  { lat =>  48.175710 	,lon => 11.754400  ,circle => .030 },
-  { lat =>  48.175681 	,lon => 11.7547203 ,circle => .030 },
-  { lat =>  48.175527 	,lon => 11.7586399 ,circle => .030 },
-  { lat =>  48.1750 	,lon => 11.7536    ,circle => .10  },
-      ];	
-
+    [    # Block a circle of <proximity> Km arround each point
+     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
+     { lat =>  48.175710 	,lon => 11.754400  ,proximity => .030 , block => 1 },
+     { lat =>  48.175681 	,lon => 11.7547203 ,proximity => .030 , block => 1 },
+     { lat =>  48.175527 	,lon => 11.7586399 ,proximity => .030 , block => 1 },
+     { lat =>  48.1750 	,lon => 11.7536    ,proximity => .10  , block => 1 },
+	 
+	 # Waypoints from GPSDrive way.txt File proximity is circle radius
+     { wp => "Dorfen"  	,proximity => 10  },
+     { wp => "Gabi"		},
+     { wp => "Erding"		},
+     { wp => "Wind3"		},
+     { wp => "Taufkirchen"  	},
+     { wp => "Isen"		},
+     { wp => "Kirchheim"	},
+	 
+	 # Allow Rules for square size areas
+	 # min_lat,min_lon max_lat,max_lon,     (y,x)
+	 #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
+	 #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
+	 #[ -90.0  , -180  , 90.0    , 180   ], # World
+	 
+	 # The rest of the World is blocked by default
+	 
+	 ];	
 
 sub check_allowed_area($){
     my $elem = shift;
     
     return 1 unless $use_area_limit;
     
-    # Block a circle of <circle> Km arround each point
-    for my $block ( @{$area_block_circles} ) {
-	return 0 
-	    if Geometry::distance_point_point($block,$elem) < $block->{circle};
-    }
-    
-    
     for my $area ( @{$areas_allowed_squares} ) {
-	if (ref($area) eq "HASH" ) {
-	    my $check;
-	    ($check->{lat},$check->{lon}) = GPSDrive::get_waypoint($area->{wp});
-	    return 1
-		if Geometry::distance_point_point($check,$elem) < $area->{circle};
+	if (ref($area) eq "HASH" ) {	    
+	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive way.txt Waypoints
+		my $proximity;
+		($area->{lat},$area->{lon},$proximity) = GPSDrive::get_waypoint($area->{wp});
+		$area->{proximity} ||= $proximity;
+	    }
+	    
+	    if ( Geometry::distance_point_point($area,$elem) < $area->{proximity} ) {
+		return ! $area->{block};
+	    }
 	} else {
 	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
 	    if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
@@ -633,6 +640,40 @@ sub check_allowed_area($){
 	}
     }
     return 0;
+}
+
+# Return a tracklist whith a track for each chek_area
+sub draw_check_areas(){
+    my $new_tracks = [];
+    for my $area ( @{$areas_allowed_squares} ) {
+	my $new_track = [];
+	if (ref($area) eq "HASH" ) {	    
+	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive way.txt Waypoints
+		my $proximity;
+		($area->{lat},$area->{lon},$proximity) = GPSDrive::get_waypoint($area->{wp});
+		$area->{proximity} ||= $proximity;
+	    }
+	    
+	    my ($lat,$lon,$r) = ($area->{lat},$area->{lon},$area->{proximity}*360/40000);
+	    for my $angel ( 0 .. 360 ) {
+		my $elem;
+		$elem->{lat} = $lat+sin($angel*2*pi/360)*$r;
+		$elem->{lon} = $lon+cos($angel*2*pi/360)*$r;
+		push(@{$new_track},$elem);
+	    }
+	} else {
+	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
+	    my $elem;
+	    $elem->{lat} = $min_lat;
+	    $elem->{lon} = $min_lon;    push(@{$new_track},$elem);
+	    $elem->{lat} = $max_lat;    push(@{$new_track},$elem);
+	    $elem->{lon} = $max_lon;    push(@{$new_track},$elem);
+	    $elem->{lat} = $min_lat;    push(@{$new_track},$elem);
+	    $elem->{lon} = $min_lon;    push(@{$new_track},$elem);
+	}
+	push(@{$new_tracks},$new_track);
+    }
+    return $new_tracks;
 }
 
 # ------------------------------------------------------------------
@@ -769,9 +810,12 @@ sub count_data($){
     return ( $count_tracks,$count_points);
 }
 # ------------------------------------------------------------------
-# Filter tracks and points
+# Filter tracks with points
+# check_allowed_area($elem) tells if this element is added or not
 sub filter_data_by_area($){
     my $tracks      = shift; # reference to tracks list
+
+    return unless $use_area_limit;
 
     my $new_tracks = [];
 
@@ -1091,12 +1135,14 @@ sub convert_Data(){
 	    $new_tracks = GPX::read_gpx_file($filename);
 	} elsif ( $filename =~ m/\.mps$/ ) {
 	    $new_tracks = Gpsbabel::read_file($filename,"mapsource");
+	} elsif ( $filename =~ m/\.gdb$/ ) {
+	    $new_tracks = Gpsbabel::read_file($filename,"gdb");
 	} elsif ( $filename =~ m/\.sav$/ ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	}
+	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
-	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    printf "Read %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
+	    printf "Read %5d Points in %d Tracks from $filename\n",$point_read_count,$track_read_count;
 	}
 
 	GPS::filter_data_by_area($new_tracks);
@@ -1117,12 +1163,12 @@ sub convert_Data(){
 	my $osm_filename = $filename;
 	if ( $track_count > 0 ) {
 	    my $new_gpx_file = $osm_filename;
-	    $new_gpx_file =~ s/\.(sav|gps|gpx|mps)$/-converted.gpx/;
+	    $new_gpx_file =~ s/\.(sav|gps|gpx|mps|gdb)$/-converted.gpx/;
 	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
 		if $single_file;
 	    
 	    my $new_osm_file = $osm_filename;
-	    $new_osm_file =~ s/\.(sav|gps|gpx|mps)$/.osm/;
+	    $new_osm_file =~ s/\.(sav|gps|gpx|mps|gdb)$/.osm/;
 	    my $points = OSM::Tracks2osm($new_tracks,$filename);
 	    OSM::write_osm_file($new_osm_file)
 		if $out_osm;
@@ -1130,11 +1176,15 @@ sub convert_Data(){
 	}
 	GPS::add_tracks($all_tracks,$new_tracks);
 	if ( $point_count && $track_count ) {
-	    printf "Added:  %5d Points in %3d Tracks for %s\n",
-	    $point_count,$track_count,$filename;
+	    printf "Added:  %5d(%5d) Points in %3d(%3d) Tracks for %s\n",
+	    $point_count,$point_read_count,$track_count,$track_read_count,$filename;
+
 	}
     }
-    
+
+    my $check_areas = GPS::draw_check_areas();
+    GPS::add_tracks($all_tracks,$check_areas);
+
     OSM::write_osm_file("__combination.osm")
 	if $out_osm;
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
@@ -1155,6 +1205,7 @@ GetOptions (
 	     'no-mirror'           => \$no_mirror,
 	     'out-osm'             => \$out_osm,
 	     'limit-area'          => \$use_area_limit,
+	     'draw_check_areas'    => \$draw_check_areas,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
@@ -1208,6 +1259,11 @@ Complete documentation
 =item B<--limit-area>
 
 use the area limits coded in the source
+
+=item B<--draw_check_areas>
+
+draw the checkareays into the file by adding a track with the border 
+of each trackarea
 
 =item B<File1> The Kismet/gpx/sav Files to read
 

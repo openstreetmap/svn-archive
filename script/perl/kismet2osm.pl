@@ -773,22 +773,6 @@ use Data::Dumper;
 no warnings 'deprecated';
 
 # ------------------------------------------------------------------
-# Add points for a bounding box. 
-# This way josm always displays the DFata at the same zoom level
-sub add_bbox_Kirchheim(){
-    my $points = [ 
-		   # Kirchheim
-		  { lat=> 48.1696615, lon => 11.741591 },
-		  { lat=> 48.181210 , lon => 11.769562 },
-		   ];
-    for my $elem ( @{$points} ) {
-	$next_osm_node_number++;
-	$elem->{tag}->{class} = "void please remove";
-	$osm_nodes->{$next_osm_node_number}=$elem;
-    }
-}
-
-# ------------------------------------------------------------------
 sub Tracks2osm($$){
     my $tracks = shift;
     my $reference = shift;
@@ -1058,8 +1042,6 @@ sub convert_Data(){
 	}
 
 	$count ++ if $point_count && $track_count;
-
-	# OSM::add_bbox_Kirchheim();
 
 	GPS::filter_data_by_area($new_tracks);
 

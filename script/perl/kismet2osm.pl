@@ -42,6 +42,8 @@ my $osm_segments_duplicate ={};
 my $osm_ways          = {};
 my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
+my $out_osm           = 0;
+my $use_area_limit    = 0;
 
 my $first_id=100000000;
 my $next_osm_node_number    = $first_id;
@@ -523,39 +525,46 @@ use Data::Dumper;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
+my $areas_allowed_squares = 
+    [
+     # min_lat,min_lon max_lat,max_lon,     (y,x)
+     #[ 48.1758, 11.7654 , 48.18095 , 11.7695 ], # Test - Kirchheim Gewerbegebiet
+     #[ 48.169, 11.66  , 48.184 , 11.774 ], # Kirchheim
+     #[ 48.147, 11.74  , 48.172 , 11.781 ], # Heimstetten
+     #[ 48.154, 11.693 , 48.196 , 11.735 ], # Aschheim
+     #[ 48.1  , 11.68  , 48.24  , 11.82  ], # Muc-N-O
+     #[ 48.1  , 11.68  , 48.4  , 12.2  ], # Muc-N-O++
+     #[ 48.0136 , 11.4211  , 48.2644  , 11.684  ], # Muc-O
+     #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
+     #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
+     #[ 48.22  , 12.0  , 49.0    , 13.0    ], # Dorfen-Sued
+     [ 48.15  , 11.85  , 48.45    , 12.36    ], # Anzing - Vilsbiburg
+     [ -90.0  , -180  , 90.0    , 180   ], # World
+     ];
+my $area_block_circles=
+    [ 
+  { lat =>  48.175921 	,lon => 11.754312  ,circle => .030 },
+  { lat =>  48.175710 	,lon => 11.754400  ,circle => .030 },
+  { lat =>  48.175681 	,lon => 11.7547203 ,circle => .030 },
+  { lat =>  48.175527 	,lon => 11.7586399 ,circle => .030 },
+  { lat =>  48.1750 	,lon => 11.7536    ,circle => .10  },
+      ];	
+
+
 sub check_allowed_area($){
     my $elem = shift;
     
+    return 1 unless $use_area_limit;
+    
     # Block a circle of <circle> Km arround each point 
-    my $block_list=[ 
-		 { lat =>  48.175921 	,lon => 11.754312  ,circle => .030 },
-		 { lat =>  48.175710 	,lon => 11.754400  ,circle => .030 },
-		 { lat =>  48.175681 	,lon => 11.7547203 ,circle => .030 },
-		 { lat =>  48.175527 	,lon => 11.7586399 ,circle => .030 },
-		 { lat =>  48.1750 	,lon => 11.7536    ,circle => .10  },
-		     ];
-    for my $block ( @{$block_list} ) {
+    
+    for my $block ( @{$area_block_circles} ) {
 	return 0 
 	    if Geometry::distance_point_point($block,$elem) < $block->{circle};
     }
-
     
-    my $areas = [
-		 # min_lat,min_lon max_lat,max_lon,     (y,x)
-		 #[ 48.1758, 11.7654 , 48.18095 , 11.7695 ], # Test - Kirchheim Gewerbegebiet
-		 #[ 48.169, 11.66  , 48.184 , 11.774 ], # Kirchheim
-		 #[ 48.147, 11.74  , 48.172 , 11.781 ], # Heimstetten
-		 #[ 48.154, 11.693 , 48.196 , 11.735 ], # Aschheim
-		 #[ 48.1  , 11.68  , 48.24  , 11.82  ], # Muc-N-O
-		 #[ 48.1  , 11.68  , 48.4  , 12.2  ], # Muc-N-O++
-		 #[ 48.0136 , 11.4211  , 48.2644  , 11.684  ], # Muc-O
-		 #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
-		 #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
-		 #[ 48.22  , 12.0  , 49.0    , 13.0    ], # Dorfen-Sued
-		 [ 48.15  , 11.85  , 48.45    , 12.36    ], # Anzing - Vilsbiburg
-		 [ -90.0  , -180  , 90.0    , 180   ], # World
-		 ];
-    for my $area ( @{$areas} ) {
+    
+    for my $area ( @{$areas_allowed_squares} ) {
 	my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
 	if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
 	     $min_lon <= $elem->{lon} &&	 $max_lon >= $elem->{lon} ) {
@@ -781,7 +790,7 @@ sub add_bbox_Kirchheim(){
 
 # ------------------------------------------------------------------
 sub Tracks2osm($$){
-    my $content = shift;
+    my $tracks = shift;
     my $reference = shift;
     $reference =~ s,/home/kismet/log/,,;
 
@@ -796,115 +805,117 @@ sub Tracks2osm($$){
     my $element_count=0;
     my $count_valid_points=0;
 
-    for my $elem ( @{$content} ) {
-	my $skip_point=0;
-	my $seg_id=0;
-	my $dist=999999999;
+    for my $track ( @{$tracks} ) {
+	for my $elem ( @{$track} ) {
+	    my $skip_point=0;
+	    my $seg_id=0;
+	    my $dist=999999999;
 
-	print "$elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n" 
-	    unless  defined($elem->{lat}) && defined($elem->{lon}) ;
+	    print "$elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n" 
+		unless  defined($elem->{lat}) && defined($elem->{lon}) ;
 
 
-	$skip_point =  ! GPS::check_allowed_area($elem);
+	    $skip_point =  ! GPS::check_allowed_area($elem);
 
-	#print Dumper(\$elem)."\n" if $debug;
-	my $pos = "$elem->{lat},$elem->{lon}";
-	$next_osm_node_number++;
-	if ( 0 && $osm_nodes_duplicate->{$pos} ) {
-	    $node_to   = $osm_nodes_duplicate->{$pos};
-	    print "Node would $next_osm_node_number pos:$pos already exists as $node_to\n"
-		if $verbose || $debug;
-	} else {
-	    if ( ! $skip_point ) {
-		$osm_nodes->{$next_osm_node_number}=$elem;
-		$osm_nodes_duplicate->{$pos} = $next_osm_node_number;
+	    #print Dumper(\$elem)."\n" if $debug;
+	    my $pos = "$elem->{lat},$elem->{lon}";
+	    $next_osm_node_number++;
+	    if ( 0 && $osm_nodes_duplicate->{$pos} ) {
+		$node_to   = $osm_nodes_duplicate->{$pos};
+		print "Node would $next_osm_node_number pos:$pos already exists as $node_to\n"
+		    if $verbose || $debug;
+	    } else {
+		if ( ! $skip_point ) {
+		    $osm_nodes->{$next_osm_node_number}=$elem;
+		    $osm_nodes_duplicate->{$pos} = $next_osm_node_number;
+		}
+		$node_to   = $next_osm_node_number;
 	    }
-	    $node_to   = $next_osm_node_number;
-	}
 	    
-	next unless $element_count++; # Beim ersten keine Segment bearbeitung
+	    next unless $element_count++; # Beim ersten keine Segment bearbeitung
 
-	# -------------------------------------------- Create Segments
-	if ( $node_from && $node_to && ! $skip_point) {
-	    $dist = Geometry::distance_point_point($osm_nodes->{$node_from},$elem);
-	}
+	    # -------------------------------------------- Create Segments
+	    if ( $node_from && $node_to && ! $skip_point) {
+		$dist = Geometry::distance_point_point($osm_nodes->{$node_from},$elem);
+	    }
 	    
-	if (  ! $skip_point ) {
-	    if ( $osm_nodes->{$node_from}->{dist} && 
-		 $osm_nodes->{$node_from}->{dist} != $dist &&
-		 $dist ) {
+	    if (  ! $skip_point ) {
+		if ( $osm_nodes->{$node_from}->{dist} && 
+		     $osm_nodes->{$node_from}->{dist} != $dist &&
+		     $dist ) {
 #	    $osm_nodes->{$node_from}->{dist} .= ", $dist";
-		$osm_nodes->{$node_from}->{dist} = $dist;
-	    } else {
-		$osm_nodes->{$node_from}->{dist} = $dist;
-	    }
-
-	    if ( $dist < .5 && 
-		 ( ! $elem->{angle_to_last} || $elem->{angle_to_last} < 90 )
-		 ){
-		$seg_id = $osm_segment_number++;
-		my $from_to = "$node_from,$node_to";
-		if ( $osm_segments_duplicate->{$from_to} ) {
-		    $seg_id = $osm_segments_duplicate->{$from_to};
-		    print "Duplicate segment $osm_segment_number --> $seg_id\n";
+		    $osm_nodes->{$node_from}->{dist} = $dist;
 		} else {
-		    $osm_segments->{$seg_id} = { from => $node_from,
-						 to   => $node_to
-						 };
-		    if ( $debug) {
-			$osm_segments->{$seg_id}->{tag} ={ distance => $dist,
-							   distance_meter => $dist*1000,
-							   reference => $reference,
-							   from_to => "$node_from $node_to",
-						       };
-		    }
-		};
-		# Angle
-		$angle = Geometry::angle_north($osm_nodes->{$node_from},$osm_nodes->{$node_to});
-	    }
-	}
+		    $osm_nodes->{$node_from}->{dist} = $dist;
+		}
 
-	if ( $seg_id &&	 ! $skip_point  ) {
-	    if ( $debug) {
-		$osm_segments->{$seg_id}->{tag}->{time_diff} = $elem->{time_diff};
-		if ( defined ( $elem->{speed} ) ) {
-		    $osm_segments->{$seg_id}->{tag}->{speed} = $elem->{speed};
+		if ( $dist < .5 && 
+		     ( ! $elem->{angle_to_last} || $elem->{angle_to_last} < 90 )
+		     ){
+		    $seg_id = $osm_segment_number++;
+		    my $from_to = "$node_from,$node_to";
+		    if ( $osm_segments_duplicate->{$from_to} ) {
+			$seg_id = $osm_segments_duplicate->{$from_to};
+			print "Duplicate segment $osm_segment_number --> $seg_id\n";
+		    } else {
+			$osm_segments->{$seg_id} = { from => $node_from,
+						     to   => $node_to
+						     };
+			if ( $debug) {
+			    $osm_segments->{$seg_id}->{tag} ={ distance => $dist,
+							       distance_meter => $dist*1000,
+							       reference => $reference,
+							       from_to => "$node_from $node_to",
+							   };
+			}
+		    };
+		    # Angle
+		    $angle = Geometry::angle_north($osm_nodes->{$node_from},$osm_nodes->{$node_to});
 		}
-		$osm_segments->{$seg_id}->{tag}->{angle} = $angle;
-		$osm_segments->{$seg_id}->{tag}->{d_lat} = $elem->{d_lat};
-		$osm_segments->{$seg_id}->{tag}->{d_lon} = $elem->{d_lon};
 	    }
-	    if ( defined ( $last_angle )) {
-		$angle_to_last = $angle - $last_angle;
-		$angle_to_last = - ( 360 - $angle_to_last) if $angle_to_last > 180;
+
+	    if ( $seg_id &&	 ! $skip_point  ) {
 		if ( $debug) {
-		    $osm_segments->{$seg_id}->{tag}->{angle_to_last} = $angle_to_last;
+		    $osm_segments->{$seg_id}->{tag}->{time_diff} = $elem->{time_diff};
+		    if ( defined ( $elem->{speed} ) ) {
+			$osm_segments->{$seg_id}->{tag}->{speed} = $elem->{speed};
+		    }
+		    $osm_segments->{$seg_id}->{tag}->{angle} = $angle;
+		    $osm_segments->{$seg_id}->{tag}->{d_lat} = $elem->{d_lat};
+		    $osm_segments->{$seg_id}->{tag}->{d_lon} = $elem->{d_lon};
 		}
-	    } else {
-		$angle_to_last=0;
-	    }
-	} 
-	
-	if ( $skip_point  
-	     || ! $seg_id      		 # Wir haben ein neues Segment
-	     || abs($angle_to_last) > 25 # unter x Grad Lenkeinschlag
-	       || $dist > .4  		 # unter x Km Distanz
-	     ) {
-	    if ( defined($way->{seg}) 
-		 && ( @{$way->{seg}} > 4)
+		if ( defined ( $last_angle )) {
+		    $angle_to_last = $angle - $last_angle;
+		    $angle_to_last = - ( 360 - $angle_to_last) if $angle_to_last > 180;
+		    if ( $debug) {
+			$osm_segments->{$seg_id}->{tag}->{angle_to_last} = $angle_to_last;
+		    }
+		} else {
+		    $angle_to_last=0;
+		}
+	    } 
+	    
+	    if ( $skip_point  
+		 || ! $seg_id      		 # Wir haben ein neues Segment
+		 || abs($angle_to_last) > 25 # unter x Grad Lenkeinschlag
+		 || $dist > .4  		 # unter x Km Distanz
 		 ) {
-		$osm_way_number++;
-		$way->{reference} = $reference;
-		$osm_ways->{$osm_way_number} = $way;
+		if ( defined($way->{seg}) 
+		     && ( @{$way->{seg}} > 4)
+		     ) {
+		    $osm_way_number++;
+		    $way->{reference} = $reference;
+		    $osm_ways->{$osm_way_number} = $way;
+		}
+		$way={};
 	    }
-	    $way={};
+	    if ( ! $skip_point  ){
+		push(@{$way->{seg}},$seg_id);
+		$count_valid_points++;
+	    }
+	    $node_from=$node_to;
+	    $last_angle = $angle;
 	}
-	if ( ! $skip_point  ){
-	    push(@{$way->{seg}},$seg_id);
-	    $count_valid_points++;
-	 }
-	$node_from=$node_to;
-	$last_angle = $angle;
     }
     return $count_valid_points;
 }
@@ -1024,59 +1035,61 @@ sub convert_Data(){
 	exit 1;
     }
 
-	my $start_time=time();
-
-	my $count=0;
-	while ( $filename = shift @ARGV ) {
-	    my $new_tracks;
-	    if ( $filename =~ m/\.gps$/ ) {
-		$new_tracks = Kismet::read_gps_file($filename);
-	    } elsif ( $filename =~ m/\.gpx$/ ) {
-		$new_tracks = GPX::read_gpx_file($filename);
-	    } elsif ( $filename =~ m/\.sav$/ ) {
-		$new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
-	    }
-	    if ( $verbose || $debug) {
-		($track_count,$point_count) =   GPS::count_data($new_tracks);
-		printf "Read %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
-	    }
-	    GPS::enrich_data($new_tracks,$filename);
-	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    if ( $verbose || $debug) {
-		printf "Results in  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
-	    }
-
-	    $count ++ if $point_count && $track_count;
-
-	    # OSM::add_bbox_Kirchheim();
-
-	    GPS::filter_data_by_area($new_tracks);
-
-	    my $osm_filename = $filename;
-	    if ( $track_count > 0 ) {
-		my $new_gpx_file = $osm_filename;
-		if ( $filename =~ m/\.gpx$/ ) {
-		    $new_gpx_file =~ s/\.(sav|gps|gpx)$/-converted.gpx/;
-		} else {
-		    $new_gpx_file =~ s/\.(sav|gps)$/.gpx/;
-		}
-		GPX::write_gpx_file($new_tracks,$new_gpx_file)
-		    if $single_file;
-		
-		my $new_osm_file = $osm_filename;
-		$new_osm_file =~ s/\.(sav|gps)$/.osm/;
-		# my $points = OSM::Tracks2osm($content,$filename);
-		# OSM::write_osm_file($new_osm_file);
-
-	    }
-	    GPS::add_tracks($all_tracks,$new_tracks);
-	    if ( $point_count && $track_count ) {
-		printf "Added:  %5d Points in %3d Tracks for %s\n",
-			 $point_count,$track_count,$filename;
-	    }
-	}
+    my $start_time=time();
     
-    #OSM::write_osm_file("__combination.osm");
+    my $count=0;
+    while ( $filename = shift @ARGV ) {
+	my $new_tracks;
+	if ( $filename =~ m/\.gps$/ ) {
+	    $new_tracks = Kismet::read_gps_file($filename);
+	} elsif ( $filename =~ m/\.gpx$/ ) {
+	    $new_tracks = GPX::read_gpx_file($filename);
+	} elsif ( $filename =~ m/\.sav$/ ) {
+	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
+	}
+	if ( $verbose || $debug) {
+	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
+	    printf "Read %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
+	}
+	GPS::enrich_data($new_tracks,$filename);
+	($track_count,$point_count) =   GPS::count_data($new_tracks);
+	if ( $verbose || $debug) {
+	    printf "Results in  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
+	}
+
+	$count ++ if $point_count && $track_count;
+
+	# OSM::add_bbox_Kirchheim();
+
+	GPS::filter_data_by_area($new_tracks);
+
+	my $osm_filename = $filename;
+	if ( $track_count > 0 ) {
+	    my $new_gpx_file = $osm_filename;
+	    if ( $filename =~ m/\.gpx$/ ) {
+		$new_gpx_file =~ s/\.(sav|gps|gpx)$/-converted.gpx/;
+	    } else {
+		$new_gpx_file =~ s/\.(sav|gps)$/.gpx/;
+	    }
+	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
+		if $single_file;
+	    
+	    my $new_osm_file = $osm_filename;
+	    $new_osm_file =~ s/\.(sav|gps|gpx)$/.osm/;
+	    my $points = OSM::Tracks2osm($new_tracks,$filename);
+	    OSM::write_osm_file($new_osm_file)
+		if $out_osm;
+
+	}
+	GPS::add_tracks($all_tracks,$new_tracks);
+	if ( $point_count && $track_count ) {
+	    printf "Added:  %5d Points in %3d Tracks for %s\n",
+	    $point_count,$track_count,$filename;
+	}
+    }
+    
+    OSM::write_osm_file("__combination.osm")
+	if $out_osm;
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
     printf "Summary:  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
     GPX::write_gpx_file($all_tracks,"__combination.gpx");
@@ -1093,6 +1106,8 @@ GetOptions (
 	     'debug'               => \$debug,      
 	     'verbose+'            => \$verbose,
 	     'no-mirror'           => \$no_mirror,
+	     'out-osm'             => \$out_osm,
+	     'limit-area'          => \$use_area_limit,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
@@ -1138,7 +1153,7 @@ kismet2osm_osm.pl [-d] [-v] [-h] <File1.gps> [<File2.gps>,...]
 
 Complete documentation
 
-=item B<File1> THe Kismet Files to read
+=item B<File1> The Kismet/gpx/sav Files to read
 
 to read all Files in a specified directory at once do the following:
 
@@ -1147,6 +1162,13 @@ to read all Files in a specified directory at once do the following:
 this will result in only one File with the name 
  ./__combination.osm
 
+=item B<out-osm>
+
+*.osm files will only be generated if this option is set.
+
+=item B<limit-area>
+
+use the area limits coded in the source
 
 
 =back

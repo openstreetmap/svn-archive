@@ -190,7 +190,8 @@ sub distance_line_point($$$$$$) {
 package File;
 ##################################################################
 
-use Geo::Gpsdrive::Utils;
+use IO::File;
+
 # -----------------------------------------------------------------------------
 # Open Data File in predefined Directories
 sub data_open($){
@@ -282,6 +283,22 @@ sub read_gps_file($) {
 
 
 ##################################################################
+package Gpsbabel;
+##################################################################
+use IO::File;
+
+
+# -----------------------------------------------------------------------------
+# Read GPS Data from GPX - File
+sub read_file($$) { 
+    my $file_name     = shift;
+    my $gpsbabel_type = shift;
+
+    my $fh = IO::File->new("gpsbabel  -i $gpsbabel_type -f \"$file_name\" -o gpx -F - |");
+    GPX::read_gpx_file($fh);
+}
+
+##################################################################
 package GPX;
 ##################################################################
 use Date::Parse;
@@ -296,16 +313,22 @@ sub read_gpx_file($) {
     my $file_name = shift;
 
     my $start_time=time();
+    my $fh;
 
-    print("Reading $file_name\n") if $verbose || $debug;
-    print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
+    if ( ref($file_name) =~ m/IO::File/ ) {
+	$fh = $file_name;
+    } else {
+	print("Reading $file_name\n") if $verbose || $debug;
+	print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
-    print STDERR "Parsing file: $file_name\n" if $debug;
+	print STDERR "Parsing file: $file_name\n" if $debug;
+	$fh = File::data_open($file_name);
+    }
+    return unless $fh;
+
     my $p = XML::Parser->new( Style => 'Objects' ,
 			      );
     
-    my $fh = File::data_open($file_name);
-    return unless $fh;
     my $content = [{Kids => []}];
     eval {
 	$content = $p->parse($fh);
@@ -479,6 +502,7 @@ package GPSDrive;
 use Date::Parse;
 use Geo::Gpsdrive::Utils;
 use Data::Dumper;
+
 # -----------------------------------------------------------------------------
 # Read GPSDrive Track Data
 sub read_gpsdrive_track_file($) { 
@@ -516,6 +540,36 @@ sub read_gpsdrive_track_file($) {
     return [$content];
 }
 
+
+my $CONFIG_DIR          = "$ENV{'HOME'}/.gpsdrive"; # Should we allow config of this?
+my $WAYPT_FILE          = "$CONFIG_DIR/way.txt";
+######################################################################
+my $waypoints={};
+sub get_waypoint($) {
+    my $waypoint_name = shift;
+    
+    if( defined ( $waypoints->{$waypoint_name} )){
+	return @{$waypoints->{$waypoint_name}};
+    }
+    # If they give just a filename, we should assume they meant the CONFIG_DIR
+    $WAYPT_FILE = "$CONFIG_DIR/$WAYPT_FILE" unless ($WAYPT_FILE =~ /\//);
+    
+    open(WAYPT,"$WAYPT_FILE") || die "ERROR: get_waypoint Can't open: $WAYPT_FILE: $!\n";
+    my ($name,$lat,$lon);
+    while (<WAYPT>) {
+	chomp;
+	next unless (/$waypoint_name/);
+	($name,$lat,$lon) = split(/\s+/);
+    }
+    close(WAYPT);
+    unless (($lat) && ($lon)) {
+	print "Unable to find waypoint '$waypoint_name' in '$WAYPT_FILE'\n";
+	exit;
+    }
+    $waypoints->{$waypoint_name} = [$lat,$lon];
+    return($lat,$lon);
+} #End get_waypoint
+
 ##################################################################
 package GPS;
 ##################################################################
@@ -537,9 +591,10 @@ my $areas_allowed_squares =
      #[ 48.0136 , 11.4211  , 48.2644  , 11.684  ], # Muc-O
      #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
      #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
-     #[ 48.22  , 12.0  , 49.0    , 13.0    ], # Dorfen-Sued
+     [ 48.22  , 12.0  , 49.0    , 13.0    ], # Dorfen-Sued
      [ 48.15  , 11.85  , 48.45    , 12.36    ], # Anzing - Vilsbiburg
-     [ -90.0  , -180  , 90.0    , 180   ], # World
+     #[ -90.0  , -180  , 90.0    , 180   ], # World
+ { wp => "Dorfen"  ,circle => 100  },
      ];
 my $area_block_circles=
     [ 
@@ -556,8 +611,7 @@ sub check_allowed_area($){
     
     return 1 unless $use_area_limit;
     
-    # Block a circle of <circle> Km arround each point 
-    
+    # Block a circle of <circle> Km arround each point
     for my $block ( @{$area_block_circles} ) {
 	return 0 
 	    if Geometry::distance_point_point($block,$elem) < $block->{circle};
@@ -565,10 +619,17 @@ sub check_allowed_area($){
     
     
     for my $area ( @{$areas_allowed_squares} ) {
-	my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
-	if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
-	     $min_lon <= $elem->{lon} &&	 $max_lon >= $elem->{lon} ) {
-	    return 1;
+	if (ref($area) eq "HASH" ) {
+	    my $check;
+	    ($check->{lat},$check->{lon}) = GPSDrive::get_waypoint($area->{wp});
+	    return 1
+		if Geometry::distance_point_point($check,$elem) < $area->{circle};
+	} else {
+	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
+	    if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
+		 $min_lon <= $elem->{lon} &&	 $max_lon >= $elem->{lon} ) {
+		return 1;
+	    }
 	}
     }
     return 0;
@@ -1028,6 +1089,8 @@ sub convert_Data(){
 	    $new_tracks = Kismet::read_gps_file($filename);
 	} elsif ( $filename =~ m/\.gpx$/ ) {
 	    $new_tracks = GPX::read_gpx_file($filename);
+	} elsif ( $filename =~ m/\.mps$/ ) {
+	    $new_tracks = Gpsbabel::read_file($filename,"mapsource");
 	} elsif ( $filename =~ m/\.sav$/ ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	}
@@ -1035,6 +1098,13 @@ sub convert_Data(){
 	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
 	    printf "Read %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
 	}
+
+	GPS::filter_data_by_area($new_tracks);
+	if ( $verbose || $debug) {
+	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
+	    printf "After Area Filter %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
+	}
+
 	GPS::enrich_data($new_tracks,$filename);
 	($track_count,$point_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
@@ -1043,21 +1113,16 @@ sub convert_Data(){
 
 	$count ++ if $point_count && $track_count;
 
-	GPS::filter_data_by_area($new_tracks);
 
 	my $osm_filename = $filename;
 	if ( $track_count > 0 ) {
 	    my $new_gpx_file = $osm_filename;
-	    if ( $filename =~ m/\.gpx$/ ) {
-		$new_gpx_file =~ s/\.(sav|gps|gpx)$/-converted.gpx/;
-	    } else {
-		$new_gpx_file =~ s/\.(sav|gps)$/.gpx/;
-	    }
+	    $new_gpx_file =~ s/\.(sav|gps|gpx|mps)$/-converted.gpx/;
 	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
 		if $single_file;
 	    
 	    my $new_osm_file = $osm_filename;
-	    $new_osm_file =~ s/\.(sav|gps|gpx)$/.osm/;
+	    $new_osm_file =~ s/\.(sav|gps|gpx|mps)$/.osm/;
 	    my $points = OSM::Tracks2osm($new_tracks,$filename);
 	    OSM::write_osm_file($new_osm_file)
 		if $out_osm;
@@ -1125,7 +1190,7 @@ So: Have Fun, improve it and send me fixes :-))
 
 B<Common usages:>
 
-kismet2osm_osm.pl [-d] [-v] [-h] <File1.gps> [<File2.gps>,...]
+kismet2osm_osm.pl [-d] [-v] [-h][--out-osm] [--limit-area] <File1.gps> [<File2.gps>,...]
 
 =head1 OPTIONS
 
@@ -1135,6 +1200,15 @@ kismet2osm_osm.pl [-d] [-v] [-h] <File1.gps> [<File2.gps>,...]
 
 Complete documentation
 
+
+=item B<--out-osm>
+
+*.osm files will only be generated if this option is set.
+
+=item B<--limit-area>
+
+use the area limits coded in the source
+
 =item B<File1> The Kismet/gpx/sav Files to read
 
 to read all Files in a specified directory at once do the following:
@@ -1143,14 +1217,5 @@ to read all Files in a specified directory at once do the following:
 
 this will result in only one File with the name 
  ./__combination.osm
-
-=item B<out-osm>
-
-*.osm files will only be generated if this option is set.
-
-=item B<limit-area>
-
-use the area limits coded in the source
-
 
 =back

@@ -4,6 +4,8 @@
 #   - Kismet-GPS File *.gps 
 #   - GpsDrive-Track  *.sav
 #   - GPX File        *.gpx
+#   - Garmin mps File *.mps
+#   - Garmin gdb File *.gdb
 # Standars Filters:
 #	- are points are inside [ -90.0  , -180  , 90.0    , 180   ], # World
 #	- minimum good points          > 5 Points/Track
@@ -205,7 +207,7 @@ sub data_open($){
 	return 0;
     }
 
-    debug("Opening $file_with_path");
+    print "Opening $file_with_path" if $debug;
     my $fh;
     if ( $file_with_path =~ m/\.gz$/ ) {
 	$fh = IO::File->new("gzip -dc $file_with_path|")
@@ -590,13 +592,13 @@ use Math::Trig;
 # Check if the point is in the area to currently evaluate
 my $areas_allowed_squares = 
     [    # Block a circle of <proximity> Km arround each point
-     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
-     { lat =>  48.175710 	,lon => 11.754400  ,proximity => .030 , block => 1 },
-     { lat =>  48.175681 	,lon => 11.7547203 ,proximity => .030 , block => 1 },
-     { lat =>  48.175527 	,lon => 11.7586399 ,proximity => .030 , block => 1 },
-     { lat =>  48.1750 	,lon => 11.7536    ,proximity => .10  , block => 1 },
+#     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
+#     { lat =>  48.175710 	,lon => 11.754400  ,proximity => .030 , block => 1 },
+#     { lat =>  48.175681 	,lon => 11.7547203 ,proximity => .030 , block => 1 },
+#     { lat =>  48.175527 	,lon => 11.7586399 ,proximity => .030 , block => 1 },
+#     { lat =>  48.1750 	,lon => 11.7536    ,proximity => .10  , block => 1 },
 	 
-	 # Waypoints from GPSDrive way.txt File proximity is circle radius
+	 # Waypoints from GPSDrive ~/.gpsdrive/way.txt File proximity is circle radius
      { wp => "Dorfen"  	,proximity => 10  },
      { wp => "Gabi"		},
      { wp => "Erding"		},
@@ -731,7 +733,7 @@ sub enrich_data($$){
 
 		# --- Check for Track Split
 		my $split_track='';
-		if ( $elem->{time_diff} > 10) { # Seconds
+		if ( $elem->{time_diff} > 60) { # Seconds
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
 		    if ( $debug) {
 			#print "Time 0: $prev_elem->{time_string}\n";
@@ -772,7 +774,7 @@ sub enrich_data($$){
 
 
 	my $num_elm_in_track = scalar(@{$new_track})||0;
-	if ( $num_elm_in_track > 5 ) {
+	if ( $num_elm_in_track > 3 ) {
 	    push(@{$new_tracks},$new_track);
 	} else {
 	    $deleted_points += $num_elm_in_track;
@@ -1201,7 +1203,9 @@ sub convert_Data(){
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
 	     'debug'               => \$debug,      
+	     'd'                   => \$debug,      
 	     'verbose+'            => \$verbose,
+	     'v+'                  => \$verbose,
 	     'no-mirror'           => \$no_mirror,
 	     'out-osm'             => \$out_osm,
 	     'limit-area'          => \$use_area_limit,

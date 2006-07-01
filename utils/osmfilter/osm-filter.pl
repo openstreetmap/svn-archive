@@ -49,8 +49,9 @@ my $out_osm           = 0;
 my $use_area_limit    = 0;
 my $use_reduce_filter = 0;
 my $draw_check_areas  = 0;
+my $generate_ways =0;
 
-my $first_id=100000000;
+my $first_id=10000;
 my $next_osm_node_number    = $first_id;
 my $osm_segment_number = $first_id;
 my $osm_way_number     = $first_id;
@@ -286,7 +287,9 @@ sub read_gps_file($) {
 	delete $elem->{'quality'};
 	delete $elem->{'noise'};
 	$elem->{'speed'} = delete($elem->{'spd'}) * 1;
-	#print Dumper(\$elem);
+	if ( $debug > 10 ) {
+	    print Dumper(\$elem);
+	}
 	push(@{$track},$elem);
     };
     
@@ -423,6 +426,7 @@ sub write_gpx_file($$) { # Write an gpx File
     print $fh "    xmlns=\"http://www.ostertag.name\"\n";
     print $fh "    >\n";
     my $track_id=0;
+    my $point_count=0;
     for my $track ( @{$tracks} ) {
 	$track_id++;
 	print $fh "\n";
@@ -432,15 +436,22 @@ sub write_gpx_file($$) { # Write an gpx File
 	print $fh "    <trkseg>\n";
 
 	for my $elem ( @{$track} ) {
-    	    my $lat  = $elem->{lat};
+	    $point_count++;
+	    my $lat  = $elem->{lat};
 	    my $lon  = $elem->{lon};
 	    print $fh "     <trkpt lat=\"$lat\" lon=\"$lon\">\n";
 	    if( defined $elem->{ele} ) {
 		print $fh "       <ele>$elem->{ele}</ele>\n";
 	    };
 	    if ( defined ( $elem->{time} ) ) {
-		my $time = UnixDate("epoch ".$elem->{time},"%m/%d/%Y %H:%M:%S");
+		$elem->{time_sec}=int($elem->{time});
+		$elem->{time_usec}=$elem->{time}-$elem->{time_sec};
+		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
+		$time .= ".$elem->{time_sec}";
 		#$time = "2004-11-12T15:04:40Z";
+		if ( $debug ) {
+		    print "elem-time: $elem->{time} UnixDate: $time\n";
+		}
 		print $fh "       <time>".$time."</time>\n";
 	    }
 	    if( defined $elem->{fix} ) {
@@ -456,10 +467,7 @@ sub write_gpx_file($$) { # Write an gpx File
     print $fh "</gpx>\n";
     $fh->close();
 
-    if ( $verbose) {
-	printf "Wrote GPX File $file_name in  %.0f sec\n",time()-$start_time;
-    }
-
+    printf "Wrote GPX File $file_name ($track_id Tracks with $point_count Points)in  %.0f sec\n",time()-$start_time;
 }
 
 #------------------------------------------------------------------
@@ -608,14 +616,15 @@ my $areas_allowed_squares =
 #     { lat =>  48.1750 	,lon => 11.7536    ,proximity => .10  , block => 1 },
 	 
 	 # Waypoints from GPSDrive ~/.gpsdrive/way.txt File proximity is circle radius
-     { wp => "Dorfen"  	,proximity => 10  },
-     { wp => "Gabi"		},
+#     { wp => "Dorfen"  	,proximity => 10  },
+     { wp => "Gabi"		,proximity => 4  },
+#     { wp => "Gabi"		,proximity => 10  },
 #     { wp => "Erding"		},
 #     { wp => "Wind3"		},
 #     { wp => "Taufkirchen"  	},
 #     { wp => "Isen"		},
-     { wp => "Kirchdorf"  	,proximity => 15  },
-     { wp => "Pfaffing"   	,proximity => 15  },
+#     { wp => "Kirchdorf"  	,proximity => 6  },
+#     { wp => "Pfaffing"   	,proximity => 15  },
 #     { wp => "Kirchheim"	},
 	 
 	 # Allow Rules for square size areas
@@ -1145,19 +1154,20 @@ sub write_osm_file($) { # Write an osm File
     }
 
     # --- Ways
-    for my $way_id ( keys %{$osm_ways} ) {
-	next unless $way_id;
-	my $way = $osm_ways->{$way_id};
-	print $fh "	<way id=\"-$way_id\">\n";
-	print $fh tags2osm($way);
-	
-	for my $seg_id ( @{$way->{seg}} ) {
-	    next unless $seg_id;
-	    print $fh "	 <seg id=\"-$seg_id\"/>\n";
+    if ( $generate_ways ) {
+	for my $way_id ( keys %{$osm_ways} ) {
+	    next unless $way_id;
+	    my $way = $osm_ways->{$way_id};
+	    print $fh "	<way id=\"-$way_id\">\n";
+	    print $fh tags2osm($way);
+	    
+	    for my $seg_id ( @{$way->{seg}} ) {
+		next unless $seg_id;
+		print $fh "	 <seg id=\"-$seg_id\"/>\n";
+	    }
+	    print $fh "	</way>\n";
 	}
-	print $fh "	</way>\n";
     }
-
 
     print $fh "</osm>\n";
     $fh->close();
@@ -1204,7 +1214,7 @@ sub convert_Data(){
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
 	if ( $filename =~ m/-converted.gpx$/ ) {
-	    print "Skipping File $filename\n";
+	    print "Skipping File $filename for read\n";
 	    next;
 	}
 
@@ -1303,6 +1313,7 @@ GetOptions (
 	     'limit-area'          => \$use_area_limit,
 	     'draw_check_areas'    => \$draw_check_areas,
 	     'use_reduce_filter'   => \$use_reduce_filter,
+	     'generate_ways'       => \$generate_ways,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
@@ -1376,11 +1387,17 @@ For now the Filter areas have to be defined in the Source at
 the definition of
   $areas_allowed_squares = 
 
-=item B<-use_reduce_filter>
+=item B<--use_reduce_filter>
 
 This Filter reduces the ammount of point used in the GPX/OSM File.
 Each point which would almost give a streight line 
 with its pre and post point will be eliminated.
+
+=item B<--generate_ways>
+
+Try to generate ways inside the OSM structure. 
+Still only testing
+
 
 =item <File1.gps> [<File2.gps>,...]
 

@@ -1214,6 +1214,8 @@ sub convert_Data(){
 	    $new_tracks = Gpsbabel::read_file($filename,"mapsource");
 	} elsif ( $filename =~ m/\.gdb$/ ) {
 	    $new_tracks = Gpsbabel::read_file($filename,"gdb");
+	} elsif ( $filename =~ m/\.ns1$/ ) {
+	    $new_tracks = Gpsbabel::read_file($filename,"netstumbler");    
 	} elsif ( $filename =~ m/\.sav$/ ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	}
@@ -1247,16 +1249,18 @@ sub convert_Data(){
 	my $osm_filename = $filename;
 	if ( $track_count > 0 ) {
 	    my $new_gpx_file = $osm_filename;
-	    $new_gpx_file =~ s/\.(sav|gps|gpx|mps|gdb)$/-converted.gpx/;
-	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
-		if $single_file;
+	    if ( $new_gpx_file =~ s/\.(sav|gps|gpx|mps|gdb|ns1)$/-converted.gpx/ ) {
+		GPX::write_gpx_file($new_tracks,$new_gpx_file)
+		    if $single_file;
+		};
 	    
 	    my $new_osm_file = $osm_filename;
-	    $new_osm_file =~ s/\.(sav|gps|gpx|mps|gdb)$/.osm/;
-	    my $points = OSM::Tracks2osm($new_tracks,$filename);
-	    # TODO this still writes out all points since beginning
-	    OSM::write_osm_file($new_osm_file)
-		if $out_osm;
+	    if ( $new_osm_file =~ s/\.(sav|gps|gpx|mps|gdb|ns1)$/.osm/ ) {
+		my $points = OSM::Tracks2osm($new_tracks,$filename);
+		# TODO this still writes out all points since beginning
+		OSM::write_osm_file($new_osm_file)
+		    if $out_osm;
+	    }
 
 	}
 
@@ -1268,7 +1272,7 @@ sub convert_Data(){
 	}
     }
 
-    OSM::write_osm_file("__combination.osm")
+    OSM::write_osm_file("00__combination.osm")
 	if $out_osm;
 
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
@@ -1277,7 +1281,7 @@ sub convert_Data(){
     my $check_areas = GPS::draw_check_areas();
     GPS::add_tracks($all_tracks,$check_areas);
 
-    GPX::write_gpx_file($all_tracks,"__combination.gpx");
+    GPX::write_gpx_file($all_tracks,"00__combination.gpx");
     if ( $verbose) {
 	printf "Converting $count  OSM Files in  %.0f sec\n",time()-$start_time;
     }
@@ -1325,6 +1329,8 @@ B<kismet2osm.pl> is a program to konvert the *.gps Files of kismet to a
 
 This Programm is completely experimental, but some Data 
 can already be retrieved with it.
+Since the script is still in Alpha Stage, please make backups 
+of your source gpx/kismet,... Files.
 
 So: Have Fun, improve it and send me fixes :-))
 
@@ -1347,13 +1353,17 @@ Complete documentation
 
 *.osm files will only be generated if this option is set.
 
+There is still a Bug/"Design Flaw" so all single .osm Files might 
+always be a collection of all previous read Files.
+
+
 =item B<--limit-area>
 
 use the area limits coded in the source
 
 =item B<--draw_check_areas>
 
-draw the check_areas into the __combination.gpx file by adding a track with the border 
+draw the check_areas into the 00__combination.gpx file by adding a track with the border 
 of each check_area 
 
 =item B<File1> The Kismet(gps)|gpx/GPSDrive(sav)|Garmin(gdb|mps) Files to read
@@ -1363,6 +1373,6 @@ to read all Files in a specified directory at once do the following:
  find <kismet_dir>/log -name "*.gps" | xargs ./kismet2osm.pl
 
 this will result in a File with the name 
- ./__combination.gpx
+ ./00__combination.gpx
 
 =back

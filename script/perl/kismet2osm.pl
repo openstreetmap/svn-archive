@@ -31,7 +31,6 @@ use IO::File;
 use Pod::Usage;
 use Storable ();
 use XML::Parser;
-use Geo::Gpsdrive::Utils;
 
 my ($man,$help);
 our ($debug,$verbose,$no_mirror,$PROXY);
@@ -46,6 +45,7 @@ my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
 my $out_osm           = 0;
 my $use_area_limit    = 0;
+my $use_reduce_filter = 0;
 my $draw_check_areas  = 0;
 
 my $first_id=100000000;
@@ -84,7 +84,7 @@ sub max($$){
 # ------------------------------------------------------------------
 # Distance in Km between 2 geo points with lat/lon
 # Wild estimation of Earth radius 40.000Km
-sub distance_point_point($$) {
+sub distance_point_point_Km($$) {
     my $p1 = shift;
     my $p2 = shift;
     no warnings 'deprecated';
@@ -155,7 +155,12 @@ sub angle_north($$){
 }
 
 # ------------------------------------------------------------------
-# Minimal Distance between line and point
+# Minimal Distance between line and point in degrees
+sub distance_line_point_Km($$$$$$) {
+    return distance_line_point(@_)*40000/360;
+}
+# ------------------------------------------------------------------
+# Minimal Distance between line and point in degrees
 sub distance_line_point($$$$$$) {
     my $x1 = shift;
     my $y1 = shift;
@@ -167,13 +172,17 @@ sub distance_line_point($$$$$$) {
 
 
     printf "distance_line_point(%f,%f, %f,%f,   %f,%f)\n", $x1, $y1, $x2, $y2,  $xp, $yp
-	if ( $debug >0 ) ;
-    
+	if ( $debug >10 ) ;
+
     my $dx1p = $x1 - $xp;
     my $dx21 = $x2 - $x1;
     my $dy1p = $y1 - $yp;
     my $dy21 = $y2 - $y1;
     my $frac = $dx21 * $dx21 + $dy21 * $dy21;
+
+    if ( $frac == 0 ) {
+	return(sqrt(($x1-$xp)*($x1-$xp) + ($y1-$yp)*($y1-$yp)));
+    }
 
     my $lambda = -($dx1p * $dx21 + $dy1p * $dy21) / $frac;
     printf "distance_line_point(): lambda_1: %f\n",$lambda
@@ -201,8 +210,9 @@ sub data_open($){
     my $file_name = shift;
 
     my $file_with_path="$file_name";
-    if ( -s $file_with_path < 270 ) {
-	warn "cannot Open $file_name (".(-s $file_with_path)." Bytes is too small)\n"
+    my $size = (-s $file_with_path)||0;
+    if ( $size < 270 ) {
+	warn "cannot Open $file_name ($size) Bytes is too small)\n"
 	    if $verbose || $debug;
 	return 0;
     }
@@ -226,7 +236,6 @@ sub data_open($){
 package Kismet;
 ##################################################################
 use Date::Parse;
-use Geo::Gpsdrive::Utils;
 use Data::Dumper;
 # -----------------------------------------------------------------------------
 # Read GPS Data from Kismet File
@@ -312,7 +321,6 @@ sub read_file($$) {
 package GPX;
 ##################################################################
 use Date::Parse;
-use Geo::Gpsdrive::Utils;
 use Data::Dumper;
 use Date::Parse;
 use Date::Manip;
@@ -329,7 +337,8 @@ sub read_gpx_file($) {
 	$fh = $file_name;
     } else {
 	print("Reading $file_name\n") if $verbose || $debug;
-	print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
+	my $size = (-s $file_name) || 0;
+	print "$file_name:	$size Bytes\n" if $debug;
 
 	print STDERR "Parsing file: $file_name\n" if $debug;
 	$fh = File::data_open($file_name);
@@ -510,7 +519,6 @@ sub write_osm_data_as_gpx_file($) { # Write an gpx File
 package GPSDrive;
 ##################################################################
 use Date::Parse;
-use Geo::Gpsdrive::Utils;
 use Data::Dumper;
 
 # -----------------------------------------------------------------------------
@@ -584,7 +592,6 @@ sub get_waypoint($) {
 package GPS;
 ##################################################################
 use Date::Parse;
-use Geo::Gpsdrive::Utils;
 use Data::Dumper;
 use Math::Trig;
 
@@ -601,11 +608,13 @@ my $areas_allowed_squares =
 	 # Waypoints from GPSDrive ~/.gpsdrive/way.txt File proximity is circle radius
      { wp => "Dorfen"  	,proximity => 10  },
      { wp => "Gabi"		},
-     { wp => "Erding"		},
-     { wp => "Wind3"		},
-     { wp => "Taufkirchen"  	},
-     { wp => "Isen"		},
-     { wp => "Kirchheim"	},
+#     { wp => "Erding"		},
+#     { wp => "Wind3"		},
+#     { wp => "Taufkirchen"  	},
+#     { wp => "Isen"		},
+     { wp => "Kirchdorf"  	,proximity => 15  },
+     { wp => "Pfaffing"   	,proximity => 15  },
+#     { wp => "Kirchheim"	},
 	 
 	 # Allow Rules for square size areas
 	 # min_lat,min_lon max_lat,max_lon,     (y,x)
@@ -628,9 +637,10 @@ sub check_allowed_area($){
 		my $proximity;
 		($area->{lat},$area->{lon},$proximity) = GPSDrive::get_waypoint($area->{wp});
 		$area->{proximity} ||= $proximity;
+		$area->{proximity} ||= 10;
 	    }
 	    
-	    if ( Geometry::distance_point_point($area,$elem) < $area->{proximity} ) {
+	    if ( Geometry::distance_point_point_Km($area,$elem) < $area->{proximity} ) {
 		return ! $area->{block};
 	    }
 	} else {
@@ -703,7 +713,7 @@ sub enrich_data($$){
 	    $elem->{time} = 0 unless defined $elem->{time};
 
 	    if (  $prev_elem ) {
-		my $dist  = Geometry::distance_point_point($prev_elem,$elem);
+		my $dist  = Geometry::distance_point_point_Km($prev_elem,$elem);
 		my $angle = Geometry::angle_north($prev_elem,$elem);
 		my ($d_lat,$d_lon) = Geometry::distance_degree_point_point($prev_elem,$elem);
 		$elem->{dist}=$dist;   # in Km
@@ -811,6 +821,7 @@ sub count_data($){
     }
     return ( $count_tracks,$count_points);
 }
+
 # ------------------------------------------------------------------
 # Filter tracks with points
 # check_allowed_area($elem) tells if this element is added or not
@@ -850,6 +861,65 @@ sub filter_data_by_area($){
 	}
     }
     print "Filter by Area: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points\n"
+	if $debug || $verbose;
+    @{$tracks}=@{$new_tracks};
+}
+
+
+# ------------------------------------------------------------------
+# Filter tracks with points
+# delete points which are 
+# inside a straight line of the point before and after
+sub filter_data_reduce_points($){
+    my $tracks      = shift; # reference to tracks list
+
+    return unless $use_reduce_filter;
+
+    my $new_tracks = [];
+
+    my $good_points=0;
+    my $deleted_points=0;
+    my $good_tracks=0;
+    for my $track ( @{$tracks} ) {
+	my $new_track = [];
+	my $last_angle         = 999999999;
+	my $last_elem = undef;
+	push(@{$new_track},$track->[0]);
+	my $size = scalar(@{$track});
+	for my $i ( 2 .. $size ) {
+	    my $skip_point =  0;
+	    my $elem0 = $new_track->[-1];
+	    my $elem1 = $track->[$i-1];
+	    my $elem2 = $track->[$i];
+	    my $dist_0_2 = Geometry::distance_point_point_Km($elem0,$elem2);
+	    if ( $dist_0_2 > .5 ) { # max .5 km distanz
+		print "Elem0 und Elem2 have $dist_0_2 Km Distance, which would be too much\n"
+		    if $debug >10;
+	    } else {
+		my $dist = Geometry::distance_line_point_Km($elem0->{lat},$elem0->{lon},
+							 $elem2->{lat},$elem2->{lon},
+							 $elem1->{lat},$elem1->{lon}
+							 );
+		$skip_point =  1 if $dist < 0.001;
+		print "Elem $i is $dist m away from line\n"
+		    if $debug >10;
+	    }
+	    if ( $skip_point ) {
+		print "Delete Element $i\n"
+		    if $debug >10;
+	    } else {
+		push(@{$new_track},$elem1);
+		$good_points++;
+	    }
+	}
+	push(@{$new_track},$track->[-1]);
+	my $num_elem=scalar(@{$new_track});
+	if ( $num_elem ) {
+	    push(@{$new_tracks},$new_track);
+	    $good_tracks++;
+	}
+    }
+    print "Filter to reduce number of points: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points\n"
 	if $debug || $verbose;
     @{$tracks}=@{$new_tracks};
 }
@@ -927,7 +997,7 @@ sub Tracks2osm($$){
 
 	    # -------------------------------------------- Create Segments
 	    if ( $node_from && $node_to && ! $skip_point) {
-		$dist = Geometry::distance_point_point($osm_nodes->{$node_from},$elem);
+		$dist = Geometry::distance_point_point_Km($osm_nodes->{$node_from},$elem);
 	    }
 	    
 	    if (  ! $skip_point ) {
@@ -967,19 +1037,19 @@ sub Tracks2osm($$){
 
 	    if ( $seg_id &&	 ! $skip_point  ) {
 		if ( $debug) {
-		    $osm_segments->{$seg_id}->{tag}->{time_diff} = $elem->{time_diff};
+		    #$osm_segments->{$seg_id}->{tag}->{time_diff} = $elem->{time_diff};
 		    if ( defined ( $elem->{speed} ) ) {
 			$osm_segments->{$seg_id}->{tag}->{speed} = $elem->{speed};
 		    }
 		    $osm_segments->{$seg_id}->{tag}->{angle} = $angle;
-		    $osm_segments->{$seg_id}->{tag}->{d_lat} = $elem->{d_lat};
-		    $osm_segments->{$seg_id}->{tag}->{d_lon} = $elem->{d_lon};
+		    #$osm_segments->{$seg_id}->{tag}->{d_lat} = $elem->{d_lat};
+		    #$osm_segments->{$seg_id}->{tag}->{d_lon} = $elem->{d_lon};
 		}
 		if ( defined ( $last_angle )) {
 		    $angle_to_last = $angle - $last_angle;
 		    $angle_to_last = - ( 360 - $angle_to_last) if $angle_to_last > 180;
 		    if ( $debug) {
-			$osm_segments->{$seg_id}->{tag}->{angle_to_last} = $angle_to_last;
+			#$osm_segments->{$seg_id}->{tag}->{angle_to_last} = $angle_to_last;
 		    }
 		} else {
 		    $angle_to_last=0;
@@ -1131,6 +1201,11 @@ sub convert_Data(){
     my $count=0;
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
+	if ( $filename =~ m/-converted.gpx$/ ) {
+	    print "Skipping File $filename\n";
+	    next;
+	}
+
 	if ( $filename =~ m/\.gps$/ ) {
 	    $new_tracks = Kismet::read_gps_file($filename);
 	} elsif ( $filename =~ m/\.gpx$/ ) {
@@ -1159,6 +1234,13 @@ sub convert_Data(){
 	    printf "Results in  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
 	}
 
+	GPS::filter_data_reduce_points($new_tracks);
+	($track_count,$point_count) =   GPS::count_data($new_tracks);
+	if ( $verbose || $debug) {
+	    printf "Results in  %5d Points in %d Tracks after filtering\n",$point_count,$track_count;
+	}
+
+
 	$count ++ if $point_count && $track_count;
 
 
@@ -1172,10 +1254,12 @@ sub convert_Data(){
 	    my $new_osm_file = $osm_filename;
 	    $new_osm_file =~ s/\.(sav|gps|gpx|mps|gdb)$/.osm/;
 	    my $points = OSM::Tracks2osm($new_tracks,$filename);
+	    # TODO this still writes out all points since beginning
 	    OSM::write_osm_file($new_osm_file)
 		if $out_osm;
 
 	}
+
 	GPS::add_tracks($all_tracks,$new_tracks);
 	if ( $point_count && $track_count ) {
 	    printf "Added:  %5d(%5d) Points in %3d(%3d) Tracks for %s\n",
@@ -1184,13 +1268,15 @@ sub convert_Data(){
 	}
     }
 
+    OSM::write_osm_file("__combination.osm")
+	if $out_osm;
+
+    ($track_count,$point_count) =   GPS::count_data($all_tracks);
+    printf "Summary:  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
+
     my $check_areas = GPS::draw_check_areas();
     GPS::add_tracks($all_tracks,$check_areas);
 
-    OSM::write_osm_file("__combination.osm")
-	if $out_osm;
-    ($track_count,$point_count) =   GPS::count_data($all_tracks);
-    printf "Summary:  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
     GPX::write_gpx_file($all_tracks,"__combination.gpx");
     if ( $verbose) {
 	printf "Converting $count  OSM Files in  %.0f sec\n",time()-$start_time;
@@ -1210,6 +1296,7 @@ GetOptions (
 	     'out-osm'             => \$out_osm,
 	     'limit-area'          => \$use_area_limit,
 	     'draw_check_areas'    => \$draw_check_areas,
+	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
@@ -1266,16 +1353,16 @@ use the area limits coded in the source
 
 =item B<--draw_check_areas>
 
-draw the checkareays into the file by adding a track with the border 
-of each trackarea
+draw the check_areas into the __combination.gpx file by adding a track with the border 
+of each check_area 
 
-=item B<File1> The Kismet/gpx/sav Files to read
+=item B<File1> The Kismet(gps)|gpx/GPSDrive(sav)|Garmin(gdb|mps) Files to read
 
 to read all Files in a specified directory at once do the following:
 
  find <kismet_dir>/log -name "*.gps" | xargs ./kismet2osm.pl
 
-this will result in only one File with the name 
- ./__combination.osm
+this will result in a File with the name 
+ ./__combination.gpx
 
 =back

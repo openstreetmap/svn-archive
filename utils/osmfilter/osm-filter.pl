@@ -447,7 +447,7 @@ sub write_gpx_file($$) { # Write an gpx File
 		$elem->{time_sec}=int($elem->{time});
 		$elem->{time_usec}=$elem->{time}-$elem->{time_sec};
 		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
-		$time .= ".$elem->{time_sec}";
+		$time .= ".$elem->{time_usec}" if $elem->{time_usec};
 		#$time = "2004-11-12T15:04:40Z";
 		if ( $debug ) {
 		    print "elem-time: $elem->{time} UnixDate: $time\n";

@@ -18,7 +18,7 @@ use strict;
 use osmutil;
 
 use vars qw ($opt_getnode $opt_getnodehistory $opt_createnode $opt_deletenode
-	     $opt_getseg $opt_get_seghistory $opt_createseg $opt_deleteseg 
+	     $opt_getseg $opt_getseghistory $opt_createseg $opt_deleteseg 
 	     $opt_from 
 	     $opt_to $opt_passwd $opt_user
 	     $opt_nodetagupdate $opt_getmap);
@@ -81,6 +81,12 @@ if (defined $opt_getseg) {
     exit 0;
 }
 
+if (defined $opt_getseghistory) {
+    my $s = osmutil::get_segment_history ($opt_getseghistory, $username, $password);
+    print "SEGMENT: $s\n";
+    exit 0;
+}
+
 
 if (defined $opt_createseg) {
     if (not defined $opt_from) {
@@ -91,7 +97,7 @@ if (defined $opt_createseg) {
 	print STDERR "--to must be defined\n";
 	exit 1;
     }
-    my $resp = osmutil::create_segment ($opt_from, $opt_to, "", $username,
+    my $resp = osmutil::create_segment ($opt_from, $opt_to, $username, 
 					$password);
     print "Segment created: $resp\n";
     exit 0;
@@ -109,6 +115,10 @@ if (defined $opt_deleteseg) {
 }
 
 if (defined $opt_nodetagupdate) {
+
+    #
+    # Does not work, old method
+    #
 
     my $uid = osmutil::create_node ($lat, $lon, "", $username, $password);
     print STDERR "UID: $uid\n";

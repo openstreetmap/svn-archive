@@ -137,14 +137,21 @@ sub get_segment {
     return $resp;
 }
 
+sub get_segment_history {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("segment/$uid/history", $username, $password);
+    return $resp;
+}
+
 sub create_segment {
     my $from = shift;
     my $to = shift;
-    my $tags = shift;
     my $username = shift;
     my $password = shift;
     my $data = "<osm version='0.2'>
-<segment id='0' tags='$tags' from='$from' to='$to'/>
+<segment id='0' from='$from' to='$to'/>
 </osm>";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";

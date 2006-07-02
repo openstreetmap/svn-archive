@@ -452,7 +452,7 @@ sub write_gpx_file($$) { # Write an gpx File
 		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
 		$time .= ".$elem->{time_usec}" if $elem->{time_usec};
 		#$time = "2004-11-12T15:04:40Z";
-		if ( $debug ) {
+		if ( $debug >20) {
 		    print "elem-time: $elem->{time} UnixDate: $time\n";
 		}
 		print $fh "       <time>".$time."</time>\n";
@@ -1036,7 +1036,7 @@ sub Tracks2osm($$){
 			$osm_segments->{$seg_id} = { from => $node_from,
 						     to   => $node_to
 						     };
-			if ( $debug) {
+			if ( $debug >20 ) {
 			    $osm_segments->{$seg_id}->{tag} ={ distance => $dist,
 							       distance_meter => $dist*1000,
 							       reference => $reference,
@@ -1349,6 +1349,73 @@ Since the script is still in Alpha Stage, please make backups
 of your source gpx/kismet,... Files.
 
 So: Have Fun, improve it and send me fixes :-))
+
+
+This description is still preleminary, since the script is 
+still in the stage of development, but for me it was already 
+very usefull. Any hints/suggestions/patches are welcome.
+Most of the threasholds are currently hardcoded in the source. 
+But since it's a perl script it shouldn't be too much effort 
+to change them. If you think we need some of these in a config-file 
+i can try to add a config file to the script too.
+
+The Idea behind the osm-filter is:
+ - reading some different input formats. 
+       Input is currently one of the folowing:
+         - Kismet-GPS File   *.gps 
+         - GpsDrive-Track    *.sav
+         - GPX File          *.gpx
+         - Garmin mps File   *.mps
+         - Garmin gdb File   *.gdb
+ - Then the Data is optionally filtered by area filters.
+   For this you can define squares- and circle- shaped areas
+   where the data is accepted or dropped.
+   For now the areas can only be defined in the Source, 
+   but this will change in the future.
+   This can be for example be used to:
+     - eliminate your home position where your gps always 
+       walk arround in circles.
+     - eliminate areas already mapped completely
+     - limit your editing/uploading to a special area
+   The areas are currently defined like
+     { lat =>  48.1111 	,lon => 11.7111    ,proximity => .10  , block => 1 },
+     { wp => "MyHome"  	,proximity => 6, block => 1 },
+   Where MyHome is a GPSDrive waypoint taken from ~/.gpsdrive/way.txt
+    proximity is defaulted by the proximity in the way.txt File (column 8)
+    block is defaulted with 0
+    If you want to see the filter areas in the resulting gpx file you can 
+    use the option    --draw_check_areas. This will draw in the check areas 
+    as seperate tracks.
+ - Then osm-filter then enriches the Data for internal use by adding:
+	- speed of each segment (if necessary)
+        - distance to last point 
+        - angle to last segment (Which would represent steering wheel angle)
+ - Then osm-filter is splitting the tracks if necessary.
+   This is needed if you have for example gathered Tracks 
+   with a Garmin handheld. There the Tracks get combined 
+   even if you had no reception or switched of the unit inbetween.
+   The decission to split the tracks is done by checking if:
+      - time between points is too high ( > 60 seconds for now )
+      - Speed is too high ( > 200 Km/h for now )
+      - Distance between 2 point is too high ( >1 Km for now)
+   Then each Track with less than 3 points is discarded.
+ - After that the ammount of Datapoints is reduced. This is done by
+   looking at three trackpoints in a row. For now I calculate the
+   distance between the line of point 1 and 3 to the point in the 
+   middle. If this distance is small enough (currently 1 meter) the 
+   middle point is dropped, because it doesn't really improve the track.
+ - if you use the option 
+       --generate_ways
+   osm-filter tries to determin continuous ways by looking 
+   at the angle to the last segment, the speed and distance.
+
+ - This is now done for all input Files. So you can also use 
+   multiple input files as source and combine them to ine large 
+   output File.
+
+ - After this all now existing data iw written to a gpx file.
+ - If you add the option  --out-osm. osm-filter tries 
+   to generate an *.osm file out of this Data.
 
 =head1 SYNOPSIS
 

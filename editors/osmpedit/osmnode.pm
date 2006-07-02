@@ -76,14 +76,14 @@ sub get_osmuid {
 sub add_from {
     my $self = shift;
     my $uid = shift;
-    print STDERR "ADDING FROM: $uid\n";
+##    print STDERR "ADDING FROM: $uid\n";
     push @{$self->{FROMS}}, $uid;
 }
 
 sub add_to {
     my $self = shift;
     my $uid = shift;
-    print STDERR "ADDING TO: $uid\n";
+##    print STDERR "ADDING TO: $uid\n";
     push @{$self->{TOS}}, $uid;
 }
 

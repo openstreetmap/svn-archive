@@ -35,6 +35,7 @@ sub new {
 	TRACKSHIDDEN => 0,
 	NODESSHIDDEN => 0,
 	SEGMENTSHIDDEN => 0,
+	WAYSHIDDEN => 0,
 	TRACKCOLLECTION => 0,
 	FRAME => 0,
 	CANVAS => 0,
@@ -343,6 +344,12 @@ sub fix_order {
 	$can->raise ("image", $top);
 	my $top = "image";
     }
+    if (not $self->{WAYSHIDDEN}) {
+	if ($can->find ("withtag", "osmway")) {
+	    $self->get_canvas ()->raise ("osmway", $top);
+	    $top = "osmway";
+	}
+    } 
     if (not $self->{TRACKSHIDDEN}) {
 	if ($can->find ("withtag", "track")) {
 	    $self->get_canvas ()->raise ("track", $top);
@@ -390,6 +397,16 @@ sub toggle_segments {
 	$self->{SEGMENTSHIDDEN}  = 0;
     } else {
 	$self->{SEGMENTSHIDDEN} = 1;
+    }
+    $self->fix_order ();
+}
+
+sub toggle_ways {
+    my $self = shift;
+    if ($self->{WAYSHIDDEN}) {
+	$self->{WAYSHIDDEN}  = 0;
+    } else {
+	$self->{WAYSHIDDEN} = 1;
     }
     $self->fix_order ();
 }

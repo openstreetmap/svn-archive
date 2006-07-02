@@ -24,6 +24,7 @@ use strict;
 
 use osmnode;
 use osmsegment;
+use osmway;
 use osmutil;
 
 use XML::TokeParser;
@@ -36,6 +37,7 @@ sub new {
 	PASSWORD => "unspecified",
 	UIDTOSEGMENTMAP => {},
 	UIDTONODEMAP => {},
+	UIDTOWAYMAP => {},
 	ITEMTOUID => {},
 	UIDTOITEM => {},
 	SEGCOLOUR => {},
@@ -57,6 +59,7 @@ sub clean {
     my $self = shift;
     $self->{UIDTOSEGMENTMAP} = {};
     $self->{UIDTONODEMAP} = {};
+    $self->{UIDTOWAYMAP} = {};
     $self->{ITEMTOUID} = {};
     $self->{UIDTOITEM} = {};
 }
@@ -78,6 +81,14 @@ sub add_node {
     $self->{UIDTONODEMAP}->{$uid} = $n;
 }
 
+sub add_way {
+    my $self = shift;
+    my $w = shift;
+##    push @{$self->{NODES}}, $n;
+    my $uid = $w->get_uid ();
+    $self->{UIDTOWAYMAP}->{$uid} = $w;
+}
+
 sub get_nodes {
     my $self = shift;
     my  @res = ();
@@ -89,6 +100,18 @@ sub get_nodes {
     }
     return @res;
 #    return @{$self->{NODES}};
+}
+
+sub get_ways {
+    my $self = shift;
+    my  @res = ();
+    foreach my $k (keys %{$self->{UIDTOWAYMAP}}) {
+	my $way = $self->{UIDTOWAYMAP}->{$k};
+	if ($way) {
+	    push @res, $way;
+	}
+    }
+    return @res;
 }
 
 sub get_segment_colour {
@@ -154,6 +177,13 @@ sub get_segment {
     my $uid = shift;
     my $segment = $self->{UIDTOSEGMENTMAP}->{$uid};
     return $segment;
+}
+
+sub get_way {
+    my $self = shift;
+    my $uid = shift;
+    my $way = $self->{UIDTOWAYMAP}->{$uid};
+    return $way;
 }
 
 sub get_node_from_item {
@@ -306,7 +336,7 @@ sub parse {
 	    return;
 	}
 	my $t;
-	my $current_node_or_segment = 0;
+	my $current_node_segment_way = 0;
 	while (1) {
 	    eval {$t = $p->get_tag() };
 	    if ($@) {
@@ -321,33 +351,51 @@ sub parse {
 		    my $lat = $attr->{lat};
 		    my $lon = $attr->{lon};
 		    my $uid = $attr->{id};
+		    my $timestamp = $attr->{timestamp};
 ##		    print STDERR "NODE $lat $lon $uid\n";
 		    my $node = new osmnode;
 		    $node->set_lat ($lat);
 		    $node->set_lon ($lon);
 		    $node->set_uid ("n$uid");
 		    $self->add_node ($node);
-		    $current_node_or_segment = $node;
+		    $current_node_segment_way = $node;
 		}
 		if ($name eq "tag") {
 		    my $attr = $t->attr;
 		    my $k = $attr->{k};
 		    my $v = $attr->{v};
 ##		    print STDERR "TAG $k: $v\n";
-		    $current_node_or_segment->add_key_value ($k, $v);
+		    $current_node_segment_way->add_key_value ($k, $v);
+		}
+		if ($name eq "seg") {
+		    my $attr = $t->attr;
+		    my $s = $attr->{id};
+		    print STDERR "  WAYSEG $s\n";
+		    $current_node_segment_way->add_segment ("s$s");
 		}
 		if ($name eq "segment") {
 		    my $attr = $t->attr;
 		    my $from = $attr->{from};
 		    my $to = $attr->{to};
-		    my $uid = $attr->{id};
-		    print STDERR "SEGMENT $from $to $uid\n";
+		    my $id = $attr->{id};
+		    my $timestamp = $attr->{timestamp};
+##		    print STDERR "SEGMENT $from $to $id\n";
 		    my $s = new osmsegment;
 		    $s->set_from ("n$from");
 		    $s->set_to ("n$to");
-		    $s->set_uid ("s$uid");
+		    $s->set_uid ("s$id");
 		    $self->add_segment ($s);
-		    $current_node_or_segment = $s;
+		    $current_node_segment_way = $s;
+		}
+		if ($name eq "way") {
+		    my $attr = $t->attr;
+		    my $id = $attr->{id};
+		    my $timestamp = $attr->{timestamp};
+		    print STDERR "WAY $id --- $timestamp\n";
+		    my $s = new osmway;
+		    $s->set_uid ("w$id");
+		    $self->add_way ($s);
+		    $current_node_segment_way = $s;
 		}
 	    }
 	}
@@ -415,6 +463,44 @@ sub draw {
 
     $can->delete ("osmsegment");
     $can->delete ("osmnode");
+    $can->delete ("osmway");
+
+    foreach my $way ($self->get_ways ()) {
+	my @segids = $way->get_segments ();
+
+	foreach my $uid (@segids) {
+	    my $segment = $self->get_segment ($uid);
+	    if (not $segment) {
+		print STDERR "WARNING: WAY SEGMENT DOES NOT EXIST --- $uid\n";
+		next;
+	    }
+
+	    my ($x0, $y0, $x1, $y1) = 
+		$self->get_segment_canvas_coords ($landsat, $segment);
+	    next unless ($x0);
+
+	    my $colour = "white";
+	    my $class = $segment->get_class ();
+	    my $car = $segment->get_car ();
+	    my $foot = $segment->get_foot ();
+	    my $bike = $segment->get_bike ();
+	    if ($class) {
+		my $c = $self->get_segment_colour ($class, $car, $bike, $foot);
+		if ($c) {
+		    $colour = $c;
+		} else {
+		    print STDERR "SEGMENT CLASS: $class\n";
+		}
+	    }
+	    
+	    my $item = $can->create ('line', $x0, $y0, $x1, $y1,
+#                      -arrow => "last",
+				     -fill => $colour,
+				     -width => 4,
+				     -tag => "osmway");
+	    $self->connect_uid_item ($uid, $item);
+	}
+    }
 
     foreach my $segment ($self->get_segments ()) {
 	my $uid = $segment->get_uid ();

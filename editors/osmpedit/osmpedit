@@ -292,6 +292,10 @@ $tbframe->Button (-text => "Toggle segments",
 		  -command => sub { $landsat->toggle_segments ()}
 		  )->pack (-side => "left");
 
+$tbframe->Button (-text => "Toggle ways",
+		  -command => sub { $landsat->toggle_ways ()}
+		  )->pack (-side => "left");
+
 $tbframe->Radiobutton (-variable => \$editmode,
                        -text => "Move",
                        -value => "move",

@@ -30,7 +30,7 @@ sub create_node {
     my $password = shift;
 
 ##    print STDERR "NEW NODE: $lat $lon\n";
-    my $data = "<osm version='0.2'>
+    my $data = "<osm version='0.3'>
 <node id='0' lon='$lon' lat='$lat'/>
 </osm>";
     print STDERR "DATA: $data\n";
@@ -69,7 +69,7 @@ sub update_node {
     my $username = shift;
     my $password = shift;
 
-    my $data = "<osm version='0.2'>
+    my $data = "<osm version='0.3'>
 <node lon='$lon' tags='$tags' uid='$uid'  lat='$lat'/>
 v</osm>";
 
@@ -145,12 +145,28 @@ sub get_segment_history {
     return $resp;
 }
 
+sub get_segment_ways {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("segment/$uid/ways", $username, $password);
+    return $resp;
+}
+
+sub get_segment_areas {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("segment/$uid/areas", $username, $password);
+    return $resp;
+}
+
 sub create_segment {
     my $from = shift;
     my $to = shift;
     my $username = shift;
     my $password = shift;
-    my $data = "<osm version='0.2'>
+    my $data = "<osm version='0.3'>
 <segment id='0' from='$from' to='$to'/>
 </osm>";
     print STDERR "DATA: $data\n";
@@ -182,7 +198,7 @@ sub update_segment {
     my $username = shift;
     my $password = shift;
 
-    my $data = "<osm version='0.2'>
+    my $data = "<osm version='0.3'>
 <segment tags='$tags' from='$from' to='$to' uid='$uid'/>
 v</osm>";
 
@@ -192,6 +208,52 @@ v</osm>";
     }
     return 1;
 }
+
+
+sub get_way {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("way/$uid", $username, $password);
+    return $resp;
+}
+
+sub get_way_history {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("way/$uid/history", $username, $password);
+    return $resp;
+}
+
+sub create_way {
+    my $username = shift;
+    my $password = shift;
+    my $data = "<osm version=\"0.3\">
+<way id=\"0\">
+</way>
+</osm>";
+    print STDERR "DATA: $data\n";
+##    my $resp = "dummy";
+    my $uid = curl::put_data ("way/0", $data, $username, $password);
+    if ($uid < 0) {
+	$uid = 0;
+    }
+    return $uid;
+}
+
+sub delete_way {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+
+    my $resp = curl::delete ("way/$uid", $username, $password);
+    if (not $resp) {
+	print STDERR "WARNING osmutil: Deletion of way $uid failed\n";
+    }
+    return $resp;
+}
+
 
 
 return 1;

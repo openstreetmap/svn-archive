@@ -19,13 +19,17 @@ use osmutil;
 
 use vars qw ($opt_getnode $opt_getnodehistory $opt_createnode $opt_deletenode
 	     $opt_getseg $opt_getseghistory $opt_createseg $opt_deleteseg 
+	     $opt_getsegways $opt_getsegareas
+	     $opt_getway $opt_getwayhistory $opt_createway $opt_deleteway 
 	     $opt_from 
 	     $opt_to $opt_passwd $opt_user
 	     $opt_nodetagupdate $opt_getmap);
 
 use Getopt::Mixed;
 Getopt::Mixed::getOptions("getseg=s getseghistory=s createseg deletesegment=s 
+                           getsegways=s getsegareas=s
                            getnode=s getnodehistory=s createnode deletenode=s
+                           getway=s getwayhistory=s createway deleteway=s
                            from=s to=s
                            passwd=s user=s
 			   nodetagupdate getmap");
@@ -87,6 +91,18 @@ if (defined $opt_getseghistory) {
     exit 0;
 }
 
+if (defined $opt_getsegways) {
+    my $s = osmutil::get_segment_ways ($opt_getsegways, $username, $password);
+    print "SEGMENT $opt_getsegways WAYS: $s\n";
+    exit 0;
+}
+
+if (defined $opt_getsegareas) {
+    my $s = osmutil::get_segment_areas ($opt_getsegareas, $username, $password);
+    print "SEGMENT $opt_getsegways AREAS: $s\n";
+    exit 0;
+}
+
 
 if (defined $opt_createseg) {
     if (not defined $opt_from) {
@@ -110,6 +126,37 @@ if (defined $opt_deleteseg) {
 	print "DELETE FAILED: $uid\n";
     } else {
 	print "Segment $uid deleted\n";;
+    }
+    exit 0;
+}
+
+
+
+if (defined $opt_getway) {
+    my $s = osmutil::get_way ($opt_getway, $username, $password);
+    print "WAY: $s\n";
+    exit 0;
+}
+
+if (defined $opt_getwayhistory) {
+    my $s = osmutil::get_way_history ($opt_getwayhistory, $username, $password);
+    print "WAY: $s\n";
+    exit 0;
+}
+
+if (defined $opt_createway) {
+    my $resp = osmutil::create_way ($username, $password);
+    print "Way created: $resp\n";
+    exit 0;
+}
+
+if (defined $opt_deleteway) {
+    my $uid = $opt_deleteway;
+    my $resp = osmutil::delete_way ($uid, $username, $password);
+    if (not $resp) {
+	print "DELETE FAILED: $uid\n";
+    } else {
+	print "Way $uid deleted\n";;
     }
     exit 0;
 }

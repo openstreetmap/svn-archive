@@ -325,7 +325,7 @@ sub parse {
 		    my $node = new osmnode;
 		    $node->set_lat ($lat);
 		    $node->set_lon ($lon);
-		    $node->set_uid ($uid);
+		    $node->set_uid ("n$uid");
 		    $self->add_node ($node);
 		    $current_node_or_segment = $node;
 		}
@@ -334,7 +334,6 @@ sub parse {
 		    my $k = $attr->{k};
 		    my $v = $attr->{v};
 ##		    print STDERR "TAG $k: $v\n";
-#		    $node->set_tags ($tags);
 		    $current_node_or_segment->add_key_value ($k, $v);
 		}
 		if ($name eq "segment") {
@@ -342,12 +341,11 @@ sub parse {
 		    my $from = $attr->{from};
 		    my $to = $attr->{to};
 		    my $uid = $attr->{id};
-#		    print STDERR "SEGMENT $from $to $uid\n";
+		    print STDERR "SEGMENT $from $to $uid\n";
 		    my $s = new osmsegment;
-		    $s->set_from ($from);
-		    $s->set_to ($to);
-		    $s->set_uid ($uid);
-##		    $s->set_tags ($tags);
+		    $s->set_from ("n$from");
+		    $s->set_to ("n$to");
+		    $s->set_uid ("s$uid");
 		    $self->add_segment ($s);
 		    $current_node_or_segment = $s;
 		}
@@ -457,7 +455,7 @@ sub draw {
 	if ($lat > $north or $lat < $south or $lon > $east or $lon < $west) {
 	    next;
 	}
-#	print STDERR "DRAW NODE: $lat $lon\n";
+##	print STDERR "DRAW NODE $uid: $lat $lon\n";
 	my $x = ($lon-$west)/$dx*$w;
 	my $y = $h-($lat-$south)/$dy*$h;
 	my $item = $self->draw_node ($can, $x, $y, $node);
@@ -517,8 +515,6 @@ sub update_segments_key_colour {
 	my $uid = $s->get_uid ();
 	my $item = $self->{UIDTOITEM}->{$uid};
 	if ($s->is_key ($key)) {
-	    my $tags = $s->get_tags ();
-##	    print STDERR "IS KEY! $key - $tags\n";
 	    $can->itemconfigure ($item, "-fill", "yellow");
 	} else {
 	    $self->update_segment_colour ($item, $can);
@@ -537,8 +533,6 @@ sub update_segments_value_colour {
 	my $uid = $s->get_uid ();
 	my $item = $self->{UIDTOITEM}->{$uid};
 	if ($s->get_key_value ($key) eq $value) {
-	    my $tags = $s->get_tags ();
-##	    print STDERR "IS VALUE! $value - $tags\n";
 	    $can->itemconfigure ($item, "-fill", "green");
 	}
     }
@@ -574,11 +568,13 @@ sub move_node {
     my $can = shift;
 
     my $node = $self->get_node_from_item ($item);
+##    print STDERR "Move node: " . $node->get_uid() . "\n";
     if ($node) {
 	my @froms = $node->get_froms ();
 	my @tos = $node->get_tos ();
 
 	foreach my $suid (@froms) {
+	    print STDERR "Check FROMS: $suid\n";
 	    my $sitem = $self->{UIDTOITEM}->{$suid};
 	    if ($item) {
 		my ($x0, $y0, $x1, $y1) = $can->coords ($sitem);
@@ -587,6 +583,7 @@ sub move_node {
 	}
 
 	foreach my $suid (@tos) {
+	    print STDERR "Check TOS: $suid\n";
 	    my $sitem = $self->{UIDTOITEM}->{$suid};
 	    if ($item) {
 		my ($x0, $y0, $x1, $y1) = $can->coords ($sitem);
@@ -618,10 +615,13 @@ sub create_node {
 
     my $uid = osmutil::create_node ($lat, $lon, $tags, $username, $password);
     if ($uid) {
-	$node->set_uid ($uid);
+	$node->set_uid ("n$uid");
 	$self->add_node ($node);
+	print STDERR "Created node with osmuid: $uid\n";
+	return "n$uid";
+    } else {
+	return "$uid";
     }
-    return $uid;
 }
 
 sub create_segment {
@@ -649,10 +649,13 @@ sub create_segment {
     my $uid = osmutil::create_segment ($from, $to, $tags, $username, $password);
 
     if ($uid) {
-	$s->set_uid ($uid);
+	$s->set_uid ("s$uid");
 	$self->add_segment ($s);
+	print STDERR "Created segment with osmuid: $uid\n";
+	return "s$uid";
+    } else {
+	return "$uid";
     }
-    return $uid;
 }
 
 sub update_node {
@@ -698,14 +701,16 @@ sub delete {
 		return 0;
 	    } else {
 		print STDERR "Trying to delete node\n";
-		$resp = osmutil::delete_node ($uid, $username, $password);
+		$resp = osmutil::delete_node ($node->get_osmuid(), 
+					      $username, $password);
 		$self->{UIDTONODEMAP}->{$uid} = 0;
 	    }
 	} else {
 	    my $seg = $self->get_segment ($uid);
 	    if ($seg) {
 		print STDERR "Trying to delete segment\n";
-		$resp = osmutil::delete_segment ($uid, $username, $password);
+		$resp = osmutil::delete_segment ($seg->get_osmuid(), 
+						 $username, $password);
 		$self->{UIDTOSEGMENTMAP}->{$uid} = 0;
 	    }
 	}

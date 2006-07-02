@@ -83,7 +83,7 @@ sub set_lon {
 
 sub get_lon {
     my $self = shift;
-    return $self->{LON};;
+    return $self->{LON};
 }
 
 sub set_uid {
@@ -94,48 +94,32 @@ sub set_uid {
 
 sub get_uid {
     my $self = shift;
-    return $self->{UID};;
+    return $self->{UID};
 }
 
-sub set_tags {
+sub get_osmuid {
     my $self = shift;
-    my $val = shift;
-    $self->{TAGS} = $val;
-##    print STDERR "VAL:$val:\n";
-    my @items = split (";", $val);
-    foreach my $item (@items) {
-#	print STDERR "ITEM:$item\n";
-	$item =~ s/^\s*//;
-	$item =~ s/\s*$//;
-	my ($name, $val) = split ("=", $item);
-	if ($name and $val) {
-	    $self->add_key_value ($name, $val);
-	}
-    }
+    my $res = $self->{UID};
+    $res =~ s/n//;
+    return $res;
 }
 
 sub get_tags {
     my $self = shift;
-    my $res = "";
-    foreach my $k (keys %{$self->{KEYVALUE}}) {
-	my $val = $self->{KEYVALUE}->{$k};
-	$res .= "$k=$val;";
-    }
-    return $res;
-
+    return $self->{KEYVALUE};
 }
 
 sub add_from {
     my $self = shift;
     my $uid = shift;
-#    print STDERR "ADDING FROM: $uid\n";
+    print STDERR "ADDING FROM: $uid\n";
     push @{$self->{FROMS}}, $uid;
 }
 
 sub add_to {
     my $self = shift;
     my $uid = shift;
-#    print STDERR "ADDING TO: $uid\n";
+    print STDERR "ADDING TO: $uid\n";
     push @{$self->{TOS}}, $uid;
 }
 
@@ -156,7 +140,12 @@ sub print {
     my $lon = $self->get_lon ();
     my $uid = $self->get_uid ();
     my $tags = $self->get_tags ();
-    print "OSMNODE: $lat $lon $uid '$tags'\n";
+    print "OSMNODE: $lat $lon $uid: ";
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	print "$k - $val; ";
+    }
+    print "\n";
 }
 
 sub parse_waypoint {
@@ -189,7 +178,7 @@ sub parse_waypoint {
 	    if ($t->is_end_tag) {
 		my $name = "$t->[0]";
 		if ($name eq "/wpt") {
-		    $self->set_tags ("name=$wpname;class=$class;creator=$creator");
+###		    $self->set_tags ("name=$wpname;class=$class;creator=$creator");
 		}
 	    }
 	}
@@ -206,7 +195,7 @@ sub upload_osm_node {
     my $lon = $self->get_lon ();
     my $tags = $self->get_tags ();
 
-    my $uid = $self->get_uid ();
+    my $uid = $self->get_osmuid ();
     if ($uid) {
 	return osmutil::update_node ($uid, $lat, $lon, $tags, $username,
 				     $password);

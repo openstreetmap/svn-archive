@@ -55,7 +55,8 @@ if (defined $opt_getmap) {
 
 
 if (defined $opt_createnode) {
-    my $uid = osmutil::create_node ($lat, $lon, $username, $password);
+    my $tags = {};
+    my $uid = osmutil::create_node ($lat, $lon, $tags, $username, $password);
     print STDERR "UID: $uid\n";
     exit 0;
 }
@@ -105,6 +106,7 @@ if (defined $opt_getsegareas) {
 
 
 if (defined $opt_createseg) {
+    my $tags = {};
     if (not defined $opt_from) {
 	print STDERR "--from must be defined\n";
 	exit 1;
@@ -113,7 +115,7 @@ if (defined $opt_createseg) {
 	print STDERR "--to must be defined\n";
 	exit 1;
     }
-    my $resp = osmutil::create_segment ($opt_from, $opt_to, $username, 
+    my $resp = osmutil::create_segment ($opt_from, $opt_to, $tags, $username, 
 					$password);
     print "Segment created: $resp\n";
     exit 0;
@@ -145,7 +147,8 @@ if (defined $opt_getwayhistory) {
 }
 
 if (defined $opt_createway) {
-    my $resp = osmutil::create_way ($username, $password);
+    my $tags = {};
+    my $resp = osmutil::create_way ($tags, $username, $password);
     print "Way created: $resp\n";
     exit 0;
 }

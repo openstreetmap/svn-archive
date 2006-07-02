@@ -26,13 +26,19 @@ use strict;
 sub create_node {
     my $lat = shift;
     my $lon = shift;
+    my $tags = shift;
     my $username = shift;
     my $password = shift;
 
 ##    print STDERR "NEW NODE: $lat $lon\n";
-    my $data = "<osm version='0.3'>
-<node id='0' lon='$lon' lat='$lat'/>
-</osm>";
+    my $data = "<osm version='0.3'>\n";
+    $data .= "  <node id='0' lon='$lon' lat='$lat'>\n";
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
+    }
+    $data .= "  </node>\n";
+    $data .= "</osm>\n";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";
     my $uid = curl::put_data ("node/0", $data, $username, $password);
@@ -69,31 +75,18 @@ sub update_node {
     my $username = shift;
     my $password = shift;
 
-    my $data = "<osm version='0.3'>
-<node lon='$lon' tags='$tags' uid='$uid'  lat='$lat'/>
-v</osm>";
+    my $data = "<osm version='0.3'>\n";
+    $data .= "  <node lon='$lon' id='$uid'  lat='$lat'>\n";
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
+    }
+    $data .= "  </node>\n";
+    $data .= "</osm>";
 
     return update_node_data ($uid, $data, $username, $password);
 
 }
-
-sub update_node_tags {
-    my $uid = shift;
-    my $tags = shift;
-    my $username = shift;
-    my $password = shift;
-
-    my $data = get_node ($uid, $username, $password);
-    print STDERR "UPDATE DATA $tags: $data\n";
-    if ($data) {
-	$data =~ s/tags.*?\s/$tags /;
-	print STDERR "UPDATE DATA: $data\n";
-	return update_node_data ($uid, $data, $username, $password);
-    } else {
-	return 0;
-    }
-}
-
 
 sub get_node {
     my $uid = shift;
@@ -164,11 +157,17 @@ sub get_segment_areas {
 sub create_segment {
     my $from = shift;
     my $to = shift;
+    my $tags = shift;
     my $username = shift;
     my $password = shift;
-    my $data = "<osm version='0.3'>
-<segment id='0' from='$from' to='$to'/>
-</osm>";
+    my $data = "<osm version='0.3'>\n";
+    $data .= "  <segment id='0' from='$from' to='$to'>\n";
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
+    }
+    $data .= "  </segment>\n";
+    $data .= "</osm>\n";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";
     my $uid = curl::put_data ("segment/0", $data, $username, $password);
@@ -198,9 +197,14 @@ sub update_segment {
     my $username = shift;
     my $password = shift;
 
-    my $data = "<osm version='0.3'>
-<segment tags='$tags' from='$from' to='$to' uid='$uid'/>
-v</osm>";
+    my $data = "<osm version='0.3'>\n";
+    $data .= "  <segment tags='$tags' from='$from' to='$to' id='$uid'>\n";
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
+    }
+    $data .= "  </segment>\n";
+    $data .= "</osm>\n";
 
     my $uid = curl::put_data ("segment/$uid", $data, $username, $password);
     if ($uid < 0) {
@@ -229,10 +233,15 @@ sub get_way_history {
 sub create_way {
     my $username = shift;
     my $password = shift;
-    my $data = "<osm version=\"0.3\">
-<way id=\"0\">
-</way>
-</osm>";
+    my $tags = shift;
+    my $data = "<osm version=\"0.3\">\n";
+    $data .= "  <way id=\"0\">\n";
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
+    }
+    $data .= "  </way>\n";
+    $data .= "</osm>\n";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";
     my $uid = curl::put_data ("way/0", $data, $username, $password);

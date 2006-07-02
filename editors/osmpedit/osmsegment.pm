@@ -123,31 +123,16 @@ sub get_uid {
     return $self->{UID};;
 }
 
-sub set_tags {
+sub get_osmuid {
     my $self = shift;
-    my $val = shift;
-    $self->{TAGS} = $val;
-##    print STDERR "VAL:$val:\n";
-    my @items = split (";", $val);
-    foreach my $item (@items) {
-##	print STDERR "TAG ITEM: $item\n";
-	$item =~ s/^\s*//;
-	$item =~ s/\s*$//;
-	my ($name, $val) = split ("=", $item);
-	if ($name and $val) {
-	    $self->add_key_value ($name, $val);
-	}
-    }
+    my $res = $self->{UID};
+    $res =~ s/s//;
+    return $res;
 }
 
 sub get_tags {
     my $self = shift;
-    my $res = "";
-    foreach my $k (keys %{$self->{KEYVALUE}}) {
-	my $val = $self->{KEYVALUE}->{$k};
-	$res .= "$k=$val;";
-    }
-    return $res;
+    return $self->{KEYVALUE};
 }
 
 sub get_keys {
@@ -187,7 +172,11 @@ sub print {
     my $to = $self->get_to ();
     my $uid = $self->get_uid ();
     my $tags = $self->get_tags ();
-    print "OSMSEGMENT: $from $to $uid '$tags'\n";
+    print "OSMSEGMENT: $from $to $uid --- ";
+    foreach my $k (keys %{$tags}) {
+	print "$k - $tags->{$k}; ";
+    }
+    print "\n";
 }
 
 sub update_osm_segment {
@@ -199,7 +188,7 @@ sub update_osm_segment {
     my $to = $self->get_to ();
     my $tags = $self->get_tags ();
 
-    my $uid = $self->get_uid ();
+    my $uid = $self->get_osmuid ();
     if ($uid) {
 	return osmutil::update_segment ($uid, $from, $to, $tags, $username,
 					$password);

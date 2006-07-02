@@ -136,12 +136,13 @@ $landsat->set_center ($start_lat, $start_lon);
 $landsat->set_scale ($scale);
 
 
-$can_frame->after( 10000,
-                   sub{
-                       printf "Timer %s\n",''.localtime(time());
-                       $landsat->fill_cache(1,$can_frame);
-                    });
-
+# Temporarily removed since it blocked the application
+#$can_frame->after( 10000,
+#                   sub{
+#                       printf "Timer %s\n",''.localtime(time());
+#                       $landsat->fill_cache(1,$can_frame);
+#                    });
+#
 
 ##$landsat->display_tile (58.4090, 15.561, 100);
 ##$landsat->display_tile ($lat, $lon, $scale);
@@ -419,6 +420,7 @@ sub button1 {
 
     if ($editmode eq "segment" and $from_node_uid) {
 	my $tonode = $osm->get_node_from_item ($id);
+	my $fromnode = $osm->get_node ($from_node_uid);
 	if ($tonode and $from_node_uid) {
 	    my $touid = $tonode->get_uid ();
 	    print STDERR "CREATE SEGMENT: $from_node_uid -> $touid\n";
@@ -426,10 +428,13 @@ sub button1 {
 	    if ($segment_key eq "class") {
 		$class = $segment_value;
 	    }
-	    my $suid = $osm->create_segment ($from_node_uid, $touid, $class);
+	    my $suid = $osm->create_segment ($fromnode->get_osmuid(), 
+					     $tonode->get_osmuid(), $class);
 	    if ($suid) {
 		$osm->connect_uid_item ($suid, $segment_create_id);
 		$osm->update_segment_colour ($segment_create_id, $can);
+		$fromnode->add_from ($suid);
+		$tonode->add_to ($suid);
 	    } else {
 		$can->delete ($segment_create_id);
 	    }
@@ -763,32 +768,6 @@ sub create_events {
 	release_motionimage ($Tk::event->x, $Tk::event->y);
     });
 }
-
-
-##sub create_class_menu {
-##    my $frame = shift;
-##    my $mb = $frame->Menubutton (-text => "none",
-##                                 -relief => 'raised',
-##				 -bg => "white",
-##				 -width => 20,
-##                                 );
-##    $mb->pack (-side => 'left',
-##               -fill => "x",
-##               -expand => 1);
-##
-##    foreach my $k ($osm->get_segment_classes ()) {
-#####	print "CLASS KEY: $k\n";
-##	$mb->command (-label => $k,
-##		      -command => sub { 
-##			  $osm->set_default_class ($k);
-##			  $mb->configure (-text => $k);
-##			  $mb->configure (-bg => $osm->get_segment_colour ($k, "yes", "yes", "yes"));
-##		      });
-##
-##    }
-##    return $mb;
-##}
-
 
 sub update_segment_key_menu {
     my $mb = shift;

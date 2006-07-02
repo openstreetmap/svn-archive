@@ -53,7 +53,7 @@ sub set_from {
 
 sub get_from {
     my $self = shift;
-    return $self->{FROM};;
+    return $self->{FROM};
 }
 
 sub set_to {
@@ -74,6 +74,21 @@ sub get_osmuid {
     return $res;
 }
 
+sub get_osmfrom {
+    my $self = shift;
+    my $res = $self->get_from ();
+    $res =~ s/n//;
+    return $res;
+}
+
+sub get_osmto {
+    my $self = shift;
+    my $res = $self->get_to ();
+    $res =~ s/n//;
+    return $res;
+}
+
+
 
 sub print {
     my $self = shift;
@@ -93,11 +108,12 @@ sub update_osm_segment {
     my $username = shift;
     my $password = shift;
 
-    my $from = $self->get_from ();
-    my $to = $self->get_to ();
+    my $from = $self->get_osmfrom ();
+    my $to = $self->get_osmto ();
     my $tags = $self->get_tags ();
 
     my $uid = $self->get_osmuid ();
+    print STDERR "Update segment: $uid $from $to\n";
     if ($uid) {
 	return osmutil::update_segment ($uid, $from, $to, $tags, $username,
 					$password);

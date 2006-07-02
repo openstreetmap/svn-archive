@@ -46,12 +46,14 @@ sub new {
     $obj->{SEGCOLOUR}->{"none"} = "white";
     $obj->{SEGCOLOUR}->{"street"} = "lightsteelblue3";
 #    $obj->{SEGCOLOUR}->{"primary"} = "orangered";
-#    $obj->{SEGCOLOUR}->{"secondary"} = "orangered4";
+    $obj->{SEGCOLOUR}->{"secondary"} = "orangered4";
     $obj->{SEGCOLOUR}->{"motorway"} = "navy";
 #    $obj->{SEGCOLOUR}->{"unsurfaced"} = "green";
-#    $obj->{SEGCOLOUR}->{"minor"} = "wheat3";
+    $obj->{SEGCOLOUR}->{"minor"} = "wheat3";
     $obj->{SEGCOLOUR}->{"path"} = "brown";
+    $obj->{SEGCOLOUR}->{"bikepath"} = "brown";
     $obj->{SEGCOLOUR}->{"train"} = "sienna3";
+    $obj->{SEGCOLOUR}->{"tunnel"} = "black";
     return $obj;
 }
 
@@ -117,19 +119,12 @@ sub get_ways {
 sub get_segment_colour {
     my $self = shift;
     my $class = shift;
-    my $car = shift;
-    my $bike = shift;
-    my $foot = shift;
     my $res = "white";
     if ($self->{SEGCOLOUR}->{$class}) {
-#	if ($car eq "yes" or $bike eq "yes" or $foot eq "yes") {
-	    $res =  $self->{SEGCOLOUR}->{$class};
-#	}
-#	if ($class eq "train") {
-#	    $res = $self->{SEGCOLOUR}->{$class};
-#	}
+	$res =  $self->{SEGCOLOUR}->{$class};
+    } else {
+	print STDERR "WARNING: No colour specified for class - $class\n";
     }
-##    print "COL for:$class:$res:\n";
     return $res;
 }
 
@@ -149,12 +144,36 @@ sub get_segment_keys {
     return keys %keys;
 }
 
+sub get_way_keys {
+    my $self = shift;
+    my %keys;
+    foreach my $s ($self->get_ways ()) {
+	foreach my $k ($s->get_keys ()) {
+	    $keys{$k} = 1;
+	}
+    }
+    return keys %keys;
+}
+
 
 sub get_segment_values {
     my $self = shift;
     my $key = $self->{SEGMENTKEY};
     my %values;
     foreach my $s ($self->get_segments ()) {
+	my $v = $s->get_key_value ($key);
+	if ($v) {
+	    $values{$v} = 1;
+	}
+    }
+    return keys %values;
+}
+
+sub get_way_values {
+    my $self = shift;
+    my $key = $self->{WAYKEY};
+    my %values;
+    foreach my $s ($self->get_ways ()) {
 	my $v = $s->get_key_value ($key);
 	if ($v) {
 	    $values{$v} = 1;
@@ -468,6 +487,13 @@ sub draw {
     foreach my $way ($self->get_ways ()) {
 	my @segids = $way->get_segments ();
 
+	my $colour = "white";
+	my $class = $way->get_class ();
+	if ($class) {
+	    $colour = $self->get_segment_colour ($class);
+	}
+	    
+
 	foreach my $uid (@segids) {
 	    my $segment = $self->get_segment ($uid);
 	    if (not $segment) {
@@ -479,26 +505,12 @@ sub draw {
 		$self->get_segment_canvas_coords ($landsat, $segment);
 	    next unless ($x0);
 
-	    my $colour = "white";
-	    my $class = $segment->get_class ();
-	    my $car = $segment->get_car ();
-	    my $foot = $segment->get_foot ();
-	    my $bike = $segment->get_bike ();
-	    if ($class) {
-		my $c = $self->get_segment_colour ($class, $car, $bike, $foot);
-		if ($c) {
-		    $colour = $c;
-		} else {
-		    print STDERR "SEGMENT CLASS: $class\n";
-		}
-	    }
-	    
+	    my $wayuid = $way->get_uid ();
 	    my $item = $can->create ('line', $x0, $y0, $x1, $y1,
 #                      -arrow => "last",
 				     -fill => $colour,
 				     -width => 4,
-				     -tag => "osmway");
-	    $self->connect_uid_item ($uid, $item);
+				     -tag => ["osmway", $wayuid]);
 	}
     }
 
@@ -512,16 +524,8 @@ sub draw {
 
 	my $colour = "white";
 	my $class = $segment->get_class ();
-	my $car = $segment->get_car ();
-	my $foot = $segment->get_foot ();
-	my $bike = $segment->get_bike ();
 	if ($class) {
-	    my $c = $self->get_segment_colour ($class, $car, $bike, $foot);
-	    if ($c) {
-		$colour = $c;
-	    } else {
-		print STDERR "SEGMENT CLASS: $class\n";
-	    }
+	    $colour = $self->get_segment_colour ($class);
 	}
 
         my $item = $can->create ('line', $x0, $y0, $x1, $y1,
@@ -555,6 +559,10 @@ sub update_segment_key_value {
     my $key = shift;
     my $value = shift;
     my $s = $self->get_segment_from_item ($item);
+    my $oldvalue = $s->get_key_value ($key);
+    if ($value eq $oldvalue) {
+	$value = "";
+    }
     if ($s) {
 	$s->add_key_value ($key, $value);
 	$s->print ();
@@ -583,13 +591,26 @@ sub update_segment_colour {
 
     my $s = $self->get_segment_from_item ($item);
     if ($s) {
+	my $c = "white";
 	my $class = $s->get_class ();
-	my $car = $s->get_car ();
-	my $foot = $s->get_foot ();
-	my $bike = $s->get_bike ();
-	my $c = $self->get_segment_colour ($class, $car, $bike, $foot);
+	if ($class) {
+	    $c = $self->get_segment_colour ($class);
+	}
 	$can->itemconfigure ($item, "-fill", $c);
     }
+}
+
+sub update_way_colour {
+    my $self = shift;
+    my $item = shift;
+    my $class = shift;
+    my $can = shift;
+
+    my $c = "white";
+    if ($class) {
+	$c = $self->get_segment_colour ($class);
+    }
+    $can->itemconfigure ($item, "-fill", $c);
 }
 
 sub update_segments_key_colour {
@@ -609,17 +630,39 @@ sub update_segments_key_colour {
 
 }
 
-sub update_segments_value_colour {
+sub update_ways_key_colour {
+    my $self = shift;
+    my $key = shift;
+    my $can = shift;
+    $self->{WAYKEY} = $key;
+    print STDERR "UPDATE_WAYS_KEY_COLOUR: $key\n";
+    foreach my $s ($self->get_ways ()) {
+	my $uid = $s->get_uid ();
+##	print STDERR "$uid\n";
+	if ($s->is_key ($key)) {
+	    $can->itemconfigure ("$uid", "-fill", "yellow");
+	} else {
+	    my $value = "";
+	    if ($key eq "none") {
+		$value = $s->get_key_value ("class");
+	    }
+	    $self->update_way_colour ("$uid", $value, $can);
+	}
+    }
+
+}
+
+sub update_ways_value_colour {
     my $self = shift;
     my $value = shift;
     my $can = shift;
-    my $key = $self->{SEGMENTKEY};
-    $self->update_segments_key_colour ($key, $can);
-    foreach my $s ($self->get_segments ()) {
+    my $key = $self->{WAYKEY};
+    $self->update_ways_key_colour ($key, $can);
+    foreach my $s ($self->get_ways ()) {
 	my $uid = $s->get_uid ();
-	my $item = $self->{UIDTOITEM}->{$uid};
+##	my $item = $self->{UIDTOITEM}->{$uid};
 	if ($s->get_key_value ($key) eq $value) {
-	    $can->itemconfigure ($item, "-fill", "green");
+	    $can->itemconfigure ("$uid", "-fill", "green");
 	}
     }
 }

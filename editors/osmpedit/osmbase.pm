@@ -43,7 +43,8 @@ sub get_key_value {
 sub is_key {
     my $self = shift;
     my $key = shift;
-    if (defined $self->{KEYVALUE}->{$key}) {
+    if (defined $self->{KEYVALUE}->{$key} and 
+	$self->{KEYVALUE}->{$key} ne "") {
 	return 1;
     } else {
 	return 0;

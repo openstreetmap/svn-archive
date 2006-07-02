@@ -79,6 +79,12 @@ my $segment_value = "";
 my @extra_keys = ();
 my @extra_values = ();
 
+my $way_key = "";
+my $way_value = "";
+
+my @way_extra_keys = ();
+my @way_extra_values = ();
+
 
 
 my $main = new MainWindow;
@@ -200,7 +206,8 @@ $left_side_frame->Button (-text => "GOTO",
 # Right side
 #
 
-my ($seg_key_menu, $seg_value_menu) = key_value_frame ();
+my ($seg_key_menu, $seg_value_menu,
+    $way_key_menu, $way_value_menu) = key_value_frame ();
 
 #
 # Bottom button row
@@ -411,7 +418,7 @@ sub button1 {
 
 	my $seg = $osm->get_segment_from_item ($id);
 	if ($seg) {
-	    print STDERR "Update class for segment\n";
+	    print STDERR "Update segment key: $segment_key\n";
 ##	    $osm->update_segment_class ($id);
 	    $osm->update_segment_key_value ($id, $segment_key, $segment_value);
 	    $osm->update_segments_key_colour ($segment_key, $can);
@@ -458,6 +465,94 @@ sub key_value_frame {
     my $entrywidth = 25;
     my $fwidth = 8;
     my $tmpframe;
+
+    #
+    # Way part
+    #
+
+    $right_side_frame->Label (-text => "Way")->pack (-side => "top");
+
+    #
+    # Key menu button
+    #
+
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Label (-text => "Key:",
+		      -width => $fwidth)->pack (-side => "left");
+
+    my $way_key_menu =  $tmpframe->Menubutton (-relief => 'raised',
+					       -bg => "yellow",
+					       -width => 20,
+						   );
+    $way_key_menu->configure (-text => "none");
+    
+
+    $way_key_menu->pack (-side => 'left',
+			 -fill => "x",
+			 -expand => 1);
+    update_way_key_menu ($way_key_menu);
+
+    my $wskey = "";
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Button (-text => "New key:",
+		       -command => sub {
+			   push @way_extra_keys, $wskey;
+			   $way_key_menu->menu ()->delete (0, "end");
+			   update_way_key_menu ($way_key_menu);
+			   $way_key_menu->menu ()->invoke ("$wskey");
+##			   print STDERR "SEGMENT_KEY: $way_key\n";
+		       },
+		       -width => $fwidth
+		       )->pack (-side => "left");
+    $tmpframe->Entry (-textvariable => \$wskey,
+		      -width => $entrywidth)->pack (-side => "left");
+
+    #
+    # Value menu button
+    #
+    
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Label (-text => "Value:",
+		      -width => $fwidth)->pack (-side => "left");
+
+    
+    my $way_value_menu = $tmpframe->Menubutton (-text => "name",
+						-relief => 'raised',
+						-bg => "green",
+						-width => 20,
+						);
+
+    $way_value_menu->configure (-text => "none");
+
+    $way_value_menu->pack (-side => 'left',
+			   -fill => "x",
+			   -expand => 1);
+    
+    update_way_value_menu ($way_value_menu);
+
+    #
+    # New value entry
+    #
+    my $wsvalue = "";
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Button (-text => "New value:",
+		       -command => sub {
+			   push @way_extra_values, $wsvalue;
+			   $way_value_menu->menu ()->delete (0, "end");
+			   update_way_value_menu ($way_value_menu);
+			   $way_value_menu->menu ()->invoke ("$wsvalue");
+		       },
+		       -width => $fwidth
+		       )->pack (-side => "left");
+    $tmpframe->Entry (-textvariable => \$wsvalue,
+		      -width => $entrywidth)->pack (-side => "left");
+
+
+
+
+    #
+    # Segment part
+    #
 
     $right_side_frame->Label (-text => "Segment")->pack (-side => "top");
 
@@ -538,7 +633,8 @@ sub key_value_frame {
 		      -width => $entrywidth)->pack (-side => "left");
 
 
-    return ($segment_key_menu, $segment_value_menu);
+    return ($segment_key_menu, $segment_value_menu,
+	    $way_key_menu, $way_value_menu);
 }
 
 sub button1release {
@@ -796,6 +892,29 @@ sub update_segment_key_menu {
     }
 }
 
+sub update_way_key_menu {
+    my $mb = shift;
+
+    $mb->command (-label => "none",
+		  -command => sub { 
+		      $osm->update_ways_key_colour ("none", $can);
+		      $mb->configure (-text => "none");
+		  });
+
+    my @keys = $osm->get_way_keys ();
+    foreach my $k (@keys, @way_extra_keys) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_ways_key_colour ($k, $can);
+			  $mb->configure (-text => $k);
+			  $way_value_menu->menu ()->delete (0, "end");
+			  update_way_value_menu ($way_value_menu);
+			  $way_key = $k;
+		      },
+		      );
+    }
+}
+
 
 sub update_segment_value_menu {
     my $mb = shift;
@@ -812,6 +931,27 @@ sub update_segment_value_menu {
 			  $osm->update_segments_value_colour ($k, $can);
 			  $mb->configure (-text => $k);
 			  $segment_value = $k;
+		      },
+		      );
+    }
+}
+
+
+sub update_way_value_menu {
+    my $mb = shift;
+
+    $mb->command (-label => "none",
+		  -command => sub { 
+		      $osm->update_ways_value_colour ("none", $can);
+		      $mb->configure (-text => "none");
+		  });
+
+    foreach my $k ($osm->get_way_values (), @way_extra_values) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_ways_value_colour ($k, $can);
+			  $mb->configure (-text => $k);
+			  $way_value = $k;
 		      },
 		      );
     }
@@ -836,6 +976,12 @@ sub update_display {
 	$osm->update_segments_key_colour ($segment_key, $can);
 	if ($segment_value) {
 	    $osm->update_segments_value_colour ($segment_value, $can);
+	}
+    }
+    if ($way_key) {
+	$osm->update_ways_key_colour ($way_key, $can);
+	if ($way_value) {
+	    $osm->update_ways_value_colour ($way_value, $can);
 	}
     }
 }
@@ -911,8 +1057,8 @@ To load the OSM data press B<Reload OSM>.  This data is cached in
 $HOME/.osmpedit/cache/lastosm.xml and the nodes and segments in this
 file will be shown when B<osmpedit> is started.
 
-B<Toggle tracks>, B<Toggle nodes> and B<Toggle segments> toggles what
-is shown in the editing area.
+B<Toggle tracks>, B<Toggle nodes>, B<Toggle segments> and B<Toggle
+ways> toggles what is shown in the editing area.
 
 Pressing the right button on some item often print some information
 about the item in the window where B<osmpedit> was started. The left
@@ -931,7 +1077,7 @@ create a node on a segment the segment will be split into two parts
 and the two parts will be connected to the new node.  Two new segments
 will be created and the old segment will be deleted from the OSM
 server.  The two new segments will have the same value of their tags
-field as the deleted segment.
+field as the deleted segment. NOT YET UPDATED FOR WAYS.
 
 In B<Delete> mode pressing the left button over a node will delete it.
 Pressing it over a segment will delete the segment.  It is probably

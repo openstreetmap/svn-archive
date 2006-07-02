@@ -326,6 +326,87 @@ sub read_file($$) {
 }
 
 ##################################################################
+package NMEA;
+##################################################################
+use IO::File;
+use Date::Parse;
+use Data::Dumper;
+use Date::Parse;
+use Date::Manip;
+
+# -----------------------------------------------------------------------------
+# Read GPS Data from NMEA - File
+sub read_file($) { 
+    my $file_name = shift;
+
+    my $start_time=time();
+
+    my $content=[];
+    print("Reading $file_name\n") if $verbose || $debug;
+    print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
+
+    my $fh = File::data_open($file_name);
+    return[] unless $fh;
+    my $last_time=0;
+    while ( my $line = $fh->getline() ) {
+	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt,$date,$mag_variation,$checksumm);
+	$alt=0;
+	chomp $line;
+	($type) = split( /,/,$line,2);
+	$type =~ s/^\s*\$GP//;
+	#print "$type: $line\n";
+	if ( $type eq "GGA" ) {
+	    my $dummy;
+	    ($time,$dummy,$lat,$lon)  = split(/,/,$line,2);
+	    next;
+	} elsif ( $type eq "RMC" ) {
+	    # RMC - Recommended Minimum Navigation Information
+	    #                                                            12
+	    #        1         2 3       4 5        6 7   8   9    10  11|
+	    #        |         | |       | |        | |   |   |    |   | |
+	    # $--RMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,xxxx,x.x,a*hh<CR><LF>
+	    #
+	    # Field Number: 
+	    #  1) UTC Time
+	    #  2) Status, V = Navigation receiver warning
+	    #  3) Latitude
+	    #  4) N or S
+	    #  5) Longitude
+	    #  6) E or W
+	    #  7) Speed over ground, knots
+	    #  8) Track made good, degrees true
+	    #  9) Date, ddmmyy
+	    # 10) Magnetic Variation, degrees
+	    # 11) E or W
+	    # 12) Checksum
+	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$date,$mag_variation,$checksumm)
+		= split(/,/,$line);
+	} else {
+	    print "Ignore Line $type: $line\n";
+	    next;
+	};
+	$lat /=100;
+	$lon /=100;
+	next if  $last_time == $time;
+	$last_time = $time;
+	print "$type ($time	$lat	$lon	$alt)\n" if $debug;
+	my $elem = {
+	    lat => $lat, 
+	    lon => $lon, 
+	    alt => $alt, 
+	    time => str2time($time),
+	    };
+	push(@{$content},$elem);
+	bless($elem,"NMEA::gps-point");
+    }
+    if ( $verbose) {
+	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
+    }
+
+    return [$content];
+}
+
+##################################################################
 package GPX;
 ##################################################################
 use Date::Parse;
@@ -449,6 +530,7 @@ sub write_gpx_file($$) { # Write an gpx File
 	    if ( defined ( $elem->{time} ) ) {
 		$elem->{time_sec}=int($elem->{time});
 		$elem->{time_usec}=$elem->{time}-$elem->{time_sec};
+		$elem->{time_usec} =~s/^0\.//;
 		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
 		$time .= ".$elem->{time_usec}" if $elem->{time_usec};
 		#$time = "2004-11-12T15:04:40Z";
@@ -670,6 +752,7 @@ sub check_allowed_area($){
 
 # Return a tracklist whith a track for each chek_area
 sub draw_check_areas(){
+    return [] unless $draw_check_areas;
     my $new_tracks = [];
     for my $area ( @{$areas_allowed_squares} ) {
 	my $new_track = [];
@@ -1231,6 +1314,8 @@ sub convert_Data(){
 	    $new_tracks = Gpsbabel::read_file($filename,"gdb");
 	} elsif ( $filename =~ m/\.ns1$/ ) {
 	    $new_tracks = Gpsbabel::read_file($filename,"netstumbler");    
+	} elsif ( $filename =~ m/\.nmea$/ ) {
+	    $new_tracks = NMEA::read_file($filename);
 	} elsif ( $filename =~ m/\.sav$/ ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	}
@@ -1263,20 +1348,17 @@ sub convert_Data(){
 
 	my $osm_filename = $filename;
 	if ( $track_count > 0 ) {
-	    my $new_gpx_file = $osm_filename;
-	    if ( $new_gpx_file =~ s/\.(sav|gps|gpx|mps|gdb|ns1)$/-converted.gpx/ ) {
-		GPX::write_gpx_file($new_tracks,$new_gpx_file)
-		    if $single_file;
-		};
+	    my $new_gpx_file = "$osm_filename-converted.gpx";
+	    $new_gpx_file =~s/.gpx-converted.gpx/-converted.gpx/;
+	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
+		if $single_file;
 	    
-	    my $new_osm_file = $osm_filename;
-	    if ( $new_osm_file =~ s/\.(sav|gps|gpx|mps|gdb|ns1)$/.osm/ ) {
-		my $points = OSM::Tracks2osm($new_tracks,$filename);
-		# TODO this still writes out all points since beginning
-		OSM::write_osm_file($new_osm_file)
-		    if $out_osm;
-	    }
-
+	    my $new_osm_file = "$osm_filename.osm";
+	    my $points = OSM::Tracks2osm($new_tracks,$filename);
+	    # TODO this still writes out all points since beginning
+	    OSM::write_osm_file($new_osm_file)
+		if $out_osm;
+	    
 	}
 
 	GPS::add_tracks($all_tracks,$new_tracks);

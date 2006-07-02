@@ -35,7 +35,10 @@ use Storable ();
 use XML::Parser;
 
 my ($man,$help);
-our ($debug,$verbose,$no_mirror,$PROXY);
+our $debug =0;
+our $verbose =0;
+our $no_mirror=0;
+our $PROXY='';
 
 
 my $osm_nodes        = {};

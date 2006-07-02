@@ -347,26 +347,49 @@ sub read_file($) {
 
     my $fh = File::data_open($file_name);
     return[] unless $fh;
-    my $last_time=0;
+    my $elem ={};
+    my $last_date='';
     while ( my $line = $fh->getline() ) {
-	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt,$date,$mag_variation,$checksumm);
+	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
+	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
 	$alt=0;
 	chomp $line;
+	$line =~ s/\s*$//;
 	($type) = split( /,/,$line,2);
 	$type =~ s/^\s*\$GP//;
 	#print "$type: $line\n";
 	if ( $type eq "GGA" ) {
-	    my $dummy;
-	    ($time,$dummy,$lat,$lon)  = split(/,/,$line,2);
+	    # GGA - Global Positioning System Fix Data
+	    # Time, Position and fix related data fora GPS receiver.
+	    #        1         2       3 4        5 6 7  8   9  10 |  12 13  14   15
+	    #        |         |       | |        | | |  |   |   | |   | |   |    |
+	    # $--GGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh<CR><LF>
+	    #  1) Universal Time Coordinated (UTC)
+	    #  2) Latitude
+	    #  3) N or S (North or South)
+	    #  4) Longitude
+	    #  5) E or W (East or West)
+	    #  6) GPS Quality Indicator, 0 - fix not available, 1 - GPS fix, 2 - Differential GPS fix
+	    #  7) Number of satellites in view, 00 - 12
+	    #  8) Horizontal Dilution of precision
+	    #  9) Antenna Altitude above/below mean-sea-level (geoid) 
+	    # 10) Units of antenna altitude, meters
+	    # 11) Geoidal separation, the difference between the WGS-84 earth
+	    #     ellipsoid and mean-sea-level (geoid), "-" means mean-sea-level below ellipsoid
+	    # 12) Units of geoidal separation, meters
+	    # 13) Age of differential GPS data, time in seconds since last SC104
+	    #     type 1 or 9 update, null field when DGPS is not used
+	    # 14) Differential reference station ID, 0000-1023
+	    # 15) Checksum
+	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
+	     $dummy,$dummy,$dummy,$checksumm)
+		= split(/,/,$line);
 	    next;
 	} elsif ( $type eq "RMC" ) {
 	    # RMC - Recommended Minimum Navigation Information
-	    #                                                            12
 	    #        1         2 3       4 5        6 7   8   9    10  11|
 	    #        |         | |       | |        | |   |   |    |   | |
 	    # $--RMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,xxxx,x.x,a*hh<CR><LF>
-	    #
-	    # Field Number: 
 	    #  1) UTC Time
 	    #  2) Status, V = Navigation receiver warning
 	    #  3) Latitude
@@ -379,25 +402,33 @@ sub read_file($) {
 	    # 10) Magnetic Variation, degrees
 	    # 11) E or W
 	    # 12) Checksum
-	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$date,$mag_variation,$checksumm)
+	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$dummy,$date,$mag_variation,$checksumm)
 		= split(/,/,$line);
 	} else {
-	    print "Ignore Line $type: $line\n";
+	    print "Ignore Line $type: $line\n"
+		if $debug>10;
 	    next;
 	};
 	$lat /=100;
 	$lon /=100;
-	next if  $last_time == $time;
-	$last_time = $time;
-	print "$type ($time	$lat	$lon	$alt)\n" if $debug;
-	my $elem = {
-	    lat => $lat, 
-	    lon => $lon, 
-	    alt => $alt, 
-	    time => str2time($time),
-	    };
-	push(@{$content},$elem);
+	$lat = -$lat if $lat_v eq "S";
+	$lon = -$lon if $lon_v eq "W";
+	print "$type ($time	$lat	$lon	$alt	$speed)\n" 
+	    if $debug>10;
+
+	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
+	$date =~ s/^(..)(..)(..)/20$3-$2-$1/;
+	$date ||= $last_date;
+	$last_date=$date;
+	$time = str2time("$date ${time}");
+	$elem->{lat} = $lat;
+	$elem->{lon} = $lon;
+	$elem->{alt} = $alt if defined $alt;
+	$elem->{time} = $time;
+
+    	push(@{$content},$elem);
 	bless($elem,"NMEA::gps-point");
+	$elem ={};
     }
     if ( $verbose) {
 	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
@@ -476,8 +507,19 @@ sub read_gpx_file($) {
 		    my ( $type ) = ($ref =~ m/GPX::(.*)/ );
 		    $trk_pt->{$type} = $trk_pt_kid->{Kids}->[0]->{Text};
 		}
-		if ( defined $trk_pt->{time} ) {
-		    my $time = str2time( $trk_pt->{time});
+		my $trk_time = $trk_pt->{time};
+		if ( defined $trk_time ) {
+		    my ($year,$month) = split(/-/,$trk_time);
+		    if ( $year < 1970 ) {
+			warn "Ignoring Dataset because of Strange Date $trk_time in GPX File\n";
+			next;
+		    };
+		    #print "trk_time $trk_time\n";
+		    my $time = str2time( $trk_time);
+		    my $ltime = localtime($time);
+		    if ( $debug >= 11 ) {
+			print "time: $ltime  ".$trk_pt->{time}."\n\n";
+		    }
 		    $trk_pt->{time_string} = $trk_pt->{time};
 		    $trk_pt->{time} = $time;
 		}
@@ -531,6 +573,9 @@ sub write_gpx_file($$) { # Write an gpx File
 		$elem->{time_sec}=int($elem->{time});
 		$elem->{time_usec}=$elem->{time}-$elem->{time_sec};
 		$elem->{time_usec} =~s/^0\.//;
+		if ( $elem->{time_sec}< 3600*30 ) {
+		    print "---------------- time_sec: $elem->{time_sec}\n";
+		}
 		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
 		$time .= ".$elem->{time_usec}" if $elem->{time_usec};
 		#$time = "2004-11-12T15:04:40Z";
@@ -1304,7 +1349,10 @@ sub convert_Data(){
 	    next;
 	}
 
-	if ( $filename =~ m/\.gps$/ ) {
+	if ( $filename =~ m/^gpsbabel:(\S+):(\S+)$/ ) {
+	    my ($type,$name) = ($1,$2);
+	    $new_tracks = Gpsbabel::read_file($name,$type);    
+	} elsif ( $filename =~ m/\.gps$/ ) {
 	    $new_tracks = Kismet::read_gps_file($filename);
 	} elsif ( $filename =~ m/\.gpx$/ ) {
 	    $new_tracks = GPX::read_gpx_file($filename);
@@ -1562,6 +1610,8 @@ Still only testing
    - Garmin mps File   *.mps
    - Garmin gdb File   *.gdb
    - Netstumbler Files *.ns1
+   - NMEA              *.nmea
+   - via gpsbabel gpsbabel:<type>:*
 
 For each File read a File *-converted.gpx will be written
 All input filenames ending with -converted.gpx will be skiped.

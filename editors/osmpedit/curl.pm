@@ -124,7 +124,7 @@ sub grab_osm {
     my $username = shift;
     my $password = shift;
 
-    my $url = "$urlbase/map?bbox=$west,$south,$east,$north";
+    my $url = "${urlbase}map?bbox=$west,$south,$east,$north";
 
     print STDERR "URL:$url\n";
 ##    print STDERR "$username:$password";

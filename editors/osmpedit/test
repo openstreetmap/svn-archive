@@ -17,14 +17,18 @@
 use strict;
 use osmutil;
 
-use vars qw ($opt_getnode $opt_getsegment $opt_createsegment $opt_from 
-	     $opt_to $opt_deletesegment $opt_createnode $opt_passwd $opt_user
-	     $opt_nodetagupdate);
+use vars qw ($opt_getnode $opt_getnodehistory $opt_createnode $opt_deletenode
+	     $opt_getseg $opt_get_seghistory $opt_createseg $opt_deleteseg 
+	     $opt_from 
+	     $opt_to $opt_passwd $opt_user
+	     $opt_nodetagupdate $opt_getmap);
 
 use Getopt::Mixed;
-Getopt::Mixed::getOptions("getnode=s getsegment createsegment from=s to=s
-                           deletesegment=s createnode passwd=s user=s
-			   nodetagupdate");
+Getopt::Mixed::getOptions("getseg=s getseghistory=s createseg deletesegment=s 
+                           getnode=s getnodehistory=s createnode deletenode=s
+                           from=s to=s
+                           passwd=s user=s
+			   nodetagupdate getmap");
 
 
 my $username = $opt_user;
@@ -32,10 +36,29 @@ my $password = $opt_passwd;
 my $lat = 58.408306;
 my $lon = 15.558601;
 
+my $lat0 = 58.38626835; #North/south
+my $lat1 = 58.43626835;
+my $lon0 = 15.54252335; #east/west
+my $lon1 = 15.64252335;
+
+
+if (defined $opt_getmap) {
+    my $data = curl::grab_osm ($lon0, $lat0, $lon1, $lat1, 
+			       $username, $password);
+    print "$data\n";
+    exit 0;
+}
+
+
 if (defined $opt_createnode) {
-    my $uid = osmutil::create_node ($lat, $lon, "name=TommyPersson",
-				    $username, $password);
+    my $uid = osmutil::create_node ($lat, $lon, $username, $password);
     print STDERR "UID: $uid\n";
+    exit 0;
+}
+
+if (defined $opt_deletenode) {
+    my $resp = osmutil::delete_node ($opt_deletenode, $username, $password);
+    print STDERR "DELETE: $resp\n";
     exit 0;
 }
 
@@ -45,7 +68,21 @@ if (defined $opt_getnode) {
     exit 0;
 }
 
-if (defined $opt_createsegment) {
+if (defined $opt_getnodehistory) {
+    my $node = osmutil::get_node_history ($opt_getnodehistory, $username, $password);
+    print "NODE: $node\n";
+    exit 0;
+}
+
+
+if (defined $opt_getseg) {
+    my $s = osmutil::get_segment ($opt_getseg, $username, $password);
+    print "SEGMENT: $s\n";
+    exit 0;
+}
+
+
+if (defined $opt_createseg) {
     if (not defined $opt_from) {
 	print STDERR "--from must be defined\n";
 	exit 1;
@@ -60,8 +97,8 @@ if (defined $opt_createsegment) {
     exit 0;
 }
 
-if (defined $opt_deletesegment) {
-    my $uid = $opt_deletesegment;
+if (defined $opt_deleteseg) {
+    my $uid = $opt_deleteseg;
     my $resp = osmutil::delete_segment ($uid, $username, $password);
     if (not $resp) {
 	print "DELETE FAILED: $uid\n";

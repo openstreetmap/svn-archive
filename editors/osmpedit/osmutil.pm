@@ -26,13 +26,12 @@ use strict;
 sub create_node {
     my $lat = shift;
     my $lon = shift;
-    my $tags = shift;
     my $username = shift;
     my $password = shift;
 
 ##    print STDERR "NEW NODE: $lat $lon\n";
     my $data = "<osm version='0.2'>
-<node id='0' lon='$lon' tags='$tags' lat='$lat'/>
+<node id='0' lon='$lon' lat='$lat'/>
 </osm>";
     print STDERR "DATA: $data\n";
 ##    my $resp = "dummy";
@@ -104,6 +103,14 @@ sub get_node {
     return $resp;
 }
 
+sub get_node_history {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("node/$uid/history", $username, $password);
+    return $resp;
+}
+
 sub get_nodes {
     my $username = shift;
     my $password = shift;
@@ -119,6 +126,14 @@ sub delete_node {
     my $password = shift;
 
     my $resp = curl::delete ("node/$uid", $username, $password);
+    return $resp;
+}
+
+sub get_segment {
+    my $uid = shift;
+    my $username = shift;
+    my $password = shift;
+    my $resp = curl::get ("segment/$uid", $username, $password);
     return $resp;
 }
 

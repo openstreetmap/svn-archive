@@ -198,7 +198,7 @@ sub update_segment {
     my $password = shift;
 
     my $data = "<osm version='0.3'>\n";
-    $data .= "  <segment tags='$tags' from='$from' to='$to' id='$uid'>\n";
+    $data .= "  <segment from='$from' to='$to' id='$uid'>\n";
     foreach my $k (keys %{$tags}) {
 	my $val = $tags->{$k};
 	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
@@ -233,9 +233,13 @@ sub get_way_history {
 sub create_way {
     my $username = shift;
     my $password = shift;
+    my $segs = shift;
     my $tags = shift;
     my $data = "<osm version=\"0.3\">\n";
     $data .= "  <way id=\"0\">\n";
+    foreach my $s (@{$segs}) {
+	$data .= "    <seg id=\"$s\"/>\n";
+    }
     foreach my $k (keys %{$tags}) {
 	my $val = $tags->{$k};
 	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
@@ -263,6 +267,32 @@ sub delete_way {
     return $resp;
 }
 
+
+sub update_way {
+    my $uid = shift;
+    my $segs = shift;
+    my $tags = shift;
+    my $username = shift;
+    my $password = shift;
+
+    my $data = "<osm version='0.3'>\n";
+    $data .= "  <way id='$uid'>\n";
+    foreach my $s (@{$segs}) {
+	$data .= "    <seg id=\"$s\"/>\n";
+    }
+    foreach my $k (keys %{$tags}) {
+	my $val = $tags->{$k};
+	$data .= "    <tag k=\"$k\" v=\"$val\"/>\n";
+    }
+    $data .= "  </way>\n";
+    $data .= "</osm>\n";
+
+    my $uid = curl::put_data ("way/$uid", $data, $username, $password);
+    if ($uid < 0) {
+	return 0;
+    }
+    return 1;
+}
 
 
 return 1;

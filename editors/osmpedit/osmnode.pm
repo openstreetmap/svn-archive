@@ -21,48 +21,28 @@ use lib "$RealBin/../perl";
 
 use XML::TokeParser;
 
+use osmbase;
+
 use strict;
 
 use osmutil;
 
+use vars qw (@ISA  $AUTOLOAD);
+@ISA = qw (osmbase);
+
+
 sub new {
     my $this = shift;
     my $class = ref($this) || $this;
-    my $obj = bless {
-	LAT => 0,
-	LON => 0,
-	UID => 0,
-	TAGS => "",
-	FROMS => [],
-	TOS => [],
-	KEYVALUE => {},
-        @_
-	}, $class;
-    return $obj;
+    SUPER::new $class (
+		       LAT => 0,
+		       LON => 0,
+		       FROMS => [],
+		       TOS => [],
+		       @_
+		       );
 }
 
-
-sub add_key_value {
-    my $self = shift;
-    my $key = shift;
-    my $value = shift;
-##    print STDERR "SETTAGS: $key - $value\n";
-    $self->{KEYVALUE}->{$key} = $value;
-}
-
-sub key_value_hash {
-    my $self = shift;
-    return $self->{KEYVALUE}
-}
-
-sub have_key_values {
-    my $self = shift;
-    if ($self->{TAGS}) {
-	return 1;
-    } else {
-	return 0;
-    }
-}
 
 sub set_lat {
     my $self = shift;
@@ -86,27 +66,11 @@ sub get_lon {
     return $self->{LON};
 }
 
-sub set_uid {
-    my $self = shift;
-    my $val = shift;
-    $self->{UID} = $val;
-}
-
-sub get_uid {
-    my $self = shift;
-    return $self->{UID};
-}
-
 sub get_osmuid {
     my $self = shift;
-    my $res = $self->{UID};
+    my $res = $self->get_uid ();
     $res =~ s/n//;
     return $res;
-}
-
-sub get_tags {
-    my $self = shift;
-    return $self->{KEYVALUE};
 }
 
 sub add_from {

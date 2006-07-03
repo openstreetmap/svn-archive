@@ -1,0 +1,381 @@
+<?xml version="1.0"?>
+<ruleset>
+
+<rule>
+<condition k="foot" v="yes" />
+<condition k="class" v="path" />
+<style colour="#00FF00" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" 
+z-index="2" casing="none"/>
+</rule>
+
+<rule>
+<condition k="highway" v="footway" />
+<style colour="#00FF00" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" 
+z-index="2" casing="none"/>
+</rule>
+
+<rule>
+<condition k="foot" v="yes" />
+<condition k="horse" v="yes" />
+<condition k="bicycle" v="yes" />
+<condition k="highway" v="bridleway" />
+<style colour="#C06000" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" 
+z-index="2" casing="none"/>
+</rule>
+
+<rule>
+<condition k="foot" v="yes" />
+<condition k="horse" v="yes" />
+<condition k="bike" v="yes" />
+<condition k="class" v="path" />
+<style colour="#C06000" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" 
+z-index="3" casing="none"/>
+</rule>
+
+
+<rule>
+<condition k="foot" v="yes" />
+<condition k="horse" v="yes" />
+<condition k="bike" v="yes" />
+<condition k="car" v="yes" />
+<condition k="class" v="unsurfaced" />
+<style colour="#FF0000" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" z-index="4"
+casing="none"/>
+</rule>
+
+<rule>
+<condition k="foot" v="yes" />
+<condition k="horse" v="yes" />
+<condition k="bicycle" v="yes" />
+<condition k="motorcar" v="yes" />
+<condition k="highway" v="unsurfaced" />
+<style colour="#FF0000" width="0,0,0,0,0,0,0,0,0,0,1,1,2,2,4" z-index="4"
+casing="none"/>
+</rule>
+
+<rule>
+<condition k="class" v="residential" />
+<style colour="#DCDCDC" width="0,0,0,0,0,0,0,0,0,1,1,1,4,6,8" 
+casing="black" z-index="5"/>
+</rule>
+
+<rule>
+<condition k="highway" v="residential" />
+<style colour="#DCDCDC" width="0,0,0,0,0,0,0,0,0,1,1,1,4,6,8" 
+casing="black" z-index="5"/>
+</rule>
+
+<rule>
+<condition k="class" v="minor" />
+<style colour="#C0C0C0" width="0,0,0,0,0,0,0,0,1,2,2,2,6,8,10" 
+casing="black" z-index="6"/>
+</rule>
+
+<rule>
+<condition k="highway" v="unclassified" />
+<style colour="#C0C0C0" width="0,0,0,0,0,0,0,0,1,2,2,2,6,8,10" 
+casing="black" z-index="6"/>
+</rule>
+
+<rule>
+<condition k="railway" v="rail" />
+<style colour="black" width="0,0,0,0,0,0,0,0,1,2,2,2,2,2" casing="black"
+z-index="1"/>
+</rule>
+
+<rule>
+<condition k="class" v="secondary" />
+<style colour="#FDBF6F" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="black" z-index="7"/>
+</rule>
+
+<rule>
+<condition k="class" v="primary" />
+<style colour="#FB805F" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="black" z-index="8"/>
+</rule>
+
+<rule>
+<condition k="highway" v="primary" />
+<style colour="#FB805F" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="black" z-index="8"/>
+</rule>
+
+<rule>
+<condition k="highway" v="trunk" />
+<style colour="#7FC97F" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="black" z-index="9"/>
+</rule>
+
+<rule>
+<condition k="waterway" v="river" />
+<style colour="blue" width="0,0,0,0,0,0,0,1,2,2,2,2,2,2" z-index="0"/>
+</rule>
+
+<rule>
+<condition k="waterway" v="canal" />
+<style colour="blue" width="0,0,0,0,0,0,0,1,2,2,2,2,2,2" z-index="0"/>
+</rule>
+
+<rule>
+<condition k="highway" v="secondary" />
+<style colour="#FDBF6F" width="0,0,0,0,0,0,0,1,2,4,4,4,8,10,12" 
+casing="black"/>
+</rule>
+
+<rule>
+<condition k="class" v="motorway" />
+<style colour="#809BC0" width="0,0,0,0,0,0,1,2,4,4,4,4,8,10,12" 
+casing="black" z-index="9"/>
+</rule>
+
+<rule>
+<condition k="highway" v="motorway" />
+<style colour="#809BC0" width="0,0,0,0,0,0,1,2,4,4,4,4,8,10,12" 
+casing="black" z-index="9"/>
+</rule>
+
+<rule>
+<condition k="foot" v="unofficial" />
+<condition k="class" v="path" />
+<style colour="#00FF00" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" casing="none" 
+z-index="2"/>
+</rule>
+
+<rule>
+<condition k="foot" v="unofficial" />
+<condition k="horse" v="unofficial" />
+<condition k="class" v="path" />
+<style colour="#C06000" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
+casing="none" z-index="2"/>
+</rule>
+
+<rule>
+<condition k="foot" v="unofficial" />
+<condition k="highway" v="footway" />
+<style colour="#00FF00" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" casing="none" 
+z-index="2"/>
+</rule>
+
+<rule>
+<condition k="foot" v="unofficial" />
+<condition k="horse" v="unofficial" />
+<style colour="#C06000" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
+casing="none" z-index="2"/>
+</rule>
+
+<rule>
+<condition k="foot" v="unofficial" />
+<condition k="horse" v="unofficial" />
+<condition k="bicycle" v="unofficial" />
+<style colour="#FF00FF" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
+casing="none" z-index="2"/>
+</rule>
+
+<rule>
+<condition k="foot" v="unofficial" />
+<condition k="bicycle" v="unofficial" />
+<style colour="#FF00FF" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
+casing="none" z-index="2"/>
+</rule>
+
+<rule>
+<condition k="class" v="hill" />
+<style image="images/peak_small.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,10,10" />
+</rule>
+
+<rule>
+<condition k="natural" v="peak" />
+<style image="images/peak_small.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,10,10" />
+</rule>
+
+<rule>
+<condition k="class" v="farm" />
+<style image="images/farm.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="pub" />
+<style image="images/pub.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,8,8" />
+</rule>
+
+<rule>
+<condition k="amenity" v="pub" />
+<style image="images/pub.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="viewpoint" />
+<style image="images/viewpoint.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0" />
+</rule>
+
+<rule>
+<condition k="tourism" v="viewpoint" />
+<style image="images/viewpoint.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0" />
+</rule>
+
+<rule>
+<condition k="class" v="church" />
+<style image="images/church.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0" />
+</rule>
+
+<rule>
+<condition k="class" v="railway station" />
+<style image="images/station.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,8,8,8" />
+</rule>
+
+<rule>
+<condition k="railway" v="station" />
+<style image="images/station.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="mast" />
+<style image="images/mast.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0" />
+</rule>
+
+<rule>
+<condition k="class" v="car park" />
+<style image="images/carpark.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="amenity" v="parking" />
+<style image="images/carpark.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="point of interest" />
+<style image="images/interest.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="tourism" v="attraction" />
+<style image="images/interest.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="caution" />
+<style image="images/caution.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1" />
+</rule>
+
+<rule>
+<condition k="class" v="amenity" />
+<style image="images/amenity.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="node" />
+<style text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1" />
+</rule>
+
+<rule>
+<condition k="class" v="tea shop" />
+<style image="images/teashop.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="restaurant" />
+<style image="images/restaurant.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="campsite" />
+<style image="images/campsite.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,8,8,8" />
+</rule>
+
+<rule>
+<condition k="tourism" v="camp_site" />
+<style image="images/campsite.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,8,8,8" />
+</rule>
+
+<rule>
+<condition k="class" v="bridge" />
+<style image="images/bridge.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0" />
+</rule>
+
+<rule>
+<condition k="class" v="tunnel" />
+<style image="images/tunnel.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0" />
+</rule>
+
+<rule>
+<condition k="class" v="barn" />
+<style image="images/barn.png" 
+text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0" />
+</rule>
+
+<rule>
+<condition k="class" v="hamlet" />
+<style text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,12,12,12" />
+</rule>
+
+<rule>
+<condition k="place" v="hamlet" />
+<style text="-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,8,12,12,12" />
+</rule>
+
+<rule>
+<condition k="class" v="village" />
+<style text="-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,14,14,14" />
+</rule>
+
+<rule>
+<condition k="place" v="village" />
+<style text="-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,14,14,14" />
+</rule>
+
+<rule>
+<condition k="class" v="small town" />
+<style text="-1,-1,-1,-1,-1,-1,8,8,8,10,14,18,18,18" />
+</rule>
+
+<rule>
+<condition k="class" v="large town" />
+<style text="-1,-1,-1,8,8,8,10,10,10,14,18,24,24,24" />
+</rule>
+
+<rule>
+<condition k="class" v="town" />
+<style text="-1,-1,-1,8,8,8,10,10,10,14,18,24,24,24" />
+</rule>
+
+<rule>
+<condition k="place" v="town" />
+<style text="-1,-1,-1,8,8,8,10,10,10,14,18,24,24,24" />
+</rule>
+
+<rule>
+<condition k="place" v="city" />
+<style text="-1,-1,8,10,10,10,14,14,14,18,24,28,32,32" />
+</rule>
+
+<rule>
+<condition k="class" v="suburb" />
+<style text="-1,-1,-1,-1,-1,-1,-1,-1,-1,8,10,14,14,14" />
+</rule>
+
+</ruleset>

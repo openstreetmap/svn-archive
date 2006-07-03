@@ -4,7 +4,6 @@ editable = cgi['action'] == 'mytraces'|| cgi['action'] == 'update'
 page = cgi['page'].to_i
 rangestart = 20 * page
 rangeend = rangestart + 19
-
 nice_rangeend = rangeend +1
 
 nice_rangeend = gpxfiles.num_rows if gpxfiles.num_rows < nice_rangeend

@@ -346,3 +346,19 @@ hides rule from IE5-Mac \*/
   background: #fff;
 }
 
+#controls img
+{
+  z-index: 9999;
+}
+
+#controls
+{
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:64px;
+  height:32px;
+  z-index: 9998;
+  cursor: pointer;
+}
+

@@ -38,8 +38,8 @@ gc = Magick::Draw.new
 
 if !tile_too_big 
   gc.stroke_linejoin('miter')
-  gc.stroke('#ffff00')
-  gc.stroke_width(3)
+  gc.stroke('#ffcc00')
+  gc.stroke_width(4)
   
   proj = OSM::Mercator.new((bllat + trlat) / 2, (bllon + trlon) / 2, (trlon - bllon) / width, width, height)
 
@@ -60,11 +60,8 @@ end
 canvas = Magick::Image.new(width, height) {
         self.background_color = 'pink'
      }
-
-begin
-	gc.draw(canvas)
-rescue ArgumentError
-end
+ 
+gc.draw(canvas)
 
 transparent_canvas = canvas.transparent('pink', Magick::TransparentOpacity)
 

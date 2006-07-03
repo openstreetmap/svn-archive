@@ -4,29 +4,32 @@ require 'net/http'
 require 'cgi'
 require 'RMagick'
 
-servers = { 'landsat' => 'onearth.jpl.nasa.gov',
+servers = { 'landsat' => 'landsat.openstreetmap.org',
 	'gpx' => 'tile.openstreetmap.org',
-	'streets' => 'tile.openstreetmap.org' }
+	'streets' => 'tile.openstreetmap.org',
+	'srtm' => 'tile.openstreetmap.org' }
 
 urls = { 'landsat' => '/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg',
 	'gpx' => '/ruby/gpx.rbx?',
-	#'streets' => '/ruby/streets.rbx?' }
-	'streets' => '/cgi-bin/streets.pl?' }
+	'streets' => '/ruby/renderer.rb?',
+	'srtm' => '/srtm.php?' }
 
 type = { 'landsat' => 'jpeg',
 	'gpx' => 'png',
-	'streets' => 'png' }
+	'streets' => 'png',
+	'srtm' => 'png' }
 
-proxy = { 'landsat' => true }
-proxyserver = 'landsat.openstreetmap.org'
-proxyport = 3128
+ports = { 'landsat' => 3128,
+	  'gpx' => 81,
+	  'streets' => 80,
+	  'srtm' => 80 }
 
 layers = []
 
 r = Apache.request
 r.content_type = 'image/jpg'
 t = Time.now + (60 * 60)
-r.headers_out.add('Expires', t.to_s)
+#r.headers_out.add('Expires', t.to_s)
 #r.send_http_header
 
 cgi = CGI.new
@@ -34,7 +37,7 @@ cgi = CGI.new
 layers = cgi['layers'].split(',') 
 if layers.length == 0
 	layers[0] = 'landsat'
-	layers[1] = 'gpx'
+	layers[1] = 'streets'
 end
 width = cgi['WIDTH']
 if width.length == 0
@@ -59,17 +62,11 @@ for l in layers
 			next
 		end
 
-		if proxy[ myL ]
-			res = Net::HTTP::Proxy(proxyserver,proxyport).start(servers[myL]) { |http|
-				http.read_timeout=5
-				http.get( urls[myL] + "&WIDTH=" + width + "&HEIGHT=" + height + "&BBOX=" + bbox )
-			}
-		else
-			res = Net::HTTP::Proxy(nil,nil).start(servers[myL],81) { |http|
+		res = Net::HTTP::Proxy(nil,nil).start(servers[myL],ports[myL]) { |http|
 				http.read_timeout=30
-				http.get( urls[myL] + "&WIDTH=" + width + "&HEIGT=" + height + "&BBOX=" + bbox )
-			}
-		end
+				http.get( urls[myL] + "&width=" + width + "&height=" + height + "&bbox=" + bbox )
+		}
+
 		case res
 		when Net::HTTPSuccess
 			images[ myL ] = Magick::Image::from_blob(res.body)

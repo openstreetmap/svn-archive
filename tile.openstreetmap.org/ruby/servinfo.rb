@@ -1,0 +1,5 @@
+$DBSERVER = '128.40.58.203'
+$DATABASE= 'openstreetmap'
+$USERNAME = 'openstreetmap'
+$PASSWORD = 'openstreetmap'
+$SERVER_NAME = 'tile.openstreetmap.org'

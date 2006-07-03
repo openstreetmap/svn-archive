@@ -171,7 +171,7 @@ module OSM
 
     def get_local_connection
       begin
-        return Mysql.real_connect('127.0.0.1', $USERNAME, $PASSWORD, $DATABASE)
+        return Mysql.real_connect('localhost', $USERNAME, $PASSWORD, $DATABASE)
       rescue MysqlError => e
         mysql_error(e)
       end
@@ -596,7 +596,7 @@ module OSM
 
       timeclause = get_time_clause(nil, to).gsub('timestamp','nodes.timestamp')
 
-      res = call_sql { "select id, latitude, longitude, visible, tags from (select * from (select nodes.id, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} #{timeclause} and nodes.id = a.id order by nodes.timestamp desc) as b group by id) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2}" }
+      res = call_sql { "select id, latitude, longitude, visible, tags from current_nodes where latitude > #{lat2}  and longitude > #{lon1} and latitude < #{lat1} and longitude < #{lon2} and visible = 1" }
 
       if !res.nil? 
         res.each_hash do |row|
@@ -776,7 +776,7 @@ module OSM
 
 
     def getnode(node_id)
-      res = call_sql {"select latitude, longitude, visible, tags from nodes where id=#{node_id} order by timestamp desc limit 1" }
+      res = call_sql {"select latitude, longitude, visible, tags from current_nodes where id=#{node_id}" }
 
       if !res.nil?
         res.each_hash do |row|
@@ -797,38 +797,48 @@ module OSM
 
       begin
         dbh = get_connection
-        res = dbh.query("select latitude, longitude from nodes where id = #{node_id} order by timestamp desc limit 1")
+        res = dbh.query("select latitude, longitude from current_nodes where id = #{node_id}")
 
         res.each_hash do |row|
-          dbh.query("insert into nodes (id,latitude,longitude,timestamp,user_id,visible) values (#{node_id} , #{row['latitude']}, #{row['longitude']}, NOW(), #{user_id}, 0)")
-          return true
+          dbh.query("set @now = NOW()")
+          dbh.query("insert into nodes (id,latitude,longitude,timestamp,user_id,visible) values (#{node_id} , #{row['latitude']}, #{row['longitude']}, @now, #{user_id}, 0)")
+          dbh.query("update current_nodes set latitude = #{row['latitude']}, longitude =  #{row['longitude']}, timestamp = @now , user_id = #{user_id}, visible =  0")
         end
 
       rescue MysqlError => e
         mysql_error(e)
-
+	return false
       ensure
         dbh.close if dbh
       end
-
-      return false
+      return true
     end 
 
 
     def update_node?(node_id, user_id, latitude, longitude, tags)
-      call_sql { "insert into nodes (id,latitude,longitude,timestamp,user_id,visible,tags) values (#{node_id} , #{latitude}, #{longitude}, NOW(), #{user_id}, 1, '#{q(tags)}')" }
+      begin
+        dbh = get_connection
+        dbh.query("set @now = NOW()")
+        dbh.query("insert into nodes (id,latitude,longitude,timestamp,user_id,visible,tags) values (#{node_id} , #{latitude}, #{longitude}, NOW(), #{user_id}, 1, '#{q(tags)}')" )
+        dbh.query("update current_nodes set latitude = #{latitude}, longitude =  #{longitude}, timestamp = @now , user_id = #{user_id}, visible =  1 where id = #{node_id}")
+      rescue MysqlError => e
+        mysql_error(e)
+	return false
+      ensure
+        dbh.close if dbh
+      end
+      return true
     end
 
 
     def create_node(lat, lon, user_id, tags)
-      @@log.log("creating node at #{lat},#{lon} for user #{user_id} with tags '#{tags}'")
+      #@@log.log("creating node at #{lat},#{lon} for user #{user_id} with tags '#{tags}'")
       begin
-        dbh = get_connection
-
-        dbh.query( "insert into meta_nodes (timestamp, user_id) values (NOW(), #{user_id})" )
-
-        dbh.query( "insert into nodes (id, latitude, longitude, timestamp, user_id, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, NOW(), #{user_id}, 1, '#{q(tags)}')" )
-
+        dbh = get_connection 
+        dbh.query("set @now = NOW()")
+        dbh.query( "insert into meta_nodes (timestamp, user_id) values (@now, #{user_id})" )
+        dbh.query( "insert into nodes (id, latitude, longitude, timestamp, user_id, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, @now, #{user_id}, 1, '#{q(tags)}')" )
+        dbh.query( "insert into current_nodes (id, latitude, longitude, timestamp, user_id, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, @now, #{user_id}, 1, '#{q(tags)}')" )
         res = dbh.query( "select last_insert_id() " )
 
         res.each do |row|

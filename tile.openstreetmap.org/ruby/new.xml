@@ -151,30 +151,30 @@ casing="none" z-index="2"/>
 </rule>
 
 <rule>
-<condition k="foot" v="unofficial" />
+<condition k="foot" v="permissive" />
 <condition k="highway" v="footway" />
 <style colour="#00FF00" width="0,0,0,0,0,0,0,0,0,0,1,1,1,1" casing="none" 
 z-index="2"/>
 </rule>
 
 <rule>
-<condition k="foot" v="unofficial" />
-<condition k="horse" v="unofficial" />
+<condition k="foot" v="permissive" />
+<condition k="horse" v="permissive" />
 <style colour="#C06000" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
 casing="none" z-index="2"/>
 </rule>
 
 <rule>
-<condition k="foot" v="unofficial" />
-<condition k="horse" v="unofficial" />
-<condition k="bicycle" v="unofficial" />
+<condition k="foot" v="permissive" />
+<condition k="horse" v="permissive" />
+<condition k="bicycle" v="permissive" />
 <style colour="#FF00FF" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
 casing="none" z-index="2"/>
 </rule>
 
 <rule>
-<condition k="foot" v="unofficial" />
-<condition k="bicycle" v="unofficial" />
+<condition k="foot" v="permissive" />
+<condition k="bicycle" v="permissive" />
 <style colour="#FF00FF" width="0,0,0,0,0,0,0,0,0,0,2,2,2,2" 
 casing="none" z-index="2"/>
 </rule>

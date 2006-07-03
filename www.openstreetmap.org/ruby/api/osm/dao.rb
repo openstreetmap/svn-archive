@@ -596,13 +596,13 @@ module OSM
 
       timeclause = get_time_clause(nil, to).gsub('timestamp','nodes.timestamp')
 
-      res = call_sql { "select id, latitude, longitude, visible, tags from current_nodes where latitude > #{lat2}  and longitude > #{lon1} and latitude < #{lat1} and longitude < #{lon2} and visible = 1" }
+      res = call_sql { "select id, timestamp, latitude, longitude, visible, tags from current_nodes where latitude > #{lat2}  and longitude > #{lon1} and latitude < #{lat1} and longitude < #{lon2} and visible = 1" }
 
       if !res.nil? 
         res.each_hash do |row|
 
           node_id = row['id'].to_i
-          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, true, row['tags'])
+          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, true, row['tags'], row['timestamp'])
         end
 
         return nodes
@@ -615,15 +615,13 @@ module OSM
        nodes = {}
        timeclause = get_time_clause(nil, to)
 
-       res = call_sql { "select id, latitude, longitude, visible, tags from 
-         (select * from 
-          (select id, latitude, longitude, visible, tags from nodes where nodes.id in (#{node_ids.join(',')}) #{timeclause} order by id, timestamp desc) as a group by id) as b" }
+       res = call_sql { "select id, latitude, longitude, visible, tags, timestamp from current_nodes where id in (#{node_ids.join(',')}) #{timeclause}" }
 
       if !res.nil? 
         res.each_hash do |row|
           node_id = row['id'].to_i
           vis = '1' == row['visible']
-          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, vis, row['tags'])
+          nodes[node_id] = Point.new(row['latitude'].to_f, row['longitude'].to_f, node_id, vis, row['tags'], row['timestamp'])
         end
 
         return nodes

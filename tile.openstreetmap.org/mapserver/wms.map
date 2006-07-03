@@ -25,7 +25,7 @@ map
 
 LAYER # LandSat WMS map from JPL (or from USGS)
 	debug on
-	NAME landsat
+	NAME landsat-old
   group foo
 	TYPE RASTER
 	OFFSITE 0 0 0
@@ -48,7 +48,7 @@ END # LandSat WMS image ends here
 
 LAYER # LandSat WMS map from JPL (or from USGS)
 	debug on
-	NAME landsat-cache
+	NAME landsat
   group foo
 	TYPE RASTER
 	OFFSITE 0 0 0
@@ -106,7 +106,6 @@ LAYER
 	
 	CONNECTION "http://tile.openstreetmap.org:81/ruby/streets.rbx?request=GetMap&layers=modis,global_mosaic&srs=EPSG:4326"
 	METADATA
-#		"wms_title" "gpx2"
 		"wms_name" "streets"
 		"wms_server_version" "1.0.0"
 		"wms_srs" "epsg:4326"
@@ -124,13 +123,61 @@ LAYER
   group foo
 	TYPE RASTER
 	OFFSITE 255 255 0
-	STATUS off
+	STATUS on
 	CONNECTIONTYPE WMS
 
 	
-	CONNECTION "http://tile.openstreetmap.org:81/cgi-bin/streets.pl?"
+	CONNECTION "http://tile.openstreetmap.org:81/ruby/svg.rb?"
 	METADATA
 		"wms_name" "streets2"
+		"wms_server_version" "1.0.0"
+		"wms_srs" "epsg:4326"
+		"wms_format" "image/png"
+	END
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+END
+
+
+LAYER 
+	debug on
+	NAME nickosm 
+  group foo
+	TYPE RASTER
+	OFFSITE 255 255 0
+	STATUS on
+	CONNECTIONTYPE WMS
+
+	
+	CONNECTION "http://nick.dev.openstreetmap.org/osm.php?"
+	METADATA
+		"wms_name" "nickosm"
+		"wms_server_version" "1.0.0"
+		"wms_srs" "epsg:4326"
+		"wms_format" "image/png"
+	END
+
+		PROJECTION
+			"init=epsg:4326"
+		END
+END
+
+
+LAYER 
+	debug on
+	NAME nicksrtm
+  group foo
+	TYPE RASTER
+	OFFSITE 255 255 0
+	STATUS on
+	CONNECTIONTYPE WMS
+
+	
+	CONNECTION "http://nick.dev.openstreetmap.org/srtm.php?"
+	METADATA
+		"wms_name" ""
 		"wms_server_version" "1.0.0"
 		"wms_srs" "epsg:4326"
 		"wms_format" "image/png"

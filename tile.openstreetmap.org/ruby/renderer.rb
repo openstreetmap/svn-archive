@@ -309,14 +309,6 @@ class Renderer
 	end
 end
 
-def blankpng(width, height)
-		canvas = Magick::Image.new(width, height) {
-        self.background_color = 'transparent'
-     	}
-		canvas.format = 'PNG'
-		puts canvas.to_blob
-end
-
 r = Apache.request
 r.content_type = 'image/png'
 cgi = CGI.new
@@ -352,14 +344,7 @@ height = 320 if height == 0
 #trlon = -0.4
 #trlat = 51.40
 
-tile_too_big = width > 256 || height > 256 || ( (trlon - bllon) * (trlat - bllat) ) > 0.0035
 
-if tile_too_big
-  blankpng(width, height)
-else
-  renderer = Renderer.new(bllon, bllat, trlon, trlat, width, height)
-  renderer.draw()
-  renderer.out()
-end
-
-
+renderer = Renderer.new(bllon, bllat, trlon, trlat, width, height)
+renderer.draw()
+renderer.out()

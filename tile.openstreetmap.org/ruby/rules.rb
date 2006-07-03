@@ -52,7 +52,7 @@ class RenderRules
 		style['casing'] = 'black' if style['casing']==nil and 
 					style['dash'] == nil
 		#style['casing'] = nil if style['casing'] = 'none'
-		style['colour'] = 'green' if style['colour']==nil
+		style['colour'] = 'white' if style['colour']==nil
 		style['width'] = "0,0,0,0,0,0,0,0,0,1,1,1,4,6,8" if style['width']==nil
 		style['z-index'] = 0 if style['z-index']==nil
 

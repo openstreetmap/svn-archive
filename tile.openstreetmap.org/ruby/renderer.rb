@@ -21,7 +21,8 @@ class Renderer
 		@gc = Magick::Draw.new
 		@segment_styles = {}
 		@node_styles = {}
-		@tagged_segments = Array.new 
+		#@tagged_segments = Array.new 
+		@tagged_segments = {}
 		@rules = RenderRules.new('new.xml')
 		dao = OSM::Dao.instance
 		@zoom = (log2((360*width)/(e-w),2)-9).round
@@ -37,35 +38,54 @@ class Renderer
 			end
 		end
 
+		seg_ids = Array.new
 		segments = dao.getlines(@nodes) unless @nodes=={}
 		unless segments==nil
 			id=0
-			segments.each_value do |segment|
-				@tagged_segments[id] = TaggedSegment.new
-				@tagged_segments[id].segment = segment
+			segments.each do |sid,segment|
+				seg_ids.push(sid)	
+				@tagged_segments[sid] = TaggedSegment.new
+				@tagged_segments[sid].segment = segment
 				keyvals = nil
 				#puts "TAGS"
 				#puts segment.tags
 				keyvals = get_kv(segment.tags) unless segment.tags == ''
 				if keyvals == nil
 					#puts "NO KEYVALS"
-					@tagged_segments[id].style = {}
-					@tagged_segments[id].style['casing'] = "black"
-					@tagged_segments[id].style['colour'] = "yellow"
-					@tagged_segments[id].style['width']=
+					@tagged_segments[sid].style = {}
+					@tagged_segments[sid].style['casing'] = "black"
+					@tagged_segments[sid].style['colour'] = "white"
+					@tagged_segments[sid].style['width']=
 						"0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
-					@tagged_segments[id].style['z-index'] = 0
+					@tagged_segments[sid].style['z-index'] = 0
 				else
 					#puts "KEYVALS"
 					#puts keyvals
-					@tagged_segments[id].style=@rules.get_style(keyvals)
+					@tagged_segments[sid].style=@rules.get_style(keyvals)
 					#puts "STYLES"
-					#puts @tagged_segments[id].style
+					#puts @tagged_segments[sid].style
 				end
 				id=id+1
 			end
 			#@tagged_segments.sort! {|a,b| a.style['z-index']<=>b.style['z-index']}
 		end
+		
+		# WAY STUFF START
+		# get ways and override tags of constituent segments
+
+		#puts "WAYS"
+		ways = dao.get_multis_from_segments(seg_ids)
+    	ways.each do |way|
+			#puts "WAY"
+	  		way.segs.each do |segid|
+				#puts "SEGID #{segid}"
+				@tagged_segments[segid.to_i].style=
+					@rules.get_style(way.tags) unless way.tags == nil or
+					@tagged_segments[segid.to_i] == nil
+			end
+   	   	end
+
+		# WAY STUFF END
 
 		@proj = OSM::Mercator.new((s+n)/2,(w+e)/2,(e-w)/width,width,height)
 		@width = width
@@ -271,7 +291,7 @@ class Renderer
 
 	def draw_segment_casings()
 		unless @tagged_segments == nil
-			@tagged_segments.each do |segment|
+			@tagged_segments.each_value do |segment|
 				#puts segment.style['z-index']
 				draw_casing(segment)
 			end
@@ -280,7 +300,8 @@ class Renderer
 
 	def draw_segments()
 		unless @tagged_segments == nil
-			@tagged_segments.each do |segment|
+			@tagged_segments.each do |sid,segment|
+				#puts "draw_segments: segment id #{sid}"
 				draw_line(segment)
 				draw_segment_name(segment)
 			end
@@ -316,7 +337,7 @@ cgi = CGI.new
 
 bbox = cgi['bbox']
 bbox = cgi['BBOX'] if bbox == ''
-bbox = '-0.75,51.02,-0.7,51.07' if bbox == ''
+bbox = '-0.9,51,-0.7,51.2' if bbox == ''
 
 bbox.gsub!('%2D', '-')
 bbox.gsub!('%2E', '.')

@@ -231,13 +231,14 @@ sub get_way_history {
 }
 
 sub create_way {
-    my $username = shift;
-    my $password = shift;
     my $segs = shift;
     my $tags = shift;
+    my $username = shift;
+    my $password = shift;
     my $data = "<osm version=\"0.3\">\n";
     $data .= "  <way id=\"0\">\n";
     foreach my $s (@{$segs}) {
+	$s =~ s/s//;
 	$data .= "    <seg id=\"$s\"/>\n";
     }
     foreach my $k (keys %{$tags}) {
@@ -278,6 +279,7 @@ sub update_way {
     my $data = "<osm version='0.3'>\n";
     $data .= "  <way id='$uid'>\n";
     foreach my $s (@{$segs}) {
+	$s =~ s/s//;
 	$data .= "    <seg id=\"$s\"/>\n";
     }
     foreach my $k (keys %{$tags}) {

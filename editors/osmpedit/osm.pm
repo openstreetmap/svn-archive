@@ -45,14 +45,16 @@ sub new {
 	}, $class;
     $obj->{SEGCOLOUR}->{"none"} = "white";
     $obj->{SEGCOLOUR}->{"street"} = "lightsteelblue3";
-#    $obj->{SEGCOLOUR}->{"primary"} = "orangered";
+    $obj->{SEGCOLOUR}->{"primary"} = "orangered";
     $obj->{SEGCOLOUR}->{"secondary"} = "orangered4";
     $obj->{SEGCOLOUR}->{"motorway"} = "navy";
 #    $obj->{SEGCOLOUR}->{"unsurfaced"} = "green";
     $obj->{SEGCOLOUR}->{"minor"} = "wheat3";
     $obj->{SEGCOLOUR}->{"path"} = "brown";
+    $obj->{SEGCOLOUR}->{"footpath"} = "brown";
     $obj->{SEGCOLOUR}->{"bikepath"} = "brown";
     $obj->{SEGCOLOUR}->{"train"} = "sienna3";
+    $obj->{SEGCOLOUR}->{"railroad"} = "sienna3";
     $obj->{SEGCOLOUR}->{"tunnel"} = "black";
     return $obj;
 }
@@ -497,7 +499,7 @@ sub draw {
 	foreach my $uid (@segids) {
 	    my $segment = $self->get_segment ($uid);
 	    if (not $segment) {
-		print STDERR "WARNING: WAY SEGMENT DOES NOT EXIST --- $uid\n";
+##		print STDERR "WARNING: WAY SEGMENT DOES NOT EXIST --- $uid\n";
 		next;
 	    }
 
@@ -902,6 +904,20 @@ sub one_segment_exists {
 	}
     }
     return 0;
+}
+
+sub create_way {
+    my $self = shift;
+    my @sids = @_;
+    my $username  = $self->get_username ();
+    my $password  = $self->get_password ();
+    my $way = new osmway;
+    $way->set_segments (@sids);
+    my $uid = $way->create_osm_way ($username, $password);
+    if ($uid) {
+	print STDERR "Created way: $uid\n";
+	$self->add_way ($way);
+    }
 }
 
 return 1;

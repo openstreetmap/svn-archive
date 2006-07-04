@@ -85,6 +85,7 @@ my $way_value = "";
 my @way_extra_keys = ();
 my @way_extra_values = ();
 
+my @initial_segments_in_way = ();
 
 
 my $main = new MainWindow;
@@ -323,6 +324,11 @@ $tbframe->Radiobutton (-variable => \$editmode,
                        -value => "segment",
                        -state => "normal")->pack (-side => "left");
 
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Way",
+                       -value => "way",
+                       -state => "normal")->pack (-side => "left");
+
 ###create_class_menu ($tbframe);
 
 
@@ -401,6 +407,15 @@ sub button1 {
 	}
     }
 
+    if ($editmode eq "way") {
+	my $seg = $osm->get_segment_from_item ($id);
+	if ($seg) {
+	    my $uid = $seg->get_uid ();
+	    print STDERR "Add segment to way: $uid\n";
+	    push @initial_segments_in_way, $uid;
+	}
+    }
+
     if ($editmode eq "segment" and not $from_node_uid) {
 	$from_node_uid = 0;
 	my $node = $osm->get_node_from_item ($id);
@@ -469,6 +484,15 @@ sub key_value_frame {
     #
     # Way part
     #
+
+    $right_side_frame->Button (-text => "Create way",
+			       -command => sub {
+				   print STDERR "Create way\n";
+				   $osm->create_way (@initial_segments_in_way);
+			       },
+			       -width => $fwidth
+			       )->pack (-side => "top");
+
 
     $right_side_frame->Label (-text => "Way")->pack (-side => "top");
 
@@ -665,6 +689,10 @@ sub button2 {
     my($c, $x, $y) = @_;
     my @item = $can->find ('withtag', 'current');
     my $id = $item[0];
+    if ($editmode eq "way") {
+	print STDERR "Clearing saved way segments\n";
+	@initial_segments_in_way = ();
+    }
 }
 
 sub button3 {

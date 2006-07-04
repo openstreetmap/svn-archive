@@ -800,7 +800,7 @@ module OSM
         res.each_hash do |row|
           dbh.query("set @now = NOW()")
           dbh.query("insert into nodes (id,latitude,longitude,timestamp,user_id,visible) values (#{node_id} , #{row['latitude']}, #{row['longitude']}, @now, #{user_id}, 0)")
-          dbh.query("update current_nodes set latitude = #{row['latitude']}, longitude =  #{row['longitude']}, timestamp = @now , user_id = #{user_id}, visible =  0")
+          dbh.query("update current_nodes set latitude = #{row['latitude']}, longitude =  #{row['longitude']}, timestamp = @now , user_id = #{user_id}, visible = 0 where id = #{node_id}")
         end
 
       rescue MysqlError => e

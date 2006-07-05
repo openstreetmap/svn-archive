@@ -137,8 +137,9 @@ if (defined $opt_getwayhistory) {
 }
 
 if (defined $opt_createway) {
+    my $segs = ();
     my $tags = {};
-    my $resp = osmutil::create_way ($tags, $username, $password);
+    my $resp = osmutil::create_way ($segs, $tags, $username, $password);
     print "Way created: $resp\n";
     exit 0;
 }

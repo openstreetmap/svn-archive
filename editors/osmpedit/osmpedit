@@ -86,6 +86,7 @@ my @way_extra_keys = ();
 my @way_extra_values = ();
 
 my @initial_segments_in_way = ();
+my %initial_segments_in_way = ();
 
 
 my $main = new MainWindow;
@@ -413,6 +414,9 @@ sub button1 {
 	    my $uid = $seg->get_uid ();
 	    print STDERR "Add segment to way: $uid\n";
 	    push @initial_segments_in_way, $uid;
+	    $initial_segments_in_way{$id} = $marked_item_colour;
+	    print STDERR "Saved colour: $marked_item_colour\n";
+	    $can->itemconfigure ($id, -fill => "green");
 	}
     }
 
@@ -692,6 +696,12 @@ sub button2 {
     if ($editmode eq "way") {
 	print STDERR "Clearing saved way segments\n";
 	@initial_segments_in_way = ();
+	foreach my $id (keys %initial_segments_in_way) {
+	    my $c = $initial_segments_in_way{$id};
+	    $can->itemconfigure ($id, -fill => "$c");
+	}
+	$marked_item_colour = $initial_segments_in_way{$marked_item_id};
+	%initial_segments_in_way = ();
     }
 }
 
@@ -738,6 +748,9 @@ sub motion {
 
     if ($marked_item_id) {
 	$can->itemconfigure ($marked_item_id, -fill => $marked_item_colour);
+	if ($initial_segments_in_way{$marked_item_id}) {
+	    $can->itemconfigure ($marked_item_id, -fill => "green");
+	}
     }
     if ($node or $seg) {
 	$marked_item_id = $id;

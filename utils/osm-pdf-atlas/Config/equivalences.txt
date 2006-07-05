@@ -1,0 +1,6 @@
+primary: trunk, Primary
+motorway: motorway_link
+path: footpath
+minor: residential, unclassified, street
+river: canal
+railway: tramway

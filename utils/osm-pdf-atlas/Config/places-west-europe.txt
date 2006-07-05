@@ -1,0 +1,10 @@
+West-Europe:    52.0,  5.0, 20.0, city
+UK:             54.0,  -4.5,  8.0, area
+Germany:        50.0,  12.0,  6.5, area
+Spain:          40.0,  -4.0,  5.5, area
+Italy:          42.0,  12.0,  5.0, area
+France:         46.0,  -0.0,  4.0, area
+Swizerland:     47.0,   8.0,  3.0, area
+Austria:        47.5,  13.0,  5.0, area
+Sweden/Norwegen/Finnland:         60.0,  18.0, 15.0, area
+Poland/Czech/Slovakai:         52, 20, 8, area

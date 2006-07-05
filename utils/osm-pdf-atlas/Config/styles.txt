@@ -1,0 +1,8 @@
+primary: #00A000
+secondary: #F23D40
+motorway: #208CB3
+path: #8CB348
+minor: #404040
+river: #0000FF
+railway: #605D55
+coast: #0000FF

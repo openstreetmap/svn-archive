@@ -1,0 +1,40 @@
+# -------------------------- Germany
+#Area: 50,12,7
+#Places: Config/places-germany.txt
+
+# ------------------------ England
+#Places: Config/places-england.txt
+
+# ------------------------ IoW
+#Places: Config/places-iow.txt
+
+
+# ------------------------- Europe
+#Area: 52.0,  5.0, 20
+#Places: Config/places-west-europe.txt
+
+# ------------------------- Australia
+Area: -27.0,  138.0, 20
+Places: Config/places-australia.txt
+
+# ------------------------- Eeast world
+#Area:     0,90, 90
+#Places: Config/places-east-world.txt
+
+# ------------------------ Africa
+#Area: 8,16, 25
+#Places: Config/places-africa.txt
+
+
+# will be filled with the defaults
+#Title:	OSM Africa Atlas
+#Filename: osm_atlas-africa.pdf
+# will be filled with the defaults
+
+Data:	Data/osm.txt
+Styles: Config/styles.txt
+Coast:	Data/gshhs_h.b
+Equivalences: Config/equivalences.txt
+Filters: Config/filter.txt
+License: Config/license.txt
+

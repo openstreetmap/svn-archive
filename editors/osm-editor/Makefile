@@ -14,7 +14,8 @@ OBJ2 = osmeditor2.o MainWindow2.o GPSDevice2.o LandsatManager2.o \
 	  SRTMConGen.o SRTMDataGrid.o SRTMGeneral.o llgr.o GPXParser2.o \
 	  OSMParser2.o qmdcodec.o HTTPHandler.o moc_HTTPHandler.o Way.o \
 	  NodeHandler.o moc_NodeHandler.o moc_LandsatManager2.o SegSplitter.o \
-	  moc_SegSplitter.o NodeMetaDataHandler.o
+	  BatchUploader.o moc_SegSplitter.o moc_BatchUploader.o moc_WayDialogue.o \
+	  NodeMetaDataHandler.o
 JEEPSSRC = jeeps-gpsbabel-1.2.7
 LIBS = -ljeeps 
 LIBPATH = -L$(JEEPSSRC) -L/usr/local/lib
@@ -25,10 +26,19 @@ SRTMOBJ = srtm.o Canvas.o SRTMGeneral.o SRTMDataGrid.o SRTMConGen.o llgr.o
 USB='USBOPT=-DNO_USB'
 
 # Configure Qt paths
-QTINCPATH = /usr/include/qt3
-QTLIB = -lqt 
-QTLIBPATH = -L/usr/lib
-MOC=moc
+# Hints if problems: try interchanging -lqt-mt and -lqt.
+
+# Mandrake 10.1
+QTINCPATH = /usr/lib/qt3/include
+QTLIB = -lqt-mt 
+QTLIBPATH = -L/usr/lib/qt3/lib
+MOC=/usr/lib/qt3/bin/moc
+
+# Debian sarge and testing
+#QTINCPATH = /usr/include/qt3
+#QTLIB = -lqt 
+#QTLIBPATH = -L/usr/lib
+#MOC=moc
 
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
 #OPTS       = -DXMLRPC
@@ -72,7 +82,7 @@ MainWindow2.o : WaypointDialogue.h Components2.h \
 	functions.h MainWindow2.h RouteMetaDataHandler.h LoginDialogue.h\
 	Map.h LandsatManager2.h Node.h Segment.h SRTMConGen.h SRTMDataGrid.h\
 	SRTMGeneral.h OSMParser2.h GPSDevice2.h Way.h WayDialogue.h NodeHandler.h\
-	HTTPHandler.h
+	HTTPHandler.h SegSplitter.h BatchUploader.h
 Components2.o : Components2.h Node.h Segment.h functions.h
 Polygon.o : Polygon.h functions.h
 WaypointDialogue.o : WaypointDialogue.h
@@ -97,4 +107,5 @@ qmdcodec.o: qmdcodec.h
 HTTPHandler.o : HTTPHandler.h
 NodeHandler.o : NodeHandler.h
 SegSplitter.o : SegSplitter.h Segment.h Node.h Way.h Components2.h HTTPHandler.h
+BatchUploader.o : BatchUploader.h Segment.h Node.h Components2.h HTTPHandler.h
 NodeMetaDataHandler.o : NodeMetaDataHandler.h

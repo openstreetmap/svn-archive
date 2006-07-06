@@ -31,6 +31,7 @@
 #include "NodeHandler.h"
 #include "Way.h"
 #include "SegSplitter.h"
+#include "BatchUploader.h"
 #include <map>
 #include <vector>
 
@@ -54,7 +55,7 @@ using std::vector;
 // N_ACTIONS should always be the last
 enum { ACTION_NODE, ACTION_MOVE_NODE, ACTION_DELETE_NODE,
 		ACTION_SEL_SEG, ACTION_SEL_WAY, ACTION_NEW_SEG, ACTION_BREAK_SEG,
-		N_ACTIONS };
+		ACTION_SEL_TRACK, N_ACTIONS };
 
 namespace OpenStreetMap 
 {
@@ -107,6 +108,15 @@ public:
 	const QPixmap& getImage(){ return image; }
 };
 
+struct SegPen
+{
+	QPen pen;
+	bool casing;
+
+	SegPen() { casing=false; }
+	SegPen(const QPen& p, bool c) { pen=p; casing=c; }
+};
+
 class MainWindow2 : public QMainWindow, public DrawSurface
 {
 
@@ -125,7 +135,8 @@ private:
 
 	// on-screen data representations 
 	std::map<QString,WaypointRep*> nodeReps; 
-	std::map<QString,QPen> segpens;
+	std::map<QString,SegPen> segpens;
+	std::map<QString,QPen> areapens;
 
 	// currently selected trackpoints
 
@@ -158,9 +169,10 @@ private:
 	LandsatManager2 landsatManager;
 
 	Node *pts[2];
+	int tpts[2];
 	vector<Node*> ptsv[2];
 	vector<Node*> movingNodes;
-	int nSelectedPoints;
+	int nSelectedPoints, nSelectedTrackPoints;
 
 	QPainter *curPainter;
 
@@ -185,6 +197,7 @@ private:
 	QPixmap savedPixmap;
 
 	SegSplitter *splitter;
+	BatchUploader *uploader;
 
 	bool makingWay;
 
@@ -198,6 +211,8 @@ private:
 		//selSeg.push_back(NULL);
 		//segCount = 0;
 	}
+
+	vector<Node*> gpxNodes;
 
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
@@ -232,7 +247,9 @@ public:
 	void drawSegment(QPainter&,Segment*);
 	void drawNodes(QPainter&);
 	void drawNode(QPainter&,Node*);
-	void drawTrackPoints(QPainter &p);
+	void drawAreas(QPainter&);
+	void drawArea(QPainter&,Area*);
+	void drawTrackPoints(QPainter &p,Components2*,QColor,bool);
 	void drawTrackPoint(QPainter &p,TrackPoint *tp);
 	void drawMoving(QPainter&);
 	void editNode(int,int,int);
@@ -253,7 +270,7 @@ public slots:
 	void toggleGPX();
 	void undo();
 	void setMode(int);
-	void setSegType(const QString&);
+	//void setSegType(const QString&);
 	void toggleNodes();
 	void grabLandsat();
 	void up();
@@ -286,6 +303,10 @@ public slots:
 	void loadOSMTracks(const QByteArray& array,void*);
 	void splitterDone();
 	void changeWayDetails();
+	void batchUpload();
+	void batchUploadDone();
+	void batchUploadError(const QString& error);
+	void segSplitterError(const QString& error);
 
 signals:
 	void newNodeAddedSig();

@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
 #include <qcstring.h>
 #include <qobject.h>
+#include "Node.h"
 
 namespace OpenStreetMap
 {
@@ -31,17 +32,20 @@ Q_OBJECT
 
 private:
 	void *emitdata;
+	Node *finalNode;	
 
 public:
 	NodeHandler();
 	void setEmit(void*,QObject*,const char *);
 	void discnnect() { this->disconnect(SIGNAL(newNodeAddedSig(void*))); }
+	void setFinalNode(Node *n) { finalNode=n; }
 
 public slots:
 	void newNodeAdded(const QByteArray&,void*);
 
 signals:
 	void newNodeAddedSig(void*);
+	void finalNodeAddedSig();
 };
 
 }

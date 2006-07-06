@@ -33,11 +33,11 @@ namespace OpenStreetMap
 class OSMParser2 : public QXmlDefaultHandler
 {
 private:
-	bool inDoc, inNode, inSegment, inWay;
+	bool inDoc, inNode, inSegment, inWay, inArea;
 	Components2* components;
 	std::map<int,Node*> readNodes;
 	std::map<int,Segment*> readSegments;
-	QString curName, curType;
+	QString curName, curType, curRef;
 	int curID;
 	RouteMetaData metaData;
 	Way *curWay;

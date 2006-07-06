@@ -30,7 +30,7 @@ void SegSplitter::splitSeg(Segment *seg,const EarthPoint& p,int limit)
 	// split segments will need to be added at that position later.
 	if(wayID=seg->getWayID())
 	{
-		w = components->getWay(wayID);
+		w = components->getWayByID(wayID);
 		wayIndex = w->removeSegment(seg);
 	}
 
@@ -45,14 +45,15 @@ void SegSplitter::splitSeg(Segment *seg,const EarthPoint& p,int limit)
 		osmhttp->scheduleCommand("PUT","/api/0.3/node/0",n->toOSM(),
 						this,
 						SLOT(nodeAdded(const QByteArray&,void*)),
-						n);
+						n,SLOT(handleError(const QString&)));
 	}
 
 	// Delete the old segment
 	if(liveUpdate)
 	{
 		url.sprintf("/api/0.3/segment/%d",seg->getOSMID());
-		osmhttp->scheduleCommand("DELETE",url);
+		osmhttp->scheduleCommand("DELETE",url,this,NULL,NULL,
+									SLOT(handleError(const QString&)));
 	}	
 	// If not in live update the only thing we need to do is add the
 	// segments to the way
@@ -101,12 +102,14 @@ void SegSplitter::addSplitSegs()
 	osmhttp->scheduleCommand("PUT","/api/0.3/segment/0",
 					segments->first->toOSM(), this,
 							SLOT(splitSegAdded(const QByteArray&,void*)),
-						segments->first);
+						segments->first,
+						SLOT(handleError(const QString&)));
 
 	osmhttp->scheduleCommand("PUT","/api/0.3/segment/0",
 								segments->second->toOSM(), this,
 								SLOT(splitSegAdded(const QByteArray&,void*)),
-						segments->second);
+						segments->second,
+						SLOT(handleError(const QString&)));
 }
 
 // splitSegAdded()
@@ -133,7 +136,7 @@ void SegSplitter::splitSegAdded(const QByteArray& resp, void *segment)
 		if(wayID>0)
 		{
 			// get the way
-			Way *w=components->getWay(wayID);
+			Way *w=components->getWayByID(wayID);
 
 			// Add the two new segments to the way at the same place
 			w->addSegmentAt(wayIndex,segments->second);
@@ -143,8 +146,12 @@ void SegSplitter::splitSegAdded(const QByteArray& resp, void *segment)
 			QString url;
 			url.sprintf("/api/0.3/way/%d",w->getOSMID());
 			osmhttp->scheduleCommand("PUT",url, w->toOSM(),this, 
-							SLOT(finished(const QByteArray&,void*)));
+							SLOT(finished(const QByteArray&,void*)),
+							NULL,
+							SLOT(handleError(const QString&)));
 		}
+		else
+			emit done();
 	}
 }	
 
@@ -160,4 +167,17 @@ SegSplitter::~SegSplitter()
 		delete segments;
 }
 
+void SegSplitter::handleHttpError(int i,const QString& e)
+{
+	QString eout;
+	cerr << "HTTP error: " << i << " " << e << endl;
+	eout.sprintf("HTTP error %d %s", i, e.ascii());
+    emit error(eout);	
+}
+
+void SegSplitter::handleError(const QString& e)
+{
+	cerr << "Error: " << e << endl;
+    emit error(e);	
+}
 }

@@ -19,27 +19,37 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+
+// 030706 change internal representation from Segment* to int (seg id)
 #include "Segment.h"
 #include <qtextstream.h>
 #include <vector>
 
+
 using std::vector;
+
 
 namespace OpenStreetMap
 {
 
+class Components2;
+
 class Way
 {
-private:
-	vector<Segment*> segments;
+protected:
+	vector<int> segments;
 	QString type, name, ref;
 	int osm_id;
+	Components2 *components;
+	bool area;
 
 public:
-	Way()
+	Way(Components2 *comp)
 	{
 		osm_id = 0;
 		name = type = ref = "";
+		components = comp;
+		area = false;
 	}
 
 	void setSegments(vector<Segment*>&);
@@ -52,20 +62,7 @@ public:
 	{
 		ref = r;
 	}
-	void setType(const QString& t) 
-	{
-		type = t;
-		// Segments take on the type of the parent way, if it has one
-		if(type!="")
-		{
-			for(int count=0; count<segments.size(); count++)
-			{
-				segments[count]->setType(type);
-				segments[count]->setWayStatus(true);
-				segments[count]->setWayStatus(true);
-			}
-		}
-	}
+	void setType(const QString& t); 
 
 	QString getName()
 	{
@@ -87,29 +84,44 @@ public:
 		return osm_id;
 	}
 
-	void setOSMID(int i)
-	{
-		cerr << "SETTING OSM ID TO " << i << endl;
-		osm_id = i;
-		for(int count=0; count<segments.size(); count++)
-			segments[count]->setWayID(i);
-	}
+	void setOSMID(int i);
 
 	QByteArray toOSM();
 
 	void addSegment (Segment *s)
 	{
-		// Segments take on the type of the parent way, if it has one
-		if(type!="")
-			s->setType(type);
-		s->setWayStatus(true);
-		s->setWayID(osm_id);
-		segments.push_back(s);
+		if(s->getOSMID())
+		{
+			// Segments take on the type of the parent way, if it has one
+			if(type!="")
+				s->setType(type);
+			s->setWayStatus(true);
+			s->setWayID(osm_id);
+			segments.push_back(s->getOSMID());
+		}
+	}
+
+	// used by parsers when the segment is not in the current area
+	void addSegmentID(int i)
+	{
+		segments.push_back(i);
 	}
 
 	int Way::removeSegment(Segment *s);
 	bool addSegmentAt(int index, Segment *s);
+
+	void setComponents(Components2 *c) { components=c; }
+
+	bool isArea() { return area; }
+
+	Segment *getSegment(int i);
+
+	int nSegments() { return segments.size(); }
+
+	void setArea(bool a) { area=a; }
 };
+
+typedef Way Area;
 
 }
 

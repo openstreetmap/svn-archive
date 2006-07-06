@@ -120,29 +120,36 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 	displayGPX = true;
 
     actionMode = ACTION_NODE;
-    curSegType = "A road";
+    curSegType = "track";
     nSelectedPoints = 0;
+    nSelectedTrackPoints = 0;
+	tpts[0] = tpts[1] = -1;
 
     doingName = false;
 
-    segpens["footpath"]= QPen (Qt::green, 2);
-    segpens["path"]= QPen (QColor(0,128,0), 2);
-    segpens["cycle path"]= QPen (Qt::magenta, 2);
-    segpens["bridleway"]=QPen(QColor(192,96,0),2);
-    segpens["byway"] = QPen (Qt::red, 2);
-    segpens["minor road"]= QPen (QColor(128,128,128), 2);
-    segpens["residential road"]= QPen (QColor(128,128,128), 1);
-    segpens["B road"]= QPen (QColor(64,64,64), 2);
-    segpens["A road"]= QPen (Qt::black, 2);
-    segpens["motorway"]= QPen (Qt::blue, 2);
-    segpens["railway"]= QPen (Qt::gray, 2);
-    segpens["permissive footpath"]= QPen (Qt::green, 1);
-    segpens["permissive bridleway"]= QPen (QColor(192,96,0), 1);
-    segpens["track"]= QPen (QColor(192,192,192), 2);
-    segpens["new forest track"]=QPen(QColor(128,64,0),2);
-    segpens["new forest cycle path"]= QPen (QColor(128,0,0), 2);
+	// change these to match the renderer 
+	
+    segpens["footpath"]= SegPen (QPen (Qt::green, 2), false );
+    segpens["path"]= SegPen (QPen (QColor(0,128,0), 2), false);
+    segpens["cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
+    segpens["bridleway"]= SegPen (QPen(QColor(192,96,0),2), false);
+    segpens["byway"] = SegPen (QPen (Qt::red, 2), false);
+    segpens["minor road"]= SegPen (QPen(QColor(220,220,220), 2),true);
+    segpens["residential road"]= SegPen(QPen (QColor(220,220,220), 1), true);
+    segpens["B road"]= SegPen(QPen (QColor(253,191,111), 4), true);
+    segpens["A road"]= SegPen(QPen (QColor(251,128,95), 4), true);
+    segpens["motorway"]= SegPen(QPen (QColor(128,155,192), 4), true);
+    segpens["railway"]= SegPen(QPen (Qt::black, 2), false);
+    segpens["permissive footpath"]= SegPen(QPen (Qt::green, 1), false);
+    segpens["permissive bridleway"]= SegPen(QPen (QColor(192,96,0), 1), false);
+    segpens["track"]= SegPen(QPen (QColor(128,128,128), 3), false);
+    segpens["new forest track"]=SegPen(QPen(QColor(192,96,0),2), false);
+    segpens["new forest cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
     cerr<<"done segpens" << endl;
 
+    areapens["wood"]= QPen (QColor(192,255,192));
+    areapens["heath"]= QPen (QColor(255,255,192));
+    areapens["lake"]= QPen (QColor(0,0,128));
 
     // Construct the menus.
     QPopupMenu* fileMenu = new QPopupMenu(this);
@@ -163,6 +170,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     fileMenu->insertItem("Logout from live update",this,
                         SLOT(logoutFromLiveUpdate()));
 	fileMenu->insertItem("Upload waypoints",this, SLOT(uploadNewWaypoints()));
+	fileMenu->insertItem("Batch upload",this, SLOT(batchUpload()));
     menuBar()->insertItem("&File",fileMenu);
     QPopupMenu* editMenu = new QPopupMenu(this);
    
@@ -181,16 +189,19 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QToolBar* toolbar=new QToolBar(this);
     toolbar->setHorizontalStretchable(true);
 
-    new QLabel("Segment: ", toolbar);
+	/* 050706 remove - now all way attribute editing via dialog box
+    new QLabel("Way type: ", toolbar);
     QComboBox* r = new QComboBox(toolbar);
-    for(std::map<QString,QPen>::iterator i=segpens.begin(); i!=segpens.end();
+    for(std::map<QString,SegPen>::iterator i=segpens.begin(); i!=segpens.end();
         i++)
     {
         r->insertItem(i->first);
     }
+	r->setCurrentText("track");
 
     QObject::connect(r,SIGNAL(activated(const QString&)),
                         this,SLOT(setSegType(const QString&)));
+						*/
 
     cerr<<"done combo box" << endl;
     // Do the toolbar buttons to change the mode.
@@ -215,6 +226,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QPixmap linknewpoint = mmLoadPixmap("images","linknewpoint.png");
     QPixmap formnewseg = mmLoadPixmap("images","formnewseg.png");
     QPixmap breakseg = mmLoadPixmap("images","breakseg.png");
+    QPixmap seltrk = mmLoadPixmap("images","seltrk.png");
     QPixmap ways = mmLoadPixmap("images","ways.png");
     QPixmap uploadways = mmLoadPixmap("images","uploadways.png");
     QPixmap waydelete = mmLoadPixmap("images","waydelete.png");
@@ -230,7 +242,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QPixmap gpx = mmLoadPixmap("images","gpx.png");
     QPixmap landsat = mmLoadPixmap("images","landsat.png");
     QPixmap contours = mmLoadPixmap("images","contours.png");
-    QPixmap editway = mmLoadPixmap("images","help.png");
+    QPixmap editway = mmLoadPixmap("images","editway.png");
 
     new QToolButton(left_pixmap,"Move left","",this,SLOT(left()),toolbar);
     new QToolButton(right_pixmap,"Move right","",this,SLOT(right()),toolbar);
@@ -259,46 +271,48 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
             (formnewseg,"New segment","",mapper,SLOT(map()),toolbar2);
     modeButtons[ACTION_BREAK_SEG]= new QToolButton
             (breakseg,"Break segment","",mapper,SLOT(map()),toolbar2);
+    modeButtons[ACTION_SEL_TRACK]= new QToolButton
+            (seltrk,"Select section of track","",mapper,SLOT(map()),toolbar2);
     new QToolButton
-            (deleteseg,"Delete Selected Segment/Way","",this,
-             SLOT(deleteSelectedSeg()),toolbar2);
+            (deleteseg,"Delete Selected Segment/Way/GPX Track","",this,
+             SLOT(deleteSelectedSeg()),toolbar);
     wayButton = new QToolButton
             (ways,"Way construction on/off","",this,
-             SLOT(toggleWays()),toolbar2);
+             SLOT(toggleWays()),toolbar);
 	wayButton->setToggleButton(true);
 	wayButton->setOn(false);
 
     new QToolButton
             (uploadways,"Upload current way","",this,
-             SLOT(uploadWay()),toolbar2);
+             SLOT(uploadWay()),toolbar);
 	
 	
     new QToolButton
             (editway,"Way Details/Edit Way","",this,
-             SLOT(changeWayDetails()),toolbar2);
+             SLOT(changeWayDetails()),toolbar);
 
 			
     osmButton = new QToolButton
             (osm,"OSM Data On/Off","",this,
-             SLOT(toggleOSM()),toolbar2);
+             SLOT(toggleOSM()),toolbar);
 	osmButton->setToggleButton(true);
 	osmButton->setOn(true);
 
     gpxButton = new QToolButton
             (gpx,"OSM GPX Tracks On/Off","",this,
-             SLOT(toggleGPX()),toolbar2);
+             SLOT(toggleGPX()),toolbar);
 	gpxButton->setToggleButton(true);
 	gpxButton->setOn(true);
 
     landsatButton = new QToolButton
             (landsat,"Landsat On/Off","",this,
-             SLOT(toggleLandsat()),toolbar2);
+             SLOT(toggleLandsat()),toolbar);
 	landsatButton->setToggleButton(true);
 	landsatButton->setOn(false);
 
     contoursButton = new QToolButton
             (contours,"SRTM Contours On/Off","",this,
-             SLOT(toggleContours()),toolbar2);
+             SLOT(toggleContours()),toolbar);
 	contoursButton->setToggleButton(true);
 	contoursButton->setOn(false);
    
@@ -404,6 +418,8 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 
 	selWay = NULL;
 	splitter = NULL;
+
+	uploader = NULL;
 }
 
 MainWindow2::~MainWindow2()
@@ -467,7 +483,7 @@ void MainWindow2::open()
     else   
     {   // GPX Data
         Components2 * comp;
-	GPXParser2 parser;
+		GPXParser2 parser;
     	cerr<<"filename=" << filename<<endl;
     	QFile file(filename);
     	QXmlInputSource source(&file);
@@ -475,7 +491,7 @@ void MainWindow2::open()
     	reader.setContentHandler(&parser);
     	reader.parse(source);
     	comp = parser.getComponents(); 
-		map.centreAt(comp->getAveragePoint());
+		map.centreAt(comp->getAverageTrackPoint());
 		if(components)
 		{
 			components->merge(comp);
@@ -622,6 +638,10 @@ void MainWindow2::grabGPXFromNet()
 
 void MainWindow2::loadComponents(const QByteArray& array,void*)
 {
+	//QMessageBox::information(this,"Received data", "Data has been received.");
+	cerr << "loadComponents()" << endl;
+	cerr << "array:" << array << endl;
+
     Components2 *netComponents;
 
     QXmlInputSource source;
@@ -642,6 +662,7 @@ void MainWindow2::loadComponents(const QByteArray& array,void*)
     {
         components = netComponents;
     }
+	showPosition();
     update();
 }
 
@@ -753,6 +774,9 @@ void MainWindow2::setMode(int m)
     update();
 }
 
+/* 050706 all this goes (all done via dialog; also can't change a segment
+ * type anymore. YOU *WILL* USE WAYS, WHETHER YOU LIKE IT OR NOT!!!! AND 
+ * THAT'S AN *ORDER* !!!! 
 void MainWindow2::setSegType(const QString &t)
 {
     // live change of selected segment
@@ -792,6 +816,7 @@ void MainWindow2::setSegType(const QString &t)
         }
     update();
 }
+*/
 
 void MainWindow2::toggleNodes()
 {
@@ -836,9 +861,11 @@ void MainWindow2::paintEvent(QPaintEvent* ev)
 {
     QPainter p(this);
     drawLandsat(p);
+	drawAreas(p);
 	drawGPX(p);
     curPainter = &p; // needed for the contour "callback"
     drawContours();
+	drawTrackPoints(p,components,QColor(255,128,192),true);
     drawSegments(p);
     drawNodes(p);
     curPainter = NULL;
@@ -903,6 +930,62 @@ void MainWindow2::heightShading(int x1,int y1,int x2,int y2,int x3,int y3,
 
 }
 
+void MainWindow2::drawAreas(QPainter& p)
+{
+	if(displayOSM)
+	{
+		for(int count=0; count<components->nAreas(); count++)
+			drawArea(p,components->getArea(count));
+	}
+}
+
+// draw an area
+// WARNING! All segments must be orientated in the same direction for this
+// to work!!!
+void MainWindow2::drawArea(QPainter& p, Area *area)
+{
+	cerr << "area type: " << area->getType() << endl;
+	if(areapens.find(area->getType()) != areapens.end())
+	{
+		cerr << "that type exists!" << endl;
+		QPen pen = areapens[area->getType()];
+		p.setPen(pen);
+		p.setBrush(QBrush(pen.color(),Qt::SolidPattern));
+
+		QPointArray pointarray(area->nSegments()+1);
+		ScreenPos pos;
+
+		int count=0, added=0;
+		while(!area->getSegment(count) && count<area->nSegments())
+		{
+			count++;
+		}
+
+		if(count<area->nSegments())
+		{
+			pos = map.getScreenPos
+				(area->getSegment(count)->firstNode()->getLon(),
+				 area->getSegment(count)->firstNode()->getLat());
+			pointarray.setPoint(added++,pos.x,pos.y);
+		}
+
+		while(count<area->nSegments())
+		{
+			if(area->getSegment(count))
+			{
+				pos = map.getScreenPos
+				(area->getSegment(count)->secondNode()->getLon(),
+				 area->getSegment(count)->secondNode()->getLat());
+				pointarray.setPoint(added++,pos.x,pos.y);
+			}
+			count++;
+		}
+
+		p.drawPolygon(pointarray,false,0,added);
+		p.setBrush(Qt::NoBrush);
+	}
+}
+
 void MainWindow2::drawSegments(QPainter& p)
 {
 	if(displayOSM)
@@ -910,12 +993,10 @@ void MainWindow2::drawSegments(QPainter& p)
     	Segment *curSeg;
     	QString segname;
 
-    	components->rewindSegments();
 
-    	while(!components->endSegment())
+		for(int count=0; count<components->nSegments(); count++)
     	{
-        	curSeg = components->nextSegment();
-        	drawSegment(p,curSeg);
+        	drawSegment(p,components->getSegment(count));
     	}
 	}
 }
@@ -939,21 +1020,19 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 			}
 		}
 
-		if(selWay && components->getWay(curSeg->getWayID())==selWay)
+		if(selWay && components->getWayByID(curSeg->getWayID())==selWay)
 		{
 			foundWay=true;
 		}
+
+		// 030706 draw only ways in colours. un-wayed segments shown in
+		// a neutral colour to encourage way tagging and make things clearer.
+		
         QPen curPen = (foundWay) ? QPen(QColor(255,170,0),5) : ( (found) ?
-                        QPen(Qt::yellow,5) : segpens[curSeg->getType()]);
+                        QPen(Qt::yellow,5) : QPen(QColor(128,128,128),1) );
 
         curPen.setStyle ((curSeg->getOSMID()>0) ?  Qt::SolidLine: Qt::DotLine );
 		
-		if(curSeg->belongsToWay() && !found && !foundWay)
-		{
-			//cerr<<"segment belongs to a way"<<endl;
-			curPen.setWidth(4);
-		}
-        p.setPen(curPen);
         if(curSeg->hasNodes())
         {
             pt1=map.getScreenPos(curSeg->firstNode()->getLon(),
@@ -962,7 +1041,33 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
                                 curSeg->secondNode()->getLat());
             if(map.pt_within_map(pt1) || map.pt_within_map(pt2))
             {
+				// Draw segments belonging to ways (only) in the correct colour
+				if(curSeg->belongsToWay() && !found && !foundWay)
+				{
+					curPen = segpens[curSeg->getType()].pen;
+					if(segpens[curSeg->getType()].casing)
+					{
+						p.setPen(QPen(Qt::black,curPen.width()+2));
+                		p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+						/*
+            			p.drawEllipse( pt1.x - 5, pt1.y - 5, 10, 10 );
+            			p.drawEllipse( pt2.x - 5, pt2.y - 5, 10, 10 );
+						*/
+
+						//cerr<<"segment belongs to a way"<<endl;
+						//curPen.setWidth(4);
+					}
+				}
+
+				int s = (curSeg->belongsToWay()) ? 4:8;
+        		p.setPen(curPen);
                 p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+				p.setBrush(Qt::SolidPattern);
+        		//p.setPen(Qt::black);
+				p.fillRect( pt1.x-s/2, pt1.y-s/2, s, s, QColor(128,128,128) );
+				p.fillRect( pt2.x-s/2, pt2.y-s/2, s, s, QColor(128,128,128) );
+				//p.drawEllipse( pt2.x - 4, pt2.y - 4, 8, 8 );
+
                 if(curSeg->getName()!="")
                 {
                     dy=pt2.y-pt1.y;
@@ -979,11 +1084,7 @@ void MainWindow2::drawGPX(QPainter& p)
 {
 	if(displayGPX)
 	{
-		osmtracks->rewindNodes();
-    	while(!osmtracks->endNode())
-    	{
-        	drawNode(p,osmtracks->nextNode());
-    	}
+		drawTrackPoints(p,osmtracks,QColor(255,192,128),false);
 	}
 }
 
@@ -991,21 +1092,49 @@ void MainWindow2::drawNodes(QPainter& p)
 {
 	if(displayOSM)
 	{
-    	components->rewindNodes();
-    	while(!components->endNode())
+		for(int count=0; count<components->nNodes(); count++)
     	{
-        	drawNode(p,components->nextNode());
+        	drawNode(p,components->getNode(count));
     	}
 	}
 }
 
-void MainWindow2::drawTrackPoints(QPainter& p)
+void MainWindow2::drawTrackPoints(QPainter& p,Components2 *comp,QColor colour,
+									bool join)
 {
-    int count=0;
-    components->rewindTrackPoints();
-    while(!components->endTrackPoint())
+	TrackPoint *prev = NULL, *current;
+	ScreenPos prevPos, currentPos;
+	QString word;
+
+	for(int count=0; count<comp->nTrackPoints(); count++)
     {
-        drawTrackPoint(p,components->nextTrackPoint());
+		current = comp->getTrackPoint(count);
+    	currentPos = map.getScreenPos(current->getLon(),current->getLat());
+		if(prev)
+		{
+			p.setPen ( (count>tpts[0] && count<=tpts[1] && comp==components ) ?
+					QPen(colour,3): QPen(colour,1) );
+			if(join && OpenStreetMap::dist(current->getLat(),current->getLon(),
+									prev->getLat(),prev->getLon() ) <= 0.05)
+			{
+				p.drawLine(prevPos.x,prevPos.y,currentPos.x,currentPos.y);
+			}
+		}
+		int r = (count==tpts[0] || count==tpts[1] && comp==components ) ? 8:4;
+		p.setBrush((count==tpts[0] || count==tpts[1] && comp==components ) ? 
+						Qt::SolidPattern: Qt::NoBrush);
+		p.drawEllipse(currentPos.x-r/2,currentPos.y-r/2,r,r);
+
+		if(comp==components)
+		{
+			word.sprintf("%d", count);
+			//p.drawPixmap(currentPos.x,currentPos.y,tpPixmap);
+			p.setFont(QFont("Helvetica",8));
+			p.drawText(currentPos.x+3,currentPos.y+3,word);
+		}
+
+		prev = current;
+		prevPos = currentPos;
     }
 }
 
@@ -1021,7 +1150,11 @@ void MainWindow2::drawNode(QPainter& p,Node* node)
     ScreenPos pos = map.getScreenPos(node->getLon(),node->getLat());
     if(map.pt_within_map(pos))
     {
-		if(nodeReps.find(node->getType()) != nodeReps.end())
+		vector<Segment*> containingSegs = components->getSegs(node);
+
+		// don't draw nodes of type 'node' which belong to segments
+		if((containingSegs.empty()||node->getType()!="node") &&
+				nodeReps.find(node->getType()) != nodeReps.end())
 		{
         	WaypointRep* img=nodeReps[node->getType()];
         	if(img) img->draw(p,pos.x,pos.y,node->getName());
@@ -1037,8 +1170,6 @@ void MainWindow2::drawNode(QPainter& p,Node* node)
 
 void MainWindow2::drawTrackPoint(QPainter &p,TrackPoint *tp)
 {
-    ScreenPos pos = map.getScreenPos(tp->getLon(),tp->getLat());
-	p.drawPixmap(pos.x,pos.y,tpPixmap);
 }
 
 void MainWindow2::removeTrackPoints()
@@ -1148,7 +1279,8 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 						osmhttp.scheduleCommand("PUT",url,xml,
 							&nodeHandler,
 							SLOT(newNodeAdded(const QByteArray&,void*)),
-							newUploadedNode);
+							newUploadedNode,
+							SLOT(handleNetCommError(const QString&)), this);
 					}
 				}
 				else
@@ -1176,6 +1308,8 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 				splitter->splitSeg(selSeg[0],p,LIMIT);
 				QObject::connect(splitter,SIGNAL(done()),this,
 									SLOT(splitterDone()));
+				QObject::connect(splitter,SIGNAL(error(const QString&)),this,
+									SLOT(segSplitterError(const QString&)));
 			}
 			break;
 
@@ -1209,7 +1343,7 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 					if(wayID)
 					{
 						cerr<<"wayID=" << wayID << endl;
-						selWay = components->getWay(wayID);
+						selWay = components->getWayByID(wayID);
 					}
 				}
 				// Otherwise, just select the segment
@@ -1228,6 +1362,28 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 				}
 			}
 			update();
+            break;
+        case ACTION_SEL_TRACK:
+            if(nSelectedTrackPoints==0)
+            {
+                if((tpts[0] = components->getNearestTrackPoint(p.y,p.x,LIMIT))
+						>=0)
+				{
+                	nSelectedTrackPoints++;
+					tpts[1] = -1;
+					update();
+				}
+            }
+            else
+            {
+                tpts[1] = components->getNearestTrackPoint(p.y,p.x,LIMIT);
+				if(tpts[1]>=0)
+				{
+					nSelectedTrackPoints = 0;
+					update();
+				}
+			}
+
             break;
     }               
 }
@@ -1598,7 +1754,7 @@ void MainWindow2::newWayAdded(const QByteArray& array,void *way)
     ids = QStringList::split("\n", str);
     if(w)
     {
-        cerr<<"NEW UPLOADED Way IS NOT NULL::SETTING ID"<<endl;
+        cerr<<"NEW UPLOADED Way/Area IS NOT NULL::SETTING ID"<<endl;
 		cerr<<"ID = "<< atoi(ids[0].ascii()) << endl;
         w->setOSMID(atoi(ids[0].ascii()));
 
@@ -1614,7 +1770,7 @@ void MainWindow2::newWayAdded(const QByteArray& array,void *way)
 void MainWindow2::deleteSelectedSeg()
 {
 	// Now deletes a way if a way is selected
-    if(selSeg.size()==1)
+    if(actionMode==ACTION_SEL_SEG && selSeg.size()==1)
     {
         cerr<<"selseg exists" << endl;
         components->deleteSegment(selSeg[0]);
@@ -1630,7 +1786,7 @@ void MainWindow2::deleteSelectedSeg()
 			// way and upload the changes to OSM
 			if(wayID=selSeg[0]->getWayID())
 			{
-				Way *w = components->getWay(wayID);
+				Way *w = components->getWayByID(wayID);
 				w->removeSegment(selSeg[0]);
             	url.sprintf ("/api/0.3/way/%d", wayID);
 				osmhttp.scheduleCommand("PUT",url);
@@ -1641,7 +1797,7 @@ void MainWindow2::deleteSelectedSeg()
         selSeg.clear();
         update();
     }
-	else if (selWay)
+	else if (actionMode==ACTION_SEL_WAY && selWay)
 	{
         components->deleteWay(selWay);
         if(liveUpdate && selWay->getOSMID()>0)
@@ -1654,6 +1810,13 @@ void MainWindow2::deleteSelectedSeg()
         delete selWay;
         selWay = NULL;
         update();
+	}
+	// 060706 now also deletes GPX track if selected
+	else if (actionMode==ACTION_SEL_TRACK && tpts[0]>=0 && tpts[1]>=0)
+	{
+		components->deleteTrackPoints(tpts[0],tpts[1]);
+		tpts[0] = tpts[1] = -1;
+		update();
 	}
 }
 
@@ -1694,38 +1857,46 @@ void MainWindow2::toggleWays()
 	clearSegments();
 }
 
+// uploadWay()
+// also uploads areas
+
 void MainWindow2::uploadWay()
 {
-	cerr<<"creating way"<<endl;
-	Way *way = new Way;
-	cerr<<"setting segments on way"<<endl;
+	Way *way = new Way(components);
 	way->setSegments(selSeg);
+	vector<QString> segTypes, areaTypes;
 
-
-	vector<QString> segTypes;
-
-	cerr<<"filling segTypes"<<endl;
-    for(std::map<QString,QPen>::iterator i=segpens.begin(); i!=segpens.end();
+	for(std::map<QString,SegPen>::iterator i=segpens.begin(); 
+						i!=segpens.end(); i++)
+	{
+		segTypes.push_back(i->first);
+	}
+	for(std::map<QString,QPen>::iterator i=areapens.begin(); i!=areapens.end();
         i++)
-    {
-        segTypes.push_back(i->first);
-    }
+	{
+		areaTypes.push_back(i->first);
+	}
 
-	cerr<<"doing way dialogue"<<endl;
-	WayDialogue *wd = new WayDialogue(this,segTypes);
+	WayDialogue *wd = new WayDialogue(this,segTypes,areaTypes);
 	if(wd->exec())
 	{
 		way->setName(wd->getName());
 		way->setType(wd->getType());
-		way->setRef(wd->getRef());
+		way->setRef(wd->getRef()); // areas shouldn't have refs really
+		way->setArea(wd->isArea());
 		QByteArray xml = way->toOSM();
 		cerr<<"way xml is: "<<xml<<endl;
-		components->addWay(way);
+		if(wd->isArea())
+			components->addArea((Area*)way);
+		else
+			components->addWay(way);
 		cerr<<"uploadWay(): CLEARING SEGMENTS"<<endl;
 		clearSegments();
 		if(liveUpdate)
 		{
-			QString url = "/api/0.3/way/0";
+			QString url = wd->isArea() ? "/api/0.3/area/0" :
+										"/api/0.3/way/0";
+			//url.sprintf("/api/0.3/%s/0", type.ascii());
 
 			newUploadedWay = way;
 			osmhttp.setAuthentication(username, password);
@@ -1739,20 +1910,27 @@ void MainWindow2::uploadWay()
 
 void MainWindow2::changeWayDetails()
 {
-	vector<QString> segTypes;
+	vector<QString> segTypes, areaTypes;
 
 	cerr<<"filling segTypes"<<endl;
-    for(std::map<QString,QPen>::iterator i=segpens.begin(); i!=segpens.end();
+    for(std::map<QString,SegPen>::iterator i=segpens.begin(); i!=segpens.end();
         i++)
     {
         segTypes.push_back(i->first);
     }
+	cerr<<"filling areaTypes"<<endl;
+    for(std::map<QString,QPen>::iterator i=areapens.begin(); i!=areapens.end();
+        i++)
+    {
+        areaTypes.push_back(i->first);
+    }
 
-	if(selWay)
+	if(selWay && !selWay->isArea())
 	{
-		WayDialogue *wd = new WayDialogue(this,segTypes,selWay->getName(),
-									selWay->getType(),selWay->getRef());
-		if(wd->exec())
+		WayDialogue *wd = new WayDialogue(this,segTypes,areaTypes,
+								selWay->getName(), selWay->getType(),
+								selWay->getRef());
+		if(wd->exec() && !wd->isArea())
 		{
 			selWay->setName(wd->getName());
 			selWay->setType(wd->getType());
@@ -1788,16 +1966,19 @@ Node *MainWindow2::doAddNewNode(double lat,double lon,const QString &name,
 		osmhttp.scheduleCommand("PUT",url,xml,
 						&nodeHandler,
 						SLOT(newNodeAdded(const QByteArray&,void*)),
-						n);
+						n,SLOT(handleNetCommError(const QString&)),this);
 	}
 	return n;
 }
 
 void MainWindow2::splitterDone()
 {
-	delete splitter;
-	splitter = NULL;
-	update();
+	if(splitter)
+	{
+		delete splitter;
+		splitter = NULL;
+		update();
+	}
 }
 
 void MainWindow2::doaddseg(void *sg)
@@ -1805,7 +1986,8 @@ void MainWindow2::doaddseg(void *sg)
 	nodeHandler.discnnect();
 	Segment *segx = (Segment*) sg;
 	cerr<<"doaddseg()"<<endl;
-	if(segx && liveUpdate)
+	if(segx && liveUpdate && segx->firstNode()->getOSMID()>0 &&
+					segx->secondNode()->getOSMID()>0)
 	{
 		QByteArray xml = segx->toOSM();
 		cerr<<"xml is: "<<xml<<endl;
@@ -1843,13 +2025,17 @@ void MainWindow2::uploadNewWaypoints()
 			osmhttp.scheduleCommand("PUT",url,newNodes[count]->toOSM(),
 								&nodeHandler,
 								SLOT(newNodeAdded(const QByteArray&,void*)),
-								newNodes[count]);
+								newNodes[count],
+								SLOT(handleNetCommError(const QString&)),
+								this);
 		}
 	}
 }
 
 void MainWindow2::loadOSMTracks(const QByteArray& array,void*)
 {
+	//QMessageBox::information(this,"Received data", "GPX data received.");
+
 	Components2 * comp;
 	GPXParser2 parser;
     QXmlInputSource source;
@@ -1871,4 +2057,63 @@ void MainWindow2::loadOSMTracks(const QByteArray& array,void*)
 	showPosition();
 	update();
 }
+
+// This method uploads a selected section of the GPX track as OSM nodes and
+// segments.
+// Loop through all trackpoints, make a node and upload each one
+// After loading nodes, create and upload the segments between them.
+void MainWindow2::batchUpload()
+{
+	// Only upload if selected GPX track...
+	if(uploader==NULL && liveUpdate && tpts[0]>=0 && tpts[1]>=0)
+	{
+		uploader = new BatchUploader;
+		QObject::connect(uploader,SIGNAL(done()),this,SLOT(batchUploadDone()));
+		QObject::connect(uploader,SIGNAL(error(const QString&)),this,
+						SLOT(batchUploadError(const QString&)));
+		uploader->setComponents(components);
+		osmhttp.setAuthentication(username,password);
+		uploader->setHTTPHandler(&osmhttp);
+		uploader->batchUpload(tpts[0],tpts[1]);
+    }
+	else if (tpts[0]<0 || tpts[1]<0)
+	{
+		QMessageBox::warning(this,"No track selected", 
+					"ERROR - no track selected!");
+	}
+	else if (uploader)
+	{
+		QMessageBox::warning(this,"Already doing a batch upload", 
+					"ERROR - already doing a batch upload!");
+	}
+	else
+	{
+		QMessageBox::warning(this,"Need to be in live update mode", 
+					"ERROR - need to be in live update mode!");
+	}
+
+}
+
+void MainWindow2::batchUploadDone()
+{
+	if(uploader)
+	{
+		delete uploader;
+		uploader = NULL;
+		update();
+	}
+}
+
+void MainWindow2::batchUploadError(const QString& error)
+{
+	QMessageBox::warning(this,"Error with batch upload",error);
+	batchUploadDone();
+}
+
+void MainWindow2::segSplitterError(const QString& error)
+{
+	QMessageBox::warning(this,"Error with segment splitting",error);
+	splitterDone();
+}
+
 }

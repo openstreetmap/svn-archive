@@ -72,6 +72,26 @@ Node *Components2::getNearestNode(double lat, double lon,double limit)
     return nearest;
 }
 
+int Components2::getNearestTrackPoint (double lat,double lon,double limit)
+{
+    double mindist=limit, dist;
+    int nearest = -1;
+    for(int count=0; count<trackpoints.size(); count++)
+    {
+        if((dist=OpenStreetMap::dist(lat,lon,
+                    trackpoints[count]->getLat(),
+					trackpoints[count]->getLon()))<limit)
+        {
+            if(dist<mindist)
+            {
+                mindist=dist;
+                nearest = count;
+            }
+        }
+    }
+    return nearest;
+}
+
 vector<Node*> Components2::getNearestNodes(double lat, double lon,double limit)
 {
     vector<Node*> nearestNodes;     
@@ -205,35 +225,41 @@ bool Components2::merge(Components2 *comp)
     Node *curNode;
     Segment *curSeg;
 	Way *curWay;
+	Area *curArea;
 	TrackPoint *curTrackPoint;
-    comp->rewindNodes();
-    while(!comp->endNode())
+	for(int count=0; count<comp->nNodes(); count++)
     {
-        curNode = comp->nextNode();
+        curNode = comp->getNode(count); 
         if(curNode->getOSMID()<0)
             curNode->setOSMID(--nodeIdx);
-        nodes.push_back(curNode);
+        addNode(curNode);
     }
-    comp->rewindSegments();
-    while(!comp->endSegment())
+	for(int count=0; count<comp->nSegments(); count++)
     {
-        curSeg = comp->nextSegment();
+        curSeg = comp->getSegment(count);
         if(curSeg->getOSMID()<0)
             curSeg->setOSMID(--segIdx);
-        segments.push_back(curSeg);
+       	addSegment(curSeg);
     }
-    comp->rewindWays();
-    while(!comp->endWay())
+	for(int count=0; count<comp->nWays(); count++)
     {
-        curWay = comp->nextWay();
+        curWay = comp->getWay(count);
         if(curWay->getOSMID()<0)
             curWay->setOSMID(--segIdx);
-       	ways.push_back(curWay);
+		curWay->setComponents(this); // yeuch - hacky
+       	addWay(curWay);
     }
-    comp->rewindTrackPoints();
-    while(!comp->endTrackPoint())
+	for(int count=0; count<comp->nAreas(); count++)
     {
-        curTrackPoint = comp->nextTrackPoint();
+        curArea = comp->getArea(count);
+        if(curArea->getOSMID()<0)
+            curArea->setOSMID(--segIdx);
+		curArea->setComponents(this); // yeuch - hacky
+       	addArea(curArea);
+    }
+	for(int count=0; count<comp->nTrackPoints(); count++)
+    {
+        curTrackPoint = comp->getTrackPoint(count);
        	trackpoints.push_back(curTrackPoint);
     }
 
@@ -253,6 +279,8 @@ void Components2::toOSM(QTextStream &strm, bool allUid)
 	cerr<<"size of ways=" << ways.size() << endl;
     for(int count=0; count<ways.size(); count++)
         ways[count]->wayToOSM(strm,allUid);
+    for(int count=0; count<areas.size(); count++)
+        areas[count]->wayToOSM(strm,allUid);
     strm << "</osm>";
 }
 
@@ -339,12 +367,28 @@ EarthPoint Components2::getAveragePoint()
 
     return avg;
 }
+EarthPoint Components2::getAverageTrackPoint()
+{
+    EarthPoint avg;
+    avg.x=avg.y=0.0;       
+
+    for(int count=0; count<trackpoints.size(); count++)
+    {
+        avg.y += trackpoints[count]->getLat();
+        avg.x += trackpoints[count]->getLon();
+    }
+
+    avg.y /= trackpoints.size();
+    avg.x /= trackpoints.size();
+
+    return avg;
+}
 
 Node *Components2::addOSMNode(int id,double lat, double lon,const QString& name,
             const QString& type, const QString& timestamp)
 {
     Node *newNode = new Node(id,lat,lon,name,type,timestamp);
-    nodes.push_back(newNode);
+    addNode(newNode);
     if(id-1<nextNodeId)
         nextNodeId = id-1;
     return newNode;
@@ -364,7 +408,7 @@ Segment * Components2::addOSMSegment (int id,Node *n1, Node *n2,
     n1->trackpointToNode();
     n2->trackpointToNode();
     Segment *seg = new Segment(id,n1,n2,name,type);
-    segments.push_back(seg);
+	addSegment(seg);
     if(id-1<nextSegId)
         nextSegId = id-1;
     return seg;
@@ -429,6 +473,7 @@ void Components2::toGPX(QTextStream& stream)
 			<< " xmlns=\"http://www.topografix.com/GPX/1/0\">"<<endl
 			<< "<trk>" << endl << "<trkseg>" << endl;
 
+	/*
 	for(int count=0; count<nodes.size(); count++)
 	{
 		if(nodes[count]->getType()=="trackpoint")
@@ -447,6 +492,24 @@ void Components2::toGPX(QTextStream& stream)
 			stream << "</trkpt>" << endl;
 		}
 	}
+	*/
+
+	for(int count=0; count<trackpoints.size(); count++)
+	{
+			stream << "<trkpt lat=\""
+					<< trackpoints[count]->getLat()
+				   << "\" lon=\""
+				   << trackpoints[count]->getLon()
+				   << "\">" << endl;
+
+			QString timestamp = trackpoints[count]->getTimestamp();
+
+			if(timestamp!="")
+				stream << "<time>" << timestamp  << "</time> "<< endl;
+	
+			stream << "</trkpt>" << endl;
+	}
+
 	stream << "</trkseg>" << endl << "</trk>" << endl;
 	for(int count=0; count<nodes.size(); count++)
 	{
@@ -472,12 +535,22 @@ void Components2::toGPX(QTextStream& stream)
 	stream << "</gpx>" << endl;
 }
 
-Way * Components2::getWay(int id)
+Way * Components2::getWayByID(int id)
 {
 	for(int count=0; count<ways.size(); count++)
 	{
-		if(ways[count]->getOSMID()==id)
+		if((ways[count]->getOSMID()==id) && id)
 			return ways[count];
+	}
+	return NULL;
+}
+
+Segment * Components2::getSegmentByID(int id)
+{
+	for(int count=0; count<segments.size(); count++)
+	{
+		if((segments[count]->getOSMID()==id) && id)
+			return segments[count];
 	}
 	return NULL;
 }
@@ -504,6 +577,71 @@ Segment *Components2::getNearestSegment(double lat, double lon,double limit)
         }
     }
     return nearest;
+}
+
+bool Components2::nodeExists(int id)
+{
+	if(id)
+	{
+		for(int count=0; count<nodes.size(); count++)
+		{
+			if(nodes[count]->getOSMID()==id)
+				return true;
+		}
+	}
+	return false;
+}
+
+bool Components2::segmentExists(int id)
+{
+	if(id)
+	{
+		for(int count=0; count<segments.size(); count++)
+		{
+			if(segments[count]->getOSMID()==id)
+				return true;
+		}
+	}
+	return false;
+}
+
+bool Components2::wayExists(int id)
+{
+	if(id)
+	{
+		for(int count=0; count<ways.size(); count++)
+		{
+			if(ways[count]->getOSMID()==id)
+				return true;
+		}
+	}
+	return false;
+}
+
+bool Components2::areaExists(int id)
+{
+	if(id)
+	{
+		for(int count=0; count<areas.size(); count++)
+		{
+			if(areas[count]->getOSMID()==id)
+				return true;
+		}
+	}
+	return false;
+}
+
+void Components2::deleteTrackPoints(int start, int end)
+{
+	if(start>=0 && end<trackpoints.size())
+	{
+    	for(int count=start; count<=end; count++)
+    	{
+			vector<TrackPoint*>::iterator i=trackpoints.begin()+start;
+			delete *i;
+			trackpoints.erase(i);
+		}
+    }
 }
 
 }

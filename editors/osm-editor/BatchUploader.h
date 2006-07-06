@@ -1,38 +1,36 @@
-#ifndef SEGSPLITTER_H
-#define SEGSPLITTER_H
+#ifndef BATCHUPLOADER_H
+#define BATCHUPLOADER_H
 
 #include "Components2.h"
 #include "HTTPHandler.h"
 #include <qcstring.h>
 
-#include <utility>
+#include <map>
 
 namespace OpenStreetMap
 {
 
-class SegSplitter : public QObject
+class BatchUploader : public QObject
 {
 Q_OBJECT
 
 private:
 	Components2 *components;
 	HTTPHandler *osmhttp;
-	std::pair<Segment*,Segment*> * segments;
-	int wayID, wayIndex;
+	std::map<int,Node*> nodes;
+	int tp1, tp2, count;
 
 public:
-	SegSplitter() { segments=NULL; }
-	~SegSplitter();
+	BatchUploader() {  }
+	~BatchUploader() { }
 	void setComponents(Components2 *comp) { components=comp; }
 	void setHTTPHandler(HTTPHandler *handler) { osmhttp=handler; }
 
-	void splitSeg(Segment*,const EarthPoint&,int);
-	void addSplitSegs();
+	void batchUpload(int,int);
 
 public slots:
 	void nodeAdded(const QByteArray&,void*);
-	void splitSegAdded(const QByteArray&,void*);
-	void finished(const QByteArray&,void*);
+	void segmentAdded(const QByteArray&,void*);
 	void handleHttpError(int i,const QString& e);
 	void handleError(const QString& e);
 
@@ -43,4 +41,4 @@ signals:
 
 }
 
-#endif // SEGSPLITTER_H
+#endif // BATCHUPLOADER_H

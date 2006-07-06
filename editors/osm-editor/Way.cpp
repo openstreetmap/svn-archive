@@ -1,5 +1,7 @@
 #include "Way.h"
 #include "RouteMetaDataHandler.h"
+#include "NodeMetaDataHandler.h"
+#include "Components2.h"
 
 /*
 Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org
@@ -28,13 +30,15 @@ void Way::setSegments(vector<Segment*>& s)
 
 	for(int count=0; count<s.size(); count++)
 	{
-		addSegment(s[count]);
+		if(s[count]->getOSMID())
+			addSegment(s[count]);
 	}
 }
 
 void Way::wayToOSM(QTextStream &outfile, bool allUid)
 {
-    outfile << "<way";
+	QString wayOrArea = (area) ? "area" : "way";
+    outfile << "<" << wayOrArea;
     int sent_id = (osm_id>0 || (allUid&&osm_id)) ? osm_id : 0;
     outfile << " id='" << sent_id   << "'>" << endl;
 
@@ -47,32 +51,44 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
     if(ref!="")
         outfile << "<tag k='ref' v='" << ref << "' />" << endl;
 
-	// 130506 use new style tags e.g. highway
-    RouteMetaDataHandler mdh;
-    RouteMetaData metaData = mdh.getMetaData(type);
-    if(metaData.foot!="no")
-       outfile << "<tag k='foot' v='" << metaData.foot << "' />" << endl;
-   if(metaData.horse!="no")
-       outfile << "<tag k='horse' v='" << metaData.horse << "' />" << endl;
-   if(metaData.bike!="no")
-       outfile << "<tag k='bicycle' v='" << metaData.bike << "' />" << endl;
-   if(metaData.car!="no")
-       outfile << "<tag k='motorcar' v='" << metaData.car << "' />" << endl;
-   if(metaData.routeClass!="")
-       outfile << "<tag k='highway' v='" << metaData.routeClass << "' />" << 
-       endl;
-	if(metaData.railway!="")
-		outfile << "<tag k='railway' v='" << metaData.railway << 
+	if ((area) && type!="")
+	{
+		// yes, I know, nodes... this will be sorted once the qt4 conversion
+		// is done...
+		NodeMetaDataHandler mdh;
+		NodeMetaData md = mdh.getMetaData(type);
+		if(md.key!="" || md.value!="")
+        	outfile << "<tag k='"<<md.key<<"' v='" << md.value << "'/>" << endl;
+	}
+	else
+	{
+		// 130506 use new style tags e.g. highway
+    	RouteMetaDataHandler mdh;
+    	RouteMetaData metaData = mdh.getMetaData(type);
+    	if(metaData.foot!="no")
+       		outfile << "<tag k='foot' v='" << metaData.foot << "' />" << endl;
+   		if(metaData.horse!="no")
+       		outfile << "<tag k='horse' v='" << metaData.horse << "' />" << endl;
+   		if(metaData.bike!="no")
+       		outfile<<"<tag k='bicycle' v='" << metaData.bike << "' />" << endl;
+   		if(metaData.car!="no")
+       		outfile<<"<tag k='motorcar' v='" << metaData.car << "' />" << endl;
+   		if(metaData.routeClass!="")
+       		outfile<<"<tag k='highway' v='" << metaData.routeClass << "' />" << 
+       		endl;
+		if(metaData.railway!="")
+			outfile << "<tag k='railway' v='" << metaData.railway << 
 			"' />" << endl;
+	}
 
    outfile << "<tag k='created_by' v='osmeditor2'/>" << endl;
 
 	for(int count=0; count<segments.size(); count++)
 	{
-		outfile << "<seg id='" << segments[count]->getOSMID() << "' />" << endl;
+		outfile << "<seg id='" << segments[count] << "' />" << endl;
 	}
 
-   outfile << "</way>" <<endl;
+   outfile << "</"<<wayOrArea<<">" <<endl;
 
 }
 // 180306 updated to 0.3
@@ -90,9 +106,9 @@ QByteArray Way::toOSM()
 // remove a segment - returns its position
 int Way::removeSegment(Segment *s)
 {
-	for(vector<Segment*>::iterator i=segments.begin(); i!=segments.end(); i++)
+	for(vector<int>::iterator i=segments.begin(); i!=segments.end(); i++)
 	{
-		if(*i==s)
+		if(*i==s->getOSMID())
 		{
 			int index = i-segments.begin();
 			segments.erase(i);
@@ -105,17 +121,60 @@ int Way::removeSegment(Segment *s)
 // Insert a segment at position 'index'
 bool Way::addSegmentAt(int index, Segment *s)
 {
-	vector<Segment*>::iterator i = segments.begin() + index;
-	if(i!=segments.end())
+	vector<int>::iterator i = segments.begin() + index;
+	if(i!=segments.end() && s->getOSMID())
 	{
 		s->setWayID(osm_id);
 		if(type!="")
 			s->setType(type);
 		s->setWayStatus(true);
-		segments.insert(i,s);
+		segments.insert(i,s->getOSMID());
 		return true;
 	}
 	return false;
+}
+
+void Way::setType(const QString &t)
+{
+		cerr << "Way::setType()" << endl;
+		Segment *curSeg;
+		type = t;
+		// Segments take on the type of the parent way, if it has one
+		if(type!="")
+		{
+			for(int count=0; count<segments.size(); count++)
+			{
+				cerr << "getting segment: "  << segments[count] << endl;
+				curSeg = components->getSegmentByID(segments[count]);
+				if(curSeg!=NULL)
+				{
+					cerr << "curSeg is not NULL" << endl;
+					cerr << "segment exists : id = " 
+								<< curSeg->getOSMID() << endl;
+					curSeg->setType(type);
+					curSeg->setWayStatus(true);
+					curSeg->setWayStatus(true);
+				}
+			}
+		}
+}
+
+void Way::setOSMID(int i)
+{
+		Segment *curSeg;
+		cerr << "SETTING OSM ID TO " << i << endl;
+		osm_id = i;
+		for(int count=0; count<segments.size(); count++)
+		{
+			if((curSeg=components->getSegmentByID(segments[count]))!=NULL)
+				curSeg->setWayID(i);
+		}
+}
+
+Segment *Way::getSegment(int i)
+{ 
+	return (i>=0 && i<segments.size()) ?
+			components->getSegmentByID(segments[i]) : NULL;
 }
 
 }

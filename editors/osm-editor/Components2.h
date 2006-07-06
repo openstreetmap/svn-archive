@@ -37,11 +37,8 @@ private:
 	vector<Node*> nodes;
 	vector<Segment*> segments;
 	vector<Way*> ways;
+	vector<Area*> areas;
 	vector<TrackPoint*> trackpoints;
-	vector<Node*>::iterator ni; 
-	vector<Segment*>::iterator si;
-	vector<Way*>::iterator wi;
-	vector<TrackPoint*>::iterator ti;
 	int nextNodeId, nextSegId;
 
 	int minNodeID();
@@ -62,10 +59,18 @@ public:
 
 	void addNode (Node *n)
 	{
-		nodes.push_back(n);
+		if(!nodeExists(n->getOSMID()))
+			nodes.push_back(n);
+	}
+
+	void addSegment (Segment *s)
+	{
+		if(!segmentExists(s->getOSMID()))
+			segments.push_back(s);
 	}
 
 	Node *getNearestNode (double lat, double lon,double);
+	int getNearestTrackPoint (double lat, double lon,double);
 	Segment *getNearestSegment (double lat, double lon,double);
 	vector<Node*> getNearestNodes (double lat, double lon, double limit);
 
@@ -79,77 +84,10 @@ public:
 							const QString& type);
 
 
-	Way *getWay(int id);
+	Way *getWayByID(int id);
+	Segment *getSegmentByID(int id);
 	Segment *getSeg(vector<Node*>& n1, vector<Node*>& n2);
 	vector<Segment*> getSegs(Node*);
-
-	void rewindNodes()
-	{
-		ni=nodes.begin();
-	}
-
-	void rewindSegments()
-	{
-		si=segments.begin();
-	}
-
-	void rewindWays()
-	{
-		wi=ways.begin();
-	}
-
-	void rewindTrackPoints()
-	{
-		ti=trackpoints.begin();
-	}
-
-	Node *nextNode()
-	{
-		Node *n  = *ni;
-		ni++;
-		return n;
-	}
-
-	Segment *nextSegment()
-	{
-		Segment *s = *si;
-		si++;
-		return s;
-	}
-
-	Way *nextWay()
-	{
-		Way *w = *wi;
-		wi++;
-		return w;
-	}
-
-	TrackPoint *nextTrackPoint()
-	{
-		TrackPoint *t = *ti;
-		ti++;
-		return t;
-	}
-
-	bool endNode()
-	{
-		return ni==nodes.end();
-	}
-
-	bool endSegment()
-	{
-		return si==segments.end();
-	}
-
-	bool endWay()
-	{
-		return wi==ways.end();
-	}
-
-	bool endTrackPoint()
-	{
-		return ti==trackpoints.end();
-	}
 
 	bool merge(Components2 *comp);
 
@@ -159,7 +97,9 @@ public:
 	bool deleteNode(Node*);
 	bool deleteSegment(Segment*);
 	bool deleteWay(Way*);
+	void deleteTrackPoints(int,int);
 	EarthPoint getAveragePoint(); 
+	EarthPoint getAverageTrackPoint(); 
 
 	QByteArray getNewNodesXML();
 	QByteArray getNewSegmentsXML();
@@ -172,8 +112,15 @@ public:
 	void addWay (Way *w)
 	{
 		cerr<<"*****ADDING WAY TO COMPONENTS*****"<<endl;
-		ways.push_back(w);
+		if(!wayExists(w->getOSMID()))
+			ways.push_back(w);
 		cerr<<ways.size()<<endl;
+	}
+
+	void addArea (Area *a)
+	{
+		if(!areaExists(a->getOSMID()))
+			areas.push_back(a);
 	}
 
 	std::pair<Segment*,Segment*>* breakSegment(Segment *s, Node *newNode);
@@ -182,6 +129,23 @@ public:
 
 	TrackPoint *addTrackPoint(double lat, double lon,
 				const QString& timestamp);
+
+	bool nodeExists(int);
+	bool segmentExists(int);
+	bool wayExists(int);
+	bool areaExists(int);
+
+	TrackPoint *getTrackPoint(int i) { return trackpoints[i]; }
+	Node *getNode(int i) { return nodes[i]; }
+	Segment *getSegment(int i) { return segments[i]; }
+	Way *getWay(int i) { return ways[i]; }
+	Area *getArea(int i) { return areas[i]; }
+
+	int nNodes() { return nodes.size(); }
+	int nSegments() { return segments.size(); }
+	int nWays() { return ways.size(); }
+	int nAreas() { return areas.size(); }
+	int nTrackPoints() { return trackpoints.size(); }
 };
 
 

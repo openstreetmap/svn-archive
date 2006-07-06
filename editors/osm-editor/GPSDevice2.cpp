@@ -99,10 +99,17 @@ int GPSDevice2::garminGetTrack(const char* port,Components2 *c)
 
 		// 10/04/05 now timestamps are stored in trackpoints in GPX format
 		mkgpxtime(gpx_timestamp, trackpts[count]->Time);
+		/*
 		c->addNewNode( 
 						trackpts[count]->lat, 
 						trackpts[count]->lon,
 						"", "trackpoint",
+						gpx_timestamp
+					 );
+					 */
+		c->addTrackPoint( 
+						trackpts[count]->lat, 
+						trackpts[count]->lon,
 						gpx_timestamp
 					 );
 

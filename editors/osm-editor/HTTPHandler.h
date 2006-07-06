@@ -39,15 +39,16 @@ struct Request
 	QString requestType;
 	QString apicall;
 	QByteArray data;
-	QObject *receiver;
-	const char *callback;
+	QObject *receiver, *errorReceiver;
+	const char *callback, *errorCallback;
 	void *recObj;
 
 	Request(const QString& rt,const QString& ac, const QByteArray& d, 
-					QObject *rc, const char *cb,
+					QObject *rc, const char *cb, QObject *erc, const char *err,
 					void *dt)
 		{ requestType=rt;
-			apicall=ac; data=d; receiver=rc; callback=cb; recObj=dt; }
+			apicall=ac; data=d; receiver=rc; callback=cb; 
+			errorReceiver=erc; errorCallback = err; recObj=dt; }
 };
 
 class HTTPHandler  : public QObject
@@ -97,14 +98,19 @@ public:
 					const QString& apicall,const QByteArray& data=QByteArray(),
 							QObject *receiver=NULL,
 							const char* callback=NULL, 
-							void* transferObject=NULL);
+							void* transferObject=NULL,
+							const char* errorCallback=
+								SLOT(handleNetCommError(const QString&)),
+							QObject* errorReceiver=NULL);
 	void scheduleCommand(const QString& requestType,
 					const QString& apicall,
 							QObject *receiver,
 							const char* callback, 
-							void* transferObject)
-		{ scheduleCommand(requestType,apicall,QByteArray(),
-								receiver,callback,transferObject); }
+							void* transferObject,
+							const char* errorCallback=
+								SLOT(handleNetCommError(const QString&)))
+		{ scheduleCommand(requestType,apicall,QByteArray(),receiver,
+								callback,transferObject,errorCallback); }
 
 public slots:
 	void responseHeaderReceived(const QHttpResponseHeader&);	

@@ -31,19 +31,27 @@ namespace OpenStreetMap
 
 class WayDialogue: public QDialog 
 {
-		
+
+Q_OBJECT
+
 private:
-	QComboBox * typeComboBox;
+	QComboBox * typeComboBox, *waComboBox;
 	QLineEdit * nameEdit, *refEdit;
+	vector<QString> wayTypes, areaTypes;
+	bool area;
 
 public:
-	WayDialogue(QWidget* parent, const vector<QString>&,
+	WayDialogue(QWidget* parent, const vector<QString>&,const vector<QString>&,
 					const QString& name="",const QString& type="",
 					const QString& ref="");
 
 	QString getType() { return typeComboBox->currentText(); }
 	QString getName() { return nameEdit->text(); }
 	QString getRef() { return refEdit->text(); }
+	bool isArea() { return area; }
+
+public slots:
+	void changeWA(const QString&);
 
 };
 

@@ -112,7 +112,8 @@ bool GPXParser2::endElement(const QString&,const QString&,
 {
 	if(inTrkpt && element=="trkpt")
 	{
-		components->addNewNode (curLat,curLong,"","trackpoint",curTimestamp);
+		//components->addNewNode (curLat,curLong,"","trackpoint",curTimestamp);
+		components->addTrackPoint (curLat,curLong,curTimestamp);
 		inTrkpt = false;
 	}
 

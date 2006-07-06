@@ -39,6 +39,12 @@ NodeMetaDataHandler::NodeMetaDataHandler()
 	nData["bridge"] = NodeMetaData("highway","bridge");
 	nData["barn"] = NodeMetaData("man_made","barn");
 	nData["country park"] = NodeMetaData("leisure","country_park");
+
+	// Put area stuff in here too. Plan is to rename from NodeMetaData to
+	// something else.
+	nData["wood"] = NodeMetaData("landuse","wood");
+	nData["heath"] = NodeMetaData("natural","heath");
+	nData["lake"] = NodeMetaData("natural","water");
 }
 
 // Returns the metadata matching a node type

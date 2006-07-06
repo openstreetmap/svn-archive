@@ -33,6 +33,7 @@ namespace OpenStreetMap
 NodeHandler::NodeHandler()
 {
 	emitdata = NULL;
+	finalNode = NULL;
 }
 
 void NodeHandler::setEmit(void* rd,QObject* receiver,const char* slot)
@@ -63,6 +64,13 @@ void NodeHandler::newNodeAdded(const QByteArray& array, void *node)
 
 		// 290406 disconnect as soon as the signal is emitted
 		discnnect();
+
+		if(n==finalNode)
+		{
+			finalNode = NULL;
+			cerr << "FINAL NODE HAS BEEN ADDED: ID=" << n->getOSMID()<<endl;
+			emit finalNodeAddedSig();
+		}
     }
     else
         cerr<<"NEW UPLAODED NODE IS NULL" << endl;

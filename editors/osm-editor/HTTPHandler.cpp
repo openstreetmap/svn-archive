@@ -30,7 +30,9 @@ void HTTPHandler::scheduleCommand(const QString& requestType,
 					const QString& apicall,const QByteArray& data,
 							QObject *receiver,
 							const char* callback, 
-							void* transferObject)
+							void* transferObject,
+							const char* errorCallback,
+							QObject* errorReceiver)
 {
 	if (requests.empty())
 	{
@@ -41,6 +43,15 @@ void HTTPHandler::scheduleCommand(const QString& requestType,
 			QObject::connect(this,
 						SIGNAL(responseReceived(const QByteArray&,void*)),
 						receiver,callback);
+			if(errorCallback)
+			{
+				QObject *theErrRec = (errorReceiver) ? errorReceiver: receiver;
+        		this->disconnect 
+					(SIGNAL(errorOccurred(const QString&)));
+				QObject::connect(this,
+						SIGNAL(errorOccurred(const QString&)),
+						theErrRec,errorCallback);
+			}
 		}
 
 		sendRequest(requestType,apicall,data);
@@ -48,7 +59,7 @@ void HTTPHandler::scheduleCommand(const QString& requestType,
 
 	requests.push_back
 					(Request(requestType,apicall,data,receiver,callback,
-								transferObject));
+								errorReceiver,errorCallback,transferObject));
 
 }
 
@@ -118,7 +129,10 @@ void HTTPHandler::responseHeaderReceived(const QHttpResponseHeader& header)
 	httpError = header.statusCode()!=200;	
 	if(httpError && doEmitErrorOccurred)
 	{
-		emit httpErrorOccurred(header.statusCode(), header.reasonPhrase());
+		QString err;
+		err.sprintf("%d %s",header.statusCode(), header.reasonPhrase());
+		//emit httpErrorOccurred(header.statusCode(), header.reasonPhrase());
+		emit errorOccurred(err);
 
 		// 280306 prevents emitting the error about 20 times. This must be 
 		// something to do with chunked http responses, I guess.
@@ -144,18 +158,35 @@ void HTTPHandler::responseReceived(int id, bool error)
 				//cerr<<"popping the front request"<<endl;
 
 				if(requests[0].callback)
+				{
+					cerr << "emitting responseReceived" << endl;
+					cerr << requests[0].callback << endl;
 					emit responseReceived(http->readAll(),requests[0].recObj);
+				}
 				requests.pop_front();
 				//cerr << "length of requests now=" << requests.size() << endl;
 				if(requests.size())
 				{
 					if(requests[0].receiver && requests[0].callback)
 					{
+						cerr << "RECEIVER AND CALLBACK EXIST" << endl;
         				this->disconnect 
 							(SIGNAL(responseReceived(const QByteArray&,void*)));
 						QObject::connect(this,
 						SIGNAL(responseReceived(const QByteArray&,void*)),
 							requests[0].receiver,requests[0].callback);
+						if(requests[0].errorCallback)
+						{
+							QObject *theErrRec = 
+								(requests[0].errorReceiver) ? 
+								requests[0].errorReceiver: requests[0].receiver;
+        					this->disconnect 
+								(SIGNAL(errorOccurred(const QString&)));
+							QObject::connect(this, 
+										SIGNAL(errorOccurred(const QString&)),
+										theErrRec,	
+										requests[0].errorCallback);
+						}
 					}
 
 					cerr<<"responseReceived(): sending the next request:" <<
@@ -173,11 +204,15 @@ void HTTPHandler::responseReceived(int id, bool error)
 				emit responseReceived(http->readAll(),NULL);
 			}
 		}
-		else
+		else 
 		{
 			cerr<<"Error encountered" << endl;
-			emit errorOccurred
-				("An unknown error occurred trying to connect.");
+			if(!httpError)
+			{
+				emit errorOccurred
+						("An unknown error occurred trying to connect.");
+			}
+
 			// Clear all pending requests - the error might affect them
 			requests.clear();
 		}

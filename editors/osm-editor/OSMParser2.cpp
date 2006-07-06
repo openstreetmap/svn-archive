@@ -26,7 +26,7 @@ namespace OpenStreetMap
 
 OSMParser2::OSMParser2()
 {
-	inDoc = inNode = inSegment = inWay = false;
+	inDoc = inNode = inSegment = inWay = inArea = false;
 	components = new Components2;
 }
 
@@ -101,15 +101,17 @@ bool OSMParser2::startElement(const QString&, const QString&,
 						(curID,readNodes[from],readNodes[to],curName, curType);
 			}
 		}
-		else if (element=="way")
+		else if (element=="way" || element=="area")
 		{
 			cerr<<"**** found a way**** " << endl;
 			curID=0;
 			curType = "";
 			curName = "";
+			curRef = "";
 			metaData.foot=metaData.horse=metaData.bike=metaData.car="no";
 			metaData.routeClass="";
-			inWay = true;
+			if(element=="way") inWay = true;
+			if(element=="area") inArea = true;
 			for(int count=0; count<attributes.length(); count++)
 			{
 				if(attributes.qName(count)=="id")
@@ -118,10 +120,11 @@ bool OSMParser2::startElement(const QString&, const QString&,
 					cerr<<"Found an ID: " << curID << endl;
 				}
 			}
-			curWay = new Way;
+			curWay = (element=="area") ? new Area(components):
+										 new Way(components);
 			curWay->setOSMID(curID);
 		}
-		else if (element=="seg" && inWay)
+		else if (element=="seg" && (inWay||inArea))
 		{
 			int segID;
 
@@ -138,7 +141,10 @@ bool OSMParser2::startElement(const QString&, const QString&,
 				cerr<<"adding segment to way: " << segID << endl;
 				curWay->addSegment(readSegments[segID]);
 			}
-
+			else
+			{
+				curWay->addSegmentID(segID);
+			}
 		}
 		else if (element=="tag")
 		{
@@ -153,7 +159,10 @@ bool OSMParser2::startElement(const QString&, const QString&,
 			}
 			
 
-			if(inNode)
+			// Yes - readNodeTags() for an area - hacky I know. Just want a
+			// quick and dirty proof of concept of areas for now.
+			// This will be sorted out!
+			if(inNode || inArea)
 			{
 				readNodeTags(key,value,curName,curType);
 			}
@@ -168,6 +177,8 @@ bool OSMParser2::startElement(const QString&, const QString&,
 			{
 				if(key=="name")
 					curName = value;
+				else if(key=="ref")
+					curRef = value;
 				else
 					readSegTags(key,value,metaData);
 			}
@@ -179,6 +190,7 @@ bool OSMParser2::startElement(const QString&, const QString&,
 bool OSMParser2::endElement(const QString&, const QString&,
 							const QString& element)
 {
+	cerr << "endElement: element=" << element << endl;
 	if(element=="node")
 	{
 		readNodes[curID]->setName(curName);
@@ -192,13 +204,21 @@ bool OSMParser2::endElement(const QString&, const QString&,
 		readSegments[curID]->setType(handler.getRouteType(metaData));
 		inSegment = false;
 	}
-	else if (element=="way")
+	else if (element=="way") 
 	{
 		RouteMetaDataHandler handler;
 		curWay->setName(curName);
+		curWay->setRef(curRef);
 		curWay->setType(handler.getRouteType(metaData));
 		components->addWay(curWay);
 		inWay = false;
+	}
+	else if (element=="area")
+	{
+		curWay->setName(curName);
+		curWay->setType(curType);
+		components->addArea(curWay);
+		inArea = false;
 	}
 	return true;
 }

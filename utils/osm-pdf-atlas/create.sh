@@ -8,7 +8,7 @@ mkdir -p $planet_dir
 echo "Check $planet_file"
 wget -nd -P "$planet_dir" -nv  --mirror http://www.ostertag.name/osm/planet/$planet_file
 
-check "gshhs_h.b"
+echo "check gshhs_h.b"
 wget -nd -P "Data" -nv  --mirror http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/version1.2/gshhs_h.b.gz 
 
 if [ "Data/gshhs_h.b.gz" -nt "Data/gshhs_h.b" ] ; then

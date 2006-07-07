@@ -2,6 +2,7 @@
 #include "RouteMetaDataHandler.h"
 #include "NodeMetaDataHandler.h"
 #include "Components2.h"
+#include <cfloat>
 
 /*
 Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org
@@ -176,5 +177,25 @@ Segment *Way::getSegment(int i)
 	return (i>=0 && i<segments.size()) ?
 			components->getSegmentByID(segments[i]) : NULL;
 }
+
+Segment *Way::longestSegment()
+{
+	double maxDist = DBL_MIN, dist;
+	Segment *curSeg, *longestSeg = NULL;
+
+	for(int count=0; count<segments.size(); count++)
+	{
+		if((curSeg=components->getSegmentByID(segments[count]))!=NULL)
+		{
+			if((dist=curSeg->length()) > maxDist)
+			{
+				maxDist = dist;
+				longestSeg = curSeg;
+			}
+		}
+	}
+	return longestSeg;
+}
+
 
 }

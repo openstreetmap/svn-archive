@@ -54,6 +54,8 @@
 
 #include "qmdcodec.h"
 
+#include <cmath>
+
 #ifdef XMLRPC
 #include <string>
 #include <XmlRpcCpp.h>
@@ -1005,7 +1007,7 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 {
         ScreenPos pt1, pt2;
         double dx, dy;
-        QFont f("Helvetica",10,QFont::Bold,true);
+        QFont f("Helvetica",10,QFont::Bold,false);
         QFontMetrics fm(f);
         p.setFont(f);
 
@@ -1068,14 +1070,24 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 				p.fillRect( pt2.x-s/2, pt2.y-s/2, s, s, QColor(128,128,128) );
 				//p.drawEllipse( pt2.x - 4, pt2.y - 4, 8, 8 );
 
-                if(curSeg->getName()!="")
+				// If the segment is the longest segment in a way, draw its
+				// name
+                if(curSeg->belongsToWay())
                 {
-                    dy=pt2.y-pt1.y;
-                    dx=pt2.x-pt1.x;
-                    double angle = atan2(dy,dx);
-                    doDrawAngleText(&p,pt1.x,pt1.y,pt1.x,pt1.y,
-                                angle,curSeg->getName().ascii());
-                }
+					Way *w = components->getWayByID(curSeg->getWayID());
+					if(w->getName()!="")
+					{
+						dy=pt2.y-pt1.y;
+						dx=pt2.x-pt1.x;
+						if(w && fm.width(w->getName()) <=fabs(dx) &&
+									curSeg==w->longestSegment())
+						{
+                    		double angle = atan2(dy,dx);
+                    		doDrawAngleText(&p,pt1.x,pt1.y,pt1.x,pt1.y,
+                                angle,w->getName().ascii());
+						}
+                	}
+				}
             }
         }
 }
@@ -1104,7 +1116,7 @@ void MainWindow2::drawTrackPoints(QPainter& p,Components2 *comp,QColor colour,
 {
 	TrackPoint *prev = NULL, *current;
 	ScreenPos prevPos, currentPos;
-	QString word;
+	QString idAsText;
 
 	for(int count=0; count<comp->nTrackPoints(); count++)
     {
@@ -1127,10 +1139,10 @@ void MainWindow2::drawTrackPoints(QPainter& p,Components2 *comp,QColor colour,
 
 		if(comp==components)
 		{
-			word.sprintf("%d", count);
+			idAsText.sprintf("%d", count);
 			//p.drawPixmap(currentPos.x,currentPos.y,tpPixmap);
 			p.setFont(QFont("Helvetica",8));
-			p.drawText(currentPos.x+3,currentPos.y+3,word);
+			p.drawText(currentPos.x+3,currentPos.y+3,idAsText);
 		}
 
 		prev = current;
@@ -1162,6 +1174,7 @@ void MainWindow2::drawNode(QPainter& p,Node* node)
         	if(node==pts[0] || node==pts[1] || node==movingNode)
         	{
             	p.setPen(QPen(Qt::red,3));
+				p.setBrush(Qt::NoBrush);
             	p.drawEllipse( pos.x - 16, pos.y - 16, 32, 32 );
         	}
 		}

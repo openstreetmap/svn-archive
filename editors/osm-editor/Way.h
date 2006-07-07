@@ -119,6 +119,8 @@ public:
 	int nSegments() { return segments.size(); }
 
 	void setArea(bool a) { area=a; }
+
+	Segment *longestSegment();
 };
 
 typedef Way Area;

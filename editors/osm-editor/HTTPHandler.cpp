@@ -43,15 +43,11 @@ void HTTPHandler::scheduleCommand(const QString& requestType,
 			QObject::connect(this,
 						SIGNAL(responseReceived(const QByteArray&,void*)),
 						receiver,callback);
-			if(errorCallback)
-			{
-				QObject *theErrRec = (errorReceiver) ? errorReceiver: receiver;
-        		this->disconnect 
+			QObject *theErrRec = (errorReceiver) ? errorReceiver: receiver;
+			this->disconnect 
 					(SIGNAL(errorOccurred(const QString&)));
-				QObject::connect(this,
-						SIGNAL(errorOccurred(const QString&)),
+			QObject::connect(this, SIGNAL(errorOccurred(const QString&)),
 						theErrRec,errorCallback);
-			}
 		}
 
 		sendRequest(requestType,apicall,data);
@@ -130,8 +126,10 @@ void HTTPHandler::responseHeaderReceived(const QHttpResponseHeader& header)
 	if(httpError && doEmitErrorOccurred)
 	{
 		QString err;
-		err.sprintf("%d %s",header.statusCode(), header.reasonPhrase());
+		err.sprintf("%d %s",header.statusCode(),
+						header.reasonPhrase().ascii());
 		//emit httpErrorOccurred(header.statusCode(), header.reasonPhrase());
+		cerr << "HTTP ERROR: " << err << endl;
 		emit errorOccurred(err);
 
 		// 280306 prevents emitting the error about 20 times. This must be 
@@ -175,18 +173,15 @@ void HTTPHandler::responseReceived(int id, bool error)
 						QObject::connect(this,
 						SIGNAL(responseReceived(const QByteArray&,void*)),
 							requests[0].receiver,requests[0].callback);
-						if(requests[0].errorCallback)
-						{
-							QObject *theErrRec = 
+
+						QObject *theErrRec = 
 								(requests[0].errorReceiver) ? 
 								requests[0].errorReceiver: requests[0].receiver;
-        					this->disconnect 
+						this->disconnect 
 								(SIGNAL(errorOccurred(const QString&)));
-							QObject::connect(this, 
+						QObject::connect(this, 
 										SIGNAL(errorOccurred(const QString&)),
-										theErrRec,	
-										requests[0].errorCallback);
-						}
+										theErrRec, requests[0].errorCallback);
 					}
 
 					cerr<<"responseReceived(): sending the next request:" <<

@@ -43,6 +43,7 @@ struct Request
 	const char *callback, *errorCallback;
 	void *recObj;
 
+
 	Request(const QString& rt,const QString& ac, const QByteArray& d, 
 					QObject *rc, const char *cb, QObject *erc, const char *err,
 					void *dt)
@@ -67,6 +68,8 @@ private:
 	std::deque<Request> requests;
 	bool doEmitErrorOccurred;
 
+	const char *defaultErrorCallback;
+
 	void sendRequest(const QString&, const QString&,
 					const QByteArray& b = QByteArray());
 
@@ -84,6 +87,9 @@ public:
 
 		QObject::connect(http,SIGNAL(requestFinished(int,bool)),
 					this,SLOT(responseReceived(int,bool)));
+
+		defaultErrorCallback = SLOT(handleNetCommError(const QString&));
+
 		}
 	~HTTPHandler()
 		{ delete http; }
@@ -99,7 +105,7 @@ public:
 							QObject *receiver=NULL,
 							const char* callback=NULL, 
 							void* transferObject=NULL,
-							const char* errorCallback=
+							const char* errorCallback= 
 								SLOT(handleNetCommError(const QString&)),
 							QObject* errorReceiver=NULL);
 	void scheduleCommand(const QString& requestType,

@@ -157,6 +157,12 @@ public:
 	{
 		return way_id;
 	}
+
+	double length()
+	{
+		return OpenStreetMap::dist(nodes[0]->getLat(),nodes[0]->getLon(),
+									nodes[1]->getLat(),nodes[1]->getLon() );
+	}
 };
 
 }

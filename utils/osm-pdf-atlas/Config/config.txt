@@ -26,7 +26,7 @@ Places: Config/places-australia.txt
 #Places: Config/places-africa.txt
 
 # ------------------------ Norway
-#Area: 60,18,20
+#Area: 67,18,24
 #Places: Config/places-norway.txt
 #Title: Norway road atlas
 #Filename: osm_norway.pdf

@@ -20,7 +20,10 @@ use Pod::Usage;
 use Storable ();
 use POSIX qw(ceil floor);
 
-my $current_file ="planet-2006-05-01.osm.bz2";
+my $current_file ="planet-2006-07.osm.bz2";
+#my $current_file ="planet.osm.bz2";
+#$current_file ="planet-2006-07.osm";
+$current_file ="planet-2006-07-a.osm";
 
 my ($man,$help);
 
@@ -922,7 +925,7 @@ sub check_Data(){
     -d $mirror_dir or mkpath $mirror_dir
 	or die "Cannot create Directory $mirror_dir:$!\n";
     
-    my $url = "http://www.ostertag.name/osm/$current_file";
+    my $url = "http://www.ostertag.name/osm/planet/$current_file";
     my $tar_file = "$mirror_dir/$current_file";
 
     print "Mirror $url\n";

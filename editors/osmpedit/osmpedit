@@ -724,6 +724,12 @@ sub button3 {
 	$seg->print ();
     }
 
+    my $way = $osm->get_way_from_item ($id);
+
+    if ($way) {
+	$way->print ();
+    }
+
 #    my $keyvalues = $osm->key_value_hash ($id);
 #    if ($keyvalues) {
 #	foreach my $k (keys %{$keyvalues}) {

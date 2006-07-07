@@ -222,6 +222,14 @@ sub get_segment_from_item {
     return $self->get_segment ($uid);
 }
 
+sub get_way_from_item {
+    my $self = shift;
+    my $item = shift;
+    my $uid = $self->{ITEMTOUID}->{$item};
+    print STDERR "UID: $uid\n";
+    return $self->get_way ($uid);
+}
+
 sub add_segment {
     my $self = shift;
     my $s = shift;
@@ -741,7 +749,6 @@ sub create_node {
     my $node = new osmnode;
     $node->set_lat ($lat);
     $node->set_lon ($lon);
-    $node->add_key_value ("editor", "osmpedit-svn");
     my $tags = $node->get_tags ();
 
     my $uid = osmutil::create_node ($lat, $lon, $tags, $username, $password);
@@ -771,7 +778,6 @@ sub create_segment {
     if ($class) {
 	$s->add_key_value ("class", $class);
     }
-    $s->add_key_value ("editor", "osmpedit-svn");
 
     my $tags = $s->get_tags ();
     
@@ -801,7 +807,6 @@ sub update_node {
 
     $node->set_lat ($lat);
     $node->set_lon ($lon);
-    $node->add_key_value ("editor", "osmpedit-svn");
 
     return $node->upload_osm_node ($username, $password);
 }

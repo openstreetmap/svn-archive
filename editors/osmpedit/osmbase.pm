@@ -9,11 +9,13 @@ use strict;
 sub new {
     my $this = shift;
     my $class = ref($this) || $this;
-    bless {
+    my $obj = bless {
 	UID => 0,
 	KEYVALUE => {},
 	@_
     }, $class;
+    $obj->add_key_value ("editor", "osmpedit-svn");
+    return $obj;
 }
 
 sub add_key_value {

@@ -317,7 +317,7 @@ sub read_file($$) {
     print("Reading $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
-    my $fh = IO::File->new("gpsbabel  -i $gpsbabel_type -f \"$file_name\" -o gpx -F - |");
+    my $fh = IO::File->new("gpsbabel  -i $gpsbabel_type -f '$file_name' -o gpx -F - |");
     if ( !$fh )  {
 	warn "Cannot Convert $file_name as Type $gpsbabel_type\n";
 	return [];
@@ -472,10 +472,14 @@ sub read_gpx_file($) {
     eval {
 	$content = $p->parse($fh);
     };
+    #print Dumper(\$content);
     if ( $@ ) {
 	warn "$@Error while parsing\n $file_name\n";
 	#print Dumper(\$content);
 	#return $content->[0]->{Kids};
+    }
+    if ( $content && (scalar(@{$content})>1) ) {
+	warn "More than one top level Section was read in $file_name\n";
     }
     if (not $p) {
 	print STDERR "WARNING: Could not parse osm data\n";
@@ -573,7 +577,7 @@ sub write_gpx_file($$) { # Write an gpx File
 		$elem->{time_sec}=int($elem->{time});
 		$elem->{time_usec}=$elem->{time}-$elem->{time_sec};
 		$elem->{time_usec} =~s/^0\.//;
-		if ( $elem->{time_sec}< 3600*30 ) {
+		if ( $elem->{time_sec} && $elem->{time_sec} < 3600*30 ) {
 		    print "---------------- time_sec: $elem->{time_sec}\n";
 		}
 		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
@@ -700,7 +704,7 @@ sub read_gpsdrive_track_file($) {
 
 
 my $CONFIG_DIR          = "$ENV{'HOME'}/.gpsdrive"; # Should we allow config of this?
-my $WAYPT_FILE          = "$CONFIG_DIR/way.txt";
+my $WAYPT_FILE          = "$CONFIG_DIR/way-Filter.txt";
 ######################################################################
 my $waypoints={};
 sub get_waypoint($) {
@@ -767,6 +771,34 @@ my $areas_allowed_squares =
 	 
 	 ];	
 
+# -------------------------------------------------
+# Add all gpsdrive waypoints from this File as a filter 
+# where deny specifies that its a block filter
+sub add_all_waypoints_to_area($){
+    my $filename = shift;
+
+    unless ( -s $filename ) {
+	print "Filter File $filename not found\n";
+	return;
+    };
+
+    open(WAYPT,"$filename") || die "ERROR: get_waypoint Can't open: $filename: $!\n";
+    my ($name,$lat,$lon, $typ,$wlan, $action, $sqlnr, $proximity);
+    while (<WAYPT>) {
+	chomp;
+	($name,$lat,$lon, $typ, $wlan, $action, $sqlnr, $proximity) = split(/\s+/);
+	my $block=0;
+	next unless $name;
+	$block = 1 if $typ =~ m/deny/;
+	next unless $name;
+	push( @{$areas_allowed_squares},
+	  { wp => $name, block => $block }
+	      );
+    }
+    close(WAYPT);
+}
+
+# -------------------------------------------------
 sub check_allowed_area($){
     my $elem = shift;
     
@@ -805,7 +837,13 @@ sub draw_check_areas(){
 	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive way.txt Waypoints
 		my $proximity;
 		($area->{lat},$area->{lon},$proximity) = GPSDrive::get_waypoint($area->{wp});
+
 		$area->{proximity} ||= $proximity;
+	    }
+	    $area->{proximity} ||= 10000;
+
+	    unless ( defined $area->{lat} && defined $area->{lon}) {
+		warn "Waypoint $area->{wp} not found\n";
 	    }
 	    
 	    my ($lat,$lon,$r) = ($area->{lat},$area->{lon},$area->{proximity}*360/40000);
@@ -813,6 +851,8 @@ sub draw_check_areas(){
 		my $elem;
 		$elem->{lat} = $lat+sin($angel*2*pi/360)*$r;
 		$elem->{lon} = $lon+cos($angel*2*pi/360)*$r;
+		next unless ($elem->{lat} > -90) &&  ($elem->{lat} < 90);
+		next unless ($elem->{lon} > -180) &&  ($elem->{lon} < 180);
 		push(@{$new_track},$elem);
 	    }
 	} else {
@@ -885,7 +925,7 @@ sub enrich_data($$){
 
 		# --- Check for Track Split
 		my $split_track='';
-		if ( $elem->{time_diff} > 60) { # Seconds
+		if ( $elem->{time_diff} > 600) { # Seconds
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
 		    if ( $debug) {
 			#print "Time 0: $prev_elem->{time_string}\n";
@@ -893,13 +933,13 @@ sub enrich_data($$){
 		    }
 		    
 		}
-		if ( $elem->{dist} > 1) { # Km
+		if ( $elem->{dist} > 11) { # Km
 		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
 		}
 
 		if ( $elem->{speed} && $elem->{speed} > 200) { # Km/h
 		    $split_track .= sprintf(" Speed: %.1f Km/h ",$elem->{speed});
-		    if ( $debug) {
+		    if ( $debug >10) {
 			print "prev:".Dumper(\$prev_elem);
 			print "".Dumper(\$elem);
 		    }
@@ -951,6 +991,8 @@ sub enrich_data($$){
 sub count_data($){
     my $tracks      = shift; # reference to tracks list
 
+    my $start_time=time();
+
     my $count_tracks=0;
     my $count_points=0;
 
@@ -961,6 +1003,12 @@ sub count_data($){
 	}
 	$count_tracks++;
     }
+
+    my $used_time = time()-$start_time;
+    if ( $verbose || ($used_time >5 )) {
+	printf "Counted ( $count_tracks Tracks,$count_points Points) in  %.0f sec\n",$used_time;
+    }
+
     return ( $count_tracks,$count_points);
 }
 
@@ -971,6 +1019,8 @@ sub filter_data_by_area($){
     my $tracks      = shift; # reference to tracks list
 
     return unless $use_area_limit;
+
+    my $start_time=time();
 
     my $new_tracks = [];
 
@@ -1002,8 +1052,9 @@ sub filter_data_by_area($){
 	    $good_tracks++;
 	}
     }
-    print "Filter by Area: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points\n"
-	if $debug || $verbose;
+    print "Filter by Area: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ".
+	"in  %.0f sec\n",time()-$start_time;
+
     @{$tracks}=@{$new_tracks};
 }
 
@@ -1017,6 +1068,7 @@ sub filter_data_reduce_points($){
 
     return unless $use_reduce_filter;
 
+    my $start_time=time();
     my $new_tracks = [];
 
     my $good_points=0;
@@ -1061,8 +1113,8 @@ sub filter_data_reduce_points($){
 	    $good_tracks++;
 	}
     }
-    print "Filter to reduce number of points: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points\n"
-	if $debug || $verbose;
+    print "Filter to reduce number of points: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ".
+	"in  %.0f sec\n",time()-$start_time;
     @{$tracks}=@{$new_tracks};
 }
 
@@ -1114,7 +1166,7 @@ sub Tracks2osm($$){
 	    my $seg_id=0;
 	    my $dist=999999999;
 
-	    print "$elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n" 
+	    print "lat or lon undefined : $elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n" 
 		unless  defined($elem->{lat}) && defined($elem->{lon}) ;
 
 
@@ -1339,12 +1391,18 @@ sub convert_Data(){
 	exit 1;
     }
 
+    GPS::add_all_waypoints_to_area($WAYPT_FILE);
+
     my $start_time=time();
     
     my $count=0;
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
 	if ( $filename =~ m/-converted.gpx$/ ) {
+	    print "Skipping File $filename for read\n";
+	    next;
+	}
+	if ( $filename =~ m/00__combination.gpx$/ ) {
 	    print "Skipping File $filename for read\n";
 	    next;
 	}
@@ -1417,16 +1475,21 @@ sub convert_Data(){
 	}
     }
 
-    OSM::write_osm_file("00__combination.osm")
-	if $out_osm;
 
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
     printf "Summary:  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
 
-    my $check_areas = GPS::draw_check_areas();
-    GPS::add_tracks($all_tracks,$check_areas);
+    if ($track_count && $point_count) {
+	OSM::write_osm_file("00__combination.osm")
+	    if $out_osm;
 
-    GPX::write_gpx_file($all_tracks,"00__combination.gpx");
+
+	    my $check_areas = GPS::draw_check_areas();
+	    GPS::add_tracks($all_tracks,$check_areas);
+
+	    GPX::write_gpx_file($all_tracks,"00__combination.gpx");
+	}
+
     if ( $verbose) {
 	printf "Converting $count  OSM Files in  %.0f sec\n",time()-$start_time;
     }

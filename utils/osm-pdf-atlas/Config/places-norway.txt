@@ -1,0 +1,12 @@
+# Norway
+South of Norway:       64.,     10.,     7.,   area
+Middle of Norway:      71.,     20.,     7.,   area
+North of Norway:       75.,     20.,     7.,   area
+#
+Oslo:                  60.,     10.75,   0.2,  city
+Trondheim:             63.38,   10.39,   0.1,  city
+Bergen:                60.395,   5.329,  0.1,  city
+Tromsø:                69.67,   18.95,   0.1,  city
+Harstad:               68.79,   16.54,   0.1,  city
+Narvik:                68.42,   17.38,   0.15, city
+Lødingen:              68.41,   15.99,   0.1,  city

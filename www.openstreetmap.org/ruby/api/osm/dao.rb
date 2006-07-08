@@ -240,7 +240,7 @@ module OSM
       begin
         dbh = get_connection
         sql = yield
-        #@@log.log sql
+        @@log.log sql
         res = dbh.query(sql)
         if res.nil? then return true else return res end
       rescue MysqlError =>ex
@@ -924,19 +924,18 @@ module OSM
 
 
     def get_multi(multi_id, type=:way)
-      res = call_sql { "select version, visible, timestamp from current_#{type}s where id = #{q(multi_id.to_s)};"}
+      res = call_sql { "select visible, timestamp from current_#{type}s where id = #{q(multi_id.to_s)};"}
 
-      version = 0
+      return nil if res.num_rows == 0
+      
       visible = true
       timestamp = ''
 
       res.each_hash do |row|
-        version = row['version'].to_i
         timestamp = row['timestamp']
         visible = false unless row['visible'] == '1'
       end
 
-      return nil unless version != 0
 
       res = call_sql { "select k,v from current_#{type}_tags where id = #{q(multi_id.to_s)};" }
 
@@ -944,6 +943,7 @@ module OSM
       res.each_hash do |row|
         tags << [row['k'],row['v']]
       end
+
 
       res = call_sql { "select segment_id from current_#{type}_segments, current_segments where current_#{type}_segments.id = #{q(multi_id.to_s)} and current_#{type}_segments.segment_id = current_segments.id and current_segments.visible = 1;" }
 
@@ -983,6 +983,7 @@ module OSM
         first = true
         tags.each do |k,v|
           tags_sql += ',' unless first
+          current_tags_sql += ',' unless first
           first = false unless !first
           tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}', @version)"
           current_tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}')"
@@ -990,7 +991,7 @@ module OSM
 
         dbh.query(tags_sql)
         dbh.query("delete from current_way_tags where id = @id")
-        dbh.query(current_sql)
+        dbh.query(current_tags_sql)
 
         # update segments
         segs_sql = "insert into #{type}_segments (id, segment_id, version) values "
@@ -999,6 +1000,7 @@ module OSM
         first = true
         segs.each do |n|
           segs_sql += ',' unless first
+          current_segs_sql += ',' unless first
           first = false unless !first
           segs_sql += "(@id, #{q(n.to_s)}, @version)"
           current_segs_sql += "(@id, #{q(n.to_s)})"
@@ -1089,21 +1091,14 @@ module OSM
 
     def get_multis_from_segments(segment_ids, type=:way)
 
-      segment_clause = "(#{segment_ids.join(',')})"
-      res = call_sql { "select id from current_way_segments where segment_id in #{segment_clause} and visible = 1; " }
 
-      multis = []
-      ids = []
-
-      res.each_hash do |row|
-        ids << row['id'].to_i
-      end
-
-      return [] if ids == []
-
-      id_list = ids.join(',')
+      id_list = segment_ids.join(',')
 
       ress = call_sql { "select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id) as segs from (select a.id, segment_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id order by sequence_id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;" }
+
+      @@log.log("select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id) as segs from (select a.id, segment_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id order by sequence_id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;")
+
+      multis = []
 
       ress.each_hash do |row|
         tags = row['tags'].split('|||').collect {|x| x.split('===')}

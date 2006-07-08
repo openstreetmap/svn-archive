@@ -170,11 +170,14 @@ module OSM
     end
 
     def get_local_connection
-      begin
-        return Mysql.real_connect('localhost', $USERNAME, $PASSWORD, $DATABASE)
-      rescue MysqlError => e
-        mysql_error(e)
-      end
+      return get_connection
+      
+      #whilst local db's are down, just talk to the main server
+      #begin
+      #  return Mysql.real_connect('localhost', $USERNAME, $PASSWORD, $DATABASE)
+      #rescue MysqlError => e
+      #  mysql_error(e)
+      #end
     end
 
     ## quote

@@ -185,7 +185,7 @@ public class Adapter {
         HttpClient client = getClient();
 
         PutMethod put = new PutMethod(url);
-        put.setRequestEntity(new StringRequestEntity(xml));
+        put.setRequestEntity(new StringRequestEntity(xml, null, "UTF-8"));
 
         client.executeMethod(put);
 

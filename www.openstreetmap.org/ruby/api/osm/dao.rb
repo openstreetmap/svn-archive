@@ -936,14 +936,13 @@ module OSM
     end # deletesegment
 
 
-    def get_multi(multi_id, type=:way, version=nil)
-      clause = ' order by version desc limit 1;'
-      clause = " and version = #{version} " unless version.nil?
-      res = call_sql { "select version, visible, timestamp from #{type}s where id = #{q(multi_id.to_s)} " + clause }
+    def get_multi(multi_id, type=:way)
+      res = call_sql { "select version, visible, timestamp from current_#{type}s where id = #{q(multi_id.to_s)};"}
 
       version = 0
       visible = true
       timestamp = ''
+
       res.each_hash do |row|
         version = row['version'].to_i
         timestamp = row['timestamp']
@@ -952,68 +951,75 @@ module OSM
 
       return nil unless version != 0
 
-      res = call_sql { "select k,v from #{type}_tags where id = #{q(multi_id.to_s)} and version = #{version};" }
+      res = call_sql { "select k,v from current_#{type}_tags where id = #{q(multi_id.to_s)};" }
 
       tags = []
       res.each_hash do |row|
         tags << [row['k'],row['v']]
       end
 
-      # if looking at an old version then get segments as they were then
-      tclause = ''
-      tclasue = " and timestamp <= '#{timestamp}' " unless version.nil?
+      res = call_sql { "select segment_id from current_#{type}_segments, current_segments where current_#{type}_segments.id = #{q(multi_id.to_s)} and current_#{type}_segments.segment_id = current_segments.id and current_segments.visible = 1;" }
 
-      res = call_sql { " 
-        select id as n from (select * from (select segments.id, visible, timestamp from #{type}_segments left join segments on #{type}_segments.segment_id = segments.id where #{type}_segments.id = #{q(multi_id.to_s)} and version = #{version} #{tclause} order by id, timestamp desc) as a group by id) as b where visible = 1;" }
+      segs = []
+      res.each_hash do |row|
+        segs << [row['segment_id'].to_i]
+      end
 
-        segs = []
-        res.each_hash do |row|
-          segs << [row['n'].to_i]
-        end
-
-        return Street.new(multi_id, tags, segs, visible, timestamp)
+      return Street.new(multi_id, tags, segs, visible, timestamp)
     end # get_multi
 
 
     def update_multi(user_id, tags, segs, type=:way, new=false, multi_id=0)
-
       begin
         dbh = get_connection
         dbh.query( "set @ins_time = NOW();" )
         dbh.query( "set @user_id = #{q(user_id.to_s)};" )
 
-
+        # get version number
+        
         if new
           dbh.query( "insert into meta_#{type}s (user_id, timestamp) values (@user_id, @ins_time)" )
           dbh.query( "set @id = last_insert_id() ")
         else
           return nil unless get_multi(multi_id, type)
-          dbh.query("set @id = #{multi_id}")
+          dbh.query("set @id = #{q(multi_id.to_s)}")
         end
 
+        # update master
         dbh.query( "insert into #{type}s (id, user_id, timestamp) values (@id, @user_id, @ins_time)" )
         dbh.query( "set @version = last_insert_id()")
 
+        # update tags
+       
         tags_sql = "insert into #{type}_tags(id, k, v, version) values "
+        current_tags_sql = "insert into current_#{type}_tags(id, k, v) values "
         first = true
         tags.each do |k,v|
           tags_sql += ',' unless first
           first = false unless !first
           tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}', @version)"
+          current_tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}')"
         end
 
-        dbh.query( tags_sql )
+        dbh.query(tags_sql)
+        dbh.query("delete from current_way_tags where id = @id")
+        dbh.query(current_sql)
 
+        # update segments
         segs_sql = "insert into #{type}_segments (id, segment_id, version) values "
+        segs_sql = "insert into current_#{type}_segments (id, segment_id) values "
 
         first = true
         segs.each do |n|
           segs_sql += ',' unless first
           first = false unless !first
           segs_sql += "(@id, #{q(n.to_s)}, @version)"
+          current_segs_sql += "(@id, #{q(n.to_s)})"
         end
 
         dbh.query( segs_sql )
+        dbh.query("delete from current_way_segments where id = @id")
+        dbh.query( current_segs_sql )
 
         res = dbh.query( "select @id as id" )
 
@@ -1035,8 +1041,25 @@ module OSM
     end
 
     def delete_multi(multi_id, user_id, type=:way)
-      multi = get_multi(multi_id, type)
-      call_sql { "insert into #{type}s (id, user_id, timestamp, visible) values (#{q(multi_id.to_s)}, #{q(user_id.to_s)},NOW(),0)" }
+      begin
+        dbh = get_connection
+        multi = get_multi(multi_id, type)
+
+        if multi
+          dbh.query('set @now = NOW()')
+          dbh.query("insert into #{type}s (id, user_id, timestamp, visible) values (#{q(multi_id.to_s)}, #{q(user_id.to_s)},@now,0)")
+          dbh.query("update current_#{type}s set user_id = #{q(user_id.to_s)}, timstamp = @now, visible = 0 where id = #{q(multi_id.to_s)}")
+          dbh.query("delete from current_#{type}_segments where id = #{q(multi_id.to_s)}")
+          dbh.query("delete from current_#{type}_tags where id = #{q(multi_id.to_s)}")
+        end
+      rescue MysqlError =>ex
+        mysql_error(ex)
+      ensure
+        dbh.close unless dbh.nil?
+      end
+
+      return nil
+
     end
 
     def get_node_history(node_id, from=nil, to=nil)
@@ -1078,37 +1101,31 @@ module OSM
     end
 
     def get_multis_from_segments(segment_ids, type=:way)
+            
       segment_clause = "(#{segment_ids.join(',')})"
-      res = call_sql { "
-      select g.id from #{type}s as g, 
-        (select id, max(version) as version from #{type}s where id in 
-          (select distinct a.id from
-            (select id, max(version) as version from #{type}_segments where segment_id in #{segment_clause} group by id) as a
-          ) group by id
-         ) as b where g.id = b.id and g.version = b.version and g.visible = 1 "}
+      res = call_sql { "select * from current_segments where visible = 1; " }
 
+      multis = []
+      ids = []
 
-         multis = []
-         ids = []
+      res.each_hash do |row|
+        ids << row['id'].to_i
+      end
 
-         res.each_hash do |row|
-           ids << row['id'].to_i
-         end
+      return [] if ids == []
 
-         return [] if ids == []
+      id_list = ids.join(',')
 
-         sql = "select c.id, timestamp, group_concat(segment_id) as segs, tags, visible from (select b.version, b.id, b.visible, b.timestamp, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select * from (select * from #{type}s where id in (#{ids.join(',')}) order by version desc, id) as a group by id) as b join #{type}_tags on #{type}_tags.id = b.id and #{type}_tags.version = b.version group by id) as c join #{type}_segments on #{type}_segments.id = c.id and #{type}_segments.version = c.version group by c.id"
+      ress = call_sql { "select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id) as segs from (select a.id, segment_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id order by sequence_id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;" }
 
-         @@log.log('calling SQL ___________________' + sql)
-         ress = call_sql { sql }
-         ress.each_hash do |row|
-           tags = row['tags'].split('|||').collect {|x| x.split('===')}
-           segs = row['segs'].split(',').collect {|x| x}
-           visible = row['visible'] == '1'
-           multis <<  Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
-         end
-         return multis
-
+      ress.each_hash do |row|
+        tags = row['tags'].split('|||').collect {|x| x.split('===')}
+        segs = row['segs'].split(',').collect {|x| x}
+        visible = row['visible'] == '1'
+        multis << Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
+      end
+      
+      return multis
     end
 
     def commify(number)

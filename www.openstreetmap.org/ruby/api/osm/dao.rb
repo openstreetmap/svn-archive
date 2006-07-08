@@ -872,7 +872,7 @@ module OSM
         dbh = get_connection
         dbh.query("set @ins_time = NOW();" )
         dbh.query( "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (#{q(segment_id.to_s)}, #{q(node_a.to_s)}, #{q(node_b.to_s)}, @ins_time, #{q(user_id.to_s)}, 1, '#{q(tags)}')" )
-        dbh.query( "update current_segments set node_a = #{q(segment_id.to_s)}, node_b = #{q(node_a.to_s)}, timestamp = @ins_time, user_id = #{user_id}, visible = 1, tags='#{q(tags)}' where id = #{q(segment_id.to_s)}" )
+        dbh.query( "update current_segments set node_a = #{q(node_a.to_s)}, node_b = #{q(node_b.to_s)}, timestamp = @ins_time, user_id = #{user_id}, visible = 1, tags='#{q(tags)}' where id = #{q(segment_id.to_s)}" )
 
         return true
 
@@ -905,7 +905,7 @@ module OSM
         dbh = get_connection
         res = dbh.query("select node_a, node_b from current_segments where id = #{q(segment_id.to_s)} and visible = 1")
 
-        if res.num_rows != 0
+        res.each_hash do |row|
           dbh.query("set @ins_time = NOW();" )
           dbh.query("insert into segments (id,node_a,node_b,timestamp,user_id,visible) values (#{q(segment_id.to_s)} , #{row['node_a']}, #{row['node_b']}, @ins_time, #{user_id}, 0)")
           dbh.query("update current_segments set node_a = #{row['node_a']}, node_b = #{row['node_b']}, timestamp = @ins_time, user_id = #{user_id}, visible = 0 where id = #{q(segment_id.to_s)}")
@@ -936,14 +936,12 @@ module OSM
         visible = false unless row['visible'] == '1'
       end
 
-
       res = call_sql { "select k,v from current_#{type}_tags where id = #{q(multi_id.to_s)};" }
 
       tags = []
       res.each_hash do |row|
         tags << [row['k'],row['v']]
       end
-
 
       res = call_sql { "select segment_id from current_#{type}_segments, current_segments where current_#{type}_segments.id = #{q(multi_id.to_s)} and current_#{type}_segments.segment_id = current_segments.id and current_segments.visible = 1;" }
 
@@ -973,8 +971,11 @@ module OSM
         end
 
         # update master
-        dbh.query( "insert into #{type}s (id, user_id, timestamp) values (@id, @user_id, @ins_time)" )
-        dbh.query( "insert into current_#{type}s (id, user_id, timestamp, visible) valuees (@id, @user_id, @ins_time, 1)" ) if new
+        @@log.log( "insert into #{type}s (id, user_id, timestamp,visible) values (@id, @user_id, @ins_time,1)")
+        dbh.query( "insert into #{type}s (id, user_id, timestamp,visible) values (@id, @user_id, @ins_time,1)" )
+        @@log.log("insert into current_#{type}s (id, user_id, timestamp, visible) values (@id, @user_id, @ins_time, 1)" )
+        dbh.query( "insert into current_#{type}s (id, user_id, timestamp, visible) values (@id, @user_id, @ins_time, 1)" ) if new
+        @@log.log("set @version = last_insert_id()")
         dbh.query( "set @version = last_insert_id()")
 
         # update tags
@@ -989,9 +990,12 @@ module OSM
           tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}', @version)"
           current_tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}')"
         end
-
+        
+        @@log.log(tags_sql)
         dbh.query(tags_sql)
+        @@log.log("delete from current_way_tags where id = @id")
         dbh.query("delete from current_way_tags where id = @id")
+        @@log.log(current_tags_sql)
         dbh.query(current_tags_sql)
 
         # update segments

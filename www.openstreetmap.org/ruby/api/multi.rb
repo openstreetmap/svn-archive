@@ -9,7 +9,6 @@ include Apache
 include REXML
 
 r = Apache.request
-r.content_encoding='text/xml'
 dao = OSM::Dao.instance
 
 type = :way

@@ -7,7 +7,6 @@ require 'bigdecimal'
 include Apache
 
 r = Apache.request
-r.content_encoding='text/xml'
 cgi = CGI.new
 
 bbox = cgi['bbox'].split(',')
@@ -65,7 +64,8 @@ if linesegments
   end
 end
 
-[:way, :area].each do |type|
+[:way].each do |type|
+#[:way, :area].each do |type|
   if seg_ids != []
     dao.get_multis_from_segments(seg_ids, type).each do |n|
       ox.add_multi(n,type)

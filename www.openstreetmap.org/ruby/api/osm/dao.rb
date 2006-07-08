@@ -1090,7 +1090,7 @@ module OSM
     def get_multis_from_segments(segment_ids, type=:way)
 
       segment_clause = "(#{segment_ids.join(',')})"
-      res = call_sql { "select id from current_segments where segment_id in #{segment_clause} and visible = 1; " }
+      res = call_sql { "select id from current_way_segments where segment_id in #{segment_clause} and visible = 1; " }
 
       multis = []
       ids = []

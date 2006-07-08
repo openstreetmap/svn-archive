@@ -696,37 +696,21 @@ module OSM
 
 
 
-    def getlines(nodes, to=nil)
-
+    def get_segments_from_nodes(nodes, to=nil)
       timeclause = get_time_clause(nil, to)
       ids = nodes.collect { |id, node| id }
       cbuff = "(#{ids.join(',')})"
-      begin
-        conn = get_connection
 
-        q = "SELECT segment.id, segment.node_a, segment.node_b, segment.tags FROM (
-               select * from
-                  (SELECT * FROM segments where (node_a IN #{cbuff} OR node_b IN #{cbuff}) #{timeclause} ORDER BY timestamp DESC)
-               as a group by id) as segment where visible = true"
+      res = call_sql {"SELECT id, node_a, node_b, tags FROM current_segments where (node_a IN #{cbuff} OR node_b IN #{cbuff}) #{timeclause} and visible = true"}
 
-        @@log.log q
-        res = conn.query(q)
+      segments = {}
 
-        segments = {}
-
-        res.each_hash do |row|
-          segment_id = row['id'].to_i
-          segments[segment_id] = UIDLinesegment.new(segment_id, row['node_a'].to_i, row['node_b'].to_i, row['tags'])
-        end
-
-        return segments
-
-      rescue MysqlError => e
-        mysql_error(e)
-      ensure
-        conn.close if conn
+      res.each_hash do |row|
+        segment_id = row['id'].to_i
+        segments[segment_id] = UIDLinesegment.new(segment_id, row['node_a'].to_i, row['node_b'].to_i, row['tags'])
       end
 
+      return segments
     end
 
 
@@ -976,7 +960,7 @@ module OSM
         dbh.query( "set @user_id = #{q(user_id.to_s)};" )
 
         # get version number
-        
+
         if new
           dbh.query( "insert into meta_#{type}s (user_id, timestamp) values (@user_id, @ins_time)" )
           dbh.query( "set @id = last_insert_id() ")
@@ -990,7 +974,7 @@ module OSM
         dbh.query( "set @version = last_insert_id()")
 
         # update tags
-       
+
         tags_sql = "insert into #{type}_tags(id, k, v, version) values "
         current_tags_sql = "insert into current_#{type}_tags(id, k, v) values "
         first = true
@@ -1101,7 +1085,7 @@ module OSM
     end
 
     def get_multis_from_segments(segment_ids, type=:way)
-            
+
       segment_clause = "(#{segment_ids.join(',')})"
       res = call_sql { "select * from current_segments where visible = 1; " }
 
@@ -1124,7 +1108,7 @@ module OSM
         visible = row['visible'] == '1'
         multis << Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
       end
-      
+
       return multis
     end
 

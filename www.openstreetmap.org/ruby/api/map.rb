@@ -33,7 +33,7 @@ ox = OSM::Ox.new
 nodes = dao.getnodes(trlat, bllon, bllat, trlon, to)
 
 if nodes && nodes.length > 0
-  linesegments = dao.getlines(nodes, to)
+  linesegments = dao.get_segments_from_nodes(nodes, to)
 end
 
 seg_ids = []

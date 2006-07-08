@@ -391,7 +391,7 @@ module OSM
       return true  
     end
 
-    
+
     def details_from_user_id(user_id)
       res = call_sql { "select email, display_name from users where active = 1 and id = #{user_id}" }
 
@@ -420,7 +420,7 @@ module OSM
       end
     end
 
-    
+
     def gpx_ids_for_user(user_id)
       return call_local_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)}" }
     end
@@ -434,11 +434,11 @@ module OSM
 
       limit = ''
       limit = ' limit 20 ' if limit==true
-      
+
       return call_local_sql { "
         select * from (
         select gpx_files.inserted, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where visible = 1 and gpx_files.user_id = users.id #{clause} order by timestamp desc) as a left join (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t  on a.id=t.gpx_id #{limit}" }
-        
+
     end
 
     def gpx_get(user_id, gpx_id)
@@ -515,16 +515,16 @@ module OSM
         res.each do |row|
           gpx_id = row[0].to_i
         end
-        
+
         gpx_update_desc(gpx_id, description, tags) unless gpx_id == 0
-        
+
       rescue MysqlError => e
         mysql_error(e)
 
       ensure
         dbh.close if dbh
       end
-       
+
     end
 
 
@@ -612,10 +612,10 @@ module OSM
 
 
     def get_nodes_by_ids(node_ids, to=nil)
-       nodes = {}
-       timeclause = get_time_clause(nil, to)
+      nodes = {}
+      timeclause = get_time_clause(nil, to)
 
-       res = call_sql { "select id, latitude, longitude, visible, tags, timestamp from current_nodes where id in (#{node_ids.join(',')}) #{timeclause}" }
+      res = call_sql { "select id, latitude, longitude, visible, tags, timestamp from current_nodes where id in (#{node_ids.join(',')}) #{timeclause}" }
 
       if !res.nil? 
         res.each_hash do |row|
@@ -628,7 +628,7 @@ module OSM
       end 
 
     end
-    
+
 
 
 
@@ -805,7 +805,7 @@ module OSM
 
       rescue MysqlError => e
         mysql_error(e)
-	return false
+        return false
       ensure
         dbh.close if dbh
       end
@@ -818,10 +818,10 @@ module OSM
         dbh = get_connection
         dbh.query("set @now = NOW()")
         dbh.query("insert into nodes (id,latitude,longitude,timestamp,user_id,visible,tags) values (#{node_id} , #{latitude}, #{longitude}, NOW(), #{user_id}, 1, '#{q(tags)}')" )
-        dbh.query("update current_nodes set latitude = #{latitude}, longitude =  #{longitude}, timestamp = @now , user_id = #{user_id}, visible =  1 where id = #{node_id}")
+        dbh.query("update current_nodes set latitude = #{latitude}, longitude =  #{longitude}, timestamp = @now , user_id = #{user_id}, tags = '#{q(tags)}', visible =  1 where id = #{node_id}")
       rescue MysqlError => e
         mysql_error(e)
-	return false
+        return false
       ensure
         dbh.close if dbh
       end
@@ -859,12 +859,10 @@ module OSM
       begin
         dbh = get_connection
 
-        sql = "insert into meta_segments (timestamp, user_id) values (NOW() , #{user_id})"
-        dbh.query(sql)
-
-        sql = "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (last_insert_id(), #{node_a_id}, #{node_b_id}, NOW(), #{user_id},1, '#{q(tags)}')"
-        dbh.query(sql)
-
+        dbh.query( "insert into meta_segments (timestamp, user_id) values (NOW() , #{user_id})")
+        dbh.query("set @ins_time = NOW();" )
+        dbh.query( "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (last_insert_id(), #{node_a_id}, #{node_b_id}, @ins_time, #{user_id},1, '#{q(tags)}')")
+        dbh.query( "insert into current_segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (last_insert_id(), #{node_a_id}, #{node_b_id}, @ins_time, #{user_id},1, '#{q(tags)}')")
         res = dbh.query('select last_insert_id()')
 
         res.each do |row|
@@ -883,30 +881,47 @@ module OSM
 
 
     def update_segment?(segment_id, user_id, node_a, node_b, tags)
-      call_sql { "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (#{q(segment_id.to_s)}, #{q(node_a.to_s)}, #{q(node_b.to_s)}, NOW(), #{q(user_id.to_s)}, 1, '#{q(tags)}')" }
-    end
+      begin
+        dbh = get_connection
+        dbh.query("set @ins_time = NOW();" )
+        dbh.query( "insert into segments (id, node_a, node_b, timestamp, user_id, visible, tags) values (#{q(segment_id.to_s)}, #{q(node_a.to_s)}, #{q(node_b.to_s)}, @ins_time, #{q(user_id.to_s)}, 1, '#{q(tags)}')" )
+        dbh.query( "update current_segments set node_a = #{q(segment_id.to_s)}, node_b = #{q(node_a.to_s)}, timestamp = @ins_time, user_id = #{user_id}, visible = 1, tags='#{q(tags)}' where id = #{q(segment_id.to_s)}" )
+
+        return true
+
+
+      rescue MysqlError => e
+        mysql_error(e)
+
+      ensure
+        dbh.close if dbh
+      end
+
+      return false
+    end # update_segment?
 
 
     def getsegment(segment_id)
-      res = call_sql { "select node_a, node_b, visible, tags from segments where id=#{segment_id} order by timestamp desc limit 1" }
+      res = call_sql { "select node_a, node_b, visible, tags, timestamp from current_segments where id=#{segment_id}" }
 
       res.each_hash do |row|
         visible = false
         if row['visible'] == '1' then visible = true end
-        return Linesegment.new(segment_id, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'])
+        return Linesegment.new(segment_id, getnode(row['node_a'].to_i), getnode(row['node_b'].to_i), visible, row['tags'], row['timestamp'])
       end
       return nil
     end # getsegment
 
 
     def delete_segment?(segment_id, user_id)
-
       begin
         dbh = get_connection
-        res = dbh.query("select node_a, node_b from segments where id = #{q(segment_id.to_s)} order by timestamp desc limit 1")
+        res = dbh.query("select node_a, node_b from current_segments where id = #{q(segment_id.to_s)} and visible = 1")
 
-        res.each_hash do |row|
-          dbh.query("insert into segments (id,node_a,node_b,timestamp,user_id,visible) values (#{q(segment_id.to_s)} , #{row['node_a']}, #{row['node_b']}, NOW(), #{user_id}, 0)")
+        if res.num_rows != 0
+          dbh.query("set @ins_time = NOW();" )
+          dbh.query("insert into segments (id,node_a,node_b,timestamp,user_id,visible) values (#{q(segment_id.to_s)} , #{row['node_a']}, #{row['node_b']}, @ins_time, #{user_id}, 0)")
+          dbh.query("update current_segments set node_a = #{row['node_a']}, node_b = #{row['node_b']}, timestamp = @ins_time, user_id = #{user_id}, visible = 0 where id = #{q(segment_id.to_s)}")
           return true
         end
 
@@ -951,12 +966,12 @@ module OSM
       res = call_sql { " 
         select id as n from (select * from (select segments.id, visible, timestamp from #{type}_segments left join segments on #{type}_segments.segment_id = segments.id where #{type}_segments.id = #{q(multi_id.to_s)} and version = #{version} #{tclause} order by id, timestamp desc) as a group by id) as b where visible = 1;" }
 
-      segs = []
-      res.each_hash do |row|
-        segs << [row['n'].to_i]
-      end
+        segs = []
+        res.each_hash do |row|
+          segs << [row['n'].to_i]
+        end
 
-      return Street.new(multi_id, tags, segs, visible, timestamp)
+        return Street.new(multi_id, tags, segs, visible, timestamp)
     end # get_multi
 
 
@@ -1035,7 +1050,7 @@ module OSM
     end 
 
     def get_segment_history(segment_id, from=nil, to=nil)
-                            
+
       res = call_sql { "select node_a, node_b, visible, tags, timestamp from segments where id = #{segment_id} " + get_time_clause(from,to) }
       history = []
       res.each_hash do |row|
@@ -1071,28 +1086,28 @@ module OSM
             (select id, max(version) as version from #{type}_segments where segment_id in #{segment_clause} group by id) as a
           ) group by id
          ) as b where g.id = b.id and g.version = b.version and g.visible = 1 "}
-          
-          
-      multis = []
-      ids = []
-      
-      res.each_hash do |row|
-        ids << row['id'].to_i
-      end
 
-      return [] if ids == []
-      
-      sql = "select c.id, timestamp, group_concat(segment_id) as segs, tags, visible from (select b.version, b.id, b.visible, b.timestamp, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select * from (select * from #{type}s where id in (#{ids.join(',')}) order by version desc, id) as a group by id) as b join #{type}_tags on #{type}_tags.id = b.id and #{type}_tags.version = b.version group by id) as c join #{type}_segments on #{type}_segments.id = c.id and #{type}_segments.version = c.version group by c.id"
 
-      @@log.log('calling SQL ___________________' + sql)
-      ress = call_sql { sql }
-      ress.each_hash do |row|
-        tags = row['tags'].split('|||').collect {|x| x.split('===')}
-        segs = row['segs'].split(',').collect {|x| x}
-        visible = row['visible'] == '1'
-        multis <<  Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
-      end
-      return multis
+         multis = []
+         ids = []
+
+         res.each_hash do |row|
+           ids << row['id'].to_i
+         end
+
+         return [] if ids == []
+
+         sql = "select c.id, timestamp, group_concat(segment_id) as segs, tags, visible from (select b.version, b.id, b.visible, b.timestamp, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select * from (select * from #{type}s where id in (#{ids.join(',')}) order by version desc, id) as a group by id) as b join #{type}_tags on #{type}_tags.id = b.id and #{type}_tags.version = b.version group by id) as c join #{type}_segments on #{type}_segments.id = c.id and #{type}_segments.version = c.version group by c.id"
+
+         @@log.log('calling SQL ___________________' + sql)
+         ress = call_sql { sql }
+         ress.each_hash do |row|
+           tags = row['tags'].split('|||').collect {|x| x.split('===')}
+           segs = row['segs'].split(',').collect {|x| x}
+           visible = row['visible'] == '1'
+           multis <<  Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
+         end
+         return multis
 
     end
 
@@ -1107,4 +1122,3 @@ module OSM
     end
   end
 end
-

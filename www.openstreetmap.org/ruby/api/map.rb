@@ -7,6 +7,7 @@ require 'bigdecimal'
 include Apache
 
 r = Apache.request
+r.content_encoding='text/xml'
 cgi = CGI.new
 
 bbox = cgi['bbox'].split(',')

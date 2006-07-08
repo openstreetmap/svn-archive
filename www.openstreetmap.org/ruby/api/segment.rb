@@ -10,7 +10,7 @@ include REXML
 
 
 r = Apache.request
-
+r.content_encoding='text/xml'
 dao = OSM::Dao.instance
 
 if r.request_method == "GET"

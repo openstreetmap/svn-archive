@@ -974,6 +974,7 @@ module OSM
 
         # update master
         dbh.query( "insert into #{type}s (id, user_id, timestamp) values (@id, @user_id, @ins_time)" )
+        dbh.query( "insert into current_#{type}s (id, user_id, timestamp, visible) valuees (@id, @user_id, @ins_time, 1)" ) if new
         dbh.query( "set @version = last_insert_id()")
 
         # update tags
@@ -995,7 +996,7 @@ module OSM
 
         # update segments
         segs_sql = "insert into #{type}_segments (id, segment_id, version) values "
-        segs_sql = "insert into current_#{type}_segments (id, segment_id) values "
+        current_segs_sql = "insert into current_#{type}_segments (id, segment_id) values "
 
         first = true
         segs.each do |n|

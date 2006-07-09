@@ -13,7 +13,7 @@ class Osmlog
 
   def log(s)
     begin
-      @@l.info(s)
+      #@@l.info(s)
     rescue
       
     end

@@ -22,6 +22,7 @@
 
 // 030706 change internal representation from Segment* to int (seg id)
 #include "Segment.h"
+#include "RouteMetaDataHandler.h"
 #include <qtextstream.h>
 #include <vector>
 
@@ -42,6 +43,7 @@ protected:
 	int osm_id;
 	Components2 *components;
 	bool area;
+	std::map <QString,QString> tags;
 
 public:
 	Way(Components2 *comp)
@@ -50,31 +52,63 @@ public:
 		name = type = ref = "";
 		components = comp;
 		area = false;
+		tags["name"] = tags["ref"] = "";
 	}
 
 	void setSegments(vector<Segment*>&);
 
 	void setName(const QString& n) 
 	{
-		name = n;
+		//name = n;
+		tags["name"] = n;
 	}
 	void setRef(const QString& r) 
 	{
-		ref = r;
+		//ref = r;
+		tags["ref"] = r;
 	}
-	void setType(const QString& t); 
+
+	// use tags
+	void setType(const QString& t);
+	void setType1(const QString& t) 
+	{
+		// use tags
+		//type = t;
+		RouteMetaDataHandler mdh;
+		RouteMetaData md = mdh.getMetaData(t);
+		tags["foot"] = md.foot;
+		tags["horse"] = md.horse;
+		tags["bicycle"] = md.bike;
+		tags["motorcar"] = md.car;
+		tags["highway"] = md.routeClass;
+		if(md.railway!="")
+			tags["railway"] = md.railway;
+	}
+	void setSegs();
 
 	QString getName()
 	{
-		return name;
+		//return name;
+		return tags["name"];
 	}
 	QString getType()
 	{
-		return type;
+		// use tags
+		//return type;
+		RouteMetaDataHandler mdh;
+		RouteMetaData md;
+		for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end();
+			i++)
+		{
+			md.parseKV(i->first, i->second);
+		}
+		QString t = mdh.getRouteType(md);
+		return t;
 	}
 	QString getRef()
 	{
-		return ref; // eg road number 
+		//return ref; // eg road number 
+		return tags["ref"];
 	}
 
 	void wayToOSM(QTextStream&, bool allUid=false);
@@ -93,8 +127,11 @@ public:
 		if(s->getOSMID())
 		{
 			// Segments take on the type of the parent way, if it has one
+			/* 090706 not any more - no need for this - rendering code looks
+			 * at the segment's parent way
 			if(type!="")
 				s->setType(type);
+			*/
 			s->setWayStatus(true);
 			s->setWayID(osm_id);
 			segments.push_back(s->getOSMID());
@@ -121,6 +158,15 @@ public:
 	void setArea(bool a) { area=a; }
 
 	Segment *longestSegment();
+
+	void addTag(QString& k,const QString& v)
+	{
+		/*
+		k = (k=="car") ? "motorcar" : k;
+		k = (k=="bike") ? "bicycle" : k;
+		*/
+		tags[k] = v;
+	}
 };
 
 typedef Way Area;

@@ -151,13 +151,13 @@ private:
 
 	// other stuff
 	QString curSegType; 
-	bool trackpoints, contours, displayOSM, displayGPX;
+	bool trackpoints, contours, displayOSM, displayGPX, showSegmentColours;
 	QString curFilename; 
 	bool mouseDown;
 
 	QToolButton* modeButtons[N_ACTIONS]; 
 	QToolButton *wayButton, *landsatButton, *osmButton, *gpxButton,
-						*contoursButton;
+						*contoursButton, *showSegmentColoursButton;
 
 	QComboBox * modes;
 
@@ -307,6 +307,7 @@ public slots:
 	void batchUploadDone();
 	void batchUploadError(const QString& error);
 	void segSplitterError(const QString& error);
+	void toggleSegmentColours();
 
 signals:
 	void newNodeAddedSig();

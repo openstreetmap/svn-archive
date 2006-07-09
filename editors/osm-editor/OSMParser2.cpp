@@ -98,7 +98,7 @@ bool OSMParser2::startElement(const QString&, const QString&,
 			if(readNodes[from]&&readNodes[to])
 			{
 				readSegments[curID] = components->addOSMSegment
-						(curID,readNodes[from],readNodes[to],curName, curType);
+						(curID,readNodes[from],readNodes[to]);
 			}
 		}
 		else if (element=="way" || element=="area")
@@ -164,14 +164,26 @@ bool OSMParser2::startElement(const QString&, const QString&,
 			// This will be sorted out!
 			if(inNode || inArea)
 			{
-				readNodeTags(key,value,curName,curType);
+				//readNodeTags(key,value,curName,curType);
+				if(inNode && readNodes[curID])
+				{
+					cerr << "NODE: key=" << key << " value=" << value <<
+							" curID=" << curID << endl;
+					readNodes[curID]->addTag(key,value);
+				}
+				else if (inArea && curWay)
+					curWay->addTag(key,value);
 			}
 			else if (inSegment)
 			{
 				if(key=="name")
 					curName = value;
+				/*
 				else
 					readSegTags(key,value,metaData);
+					*/
+				if(readSegments[curID])
+					readSegments[curID]->addTag(key,value);
 			}
 			else if (inWay)
 			{
@@ -179,8 +191,16 @@ bool OSMParser2::startElement(const QString&, const QString&,
 					curName = value;
 				else if(key=="ref")
 					curRef = value;
+				/*
 				else
 					readSegTags(key,value,metaData);
+					*/
+				if(curWay)
+				{
+					cerr << "adding tag to current way: key=" << key <<
+								" value=" << value << endl;
+					curWay->addTag(key,value);
+				}
 			}
 		}
 	}
@@ -193,30 +213,30 @@ bool OSMParser2::endElement(const QString&, const QString&,
 	cerr << "endElement: element=" << element << endl;
 	if(element=="node")
 	{
-		readNodes[curID]->setName(curName);
-		readNodes[curID]->setType(curType);
+		//readNodes[curID]->setName(curName);
+		//readNodes[curID]->setType(curType);
 		inNode = false;
 	}
 	else if (element=="segment")
 	{
 		RouteMetaDataHandler handler;
-		readSegments[curID]->setName(curName);
-		readSegments[curID]->setType(handler.getRouteType(metaData));
+		//readSegments[curID]->setName(curName);
+		//readSegments[curID]->setType(handler.getRouteType(metaData));
 		inSegment = false;
 	}
 	else if (element=="way") 
 	{
 		RouteMetaDataHandler handler;
-		curWay->setName(curName);
-		curWay->setRef(curRef);
-		curWay->setType(handler.getRouteType(metaData));
+		//curWay->setName(curName);
+		//curWay->setRef(curRef);
+		//curWay->setType(handler.getRouteType(metaData));
 		components->addWay(curWay);
 		inWay = false;
 	}
 	else if (element=="area")
 	{
-		curWay->setName(curName);
-		curWay->setType(curType);
+		//curWay->setName(curName);
+		//curWay->setType(curType);
 		components->addArea(curWay);
 		inArea = false;
 	}

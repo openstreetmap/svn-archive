@@ -48,6 +48,59 @@ RouteMetaData RouteMetaData::preferred()
 							preferred(routeClass) );
 }
 
+// Parse an OSM key/value pair
+// 130506 reads new style keys such as 'bicycle' and 'highway'
+void RouteMetaData::parseKV(const QString &key, const QString& value)
+{
+	//cerr << "Trying key " << key << " value " << value << endl;
+	if(key == "foot")
+		foot = value;
+	else if(key == "horse")
+		horse = value;
+	// prevent conflicting 'bicycle' and 'bike' keys
+	else if(key == "bike" || key == "bicycle")
+	{
+		if(key=="bicycle")
+		{
+			doneBicycle=true;
+			bike = value;
+		}
+		else if(!doneBicycle)
+		{
+			bike=value;
+		}
+	}
+	// same with 'motorcar' and 'car'
+	else if(key == "car" || key == "motorcar")
+	{
+		if(key=="motorcar")
+		{
+			doneMotorcar=true;
+			car = value;
+		}
+		else if (!doneMotorcar)
+		{
+			car = value;
+		}
+	}
+	// same with 'class' and 'highway'
+	else if(key == "class" || key == "highway")
+	{
+		if(key=="highway")
+		{
+			doneHighway=true;
+			routeClass = value;
+		}
+		else if (!doneHighway)
+		{
+			routeClass=value;
+		}
+	}
+
+	else if (key=="railway")
+		railway = value;
+}
+
 // Returns the preferred value for a particular property (foot etc)
 // This will be the first in the list.
 QString RouteMetaData::preferred(const QString& property)
@@ -107,6 +160,11 @@ RouteMetaData RouteMetaDataHandler::getMetaData(const QString& type)
 
 QString RouteMetaDataHandler::getRouteType(const RouteMetaData &rd) 
 {
+		/*
+	cerr << "Trying RouteMetaData: foot=" << rd.foot << 
+			" horse=" << rd.horse << " bike=" << rd.bike << " car=" << rd.car
+			<< " routelcass=" << rd.routeClass <<endl;
+			*/
 	for(std::map<QString,RouteMetaData>::iterator i=rData.begin();
 		i!=rData.end(); i++)
 	{

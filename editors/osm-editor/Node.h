@@ -25,10 +25,12 @@
 #include <qcstring.h>
 #include <qstringlist.h>
 #include <vector>
+#include <map>
 #include <fstream>
 #include "functions.h"
 #include "EarthPoint.h"
 #include <qtextstream.h>
+#include "NodeMetaDataHandler.h"
 
 #include <iostream>
 
@@ -45,6 +47,7 @@ private:
 	double lat, lon;
 	int osm_id;
 	QString name, type, timestamp;
+	std::map <QString,QString> tags;
 
 public:
 	Node()
@@ -53,6 +56,7 @@ public:
 		name=type=""; 
 		osm_id = 0; 
 		timestamp="";
+		tags["name"] = "";
 	}
 
 	Node(double lt, double ln)
@@ -62,6 +66,7 @@ public:
 		osm_id=0; 
 		name=type=""; 
 		timestamp="";
+		tags["name"] = "";
 	}
 	Node(int i,double lt, double ln)
 	{
@@ -70,14 +75,15 @@ public:
 		osm_id=i; 
 		name=type=""; 
 		timestamp="";
+		tags["name"] = "";
 	}
 
 	Node(int i,double lt, double ln,const QString& n, const QString& t)
 	{
 		lat=lt; 
 		lon=ln; 
-		name=n; 
-		type=t; 
+		setName(n);	
+		setType(t);	
 		osm_id=i; 
 		timestamp="";
 	}
@@ -86,18 +92,19 @@ public:
 	{
 		lat=lt; 
 		lon=ln; 
-		name=n; 
-		type=t; 
+		setName(n);
+		setType(t);	
 		osm_id=0; 
 		timestamp="";
 	}
 
-	Node(int i,double lt, double ln,const QString& n, const QString& t,const QString& ts)
+	Node(int i,double lt, double ln,const QString& n, const QString& t,
+					const QString& ts)
 	{
 		lat=lt; 
 		lon=ln; 
-		name=n; 
-		type=t; 
+		setName(n);
+		setType(t);
 		osm_id=i; 
 		timestamp=ts;
 	}
@@ -120,20 +127,24 @@ public:
 
 	void setName(const QString& n) 
 	{
-		name = n;
+		//name = n;
+		tags["name"] = n;
 	}
 	void setType(const QString& t) 
 	{
-		type = t;
+		// Use tags
+		NodeMetaDataHandler mdh;
+		NodeMetaData md = mdh.getMetaData(t);
+		if(md.key!="")
+			tags[md.key] = md.value;
+		//type = t;
 	}
 	QString getName()
 	{
-		return name;
+		//return name;
+		return tags["name"];
 	}
-	QString getType()
-	{
-		return type;
-	}
+	QString getType();
 
 	int getOSMID()
 	{
@@ -149,6 +160,11 @@ public:
 		{ this->lat=lat; this->lon=lon; }
 	void trackpointToNode();
 	QByteArray toOSM();
+
+	void addTag(const QString& k,const QString& v)
+	{
+		tags[k] = v;
+	}
 };
 
 class TrackPoint
@@ -170,6 +186,7 @@ public:
 	double getLat() { return lat; }
 	double getLon() { return lon; }
 	QString getTimestamp() { return timestamp; }
+
 };
 
 }

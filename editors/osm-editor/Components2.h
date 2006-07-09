@@ -74,14 +74,12 @@ public:
 	Segment *getNearestSegment (double lat, double lon,double);
 	vector<Node*> getNearestNodes (double lat, double lon, double limit);
 
-	Segment * addNewSegment (Node *n1, Node *n2, const QString& name,
-								const QString& type)
+	Segment * addNewSegment (Node *n1, Node *n2) 
 	{
-		return addOSMSegment(nextSegId--,n1,n2,name,type);
+		return addOSMSegment(nextSegId--,n1,n2);
 	}
 
-	Segment * addOSMSegment (int id,Node *n1, Node *n2, const QString& name,
-							const QString& type);
+	Segment * addOSMSegment (int id,Node *n1, Node *n2);
 
 
 	Way *getWayByID(int id);

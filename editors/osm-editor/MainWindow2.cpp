@@ -120,6 +120,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     wptSaved = false;
 	displayOSM = true;
 	displayGPX = true;
+	showSegmentColours = false;
 
     actionMode = ACTION_NODE;
     curSegType = "track";
@@ -132,20 +133,20 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 	// change these to match the renderer 
 	
     segpens["footpath"]= SegPen (QPen (Qt::green, 2), false );
-    segpens["path"]= SegPen (QPen (QColor(0,128,0), 2), false);
+    segpens["path"]= SegPen (QPen (QColor(0,192,0), 2), false);
     segpens["cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
     segpens["bridleway"]= SegPen (QPen(QColor(192,96,0),2), false);
     segpens["byway"] = SegPen (QPen (Qt::red, 2), false);
-    segpens["minor road"]= SegPen (QPen(QColor(220,220,220), 2),true);
-    segpens["residential road"]= SegPen(QPen (QColor(220,220,220), 1), true);
+    segpens["minor road"]= SegPen (QPen(QColor(192,192,192), 2),true);
+    segpens["residential road"]= SegPen(QPen (QColor(192,192,192), 1), true);
     segpens["B road"]= SegPen(QPen (QColor(253,191,111), 4), true);
     segpens["A road"]= SegPen(QPen (QColor(251,128,95), 4), true);
     segpens["motorway"]= SegPen(QPen (QColor(128,155,192), 4), true);
     segpens["railway"]= SegPen(QPen (Qt::black, 2), false);
-    segpens["permissive footpath"]= SegPen(QPen (Qt::green, 1), false);
-    segpens["permissive bridleway"]= SegPen(QPen (QColor(192,96,0), 1), false);
+    segpens["permissive footpath"]= SegPen(QPen (QColor(0,192,0), 2), false);
+    segpens["permissive bridleway"]= SegPen(QPen (QColor(170,85,0), 2), false);
     segpens["track"]= SegPen(QPen (QColor(128,128,128), 3), false);
-    segpens["new forest track"]=SegPen(QPen(QColor(192,96,0),2), false);
+    segpens["new forest track"]=SegPen(QPen(QColor(170,85,0),2), false);
     segpens["new forest cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
     cerr<<"done segpens" << endl;
 
@@ -182,6 +183,8 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
                         CTRL+Key_L);
     editMenu->insertItem("Toggle &contours",this,SLOT(toggleContours()),
                         CTRL+Key_C);
+    editMenu->insertItem("Toggle segment colours",this,
+					SLOT(toggleSegmentColours()));
     editMenu->insertItem("Remove trac&k points",this,SLOT(removeTrackPoints()),
                         CTRL+Key_K);
 	editMenu->insertItem("Change serial port", this, SLOT(changeSerialPort()));
@@ -244,6 +247,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
     QPixmap gpx = mmLoadPixmap("images","gpx.png");
     QPixmap landsat = mmLoadPixmap("images","landsat.png");
     QPixmap contours = mmLoadPixmap("images","contours.png");
+    QPixmap segcol = mmLoadPixmap("images","segcol.png");
     QPixmap editway = mmLoadPixmap("images","editway.png");
 
     new QToolButton(left_pixmap,"Move left","",this,SLOT(left()),toolbar);
@@ -318,6 +322,12 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h) :
 	contoursButton->setToggleButton(true);
 	contoursButton->setOn(false);
    
+    showSegmentColoursButton = new QToolButton
+            (segcol,"Segment Type Indication On/Off","",this,
+             SLOT(toggleSegmentColours()),toolbar);
+	showSegmentColoursButton->setToggleButton(true);
+	showSegmentColoursButton->setOn(false);
+
     toolbar->setStretchableWidget(new QLabel(toolbar));
     toolbar2->setStretchableWidget(new QLabel(toolbar2));
 
@@ -853,6 +863,13 @@ void MainWindow2::toggleContours()
     update();
 }
 
+void MainWindow2::toggleSegmentColours()
+{
+   	showSegmentColours = !showSegmentColours; 
+	showSegmentColoursButton->setOn(showSegmentColours);
+    update();
+}
+
 void MainWindow2::undo()
 {
     //TODO
@@ -1046,11 +1063,17 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 				// Draw segments belonging to ways (only) in the correct colour
 				if(curSeg->belongsToWay() && !found && !foundWay)
 				{
-					curPen = segpens[curSeg->getType()].pen;
-					if(segpens[curSeg->getType()].casing)
+
+					Way *w=components->getWayByID(curSeg->getWayID());
+					//curPen = segpens[curSeg->getType()].pen;
+					if(segpens.find(w->getType()) != segpens.end())
 					{
-						p.setPen(QPen(Qt::black,curPen.width()+2));
-                		p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+						curPen = segpens[w->getType()].pen;
+
+						if(segpens[w->getType()].casing)
+						{
+							p.setPen(QPen(Qt::black,curPen.width()+2));
+                			p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
 						/*
             			p.drawEllipse( pt1.x - 5, pt1.y - 5, 10, 10 );
             			p.drawEllipse( pt2.x - 5, pt2.y - 5, 10, 10 );
@@ -1058,23 +1081,11 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 
 						//cerr<<"segment belongs to a way"<<endl;
 						//curPen.setWidth(4);
+						}
 					}
-				}
 
-				int s = (curSeg->belongsToWay()) ? 4:8;
-        		p.setPen(curPen);
-                p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
-				p.setBrush(Qt::SolidPattern);
-        		//p.setPen(Qt::black);
-				p.fillRect( pt1.x-s/2, pt1.y-s/2, s, s, QColor(128,128,128) );
-				p.fillRect( pt2.x-s/2, pt2.y-s/2, s, s, QColor(128,128,128) );
-				//p.drawEllipse( pt2.x - 4, pt2.y - 4, 8, 8 );
-
-				// If the segment is the longest segment in a way, draw its
-				// name
-                if(curSeg->belongsToWay())
-                {
-					Way *w = components->getWayByID(curSeg->getWayID());
+					// If the segment is the longest segment in a way, draw its
+					// name
 					if(w->getName()!="")
 					{
 						dy=pt2.y-pt1.y;
@@ -1088,6 +1099,27 @@ void MainWindow2::drawSegment(QPainter& p, Segment *curSeg)
 						}
                 	}
 				}
+				// If the user has selected to display unwayed segments in
+				// colour, find the appropriate colour.
+				else if (showSegmentColours && !found && !foundWay) 
+				{
+					cerr << "FOUND A SEG TO COLOUR*** " ;
+					cerr << "Type: "<< curSeg->getType() << endl;
+					if(segpens.find(curSeg->getType()) != segpens.end())
+					{
+						curPen = segpens[curSeg->getType()].pen;
+						curPen.setWidth(1); // unwayed segments always 1
+					}
+				}
+
+				int s = (curSeg->belongsToWay()) ? 4:8;
+        		p.setPen(curPen);
+                p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+				p.setBrush(Qt::SolidPattern);
+        		//p.setPen(Qt::black);
+				p.fillRect( pt1.x-s/2, pt1.y-s/2, s, s, QColor(128,128,128) );
+				p.fillRect( pt2.x-s/2, pt2.y-s/2, s, s, QColor(128,128,128) );
+				//p.drawEllipse( pt2.x - 4, pt2.y - 4, 8, 8 );
             }
         }
 }
@@ -1279,8 +1311,7 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
                 if(!pts[1] || pts[1]->getOSMID()<=0)
 				{
 					pts[1] = components->addNewNode(p.y,p.x,"","node");
-                	Segment *segx= components->addNewSegment
-							(pts[0],pts[1],"",curSegType);
+                	Segment *segx= components->addNewSegment (pts[0],pts[1]);
 					nodeHandler.setEmit
 							(segx,this,SLOT(doaddseg(void*)));
 					if(liveUpdate)
@@ -1299,7 +1330,7 @@ void MainWindow2::mousePressEvent(QMouseEvent* ev)
 				else
 				{
                 	Segment *segx=
-					    components->addNewSegment(pts[0],pts[1],"",curSegType);
+					    components->addNewSegment(pts[0],pts[1]);
 					doaddseg(segx);
 				}
 
@@ -1421,13 +1452,9 @@ void MainWindow2::editNode(int x,int y,int limit)
     EarthPoint p = map.getEarthPoint(ScreenPos(x,y));
     if((nearest=components->getNearestNode(p.y,p.x,LIMIT)) != NULL)
     {
-        cerr<<"creating waypoint dialogue" << endl;
-		cerr<<"nearest->getName()=" << nearest->getName() << endl;
-		cerr<<"nearest->getType()=" << nearest->getType() << endl;
         d = new WaypointDialogue
                     (this,nodeReps,"Edit node",
                     nearest->getType(),nearest->getName());
-        cerr<<"done." << endl;
         if(d->exec())
         {
             nearest->setName(d->getName());

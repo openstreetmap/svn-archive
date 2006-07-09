@@ -39,16 +39,33 @@ void Segment::segToOSM(QTextStream &outfile, bool allUid)
     
     outfile << " id='" << sent_id   << "'>" << endl;
 
-    QString tags = "";
+    //QString tags = "";
 
     //  avoid dumping the name too many times
+	/*
     if(name!="")
         outfile << "<tag k='name' v='" << name << "' />" << endl;
+	*/
 
 	// Only write out the type if the segment does not belong to a way;
 	// if it does, the segment will be assumed to have the same type as the way
+	// 080706 no longer make this assumption
+	/*
 	if(!wayStatus)
 	{
+	*/
+		// 080706 all tags written out, not just those of interest to osmeditor2
+		for(std::map<QString,QString>::iterator i=tags.begin(); 
+						i!=tags.end(); i++)
+		{
+			if(i->second!="")
+			{
+				outfile << "<tag k='"<<i->first<<"' v='" 
+						<< i->second << "'/>"
+				<<endl;
+			}
+		}
+		/*
 		// 130506 change to use the new styles of tag (highway etc)
     	RouteMetaDataHandler mdh;
     	RouteMetaData metaData = mdh.getMetaData(type);
@@ -68,7 +85,9 @@ void Segment::segToOSM(QTextStream &outfile, bool allUid)
    		if(metaData.railway!="")
        		outfile << "<tag k='railway' v='" << metaData.railway << 
 					"' />" << endl;
-	}
+		*/
+	
+	/*}*/
 
 
    outfile << "</segment>" <<endl;
@@ -85,6 +104,42 @@ QByteArray Segment::toOSM()
     str<<"</osm>"<<endl;
     str<<'\0';
     return xml;
+}
+
+QString Segment::getType()
+{
+		// use tags
+		//return type;
+		RouteMetaDataHandler mdh;
+		RouteMetaData md;
+		for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end();
+			i++)
+		{
+			cerr << "Sending parseKV: first=" << i->first << 
+					" second=" << i->second << endl;
+			md.parseKV(i->first, i->second);
+		}
+		cerr << "RouteMetaData: foot=" << md.foot << " horse=" << md.horse
+				<< " bike=" << md.bike << " car=" << md.car
+				<< " routeClass=" << md.routeClass << endl;
+		QString t = mdh.getRouteType(md);
+		cerr << "So type is " << t << endl;
+		return t;
+}
+
+void Segment::setType(const QString& t)
+{
+		// use tags
+		//type = t;
+		RouteMetaDataHandler mdh;
+		RouteMetaData md = mdh.getMetaData(t);
+		tags["foot"] = md.foot;
+		tags["horse"] = md.horse;
+		tags["bicycle"] = md.bike;
+		tags["motorcar"] = md.car;
+		tags["highway"] = md.routeClass;
+		if(md.railway!="")
+			tags["railway"] = md.railway;
 }
 
 // Upload an existing (or new) segment to OSM

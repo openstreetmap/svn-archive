@@ -23,6 +23,7 @@ namespace OpenStreetMap
 {
 
 // 180306 updated for 0.3
+// 080706 updated to allow for the fact that all tags now stored
 int Node::toOSM(QTextStream& outfile, bool allUid)
 {
     int sent_id = (osm_id>0 || (allUid&&osm_id)) ? osm_id: 0;
@@ -32,6 +33,7 @@ int Node::toOSM(QTextStream& outfile, bool allUid)
     
     outfile << " id='" << sent_id << "' >" << endl;
     
+	/*
     if(name != "")
         outfile << "<tag k='name' v='" << name << "'/>" << endl;
 
@@ -43,6 +45,18 @@ int Node::toOSM(QTextStream& outfile, bool allUid)
 		if(md.key!="" || md.value!="")
         	outfile << "<tag k='"<<md.key<<"' v='" << md.value << "'/>" << endl;
 	}
+	*/
+
+	// 080706 all tags written out, not just those of interest to osmeditor2
+	for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end(); i++)
+	{
+		if(i->second!="")
+		{
+			outfile << "<tag k='"<<i->first<<"' v='" << i->second << "'/>"
+				<<endl;
+		}
+	}
+
     outfile << "</node>" << endl;
 }
 
@@ -65,6 +79,22 @@ void Node::trackpointToNode()
 {
     if(type=="trackpoint")
         type="node";
+}
+
+QString Node::getType()
+{
+		// Use tags
+		//return type;
+		NodeMetaDataHandler mdh;
+		QString curType;
+		for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end();
+			i++)
+		{
+			curType = mdh.getNodeType(i->first,i->second);
+			if(curType!="" && curType!="node")
+				return curType;
+		}
+		return "node";
 }
 
 }

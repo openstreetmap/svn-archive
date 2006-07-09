@@ -12,7 +12,10 @@ namespace OpenStreetMap
 // Tests an incoming set of matadata against the required criteria
 bool NodeMetaData::testmatch(const NodeMetaData& indata)
 { 
-	return key==indata.key && value==indata.value;
+	// 090706 if the key is class and the value is the specified value
+	// that also counts as a match
+	return (key==indata.key && value==indata.value) ||
+			(key=="class" && value==indata.value);
 }
 
 NodeMetaDataHandler::NodeMetaDataHandler()
@@ -62,7 +65,7 @@ QString NodeMetaDataHandler::getNodeType(const QString& k,const QString &v)
 	NodeMetaData nd(k,v);
 
 	for(std::map<QString,NodeMetaData>::iterator i=nData.begin();
-		i!=nData.end(); i++)
+				   	i!=nData.end(); i++)
 	{
 		if (i->second.testmatch(nd))
 			return i->first;

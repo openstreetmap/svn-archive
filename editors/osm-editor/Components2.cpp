@@ -402,12 +402,11 @@ TrackPoint *Components2::addTrackPoint(double lat, double lon,
     return newTP;
 }
 
-Segment * Components2::addOSMSegment (int id,Node *n1, Node *n2,
-                                        const QString& name,const QString& type)
+Segment * Components2::addOSMSegment (int id,Node *n1, Node *n2)
 {
     n1->trackpointToNode();
     n2->trackpointToNode();
-    Segment *seg = new Segment(id,n1,n2,name,type);
+    Segment *seg = new Segment(id,n1,n2);
 	addSegment(seg);
     if(id-1<nextSegId)
         nextSegId = id-1;

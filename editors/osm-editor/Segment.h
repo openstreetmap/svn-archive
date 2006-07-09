@@ -21,6 +21,7 @@
  */
 #include "Node.h"
 #include <qtextstream.h>
+#include "RouteMetaDataHandler.h"
 
 namespace OpenStreetMap
 {
@@ -32,6 +33,7 @@ private:
 	QString type, name;
 	int osm_id, way_id;
 	bool wayStatus;
+	std::map <QString,QString> tags;
 
 public:
 	Segment()
@@ -39,6 +41,7 @@ public:
 		nodes[0] = nodes[1] = NULL;
 		osm_id = 0;
 		name = type = "";
+		tags["name"] = "";
 		wayStatus = false;
 		way_id = 0;
 	}
@@ -51,6 +54,7 @@ public:
 		name = type = "";
 		wayStatus = false;
 		way_id = 0;
+		tags["name"] = "";
 	}
 
 	Segment(int id,Node *n1, Node *n2)
@@ -61,6 +65,7 @@ public:
 		name = type = "";
 		wayStatus = false;
 		way_id = 0;
+		tags["name"] = "";
 	}
 
 	Segment(int id,Node *n1, Node *n2, const QString& n,
@@ -69,8 +74,8 @@ public:
 		nodes[0] = n1;
 		nodes[1] = n2;
 		osm_id = id;
-		name = n;
-		type = t;
+		setName(n);
+		setType(t);	
 		wayStatus = false;
 		way_id = 0;
 	}
@@ -80,28 +85,23 @@ public:
 		nodes[0] = n1;
 		nodes[1] = n2;
 		osm_id = 0;
-		name = n;
-		type = t;
+		setName(n);
+		setType(t);	
 		wayStatus = false;
 		way_id = 0;
 	}
 
 	void setName(const QString& n) 
 	{
-		name = n;
+		//name = n;
+		tags["name"] = n;
 	}
-	void setType(const QString& t) 
-	{
-		type = t;
-	}
+	void setType(const QString& t);
 	QString getName()
 	{
-		return name;
+		return tags["name"]; 
 	}
-	QString getType()
-	{
-		return type;
-	}
+	QString getType();
 
 	void toOSM(QTextStream&);
 	void segToOSM(QTextStream&, bool allUid=false);
@@ -162,6 +162,10 @@ public:
 	{
 		return OpenStreetMap::dist(nodes[0]->getLat(),nodes[0]->getLon(),
 									nodes[1]->getLat(),nodes[1]->getLon() );
+	}
+	void addTag(QString& k,const QString& v)
+	{
+		tags[k] = v;
 	}
 };
 

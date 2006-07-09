@@ -44,14 +44,17 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
     outfile << " id='" << sent_id   << "'>" << endl;
 
 
-    QString tags = "";
+    //QString tags = "";
 
     //  avoid dumping the name too many times
+	/*
     if(name!="")
         outfile << "<tag k='name' v='" << name << "' />" << endl;
     if(ref!="")
         outfile << "<tag k='ref' v='" << ref << "' />" << endl;
+		*/
 
+	/* 080706 write out all tags
 	if ((area) && type!="")
 	{
 		// yes, I know, nodes... this will be sorted once the qt4 conversion
@@ -81,15 +84,26 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
 			outfile << "<tag k='railway' v='" << metaData.railway << 
 			"' />" << endl;
 	}
+	*/
+	// 080706 all tags written out, not just those of interest to osmeditor2
+	for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end(); i++)
+	{
+		if(i->second!="")
+		{
+			outfile << "<tag k='"<<i->first<<"' v='" << i->second << "'/>"
+			<<endl;
+		}
+	}
 
-   outfile << "<tag k='created_by' v='osmeditor2'/>" << endl;
+   	if(tags.find("created_by")==tags.end()) 
+   		outfile << "<tag k='created_by' v='osmeditor2'/>" << endl;
 
 	for(int count=0; count<segments.size(); count++)
 	{
 		outfile << "<seg id='" << segments[count] << "' />" << endl;
 	}
 
-   outfile << "</"<<wayOrArea<<">" <<endl;
+   	outfile << "</"<<wayOrArea<<">" <<endl;
 
 }
 // 180306 updated to 0.3
@@ -126,8 +140,10 @@ bool Way::addSegmentAt(int index, Segment *s)
 	if(i!=segments.end() && s->getOSMID())
 	{
 		s->setWayID(osm_id);
+		/* 090706 not anymore - see addSegment()
 		if(type!="")
 			s->setType(type);
+		*/
 		s->setWayStatus(true);
 		segments.insert(i,s->getOSMID());
 		return true;
@@ -138,8 +154,16 @@ bool Way::addSegmentAt(int index, Segment *s)
 void Way::setType(const QString &t)
 {
 		cerr << "Way::setType()" << endl;
+		setType1(t);
+		setSegs();
+}
+
+// 090706 this can probably all go - see addSegment() - but keep all but
+// setType() in for the moment to lessen chances of random bugs
+void Way::setSegs()
+{
+		QString t=getType();
 		Segment *curSeg;
-		type = t;
 		// Segments take on the type of the parent way, if it has one
 		if(type!="")
 		{
@@ -152,8 +176,7 @@ void Way::setType(const QString &t)
 					cerr << "curSeg is not NULL" << endl;
 					cerr << "segment exists : id = " 
 								<< curSeg->getOSMID() << endl;
-					curSeg->setType(type);
-					curSeg->setWayStatus(true);
+					//curSeg->setType(type);
 					curSeg->setWayStatus(true);
 				}
 			}

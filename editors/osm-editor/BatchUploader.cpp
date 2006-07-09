@@ -56,8 +56,7 @@ void BatchUploader::nodeAdded(const QByteArray& resp, void *node)
 			if(nodes[count-1] && nodes[count])
 			{
 				Segment *segx =
-					components->addNewSegment(nodes[count-1],nodes[count],
-										"","track");
+					components->addNewSegment(nodes[count-1],nodes[count]);
 
 				osmhttp->scheduleCommand
 						("PUT","/api/0.3/segment/0",segx->toOSM(),

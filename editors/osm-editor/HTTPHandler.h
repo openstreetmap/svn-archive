@@ -114,9 +114,11 @@ public:
 							const char* callback, 
 							void* transferObject,
 							const char* errorCallback=
-								SLOT(handleNetCommError(const QString&)))
+								SLOT(handleNetCommError(const QString&)),
+								QObject *errorReceiver=NULL)
 		{ scheduleCommand(requestType,apicall,QByteArray(),receiver,
-								callback,transferObject,errorCallback); }
+								callback,transferObject,errorCallback,
+								errorReceiver); }
 
 public slots:
 	void responseHeaderReceived(const QHttpResponseHeader&);	

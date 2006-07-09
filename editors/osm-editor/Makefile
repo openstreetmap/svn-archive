@@ -34,11 +34,23 @@ QTLIB = -lqt-mt
 QTLIBPATH = -L/usr/lib/qt3/lib
 MOC=/usr/lib/qt3/bin/moc
 
+# Fedora Core 5
+#QTINCPATH = /usr/lib/qt-3.3/include
+#QTLIB = -lqt-mt
+#QTLIBPATH = -L/usr/lib/qt-3.3/lib
+#MOC=/usr/lib/qt-3.3/bin/moc
+
 # Debian sarge and testing
 #QTINCPATH = /usr/include/qt3
 #QTLIB = -lqt 
 #QTLIBPATH = -L/usr/lib
 #MOC=moc
+
+# Gentoo
+#QTINCPATH = /usr/qt/3/include
+#QTLIB = -lqt 
+#QTLIBPATH = -L/usr/qt/3/lib
+#MOC=/usr/qt/3/bin/moc
 
 #set OPTS to -DXMLRPC to compile in XMLRPC stuff
 #OPTS       = -DXMLRPC

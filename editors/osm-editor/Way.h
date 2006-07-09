@@ -144,7 +144,7 @@ public:
 		segments.push_back(i);
 	}
 
-	int Way::removeSegment(Segment *s);
+	int removeSegment(Segment *s);
 	bool addSegmentAt(int index, Segment *s);
 
 	void setComponents(Components2 *c) { components=c; }

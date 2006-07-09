@@ -252,7 +252,8 @@ void LandsatManager2::grabTiles(int x1,int y1,int x2,int y2)
 
 	lshttp.scheduleCommand("GET",url,this,
 						SLOT(dataReceived(const QByteArray&,void*)),
-						dimensions);
+						dimensions,
+						SLOT(handleNetCommError(const QString&)), widget);
 
 }
 
@@ -338,7 +339,8 @@ void LandsatManager2::grabTilesNew()
 				QString url = tile->getURL(llstep);
 				cerr<<"Tile URL = " << url << endl;
 				lshttp.scheduleCommand("GET",url,this,
-						SLOT(newDataReceived(const QByteArray&,void*)),tile);
+						SLOT(newDataReceived(const QByteArray&,void*)),tile,
+						SLOT(handleNetCommError(const QString&)), widget);
 			}
 		}
 	}

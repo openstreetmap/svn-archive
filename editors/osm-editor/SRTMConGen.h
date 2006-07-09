@@ -40,7 +40,7 @@ public:
 	SRTMConGen(Map& map, int f);
 	~SRTMConGen() { delete sampledata; }
 	void generate(DrawSurface *ds);
-	void SRTMConGen::generateShading(DrawSurface *ds,double shadingres);
+	void generateShading(DrawSurface *ds,double shadingres);
 };
 
 }

@@ -60,6 +60,17 @@ my $osm_segment_number = $first_id;
 my $osm_way_number     = $first_id;
 
 
+##################################################################
+package Utils;
+##################################################################
+
+# print the time elapsed since starting
+# starting_time is the first argument
+sub print_time($){
+    my $start_time = shift;
+    printf "in %.0f sec\n", time()-$start_time;
+}
+
 
 ##################################################################
 package Geometry;
@@ -273,7 +284,8 @@ sub read_gps_file($) {
 	return;
     }
     if ( $debug ) {
-	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
+	printf "Read and parsed $file_name";
+	Utils::print_time($start_time);
     }
     my $track=[];
     for my $elem  ( @{$content->[0]->{Kids}} ) {
@@ -431,7 +443,8 @@ sub read_file($) {
 	$elem ={};
     }
     if ( $verbose) {
-	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
+	printf "Read and parsed $file_name";
+	Utils::print_time($start_time);
     }
 
     return [$content];
@@ -486,7 +499,8 @@ sub read_gpx_file($) {
 	return;
     }
     if ( $verbose) {
-	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
+	printf "Read and parsed $file_name";
+	Utils::print_time($start_time);
     }
     $content = $content->[0]->{Kids};
 
@@ -601,7 +615,8 @@ sub write_gpx_file($$) { # Write an gpx File
     print $fh "</gpx>\n";
     $fh->close();
 
-    printf "Wrote GPX File $file_name ($track_id Tracks with $point_count Points)in  %.0f sec\n",time()-$start_time;
+    printf "Wrote GPX File $file_name ($track_id Tracks with $point_count Points)";
+    Utils::print_time($start_time);
 }
 
 #------------------------------------------------------------------
@@ -653,7 +668,8 @@ sub write_osm_data_as_gpx_file($) { # Write an gpx File
     $fh->close();
 
     if ( $verbose) {
-	printf "Wrote OSM File in  %.0f sec\n",time()-$start_time;
+	printf "Wrote OSM File";
+	Utils::print_time($start_time);
     }
 
 }
@@ -696,7 +712,8 @@ sub read_gpsdrive_track_file($) {
 	bless($elem,"Kismet::gps-point");
     }
     if ( $verbose) {
-	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
+	printf "Read and parsed $file_name";
+	Utils::print_time($start_time);
     }
 
     return [$content];
@@ -704,7 +721,7 @@ sub read_gpsdrive_track_file($) {
 
 
 my $CONFIG_DIR          = "$ENV{'HOME'}/.gpsdrive"; # Should we allow config of this?
-my $WAYPT_FILE          = "$CONFIG_DIR/way-Filter.txt";
+my $WAYPT_FILE          = "$CONFIG_DIR/way.txt";
 ######################################################################
 my $waypoints={};
 sub get_waypoint($) {
@@ -774,7 +791,7 @@ my $areas_allowed_squares =
 # -------------------------------------------------
 # Add all gpsdrive waypoints from this File as a filter 
 # where deny specifies that its a block filter
-sub add_all_waypoints_to_area($){
+sub read_filter_areas($){
     my $filename = shift;
 
     unless ( -s $filename ) {
@@ -789,7 +806,9 @@ sub add_all_waypoints_to_area($){
 	($name,$lat,$lon, $typ, $wlan, $action, $sqlnr, $proximity) = split(/\s+/);
 	my $block=0;
 	next unless $name;
+	next unless $typ =~ m/^filter\./;
 	$block = 1 if $typ =~ m/deny/;
+	$block = 0 if $typ =~ m/allow/;
 	next unless $name;
 	push( @{$areas_allowed_squares},
 	  { wp => $name, block => $block }
@@ -972,14 +991,16 @@ sub enrich_data($$){
 	    $deleted_points += $num_elm_in_track;
 	}
 	
-	if ( $debug || $verbose ) {
+	if ( $debug || $verbose >1 ) {
 	    printf "Enrich Data: Track $track_number from $comment\n";
 	    printf "	Distance: %8.2f m .. %8.2f Km \n", $min_dist*1000,$max_dist;
 	    printf "	Elements: ".(scalar(@{$track}))."\n",
 	}
     }
-    if ( $debug || $verbose ) {
+    if ( $debug || $verbose >1) {
 	printf "Enrich Data: $comment:\n";
+    };
+    if ( $debug ) {
 	printf "	Deleted Points: $deleted_points\n"
     }
     #print Dumper(\$new_tracks);
@@ -1005,8 +1026,9 @@ sub count_data($){
     }
 
     my $used_time = time()-$start_time;
-    if ( $verbose || ($used_time >5 )) {
-	printf "Counted ( $count_tracks Tracks,$count_points Points) in  %.0f sec\n",$used_time;
+    if ( $debug || ($used_time >5 )) {
+	printf "Counted ( $count_tracks Tracks,$count_points Points)";
+	Utils::print_time($start_time);
     }
 
     return ( $count_tracks,$count_points);
@@ -1052,8 +1074,13 @@ sub filter_data_by_area($){
 	    $good_tracks++;
 	}
     }
-    print "Filter by Area: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ".
-	"in  %.0f sec\n",time()-$start_time;
+    if ( $verbose >1) {
+	print "Filter by Area: Good Tracks: $good_tracks, Points: $good_points";
+	Utils::print_time($start_time); 
+    }
+    print "deleted_points:$deleted_points \n"	
+	if $debug>10;
+
 
     @{$tracks}=@{$new_tracks};
 }
@@ -1113,8 +1140,8 @@ sub filter_data_reduce_points($){
 	    $good_tracks++;
 	}
     }
-    print "Filter to reduce number of points: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ".
-	"in  %.0f sec\n",time()-$start_time;
+    print "Filter to reduce number of points: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ";
+    Utils::print_time($start_time);
     @{$tracks}=@{$new_tracks};
 }
 
@@ -1356,7 +1383,8 @@ sub write_osm_file($) { # Write an osm File
     $fh->close();
 
     if ( $verbose) {
-	printf "Wrote OSM File in  %.0f sec\n",time()-$start_time;
+	printf "Wrote OSM File";
+	Utils::print_time($start_time);
     }
 
 }
@@ -1383,27 +1411,31 @@ sub convert_Data(){
     my $filename = "/home/kismet/log/gps-Tweety/gps-14.5.2004.txt-ACTIVE_LOG_015.gps";
     my $all_tracks =[];
     my $single_file=( @ARGV ==1 );
+    my $start_time=time();
 
     my ($track_count,$point_count);
 
     if ( @ARGV < 1 ){
 	print "Need Filename(s) to convert\n";
+	print "use: osm-filter.pl -h for more help\n";
 	exit 1;
     }
 
-    GPS::add_all_waypoints_to_area($WAYPT_FILE);
-
-    my $start_time=time();
-    
+    GPS::read_filter_areas($WAYPT_FILE);
+   
     my $count=0;
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
 	if ( $filename =~ m/-converted.gpx$/ ) {
-	    print "Skipping File $filename for read\n";
+	    print "$filename: Skipping for read\n";
 	    next;
 	}
 	if ( $filename =~ m/00__combination.gpx$/ ) {
-	    print "Skipping File $filename for read\n";
+	    print "$filename: Skipping for read\n";
+	    next;
+	}
+	if ( $filename =~ m/00__check_areas.gpx$/ ) {
+	    print "$filename: Skipping for read\n";
 	    next;
 	}
 
@@ -1427,25 +1459,25 @@ sub convert_Data(){
 	}
 	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
-	    printf "Read %5d Points in %d Tracks from $filename\n",$point_read_count,$track_read_count;
+	    printf "$filename: Read %5d Points in %d Tracks\n",$point_read_count,$track_read_count;
 	}
 
 	GPS::filter_data_by_area($new_tracks);
 	if ( $verbose || $debug) {
 	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    printf "After Area Filter %5d Points in %d Tracks from $filename\n",$point_count,$track_count;
+	    printf "$filename: Area Filter to %5d Points in %d Tracks\n",$point_count,$track_count;
 	}
 
 	GPS::enrich_data($new_tracks,$filename);
 	($track_count,$point_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
-	    printf "Results in  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
+	    printf "$filename: enriching to %5d Points in %d Tracks\n",$point_count,$track_count;
 	}
 
 	GPS::filter_data_reduce_points($new_tracks);
 	($track_count,$point_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
-	    printf "Results in  %5d Points in %d Tracks after filtering\n",$point_count,$track_count;
+	    printf "$filename: Data Reduce to %5d Points in %d Tracks\n",$point_count,$track_count;
 	}
 
 
@@ -1482,16 +1514,18 @@ sub convert_Data(){
     if ($track_count && $point_count) {
 	OSM::write_osm_file("00__combination.osm")
 	    if $out_osm;
-
-
-	    my $check_areas = GPS::draw_check_areas();
-	    GPS::add_tracks($all_tracks,$check_areas);
-
+	    
 	    GPX::write_gpx_file($all_tracks,"00__combination.gpx");
 	}
 
+    if ( $draw_check_areas ) {
+	my $check_areas = GPS::draw_check_areas();
+	GPX::write_gpx_file($check_areas,"00__check_areas.gpx");
+     }
+
     if ( $verbose) {
-	printf "Converting $count  OSM Files in  %.0f sec\n",time()-$start_time;
+	printf "Converting $count  OSM Files";
+	Utils::print_time($start_time);
     }
 }
 
@@ -1641,14 +1675,22 @@ There will also be written a file named
 
 use the area limits coded in the source
 
+By default the File ~/.gpsdrive/way.txt is also read and all 
+waypoints starting with 
+  filter.
+are added as filter areas.
+    filter.deny will be filtered out
+    filter.allo will be left in the resulting files
+
+If you want to define squares you have to define them for now 
+in the Source at the definition of
+  $areas_allowed_squares = 
+AND: they are not tested :-(
+
 =item B<--draw_check_areas>
 
-draw the check_areas into the 00__combination.gpx file by adding a track with the border 
-of each check_area 
-
-For now the Filter areas have to be defined in the Source at
-the definition of
-  $areas_allowed_squares = 
+draw the check_areas into the file 00__check_areas.gpx file 
+by adding a track with the border of each check_area 
 
 =item B<--use_reduce_filter>
 

@@ -59,6 +59,18 @@ void HTTPHandler::scheduleCommand(const QString& requestType,
 
 }
 
+void HTTPHandler::clearRequests()
+{
+	// First disconnect the slots
+	this->disconnect (SIGNAL(responseReceived(const QByteArray&,void*)));
+	this->disconnect (SIGNAL(errorOccurred(const QString&)));
+
+	// Now clear the pending requests
+	requests.clear();
+
+	makingRequest = false;
+}
+
 void HTTPHandler::sendRequest(const QString& requestType, 
 							const QString& url,
 							const QByteArray& b)

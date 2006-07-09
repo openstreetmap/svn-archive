@@ -348,6 +348,10 @@ void LandsatManager2::grabTilesNew()
 
 void LandsatManager2::clearTiles()
 {
+	// 090706 clear any pending requests - otherwise there will be an
+	// almighty crash :-)
+	lshttp.clearRequests();
+
 	vector<Tile*>::iterator i = newtiles.begin();
 	while(i!=newtiles.end())
 	{

@@ -120,6 +120,8 @@ public:
 								callback,transferObject,errorCallback,
 								errorReceiver); }
 
+	void clearRequests();
+
 public slots:
 	void responseHeaderReceived(const QHttpResponseHeader&);	
 	void responseReceived(int,bool);

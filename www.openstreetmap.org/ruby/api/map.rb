@@ -21,7 +21,7 @@ trlat = bbox[3].to_f
 to = nil
 to = Time.parse(cgi['to']) unless cgi['to'] == ''
 
-if bllat > trlat || bllon > trlon # ||  ( (trlon - bllon) * (trlat - bllat) ) > (0.0035 * 4)
+if bllat > trlat || bllon > trlon || bllat < -90 || trlat < -90 || bllat > 90 || trlat > 90 || bllon < -180 || trlon < -180 || bllon > 180 || trlon > 180 # ||  ( (trlon - bllon) * (trlat - bllat) ) > (0.0035 * 4)
   exit BAD_REQUEST
 end
 
@@ -72,8 +72,6 @@ end
     end
   end
 end
-
-
 
 ox.print_http(r)
 

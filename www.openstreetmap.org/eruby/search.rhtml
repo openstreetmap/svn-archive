@@ -16,8 +16,7 @@ query = cgi['query']
 <div id="main_area">
 
 <br />
-<font size="+3">Search</font><i>(++beta)</i> Search is very beta right now, see <a href="http://wiki.openstreetmap.org/index.php/Search">here</a> to discuss.
-<br /><br />
+<font size="+3">Search</font><br /><br />
 
 <% if cgi['action'] == 'citysearch' 
   %>
@@ -55,31 +54,50 @@ query = cgi['query']
 <form action="/search.html">
 <input type="text" name="query" value="<%=query%>">
 <input type="submit" value="Search">
-</form>
-Would you like to perform a <a href="/search.html?action=citysearch&query=<%=query%>">city search</a>?<br>
-
+Would you like to perform a <a href="/search.html?action=citysearch&query=<%=query%>">city search</a>?
+</form><br>
 <%
+
+page = 0
+
+page = cgi['page'].to_i
+
+limit = page * 10
 
 #FIXME this should be in the API
 
 if query != ''
-  res = dao.call_sql { "select k,v,way_id, latitude, longitude from (select * from (select * from (select k,v,way_tags.id as way_id, way_segments.segment_id from way_tags join way_segments on way_segments.id = way_tags.id where match(v) against  ('#{dao.q(query)}') limit 100) as a group by way_id) as b, segments where segment_id = segments.id) as c, nodes where node_a = nodes.id group by way_id 
-  limit 10;" }
-%> <%=res.num_rows%> results<table border="0"> <%
+  res = dao.call_sql { "select * from current_way_tags join current_ways where match(v) against ('#{dao.q(query)}') and current_way_tags.id = current_ways.id limit #{limit}, 11;" }
+%> 
 
 
+<% if page > 0 %>
+  <a href="/search.html?page=<%=page-1%>&query=<%=query%>">Previous page</a>
+<% else %>
+  <font color="gray">Previous page</font>
+<% end %>
+|
+<% if res.num_rows == 11 %>
+  <a href="/search.html?page=<%=page+1%>&query=<%=query%>">Next page</a>
+<% else %>
+  <font color="gray">Next page</font>
+<% end %>
+
+<br><br>
+<table border="0"> <%
+
+i = 0
 res.each_hash do |row|
+i += 1
+break if i == 11
 %>
 <tr>
 <td>
-<a href="/index.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=15">
-<%=row['k']%>=<%=row['v']%></a><br>
-<font size="-2">
-Way <%=row['way_id']%></a> ( <%=row['latitude']%>,  <%=row['longitude']%>)</a><br />
-
-<a href="/index.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=15">Map</a> - 
-<a href="/edit.html?lat=<%=row['latitude']%>&lon=<%=row['longitude']%>&zoom=15">Edit</a> - 
-<a href="/api/0.3/way/<%=row['way_id']%>">API</a>
+<a href="/goto/way/<%=row['id']%>"><%=row['v']%></a> (k:<%=row['k']%>)<br>
+  <font size="-2" color="green">
+Way <%=row['id']%> (<%=row['timestamp']%>)
+<a href="/goto/way/<%=row['id']%>">Map</a> - 
+<a href="/api/0.3/way/<%=row['id']%>">API</a>
 <br /><br/ >
 </font>
 </td></tr>

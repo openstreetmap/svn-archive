@@ -943,7 +943,7 @@ module OSM
         tags << [row['k'],row['v']]
       end
 
-      res = call_sql { "select segment_id from current_#{type}_segments, current_segments where current_#{type}_segments.id = #{q(multi_id.to_s)} and current_#{type}_segments.segment_id = current_segments.id and current_segments.visible = 1;" }
+      res = call_sql { "select segment_id from current_#{type}_segments, current_segments where current_#{type}_segments.id = #{q(multi_id.to_s)} and current_#{type}_segments.segment_id = current_segments.id and current_segments.visible = 1 order by sequence_id;" }
 
       segs = []
       res.each_hash do |row|
@@ -971,11 +971,8 @@ module OSM
         end
 
         # update master
-        @@log.log( "insert into #{type}s (id, user_id, timestamp,visible) values (@id, @user_id, @ins_time,1)")
         dbh.query( "insert into #{type}s (id, user_id, timestamp,visible) values (@id, @user_id, @ins_time,1)" )
-        @@log.log("insert into current_#{type}s (id, user_id, timestamp, visible) values (@id, @user_id, @ins_time, 1)" )
         dbh.query( "insert into current_#{type}s (id, user_id, timestamp, visible) values (@id, @user_id, @ins_time, 1)" ) if new
-        @@log.log("set @version = last_insert_id()")
         dbh.query( "set @version = last_insert_id()")
 
         # update tags
@@ -1000,15 +997,17 @@ module OSM
 
         # update segments
         segs_sql = "insert into #{type}_segments (id, segment_id, version) values "
-        current_segs_sql = "insert into current_#{type}_segments (id, segment_id) values "
+        current_segs_sql = "insert into current_#{type}_segments (id, segment_id, sequence_id) values "
 
+        co = 1
         first = true
         segs.each do |n|
           segs_sql += ',' unless first
           current_segs_sql += ',' unless first
           first = false unless !first
           segs_sql += "(@id, #{q(n.to_s)}, @version)"
-          current_segs_sql += "(@id, #{q(n.to_s)})"
+          current_segs_sql += "(@id, #{q(n.to_s)}, #{co})"
+          co += 1
         end
 
         dbh.query( segs_sql )
@@ -1100,9 +1099,8 @@ module OSM
 
       id_list = segment_ids.join(',')
 
-      ress = call_sql { "select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id) as segs from (select a.id, segment_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id order by sequence_id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;" }
 
-      @@log.log("select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id) as segs from (select a.id, segment_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id order by sequence_id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;")
+      ress = call_sql { "select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id order by sequence_id) as segs from (select a.id, segment_id, sequence_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;" }
 
       multis = []
 

@@ -16,7 +16,8 @@
 # Output is:
 #   - OSM File for josm *.osm ( http://openstreetmap.org/)
 #   - GPX File for josm *.gpx
-#   - _collection.gpx, _collection.osm (one File wit all good tracks)
+#   - 00__collection.gpx, 00__collection.osm (one File with all good tracks)
+#   - 00__check_areas.gpx with al the area filters 
 #
 # Joerg Ostertag <openstreetmap@ostertag.name>
 
@@ -68,7 +69,7 @@ package Utils;
 # starting_time is the first argument
 sub print_time($){
     my $start_time = shift;
-    printf "in %.0f sec\n", time()-$start_time;
+    printf " in %.0f sec\n", time()-$start_time;
 }
 
 
@@ -226,25 +227,30 @@ use IO::File;
 sub data_open($){
     my $file_name = shift;
 
-    my $file_with_path="$file_name";
-    my $size = (-s $file_with_path)||0;
+
+    # If it's already an open File
+    if ( ref($file_name) =~ m/IO::File/ ) {
+	return $file_name;
+    }
+
+    my $size = (-s $file_name)||0;
     if ( $size < 270 ) {
 	warn "cannot Open $file_name ($size) Bytes is too small)\n"
 	    if $verbose || $debug;
-	return 0;
+	return undef;
     }
 
-    print "Opening $file_with_path" if $debug;
+    print "Opening $file_name" if $debug;
     my $fh;
-    if ( $file_with_path =~ m/\.gz$/ ) {
-	$fh = IO::File->new("gzip -dc $file_with_path|")
-	    or die("cannot open $file_with_path: $!");
-    } elsif ( $file_with_path =~ m/\.bz2$/ ) {
-	    $fh = IO::File->new("bzip2 -dc $file_with_path|")
-		or die("cannot open $file_with_path: $!");
+    if ( $file_name =~ m/\.gz$/ ) {
+	$fh = IO::File->new("gzip -dc $file_name|")
+	    or die("cannot open $file_name: $!");
+    } elsif ( $file_name =~ m/\.bz2$/ ) {
+	    $fh = IO::File->new("bzip2 -dc $file_name|")
+		or die("cannot open $file_name: $!");
 	} else {
-	    $fh = IO::File->new("<$file_with_path")
-		or die("cannot open $file_with_path: $!");
+	    $fh = IO::File->new("<$file_name")
+		or die("cannot open $file_name: $!");
 	}
     return $fh;
 }
@@ -269,19 +275,19 @@ sub read_gps_file($) {
 			      );
     
     my $fh = File::data_open($file_name);
-    return unless $fh;
+    return {tracks=>[]} unless $fh;
     my $content = [{Kids => []}];
     eval {
 	$content = $p->parse($fh);
     };
     if ( $@ ) {
 	warn "$@Error while parsing\n $file_name\n";
-	#print Dumper(\$content);
+	print Dumper(\$content);
 	#return $content->[0]->{Kids};
     }
     if (not $p) {
 	print STDERR "WARNING: Could not parse osm data\n";
-	return;
+	return {tracks=>[]};
     }
     if ( $debug ) {
 	printf "Read and parsed $file_name";
@@ -310,7 +316,7 @@ sub read_gps_file($) {
     
 #    print Dumper(\$track);
 
-    return [$track];
+    return {tracks=>[$track]};
 }
 
 
@@ -321,7 +327,7 @@ use IO::File;
 
 
 # -----------------------------------------------------------------------------
-# Read GPS Data from GPX - File
+# Read GPS Data with the help of gpsbabel converting a file to a GPX-File
 sub read_file($$) { 
     my $file_name     = shift;
     my $gpsbabel_type = shift;
@@ -332,7 +338,7 @@ sub read_file($$) {
     my $fh = IO::File->new("gpsbabel  -i $gpsbabel_type -f '$file_name' -o gpx -F - |");
     if ( !$fh )  {
 	warn "Cannot Convert $file_name as Type $gpsbabel_type\n";
-	return [];
+	return {tracks=>[]};
     }
     GPX::read_gpx_file($fh);
 }
@@ -353,12 +359,12 @@ sub read_file($) {
 
     my $start_time=time();
 
-    my $content=[];
+    my $new_tracks={tracks=>[]};
     print("Reading $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     my $fh = File::data_open($file_name);
-    return[] unless $fh;
+    return {tracks=>[]} unless $fh;
     my $elem ={};
     my $last_date='';
     while ( my $line = $fh->getline() ) {
@@ -438,7 +444,7 @@ sub read_file($) {
 	$elem->{alt} = $alt if defined $alt;
 	$elem->{time} = $time;
 
-    	push(@{$content},$elem);
+    	push(@{$new_tracks->{tracks}},$elem);
 	bless($elem,"NMEA::gps-point");
 	$elem ={};
     }
@@ -447,7 +453,7 @@ sub read_file($) {
 	Utils::print_time($start_time);
     }
 
-    return [$content];
+    return $new_tracks;
 }
 
 ##################################################################
@@ -466,17 +472,11 @@ sub read_gpx_file($) {
     my $start_time=time();
     my $fh;
 
-    if ( ref($file_name) =~ m/IO::File/ ) {
-	$fh = $file_name;
-    } else {
-	print("Reading $file_name\n") if $verbose || $debug;
-	my $size = (-s $file_name) || 0;
-	print "$file_name:	$size Bytes\n" if $debug;
-
+    $fh = File::data_open($file_name);
+    if ( ! ref($file_name) =~ m/IO::File/ ) {
 	print STDERR "Parsing file: $file_name\n" if $debug;
-	$fh = File::data_open($file_name);
     }
-    return unless $fh;
+    return {tracks=>[]} unless $fh;
 
     my $p = XML::Parser->new( Style => 'Objects' ,
 			      );
@@ -485,26 +485,31 @@ sub read_gpx_file($) {
     eval {
 	$content = $p->parse($fh);
     };
-    #print Dumper(\$content);
     if ( $@ ) {
 	warn "$@Error while parsing\n $file_name\n";
 	#print Dumper(\$content);
 	#return $content->[0]->{Kids};
     }
     if ( $content && (scalar(@{$content})>1) ) {
-	warn "More than one top level Section was read in $file_name\n";
+	die "More than one top level Section was read in $file_name\n";
     }
     if (not $p) {
 	print STDERR "WARNING: Could not parse osm data\n";
-	return;
+	return {tracks=>[]} ;
     }
     if ( $verbose) {
 	printf "Read and parsed $file_name";
 	Utils::print_time($start_time);
     }
-    $content = $content->[0]->{Kids};
 
-    my $new_tracks=[];
+    my $new_tracks={tracks=>[]};
+    $content = $content->[0];
+    #print Dumper(keys %{$content});
+    #print Dumper(\$content);
+    $content = $content->{Kids};
+
+
+
     for my $elem ( @{$content} ) {
 	next unless ref($elem) eq "GPX::trk";
 	#	    GPX::trkseg
@@ -547,7 +552,7 @@ sub read_gpx_file($) {
 		push(@{$new_track},$trk_pt);
 	    }
 	}
-	push(@{$new_tracks},$new_track);
+	push(@{$new_tracks->{tracks}},$new_track);
     }
 
     #print Dumper(\$new_tracks);
@@ -561,7 +566,7 @@ sub write_gpx_file($$) { # Write an gpx File
 
     my $start_time=time();
 
-    print("Writing GPS File $file_name\n") if $verbose || $debug;
+    print("Writing GPS File $file_name\n") if $verbose >1 || $debug >1;
 
     my $fh = IO::File->new(">$file_name");
     print $fh "<gpx \n";
@@ -571,7 +576,7 @@ sub write_gpx_file($$) { # Write an gpx File
     print $fh "    >\n";
     my $track_id=0;
     my $point_count=0;
-    for my $track ( @{$tracks} ) {
+    for my $track ( @{$tracks->{tracks}} ) {
 	$track_id++;
 	print $fh "\n";
 	print $fh "<trk>\n";
@@ -688,12 +693,12 @@ sub read_gpsdrive_track_file($) {
 
     my $start_time=time();
 
-    my $content=[];
+    my $new_tracks = {tracsk=>[]};
     print("Reading $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     my $fh = File::data_open($file_name);
-    return[] unless $fh;
+    return $new_tracks  unless $fh;
     while ( my $line = $fh->getline() ) {
 	chomp $line;
 	#print "$line\n";
@@ -708,7 +713,7 @@ sub read_gpsdrive_track_file($) {
 	    time => str2time($time),
 	    bssid => 'GP:SD:TR:AC:KL:OG',
 	};
-	push(@{$content},$elem);
+	push(@{$new_tracks->{tracks}},$elem);
 	bless($elem,"Kismet::gps-point");
     }
     if ( $verbose) {
@@ -716,7 +721,7 @@ sub read_gpsdrive_track_file($) {
 	Utils::print_time($start_time);
     }
 
-    return [$content];
+    return $new_tracks;
 }
 
 
@@ -727,6 +732,7 @@ my $waypoints={};
 sub get_waypoint($) {
     my $waypoint_name = shift;
     
+    # Lok it up if it's cached?
     if( defined ( $waypoints->{$waypoint_name} )){
 	return @{$waypoints->{$waypoint_name}};
     }
@@ -766,18 +772,6 @@ my $areas_allowed_squares =
 #     { lat =>  48.175527 	,lon => 11.7586399 ,proximity => .030 , block => 1 },
 #     { lat =>  48.1750 	,lon => 11.7536    ,proximity => .10  , block => 1 },
 	 
-	 # Waypoints from GPSDrive ~/.gpsdrive/way.txt File proximity is circle radius
-#     { wp => "Dorfen"  	,proximity => 10  },
-     { wp => "Gabi"		,proximity => 4  },
-#     { wp => "Gabi"		,proximity => 10  },
-#     { wp => "Erding"		},
-#     { wp => "Wind3"		},
-#     { wp => "Taufkirchen"  	},
-#     { wp => "Isen"		},
-#     { wp => "Kirchdorf"  	,proximity => 6  },
-#     { wp => "Pfaffing"   	,proximity => 15  },
-#     { wp => "Kirchheim"	},
-	 
 	 # Allow Rules for square size areas
 	 # min_lat,min_lon max_lat,max_lon,     (y,x)
 	 #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
@@ -807,8 +801,15 @@ sub read_filter_areas($){
 	my $block=0;
 	next unless $name;
 	next unless $typ =~ m/^filter\./;
-	$block = 1 if $typ =~ m/deny/;
-	$block = 0 if $typ =~ m/allow/;
+	if ( $typ =~ m/deny/ ) {
+	    $block = 1;
+	} elsif ( $typ =~ m/allow/) {
+	    $block = 0;
+	} elsif ( $typ =~ m/none/) {
+	    next;
+	} else {
+	    warn "WARNING !!! unknown Filter type $typ for WP $name\n";
+	    };
 	next unless $name;
 	push( @{$areas_allowed_squares},
 	  { wp => $name, block => $block }
@@ -833,6 +834,9 @@ sub check_allowed_area($){
 	    }
 	    
 	    if ( Geometry::distance_point_point_Km($area,$elem) < $area->{proximity} ) {
+		print "check_allowed_area(".$elem->{lat}.",".$elem->{lon}.
+		    ") -> WP: $area->{wp} : block: $area->{block}\n"
+		    if $debug >30;
 		return ! $area->{block};
 	    }
 	} else {
@@ -849,7 +853,7 @@ sub check_allowed_area($){
 # Return a tracklist whith a track for each chek_area
 sub draw_check_areas(){
     return [] unless $draw_check_areas;
-    my $new_tracks = [];
+    my $new_tracks={tracks=>[]};
     for my $area ( @{$areas_allowed_squares} ) {
 	my $new_track = [];
 	if (ref($area) eq "HASH" ) {	    
@@ -873,6 +877,17 @@ sub draw_check_areas(){
 		next unless ($elem->{lat} > -90) &&  ($elem->{lat} < 90);
 		next unless ($elem->{lon} > -180) &&  ($elem->{lon} < 180);
 		push(@{$new_track},$elem);
+		if ( ! ( $angel % 10 ) ) {
+		    my $dir = 1.3;
+		    $dir = 0.7 if $area->{block};
+		    my $lat1 = $lat+sin($angel*2*pi/360)*$r*$dir;
+		    my $lon1 = $lon+cos($angel*2*pi/360)*$r*$dir;
+		    next unless ($lat1 > -90) &&  ($lat1 < 90);
+		    next unless ($lon1 > -180) &&  ($lon1 < 180);
+
+		    push(@{$new_track},{lat=> $lat1,lon=>$lon1});
+		    push(@{$new_track},$elem);	    
+		}
 	    }
 	} else {
 	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
@@ -884,7 +899,7 @@ sub draw_check_areas(){
 	    $elem->{lat} = $min_lat;    push(@{$new_track},$elem);
 	    $elem->{lon} = $min_lon;    push(@{$new_track},$elem);
 	}
-	push(@{$new_tracks},$new_track);
+	push(@{$new_tracks->{tracks}},$new_track);
     }
     return $new_tracks;
 }
@@ -894,11 +909,11 @@ sub draw_check_areas(){
 sub enrich_data($$){
     my $tracks      = shift; # reference to tracks list
     my $comment     = shift;
-    my $new_tracks = [];
+    my $new_tracks={tracks=>[]};
     my $deleted_points=0;
 
     my $track_number=0;
-    for my $track ( @{$tracks} ) {
+    for my $track ( @{$tracks->{tracks}} ) {
 	my $prev_elem=0;
 	my $min_dist=999999999999999;
 	my $max_dist=0;
@@ -967,7 +982,7 @@ sub enrich_data($$){
 		if (  $split_track ne '' ) {
 		    my $num_elem=scalar(@{$new_track});
 		    if ( $num_elem  > 1) {
-			push(@{$new_tracks},$new_track);
+			push(@{$new_tracks->{tracks}},$new_track);
 			print "--------------- Splitting" if $debug;
 		    } else {
 			print "--------------- Dropping" if $debug;
@@ -986,7 +1001,7 @@ sub enrich_data($$){
 
 	my $num_elm_in_track = scalar(@{$new_track})||0;
 	if ( $num_elm_in_track > 3 ) {
-	    push(@{$new_tracks},$new_track);
+	    push(@{$new_tracks->{tracks}},$new_track);
 	} else {
 	    $deleted_points += $num_elm_in_track;
 	}
@@ -1004,7 +1019,7 @@ sub enrich_data($$){
 	printf "	Deleted Points: $deleted_points\n"
     }
     #print Dumper(\$new_tracks);
-    @{$tracks}=@{$new_tracks};
+    $tracks=$new_tracks;
 }
 
 # ------------------------------------------------------------------
@@ -1017,7 +1032,7 @@ sub count_data($){
     my $count_tracks=0;
     my $count_points=0;
 
-    for my $track ( @{$tracks} ) {
+    for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	for my $elem ( @{$track} ) {
 	    $count_points++;
@@ -1026,7 +1041,7 @@ sub count_data($){
     }
 
     my $used_time = time()-$start_time;
-    if ( $debug || ($used_time >5 )) {
+    if ( $debug>10 || ($used_time >5 )) {
 	printf "Counted ( $count_tracks Tracks,$count_points Points)";
 	Utils::print_time($start_time);
     }
@@ -1044,12 +1059,12 @@ sub filter_data_by_area($){
 
     my $start_time=time();
 
-    my $new_tracks = [];
+    my $new_tracks={tracks=>[]};
 
     my $good_points=0;
     my $deleted_points=0;
     my $good_tracks=0;
-    for my $track ( @{$tracks} ) {
+    for my $track ( @{$tracks->{tracks}} ) {
 	my $new_track = [];
 	for my $elem ( @{$track} ) {
 
@@ -1058,7 +1073,7 @@ sub filter_data_by_area($){
 	    if ( $skip_point ) {
 		my $num_elem=scalar(@{$new_track});
 		if ( $num_elem ) {
-		    push(@{$new_tracks},$new_track);
+		    push(@{$new_tracks->{tracks}},$new_track);
 		    $good_tracks++;
 		}
 		$new_track=[];
@@ -1070,7 +1085,7 @@ sub filter_data_by_area($){
 	}
 	my $num_elem=scalar(@{$new_track});
 	if ( $num_elem ) {
-	    push(@{$new_tracks},$new_track);
+	    push(@{$new_tracks->{tracks}},$new_track);
 	    $good_tracks++;
 	}
     }
@@ -1081,8 +1096,7 @@ sub filter_data_by_area($){
     print "deleted_points:$deleted_points \n"	
 	if $debug>10;
 
-
-    @{$tracks}=@{$new_tracks};
+    return $new_tracks;
 }
 
 
@@ -1096,12 +1110,12 @@ sub filter_data_reduce_points($){
     return unless $use_reduce_filter;
 
     my $start_time=time();
-    my $new_tracks = [];
+    my $new_tracks={tracks=>[]};
 
     my $good_points=0;
     my $deleted_points=0;
     my $good_tracks=0;
-    for my $track ( @{$tracks} ) {
+    for my $track ( @{$tracks->{tracks}} ) {
 	my $new_track = [];
 	my $last_angle         = 999999999;
 	my $last_elem = undef;
@@ -1113,19 +1127,24 @@ sub filter_data_reduce_points($){
 	    my $elem1 = $track->[$i-1];
 	    my $elem2 = $track->[$i];
 	    my $dist_0_2 = Geometry::distance_point_point_Km($elem0,$elem2);
+
+	    # Max Distance between 2 points in Track
 	    if ( $dist_0_2 > .5 ) { # max .5 km distanz
 		print "Elem0 und Elem2 have $dist_0_2 Km Distance, which would be too much\n"
 		    if $debug >10;
 	    } else {
+		# Distance between line of line(p0 and p2) to p1 
 		my $dist = Geometry::distance_line_point_Km($elem0->{lat},$elem0->{lon},
 							 $elem2->{lat},$elem2->{lon},
 							 $elem1->{lat},$elem1->{lon}
 							 );
-		$skip_point =  1 if $dist < 0.001;
+		$skip_point =  1 if $dist < 0.001; # 1 meter
 		print "Elem $i is $dist m away from line\n"
 		    if $debug >10;
 	    }
+
 	    if ( $skip_point ) {
+		$deleted_points++;
 		print "Delete Element $i\n"
 		    if $debug >10;
 	    } else {
@@ -1134,15 +1153,19 @@ sub filter_data_reduce_points($){
 	    }
 	}
 	push(@{$new_track},$track->[-1]);
+
 	my $num_elem=scalar(@{$new_track});
 	if ( $num_elem ) {
-	    push(@{$new_tracks},$new_track);
+	    push(@{$new_tracks->{tracks}},$new_track);
 	    $good_tracks++;
 	}
     }
-    print "Filter to reduce number of points: Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ";
-    Utils::print_time($start_time);
-    @{$tracks}=@{$new_tracks};
+    if ( $verbose > 1 ) {
+	print "Filter to reduce number of points: ".
+	    "Good Tracks: $good_tracks, GoodPoints: $good_points, deleted_points:$deleted_points ";
+	Utils::print_time($start_time);
+    }
+    return $new_tracks;
 }
 
 # ------------------------------------------------------------------
@@ -1151,8 +1174,10 @@ sub add_tracks($$){
     my $dst_tracks      = shift; # reference to tracks list
     my $src_tracks      = shift; # reference to tracks list
 
-    for my $track ( @{$src_tracks} ) {
-	push(@{$dst_tracks},$track);
+    $dst_tracks ||= { tracks => [] };
+    for my $track ( @{$src_tracks->{tracks}} ) {
+	next unless $track;
+	push(@{$dst_tracks->{tracks}},$track);
     }
 }
 
@@ -1187,7 +1212,7 @@ sub Tracks2osm($$){
     my $element_count=0;
     my $count_valid_points=0;
 
-    for my $track ( @{$tracks} ) {
+    for my $track ( @{$tracks->{tracks}} ) {
 	for my $elem ( @{$track} ) {
 	    my $skip_point=0;
 	    my $seg_id=0;
@@ -1323,7 +1348,7 @@ sub write_osm_file($) { # Write an osm File
 
     my $start_time=time();
 
-    print("Writing OSM File $file_name\n") if $verbose || $debug;
+    print("Writing OSM File $file_name\n") if $verbose >1 || $debug>1;
 
     my $fh = IO::File->new(">$file_name");
     print $fh "<?xml version=\"1.0\"?>\n";
@@ -1383,7 +1408,7 @@ sub write_osm_file($) { # Write an osm File
     $fh->close();
 
     if ( $verbose) {
-	printf "Wrote OSM File";
+	printf "Wrote OSM File $file_name";
 	Utils::print_time($start_time);
     }
 
@@ -1408,10 +1433,10 @@ package main;
 # *****************************************************************************
 sub convert_Data(){
 
-    my $filename = "/home/kismet/log/gps-Tweety/gps-14.5.2004.txt-ACTIVE_LOG_015.gps";
-    my $all_tracks =[];
-    my $single_file=( @ARGV ==1 );
-    my $start_time=time();
+    my $filename    = "/home/kismet/log/gps-Tweety/gps-14.5.2004.txt-ACTIVE_LOG_015.gps";
+    my $all_tracks  = { tracks => []};
+    my $single_file = ( @ARGV ==1 );
+    my $start_time  = time();
 
     my ($track_count,$point_count);
 
@@ -1427,15 +1452,15 @@ sub convert_Data(){
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
 	if ( $filename =~ m/-converted.gpx$/ ) {
-	    print "$filename: Skipping for read\n";
+	    print "$filename: Skipping for read. These are my own files.\n";
 	    next;
 	}
 	if ( $filename =~ m/00__combination.gpx$/ ) {
-	    print "$filename: Skipping for read\n";
+	    print "$filename: Skipping for read. These are my own files.\n";
 	    next;
 	}
 	if ( $filename =~ m/00__check_areas.gpx$/ ) {
-	    print "$filename: Skipping for read\n";
+	    print "$filename: Skipping for read. These are my own files.\n";
 	    next;
 	}
 
@@ -1456,16 +1481,21 @@ sub convert_Data(){
 	    $new_tracks = NMEA::read_file($filename);
 	} elsif ( $filename =~ m/\.sav$/ ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
+	} else {
+	    warn "$filename: !!! Skipping because it's an unknown Filetype for reading\n";
+	    next;
 	}
 	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
 	    printf "$filename: Read %5d Points in %d Tracks\n",$point_read_count,$track_read_count;
 	}
 
-	GPS::filter_data_by_area($new_tracks);
-	if ( $verbose || $debug) {
-	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    printf "$filename: Area Filter to %5d Points in %d Tracks\n",$point_count,$track_count;
+	if ( $use_area_limit ) {
+	    $new_tracks = GPS::filter_data_by_area($new_tracks);
+	    if ( $verbose || $debug) {
+		($track_count,$point_count) =   GPS::count_data($new_tracks);
+		printf "$filename: Area Filter to %5d Points in %d Tracks\n",$point_count,$track_count;
+	    }
 	}
 
 	GPS::enrich_data($new_tracks,$filename);
@@ -1474,10 +1504,12 @@ sub convert_Data(){
 	    printf "$filename: enriching to %5d Points in %d Tracks\n",$point_count,$track_count;
 	}
 
-	GPS::filter_data_reduce_points($new_tracks);
-	($track_count,$point_count) =   GPS::count_data($new_tracks);
-	if ( $verbose || $debug) {
-	    printf "$filename: Data Reduce to %5d Points in %d Tracks\n",$point_count,$track_count;
+	if ( $use_reduce_filter ) {
+	    $new_tracks = GPS::filter_data_reduce_points($new_tracks);
+	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
+	    if ( $verbose || $debug) {
+		printf "$filename: Data Reduce to %5d Points in %d Tracks\n",$point_count,$track_count;
+	    }
 	}
 
 
@@ -1505,11 +1537,17 @@ sub convert_Data(){
 	    $point_count,$point_read_count,$track_count,$track_read_count,$filename;
 
 	}
+	if ( $verbose ) {
+	    print "\n";
+	}
+	if ( $debug) {
+	    print "\n";
+	}
     }
 
 
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
-    printf "Summary:  %5d Points in %d Tracks after enriching\n",$point_count,$track_count;
+    printf "Summary:  %5d Points in %d Tracks after filtering\n",$point_count,$track_count;
 
     if ($track_count && $point_count) {
 	OSM::write_osm_file("00__combination.osm")
@@ -1524,7 +1562,7 @@ sub convert_Data(){
      }
 
     if ( $verbose) {
-	printf "Converting $count  OSM Files";
+	printf "Converting $count Files";
 	Utils::print_time($start_time);
     }
 }

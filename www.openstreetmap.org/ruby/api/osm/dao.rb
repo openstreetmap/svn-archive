@@ -1037,14 +1037,23 @@ module OSM
     def delete_multi(multi_id, user_id, type=:way)
       begin
         dbh = get_connection
+        @@log.log('1')
         multi = get_multi(multi_id, type)
 
         if multi
+
+        @@log.log('2')
           dbh.query('set @now = NOW()')
+        @@log.log('3')
           dbh.query("insert into #{type}s (id, user_id, timestamp, visible) values (#{q(multi_id.to_s)}, #{q(user_id.to_s)},@now,0)")
-          dbh.query("update current_#{type}s set user_id = #{q(user_id.to_s)}, timstamp = @now, visible = 0 where id = #{q(multi_id.to_s)}")
+        @@log.log('4')
+          dbh.query("update current_#{type}s set user_id = #{q(user_id.to_s)}, timestamp = @now, visible = 0 where id = #{q(multi_id.to_s)}")
+        @@log.log('5')
           dbh.query("delete from current_#{type}_segments where id = #{q(multi_id.to_s)}")
+        @@log.log('6')
           dbh.query("delete from current_#{type}_tags where id = #{q(multi_id.to_s)}")
+        @@log.log('7')
+          return true
         end
       rescue MysqlError =>ex
         mysql_error(ex)

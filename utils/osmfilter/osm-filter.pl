@@ -20,6 +20,14 @@
 #   - 00__check_areas.gpx with al the area filters 
 #
 # Joerg Ostertag <openstreetmap@ostertag.name>
+# TODO:
+#   eliminate duplicate waypoints
+#   area filter fo waypoints
+#   keep name of Tracks
+#   eliminate duplicate Tracks
+#   cut out part of tracks which cover the same road
+#   make limits (max_speed, max_line_dist, ...) configurable
+#   write time linke: 2006-07-11T10:02:07Z
 
 use strict;
 use warnings;
@@ -309,7 +317,7 @@ sub read_gps_file($) {
 	delete $elem->{'noise'};
 	$elem->{'speed'} = delete($elem->{'spd'}) * 1;
 	if ( $debug > 10 ) {
-	    print Dumper(\$elem);
+	    print "read element: ".Dumper(\$elem);
 	}
 	push(@{$track},$elem);
     };
@@ -444,6 +452,17 @@ sub read_file($) {
 	$elem->{alt} = $alt if defined $alt;
 	$elem->{time} = $time;
 
+	# More interesting Info might be:
+	# <course>52.000000</course>
+	# <ele>0.000000</ele>
+	# <fix>2d</fix>
+	# <fix>3d</fix>
+	# <hdop>-0.000000</hdop>
+	# <sat>4</sat>
+	# <speed>0.000000</speed>
+	# <time>2035-12-03T05:42:23Z</time>
+	# <trkpt lat="48.177040000" lon="11.759786667">
+	
     	push(@{$new_tracks->{tracks}},$elem);
 	bless($elem,"NMEA::gps-point");
 	$elem ={};
@@ -502,14 +521,43 @@ sub read_gpx_file($) {
 	Utils::print_time($start_time);
     }
 
-    my $new_tracks={tracks=>[]};
-    $content = $content->[0];
+    my $new_tracks={tracks=>[],wpt=>[]};
     #print Dumper(keys %{$content});
     #print Dumper(\$content);
+    $content = $content->[0];
     $content = $content->{Kids};
 
 
 
+    # Extract Waypoints
+    for my $elem ( @{$content} ) {
+	next unless ref($elem) eq "GPX::wpt";
+	my $wpt_elem = $elem->{Kids};
+	my $new_wpt={};
+	$new_wpt->{lat} = $elem->{lat};
+	$new_wpt->{lon} = $elem->{lon};
+	for my $elem ( @{$wpt_elem} ) {
+	    my $found=0;
+	    for my $type ( qw ( name ele
+				cmt desc
+				sym
+				course  fix hdop sat speed time )) {
+		if ( ref($elem) eq "GPX::$type" ){
+		    $new_wpt->{$type} = $elem->{Kids}->[0]->{Text};
+		    $found++;
+		}
+	    }
+	    if ( $found ){
+	    } elsif (ref($elem) eq 'GPX::Characters') {
+	    } else {
+		print "unknown tag in Waypoint:".Dumper(\$elem);
+	    }
+	}
+	#print Dumper(\$new_wpt);
+	push(@{$new_tracks->{wpt}},$new_wpt);
+    }
+    
+    # Extract Tracks
     for my $elem ( @{$content} ) {
 	next unless ref($elem) eq "GPX::trk";
 	#	    GPX::trkseg
@@ -569,13 +617,32 @@ sub write_gpx_file($$) { # Write an gpx File
     print("Writing GPS File $file_name\n") if $verbose >1 || $debug >1;
 
     my $fh = IO::File->new(">$file_name");
+    print $fh "<?xml version=\"1.0\"?>\n";
     print $fh "<gpx \n";
     print $fh "    version=\"1.0\"\n";
     print $fh "    creator=\"osm-filter Converter\"\n";
     print $fh "    xmlns=\"http://www.ostertag.name\"\n";
     print $fh "    >\n";
+    # <bounds minlat="47.855922617" minlon ="8.440864999" maxlat="48.424462667" maxlon="12.829756737" />
+    # <time>2006-07-11T08:01:39Z</time>
+
     my $track_id=0;
     my $point_count=0;
+    for my $wpt ( @{$tracks->{wpt}} ) {
+	my $lat  = $wpt->{lat};
+	my $lon  = $wpt->{lon};
+	print $fh " <wpt lat=\"$lat\" lon=\"$lon\">\n";
+	#print $fh "     <name>$wpt->{name}</name>\n";
+	for my $type ( qw ( name ele
+			    cmt desc
+			    sym
+			    course  fix hdop sat speed time )) {
+	    if( defined $wpt->{$type} ) {
+		print $fh "     <$type>$wpt->{$type}</$type>\n";
+	    }
+	};
+	print $fh " </wpt>\n";
+    }
     for my $track ( @{$tracks->{tracks}} ) {
 	$track_id++;
 	print $fh "\n";
@@ -826,7 +893,7 @@ sub check_allowed_area($){
     
     for my $area ( @{$areas_allowed_squares} ) {
 	if (ref($area) eq "HASH" ) {	    
-	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive way.txt Waypoints
+	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive ~/.gpsdrive/way.txt Waypoints
 		my $proximity;
 		($area->{lat},$area->{lon},$proximity) = GPSDrive::get_waypoint($area->{wp});
 		$area->{proximity} ||= $proximity;
@@ -909,7 +976,14 @@ sub draw_check_areas(){
 sub enrich_data($$){
     my $tracks      = shift; # reference to tracks list
     my $comment     = shift;
-    my $new_tracks={tracks=>[]};
+    my $new_tracks= { tracks => [],wpt=>[] };
+
+    # Keep WPT
+    for my $elem ( @{$tracks->{wpt}} ) {
+	next unless $elem;
+	push(@{$new_tracks->{wpt}},$elem);
+    }
+
     my $deleted_points=0;
 
     my $track_number=0;
@@ -1059,7 +1133,14 @@ sub filter_data_by_area($){
 
     my $start_time=time();
 
-    my $new_tracks={tracks=>[]};
+    my $new_tracks= { tracks => [],wpt=>[] };
+
+    # Keep WPT
+    for my $elem ( @{$tracks->{wpt}} ) {
+	next unless $elem;
+	# TODO: if (filter)
+	push(@{$new_tracks->{wpt}},$elem);
+    }
 
     my $good_points=0;
     my $deleted_points=0;
@@ -1110,7 +1191,13 @@ sub filter_data_reduce_points($){
     return unless $use_reduce_filter;
 
     my $start_time=time();
-    my $new_tracks={tracks=>[]};
+    my $new_tracks= { tracks => [],wpt=>[] };
+
+    # Keep WPT
+    for my $elem ( @{$tracks->{wpt}} ) {
+	next unless $elem;
+	push(@{$new_tracks->{wpt}},$elem);
+    }
 
     my $good_points=0;
     my $deleted_points=0;
@@ -1174,11 +1261,60 @@ sub add_tracks($$){
     my $dst_tracks      = shift; # reference to tracks list
     my $src_tracks      = shift; # reference to tracks list
 
-    $dst_tracks ||= { tracks => [] };
-    for my $track ( @{$src_tracks->{tracks}} ) {
-	next unless $track;
-	push(@{$dst_tracks->{tracks}},$track);
+    $dst_tracks ||= { tracks => [],wpt=>[] };
+    for my $elem ( @{$src_tracks->{wpt}} ) {
+	next unless $elem;
+	push(@{$dst_tracks->{wpt}},$elem);
     }
+    for my $elem ( @{$src_tracks->{tracks}} ) {
+	next unless $elem;
+	push(@{$dst_tracks->{tracks}},$elem);
+    }
+}
+
+
+# ------------------------------------------------------------------
+# remove Waypoints which are duplicate
+sub filter_duplicate_wpt($){
+    my $tracks      = shift; # reference to tracks list
+
+    my @new_wpt;
+    my %wpt_by_name;
+    sub compare_wpt($$){
+	my $wpt1 = shift;
+	my $wpt2 = shift;
+	# later we do a full compare
+	for my $type ( qw ( name lat lon ele )) {
+	    return 0
+		if $wpt1->{$type} && $wpt2->{$type} && $wpt1->{$type} ne $wpt2->{$type} ;
+	}
+	return 1;
+    }
+
+    for my $elem ( @{$tracks->{wpt}} ) {
+	my $name = $elem->{name};
+	#print Dumper(\$elem);
+	if ( defined $wpt_by_name{$name}) {
+	    my $found =0;
+	    for my $wpt1( @{$wpt_by_name{$name}} ) {
+		if ( compare_wpt( $elem,$wpt1 ) ) {
+		    $found=1;
+		    last;
+		}
+	    }
+	    if ( $found ) {
+		print "wpt($name) is duplicate ignoring\n"
+		    if $verbose >5 || $debug;
+		next;
+	    }
+	    push(@{$wpt_by_name{$name}}, $elem);
+	} else {
+	    $wpt_by_name{$name} = [ $elem ];
+	}
+	push(@new_wpt,$elem);
+    }
+
+    $tracks->{wpt}=\@new_wpt;
 }
 
 
@@ -1544,6 +1680,8 @@ sub convert_Data(){
 	    print "\n";
 	}
     }
+
+    GPS::filter_duplicate_wpt($all_tracks);
 
 
     ($track_count,$point_count) =   GPS::count_data($all_tracks);

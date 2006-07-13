@@ -307,7 +307,8 @@ sub read_gps_file($) {
 	next unless $elem->{'bssid'} eq 'GP:SD:TR:AC:KL:OG';
 	delete $elem->{Kids};
 	if ( defined($elem->{"time-sec"}) && defined($elem->{"time-usec"}) ) {
-	    $elem->{time} = $elem->{"time-sec"}.".".$elem->{"time-usec"};
+	    $elem->{time} = $elem->{"time-sec"}+($elem->{"time-usec"}/1000000);
+	    #print "$elem->{time} = $elem->{'time-sec'}  $elem->{'time-usec'}\n";
 	}
 	delete $elem->{'time-sec'};
 	delete $elem->{'time-usec'};
@@ -367,14 +368,15 @@ sub read_file($) {
 
     my $start_time=time();
 
-    my $new_tracks={tracks=>[]};
+    my $new_tracks={tracks=>[],wpt=>[]};
     print("Reading $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     my $fh = File::data_open($file_name);
-    return {tracks=>[]} unless $fh;
+    return {tracks=>[],wpt=>[]} unless $fh;
     my $elem ={};
     my $last_date='';
+    my $new_track=[];
     while ( my $line = $fh->getline() ) {
 	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
 	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
@@ -463,10 +465,11 @@ sub read_file($) {
 	# <time>2035-12-03T05:42:23Z</time>
 	# <trkpt lat="48.177040000" lon="11.759786667">
 	
-    	push(@{$new_tracks->{tracks}},$elem);
+    	push(@{$new_track},$elem);
 	bless($elem,"NMEA::gps-point");
 	$elem ={};
     }
+    push(@{$new_tracks->{tracks}},$new_track);
     if ( $verbose) {
 	printf "Read and parsed $file_name";
 	Utils::print_time($start_time);
@@ -482,6 +485,7 @@ use Date::Parse;
 use Data::Dumper;
 use Date::Parse;
 use Date::Manip;
+use POSIX qw(strftime);
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from GPX - File
@@ -637,8 +641,9 @@ sub write_gpx_file($$) { # Write an gpx File
 			    cmt desc
 			    sym
 			    course  fix hdop sat speed time )) {
-	    if( defined $wpt->{$type} ) {
-		print $fh "     <$type>$wpt->{$type}</$type>\n";
+	    my $value = $wpt->{$type};
+	    if( defined $value ) {
+		print $fh "     <$type>$value</$type>\n";
 	    }
 	};
 	print $fh " </wpt>\n";
@@ -659,23 +664,34 @@ sub write_gpx_file($$) { # Write an gpx File
 	    if( defined $elem->{ele} ) {
 		print $fh "       <ele>$elem->{ele}</ele>\n";
 	    };
+	    # --- time
 	    if ( defined ( $elem->{time} ) ) {
-		$elem->{time_sec}=int($elem->{time});
-		$elem->{time_usec}=$elem->{time}-$elem->{time_sec};
-		$elem->{time_usec} =~s/^0\.//;
-		if ( $elem->{time_sec} && $elem->{time_sec} < 3600*30 ) {
-		    print "---------------- time_sec: $elem->{time_sec}\n";
+		#print Dumper(\$elem);
+
+		##################
+		my ($time_sec,$time_usec)=( $elem->{time} =~ m/(\d+)(\.\d*)?/);
+		if ( defined($time_usec) ) {
+		    $time_usec =~ s/^\.//;
 		}
-		my $time = UnixDate("epoch ".$elem->{time_sec},"%m/%d/%Y %H:%M:%S");
-		$time .= ".$elem->{time_usec}" if $elem->{time_usec};
-		#$time = "2004-11-12T15:04:40Z";
+		if ( $time_sec && $time_sec < 3600*30 ) {
+		    $time_usec =~s/^\.//;
+		    print "---------------- time_sec: $time_sec\n";
+		}
+		my $time = strftime("%FT%H:%M:%SZ", localtime($time_sec));
+		#UnixDate("epoch ".$time_sec,"%m/%d/%Y %H:%M:%S");
+		$time .= ".$time_usec" if $time_usec;
 		if ( $debug >20) {
 		    print "elem-time: $elem->{time} UnixDate: $time\n";
 		}
 		print $fh "       <time>".$time."</time>\n";
 	    }
-	    if( defined $elem->{fix} ) {
-		print $fh "       <fix>$elem->{fix}</fix>\n";
+	    # --- other attributes
+	    for my $type ( qw ( name ele
+				cmt course  fix hdop sat speed  )) {
+		my $value = $elem->{$type};
+		if( defined $value ) {
+		    print $fh "       <$type>$value</$type>\n";
+		}
 	    };
 	    print $fh "     </trkpt>\n";
 	}
@@ -760,29 +776,39 @@ sub read_gpsdrive_track_file($) {
 
     my $start_time=time();
 
-    my $new_tracks = {tracsk=>[]};
+    my $new_tracks = { tracks=>[],wpt=>[] };
     print("Reading $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     my $fh = File::data_open($file_name);
     return $new_tracks  unless $fh;
+
+    my $new_track = [];
     while ( my $line = $fh->getline() ) {
 	chomp $line;
 	#print "$line\n";
 	$line =~ s/^\s*//;
 	#my ($lat,$lon,$alt,$time) = ($line =~ m/\s*([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+(.*)/);
 	my ($lat,$lon,$alt,$time) = split(/\s+/,$line,4);
-	print "($lat,$lon,$alt,$time)\n" if $debug;
+	print "(lat: $lat,lon: $lon, alt:$alt, time: $time)\n" if $debug>1;
+	if ( ($lat>1000) || ( $lon>1000 )) { # new track
+	    if ( scalar(@{$new_track}) >0 ) {
+		push(@{$new_tracks->{tracks}},$new_track);
+	    }
+	    $new_track = [];
+	    next;
+	}
+
 	my $elem = {
 	    lat => $lat, 
 	    lon => $lon, 
 	    alt => $alt, 
 	    time => str2time($time),
-	    bssid => 'GP:SD:TR:AC:KL:OG',
 	};
-	push(@{$new_tracks->{tracks}},$elem);
-	bless($elem,"Kismet::gps-point");
+	push(@{$new_track},$elem);
+	bless($elem,"GPSDrive::gps-point");
     }
+    push(@{$new_tracks->{tracks}},$new_track);
     if ( $verbose) {
 	printf "Read and parsed $file_name";
 	Utils::print_time($start_time);
@@ -1080,7 +1106,7 @@ sub enrich_data($$){
 	    $deleted_points += $num_elm_in_track;
 	}
 	
-	if ( $debug || $verbose >1 ) {
+	if ( $debug>1 || $verbose >1 ) {
 	    printf "Enrich Data: Track $track_number from $comment\n";
 	    printf "	Distance: %8.2f m .. %8.2f Km \n", $min_dist*1000,$max_dist;
 	    printf "	Elements: ".(scalar(@{$track}))."\n",
@@ -1710,8 +1736,8 @@ sub convert_Data(){
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
-	     'debug'               => \$debug,      
-	     'd'                   => \$debug,      
+	     'debug+'               => \$debug,      
+	     'd+'                  => \$debug,      
 	     'verbose+'            => \$verbose,
 	     'v+'                  => \$verbose,
 	     'no-mirror'           => \$no_mirror,

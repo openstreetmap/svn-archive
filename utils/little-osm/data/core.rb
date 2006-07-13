@@ -50,7 +50,7 @@ class Way < OsmPrimitive
   
   def Way.to_uid id; (id<<3) + 2 end
   def bbox
-    bbox = [Float::MAX, Float::MAX, Float::MIN, Float::MIN]
+    bbox = [Float::MAX, Float::MAX, -Float::MAX, -Float::MAX]
     segment.each do |s|
       sb = s.bbox
       bbox[0] = sb[0] if sb[0] < bbox[0]

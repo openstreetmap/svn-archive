@@ -1,4 +1,3 @@
-$: << '..'
 require 'data/core'
 require 'test/unit'
 require 'test/unit/assertions'
@@ -53,10 +52,12 @@ class OsmDataTest < Test::Unit::TestCase
     w = Way.new [], 123
     assert_equal 123, w.to_i
     assert_equal 0, w.segment.size
-    w = Way.new [Segment.new(Node.new(42,2), Node.new(3,4)), Segment.new(Node.new(3,4), Node.new(5,6))]
+    w = Way.new [Segment.new(Node.new(42,-2), Node.new(3,4)), Segment.new(Node.new(3,4), Node.new(5,6))]
     assert_equal 2, w.segment.size
     assert_equal 3, w.segment[0].to.lat
-    assert_equal [3,2,42,6], w.bbox
+    assert_equal [3,-2,42,6], w.bbox
+    w = Way.new [Segment.new(Node.new(-1,-1), Node.new(-1,-1))]
+    assert_equal [-1,-1,-1,-1], w.bbox
   end
 end
 

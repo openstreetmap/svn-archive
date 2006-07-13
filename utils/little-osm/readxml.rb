@@ -5,7 +5,13 @@ require 'rexml/document'
 require 'sqlite3'
 require 'time'
 
-abort Dir.pwd+"/planet.osm not found" unless File.exist? 'planet.osm'
+planet_osm = Dir.pwd+"/planet.osm"
+unless File.exist? planet_osm
+  candidates = Dir.glob "planet*.osm"
+  planet_osm = candidates[0] unless candidates.empty?
+end
+
+abort "#{Dir.pwd}/#{planet_osm} not found." unless File.exist? planet_osm
 
 # cleanup database
 File.delete 'planet.db' if File.exist? 'planet.db'
@@ -49,6 +55,7 @@ end
 
 def write_sql data
   tags = data.tags ? data.tags.to_a.join("\n") : "null"
+  tags.gsub!(/\"/, '')
   time = data.timestamp ? '"'+data.timestamp.xmlschema+'"' : "null"
   case data.class.name
   when "Node"
@@ -60,7 +67,9 @@ def write_sql data
   	reference = data.segment.collect {|s| Segment.to_uid(s).to_s}.join ','
   	data.load_references
   end
-  $db.execute %Q{insert into data values (#{data.to_uid}, "#{tags}", #{time}, "#{reference}", #{data.bbox.join(',')});}
+  sql = %Q{insert into data values (#{data.to_uid}, "#{tags}", #{time}, "#{reference}", #{data.bbox.join(',')});}
+  $tmpsql << sql << "\n"
+  $db.execute sql
 end
 
 class XmlReader
@@ -90,5 +99,4 @@ class XmlReader
   end
 end
 
-REXML::Document.parse_stream File.new('planet.osm'), XmlReader.new
 $db.execute 'COMMIT'

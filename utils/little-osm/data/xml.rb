@@ -5,7 +5,7 @@ require 'time'
 class OsmPrimitive
   def to_xml
     e = REXML::Element.new self.class.name.downcase
-    e.add_attributes 'id'=>@id, 'timestamp'=>(@timestamp.strftime("%Y-%m-%d %H:%M:%S") if @timestamp)
+    e.add_attributes 'id'=>@id, 'timestamp'=>(@timestamp.xmlschema if @timestamp)
     @tags.each do |key, value|
       tag = REXML::Element.new 'tag'
       tag.add_attributes 'k' => key, 'v' => value

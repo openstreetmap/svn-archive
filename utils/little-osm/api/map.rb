@@ -1,11 +1,8 @@
-#!/usr/bin/ruby
-
-$: << '../..'
-
 require 'data/core'
 require 'data/xml'
 require 'sqlite3'
-require 'cgi'
+
+require 'tools'
 
 def to_id s
   s.to_i >> 3
@@ -24,16 +21,14 @@ def make_osm q
   end
 end
 
-$stdout.sync = true
+bbox = []
+queries = Thread.current['uri'].query.split('&').each do |x| bbox = x.scan(/[0-9,]+/)[0].split ',' if x =~ /^bbox=/ end
 
-cgi = CGI.new
-bbox = cgi['bbox'].split ','
-
-print "\r\n\r\n"
-puts %Q{<?xml version="1.0"?>\n<osm version="0.3" generator="little-osm">}
+ok
+header
 
 if bbox.size == 4
-  db = SQLite3::Database.new '../../planet.db'
+  db = SQLite3::Database.new 'planet.db'
   db.execute "select * from data where minlat < #{bbox[3]} and minlon < #{bbox[2]} and maxlat > #{bbox[1]} and maxlon > #{bbox[0]}" do |line|
     make_osm(line).to_xml.write
     puts

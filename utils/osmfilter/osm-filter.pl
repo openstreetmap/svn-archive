@@ -377,6 +377,8 @@ sub read_file($) {
     my $elem ={};
     my $last_date='';
     my $new_track=[];
+    my ($pdop,$hdop,$vdop);
+    my ($sat);
     while ( my $line = $fh->getline() ) {
 	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
 	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
@@ -385,7 +387,8 @@ sub read_file($) {
 	$line =~ s/\s*$//;
 	($type) = split( /,/,$line,2);
 	$type =~ s/^\s*\$GP//;
-	#print "$type: $line\n";
+	print "$type: $line\n"
+	    if $debug>2;
 	if ( $type eq "GGA" ) {
 	    # GGA - Global Positioning System Fix Data
 	    # Time, Position and fix related data fora GPS receiver.
@@ -409,10 +412,11 @@ sub read_file($) {
 	    #     type 1 or 9 update, null field when DGPS is not used
 	    # 14) Differential reference station ID, 0000-1023
 	    # 15) Checksum
-	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
+	    ($dummy,$time,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
 	     $dummy,$dummy,$dummy,$checksumm)
 		= split(/,/,$line);
-	    next;
+	    #print "(,$time,$status, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality,,, Alt: $alt,$alt_unit,,,,$checksumm)\n";
+
 	} elsif ( $type eq "RMC" ) {
 	    # RMC - Recommended Minimum Navigation Information
 	    #        1         2 3       4 5        6 7   8   9    10  11|
@@ -431,12 +435,65 @@ sub read_file($) {
 	    # 11) E or W
 	    # 12) Checksum
 	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$dummy,$date,$mag_variation,$checksumm)
-		= split(/,/,$line);
+		= split(/,/,$line);    
+	} elsif ( $type eq "GSA" ) {
+	    # GSA - GPS DOP and active satellites
+	    #        1 2 3                        14 15  16  17  18
+	    #        | | |                         |  |   |   |   |
+	    # $--GSA,a,a,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x.x,x.x,x.x*hh<CR><LF>
+	    # Field Number: 
+	    #  1) Selection mode
+	    #  2) Mode
+	    #  3) ID of 1st satellite used for fix
+	    #  ...
+	    #  14) ID of 12th satellite used for fix
+	    #  15) PDOP in meters
+	    #  16) HDOP in meters
+	    #  17) VDOP in meters
+	    #  18) checksum 
+	    ($dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,
+	     $dummy,$dummy,$dummy,$dummy,$pdop,$hdop,$vdop,$checksumm)
+		= split(/,/,$line);    
+	    next;
+	} elsif ( $type eq "GSV" ) {
+	    # GSV - Satellites in view
+	    #
+	    #        1 2 3 4 5 6 7     n
+	    #        | | | | | | |     |
+	    # $--GSV,x,x,x,x,x,x,x,...*hh<CR><LF>
+	    # Field Number: 
+	    #  1) total number of messages
+	    #  2) message number
+	    #  3) satellites in view
+	    #  4) satellite number
+	    #  5) elevation in degrees
+	    #  6) azimuth in degrees to true
+	    #  7) SNR in dB
+	    #  more satellite infos like 4)-7)
+	    #  n) checksum
+	    my ($msg_anz,$msg_no,$rest);
+	    ($dummy,$msg_anz,$msg_no,$dummy,$rest) = split(/,/,$line,5);
+	    $msg_anz = 20 if $msg_anz>20;
+	    $sat={} if $msg_no == 1;
+	    #print "# of Messages: $msg_anz; rest: '$rest'\n";
+	    while ( defined $rest && $rest =~ m/,/) {
+		#print "# $count: $rest\n";
+		my ($sat_no,$sat_ele,$sat_azi,$sat_snr);
+		($sat_no,$sat_ele,$sat_azi,$sat_snr,$rest) = split(/,/,$rest,5);
+		#print "($sat_no,$sat_ele,$sat_azi,$sat_snr)\n";
+		last unless defined ($sat_no) && defined($sat_ele) && defined($sat_azi) && defined($sat_snr);
+		$sat->{$sat_no}->{ele} = $sat_ele;
+		$sat->{$sat_no}->{azi} = $sat_azi;
+		$sat->{$sat_no}->{snr} = $sat_snr;
+	    }
+	    #print Dumper(\$sat);
+	    next;
 	} else {
 	    print "Ignore Line $type: $line\n"
-		if $debug>10;
+		if $debug>2;
 	    next;
 	};
+	next unless ($lat ne "" )&& ($lon ne "");
 	$lat /=100;
 	$lon /=100;
 	$lat = -$lat if $lat_v eq "S";
@@ -445,8 +502,11 @@ sub read_file($) {
 	    if $debug>10;
 
 	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
-	$date =~ s/^(..)(..)(..)/20$3-$2-$1/;
-	$date ||= $last_date;
+	if ( defined($date)) {
+	    $date =~ s/^(..)(..)(..)/20$3-$2-$1/;
+	} else {
+	    $date = $last_date;
+	}
 	$last_date=$date;
 	$time = str2time("$date ${time}");
 	$elem->{lat} = $lat;
@@ -454,6 +514,15 @@ sub read_file($) {
 	$elem->{alt} = $alt if defined $alt;
 	$elem->{time} = $time;
 
+	$elem->{pdop} = $pdop;
+	$elem->{hdop} = $hdop;
+	$elem->{vdop} = $vdop;
+
+	for my $sat_no ( keys %{$sat} ) {
+	    $elem->{"sat_${sat_no}_ele"} = $sat->{$sat_no}->{ele};
+	    $elem->{"sat_${sat_no}_azi"} = $sat->{$sat_no}->{azi};
+	    $elem->{"sat_${sat_no}_snr"} = $sat->{$sat_no}->{snr};
+	}
 	# More interesting Info might be:
 	# <course>52.000000</course>
 	# <ele>0.000000</ele>
@@ -687,7 +756,9 @@ sub write_gpx_file($$) { # Write an gpx File
 	    }
 	    # --- other attributes
 	    for my $type ( qw ( name ele
-				cmt course  fix hdop sat speed  )) {
+				cmt course  
+				fix pdop hdop vdop
+				sat speed  )) {
 		my $value = $elem->{$type};
 		if( defined $value ) {
 		    print $fh "       <$type>$value</$type>\n";
@@ -1119,7 +1190,7 @@ sub enrich_data($$){
 	printf "	Deleted Points: $deleted_points\n"
     }
     #print Dumper(\$new_tracks);
-    $tracks=$new_tracks;
+    return $new_tracks;
 }
 
 # ------------------------------------------------------------------
@@ -1660,7 +1731,7 @@ sub convert_Data(){
 	    }
 	}
 
-	GPS::enrich_data($new_tracks,$filename);
+	$new_tracks = GPS::enrich_data($new_tracks,$filename);
 	($track_count,$point_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
 	    printf "$filename: enriching to %5d Points in %d Tracks\n",$point_count,$track_count;

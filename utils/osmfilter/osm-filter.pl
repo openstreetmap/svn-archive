@@ -58,6 +58,7 @@ my $osm_ways          = {};
 my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
 my $out_osm           = 0;
+my $split_tracks      = 0;
 my $use_area_limit    = 0;
 my $use_reduce_filter = 0;
 my $draw_check_areas  = 0;
@@ -248,7 +249,7 @@ sub data_open($){
 	return undef;
     }
 
-    print "Opening $file_name" if $debug;
+    print "Opening $file_name\n" if $debug;
     my $fh;
     if ( $file_name =~ m/\.gz$/ ) {
 	$fh = IO::File->new("gzip -dc $file_name|")
@@ -1069,8 +1070,9 @@ sub draw_check_areas(){
 }
 
 # ------------------------------------------------------------------
-# Add things like speed, time, .. to the Kismet GPS Data
-sub enrich_data($$){
+# Add things like speed, time, .. to the GPS Data
+# and the split the tracks if we think it's necessary
+sub split_tracks($$){
     my $tracks      = shift; # reference to tracks list
     my $comment     = shift;
     my $new_tracks= { tracks => [],wpt=>[] };
@@ -1128,7 +1130,7 @@ sub enrich_data($$){
 		    }
 		}
 
-		# --- Check for Track Split
+		# --- Check for Track Split: time diff >10 Minutes
 		my $split_track='';
 		if ( $elem->{time_diff} > 600) { # Seconds
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
@@ -1138,11 +1140,11 @@ sub enrich_data($$){
 		    }
 		    
 		}
-		if ( $elem->{dist} > 11) { # Km
+		if ( $elem->{dist} > 11) { # Check for Track Split: 11 Km
 		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
 		}
 
-		if ( $elem->{speed} && $elem->{speed} > 200) { # Km/h
+		if ( $elem->{speed} && $elem->{speed} > 200) { # Check for Track Split: 200 Km/h
 		    $split_track .= sprintf(" Speed: %.1f Km/h ",$elem->{speed});
 		    if ( $debug >10) {
 			print "prev:".Dumper(\$prev_elem);
@@ -1731,10 +1733,12 @@ sub convert_Data(){
 	    }
 	}
 
-	$new_tracks = GPS::enrich_data($new_tracks,$filename);
-	($track_count,$point_count) =   GPS::count_data($new_tracks);
-	if ( $verbose || $debug) {
-	    printf "$filename: enriching to %5d Points in %d Tracks\n",$point_count,$track_count;
+	if ( $split_tracks ) {
+	    $new_tracks = GPS::split_tracks($new_tracks,$filename);
+	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
+	    if ( $verbose || $debug) {
+		printf "$filename: enriching/splitting to %5d Points in %d Tracks\n",$point_count,$track_count;
+	    }
 	}
 
 	if ( $use_reduce_filter ) {
@@ -1749,6 +1753,7 @@ sub convert_Data(){
 	$count ++ if $point_count && $track_count;
 
 
+	($track_count,$point_count) =   GPS::count_data($new_tracks);
 	my $osm_filename = $filename;
 	if ( $track_count > 0 ) {
 	    my $new_gpx_file = "$osm_filename-converted.gpx";
@@ -1813,6 +1818,7 @@ GetOptions (
 	     'v+'                  => \$verbose,
 	     'no-mirror'           => \$no_mirror,
 	     'out-osm'             => \$out_osm,
+	     'split-tracks'        => \$split_tracks,
 	     'limit-area'          => \$use_area_limit,
 	     'draw_check_areas'    => \$draw_check_areas,
 	     'use_reduce_filter'   => \$use_reduce_filter,
@@ -1964,6 +1970,13 @@ AND: they are not tested :-(
 
 draw the check_areas into the file 00__check_areas.gpx file 
 by adding a track with the border of each check_area 
+
+=item B<--split-tracks>
+
+Split tracks it they have gaps of more than 
+ - 10 Minutes
+ - 11Km
+ - 200Km/h
 
 =item B<--use_reduce_filter>
 

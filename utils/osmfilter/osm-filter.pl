@@ -111,6 +111,9 @@ sub max($$){
 # ------------------------------------------------------------------
 # Distance in Km between 2 geo points with lat/lon
 # Wild estimation of Earth radius 40.000Km
+# At the poles we are completely off, since we assume the 
+# lat/lon both have 40000Km radius, which is completely wrong
+# if you are not at the aequator
 sub distance_point_point_Km($$) {
     my $p1 = shift;
     my $p2 = shift;
@@ -377,18 +380,20 @@ sub read_file($) {
     return {tracks=>[],wpt=>[]} unless $fh;
     my $elem ={};
     my $last_date='';
+    my $last_time=0;
     my $new_track=[];
-    my ($pdop,$hdop,$vdop);
-    my ($sat);
+    my ($sat,$pdop,$hdop,$vdop,$sat_count);
+    my $sat_time =0;
     while ( my $line = $fh->getline() ) {
 	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
 	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
 	$alt=0;
 	chomp $line;
-	$line =~ s/\s*$//;
-	($type) = split( /,/,$line,2);
+	$line =~ s/\*(\S+)\s*$//;
+	$checksumm=$1;
+	($type,$line) = split( /,/,$line,2);
 	$type =~ s/^\s*\$GP//;
-	print "$type: $line\n"
+	print "type $type, line: $line, checksumm:$checksumm\n"
 	    if $debug>2;
 	if ( $type eq "GGA" ) {
 	    # GGA - Global Positioning System Fix Data
@@ -413,10 +418,10 @@ sub read_file($) {
 	    #     type 1 or 9 update, null field when DGPS is not used
 	    # 14) Differential reference station ID, 0000-1023
 	    # 15) Checksum
-	    ($dummy,$time,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
-	     $dummy,$dummy,$dummy,$checksumm)
+	    ($time,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
+	     $dummy,$dummy,$dummy)
 		= split(/,/,$line);
-	    #print "(,$time,$status, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality,,, Alt: $alt,$alt_unit,,,,$checksumm)\n";
+	    #print "(,$time,$status, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality,,, Alt: $alt,$alt_unit,,,,)\n";
 
 	} elsif ( $type eq "RMC" ) {
 	    # RMC - Recommended Minimum Navigation Information
@@ -435,7 +440,7 @@ sub read_file($) {
 	    # 10) Magnetic Variation, degrees
 	    # 11) E or W
 	    # 12) Checksum
-	    ($dummy,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$dummy,$date,$mag_variation,$checksumm)
+	    ($time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$dummy,$date,$mag_variation)
 		= split(/,/,$line);    
 	} elsif ( $type eq "GSA" ) {
 	    # GSA - GPS DOP and active satellites
@@ -452,8 +457,8 @@ sub read_file($) {
 	    #  16) HDOP in meters
 	    #  17) VDOP in meters
 	    #  18) checksum 
-	    ($dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,
-	     $dummy,$dummy,$dummy,$dummy,$pdop,$hdop,$vdop,$checksumm)
+	    ($dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,
+	     $dummy,$dummy,$dummy,$dummy,$pdop,$hdop,$vdop)
 		= split(/,/,$line);    
 	    next;
 	} elsif ( $type eq "GSV" ) {
@@ -473,7 +478,7 @@ sub read_file($) {
 	    #  more satellite infos like 4)-7)
 	    #  n) checksum
 	    my ($msg_anz,$msg_no,$rest);
-	    ($dummy,$msg_anz,$msg_no,$dummy,$rest) = split(/,/,$line,5);
+	    ($msg_anz,$msg_no,$sat_count,$rest) = split(/,/,$line,4);
 	    $msg_anz = 20 if $msg_anz>20;
 	    $sat={} if $msg_no == 1;
 	    #print "# of Messages: $msg_anz; rest: '$rest'\n";
@@ -487,6 +492,7 @@ sub read_file($) {
 		$sat->{$sat_no}->{azi} = $sat_azi;
 		$sat->{$sat_no}->{snr} = $sat_snr;
 	    }
+	    $sat_time = $last_time;
 	    #print Dumper(\$sat);
 	    next;
 	} else {
@@ -510,26 +516,32 @@ sub read_file($) {
 	}
 	$last_date=$date;
 	$time = str2time("$date ${time}");
+	$last_time = $time;
+
 	$elem->{lat} = $lat;
 	$elem->{lon} = $lon;
 	$elem->{alt} = $alt if defined $alt;
 	$elem->{time} = $time;
 
-	$elem->{pdop} = $pdop;
-	$elem->{hdop} = $hdop;
-	$elem->{vdop} = $vdop;
-
-	for my $sat_no ( keys %{$sat} ) {
-	    $elem->{"sat_${sat_no}_ele"} = $sat->{$sat_no}->{ele};
-	    $elem->{"sat_${sat_no}_azi"} = $sat->{$sat_no}->{azi};
-	    $elem->{"sat_${sat_no}_snr"} = $sat->{$sat_no}->{snr};
+	$elem->{pdop} = $pdop if $pdop;
+	$elem->{hdop} = $hdop if $hdop;
+	$elem->{vdop} = $vdop if $vdop;
+	
+	my $sat_time_diff = $time - $sat_time;
+	#printf "time diff: %f\n ", $sat_time_diff;
+	if ( $sat_time_diff < 10 ) {
+	    $elem->{sat}  = $sat_count;
+	    for my $sat_no ( keys %{$sat} ) {
+		$elem->{"sat_${sat_no}_ele"} = $sat->{$sat_no}->{ele};
+		$elem->{"sat_${sat_no}_azi"} = $sat->{$sat_no}->{azi};
+		$elem->{"sat_${sat_no}_snr"} = $sat->{$sat_no}->{snr};
+	    }
 	}
 	# More interesting Info might be:
 	# <course>52.000000</course>
 	# <ele>0.000000</ele>
 	# <fix>2d</fix>
 	# <fix>3d</fix>
-	# <hdop>-0.000000</hdop>
 	# <sat>4</sat>
 	# <speed>0.000000</speed>
 	# <time>2035-12-03T05:42:23Z</time>
@@ -758,8 +770,8 @@ sub write_gpx_file($$) { # Write an gpx File
 	    # --- other attributes
 	    for my $type ( qw ( name ele
 				cmt course  
-				fix pdop hdop vdop
-				sat speed  )) {
+				fix pdop hdop vdop sat
+				speed  )) {
 		my $value = $elem->{$type};
 		if( defined $value ) {
 		    print $fh "       <$type>$value</$type>\n";
@@ -1126,7 +1138,7 @@ sub split_tracks($$){
 			    print "Speed diff: old:$elem->{speed} - calc:$new_speed =  $delta_speed\n";
 			}
 		    } else {
-			$elem->{speed} = $new_speed;
+			$elem->{speed} = sprintf("%5.4f",$new_speed);
 		    }
 		}
 

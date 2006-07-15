@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="10C694AA60DL3062cc320x22f7" name="little-osm" kpf_version="2">
+<preference-set id="">
+  <string id="import_dirname">/home/imi/src/little-osm</string>
+</preference-set>
+<file url="planet.sql" id="10C694CF17CL62a8161b0x22f7" name="planet.sql">
+</file>
+<file url="tools.rb" id="10C694CF17CL27c67460x22f7" name="tools.rb">
+<preference-set id="">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="getparams"></string>
+  <boolean id="use-console">0</boolean>
+  <string id="filename">/home/imi/src/little-osm/tools.rb</string>
+  <string id="executable-params"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="mpostparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <string id="userCGIEnvironment"></string>
+</preference-set>
+</preference-set>
+</preference-set>
+</file>
+<file url="server.rb" id="10C694CF17CL65da2efb0x22f7" name="server.rb">
+<preference-set id="">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="getparams"></string>
+  <boolean id="use-console">0</boolean>
+  <string id="filename">/home/imi/src/little-osm/server.rb</string>
+  <string id="executable-params"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="mpostparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <string id="userCGIEnvironment"></string>
+</preference-set>
+</preference-set>
+</preference-set>
+</file>
+<file url="README" id="10C694CF17DL587cf1ab0x22f7" name="README">
+</file>
+<file url="readxml.rb" id="10C694CF17DL5fff9f2b0x22f7" name="readxml.rb">
+<preference-set id="">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="getparams"></string>
+  <boolean id="use-console">0</boolean>
+  <string id="filename">/home/imi/src/little-osm/readxml.rb</string>
+  <string id="executable-params"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="mpostparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <string id="userCGIEnvironment"></string>
+</preference-set>
+</preference-set>
+</preference-set>
+</file>
+<folder url="test" id="10C694CF182L2bfbbaa20x22f7" name="test">
+<preference-set id="">
+</preference-set>
+<file url="test/t_core.rb" id="10C694CF17DLe7d63c20x22f7" name="t_core.rb">
+</file>
+<file url="test/t_xml.rb" id="10C694CF17DL7886049e0x22f7" name="t_xml.rb">
+</file>
+<file url="test/all.rb" id="10C694CF17DL2cfdbf350x22f7" name="all.rb">
+</file>
+<file url="test/t_tools.rb" id="10C71655C66L1df868ce0x1945" name="t_tools.rb">
+<preference-set id="">
+</preference-set>
+</file>
+<file url="test/t_map.rb" id="10C71DB08AFL4bc387a0x2e99" name="t_map.rb">
+<preference-set id="">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="getparams"></string>
+  <boolean id="use-console">0</boolean>
+  <string id="filename">/home/imi/src/little-osm/test/t_map.rb</string>
+  <string id="executable-params"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="mpostparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <string id="userCGIEnvironment"></string>
+</preference-set>
+</preference-set>
+</preference-set>
+</file>
+</folder>
+<folder url="api" id="10C694CF186L1e3290910x22f7" name="api">
+<preference-set id="">
+</preference-set>
+<file url="api/map.rb" id="10C694CF17DL4ec0ded20x22f7" name="map.rb">
+<preference-set id="">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="getparams"></string>
+  <boolean id="use-console">0</boolean>
+  <string id="filename">/home/imi/src/little-osm/api/map.rb</string>
+  <string id="executable-params"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="mpostparams"></string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <string id="userCGIEnvironment"></string>
+</preference-set>
+</preference-set>
+</preference-set>
+</file>
+<file url="api/test.rb" id="10C694CF17EL128ece6a0x22f7" name="test.rb">
+</file>
+</folder>
+<folder url="data" id="10C694CF189L281342b40x22f7" name="data">
+<preference-set id="">
+</preference-set>
+<file url="data/xml.rb" id="10C694CF17EL33ac15e30x22f7" name="xml.rb">
+<preference-set id="">
+</preference-set>
+</file>
+<file url="data/core.rb" id="10C694CF17EL48d8c3030x22f7" name="core.rb">
+</file>
+</folder>
+</project>

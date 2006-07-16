@@ -52,8 +52,6 @@ our $PROXY='';
 
 my $osm_nodes        = {};
 my $osm_nodes_duplicate   = {};
-my $osm_segments     = {};
-my $osm_segments_duplicate ={};
 my $osm_ways          = {};
 my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
@@ -62,7 +60,8 @@ my $split_tracks      = 0;
 my $use_area_limit    = 0;
 my $use_reduce_filter = 0;
 my $draw_check_areas  = 0;
-my $generate_ways =0;
+my $generate_ways     = 0;
+my $check_against_osm = 0;
 
 my $first_id=10000;
 my $next_osm_node_number    = $first_id;
@@ -266,6 +265,136 @@ sub data_open($){
 	}
     return $fh;
 }
+
+##################################################################
+package OSM;
+##################################################################
+
+sub LoadOSM($$)
+{
+  my $file_name = shift;
+  my $Bounds    = shift;
+
+  printf STDERR "Reading OSM File: $file_name\n";
+  my $start_time=time();
+  my $fh = File::data_open($file_name);
+  my @segments;
+  while ( my $line = $fh ->getline() ) {
+      my @segment;
+      my $dummy;
+      ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
+      $segment[4] = $dummy if $debug;
+      push (@segments,\@segment);
+  }
+  $fh->close();
+
+  if ( $verbose) {
+      printf "Read and parsed $file_name";
+      Utils::print_time($start_time);
+  }
+
+  return(\@segments);
+}
+
+
+sub reduce_osm_segments($$) {
+    my $all_osm_segments = shift;
+    my $bounds = shift;
+
+    my $start_time=time();
+
+    #print "reduce_osm_segments(".Dumper(\$bounds).")\n" if $debug;
+
+    my $osm_segments = [];
+    my $count=0;
+    for my $seg ( @{$all_osm_segments} ) {
+	next unless $seg->[0] >= $bounds->{lat_min};
+	next unless $seg->[0] <= $bounds->{lat_max};
+	next unless $seg->[1] >= $bounds->{lon_min};
+	next unless $seg->[1] <= $bounds->{lon_max};
+	next unless $seg->[2] >= $bounds->{lat_min};
+	next unless $seg->[2] <= $bounds->{lat_max};
+	next unless $seg->[3] >= $bounds->{lon_min};
+	next unless $seg->[3] <= $bounds->{lon_max};
+	$count++;
+	push(@{$osm_segments},$seg);
+    }
+    if ( $verbose || $debug) {
+	printf "Reduced OSM Data to $count Segments ";
+	Utils::print_time($start_time);
+    }
+
+    return $osm_segments;
+}
+
+# ------------------------------------------------------------------
+# check if new trackpoints are on existing osm tracks
+sub check_against_osm($$){
+    my $tracks       = shift; # reference to tracks list
+    my $all_osm_segments = shift;
+
+    my $start_time=time();
+
+    my $bounds = GPS::bounds($tracks);
+    #print "Track Bounds: ".Dumper(\$bounds);
+    my $osm_segments = reduce_osm_segments($all_osm_segments,$bounds);
+
+    my $new_tracks={tracks=>[],wpt=>[]};
+
+    # Keep WPT
+    for my $wpt ( @{$tracks->{wpt}} ) {
+	next unless $wpt;
+	push(@{$new_tracks->{wpt}},$wpt);
+    }
+
+    my $count_points = 0;
+    my $new_points = 0;
+    for my $track ( @{$tracks->{tracks}} ) {
+	next if !$track;
+	my $new_track=[];
+	for my $elem ( @{$track} ) {
+	    my $skip_point=0;
+	    my $min_dist = 40000;
+	    for my $seg ( @{$osm_segments} ) {
+		# Distance between line of segment($seg)  to trackpoint $elem
+		my $dist = Geometry::distance_line_point_Km($seg->[0],$seg->[1],
+							    $seg->[2],$seg->[3],
+							    $elem->{lat},$elem->{lon}
+							 );
+		$min_dist = $dist if $dist < $min_dist;
+		next unless  $dist < 0.015; # in Km
+		printf "Elem is %3.1f m away from line\n",$dist*1000
+		    if $debug >10;
+		$count_points++;
+		$skip_point++;
+		last;
+	    }
+	    # print "Min Dist: $min_dist\n";
+	    
+	    if ( $skip_point ) {
+		my $num_elem=scalar(@{$new_track});
+		if ( $num_elem ) {
+		    push(@{$new_tracks->{tracks}},$new_track);
+		}
+		$new_track=[];
+		$count_points++;
+	    } else {
+		push(@{$new_track},$elem);
+		$new_points++;
+	    }
+	}
+	push(@{$new_tracks->{tracks}},$new_track);
+    }
+
+    my $used_time = time()-$start_time;
+    if ( $debug>10 || ($used_time >5 )) {
+	printf "Found $count_points Points already in OSM. This leaves $new_points ";
+	Utils::print_time($start_time);
+    }
+
+    return $new_tracks;
+}
+
 
 ##################################################################
 package Kismet;
@@ -791,61 +920,6 @@ sub write_gpx_file($$) { # Write an gpx File
     Utils::print_time($start_time);
 }
 
-#------------------------------------------------------------------
-sub write_osm_data_as_gpx_file($) { # Write an gpx File
-    my $tracks = shift;
-    my $file_name = shift;
-
-    my $start_time=time();
-
-    print("Writing GPS File $file_name\n") if $verbose || $debug;
-
-    my $fh = IO::File->new(">$file_name");
-    print $fh "<gpx version=\"1.0\" creator=\"osm-filter Converter\" xmlns=\"http://www.ostertag.name\">\n";
-    # --- Segments
-    for my $seg_id (  sort keys %{$osm_segments} ) {
-	next unless $seg_id;
-	print $fh "\n<trk>\n";
-	print $fh "    <number>$seg_id</number>\n";
-	#print $fh "<extensions>\n";
-	#print $fh "<property key=\"foot\"  value=\"no\"/>\n";
-	#print $fh "<property key=\"horse\" value=\"no\"/>\n";
-	#print $fh "<property key=\"bike\"  value=\"no\"/>\n";
-	#print $fh "<property key=\"car\"   value=\"no\"/>\n";
-	#print $fh "<property key=\"class\" value=\"\"/>\n";
-	#print $fh "</extensions>\n";
-
-	my $segment = $osm_segments->{$seg_id};
-	my $node_from = $segment->{from};
-	my $node_to   = $segment->{to};
-	
-	print $fh "<trkseg>\n";
-	for my $node_id ( $node_from, $node_to)  {
-	    my $lat = $osm_nodes->{$node_id}->{lat};
-	    my $lon = $osm_nodes->{$node_id}->{lon};
-	    
-	    print $fh "   <trkpt lat=\"$lat\" lon=\"$lon\">\n";
-	    print $fh "     <time>2004-11-12T15:04:40Z</time>\n";
-	    print $fh "   </trkpt>\n";
-	}
-	print $fh "</trkseg>\n";
-	#print $fh tags2osm($segment);
-	print $fh "</trk>\n\n";
-    
-    }
-
-    
-
-    print $fh "</gpx>\n";
-    $fh->close();
-
-    if ( $verbose) {
-	printf "Wrote OSM File";
-	Utils::print_time($start_time);
-    }
-
-}
-
 
 ##################################################################
 package GPSDrive;
@@ -1235,6 +1309,39 @@ sub count_data($){
 }
 
 # ------------------------------------------------------------------
+# get bounding Box for Data
+sub bounds($){
+    my $tracks      = shift; # reference to tracks list
+
+    my $start_time=time();
+
+    my $lat_min =  90;
+    my $lat_max = -90;
+    my $lon_min =  180;
+    my $lon_max = -180;
+
+    for my $track ( @{$tracks->{tracks}} ) {
+	next if !$track;
+	for my $elem ( @{$track} ) {
+	    $lat_min  = $elem->{lat}	    if $lat_min > $elem->{lat};
+	    $lat_max  = $elem->{lat}	    if $lat_max < $elem->{lat};
+
+	    $lon_min  = $elem->{lon}	    if $lon_min > $elem->{lon};
+	    $lon_max  = $elem->{lon}	    if $lon_max < $elem->{lon};
+	}
+    }
+
+    my $used_time = time()-$start_time;
+    if ( $debug>10 || ($used_time >5 )) {
+	printf "Bounds are ($lat_min,$lon_min) ($lat_max,$lon_max)";
+	Utils::print_time($start_time);
+    }
+
+    return { lat_min => $lat_min,lon_min => $lon_min,
+	     lat_max => $lat_max,lon_max => $lon_max };
+}
+
+# ------------------------------------------------------------------
 # Filter tracks with points
 # check_allowed_area($elem) tells if this element is added or not
 sub filter_data_by_area($){
@@ -1446,6 +1553,10 @@ no warnings 'deprecated';
 sub Tracks2osm($$){
     my $tracks = shift;
     my $reference = shift;
+
+    my $osm_segments     = {};
+    my $osm_segments_duplicate ={};
+
     $reference =~ s,/home/kismet/log/,,;
 
     my $last_angle         = 999999999;
@@ -1571,7 +1682,7 @@ sub Tracks2osm($$){
 	    $last_angle = $angle;
 	}
     }
-    return $count_valid_points;
+    return $osm_segments;
 }
 
 # ------------------------------------------------------------------
@@ -1590,8 +1701,9 @@ sub tags2osm($){
     return $erg;
 }
 
-sub write_osm_file($) { # Write an osm File
+sub write_osm_file($$) { # Write an osm File
     my $file_name = shift;
+    my $osm_segments = shift;
 
     my $start_time=time();
 
@@ -1694,6 +1806,19 @@ sub convert_Data(){
     }
 
     GPS::read_filter_areas($WAYPT_FILE);
+
+    my $osm_segments;
+    if ( $check_against_osm ) {
+	my $osm_filename = "~/svn.openstreetmap.org/".
+	    "utils/osm-pdf-atlas/Data/osm.txt";
+	$osm_filename = "./osm.txt";
+	$osm_segments = OSM::LoadOSM($osm_filename,
+				 { lat_min => -90, lon_min => -180,
+				   lat_max => -90, lon_max => -180
+				   });
+	};
+    
+
    
     my $count=0;
     while ( $filename = shift @ARGV ) {
@@ -1745,6 +1870,10 @@ sub convert_Data(){
 	    }
 	}
 
+	if ( $check_against_osm ) {
+	    $new_tracks = OSM::check_against_osm($new_tracks,$osm_segments);
+	};
+
 	if ( $split_tracks ) {
 	    $new_tracks = GPS::split_tracks($new_tracks,$filename);
 	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
@@ -1766,19 +1895,17 @@ sub convert_Data(){
 
 
 	($track_count,$point_count) =   GPS::count_data($new_tracks);
-	my $osm_filename = $filename;
 	if ( $track_count > 0 ) {
-	    my $new_gpx_file = "$osm_filename-converted.gpx";
+	    my $new_gpx_file = "$filename-converted.gpx";
 	    $new_gpx_file =~s/.gpx-converted.gpx/-converted.gpx/;
 	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
 		if $single_file;
 	    
-	    my $new_osm_file = "$osm_filename.osm";
-	    my $points = OSM::Tracks2osm($new_tracks,$filename);
-	    # TODO this still writes out all points since beginning
-	    OSM::write_osm_file($new_osm_file)
-		if $out_osm;
-	    
+	    if ( $out_osm ){
+		my $new_osm_file = "$filename.osm";
+		my $points = OSM::Tracks2osm($new_tracks,$filename);
+		OSM::write_osm_file($new_osm_file,$points)
+		}
 	}
 
 	GPS::add_tracks($all_tracks,$new_tracks);
@@ -1802,10 +1929,12 @@ sub convert_Data(){
     printf "Summary:  %5d Points in %d Tracks after filtering\n",$point_count,$track_count;
 
     if ($track_count && $point_count) {
-	OSM::write_osm_file("00__combination.osm")
-	    if $out_osm;
-	    
-	    GPX::write_gpx_file($all_tracks,"00__combination.gpx");
+	if (  $out_osm) {
+	    my $points = OSM::Tracks2osm($all_tracks,$filename);
+	    OSM::write_osm_file("00__combination.osm",$points);
+	}
+	
+	GPX::write_gpx_file($all_tracks,"00__combination.gpx");
 	}
 
     if ( $draw_check_areas ) {
@@ -1833,6 +1962,7 @@ GetOptions (
 	     'split-tracks'        => \$split_tracks,
 	     'limit-area'          => \$use_area_limit,
 	     'draw_check_areas'    => \$draw_check_areas,
+	     'check_against_osm'   => \$check_against_osm,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'generate_ways'       => \$generate_ways,
 	     'proxy=s'             => \$PROXY,
@@ -1989,6 +2119,14 @@ Split tracks it they have gaps of more than
  - 10 Minutes
  - 11Km
  - 200Km/h
+
+=item B<--check_against_osm>
+
+This loads the osm.txt. osm.txt is a the segmentss File generated 
+from in the pdf-atlas directory utils/osm-pdf-atlas/Data/osm.txt.
+I must be linked to ./osm.txt
+Then it checks if any of the points are near (<15m) any  
+of the osm-segments. If so they will be deleted.
 
 =item B<--use_reduce_filter>
 

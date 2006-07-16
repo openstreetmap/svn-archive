@@ -13,6 +13,8 @@
 #	- minimum good points          > 5 Points/Track
 #	- distance between trackpoints < 1 Km
 #	- speed between Trackpoints    < 200 Km/h
+#       - the track point is near (<20m) any OSM-segment
+#
 # Output is:
 #   - OSM File for josm *.osm ( http://openstreetmap.org/)
 #   - GPX File for josm *.gpx
@@ -27,7 +29,6 @@
 #   eliminate duplicate Tracks
 #   cut out part of tracks which cover the same road
 #   make limits (max_speed, max_line_dist, ...) configurable
-#   write time linke: 2006-07-11T10:02:07Z
 
 use strict;
 use warnings;
@@ -307,7 +308,9 @@ sub reduce_osm_segments($$) {
 
     my $osm_segments = [];
     my $count=0;
+    my $all_count=0;
     for my $seg ( @{$all_osm_segments} ) {
+	$all_count++;
 	next unless $seg->[0] >= $bounds->{lat_min};
 	next unless $seg->[0] <= $bounds->{lat_max};
 	next unless $seg->[1] >= $bounds->{lon_min};
@@ -320,7 +323,7 @@ sub reduce_osm_segments($$) {
 	push(@{$osm_segments},$seg);
     }
     if ( $verbose || $debug) {
-	printf "Reduced OSM Data to $count Segments ";
+	printf "Reduced OSM Data to $count( $all_count) Segments ";
 	Utils::print_time($start_time);
     }
 
@@ -329,13 +332,15 @@ sub reduce_osm_segments($$) {
 
 # ------------------------------------------------------------------
 # check if new trackpoints are on existing osm tracks
-sub check_against_osm($$){
+sub check_against_osm($$$){
     my $tracks       = shift; # reference to tracks list
     my $all_osm_segments = shift;
+    my $config       = shift;
 
+    my $dist_osm_track = $config->{dist} || 20;
     my $start_time=time();
 
-    my $bounds = GPS::bounds($tracks);
+    my $bounds = GPS::get_bounding_box($tracks);
     #print "Track Bounds: ".Dumper(\$bounds);
     my $osm_segments = reduce_osm_segments($all_osm_segments,$bounds);
 
@@ -357,23 +362,23 @@ sub check_against_osm($$){
 	    my $min_dist = 40000;
 	    for my $seg ( @{$osm_segments} ) {
 		# Distance between line of segment($seg)  to trackpoint $elem
-		my $dist = Geometry::distance_line_point_Km($seg->[0],$seg->[1],
+		my $dist = 1000*Geometry::distance_line_point_Km($seg->[0],$seg->[1],
 							    $seg->[2],$seg->[3],
 							    $elem->{lat},$elem->{lon}
 							 );
 		$min_dist = $dist if $dist < $min_dist;
-		next unless  $dist < 0.015; # in Km
-		printf "Elem is %3.1f m away from line\n",$dist*1000
+		next unless  $dist < $dist_osm_track; # in m
+		printf "Elem is %3.1f m away from line\n",$dist
 		    if $debug >10;
 		$count_points++;
 		$skip_point++;
 		last;
 	    }
-	    # print "Min Dist: $min_dist\n";
+	    # print "Min Dist: $min_dist Meter\n";
 	    
 	    if ( $skip_point ) {
 		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem ) {
+		if ( $num_elem >4 ) {
 		    push(@{$new_tracks->{tracks}},$new_track);
 		}
 		$new_track=[];
@@ -386,8 +391,7 @@ sub check_against_osm($$){
 	push(@{$new_tracks->{tracks}},$new_track);
     }
 
-    my $used_time = time()-$start_time;
-    if ( $debug>10 || ($used_time >5 )) {
+    if ( $debug || $verbose) {
 	printf "Found $count_points Points already in OSM. This leaves $new_points ";
 	Utils::print_time($start_time);
     }
@@ -916,7 +920,7 @@ sub write_gpx_file($$) { # Write an gpx File
     print $fh "</gpx>\n";
     $fh->close();
 
-    printf "Wrote GPX File $file_name ($track_id Tracks with $point_count Points)";
+    printf "$file_name: Wrote GPX File ($track_id Tracks with $point_count Points)";
     Utils::print_time($start_time);
 }
 
@@ -1158,9 +1162,15 @@ sub draw_check_areas(){
 # ------------------------------------------------------------------
 # Add things like speed, time, .. to the GPS Data
 # and the split the tracks if we think it's necessary
-sub split_tracks($$){
+sub split_tracks($$$){
     my $tracks      = shift; # reference to tracks list
     my $comment     = shift;
+    my $config      = shift;
+
+    my $max_speed = $config->{max_speed} || 200;
+    my $max_dist  = $config->{max_dist}  || 11;
+    my $max_time  = $config->{max_time}  || 600;
+
     my $new_tracks= { tracks => [],wpt=>[] };
 
     # Keep WPT
@@ -1216,21 +1226,17 @@ sub split_tracks($$){
 		    }
 		}
 
-		# --- Check for Track Split: time diff >10 Minutes
 		my $split_track='';
-		if ( $elem->{time_diff} > 600) { # Seconds
+
+		if ( $elem->{time_diff} > $max_time) { # ---- Check for Track Split: time diff
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
-		    if ( $debug) {
-			#print "Time 0: $prev_elem->{time_string}\n";
-			#print "Time 1: $elem->{time_string}\n";
-		    }
-		    
 		}
-		if ( $elem->{dist} > 11) { # Check for Track Split: 11 Km
+
+		if ( $elem->{dist} > $max_dist) {             # ---- Check for Track Split: 11 Km
 		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
 		}
 
-		if ( $elem->{speed} && $elem->{speed} > 200) { # Check for Track Split: 200 Km/h
+		if ( $elem->{speed} && $elem->{speed} > $max_speed) { # ---- Check for Track Split: 200 Km/h
 		    $split_track .= sprintf(" Speed: %.1f Km/h ",$elem->{speed});
 		    if ( $debug >10) {
 			print "prev:".Dumper(\$prev_elem);
@@ -1309,8 +1315,20 @@ sub count_data($){
 }
 
 # ------------------------------------------------------------------
+# Print Number of points/tracks with a comment
+sub print_count_data($$){
+    my $tracks      = shift; # reference to tracks list
+    my $comment = shift;
+
+    my ($track_count,$point_count) = GPS::count_data($tracks);
+    if ( $verbose || $debug) {
+	printf "$comment %5d Points in %d Tracks\n",$point_count,$track_count;
+    }
+}
+
+# ------------------------------------------------------------------
 # get bounding Box for Data
-sub bounds($){
+sub get_bounding_box($){
     my $tracks      = shift; # reference to tracks list
 
     my $start_time=time();
@@ -1547,7 +1565,7 @@ package OSM;
 
 use Data::Dumper;
 
-no warnings 'deprecated';
+#no warnings 'deprecated';
 
 # ------------------------------------------------------------------
 sub Tracks2osm($$){
@@ -1556,8 +1574,6 @@ sub Tracks2osm($$){
 
     my $osm_segments     = {};
     my $osm_segments_duplicate ={};
-
-    $reference =~ s,/home/kismet/log/,,;
 
     my $last_angle         = 999999999;
     my $angle;
@@ -1767,7 +1783,7 @@ sub write_osm_file($$) { # Write an osm File
     $fh->close();
 
     if ( $verbose) {
-	printf "Wrote OSM File $file_name";
+	printf "$file_name: Wrote OSM File";
 	Utils::print_time($start_time);
     }
 
@@ -1864,30 +1880,23 @@ sub convert_Data(){
 
 	if ( $use_area_limit ) {
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
-	    if ( $verbose || $debug) {
-		($track_count,$point_count) =   GPS::count_data($new_tracks);
-		printf "$filename: Area Filter to %5d Points in %d Tracks\n",$point_count,$track_count;
-	    }
+	    GPS::print_count_data($new_tracks,"$filename: Area Filter to ");
 	}
 
 	if ( $check_against_osm ) {
-	    $new_tracks = OSM::check_against_osm($new_tracks,$osm_segments);
+	    $new_tracks = OSM::check_against_osm( $new_tracks,$osm_segments,
+					      { dist => 20 });
 	};
 
 	if ( $split_tracks ) {
-	    $new_tracks = GPS::split_tracks($new_tracks,$filename);
-	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    if ( $verbose || $debug) {
-		printf "$filename: enriching/splitting to %5d Points in %d Tracks\n",$point_count,$track_count;
-	    }
+	    $new_tracks = GPS::split_tracks($new_tracks,$filename,
+					{ max_speed => 200 });
+	    GPS::print_count_data($new_tracks,"$filename: enriching/splitting to" );
 	}
 
 	if ( $use_reduce_filter ) {
 	    $new_tracks = GPS::filter_data_reduce_points($new_tracks);
-	    ($track_count,$point_count) =   GPS::count_data($new_tracks);
-	    if ( $verbose || $debug) {
-		printf "$filename: Data Reduce to %5d Points in %d Tracks\n",$point_count,$track_count;
-	    }
+	    GPS::print_count_data($new_tracks,"$filename: Data Reduce to ");
 	}
 
 
@@ -1925,8 +1934,7 @@ sub convert_Data(){
     GPS::filter_duplicate_wpt($all_tracks);
 
 
-    ($track_count,$point_count) =   GPS::count_data($all_tracks);
-    printf "Summary:  %5d Points in %d Tracks after filtering\n",$point_count,$track_count;
+    GPS::print_count_data($all_tracks,"Summary:  after complete processing ");
 
     if ($track_count && $point_count) {
 	if (  $out_osm) {

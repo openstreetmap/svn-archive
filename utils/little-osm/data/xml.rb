@@ -13,6 +13,13 @@ class OsmPrimitive
     end if @tags
     e
   end
+
+  def OsmPrimitive.from_xml e
+    raise "Unknown tag '#{e.name}'" unless %W{node segment way}.contains? e.name  #security concern
+    osm = eval("e.name.capitalize").from_xml e
+    e.each { |tag| osm[tag.attributes["k"]] = tag.attributes["v"] if tag.name == "tag" }
+    osm
+  end
 end
 
 class Node < OsmPrimitive
@@ -21,6 +28,11 @@ class Node < OsmPrimitive
     e.add_attributes 'lat'=>@lat, 'lon'=>@lon
     e
   end
+
+  def Node.from_xml e
+    a = e.attributes
+  	Node.new a["lat"], a["lon"], a["id"], a["timestamp"]
+  end
 end
 
 class Segment < OsmPrimitive
@@ -28,6 +40,11 @@ class Segment < OsmPrimitive
     e = super
     e.add_attributes 'from'=>@from.to_i, 'to'=>@to.to_i
     e
+  end
+
+  def Segment.from_xml e
+    a = e.attributes
+  	Segment.new a["from"].to_i, a["to"].to_i, a["id"], a["timestamp"]
   end
 end
 
@@ -40,5 +57,11 @@ class Way < OsmPrimitive
       e.add_element seg
     end
     e
+  end
+
+  def Way.from_xml e
+    segs = []
+    e.each { |seg| segs << seg if seg.name == "seg" }
+  	Way.new segs, e.attributes["id"], e.attributes["timestamp"]
   end
 end

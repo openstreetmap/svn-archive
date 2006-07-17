@@ -1,3 +1,7 @@
+# -------------------------- Munich
+Area: 48.14,11.55,1.0
+Places: Config/places-munich.txt
+
 # -------------------------- Germany
 #Area: 50,12,7
 #Places: Config/places-germany.txt
@@ -14,8 +18,8 @@
 #Places: Config/places-west-europe.txt
 
 # ------------------------- Australia
-Area: -27.0,  138.0, 20
-Places: Config/places-australia.txt
+#Area: -27.0,  138.0, 20
+#Places: Config/places-australia.txt
 
 # ------------------------- Eeast world
 #Area:     0,90, 90

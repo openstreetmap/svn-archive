@@ -1,16 +1,14 @@
 #!/usr/bin/env ruby
 
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
-PID_PATH = "#{THIS_DIR}/to_osm.pid"
+TIGER_PID_PATH = "#{THIS_DIR}/to_osm.pid"
 
 def tiger_import_running?
-	return false unless File.exist?(PID_PATH)
-	pid = IO.read(PID_PATH).strip.to_i
+	return false unless File.exist?(TIGER_PID_PATH)
+	pid = IO.read(TIGER_PID_PATH).strip.to_i
 	`/bin/ps -p #{pid}`
 	$?.to_i.zero?
 end
 
-exit if tiger_import_running?
-
-`#{THIS_DIR}/to_osm #{THIS_DIR}/spider/tiger2005fe`
+`#{THIS_DIR}/to_osm #{THIS_DIR}/spider/tiger2005fe` unless tiger_import_running?
 

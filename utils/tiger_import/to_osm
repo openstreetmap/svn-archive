@@ -50,6 +50,20 @@ FIRST_FIPS = [
 	"48167",  # Galveston (greater Houston, TX)
 	"48039",  # Brazoria (greater Houston, TX)
 	"48071",  # Chambers (greater Houston, TX)
+	"18029",  # Dearborn (greater Cincinatti, OH)
+	"21015",  # Boone (greater Cincinatti, OH)
+	"21117",  # Kenton (greater Cincinatti, OH)
+	"21037",  # Campbell (greater Cincinatti, OH)
+	"21191",  # Pendleton (greater Cincinatti, OH)
+	"21023",  # Bracken (greater Cincinatti, OH)
+	"39061",  # Hamilton (greater Cincinatti, OH)
+	"39025",  # Clermont (greater Cincinatti, OH)
+	"39015",  # Brown (greater Cincinatti, OH)
+	"39001",  # Adams (greater Cincinatti, OH)
+	"39017",  # Butler (greater Cincinatti, OH)
+	"39165",  # Warren (greater Cincinatti, OH)
+	"39027",  # Clinton (greater Cincinatti, OH)
+	"39057",  # Greene (greater Cincinatti, OH)
 ]
 
 def usage
@@ -211,8 +225,10 @@ def create_street_raw(street)
 	av_lat = total_lat / street.points.length
 	av_long = total_long / street.points.length
 	$stderr.puts "\tcenter lat, long = #{av_lat}, #{av_long}"
+	$stderr.puts "\tURL = http://www.openstreetmap.org/index.html?lat=#{av_lat}&lon=#{av_long}&zoom=12"
 	tags = {
 		"name" => street.name,
+		"created_by" => "TIGER Import Process",
 		"from_zip" => street.from_zip,
 		"to_zip" => street.to_zip,
 	}
@@ -352,7 +368,7 @@ class Indices
 		FIRST_FIPS.each do |fips|
 			fips_a << fips
 		end
-		@map.keys.each do |fips|
+		@map.keys.sort.each do |fips|
 			fips_a << fips
 		end
 		fips_a = fips_a.uniq

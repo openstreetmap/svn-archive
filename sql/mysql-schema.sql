@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: openstreetmap
 -- ------------------------------------------------------
--- Server version	4.1.11-Debian_4-log
+-- Server version        4.1.11-Debian_4sarge2-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -56,6 +56,80 @@ CREATE TABLE `areas` (
   `visible` tinyint(1) default '1',
   PRIMARY KEY  (`id`,`version`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `current_nodes`
+--
+
+DROP TABLE IF EXISTS `current_nodes`;
+CREATE TABLE `current_nodes` (
+  `id` bigint(64) default NULL,
+  `latitude` double default NULL,
+  `longitude` double default NULL,
+  `user_id` bigint(20) default NULL,
+  `visible` tinyint(1) default NULL,
+  `tags` text,
+  `timestamp` datetime default NULL,
+  KEY `current_nodes_id_idx` (`id`),
+  KEY `current_nodes_lat_lon_idx` (`latitude`,`longitude`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `current_segments`
+--
+
+DROP TABLE IF EXISTS `current_segments`;
+CREATE TABLE `current_segments` (
+  `id` bigint(64) default NULL,
+  `node_a` bigint(64) default NULL,
+  `node_b` bigint(64) default NULL,
+  `user_id` bigint(20) default NULL,
+  `visible` tinyint(1) default NULL,
+  `tags` text,
+  `timestamp` datetime default NULL,
+  KEY `current_segments_id_visible_idx` (`id`,`visible`),
+  KEY `current_segments_a_idx` (`node_a`),
+  KEY `current_segments_b_idx` (`node_b`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `current_way_segments`
+--
+
+DROP TABLE IF EXISTS `current_way_segments`;
+CREATE TABLE `current_way_segments` (
+  `id` bigint(64) default NULL,
+  `segment_id` bigint(11) default NULL,
+  `sequence_id` bigint(11) default NULL,
+  KEY `current_way_segments_seg_idx` (`segment_id`),
+  KEY `current_way_segments_id_idx` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `current_way_tags`
+--
+
+DROP TABLE IF EXISTS `current_way_tags`;
+CREATE TABLE `current_way_tags` (
+  `id` bigint(64) default NULL,
+  `k` varchar(255) default NULL,
+  `v` varchar(255) default NULL,
+  KEY `current_way_tags_id_idx` (`id`),
+  FULLTEXT KEY `current_way_tags_v_idx` (`v`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `current_ways`
+--
+
+DROP TABLE IF EXISTS `current_ways`;
+CREATE TABLE `current_ways` (
+  `id` bigint(64) default NULL,
+  `user_id` bigint(20) default NULL,
+  `timestamp` datetime default NULL,
+  `visible` tinyint(1) default NULL,
+  KEY `current_ways_id_visible_idx` (`id`,`visible`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `gps_points`
@@ -217,7 +291,8 @@ CREATE TABLE `users` (
   `creation_time` datetime default NULL,
   `timeout` datetime default NULL,
   `display_name` varchar(255) default '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `users_email_idx` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -229,11 +304,8 @@ CREATE TABLE `way_segments` (
   `id` bigint(64) NOT NULL default '0',
   `segment_id` int(11) default NULL,
   `version` bigint(20) NOT NULL default '0',
-  `sequence_id` int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (`id`,`version`,`sequence_id`),
-  KEY `way_segments_id_idx` (`id`),
-  KEY `way_segments_segment_id_idx` (`segment_id`),
-  KEY `way_segments_id_version_idx` (`id`,`version`)
+  `sequence_id` bigint(11) NOT NULL auto_increment,
+  PRIMARY KEY  (`id`,`version`,`sequence_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -245,9 +317,8 @@ CREATE TABLE `way_tags` (
   `id` bigint(64) NOT NULL default '0',
   `k` varchar(255) default NULL,
   `v` varchar(255) default NULL,
-  `version` bigint(20) NOT NULL default '0',
-  `sequence_id` int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (`id`,`version`,`sequence_id`)
+  `version` bigint(20) default NULL,
+  KEY `way_tags_id_version_idx` (`id`,`version`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -259,9 +330,10 @@ CREATE TABLE `ways` (
   `id` bigint(64) NOT NULL default '0',
   `user_id` bigint(20) default NULL,
   `timestamp` datetime default NULL,
-  `version` bigint(20) NOT NULL auto_increment,
+  `version` bigint(20) unsigned NOT NULL auto_increment,
   `visible` tinyint(1) default '1',
-  PRIMARY KEY  (`id`,`version`)
+  PRIMARY KEY  (`id`,`version`),
+  KEY `ways_id_version_idx` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -271,4 +343,3 @@ CREATE TABLE `ways` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

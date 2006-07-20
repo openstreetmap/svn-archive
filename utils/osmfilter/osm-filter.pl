@@ -363,6 +363,12 @@ sub check_against_osm($$$){
 	for my $elem ( @{$track} ) {
 	    my $skip_point=0;
 	    my $min_dist = 40000;
+	    my $pdop = $elem->{pdop};
+	    my $compare_dist=$dist_osm_track;
+	    if ( defined ( $pdop ) &&  ($pdop >0) ) {
+		$compare_dist= $pdop;
+	    }
+
 	    for my $seg ( @{$osm_segments} ) {
 		# Distance between line of segment($seg)  to trackpoint $elem
 		my $dist = 1000*Geometry::distance_line_point_Km($seg->[0],$seg->[1],
@@ -370,9 +376,9 @@ sub check_against_osm($$$){
 							    $elem->{lat},$elem->{lon}
 							 );
 		$min_dist = $dist if $dist < $min_dist;
-		next unless  $dist < $dist_osm_track; # in m
+		next if $dist > $compare_dist; # in m
 		printf "Elem is %3.1f m away from line\n",$dist
-		    if $debug >10;
+		    if $debug >5;
 		$count_points++;
 		$skip_point++;
 		last;
@@ -645,10 +651,16 @@ sub read_file($) {
 	};
 	next unless ($lat ne "" )&& ($lon ne "");
 	next if  ($lat eq "0000.0000" ) && ($lon eq "00000.0000");
-	my ($l1,$l2) = ($lat =~ m/(\d\d)(\d\d.\d+)/);
-	$lat = ($l1+$l2/60);
-	($l1,$l2) = ($lon =~ m/(\d\d)(\d\d.\d+)/);
-	$lon = ($l1+$l2/60);
+	if ( $lat =~ m/(\d\d)(\d\d.\d+)/) {
+	    $lat = $1 + $2/60;
+	} else {
+	    print "Error in lat: $lat\n$line\n";
+	}
+	if ($lon =~ m/(\d+)(\d\d\.\d+)/){
+	    $lon = $1 + $2/60;
+	} else {
+	    print "Error in lon: $lon\n$line\n";
+	}
 	$lat = -$lat if $lat_v eq "S";
 	$lon = -$lon if $lon_v eq "W";
 	print "type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n" 

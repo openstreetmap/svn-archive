@@ -56,13 +56,15 @@ my $osm_nodes_duplicate   = {};
 my $osm_ways          = {};
 my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
+
 my $out_osm           = 0;
 my $split_tracks      = 0;
 my $use_area_limit    = 0;
 my $use_reduce_filter = 0;
 my $draw_check_areas  = 0;
-my $generate_ways     = 0;
 my $check_against_osm = 0;
+my $do_all_filters    = 0;
+my $generate_ways     = 0;
 
 my $first_id=10000;
 my $next_osm_node_number    = $first_id;
@@ -276,7 +278,8 @@ sub LoadOSM($$)
   my $file_name = shift;
   my $Bounds    = shift;
 
-  printf STDERR "Reading OSM File: $file_name\n";
+  printf STDERR "Reading OSM File: $file_name\n"
+      if $debug || $verbose;
   my $start_time=time();
   my $fh = File::data_open($file_name);
   my @segments;
@@ -481,7 +484,9 @@ sub read_file($$) {
     print("Reading $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
-    my $fh = IO::File->new("gpsbabel  -i $gpsbabel_type -f '$file_name' -o gpx -F - |");
+    my $gpsbabel_call="gpsbabel  -i $gpsbabel_type -f '$file_name' -o gpx -F - ";
+    print "calling gpsbabel:\n$gpsbabel_call\n " if $debug>3;
+    my $fh = IO::File->new("$gpsbabel_call |");
     if ( !$fh )  {
 	warn "Cannot Convert $file_name as Type $gpsbabel_type\n";
 	return {tracks=>[]};
@@ -516,7 +521,8 @@ sub read_file($) {
     my $last_time=0;
     my $new_track=[];
     my ($sat,$pdop,$hdop,$vdop,$sat_count);
-    my $sat_time =0;
+    my $sat_time = 0;
+    my $dop_time = 0;
     while ( my $line = $fh->getline() ) {
 	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
 	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
@@ -553,7 +559,7 @@ sub read_file($) {
 	    # 15) Checksum
 	    ($time,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
 	     $dummy,$dummy,$dummy)
-		= split(/,/,$line);
+		= split(/,/,$line);	    
 	    #print "(,$time,$status, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality,,, Alt: $alt,$alt_unit,,,,)\n";
 
 	} elsif ( $type eq "RMC" ) {
@@ -592,7 +598,11 @@ sub read_file($) {
 	    #  18) checksum 
 	    ($dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,
 	     $dummy,$dummy,$dummy,$dummy,$pdop,$hdop,$vdop)
-		= split(/,/,$line);    
+		= split(/,/,$line);
+	    $hdop = undef unless $hdop =~ m/[\d\-\+]+/;
+	    $vdop = undef unless $vdop =~ m/[\d\-\+]+/;
+	    $pdop = undef unless $pdop =~ m/[\d\-\+]+/;
+	    $dop_time=$last_time;
 	    next;
 	} elsif ( $type eq "GSV" ) {
 	    # GSV - Satellites in view
@@ -630,16 +640,24 @@ sub read_file($) {
 	    next;
 	} else {
 	    print "Ignore Line $type: $line\n"
-		if $debug>2;
+		if $debug>6;
 	    next;
 	};
 	next unless ($lat ne "" )&& ($lon ne "");
-	$lat /=100;
-	$lon /=100;
+	next if  ($lat eq "0000.0000" ) && ($lon eq "00000.0000");
+	my ($l1,$l2) = ($lat =~ m/(\d\d)(\d\d.\d+)/);
+	$lat = ($l1+$l2/60);
+	($l1,$l2) = ($lon =~ m/(\d\d)(\d\d.\d+)/);
+	$lon = ($l1+$l2/60);
 	$lat = -$lat if $lat_v eq "S";
 	$lon = -$lon if $lon_v eq "W";
-	print "$type ($time	$lat	$lon	$alt	$speed)\n" 
-	    if $debug>10;
+	print "type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n" 
+	    if $debug>3;
+	if ( ( abs($lat) < 0.001 ) && 
+	     ( abs($lat) < 0.001 ) ) {
+	    print "too near to (0/0) : type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n";
+	    next;
+	};
 
 	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
 	if ( defined($date)) {
@@ -649,16 +667,31 @@ sub read_file($) {
 	}
 	$last_date=$date;
 	$time = str2time("$date ${time}");
-	$last_time = $time;
+	$last_time = $time if $time;
 
 	$elem->{lat} = $lat;
 	$elem->{lon} = $lon;
 	$elem->{alt} = $alt if defined $alt;
-	$elem->{time} = $time;
+	$elem->{time} = $time if defined $time;
+	$time ||=0;
 
-	$elem->{pdop} = $pdop if $pdop;
-	$elem->{hdop} = $hdop if $hdop;
-	$elem->{vdop} = $vdop if $vdop;
+	my $dop_time_diff = $time - $dop_time;
+	#printf "time diff: %f\n ", $dop_time_diff;
+	if ( $dop_time_diff < 10
+	     && defined($hdop) 
+	     && defined($vdop)
+	     && defined($pdop)
+	     ) {
+	    $elem->{pdop} = $pdop if $pdop;
+	    $elem->{hdop} = $hdop if $hdop;
+	    $elem->{vdop} = $vdop if $vdop;
+	    if ( $hdop > 30 or 
+		 $vdop > 30 or 
+		 $pdop > 30  ) {
+		#print Dumper(\$elem);
+		next;
+	    }
+	}
 	
 	my $sat_time_diff = $time - $sat_time;
 	#printf "time diff: %f\n ", $sat_time_diff;
@@ -680,8 +713,8 @@ sub read_file($) {
 	# <time>2035-12-03T05:42:23Z</time>
 	# <trkpt lat="48.177040000" lon="11.759786667">
 	
-    	push(@{$new_track},$elem);
 	bless($elem,"NMEA::gps-point");
+    	push(@{$new_track},$elem);
 	$elem ={};
     }
     push(@{$new_tracks->{tracks}},$new_track);
@@ -1972,6 +2005,7 @@ GetOptions (
 	     'draw_check_areas'    => \$draw_check_areas,
 	     'check_against_osm'   => \$check_against_osm,
 	     'use_reduce_filter'   => \$use_reduce_filter,
+	     'filter-all'          => \$do_all_filters,
 	     'generate_ways'       => \$generate_ways,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
@@ -1979,6 +2013,14 @@ GetOptions (
 	     'h|help|x'            => \$help, 
 	     )
     or pod2usage(1);
+
+if ( $do_all_filters ) {
+    $out_osm           = 1;
+    $split_tracks      = 1;
+    $use_area_limit    = 1;
+    $use_reduce_filter = 1;
+    $check_against_osm = 1;
+}
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
@@ -2141,6 +2183,10 @@ of the osm-segments. If so they will be deleted.
 This Filter reduces the ammount of point used in the GPX/OSM File.
 Each point which would almost give a streight line 
 with its pre and post point will be eliminated.
+
+=item B<--filter-all>
+
+Switch on all of the above filters
 
 =item B<--generate_ways>
 

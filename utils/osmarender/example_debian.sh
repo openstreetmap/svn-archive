@@ -6,17 +6,11 @@ xalan -v || sudo apt-get install xalan
 # check if librsvg2-bin is installed
 rsvg-convert -v || sudo apt-get install librsvg2-bin
 
-# get current planet.osm
-export planet_file=planet-2006-07-a.osm.bz2
-export planet_dir=~/.gpsdrive/MIRROR/osm
-
-mkdir -p $planet_dir
-
-echo "Check $planet_file"
-wget -nd -P "$planet_dir" -nv  --mirror http://www.ostertag.name/osm/planet/$planet_file
-
-ln -s "$planet_dir/$planet_file" data.osm
-
+download_url='http://www.openstreetmap.org/api/0.3/map?'
+download_bbox='bbox=11.727117425387659,48.16020260299748,11.776499448945952,48.18914763168421'
+if [ ! -s data.osm ] ; then
+    curl --netrc -o data.osm "$download_url$download_bbox"
+fi
 
 # Start rendering
 xalan -in osm-map-features.xml -out data.svg

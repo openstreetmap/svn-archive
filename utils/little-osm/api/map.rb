@@ -4,20 +4,18 @@ require 'sqlite3'
 
 require 'tools'
 
-def to_id s
-  s.to_i >> 3
-end
+include OSM
 
 def make_osm q
-  case q[0].to_i & 0x7
-  when 0
-    Node.new q[4], q[5], to_id(q[0]), q[2]
-  when 1
+  case uid_to_class q[0]
+  when Node
+    Node.new q[4], q[5], nil, uid_to_id(q[0]), q[2]
+  when Segment
     from, to = q[3].split ','
-    Segment.new(to_id(from), to_id(to), to_id(q[0]), q[2])
-  when 2
-    segs = q[3].split(',').collect do |x| to_id(x) end
-    Way.new segs, to_id(q[0]), q[2]
+    Segment.new uid_to_id(from), uid_to_id(to), nil, uid_to_id(q[0]), q[2]
+  when Way
+    segs = q[3].split(',').collect do |x| uid_to_id(x) end
+    Way.new segs, nil, uid_to_id(q[0]), q[2]
   end
 end
 
@@ -43,8 +41,7 @@ header
 
 db = SQLite3::Database.new 'planet.db'
 db.execute "select * from data where minlat < #{bbox[3]} and minlon < #{bbox[2]} and maxlat > #{bbox[1]} and maxlon > #{bbox[0]}" do |line|
-  make_osm(line).to_xml.write
-  puts
+  puts make_osm(line).to_xml
 end
 
 puts '</osm>'

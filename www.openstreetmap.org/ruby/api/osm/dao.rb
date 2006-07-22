@@ -16,7 +16,7 @@ module OSM
       @degrees_per_pixel = degrees_per_pixel
       @width = width
       @height = height
-      @dlon = width / 2 * degrees_per_pixel 
+      @dlon = width / 2 * degrees_per_pixel
       @dlat = height / 2 * degrees_per_pixel  * cos(@clat * PI / 180)
 
       @tx = xsheet(@clon - @dlon)
@@ -44,11 +44,11 @@ module OSM
     #and these two will give you the right points on your image. all the constants can be reduced to speed things up. FIXME
 
     def y(lat)
-      return @height - ((ysheet(lat) - @ty) / (@by - @ty) * @height) 
+      return @height - ((ysheet(lat) - @ty) / (@by - @ty) * @height)
     end
 
     def x(lon)
-      return  ((xsheet(lon) - @tx) / (@bx - @tx) * @width)  
+      return  ((xsheet(lon) - @tx) / (@bx - @tx) * @width)
     end
   end
 
@@ -171,7 +171,7 @@ module OSM
 
     def get_local_connection
       return get_connection
-      
+
       #whilst local db's are down, just talk to the main server
       #begin
       #  return Mysql.real_connect('localhost', $USERNAME, $PASSWORD, $DATABASE)
@@ -309,7 +309,7 @@ module OSM
       token = make_token
       call_sql { "update users set token = '#{token}' where email = '#{q(email)}' and active = true" }
       return token
-    end 
+    end
 
 
     def login(email, pass)
@@ -387,11 +387,11 @@ module OSM
     end
 
 
-    def save_display_name(user_id, display_name)    
+    def save_display_name(user_id, display_name)
       res = call_local_sql { "select id from users where display_name = '#{q(display_name)}'" }
       return false if res.num_rows > 0
       call_sql {"update users set display_name = '#{q(display_name)}' where id = #{user_id}"}
-      return true  
+      return true
     end
 
 
@@ -537,7 +537,7 @@ module OSM
 
     def delete_sheduled_gpx_files()
       call_sql { 'delete from gpx_files, gps_points using gpx_files, gps_points where gpx_files.id = gps_points.gpx_id and gpx_files.visible = false' }
-    end    
+    end
 
 
     def new_gpx_file(user_id, filename)
@@ -545,7 +545,7 @@ module OSM
       begin
         dbh = get_connection
         dbh.query("insert into gpx_files (timestamp, user_id, visible, name) values (NOW(), #{q(user_id.to_s)}, 1, '#{q(filename.to_s)}')")
-        res = dbh.query('select last_insert_id()') 
+        res = dbh.query('select last_insert_id()')
 
         res.each do |row|
           return row[0]
@@ -601,7 +601,7 @@ module OSM
 
       res = call_sql { "select id, timestamp, latitude, longitude, visible, tags from current_nodes where latitude > #{lat2}  and longitude > #{lon1} and latitude < #{lat1} and longitude < #{lon2} and visible = 1" }
 
-      if !res.nil? 
+      if !res.nil?
         res.each_hash do |row|
 
           node_id = row['id'].to_i
@@ -620,7 +620,7 @@ module OSM
 
       res = call_sql { "select id, latitude, longitude, visible, tags, timestamp from current_nodes where id in (#{node_ids.join(',')}) #{timeclause}" }
 
-      if !res.nil? 
+      if !res.nil?
         res.each_hash do |row|
           node_id = row['id'].to_i
           vis = '1' == row['visible']
@@ -628,7 +628,7 @@ module OSM
         end
 
         return nodes
-      end 
+      end
 
     end
 
@@ -640,7 +640,7 @@ module OSM
 
       res = call_sql { "select id, latitude, longitude, visible, tags from (select * from (select nodes.id, nodes.latitude, nodes.longitude, nodes.visible, nodes.tags from nodes, nodes as a where a.latitude > #{lat2}  and a.latitude < #{lat1}  and a.longitude > #{lon1} and a.longitude < #{lon2} and date < #{date.strftime('%Y-%m-%d %H:%M:%S')} and nodes.id = a.id order by nodes.timestamp desc) as b group by id) as c where visible = true and latitude > #{lat2}  and latitude < #{lat1}  and longitude > #{lon1} and longitude < #{lon2} and date < #{date.strftime('%Y-%m-%d %H:%M:%S')}" }
 
-      if !res.nil? 
+      if !res.nil?
         res.each_hash do |row|
 
           node_id = row['id'].to_i
@@ -797,7 +797,7 @@ module OSM
         dbh.close if dbh
       end
       return true
-    end 
+    end
 
 
     def update_node?(node_id, user_id, latitude, longitude, tags)
@@ -819,7 +819,7 @@ module OSM
     def create_node(lat, lon, user_id, tags)
       #@@log.log("creating node at #{lat},#{lon} for user #{user_id} with tags '#{tags}'")
       begin
-        dbh = get_connection 
+        dbh = get_connection
         dbh.query("set @now = NOW()")
         dbh.query( "insert into meta_nodes (timestamp, user_id) values (@now, #{user_id})" )
         dbh.query( "insert into nodes (id, latitude, longitude, timestamp, user_id, visible, tags) values ( last_insert_id(), #{lat}, #{lon}, @now, #{user_id}, 1, '#{q(tags)}')" )
@@ -927,7 +927,7 @@ module OSM
       res = call_sql { "select visible, timestamp from current_#{type}s where id = #{q(multi_id.to_s)};"}
 
       return nil if res.num_rows == 0
-      
+
       visible = true
       timestamp = ''
 
@@ -976,24 +976,25 @@ module OSM
         dbh.query( "set @version = last_insert_id()")
 
         # update tags
+        unless tags.empty?
+          tags_sql = "insert into #{type}_tags(id, k, v, version) values "
+          current_tags_sql = "insert into current_#{type}_tags(id, k, v) values "
+          first = true
+          tags.each do |k,v|
+            tags_sql += ',' unless first
+            current_tags_sql += ',' unless first
+            first = false unless !first
+            tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}', @version)"
+            current_tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}')"
+          end
 
-        tags_sql = "insert into #{type}_tags(id, k, v, version) values "
-        current_tags_sql = "insert into current_#{type}_tags(id, k, v) values "
-        first = true
-        tags.each do |k,v|
-          tags_sql += ',' unless first
-          current_tags_sql += ',' unless first
-          first = false unless !first
-          tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}', @version)"
-          current_tags_sql += "(@id, '#{q(k.to_s)}', '#{q(v.to_s)}')"
+          @@log.log(tags_sql)
+          dbh.query(tags_sql)
+          @@log.log("delete from current_way_tags where id = @id")
+          dbh.query("delete from current_way_tags where id = @id")
+          @@log.log(current_tags_sql)
+          dbh.query(current_tags_sql)
         end
-        
-        @@log.log(tags_sql)
-        dbh.query(tags_sql)
-        @@log.log("delete from current_way_tags where id = @id")
-        dbh.query("delete from current_way_tags where id = @id")
-        @@log.log(current_tags_sql)
-        dbh.query(current_tags_sql)
 
         # update segments
         segs_sql = "insert into #{type}_segments (id, segment_id, version) values "
@@ -1064,7 +1065,7 @@ module OSM
         history << Point.new( row['lat'], row['lon'], node_id, visible, row['tags'], row['timestamp'] )
       end
       return history
-    end 
+    end
 
     def get_segment_history(segment_id, from=nil, to=nil)
 
@@ -1075,9 +1076,9 @@ module OSM
         history << UIDLinesegment.new(segment_id, row['node_a'], row['node_b'], row['tags'], visible, row['timestamp'] )
       end
       return history
-    end 
+    end
 
-    def get_multi_history(multi_id, type=:way, from=nil, to=nil) 
+    def get_multi_history(multi_id, type=:way, from=nil, to=nil)
       res = call_sql { "select version from #{type}s where id = #{multi_id} " + get_time_clause(from,to) }
       history = []
       res.each_hash do |row|
@@ -1091,7 +1092,7 @@ module OSM
       clause = ''
       clause += " and timestamp > '#{from.strftime('%Y-%m-%d %H:%M:%S')}' " unless from.nil?
       clause += " and timestamp < '#{  to.strftime('%Y-%m-%d %H:%M:%S')}' " unless to.nil?
-      return clause   
+      return clause
     end
 
     def get_multis_from_segments(segment_ids, type=:way)
@@ -1116,9 +1117,9 @@ module OSM
 
     def commify(number)
       c = { :value => "", :length => 0 }
-      r = number.to_s.reverse.split("").inject(c) do |t, e|  
+      r = number.to_s.reverse.split("").inject(c) do |t, e|
         iv, il = t[:value], t[:length]
-        iv += ',' if il % 3 == 0 && il != 0    
+        iv += ',' if il % 3 == 0 && il != 0
         { :value => iv + e, :length => il + 1 }
       end
       r[:value].reverse!

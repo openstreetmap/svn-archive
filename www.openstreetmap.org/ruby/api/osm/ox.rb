@@ -9,6 +9,7 @@ module OSM
 
     def initialize
       @doc = Document.new
+      @doc.encoding = "UTF-8"
       @root = Node.new 'osm'
       @root['version'] = '0.3'
       @root['generator'] = 'OpenStreetMap server'

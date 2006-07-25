@@ -15,7 +15,7 @@ r = Apache.request
 dao = OSM::Dao.instance
 
 cgi = CGI.new
-segment_id = cgi['segmentid'].to_i
+segment_id = cgi['segmentid'].split(",")
 
 from = nil
 to = nil
@@ -24,9 +24,11 @@ to = Time.parse(cgi['to']) unless cgi['to'] == ''
 
 ox = OSM::Ox.new
 
-dao.get_segment_history(segment_id, from, to).each do |n|
-  ox.add_segment(n)
+segment_id.each do |id|
+  dao.get_segment_history(id.to_i, from, to).each do |n|
+    ox.add_segment(n)
+  end
 end
 
-puts ox.to_s
+ox.print_http(r)
 

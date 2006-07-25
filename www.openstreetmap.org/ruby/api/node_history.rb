@@ -15,7 +15,6 @@ r = Apache.request
 dao = OSM::Dao.instance
 
 cgi = CGI.new
-puts cgi['nodeid']
 node_id = cgi['nodeid'].split(",")
 
 
@@ -27,7 +26,7 @@ to = Time.parse(cgi['to']) unless cgi['to'] == ''
 ox = OSM::Ox.new
 
 node_id.each do |id|
-  dao.get_node_history(id, from, to).each do |n|
+  dao.get_node_history(id.to_i, from, to).each do |n|
     ox.add_node(n)
   end
 end

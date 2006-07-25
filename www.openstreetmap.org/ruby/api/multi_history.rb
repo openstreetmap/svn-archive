@@ -15,7 +15,7 @@ r = Apache.request
 dao = OSM::Dao.instance
 
 cgi = CGI.new
-multi_id = cgi['multiid'].to_i
+multi_id = cgi['multiid'].split(",")
 
 from = nil
 to = nil
@@ -27,8 +27,10 @@ type = :area if cgi['type'] == 'area'
 
 ox = OSM::Ox.new
 
-dao.get_multi_history(multi_id, type, from, to).each do |n|
-  ox.add_multi(n, type)
+multi_id.each do |id|
+  dao.get_multi_history(id.to_i, type, from, to).each do |n|
+    ox.add_multi(n, type)
+  end
 end
 
 ox.print_http(r)

@@ -31,5 +31,5 @@ dao.get_multi_history(multi_id, type, from, to).each do |n|
   ox.add_multi(n, type)
 end
 
-puts ox.print_http(r)
+ox.print_http(r)
 

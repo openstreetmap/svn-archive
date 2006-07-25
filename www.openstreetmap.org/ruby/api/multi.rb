@@ -19,17 +19,13 @@ if r.request_method == "GET"
   multi_id = cgi['multiid'].to_i
   type = :area if cgi['type'] == 'area'
 
-  if multi_id != 0
-    ox = OSM::Ox.new
+  exit BAD_REQUEST if multi_id == 0
+  multi = dao.get_multi(multi_id, type)
+  exit HTTP_NOT_FOUND unless multi and multi.visible
 
-    multi = dao.get_multi(multi_id, type)
-
-    if multi
-      exit HTTP_NOT_FOUND unless multi.visible
-      ox.add_multi(multi, type)
-      ox.print_http(r)
-    end
-  end
+  ox = OSM::Ox.new
+  ox.add_multi(multi, type)
+  ox.print_http(r)
 else
   user_id = dao.useridfromcreds(r.user, r.get_basic_auth_pw)
   multi_id = r.args.match(/multiid=([0-9]+)/).captures.first.to_i

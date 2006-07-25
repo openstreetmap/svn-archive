@@ -59,10 +59,10 @@
 	RewriteRule   ^/map/map.png$  /ruby/viewmap.rb  [PT,T=image/png]
 	
 	
-	RewriteRule   /api/0.3/node/([0-9]+)/history    /ruby/api/0.3/node_history.rb?nodeid=$1&%{QUERY_STRING}         [PT,T=text/plain]
-	RewriteRule   /api/0.3/segment/([0-9]+)/history         /ruby/api/0.3/segment_history.rb?segmentid=$1&%{QUERY_STRING}           [PT,T=text/plain]
-	RewriteRule   /api/0.3/way/([0-9]+)/history     /ruby/api/0.3/multi_history.rb?type=way&multiid=$1&%{QUERY_STRING}              [PT,T=text/plain]
-	RewriteRule   /api/0.3/area/([0-9]+)/history    /ruby/api/0.3/multi_history.rb?type=area&multiid=$1&%{QUERY_STRING}             [PT,T=text/plain]
+	RewriteRule   /api/0.3/node/([0-9,]+)/history    /ruby/api/0.3/node_history.rb?nodeid=$1&%{QUERY_STRING}         [PT,T=text/plain]
+	RewriteRule   /api/0.3/segment/([0-9,]+)/history         /ruby/api/0.3/segment_history.rb?segmentid=$1&%{QUERY_STRING}           [PT,T=text/plain]
+	RewriteRule   /api/0.3/way/([0-9,]+)/history     /ruby/api/0.3/multi_history.rb?type=way&multiid=$1&%{QUERY_STRING}              [PT,T=text/plain]
+	RewriteRule   /api/0.3/area/([0-9,]+)/history    /ruby/api/0.3/multi_history.rb?type=area&multiid=$1&%{QUERY_STRING}             [PT,T=text/plain]
 	
 	RewriteRule   /api/0.3/segment/([0-9]+)/ways    /ruby/api/0.3/multis_by_segments.rb?type=way&segmentids=$1              [PT,T=text/plain]
 	RewriteRule   /api/0.3/segment/([0-9]+)/areas   /ruby/api/0.3/multis_by_segments.rb?type=area&segmentids=$1             [PT,T=text/plain]

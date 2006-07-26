@@ -1,15 +1,21 @@
 #!/usr/bin/perl
 # Takes a planet.osm, and loads it into a database
 #
-# Includes schema files at the end
+# PostgreSQL support ($dbtype='pgsql'):
+#	nodes,node_tags,segments,segment_tags,ways,way_tags,way_segments tables
+#	includes schema files at the end
+#
+# MySQL support ($dbtype='mysql'):
+#	same table layout as main OSM server
 #
 # Nick Burch
 #     v0.01   23/07/2006
+#     v0.02   26/07/2006 mysql added (Richard Fairhurst)
 
 use strict;
 use DBI;
 
-my $dbtype = "pgsql";
+my $dbtype = "mysql";	# mysql | pgsql
 my $dbname = "planetosm";
 my $dbhost = "";
 my $dbuser = "";
@@ -17,7 +23,16 @@ my $dbpass = "";
 
 my $xml = shift;
 unless($xml) {
-	die("Use:\n\tplanetosm-to-db.pl <planet.osm.xml>|<-schema>\n");
+	die <<EOT
+
+planetosm-to-db.pl <planet.osm.xml>\t - parse planet.osm file and upload to db
+planetosm-to-db.pl -schema\t\t - output database schema
+planetosm-to-db.pl -empty\t\t - empty tables ready for new upload
+
+Before running, configure the script to include your database type
+(pgsql or mysql), name, host, user and password.
+
+EOT
 }
 if($xml eq "-schema") {
 	print &fetch_schema($dbtype);
@@ -27,11 +42,21 @@ if($xml eq "-schema") {
 # Open our database connection
 my $conn = &open_connection($dbtype,$dbname,$dbhost,$dbuser,$dbpass);
 
+if ($xml eq "-empty") {
+	foreach my $sql (split "\n",&empty_tables($dbtype)) {
+		print "$sql\n";
+		$conn->do($sql);
+	}
+	exit;
+}
+
 # Get our prepared statements
 my $node_ps = &build_node_ps($dbtype,$conn);
 my $node_tag_ps = &build_node_tag_ps($dbtype,$conn);
+my $node_tag_ps_mysql = &build_node_tag_ps_mysql($dbtype,$conn);
 my $seg_ps = &build_seg_ps($dbtype,$conn);
 my $seg_tag_ps = &build_seg_tag_ps($dbtype,$conn);
+my $seg_tag_ps_mysql = &build_seg_tag_ps_mysql($dbtype,$conn);
 my $way_ps = &build_way_ps($dbtype,$conn);
 my $way_seg_ps = &build_way_seg_ps($dbtype,$conn);
 my $way_tag_ps = &build_way_tag_ps($dbtype,$conn);
@@ -111,17 +136,35 @@ while(my $line = <XML>) {
 		$value =~ s/\&apos\;/'/g;
 		
 		if($last_type eq "node") {
-			$node_tag_ps->execute($last_id,$name,$value)
-				or warn("Invalid line '$line' : ".$conn->errstr);
+			if ($dbtype eq 'pgsql') {
+				$node_tag_ps->execute($last_id,$name,$value)
+					or warn("Invalid line '$line' : ".$conn->errstr);
+			} else {
+				$node_tag_ps_mysql->execute("$name=$value",$last_id)
+					or warn("Invalid line '$line' : ".$conn->errstr);
+			}
 		} elsif($last_type eq "segment") {
-			$seg_tag_ps->execute($last_id,$name,$value)
-				or warn("Invalid line '$line' : ".$conn->errstr);
+			if ($dbtype eq 'pgsql') {
+				$seg_tag_ps->execute($last_id,$name,$value)
+					or warn("Invalid line '$line' : ".$conn->errstr);
+			} else {
+				$seg_tag_ps_mysql->execute("$name=$value",$last_id)
+					or warn("Invalid line '$line' : ".$conn->errstr);
+			}
 		} elsif($last_type eq "way") {
 			$way_tag_ps->execute($last_id,$name,$value)
 				or warn("Invalid line '$line' : ".$conn->errstr);
 		}
 	}
 }
+
+# Post-processing
+
+foreach my $sql (split "\n",&post_process($dbtype)) {
+	print "$sql\n";
+	$conn->do($sql);
+}
+
 
 ########################################################################
 
@@ -141,14 +184,19 @@ sub open_connection {
 	if($dbtype eq "pgsql") {
 		$dsn = "dbi:Pg:dbname=$dbname";
 		$dsn .= ";host=$dbhost" if $dbhost;
+	} elsif ($dbtype eq 'mysql') {
+		$dsn = "DBI:mysql:$dbname";
+		$dsn.= ";host=$dbhost" if $dbhost;
 	} else {
 		die("Unknown database type '$dbtype'");
 	}
 
 	my $conn = DBI->connect( $dsn, $dbuser, $dbpass, 
 				{ PrintError => 0, RaiseError => 1, AutoCommit => 1 } );
-	$conn->do('SET client_encoding = LATIN1');
-	#$conn->do('SET client_encoding = UTF8');
+	if ($dbtype eq 'pgsql') {
+		$conn->do('SET client_encoding = LATIN1');
+		#$conn->do('SET client_encoding = UTF8');
+	}
 	return $conn;
 }
 
@@ -162,6 +210,13 @@ sub build_node_ps {
 sub build_node_tag_ps {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO node_tags (node,name,value) VALUES (?,?,?)";
+	my $sth = $conn->prepare($sql);
+	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
+	return $sth;
+}
+sub build_node_tag_ps_mysql {
+	my ($dbtype,$conn) = @_;
+	my $sql = "UPDATE nodes SET tags=CONCAT_WS(';',tags,?) WHERE id=?";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -180,6 +235,13 @@ sub build_seg_tag_ps {
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
+sub build_seg_tag_ps_mysql {
+	my ($dbtype,$conn) = @_;
+	my $sql = "UPDATE segments SET tags=CONCAT_WS(';',tags,?) WHERE id=?";
+	my $sth = $conn->prepare($sql);
+	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
+	return $sth;
+}
 sub build_way_ps {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO ways (id) VALUES (?)";
@@ -189,14 +251,18 @@ sub build_way_ps {
 }
 sub build_way_seg_ps {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO way_segments (way,segment,seg_order) VALUES (?,?,?)";
+	my $sql;
+	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_segments (way,segment,seg_order) VALUES (?,?,?)"; }
+	else					{ $sql = "INSERT INTO way_segments (id,segment_id,sequence_id) VALUES (?,?,?)"; }
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
 sub build_way_tag_ps {
 	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO way_tags (way,name,value) VALUES (?,?,?)";
+	my $sql;
+	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_tags (way,name,value) VALUES (?,?,?)"; }
+	else					{ $sql = "INSERT INTO way_tags (id,k,v) VALUES (?,?,?)"; }
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -273,7 +339,58 @@ CREATE TABLE way_segments (
 CREATE INDEX i_way_segments_way ON way_segments(way);
 CREATE INDEX i_way_segments_segment ON way_segments(segment);
 EOT
+	} elsif ($dbtype eq 'mysql') {
+		return "Please refer to http://trac.openstreetmap.org/browser/sql/mysql-schema.sql\n";
 	} else {
 		die("Unknown database type '$dbtype'");
+	}
+}
+
+sub empty_tables {
+	my ($dbtype)=@_;	# not currently used
+	if ($dbtype eq 'pgsql') {
+		return <<EOT;
+TRUNCATE TABLE nodes
+TRUNCATE TABLE node_tags
+TRUNCATE TABLE segments
+TRUNCATE TABLE segment_tags
+TRUNCATE TABLE ways
+TRUNCATE TABLE way_tags
+TRUNCATE TABLE way_segments
+EOT
+	} else {
+		return <<EOT;
+TRUNCATE TABLE nodes
+TRUNCATE TABLE segments
+TRUNCATE TABLE ways
+TRUNCATE TABLE way_tags
+TRUNCATE TABLE way_segments
+TRUNCATE TABLE current_nodes
+TRUNCATE TABLE current_segments
+TRUNCATE TABLE current_ways
+TRUNCATE TABLE current_way_tags
+TRUNCATE TABLE current_way_segments
+TRUNCATE TABLE meta_nodes
+TRUNCATE TABLE meta_segments
+TRUNCATE TABLE meta_ways
+EOT
+	}
+}
+
+sub post_process {
+	my ($dbtype)=@_;
+	unless ($dbtype eq 'pgsql') {
+		return <<EOT;
+UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1
+UPDATE segments SET tags=TRIM(';' FROM tags),visible=1
+INSERT INTO current_ways (id,visible) SELECT id,1 FROM ways
+INSERT INTO current_way_tags (id,k,v) SELECT id,k,v FROM way_tags
+INSERT INTO current_way_segments (id,segment_id,sequence_id) SELECT id,segment_id,sequence_id FROM way_segments
+INSERT INTO current_segments (id,node_a,node_b,tags,visible) SELECT id,node_a,node_b,tags,1 FROM segments
+INSERT INTO current_nodes (id,latitude,longitude,tags,visible) SELECT id,latitude,longitude,tags,1 FROM nodes
+INSERT INTO meta_nodes (id) SELECT id FROM nodes
+INSERT INTO meta_segments (id) SELECT id FROM segments
+INSERT INTO meta_ways (id) SELECT id FROM ways
+EOT
 	}
 }

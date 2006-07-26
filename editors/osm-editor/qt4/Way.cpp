@@ -38,67 +38,14 @@ void Way::setSegments(vector<Segment*>& s)
 	}
 }
 
-void Way::wayToOSM(QTextStream &outfile, bool allUid)
+void Way::toOSM(QTextStream &outfile, bool allUid)
 {
 	QString wayOrArea = (area) ? "area" : "way";
     outfile << "<" << wayOrArea;
     int sent_id = (osm_id>0 || (allUid&&osm_id)) ? osm_id : 0;
     outfile << " id='" << sent_id   << "'>" << endl;
 
-
-    //QString tags = "";
-
-    //  avoid dumping the name too many times
-	/*
-    if(name!="")
-        outfile << "<tag k='name' v='" << name << "' />" << endl;
-    if(ref!="")
-        outfile << "<tag k='ref' v='" << ref << "' />" << endl;
-		*/
-
-	/* 080706 write out all tags
-	if ((area) && type!="")
-	{
-		// yes, I know, nodes... this will be sorted once the qt4 conversion
-		// is done...
-		NodeMetaDataHandler mdh;
-		NodeMetaData md = mdh.getMetaData(type);
-		if(md.key!="" || md.value!="")
-        	outfile << "<tag k='"<<md.key<<"' v='" << md.value << "'/>" << endl;
-	}
-	else
-	{
-		// 130506 use new style tags e.g. highway
-    	RouteMetaDataHandler mdh;
-    	RouteMetaData metaData = mdh.getMetaData(type);
-    	if(metaData.foot!="no")
-       		outfile << "<tag k='foot' v='" << metaData.foot << "' />" << endl;
-   		if(metaData.horse!="no")
-       		outfile << "<tag k='horse' v='" << metaData.horse << "' />" << endl;
-   		if(metaData.bike!="no")
-       		outfile<<"<tag k='bicycle' v='" << metaData.bike << "' />" << endl;
-   		if(metaData.car!="no")
-       		outfile<<"<tag k='motorcar' v='" << metaData.car << "' />" << endl;
-   		if(metaData.routeClass!="")
-       		outfile<<"<tag k='highway' v='" << metaData.routeClass << "' />" << 
-       		endl;
-		if(metaData.railway!="")
-			outfile << "<tag k='railway' v='" << metaData.railway << 
-			"' />" << endl;
-	}
-	*/
-	// 080706 all tags written out, not just those of interest to osmeditor2
-	for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end(); i++)
-	{
-		if(i->second!="")
-		{
-			outfile << "<tag k='"<<i->first<<"' v='" << i->second << "'/>"
-			<<endl;
-		}
-	}
-
-   	if(tags.find("created_by")==tags.end()) 
-   		outfile << "<tag k='created_by' v='osmeditor2'/>" << endl;
+	writeTags(outfile);
 
 	for(int count=0; count<segments.size(); count++)
 	{
@@ -107,20 +54,6 @@ void Way::wayToOSM(QTextStream &outfile, bool allUid)
 
    	outfile << "</"<<wayOrArea<<">" <<endl;
 
-}
-// 180306 updated to 0.3
-QByteArray Way::toOSM()
-{
-    QByteArray xml;
-	// No longer works in Qt4
-    //QTextStream str(xml, QIODevice::WriteOnly);
-	//but this does
-	QTextStream str(&xml);
-    str<<"<osm version='0.3'>"<<endl;
-    wayToOSM(str);
-    str<<"</osm>"<<endl;
-    str<<'\0';
-    return xml;
 }
 
 // remove a segment - returns its position
@@ -154,13 +87,6 @@ bool Way::addSegmentAt(int index, Segment *s)
 		return true;
 	}
 	return false;
-}
-
-void Way::setType(const QString &t)
-{
-		cerr << "Way::setType()" << endl;
-		setType1(t);
-		setSegs();
 }
 
 // 090706 this can probably all go - see addSegment() - but keep all but

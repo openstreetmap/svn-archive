@@ -179,7 +179,7 @@ QByteArray Components2::getNewSegmentsXML()
     {
         if(segments[count]->getOSMID()<0)
         {
-            segments[count]->segToOSM(stream);
+            segments[count]->toOSM(stream);
         }
     }
     stream<<"</osm>" <<endl;
@@ -277,11 +277,11 @@ void Components2::toOSM(QTextStream &strm, bool allUid)
     for(int count=0; count<nodes.size(); count++)
         nodes[count]->toOSM(strm,allUid);
     for(int count=0; count<segments.size(); count++)
-        segments[count]->segToOSM(strm,allUid);
+        segments[count]->toOSM(strm,allUid);
     for(int count=0; count<ways.size(); count++)
-        ways[count]->wayToOSM(strm,allUid);
+        ways[count]->toOSM(strm,allUid);
     for(int count=0; count<areas.size(); count++)
-        areas[count]->wayToOSM(strm,allUid);
+        areas[count]->toOSM(strm,allUid);
     strm << "</osm>";
 }
 

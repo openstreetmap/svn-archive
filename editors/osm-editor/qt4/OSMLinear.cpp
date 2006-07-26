@@ -1,10 +1,10 @@
-#include "Segment.h"
+#include "OSMLinear.h"
 #include "RouteMetaDataHandler.h"
 //Added by qt3to4:
 #include <QTextStream>
 
 /*
-Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
+Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,23 +24,34 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 namespace OpenStreetMap
 {
 
-// 180306 updated to 0.3
-void Segment::toOSM(QTextStream &outfile, bool allUid)
+QString OSMLinear::getType()
 {
-    outfile << "<segment from='"
-                << nodes[0]->getOSMID() <<
-                   "' to='"
-                << nodes[1]->getOSMID() << "' ";
-    int sent_id = (osm_id>0 || (allUid&&osm_id)) ? osm_id : 0;
-    
-    outfile << " id='" << sent_id   << "'>" << endl;
-
-	writeTags(outfile);
-
-   	outfile << "</segment>" <<endl;
+		// use tags
+		//return type;
+		RouteMetaDataHandler mdh;
+		RouteMetaData md;
+		for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end();
+			i++)
+		{
+			md.parseKV(i->first, i->second);
+		}
+		QString t = mdh.getRouteType(md);
+		return t;
 }
 
-// Upload an existing (or new) segment to OSM
-// 130506 removed this old curl way of doing it
+void OSMLinear::setType(const QString& t)
+{
+		// use tags
+		//type = t;
+		RouteMetaDataHandler mdh;
+		RouteMetaData md = mdh.getMetaData(t);
+		tags["foot"] = md.foot;
+		tags["horse"] = md.horse;
+		tags["bicycle"] = md.bike;
+		tags["motorcar"] = md.car;
+		tags["highway"] = md.routeClass;
+		if(md.railway!="")
+			tags["railway"] = md.railway;
+}
 
 }

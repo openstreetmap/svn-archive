@@ -26,7 +26,7 @@ namespace OpenStreetMap
 
 // 180306 updated for 0.3
 // 080706 updated to allow for the fact that all tags now stored
-int Node::toOSM(QTextStream& outfile, bool allUid)
+void Node::toOSM(QTextStream& outfile, bool allUid)
 {
     int sent_id = (osm_id>0 || (allUid&&osm_id)) ? osm_id: 0;
 	outfile.setRealNumberPrecision(10); // 250306 in response to request
@@ -50,32 +50,11 @@ int Node::toOSM(QTextStream& outfile, bool allUid)
 	*/
 
 	// 080706 all tags written out, not just those of interest to osmeditor2
-	for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end(); i++)
-	{
-		if(i->second!="")
-		{
-			outfile << "<tag k='"<<i->first<<"' v='" << i->second << "'/>"
-				<<endl;
-		}
-	}
+	writeTags(outfile);
 
     outfile << "</node>" << endl;
 }
 
-// 180306 updated for 0.3
-QByteArray Node::toOSM()
-{
-    QByteArray xml;
-	// No longer works in Qt4
-    //QTextStream str(xml, QIODevice::WriteOnly);
-	//but this does
-	QTextStream str(&xml);
-    str<<"<osm version='0.3'>"<<endl;
-    toOSM(str);
-    str<<"</osm>"<<endl;
-    str<<'\0';
-    return xml;
-}
 // 180306 not changed as this is the old curl way of doing it
 // 130506 took out the old curl way of doing it
 

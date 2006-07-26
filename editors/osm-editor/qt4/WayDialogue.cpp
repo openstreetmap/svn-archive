@@ -24,7 +24,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QHBoxLayout>
-#include "MainWindow2.h"
+#include "MapWidget.h"
 
 namespace OpenStreetMap 
 {

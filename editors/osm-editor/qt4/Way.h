@@ -25,6 +25,7 @@
 #include "RouteMetaDataHandler.h"
 #include <qtextstream.h>
 #include <vector>
+#include "OSMLinear.h"
 
 
 using std::vector;
@@ -35,15 +36,13 @@ namespace OpenStreetMap
 
 class Components2;
 
-class Way
+class Way : public OSMLinear
 {
 protected:
 	vector<int> segments;
 	QString type, name, ref;
-	int osm_id;
 	Components2 *components;
 	bool area;
-	std::map <QString,QString> tags;
 
 public:
 	Way(Components2 *comp)
@@ -57,11 +56,6 @@ public:
 
 	void setSegments(vector<Segment*>&);
 
-	void setName(const QString& n) 
-	{
-		//name = n;
-		tags["name"] = n;
-	}
 	void setRef(const QString& r) 
 	{
 		//ref = r;
@@ -69,58 +63,24 @@ public:
 	}
 
 	// use tags
-	void setType(const QString& t);
-	void setType1(const QString& t) 
+	void setType(const QString& t) 
 	{
 		// use tags
 		//type = t;
-		RouteMetaDataHandler mdh;
-		RouteMetaData md = mdh.getMetaData(t);
-		tags["foot"] = md.foot;
-		tags["horse"] = md.horse;
-		tags["bicycle"] = md.bike;
-		tags["motorcar"] = md.car;
-		tags["highway"] = md.routeClass;
-		if(md.railway!="")
-			tags["railway"] = md.railway;
+		OSMLinear::setType(t);
+		setSegs();
 	}
+
 	void setSegs();
 
-	QString getName()
-	{
-		//return name;
-		return tags["name"];
-	}
-	QString getType()
-	{
-		// use tags
-		//return type;
-		RouteMetaDataHandler mdh;
-		RouteMetaData md;
-		for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end();
-			i++)
-		{
-			md.parseKV(i->first, i->second);
-		}
-		QString t = mdh.getRouteType(md);
-		return t;
-	}
 	QString getRef()
 	{
 		//return ref; // eg road number 
 		return tags["ref"];
 	}
 
-	void wayToOSM(QTextStream&, bool allUid=false);
+	void toOSM(QTextStream&, bool allUid=false);
 
-	int getOSMID()
-	{
-		return osm_id;
-	}
-
-	void setOSMID(int i);
-
-	QByteArray toOSM();
 
 	void addSegment (Segment *s)
 	{
@@ -158,15 +118,12 @@ public:
 	void setArea(bool a) { area=a; }
 
 	Segment *longestSegment();
+	
+	void setOSMID(int);
 
-	void addTag(QString& k,const QString& v)
-	{
-		/*
-		k = (k=="car") ? "motorcar" : k;
-		k = (k=="bike") ? "bicycle" : k;
-		*/
-		tags[k] = v;
-	}
+	// fails to compile without this seemingly pointless code on
+	// the version of g++ with mandrake 10.1. 
+	QByteArray toOSM() { return OSMObject::toOSM(); }
 };
 
 typedef Way Area;

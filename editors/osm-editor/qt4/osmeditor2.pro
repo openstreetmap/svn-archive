@@ -17,11 +17,14 @@ HEADERS += BatchUploader.h \
            GPSDevice2.h \
            GPXParser2.h \
            HTTPHandler.h \
-           LandsatManager2.h \
+           TileManager.h \
            llgr.h \
            LoginDialogue.h \
            MainWindow2.h \
            Map.h \
+		   MapWidget.h \
+		   OSMLinear.h \
+		   OSMObject.h \
            Node.h \
            NodeHandler.h \
            NodeMetaDataHandler.h \
@@ -62,14 +65,16 @@ SOURCES += BatchUploader.cpp \
            GPSDevice2.cpp \
            GPXParser2.cpp \
            HTTPHandler.cpp \
-           LandsatManager2.cpp \
+           TileManager.cpp \
            llgr.cpp \
            LoginDialogue.cpp \
            MainWindow2.cpp \
+		   MapWidget.cpp \
            Node.cpp \
            NodeHandler.cpp \
            NodeMetaDataHandler.cpp \
            osmeditor2.cpp \
+		   OSMLinear.cpp \
            OSMParser2.cpp \
            RouteMetaDataHandler.cpp \
            Segment.cpp \

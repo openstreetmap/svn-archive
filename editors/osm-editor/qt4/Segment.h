@@ -20,20 +20,20 @@
 
  */
 #include "Node.h"
+#include "OSMLinear.h"
 #include <qtextstream.h>
 #include "RouteMetaDataHandler.h"
 
 namespace OpenStreetMap
 {
 
-class Segment
+class Segment : public OSMLinear
 {
 private:
 	Node *nodes[2];
 	QString type, name;
-	int osm_id, way_id;
+	int way_id;
 	bool wayStatus;
-	std::map <QString,QString> tags;
 
 public:
 	Segment()
@@ -91,20 +91,7 @@ public:
 		way_id = 0;
 	}
 
-	void setName(const QString& n) 
-	{
-		//name = n;
-		tags["name"] = n;
-	}
-	void setType(const QString& t);
-	QString getName()
-	{
-		return tags["name"]; 
-	}
-	QString getType();
-
-	void toOSM(QTextStream&);
-	void segToOSM(QTextStream&, bool allUid=false);
+	void toOSM(QTextStream&, bool allUid=false);
 
 	bool contains(Node *n)
 	{
@@ -121,17 +108,6 @@ public:
 		return nodes[1];
 	}
 
-	int getOSMID()
-	{
-		return osm_id;
-	}
-
-	void setOSMID(int i)
-	{
-		osm_id = i;
-	}
-
-	QByteArray toOSM();
 
 	bool hasNodes()
 	{
@@ -163,10 +139,10 @@ public:
 		return OpenStreetMap::dist(nodes[0]->getLat(),nodes[0]->getLon(),
 									nodes[1]->getLat(),nodes[1]->getLon() );
 	}
-	void addTag(QString& k,const QString& v)
-	{
-		tags[k] = v;
-	}
+	
+	// fails to compile without this seemingly pointless code on
+	// the version of g++ with mandrake 10.1. 
+	QByteArray toOSM() { return OSMObject::toOSM(); }
 };
 
 }

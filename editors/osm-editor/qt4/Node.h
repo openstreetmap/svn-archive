@@ -35,19 +35,18 @@
 #include <iostream>
 
 #include <cmath>
+#include "OSMObject.h"
 
 using std::ostream;
 
 namespace OpenStreetMap
 {
 
-class Node
+class Node : public OSMObject
 {
 private:
 	double lat, lon;
-	int osm_id;
 	QString name, type, timestamp;
-	std::map <QString,QString> tags;
 
 public:
 	Node()
@@ -108,28 +107,13 @@ public:
 		osm_id=i; 
 		timestamp=ts;
 	}
-	int toOSM(QTextStream&,bool allUid=false);
+	void toOSM(QTextStream&,bool allUid=false);
 
 	bool operator==(const Node& tp)
 	{ 
 		return (fabs(lat-tp.lat)<0.000001) && (fabs(lon-tp.lon)<0.000001); 
 	}
 
-	bool isFromOSM() 
-	{ 
-		return osm_id>0; 
-	}
-
-	void setOSMID(int i ) 
-	{ 
-		osm_id  = i; 
-	}
-
-	void setName(const QString& n) 
-	{
-		//name = n;
-		tags["name"] = n;
-	}
 	void setType(const QString& t) 
 	{
 		// Use tags
@@ -146,12 +130,6 @@ public:
 	}
 	QString getType();
 
-	int getOSMID()
-	{
-		return osm_id;
-	}
-
-
 	double getLat() { return lat; }
 	double getLon() { return lon; }
 	QString getTimestamp() { return timestamp; }
@@ -159,12 +137,10 @@ public:
 	void setCoords(double lat,double lon)
 		{ this->lat=lat; this->lon=lon; }
 	void trackpointToNode();
-	QByteArray toOSM();
-
-	void addTag(const QString& k,const QString& v)
-	{
-		tags[k] = v;
-	}
+	
+	// fails to compile without this seemingly pointless code on
+	// the version of g++ with mandrake 10.1. 
+	QByteArray toOSM() { return OSMObject::toOSM(); }
 };
 
 class TrackPoint

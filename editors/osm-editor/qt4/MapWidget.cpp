@@ -604,50 +604,6 @@ void MapWidget::setMode(int m)
     update();
 }
 
-/* 050706 all this goes (all done via dialog; also can't change a segment
- * type anymore. YOU *WILL* USE WAYS, WHETHER YOU LIKE IT OR NOT!!!! AND 
- * THAT'S AN *ORDER* !!!! 
-void MapWidget::setSegType(const QString &t)
-{
-    // live change of selected segment
-    curSegType =   t;
-
-	// Now set the type of the way if a way is selected, rather than a segment
-	if(selWay)
-		selWay->setType(curSegType);
-	else
-	{
-		for(int count=0; count<selSeg.size(); count++)
-			selSeg[count]->setType(curSegType);
-	}
-
-        // UPLOAD IF IN LIVE MODE
-        if(liveUpdate)
-        {
-			if(selWay)
-			{
-            	QByteArray xml = selWay->toOSM();
-            	QString url;
-            	url.sprintf ("/api/0.3/way/%d", selWay->getOSMID());
-            	osmhttp.setAuthentication(username, password);
-				osmhttp.scheduleCommand("PUT",url,xml);
-			}
-			else if(!makingWay)
-			{
-				for(int ct=0; ct<selSeg.size(); ct++)
-				{
-            		QByteArray xml = selSeg[ct]->toOSM();
-            		QString url;
-            		url.sprintf("/api/0.3/segment/%d",selSeg[ct]->getOSMID());
-            		osmhttp.setAuthentication(username, password);
-					osmhttp.scheduleCommand("PUT",url,xml);
-				}
-			}
-        }
-    update();
-}
-*/
-
 void MapWidget::toggleNodes()
 {
     trackpoints = !trackpoints;
@@ -719,10 +675,6 @@ void MapWidget::paintEvent(QPaintEvent* ev)
     curPainter = NULL;
     if(movingNode)
     {
-            /*
-        bitBlt(this,0,0, &savedPixmap,0,0,savedPixmap.width(),
-                        savedPixmap.height(), Qt::CopyROP);
-                        */
         drawMoving(p);
     }
 }
@@ -755,7 +707,6 @@ void MapWidget::drawAngleText(int fontsize,double angle,int x,int y,int r,
 {
     if(curPainter)
     {
-        //angle*=-180/M_PI;
         curPainter->setFont(QFont("Helvetica",fontsize));
         doDrawAngleText(curPainter,x,y,x,y,angle,text);
     }
@@ -850,9 +801,17 @@ void MapWidget::drawSegments(QPainter& p)
 
 void MapWidget::drawSegment(QPainter& p, Segment *curSeg)
 {
-        ScreenPos pt1, pt2;
+	ScreenPos pt1=map.getScreenPos(curSeg->firstNode()->getLon(),
+                                curSeg->firstNode()->getLat()),
+		  	  pt2=map.getScreenPos(curSeg->secondNode()->getLon(),
+						curSeg->secondNode()->getLat());
+		
+	// 270706 do this test at the beginning to improve speed
+	if(map.pt_within_map(pt1) || map.pt_within_map(pt2))
+	{
         double dx, dy;
         QFont f("Helvetica",10,QFont::Bold,false);
+
         QFontMetrics fm(f);
         p.setFont(f);
 
@@ -882,18 +841,11 @@ void MapWidget::drawSegment(QPainter& p, Segment *curSeg)
 		
         if(curSeg->hasNodes())
         {
-            pt1=map.getScreenPos(curSeg->firstNode()->getLon(),
-                                curSeg->firstNode()->getLat());
-            pt2=map.getScreenPos(curSeg->secondNode()->getLon(),
-                                curSeg->secondNode()->getLat());
-            if(map.pt_within_map(pt1) || map.pt_within_map(pt2))
-            {
 				// Draw segments belonging to ways (only) in the correct colour
 				if(curSeg->belongsToWay() && !found && !foundWay)
 				{
 
 					Way *w=components->getWayByID(curSeg->getWayID());
-					//curPen = segpens[curSeg->getType()].pen;
 					if(segpens.find(w->getType()) != segpens.end())
 					{
 						curPen = segpens[w->getType()].pen;
@@ -902,13 +854,6 @@ void MapWidget::drawSegment(QPainter& p, Segment *curSeg)
 						{
 							p.setPen(QPen(Qt::black,curPen.width()+2));
                 			p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
-						/*
-            			p.drawEllipse( pt1.x - 5, pt1.y - 5, 10, 10 );
-            			p.drawEllipse( pt2.x - 5, pt2.y - 5, 10, 10 );
-						*/
-
-						//cerr<<"segment belongs to a way"<<endl;
-						//curPen.setWidth(4);
 						}
 					}
 
@@ -944,12 +889,11 @@ void MapWidget::drawSegment(QPainter& p, Segment *curSeg)
         		p.setPen(curPen);
                 p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
 				p.setBrush(Qt::SolidPattern);
-        		//p.setPen(Qt::black);
 				p.fillRect( pt1.x-s/2, pt1.y-s/2, s, s, QColor(128,128,128) );
 				p.fillRect( pt2.x-s/2, pt2.y-s/2, s, s, QColor(128,128,128) );
-				//p.drawEllipse( pt2.x - 4, pt2.y - 4, 8, 8 );
-            }
+            
         }
+	}
 }
 
 void MapWidget::drawGPX(QPainter& p)
@@ -1000,7 +944,6 @@ void MapWidget::drawTrackPoints(QPainter& p,Components2 *comp,QColor colour,
 		if(comp==components)
 		{
 			idAsText.sprintf("%d", count);
-			//p.drawPixmap(currentPos.x,currentPos.y,tpPixmap);
 			p.setFont(QFont("Helvetica",8));
 			p.drawText(currentPos.x+3,currentPos.y+3,idAsText);
 		}
@@ -1070,7 +1013,6 @@ void MapWidget::mousePressEvent(QMouseEvent* ev)
             if(movingNode)
             {
                 movingNodeSegs = components->getSegs(movingNode);
-                //components->deleteNode(movingNode);
                 movingNodes.clear();
                 for(int count=0; count<movingNodeSegs.size(); count++)
                 {
@@ -1195,11 +1137,6 @@ void MapWidget::mousePressEvent(QMouseEvent* ev)
 			// way, we can re-use the current last segment if selection
 			// of the last segment was unsuccessful.
 			
-			/*
-			if(makingWay && segCount!=0 && selSeg[segCount]!=NULL)
-				selSeg.push_back(NULL);
-			*/
-
 			s1= components->getNearestSegment(p.y,p.x,LIMIT);
 			if(s1)
 			{
@@ -1254,11 +1191,7 @@ void MapWidget::mousePressEvent(QMouseEvent* ev)
 
 void MapWidget::resizeEvent(QResizeEvent * ev)
 {
-    //map.resizeTopLeft(ev->size().width(), ev->size().height());
     map.resizeTopLeft(width(), height());
-    //landsatManager.grab();
-    //landsatManager.resize(ev->size().width(), ev->size().height());
-    //landsatManager.resize(width(), height());
     update();
     LIMIT=map.earthDist(10);
 }
@@ -1281,7 +1214,6 @@ void MapWidget::editNode(int x,int y,int limit)
             nearest->setType(d->getType());
             if(liveUpdate && nearest->getOSMID()>0)
             {
-                //nearest->uploadToOSM(username,password);
                 QByteArray xml = nearest->toOSM();
                 QString url;
                 url.sprintf ("/api/0.3/node/%d", nearest->getOSMID());
@@ -1351,7 +1283,6 @@ void MapWidget::mouseReleaseEvent(QMouseEvent* ev)
             if(movingNode)
             {
                 movingNode->setCoords(p.y,p.x);
-                //components->addNode(movingNode);
                 if(liveUpdate && movingNode->getOSMID()>0)
                 {
                     QByteArray xml = movingNode->toOSM();
@@ -1390,12 +1321,6 @@ void MapWidget::keyPressEvent(QKeyEvent* ev)
         {
             case Qt::Key_Plus  : magnify(); break;
             case Qt::Key_Minus : shrink(); break;
-                                 
-            // Remember the ZX Spectrum? :-)
-            case Qt::Key_5     : screenLeft(); break;
-            case Qt::Key_6     : screenDown(); break;
-            case Qt::Key_7     : screenUp(); break;
-            case Qt::Key_8     : screenRight(); break;
         }
     }
 }
@@ -1436,22 +1361,6 @@ void MapWidget::down()
     update();
 }
 
-void MapWidget::screenLeft()
-{
-}
-
-void MapWidget::screenRight()
-{
-}
-
-void MapWidget::screenUp()
-{
-}
-
-void MapWidget::screenDown()
-{
-}
-
 void MapWidget::magnify()
 {
     map.rescale(2);
@@ -1471,16 +1380,6 @@ void MapWidget::shrink()
     showPosition();
     update();
     LIMIT=map.earthDist(10);
-}
-
-void MapWidget::updateWithLandsatCheck()
-{
-		/*
-    if(landsatManager.needMoreData())
-        landsatManager.forceGrab();
-    showPosition();
-    update();
-	*/
 }
 
 void MapWidget::grabLandsat()
@@ -1542,7 +1441,6 @@ QPixmap mmLoadPixmap(const QString& directory, const QString& filename)
 void MapWidget::newSegmentAdded(const QByteArray& array, void *segment)
 {
 	Segment *seg = (Segment*) segment;
-	//Segment *seg=newUploadedSegment;
     QString str = array;
     QStringList ids;
     ids = str.split("\n");
@@ -1559,7 +1457,6 @@ void MapWidget::newSegmentAdded(const QByteArray& array, void *segment)
 void MapWidget::newWayAdded(const QByteArray& array,void *way)
 {
 	Way *w=(Way*)way;
-	//Way *w=newUploadedWay;
     QString str = array;
     QStringList ids;
     ids = str.split("\n");
@@ -1704,7 +1601,6 @@ void MapWidget::uploadWay()
 		{
 			QString url = wd->isArea() ? "/api/0.3/area/0" :
 										"/api/0.3/way/0";
-			//url.sprintf("/api/0.3/%s/0", type.toAscii().constData());
 
 			newUploadedWay = way;
 			osmhttp.setAuthentication(username, password);
@@ -1766,7 +1662,6 @@ Node *MapWidget::doAddNewNode(double lat,double lon,const QString &name,
 	Node *n = components->addNewNode(lat,lon,name,type);
 	if(liveUpdate)
 	{
-		//n->uploadToOSM(username,password);
 		QByteArray xml = n->toOSM();
 		QString url = "/api/0.3/node/0";
 		osmhttp.setAuthentication(username, password);

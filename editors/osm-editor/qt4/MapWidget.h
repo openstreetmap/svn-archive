@@ -236,7 +236,6 @@ public:
 	void drawContours();
 	void rescale(double);
 
-	void updateWithLandsatCheck();
 	Map getMap() { return map; }
 
 	void drawContour(int,int,int,int,int,int,int);
@@ -284,10 +283,6 @@ public slots:
 	void left();
 	void right();
 	void magnify();
-	void screenUp();
-	void screenDown();
-	void screenLeft();
-	void screenRight();
 	void shrink();
 	void loginToLiveUpdate();
 	void grabOSMFromNet();

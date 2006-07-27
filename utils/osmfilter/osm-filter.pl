@@ -63,6 +63,7 @@ my $use_area_limit    = 0;
 my $use_reduce_filter = 0;
 my $draw_check_areas  = 0;
 my $check_against_osm = 0;
+my $filter_duplicate_tracepoints = 0;
 my $do_all_filters    = 0;
 my $generate_ways     = 0;
 
@@ -282,6 +283,9 @@ sub LoadOSM($$)
       if $debug || $verbose;
   my $start_time=time();
   my $fh = File::data_open($file_name);
+
+  die "Cannot open $file_name in LoadOSM"  unless $fh;
+
   my @segments;
   while ( my $line = $fh ->getline() ) {
       my @segment;
@@ -326,7 +330,7 @@ sub reduce_osm_segments($$) {
 	push(@{$osm_segments},$seg);
     }
     if ( $verbose || $debug) {
-	printf "Reduced OSM Data to $count( $all_count) Segments ";
+	printf "Reduced OSM Data to $count( $all_count) OSM-Segments ";
 	Utils::print_time($start_time);
     }
 
@@ -539,7 +543,7 @@ sub read_file($) {
 	($type,$line) = split( /,/,$line,2);
 	$type =~ s/^\s*\$GP//;
 	print "type $type, line: $line, checksumm:$checksumm\n"
-	    if $debug>2;
+	    if $debug>4;
 	if ( $type eq "GGA" ) {
 	    # GGA - Global Positioning System Fix Data
 	    # Time, Position and fix related data fora GPS receiver.
@@ -664,7 +668,7 @@ sub read_file($) {
 	$lat = -$lat if $lat_v eq "S";
 	$lon = -$lon if $lon_v eq "W";
 	print "type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n" 
-	    if $debug>3;
+	    if $debug>5;
 	if ( ( abs($lat) < 0.001 ) && 
 	     ( abs($lat) < 0.001 ) ) {
 	    print "too near to (0/0) : type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n";
@@ -844,14 +848,14 @@ sub read_gpx_file($) {
 		}
 		my $trk_time = $trk_pt->{time};
 		if ( defined $trk_time ) {
-		    my ($year,$month) = split(/-/,$trk_time);
-		    if ( $year < 1970 ) {
-			warn "Ignoring Dataset because of Strange Date $trk_time in GPX File\n";
-			next;
-		    };
 		    #print "trk_time $trk_time\n";
 		    my $time = str2time( $trk_time);
 		    my $ltime = localtime($time);
+		    my ($year,$month) = split(/-/,$trk_time);
+		    if ( $year < 1970 ) {
+			warn "Ignoring Dataset because of Strange Date $trk_time ($ltime) in GPX File\n";
+			next;
+		    };
 		    if ( $debug >= 11 ) {
 			print "time: $ltime  ".$trk_pt->{time}."\n\n";
 		    }
@@ -920,6 +924,10 @@ sub write_gpx_file($$) { # Write an gpx File
 	    $point_count++;
 	    my $lat  = $elem->{lat};
 	    my $lon  = $elem->{lon};
+	    if ( abs($lat) >90 || abs($lon) >180 ) {
+		warn "write_gpx_track: Element ($lat/$lon) out of bound\n";
+		next;
+	    };
 	    print $fh "     <trkpt lat=\"$lat\" lon=\"$lon\">\n";
 	    if( defined $elem->{ele} ) {
 		print $fh "       <ele>$elem->{ele}</ele>\n";
@@ -1095,11 +1103,12 @@ sub read_filter_areas($){
 
     open(WAYPT,"$filename") || die "ERROR: get_waypoint Can't open: $filename: $!\n";
     my ($name,$lat,$lon, $typ,$wlan, $action, $sqlnr, $proximity);
-    while (<WAYPT>) {
-	chomp;
-	($name,$lat,$lon, $typ, $wlan, $action, $sqlnr, $proximity) = split(/\s+/);
+    while (my $line = <WAYPT>) {
+	chomp($line);
+	($name,$lat,$lon, $typ, $wlan, $action, $sqlnr, $proximity) = split(/\s+/,$line);
 	my $block=0;
 	next unless $name;
+	next unless $typ;
 	next unless $typ =~ m/^filter\./;
 	if ( $typ =~ m/deny/ ) {
 	    $block = 1;
@@ -1599,6 +1608,94 @@ sub filter_duplicate_wpt($){
 }
 
 
+# ------------------------------------------------------------------
+# check if new trackpoints are ner already existing ones
+
+sub filter_duplicate_tracepoints($$$){
+    my $tracks       = shift; # reference to tracks list
+    my $checked_track_segments = shift;
+    my $config       = shift;
+
+    my $dist_old2track = $config->{dist} || 20;
+    my $start_time=time();
+
+    my $bounds = GPS::get_bounding_box($tracks);
+    print "Track Bounds: ".Dumper(\$bounds);
+
+    my $new_tracks={tracks=>[],wpt=>[]};
+
+    # Keep WPT
+    for my $wpt ( @{$tracks->{wpt}} ) {
+	next unless $wpt;
+	push(@{$new_tracks->{wpt}},$wpt);
+    }
+
+    my $count_points = 0;
+    my $new_points = 0;
+    for my $track ( @{$tracks->{tracks}} ) {
+	next if !$track;
+	my $new_track=[];
+	my $last_elem={};
+	for my $elem ( @{$track} ) {
+	    my $skip_point=0;
+	    my $min_dist = 40000;
+	    my $pdop = $elem->{pdop};
+	    my $compare_dist=$dist_old2track;
+	    if ( defined ( $pdop ) &&  ($pdop >0) ) {
+		$compare_dist= $pdop;
+	    }
+
+	    for my $seg ( @{$checked_track_segments} ) {
+		#print Dumper(\$seg);
+		# Distance between line of segment($seg)  to trackpoint $elem
+		my $dist = 1000*Geometry::distance_line_point_Km($seg->[0],$seg->[1],
+								 $seg->[2],$seg->[3],
+								 $elem->{lat},$elem->{lon}
+								 );
+		$min_dist = $dist if $dist < $min_dist;
+		next if $dist > $compare_dist; # in m
+		printf "Elem is %3.1f m away from other Track line\n",$dist
+		    if $debug >1;
+		$count_points++;
+		$skip_point++;
+		last;
+	    }
+	    # print "Min Dist: $min_dist Meter\n";
+
+	    ################################
+	    # Since this is currently only a dumpy all points are taken
+	    $skip_point=0;
+
+	    
+	    if ( $skip_point ) {
+		my $num_elem=scalar(@{$new_track});
+		if ( $num_elem >4 ) {
+		    push(@{$new_tracks->{tracks}},$new_track);
+		}
+		$new_track=[];
+		$count_points++;
+	    } else {
+		push(@{$new_track},$elem);
+		$new_points++;
+		if ( defined($last_elem) && defined($last_elem->{lat}) && defined($last_elem->{lon})) {
+		    push(@{$checked_track_segments},
+			 [$last_elem->{lat},$last_elem->{lon},$elem->{lat},$elem->{lon}]);
+		}
+	    }
+	    $last_elem=$elem;
+	}
+	push(@{$new_tracks->{tracks}},$new_track);
+    }
+
+    if ( $debug || $verbose) {
+	printf "Found $count_points Points already in other Tracks. This leaves $new_points ";
+	Utils::print_time($start_time);
+    }
+
+    return $new_tracks;
+}
+
+
 
 # ------------------------------------------------------------------
 
@@ -1870,9 +1967,20 @@ sub convert_Data(){
 
     my $osm_segments;
     if ( $check_against_osm ) {
-	my $osm_filename = "~/svn.openstreetmap.org/".
-	    "utils/osm-pdf-atlas/Data/osm.txt";
-	$osm_filename = "./osm.txt";
+	my @path=qw( ./
+		     ~/openstreetmap.org/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
+		     ~/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
+		     ~/.gpsdrive/MIRROR/osm/);
+	my $osm_filename;
+	my $home = $ENV{HOME}|| '~/';
+	for my $path ( @path ) {
+	    $osm_filename = "${path}osm.txt";
+	    $osm_filename =~ s,\~/,$home/,;
+	    print "check $osm_filename for loading\n" if $debug;
+	    
+	    last if -s $osm_filename;
+	    $osm_filename='';
+	}
 	$osm_segments = OSM::LoadOSM($osm_filename,
 				 { lat_min => -90, lon_min => -180,
 				   lat_max => -90, lon_max => -180
@@ -1897,25 +2005,27 @@ sub convert_Data(){
 	    next;
 	}
 
+	my ( $extention ) = ( $filename =~ m/\.([^\.]+)(\.gz|\.bz2)?$/ );
+	print "$filename has extention '$extention'\n" if $debug>1;
 	if ( $filename =~ m/^gpsbabel:(\S+):(\S+)$/ ) {
 	    my ($type,$name) = ($1,$2);
 	    $new_tracks = Gpsbabel::read_file($name,$type);    
-	} elsif ( $filename =~ m/\.gps$/ ) {
+	} elsif ( $extention eq "gps" ) {
 	    $new_tracks = Kismet::read_gps_file($filename);
-	} elsif ( $filename =~ m/\.gpx$/ ) {
+	} elsif ( $extention eq "gpx" ) {
 	    $new_tracks = GPX::read_gpx_file($filename);
-	} elsif ( $filename =~ m/\.mps$/ ) {
+	} elsif ( $extention eq "mps" ) {
 	    $new_tracks = Gpsbabel::read_file($filename,"mapsource");
-	} elsif ( $filename =~ m/\.gdb$/ ) {
+	} elsif ( $extention eq "gdb" ) {
 	    $new_tracks = Gpsbabel::read_file($filename,"gdb");
-	} elsif ( $filename =~ m/\.ns1$/ ) {
-	    $new_tracks = Gpsbabel::read_file($filename,"netstumbler");    
-	} elsif ( $filename =~ m/\.nmea$/ ) {
+	} elsif ( $extention eq "ns1" ) {
+	    $new_tracks = Gpsbabel::read_file($filename,"netstumbler");
+	} elsif ( $extention eq "nmea" ) {
 	    $new_tracks = NMEA::read_file($filename);
-	} elsif ( $filename =~ m/\.sav$/ ) {
+	} elsif ( $extention eq "sav" ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	} else {
-	    warn "$filename: !!! Skipping because it's an unknown Filetype for reading\n";
+	    warn "$filename: !!! Skipping because of unknown Filetype ($extention) for reading\n";
 	    next;
 	}
 	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
@@ -1927,6 +2037,12 @@ sub convert_Data(){
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
 	    GPS::print_count_data($new_tracks,"$filename: Area Filter to ");
 	}
+
+	
+	if ( $filter_duplicate_tracepoints ) {
+	    $new_tracks = GPS::filter_duplicate_tracepoints( $new_tracks,[],
+					      { dist => 20 });
+	};
 
 	if ( $check_against_osm ) {
 	    $new_tracks = OSM::check_against_osm( $new_tracks,$osm_segments,
@@ -2016,6 +2132,7 @@ GetOptions (
 	     'limit-area'          => \$use_area_limit,
 	     'draw_check_areas'    => \$draw_check_areas,
 	     'check_against_osm'   => \$check_against_osm,
+    'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-all'          => \$do_all_filters,
 	     'generate_ways'       => \$generate_ways,
@@ -2029,9 +2146,9 @@ GetOptions (
 if ( $do_all_filters ) {
     $out_osm           = 1;
     $split_tracks      = 1;
-    $use_area_limit    = 1;
     $use_reduce_filter = 1;
     $check_against_osm = 1;
+    $filter_duplicate_tracepoints=1;
 }
 
 pod2usage(1) if $help;
@@ -2170,10 +2287,6 @@ in the Source at the definition of
   $areas_allowed_squares = 
 AND: they are not tested :-(
 
-=item B<--draw_check_areas>
-
-draw the check_areas into the file 00__check_areas.gpx file 
-by adding a track with the border of each check_area 
 
 =item B<--split-tracks>
 
@@ -2190,15 +2303,29 @@ I must be linked to ./osm.txt
 Then it checks if any of the points are near (<15m) any  
 of the osm-segments. If so they will be deleted.
 
-=item B<--use_reduce_filter>
+=item B<--check_against_osm>
 
-This Filter reduces the ammount of point used in the GPX/OSM File.
-Each point which would almost give a streight line 
-with its pre and post point will be eliminated.
+This loads the osm.txt. osm.txt is a the segmentss File generated 
+from in the pdf-atlas directory utils/osm-pdf-atlas/Data/osm.txt.
+I must be linked to ./osm.txt
+Then it checks if any of the points are near (<15m) any  
+of the osm-segments. If so they will be deleted.
+
+=item B<--filter_duplicate_tracepoints>
+
+This Filter checks for points near an already existing Trackline. 
+If so it is removed
+
+Currently it's only a stub, so anyone can sit down and programm the compare routine.
 
 =item B<--filter-all>
 
 Switch on all of the above filters
+
+=item B<--draw_check_areas>
+
+draw the check_areas into the file 00__check_areas.gpx file 
+by adding a track with the border of each check_area 
 
 =item B<--generate_ways>
 

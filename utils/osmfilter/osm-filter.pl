@@ -19,16 +19,19 @@
 #   - OSM File for josm *.osm ( http://openstreetmap.org/)
 #   - GPX File for josm *.gpx
 #   - 00__collection.gpx, 00__collection.osm (one File with all good tracks)
-#   - 00__check_areas.gpx with al the area filters 
+#   - 00__filter_areas.gpx with al the area filters 
 #
 # Joerg Ostertag <openstreetmap@ostertag.name>
 # TODO:
 #   eliminate duplicate waypoints
-#   area filter fo waypoints
+#   area filter for waypoints
 #   keep name of Tracks
 #   eliminate duplicate Tracks
 #   cut out part of tracks which cover the same road
 #   make limits (max_speed, max_line_dist, ...) configurable
+#   write more filters:
+#      - eliminate duplicate tracksegments (driving a street up and down)
+#      - elimiate trackpoints where the GPS was standing for a longer time at one point
 
 use strict;
 use warnings;
@@ -60,7 +63,7 @@ my $out_osm           = 0;
 my $split_tracks      = 0;
 my $use_area_limit    = 0;
 my $use_reduce_filter = 0;
-my $draw_check_areas  = 0;
+my $draw_filter_areas  = 0;
 my $check_against_osm = 0;
 my $filter_duplicate_tracepoints = 0;
 my $do_all_filters    = 0;
@@ -285,6 +288,7 @@ sub LoadOSM($)
   my $segments;
 
   if ( -s "$file_name.storable") {
+      # later we should compare if the file also is newer than the source
       $file_name .= ".storable";
       $segments = Storable::retrieve($file_name);
   } else {
@@ -355,7 +359,7 @@ sub check_against_osm($$$){
     my $config       = shift;
 
     my $dist_osm_track = $config->{dist} || 20;
-    my $max_angle = 45;
+    my $max_angle = 30;
     my $start_time=time();
 
     my $bounds = GPS::get_bounding_box($tracks);
@@ -370,13 +374,14 @@ sub check_against_osm($$$){
 	push(@{$new_tracks->{wpt}},$wpt);
     }
 
-    my $count_points = 0;
+    my $all_points = 0;
     my $new_points = 0;
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	my $new_track=[];
 	my $last_elem;
 	for my $elem ( @{$track} ) {
+	    $all_points++;
 	    my $skip_point=0;
 	    my $min_dist = 40000;
 	    my $pdop = $elem->{pdop};
@@ -391,7 +396,9 @@ sub check_against_osm($$$){
 	    }
 
 	    for my $segment ( @{$osm_segments} ) {
-		next unless ($angle- $segment->[4]) < $max_angle;
+		# The lines have to be fairly parallel
+		next unless abs ($angle - $segment->[4]) < $max_angle;
+
 		# Distance between line of segment($segment)  to trackpoint $elem
 		my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
 							    $segment->[2],$segment->[3],
@@ -401,7 +408,6 @@ sub check_against_osm($$$){
 		next if $dist > $compare_dist; # in m
 		printf "Elem is %3.1f m away from line\n",$dist
 		    if $debug >5;
-		$count_points++;
 		$skip_point++;
 		last;
 	    }
@@ -413,7 +419,6 @@ sub check_against_osm($$$){
 		    push(@{$new_tracks->{tracks}},$new_track);
 		}
 		$new_track=[];
-		$count_points++;
 	    } else {
 		push(@{$new_track},$elem);
 		$new_points++;
@@ -424,7 +429,7 @@ sub check_against_osm($$$){
     }
 
     if ( $debug || $verbose) {
-	printf "Found $count_points Points already in OSM. This leaves $new_points ";
+	printf "Reduced  $new_points($all_points) Points comparing to OSM.txt";
 	Utils::print_time($start_time);
     }
 
@@ -1179,8 +1184,8 @@ sub check_allowed_area($){
 }
 
 # Return a tracklist whith a track for each chek_area
-sub draw_check_areas(){
-    return [] unless $draw_check_areas;
+sub draw_filter_areas(){
+    return [] unless $draw_filter_areas;
     my $new_tracks={tracks=>[]};
     for my $area ( @{$areas_allowed_squares} ) {
 	my $new_track = [];
@@ -2016,7 +2021,7 @@ sub convert_Data(){
 	    print "$filename: Skipping for read. These are my own files.\n";
 	    next;
 	}
-	if ( $filename =~ m/00__check_areas.gpx$/ ) {
+	if ( $filename =~ m/00__filter_areas.gpx$/ ) {
 	    print "$filename: Skipping for read. These are my own files.\n";
 	    next;
 	}
@@ -2111,8 +2116,9 @@ sub convert_Data(){
     GPS::filter_duplicate_wpt($all_tracks);
 
 
-    GPS::print_count_data($all_tracks,"Summary:  after complete processing ");
+    GPS::print_count_data($all_tracks,"Result:  after complete processing ");
 
+    ($track_count,$point_count) =   GPS::count_data($all_tracks);
     if ($track_count && $point_count) {
 	if (  $out_osm) {
 	    my $points = OSM::Tracks2osm($all_tracks,$filename);
@@ -2122,9 +2128,9 @@ sub convert_Data(){
 	GPX::write_gpx_file($all_tracks,"00__combination.gpx");
 	}
 
-    if ( $draw_check_areas ) {
-	my $check_areas = GPS::draw_check_areas();
-	GPX::write_gpx_file($check_areas,"00__check_areas.gpx");
+    if ( $draw_filter_areas ) {
+	my $filter_areas = GPS::draw_filter_areas();
+	GPX::write_gpx_file($filter_areas,"00__filter_areas.gpx");
      }
 
     if ( $verbose) {
@@ -2146,9 +2152,9 @@ GetOptions (
 	     'out-osm'             => \$out_osm,
 	     'split-tracks'        => \$split_tracks,
 	     'limit-area'          => \$use_area_limit,
-	     'draw_check_areas'    => \$draw_check_areas,
+	     'draw_filter_areas'    => \$draw_filter_areas,
 	     'check_against_osm'   => \$check_against_osm,
-    'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
+             'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-all'          => \$do_all_filters,
 	     'generate_ways'       => \$generate_ways,
@@ -2164,7 +2170,7 @@ if ( $do_all_filters ) {
     $split_tracks      = 1;
     $use_reduce_filter = 1;
     $check_against_osm = 1;
-    $filter_duplicate_tracepoints=1;
+#    $filter_duplicate_tracepoints=1;
 }
 
 pod2usage(1) if $help;
@@ -2227,7 +2233,7 @@ The Idea behind the osm-filter is:
     proximity is defaulted by the proximity in the way.txt File (column 8)
     block is defaulted with 0
     If you want to see the filter areas in the resulting gpx file you can 
-    use the option    --draw_check_areas. This will draw in the check areas 
+    use the option    --draw_filter_areas. This will draw in the check areas 
     as seperate tracks.
  - Then osm-filter then enriches the Data for internal use by adding:
 	- speed of each segment (if necessary)
@@ -2287,6 +2293,36 @@ There will also be written a file named
  ./00__combination.osm
 
 
+=item B<--split-tracks>
+
+Split tracks it they have gaps of more than 
+ - 10 Minutes
+ - 11Km
+ - 200Km/h
+
+=item B<--check_against_osm>
+
+This loads the osm.txt. osm.txt is a the segmentss File generated 
+from in the pdf-atlas directory utils/osm-pdf-atlas/Data/osm.txt.
+I must be linked to ./osm.txt
+Then it checks if any of the points are near (<20m) any  
+of the osm-segments. 
+And the OSM Segment and the track segments have an 
+angle of less than 30 Degrees.
+If so they will be deleted.
+
+=item B<--filter_duplicate_tracepoints>
+
+This Filter checks for points near an already existing Trackline. 
+If so it is removed
+
+Currently it's only a stub, so anyone can sit down and programm the compare routine.
+
+=item B<--filter-all>
+
+Switch on all of the above filters
+
+
 =item B<--limit-area>
 
 use the area limits coded in the source
@@ -2303,45 +2339,10 @@ in the Source at the definition of
   $areas_allowed_squares = 
 AND: they are not tested :-(
 
+=item B<--draw_filter_areas>
 
-=item B<--split-tracks>
-
-Split tracks it they have gaps of more than 
- - 10 Minutes
- - 11Km
- - 200Km/h
-
-=item B<--check_against_osm>
-
-This loads the osm.txt. osm.txt is a the segmentss File generated 
-from in the pdf-atlas directory utils/osm-pdf-atlas/Data/osm.txt.
-I must be linked to ./osm.txt
-Then it checks if any of the points are near (<15m) any  
-of the osm-segments. If so they will be deleted.
-
-=item B<--check_against_osm>
-
-This loads the osm.txt. osm.txt is a the segmentss File generated 
-from in the pdf-atlas directory utils/osm-pdf-atlas/Data/osm.txt.
-I must be linked to ./osm.txt
-Then it checks if any of the points are near (<15m) any  
-of the osm-segments. If so they will be deleted.
-
-=item B<--filter_duplicate_tracepoints>
-
-This Filter checks for points near an already existing Trackline. 
-If so it is removed
-
-Currently it's only a stub, so anyone can sit down and programm the compare routine.
-
-=item B<--filter-all>
-
-Switch on all of the above filters
-
-=item B<--draw_check_areas>
-
-draw the check_areas into the file 00__check_areas.gpx file 
-by adding a track with the border of each check_area 
+draw the filter_areas into the file 00__filter_areas.gpx file 
+by creating a track with the border of each filter_area 
 
 =item B<--generate_ways>
 

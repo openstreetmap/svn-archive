@@ -4,7 +4,7 @@ require 'rss/2.0'
 
 start_time = Time.now
 
-MYSQL_SERVER = "128.40.59.181"
+MYSQL_SERVER = "db.openstreetmap.org"
 MYSQL_USER = "openstreetmap"
 MYSQL_PASS = "openstreetmap"
 MYSQL_DATABASE = "openstreetmap"
@@ -33,10 +33,10 @@ begin
   end
 
   puts '<h2>Top 10 users for uploads of gps data</h2><table><tr><td><b>User</b></td><td><b>No. of points</b></td></tr>'
-  res = dbh.query('select sum(size) as size, email from gpx_files, users where user_id = users.id group by user_id order by size desc limit 10;')
+  res = dbh.query('select sum(size) as size, display_name from gpx_files, users where user_id = users.id group by user_id order by size desc limit 10;')
 
   res.each_hash do |row|
-    puts "<tr><td>#{row['email'].gsub('@',' at ').gsub('.',' dot ')}</td><td>#{row['size']}</td></tr>"
+    puts "<tr><td>#{row['display_name'].gsub('@',' at ').gsub('.',' dot ')}</td><td>#{row['size']}</td></tr>"
   end
   
   puts '</table>'
@@ -75,10 +75,10 @@ puts '<h2>Top users editing over the past...</h2><table><tr>
   </tr><tr>'
 
 [1, 7, 28].each do |n|
-  res = dbh.query( "select email, count from users, (select user_id, count(*) as count from nodes where timestamp > NOW() - INTERVAL #{n} DAY group by user_id order by count desc limit 30) as a where a.user_id = users.id")
+  res = dbh.query( "select display_name, count from users, (select user_id, count(*) as count from nodes where timestamp > NOW() - INTERVAL #{n} DAY group by user_id order by count desc limit 30) as a where a.user_id = users.id")
   puts '<td>'
   res.each_hash do |row|
-    puts row['count'] + " " + row['email'].gsub('@',' at ').gsub('.',' dot ') + "<br />"
+    puts row['count'] + " " + row['display_name'].gsub('@',' at ').gsub('.',' dot ') + "<br />"
   end
   puts '</td>'
 end

@@ -41,7 +41,6 @@ use Getopt::Long;
 use HTTP::Request;
 use IO::File;
 use Pod::Usage;
-use Storable ();
 use XML::Parser;
 
 my ($man,$help);
@@ -273,35 +272,46 @@ sub data_open($){
 ##################################################################
 package OSM;
 ##################################################################
+use Storable;
 
-sub LoadOSM($$)
+sub LoadOSM($)
 {
   my $file_name = shift;
-  my $Bounds    = shift;
 
   printf STDERR "Reading OSM File: $file_name\n"
       if $debug || $verbose;
   my $start_time=time();
-  my $fh = File::data_open($file_name);
 
-  die "Cannot open $file_name in LoadOSM"  unless $fh;
+  my $segments;
 
-  my @segments;
-  while ( my $line = $fh ->getline() ) {
-      my @segment;
-      my $dummy;
-      ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
-      $segment[4] = $dummy if $debug;
-      push (@segments,\@segment);
+  if ( -s "$file_name.storable") {
+      $file_name .= ".storable";
+      $segments = Storable::retrieve($file_name);
+  } else {
+      my $fh = File::data_open($file_name);
+
+      die "Cannot open $file_name in LoadOSM"  unless $fh;
+
+      while ( my $line = $fh ->getline() ) {
+	  my @segment;
+	  my $dummy;
+	  ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
+	  $segment[4] = Geometry::angle_north(
+					  { lat => $segment[0] , lon => $segment[1] },
+					  { lat => $segment[2] , lon => $segment[3] });
+	  $segment[5] = $dummy if $debug;
+	  push (@{$segments},\@segment);
+      }
+      $fh->close();
+      Storable::store($segments   ,"$file_name.storable");
   }
-  $fh->close();
 
   if ( $verbose) {
       printf "Read and parsed $file_name";
       Utils::print_time($start_time);
   }
 
-  return(\@segments);
+  return($segments);
 }
 
 
@@ -316,18 +326,18 @@ sub reduce_osm_segments($$) {
     my $osm_segments = [];
     my $count=0;
     my $all_count=0;
-    for my $seg ( @{$all_osm_segments} ) {
+    for my $segment ( @{$all_osm_segments} ) {
 	$all_count++;
-	next unless $seg->[0] >= $bounds->{lat_min};
-	next unless $seg->[0] <= $bounds->{lat_max};
-	next unless $seg->[1] >= $bounds->{lon_min};
-	next unless $seg->[1] <= $bounds->{lon_max};
-	next unless $seg->[2] >= $bounds->{lat_min};
-	next unless $seg->[2] <= $bounds->{lat_max};
-	next unless $seg->[3] >= $bounds->{lon_min};
-	next unless $seg->[3] <= $bounds->{lon_max};
+	next unless $segment->[0] >= $bounds->{lat_min};
+	next unless $segment->[0] <= $bounds->{lat_max};
+	next unless $segment->[1] >= $bounds->{lon_min};
+	next unless $segment->[1] <= $bounds->{lon_max};
+	next unless $segment->[2] >= $bounds->{lat_min};
+	next unless $segment->[2] <= $bounds->{lat_max};
+	next unless $segment->[3] >= $bounds->{lon_min};
+	next unless $segment->[3] <= $bounds->{lon_max};
 	$count++;
-	push(@{$osm_segments},$seg);
+	push(@{$osm_segments},$segment);
     }
     if ( $verbose || $debug) {
 	printf "Reduced OSM Data to $count( $all_count) OSM-Segments ";
@@ -345,6 +355,7 @@ sub check_against_osm($$$){
     my $config       = shift;
 
     my $dist_osm_track = $config->{dist} || 20;
+    my $max_angle = 45;
     my $start_time=time();
 
     my $bounds = GPS::get_bounding_box($tracks);
@@ -364,6 +375,7 @@ sub check_against_osm($$$){
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	my $new_track=[];
+	my $last_elem;
 	for my $elem ( @{$track} ) {
 	    my $skip_point=0;
 	    my $min_dist = 40000;
@@ -373,10 +385,16 @@ sub check_against_osm($$$){
 		$compare_dist= $pdop;
 	    }
 
-	    for my $seg ( @{$osm_segments} ) {
-		# Distance between line of segment($seg)  to trackpoint $elem
-		my $dist = 1000*Geometry::distance_line_point_Km($seg->[0],$seg->[1],
-							    $seg->[2],$seg->[3],
+	    my $angle=-999999;
+	    if ( $last_elem ) {
+		$angle = Geometry::angle_north($last_elem,$elem);
+	    }
+
+	    for my $segment ( @{$osm_segments} ) {
+		next unless ($angle- $segment->[4]) < $max_angle;
+		# Distance between line of segment($segment)  to trackpoint $elem
+		my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
+							    $segment->[2],$segment->[3],
 							    $elem->{lat},$elem->{lon}
 							 );
 		$min_dist = $dist if $dist < $min_dist;
@@ -400,6 +418,7 @@ sub check_against_osm($$$){
 		push(@{$new_track},$elem);
 		$new_points++;
 	    }
+	    $last_elem=$elem;
 	}
 	push(@{$new_tracks->{tracks}},$new_track);
     }
@@ -1620,7 +1639,7 @@ sub filter_duplicate_tracepoints($$$){
     my $start_time=time();
 
     my $bounds = GPS::get_bounding_box($tracks);
-    print "Track Bounds: ".Dumper(\$bounds);
+    #print "Track Bounds: ".Dumper(\$bounds);
 
     my $new_tracks={tracks=>[],wpt=>[]};
 
@@ -1645,11 +1664,11 @@ sub filter_duplicate_tracepoints($$$){
 		$compare_dist= $pdop;
 	    }
 
-	    for my $seg ( @{$checked_track_segments} ) {
-		#print Dumper(\$seg);
-		# Distance between line of segment($seg)  to trackpoint $elem
-		my $dist = 1000*Geometry::distance_line_point_Km($seg->[0],$seg->[1],
-								 $seg->[2],$seg->[3],
+	    for my $segment ( @{$checked_track_segments} ) {
+		#print Dumper(\$segment);
+		# Distance between line of segment($segment)  to trackpoint $elem
+		my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
+								 $segment->[2],$segment->[3],
 								 $elem->{lat},$elem->{lon}
 								 );
 		$min_dist = $dist if $dist < $min_dist;
@@ -1664,7 +1683,7 @@ sub filter_duplicate_tracepoints($$$){
 
 	    ################################
 	    # Since this is currently only a dumpy all points are taken
-	    $skip_point=0;
+	    #$skip_point=0;
 
 	    
 	    if ( $skip_point ) {
@@ -1981,10 +2000,7 @@ sub convert_Data(){
 	    last if -s $osm_filename;
 	    $osm_filename='';
 	}
-	$osm_segments = OSM::LoadOSM($osm_filename,
-				 { lat_min => -90, lon_min => -180,
-				   lat_max => -90, lon_max => -180
-				   });
+	$osm_segments = OSM::LoadOSM($osm_filename);
 	};
     
 

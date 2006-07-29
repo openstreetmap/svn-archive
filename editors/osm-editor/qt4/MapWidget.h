@@ -192,7 +192,7 @@ private:
 	QString username, password;
 	bool liveUpdate;
 
-	HTTPHandler osmhttp;
+	HTTPHandler osmhttp, geocoder;
 	NodeHandler nodeHandler;
 
 	Node *newUploadedNode, *movingNode;
@@ -261,6 +261,7 @@ public:
 	Node * doAddNewNode(double lat,double lon,const QString &name,
 									const QString& type);
 
+	void geocoderLookup(const QString& place,const QString &country);
 public slots:
 	void open();
 	void save();
@@ -310,6 +311,8 @@ public slots:
 	void segSplitterError(const QString& error);
 	void toggleSegmentColours();
 
+	void geocoderParse(const QByteArray& data, void*);
+	void handleGeocoderError(const QString& error);
 signals:
 	void newNodeAddedSig();
 	void message(const QString&);

@@ -170,6 +170,10 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
     QPixmap editway = mmLoadPixmap("images","editway.png");
     QPixmap tiledOSM = mmLoadPixmap("images","tiledosm.png");
 
+	gcedit = new QLineEdit(this);
+	toolbar->addWidget(gcedit);
+	QObject::connect(gcedit,SIGNAL(returnPressed()), this,SLOT(doGeocoder()));
+
     toolbar->addAction(left_pixmap,"Move left",widget,SLOT(left()));
     toolbar->addAction(right_pixmap,"Move right",widget,SLOT(right()));
     toolbar->addAction(up_pixmap,"Move up",widget,SLOT(up()));
@@ -318,5 +322,12 @@ void MainWindow2::showMessage(const QString& msg)
 {
 	statusBar()->showMessage(msg);
 }
+
+void MainWindow2::doGeocoder()
+{
+	cerr<<"MainWindow2::doGeocoder()" << endl;
+	widget->geocoderLookup(gcedit->text(), "UK");
+}
+
 
 }

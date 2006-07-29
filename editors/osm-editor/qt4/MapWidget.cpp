@@ -57,6 +57,7 @@
 #include <qxml.h>
 #include "OSMParser2.h"
 #include "GPXParser2.h"
+#include "Geocoder.h"
 
 //#include "qmdcodec.h"
 
@@ -117,7 +118,8 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 									"www.openstreetmap.org",
 							 		"/api/0.3/map?"),		
                                     osmhttp("www.openstreetmap.org"),
-									tpPixmap("images/trackpoint.png")
+									tpPixmap("images/trackpoint.png"),
+									geocoder ("nick.dev.openstreetmap.org")
 {
     LIMIT=map.earthDist(10);
 
@@ -242,6 +244,7 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 	splitter = NULL;
 
 	uploader = NULL;
+
 }
 
 MapWidget::~MapWidget()
@@ -885,12 +888,15 @@ void MapWidget::drawSegment(QPainter& p, Segment *curSeg)
 					}
 				}
 
-				int s = (curSeg->belongsToWay()) ? 4:8;
-        		p.setPen(curPen);
-                p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
-				p.setBrush(Qt::SolidPattern);
-				p.fillRect( pt1.x-s/2, pt1.y-s/2, s, s, QColor(128,128,128) );
-				p.fillRect( pt2.x-s/2, pt2.y-s/2, s, s, QColor(128,128,128) );
+				if(1)
+				{
+					int s = (curSeg->belongsToWay()) ? 4:8;
+        			p.setPen(curPen);
+                	p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+					p.setBrush(Qt::SolidPattern);
+					p.fillRect( pt1.x-s/2,pt1.y-s/2,s,s,QColor(128,128,128) );
+					p.fillRect( pt2.x-s/2,pt2.y-s/2,s,s,QColor(128,128,128) );
+				}
             
         }
 	}
@@ -1631,6 +1637,7 @@ void MapWidget::changeWayDetails()
 
 	if(selWay && !selWay->isArea())
 	{
+		selWay->printTags();
 		WayDialogue *wd = new WayDialogue(this,segTypes,areaTypes,
 								selWay->getName(), selWay->getType(),
 								selWay->getRef());
@@ -1815,6 +1822,64 @@ void MapWidget::segSplitterError(const QString& error)
 {
 	QMessageBox::warning(this,"Error with segment splitting",error);
 	splitterDone();
+}
+
+void MapWidget::geocoderLookup(const QString& place,const QString &country)
+{
+	if(1)
+	{
+		cerr << "MapWidget::geocoderLookup: place=" <<
+				place.toAscii().constData() << " country="
+				<< country.toAscii().constData() << endl;
+
+		QString url;
+		url.sprintf("/gc.php?place=%s&country=%s",
+				place.toAscii().constData(),
+				country.toAscii().constData() );
+		cerr << "Geocoder URL: " << url.toAscii().constData() << endl;
+		geocoder.scheduleCommand("GET",url,QByteArray(),
+								this,
+								SLOT(geocoderParse(const QByteArray&,void*)),
+								NULL,
+							SLOT(handleGeocoderError(const QString&)), this);
+	}
+	else
+		cerr << "Geocoder already active" << endl;
+}
+
+void MapWidget::handleGeocoderError(const QString& error)
+{
+	/*
+	if(geocoder!=NULL)
+	{
+		cerr<<"Geocoder Error: " << error.toAscii().constData() << endl;
+		cerr<<"setting geocoder to NULL"<<endl;
+		delete geocoder;
+		geocoder=NULL;
+	}
+	else
+		cerr<<"geocoder is NULL" << endl;
+	*/
+}
+
+void MapWidget::geocoderParse(const QByteArray& data, void*)
+{
+
+	cerr<<"geocoderParse " << endl;
+	Geocoder gparser;
+	QXmlInputSource source;
+	cerr<<"setting data " << endl;
+    source.setData(data);
+	QXmlSimpleReader reader;
+	cerr<<"setting content handler " << endl;
+	reader.setContentHandler(&gparser);
+	cerr<<"parsing " << endl;
+	reader.parse(source);
+	cerr<<"centreAt " << endl;
+	cerr << "point=" << gparser.getPoint().x<<","<<gparser.getPoint().y<<endl;
+	map.centreAt(gparser.getPoint() );
+	update();
+	cerr<<"update " << endl;
 }
 
 }

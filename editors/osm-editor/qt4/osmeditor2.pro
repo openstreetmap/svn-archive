@@ -14,6 +14,7 @@ HEADERS += BatchUploader.h \
            Components2.h \
            EarthPoint.h \
            functions.h \
+		   Geocoder.h \
            GPSDevice2.h \
            GPXParser2.h \
            HTTPHandler.h \
@@ -62,6 +63,7 @@ HEADERS += BatchUploader.h \
            jeeps-gpsbabel-1.2.7/queue.h
 SOURCES += BatchUploader.cpp \
            Components2.cpp \
+		   Geocoder.cpp \
            GPSDevice2.cpp \
            GPXParser2.cpp \
            HTTPHandler.cpp \

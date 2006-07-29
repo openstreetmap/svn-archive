@@ -119,6 +119,24 @@ public:
 	}
 
 	virtual void toOSM(QTextStream& strm,bool=false) = 0;
+
+	void printTags()
+	{
+		
+		// 080706 all tags written out, not just those of interest to osmeditor2
+		for(std::map<QString,QString>::iterator i=tags.begin(); 
+						i!=tags.end(); i++)
+		{
+			if(i->second!="")
+			{
+				cerr << "<tag k='"<<i->first.toAscii().constData()<<"' v='" << i->second.toAscii().constData() << "'/>"
+				<<endl;
+			}
+		}
+
+   		if(tags.find("created_by")==tags.end()) 
+   			cerr << "<tag k='created_by' v='osmeditor2'/>" << endl;
+	}
 };
 
 }

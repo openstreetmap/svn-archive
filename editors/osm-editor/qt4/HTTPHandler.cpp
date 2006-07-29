@@ -79,6 +79,12 @@ void HTTPHandler::sendRequest(const QString& requestType,
 {
 	if(!makingRequest)
 	{
+		cerr << "sendRequest() : requestType="
+								<< requestType.toAscii().constData()
+						<< "  url=" << url.toAscii().constData()
+						<< " host=" << host.toAscii().constData()
+						<<endl;
+
 		makingRequest=true;
 		QString s = b;
 		if(!s.isNull())
@@ -207,10 +213,11 @@ void HTTPHandler::responseReceived(int id, bool error)
 		}
 		else 
 		{
-			if(!httpError)
+			if(!httpError && doEmitErrorOccurred)
 			{
 				emit errorOccurred
 						("An unknown error occurred trying to connect.");
+				doEmitErrorOccurred = false;
 			}
 
 			// Clear all pending requests - the error might affect them

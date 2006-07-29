@@ -72,6 +72,8 @@ private:
 	QAction *wayAction, *landsatAction, *osmAction, *gpxAction,
 						*contoursAction, *showSegmentColoursAction,
 						*tiledOSMAction;
+
+	QLineEdit *gcedit;
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
 			 		double=640,double=480);
@@ -85,6 +87,7 @@ public slots:
 	void toggleWays();
 	void toggleSegmentColours();
 	void showMessage(const QString&);
+	void doGeocoder();
 };
 
 }

@@ -1,120 +1,106 @@
 #!/usr/bin/ruby -w
 
-#require 'cgi'
-require 'osm/dao.rb'
-require 'bigdecimal'
-#include Apache
-# This should be put in the directory above the 'osm' directory containing
-# 'dao.rb' to work properly
+$: << Dir.pwd+"/../../www.openstreetmap.org/ruby/api"
 
-def get_kv(tags)
-	kv = {}
-	tagarray = tags.split(';')
-	tagarray.each do |kvpair|
-		kvpairarray = kvpair.split('=')
-		kv[kvpairarray[0]] = kvpairarray[1]
-	end
-	return kv
-end
-		
-def print_kv(kv)
-	kv.each do |k,v|
-		unless v==nil
-			v1 = v.gsub(/[']/,"&apos;") # escape quotes
-			v2 = v1.gsub(/</,"&lt;") # escape <
-			v3 = v2.gsub(/>/,"&gt;") # escape >
-			puts "<tag k='#{k}' v='#{v3}' />"
-		end
-	end
+require 'mysql'
+require 'time'
+require 'osm/servinfo.rb'
+require 'cgi'
+
+$mysql = Mysql.real_connect $DBSERVER, $USERNAME, $PASSWORD, $DATABASE
+
+# create a hash of entries out of a list of semi colon seperated key=value pairs
+def read_tags tag_str
+  tags_arr = tag_str.split(';').collect {|tag| tag =~ /=/ ? [$`,$'] : [tag,""] }
+  Hash[*tags_arr.flatten]
 end
 
-#r = Apache.request
-#cgi = CGI.new
-
-
-#bllon, bllat, trlong, trlat = bbox.map { |elem| elem.to_f }
-
-if ARGV.length < 4
-	puts "Usage: planet.rb bllon bllat trlon trlat"
-	exit
+# create a timestamp or nil out of a time string
+def read_timestamp time_str
+  (time_str.nil? or time_str == "" or time_str == "NULL") ? Time.at(0) : Time.parse(time_str)
 end
 
-bllon = ARGV[0].to_f
-bllat = ARGV[1].to_f
-trlon = ARGV[2].to_f
-trlat = ARGV[3].to_f
-
-to = nil
-#to = Time.parse(cgi['to']) unless cgi['to'] == ''
-
-if bllat > trlat || bllon > trlon
-    puts "That is not a sensible bounding box, you silly person."
-	exit
-end
-
-dao = OSM::Dao.instance
-
-nodes = dao.getnodes(trlat, bllon, bllat, trlon, to)
-
-if nodes && nodes.length > 0
-  linesegments = dao.getlines(nodes, to)
-end
-
-seg_ids = []
-
-if linesegments # get nodes we dont have yet
-  nodes_missing = []
-  
-  linesegments.each do |key, l|
-    seg_ids << key
-    nodes_missing << l.node_a_id unless nodes[l.node_a_id]
-    nodes_missing << l.node_b_id unless nodes[l.node_b_id]
-  end
-
-  nodes.merge!(dao.get_nodes_by_ids(nodes_missing, to)) unless nodes_missing.empty?
-end
-
-puts "<?xml version='1.0'?>"
-puts "<osm version='0.3'>"
-
-if nodes
-  nodes.each do |i,n|
-	  #ox.add_node(n) unless !n.visible
-	  unless !n.visible
-	  	puts "<node id='#{i}' lat='#{n.latitude}' lon='#{n.longitude}' >" 
-		kv = get_kv(n.tags)
-		print_kv(kv)
-		puts "</node>"
-	  end
-  end
-end
-
-if linesegments
-  linesegments.each do |key, l|
-    if nodes[l.node_a_id].visible && nodes[l.node_b_id].visible
-      #ox.add_segment(l)
-
-	  puts "<segment id='#{key}' from='#{l.node_a_id}' to='#{l.node_b_id}' >" 
-	  kv = get_kv(l.tags)
-	  print_kv(kv)
-	  puts "</segment>"
+# yields for every node with parameter
+# id, lat, lon, timestamp, tags
+# 'tags' are a hash in format {key1=>value1, key2=>value2...}
+def all_nodes
+  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1;" do |rows|
+    rows.each do |row|
+      yield row[0].to_i, row[1].to_f, row[2].to_f, read_timestamp(row[3]), read_tags(row[4])
     end
   end
 end
 
-[:way, :area].each do |type|
-  if seg_ids != []
-    dao.get_multis_from_segments(seg_ids, type).each do |n|
-      #ox.add_multi(n,type)
-	  puts "<#{type} id='#{n.id}'>"
-	  print_kv(n.tags)
-	  n.segs.each do |segid|
-	  	puts "<seg id='#{segid}' />"
-	  end
-	  puts "</#{type}>"
+# yields for every segment
+# id, from_id, to_id, timestamp, tags
+def all_segments
+  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1;" do |rows|
+    rows.each do |row|
+      yield row[0].to_i, row[1].to_i, row[2].to_i, read_timestamp(row[3]), read_tags(row[4])
     end
+  end
+end
+
+# yields for every way
+# id, [id1,id2,id3...], timestamp, tags
+def all_ways
+  $mysql.query "select id, timestamp from current_ways where visible = 1;" do |ways|
+    ways.each do |row|
+      id = row[0].to_i
+      segs = []
+      $mysql.query "select segment_id from current_way_segments where id = #{id} order by sequence_id;" do |segments|
+        segments.each {|s| segs << s[0].to_i}
+      end
+      tags_arr = []
+      $mysql.query "select k,v from current_way_tags where id = #{id};" do |tags|
+        tags.each {|t| tags_arr << t[0] << t[1]}
+      end
+      yield id, segs, read_timestamp(row[1]), Hash[*tags_arr]
+    end
+  end
+end
+
+# output all tags in the hash
+def out_tags tags
+  tags.each {|key, value| puts "    <tag k='#{CGI.escapeHTML(key)}' v='#{CGI.escapeHTML(value)}' />"}
+end
+
+
+puts "<?xml version='1.0' encoding='UTF-8'?>"
+puts "<osm version='0.3' generator='OpenStreetMap planet.rb'>"
+
+all_nodes do |id, lat, lon, timestamp, tags|
+  print "  <node id='#{id}' lat='#{lat}' lon=#{lon} timestamp='#{timestamp.xmlschema}'"
+  if tags.empty?
+    puts "/>"
+  else
+    puts ">"
+    out_tags tags
+    puts "  </node>"
+  end
+end
+
+all_segments do |id, from, to, timestamp, tags|
+  print "  <segment id='#{id}' from='#{from}' to='#{to}' timestamp='#{timestamp.xmlschema}'"
+  if tags.empty?
+    puts "/>"
+  else
+    puts ">"
+    out_tags tags
+    puts "  </segment>"
+  end
+end
+
+all_ways do |id, segs, timestamp, tags|
+  print "  <way id='#{id}' timestamp='#{timestamp.xmlschema}'"
+  if tags.empty? and segs.empty?
+    puts "/>"
+  else
+    puts ">"
+    segs.each {|seg_id| puts "    <seg id='#{seg_id}' />"}
+    out_tags tags
+    puts "  </way>"
   end
 end
 
 puts "</osm>"
-GC.start

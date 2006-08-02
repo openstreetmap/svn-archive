@@ -1,3 +1,4 @@
+$: << ".."
 require 'data/core'
 require 'test/unit'
 require 'test/unit/assertions'
@@ -20,6 +21,13 @@ class OsmDataTest < Test::Unit::TestCase
     assert_not_equal idclass_to_uid(23,Node), idclass_to_uid(42,Node)
     assert_not_equal idclass_to_uid(23,Node), idclass_to_uid(23,Way)
     assert_not_equal idclass_to_uid(23,Segment), idclass_to_uid(23,Way)
+  end
+
+  def test_uid_to_class
+    assert_equal Node, uid_to_class(0)
+    assert_equal Segment, uid_to_class(9)
+    assert_equal Way, uid_to_class("18")
+    assert_equal nil, uid_to_class(7)
   end
 
   def test_osm_primitive

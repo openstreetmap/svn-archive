@@ -19,7 +19,7 @@ module OSM
     # Return this primitive as REXML element. Called from subclasses to fill
     # in the common attributes
     def to_rexml
-      e = REXML::Element.new self.class.name.downcase
+      e = REXML::Element.new self.canonical_name
       e.add_attributes 'id'=>@id, 'timestamp'=>(@timestamp.xmlschema if @timestamp)
       @tags.each do |key, value|
         tag = REXML::Element.new 'tag'
@@ -95,7 +95,7 @@ module OSM
     # Create an way out of an REXML structure
     def Way.from_rexml e
       segs = []
-      e.each_element { |seg| segs << seg if seg.name == "seg" }
+      e.each_element { |seg| segs << Segment.from_rexml(seg) if seg.name == "seg" }
       Way.new :segments=>segs, :id=>e.attributes["id"], :timestamp=>e.attributes["timestamp"]
     end
 

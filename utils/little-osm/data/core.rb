@@ -39,7 +39,6 @@ module OSM
 
   # Base class for handling the common stuff in any primitive.
   class OsmPrimitive
-    protected :initialize
     attr_reader :timestamp, :tags
 
     def initialize tags = {}, id = 0, timestamp = nil
@@ -57,6 +56,8 @@ module OSM
 
     # Return the unique identifier, which is unique among all OsmPrimitives
     def to_uid; idclass_to_uid self.to_i,self.class end
+
+    protected :initialize
   end
 
 
@@ -79,6 +80,7 @@ module OSM
 
     def pos; [@lat,@lon] end
     def bbox; [@lat,@lon,@lat,@lon] end
+    def Node.canonical_name; "node" end
   end
 
   # A segment with a "from" and a "to" node
@@ -103,6 +105,7 @@ module OSM
       lon = [from.lon, to.lon]
       [lat.min, lon.min, lat.max, lon.max]
     end
+    def Segment.canonical_name; "segment" end
   end
 
   # A way with a list of segments
@@ -132,6 +135,8 @@ module OSM
       end
       bbox
     end
+    
+    def Way.canonical_name; "way" end
   end
 
   # Some short uid helper functions.

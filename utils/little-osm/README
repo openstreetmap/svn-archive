@@ -8,8 +8,8 @@ little-osm is intended as a read only server!
 
 Installation:
 - install ruby
-- install sqlite3 ("gem install sqlite3")
-- Get the planet.osm into little-osm directory (http://wiki.eigenheimstrasse.de/wiki/JOSM/Mirrors)
+- install sqlite3 ("gem install sqlite3-ruby")
+- Get the planet.osm into little-osm directory (http://josm.eigenheimstrasse.de/wiki/Mirrors)
 - run readxml.rb to convert the database. This will take a while.
 - run server.rb
 - point your favourite programm to http://localhost:3000
@@ -23,7 +23,7 @@ planet.osm - here, you have to copy the planet.osm to read in. Make sure, it
              filesize is 82125276 bytes.
 planet.db  - This will be the generated sqlite database (will be about 130 MB)
 test/*     - Some unit tests.
-api        - All API files reside here.
+api/*      - All API files reside here.
 
 
 License of the whole stuff: GPL 2.0, Ruby license or both (at your choice).

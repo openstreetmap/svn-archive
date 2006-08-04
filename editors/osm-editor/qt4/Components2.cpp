@@ -343,7 +343,10 @@ bool Components2::deleteWay(Way *w)
 			for(int count=0; count<segments.size(); count++)
 			{
 				if(segments[count]->getWayID()==w->getOSMID())
+				{
 					segments[count]->setWayID(0);
+					segments[count]->setWayStatus(false);
+				}
 			}
             return true;
         }

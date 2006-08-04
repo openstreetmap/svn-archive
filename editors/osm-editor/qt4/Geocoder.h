@@ -10,7 +10,7 @@ namespace OpenStreetMap
 class Geocoder : public QXmlDefaultHandler
 {
 private:
-	bool inLat, inLong;
+	bool inLat, inLong, foundLat, foundLong;
 	double lat, lon;
 public:
 	Geocoder();
@@ -21,6 +21,7 @@ public:
 							const QString& element);
 	bool characters(const QString& characters);
 	EarthPoint getPoint() { return EarthPoint(lon,lat); }
+	bool valid() { return foundLat && foundLong; }
 };
 
 }

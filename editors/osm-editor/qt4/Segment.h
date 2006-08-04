@@ -119,9 +119,16 @@ public:
 		wayStatus = ws;
 	}
 
+	// belongs to an actual osm way
 	bool belongsToWay()
 	{
 		return way_id>0;
+	}
+
+	// belongs to a way - which may or may not have been added to osm
+	bool getWayStatus()
+	{
+		return wayStatus;
 	}
 
 	void setWayID(int id)

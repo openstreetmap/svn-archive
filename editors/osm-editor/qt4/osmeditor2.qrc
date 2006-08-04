@@ -1,0 +1,52 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>images/two.png</file>
+	<file>images/waybuild.png</file>
+	<file>images/deleteseg.png</file>
+	<file>images/waypoint.png</file>
+	<file>images/nametracks.png</file>
+	<file>images/objectmanip.png</file>
+	<file>images/linknewpoint.png</file>
+	<file>images/formnewseg.png</file>
+	<file>images/breakseg.png</file>
+	<file>images/seltrk.png</file>
+	<file>images/ways.png</file>
+	<file>images/uploadways.png</file>
+	<file>images/waydelete.png</file>
+	<file>images/arrow_left.png</file>
+	<file>images/arrow_right.png</file>
+	<file>images/arrow_up.png</file>
+	<file>images/arrow_down.png</file>
+	<file>images/magnify.png</file>
+	<file>images/shrink.png</file>
+	<file>images/selseg.png</file>
+	<file>images/selway.png</file>
+	<file>images/osm.png</file>
+	<file>images/gpx.png</file>
+	<file>images/landsat.png</file>
+	<file>images/contours.png</file>
+	<file>images/segcol.png</file>
+	<file>images/editway.png</file>
+	<file>images/tiledosm.png</file>
+	<file>images/pub.png</file>
+	<file>images/church.png</file>
+	<file>images/viewpoint.png</file>
+	<file>images/farm.png</file>
+	<file>images/peak.png</file>
+	<file>images/place.png</file>
+	<file>images/carpark.png</file>
+	<file>images/station.png</file>
+	<file>images/mast.png</file>
+	<file>images/interest.png</file>
+	<file>images/trackpoint.png</file>
+	<file>images/node.png</file>
+	<file>images/waypoint.png</file>
+	<file>images/campsite.png</file>
+	<file>images/restaurant.png</file>
+	<file>images/bridge.png</file>
+	<file>images/teashop.png</file>
+	<file>images/park.png</file>
+	<file>images/industry.png</file>
+	<file>images/barn.png</file>
+</qresource>
+</RCC>

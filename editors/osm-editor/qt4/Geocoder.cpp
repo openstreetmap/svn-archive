@@ -5,7 +5,7 @@ namespace OpenStreetMap
 
 Geocoder::Geocoder()
 {
-	inLat = inLong = false;
+	inLat = inLong = foundLat = foundLong = false;
 	lat = lon = 0.0;
 }
 
@@ -16,10 +16,12 @@ bool Geocoder::startElement(const QString&, const QString&,
 	if(element=="geo:lat") 
 	{
 		inLat = true;
+		foundLat = true;
 	}
 	else if(element=="geo:long")
 	{
 		inLong = true;
+		foundLong = true;
 	}
 	return true;
 }

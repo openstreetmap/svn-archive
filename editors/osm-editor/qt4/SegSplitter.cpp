@@ -25,14 +25,6 @@ void SegSplitter::splitSeg(Segment *seg,const EarthPoint& p,int limit)
 	if(!n)
 		n=components->addNewNode(p.y,p.x,"","node");
 
-	// If the segment is in a way, get hold of the way and remove the
-	// segment from it. Store the index of the segment in the way; the
-	// split segments will need to be added at that position later.
-	if(wayID=seg->getWayID())
-	{
-		w = components->getWayByID(wayID);
-		wayIndex = w->removeSegment(seg);
-	}
 
 	// Actually break the segment; this returns a pair of the two new segments
 	segments = components->breakSegment(seg,n);
@@ -55,6 +47,14 @@ void SegSplitter::splitSeg(Segment *seg,const EarthPoint& p,int limit)
 		osmhttp->scheduleCommand("DELETE",url,this,NULL,NULL,
 									SLOT(handleError(const QString&)));
 	}	
+	// If the segment is in a way, get hold of the way and remove the
+	// segment from it. Store the index of the segment in the way; the
+	// split segments will need to be added at that position later.
+	if(wayID=seg->getWayID())
+	{
+		w = components->getWayByID(wayID);
+		wayIndex = w->removeSegment(seg);
+	}
 	// If not in live update the only thing we need to do is add the
 	// segments to the way
 	else

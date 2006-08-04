@@ -58,7 +58,7 @@ using std::vector;
 // Mouse action modes
 // These need to match the order that the toolbar buttons are added
 // N_ACTIONS should always be the last
-enum { ACTION_NODE, ACTION_MOVE_NODE, ACTION_DELETE_NODE,
+enum { ACTION_WAY_BUILD, ACTION_NODE, ACTION_MOVE_NODE, ACTION_DELETE_NODE,
 		ACTION_SEL_SEG, ACTION_SEL_WAY, ACTION_NEW_SEG, ACTION_BREAK_SEG,
 		ACTION_SEL_TRACK, N_ACTIONS };
 
@@ -151,7 +151,7 @@ private:
 	vector<Segment*> selSeg;
 	int segCount;
 
-	Way *selWay;
+	Way *selWay, *builtWay;
 
 	// current mouse action mode
 	int actionMode;
@@ -159,7 +159,7 @@ private:
 	// other stuff
 	QString curSegType; 
 	bool trackpoints, contours, displayOSM, displayGPX, showSegmentColours;
-	QString curFilename; 
+	QString curFilename, curFiletype;
 	bool mouseDown;
 
 
@@ -168,7 +168,8 @@ private:
 	QPixmap landsatPixmap;
 
 
-	void saveFile(const QString&);
+	void saveOSM(const QString&);
+	void saveGPX(const QString&);
 
 	PixTileManager landsatManager;
 	OSMTileManager osmTileManager;
@@ -266,7 +267,6 @@ public slots:
 	void open();
 	void save();
 	void saveAs();
-	void saveGPX();
 	void readGPS();
 	void quit();
 	void toggleLandsat();

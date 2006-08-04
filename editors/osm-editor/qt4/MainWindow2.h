@@ -74,6 +74,10 @@ private:
 						*tiledOSMAction;
 
 	QLineEdit *gcedit;
+	QComboBox *country;
+
+	std::map<QString,QString> countryCodes;
+
 public:
 	MainWindow2 (double=51.0,double=-1.0,double=4000,
 			 		double=640,double=480);

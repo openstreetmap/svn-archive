@@ -118,8 +118,8 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 									"www.openstreetmap.org",
 							 		"/api/0.3/map?"),		
                                     osmhttp("www.openstreetmap.org"),
-									tpPixmap("images/trackpoint.png"),
-									geocoder ("nick.dev.openstreetmap.org")
+									tpPixmap(":/images/trackpoint.png"),
+									geocoder ("brainoff.com")
 {
     LIMIT=map.earthDist(10);
 
@@ -132,7 +132,7 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 	displayGPX = true;
 	showSegmentColours = false;
 
-    actionMode = ACTION_NODE;
+    actionMode = ACTION_WAY_BUILD;
     curSegType = "track";
     nSelectedPoints = 0;
     nSelectedTrackPoints = 0;
@@ -166,51 +166,51 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 
 
     nodeReps["pub"] = new WaypointRep
-            ("images/pub.png","Helvetica",10, QColor(170,85,0));
-    nodeReps["church"] = new WaypointRep ( "images/church.png");
-    nodeReps["viewpoint"] = new WaypointRep("images/viewpoint.png");
-    nodeReps["farm"] = new WaypointRep("images/farm.png",
+            (":/images/pub.png","Helvetica",10, QColor(170,85,0));
+    nodeReps["church"] = new WaypointRep ( ":/images/church.png");
+    nodeReps["viewpoint"] = new WaypointRep(":/images/viewpoint.png");
+    nodeReps["farm"] = new WaypointRep(":/images/farm.png",
                     "Helvetica",8,Qt::red);
     nodeReps["hill"] = new WaypointRep(
-                    "images/peak.png","Helvetica",10, Qt::magenta);
+                    ":/images/peak.png","Helvetica",10, Qt::magenta);
     nodeReps["hamlet"] = new WaypointRep(
-                    "images/place.png","Helvetica",12, Qt::black);
+                    ":/images/place.png","Helvetica",12, Qt::black);
     nodeReps["village"] = new WaypointRep(
-                    "images/place.png","Helvetica",16, Qt::black);
+                    ":/images/place.png","Helvetica",16, Qt::black);
     nodeReps["small town"] = new WaypointRep(
-                    "images/place.png","Helvetica",20, Qt::black);
+                    ":/images/place.png","Helvetica",20, Qt::black);
     nodeReps["large town"] = new WaypointRep(
-                    "images/place.png","Helvetica",24, Qt::black);
+                    ":/images/place.png","Helvetica",24, Qt::black);
     nodeReps["car park"] = new WaypointRep(
-                    "images/carpark.png", "Helvetica",8,Qt::blue);
+                    ":/images/carpark.png", "Helvetica",8,Qt::blue);
     nodeReps["railway station"] = new WaypointRep(
-                    "images/station.png", "Helvetica",10,Qt::red);
+                    ":/images/station.png", "Helvetica",10,Qt::red);
     nodeReps["mast"] = new WaypointRep(
-                    "images/mast.png");
+                    ":/images/mast.png");
     nodeReps["point of interest"] = new WaypointRep
-            ("images/interest.png");
+            (":/images/interest.png");
     nodeReps["suburb"] = new WaypointRep(
-            "images/place.png","Helvetica",16, Qt::black);
+            ":/images/place.png","Helvetica",16, Qt::black);
     nodeReps["trackpoint"] = new WaypointRep(
-                    "images/trackpoint.png","Helvetica",8,Qt::black);
+                    ":/images/trackpoint.png","Helvetica",8,Qt::black);
     nodeReps["node"] = new WaypointRep(
-                    "images/node.png","Helvetica",8,Qt::black);
+                    ":/images/node.png","Helvetica",8,Qt::black);
     nodeReps["waypoint"] = new WaypointRep(
-                    "images/waypoint.png","Helvetica",8,Qt::black);
+                    ":/images/waypoint.png","Helvetica",8,Qt::black);
 
     nodeReps["campsite"] = new WaypointRep(
-                    "images/campsite.png","Helvetica",8,QColor(0,128,0));
+                    ":/images/campsite.png","Helvetica",8,QColor(0,128,0));
     nodeReps["restaurant"] = new WaypointRep(
-                    "images/restaurant.png","Helvetica",8,QColor(128,0,0));
-    nodeReps["bridge"] = new WaypointRep("images/bridge.png");
+                    ":/images/restaurant.png","Helvetica",8,QColor(128,0,0));
+    nodeReps["bridge"] = new WaypointRep(":/images/bridge.png");
     nodeReps["tea shop"] = new WaypointRep(
-                    "images/teashop.png","Helvetica",8,Qt::magenta);
-    nodeReps["country park"] = new WaypointRep("images/park.png",
+                    ":/images/teashop.png","Helvetica",8,Qt::magenta);
+    nodeReps["country park"] = new WaypointRep(":/images/park.png",
                             "Helvetica",8,QColor(0,192,0));
-    nodeReps["industrial area"] = new WaypointRep("images/industry.png",
+    nodeReps["industrial area"] = new WaypointRep(":/images/industry.png",
                             "Helvetica",8,Qt::darkGray);
-    nodeReps["barn"] = new WaypointRep("images/barn.png");
-    curFilename = "";
+    nodeReps["barn"] = new WaypointRep(":/images/barn.png");
+    curFilename = curFiletype = "";
 
     trackpoints=true;
 
@@ -219,6 +219,7 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 
 	clearSegments();
 
+	setFocus(Qt::ActiveWindowFocusReason);
     setFocusPolicy(Qt::ClickFocus);
 
     showPosition();
@@ -240,7 +241,7 @@ MapWidget::MapWidget(QMainWindow *mainwin,
 
 	serialPort = "/dev/ttyS0";
 
-	selWay = NULL;
+	selWay = builtWay = NULL;
 	splitter = NULL;
 
 	uploader = NULL;
@@ -261,7 +262,7 @@ MapWidget::~MapWidget()
 
 void MapWidget::open()
 {
-    QFileDialog* fd = new QFileDialog( this,"Open osm or gpx...");
+    QFileDialog* fd = new QFileDialog( this,"Open osm or gpx...", ".");
     fd->setViewMode( QFileDialog::List );
 	QStringList types;
 	types << "GPS Exchange (*.gpx)" << "Openstreetmap data (*.osm)";
@@ -539,22 +540,48 @@ void MapWidget::save()
 {
     if(curFilename == "")
         saveAs();
-    else
-        saveFile(curFilename);
+    else if (curFiletype=="osm")
+        saveOSM(curFilename);
+	else
+		saveGPX(curFilename);
 }
 
 void MapWidget::saveAs()
 {
-    QString filename = QFileDialog::getSaveFileName(this,"Enter filename",
-					".","*.osm");
-    if(filename!="")
-        saveFile(filename);
+    QFileDialog* fd = new QFileDialog( this,"Save data...", ".");
+    fd->setViewMode( QFileDialog::List );
+	QStringList types;
+	types << "GPS Exchange (*.gpx)" << "Openstreetmap data (*.osm)";
+	fd->setFilters(types);
+    fd->setFileMode( QFileDialog::AnyFile );
+
+    if ( fd->exec() != QDialog::Accepted )
+    {   delete fd;
+        return;
+    }
+	QStringList files = fd->selectedFiles();
+    if (files.isEmpty())
+    {   delete fd;
+        return;
+    }
+    QString filename = files[0];
+    if (fd->selectedFilter().contains("osm"))
+    {  // OSM DATA
+		saveOSM(filename);
+    }
+    else   
+    {   // GPX Data
+		saveGPX(filename);
+    }
+    /* Delete fd; ? */
+	delete fd;
 }
 
-void MapWidget::saveFile(const QString& filename)
+void MapWidget::saveOSM(const QString& filename)
 {
 //      components->toGPX(filename);   
     curFilename = filename;
+	curFiletype = "osm";
     QFile file (filename);
     if(file.open(QIODevice::WriteOnly))
     {
@@ -564,10 +591,10 @@ void MapWidget::saveFile(const QString& filename)
     }
 }
 
-void MapWidget::saveGPX()
+void MapWidget::saveGPX(const QString& filename)
 {
-    QString filename = QFileDialog::getSaveFileName(this,"Enter filename",
-													".","*.osm");
+    curFilename = filename;
+	curFiletype = "gpx";
     QFile file (filename);
     if(file.open(QIODevice::WriteOnly))
     {
@@ -595,11 +622,14 @@ void MapWidget::setMode(int m)
     // Wipe any currently selected points
     nSelectedPoints = 0;
 
-	if(m!=ACTION_BREAK_SEG)
+	cerr<<"setMode(): CLEARING SEGMENTS" << endl;
+	clearSegments();
+
+	if (m!=ACTION_WAY_BUILD && builtWay && builtWay->getOSMID()<=0)
 	{
-		cerr<<"setMode(): CLEARING SEGMENTS" << endl;
-		clearSegments();
-	}	
+		delete builtWay;
+		builtWay = NULL;
+	}
 
     movingNode = NULL;
     pts[0]=pts[1]=NULL;
@@ -838,42 +868,50 @@ void MapWidget::drawSegment(QPainter& p, Segment *curSeg)
 		// a neutral colour to encourage way tagging and make things clearer.
 		
         QPen curPen = (foundWay) ? QPen(QColor(255,170,0),5) : ( (found) ?
-                        QPen(Qt::yellow,5) : QPen(QColor(128,128,128),1) );
+                        QPen(Qt::yellow,5) : 
+						QPen((curSeg->getOSMID()>0) ? QColor(128,128,128):
+								QColor(192,192,192),1) );
 
         curPen.setStyle ((curSeg->getOSMID()>0) ?  Qt::SolidLine: Qt::DotLine );
 		
         if(curSeg->hasNodes())
         {
 				// Draw segments belonging to ways (only) in the correct colour
-				if(curSeg->belongsToWay() && !found && !foundWay)
+				if(curSeg->getWayStatus() && !found && !foundWay)
 				{
-
-					Way *w=components->getWayByID(curSeg->getWayID());
-					if(segpens.find(w->getType()) != segpens.end())
+					Way *w;
+					if(w=components->getWayByID(curSeg->getWayID()))
 					{
-						curPen = segpens[w->getType()].pen;
-
-						if(segpens[w->getType()].casing)
+						if(segpens.find(w->getType()) != segpens.end())
 						{
-							p.setPen(QPen(Qt::black,curPen.width()+2));
-                			p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
-						}
-					}
+							curPen = segpens[w->getType()].pen;
 
-					// If the segment is the longest segment in a way, draw its
-					// name
-					if(w->getName()!="")
-					{
-						dy=pt2.y-pt1.y;
-						dx=pt2.x-pt1.x;
-						if(w && fm.width(w->getName()) <=fabs(dx) &&
+							if(segpens[w->getType()].casing)
+							{
+								p.setPen(QPen(Qt::black,curPen.width()+2));
+                				p.drawLine(pt1.x,pt1.y,pt2.x,pt2.y);
+							}
+						}
+
+						// If the segment is the longest segment in a way, draw
+						// its name
+						if(w->getName()!="")
+						{
+							dy=pt2.y-pt1.y;
+							dx=pt2.x-pt1.x;
+							if(fm.width(w->getName()) <=fabs(dx) &&
 									curSeg==w->longestSegment())
-						{
-                    		double angle = atan2(dy,dx);
-                    		doDrawAngleText(&p,pt1.x,pt1.y,pt1.x,pt1.y,
+							{
+                    			double angle = atan2(dy,dx);
+                    			doDrawAngleText(&p,pt1.x,pt1.y,pt1.x,pt1.y,
                                 angle,w->getName().toAscii().constData());
-						}
-                	}
+							}
+                		}
+					}
+					else
+					{
+						curPen = QPen(QColor(128,128,128), 3);
+					}
 				}
 				// If the user has selected to display unwayed segments in
 				// colour, find the appropriate colour.
@@ -1119,13 +1157,55 @@ void MapWidget::mousePressEvent(QMouseEvent* ev)
 				
 					
             break;
+		case ACTION_WAY_BUILD:
+				if(!builtWay)
+					builtWay = new Way(components);
+                pts[0] = components->getNearestNode(p.y,p.x,LIMIT);
+                if(!pts[0] || pts[0]->getOSMID()<=0)
+				{
+					if(!pts[0]) 
+						pts[0] = components->addNewNode(p.y,p.x,"","node");
+					if(pts[1])
+					{
+                		Segment *segx=
+								components->addNewSegment(pts[1],pts[0]);
+						nodeHandler.setEmit
+							(segx,this,SLOT(doaddseg(void*)));
+					}
+					if(liveUpdate)
+					{
+						QByteArray xml = pts[0]->toOSM();
+						QString url = "/api/0.3/node/0";
+						osmhttp.setAuthentication(username, password);
+						osmhttp.scheduleCommand("PUT",url,xml,
+							&nodeHandler,
+							SLOT(newNodeAdded(const QByteArray&,void*)),
+							pts[0],	
+							SLOT(handleNetCommError(const QString&)), this);
+					}
+				}
+				else if (pts[1])
+				{
+                	Segment *segx=
+					    components->addNewSegment(pts[1],pts[0]);
+					doaddseg(segx);
+				}
+
+				pts[1]=pts[0];
+				update();
+					
+            	break;
+
 		case ACTION_BREAK_SEG:
-			if(selSeg.size()==1 && splitter==NULL)
+			// 030806 no longer use selected segment - use nearest segment
+			// to click
+			s1= components->getNearestSegment(p.y,p.x,LIMIT);
+			if(s1 && splitter==NULL)
 			{
 				splitter = new SegSplitter;
 				splitter->setComponents(components);
 				splitter->setHTTPHandler(&osmhttp);
-				splitter->splitSeg(selSeg[0],p,LIMIT);
+				splitter->splitSeg(s1,p,LIMIT);
 				QObject::connect(splitter,SIGNAL(done()),this,
 									SLOT(splitterDone()));
 				QObject::connect(splitter,SIGNAL(error(const QString&)),this,
@@ -1456,6 +1536,10 @@ void MapWidget::newSegmentAdded(const QByteArray& array, void *segment)
         seg->setOSMID(atoi(ids[0].toAscii().constData()));
         newUploadedSegment = NULL;
         cerr<<"DONE."<<endl;
+
+		// 030806 if in "easy" way build mode, add segment to the current way
+		if(builtWay && actionMode==ACTION_WAY_BUILD)
+			builtWay->addSegment(seg);
     }
     update();
 }
@@ -1574,8 +1658,20 @@ void MapWidget::toggleWays()
 
 void MapWidget::uploadWay()
 {
-	Way *way = new Way(components);
-	way->setSegments(selSeg);
+	Way *way;
+	if(actionMode==ACTION_WAY_BUILD)
+	{
+		way = builtWay;
+		builtWay = NULL;
+		pts[0] = pts[1] = NULL;
+	}
+	else
+	{
+		way = new Way(components);
+
+		way->setSegments(selSeg);
+	}
+
 	vector<QString> segTypes, areaTypes;
 
 	for(std::map<QString,SegPen>::iterator i=segpens.begin(); 
@@ -1705,7 +1801,10 @@ void MapWidget::doaddseg(void *sg)
 						this,SLOT(newSegmentAdded(const QByteArray&,void*)),
 						segx);	
 	}
+
+
 	segx=NULL;
+	
 	update();
 }
 
@@ -1833,7 +1932,12 @@ void MapWidget::geocoderLookup(const QString& place,const QString &country)
 				<< country.toAscii().constData() << endl;
 
 		QString url;
+		/*
 		url.sprintf("/gc.php?place=%s&country=%s",
+				place.toAscii().constData(),
+				country.toAscii().constData() );
+		*/
+		url.sprintf("/geocoder/rest/?city=%s,%s",
 				place.toAscii().constData(),
 				country.toAscii().constData() );
 		cerr << "Geocoder URL: " << url.toAscii().constData() << endl;
@@ -1877,9 +1981,17 @@ void MapWidget::geocoderParse(const QByteArray& data, void*)
 	reader.parse(source);
 	cerr<<"centreAt " << endl;
 	cerr << "point=" << gparser.getPoint().x<<","<<gparser.getPoint().y<<endl;
-	map.centreAt(gparser.getPoint() );
-	update();
-	cerr<<"update " << endl;
+	if (gparser.valid())
+	{
+		map.centreAt(gparser.getPoint() );
+		showPosition();
+		update();
+	}
+	else
+	{
+		QMessageBox::information(this,"Couldn't find place",
+								"Couldn't find that place!");
+	}
 }
 
 }

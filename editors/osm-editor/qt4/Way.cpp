@@ -65,6 +65,8 @@ int Way::removeSegment(Segment *s)
 		{
 			int index = i-segments.begin();
 			segments.erase(i);
+			s->setOSMID(0);
+			s->setWayStatus(false);
 			return index;
 		}
 	}

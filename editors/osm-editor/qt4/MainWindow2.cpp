@@ -41,6 +41,7 @@
 #include <qlabel.h>
 #include <qsignalmapper.h>
 #include <qtextstream.h>
+#include <qpushbutton.h>
 //Added by qt3to4:
 #include <QResizeEvent>
 #include <QPixmap>
@@ -91,9 +92,11 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
     fileMenu->addAction("&Open",widget,SLOT(open()),Qt::CTRL+Qt::Key_O);
     fileMenu->addAction("&Save",widget,SLOT(save()),Qt::CTRL+Qt::Key_S);
     fileMenu->addAction("Save &as...",widget,SLOT(saveAs()),Qt::CTRL+Qt::Key_A);
-    fileMenu->addAction("Save GPX...",widget,SLOT(saveGPX()),
-					Qt::CTRL+Qt::Key_X);
     fileMenu->addAction("&Read GPS",widget,SLOT(readGPS()),Qt::CTRL+Qt::Key_R);
+    fileMenu->addAction("Login to live update",widget,
+                        SLOT(loginToLiveUpdate()));
+    fileMenu->addAction("Logout from live update",widget,
+                        SLOT(logoutFromLiveUpdate()));
     fileMenu->addAction("&Grab Landsat",widget,SLOT(grabLandsat()),
 					Qt::CTRL+Qt::Key_G);
     fileMenu->addAction("Grab OSM from &Net",widget,SLOT(grabOSMFromNet()),
@@ -101,13 +104,9 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
     fileMenu->addAction("Grab OSM GPX tracks",widget,SLOT(grabGPXFromNet()));
     fileMenu->addAction("&Upload OSM",widget,SLOT(uploadOSM()),
 					Qt::CTRL+Qt::Key_U);
-    fileMenu->addAction("&Quit", widget, SLOT(quit()), Qt::ALT+Qt::Key_Q);
-    fileMenu->addAction("Login to live update",widget,
-                        SLOT(loginToLiveUpdate()));
-    fileMenu->addAction("Logout from live update",widget,
-                        SLOT(logoutFromLiveUpdate()));
 	fileMenu->addAction("Upload waypoints",widget, SLOT(uploadNewWaypoints()));
 	fileMenu->addAction("Batch upload",widget, SLOT(batchUpload()));
+    fileMenu->addAction("&Quit", widget, SLOT(quit()), Qt::ALT+Qt::Key_Q);
 
 	QMenu *editMenu = menuBar()->addMenu("&Edit");
    
@@ -126,6 +125,7 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
 	editMenu->addAction("Change serial port", widget, SLOT(changeSerialPort()));
 
     QToolBar* toolbar=new QToolBar(this);
+	toolbar->setIconSize(QSize(16,16));
 	addToolBar(toolbar);
 
     // Do the toolbar buttons to change the mode.
@@ -140,39 +140,62 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
     QSignalMapper* mapper = new QSignalMapper(this);
 
 
-    QPixmap one = mmLoadPixmap("images","one.png");
-    QPixmap two = mmLoadPixmap("images","two.png");
-    QPixmap deleteseg = mmLoadPixmap("images","deleteseg.png");
-    QPixmap wp = mmLoadPixmap("images","waypoint.png");
-    QPixmap three = mmLoadPixmap("images","three.png");
-    QPixmap nametracks = mmLoadPixmap("images","nametracks.png");
-    QPixmap objectmanip = mmLoadPixmap("images","objectmanip.png");
-    QPixmap linknewpoint = mmLoadPixmap("images","linknewpoint.png");
-    QPixmap formnewseg = mmLoadPixmap("images","formnewseg.png");
-    QPixmap breakseg = mmLoadPixmap("images","breakseg.png");
-    QPixmap seltrk = mmLoadPixmap("images","seltrk.png");
-    QPixmap ways = mmLoadPixmap("images","ways.png");
-    QPixmap uploadways = mmLoadPixmap("images","uploadways.png");
-    QPixmap waydelete = mmLoadPixmap("images","waydelete.png");
-    QPixmap left_pixmap = mmLoadPixmap("images","arrow_left.png");
-    QPixmap right_pixmap = mmLoadPixmap("images","arrow_right.png");
-    QPixmap up_pixmap = mmLoadPixmap("images","arrow_up.png");
-    QPixmap down_pixmap = mmLoadPixmap("images","arrow_down.png");
-    QPixmap magnify_pixmap = mmLoadPixmap("images","magnify.png");
-    QPixmap shrink_pixmap = mmLoadPixmap("images","shrink.png");
-    QPixmap selseg_pixmap = mmLoadPixmap("images","selseg.png");
-    QPixmap selway_pixmap = mmLoadPixmap("images","selway.png");
-    QPixmap osm = mmLoadPixmap("images","osm.png");
-    QPixmap gpx = mmLoadPixmap("images","gpx.png");
-    QPixmap landsat = mmLoadPixmap("images","landsat.png");
-    QPixmap contours = mmLoadPixmap("images","contours.png");
-    QPixmap segcol = mmLoadPixmap("images","segcol.png");
-    QPixmap editway = mmLoadPixmap("images","editway.png");
-    QPixmap tiledOSM = mmLoadPixmap("images","tiledosm.png");
+    QPixmap two(":/images/two.png");
+    QPixmap waybuild(":/images/waybuild.png");
+    QPixmap deleteseg(":/images/deleteseg.png");
+    QPixmap wp(":/images/waypoint.png");
+    QPixmap nametracks(":/images/nametracks.png");
+    QPixmap objectmanip(":/images/objectmanip.png");
+    QPixmap linknewpoint(":/images/linknewpoint.png");
+    QPixmap formnewseg(":/images/formnewseg.png");
+    QPixmap breakseg(":/images/breakseg.png");
+    QPixmap seltrk(":/images/seltrk.png");
+    QPixmap ways(":/images/ways.png");
+    QPixmap uploadways(":/images/uploadways.png");
+    QPixmap waydelete(":/images/waydelete.png");
+    QPixmap left_pixmap(":/images/arrow_left.png");
+    QPixmap right_pixmap(":/images/arrow_right.png");
+    QPixmap up_pixmap(":/images/arrow_up.png");
+    QPixmap down_pixmap(":/images/arrow_down.png");
+    QPixmap magnify_pixmap(":/images/magnify.png");
+    QPixmap shrink_pixmap(":/images/shrink.png");
+    QPixmap selseg_pixmap(":/images/selseg.png");
+    QPixmap selway_pixmap(":/images/selway.png");
+    QPixmap osm(":/images/osm.png");
+    QPixmap gpx(":/images/gpx.png");
+    QPixmap landsat(":/images/landsat.png");
+    QPixmap contours(":/images/contours.png");
+    QPixmap segcol(":/images/segcol.png");
+    QPixmap editway(":/images/editway.png");
+    QPixmap tiledOSM(":/images/tiledosm.png");
 
-	gcedit = new QLineEdit(this);
+	toolbar->addWidget(new QLabel("Search:",toolbar));
+	gcedit = new QLineEdit(toolbar);
+	gcedit->setMaxLength(10);
 	toolbar->addWidget(gcedit);
+	country = new QComboBox(toolbar);
+
+	// Add your country here...
+	countryCodes["UK"] = "uk";	
+	countryCodes["France"] = "fr";	
+	countryCodes["Deutschland"] = "gm";	
+	countryCodes["Italia"] = "it";	
+	countryCodes["Norge"] = "no";	
+	countryCodes["Sverige"] = "sw";	
+
+	for(std::map<QString,QString>::iterator i=countryCodes.begin();
+		i!=countryCodes.end(); i++)
+	{
+		country->addItem(i->first);
+	}
+
+	toolbar->addWidget(country);
 	QObject::connect(gcedit,SIGNAL(returnPressed()), this,SLOT(doGeocoder()));
+	/*
+	QPushButton *go = new QPushButton("Go!");
+	QObject::connect(go,SIGNAL(clicked()), this,SLOT(doGeocoder()));
+	toolbar->addWidget(go);
+	*/
 
     toolbar->addAction(left_pixmap,"Move left",widget,SLOT(left()));
     toolbar->addAction(right_pixmap,"Move right",widget,SLOT(right()));
@@ -237,9 +260,13 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
 	showSegmentColoursAction->setCheckable(true);
 	showSegmentColoursAction->setChecked(false);
 
+	addToolBarBreak(Qt::TopToolBarArea);
     QToolBar  *toolbar2 = new QToolBar(this);
+	toolbar2->setIconSize(QSize(16,16));
 	addToolBar(toolbar2);
    
+	modeActions[ACTION_WAY_BUILD] = new QAction
+			(waybuild, "Draw way", widget);
     modeActions[ACTION_NODE]= new QAction
             (wp,"Edit Nodes",widget);
     modeActions[ACTION_MOVE_NODE]= new QAction
@@ -326,7 +353,8 @@ void MainWindow2::showMessage(const QString& msg)
 void MainWindow2::doGeocoder()
 {
 	cerr<<"MainWindow2::doGeocoder()" << endl;
-	widget->geocoderLookup(gcedit->text(), "UK");
+	widget->setFocus(Qt::ActiveWindowFocusReason);
+	widget->geocoderLookup(gcedit->text(),countryCodes[country->currentText()]);
 }
 
 

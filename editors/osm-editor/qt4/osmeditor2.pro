@@ -8,6 +8,7 @@ DEPENDPATH += . jeeps-gpsbabel-1.2.7
 INCLUDEPATH += . jeeps-gpsbabel-1.2.7
 QT += xml network 
 DEFINES += NO_USB
+RESOURCES = osmeditor2.qrc
 
 # Input
 HEADERS += BatchUploader.h \

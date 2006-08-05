@@ -2328,14 +2328,20 @@ Split tracks it they have gaps of more than
 
 =item B<--check_against_osm>
 
-This loads the osm.txt. osm.txt is a the segmentss File generated 
-from in the pdf-atlas directory utils/osm-pdf-atlas/Data/osm.txt.
-I must be linked to ./osm.txt
-Then it checks if any of the points are near (<20m) any  
+This loads the osm.txt and checks if the 
+track-points already exist as an osm-segment.
+It checks if any of the points are near (<20m) any  
 of the osm-segments. 
 And the OSM Segment and the track segments have an 
 angle of less than 30 Degrees.
-If so they will be deleted.
+If so they will be dropped.
+
+The file osm.txt is the segments file used by osm-pdf-atlas.
+It's containing all osm-segments from planet.osm in a rather simple way.
+The probably easiest way to create it is to go to the 
+directory
+   svn.openstreetmap.org/utils/osm-pdf-atlas
+and once call "create.sh".
 
 =item B<--filter_duplicate_tracepoints>
 

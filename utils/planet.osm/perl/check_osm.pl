@@ -192,10 +192,10 @@ sub read_osm_file($) { # Insert Streets from osm File
 	if ( $verbose) {
 	    printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
 	}
-	if ( $file_name eq "planet.osm" ) {
-	        Storable::store($osm_nodes   ,"$file_name.node.storable");
-		Storable::store($osm_segments,"$file_name.segment.storable");
-		Storable::store($osm_ways    ,"$file_name.way.storable");
+	if ( $file_name =~ m/planet.*osm/ ) {
+	        Storable::store($osm_nodes   ,"$file_name.storable.node");
+		Storable::store($osm_segments,"$file_name.storable.segment");
+		Storable::store($osm_ways    ,"$file_name.storable.way");
 		if ( $verbose) {
 		    printf "Read and parsed and stored $file_name in %.0f sec\n",time()-$start_time;
 		}

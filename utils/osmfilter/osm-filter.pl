@@ -1166,11 +1166,23 @@ sub read_filter_areas_xml($){
 	Utils::print_time($start_time);
     }
     for my $elem  ( @{$content->[0]->{Kids}} ) {
-	next; #Since this is only a stub for now
-	my $name = '';
-	my $block=1;
+	next unless ref($elem) eq "GPS::node";
+	for my $tag ( @{$elem->{Kids}} ) {
+	    next unless defined $tag->{v};
+	    $elem->{$tag->{k}}=$tag->{v};
+	};
+	delete $elem->{Kids};
+	my $block =  $elem->{'of:block'};
+	$block = 1 unless defined $block;
+	my $lat =  $elem->{lat};
+	my $lon =  $elem->{lon};
+	my $proximity = $elem->{'of:radius'}||10000;
 	push( @{$areas_allowed_squares},
-	  { wp => $name, block => $block }
+	  { lat => $lat,
+	    lon => $lon,
+	    proximity => $proximity,
+	    block => $block, 
+	}
 	      );
     }
 }

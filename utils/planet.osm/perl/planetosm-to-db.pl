@@ -15,7 +15,7 @@
 use strict;
 use DBI;
 
-my $dbtype = "mysql";	# mysql | pgsql
+my $dbtype = "pgsql";	# mysql | pgsql
 my $dbname = "planetosm";
 my $dbhost = "";
 my $dbuser = "";
@@ -76,8 +76,8 @@ open(XML, "<$xml");
 my $last_id;
 my $last_type;
 while(my $line = <XML>) {
-	if($line =~ /^<node/) {
-		my ($id,$lat,$long) = ($line =~ /^<node id='(\d+)' lat='(\-?[\d\.]+)' lon='(\-?[\d\.]+e?\-?\d*)'/);
+	if($line =~ /^\s*<node/) {
+		my ($id,$lat,$long) = ($line =~ /^\s*<node id='(\d+)' lat='?(\-?[\d\.]+)'? lon='?(\-?[\d\.]+e?\-?\d*)'?/);
 		unless($id) { warn "Invalid line '$line'"; next; }
 
 		$node_ps->execute($id,$lat,$long) 
@@ -90,8 +90,8 @@ while(my $line = <XML>) {
 		$node_count++;
 		&display_count("node", $node_count);
 	}
-	elsif($line =~ /^<segment/) {
-		my ($id,$from,$to) = ($line =~ /^<segment id='(\d+)' from='(\d+)' to='(\d+)'/);
+	elsif($line =~ /^\s*<segment/) {
+		my ($id,$from,$to) = ($line =~ /^\s*<segment id='(\d+)' from='(\d+)' to='(\d+)'/);
 		unless($id) { warn "Invalid line '$line'"; next; }
 		unless($nodes{$to}) { warn "No node $to for line '$line'"; next; }
 		unless($nodes{$from}) { warn "No node $from for line '$line'"; next; }
@@ -106,8 +106,8 @@ while(my $line = <XML>) {
 		$seg_count++;
 		&display_count("segment", $seg_count);
 	}
-	elsif($line =~ /^<way/) {
-		my ($id) = ($line =~ /^<way id='(\d+)'/);
+	elsif($line =~ /^\s*<way/) {
+		my ($id) = ($line =~ /^\s*<way id='(\d+)'/);
 		unless($id) { warn "Invalid line '$line'"; next; }
 		$way_ps->execute($id)
 			or warn("Invalid line '$line' : ".$conn->errstr);
@@ -119,8 +119,8 @@ while(my $line = <XML>) {
 		$way_seg_count = 0;
 		&display_count("way", $way_count);
 	}
-	elsif($line =~ /^<seg /) {
-		my ($id) = ($line =~ /^<seg id='(\d+)'/);
+	elsif($line =~ /^\s*<seg /) {
+		my ($id) = ($line =~ /^\s*<seg id='(\d+)'/);
 		unless($id) { warn "Invalid line '$line'"; next; }
 		unless($segs{$id}) { warn "Invalid segment for line '$line'"; next; }
 
@@ -128,8 +128,8 @@ while(my $line = <XML>) {
 		$way_seg_ps->execute($last_id,$id,$way_seg_count)
 			or warn("Invalid line '$line' : ".$conn->errstr);
 	}
-	elsif($line =~ /^<tag/) {
-		my ($name,$value) = ($line =~ /^<tag k='(.*?)' v='(.*?)'/);
+	elsif($line =~ /^\s*<tag/) {
+		my ($name,$value) = ($line =~ /^\s*<tag k='(.*?)' v='(.*?)'/);
 		unless($name) { warn "Invalid line '$line'"; next; }
 
 		# Decode the XML elements in the name and value
@@ -293,6 +293,8 @@ CREATE TABLE node_tags (
 	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id)
 );
 CREATE INDEX i_node_tags_node ON node_tags(node);
+CREATE INDEX i_node_tags_name ON node_tags(name);
+CREATE INDEX i_node_tags_value ON node_tags(value);
 
 CREATE TABLE segments (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_segments'),

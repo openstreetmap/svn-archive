@@ -16,9 +16,9 @@ require "net/http"
 require "rexml/document"
 
 # get little-osm's data structure
-$: << "../utils/little-osm"
-require "data/core"
-require "data/xml"
+$: << File.dirname(__FILE__)+"/../utils/osm-data/lib"
+require "osm/data"
+require "osm/rexml"
 
 include OSM
 

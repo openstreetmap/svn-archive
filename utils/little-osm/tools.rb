@@ -1,7 +1,7 @@
 module OSM
 
   OK = "HTTP/1.1 200/OK\r\nServer: little-osm\r\nContent-type: text/plain\r\n\r\n"
-  HEADER = "<?xml version='1.0' encoding='UTF-8'?>\n<osm version='0.3' generator='little-osm'>"
+  HEADER = "<?xml version='1.0' encoding='UTF-8'?>\n<osm version='0.3' generator='little-osm'>\n"
   FOOTER = '</osm>'
 
   def bad_request reason = "Bad Request"
@@ -21,15 +21,16 @@ module OSM
 
   # Create and return an osm object out of the database query array
   def make_osm q
+    tags = q[1] == "NULL" ? nil : Hash[*q[1].split("\n")]
     case uid_to_class(q[0]).to_s
     when "OSM::Node"
-      Node.new q[4], q[5], nil, uid_to_id(q[0]), q[2]
+      Node.new q[4], q[5], tags, uid_to_id(q[0]), q[2]
     when "OSM::Segment"
       from, to = q[3].split ','
-      Segment.new uid_to_id(from), uid_to_id(to), nil, uid_to_id(q[0]), q[2]
+      Segment.new uid_to_id(from), uid_to_id(to), tags, uid_to_id(q[0]), q[2]
     when "OSM::Way"
       segs = q[3].split(',').collect do |x| uid_to_id(x) end
-      Way.new segs, nil, uid_to_id(q[0]), q[2]
+      Way.new segs, tags, uid_to_id(q[0]), q[2]
     end
   end
 

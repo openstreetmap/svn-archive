@@ -2,14 +2,14 @@
 # can be accessed by using the [] operator.
 # Timestamp is accessed via "timestamp" getter. The id
 # can be retrieved as to_i.
-
+#
 # Primitives can be created either by specifying an
 # array, in which case the order of the values is important
 # or by specifying an hash, where the hash keys will be
 # the parameters. Tags are always transfered as hashes.
-
-# Example:
-
+#
+# ==Example
+#
 #  # create two nodes
 #  node1 = Node.new :lat=>51, :lon=>1
 #  node2 = Node.new 52, 1, {"name"=>"My Home", "class"=>"poi"}
@@ -19,22 +19,20 @@
 #  way = Way.new [segment]
 #  # do some funny tag stuff
 #  way[name] = "Way to " + node2[name].downcase
-
-
+#
+#
 # In OSM, data primitives can be "incomplete", in which
 # case only the id is known. Then, you may only call to_i
-# to retrieve the id (in fact, you will get an integer instead
-# of an OSM object for incomplete data types. That's the
-# reason for accessing the id via .to_i ;)
-
+# to retrieve the id (in fact, you may get an integer instead
+# of an OSM object for incomplete data types, but don't depend 
+# on this)
+#
 # You can access an unique id from every complete primitive
 # by calling .to_uid. This identifier is unique among all
 # objects (not only among objects of the own class).
 # There are conversion functions to retrieve the id and the
 # class from an uid: uid_to_id and uid_to_class as well as
 # to construct an uid: idclass_to_uid
-
-
 module OSM
 
   # Base class for handling the common stuff in any primitive.
@@ -55,7 +53,7 @@ module OSM
     def to_i; @id.to_i end
 
     # Return the unique identifier, which is unique among all OsmPrimitives
-    def to_uid; idclass_to_uid self.to_i,self.class end
+    def to_uid; OSM.idclass_to_uid self.to_i,self.class end
 
     protected :initialize
   end
@@ -80,7 +78,7 @@ module OSM
 
     def pos; [@lat,@lon] end
     def bbox; [@lat,@lon,@lat,@lon] end
-    def Node.canonical_name; "node" end
+    def self.canonical_name; "node" end
   end
 
   # A segment with a "from" and a "to" node
@@ -105,7 +103,7 @@ module OSM
       lon = [from.lon, to.lon]
       [lat.min, lon.min, lat.max, lon.max]
     end
-    def Segment.canonical_name; "segment" end
+    def self.canonical_name; "segment" end
   end
 
   # A way with a list of segments
@@ -136,7 +134,7 @@ module OSM
       bbox
     end
     
-    def Way.canonical_name; "way" end
+    def self.canonical_name; "way" end
   end
 
   # Some short uid helper functions.
@@ -152,5 +150,6 @@ module OSM
     klass = eval klass.capitalize if klass.kind_of? String
     (id.to_i<<3)+[Node,Segment,Way].index(klass)
   end
-
+  
+  module_function :uid_to_id, :uid_to_class, :idclass_to_uid
 end

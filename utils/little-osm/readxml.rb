@@ -2,44 +2,53 @@
 
 # Read in planet.osm and create a sqlite3 database file named "planet.db"
 
-require 'data/core'
+$: << File.dirname(__FILE__)+"/../osm-data/lib"
+
+require 'osm/data'
 require 'rexml/document'
 require 'sqlite3'
 require 'time'
 
 
-# define from_db in data classes which retrieve the data from the just created database
-def Node.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
-  Node.new minlat, minlon, uid.to_i>>3, time
-end
-def Node.from_db_id uid
-  Node.from_db(*$db.execute("select * from data where uid=#{uid};")[0].to_a)
-end
-def Segment.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
-  fid, tid = reference.split ','
-  Segment.new(Node.from_db_id(fid.to_i), Node.from_db_id(tid.to_i), ((uid.to_i)>>3).to_s, time)
-end
-def Segment.from_db_id uid
-  q = $db.execute("select * from data where uid=#{uid};")[0].to_a
-  throw :incomplete_way if q.empty?
-  Segment.from_db(*q)
-end
-
-# define load_references in segment and way, which replaces the id-references by their real data
-class Segment < OsmPrimitive
-  def load_references
-    self.from = Node.from_db_id Node.to_uid(self.from)
-    self.to = Node.from_db_id Node.to_uid(self.to)
+module OSM
+  class Node < OsmPrimitive
+    def self.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
+      Node.new minlat, minlon, OSM::uid_to_id(uid), time
+    end
+    def self.from_db_id uid
+      complete_node = $db.execute("select * from data where uid=#{uid};")[0].to_a
+      raise uid.to_s+" not found" if complete_node.empty?
+      Node.from_db(*complete_node)
+    end
   end
-end
-class Way < OsmPrimitive
-  def load_references
-    segment.collect! do |id|
-      Segment.from_db_id Segment.to_uid(id)
+  
+
+  # define load_references in segment and way, which replaces the id-references by their real data
+  class Segment < OsmPrimitive
+    def load_references
+      self.from = Node.from_db_id OSM::idclass_to_uid(self.from, Node)
+      self.to = Node.from_db_id OSM::idclass_to_uid(self.to, Node)
+    end
+    def self.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
+      fid, tid = reference.split ','
+      Segment.new(Node.from_db_id(fid.to_i), Node.from_db_id(tid.to_i), OSM::uid_to_id(uid).to_s, time)
+    end
+    def self.from_db_id uid
+      q = $db.execute("select * from data where uid=#{uid};")[0].to_a
+      throw :incomplete_way if q.empty?
+      Segment.from_db(*q)
+    end
+  end
+
+
+  class Way < OsmPrimitive
+    def load_references
+      self.segments.collect! do |id|
+        Segment.from_db_id OSM::idclass_to_uid(id, Segment)
+      end
     end
   end
 end
-
 
 # writes the data object into the database.
 def write_sql data
@@ -47,17 +56,16 @@ def write_sql data
   tags.gsub!(/\"/, '')
   time = data.timestamp ? '"'+data.timestamp.xmlschema+'"' : "null"
   case data.class.name
-  when "Node"
+  when "OSM::Node"
   	reference = ""
-  when "Segment"
-  	reference = Node.to_uid(data.from).to_s + "," + Node.to_uid(data.to).to_s
+  when "OSM::Segment"
+  	reference = OSM::idclass_to_uid(data.from, OSM::Node).to_s + "," + OSM::idclass_to_uid(data.to, OSM::Node).to_s
   	data.load_references
-  when "Way"
-  	reference = data.segment.collect {|s| Segment.to_uid(s).to_s}.join ','
+  when "OSM::Way"
+  	reference = data.segments.collect {|s| OSM.idclass_to_uid(s, OSM::Segment).to_s}.join ','
   	data.load_references
   end
   sql = %Q{insert into data values (#{data.to_uid}, "#{tags}", #{time}, "#{reference}", #{data.bbox.join(',')});}
-  $tmpsql << sql << "\n"
   $db.execute sql
 end
 
@@ -70,15 +78,15 @@ class XmlReader
 
     case name
     when "node"
-      @current = Node.new a['lat'].to_f, a['lon'].to_f, id, time
+      @current = OSM::Node.new :lat => a['lat'].to_f, :lon => a['lon'].to_f, :id => id, :timestamp => time
     when "segment"
-      @current = Segment.new a['from'].to_i, a['to'].to_i, id, time
+      @current = OSM::Segment.new :from => a['from'].to_i, :to => a['to'].to_i, :id => id, :timestamp => time
     when "way"
-      @current = Way.new [], id, time
+      @current = OSM::Way.new :segments => [], :id => id, :timestamp => time
     when "tag"
       @current[a['k']] = a['v']
     when "seg"
-      @current.segment << a['id'].to_i
+      @current.segments << a['id'].to_i
     end
   end
 
@@ -93,7 +101,7 @@ end
 
 abort "planet.osm not found." unless File.exist? "planet.osm"
 File.delete "planet.db" if File.exist? "planet.db"
-$db = SQLite3::Database.new PLANET_DB
+$db = SQLite3::Database.new "planet.db"
 $db.execute 'BEGIN'
 open('planet.sql').each {|sql| $db.execute sql}
 REXML::Document.parse_stream File.new('planet.osm'), XmlReader.new

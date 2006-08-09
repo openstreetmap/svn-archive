@@ -2,8 +2,16 @@
 # This is a small hand-made http server. (Why not use webbrick? Because it always
 # caches the whole response before sending it to the client.)
 
+$DEBUG = true
+
 require 'socket'
 require 'uri'
+
+$: << File.dirname(__FILE__)+"/../osm-data/lib"
+
+require 'osm/data'
+require 'osm/rexml'
+require 'tools'
 
 # use all api files here. For Debug mode, they will later be reloaded, so that
 # changes are in effect even if the server is not restarted.
@@ -24,7 +32,7 @@ loop do
     cmd = uri.path.scan(/[^\/]*/)[0]
     cmd ||= "test"
     puts Thread.current.object_id.to_s + ": call command '#{cmd}'" if $-v
-    queries_arr = uri.query.split('&').collect do |x| x.split "=" end
+    queries_arr = uri.query.nil? ? [] : uri.query.split('&').collect do |x| x.split "=" end
     queries = {}
     queries_arr.each do |x| queries[x[0]] = (x[1] ||= "") end
     begin
@@ -37,12 +45,12 @@ loop do
       # If the error occoured after the api call sent the ok-header, this would not make much sense, but
       # it is the best hint we can give to the client in an unbuffered server response.. (and hopefully,
       # this will invalidate every xml structure making the response unlikely to be misinterpreted ;)
-      session.print "HTTP/1.1 500/Exception executing script\r\n",
-        "Server: little-osm\r\n",
-        "Content-type: text/plain\r\n\r\n",
-        "Error while executing script #{cmd}.rb:\r\n",
-        "#{x}\r\n  ",
-        x.backtrace.join("\r\n  ")
+      session << "HTTP/1.1 500/Exception executing script\r\n"
+      session << "Server: little-osm\r\n"
+      session << "Content-type: text/plain\r\n\r\n"
+      session << "Error while executing script #{cmd}.rb:\r\n"
+      session << "#{x}\r\n  "
+      session << x.backtrace.join("\r\n  ")
     ensure
       puts Thread.current.object_id.to_s + ": call finished" if $-v
       session.close

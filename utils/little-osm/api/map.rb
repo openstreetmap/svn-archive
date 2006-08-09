@@ -4,11 +4,7 @@
 # Note, that unlike the map-request of the current server, this one
 # may deliver incomplete line segments. (segments, where one node is outside the bbox)
 
-require 'data/core'
-require 'data/xml'
 require 'sqlite3'
-
-require 'tools'
 
 module OSM
 
@@ -33,7 +29,7 @@ module OSM
     # doing the request.
     db = SQLite3::Database.new 'planet.db'
     db.execute "select * from data where minlat < #{bbox[3]} and minlon < #{bbox[2]} and maxlat > #{bbox[1]} and maxlon > #{bbox[0]}" do |line|
-      session << make_osm(line).to_xml
+      session << "  " << make_osm(line).to_xml << "\n"
     end
     session << FOOTER
   end

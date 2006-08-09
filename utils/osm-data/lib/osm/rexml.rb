@@ -1,14 +1,11 @@
-# Adds to_xml and from_xml capabilities to the core objects.
-# Both functions use strings as parameter/return, which has to be in correct
-# osm-xml syntax
-
-# Example:
+# Adds to_xml, to_rexml, from_xml and from_rexml capabilities to the core objects.
+#
+# ==Example
 #  node = OsmPrimitive.from_xml '<node id="1" lat="51" lon="1" />'
 #  node.lat, node.lon = 52, 2
 #  print node.to_xml                 => <node id="1" lat="52" lon="2" />
 
-
-require 'data/core'
+require 'osm/data'
 require 'rexml/document'
 require 'time'
 
@@ -16,10 +13,9 @@ module OSM
 
   class OsmPrimitive
 
-    # Return this primitive as REXML element. Called from subclasses to fill
-    # in the common attributes
+    # Return this primitive as REXML element.
     def to_rexml
-      e = REXML::Element.new self.canonical_name
+      e = REXML::Element.new self.class.canonical_name
       e.add_attributes 'id'=>@id, 'timestamp'=>(@timestamp.xmlschema if @timestamp)
       @tags.each do |key, value|
         tag = REXML::Element.new 'tag'
@@ -27,6 +23,11 @@ module OSM
         e.add_element(tag)
       end if @tags
       e
+    end
+
+    # Return the primitive as xml string
+    def to_xml
+      self.to_rexml.to_s
     end
 
     # Create an primitive out of an xml string.
@@ -42,16 +43,14 @@ module OSM
       osm
     end
 
-    protected :to_rexml
   end
 
   class Node < OsmPrimitive
 
-    # Return the node as xml string
-    def to_xml
-      e = to_rexml
+    def to_rexml
+      e = super
       e.add_attributes 'lat'=>@lat, 'lon'=>@lon
-      e.to_s
+      e
     end
 
     # Create a node out of the REXML element
@@ -64,11 +63,10 @@ module OSM
 
   class Segment < OsmPrimitive
 
-    # Return the segment as xml string
-    def to_xml
-      e = to_rexml
+    def to_rexml
+      e = super
       e.add_attributes 'from'=>@from.to_i, 'to'=>@to.to_i
-      e.to_s
+      e
     end
 
     # Create a segment out of an REXML element
@@ -81,15 +79,14 @@ module OSM
 
   class Way < OsmPrimitive
 
-    # Return the way as XML string
-    def to_xml
-      e = to_rexml
+    def to_rexml
+      e = super
       @segments.each do |s|
         seg = REXML::Element.new 'seg'
         seg.add_attribute 'id', s.to_i
         e.add_element seg
       end
-      e.to_s
+      e
     end
 
     # Create an way out of an REXML structure
@@ -100,5 +97,4 @@ module OSM
     end
 
   end
-
 end

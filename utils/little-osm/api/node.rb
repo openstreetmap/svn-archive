@@ -1,5 +1,4 @@
 # delivers a single node by id
-require "tools"
 
 module OSM
   def node uri, queries, session

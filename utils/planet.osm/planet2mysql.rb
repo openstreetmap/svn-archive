@@ -1,15 +1,15 @@
 #!/usr/bin/ruby -w
 
-$: << Dir.pwd+"/../little-osm"
-$: << Dir.pwd+"/../../www.openstreetmap.org/ruby/api"
+$: << File.dirname(__FILE__)+"/../osm-data/lib"
+$: << File.dirname(__FILE__)+"/../../www.openstreetmap.org/ruby/api"
 
 require 'mysql'
 require 'time'
 require 'osm/servinfo.rb'
 require 'cgi'
 
-require 'data/core'
-require 'data/xml'
+require 'osm/data'
+require 'osm/rexml'
 
 $mysql = Mysql.real_connect $DBSERVER, $USERNAME, $PASSWORD, $DATABASE
 

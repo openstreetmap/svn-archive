@@ -303,7 +303,9 @@ sub LoadOSM($)
   } else {
       my $fh = File::data_open($filename);
 
-      die "Cannot open $filename in LoadOSM"  unless $fh;
+      die "Cannot open $filename in LoadOSM.\n".
+	  "Please create it first to use the option --osm.\n".
+	  "See --help for more info"  unless $fh;
 
       while ( my $line = $fh ->getline() ) {
 	  my @segment;
@@ -1111,23 +1113,28 @@ use Math::Trig;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
-my $areas_allowed_squares = 
-    [    # Block a circle of <proximity> Km arround each point
-#     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
-#     { lat =>  48.175710 	,lon => 11.754400  ,proximity => .030 , block => 1 },
-#     { lat =>  48.175681 	,lon => 11.7547203 ,proximity => .030 , block => 1 },
-#     { lat =>  48.175527 	,lon => 11.7586399 ,proximity => .030 , block => 1 },
-#     { lat =>  48.1750 	,lon => 11.7536    ,proximity => .10  , block => 1 },
+my $areas_allowed_squares;
+
+# -------------------------------------------------
+# Add these filters from source
+sub add_internal_filter_areas(){
+    push( @{$areas_allowed_squares},
+	  (    
+	       # Block a circle of <proximity> Km arround each point
+	       #     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
 	 
-	 # Allow Rules for square size areas
-	 # min_lat,min_lon max_lat,max_lon,     (y,x)
-	 #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
-	 #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
-	 #[ -90.0  , -180  , 90.0    , 180   ], # World
+	       # Allow Rules for square size areas
+	       # Warning square areas are not tested yet
+
+	       # min_lat,min_lon max_lat,max_lon,     (y,x)
+	       #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
+	       #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
+
+	       # [ -90.0  , -180  , 90.0    , 180   ], # World Allow 
+	       # The rest of the World is blocked by default
 	 
-	 # The rest of the World is blocked by default
-	 
-	 ];	
+	       ));
+}
 
 
 # -------------------------------------------------
@@ -1242,13 +1249,16 @@ sub check_allowed_area($){
 	    if ( Geometry::distance_point_point_Km($area,$elem) < $area->{proximity} ) {
 		printf STDERR "check_allowed_area(".$elem->{lat}.",".$elem->{lon}.
 		    ") -> WP: $area->{wp} : block: $area->{block}\n"
-		    if $debug >30;
+		    if $debug > 30;
 		return ! $area->{block};
 	    }
 	} else {
 	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
 	    if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
 		 $min_lon <= $elem->{lon} &&	 $max_lon >= $elem->{lon} ) {
+		if ( $debug >30) {
+		    printf STDERR "Allow Square\n";
+		}
 		return 1;
 	    }
 	}
@@ -2065,7 +2075,11 @@ sub convert_Data(){
 
     GPS::read_filter_areas($WAYPT_FILE);
     GPS::read_filter_areas_xml($FILTER_FILE);
-
+    GPS::add_internal_filter_areas();
+    if ( $debug >30 ) {
+	print "areas_allowed_squares:".Dumper(\$areas_allowed_squares);
+    }
+    
     my $osm_segments;
     if ( $check_against_osm ) {
 	my @path=qw( ./
@@ -2135,7 +2149,7 @@ sub convert_Data(){
 
 	if ( $use_area_limit ) {
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
-	    GPS::print_count_data($new_tracks,"$filename: Area Filter to ");
+	    GPS::print_count_data($new_tracks,"$filename: Area Filters to ");
 	}
 
 	
@@ -2335,11 +2349,6 @@ The Idea behind the osm-filter is:
       - Speed is too high ( > 200 Km/h for now )
       - Distance between 2 point is too high ( >1 Km for now)
    Then each Track with less than 3 points is discarded.
- - After that the ammount of Datapoints is reduced. This is done by
-   looking at three trackpoints in a row. For now I calculate the
-   distance between the line of point 1 and 3 to the point in the 
-   middle. If this distance is small enough (currently 1 meter) the 
-   middle point is dropped, because it doesn't really improve the track.
  - if you use the option 
        --generate_ways
    osm-filter tries to determin continuous ways by looking 
@@ -2411,10 +2420,18 @@ If so it is removed
 
 Currently it's only a stub, so anyone can sit down and programm the compare routine.
 
+=item B<-- use_reduce_filter>
+
+The ammount of Datapoints is reduced. 
+This is done by looking at three trackpoints in a row. For now I calculate the
+distance between the line of point 1 and 3 to the point in the 
+middle. If this distance is small enough (currently 1 meter) the 
+middle point is dropped, because it doesn't really improve the track.
+
+
 =item B<--filter-all>
 
 Switch on all of the above filters
-
 
 =item B<--limit-area>
 
@@ -2425,7 +2442,7 @@ waypoints starting with
   filter.
 are added as filter areas.
     filter.deny will be filtered out
-    filter.allo will be left in the resulting files
+    filter.allow will be left in the resulting files
 
 If you want to define squares you have to define them for now 
 in the Source at the definition of

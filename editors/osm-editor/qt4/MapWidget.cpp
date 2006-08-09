@@ -147,6 +147,7 @@ MapWidget::MapWidget(QMainWindow *mainwin,
     segpens["cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
     segpens["bridleway"]= SegPen (QPen(QColor(192,96,0),2), false);
     segpens["byway"] = SegPen (QPen (Qt::red, 2), false);
+    segpens["RUPP"] = SegPen (QPen (QColor(192,0,0), 2), false);
     segpens["minor road"]= SegPen (QPen(QColor(192,192,192), 2),true);
     segpens["residential road"]= SegPen(QPen (QColor(192,192,192), 1), true);
     segpens["B road"]= SegPen(QPen (QColor(253,191,111), 4), true);
@@ -156,7 +157,7 @@ MapWidget::MapWidget(QMainWindow *mainwin,
     segpens["permissive footpath"]= SegPen(QPen (QColor(0,192,0), 2), false);
     segpens["permissive bridleway"]= SegPen(QPen (QColor(170,85,0), 2), false);
     segpens["track"]= SegPen(QPen (QColor(128,128,128), 3), false);
-    segpens["new forest track"]=SegPen(QPen(QColor(170,85,0),2), false);
+    segpens["new forest track"]=SegPen(QPen(QColor(128,64,0),2), false);
     segpens["new forest cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
     cerr<<"done segpens" << endl;
 
@@ -625,9 +626,10 @@ void MapWidget::setMode(int m)
 	cerr<<"setMode(): CLEARING SEGMENTS" << endl;
 	clearSegments();
 
-	if (m!=ACTION_WAY_BUILD && builtWay && builtWay->getOSMID()<=0)
+	if (m!=ACTION_WAY_BUILD && builtWay) 
 	{
-		delete builtWay;
+		if(builtWay->getOSMID()<=0)
+			delete builtWay;
 		builtWay = NULL;
 	}
 
@@ -1659,12 +1661,17 @@ void MapWidget::toggleWays()
 void MapWidget::uploadWay()
 {
 	Way *way;
-	if(actionMode==ACTION_WAY_BUILD)
+	// If builtWay exists we upload that.
+	// (builtWay is either the way constructed via 'easy build' mode, or the
+	// way constructed via a batch upload)
+	if(builtWay)
 	{
 		way = builtWay;
 		builtWay = NULL;
 		pts[0] = pts[1] = NULL;
 	}
+	// Otherwise create a way from the selected segments. This is used 
+	// typically when constructing a way out of existing segments.
 	else
 	{
 		way = new Way(components);
@@ -1874,11 +1881,11 @@ void MapWidget::batchUpload()
 	// Only upload if selected GPX track...
 	if(uploader==NULL && liveUpdate && tpts[0]>=0 && tpts[1]>=0)
 	{
-		uploader = new BatchUploader;
-		QObject::connect(uploader,SIGNAL(done()),this,SLOT(batchUploadDone()));
+		uploader = new BatchUploader(components);
+		QObject::connect(uploader,SIGNAL(done(Way*)),this,
+						SLOT(batchUploadDone(Way*)));
 		QObject::connect(uploader,SIGNAL(error(const QString&)),this,
 						SLOT(batchUploadError(const QString&)));
-		uploader->setComponents(components);
 		osmhttp.setAuthentication(username,password);
 		uploader->setHTTPHandler(&osmhttp);
 		uploader->batchUpload(tpts[0],tpts[1]);
@@ -1901,12 +1908,18 @@ void MapWidget::batchUpload()
 
 }
 
-void MapWidget::batchUploadDone()
+void MapWidget::batchUploadDone(Way *way)
 {
 	if(uploader)
 	{
 		delete uploader;
 		uploader = NULL;
+
+		// 050806 set the built way to the way constructed via batch upload
+		if(builtWay && builtWay->getOSMID()<=0)
+			delete builtWay;
+		builtWay = way;
+
 		update();
 	}
 }
@@ -1914,7 +1927,8 @@ void MapWidget::batchUploadDone()
 void MapWidget::batchUploadError(const QString& error)
 {
 	QMessageBox::warning(this,"Error with batch upload",error);
-	batchUploadDone();
+	delete uploader;
+	uploader = NULL;
 }
 
 void MapWidget::segSplitterError(const QString& error)

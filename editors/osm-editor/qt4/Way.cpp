@@ -77,7 +77,8 @@ int Way::removeSegment(Segment *s)
 bool Way::addSegmentAt(int index, Segment *s)
 {
 	vector<int>::iterator i = segments.begin() + index;
-	if(i!=segments.end() && s->getOSMID())
+	//050806 bug if(i!=segments.end() && s->getOSMID())
+	if(s->getOSMID())
 	{
 		s->setWayID(osm_id);
 		/* 090706 not anymore - see addSegment()

@@ -171,7 +171,6 @@ MainWindow2::MainWindow2(double lat,double lon, double s,double w,double h)
 
 	toolbar->addWidget(new QLabel("Search:",toolbar));
 	gcedit = new QLineEdit(toolbar);
-	gcedit->setMaxLength(10);
 	toolbar->addWidget(gcedit);
 	country = new QComboBox(toolbar);
 

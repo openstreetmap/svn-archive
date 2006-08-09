@@ -306,7 +306,7 @@ public slots:
 	void splitterDone();
 	void changeWayDetails();
 	void batchUpload();
-	void batchUploadDone();
+	void batchUploadDone(Way *);
 	void batchUploadError(const QString& error);
 	void segSplitterError(const QString& error);
 	void toggleSegmentColours();

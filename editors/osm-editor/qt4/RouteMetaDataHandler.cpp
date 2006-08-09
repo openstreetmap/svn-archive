@@ -127,7 +127,10 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 	rData["cycle path"] = RouteMetaData ("permissive|unofficial",  
 											"permissive|unofficial", "no",
 										"no", "cycleway|path");
-	rData["byway"] = RouteMetaData ("yes", "yes", "yes", "yes",  "unsurfaced");
+	rData["byway"] = RouteMetaData ("yes", "yes", "yes", "yes",  
+					"track|unsurfaced");
+	rData["RUPP"] = RouteMetaData ("yes", "yes", "yes", "unknown",  
+						"track|unsurfaced");
 	rData["minor road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
 								"unclassified|minor");
 	rData["residential road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
@@ -139,11 +142,11 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 	rData["new forest track"] = RouteMetaData ("permissive|unofficial", 
 												"no", "permissive|unofficial", 
 												"no",  
-												"unsurfaced"); 
+												"track|unsurfaced"); 
 	rData["new forest cycle path"] = RouteMetaData ("permissive|unofficial", 
 												"permissive|unofficial", 
 												"permissive|unofficial", "no",  
-												"unsurfaced"); 
+												"track|unsurfaced"); 
 }
 
 // Returns the metadata matching a type

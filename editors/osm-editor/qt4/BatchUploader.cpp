@@ -4,6 +4,15 @@
 namespace OpenStreetMap
 {
 
+BatchUploader::~BatchUploader()
+{
+	// delete the way if we didn't successfully finish.
+	// (If we did, it's the receiver of the signal's responsibility to 
+	// dispose of the way)
+	if(!successful)
+		delete way;
+}
+
 // This method uploads a selected section of the GPX track as OSM nodes and
 // segments.
 // Loop through all trackpoints, make a node and upload each one
@@ -96,6 +105,7 @@ void BatchUploader::segmentAdded(const QByteArray& resp, void *segment)
     if(s)
     {
 		s->setOSMID(atoi(ids[0].toAscii().constData()));
+		way->addSegment(s); // 050806 add segment to way
 		cerr << "semgnet ID: " << ids[0].toAscii().constData() << endl;
 		if(count<tp2)
 		{
@@ -109,8 +119,11 @@ void BatchUploader::segmentAdded(const QByteArray& resp, void *segment)
 								SLOT(nodeAdded(const QByteArray&,void*)),
 								nodes[count],SLOT(handleError(const QString&)));
 		}
-		else
-			emit done();
+		else // we're done - emit signal and pass the way back
+		{
+			successful = true;
+			emit done(way);
+		}
     }
 }
 

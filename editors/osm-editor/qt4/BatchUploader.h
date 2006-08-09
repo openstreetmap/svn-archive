@@ -19,11 +19,14 @@ private:
 	HTTPHandler *osmhttp;
 	std::map<int,Node*> nodes;
 	int tp1, tp2, count;
+	Way *way;
+	bool successful;
 
 public:
-	BatchUploader() {  }
-	~BatchUploader() { }
-	void setComponents(Components2 *comp) { components=comp; }
+	BatchUploader(Components2* c) { components=c; way=new Way(c); 
+   										successful=false;	}
+	~BatchUploader();
+	Way *getWay() { return way; }
 	void setHTTPHandler(HTTPHandler *handler) { osmhttp=handler; }
 
 	void batchUpload(int,int);
@@ -35,7 +38,7 @@ public slots:
 	void handleError(const QString& e);
 
 signals:
-	void done();
+	void done(Way *);
 	void error(const QString&);
 };
 

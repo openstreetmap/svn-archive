@@ -42,8 +42,23 @@ if($xml eq "-schema") {
 # Open our database connection
 my $conn = &open_connection($dbtype,$dbname,$dbhost,$dbuser,$dbpass);
 
+# Empty out the database if requested
 if ($xml eq "-empty") {
+	# Skip over errors
+	$conn->{PrintError} = 1;
+	$conn->{RaiseError} = 0;
+
+	# Process
 	foreach my $sql (split "\n",&empty_tables($dbtype)) {
+		print "$sql\n";
+		$conn->do($sql);
+	}
+
+	# Also zap and indexes we create in post process
+	my $post_sql = &post_process($dbtype);
+	my @indexes = ($post_sql =~ /^CREATE INDEX (.*?) /gm);
+	foreach my $index (@indexes) {
+		my $sql = "DROP INDEX $index";
 		print "$sql\n";
 		$conn->do($sql);
 	}
@@ -61,13 +76,24 @@ my $way_ps = &build_way_ps($dbtype,$conn);
 my $way_seg_ps = &build_way_seg_ps($dbtype,$conn);
 my $way_tag_ps = &build_way_tag_ps($dbtype,$conn);
 
-my $node_count;
-my $seg_count;
-my $way_count;
-my $way_seg_count;
+# Should we batch inserts in transactions to help performance?
+# (DB specific if this helps or hinders)
+my $batch_inserts = &should_batch_inserts($dbtype,$conn);
+
+# Counts of the numbers handled
+my $node_count = 0;
+my $seg_count = 0;
+my $way_count = 0;
+my $way_seg_count = 0;
+my $line_count = 0;
 
 my %nodes;
 my %segs;
+
+# Turn on batching, if the database likes that
+if($batch_inserts) {
+	$conn->{AutoCommit} = 0;
+}
 
 # Process
 open(XML, "<$xml");
@@ -76,6 +102,16 @@ open(XML, "<$xml");
 my $last_id;
 my $last_type;
 while(my $line = <XML>) {
+	$line_count++;
+
+	# Handle batches, if the DB wants them
+	if($line_count % 10000 == 0) {
+		if($batch_inserts) {
+			$conn->commit();
+		}
+	}
+
+	# Process the line of XML
 	if($line =~ /^\s*<node/) {
 		my ($id,$lat,$long) = ($line =~ /^\s*<node id='(\d+)' lat='?(\-?[\d\.]+)'? lon='?(\-?[\d\.]+e?\-?\d*)'?/);
 		unless($id) { warn "Invalid line '$line'"; next; }
@@ -158,8 +194,12 @@ while(my $line = <XML>) {
 	}
 }
 
-# Post-processing
+# End the batch, if the database likes that
+if($batch_inserts) {
+	$conn->dbi_commit();
+}
 
+# Post-processing
 foreach my $sql (split "\n",&post_process($dbtype)) {
 	print "$sql\n";
 	$conn->do($sql);
@@ -199,6 +239,8 @@ sub open_connection {
 	}
 	return $conn;
 }
+
+########################################################################
 
 sub build_node_ps {
 	my ($dbtype,$conn) = @_;
@@ -268,9 +310,23 @@ sub build_way_tag_ps {
 	return $sth;
 }
 
+########################################################################
+
+sub should_batch_inserts {
+	my ($dbtype,$conn) = @_;
+	if($dbtype eq 'pgsql') {
+		# Postgres likes to get bulk inserts in batches
+		return 1;
+	}
+	return 0;
+}
+
+########################################################################
+
 sub fetch_schema {
 	my ($dbtype) = @_;
 	if($dbtype eq "pgsql") {
+		# Note - indexes created in post process
 		return <<"EOT";
 CREATE SEQUENCE s_nodes;
 CREATE SEQUENCE s_segments;
@@ -282,8 +338,6 @@ CREATE TABLE nodes (
 	longitude REAL NOT NULL,
 	CONSTRAINT pk_nodes_id PRIMARY KEY (id)
 );
-CREATE INDEX i_nodes_lat ON nodes(latitude);
-CREATE INDEX i_nodes_long ON nodes(longitude);
 
 CREATE TABLE node_tags (
 	node INTEGER NOT NULL,
@@ -292,9 +346,6 @@ CREATE TABLE node_tags (
 	CONSTRAINT pk_node_tags PRIMARY KEY (node,name),
 	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id)
 );
-CREATE INDEX i_node_tags_node ON node_tags(node);
-CREATE INDEX i_node_tags_name ON node_tags(name);
-CREATE INDEX i_node_tags_value ON node_tags(value);
 
 CREATE TABLE segments (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_segments'),
@@ -304,8 +355,6 @@ CREATE TABLE segments (
 	CONSTRAINT fk_segments_a FOREIGN KEY (node_a) REFERENCES nodes (id),
 	CONSTRAINT fk_segments_b FOREIGN KEY (node_b) REFERENCES nodes (id)
 );
-CREATE INDEX i_segments_node_a ON segments(node_a);
-CREATE INDEX i_segments_node_b ON segments(node_b);
 
 CREATE TABLE segment_tags (
 	segment INTEGER NOT NULL,
@@ -314,7 +363,6 @@ CREATE TABLE segment_tags (
 	CONSTRAINT pk_segment_tags PRIMARY KEY (segment,name),
 	CONSTRAINT fk_segment FOREIGN KEY (segment) REFERENCES segments (id)
 );
-CREATE INDEX i_segment_tags_segment ON segment_tags(segment);
 
 CREATE TABLE ways (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_ways'),
@@ -328,7 +376,6 @@ CREATE TABLE way_tags (
 	CONSTRAINT pk_way_tags PRIMARY KEY (way,name),
 	CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id)
 );
-CREATE INDEX i_way_tags_way ON way_tags(way);
 
 CREATE TABLE way_segments (
 	way INTEGER NOT NULL,
@@ -338,8 +385,6 @@ CREATE TABLE way_segments (
 	CONSTRAINT fk_ws_way FOREIGN KEY (way) REFERENCES ways (id),
 	CONSTRAINT fk_ws_seg FOREIGN KEY (segment) REFERENCES segments (id)
 );
-CREATE INDEX i_way_segments_way ON way_segments(way);
-CREATE INDEX i_way_segments_segment ON way_segments(segment);
 EOT
 	} elsif ($dbtype eq 'mysql') {
 		return "Please refer to http://trac.openstreetmap.org/browser/sql/mysql-schema.sql\n";
@@ -349,16 +394,11 @@ EOT
 }
 
 sub empty_tables {
-	my ($dbtype)=@_;	# not currently used
+	my ($dbtype)=@_;
 	if ($dbtype eq 'pgsql') {
+		# Will only work on 8.1, do deletes on earlier versions
 		return <<EOT;
-TRUNCATE TABLE nodes
-TRUNCATE TABLE node_tags
-TRUNCATE TABLE segments
-TRUNCATE TABLE segment_tags
-TRUNCATE TABLE ways
-TRUNCATE TABLE way_tags
-TRUNCATE TABLE way_segments
+TRUNCATE TABLE way_tags, way_segments, ways, segment_tags, segments, node_tags, nodes
 EOT
 	} else {
 		return <<EOT;
@@ -381,7 +421,27 @@ EOT
 
 sub post_process {
 	my ($dbtype)=@_;
-	unless ($dbtype eq 'pgsql') {
+	if ($dbtype eq 'pgsql') {
+		# Enable the indexes, which we turn off during a bulk load
+		return <<EOT;
+CREATE INDEX i_nodes_lat ON nodes(latitude);
+CREATE INDEX i_nodes_long ON nodes(longitude);
+
+CREATE INDEX i_node_tags_node ON node_tags(node);
+CREATE INDEX i_node_tags_name ON node_tags(name);
+CREATE INDEX i_node_tags_value ON node_tags(value);
+
+CREATE INDEX i_segments_node_a ON segments(node_a);
+CREATE INDEX i_segments_node_b ON segments(node_b);
+
+CREATE INDEX i_segment_tags_segment ON segment_tags(segment);
+
+CREATE INDEX i_way_tags_way ON way_tags(way);
+
+CREATE INDEX i_way_segments_way ON way_segments(way);
+CREATE INDEX i_way_segments_segment ON way_segments(segment);
+EOT
+	} else {
 		return <<EOT;
 UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1
 UPDATE segments SET tags=TRIM(';' FROM tags),visible=1

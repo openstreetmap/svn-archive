@@ -62,15 +62,15 @@ end
 
 # output all tags in the hash
 def out_tags tags
-  tags.each {|key, value| puts "    <tag k='#{CGI.escapeHTML(key)}' v='#{CGI.escapeHTML(value)}' />"}
+  tags.each {|key, value| puts %{    <tag k="#{CGI.escapeHTML(key)}" v="#{CGI.escapeHTML(value)}" />}}
 end
 
 
-puts "<?xml version='1.0' encoding='UTF-8'?>"
-puts "<osm version='0.3' generator='OpenStreetMap planet.rb'>"
+puts '<?xml version="1.0" encoding="UTF-8"?>'
+puts '<osm version="0.3" generator="OpenStreetMap planet.rb">'
 
 all_nodes do |id, lat, lon, timestamp, tags|
-  print "  <node id='#{id}' lat='#{lat}' lon=#{lon} timestamp='#{timestamp.xmlschema}'"
+  print %{  <node id="#{id}" lat="#{lat}" lon="#{lon}" timestamp="#{timestamp.xmlschema}"}
   if tags.empty?
     puts "/>"
   else
@@ -81,7 +81,7 @@ all_nodes do |id, lat, lon, timestamp, tags|
 end
 
 all_segments do |id, from, to, timestamp, tags|
-  print "  <segment id='#{id}' from='#{from}' to='#{to}' timestamp='#{timestamp.xmlschema}'"
+  print %{  <segment id="#{id}" from="#{from}" to="#{to}" timestamp="#{timestamp.xmlschema}"}
   if tags.empty?
     puts "/>"
   else
@@ -92,12 +92,12 @@ all_segments do |id, from, to, timestamp, tags|
 end
 
 all_ways do |id, segs, timestamp, tags|
-  print "  <way id='#{id}' timestamp='#{timestamp.xmlschema}'"
+  print %{  <way id="#{id}" timestamp="#{timestamp.xmlschema}"}
   if tags.empty? and segs.empty?
     puts "/>"
   else
     puts ">"
-    segs.each {|seg_id| puts "    <seg id='#{seg_id}' />"}
+    segs.each {|seg_id| puts %{    <seg id="#{seg_id}" />}}
     out_tags tags
     puts "  </way>"
   end

@@ -18,7 +18,7 @@ class Hash
     if self.empty?
       nil
     else
-      self.to_a.collect{|x| x.join "="}.join(";")
+      self.collect{|k,v| "#{k}=#{v}"}.join(";").gsub('"', '\"')
     end
   end
 end
@@ -57,6 +57,7 @@ class OSM::Way
   end
 end
 
+$mysql.query "set autocommit = 0;"
 current = ""
 open(ARGV[0]).each do |line|
   next if line =~ /\<osm|\<\/osm\>|\<\?xml/
@@ -67,3 +68,5 @@ open(ARGV[0]).each do |line|
     current = ""
   end
 end
+
+$mysql.query "commit;"

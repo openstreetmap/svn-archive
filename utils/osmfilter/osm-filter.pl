@@ -2454,6 +2454,16 @@ AND: they are not tested :-(
 draw the filter_areas into the file 00__filter_areas.gpx file 
 by creating a track with the border of each filter_area 
 
+
+The default area-filter rule is deny. And the filtering is done 
+in the order the areas are found in the
+ File(~/.gpsdrive/way.txt first then ~/josm/filter.xml). 
+So the last filter should be an allow all if you want 
+are working with deny filters only and want to allow all the rest
+of the world.
+Something like:
+ all 0.0 0.0 allow 0 0 0 40000000
+
 =item B<--generate_ways>
 
 Try to generate ways inside the OSM structure. 

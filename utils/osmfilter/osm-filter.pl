@@ -286,7 +286,108 @@ package OSM;
 ##################################################################
 use Storable;
 
-sub LoadOSM($)
+###########################################
+
+my $read_osm_nodes;
+my $read_osm_segments;
+
+sub node_ {
+    $osm_obj = undef
+}
+sub node {
+    my($p, $tag, %attrs) = @_;  
+    my $id = delete $attrs{id};
+    $osm_obj = {};
+    $osm_obj->{id} = $id;
+
+    $osm_obj->{lat} = delete $attrs{lat};
+    $osm_obj->{lon} = delete $attrs{lon};
+
+    delete $attrs{timestamp};
+
+    if ( keys %attrs ) {
+	warn "node $id has extra attrs: ".Dumper(\%attrs);
+    }
+
+    $read_osm_nodes->{$id} = $osm_obj;
+}
+
+# --------------------------------------------
+sub segment_ {
+    $osm_obj = undef
+}
+sub segment {
+    my($p, $tag, %attrs) = @_;  
+    my $id = delete $attrs{id};
+    $osm_obj = {};
+    $osm_obj->{id} = $id;
+
+    $osm_obj->{from} = delete $attrs{from};
+    $osm_obj->{to}   = delete $attrs{to};
+
+    if ( keys %attrs ) {
+	warn "segment $id has extra attrs: ".Dumper(\%attrs);
+    }
+    my @segment;
+    my $dummy;
+    my $node1 = $read_osm_nodes->{$osm_obj->{from}};
+    my $node2 = $read_osm_nodes->{$osm_obj->{to}};
+    ($segment[0],$segment[1],$segment[2],$segment[3]) =
+	($node1->{lat},$node1->{lon},$node2->{lat},$node2->{lon});
+    $segment[4] = Geometry::angle_north(
+				    { lat => $segment[0] , lon => $segment[1] },
+				    { lat => $segment[2] , lon => $segment[3] });
+    #$segment[5] = $attrs{name} if $debug;
+    push (@{$read_osm_segments},\@segment);
+}
+# --------------------------------------------
+sub tag {
+    my($p, $tag, %attrs) = @_;  
+    #print "Tag - $tag: ".Dumper(\%attrs);
+    my $k = delete $attrs{k};
+    my $v = delete $attrs{v};
+
+    return if $k eq "created_by";
+
+    if ( keys %attrs ) {
+	print "Unknown Tag value for ".Dumper($osm_obj)."Tags:".Dumper(\%attrs);
+    }
+    
+    my $id = $osm_obj->{id};
+    if ( defined( $osm_obj->{tag}->{$k} ) &&
+	 $osm_obj->{tag}->{$k} ne $v
+	 ) {
+	printf "Tag %8s already exists for obj(id=$id) tag '$osm_obj->{tag}->{$k}' ne '$v'\n",$k ;
+    }
+    $osm_obj->{tag}->{$k} = $v;
+    if ( $k eq "alt" ) {
+	$osm_obj->{alt} = $v;
+    }	    
+}
+
+# --------------------------------------------
+sub read_osm_file($) { # Insert Segments from osm File
+    my $file_name = shift;
+
+    print("Reading $file_name\n") if $verbose || $debug;
+    print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
+
+    print STDERR "Parsing file: $file_name\n" if $debug;
+    my $p = XML::Parser->new( Style => 'Subs' ,
+			      );
+	
+    my $fh = File::data_open($file_name);
+    my $content = $p->parse($fh);
+    if (not $p) {
+	print STDERR "WARNING: Could not parse osm data from $file_name\n";
+	return;
+    }
+    return($read_osm_segments);
+}
+
+# ----------------------------------------------
+
+sub LoadOSM_segment_txt($)
 {
   my $filename = shift;
 
@@ -303,7 +404,7 @@ sub LoadOSM($)
   } else {
       my $fh = File::data_open($filename);
 
-      die "Cannot open $filename in LoadOSM.\n".
+      die "Cannot open $filename in LoadOSM_segment_txt.\n".
 	  "Please create it first to use the option --osm.\n".
 	  "See --help for more info"  unless $fh;
 
@@ -2082,22 +2183,28 @@ sub convert_Data(){
     
     my $osm_segments;
     if ( $check_against_osm ) {
-	my @path=qw( ./
-		     ~/openstreetmap.org/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
-		     ~/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
-		     ~/.gpsdrive/MIRROR/osm/);
-	my $osm_filename;
-	my $home = $ENV{HOME}|| '~/';
-	for my $path ( @path ) {
-	    $osm_filename = "${path}osm.txt";
-	    $osm_filename =~ s,\~/,$home/,;
-	    printf STDERR "check $osm_filename for loading\n" if $debug;
-	    
-	    last if -s $osm_filename;
-	    $osm_filename='';
-	}
-	$osm_segments = OSM::LoadOSM($osm_filename);
+	if ( -s $check_against_osm ) {
+	    $osm_segments = OSM::read_osm_file($check_against_osm);
+	    #print Dumper(\$osm_segments ) if $debug;
+	} else {
+
+	    my @path=qw( ./
+			 ~/openstreetmap.org/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
+			 ~/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
+			 ~/.gpsdrive/MIRROR/osm/);
+	    my $osm_filename;
+	    my $home = $ENV{HOME}|| '~/';
+	    for my $path ( @path ) {
+		$osm_filename = "${path}osm.txt";
+		$osm_filename =~ s,\~/,$home/,;
+		printf STDERR "check $osm_filename for loading\n" if $debug;
+		
+		last if -s $osm_filename;
+		$osm_filename='';
+	    }
+	    $osm_segments = OSM::LoadOSM_segment_txt($osm_filename);
 	};
+    }
     
 
    
@@ -2252,7 +2359,7 @@ GetOptions (
 	     'split-tracks'        => \$split_tracks,
 	     'limit-area'          => \$use_area_limit,
 	     'draw_filter_areas'    => \$draw_filter_areas,
-	     'check_against_osm'   => \$check_against_osm,
+	     'check_against_osm:s'   => \$check_against_osm,
              'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-all'          => \$do_all_filters,
@@ -2265,10 +2372,10 @@ GetOptions (
     or pod2usage(1);
 
 if ( $do_all_filters ) {
-    $out_osm           = 1;
-    $split_tracks      = 1;
-    $use_reduce_filter = 1;
-    $check_against_osm = 1;
+    $out_osm           ||= 1;
+    $split_tracks      ||= 1;
+    $use_reduce_filter ||= 1;
+    $check_against_osm ||= 1;
 #    $filter_duplicate_tracepoints=1;
 }
 
@@ -2412,6 +2519,8 @@ The probably easiest way to create it is to go to the
 directory
    svn.openstreetmap.org/utils/osm-pdf-atlas
 and once call "create.sh".
+
+If you provide a filename this file is read instead of the osm.txt file
 
 =item B<--filter_duplicate_tracepoints>
 

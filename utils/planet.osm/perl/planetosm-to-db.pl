@@ -128,6 +128,8 @@ while(my $line = <XML>) {
 	}
 	elsif($line =~ /^\s*<segment/) {
 		my ($id,$from,$to) = ($line =~ /^\s*<segment id='(\d+)' from='(\d+)' to='(\d+)'/);
+		$last_id = undef; # In case it has tags
+
 		unless($id) { warn "Invalid line '$line'"; next; }
 		unless($nodes{$to}) { warn "No node $to for line '$line'"; next; }
 		unless($nodes{$from}) { warn "No node $from for line '$line'"; next; }
@@ -167,10 +169,17 @@ while(my $line = <XML>) {
 	elsif($line =~ /^\s*<tag/) {
 		my ($name,$value) = ($line =~ /^\s*<tag k='(.*?)' v='(.*?)'/);
 		unless($name) { warn "Invalid line '$line'"; next; }
+		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
 		# Decode the XML elements in the name and value
 		$value =~ s/\&apos\;/'/g;
 		
+		# If last_id isn't there, the tag we're attached to was invalid
+		unless($last_id) {
+			warn("Invalid previous $last_type, ignoring its tag '$line'");
+			next;
+		}
+
 		if($last_type eq "node") {
 			if ($dbtype eq 'pgsql') {
 				$node_tag_ps->execute($last_id,$name,$value)
@@ -196,7 +205,8 @@ while(my $line = <XML>) {
 
 # End the batch, if the database likes that
 if($batch_inserts) {
-	$conn->dbi_commit();
+	$conn->commit();
+	$conn->{AutoCommit} = 1;
 }
 
 # Post-processing

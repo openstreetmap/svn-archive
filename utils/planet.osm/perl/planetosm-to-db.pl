@@ -21,6 +21,11 @@ my $dbhost = "";
 my $dbuser = "";
 my $dbpass = "";
 
+# Exclude nodes within this lat,long,lat,long bounding box
+my @exclude_bbox = ();
+# Exclude USA + Canada
+#@exclude_bbox = (20,-180,80,-45);
+
 my $xml = shift;
 unless($xml) {
 	die <<EOT
@@ -114,8 +119,20 @@ while(my $line = <XML>) {
 	# Process the line of XML
 	if($line =~ /^\s*<node/) {
 		my ($id,$lat,$long) = ($line =~ /^\s*<node id='(\d+)' lat='?(\-?[\d\.]+)'? lon='?(\-?[\d\.]+e?\-?\d*)'?/);
+		$last_id = undef; # In case it has tags we need to exclude
+
 		unless($id) { warn "Invalid line '$line'"; next; }
 
+		# Do we need to exclude this node?
+		if(@exclude_bbox) {
+			if($lat > $exclude_bbox[0] && $lat < $exclude_bbox[2] &&
+				$long > $exclude_bbox[1] && $long < $exclude_bbox[3]) {
+				#warn("Skipping node at $lat $long as in bbox\n");
+				next;
+			}
+		}
+
+		# Add the node
 		$node_ps->execute($id,$lat,$long) 
 			or warn("Invalid line '$line' : ".$conn->errstr);
 
@@ -128,7 +145,7 @@ while(my $line = <XML>) {
 	}
 	elsif($line =~ /^\s*<segment/) {
 		my ($id,$from,$to) = ($line =~ /^\s*<segment id='(\d+)' from='(\d+)' to='(\d+)'/);
-		$last_id = undef; # In case it has tags
+		$last_id = undef; # In case it has tags we need to exclude
 
 		unless($id) { warn "Invalid line '$line'"; next; }
 		unless($nodes{$to}) { warn "No node $to for line '$line'"; next; }
@@ -146,6 +163,8 @@ while(my $line = <XML>) {
 	}
 	elsif($line =~ /^\s*<way/) {
 		my ($id) = ($line =~ /^\s*<way id='(\d+)'/);
+		$last_id = undef; # In case it has tags we need to exclude
+
 		unless($id) { warn "Invalid line '$line'"; next; }
 		$way_ps->execute($id)
 			or warn("Invalid line '$line' : ".$conn->errstr);

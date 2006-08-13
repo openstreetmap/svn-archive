@@ -49,7 +49,6 @@ use XML::Parser;
 my ($man,$help);
 our $debug =0;
 our $verbose =0;
-our $no_mirror=0;
 our $PROXY='';
 
 
@@ -63,9 +62,9 @@ my $use_stdin         = 0;
 my $use_stdout        = 0;
 my $out_osm           = 0;
 my $split_tracks      = 0;
-my $use_area_limit    = 0;
-my $use_reduce_filter = 0;
+my @filter_area       = ();
 my $draw_filter_areas  = 0;
+my $use_reduce_filter = 0;
 my $check_against_osm = 0;
 my $filter_duplicate_tracepoints = 0;
 my $do_all_filters    = 0;
@@ -304,6 +303,7 @@ sub node {
     $osm_obj->{lon} = delete $attrs{lon};
 
     delete $attrs{timestamp};
+    delete $attrs{action};
 
     if ( keys %attrs ) {
 	warn "node $id has extra attrs: ".Dumper(\%attrs);
@@ -357,7 +357,9 @@ sub tag {
     if ( defined( $osm_obj->{tag}->{$k} ) &&
 	 $osm_obj->{tag}->{$k} ne $v
 	 ) {
-	printf "Tag %8s already exists for obj(id=$id) tag '$osm_obj->{tag}->{$k}' ne '$v'\n",$k ;
+	if ( $debug >1 ) {
+	    printf STDERR "Tag %8s already exists for obj tag '$osm_obj->{tag}->{$k}' ne '$v'\n",$k ;
+	}
     }
     $osm_obj->{tag}->{$k} = $v;
     if ( $k eq "alt" ) {
@@ -369,7 +371,7 @@ sub tag {
 sub read_osm_file($) { # Insert Segments from osm File
     my $file_name = shift;
 
-    print("Reading $file_name\n") if $verbose || $debug;
+    print("Reading OSM File $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     print STDERR "Parsing file: $file_name\n" if $debug;
@@ -1333,10 +1335,35 @@ sub read_filter_areas($){
 }
 
 # -------------------------------------------------
+# Read in all specified Filter Areas
+sub read_all_filter_areas(){
+    if ( $filter_area[0] eq ''  ) {
+	shift ( @filter_area);
+	push ( @filter_area, $WAYPT_FILE) if -s $WAYPT_FILE;
+	push ( @filter_area, $FILTER_FILE) if -s $FILTER_FILE;
+	push ( @filter_area, 'internal');
+    };
+
+    for my $file ( @filter_area ) {
+	if ( $file =~ m/way[^\/]\.txt$/ ) {
+	    read_filter_area();
+	} elsif ( $file =~ m/\.xml$/ ) {
+	    read_filter_areas_xml($file);
+	} elsif ( $file =~ m/^internal$/ ) {
+	    add_internal_filter_areas();
+	}
+	if ( $debug >30 ) {
+	    print "areas_allowed_squares:".Dumper(\$areas_allowed_squares);
+	}
+    }
+}
+
+# -------------------------------------------------
+# Check given Element against all defined area-filters
 sub check_allowed_area($){
     my $elem = shift;
     
-    return 1 unless $use_area_limit;
+    return 1 unless @filter_area;
     
     for my $area ( @{$areas_allowed_squares} ) {
 	if (ref($area) eq "HASH" ) {	    
@@ -1367,7 +1394,8 @@ sub check_allowed_area($){
     return 0;
 }
 
-# Return a tracklist whith a track for each chek_area
+# --------------------------------------------
+# Return a tracklist whith a track for each area_filter
 sub draw_filter_areas(){
     return [] unless $draw_filter_areas;
     my $new_tracks={tracks=>[]};
@@ -1627,7 +1655,7 @@ sub get_bounding_box($){
 sub filter_data_by_area($){
     my $tracks      = shift; # reference to tracks list
 
-    return unless $use_area_limit;
+    return unless @filter_area;
 
     my $start_time=time();
 
@@ -2174,12 +2202,8 @@ sub convert_Data(){
 	exit 1;
     }
 
-    GPS::read_filter_areas($WAYPT_FILE);
-    GPS::read_filter_areas_xml($FILTER_FILE);
-    GPS::add_internal_filter_areas();
-    if ( $debug >30 ) {
-	print "areas_allowed_squares:".Dumper(\$areas_allowed_squares);
-    }
+    GPS::read_all_filter_areas();
+
     
     my $osm_segments;
     if ( $check_against_osm ) {
@@ -2254,7 +2278,7 @@ sub convert_Data(){
 	    printf STDERR "$filename: Read %5d Points in %d Tracks\n",$point_read_count,$track_read_count;
 	}
 
-	if ( $use_area_limit ) {
+	if ( @filter_area ) {
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
 	    GPS::print_count_data($new_tracks,"$filename: Area Filters to ");
 	}
@@ -2352,14 +2376,13 @@ GetOptions (
 	     'd+'                  => \$debug,      
 	     'verbose+'            => \$verbose,
 	     'v+'                  => \$verbose,
-	     'no-mirror'           => \$no_mirror,
 	     'out-osm'             => \$out_osm,
 	     'stdin'               => \$use_stdin,
 	     'stdout'              => \$use_stdout,
 	     'split-tracks'        => \$split_tracks,
-	     'limit-area'          => \$use_area_limit,
-	     'draw_filter_areas'    => \$draw_filter_areas,
-	     'check_against_osm:s'   => \$check_against_osm,
+	     'filter-area:s@'      => \@filter_area,
+	     'draw_filter_areas'   => \$draw_filter_areas,
+	     'check_against_osm:s' => \$check_against_osm,
              'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-all'          => \$do_all_filters,
@@ -2529,7 +2552,7 @@ If so it is removed
 
 Currently it's only a stub, so anyone can sit down and programm the compare routine.
 
-=item B<-- use_reduce_filter>
+=item B<--use_reduce_filter>
 
 The ammount of Datapoints is reduced. 
 This is done by looking at three trackpoints in a row. For now I calculate the

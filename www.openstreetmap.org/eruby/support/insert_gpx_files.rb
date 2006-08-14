@@ -34,15 +34,18 @@ dao.delete_sheduled_gpx_files unless DEBUG
 
 files = dao.get_scheduled_gpx_uploads
 
-files.each_hash do |row|
+puts 'got files...' + files.to_s if DEBUG
 
+files.each_hash do |row|
+  puts '.'
   filename = row['tmpname']
   #copy the file here
   if DEBUG
     puts "execing: cp #{filename} #{filename}"
     `cp #{filename} .#{filename}`
   else
-    `scp 128.40.59.140:#{filename} .#{filename}`
+     puts "execing: scp 128.40.58.202:#{filename} .#{filename}"
+    `scp 128.40.58.202:#{filename} .#{filename}`
   end
 
   `zcat /home/steve/bin#{filename} > /home/steve/bin#{filename}.yeah`
@@ -267,11 +270,11 @@ END_OF_MESSAGE
   if !DEBUG
     `./make_trace_pic.rb #{gpx_id}`
     dbh.query("update gpx_files set inserted = 1 where tmpname = '#{filename}'")
-    puts "execing: scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx"
-    `scp #{realfile} 128.40.59.140:/home/osm/gpx/#{gpx_id}.gpx`
+    puts "execing: scp #{realfile} 128.40.58.202:/home/osm/gpx/#{gpx_id}.gpx"
+    `scp #{realfile} 128.40.58.202:/home/osm/gpx/#{gpx_id}.gpx`
     File.delete('/home/steve/bin' + filename)
     File.delete('/home/steve/bin' + filename + '.yeah')
-   `ssh 128.40.59.140 rm #{filename}`
+   `ssh 128.40.58.202 rm #{filename}`
   end
 
 end

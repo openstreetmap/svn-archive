@@ -41,7 +41,7 @@ if connection
   res = connection.query(sql)
   puts '<table border="1">'
   res.each_hash do |row|
-    puts '<tr><td>' +  row['email'].gsub('.', ' dot ').gsub('@',' at ') + '</td><td align="right">' + row['a'] + "</td><td><img src='/redpixel.gif' width='#{row['a']}' height='10' /></td></tr>"
+    puts '<tr><td>' +  row['email'].split('@')[0] + '</td><td align="right">' + row['a'] + "</td><td><img src='/redpixel.gif' width='#{row['a']}' height='10' /></td></tr>"
   end
 
   puts '</table><br><br>'

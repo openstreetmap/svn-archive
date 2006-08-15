@@ -15,6 +15,7 @@ url = "/traces/tag/#{cgi['tag']}/page/" if cgi['action'] == 'publictag'
 url = "/traces/user/#{cgi['display_name']}/page/" if cgi['action'] == 'public'
 url = "/traces/mine/tag/#{cgi['tag']}/page/" if cgi['action'] == 'mytag'
 url = "/traces/mine/page/" if cgi['action'] == 'mytraces'
+url = "/traces/mine/page/" if cgi['action'] == 'update'
 %>
 
 <% if !nofiles %>

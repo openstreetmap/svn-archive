@@ -75,13 +75,14 @@ if loggedin
       id = row['id']
       rm = cgi["rm_#{id}"] == 'on'
       priv = cgi["priv_#{id}"] == 'on'
+      rowexists = cgi.has_key?("priv_#{id}")
       if rm
         dao.schedule_gpx_delete(id.to_i)
         %>
         <i>The gpx file <%= row['name'] %> has been scheduled for deletion.</i><br>
         <%
       end
-      dao.gpx_set_private(id.to_i, !priv) if dao.does_user_own_gpx?(user_id, id.to_i)
+      dao.gpx_set_private(id.to_i, !priv) if dao.does_user_own_gpx?(user_id, id.to_i) && rowexists
     end
   end
 

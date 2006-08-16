@@ -65,7 +65,7 @@ my $split_tracks      = 0;
 my @filter_area_files  = ();
 my $draw_filter_areas  = 0;
 my $use_reduce_filter = 0;
-my $check_against_osm = 0;
+my $check_against_osm = undef;
 my $filter_duplicate_tracepoints = 0;
 my $do_all_filters    = 0;
 my $generate_ways     = 0;
@@ -1233,8 +1233,8 @@ sub add_internal_filter_areas(){
 	       #[ 48.0  , 11.6  , 48.4    , 12.0    ], # München
 	       #[ 48.10  , 11.75  , 49.0    , 14.0    ], # Münchner-Osten-
 
-	       # [ -90.0  , -180  , 90.0    , 180   ], # World Allow 
 	       # The rest of the World is blocked by default
+	       [ -90.0  , -180  , 90.0    , 180   ], # World Allow 
 	 
 	       ));
 }
@@ -1282,6 +1282,9 @@ sub read_filter_areas_xml($){
 	    $elem->{$tag->{k}}=$tag->{v};
 	};
 	delete $elem->{Kids};
+	if ( defined $elem->{'of:active'} && !  $elem->{'of:active'} ) {
+	    next;
+	}
 	my $block =  $elem->{'of:block'};
 	$block = 1 unless defined $block;
 	my $lat =  $elem->{lat};
@@ -1366,7 +1369,7 @@ sub read_all_filter_areas(@){
 sub check_allowed_area($){
     my $elem = shift;
     
-    return 1 unless @filter_area;
+    return 1 unless @filter_area_files;
     
     for my $area ( @{$internal__filter_area_list} ) {
 	if (ref($area) eq "HASH" ) {	    
@@ -1394,7 +1397,7 @@ sub check_allowed_area($){
 	    }
 	}
     }
-    return 0;
+    return 1;
 }
 
 # --------------------------------------------
@@ -1461,7 +1464,7 @@ sub split_tracks($$$){
     my $config      = shift;
 
     my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || 5;
+    my $max_allowed_dist  = $config->{max_dist}  || .5;
     my $max_allowed_time  = $config->{max_time}  || 60;
 
     my $new_tracks= { tracks => [],wpt=>[] };
@@ -1529,7 +1532,7 @@ sub split_tracks($$$){
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
 		}
 
-		if ( $elem->{dist} > $max_allowed_dist) {             # ---- Check for Track Split: 11 Km
+		if ( $elem->{dist} > $max_allowed_dist) {             # ---- Check for Track Split: 1 Km
 		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
 		}
 
@@ -1662,7 +1665,7 @@ sub get_bounding_box($){
 sub filter_data_by_area($){
     my $tracks      = shift; # reference to tracks list
 
-    return unless @filter_area;
+    return unless @filter_area_files;
 
     my $start_time=time();
 
@@ -2285,7 +2288,7 @@ sub convert_Data(){
 	    printf STDERR "$filename: Read %5d Points in %d Tracks\n",$point_read_count,$track_read_count;
 	}
 
-	if ( @filter_area ) {
+	if ( @filter_area_files ) {
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
 	    GPS::print_count_data($new_tracks,"$filename: Area Filters to ");
 	}
@@ -2389,10 +2392,11 @@ GetOptions (
 	     'split-tracks'        => \$split_tracks,
 	     'draw_filter_areas'   => \$draw_filter_areas,
 	     'check_against_osm:s' => \$check_against_osm,
+	     'osm:s'               => \$check_against_osm,
              'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-all'          => \$do_all_filters,
-	     'filter-area:s@'      => \@filter_area,
+	     'filter-area:s@'      => \@filter_area_files,
 	     'generate_ways'       => \$generate_ways,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
@@ -2405,7 +2409,8 @@ if ( $do_all_filters ) {
     $out_osm           ||= 1;
     $split_tracks      ||= 1;
     $use_reduce_filter ||= 1;
-    $check_against_osm ||= 1;
+    $check_against_osm = 1 unless defined $check_against_osm;
+    @filter_area_files || push(@filter_area_files,"");
 #    $filter_duplicate_tracepoints=1;
 }
 
@@ -2529,11 +2534,11 @@ There will also be written a file named
 =item B<--split-tracks>
 
 Split tracks it they have gaps of more than 
- - 10 Minutes
- - 11Km
- - 200Km/h
+ - 1 Minute
+ - 1 Km
+ - 200 Km/h
 
-=item B<--check_against_osm>
+=item B<--check_against_osm> |  B<--osm>
 
 This loads the osm.txt and checks if the 
 track-points already exist as an osm-segment.
@@ -2552,6 +2557,9 @@ and once call "create.sh".
 
 If you provide a filename this file is read instead of the osm.txt file
 
+you can use --osm=0 in combination with --filter-all to not let osm-filter 
+check against osm Data.
+
 =item B<--filter_duplicate_tracepoints>
 
 This Filter checks for points near an already existing Trackline. 
@@ -2568,40 +2576,50 @@ middle. If this distance is small enough (currently 1 meter) the
 middle point is dropped, because it doesn't really improve the track.
 
 
-=item B<--filter-all>
-
-Switch on all of the above filters
-
 =item B<--limit-area>
 
-use the area limits coded in the source
+Use the area filters
 
-By default the File ~/.gpsdrive/way.txt is also read and all 
-waypoints starting with 
-  filter.
+By default the Files ~/.gpsdrive/way.txt is read
+and all waypoints starting with filter.
 are added as filter areas.
     filter.deny will be filtered out
     filter.allow will be left in the resulting files
+    filter.none nothing will be done here
+after this by default the file  ~/josm/filter.xml is read.
+An example would look lie:
+<?xml version="1.0"?>
+<osm>
+  <node id="-10001"  lat="48.411430"  lon="9.492400" >     
+    <tag k="name" v="de_Dottingen"/>
+    <tag k="of:radius" v="2000" />
+    <tag k="of:block" v="1" />
+    <tag k="of:active" v="1" />
+  </node>
+  <node id="-10002"  lat="48.138004"  lon="11.557109" >
+    <tag k="name" v="de_Muenchen"/>
+    <tag k="of:radius" v="5000" />
+    <tag k="of:block" v="1" />
+    <tag k="of:active" v="0" />
+  </node>
+</osm>
 
 If you want to define squares you have to define them for now 
 in the Source at the definition of
   $internal__filter_area_list = 
 AND: they are not tested :-(
 
+The default area-filter rule is allow the rest.
+
+
+=item B<--filter-all>
+
+Switch on all of the above filters
+
 =item B<--draw_filter_areas>
 
-draw the filter_areas into the file 00__filter_areas.gpx file 
+Draw the filter_areas into the file 00__filter_areas.gpx file 
 by creating a track with the border of each filter_area 
-
-
-The default area-filter rule is deny. And the filtering is done 
-in the order the areas are found in the
- File(~/.gpsdrive/way.txt first then ~/josm/filter.xml). 
-So the last filter should be an allow all if you want 
-are working with deny filters only and want to allow all the rest
-of the world.
-Something like:
- all 0.0 0.0 allow 0 0 0 40000000
 
 =item B<--generate_ways>
 

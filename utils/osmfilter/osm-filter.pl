@@ -62,7 +62,7 @@ my $use_stdin         = 0;
 my $use_stdout        = 0;
 my $out_osm           = 0;
 my $split_tracks      = 0;
-my @filter_area       = ();
+my @filter_area_files  = ();
 my $draw_filter_areas  = 0;
 my $use_reduce_filter = 0;
 my $check_against_osm = 0;
@@ -1216,12 +1216,12 @@ use Math::Trig;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
-my $areas_allowed_squares;
+my $internal__filter_area_list;
 
 # -------------------------------------------------
 # Add these filters from source
 sub add_internal_filter_areas(){
-    push( @{$areas_allowed_squares},
+    push( @{$internal__filter_area_list},
 	  (    
 	       # Block a circle of <proximity> Km arround each point
 	       #     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
@@ -1287,7 +1287,7 @@ sub read_filter_areas_xml($){
 	my $lat =  $elem->{lat};
 	my $lon =  $elem->{lon};
 	my $proximity = $elem->{'of:radius'}||10000;
-	push( @{$areas_allowed_squares},
+	push( @{$internal__filter_area_list},
 	  { lat => $lat,
 	    lon => $lon,
 	    proximity => $proximity,
@@ -1327,7 +1327,7 @@ sub read_filter_areas($){
 	    warn "WARNING !!! unknown Filter type $typ for WP $name\n";
 	    };
 	next unless $name;
-	push( @{$areas_allowed_squares},
+	push( @{$internal__filter_area_list},
 	  { wp => $name, block => $block }
 	      );
     }
@@ -1336,15 +1336,18 @@ sub read_filter_areas($){
 
 # -------------------------------------------------
 # Read in all specified Filter Areas
-sub read_all_filter_areas(){
-    if ( $filter_area[0] eq ''  ) {
-	shift ( @filter_area);
-	push ( @filter_area, $WAYPT_FILE) if -s $WAYPT_FILE;
-	push ( @filter_area, $FILTER_FILE) if -s $FILTER_FILE;
-	push ( @filter_area, 'internal');
+sub read_all_filter_areas(@){
+    my @filter_area_files=@_;
+    return unless  @filter_area_files;
+
+    if ( $filter_area_files[0] eq ''  ) {
+	shift ( @filter_area_files);
+	push ( @filter_area_files, $WAYPT_FILE) if -s $WAYPT_FILE;
+	push ( @filter_area_files, $FILTER_FILE) if -s $FILTER_FILE;
+	push ( @filter_area_files, 'internal');
     };
 
-    for my $file ( @filter_area ) {
+    for my $file ( @filter_area_files ) {
 	if ( $file =~ m/way[^\/]\.txt$/ ) {
 	    read_filter_area();
 	} elsif ( $file =~ m/\.xml$/ ) {
@@ -1353,7 +1356,7 @@ sub read_all_filter_areas(){
 	    add_internal_filter_areas();
 	}
 	if ( $debug >30 ) {
-	    print "areas_allowed_squares:".Dumper(\$areas_allowed_squares);
+	    print "internal__filter_area_list:".Dumper(\$internal__filter_area_list);
 	}
     }
 }
@@ -1365,7 +1368,7 @@ sub check_allowed_area($){
     
     return 1 unless @filter_area;
     
-    for my $area ( @{$areas_allowed_squares} ) {
+    for my $area ( @{$internal__filter_area_list} ) {
 	if (ref($area) eq "HASH" ) {	    
 	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive ~/.gpsdrive/way.txt Waypoints
 		my $proximity;
@@ -1399,7 +1402,7 @@ sub check_allowed_area($){
 sub draw_filter_areas(){
     return [] unless $draw_filter_areas;
     my $new_tracks={tracks=>[]};
-    for my $area ( @{$areas_allowed_squares} ) {
+    for my $area ( @{$internal__filter_area_list} ) {
 	my $new_track = [];
 	if (ref($area) eq "HASH" ) {	    
 	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive way.txt Waypoints
@@ -1457,9 +1460,9 @@ sub split_tracks($$$){
     my $comment     = shift;
     my $config      = shift;
 
-    my $max_speed = $config->{max_speed} || 200;
-    my $max_dist  = $config->{max_dist}  || 11;
-    my $max_time  = $config->{max_time}  || 600;
+    my $max_allowed_speed = $config->{max_speed} || 200;
+    my $max_allowed_dist  = $config->{max_dist}  || 5;
+    my $max_allowed_time  = $config->{max_time}  || 60;
 
     my $new_tracks= { tracks => [],wpt=>[] };
 
@@ -1484,6 +1487,10 @@ sub split_tracks($$$){
 		$deleted_points++;
 		next;
 	    }
+	    if ( $elem->{fix} && $elem->{fix} eq "none" ) {
+		$deleted_points++;
+		next;
+	    };		
 
 	    $elem->{time} = 0 unless defined $elem->{time};
 
@@ -1518,15 +1525,15 @@ sub split_tracks($$$){
 
 		my $split_track='';
 
-		if ( $elem->{time_diff} > $max_time) { # ---- Check for Track Split: time diff
+		if ( $elem->{time_diff} > $max_allowed_time) { # ---- Check for Track Split: time diff
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
 		}
 
-		if ( $elem->{dist} > $max_dist) {             # ---- Check for Track Split: 11 Km
+		if ( $elem->{dist} > $max_allowed_dist) {             # ---- Check for Track Split: 11 Km
 		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
 		}
 
-		if ( $elem->{speed} && $elem->{speed} > $max_speed) { # ---- Check for Track Split: 200 Km/h
+		if ( $elem->{speed} && $elem->{speed} > $max_allowed_speed) { # ---- Check for Track Split: 200 Km/h
 		    $split_track .= sprintf(" Speed: %.1f Km/h ",$elem->{speed});
 		    if ( $debug >10) {
 			printf STDERR "prev:".Dumper(\$prev_elem);
@@ -2202,7 +2209,7 @@ sub convert_Data(){
 	exit 1;
     }
 
-    GPS::read_all_filter_areas();
+    GPS::read_all_filter_areas(@filter_area_files);
 
     
     my $osm_segments;
@@ -2380,12 +2387,12 @@ GetOptions (
 	     'stdin'               => \$use_stdin,
 	     'stdout'              => \$use_stdout,
 	     'split-tracks'        => \$split_tracks,
-	     'filter-area:s@'      => \@filter_area,
 	     'draw_filter_areas'   => \$draw_filter_areas,
 	     'check_against_osm:s' => \$check_against_osm,
              'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-all'          => \$do_all_filters,
+	     'filter-area:s@'      => \@filter_area,
 	     'generate_ways'       => \$generate_ways,
 	     'proxy=s'             => \$PROXY,
 	     'MAN'                 => \$man, 
@@ -2578,7 +2585,7 @@ are added as filter areas.
 
 If you want to define squares you have to define them for now 
 in the Source at the definition of
-  $areas_allowed_squares = 
+  $internal__filter_area_list = 
 AND: they are not tested :-(
 
 =item B<--draw_filter_areas>

@@ -21,9 +21,9 @@ use Storable ();
 use POSIX qw(ceil floor);
 
 my $current_file ="planet-2006-07.osm.bz2";
-#my $current_file ="planet.osm.bz2";
-#$current_file ="planet-2006-07.osm";
-$current_file ="planet-2006-07-a.osm";
+#$current_file ="planet.osm.bz2";
+#$current_file ="planet-2006-07-a.osm";
+$current_file ="planet.osm";
 
 my ($man,$help);
 
@@ -442,6 +442,7 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
     print "------------ Check Segments\n";
 
     my $max_dist=0;
+    my $sum_dist=0;
     my $min_dist=99999999999999;
     my $dist_ranges;
     html_header("segment-from_eq_to","<H2>Segments with same from and to</H2>\n");
@@ -461,6 +462,7 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
     html_header("segment-small-distance","<tr><th>Segment</th><th>Distance</th></tr>");
 
     my $segment_tags={};
+    my $counted_segmtnts=0;
     for my $seg_id (  keys %{$osm_segments} ) {
 	my $segment = $osm_segments->{$seg_id};
 	my $node_from = $segment->{from};
@@ -530,6 +532,8 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
 	} 
 	$max_dist=max($dist,$max_dist);
    	$min_dist=min($dist,$min_dist);
+	$sum_dist += $dist;
+	$counted_segmtnts++;
 	my $dist_range = int($dist/1)*1;
 	$dist_range = floor($dist*10)/10 if $dist < 1;
 	$dist_range = floor($dist*100)/100 if $dist < 0.1;
@@ -542,6 +546,8 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
     html_out("statistics-segments","<h3>Segment Length</h3>\n");
     html_out("statistics-segments", sprintf("Minimum Segment length: %f m<br/>\n",$min_dist/1000));
     html_out("statistics-segments", sprintf("Maximum Segment length: %5.2f Km<br/>\n",$max_dist));
+    html_out("statistics-segments", sprintf("Average Segment length: %5.2f Km<br/>\n",$sum_dist/$counted_segmtnts));
+    html_out("statistics-segments", sprintf("All Segment together length: %5.2f Km<br/>\n",$sum_dist));
     html_out("statistics-segments","<br/>\n<table border=1>");
     html_out("statistics-segments",sprintf("<tr><th>Segments Length</th><th>Number of Segments</th></tr>\n",));
     for my $dist_range ( sort { $a <=> $b } 

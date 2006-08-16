@@ -1,5 +1,0 @@
-$DBSERVER = 'localhost'
-$DATABASE= 'osm'
-$USERNAME = 'root'
-$PASSWORD = ''
-$SERVER_NAME = 'localhost'

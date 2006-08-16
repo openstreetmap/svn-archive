@@ -201,7 +201,7 @@ module OSM
     def check_user?(email, pass)
       @@log.log('checking user ' + email)
 
-      res = call_local_sql { "select id from users where email='#{q(email)}' and pass_crypt=md5('#{q(pass)}') and active = true" }
+      res = call_sql { "select id from users where email='#{q(email)}' and pass_crypt=md5('#{q(pass)}') and active = true" }
       # should only be one result, as user name is unique
       if res.num_rows == 1
         set_timeout(email)
@@ -222,22 +222,6 @@ module OSM
       end
 
       return confirmstring
-    end
-
-    def call_local_sql  # FIXME this should be wrapped up with the other call_sql
-      dbh = nil
-      begin
-        dbh = get_local_connection
-        sql = yield
-        #@@log.log sql
-        res = dbh.query(sql)
-        if res.nil? then return true else return res end
-      rescue MysqlError =>ex
-        mysql_error(ex)
-      ensure
-        dbh.close unless dbh.nil?
-      end
-      nil
     end
 
 
@@ -340,7 +324,7 @@ module OSM
 
 
     def does_user_exist?(email)
-      res = call_local_sql { "select id from users where email = '#{q(email)}' and active = true" }
+      res = call_sql { "select id from users where email = '#{q(email)}' and active = true" }
       return res.num_rows == 1
     end
 
@@ -348,7 +332,7 @@ module OSM
     ## check_user_token?
     # checks a user token to see if it is active
     def check_user_token?(token)
-      res = call_local_sql { "select id from users where active = 1 and token = '#{q(token)}' and timeout > NOW()" }
+      res = call_sql { "select id from users where active = 1 and token = '#{q(token)}' and timeout > NOW()" }
       if res.num_rows == 1
         res.each_hash do |row|
           return row['id'].to_i
@@ -378,7 +362,7 @@ module OSM
 
 
     def email_from_token(token)
-      res = call_local_sql { "select email from users where active = 1 and token = '#{q(token)}'" }
+      res = call_sql { "select email from users where active = 1 and token = '#{q(token)}'" }
 
       if res.nil?
         return nil
@@ -394,7 +378,7 @@ module OSM
 
 
     def save_display_name(user_id, display_name)
-      res = call_local_sql { "select id from users where display_name = '#{q(display_name)}'" }
+      res = call_sql { "select id from users where display_name = '#{q(display_name)}'" }
       return false if res.num_rows > 0
       call_sql {"update users set display_name = '#{q(display_name)}' where id = #{user_id}"}
       return true
@@ -416,7 +400,7 @@ module OSM
     end
 
     def details_from_email(email)
-      res = call_local_sql { "select email, display_name from users where active = 1 and email = '#{email}'" }
+      res = call_sql { "select email, display_name from users where active = 1 and email = '#{email}'" }
 
       if res.nil?
         return nil
@@ -431,7 +415,7 @@ module OSM
 
 
     def gpx_ids_for_user(user_id)
-      return call_local_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)}" }
+      return call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)}" }
     end
 
     def gpx_files(bpublic, display_name, tag, user_id, page=0, limit=false)
@@ -444,29 +428,29 @@ module OSM
       limit = ''
       limit = ' limit 20 ' if limit==true
 
-      return call_local_sql { "
+      return call_sql { "
         select * from (
         select gpx_files.inserted, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description, users.display_name from gpx_files, users where visible = 1 and gpx_files.user_id = users.id #{clause} order by timestamp desc) as a left join (select gpx_id,group_concat(tag SEPARATOR ' ') as tags from gpx_file_tags group by gpx_id) as t  on a.id=t.gpx_id #{limit}" }
 
     end
 
     def gpx_get(user_id, gpx_id)
-      return call_local_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
+      return call_sql { "select id, timestamp, name, size, latitude, longitude, private, description from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
     end
 
     def gpx_public_get(gpx_id)
-      return call_local_sql { "select users.display_name, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description from gpx_files, users  where gpx_files.id = #{q(gpx_id.to_s)} and gpx_files.visible = 1 and gpx_files.private = 0 and gpx_files.user_id = users.id" }
+      return call_sql { "select users.display_name, gpx_files.id, gpx_files.timestamp, gpx_files.name, gpx_files.size, gpx_files.latitude, gpx_files.longitude, gpx_files.private, gpx_files.description from gpx_files, users  where gpx_files.id = #{q(gpx_id.to_s)} and gpx_files.visible = 1 and gpx_files.private = 0 and gpx_files.user_id = users.id" }
     end
 
     def gpx_tags(gpx_id)
-      res = call_local_sql { "select tag from gpx_file_tags where gpx_id = #{q(gpx_id.to_s)} order by sequence_id asc" }
+      res = call_sql { "select tag from gpx_file_tags where gpx_id = #{q(gpx_id.to_s)} order by sequence_id asc" }
       tags = []
       res.each { |tag| tags << tag[0] }
       return tags
     end
 
     def gpx_user_tags(user_id)
-      return call_local_sql { "select distinct tag from gpx_file_tags where gpx_id in (select id from gpx_files where user_id = #{q(user_id.to_s)} and visible=1) order by tag;" }
+      return call_sql { "select distinct tag from gpx_file_tags where gpx_id in (select id from gpx_files where user_id = #{q(user_id.to_s)} and visible=1) order by tag;" }
     end
 
     def gpx_update_desc(gpx_id, description='', tags=[])
@@ -480,7 +464,7 @@ module OSM
 
     def gpx_pending_details_for_user(user_id)
       @@log.log('getting gpx files for user ' + user_id.to_s)
-      return call_local_sql { "select originalname from gpx_pending_files where user_id = #{q(user_id.to_s)}" }
+      return call_sql { "select originalname from gpx_pending_files where user_id = #{q(user_id.to_s)}" }
     end
 
     def gpx_set_private(gpx_id, private=false)
@@ -488,7 +472,7 @@ module OSM
     end
 
     def gpx_size(gpx_id)
-      res = call_local_sql { "select count(*) as count from gps_points where gpx_id = #{q(gpx_id.to_s)}" }
+      res = call_sql { "select count(*) as count from gps_points where gpx_id = #{q(gpx_id.to_s)}" }
       res.each_hash do |row|
         return row['count']
       end
@@ -496,12 +480,12 @@ module OSM
 
 
     def does_user_own_gpx?(user_id, gpx_id)
-      res = call_local_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
+      res = call_sql { "select id from gpx_files where user_id = #{q(user_id.to_s)} and id = #{q(gpx_id.to_s)} and visible = 1" }
       return res && res.num_rows == 1
     end
 
     def gpx_public?(gpx_id)
-      res = call_local_sql { "select id from gpx_files where id = #{q(gpx_id.to_s)} and private = 0 and visible = 1" }
+      res = call_sql { "select id from gpx_files where id = #{q(gpx_id.to_s)} and private = 0 and visible = 1" }
       return res && res.num_rows == 1
     end
 
@@ -538,7 +522,7 @@ module OSM
 
 
     def get_scheduled_gpx_uploads()
-      call_local_sql { "select * from gpx_files where inserted = 0" }
+      call_sql { "select * from gpx_files where inserted = 0" }
     end
 
     def delete_sheduled_gpx_files()
@@ -590,7 +574,7 @@ module OSM
     def useridfromemail(email)
       email = quote(email)
 
-      res = call_local_sql { "select id from users where email='#{email}' and active = true" }
+      res = call_sql { "select id from users where email='#{email}' and active = true" }
 
       res.each_hash do |row|
         return row['id'].to_i
@@ -666,7 +650,7 @@ module OSM
 
       page = page * 5000
 
-      res = call_local_sql { "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000" }
+      res = call_sql { "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000" }
 
       return nil unless res
 

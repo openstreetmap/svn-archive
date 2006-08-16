@@ -161,12 +161,18 @@ module OSM
       @@log.log("Error message: "+ e.error)
     end
 
-    def get_connection
+    @@dbh = nil  # one handle per VM
+
+    def create_connection
       begin
-        return Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
-      rescue MysqlError => e
-        mysql_error(e)
+        @@dbh = Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
+      rescue MysqlError =>ex
+        mysql_error(ex)
       end
+    end
+
+    def get_connection
+      @@dbh || create_connection
     end
 
     def get_local_connection
@@ -1097,19 +1103,14 @@ module OSM
 
     def get_multis_from_segments(segment_ids, type=:way)
 
-
       id_list = segment_ids.join(',')
 
-
-      ress = call_sql { "select d.id,d.segs,d.tags,current_ways.timestamp,current_ways.visible from (select c.id, segs, group_concat(k , concat('===', v) SEPARATOR '|||') as tags from (select id, group_concat(segment_id order by sequence_id) as segs from (select a.id, segment_id, sequence_id from (select id from current_way_segments where segment_id in (#{id_list}) group by id) as a, current_way_segments where a.id = current_way_segments.id) as b group by id) as c, current_way_tags where c.id = current_way_tags.id group by id) as d, current_ways where current_ways.id = d.id;" }
+      ress = call_sql { "select id from current_way_segments where segment_id in (#{id_list}) group by id" }
 
       multis = []
 
       ress.each_hash do |row|
-        tags = row['tags'].split('|||').collect {|x| x.split('===')}
-        segs = row['segs'].split(',').collect {|x| x}
-        visible = row['visible'] == '1'
-        multis << Street.new(row['id'].to_i, tags, segs, visible, row['timestamp'])
+        multis << get_multi(row['id'].to_i)
       end
 
       return multis
@@ -1124,5 +1125,6 @@ module OSM
       end
       r[:value].reverse!
     end
+
   end
 end

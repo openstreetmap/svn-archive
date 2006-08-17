@@ -39,7 +39,7 @@ class Renderer
 		end
 
 		seg_ids = Array.new
-		segments = dao.getlines(@nodes) unless @nodes=={}
+		segments = dao.get_segments_from_nodes(@nodes) unless @nodes=={}
 		unless segments==nil
 			id=0
 			segments.each do |sid,segment|

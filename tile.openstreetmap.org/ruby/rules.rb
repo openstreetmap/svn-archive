@@ -32,16 +32,17 @@ class RenderRules
 		style = {}
 		@rules.each do |rule|
 			hits = 0
-			supplied_keyvals.each do |supplied_key,supplied_val|
-				unless rule['conditions'][supplied_key] == nil
-					if rule['conditions'][supplied_key] == supplied_val
-						hits = hits + 1
-					else
-						hits = 0
-						break
+
+				supplied_keyvals.each do |supplied_key,supplied_val|
+					unless rule['conditions'][supplied_key] == nil
+						if rule['conditions'][supplied_key] == supplied_val
+							hits = hits + 1
+						else
+							hits = 0
+							break
+						end
 					end
 				end
-			end
 
 			if hits > prevhits
 				prevhits = hits

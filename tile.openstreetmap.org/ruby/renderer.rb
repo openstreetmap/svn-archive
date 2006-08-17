@@ -46,25 +46,30 @@ class Renderer
 				seg_ids.push(sid)	
 				@tagged_segments[sid] = TaggedSegment.new
 				@tagged_segments[sid].segment = segment
-				keyvals = nil
-				#puts "TAGS"
-				#puts segment.tags
-				keyvals = get_kv(segment.tags) unless segment.tags == ''
-				if keyvals == nil
-					#puts "NO KEYVALS"
-					@tagged_segments[sid].style = {}
-					@tagged_segments[sid].style['casing'] = "black"
-					@tagged_segments[sid].style['colour'] = "white"
+				@tagged_segments[sid].style = {}
+				@tagged_segments[sid].style['casing'] = 'black';
+				@tagged_segments[sid].style['colour'] = 'white';
 					@tagged_segments[sid].style['width']=
 						"0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
-					@tagged_segments[sid].style['z-index'] = 0
-				else
+				#keyvals = nil
+				#puts "TAGS"
+				#puts segment.tags
+				#keyvals = get_kv(segment.tags) unless segment.tags == ''
+				#if keyvals == nil
+					#puts "NO KEYVALS"
+				#		@tagged_segments[sid].style = {}
+				#	@tagged_segments[sid].style['casing'] = "black"
+				#	@tagged_segments[sid].style['colour'] = "white"
+				#	@tagged_segments[sid].style['width']=
+				#		"0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
+				#	@tagged_segments[sid].style['z-index'] = 0
+				#else
 					#puts "KEYVALS"
 					#puts keyvals
-					@tagged_segments[sid].style=@rules.get_style(keyvals)
+					#@tagged_segments[sid].style=@rules.get_style(keyvals)
 					#puts "STYLES"
 					#puts @tagged_segments[sid].style
-				end
+				#end
 				id=id+1
 			end
 			#@tagged_segments.sort! {|a,b| a.style['z-index']<=>b.style['z-index']}
@@ -73,7 +78,8 @@ class Renderer
 		# WAY STUFF START
 		# get ways and override tags of constituent segments
 
-		#puts "WAYS"
+				#puts "WAYS"
+		#puts "(#{seg_ids.join(',')}"
 		ways = dao.get_multis_from_segments(seg_ids)
     	ways.each do |way|
 			#puts "WAY"
@@ -337,7 +343,9 @@ cgi = CGI.new
 
 bbox = cgi['bbox']
 bbox = cgi['BBOX'] if bbox == ''
-bbox = '-0.9,51,-0.7,51.2' if bbox == ''
+#bbox = '-0.9,51,-0.7,51.2' 
+#bbox = '-1.5,50.85,-1.3,51.05' 
+#bbox = '-0.5,51.30,-0.4,51.40'
 
 bbox.gsub!('%2D', '-')
 bbox.gsub!('%2E', '.')
@@ -358,11 +366,11 @@ height = cgi['height'].to_i
 height = cgi['HEIGHT'].to_i if height == 0
 height = 320 if height == 0
 
-#width = 400 
-#height = 320
+#width = 800 
+#height = 600 
 #bllon = -0.5
 #bllat = 51.30
-#trlon = -0.4
+#trlon = -0.4 
 #trlat = 51.40
 
 

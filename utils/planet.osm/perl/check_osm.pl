@@ -20,6 +20,7 @@ use Pod::Usage;
 use Storable ();
 use POSIX qw(ceil floor);
 
+
 my $current_file ="planet-2006-07.osm.bz2";
 #$current_file ="planet.osm.bz2";
 #$current_file ="planet-2006-07-a.osm";
@@ -35,6 +36,10 @@ our $UNPACK_DIR   = "$CONFIG_DIR/UNPACK";
 our ($lat_min,$lat_max,$lon_min,$lon_max) = (0,0,0,0);
 
 our ($debug,$verbose,$no_mirror,$PROXY);
+our $osm_file; # The complete osm Filename (including path)
+my $osm_file_name; # later the pure filename (without dir) of the osm File
+our $selected_area; # a selected area in lower case for example germany
+my $output_dir="stats/all"; # this is the directora where all the html file go in
 
 sub min($$){
     my $a=shift;
@@ -69,10 +74,50 @@ my $osm_ways     = {};
 my $osm_stats    = {};
 my $osm_obj      = undef; # OSM Object currently read
 
+
 ###########################################
 
+my $area_definitions = {
+    #                     min    |    max  
+    #                  lat   lon |  lat lon
+    uk         => [ [  49  , -11,   64,   3] ],
+    germany    => [ [  47  ,   5,   54,  16] ],
+    spain      => [ [  35.5,  -9,   44,   4] ],
+    europe     => [ [  35  , -12,   75,  35] ],
+    africa     => [ [ -45  , -20,   30,  55] ],
+    world_east => [ [ -90  ,  90,  -30, 180] ],
+    world_west => [ [ -90  ,  90, -180,  -3] ],
+};
+
+sub in_area($){
+    my $obj = shift;
+    
+    my $areas = $area_definitions->{$selected_area};
+    #print "in_area(".Dumper(\$obj).")";;
+    #print Dumper(\$areas);
+    for my $a ( @{$areas}  ) {
+	#print Dumper(\$a);
+	if (
+	    $obj->{lat} >= $a->[0] &&
+	    $obj->{lon} >= $a->[1] &&
+	    $obj->{lat} <= $a->[2] &&
+	    $obj->{lon} <= $a->[3] ) {
+	    return 1;
+	}
+    }
+    return 0;
+}
+
+###########################################
+my $count_node=0;
+my $count_segment=0;
+my $count_way=0;
+my $count_node_all=0;
+my $count_segment_all=0;
+my $count_way_all=0;
+
 sub node_ {
-    $osm_obj = undef
+    $osm_obj = undef;
 }
 sub node {
     my($p, $tag, %attrs) = @_;  
@@ -82,17 +127,36 @@ sub node {
 
     $osm_obj->{lat} = delete $attrs{lat};
     $osm_obj->{lon} = delete $attrs{lon};
+    $osm_obj->{timestamp} = delete $attrs{timestamp} if defined $attrs{timestamp};
 
     if ( keys %attrs ) {
 	warn "node $id has extra attrs: ".Dumper(\%attrs);
     }
-
+    
     #obj_compare($osm_nodes->{$id},$osm_obj);
-    $osm_nodes->{$id} = $osm_obj;
+    $count_node_all++;
+    if ( in_area($osm_obj) ) {
+	# TODO: If I don't store the nodes I later can't detect for missing nodes.
+	# so I'll have to store node with a special mark to later recognize they 
+	# exist, but are not in the area
+	$osm_nodes->{$id} = $osm_obj;
+	$count_node++;
+    }
+    if ( $verbose || $debug ) {
+	if (!($count_node_all % 1000) ) {
+	    printf("node %d (%d)\r",$count_node,$count_node_all);
+	    #$fh->getpos;
+	}
+    }
 }
 
 # --------------------------------------------
 sub way_ {
+    my $id = $osm_obj->{id};
+    if ( @{$osm_obj->{seg}} >0 ) {
+	$osm_ways->{$id} = $osm_obj;
+	$count_way++;
+    }
     $osm_obj = undef
 }
 sub way {
@@ -105,7 +169,10 @@ sub way {
     if ( keys %attrs ) {
 	warn "way $id has extra attrs: ".Dumper(\%attrs);
     }
-    $osm_ways->{$id} = $osm_obj;
+    print "\n" if !$count_way_all && ($verbose || $debug);
+    $count_way_all++;
+    printf("way %d\r",$count_way) 
+	if !( $count_way_all % 1000 ) && ($verbose || $debug);
 }
 # --------------------------------------------
 sub segment_ {
@@ -117,20 +184,31 @@ sub segment {
     $osm_obj = {};
     $osm_obj->{id} = $id;
 
-    $osm_obj->{from} = delete $attrs{from};
-    $osm_obj->{to}   = delete $attrs{to};
+    my $from = $osm_obj->{from} = delete $attrs{from};
+    my $to   = $osm_obj->{to}   = delete $attrs{to};
+    $osm_obj->{timestamp} = delete $attrs{timestamp} if defined $attrs{timestamp};
 
     if ( keys %attrs ) {
 	warn "segment $id has extra attrs: ".Dumper(\%attrs);
     }
-    $osm_segments->{$id} = $osm_obj;
+    if ( defined($osm_nodes->{$from}) && defined($osm_nodes->{$to}) ) {
+	$osm_segments->{$id} = $osm_obj;
+	$count_segment++;
+    }
+    print "\n" if !$count_segment_all && ($verbose || $debug);
+    $count_segment_all++;
+    printf("segment %d (%d)\r",$count_segment,$count_segment_all) 
+	if !($count_segment_all%5000) && ($verbose || $debug);
 }
 # --------------------------------------------
 sub seg {
     my($p, $tag, %attrs) = @_;  
     my $id = $attrs{id};
+    delete $attrs{timestamp} if defined $attrs{timestamp};
     #print "Seg $id for way($osm_obj->{id})\n";
-    push(@{$osm_obj->{seg}},$id);
+    if (defined($osm_nodes->{$id})) {
+	push(@{$osm_obj->{seg}},$id);
+    }
 }
 # --------------------------------------------
 sub tag {
@@ -138,6 +216,7 @@ sub tag {
     #print "Tag - $tag: ".Dumper(\%attrs);
     my $k = delete $attrs{k};
     my $v = delete $attrs{v};
+    delete $attrs{timestamp};
 
     return if $k eq "created_by";
 
@@ -168,34 +247,42 @@ sub read_osm_file($) { # Insert Streets from osm File
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     if ( $file_name =~ m/planet.*osm/ &&
-	 -s "$file_name.storable.node" &&
-         -s "$file_name.storable.segment" &&
-         -s "$file_name.storable.way" 
+	 -s "$file_name.$selected_area.storable.node" &&
+         -s "$file_name.$selected_area.storable.segment" &&
+         -s "$file_name.$selected_area.storable.way" 
          ) {
-        $osm_nodes    = Storable::retrieve("$file_name.storable.node");
-        $osm_segments = Storable::retrieve("$file_name.storable.segment");
-        $osm_ways     = Storable::retrieve("$file_name.storable.way");
+        $osm_nodes    = Storable::retrieve("$file_name.$selected_area.storable.node");
+        $osm_segments = Storable::retrieve("$file_name.$selected_area.storable.segment");
+        $osm_ways     = Storable::retrieve("$file_name.$selected_area.storable.way");
 	if ( $verbose) {
-	    printf "Read $file_name.storable.* in %.0f sec\n",time()-$start_time;
+	    printf "Read $file_name.$selected_area.storable.* in %.0f sec\n",time()-$start_time;
 	}
     } else {
 	print STDERR "Parsing file: $file_name\n" if $debug;
 	my $p = XML::Parser->new( Style => 'Subs' ,
+				  ErrorContext => 10,
 				  );
 	
 	my $fh = data_open($file_name);
-	my $content = $p->parse($fh);
-	if (not $p) {
-	    print STDERR "WARNING: Could not parse osm data\n";
-	    return;
-	}
+	eval {
+	    $p->parse($fh);
+	};
+	print "\n" if $debug || $verbose;
 	if ( $verbose) {
 	    printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
 	}
+	if ( $@ ) {
+	    warn "$@Error while parsing\n $file_name\n";
+	    return;
+	}
+	if (not $p) {
+	    warn "WARNING: Could not parse osm data\n";
+	    return;
+	}
 	if ( $file_name =~ m/planet.*osm/ ) {
-	        Storable::store($osm_nodes   ,"$file_name.storable.node");
-		Storable::store($osm_segments,"$file_name.storable.segment");
-		Storable::store($osm_ways    ,"$file_name.storable.way");
+	        Storable::store($osm_nodes   ,"$file_name.$selected_area.storable.node");
+		Storable::store($osm_segments,"$file_name.$selected_area.storable.segment");
+		Storable::store($osm_ways    ,"$file_name.$selected_area.storable.way");
 		if ( $verbose) {
 		    printf "Read and parsed and stored $file_name in %.0f sec\n",time()-$start_time;
 		}
@@ -210,21 +297,22 @@ sub read_osm_file($) { # Insert Streets from osm File
 sub html_out($$){
     my $type = shift;
     my $message = shift;
-
+    
     my $fh = undef;
     if ( defined($html_files->{$type}->{fh})) {
 	$fh = $html_files->{$type}->{fh};
     } else {
-	$fh = IO::File->new(">OSM_errors_$type.html");
+	$fh = IO::File->new(">$output_dir/OSM_errors_$type.html");
 	$html_files->{$type}->{fh}=$fh;
 	print $fh "<html>\n<head>\n";
 	print $fh "<link rel=\"stylesheet\" type=\"text/css\" href=\"/site.css\"/>\n";
 	print $fh "</head>\n";
 	print $fh "<BODY BGCOLOR=\"#000066\" LINK=\"#6699FF\" ALINK=\"#7799FF\" VLINK=\"#FFFF66\" \n";
 	print $fh "text=white marginwidth=\"0\" marginheight=\"0\" leftmargin=\"0\" topmargin=\"0\" >\n";
-	print $fh "<title>Open Street Map $type for  $current_file</title>\n";
+	print $fh "<title>Open Street Map $type for osm File: $osm_file_name Area:$selected_area</title>\n";
 
-	print $fh "<h3>Type for $current_file</h3>\n";
+	print $fh "<h3>Type for osm File: $osm_file_name Area:$selected_area</h3>\n";
+	print $fh "<h3>osm File: $osm_file_name Area:$selected_area</h3>\n";
 	print $fh "<A href=\"index.html\">Back to the Index</a><br/>\n\n";
 	if ( defined($html_files->{$type}->{header}) ){
 	    print $fh $html_files->{$type}->{header};
@@ -244,7 +332,7 @@ sub xml_out($$){
     if ( defined($xml_files->{$type}->{fh})) {
 	$fh = $xml_files->{$type}->{fh};
     } else {
-	$fh = IO::File->new(">OSM_errors_$type.xml");
+	$fh = IO::File->new(">$output_dir/OSM_errors_$type.xml");
 	$xml_files->{$type}->{fh}=$fh;
 	print $fh "<?xml version=\"1.0\"?>\n";
 	print $fh "<osm version=\"0.3\" generator=\"OpenStreetMap planet.osm checker\">\n";
@@ -301,6 +389,15 @@ sub data_open($){
     die "cannot Find $file_name\n";
 }
 
+# Distance between 2 points
+sub p2p_distance($$){
+    my $p1 = shift;
+    my $p2 = shift;
+    my $delta_lat=abs( $p1->{lat} - $p2->{lat} );
+    my $delta_lon=abs( $p1->{lon} - $p2->{lon} );
+    my $dist = sqrt($delta_lat*$delta_lat+$delta_lon*$delta_lon)*40000/360;
+    return $dist;
+}
 
 
 sub adjust_bounding_box($$$){
@@ -394,10 +491,10 @@ sub link_to_obj($){
     } else {
 	$erg .= "$type: ".Dumper(\$obj);
     };
-    $erg .= tag_string($obj);
+    $erg .= "<font size=-4>".tag_string($obj)."</font>";
     $erg .= "\n";
     if ( $type ne "Node" ) {
-	link_download_bbox($bbox);
+	$erg .= "<td>".link_download_josm($bbox). "</td>";
 	#$erg .= "Bounding Box:\n";
 	#$erg .= sprintf( "(%6.5f,%6.5f) "  ,$bbox->{lat_min},$bbox->{lon_min});
 	#$erg .= sprintf( "(%6.5f,%6.5f)\n" ,$bbox->{lat_max},$bbox->{lon_max});
@@ -405,7 +502,7 @@ sub link_to_obj($){
 
 
     $erg .= "<td>";
-    $erg .= "Map with Zoom: ";
+    $erg .= "Map($type) with Zoom: ";
     for my $zoom ( qw( 10 15 20 24 )) {
 	$erg .= $osm_link . "lat=$lat&lon=$lon&zoom=$zoom\">$zoom</a> ";
     }
@@ -423,15 +520,13 @@ sub link_node($){
     return $osm_link . "lat=$node->{lat}&lon=$node->{lon}&zoom=23\">";
 }
 
-sub link_download_bbox($){
+sub link_download_josm($){
     my $bbox = shift;
-    my $osm_base_url="http://www.openstreetmap.org/api/0.3/map?bbox=";
     my $box = "$bbox->{lat_min},$bbox->{lon_min},$bbox->{lat_max},$bbox->{lon_max}";
-    my $erg .= "Bounding Box:\n";
-    $erg .= "<A href =\"$osm_base_url$box\">";
-    $erg .= sprintf( "(%6.5f,%6.5f) "  ,$bbox->{lat_min},$bbox->{lon_min});
-    $erg .= sprintf( "(%6.5f,%6.5f)\n" ,$bbox->{lat_max},$bbox->{lon_max});
-    $erg .= "</a>";
+    my $erg .= "<font size=-3>josm&nbsp;--download=";
+    $erg .= sprintf( "%6.5f,%6.5f,"  ,$bbox->{lat_min}-0.001,$bbox->{lon_min}+0.001);
+    $erg .= sprintf( "%6.5f,%6.5f\n" ,$bbox->{lat_max}-0.001,$bbox->{lon_max}+0.001);
+    $erg .= "</font>";
     return $erg; 
 }
 
@@ -480,10 +575,7 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
 	my $lon1 = $osm_nodes->{$node_from}->{lon};
 	my $lat2 = $osm_nodes->{$node_to}->{lat};
 	my $lon2 = $osm_nodes->{$node_to}->{lon};
-	my $delta_lat=abs($lat1-$lat2);
-	my $delta_lon=abs($lon1-$lon2);
-	my $dist_deg = sqrt($delta_lat*$delta_lat+$delta_lon*$delta_lon);
-	my $dist = sqrt($delta_lat*$delta_lat+$delta_lon*$delta_lon)*40000/360;
+	my $dist = p2p_distance($osm_nodes->{$node_from},$osm_nodes->{$node_to});
 	$osm_segments->{$seg_id}->{distance}=$dist;
 
 	for my $k ( keys %{$segment->{tag}} ) {
@@ -504,17 +596,17 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
 	    xml_out( "segment-no-distance",$seg_id);
 	    html_out("segment-no-distance", sprintf ("<tr><td>%d</td>\n",$seg_id));
 	    html_out("segment-no-distance","<td>&nbsp;". tag_string($osm_segments->{$seg_id}));
-	    html_out("segment-no-distance",sprintf ("<td>%6d(%14.11f,%14.11f)<br/>",$node_from, $lat1,$lon1));
-	    html_out("segment-no-distance",sprintf ("    %6d(%14.11f,%14.11f)</td>",$node_to,$lat2,$lon2));
+	    html_out("segment-no-distance",sprintf ("<td>%6d(%6.4f,%6.4f)<br/>",$node_from, $lat1,$lon1));
+	    html_out("segment-no-distance",sprintf ("    %6d(%6.4f,%6.4f)</td>",$node_to,$lat2,$lon2));
 	    html_out("segment-no-distance","<td>".link_node($node_from)."link</a></td></tr>\n");
 	    next;
 	} 
 	
-	if ( $dist > 5 ) {
+	if ( $dist > 8 ) {
 	    xml_out( "segment-long",$seg_id);
-	    html_out("segment-long","<tr>". sprintf("<td>%d</td><td> %f Km</td>\n",$seg_id,$dist));
-	    html_out("segment-long",sprintf("<td>%6d</td>\n",$node_from));
-	    html_out("segment-long",sprintf("<td>%6d</td>\n",$node_to));
+	    html_out("segment-long","<tr>". sprintf("<td>%d</td><td> %5.2f Km</td>\n",$seg_id,$dist));
+	    html_out("segment-long",sprintf("<td>%6d<br><font size=-3>(%6.4f,%6.4f)</font></td>\n",$node_from, $lat1,$lon1));
+	    html_out("segment-long",sprintf("<td>%6d<br><font size=-3>(%6.4f,%6.4f)</font></td>\n",$node_to,$lat2,$lon2));
 	    html_out("segment-long","<td>".link_to_obj($segment)."</td>");
 	    html_out("segment-long","</tr>");
 	} 
@@ -524,20 +616,18 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
 	    html_out("segment-small-distance",
 		     "<li>".
 		     sprintf("Segment %d has small Distance %20.18f m <br>\n", $seg_id, $dist_meters).
-		     sprintf(" %f Grad  \n",$dist_deg). link_to_obj($segment)."<br>\n".
-		     sprintf("\tfrom:%6d(%14.11f,%14.11f)<br>\n",$node_from, $lat1,$lon1).
-		     sprintf("\tto:  %6d(%14.11f,%14.11f)<br>\n",$node_to,$lat2,$lon2).
-		     sprintf("\tdelta:     (%14.11f,%14.11f)<br>\n",$delta_lat,$delta_lon)
+		     sprintf("\tfrom:%6d(%6.4f,%6.4f)<br>\n",$node_from, $lat1,$lon1).
+		     sprintf("\tto:  %6d(%6.4f,%6.4f)<br>\n",$node_to,$lat2,$lon2)
 		     );
 	} 
 	$max_dist=max($dist,$max_dist);
    	$min_dist=min($dist,$min_dist);
 	$sum_dist += $dist;
 	$counted_segmtnts++;
-	my $dist_range = int($dist/1)*1;
-	$dist_range = floor($dist*10)/10 if $dist < 1;
-	$dist_range = floor($dist*100)/100 if $dist < 0.1;
-	$dist_ranges->{$dist_range}++;
+	my $dist_range_h = int($dist/1)*1;
+	$dist_range_h = floor($dist*10)/10 if $dist < 1;
+	$dist_range_h = floor($dist*100)/100 if $dist < 0.1;
+	$dist_ranges->{$dist_range_h}++;
     }
 
     html_out("segment-from_eq_to","</table>");
@@ -561,11 +651,11 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
     # ----------------------
     html_out("statistics-segments","<h2>Tags in Segments </h2>");
     html_out("statistics-segments","<table border=1><tr><th>Tag Name</th> <th># of Tag usage</th> <th># of different Values</th> </tr>");
-    for my $k ( sort keys %{$segment_tags} ) {
+    for my $st ( sort keys %{$segment_tags} ) {
 	html_out("statistics-segments","<tr>");
-	html_out("statistics-segments","<td>$k</td>");
-	html_out("statistics-segments","<td align=right>$segment_tags->{$k}->{count}</td>");
-	my $values = $segment_tags->{$k}->{values};
+	html_out("statistics-segments","<td>$st</td>");
+	html_out("statistics-segments","<td align=right>$segment_tags->{$st}->{count}</td>");
+	my $values = $segment_tags->{$st}->{values};
 	my $num_values = scalar( keys(%{$values}));
 	html_out("statistics-segments","<td align=right>$num_values</td>");
 	html_out("statistics-segments","<td>");
@@ -643,9 +733,9 @@ sub check_osm_nodes() {
 		html_out("node-no-connections","<td>&nbsp;". tag_string($osm_nodes->{$node_id}));
 		html_out("node-no-connections","</td></tr>");
 	    }
-	    for my $k ( keys %{$node->{tag}} ) {
-		$node_tags->{$k}->{count} ++;
-		$node_tags->{$k}->{values}->{$node->{tag}->{$k}} ++;
+	    for my $nt ( keys %{$node->{tag}} ) {
+		$node_tags->{$nt}->{count} ++;
+		$node_tags->{$nt}->{values}->{$node->{tag}->{$nt}} ++;
 	    }
 	}
     }
@@ -755,7 +845,7 @@ sub check_osm_nodes() {
 	    html_out("node","<td align=right>$size $count_points $size_end</td>");
 	    if ( $count_err ) {
 		html_out("node","<td align=right> $link $count_err $link_e </td>");
-		html_out("node","<td>$link ".sprintf("%4.2f MB ",(-s $file)/1024/1024 )."$link_e</td>");
+		html_out("node","<td>$link ".sprintf("%4.2f MB ",(-s "$output_dir/$file")/1024/1024 )."$link_e</td>");
 		html_out("node",sprintf("<td align=right>  %5.2f %%</td>",$count_err/$count_points*100));
 	    } else {
 		html_out("node","<td align=right>$size 0      $size_end</td>");
@@ -921,25 +1011,117 @@ sub check_osm_ways() {
 
 }
 
+
+sub write_index(){
+    my $fh = IO::File->new(">$output_dir/index.html");
+print $fh '<HTML>
+<head>
+      <link rel="stylesheet" type="text/css" href="/site.css"/>
+</head>
+
+<BODY BGCOLOR="#000066" 
+      LINK="#6699FF" ALINK="#7799FF" VLINK="#FFFF66" 
+      text=white marginwidth="0" marginheight="0" leftmargin="0" topmargin="0" >
+<!-- ------------------------------------------------------------------ -->
+
+<title>Open Street Map</title>
+
+
+<a align="right" href="http://www.OpenStreetMap.org/">
+<img src="../../../../osm/Osm_linkage.png">
+</a>
+
+
+<!-- ------------------------------------------------------------------ -->
+<h1>Open Street Map Stats</h1>
+';
+    print $fh "osm File: $osm_file_name Area:$selected_area\n";
+print $fh '
+<H3>Nodes</h3>
+<ul>
+<li><A href="OSM_errors_statistics-nodes.html">Statistics Nodes</a>
+<li><A href="OSM_errors_node.html">Nodes with errors (html)</a>
+<A href="OSM_errors_node-duplicate.xml">(XML)</a>
+<li>Nodes without any Segments connected <A href="OSM_errors_node-no-connections.html">html</a>
+<A href="OSM_errors_node-no-connections.xml">(XML)</a>
+</ul>
+
+<H3>Segments</h3>
+<ul>
+<li><A href="OSM_errors_statistics-segments.html">Statistics Segments</a>
+<li><A href="OSM_errors_segment-from_eq_to.html">Segments with from equal to (html)</a>
+    <A href="OSM_errors_segment-from_eq_to.xml">(XML)</a>
+<li><A href="OSM_errors_segment-long.html">Long Segments (html)</a>
+    <A href="OSM_errors_segment-long.xml">(XML)</a>
+<li><A href="OSM_errors_segment-no-distance.html">Segments without distance (html)</a>
+    <A href="OSM_errors_segment-no-distance.xml">(XML)</a>
+</ul>
+
+<H3>Ways</h3>
+<ul>
+<li><A href="OSM_errors_statistics-ways.html">Statistics Ways (html)</a>
+<li><A href="OSM_errors_way.html">Ways with errors (html)</a>
+    <A href="OSM_errors_way-undef-segment.xml">(XML)</a>
+</ul>
+
+<!-- ------------------------------------------------------------------ ->
+<font size=-1>
+<h5>Description how to use the XML Files with josm</h5>
+
+You can use the XML Files in Combination with josm to select all
+elements in your area. 
+The commandline to do so is:
+
+<pre>java -jar josm-latest.jar \
+          osm://lat1,lon1,lat2,lon2 \
+          --selection=http://www.ostertag.name/osm/...
+</pre> 
+
+This command loads josm with a bounding box (lat1,lon1),(lat2,lon2)
+and automagically selects all elements given in the url/file http://www.ostertag.name/osm/...
+<br>
+Instead of "osm://..." you can also use a url of the OpenStreetMap
+homepage. This would be for example 
+<pre>http://www.openstreetmap.org/index.html?lat=11&lon=48&zoom=10</pre>
+
+Using a url for the --selection downloads the File everytime you 
+start josm. So if you want to avoid this you have to
+download the *.xml File by yourself and then use:
+<pre>
+	--selection=file://...
+</pre>
+instead.
+
+</font>
+</html>
+';
+}
+
+# *****************************************************************************
+sub mirror_Data(){
+    print "\nMirror OSM Data\n";
+
+    if ( !$osm_file ) {
+
+	-d "$MIRROR_DIR/osm" or mkpath "$MIRROR_DIR/osm"
+	    or die "Cannot create Directory $MIRROR_DIR/osm: $!\n";
+	
+	my $url = "http://www.ostertag.name/osm/planet/$current_file";
+	$osm_file = "$MIRROR_DIR/osm/$current_file";
+
+	print "Mirror $url\n";
+	my $mirror = mirror_file($url,$osm_file);
+    }
+}
+
 # *****************************************************************************
 sub check_Data(){
 
     print "\nDownload and import OSM Data\n";
 
-    my $mirror_dir="$main::MIRROR_DIR/osm";
+    print "Read OSM Data from file $osm_file \n";
+    read_osm_file( $osm_file );
 
-    -d $mirror_dir or mkpath $mirror_dir
-	or die "Cannot create Directory $mirror_dir:$!\n";
-    
-    my $url = "http://www.ostertag.name/osm/planet/$current_file";
-    my $tar_file = "$mirror_dir/$current_file";
-
-    print "Mirror $url\n";
-    my $mirror = mirror_file($url,$tar_file);
-
-    print "Read OSM Data\n";
-    read_osm_file( $tar_file );
-    
     # Checks and statistics
     html_out("statistics-nodes"   ,"OSM Nodes:    " . scalar keys( %$osm_nodes)."<br>\n");
     html_out("statistics-segments","OSM Segments: " . scalar keys( %$osm_segments)."<br>\n");
@@ -989,16 +1171,50 @@ GetOptions (
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
 	     'h|help|x'            => \$help, 
+	     'osm-file=s'          => \$osm_file,
+	     'area=s'              => \$selected_area,
 	     )
     or pod2usage(1);
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
-# Get and Unpack and check openstreetmap  planet.osm from http://www.openstreetmap.org/
+$selected_area='UK' unless defined $selected_area;
+$selected_area=lc($selected_area);
+
+my $areas = $area_definitions->{$selected_area};
+if (! defined($areas) ){
+    print "Unknown Area $selected_area\n";
+    print "allowed Areas:".join(" ",keys %{$area_definitions})."\n";
+    exit -1;
+}    
+
+# Get openstreetmap  planet.osm from http://www.openstreetmap.org/
+mirror_Data();
+
+my $planet_name=$osm_file;
+$planet_name =~ s,.*/,,;
+$osm_file_name = $planet_name;
+$planet_name =~ s,^planet-?,,;
+$planet_name =~ s,\.osm.*$,,;
+$output_dir="stats/$planet_name/$selected_area";
+print "output dir: $output_dir\n";
+
+# create directory
+-d $output_dir or mkpath $output_dir
+    or die "Cannot create Directory $output_dir:$!\n";
+    
+
+# write index.html
+write_index();
+
+#  Unpack and check openstreetmap planet.osm
 check_Data();
 
 print "Check Complete\n";
+
+exit 0;
+
 ##################################################################
 # Usage/manual
 
@@ -1006,7 +1222,7 @@ __END__
 
 =head1 NAME
 
-B<check_osm.pl> Version 0.00001
+B<check_osm.pl> Version 0.01
 
 =head1 DESCRIPTION
 
@@ -1041,5 +1257,18 @@ files found on local Filesystem.
 =item B<--proxy>
 
 use proxy for download
+
+=item B<--osm-file>
+
+select the planet.osm file to use for the checks
+
+=item B<--area>
+
+select an area to view.
+Currently there a rough boundings in here for:
+ UK
+ Germany
+ world_east
+ world_west
 
 =back

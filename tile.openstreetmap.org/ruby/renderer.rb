@@ -24,12 +24,13 @@ class Renderer
 		#@tagged_segments = Array.new 
 		@tagged_segments = {}
 		@rules = RenderRules.new('new.xml')
-		dao = OSM::Dao.instance
+		@dao = OSM::Dao.instance
 		@zoom = (log2((360*width)/(e-w),2)-9).round
 		factor  = (@zoom<13) ? 0.5 : 0.5*(2**(@zoom-13))
-		@nodes = dao.getnodes(n+(n-s)*factor,w-(e-w)*factor,s-(n-s)*factor,
-				e+(e-w)*factor)
-		@nodes.each do |id,node|
+		@nodes = @dao.getnodes(n+(n-s)*factor,w-(e-w)*factor,s-(n-s)*factor, e+(e-w)*factor)
+
+
+    @nodes.each do |id,node|
 			keyvals = nil
 			style = nil
 			keyvals = get_kv(node.tags) unless node.tags == ''
@@ -39,8 +40,8 @@ class Renderer
 		end
 
 		seg_ids = Array.new
-		segments = dao.get_segments_from_nodes(@nodes) unless @nodes=={}
-		unless segments==nil
+		segments = @dao.get_segments_from_nodes(@nodes) unless @nodes.empty?
+		unless segments.nil?
 			id=0
 			segments.each do |sid,segment|
 				seg_ids.push(sid)	
@@ -49,9 +50,8 @@ class Renderer
 				@tagged_segments[sid].style = {}
 				@tagged_segments[sid].style['casing'] = 'black';
 				@tagged_segments[sid].style['colour'] = 'white';
-					@tagged_segments[sid].style['width']=
-						"0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
-				id=id+1
+				@tagged_segments[sid].style['width'] = "0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
+				id += 1
 			end
 			#@tagged_segments.sort! {|a,b| a.style['z-index']<=>b.style['z-index']}
 		end
@@ -59,15 +59,13 @@ class Renderer
 		# WAY STUFF START
 		# get ways and override tags of constituent segments
 
-		unless seg_ids == nil
-			ways = dao.get_multis_from_segments(seg_ids)
-    		ways.each do |way|
-	  			way.segs.each do |segid|
-					@tagged_segments[segid.to_i].style=
-						@rules.get_style(way.tags) unless way.tags == nil or
-						@tagged_segments[segid.to_i] == nil
-				end
-   	   		end
+		unless seg_ids.nil? || seg_ids.empty?
+			ways = @dao.get_multis_from_segments(seg_ids)
+    	ways.each do |way|
+	  	  way.segs.each do |segid|
+  			  @tagged_segments[segid.to_i].style = @rules.get_style(way.tags) unless way.tags.nil? or @tagged_segments[segid.to_i].nil?
+		    end
+   	  end
 		end
 
 		# WAY STUFF END
@@ -76,8 +74,8 @@ class Renderer
 		@width = width
 		@height = height
 		@gc.font_family('helvetica')
-  		@gc.stroke_linejoin('round')
-  		@gc.stroke_linecap('round')
+ 		@gc.stroke_linejoin('round')
+ 		@gc.stroke_linecap('round')
 	end
 
 	def get_kv(tags)
@@ -90,14 +88,13 @@ class Renderer
 	end
 
 	def draw_casing(seg)
-		unless seg.style==nil or seg.style['casing']==nil 
+		unless seg.style.nil? or seg.style['casing'].nil?
 			@gc.stroke_dasharray()
 			@gc.stroke(seg.style['casing'])
-			@gc.stroke_width(seg.style['width'].split(",")[@zoom-1].
-					to_i+2)	
+			@gc.stroke_width(seg.style['width'].split(",")[@zoom-1].to_i+2)	
 			node_a = @nodes[seg.segment.node_a_id]
 			node_b = @nodes[seg.segment.node_b_id]
-			unless node_a == nil or node_b == nil 
+			unless node_a.nil? or node_b.nil?
 				x1 = @proj.x(node_a.longitude).to_i
 				y1 = @proj.y(node_a.latitude).to_i
 				x2 = @proj.x(node_b.longitude).to_i
@@ -108,8 +105,7 @@ class Renderer
 	end
 
 	def draw_line(seg)
-		unless seg.style==nil or 
-				seg.style['colour']==nil 
+		unless seg.style.nil? or seg.style['colour'].nil?
 			#puts "DRAWING LINE"
 			#puts seg.style['colour']
 			@gc.stroke(seg.style['colour'])
@@ -117,13 +113,13 @@ class Renderer
 						split(",")[@zoom-1])	
 			node_a = @nodes[seg.segment.node_a_id]
 			node_b = @nodes[seg.segment.node_b_id]
-			unless node_a == nil or node_b == nil 
+			unless node_a.nil? or node_b.nil?
 				#puts "ACTUALLY DRAWING"
 				x1 = @proj.x(node_a.longitude).to_i
 				y1 = @proj.y(node_a.latitude).to_i
 				x2 = @proj.x(node_b.longitude).to_i
 				y2 = @proj.y(node_b.latitude).to_i 
-				if seg.style['dash'] == nil
+				if seg.style['dash'].nil?
 					@gc.stroke_dasharray()
 				else	
 					eval("@gc.stroke_dasharray(#{seg.style['dash']})")
@@ -134,17 +130,14 @@ class Renderer
 	end
 
 	def draw_segment_name(seg)
-		unless seg.segment==nil or 
-				seg.style==nil or 
-				seg.style['width']==nil 
-			keyvals=get_kv(seg.segment.tags) unless 
-					seg.segment.tags==''
+		unless seg.segment.nil? or seg.style.nil? or seg.style['width'].nil?
+			keyvals=get_kv(seg.segment.tags) unless seg.segment.tags==''
 			segwidth=(seg.style['width'].split(",")[@zoom-1]).to_i
-			unless keyvals==nil or keyvals['name']==nil or segwidth==nil
+			unless keyvals.nil? or keyvals['name'].nil? or segwidth.nil?
 				metrics=@gc.get_type_metrics(keyvals['name'])
 				node_a = @nodes[seg.segment.node_a_id]
 				node_b = @nodes[seg.segment.node_b_id]
-				unless node_a == nil or node_b == nil 
+				unless node_a.nil? or node_b.nil?
 					p=Array.new
 					p[0] = {}
 					p[1] = {}
@@ -160,13 +153,13 @@ class Renderer
 						y1 = avy-(metrics.ascent+metrics.descent)/2
 						x2 = avx+metrics.width/2
 						y2 = avy+(metrics.ascent+metrics.descent)/2
-						@gc.fill(seg.style['colour']) unless
-							seg.style['colour']==nil
+						@gc.fill(seg.style['colour']) unless seg.style['colour'].nil?
 						@gc.rectangle(x1,y1,x2,y2)
 						@gc.stroke("black")
 						@gc.pointsize(10)
 						@gc.stroke_width(1)
 						@gc.text(x1,y2,keyvals['name'])
+
 					elsif length >= metrics.width and @zoom>=13
 						fs = (@zoom==13) ? 8:10
 						interior_angle_text(p,fs,"black",keyvals['name'],
@@ -218,23 +211,23 @@ class Renderer
 	def draw_points_of_interest_icons()
 		allnamedata = Array.new
 		@nodes.each do |id,node|
-			unless @node_styles[id]==nil 
+			unless @node_styles[id].nil?
 				x = @proj.x(node.longitude).to_i
 				y = @proj.y(node.latitude).to_i
-				unless @node_styles[id]['image']==nil
+				unless @node_styles[id]['image'].nil?
 					image = Magick::Image.read(@node_styles[id]['image']).first
 					@gc.composite(x,y,0,0,image)
 					x = x + image.bounding_box.width	
 					y = y + image.bounding_box.height	
 				end
 
-				unless @node_styles[id]['text']==nil 
+				unless @node_styles[id]['text'].nil?
 					fs=@node_styles[id]['text'].split(",")[@zoom-1].to_i
 					if fs>0
 						#puts "fs is #{fs}"
 						namedata = {} 
 						keyvals=get_kv(node.tags) unless node.tags==''
-						unless keyvals['name']==nil
+						unless keyvals['name'].nil?
 							namedata['x']=x
 							namedata['y']=y 
 							namedata['name'] = keyvals['name']
@@ -275,7 +268,7 @@ class Renderer
 	end
 
 	def draw_segment_casings()
-		unless @tagged_segments == nil
+		unless @tagged_segments.nil?
 			@tagged_segments.each_value do |segment|
 				#puts segment.style['z-index']
 				draw_casing(segment)
@@ -284,7 +277,7 @@ class Renderer
 	end
 
 	def draw_segments()
-		unless @tagged_segments == nil
+		unless @tagged_segments.nil?
 			@tagged_segments.each do |sid,segment|
 				#puts "draw_segments: segment id #{sid}"
 				draw_line(segment)
@@ -316,17 +309,18 @@ class Renderer
 end
 
 def blankpng(width,height)
-    canvas = Magick::Image.new(width,height) {
-	self.background_color = 'transparent'
+  canvas = Magick::Image.new(width,height) {
+	  self.background_color = 'transparent'
 	}
 	canvas.format = 'PNG'
 	puts canvas.to_blob
 end
 
+P = rand().to_s
+
 r = Apache.request
 r.content_type = 'image/png'
 cgi = CGI.new
-
 
 bbox = cgi['bbox']
 bbox = cgi['BBOX'] if bbox == ''
@@ -363,9 +357,9 @@ height = 320 if height == 0
 tile_too_big = width > 256 || height > 256 || ((trlon-bllon)*(trlat-bllat)) > 0.0035
 
 if tile_too_big
-    blankpng(width,height)
+  blankpng(width,height)
 else
-    renderer = Renderer.new(bllon, bllat, trlon, trlat, width, height)
-    renderer.draw()
-    renderer.out()
+  renderer = Renderer.new(bllon, bllat, trlon, trlat, width, height)
+  renderer.draw()
+  renderer.out()
 end

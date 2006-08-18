@@ -51,25 +51,6 @@ class Renderer
 				@tagged_segments[sid].style['colour'] = 'white';
 					@tagged_segments[sid].style['width']=
 						"0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
-				#keyvals = nil
-				#puts "TAGS"
-				#puts segment.tags
-				#keyvals = get_kv(segment.tags) unless segment.tags == ''
-				#if keyvals == nil
-					#puts "NO KEYVALS"
-				#		@tagged_segments[sid].style = {}
-				#	@tagged_segments[sid].style['casing'] = "black"
-				#	@tagged_segments[sid].style['colour'] = "white"
-				#	@tagged_segments[sid].style['width']=
-				#		"0,0,0,0,0,0,0,0,0,1,1,1,4,6,8"
-				#	@tagged_segments[sid].style['z-index'] = 0
-				#else
-					#puts "KEYVALS"
-					#puts keyvals
-					#@tagged_segments[sid].style=@rules.get_style(keyvals)
-					#puts "STYLES"
-					#puts @tagged_segments[sid].style
-				#end
 				id=id+1
 			end
 			#@tagged_segments.sort! {|a,b| a.style['z-index']<=>b.style['z-index']}
@@ -78,18 +59,16 @@ class Renderer
 		# WAY STUFF START
 		# get ways and override tags of constituent segments
 
-				#puts "WAYS"
-		#puts "(#{seg_ids.join(',')}"
-		ways = dao.get_multis_from_segments(seg_ids)
-    	ways.each do |way|
-			#puts "WAY"
-	  		way.segs.each do |segid|
-				#puts "SEGID #{segid}"
-				@tagged_segments[segid.to_i].style=
-					@rules.get_style(way.tags) unless way.tags == nil or
-					@tagged_segments[segid.to_i] == nil
-			end
-   	   	end
+		unless seg_ids == nil
+			ways = dao.get_multis_from_segments(seg_ids)
+    		ways.each do |way|
+	  			way.segs.each do |segid|
+					@tagged_segments[segid.to_i].style=
+						@rules.get_style(way.tags) unless way.tags == nil or
+						@tagged_segments[segid.to_i] == nil
+				end
+   	   		end
+		end
 
 		# WAY STUFF END
 

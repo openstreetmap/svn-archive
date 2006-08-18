@@ -1,6 +1,7 @@
 module OSM
 
   require 'mysql'
+  require 'thread'
   require 'singleton'
   require 'time'
   require 'osm/servinfo.rb'
@@ -148,6 +149,61 @@ module OSM
   end #UIDLinesegment
 
 
+  class ConnectionPool
+    @@instance       = nil
+    @@instance_mutex = Mutex.new
+
+    def self.get_instance()
+      @@instance_mutex.synchronize {
+        @@instance ||= self.new()
+      }
+    end
+
+    def initialize()
+      @free_connections   = []
+      @num_busy           = 0
+      @max_allowed        = 30 
+      @monitor_mutex      = Mutex.new
+      @free_mutex         = Mutex.new
+      @busy_mutex         = Mutex.new
+      @max_allowed.times {
+        @free_connections.push create_connection
+      }
+    end
+
+    def free?
+      @monitor_mutex.synchronize {
+        @free_connections.size
+      }
+    end
+
+    def open
+      yield(connection = get_connection)
+      release connection
+    end
+
+    protected
+    def get_connection
+      @busy_mutex.synchronize {
+        while @free_connections.empty?
+          sleep(0.001)
+        end
+      @free_connections.pop
+      }
+    end
+
+    def release(connection)
+      @free_mutex.synchronize {
+        @free_connections.push connection
+      }
+    end
+
+    def create_connection
+      @dbh = Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
+    end
+
+  end
+
 
   class Dao
     include Singleton
@@ -161,19 +217,7 @@ module OSM
       @@log.log("Error message: "+ e.error)
     end
 
-    @dbh = nil  # one handle per instance
-
-    def create_connection
-      begin
-        @dbh = Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
-      rescue MysqlError =>ex
-        mysql_error(ex)
-      end
-    end
-
-    def get_connection
-      @dbh || create_connection
-    end
+    @@pool = ConnectionPool.new
 
     ## quote
     # escape characters in the string which might affect the
@@ -183,7 +227,6 @@ module OSM
     end
 
     def q(s); quote(s); end
-
 
     ## check_user?
     # returns whether the given username and password are correct and active
@@ -215,17 +258,12 @@ module OSM
 
 
     def call_sql
-      begin
-        dbh = get_connection
+      @@pool.open {|connection|
         sql = yield
         @@log.log sql
-        res = dbh.query(sql)
+        res = connection.query(sql)
         if res.nil? then return true else return res end
-      rescue MysqlError =>ex
-        mysql_error(ex)
-      ensure
-        dbh.close unless dbh.nil?
-      end
+      }
       nil
     end
 

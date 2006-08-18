@@ -80,7 +80,9 @@ my $osm_obj      = undef; # OSM Object currently read
 my $area_definitions = {
     #                     min    |    max  
     #                  lat   lon |  lat lon
-    uk         => [ [  49  , -11,   64,   3] ],
+    uk         => [ [  49  , -11,   64,   3],
+		    [ 49.9 ,  -5.8, 54,0.80],
+		    ],
     germany    => [ [  47  ,   5,   54,  16] ],
     spain      => [ [  35.5,  -9,   44,   4] ],
     europe     => [ [  35  , -12,   75,  35] ],
@@ -171,7 +173,7 @@ sub way {
     }
     print "\n" if !$count_way_all && ($verbose || $debug);
     $count_way_all++;
-    printf("way %d\r",$count_way) 
+    printf("way %d(%d)\r",$count_way,$count_way_all) 
 	if !( $count_way_all % 1000 ) && ($verbose || $debug);
 }
 # --------------------------------------------
@@ -206,7 +208,7 @@ sub seg {
     my $id = $attrs{id};
     delete $attrs{timestamp} if defined $attrs{timestamp};
     #print "Seg $id for way($osm_obj->{id})\n";
-    if (defined($osm_nodes->{$id})) {
+    if (defined($osm_segments->{$id})) {
 	push(@{$osm_obj->{seg}},$id);
     }
 }

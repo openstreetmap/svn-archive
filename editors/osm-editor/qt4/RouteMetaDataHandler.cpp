@@ -45,7 +45,8 @@ RouteMetaData RouteMetaData::preferred()
 {
 	return RouteMetaData(preferred(foot),preferred(bike),
 							preferred(horse),preferred(car),
-							preferred(routeClass) );
+							preferred(routeClass),
+				   			preferred(railway)	);
 }
 
 // Parse an OSM key/value pair
@@ -128,9 +129,9 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 											"permissive|unofficial", "no",
 										"no", "cycleway|path");
 	rData["byway"] = RouteMetaData ("yes", "yes", "yes", "yes",  
-					"track|unsurfaced");
+					"unsurfaced|track");
 	rData["RUPP"] = RouteMetaData ("yes", "yes", "yes", "unknown",  
-						"track|unsurfaced");
+						"unsurfaced|track");
 	rData["minor road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
 								"unclassified|minor");
 	rData["residential road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
@@ -142,11 +143,11 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 	rData["new forest track"] = RouteMetaData ("permissive|unofficial", 
 												"no", "permissive|unofficial", 
 												"no",  
-												"track|unsurfaced"); 
+												"unsurfaced|track"); 
 	rData["new forest cycle path"] = RouteMetaData ("permissive|unofficial", 
 												"permissive|unofficial", 
 												"permissive|unofficial", "no",  
-												"track|unsurfaced"); 
+												"unsurfaced|track"); 
 }
 
 // Returns the metadata matching a type

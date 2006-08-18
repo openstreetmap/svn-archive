@@ -161,29 +161,18 @@ module OSM
       @@log.log("Error message: "+ e.error)
     end
 
-    @@dbh = nil  # one handle per VM
+    @dbh = nil  # one handle per instance
 
     def create_connection
       begin
-        @@dbh = Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
+        @dbh = Mysql.real_connect($DBSERVER, $USERNAME, $PASSWORD, $DATABASE)
       rescue MysqlError =>ex
         mysql_error(ex)
       end
     end
 
     def get_connection
-      @@dbh || create_connection
-    end
-
-    def get_local_connection
-      return get_connection
-
-      #whilst local db's are down, just talk to the main server
-      #begin
-      #  return Mysql.real_connect('localhost', $USERNAME, $PASSWORD, $DATABASE)
-      #rescue MysqlError => e
-      #  mysql_error(e)
-      #end
+      @dbh || create_connection
     end
 
     ## quote
@@ -226,7 +215,6 @@ module OSM
 
 
     def call_sql
-      dbh = nil
       begin
         dbh = get_connection
         sql = yield

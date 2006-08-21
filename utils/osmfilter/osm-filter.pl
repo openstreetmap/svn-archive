@@ -376,6 +376,7 @@ sub read_osm_file($) { # Insert Segments from osm File
 
     print STDERR "Parsing file: $file_name\n" if $debug;
     my $p = XML::Parser->new( Style => 'Subs' ,
+			      ErrorContext => 10,
 			      );
 	
     my $fh = File::data_open($file_name);
@@ -1464,7 +1465,7 @@ sub split_tracks($$$){
     my $config      = shift;
 
     my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || .5;
+    my $max_allowed_dist  = $config->{max_dist}  || 1;
     my $max_allowed_time  = $config->{max_time}  || 60;
 
     my $new_tracks= { tracks => [],wpt=>[] };
@@ -1761,7 +1762,7 @@ sub filter_data_reduce_points($){
 							 $elem2->{lat},$elem2->{lon},
 							 $elem1->{lat},$elem1->{lon}
 							 );
-		$skip_point =  1 if $dist < 0.001; # 1 meter
+		$skip_point =  1 if $dist < 0.004; # 4 meter
 		printf STDERR "Elem $i is $dist m away from line\n"
 		    if $debug >10;
 	    }
@@ -2386,22 +2387,25 @@ GetOptions (
 	     'd+'                  => \$debug,      
 	     'verbose+'            => \$verbose,
 	     'v+'                  => \$verbose,
-	     'out-osm'             => \$out_osm,
+	     'MAN'                 => \$man, 
+	     'man'                 => \$man, 
+	     'h|help|x'            => \$help, 
+
 	     'stdin'               => \$use_stdin,
 	     'stdout'              => \$use_stdout,
+	     'proxy=s'             => \$PROXY,
+
+	     'out-osm'             => \$out_osm,
 	     'split-tracks'        => \$split_tracks,
-	     'draw_filter_areas'   => \$draw_filter_areas,
 	     'check_against_osm:s' => \$check_against_osm,
 	     'osm:s'               => \$check_against_osm,
              'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
 	     'use_reduce_filter'   => \$use_reduce_filter,
-	     'filter-all'          => \$do_all_filters,
 	     'filter-area:s@'      => \@filter_area_files,
 	     'generate_ways'       => \$generate_ways,
-	     'proxy=s'             => \$PROXY,
-	     'MAN'                 => \$man, 
-	     'man'                 => \$man, 
-	     'h|help|x'            => \$help, 
+	     'filter-all'          => \$do_all_filters,
+
+	     'draw_filter_areas'   => \$draw_filter_areas,
 	     )
     or pod2usage(1);
 
@@ -2572,7 +2576,7 @@ Currently it's only a stub, so anyone can sit down and programm the compare rout
 The ammount of Datapoints is reduced. 
 This is done by looking at three trackpoints in a row. For now I calculate the
 distance between the line of point 1 and 3 to the point in the 
-middle. If this distance is small enough (currently 1 meter) the 
+middle. If this distance is small enough (currently 4 meter) the 
 middle point is dropped, because it doesn't really improve the track.
 
 

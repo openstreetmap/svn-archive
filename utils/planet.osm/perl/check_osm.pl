@@ -75,19 +75,19 @@ my $OSM_WAYS     = {};
 my $OSM_OBJ      = undef; # OSM Object currently read
 
 ###########################################
-
 my $area_definitions = {
     #                     min    |    max  
     #                  lat   lon |  lat lon
     uk         => [ [  49  , -11,   64,   3],
 		    [ 49.9 ,  -5.8, 54,0.80],
 		    ],
+    iom        => [ [ 54.03,-4.85,54.44, -4.2],
     germany    => [ [  47  ,   5,   54,  16] ],
     spain      => [ [  35.5,  -9,   44,   4] ],
     europe     => [ [  35  , -12,   75,  35] ],
     africa     => [ [ -45  , -20,   30,  55] ],
-    world_east => [ [ -90  ,  90,  -30, 180] ],
-    world_west => [ [ -90  ,  90, -180,  -3] ],
+    world_east => [ [ -90  , -30,   90, 180] ],
+    world_west => [ [ -90  ,-180,   90, -30] ],
 };
 my $SELECTED_AREA_filters=undef;
 
@@ -1061,10 +1061,11 @@ print $fh '<HTML>
 	    for my $file ( sort glob("$OUTPUT_BASE_DIR/$planet/$area/OSM_*.html") ) {
 		$file =~ s,.*/,,;
 		my $file_short=$file;
-		$file_short =~ s/OSM_errors_statistics/stat-/;
+		next if $file_short =~ m,node-\d+,;
+		$file_short =~ s/OSM_errors_statistics-/stat-/;
 		$file_short =~ s/OSM_errors_//;
 		$file_short =~ s/\.html$//;
-		print $fh " <A href =\"$planet/$area/$file\">$file</a>\n";
+		print $fh " <A href =\"$planet/$area/$file\">$file_short</a>\n";
 	    }
 	    print $fh "</li>\n";
 	}
@@ -1198,6 +1199,7 @@ sub check_Data(){
 	print $fh "\n\n\n</html>\n";
 	$fh->close();
 	delete $html_files->{$type}->{fh};
+	delete $html_files->{$type}->{header};
     }
 
     # close all xml Files 
@@ -1207,6 +1209,7 @@ sub check_Data(){
 	print $fh "\n\n</osm>\n";
 	$fh->close();
 	delete $xml_files->{$type}->{fh};
+	delete $xml_files->{$type}->{header};
     }
 }
 

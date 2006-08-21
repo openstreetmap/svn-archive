@@ -17,9 +17,9 @@ use DBI;
 
 my $dbtype = "pgsql";	# mysql | pgsql
 my $dbname = "planetosm";
-my $dbhost = "";
-my $dbuser = "";
-my $dbpass = "";
+my $dbhost = $ENV{DBHOST} || "localhost";
+my $dbuser = $ENV{DBUSER} || "";
+my $dbpass = $ENV{DBPASS} || "";
 
 # Exclude nodes within this lat,long,lat,long bounding box
 my @exclude_bbox = ();
@@ -191,7 +191,7 @@ while(my $line = <XML>) {
 		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
 		# Decode the XML elements in the name and value
-		$value =~ s/\&apos\;/'/g;
+		$value =~ s/\&apos\;/\'/g;
 		
 		# If last_id isn't there, the tag we're attached to was invalid
 		unless($last_id) {

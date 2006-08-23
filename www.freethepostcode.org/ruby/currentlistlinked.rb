@@ -13,10 +13,11 @@
 
 require 'singleton'
 require 'cgi'
-load '/var/www/nickb/ruby/dao.rb' 
+load 'dao.rb'
 
 print '<html><body>'
-puts '# Generated daily. Click a postcode to see its location.'
+puts '# Generated daily. Click a postcode to see its location and leave a <br>
+        comment, or click OSM Map to see the location in OpenStreetMap'
 
 dao = OSM::Dao.instance
 
@@ -31,6 +32,15 @@ res.each_hash do |row|
   print row['part2']
   print ( '">' )
   print row['lat'] + ' ' + row['lon'] + ' ' + row['part1'] + ' ' + row['part2']
-  print ( '</a>' )
+  print ( '</a>    ' )
+
+  print ('<a href="http://www.openstreetmap.org/index.html?')
+  print ('lat=')
+  print row['lat']
+  print ('&lon=')
+  print row['lon'] 
+  print ('&zoom=11">')
+  print ('   OSM Map</a>')
+  
  end
   puts( '</body></html>' )

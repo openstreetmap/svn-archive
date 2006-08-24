@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+u#!/usr/bin/ruby
 
 
 #
@@ -25,22 +25,10 @@ res = dao.call_sql { 'select format(avg(lat),6) as lat, format(avg(lon),6) as lo
 
 
 res.each_hash do |row|
-  print "<p>"
-  print ( '<a href="http://www.kirit.com/Postcode/UK:/' )
-  print row['part1']
-  print ( '%20' )
-  print row['part2']
-  print ( '">' )
-  print row['lat'] + ' ' + row['lon'] + ' ' + row['part1'] + ' ' + row['part2']
-  print ( '</a>    ' )
+  puts "<p>  <a href=\"http://www.kirit.com/Postcode/UK:/#{row['part1']}%20#{row['part2']}\">"
+  puts "#{row['lat']} #{row['lon']} #{row['part1']} #{row['part2']}</a>"
 
-  print ('<a href="http://www.openstreetmap.org/index.html?')
-  print ('lat=')
-  print row['lat']
-  print ('&lon=')
-  print row['lon'] 
-  print ('&zoom=11">')
-  print ('   OSM Map</a>')
-  
- end
-  puts( '</body></html>' )
+  puts "<a href=\"http://www.openstreetmap.org/index.html?lat=#{row['lat']}&lon=#{row['lon']}&zoom=11\">OSM Map</a>"
+end
+
+puts '</body></html>' 

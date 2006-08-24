@@ -61,6 +61,7 @@ my $osm_obj           = undef; # OSM Object currently read
 my $use_stdin         = 0;
 my $use_stdout        = 0;
 my $out_osm           = 0;
+my $out_raw_gpx       = 0;
 my $split_tracks      = 0;
 my @filter_area_files  = ();
 my $draw_filter_areas  = 0;
@@ -145,7 +146,7 @@ sub distance_point_point_Km($$) {
     my $delta_lat=$lat1-$lat2;
     my $delta_lon=$lon1-$lon2;
     return sqrt($delta_lat*$delta_lat+$delta_lon*$delta_lon)*40000/360;
-   
+    
 }
 
 # ------------------------------------------------------------------
@@ -167,7 +168,7 @@ sub distance_degree_point_point($$) {
     my $delta_lat=$lat1-$lat2;
     my $delta_lon=$lon1-$lon2;
     return $delta_lat,$delta_lon;
-  
+    
 }
 
 # ------------------------------------------------------------------
@@ -189,6 +190,19 @@ sub angle_north($$){
 
     # Angle
     my $angle = - rad2deg(atan2($delta_lat,$delta_lon));
+    return $angle;
+}
+
+# ------------------------------------------------------------------
+# Angle from North relative
+# so if you exchange the two points of the segment the angle keeps the same
+# result is between  +0 ..  180
+sub angle_north_relative($$){
+    my $p1 = shift;
+    my $p2 = shift;
+    my $angle = angle_north($p1,$p2);
+    $angle += 180 if $angle < 0;
+    $angle -= 180 if $angle >180;
     return $angle;
 }
 
@@ -271,12 +285,12 @@ sub data_open($){
 	$fh = IO::File->new("gzip -dc $filename|")
 	    or die("cannot open $filename: $!");
     } elsif ( $filename =~ m/\.bz2$/ ) {
-	    $fh = IO::File->new("bzip2 -dc $filename|")
-		or die("cannot open $filename: $!");
-	} else {
-	    $fh = IO::File->new("$filename",'r')
-		or die("cannot open $filename: $!");
-	}
+	$fh = IO::File->new("bzip2 -dc $filename|")
+	    or die("cannot open $filename: $!");
+    } else {
+	$fh = IO::File->new("$filename",'r')
+	    or die("cannot open $filename: $!");
+    }
     return $fh;
 }
 
@@ -291,7 +305,7 @@ my $read_osm_nodes;
 my $read_osm_segments;
 
 sub node_ {
-    $osm_obj = undef
+    $osm_obj = undef;
 }
 sub node {
     my($p, $tag, %attrs) = @_;  
@@ -314,7 +328,7 @@ sub node {
 
 # --------------------------------------------
 sub segment_ {
-    $osm_obj = undef
+    $osm_obj = undef;
 }
 sub segment {
     my($p, $tag, %attrs) = @_;  
@@ -334,7 +348,7 @@ sub segment {
     my $node2 = $read_osm_nodes->{$osm_obj->{to}};
     ($segment[0],$segment[1],$segment[2],$segment[3]) =
 	($node1->{lat},$node1->{lon},$node2->{lat},$node2->{lon});
-    $segment[4] = Geometry::angle_north(
+    $segment[4] = Geometry::angle_north_relative(
 				    { lat => $segment[0] , lon => $segment[1] },
 				    { lat => $segment[2] , lon => $segment[3] });
     #$segment[5] = $attrs{name} if $debug;
@@ -378,7 +392,7 @@ sub read_osm_file($) { # Insert Segments from osm File
     my $p = XML::Parser->new( Style => 'Subs' ,
 			      ErrorContext => 10,
 			      );
-	
+    
     my $fh = File::data_open($file_name);
     my $content = $p->parse($fh);
     if (not $p) {
@@ -390,47 +404,47 @@ sub read_osm_file($) { # Insert Segments from osm File
 
 # ----------------------------------------------
 
-sub LoadOSM_segment_txt($)
+sub LoadOSM_segment_csv($)
 {
-  my $filename = shift;
+    my $filename = shift;
 
-  printf STDERR "Reading OSM File: $filename\n"
-      if $debug || $verbose;
-  my $start_time=time();
+    printf STDERR "Reading OSM File: $filename\n"
+	if $debug || $verbose;
+    my $start_time=time();
 
-  my $segments;
+    my $segments;
 
-  if ( -s "$filename.storable") {
-      # later we should compare if the file also is newer than the source
-      $filename .= ".storable";
-      $segments = Storable::retrieve($filename);
-  } else {
-      my $fh = File::data_open($filename);
+    if ( -s "$filename.storable") {
+	# later we should compare if the file also is newer than the source
+	$filename .= ".storable";
+	$segments = Storable::retrieve($filename);
+    } else {
+	my $fh = File::data_open($filename);
 
-      die "Cannot open $filename in LoadOSM_segment_txt.\n".
-	  "Please create it first to use the option --osm.\n".
-	  "See --help for more info"  unless $fh;
+	die "Cannot open $filename in LoadOSM_segment_csv.\n".
+	    "Please create it first to use the option --osm.\n".
+	    "See --help for more info"  unless $fh;
 
-      while ( my $line = $fh ->getline() ) {
-	  my @segment;
-	  my $dummy;
-	  ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
-	  $segment[4] = Geometry::angle_north(
-					  { lat => $segment[0] , lon => $segment[1] },
-					  { lat => $segment[2] , lon => $segment[3] });
-	  $segment[5] = $dummy if $debug;
-	  push (@{$segments},\@segment);
-      }
-      $fh->close();
-      Storable::store($segments   ,"$filename.storable");
-  }
+	while ( my $line = $fh ->getline() ) {
+	    my @segment;
+	    my $dummy;
+	    ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
+	    $segment[4] = Geometry::angle_north_relative(
+					    { lat => $segment[0] , lon => $segment[1] },
+					    { lat => $segment[2] , lon => $segment[3] });
+	    $segment[5] = $dummy if $debug;
+	    push (@{$segments},\@segment);
+	}
+	$fh->close();
+	Storable::store($segments   ,"$filename.storable");
+    }
 
-  if ( $verbose) {
-      printf STDERR "Read and parsed $filename";
-      Utils::print_time($start_time);
-  }
+    if ( $verbose) {
+	printf STDERR "Read and parsed $filename";
+	Utils::print_time($start_time);
+    }
 
-  return($segments);
+    return($segments);
 }
 
 
@@ -473,7 +487,7 @@ sub check_against_osm($$$){
     my $all_osm_segments = shift;
     my $config       = shift;
 
-    my $dist_osm_track = $config->{dist} || 20;
+    my $dist_osm_track = $config->{dist} || 40;
     my $max_angle = 30;
     my $start_time=time();
 
@@ -491,35 +505,60 @@ sub check_against_osm($$$){
 
     my $all_points = 0;
     my $new_points = 0;
+    my $last_compare_dist=0;
+    my $track_count=0;
     for my $track ( @{$tracks->{tracks}} ) {
+	$track_count++;
 	next if !$track;
 	my $new_track=[];
-	my $last_elem;
-	for my $elem ( @{$track} ) {
+	my $angle_n_r0=-999999;
+	my $angle_n_r2=-999999;
+	for my $element_num ( 0 .. $#{@{$track}} ) {
+	    my $elem0=$track->[$element_num-1];
+	    my $elem1=$track->[$element_num];
+	    my $elem2=$track->[$element_num+1];
 	    $all_points++;
 	    my $skip_point=0;
 	    my $min_dist = 40000;
-	    my $pdop = $elem->{pdop};
+	    my $pdop = $elem1->{pdop};
 	    my $compare_dist=$dist_osm_track;
 	    if ( defined ( $pdop ) &&  ($pdop >0) ) {
 		$compare_dist= $pdop;
 		$compare_dist=10 if $compare_dist <10;
 	    }
 
-	    my $angle=-999999;
-	    if ( $last_elem ) {
-		$angle = Geometry::angle_north($last_elem,$elem);
+	    if ( $last_compare_dist != $compare_dist ) {
+		print STDERR "check_against_osm() compare_dist: $compare_dist\n" 
+		    if ($verbose > 1) || ($debug > 1 );
+		$last_compare_dist = $compare_dist;
+	    };
+
+	    if ( $element_num > 0 ) {
+		$angle_n_r0 = Geometry::angle_north_relative($elem0,$elem1);
+	    }
+	    if ( $element_num < $#{@{$track}} ) {
+		$angle_n_r2 = Geometry::angle_north_relative($elem1,$elem2);
 	    }
 
+	    my $segment_count=0;
+	    #print STDERR "Track: $track_count Element: $element_num\n";
 	    for my $segment ( @{$osm_segments} ) {
-		# The lines have to be fairly parallel
-		next unless abs ($angle - $segment->[4]) < $max_angle;
+		$segment_count++;
+		# The line from or to the element has to be fairly parallel
+		next unless
+		    ( abs ($angle_n_r0 - $segment->[4])  < $max_angle) ||
+		    ( abs ($angle_n_r2 - $segment->[4])  < $max_angle);
+		# print STDERR "abs_angle: $abs_angle\n" if $debug;
 
-		# Distance between line of segment($segment)  to trackpoint $elem
+		# Distance between line of segment($segment)  to trackpoint $elem1
 		my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
-							    $segment->[2],$segment->[3],
-							    $elem->{lat},$elem->{lon}
-							 );
+								 $segment->[2],$segment->[3],
+								 $elem1->{lat},$elem1->{lon}
+								 );
+		if ( $dist < 30) {
+		    #print STDERR "Dist $dist Segment $segment_count\n";
+		    #join(" , ",@{$segment})."  Elem:".Dumper(\$elem1);
+		}
 		$min_dist = $dist if $dist < $min_dist;
 		next if $dist > $compare_dist; # in m
 		printf STDERR "Elem is %3.1f m away from line\n",$dist
@@ -528,18 +567,28 @@ sub check_against_osm($$$){
 		last;
 	    }
 	    # printf STDERR "Min Dist: $min_dist Meter\n";
-	    
+	    $elem1->{skip_point}++;
+	}
+	for my $element_num ( 0 .. $#{@{$track}} ) {
+	    my $elem0=$track->[$element_num-1];
+	    my $elem1=$track->[$element_num];
+	    my $elem2=$track->[$element_num+1];
+	    my $skip_point = $elem1->{skip_point};
+	    # This should only skip the point if the one before and after are skiped too
+	    # But currentls it's not working yet
+	    $skip_point=0 if ( $element_num > 0             ) && ( ! $elem0->{skip_point} );
+	    $skip_point=0 if ( $element_num < $#{@{$track}} ) && ( ! $elem2->{skip_point} );
+
 	    if ( $skip_point ) {
 		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem >4 ) {
+		if ( $num_elem >2 ) {
 		    push(@{$new_tracks->{tracks}},$new_track);
 		}
 		$new_track=[];
 	    } else {
-		push(@{$new_track},$elem);
+		push(@{$new_track},$elem1);
 		$new_points++;
 	    }
-	    $last_elem=$elem;
 	}
 	push(@{$new_tracks->{tracks}},$new_track);
     }
@@ -1112,7 +1161,7 @@ sub write_gpx_file($$) { # Write an gpx File
 	}
 	print $fh "    </trkseg>\n";
 	print $fh "</trk>\n\n";
-    
+	
     }
 
     print $fh "</gpx>\n";
@@ -1226,7 +1275,7 @@ sub add_internal_filter_areas(){
 	  (    
 	       # Block a circle of <proximity> Km arround each point
 	       #     { lat =>  48.175921 	,lon => 11.754312  ,proximity => .030 , block => 1 },
-	 
+	       
 	       # Allow Rules for square size areas
 	       # Warning square areas are not tested yet
 
@@ -1236,7 +1285,7 @@ sub add_internal_filter_areas(){
 
 	       # The rest of the World is blocked by default
 	       [ -90.0  , -180  , 90.0    , 180   ], # World Allow 
-	 
+	       
 	       ));
 }
 
@@ -1307,6 +1356,9 @@ sub read_filter_areas_xml($){
 sub read_filter_areas($){
     my $filename = shift;
 
+    printf STDERR "Read GpsDrive Filter File $filename\n"
+	if ( $debug || $verbose );
+
     unless ( -s $filename ) {
 	printf STDERR "Filter File $filename not found\n";
 	return;
@@ -1329,7 +1381,7 @@ sub read_filter_areas($){
 	    next;
 	} else {
 	    warn "WARNING !!! unknown Filter type $typ for WP $name\n";
-	    };
+	};
 	next unless $name;
 	push( @{$internal__filter_area_list},
 	  { wp => $name, block => $block }
@@ -1583,7 +1635,7 @@ sub split_tracks($$$){
     };
     if ( $debug ) {
 	printf STDERR "	Deleted Points: $deleted_points\n"
-    }
+	}
     #printf STDERR Dumper(\$new_tracks);
     return $new_tracks;
 }
@@ -1696,10 +1748,10 @@ sub filter_data_by_area($){
 		}
 		$new_track=[];
 		$deleted_points++
-	    } else {
-		push(@{$new_track},$elem);
-		$good_points++;
-	    }
+		} else {
+		    push(@{$new_track},$elem);
+		    $good_points++;
+		}
 	}
 	my $num_elem=scalar(@{$new_track});
 	if ( $num_elem ) {
@@ -1759,9 +1811,9 @@ sub filter_data_reduce_points($){
 	    } else {
 		# Distance between line of line(p0 and p2) to p1 
 		my $dist = Geometry::distance_line_point_Km($elem0->{lat},$elem0->{lon},
-							 $elem2->{lat},$elem2->{lon},
-							 $elem1->{lat},$elem1->{lon}
-							 );
+							    $elem2->{lat},$elem2->{lon},
+							    $elem1->{lat},$elem1->{lon}
+							    );
 		$skip_point =  1 if $dist < 0.004; # 4 meter
 		printf STDERR "Elem $i is $dist m away from line\n"
 		    if $debug >10;
@@ -1879,6 +1931,7 @@ sub filter_duplicate_tracepoints($$$){
 
     my $count_points = 0;
     my $new_points = 0;
+    my $last_compare_dist=0;
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	my $new_track=[];
@@ -1891,6 +1944,12 @@ sub filter_duplicate_tracepoints($$$){
 	    if ( defined ( $pdop ) &&  ($pdop >0) ) {
 		$compare_dist= $pdop;
 	    }
+
+	    if ( $last_compare_dist != $compare_dist ) {
+		print STDERR "compare_dist: $compare_dist\n" 
+		    if ($verbose > 1) || ($debug > 1 );
+		$last_compare_dist = $compare_dist;
+	    };
 
 	    for my $segment ( @{$checked_track_segments} ) {
 		#printf STDERR Dumper(\$segment);
@@ -1924,7 +1983,9 @@ sub filter_duplicate_tracepoints($$$){
 	    } else {
 		push(@{$new_track},$elem);
 		$new_points++;
-		if ( defined($last_elem) && defined($last_elem->{lat}) && defined($last_elem->{lon})) {
+		if ( defined($last_elem) 
+		     && defined($last_elem->{lat}) 
+		     && defined($last_elem->{lon})) {
 		    push(@{$checked_track_segments},
 			 [$last_elem->{lat},$last_elem->{lon},$elem->{lat},$elem->{lon}]);
 		}
@@ -1935,7 +1996,8 @@ sub filter_duplicate_tracepoints($$$){
     }
 
     if ( $debug || $verbose) {
-	printf STDERR "Found $count_points Points already in other Tracks. This leaves $new_points ";
+	printf STDERR "Found $count_points Points already in other Tracks.".
+	    "This leaves $new_points ";
 	Utils::print_time($start_time);
     }
 
@@ -2219,9 +2281,19 @@ sub convert_Data(){
     my $osm_segments;
     if ( $check_against_osm ) {
 	if ( -s $check_against_osm ) {
-	    $osm_segments = OSM::read_osm_file($check_against_osm);
+	    if (  $check_against_osm =~ m/\.csv/ ) {
+		$osm_segments = OSM::LoadOSM_segment_csv($check_against_osm);
+	    } elsif ( $check_against_osm =~ m/\.osm/ ) {
+		$osm_segments = OSM::read_osm_file($check_against_osm);
+	    } else {
+		die "Unknown Datatype for $check_against_osm\n";
+	    }
 	    #print Dumper(\$osm_segments ) if $debug;
 	} else {
+
+	    # later we search in:
+	    #  ~/.osm/data/planet.osm.csv
+	    # /var/data/osm/planet.osm.csv
 
 	    my @path=qw( ./
 			 ~/openstreetmap.org/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
@@ -2230,6 +2302,7 @@ sub convert_Data(){
 	    my $osm_filename;
 	    my $home = $ENV{HOME}|| '~/';
 	    for my $path ( @path ) {
+
 		$osm_filename = "${path}osm.txt";
 		$osm_filename =~ s,\~/,$home/,;
 		printf STDERR "check $osm_filename for loading\n" if $debug;
@@ -2237,12 +2310,12 @@ sub convert_Data(){
 		last if -s $osm_filename;
 		$osm_filename='';
 	    }
-	    $osm_segments = OSM::LoadOSM_segment_txt($osm_filename);
+	    $osm_segments = OSM::LoadOSM_segment_csv($osm_filename);
 	};
     }
     
 
-   
+    
     my $count=0;
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
@@ -2289,20 +2362,32 @@ sub convert_Data(){
 	    printf STDERR "$filename: Read %5d Points in %d Tracks\n",$point_read_count,$track_read_count;
 	}
 
+
 	if ( @filter_area_files ) {
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
 	    GPS::print_count_data($new_tracks,"$filename: Area Filters to ");
 	}
 
-	
+	if ( $out_raw_gpx ){
+	    my $new_gpx_file = "$filename-raw.gpx";
+	    $new_gpx_file =~s/.gpx-raw.gpx/-raw.gpx/;
+	    GPX::write_gpx_file($new_tracks,$new_gpx_file);
+	};
+		
 	if ( $filter_duplicate_tracepoints ) {
 	    $new_tracks = GPS::filter_duplicate_tracepoints( $new_tracks,[],
-					      { dist => 20 });
+							 { dist => 20 });
 	};
 
+
 	if ( $check_against_osm ) {
+	    if ( $out_raw_gpx && $debug ){
+		my $new_gpx_file = "$filename-raw-pre-osm.gpx";
+		$new_gpx_file =~s/.gpx-raw-pre-osm.gpx/-raw-pre-osm.gpx/;
+		GPX::write_gpx_file($new_tracks,$new_gpx_file);
+	    };
 	    $new_tracks = OSM::check_against_osm( $new_tracks,$osm_segments,
-					      { dist => 20 });
+					      { dist => 30 });
 	};
 
 	if ( $split_tracks ) {
@@ -2313,7 +2398,7 @@ sub convert_Data(){
 
 	if ( $use_reduce_filter ) {
 	    $new_tracks = GPS::filter_data_reduce_points($new_tracks);
-	    GPS::print_count_data($new_tracks,"$filename: Data Reduce to ");
+	    GPS::print_count_data($new_tracks,"$filename: Data Reduce Pionts to ");
 	}
 
 
@@ -2370,7 +2455,7 @@ sub convert_Data(){
     if ( $draw_filter_areas ) {
 	my $filter_areas = GPS::draw_filter_areas();
 	GPX::write_gpx_file($filter_areas,"00__filter_areas.gpx");
-     }
+    }
 
     if ( $verbose) {
 	printf STDERR "Converting $count Files";
@@ -2396,6 +2481,7 @@ GetOptions (
 	     'proxy=s'             => \$PROXY,
 
 	     'out-osm'             => \$out_osm,
+	     'out-raw-gpx'         => \$out_raw_gpx,
 	     'split-tracks'        => \$split_tracks,
 	     'check_against_osm:s' => \$check_against_osm,
 	     'osm:s'               => \$check_against_osm,
@@ -2411,6 +2497,7 @@ GetOptions (
 
 if ( $do_all_filters ) {
     $out_osm           ||= 1;
+    $out_raw_gpx       ||= 1;
     $split_tracks      ||= 1;
     $use_reduce_filter ||= 1;
     $check_against_osm = 1 unless defined $check_against_osm;
@@ -2523,6 +2610,10 @@ osm-filter.pl [--man] [-d] [-v] [-h][--out-osm] [--limit-area] <File1.gps> [<Fil
 =item B<--man> Complete documentation
 
 This shows the Complete documentation
+
+=item B<--out-raw-gpx>
+
+Print raw converted output to filename-raw.gpx
 
 =item B<--out-osm>
 

@@ -50,15 +50,17 @@ WayDialogue::WayDialogue(QWidget* parent,
 	layout->setMargin(10);
 	layout->setSpacing(20);
 
+	/* 240806 remove due to uncertain area status
 	waComboBox = new QComboBox(this);
 	layout->addWidget(new QLabel("Way or area:",this),0,0);
 	waComboBox->insertItem(0,"way");
 	waComboBox->insertItem(1,"area");
 	waComboBox->setCurrentIndex(0);
 	layout->addWidget(waComboBox,0,1);
+	*/
 	
 	typeComboBox = new QComboBox(this);
-	layout->addWidget(new QLabel("Type:",this),1,0);
+	layout->addWidget(new QLabel("Type:",this),0,0);
 	for(int count=0; count<segTypes.size(); count++)
 	{
 		typeComboBox->insertItem (count,segTypes[count]);
@@ -67,15 +69,18 @@ WayDialogue::WayDialogue(QWidget* parent,
 	}
 	typeComboBox->setCurrentIndex(itemIndex);
 
-	layout->addWidget(typeComboBox,1,1);
-	layout->addWidget(new QLabel("Name:",this),2,0);
+	layout->addWidget(typeComboBox,0,1);
+	layout->addWidget(new QLabel("Name:",this),1,0);
 	nameEdit = new QLineEdit(this);
 	nameEdit->setText(name);
-	layout->addWidget(nameEdit,2,1);
-	layout->addWidget(new QLabel("Number:",this),3,0);
+	layout->addWidget(nameEdit,1,1);
+	layout->addWidget(new QLabel("Number:",this),2,0);
 	refEdit = new QLineEdit(this);
 	refEdit->setText(ref);
-	layout->addWidget(refEdit,3,1);
+	layout->addWidget(refEdit,2,1);
+	topL->addWidget(new QLabel("Note:",this));
+	noteText = new QTextEdit(this);
+	topL->addWidget(noteText);
 	QHBoxLayout *okcL=new QHBoxLayout();
 	topL->addLayout(okcL);
 	QPushButton *ok=new QPushButton("OK",this),
@@ -84,8 +89,10 @@ WayDialogue::WayDialogue(QWidget* parent,
 	okcL->addWidget(cancel);
 	QObject::connect(ok,SIGNAL(clicked()),this,SLOT(accept()));
 	QObject::connect(cancel,SIGNAL(clicked()),this,SLOT(reject()));
+	/*
 	QObject::connect(waComboBox,SIGNAL(activated(const QString&)),
 						this,SLOT(changeWA(const QString&)));
+						*/
 }
 
 void WayDialogue::changeWA(const QString& wayOrArea)

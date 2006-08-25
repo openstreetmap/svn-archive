@@ -81,18 +81,31 @@ public:
 		return tags["name"];
 	}
 
+	void setNote(const QString& n) 
+	{
+		//name = n;
+		tags["note"] = n;
+	}
+
+	QString getNote()
+	{
+		//return name;
+		return (tags.find("note")==tags.end()) ? "" : tags["note"];
+	}
+
 	void addTag(const QString& k,const QString& v)
 	{
 		tags[k] = v;
 	}
 	
-	void writeTags(QTextStream &outfile)
+	// 180806 don't write out 'no' tags by default
+	void writeTags(QTextStream &outfile, bool doNos = false)
 	{
 		// 080706 all tags written out, not just those of interest to osmeditor2
 		for(std::map<QString,QString>::iterator i=tags.begin(); 
 						i!=tags.end(); i++)
 		{
-			if(i->second!="")
+			if(i->second!="" && (i->second!="no" || doNos==true))
 			{
 				outfile << "<tag k='"<<i->first<<"' v='" << i->second << "'/>"
 				<<endl;

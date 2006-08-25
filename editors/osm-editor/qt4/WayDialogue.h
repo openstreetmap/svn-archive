@@ -25,6 +25,7 @@ using std::vector;
 #include <qdialog.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
+#include <qtextedit.h>
 
 namespace OpenStreetMap 
 {
@@ -37,6 +38,7 @@ Q_OBJECT
 private:
 	QComboBox * typeComboBox, *waComboBox;
 	QLineEdit * nameEdit, *refEdit;
+	QTextEdit *noteText;
 	vector<QString> wayTypes, areaTypes;
 	bool area;
 
@@ -48,6 +50,8 @@ public:
 	QString getType() { return typeComboBox->currentText(); }
 	QString getName() { return nameEdit->text(); }
 	QString getRef() { return refEdit->text(); }
+	QString getNote() { return noteText->toPlainText(); }
+	void setNote(const QString& note) { noteText->setPlainText(note); }
 	bool isArea() { return area; }
 
 public slots:

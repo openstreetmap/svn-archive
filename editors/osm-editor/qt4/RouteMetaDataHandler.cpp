@@ -14,7 +14,8 @@ bool RouteMetaData::testmatch(const RouteMetaData& indata)
 { 
 	return testmatch(foot,indata.foot) && testmatch(horse,indata.horse)
 				&& testmatch(bike,indata.bike) && testmatch(car,indata.car)
-				&& testmatch(routeClass,indata.routeClass);
+				&& testmatch(routeClass,indata.routeClass) &&
+					testmatch(railway,indata.railway);
 }
 
 // Tests an incoming aspect of the metadata (foot, horse etc) against the 
@@ -29,7 +30,7 @@ bool RouteMetaData::testmatch(const QString& requiredCriteria,
 		QStringList allowed = requiredCriteria.split("|");
 		for(int count=0; count<allowed.size(); count++)
 		{
-			if(indata==allowed[count]) 
+			if(indata==allowed[count])
 			{
 				return true;
 			}
@@ -107,7 +108,7 @@ void RouteMetaData::parseKV(const QString &key, const QString& value)
 QString RouteMetaData::preferred(const QString& property)
 {
 	QStringList allowed=property.split("|");
-	return allowed[0];
+	return (allowed[0]=="*") ? "" : allowed[0];
 }
 
 RouteMetaDataHandler::RouteMetaDataHandler()
@@ -132,14 +133,14 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 					"unsurfaced|track");
 	rData["RUPP"] = RouteMetaData ("yes", "yes", "yes", "unknown",  
 						"unsurfaced|track");
-	rData["minor road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
+	rData["minor road"] = RouteMetaData ("*", "*", "*", "*",  
 								"unclassified|minor");
-	rData["residential road"] = RouteMetaData ("yes", "yes", "yes", "yes",  
+	rData["residential road"] = RouteMetaData ("*", "*", "*", "*",  
 												"residential");
-	rData["B road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "secondary");
-	rData["A road"] = RouteMetaData ("yes", "yes", "yes", "yes",  "primary");
-	rData["motorway"] = RouteMetaData ("no", "no", "no", "yes",  "motorway");
-	rData["railway"] = RouteMetaData ("no", "no", "no", "no",  "", "rail");
+	rData["B road"] = RouteMetaData ("*", "*", "*", "*",  "secondary");
+	rData["A road"] = RouteMetaData ("*", "*", "*", "*",  "primary");
+	rData["motorway"] = RouteMetaData ("*", "*", "*", "*",  "motorway");
+	rData["railway"] = RouteMetaData ("*", "*", "*", "*",  "*", "rail");
 	rData["new forest track"] = RouteMetaData ("permissive|unofficial", 
 												"no", "permissive|unofficial", 
 												"no",  

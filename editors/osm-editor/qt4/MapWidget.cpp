@@ -1693,10 +1693,12 @@ void MapWidget::uploadWay()
 	}
 
 	WayDialogue *wd = new WayDialogue(this,segTypes,areaTypes);
+	wd->setNote(way->getNote());
 	if(wd->exec())
 	{
 		way->setName(wd->getName());
 		way->setType(wd->getType());
+		way->setNote(wd->getNote());
 		way->setRef(wd->getRef()); // areas shouldn't have refs really
 		way->setArea(wd->isArea());
 		QByteArray xml = way->toOSM();
@@ -1744,10 +1746,12 @@ void MapWidget::changeWayDetails()
 		WayDialogue *wd = new WayDialogue(this,segTypes,areaTypes,
 								selWay->getName(), selWay->getType(),
 								selWay->getRef());
+		wd->setNote(selWay->getNote());
 		if(wd->exec() && !wd->isArea())
 		{
 			selWay->setName(wd->getName());
 			selWay->setType(wd->getType());
+			selWay->setNote(wd->getNote());
 			selWay->setRef(wd->getRef());
 			QByteArray xml = selWay->toOSM();
 			if(liveUpdate)
@@ -1834,6 +1838,7 @@ void MapWidget::uploadNewWaypoints()
 		if(newNodes[count]->getType()!="trackpoint" &&
 			newNodes[count]->getType()!="node" &&
 			// Stop people uploading those ****** Garmin waypoints !!!!
+			newNodes[count]->getName()!="GARMIN" &&
 			newNodes[count]->getName().left(3)!="GRM") 
 		{
 			osmhttp.scheduleCommand("PUT",url,newNodes[count]->toOSM(),

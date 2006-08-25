@@ -32,6 +32,7 @@
 #   write more filters:
 #      - eliminate duplicate tracksegments (driving a street up and down)
 #      - elimiate trackpoints where the GPS was standing for a longer time at one point
+#      - Filter to eliminate all waypoints
 
 use strict;
 use warnings;
@@ -63,10 +64,11 @@ my $use_stdout        = 0;
 my $out_osm           = 0;
 my $out_raw_gpx       = 0;
 my $split_tracks      = 0;
-my @filter_area_files  = ();
-my $draw_filter_areas  = 0;
+my @filter_area_files = ();
+my $draw_filter_areas = 0;
 my $use_reduce_filter = 0;
-my $check_against_osm = undef;
+my $do_filter_clew   = 0;
+my $do_check_against_osm = undef;
 my $filter_duplicate_tracepoints = 0;
 my $do_all_filters    = 0;
 my $generate_ways     = 0;
@@ -385,7 +387,7 @@ sub tag {
 sub read_osm_file($) { # Insert Segments from osm File
     my $file_name = shift;
 
-    print("Reading OSM File $file_name\n") if $verbose || $debug;
+    print("Reading OSM Segment from File $file_name\n") if $verbose || $debug;
     print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
 
     print STDERR "Parsing file: $file_name\n" if $debug;
@@ -439,7 +441,7 @@ sub LoadOSM_segment_csv($)
 	Storable::store($segments   ,"$filename.storable");
     }
 
-    if ( $verbose) {
+    if ( $verbose >1 || $debug) {
 	printf STDERR "Read and parsed $filename";
 	Utils::print_time($start_time);
     }
@@ -447,7 +449,9 @@ sub LoadOSM_segment_csv($)
     return($segments);
 }
 
-
+# ------------------------------------------------------------------
+# reduce osm Segments to only those insiide the bounding box
+# This make comparison faster
 sub reduce_osm_segments($$) {
     my $all_osm_segments = shift;
     my $bounds = shift;
@@ -472,12 +476,51 @@ sub reduce_osm_segments($$) {
 	$count++;
 	push(@{$osm_segments},$segment);
     }
-    if ( $verbose || $debug) {
-	printf STDERR "Reduced OSM Data to $count( $all_count) OSM-Segments ";
+    if ( $verbose > 3 || $debug > 3 ) {
+	printf STDERR "		Reduced OSM Data to $count( $all_count) OSM-Segments ";
 	Utils::print_time($start_time);
     }
 
     return $osm_segments;
+}
+# ------------------------------------------------------------------
+# check if a nearby osm segment would fit
+sub is_osm_segment_nearby($$$){
+    my $track        = shift;
+    my $track_pos    = shift;
+    my $osm_segments = shift;
+
+    my $max_angle = 30;
+
+    my $elem0=$track->[$track_pos-1];
+    my $elem1=$track->[$track_pos];
+    my $elem2=$track->[$track_pos+1];
+    my $skip_point=0;
+    my $min_dist = 40000;
+    my $compare_dist = $elem1->{compare_dist};
+
+    for my $segment_num ( 0 .. $#{@{$osm_segments}} ) {
+	my $segment = $osm_segments->[$segment_num];
+	# The line from or to the element has to be fairly parallel
+	next unless
+	    ( abs ($elem0->{angle_n_r} - $segment->[4])  < $max_angle) ||
+	    ( abs ($elem1->{angle_n_r} - $segment->[4])  < $max_angle);
+	#print STDERR "abs_angle: $angle_n_r2\n" if $debug;
+
+	# Distance between line of segment($segment)  to trackpoint $elem1
+	my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
+							 $segment->[2],$segment->[3],
+							 $elem1->{lat},$elem1->{lon}
+							 );
+	$min_dist = $dist if $dist < $min_dist;
+	next if $dist > $compare_dist; # in m
+	printf STDERR "Elem is %3.1f m away from line\n",$dist
+	    if $debug >5;
+	$skip_point++;
+	last;
+    }
+    # printf STDERR "Min Dist: $min_dist Meter\n";
+    return $skip_point;
 }
 
 # ------------------------------------------------------------------
@@ -488,7 +531,6 @@ sub check_against_osm($$$){
     my $config       = shift;
 
     my $dist_osm_track = $config->{dist} || 40;
-    my $max_angle = 30;
     my $start_time=time();
 
     my $bounds = GPS::get_bounding_box($tracks);
@@ -505,79 +547,50 @@ sub check_against_osm($$$){
 
     my $all_points = 0;
     my $new_points = 0;
-    my $last_compare_dist=0;
     my $track_count=0;
+    my $skiped_points=0;
     for my $track ( @{$tracks->{tracks}} ) {
 	$track_count++;
 	next if !$track;
 	my $new_track=[];
-	my $angle_n_r0=-999999;
-	my $angle_n_r2=-999999;
-	for my $element_num ( 0 .. $#{@{$track}} ) {
-	    my $elem0=$track->[$element_num-1];
-	    my $elem1=$track->[$element_num];
-	    my $elem2=$track->[$element_num+1];
+	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	    my $elem0=$track->[$track_pos-1];
+	    my $elem1=$track->[$track_pos];
+	    my $elem2=$track->[$track_pos+1];
 	    $all_points++;
 	    my $skip_point=0;
-	    my $min_dist = 40000;
 	    my $pdop = $elem1->{pdop};
 	    my $compare_dist=$dist_osm_track;
 	    if ( defined ( $pdop ) &&  ($pdop >0) ) {
 		$compare_dist= $pdop;
 		$compare_dist=10 if $compare_dist <10;
 	    }
+	    $elem1->{compare_dist} = $compare_dist;
 
-	    if ( $last_compare_dist != $compare_dist ) {
-		print STDERR "check_against_osm() compare_dist: $compare_dist\n" 
-		    if ($verbose > 1) || ($debug > 1 );
-		$last_compare_dist = $compare_dist;
-	    };
+	    $elem0->{angle_n_r} = $track_pos > 0 ?
+		Geometry::angle_north_relative($elem0,$elem1) :
+		-999999;
+	    
+	    $elem1->{angle_n_r}  = 	$track_pos < $#{@{$track}} ?
+		Geometry::angle_north_relative($elem1,$elem2) : 
+		-999999;
+	    
+	    
+	    #print STDERR "Track: $track_count Element: $track_pos\n";
+	    $elem1->{skip_point}= is_osm_segment_nearby($track,$track_pos,$osm_segments);
 
-	    if ( $element_num > 0 ) {
-		$angle_n_r0 = Geometry::angle_north_relative($elem0,$elem1);
-	    }
-	    if ( $element_num < $#{@{$track}} ) {
-		$angle_n_r2 = Geometry::angle_north_relative($elem1,$elem2);
-	    }
-
-	    my $segment_count=0;
-	    #print STDERR "Track: $track_count Element: $element_num\n";
-	    for my $segment ( @{$osm_segments} ) {
-		$segment_count++;
-		# The line from or to the element has to be fairly parallel
-		next unless
-		    ( abs ($angle_n_r0 - $segment->[4])  < $max_angle) ||
-		    ( abs ($angle_n_r2 - $segment->[4])  < $max_angle);
-		# print STDERR "abs_angle: $abs_angle\n" if $debug;
-
-		# Distance between line of segment($segment)  to trackpoint $elem1
-		my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
-								 $segment->[2],$segment->[3],
-								 $elem1->{lat},$elem1->{lon}
-								 );
-		if ( $dist < 30) {
-		    #print STDERR "Dist $dist Segment $segment_count\n";
-		    #join(" , ",@{$segment})."  Elem:".Dumper(\$elem1);
-		}
-		$min_dist = $dist if $dist < $min_dist;
-		next if $dist > $compare_dist; # in m
-		printf STDERR "Elem is %3.1f m away from line\n",$dist
-		    if $debug >5;
-		$skip_point++;
-		last;
-	    }
-	    # printf STDERR "Min Dist: $min_dist Meter\n";
-	    $elem1->{skip_point}++;
 	}
-	for my $element_num ( 0 .. $#{@{$track}} ) {
-	    my $elem0=$track->[$element_num-1];
-	    my $elem1=$track->[$element_num];
-	    my $elem2=$track->[$element_num+1];
+
+	# Copy only those with skip_point set to 1
+	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	    my $elem0=$track->[$track_pos-1];
+	    my $elem1=$track->[$track_pos];
+	    my $elem2=$track->[$track_pos+1];
 	    my $skip_point = $elem1->{skip_point};
 	    # This should only skip the point if the one before and after are skiped too
 	    # But currentls it's not working yet
-	    $skip_point=0 if ( $element_num > 0             ) && ( ! $elem0->{skip_point} );
-	    $skip_point=0 if ( $element_num < $#{@{$track}} ) && ( ! $elem2->{skip_point} );
+	    $skip_point=0 if ( $track_pos > 0             ) && ( ! $elem0->{skip_point} );
+	    $skip_point=0 if ( $track_pos < $#{@{$track}} ) && ( ! $elem2->{skip_point} );
 
 	    if ( $skip_point ) {
 		my $num_elem=scalar(@{$new_track});
@@ -585,6 +598,7 @@ sub check_against_osm($$$){
 		    push(@{$new_tracks->{tracks}},$new_track);
 		}
 		$new_track=[];
+		$skiped_points++;
 	    } else {
 		push(@{$new_track},$elem1);
 		$new_points++;
@@ -593,8 +607,9 @@ sub check_against_osm($$$){
 	push(@{$new_tracks->{tracks}},$new_track);
     }
 
-    if ( $debug || $verbose) {
-	printf STDERR "Reduced  $new_points($all_points) Points comparing to OSM.txt";
+    if ( $debug || $verbose >1) {
+	printf STDERR "		Eliminated  $skiped_points ($all_points) Points comparing to ".
+	    (scalar @{$osm_segments})." OSM Segments";
 	Utils::print_time($start_time);
     }
 
@@ -614,7 +629,7 @@ sub read_gps_file($) {
 
     my $start_time=time();
 
-    printf STDERR ("Reading $filename\n") if $verbose || $debug;
+    printf STDERR ("Reading $filename\n") if $verbose>1 || $debug;
     printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
 
     print STDERR "Parsing file: $filename\n" if $debug;
@@ -680,7 +695,7 @@ sub read_file($$) {
     my $filename     = shift;
     my $gpsbabel_type = shift;
 
-    printf STDERR ("Reading $filename\n") if $verbose || $debug;
+    printf STDERR ("Reading $filename\n") if $verbose>1 || $debug;
     printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
 
     my $gpsbabel_call="gpsbabel  -i $gpsbabel_type -f '$filename' -o gpx -F - ";
@@ -923,7 +938,7 @@ sub read_file($) {
 	$elem ={};
     }
     push(@{$new_tracks->{tracks}},$new_track);
-    if ( $verbose) {
+    if ( $verbose >1 ) {
 	printf STDERR "Read and parsed $filename";
 	Utils::print_time($start_time);
     }
@@ -973,7 +988,7 @@ sub read_gpx_file($) {
 	print STDERR "WARNING: Could not parse osm data\n";
 	return {tracks=>[]} ;
     }
-    if ( $verbose) {
+    if ( $verbose >1 ) {
 	printf STDERR "Read and parsed $filename";
 	Utils::print_time($start_time);
     }
@@ -997,7 +1012,7 @@ sub read_gpx_file($) {
 	    my $found=0;
 	    for my $type ( qw ( name ele
 				cmt desc
-				sym
+				sym pdop
 				course  fix hdop sat speed time )) {
 		if ( ref($elem) eq "GPX::$type" ){
 		    $new_wpt->{$type} = $elem->{Kids}->[0]->{Text};
@@ -1218,7 +1233,7 @@ sub read_gpsdrive_track_file($) {
 	bless($elem,"GPSDrive::gps-point");
     }
     push(@{$new_tracks->{tracks}},$new_track);
-    if ( $verbose) {
+    if ( $verbose >1 ) {
 	printf STDERR "Read and parsed $filename";
 	Utils::print_time($start_time);
     }
@@ -1508,6 +1523,52 @@ sub draw_filter_areas(){
     return $new_tracks;
 }
 
+
+# ------------------------------------------------------------------
+# Enrich Track Data by adding:;
+#    Distance to next point
+#    angle_n: Angle to next point compared to north
+#    angle_n_r: Angle to next point compared to north ignoring direction
+#    angle: Angle between previous segment and following segment
+#    compare_dist: is pdop or any other usefull distance in
+#                  meter we can later use for distance comparison
+sub enrich_single_track($){
+    my $track = shift;
+    my $last_track_point = $#{@{$track}};
+    my $compare_dist=30;
+    for my $track_pos ( 0 ..  $last_track_point) {
+	my $elem0=$track->[$track_pos-1];
+	my $elem1=$track->[$track_pos];
+	my $elem2=$track->[$track_pos+1];
+
+	my $pdop = $elem1->{pdop};
+	if ( defined ( $pdop ) &&  ($pdop >0) ) {
+	    $compare_dist= $pdop;
+	}
+	$compare_dist=10 if $compare_dist <10;
+	$elem1->{compare_dist} = $compare_dist;
+	
+	if ( $track_pos < $last_track_point ) {
+	    $elem1->{angle_n}   = Geometry::angle_north($elem1,$elem2);
+	    $elem1->{angle_n_r} = Geometry::angle_north_relative($elem1,$elem2);
+	} else {
+	    $elem1->{angle_n}   = -999999;
+	    $elem1->{angle_n_r} = -999999;
+	}
+	if ( ($track_pos > 0) &&
+	     ( $track_pos < $last_track_point ) ) {
+	    $elem1->{angle} = 
+		Geometry::angle_north($elem0,$elem1)  -
+		Geometry::angle_north($elem1,$elem2);
+	} else {
+	    $elem1->{angle} =0;
+	}
+	# Distance between line of segment($segment)  to trackpoint $elem1
+	$elem1->{dist} = 1000*Geometry::distance_point_point_Km($elem1,$elem2);
+    }
+}
+
+
 # ------------------------------------------------------------------
 # Add things like speed, time, .. to the GPS Data
 # and the split the tracks if we think it's necessary
@@ -1669,13 +1730,14 @@ sub count_data($){
 
 # ------------------------------------------------------------------
 # Print Number of points/tracks with a comment
-sub print_count_data($$){
-    my $tracks      = shift; # reference to tracks list
-    my $comment = shift;
+sub print_count_data($$$){
+    my $filename = shift;
+    my $tracks   = shift; # reference to tracks list
+    my $comment  = shift;
 
     my ($track_count,$point_count) = GPS::count_data($tracks);
     if ( $verbose || $debug) {
-	printf STDERR "$comment %5d Points in %d Tracks\n",$point_count,$track_count;
+	printf STDERR "$filename: %5d Points in %d Tracks $comment\n",$point_count,$track_count;
     }
 }
 
@@ -1883,24 +1945,28 @@ sub filter_duplicate_wpt($){
     for my $elem ( @{$tracks->{wpt}} ) {
 	my $name = $elem->{name};
 	#printf STDERR Dumper(\$elem);
-	if ( defined $wpt_by_name{$name}) {
-	    my $found =0;
-	    for my $wpt1( @{$wpt_by_name{$name}} ) {
-		if ( compare_wpt( $elem,$wpt1 ) ) {
-		    $found=1;
-		    last;
+	if ( defined($name) && $name ) {
+	    if ( defined $wpt_by_name{$name}) {
+		my $found =0;
+		for my $wpt1( @{$wpt_by_name{$name}} ) {
+		    if ( compare_wpt( $elem,$wpt1 ) ) {
+			$found=1;
+			last;
+		    }
 		}
+		if ( $found ) {
+		    printf STDERR "wpt($name) is duplicate ignoring\n"
+			if $verbose >5 || $debug;
+		    next;
+		}
+		push(@{$wpt_by_name{$name}}, $elem);
+	    } else {
+		$wpt_by_name{$name} = [ $elem ];
 	    }
-	    if ( $found ) {
-		printf STDERR "wpt($name) is duplicate ignoring\n"
-		    if $verbose >5 || $debug;
-		next;
-	    }
-	    push(@{$wpt_by_name{$name}}, $elem);
+	    push(@new_wpt,$elem);
 	} else {
-	    $wpt_by_name{$name} = [ $elem ];
+	    warn "unnamed Waypoint".Dumper(\$elem)."\n" if $verbose || $debug;
 	}
-	push(@new_wpt,$elem);
     }
 
     $tracks->{wpt}=\@new_wpt;
@@ -1998,6 +2064,142 @@ sub filter_duplicate_tracepoints($$$){
     if ( $debug || $verbose) {
 	printf STDERR "Found $count_points Points already in other Tracks.".
 	    "This leaves $new_points ";
+	Utils::print_time($start_time);
+    }
+
+    return $new_tracks;
+}
+
+
+
+
+# ------------------------------------------------------------------
+# scan over the elements and return the number of elements which 
+# are inside a boundingbox with a specified length
+sub find_points_in_bounding_box_for_track($$$){
+    my $track     = shift; # reference to tracks list
+    my $track_pos = shift; # First Trackpoint to look at
+    my $max_dist  = shift; # Height/width in km for bounding box
+
+    my $lat_min =  90;
+    my $lat_max = -90;
+    my $lon_min =  180;
+    my $lon_max = -180;
+
+    my $count=0;
+
+    my $last_track_point = $#{@{$track}};
+    for my $track_pos_test ( $track_pos .. $#{@{$track}} ) {
+	my $elem  =$track->[$track_pos_test];
+	$lat_min  = $elem->{lat}	    if $lat_min > $elem->{lat};
+	$lat_max  = $elem->{lat}	    if $lat_max < $elem->{lat};
+	
+	$lon_min  = $elem->{lon}	    if $lon_min > $elem->{lon};
+	$lon_max  = $elem->{lon}	    if $lon_max < $elem->{lon};
+	
+	my $dist = Geometry::distance_point_point_Km(
+						 { lat => $lat_min,lon => $lon_min},
+						 { lat => $lat_max,lon => $lon_max} );
+	last if $dist>$max_dist;
+	$count++;
+    }
+    #print STDERR "Bbox($count)\n" if $debug>1;
+    return $count;
+}
+
+# ------------------------------------------------------------------
+# check if a the next n points are a GPS inacuracy clew
+sub is_gps_clew($$){
+    my $track        = shift;
+    my $track_pos    = shift;
+
+    my $max_angle = 90;
+    my $skip_point=0;
+
+    my $count_clew=0;
+    # We work with a boundingbox too
+    # we just have to return a number of segments which belong to the clew
+    # This reduces the cost for this action dramatically
+    my $bbox=find_points_in_bounding_box_for_track($track,$track_pos,0.040);
+    for my $track_pos_test ( $track_pos .. Geometry::min($track_pos+$bbox,$#{@{$track}}) ) {
+	#print "track_pos_test($track_pos): $track_pos_test\n";
+	my $elem0 = $track->[$track_pos_test];
+	my $elem1 = $track->[$track_pos_test+1];
+	last if	$elem0->{dist} > $elem0->{compare_dist};
+	next if abs ($elem0->{angle}) < 20;
+	last if abs ($elem0->{angle})+abs($elem1->{angle})<40;
+	$count_clew++;
+    }
+
+    #print "$count_clew\n" if $count_clew>1;
+    return $count_clew if $count_clew>7;
+    return 0 ;
+}
+
+# ------------------------------------------------------------------
+# check if new trackpoints are on existing duplicate to other gpx tracks
+sub filter_gps_clew($$){
+    my $tracks       = shift; # reference to tracks list
+    my $config       = shift;
+
+    my $dist_osm_track = $config->{dist} || 40;
+    my $start_time=time();
+
+    my $new_tracks={tracks=>[],wpt=>[]};
+
+    # Keep WPT
+    for my $wpt ( @{$tracks->{wpt}} ) {
+	next unless $wpt;
+	push(@{$new_tracks->{wpt}},$wpt);
+    }
+
+    my $all_points = 0;
+    my $track_count=0;
+    my $skiped_points=0;
+    for my $track ( @{$tracks->{tracks}} ) {
+	$track_count++;
+	next if !$track;
+
+	GPS::enrich_single_track($track);
+
+	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	    my $elem=$track->[$track_pos];
+	    my $count_clew = is_gps_clew($track,$track_pos);
+	    for ( 1 .. $count_clew){
+		$track_pos++;
+		last if $track_pos > $#{@{$track}};
+		$track->[$track_pos]->{skip_point}= 1;
+	    }
+	}
+
+	# Copy only those with skip_point set to 0
+	my $new_track=[];
+	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	    $all_points ++;
+	    my $elem0=$track->[$track_pos-1];
+	    my $elem1=$track->[$track_pos];
+	    my $elem2=$track->[$track_pos+1];
+	    my $skip_point = $elem1->{skip_point};
+	    # This should only skip the point if the one before and after are skiped too
+	    # But currentls it's not working yet
+	    $skip_point=0 if ( $track_pos > 0             ) && ( ! $elem0->{skip_point} );
+	    $skip_point=0 if ( $track_pos < $#{@{$track}} ) && ( ! $elem2->{skip_point} );
+
+	    if ( $skip_point ) {
+		my $num_elem=scalar(@{$new_track});
+		if ( $num_elem >2 ) {
+		    push(@{$new_tracks->{tracks}},$new_track);
+		}
+		$new_track=[];
+		$skiped_points++;
+	    } else {
+		push(@{$new_track},$elem1);
+	    }	}
+	push(@{$new_tracks->{tracks}},$new_track);
+    }
+
+    if ( $debug || $verbose >1) {
+	printf STDERR "		Eliminated $skiped_points ($all_points) Points looking for clews";
 	Utils::print_time($start_time);
     }
 
@@ -2279,14 +2481,14 @@ sub convert_Data(){
 
     
     my $osm_segments;
-    if ( $check_against_osm ) {
-	if ( -s $check_against_osm ) {
-	    if (  $check_against_osm =~ m/\.csv/ ) {
-		$osm_segments = OSM::LoadOSM_segment_csv($check_against_osm);
-	    } elsif ( $check_against_osm =~ m/\.osm/ ) {
-		$osm_segments = OSM::read_osm_file($check_against_osm);
+    if ( $do_check_against_osm ) {
+	if ( -s $do_check_against_osm ) {
+	    if (  $do_check_against_osm =~ m/\.csv/ ) {
+		$osm_segments = OSM::LoadOSM_segment_csv($do_check_against_osm);
+	    } elsif ( $do_check_against_osm =~ m/\.osm/ ) {
+		$osm_segments = OSM::read_osm_file($do_check_against_osm);
 	    } else {
-		die "Unknown Datatype for $check_against_osm\n";
+		die "Unknown Datatype for $do_check_against_osm\n";
 	    }
 	    #print Dumper(\$osm_segments ) if $debug;
 	} else {
@@ -2319,7 +2521,11 @@ sub convert_Data(){
     my $count=0;
     while ( $filename = shift @ARGV ) {
 	my $new_tracks;
-	if ( $filename =~ m/-converted.gpx$/ ) {
+	if ( $filename =~ m/-raw(|-osm|-pre-osm|-pre-clew)\.gpx$/ ) {
+	    printf STDERR "$filename: Skipping for read. These are my own files.\n";
+	    next;
+	}
+	if ( $filename =~ m/-converted\.gpx$/ ) {
 	    printf STDERR "$filename: Skipping for read. These are my own files.\n";
 	    next;
 	}
@@ -2359,13 +2565,7 @@ sub convert_Data(){
 	}
 	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
 	if ( $verbose || $debug) {
-	    printf STDERR "$filename: Read %5d Points in %d Tracks\n",$point_read_count,$track_read_count;
-	}
-
-
-	if ( @filter_area_files ) {
-	    $new_tracks = GPS::filter_data_by_area($new_tracks);
-	    GPS::print_count_data($new_tracks,"$filename: Area Filters to ");
+	    printf STDERR "$filename: %5d Points in %d Tracks read\n",$point_read_count,$track_read_count;
 	}
 
 	if ( $out_raw_gpx ){
@@ -2374,31 +2574,52 @@ sub convert_Data(){
 	    GPX::write_gpx_file($new_tracks,$new_gpx_file);
 	};
 		
+
+	if ( $do_filter_clew ) {
+	    if ( $out_raw_gpx && $debug >3 ){
+		my $new_gpx_file = "$filename-raw-pre-clew.gpx";
+		$new_gpx_file =~s/.gpx-raw-pre-clew.gpx/-raw-pre-clew.gpx/;
+		GPX::write_gpx_file($new_tracks,$new_gpx_file);
+	    };
+	    $new_tracks = GPS::filter_gps_clew( $new_tracks,
+					      { dist => 30 });
+	    GPS::print_count_data($filename,$new_tracks,"after Clew Filtering");
+	};
+
+
+	if ( @filter_area_files ) {
+	    $new_tracks = GPS::filter_data_by_area($new_tracks);
+	    GPS::print_count_data($filename,$new_tracks," after Area Filters");
+	}
+
+
 	if ( $filter_duplicate_tracepoints ) {
 	    $new_tracks = GPS::filter_duplicate_tracepoints( $new_tracks,[],
 							 { dist => 20 });
 	};
 
 
-	if ( $check_against_osm ) {
-	    if ( $out_raw_gpx && $debug ){
+
+	if ( $do_check_against_osm ) {
+	    if ( $out_raw_gpx && $debug >3 ){
 		my $new_gpx_file = "$filename-raw-pre-osm.gpx";
 		$new_gpx_file =~s/.gpx-raw-pre-osm.gpx/-raw-pre-osm.gpx/;
 		GPX::write_gpx_file($new_tracks,$new_gpx_file);
 	    };
 	    $new_tracks = OSM::check_against_osm( $new_tracks,$osm_segments,
 					      { dist => 30 });
+	    GPS::print_count_data($filename,$new_tracks,"after filtering against existing OSM Data");
 	};
 
 	if ( $split_tracks ) {
 	    $new_tracks = GPS::split_tracks($new_tracks,$filename,
 					{ max_speed => 200 });
-	    GPS::print_count_data($new_tracks,"$filename: enriching/splitting to" );
+	    GPS::print_count_data($filename,$new_tracks," after enriching/splitting" );
 	}
 
 	if ( $use_reduce_filter ) {
 	    $new_tracks = GPS::filter_data_reduce_points($new_tracks);
-	    GPS::print_count_data($new_tracks,"$filename: Data Reduce Pionts to ");
+	    GPS::print_count_data($filename,$new_tracks,"after Data Reduce Points");
 	}
 
 
@@ -2421,8 +2642,8 @@ sub convert_Data(){
 
 	GPS::add_tracks($all_tracks,$new_tracks);
 	if ( $point_count && $track_count ) {
-	    printf STDERR "Added:  %5d(%5d) Points in %3d(%3d) Tracks for %s\n",
-	    $point_count,$point_read_count,$track_count,$track_read_count,$filename;
+	    printf STDERR "$filename: %5d(%5d) Points in %3d(%3d) Tracks added\n",
+	    $point_count,$point_read_count,$track_count,$track_read_count;
 
 	}
 	if ( $verbose ) {
@@ -2436,11 +2657,11 @@ sub convert_Data(){
     GPS::filter_duplicate_wpt($all_tracks);
 
 
-    GPS::print_count_data($all_tracks,"Result:  after complete processing ");
+    GPS::print_count_data("Result:",$all_tracks,"after complete processing");
 
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
-    if ($track_count && $point_count) {
-	if (  $out_osm) {
+    #if ($track_count && $point_count) {
+	if (  $out_osm ) {
 	    my $points = OSM::Tracks2osm($all_tracks,$filename);
 	    OSM::write_osm_file("00__combination.osm",$points);
 	}
@@ -2450,7 +2671,7 @@ sub convert_Data(){
 	    } else {
 		GPX::write_gpx_file($all_tracks,"00__combination.gpx");
 		};
-    }
+    #}
 
     if ( $draw_filter_areas ) {
 	my $filter_areas = GPS::draw_filter_areas();
@@ -2483,9 +2704,10 @@ GetOptions (
 	     'out-osm'             => \$out_osm,
 	     'out-raw-gpx'         => \$out_raw_gpx,
 	     'split-tracks'        => \$split_tracks,
-	     'check_against_osm:s' => \$check_against_osm,
-	     'osm:s'               => \$check_against_osm,
+	     'check_against_osm:s' => \$do_check_against_osm,
+	     'osm:s'               => \$do_check_against_osm,
              'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
+	     'filter-clew'     => \$do_filter_clew,
 	     'use_reduce_filter'   => \$use_reduce_filter,
 	     'filter-area:s@'      => \@filter_area_files,
 	     'generate_ways'       => \$generate_ways,
@@ -2496,11 +2718,12 @@ GetOptions (
     or pod2usage(1);
 
 if ( $do_all_filters ) {
-    $out_osm           ||= 1;
-    $out_raw_gpx       ||= 1;
-    $split_tracks      ||= 1;
-    $use_reduce_filter ||= 1;
-    $check_against_osm = 1 unless defined $check_against_osm;
+    $out_osm            ||= 1;
+    $out_raw_gpx        ||= 1;
+    $split_tracks       ||= 1;
+    $use_reduce_filter  ||= 1;
+    $do_filter_clew     ||= 1;
+    $do_check_against_osm = 1 unless defined $do_check_against_osm;
     @filter_area_files || push(@filter_area_files,"");
 #    $filter_duplicate_tracepoints=1;
 }
@@ -2706,6 +2929,9 @@ AND: they are not tested :-(
 
 The default area-filter rule is allow the rest.
 
+=irem B<--filter-clew>
+
+Filter out these little nasty gps accuracies if you are standing still
 
 =item B<--filter-all>
 

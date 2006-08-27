@@ -13,6 +13,12 @@ use Exporter; require DynaLoader; require AutoLoader;
  distance_line_point
 );
 
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
+
 # ------------------------------------------------------------------
 # Distance in Km between 2 geo points with lat/lon
 # Wild estimation of Earth radius 40.000Km

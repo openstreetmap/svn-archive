@@ -23,13 +23,13 @@
 #
 # Joerg Ostertag <osm-filter.openstreetmap@ostertag.name>
 # TODO:
-#   eliminate duplicate waypoints
-#   area filter for waypoints
-#   keep name of Tracks
-#   eliminate duplicate Tracks
-#   cut out part of tracks which cover the same road
-#   make limits (max_speed, max_line_dist, ...) configurable
-#   write more filters:
+#   - eliminate duplicate waypoints
+#   - area filter for waypoints
+#   - eliminate duplicate Tracks
+#   - cut out part of tracks which cover the same road
+#   - make limits (max_speed, max_line_dist, ...) configurable
+#   - add config file 
+#   - write more filters:
 #      - eliminate duplicate tracksegments (driving a street up and down)
 #      - elimiate trackpoints where the GPS was standing for a longer time at one point
 #      - Filter to eliminate all waypoints
@@ -97,6 +97,16 @@ my $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
 package OSM;
 ##################################################################
 use Storable;
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
 
 ###########################################
 
@@ -415,6 +425,12 @@ package Kismet;
 ##################################################################
 use Date::Parse;
 use Data::Dumper;
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
+
 # -----------------------------------------------------------------------------
 # Read GPS Data from Kismet File
 sub read_gps_file($) { 
@@ -488,6 +504,11 @@ package Gpsbabel;
 ##################################################################
 use IO::File;
 
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
+
 
 # -----------------------------------------------------------------------------
 # Read GPS Data with the help of gpsbabel converting a file to a GPX-File
@@ -511,7 +532,9 @@ sub read_file($$) {
 	warn "Cannot Convert $filename as Type $gpsbabel_type\n";
 	return $data;
     }
-    GPX::read_gpx_file($fh);
+    $data = GPX::read_gpx_file($fh);
+    $data->{filename} = $filename;
+    return $data;
 }
 
 ##################################################################
@@ -522,6 +545,11 @@ use Date::Parse;
 use Data::Dumper;
 use Date::Parse;
 use Date::Manip;
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from NMEA - File
@@ -764,6 +792,11 @@ use Data::Dumper;
 use Date::Parse;
 use Date::Manip;
 use POSIX qw(strftime);
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from GPX - File
@@ -1009,6 +1042,11 @@ package GPSDrive;
 use Date::Parse;
 use Data::Dumper;
 
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
+
 # -----------------------------------------------------------------------------
 # Read GPSDrive Track Data
 sub read_gpsdrive_track_file($) { 
@@ -1099,6 +1137,11 @@ package GPS;
 use Date::Parse;
 use Data::Dumper;
 use Math::Trig;
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
@@ -2081,6 +2124,11 @@ package OSM;
 ##################################################################
 
 use Data::Dumper;
+
+use Geo::Geometry;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
 
 #no warnings 'deprecated';
 

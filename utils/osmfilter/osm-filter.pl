@@ -2552,6 +2552,7 @@ sub convert_Data(){
 
 
     GPS::print_count_data($all_tracks,"after complete processing");
+    print_time($start_time);
 
     ($track_count,$point_count) =   GPS::count_data($all_tracks);
     if (  $out_osm ) {

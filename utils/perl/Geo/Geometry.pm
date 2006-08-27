@@ -1,20 +1,15 @@
 ##################################################################
-package Utils::Geometry;
+package Geo::Geometry;
 ##################################################################
 
 use Exporter; require DynaLoader; require AutoLoader;
 @ISA = qw(Exporter DynaLoader);
-@EXPORT = qw(
- distance_point_point_Km
- distance_degree_point_point
- angle_north
- angle_north_relative
- distance_line_point_Km
- distance_line_point
-);
+@EXPORT = qw( distance_point_point_Km distance_degree_point_point angle_north
+	      angle_north_relative distance_line_point_Km distance_line_point
+	      );
 
+use Math::Trig;
 
-use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;

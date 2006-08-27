@@ -92,144 +92,6 @@ my $osm_way_number     = $first_id;
 my $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
 
 
-
-##################################################################
-package Geometry;
-##################################################################
-
-# ------------------------------------------------------------------
-# Distance in Km between 2 geo points with lat/lon
-# Wild estimation of Earth radius 40.000Km
-# At the poles we are completely off, since we assume the 
-# lat/lon both have 40000Km radius, which is completely wrong
-# if you are not at the aequator
-sub distance_point_point_Km($$) {
-    my $p1 = shift;
-    my $p2 = shift;
-    no warnings 'deprecated';
-
-    return 999999999 
-	unless defined($p1) && defined($p2);
-
-    my $lat1 = $p1->{'lat'};
-    my $lon1 = $p1->{'lon'};
-    my $lat2 = $p2->{'lat'};
-    my $lon2 = $p2->{'lon'};
-
-    return 999999999 
-	unless defined($lat1) && defined($lon1);
-    return 999999999 
-	unless defined($lat2) && defined($lon2);
-
-    
-    # Distance
-    my $delta_lat=$lat1-$lat2;
-    my $delta_lon=$lon1-$lon2;
-    return sqrt($delta_lat*$delta_lat+$delta_lon*$delta_lon)*40000/360;
-    
-}
-
-# ------------------------------------------------------------------
-# Distance between 2 geo points with lat/lon, 
-# result: (delta_lat,delta_lon) in degrees
-sub distance_degree_point_point($$) {
-    my $p1 = shift;
-    my $p2 = shift;
-
-    return (999999999,999999999)
-	unless defined($p1) && defined($p2);
-
-    my $lat1 = $p1->{lat};
-    my $lon1 = $p1->{lon};
-    my $lat2 = $p2->{lat};
-    my $lon2 = $p2->{lon};
-    
-    # Distance
-    my $delta_lat=$lat1-$lat2;
-    my $delta_lon=$lon1-$lon2;
-    return $delta_lat,$delta_lon;
-    
-}
-
-# ------------------------------------------------------------------
-# Angle from North
-# East is  +0 ..   180
-# West is  -0 .. - 180
-sub angle_north($$){
-    my $p1 = shift;
-    my $p2 = shift;
-
-    my $lat1 = $p1->{lat};
-    my $lon1 = $p1->{lon};
-    my $lat2 = $p2->{lat};
-    my $lon2 = $p2->{lon};
-    
-    # Distance
-    my $delta_lat=$lat1-$lat2;
-    my $delta_lon=$lon1-$lon2;
-
-    # Angle
-    my $angle = - rad2deg(atan2($delta_lat,$delta_lon));
-    return $angle;
-}
-
-# ------------------------------------------------------------------
-# Angle from North relative
-# so if you exchange the two points of the segment the angle keeps the same
-# result is between  +0 ..  180
-sub angle_north_relative($$){
-    my $p1 = shift;
-    my $p2 = shift;
-    my $angle = angle_north($p1,$p2);
-    $angle += 180 if $angle < 0;
-    $angle -= 180 if $angle >180;
-    return $angle;
-}
-
-# ------------------------------------------------------------------
-# Minimal Distance between line and point in degrees
-sub distance_line_point_Km($$$$$$) {
-    return distance_line_point(@_)*40000/360;
-}
-# ------------------------------------------------------------------
-# Minimal Distance between line and point in degrees
-sub distance_line_point($$$$$$) {
-    my $x1 = shift;
-    my $y1 = shift;
-    my $x2 = shift;
-    my $y2 = shift;
-
-    my $xp = shift;
-    my $yp = shift;
-
-
-    printf STDERR "distance_line_point(%f,%f, %f,%f,   %f,%f)\n", $x1, $y1, $x2, $y2,  $xp, $yp
-	if ( $debug >10 ) ;
-
-    my $dx1p = $x1 - $xp;
-    my $dx21 = $x2 - $x1;
-    my $dy1p = $y1 - $yp;
-    my $dy21 = $y2 - $y1;
-    my $frac = $dx21 * $dx21 + $dy21 * $dy21;
-
-    if ( $frac == 0 ) {
-	return(sqrt(($x1-$xp)*($x1-$xp) + ($y1-$yp)*($y1-$yp)));
-    }
-
-    my $lambda = -($dx1p * $dx21 + $dy1p * $dy21) / $frac;
-    printf STDERR "distance_line_point(): lambda_1: %f\n",$lambda
-	if ( $debug > 10 );
-
-    $lambda = min(max($lambda,0.0),1.0);
-    
-    printf STDERR "distance_line_point(): lambda: %f\n",$lambda
-	if ( $debug > 10 ) ;
-
-    my $xsep = $dx1p + $lambda * $dx21;
-    my $ysep = $dy1p + $lambda * $dy21;
-    return sqrt($xsep * $xsep + $ysep * $ysep);
-}
-
 ##################################################################
 package File;
 ##################################################################
@@ -328,7 +190,7 @@ sub segment {
     my $node2 = $read_osm_nodes->{$osm_obj->{to}};
     ($segment[0],$segment[1],$segment[2],$segment[3]) =
 	($node1->{lat},$node1->{lon},$node2->{lat},$node2->{lon});
-    $segment[4] = Geometry::angle_north_relative(
+    $segment[4] = angle_north_relative(
 				    { lat => $segment[0] , lon => $segment[1] },
 				    { lat => $segment[2] , lon => $segment[3] });
     #$segment[5] = $attrs{name} if $debug;
@@ -409,7 +271,7 @@ sub LoadOSM_segment_csv($)
 	    my @segment;
 	    my $dummy;
 	    ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
-	    $segment[4] = Geometry::angle_north_relative(
+	    $segment[4] = angle_north_relative(
 					    { lat => $segment[0] , lon => $segment[1] },
 					    { lat => $segment[2] , lon => $segment[3] });
 	    $segment[5] = $dummy if $debug;
@@ -487,7 +349,7 @@ sub is_segment_of_list_nearby($$$){
 	#print STDERR "abs_angle: $angle_n_r2\n" if $debug;
 
 	# Distance between line of segment($segment)  to trackpoint $elem1
-	my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
+	my $dist = 1000*distance_line_point_Km($segment->[0],$segment->[1],
 							 $segment->[2],$segment->[3],
 							 $elem1->{lat},$elem1->{lon}
 							 );
@@ -1456,7 +1318,7 @@ sub check_allowed_area($){
 		$area->{proximity} ||= 10;
 	    }
 	    
-	    if ( Geometry::distance_point_point_Km($area,$elem) < $area->{proximity} ) {
+	    if ( distance_point_point_Km($area,$elem) < $area->{proximity} ) {
 		printf STDERR "check_allowed_area(".$elem->{lat}.",".$elem->{lon}.
 		    ") -> WP: $area->{wp} : block: $area->{block}\n"
 		    if $debug > 30;
@@ -1561,8 +1423,8 @@ sub enrich_single_track($){
 	$elem1->{compare_dist} = $compare_dist;
 	
 	if ( $track_pos < $last_track_point ) {
-	    $elem1->{angle_n}   = Geometry::angle_north($elem1,$elem2);
-	    $elem1->{angle_n_r} = Geometry::angle_north_relative($elem1,$elem2);
+	    $elem1->{angle_n}   = angle_north($elem1,$elem2);
+	    $elem1->{angle_n_r} = angle_north_relative($elem1,$elem2);
 	} else {
 	    $elem1->{angle_n}   = -999999;
 	    $elem1->{angle_n_r} = -999999;
@@ -1570,13 +1432,13 @@ sub enrich_single_track($){
 	if ( ($track_pos > 0) &&
 	     ( $track_pos < $last_track_point ) ) {
 	    $elem1->{angle} = 
-		Geometry::angle_north($elem0,$elem1)  -
-		Geometry::angle_north($elem1,$elem2);
+		angle_north($elem0,$elem1)  -
+		angle_north($elem1,$elem2);
 	} else {
 	    $elem1->{angle} =0;
 	}
 	# Distance between line of segment($segment)  to trackpoint $elem1
-	$elem1->{dist} = 1000*Geometry::distance_point_point_Km($elem1,$elem2);
+	$elem1->{dist} = 1000*distance_point_point_Km($elem1,$elem2);
     }
 }
 
@@ -1632,9 +1494,9 @@ sub split_tracks($$){
 	    $elem->{time} = 0 unless defined $elem->{time};
 
 	    if (  $prev_elem ) {
-		my $dist  = Geometry::distance_point_point_Km($prev_elem,$elem);
-		my $angle = Geometry::angle_north($prev_elem,$elem);
-		my ($d_lat,$d_lon) = Geometry::distance_degree_point_point($prev_elem,$elem);
+		my $dist  = distance_point_point_Km($prev_elem,$elem);
+		my $angle = angle_north($prev_elem,$elem);
+		my ($d_lat,$d_lon) = distance_degree_point_point($prev_elem,$elem);
 		$elem->{dist}=$dist;   # in Km
 		$elem->{angle}=$angle; # in Degre
 		if ($debug)  {
@@ -1892,7 +1754,7 @@ sub filter_data_reduce_points($){
 	    my $elem0 = $new_track->[-1];
 	    my $elem1 = $track->[$i-1];
 	    my $elem2 = $track->[$i];
-	    my $dist_0_2 = Geometry::distance_point_point_Km($elem0,$elem2);
+	    my $dist_0_2 = distance_point_point_Km($elem0,$elem2);
 
 	    # Max Distance between 2 points in Track
 	    if ( $dist_0_2 > .5 ) { # max .5 km distanz
@@ -1900,7 +1762,7 @@ sub filter_data_reduce_points($){
 		    if $debug >10;
 	    } else {
 		# Distance between line of line(p0 and p2) to p1 
-		my $dist = Geometry::distance_line_point_Km($elem0->{lat},$elem0->{lon},
+		my $dist = distance_line_point_Km($elem0->{lat},$elem0->{lon},
 							    $elem2->{lat},$elem2->{lon},
 							    $elem1->{lat},$elem1->{lon}
 							    );
@@ -2053,7 +1915,7 @@ sub filter_duplicate_tracepoints($$$){
 	    for my $segment ( @{$checked_track_segments} ) {
 		#printf STDERR Dumper(\$segment);
 		# Distance between line of segment($segment)  to trackpoint $elem
-		my $dist = 1000*Geometry::distance_line_point_Km($segment->[0],$segment->[1],
+		my $dist = 1000*distance_line_point_Km($segment->[0],$segment->[1],
 								 $segment->[2],$segment->[3],
 								 $elem->{lat},$elem->{lon}
 								 );
@@ -2130,7 +1992,7 @@ sub find_points_in_bounding_box_for_track($$$){
 	$lon_min  = $elem->{lon}	    if $lon_min > $elem->{lon};
 	$lon_max  = $elem->{lon}	    if $lon_max < $elem->{lon};
 	
-	my $dist = Geometry::distance_point_point_Km(
+	my $dist = distance_point_point_Km(
 						 { lat => $lat_min,lon => $lon_min},
 						 { lat => $lat_max,lon => $lon_max} );
 	last if $dist>$max_dist;
@@ -2315,7 +2177,7 @@ sub Tracks2osm($){
 
 	    # -------------------------------------------- Create Segments
 	    if ( $node_from && $node_to && ! $skip_point) {
-		$dist = Geometry::distance_point_point_Km($osm_nodes->{$node_from},$elem);
+		$dist = distance_point_point_Km($osm_nodes->{$node_from},$elem);
 	    }
 	    
 	    if (  ! $skip_point ) {
@@ -2349,7 +2211,7 @@ sub Tracks2osm($){
 			}
 		    };
 		    # Angle
-		    $angle = Geometry::angle_north($osm_nodes->{$node_from},$osm_nodes->{$node_to});
+		    $angle = angle_north($osm_nodes->{$node_from},$osm_nodes->{$node_to});
 		}
 	    }
 

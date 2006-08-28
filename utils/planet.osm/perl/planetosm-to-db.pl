@@ -204,24 +204,11 @@ while(my $line = <XML>) {
 		}
 
 		if($last_type eq "node") {
-			if ($dbtype eq 'pgsql') {
-				$node_tag_ps->execute($last_id,$name,$value)
-					or warn("Invalid line '$line' : ".$conn->errstr);
-			} else {
-				$node_tag_ps_mysql->execute("$name=$value",$last_id)
-					or warn("Invalid line '$line' : ".$conn->errstr);
-			}
+			do_node_tag($last_id,$name,$value,$line);
 		} elsif($last_type eq "segment") {
-			if ($dbtype eq 'pgsql') {
-				$seg_tag_ps->execute($last_id,$name,$value)
-					or warn("Invalid line '$line' : ".$conn->errstr);
-			} else {
-				$seg_tag_ps_mysql->execute("$name=$value",$last_id)
-					or warn("Invalid line '$line' : ".$conn->errstr);
-			}
+			do_seg_tag($last_id,$name,$value,$line);
 		} elsif($last_type eq "way") {
-			$way_tag_ps->execute($last_id,$name,$value)
-				or warn("Invalid line '$line' : ".$conn->errstr);
+			do_way_tag($last_id,$name,$value,$line);
 		}
 	}
 }
@@ -238,6 +225,47 @@ foreach my $sql (split "\n",&post_process($dbtype)) {
 	$conn->do($sql);
 }
 
+
+########################################################################
+
+sub do_node_tag($ $ $ $) {
+	my ($last_id,$name,$value,$line) = @_;
+
+	if ($dbtype eq 'pgsql') {
+		do_tag_add($node_tag_ps,$last_id,$name,$value,$line);
+	} else {
+		do_tag_append($node_tag_ps,$last_id,$name,$value,$line);
+	}
+}
+sub do_segment_tag($ $ $ $) {
+	my ($last_id,$name,$value,$line) = @_;
+
+	if ($dbtype eq 'pgsql') {
+		do_tag_add($seg_tag_ps,$last_id,$name,$value,$line);
+	} else {
+		do_tag_append($seg_tag_ps,$last_id,$name,$value,$line);
+	}
+}
+sub do_way_tag($ $ $ $) {
+	my ($last_id,$name,$value,$line) = @_;
+
+	do_tag_add($seg_tag_ps,$last_id,$name,$value,$line);
+}
+
+# Postgres style "one row per tag" tag addition
+sub do_tag_add($ $ $ $ $) {
+	my ($tag_ps,$last_id,$name,$value,$line) = @_;
+
+	$tag_ps->execute($last_id,$name,$value)
+		or warn("Invalid line '$line' : ".$conn->errstr);
+}
+# MySQL style "; between tags" tag addition
+sub do_tag_append($ $ $ $ $) {
+	my ($tag_ps,$last_id,$name,$value,$line) = @_;
+
+	$tag_ps->execute("$name=$value",$last_id)
+		or warn("Invalid line '$line' : ".$conn->errstr);
+}
 
 ########################################################################
 

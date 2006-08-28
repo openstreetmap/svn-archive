@@ -24,12 +24,41 @@ my $dbhost = $ENV{DBHOST} || "localhost";
 my $dbuser = $ENV{DBUSER} || "";
 my $dbpass = $ENV{DBPASS} || "";
 
+# Should we warn for things we skip due to the bbox?
+my $warn_bbox_skip = 0;
+
+# Grab the filename
+my $xml = shift;
+
+if($xml eq "-schema") {
+	print &fetch_schema($dbtype);
+	exit;
+}
+
 # Exclude nodes within this lat,long,lat,long bounding box
 my @exclude_bbox = ();
-# Exclude USA + Canada
-#@exclude_bbox = (20,-180,80,-45);
+my @only_bbox = ();
 
-my $xml = shift;
+if($xml eq "-bbox" || $xml eq "--bbox") {
+	my $bbox = shift;
+	@only_bbox = split(/,/, $bbox);
+	$xml = shift;
+}
+if($xml eq "-exbbox" || $xml eq "--exbbox" || $xml eq "-ebbox") {
+	my $bbox = shift;
+	@exclude_bbox = split(/,/, $bbox);
+	$xml = shift;
+}
+
+# Check that things are in the right order
+if(@only_bbox) {
+	check_bbox_valid(@only_bbox);
+}
+if(@exclude_bbox) {
+	check_bbox_valid(@exclude_bbox);
+}
+
+# Give them help, if they need it
 unless($xml) {
 	die <<EOT
 
@@ -37,16 +66,19 @@ planetosm-to-db.pl <planet.osm.xml>\t - parse planet.osm file and upload to db
 planetosm-to-db.pl -schema\t\t - output database schema
 planetosm-to-db.pl -empty\t\t - empty tables ready for new upload
 
+planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
+	Only add things inside the bounding box 
+     (min lat, min long, max lat, max long)
+planetosm-to-db.pl -exbbox 20,-180,80,-45 <planet.osm.xml>
+    Add everything except those inside the bounding box
+     (min lat, min long, max lat, max long)
+	Use "20,-180,80,-45" to exclude the Tiger data
+
 Before running, configure the script to include your database type
 (pgsql or mysql), name, host, user and password.
 
 EOT
 }
-if($xml eq "-schema") {
-	print &fetch_schema($dbtype);
-	exit;
-}
-
 # Open our database connection
 my $conn = &open_connection($dbtype,$dbname,$dbhost,$dbuser,$dbpass);
 
@@ -71,6 +103,11 @@ if ($xml eq "-empty") {
 		$conn->do($sql);
 	}
 	exit;
+}
+
+# Check we can load the file
+unless(-f $xml) {
+	die("Planet.osm file '$xml' could not be found\n");
 }
 
 # Get our prepared statements
@@ -122,8 +159,9 @@ while(my $line = <XML>) {
 
 	# Process the line of XML
 	if($line =~ /^\s*<node/) {
-		my ($id,$lat,$long) = ($line =~ /^\s*<node id='(\d+)' lat='?(\-?[\d\.]+)'? lon='?(\-?[\d\.]+e?\-?\d*)'?/);
+		my ($id,$lat,$long) = ($line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
 		$last_id = undef; # In case it has tags we need to exclude
+		$last_type = "node";
 
 		unless($id) { warn "Invalid line '$line'"; next; }
 
@@ -131,7 +169,20 @@ while(my $line = <XML>) {
 		if(@exclude_bbox) {
 			if($lat > $exclude_bbox[0] && $lat < $exclude_bbox[2] &&
 				$long > $exclude_bbox[1] && $long < $exclude_bbox[3]) {
-				#warn("Skipping node at $lat $long as in bbox\n");
+				if($warn_bbox_skip) {
+					warn("Skipping node at $lat $long as in bbox\n");
+				}
+				next;
+			}
+		}
+		if(@only_bbox) {
+			if($lat > $only_bbox[0] && $lat < $only_bbox[2] &&
+				$long > $only_bbox[1] && $long < $only_bbox[3]) {
+				# This one's inside the bbox
+			} else {
+				if($warn_bbox_skip) {
+					warn("Skipping node at $lat $long as not in bbox\n");
+				}
 				next;
 			}
 		}
@@ -142,55 +193,71 @@ while(my $line = <XML>) {
 
 		$nodes->Bit_On($id);
 		$last_id = $id;
-		$last_type = "node";
 
 		$node_count++;
 		&display_count("node", $node_count);
 	}
 	elsif($line =~ /^\s*<segment/) {
-		my ($id,$from,$to) = ($line =~ /^\s*<segment id='(\d+)' from='(\d+)' to='(\d+)'/);
+		my ($id,$from,$to) = ($line =~ /^\s*<segment id=['"](\d+)['"] from=['"](\d+)['"] to=['"](\d+)['"]/);
 		$last_id = undef; # In case it has tags we need to exclude
+		$last_type = "segment";
 
 		unless($id) { warn "Invalid line '$line'"; next; }
-		unless($nodes->contains($to)) { warn "No node $to for line '$line'"; next; }
-		unless($nodes->contains($from)) { warn "No node $from for line '$line'"; next; }
+
+		unless($nodes->contains($to)) { 
+			if($warn_bbox_skip) {
+				warn "No node $to for line '$line'"; 
+			}
+			next; 
+		}
+		unless($nodes->contains($from)) { 
+			if($warn_bbox_skip) {
+				warn "No node $from for line '$line'"; 
+			}
+			next; 
+		}
 
 		$seg_ps->execute($id,$from,$to)
 			or warn("Invalid line '$line' : ".$conn->errstr);
 
 		$segs->Bit_On($id);
 		$last_id = $id;
-		$last_type = "segment";
 
 		$seg_count++;
 		&display_count("segment", $seg_count);
 	}
 	elsif($line =~ /^\s*<way/) {
-		my ($id) = ($line =~ /^\s*<way id='(\d+)'/);
+		my ($id) = ($line =~ /^\s*<way id=['"](\d+)['"]/);
 		$last_id = undef; # In case it has tags we need to exclude
+		$last_type = "way";
 
 		unless($id) { warn "Invalid line '$line'"; next; }
 		$way_ps->execute($id)
 			or warn("Invalid line '$line' : ".$conn->errstr);
 
 		$last_id = $id;
-		$last_type = "way";
 
 		$way_count++;
 		$way_seg_count = 0;
 		&display_count("way", $way_count);
 	}
 	elsif($line =~ /^\s*<seg /) {
-		my ($id) = ($line =~ /^\s*<seg id='(\d+)'/);
+		my ($id) = ($line =~ /^\s*<seg id=['"](\d+)['"]/);
+		unless($last_id) { next; }
 		unless($id) { warn "Invalid line '$line'"; next; }
-		unless($segs->contains($id)) { warn "Invalid segment for line '$line'"; next; }
+		unless($segs->contains($id)) { 
+			if($warn_bbox_skip) {
+				warn "Invalid segment for line '$line'"; 
+			}
+			next; 
+		}
 
 		$way_seg_count++;
 		$way_seg_ps->execute($last_id,$id,$way_seg_count)
 			or warn("Invalid line '$line' : ".$conn->errstr);
 	}
 	elsif($line =~ /^\s*<tag/) {
-		my ($name,$value) = ($line =~ /^\s*<tag k='(.*?)' v='(.*?)'/);
+		my ($name,$value) = ($line =~ /^\s*<tag k=['"](.*?)['"] v=['"](.*?)['"]/);
 		unless($name) { warn "Invalid line '$line'"; next; }
 		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
@@ -199,14 +266,16 @@ while(my $line = <XML>) {
 		
 		# If last_id isn't there, the tag we're attached to was invalid
 		unless($last_id) {
-			warn("Invalid previous $last_type, ignoring its tag '$line'");
+			if($warn_bbox_skip) {
+				warn("Invalid previous $last_type, ignoring its tag '$line'");
+			}
 			next;
 		}
 
 		if($last_type eq "node") {
 			do_node_tag($last_id,$name,$value,$line);
 		} elsif($last_type eq "segment") {
-			do_seg_tag($last_id,$name,$value,$line);
+			do_segment_tag($last_id,$name,$value,$line);
 		} elsif($last_type eq "way") {
 			do_way_tag($last_id,$name,$value,$line);
 		}
@@ -249,7 +318,7 @@ sub do_segment_tag($ $ $ $) {
 sub do_way_tag($ $ $ $) {
 	my ($last_id,$name,$value,$line) = @_;
 
-	do_tag_add($seg_tag_ps,$last_id,$name,$value,$line);
+	do_tag_add($way_tag_ps,$last_id,$name,$value,$line);
 }
 
 # Postgres style "one row per tag" tag addition
@@ -276,6 +345,15 @@ sub display_count {
 	}
 }
 
+sub check_bbox_valid {
+	my @bbox = @_;
+	unless($bbox[0] < $bbox[2]) {
+		die("1st lat ($bbox[0]) must be smaller than second ($bbox[2])");
+	}
+	unless($bbox[1] < $bbox[3]) {
+		die("1st long ($bbox[1]) must be smaller than second ($bbox[3])");
+	}
+}
 ########################################################################
 
 sub open_connection {

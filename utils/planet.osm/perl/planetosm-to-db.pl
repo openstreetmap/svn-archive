@@ -15,6 +15,9 @@
 use strict;
 use DBI;
 
+# We need Bit::Vector, as perl hashes can't handle the sort of data we need
+use Bit::Vector;
+
 my $dbtype = "pgsql";	# mysql | pgsql
 my $dbname = "planetosm";
 my $dbhost = $ENV{DBHOST} || "localhost";
@@ -92,8 +95,9 @@ my $way_count = 0;
 my $way_seg_count = 0;
 my $line_count = 0;
 
-my %nodes;
-my %segs;
+# We assume IDs to be up to 50 million
+my $nodes = Bit::Vector->new( 50 * 1000 * 1000 );
+my $segs = Bit::Vector->new( 50 * 1000 * 1000 );
 
 # Turn on batching, if the database likes that
 if($batch_inserts) {
@@ -136,7 +140,7 @@ while(my $line = <XML>) {
 		$node_ps->execute($id,$lat,$long) 
 			or warn("Invalid line '$line' : ".$conn->errstr);
 
-		$nodes{$id} = $id;
+		$nodes->Bit_On($id);
 		$last_id = $id;
 		$last_type = "node";
 
@@ -148,13 +152,13 @@ while(my $line = <XML>) {
 		$last_id = undef; # In case it has tags we need to exclude
 
 		unless($id) { warn "Invalid line '$line'"; next; }
-		unless($nodes{$to}) { warn "No node $to for line '$line'"; next; }
-		unless($nodes{$from}) { warn "No node $from for line '$line'"; next; }
+		unless($nodes->contains($to)) { warn "No node $to for line '$line'"; next; }
+		unless($nodes->contains($from)) { warn "No node $from for line '$line'"; next; }
 
 		$seg_ps->execute($id,$from,$to)
 			or warn("Invalid line '$line' : ".$conn->errstr);
 
-		$segs{$id} = $id;
+		$segs->Bit_On($id);
 		$last_id = $id;
 		$last_type = "segment";
 
@@ -179,7 +183,7 @@ while(my $line = <XML>) {
 	elsif($line =~ /^\s*<seg /) {
 		my ($id) = ($line =~ /^\s*<seg id='(\d+)'/);
 		unless($id) { warn "Invalid line '$line'"; next; }
-		unless($segs{$id}) { warn "Invalid segment for line '$line'"; next; }
+		unless($segs->contains($id)) { warn "Invalid segment for line '$line'"; next; }
 
 		$way_seg_count++;
 		$way_seg_ps->execute($last_id,$id,$way_seg_count)

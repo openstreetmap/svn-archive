@@ -32,15 +32,10 @@ except ImportError:
    exiflib = False
 
 debug = False
-pyosmeditorversion = "0.1.1"
+pyosmeditorversion = "0.1.2"
 DB_ENCODING = "utf-8"
 
 CONFIGFILENAME = "~/.pyosmeditor/pysomeditor.xml"
-# config option
-# TODO: make a config panel
-# at the moment: edit config file
-# <savecurrentdisplaycoord>1</savecurrentdisplaycoord>
-# <currentdisplaycoord>12.345,23.456,12.346,23.457</currentdisplaycoord>
 
 try:
    import pygtk
@@ -54,12 +49,13 @@ try:
 except:
    sys.exit(1)
 
+##############################
+# Import translations for .glade and .py
 import locale
 import gettext
 APP = 'pyosmeditor'
 DIR = 'locale'
-# print locale.LC_ALL
-# locale.setlocale(locale.LC_ALL, '')
+
 gtk.glade.bindtextdomain(APP,DIR) 
 gtk.glade.textdomain(APP)
 gettext.bindtextdomain(APP,DIR) 
@@ -2420,9 +2416,9 @@ class selected_elements_handler:
    def clear(self):
       for ele in self.selected_elements:
          ele.draw(self.osmeditor.drawarea, box = None, selected = False)
-   
+      self.osmeditor.drawarea.refresh()
+      
       self.selected_elements = []
-#      self.notebook.set_current_page(0)
       
       # clear info
       self.selected_item_textentry.set_text("")
@@ -3968,7 +3964,7 @@ class osmeditor:
                id = self.osmdata.get_next_own_id()
 
             self.osmdata.create_new_way(seglist,id)
-            self.drawarea.drawway(id, arrow = True)
+            self.drawarea.drawway(id, arrowtype = 1)
                
             if self.livemode:
                dia.destroy()

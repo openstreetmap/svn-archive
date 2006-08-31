@@ -11,7 +11,7 @@
 # Standars Filters:
 #	- are points are inside [ -90.0  , -180  , 90.0    , 180   ], # World
 #	- minimum good points          > 5 Points/Track
-#	- distance between trackpoints < 1 Km
+#	- distance between trackpoints < 2 Km
 #	- speed between Trackpoints    < 200 Km/h
 #       - the track point is near (<20m) any OSM-segment
 #
@@ -58,6 +58,7 @@ use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;
+use Geo::OSM::SegmentList;
 
 my ($man,$help);
 our $debug =0;
@@ -74,6 +75,8 @@ my $osm_obj           = undef; # OSM Object currently read
 my $use_stdin         = 0;
 my $use_stdout        = 0;
 my $out_osm           = 0;
+my $fake_gpx_date     = 0;
+my $write_gpx_wpt     = 0;
 my $out_raw_gpx       = 0;
 my $split_tracks      = 0;
 my @filter_area_files = ();
@@ -211,50 +214,6 @@ sub read_osm_file($) { # Insert Segments from osm File
     return($read_osm_segments);
 }
 
-# ----------------------------------------------
-
-sub LoadOSM_segment_csv($)
-{
-    my $filename = shift;
-
-    printf STDERR "Reading OSM File: $filename\n"
-	if $debug || $verbose;
-    my $start_time=time();
-
-    my $segments;
-
-    if ( -s "$filename.storable") {
-	# later we should compare if the file also is newer than the source
-	$filename .= ".storable";
-	$segments = Storable::retrieve($filename);
-    } else {
-	my $fh = File::data_open($filename);
-
-	die "Cannot open $filename in LoadOSM_segment_csv.\n".
-	    "Please create it first to use the option --osm.\n".
-	    "See --help for more info"  unless $fh;
-
-	while ( my $line = $fh ->getline() ) {
-	    my @segment;
-	    my $dummy;
-	    ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
-	    $segment[4] = angle_north_relative(
-					    { lat => $segment[0] , lon => $segment[1] },
-					    { lat => $segment[2] , lon => $segment[3] });
-	    $segment[5] = $dummy if $debug;
-	    push (@{$segments},\@segment);
-	}
-	$fh->close();
-	Storable::store($segments   ,"$filename.storable");
-    }
-
-    if ( $verbose >1 || $debug) {
-	printf STDERR "Read and parsed $filename";
-	print_time($start_time);
-    }
-
-    return($segments);
-}
 
 # ------------------------------------------------------------------
 # reduce osm Segments to only those insiide the bounding box
@@ -952,24 +911,32 @@ sub write_gpx_file($$) { # Write an gpx File
     # <bounds minlat="47.855922617" minlon ="8.440864999" maxlat="48.424462667" maxlon="12.829756737" />
     # <time>2006-07-11T08:01:39Z</time>
 
-    my $track_id=0;
     my $point_count=0;
-    for my $wpt ( @{$tracks->{wpt}} ) {
-	my $lat  = $wpt->{lat};
-	my $lon  = $wpt->{lon};
-	print $fh " <wpt lat=\"$lat\" lon=\"$lon\">\n";
-	#print $fh "     <name>$wpt->{name}</name>\n";
-	for my $type ( qw ( name ele
-			    cmt desc
-			    sym
-			    course  fix hdop sat speed time )) {
-	    my $value = $wpt->{$type};
-	    if( defined $value ) {
-		print $fh "     <$type>$value</$type>\n";
-	    }
-	};
-	print $fh " </wpt>\n";
+
+    # write Waypoints
+    if ( $write_gpx_wpt ) {
+	for my $wpt ( @{$tracks->{wpt}} ) {
+	    my $lat  = $wpt->{lat};
+	    my $lon  = $wpt->{lon};
+	    print $fh " <wpt lat=\"$lat\" lon=\"$lon\">\n";
+	    #print $fh "     <name>$wpt->{name}</name>\n";
+	    for my $type ( qw ( name ele
+				cmt desc
+				sym
+				course  fix hdop sat speed time )) {
+		my $value = $wpt->{$type};
+		next if $fake_gpx_date && ($type eq "time");
+		if( defined $value ) {
+		    print $fh "     <$type>$value</$type>\n";
+		}
+	    };
+	    print $fh " </wpt>\n";
+	}
     }
+
+    # write tracks
+    my $fake_time=0;
+    my $track_id=0;
     for my $track ( @{$tracks->{tracks}} ) {
 	$track_id++;
 	print $fh "\n";
@@ -1003,9 +970,13 @@ sub write_gpx_file($$) { # Write an gpx File
 		    $time_usec =~s/^\.//;
 		    print "---------------- time_sec: $time_sec\n";
 		}
+		if ( $fake_gpx_date ) {
+		    $fake_time += rand(10);
+		    $time_sec = $fake_time;
+		}
 		my $time = strftime("%FT%H:%M:%SZ", localtime($time_sec));
 		#UnixDate("epoch ".$time_sec,"%m/%d/%Y %H:%M:%S");
-		$time .= ".$time_usec" if $time_usec;
+		$time .= ".$time_usec" if $time_usec && ! $fake_gpx_date;
 		if ( $debug >20) {
 		    printf STDERR "elem-time: $elem->{time} UnixDate: $time\n";
 		}
@@ -1016,6 +987,7 @@ sub write_gpx_file($$) { # Write an gpx File
 				cmt course  
 				fix pdop hdop vdop sat
 				speed  )) {
+		next if $fake_gpx_date && ($type eq "time");
 		my $value = $elem->{$type};
 		if( defined $value ) {
 		    print $fh "       <$type>$value</$type>\n";
@@ -1455,7 +1427,7 @@ sub split_tracks($$){
     my $filename     = $tracks->{filename};
 
     my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || 1;
+    my $max_allowed_dist  = $config->{max_dist}  || 2;
     my $max_allowed_time  = $config->{max_time}  || 60;
 
     my $new_tracks={
@@ -2403,7 +2375,7 @@ sub convert_Data(){
     if ( $do_check_against_osm ) {
 	if ( -s $do_check_against_osm ) {
 	    if (  $do_check_against_osm =~ m/\.csv/ ) {
-		$osm_segments = OSM::LoadOSM_segment_csv($do_check_against_osm);
+		$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($do_check_against_osm);
 	    } elsif ( $do_check_against_osm =~ m/\.osm/ ) {
 		$osm_segments = OSM::read_osm_file($do_check_against_osm);
 	    } else {
@@ -2431,13 +2403,13 @@ sub convert_Data(){
 		last if -s $osm_filename;
 		$osm_filename='';
 	    }
-	    $osm_segments = OSM::LoadOSM_segment_csv($osm_filename);
+	    $osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($osm_filename);
 	};
     }
     
 
     
-    my $count=0;
+    my $count_files_converted=0;
     while ( my $filename = shift @ARGV ) {
 	my $new_tracks;
 	if ( ( $filename =~ m/-raw(|-osm|-pre-osm|-pre-clew)\.gpx$/ ) ||
@@ -2517,7 +2489,7 @@ sub convert_Data(){
 	}
 
 
-	$count ++ if $point_count && $track_count;
+	$count_files_converted ++ if $point_count && $track_count;
 
 
 	($track_count,$point_count) =   GPS::count_data($new_tracks);
@@ -2548,34 +2520,35 @@ sub convert_Data(){
 	}
     }
 
-    GPS::filter_duplicate_wpt($all_tracks);
+    if ( $count_files_converted ) {
+	GPS::filter_duplicate_wpt($all_tracks);
 
 
-    GPS::print_count_data($all_tracks,"after complete processing");
-    print_time($start_time);
+	    GPS::print_count_data($all_tracks,"after complete processing");
+	    print_time($start_time);
 
-    ($track_count,$point_count) =   GPS::count_data($all_tracks);
-    if (  $out_osm ) {
-	my $points = OSM::Tracks2osm($all_tracks);
-	OSM::write_osm_file("00_combination.osm",$points);
-    }
-    
-    if ( $use_stdout ) {
-	GPX::write_gpx_file($all_tracks,'-');
-	} else {
-	    GPX::write_gpx_file($all_tracks,"00_combination.gpx");
-		if ( $out_raw_gpx ){
-		    GPX::write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
-		    }
-	    };
-    
-    if ( $draw_filter_areas ) {
-	my $filter_areas = GPS::draw_filter_areas();
-	GPX::write_gpx_file($filter_areas,"00_filter_areas.gpx");
-    }
-
+	    ($track_count,$point_count) =   GPS::count_data($all_tracks);
+	    if (  $out_osm ) {
+		my $points = OSM::Tracks2osm($all_tracks);
+		OSM::write_osm_file("00_combination.osm",$points);
+	    }
+	    
+	    if ( $use_stdout ) {
+		GPX::write_gpx_file($all_tracks,'-');
+		} else {
+		    GPX::write_gpx_file($all_tracks,"00_combination.gpx");
+			if ( $out_raw_gpx ){
+			    GPX::write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
+			    }
+		    };
+	    
+	    if ( $draw_filter_areas ) {
+		my $filter_areas = GPS::draw_filter_areas();
+		GPX::write_gpx_file($filter_areas,"00_filter_areas.gpx");
+	    }
+	}
     if ( $verbose) {
-	printf STDERR "Converting $count Files";
+	printf STDERR "Converting $count_files_converted Files";
 	print_time($start_time);
     }
 }
@@ -2608,7 +2581,8 @@ GetOptions (
 	     'filter-area:s@'      => \@filter_area_files,
 	     'generate_ways'       => \$generate_ways,
 	     'filter-all'          => \$do_all_filters,
-
+	     'fake-gpx-date'       => \$fake_gpx_date,
+	     'write-gpx-wpt'       => \$write_gpx_wpt,
 	     'draw_filter_areas'   => \$draw_filter_areas,
 	     )
     or pod2usage(1);
@@ -2699,7 +2673,7 @@ The Idea behind the osm-filter is:
    The decission to split the tracks is done by checking if:
       - time between points is too high ( > 60 seconds for now )
       - Speed is too high ( > 200 Km/h for now )
-      - Distance between 2 point is too high ( >1 Km for now)
+      - Distance between 2 point is too high ( >2 Km for now)
    Then each Track with less than 3 points is discarded.
  - if you use the option 
        --generate_ways
@@ -2843,6 +2817,14 @@ by creating a track with the border of each filter_area
 Try to generate ways inside the OSM structure. 
 Still only testing
 
+
+=item B<--fake-gpx-date>
+
+This eliminates the date for while writing gpx data.
+
+=item B<--write-gpx-wpt>
+
+Only if this option is set, Waypoints are written to any of the gpx Files.
 
 =item <File1.gps> [<File2.gps>,...]
 

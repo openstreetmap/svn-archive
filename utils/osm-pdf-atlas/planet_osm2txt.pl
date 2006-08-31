@@ -10,53 +10,59 @@ use IO::File;
 use Pod::Usage;
 use Data::Dumper;
 
-sub data_open($);
-	      sub combine_way_into_segments();
-	      sub output_osm();
-	      sub output_named_points();
-	      sub output_statistic();
+sub data_open($); # {}
+sub combine_way_into_segments();
+sub output_osm();
+sub output_named_points();
+sub output_statistic();
 
-	      our $debug=0;
-	      our $verbose=0;
-	      our $man=0;
-	      our $help=0;
-	      my $areas_todo;
+our $debug=0;
+our $verbose=0;
+our $man=0;
+our $help=0;
+my $areas_todo;
 Getopt::Long::Configure('no_ignore_case');
-	      GetOptions ( 
-			   'verbose+'            => \$verbose,
-			   'debug'               => \$debug,      
-			   'd'                   => \$debug,      
-			   'MAN'                 => \$man, 
-			   'man'                 => \$man, 
-			   'h|help|x'            => \$help, 
-			   'area=s'              => \$areas_todo,
-			   )
-	      or pod2usage(1);
+GetOptions ( 
+	     'verbose+'            => \$verbose,
+	     'debug+'              => \$debug,      
+	     'd'                   => \$debug,      
+	     'MAN'                 => \$man, 
+	     'man'                 => \$man, 
+	     'h|help|x'            => \$help, 
+	     'area=s'              => \$areas_todo,
+	     )
+    or pod2usage(1);
 
-	      pod2usage(1) if $help;
-	      pod2usage(-verbose=>2) if $man;
+pod2usage(1) if $help;
+pod2usage(-verbose=>2) if $man;
 
 
-	      my $Filename = shift();
-	      pod2usage(1) unless $Filename;
+my $Filename = shift();
+pod2usage(1) unless $Filename;
 
-	      our $READ_FH=undef;
+our $READ_FH=undef;
 
 # ------------------------------------------------------------------
-	      my $area_definitions = {
-		  #                     min    |    max  
-		  #                  lat   lon |  lat lon
-		  uk         => [ [  49  , -11,   64,   3],
-				  [ 49.9 ,  -5.8, 54,0.80],
-				  ],
-		  iom        => [ [  49  , -11,   64,   3] ],
-		  germany    => [ [  47  ,   5,   54,  16] ],
-		  spain      => [ [  35.5,  -9,   44,   4] ],
-		  europe     => [ [  35  , -12,   75,  35] ],
-		  africa     => [ [ -45  , -20,   30,  55] ],
-		  world_east => [ [ -90  , -30,   90, 180] ],
-		  world_west => [ [ -90  ,-180,   90, -30] ],
-	      };
+my $area_definitions = {
+    #                     min    |    max  
+    #                  lat   lon |  lat lon
+    uk         => [ [  49  , -11,   64,   3],
+		    [ 49.9 ,  -5.8, 54,0.80],
+		    ],
+    iom        => [ [  49  , -11,   64,   3] ],
+    germany    => [ [  47  ,   5,   54,  16] ],
+    spain      => [ [  35.5,  -9,   44,   4] ],
+    europe     => [ [  35  , -12,   75,  35] ],
+    africa     => [ [ -45  , -20,   30,  55] ],
+    world_east => [ [ -90  , -30,   90, 180] ],
+    world_west => [ [ -90  ,-180,   90, -30] ],
+};
+my $lon=-180;
+while ( $lon < 180 ){
+    my $lon1=$lon+45;
+    $area_definitions->{"stripe_${lon}_${lon1}"} = [ [ -90  ,$lon,   90, $lon1] ];
+    $lon=$lon1;
+}
 my $SELECTED_AREA_filters=undef;
 
 #$areas_todo=join(',',sort keys %{$area_definitions}) unless defined $areas_todo;
@@ -64,6 +70,11 @@ $areas_todo ||= 'germany';
 $areas_todo=lc($areas_todo);
 my $SELECTED_AREA=$areas_todo;
 our $SELECTED_AREA_filters = $area_definitions->{$SELECTED_AREA};
+
+if ( ! defined ($area_definitions->{$SELECTED_AREA} ) ) {
+    die "unknown area $SELECTED_AREA.\n".
+	"Allowed Areas:\n\t".join("\n\t",sort keys %{$area_definitions})."\n";
+}
 
 sub in_area($){
     my $obj = shift;
@@ -443,6 +454,11 @@ planet_osm2txt.pl [-d] [-v] [-h]  <planet_filename.osm>
 =item B<--man> Complete documentation
 
 Complete documentation
+
+=item B<--area=germany> Area Filter
+
+Only read area for processing
+
 
 =item B<planet_filename.osm>
 

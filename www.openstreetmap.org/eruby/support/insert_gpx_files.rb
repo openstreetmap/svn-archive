@@ -44,7 +44,7 @@ files.each_hash do |row|
     puts "execing: cp #{filename} #{filename}"
     `cp #{filename} .#{filename}`
   else
-     puts "execing: scp 128.40.58.202:#{filename} .#{filename}"
+     puts "execing: scp 128.40.58.202:#{filename} .#{filename}" if DEBUG
     `scp 128.40.58.202:#{filename} .#{filename}`
   end
 
@@ -59,7 +59,7 @@ files.each_hash do |row|
     realfile = '.' + filename
   end
 
-  puts realfile
+  puts realfile if DEBUG
 
   points = 0
   poss_points = 0
@@ -74,7 +74,7 @@ files.each_hash do |row|
   
     # got a file, we hope
 
-    $stderr << "Inserting #{name} for user #{user_id.to_s} from file #{filename} \n"
+    $stderr << "Inserting #{name} for user #{user_id.to_s} from file #{filename} \n" if DEBUG
   
     trackseg = 0
     
@@ -85,7 +85,7 @@ files.each_hash do |row|
       exit
     end
 
-    $stderr << 'new gpx file id: ' + gpx_id.to_s + "\n"
+    $stderr << 'new gpx file id: ' + gpx_id.to_s + "\n" if DEBUG
 
     lat = -1
     lon = -1
@@ -154,7 +154,7 @@ files.each_hash do |row|
   error = error || points == 0
   if email_address && email_address != ''
     msgstr = ''
-    if !error
+    unless error
       msgstr = <<END_OF_MESSAGE
 From: webmaster <webmaster@openstreetmap.org>
 To: #{email_address}
@@ -209,7 +209,7 @@ END_OF_MESSAGE
 
 
     end
-      if !DEBUG
+      unless DEBUG
         Net::SMTP.start('127.0.0.1', 25) do |smtp|
           smtp.send_message msgstr.untaint,
                             'webmaster@openstreetmap.org'.untaint,

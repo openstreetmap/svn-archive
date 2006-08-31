@@ -25,6 +25,7 @@ class Renderer
 		@tagged_segments = {}
 		@rules = RenderRules.new('new.xml')
 		@dao = OSM::Dao.instance
+    @P = rand().to_s
 		@zoom = (log2((360*width)/(e-w),2)-9).round
 		factor  = (@zoom<13) ? 0.5 : 0.5*(2**(@zoom-13))
 		@nodes = @dao.getnodes(n+(n-s)*factor,w-(e-w)*factor,s-(n-s)*factor, e+(e-w)*factor)
@@ -63,7 +64,7 @@ class Renderer
 			ways = @dao.get_multis_from_segments(seg_ids)
     	ways.each do |way|
 	  	  way.segs.each do |segid|
-  			  @tagged_segments[segid.to_i].style = @rules.get_style(way.tags) unless way.tags.nil? or @tagged_segments[segid.to_i].nil?
+  			  @tagged_segments[segid.id.to_i].style = @rules.get_style(way.tags) unless way.tags.nil? or @tagged_segments[segid.id.to_i].nil?
 		    end
    	  end
 		end

@@ -704,7 +704,8 @@ module OSM
       ids = nodes.collect { |id, node| id }
       cbuff = "(#{ids.join(',')})"
 
-      res = call_sql {"SELECT id, node_a, node_b, tags FROM current_segments where (node_a IN #{cbuff} OR node_b IN #{cbuff}) #{timeclause} and visible = true"}
+#      res = call_sql {"SELECT id, node_a, node_b, tags FROM current_segments where (node_a IN #{cbuff} OR node_b IN #{cbuff}) #{timeclause} and visible = true"}
+      res = call_sql {"SELECT DISTINCTROW * FROM ( SELECT id, node_a, node_b, tags FROM current_segments where node_a IN #{cbuff} and visible = true UNION SELECT id, node_a, node_b, tags FROM current_segments where node_b IN #{cbuff} and visible = true) as a #{timeclause}"}
 
       segments = {}
 

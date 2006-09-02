@@ -55,20 +55,25 @@ use Pod::Usage;
 use XML::Parser;
 
 use Geo::Geometry;
+use Geo::OSM::SegmentList;
+use Geo::OSM::Tracks2OSM;
+use Geo::OSM::Write;
+use Geo::Tracks::GpsBabel;
+use Geo::Tracks::Kismet;
+use Geo::Tracks::NMEA;
+use Geo::Tracks::Tools;
+use Utils::Debug;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;
-use Geo::OSM::SegmentList;
+use Geo::GPX::File;
 
 my ($man,$help);
-our $debug =0;
-our $verbose =0;
+#our $DEBUG =0;
+#our $VERBOSE =0;
 our $PROXY='';
 
 
-my $osm_nodes        = {};
-my $osm_nodes_duplicate   = {};
-my $osm_ways          = {};
 my $osm_stats         = {};
 my $osm_obj           = undef; # OSM Object currently read
 
@@ -81,17 +86,12 @@ my $out_raw_gpx       = 0;
 my $split_tracks      = 0;
 my @filter_area_files = ();
 my $draw_filter_areas = 0;
-my $use_reduce_filter = 0;
-my $do_filter_clew   = 0;
-my $do_check_against_osm = undef;
-my $filter_duplicate_tracepoints = 0;
+my $use_reduce_filter = undef;
+my $do_filter_clew   = undef;
+my $do_filter_against_osm = undef;
+my $filter_duplicate_tracesegments = 0;
 my $do_all_filters    = 0;
 my $generate_ways     = 0;
-
-my $first_id=10000;
-my $next_osm_node_number    = $first_id;
-my $osm_segment_number = $first_id;
-my $osm_way_number     = $first_id;
 
 my $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
 
@@ -100,155 +100,24 @@ my $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
 package OSM;
 ##################################################################
 use Storable;
+use strict;
+use warnings;
+use Carp;
 
 use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;
+use Utils::Debug;
 
 use Geo::Geometry;
+use Geo::OSM::SegmentList;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;
-
-###########################################
-
-my $read_osm_nodes;
-my $read_osm_segments;
-
-sub node_ {
-    $osm_obj = undef;
-}
-sub node {
-    my($p, $tag, %attrs) = @_;  
-    my $id = delete $attrs{id};
-    $osm_obj = {};
-    $osm_obj->{id} = $id;
-
-    $osm_obj->{lat} = delete $attrs{lat};
-    $osm_obj->{lon} = delete $attrs{lon};
-
-    delete $attrs{timestamp};
-    delete $attrs{action};
-
-    if ( keys %attrs ) {
-	warn "node $id has extra attrs: ".Dumper(\%attrs);
-    }
-
-    $read_osm_nodes->{$id} = $osm_obj;
-}
-
-# --------------------------------------------
-sub segment_ {
-    $osm_obj = undef;
-}
-sub segment {
-    my($p, $tag, %attrs) = @_;  
-    my $id = delete $attrs{id};
-    $osm_obj = {};
-    $osm_obj->{id} = $id;
-
-    $osm_obj->{from} = delete $attrs{from};
-    $osm_obj->{to}   = delete $attrs{to};
-
-    if ( keys %attrs ) {
-	warn "segment $id has extra attrs: ".Dumper(\%attrs);
-    }
-    my @segment;
-    my $dummy;
-    my $node1 = $read_osm_nodes->{$osm_obj->{from}};
-    my $node2 = $read_osm_nodes->{$osm_obj->{to}};
-    ($segment[0],$segment[1],$segment[2],$segment[3]) =
-	($node1->{lat},$node1->{lon},$node2->{lat},$node2->{lon});
-    $segment[4] = angle_north_relative(
-				    { lat => $segment[0] , lon => $segment[1] },
-				    { lat => $segment[2] , lon => $segment[3] });
-    #$segment[5] = $attrs{name} if $debug;
-    push (@{$read_osm_segments},\@segment);
-}
-# --------------------------------------------
-sub tag {
-    my($p, $tag, %attrs) = @_;  
-    #print "Tag - $tag: ".Dumper(\%attrs);
-    my $k = delete $attrs{k};
-    my $v = delete $attrs{v};
-
-    return if $k eq "created_by";
-
-    if ( keys %attrs ) {
-	print "Unknown Tag value for ".Dumper($osm_obj)."Tags:".Dumper(\%attrs);
-    }
-    
-    my $id = $osm_obj->{id};
-    if ( defined( $osm_obj->{tag}->{$k} ) &&
-	 $osm_obj->{tag}->{$k} ne $v
-	 ) {
-	if ( $debug >1 ) {
-	    printf STDERR "Tag %8s already exists for obj tag '$osm_obj->{tag}->{$k}' ne '$v'\n",$k ;
-	}
-    }
-    $osm_obj->{tag}->{$k} = $v;
-    if ( $k eq "alt" ) {
-	$osm_obj->{alt} = $v;
-    }	    
-}
-
-# --------------------------------------------
-sub read_osm_file($) { # Insert Segments from osm File
-    my $file_name = shift;
-
-    print("Reading OSM Segment from File $file_name\n") if $verbose || $debug;
-    print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
-
-    print STDERR "Parsing file: $file_name\n" if $debug;
-    my $p = XML::Parser->new( Style => 'Subs' ,
-			      ErrorContext => 10,
-			      );
-    
-    my $fh = File::data_open($file_name);
-    my $content = $p->parse($fh);
-    if (not $p) {
-	print STDERR "WARNING: Could not parse osm data from $file_name\n";
-	return;
-    }
-    return($read_osm_segments);
-}
+use Geo::Tracks::Tools;
 
 
-# ------------------------------------------------------------------
-# reduce osm Segments to only those insiide the bounding box
-# This make comparison faster
-sub reduce_osm_segments($$) {
-    my $all_osm_segments = shift;
-    my $bounds = shift;
-
-    my $start_time=time();
-
-    #printf STDERR "reduce_osm_segments(".Dumper(\$bounds).")\n" if $debug;
-
-    my $osm_segments = [];
-    my $count=0;
-    my $all_count=0;
-    for my $segment ( @{$all_osm_segments} ) {
-	$all_count++;
-	next unless $segment->[0] >= $bounds->{lat_min};
-	next unless $segment->[0] <= $bounds->{lat_max};
-	next unless $segment->[1] >= $bounds->{lon_min};
-	next unless $segment->[1] <= $bounds->{lon_max};
-	next unless $segment->[2] >= $bounds->{lat_min};
-	next unless $segment->[2] <= $bounds->{lat_max};
-	next unless $segment->[3] >= $bounds->{lon_min};
-	next unless $segment->[3] <= $bounds->{lon_max};
-	$count++;
-	push(@{$osm_segments},$segment);
-    }
-    if ( $verbose > 3 || $debug > 3 ) {
-	printf STDERR "		Reduced OSM Data to $count( $all_count) OSM-Segments ";
-	print_time($start_time);
-    }
-
-    return $osm_segments;
-}
 # ------------------------------------------------------------------
 # check if a nearby segment would fit
 sub is_segment_of_list_nearby($$$){
@@ -272,17 +141,17 @@ sub is_segment_of_list_nearby($$$){
 	next unless
 	    ( abs ($elem0->{angle_n_r} - $segment->[4])  < $max_angle) ||
 	    ( abs ($elem1->{angle_n_r} - $segment->[4])  < $max_angle);
-	#print STDERR "abs_angle: $angle_n_r2\n" if $debug;
+	#print STDERR "abs_angle: $angle_n_r2\n" if $DEBUG;
 
 	# Distance between line of segment($segment)  to trackpoint $elem1
 	my $dist = 1000*distance_line_point_Km($segment->[0],$segment->[1],
-							 $segment->[2],$segment->[3],
-							 $elem1->{lat},$elem1->{lon}
-							 );
+					       $segment->[2],$segment->[3],
+					       $elem1->{lat},$elem1->{lon}
+					       );
 	$min_dist = $dist if $dist < $min_dist;
 	next if $dist > $compare_dist; # in m
 	printf STDERR "Elem is %3.1f m away from line\n",$dist
-	    if $debug >5;
+	    if $DEBUG >5;
 	$skip_point++;
 	last;
     }
@@ -290,727 +159,54 @@ sub is_segment_of_list_nearby($$$){
     return $skip_point;
 }
 
+
 # ------------------------------------------------------------------
 # check if new trackpoints are on existing osm tracks
-sub check_against_osm($$$){
+sub filter_against_osm($$$){
     my $tracks       = shift; # reference to tracks list
     my $all_osm_segments = shift;
     my $config       = shift;
 
+    my $start_time=time();
+
     my $filename=$tracks->{filename};
-    if ( $out_raw_gpx && $debug >3 ){
+    if ( $out_raw_gpx && $DEBUG >3 ){
 	my $new_gpx_file = "$filename-raw-pre-osm.gpx";
 	$new_gpx_file =~s/.gpx-raw-pre-osm.gpx/-raw-pre-osm.gpx/;
-	GPX::write_gpx_file($tracks,$new_gpx_file);
+	write_gpx_file($tracks,$new_gpx_file);
     };
 
     my $dist_osm_track = $config->{dist} || 40;
-    my $start_time=time();
 
     my $bounds = GPS::get_bounding_box($tracks);
     #printf STDERR "Track Bounds: ".Dumper(\$bounds);
-    my $osm_segments = reduce_osm_segments($all_osm_segments,$bounds);
+    my $osm_segments = reduce_segments_list($all_osm_segments,$bounds);
 
-    my $new_tracks={ filename => $tracks->{filename},
-		     tracks => [],
-		     wpt => [],
-		     };
 
-    # Keep WPT
-    for my $wpt ( @{$tracks->{wpt}} ) {
-	next unless $wpt;
-	push(@{$new_tracks->{wpt}},$wpt);
-    }
-
-    my $all_points = 0;
-    my $new_points = 0;
-    my $track_count=0;
-    my $skiped_points=0;
+    enrich_tracks($tracks);
+    
     for my $track ( @{$tracks->{tracks}} ) {
-	$track_count++;
 	next if !$track;
-	my $new_track=[];
-
-	GPS::enrich_single_track($track);
 
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
-	    $all_points++;
-
-	    #print STDERR "Track: $track_count Element: $track_pos\n";
-	    $track->[$track_pos]->{skip_point} =
-		is_segment_of_list_nearby($track,$track_pos,$osm_segments);
-
+	    $track->[$track_pos]->{good_point} =
+		! is_segment_of_list_nearby($track,$track_pos,$osm_segments);
 	}
-
-	# Copy only those with skip_point set to 1
-	for my $track_pos ( 0 .. $#{@{$track}} ) {
-	    my $elem0=$track->[$track_pos-1];
-	    my $elem1=$track->[$track_pos];
-	    my $elem2=$track->[$track_pos+1];
-	    my $skip_point = $elem1->{skip_point};
-	    # This should only skip the point if the one before and after are skiped too
-	    # But currentls it's not working yet
-	    $skip_point=0 if ( $track_pos > 0             ) && ( ! $elem0->{skip_point} );
-	    $skip_point=0 if ( $track_pos < $#{@{$track}} ) && ( ! $elem2->{skip_point} );
-
-	    if ( $skip_point ) {
-		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem >2 ) {
-		    push(@{$new_tracks->{tracks}},$new_track);
-		}
-		$new_track=[];
-		$skiped_points++;
-	    } else {
-		push(@{$new_track},$elem1);
-		$new_points++;
-	    }
-	}
-	push(@{$new_tracks->{tracks}},$new_track);
     }
 
-    if ( $debug || $verbose >1) {
-	printf STDERR "		Eliminated  $skiped_points ($all_points) Points comparing to ".
-	    (scalar @{$osm_segments})." OSM Segments\n";
-    }
+    my $new_tracks = tracks_only_good_point_split($tracks);
 
-    GPS::print_count_data($new_tracks,"after filtering against existing OSM Data");
+    GPS::print_count_data($new_tracks,"after Filtering against existing OSM Data");
     print_time($start_time);
     return $new_tracks;
 }
-
-
-##################################################################
-package Kismet;
-##################################################################
-use Date::Parse;
-use Data::Dumper;
-
-use Geo::Geometry;
-use Utils::File;
-use Utils::Math;
-use Utils::Timing;
-
-# -----------------------------------------------------------------------------
-# Read GPS Data from Kismet File
-sub read_gps_file($) { 
-    my $filename = shift;
-
-    my $start_time=time();
-
-    my $data = {
-	filename => $filename,
-	tracks => [],
-	wpt => [],
-	};
-
-    printf STDERR ("Reading $filename\n") if $verbose>1 || $debug;
-    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
-
-    print STDERR "Parsing file: $filename\n" if $debug;
-    my $p = XML::Parser->new( Style => 'Objects' ,
-			      );
-    
-    my $fh = File::data_open($filename);
-    return $data unless $fh;
-    my $content = [{Kids => []}];
-    eval {
-	$content = $p->parse($fh);
-    };
-    if ( $@ ) {
-	warn "$@Error while parsing\n $filename\n";
-	printf STDERR Dumper(\$content);
-	#return $content->[0]->{Kids};
-    }
-    if (not $p) {
-	print STDERR "WARNING: Could not parse osm data\n";
-	return $data;
-    }
-    if ( $debug ) {
-	printf STDERR "Read and parsed $filename";
-	print_time($start_time);
-    }
-    my $track=[];
-    for my $elem  ( @{$content->[0]->{Kids}} ) {
-	next unless ref($elem) eq "Kismet::gps-point";
-	next unless $elem->{'bssid'} eq 'GP:SD:TR:AC:KL:OG';
-	delete $elem->{Kids};
-	if ( defined($elem->{"time-sec"}) && defined($elem->{"time-usec"}) ) {
-	    $elem->{time} = $elem->{"time-sec"}+($elem->{"time-usec"}/1000000);
-	    #printf STDERR "$elem->{time} = $elem->{'time-sec'}  $elem->{'time-usec'}\n";
-	}
-	delete $elem->{'time-sec'};
-	delete $elem->{'time-usec'};
-	delete $elem->{'bssid'};
-	delete $elem->{'signal'};
-	delete $elem->{'quality'};
-	delete $elem->{'noise'};
-	$elem->{'speed'} = delete($elem->{'spd'}) * 1;
-	if ( $debug > 10 ) {
-	    printf STDERR "read element: ".Dumper(\$elem);
-	}
-	push(@{$track},$elem);
-    };
-    
-#    printf STDERR Dumper(\$track);
-
-    $data->{tracks}=[$track];
-    return $data;
-}
-
-
-##################################################################
-package Gpsbabel;
-##################################################################
-use IO::File;
-
-use Geo::Geometry;
-use Utils::File;
-use Utils::Math;
-use Utils::Timing;
-
-
-# -----------------------------------------------------------------------------
-# Read GPS Data with the help of gpsbabel converting a file to a GPX-File
-sub read_file($$) { 
-    my $filename     = shift;
-    my $gpsbabel_type = shift;
-
-    my $data = {
-	filename => $filename,
-	tracks => [],
-	wpt => [],
-	};
-
-    printf STDERR ("Reading $filename\n") if $verbose>1 || $debug;
-    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
-
-    my $gpsbabel_call="gpsbabel  -i $gpsbabel_type -f '$filename' -o gpx -F - ";
-    printf STDERR "calling gpsbabel:\n$gpsbabel_call\n " if $debug>3;
-    my $fh = IO::File->new("$gpsbabel_call |");
-    if ( !$fh )  {
-	warn "Cannot Convert $filename as Type $gpsbabel_type\n";
-	return $data;
-    }
-    $data = GPX::read_gpx_file($fh);
-    $data->{filename} = $filename;
-    return $data;
-}
-
-##################################################################
-package NMEA;
-##################################################################
-use IO::File;
-use Date::Parse;
-use Data::Dumper;
-use Date::Parse;
-use Date::Manip;
-
-use Geo::Geometry;
-use Utils::File;
-use Utils::Math;
-use Utils::Timing;
-
-# -----------------------------------------------------------------------------
-# Read GPS Data from NMEA - File
-sub read_file($) { 
-    my $filename = shift;
-
-    my $start_time=time();
-
-    my $new_tracks={ 
-	filename => $filename,
-	tracks => [],
-	wpt => []
-	};
-    printf STDERR ("Reading $filename\n") if $verbose || $debug;
-    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
-
-    my $fh = File::data_open($filename);
-    return $new_tracks unless $fh;
-    my $elem ={};
-    my $last_date='';
-    my $last_time=0;
-    my $new_track=[];
-    my ($sat,$pdop,$hdop,$vdop,$sat_count);
-    my $sat_time = 0;
-    my $dop_time = 0;
-    while ( my $line = $fh->getline() ) {
-	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
-	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
-	$alt=0;
-	chomp $line;
-	$line =~ s/\*(\S+)\s*$//;
-	$checksumm=$1;
-	($type,$line) = split( /,/,$line,2);
-	$type =~ s/^\s*\$GP//;
-	printf STDERR "type $type, line: $line, checksumm:$checksumm\n"
-	    if $debug>4;
-	if ( $type eq "GGA" ) {
-	    # GGA - Global Positioning System Fix Data
-	    # Time, Position and fix related data fora GPS receiver.
-	    #        1         2       3 4        5 6 7  8   9  10 |  12 13  14   15
-	    #        |         |       | |        | | |  |   |   | |   | |   |    |
-	    # $--GGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh<CR><LF>
-	    #  1) Universal Time Coordinated (UTC)
-	    #  2) Latitude
-	    #  3) N or S (North or South)
-	    #  4) Longitude
-	    #  5) E or W (East or West)
-	    #  6) GPS Quality Indicator, 0 - fix not available, 1 - GPS fix, 2 - Differential GPS fix
-	    #  7) Number of satellites in view, 00 - 12
-	    #  8) Horizontal Dilution of precision
-	    #  9) Antenna Altitude above/below mean-sea-level (geoid) 
-	    # 10) Units of antenna altitude, meters
-	    # 11) Geoidal separation, the difference between the WGS-84 earth
-	    #     ellipsoid and mean-sea-level (geoid), "-" means mean-sea-level below ellipsoid
-	    # 12) Units of geoidal separation, meters
-	    # 13) Age of differential GPS data, time in seconds since last SC104
-	    #     type 1 or 9 update, null field when DGPS is not used
-	    # 14) Differential reference station ID, 0000-1023
-	    # 15) Checksum
-	    ($time,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
-	     $dummy,$dummy,$dummy)
-		= split(/,/,$line);	    
-	    #printf STDERR "(,$time,$status, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality,,, Alt: $alt,$alt_unit,,,,)\n";
-
-	} elsif ( $type eq "RMC" ) {
-	    # RMC - Recommended Minimum Navigation Information
-	    #        1         2 3       4 5        6 7   8   9    10  11|
-	    #        |         | |       | |        | |   |   |    |   | |
-	    # $--RMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,xxxx,x.x,a*hh<CR><LF>
-	    #  1) UTC Time
-	    #  2) Status, V = Navigation receiver warning
-	    #  3) Latitude
-	    #  4) N or S
-	    #  5) Longitude
-	    #  6) E or W
-	    #  7) Speed over ground, knots
-	    #  8) Track made good, degrees true
-	    #  9) Date, ddmmyy
-	    # 10) Magnetic Variation, degrees
-	    # 11) E or W
-	    # 12) Checksum
-	    ($time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$dummy,$date,$mag_variation)
-		= split(/,/,$line);    
-	} elsif ( $type eq "GSA" ) {
-	    # GSA - GPS DOP and active satellites
-	    #        1 2 3                        14 15  16  17  18
-	    #        | | |                         |  |   |   |   |
-	    # $--GSA,a,a,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x.x,x.x,x.x*hh<CR><LF>
-	    # Field Number: 
-	    #  1) Selection mode
-	    #  2) Mode
-	    #  3) ID of 1st satellite used for fix
-	    #  ...
-	    #  14) ID of 12th satellite used for fix
-	    #  15) PDOP in meters
-	    #  16) HDOP in meters
-	    #  17) VDOP in meters
-	    #  18) checksum 
-	    ($dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,$dummy,
-	     $dummy,$dummy,$dummy,$dummy,$pdop,$hdop,$vdop)
-		= split(/,/,$line);
-	    $hdop = undef unless $hdop =~ m/[\d\-\+]+/;
-	    $vdop = undef unless $vdop =~ m/[\d\-\+]+/;
-	    $pdop = undef unless $pdop =~ m/[\d\-\+]+/;
-	    $dop_time=$last_time;
-	    next;
-	} elsif ( $type eq "GSV" ) {
-	    # GSV - Satellites in view
-	    #
-	    #        1 2 3 4 5 6 7     n
-	    #        | | | | | | |     |
-	    # $--GSV,x,x,x,x,x,x,x,...*hh<CR><LF>
-	    # Field Number: 
-	    #  1) total number of messages
-	    #  2) message number
-	    #  3) satellites in view
-	    #  4) satellite number
-	    #  5) elevation in degrees
-	    #  6) azimuth in degrees to true
-	    #  7) SNR in dB
-	    #  more satellite infos like 4)-7)
-	    #  n) checksum
-	    my ($msg_anz,$msg_no,$rest);
-	    ($msg_anz,$msg_no,$sat_count,$rest) = split(/,/,$line,4);
-	    $msg_anz = 20 if $msg_anz>20;
-	    $sat={} if $msg_no == 1;
-	    #printf STDERR "# of Messages: $msg_anz; rest: '$rest'\n";
-	    while ( defined $rest && $rest =~ m/,/) {
-		#printf STDERR "# $count: $rest\n";
-		my ($sat_no,$sat_ele,$sat_azi,$sat_snr);
-		($sat_no,$sat_ele,$sat_azi,$sat_snr,$rest) = split(/,/,$rest,5);
-		#printf STDERR "($sat_no,$sat_ele,$sat_azi,$sat_snr)\n";
-		last unless defined ($sat_no) && defined($sat_ele) && defined($sat_azi) && defined($sat_snr);
-		$sat->{$sat_no}->{ele} = $sat_ele;
-		$sat->{$sat_no}->{azi} = $sat_azi;
-		$sat->{$sat_no}->{snr} = $sat_snr;
-	    }
-	    $sat_time = $last_time;
-	    #printf STDERR Dumper(\$sat);
-	    next;
-	} else {
-	    printf STDERR "Ignore Line $type: $line\n"
-		if $debug>6;
-	    next;
-	};
-	next unless ($lat ne "" )&& ($lon ne "");
-	next if  ($lat eq "0000.0000" ) && ($lon eq "00000.0000");
-	if ( $lat =~ m/(\d\d)(\d\d.\d+)/) {
-	    $lat = $1 + $2/60;
-	} else {
-	    printf STDERR "Error in lat: $lat\n$line\n";
-	}
-	if ($lon =~ m/(\d+)(\d\d\.\d+)/){
-	    $lon = $1 + $2/60;
-	} else {
-	    printf STDERR "Error in lon: $lon\n$line\n";
-	}
-	$lat = -$lat if $lat_v eq "S";
-	$lon = -$lon if $lon_v eq "W";
-	printf STDERR "type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n" 
-	    if $debug>5;
-	if ( ( abs($lat) < 0.001 ) && 
-	     ( abs($lat) < 0.001 ) ) {
-	    printf STDERR "too near to (0/0) : type $type (time:$time	lat:$lat	lon:$lon	alt:$alt	speed:$speed)\n";
-	    next;
-	};
-
-	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
-	if ( defined($date)) {
-	    $date =~ s/^(..)(..)(..)/20$3-$2-$1/;
-	} else {
-	    $date = $last_date;
-	}
-	$last_date=$date;
-	$time = str2time("$date ${time}");
-	$last_time = $time if $time;
-
-	$elem->{lat} = $lat;
-	$elem->{lon} = $lon;
-	$elem->{alt} = $alt if defined $alt;
-	$elem->{time} = $time if defined $time;
-	$time ||=0;
-
-	my $dop_time_diff = $time - $dop_time;
-	#printf STDERR "time diff: %f\n ", $dop_time_diff;
-	if ( $dop_time_diff < 10
-	     && defined($hdop) 
-	     && defined($vdop)
-	     && defined($pdop)
-	     ) {
-	    $elem->{pdop} = $pdop if $pdop;
-	    $elem->{hdop} = $hdop if $hdop;
-	    $elem->{vdop} = $vdop if $vdop;
-	    if ( $hdop > 30 or 
-		 $vdop > 30 or 
-		 $pdop > 30  ) {
-		#printf STDERR Dumper(\$elem);
-		next;
-	    }
-	}
-	
-	my $sat_time_diff = $time - $sat_time;
-	#printf STDERR "time diff: %f\n ", $sat_time_diff;
-	if ( $sat_time_diff < 10 ) {
-	    $elem->{sat}  = $sat_count;
-	    for my $sat_no ( keys %{$sat} ) {
-		$elem->{"sat_${sat_no}_ele"} = $sat->{$sat_no}->{ele};
-		$elem->{"sat_${sat_no}_azi"} = $sat->{$sat_no}->{azi};
-		$elem->{"sat_${sat_no}_snr"} = $sat->{$sat_no}->{snr};
-	    }
-	}
-	# More interesting Info might be:
-	# <course>52.000000</course>
-	# <ele>0.000000</ele>
-	# <fix>2d</fix>
-	# <fix>3d</fix>
-	# <sat>4</sat>
-	# <speed>0.000000</speed>
-	# <time>2035-12-03T05:42:23Z</time>
-	# <trkpt lat="48.177040000" lon="11.759786667">
-	
-	bless($elem,"NMEA::gps-point");
-    	push(@{$new_track},$elem);
-	$elem ={};
-    }
-    push(@{$new_tracks->{tracks}},$new_track);
-    if ( $verbose >1 ) {
-	printf STDERR "Read and parsed $filename";
-	print_time($start_time);
-    }
-
-    return $new_tracks;
-}
-
-##################################################################
-package GPX;
-##################################################################
-use Date::Parse;
-use Data::Dumper;
-use Date::Parse;
-use Date::Manip;
-use POSIX qw(strftime);
-
-use Geo::Geometry;
-use Utils::File;
-use Utils::Math;
-use Utils::Timing;
-
-# -----------------------------------------------------------------------------
-# Read GPS Data from GPX - File
-sub read_gpx_file($;$) { 
-    my $filename      = shift;
-    my $real_filename = shift || $filename;
-
-    my $start_time=time();
-    my $fh;
-
-    my $new_tracks={
-	filename => $real_filename,
-	tracks => [],
-	wpt => []
-	};
-
-    $fh = File::data_open($filename);
-    if ( ! ref($filename) =~ m/IO::File/ ) {
-	print STDERR "Parsing file: $filename\n" if $debug;
-    }
-    return $new_tracks unless $fh;
-
-    my $p = XML::Parser->new( Style => 'Objects' ,
-			      );
-    
-    my $content = [{Kids => []}];
-    eval {
-	$content = $p->parse($fh);
-    };
-    if ( $@ ) {
-	warn "$@Error while parsing\n $filename\n";
-	#print Dumper(\$content);
-	#return $content->[0]->{Kids};
-    }
-    if ( $content && (scalar(@{$content})>1) ) {
-	die "More than one top level Section was read in $filename\n";
-    }
-    if (not $p) {
-	print STDERR "WARNING: Could not parse osm data\n";
-	return $new_tracks;
-    }
-    if ( $verbose >1 ) {
-	printf STDERR "Read and parsed $filename";
-	print_time($start_time);
-    }
-
-    #print Dumper(keys %{$content});
-    #print Dumper(\$content);
-    $content = $content->[0];
-    $content = $content->{Kids};
-
-
-
-    # Extract Waypoints
-    for my $elem ( @{$content} ) {
-	next unless ref($elem) eq "GPX::wpt";
-	my $wpt_elem = $elem->{Kids};
-	my $new_wpt={};
-	$new_wpt->{lat} = $elem->{lat};
-	$new_wpt->{lon} = $elem->{lon};
-	for my $elem ( @{$wpt_elem} ) {
-	    my $found=0;
-	    for my $type ( qw ( name ele
-				cmt desc
-				sym pdop
-				course  fix hdop sat speed time )) {
-		if ( ref($elem) eq "GPX::$type" ){
-		    $new_wpt->{$type} = $elem->{Kids}->[0]->{Text};
-		    $found++;
-		}
-	    }
-	    if ( $found ){
-	    } elsif (ref($elem) eq 'GPX::Characters') {
-	    } else {
-		printf STDERR "unknown tag in Waypoint:".Dumper(\$elem);
-	    }
-	}
-	#printf STDERR Dumper(\$new_wpt);
-	push(@{$new_tracks->{wpt}},$new_wpt);
-    }
-    
-    # Extract Tracks
-    for my $elem ( @{$content} ) {
-	next unless ref($elem) eq "GPX::trk";
-	#	    GPX::trkseg
-	$elem = $elem->{Kids};
-	#printf STDERR Dumper(\$elem);
-	my $new_track=[];
-	for my $trk_elem ( @{$elem} ) {
-	    next unless ref($trk_elem) eq "GPX::trkseg";
-	    $trk_elem = $trk_elem->{Kids};
-	    #printf STDERR Dumper(\$trk_elem);
-	    for my $trk_pt ( @{$trk_elem} ) {
-		next unless ref($trk_pt) eq "GPX::trkpt";
-		#printf STDERR "Track Point:".Dumper(\$trk_pt);
-		for my $trk_pt_kid ( @{$trk_pt->{Kids}} ) {
-		    next if ref($trk_pt_kid) eq "GPX::Characters";
-		    #printf STDERR "Track Point Kid:".Dumper(\$trk_pt_kid);
-		    my $ref = ref($trk_pt_kid);
-		    my ( $type ) = ($ref =~ m/GPX::(.*)/ );
-		    $trk_pt->{$type} = $trk_pt_kid->{Kids}->[0]->{Text};
-		}
-		my $trk_time = $trk_pt->{time};
-		if ( defined $trk_time ) {
-		    #printf STDERR "trk_time $trk_time\n";
-		    my $time = str2time( $trk_time);
-		    my $ltime = localtime($time);
-		    my ($year,$month) = split(/-/,$trk_time);
-		    if ( $year < 1970 ) {
-			warn "Ignoring Dataset because of Strange Date $trk_time ($ltime) in GPX File\n";
-			next;
-		    };
-		    if ( $debug >= 11 ) {
-			printf STDERR "time: $ltime  ".$trk_pt->{time}."\n\n";
-		    }
-		    $trk_pt->{time_string} = $trk_pt->{time};
-		    $trk_pt->{time} = $time;
-		}
-
-		delete $trk_pt->{Kids};
-		#printf STDERR "Final Track Point:".Dumper(\$trk_pt);
-		push(@{$new_track},$trk_pt);
-	    }
-	}
-	push(@{$new_tracks->{tracks}},$new_track);
-    }
-
-    #printf STDERR Dumper(\$new_tracks);
-    return $new_tracks;
-}
-
-#------------------------------------------------------------------
-sub write_gpx_file($$) { # Write an gpx File
-    my $tracks = shift;
-    my $filename = shift;
-
-    my $start_time=time();
-
-    printf STDERR ("Writing GPS File $filename\n") if $verbose >1 || $debug >1;
-
-    my $fh;
-    if ( $filename eq '-' ) {
-	$fh = IO::File->new(">&STDOUT");
-    } else {
-	$fh = IO::File->new(">$filename");
-    }
-    print $fh "<?xml version=\"1.0\"?>\n";
-    print $fh "<gpx \n";
-    print $fh "    version=\"1.0\"\n";
-    print $fh "    creator=\"osm-filter Converter\"\n";
-    print $fh "    xmlns=\"http://www.ostertag.name\"\n";
-    print $fh "    >\n";
-    # <bounds minlat="47.855922617" minlon ="8.440864999" maxlat="48.424462667" maxlon="12.829756737" />
-    # <time>2006-07-11T08:01:39Z</time>
-
-    my $point_count=0;
-
-    # write Waypoints
-    if ( $write_gpx_wpt ) {
-	for my $wpt ( @{$tracks->{wpt}} ) {
-	    my $lat  = $wpt->{lat};
-	    my $lon  = $wpt->{lon};
-	    print $fh " <wpt lat=\"$lat\" lon=\"$lon\">\n";
-	    #print $fh "     <name>$wpt->{name}</name>\n";
-	    for my $type ( qw ( name ele
-				cmt desc
-				sym
-				course  fix hdop sat speed time )) {
-		my $value = $wpt->{$type};
-		next if $fake_gpx_date && ($type eq "time");
-		if( defined $value ) {
-		    print $fh "     <$type>$value</$type>\n";
-		}
-	    };
-	    print $fh " </wpt>\n";
-	}
-    }
-
-    # write tracks
-    my $fake_time=0;
-    my $track_id=0;
-    for my $track ( @{$tracks->{tracks}} ) {
-	$track_id++;
-	print $fh "\n";
-	print $fh "<trk>\n";
-	print $fh "   <name>$filename $track_id</name>\n";
-	print $fh "   <number>$track_id</number>\n";
-	print $fh "    <trkseg>\n";
-
-	for my $elem ( @{$track} ) {
-	    $point_count++;
-	    my $lat  = $elem->{lat};
-	    my $lon  = $elem->{lon};
-	    if ( abs($lat) >90 || abs($lon) >180 ) {
-		warn "write_gpx_track: Element ($lat/$lon) out of bound\n";
-		next;
-	    };
-	    print $fh "     <trkpt lat=\"$lat\" lon=\"$lon\">\n";
-	    if( defined $elem->{ele} ) {
-		print $fh "       <ele>$elem->{ele}</ele>\n";
-	    };
-	    # --- time
-	    if ( defined ( $elem->{time} ) ) {
-		#print Dumper(\$elem);
-
-		##################
-		my ($time_sec,$time_usec)=( $elem->{time} =~ m/(\d+)(\.\d*)?/);
-		if ( defined($time_usec) ) {
-		    $time_usec =~ s/^\.//;
-		}
-		if ( $time_sec && $time_sec < 3600*30 ) {
-		    $time_usec =~s/^\.//;
-		    print "---------------- time_sec: $time_sec\n";
-		}
-		if ( $fake_gpx_date ) {
-		    $fake_time += rand(10);
-		    $time_sec = $fake_time;
-		}
-		my $time = strftime("%FT%H:%M:%SZ", localtime($time_sec));
-		#UnixDate("epoch ".$time_sec,"%m/%d/%Y %H:%M:%S");
-		$time .= ".$time_usec" if $time_usec && ! $fake_gpx_date;
-		if ( $debug >20) {
-		    printf STDERR "elem-time: $elem->{time} UnixDate: $time\n";
-		}
-		print $fh "       <time>".$time."</time>\n";
-	    }
-	    # --- other attributes
-	    for my $type ( qw ( name ele
-				cmt course  
-				fix pdop hdop vdop sat
-				speed  )) {
-		next if $fake_gpx_date && ($type eq "time");
-		my $value = $elem->{$type};
-		if( defined $value ) {
-		    print $fh "       <$type>$value</$type>\n";
-		}
-	    };
-	    print $fh "     </trkpt>\n";
-	}
-	print $fh "    </trkseg>\n";
-	print $fh "</trk>\n\n";
-	
-    }
-
-    print $fh "</gpx>\n";
-    $fh->close();
-
-    printf STDERR "$filename:	 %5d Points in %d Tracks Wrote to GPX File",$point_count,$track_id;
-    print_time($start_time);
-}
-
 
 ##################################################################
 package GPSDrive;
 ##################################################################
+use strict;
+use warnings;
+
 use Date::Parse;
 use Data::Dumper;
 
@@ -1018,6 +214,7 @@ use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;
+use Utils::Debug;
 
 # -----------------------------------------------------------------------------
 # Read GPSDrive Track Data
@@ -1032,10 +229,10 @@ sub read_gpsdrive_track_file($) {
 	wpt => []
 	};
 
-    printf STDERR ("Reading $filename\n") if $verbose || $debug;
-    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
+    printf STDERR ("Reading $filename\n") if $VERBOSE || $DEBUG;
+    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $DEBUG;
 
-    my $fh = File::data_open($filename);
+    my $fh = data_open($filename);
     return $new_tracks  unless $fh;
 
     my $new_track = [];
@@ -1045,7 +242,7 @@ sub read_gpsdrive_track_file($) {
 	$line =~ s/^\s*//;
 	#my ($lat,$lon,$alt,$time) = ($line =~ m/\s*([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+([\+\-\d\.]+)\s+(.*)/);
 	my ($lat,$lon,$alt,$time) = split(/\s+/,$line,4);
-	printf STDERR "(lat: $lat,lon: $lon, alt:$alt, time: $time)\n" if $debug>1;
+	printf STDERR "(lat: $lat,lon: $lon, alt:$alt, time: $time)\n" if $DEBUG>1;
 	if ( ($lat>1000) || ( $lon>1000 )) { # new track
 	    if ( scalar(@{$new_track}) >0 ) {
 		push(@{$new_tracks->{tracks}},$new_track);
@@ -1064,7 +261,7 @@ sub read_gpsdrive_track_file($) {
 	bless($elem,"GPSDrive::gps-point");
     }
     push(@{$new_tracks->{tracks}},$new_track);
-    if ( $verbose >1 ) {
+    if ( $VERBOSE >1 ) {
 	printf STDERR "Read and parsed $filename";
 	print_time($start_time);
     }
@@ -1106,6 +303,9 @@ sub get_waypoint($) {
 ##################################################################
 package GPS;
 ##################################################################
+use strict;
+use warnings;
+
 use Date::Parse;
 use Data::Dumper;
 use Math::Trig;
@@ -1114,6 +314,9 @@ use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
 use Utils::Timing;
+use Utils::Debug;
+use Geo::Tracks::Tools;
+use Carp;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
@@ -1154,14 +357,14 @@ sub read_filter_areas_xml($){
 	wpt => []
 	};
 
-    printf STDERR "Reading Filter File $filename\n" if $verbose || $debug;
-    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $debug;
+    printf STDERR "Reading Filter File $filename\n" if $VERBOSE || $DEBUG;
+    printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $DEBUG;
 
-    print STDERR "Parsing file: $filename\n" if $debug;
+    print STDERR "Parsing file: $filename\n" if $DEBUG;
     my $p = XML::Parser->new( Style => 'Objects' ,
 			      );
     
-    my $fh = File::data_open($filename);
+    my $fh = data_open($filename);
     if ( ! $fh ) {
 	warn "Could not open Filter File $filename\n";
 	return;
@@ -1178,7 +381,7 @@ sub read_filter_areas_xml($){
 	print STDERR "WARNING: Could not parse filter data\n";
 	return $new_tracks;
     }
-    if ( $debug ) {
+    if ( $DEBUG ) {
 	printf STDERR "Read and parsed $filename";
 	print_time($start_time);
     }
@@ -1214,7 +417,7 @@ sub read_filter_areas($){
     my $filename = shift;
 
     printf STDERR "Read GpsDrive Filter File $filename\n"
-	if ( $debug || $verbose );
+	if ( $DEBUG || $VERBOSE );
 
     unless ( -s $filename ) {
 	printf STDERR "Filter File $filename not found\n";
@@ -1268,7 +471,7 @@ sub read_all_filter_areas(@){
 	} elsif ( $file =~ m/^internal$/ ) {
 	    add_internal_filter_areas();
 	}
-	if ( $debug >30 ) {
+	if ( $DEBUG >30 ) {
 	    print "internal__filter_area_list:".Dumper(\$internal__filter_area_list);
 	}
     }
@@ -1293,14 +496,14 @@ sub check_allowed_area($){
 	    if ( distance_point_point_Km($area,$elem) < $area->{proximity} ) {
 		printf STDERR "check_allowed_area(".$elem->{lat}.",".$elem->{lon}.
 		    ") -> WP: $area->{wp} : block: $area->{block}\n"
-		    if $debug > 30;
+		    if $DEBUG > 30;
 		return ! $area->{block};
 	    }
 	} else {
 	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
 	    if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
 		 $min_lon <= $elem->{lon} &&	 $max_lon >= $elem->{lon} ) {
-		if ( $debug >30) {
+		if ( $DEBUG >30) {
 		    printf STDERR "Allow Square\n";
 		}
 		return 1;
@@ -1370,49 +573,6 @@ sub draw_filter_areas(){
 }
 
 
-# ------------------------------------------------------------------
-# Enrich Track Data by adding:;
-#    Distance to next point
-#    angle_n: Angle to next point compared to north
-#    angle_n_r: Angle to next point compared to north ignoring direction
-#    angle: Angle between previous segment and following segment
-#    compare_dist: is pdop or any other usefull distance in
-#                  meter we can later use for distance comparison
-sub enrich_single_track($){
-    my $track = shift;
-    my $last_track_point = $#{@{$track}};
-    my $compare_dist=30;
-    for my $track_pos ( 0 ..  $last_track_point) {
-	my $elem0=$track->[$track_pos-1];
-	my $elem1=$track->[$track_pos];
-	my $elem2=$track->[$track_pos+1];
-
-	my $pdop = $elem1->{pdop};
-	if ( defined ( $pdop ) &&  ($pdop >0) ) {
-	    $compare_dist= $pdop;
-	}
-	$compare_dist=10 if $compare_dist <10;
-	$elem1->{compare_dist} = $compare_dist;
-	
-	if ( $track_pos < $last_track_point ) {
-	    $elem1->{angle_n}   = angle_north($elem1,$elem2);
-	    $elem1->{angle_n_r} = angle_north_relative($elem1,$elem2);
-	} else {
-	    $elem1->{angle_n}   = -999999;
-	    $elem1->{angle_n_r} = -999999;
-	}
-	if ( ($track_pos > 0) &&
-	     ( $track_pos < $last_track_point ) ) {
-	    $elem1->{angle} = 
-		angle_north($elem0,$elem1)  -
-		angle_north($elem1,$elem2);
-	} else {
-	    $elem1->{angle} =0;
-	}
-	# Distance between line of segment($segment)  to trackpoint $elem1
-	$elem1->{dist} = 1000*distance_point_point_Km($elem1,$elem2);
-    }
-}
 
 
 # ------------------------------------------------------------------
@@ -1430,28 +590,20 @@ sub split_tracks($$){
     my $max_allowed_dist  = $config->{max_dist}  || 2;
     my $max_allowed_time  = $config->{max_time}  || 60;
 
-    my $new_tracks={
-	filename => $tracks->{filename},
-	tracks => [],
-	wpt => []
-	};
-
-    # Keep WPT
-    for my $elem ( @{$tracks->{wpt}} ) {
-	next unless $elem;
-	push(@{$new_tracks->{wpt}},$elem);
-    }
+    my $new_tracks={};
+    copy_track_structure($tracks,$new_tracks);
+    copy_track_wpt($tracks,$new_tracks);
 
     my $deleted_points=0;
 
     my $track_number=0;
+    enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
 	my $prev_elem=0;
 	my $min_dist=999999999999999;
 	my $max_dist=0;
 	$track_number++;
 	next if !$track;
-	GPS::enrich_single_track($track);
 	my $new_track = [];
 	for my $elem ( @{$track} ) {
 	    unless ( defined($elem->{lat}) && defined($elem->{lon})){
@@ -1471,7 +623,7 @@ sub split_tracks($$){
 		my ($d_lat,$d_lon) = distance_degree_point_point($prev_elem,$elem);
 		$elem->{dist}=$dist;   # in Km
 		$elem->{angle}=$angle; # in Degre
-		if ($debug)  {
+		if ($DEBUG)  {
 		    #$elem->{d_lat}=sprintf("%9f",$d_lat*100000);
 		    #$elem->{d_lon}=sprintf("%9f",$d_lon*100000);
 		}
@@ -1486,7 +638,7 @@ sub split_tracks($$){
 		    $new_speed = $dist/$elem->{time_diff}*3600;
 		    if ( defined ( $elem->{speed}) && $new_speed && $elem->{speed} ) {
 			my $delta_speed = $elem->{speed} - $new_speed;
-			if ( $debug && $delta_speed > 1 ) {
+			if ( $DEBUG && $delta_speed > 1 ) {
 			    printf STDERR "Speed diff: old:$elem->{speed} - calc:$new_speed =  $delta_speed\n";
 			}
 		    } else {
@@ -1500,13 +652,13 @@ sub split_tracks($$){
 		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
 		}
 
-		if ( $elem->{dist} > $max_allowed_dist) {             # ---- Check for Track Split: 1 Km
+		if ( $elem->{dist} > $max_allowed_dist) {             # ---- Check for Track Split: xx Km
 		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
 		}
 
 		if ( $elem->{speed} && $elem->{speed} > $max_allowed_speed) { # ---- Check for Track Split: 200 Km/h
 		    $split_track .= sprintf(" Speed: %.1f Km/h ",$elem->{speed});
-		    if ( $debug >10) {
+		    if ( $DEBUG >10) {
 			printf STDERR "prev:".Dumper(\$prev_elem);
 			printf STDERR "".Dumper(\$elem);
 		    }
@@ -1516,12 +668,12 @@ sub split_tracks($$){
 		    my $num_elem=scalar(@{$new_track});
 		    if ( $num_elem  > 1) {
 			push(@{$new_tracks->{tracks}},$new_track);
-			printf STDERR "--------------- Splitting" if $debug;
+			printf STDERR "--------------- Splitting" if $DEBUG;
 		    } else {
-			printf STDERR "--------------- Dropping" if $debug;
+			printf STDERR "--------------- Dropping" if $DEBUG;
 			$deleted_points+=$num_elem;
 		    }
-		    if ( $debug ) {
+		    if ( $DEBUG ) {
 			printf STDERR "\tTrack Part (%4d Points)\t$split_track\n",$num_elem;
 		    }
 		    $new_track=[];
@@ -1539,17 +691,17 @@ sub split_tracks($$){
 	    $deleted_points += $num_elm_in_track;
 	}
 	
-	if ( $debug>2 || $verbose >4 ) {
+	if ( $DEBUG>2 || $VERBOSE >4 ) {
 	    printf STDERR "Split Track $track_number from $filename\n";
 	    printf STDERR "	Distance: %8.2f m .. %8.2f Km \n", $min_dist*1000,$max_dist;
 	    printf STDERR "	Elements: ".(scalar(@{$track}))."\n",
 	}
     }
-    if ( $debug ) {
+    if ( $DEBUG ) {
 	printf STDERR "		Deleted Points: $deleted_points (because Elem/Track < 3 )\n"
 	}
     #printf STDERR Dumper(\$new_tracks);
-    GPS::print_count_data($new_tracks,"after enriching/splitting");
+    GPS::print_count_data($new_tracks,"after splitting");
     print_time($start_time);
     return $new_tracks;
 }
@@ -1573,7 +725,7 @@ sub count_data($){
     }
 
     my $used_time = time()-$start_time;
-    if ( $debug>10 || ($used_time >5 )) {
+    if ( $DEBUG>10 || ($used_time >5 )) {
 	printf STDERR "Counted ( $count_tracks Tracks,$count_points Points)";
 	print_time($start_time);
     }
@@ -1592,8 +744,8 @@ sub print_count_data($$){
 
 
     my ($track_count,$point_count) = GPS::count_data($tracks);
-    if ( $verbose || $debug) {
-	printf STDERR "$filename:	%5d Points in %d Tracks $comment",$point_count,$track_count;
+    if ( $VERBOSE || $DEBUG) {
+	printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_count,$track_count;
     }
 }
 
@@ -1621,7 +773,7 @@ sub get_bounding_box($){
     }
 
     my $used_time = time()-$start_time;
-    if ( $debug>10 || ($used_time >5 )) {
+    if ( $DEBUG>10 || ($used_time >5 )) {
 	printf STDERR "Bounds are ($lat_min,$lon_min) ($lat_max,$lon_max)";
 	print_time($start_time);
     }
@@ -1640,18 +792,9 @@ sub filter_data_by_area($){
 
     my $start_time=time();
 
-    my $new_tracks={
-	filename => $tracks->{filename},
-	tracks => [],
-	wpt => []
-	};
-
-    # Keep WPT
-    for my $elem ( @{$tracks->{wpt}} ) {
-	next unless $elem;
-	# TODO: if (filter)
-	push(@{$new_tracks->{wpt}},$elem);
-    }
+    my $new_tracks={};
+    copy_track_structure($tracks,$new_tracks);
+    copy_track_wpt($tracks,$new_tracks);
 
     my $good_points=0;
     my $deleted_points=0;
@@ -1682,13 +825,72 @@ sub filter_data_by_area($){
 	}
     }
     printf STDERR "deleted_points:$deleted_points \n"	
-	if $debug>10;
+	if $DEBUG>10;
 
-    GPS::print_count_data($new_tracks,"after Area Filters");
+    GPS::print_count_data($new_tracks,"after Filtering Areas");
     print_time($start_time); 
     return $new_tracks;
 }
 
+
+# ------------------------------------------------------------------
+# check if a the next n points are combinable and 
+# can be replaceable by one segment
+sub is_gps_combineable($$){
+    my $track    = shift;
+    my $track_pos = shift;
+
+    my $count_combine =0;
+
+    my $sum_dist=0;
+    my $sum_angle=0;
+
+    my $elem0 = $track->[$track_pos];
+    my $dist_over=0;
+    my $pos_max = $#{@{$track}};
+    for my $track_pos_test ( $track_pos .. $pos_max ) {
+	my $elem2 = $track->[$track_pos_test];
+	$sum_dist = $sum_dist + $elem2->{dist};
+	if ( $sum_dist > 500 ) { # max 500 km distanz
+	    printf STDERR "Elements have $sum_dist Km Distance, which would be too much\n"
+		if $DEBUG >10;
+	    last;
+	}
+	if ( abs ($elem2->{angle}) > 20 ) {
+	    printf STDERR "Element $track_pos_test has $elem2->{angle} ° to next elem, which would be too much\n"
+		if $DEBUG >10;
+	    last;
+	}
+
+	$sum_angle +=abs($elem2->{angle});
+	if ( $sum_angle > 20 ) {
+	    printf STDERR "Elements 0 .. $track_pos_test has $sum_angle ° in summ, which would be too much\n"
+		if $DEBUG >10;
+	    last;
+	}
+
+	$dist_over=0;
+	for my $track_pos_test1 ( $track_pos+1 .. $track_pos_test) {
+	    my $elem1 = $track->[$track_pos_test1];
+	    # Distance between line of line(p0 and p2) to p1 20060810_182203.nmea
+	    my $dist = distance_line_point_Km($elem0->{lat},$elem0->{lon},
+					      $elem2->{lat},$elem2->{lon},
+					      $elem1->{lat},$elem1->{lon}
+					      );
+	    $dist_over =  1 if $dist > 0.04; # 4 meter
+	    printf STDERR "Elem  $track_pos_test1 is $dist m away from line\n"
+		if $DEBUG >10;
+	    last if $dist_over;
+	}
+	last if $dist_over;
+        $count_combine++;
+    }
+
+    return 0 unless $count_combine;
+    #print "pos: $track_pos($pos_max) : combine $count_combine Dist: $sum_dist\n";
+
+    return $count_combine;
+}
 
 # ------------------------------------------------------------------
 # Filter tracks with points
@@ -1700,67 +902,20 @@ sub filter_data_reduce_points($){
     return unless $use_reduce_filter;
 
     my $start_time=time();
-    my $new_tracks={
-	filename => $tracks->{filename},
-	tracks => [],
-	wpt => []
-	};
 
-    # Keep WPT
-    for my $elem ( @{$tracks->{wpt}} ) {
-	next unless $elem;
-	push(@{$new_tracks->{wpt}},$elem);
-    }
-
-    my $good_points=0;
-    my $deleted_points=0;
-    my $good_tracks=0;
+    enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
-	my $new_track = [];
-	my $last_angle         = 999999999;
-	my $last_elem = undef;
-	push(@{$new_track},$track->[0]);
-	my $size = scalar(@{$track});
-	for my $i ( 2 .. $size ) {
-	    my $skip_point =  0;
-	    my $elem0 = $new_track->[-1];
-	    my $elem1 = $track->[$i-1];
-	    my $elem2 = $track->[$i];
-	    my $dist_0_2 = distance_point_point_Km($elem0,$elem2);
-
-	    # Max Distance between 2 points in Track
-	    if ( $dist_0_2 > .5 ) { # max .5 km distanz
-		printf STDERR "Elem0 und Elem2 have $dist_0_2 Km Distance, which would be too much\n"
-		    if $debug >10;
-	    } else {
-		# Distance between line of line(p0 and p2) to p1 
-		my $dist = distance_line_point_Km($elem0->{lat},$elem0->{lon},
-							    $elem2->{lat},$elem2->{lon},
-							    $elem1->{lat},$elem1->{lon}
-							    );
-		$skip_point =  1 if $dist < 0.004; # 4 meter
-		printf STDERR "Elem $i is $dist m away from line\n"
-		    if $debug >10;
-	    }
-
-	    if ( $skip_point ) {
-		$deleted_points++;
-		printf STDERR "Delete Element $i\n"
-		    if $debug >10;
-	    } else {
-		push(@{$new_track},$elem1);
-		$good_points++;
-	    }
-	}
-	push(@{$new_track},$track->[-1]);
-
-	my $num_elem=scalar(@{$new_track});
-	if ( $num_elem ) {
-	    push(@{$new_tracks->{tracks}},$new_track);
-	    $good_tracks++;
+	next if !$track;
+	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	    my $count_combinable = is_gps_combineable($track,$track_pos);
+	    set_number_bad_points($track,$track_pos,$count_combinable);
+	    $track_pos+=$count_combinable;
 	}
     }
-    GPS::print_count_data($new_tracks,"after Data Reduce Points deleted_points:$deleted_points ");
+    
+    my $new_tracks = tracks_only_good_point($tracks);
+
+    GPS::print_count_data($new_tracks,"after Data Reduce Points ");
     print_time($start_time);
     return $new_tracks;
 }
@@ -1819,7 +974,7 @@ sub filter_duplicate_wpt($){
 		}
 		if ( $found ) {
 		    printf STDERR "wpt($name) is duplicate ignoring\n"
-			if $verbose >5 || $debug;
+			if $VERBOSE >5 || $DEBUG;
 		    next;
 		}
 		push(@{$wpt_by_name{$name}}, $elem);
@@ -1828,7 +983,7 @@ sub filter_duplicate_wpt($){
 	    }
 	    push(@new_wpt,$elem);
 	} else {
-	    warn "unnamed Waypoint".Dumper(\$elem)."\n" if $verbose || $debug;
+	    warn "unnamed Waypoint".Dumper(\$elem)."\n" if $VERBOSE || $DEBUG;
 	}
     }
 
@@ -1839,7 +994,7 @@ sub filter_duplicate_wpt($){
 # ------------------------------------------------------------------
 # check if new trackpoints are ner already existing ones
 
-sub filter_duplicate_tracepoints($$$){
+sub filter_duplicate_tracesegments($$$){
     my $tracks       = shift; # reference to tracks list
     my $checked_track_segments = shift;
     my $config       = shift;
@@ -1850,85 +1005,23 @@ sub filter_duplicate_tracepoints($$$){
     my $bounds = GPS::get_bounding_box($tracks);
     #printf STDERR "Track Bounds: ".Dumper(\$bounds);
 
-    my $new_tracks={
-	filename => $tracks->{filename},
-	tracks => [],
-	wpt => []
-	};
-
-    # Keep WPT
-    for my $wpt ( @{$tracks->{wpt}} ) {
-	next unless $wpt;
-	push(@{$new_tracks->{wpt}},$wpt);
-    }
-
     my $count_points = 0;
     my $new_points = 0;
     my $last_compare_dist=0;
+    enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
-	my $new_track=[];
-	my $last_elem={};
-	for my $elem ( @{$track} ) {
-	    my $skip_point=0;
-	    my $min_dist = 40000;
-	    my $pdop = $elem->{pdop};
-	    my $compare_dist=$dist_old2track;
-	    if ( defined ( $pdop ) &&  ($pdop >0) ) {
-		$compare_dist= $pdop;
-	    }
-
-	    if ( $last_compare_dist != $compare_dist ) {
-		print STDERR "compare_dist: $compare_dist\n" 
-		    if ($verbose > 1) || ($debug > 1 );
-		$last_compare_dist = $compare_dist;
-	    };
-
-	    for my $segment ( @{$checked_track_segments} ) {
-		#printf STDERR Dumper(\$segment);
-		# Distance between line of segment($segment)  to trackpoint $elem
-		my $dist = 1000*distance_line_point_Km($segment->[0],$segment->[1],
-								 $segment->[2],$segment->[3],
-								 $elem->{lat},$elem->{lon}
-								 );
-		$min_dist = $dist if $dist < $min_dist;
-		next if $dist > $compare_dist; # in m
-		printf STDERR "Elem is %3.1f m away from other Track line\n",$dist
-		    if $debug >1;
-		$count_points++;
-		$skip_point++;
-		last;
-	    }
-	    # printf STDERR "Min Dist: $min_dist Meter\n";
-
-	    ################################
-	    # Since this is currently only a dumpy all points are taken
-	    #$skip_point=0;
-
-	    
-	    if ( $skip_point ) {
-		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem >4 ) {
-		    push(@{$new_tracks->{tracks}},$new_track);
-		}
-		$new_track=[];
-		$count_points++;
-	    } else {
-		push(@{$new_track},$elem);
-		$new_points++;
-		if ( defined($last_elem) 
-		     && defined($last_elem->{lat}) 
-		     && defined($last_elem->{lon})) {
-		    push(@{$checked_track_segments},
-			 [$last_elem->{lat},$last_elem->{lon},$elem->{lat},$elem->{lon}]);
-		}
-	    }
-	    $last_elem=$elem;
+	
+	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	    #my $count_clew = is_gps_clew($track,$track_pos);
+	    #set_number_bad_points($track,$track_pos,$count_clew);
 	}
-	push(@{$new_tracks->{tracks}},$new_track);
+
     }
 
-    if ( $debug || $verbose) {
+    my $new_tracks = tracks_only_good_point_split($tracks);
+
+    if ( $DEBUG || $VERBOSE) {
 	printf STDERR "Found $count_points Points already in other Tracks.".
 	    "This leaves $new_points ";
 	print_time($start_time);
@@ -1939,11 +1032,40 @@ sub filter_duplicate_tracepoints($$$){
 
 
 
+# ------------------------------------------------------------------
+# check if distance between two  trackpoints is 0 Km
+sub filter_null_dist($){
+    my $tracks       = shift; # reference to tracks list
+
+    my $start_time=time();
+
+    enrich_tracks($tracks);
+    for my $track ( @{$tracks->{tracks}} ) {
+	next if !$track;
+	
+	for  ( my $track_pos=1; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	    my $elem0  =$track->[$track_pos-1];
+	    my $elem1  =$track->[$track_pos];
+	    next if $elem0->{lat} !=  $elem1->{lat};
+	    next if $elem0->{lon} !=  $elem1->{lon};
+	    $elem1->{good_point} =0;
+	}
+
+    }
+
+    my $new_tracks = tracks_only_good_point($tracks);
+    GPS::print_count_data($new_tracks,"after Filtering null distance");
+    print_time($start_time);
+    return $new_tracks;
+}
+
+
+
 
 # ------------------------------------------------------------------
 # scan over the elements and return the number of elements which 
 # are inside a boundingbox with a specified length
-sub find_points_in_bounding_box_for_track($$$){
+sub find_max_points_in_bbox_for_track($$$){
     my $track     = shift; # reference to tracks list
     my $track_pos = shift; # First Trackpoint to look at
     my $max_dist  = shift; # Height/width in km for bounding box
@@ -1970,7 +1092,7 @@ sub find_points_in_bounding_box_for_track($$$){
 	last if $dist>$max_dist;
 	$count++;
     }
-    #print STDERR "Bbox($count)\n" if $debug>1;
+    #print STDERR "Bbox($count)\n" if $DEBUG>1;
     return $count;
 }
 
@@ -1984,23 +1106,26 @@ sub is_gps_clew($$){
     my $skip_point=0;
 
     my $count_clew=0;
-    # We work with a boundingbox too
+    # We work with a bounding circle too
     # we just have to return a number of segments which belong to the clew
     # This reduces the cost for this action dramatically
-    my $bbox=find_points_in_bounding_box_for_track($track,$track_pos,0.040);
-    for my $track_pos_test ( $track_pos .. min($track_pos+$bbox,$#{@{$track}}) ) {
+    my $bbox=find_max_points_in_bbox_for_track($track,$track_pos,0.040);
+
+    my $pos_max = $#{@{$track}};
+    for my $track_pos_test ( $track_pos .. min($track_pos+$bbox,$pos_max) ) {
 	#print "track_pos_test($track_pos): $track_pos_test\n";
 	my $elem0 = $track->[$track_pos_test];
 	my $elem1 = $track->[$track_pos_test+1];
 	last if	$elem0->{dist} > $elem0->{compare_dist};
-	next if abs ($elem0->{angle}) < 20;
-	last if abs ($elem0->{angle})+abs($elem1->{angle})<40;
+	last if abs ($elem0->{angle}) < 20;
+	last if abs ($elem0->{angle})+abs($elem1->{angle})<70;
+	last if abs ($elem0->{angle})<70 && abs($elem1->{angle})<70;
 	$count_clew++;
     }
 
-    #print "$count_clew\n" if $count_clew>1;
-    return $count_clew if $count_clew>7;
-    return 0 ;
+    return 0 if $count_clew < 5;
+    #print "pos: $track_pos($pos_max) : clew $count_clew bbox: $bbox\n";
+    return $count_clew;
 }
 
 # ------------------------------------------------------------------
@@ -2009,78 +1134,33 @@ sub filter_gps_clew($$){
     my $tracks       = shift; # reference to tracks list
     my $config       = shift;
 
-    if ( $out_raw_gpx && $debug >3 ){
+    my $start_time=time();
+
+    if ( $out_raw_gpx && $DEBUG >3 ){
 	my $filename=$tracks->{filename};
 	my $new_gpx_file = "$filename-raw-pre-clew.gpx";
 	$new_gpx_file =~s/.gpx-raw-pre-clew.gpx/-raw-pre-clew.gpx/;
-	GPX::write_gpx_file($tracks,$new_gpx_file);
+	write_gpx_file($tracks,$new_gpx_file);
     };
 
     my $dist_osm_track = $config->{dist} || 40;
-    my $start_time=time();
 
-    my $new_tracks={
-	filename => $tracks->{filename},
-	tracks => [],
-	wpt => []
-	};
-
-    # Keep WPT
-    for my $wpt ( @{$tracks->{wpt}} ) {
-	next unless $wpt;
-	push(@{$new_tracks->{wpt}},$wpt);
-    }
-
-    my $all_points = 0;
-    my $track_count=0;
-    my $skiped_points=0;
+    enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
-	$track_count++;
 	next if !$track;
-
-	GPS::enrich_single_track($track);
-
+	
 	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
-	    my $elem=$track->[$track_pos];
 	    my $count_clew = is_gps_clew($track,$track_pos);
-	    for ( 1 .. $count_clew){
-		$track_pos++;
-		last if $track_pos > $#{@{$track}};
-		$track->[$track_pos]->{skip_point}= 1;
-	    }
+	    set_number_bad_points($track,$track_pos,$count_clew);
 	}
 
-	# Copy only those with skip_point set to 0
-	my $new_track=[];
-	for my $track_pos ( 0 .. $#{@{$track}} ) {
-	    $all_points ++;
-	    my $elem0=$track->[$track_pos-1];
-	    my $elem1=$track->[$track_pos];
-	    my $elem2=$track->[$track_pos+1];
-	    my $skip_point = $elem1->{skip_point};
-	    # This should only skip the point if the one before and after are skiped too
-	    # But currentls it's not working yet
-	    $skip_point=0 if ( $track_pos > 0             ) && ( ! $elem0->{skip_point} );
-	    $skip_point=0 if ( $track_pos < $#{@{$track}} ) && ( ! $elem2->{skip_point} );
-
-	    if ( $skip_point ) {
-		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem >2 ) {
-		    push(@{$new_tracks->{tracks}},$new_track);
-		}
-		$new_track=[];
-		$skiped_points++;
-	    } else {
-		push(@{$new_track},$elem1);
-	    }	}
-	push(@{$new_tracks->{tracks}},$new_track);
     }
 
-    if ( $debug || $verbose >1) {
-	printf STDERR "		Eliminated $skiped_points ($all_points) Points looking for clews\n";
-    }
+    #printf STDERR "Good Points: %d\n",count_good_point($tracks);
 
-    GPS::print_count_data($new_tracks,"after Clew Filtering");
+    my $new_tracks = tracks_only_good_point_split($tracks);
+
+    GPS::print_count_data($new_tracks,"after Filtering Clews");
     print_time($start_time);
     return $new_tracks;
 }
@@ -2089,242 +1169,6 @@ sub filter_gps_clew($$){
 
 # ------------------------------------------------------------------
 
-
-
-##################################################################
-package OSM;
-##################################################################
-
-use Data::Dumper;
-
-use Geo::Geometry;
-use Utils::File;
-use Utils::Math;
-use Utils::Timing;
-
-#no warnings 'deprecated';
-
-# ------------------------------------------------------------------
-sub Tracks2osm($){
-    my $tracks = shift;
-
-    my $reference = $tracks->{filename};
-    my $osm_segments     = {};
-    my $osm_segments_duplicate ={};
-
-    my $last_angle         = 999999999;
-    my $angle;
-    my $way={};
-    my $angle_to_last;
-
-    my $node_to   = 0;
-    my $node_from = 0;
-
-    my $element_count=0;
-    my $count_valid_points=0;
-
-    for my $track ( @{$tracks->{tracks}} ) {
-	for my $elem ( @{$track} ) {
-	    my $skip_point=0;
-	    my $seg_id=0;
-	    my $dist=999999999;
-
-	    printf STDERR "lat or lon undefined : $elem->{lat},$elem->{lon} ".Dumper(\$elem)."\n" 
-		unless  defined($elem->{lat}) && defined($elem->{lon}) ;
-
-
-	    $skip_point =  ! GPS::check_allowed_area($elem);
-
-	    #printf STDERR Dumper(\$elem)."\n" if $debug;
-	    my $pos = "$elem->{lat},$elem->{lon}";
-	    $next_osm_node_number++;
-	    if ( 0 && $osm_nodes_duplicate->{$pos} ) {
-		$node_to   = $osm_nodes_duplicate->{$pos};
-		printf STDERR "Node would $next_osm_node_number pos:$pos already exists as $node_to\n"
-		    if $verbose || $debug;
-	    } else {
-		if ( ! $skip_point ) {
-		    $osm_nodes->{$next_osm_node_number}=$elem;
-		    $osm_nodes_duplicate->{$pos} = $next_osm_node_number;
-		}
-		$node_to   = $next_osm_node_number;
-	    }
-	    
-	    next unless $element_count++; # Beim ersten keine Segment bearbeitung
-
-	    # -------------------------------------------- Create Segments
-	    if ( $node_from && $node_to && ! $skip_point) {
-		$dist = distance_point_point_Km($osm_nodes->{$node_from},$elem);
-	    }
-	    
-	    if (  ! $skip_point ) {
-		if ( $osm_nodes->{$node_from}->{dist} && 
-		     $osm_nodes->{$node_from}->{dist} != $dist &&
-		     $dist ) {
-#	    $osm_nodes->{$node_from}->{dist} .= ", $dist";
-		    $osm_nodes->{$node_from}->{dist} = $dist;
-		} else {
-		    $osm_nodes->{$node_from}->{dist} = $dist;
-		}
-
-		if ( $dist < .5 && 
-		     ( ! $elem->{angle_to_last} || $elem->{angle_to_last} < 90 )
-		     ){
-		    $seg_id = $osm_segment_number++;
-		    my $from_to = "$node_from,$node_to";
-		    if ( $osm_segments_duplicate->{$from_to} ) {
-			$seg_id = $osm_segments_duplicate->{$from_to};
-			printf STDERR "Duplicate segment $osm_segment_number --> $seg_id\n";
-		    } else {
-			$osm_segments->{$seg_id} = { from => $node_from,
-						     to   => $node_to
-						     };
-			if ( $debug >20 ) {
-			    $osm_segments->{$seg_id}->{tag} ={ distance => $dist,
-							       distance_meter => $dist*1000,
-							       reference => $reference,
-							       from_to => "$node_from $node_to",
-							   };
-			}
-		    };
-		    # Angle
-		    $angle = angle_north($osm_nodes->{$node_from},$osm_nodes->{$node_to});
-		}
-	    }
-
-	    if ( $seg_id &&	 ! $skip_point  ) {
-		if ( $debug) {
-		    #$osm_segments->{$seg_id}->{tag}->{time_diff} = $elem->{time_diff};
-		    if ( defined ( $elem->{speed} ) ) {
-			$osm_segments->{$seg_id}->{tag}->{speed} = $elem->{speed};
-		    }
-		    $osm_segments->{$seg_id}->{tag}->{angle} = $angle;
-		    #$osm_segments->{$seg_id}->{tag}->{d_lat} = $elem->{d_lat};
-		    #$osm_segments->{$seg_id}->{tag}->{d_lon} = $elem->{d_lon};
-		}
-		if ( defined ( $last_angle )) {
-		    $angle_to_last = $angle - $last_angle;
-		    $angle_to_last = - ( 360 - $angle_to_last) if $angle_to_last > 180;
-		    if ( $debug) {
-			#$osm_segments->{$seg_id}->{tag}->{angle_to_last} = $angle_to_last;
-		    }
-		} else {
-		    $angle_to_last=0;
-		}
-	    } 
-	    
-	    if ( $skip_point  
-		 || ! $seg_id      		 # Wir haben ein neues Segment
-		 || abs($angle_to_last) > 25 # unter x Grad Lenkeinschlag
-		 || $dist > .4  		 # unter x Km Distanz
-		 ) {
-		if ( defined($way->{seg}) 
-		     && ( @{$way->{seg}} > 4)
-		     ) {
-		    $osm_way_number++;
-		    $way->{reference} = $reference;
-		    $osm_ways->{$osm_way_number} = $way;
-		}
-		$way={};
-	    }
-	    if ( ! $skip_point  ){
-		push(@{$way->{seg}},$seg_id);
-		$count_valid_points++;
-	    }
-	    $node_from=$node_to;
-	    $last_angle = $angle;
-	}
-    }
-    return $osm_segments;
-}
-
-# ------------------------------------------------------------------
-sub tags2osm($){
-    my $obj = shift;
-    
-    my $erg = '';
-    for my $k ( keys %{$obj->{tag}} ) {
-	my $v = $obj->{tag}{$k};
-	if ( ! defined $v ) {
-	    warn "incomplete Object: ".Dumper($obj);
-	}
-	#next unless defined $v;
-	$erg .= "	 <tag k=\"$k\" v=\"$v\"/>\n";
-    }
-    return $erg;
-}
-
-sub write_osm_file($$) { # Write an osm File
-    my $filename = shift;
-    my $osm_segments = shift;
-
-    my $start_time=time();
-
-    printf STDERR ("Writing OSM File $filename\n") if $verbose >1 || $debug>1;
-
-    my $fh = IO::File->new(">$filename");
-    print $fh "<?xml version=\"1.0\"?>\n";
-    print $fh "<osm version=\"0.3\" generator=\"OpenStreetMap Tracks2osm Converter\">\n";
-    
-    # --- Nodes
-    for my $node_id (  sort keys %{$osm_nodes} ) {
-	next unless $node_id;
-	my $node = $osm_nodes->{$node_id};
-	my $lat = $osm_nodes->{$node_id}->{lat};
-	my $lon = $osm_nodes->{$node_id}->{lon};
-	next unless defined($lat) && defined($lon);
-	print $fh "	<node id=\"-$node_id\" ";
-	print $fh " lat=\"$lat\" ";
-	print $fh " lon=\"$lon\" ";
-	print $fh ">\t";
-	print $fh tags2osm($node);
-	#print $fh "	 <tag k=\"alt\" v=\"$node->{alt}\"/>\t";
-	print $fh "	</node>\n";
-
-    }
-
-    # --- Segments
-    for my $seg_id (  sort keys %{$osm_segments} ) {
-	next unless $seg_id;
-	my $segment = $osm_segments->{$seg_id};
-	my $node_from = $segment->{from};
-	my $node_to   = $segment->{to};
-	print $fh "	<segment id=\"-$seg_id\" ";
-	print $fh " from=\"-$node_from\" ";
-	print $fh " to=\"-$node_to\" ";
-	my $sep="\n";
-	#$sep="\t";
-	print $fh ">$sep";
-	print $fh tags2osm($segment);
-	print $fh "	</segment>\n";
-
-    }
-
-    # --- Ways
-    if ( $generate_ways ) {
-	for my $way_id ( keys %{$osm_ways} ) {
-	    next unless $way_id;
-	    my $way = $osm_ways->{$way_id};
-	    print $fh "	<way id=\"-$way_id\">\n";
-	    print $fh tags2osm($way);
-	    
-	    for my $seg_id ( @{$way->{seg}} ) {
-		next unless $seg_id;
-		print $fh "	 <seg id=\"-$seg_id\"/>\n";
-	    }
-	    print $fh "	</way>\n";
-	}
-    }
-
-    print $fh "</osm>\n";
-    $fh->close();
-
-    if ( $verbose) {
-	printf STDERR "$filename: Wrote OSM File";
-	print_time($start_time);
-    }
-
-}
 
 
 ###########################################
@@ -2341,6 +1185,9 @@ sub write_osm_file($$) { # Write an osm File
 ########################################################################################
 ########################################################################################
 package main;
+
+use strict;
+use warnings;
 
 # *****************************************************************************
 sub convert_Data(){
@@ -2364,7 +1211,7 @@ sub convert_Data(){
     }
     if ( @ARGV < 1){
 	printf STDERR "Need Filename(s) to convert\n";
-	printf STDERR "use: osm-filter.pl -h for more help\n";
+	printf STDERR "use: osmfilter.pl -h for more help\n";
 	exit 1;
     }
 
@@ -2372,39 +1219,8 @@ sub convert_Data(){
 
     
     my $osm_segments;
-    if ( $do_check_against_osm ) {
-	if ( -s $do_check_against_osm ) {
-	    if (  $do_check_against_osm =~ m/\.csv/ ) {
-		$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($do_check_against_osm);
-	    } elsif ( $do_check_against_osm =~ m/\.osm/ ) {
-		$osm_segments = OSM::read_osm_file($do_check_against_osm);
-	    } else {
-		die "Unknown Datatype for $do_check_against_osm\n";
-	    }
-	    #print Dumper(\$osm_segments ) if $debug;
-	} else {
-
-	    # later we search in:
-	    #  ~/.osm/data/planet.osm.csv
-	    # /var/data/osm/planet.osm.csv
-
-	    my @path=qw( ./
-			 ~/openstreetmap.org/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
-			 ~/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
-			 ~/.gpsdrive/MIRROR/osm/);
-	    my $osm_filename;
-	    my $home = $ENV{HOME}|| '~/';
-	    for my $path ( @path ) {
-
-		$osm_filename = "${path}osm.txt";
-		$osm_filename =~ s,\~/,$home/,;
-		printf STDERR "check $osm_filename for loading\n" if $debug;
-		
-		last if -s $osm_filename;
-		$osm_filename='';
-	    }
-	    $osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($osm_filename);
-	};
+    if ( $do_filter_against_osm ) {
+	$osm_segments = load_segment_list($do_filter_against_osm);
     }
     
 
@@ -2421,25 +1237,31 @@ sub convert_Data(){
 	    next;
 	}
 
+	if ( ! -s $filename ) {
+	    printf STDERR "$filename: Skipping for read. Cannot be found.\n\n";
+	    next;
+	    
+	}
+
 	my ( $extention ) = ( $filename =~ m/\.([^\.]+)(\.gz|\.bz2)?$/ );
-	printf STDERR "$filename has extention '$extention'\n" if $debug>1;
+	printf STDERR "$filename has extention '$extention'\n" if $DEBUG>1;
 	if ( $filename eq '-' ) {
-	    $new_tracks = GPX::read_gpx_file($filename);
+	    $new_tracks = read_gpx_file($filename);
 	} elsif ( $filename =~ m/^gpsbabel:(\S+):(\S+)$/ ) {
 	    my ($type,$name) = ($1,$2);
-	    $new_tracks = Gpsbabel::read_file($name,$type);    
+	    $new_tracks = read_track_GpsBabel($name,$type);    
 	} elsif ( $extention eq "gps" ) {
 	    $new_tracks = Kismet::read_gps_file($filename);
 	} elsif ( $extention eq "gpx" ) {
-	    $new_tracks = GPX::read_gpx_file($filename);
+	    $new_tracks = read_gpx_file($filename);
 	} elsif ( $extention eq "mps" ) {
-	    $new_tracks = Gpsbabel::read_file($filename,"mapsource");
+	    $new_tracks = read_track_GpsBabel($filename,"mapsource");
 	} elsif ( $extention eq "gdb" ) {
-	    $new_tracks = Gpsbabel::read_file($filename,"gdb");
+	    $new_tracks = read_track_GpsBabel($filename,"gdb");
 	} elsif ( $extention eq "ns1" ) {
-	    $new_tracks = Gpsbabel::read_file($filename,"netstumbler");
+	    $new_tracks = read_track_GpsBabel($filename,"netstumbler");
 	} elsif ( $extention eq "nmea" ) {
-	    $new_tracks = NMEA::read_file($filename);
+	    $new_tracks = read_track_NMEA($filename);
 	} elsif ( $extention eq "sav" ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	} else {
@@ -2447,8 +1269,10 @@ sub convert_Data(){
 	    next;
 	}
 	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
-	if ( $verbose || $debug) {
-	    printf STDERR "$filename: %5d Points in %d Tracks read\n",$point_read_count,$track_read_count;
+	if ( $VERBOSE || $DEBUG) {
+	    my $comment = "read";
+	    printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_read_count,$track_read_count;
+	    print  STDERR "\n";
 	}
 
 	if ( $out_raw_gpx ){
@@ -2456,9 +1280,10 @@ sub convert_Data(){
 
 	    my $new_gpx_file = "$filename-raw.gpx";
 	    $new_gpx_file =~s/.gpx-raw.gpx/-raw.gpx/;
-	    GPX::write_gpx_file($new_tracks,$new_gpx_file);
+	    write_gpx_file($new_tracks,$new_gpx_file);
 	};
 		
+	$new_tracks = GPS::filter_null_dist( $new_tracks );
 
 	if ( $do_filter_clew ) {
 	    $new_tracks = GPS::filter_gps_clew( $new_tracks,
@@ -2469,13 +1294,13 @@ sub convert_Data(){
 	    $new_tracks = GPS::filter_data_by_area($new_tracks);
 	}
 
-	if ( $filter_duplicate_tracepoints ) {
-	    $new_tracks = GPS::filter_duplicate_tracepoints( $new_tracks,[],
+	if ( $filter_duplicate_tracesegments ) {
+	    $new_tracks = GPS::filter_duplicate_tracesegments( $new_tracks,[],
 							 { dist => 20 });
 	};
 
-	if ( $do_check_against_osm ) {
-	    $new_tracks = OSM::check_against_osm( $new_tracks,$osm_segments,
+	if ( $do_filter_against_osm ) {
+	    $new_tracks = OSM::filter_against_osm( $new_tracks,$osm_segments,
 					      { dist => 30 });
 	};
 
@@ -2496,26 +1321,27 @@ sub convert_Data(){
 	if ( $track_count > 0 ) {
 	    my $new_gpx_file = "$filename-converted.gpx";
 	    $new_gpx_file =~s/.gpx-converted.gpx/-converted.gpx/;
-	    GPX::write_gpx_file($new_tracks,$new_gpx_file)
+	    write_gpx_file($new_tracks,$new_gpx_file)
 		if $single_file;
 	    
 	    if ( $out_osm ){
 		my $new_osm_file = "$filename.osm";
-		my $points = OSM::Tracks2osm($new_tracks);
-		OSM::write_osm_file($new_osm_file,$points)
+		my $osm = tracks2osm($new_tracks);
+		write_osm_file($new_osm_file,$osm)
 		}
 	}
 
 	GPS::add_tracks($all_tracks,$new_tracks);
 	if ( $point_count && $track_count ) {
-	    printf STDERR "$filename: %5d(%5d) Points in %3d(%3d) Tracks added\n",
+	    printf STDERR "%-35s:	",$filename;
+	    printf STDERR "%5d(%5d) Points in %3d(%3d) Tracks added\n",
 	    $point_count,$point_read_count,$track_count,$track_read_count;
 
 	}
-	if ( $verbose ) {
+	if ( $VERBOSE ) {
 	    printf STDERR "\n";
 	}
-	if ( $debug) {
+	if ( $DEBUG) {
 	    printf STDERR "\n";
 	}
     }
@@ -2529,25 +1355,25 @@ sub convert_Data(){
 
 	    ($track_count,$point_count) =   GPS::count_data($all_tracks);
 	    if (  $out_osm ) {
-		my $points = OSM::Tracks2osm($all_tracks);
-		OSM::write_osm_file("00_combination.osm",$points);
+		my $osm = tracks2osm($all_tracks);
+		write_osm_file("00_combination.osm",$osm);
 	    }
 	    
 	    if ( $use_stdout ) {
-		GPX::write_gpx_file($all_tracks,'-');
+		write_gpx_file($all_tracks,'-');
 		} else {
-		    GPX::write_gpx_file($all_tracks,"00_combination.gpx");
+		    write_gpx_file($all_tracks,"00_combination.gpx");
 			if ( $out_raw_gpx ){
-			    GPX::write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
+			    write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
 			    }
 		    };
 	    
 	    if ( $draw_filter_areas ) {
 		my $filter_areas = GPS::draw_filter_areas();
-		GPX::write_gpx_file($filter_areas,"00_filter_areas.gpx");
+		write_gpx_file($filter_areas,"00_filter_areas.gpx");
 	    }
 	}
-    if ( $verbose) {
+    if ( $VERBOSE) {
 	printf STDERR "Converting $count_files_converted Files";
 	print_time($start_time);
     }
@@ -2558,10 +1384,10 @@ sub convert_Data(){
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
-	     'debug+'               => \$debug,      
-	     'd+'                  => \$debug,      
-	     'verbose+'            => \$verbose,
-	     'v+'                  => \$verbose,
+	     'debug:+'               => \$DEBUG,      
+	     'd:+'                  => \$DEBUG,      
+	     'verbose:+'            => \$VERBOSE,
+	     'v:+'                  => \$VERBOSE,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
 	     'h|help|x'            => \$help, 
@@ -2573,11 +1399,11 @@ GetOptions (
 	     'out-osm'             => \$out_osm,
 	     'out-raw-gpx'         => \$out_raw_gpx,
 	     'split-tracks'        => \$split_tracks,
-	     'check_against_osm:s' => \$do_check_against_osm,
-	     'osm:s'               => \$do_check_against_osm,
-             'filter_duplicate_tracepoints' => \$filter_duplicate_tracepoints,
-	     'filter-clew'     => \$do_filter_clew,
-	     'use_reduce_filter'   => \$use_reduce_filter,
+	     'filter_against_osm:s' => \$do_filter_against_osm,
+	     'osm:s'               => \$do_filter_against_osm,
+             'filter_duplicate_tracesegments' => \$filter_duplicate_tracesegments,
+	     'filter-clew!'     => \$do_filter_clew,
+	     'use_reduce_filter!'   => \$use_reduce_filter,
 	     'filter-area:s@'      => \@filter_area_files,
 	     'generate_ways'       => \$generate_ways,
 	     'filter-all'          => \$do_all_filters,
@@ -2591,11 +1417,11 @@ if ( $do_all_filters ) {
     $out_osm            ||= 1;
     $out_raw_gpx        ||= 1;
     $split_tracks       ||= 1;
-    $use_reduce_filter  ||= 1;
-    $do_filter_clew     ||= 1;
-    $do_check_against_osm = 1 unless defined $do_check_against_osm;
+    $use_reduce_filter  = 1 unless defined $use_reduce_filter;
+    $do_filter_clew     = 1 unless defined $do_filter_clew;
+    $do_filter_against_osm = 1 unless defined $do_filter_against_osm;
     @filter_area_files || push(@filter_area_files,"");
-#    $filter_duplicate_tracepoints=1;
+#    $filter_duplicate_tracesegments=1;
 }
 
 pod2usage(1) if $help;
@@ -2726,7 +1552,7 @@ Split tracks it they have gaps of more than
  - 1 Km
  - 200 Km/h
 
-=item B<--check_against_osm> |  B<--osm>
+=item B<--filter_against_osm> |  B<--osm>
 
 This loads the osm.txt and checks if the 
 track-points already exist as an osm-segment.
@@ -2748,7 +1574,7 @@ If you provide a filename this file is read instead of the osm.txt file
 you can use --osm=0 in combination with --filter-all to not let osm-filter 
 check against osm Data.
 
-=item B<--filter_duplicate_tracepoints>
+=item B<--filter_duplicate_tracesegments>
 
 This Filter checks for points near an already existing Trackline. 
 If so it is removed
@@ -2799,7 +1625,7 @@ AND: they are not tested :-(
 
 The default area-filter rule is allow the rest.
 
-=irem B<--filter-clew>
+=item B<--filter-clew>
 
 Filter out these little nasty gps accuracies if you are standing still
 

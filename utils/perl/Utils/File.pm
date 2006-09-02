@@ -1,14 +1,18 @@
 ##################################################################
-package File;
+package Utils::File;
 ##################################################################
 
-use Exporter; require DynaLoader; require AutoLoader;
-@ISA = qw(Exporter DynaLoader);
-@EXPORT = qw(
-	     data_open
-	     );
+use Exporter;
+@ISA = qw( Exporter );
+use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+@EXPORT = qw( data_open
+	      file_needs_re_generation
+	      );
+use strict;
+use warnings;
 
 use IO::File;
+use Utils::Debug;
 
 # -----------------------------------------------------------------------------
 # Open Data File in predefined Directories
@@ -29,12 +33,12 @@ sub data_open($){
 	my $size = (-s $filename)||0;
 	if ( $size < 270 ) {
 	    warn "cannot Open $filename ($size) Bytes is too small)\n"
-		if $verbose || $debug;
+		if $VERBOSE || $DEBUG;
 	    return undef;
 	}
     }
 
-    printf STDERR "Opening $filename\n" if $debug;
+    printf STDERR "Opening $filename\n" if $DEBUG;
     if ( $filename =~ m/\.gz$/ ) {
 	$fh = IO::File->new("gzip -dc $filename|")
 	    or die("cannot open $filename: $!");
@@ -46,4 +50,19 @@ sub data_open($){
 	    or die("cannot open $filename: $!");
     }
     return $fh;
+}
+
+# -----------------------------------------------------------------------------
+# Open Data File in predefined Directories
+sub file_needs_re_generation($$){
+    my $src_filename = shift;
+    my $dst_filename = shift;
+
+    # dst file does not exist
+    return 1 unless -s $dst_filename;
+
+    my ($src_mtime) = (stat($src_filename))[9] || 0;
+    my ($dst_mtime) = (stat($dst_filename))[9] || 0;
+
+    return $src_mtime > $dst_mtime;
 }

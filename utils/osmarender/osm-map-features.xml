@@ -142,10 +142,10 @@
   <rule e="segment|way" k="highway" v="secondary">
       <line class='highway-secondary-casing' />
   </rule>
-  <rule e="segment|way" k="highway" v="primary">
+  <rule e="segment|way" k="highway" v="primary|primary_link">
       <line class='highway-primary-casing' />
   </rule>
-  <rule e="segment|way" k="highway" v="trunk">
+  <rule e="segment|way" k="highway" v="trunk|trunk_link">
       <line class='highway-trunk-casing' />
   </rule>
   <rule e="segment|way" k="highway" v="motorway|motorway_link">
@@ -166,7 +166,7 @@
     </rule>    
   </rule>
 
-  <rule e="segment|way" k="highway" v="primary">
+  <rule e="segment|way" k="highway" v="primary|primary_link">
     <rule k="oneway" v="~">
       <line class='highway-primary-core' />
     </rule>
@@ -178,7 +178,7 @@
     </rule>    
   </rule>
 
-  <rule e="segment|way" k="highway" v="trunk">
+  <rule e="segment|way" k="highway" v="trunk|trunk_link">
     <rule k="oneway" v="~">
       <line class='highway-trunk-core' />
     </rule>
@@ -273,11 +273,11 @@
     <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" />
   </rule>
 
-  <rule e="segment|way" k="highway" v="primary">
+  <rule e="segment|way" k="highway" v="primary|primary_link">
     <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" />
   </rule>
 
-  <rule e="segment|way" k="highway" v="trunk">
+  <rule e="segment|way" k="highway" v="trunk|trunk_link">
     <text k="name" text-anchor='middle' startOffset='50%' class="highway-trunk-name" />
   </rule>
 
@@ -295,11 +295,11 @@
     <text k="ref" class='highway-secondary-ref' dx='2.5' dy='-2.5' />
   </rule>
 
-  <rule e="node" k="highway" v="primary">
+  <rule e="node" k="highway" v="primary|primary_link">
     <text k="ref" class='highway-primary-ref' dx='2.5' dy='-2.5' />
   </rule>
 
-  <rule e="node" k="highway" v="trunk">
+  <rule e="node" k="highway" v="trunk|trunk_link">
     <text k="ref" class='highway-trunk-ref' dx='2.5' dy='-2.5' />
   </rule>
 

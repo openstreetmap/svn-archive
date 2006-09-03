@@ -62,9 +62,11 @@ class Renderer
 
 		unless seg_ids.nil? || seg_ids.empty?
 			ways = @dao.get_multis_from_segments(seg_ids)
+
+		# NW 030906 note that 'segid' is now an array of one member
     	ways.each do |way|
 	  	  way.segs.each do |segid|
-  			  @tagged_segments[segid.id.to_i].style = @rules.get_style(way.tags) unless way.tags.nil? or @tagged_segments[segid.id.to_i].nil?
+  			  @tagged_segments[segid[0].to_i].style = @rules.get_style(way.tags) unless way.tags.nil? or @tagged_segments[segid[0].to_i].nil?
 		    end
    	  end
 		end

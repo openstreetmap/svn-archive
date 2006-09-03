@@ -112,8 +112,9 @@ sub write_osm_file($$) { # Write an osm File
     print $fh "</osm>\n";
     $fh->close();
 
-    if ( $VERBOSE) {
-	printf STDERR "$filename: Wrote OSM File ".
+    if ( $VERBOSE || $DEBUG ) {
+	printf STDERR "%-35s:	",$filename;
+	printf STDERR " Wrote OSM File ".
 	    "($count_nodes Nodes, $count_segments Segments, $count_ways Ways)";
 	print_time($start_time);
     }

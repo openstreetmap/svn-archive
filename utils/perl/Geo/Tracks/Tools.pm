@@ -10,7 +10,13 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 	      count_good_point
 	      set_number_bad_points
 	      enrich_tracks
-	      );
+	      track_point_speed
+	      track_part_angle
+	      track_part_distance
+	      print_count_data
+	      count_data
+	      add_tracks
+);
 
 
 use strict;
@@ -20,6 +26,8 @@ use Carp;
 use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
+use Utils::Debug;
+use Utils::Timing;
 
 # Copy the track structure
 sub copy_track_structure($$){
@@ -167,7 +175,7 @@ sub count_good_point($){
 
 # ------------------------------------------------------------------
 # Enrich Track Data by adding:;
-#    Distance to next point
+#    dist: Distance to next point in meters
 #    angle_n: Angle to next point compared to north
 #    angle_n_r: Angle to next point compared to north ignoring direction
 #    angle: Angle between previous segment and following segment
@@ -218,6 +226,9 @@ sub enrich_single_track($){
 	# Distance between line of segment($segment)  to trackpoint $elem1
 	$elem1->{dist} = 1000*distance_point_point_Km($elem1,$elem2);
 
+	if ( defined($elem1->{time}) && defined($elem2->{time}) ) {
+	    $elem1->{time_diff} = $elem1->{time} - $elem2->{time};
+	}
     }
 }
 
@@ -230,4 +241,149 @@ sub enrich_tracks($){
     }
 }
 
+
+# ------------------------------------------------------------------
+# Calculate Average Speed of track segment
+sub track_point_speed($$){
+    my $track = shift;
+    my $track_pos = shift;
+
+    my $elem = $track->[$track_pos];
+    return $elem->{speed} if defined $elem->{speed};
+    
+    my $pos_start = $track_pos-10;
+    $pos_start = 0        if $pos_start<0;
+
+    my $pos_end =  $pos_start+20;
+    my $max_pos = $#{@{$track}};
+    $pos_end   = $max_pos if $pos_end> $max_pos;
+ 
+    return track_part_speed($track,$pos_start,$pos_end);
+}
+
+# ------------------------------------------------------------------
+# Calculate Average Speed of track segment
+sub track_part_speed($$$){
+    my $track = shift;
+    my $pos_start = shift;
+    my $pos_end = shift;
+    my $avg_speed = 0;
+
+    my $max_pos = $#{@{$track}};
+    $pos_start = 0        if $pos_start<0;
+    $pos_end   = $max_pos if $pos_end> $max_pos;
+
+    my $dist = track_part_distance($track,$pos_start,$pos_end)/1000;
+    my $elem_s = $track->[$pos_start];
+    my $elem_e = $track->[$pos_end];
+    my $time_diff = $elem_s->{time} - $elem_e->{time};
+    my $speed = $dist/$time_diff*3600;
+
+    $avg_speed = $speed;
+
+    my $sum_speed=0;
+    for my $track_pos ( $pos_start .. $pos_end ) {
+	my $elem = $track->[$track_pos];
+
+	return $speed # Abort if any sub-speeds are not defined
+	    unless defined $elem->{speed};
+
+	$sum_speed += $elem->{speed};
+    }
+    $avg_speed = $sum_speed/($pos_end-$pos_start+1);
+
+    return $avg_speed;
+}
+
+# ------------------------------------------------------------------
+# Summarize all angles between start and endpoint of a single track
+sub track_part_angle($$$){
+    my $track = shift;
+    my $pos_start = shift;
+    my $pos_end = shift;
+    my $sum_angle=0;
+    
+    for my $track_pos ( $pos_start .. $pos_end ) {
+	$sum_angle += $track->[$track_pos]->{angle};
+    }
+    return $sum_angle;
+}
+
+# ------------------------------------------------------------------
+# Summarize distance between start and endpoint of a single track
+sub track_part_distance($$$){
+    my $track = shift;
+    my $pos_start = shift;
+    my $pos_end = shift;
+    my $sum_angle=0;
+    
+    for my $track_pos ( $pos_start .. $pos_end ) {
+	$sum_angle += $track->[$track_pos]->{dist};
+    }
+    return $sum_angle;
+}
+
+# ------------------------------------------------------------------
+# count tracks and points
+sub count_data($){
+    my $tracks      = shift; # reference to tracks list
+
+    my $start_time=time();
+
+    my $count_tracks=0;
+    my $count_points=0;
+
+    for my $track ( @{$tracks->{tracks}} ) {
+	next if !$track;
+	for my $elem ( @{$track} ) {
+	    $count_points++;
+	}
+	$count_tracks++;
+    }
+
+    my $used_time = time()-$start_time;
+    if ( $DEBUG>5 || $VERBOSE>5 || ($used_time >5 )) {
+	printf STDERR "Counted ( $count_tracks Tracks,$count_points Points)";
+	print_time($start_time);
+    }
+
+    return ( $count_tracks,$count_points);
+}
+
+# ------------------------------------------------------------------
+# Print Number of points/tracks with a comment
+# and print them with a comment and the filename stored in the track
+sub print_count_data($$){
+    my $tracks   = shift; # reference to tracks list
+    my $comment  = shift;
+
+    my $filename =     $tracks->{filename};
+
+    my ($track_count,$point_count) = GPS::count_data($tracks);
+    if ( $VERBOSE || $DEBUG) {
+	printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_count,$track_count;
+    }
+}
+
+
+# ------------------------------------------------------------------
+# add a list of tracks to another list of Tracks
+sub add_tracks($$){
+    my $dst_tracks      = shift; # reference to tracks list
+    my $src_tracks      = shift; # reference to tracks list
+
+    $dst_tracks ||= { filename => '',
+		      tracks => [],
+		      wpt => [],
+		      };
+    $dst_tracks->{filename} .=",$src_tracks->{filename}";
+    for my $elem ( @{$src_tracks->{wpt}} ) {
+	next unless $elem;
+	push(@{$dst_tracks->{wpt}},$elem);
+    }
+    for my $elem ( @{$src_tracks->{tracks}} ) {
+	next unless $elem;
+	push(@{$dst_tracks->{tracks}},$elem);
+    }
+}
 1;

@@ -79,19 +79,19 @@ my $osm_obj           = undef; # OSM Object currently read
 
 my $use_stdin         = 0;
 my $use_stdout        = 0;
-my $out_osm           = 0;
-my $fake_gpx_date     = 0;
-my $write_gpx_wpt     = 0;
-my $out_raw_gpx       = 0;
-my $split_tracks      = 0;
+my $out_osm           = undef;
+my $fake_gpx_date     = undef;
+my $write_gpx_wpt     = undef;
+my $out_raw_gpx       = undef;
+my $split_tracks      = undef;
 my @filter_area_files = ();
-my $draw_filter_areas = 0;
-my $use_reduce_filter = undef;
+my $draw_filter_areas = undef;
+my $do_filter_reduce_pt = undef;
 my $do_filter_clew   = undef;
 my $do_filter_against_osm = undef;
-my $filter_duplicate_tracesegments = 0;
+my $do_filter_dup_trace_segments = undef;
 my $do_all_filters    = 0;
-my $generate_ways     = 0;
+my $generate_ways     = undef;
 
 my $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
 
@@ -196,7 +196,7 @@ sub filter_against_osm($$$){
 
     my $new_tracks = tracks_only_good_point_split($tracks);
 
-    GPS::print_count_data($new_tracks,"after Filtering against existing OSM Data");
+    print_count_data($new_tracks,"after Filtering against existing OSM Data");
     print_time($start_time);
     return $new_tracks;
 }
@@ -479,12 +479,20 @@ sub read_all_filter_areas(@){
 
 # -------------------------------------------------
 # Check given Element against all defined area-filters
-sub check_allowed_area($){
+sub check_allowed_area($$){
     my $elem = shift;
+    my $filter_area_list = shift;
+    #$internal__filter_area_list
     
     return 1 unless @filter_area_files;
+    if ( ref($filter_area_list) ne "ARRAY" ) {
+	confess("check_allowed_area(): Filter list must be an array");
+    };
+    unless ( defined($elem->{lat}) && defined($elem->{lon}) ) {
+	confess("check_allowed_area(): Unknown Type of Element to check:".Dumper(\$elem));
+    };
     
-    for my $area ( @{$internal__filter_area_list} ) {
+    for my $area ( @{$filter_area_list} ) {
 	if (ref($area) eq "HASH" ) {	    
 	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive ~/.gpsdrive/way.txt Waypoints
 		my $proximity;
@@ -587,166 +595,49 @@ sub split_tracks($$){
     my $filename     = $tracks->{filename};
 
     my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || 2;
+    my $max_allowed_dist  = $config->{max_dist}  || 5000; # 5 Km
     my $max_allowed_time  = $config->{max_time}  || 60;
-
-    my $new_tracks={};
-    copy_track_structure($tracks,$new_tracks);
-    copy_track_wpt($tracks,$new_tracks);
-
-    my $deleted_points=0;
 
     my $track_number=0;
     enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
-	my $prev_elem=0;
-	my $min_dist=999999999999999;
-	my $max_dist=0;
-	$track_number++;
-	next if !$track;
-	my $new_track = [];
-	for my $elem ( @{$track} ) {
+	my $max_pos = $#{@{$track}};
+	for  ( my $track_pos=0; $track_pos <= $max_pos;$track_pos++ ) {
+	    my $elem = $track->[$track_pos];
 	    unless ( defined($elem->{lat}) && defined($elem->{lon})){
-		$deleted_points++;
+		$elem->{good_point}=0;
 		next;
 	    }
 	    if ( $elem->{fix} && $elem->{fix} eq "none" ) {
-		$deleted_points++;
+		$elem->{good_point}=0;
 		next;
 	    };		
+	    next if $track_pos >= $max_pos;
 
 	    $elem->{time} = 0 unless defined $elem->{time};
 
-	    if (  $prev_elem ) {
-		my $dist  = distance_point_point_Km($prev_elem,$elem);
-		my $angle = angle_north($prev_elem,$elem);
-		my ($d_lat,$d_lon) = distance_degree_point_point($prev_elem,$elem);
-		$elem->{dist}=$dist;   # in Km
-		$elem->{angle}=$angle; # in Degre
-		if ($DEBUG)  {
-		    #$elem->{d_lat}=sprintf("%9f",$d_lat*100000);
-		    #$elem->{d_lon}=sprintf("%9f",$d_lon*100000);
-		}
-		if ($dist) {
-		    $min_dist=min($min_dist,$dist);
-		    $max_dist=max($max_dist,$dist);
-		}
-		$elem->{time_diff} = $elem->{time} - $prev_elem->{time};
-		# --------- Speed
-		my $new_speed = 0;
-		if ( $elem->{time_diff} ) {
-		    $new_speed = $dist/$elem->{time_diff}*3600;
-		    if ( defined ( $elem->{speed}) && $new_speed && $elem->{speed} ) {
-			my $delta_speed = $elem->{speed} - $new_speed;
-			if ( $DEBUG && $delta_speed > 1 ) {
-			    printf STDERR "Speed diff: old:$elem->{speed} - calc:$new_speed =  $delta_speed\n";
-			}
-		    } else {
-			$elem->{speed} = sprintf("%5.4f",$new_speed);
-		    }
-		}
-
-		my $split_track='';
-
-		if ( $elem->{time_diff} > $max_allowed_time) { # ---- Check for Track Split: time diff
-		    $split_track .= " Delta Time: $elem->{time_diff} sec. ";
-		}
-
-		if ( $elem->{dist} > $max_allowed_dist) {             # ---- Check for Track Split: xx Km
-		    $split_track .= sprintf(" Dist: %.3f Km ",$elem->{dist});
-		}
-
-		if ( $elem->{speed} && $elem->{speed} > $max_allowed_speed) { # ---- Check for Track Split: 200 Km/h
-		    $split_track .= sprintf(" Speed: %.1f Km/h ",$elem->{speed});
-		    if ( $DEBUG >10) {
-			printf STDERR "prev:".Dumper(\$prev_elem);
-			printf STDERR "".Dumper(\$elem);
-		    }
-		}
-
-		if (  $split_track ne '' ) {
-		    my $num_elem=scalar(@{$new_track});
-		    if ( $num_elem  > 1) {
-			push(@{$new_tracks->{tracks}},$new_track);
-			printf STDERR "--------------- Splitting" if $DEBUG;
-		    } else {
-			printf STDERR "--------------- Dropping" if $DEBUG;
-			$deleted_points+=$num_elem;
-		    }
-		    if ( $DEBUG ) {
-			printf STDERR "\tTrack Part (%4d Points)\t$split_track\n",$num_elem;
-		    }
-		    $new_track=[];
-		}
+	    if ( $elem->{time_diff} > $max_allowed_time) { # ---- Check for Track Split: time diff
+		$elem->{good_point} =0;
 	    }
-	    push(@{$new_track},$elem);
-	    $prev_elem=$elem;
-	}
 
-
-	my $num_elm_in_track = scalar(@{$new_track})||0;
-	if ( $num_elm_in_track > 3 ) {
-	    push(@{$new_tracks->{tracks}},$new_track);
-	} else {
-	    $deleted_points += $num_elm_in_track;
-	}
-	
-	if ( $DEBUG>2 || $VERBOSE >4 ) {
-	    printf STDERR "Split Track $track_number from $filename\n";
-	    printf STDERR "	Distance: %8.2f m .. %8.2f Km \n", $min_dist*1000,$max_dist;
-	    printf STDERR "	Elements: ".(scalar(@{$track}))."\n",
+	    my $dist  = $elem->{dist};   # in Km
+	    if ( $dist > $max_allowed_dist) {             # ---- Check for Track Split: xx Km
+		$elem->{good_point} =0;
+	    }
+	    
+	    # --------- Speed
+	    my $speed = track_point_speed($track,$track_pos);
+	    if ( $speed && $speed > $max_allowed_speed) { # ---- Check for Track Split: 200 Km/h
+		$elem->{good_point} =0;
+	    }
 	}
     }
-    if ( $DEBUG ) {
-	printf STDERR "		Deleted Points: $deleted_points (because Elem/Track < 3 )\n"
-	}
-    #printf STDERR Dumper(\$new_tracks);
-    GPS::print_count_data($new_tracks,"after splitting");
+
+    my $new_tracks = tracks_only_good_point_split($tracks);
+
+    print_count_data($new_tracks,"after splitting");
     print_time($start_time);
     return $new_tracks;
-}
-
-# ------------------------------------------------------------------
-# count tracks and points
-sub count_data($){
-    my $tracks      = shift; # reference to tracks list
-
-    my $start_time=time();
-
-    my $count_tracks=0;
-    my $count_points=0;
-
-    for my $track ( @{$tracks->{tracks}} ) {
-	next if !$track;
-	for my $elem ( @{$track} ) {
-	    $count_points++;
-	}
-	$count_tracks++;
-    }
-
-    my $used_time = time()-$start_time;
-    if ( $DEBUG>10 || ($used_time >5 )) {
-	printf STDERR "Counted ( $count_tracks Tracks,$count_points Points)";
-	print_time($start_time);
-    }
-
-    return ( $count_tracks,$count_points);
-}
-
-# ------------------------------------------------------------------
-# Print Number of points/tracks with a comment
-sub print_count_data($$){
-#    my $filename = shift;
-    my $tracks   = shift; # reference to tracks list
-    my $comment  = shift;
-
-    my $filename =     $tracks->{filename};
-
-
-    my ($track_count,$point_count) = GPS::count_data($tracks);
-    if ( $VERBOSE || $DEBUG) {
-	printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_count,$track_count;
-    }
 }
 
 # ------------------------------------------------------------------
@@ -785,49 +676,23 @@ sub get_bounding_box($){
 # ------------------------------------------------------------------
 # Filter tracks with points
 # check_allowed_area($elem) tells if this element is added or not
-sub filter_data_by_area($){
+sub filter_track_by_area($){
     my $tracks      = shift; # reference to tracks list
 
     return unless @filter_area_files;
 
     my $start_time=time();
 
-    my $new_tracks={};
-    copy_track_structure($tracks,$new_tracks);
-    copy_track_wpt($tracks,$new_tracks);
-
-    my $good_points=0;
-    my $deleted_points=0;
-    my $good_tracks=0;
     for my $track ( @{$tracks->{tracks}} ) {
-	my $new_track = [];
-	for my $elem ( @{$track} ) {
-
-	    my $skip_point =  ! check_allowed_area($elem);
-
-	    if ( $skip_point ) {
-		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem ) {
-		    push(@{$new_tracks->{tracks}},$new_track);
-		    $good_tracks++;
-		}
-		$new_track=[];
-		$deleted_points++
-		} else {
-		    push(@{$new_track},$elem);
-		    $good_points++;
-		}
-	}
-	my $num_elem=scalar(@{$new_track});
-	if ( $num_elem ) {
-	    push(@{$new_tracks->{tracks}},$new_track);
-	    $good_tracks++;
+	for my $track_pos ( 0 .. $#{@{$track}} ) {
+	    my $elem = $track->[$track_pos];
+	    $elem->{good_point} = check_allowed_area($elem,$internal__filter_area_list);
 	}
     }
-    printf STDERR "deleted_points:$deleted_points \n"	
-	if $DEBUG>10;
 
-    GPS::print_count_data($new_tracks,"after Filtering Areas");
+    my $new_tracks = tracks_only_good_point_split($tracks);
+
+    print_count_data($new_tracks,"after Filtering Areas");
     print_time($start_time); 
     return $new_tracks;
 }
@@ -877,7 +742,7 @@ sub is_gps_combineable($$){
 					      $elem2->{lat},$elem2->{lon},
 					      $elem1->{lat},$elem1->{lon}
 					      );
-	    $dist_over =  1 if $dist > 0.04; # 4 meter
+	    $dist_over =  1 if $dist > 0.010; # 10 meter
 	    printf STDERR "Elem  $track_pos_test1 is $dist m away from line\n"
 		if $DEBUG >10;
 	    last if $dist_over;
@@ -899,13 +764,12 @@ sub is_gps_combineable($$){
 sub filter_data_reduce_points($){
     my $tracks      = shift; # reference to tracks list
 
-    return unless $use_reduce_filter;
+    return unless $do_filter_reduce_pt;
 
     my $start_time=time();
 
     enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
-	next if !$track;
 	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
 	    my $count_combinable = is_gps_combineable($track,$track_pos);
 	    set_number_bad_points($track,$track_pos,$count_combinable);
@@ -915,30 +779,9 @@ sub filter_data_reduce_points($){
     
     my $new_tracks = tracks_only_good_point($tracks);
 
-    GPS::print_count_data($new_tracks,"after Data Reduce Points ");
+    print_count_data($new_tracks,"after Data Reduce Points ");
     print_time($start_time);
     return $new_tracks;
-}
-
-# ------------------------------------------------------------------
-# add a list of tracks to another 
-sub add_tracks($$){
-    my $dst_tracks      = shift; # reference to tracks list
-    my $src_tracks      = shift; # reference to tracks list
-
-    $dst_tracks ||= { filename => '',
-		      tracks => [],
-		      wpt => [],
-		      };
-    $dst_tracks->{filename} .=",$src_tracks->{filename}";
-    for my $elem ( @{$src_tracks->{wpt}} ) {
-	next unless $elem;
-	push(@{$dst_tracks->{wpt}},$elem);
-    }
-    for my $elem ( @{$src_tracks->{tracks}} ) {
-	next unless $elem;
-	push(@{$dst_tracks->{tracks}},$elem);
-    }
 }
 
 
@@ -991,42 +834,85 @@ sub filter_duplicate_wpt($){
 }
 
 
+
+# Adds a segment to the segment list by providing 
+# a track and the position where to get the segment from
+sub add_trackpoint2segmentlist($$$){
+    my $segment_list = shift;
+    my $track = shift;
+    my $track_pos = shift;
+
+    my $elem0 = $track->[$track_pos];
+    my $elem1 = $track->[$track_pos+1];
+
+    my @segment;
+    ($segment[0],$segment[1],$segment[2],$segment[3]) =
+	($elem0->{lat},$elem0->{lon},$elem1->{lat},$elem1->{lon});
+    $segment[4] = angle_north_relative(
+				   { lat => $segment[0] , lon => $segment[1] },
+				   { lat => $segment[2] , lon => $segment[3] });
+    push (@{$segment_list},\@segment);
+}
+
 # ------------------------------------------------------------------
 # check if new trackpoints are ner already existing ones
-
-sub filter_duplicate_tracesegments($$$){
+sub filter_dup_trace_segments($$){
     my $tracks       = shift; # reference to tracks list
-    my $checked_track_segments = shift;
     my $config       = shift;
 
     my $dist_old2track = $config->{dist} || 20;
     my $start_time=time();
 
     my $bounds = GPS::get_bounding_box($tracks);
-    #printf STDERR "Track Bounds: ".Dumper(\$bounds);
 
     my $count_points = 0;
     my $new_points = 0;
     my $last_compare_dist=0;
-    enrich_tracks($tracks);
-    for my $track ( @{$tracks->{tracks}} ) {
-	next if !$track;
-	
-	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
-	    #my $count_clew = is_gps_clew($track,$track_pos);
-	    #set_number_bad_points($track,$track_pos,$count_clew);
-	}
 
+    enrich_tracks($tracks);
+    
+    my $segment_list=[];
+    for my $track_no ( 0 .. $#{@{$tracks->{tracks}}} ) {
+	my $track = $tracks->{tracks}->[$track_no];
+	next if !$track;
+	my $sliding_track_pos=0;
+	my $pos_max= $#{@{$track}};
+	for my $track_pos ( 1 .. $pos_max ) {
+	    $track->[$track_pos]->{good_point} =
+		! OSM::is_segment_of_list_nearby($track,$track_pos,$segment_list);
+
+	    my $track_angle=0;
+	    while ( ( abs($track_angle = track_part_angle($track,$sliding_track_pos,$track_pos-1)) > 140 ) 
+		    && ($sliding_track_pos<$track_pos-5)
+		    && track_part_distance($track,$sliding_track_pos,$track_pos-1)>100) {
+		add_trackpoint2segmentlist($segment_list,$track,$sliding_track_pos);
+		$sliding_track_pos ++;
+		print STDERR "Track: $track_no ".
+		    "sliding_track_pos: $sliding_track_pos/".($sliding_track_pos-$track_pos).
+		    " ($track_pos,$pos_max)	track_angle: $track_angle lets me assume a turn\n" 
+		    if $DEBUG > 1;
+	    }
+	    if ( ( $track_pos - $sliding_track_pos ) > 140 ) {
+		#add_trackpoint2segmentlist($segment_list,$track,$sliding_track_pos);
+		#$sliding_track_pos ++;
+
+		# TODO: Immer nur dann kopieren, wenn der 
+		# winkel sich um mehr als 160 Grad geändert hat
+	    }
+#	    print "Track: $track_no sliding_track_pos: $sliding_track_pos ($pos_max)	track_angle: $track_angle\n";
+	    #print Dumper(\@sliding_track_list);
+	}
+	while ( $sliding_track_pos < $pos_max ) {
+	    add_trackpoint2segmentlist($segment_list,$track,$sliding_track_pos);
+	    $sliding_track_pos ++;
+	}
     }
 
     my $new_tracks = tracks_only_good_point_split($tracks);
 
-    if ( $DEBUG || $VERBOSE) {
-	printf STDERR "Found $count_points Points already in other Tracks.".
-	    "This leaves $new_points ";
-	print_time($start_time);
-    }
-
+    print_count_data($new_tracks,"after Filtering my own Tracks.");
+    print_time($start_time);
+    
     return $new_tracks;
 }
 
@@ -1054,7 +940,7 @@ sub filter_null_dist($){
     }
 
     my $new_tracks = tracks_only_good_point($tracks);
-    GPS::print_count_data($new_tracks,"after Filtering null distance");
+    print_count_data($new_tracks,"after Filtering null distance");
     print_time($start_time);
     return $new_tracks;
 }
@@ -1109,7 +995,7 @@ sub is_gps_clew($$){
     # We work with a bounding circle too
     # we just have to return a number of segments which belong to the clew
     # This reduces the cost for this action dramatically
-    my $bbox=find_max_points_in_bbox_for_track($track,$track_pos,0.040);
+    my $bbox=find_max_points_in_bbox_for_track($track,$track_pos,0.050);
 
     my $pos_max = $#{@{$track}};
     for my $track_pos_test ( $track_pos .. min($track_pos+$bbox,$pos_max) ) {
@@ -1160,7 +1046,7 @@ sub filter_gps_clew($$){
 
     my $new_tracks = tracks_only_good_point_split($tracks);
 
-    GPS::print_count_data($new_tracks,"after Filtering Clews");
+    print_count_data($new_tracks,"after Filtering Clews");
     print_time($start_time);
     return $new_tracks;
 }
@@ -1203,8 +1089,6 @@ sub convert_Data(){
 	};
     my $single_file = ( @ARGV ==1 );
     my $start_time  = time();
-
-    my ($track_count,$point_count);
 
     if ( $use_stdin ) {
 	push(@ARGV,"-");
@@ -1268,7 +1152,7 @@ sub convert_Data(){
 	    warn "$filename: !!! Skipping because of unknown Filetype ($extention) for reading\n";
 	    next;
 	}
-	my ($track_read_count,$point_read_count) =   GPS::count_data($new_tracks);
+	my ($track_read_count,$point_read_count) =   count_data($new_tracks);
 	if ( $VERBOSE || $DEBUG) {
 	    my $comment = "read";
 	    printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_read_count,$track_read_count;
@@ -1276,27 +1160,26 @@ sub convert_Data(){
 	}
 
 	if ( $out_raw_gpx ){
-	    GPS::add_tracks($all_raw_tracks,$new_tracks);
-
 	    my $new_gpx_file = "$filename-raw.gpx";
 	    $new_gpx_file =~s/.gpx-raw.gpx/-raw.gpx/;
 	    write_gpx_file($new_tracks,$new_gpx_file);
+
+	    add_tracks($all_raw_tracks,$new_tracks);
 	};
 		
 	$new_tracks = GPS::filter_null_dist( $new_tracks );
+
+	if ( @filter_area_files ) {
+	    $new_tracks = GPS::filter_track_by_area($new_tracks);
+	}
 
 	if ( $do_filter_clew ) {
 	    $new_tracks = GPS::filter_gps_clew( $new_tracks,
 					      { dist => 30 });
 	};
 
-	if ( @filter_area_files ) {
-	    $new_tracks = GPS::filter_data_by_area($new_tracks);
-	}
-
-	if ( $filter_duplicate_tracesegments ) {
-	    $new_tracks = GPS::filter_duplicate_tracesegments( $new_tracks,[],
-							 { dist => 20 });
+	if ( $do_filter_dup_trace_segments ) {
+	    $new_tracks = GPS::filter_dup_trace_segments( $new_tracks,{});
 	};
 
 	if ( $do_filter_against_osm ) {
@@ -1309,15 +1192,14 @@ sub convert_Data(){
 					{ max_speed => 200 });
 	}
 
-	if ( $use_reduce_filter ) {
+	if ( $do_filter_reduce_pt ) {
 	    $new_tracks = GPS::filter_data_reduce_points($new_tracks);
 	}
 
-
+	my ($track_count,$point_count);
+	($track_count,$point_count) =   count_data($new_tracks);
 	$count_files_converted ++ if $point_count && $track_count;
 
-
-	($track_count,$point_count) =   GPS::count_data($new_tracks);
 	if ( $track_count > 0 ) {
 	    my $new_gpx_file = "$filename-converted.gpx";
 	    $new_gpx_file =~s/.gpx-converted.gpx/-converted.gpx/;
@@ -1329,31 +1211,29 @@ sub convert_Data(){
 		my $osm = tracks2osm($new_tracks);
 		write_osm_file($new_osm_file,$osm)
 		}
+	} else {
+	    printf STDERR "%-35s:No resulting Tracks so nothing is written\n",$filename;
 	}
 
-	GPS::add_tracks($all_tracks,$new_tracks);
+	add_tracks($all_tracks,$new_tracks);
 	if ( $point_count && $track_count ) {
 	    printf STDERR "%-35s:	",$filename;
 	    printf STDERR "%5d(%5d) Points in %3d(%3d) Tracks added\n",
 	    $point_count,$point_read_count,$track_count,$track_read_count;
 
 	}
-	if ( $VERBOSE ) {
-	    printf STDERR "\n";
-	}
-	if ( $DEBUG) {
+	if ( $VERBOSE || $DEBUG ) {
 	    printf STDERR "\n";
 	}
     }
 
+    GPS::filter_duplicate_wpt($all_tracks);
+    
+
     if ( $count_files_converted ) {
-	GPS::filter_duplicate_wpt($all_tracks);
-
-
-	    GPS::print_count_data($all_tracks,"after complete processing");
+	    print_count_data($all_tracks,"after complete processing");
 	    print_time($start_time);
-
-	    ($track_count,$point_count) =   GPS::count_data($all_tracks);
+	    
 	    if (  $out_osm ) {
 		my $osm = tracks2osm($all_tracks);
 		write_osm_file("00_combination.osm",$osm);
@@ -1361,18 +1241,24 @@ sub convert_Data(){
 	    
 	    if ( $use_stdout ) {
 		write_gpx_file($all_tracks,'-');
-		} else {
-		    write_gpx_file($all_tracks,"00_combination.gpx");
-			if ( $out_raw_gpx ){
-			    write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
-			    }
-		    };
+	    } else {
+		write_gpx_file($all_tracks,"00_combination.gpx");
+		if ( $out_raw_gpx ){
+		    write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
+		}
+	    };
 	    
-	    if ( $draw_filter_areas ) {
-		my $filter_areas = GPS::draw_filter_areas();
-		write_gpx_file($filter_areas,"00_filter_areas.gpx");
+	} else {
+	    if ( $VERBOSE || $DEBUG ) {
+		print STDERR "No files Converted; so nothing written\n";
 	    }
 	}
+    
+    if ( $draw_filter_areas ) {
+	my $filter_areas = GPS::draw_filter_areas();
+	write_gpx_file($filter_areas,"00_filter_areas.gpx");
+    }
+
     if ( $VERBOSE) {
 	printf STDERR "Converting $count_files_converted Files";
 	print_time($start_time);
@@ -1384,44 +1270,44 @@ sub convert_Data(){
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
-	     'debug:+'               => \$DEBUG,      
+	     'debug:+'              => \$DEBUG,      
 	     'd:+'                  => \$DEBUG,      
 	     'verbose:+'            => \$VERBOSE,
 	     'v:+'                  => \$VERBOSE,
-	     'MAN'                 => \$man, 
-	     'man'                 => \$man, 
-	     'h|help|x'            => \$help, 
+	     'MAN'                  => \$man, 
+	     'man'                  => \$man, 
+	     'h|help|x'             => \$help, 
 
-	     'stdin'               => \$use_stdin,
-	     'stdout'              => \$use_stdout,
-	     'proxy=s'             => \$PROXY,
+	     'stdin'                => \$use_stdin,
+	     'stdout'               => \$use_stdout,
+	     'proxy=s'              => \$PROXY,
 
-	     'out-osm'             => \$out_osm,
-	     'out-raw-gpx'         => \$out_raw_gpx,
-	     'split-tracks'        => \$split_tracks,
-	     'filter_against_osm:s' => \$do_filter_against_osm,
-	     'osm:s'               => \$do_filter_against_osm,
-             'filter_duplicate_tracesegments' => \$filter_duplicate_tracesegments,
-	     'filter-clew!'     => \$do_filter_clew,
-	     'use_reduce_filter!'   => \$use_reduce_filter,
-	     'filter-area:s@'      => \@filter_area_files,
-	     'generate_ways'       => \$generate_ways,
-	     'filter-all'          => \$do_all_filters,
-	     'fake-gpx-date'       => \$fake_gpx_date,
-	     'write-gpx-wpt'       => \$write_gpx_wpt,
-	     'draw_filter_areas'   => \$draw_filter_areas,
+	     'out-osm!'             => \$out_osm,
+	     'out-raw-gpx!'         => \$out_raw_gpx,
+	     'split-tracks!'        => \$split_tracks,
+	     'filter-against-osm:s' => \$do_filter_against_osm,
+	     'osm:s'                => \$do_filter_against_osm,
+             'filter-dup-seg!'      => \$do_filter_dup_trace_segments,
+	     'filter-clew!'         => \$do_filter_clew,
+	     'filter-reduce!'       => \$do_filter_reduce_pt,
+	     'filter-area:s@'       => \@filter_area_files,
+	     'generate_ways!'       => \$generate_ways,
+	     'filter-all'           => \$do_all_filters,
+	     'fake-gpx-date!'       => \$fake_gpx_date,
+	     'write-gpx-wpt!'       => \$write_gpx_wpt,
+	     'draw_filter_areas!'   => \$draw_filter_areas,
 	     )
     or pod2usage(1);
 
 if ( $do_all_filters ) {
-    $out_osm            ||= 1;
-    $out_raw_gpx        ||= 1;
-    $split_tracks       ||= 1;
-    $use_reduce_filter  = 1 unless defined $use_reduce_filter;
+    $out_osm            = 1 unless defined $out_osm;
+    $out_raw_gpx        = 1 unless defined $out_raw_gpx;
+    $split_tracks       = 1 unless defined $split_tracks;
+    $do_filter_reduce_pt  = 1 unless defined $do_filter_reduce_pt;
     $do_filter_clew     = 1 unless defined $do_filter_clew;
     $do_filter_against_osm = 1 unless defined $do_filter_against_osm;
+    $do_filter_dup_trace_segments =1 unless defined $do_filter_dup_trace_segments;
     @filter_area_files || push(@filter_area_files,"");
-#    $filter_duplicate_tracesegments=1;
 }
 
 pod2usage(1) if $help;
@@ -1552,7 +1438,7 @@ Split tracks it they have gaps of more than
  - 1 Km
  - 200 Km/h
 
-=item B<--filter_against_osm> |  B<--osm>
+=item B<--filter-against-osm> |  B<--osm>
 
 This loads the osm.txt and checks if the 
 track-points already exist as an osm-segment.
@@ -1574,14 +1460,14 @@ If you provide a filename this file is read instead of the osm.txt file
 you can use --osm=0 in combination with --filter-all to not let osm-filter 
 check against osm Data.
 
-=item B<--filter_duplicate_tracesegments>
+=item B<--filter-dup-seg>
 
 This Filter checks for points near an already existing Trackline. 
 If so it is removed
 
 Currently it's only a stub, so anyone can sit down and programm the compare routine.
 
-=item B<--use_reduce_filter>
+=item B<--filter-reduce>
 
 The ammount of Datapoints is reduced. 
 This is done by looking at three trackpoints in a row. For now I calculate the

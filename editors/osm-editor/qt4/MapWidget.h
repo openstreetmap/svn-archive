@@ -253,7 +253,7 @@ public:
 	void drawNodes(QPainter&);
 	void drawNode(QPainter&,Node*);
 	void drawAreas(QPainter&);
-	void drawArea(QPainter&,Area*);
+	void drawArea(QPainter&,Way*);
 	void drawTrackPoints(QPainter &p,Components2*,QColor,bool);
 	void drawTrackPoint(QPainter &p,TrackPoint *tp);
 	void drawMoving(QPainter&);

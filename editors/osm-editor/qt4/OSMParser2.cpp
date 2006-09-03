@@ -120,7 +120,7 @@ bool OSMParser2::startElement(const QString&, const QString&,
 					cerr<<"Found an ID: " << curID << endl;
 				}
 			}
-			curWay = (element=="area") ? new Area(components):
+			curWay = (element=="area") ? new Way(components):
 										 new Way(components);
 			curWay->setOSMID(curID);
 		}

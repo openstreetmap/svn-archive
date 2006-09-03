@@ -40,7 +40,9 @@ void Way::setSegments(vector<Segment*>& s)
 
 void Way::toOSM(QTextStream &outfile, bool allUid)
 {
-	QString wayOrArea = (area) ? "area" : "way";
+	//QString wayOrArea = (area) ? "area" : "way";
+	QString wayOrArea = "way";
+
     outfile << "<" << wayOrArea;
     int sent_id = (osm_id>0 || (allUid&&osm_id)) ? osm_id : 0;
     outfile << " id='" << sent_id   << "'>" << endl;

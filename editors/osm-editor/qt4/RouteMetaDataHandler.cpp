@@ -139,6 +139,7 @@ RouteMetaDataHandler::RouteMetaDataHandler()
 												"residential");
 	rData["B road"] = RouteMetaData ("*", "*", "*", "*",  "secondary");
 	rData["A road"] = RouteMetaData ("*", "*", "*", "*",  "primary");
+	rData["Trunk A road"] = RouteMetaData ("*", "*", "*", "*",  "trunk");
 	rData["motorway"] = RouteMetaData ("*", "*", "*", "*",  "motorway");
 	rData["railway"] = RouteMetaData ("*", "*", "*", "*",  "*", "rail");
 	rData["new forest track"] = RouteMetaData ("permissive|unofficial", 

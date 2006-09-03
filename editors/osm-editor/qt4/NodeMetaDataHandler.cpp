@@ -21,7 +21,8 @@ bool NodeMetaData::testmatch(const NodeMetaData& indata)
 NodeMetaDataHandler::NodeMetaDataHandler()
 {
 	nData["pub"] = NodeMetaData("amenity","pub");
-	nData["church"] = NodeMetaData("amenity","church");
+	//nData["church"] = NodeMetaData("amenity","church");
+	nData["church"] = NodeMetaData("amenity","place_of_worship");
 	nData["viewpoint"] = NodeMetaData ("tourism","viewpoint");
 	nData["hill"] = NodeMetaData("natural","peak");
 	nData["farm"] = NodeMetaData("residence","farm");
@@ -43,11 +44,14 @@ NodeMetaDataHandler::NodeMetaDataHandler()
 	nData["barn"] = NodeMetaData("man_made","barn");
 	nData["country park"] = NodeMetaData("leisure","country_park");
 
-	// Put area stuff in here too. Plan is to rename from NodeMetaData to
-	// something else.
+	// Put area stuff in here too. This is a thoroughly nasty fudge; plan is to
+	// rename from NodeMetaData to something else. Well, the plan is actually
+	// to completely revise the mapping of high-level types to Map Features
+	// tags. Oh, and consign class to the wastebin of history, too. :-)
 	nData["wood"] = NodeMetaData("landuse","wood");
 	nData["heath"] = NodeMetaData("natural","heath");
 	nData["lake"] = NodeMetaData("natural","water");
+	nData["park"] = NodeMetaData("leisure","park");
 }
 
 // Returns the metadata matching a node type

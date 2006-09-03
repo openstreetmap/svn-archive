@@ -52,10 +52,7 @@ public:
 	QString getRef() { return refEdit->text(); }
 	QString getNote() { return noteText->toPlainText(); }
 	void setNote(const QString& note) { noteText->setPlainText(note); }
-	bool isArea() { return area; }
-
-public slots:
-	void changeWA(const QString&);
+	bool isArea();
 
 };
 

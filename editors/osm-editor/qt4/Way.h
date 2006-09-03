@@ -67,8 +67,48 @@ public:
 	{
 		// use tags
 		//type = t;
-		OSMLinear::setType(t);
+		if(isArea())
+			setAreaType(t);
+		else
+			OSMLinear::setType(t);
 		setSegs();
+	}
+
+	QString getType()
+	{
+		if(isArea())
+			return getAreaType();
+		else
+			return OSMLinear::getType();
+	}
+
+	// horribly hacky. The relation of tags to high-level types probably
+	// needs to be completely rewritten.
+	QString getAreaType()
+	{
+		// Use tags
+		//return type;
+		NodeMetaDataHandler mdh;
+		QString curType;
+		for(std::map<QString,QString>::iterator i=tags.begin(); i!=tags.end();
+			i++)
+		{
+			curType = mdh.getNodeType(i->first,i->second);
+			if(curType!="" && curType!="node")
+				return curType;
+		}
+		return "";
+	}
+
+	// horribly hacky
+	void setAreaType(const QString& t) 
+	{
+		// Use tags
+		NodeMetaDataHandler mdh;
+		NodeMetaData md = mdh.getMetaData(t);
+		if(md.key!="")
+			tags[md.key] = md.value;
+		//type = t;
 	}
 
 	void setSegs();
@@ -109,13 +149,13 @@ public:
 
 	void setComponents(Components2 *c) { components=c; }
 
-	bool isArea() { return area; }
+	//bool isArea() { return area; }
 
 	Segment *getSegment(int i);
 
 	int nSegments() { return segments.size(); }
 
-	void setArea(bool a) { area=a; }
+	//void setArea(bool a) { area=a; }
 
 	Segment *longestSegment();
 	
@@ -124,9 +164,26 @@ public:
 	// fails to compile without this seemingly pointless code on
 	// the version of g++ with mandrake 10.1. 
 	QByteArray toOSM() { return OSMObject::toOSM(); }
+
+	// This really *is* horrible. It will go when high level types to
+	// Map Features is rewritten.
+	bool isArea()
+	{
+		std::map<QString,QString>::iterator natural =
+				tags.find("natural"),
+				landuse = tags.find("landuse"), leisure =
+				tags.find("leisure");
+
+		return ((natural!=tags.end() && 
+				(natural->second=="water" || natural->second=="heath"))
+					||
+				(landuse!=tags.end() && landuse->second=="wood") 
+					||
+				(leisure!=tags.end() && leisure->second=="park") 
+				);
+	}
 };
 
-typedef Way Area;
 
 }
 

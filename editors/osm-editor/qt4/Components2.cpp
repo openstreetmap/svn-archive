@@ -227,7 +227,7 @@ bool Components2::merge(Components2 *comp)
     Node *curNode;
     Segment *curSeg;
 	Way *curWay;
-	Area *curArea;
+	Way *curArea;
 	TrackPoint *curTrackPoint;
 	for(int count=0; count<comp->nNodes(); count++)
     {

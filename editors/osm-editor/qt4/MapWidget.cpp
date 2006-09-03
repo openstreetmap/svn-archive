@@ -152,18 +152,20 @@ MapWidget::MapWidget(QMainWindow *mainwin,
     segpens["residential road"]= SegPen(QPen (QColor(192,192,192), 1), true);
     segpens["B road"]= SegPen(QPen (QColor(253,191,111), 4), true);
     segpens["A road"]= SegPen(QPen (QColor(251,128,95), 4), true);
+    segpens["Trunk A road"]= SegPen(QPen (QColor(127,201,127), 4), true);
     segpens["motorway"]= SegPen(QPen (QColor(128,155,192), 4), true);
     segpens["railway"]= SegPen(QPen (Qt::black, 2), false);
     segpens["permissive footpath"]= SegPen(QPen (QColor(0,192,0), 2), false);
     segpens["permissive bridleway"]= SegPen(QPen (QColor(170,85,0), 2), false);
     segpens["track"]= SegPen(QPen (QColor(128,128,128), 3), false);
-    segpens["new forest track"]=SegPen(QPen(QColor(128,64,0),2), false);
+    segpens["new forest track"]=SegPen(QPen(QColor(255,64,0),2), false);
     segpens["new forest cycle path"]= SegPen(QPen (Qt::magenta, 2), false);
     cerr<<"done segpens" << endl;
 
-    areapens["wood"]= QPen (QColor(192,255,192));
+    areapens["wood"]= QPen (QColor(128,255,128));
     areapens["heath"]= QPen (QColor(255,255,192));
     areapens["lake"]= QPen (QColor(0,0,128));
+    areapens["park"]= QPen (QColor(192,255,192));
 
 
     nodeReps["pub"] = new WaypointRep
@@ -768,15 +770,16 @@ void MapWidget::drawAreas(QPainter& p)
 {
 	if(displayOSM)
 	{
-		for(int count=0; count<components->nAreas(); count++)
-			drawArea(p,components->getArea(count));
+		for(int count=0; count<components->nWays(); count++)
+			if(components->getWay(count)->isArea())
+				drawArea(p,components->getWay(count));
 	}
 }
 
 // draw an area
 // WARNING! All segments must be orientated in the same direction for this
 // to work!!!
-void MapWidget::drawArea(QPainter& p, Area *area)
+void MapWidget::drawArea(QPainter& p, Way *area)
 {
 	if(areapens.find(area->getType()) != areapens.end())
 	{
@@ -1697,21 +1700,24 @@ void MapWidget::uploadWay()
 	if(wd->exec())
 	{
 		way->setName(wd->getName());
+		//way->setArea(wd->isArea());
 		way->setType(wd->getType());
 		way->setNote(wd->getNote());
-		way->setRef(wd->getRef()); // areas shouldn't have refs really
-		way->setArea(wd->isArea());
+
+		if(!wd->isArea())
+			way->setRef(wd->getRef()); // areas shouldn't have refs really
+		components->addWay(way);
+
 		QByteArray xml = way->toOSM();
-		if(wd->isArea())
-			components->addArea((Area*)way);
-		else
-			components->addWay(way);
 		cerr<<"uploadWay(): CLEARING SEGMENTS"<<endl;
 		clearSegments();
 		if(liveUpdate)
 		{
+				/*
 			QString url = wd->isArea() ? "/api/0.3/area/0" :
 										"/api/0.3/way/0";
+										*/
+			QString url = "/api/0.3/way/0";
 
 			newUploadedWay = way;
 			osmhttp.setAuthentication(username, password);
@@ -1740,18 +1746,19 @@ void MapWidget::changeWayDetails()
         areaTypes.push_back(i->first);
     }
 
-	if(selWay && !selWay->isArea())
+	if(selWay)
 	{
 		selWay->printTags();
 		WayDialogue *wd = new WayDialogue(this,segTypes,areaTypes,
 								selWay->getName(), selWay->getType(),
 								selWay->getRef());
 		wd->setNote(selWay->getNote());
-		if(wd->exec() && !wd->isArea())
+		if(wd->exec())
 		{
 			selWay->setName(wd->getName());
 			selWay->setType(wd->getType());
 			selWay->setNote(wd->getNote());
+			//selWay->setArea(wd->isArea());
 			selWay->setRef(wd->getRef());
 			QByteArray xml = selWay->toOSM();
 			if(liveUpdate)

@@ -37,7 +37,7 @@ private:
 	vector<Node*> nodes;
 	vector<Segment*> segments;
 	vector<Way*> ways;
-	vector<Area*> areas;
+	vector<Way*> areas;
 	vector<TrackPoint*> trackpoints;
 	int nextNodeId, nextSegId;
 
@@ -115,7 +115,7 @@ public:
 		cerr<<ways.size()<<endl;
 	}
 
-	void addArea (Area *a)
+	void addArea (Way *a)
 	{
 		if(!areaExists(a->getOSMID()))
 			areas.push_back(a);
@@ -137,7 +137,7 @@ public:
 	Node *getNode(int i) { return nodes[i]; }
 	Segment *getSegment(int i) { return segments[i]; }
 	Way *getWay(int i) { return ways[i]; }
-	Area *getArea(int i) { return areas[i]; }
+	Way *getArea(int i) { return areas[i]; }
 
 	int nNodes() { return nodes.size(); }
 	int nSegments() { return segments.size(); }

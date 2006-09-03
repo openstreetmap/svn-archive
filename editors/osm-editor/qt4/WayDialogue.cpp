@@ -36,6 +36,8 @@ WayDialogue::WayDialogue(QWidget* parent,
 								 const QString& ref) : 
 				QDialog(parent)
 {
+	//cerr << "WayDialogue: type= "<< type.toAscii().constData() << endl;
+
 	setModal(true);
 	setWindowTitle("Enter way details");
 	this->areaTypes = areaTypes;
@@ -61,11 +63,20 @@ WayDialogue::WayDialogue(QWidget* parent,
 	
 	typeComboBox = new QComboBox(this);
 	layout->addWidget(new QLabel("Type:",this),0,0);
+	int i=0;
 	for(int count=0; count<segTypes.size(); count++)
 	{
-		typeComboBox->insertItem (count,segTypes[count]);
+		typeComboBox->insertItem (i,segTypes[count]);
 		if(segTypes[count]==type)
-			itemIndex = count;
+			itemIndex =  i;
+		i++;
+	}
+	for(int count=0; count<areaTypes.size(); count++)
+	{
+		typeComboBox->insertItem (i,areaTypes[count]);
+		if(areaTypes[count]==type)
+			itemIndex =  i;
+		i++;
 	}
 	typeComboBox->setCurrentIndex(itemIndex);
 
@@ -95,25 +106,16 @@ WayDialogue::WayDialogue(QWidget* parent,
 						*/
 }
 
-void WayDialogue::changeWA(const QString& wayOrArea)
+bool WayDialogue::isArea()
 {
-	typeComboBox->clear();
-	if(wayOrArea=="way")
+	QString type = getType();
+	for(int count=0; count<areaTypes.size(); count++)
 	{
-		for(int count=0; count<wayTypes.size(); count++)
-		{
-			typeComboBox->insertItem (count,wayTypes[count]);
-		}
-		area=false;
+		if(areaTypes[count]==type)
+			return true;
 	}
-	else
-	{
-		for(int count=0; count<areaTypes.size(); count++)
-		{
-			typeComboBox->insertItem (count,areaTypes[count]);
-		}
-		area=true;
-	}
+	return false;
 }
+
 
 }

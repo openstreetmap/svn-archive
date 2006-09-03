@@ -24,7 +24,7 @@ use POSIX qw(ceil floor);
 my $current_file ="planet-2006-07.osm.bz2";
 #$current_file ="planet.osm.bz2";
 #$current_file ="planet-2006-07-a.osm";
-$current_file ="planet.osm";
+$current_file ="planet-060827-b.osm";
 
 my ($man,$help);
 
@@ -81,7 +81,7 @@ my $area_definitions = {
     uk         => [ [  49  , -11,   64,   3],
 		    [ 49.9 ,  -5.8, 54,0.80],
 		    ],
-    iom        => [ [ 54.03,-4.85,54.44, -4.2],
+    iom        => [ [ 54.03,-4.85,54.44, -4.2]],
     germany    => [ [  47  ,   5,   54,  16] ],
     spain      => [ [  35.5,  -9,   44,   4] ],
     europe     => [ [  35  , -12,   75,  35] ],
@@ -347,6 +347,7 @@ sub xml_out($$){
 	$fh = $xml_files->{$type}->{fh};
     } else {
 	$fh = IO::File->new(">$OUTPUT_DIR/OSM_errors_$type.xml");
+	die "Cannot open OSM_errors_$type.xml for write\n" unless $fh;
 	$xml_files->{$type}->{fh}=$fh;
 	print $fh "<?xml version=\"1.0\"?>\n";
 	print $fh "<osm version=\"0.3\" generator=\"OpenStreetMap planet.osm checker\">\n";
@@ -1026,6 +1027,7 @@ sub check_osm_ways() {
 
 sub write_top_index(){
     my $fh = IO::File->new(">$OUTPUT_BASE_DIR/index.html");
+    die "Cannot open top_index.html for write\n" unless $fh;
 print $fh '<HTML>
 <head>
       <link rel="stylesheet" type="text/css" href="/site.css"/>
@@ -1081,6 +1083,7 @@ print $fh '
 
 sub write_index(){
     my $fh = IO::File->new(">$OUTPUT_DIR/index.html");
+    die "Cannot open index.html for write\n" unless $fh;
 print $fh '<HTML>
 <head>
       <link rel="stylesheet" type="text/css" href="/site.css"/>
@@ -1165,18 +1168,15 @@ instead.
 }
 
 # *****************************************************************************
-sub mirror_Data(){
-    print "\nMirror OSM Data\n";
+sub mirror_Data($){
+    my $osm_file = shift;
 
-    if ( !$osm_file ) {
-
-	-d "$MIRROR_DIR/osm" or mkpath "$MIRROR_DIR/osm"
-	    or die "Cannot create Directory $MIRROR_DIR/osm: $!\n";
+    -d "$MIRROR_DIR/osm" or mkpath "$MIRROR_DIR/osm"
+	or die "Cannot create Directory $MIRROR_DIR/osm: $!\n";
 	
+    if ( ! $no_mirror ) {
 	my $url = "http://www.ostertag.name/osm/planet/$current_file";
-	$osm_file = "$MIRROR_DIR/osm/$current_file";
-
-	print "Mirror $url\n";
+	print "\nMirror OSM Data from $url\n";
 	my $mirror = mirror_file($url,$osm_file);
     }
 }
@@ -1246,15 +1246,19 @@ pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
 
-# Get openstreetmap  planet.osm from http://www.openstreetmap.org/
-mirror_Data();
-
+# Get openstreetmap  planet.osm 
+# from http://www.openstreetmap.org/ 
+# or http://planet.ostertag.name
+$osm_file ||= "$MIRROR_DIR/osm/$current_file";
+mirror_Data($osm_file);
 
 my $planet_name=$osm_file;
-$planet_name =~ s,.*/,,;
+$planet_name =~ s,^.*/,,;
 $osm_file_name = $planet_name;
 $planet_name =~ s,^planet-?,,;
 $planet_name =~ s,\.osm.*$,,;
+
+die "no Planet name for OSM-File: $osm_file\n" unless $planet_name;
 
 $areas_todo=join(',',sort keys %{$area_definitions}) unless defined $areas_todo;
 $areas_todo=lc($areas_todo);
@@ -1263,7 +1267,7 @@ write_top_index();
 for my $area ( split(',',$areas_todo )) {
     my $start_time=time();
     $SELECTED_AREA = $area;
-    
+
     my $areas = $area_definitions->{$SELECTED_AREA};
     if (! defined($areas) ){
 	print "Unknown Area $SELECTED_AREA\n";
@@ -1279,7 +1283,9 @@ for my $area ( split(',',$areas_todo )) {
     -d $OUTPUT_DIR or mkpath $OUTPUT_DIR
 	or die "Cannot create Directory $OUTPUT_DIR:$!\n";
     
-
+    if ( $verbose || $debug ) {
+	print STDERR "\nChecking $SELECTED_AREA\n";
+    }
     # Empty out global Variables for next loop
     $count_node=0;
     $count_segment=0;
@@ -1300,7 +1306,7 @@ for my $area ( split(',',$areas_todo )) {
     # write index.html
     write_index();
 
-    printf "Check Complete for $osm_file/$area in %.0f sec\n",time()-$start_time;
+    printf "Check Completed for $osm_file/$area in %.0f sec\n\n",time()-$start_time;
 
 }
 write_top_index();
@@ -1350,9 +1356,9 @@ files found on local Filesystem.
 
 use proxy for download
 
-=item B<--osm-file>
+=item B<--osm-file=path/planet.osm>
 
-select the planet.osm file to use for the checks
+Select the "path/planet.osm" file to use for the checks
 
 =item B<--area>
 

@@ -113,13 +113,13 @@
 
 
   <!-- draw highway casings for minor roads -->
-  <rule e="segment|way" k="highway" v="unclassified|residential">
+  <rule e="segment|way" k="highway" v="service|unclassified|residential">
     <line class='highway-unclassified-casing' />
   </rule>
 
 
   <!-- draw highway cores for minor roads -->
-  <rule e="segment|way" k="highway" v="unclassified|residential">
+  <rule e="segment|way" k="highway" v="service|unclassified|residential">
     <rule k="oneway" v="~">
       <line class='highway-unclassified-core' />  
     </rule>
@@ -265,7 +265,7 @@
 
 
   <!-- Draw street names for all highways -->
-  <rule e="segment|way" k="highway" v="unclassified|residential">
+  <rule e="segment|way" k="highway" v="service|unclassified|residential">
     <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
   </rule>
 
@@ -287,7 +287,7 @@
 
 
   <!-- Draw refs for all highways -->
-  <rule e="node" k="highway" v="unclassified|residential">
+  <rule e="node" k="highway" v="service|unclassified|residential">
     <text k="ref" class='highway-unclassified-ref' dx='2.5' dy='-2.5' />
   </rule>
 

@@ -269,6 +269,8 @@ sub track_part_speed($$$){
     my $pos_end = shift;
     my $avg_speed = 0;
 
+    return 0 unless defined $track;
+
     my $max_pos = $#{@{$track}};
     $pos_start = 0        if $pos_start<0;
     $pos_end   = $max_pos if $pos_end> $max_pos;
@@ -276,11 +278,16 @@ sub track_part_speed($$$){
     my $dist = track_part_distance($track,$pos_start,$pos_end)/1000;
     my $elem_s = $track->[$pos_start];
     my $elem_e = $track->[$pos_end];
-    my $time_diff = $elem_s->{time} - $elem_e->{time};
-    my $speed = $dist/$time_diff*3600;
 
+    my $speed=0;
+    if ( defined($elem_s->{time}) && defined($elem_e->{time}) ) {
+	my $time_diff = $elem_s->{time} - $elem_e->{time};
+	if ( $time_diff ) {
+	    my $speed = $dist/$time_diff*3600;
+	};
+    };
     $avg_speed = $speed;
-
+    
     my $sum_speed=0;
     for my $track_pos ( $pos_start .. $pos_end ) {
 	my $elem = $track->[$track_pos];
@@ -386,4 +393,5 @@ sub add_tracks($$){
 	push(@{$dst_tracks->{tracks}},$elem);
     }
 }
+
 1;

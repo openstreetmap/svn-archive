@@ -25,6 +25,7 @@ use Storable ();
 use Utils::LWP::Utils;
 use File::Slurp;
 use Utils::Debug;
+use Utils::Timing;
 
 
 sub osm_dir() {
@@ -91,6 +92,8 @@ sub mirror_planet(){
 sub UTF8sanitize($){
     my $filename = shift;
 
+    my $start_time=time();
+
     my $filename_new= $filename;
     $filename_new =~ s/\.osm/-a.osm/;
 
@@ -98,9 +101,24 @@ sub UTF8sanitize($){
 	unless file_needs_re_generation($filename,$filename_new);
 
     print STDERR "UTF8 Sanitize $filename ... \n";
+    # Uggly Hack, but for now it works
+    my $UTF8sanitizer=find_file_in_perl_path('../planet.osm/C/UTF8sanitizer');
+    die "Sanitizer not found\n" unless -x $UTF8sanitizer;
+
     print STDERR "     this may take some time ... \n";
-    my $result = `bzip2 -dc $filename | UTF8sanitizer  | bzip2 >$filename_new.part`;
+    my $result = `bzip2 -dc $filename | $UTF8sanitizer  | bzip2 >$filename_new.part`;
     print $result if $DEBUG || $VERBOSE;
+  
+    print "Sanitized $filename " if $DEBUG || $VERBOSE;
+	print_time($start_time);
+
+    my $file_size     = -s "$filename";
+    my $file_size_new = -s "$filename_new.part";
+    if ( $file_size_new < ($file_size*0.9) ) {
+	die "File Sanitize seems not successfull.\n".
+	    "Original Size $file_size\n".
+	    "Sanitized Size $file_size_new\n";
+    }
     rename "$filename_new.part","$filename_new";
     if ( ! -s $filename_new ) {
 	die "Cannot sanitize $filename\n";
@@ -109,4 +127,20 @@ sub UTF8sanitize($){
     return $filename_new;
 }
 
+sub find_file_in_perl_path($){
+    my $file = shift;
+
+    my $found_file = '';
+    for my $path ( @INC ) {
+	my $filename = "$path/$file";
+	print "find_file_in_perl_path: looking in '$filename'\n" if $DEBUG>2;
+	if ( -s $filename){
+	    $found_file = $filename;
+	    last;
+	};
+    }
+    
+    print "find_file_in_perl_path($file): --> $found_file\n" if $DEBUG;
+    return $found_file;
+}
 1;

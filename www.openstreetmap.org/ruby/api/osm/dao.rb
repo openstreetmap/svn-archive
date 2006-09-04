@@ -660,7 +660,7 @@ module OSM
 
       page = page * 5000
 
-      res = call_local_sql { "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by timestamp desc limit #{page}, 5000" }
+      res = call_local_sql { "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by gpx_id,timestamp desc limit #{page}, 5000" }
 
       return nil unless res
 

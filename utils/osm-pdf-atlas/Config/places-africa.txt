@@ -1,1 +1,2 @@
+Africa:    8,16, 35, area
 Africa:    8,16, 30, city

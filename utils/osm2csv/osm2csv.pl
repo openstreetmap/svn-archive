@@ -22,10 +22,10 @@ use Utils::Debug;
 use Utils::LWP::Utils;
 use Utils::File;
 
-sub combine_way_into_segments();
-sub output_osm();
-sub output_named_points();
-sub output_statistic();
+sub combine_way_into_segments($); # {}
+sub output_osm($); # {}
+sub output_named_points($); # {}
+sub output_statistic($); # {}
 
 our $man=0;
 our $help=0;
@@ -140,11 +140,11 @@ $Stats{"tags estim"}     = 46330000;
 # Parsing planet.osm File
 #----------------------------------------------
 print STDERR "Reading and Parsing XML from $Filename\n" if $DEBUG;
-my $start_time=time();
+our $PARSING_START_TIME=time();
 $READ_FH = data_open($Filename);
 if ( $VERBOSE || $DEBUG )  {
     print STDERR "\n";
-    print STDERR "Parsing $Filename for area $SELECTED_AREA\n";
+    print STDERR "osm2csv: Parsing $Filename for area $SELECTED_AREA\n";
 }
 my $P = new XML::Parser( Handlers => {
     Start => \&DoStart, 
@@ -167,130 +167,146 @@ if (not $P) {
     print STDERR "WARNING: Could not parse osm data $Filename\n";
     return;
 }
-printf("Parsing Osm-Data in %.0f sec\n",time()-$start_time )
-    if $DEBUG;
+printf("osm2csv: Parsing Osm-Data in %.0f sec\n",time()-$PARSING_START_TIME )
+    if $DEBUG || $VERBOSE;
 
 
 printf STDERR "Creating output files\n";
 
-combine_way_into_segments();
-output_osm();
-output_named_points();
-output_statistic();
+my $data_dir=osm_dir()."/planet/csv";
+mkdir_if_needed( $data_dir );
+combine_way_into_segments("$data_dir/ways-$SELECTED_AREA.csv");
+output_osm("$data_dir/osm-$SELECTED_AREA.csv");
+output_named_points("$data_dir/points-$SELECTED_AREA.csv");
+output_statistic("$data_dir/stats-$SELECTED_AREA.txt");
 printf STDERR "Done\n";
 exit;
 
 #----------------------------------------------
 # Combine way data into segments
 #----------------------------------------------
-sub combine_way_into_segments() {
-    print STDERR "Combine way data into segments\n" if $DEBUG;
-    if(open(WAYS,">Data/ways-$SELECTED_AREA.csv")){
-	foreach my $id ( keys %Ways){
-	    my $Way = $Ways{$id};
-	    next unless defined $Way;
-	    my $segments=$Way->{"segments"};
-	    my @SubSegments = split(/,/, $segments);
-	    unless ( scalar(@SubSegments) ) {
-		$Stats{"empty ways"}++; 
-		if ( $DEBUG ) {
-		    printf WAYS "No Segments for Way: Name:%s\n",($Way->{"name"}||'');
-		}
-		next;
-	    }
+sub combine_way_into_segments($) {
+    my $filename = shift;
+    print STDERR "Combine way data into segments --> $filename\n" if $DEBUG;
+    if(! open(WAYS,">$filename")) {
+	warn "combine_way_into_segments: Cannot write to $filename\n";
+	return;
+    }
+    foreach my $id ( keys %Ways){
+	my $Way = $Ways{$id};
+	next unless defined $Way;
+	my $segments=$Way->{"segments"};
+	my @SubSegments = split(/,/, $segments);
+	unless ( scalar(@SubSegments) ) {
+	    $Stats{"empty ways"}++; 
 	    if ( $DEBUG ) {
-		printf WAYS "Way: %s,%s\n", $Way->{"segments"}, ($Way->{"name"}||'');
+		printf WAYS "No Segments for Way: Name:%s\n",($Way->{"name"}||'');
 	    }
-	    $Stats{"untagged ways"}++ 
-		unless scalar( keys (%$Way)); 
-	    
-	    if ( $DEBUG) {
-		printf WAYS "Copying keys: %s to segments %s\n",
-		join(",",keys(%$Way)),
-		join(",",@SubSegments);
-	    }
-	    
-	    # Each segment in a way inherits the way's attributes
-	    foreach my $Segment(@SubSegments){
-		foreach my $Key(keys(%$Way)){
-		    $Segments{$Segment}{$Key} = $Way->{$Key}
-		}
+	    next;
+	}
+	if ( $DEBUG ) {
+	    printf WAYS "Way: %s,%s\n", $Way->{"segments"}, ($Way->{"name"}||'');
+	}
+	$Stats{"untagged ways"}++ 
+	    unless scalar( keys (%$Way)); 
+	
+	if ( $DEBUG) {
+	    printf WAYS "Copying keys: %s to segments %s\n",
+	    join(",",keys(%$Way)),
+	    join(",",@SubSegments);
+	}
+	
+	# Each segment in a way inherits the way's attributes
+	foreach my $Segment(@SubSegments){
+	    foreach my $Key(keys(%$Way)){
+		$Segments{$Segment}{$Key} = $Way->{$Key}
 	    }
 	}
-	close WAYS;
     }
+    close WAYS;
+
 }
 
 #----------------------------------------------
 # Main output (segments)
 #----------------------------------------------
-sub output_osm(){
-    print STDERR "Writing Segments to Data/osm-$SELECTED_AREA.csv\n" if $DEBUG;
-    if(open(OSM, ">Data/osm-$SELECTED_AREA.csv")){
-	foreach my $id (keys %Segments){
-	    my $Segment = $Segments{$id};
-	    next unless defined $Segment;
-	    my $From = $Segment->{"from"};
-	    my $To = $Segment->{"to"};
-	    unless ( $From && $To ) {
-		$Stats{"segments without endpoints"}++;
-		next;
-	    }
-	    unless ( defined($Nodes{$From}) && defined($Nodes{$To}) ) {
-		$Stats{"segments without endpoint nodes defined"}++;
-		next;
-	    }
-	    printf OSM "%f,%f,%f,%f,%s,%s,%s\n",
-	    $Nodes{$From}{"lat"},
-	    $Nodes{$From}{"lon"},
-	    $Nodes{$To}{"lat"},
-	    $Nodes{$To}{"lon"},
-	    ($Segment->{"class"}||''),
-	    ($Segment->{"name"}||''),
-	    ($Segment->{"highway"}||'');
-	}
-	close OSM;
+sub output_osm($){
+    my $filename = shift;
+    print STDERR "Writing Segments to $filename\n" if $DEBUG;
+    if(! open(OSM,">$filename")) {
+	warn "output_osm: Cannot write to $filename\n";
+	return;
     }
+    foreach my $id (keys %Segments){
+	my $Segment = $Segments{$id};
+	next unless defined $Segment;
+	my $From = $Segment->{"from"};
+	my $To = $Segment->{"to"};
+	unless ( $From && $To ) {
+	    $Stats{"segments without endpoints"}++;
+	    next;
+	}
+	unless ( defined($Nodes{$From}) && defined($Nodes{$To}) ) {
+	    $Stats{"segments without endpoint nodes defined"}++;
+	    next;
+	}
+	printf OSM "%f,%f,%f,%f,%s,%s,%s\n",
+	$Nodes{$From}{"lat"},
+	$Nodes{$From}{"lon"},
+	$Nodes{$To}{"lat"},
+	$Nodes{$To}{"lon"},
+	($Segment->{"class"}||''),
+	($Segment->{"name"}||''),
+	($Segment->{"highway"}||'');
+    }
+    close OSM;
 }
 
 #----------------------------------------------
 # Secondary output (named points)
 #----------------------------------------------
-sub output_named_points(){
-    print STDERR "Writing Points to Data/points-$SELECTED_AREA.csv\n" if $DEBUG;
-    if(open(POINTS, ">Data/points-$SELECTED_AREA.csv")){
-	foreach my $id ( keys %Nodes ){
-	    my $Node = $Nodes{$id};
-	    next unless defined $Node;
-	    $Stats{"Nodes with zero lat/long"}++ 
-		if($Node->{"lat"} == 0 and $Node->{"lon"} == 0);
-	    
-	    if($Node->{"name"} || $Node->{"amenity"} || $Node->{"class"}){
-		printf POINTS "%f,%f,%s,%s,%s\n",
-		$Node->{"lat"},
-		$Node->{"lon"},
-		($Node->{"name"}||''),
-		($Node->{"amenity"}||''),
-		($Node->{"class"}||'');
-	    }
-	}
-	close POINTS;
+sub output_named_points($){
+    my $filename = shift;
+    print STDERR "Writing Points to $filename\n" if $DEBUG;
+    if(! open(POINTS,">$filename")) {
+	warn "output_osm: Cannot write to $filename\n";
+	return;
     }
+    foreach my $id ( keys %Nodes ){
+	my $Node = $Nodes{$id};
+	next unless defined $Node;
+	$Stats{"Nodes with zero lat/long"}++ 
+	    if($Node->{"lat"} == 0 and $Node->{"lon"} == 0);
+	
+	if($Node->{"name"} || $Node->{"amenity"} || $Node->{"class"}){
+	    printf POINTS "%f,%f,%s,%s,%s\n",
+	    $Node->{"lat"},
+	    $Node->{"lon"},
+	    ($Node->{"name"}||''),
+	    ($Node->{"amenity"}||''),
+	    ($Node->{"class"}||'');
+	}
+    }
+    close POINTS;
+    
 }
 
 #----------------------------------------------
 # Statistics output
 #----------------------------------------------
-sub output_statistic(){
-    print STDERR "Statistics output\n" if $DEBUG;
-    if(open(STATS, ">Data/stats-$SELECTED_AREA.txt")){
-	foreach(sort {$AllTags{$b} <=> $AllTags{$a}} keys(%AllTags)){
-	    printf STATS "* %d %s\n", $AllTags{$_}, $_;
-	}
-	printf STATS "\n\nStats:\n";
-	foreach(keys(%Stats)){
-	    printf STATS "* %d %s\n", $Stats{$_}, $_;
-	}
+sub output_statistic($){
+    my $filename = shift;
+    print STDERR "Statistics output $filename\n" if $DEBUG;
+    if(! open(STATS,">$filename")) {
+	warn "output_osm: Cannot write to $filename\n";
+	return;
+    }
+    foreach(sort {$AllTags{$b} <=> $AllTags{$a}} keys(%AllTags)){
+	printf STATS "* %d %s\n", $AllTags{$_}, $_;
+    }
+    printf STATS "\n\nStats:\n";
+    foreach(keys(%Stats)){
+	printf STATS "* %d %s\n", $Stats{$_}, $_;
     }
 }
 
@@ -408,6 +424,9 @@ sub DoEnd(){
 	    printf STDERR "VSZ: %.0f MB ",$vsz;
 	    printf STDERR "RSS: %.0f MB",$rss;
 	}
+	my $time_diff=time()-$PARSING_START_TIME;
+	my $time_estimated= $time_diff*$Stats{"tags estim"}/$Stats{"tags read"};
+	printf STDERR " time %.0f min rest: %.0f min",$time_diff/60,$time_estimated/60;
 	print STDERR "\r";
     }
 }
@@ -425,12 +444,12 @@ __END__
 
 =head1 NAME
 
-B<planet_osm2txt.pl> Version 0.01
+B<osm2csv.pl> Version 0.02
 
 =head1 DESCRIPTION
 
-B<planet_osm2txt.pl> is a program to convert osm-data from xml format to 
-a plain text file in cvs form
+B<osm2csv.pl> is a program to convert osm-data from xml format to 
+a plain text file in cvs form.
 
 =head1 SYNOPSIS
 
@@ -445,6 +464,14 @@ planet_osm2txt.pl [-d] [-v] [-h] [--no-mirror] [--proxy=<proxy:port>]<planet_fil
 =item B<--man> Complete documentation
 
 Complete documentation
+
+=item B<--proxy=<proxy:port>>
+
+Use proxy Server to get the newest planet.osm File
+
+=item B<--no-mirror>
+
+do not try to get the newest planet.osm first
 
 =item B<--area=germany> Area Filter
 

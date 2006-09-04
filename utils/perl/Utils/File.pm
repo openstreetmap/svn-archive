@@ -7,12 +7,17 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 @EXPORT = qw( data_open
 	      file_needs_re_generation
+	      mkdir_if_needed
 	      );
 use strict;
 use warnings;
 
 use IO::File;
 use Utils::Debug;
+
+use File::Basename;
+use File::Copy;
+use File::Path;
 
 # -----------------------------------------------------------------------------
 # Open Data File in predefined Directories
@@ -52,7 +57,7 @@ sub data_open($){
     return $fh;
 }
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------
 # Open Data File in predefined Directories
 sub file_needs_re_generation($$){
     my $src_filename = shift;
@@ -66,3 +71,13 @@ sub file_needs_re_generation($$){
 
     return $src_mtime > $dst_mtime;
 }
+
+# ------------------------------------------------------------------
+# Create Directory if needed and die if not possible
+sub mkdir_if_needed($){
+    my $dir = shift;
+    -d "$dir" or mkpath "$dir"
+        or die "Cannot create Directory $dir: $!\n";
+}
+
+1;

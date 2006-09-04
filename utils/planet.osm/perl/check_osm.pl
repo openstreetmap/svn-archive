@@ -5,6 +5,13 @@ Initial Version (Apr,2006) by Joerg Ostertag <joerg.ostertag\@rechengilde.de>
 Version 0.01
 ";
 
+BEGIN {
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+}
+
+
 use strict;
 use warnings;
 
@@ -16,26 +23,23 @@ use File::Path;
 use Getopt::Long;
 use HTTP::Request;
 use IO::File;
+use POSIX qw(ceil floor);
 use Pod::Usage;
 use Storable ();
-use POSIX qw(ceil floor);
 
-
-my $current_file ="planet-2006-07.osm.bz2";
-#$current_file ="planet.osm.bz2";
-#$current_file ="planet-2006-07-a.osm";
-$current_file ="planet-060827-b.osm";
+use Geo::OSM::Planet;
+use Utils::Debug;
+use Utils::LWP::Utils;
 
 my ($man,$help);
 
 our $CONFIG_DIR    = "$ENV{'HOME'}/.gpsdrive"; # Should we allow config of this?
 our $CONFIG_FILE   = "$CONFIG_DIR/gpsdriverc";
-our $MIRROR_DIR   = "$CONFIG_DIR/MIRROR";
+our $MIRROR_DIR   = osm_dir();
 our $UNPACK_DIR   = "$CONFIG_DIR/UNPACK";
 
 our ($lat_min,$lat_max,$lon_min,$lon_max) = (0,0,0,0);
 
-our ($debug,$verbose,$no_mirror,$PROXY);
 our $osm_file; # The complete osm Filename (including path)
 my $osm_file_name; # later the pure filename (without dir) of the osm File
 our $SELECTED_AREA; # a selected area in lower case for example germany
@@ -143,7 +147,7 @@ sub node {
 	$OSM_NODES->{$id} = $OSM_OBJ;
 	$count_node++;
     }
-    if ( $verbose || $debug ) {
+    if ( $VERBOSE || $DEBUG ) {
 	if (!($count_node_all % 1000) ) {
 	    printf("node %d (%d)\r",$count_node,$count_node_all);
 	    #$fh->getpos;
@@ -170,10 +174,10 @@ sub way {
     if ( keys %attrs ) {
 	warn "way $id has extra attrs: ".Dumper(\%attrs);
     }
-    print "\n" if !$count_way_all && ($verbose || $debug);
+    print "\n" if !$count_way_all && ($VERBOSE || $DEBUG);
     $count_way_all++;
     printf("way %d(%d)\r",$count_way,$count_way_all) 
-	if !( $count_way_all % 1000 ) && ($verbose || $debug);
+	if !( $count_way_all % 1000 ) && ($VERBOSE || $DEBUG);
 }
 # --------------------------------------------
 sub segment_ {
@@ -196,10 +200,10 @@ sub segment {
 	$OSM_SEGMENTS->{$id} = $OSM_OBJ;
 	$count_segment++;
     }
-    print "\n" if !$count_segment_all && ($verbose || $debug);
+    print "\n" if !$count_segment_all && ($VERBOSE || $DEBUG);
     $count_segment_all++;
     printf("segment %d (%d)\r",$count_segment,$count_segment_all) 
-	if !($count_segment_all%5000) && ($verbose || $debug);
+	if !($count_segment_all%5000) && ($VERBOSE || $DEBUG);
 }
 # --------------------------------------------
 sub seg {
@@ -247,8 +251,8 @@ sub read_osm_file($$) { # Insert Streets from osm File
     die "No area specified\n" unless $area;
     my $start_time=time();
 
-    print "Unpack and Read OSM Data from file $osm_file\n" if $verbose || $debug;
-    print "$file_name:	".(-s $file_name)." Bytes\n" if $debug;
+    print "Unpack and Read OSM Data from file $osm_file\n" if $VERBOSE || $DEBUG;
+    print "$file_name:	".(-s $file_name)." Bytes\n" if $DEBUG;
 
     my $storable_base= dirname($file_name)."/storable";
     unless ( -d $storable_base ) {
@@ -265,11 +269,11 @@ sub read_osm_file($$) { # Insert Streets from osm File
         $OSM_NODES    = Storable::retrieve("$storable_base.node");
         $OSM_SEGMENTS = Storable::retrieve("$storable_base.segment");
         $OSM_WAYS     = Storable::retrieve("$storable_base.way");
-	if ( $verbose) {
+	if ( $VERBOSE) {
 	    printf "Read $storable_base.* in %.0f sec\n",time()-$start_time;
 	}
     } else {
-	print STDERR "Parsing file: $file_name\n" if $debug;
+	print STDERR "Parsing file: $file_name\n" if $DEBUG;
 	my $p = XML::Parser->new( Style => 'Subs' ,
 				  ErrorContext => 10,
 				  );
@@ -279,8 +283,8 @@ sub read_osm_file($$) { # Insert Streets from osm File
 	eval {
 	    $p->parse($fh);
 	};
-	print "\n" if $debug || $verbose;
-	if ( $verbose) {
+	print "\n" if $DEBUG || $VERBOSE;
+	if ( $VERBOSE) {
 	    printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
 	}
 	if ( $@ ) {
@@ -295,7 +299,7 @@ sub read_osm_file($$) { # Insert Streets from osm File
 	        Storable::store($OSM_NODES   ,"$storable_base.node");
 		Storable::store($OSM_SEGMENTS,"$storable_base.segment");
 		Storable::store($OSM_WAYS    ,"$storable_base.way");
-		if ( $verbose) {
+		if ( $VERBOSE) {
 		    printf "Read and parsed and stored $file_name in %.0f sec\n",time()-$start_time;
 		}
 	    }
@@ -682,7 +686,7 @@ sub check_osm_segments() { # Insert Streets from osm variables into mysql-db for
     html_out("statistics-segments","</table>");
 
 
-    if ( $verbose) {
+    if ( $VERBOSE) {
 	printf "Checked OSM Segments in %.0f sec\n",time()-$start_time;
     }
 }
@@ -894,7 +898,7 @@ sub check_osm_nodes() {
     html_out("statistics-nodes", "</table>");
 
     
-    if ( $verbose) {
+    if ( $VERBOSE) {
 	printf "Checked OSM Segments in %.0f sec\n",time()-$start_time;
     }
 }
@@ -1018,7 +1022,7 @@ sub check_osm_ways() {
     html_out("statistics-ways","</table>");
 
     # ------------
-    if ( $verbose) {
+    if ( $VERBOSE) {
 	printf "Checked OSM Ways  in %.0f sec\n",time()-$start_time;
     }
 
@@ -1168,20 +1172,6 @@ instead.
 }
 
 # *****************************************************************************
-sub mirror_Data($){
-    my $osm_file = shift;
-
-    -d "$MIRROR_DIR/osm" or mkpath "$MIRROR_DIR/osm"
-	or die "Cannot create Directory $MIRROR_DIR/osm: $!\n";
-	
-    if ( ! $no_mirror ) {
-	my $url = "http://www.ostertag.name/osm/planet/$current_file";
-	print "\nMirror OSM Data from $url\n";
-	my $mirror = mirror_file($url,$osm_file);
-    }
-}
-
-# *****************************************************************************
 sub check_Data(){
     # Checks and statistics
     html_out("statistics-nodes"   ,"OSM Nodes:    " . scalar keys( %$OSM_NODES)."<br>\n");
@@ -1229,10 +1219,10 @@ my $areas_todo;
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
-	     'debug'               => \$debug,      
-	     'verbose+'            => \$verbose,
-	     'no-mirror'           => \$no_mirror,
-	     'proxy=s'             => \$PROXY,
+	     'debug'               => \$DEBUG,      
+	     'verbose+'            => \$VERBOSE,
+	     'no-mirror'           => \$Utils::LWP::Utils::NO_MIRROR,
+	     'proxy=s'             => \$Utils::LWP::Utils::PROXY,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
 	     'h|help|x'            => \$help, 
@@ -1245,18 +1235,20 @@ GetOptions (
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
+if ( ! -s $osm_file ) {
+    $osm_file = mirror_planet();
+};
 
-# Get openstreetmap  planet.osm 
-# from http://www.openstreetmap.org/ 
-# or http://planet.ostertag.name
-$osm_file ||= "$MIRROR_DIR/osm/$current_file";
-mirror_Data($osm_file);
+die "No existing osm File $osm_file\n" 
+    unless -s $osm_file;
 
 my $planet_name=$osm_file;
 $planet_name =~ s,^.*/,,;
 $osm_file_name = $planet_name;
 $planet_name =~ s,^planet-?,,;
 $planet_name =~ s,\.osm.*$,,;
+
+$no_mirror = 0 unless defined $no_mirror;
 
 die "no Planet name for OSM-File: $osm_file\n" unless $planet_name;
 
@@ -1283,7 +1275,7 @@ for my $area ( split(',',$areas_todo )) {
     -d $OUTPUT_DIR or mkpath $OUTPUT_DIR
 	or die "Cannot create Directory $OUTPUT_DIR:$!\n";
     
-    if ( $verbose || $debug ) {
+    if ( $VERBOSE || $DEBUG ) {
 	print STDERR "\nChecking $SELECTED_AREA\n";
     }
     # Empty out global Variables for next loop

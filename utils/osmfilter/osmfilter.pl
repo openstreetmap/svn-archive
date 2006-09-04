@@ -316,6 +316,7 @@ use Utils::Math;
 use Utils::Timing;
 use Utils::Debug;
 use Geo::Tracks::Tools;
+use Geo::GPX::File;
 use Carp;
 
 # ------------------------------------------------------------------

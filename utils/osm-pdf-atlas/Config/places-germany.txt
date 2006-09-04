@@ -1,4 +1,4 @@
-Germany:             50.,     12.,     7.0,  area
+Germany:             50.,     12.,     8.0,  area
 Baden-Wuertenberg:   48.780,   9.172,  1.8,  area
 Bayern:              48.140,  11.557,  1.8,  area
 Saarland:            49.2,     7.0,    1.0,  area

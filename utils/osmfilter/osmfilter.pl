@@ -617,7 +617,8 @@ sub split_tracks($$){
 
 	    $elem->{time} = 0 unless defined $elem->{time};
 
-	    if ( $elem->{time_diff} > $max_allowed_time) { # ---- Check for Track Split: time diff
+	    if ( defined($elem->{time_diff}) && 
+		 ( $elem->{time_diff} > $max_allowed_time ) ) { # ---- Check for Track Split: time diff
 		$elem->{good_point} =0;
 	    }
 
@@ -1441,7 +1442,7 @@ Split tracks it they have gaps of more than
 
 =item B<--filter-against-osm> |  B<--osm>
 
-This loads the osm.txt and checks if the 
+This loads the osm.csv and checks if the 
 track-points already exist as an osm-segment.
 It checks if any of the points are near (<20m) any  
 of the osm-segments. 
@@ -1449,14 +1450,15 @@ And the OSM Segment and the track segments have an
 angle of less than 30 Degrees.
 If so they will be dropped.
 
-The file osm.txt is the segments file used by osm-pdf-atlas.
+The file osm.csv is the segments file used by osm-pdf-atlas.
 It's containing all osm-segments from planet.osm in a rather simple way.
 The probably easiest way to create it is to go to the 
 directory
    svn.openstreetmap.org/utils/osm-pdf-atlas
 and once call "create.sh".
 
-If you provide a filename this file is read instead of the osm.txt file
+If you provide a filename this file is read instead of the osm.csv file. 
+The Filename provided can be a csv-file or a standard osm-file.
 
 you can use --osm=0 in combination with --filter-all to not let osm-filter 
 check against osm Data.

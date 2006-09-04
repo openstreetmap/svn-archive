@@ -54,7 +54,7 @@ sub read_gpx_file($;$) {
     };
     if ( $@ ) {
 	warn "$@Error while parsing\n $filename\n";
-	#print Dumper(\$content);
+	#print "Parsing Content:".Dumper(\$content) if $DEBUG>99;
 	#return $content->[0]->{Kids};
     }
     if ( $content && (scalar(@{$content})>1) ) {
@@ -75,10 +75,11 @@ sub read_gpx_file($;$) {
     $content = $content->{Kids};
 
 
+#    print "Parsing Content:".Dumper(\$content) if $DEBUG>99;
 
     # Extract Waypoints
     for my $elem ( @{$content} ) {
-	next unless ref($elem) eq "GPX::wpt";
+	next unless ref($elem) eq "Geo::GPX::File::wpt";
 	my $wpt_elem = $elem->{Kids};
 	my $new_wpt={};
 	$new_wpt->{lat} = $elem->{lat};
@@ -89,13 +90,13 @@ sub read_gpx_file($;$) {
 				cmt desc
 				sym pdop
 				course  fix hdop sat speed time )) {
-		if ( ref($elem) eq "GPX::$type" ){
+		if ( ref($elem) eq "Geo::GPX::File::$type" ){
 		    $new_wpt->{$type} = $elem->{Kids}->[0]->{Text};
 		    $found++;
 		}
 	    }
 	    if ( $found ){
-	    } elsif (ref($elem) eq 'GPX::Characters') {
+	    } elsif (ref($elem) eq 'Geo::GPX::File::Characters') {
 	    } else {
 		printf STDERR "unknown tag in Waypoint:".Dumper(\$elem);
 	    }
@@ -106,23 +107,23 @@ sub read_gpx_file($;$) {
     
     # Extract Tracks
     for my $elem ( @{$content} ) {
-	next unless ref($elem) eq "GPX::trk";
+	next unless ref($elem) eq "Geo::GPX::File::trk";
 	#	    GPX::trkseg
 	$elem = $elem->{Kids};
-	#printf STDERR Dumper(\$elem);
+	#printf STDERR "Tracks: ".ref($elem)." ".Dumper(\$elem);
 	my $new_track=[];
 	for my $trk_elem ( @{$elem} ) {
-	    next unless ref($trk_elem) eq "GPX::trkseg";
+	    next unless ref($trk_elem) eq "Geo::GPX::File::trkseg";
 	    $trk_elem = $trk_elem->{Kids};
-	    #printf STDERR Dumper(\$trk_elem);
+	    #printf STDERR "Track: ".ref($elem)." ".Dumper(\$trk_elem);
 	    for my $trk_pt ( @{$trk_elem} ) {
-		next unless ref($trk_pt) eq "GPX::trkpt";
+		next unless ref($trk_pt) eq "Geo::GPX::File::trkpt";
 		#printf STDERR "Track Point:".Dumper(\$trk_pt);
 		for my $trk_pt_kid ( @{$trk_pt->{Kids}} ) {
-		    next if ref($trk_pt_kid) eq "GPX::Characters";
+		    next if ref($trk_pt_kid) eq "Geo::GPX::File::Characters";
 		    #printf STDERR "Track Point Kid:".Dumper(\$trk_pt_kid);
 		    my $ref = ref($trk_pt_kid);
-		    my ( $type ) = ($ref =~ m/GPX::(.*)/ );
+		    my ( $type ) = ($ref =~ m/Geo::GPX::File::(.*)/ );
 		    $trk_pt->{$type} = $trk_pt_kid->{Kids}->[0]->{Text};
 		}
 		my $trk_time = $trk_pt->{time};

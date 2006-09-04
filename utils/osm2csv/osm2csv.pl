@@ -20,8 +20,8 @@ use Data::Dumper;
 use Geo::OSM::Planet;
 use Utils::Debug;
 use Utils::LWP::Utils;
+use Utils::File;
 
-sub data_open($); # {}
 sub combine_way_into_segments();
 sub output_osm();
 sub output_named_points();
@@ -179,37 +179,6 @@ output_named_points();
 output_statistic();
 printf STDERR "Done\n";
 exit;
-
-# -----------------------------------------------------------------------------
-# Open Planet.osm Data File
-sub data_open($){
-    my $file_name = shift;
-
-    if ( ! -s $file_name ) {
-	if ( -s "$file_name.bz2" ) {
-	    $file_name = "$file_name.bz2";
-	} elsif ( -s "$file_name.gz" ) {
-	    $file_name = "$file_name.gz";
-	}
-    }
-
-    if ( -s $file_name ) {
-	print STDERR "Opening $file_name" if $DEBUG || $VERBOSE;
-	my $fh;
-	if ( $file_name =~ m/\.gz$/ ) {
-	    $fh = IO::File->new("gzip -dc $file_name|")
-		or die("cannot open $file_name: $!");
-	} elsif ( $file_name =~ m/\.bz2$/ ) {
-	    $fh = IO::File->new("bzip2 -dc $file_name|")
-		or die("cannot open $file_name: $!");
-	} else {
-	    $fh = IO::File->new("<$file_name")
-		or die("cannot open $file_name: $!");
-	}
-	return $fh;
-    }
-    die "cannot Find $file_name\n";
-}
 
 #----------------------------------------------
 # Combine way data into segments

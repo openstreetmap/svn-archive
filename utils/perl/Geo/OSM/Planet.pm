@@ -29,6 +29,10 @@ use Utils::Timing;
 
 
 sub osm_dir() {
+    # For later these are the defaults
+    # edpending on where we can read/write
+    #  ~/osm
+    # /var/data/osm
     return "$ENV{HOME}/osm/planet";
 }
 

@@ -22,6 +22,7 @@ use Utils::Math;
 use Utils::Timing;
 use Data::Dumper;
 use Geo::Geometry;
+use Geo::OSM::Planet;
 
 sub load_segment_list($){
     my $do_filter_against_osm = shift;
@@ -42,21 +43,13 @@ sub load_segment_list($){
 	#  ~/.osm/data/planet.osm.csv
 	# /var/data/osm/planet.osm.csv
 
-	my @path=qw( ./
-		     ~/openstreetmap.org/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
-		     ~/svn.openstreetmap.org/utils/osm-pdf-atlas/Data/
-		     ~/.gpsdrive/MIRROR/osm/);
-	my $osm_filename;
 	my $home = $ENV{HOME}|| '~/';
-	for my $path ( @path ) {
-
-	    $osm_filename = "${path}osm.txt";
-	    $osm_filename =~ s,\~/,$home/,;
-	    printf STDERR "check $osm_filename for loading\n" if $DEBUG;
-	    
-	    last if -s $osm_filename;
-	    $osm_filename='';
-	}
+	my $path=	osm_dir();
+	my $osm_filename = "${path}osm.csv";
+	$osm_filename =~ s,\~/,$home/,;
+	printf STDERR "check $osm_filename for loading\n" if $DEBUG;
+	
+	die "Cannot open $osm_filename\n" unless -s $osm_filename;
 	$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($osm_filename);
     };
     return $osm_segments

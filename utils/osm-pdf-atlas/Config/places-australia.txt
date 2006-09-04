@@ -1,3 +1,4 @@
+Australia:          -27.0,  122.0, 30, area
 Australia-east:     -27.0,  122.0, 15, area
 Australia-west:     -27.0,  145.0, 15, area
 Sydney:             -33.88,  151.21, .2, city

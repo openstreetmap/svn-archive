@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+BEGIN {
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+}
+
+
 use strict;
 use warnings;
 
@@ -10,25 +17,31 @@ use IO::File;
 use Pod::Usage;
 use Data::Dumper;
 
+use Geo::OSM::Planet;
+use Utils::Debug;
+use Utils::LWP::Utils;
+
 sub data_open($); # {}
 sub combine_way_into_segments();
 sub output_osm();
 sub output_named_points();
 sub output_statistic();
 
-our $debug=0;
-our $verbose=0;
 our $man=0;
 our $help=0;
 my $areas_todo;
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
-	     'verbose+'            => \$verbose,
-	     'debug+'              => \$debug,      
-	     'd'                   => \$debug,      
+	     'debug+'              => \$DEBUG,      
+	     'd+'                  => \$DEBUG,      
+	     'verbose+'            => \$VERBOSE,
 	     'MAN'                 => \$man, 
 	     'man'                 => \$man, 
 	     'h|help|x'            => \$help, 
+
+	     'no-mirror'           => \$Utils::LWP::Utils::NO_MIRROR,
+	     'proxy=s'             => \$Utils::LWP::Utils::PROXY,
+
 	     'area=s'              => \$areas_todo,
 	     )
     or pod2usage(1);
@@ -38,6 +51,13 @@ pod2usage(-verbose=>2) if $man;
 
 
 my $Filename = shift();
+unless ( $Filename && -s $Filename ) {
+    $Filename = mirror_planet();
+};
+if ( ! -s $Filename ) {
+    die "Cannot read $Filename\n";
+}
+
 pod2usage(1) unless $Filename;
 
 our $READ_FH=undef;
@@ -46,16 +66,18 @@ our $READ_FH=undef;
 my $area_definitions = {
     #                     min    |    max  
     #                  lat   lon |  lat lon
-    uk         => [ [  49  , -11,   64,   3],
-		    [ 49.9 ,  -5.8, 54,0.80],
+    uk         => [ [  49  , -11,   64,   3  ],
+		    [ 49.9 ,  -5.8, 54,   0.80 ],
 		    ],
-    iom        => [ [  49  , -11,   64,   3] ],
-    germany    => [ [  47  ,   5,   54,  16] ],
-    spain      => [ [  35.5,  -9,   44,   4] ],
-    europe     => [ [  35  , -12,   75,  35] ],
-    africa     => [ [ -45  , -20,   30,  55] ],
-    world_east => [ [ -90  , -30,   90, 180] ],
-    world_west => [ [ -90  ,-180,   90, -30] ],
+    iom        => [ [  49  , -11,   64,   3  ] ],
+    germany    => [ [  47  ,   5,   54,  16  ] ],
+    spain      => [ [  35.5,  -9,   44,   4  ] ],
+    europe     => [ [  35  , -12,   75,  35  ],
+		    [  62.2,-24.4,66.8,-12.2], # Iceland
+		    ],
+    africa     => [ [ -45  , -20,   30,  55  ] ],
+    world_east => [ [ -90  , -30,   90, 180  ] ],
+    world_west => [ [ -90  ,-180,   90, -30  ] ],
 };
 my $lon=-180;
 while ( $lon < 180 ){
@@ -117,10 +139,10 @@ $Stats{"tags estim"}     = 46330000;
 #----------------------------------------------
 # Parsing planet.osm File
 #----------------------------------------------
-print STDERR "Reading and Parsing XML from $Filename\n" if $debug;
+print STDERR "Reading and Parsing XML from $Filename\n" if $DEBUG;
 my $start_time=time();
 $READ_FH = data_open($Filename);
-if ( $verbose || $debug )  {
+if ( $VERBOSE || $DEBUG )  {
     print STDERR "\n";
     print STDERR "Parsing $Filename for area $SELECTED_AREA\n";
 }
@@ -132,7 +154,7 @@ eval {
     $P->parse($READ_FH);
     $READ_FH->close();
 };
-if ( $verbose || $debug )  {
+if ( $VERBOSE || $DEBUG )  {
     print STDERR "\n";
 }
 
@@ -146,7 +168,7 @@ if (not $P) {
     return;
 }
 printf("Parsing Osm-Data in %.0f sec\n",time()-$start_time )
-    if $debug;
+    if $DEBUG;
 
 
 printf STDERR "Creating output files\n";
@@ -172,7 +194,7 @@ sub data_open($){
     }
 
     if ( -s $file_name ) {
-	print STDERR "Opening $file_name" if $debug || $verbose;
+	print STDERR "Opening $file_name" if $DEBUG || $VERBOSE;
 	my $fh;
 	if ( $file_name =~ m/\.gz$/ ) {
 	    $fh = IO::File->new("gzip -dc $file_name|")
@@ -193,7 +215,7 @@ sub data_open($){
 # Combine way data into segments
 #----------------------------------------------
 sub combine_way_into_segments() {
-    print STDERR "Combine way data into segments\n" if $debug;
+    print STDERR "Combine way data into segments\n" if $DEBUG;
     if(open(WAYS,">Data/ways-$SELECTED_AREA.csv")){
 	foreach my $id ( keys %Ways){
 	    my $Way = $Ways{$id};
@@ -202,18 +224,18 @@ sub combine_way_into_segments() {
 	    my @SubSegments = split(/,/, $segments);
 	    unless ( scalar(@SubSegments) ) {
 		$Stats{"empty ways"}++; 
-		if ( $debug ) {
+		if ( $DEBUG ) {
 		    printf WAYS "No Segments for Way: Name:%s\n",($Way->{"name"}||'');
 		}
 		next;
 	    }
-	    if ( $debug ) {
+	    if ( $DEBUG ) {
 		printf WAYS "Way: %s,%s\n", $Way->{"segments"}, ($Way->{"name"}||'');
 	    }
 	    $Stats{"untagged ways"}++ 
 		unless scalar( keys (%$Way)); 
 	    
-	    if ( $debug) {
+	    if ( $DEBUG) {
 		printf WAYS "Copying keys: %s to segments %s\n",
 		join(",",keys(%$Way)),
 		join(",",@SubSegments);
@@ -234,7 +256,7 @@ sub combine_way_into_segments() {
 # Main output (segments)
 #----------------------------------------------
 sub output_osm(){
-    print STDERR "Writing Segments to Data/osm-$SELECTED_AREA.csv\n" if $debug;
+    print STDERR "Writing Segments to Data/osm-$SELECTED_AREA.csv\n" if $DEBUG;
     if(open(OSM, ">Data/osm-$SELECTED_AREA.csv")){
 	foreach my $id (keys %Segments){
 	    my $Segment = $Segments{$id};
@@ -266,7 +288,7 @@ sub output_osm(){
 # Secondary output (named points)
 #----------------------------------------------
 sub output_named_points(){
-    print STDERR "Writing Points to Data/points-$SELECTED_AREA.csv\n" if $debug;
+    print STDERR "Writing Points to Data/points-$SELECTED_AREA.csv\n" if $DEBUG;
     if(open(POINTS, ">Data/points-$SELECTED_AREA.csv")){
 	foreach my $id ( keys %Nodes ){
 	    my $Node = $Nodes{$id};
@@ -291,7 +313,7 @@ sub output_named_points(){
 # Statistics output
 #----------------------------------------------
 sub output_statistic(){
-    print STDERR "Statistics output\n" if $debug;
+    print STDERR "Statistics output\n" if $DEBUG;
     if(open(STATS, ">Data/stats-$SELECTED_AREA.txt")){
 	foreach(sort {$AllTags{$b} <=> $AllTags{$a}} keys(%AllTags)){
 	    printf STATS "* %d %s\n", $AllTags{$_}, $_;
@@ -393,7 +415,7 @@ sub DoEnd(){
     }
 
     $Stats{"tags read"}++;
-    if ( ( $verbose || $debug ) && ! ( $Stats{"tags read"} % 10000 ))  {
+    if ( ( $VERBOSE || $DEBUG ) && ! ( $Stats{"tags read"} % 10000 ))  {
 	print STDERR "\r";
 	print STDERR "Read($SELECTED_AREA): ";
 	for my $k ( sort keys %Stats ) {
@@ -445,7 +467,7 @@ a plain text file in cvs form
 
 B<Common usages:>
 
-planet_osm2txt.pl [-d] [-v] [-h]  <planet_filename.osm>
+planet_osm2txt.pl [-d] [-v] [-h] [--no-mirror] [--proxy=<proxy:port>]<planet_filename.osm>
 
 =head1 OPTIONS
 

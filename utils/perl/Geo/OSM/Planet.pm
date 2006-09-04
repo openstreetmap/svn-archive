@@ -102,6 +102,9 @@ sub UTF8sanitize($){
     my $result = `bzip2 -dc $filename | UTF8sanitizer  | bzip2 >$filename_new.part`;
     print $result if $DEBUG || $VERBOSE;
     rename "$filename_new.part","$filename_new";
+    if ( ! -s $filename_new ) {
+	die "Cannot sanitize $filename\n";
+    }
     print "now we have a sanitizes $filename_new\n" if $DEBUG || $VERBOSE;
     return $filename_new;
 }

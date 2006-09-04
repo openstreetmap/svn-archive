@@ -12,6 +12,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 use strict;
 use warnings;
 
+use LWP::UserAgent;
+
 use Utils::Debug;
 
 our $PROXY='';

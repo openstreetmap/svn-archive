@@ -49,6 +49,7 @@ sub create_node($$) {
     } else {
 	$next_osm_node_number--;
 	$id = $next_osm_node_number;
+	$elem->{tag}->{converted_by} = "Track2osm" ;
 	$osm_nodes->{$id}=$elem;
 	$lat_lon2node->{$lat_lon}=$id;
 	$osm_nodes_duplicate->{$lat_lon}=$id;
@@ -75,9 +76,11 @@ sub create_segment($$){
     } else {
 	$next_osm_segment_number--;
 	$seg_id=$next_osm_segment_number;
+	$elem->{tag}->{converted_by} = "Track2osm" ;
 	$osm_segments->{$seg_id} = { 
 	    from => $elem->{from},
-	    to   => $elem->{to}
+	    to   => $elem->{to},
+	    tag  => $elem->{tag},
 	};
     };
     return $seg_id;
@@ -138,21 +141,26 @@ sub tracks2osm($){
 		    if $DEBUG >2;
 		next;
 	    }
-	    $seg_id = create_segment({from=>$from,to=>$to},$osm_segments);
+	    my $tags = {"converted_by" => "Track2osm"};
 	    if ( $DEBUG >10 ) {
-		my $tags = { distance => $dist,
-			     distance_meter => $dist*1000,
-			     reference => "$reference $track_pos, Track:$track_nr",
-			     from_to => "$from $to",
-			 };
-		if ( $DEBUG >12 ) {
-		    for my $k ( keys %{$elem} ) {
-			next if $k =~ m/^sat_/;
-			$tags->{$k}=$elem->{$k};
-		    }
+		$tags->{distance} = $dist;
+		$tags->{distance_meter} = $dist*1000;
+		$tags->{reference} = "$reference $track_pos, Track:$track_nr";
+		$tags->{from_to} = "$from $to";
+	    };
+	    if ( $DEBUG >12 ) {
+		for my $k ( keys %{$elem} ) {
+		    next if $k =~ m/^sat_/;
+		    $tags->{$k}=$elem->{$k};
 		}
-		$osm_segments->{$seg_id}->{tag}=$tags;
 	    }
+	    
+	    $seg_id = create_segment(
+				 {
+				     from => $from,
+				     to   => $to,
+				     tag  => $tags,
+				 },$osm_segments);
 	    
 	    
 	    # -------------------------------------------- Create Ways
@@ -160,25 +168,27 @@ sub tracks2osm($){
 		$angle=$elem->{angle};
 		$last_angle = $last_elem->{angle};
 		
-		my $skip_point  = 0;
-		if ( $skip_point  
-		     || ! $seg_id             # Wir haben ein neues Segment
-		     || abs($last_angle) > 25 # unter x Grad Lenkeinschlag
-		     || $dist > 5   	  # unter x Km Distanz
+		if ( ! $seg_id               # Wir haben ein neues Segment
+		     || abs($last_angle) > 25 # over x Grad Lenkeinschlag
+		     || $dist > 5             # more than x Km Distance
 		     ) {
 		    if ( defined($way->{seg}) 
 			 && ( @{$way->{seg}} > 4)
 			 ) {
 			$next_osm_way_number--;
-			$way->{reference} = $reference;
+			if ( $DEBUG >10 ) {
+			    $way->{reference} = $reference;
+			}
 			$osm_ways->{$next_osm_way_number} = $way;
 		    }
 		    $way={};
 		}
-		if ( ! $skip_point  ){
-		    push(@{$way->{seg}},$seg_id);
-		    $count_valid_points_for_ways++;
-		}
+
+		push(@{$way->{seg}},$seg_id);
+		$count_valid_points_for_ways++;
+		
+		my $tags = {"converted_by" => "Track2osm"};
+		$way->{tag} = $tags;
 	    }
 
 	    $last_elem=$elem;

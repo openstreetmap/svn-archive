@@ -1,4 +1,11 @@
 #!/usr/bin/perl
+
+BEGIN {
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+}
+
 use strict;
 use PDF::API2;
 use Data::Dumper;
@@ -6,16 +13,58 @@ use constant mm => 25.4/72;
 use Carp qw(cluck confess);
 use Getopt::Long;
 
-my $debug;
 
+use Geo::GPX::File;
+use Geo::Geometry;
+use Geo::OSM::SegmentList;
+use Geo::OSM::Tracks2OSM;
+use Geo::OSM::Write;
+use Geo::Tracks::GpsBabel;
+use Geo::Tracks::Kismet;
+use Geo::Tracks::NMEA;
+use Geo::Tracks::Tools;
+use Utils::Debug;
+use Utils::File;
+use Utils::Math;
+use Utils::Timing;
+use Geo::OSM::Planet;
+
+my $ConfigFile = "Config/config.txt";
 Getopt::Long::Configure('no_ignore_case');
+print "Options: -".join(",",@ARGV)."-\n";
+my $CommandLineOptions;
+my $ResultDir=osm_dir().'/pdf-atlas/Results';
+
 GetOptions ( 
-	     'debug'               => \$debug,      
-	     'd'                   => \$debug,      
+	     'debug+'     => \$DEBUG,      
+	     'd+'         => \$DEBUG,      
+	     'c:s'        => \$ConfigFile,
+	     'config:s'   => \$ConfigFile,
+	     'Places:s'   => \$CommandLineOptions->{Places},
+	     'ResultDir:s'=> \$ResultDir,
 	     );
 
-my $ConfigFile = shift() || die("Usage: $0 [-d] [Config file]\n");
-CreateAtlas($ConfigFile);
+mkdir_if_needed( $ResultDir );
+
+print "Rest Options: -".join(",",@ARGV)."-\n";
+  
+# Read the configuration file
+my $Options = ReadFile($ConfigFile);
+printf STDERR "CreateAtlas() Options: ".Dumper(\$Options)."\n" 
+    if $DEBUG>12;
+
+for my $k ( keys %{$CommandLineOptions} ) {
+    my $value = $CommandLineOptions->{$k};
+    $Options->{$k}=$value if defined $value;
+    printf STDERR "CreateAtlas() Additional Option %-12s: $Options->{$k}\n",$k 
+	if $DEBUG>2;      
+}
+
+if ( shift() ) {
+    die("Usage: $0 [-d] [--config=<Config file>]\n");
+};
+    
+CreateAtlas($Options);
 exit;
 
 
@@ -23,12 +72,9 @@ exit;
 # Create a PDF road atlas, based on options in a config file
 #---------------------------------------------------------
 sub CreateAtlas(){
+  my $Options = shift;
   my $PDF = PDF::API2->new();
-  
-  # Read the configuration file
-  my $Options = ReadFile(shift());
-  printf STDERR "CreateAtlas::Options:".Dumper(\$Options)."\n" 
-      if $debug>10;
+
 
 { # Setting defaults
     my ($guess_name) = ( $Options->{Places}  =~ m/places-(.+).txt/ );
@@ -54,9 +100,10 @@ sub CreateAtlas(){
   TextPage($PDF, $Options->{"License"});
   
   # Save the PDF
-  my $pdf_filename=$Options->{"Filename"};
+  unless ( -d $ResultDir ) { mkpath $ResultDir;};
+  my $pdf_filename=$ResultDir."/".$Options->{"Filename"};
   printf STDERR "Saving %s\n", $pdf_filename;
-  $PDF->saveas($Options->{"Filename"});
+  $PDF->saveas($pdf_filename);
 }
 
 #---------------------------------------------------------
@@ -104,7 +151,8 @@ sub TextPage()
 {
   my ($PDF, $Filename) = @_;
   my $Page = $PDF->page;
-  
+  $Filename =~ s/\~/$ENV{HOME}/;
+
   my $TextHandler = $Page->text;
   $TextHandler->font($PDF->corefont('Helvetica'), 6/mm );
   $TextHandler->fillcolor('black');
@@ -155,7 +203,7 @@ sub LoadData()
  
   die "No Area defined for ".Dumper($Options)."\n" 
       unless defined $Options->{"Area"};
-  print "Area: '$Options->{Area}'\n" if $debug;
+  print "Area: '$Options->{Area}'\n" if $DEBUG;
   my ($LatC, $LongC, $Size) = split(/\s*,\s*/,$Options->{"Area"});
   my $Margin = 1.5;
   my %Bounds = (
@@ -164,14 +212,14 @@ sub LoadData()
     "S" => $LatC - $Margin * $Size,
     "N" => $LatC + $Margin * $Size);
 
-  print "Bounds: ".Dumper(\%Bounds) if $debug>10;
+  print "Bounds: ".Dumper(\%Bounds) if $DEBUG>10;
   die "No Size defined for ".Dumper($Options)."\n" unless $Size;
   
   $Data{"Coast"} = LoadGSHHS($Options->{"Coast"}, \%Bounds) if($Options->{"Coast"});
     
   $Data{"Segments"} = LoadOSM($Options->{"Data"}, \%Bounds) if($Options->{"Data"});
   
-  printf STDERR "Data loaded\n" if $debug;
+  printf STDERR "Data loaded\n" if $DEBUG;
   return(\%Data);
 }
 
@@ -180,7 +228,12 @@ sub LoadGSHHS()
   my ($Filename, $Bounds) = @_;
   my @Coasts;
 
-  printf STDERR "Reading GSHHS file $Filename\n" if $debug;
+  $Filename =~ s/\~/$ENV{HOME}/;
+
+  if ( ! -s $Filename && -s osm_dir()."/$Filename" ) {
+      $Filename=osm_dir()."/$Filename";
+  }
+  printf STDERR "Reading GSHHS file $Filename\n" if $DEBUG;
   # Open the file for reading, binary  
   open(my $fp, "<", $Filename)
       || die("Can't open GSHHS file $Filename ($!)\n");
@@ -241,6 +294,7 @@ sub coastcode(){
 sub LoadOSM()
 {
   my ($Filename, $Bounds) = @_;
+  $Filename =~ s/\~/$ENV{HOME}/;
 
   printf STDERR "Reading OSM File: $Filename\n";
   open(my $fp, "<", $Filename) 
@@ -258,6 +312,7 @@ sub MapPages()
   my ($PDF, $Options, $Data) = @_;
   
   my $Filename = $Options->{"Places"};
+  $Filename =~ s/\~/$ENV{HOME}/;
   open(my $fp, "<", $Filename) 
       or die("Can't open $Filename ($!)\n");
   
@@ -709,8 +764,9 @@ sub DegToRad(){
 #---------------------------------------------------------
 sub ReadFile(){
   my $Filename = shift();
+  $Filename =~ s/\~/$ENV{HOME}/;
   my %Options;
-  printf STDERR "\n-----------------------------------\n" if $debug>1;
+  printf STDERR "\n-----------------------------------\n" if $DEBUG>1;
   printf STDERR "  - Reading %s\n", $Filename;
   open(my $fp, $Filename) 
       || die("Can't open $Filename ($!)\n");
@@ -724,15 +780,15 @@ sub ReadFile(){
       chomp $Value;
       $Value =~ s/[\r\a\n\s]*$//g;;
       print STDERR "Key: $Key	Value:$Value\n" 
-	  if $debug>5;
+	  if $DEBUG>5;
       $Options{$Key} = $Value;
       unless ( $Key && defined($Value) && $Value ) { 
 	  warn "Key:Value split not successfullt $Key:$Value"
 	  };
   }
   close $fp;
-  printf STDERR "Options($Filename):".Dumper(\%Options)."\n" if $debug > 10;
-  printf STDERR "File $Filename read complete\n" if $debug >1;
-  printf STDERR "+++++++++++++++++++++++++++++++++++++++++\n" if $debug > 2;
+  printf STDERR "Options($Filename):".Dumper(\%Options)."\n" if $DEBUG > 10;
+  printf STDERR "File $Filename read complete\n" if $DEBUG >1;
+  printf STDERR "+++++++++++++++++++++++++++++++++++++++++\n" if $DEBUG > 2;
   return(\%Options);
 }

@@ -23,30 +23,28 @@ use strict;
 use warnings;
     
 # ------------------------------------------------------------------
-my $osm_file;
-
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
-	     'debug:+'              => \$DEBUG,      
-	     'd:+'                  => \$DEBUG,      
-	     'verbose:+'            => \$VERBOSE,
-	     'v:+'                  => \$VERBOSE,
-	     'MAN'                  => \$man, 
-	     'man'                  => \$man, 
-	     'h|help|x'             => \$help, 
-	     'osm=s'                => \$osm_file,
-	     'proxy=s'              => \$PROXY,
-	     'no-mirror=s'              => \$NO_MIRROR,
+	     'debug:+'    => \$DEBUG,      
+	     'd:+'        => \$DEBUG,      
+	     'verbose:+'  => \$VERBOSE,
+	     'v:+'        => \$VERBOSE,
+	     'MAN'        => \$man, 
+	     'man'        => \$man, 
+	     'h|help|x'   => \$help, 
+
+	     'no-mirror'  => \$Utils::LWP::Utils::NO_MIRROR,
+	     'proxy=s'    => \$Utils::LWP::Utils::PROXY,
+
 	     )
     or pod2usage(1);
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
-if ( ! -s $osm_file ) {
-    $osm_file = mirror_planet();
-};
+mirror_planet();
+
 
 
 ##################################################################
@@ -56,11 +54,20 @@ __END__
 
 =head1 NAME
 
-B<planet-mirror.pl> Version 0.01
+B<planet-mirror.pl> Version 0.1
 
 =head1 DESCRIPTION
 
-B<planet-mirror.pl> is a program download the currentplanet.osm
+B<planet-mirror.pl> is a program download the current planet.osm
+
+This program will have a look at http://planet.openstreetmap.org/ 
+and see if there is a newer planet-xx.osm.bz2 File to download.
+If ther is it will download it to ~/osm/planet/
+After this it will Sanitize the File and write the result to
+planet-xx-a.osm.bz2
+If you want your planet File to always be up to date you can i
+add the following line to your crontab
+ 01 9 * * * /home/<yourname>/svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl
 
 =head1 SYNOPSIS
 

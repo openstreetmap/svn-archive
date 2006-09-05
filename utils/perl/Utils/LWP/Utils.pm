@@ -42,7 +42,8 @@ our $lwp_timer=0;
 		    $out_string ="\n".$out_string;
 		    $lwp_bytes=0;
 		}
-		printf STDERR "LWP: $out_string\n"; 
+		printf STDERR "LWP: $out_string\n"
+		    if $DEBUG || $VERBOSE; 
 		$lwp_last_was_bytes=0;
 	    }
 	};
@@ -65,7 +66,8 @@ sub mirror_file($$){
     if (!$PROXY) {
         $PROXY ||= $ENV{'PROXY'};
         $PROXY ||= $ENV{'http_proxy'};
-        print "Set Proxy to $PROXY\n" if $PROXY;
+        print "Set Proxy to $PROXY\n" 
+	    if $PROXY && ( $DEBUG || $VERBOSE);
     }
     if ( $PROXY ){
         $PROXY = "http://$PROXY" unless $PROXY =~ m,^.?.tp://,;

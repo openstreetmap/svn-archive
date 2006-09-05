@@ -30,6 +30,7 @@ sub output_statistic($); # {}
 our $man=0;
 our $help=0;
 my $areas_todo;
+my $do_list_areas=0;
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
 	     'debug+'              => \$DEBUG,      
@@ -43,6 +44,7 @@ GetOptions (
 	     'proxy=s'             => \$Utils::LWP::Utils::PROXY,
 
 	     'area=s'              => \$areas_todo,
+	     'list-areas'          => \$do_list_areas,
 	     )
     or pod2usage(1);
 
@@ -76,14 +78,16 @@ my $area_definitions = {
 		    [  62.2,-24.4,66.8,-12.2], # Iceland
 		    ],
     africa     => [ [ -45  , -20,   30,  55  ] ],
-    world_east => [ [ -90  , -30,   90, 180  ] ],
-    world_west => [ [ -90  ,-180,   90, -30  ] ],
+    # Those eat up all memory on normal machines
+    # world_east => [ [ -90  , -30,   90, 180  ] ], 
+    # world_west => [ [ -90  ,-180,   90, -30  ] ],
 };
-my $lon=-180;
-while ( $lon < 180 ){
-    my $lon1=$lon+45;
-    $area_definitions->{"stripe_${lon}_${lon1}"} = [ [ -90  ,$lon,   90, $lon1] ];
-    $lon=$lon1;
+my $stripe_lon=-180;
+my $stripe_step=10;
+while ( $stripe_lon < 180 ){
+    my $stripe_lon1=$stripe_lon+$stripe_step+1;
+    $area_definitions->{"stripe_${stripe_lon}_${stripe_lon1}"} = [ [ -90  ,$stripe_lon,   90, $stripe_lon1] ];
+    $stripe_lon=$stripe_lon+$stripe_step;
 }
 my $SELECTED_AREA_filters=undef;
 
@@ -93,6 +97,10 @@ $areas_todo=lc($areas_todo);
 my $SELECTED_AREA=$areas_todo;
 our $SELECTED_AREA_filters = $area_definitions->{$SELECTED_AREA};
 
+if ( $do_list_areas ) {
+    print join("\n",sort { $a<=>$b} keys %{$area_definitions})."\n";
+    exit;
+}
 if ( ! defined ($area_definitions->{$SELECTED_AREA} ) ) {
     die "unknown area $SELECTED_AREA.\n".
 	"Allowed Areas:\n\t".join("\n\t",sort keys %{$area_definitions})."\n";
@@ -455,7 +463,7 @@ a plain text file in cvs form.
 
 B<Common usages:>
 
-planet_osm2txt.pl [-d] [-v] [-h] [--no-mirror] [--proxy=<proxy:port>]<planet_filename.osm>
+planet_osm2txt.pl [-d] [-v] [-h] [--no-mirror] [--proxy=<proxy:port>] [--list-areas] <planet_filename.osm>
 
 =head1 OPTIONS
 
@@ -477,6 +485,9 @@ do not try to get the newest planet.osm first
 
 Only read area for processing
 
+=item B<--list-areas>
+
+print all areas possible
 
 =item B<planet_filename.osm>
 

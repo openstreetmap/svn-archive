@@ -1,6 +1,8 @@
+Area: 52.0,  5.0, 180
+#Area: 52.0,  5.0, 20
 # -------------------------- Munich
-Area: 48.14,11.55,1.0
-Places: Config/places-munich.txt
+#Area: 48.14,11.55,1.0
+#Places: Config/places-munich.txt
 
 # -------------------------- Germany
 #Area: 50,12,7
@@ -10,11 +12,10 @@ Places: Config/places-munich.txt
 #Places: Config/places-england.txt
 
 # ------------------------ IoW
-#Places: Config/places-iow.txt
+Places: Config/places-iow.txt
 
 
 # ------------------------- Europe
-#Area: 52.0,  5.0, 20
 #Places: Config/places-west-europe.txt
 
 # ------------------------- Australia
@@ -40,9 +41,9 @@ Places: Config/places-munich.txt
 #Filename: osm_atlas-africa.pdf
 # will be filled with the defaults
 
-Data:	Data/osm.txt
+Data:	~/osm/planet/csv/osm-europe.csv
 Styles: Config/styles.txt
-Coast:	Data/gshhs_h.b
+Coast:	~/osm/GSHHS/gshhs_h.b
 Equivalences: Config/equivalences.txt
 Filters: Config/filter.txt
 License: Config/license.txt

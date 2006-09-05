@@ -98,7 +98,7 @@ my $SELECTED_AREA=$areas_todo;
 our $SELECTED_AREA_filters = $area_definitions->{$SELECTED_AREA};
 
 if ( $do_list_areas ) {
-    print join("\n",sort { $a<=>$b} keys %{$area_definitions})."\n";
+    print join("\n",sort keys %{$area_definitions})."\n";
     exit;
 }
 if ( ! defined ($area_definitions->{$SELECTED_AREA} ) ) {

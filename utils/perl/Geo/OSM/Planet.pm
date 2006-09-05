@@ -67,7 +67,7 @@ sub mirror_planet(){
 	return undef unless $current_file;
 	$url .= "/$current_file";
 	$current_file = "$mirror_dir/$current_file";
-	print "\nMirror OSM Data from $url\n";
+	print STDERR "\nMirror OSM Data from $url\n" if $VERBOSE || $DEBUG;
 	$result = mirror_file($url,$current_file);
 	return undef unless $result;
 

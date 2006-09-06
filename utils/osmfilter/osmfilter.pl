@@ -1137,7 +1137,7 @@ sub convert_Data(){
 	    my ($type,$name) = ($1,$2);
 	    $new_tracks = read_track_GpsBabel($name,$type);    
 	} elsif ( $extention eq "gps" ) {
-	    $new_tracks = Kismet::read_gps_file($filename);
+	    $new_tracks = read_kismet_file($filename);
 	} elsif ( $extention eq "gpx" ) {
 	    $new_tracks = read_gpx_file($filename);
 	} elsif ( $extention eq "mps" ) {

@@ -5,7 +5,7 @@ package Geo::Tracks::Kismet;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_gps_file );
+@EXPORT = qw( read_kismet_file );
 
 use strict;
 use warnings;
@@ -23,7 +23,7 @@ use Utils::Timing;
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from Kismet File
-sub read_gps_file($) { 
+sub read_kismet_file($) { 
     my $filename = shift;
 
     my $start_time=time();
@@ -62,7 +62,7 @@ sub read_gps_file($) {
     }
     my $track=[];
     for my $elem  ( @{$content->[0]->{Kids}} ) {
-	next unless ref($elem) eq "Kismet::gps-point";
+	next unless ref($elem) eq "Geo::Tracks::Kismet::gps-point";
 	next unless $elem->{'bssid'} eq 'GP:SD:TR:AC:KL:OG';
 	delete $elem->{Kids};
 	if ( defined($elem->{"time-sec"}) && defined($elem->{"time-usec"}) ) {

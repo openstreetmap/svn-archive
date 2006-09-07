@@ -74,26 +74,26 @@ my ($man,$help);
 our $PROXY='';
 
 
-my $osm_stats         = {};
-my $osm_obj           = undef; # OSM Object currently read
+our $osm_stats         = {};
+our $osm_obj           = undef; # OSM Object currently read
 
-my $use_stdin         = 0;
-my $use_stdout        = 0;
-my $out_osm           = undef;
-my $fake_gpx_date     = undef;
-my $write_gpx_wpt     = undef;
-my $out_raw_gpx       = undef;
-my $split_tracks      = undef;
-my @filter_area_files = ();
-my $draw_filter_areas = undef;
-my $do_filter_reduce_pt = undef;
-my $do_filter_clew   = undef;
-my $do_filter_against_osm = undef;
-my $do_filter_dup_trace_segments = undef;
-my $do_all_filters    = 0;
-my $generate_ways     = undef;
+our $use_stdin         = 0;
+our $use_stdout        = 0;
+our $out_osm           = undef;
+our $fake_gpx_date     = undef;
+our $write_gpx_wpt     = undef;
+our $out_raw_gpx       = undef;
+our $split_tracks      = undef;
+our @filter_area_files = ();
+our $draw_filter_areas = undef;
+our $do_filter_reduce_pt = undef;
+our $do_filter_clew   = undef;
+our $do_filter_against_osm = undef;
+our $do_filter_dup_trace_segments = undef;
+our $do_all_filters    = 0;
+our $generate_ways     = undef;
 
-my $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
+our $FILTER_FILE = "$ENV{'HOME'}/.josm/filter.xml";
 
 
 ##################################################################
@@ -1311,6 +1311,8 @@ if ( $do_all_filters ) {
     $do_filter_dup_trace_segments =1 unless defined $do_filter_dup_trace_segments;
     @filter_area_files || push(@filter_area_files,"");
 }
+
+$fake_gpx_date ||=0;
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;

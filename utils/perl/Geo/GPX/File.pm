@@ -165,6 +165,9 @@ sub write_gpx_file($$) { # Write an gpx File
     # TODO: This has to get a good interface
     my $write_gpx_wpt=$main::write_gpx_wpt;
     my $fake_gpx_date=$main::fake_gpx_date;
+    
+    die "fake_gpx_date not defined \n" 
+	unless defined $fake_gpx_date;
 
     printf STDERR ("Writing GPS File $filename\n") if $VERBOSE >1 || $DEBUG >1;
 

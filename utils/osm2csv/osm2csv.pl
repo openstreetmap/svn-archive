@@ -82,11 +82,14 @@ my $area_definitions = {
     # world_east => [ [ -90  , -30,   90, 180  ] ], 
     # world_west => [ [ -90  ,-180,   90, -30  ] ],
 };
-my $stripe_lon=-180;
-my $stripe_step=10;
+my $stripe_lon     = -180;
+my $stripe_step    = 5;
+my $stripe_overlap = 0.2;
 while ( $stripe_lon < 180 ){
-    my $stripe_lon1=$stripe_lon+$stripe_step+1;
-    $area_definitions->{"stripe_${stripe_lon}_${stripe_lon1}"} = [ [ -90  ,$stripe_lon,   90, $stripe_lon1] ];
+    my $stripe_lon1=$stripe_lon+$stripe_step+$stripe_overlap;
+    $area_definitions->{"stripe_${stripe_lon}_${stripe_lon1}"} =
+	[ [ -90,$stripe_lon,   
+	    90, $stripe_lon1] ];
     $stripe_lon=$stripe_lon+$stripe_step;
 }
 my $SELECTED_AREA_filters=undef;

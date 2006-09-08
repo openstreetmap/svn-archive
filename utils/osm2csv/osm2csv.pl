@@ -21,6 +21,7 @@ use Geo::OSM::Planet;
 use Utils::Debug;
 use Utils::LWP::Utils;
 use Utils::File;
+use Geo::Filter::Area;
 
 sub combine_way_into_segments($); # {}
 sub output_osm($); # {}
@@ -64,68 +65,16 @@ pod2usage(1) unless $Filename;
 
 our $READ_FH=undef;
 
-# ------------------------------------------------------------------
-my $area_definitions = {
-    #                     min    |    max  
-    #                  lat   lon |  lat lon
-    uk         => [ [  49  , -11,   64,   3  ],
-		    [ 49.9 ,  -5.8, 54,   0.80 ],
-		    ],
-    iom        => [ [  49  , -11,   64,   3  ] ],
-    germany    => [ [  47  ,   5,   54,  16  ] ],
-    spain      => [ [  35.5,  -9,   44,   4  ] ],
-    europe     => [ [  35  , -12,   75,  35  ],
-		    [  62.2,-24.4,66.8,-12.2], # Iceland
-		    ],
-    africa     => [ [ -45  , -20,   30,  55  ] ],
-    # Those eat up all memory on normal machines
-    # world_east => [ [ -90  , -30,   90, 180  ] ], 
-    # world_west => [ [ -90  ,-180,   90, -30  ] ],
-};
-my $stripe_lon     = -180;
-my $stripe_step    = 5;
-my $stripe_overlap = 0.2;
-while ( $stripe_lon < 180 ){
-    my $stripe_lon1=$stripe_lon+$stripe_step+$stripe_overlap;
-    $area_definitions->{"stripe_${stripe_lon}_${stripe_lon1}"} =
-	[ [ -90,$stripe_lon,   
-	    90, $stripe_lon1] ];
-    $stripe_lon=$stripe_lon+$stripe_step;
-}
-my $SELECTED_AREA_filters=undef;
 
-#$areas_todo=join(',',sort keys %{$area_definitions}) unless defined $areas_todo;
 $areas_todo ||= 'germany';
 $areas_todo=lc($areas_todo);
-my $SELECTED_AREA=$areas_todo;
-our $SELECTED_AREA_filters = $area_definitions->{$SELECTED_AREA};
-
 if ( $do_list_areas ) {
-    print join("\n",sort keys %{$area_definitions})."\n";
+    Geo::Filter::Area->list_areas()."\n";
     exit;
 }
-if ( ! defined ($area_definitions->{$SELECTED_AREA} ) ) {
-    die "unknown area $SELECTED_AREA.\n".
-	"Allowed Areas:\n\t".join("\n\t",sort keys %{$area_definitions})."\n";
-}
 
-sub in_area($){
-    my $obj = shift;
-    
-    #print "in_area(".Dumper(\$obj).")";;
-    #print Dumper(\$SELECTED_AREA_filters);
-    for my $a ( @{$SELECTED_AREA_filters}  ) {
-	#print Dumper(\$a);
-	if (
-	    $obj->{lat} >= $a->[0] &&
-	    $obj->{lon} >= $a->[1] &&
-	    $obj->{lat} <= $a->[2] &&
-	    $obj->{lon} <= $a->[3] ) {
-	    return 1;
-	}
-    }
-    return 0;
-}
+our $AREA_FILTER = Geo::Filter::Area->new( area => $areas_todo );
+
 
 # -----------------------------------------------------------------------------
 # Temporary data
@@ -155,7 +104,7 @@ our $PARSING_START_TIME=time();
 $READ_FH = data_open($Filename);
 if ( $VERBOSE || $DEBUG )  {
     print STDERR "\n";
-    print STDERR "osm2csv: Parsing $Filename for area $SELECTED_AREA\n";
+    print STDERR "osm2csv: Parsing $Filename for area ".$AREA_FILTER->name()."\n";
 }
 my $P = new XML::Parser( Handlers => {
     Start => \&DoStart, 
@@ -186,10 +135,13 @@ printf STDERR "Creating output files\n";
 
 my $data_dir=osm_dir()."/planet/csv";
 mkdir_if_needed( $data_dir );
-combine_way_into_segments("$data_dir/ways-$SELECTED_AREA.csv");
-output_osm("$data_dir/osm-$SELECTED_AREA.csv");
-output_named_points("$data_dir/points-$SELECTED_AREA.csv");
-output_statistic("$data_dir/stats-$SELECTED_AREA.txt");
+my $area_name = $AREA_FILTER->name();
+die "No Area Name defined\n"
+    unless $area_name;
+combine_way_into_segments("$data_dir/ways-$area_name.csv");
+output_osm("$data_dir/osm-$area_name.csv");
+output_named_points("$data_dir/points-$area_name.csv");
+output_statistic("$data_dir/stats-$area_name.txt");
 printf STDERR "Done\n";
 exit;
 
@@ -367,7 +319,7 @@ sub DoEnd(){
 	$osm_obj->{"lat"} = $MainAttr{"lat"};
 	$osm_obj->{"lon"} = $MainAttr{"lon"};
 	
-	if ( in_area($osm_obj) ) {
+	if ( $AREA_FILTER->inside($osm_obj) ) {
 	    $Nodes{$ID}{"lat"} = $MainAttr{"lat"};
 	    $Nodes{$ID}{"lon"} = $MainAttr{"lon"};
 	    foreach(keys(%Tags)){
@@ -413,7 +365,7 @@ sub DoEnd(){
     $Stats{"tags read"}++;
     if ( ( $VERBOSE || $DEBUG ) && ! ( $Stats{"tags read"} % 10000 ))  {
 	print STDERR "\r";
-	print STDERR "Read($SELECTED_AREA): ";
+	print STDERR "Read(".$AREA_FILTER->name()."): ";
 	for my $k ( sort keys %Stats ) {
 	    next if $k =~ m/( estim| read)$/;
 	    print STDERR " $k:".$Stats{$k};

@@ -303,7 +303,7 @@ sub do_node_tag($ $ $ $) {
 	if ($dbtype eq 'pgsql') {
 		do_tag_add($node_tag_ps,$last_id,$name,$value,$line);
 	} else {
-		do_tag_append($node_tag_ps,$last_id,$name,$value,$line);
+		do_tag_append($node_tag_mysql,$last_id,$name,$value,$line);
 	}
 }
 sub do_segment_tag($ $ $ $) {
@@ -312,7 +312,7 @@ sub do_segment_tag($ $ $ $) {
 	if ($dbtype eq 'pgsql') {
 		do_tag_add($seg_tag_ps,$last_id,$name,$value,$line);
 	} else {
-		do_tag_append($seg_tag_ps,$last_id,$name,$value,$line);
+		do_tag_append($seg_tag_mysql,$last_id,$name,$value,$line);
 	}
 }
 sub do_way_tag($ $ $ $) {

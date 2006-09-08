@@ -16,13 +16,12 @@ use warnings;
 
 use Math::Trig;
 
-use Utils::File;
-use Utils::Debug;
-use Utils::Math;
-use Utils::Timing;
 use Data::Dumper;
 use Geo::Geometry;
 use Geo::OSM::Planet;
+use Utils::Debug;
+use Utils::File;
+use Utils::Math;
 
 sub load_segment_list($){
     my $do_filter_against_osm = shift;

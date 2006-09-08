@@ -17,11 +17,10 @@ use warnings;
 use Data::Dumper;
 
 use Geo::Geometry;
+use Geo::Tracks::Tools;
+use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
-use Utils::Debug;
-use Geo::Tracks::Tools;
 
 my $first_id = -10000;
 

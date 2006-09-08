@@ -21,7 +21,6 @@ use POSIX qw(strftime);
 use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
 use Utils::Debug;
 
 # -----------------------------------------------------------------------------

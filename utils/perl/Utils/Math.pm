@@ -2,6 +2,9 @@
 package Utils::Math;
 ##################################################################
 
+use strict;
+use warnings;
+
 use Exporter; require DynaLoader; require AutoLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw(min max);
@@ -23,3 +26,5 @@ sub max($$){
     return $a if ! defined $b;
     return $a>$b?$a:$b;
 }
+
+1;

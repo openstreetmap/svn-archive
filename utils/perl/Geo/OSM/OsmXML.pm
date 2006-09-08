@@ -1,4 +1,8 @@
 package OsmXML;
+
+use strict;
+use warnings;
+
 use XML::Parser;
 
 sub new(){ bless{} }

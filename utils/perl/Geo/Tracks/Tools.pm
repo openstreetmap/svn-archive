@@ -27,7 +27,6 @@ use Geo::Geometry;
 use Utils::File;
 use Utils::Math;
 use Utils::Debug;
-use Utils::Timing;
 
 # Copy the track structure
 sub copy_track_structure($$){

@@ -1,4 +1,9 @@
 package osm;
+
+use strict;
+use warnings;
+
+
 use WWW::Curl::easy;
 
 sub new(){bless{}};

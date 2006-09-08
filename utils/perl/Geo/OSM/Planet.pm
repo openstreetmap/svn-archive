@@ -13,19 +13,18 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 use strict;
 use warnings;
 
-use Utils::File;
 use HTTP::Request;
-
 use File::Basename;
 use File::Copy;
 use File::Path;
+use File::Slurp;
 use Getopt::Long;
 use HTTP::Request;
 use Storable ();
-use Utils::LWP::Utils;
-use File::Slurp;
+
+use Utils::File;
 use Utils::Debug;
-use Utils::Timing;
+use Utils::LWP::Utils;
 
 
 sub osm_dir() {

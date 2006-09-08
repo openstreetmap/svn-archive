@@ -7,15 +7,17 @@ BEGIN {
 }
 
 use strict;
+use warning;
+
 use PDF::API2;
 use Data::Dumper;
 use constant mm => 25.4/72;
 use Carp qw(cluck confess);
 use Getopt::Long;
 
-
 use Geo::GPX::File;
 use Geo::Geometry;
+use Geo::OSM::Planet;
 use Geo::OSM::SegmentList;
 use Geo::OSM::Tracks2OSM;
 use Geo::OSM::Write;
@@ -26,8 +28,6 @@ use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
-use Geo::OSM::Planet;
 
 my $ConfigFile = "Config/config.txt";
 Getopt::Long::Configure('no_ignore_case');

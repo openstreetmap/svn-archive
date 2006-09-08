@@ -16,6 +16,7 @@ use Getopt::Long;
 use Geo::OSM::Planet;
 use Utils::Debug;
 use Utils::LWP::Utils;
+use Pod::Usage;
 
 my ($man,$help);
 
@@ -74,6 +75,10 @@ add the following line to your crontab
 B<Common usages:>
 
 planet-mirror.pl [--man] [-d] [-v] [-h] [--no-proxy] [--no-mirror]
+
+planet-mirror.pl -v 
+
+ Download the most current planet-xxxxxx.osm.bz and tell what's going on
 
 =head1 OPTIONS
 

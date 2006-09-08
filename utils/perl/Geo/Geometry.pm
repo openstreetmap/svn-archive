@@ -2,6 +2,9 @@
 package Geo::Geometry;
 ##################################################################
 
+use strict;
+use warnings;
+
 use Exporter; require DynaLoader; require AutoLoader;
 @ISA = qw(Exporter DynaLoader);
 @EXPORT = qw( distance_point_point_Km distance_degree_point_point angle_north
@@ -12,7 +15,7 @@ use Math::Trig;
 
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
+use Utils::Debug;
 
 # ------------------------------------------------------------------
 # Distance in Km between 2 geo points with lat/lon

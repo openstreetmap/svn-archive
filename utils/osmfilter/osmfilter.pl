@@ -65,7 +65,6 @@ use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
 use Geo::GPX::File;
 
 my ($man,$help);
@@ -105,17 +104,11 @@ use warnings;
 use Carp;
 
 use Geo::Geometry;
-use Utils::File;
-use Utils::Math;
-use Utils::Timing;
-use Utils::Debug;
-
-use Geo::Geometry;
 use Geo::OSM::SegmentList;
+use Geo::Tracks::Tools;
+use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
-use Geo::Tracks::Tools;
 
 
 # ------------------------------------------------------------------
@@ -211,10 +204,9 @@ use Date::Parse;
 use Data::Dumper;
 
 use Geo::Geometry;
+use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
-use Utils::Debug;
 
 # -----------------------------------------------------------------------------
 # Read GPSDrive Track Data
@@ -309,15 +301,14 @@ use warnings;
 use Date::Parse;
 use Data::Dumper;
 use Math::Trig;
+use Carp;
 
+use Geo::GPX::File;
 use Geo::Geometry;
+use Geo::Tracks::Tools;
+use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
-use Utils::Debug;
-use Geo::Tracks::Tools;
-use Geo::GPX::File;
-use Carp;
 
 # ------------------------------------------------------------------
 # Check if the point is in the area to currently evaluate
@@ -1115,9 +1106,10 @@ sub convert_Data(){
     while ( my $filename = shift @ARGV ) {
 	my $new_tracks;
 	if ( ( $filename =~ m/-raw(|-osm|-pre-osm|-pre-clew)\.gpx$/ ) ||
-	     ( $filename =~ m/-converted\.gpx$/ ) ||
-	     ( $filename =~ m/00_combination.gpx$/ ) ||
-	     ( $filename =~ m/00_filter_areas.gpx$/ )  
+	     ( $filename =~ m/-converted\.gpx(.gz|bz2)?$/ ) ||
+	     ( $filename =~ m/-combination.gpx(.gz|bz2)?$/ ) ||
+	     ( $filename =~ m/00_combination.gpx(.gz|bz2)?$/ ) ||
+	     ( $filename =~ m/00_filter_areas.gpx(.gz|bz2)?$/ )  
 	     ){
 	    printf STDERR "$filename: Skipping for read. These are my own files.\n\n";
 	    next;

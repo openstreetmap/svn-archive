@@ -15,15 +15,13 @@ use Date::Manip;
 use Date::Parse;
 use Date::Parse;
 use Date::Parse;
-use Geo::Geometry;
-use Geo::Geometry;
 use IO::File;
 use Math::Trig;
 
+use Geo::Geometry;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from NMEA - File

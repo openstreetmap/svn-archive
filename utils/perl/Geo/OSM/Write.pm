@@ -11,13 +11,12 @@ use strict;
 use warnings;
 
 use Math::Trig;
-
-use Utils::File;
-use Utils::Debug;
-use Utils::Math;
-use Utils::Timing;
 use Data::Dumper;
+
 use Geo::Geometry;
+use Utils::Debug;
+use Utils::File;
+use Utils::Math;
 
 
 # ------------------------------------------------------------------

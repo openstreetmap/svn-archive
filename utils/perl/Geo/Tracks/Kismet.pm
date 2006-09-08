@@ -19,7 +19,6 @@ use Geo::Geometry;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
-use Utils::Timing;
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from Kismet File

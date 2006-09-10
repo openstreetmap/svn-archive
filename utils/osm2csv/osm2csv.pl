@@ -73,17 +73,18 @@ if ( $do_list_areas ) {
     exit;
 }
 
-our $AREA_FILTER = Geo::Filter::Area->new( area => $areas_todo );
 
 
 # -----------------------------------------------------------------------------
 # Temporary data
-my (%MainAttr,$Type,%Tags, @WaySegments);
+our (%MainAttr,$Type,%Tags, @WaySegments);
 # Stats
-my %AllTags;
+our %AllTags;
 # Stored data
-my (%Nodes, %Segments, %Ways, %Stats);
-
+our (%Nodes, %Segments, %Ways, %Stats);
+# Currently active Area Filter
+our $AREA_FILTER;
+our $PARSING_START_TIME=0;
 # Estimated Number of elements to show readin progress in percent
 # Currently taken from planet-060818
 $Stats{"nodes estim"}    = 13436254;
@@ -96,40 +97,7 @@ $Stats{"tags estim"}     = 46330000;
 # Processing stage
 #----------------------------------------------
 
-#----------------------------------------------
-# Parsing planet.osm File
-#----------------------------------------------
-print STDERR "Reading and Parsing XML from $Filename\n" if $DEBUG;
-our $PARSING_START_TIME=time();
-$READ_FH = data_open($Filename);
-if ( $VERBOSE || $DEBUG )  {
-    print STDERR "\n";
-    print STDERR "osm2csv: Parsing $Filename for area ".$AREA_FILTER->name()."\n";
-}
-my $P = new XML::Parser( Handlers => {
-    Start => \&DoStart, 
-    End => \&DoEnd, 
-    Char => \&DoChar});
-eval {
-    $P->parse($READ_FH);
-    $READ_FH->close();
-};
-if ( $VERBOSE || $DEBUG )  {
-    print STDERR "\n";
-}
-
-if ($@) {
-    print STDERR "WARNING: Could not parse osm data $Filename\n";
-    print STDERR "ERROR: $@\n";
-    return;
-}
-if (not $P) {
-    print STDERR "WARNING: Could not parse osm data $Filename\n";
-    return;
-}
-printf("osm2csv: Parsing Osm-Data in %.0f sec\n",time()-$PARSING_START_TIME )
-    if $DEBUG || $VERBOSE;
-
+parse_planet($Filename,$areas_todo);
 
 printf STDERR "Creating output files\n";
 
@@ -144,6 +112,49 @@ output_named_points("$data_dir/points-$area_name.csv");
 output_statistic("$data_dir/stats-$area_name.txt");
 printf STDERR "Done\n";
 exit;
+
+#----------------------------------------------
+# Parsing planet.osm File
+#----------------------------------------------
+sub parse_planet($$){
+    my $Filename = shift;
+    my $area_name = shift;
+
+    print STDERR "Reading and Parsing XML from $Filename for $area_name\n" if $DEBUG;
+
+    $AREA_FILTER = Geo::Filter::Area->new( area => $area_name );
+
+    $PARSING_START_TIME=time();
+    $READ_FH = data_open($Filename);
+    if ( $VERBOSE || $DEBUG )  {
+	print STDERR "\n";
+	print STDERR "osm2csv: Parsing $Filename for area ".$AREA_FILTER->name()."\n";
+    }
+    my $P = new XML::Parser( Handlers => {
+	Start => \&DoStart, 
+	End => \&DoEnd, 
+	Char => \&DoChar});
+    eval {
+	$P->parse($READ_FH);
+	$READ_FH->close();
+    };
+    if ( $VERBOSE || $DEBUG )  {
+	print STDERR "\n";
+    }
+
+    if ($@) {
+	print STDERR "WARNING: Could not parse osm data $Filename\n";
+	print STDERR "ERROR: $@\n";
+	return;
+    }
+    if (not $P) {
+	print STDERR "WARNING: Could not parse osm data $Filename\n";
+	return;
+    }
+    printf("osm2csv: Parsing Osm-Data in %.0f sec\n",time()-$PARSING_START_TIME )
+	if $DEBUG || $VERBOSE;
+
+}
 
 #----------------------------------------------
 # Combine way data into segments
@@ -213,7 +224,7 @@ sub output_osm($){
 	    $Stats{"segments without endpoint nodes defined"}++;
 	    next;
 	}
-	printf OSM "%f,%f,%f,%f,%s,%s,%s\n",
+	printf OSM "%f,%f,%f,%f,%s,%s,%s",
 	$Nodes{$From}{"lat"},
 	$Nodes{$From}{"lon"},
 	$Nodes{$To}{"lat"},
@@ -221,6 +232,12 @@ sub output_osm($){
 	($Segment->{"class"}||''),
 	($Segment->{"name"}||''),
 	($Segment->{"highway"}||'');
+	foreach my $k ( keys %{$Segment} ){
+	    next if $k =~ m/^(class|name|highway)$/;
+	    my $v = $Segment->{$Key};
+	    printf OSM ",%s=%s",$k,$v
+	}
+	printf OSM "\n",
     }
     close OSM;
 }
@@ -376,20 +393,9 @@ sub DoEnd(){
 	    }
 	    print STDERR " ";
 	}
-	my $proc_file = "/proc/$$/statm";
-	if ( -r $proc_file ) {
-	    my $statm = `cat $proc_file`;
-	    chomp $statm;
-	    my @statm = split(/\s+/,$statm);
-	    my $vsz = ($statm[0]*4)/1024;
-	    my $rss = ($statm[1]*4)/1024;
-	    #      printf STDERR " PID: $$ ";
-	    printf STDERR "VSZ: %.0f MB ",$vsz;
-	    printf STDERR "RSS: %.0f MB",$rss;
-	}
-	my $time_diff=time()-$PARSING_START_TIME;
-	my $time_estimated= $time_diff*$Stats{"tags estim"}/$Stats{"tags read"};
-	printf STDERR " time %.0f min rest: %.0f min",$time_diff/60,$time_estimated/60;
+
+	print STDERR mem_usage();
+	print STDERR time_estimate($PARSING_START_TIME,$Stats{"tags estim"},$Stats{"tags read"});
 	print STDERR "\r";
     }
 }

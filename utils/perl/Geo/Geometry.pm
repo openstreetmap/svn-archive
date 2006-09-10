@@ -5,8 +5,10 @@ package Geo::Geometry;
 use strict;
 use warnings;
 
-use Exporter; require DynaLoader; require AutoLoader;
-@ISA = qw(Exporter DynaLoader);
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+@ISA = qw( Exporter );
 @EXPORT = qw( distance_point_point_Km distance_degree_point_point angle_north
 	      angle_north_relative distance_line_point_Km distance_line_point
 	      );
@@ -124,7 +126,7 @@ sub distance_line_point($$$$$$) {
 
 
     printf STDERR "distance_line_point(%f,%f, %f,%f,   %f,%f)\n", $x1, $y1, $x2, $y2,  $xp, $yp
-	if ( $debug >10 ) ;
+	if ( $DEBUG >10 ) ;
 
     my $dx1p = $x1 - $xp;
     my $dx21 = $x2 - $x1;
@@ -138,12 +140,12 @@ sub distance_line_point($$$$$$) {
 
     my $lambda = -($dx1p * $dx21 + $dy1p * $dy21) / $frac;
     printf STDERR "distance_line_point(): lambda_1: %f\n",$lambda
-	if ( $debug > 10 );
+	if ( $DEBUG > 10 );
 
     $lambda = min(max($lambda,0.0),1.0);
     
     printf STDERR "distance_line_point(): lambda: %f\n",$lambda
-	if ( $debug > 10 ) ;
+	if ( $DEBUG > 10 ) ;
 
     my $xsep = $dx1p + $lambda * $dx21;
     my $ysep = $dy1p + $lambda * $dy21;

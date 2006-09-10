@@ -5,8 +5,9 @@ package Utils::Math;
 use strict;
 use warnings;
 
-use Exporter; require DynaLoader; require AutoLoader;
-@ISA = qw(Exporter DynaLoader);
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+@ISA = qw( Exporter );
 @EXPORT = qw(min max);
 
 use Math::Trig;

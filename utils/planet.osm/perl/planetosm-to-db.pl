@@ -13,12 +13,30 @@
 #     v0.02   26/07/2006 mysql added (Richard Fairhurst)
 
 use strict;
+use warnings;
+
 use DBI;
 
 # We need Bit::Vector, as perl hashes can't handle the sort of data we need
 use Bit::Vector;
 
-my $dbtype = "pgsql";	# mysql | pgsql
+sub do_node_tag($$$$); # {}
+sub do_segment_tag($$$$); # {}
+sub do_way_tag($$$$); # {}
+sub fetch_schema($); # {}
+sub build_node_ps($$); # {}
+sub build_node_tag_ps($$); # {}
+sub build_node_tag_ps_mysql($$); # {}
+sub build_seg_ps($$); # {}
+sub build_seg_tag_ps($$); # {}
+sub build_seg_tag_ps_mysql($$); # {}
+sub build_way_ps($$); # {}
+sub build_way_seg_ps($$); # {}
+sub build_way_tag_ps($$); # {}
+sub should_batch_inserts($$); # {}
+sub check_bbox_valid(@); # {}
+
+my $dbtype = $ENV{DBTYPE} || "pgsql";	# mysql | pgsql
 my $dbname = "planetosm";
 my $dbhost = $ENV{DBHOST} || "localhost";
 my $dbuser = $ENV{DBUSER} || "";
@@ -28,10 +46,10 @@ my $dbpass = $ENV{DBPASS} || "";
 my $warn_bbox_skip = 0;
 
 # Grab the filename
-my $xml = shift;
+my $xml = shift||'';
 
 if($xml eq "-schema") {
-	print &fetch_schema($dbtype);
+	print fetch_schema($dbtype);
 	exit;
 }
 
@@ -62,9 +80,9 @@ if(@exclude_bbox) {
 unless($xml) {
 	die <<EOT
 
-planetosm-to-db.pl <planet.osm.xml>\t - parse planet.osm file and upload to db
-planetosm-to-db.pl -schema\t\t - output database schema
-planetosm-to-db.pl -empty\t\t - empty tables ready for new upload
+$0 <planet.osm.xml>\t - parse planet.osm file and upload to db
+$0 -schema\t\t - output database schema
+$0 -empty\t\t - empty tables ready for new upload
 
 planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
 	Only add things inside the bounding box 
@@ -79,6 +97,7 @@ Before running, configure the script to include your database type
 
 EOT
 }
+
 # Open our database connection
 my $conn = &open_connection($dbtype,$dbname,$dbhost,$dbuser,$dbpass);
 
@@ -111,19 +130,19 @@ unless(-f $xml) {
 }
 
 # Get our prepared statements
-my $node_ps = &build_node_ps($dbtype,$conn);
-my $node_tag_ps = &build_node_tag_ps($dbtype,$conn);
-my $node_tag_ps_mysql = &build_node_tag_ps_mysql($dbtype,$conn);
-my $seg_ps = &build_seg_ps($dbtype,$conn);
-my $seg_tag_ps = &build_seg_tag_ps($dbtype,$conn);
-my $seg_tag_ps_mysql = &build_seg_tag_ps_mysql($dbtype,$conn);
-my $way_ps = &build_way_ps($dbtype,$conn);
-my $way_seg_ps = &build_way_seg_ps($dbtype,$conn);
-my $way_tag_ps = &build_way_tag_ps($dbtype,$conn);
+my $node_ps = build_node_ps($dbtype,$conn);
+my $node_tag_ps = build_node_tag_ps($dbtype,$conn);
+my $node_tag_ps_mysql = build_node_tag_ps_mysql($dbtype,$conn);
+my $seg_ps = build_seg_ps($dbtype,$conn);
+my $seg_tag_ps = build_seg_tag_ps($dbtype,$conn);
+my $seg_tag_ps_mysql = build_seg_tag_ps_mysql($dbtype,$conn);
+my $way_ps = build_way_ps($dbtype,$conn);
+my $way_seg_ps = build_way_seg_ps($dbtype,$conn);
+my $way_tag_ps = build_way_tag_ps($dbtype,$conn);
 
 # Should we batch inserts in transactions to help performance?
 # (DB specific if this helps or hinders)
-my $batch_inserts = &should_batch_inserts($dbtype,$conn);
+my $batch_inserts = should_batch_inserts($dbtype,$conn);
 
 # Counts of the numbers handled
 my $node_count = 0;
@@ -226,8 +245,8 @@ while(my $line = <XML>) {
 		$seg_count++;
 		&display_count("segment", $seg_count);
 	}
-	elsif($line =~ /^\s*<way/) {
-		my ($id) = ($line =~ /^\s*<way id=['"](\d+)['"]/);
+	elsif($line =~ /^\s*\<way/) {
+		my ($id) = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "way";
 
@@ -241,8 +260,8 @@ while(my $line = <XML>) {
 		$way_seg_count = 0;
 		&display_count("way", $way_count);
 	}
-	elsif($line =~ /^\s*<seg /) {
-		my ($id) = ($line =~ /^\s*<seg id=['"](\d+)['"]/);
+	elsif($line =~ /^\s*\<seg /) {
+		my ($id) = ($line =~ /^\s*\<seg id=[\'\"](\d+)[\'\"]/);
 		unless($last_id) { next; }
 		unless($id) { warn "Invalid line '$line'"; next; }
 		unless($segs->contains($id)) { 
@@ -256,8 +275,8 @@ while(my $line = <XML>) {
 		$way_seg_ps->execute($last_id,$id,$way_seg_count)
 			or warn("Invalid line '$line' : ".$conn->errstr);
 	}
-	elsif($line =~ /^\s*<tag/) {
-		my ($name,$value) = ($line =~ /^\s*<tag k=['"](.*?)['"] v=['"](.*?)['"]/);
+	elsif($line =~ /^\s*\<tag/) {
+		my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);
 		unless($name) { warn "Invalid line '$line'"; next; }
 		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
@@ -303,7 +322,7 @@ sub do_node_tag($ $ $ $) {
 	if ($dbtype eq 'pgsql') {
 		do_tag_add($node_tag_ps,$last_id,$name,$value,$line);
 	} else {
-		do_tag_append($node_tag_mysql,$last_id,$name,$value,$line);
+		do_tag_append($node_tag_ps_mysql,$last_id,$name,$value,$line);
 	}
 }
 sub do_segment_tag($ $ $ $) {
@@ -312,7 +331,7 @@ sub do_segment_tag($ $ $ $) {
 	if ($dbtype eq 'pgsql') {
 		do_tag_add($seg_tag_ps,$last_id,$name,$value,$line);
 	} else {
-		do_tag_append($seg_tag_mysql,$last_id,$name,$value,$line);
+		do_tag_append($seg_tag_ps_mysql,$last_id,$name,$value,$line);
 	}
 }
 sub do_way_tag($ $ $ $) {
@@ -338,14 +357,14 @@ sub do_tag_append($ $ $ $ $) {
 
 ########################################################################
 
-sub display_count {
+sub display_count($$) {
 	my ($type, $count) = @_;
 	if($count % 10000 == 0) {
 		print "Done $count ${type}s\n";
 	}
 }
 
-sub check_bbox_valid {
+sub check_bbox_valid(@) {
 	my @bbox = @_;
 	unless($bbox[0] < $bbox[2]) {
 		die("1st lat ($bbox[0]) must be smaller than second ($bbox[2])");
@@ -356,7 +375,7 @@ sub check_bbox_valid {
 }
 ########################################################################
 
-sub open_connection {
+sub open_connection($$$$$) {
 	my ($dbtype,$dbname,$dbhost,$dbuser,$dbpass) = @_;
 	my $dsn;
 
@@ -381,56 +400,56 @@ sub open_connection {
 
 ########################################################################
 
-sub build_node_ps {
+sub build_node_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO nodes (id,latitude,longitude) VALUES (?,?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_node_tag_ps {
+sub build_node_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO node_tags (node,name,value) VALUES (?,?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_node_tag_ps_mysql {
+sub build_node_tag_ps_mysql($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "UPDATE nodes SET tags=CONCAT_WS(';',tags,?) WHERE id=?";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_seg_ps {
+sub build_seg_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO segments (id,node_a,node_b) VALUES (?,?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_seg_tag_ps {
+sub build_seg_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO segment_tags (segment,name,value) VALUES (?,?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_seg_tag_ps_mysql {
+sub build_seg_tag_ps_mysql($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "UPDATE segments SET tags=CONCAT_WS(';',tags,?) WHERE id=?";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_way_ps {
+sub build_way_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO ways (id) VALUES (?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_way_seg_ps {
+sub build_way_seg_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql;
 	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_segments (way,segment,seg_order) VALUES (?,?,?)"; }
@@ -439,7 +458,7 @@ sub build_way_seg_ps {
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_way_tag_ps {
+sub build_way_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql;
 	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_tags (way,name,value) VALUES (?,?,?)"; }
@@ -451,7 +470,7 @@ sub build_way_tag_ps {
 
 ########################################################################
 
-sub should_batch_inserts {
+sub should_batch_inserts($$) {
 	my ($dbtype,$conn) = @_;
 	if($dbtype eq 'pgsql') {
 		# Postgres likes to get bulk inserts in batches
@@ -462,7 +481,7 @@ sub should_batch_inserts {
 
 ########################################################################
 
-sub fetch_schema {
+sub fetch_schema($) {
 	my ($dbtype) = @_;
 	if($dbtype eq "pgsql") {
 		# Note - indexes created in post process
@@ -532,7 +551,7 @@ EOT
 	}
 }
 
-sub empty_tables {
+sub empty_tables($) {
 	my ($dbtype)=@_;
 	if ($dbtype eq 'pgsql') {
 		# Will only work on 8.1, do deletes on earlier versions
@@ -558,7 +577,7 @@ EOT
 	}
 }
 
-sub post_process {
+sub post_process($) {
 	my ($dbtype)=@_;
 	if ($dbtype eq 'pgsql') {
 		# Enable the indexes, which we turn off during a bulk load

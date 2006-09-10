@@ -32,7 +32,17 @@ sub osm_dir() {
     # edpending on where we can read/write
     #  ~/osm
     # /var/data/osm
-    return "$ENV{HOME}/osm/planet";
+    my $dir;
+
+    my $home = $ENV{HOME};
+    unless ( $home ) {
+	$home = `whoami`;
+	chomp $home;
+	$home = "/home/$home";
+    }
+    
+    $dir = "$home/osm/planet";
+    return $dir;
 }
 
 

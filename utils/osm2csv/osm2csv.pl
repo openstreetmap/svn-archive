@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
 BEGIN {
-    unshift(@INC,"../perl");
-    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+    my $dir = $0;
+    $dir =~s,[^/]+/[^/]+$,,;
+    unshift(@INC,"$dir/perl");
 }
 
 
@@ -69,7 +69,7 @@ our $READ_FH=undef;
 $areas_todo ||= 'germany';
 $areas_todo=lc($areas_todo);
 if ( $do_list_areas ) {
-    Geo::Filter::Area->list_areas()."\n";
+    print Geo::Filter::Area->list_areas()."\n";
     exit;
 }
 

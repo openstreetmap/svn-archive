@@ -33,7 +33,7 @@ our $lwp_timer=0;
 		$lwp_bytes += $anz;
 		if ( time() > $lwp_timer+1){
 		    printf STDERR"LWP: got %d Bytes (%.4f MB)\r",$lwp_bytes,$lwp_bytes/1024/1024
-			if $DEBUG || $VERBOSE;
+			if $DEBUG || $VERBOSE>1;
 		    $lwp_last_was_bytes=1;
 		    $lwp_timer = time();
 		}
@@ -43,7 +43,7 @@ our $lwp_timer=0;
 		    $lwp_bytes=0;
 		}
 		printf STDERR "LWP: $out_string\n"
-		    if $DEBUG || $VERBOSE; 
+		    if $DEBUG || $VERBOSE>1; 
 		$lwp_last_was_bytes=0;
 	    }
 	};

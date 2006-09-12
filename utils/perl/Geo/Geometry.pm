@@ -151,3 +151,5 @@ sub distance_line_point($$$$$$) {
     my $ysep = $dy1p + $lambda * $dy21;
     return sqrt($xsep * $xsep + $ysep * $ysep);
 }
+
+1;

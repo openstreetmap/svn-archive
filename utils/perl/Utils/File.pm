@@ -18,6 +18,7 @@ use Utils::Debug;
 use File::Basename;
 use File::Copy;
 use File::Path;
+use Time::Local;
 
 # -----------------------------------------------------------------------------
 # Open Data File in predefined Directories
@@ -64,12 +65,24 @@ sub file_needs_re_generation($$){
     my $dst_filename = shift;
 
     # dst file does not exist
-    return 1 unless -s $dst_filename;
+    unless ( -e $dst_filename ){
+	print STDERR "Update needed. $dst_filename has no size\n" 
+	    if $VERBOSE>1;
+	return 1;
+    }
 
     my ($src_mtime) = (stat($src_filename))[9] || 0;
     my ($dst_mtime) = (stat($dst_filename))[9] || 0;
 
-    return $src_mtime > $dst_mtime;
+    my $update_needed=$src_mtime > $dst_mtime;
+    if (  $update_needed ) {
+	if ( $VERBOSE>1 ) {
+	    print STDERR "Update needed.\n";
+	    print STDERR "$dst_filename\t".localtime($dst_mtime)." is older than \n";
+	    print STDERR "$src_filename\t".localtime($src_mtime)."\n";
+	}
+    }
+    return $update_needed;
 }
 
 # ------------------------------------------------------------------

@@ -46,14 +46,15 @@ sub mem_usage(){
     return $msg;
 }
 
+# returns a time estimation for the rest of the process
 sub time_estimate($$$){
-    my $start_time = shift;
-    my $elem_no    = shift;
-    my $elem_max   = shift;
+    my $start_time = shift; # Time the process was started
+    my $elem_no    = shift; # The number of the current element
+    my $elem_max   = shift; # the maximum number of possible elements
 
     my $time_diff=time()-$start_time;
     my $time_estimated= $time_diff*$elem_no/$elem_max;
-    my $msg = sprintf( " time %.0f min rest: %.0f min",$time_diff/60,$time_estimated/60);
+    my $msg = sprintf( " %.0f(%.0f) minutes",$time_diff/60,$time_estimated/60);
     return $msg;
 }
 

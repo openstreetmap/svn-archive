@@ -1,0 +1,22 @@
+Germany:             50.,     12.,     8.0,  area
+Baden-Wuertenberg:   48.780,   9.172,  1.8,  area
+Bayern:              48.140,  11.557,  1.8,  area
+Saarland:            49.2,     7.0,    1.0,  area
+Rheinland-Pfalz:     50.0,     7.5,    1.8,  area
+Hessen:              50.5,    9.0,     1.8,  area
+Thüringen:           51.0,    11.0,    2.0,  area
+Mecklenburg:         53.0,    13.0,    2.0,  area
+Westfalen:           51.5,    7.0,     2.0,  area
+Niedersachsen:       52.5,    9.5,     2.0,  area
+Schleswig-Holstein:  54.0,    10.0,    2.0,  area
+#
+Stuttgart:           48.780,   9.172,  0.4,  city
+Stuttgart-Center:    48.780,   9.172,  0.1,  city
+Mannheim:            49.4621,  8.4769, 0.4,  city
+Frankfurt:           49.9667,  8.7935, 0.4,  city
+Hamburg:             53.548,   9.976,  0.8,  city
+Hamburg-Center:      53.548,   9.976,  0.2,  city
+Berlin:              52.5146, 13.4033, 0.8,  city
+Berlin-Center:       52.5146, 13.4033, 0.2,  city
+Munich:              48.140,  11.567,  0.3,  city
+Munich-Center:       48.140,  11.567,  0.1,  city

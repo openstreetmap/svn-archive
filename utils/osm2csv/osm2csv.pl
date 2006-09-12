@@ -4,6 +4,10 @@ BEGIN {
     my $dir = $0;
     $dir =~s,[^/]+/[^/]+$,,;
     unshift(@INC,"$dir/perl");
+
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
 }
 
 
@@ -27,11 +31,14 @@ sub combine_way_into_segments($); # {}
 sub output_osm($); # {}
 sub output_named_points($); # {}
 sub output_statistic($); # {}
+sub parse_planet($$); # {}
 
 our $man=0;
 our $help=0;
 my $areas_todo;
 my $do_list_areas=0;
+my $do_update_only=0;
+
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
 	     'debug+'              => \$DEBUG,      
@@ -46,6 +53,7 @@ GetOptions (
 
 	     'area=s'              => \$areas_todo,
 	     'list-areas'          => \$do_list_areas,
+	     'update-only'         => \$do_update_only,
 	     )
     or pod2usage(1);
 
@@ -73,44 +81,63 @@ if ( $do_list_areas ) {
     exit;
 }
 
-
-
-# -----------------------------------------------------------------------------
-# Temporary data
 our (%MainAttr,$Type,%Tags, @WaySegments);
 # Stats
 our %AllTags;
 # Stored data
 our (%Nodes, %Segments, %Ways, %Stats);
-# Currently active Area Filter
 our $AREA_FILTER;
 our $PARSING_START_TIME=0;
-# Estimated Number of elements to show readin progress in percent
-# Currently taken from planet-060818
-$Stats{"nodes estim"}    = 13436254;
-$Stats{"segments estim"} = 9566333;
-$Stats{"ways estim"}     = 2548673;
-$Stats{"tags estim"}     = 46330000;
 
 
-#----------------------------------------------
-# Processing stage
-#----------------------------------------------
-
-parse_planet($Filename,$areas_todo);
-
-printf STDERR "Creating output files\n";
-
-my $data_dir=osm_dir()."/planet/csv";
+my $data_dir=planet_dir()."/csv";
 mkdir_if_needed( $data_dir );
-my $area_name = $AREA_FILTER->name();
-die "No Area Name defined\n"
-    unless $area_name;
-combine_way_into_segments("$data_dir/ways-$area_name.csv");
-output_osm("$data_dir/osm-$area_name.csv");
-output_named_points("$data_dir/points-$area_name.csv");
-output_statistic("$data_dir/stats-$area_name.txt");
-printf STDERR "Done\n";
+
+for my $area_name ( split(",",$areas_todo) ) {
+    if ( $do_update_only ) {
+	my $needs_update=0;
+	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/ways-$area_name.csv");
+	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/osm-$area_name.csv");
+	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/points-$area_name.csv");
+	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/stats-$area_name.txt");
+	next unless $needs_update;
+	print STDERR "Update needed. One of the files is old or non existent\n" if $VERBOSE;
+    }
+    # -----------------------------------------------------------------------------
+    # Temporary data
+
+    (%MainAttr,%Tags)=((),());
+    $Type='';
+    @WaySegments = ();
+    (%AllTags,%Nodes, %Segments, %Ways, %Stats)=((),(),(),(),());
+
+    # Currently active Area Filter
+    $PARSING_START_TIME=0;
+    # Estimated Number of elements to show readin progress in percent
+    # Currently taken from planet-060818
+    $Stats{"nodes estim"}    = 14135968;
+    $Stats{"segments estim"} = 10697464;
+    $Stats{"ways estim"}     = 2758781;
+    $Stats{"tags estim"}     = 51450000;
+
+
+    #----------------------------------------------
+    # Processing stage
+    #----------------------------------------------
+
+    print STDERR "creating $data_dir/osm-$area_name.csv\n" if $VERBOSE;
+
+    parse_planet($Filename,$area_name);
+
+    printf STDERR "Creating output files\n";
+    die "No Area Name defined\n"
+	unless $area_name;
+    combine_way_into_segments("$data_dir/ways-$area_name.csv");
+    output_osm("$data_dir/osm-$area_name.csv");
+    output_named_points("$data_dir/points-$area_name.csv");
+    output_statistic("$data_dir/stats-$area_name.txt");
+    printf STDERR "$area_name Done\n";
+}
 exit;
 
 #----------------------------------------------
@@ -234,7 +261,7 @@ sub output_osm($){
 	($Segment->{"highway"}||'');
 	foreach my $k ( keys %{$Segment} ){
 	    next if $k =~ m/^(class|name|highway)$/;
-	    my $v = $Segment->{$Key};
+	    my $v = $Segment->{$k};
 	    printf OSM ",%s=%s",$k,$v
 	}
 	printf OSM "\n",

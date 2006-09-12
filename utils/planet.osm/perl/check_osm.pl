@@ -6,6 +6,10 @@ Version 0.01
 ";
 
 BEGIN {
+    my $dir = $0;
+    $dir =~s,[^/]+/[^/]+$,,;
+    unshift(@INC,"$dir/perl");
+
     unshift(@INC,"../perl");
     unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
@@ -35,7 +39,7 @@ my ($man,$help);
 
 our $CONFIG_DIR    = "$ENV{'HOME'}/.gpsdrive"; # Should we allow config of this?
 our $CONFIG_FILE   = "$CONFIG_DIR/gpsdriverc";
-#our $MIRROR_DIR   = osm_dir();
+#our $MIRROR_DIR   = planet_dir();
 #our $UNPACK_DIR   = "$CONFIG_DIR/UNPACK";
 
 our ($lat_min,$lat_max,$lon_min,$lon_max) = (0,0,0,0);
@@ -43,7 +47,7 @@ our ($lat_min,$lat_max,$lon_min,$lon_max) = (0,0,0,0);
 our $osm_file; # The complete osm Filename (including path)
 my $osm_file_name; # later the pure filename (without dir) of the osm File
 our $SELECTED_AREA; # a selected area in lower case for example germany
-my $OUTPUT_BASE_DIR=osm_dir()."planet/stats";
+my $OUTPUT_BASE_DIR=planet_dir()."/stats";
 my $OUTPUT_DIR=" $OUTPUT_BASE_DIR/all"; # this is the directory where all the html file go in
 
 sub min($$){

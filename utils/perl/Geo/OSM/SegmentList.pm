@@ -43,7 +43,7 @@ sub load_segment_list($){
 	# /var/data/osm/planet.osm.csv
 
 	my $home = $ENV{HOME}|| '~/';
-	my $path=	osm_dir();
+	my $path=	planet_dir();
 	my $osm_filename = "${path}/csv/osm.csv";
 	$osm_filename =~ s,\~/,$home/,;
 	printf STDERR "check $osm_filename for loading\n" if $DEBUG;

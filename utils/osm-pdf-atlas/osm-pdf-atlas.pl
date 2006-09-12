@@ -7,7 +7,7 @@ BEGIN {
 }
 
 use strict;
-use warning;
+use warnings;
 
 use PDF::API2;
 use Data::Dumper;
@@ -28,6 +28,16 @@ use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
+
+sub CreateAtlas($); #{}
+sub LoadOSM($$); #{}
+sub AddTitlePage($$); #{}
+sub TextPage($$); #{}
+sub AddMetaInfo($$); #{}
+sub LoadData($); #{}
+sub ReadFile($); #{}
+sub BBoxPages($); #{}
+sub ContentsPage($$); #{}
 
 my $ConfigFile = "Config/config.txt";
 Getopt::Long::Configure('no_ignore_case');
@@ -71,7 +81,7 @@ exit;
 #---------------------------------------------------------
 # Create a PDF road atlas, based on options in a config file
 #---------------------------------------------------------
-sub CreateAtlas(){
+sub CreateAtlas($){
   my $Options = shift;
   my $PDF = PDF::API2->new();
 
@@ -92,6 +102,7 @@ sub CreateAtlas(){
   AddTitlePage($PDF, $Options->{"Title"}) 
       if $Options->{"Title"};
   
+BBoxPages( $Options);
   my $Data = LoadData($Options);
 
   MapPages($PDF, $Options, $Data);
@@ -100,7 +111,6 @@ sub CreateAtlas(){
   TextPage($PDF, $Options->{"License"});
   
   # Save the PDF
-  unless ( -d $ResultDir ) { mkpath $ResultDir;};
   my $pdf_filename=$ResultDir."/".$Options->{"Filename"};
   printf STDERR "Saving %s\n", $pdf_filename;
   $PDF->saveas($pdf_filename);
@@ -109,7 +119,7 @@ sub CreateAtlas(){
 #---------------------------------------------------------
 # Adds a title page to the PDF document
 #---------------------------------------------------------
-sub AddTitlePage()
+sub AddTitlePage($$)
 {
   my ($PDF, $Title) = @_;
   my $Font = $PDF->corefont('Helvetica');
@@ -147,7 +157,7 @@ sub AddTitlePage()
 #---------------------------------------------------------
 # Adds a page of preformatted text, from a text file
 #---------------------------------------------------------
-sub TextPage()
+sub TextPage($$)
 {
   my ($PDF, $Filename) = @_;
   my $Page = $PDF->page;
@@ -171,7 +181,8 @@ sub TextPage()
 #---------------------------------------------------------
 # Adds meta-information to a PDF
 #---------------------------------------------------------
-sub AddMetaInfo(){
+sub AddMetaInfo($$)
+{
   my ($PDF, $Title) = @_;
   
   # Timestamp (using perl standard functions to make script easier to install)
@@ -190,7 +201,7 @@ sub AddMetaInfo(){
     );
 }
 
-sub LoadData()
+sub LoadData($)
 {
   my ($Options) = @_;
   my %Data;
@@ -240,7 +251,7 @@ sub LoadGSHHS()
   binmode($fp);
   printf "Loading coastlines from %s\n", $Filename;
   
-    printf "Area Bounds lat %f to %f, long %f to %f\n",
+    printf "GSHHS Area Bounds lat %f to %f, long %f to %f\n",
     $Bounds->{"S"},
     $Bounds->{"N"},
     $Bounds->{"W"},
@@ -283,7 +294,7 @@ sub LoadGSHHS()
   return(\@Coasts);
 }
 
-sub coastcode(){
+sub coastcode($){
   my $x = shift();
   if($x > 0x80000000){
     $x -= 0xFFFFFFFF; $x--;
@@ -291,7 +302,7 @@ sub coastcode(){
   return($x / 1E+6);
 }
 
-sub LoadOSM()
+sub LoadOSM($$)
 {
   my ($Filename, $Bounds) = @_;
   $Filename =~ s/\~/$ENV{HOME}/;
@@ -307,7 +318,8 @@ sub LoadOSM()
   return(\@Lines);
 }
 
-sub MapPages()
+
+sub MapPages($$$)
 {
   my ($PDF, $Options, $Data) = @_;
   
@@ -341,10 +353,49 @@ sub MapPages()
   }
 }
 
+sub BBoxPages($)
+{
+  my ($Options) = @_;
+  
+  my $Filename = $Options->{"Places"};
+  $Filename =~ s/\~/$ENV{HOME}/;
+  open(my $fp, "<", $Filename) 
+      or die("Can't open $Filename ($!)\n");
+  
+  my $lat_min =  90;
+  my $lat_max = -90;
+  my $lon_min =  180;
+  my $lon_max = -180;
+
+  foreach my $Line(<$fp>){
+      chomp $Line;
+      $Line =~ s/[\r\a\n\s]*$//g;;
+      next if $Line =~ m/^\s*\#/;# Comments starting with #
+      next if $Line =~ m/^\s*$/; # Empty lines
+      $Line=~ s/^.+\:\s*//;
+      my ($Lat, $Lon, $Size, $Type) = split(/\s*,\s*/, $Line);
+      for my $size ( ($Size,-$Size)){
+	  $lat_min  = $Lat+$size  if $lat_min > $Lat+$size;
+	  $lat_max  = $Lat+$size  if $lat_max < $Lat+$size;
+	  
+	  $lon_min  = $Lon+$size  if $lon_min > $Lon+$size;
+	  $lon_max  = $Lon+$size  if $lon_max < $Lon+$size;
+      }
+  }
+
+  my $LatC=($lat_min+$lat_max)/2;
+  my $LonC=($lon_min+$lon_max)/2;
+  my $Size=max($lat_max-$lat_min,$lon_max-$lon_min)/2;
+  printf "BBox   $Options->{Area} --> ($LatC,$LonC,$Size) for maps\n";
+  $Options->{"Area"}="$LatC,$LonC,$Size";
+  close $fp;
+
+}
+
 #---------------------------------------------------------
 # Adds a simple "text-style" contents page
 #---------------------------------------------------------
-sub ContentsPage()
+sub ContentsPage($$)
 {
         my ($PDF, $Maps) = @_;
         my $Page = $PDF->page;
@@ -659,7 +710,7 @@ sub BorderRect()
 sub FormatNum()
 {
   my $Text = sprintf("%lf", shift());
-  $Text =~ s/(\.\d*?)0+$/\1/;
+  $Text =~ s/(\.\d*?)0+$/$1/;
   $Text =~ s/\.$//;
   return($Text);
 }
@@ -762,8 +813,9 @@ sub DegToRad(){
 # Reads a file consisting of "Name: Value" pairs, and 
 # returns them as a hash
 #---------------------------------------------------------
-sub ReadFile(){
+sub ReadFile($){
   my $Filename = shift();
+
   $Filename =~ s/\~/$ENV{HOME}/;
   my %Options;
   printf STDERR "\n-----------------------------------\n" if $DEBUG>1;

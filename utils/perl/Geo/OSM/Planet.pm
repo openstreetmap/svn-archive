@@ -7,6 +7,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 @EXPORT = qw( mirror_planet
 	      osm_dir
+	      planet_dir
 	      UTF8sanitize
 	      );
 
@@ -41,7 +42,13 @@ sub osm_dir() {
 	$home = "/home/$home";
     }
     
-    $dir = "$home/osm/planet";
+    $dir = "$home/osm";
+    return $dir;
+}
+
+sub planet_dir() {
+    my $dir = osm_dir();
+    $dir = "$dir/planet";
     return $dir;
 }
 
@@ -53,7 +60,7 @@ sub mirror_planet(){
     my $planet_server="http://planet.openstreetmap.org";
     my $url = "$planet_server";
 
-    my $mirror_dir=osm_dir();
+    my $mirror_dir=planet_dir();
     mkdir_if_needed( $mirror_dir );
     
     my $current_file;

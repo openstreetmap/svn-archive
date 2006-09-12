@@ -1,0 +1,4 @@
+Newseeland:          -41.0,  172.0, 8, area
+Newseeland-north:          -38.0,  176.0, 4, area
+Newseeland-south:          -44.0,  170.0, 4, area
+xy:          -38.96,  175.66, .5, city

@@ -1,1 +1,1 @@
-East-World:    0,90, 90, city
+World East:    0,90, 90, area

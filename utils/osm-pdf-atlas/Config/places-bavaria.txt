@@ -1,0 +1,6 @@
+Bayern:              48.140,  11.557,  1.8,  area
+#
+Mannheim:            49.4621,  8.4769, 0.4,  city
+Frankfurt:           49.9667,  8.7935, 0.4,  city
+Munich:              48.140,  11.567,  0.3,  city
+Munich-Center:       48.140,  11.567,  0.1,  city

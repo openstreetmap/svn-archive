@@ -22,7 +22,8 @@ my ($man,$help);
 
 use strict;
 use warnings;
-    
+
+my $do_print_filename=0;
 # ------------------------------------------------------------------
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
@@ -38,13 +39,17 @@ GetOptions (
 	     'no-mirror'  => \$Utils::LWP::Utils::NO_MIRROR,
 	     'proxy=s'    => \$Utils::LWP::Utils::PROXY,
 
+	     'print-filename'     => \$do_print_filename,
 	     )
     or pod2usage(1);
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
-mirror_planet();
+my $filename = mirror_planet();
+if ( $do_print_filename ) {
+    print "$filename\n";
+}
 
 
 
@@ -104,5 +109,8 @@ use proxy for download
 Select the "path/planet.osm" file to use for the checks
 
 
+=item B<--print_filename>
+
+print the filename of the mirrored osm file
 
 =back

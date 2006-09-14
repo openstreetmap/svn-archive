@@ -1,0 +1,8 @@
+Braunschweig:                    52.267,	10.533,	0.300000, area
+Delmenhorst:                     53.050,	8.617,	0.300000, area
+Emden:                           53.367,	7.217,	0.300000, area
+Oldenburg (Oldenburg):           53.167,	8.200,	0.300000, area
+Osnabrück:                       52.267,	8.050,	0.300000, area
+Salzgitter:                      52.122,	10.376,	0.300000, area
+Wilhelmshaven:                   53.517,	8.133,	0.300000, area
+Wolfsburg:                       52.433,	10.800,	0.300000, area

@@ -1,6 +1,6 @@
-Germany:             50.,     12.,     8.0,  area
-Baden-Wuertenberg:   48.780,   9.172,  1.8,  area
-Bayern:              48.140,  11.557,  1.8,  area
+Germany:             50.,     11.0,     7.0,  area
+Baden-Wuertenberg:   48.780,   9.17,  1.8,  area
+Bayern:              48.140,  11.55,  1.8,  area
 Saarland:            49.2,     7.0,    1.0,  area
 Rheinland-Pfalz:     50.0,     7.5,    1.8,  area
 Hessen:              50.5,    9.0,     1.8,  area
@@ -9,5 +9,3 @@ Mecklenburg:         53.0,    13.0,    2.0,  area
 Westfalen:           51.5,    7.0,     2.0,  area
 Niedersachsen:       52.5,    9.5,     2.0,  area
 Schleswig-Holstein:  54.0,    10.0,    2.0,  area
-Munich:              48.140,  11.567,  0.3,  city
-Munich-Center:       48.140,  11.567,  0.1,  city

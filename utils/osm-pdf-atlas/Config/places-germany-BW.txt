@@ -1,0 +1,9 @@
+Baden-Baden:                     48.750,	8.250,	0.300000, area
+Freiburg im Breisgau:            48.000,	7.850,	0.300000, area
+Heidelberg:                      49.417,	8.700,	0.300000, area
+Heilbronn:                       49.140,	9.220,	0.300000, area
+Karlsruhe:                       49.005,	8.386,	0.300000, area
+Mannheim:                        49.488,	8.465,	0.300000, area
+Pforzheim:                       48.883,	8.700,	0.300000, area
+Stuttgart:                       48.767,	9.183,	0.300000, area
+Ulm:                             48.400,	10.000,	0.300000, area

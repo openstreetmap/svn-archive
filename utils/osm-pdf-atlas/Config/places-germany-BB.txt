@@ -1,0 +1,4 @@
+Brandenburg an der Havel:        52.417,	12.550,	0.300000, area
+Cottbus:                         51.767,	14.333,	0.300000, area
+Frankfurt (Oder):                52.350,	14.550,	0.300000, area
+Potsdam:                         52.400,	13.067,	0.300000, area

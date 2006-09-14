@@ -1,0 +1,12 @@
+Frankenthal (Pfalz):             49.537,	8.355,	0.300000, area
+Kaiserslautern:                  49.450,	7.750,	0.300000, area
+Koblenz:                         50.350,	7.600,	0.300000, area
+Landau in der Pfalz:             49.208,	8.113,	0.300000, area
+Ludwigshafen am Rhein:           49.481,	8.435,	0.300000, area
+Mainz:                           50.000,	8.271,	0.300000, area
+Neustadt an der WeinstraÃŸe:     49.357,	8.138,	0.300000, area
+Pirmasens:                       49.200,	7.600,	0.300000, area
+Speyer:                          49.330,	8.428,	0.300000, area
+Trier:                           49.750,	6.633,	0.300000, area
+Worms:                           49.636,	8.360,	0.300000, area
+Zweibrücken:                     49.250,	7.367,	0.300000, area

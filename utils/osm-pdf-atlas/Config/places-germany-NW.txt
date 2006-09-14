@@ -1,0 +1,24 @@
+Aachen:                          50.767,	6.100,	0.300000, area
+Bielefeld:                       52.033,	8.533,	0.300000, area
+Bochum:                          51.483,	7.217,	0.300000, area
+Bonn:                            50.733,	7.100,	0.300000, area
+Bottrop:                         51.517,	6.917,	0.300000, area
+Dortmund:                        51.516,	7.468,	0.300000, area
+Düsseldorf:                      51.217,	6.767,	0.300000, area
+Duisburg:                        51.433,	6.750,	0.300000, area
+Essen:                           51.450,	7.017,	0.300000, area
+Gelsenkirchen:                   51.550,	7.100,	0.300000, area
+Hagen:                           51.350,	7.467,	0.300000, area
+Hamm:                            51.683,	7.800,	0.300000, area
+Herne:                           51.550,	7.217,	0.300000, area
+Köln:                            50.933,	6.950,	0.300000, area
+Krefeld:                         51.333,	6.568,	0.300000, area
+Leverkusen:                      51.050,	7.017,	0.300000, area
+Mönchengladbach:                 51.200,	6.433,	0.300000, area
+Mülheim an der Ruhr:             51.433,	6.883,	0.300000, area
+Münster:                         51.967,	7.633,	0.300000, area
+Neustadt an der WeinstraÃŸe:     49.357,	8.138,	0.300000, area
+Oberhausen:                      51.467,	6.850,	0.300000, area
+Remscheid:                       51.183,	7.200,	0.300000, area
+Solingen:                        51.183,	7.083,	0.300000, area
+Wuppertal:                       51.267,	7.183,	0.300000, area

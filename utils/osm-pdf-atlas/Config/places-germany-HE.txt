@@ -1,0 +1,5 @@
+Darmstadt:                       49.871,	8.649,	0.300000, area
+Frankfurt am Main:               50.117,	8.683,	0.300000, area
+Kassel:                          51.317,	9.500,	0.300000, area
+Offenbach:                       50.100,	8.767,	0.300000, area
+Wiesbaden:                       50.083,	8.250,	0.300000, area

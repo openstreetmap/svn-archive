@@ -10,6 +10,8 @@
 # will be filled with the defaults
 
 Data:	~/osm/planet/csv/osm.csv
+#Data:	~/osm/planet/csv/osm-europe.csv
+#Data:	~/osm/planet/csv/osm-germany.csv
 Styles: Config/styles.txt
 Coast:	~/osm/GSHHS/gshhs_h.b
 Equivalences: Config/equivalences.txt

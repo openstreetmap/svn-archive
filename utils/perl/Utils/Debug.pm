@@ -30,7 +30,8 @@ sub print_time($){
 }
 
 # get memory usage from /proc Filesystem
-sub mem_usage(){
+sub mem_usage(;$){
+    my $type = shift||'';
     my $proc_file = "/proc/$$/statm";
     my $msg = '';
     if ( -r $proc_file ) {
@@ -40,11 +41,14 @@ sub mem_usage(){
 	my $vsz = ($statm[0]*4)/1024;
 	my $rss = ($statm[1]*4)/1024;
 	#      printf STDERR " PID: $$ ";
+	return $rss if $type eq "rss";
+	return $vsz if $type eq "vsz";
 	$msg .= sprintf( "VSZ: %.0f MB ",$vsz);
 	$msg .= sprintf( "RSS: %.0f MB",$rss);
     }
     return $msg;
 }
+
 
 # returns a time estimation for the rest of the process
 sub time_estimate($$$){

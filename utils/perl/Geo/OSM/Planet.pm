@@ -105,8 +105,11 @@ sub mirror_planet(){
 	print STDERR "Sanitized File: $current_file\n";
     }
 
-    return $current_file;
+    my ($unpacked_file) = ($current_file=~ m/(.*\.osm)/);
+    $current_file = $unpacked_file
+	unless file_needs_re_generation($current_file,$unpacked_file);
 
+    return $current_file;
 }
 
 sub UTF8sanitize($){
@@ -116,10 +119,13 @@ sub UTF8sanitize($){
 
     my $filename_new= $filename;
     $filename_new =~ s/\.osm/-a.osm/;
+    my $filename_new_check=newest_filename($filename_new);
 
-    return $filename_new 
-	unless file_needs_re_generation($filename,$filename_new);
+    # check if planet-060101-a.osm[.bz2] is newer than  planet-060101.osm.bz2
+    return $filename_new_check
+	unless file_needs_re_generation($filename,$filename_new_check);
 
+    # We have to create a new one
     print STDERR "UTF8 Sanitize $filename ... \n";
     # Uggly Hack, but for now it works
     my $UTF8sanitizer=find_file_in_perl_path('../planet.osm/C/UTF8sanitizer');

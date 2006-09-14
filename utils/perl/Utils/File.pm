@@ -8,6 +8,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 @EXPORT = qw( data_open
 	      file_needs_re_generation
 	      mkdir_if_needed
+	      newest_filename
 	      );
 use strict;
 use warnings;
@@ -64,6 +65,12 @@ sub file_needs_re_generation($$){
     my $src_filename = shift;
     my $dst_filename = shift;
 
+    unless ( -e $src_filename ){
+	print STDERR "No Update makes sense, since we lack the source File: $src_filename\n" 
+	    if $VERBOSE>1;
+	return 0;
+    }
+
     # dst file does not exist
     unless ( -e $dst_filename ){
 	print STDERR "Update needed. $dst_filename has no size\n" 
@@ -83,6 +90,20 @@ sub file_needs_re_generation($$){
 	}
     }
     return $update_needed;
+}
+
+# Given a filename it checks if we have an unpacked Version which is newer 
+sub newest_filename($){
+    my $filename = shift;
+
+    my $filename_unpacked = $filename;
+    $filename_unpacked =~ s/\.(gz|bz2|bz)$//;
+    if ( file_needs_re_generation($filename,$filename_unpacked)) {
+	return $filename if -s $filename;
+    } else {
+	return $filename_unpacked if -s $filename_unpacked;
+    }
+    return undef;
 }
 
 # ------------------------------------------------------------------

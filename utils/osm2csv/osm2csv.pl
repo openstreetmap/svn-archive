@@ -21,11 +21,12 @@ use IO::File;
 use Pod::Usage;
 use Data::Dumper;
 
+use Geo::Filter::Area;
 use Geo::OSM::Planet;
 use Utils::Debug;
-use Utils::LWP::Utils;
 use Utils::File;
-use Geo::Filter::Area;
+use Utils::LWP::Utils;
+use Utils::Math;
 
 sub combine_way_into_segments($); # {}
 sub output_osm($); # {}
@@ -88,6 +89,7 @@ our %AllTags;
 our (%Nodes, %Segments, %Ways, %Stats);
 our $AREA_FILTER;
 our $PARSING_START_TIME=0;
+our $PARSING_DISPLAY_TIME=0;
 
 
 my $data_dir=planet_dir()."/csv";
@@ -178,6 +180,7 @@ sub parse_planet($$){
 	print STDERR "WARNING: Could not parse osm data $Filename\n";
 	return;
     }
+    $Stats{"time parsing"} = time()-$PARSING_START_TIME;
     printf("osm2csv: Parsing Osm-Data in %.0f sec\n",time()-$PARSING_START_TIME )
 	if $DEBUG || $VERBOSE;
 
@@ -188,14 +191,26 @@ sub parse_planet($$){
 #----------------------------------------------
 sub combine_way_into_segments($) {
     my $filename = shift;
-    print STDERR "Combine way data into segments --> $filename\n" if $DEBUG;
+    $PARSING_START_TIME=time();
+
+    print STDERR "Combine way data into segments --> $filename\n" if $DEBUG ||$VERBOSE;
     if(! open(WAYS,">$filename")) {
 	warn "combine_way_into_segments: Cannot write to $filename\n";
 	return;
     }
+    my $way_count=0;
     foreach my $id ( keys %Ways){
+	$way_count++;
 	my $Way = $Ways{$id};
 	next unless defined $Way;
+	if ( ( $VERBOSE || $DEBUG ) &&
+	     ( time()-$PARSING_DISPLAY_TIME >0.9)
+	     )  {
+	    $PARSING_DISPLAY_TIME= time();
+	    print STDERR "Combine way ".mem_usage();
+	    print STDERR time_estimate($PARSING_START_TIME,$way_count,$Stats{"ways"});
+	    print STDERR "\r";
+	}
 	my $segments=$Way->{"segments"};
 	my @SubSegments = split(/,/, $segments);
 	unless ( scalar(@SubSegments) ) {
@@ -225,7 +240,10 @@ sub combine_way_into_segments($) {
 	}
     }
     close WAYS;
-
+    if ( ( $VERBOSE || $DEBUG ) ) {
+	print STDERR "\n";
+    }
+    $Stats{"time combining"} = time()-$PARSING_START_TIME;
 }
 
 #----------------------------------------------
@@ -233,7 +251,10 @@ sub combine_way_into_segments($) {
 #----------------------------------------------
 sub output_osm($){
     my $filename = shift;
-    print STDERR "Writing Segments to $filename\n" if $DEBUG;
+
+    $PARSING_START_TIME=time();
+
+    print STDERR "Writing Segments to $filename\n" if $DEBUG || $VERBOSE;
     if(! open(OSM,">$filename")) {
 	warn "output_osm: Cannot write to $filename\n";
 	return;
@@ -267,6 +288,7 @@ sub output_osm($){
 	printf OSM "\n",
     }
     close OSM;
+    $Stats{"time output"} = time()-$PARSING_START_TIME;
 }
 
 #----------------------------------------------
@@ -274,7 +296,7 @@ sub output_osm($){
 #----------------------------------------------
 sub output_named_points($){
     my $filename = shift;
-    print STDERR "Writing Points to $filename\n" if $DEBUG;
+    print STDERR "Writing Points to $filename\n" if $DEBUG ||$VERBOSE;
     if(! open(POINTS,">$filename")) {
 	warn "output_osm: Cannot write to $filename\n";
 	return;
@@ -407,11 +429,18 @@ sub DoEnd(){
     }
 
     $Stats{"tags read"}++;
-    if ( ( $VERBOSE || $DEBUG ) && ! ( $Stats{"tags read"} % 10000 ))  {
+    if ( ( $VERBOSE || $DEBUG ) &&
+#	 ! ( $Stats{"tags read"} % 10000 ) &&
+	 ( time()-$PARSING_DISPLAY_TIME >0.9)
+
+	 )  {
+	$PARSING_DISPLAY_TIME= time();
 	print STDERR "\r";
 	print STDERR "Read(".$AREA_FILTER->name()."): ";
 	for my $k ( sort keys %Stats ) {
 	    next if $k =~ m/( estim| read)$/;
+	    next if $k =~ m/named/ && $VERBOSE <=1;
+	    next if $k !~ m/tags/ && $VERBOSE <=2;
 	    print STDERR " $k:".$Stats{$k};
 	    if ( defined($Stats{"$k read"}) ) {
 		printf STDERR " %.0f%%",(100*$Stats{"$k read"}/$Stats{"$k estim"}) 
@@ -420,6 +449,9 @@ sub DoEnd(){
 	    }
 	    print STDERR " ";
 	}
+
+	$Stats{"max rss"} = max($Stats{"max rss"},mem_usage('rss'));
+	$Stats{"max vsz"} = max($Stats{"max vsz"},mem_usage('vsz'));
 
 	print STDERR mem_usage();
 	print STDERR time_estimate($PARSING_START_TIME,$Stats{"tags estim"},$Stats{"tags read"});

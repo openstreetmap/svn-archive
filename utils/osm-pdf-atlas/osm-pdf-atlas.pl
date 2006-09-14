@@ -229,6 +229,7 @@ sub LoadData($)
   $Data{"Coast"} = LoadGSHHS($Options->{"Coast"}, \%Bounds) if($Options->{"Coast"});
     
   $Data{"Segments"} = LoadOSM($Options->{"Data"}, \%Bounds) if($Options->{"Data"});
+  $Data{"Points"} = LoadOSM($Options->{"Data_POI"}, \%Bounds) if($Options->{"Data_POI"});
   
   printf STDERR "Data loaded\n" if $DEBUG;
   return(\%Data);
@@ -306,7 +307,7 @@ sub LoadOSM($$)
   my ($Filename, $Bounds) = @_;
   $Filename =~ s/\~/$ENV{HOME}/;
 
-  printf "Loading streetmaps from %s\n", $Filename;
+  printf "Loading OSM Data from %s\n", $Filename;
   open(my $fp, "<", $Filename) 
       or die("Can't open $Filename ($!)\n");
   my @Lines = <$fp>;
@@ -340,14 +341,23 @@ sub MapPages($$$)
   my ($LatC, $LongC, $Size) = split(/,/,$Options->{"Area"});
   MapContentsPage($PDF, \@Maps, $LatC, $LongC, $Size, $Data);
   
-  
   foreach my $Map(@Maps)
   { 
       my ($Name, $More) = split(/:\s*/, $Map);
       my ($Lat, $Long, $Size, $Type) = split(/\s*,\s*/, $More);
       
-      printf STDERR "Generating map for $Name at $Lat, $Long , +- $Size\n";
+      my $PageNum = $PDF->pages+1;
+      printf STDERR "Generating map for $Name at $Lat, $Long , +- $Size Page  $PageNum\n";
       MapPage($PDF, $Lat, $Long, $Size, $Name, $Type, $Data);
+
+      if ( $DEBUG >1 ) {
+	  # Save the PDF
+	  my $pdf_filename=$ResultDir."/".$Options->{"Filename"};
+	  #$pdf_filename =~s/\.pdf/-debug.pdf/;
+	  printf STDERR "Saving %s\n", $pdf_filename;
+	  $PDF->saveas($pdf_filename);
+	  $PDF = PDF::API2->open($pdf_filename);
+      }
   }
 }
 
@@ -427,20 +437,26 @@ sub ContentsPage($$)
             $y -= ($TextSize+1);                
         }
 }
+
 sub MapContentsPage(){
   my ($PDF, $Maps, $Lat, $Long, $Size, $Data) = @_;
-  my $Proj = SetupProjection($Lat, $Long, $Size);
+  my $Proj = SetupProjection($Lat, $Long, $Size*1.1);
 
   my $Page = $PDF->page;
   $Page->mediabox(210/mm, 297/mm);
+  my $Font = $PDF->corefont('Helvetica');
   
   my $gfx = $Page->gfx;
   my $text = $Page->text;
   $text->font($PDF->corefont('Helvetica'), 4/mm );
           
   DrawCoastline($Data->{"Coast"}, $Proj, $gfx);
-  
+  DrawOSM($Data->{"Segments"}, $Proj, $gfx, $Data->{"Styles"});
+  DrawOSM_POI($PDF,$Data->{"Points"}, $Proj,  $Data->{"Styles"});
+  WhiteOutEdges($PDF, $Page, $Proj);
+
   my $Count = $PDF->pages + 1;
+  my $map_is_on_page=2;
   foreach my $Map(@$Maps)
   {
     my ($Name, $More) = split(/:\s*/, $Map);
@@ -462,15 +478,52 @@ sub MapContentsPage(){
     $gfx->stroke();
     $gfx->endpath();
     
+    $text->fillcolor($Colour);
     # Text (inside area maps, outside city maps)
-    if(!$IsCity){
-      $text->fillcolor($Colour);
-      $text->translate((($IsCity ? $x2 : $x1) + 1)/mm, ($y2 - 5)/mm);
-      $text->text($Name);
+    if($IsCity){
+	$text->font($Font, 3/mm );
+	$text->translate(($x1 + 1)/mm, ($y2)/mm);
+	$text->text($Name);
+    } else {
+	$text->font($Font, 4/mm );
+	$text->translate(( $x1 + 1)/mm, ($y2 - 4)/mm);
+	$text->text($Name);
     }
+
+    $map_is_on_page++;
+    $text->font($Font, 4/mm );
+    $text->translate(($x2-1)/mm, ($y2 - 4)/mm);
+    $text->text_right($Count);
     
     $Count++;
   }
+}
+
+sub WhiteOutEdges($$$) {
+    my ($PDF, $Page, $Proj) = @_;
+    # White-out the edges of the page (stop maps spilling over)
+    my $edges = $Page->gfx;
+    $edges->rect(0/mm, 0/mm, 10/mm, 297/mm); # left
+    $edges->rect(0/mm, 0/mm, 210/mm, 10/mm); # bottom
+    $edges->rect(200/mm, 0/mm, 210/mm, 297/mm); # right
+    $edges->rect(0/mm, 287/mm, 210/mm, 297/mm); # top
+    $edges->fillcolor("#FFFFFF"); 
+    $edges->fill; 
+    $edges->endpath;
+    
+    # Map border
+    $edges->strokecolor("#000080");
+    $edges->rect(10/mm, 10/mm, 190/mm, 277/mm); 
+    $edges->stroke();
+    $edges->endpath();
+
+    # Page number
+    my $Font = $PDF->corefont('Helvetica');
+    my $text = $Page->text;  
+    $text->fillcolor("#000000"); 
+    $text->font($Font, 4/mm );
+    $text->translate( 200/mm, 6/mm );
+    $text->text_right(sprintf("%d", $PDF->pages));
 }
 
 #---------------------------------------------------------
@@ -493,39 +546,20 @@ sub MapPage(){
   DrawCoastline($Data->{"Coast"}, $Proj, $gfx);
 
   DrawOSM($Data->{"Segments"}, $Proj, $gfx, $Data->{"Styles"});
+  DrawOSM_POI($PDF,$Data->{"Points"}, $Proj,  $Data->{"Styles"});
 
   ScaleBar($PDF, $Page, $Proj);
   
-  # White-out the edges of the page (stop maps spilling over)
-  my $edges = $Page->gfx;
-  $edges->rect(0/mm, 0/mm, 10/mm, 297/mm); # left
-  $edges->rect(0/mm, 0/mm, 210/mm, 10/mm); # bottom
-  $edges->rect(200/mm, 0/mm, 210/mm, 297/mm); # right
-  $edges->rect(0/mm, 287/mm, 210/mm, 297/mm); # top
-  $edges->fillcolor("#FFFFFF"); 
-  $edges->fill; 
-  $edges->endpath;
+  WhiteOutEdges($PDF, $Page, $Proj);
   
-  # Map border
-  $edges->strokecolor("#000080");
-  $edges->rect(10/mm, 10/mm, 190/mm, 277/mm); 
-  $edges->stroke();
-  $edges->endpath();
-  
-  # Page number
   my $text = $Page->text;  
   $text->fillcolor("#000000"); 
-  $text->font($Font, 6/mm );
-  $text->translate( 10/mm, 289/mm );
-  $text->text(sprintf("%d", $PDF->pages));
-  
+
   # Page name
-  $text->translate( 10/mm, 3/mm );
-  $text->text($Name);
-  
-  # URL
-  $text->translate( 200/mm, 3/mm );
-  $text->text_right("http://openstreetmap.org/");
+  $text->font($Font, 6/mm );
+  $text->translate( 200/mm, 289/mm );
+  $text->text_right($Name);
+
 }
 
 #---------------------------------------------------------
@@ -557,6 +591,86 @@ sub DrawCoastline()
   }     
 }
 
+#---------------------------------------------------------
+# Draw OpenStreetMap POI
+#---------------------------------------------------------
+sub DrawOSM_POI()
+{
+    my($PDF,$Points, $Proj, $Styles) = @_;
+    
+    if($Points)
+    {
+	my $Page = $PDF->openpage(0);
+	my $gfx = $Page->gfx;
+	my $text = $Page->text;  
+	$text->font($PDF->corefont('Helvetica'), 4/mm );
+	my $png = $PDF->image_png(' ../../map-icons/square.small/unknown.png');
+	
+	foreach my $Line(@$Points)
+	{
+	    my($Lat1,$Long1,$Name,$Type) = split(/,/,$Line);
+	    unless ( $Lat1 && $Long1 ) {
+		confess "$Line\nany of lat/lon is 0\n";
+	    }
+	    
+	    
+	    $Type = lc($Type);  
+	    if(PossiblyOn($Proj, $Lat1, $Long1, $Lat1, $Long1))
+	    {
+		my ($x1, $y1) = Project($Proj, $Lat1, $Long1);
+		
+		my $Colour = exists($Styles->{$Type}) ? $Styles->{$Type}: "#A0A0A0";
+		$text->fillcolor($Colour); 
+		
+		$gfx->move($x1/mm,$y1/mm);
+		$text->translate(($x1-2)/mm, ($y1-2)/mm );
+		$text->text("x  $Name,$Type");
+		$gfx-> image($png, $x1/mm - ($png->width/2),$y1/mm - ($png->height/2));
+	    }
+	}
+    }
+}
+#---------------------------------------------------------
+# Draw a basic (uncorrelated with anything) grid on a map
+#---------------------------------------------------------
+sub mapGrid()
+{
+  my ($Page, $x1, $y1, $x2, $y2, $Font, $Proj) = @_;
+  my $grid = $Page->gfx;
+  
+  my $xLabels = "ABCDEFG";
+  my $dx = ($x2 - $x1) / 7;
+  my $dy = ($y2 - $y1) / 10;
+  
+  my $gridtext = $Page->text;  
+  $gridtext->fillcolor("#C1E4FF"); 
+  $gridtext->font($Font, 3/mm );
+  
+  my $count = 0;
+  for(my $x = $x1; $x < $x2-1; $x += $dx)
+  {
+    $grid->move($x/mm,$y1/mm);
+    $grid->line($x/mm,$y2/mm); 
+    
+    $gridtext->translate(($x + $dx - 4)/mm, ($y1 - 4)/mm );
+    $gridtext->text(substr($xLabels, $count++, 1));
+  }
+  
+  $count = 1;
+  for(my $y = $y1; $y > $y2+1; $y += $dy)
+  {
+    $grid->move($x1/mm,$y/mm);
+    $grid->line($x2/mm,$y/mm); 
+    
+    $gridtext->translate(($x1 + 2)/mm, ($y + $dy + 2)/mm );
+    $gridtext->text($count++);
+    
+  }
+  
+  $grid->strokecolor("#C1E4FF");
+  $grid->stroke();
+  $grid->endpath();
+}
 #---------------------------------------------------------
 # Draw OpenStreetMap segments
 #---------------------------------------------------------
@@ -684,7 +798,12 @@ sub ScaleBar()
   $text->font($PDF->corefont('Helvetica'), 4/mm );
   $text->translate($ScaleX/mm, ($ScaleY - 6)/mm );
   $text->text(FormatNum($ScaleLen) . " km");
-    
+
+  # URL
+  my $Font = $PDF->corefont('Helvetica');
+  $text->font($Font, 4/mm );
+  $text->translate( 10/mm, 6/mm );
+  $text->text("http://openstreetmap.org/");
 }
 
 #---------------------------------------------------------

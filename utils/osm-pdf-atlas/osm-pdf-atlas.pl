@@ -43,7 +43,7 @@ my $ConfigFile = "Config/config.txt";
 Getopt::Long::Configure('no_ignore_case');
 print "Options: -".join(",",@ARGV)."-\n";
 my $CommandLineOptions;
-my $ResultDir=osm_dir().'/pdf-atlas/Results';
+my $ResultDir=osm_dir().'/pdf-atlas';
 
 GetOptions ( 
 	     'debug+'     => \$DEBUG,      
@@ -244,12 +244,11 @@ sub LoadGSHHS()
   if ( ! -s $Filename && -s osm_dir()."/$Filename" ) {
       $Filename=osm_dir()."/$Filename";
   }
-  printf STDERR "Reading GSHHS file $Filename\n" if $DEBUG;
+  printf "Loading coastlines from GSHHS file %s\n", $Filename;
   # Open the file for reading, binary  
   open(my $fp, "<", $Filename)
       || die("Can't open GSHHS file $Filename ($!)\n");
   binmode($fp);
-  printf "Loading coastlines from %s\n", $Filename;
   
     printf "GSHHS Area Bounds lat %f to %f, long %f to %f\n",
     $Bounds->{"S"},
@@ -307,10 +306,9 @@ sub LoadOSM($$)
   my ($Filename, $Bounds) = @_;
   $Filename =~ s/\~/$ENV{HOME}/;
 
-  printf STDERR "Reading OSM File: $Filename\n";
+  printf "Loading streetmaps from %s\n", $Filename;
   open(my $fp, "<", $Filename) 
       or die("Can't open $Filename ($!)\n");
-  printf "Loading streetmaps from %s\n", $Filename;
   my @Lines = <$fp>;
   chomp @Lines;
   close($fp);  
@@ -348,7 +346,7 @@ sub MapPages($$$)
       my ($Name, $More) = split(/:\s*/, $Map);
       my ($Lat, $Long, $Size, $Type) = split(/\s*,\s*/, $More);
       
-      printf STDERR "Generating map for $Name at $Lat, $Long\n";      
+      printf STDERR "Generating map for $Name at $Lat, $Long , +- $Size\n";
       MapPage($PDF, $Lat, $Long, $Size, $Name, $Type, $Data);
   }
 }

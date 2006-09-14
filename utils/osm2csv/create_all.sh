@@ -6,9 +6,10 @@ dir=`dirname $0 `
 areas=`$dir/osm2csv.pl --list-areas`
 
 for a in $areas ; do
-    echo $a | grep 'stripe_' || continue
+    echo $a | grep -q  'stripe_' || continue
+    echo ""
     echo "=================================================="
     echo "Trying Area $a"
-  $dir/osm2csv.pl -v --area=$a 
+  $dir/osm2csv.pl -v --update-only --area=$a 
 done
-cat ~/osm/planet/csv/stripe_*.csv | sort -u > ~/osm/planet/csv/osm.csv
+cat ~/osm/planet/csv/osm-stripe_*.csv | sort -u > ~/osm/planet/csv/osm.csv

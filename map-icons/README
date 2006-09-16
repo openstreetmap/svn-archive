@@ -47,3 +47,5 @@ to each sub-sub-directory. before you start a sub-category you'll
 have to create an icon for this subcategory. This way the renderer
 can always take the category icon if there does not exist a specific
 icon for this.
+If you are not sure where to put the icon you should consider using 
+the others category(directory)

@@ -593,8 +593,12 @@ CREATE INDEX i_segments_node_a ON segments(node_a);
 CREATE INDEX i_segments_node_b ON segments(node_b);
 
 CREATE INDEX i_segment_tags_segment ON segment_tags(segment);
+CREATE INDEX i_segment_tags_name ON segment_tags(name);
+CREATE INDEX i_segment_tags_value ON segment_tags(value);
 
 CREATE INDEX i_way_tags_way ON way_tags(way);
+CREATE INDEX i_way_tags_name ON way_tags(name);
+CREATE INDEX i_way_tags_value ON way_tags(value);
 
 CREATE INDEX i_way_segments_way ON way_segments(way);
 CREATE INDEX i_way_segments_segment ON way_segments(segment);

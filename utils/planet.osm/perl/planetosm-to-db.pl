@@ -125,7 +125,7 @@ if ($xml eq "-empty") {
 }
 
 # Check we can load the file
-unless(-f $xml) {
+unless(-f $xml || $xml eq "-") {
 	die("Planet.osm file '$xml' could not be found\n");
 }
 

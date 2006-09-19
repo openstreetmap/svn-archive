@@ -64,6 +64,16 @@ FIRST_FIPS = [
 	"39165",  # Warren (greater Cincinatti, OH)
 	"39027",  # Clinton (greater Cincinatti, OH)
 	"39057",  # Greene (greater Cincinatti, OH)
+	"06037",  # California (for Blars, blarson@blars.org)
+	"06059",  # California (for Blars, blarson@blars.org)
+	"06073",  # California (for Blars, blarson@blars.org)
+	"06071",  # California (for Blars, blarson@blars.org)
+	"06065",  # California (for Blars, blarson@blars.org)
+	"06111",  # California (for Blars, blarson@blars.org)
+	"06029",  # California (for Blars, blarson@blars.org)
+	"41029",  # California (for Blars, blarson@blars.org)
+	"06085",  # California (for Blars, blarson@blars.org)
+	"51059",  # Clifton, VA (for Michael Robinson, robinson@fuzzymuzzle.com)
 ]
 
 def usage
@@ -427,7 +437,7 @@ demonize do
 		before = Time.now
 		create_street(streets[streets_i]) unless DEBUG
 		after = Time.now
-		sleep(after - before)  # let the server breath
+		sleep((after - before) / 2)  # let the server breath
 		$stderr.puts "[#{Time.now}] created street[#{i}], #{streets_i+1} / #{streets.length} in FIPS #{fips}"
 		true  # we've finished this street
 	end

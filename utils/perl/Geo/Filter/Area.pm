@@ -49,7 +49,20 @@ sub new($;@){
 
     my $self={};
     my $area;
-    if ( defined $options{area} ) {
+    if ( defined $options{lat_min} &&
+	 defined $options{lon_min} &&
+	 defined $options{lat_max} &&
+	 defined $options{lon_max} 
+	 ) {
+	$self->{area_filters}= [
+				[$options{lat_min},$options{lon_min},
+				 $options{lat_max},$options{lon_max}]
+				];
+	$self->{area_name} = "[$options{lat_min},$options{lon_min}".
+	    " .. ".
+	    "$options{lat_max},$options{lon_max}]";
+	    
+    } elsif ( defined $options{area} ) {
 	$area = delete  $options{area};
 	if ( ! defined ( $AREA_DEFINITIONS->{$area} ) ) {
 	    die "unknown area $area.\n".

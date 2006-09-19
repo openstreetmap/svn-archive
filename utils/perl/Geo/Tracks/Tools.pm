@@ -367,7 +367,7 @@ sub print_count_data($$){
 
     my ($track_count,$point_count) = GPS::count_data($tracks);
     if ( $VERBOSE || $DEBUG) {
-	printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_count,$track_count;
+	printf STDERR "%-35s: %5d Points in %d Tracks $comment",$filename,$point_count,$track_count;
     }
 }
 

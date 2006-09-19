@@ -181,13 +181,25 @@ sub filter_against_osm($$$){
 
 
     enrich_tracks($tracks);
-    
+
+    my $parsing_display_time=time();
+    my ($track_count,$point_count) =   count_data($tracks);
+    my $track_points_done=0;
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
 	    $track->[$track_pos]->{good_point} =
 		! is_segment_of_list_nearby($track,$track_pos,$osm_segments);
+	    $track_points_done++;
+	    if ( ( $VERBOSE || $DEBUG ) &&
+		 ( time()-$parsing_display_time >10)
+		 )  {
+		$parsing_display_time= time();
+		print STDERR "Filter against osm ".mem_usage();
+		print STDERR time_estimate($start_time,$track_points_done,$point_count);
+		print STDERR "\r";
+	    }
 	}
     }
 
@@ -867,7 +879,10 @@ sub filter_dup_trace_segments($$){
     my $last_compare_dist=0;
 
     enrich_tracks($tracks);
-    
+    my $parsing_display_time=time();
+    my ($track_count,$point_count) =   count_data($tracks);
+    my $track_points_done=0;
+
     my $segment_list=[];
     for my $track_no ( 0 .. $#{@{$tracks->{tracks}}} ) {
 	my $track = $tracks->{tracks}->[$track_no];
@@ -903,6 +918,16 @@ sub filter_dup_trace_segments($$){
 	    add_trackpoint2segmentlist($segment_list,$track,$sliding_track_pos);
 	    $sliding_track_pos ++;
 	}
+	$track_points_done++;
+	if ( ( $VERBOSE || $DEBUG ) &&
+	     ( time()-$parsing_display_time >.9)
+	     )  {
+	    $parsing_display_time= time();
+	    print STDERR "Filter my own ".mem_usage();
+	    print STDERR time_estimate($start_time,$track_points_done,$point_count);
+	    print STDERR "\r";
+	}
+
     }
 
     my $new_tracks = tracks_only_good_point_split($tracks);
@@ -1029,12 +1054,24 @@ sub filter_gps_clew($$){
     my $dist_osm_track = $config->{dist} || 40;
 
     enrich_tracks($tracks);
+    my $parsing_display_time=time();
+    my ($track_count,$point_count) =   count_data($tracks);
+    my $track_points_done=0;
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;
 	
 	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
 	    my $count_clew = is_gps_clew($track,$track_pos);
 	    set_number_bad_points($track,$track_pos,$count_clew);
+	    $track_points_done++;
+	    if ( ( $VERBOSE || $DEBUG ) &&
+		 ( time()-$parsing_display_time >.9)
+		 )  {
+		$parsing_display_time= time();
+		print STDERR "Filter clew ".mem_usage();
+		print STDERR time_estimate($start_time,$track_points_done,$point_count);
+		print STDERR "\r";
+	    }
 	}
 
     }

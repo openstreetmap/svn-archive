@@ -62,6 +62,8 @@ pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
 
+# TODO:
+# if the input filename is not planet*osm* we have to change the output filename too.
 my $Filename = shift();
 unless ( $Filename && -s $Filename ) {
     $Filename = mirror_planet();
@@ -120,7 +122,7 @@ for my $area_name ( split(",",$areas_todo) ) {
     $Stats{"nodes estim"}    = 14135968;
     $Stats{"segments estim"} = 10697464;
     $Stats{"ways estim"}     = 2758781;
-    $Stats{"tags estim"}     = 51450000;
+    $Stats{"tags estim"}     = 53518120;
 
 
     #----------------------------------------------
@@ -281,7 +283,8 @@ sub output_osm($){
 	($Segment->{"name"}||''),
 	($Segment->{"highway"}||'');
 	foreach my $k ( keys %{$Segment} ){
-	    next if $k =~ m/^(class|name|highway)$/;
+	    #next if $k =~ m/^(class|name|highway)$/;
+	    next if $k =~ m/^(from|to|segments)$/;
 	    my $v = $Segment->{$k};
 	    printf OSM ",%s=%s",$k,$v
 	}
@@ -301,22 +304,36 @@ sub output_named_points($){
 	warn "output_osm: Cannot write to $filename\n";
 	return;
     }
+    my $count=0;
     foreach my $id ( keys %Nodes ){
 	my $Node = $Nodes{$id};
 	next unless defined $Node;
 	$Stats{"Nodes with zero lat/long"}++ 
 	    if($Node->{"lat"} == 0 and $Node->{"lon"} == 0);
 	
-	if($Node->{"name"} || $Node->{"amenity"} || $Node->{"class"}){
-	    printf POINTS "%f,%f,%s,%s,%s\n",
+	if($Node->{"name"} || 
+	   $Node->{"amenity"} || 
+	   $Node->{"class"} || 
+	   $Node->{"abutters"}){
+	    printf POINTS "%f,%f,%s,%s,%s",
 	    $Node->{"lat"},
 	    $Node->{"lon"},
 	    ($Node->{"name"}||''),
 	    ($Node->{"amenity"}||''),
 	    ($Node->{"class"}||'');
+	    foreach my $k ( keys %{$Node} ) {
+		#next if $k =~ m/^(class|name|highway)$/;
+		next if $k =~ m/^(lat|lon)$/;
+		my $v = $Node->{$k};
+		printf POINTS ",%s=%s",$k,$v;
+	    }
+	    printf POINTS "\n";
+	    
+	    $count++;
 	}
     }
     close POINTS;
+    print STDERR "Writen $count Points to $filename\n" if $DEBUG ||$VERBOSE;
     
 }
 
@@ -389,6 +406,8 @@ sub DoEnd(){
 	    $Nodes{$ID}{"lat"} = $MainAttr{"lat"};
 	    $Nodes{$ID}{"lon"} = $MainAttr{"lon"};
 	    foreach(keys(%Tags)){
+		next if /created_by/;
+		next if /time/;
 		$Nodes{$ID}{$_} = $Tags{$_};
 	    }
 	    $Stats{"nodes named"}++ if($Nodes{$ID}{"name"});
@@ -408,6 +427,8 @@ sub DoEnd(){
 	    $Segments{$ID}{"from"} = $from;
 	    $Segments{$ID}{"to"} = $to;
 	    foreach(keys(%Tags)){
+		next if /created_by/;
+		next if /time/;
 		$Segments{$ID}{$_} = $Tags{$_};
 	    }
 	    $Stats{"segments tagged"}++ if($MainAttr{"tags"});
@@ -421,6 +442,8 @@ sub DoEnd(){
 	if ( @WaySegments ) {
 	    $Ways{$ID}{"segments"} = join(",",@WaySegments);
 	    foreach(keys(%Tags)){
+		next if /created_by/;
+		next if /time/;
 		$Ways{$ID}{$_} = $Tags{$_};
 	    }    
 	    $Stats{"ways"}++;
@@ -450,11 +473,13 @@ sub DoEnd(){
 	    print STDERR " ";
 	}
 
-	$Stats{"max rss"} = max($Stats{"max rss"},mem_usage('rss'));
-	$Stats{"max vsz"} = max($Stats{"max vsz"},mem_usage('vsz'));
+	my $rss = mem_usage('rss');
+	$Stats{"max rss"} = max($Stats{"max rss"},$rss) if $rss;
+	my $vsz = mem_usage('vsz');
+	$Stats{"max vsz"} = max($Stats{"max vsz"},$vsz) if $vsz;
 
 	print STDERR mem_usage();
-	print STDERR time_estimate($PARSING_START_TIME,$Stats{"tags estim"},$Stats{"tags read"});
+	print STDERR time_estimate($PARSING_START_TIME,$Stats{"tags read"},$Stats{"tags estim"});
 	print STDERR "\r";
     }
 }
@@ -483,7 +508,7 @@ a plain text file in cvs form.
 
 B<Common usages:>
 
-planet_osm2txt.pl [-d] [-v] [-h] [--no-mirror] [--proxy=<proxy:port>] [--list-areas] <planet_filename.osm>
+osm2csv.pl [-d] [-v] [-h] [--no-mirror] [--proxy=<proxy:port>] [--list-areas] <planet_filename.osm>
 
 =head1 OPTIONS
 

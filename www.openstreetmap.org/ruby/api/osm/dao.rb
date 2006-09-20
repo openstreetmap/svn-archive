@@ -563,8 +563,8 @@ module OSM
 
     def update_gpx_meta(gpx_id)
       call_sql { "update gpx_files set size = (select count(*) from gps_points where gps_points.gpx_id = #{gpx_id}) where id = #{gpx_id};" }
-      call_sql { "update gpx_files set latitude = (select latitude from gps_points where gps_points.gpx_id = #{gpx_id} limit 1),
-                    longitude = (select longitude from gps_points where gps_points.gpx_id = #{gpx_id} limit 1) where id = #{gpx_id};" }
+      call_sql { "update gpx_files set latitude = (select (0.0000001*latitude) AS latitude from gps_points where gps_points.gpx_id = #{gpx_id} limit 1),
+                    longitude = (select (0.0000001*longitude) AS longitude from gps_points where gps_points.gpx_id = #{gpx_id} limit 1) where id = #{gpx_id};" }
     end
 
 
@@ -660,12 +660,13 @@ module OSM
 
       page = page * 5000
 
-      res = call_local_sql { "select distinctrow latitude, longitude from gps_points where latitude > #{lat1} and latitude < #{lat2} and longitude > #{lon1} and longitude < #{lon2} order by gpx_id,timestamp desc limit #{page}, 5000" }
+      res = call_local_sql { "select distinctrow (0.0000001*latitude) AS latitude, (0.0000001*longitude) AS longitude from gps_points where latitude > (#{lat1}*10000000) and latitude < (#{lat2}*10000000) and longitude > (#{lon1}*10000000) and longitude < (#{lon2}*10000000) order by timestamp desc limit #{page}, 5000" }
+
 
       return nil unless res
 
       res.each_hash do |row|
-        points.push Trackpoint.new(row['latitude'].to_f, row['longitude'].to_f)
+        points.push Trackpoint.new(row['latitude'].to_f,row['longitude'].to_f)
       end
       return points
     end
@@ -678,7 +679,7 @@ module OSM
 
         dbh = get_connection
 
-        q = "select latitude, longitude from gps_points where gpx_id = #{gpx_id} limit 5000"
+        q = "select (0.0000001*latitude) AS latitude, (0.0000001*longitude) AS longitude from gps_points where gpx_id = #{gpx_id} limit 5000"
 
         res = dbh.query(q)
 

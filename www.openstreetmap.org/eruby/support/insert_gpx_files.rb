@@ -122,7 +122,7 @@ files.each_hash do |row|
       if gotlatlon && gotdate
         ele = '0' unless gotele
         if lat < 90 && lat > -90 && lon > -180 && lon < 180
-          sql = "insert into gps_points (latitude, longitude, altitude, timestamp, user_id, trackid, gpx_id) values (#{lat}, #{lon}, #{ele}, '#{date.strftime('%Y-%m-%d %H:%M:%S')}', #{user_id}, #{trackseg}, #{gpx_id})"
+          sql = "insert into gps_points (latitude, longitude, altitude, timestamp, user_id, trackid, gpx_id) values ((#{lat}*10000000), (#{lon}*10000000), #{ele}, '#{date.strftime('%Y-%m-%d %H:%M:%S')}', #{user_id}, #{trackseg}, #{gpx_id})"
           points += 1
           dbh.query(sql)
         end

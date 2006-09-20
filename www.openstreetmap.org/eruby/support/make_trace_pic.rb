@@ -14,7 +14,7 @@ dao = OSM::Dao.instance
 
 dbh = dao.get_connection
 
-res = dbh.query("select max(latitude), min(latitude), max(longitude), min(longitude) from gps_points where gpx_id = #{gpx_id}")
+res = dbh.query("select max(0.0000001*latitude), min(0.0000001*latitude), max(0.0000001*longitude), min(0.0000001*longitude) from gps_points where gpx_id = #{gpx_id}")
 
 lat_max = 0.0
 lat_min = 0.0
@@ -52,7 +52,7 @@ gc.stroke_linejoin('miter')
 gc.stroke('#000000')
 gc.stroke_width(3)
 
-points = dbh.query("select latitude, longitude from gps_points where gpx_id=#{gpx_id}")
+points = dbh.query("select (0.0000001*latitude) AS latitude, (0.0000001*longitude) AS longitude from gps_points where gpx_id=#{gpx_id}")
 
 puts 'drawing...'
 
@@ -85,4 +85,4 @@ transparent_canvas.format = 'PNG'
 transparent_canvas.write("/tmp/#{gpx_id}.png")
 
 `convert -scale 50x50 /tmp/#{gpx_id}.png /tmp/#{gpx_id}-icon.png`
-`scp /tmp/#{gpx_id}*.png 128.40.59.140:/var/www/openstreetmap/trace-images/`
+`scp /tmp/#{gpx_id}*.png 128.40.58.202:/var/www/openstreetmap/trace-images/`

@@ -22,11 +22,15 @@ my @Browsers = ("\"C:\\Program Files\\Mozilla Firefox\\firefox\"", "/usr/bin/fir
 my $Browser;
 foreach(@Browsers){$Browser = $_ if(-f $_);}
 
-FirstTime() if(! -d $Files);
-
 # Globals
 my $Status = "Statusbar";
 my ($Lat1,$Long1,$Lat2,$Long2,$Title,$CoordsValid);
+my %Options;
+
+FirstTime() if(! -d $Files);
+
+LoadOptions("$Files/options.txt");
+
 #-----------------------------------------------------------------------------
 # Create GUI
 #-----------------------------------------------------------------------------
@@ -63,7 +67,7 @@ $Window->configure(-menu => $Menu);
 # Create rest of window
 #-----------------------------------------------------------------------------
 my $Footer = $Window->Frame()->pack(-side=>"bottom", -fill=>"x");
-$Footer->Button(-text => 'Render', -command => sub{})->pack(-side=>'left');
+$Footer->Button(-text => 'Render', -command => \&Render)->pack(-side=>'left');
 $Footer->Button(-text => 'Quit', -command => sub{exit})->pack(-side=>'right');
 $Footer->Message(-textvariable => \$Status)->pack(-side=>'left', -expand=>1, -fill=>'x');
 
@@ -109,7 +113,20 @@ sub DownloadData(){
     $Status = "Enter some coordinates, or load a bookmark";
     return;
     }
-  print "Downloading";
+    
+  $Options{"username"} =~ s/\@/%40/;
+  
+  my $URL = sprintf( "http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=$Long1,$Lat1,$Long2,$Lat2",
+  $Options{"username"},
+  $Options{"password"});
+  
+  $Status = "Downloading\n";
+  getstore($URL, "$Files/data.osm");
+  $Status = "Download complete\n";
+}
+
+sub Render(){
+
 }
 
 sub BookmarkMenu(){
@@ -134,12 +151,75 @@ sub BrowseTo(){
   `$Browser $URL` if($Browser);
 }
 sub FirstTime(){
-  print "Welcome to $NAME\n\nThis looks like the first time you've run this program.\nIs it okay to create a directory in $Files, and download some data from the web?\n";
+  print "Welcome to $NAME\n\nThis looks like the first time you've run this program.\nIs it okay to create a directory in $Files, and download some data from the web? (y/n)\n";
   exit if(<> !~ /Y/i);
   mkdir($Files);
+    
+  
+  # Get username and password
+  print "\n\nYou now have the opportunity to enter an OSM username and password.\n\nThese will appear on your screen, so check nobody is watching!\nThese will be stored in plaintext on disk\n\nIf you don't want to enter a password yet, just press enter twice,\nthen edit $Files/options.txt later\n";
+  print "Username:"; $Options{"username"} = <>;
+  print "Password:"; $Options{"password"} = <>;
+  chomp($Options{"username"}, $Options{"password"});
+  print "\n";
+  
+  LookFor("Browser", 
+    "C:\\Program Files\\Mozilla Firefox\\firefox.exe", 
+    "/usr/bin/firefox");
+  
+  LookFor("XmlStarlet", 
+    "C:\\xml\\xml.exe", 
+    "/usr/bin/xmlstarlet");
+  
+  LookFor("Inkscape", 
+    "C:\\Program Files\\inkscape\\inkscape.exe", 
+    "/usr/bin/inkscape");
+    
+  SaveOptions("$Files/options.txt");
+  
+  # Download files for the first time
   DownloadFiles();  
+  
 }
 
+sub SaveOptions(){
+  my $Filename = shift();
+  if(open(SAVEOPTIONS, ">", $Filename)){
+    foreach my $Option(keys %Options){
+      printf SAVEOPTIONS "%s=%s\n", $Option, $Options{$Option};
+    }
+    close SAVEOPTIONS;
+  }
+  else{
+    print STDERR "Problem: Couldn't save options to $Filename\n";
+  }
+}
+
+sub LookFor(){
+  my ($Name, @Options) = @_;
+  foreach my $Option(@Options){
+    if(-f $Option){
+      $Options{$Name} = $Option;
+      print "Using $Name: $Option\n";
+      return;
+    }
+  }
+  print "Where can I find $Name on this computer? (press Enter if you don't know)\n";
+  $Options{$Name} = <>;
+  chomp($Options{$Name});
+}
+
+sub LoadOptions(){
+  my $Filename = shift();
+  open(OPT, "<", $Filename) || return;
+  while(my $Line = <OPT>){
+    chomp $Line;
+    if($Line =~ /^\s*(\w+)\s*=\s*(.*)/){
+      $Options{$1} = $2;
+    }
+  }
+  close OPT;
+}
 #-----------------------------------------------------------------------------
 # not finished
 #-----------------------------------------------------------------------------

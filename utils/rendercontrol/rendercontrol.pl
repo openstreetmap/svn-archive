@@ -103,8 +103,13 @@ my $UpdateMenu = $Menu->cascade(-label=>"~Update");
 
 # Help menu
 my $HelpMenu = $Menu->cascade(-label => "~Help");
-  $HelpMenu->command(-label=>"~Web page", 
-    -command => sub{BrowseTo("http://www.openstreetmap.org/");});
+  $HelpMenu->command(-label=>"~Index (web page)", 
+    -command => sub{BrowseTo("http://wiki.openstreetmap.org/index.php/Rendercontrol");});
+  $HelpMenu->separator();
+  $HelpMenu->command(-label=>"~OpenStreetMap", 
+    -command => sub{BrowseTo("http://wiki.openstreetmap.org/");});
+  $HelpMenu->command(-label=>"~Mailing list", 
+    -command => sub{BrowseTo("http://lists.openstreetmap.org/cgi-bin/mailman/listinfo/talk");});
 
 $Window->configure(-menu => $Menu);
 

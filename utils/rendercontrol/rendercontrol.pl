@@ -39,7 +39,6 @@ use Tk::Pane;
 use Tk::Label;
 use Tk::Menu;
 use Tk::Image;
-use XML::Simple;
 use Data::Dumper;
 use LWP::Simple qw(getstore);
 #DownloadFiles();exit;
@@ -141,7 +140,6 @@ my $IID = $Canvas->createImage(0, 0,
         -anchor => 'nw',
         -image  => $Image);
     
-#AddControlsFromFile($ListFrame, "Files/freemap.xml");
 AddDemoControls($ListFrame);
 MainLoop;
 
@@ -409,27 +407,6 @@ sub AddDemoControls(){
     $ItemFrame->Checkbutton(-text => "TODO $_")->pack(-side=>'top')->deselect();
   }
 }
-#-----------------------------------------------------------------------------
-# not finished
-#-----------------------------------------------------------------------------
-sub AddControlsFromFile(){
-	my($Frame, $File) = @_;
-	my $xml = new XML::Simple;
-	my $data = $xml->XMLin($File);
-	
-	my @Rules = @{$data->{"rule"}};
-	foreach my $Rule(@Rules){
-		
-		my $ItemFrame = $Frame->Frame(-borderwidth=>2,-relief=>'ridge')->pack(-expand=>1,-fill=>'x',-padx=>8,-pady=>3);
-		$ItemFrame->Checkbutton(-text => "Enable")->pack(-side=>'top')->deselect();
-		#$Frame->Entry()->pack(-side=>'top');
-		$ItemFrame->Label(-text => $Rule->{"style"}->{"colour"})->pack(-side=>'top');
-		$ItemFrame->Label(-text => $Rule->{"style"}->{"casing"})->pack(-side=>'top');
-		$ItemFrame->Label(-text => sprintf("%s = %s", $Rule->{"condition"}->{"k"}, $Rule->{"condition"}->{"v"}))->pack(-side=>'top');
-	}
-	close DBG;
-}
-
 
 sub SetData(){
   ($Title,$Lat1,$Long1,$Lat2,$Long2) = @_;

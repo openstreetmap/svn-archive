@@ -56,8 +56,9 @@ my $ViewMenu = $Menu->cascade(-label => "~View");
   $ViewMenu->command(-label=> "OSM data", -command => sub{SetView("text", "$Files/data.osm");});
   $ViewMenu->command(-label=> "Osmarender", -command => sub{SetView("text", "$Files/osm-map-features.xml");});
   $ViewMenu->command(-label=> "SVG", -command => sub{SetView("text", "$Files/output.svg");});
-  $ViewMenu->command(-label=> "Image", -command => sub{SetView("image", "$Files/output.png");});
+  $ViewMenu->command(-label=> "Image", -command => sub{SetView("image", "$Files/output.gif");});
 
+  $ViewMenu->separator();
   $ViewMenu->command(-label=> "Open SVG", -command => sub{});
   $ViewMenu->command(-label=> "Open image", -command => sub{});
 
@@ -111,6 +112,101 @@ my $IID = $Canvas->createImage(0, 0,
 AddDemoControls($ListFrame);
 MainLoop;
 
+	
+#-----------------------------------------------------------------------------
+# Download all rendering files from disk
+#-----------------------------------------------------------------------------
+sub DownloadFiles(){
+  my @Files = ("http://svn.openstreetmap.org/utils/osmarender/osmarender.xsl", 
+  "http://svn.openstreetmap.org/utils/osmarender/osm-map-features.xml",
+  "http://wiki.openstreetmap.org/index.php/OJW/Bookmarks",
+  "http://svn.openstreetmap.org/freemap/freemap.xml");
+
+  foreach my $File(@Files){
+    if($File =~ /\/([^\\\/]*?)$/){
+      my $Title = $1;
+      $Status = "Downloading $Title";
+      my $Store = "$Files/$Title";
+      print "Downloading $File to $Store\n";
+      getstore($File, $Store);
+    }
+  }
+  $Status = "Download complete";
+}
+
+#-----------------------------------------------------------------------------
+# Downloads OSM data from web
+#-----------------------------------------------------------------------------
+sub DownloadData(){
+  if(!$CoordsValid){
+    $Status = "Enter some coordinates, or load a bookmark";
+    return;
+    }
+    
+  $Options{"username"} =~ s/\@/%40/;
+  
+  my $URL = sprintf( "http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=$Long1,$Lat1,$Long2,$Lat2",
+  $Options{"username"},
+  $Options{"password"});
+  
+  $Status = "Downloading\n";
+  getstore($URL, "$Files/data.osm");
+  $Status = "Download complete\n";
+}
+
+#-----------------------------------------------------------------------------
+# Renders a map
+#-----------------------------------------------------------------------------
+sub Render(){
+  if($Options{"XmlStarlet"}){
+    my $Cmd = sprintf("\"%s\" tr %s %s > %s",
+      $Options{"XmlStarlet"},
+      "$Files/osmarender.xsl",
+      "$Files/osm-map-features.xml",
+      "$Files/output.svg");
+    `$Cmd`;
+    $Status = "Render complete";
+  }
+  else {
+    $Status = "No XLST program (e.g. xmlstarlet) available";
+    return;
+  }
+  
+  if($Options{"Inkscape"}){
+    my $Cmd = sprintf("\"%s\" -D -w %d -b FFFFFF -e %s %s",
+      $Options{"Inkscape"},
+      $Options{"RenderWidth"},
+      "$Files/output.png",
+      "$Files/output.svg");
+      
+    print "=" x 80 . "\n$Cmd\n" . "=" x 80 . "\n";
+    `$Cmd`;
+  }
+  else{
+    $Status = "No SVG renderer available";
+    return;
+  }
+  ConvertOutputs();
+}
+
+#-----------------------------------------------------------------------------
+# Convert between bitmap graphics formats
+#-----------------------------------------------------------------------------
+sub ConvertOutputs(){
+  return if(!$Options{"ImageMagick"});
+  
+  foreach my $Output("$Files/output.png","$Files/output.gif"){
+    my $Cmd = sprintf("\"%s\" %s %s",
+      $Options{"ImageMagick"},
+      "$Files/output.png",
+      $Output);
+    
+    `$Cmd`;
+  }
+  
+  SetView("image","$Files/output.gif");
+}
+
 #-----------------------------------------------------------------------------
 # Set what's displayed in the right-hand pane
 #-----------------------------------------------------------------------------
@@ -136,79 +232,23 @@ sub SetView(){
   elsif($Style eq "image"){
     print "Loading image $Filename\n";
     $Canvas->pack();
+    
+    $Image->configure(-file=>$Filename);
+
+    $Canvas->configure(-width => $Image->width);
+    $Canvas->configure(-height => $Image->height);
+    
     $TextView->pack('forget');
   }
   else{
+    print STDERR "Unknown type of object to display";
   }
 }
-	
+
 #-----------------------------------------------------------------------------
-# Download all rendering files from disk
+# Create a submenu showing all bookmarks loaded from a file, where clicking on
+# any menu loads its coordinates into appropriate places
 #-----------------------------------------------------------------------------
-sub DownloadFiles(){
-  my @Files = ("http://svn.openstreetmap.org/utils/osmarender/osmarender.xsl", 
-  "http://svn.openstreetmap.org/utils/osmarender/osm-map-features.xml",
-  "http://wiki.openstreetmap.org/index.php/OJW/Bookmarks",
-  "http://svn.openstreetmap.org/freemap/freemap.xml");
-
-  foreach my $File(@Files){
-    if($File =~ /\/([^\\\/]*?)$/){
-      my $Title = $1;
-      $Status = "Downloading $Title";
-      my $Store = "$Files/$Title";
-      print "Downloading $File to $Store\n";
-      getstore($File, $Store);
-    }
-  }
-  $Status = "Download complete";
-}
-
-sub DownloadData(){
-  if(!$CoordsValid){
-    $Status = "Enter some coordinates, or load a bookmark";
-    return;
-    }
-    
-  $Options{"username"} =~ s/\@/%40/;
-  
-  my $URL = sprintf( "http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=$Long1,$Lat1,$Long2,$Lat2",
-  $Options{"username"},
-  $Options{"password"});
-  
-  $Status = "Downloading\n";
-  getstore($URL, "$Files/data.osm");
-  $Status = "Download complete\n";
-}
-
-sub Render(){
-  if($Options{"XmlStarlet"}){
-    my $Cmd = sprintf("\"%s\" tr %s %s > %s",
-      $Options{"XmlStarlet"},
-      "$Files/osmarender.xsl",
-      "$Files/osm-map-features.xml",
-      "$Files/output.svg");
-    `$Cmd`;
-    $Status = "Render complete";
-  }
-  else {
-    $Status = "No XLST program (e.g. xmlstarlet) available";
-    return;
-  }
-  
-  if($Options{"Inkscape"}){
-    my $Cmd = sprintf("\"%s\" -D -w 2000 -b FFFFFF -e %s %s",
-      $Options{"Inkscape"},
-      $Options{"RenderWidth"},
-      "$Files/output.png",
-      "$Files/output.svg");
-    `$Cmd`;
-  }
-  else{
-    $Status = "No SVG renderer available";
-    return;
-  }
-}
-
 sub BookmarkMenu(){
   my ($Menu, $File) = @_;
   open(IN, $File) || return;
@@ -226,12 +266,18 @@ sub BookmarkMenu(){
     -command => sub{BrowseTo("http://wiki.openstreetmap.org/index.php/OJW/Bookmarks")});
 }
 
+#-----------------------------------------------------------------------------
+# Opens a web browser to display the specified URL
+#-----------------------------------------------------------------------------
 sub BrowseTo(){
   my $URL = shift();
   my $Browser = $Options{"Browser"};
   `\"$Browser\" $URL` if($Browser);
 }
 
+#-----------------------------------------------------------------------------
+# Sets-up the application, first time it's run
+#-----------------------------------------------------------------------------
 sub FirstTime(){
   print "Welcome to $NAME\n\nThis looks like the first time you've run this program.\nIs it okay to create a directory in $Files, and download some data from the web? (y/n)\n";
   exit if(<> !~ /Y/i);
@@ -259,6 +305,9 @@ sub FirstTime(){
     "C:\\Program Files\\inkscape\\inkscape.exe", 
     "/usr/bin/inkscape");
     
+  LookFor("ImageMagick", 
+    "/usr/bin/convert");
+  
   SaveOptions("$Files/options.txt");
   
   # Download files for the first time
@@ -266,6 +315,9 @@ sub FirstTime(){
   
 }
 
+#-----------------------------------------------------------------------------
+# Save all options to disk
+#-----------------------------------------------------------------------------
 sub SaveOptions(){
   my $Filename = shift();
   if(open(SAVEOPTIONS, ">", $Filename)){
@@ -279,6 +331,10 @@ sub SaveOptions(){
   }
 }
 
+#-----------------------------------------------------------------------------
+# Try to find a particular program
+# Usage: LookFor("SettingName", "PossibleLocation1", "PossibleLocation2",...)
+#-----------------------------------------------------------------------------
 sub LookFor(){
   my ($Name, @Options) = @_;
   foreach my $Option(@Options){
@@ -293,6 +349,10 @@ sub LookFor(){
   chomp($Options{$Name});
 }
 
+#-----------------------------------------------------------------------------
+# Load all options from disk
+# as name=value pairs (one per line)
+#-----------------------------------------------------------------------------
 sub LoadOptions(){
   my $Filename = shift();
   open(OPT, "<", $Filename) || return;
@@ -304,6 +364,10 @@ sub LoadOptions(){
   }
   close OPT;
 }
+
+#-----------------------------------------------------------------------------
+# Temporary: fill the left column with dummy controls to see what it looks like
+#-----------------------------------------------------------------------------
 sub AddDemoControls(){
   my($Frame) = @_;
   

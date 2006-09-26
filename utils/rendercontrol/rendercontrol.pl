@@ -5,6 +5,7 @@ use IO::Socket::INET;
 use Tk::Pane;
 use Tk::Label;
 use Tk::Menu;
+use Tk::Image;
 use XML::Simple;
 use Data::Dumper;
 use LWP::Simple qw(getstore);
@@ -16,19 +17,18 @@ my $NAME = "RenderControl";
 my $Files = "Files"; # Main directory
 
 #-----------------------------------------------------------------------------
-# Look for some useful objects
+# Pre-GUI stage
 #-----------------------------------------------------------------------------
-my @Browsers = ("\"C:\\Program Files\\Mozilla Firefox\\firefox\"", "/usr/bin/firefox");
-my $Browser;
-foreach(@Browsers){$Browser = $_ if(-f $_);}
 
 # Globals
 my $Status = "Statusbar";
-my ($Lat1,$Long1,$Lat2,$Long2,$Title,$CoordsValid);
-my %Options;
+my ($Lat1,$Long1,$Lat2,$Long2,$Title,$CoordsValid,$DisplayText);
+my %Options = ("RenderWidth"=>"1000");
 
+# If this is the first time the program has run, ask user some questions
 FirstTime() if(! -d $Files);
 
+# Load options from a file
 LoadOptions("$Files/options.txt");
 
 #-----------------------------------------------------------------------------
@@ -51,15 +51,27 @@ my $FileMenu = $Menu->cascade(-label => "~File");
   BookmarkMenu($Bookmarks, "$Files/Bookmarks");
   $FileMenu->command(-label=> "E~xit", -command => sub{exit});
 
+# View menu
+my $ViewMenu = $Menu->cascade(-label => "~View");
+  $ViewMenu->command(-label=> "OSM data", -command => sub{SetView("text", "$Files/data.osm");});
+  $ViewMenu->command(-label=> "Osmarender", -command => sub{SetView("text", "$Files/osm-map-features.xml");});
+  $ViewMenu->command(-label=> "SVG", -command => sub{SetView("text", "$Files/output.svg");});
+  $ViewMenu->command(-label=> "Image", -command => sub{SetView("image", "$Files/output.png");});
+
+  $ViewMenu->command(-label=> "Open SVG", -command => sub{});
+  $ViewMenu->command(-label=> "Open image", -command => sub{});
+
 # Update from web
 my $UpdateMenu = $Menu->cascade(-label=>"~Update");
   $UpdateMenu->command(-label=>"~Download latest files", 
     -command => \&DownloadFiles);
-    
+  $UpdateMenu->command(-label=>"~Reload options", 
+    -command => sub{LoadOptions("$Files/options.txt");});
+
 # Help menu
 my $HelpMenu = $Menu->cascade(-label => "~Help");
   $HelpMenu->command(-label=>"~Web page", 
-    -command => sub{BrowseTo("http://www.slashdot.org/");});
+    -command => sub{BrowseTo("http://www.openstreetmap.org/");});
 
 $Window->configure(-menu => $Menu);
 
@@ -71,8 +83,8 @@ $Footer->Button(-text => 'Render', -command => \&Render)->pack(-side=>'left');
 $Footer->Button(-text => 'Quit', -command => sub{exit})->pack(-side=>'right');
 $Footer->Message(-textvariable => \$Status)->pack(-side=>'left', -expand=>1, -fill=>'x');
 
-my $LeftFrame = $Window->Frame()->pack(-expand=>1,-fill=>'both',-side=>"left");
-my $ControlFrame = $LeftFrame->Frame(-borderwidth=>2,-relief=>'ridge')->pack(-side=>'top', -expand=>1,-fill=>'both');
+my $LeftFrame = $Window->Frame()->pack(-expand=>0,-fill=>'y',-side=>"left");
+my $ControlFrame = $LeftFrame->Frame(-borderwidth=>2,-relief=>'ridge')->pack(-side=>'top');
 my $ListFrame = $LeftFrame->Scrolled('Pane', -scrollbars => 'e',-borderwidth=>2,-relief=>'ridge')->pack(-side=>'bottom', -expand=>1,-fill=>'both');
 
 $ControlFrame->Entry(-textvariable=>\$Lat1)->pack(-side=>'top');
@@ -82,11 +94,54 @@ $ControlFrame->Entry(-textvariable=>\$Long2)->pack(-side=>'top');
 $ControlFrame->Button(-text=>"Download", -command=>\&DownloadData)->pack(-side=>'top');
 
 my $RightFrame = $Window->Frame(-borderwidth=>2,-relief=>'ridge')->pack(-expand=>1,-fill=>'both',-side=>"right");
-my $List2 = $RightFrame->Scrolled('Pane', -scrollbars => 'e',-relief=>'ridge')->pack(-expand=>1,-fill=>'both');
+my $List2 = $RightFrame->Scrolled('Pane', -scrollbars => 'se',-relief=>'ridge')->pack(-expand=>1,-fill=>'both');
 
-#AddControlsFromFile($List1, "Files/freemap.xml");
+# Create image
+#my $Image = $Window->Photo(-format=>"GIF",-file=>"$Files/blank.gif");
+my $Image = $Window->Photo(-format=>"GIF");
+my $Canvas = $List2->Canvas(-width => $Image->width,
+        -height => $Image->height)->pack(-expand=>1, fill=>'both');
+my $TextView = $List2->Text()->pack(-expand=>1, fill=>'both');
+
+my $IID = $Canvas->createImage(0, 0,
+        -anchor => 'nw',
+        -image  => $Image);
+    
+#AddControlsFromFile($ListFrame, "Files/freemap.xml");
+AddDemoControls($ListFrame);
 MainLoop;
 
+#-----------------------------------------------------------------------------
+# Set what's displayed in the right-hand pane
+#-----------------------------------------------------------------------------
+sub SetView(){
+  my ($Style, $Filename) = @_;
+  if($Style eq "text"){
+    print "Loading text file $Filename\n";
+
+    if(open(IN, "<",$Filename)){
+      $DisplayText = join('', <IN>);
+      close IN;
+    }
+    else{
+      $DisplayText = "File not available:\n$Filename\n";
+    }
+
+    $TextView->delete('1.0','end');
+    $TextView->insert("end", $DisplayText);
+
+    $Canvas->pack('forget');
+    $TextView->pack();
+  }
+  elsif($Style eq "image"){
+    print "Loading image $Filename\n";
+    $Canvas->pack();
+    $TextView->pack('forget');
+  }
+  else{
+  }
+}
+	
 #-----------------------------------------------------------------------------
 # Download all rendering files from disk
 #-----------------------------------------------------------------------------
@@ -126,7 +181,32 @@ sub DownloadData(){
 }
 
 sub Render(){
-
+  if($Options{"XmlStarlet"}){
+    my $Cmd = sprintf("\"%s\" tr %s %s > %s",
+      $Options{"XmlStarlet"},
+      "$Files/osmarender.xsl",
+      "$Files/osm-map-features.xml",
+      "$Files/output.svg");
+    `$Cmd`;
+    $Status = "Render complete";
+  }
+  else {
+    $Status = "No XLST program (e.g. xmlstarlet) available";
+    return;
+  }
+  
+  if($Options{"Inkscape"}){
+    my $Cmd = sprintf("\"%s\" -D -w 2000 -b FFFFFF -e %s %s",
+      $Options{"Inkscape"},
+      $Options{"RenderWidth"},
+      "$Files/output.png",
+      "$Files/output.svg");
+    `$Cmd`;
+  }
+  else{
+    $Status = "No SVG renderer available";
+    return;
+  }
 }
 
 sub BookmarkMenu(){
@@ -148,8 +228,10 @@ sub BookmarkMenu(){
 
 sub BrowseTo(){
   my $URL = shift();
-  `$Browser $URL` if($Browser);
+  my $Browser = $Options{"Browser"};
+  `\"$Browser\" $URL` if($Browser);
 }
+
 sub FirstTime(){
   print "Welcome to $NAME\n\nThis looks like the first time you've run this program.\nIs it okay to create a directory in $Files, and download some data from the web? (y/n)\n";
   exit if(<> !~ /Y/i);
@@ -165,6 +247,8 @@ sub FirstTime(){
   
   LookFor("Browser", 
     "C:\\Program Files\\Mozilla Firefox\\firefox.exe", 
+    "C:\\windows\\iexplore.exe", 
+    "C:\\winnt\\iexplore.exe", 
     "/usr/bin/firefox");
   
   LookFor("XmlStarlet", 
@@ -219,6 +303,14 @@ sub LoadOptions(){
     }
   }
   close OPT;
+}
+sub AddDemoControls(){
+  my($Frame) = @_;
+  
+  foreach (1..60){
+    my $ItemFrame = $Frame->Frame()->pack(-expand=>1, -fill=>'x');
+    $ItemFrame->Checkbutton(-text => "TODO $_")->pack(-side=>'top')->deselect();
+  }
 }
 #-----------------------------------------------------------------------------
 # not finished

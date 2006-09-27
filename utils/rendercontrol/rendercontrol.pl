@@ -41,6 +41,7 @@ use Tk::Menu;
 use Tk::Image;
 use Data::Dumper;
 use LWP::Simple qw(getstore);
+use File::Copy qw(copy);
 #DownloadFiles();exit;
 #-----------------------------------------------------------------------------
 # Options
@@ -54,7 +55,7 @@ my $Files = "Files"; # Main directory
 
 # Globals
 my $Status = "Statusbar";
-my ($Lat1,$Long1,$Lat2,$Long2,$Title,$CoordsValid,$DisplayText);
+my ($Lat1,$Long1,$Lat2,$Long2,$Title,$CoordsValid,$DisplayText,$ProjectName);
 my %Options = ("RenderWidth"=>"1000");
 
 # If this is the first time the program has run, ask user some questions
@@ -79,8 +80,15 @@ $Window->optionAdd('*BorderWidth' => 1);
 # File menu
 my $Menu = $Window->Menu;
 my $FileMenu = $Menu->cascade(-label => "~File");
-  my $Bookmarks = $FileMenu->cascade(-label=> "Bookmarks");
-  BookmarkMenu($Bookmarks, "$Files/Bookmarks");
+  my $Bookmarks1 = $FileMenu->cascade(-label=> "Global bookmarks");
+  BookmarkMenu($Bookmarks1, "$Files/Bookmarks");
+  my $Bookmarks2 = $FileMenu->cascade(-label=> "JOSM Bookmarks");
+  BookmarkMenu($Bookmarks2, $Options{"JosmBookmarks"});
+  
+  my $ProjectMenu = $FileMenu->cascade(-label=> "Load");
+  ListProjects();
+  
+  $FileMenu->command(-label=> "~Save project as", -command => \&SaveProjectDialog);
   $FileMenu->command(-label=> "E~xit", -command => sub{exit});
 
 # View menu
@@ -91,8 +99,8 @@ my $ViewMenu = $Menu->cascade(-label => "~View");
   $ViewMenu->command(-label=> "Image", -command => sub{SetView("image", "$Files/output.gif");});
 
   $ViewMenu->separator();
-  $ViewMenu->command(-label=> "Open SVG", -command => sub{});
-  $ViewMenu->command(-label=> "Open image", -command => sub{});
+  $ViewMenu->command(-label=> "Open SVG", -command => sub{OpenFile("Editor", "$Files/output.svg");});
+  $ViewMenu->command(-label=> "Open image", -command => sub{OpenFile("ImageEditor", "$Files/output.png");});
 
 # Update from web
 my $UpdateMenu = $Menu->cascade(-label=>"~Update");
@@ -100,16 +108,12 @@ my $UpdateMenu = $Menu->cascade(-label=>"~Update");
     -command => \&DownloadFiles);
   $UpdateMenu->command(-label=>"~Reload options", 
     -command => sub{LoadOptions("$Files/options.txt");});
-
+  $UpdateMenu->command(-label=>"Reload project list",
+    -command => \&RefreshListProjects);
 # Help menu
 my $HelpMenu = $Menu->cascade(-label => "~Help");
-  $HelpMenu->command(-label=>"~Index (web page)", 
-    -command => sub{BrowseTo("http://wiki.openstreetmap.org/index.php/Rendercontrol");});
-  $HelpMenu->separator();
-  $HelpMenu->command(-label=>"~OpenStreetMap", 
-    -command => sub{BrowseTo("http://wiki.openstreetmap.org/");});
-  $HelpMenu->command(-label=>"~Mailing list", 
-    -command => sub{BrowseTo("http://lists.openstreetmap.org/cgi-bin/mailman/listinfo/talk");});
+  $HelpMenu->command(-label=>"~Web page", 
+    -command => sub{BrowseTo("http://www.openstreetmap.org/");});
 
 $Window->configure(-menu => $Menu);
 
@@ -138,8 +142,8 @@ my $List2 = $RightFrame->Scrolled('Pane', -scrollbars => 'se',-relief=>'ridge')-
 #my $Image = $Window->Photo(-format=>"GIF",-file=>"$Files/blank.gif");
 my $Image = $Window->Photo(-format=>"GIF");
 my $Canvas = $List2->Canvas(-width => $Image->width,
-        -height => $Image->height)->pack(-expand=>1, fill=>'both');
-my $TextView = $List2->Text()->pack(-expand=>1, fill=>'both');
+        -height => $Image->height)->pack(-expand=>1, -fill=>'both');
+my $TextView = $List2->Text()->pack(-expand=>1, -fill=>'both');
 
 my $IID = $Canvas->createImage(0, 0,
         -anchor => 'nw',
@@ -148,7 +152,65 @@ my $IID = $Canvas->createImage(0, 0,
 AddDemoControls($ListFrame);
 MainLoop;
 
-	
+#-----------------------------------------------------------------------------
+# Refresh the list of projects in the file menu
+#-----------------------------------------------------------------------------
+sub RefreshListProjects(){
+  my $MenuThing = $ProjectMenu->cget(-menu); 
+  $MenuThing->delete(0, "end");
+  ListProjects();
+}
+sub ListProjects(){
+  opendir(DIR, $Files) || return;
+  while(my $File = readdir(DIR)){
+    my $FullFile = "$Files/$File";
+    if(-d $FullFile && $File ne "." && $File ne ".."){
+      $ProjectMenu->command(
+          -label => "Proj " . $File, 
+          -command => sub{$ProjectName = $File; WithProject("load");});
+    }
+  }
+  closedir(DIR);
+}
+
+#-----------------------------------------------------------------------------
+# Dialog box allowing project files to be saved in particular place
+#-----------------------------------------------------------------------------
+sub SaveProjectDialog(){
+  my $SaveProject;
+  my $Dialog = $Window->Toplevel(-title=>"Save project");
+  $Dialog->Entry(-textvariable=>\$SaveProject)->pack();
+  $Dialog->Button(-text=>"Cancel", -command=>sub{$Dialog->withdraw()})->pack();
+  $Dialog->Button(-text=>"OK", -command=>sub{$ProjectName = $SaveProject; WithProject("save"); $Dialog->withdraw()})->pack();
+}
+
+#-----------------------------------------------------------------------------
+# Do something with a "project" (group of data files)
+# - load (from project directory into Files/ directory)
+# - save (into project directory)
+# - delete project directory
+#-----------------------------------------------------------------------------
+sub WithProject(){
+  my $Mode = shift();
+  return if(!$ProjectName);
+  
+  my $ProjectDir = "$Files/$ProjectName";
+  mkdir($ProjectDir) if(! -d $ProjectDir && $Mode eq "save");
+  
+  foreach ("data.osm","output.svg","output.png","output.jpg","output.gif"){
+    if($Mode eq "save"){
+      copy("$Files/$_","$ProjectDir/$_");
+    }
+    elsif($Mode eq "load"){
+      copy("$ProjectDir/$_", "$Files/$_");
+    }
+    elsif($Mode eq "delete"){
+      unlink "$ProjectDir/$_";
+    }
+  }
+  unlink $ProjectDir if($Mode eq "delete");
+}
+
 #-----------------------------------------------------------------------------
 # Download all rendering files from disk
 #-----------------------------------------------------------------------------
@@ -178,6 +240,8 @@ sub DownloadData(){
     $Status = "Enter some coordinates, or load a bookmark";
     return;
     }
+
+  PrintBig("Downloading $Title ($Lat1,$Long1,$Lat2,$Long2)");
     
   $Options{"username"} =~ s/\@/%40/;
   
@@ -214,8 +278,8 @@ sub Render(){
       $Options{"RenderWidth"},
       "$Files/output.png",
       "$Files/output.svg");
-      
-    print "=" x 80 . "\n$Cmd\n" . "=" x 80 . "\n";
+    
+    PrintBig($Cmd);  
     `$Cmd`;
   }
   else{
@@ -224,7 +288,6 @@ sub Render(){
   }
   ConvertOutputs();
 }
-
 #-----------------------------------------------------------------------------
 # Convert between bitmap graphics formats
 #-----------------------------------------------------------------------------
@@ -282,21 +345,40 @@ sub SetView(){
 }
 
 #-----------------------------------------------------------------------------
+# Open a file using external editor
+#  * param1 is what program to use, and is a reference to something in %Options
+#  * param2 is the filename to open
+#-----------------------------------------------------------------------------
+sub OpenFile("ImageEditor", "$Files/output.png"){
+  my ($ProgramType, $Filename) = @_;
+  my $Program = $Options{$ProgramType};
+  if(!$Program){
+    print STDERR "Can't find a $ProgramType to open $Filename\n";
+    return;
+  }
+  my $Cmd = sprintf("\"%s\" \"%s\"", $Program, $Filename);
+  PrintBig($Cmd);
+  `$Cmd`;
+}
+
+#-----------------------------------------------------------------------------
 # Create a submenu showing all bookmarks loaded from a file, where clicking on
 # any menu loads its coordinates into appropriate places
 #-----------------------------------------------------------------------------
 sub BookmarkMenu(){
   my ($Menu, $File) = @_;
+  return if(!$File);
+  
   open(IN, $File) || return;
   my $Data = join('', <IN>);
   close IN;
-  if($Data =~ /START_DATA(.*)END_DATA/ms){
-    $Data = $1;
-    foreach my $Line(split(/\n/, $Data)){
-      my ($Name, $Lat1, $Long1, $Lat2, $Long2, $Spare) = split(/,/,$Line);
-      $Menu->command(-label=> $Name, -command => sub{SetData($Name,$Lat1, $Long1, $Lat2, $Long2);}) if($Name && $Spare eq "false");
-    }
+  $Data = $1 if($Data =~ /START_DATA(.*)END_DATA/ms);
+
+  foreach my $Line(split(/\n/, $Data)){
+    my ($Name, $Lat1, $Long1, $Lat2, $Long2, $Spare) = split(/,/,$Line);
+    $Menu->command(-label=> $Name, -command => sub{SetData($Name,$Lat1, $Long1, $Lat2, $Long2);}) if($Name && $Spare eq "false");
   }
+
   $Menu->separator();
   $Menu->command(-label=> "Edit this list (web link)", 
     -command => sub{BrowseTo("http://wiki.openstreetmap.org/index.php/OJW/Bookmarks")});
@@ -316,7 +398,7 @@ sub BrowseTo(){
 #-----------------------------------------------------------------------------
 sub FirstTime(){
   print "Welcome to $NAME\n\nThis looks like the first time you've run this program.\nIs it okay to create a directory in $Files, and download some data from the web? (y/n)\n";
-  exit if(<> !~ /Y/i);
+  exit if(<> =~ /N/i);
   mkdir($Files);
     
   
@@ -331,6 +413,8 @@ sub FirstTime(){
     "C:\\Program Files\\Mozilla Firefox\\firefox.exe", 
     "C:\\windows\\iexplore.exe", 
     "C:\\winnt\\iexplore.exe", 
+    "C:\\windows\\iexplore.exe", 
+	"C:/Program Files/Internet Explorer/iexplore.exe",
     "/usr/bin/firefox");
   
   LookFor("XmlStarlet", 
@@ -344,6 +428,24 @@ sub FirstTime(){
   LookFor("ImageMagick", 
     "/usr/bin/convert");
   
+  LookFor("JosmBookmarks", 
+    "~/.josm/Bookmarks",
+	"C:/Documents and Settings/oliverwhite.CUESIM/.josm/bookmarks");
+
+  LookFor("JOSM", 
+    "C:/home/osm/josm-latest.jar");
+  
+  LookFor("Editor", 
+    "c:/windows/notepad.exe",
+    "c:/winnt/notepad.exe",
+	"/usr/bin/kate",
+	"/usr/bin/emacs");
+	
+  LookFor("ImageEditor", 
+    "C:/Program Files/GIMP-2.0/bin/gimp-win-remote.exe",
+	"/usr/bin/gimp",
+	"/usr/bin/gqview");
+
   SaveOptions("$Files/options.txt");
   
   # Download files for the first time
@@ -413,9 +515,18 @@ sub AddDemoControls(){
   }
 }
 
+#-----------------------------------------------------------------------------
+# Sets the download area (used when clicking on bookmark menu)
+#-----------------------------------------------------------------------------
 sub SetData(){
   ($Title,$Lat1,$Long1,$Lat2,$Long2) = @_;
   $CoordsValid = 1;
-  print "Ok, loading $Title,$Lat1,$Long1,$Lat2,$Long2\n";
 }
 
+
+#-----------------------------------------------------------------------------
+# Prints a message in big letters on console
+#-----------------------------------------------------------------------------
+sub PrintBig(){
+    print STDERR "=" x 80 . "\n" . shift() . "\n" . "=" x 80 . "\n";
+}

@@ -120,11 +120,6 @@ $Window->configure(-menu => $Menu);
 #-----------------------------------------------------------------------------
 # Create rest of window
 #-----------------------------------------------------------------------------
-my $Footer = $Window->Frame()->pack(-side=>"bottom", -fill=>"x");
-$Footer->Button(-text => 'Render', -command => \&Render)->pack(-side=>'left');
-$Footer->Button(-text => 'Quit', -command => sub{exit})->pack(-side=>'right');
-$Footer->Message(-textvariable => \$Status)->pack(-side=>'left', -expand=>1, -fill=>'x');
-
 my $LeftFrame = $Window->Frame()->pack(-expand=>0,-fill=>'y',-side=>"left");
 my $ControlFrame = $LeftFrame->Frame(-borderwidth=>2,-relief=>'ridge')->pack(-side=>'top');
 my $ListFrame = $LeftFrame->Scrolled('Pane', -scrollbars => 'e',-borderwidth=>2,-relief=>'ridge')->pack(-side=>'bottom', -expand=>1,-fill=>'both');
@@ -135,11 +130,14 @@ $ControlFrame->Entry(-textvariable=>\$Long1)->pack(-side=>'top');
 $ControlFrame->Entry(-textvariable=>\$Long2)->pack(-side=>'top');
 $ControlFrame->Button(-text=>"Download", -command=>\&DownloadData)->pack(-side=>'top');
 
+$ControlFrame->Entry()->pack(-side=>'top');
+$ControlFrame->Button(-text => 'Render', -command => \&Render)->pack(-side=>'left');
+$ControlFrame->Message(-textvariable => \$Status)->pack(-side=>'left', -expand=>1, -fill=>'x');
+
 my $RightFrame = $Window->Frame(-borderwidth=>2,-relief=>'ridge')->pack(-expand=>1,-fill=>'both',-side=>"right");
 my $List2 = $RightFrame->Scrolled('Pane', -scrollbars => 'se',-relief=>'ridge')->pack(-expand=>1,-fill=>'both');
 
 # Create image
-#my $Image = $Window->Photo(-format=>"GIF",-file=>"$Files/blank.gif");
 my $Image = $Window->Photo(-format=>"GIF");
 my $Canvas = $List2->Canvas(-width => $Image->width,
         -height => $Image->height)->pack(-expand=>1, -fill=>'both');
@@ -149,15 +147,14 @@ my $IID = $Canvas->createImage(0, 0,
         -anchor => 'nw',
         -image  => $Image);
     
-AddDemoControls($ListFrame);
+AddDemoControls($ListFrame) if(0);
 MainLoop;
 
 #-----------------------------------------------------------------------------
 # Refresh the list of projects in the file menu
 #-----------------------------------------------------------------------------
 sub RefreshListProjects(){
-  my $MenuThing = $ProjectMenu->cget(-menu); 
-  $MenuThing->delete(0, "end");
+  $ProjectMenu->cget(-menu)->delete(0, "end");
   ListProjects();
 }
 sub ListProjects(){
@@ -179,9 +176,10 @@ sub ListProjects(){
 sub SaveProjectDialog(){
   my $SaveProject;
   my $Dialog = $Window->Toplevel(-title=>"Save project");
+  $Dialog->Message(-text=>"Enter a project name")->pack();
   $Dialog->Entry(-textvariable=>\$SaveProject)->pack();
-  $Dialog->Button(-text=>"Cancel", -command=>sub{$Dialog->withdraw()})->pack();
-  $Dialog->Button(-text=>"OK", -command=>sub{$ProjectName = $SaveProject; WithProject("save"); $Dialog->withdraw()})->pack();
+  $Dialog->Button(-text=>"Cancel", -command=>sub{$Dialog->withdraw()})->pack(-side=>'left');
+  $Dialog->Button(-text=>"OK", -command=>sub{$ProjectName = $SaveProject; WithProject("save"); $Dialog->withdraw()})->pack(-side=>'right');
 }
 
 #-----------------------------------------------------------------------------

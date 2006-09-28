@@ -31,12 +31,12 @@ function init()
 	*/
 
 	var osmdev = new OpenLayers.Layer.WMS( "OSM with SRTM Contours", 
-		"http://nick.dev.openstreetmap.org/freemap.php",
+		"http://nick.dev.openstreetmap.org/openlayers/freemap.php",
 		{ 'layers' : 'areas,srtm,osm' } );
 
 	var osmlsat2=new OpenLayers.Layer.WMS
 	( "OSM with Landsat satellite photos",
-		"http://nick.dev.openstreetmap.org/freemap.php",
+		"http://nick.dev.openstreetmap.org/openlayers/freemap.php",
 	{ 'layers' : 'osm,landsat', 'styles' : 'osmeditor' } );
 
 //		{ 'TRANSPARENT' : true });
@@ -164,7 +164,7 @@ function descSend()
 
 	var data =  { icon: 
 								new OpenLayers.Icon
-					('http://nick.dev.openstreetmap.org/images/amenity.png'),
+					('http://nick.dev.openstreetmap.org/openlayers/images/amenity.png'),
 									popupContentHTML:
 								'<h3>'+document.getElementById('title').value+
 								'</h3><p>'
@@ -516,7 +516,7 @@ function walkRouteGo()
 
 function getWalkRoutes()
 {
-	ajax("http://nick.dev.openstreetmap.org/walkroute.php", 
+	ajax("http://nick.dev.openstreetmap.org/openlayers/walkroute.php", 
 			"bbox="+w+","+s+","+e+","+n+"&action=getroutes", 
 			walkRoutesCallback);
 }
@@ -524,7 +524,7 @@ function getWalkRoutes()
 function getWalkRouteById(e)
 {
 	var el = (e.target) ? e.target: e.srcElement;
-	ajax("http://nick.dev.openstreetmap.org/walkroute.php", 
+	ajax("http://nick.dev.openstreetmap.org/openlayers/walkroute.php", 
 			"id="+el.id.substring[2]+"&action=getroute", walkRouteByIdCallback);
 }
 
@@ -568,7 +568,7 @@ function walkRouteByIdCallback (xmlHTTP, addData)
 
 	data =  { icon: 
 								new OpenLayers.Icon
-					('http://nick.dev.openstreetmap.org/images/amenity.png'),
+					('http://nick.dev.openstreetmap.org/openlayers/images/amenity.png'),
 									popupContentHTML: '',
 									popupSize:
 								new OpenLayers.Size(320,200)

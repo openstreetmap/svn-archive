@@ -82,8 +82,7 @@ $Window->optionAdd('*BorderWidth' => 1);
 my $Menu = $Window->Menu;
 my $FileMenu = $Menu->cascade(-label => "~File");
   
-  $FileMenu->command(-label=> "~Load OSM file", -command => sub{ReplaceFile("$Files/data.osm","osm");});
-  $FileMenu->command(-label=> "~Load SVG file", -command => sub{ReplaceFile("$Files/output.svg","svg");});
+  $FileMenu->command(-label=> "~Open", -command => sub{ReplaceFile("$Files/data.osm","osm");});
   $FileMenu->separator();
   $FileMenu->command(-label=> "E~xit", -command => sub{exit});
 
@@ -95,8 +94,8 @@ my $ViewMenu = $Menu->cascade(-label => "~View");
   $ViewMenu->command(-label=> "Image", -command => sub{SetView("image", "$Files/output.gif");});
 
   $ViewMenu->separator();
-  $ViewMenu->command(-label=> "Open SVG", -command => sub{OpenFile("Editor", "$Files/output.svg");});
-  $ViewMenu->command(-label=> "Open image", -command => sub{OpenFile("ImageEditor", "$Files/output.png");});
+  $ViewMenu->command(-label=> "Open SVG in editor", -command => sub{OpenFile("Editor", "$Files/output.svg");});
+  $ViewMenu->command(-label=> "Open image in editor", -command => sub{OpenFile("ImageEditor", "$Files/output.png");});
 
 # Project menu
 my $ProjectMenu = $Menu->cascade(-label => "~Project");
@@ -206,6 +205,9 @@ sub ReplaceFile(){
   my @FileTypes = (["$Ext files", "*.$Ext"], ["All Files", "*"] );
   
   my $FromFile = $Window->getOpenFile(-filetypes => \@FileTypes);
+  return if(!$FromFile);
+  
+  copy($FromFile, $ToFile);
 }
 
 #-----------------------------------------------------------------------------

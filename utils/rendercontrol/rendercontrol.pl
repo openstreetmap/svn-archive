@@ -57,6 +57,7 @@ my $Files = "Files"; # Main directory
 my $Status = "Statusbar";
 my ($Lat1,$Long1,$Lat2,$Long2,$Title,$CoordsValid,$DisplayText,$ProjectName);
 my %Options = ("RenderWidth"=>"1000");
+my $WikiPage = "http://wiki.openstreetmap.org/index.php/Rendercontrol";
 
 # If this is the first time the program has run, ask user some questions
 FirstTime() if(! -d $Files);
@@ -80,15 +81,10 @@ $Window->optionAdd('*BorderWidth' => 1);
 # File menu
 my $Menu = $Window->Menu;
 my $FileMenu = $Menu->cascade(-label => "~File");
-  my $Bookmarks1 = $FileMenu->cascade(-label=> "Global bookmarks");
-  BookmarkMenu($Bookmarks1, "$Files/Bookmarks");
-  my $Bookmarks2 = $FileMenu->cascade(-label=> "JOSM Bookmarks");
-  BookmarkMenu($Bookmarks2, $Options{"JosmBookmarks"});
   
-  my $ProjectMenu = $FileMenu->cascade(-label=> "Load");
-  ListProjects();
-  
-  $FileMenu->command(-label=> "~Save project as", -command => \&SaveProjectDialog);
+  $FileMenu->command(-label=> "~Load OSM file", -command => sub{ReplaceFile("$Files/data.osm","osm");});
+  $FileMenu->command(-label=> "~Load SVG file", -command => sub{ReplaceFile("$Files/output.svg","svg");});
+  $FileMenu->separator();
   $FileMenu->command(-label=> "E~xit", -command => sub{exit});
 
 # View menu
@@ -102,20 +98,38 @@ my $ViewMenu = $Menu->cascade(-label => "~View");
   $ViewMenu->command(-label=> "Open SVG", -command => sub{OpenFile("Editor", "$Files/output.svg");});
   $ViewMenu->command(-label=> "Open image", -command => sub{OpenFile("ImageEditor", "$Files/output.png");});
 
+# Project menu
+my $ProjectMenu = $Menu->cascade(-label => "~Project");
+  my $LoadProjectMenu = $ProjectMenu->cascade(-label=> "Load ~project");
+  ListProjects($LoadProjectMenu);
+  
+  $ProjectMenu->command(-label=> "~Save project as", -command => \&SaveProjectDialog);
+  
+  $ProjectMenu->separator();
+  $ProjectMenu->command(-label=>"Reload project list",
+    -command => sub{RefreshListProjects($LoadProjectMenu);});
+
+# Bookmarks menu
+my $BookmarksMenu = $Menu->cascade(-label => "~Bookmarks");
+  my $Bookmarks1 = $BookmarksMenu->cascade(-label=> "Global bookmarks");
+  BookmarkMenu($Bookmarks1, "$Files/Bookmarks");
+  my $Bookmarks2 = $BookmarksMenu->cascade(-label=> "JOSM Bookmarks");
+  BookmarkMenu($Bookmarks2, $Options{"JosmBookmarks"});
+
 # Update from web
 my $UpdateMenu = $Menu->cascade(-label=>"~Update");
   $UpdateMenu->command(-label=>"~Download latest files", 
     -command => \&DownloadFiles);
   $UpdateMenu->command(-label=>"~Reload options", 
     -command => sub{LoadOptions("$Files/options.txt");});
-  $UpdateMenu->command(-label=>"Reload project list",
-    -command => \&RefreshListProjects);
+
 # Help menu
 my $HelpMenu = $Menu->cascade(-label => "~Help");
   $HelpMenu->command(-label=>"~Web page", 
-    -command => sub{BrowseTo("http://www.openstreetmap.org/");});
+    -command => sub{BrowseTo($WikiPage);});
 
 $Window->configure(-menu => $Menu);
+# tst change
 
 #-----------------------------------------------------------------------------
 # Create rest of window
@@ -154,10 +168,12 @@ MainLoop;
 # Refresh the list of projects in the file menu
 #-----------------------------------------------------------------------------
 sub RefreshListProjects(){
+  my ($Menu) = @_;
   $ProjectMenu->cget(-menu)->delete(0, "end");
-  ListProjects();
+  ListProjects($Menu);
 }
 sub ListProjects(){
+  my ($Menu) = @_;
   opendir(DIR, $Files) || return;
   while(my $File = readdir(DIR)){
     my $FullFile = "$Files/$File";
@@ -180,6 +196,16 @@ sub SaveProjectDialog(){
   $Dialog->Entry(-textvariable=>\$SaveProject)->pack();
   $Dialog->Button(-text=>"Cancel", -command=>sub{$Dialog->withdraw()})->pack(-side=>'left');
   $Dialog->Button(-text=>"OK", -command=>sub{$ProjectName = $SaveProject; WithProject("save"); $Dialog->withdraw()})->pack(-side=>'right');
+}
+
+#-----------------------------------------------------------------------------
+# Load a file, storing it in the specified location
+#-----------------------------------------------------------------------------
+sub ReplaceFile(){
+  my ($ToFile, $Ext) = @_;
+  my @FileTypes = (["$Ext files", "*.$Ext"], ["All Files", "*"] );
+  
+  my $FromFile = $Window->getOpenFile(-filetypes => \@FileTypes);
 }
 
 #-----------------------------------------------------------------------------

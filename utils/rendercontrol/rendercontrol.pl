@@ -67,7 +67,7 @@ LoadOptions("$Files/options.txt");
 #-----------------------------------------------------------------------------
 # Create GUI
 #-----------------------------------------------------------------------------
-print STDERR "\n\nLoading GUI...\n";
+PrintBig("Loading GUI");
 my $Window = new MainWindow(-title => $NAME);
 my %Controls;
 
@@ -447,6 +447,7 @@ sub FirstTime(){
   SaveOptions("$Files/options.txt");
   
   # Download files for the first time
+  PrintBig("Downloading latest osmarender");
   DownloadFiles();  
   
 }

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE xsl:stylesheet [ <!ENTITY nbsp '&#160;'> ]>
 
-<!-- Osmarender.xsl 2.0 -->
+<!-- Osmarender.xsl 3.1 -->
 
 <!-- Revision history:
      1.0 2006-03-21 Initial version
@@ -49,6 +49,12 @@
 					Improved rules file, lots of new tags, icons and cleaner look and feel
 					Rules file does not select segments for rendering by default (this encourages everyone to tag ways) 
 					Tested with IE 6.x, Firefox 1.5, xalan, xmlstarlet, xsltproc, Adobe ASV3, Inkscape, Batik-Squiggle
+	3.1 2006-09-30	Implements waysegment pseudo-element to enable segments that are part of a way to be selected
+					Grid lines are now generated properly
+					Rendering of external white border is now improved when bounds are specified
+					No external white border when no bounds specified
+					Various tweaks to the rules file
+					
 -->
 
 <!-- Osmarender rules files contain two kinds of element; rules and instructions.  Rule elements provide a
@@ -244,7 +250,7 @@
 				<xsl:attribute name='onmouseup'>fnOnMouseUp(evt)</xsl:attribute>
 			</xsl:if>
 
-			<!-- Include javaScript functions for all they dynamic stuff --> 
+			<!-- Include javaScript functions for all the dynamic stuff --> 
 			<xsl:if test='/rules/@javaScript="yes"'>
 				<xsl:call-template name='javaScript'/>
 			</xsl:if>
@@ -265,6 +271,7 @@
 
 			<!-- Draw a nice background layer -->
 			<rect x='0px' y='0px' height='{$documentHeight}px' width='{$documentWidth}px' class='map-background'/>
+
 
 			<!-- Process all the rules, one layer at a time -->
 	 			<xsl:apply-templates select='/rules/rule'>
@@ -313,14 +320,16 @@
 	 			</xsl:apply-templates>
 			
 	
+			<!-- Blank out anything outside the bounding box -->
+			<xsl:if test='/rules/bounds or $data/osm/bounds'>
+				<xsl:call-template name='eraseOutsideBoundingBox'/>
+			</xsl:if>
+			
 			<!-- Draw a grid if required -->
 			<xsl:if test='/rules/@showGrid="yes"'>
 				<xsl:call-template name="gridDraw"/>
 			</xsl:if>
 
-			<!-- Blank out anything outside the bounding box -->
-			<xsl:call-template name='eraseOutsideBoundingBox'/>
-			
 			<!-- Draw a border if required -->
 			<xsl:if test='/rules/@showBorder="yes"'>
 				<xsl:call-template name="borderDraw"/>
@@ -385,11 +394,14 @@
 		<xsl:variable name='k'>|<xsl:value-of select='$kBare'/>|</xsl:variable>
 		<xsl:variable name='v'>|<xsl:value-of select='$vBare'/>|</xsl:variable>
 
+
+		<xsl:variable name='selectedElements' select='$elements[contains($e,concat("|",name(),"|"))or (contains($e,"|waysegment|") and name()="segment" and key("wayBySegment",@id))]'/>
+
 		<xsl:choose>
 			<xsl:when test='contains($k,"|*|")'>
 				<xsl:choose>
 					<xsl:when test='contains($v,"|~|")'>
-						<xsl:variable name='elementsWithNoTags' select='$elements[contains($e,name()) and count(tag)=0]'/>
+						<xsl:variable name='elementsWithNoTags' select='$selectedElements[count(tag)=0]'/>
 						<xsl:call-template name='processElements'>
 							<xsl:with-param name='eBare' select='$eBare'/>
 							<xsl:with-param name='kBare' select='$kBare'/>
@@ -400,7 +412,7 @@
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:when test='contains($v,"|*|")'>
-						<xsl:variable name='allElements' select='$elements[contains($e,name())]'/>
+						<xsl:variable name='allElements' select='$selectedElements'/>
 						<xsl:call-template name='processElements'>
 							<xsl:with-param name='eBare' select='$eBare'/>
 							<xsl:with-param name='kBare' select='$kBare'/>
@@ -411,7 +423,7 @@
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name='allElementsWithValue' select='$elements[contains($e,name()) and tag[contains($v,concat("|",@v,"|"))]]'/>
+						<xsl:variable name='allElementsWithValue' select='$selectedElements[tag[contains($v,concat("|",@v,"|"))]]'/>
 						<xsl:call-template name='processElements'>
 							<xsl:with-param name='eBare' select='$eBare'/>
 							<xsl:with-param name='kBare' select='$kBare'/>
@@ -424,7 +436,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test='contains($v,"|~|")'>
-				<xsl:variable name='elementsWithoutKey' select='$elements[contains($e,name()) and count(tag[contains($k,concat("|",@k,"|"))])=0]'/>
+				<xsl:variable name='elementsWithoutKey' select='$selectedElements[count(tag[contains($k,concat("|",@k,"|"))])=0]'/>
 				<xsl:call-template name='processElements'>
 					<xsl:with-param name='eBare' select='$eBare'/>
 					<xsl:with-param name='kBare' select='$kBare'/>
@@ -435,7 +447,7 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test='contains($v,"|*|")'>
-				<xsl:variable name='allElementsWithKey' select='$elements[contains($e,name()) and tag[contains($k,concat("|",@k,"|"))]]'/>
+				<xsl:variable name='allElementsWithKey' select='$selectedElements[tag[contains($k,concat("|",@k,"|"))]]'/>
 				<xsl:call-template name='processElements'>
 					<xsl:with-param name='eBare' select='$eBare'/>
 					<xsl:with-param name='kBare' select='$kBare'/>
@@ -446,7 +458,7 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name='elementsWithKey' select='$elements[contains($e,name()) and tag[contains($k,concat("|",@k,"|")) and contains($v,concat("|",@v,"|"))]]'/>
+				<xsl:variable name='elementsWithKey' select='$selectedElements[tag[contains($k,concat("|",@k,"|")) and contains($v,concat("|",@v,"|"))]]'/>
 				<xsl:call-template name='processElements'>
 					<xsl:with-param name='eBare' select='$eBare'/>
 					<xsl:with-param name='kBare' select='$kBare'/>
@@ -730,7 +742,6 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 	</xsl:template>
 
 
-
 	<!-- Generate an area path for the current way or area element -->
 	<xsl:template name='generateAreaPath'>
 
@@ -819,12 +830,6 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 	<!-- ============================================================================= -->
 
 	<!-- Draw a line for the current <segment> element using the formatting of the current <line> instruction -->
-	<!-- Should do something like the following for drawing ways:
-			<g stroke='red' stroke-width='0.8' stroke-linejoin='round' stroke-linecap='butt' fill='none'>
-	   <path id='test1' d="M6,9 L10,10 L10,20 L11,23 L12,23 L14,25 L20,3 "/>
-		</g>
-	-->
-	
 	<xsl:template name='drawLine'>
 		<xsl:param name='instruction'/>
 		<xsl:param name='segment'/> <!-- The current segment element -->
@@ -1136,18 +1141,47 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 
 
 	<xsl:template name='eraseOutsideBoundingBox'>
-		<rect x='-1000px' y='-1000px' width='{$width+1000}px' height='1000px' fill="white" stroke="none"/>
-		<rect x='{$width}px' y='-1000px' width='1000px' height='{$height+1000}px' fill="white" stroke="none"/>
-		<rect x='-1000px' y='0px' width='1000px' height='{$height+1000}px' fill="white" stroke="none"/>
-		<rect x='0px' y='{$height}px' width='{$width+1000}px' height='1000px' fill="white" stroke="none"/>
+		<xsl:variable name='topMargin' select='(number($trlat)-number($topRightLatitude))*10000*$scale*$projection'/>
+		<xsl:variable name='leftMargin' select='(number($bottomLeftLongitude)-number($bllon))*10000*$scale'/>
+		<xsl:variable name='rightMargin' select='(number($trlon)-number($topRightLongitude))*10000*$scale'/>
+		<xsl:variable name='bottomMargin' select='(number($bottomLeftLatitude)-number($bllat))*10000*$scale*$projection'/>
+		<g fill="white" stroke="none">
+			<rect x='{0-$leftMargin}px' y='{0-$topMargin}px' width='{$documentWidth+$leftMargin}px' height='{$topMargin}px'/>
+			<rect x='{$documentWidth}px' y='{0-$topMargin}px' width='{$rightMargin}px' height='{$topMargin+$documentHeight}px'/>
+			<rect x='{0-$leftMargin}px' y='0px' width='{$leftMargin}px' height='{$documentHeight+$bottomMargin}px'/>
+			<rect x='0px' y='{$documentHeight}px' width='{$documentWidth+$rightMargin}px' height='{$bottomMargin}px'/>
+		</g>
 	</xsl:template>
 
 
 	<!-- Draw a grid over the map in 1km increments -->
-	<!-- The grid is drawn as two dashed lines that are as wide and as high as the document.  This is a bit lame as the stroke-width cannot then be specified in the rules file. -->
 	<xsl:template name='gridDraw'>
-		<line x1="{$documentWidth div 2}" y1="0" x2="{$documentWidth div 2}" y2="{$documentHeight}" class='map-grid-line' stroke-width="{$documentWidth}px" stroke-dasharray="0.1,{($km)-0.1}" />
-		<line x1="0" y1="{$documentHeight div 2}" x2="{$documentWidth}" y2="{$documentHeight div 2}" class='map-grid-line' stroke-width="{$documentHeight}px" stroke-dasharray="0.1,{($km)-0.1}" />
+		<xsl:call-template name='gridDrawHorizontals'>
+			<xsl:with-param name='line' select='"1"'/>
+		</xsl:call-template>
+		<xsl:call-template name='gridDrawVerticals'>
+			<xsl:with-param name='line' select='"1"'/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name='gridDrawHorizontals'>
+		<xsl:param name='line'/>
+		<xsl:if test='($line*$km) &lt; $documentHeight'>
+			<line x1='0px' y1='{$line*$km}px' x2='{$documentWidth}px' y2='{$line*$km}px' class='map-grid-line'/>
+			<xsl:call-template name='gridDrawHorizontals'>
+				<xsl:with-param name='line' select='$line+1'/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name='gridDrawVerticals'>
+		<xsl:param name='line'/>
+		<xsl:if test='($line*$km) &lt; $documentWidth'>
+			<line x1='{$line*$km}px' y1='0px' x2='{$line*$km}px' y2='{$documentHeight}px' class='map-grid-line'/>
+			<xsl:call-template name='gridDrawVerticals'>
+				<xsl:with-param name='line' select='$line+1'/>
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 
 

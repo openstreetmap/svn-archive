@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- This file should be used with Osmarender 3.0 -->
+<!-- This file should be used with Osmarender 3.1 -->
 <!-- This file implements a sub-set of the items described at http://wiki.openstreetmap.org/index.php/Map_Features -->
 
 <!-- A scale of 0.1 will make fat roads on a small map, a scale of 5 will draw very thin roads on a large scale map -->
@@ -25,15 +25,21 @@
 	<!-- Uncomment this element if you want to explicitly specify the bounding box for a map, or you can add a <bounds> element to
 	     your data.osm file, which is probably a better thing to do. -->
 	<!--<bounds
-	    minlat="51.41"
-	    minlon="-0.4344802422025771"
-	    maxlat="51.42187795307207"
-	    maxlon="-0.3891926802448317" />
-	-->
+	    minlat="51.50583362991789"
+	    minlon="-0.13313005495563884"
+	    maxlat="51.516556840221504"
+	    maxlon="-0.10891295872251346" />-->
+	
 
-	<!-- Only select nodes and ways that do not have a osmarender:render=no tag -->
+	<!-- For debugging this rule draws a one pixel wide trace of *all* segments.  This enables segments that have no
+		    tags to be identified. Comment it out to hide the debug trace. --> 
+	<!--<rule e="segment" k="~" v="~">  
+		<line class='debug'/>
+	</rule>-->
+
+	<!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
 	<!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-	<rule e="node|way" k="osmarender:render" v="~|yes">
+	<rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
 
 		<!-- draw highway shading first -->
 		<rule k="highway" v="residential">
@@ -55,12 +61,34 @@
 			<line class='abutters-mixed'/> 
 		</rule>
 
+
+		<!-- Draw natural features -->
+		<rule e="way|area" k="natural" v="coastline">
+		   <line class='natural-coastline'/> 
+		</rule>
+		<rule e="way|area" k="natural" v="land">
+			<area class='natural-land' /> 
+		</rule>
+		<rule e="way|area" k="landuse" v="forest|wood">
+			<area class='landuse-wood'/> 
+		</rule>
+		<rule e="way|area" k="landuse" v="field">
+			<area class='landuse-field'/>
+		</rule>
+		<rule e="way|area" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
+			<area class='leisure-park'/> 
+		</rule>			
+
+
 		<!-- draw waterways -->
 		<rule e="way|area" k="waterway" v="riverbank">
 		   <area class='waterway-riverbank'/> 
 		</rule>
 		<rule e="segment|way" k="waterway" v="river">
 			<line class='waterway-river-casing'/> 
+		</rule>
+		<rule e="segment|way" k="waterway" v="stream">
+			<line class='waterway-stream-casing'/> 
 		</rule>
 		<rule e="segment|way" k="waterway" v="canal">
 			<line class='waterway-canal-casing'/> 
@@ -71,6 +99,9 @@
 		<rule e="segment|way" k="waterway" v="river">
 			<line class='waterway-river-core'/> 
 		</rule>
+		<rule e="segment|way" k="waterway" v="stream">
+			<line class='waterway-stream-core'/> 
+		</rule>
 		<rule e="segment|way" k="waterway" v="canal">
 			<line class='waterway-canal-core'/> 
 		</rule>
@@ -78,22 +109,8 @@
 			<line class='waterway-drain-core'/> 
 		</rule>
 
-		<!-- Draw natural features -->
-		<rule e="way|area" k="natural" v="coastline">
-		   <area class='natural-water'/> 
-		</rule>
-		<rule e="way|area" k="natural" v="land">
-			<area class='natural-land' /> 
-		</rule>
-		<rule e="way|area" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common">
-			<area class='leisure-park'/> 
-		</rule>
-		<rule e="way|area" k="landuse" v="forest|wood">
-			<area class='landuse-wood'/> 
-		</rule>
-		<rule e="way|area" k="landuse" v="field">
-			<area class='landuse-field'/>
-		</rule>
+		
+		
 		<rule e="way|area" k="landuse" v="residential">
 			<area class='landuse-residential'/> 
 		</rule>
@@ -120,7 +137,7 @@
 		</rule>
 
 		<!-- Draw man-made areas -->
-		<rule e="way|area" k="sport" v="rugby|soccer|cricket">
+		<rule e="way|area" k="sport" v="rugby|soccer|cricket|horse_racing|golf|hockey|tennis|football|baseball|bowls|basketball">
 			<area class='sport'/>
 		</rule>
 		<rule e="way|area" k="amenity" v="parking">
@@ -139,12 +156,6 @@
 			<area class='building-residential'/> 
 		</rule>
 
-
-		<!-- For debugging this rule draws a one pixel wide trace of *all* segments.  This enables segments that have no
-		     tags to be identified. Comment it out to hide the debug trace. --> 
-		<!--<rule e="segment" k="~" v="~">  
-			<line class='debug'/>
-		</rule>-->
 
 		<!-- draw highway casings -->
 		<rule e="segment|way" k="highway" v="pedestrian">
@@ -451,7 +462,7 @@
 
 		<!-- Draw street names for all highways -->
 		<rule k="osmarender:renderName" v="~|yes">
-			<rule e="segment|way" k="highway" v="unclassified|residential|name|pedestrian">
+			<rule e="segment|way" k="highway" v="unclassified|residential|minor|pedestrian">
 				<text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">
@@ -526,7 +537,7 @@
 		<!--<rule e="way" k="class|highway|waterway|route" v="~">
 				<line class='error'/> 
 		</rule>-->
-	</rule>
+	 </rule>
 
 
 
@@ -992,6 +1003,22 @@
 			  fill: none;
 			  }
 
+			.waterway-stream-casing {
+			  stroke-width: 0.5px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  stroke: #aaaaaa;
+			  fill: none;
+			  }
+				
+			.waterway-stream-core {
+			  stroke-width: 0.4px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  stroke: #89bac6;
+			  fill: none;
+			  }
+
 			.waterway-canal-casing {
 			  stroke-width: 2px;
 			  stroke-linecap: butt;
@@ -1200,6 +1227,12 @@
 			  stroke-width: 0px;
 			  }
 			  
+			.natural-coastline {
+			  fill: none;
+			  stroke: #89bac6;
+			  stroke-width: 0.4px;
+			  }
+
 			.natural-land {
 			  fill: #ffffff;
 			  stroke: #e0e0e0;
@@ -1207,7 +1240,7 @@
 			  }
 
 			.landuse-wood {
-			  fill: #84b295;
+			  fill: #b1efc8;
 			  stroke: #6fc18e;
 			  stroke-width: 0.2px;
 			  }
@@ -1219,7 +1252,7 @@
 			  }
 
 			.landuse-field {
-			  fill: #c7f1a3;
+			  fill: #bde3cb;
 			  stroke: #6fc13d;
 			  stroke-width: 0.2px;
 			}
@@ -1253,7 +1286,7 @@
 			  }
 
 			.leisure-park {
-			  fill: #bde3cb;
+			  fill: #c7f1a3;
 			  stroke: #6fc18e;
 			  stroke-width: 0.2px;
 			  }
@@ -1356,6 +1389,7 @@
 			.map-grid-line {
 			  fill: none;
 			  stroke: #8080ff;
+			  stroke-width: 0.1px;
 			  stroke-opacity: 0.5;
 			  }
 
@@ -1572,7 +1606,7 @@
 		  fill-opacity="1"
 		  stroke="black"
 		  stroke-width="1px"
-		  stroke-miterlimit="4px">
+		  stroke-miterlimit="4">
 			<svg:path d="M 0,60 C 0,65 10,65 10,60 L 10,50 L 35,70 L 35,85 C 35,90 45,90 45,85 L 45,70 L 75,70 L 75,85 C 75,90 85,90 85,85 L 85,60 L 40,60 L 5,30 C 9,20 45,20 50,25 L 50,10 C 50,5 40,5 40,10 L 40,15 L 10,15 L 10,10 C 10,5 0,5 0,10 C 0,10 0,60 0,60 z M 10,35 C 15,25 45,25 55,35 L 85,60 C 75,50 40,50 40,60 L 10,35 z "/>
 		</svg:symbol>
 
@@ -1619,6 +1653,15 @@
 			<svg:path d="M 0,0 L 14,0 L 14,8 L 0,8 L 0,0 z M 0,0 L 7,4 L 14,0" />
 		</svg:symbol>
 
+		<svg:symbol 
+		  id="parking" 
+		  viewBox="0 -10 20 20"
+		  stroke="none"
+		  fill-opacity="1"
+		  fill-rule="nonzero">
+			<svg:rect fill="#0087ff" width="20" height="20" x="0" y="-10" rx="4" ry="4" />
+			<svg:path fill="white" d="M 5,8 L 5,-7 L 12,-7 C 14,-7 15.5,-5.3 16,-4 C 16.5,-2.77 16.5,-1.23 16,0 C 15.41,1.42 14,3 12,3 L 8,3 L 8,8 L 5,8 z M 8,-4 L 8,0 C 9.3,0 11,0 12.32,-0.31 C 13.6,-0.76 13.5,-2.8 12.5,-3.48 C 11.5,-4.1 8.6,-4 8,-4 z "/>
+		</svg:symbol>
 	</defs>
 
 	

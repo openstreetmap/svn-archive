@@ -120,7 +120,7 @@ class Image
 		if($this->zoom>=10)
 		{
 		//$this->load_segment_styles();
-		$this->load_way_styles();
+		//$this->load_way_styles();
 
 		// WARNING !!! This screws up the keys of associative arrays !!!
 		//usort($this->mapdata->segments,"zIndexCmp");
@@ -130,21 +130,26 @@ class Image
 			$this->draw_landsat();
 
 		// Then areas
+		/*
 		if($this->poly==1)
 			$this->draw_areas();
+		*/
 
 		// Contours should come here
 		if($this->srtm==1)
 			$this->draw_contours();
 
-		$this->draw_way_outlines();
-		$this->draw_ways();
+		$wayids = $this->get_wayids();
+		$this->draw_way_outlines($wayids);
+		$this->draw_ways($wayids);
 		$this->draw_unwayed_segments();
 		$this->draw_points_of_interest();
 
 
+		/*
 		if($this->zoom >= 13)
 			$this->draw_way_names();
+		*/
 
 		}
 		
@@ -214,20 +219,37 @@ class Image
 		}	
 	}
 
-	function draw_ways()
+	function get_wayids()
 	{
-		# Only attempt to draw the line if at least one of the points
-		# is within the map
-		$ids = array_keys($this->mapdata->ways);
-		foreach ($ids as $id)
+		$wayids = array();
+		$type="way";
+		$segment_ids = array_keys($this->mapdata->segments);
+		$segment_clause = "(".implode(",",$segment_ids).")";
+
+		$sql = "select id from ${type}_segments where segment_id in ".
+				"${segment_clause} group by id";
+
+		$result=mysql_query($sql) or die(mysql_error());
+		while($row=@mysql_fetch_array($result))
+			$wayids[] = $row['id'];
+		return $wayids;
+	}
+
+	function draw_ways($wayids)
+	{
+		foreach($wayids as $id)
 		{
+			$way = $this->get_way($id);
+
+			$curStyle = getStyle($this->styleRules,$way["tags"]);
+
 			// Not areas
-			if($this->mapdata->ways[$id]["style"]["render"]!="area")
+			if($curStyle["render"]!="area")
 			{
 				$width = $this->getZoomLevelValue
-							($this->mapdata->ways[$id]["style"]["width"]);
+							($curStyle["width"]);
 
-				foreach($this->mapdata->ways[$id]["segs"] as $segid)
+				foreach($way["segs"] as $segid)
 				{
 					//echo "<strong>wayseg:</strong> $segid<br/>";
 					if(isset($this->mapdata->segments[$segid]))
@@ -248,8 +270,7 @@ class Image
 							$width>0	)
 
 						{
-							$rgb=explode(",",
-							$this->mapdata->ways[$id]["style"]["colour"]);
+							$rgb=explode(",", $curStyle["colour"]);
 
 							if(count($rgb)==3)
 							{
@@ -259,14 +280,12 @@ class Image
 								ImageSetThickness($this->im, $width);
 								// 07/06/05 Changed this to reflect the new way
 								// that dashed lines are stored in the database.
-						   		if(isset
-								($this->mapdata->ways[$id]["style"]["dash"]))
+						   		if(isset ($curStyle["dash"]))
 								{
 
 									$dash = 
 									$this->makeDashPattern
-									($this->mapdata->ways[$id]["style"]["dash"],
-									$colour);
+									($curStyle["dash"], $colour);
 									ImageSetStyle($this->im,  $dash);
 
 
@@ -291,17 +310,60 @@ class Image
 						}
 					}
 				}
+				
+				if($this->zoom>=13 && 
+					$way['tags']['name'] && $way['tags']['name']!="")
+				{
+					$this->draw_way_name($way);
+				}
 			}
 		}	
 	}
+
+	// Adapted from same function in dao.rb
+
+	function get_way($way_id)
+	{
+		$type="way";
+		$way = array();
+
+	  	$sql= "select k,v from ${type}_tags where id = $way_id";
+		
+      	$result = mysql_query($sql);
+      	$way["tags"] = array();
+	  	while($row=mysql_fetch_array($result))
+			$way["tags"][$row["k"]]=$row["v"];
+	
+		// might this be quicker?  - NO
+		//$this->ways[$way_id]["tags"] =$this->get_tag_array($row["tags"]);
+		
+
+      	# if looking at an old version then get segments as they were then
+      	$tclause = '';
+
+	  	// not sure about this
+      	//$tclause = " and timestamp <= '${timestamp}' " unless version.nil?
+
+		$result = mysql_query
+			("select segment_id as n from ${type}_segments where id = $way_id");
+
+	  	$way["segs"]=array();
+	  	while($row=mysql_fetch_array($result))
+	  		$way["segs"][] = $row["n"];
+
+		return $way;
+	}
+
 
 	function draw_areas()
 	{
 		$ids = array_keys($this->mapdata->ways);
 		foreach ($ids as $id)
 		{
+			$curStyle = getStyle($this->styleRules,
+							$this->mapdata->ways[$id]["tags"]);
 			// Areas only
-			if($this->mapdata->ways[$id]["style"]["render"]=="area")
+			if($curStyle["render"]=="area")
 			{
 				// This will only work if all segments are aligned in the
 				// same direction!
@@ -331,10 +393,9 @@ class Image
 					}
 				}
 
-				$rgb=explode(",",
-						$this->mapdata->ways[$id]["style"]["colour"]);
+				$rgb=explode(",",$curStyle["colour"]);
 
-				if(count($rgb)==3)
+				if(count($rgb)==3 && count($curarea)>=6)
 				{
 					$colour = ImageColorAllocate
 								($this->im, $rgb[0],$rgb[1],$rgb[2]);
@@ -422,15 +483,16 @@ class Image
 		}	
 	}
 
-	function draw_way_outlines()
+	function draw_way_outlines($wayids)
 	{
-		$ids = array_keys($this->mapdata->ways);
-		foreach ($ids as $id)
+		foreach ($wayids as $id)
 		{
-			$width = $this->getZoomLevelValue
-							($this->mapdata->ways[$id]["style"]["width"]);
+			$way = $this->get_way($id);
+			$curStyle = getStyle($this->styleRules,$way["tags"]);
+
+			$width = $this->getZoomLevelValue ($curStyle["width"]);
 					
-			foreach($this->mapdata->ways[$id]['segs'] as $segid)
+			foreach($way['segs'] as $segid)
 			{
 				$seg = $this->mapdata->segments[$segid];
 
@@ -448,10 +510,9 @@ class Image
 					 )
 
 					{
-						if($this->mapdata->ways[$id]["style"]["casing"]!=null)	
+						if($curStyle["casing"]!=null)	
 						{
-							$rgb=explode(",", 
-								$this->mapdata->ways[$id]["style"]["casing"]);
+							$rgb=explode(",", $curStyle["casing"]);
 							if(count($rgb)==3)
 							{
 								$colour = ImageColorAllocate

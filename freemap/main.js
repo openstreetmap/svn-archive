@@ -32,7 +32,7 @@ function init()
 
 	var osmdev = new OpenLayers.Layer.WMS( "OSM with SRTM Contours", 
 		"http://nick.dev.openstreetmap.org/openlayers/freemap.php",
-		{ 'layers' : 'areas,srtm,osm' } );
+		{ 'layers' : 'areas,srtm,osm' }, { 'buffer' : 1 } );
 
 	var osmlsat2=new OpenLayers.Layer.WMS
 	( "OSM with Landsat satellite photos",

@@ -27,10 +27,10 @@ var initLon = <?php echo isset($_GET['lon']) ? $_GET['lon'] : -0.72; ?>;
 var initLat = <?php echo isset($_GET['lat']) ? $_GET['lat'] : 51.05; ?>;
 initLon =    (initLon>=1.565&&initLon<=1.575) ? -initLon: initLon;
 </script>
-<script src="http://openlayers.org/dev/lib/OpenLayers.js"></script>
 <!--
-<script src="http://www.openlayers.org/api/2/OpenLayers.js"></script>
+<script src="http://openlayers.org/dev/lib/OpenLayers.js"></script>
 -->
+<script src="http://www.openlayers.org/api/2.1-rc3/OpenLayers.js"></script>
 <script type='text/javascript' src="main.js" > </script>
 <script type='text/javascript' src="freemaplayer.js" > </script>
 <script type='text/javascript' src="freemaptile.js" > </script>

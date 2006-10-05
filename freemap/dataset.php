@@ -163,7 +163,7 @@ class Dataset
 			$this->nodes[$row["id"]] = $curNode;
 		}
 */		
-		$this->get_ways_from_segments(array_keys($this->segments));
+		//$this->get_ways_from_segments(array_keys($this->segments));
 
 	}
 

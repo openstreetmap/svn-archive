@@ -35,7 +35,7 @@ use LWP::Simple;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
-my $Password = "---";  # Ask OJW for a password to use this script
+my $Password = "username|password";  # Ask OJW for a password to use this script
 UpdateOsmarender();
 ProcessRequestFromWeb($Password);
 exit;
@@ -44,19 +44,14 @@ exit;
 # Gets latest copy of osmarender from repository
 #-----------------------------------------------------------------------------
 sub UpdateOsmarender(){
-  DownloadFile(
-    "http://svn.openstreetmap.org/utils/osmarender/osm-map-features.xml",
-    "osm-map-features.xml",
-    1,
-    "Osmarender styles");
-
-  DownloadFile(
-    "http://svn.openstreetmap.org/utils/osmarender/osmarender.xsl", 
-    "osmarender.xsl",
-    1,
-    "Osmarender program");
+  foreach $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png")){
   
-  # TODO: download images
+    DownloadFile(
+    "http://almien.co.uk/OSM/Places/Download/$File",
+    $File,
+    1,
+    "Osmarender ($File)");
+  }
 }
 
 #-----------------------------------------------------------------------------
@@ -81,32 +76,39 @@ sub ProcessRequest(){
   
   # File comprises pipe-separated fields
   open(IN, "<", $File);
-  my ($Version, $ID, $URL) = split(/\|/, <IN>);
+  my ($Version, $ID, $Width, $URL) = split(/\|/, <IN>);
   close IN;
   
-  if($Version != 1){
+  if($Version != 2){
     print STDERR "A new version of this script is available\n";
     print STDERR "Not processing requests, as the interface may have changed\n";
     print STDERR "Please download latest script and run that instead of this one\n";
     exit;
   }
+  if($ID == -1){
+    print STDERR "Nothing to do!\n";
+    exit;
+  }
   print STDERR "Using interface version $Version\n";
   print STDERR "Downloading $ID from $URL\n";
   
+  foreach $OldFile("output.png", "output.svg", "data.osm"){
+    unlink $OldFile if(-f $OldFile);
+  }
+  
   # Get the OSM data
-  unlink "data.osm" if(-f "data.osm");  # in case data.osm already exists
   DownloadFile($URL, "data.osm.gz", 0, "OSM data for location (ID $ID)");
   # Decompress data
   `gunzip data.osm.gz`;
   
   # Transform it to SVG
-  xml2svg("$ID.svg");
+  xml2svg("output.svg");
   
   # Render it to PNG
-  svg2png("$ID.svg", "$ID.png", 500);
+  svg2png("output.svg", "output.png", $Width);
 
   # Upload it
-  upload("$ID.png", $ID, $Password)
+  upload("output.png", $ID, $Password)
 }
 
 #-----------------------------------------------------------------------------

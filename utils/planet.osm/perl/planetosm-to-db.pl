@@ -148,7 +148,6 @@ my $batch_inserts = should_batch_inserts($dbtype,$conn);
 my $node_count = 0;
 my $seg_count = 0;
 my $way_count = 0;
-my $way_seg_count = 0;
 my $line_count = 0;
 
 # We assume IDs to be up to 50 million
@@ -164,8 +163,17 @@ if($batch_inserts) {
 open(XML, "<$xml");
 #open(XML, "<:utf8", $xml);
 
+# Hold the id and type of the last valid main tag
 my $last_id;
 my $last_type;
+
+# Hold the segment and tags list for a way
+# (We only add the way+segments+tags if has valid segments)
+my $way_line;
+my @way_tags;
+my @way_segs;
+
+# Loop over the data
 while(my $line = <XML>) {
 	$line_count++;
 
@@ -251,14 +259,49 @@ while(my $line = <XML>) {
 		$last_type = "way";
 
 		unless($id) { warn "Invalid line '$line'"; next; }
-		$way_ps->execute($id)
-			or warn("Invalid line '$line' : ".$conn->errstr);
 
+		# Save ID and line, will add later
 		$last_id = $id;
+		$way_line = $line;
 
 		$way_count++;
-		$way_seg_count = 0;
 		&display_count("way", $way_count);
+
+		# Blank way children lists
+		@way_tags = ();
+		@way_segs = ();
+	}
+	elsif($line =~ /^\s*\<\/way/) {
+		my $way_id = $last_id;
+		$last_id = undef;
+
+		unless($way_id) { 
+			# Invalid way, skip
+			next; 
+		}
+
+		unless(@way_segs) {
+			if($warn_bbox_skip) {
+				warn("Skipping way with no valid segments with id '$way_id'");
+			}
+			next;
+		}
+
+		# Add way
+		$way_ps->execute($way_id)
+			or warn("Invalid line '$way_line' : ".$conn->errstr);
+
+		# Add way segments
+		my $way_seg_count = 0;
+		foreach my $ws (@way_segs) {
+			$way_seg_count++;
+			$way_seg_ps->execute($way_id,$ws->{id},$way_seg_count)
+				or warn("Invalid line '$ws->{line}' : ".$conn->errstr);
+		}
+		# Add way tags
+		foreach my $wt (@way_tags) {
+			do_way_tag($way_id,$wt->{name},$wt->{value},$wt->{line});
+		}
 	}
 	elsif($line =~ /^\s*\<seg /) {
 		my ($id) = ($line =~ /^\s*\<seg id=[\'\"](\d+)[\'\"]/);
@@ -271,9 +314,12 @@ while(my $line = <XML>) {
 			next; 
 		}
 
-		$way_seg_count++;
-		$way_seg_ps->execute($last_id,$id,$way_seg_count)
-			or warn("Invalid line '$line' : ".$conn->errstr);
+		# Save, only add later
+		my %ws;	
+		$ws{'line'} = $line;
+		$ws{'id'} = $id;
+
+		push (@way_segs,\%ws);
 	}
 	elsif($line =~ /^\s*\<tag/) {
 		my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);
@@ -296,7 +342,13 @@ while(my $line = <XML>) {
 		} elsif($last_type eq "segment") {
 			do_segment_tag($last_id,$name,$value,$line);
 		} elsif($last_type eq "way") {
-			do_way_tag($last_id,$name,$value,$line);
+			# Save, only add if way has segments
+			my %wt;	
+			$wt{'line'} = $line;
+			$wt{'name'} = $name;
+			$wt{'value'} = $value;
+
+			push (@way_tags,\%wt);
 		}
 	}
 }

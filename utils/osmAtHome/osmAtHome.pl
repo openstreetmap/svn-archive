@@ -109,6 +109,9 @@ sub ProcessRequest(){
 
   # Upload it
   upload("output.png", $ID, $Password)
+  
+  # Say where to find the result
+  print "Done. View the result at\nhttp://almien.co.uk/OSM/Places/?id=$ID\n";
 }
 
 #-----------------------------------------------------------------------------

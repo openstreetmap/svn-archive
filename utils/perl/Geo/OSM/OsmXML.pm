@@ -1,8 +1,11 @@
-package OsmXML;
+package Geo::OSM::OsmXML;
 
 use strict;
 use warnings;
 
+use Utils::File;
+use Utils::Math;
+use Utils::Debug;
 use XML::Parser;
 
 sub new(){ bless{} }
@@ -11,7 +14,24 @@ sub load(){
   my ($self, $Filename) = @_;
 
   my $P = new XML::Parser(Handlers => {Start => \&DoStart, End => \&DoEnd, Char => \&DoChar});
-  $P->parsefile($Filename);
+    my $fh = data_open($file_name);
+    die "Cannot open OSM File $file_name\n" unless $fh;
+    eval {
+	$P->parse($fh);
+    };
+    print "\n" if $DEBUG || $VERBOSE;
+    if ( $VERBOSE) {
+	printf "Read and parsed $file_name in %.0f sec\n",time()-$start_time;
+    }
+    if ( $@ ) {
+	warn "$@Error while parsing\n $file_name\n";
+	return;
+    }
+    if (not $p) {
+	warn "WARNING: Could not parse osm data\n";
+	return;
+    }
+
 }
 sub name(){return($OsmXML::lastName)};
 

@@ -12,10 +12,25 @@
 #     v0.01   23/07/2006
 #     v0.02   26/07/2006 mysql added (Richard Fairhurst)
 
+BEGIN {
+    my $dir = $0;
+    $dir =~s,[^/]+/[^/]+$,,;
+    unshift(@INC,"$dir/perl");
+
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+}
+
 use strict;
 use warnings;
 
 use DBI;
+use Getopt::Long;
+
+use Utils::Debug;
+use Geo::OSM::Planet;
+use Pod::Usage;
 
 # We need Bit::Vector, as perl hashes can't handle the sort of data we need
 use Bit::Vector;
@@ -42,13 +57,49 @@ my $dbhost = $ENV{DBHOST} || "localhost";
 my $dbuser = $ENV{DBUSER} || "";
 my $dbpass = $ENV{DBPASS} || "";
 
-# Should we warn for things we skip due to the bbox?
-my $warn_bbox_skip = 0;
+our $man=0;
+our $help=0;
+my $do_empty=0;
+my $do_schema=0;
+my $do_bbox='';
+my $do_exbbox='';
+
+Getopt::Long::Configure('no_ignore_case');
+GetOptions ( 
+	     'debug+'           => \$DEBUG,      
+	     'd+'               => \$DEBUG,      
+	     'verbose+'         => \$VERBOSE,
+	     'v+'               => \$VERBOSE,
+	     'MAN'              => \$man, 
+	     'man'              => \$man, 
+	     'h|help|x'         => \$help, 
+
+	     'no-mirror'        => \$Utils::LWP::Utils::NO_MIRROR,
+	     'proxy=s'          => \$Utils::LWP::Utils::PROXY,
+
+	     'empty'            => \$do_empty,
+	     'schema'		=> \$do_schema,
+	     'bbox:s'		=> \$do_bbox,
+	     'exbbox:s'		=> \$do_exbbox,
+	     'ebbox:s'		=> \$do_exbbox,
+
+	     'dbtype' => \$dbtype,
+	     'dbname' => \$dbname,
+	     'dbhost' => \$dbhost,
+	     'dbuser' => \$dbuser,
+	     'dbpass' => \$dbpass,
+	     ) or pod2usage(1);
+
+pod2usage(1) if $help;
+pod2usage(-verbose=>2) if $man;
 
 # Grab the filename
 my $xml = shift||'';
 
-if($xml eq "-schema") {
+# Should we warn for things we skip due to the bbox?
+my $warn_bbox_skip = 0;
+
+if($do_schema) {
 	print fetch_schema($dbtype);
 	exit;
 }
@@ -57,15 +108,11 @@ if($xml eq "-schema") {
 my @exclude_bbox = ();
 my @only_bbox = ();
 
-if($xml eq "-bbox" || $xml eq "--bbox") {
-	my $bbox = shift;
-	@only_bbox = split(/,/, $bbox);
-	$xml = shift;
+if($do_bbox) {
+	@only_bbox = split(/,/, $do_bbox);
 }
-if($xml eq "-exbbox" || $xml eq "--exbbox" || $xml eq "-ebbox") {
-	my $bbox = shift;
-	@exclude_bbox = split(/,/, $bbox);
-	$xml = shift;
+if($do_exbbox ) {
+	@exclude_bbox = split(/,/, $do_exbbox);
 }
 
 # Check that things are in the right order
@@ -77,32 +124,15 @@ if(@exclude_bbox) {
 }
 
 # Give them help, if they need it
-unless($xml) {
-	die <<EOT
-
-$0 <planet.osm.xml>\t - parse planet.osm file and upload to db
-$0 -schema\t\t - output database schema
-$0 -empty\t\t - empty tables ready for new upload
-
-planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
-	Only add things inside the bounding box 
-     (min lat, min long, max lat, max long)
-planetosm-to-db.pl -exbbox 20,-180,80,-45 <planet.osm.xml>
-    Add everything except those inside the bounding box
-     (min lat, min long, max lat, max long)
-	Use "20,-180,80,-45" to exclude the Tiger data
-
-Before running, configure the script to include your database type
-(pgsql or mysql), name, host, user and password.
-
-EOT
+unless( $do_empty || $xml) {
+     pod2usage(1);
 }
 
 # Open our database connection
 my $conn = &open_connection($dbtype,$dbname,$dbhost,$dbuser,$dbpass);
 
 # Empty out the database if requested
-if ($xml eq "-empty") {
+if ( $do_empty ) {
 	# Skip over errors
 	$conn->{PrintError} = 1;
 	$conn->{RaiseError} = 0;
@@ -125,7 +155,7 @@ if ($xml eq "-empty") {
 }
 
 # Check we can load the file
-unless(-f $xml || $xml eq "-") {
+unless( -f $xml || $xml eq "-" ) {
 	die("Planet.osm file '$xml' could not be found\n");
 }
 
@@ -350,7 +380,16 @@ while(my $line = <XML>) {
 
 			push (@way_tags,\%wt);
 		}
+	    }	
+	elsif($line =~ /^\s*\<\?xml/) {
 	}
+	elsif($line =~ /^\s*\<osm /) {
+	}
+	elsif($line =~ /^\s*\<\/node\>/) {
+	}
+	else {
+	    print STDERR "Unknown line $line\n";
+	};
 }
 
 # End the batch, if the database likes that
@@ -670,3 +709,83 @@ INSERT INTO meta_ways (id) SELECT id FROM ways
 EOT
 	}
 }
+
+
+
+##################################################################
+# Usage/manual
+
+__END__
+
+=head1 NAME
+
+B<planertosm-to-db.pl>
+
+=head1 DESCRIPTION
+
+=head1 SYNOPSIS
+
+B<Common usages:>
+
+
+B<planertosm-to-db.pl> <planet.osm.xml> - parse planet.osm file and upload to db
+
+=head1 OPTIONS
+
+=over 2
+
+=item B<--schema> - output database schema
+
+=item B<--empty> - empty tables ready for new upload
+
+=item B<--bbox>
+
+planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
+	Only add things inside the bounding box 
+     (min lat, min long, max lat, max long)
+
+=item B<--exbox>
+
+planetosm-to-db.pl -exbbox 20,-180,80,-45 <planet.osm.xml>
+
+Add everything except those inside the bounding box
+min lat, min long, max lat, max long)
+
+
+Use "20,-180,80,-45" to exclude the Tiger data
+
+
+=item B<--dbtype>
+
+mysql | pgsql
+
+ ENV DBTYPE to  mysql | pgsql
+       
+ default: pgsql
+
+=item B<--dbname>
+
+ ENV DBNAME
+ default: osm
+
+=item B<--dbhost>
+
+ ENV DBHOST
+ default: localhost
+
+=item B<--dbuser>
+
+ ENV DBUSER
+ default: ""
+
+=item B<--dbpass>
+
+ ENV DBPASS
+ default: ""
+
+=back
+
+Before running, think about your database type
+(pgsql or mysql), name, host, user and password and 
+provide them at commandline or set the Environment Variables.
+

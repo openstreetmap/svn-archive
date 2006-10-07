@@ -50,6 +50,7 @@ sub build_way_seg_ps($$); # {}
 sub build_way_tag_ps($$); # {}
 sub should_batch_inserts($$); # {}
 sub check_bbox_valid(@); # {}
+sub display_count($$); #{}
 
 my $dbtype = $ENV{DBTYPE} || "pgsql";	# mysql | pgsql
 my $dbname = $ENV{DBNAME} || "osm";
@@ -123,10 +124,17 @@ if(@exclude_bbox) {
 	check_bbox_valid(@exclude_bbox);
 }
 
+if ( ! $xml ) {
+    $xml = mirror_planet();
+};
+
 # Give them help, if they need it
 unless( $do_empty || $xml) {
      pod2usage(1);
 }
+
+our $PARSING_DISPLAY_TIME=0;
+our $PARSING_START_TIME=time();
 
 # Open our database connection
 my $conn = &open_connection($dbtype,$dbname,$dbhost,$dbuser,$dbpass);
@@ -157,6 +165,10 @@ if ( $do_empty ) {
 # Check we can load the file
 unless( -f $xml || $xml eq "-" ) {
 	die("Planet.osm file '$xml' could not be found\n");
+}
+
+if ( $xml ne "-" && ! -s $xml ) {
+    die " $xml has 0 size\n";
 }
 
 # Get our prepared statements
@@ -209,10 +221,11 @@ while(my $line = <XML>) {
 
 	# Handle batches, if the DB wants them
 	if($line_count % 10000 == 0) {
-		if($batch_inserts) {
-			$conn->commit();
-		}
+	    if($batch_inserts) {
+		$conn->commit();
+	    }
 	}
+	display_count("line",$line_count);
 
 	# Process the line of XML
 	if($line =~ /^\s*<node/) {
@@ -281,7 +294,7 @@ while(my $line = <XML>) {
 		$last_id = $id;
 
 		$seg_count++;
-		&display_count("segment", $seg_count);
+		#&display_count("segment", $seg_count);
 	}
 	elsif($line =~ /^\s*\<way/) {
 		my ($id) = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
@@ -396,6 +409,10 @@ while(my $line = <XML>) {
 if($batch_inserts) {
 	$conn->commit();
 	$conn->{AutoCommit} = 1;
+} else {
+    enable_keys($dbtype,$conn,"nodes");
+    enable_keys($dbtype,$conn,"segments");
+    enable_keys($dbtype,$conn,"ways");
 }
 
 # Post-processing
@@ -449,10 +466,19 @@ sub do_tag_append($ $ $ $ $) {
 ########################################################################
 
 sub display_count($$) {
-	my ($type, $count) = @_;
-	if($count % 10000 == 0) {
-		print "Done $count ${type}s\n";
-	}
+    my ($type, $count) = @_;
+    if ( ( $VERBOSE || $DEBUG ) &&
+	 ( time()-$PARSING_DISPLAY_TIME >2)
+	 )  {
+	$PARSING_DISPLAY_TIME= time();
+	print "Done $count ${type}s ";
+	print "$type:";
+	my $max_id = estimated_max_id($type);
+	#print STDERR mem_usage();
+	print STDERR time_estimate($PARSING_START_TIME,$count,$max_id);
+	print STDERR "lines\r";
+	print STDERR "\n" if $DEBUG>4;
+    }
 }
 
 sub check_bbox_valid(@) {

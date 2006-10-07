@@ -9,6 +9,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 	      osm_dir
 	      planet_dir
 	      UTF8sanitize
+	      estimated_max_id
+	      estimated_max_count
 	      );
 
 use strict;
@@ -27,6 +29,55 @@ use Utils::File;
 use Utils::Debug;
 use Utils::LWP::Utils;
 
+
+my $estimations = {
+    'way' => {
+	'count' => 2816628,
+	'max_id' => 3222817,
+	},
+	'seg' => {
+	    'count' => 9918572,
+	    'max_id' => 12584020,
+	},
+	'segment' => {
+	    'count' => 11282506,
+	    'max_id' => 12579354,
+	},
+	'tag' => {
+	    'count' => 14915921,
+	    'max_id' => 1,
+	},
+	'node' => {
+	    'count' => 14601013,
+	    'max_id' => 15763764,
+	},
+	'line' => {
+	    'count' => 58546735,
+	    'max_id' => 53534640,
+	},
+	'elem' => {
+	    'count' => 58546735,
+	    'max_id' => 53534640,
+	}
+    };
+    
+sub estimated_max_id($){
+    my $type= shift;
+    unless ( defined ($estimations->{$type}->{max_id})) {
+	warn("\n estimated_max_id($type): unknown Tag-Type\n");
+	return 0;
+    };
+    return $estimations->{$type}->{max_id};
+}
+    
+sub estimated_max_count($){
+    my $type= shift;
+    unless ( defined ($estimations->{$type}->{count})) {
+	warn("\n estimated_max_id($type): unknown Tag-Type\n");
+	return 0;
+    };
+    return $estimations->{$type}->{count};
+}
 
 sub osm_dir() {
     # For later these are the defaults

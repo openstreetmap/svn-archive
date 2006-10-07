@@ -108,7 +108,7 @@ sub ProcessRequest(){
   svg2png("output.svg", "output.png", $Width);
 
   # Upload it
-  upload("output.png", $ID, $Password)
+  upload("output.png", $ID, $Password);
   
   # Say where to find the result
   print "Done. View the result at\nhttp://almien.co.uk/OSM/Places/?id=$ID\n";
@@ -185,3 +185,44 @@ sub upload(){
     die("Post error: " . $res->error);
   } 
 }
+
+#-----------------------------------------------------------------------------
+# Modifying this script:
+#
+# You probably won't have the exact same setup as me, so this script might need
+# some changes to work properly.  Since I only expect a handful of people to run
+# this script, I think they can probably modify it themselves to suit their 
+# computer's configuration.  Here's some of the things to look at:
+#
+# Location of inkscape - I've just called it "inkscape", but you can change that to
+# the path of your inkscape program if it's elsewhere
+#
+# Location of xmlstarlet - on Windows, it's c:\xml\xml.exe by default, so change that
+#
+# "Nice" statements - the script uses the nice keyword to give the rendering 
+# low scheduling priority, so it doesn't lock-up your computer and stop your desktop
+# working.  Remove this on Windows, as it won't work
+#
+# Other SVG->PNG renderers - careful, as many renderers don't render the same area of
+# the SVG.  It would probably be a good idea if we all used inkscape, as that makes the
+# generated images much more predictable in terms of where the edges are exactly.
+#
+# Other XSLT programs - this is easier, as you can pick any one.  I've used xmlstarlet,
+# but other people prefer xsltproc, xalan, etc.  If you use a different program,
+# you'll need to update the command-line options this script supplies, so that
+# it does the right thing.
+#
+#-----------------------------------------------------------------------------
+# Testing:
+# 
+# To test changes to this script without affecting other users, simply comment-out
+# the upload() function call, so that renders things and leaves them on your 
+# computer, rather than trying to upload the result.
+# 
+# To test the effect of changes to the osmarender files, comment-out the
+# UpdateOsmarender() function call, so that it keeps your modified version of
+# osmarender, instead of downloading a new copy each time.
+#
+# To render a particular town, look-up the town's ID at almien.co.uk/OSM/Places,
+# then hardcode that ID in the script rather than downloading IDs from the web
+#-----------------------------------------------------------------------------

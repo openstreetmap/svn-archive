@@ -147,7 +147,7 @@ sub Storable_save($$){
 	#warn Dumper(\$segments);
 	die "Storable_save(): $@\n";
     }
-    printf STDERR "Sored OSM File: $filename as storable\n"
+    printf STDERR "Stored OSM File: $filename as storable\n"
 	if $DEBUG || $VERBOSE;
 }
 

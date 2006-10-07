@@ -1,0 +1,40 @@
+<project name="mappaint" default="build" basedir=".">
+
+	<!-- point to your JOSM directory -->
+	<property name="josm" location="../josm/bin" />
+
+
+
+	<target name="init">
+		<mkdir dir="build"></mkdir>
+		<mkdir dir="dist"></mkdir>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpath="${josm}" destdir="build">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
+		<copy todir="build/images">
+			<fileset dir="images"></fileset>
+		</copy>
+		<jar destfile="dist/mappaint.jar" basedir="build">
+			<manifest>
+				<attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
+				<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;You need an elemstyle.xml saved into ~/.josm/plugins/mappaint/" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="install" depends="build">
+		<copy file="dist/mappaint.jar" todir="${user.home}/.josm/plugins"/>
+	</target>
+
+</project>

@@ -46,8 +46,8 @@ module OSM
       @timestamp = Time.parse(@timestamp) if @timestamp and @timestamp.kind_of? String
     end
 
-    def []= name, value; @tags[name] = value end
-    def [] name; @tags[name] end
+    def []= name, value; @tags[name.to_s] = value end
+    def [] name; @tags[name.to_s] end
 
     # Access the id via to_i. This works for incomplete primitives as well
     def to_i; @id.to_i end

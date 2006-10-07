@@ -37,7 +37,7 @@ sub should_batch_inserts($$); # {}
 sub check_bbox_valid(@); # {}
 
 my $dbtype = $ENV{DBTYPE} || "pgsql";	# mysql | pgsql
-my $dbname = "planetosm";
+my $dbname = $ENV{DBNAME} || "osm";
 my $dbhost = $ENV{DBHOST} || "localhost";
 my $dbuser = $ENV{DBUSER} || "";
 my $dbpass = $ENV{DBPASS} || "";

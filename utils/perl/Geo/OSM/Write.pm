@@ -23,14 +23,14 @@ use Utils::Math;
 sub tags2osm($){
     my $obj = shift;
     
-    my $erg = '';
+    my $erg = "\n";
     for my $k ( keys %{$obj->{tag}} ) {
 	my $v = $obj->{tag}{$k};
 	if ( ! defined $v ) {
 	    warn "incomplete Object: ".Dumper($obj);
 	}
 	#next unless defined $v;
-	$erg .= "	 <tag k=\"$k\" v=\"$v\"/>\n";
+	$erg .= "    <tag k=\'$k\' v=\'$v\' />\n";
     }
     return $erg;
 }
@@ -53,24 +53,34 @@ sub write_osm_file($$) { # Write an osm File
 
     printf STDERR ("Writing OSM File $filename\n") if $VERBOSE >1 || $DEBUG>1;
 
-    my $fh = IO::File->new(">$filename");
-    print $fh "<?xml version=\"1.0\"?>\n";
-    print $fh "<osm version=\"0.3\" generator=\"OpenStreetMap Tracks2osm Converter\">\n";
+    my $fh;
+    if ( $filename eq "-" ) {
+	$fh = IO::File->new('>&STDOUT');
+	$fh or  die("cannot open STDOUT: $!");
+    } else {
+	$fh = IO::File->new(">$filename");
+    }
+    print $fh "<?xml version='1.0' encoding='UTF-8'?>\n";
+    print $fh "<osm version=\'0.3\' generator=\'".$osm->{tool}."\'>\n";
     
     # --- Nodes
     for my $node_id (  sort keys %{$osm_nodes} ) {
 	next unless $node_id;
 	my $node = $osm_nodes->{$node_id};
-	my $lat = $osm_nodes->{$node_id}->{lat};
-	my $lon = $osm_nodes->{$node_id}->{lon};
-	next unless defined($lat) && defined($lon);
-	print $fh "	<node id=\"$node_id\" ";
-	print $fh " lat=\"$lat\" ";
-	print $fh " lon=\"$lon\" ";
+	my $lat = $node->{lat};
+	my $lon = $node->{lon};
+	unless ( defined($lat) && defined($lon)){
+	    printf STDERR "Node '$node_id' not complete\n";
+	    next;
+	}
+	print $fh "  <node id=\'$node_id\' ";
+	print $fh " timestamp=\'".$node->{timestamp}."\' " 
+	    if defined $node->{timestamp};
+	print $fh " lat=\'$lat\' ";
+	print $fh " lon=\'$lon\' ";
 	print $fh ">\t";
 	print $fh tags2osm($node);
-	#print $fh "	 <tag k=\"alt\" v=\"$node->{alt}\"/>\t";
-	print $fh "	</node>\n";
+	print $fh "  </node>\n";
 	$count_nodes++;
     }
 
@@ -80,32 +90,35 @@ sub write_osm_file($$) { # Write an osm File
 	my $segment = $osm_segments->{$segment_id};
 	my $node_from = $segment->{from};
 	my $node_to   = $segment->{to};
-	print $fh "	<segment id=\"$segment_id\" ";
-	print $fh " from=\"$node_from\" ";
-	print $fh " to=\"$node_to\" ";
-	my $sep="\n";
-	#$sep="\t";
-	print $fh ">$sep";
+	print $fh "  <segment id=\'$segment_id\' ";
+	print $fh " timestamp=\'".$segment->{timestamp}."\' " 
+	    if defined $segment->{timestamp};
+	print $fh " from=\'$node_from\' ";
+	print $fh " to=\'$node_to\' ";
+	print $fh ">";
 	print $fh tags2osm($segment);
-	print $fh "	</segment>\n";
+	print $fh "  </segment>\n";
 	$count_segments++;
     }
 
     # --- Ways
-    if ( $generate_ways ) {
-	for my $way_id ( keys %{$osm_ways} ) {
-	    next unless $way_id;
-	    my $way = $osm_ways->{$way_id};
-	    print $fh "	<way id=\"$way_id\">\n";
-	    print $fh tags2osm($way);
-	    
-	    for my $seg_id ( @{$way->{seg}} ) {
-		next unless $seg_id;
-		print $fh "	 <seg id=\"$seg_id\"/>\n";
-	    }
-	    print $fh "	</way>\n";
-	    $count_ways++;
+    for my $way_id ( sort keys %{$osm_ways} ) {
+	next unless $way_id;
+	my $way = $osm_ways->{$way_id};
+	print $fh "  <way id=\'$way_id\'";
+	print $fh " timestamp=\'".$way->{timestamp}."\'" 
+	    if defined $way->{timestamp};
+	print $fh ">";
+	print $fh tags2osm($way);
+	
+	for my $seg_id ( @{$way->{seg}} ) {
+	    next unless $seg_id;
+	    print $fh "    <seg id=\'$seg_id\'";
+	    print $fh " />\n";
 	}
+	print $fh "  </way>\n";
+	$count_ways++;
+	
     }
 
     print $fh "</osm>\n";

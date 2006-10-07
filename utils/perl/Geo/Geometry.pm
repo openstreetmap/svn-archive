@@ -11,6 +11,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 @ISA = qw( Exporter );
 @EXPORT = qw( distance_point_point_Km distance_degree_point_point angle_north
 	      angle_north_relative distance_line_point_Km distance_line_point
+	      adjust_bounding_box
 	      );
 
 use Math::Trig;
@@ -151,5 +152,30 @@ sub distance_line_point($$$$$$) {
     my $ysep = $dy1p + $lambda * $dy21;
     return sqrt($xsep * $xsep + $ysep * $ysep);
 }
+
+sub adjust_bounding_box($$$){
+    my $bbox = shift;
+    my $lat = shift;
+    my $lon = shift;
+
+    for my $type ( qw(lat_min lat_max lon_min lon_max lat lon )) {
+        next if defined ($bbox->{$type});
+        if ( $type =~m/min/ ) {
+            $bbox->{$type} = 1000;
+        } else {
+            $bbox->{$type} = -1000;
+        }
+    }
+    # remember lat/lon Min/Max 
+    $bbox->{lat_min}= min($bbox->{lat_min},$lat);
+    $bbox->{lat_max}= max($bbox->{lat_max},$lat);
+    $bbox->{lon_min}= min($bbox->{lon_min},$lon);
+    $bbox->{lon_max}= max($bbox->{lon_max},$lon);
+    $bbox->{lat_delta}= $bbox->{lat_max}-$bbox->{lat_min};
+    $bbox->{lon_delta}= $bbox->{lon_max}-$bbox->{lon_min};
+    $bbox->{lat}= ($bbox->{lat_min}+$bbox->{lat_max})/2;
+    $bbox->{lon}= ($bbox->{lon_min}+$bbox->{lon_max})/2;
+}
+
 
 1;

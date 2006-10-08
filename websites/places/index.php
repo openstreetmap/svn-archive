@@ -18,6 +18,7 @@
 ************************************************************************
 */
 include("../Connect/connect.inc");
+include("osmpassword.inc");
 
   /* API calls - these mustn't have any headers */
   switch($_REQUEST["action"]){
@@ -277,7 +278,9 @@ function LatLong($ID){
 }
 
 function DownloadMap($Lat, $Long, $Size, $Filename){
-  $URL = sprintf("http://download2%%40almien.co.uk:bestbefore@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+  $Credentials = osmPassword();
+  $URL = sprintf("http://%s@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+    osmPassword(),
     $Long - $Size,
     $Lat - $Size,
     $Long + $Size,
@@ -325,7 +328,14 @@ function ShowPlace($ID){
   print "</form>";
  
 }
-  
+function ApiLink($Lat, $Long){  
+  $URL = sprintf("http://www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+    $Long - $Size,
+    $Lat - $Size,
+    $Long + $Size,
+    $Lat + $Size);
+  return($URL);
+}
 function ListPlaces($Search = "", $BasicText = 0){
   $SQL = sprintf("select * from places2 order by name;");
   $Result = mysql_query($SQL);

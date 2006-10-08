@@ -62,6 +62,9 @@ include("osmpassword.inc");
     case "download";
       DownloadData($_REQUEST["id"]); 
       break;
+    case "phpinfo";
+      phpInfo(); 
+      break;
     case "rendered_by":
       ListRenderedBy($_REQUEST["user"]);
       break;
@@ -256,7 +259,8 @@ function DownloadData($ID){
   list($Lat, $Long) = LatLong($ID);
   $Filename = sprintf("Data/%d.osm", $ID);
   printf("<p>Downloading place #%d at %f, %f</p>", $ID, $Lat, $Long);
-  
+  set_time_limit(90);
+  ini_set('default_socket_timeout', 90);
   DownloadMap($Lat, $Long, 0.05, $Filename);
   system("gzip $Filename");
   

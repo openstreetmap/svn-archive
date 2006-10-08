@@ -37,13 +37,8 @@ include("../Connect/connect.inc");
 
   if(rand(0,10) == 1)
     UpdateOSM();
-    
-  print "<ul class=\"actions\">";
-  foreach(explode("|","home|search|list|update_osm|import_places|random_update|stats") as $Action){
-    printf("<li><a href=\"./?action=%s\">%s</a></li>\n", $Action, $Action);
-  }
-  print "</ul>";
- print "<p>From svn</p>\n";  
+  ActionList("home|search|list|admin|stats");
+  
   switch($_REQUEST["action"]){
     case "places":
       ImportPlaces($_REQUEST["lat"], $_REQUEST["long"]);
@@ -72,6 +67,10 @@ include("../Connect/connect.inc");
     case "search":
       SearchForm($_REQUEST["q"]);
       break;
+    case "admin":
+      print "<h2>Admin actions</h2>\n<p>Any of these functions can be run by normal visitors</p>\n";
+      ActionList("update_osm|import_places|random_update");
+      break;
     default:
       $NoAction = 1;
   }
@@ -88,6 +87,14 @@ include("../Connect/connect.inc");
     MapOf(45,20,30,60, 400, 200);
     SearchForm();
   }
+  
+function ActionList($Actions){
+ print "<ul class=\"actions\">";
+  foreach(explode("|",$Actions) as $Action){
+    printf("<li><a href=\"./?action=%s\">%s</a></li>\n", $Action, $Action);
+  }
+  print "</ul>";
+}
 function ListRenderedBy($Username){
   $SQL = sprintf("select * from places2 where `renderer`='%s' order by id;",
     mysql_escape_string($Username));

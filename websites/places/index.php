@@ -32,18 +32,18 @@ include("../Connect/connect.inc");
   }
   
   include($DOCUMENT_ROOT . "/Templates/templates.php"); 
-  document_header("OpenStreetMap - Places"); 
+  document_header("OpenStreetMap - Places", "styles.css"); 
   document_navbar();
 
   if(rand(0,10) == 1)
     UpdateOSM();
     
-  print "<ul>";
+  print "<ul class=\"actions\">";
   foreach(explode("|","home|search|list|update_osm|import_places|random_update|stats") as $Action){
     printf("<li><a href=\"./?action=%s\">%s</a></li>\n", $Action, $Action);
   }
   print "</ul>";
-  
+ print "<p>From svn</p>\n";  
   switch($_REQUEST["action"]){
     case "places":
       ImportPlaces($_REQUEST["lat"], $_REQUEST["long"]);

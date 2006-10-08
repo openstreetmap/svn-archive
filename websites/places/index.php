@@ -319,6 +319,7 @@ function ShowPlace($ID){
   printf("<li>%s</li>\n", DataLink($ID));
   if($Data["renderer"])
     printf("<li>Rendered by %s</li>\n", htmlentities($Data["renderer"]));
+  printf("<li>Link to <a href=\"%s\">OSM API</a></li>\n", ApiLink($Data["lat"], $Data["lon"], 0.05));
   print "</ul>";
  
   print "<form action=\"./\" method=\"post\">";

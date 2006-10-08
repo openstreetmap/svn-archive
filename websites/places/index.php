@@ -329,7 +329,7 @@ function ShowPlace($ID){
   print "</form>";
  
 }
-function ApiLink($Lat, $Long){  
+function ApiLink($Lat, $Long, $Size){  
   $URL = sprintf("http://www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
     $Long - $Size,
     $Lat - $Size,

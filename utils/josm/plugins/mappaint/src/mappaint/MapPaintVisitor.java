@@ -22,9 +22,9 @@ import org.openstreetmap.josm.data.osm.visitor.SimplePaintVisitor;
 public class MapPaintVisitor extends SimplePaintVisitor {
 
 	/**
-	 * Draw a small rectangle. 
+	 * Draw a small rectangle.
 	 * White if selected (as always) or red otherwise.
-	 * 
+	 *
 	 * @param n The node to draw.
 	 */
 	// Altered from SimplePaintVisitor
@@ -43,7 +43,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		}
 		else
 		{
-			drawNode(n, n.selected ? getPreferencesColor("selected", 
+			drawNode(n, n.selected ? getPreferencesColor("selected",
 									Color.YELLOW)
 				: getPreferencesColor("node", Color.RED));
 		}
@@ -91,7 +91,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			for (Segment ls : w.segments)
 			{
 				if (!ls.selected) // selected already in good color
-					drawSegment(ls, w.selected ? 
+					drawSegment(ls, w.selected ?
 						getPreferencesColor("selected", Color.YELLOW) : colour,
 						width);
 			}
@@ -117,7 +117,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			polygon.addPoint(p.x,p.y);
 		}
 
-		g.setColor( w.selected ? 
+		g.setColor( w.selected ?
 						getPreferencesColor("selected", Color.YELLOW) : colour);
 
 		g.fillPolygon(polygon);
@@ -145,12 +145,12 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	/**
 	 * Draw a line with the given color.
 	 */
-	// Altered - now specify width 
+	// Altered - now specify width
 	@Override protected void drawSegment(Segment ls, Color col) {
 			drawSegment(ls,col,1);
 	}
 
-	// Altered - now specify width 
+	// Altered - now specify width
 	private void drawSegment (Segment ls, Color col, int width) {
 		Graphics2D g2d = (Graphics2D)g;
 		if (ls.incomplete)

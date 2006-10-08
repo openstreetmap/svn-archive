@@ -16,7 +16,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.dialogs.LayerList;
+import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 
@@ -91,8 +91,8 @@ public class LandsatLayer extends Layer {
 
 	@Override public Component[] getMenuEntries() {
 		return new Component[]{
-				new JMenuItem(new LayerList.ShowHideLayerAction(this)),
-				new JMenuItem(new LayerList.DeleteLayerAction(this)),
+				new JMenuItem(new LayerListDialog.ShowHideLayerAction(this)),
+				new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
 				new JSeparator(),
 				new JMenuItem(new LayerListPopup.InfoAction(this))};
 	}

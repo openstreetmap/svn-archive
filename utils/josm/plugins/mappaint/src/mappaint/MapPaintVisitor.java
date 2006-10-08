@@ -106,6 +106,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		boolean first=true;
 		for (Segment ls : w.segments)
 		{
+		    if (ls.incomplete) continue;
 			if(first)
 			{
 				p = nc.getPoint(ls.from.eastNorth);

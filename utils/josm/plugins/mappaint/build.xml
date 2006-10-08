@@ -11,7 +11,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="${josm}" destdir="build">
+		<javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
 			<include name="**/*.java" />
 		</javac>
 	</target>

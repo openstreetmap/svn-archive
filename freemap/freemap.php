@@ -48,10 +48,11 @@ class Image
 	var $debug;
 
 	var $mapdata;
-	var $landsat, $poly, $srtm;
+	var $landsat, $poly, $srtm, $datasrc, $location;
 
 	function Image ($w, $s, $e, $n, $width, $height, $stylexml,
-					$lsat=0, $pl=0, $con=1, $dbg=0)
+					$lsat=0, $pl=0, $con=1, $dsrc="db", 
+					$loc="http://www.openstreetmap.org/api/0.3/map", $dbg=0)
 	{
 		$this->map = new Map ($w,$s,$e,$n, $width, $height);
 		//$this->zoom=$zoom;
@@ -59,6 +60,9 @@ class Image
 		$this->landsat = $lsat;
 		$this->poly = $pl;
 		$this->srtm = $con;
+
+		$this->datasrc = $dsrc;
+		$this->location = $loc;
 
 		// 150506 recalculate zoom from input pixel and longitude width
 		// see Steve's email of 01/02/06
@@ -84,8 +88,10 @@ class Image
 
 		if($this->zoom>=10)
 		{
-			$this->mapdata = new Dataset();
-			$this->mapdata->grab_direct_from_database($w, $s, $e, $n, $zoom);
+			//$this->mapdata = new Dataset();
+			//$this->mapdata->grab_direct_from_database($w, $s, $e, $n, $zoom);
+			$this->mapdata=grabOSM($w,$s,$e,$n,$this->datasrc, $this->zoom,
+										$this->location);
 		
 			// Make all segments inherit tags from their parent way
 			//$this->mapdata->give_segs_waytags();
@@ -102,16 +108,6 @@ class Image
 		// 06/06/05 removed hacky path style stuff: 
 		// now in load_segment_types()
 		$this->debug = $dbg;
-		if($this->debug==1)
-		{
-			echo "<h1>Before processing</h1>\n";
-			print_r($this->styleRules);
-			echo "<br/>";
-//			$this->processStyleRules();
-			echo "<h1>After processing</h1>\n";
-			print_r($this->styleRules);
-			echo "<br/>";
-		}
 	}
 
 	function draw()
@@ -120,10 +116,10 @@ class Image
 		if($this->zoom>=10)
 		{
 		//$this->load_segment_styles();
-		//$this->load_way_styles();
+		$this->load_way_styles();
 
 		// WARNING !!! This screws up the keys of associative arrays !!!
-		//usort($this->mapdata->segments,"zIndexCmp");
+		//usort($this->mapdata["segments"],"zIndexCmp");
 
 		// Draw Landsat if required, first
 		if($this->landsat==1)
@@ -139,17 +135,14 @@ class Image
 		if($this->srtm==1)
 			$this->draw_contours();
 
-		$wayids = $this->get_wayids();
-		$this->draw_way_outlines($wayids);
-		$this->draw_ways($wayids);
-		$this->draw_unwayed_segments();
+		$this->draw_way_outlines();
+		$this->draw_ways();
+		//$this->draw_unwayed_segments();
 		$this->draw_points_of_interest();
 
 
-		/*
 		if($this->zoom >= 13)
 			$this->draw_way_names();
-		*/
 
 		}
 		
@@ -180,25 +173,25 @@ class Image
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
 
-		$ids = array_keys($this->mapdata->segments);
+		$ids = array_keys($this->mapdata["segments"]);
 		foreach ($ids as $id)
 		{
 			// only do segments which don't belong to ways
-			if(!isset($this->mapdata->segments[$id]["way"]))
+			if(!isset($this->mapdata["segments"][$id]["way"]))
 			{
 
 				$width = 1;
 				$p[0] = $this->map->get_point
-				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
+				($this->mapdata["nodes"][$this->mapdata["segments"][$id]['from']]);
 				$p[1] = $this->map->get_point
-				($this->mapdata->nodes[$this->mapdata->segments[$id]['to']]);
+				($this->mapdata["nodes"][$this->mapdata["segments"][$id]['to']]);
 
 			
-				if ( (isset($this->mapdata->nodes
-					[$this->mapdata->segments[$id]['to']]) 
+				if ( (isset($this->mapdata["nodes"]
+					[$this->mapdata["segments"][$id]['to']]) 
 						&&
-				 isset($this->mapdata->nodes
-				 	[$this->mapdata->segments[$id]['from']]) ) &&
+				 isset($this->mapdata["nodes"]
+				 	[$this->mapdata["segments"][$id]['from']]) ) &&
 				$width>0	
 					 )
 
@@ -219,58 +212,44 @@ class Image
 		}	
 	}
 
-	function get_wayids()
+	function draw_ways()
 	{
-		$wayids = array();
-		$type="way";
-		$segment_ids = array_keys($this->mapdata->segments);
-		$segment_clause = "(".implode(",",$segment_ids).")";
-
-		$sql = "select id from ${type}_segments where segment_id in ".
-				"${segment_clause} group by id";
-
-		$result=mysql_query($sql) or die(mysql_error());
-		while($row=@mysql_fetch_array($result))
-			$wayids[] = $row['id'];
-		return $wayids;
-	}
-
-	function draw_ways($wayids)
-	{
-		foreach($wayids as $id)
+		# Only attempt to draw the line if at least one of the points
+		# is within the map
+		$ids = array_keys($this->mapdata["ways"]);
+		foreach ($ids as $id)
 		{
-			$way = $this->get_way($id);
-
-			$curStyle = getStyle($this->styleRules,$way["tags"]);
-
+			$curStyle = getStyle($this->styleRules,
+							$this->mapdata["ways"][$id]["tags"]);
 			// Not areas
 			if($curStyle["render"]!="area")
 			{
 				$width = $this->getZoomLevelValue
 							($curStyle["width"]);
 
-				foreach($way["segs"] as $segid)
+				foreach($this->mapdata["ways"][$id]["segs"] as $segid)
 				{
 					//echo "<strong>wayseg:</strong> $segid<br/>";
-					if(isset($this->mapdata->segments[$segid]))
+					if(isset($this->mapdata["segments"][$segid]))
 					{
 						//echo "<strong>Exists</strong><br/>";
 
 						// specify the segment's parent way
-						$this->mapdata->segments[$segid]["way"] = $id;
-						$seg = $this->mapdata->segments[$segid];
+						$this->mapdata["segments"][$segid]["way"] = $id;
+						$seg = $this->mapdata["segments"][$segid];
 						$p[0] = $this->map->get_point 
-							($this->mapdata->nodes[$seg['from']]);
+							($this->mapdata["nodes"][$seg['from']]);
 						$p[1] = $this->map->get_point 
-							($this->mapdata->nodes[$seg['to']]);
+							($this->mapdata["nodes"][$seg['to']]);
 
 			
-						if ( (isset($this->mapdata->nodes [$seg['to']]) 
-							&& isset($this->mapdata->nodes [$seg['from']]) ) &&
+						if ( (isset($this->mapdata["nodes"] [$seg['to']]) 
+							&& isset($this->mapdata["nodes"] [$seg['from']]) ) &&
 							$width>0	)
 
 						{
-							$rgb=explode(",", $curStyle["colour"]);
+							$rgb=explode(",",
+							$curStyle["colour"]);
 
 							if(count($rgb)==3)
 							{
@@ -280,12 +259,14 @@ class Image
 								ImageSetThickness($this->im, $width);
 								// 07/06/05 Changed this to reflect the new way
 								// that dashed lines are stored in the database.
-						   		if(isset ($curStyle["dash"]))
+						   		if(isset
+								($curStyle["dash"]))
 								{
 
 									$dash = 
 									$this->makeDashPattern
-									($curStyle["dash"], $colour);
+									($curStyle["dash"],
+									$colour);
 									ImageSetStyle($this->im,  $dash);
 
 
@@ -310,77 +291,36 @@ class Image
 						}
 					}
 				}
-				
-				if($this->zoom>=13 && 
-					$way['tags']['name'] && $way['tags']['name']!="")
-				{
-					$this->draw_way_name($way);
-				}
 			}
 		}	
 	}
 
-	// Adapted from same function in dao.rb
-
-	function get_way($way_id)
-	{
-		$type="way";
-		$way = array();
-
-	  	$sql= "select k,v from ${type}_tags where id = $way_id";
-		
-      	$result = mysql_query($sql);
-      	$way["tags"] = array();
-	  	while($row=mysql_fetch_array($result))
-			$way["tags"][$row["k"]]=$row["v"];
-	
-		// might this be quicker?  - NO
-		//$this->ways[$way_id]["tags"] =$this->get_tag_array($row["tags"]);
-		
-
-      	# if looking at an old version then get segments as they were then
-      	$tclause = '';
-
-	  	// not sure about this
-      	//$tclause = " and timestamp <= '${timestamp}' " unless version.nil?
-
-		$result = mysql_query
-			("select segment_id as n from ${type}_segments where id = $way_id");
-
-	  	$way["segs"]=array();
-	  	while($row=mysql_fetch_array($result))
-	  		$way["segs"][] = $row["n"];
-
-		return $way;
-	}
-
-
 	function draw_areas()
 	{
-		$ids = array_keys($this->mapdata->ways);
+		$ids = array_keys($this->mapdata["ways"]);
 		foreach ($ids as $id)
 		{
 			$curStyle = getStyle($this->styleRules,
-							$this->mapdata->ways[$id]["tags"]);
+							$this->mapdata["ways"][$id]["tags"]);
 			// Areas only
 			if($curStyle["render"]=="area")
 			{
 				// This will only work if all segments are aligned in the
 				// same direction!
 				$curarea = array();
-				foreach($this->mapdata->ways[$id]["segs"] as $segid)
+				foreach($this->mapdata["ways"][$id]["segs"] as $segid)
 				{
-					if(isset($this->mapdata->segments[$segid]))
+					if(isset($this->mapdata["segments"][$segid]))
 					{
-						$seg = $this->mapdata->segments[$segid];
-						$this->mapdata->segments[$segid]["way"] = $id;
-						if(isset($this->mapdata->nodes[$seg['from']]) &&
-						   isset($this->mapdata->nodes[$seg['to']]))
+						$seg = $this->mapdata["segments"][$segid];
+						$this->mapdata["segments"][$segid]["way"] = $id;
+						if(isset($this->mapdata["nodes"][$seg['from']]) &&
+						   isset($this->mapdata["nodes"][$seg['to']]))
 						{
 							$p[0] = $this->map->get_point 
-								($this->mapdata->nodes[$seg['from']]);
+								($this->mapdata["nodes"][$seg['from']]);
 							$p[1] = $this->map->get_point 
-								($this->mapdata->nodes[$seg['to']]);
+								($this->mapdata["nodes"][$seg['to']]);
 	
 							if(count($curarea)==0)
 							{
@@ -393,9 +333,9 @@ class Image
 					}
 				}
 
-				$rgb=explode(",",$curStyle["colour"]);
+				$rgb=explode(",", $curStyle["colour"]);
 
-				if(count($rgb)==3 && count($curarea)>=6)
+				if(count($rgb)==3)
 				{
 					$colour = ImageColorAllocate
 								($this->im, $rgb[0],$rgb[1],$rgb[2]);
@@ -411,13 +351,13 @@ class Image
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		$ids = array_keys($this->mapdata->segments);
+		$ids = array_keys($this->mapdata["segments"]);
 		foreach ($ids as $id)
 		{
 					
-			$this->mapdata->segments[$id]["style"] = 
+			$this->mapdata["segments"][$id]["style"] = 
 				getStyle($this->styleRules,
-							$this->mapdata->segments[$id]["tags"]);
+							$this->mapdata["segments"][$id]["tags"]);
 		}
 	}
 
@@ -425,12 +365,14 @@ class Image
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		$ids = array_keys($this->mapdata->ways);
+		$ids = array_keys($this->mapdata["ways"]);
 		foreach ($ids as $id)
 		{
-			$this->mapdata->ways[$id]["style"] = 
+			/*
+			$this->mapdata["ways"][$id]["style"] = 
 				getStyle($this->styleRules,
-							$this->mapdata->ways[$id]["tags"]);
+							$this->mapdata["ways"][$id]["tags"]);
+							*/
 		}
 	}
 
@@ -439,22 +381,22 @@ class Image
 	{
 		# Only attempt to draw the line if at least one of the points
 		# is within the map
-		$ids = array_keys($this->mapdata->segments);
+		$ids = array_keys($this->mapdata["segments"]);
 		foreach ($ids as $id)
 		{
 			$width = $this->getZoomLevelValue
-							($this->mapdata->segments[$id]["style"]["width"]);
+							($this->mapdata["segments"][$id]["style"]["width"]);
 					
 			$p[0] = $this->map->get_point
-				($this->mapdata->nodes[$this->mapdata->segments[$id]['from']]);
+				($this->mapdata["nodes"][$this->mapdata["segments"][$id]['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata->nodes[$this->mapdata->segments[$id]['to']]);
+				($this->mapdata["nodes"][$this->mapdata["segments"][$id]['to']]);
 
 
 			if ($width>0 &&  
-				(isset($this->mapdata->nodes[$this->mapdata->segments
+				(isset($this->mapdata["nodes"][$this->mapdata["segments"]
 								[$id]['to']]) &&
-				 isset($this->mapdata->nodes[$this->mapdata->segments
+				 isset($this->mapdata["nodes"][$this->mapdata["segments"]
 				 						[$id]['from']]) ) 
 		/*
 			&& ($this->map->pt_within_map ($p[0]) || 
@@ -463,10 +405,10 @@ class Image
 					 )
 
 			{
-				if($this->mapdata->segments[$id]["style"]["casing"]!=null)	
+				if($this->mapdata["segments"][$id]["style"]["casing"]!=null)	
 				{
 					$rgb=explode(",",
-						$this->mapdata->segments[$id]["style"]["casing"]);
+						$this->mapdata["segments"][$id]["style"]["casing"]);
 					if(count($rgb)==3)
 					{
 						$colour = ImageColorAllocate
@@ -483,36 +425,37 @@ class Image
 		}	
 	}
 
-	function draw_way_outlines($wayids)
+	function draw_way_outlines()
 	{
-		foreach ($wayids as $id)
+		$ids = array_keys($this->mapdata["ways"]);
+		foreach ($ids as $id)
 		{
-			$way = $this->get_way($id);
-			$curStyle = getStyle($this->styleRules,$way["tags"]);
-
+			$curStyle = getStyle($this->styleRules,
+							$this->mapdata["ways"][$id]["tags"]);
 			$width = $this->getZoomLevelValue ($curStyle["width"]);
 					
-			foreach($way['segs'] as $segid)
+			foreach($this->mapdata["ways"][$id]['segs'] as $segid)
 			{
-				$seg = $this->mapdata->segments[$segid];
+				$seg = $this->mapdata["segments"][$segid];
 
 				if($seg)
 				{
 					$p[0] = $this->map->get_point 
-						($this->mapdata->nodes[$seg['from']]);
+						($this->mapdata["nodes"][$seg['from']]);
 					$p[1] = $this->map->get_point
-						($this->mapdata->nodes[$seg['to']]);
+						($this->mapdata["nodes"][$seg['to']]);
 
 
 					if ($width>0 &&  
-						(isset($this->mapdata->nodes[$seg['to']]) &&
-				 	 	 isset($this->mapdata->nodes[$seg['from']]) ) 
+						(isset($this->mapdata["nodes"][$seg['to']]) &&
+				 	 	 isset($this->mapdata["nodes"][$seg['from']]) ) 
 					 )
 
 					{
 						if($curStyle["casing"]!=null)	
 						{
-							$rgb=explode(",", $curStyle["casing"]);
+							$rgb=explode(",", 
+								$curStyle["casing"]);
 							if(count($rgb)==3)
 							{
 								$colour = ImageColorAllocate
@@ -535,25 +478,25 @@ class Image
 		$allnamedata=array();
 
 		// 070406 changed 'type' to ['tags']['class'] for nodes
-		$ids = array_keys($this->mapdata->nodes);
+		$ids = array_keys($this->mapdata["nodes"]);
 		foreach ($ids as $id)
 		{
 			$w = 0;
 			$h = 0;
-			$this->mapdata->nodes[$id]["style"] = 
+			$this->mapdata["nodes"][$id]["style"] = 
 					getStyle($this->styleRules,
-								$this->mapdata->nodes[$id]["tags"]);
-			$p = $this->map->get_point($this->mapdata->nodes[$id]);
+								$this->mapdata["nodes"][$id]["tags"]);
+			$p = $this->map->get_point($this->mapdata["nodes"][$id]);
 
 			//if ( $this->map->pt_within_map ($p))
-			if(isset($this->mapdata->nodes[$id]["style"]["text"]))
+			if(isset($this->mapdata["nodes"][$id]["style"]["text"]))
 			{
 				$text = $this->getZoomLevelValue
-							($this->mapdata->nodes[$id]["style"]["text"]);
+							($this->mapdata["nodes"][$id]["style"]["text"]);
 
-				if($this->mapdata->nodes[$id]["style"]["image"])
+				if($this->mapdata["nodes"][$id]["style"]["image"])
 				{
-					$imgfile=$this->mapdata->nodes[$id]["style"]["image"];
+					$imgfile=$this->mapdata["nodes"][$id]["style"]["image"];
 					$imgsize=getimagesize($imgfile);
 					$w = $imgsize[0];
 					$h = $imgsize[1];
@@ -562,7 +505,7 @@ class Image
 					if($text>=0)
 					{
 						$this->draw_image($p['x'],$p['y'], $w,$h,$imgfile,
-										$this->mapdata->nodes
+										$this->mapdata["nodes"]
 											[$id]['tags']['name']);
 					}
 				}
@@ -571,7 +514,7 @@ class Image
 				if($text>0)
 				{
 					$namedata['name'] = 
-							$this->mapdata->nodes[$id]['tags']['name'];
+							$this->mapdata["nodes"][$id]['tags']['name'];
 					$namedata['fontsize'] = $text; 
 					$namedata['x']= $p['x']+$w/2;
 					$namedata['y']= $p['y']+$h/2;
@@ -653,9 +596,9 @@ class Image
 			// Work out position from provided segment
 			$p = array();
 			$p[0] = $this->map->get_point
-				($this->mapdata->nodes[$seg['from']]);
+				($this->mapdata["nodes"][$seg['from']]);
 			$p[1] = $this->map->get_point
-				($this->mapdata->nodes[$seg['to']]);
+				($this->mapdata["nodes"][$seg['to']]);
 			$len = line_length($p[0]['x'],$p[0]['y'],$p[1]['x'],$p[1]['y']);
 
 			$av['x'] = $p[0]['x'] + (($p[1]['x'] - $p[0]['x'])/2);
@@ -708,7 +651,7 @@ class Image
 
 	function draw_way_names()
 	{
-		foreach($this->mapdata->ways as $way)
+		foreach($this->mapdata["ways"] as $way)
 		{
 			if($way['tags']['name'] && $way['tags']['name']!="")
 				$this->draw_way_name($way);
@@ -720,7 +663,7 @@ class Image
 	{
 		// middle segment
 		$i = count($way['segs']) / 2;
-		//$curseg = $this->mapdata->segments[$way['segs'][$i]];
+		//$curseg = $this->mapdata["segments"][$way['segs'][$i]];
 
 		// quick and messy way to get the most suitable segment
 		$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$way['tags']['name']);
@@ -735,7 +678,7 @@ class Image
 
 		foreach ($way['segs'] as $seg)
 		{
-			$segment = $this->mapdata->segments[$seg];
+			$segment = $this->mapdata["segments"][$seg];
 			// Work out position from provided segment
 			$p[0] = $this->map->get_point ($segment['from']);
 			$p[1] = $this->map->get_point ($segment['to']);
@@ -771,7 +714,7 @@ class Image
 			$cont=true;
 			while($cont)	
 			{
-				$curseg = $this->mapdata->segments[$way['segs'][$i]];
+				$curseg = $this->mapdata["segments"][$way['segs'][$i]];
 
 				$this->draw_segment_name($curseg,$namewords[$wc],true);
 
@@ -910,11 +853,6 @@ class Image
 			// Get the screen coordinates of the sampling points
 			$screen_pts = $this->get_screen_pts ($sampling_pts, $rects[0]);
 
-			if($this->debug)
-			{
-				echo "DIMENSIONS : ";
-				print_r($sampling_pts);
-			}
 
 			// Do each row of the sampling points
 
@@ -989,19 +927,9 @@ class Image
 		$end_ht = (floor($end_ht/$interval)) * $interval;
 
 
-		if($this->debug)	
-		{
-			echo "<p>pts : ".$pt." ".($pt+1)." ".($pt+10801)." ".
-				($pt+10802)."<br/>heights:";	
-			echo $hgt[$pt]. " ".$hgt[$pt+1]." ".$hgt[$pt+10801]." ".
-				$hgt[$pt+10802]."<br/>";
-			echo "start ht, end ht: $start_ht $end_ht<br/>";
-		}
-
 
 		for($ht=$start_ht; $ht<=$end_ht; $ht+=$interval)
 		{
-			if($this->debug) echo "${ht}ft: ";
 
 				
 			# See add_contour() in contours.php.
@@ -1022,13 +950,6 @@ class Image
 			{
 				for($count=0; $count<count($line_pts); $count++)
 				{
-					if($this->debug==1)
-					{
-						echo "Got line $count: ".$line_pts[$count][0]['x'].","
-						.$line_pts[$count][0]['y'].
-						" ".$line_pts[$count][1]['x'].",".
-						$line_pts[$count][1]['y']."<br/>";
-					}
 
 					$colour = ($ht%($interval*5)) ?
 						$this->contour_colour : $this->mint;
@@ -1050,10 +971,7 @@ class Image
 					ImageSetThickness($this->im,1);
 				}
 			}	
-			elseif($this->debug==1)
-					echo "<strong>Line doesn't intersect rect.</strong><br/>";
 		}
-		if($this->debug) echo "</p>";
 	}
 
 	// SRTM STUFF ENDS HERE
@@ -1066,68 +984,71 @@ function zIndexCmp($a,$b)
 
 ////////////////// SCRIPT BEGINS HERE /////////////////////
 
-$defaults = array("WIDTH" => 400, 
-			"HEIGHT" => 320,
-			"tp" => 0,
-			"debug" => 0);
+$defaults = array("width" => 400, 
+			"height" => 320,
+			"debug" => 0,
+			// data source - "db", "osm" or "file"
+			"datasrc" => "db", 
+			// API URL or local filename
+			"location" => "http://www.openstreetmap.org/api/0.3/map",
+			"bbox" => "-0.75,51.02,-0.7,51.07",
+			"layers" => "areas,srtm,osm" );
 
-$style = (isset($_GET["styles"])) ? $_GET["styles"] : 
-		(isset($_GET["STYLES"]) ? $_GET['STYLES'] : "default");
-$layers = (isset($_GET["layers"])) ? $_GET["layers"] : 
-	(isset($_GET['LAYERS']) ? $_GET['LAYERS'] : "areas,srtm,osm");
 $layer_array = explode(",",$layers);
-
-$stylefiles=array ("default" => "freemap.xml", "osmeditor" => "osmeditor.xml" );
 
 $inp=array();
 
 foreach ($defaults as $field=>$default)
 {
-	$inp[$field]=wholly_numeric($_GET[$field]) ?  $_GET[$field] : $default;
+	if(valid_input($field,$_GET[$field]))
+		$inp[$field] = $_GET[$field];
+	elseif(valid_input($field,$_GET[strtoupper($field)]))
+		$inp[$field] = $_GET[strtoupper($field)];
+	else
+		$inp[$field] = $default;
 }
 
-$bbox = explode(",",(isset($_GET['BBOX']) ? $_GET['BBOX']:$_GET['bbox']));
-if(count($bbox)!=4)
-{
-	$error = "You need to supply a bounding box!";
-}
-elseif($bbox[0]<-180 || $bbox[0]>180 || $bbox[2]<-180 || $bbox[2]>180 ||
+$layer_array = explode(",",$inp['layers']);
+$bbox = explode(",",$inp['bbox']);
+
+if($bbox[0]<-180 || $bbox[0]>180 || $bbox[2]<-180 || $bbox[2]>180 ||
 	 $bbox[1]<-90 || $bbox[1]>90 || $bbox[3]<-90 || $bbox[3]>90)
 {
 	$error = "Invalid latitude and/or longitude!";
 }
-else
-{
-	foreach($bbox as $i)
-	{
-		if(!wholly_numeric($i))	
-			$error = "Invalid input. Goodbye!";
-	}
-}
 
-if(!isset($error))
-{
-	$landsat=(in_array("landsat",$layer_array)) ? 1:0;
-	$poly=(in_array("areas",$layer_array))  ? 1:0;
-	$srtm=(in_array("srtm",$layer_array)) ? 1:0;
-	$stylexml = (in_array($style,array_keys($stylefiles))) ? 
-				$stylefiles[$style] : "freemap.xml";
+$landsat=(in_array("landsat",$layer_array)) ? 1:0;
+$poly=(in_array("areas",$layer_array))  ? 1:0;
+$srtm=(in_array("srtm",$layer_array)) ? 1:0;
+$stylexml = "freemap.xml";
 
-	$image = new Image($bbox[0], $bbox[1], $bbox[2], $bbox[3],
-						$inp["WIDTH"],$inp["HEIGHT"],$stylexml,
-						$landsat,$poly,$srtm,$inp["debug"]);
-}
+$image = new Image($bbox[0], $bbox[1], $bbox[2], $bbox[3],
+						$inp["width"],$inp["height"],$stylexml,
+						$landsat,$poly,$srtm,$inp["datasrc"],
+						$inp["location"],$inp["debug"]);
 
-if (isset($error))
+if(isset($error))
 {
-	echo "<html><body><strong>Error:</strong>$error</body></html>";
+	echo "<html><head><title>Error!</title></head><body>$error</body></html>";
 }
 else
 {
-	
 	if (!isset($_GET['debug']))
 		header('Content-type: image/png'); 
 	
 	$image->draw();
+}
+
+function valid_input($field,$value)
+{
+	if($field=="bbox")
+	{
+		return preg_match("/^[\.\-\d]+,[\.\-\d]+,[\.\-\d]+,[\.\-\d]+$/",$value);
+	}
+	elseif($field=="width" || $field=="height")
+	{
+		return wholly_numeric($value);
+	}
+	return $value;
 }
 ?>

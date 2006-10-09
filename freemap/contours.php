@@ -71,11 +71,9 @@ function read_hgts2($rect,&$hgt,$dbg,$f)
 
 	for($row=$rect['top']*1201; $row<=$rect['bottom']*1201; $row+=1201)
 	{
-		if($dbg) echo "ROW NUMBER (GB) ". floor($gb/10801). "<br/>";
 		// 20/02/05 Only do every '$f' rows
 		if(($gb/10801)%$f == 0)
 		{
-			if($dbg) echo "COUNTING<br/>";
 			$width = ($rect['right']-$rect['left'])+1;#width in number of points
 			fseek($fp,($row+$rect['left'])*2);
 			$data = fread ($fp,$width*2);
@@ -91,8 +89,6 @@ function read_hgts2($rect,&$hgt,$dbg,$f)
 		 			(ord($data[$datacount])*256+ord($data[$datacount+1])) 
 					* 3.28084;
 					$hgt[$gb+$datacount/2] = ($h>=1 && $h<4500) ? $h: 1;
-					if($dbg) echo "HEIGHT pt ". ($gb+$datacount/2). " = ".
-					$hgt[$gb+$datacount/2]."<br/>";
 					// 20/02/05 bottomright is the highest included point
 					$bottomright = $gb+$datacount/2;
 				}
@@ -138,7 +134,6 @@ function get_bounding_rects($ll, $dbg)
 	//foreach($rects as $rect)
 	{
 		$rect=$rects[$count];
-		if($dbg)echo "Doing rect.... long $rect[long] lat $rect[lat] ";
 		$rect['left'] = $ll['bottomleft']['long'] > $rect['long']  ?
 					floor(($ll['bottomleft']['long'] - $rect['long'])*1200): 0;
 		$rect['right'] = ($ll['topright']['long'] < $rect['long']+1) ?
@@ -150,15 +145,9 @@ function get_bounding_rects($ll, $dbg)
 		$rect['bottom'] = $ll['bottomleft']['lat'] > $rect['lat']  ?
 					1+floor((($rect['lat']+1)-$ll['bottomleft']['lat'])*1200) :
 				  		1200;
-		if($dbg)
-		{
-			echo "Coords: left $rect[left] right $rect[right] top ".
-			"$rect[top] bottom $rect[bottom]<br/>";
-		}
 		$rects[$count] = $rect;
 	}
 
-	if($dbg)echo "Coords: left ".$rects[0]['left']; 
 	return $rects;
 }
 
@@ -204,28 +193,6 @@ function get_line($ht,$hts,$sp,&$edges, $twocontours,$dbg)
 						($ht,$hts[$edges[$edge2][0]],$hts[$edges[$edge2][1]]))
 					{
 					  
-						if($dbg)
-						{
-							
-						echo "<strong>found!</strong> ";
-						
-						echo "edge$edge: heights ".$hts[$edges[$edge][0]]." ".
-						$hts[$edges[$edge][1]]. " ".
-						"edge$edge2: heights ".$hts[$edges[$edge2][0]]." ".
-						$hts[$edges[$edge2][1]];
-
-						echo "corner: $cnr<br/>";
-						/*
-						"pts: edgeA: ".$sp[$edges[$edge][0]]['x']. ",".
-							$sp[$edges[$edge][0]]['y']. " ".
-						"&amp; ".$sp[$edges[$edge][1]]['x']. ",".
-							$sp[$edges[$edge][1]]['y']. " ".
-						"edgeB: ".$sp[$edges[$edge2][0]]['x']. ",".
-							$sp[$edges[$edge2][0]]['y']. " ".
-						"&amp; ".$sp[$edges[$edge2][1]]['x']. ",".
-							$sp[$edges[$edge2][1]]['y']. "<br/>";
-							*/
-						}	
 						$eAh0 = $hts[$edges[$edge][0]];
 						$eAh1 = $hts[$edges[$edge][1]];
 						$eBh0 = $hts[$edges[$edge2][0]];

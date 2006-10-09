@@ -7,7 +7,7 @@
 ################################################################################
 //header("Content-type: text/xml");
 require_once('defines.php');
-require_once('database.php');
+//require_once('database.php');
 //define('OSM_LOGIN','NOT_NEEDED');
 
 // 15/03/06 now uses 0.3 API
@@ -35,40 +35,50 @@ $stuff = grabOSM(-0.75,51.02,-0.7,51.07,true);
 print_r($stuff);
 */
 
-// $datamode can be:
-// 0 = grab data from OSM using the API 
-// 1 = grab data from a local XML file
-// 2 = grab data from the database
+// $datasrc can be:
+// "osm" = grab data from OSM using the API 
+// "file" = grab data from a local XML file
+// "db" = grab data from the database
 // $location is either an API URL or a local XML file
 
-function grabOSM($w0, $s0, $e0, $n0, $datamode=0, 
+function grabOSM($w0, $s0, $e0, $n0, $datasrc="db", $zoom=null, 
 				$location="http://www.openstreetmap.org/api/0.3/map")
 {
+	$resp2=array("nodes"=>array(),"segments"=>array(),"ways"=>array());
 	// Pull out half of tiles above and to left of current tile to avoid
 	// cutting off labels
-	$w1 = $w0 - ($e0-$w0)/2;
-	$n1 = $n0 + ($n0-$s0)/2;
+	// Pull out half of tiles above and to left of current tile to avoid
+	// cutting off labels
 
-	switch($datamode)
+	// 0.5 is acceptable at zoom 13 and less
+	$factor = ($zoom) ? 0.5 : (($zoom<13) ? 0.5 : 0.5*pow(2,$zoom-13));
+
+	$w1 = $w0 - ($e0-$w0)*$factor;
+	$n1 = $n0 + ($n0-$s0)*$factor;
+	$e1= $e0 + ($e0-$w0)*$factor;
+	$s1 = $s0 - ($n0-$s0)*$factor;
+
+	switch($datasrc)
 	{
-		case 1:
-			$resp2 = parseOSM($location,$w0,$s0,$e0,$n0);
+
+		case "db": // grab from local database
+			grab_direct_from_database($resp2,$w1,$s1,$e1,$n1);
 			break;
 
-		case 0:
+		case "osm": // grab from live OSM API
 			$url = "$location?bbox=$w1,$s0,$e0,$n1";
 			$ch=curl_init ($url);
 			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 			curl_setopt($ch,CURLOPT_HEADER,false);
 			curl_setopt($ch,CURLOPT_USERPWD,OSM_LOGIN);
 			$resp=curl_exec($ch);
-		//	echo $resp;
+			//echo $resp;
 			curl_close($ch);
 			$resp2 = parseOSM(explode("\n",$resp));
 			break;
 
-		case 2:
-			$resp2 = grab_direct_from_database($w0,$s0,$e0,$n0);
+		case "file": // grab from local file
+			$resp2 = parseOSM($location,$w0,$s0,$e0,$n0);
 			break;
 	
 	}
@@ -145,8 +155,8 @@ function on_start_element($parser,$element,$attrs)
 				$curNode = array();
 				$curNode["lat"] = $attrs["LAT"];
 				$curNode["long"] = $attrs["LON"];
+				$curNode['tags']=array();
 				$curID = $attrs["ID"];
-//				echo "Including node $curID\n";
 			}
 		}
 		elseif($element=="SEGMENT")
@@ -298,6 +308,128 @@ function include_data($lat, $lon, $w, $s, $e, $n)
 		//return true;
 	}
 	return true;
+}
+
+function grab_direct_from_database (&$data, $west, $south, $east, $north)
+{
+
+	$conn=mysql_connect("localhost",DB_USERNAME,DB_PASSWORD);
+	mysql_select_db(DB_DBASE);
+
+	// Taken straight from streets.pl and dao.rb
+	$sql = "select id, latitude, longitude, visible, tags from ".
+	   "nodes where latitude > $south  and latitude < $north ".
+	   "and longitude > $west and longitude < $east ";
+
+	$clause=null;
+
+	$result = mysql_query($sql);
+	while ($row = mysql_fetch_array($result)) 
+	{
+
+		$curNode["lat"] = $row["latitude"];
+		$curNode["long"] = $row["longitude"];
+		$curNode["tags"] = get_tag_array($row["tags"]);
+		$data["nodes"][$row["id"]] = $curNode;
+
+		if (! $clause) 
+		{
+			$clause .= $row["id"];
+		} 
+		else 
+		{
+			$clause .= ',' . $row["id"];
+		}
+	}
+
+	// Also need nodes outside the bbox which belong to a segment inside
+
+	// Taken straight from streets.pl
+
+	/* 090406 Replace this call by the one below designed to get segments 
+	which pass through the bounding box but with no nodes within
+	*/
+	
+
+	$sql = "SELECT id, node_a, node_b, ".
+	   "tags FROM segments ".
+	   "where node_a IN ($clause) OR node_b IN ($clause) ".
+	   "and visible = 1";
+
+	$result = mysql_query($sql);
+
+	// suppress error message
+	while($row=@mysql_fetch_array($result))
+	{
+		$curSeg["from"] = $row["node_a"];
+		$curSeg["to"] = $row["node_b"];
+		$segnodes[] = $row["node_a"];
+		$segnodes[] = $row["node_b"];
+		$curSeg["tags"] = get_tag_array($row["tags"]);
+		$data["segments"][$row["id"]] = $curSeg;
+	}
+
+	get_ways_from_segments($data,array_keys($data["segments"]));
+
+}
+
+// Adapted from same function in dao.rb
+
+function get_ways_from_segments(&$data,$segment_ids)
+{
+	$type="way";
+	$segment_clause = "(".implode(",",$segment_ids).")";
+
+	$sql = "select id from ${type}_segments where segment_id in ".
+	"${segment_clause} group by id";
+
+	$result=mysql_query($sql) or die(mysql_error());
+	while($row=@mysql_fetch_array($result))
+	{
+		get_way($data,$row["id"]); 
+	}
+}
+
+// Adapted from same function in dao.rb
+
+function get_way(&$data,$way_id,$version=null) 
+{
+	$type="way";
+	$data["ways"][$way_id] = array();
+
+	$sql= "select k,v from ${type}_tags where id = $way_id";
+
+	// again remove version stuff and ".  "version = $version";
+
+	$result = mysql_query($sql);
+	$data["ways"][$way_id]["tags"] = array();
+	while($row=mysql_fetch_array($result))
+		$data["ways"][$way_id]["tags"][$row["k"]]=$row["v"];
+
+	// might this be quicker?  - NO
+	//$data["ways"][$way_id]["tags"] =$this->get_tag_array($row["tags"]);
+
+
+	$result = mysql_query("select segment_id as n from ${type}_segments ".
+				"where id = $way_id");
+
+
+	$data["ways"][$way_id]["segs"]=array();
+	while($row=mysql_fetch_array($result))
+		$data["ways"][$way_id]["segs"][] = $row["n"];
+}
+
+function get_tag_array($tagstring)
+{
+	$tags=array();
+	$t = explode(";",$tagstring);
+	foreach ($t as $t1)
+	{
+		$t2 = explode("=",$t1);
+		if($t2 && $t2[0] && $t2[0]!="")
+			$tags[$t2[0]] = $t2[1];
+	}
+	return $tags;
 }
 
 ?>

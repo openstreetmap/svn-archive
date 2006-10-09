@@ -50,8 +50,7 @@ class Dataset
 
 		$sql = "select id, latitude, longitude, visible, tags from ".
 			   "nodes where latitude > $south  and latitude < $north ".
-			   "and longitude > $west and longitude < $east and ".
-			   "visible=true";
+			   "and longitude > $west and longitude < $east ";
 
 		$clause=null;
 
@@ -96,7 +95,7 @@ class Dataset
 		$sql = "SELECT id, node_a, node_b, ".
 		       "tags FROM segments ".
 			   "where node_a IN ($clause) OR node_b IN ($clause) ".
-			   "and visible = true";
+			   "and visible = 1";
 
 		$result = mysql_query($sql);
 
@@ -163,7 +162,7 @@ class Dataset
 			$this->nodes[$row["id"]] = $curNode;
 		}
 */		
-		//$this->get_ways_from_segments(array_keys($this->segments));
+		$this->get_ways_from_segments(array_keys($this->segments));
 
 	}
 
@@ -173,19 +172,6 @@ class Dataset
 	{
 		$type="way";
 		$segment_clause = "(".implode(",",$segment_ids).")";
-		/* 
-		$sql =  
-     		"select g.id from ${type}s as g, 
-        (select id, tags, max(version) as version from ${type}s where id in ".
-		" (select distinct a.id from ".
-            "(select id, max(version) as version from ${type}_segments where ".
-			"id in (select id from ${type}_segments where segment_id in ".
-			"${segment_clause}) group by id) as a ".
-          ") group by id".
-         ") as b where g.id = b.id and g.version = b.version and g.visible=1 ";
-		 */
-         
-		 /* This can be simplified enormously for our purposes */
 
 		$sql = "select id from ${type}_segments where segment_id in ".
 				"${segment_clause} group by id";
@@ -203,30 +189,6 @@ class Dataset
 	{
 		$type="way";
 		$this->ways[$way_id] = array();
-
-		/* this stuff is not necessary for our purposes....
-
-      	$clause = ' order by version desc limit 1;';
-	  	if($version)
-      		$clause = " and version = ${version} ";
-
-      	$result = mysql_query
-		("select version, visible, timestamp from ${type}s where id=$way_id ".
-	 	 $clause);
-
-      	$version = 0;
-      	$visible = true;
-      	$timestamp = '';
-	  	while($row=mysql_fetch_array($result))
-	  	{
-        	$version = $row['version'];
-        	$timestamp = $row['timestamp'];
-        	$visible = $row['visible'];
-	  	}
-
-      	if(!$version) return null;
-		*/
-		
 
 	  	$sql= "select k,v from ${type}_tags where id = $way_id";
 		
@@ -247,25 +209,8 @@ class Dataset
 	  	// not sure about this
       	//$tclause = " and timestamp <= '${timestamp}' " unless version.nil?
 
-		// this gets the segments so is necessary
-		// but take version stuff out
-		/*
-      	$result = mysql_query( 
-	  	"select id as n from (select * from (select segments.id, visible, ".
-		"timestamp from ${type}_segments left join segments on ".
-		"${type}_segments.segment_id = segments.id where ${type}_segments.id ".
-		"= $way_id order by id, ".
-		"timestamp desc) as a group by id) as b where visible = 1;" );
-		*/
-
-		/*
-	
-		The above can be simplified enormously if we aren't doing
-		versioning !!!
-
-		*/
-
-		$result = mysql_query("select segment_id as n from ${type}_segments where id = $way_id");
+		$result = mysql_query("select segment_id as n from ${type}_segments ".
+								"where id = $way_id");
 
 
 	  	$this->ways[$way_id]["segs"]=array();
@@ -332,9 +277,10 @@ class Dataset
 	// $datamode can be:
 	// 0 = grab data from OSM using the API 
 	// 1 = grab data from a local XML file
+	// 2 = grab data from a local OSM database
 	// $location is either an API URL or a local XML file
 
-	function grabOSM($w0, $s0, $e0, $n0, $netgrab=true, 
+	function grabOSM($w0, $s0, $e0, $n0, $mode=0,$zoom=null, 
 				$location="http://www.openstreetmap.org/api/0.3/map")
 	{
 		// Pull out half of tiles above and to left of current tile to avoid
@@ -345,13 +291,13 @@ class Dataset
 		$s1 = $s0 - ($n0-$s0)/2;
 		$dset = null;
 
-		switch($netgrab)
+		switch($mode)
 		{
-			case false:
+			case 0:
 				$data = parseOSM($location,$w1,$s1,$e1,$n1);
 				break;
 
-			case true:
+			case 1:
 				$url = "$location?bbox=$w1,$s1,$e1,$n1";
 				$ch=curl_init ($url);
 				curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
@@ -360,6 +306,10 @@ class Dataset
 				$resp=curl_exec($ch);
 				curl_close($ch);
 				$data = parseOSM(explode("\n",$resp));
+				break;
+
+			case 2:
+				$this->grab_direct_from_database($w0,$s0,$e0,$n0,$zoom);
 				break;
 		}
 		$this->nodes = $data["nodes"];

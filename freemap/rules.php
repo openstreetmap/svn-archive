@@ -119,8 +119,10 @@ function getStyle($rules,$suppliedKeyvals)
 	foreach($rules as $curRule)
 	{
 		$hit = 0;
-
 		// Go through all supplied Keyvals
+		if(!is_array($suppliedKeyvals))
+	{			echo "not an array"; return; }
+
 		foreach($suppliedKeyvals as $k=>$v)
 		{
 			// If the current ruleset includes the current key...

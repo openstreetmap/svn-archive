@@ -400,6 +400,8 @@ while(my $line = <XML>) {
 	}
 	elsif($line =~ /^\s*\<\/node\>/) {
 	}
+	elsif($line =~ /^\s*\<\/segment\>/) {
+	}
 	else {
 	    print STDERR "Unknown line $line\n";
 	};

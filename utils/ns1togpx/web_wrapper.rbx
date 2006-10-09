@@ -51,7 +51,8 @@ end
 
 errors = ''
 gpx = nil
-if (! params["ns1_file"].nil?) && (! params["ns1_file"].empty?)
+if false  #(! params["ns1_file"].nil?) && (! params["ns1_file"].empty?)
+	File.open("/home/ben/ns1/#{$$}.ns1", "w") { |f| f.print params["ns1_file"] }
 	begin
 		rd = StringIO.new(params["ns1_file"])
 		wr = StringIO.new

@@ -202,8 +202,8 @@ if($batch_inserts) {
 }
 
 # Process
-open(XML, "<$xml");
-#open(XML, "<:utf8", $xml);
+open(XML, "<$xml") or die("$!");
+#open(XML, "<:utf8","$xml") or die("$!");
 
 # Hold the id and type of the last valid main tag
 my $last_id;
@@ -470,14 +470,15 @@ sub display_count($$) {
     if ( ( $VERBOSE || $DEBUG ) &&
 	 ( time()-$PARSING_DISPLAY_TIME >2)
 	 )  {
-	$PARSING_DISPLAY_TIME= time();
-	print "Done $count ${type}s ";
-	print "$type:";
-	my $max_id = estimated_max_id($type);
-	#print STDERR mem_usage();
-	print STDERR time_estimate($PARSING_START_TIME,$count,$max_id);
-	print STDERR "lines\r";
-	print STDERR "\n" if $DEBUG>4;
+		$PARSING_DISPLAY_TIME= time();
+		print STDERR "Done $count ${type}s\t\t";
+		print STDERR "$type:";
+
+		my $max_id = estimated_max_id($type);
+		#print STDERR mem_usage();
+		print STDERR time_estimate($PARSING_START_TIME,$count,$max_id);
+		print STDERR " lines\r";
+		print STDERR "\n" if $DEBUG>4;
     }
 }
 

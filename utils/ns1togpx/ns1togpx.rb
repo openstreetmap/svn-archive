@@ -28,26 +28,26 @@ module Ns1togpx
 		end
 
 		def read_uint8(io)
-			ar = io.getc
-			ar.pack("I")
+			ar = [io.getc]
+			ar.map { |ch| ch.chr }.join.unpack("C").first
 		end
 
 		def read_uint32(io)
 			ar = []
 			4.times { ar << io.getc }
-			ar.pack("I")
+			ar.map { |ch| ch.chr }.join.unpack("L").first
 		end
 
 		def read_int32(io)
 			ar = []
 			4.times { ar << io.getc }
-			ar.pack("i")
+			ar.map { |ch| ch.chr }.join.unpack("l").first
 		end
 
 		def read_double(io)
 			ar = []
 			8.times { ar << io.getc }
-			ar.pack("E")
+			ar.map { |ch| ch.chr }.join.unpack("E").first  # might need to be an "E" or "D"
 		end
 
 		def read_time_t(io)
@@ -57,19 +57,18 @@ module Ns1togpx
 		def read_filetime(io)
 			ar = []
 			8.times { ar << io.getc }
-			ar.pack("I")
+			ar.map { |ch| ch.chr }.join.unpack("Q").first
 		end
 
 		def filetime_to_time(filetime)
-			epoch = Time.utc(1601, 1, 1, 0, 0, 0, 0)
 			nanos = filetime * 100
 			seconds = nanos / 1000000000
-			epoch + seconds
+			epoch_shift = (1911 - 1601) * 365.25 * 24 * 60 * 60
+			Time.utc(1911) + (seconds - epoch_shift)
 		end
 
 		def time_t_to_time(time_t)
-			epoch = Time.utc(1970, 1, 1, 0, 0, 0, 0)
-			epoch + time_t
+			Time.utc(1970) + time_t
 		end
 
 		def convert(ns1, gpx)
@@ -77,19 +76,23 @@ module Ns1togpx
 			ns1_sig = ns1.read(4)
 			throw "Does not seem to be an NS1 file" unless ns1_sig == "NetS"
 			@ns1_version = read_uint32(ns1)
+			$stderr.puts "NS1 version #{@ns1_version}"
 			ns1_num_apinfo = read_uint32(ns1)
-			ns1_num_apinfo.times do
+			$stderr.puts "number of APINFO entries = #{ns1_num_apinfo}"
+			ns1_num_apinfo.times do |i|
+				if ns1.eof?
+					$stderr.puts "WARNING: Premature end of NS1 file, #{ns1_num_apinfo} APINFO entries expected, processed #{i}."
+					break
+				end
 				convert_apinfo(ns1, gpx)
 			end
-			ns1.close
 			write_footer(gpx)
-			gpx.close
 		end
 
 		def convert_apinfo(ns1, gpx)
 			case @ns1_version
 			when 1
-				# no real GPS data in version 1 of the NS1 format
+				$stderr.puts "No GPS data in version 1 of the NS1 format"
 			when 6
 				ns1_ssid_length = read_uint8(ns1)
 				ns1_ssid = ns1.read(ns1_ssid_length)
@@ -100,10 +103,16 @@ module Ns1togpx
 				ns1_long = read_double(ns1)
 				write_point(gpx, ns1_lat, ns1_long, ns1_time)
 				ns1_num_apdata = read_uint32(ns1)
-				ns1_num_apdata.times do
+				ns1_num_apdata.times do |i|
+					if ns1.eof?
+						$stderr.puts "WARNING: Premature end of NS1 file, #{ns1_num_apdata} APDATA entries expected, processed #{i}."
+						break
+					end
 					convert_apdata(ns1, gpx)
 				end
-			else  # when 11 or 12
+				ns1_name_length = read_uint8(ns1)
+				ns1.read(ns1_name_length)
+			when 11
 				ns1_ssid_length = read_uint8(ns1)
 				ns1_ssid = ns1.read(ns1_ssid_length)
 				ns1.read(34)  # skip ahead to the LastSeen FILETIME
@@ -114,10 +123,40 @@ module Ns1togpx
 				write_point(gpx, ns1_lat, ns1_long, ns1_time)
 				ns1_num_apdata = read_uint32(ns1)
 				ns1_num_apdata.times do
+					if ns1.eof?
+						$stderr.puts "WARNING: Premature end of NS1 file, #{ns1_num_apdata} APDATA entries expected, processed #{i}."
+						break
+					end
 					convert_apdata(ns1, gpx)
 				end
+				ns1_name_length = read_uint8(ns1)
+				ns1.read(ns1_name_length)
+				ns1.read(36)  # skip the rest of the v11 APINFO
+			when 12
+				ns1_ssid_length = read_uint8(ns1)
+				ns1_ssid = ns1.read(ns1_ssid_length)
+				ns1.read(34)  # skip ahead to the LastSeen FILETIME
+				ns1_lastseen = read_filetime(ns1)
+				ns1_time = filetime_to_time(ns1_lastseen)
+				ns1_lat = read_double(ns1)
+				ns1_long = read_double(ns1)
+				write_point(gpx, ns1_lat, ns1_long, ns1_time)
+				ns1_num_apdata = read_uint32(ns1)
+				ns1_num_apdata.times do
+					if ns1.eof?
+						$stderr.puts "WARNING: Premature end of NS1 file, #{ns1_num_apdata} APDATA entries expected, processed #{i}."
+						break
+					end
+					convert_apdata(ns1, gpx)
+				end
+				ns1_name_length = read_uint8(ns1)
+				ns1.read(ns1_name_length)
+				ns1.read(40)  # skip ahead to the 802.11 information elements
+				ns1_ie_length = read_uint32(ns1)
+				ns1.read(ns1_ie_length)
+			else
+				throw "Unsupported NS1 version number, #{@ns1_version}."
 			end
-			ns1.read  # skip the rest
 		end
 
 		def convert_apdata(ns1, gpx)
@@ -129,7 +168,7 @@ module Ns1togpx
 				ns1_timefield = read_filetime(ns1)
 				ns1_time = filetime_to_time(ns1_timefield)
 			end
-			read(8)  # skip ahead to the Location Source
+			ns1.read(8)  # skip ahead to the Location Source
 			ns1_location_source = read_int32(ns1)
 			if ns1_location_source == 1
 				convert_gpsdata(ns1, gpx, ns1_time)
@@ -139,8 +178,8 @@ module Ns1togpx
 		def convert_gpsdata(ns1, gpx, time)
 			ns1_lat = read_double(ns1)
 			ns1_long = read_double(ns1)
-			write_point(gpx, ns1_lat, ns_long, time)
-			read(44)  # skip the rest
+			write_point(gpx, ns1_lat, ns1_long, time)
+			ns1.read(44)  # skip the rest
 		end
 
 		def time_to_gpxtime(time)
@@ -180,8 +219,6 @@ end  # of module
 
 if __FILE__ == $0
 
-	require 'ns1togpx'
-
 	if (ARGV.length >= 1) && (ARGV.first =~ /(-h)|(--help)/i)
 		$stderr.print <<EOF
 ns1togpx Converter
@@ -197,12 +234,12 @@ EOF
 	if (ARGV.length >= 1) && (ARGV.first != "-") && File.exists?(ARGV.first)
 		source = File.open(ARGV.first)
 	end
-
 	begin
 		source.binmode
 		Ns1togpx::Converter.new.convert(source, $stdout)
+		$stdout.close
 	ensure
-		source.close
+		source.close unless source.closed?
 	end
 
 end

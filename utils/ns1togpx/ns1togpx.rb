@@ -63,8 +63,8 @@ module Ns1togpx
 		def filetime_to_time(filetime)
 			nanos = filetime * 100
 			seconds = nanos / 1000000000
-			epoch_shift = (1911 - 1601) * 365.25 * 24 * 60 * 60
-			Time.utc(1911) + (seconds - epoch_shift)
+			epoch_shift = (1971 - 1601) * 365.25 * 24 * 60 * 60
+			Time.utc(1971) + (seconds - epoch_shift)
 		end
 
 		def time_t_to_time(time_t)

@@ -65,26 +65,6 @@
   </target>
 
 
-  <target name="install" depends="dist">
-
-    <javadoc sourcepath="${src}" destdir="${dist}/api" packagenames="org.openstreetmap.*"/>
-
-
-    <copy todir="/var/lib/tomcat4/webapps/api/WEB-INF/lib/">
-      <fileset dir="${dist}" casesensitive="yes">
-        <include name="**/*.jar"/>
-      </fileset>
-    </copy>
-
-    <copy file="${jsp}/xml.jsp" tofile="/var/lib/tomcat4/webapps/api/xml.jsp" />
-
-    <copy todir="/var/www/openstreetmap/javadoc">
-      <fileset dir="${dist}/api"/>
-    </copy>
-
-  </target>
-
-
   <target name="clean">
     <delete dir="${build}"/>
     <delete dir="${dist}"/>

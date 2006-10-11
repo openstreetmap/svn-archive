@@ -315,6 +315,9 @@
 		<rule e="segment|way" k="railway" v="rail">
 			<line class='railway-rail' />
 		</rule>
+		<rule e="segment|way" k="railway" v="light_rail|tram">
+			<line class='railway-light-rail' />
+		</rule>
 
 
 		<!-- Airfields and airports -->
@@ -1053,6 +1056,14 @@
 
 			.railway-rail {
 			  stroke-width: 1.5px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  stroke: #000000;
+			  fill: none;
+			  }
+			
+			.railway-light-rail {
+			  stroke-width: 0.8px;
 			  stroke-linecap: butt;
 			  stroke-linejoin: round;
 			  stroke: #000000;

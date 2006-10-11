@@ -318,6 +318,9 @@
 		<rule e="segment|way" k="railway" v="light_rail|tram">
 			<line class='railway-light-rail' />
 		</rule>
+		<rule e="segment|way" k="railway" v="subway">
+			<line class='railway-subway-rail' />
+		</rule>
 
 
 		<!-- Airfields and airports -->
@@ -1068,6 +1071,19 @@
 			  stroke-linejoin: round;
 			  stroke: #000000;
 			  fill: none;
+			  }
+			
+			/* TODO: */
+			/* Figure out why Inkscape doesn't produce dashes for this */
+			.railway-subway-rail {
+			  stroke-width: 0.8px;
+			  stroke-linecap: butt;
+			  stroke-linejoin: round;
+			  stroke: #aaaaaa;
+			  fill: none;
+			  stroke-dasharray: 3px, 1px;
+			  stroke-dashoffset: 0;
+			  stroke-opacity: 1;
 			  }
 			
 			.railway-rail-dashes {

@@ -72,11 +72,17 @@
 		<rule e="way|area" k="landuse" v="forest|wood">
 			<area class='landuse-wood'/> 
 		</rule>
-		<rule e="way|area" k="landuse" v="field">
+		<rule e="way|area" k="landuse" v="field|meadow">
 			<area class='landuse-field'/>
 		</rule>
 		<rule e="way|area" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
 			<area class='leisure-park'/> 
+		</rule>			
+		<rule e="way|area" k="leisure" v="stadium|sports_centre">
+			<area class='leisure-stadium'/> 
+		</rule>			
+		<rule e="way|area" k="leisure" v="track">
+			<area class='leisure-track'/> 
 		</rule>			
 
 
@@ -1315,6 +1321,19 @@
 			.leisure-park {
 			  fill: #c7f1a3;
 			  stroke: #6fc18e;
+			  stroke-width: 0.2px;
+			  }
+			  
+			/* colour might want tweaking slightly */
+			.leisure-stadium {
+			  fill: #672a8e;
+			  stroke: #461d61;
+			  stroke-width: 0.2px;
+			  }
+			  
+			.leisure-track {
+			  fill: #ba4752;
+			  stroke: #532226;
 			  stroke-width: 0.2px;
 			  }
 			  

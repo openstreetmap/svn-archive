@@ -26,6 +26,7 @@ use Utils::Math;
 # starting_time is the first argument
 sub print_time($){
     my $start_time = shift;
+    return unless $DEBUG||$VERBOSE;
     my $time_diff = time()-$start_time;
     if ( $time_diff > 1 ) {
 	printf STDERR " in %.0f sec", $time_diff;
@@ -42,9 +43,9 @@ sub mem_usage(;$){
     my $msg = '';
     if ( -r $proc_file ) {
 	my $fh = IO::File->new("<$proc_file");
-	my $statm = $fh->getline()
-	    or return "";
+	my $statm = $fh->getline();
 	$fh->close();
+	$statm  or return "";
 	chomp $statm;
 	my @statm = split(/\s+/,$statm);
 	return unless @statm;
@@ -57,7 +58,7 @@ sub mem_usage(;$){
 	return $vsz if $type eq "vsz";
 	return $mem_statistics->{"max rss"} if $type eq "max rss";
 	return $mem_statistics->{"max vsz"} if $type eq "max vsz";
-	$msg .= sprintf( "MEM: %.0f(%.0f) MB ",$vsz,mem_info("MemTotal"));
+	$msg .= sprintf( "MEM: %.0f(%.0f/%.0f) MB ",$vsz,mem_info("MemTotal"),mem_info("MemFree"));
 	#$msg .= sprintf( "RSS: %.0f MB ",$rss);
 	#$msg .= mem_info();
     }

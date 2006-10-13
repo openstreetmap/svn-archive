@@ -179,7 +179,7 @@ sub write_gpx_file($$) { # Write an gpx File
     print $fh "<?xml version=\"1.0\"?>\n";
     print $fh "<gpx \n";
     print $fh "    version=\"1.0\"\n";
-    print $fh "    creator=\"osm-filter Converter\"\n";
+    print $fh "    creator=\"osmfilter Converter\"\n";
     print $fh "    xmlns=\"http://www.ostertag.name\"\n";
     print $fh "    >\n";
     # <bounds minlat="47.855922617" minlon ="8.440864999" maxlat="48.424462667" maxlon="12.829756737" />
@@ -278,7 +278,7 @@ sub write_gpx_file($$) { # Write an gpx File
     $fh->close();
 
     my $comment = "wrote to GPX File";
-    printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_count,$track_id;
+    printf STDERR "%-35s: %5d Points in %d Tracks $comment",$filename,$point_count,$track_id;
     print_time($start_time);
 }
 

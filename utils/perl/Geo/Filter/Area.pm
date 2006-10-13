@@ -23,8 +23,9 @@ my $AREA_DEFINITIONS = {
 		    ],
     africa     => [ [ -45  , -20,   30,  55  ] ],
     # Those eat up all memory on normal machines
-    # world_east => [ [ -90  , -30,   90, 180  ] ], 
-    # world_west => [ [ -90  ,-180,   90, -30  ] ],
+    world_east => [ [ -90  , -30,   90, 180  ] ], 
+    world_west => [ [ -90  ,-180,   90, -30  ] ],
+    world      => [ [ -90  ,-180,   90, 180  ] ],
 };
 
 # ------------------------------------

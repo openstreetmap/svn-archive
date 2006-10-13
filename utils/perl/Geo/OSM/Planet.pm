@@ -24,6 +24,7 @@ use File::Slurp;
 use Getopt::Long;
 use HTTP::Request;
 use Storable ();
+use Data::Dumper;
 
 use Utils::File;
 use Utils::Debug;
@@ -34,33 +35,33 @@ my $estimations = {
     'way' => {
 	'count' => 2816628,
 	'max_id' => 3222817,
-	},
-	'seg' => {
-	    'count' => 9918572,
-	    'max_id' => 12584020,
-	},
-	'segment' => {
-	    'count' => 11282506,
-	    'max_id' => 12579354,
-	},
-	'tag' => {
-	    'count' => 14915921,
-	    'max_id' => 1,
-	},
-	'node' => {
-	    'count' => 14601013,
-	    'max_id' => 15763764,
-	},
-	'line' => {
-	    'count' => 58546735,
-	    'max_id' => 53534640,
-	},
-	'elem' => {
-	    'count' => 58546735,
-	    'max_id' => 53534640,
-	}
-    };
-    
+    },
+    'seg' => {
+	'count' => 9918572,
+	'max_id' => 12584020,
+    },
+    'segment' => {
+	'count' => 11282506,
+	'max_id' => 12579354,
+    },
+    'tag' => {
+	'count' => 14915921,
+	'max_id' => 1,
+    },
+    'node' => {
+	'count' => 14601013,
+	'max_id' => 15763764,
+    },
+    'line' => {
+	'count' => 58546735,
+	'max_id' => 53534640,
+    },
+    'elem' => {
+	'count' => 58546735,
+	'max_id' => 53534640,
+    }
+};
+
 sub estimated_max_id($){
     my $type= shift;
     unless ( defined ($estimations->{$type}->{max_id})) {
@@ -69,7 +70,7 @@ sub estimated_max_id($){
     };
     return $estimations->{$type}->{max_id};
 }
-    
+
 sub estimated_max_count($){
     my $type= shift;
     unless ( defined ($estimations->{$type}->{count})) {
@@ -116,7 +117,9 @@ sub mirror_planet(){
     
     my $current_file;
     if ( $Utils::LWP::Utils::NO_MIRROR ) {
-	my @files= sort { $b cmp $a}  glob("$mirror_dir/planet-*.osm.bz2");
+	my @files= sort { $b cmp $a}  
+	      grep { $_ !~ m/planet-061008/ } 
+	      glob("$mirror_dir/planet-*.osm.bz2");
 	if ( $DEBUG) {
 	    print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
 	}
@@ -130,8 +133,10 @@ sub mirror_planet(){
 	my $index_content = read_file( $index_file ) ;
 
 	# Get the current planet.osm File
-	( $current_file ) = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/);
+	my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/g);
+	( $current_file ) = grep { $_ !~ m/planet-061008/ } @all_files;
 	return undef unless $current_file;
+	
 	$url .= "/$current_file";
 	$current_file = "$mirror_dir/$current_file";
 	print STDERR "\nMirror OSM Data from $url\n" if $VERBOSE || $DEBUG;

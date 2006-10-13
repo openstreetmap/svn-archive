@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# Licence GPL
 
 BEGIN {
     my $dir = $0;

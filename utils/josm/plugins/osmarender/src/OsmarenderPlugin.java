@@ -63,16 +63,32 @@ public class OsmarenderPlugin extends Plugin {
 				}
 			}
 
-			try {
-				// store the stuff in data.osm
-				OsmWriter.output(new FileOutputStream(getPluginDir()+"data.osm"), new OsmWriter.All(fromDataSet, true));
+			String firefox = Main.pref.get("osmarender.firefox", "firefox");
+			boolean retry = false;
+			do {
+				try {
+					retry = false;
 
-				// launch up the viewer
-				String firefox = Main.pref.get("osmarender.firefox", "firefox");
-				Runtime.getRuntime().exec(firefox+" "+getPluginDir()+"osm-map-features.xml");
-			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(Main.parent, "Could not launch Osmarender.");
-			}
+					// write to plugin dir
+					OsmWriter.output(new FileOutputStream(getPluginDir()+"data.osm"), new OsmWriter.All(fromDataSet, true));
+
+					// get the exec line
+					String exec = firefox;
+					if (System.getProperty("os.name").startsWith("Windows"))
+						exec += " file:///"+getPluginDir().replace('\\','/').replace(" ","%20")+"osm-map-features.xml\"";
+					else
+						exec += " "+getPluginDir()+"osm-map-features.xml";
+
+					// launch up the viewer
+					Runtime.getRuntime().exec(exec);
+				} catch (IOException e1) {
+					firefox = JOptionPane.showInputDialog(Main.parent, "FireFox not found. Please enter location of firefox executable");
+					if (firefox != null) {
+						Main.pref.put("osmarender.firefox", firefox);
+						retry = true;
+					}
+				}
+			} while (retry);
 		}
 	}
 
@@ -80,7 +96,7 @@ public class OsmarenderPlugin extends Plugin {
 	private JMenuItem osmarenderMenu = new JMenuItem(new Action());
 
 	public OsmarenderPlugin() throws IOException {
-		JMenuBar menu = Main.main.mainMenu;
+		JMenuBar menu = Main.main.menu;
 		view = null;
 		for (int i = 0; i < menu.getMenuCount(); ++i) {
 			if (menu.getMenu(i) != null && tr("View").equals(menu.getMenu(i).getName())) {
@@ -90,7 +106,7 @@ public class OsmarenderPlugin extends Plugin {
 		}
 		if (view == null) {
 			view = new JMenu(tr("View"));
-			Main.main.mainMenu.add(view, 1);
+			menu.add(view, 2);
 			view.setVisible(false);
 		}
 		view.add(osmarenderMenu);

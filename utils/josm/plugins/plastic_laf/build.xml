@@ -1,36 +1,14 @@
-<project name="plastic_laf" default="build" basedir=".">
+<project name="plastic_laf" default="install" basedir=".">
 
-	<path id="classpath">
-		<fileset file="../../../../editors/josm/dist/josm-custom.jar" />
-		<fileset dir="lib" />
-	</path>
-
-
-	<target name="compile">
-		<mkdir dir="build"></mkdir>
-		<mkdir dir="dist"></mkdir>
-		<javac srcdir="src" classpathref="classpath" debug="true" destdir="build">
-			<include name="**/*.java" />
-		</javac>
-	</target>
-
-	<target name="build" depends="compile">
-		<unjar dest="build" src="lib/looks-2.0.4.jar" />
-		<jar destfile="dist/plastic_laf.jar" basedir="build">
+	<target name="install">
+		<unjar dest="bin" src="lib/looks-2.0.4.jar" />
+		<jar destfile="${user.home}/.josm/plugins/plastic_laf.jar" basedir="bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="plastic_laf.Plugin" />
 				<attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel" />
+				<attribute name="Plugin-Early" value="true" />
 			</manifest>
 		</jar>
-	</target>
-
-	<target name="clean">
-		<delete dir="build" />
-		<delete dir="dist" />
-	</target>
-
-	<target name="install" depends="build">
-		<copy file="dist/plastic_laf.jar" todir="${user.home}/.josm/plugins"/>
 	</target>
 
 </project>

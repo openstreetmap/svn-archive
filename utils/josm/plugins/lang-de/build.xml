@@ -1,0 +1,32 @@
+<project name="lang-de" default="install" basedir=".">
+
+	<property name="language" value="de" />
+	<property name="josm" value="../../../../editors/josm" />
+	
+	<target name="install">
+		<jar destfile="${user.home}/.josm/plugins/lang-${language}.jar" basedir="bin">
+			<fileset dir="ressource" />
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />
+				<attribute name="Plugin-Description" value="German translation / Deutsche Übersetzung." />
+				<attribute name="Plugin-Early" value="true" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="gettext">
+		<exec executable="find" output="build/alljava.txt">
+			<arg line="src -name '*.java'"/>
+		</exec>
+		<exec executable="xgettext">
+			<arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -opo/keys.pot -fbuild/alljava.txt"/>
+		</exec>
+		<exec executable="msgmerge">
+			<arg line="-U ${language}.po $(josm)/po/keys.pot"/>
+		</exec>
+		<exec executable="msgfmt">
+			<arg line="--java2 -dpo -rorg.openstreetmap.josm.Translation -l${language} ${language}.po"/>
+		</exec>
+	</target>
+
+</project>

@@ -6,6 +6,6 @@ import org.openstreetmap.josm.plugins.Plugin;
 public class LandsatPlugin extends Plugin {
 
 	public LandsatPlugin() {
-		Main.main.downloadAction.downloadTasks.add(new DownloadLandsatTask());
+		Main.main.menu.download.downloadTasks.add(new DownloadLandsatTask());
 	}
 }

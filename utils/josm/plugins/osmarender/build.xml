@@ -1,32 +1,25 @@
-<project name="osmarender" default="build" basedir=".">
+<project name="osmarender" default="install" basedir=".">
 
-	<!--property name="josm" location="../../../../editors/josm/dist/josm-custom.jar" /-->
-	<property name="josm" location="../../../../../josm/bin" />
-
+	<property name="josm" location="../../../../editors/josm/dist/josm-custom.jar" />
 	<property name="osmarender" location="../../../osmarender" />
-	<property name="target" location="dist/osmarender.jar" />
 
 
-
-	<target name="init">
-		<mkdir dir="build"></mkdir>
+	<target name="compile">
+		<mkdir dir="bin"></mkdir>
 		<mkdir dir="dist"></mkdir>
-	</target>
-
-	<target name="compile" depends="init">
-		<javac srcdir="src" debug="true" classpath="${josm}" destdir="build">
+		<javac srcdir="src" debug="true" classpath="${josm}" destdir="bin">
 			<include name="**/*.java" />
 		</javac>
 	</target>
 
-	<target name="build" depends="compile">
-		<copy todir="build">
+	<target name="build">
+		<copy todir="bin">
 			<fileset dir="${osmarender}">
 				<include name="osmarender.xsl"/>
 				<include name="osm-map-features.xml"/>
 			</fileset>
 		</copy>
-		<jar destfile="${target}" basedir="build">
+		<jar destfile="${user.home}/.josm/plugins/osmarender.jar" basedir="bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="OsmarenderPlugin" />
 				<attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image" />
@@ -35,12 +28,10 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="build" />
+		<delete dir="bin" />
 		<delete dir="dist" />
 	</target>
 
-	<target name="install" depends="build">
-		<copy file="${target}" todir="${user.home}/.josm/plugins"/>
-	</target>
+	<target name="install" depends="compile,build" />
 
 </project>

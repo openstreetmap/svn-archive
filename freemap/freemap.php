@@ -23,6 +23,7 @@ require_once('rules.php');
 require_once('Map.php');
 require_once('contours.php');
 require_once('functions.php');
+require_once('Painter.php');
 
 
 // 070406 changed ['name'] to ['tags']['name'] for nodes, segments and ways
@@ -56,6 +57,7 @@ class Image
 	{
 		$this->map = new Map ($w,$s,$e,$n, $width, $height);
 		//$this->zoom=$zoom;
+		$this->painter = new MagickPainter();
 
 		$this->landsat = $lsat;
 		$this->poly = $pl;
@@ -72,18 +74,18 @@ class Image
 		# in GD2, when copying images (as we do for the icons), both source
 		# and destination image must be either paletted or true colour.
 		# (The icons are s)
-		$this->im = ImageCreateTrueColor($this->map->width*
+		$this->backcol = 
+			$this->painter->createImage($this->map->width*
 				(2*$this->extensionFactor()+1),
 									$this->map->height*
-				(2*$this->extensionFactor()+1));
+				(2*$this->extensionFactor()+1), 220, 220, 220);
 		
-		$this->backcol = ImageColorAllocate($this->im,220,220,220);
-		$this->gold = ImageColorAllocate($this->im,255,255,0);
-		$this->black = ImageColorAllocate($this->im,0,0,0);
-		$this->ltyellow = ImageColorAllocate($this->im,255,255,192);
-		$this->ltgreen = ImageColorAllocate($this->im,192,255,192);
-		$this->contour_colour = ImageColorAllocate($this->im,192,192,0);
-		$this->mint = ImageColorAllocate($this->im,0,192,64);
+		$this->gold = $this->painter->getColour(255,255,0);
+		$this->black = $this->painter->getColour(0,0,0);
+		$this->ltyellow = $this->painter->getColour(255,255,192);
+		$this->ltgreen = $this->painter->getColour(192,255,192);
+		$this->contour_colour = $this->painter->getColour(192,192,0);
+		$this->mint = $this->painter->getColour(0,192,64);
 
 
 		if($this->zoom>=10)
@@ -101,8 +103,6 @@ class Image
 			$this->styleRules = readStyleRules($stylexml);
 		}
 
-		ImageFill($this->im,100,100,$this->backcol);
-		ImageColorTransparent($this->im,$this->backcol);
 		$this->is_valid = true;
 
 		// 06/06/05 removed hacky path style stuff: 
@@ -145,25 +145,15 @@ class Image
 			$this->draw_way_names();
 
 		}
-		
-		$im2 = ImageCreateTrueColor($this->map->width,
-											$this->map->height);
+	
+		$this->painter->crop(
+				$this->map->width*$this->extensionFactor(),
+				$this->map->height*$this->extensionFactor(),
+				$this->map->width,
+				$this->map->height
+							);
 
-		ImageFill($im2,100,100,$this->backcol);
-		ImageColorTransparent($im2,$this->backcol);
-		/*
-		ImageTTFText($im2, 8, 0, $this->map->width/2, 
-								$this->map->height/2, $this->black, 
-							TRUETYPE_FONT, $this->zoom);
-							*/
-		ImageCopyMerge($im2,$this->im,0,0,
-					$this->map->width*$this->extensionFactor(),
-					$this->map->height*$this->extensionFactor(),
-					$this->map->width,
-					$this->map->height, 100);
-		ImagePNG($im2);
-		ImageDestroy($im2);
-		ImageDestroy($this->im);
+		$this->painter->renderImage();
 	}
 
 	
@@ -198,15 +188,16 @@ class Image
 				{
 					$rgb = array (128,128,128);
 
-					$colour = ImageColorAllocate
-							($this->im, $rgb[0],$rgb[1],$rgb[2]);
+					$colour = $this->painter->getColour
+							( $rgb[0],$rgb[1],$rgb[2]);
 
-					ImageSetThickness($this->im, $width);
-					// 090406 outlines now done in their own function
-					ImageLine($this->im,$this->cnvX($p[0]['x']),
-									$this->cnvY($p[0]['y']),
-								$this->cnvX($p[1]['x']),$this->cnvY($p[1]['y']),
-								$colour);
+
+					$this->painter->drawLine(
+					$this->cnvX($p[0]['x']), 
+					$this->cnvY($p[0]['y']),
+					$this->cnvX($p[1]['x']),
+					$this->cnvY($p[1]['y']),
+								$colour, $width);
 				}
 			}
 		}	
@@ -248,44 +239,40 @@ class Image
 							$width>0	)
 
 						{
-							$rgb=explode(",",
-							$curStyle["colour"]);
+							$rgb=explode(",", $curStyle["colour"]);
 
 							if(count($rgb)==3)
 							{
-								$colour = ImageColorAllocate
-								($this->im, $rgb[0],$rgb[1],$rgb[2]);
+								$colour = $this->painter->getColour
+								($rgb[0],$rgb[1],$rgb[2]);
 
-								ImageSetThickness($this->im, $width);
+								//ImageSetThickness($this->im, $width);
 								// 07/06/05 Changed this to reflect the new way
 								// that dashed lines are stored in the database.
-						   		if(isset
-								($curStyle["dash"]))
+						   		if(isset ($curStyle["dash"]))
 								{
-
-									$dash = 
-									$this->makeDashPattern
-									($curStyle["dash"],
-									$colour);
-									ImageSetStyle($this->im,  $dash);
-
-
-									ImageLine($this->im,$this->cnvX($p[0]['x']),
-										$this->cnvY($p[0]['y']),
-									$this->cnvX($p[1]['x']),
-										$this->cnvY($p[1]['y']),
-									IMG_COLOR_STYLED);
+//									echo "DASHED LINE: data = $curStyle[dash] $rgb[0] $rgb[1] $rgb[2] $width<br/>";
+									$this->painter->drawDashedLine	
+									($this->cnvX($p[0]['x']),
+									 $this->cnvY($p[0]['y']),
+									 $this->cnvX($p[1]['x']),
+									 $this->cnvY($p[1]['y']),
+							  	     $curStyle["dash"], 
+									 $colour,
+									 $width);
 								}
 
 								else
 								{
 									//090406 outlines now done in their own 
 									// function
-									ImageLine($this->im,$this->cnvX($p[0]['x']),
-									$this->cnvY($p[0]['y']),
-									$this->cnvX($p[1]['x']),
-									$this->cnvY($p[1]['y']),
-									$colour);
+									$this->painter->drawLine	
+									($this->cnvX($p[0]['x']),
+									 $this->cnvY($p[0]['y']),
+									 $this->cnvX($p[1]['x']),
+									 $this->cnvY($p[1]['y']),
+									 $colour,
+									 $width);
 								}
 							}
 						}
@@ -337,11 +324,9 @@ class Image
 
 				if(count($rgb)==3)
 				{
-					$colour = ImageColorAllocate
-								($this->im, $rgb[0],$rgb[1],$rgb[2]);
-					ImageFilledPolygon($this->im,$curarea,
-										count($curarea)/2,$colour);
-
+					$colour = $this->painter->getColour
+								($rgb[0],$rgb[1],$rgb[2]);
+					$this->painter->drawPolygon($curarea, $colour);
 				}
 			}
 		}	
@@ -377,53 +362,6 @@ class Image
 	}
 
 	// 090406 draw segment outlines first
-	function draw_segment_outlines()
-	{
-		# Only attempt to draw the line if at least one of the points
-		# is within the map
-		$ids = array_keys($this->mapdata["segments"]);
-		foreach ($ids as $id)
-		{
-			$width = $this->getZoomLevelValue
-							($this->mapdata["segments"][$id]["style"]["width"]);
-					
-			$p[0] = $this->map->get_point
-				($this->mapdata["nodes"][$this->mapdata["segments"][$id]['from']]);
-			$p[1] = $this->map->get_point
-				($this->mapdata["nodes"][$this->mapdata["segments"][$id]['to']]);
-
-
-			if ($width>0 &&  
-				(isset($this->mapdata["nodes"][$this->mapdata["segments"]
-								[$id]['to']]) &&
-				 isset($this->mapdata["nodes"][$this->mapdata["segments"]
-				 						[$id]['from']]) ) 
-		/*
-			&& ($this->map->pt_within_map ($p[0]) || 
-				     $this->map->pt_within_map ($p[1]) ) 
-					 */
-					 )
-
-			{
-				if($this->mapdata["segments"][$id]["style"]["casing"]!=null)	
-				{
-					$rgb=explode(",",
-						$this->mapdata["segments"][$id]["style"]["casing"]);
-					if(count($rgb)==3)
-					{
-						$colour = ImageColorAllocate
-						($this->im, $rgb[0],$rgb[1],$rgb[2]);
-					}
-					ImageSetThickness($this->im, $width+2);
-					ImageLine($this->im,$this->cnvX($p[0]['x']),
-								$this->cnvY($p[0]['y']),
-								$this->cnvX($p[1]['x']),
-								$this->cnvY($p[1]['y']),$colour);
-
-				}
-			}
-		}	
-	}
 
 	function draw_way_outlines()
 	{
@@ -458,14 +396,15 @@ class Image
 								$curStyle["casing"]);
 							if(count($rgb)==3)
 							{
-								$colour = ImageColorAllocate
-									($this->im, $rgb[0],$rgb[1],$rgb[2]);
+								$colour = $this->painter->getColour 
+									($rgb[0],$rgb[1],$rgb[2]);
 							}
-							ImageSetThickness($this->im, $width+2);
-							ImageLine($this->im,$this->cnvX($p[0]['x']),
+							$this->painter->drawLine(
+								$this->cnvX($p[0]['x']),
 								$this->cnvY($p[0]['y']),
 								$this->cnvX($p[1]['x']),
-								$this->cnvY($p[1]['y']),$colour);
+								$this->cnvY($p[1]['y']),
+								$colour, $width+2);
 						}
 					}
 				}
@@ -497,16 +436,12 @@ class Image
 				if($this->mapdata["nodes"][$id]["style"]["image"])
 				{
 					$imgfile=$this->mapdata["nodes"][$id]["style"]["image"];
-					$imgsize=getimagesize($imgfile);
-					$w = $imgsize[0];
-					$h = $imgsize[1];
-
 
 					if($text>=0)
 					{
-						$this->draw_image($p['x'],$p['y'], $w,$h,$imgfile,
-										$this->mapdata["nodes"]
-											[$id]['tags']['name']);
+						$this->painter->drawImage($this->cnvX($p['x']),
+												$this->cnvY($p['y']),$imgfile,
+													"png");
 					}
 				}
 				// Names are displayed after everything else, so save 
@@ -525,23 +460,11 @@ class Image
 		$this->draw_names($allnamedata);
 	}
 
-	function draw_image($x,$y,$w,$h,$imgfile,$name)
-	{
-		
-		$icon = ImageCreateFromPNG($imgfile);
-
-		ImageCopy($this->im,$icon,
-				$this->cnvX($x-$w/2),
-				$this->cnvY($y-$h/2),
-				0,0,$w,$h);
-		ImageDestroy($icon);
-    }
-
 	function draw_names(&$namedata)
 	{
 		foreach($namedata as $name)
 		{
-			$this->draw_name($name['x'],$name['y'],
+			$this->draw_name($this->cnvX($name['x']),$this->cnvY($name['y']),
 								$name['name'],$name['fontsize'],
 								$this->black);
 		}
@@ -550,26 +473,7 @@ class Image
 	# 16/11/04 new version for truetype fonts.
 	function draw_name($x,$y,$name,$fontsize,$colour)
 	{
-		
-		$name_arr = explode(' ',$name);
-		
-		for($count=0; $count<count($name_arr)-1; $count++)
-		{
-			ImageTTFText($this->im, $fontsize, 0, $this->cnvX($x), 
-								$this->cnvY($y), $colour, 
-							TRUETYPE_FONT,
-							$name_arr[$count]);
-
-			// Get the height of the next word, so we know how far down to
-			// draw it.	
-			$bbox = ImageTTFBBox($fontsize,0,TRUETYPE_FONT,$name_arr[$count+1]);
-			$y += ($bbox[1]-$bbox[7])+FONT_MARGIN;
-		}
-			
-		// Finally draw the last word
-		@ImageTTFText($this->im, $fontsize, 0, $this->cnvX($x), 
-								$this->cnvY($y), $colour, 
-							TRUETYPE_FONT, $name_arr[$count]);
+		$this->painter->drawMultiword($x,$y,$name,$fontsize,$colour);		
 	} 
 
 	// name drawing stuff
@@ -589,9 +493,8 @@ class Image
 
 		if($name)
 		{
-			$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$name);
-			$text_width = line_length($bbox[6],$bbox[7],$bbox[4],$bbox[5]);
-			$text_height = line_length($bbox[6],$bbox[7],$bbox[0],$bbox[1]);
+			list($text_width,$text_height) = 
+					$this->painter->getTextDimensions(8,$name);
 
 			// Work out position from provided segment
 			$p = array();
@@ -612,11 +515,13 @@ class Image
 				$y1=$av['y']-$text_height/2;
 				$x2=$av['x']+$text_width/2;
 				$y2=$av['y']+$text_height/2;
-				ImageFilledRectangle($this->im,$this->cnvX($x1),$this->cnvY($y1),
-										$this->cnvX($x2),$this->cnvY($y2), $this->black);
-				ImageTTFText($this->im, 8, 0,  
-							$this->cnvX($x1), $this->cnvY($y2), $this->gold,
-							TRUETYPE_FONT, $name);
+
+				$this->painter->drawFilledRectangle
+							($this->cnvX($x1),$this->cnvY($y1),
+										$this->cnvX($x2),$this->cnvY($y2), 
+										$this->black);
+				$this->painter->drawText( $this->cnvX($x1), $this->cnvY($y2), 
+											8,$name, $this->gold);
 				$succ=true;
 			}
 			elseif($len*1.25>=$text_width || $force)
@@ -630,7 +535,11 @@ class Image
 				}
 				else
 				{
-					$this->angle_text($p, 8, $this->black, $name);
+					$this->painter->angleText($this->cnvX($p[0]['x']),
+											  $this->cnvY($p[0]['y']),
+											  $this->cnvX($p[1]['x']),
+											  $this->cnvY($p[1]['y']),
+											  8, $this->black, $name);
 				}
 				$succ=true;
 			}
@@ -646,7 +555,11 @@ class Image
 	{
 		$i = ($p[1]['x'] > $p[0]['x']) ? 0:1;
 		$p[$i]['y'] = $p[$i]['y'] + $segwidth/2 + $text_height/2;
-		$this->angle_text($p,$fontsize,$colour,$text);
+		$this->painter->angleText($this->cnvX($p[0]['x']),
+											  $this->cnvY($p[0]['y']),
+											  $this->cnvX($p[1]['x']),
+											  $this->cnvY($p[1]['y']),
+											  $fontsize, $colour, $text);
 	}
 
 	function draw_way_names()
@@ -666,9 +579,9 @@ class Image
 		//$curseg = $this->mapdata["segments"][$way['segs'][$i]];
 
 		// quick and messy way to get the most suitable segment
-		$bbox=ImageTTFBBox(8,0,TRUETYPE_FONT,$way['tags']['name']);
-		$text_width = line_length($bbox[6],$bbox[7],$bbox[4],$bbox[5]);
-		$text_height = line_length($bbox[6],$bbox[7],$bbox[0],$bbox[1]);
+			
+		list($text_width,$text_height) = 
+					$this->painter->getTextDimensions(8,$name);
 
 		$maxlength=0;
 		$longestseg=null;
@@ -725,70 +638,6 @@ class Image
 		*/
 	}
 
-	function angle_text ($p, $fontsize, $colour, $text)
-	{
-		$angle=slope_angle($p[0]['x'], $p[0]['y'], $p[1]['x'], $p[1]['y']);
-		$i = ($p[1]['x'] > $p[0]['x']) ? 0:1;
-		ImageTTFText($this->im, $fontsize, -$angle, $this->cnvX($p[$i]['x']), 
-			$this->cnvY($p[$i]['y']),
-						$colour, TRUETYPE_FONT, $text);
-
-		return $i;
-	}
-
-	// goes through all the style rules and makes the colours and text size
-	// for this zoom level
-	// do here, rather than in the rules file parser, to avoid having to
-	// messily pass the image reference and zoom level over to the parser
-	function processStyleRules()
-	{
-		for($count=0; $count<count($this->styleRules); $count++)
-		{
-			if($this->styleRules[$count]["colour"])
-			{
-				$rgb=explode(",",$this->styleRules[$count]["colour"]);
-
-				$this->styleRules[$count]["colour"]=
-					ImageColorAllocate($this->im, $rgb[0],$rgb[1],$rgb[2]);
-				$this->styleRules[$count]["dash"]=
-						$this->makeDashPattern
-							($this->styleRules[$count]["dash"],
-							$this->styleRules[$count]["colour"]);
-			}
-			if($this->styleRules[$count]["casing"])
-			{	
-				$rgb=explode(",",$this->styleRules[$count]["casing"]);
-				$this->styleRules[$count]["casing"]=
-					ImageColorAllocate($this->im, $rgb[0],$rgb[1],$rgb[2]);
-			}
-			if($this->styleRules[$count]["width"])
-			{
-				$this->styleRules[$count]["width"] = $this->getZoomLevelValue
-							($this->styleRules[$count]["width"]);
-			}
-			if($this->styleRules[$count]["text"])
-			{
-				$this->styleRules[$count]["text"] = $this->getZoomLevelValue
-						($this->styleRules[$count]["text"]);
-			}
-		}
-	}
-
-	function makeDashPattern($dash, $colour)
-	{
-		if($dash && $colour)
-		{
-			list($on,$off)=explode(",",$dash);
-			$dashpattern=array();
-			for($count2=0; $count2<$on; $count2++)
-				$dashpattern[$count2] = $colour;
-			for($count2=0; $count2<$off;$count2++)
-				$dashpattern[$on+$count2] = IMG_COLOR_TRANSPARENT;
-			return $dashpattern;
-		}
-		return null;
-	}
-
 	// for attributes which vary depending on zoom level,
 	// e.g. line width, feature text
 	function getZoomLevelValue($valuelist)
@@ -817,7 +666,8 @@ class Image
 	{
 		$bottomleft_ll = $this->map->bottomleft;
 		$topright_ll = $this->map->get_top_right();
-		$img = ImageCreateFromJPEG
+
+		$this->painter->drawImage ($this->cnvX(0), $this->cnvY(0),
 //				("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=".
 				("http://landsat.openstreetmap.org:3128/wms.cgi?".
 								"request=GetMap&width=".
@@ -826,9 +676,8 @@ class Image
 								"&srs=EPSG:4326&".
 	 	                        "format=image/jpeg&bbox=$bottomleft_ll[long],".
 								"$bottomleft_ll[lat],".
-								"$topright_ll[long],$topright_ll[lat]");
-		ImageCopy($this->im,$img,$this->cnvX(0),$this->cnvY(0),0,0,
-						$this->map->width,$this->map->height);
+								"$topright_ll[long],$topright_ll[lat]".
+								"jpeg") );
 	}
 
 	// SRTM STUFF BEGINS HERE
@@ -958,17 +807,21 @@ class Image
 					{
 						# 08/02/05 changed parameters for slope_angle()
 						# 12/02/05 put all the text drawing code in angle_text()
-						$this->angle_text ($line_pts[$count], 8, $colour, $ht);
+						$this->painter->angleText($this->cnvX
+								($line_pts[$count][0]['x']),
+									  $this->cnvY($line_pts[$count][0]['y']),
+									  $this->cnvX($line_pts[$count][1]['x']),
+									  $this->cnvY($line_pts[$count][1]['y']),
+											  8, $colour, $ht);
 
 						$last_pt[$ht][] = $pt;
 					}
-					
-					ImageLine($this->im,
+		
+					$this->painter->drawLine(
 						$this->cnvX($line_pts[$count][0]['x']),
 						$this->cnvY($line_pts[$count][0]['y']),
 						$this->cnvX($line_pts[$count][1]['x']),
-						$this->cnvY($line_pts[$count][1]['y']), $colour); 
-					ImageSetThickness($this->im,1);
+						$this->cnvY($line_pts[$count][1]['y']), $colour, 1);
 				}
 			}	
 		}

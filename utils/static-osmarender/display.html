@@ -1,0 +1,117 @@
+<html>
+<head>
+	<title>OSM Rendered Output</title>
+	<style type="text/css">
+	</style>
+	<script type="text/javascript" src="information.js"></script>
+</head>
+<body id="body">
+
+<div id="images">
+	<div id="row1" class="tilerow">
+		<img class="tile" id="row1-img1" /><img class="tile" id="row1-img2" />
+	</div>
+	<div id="row2" class="tilerow">
+		<img class="tile" id="row2-img1" /><img class="tile" id="row2-img2" />
+	</div>
+</div>
+
+<div style="position: absolute; top: 100px; right: 5px;">
+	<div id="controls">
+		<table>
+			<tr><td /><td>
+				<a href="" id="north">north</a>
+			</td><td /></tr>
+			<tr><td>
+				<a href="" id="west">west</a>
+			</td><td /><td>
+				<a href="" id="east">east</a>
+			</td></tr>
+			<tr><td /><td>
+				<a href="" id="south">south</a>
+			</td><td /></tr>
+			<tr><td colspan="3" align="center">
+				<br /><br />
+				<a href="" id="zoomin">zoom in</a>
+				<br />
+				<a href="" id="zoomout">zoom out</a>
+			</td></tr>
+		</table>
+	</div>
+</div>
+
+<br style="clear: both" />
+
+<script type="text/javascript">
+var ia = document.getElementById("images");
+
+function setup(easting,northing,zoom) {
+	// Where to find things
+	var tile_base = "scale-" + zoom + "/";
+
+	// Set the images
+	for(var i=0; i<=1; i=i+1) {
+		for(var j=0; j<=1; j=j+1) {
+			var img_id = "row" + (i+1) + "-img" + (j+1);
+			var img = document.getElementById(img_id);
+
+			var img_easting = easting + j;
+			var img_northing = northing + i;
+
+			img.src = tile_base + "tile-" + img_northing + "x" + img_easting + ".png";
+			img.style.width = tile_widths[zoom];
+			img.style.height = tile_heights[zoom];
+		}
+	}
+
+
+	// Setup our nsew links
+	function navLink(dir,e,n,z) {
+		var a = document.getElementById(dir);
+		var done = false;
+		if(e > 0 && n > 0 && z > 0) {
+			if(e <= tiles_in_dir[z] && n <= tiles_in_dir[z] && z <= scales) {
+				a.href = "?" + e + "," + n + "," + z;
+				done = true;
+			}
+		}
+		if(!done) {
+			a.href="#";
+		}
+	}
+	navLink("north", easting, (northing-1), zoom);
+	navLink("south", easting, (northing+1), zoom);
+	navLink("east",  (easting+1), northing, zoom);
+	navLink("west",  (easting-1), northing, zoom);
+
+	// Setup the zoom links
+	navLink("zoomin", (easting*2), (northing*2), (zoom+1));
+	navLink("zoomout", Math.round(easting/2), Math.round(northing/2), (zoom-1));
+}
+
+// What tiles did they request?
+var easting = 1;
+var northing = 1;
+var zoom = 1;
+if(location.href.indexOf("?") > 0) {
+	var coords = location.href.substring( location.href.indexOf("?") + 1 );
+	if(coords.indexOf("#") > 0) {
+		coords = coords.substring( 0, coords.indexOf("#") );
+	}
+
+	easting = coords.substring( 0, coords.indexOf(",") );
+	coords = coords.substring( coords.indexOf(",") + 1 );
+	northing = coords.substring( 0, coords.indexOf(",") );
+	zoom = coords.substring( coords.indexOf(",") + 1 );
+
+	// make numbers
+	easting = easting / 1;
+	northing = northing / 1;
+	zoom = zoom / 1;
+}
+
+setup(easting,northing,zoom);
+</script>
+
+</body>
+</html>

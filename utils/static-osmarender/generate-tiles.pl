@@ -56,19 +56,28 @@ if(-d "osmarender") {
 
 # Where are we putting things?
 my ($dir) = ($filename =~ /^.*\/(.*?)\.osm$/);
-unless($dir) { $dir = "output"; }
+unless($dir) { 
+	if(!($filename =~ /\//) && $filename =~ /\.osm$/) {
+		($dir) = ($filename =~ /^(.*?)\.osm$/);
+	} else {
+		$dir = "output"; 
+	}
+}
 unless(-d $dir) { mkdir $dir; }
 print "Outputting tiles to $dir\n";
 
-
 # What are we going to use to make svgs?
 my $xslt;
+my $xslt_out;
 if(-f "/usr/share/java/xalan2.jar") {
-	$xslt = "java -jar /usr/share/java/xalan2.jar";
+	$xslt = "java -jar /usr/share/java/xalan2.jar -in";
+	$xslt_out = "-out";
 } elsif(-f "/usr/share/java/xalan-j2.jar") {
-	$xslt = "java -jar /usr/share/java/xalan-j2.jar";
+	$xslt_out = "-out";
+	$xslt = "java -jar /usr/share/java/xalan-j2.jar -in";
 } elsif(-f "/usr/bin/xsltproc") {
 	$xslt = "/usr/bin/xsltproc";
+	$xslt_out = "-o";
 } else {
 	die("No supported xslt program found\n");
 }
@@ -91,7 +100,7 @@ foreach my $scale (@osmarender_scales) {
 	tweakMapFeatures($scale);
 
 	# Turn into svg
-	`cd /tmp/ && $xslt -in osm-map-features.xml -out $ofn`;
+	`cd /tmp/ && $xslt osm-map-features.xml $xslt_out $ofn`;
 
 	# Save the filename
 	$svgs{$scale} = $ofn;
@@ -182,6 +191,12 @@ foreach my $scale (@osmarender_scales) {
 		for(my $i=0; $i<$tscale; $i++) {
 			for(my $j=0; $j<$tscale; $j++) {
 				my $tile = $odir."/tile-".(($i*$tscale)+$j).".png";
+				unless(-f $tile) {
+					$tile = $odir."/tile.png.".(($i*$tscale)+$j);
+				}
+				unless(-f $tile) {
+					die("No tile found for zoom $tscale at $i x $j - looked for $tile\n");
+				}
 				my $ntile = $odir."/tile-".($i+1)."x".($j+1).".png";
 				`mv $tile $ntile`;
 			}

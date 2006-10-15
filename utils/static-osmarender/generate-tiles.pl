@@ -108,17 +108,25 @@ foreach my $scale (@osmarender_scales) {
 
 
 # For each scale, rasterize the image at the required DPI
-my $dpi_factor = 0.5;
+my $dpi_scale = 0.5;
 my @master_pngs;
 foreach my $scale (@osmarender_scales) {
-	# Next DPI
-	$dpi_factor = $dpi_factor * 2;
-	my $output_dpi = int($initial_dpi * $dpi_factor);
+	# Move to the next DPI
+	$dpi_scale = $dpi_scale * 2;
+	my $output_dpi = int($initial_dpi * $dpi_scale);
 
-	# Rasterize the .svg
+	# Do we need to tweak the DPI, to stop the tiles being too big?
+	# (Caused by osmarender scaling effects)
+	# (The 0.65 is an empirical scale factor, should give ~ same widths)
+	$output_dpi = $output_dpi / (($scale / $osmarender_scales[0]) ** 0.65);
+	
+	# Round the output dpi
+	$output_dpi = int($output_dpi);
+
+	# Rasterize the .svg, at the required DPI
 	my $png = "$dir/$output_dpi.png";
 	print "Generating PNG for scale $scale at $output_dpi dpi\n";
-	`unset DISPLAY && inkscape -D -d $output_dpi -e $png $svgs{$scale}`;
+	print `inkscape -D -z -d $output_dpi -e $png $svgs{$scale} 2>&1`;
 	print "Generated $png\n\n";
 	push @master_pngs, $png;
 }

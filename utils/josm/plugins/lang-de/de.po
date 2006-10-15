@@ -1,4 +1,5 @@
 # translation of de.po to 
+# translation of de.po to
 # Sven Anders <s.anders@digitec.de>, 2006.
 # Sven Anders <sven@anders-hamburg.de>, 2006.
 msgid ""
@@ -6,7 +7,7 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-10-13 23:04+0200\n"
-"PO-Revision-Date: 2006-09-10 14:21+0200\n"
+"PO-Revision-Date: 2006-10-14 20:38+0200\n"
 "Last-Translator: Sven Anders <sven@anders-hamburg.de>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +100,7 @@ msgstr "Verschieben"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/MoveAction.java:54
 msgid "Move around objects that are under the mouse or selected."
-msgstr ""
+msgstr "Objekte die sich unter der Maus befinden oder ausgewählt sind verschieben"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/MoveAction.java:102
 msgid "Cannot move objects outside of the world."
@@ -115,8 +116,7 @@ msgstr "Füge einen neuen Weg hinzu."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:95
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:143
-msgid ""
-"Warning: This way is incomplete. Try to download it, before adding segments."
+msgid "Warning: This way is incomplete. Try to download it, before adding segments."
 msgstr ""
 "Achtung: Dieser Weg ist nicht vollständig. Er sollte vom Server geladen "
 "werden, bevor Abschnitte hinzugefügt werden."
@@ -144,8 +144,7 @@ msgstr "Abschnitte eines Weges hinzufügen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:168
 msgid "Do you want to add all other selected segments to the one selected way?"
-msgstr ""
-"Sollen die gewählten Abschnitte zu dem ausgewählten Weg hinzugefügt werden?"
+msgstr "Sollen die gewählten Abschnitte zu dem ausgewählten Weg hinzugefügt werden?"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:168
 msgid "Add segments to way?"
@@ -195,18 +194,16 @@ msgid "Add Node into Segment"
 msgstr "Einen Knotenpunkt in einen Abschnitt einfügen"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:23
-#, fuzzy
 msgid "Raw GPS data"
-msgstr "Hole GPS-Daten"
+msgstr "Roh GPS-Daten"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:26
 msgid "Downloading GPS data"
 msgstr "Hole GPS-Daten"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:25
-#, fuzzy
 msgid "OpenStreetMap data"
-msgstr "Java OpenStreetMap - Editor "
+msgstr "OpenStreetMap Daten"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:28
 #: ../landsat/src/landsat/DownloadLandsatTask.java:21
@@ -276,40 +273,37 @@ msgstr "Kann \"{0}\" nicht lesen."
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:302
 #, java-format
 msgid "Executing {0}"
-msgstr ""
+msgstr "Erledige {0}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:146
 msgid "The Tool requires some data to be loaded."
-msgstr ""
+msgstr "Für das Werkzeug ist es nötig das Daten geladen sind."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:306
-#, fuzzy, java-format
+#, java-format
 msgid "Could not execute command: {0}"
-msgstr "Kann \"{0}\" nicht lesen."
+msgstr "Kann \"{0}\" nicht ausführen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:317
 msgid "Tools"
-msgstr ""
+msgstr "Werkzeuge"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:352
-#, fuzzy
 msgid "Could not read external tool configuration."
-msgstr "Kann das Format nicht ermitteln."
+msgstr "Kann die externen Werkzeugeinstellungen nicht lesen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:29
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:69
 msgid "Align Nodes in Circle"
-msgstr ""
+msgstr "Knotenpunkte im Kreis anordnen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:29
-#, fuzzy
 msgid "Move the selected nodes into a circle."
-msgstr "Gewählte Ebene in die Ebene direkt darunter integrieren."
+msgstr "Gewählte Punkte auf eine Kreisform bringen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:39
-#, fuzzy
 msgid "Please select at least four nodes."
-msgstr "Bitte wählen Sie mindestens einen Abschnitt aus."
+msgstr "Bitte wählen Sie mindestens vier Punkte aus."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RenameLayerAction.java:35
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RenameLayerAction.java:56
@@ -370,9 +364,8 @@ msgid "max lon"
 msgstr "max Länge"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:122
-#, fuzzy
 msgid "Download the following data:"
-msgstr "Lade Daten aus dem Internet"
+msgstr "Lade die folgenden Daten aus dem Internet:"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:129
 msgid "URL from www.openstreetmap.org"
@@ -411,13 +404,11 @@ msgstr "Bereich auswählen"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:261
 msgid "Please enter the desired coordinates or click on a bookmark."
-msgstr ""
-"Bitte geben Sie die Koordinaten an oder wählen Sie eine Lesezeichen aus."
+msgstr "Bitte geben Sie die Koordinaten an oder wählen Sie eine Lesezeichen aus."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:263
-#, fuzzy
 msgid "Please select at least one download data type."
-msgstr "Bitte wählen Sie mindestens einen Abschnitt aus."
+msgstr "Bitte wählen Sie mindestens einen Quelle zum laden aus."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExitAction.java:18
 msgid "Exit"
@@ -459,9 +450,8 @@ msgid "Bug Reports"
 msgstr "Fehler melden:"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:74
-#, fuzzy
 msgid "News about JOSM"
-msgstr "Über JOSM..."
+msgstr "Neues über JOSM..."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:78
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:25
@@ -616,7 +606,7 @@ msgstr "Hilfe"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:104
 msgid "Can only edit help pages from JOSM Online Help"
-msgstr ""
+msgstr "Kann nur Hilfeseite von JOSM Online Hilfe bearbeiten."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:39
 #, java-format
@@ -634,14 +624,13 @@ msgid "Download all (selected) incomplete ways from the OSM server."
 msgstr "Alle (ausgewählten) unvollständigen Wege vom OSM Server laden."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:66
-#, fuzzy
 msgid "Please select an incomplete way."
-msgstr "Bitte eine Farbe wählen."
+msgstr "Bitte einen unvollständigen Weg auswählen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:69
-#, fuzzy, java-format
+#, java-format
 msgid "Download {0} incomplete ways?"
-msgstr "Unvollständige Objekte nachladen?"
+msgstr "{0} unvollständige Wege nachladen?"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:69
 msgid "Download?"
@@ -751,6 +740,9 @@ msgid ""
 "It may be outdated. Please contact the plugin's autor.\n"
 "This message will not shown again until JOSM is restarted."
 msgstr ""
+"Das Plugin {0} ist auf die Ausnahmebedingung (Exception) gestoßen: {1}\n"
+"Vielleicht ist es veraltet? Bitte nehmen Sie Kontakt mit dem Plugin Autor auf.\n"
+"Diese Meldung erscheint erst wieder mit dem nächsten Neustart des Programmes."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:50
 msgid "Do nothing"
@@ -810,9 +802,9 @@ msgid "Shift-"
 msgstr "Shift-"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/plugins/PluginException.java:17
-#, fuzzy, java-format
+#, java-format
 msgid "An error occoured in plugin {0}"
-msgstr "Beim Speichern ist ein Fehler aufgetreten."
+msgstr "Ein Fehler ist im Plugin {0} aufgetreten."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:63
 msgid "Load Selection"
@@ -895,16 +887,14 @@ msgstr "Lösen"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:64
 msgid "Open a merge dialog of all selected items in the list above."
-msgstr ""
-"Öffnet eine Dialog-Fenster mit dem gewählten Objekten aus der obigen Liste."
+msgstr "Öffnet eine Dialog-Fenster mit dem gewählten Objekten aus der obigen Liste."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:73
 msgid "Select"
 msgstr "Wähle aus"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:74
-msgid ""
-"Set the selected elements on the map to the selected items in the list above."
+msgid "Set the selected elements on the map to the selected items in the list above."
 msgstr ""
 "Setze die gewählten Elemente auf der Karte auf die obige Liste der "
 "ausgewählten Objekte."
@@ -987,8 +977,7 @@ msgstr[1] "Dies wird {0} Objekte ändern."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:102
 #, java-format
-msgid ""
-"Please select a new value for \"{0}\".<br>(Empty string deletes the key.)"
+msgid "Please select a new value for \"{0}\".<br>(Empty string deletes the key.)"
 msgstr ""
 "Bitte geben Sie einen neuen Wert für \"{0}\" an.<br>(Leereingabe löscht den "
 "Eintrag.)"
@@ -1006,8 +995,7 @@ msgstr "<verschieden>"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:151
 msgid "Please select objects for which you want to change properties."
-msgstr ""
-"Bitte die Objekte auswählen an denen Eigenschaften geändert werden sollen."
+msgstr "Bitte die Objekte auswählen an denen Eigenschaften geändert werden sollen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:156
 msgid "Please select a key"
@@ -1124,8 +1112,7 @@ msgstr "Kann keine schreibbare Combobox mit Defaultwerten haben (Zeile {0})"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:183
 #, java-format
-msgid ""
-"display_values ({0}) and values ({1}) must be of same number of elements."
+msgid "display_values ({0}) and values ({1}) must be of same number of elements."
 msgstr ""
 "display_values ({0}) und values ({1}) müssen die selbe Anzahl an Elementen "
 "haben."
@@ -1388,8 +1375,7 @@ msgstr "Ebene nicht in der Liste."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:55
 msgid "Hint: Some changes came from uploading new data to the server."
-msgstr ""
-"Hinweis: Einige Änderungen sind durch das Übertragen zum Server entstanden."
+msgstr "Hinweis: Einige Änderungen sind durch das Übertragen zum Server entstanden."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:57
 msgid "There are unsaved changes. Really quit?"
@@ -1569,8 +1555,7 @@ msgstr "jeder"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:40
 msgid "If specified, reset the configuration instead of reading it."
-msgstr ""
-"Wenn angegeben, wird die Konfiguration zurückgesetzt anstatt sie zu lesen."
+msgstr "Wenn angegeben, wird die Konfiguration zurückgesetzt anstatt sie zu lesen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:65
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:68
@@ -1584,8 +1569,7 @@ msgstr "Passwort"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:123
 msgid "You have to restart JOSM for some settings to take effect."
-msgstr ""
-"Sie müssen das Programm neu starten damit die Einstellungen sichtbar werden."
+msgstr "Sie müssen das Programm neu starten damit die Einstellungen sichtbar werden."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:185
 msgid "Draw lines between raw gps points."
@@ -1604,8 +1588,7 @@ msgid "Draw Direction Arrows"
 msgstr "Zeichne Richtungspfeile"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:250
-msgid ""
-"Force drawing of lines if the imported data contain no line information."
+msgid "Force drawing of lines if the imported data contain no line information."
 msgstr ""
 "Das Zeichnen von Linien erzwingen, wenn die importierten Daten keine Linien-"
 "Informationen enthalten."
@@ -1653,8 +1636,7 @@ msgid "Login name (email) to the OSM account."
 msgstr "Benutzername (E-Mail) für den OSM Server."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:388
-msgid ""
-"Login password to the OSM account. Leave blank to not store any password."
+msgid "Login password to the OSM account. Leave blank to not store any password."
 msgstr ""
 "Passwort für den OSM Server. Leer lassen, wenn kein Passwort gespeichert "
 "werden soll."
@@ -1716,8 +1698,7 @@ msgstr "Anzeige-Einstellungen"
 msgid ""
 "Various settings that influence the visual representation of the whole "
 "program."
-msgstr ""
-"Diverse Optionen die die Visuell Repräsentation des Programms beeinflussen."
+msgstr "Diverse Optionen die die Visuell Repräsentation des Programms beeinflussen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:407
 msgid "Look and Feel"
@@ -1779,15 +1760,15 @@ msgstr "Voreinstellungs-Quellen:"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:462
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:462
 msgid "Configure available Plugins."
-msgstr ""
+msgstr "Verfügbare Plugins konfigurieren."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:465
 msgid "Get more plugins"
-msgstr ""
+msgstr "Mehr Plugins holen"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:45
 #, java-format
@@ -1869,8 +1850,7 @@ msgstr ""
 "Versuchen sie das Format in den Einstellungen einzustellen."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:63
-msgid ""
-"Format string is incomplete. Need at least 'lat' and 'lon' specification"
+msgid "Format string is incomplete. Need at least 'lat' and 'lon' specification"
 msgstr ""
 "Die Format -Zeile ist unvollständig. Brauche mindestens 'lat' und 'lon' "
 "Spalten."
@@ -1912,12 +1892,12 @@ msgstr "Abbruch..."
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/IncompleteDownloader.java:80
 #, java-format
 msgid "Data error: Segment {0} is deleted but part of Way {1}"
-msgstr ""
+msgstr "Daten-Fehler: Abschnit {0} ist gelöscht aber teil des Wegs {1}."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/IncompleteDownloader.java:115
 #, java-format
 msgid "Data error: Node {0} is deleted but part of Segment {1}"
-msgstr ""
+msgstr "Daten-Fehler: Knotenpunkt {0} ist gelöscht, aber Teil des Abschnittes {1}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmIdReader.java:34
 msgid "Error during parse."
@@ -2030,12 +2010,12 @@ msgstr[1] "Objekte"
 #: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:201
 #, java-format
 msgid "Plugin not found: {0}."
-msgstr ""
+msgstr "Plugin nicht gefunden: {0}."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:204
-#, fuzzy, java-format
+#, java-format
 msgid "Could not load plugin {0}."
-msgstr "Kann \"{0}\" nicht lesen."
+msgstr "Kann das Plugin {0}nicht laden."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:228
 msgid "unnamed"
@@ -2060,15 +2040,13 @@ msgstr "Ignoriere die Ungültige Datei URL: \"{0}\""
 #: ../osmarender/src/OsmarenderPlugin.java:102
 #: ../osmarender/src/OsmarenderPlugin.java:108
 msgid "View"
-msgstr ""
+msgstr "Bild"
 
 #: ../landsat/src/landsat/DownloadLandsatTask.java:18
-#, fuzzy
 msgid "Landsat background images"
-msgstr "Lade und zeige Satelietenbilder als Hintergrund."
+msgstr "Landsat Hintergundbilder."
 
 #: ../landsat/src/landsat/LandsatLayer.java:45
-#, fuzzy
 msgid "Wrong longitude transformation for tile manager. Can't operate on {0}"
 msgstr ""
 "Falsche Breitentransformation für den Teilen-Cache. Kann nicht auf {0} "
@@ -2087,7 +2065,7 @@ msgstr "Voreinstellungsquellen Tester"
 msgid ""
 "Open the annotation preset test tool for previewing annotation preset "
 "dialogs."
-msgstr ""
+msgstr "Statret den Voreinstellungsquellen Test Werkzeug um diese aus zu probieren."
 
 #: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:28
 msgid "You have to specify annotation sources in the preferences first."
@@ -2095,32 +2073,3 @@ msgstr ""
 "Es müssen zuerst Voreinstellungsquellen in den Einstellungen definiert "
 "werden."
 
-#~ msgid "Download {0} ways containing a total of {1} segments?"
-#~ msgstr "Lade {0} Wege, die aus {1} Abschnitten bestehen?"
-
-#~ msgid "Refresh the selection list."
-#~ msgstr "Auswahlliste aktualisieren."
-
-#~ msgid "Search for objects."
-#~ msgstr "Objekte suchen."
-
-#~ msgid "Language"
-#~ msgstr "Sprache"
-
-#~ msgid "Conflicts in disjunct objects"
-#~ msgstr "Konflikte in unabhängigen Objekten"
-
-#~ msgid "Downloading {0} {1}"
-#~ msgstr "Hole {0} {1}"
-
-#~ msgid "Got more than one object when expecting only one."
-#~ msgstr "Habe ein Objekt erwartet, aber mehrere empfangen."
-
-#~ msgid "Move selected objects around."
-#~ msgstr "Verschiebe markierte Objekte"
-
-#~ msgid "Open as raw gps data"
-#~ msgstr "Als GPS-Daten öffnen"
-
-#~ msgid "Show background"
-#~ msgstr "Hintergrund anzeigen"

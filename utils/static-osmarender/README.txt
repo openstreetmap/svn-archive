@@ -34,3 +34,15 @@ Program Arguments:
       eg     -osmarender-scales 0.3,0.5,1.0,1.0
  <filename.osm>
       The .osm file to render
+
+
+Outstanding Issues:
+* ImageMagick breaks very large pngs when you try to crop them. We'll need to
+   find an alternate program to do the cropping for really big files
+* You have to figure out the initial DPI yourself. Without the .osm file
+   including the bounding box, I'm not sure how we can calculate one for you
+* As you change the osmarender scale, not only does the page size change, but
+   the aspect ratio does too. So, your tiles will never be the same size or
+   shape.
+* The browsing interface is pretty basic, and could really use being made
+   a lot snazzier.

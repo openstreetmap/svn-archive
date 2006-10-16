@@ -3,8 +3,9 @@
 
 Requires:
  * xalan2 or xsltproc
- * mogrify
+ * ImageMagick (for identify)
  * inkscape
+ * vips <http://www.vips.ecs.soton.ac.uk/> - needs tools, not just library
 
 Will take a .osm file, pass it through osmarender at a number of different
 scale factors. It will then output these svgs at increasing DPI levels,
@@ -37,8 +38,9 @@ Program Arguments:
 
 
 Outstanding Issues:
-* ImageMagick breaks very large pngs when you try to crop them. We'll need to
-   find an alternate program to do the cropping for really big files
+* For each tile we generate, we call vips. This can be a bit slow, so we
+   should really find a way to have vips spit out several tiles once it has
+   started processing the large image
 * You have to figure out the initial DPI yourself. Without the .osm file
    including the bounding box, I'm not sure how we can calculate one for you
 * As you change the osmarender scale, not only does the page size change, but

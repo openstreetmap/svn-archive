@@ -170,13 +170,6 @@ foreach my $scale (@osmarender_scales) {
 	print "\n";
 	print "Generating tile images in $odir for scale $scale from $png\n";
 
-	# Crop the master image so the tiles fit exactly into it
-	unless($cropwidth == $width && $cropheight == $height) {
-		print "Cropping image from ${width}x${height} to ${cropwidth}x${cropheight}\n";
-		print `convert -crop ${cropwidth}x${cropheight}+0+0 $png /tmp/crop.png`;
-		print `mv /tmp/crop.png $png`;
-	}
-
 	# Save the sizes for the javascript
 	print JS "\n";
 	print JS "tiles_in_dir[$oscale] = $tscale;\n";
@@ -184,32 +177,31 @@ foreach my $scale (@osmarender_scales) {
 	print JS "tile_heights[$oscale] = $tileheight;\n";
 
 	# Now, have it split into handy tiles
+	# Makes one call to vips per tile, which isn't ideal, but at least
+	#  it doesn't die / use lots of memory / break like "convert -crop" does
+	#	
+	# We want the tiles to be to be <updown>x<leftright>.png
 	print "Splitting into $tiles tiles of ${tilewidth}x${tileheight}:\n";
-	print `convert -crop ${tilewidth}x${tileheight}x0x0 $png $odir/tile.png`;
+	if($tscale == 1) {
+		`cp $png $odir/tile-1x1.png`;
+	} else {
+		for(my $i=0; $i<$tscale; $i++) {
+			for(my $j=0; $j<$tscale; $j++) {
+				my $tileid = ($i+1)."x".($j+1);
+				my $otile = $odir."/tile-".$tileid.".png";
+
+				my $toffset = $i * $tileheight;
+				my $loffset = $j * $tilewidth;
+
+				print "  Producing $tileid of ${tscale}x${tscale} - offset is ${loffset}x${toffset}\n";
+				print `vips im_extract_area $png $otile $loffset $toffset $tilewidth $tileheight`;
+			}
+		}
+	}
 
 	# Remove the large image, we no longer need it
 	unlink $png;
 
-	# Finally, shuffle the tiles so they have the right names
-	# We want them to be <updown>x<leftright>.png
-	print "Renaming tiles\n";
-	if($tscale == 1) {
-		`mv $odir/tile.png $odir/tile-1x1.png`;
-	} else {
-		for(my $i=0; $i<$tscale; $i++) {
-			for(my $j=0; $j<$tscale; $j++) {
-				my $tile = $odir."/tile-".(($i*$tscale)+$j).".png";
-				unless(-f $tile) {
-					$tile = $odir."/tile.png.".(($i*$tscale)+$j);
-				}
-				unless(-f $tile) {
-					die("No tile found for zoom $tscale at $i x $j - looked for $tile\n");
-				}
-				my $ntile = $odir."/tile-".($i+1)."x".($j+1).".png";
-				`mv $tile $ntile`;
-			}
-		}
-	}
 	print "Finished generating $tiles tiles\n";
 }
 

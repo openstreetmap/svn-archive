@@ -35,8 +35,7 @@ use LWP::Simple;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
-my $Password = "username|password";  # Ask OJW for a password to use this script
-UpdateOsmarender();
+my $Password = "user|password";  # Ask OJW for a password to use this script
 ProcessRequestFromWeb($Password);
 exit;
 
@@ -86,9 +85,13 @@ sub ProcessRequest(){
     exit;
   }
   if($ID == -1){
-    print STDERR "Nothing to do!\n";
+    print STDERR "Nothing to do!\nSleeping for 1 hour: press Ctrl-C to quit\n";
+    sleep(3600);
     exit;
   }
+  
+  UpdateOsmarender();
+  
   print STDERR "Using interface version $Version\n";
   print STDERR "Downloading $ID from $URL\n";
   

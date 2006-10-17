@@ -57,7 +57,7 @@ class Image
 	{
 		$this->map = new Map ($w,$s,$e,$n, $width, $height);
 		//$this->zoom=$zoom;
-		$this->painter = new MagickPainter();
+		$this->painter = new GDPainter();
 
 		$this->landsat = $lsat;
 		$this->poly = $pl;
@@ -126,10 +126,10 @@ class Image
 			$this->draw_landsat();
 
 		// Then areas
-		/*
+		
 		if($this->poly==1)
 			$this->draw_areas();
-		*/
+		
 
 		// Contours should come here
 		if($this->srtm==1)
@@ -493,8 +493,11 @@ class Image
 
 		if($name)
 		{
-			list($text_width,$text_height) = 
-					$this->painter->getTextDimensions(8,$name);
+			$r = $this->painter->getTextDimensions(8,$name);
+			if($r)
+				list($text_width,$text_height) = $r;
+			else
+				return;
 
 			// Work out position from provided segment
 			$p = array();

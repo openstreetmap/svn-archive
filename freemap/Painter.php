@@ -181,6 +181,7 @@ class MagickPainter extends Painter
 		{
 			DrawSetFontSize($this->dwand,$fontsize);
 			DrawSetStrokeColor($this->dwand,$pwand); 
+			DrawSetFontWeight($this->dwand,100);
 			DrawAnnotation($this->dwand,$x,$y,$text); 
 		}
 	}
@@ -214,12 +215,10 @@ class MagickPainter extends Painter
 
 	function drawDashedLine($x1,$y1,$x2,$y2,$dash, $pwand, $thickness)
 	{
-		$dashpattern = explode(",",$dash);
-		$dashpattern[0] = (double)$dashpattern[0];
-		$dashpattern[1] = (double)$dashpattern[1];
-		DrawSetStrokeDashArray($this->dwand, $dashpattern);
+		//$dashpattern = explode(",",$dash);
+		//DrawSetStrokeDashArray($this->dwand, $dashpattern);
 		$this->drawLine($x1,$y1,$x2,$y2,$pwand,$thickness);
-		DrawSetStrokeDashArray($this->dwand); // remove the dash pattern
+		//DrawSetStrokeDashArray($this->dwand); // remove the dash pattern
 	}
 
 	# 16/11/04 new version for truetype fonts.
@@ -265,18 +264,26 @@ class MagickPainter extends Painter
 
 	function getTextDimensions($fontsize,$text)
 	{
-		$f = DrawGetFontSize($this->dwand);
-		DrawSetFontSize($this->dwand,$fontsize);
-		// I presume this uses the current font size
-		return array 
-			( MagickGetStringWidth($this->wand,$this->dwand,$text),
-			 MagickGetStringHeight($this->wand,$this->dwand,$text ) );
-		DrawSetFontSize($this->dwand,$f);
+		// Fatal errors should be restricted to exceptional conditions,
+		// surely???
+		if($text!="") 
+		{
+			$f = DrawGetFontSize($this->dwand);
+			DrawSetFontSize($this->dwand,$fontsize);
+			// I presume this uses the current font size
+			return array 
+				( MagickGetStringWidth($this->wand,$this->dwand,$text),
+			 	MagickGetStringHeight($this->wand,$this->dwand,$text ) );
+			DrawSetFontSize($this->dwand,$f);
+		}
+		return null;
 	}
 
 	function renderImage()
 	{
 		MagickEchoImageBlob($this->wand);
+		DestroyDrawingWand($this->dwand);
+		DestroyMagickWand($this->wand);
 	}
 
 	function crop($x,$y,$w,$h)

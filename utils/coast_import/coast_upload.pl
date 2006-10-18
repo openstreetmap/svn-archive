@@ -36,12 +36,12 @@ my $X1 = shift();
 my $X2 = shift();
 my $Sector = shift() || "20";
 
-createCoasts("Data/NGA_GlobalShoreline_cd".$Sector, $Y1, $Y2, $X1, $X2, $StartAt);
+createCoasts("Data/NGA_GlobalShoreline_cd".$Sector, $Y1, $Y2, $X1, $X2);
 print "Done\n";
 
 
 sub createCoasts(){
-  my ($Filename, $Y1, $Y2, $X1, $X2, $StartAt) = @_;
+  my ($Filename, $Y1, $Y2, $X1, $X2) = @_;
   
   my $PW = "----"; # Password for reporting progress to the almien website
   my $ID = int(get(sprintf("http://almien.co.uk/OSM/CoastlineUpload/Update/?pg=$PW&action=start&S=%f&N=%f&W=%f&E=%f",$Y1,$Y2,$X1,$X2)));

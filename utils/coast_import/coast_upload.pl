@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+  #!/usr/bin/perl
 #-----------------------------------------------------------------------------
 # coast_upload.pl
 # 
@@ -30,6 +30,7 @@ use LWP::Simple;
 use osm;
 use strict;
 
+# Lat, Lat, Long, Long, Sector
 my $Y1 = shift();
 my $Y2 = shift();
 my $X1 = shift();
@@ -41,6 +42,7 @@ print "Done\n";
 
 
 sub createCoasts(){
+  # Filename, Lat, Lat, Long, Long
   my ($Filename, $Y1, $Y2, $X1, $X2) = @_;
   
   my $PW = "----"; # Password for reporting progress to the almien website

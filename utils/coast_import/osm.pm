@@ -9,6 +9,7 @@ sub setup(){
   $self->{Password} = shift();
   $self->{UserAgent} = shift();
   
+  # You might need to change this to Easy with a capital E
   $self->{Curl} = new WWW::Curl::easy;
 
 }

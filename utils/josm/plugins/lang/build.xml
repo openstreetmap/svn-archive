@@ -1,0 +1,49 @@
+<project name="lang" default="install-all" basedir=".">
+
+	<property name="josm" value="../../../../editors/josm" />
+	<property name="plugins" value="../.."/>
+
+	<target name="install-all" depends="josm-build,keys.pot">
+		<ant target="install"><property name="language" value="de"/></ant>
+		<ant target="install"><property name="language" value="fr"/></ant>
+		<ant target="install"><property name="language" value="ro"/></ant>
+		<ant target="install"><property name="language" value="en_GB"/></ant>
+	</target>
+
+	<target name="install">
+		<mkdir dir="${language}/bin"/>
+		<javac srcdir="${language}/src" classpath="${josm}/dist/josm-custom.jar" destdir="${language}/bin" />
+
+		<exec executable="msgmerge">
+			<arg line="-U ${language}/${language}.po keys.pot"/>
+		</exec>
+
+		<exec executable="msgfmt">
+			<arg line="--java2 -d${language}/bin -rorg.openstreetmap.josm.Translation -l${language} ${language}/${language}.po"/>
+		</exec>
+
+		<jar destfile="${user.home}/.josm/plugins/lang-${language}.jar" basedir="${language}/bin">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />
+				<attribute name="Plugin-Description" value="Translation to locale ${language}" />
+				<attribute name="Plugin-Early" value="true" />
+			</manifest>
+		</jar>
+	</target>
+
+
+
+	<target name="josm-build">
+		<ant dir="${josm}" />
+	</target>
+	
+	<target name="keys.pot">
+		<exec executable="find" output="alljava.txt">
+			<arg line="${josm}/src ${plugins} -name '*.java'"/>
+		</exec>
+
+		<exec executable="xgettext">
+			<arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -okeys.pot -falljava.txt"/>
+		</exec>
+	</target>
+</project>

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JOSM SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-13 23:16+0200\n"
+"POT-Creation-Date: 2006-10-22 21:32+0200\n"
 "PO-Revision-Date: 14/10/2006 18:36+0100\n"
 "Last-Translator: Bruce Cowan <bruce.cowan@dsl.pipex.com>\n"
 "Language-Team: English/GB <josm-en_gb@eigenheimstrasse.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddSegmentAction.java:52
 msgid "Add segment"
@@ -122,16 +122,22 @@ msgstr ""
 "Warning: This way is incomplete. Try to download it before adding segments."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:162
-#, java-format
+#, fuzzy, java-format
 msgid ""
 "{0} way has been selected.\n"
 "Do you wish to select all segments belonging to the way instead?"
+msgid_plural ""
 "{0} ways have been selected.\n"
 "Do you wish to select all segments belonging to the ways instead?"
-msgstr ""
+msgstr[0] ""
 "{0} way has been selected.\n"
-"Do you wish to select all segments belonging to the way instead?"
-"{0} ways have been selected.\n"
+"Do you wish to select all segments belonging to the way instead?{0} ways "
+"have been selected.\n"
+"Do you wish to select all segments belonging to the ways instead?"
+msgstr[1] ""
+"{0} way has been selected.\n"
+"Do you wish to select all segments belonging to the way instead?{0} ways "
+"have been selected.\n"
 "Do you wish to select all segments belonging to the ways instead?"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:162
@@ -203,7 +209,7 @@ msgid "OpenStreetMap data"
 msgstr "OpenStreetMap data"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:28
-#: ../landsat/src/landsat/DownloadLandsatTask.java:21
+#: ../../plugins/landsat/src/landsat/DownloadLandsatTask.java:21
 msgid "Downloading data"
 msgstr "Downloading data"
 
@@ -256,11 +262,13 @@ msgid "Unknown file extension: {0}"
 msgstr "Unknown file extension: {0}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:83
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:59
 #, java-format
 msgid "Error while parsing {0}"
 msgstr "Error while parsing {0}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:86
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:63
 #, java-format
 msgid "Could not read \"{0}\""
 msgstr "Could not read \"{0}\""
@@ -594,12 +602,12 @@ msgstr "Objects to delete:"
 msgid "Upload this changes?"
 msgstr "Upload these changes?"
 
-#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:52
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:54
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:55
 msgid "Help"
 msgstr "Help"
 
-#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:104
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:106
 msgid "Can only edit help pages from JOSM Online Help"
 msgstr "Can only edit help pages from JOSM Online Help"
 
@@ -644,8 +652,8 @@ msgid ""
 "Note: GPL is not compatible to the OSM license. Do not upload GPL licensed "
 "tracks."
 msgstr ""
-"Note: The GPL is not compatible with the OSM licence. Do not upload GPL licensed "
-"tracks."
+"Note: The GPL is not compatible with the OSM licence. Do not upload GPL "
+"licensed tracks."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:45
 msgid "Export to GPX"
@@ -1047,6 +1055,8 @@ msgstr "Add a new key/value pair to all objects"
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:321
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:53
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:355
+#: ../../plugins/grid/src/grid/GridPlugin.java:43
+#: ../../plugins/grid/src/grid/GridPlugin.java:49
 msgid "Edit"
 msgstr "Edit"
 
@@ -1818,11 +1828,13 @@ msgid "Unknown host"
 msgstr "Unknown host"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawGpsReader.java:43
+#: ../../plugins/waypoints/src/WaypointReader.java:55
 #, java-format
 msgid "Data error: lat value \"{0}\" is out of bound."
 msgstr "Data error: lat value \"{0}\" is out of bound."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawGpsReader.java:45
+#: ../../plugins/waypoints/src/WaypointReader.java:59
 #, java-format
 msgid "Data error: lon value \"{0}\" is out of bound."
 msgstr "Data error: lon value \"{0}\" is out of bound."
@@ -2025,29 +2037,29 @@ msgstr "Ignoring malformed url: \"{0}\""
 msgid "Ignoring malformed file url: \"{0}\""
 msgstr "Ignoring malformed file url: \"{0}\""
 
-#: ../osmarender/src/OsmarenderPlugin.java:102
-#: ../osmarender/src/OsmarenderPlugin.java:108
+#: ../../plugins/osmarender/src/OsmarenderPlugin.java:102
+#: ../../plugins/osmarender/src/OsmarenderPlugin.java:108
 msgid "View"
 msgstr "View"
 
-#: ../landsat/src/landsat/DownloadLandsatTask.java:18
+#: ../../plugins/landsat/src/landsat/DownloadLandsatTask.java:18
 msgid "Landsat background images"
 msgstr "Landsat background images"
 
-#: ../landsat/src/landsat/LandsatLayer.java:45
+#: ../../plugins/landsat/src/landsat/LandsatLayer.java:45
 msgid "Wrong longitude transformation for tile manager. Can't operate on {0}"
 msgstr "Wrong longitude transformation for tile manager. Can't operate on {0}"
 
-#: ../landsat/src/landsat/LandsatLayer.java:70
+#: ../../plugins/landsat/src/landsat/LandsatLayer.java:70
 #, java-format
 msgid "WMS layer: {0}"
 msgstr "WMS layer: {0}"
 
-#: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
 msgid "Annotation Preset Tester"
 msgstr "Annotation Preset Tester"
 
-#: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
 msgid ""
 "Open the annotation preset test tool for previewing annotation preset "
 "dialogs."
@@ -2055,9 +2067,24 @@ msgstr ""
 "Open the annotation preset test tool for previewing annotation preset "
 "dialogs."
 
-#: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:28
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:28
 msgid "You have to specify annotation sources in the preferences first."
 msgstr "You have to specify annotation sources in the preferences first."
+
+#: ../../plugins/grid/src/grid/GridLayer.java:74
+#, fuzzy
+msgid "Grid layer:"
+msgstr "layer"
+
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:33
+#, fuzzy
+msgid "Open waypoints file"
+msgstr "Open a file."
+
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:33
+#, fuzzy
+msgid "Open a waypoints file."
+msgstr "Open a file."
 
 #~ msgid "Download {0} ways containing a total of {1} segments?"
 #~ msgstr "Download {0} ways containing a total of {1} segments?"

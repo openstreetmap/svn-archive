@@ -2,19 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: JOSM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-13 23:14+0200\n"
+"POT-Creation-Date: 2006-10-22 21:32+0200\n"
 "PO-Revision-Date: 2006-10-14 10:09+0200\n"
 "Last-Translator: Ovidiu Constantin <ovidiu@mybox.ro>\n"
 "Language-Team: Romanian <gnomero-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3;plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1))\n"
+"Plural-Forms: nplurals=3;plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1))\n"
 "X-Poedit-Language: Romanian\n"
 "X-Poedit-Country: ROMANIA\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -119,8 +120,11 @@ msgstr "Adaugă o nouă cale datelor."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:95
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:143
-msgid "Warning: This way is incomplete. Try to download it, before adding segments."
-msgstr "Atentie: Această cale este incompletă. Încercaţi să o descărcaţi înainte de a adăuga segmente."
+msgid ""
+"Warning: This way is incomplete. Try to download it, before adding segments."
+msgstr ""
+"Atentie: Această cale este incompletă. Încercaţi să o descărcaţi înainte de "
+"a adăuga segmente."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:162
 #, java-format
@@ -209,7 +213,7 @@ msgid "OpenStreetMap data"
 msgstr "Date OpenStreetMap"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:28
-#: ../landsat/src/landsat/DownloadLandsatTask.java:21
+#: ../../plugins/landsat/src/landsat/DownloadLandsatTask.java:21
 msgid "Downloading data"
 msgstr "Descarc date"
 
@@ -262,11 +266,13 @@ msgid "Unknown file extension: {0}"
 msgstr "Extensie fişier necunoscută : {0}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:83
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:59
 #, java-format
 msgid "Error while parsing {0}"
 msgstr "Eroare la prelucrarea {0}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:86
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:63
 #, java-format
 msgid "Could not read \"{0}\""
 msgstr "Nu am putut citi \"{0}\""
@@ -339,8 +345,12 @@ msgid "Download map data from the OSM server."
 msgstr "Descarcă hărţi de la serverul OSM."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:102
-msgid "Move and zoom the image like the main map. Select an area to download by dragging."
-msgstr "Mută şi măreşte imaginea ca şi harta principală. Selectaţi prin tragere zona ce va fi descărcată."
+msgid ""
+"Move and zoom the image like the main map. Select an area to download by "
+"dragging."
+msgstr ""
+"Mută şi măreşte imaginea ca şi harta principală. Selectaţi prin tragere zona "
+"ce va fi descărcată."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:105
 msgid "Bounding box"
@@ -403,7 +413,8 @@ msgstr "Alegeţi o zonă"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:261
 msgid "Please enter the desired coordinates or click on a bookmark."
-msgstr "Vă rog introduceţi coordonetele dorite sau faceţi clic pe un semn de carte."
+msgstr ""
+"Vă rog introduceţi coordonetele dorite sau faceţi clic pe un semn de carte."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:263
 msgid "Please select at least one download data type."
@@ -490,8 +501,12 @@ msgid "Empty document"
 msgstr "Document gol"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:32
-msgid "There are unresolved conflicts. Conflicts will not be saved and handled as if you rejected all. Continue?"
-msgstr "Există conflicte nerezolvate. Conflictele nu vor fi salvate şi se vor trata ca şi cum aţi refuzat totul. Continui?"
+msgid ""
+"There are unresolved conflicts. Conflicts will not be saved and handled as "
+"if you rejected all. Continue?"
+msgstr ""
+"Există conflicte nerezolvate. Conflictele nu vor fi salvate şi se vor trata "
+"ca şi cum aţi refuzat totul. Continui?"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:32
 msgid "Conflicts"
@@ -530,7 +545,9 @@ msgstr "Scalare automată: {0}"
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:43
 #, java-format
 msgid "Auto zoom the view (to {0}. Disabled if the view is moved)"
-msgstr "Mărire automată pentru a vizualiza (la {0}. Dezactivat dacă vizualizarea este mutată)"
+msgstr ""
+"Mărire automată pentru a vizualiza (la {0}. Dezactivat dacă vizualizarea "
+"este mutată)"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAsAction.java:28
 msgid "Save as"
@@ -592,12 +609,12 @@ msgstr "Obiecte de şters:"
 msgid "Upload this changes?"
 msgstr "Transmit aceste schimbări?"
 
-#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:52
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:54
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:55
 msgid "Help"
 msgstr "Ajutor"
 
-#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:104
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:106
 msgid "Can only edit help pages from JOSM Online Help"
 msgstr "Se pot edita doar paginile din ajutorul JOSM online"
 
@@ -639,8 +656,12 @@ msgid "Redo the last undone action."
 msgstr "Refă ultima acţiune anulată."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:40
-msgid "Note: GPL is not compatible to the OSM license. Do not upload GPL licensed tracks."
-msgstr "Notă: GPL nu este compatibilă cu licenţa OSM. Nu transmiteţi piste licenţiate GPL"
+msgid ""
+"Note: GPL is not compatible to the OSM license. Do not upload GPL licensed "
+"tracks."
+msgstr ""
+"Notă: GPL nu este compatibilă cu licenţa OSM. Nu transmiteţi piste "
+"licenţiate GPL"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:45
 msgid "Export to GPX"
@@ -767,8 +788,12 @@ msgstr ""
 "\n"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:83
-msgid "Please send an email with the following information to josm@eigenheimstrasse.de"
-msgstr "Vă rog trimiteţi un email cu următoarele informaţii la josm@eigenheimstrasse.de"
+msgid ""
+"Please send an email with the following information to josm@eigenheimstrasse."
+"de"
+msgstr ""
+"Vă rog trimiteţi un email cu următoarele informaţii la josm@eigenheimstrasse."
+"de"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/tools/ShortCutLabel.java:12
 msgid "Ctrl-"
@@ -827,8 +852,19 @@ msgid "Please enter a search string."
 msgstr "Vă rog introduceţi un şir de căutat"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:145
-msgid "<html>Fulltext search.<ul><li><code>Baker Street</code>  - 'Baker' and 'Street' in any key or name.</li><li><code>\"Baker Street\"</code>  - 'Baker Street' in any key or name.</li><li><code>name:Bak</code>  - 'Bak' anywhere in the name.</li><li><code>-name:Bak</code>  - not 'Bak' in the name.</li><li><code>foot:</code>  - key=foot set to any value.</ul></html>"
-msgstr "<html>Căutare în întreg textul.<ul><li><code>Bulevardul Unirii</code>  - 'Bulevardul' şi 'Unirii' în orice cheie sau nume.</li><li><code>\"Bulevardul Unirii\"</code>  - 'Bulevardul Unirii' în orice cheie sau nume.</li><li><code>name:Uni</code>  - 'Uni' oriunde în nume.</li><li><code>-name:Uni</code>  - nu există 'Uni' în nume.</li><li><code>foot:</code>  - cheia foot are orice valoare.</ul></html>"
+msgid ""
+"<html>Fulltext search.<ul><li><code>Baker Street</code>  - 'Baker' and "
+"'Street' in any key or name.</li><li><code>\"Baker Street\"</code>  - 'Baker "
+"Street' in any key or name.</li><li><code>name:Bak</code>  - 'Bak' anywhere "
+"in the name.</li><li><code>-name:Bak</code>  - not 'Bak' in the name.</"
+"li><li><code>foot:</code>  - key=foot set to any value.</ul></html>"
+msgstr ""
+"<html>Căutare în întreg textul.<ul><li><code>Bulevardul Unirii</code>  - "
+"'Bulevardul' şi 'Unirii' în orice cheie sau nume.</li><li><code>\"Bulevardul "
+"Unirii\"</code>  - 'Bulevardul Unirii' în orice cheie sau nume.</"
+"li><li><code>name:Uni</code>  - 'Uni' oriunde în nume.</li><li><code>-name:"
+"Uni</code>  - nu există 'Uni' în nume.</li><li><code>foot:</code>  - cheia "
+"foot are orice valoare.</ul></html>"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:153
 msgid "replace selection"
@@ -860,15 +896,20 @@ msgstr "Rezolvă"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:64
 msgid "Open a merge dialog of all selected items in the list above."
-msgstr "Deschide un dialog de îmbinare a tuturor elementelor selectate din lista de mai sus."
+msgstr ""
+"Deschide un dialog de îmbinare a tuturor elementelor selectate din lista de "
+"mai sus."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:73
 msgid "Select"
 msgstr "Selectaţi"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:74
-msgid "Set the selected elements on the map to the selected items in the list above."
-msgstr "Setaţi elementele selectate de pe hartă ca elemente selectate din lista de mai sus."
+msgid ""
+"Set the selected elements on the map to the selected items in the list above."
+msgstr ""
+"Setaţi elementele selectate de pe hartă ca elemente selectate din lista de "
+"mai sus."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:108
 msgid "Please select something from the conflict list."
@@ -917,8 +958,12 @@ msgid "Not implemented yet."
 msgstr "Nu a fost încă implementat."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:138
-msgid "Revert the state of all currently selected objects to the version selected in the history list."
-msgstr "Readu toate obiectele selectate curent la starea din versiunea selectată în lista de istoric."
+msgid ""
+"Revert the state of all currently selected objects to the version selected "
+"in the history list."
+msgstr ""
+"Readu toate obiectele selectate curent la starea din versiunea selectată în "
+"lista de istoric."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
 msgid "Command Stack"
@@ -930,7 +975,8 @@ msgstr "Deschide o listă cu toate comenzile (zonă tampon pentru anulare)."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:99
 msgid "Please select the objects you want to change properties for."
-msgstr "Vă rog selectaţi obiectele pentru care doriţi să schimbaţi proprietăţile."
+msgstr ""
+"Vă rog selectaţi obiectele pentru care doriţi să schimbaţi proprietăţile."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:102
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:156
@@ -943,8 +989,11 @@ msgstr[2] "Se vor modifica {0} de obiecte."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:102
 #, java-format
-msgid "Please select a new value for \"{0}\".<br>(Empty string deletes the key.)"
-msgstr "Vă rog selectaţi o valoare nouă pentru \"{0}\".<br>(Un şir gol va şterge cheia.)"
+msgid ""
+"Please select a new value for \"{0}\".<br>(Empty string deletes the key.)"
+msgstr ""
+"Vă rog selectaţi o valoare nouă pentru \"{0}\".<br>(Un şir gol va şterge "
+"cheia.)"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:114
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:178
@@ -959,7 +1008,8 @@ msgstr "<diferit>"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:151
 msgid "Please select objects for which you want to change properties."
-msgstr "Vă rog selectaţi obiectele pentru care doriţi să schimbaţi proprietăţile."
+msgstr ""
+"Vă rog selectaţi obiectele pentru care doriţi să schimbaţi proprietăţile."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:156
 msgid "Please select a key"
@@ -1022,6 +1072,8 @@ msgstr "Adaugă o nouă pereche cheie/valoare tuturor obiectelor"
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:321
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:53
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:355
+#: ../../plugins/grid/src/grid/GridPlugin.java:43
+#: ../../plugins/grid/src/grid/GridPlugin.java:49
 msgid "Edit"
 msgstr "Editare"
 
@@ -1073,12 +1125,16 @@ msgstr "Tip necunoscut la linia {0}"
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:178
 #, java-format
 msgid "Cannot have a writable combobox with default values (line {0})"
-msgstr "Nu pot avea o listă de selecţie modificabilă cu valori implicite (linia {0})"
+msgstr ""
+"Nu pot avea o listă de selecţie modificabilă cu valori implicite (linia {0})"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:183
 #, java-format
-msgid "display_values ({0}) and values ({1}) must be of same number of elements."
-msgstr "display_values ({0}) şi values ({1}) trebuie să aibă acelaşi număr de elemente."
+msgid ""
+"display_values ({0}) and values ({1}) must be of same number of elements."
+msgstr ""
+"display_values ({0}) şi values ({1}) trebuie să aibă acelaşi număr de "
+"elemente."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:184
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:185
@@ -1348,7 +1404,9 @@ msgstr "stratul nu este în listă."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:55
 msgid "Hint: Some changes came from uploading new data to the server."
-msgstr "Indiciu: Anumite modificări au apărut în urma transmiterii de date noi la server."
+msgstr ""
+"Indiciu: Anumite modificări au apărut în urma transmiterii de date noi la "
+"server."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:57
 msgid "There are unsaved changes. Really quit?"
@@ -1419,7 +1477,8 @@ msgid ""
 "Parameters are read in the order they are specified, so make sure you load\n"
 "some data before --selection"
 msgstr ""
-"Parametrii sunt citiţi în ordinea în care sunt specificaţi, deci asiguraţi-vă\n"
+"Parametrii sunt citiţi în ordinea în care sunt specificaţi, deci asiguraţi-"
+"vă\n"
 "că aţi încărcat date înainte de --selection"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:166
@@ -1490,7 +1549,8 @@ msgstr "Parola OSM."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:36
 msgid "Size the applet to the given geometry (format: WIDTHxHEIGHT)"
-msgstr "Dimensionează aplicaţia la geometria precizată (format: LĂŢIMExÎNĂLŢIME)"
+msgstr ""
+"Dimensionează aplicaţia la geometria precizată (format: LĂŢIMExÎNĂLŢIME)"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:37
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:38
@@ -1499,16 +1559,28 @@ msgid "string;string;..."
 msgstr "şir;şir;..."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:37
-msgid "Download each. Can be x1,y1,x2,y2 an url containing lat=y&lon=x&zoom=z or a filename"
-msgstr "Descarcă pe fiecare. Poate fi x1,y1,x2,y2 o adresă conţinând lat=y&lon=x&zoom=z sau un nume de fişier"
+msgid ""
+"Download each. Can be x1,y1,x2,y2 an url containing lat=y&lon=x&zoom=z or a "
+"filename"
+msgstr ""
+"Descarcă pe fiecare. Poate fi x1,y1,x2,y2 o adresă conţinând "
+"lat=y&lon=x&zoom=z sau un nume de fişier"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:38
-msgid "Download each as raw gps. Can be x1,y1,x2,y2 an url containing lat=y&lon=x&zoom=z or a filename"
-msgstr "Descarcă pe fiecare ca gps neprelucrat. Poate fi x1,y1,x2,y2 sau o adresă conţinând lat=x&lon=y&zoom=z sau un nume de fişier"
+msgid ""
+"Download each as raw gps. Can be x1,y1,x2,y2 an url containing "
+"lat=y&lon=x&zoom=z or a filename"
+msgstr ""
+"Descarcă pe fiecare ca gps neprelucrat. Poate fi x1,y1,x2,y2 sau o adresă "
+"conţinând lat=x&lon=y&zoom=z sau un nume de fişier"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:39
-msgid "Add each to the initial selection. Can be a google-like search string or an url which returns osm-xml"
-msgstr "Adaugă pe fiecare la selecţia iniţială. Poate fi un şir de căutare tip google sau o adresă care întoarce osm-xml"
+msgid ""
+"Add each to the initial selection. Can be a google-like search string or an "
+"url which returns osm-xml"
+msgstr ""
+"Adaugă pe fiecare la selecţia iniţială. Poate fi un şir de căutare tip "
+"google sau o adresă care întoarce osm-xml"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:40
 msgid "any"
@@ -1549,8 +1621,11 @@ msgid "Draw Direction Arrows"
 msgstr "Desenează săgeţi direcţionale"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:250
-msgid "Force drawing of lines if the imported data contain no line information."
-msgstr "Forţează desenarea liniilor dacă datele importate nu conţin informatii despre linii."
+msgid ""
+"Force drawing of lines if the imported data contain no line information."
+msgstr ""
+"Forţează desenarea liniilor dacă datele importate nu conţin informatii "
+"despre linii."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:254
 msgid "Draw larger dots for the GPS points."
@@ -1595,28 +1670,52 @@ msgid "Login name (email) to the OSM account."
 msgstr "Nume autentificare (email) pentru contul OSM."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:388
-msgid "Login password to the OSM account. Leave blank to not store any password."
-msgstr "Parolă de autentificare pentru contul OSM. Lăsaţi gol pentru a nu păstra nici o parolă."
+msgid ""
+"Login password to the OSM account. Leave blank to not store any password."
+msgstr ""
+"Parolă de autentificare pentru contul OSM. Lăsaţi gol pentru a nu păstra "
+"nici o parolă."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:389
 msgid "The base URL to the server retrieving WMS background pictures from."
 msgstr "Adresa de bază a serverului pentru obţinerea imaginilor WMS de fundal."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:390
-msgid "<html>Import string specification. lat/lon and time are imported.<br><b>lat</b>: The latitude coordinate<br><b>lon</b>: The longitude coordinate<br><b>time</b>: The measured time as string<br><b>ignore</b>: Skip this field<br>An example: \"ignore ignore lat lon\" will use ' ' as delimiter, skip the first two values and read then lat/lon.<br>Other example: \"lat,lon\" will just read lat/lon values comma seperated.</html>"
-msgstr "<html>Specificaţii pentru formatul şirului de import. lat/lon şi timp sunt importate.<br><b>lat</b>: Coordonata latitudine<br><b>lon</b>: Coordonata longitudine<br><b>time</b>: Timpul măsurat, ca şir<br><b>ignore</b>: Sări peste acest câmp<br>Un exemplu: \"ignore ignore lat lon\" va folosi ' ' ca delimitare, va sări peste primele două valori şi apoi va citi lat/lon.<br>Alt examplu: \"lat,lon\" va citi doar valorile lat/lon separate prin virgulă.</html>"
+msgid ""
+"<html>Import string specification. lat/lon and time are imported.<br><b>lat</"
+"b>: The latitude coordinate<br><b>lon</b>: The longitude "
+"coordinate<br><b>time</b>: The measured time as string<br><b>ignore</b>: "
+"Skip this field<br>An example: \"ignore ignore lat lon\" will use ' ' as "
+"delimiter, skip the first two values and read then lat/lon.<br>Other "
+"example: \"lat,lon\" will just read lat/lon values comma seperated.</html>"
+msgstr ""
+"<html>Specificaţii pentru formatul şirului de import. lat/lon şi timp sunt "
+"importate.<br><b>lat</b>: Coordonata latitudine<br><b>lon</b>: Coordonata "
+"longitudine<br><b>time</b>: Timpul măsurat, ca şir<br><b>ignore</b>: Sări "
+"peste acest câmp<br>Un exemplu: \"ignore ignore lat lon\" va folosi ' ' ca "
+"delimitare, va sări peste primele două valori şi apoi va citi lat/lon."
+"<br>Alt examplu: \"lat,lon\" va citi doar valorile lat/lon separate prin "
+"virgulă.</html>"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:397
-msgid "If your gps device draw to few lines, select this to draw lines along your way."
-msgstr "Dacă dispozitivul gps a desenat prea puţine linii, selectaţi această opţiune pentru a desena linii pe cale."
+msgid ""
+"If your gps device draw to few lines, select this to draw lines along your "
+"way."
+msgstr ""
+"Dacă dispozitivul gps a desenat prea puţine linii, selectaţi această opţiune "
+"pentru a desena linii pe cale."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:398
 msgid "Colors used by different objects in JOSM."
 msgstr "Culori utilizate de diferite obiecte în JOSM."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:399
-msgid "The sources (url or filename) of annotation preset definition files. See http://josm.eigenheimstrasse.de/wiki/AnnotationPresets for help."
-msgstr "Sursele (adresă sau nume de fişier) ale fişierelor cu adnotări predefinite. Vedeţi http://josm.eigenheimstrasse.de/wiki/AnnotationPresets pentru ajutor."
+msgid ""
+"The sources (url or filename) of annotation preset definition files. See "
+"http://josm.eigenheimstrasse.de/wiki/AnnotationPresets for help."
+msgstr ""
+"Sursele (adresă sau nume de fişier) ale fişierelor cu adnotări predefinite. "
+"Vedeţi http://josm.eigenheimstrasse.de/wiki/AnnotationPresets pentru ajutor."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:400
 msgid "Add a new annotation preset source to the list."
@@ -1631,8 +1730,12 @@ msgid "Display Settings"
 msgstr "Configurări afişare"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:406
-msgid "Various settings that influence the visual representation of the whole program."
-msgstr "Diferite opţiuni care influenţează reprezentarea vizuală a întregului program."
+msgid ""
+"Various settings that influence the visual representation of the whole "
+"program."
+msgstr ""
+"Diferite opţiuni care influenţează reprezentarea vizuală a întregului "
+"program."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:407
 msgid "Look and Feel"
@@ -1663,12 +1766,19 @@ msgid "OSM password"
 msgstr "Parola OSM"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:428
-msgid "<html>WARNING: The password is stored in plain text in the preferences file.<br>The password is transfered in plain text to the server, encoded in the url.<br><b>Do not use a valuable Password.</b></html>"
-msgstr "<html>ATENŢIE: Parola este păstrată în format text clar în fişierul de preferinţe.<br>Parola este transferată în text clar către server, codată în adresă.<br><b>Nu folosiţi o parolă importantă.</b></html>"
+msgid ""
+"<html>WARNING: The password is stored in plain text in the preferences file."
+"<br>The password is transfered in plain text to the server, encoded in the "
+"url.<br><b>Do not use a valuable Password.</b></html>"
+msgstr ""
+"<html>ATENŢIE: Parola este păstrată în format text clar în fişierul de "
+"preferinţe.<br>Parola este transferată în text clar către server, codată în "
+"adresă.<br><b>Nu folosiţi o parolă importantă.</b></html>"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:437
 msgid "CSV import specification (empty: read from first line in data)"
-msgstr "Specificaţie pentru import CSV (gol: citeşte din prima linie a datelor)"
+msgstr ""
+"Specificaţie pentru import CSV (gol: citeşte din prima linie a datelor)"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:442
 msgid "Map Settings"
@@ -1756,11 +1866,13 @@ msgid "Unknown host"
 msgstr "Gazdă necunoscută"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawGpsReader.java:43
+#: ../../plugins/waypoints/src/WaypointReader.java:55
 #, java-format
 msgid "Data error: lat value \"{0}\" is out of bound."
 msgstr "Eroare date: valoarea lat \"{0}\" este în afara limitelor."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawGpsReader.java:45
+#: ../../plugins/waypoints/src/WaypointReader.java:59
 #, java-format
 msgid "Data error: lon value \"{0}\" is out of bound."
 msgstr "Eroare date: valoarea lon \"{0}\" este în afara limitelor."
@@ -1770,12 +1882,19 @@ msgid "Could not detect data format string."
 msgstr "Nu am putut detecta şirul de format al datelor."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:62
-msgid "Format string in data is incomplete or not found. Try setting an manual format string in Preferences."
-msgstr "Şirul de format al datelor este incomplet sau nu a putut fi găsit. Încercaţi să precizaţi manual un şir de format în Preferinţe."
+msgid ""
+"Format string in data is incomplete or not found. Try setting an manual "
+"format string in Preferences."
+msgstr ""
+"Şirul de format al datelor este incomplet sau nu a putut fi găsit. Încercaţi "
+"să precizaţi manual un şir de format în Preferinţe."
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:63
-msgid "Format string is incomplete. Need at least 'lat' and 'lon' specification"
-msgstr "Şirul de format este incomplet. E necesar să fie specificate cel puţin 'lat' şi 'lon'"
+msgid ""
+"Format string is incomplete. Need at least 'lat' and 'lon' specification"
+msgstr ""
+"Şirul de format este incomplet. E necesar să fie specificate cel puţin 'lat' "
+"şi 'lon'"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:83
 #, java-format
@@ -1819,7 +1938,8 @@ msgstr "Eroare de date: Segmentul {0} a fost sterş dar este parte a căii {1}"
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/IncompleteDownloader.java:115
 #, java-format
 msgid "Data error: Node {0} is deleted but part of Segment {1}"
-msgstr "Eroare de date: Nodul {0} a fost şters dar este parte a segmentului {1}"
+msgstr ""
+"Eroare de date: Nodul {0} a fost şters dar este parte a segmentului {1}"
 
 #: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmIdReader.java:34
 msgid "Error during parse."
@@ -1959,60 +2079,92 @@ msgstr "Ignor adresa malformată: \"{0}\""
 msgid "Ignoring malformed file url: \"{0}\""
 msgstr "Ignor adresa malformată către fişier: \"{0}\""
 
-#: ../osmarender/src/OsmarenderPlugin.java:102
-#: ../osmarender/src/OsmarenderPlugin.java:108
+#: ../../plugins/osmarender/src/OsmarenderPlugin.java:102
+#: ../../plugins/osmarender/src/OsmarenderPlugin.java:108
 msgid "View"
 msgstr "Vizualizare"
 
-#: ../landsat/src/landsat/DownloadLandsatTask.java:18
+#: ../../plugins/landsat/src/landsat/DownloadLandsatTask.java:18
 msgid "Landsat background images"
 msgstr "Imagini de fundal Landsat"
 
-#: ../landsat/src/landsat/LandsatLayer.java:45
+#: ../../plugins/landsat/src/landsat/LandsatLayer.java:45
 msgid "Wrong longitude transformation for tile manager. Can't operate on {0}"
-msgstr "Eroare la transformarea longitudinii pentru administratorul de imagini. Nu pot opera pe {0}"
+msgstr ""
+"Eroare la transformarea longitudinii pentru administratorul de imagini. Nu "
+"pot opera pe {0}"
 
-#: ../landsat/src/landsat/LandsatLayer.java:70
+#: ../../plugins/landsat/src/landsat/LandsatLayer.java:70
 #, java-format
 msgid "WMS layer: {0}"
 msgstr "Stratul WMS: {0}"
 
-#: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
 msgid "Annotation Preset Tester"
 msgstr "Tester de adnotări predefinite"
 
-#: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
-msgid "Open the annotation preset test tool for previewing annotation preset dialogs."
-msgstr "Deschide unealta de test a adnotărilor pentru a previzualiza mesajele cu adnotări predefinite."
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
+msgid ""
+"Open the annotation preset test tool for previewing annotation preset "
+"dialogs."
+msgstr ""
+"Deschide unealta de test a adnotărilor pentru a previzualiza mesajele cu "
+"adnotări predefinite."
 
-#: ../annotation-tester/src/annotationtester/AnnotationTesterAction.java:28
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:28
 msgid "You have to specify annotation sources in the preferences first."
 msgstr "Mai întâi trebuie să specificaţi surse de adnotări în preferinţe."
 
+#: ../../plugins/grid/src/grid/GridLayer.java:74
+#, fuzzy
+msgid "Grid layer:"
+msgstr "strat"
+
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:33
+#, fuzzy
+msgid "Open waypoints file"
+msgstr "Deschide un fişier."
+
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:33
+#, fuzzy
+msgid "Open a waypoints file."
+msgstr "Deschide un fişier."
+
 #~ msgid "Download {0} ways containing a total of {1} segments?"
 #~ msgstr "Descarc {0} căi conţinând în total {1} segmente?"
+
 #~ msgid "Refresh the selection list."
 #~ msgstr "Reîncarcă lista de selecţii"
+
 #~ msgid "Search for objects."
 #~ msgstr "Caută obiecte"
+
 #~ msgid "Language"
 #~ msgstr "Limbă"
+
 #~ msgid "Conflicts in disjunct objects"
 #~ msgstr "Conflicte în obiecte disjuncte"
+
 #~ msgid "Downloading {0} {1}"
 #~ msgstr "Descarc {0} {1}"
+
 #~ msgid "Got more than one object when expecting only one."
 #~ msgstr "Am primit mai mult de un obiect când mă aşteptam doar la unul."
+
 #~ msgid "Used in a way."
 #~ msgstr "Folosit într-o cale."
+
 #~ msgid "Move selected objects around."
 #~ msgstr "Mută obiectele selectate."
+
 #~ msgid "Open as raw gps data"
 #~ msgstr "Deschide ca date gps neprelucrate"
+
 #~ msgid "Show background"
 #~ msgstr "Arată fundalul"
+
 #~ msgid "Images"
 #~ msgstr "Imagini"
+
 #~ msgid "Time loop in gps data."
 #~ msgstr "Buclă de timp în datele gps."
-

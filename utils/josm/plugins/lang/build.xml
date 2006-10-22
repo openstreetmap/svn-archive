@@ -22,6 +22,8 @@
 			<arg line="--java2 -d${language}/bin -rorg.openstreetmap.josm.Translation -l${language} ${language}/${language}.po"/>
 		</exec>
 
+		<copy file="i18n.properties" todir="${language}/bin/org/openstreetmap/josm" />
+
 		<jar destfile="${user.home}/.josm/plugins/lang-${language}.jar" basedir="${language}/bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />

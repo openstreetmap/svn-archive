@@ -36,4 +36,9 @@ public class ElemStyles
 		}
 		return null;
 	}
+
+	public boolean isArea(OsmPrimitive p)
+	{
+		return getStyle(p) instanceof AreaElemStyle;
+	}
 }

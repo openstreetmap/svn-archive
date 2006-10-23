@@ -30,19 +30,13 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Node n) {
 		ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
-		if(nodeStyle!=null)
-		{
-			if(nodeStyle instanceof IconElemStyle)
-			{
+		if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
+			if(nodeStyle instanceof IconElemStyle) {
 				drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
-			}
-			else
-			{
+			} else {
 				// throw some sort of exception
 			}
-		}
-		else
-		{
+		} else {
 			drawNode(n, n.selected ? getPreferencesColor("selected",
 									Color.YELLOW)
 				: getPreferencesColor("node", Color.RED));

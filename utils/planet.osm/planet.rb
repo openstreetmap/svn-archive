@@ -21,7 +21,7 @@ def read_timestamp time_str
 end
 
 def pageSQL(page)
-  return " limit #{page * 100000}, 100000"
+  return " limit #{page * 500000}, 500000"
 end
 
 # yields for every node with parameter
@@ -47,8 +47,8 @@ end
 
 # yields for every way
 # id, [id1,id2,id3...], timestamp, tags
-def all_ways
-  $mysql.query "select id, timestamp from current_ways where visible = 1;" do |ways|
+def all_ways(page)
+  $mysql.query "select id, timestamp from current_ways where visible = 1 #{pageSQL(page)}" do |ways|
     ways.each do |row|
       id = row[0].to_i
       segs = []
@@ -111,16 +111,24 @@ while not done
   end
 end
 
-all_ways do |id, segs, timestamp, tags|
-  print %{  <way id="#{id}" timestamp="#{timestamp.xmlschema}"}
-  if tags.empty? and segs.empty?
-    puts "/>"
-  else
-    puts ">"
-    segs.each {|seg_id| puts %{    <seg id="#{seg_id}" />}}
-    out_tags tags
-    puts "  </way>"
+done = false
+page = 0
+
+while not done
+  done = true
+  page += 1
+
+  all_ways do |id, segs, timestamp, tags|
+    done = false
+    print %{  <way id="#{id}" timestamp="#{timestamp.xmlschema}"}
+    if tags.empty? and segs.empty?
+      puts "/>"
+    else
+      puts ">"
+      segs.each {|seg_id| puts %{    <seg id="#{seg_id}" />}}
+      out_tags tags
+      puts "  </way>"
+    end
   end
 end
-
 puts "</osm>"

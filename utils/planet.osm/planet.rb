@@ -1,6 +1,6 @@
 #!/usr/bin/ruby -w
 
-$: << Dir.pwd+"/../../www.openstreetmap.org/ruby/api"
+#$: << Dir.pwd+"/../../www.openstreetmap.org/ruby/api"
 
 require 'mysql'
 require 'time'
@@ -20,11 +20,15 @@ def read_timestamp time_str
   (time_str.nil? or time_str == "" or time_str == "NULL") ? Time.at(0) : Time.parse(time_str)
 end
 
+def pageSQL(page)
+  return " limit #{page * 100000}, 100000"
+end
+
 # yields for every node with parameter
 # id, lat, lon, timestamp, tags
 # 'tags' are a hash in format {key1=>value1, key2=>value2...}
-def all_nodes
-  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1;" do |rows|
+def all_nodes(page)
+  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 #{pageSQL(page)}" do |rows|
     rows.each do |row|
       yield row[0].to_i, row[1].to_f, row[2].to_f, read_timestamp(row[3]), read_tags(row[4])
     end
@@ -33,8 +37,8 @@ end
 
 # yields for every segment
 # id, from_id, to_id, timestamp, tags
-def all_segments
-  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1;" do |rows|
+def all_segments(page)
+  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1 #{pageSQL(page)}" do |rows|
     rows.each do |row|
       yield row[0].to_i, row[1].to_i, row[2].to_i, read_timestamp(row[3]), read_tags(row[4])
     end
@@ -69,25 +73,41 @@ end
 puts '<?xml version="1.0" encoding="UTF-8"?>'
 puts '<osm version="0.3" generator="OpenStreetMap planet.rb">'
 
-all_nodes do |id, lat, lon, timestamp, tags|
-  print %{  <node id="#{id}" lat="#{lat}" lon="#{lon}" timestamp="#{timestamp.xmlschema}"}
-  if tags.empty?
-    puts "/>"
-  else
-    puts ">"
-    out_tags tags
-    puts "  </node>"
+done = false
+page = 0
+
+while not done
+  done = true
+  page += 1
+  all_nodes(page) do |id, lat, lon, timestamp, tags|
+    done = false
+    print %{  <node id="#{id}" lat="#{lat}" lon="#{lon}" timestamp="#{timestamp.xmlschema}"}
+    if tags.empty?
+      puts "/>"
+    else
+      puts ">"
+      out_tags tags
+      puts "  </node>"
+    end
   end
 end
 
-all_segments do |id, from, to, timestamp, tags|
-  print %{  <segment id="#{id}" from="#{from}" to="#{to}" timestamp="#{timestamp.xmlschema}"}
-  if tags.empty?
-    puts "/>"
-  else
-    puts ">"
-    out_tags tags
-    puts "  </segment>"
+done = false
+page = 0
+
+while not done
+  done = true
+  page += 1
+  all_segments(page) do |id, from, to, timestamp, tags|
+    done = false
+    print %{  <segment id="#{id}" from="#{from}" to="#{to}" timestamp="#{timestamp.xmlschema}"}
+    if tags.empty?
+      puts "/>"
+    else
+      puts ">"
+      out_tags tags
+      puts "  </segment>"
+    end
   end
 end
 

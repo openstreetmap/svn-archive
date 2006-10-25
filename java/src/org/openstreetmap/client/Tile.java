@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.Point;
+import org.openstreetmap.gui.MsgBox;
 
 import processing.core.PImage;
 
@@ -57,6 +58,7 @@ public class Tile extends Thread {
 
 	OsmApplet applet;
 	Map images = new HashMap();
+    
 	
 	// FIXME: Multiple threads are accessing this vector. 
 	// If you replace the enumerations with iterations, you can see the concurrent 
@@ -357,14 +359,28 @@ public class Tile extends Thread {
 	}
 
 	public void zoomin() {
+        boolean zin = false;
 		zoom++;
+        if (zoom > 18){
+            zoom = 18;
+            zin = true;
+        }
+        if (zoom==18 && zin){
+        }
 		zoom();
-	}
+    }
+	
 
 	public void zoomout() {
-		zoom--;
-		if (zoom < 14) {
-			zoom = 14;
+		boolean zout = false;
+        System.out.println("Zoom out says "+zoom);
+        zoom--;
+		if (zoom < 8) {
+			zoom = 8;
+            zout = true;
+        }
+        if (zoom==8 && zout){
+            MsgBox.msg("You can't zoom out any further");
 		}
 		zoom();
 	}

@@ -155,5 +155,3 @@ double Way::pixelDistance(const QPointF& Target, double ClearEndDistance, const 
 		return L.capDistance(Target);
 	}
 }
-
-

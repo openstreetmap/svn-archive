@@ -1,6 +1,7 @@
 v0.04 
 	* FIX : reset brush when drawing zoom window
 	* FIX : include way id when sending updates to Openstreetmap
+	* FIX : always prefer to select a road
 
 v0.03 25 oct 2006
 	* FIX : compilation fixes for linux

@@ -138,16 +138,11 @@ double Road::pixelDistance(const QPointF& Target, double ClearEndDistance, const
 	{
 		double D = p->Ways[i]->pixelDistance(Target,ClearEndDistance,theProjection);
 		if (D < ClearEndDistance)
-		{
 			Best = D;
-			// if we are really close, prefer the segment
-			if (Best < ClearEndDistance/3)
-				return ClearEndDistance;
-		}
 	}
-	// otherwise prefer us
+	// always prefer us over ways
 	if (Best<ClearEndDistance)
-		Best/=2;
+		Best*=0.99;
 	return Best;
 }
 

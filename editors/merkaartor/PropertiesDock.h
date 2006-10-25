@@ -1,0 +1,50 @@
+#ifndef MERKATOR_PROPERTIESDOCK_H_
+#define MERKATOR_PROPERTIESDOCK_H_
+
+#include "GeneratedFiles/ui_TrackPointProperties.h"
+#include "GeneratedFiles/ui_RoadProperties.h"
+#include "GeneratedFiles/ui_WayProperties.h"
+
+#include <QtGui/QDockWidget>
+
+class MainWindow;
+class MapFeature;
+
+class PropertiesDock : public QDockWidget
+{
+	Q_OBJECT
+
+	public:
+		PropertiesDock(MainWindow* aParent);
+	public:
+		~PropertiesDock(void);
+
+		void setSelection(MapFeature* aFeature);
+		MapFeature* selection();
+		void resetValues();
+
+	public slots:
+		void on_WayWidth_textChanged(const QString& s);
+		void on_TrackPointLat_textChanged(const QString& s);
+		void on_TrackPointLon_textChanged(const QString& s);
+		void on_RoadName_textChanged(const QString& s);
+
+	private:
+		void switchToWayUi();
+		void switchToNoUi();
+		void switchToTrackPointUi();
+		void switchToRoadUi();
+
+		MainWindow* Main;
+		QWidget* CurrentUi;
+		MapFeature* Selection;
+		Ui::WayProperties WayUi;
+		Ui::TrackPointProperties TrackPointUi;
+		Ui::RoadProperties RoadUi;
+
+		enum { NoUiShowing, WayUiShowing, TrackPointUiShowing, RoadUiShowing } NowShowing ;
+};
+
+#endif
+
+

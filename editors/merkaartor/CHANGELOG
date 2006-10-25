@@ -1,0 +1,30 @@
+v0.03 25 oct 2006
+	* FIX : compilation fixes for linux
+	* ADD : pan view by dragging
+	* ADD : create node
+	* FIX : don't draw nodes when zoomed out
+	* FIX : draw segments stronger when zoomed out
+	* FIX : make roads easier to select, segments harder
+
+v0.02 24 oct 2006
+	* ADD : update/commit style merging and conflict resolution
+	  with openstreetmap
+	* ADD : delete node/segment
+	* FIX : move trackpoints accessible from editor toolbar
+	* ADD : layers
+	* ADD : support for OSM ways
+
+v0.01 20 oct 2006
+	* ADD : upload node/segments to OSM
+	* ADD : download segment tags
+	* ADD : edit node properties (long,lat)
+	* ADD : edit segment properties (width,tags)
+
+v0.00 17 oct 2006
+	* ADD : download node/segments from OSM
+	* ADD : display node/segments/tracks
+	* ADD : add segments
+	* ADD : move nodes
+
+
+

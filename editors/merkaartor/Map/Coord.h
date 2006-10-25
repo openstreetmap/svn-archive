@@ -1,0 +1,100 @@
+#ifndef MERKATOR_COORD_H_
+#define MERKATOR_COORD_H_
+
+inline double angToRad(double a)
+{
+	return a*3.141592/180;
+}
+
+inline double radToAng(double a)
+{
+	return a*180/3.141592;
+}
+
+class Coord
+{
+	public:
+		Coord(double aLat, double aLon)
+			: Lat(aLat), Lon(aLon)
+		{
+		}
+
+		double lat() const
+		{
+			return Lat;
+		}
+
+		double lon() const
+		{
+			return Lon;
+		}
+
+		void setLat(double l)
+		{
+			Lat = l;
+		}
+
+		void setLon(double l)
+		{
+			Lon = l;
+		}
+
+	private:
+		double Lat;
+		double Lon;
+};
+
+class CoordBox
+{
+	public:
+		CoordBox(const Coord& C1, const Coord& C2);
+
+		void merge(const Coord& C)
+		{
+			if (C.lat() < BottomLeft.lat())
+				BottomLeft.setLat(C.lat());
+			if (C.lon() < BottomLeft.lon())
+				BottomLeft.setLon(C.lon());
+			if (C.lat() > TopRight.lat())
+				TopRight.setLat(C.lat());
+			if (C.lon() > BottomLeft.lon())
+				TopRight.setLon(C.lon());
+		}
+
+		void merge(const CoordBox& B)
+		{
+			merge(B.BottomLeft);
+			merge(B.TopRight);
+		}
+
+		Coord center() const
+		{
+			return Coord( (BottomLeft.lat()+TopRight.lat())/2,(BottomLeft.lon()+TopRight.lon())/2 );
+		}
+
+		double lonDiff() const
+		{
+			return TopRight.lon()-BottomLeft.lon();
+		}
+		double latDiff() const
+		{
+			return TopRight.lat()-BottomLeft.lat();
+		}
+		CoordBox zoomed(double f) const;
+		const Coord& bottomLeft() const
+		{
+			return BottomLeft;
+		}
+
+		const Coord& topRight() const
+		{
+			return TopRight;
+		}
+
+	private:
+		Coord BottomLeft, TopRight;
+};
+
+#endif
+
+

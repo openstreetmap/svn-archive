@@ -1,0 +1,29 @@
+Need
+* Working C++ compiler
+* Qt 4.2 development environment
+
+Instructions
+
+1. Change directory to the one in which you unpacked Merkaartor
+
+for example
+$ cd /home/me/src/Merkaartor-0.xx
+
+2. Run qmake
+
+$ qmake
+
+3. Run your build tool, make for posix like systems, nmake for
+Windows C++ Build system
+
+$ make
+or
+$ nmake
+
+4. If you are lucky, you'll find an executable in the
+release subdirectory. Otherwise mail a complete error log to
+bvh-osm@irule.be
+
+Bart Vanhauwaert
+
+

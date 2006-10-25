@@ -224,6 +224,8 @@ public class OsmApplet extends PApplet {
 	EditMode nodeMoveMode = new NodeMoveMode(this);
 	EditMode deleteMode = new DeleteMode(this);
 	EditMode moveMode = new MoveMode(this);
+    EditMode zoomoutMode = new ZoomOutMode(this);
+    EditMode zoominMode = new ZoomInMode(this);
 
 	/*
 	 * if !ready, a wait cursor is shown and input doesn't do anything TODO:
@@ -255,6 +257,8 @@ public class OsmApplet extends PApplet {
 		modeManager.addMode(nameMode);
 		modeManager.addMode(nodeMoveMode);
 		modeManager.addMode(deleteMode);
+        modeManager.addMode(zoominMode);
+        modeManager.addMode(zoomoutMode);
 
 		modeManager.draw(); // make modeManager set up things
 
@@ -298,7 +302,7 @@ public class OsmApplet extends PApplet {
 				e.printStackTrace();
 			}
 
-			js = JSObject.getWindow(this);
+			//js = JSObject.getWindow(this);
 		}
 
 		println("check webpage applet parameters for a user/pass");
@@ -348,6 +352,7 @@ public class OsmApplet extends PApplet {
 		// try to connect to OSM
 		osm = new Adapter(userName, password, this, apiURL);
 
+        
 		// register as listener of finished commands (to redraw)
 		osm.commandManager.addListener(new CommandManager.Listener(){
 			public void commandFinished(ServerCommand command) {

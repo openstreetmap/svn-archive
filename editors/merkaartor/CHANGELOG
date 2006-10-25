@@ -1,3 +1,6 @@
+v0.04 
+	* FIX : reset brush when drawing zoom window
+
 v0.03 25 oct 2006
 	* FIX : compilation fixes for linux
 	* ADD : pan view by dragging

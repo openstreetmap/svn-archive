@@ -23,6 +23,7 @@ void ZoomInteraction::paintEvent(QPaintEvent*, QPainter& thePainter)
 	if (HaveFirstPoint)
 	{
 		QPen TP(Qt::DashDotLine);
+		thePainter.setBrush(Qt::NoBrush);
 		TP.setColor(QColor(255,0,0));
 		thePainter.setPen(TP);
 		thePainter.drawRect(QRectF(P1,QSize(P2.x()-P1.x(),P2.y()-P1.y())));

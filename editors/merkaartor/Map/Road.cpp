@@ -38,6 +38,23 @@ void Road::add(Way* W)
 		p->Ways.push_back(W);
 }
 
+void Road::add(Way* W, unsigned int Idx)
+{
+	if (std::find(p->Ways.begin(),p->Ways.end(),W) == p->Ways.end())
+	{
+		p->Ways.push_back(W);
+		std::rotate(p->Ways.begin()+Idx,p->Ways.end()-1,p->Ways.end());
+	}
+}
+
+unsigned int Road::find(Way* W) const
+{
+	for (unsigned int i=0; i<p->Ways.size(); ++i)
+		if (p->Ways[i] == W)
+			return i;
+	return p->Ways.size();
+}
+
 void Road::erase(Way* W)
 {
 	std::vector<Way*>::iterator i = std::find(p->Ways.begin(),p->Ways.end(),W);
@@ -118,16 +135,35 @@ void Road::draw(QPainter& thePainter, const Projection& theProjection)
 
 void Road::drawFocus(QPainter& thePainter, const Projection& theProjection)
 {
+	QFont F(thePainter.font());
+	F.setPointSize(10);
+	F.setBold(true);
+	F.setWeight(QFont::Black);
+	thePainter.setFont(F);
 	QPen TP(QColor(0,0,255));
 	thePainter.setPen(TP);
 	thePainter.setBrush(QColor(0,0,255));
 	for (unsigned int i=0; i<p->Ways.size(); ++i)
 	{
 		Way* W = p->Ways[i];
+		QPointF F(theProjection.project(W->from()->position()));
 		QPointF P(theProjection.project(half(W)));
-		double Rad = theProjection.pixelPerM()*W->width();
-		thePainter.drawEllipse(P.x()-Rad/2,P.y()-Rad/2,Rad,Rad);
 		::draw(thePainter,TP,W,theProjection);
+		if (distance(F,P)>30)
+		{
+			thePainter.setBrush(Qt::NoBrush);
+			thePainter.setPen(QColor(0,0,0));
+			thePainter.fillRect(QRect(P.x()-6,P.y()-6,12,12),QColor(255,255,255));
+			thePainter.drawText(QRect(P.x()-6,P.y()-6,12,12),Qt::AlignCenter,QString::number(i+1));
+			thePainter.setPen(TP);
+			thePainter.drawEllipse(P.x()-7,P.y()-7,14,14);
+			thePainter.setBrush(QColor(0,0,255));
+		}
+		else
+		{
+			double Rad = theProjection.pixelPerM()*W->width();
+			thePainter.drawEllipse(P.x()-Rad/2,P.y()-Rad/2,Rad,Rad);
+		}
 	}
 }
 

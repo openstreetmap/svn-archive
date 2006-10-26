@@ -3,6 +3,7 @@ v0.04
 	* FIX : include way id when sending updates to Openstreetmap
 	* FIX : always prefer to select a road
 	* ADD : delete nodes,segments,roads on server
+	* ADD : ability to remove segments from roads, and influence order
 
 v0.03 25 oct 2006
 	* FIX : compilation fixes for linux

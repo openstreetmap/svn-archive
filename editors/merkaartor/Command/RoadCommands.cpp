@@ -26,5 +26,29 @@ bool RoadAddWayCommand::buildDirtyList(DirtyList& theList)
 }
 
 
+/* ROADREMOVEWAYCOMMAND */
+
+RoadRemoveWayCommand::RoadRemoveWayCommand(Road* R, Way* W)
+: Idx(R->find(W)), theRoad(R), theWay(W)
+{
+	redo();
+}
+
+void RoadRemoveWayCommand::undo()
+{
+	theRoad->add(theWay,Idx);
+}
+
+void RoadRemoveWayCommand::redo()
+{
+	theRoad->erase(theWay);
+}
+
+bool RoadRemoveWayCommand::buildDirtyList(DirtyList& theList)
+{
+	return theList.update(theRoad);
+}
+
+
 
 

@@ -22,8 +22,10 @@ class Road : public MapFeature
 		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList);
 
 		void add(Way* W);
+		void add(Way* W, unsigned int Idx);
 		void erase(Way* W);
 		unsigned int size() const;
+		unsigned int find(Way* W) const;
 		Way* get(unsigned int idx);
 		const Way* get(unsigned int Idx) const;
 

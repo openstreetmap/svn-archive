@@ -20,6 +20,21 @@ class RoadAddWayCommand : public Command
 		Way* theWay;
 };
 
+class RoadRemoveWayCommand : public Command
+{
+	public:
+		RoadRemoveWayCommand(Road* R, Way* W);
+
+		virtual void undo();
+		virtual void redo();
+		virtual bool buildDirtyList(DirtyList& theList);
+
+	private:
+		unsigned int Idx;
+		Road* theRoad;
+		Way* theWay;
+};
+
 #endif
 
 

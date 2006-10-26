@@ -46,8 +46,12 @@ void CreateRoadInteraction::snapMouseReleaseEvent(QMouseEvent *anEvent, Way * W)
 		main()->properties()->setSelection(Current);
 	}
 	else
-		document()->history().add(
-			new RoadAddWayCommand(Current, W));
+	{
+		if (Current->find(W) < Current->size())
+			document()->history().add(new RoadRemoveWayCommand(Current, W));
+		else
+			document()->history().add(new RoadAddWayCommand(Current, W));
+	}
 	Current->setLastUpdated(MapFeature::User);
 	view()->update();
 }

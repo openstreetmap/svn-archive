@@ -4,6 +4,8 @@ v0.04
 	* FIX : always prefer to select a road
 	* ADD : delete nodes,segments,roads on server
 	* ADD : ability to remove segments from roads, and influence order
+	* ADD : user recognizable names in upload window
+	* FIX : use a dotted line for gpx track segments
 
 v0.03 25 oct 2006
 	* FIX : compilation fixes for linux

@@ -41,7 +41,7 @@ unsigned int TrackSegment::size() const
 
 void TrackSegment::draw(QPainter &P, const Projection &theProjection)
 {
-	P.setPen(QPen(QColor(128,128,128),1));
+	P.setPen(QPen(QColor(128,128,128),1,Qt::DotLine));
 	for (unsigned int i=1; i<p->Points.size(); ++i)
 	{
 		P.drawLine(

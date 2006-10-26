@@ -8,8 +8,8 @@ little-osm is intended as a read only server!
 
 Installation:
 - install ruby
-- install sqlite3 ("gem install sqlite3-ruby")
-- Get the planet.osm into little-osm directory (http://josm.eigenheimstrasse.de/wiki/Mirrors)
+- install mysql ("gem install mysql")
+- Get the planet.osm into little-osm directory
 - run readxml.rb to convert the database. This will take a while.
 - run server.rb
 - point your favourite programm to http://localhost:3000

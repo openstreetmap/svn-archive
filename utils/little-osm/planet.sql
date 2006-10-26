@@ -7,10 +7,9 @@ CREATE TABLE `data` (
   `tags` text,
   `time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `reference` text,
-  `minlat` float NOT NULL default '0',
-  `minlon` float NOT NULL default '0',
-  `maxlat` float NOT NULL default '0',
-  `maxlon` float NOT NULL default '0',
-  KEY `Index_1` (`uid`)
-  KEY `Index_2` (`minlat`,`minlon`,`maxlat`,`maxlon`)
+  `min` point NOT NULL,
+  `max` point NOT NULL,
+  KEY `Index_1` (`uid`),
+  spatial (`min`),
+  spatial (`max`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

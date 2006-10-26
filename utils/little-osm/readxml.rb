@@ -12,11 +12,12 @@ require 'time'
 
 module OSM
   class Node < OsmPrimitive
-    def self.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
-      Node.new minlat, minlon, OSM::uid_to_id(uid), time
+    def self.from_db uid, tags, time, reference, min, max
+			min =~ /POINT\(([^ ]* [^)]*)\)/
+      Node.new $1.to_f, $2.to_f, OSM::uid_to_id(uid), time
     end
     def self.from_db_id uid
-      complete_node = $db.query("select * from data where uid=#{uid};").fetch_row
+      complete_node = $db.query("select uid, tags, time, reference, astext(min), astext(max) from data where uid=#{uid};").fetch_row
       if complete_node.nil?
         $current = nil
         throw :incomplete
@@ -32,12 +33,12 @@ module OSM
       self.from = Node.from_db_id OSM::idclass_to_uid(self.from, Node)
       self.to = Node.from_db_id OSM::idclass_to_uid(self.to, Node)
     end
-    def self.from_db uid, tags, time, reference, minlat, minlon, maxlat, maxlon
+    def self.from_db uid, tags, time, reference
       fid, tid = reference.split ','
       Segment.new(Node.from_db_id(fid.to_i), Node.from_db_id(tid.to_i), OSM::uid_to_id(uid).to_s, time)
     end
     def self.from_db_id uid
-      q = $db.query("select * from data where uid=#{uid};").fetch_row
+      q = $db.query("select uid, tags, time, reference from data where uid=#{uid};").fetch_row
       if q.nil?
         $current = nil
         throw :incomplete
@@ -64,6 +65,8 @@ def write_sql data
     time = data.timestamp.xmlschema
     time = time[0..-7] if time.include? "+"
     time = 'TIMESTAMP("'+time+'")'
+	else
+		time = 'NULL'
   end
   case data.class.name
   when "OSM::Node"
@@ -75,8 +78,8 @@ def write_sql data
   	reference = data.segments.collect {|s| OSM.idclass_to_uid(s, OSM::Segment).to_s}.join ','
   	data.load_references
   end
-  sql = %Q{insert into data values (#{data.to_uid}, "#{tags}", #{time}, "#{reference}", #{data.bbox.join(',')});}
-  $db.query sql
+  sql = %Q{insert into data values (#{data.to_uid}, "#{tags}", #{time}, "#{reference}", GeomFromText('POINT(#{data.bbox[0..1].join(' ')})'), GeomFromText('POINT(#{data.bbox[2..3].join(' ')})'));}
+	$db.query sql
 end
 
 # parses the input data and call to write_sql for each object.
@@ -102,38 +105,20 @@ class XmlReader
 
   def tag_end name
     catch :incomplete do
-      write_sql @current if name =~ /node|segment|way/
+			return unless name =~ /node|segment|way/
+			$obj = $obj + 1
+			puts $obj if $obj % 100000 == 0
+      write_sql @current
     end
   end
 end
 
+$obj = 0
 
 puts Time.now
 $stdout.flush
+$stdout.sync = true
 abort "planet.osm not found." unless File.exist? "planet.osm"
 $db = Mysql.real_connect "localhost", "root", "", "little-osm"
 $db.query "delete from data;"
-#REXML::Document.parse_stream File.new('planet.osm'), XmlReader.new
-
-open "planet.osm" do |file|
-  file.each_line do |line|
-    catch :incomplete do
-      case line
-      when /^  <node id='([^']*)' lat='([^']*)' lon='([^']*)' timestamp='([^']*)'(\/?)>/
-        $current = OSM::Node.new :id => $1, :lat => $2, :lon => $3, :timestamp => $4
-        write_sql $current if $5 == "/"
-      when /^  <segment id='([^']*)' from='([^']*)' to='([^']*)' timestamp='([^']*)'/
-        $current = OSM::Segment.new :id => $1, :from => $2, :to => $3, :timestamp => $4
-        write_sql $current if $5 == "/"
-      when /^  <way id='([^']*)' timestamp='([^']*)'/
-        $current = OSM::Way.new :id => $1, :timestamp => $2, :segments => []
-      when /^    <seg id='([^']*)'/
-        $current.segments << $1.to_i unless $current.nil?
-      when /^    <tag k="([^"]*)" v="([^"]*)"/
-        $current[$1] = $2 unless $current.nil?
-      when /^  <\//
-        write_sql $current unless $current.nil?
-      end
-    end
-  end
-end
+REXML::Document.parse_stream File.new('planet.osm'), XmlReader.new

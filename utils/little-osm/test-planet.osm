@@ -1,0 +1,13 @@
+<osm>
+  <way id="1">
+    <seg id="1" />
+    <tag k="foo " v="bar'" />
+  </way>
+  <node id="1" lat="23" lon="42" />
+  <segment id="1" from="2" to="1">
+    <tag k="=" v=";" />
+  </segment>
+  <node id="2" lat="1" lon="2">
+    <tag k="&quot;&amp;;'" v="'&amp;&quot;amp;'" />
+  </node>
+</osm>

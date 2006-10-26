@@ -26,6 +26,14 @@ static QString stripToOSMId(const QString& id)
 	return id;
 }
 
+static QString userName(const MapFeature* F)
+{
+	QString s(F->tagValue("name",""));
+	if (!s.isEmpty())
+		return " ("+s+")";
+	return "";
+}
+
 static bool isInterestingPoint(MapDocument* theDocument, TrackPoint* Pt)
 {
 	// does its id look like one from osm
@@ -204,7 +212,7 @@ bool DirtyListDescriber::showChanges(QWidget* aParent)
 bool DirtyListDescriber::addWay(Way* W)
 {
 	if (W->controlFrom() || W->controlTo())
-		Ui.ChangesList->addItem(QString("IGNORE bezier link %1").arg(W->id()));
+		Ui.ChangesList->addItem(QString("IGNORE bezier link %1").arg(W->id()) + userName(W));
 	else
 		Ui.ChangesList->addItem(QString("ADD link %1").arg(W->id()));
 	return false;
@@ -212,49 +220,49 @@ bool DirtyListDescriber::addWay(Way* W)
 
 bool DirtyListDescriber::addRoad(Road* R)
 {
-	Ui.ChangesList->addItem(QString("ADD road %1").arg(R->id()));
+	Ui.ChangesList->addItem(QString("ADD road %1").arg(R->id()) + userName(R));
 	return false;
 }
 
 bool DirtyListDescriber::addPoint(TrackPoint* Pt)
 {
-	Ui.ChangesList->addItem(QString("ADD trackpoint %1").arg(Pt->id()));
+	Ui.ChangesList->addItem(QString("ADD trackpoint %1").arg(Pt->id()) + userName(Pt));
 	return false;
 }
 
 bool DirtyListDescriber::updateWay(Way* W)
 {
-	Ui.ChangesList->addItem(QString("UPDATE link %1").arg(W->id()));
+	Ui.ChangesList->addItem(QString("UPDATE link %1").arg(W->id()) + userName(W));
 	return false;
 }
 
 bool DirtyListDescriber::updatePoint(TrackPoint* Pt)
 {
-	Ui.ChangesList->addItem(QString("UPDATE trackpoint %1").arg(Pt->id()));
+	Ui.ChangesList->addItem(QString("UPDATE trackpoint %1").arg(Pt->id()) + userName(Pt));
 	return false;
 }
 
 bool DirtyListDescriber::updateRoad(Road* R)
 {
-	Ui.ChangesList->addItem(QString("UPDATE road %1").arg(R->id()));
+	Ui.ChangesList->addItem(QString("UPDATE road %1").arg(R->id()) + userName(R));
 	return false;
 }
 
 bool DirtyListDescriber::eraseWay(Way* W)
 {
-	Ui.ChangesList->addItem(QString("REMOVE link %1").arg(W->id()));
+	Ui.ChangesList->addItem(QString("REMOVE link %1").arg(W->id()) + userName(W));
 	return false;
 }
 
 bool DirtyListDescriber::erasePoint(TrackPoint* Pt)
 {
-	Ui.ChangesList->addItem(QString("REMOVE trackpoint %1").arg(Pt->id()));
+	Ui.ChangesList->addItem(QString("REMOVE trackpoint %1").arg(Pt->id()) + userName(Pt));
 	return false;
 }
 
 bool DirtyListDescriber::eraseRoad(Road* R)
 {
-	Ui.ChangesList->addItem(QString("REMOVE road %1").arg(R->id()));
+	Ui.ChangesList->addItem(QString("REMOVE road %1").arg(R->id()) + userName(R));
 	return false;
 }
 
@@ -327,7 +335,7 @@ void DirtyListExecutor::on_Request_finished(int id, bool err)
 bool DirtyListExecutor::addWay(Way* W)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("ADD link %1").arg(W->id()));
+	Progress->setLabelText(QString("ADD link %1").arg(W->id()) + userName(W));
 	if (W->controlFrom() || W->controlTo())
 		return false;
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
@@ -351,7 +359,7 @@ bool DirtyListExecutor::addWay(Way* W)
 bool DirtyListExecutor::addRoad(Road *R)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("ADD road %1").arg(R->id()));
+	Progress->setLabelText(QString("ADD road %1").arg(R->id()) + userName(R));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 
 	QString DataIn, DataOut, OldId;
@@ -374,7 +382,7 @@ bool DirtyListExecutor::addRoad(Road *R)
 bool DirtyListExecutor::addPoint(TrackPoint* Pt)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("ADD trackpoint %1").arg(Pt->id()));
+	Progress->setLabelText(QString("ADD trackpoint %1").arg(Pt->id()) + userName(Pt));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 
 	QString DataIn, DataOut, OldId;
@@ -397,7 +405,7 @@ bool DirtyListExecutor::addPoint(TrackPoint* Pt)
 bool DirtyListExecutor::updateWay(Way* W)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("UPDATE link %1").arg(W->id()));
+	Progress->setLabelText(QString("UPDATE link %1").arg(W->id()) + userName(W));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/segment/%1");
 	URL = URL.arg(stripToOSMId(W->id()));
@@ -414,7 +422,7 @@ bool DirtyListExecutor::updateWay(Way* W)
 bool DirtyListExecutor::updateRoad(Road* R)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("UPDATE road %1").arg(R->id()));
+	Progress->setLabelText(QString("UPDATE road %1").arg(R->id()) + userName(R));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/way/%1");
 	URL = URL.arg(stripToOSMId(R->id()));
@@ -431,7 +439,7 @@ bool DirtyListExecutor::updateRoad(Road* R)
 bool DirtyListExecutor::updatePoint(TrackPoint* Pt)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("UPDATE trackpoint %1").arg(Pt->id()));
+	Progress->setLabelText(QString("UPDATE trackpoint %1").arg(Pt->id()) + userName(Pt));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/node/%1");
 	URL = URL.arg(stripToOSMId(Pt->id()));
@@ -448,7 +456,7 @@ bool DirtyListExecutor::updatePoint(TrackPoint* Pt)
 bool DirtyListExecutor::erasePoint(TrackPoint *Pt)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("REMOVE trackpoint %1").arg(Pt->id()));
+	Progress->setLabelText(QString("REMOVE trackpoint %1").arg(Pt->id()) + userName(Pt));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/node/%1");
 	URL = URL.arg(stripToOSMId(Pt->id()));
@@ -464,7 +472,7 @@ bool DirtyListExecutor::erasePoint(TrackPoint *Pt)
 bool DirtyListExecutor::eraseRoad(Road *R)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("REMOVE road %1").arg(R->id()));
+	Progress->setLabelText(QString("REMOVE road %1").arg(R->id()) + userName(R));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/way/%1");
 	URL = URL.arg(stripToOSMId(R->id()));
@@ -480,7 +488,7 @@ bool DirtyListExecutor::eraseRoad(Road *R)
 bool DirtyListExecutor::eraseWay(Way *W)
 {
 	Progress->setValue(++Done);
-	Progress->setLabelText(QString("REMOVE link %1").arg(W->id()));
+	Progress->setLabelText(QString("REMOVE link %1").arg(W->id()) + userName(W));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/segment/%1");
 	URL = URL.arg(stripToOSMId(W->id()));

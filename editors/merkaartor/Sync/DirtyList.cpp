@@ -18,13 +18,24 @@
 
 #include <algorithm>
 
-
-bool isPartOfWay(MapDocument* theDocument, TrackPoint* Pt)
+static QString stripToOSMId(const QString& id)
 {
+	int f = id.lastIndexOf("_");
+	if (f>0)
+		return id.right(id.length()-(f+1));
+	return id;
+}
+
+static bool isInterestingPoint(MapDocument* theDocument, TrackPoint* Pt)
+{
+	// does its id look like one from osm
+	if (Pt->id().left(5) == "node_")
+		return true;
 	// if the user has added special tags, that fine also
 	for (unsigned int i=0; i<Pt->tagSize(); ++i)
 		if (Pt->tagKey(i) != "created_by")
 			return true;
+	// if it is part of a road, then too
 	for (unsigned int j=0; j<theDocument->numLayers(); ++j)
 	{
 		MapLayer* theLayer = theDocument->layer(j);
@@ -42,162 +53,222 @@ bool isPartOfWay(MapDocument* theDocument, TrackPoint* Pt)
 }
 
 
+bool DirtyListBuild::add(MapFeature* F)
+{
+	Added.push_back(F);
+	return false;
+}
 
-DirtyList::DirtyList(MapDocument* aDoc, const QString& aWeb, const QString& aUser, const QString& aPwd)
-: theDocument(aDoc), Web(aWeb), User(aUser), Pwd(aPwd)
+bool DirtyListBuild::update(MapFeature* F)
+{
+	for (unsigned int i=0; i<Updated.size(); ++i)
+		if (Updated[i] == F)
+		{
+			UpdateCounter[i].first++;
+			return false;
+		}
+	Updated.push_back(F);
+	UpdateCounter.push_back(std::make_pair(1,0));
+	return false;
+}
+
+bool DirtyListBuild::erase(MapFeature* F)
+{
+	Deleted.push_back(F);
+	return false;
+}
+
+bool DirtyListBuild::willBeAdded(MapFeature* F) const
+{
+	return std::find(Added.begin(),Added.end(),F) != Added.end();
+}
+
+bool DirtyListBuild::willBeErased(MapFeature* F) const
+{
+	return std::find(Deleted.begin(),Deleted.end(),F) != Deleted.end();
+}
+
+bool DirtyListBuild::updateNow(MapFeature* F) const
+{
+	for (unsigned int i=0; i<Updated.size(); ++i)
+		if (Updated[i] == F)
+		{
+			UpdateCounter[i].second++;
+			return UpdateCounter[i].first == UpdateCounter[i].second;
+		}
+	return false;
+}
+
+void DirtyListBuild::resetUpdates()
+{
+	for (unsigned int i=0; i<UpdateCounter.size(); ++i)
+		UpdateCounter[i].second = 0;
+}
+
+/* DIRTYLISTVISIT */
+
+DirtyListVisit::DirtyListVisit(MapDocument* aDoc, const DirtyListBuild &aBuilder, bool b)
+: theDocument(aDoc), Future(aBuilder), EraseFromHistory(b)
 {
 }
 
-DirtyList::~DirtyList(void)
+MapDocument* DirtyListVisit::document()
 {
+	return theDocument;
 }
 
-bool DirtyList::isAdded(MapFeature* F)
+bool DirtyListVisit::add(MapFeature* F)
 {
-	if (Way* W = dynamic_cast<Way*>(F))
-		return isAdded(W);
-	else if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(F))
-		return isAdded(Pt);
+	if (Future.willBeErased(F))
+		return EraseFromHistory;
+	if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(F))
+	{
+		if (isInterestingPoint(theDocument,Pt))
+			return addPoint(Pt);
+		else
+			return EraseFromHistory;
+	}
+	else if (Way* W = dynamic_cast<Way*>(F))
+		return addWay(W);
 	else if (Road* R = dynamic_cast<Road*>(F))
-		return isAdded(R);
-	return false;
+		return addRoad(R);
+	return EraseFromHistory;
 }
 
-bool DirtyList::isAdded(Way* W)
+bool DirtyListVisit::update(MapFeature* F)
 {
-	if (W && (W->lastUpdated() == MapFeature::User))
+	if (Future.willBeErased(F) || Future.willBeAdded(F))
+		return EraseFromHistory;
+	if (!Future.updateNow(F))
+		return EraseFromHistory;
+	if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(F))
 	{
-		Added.push_back(W);
-		if (IsExecuting)
-			return executeAdded(W);
+		if (isInterestingPoint(theDocument,Pt))
+			return updatePoint(Pt);
 		else
-			describeAdded(W);
+			return EraseFromHistory;
 	}
-	return false;
-}
-
-bool DirtyList::isAdded(TrackPoint* Pt)
-{
-	if (Pt && isPartOfWay(theDocument,Pt) && (Pt->lastUpdated() == MapFeature::User))
-	{
-		Added.push_back(Pt);
-		if (IsExecuting)
-			return executeAdded(Pt);
-		else
-			describeAdded(Pt);
-	}
-	return false;
-}
-
-bool DirtyList::isAdded(Road* R)
-{
-	if (R && (R->lastUpdated() == MapFeature::User))
-	{
-		Added.push_back(R);
-		if (IsExecuting)
-			return executeAdded(R);
-		else
-			describeAdded(R);
-	}
-	return false;
-}
-
-bool DirtyList::isUpdated(MapFeature* F)
-{
-	std::vector<MapFeature*>::iterator i = std::find(Added.begin(),Added.end(),F);
-	if (i != Added.end())
-		return true;
-	i = std::find(Changed.begin(),Changed.end(),F);
-	if (i != Changed.end())
-		return true;
-	return false;
-}
-
-bool DirtyList::isChanged(MapFeature* F)
-{
-	if (F->lastUpdated() != MapFeature::User) return false;
-	if (Way* W = dynamic_cast<Way*>(F))
-		return isChanged(W);
-	else if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(F))
-		return isChanged(Pt);
+	else if (Way* W = dynamic_cast<Way*>(F))
+		return updateWay(W);
 	else if (Road* R = dynamic_cast<Road*>(F))
-		return isChanged(R);
-	return false;
+		return updateRoad(R);
+	return EraseFromHistory;
 }
 
-bool DirtyList::isChanged(Way* W)
+bool DirtyListVisit::erase(MapFeature* F)
 {
-	if (W->lastUpdated() != MapFeature::User) return false;
-	if (isUpdated(W)) return IsExecuting;
-	Changed.push_back(W);
-	if (IsExecuting)
-		return executeChanged(W);
-	else
-		describeChanged(W);
-	return false;
-}
-
-bool DirtyList::isChanged(Road* R)
-{
-	if (R->lastUpdated() != MapFeature::User) return false;
-	if (isUpdated(R)) return IsExecuting;
-	Changed.push_back(R);
-	if (IsExecuting)
-		return executeChanged(R);
-	else
-		describeChanged(R);
-	return false;
-}
-
-bool DirtyList::isChanged(TrackPoint *Pt)
-{
-	if (Pt->lastUpdated() != MapFeature::User) return false;
-	if (isUpdated(Pt)) return IsExecuting;
-	if (isPartOfWay(theDocument,Pt))
+	if (Future.willBeAdded(F))
+		return EraseFromHistory;
+	if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(F))
 	{
-		Changed.push_back(Pt);
-		if (IsExecuting)
-			return executeChanged(Pt);
+		if (isInterestingPoint(theDocument,Pt))
+			return erasePoint(Pt);
 		else
-			describeChanged(Pt);
+			return EraseFromHistory;
 	}
-	return false;
+	else if (Way* W = dynamic_cast<Way*>(F))
+		return eraseWay(W);
+	else if (Road* R = dynamic_cast<Road*>(F))
+		return eraseRoad(R);
+	return EraseFromHistory;
 }
 
-void DirtyList::describeAdded(Way* W)
+/* DIRTYLISTDESCRIBER */
+
+
+DirtyListDescriber::DirtyListDescriber(MapDocument* aDoc, const DirtyListBuild& aFuture)
+: DirtyListVisit(aDoc, aFuture, false), Task(0)
+{
+}
+
+unsigned int DirtyListDescriber::tasks() const
+{
+	return Task;
+}
+
+bool DirtyListDescriber::showChanges(QWidget* aParent)
+{
+	QDialog* dlg = new QDialog(aParent);
+	Ui.setupUi(dlg);
+
+	document()->history().buildDirtyList(*this);
+
+	bool ok = (dlg->exec() == QDialog::Accepted);
+
+	Task = Ui.ChangesList->count();
+	delete dlg;
+	return ok;
+}
+
+
+bool DirtyListDescriber::addWay(Way* W)
 {
 	if (W->controlFrom() || W->controlTo())
 		Ui.ChangesList->addItem(QString("IGNORE bezier link %1").arg(W->id()));
 	else
 		Ui.ChangesList->addItem(QString("ADD link %1").arg(W->id()));
+	return false;
 }
 
-void DirtyList::describeAdded(Road* R)
+bool DirtyListDescriber::addRoad(Road* R)
 {
 	Ui.ChangesList->addItem(QString("ADD road %1").arg(R->id()));
+	return false;
 }
 
-void DirtyList::describeAdded(TrackPoint* Pt)
+bool DirtyListDescriber::addPoint(TrackPoint* Pt)
 {
 	Ui.ChangesList->addItem(QString("ADD trackpoint %1").arg(Pt->id()));
+	return false;
 }
 
-void DirtyList::describeChanged(Way* W)
+bool DirtyListDescriber::updateWay(Way* W)
 {
 	Ui.ChangesList->addItem(QString("UPDATE link %1").arg(W->id()));
+	return false;
 }
 
-void DirtyList::describeChanged(TrackPoint* Pt)
+bool DirtyListDescriber::updatePoint(TrackPoint* Pt)
 {
 	Ui.ChangesList->addItem(QString("UPDATE trackpoint %1").arg(Pt->id()));
+	return false;
 }
 
-void DirtyList::describeChanged(Road* R)
+bool DirtyListDescriber::updateRoad(Road* R)
 {
 	Ui.ChangesList->addItem(QString("UPDATE road %1").arg(R->id()));
+	return false;
 }
 
-bool DirtyList::sendRequest(const QString& URL, const QString& Data, QString& Rcv)
+bool DirtyListDescriber::eraseWay(Way* W)
+{
+	Ui.ChangesList->addItem(QString("REMOVE link %1").arg(W->id()));
+	return false;
+}
+
+bool DirtyListDescriber::erasePoint(TrackPoint* Pt)
+{
+	Ui.ChangesList->addItem(QString("REMOVE trackpoint %1").arg(Pt->id()));
+	return false;
+}
+
+bool DirtyListDescriber::eraseRoad(Road* R)
+{
+	Ui.ChangesList->addItem(QString("REMOVE road %1").arg(R->id()));
+	return false;
+}
+
+
+/* DIRTYLIST */
+
+
+DirtyListExecutor::DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks)
+: DirtyListVisit(aDoc, aFuture, true), Tasks(aTasks), Done(0), Web(aWeb), User(aUser), Pwd(aPwd)
+{
+}
+
+
+bool DirtyListExecutor::sendRequest(const QString& Method, const QString& URL, const QString& Data, QString& Rcv)
 {
 	QByteArray ba(Data.toUtf8());
 	QBuffer Buf(&ba);
@@ -206,7 +277,7 @@ bool DirtyList::sendRequest(const QString& URL, const QString& Data, QString& Rc
 	connect(&Link,SIGNAL(requestFinished(int, bool)), this,SLOT(on_Request_finished(int, bool)));
 	Link.setHost(Web);
 	Link.setUser(User, Pwd);
-	QHttpRequestHeader Request("PUT",URL);
+	QHttpRequestHeader Request(Method,URL);
 	Request.setValue("Host",Web);
 	int y = Request.minorVersion();
 	y = Request.majorVersion();
@@ -233,12 +304,32 @@ bool DirtyList::sendRequest(const QString& URL, const QString& Data, QString& Rc
 
 }
 
-bool DirtyList::executeAdded(Way* W)
+bool DirtyListExecutor::executeChanges(QWidget* aParent)
 {
+	Progress = new QProgressDialog(aParent);
+	Progress->setMinimumDuration(0);
+	Progress->setMaximum(Tasks);
+	Progress->show();
+	document()->history().buildDirtyList(*this);
+	delete Progress;
+	return true;
+}
+
+void DirtyListExecutor::on_Request_finished(int id, bool err)
+{
+	if ( (id == FinishedId) || err)
+	{
+		Finished = true;
+		FinishedError = err;
+	}
+}
+
+bool DirtyListExecutor::addWay(Way* W)
+{
+	Progress->setValue(++Done);
+	Progress->setLabelText(QString("ADD link %1").arg(W->id()));
 	if (W->controlFrom() || W->controlTo())
 		return false;
-	Progress->setValue(++Task);
-	Progress->setLabelText(QString("ADD link %1").arg(W->id()));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 
 	QString DataIn, DataOut, OldId;
@@ -247,7 +338,7 @@ bool DirtyList::executeAdded(Way* W)
 	DataIn = wrapOSM(exportOSM(*W));
 	W->setId(OldId);
 	QString URL("/api/0.3/segment/0");
-	if (sendRequest(URL,DataIn,DataOut))
+	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		// chop off extra spaces, newlines etc
 		W->setId("segment_"+QString::number(DataOut.toInt()));
@@ -257,9 +348,9 @@ bool DirtyList::executeAdded(Way* W)
 	return false;
 }
 
-bool DirtyList::executeAdded(Road *R)
+bool DirtyListExecutor::addRoad(Road *R)
 {
-	Progress->setValue(++Task);
+	Progress->setValue(++Done);
 	Progress->setLabelText(QString("ADD road %1").arg(R->id()));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 
@@ -269,7 +360,7 @@ bool DirtyList::executeAdded(Road *R)
 	DataIn = wrapOSM(exportOSM(*R));
 	R->setId(OldId);
 	QString URL("/api/0.3/way/0");
-	if (sendRequest(URL,DataIn,DataOut))
+	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		// chop off extra spaces, newlines etc
 		R->setId("way_"+QString::number(DataOut.toInt()));
@@ -280,9 +371,9 @@ bool DirtyList::executeAdded(Road *R)
 }
 
 
-bool DirtyList::executeAdded(TrackPoint* Pt)
+bool DirtyListExecutor::addPoint(TrackPoint* Pt)
 {
-	Progress->setValue(++Task);
+	Progress->setValue(++Done);
 	Progress->setLabelText(QString("ADD trackpoint %1").arg(Pt->id()));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 
@@ -292,7 +383,7 @@ bool DirtyList::executeAdded(TrackPoint* Pt)
 	DataIn = wrapOSM(exportOSM(*Pt));
 	Pt->setId(OldId);
 	QString URL("/api/0.3/node/0");
-	if (sendRequest(URL,DataIn,DataOut))
+	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		// chop off extra spaces, newlines etc
 		Pt->setId("node_"+QString::number(DataOut.toInt()));
@@ -302,24 +393,17 @@ bool DirtyList::executeAdded(TrackPoint* Pt)
 	return false;
 }
 
-static QString stripToOSMId(const QString& id)
-{
-	int f = id.lastIndexOf("_");
-	if (f>0)
-		return id.right(id.length()-(f+1));
-	return id;
-}
 
-bool DirtyList::executeChanged(Way* W)
+bool DirtyListExecutor::updateWay(Way* W)
 {
-	Progress->setValue(++Task);
+	Progress->setValue(++Done);
 	Progress->setLabelText(QString("UPDATE link %1").arg(W->id()));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/segment/%1");
 	URL = URL.arg(stripToOSMId(W->id()));
 	QString DataIn, DataOut;
 	DataIn = wrapOSM(exportOSM(*W));
-	if (sendRequest(URL,DataIn,DataOut))
+	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		W->setLastUpdated(MapFeature::OSMServer);
 		return true;
@@ -327,16 +411,16 @@ bool DirtyList::executeChanged(Way* W)
 	return true;
 }
 
-bool DirtyList::executeChanged(Road* R)
+bool DirtyListExecutor::updateRoad(Road* R)
 {
-	Progress->setValue(++Task);
+	Progress->setValue(++Done);
 	Progress->setLabelText(QString("UPDATE road %1").arg(R->id()));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/way/%1");
 	URL = URL.arg(stripToOSMId(R->id()));
 	QString DataIn, DataOut;
 	DataIn = wrapOSM(exportOSM(*R));
-	if (sendRequest(URL,DataIn,DataOut))
+	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		R->setLastUpdated(MapFeature::OSMServer);
 		return true;
@@ -344,16 +428,16 @@ bool DirtyList::executeChanged(Road* R)
 	return true;
 }
 
-bool DirtyList::executeChanged(TrackPoint* Pt)
+bool DirtyListExecutor::updatePoint(TrackPoint* Pt)
 {
-	Progress->setValue(++Task);
+	Progress->setValue(++Done);
 	Progress->setLabelText(QString("UPDATE trackpoint %1").arg(Pt->id()));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
 	QString URL("/api/0.3/node/%1");
 	URL = URL.arg(stripToOSMId(Pt->id()));
 	QString DataIn, DataOut;
 	DataIn = wrapOSM(exportOSM(*Pt));
-	if (sendRequest(URL,DataIn,DataOut))
+	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		Pt->setLastUpdated(MapFeature::OSMServer);
 		return true;
@@ -361,45 +445,50 @@ bool DirtyList::executeChanged(TrackPoint* Pt)
 	return false;
 }
 
-bool DirtyList::showChanges(QWidget* aParent)
+bool DirtyListExecutor::erasePoint(TrackPoint *Pt)
 {
-	IsExecuting = false;
-	Added.clear();
-	Changed.clear();
-	QDialog* dlg = new QDialog(aParent);
-	Ui.setupUi(dlg);
-
-	theDocument->history().buildDirtyList(*this);
-
-	bool ok = (dlg->exec() == QDialog::Accepted);
-
-	Task = Ui.ChangesList->count();
-	delete dlg;
-	return ok;
-}
-
-bool DirtyList::executeChanges(QWidget* aParent)
-{
-	IsExecuting = true;
-	Added.clear();
-	Changed.clear();
-	Progress = new QProgressDialog(aParent);
-	Progress->setMinimumDuration(0);
-	Progress->setMaximum(Task);
-	Progress->show();
-	Task = 0;
-	theDocument->history().buildDirtyList(*this);
-	delete Progress;
-	return true;
-}
-
-void DirtyList::on_Request_finished(int id, bool err)
-{
-	if ( (id == FinishedId) || err)
+	Progress->setValue(++Done);
+	Progress->setLabelText(QString("REMOVE trackpoint %1").arg(Pt->id()));
+	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
+	QString URL("/api/0.3/node/%1");
+	URL = URL.arg(stripToOSMId(Pt->id()));
+	QString DataIn, DataOut;
+	if (sendRequest("DELETE",URL,DataIn,DataOut))
 	{
-		Finished = true;
-		FinishedError = err;
+		Pt->setLastUpdated(MapFeature::OSMServer);
+		return true;
 	}
+	return false;
 }
 
+bool DirtyListExecutor::eraseRoad(Road *R)
+{
+	Progress->setValue(++Done);
+	Progress->setLabelText(QString("REMOVE road %1").arg(R->id()));
+	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
+	QString URL("/api/0.3/way/%1");
+	URL = URL.arg(stripToOSMId(R->id()));
+	QString DataIn, DataOut;
+	if (sendRequest("DELETE",URL,DataIn,DataOut))
+	{
+		R->setLastUpdated(MapFeature::OSMServer);
+		return true;
+	}
+	return false;
+}
 
+bool DirtyListExecutor::eraseWay(Way *W)
+{
+	Progress->setValue(++Done);
+	Progress->setLabelText(QString("REMOVE link %1").arg(W->id()));
+	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
+	QString URL("/api/0.3/segment/%1");
+	URL = URL.arg(stripToOSMId(W->id()));
+	QString DataIn, DataOut;
+	if (sendRequest("DELETE",URL,DataIn,DataOut))
+	{
+		W->setLastUpdated(MapFeature::OSMServer);
+		return true;
+	}
+	return false;
+}

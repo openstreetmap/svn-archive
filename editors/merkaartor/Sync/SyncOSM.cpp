@@ -15,10 +15,14 @@ void syncOSM(MainWindow* theMain, const QString& aWeb, const QString& aUser, con
 		QMessageBox::warning(theMain,MainWindow::tr("Unresolved conflicts"), MainWindow::tr("Please resolve existing conflicts first"));
 		return;
 	}
-	DirtyList Dirty(theMain->document(), aWeb, aUser, aPwd);
-	if (Dirty.showChanges(theMain))
+
+	DirtyListBuild Future;
+	theMain->document()->history().buildDirtyList(Future);
+	DirtyListDescriber Describer(theMain->document(),Future);
+	if (Describer.showChanges(theMain))
 	{
-		Dirty.executeChanges(theMain);
+		DirtyListExecutor Exec(theMain->document(),Future,aWeb,aUser,aPwd,Describer.tasks());
+		Exec.executeChanges(theMain);
 	}
 }
 

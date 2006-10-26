@@ -20,7 +20,7 @@ void WaySetWidthCommand::undo()
 
 bool WaySetWidthCommand::buildDirtyList(DirtyList &theList)
 {
-	return theList.isChanged(theWay);
+	return theList.update(theWay);
 }
 
 /* WAYSETFROMTOCOMMAND */
@@ -43,7 +43,7 @@ void WaySetFromToCommand::redo()
 
 bool WaySetFromToCommand::buildDirtyList(DirtyList &theList)
 {
-	return theList.isChanged(theWay);
+	return theList.update(theWay);
 }
 
 

@@ -40,7 +40,7 @@ void SetTagCommand::undo()
 
 bool SetTagCommand::buildDirtyList(DirtyList& theList)
 {
-	return theList.isChanged(theFeature);
+	return theList.update(theFeature);
 }
 
 /* CLEARTAGSCOMMAND */
@@ -66,7 +66,7 @@ void ClearTagsCommand::undo()
 
 bool ClearTagsCommand::buildDirtyList(DirtyList& theList)
 {
-	return theList.isChanged(theFeature);
+	return theList.update(theFeature);
 }
 
 /* CLEARTAGCOMMAND */
@@ -96,7 +96,7 @@ void ClearTagCommand::redo()
 
 bool ClearTagCommand::buildDirtyList(DirtyList& theList)
 {
-	return theList.isChanged(theFeature);
+	return theList.update(theFeature);
 }
 
 

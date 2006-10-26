@@ -22,7 +22,7 @@ void AddFeatureCommand::redo()
 bool AddFeatureCommand::buildDirtyList(DirtyList& theList)
 {
 	if (UserAdded)
-		return theList.isAdded(theFeature);
+		return theList.add(theFeature);
 	return false;
 }
 
@@ -60,7 +60,5 @@ void RemoveFeatureCommand::undo()
 
 bool RemoveFeatureCommand::buildDirtyList(DirtyList &theList)
 {
-	return false;
+	return theList.erase(theFeature);
 }
-
-

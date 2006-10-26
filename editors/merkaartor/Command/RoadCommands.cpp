@@ -22,7 +22,7 @@ void RoadAddWayCommand::redo()
 
 bool RoadAddWayCommand::buildDirtyList(DirtyList& theList)
 {
-	return theList.isChanged(theRoad);
+	return theList.update(theRoad);
 }
 
 

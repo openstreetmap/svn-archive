@@ -20,7 +20,7 @@ void MoveTrackPointCommand::redo()
 
 bool MoveTrackPointCommand::buildDirtyList(DirtyList &theList)
 {
-	return theList.isChanged(thePoint);
+	return theList.update(thePoint);
 }
 
 

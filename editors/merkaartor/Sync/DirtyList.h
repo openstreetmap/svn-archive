@@ -15,15 +15,128 @@ class QWidget;
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
+#include <utility>
 #include <vector>
 
-class DirtyList : public QObject
+class DirtyList
+{
+	public:
+		virtual bool add(MapFeature* F) = 0;
+		virtual bool update(MapFeature* F) = 0;
+		virtual bool erase(MapFeature* F) = 0;
+};
+
+class DirtyListBuild : public DirtyList
+{
+	public:
+		virtual bool add(MapFeature* F);
+		virtual bool update(MapFeature* F);
+		virtual bool erase(MapFeature* F);
+
+		bool willBeAdded(MapFeature* F) const;
+		bool willBeErased(MapFeature* F) const;
+		bool updateNow(MapFeature* F) const;
+		void resetUpdates();
+
+	private:
+		std::vector<MapFeature*> Added, Deleted;
+		std::vector<MapFeature*> Updated;
+		mutable std::vector<std::pair<unsigned int, unsigned int> > UpdateCounter;
+};
+
+class DirtyListVisit : public DirtyList
+{
+	public:
+		DirtyListVisit(MapDocument* aDoc, const DirtyListBuild& aFuture, bool aEraseFromHistory);
+
+		MapDocument* document();
+		virtual bool add(MapFeature* F);
+		virtual bool update(MapFeature* F);
+		virtual bool erase(MapFeature* F);
+
+		virtual bool addPoint(TrackPoint* Pt) = 0;
+		virtual bool addWay(Way* W) = 0;
+		virtual bool addRoad(Road* R) = 0;
+		virtual bool updatePoint(TrackPoint* Pt) = 0;
+		virtual bool updateWay(Way* W) = 0;
+		virtual bool updateRoad(Road* R) = 0;
+		virtual bool erasePoint(TrackPoint* Pt) = 0;
+		virtual bool eraseWay(Way* W) = 0;
+		virtual bool eraseRoad(Road* R) = 0;
+
+	private:
+		MapDocument* theDocument;
+		const DirtyListBuild& Future;
+		bool EraseFromHistory;
+		std::vector<MapFeature*> Updated;
+};
+
+class DirtyListDescriber : public DirtyListVisit
+{
+	public:
+		DirtyListDescriber(MapDocument* aDoc, const DirtyListBuild& aFuture);
+
+		virtual bool addPoint(TrackPoint* Pt);
+		virtual bool addWay(Way* W);
+		virtual bool addRoad(Road* R);
+		virtual bool updatePoint(TrackPoint* Pt);
+		virtual bool updateWay(Way* W);
+		virtual bool updateRoad(Road* R);
+		virtual bool erasePoint(TrackPoint* Pt);
+		virtual bool eraseWay(Way* W);
+		virtual bool eraseRoad(Road* R);
+
+		bool showChanges(QWidget* Parent);
+		unsigned int tasks() const;
+
+	private:
+		Ui::SyncListDialog Ui;
+		unsigned int Task;
+};
+
+
+class DirtyListExecutor : public QObject, public DirtyListVisit
 {
 	Q_OBJECT
 
 	public:
-		DirtyList(MapDocument* aDoc, const QString& aWeb, const QString& aUser, const QString& aPwd);
-		~DirtyList(void);
+		DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks);
+
+		virtual bool addPoint(TrackPoint* Pt);
+		virtual bool addWay(Way* W);
+		virtual bool addRoad(Road* R);
+		virtual bool updatePoint(TrackPoint* Pt);
+		virtual bool updateWay(Way* W);
+		virtual bool updateRoad(Road* R);
+		virtual bool erasePoint(TrackPoint* Pt);
+		virtual bool eraseWay(Way* W);
+		virtual bool eraseRoad(Road* R);
+
+		bool executeChanges(QWidget* Parent);
+
+	private slots:
+		void on_Request_finished(int id, bool);
+	private:
+		bool sendRequest(const QString& Method, const QString& URL, const QString& Out, QString& Rcv);
+
+		Ui::SyncListDialog Ui;
+		unsigned int Tasks, Done;
+		QProgressDialog* Progress;
+		QString Web,User,Pwd;
+		bool Finished;
+		bool FinishedError;
+		int FinishedId;
+};
+
+
+/*
+class DirtyListImpl : public QObject, public DirtyList
+{
+	Q_OBJECT
+
+	public:
+		DirtyListImpl(MapDocument* aDoc, const QString& aWeb, const QString& aUser, const QString& aPwd);
+		~DirtyListImpl(void);
 
 		bool isAdded(MapFeature* F);
 		bool isAdded(Way* W);
@@ -33,11 +146,10 @@ class DirtyList : public QObject
 		bool isChanged(Way* W);
 		bool isChanged(TrackPoint* Pt);
 		bool isChanged(Road* R);
+		bool isDeleted(MapFeature* F);
 		bool showChanges(QWidget* Parent);
 		bool executeChanges(QWidget* Parent);
 
-	private slots:
-		void on_Request_finished(int id, bool);
 	private:
 		void describeAdded(Way* W);
 		void describeAdded(TrackPoint* Pt);
@@ -53,20 +165,18 @@ class DirtyList : public QObject
 		bool executeChanged(Road* R);
 
 		bool isUpdated(MapFeature* F);
-		bool sendRequest(const QString& URL, const QString& Out, QString& Rcv);
 
 		MapDocument* theDocument;
 		Ui::SyncListDialog Ui;
 		std::vector<MapFeature*> Added, Changed;
 		bool IsExecuting;
 		QProgressDialog* Progress;
-		unsigned int Task;
 		QString Web,User,Pwd;
 		bool Finished;
 		bool FinishedError;
 		int FinishedId;
 };
-
+*/
 #endif
 
 

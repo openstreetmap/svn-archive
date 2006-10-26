@@ -21,6 +21,7 @@ void syncOSM(MainWindow* theMain, const QString& aWeb, const QString& aUser, con
 	DirtyListDescriber Describer(theMain->document(),Future);
 	if (Describer.showChanges(theMain))
 	{
+		Future.resetUpdates();
 		DirtyListExecutor Exec(theMain->document(),Future,aWeb,aUser,aPwd,Describer.tasks());
 		Exec.executeChanges(theMain);
 	}

@@ -1,5 +1,6 @@
 #include "Map/Way.h"
 #include "Command/DocumentCommands.h"
+#include "Command/WayCommands.h"
 #include "Map/Painting.h"
 #include "Map/Projection.h"
 #include "Map/TrackPoint.h"
@@ -26,10 +27,24 @@ Way::~Way(void)
 {
 }
 
-void Way::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* F, CommandList* theList)
+void Way::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* F, CommandList* theList, const std::vector<MapFeature*>& Alternatives)
 {
 	if ( (To == F) || (From == F) || (ControlFrom ==F) || (ControlTo == F) )
-		theList->add(new RemoveFeatureCommand(theDocument,this));
+	{
+		TrackPoint* Alternative = 0;
+		if (Alternatives.size() == 1)
+			Alternative = dynamic_cast<TrackPoint*>(Alternatives[0]);
+		if (Alternative)
+		{
+			TrackPoint* NewTo = (To==F)?Alternative:To;
+			TrackPoint* NewFrom = (From==F)?Alternative:From;
+			TrackPoint* NewControlTo = (ControlTo==F)?Alternative:ControlTo;
+			TrackPoint* NewControlFrom = (ControlFrom==F)?Alternative:ControlFrom;
+			theList->add(new WaySetFromToCommand(this,NewFrom, NewControlFrom, NewControlTo, NewTo));
+		}
+		else
+			theList->add(new RemoveFeatureCommand(theDocument,this));
+	}
 }
 
 double Way::width() const
@@ -54,6 +69,15 @@ void Way::setFromTo(TrackPoint* aFrom, TrackPoint* aTo)
 {
 	From = aFrom;
 	To = aTo;
+	ControlFrom = ControlTo = 0;
+}
+
+void Way::setFromTo(TrackPoint* aFrom, TrackPoint* aC1, TrackPoint* aC2, TrackPoint* aTo)
+{
+	From = aFrom;
+	To = aTo;
+	ControlFrom = aC1;
+	ControlTo = aC2;
 }
 
 TrackPoint* Way::from()

@@ -1,5 +1,7 @@
 #include "Map/Road.h"
 
+#include "Command/DocumentCommands.h"
+#include "Command/RoadCommands.h"
 #include "Map/Painting.h"
 #include "Map/Projection.h"
 #include "Map/TrackPoint.h"
@@ -182,10 +184,27 @@ double Road::pixelDistance(const QPointF& Target, double ClearEndDistance, const
 	return Best;
 }
 
-void Road::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList)
+void Road::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Proposals)
 {
-	// TODO
+	for (unsigned int i=0; i<p->Ways.size(); ++i)
+		if (p->Ways[i] == aFeature)
+		{
+			std::vector<Way*> Alternatives;
+			for (unsigned int j=0; j<Proposals.size(); ++j)
+			{
+				Way* W = dynamic_cast<Way*>(Proposals[j]);
+				if (W)
+					Alternatives.push_back(W);
+			}
+			if ( (p->Ways.size() == 1) && (Alternatives.size() == 0) )
+				theList->add(new RemoveFeatureCommand(theDocument,this));
+			else
+			{
+				theList->add(new RoadRemoveWayCommand(this, p->Ways[i]));
+				for (unsigned int j=0; j<Alternatives.size(); ++j)
+					theList->add(new RoadAddWayCommand(this, Alternatives[j], i+j));
+			}
+			return;
+		}
 }
-
-
 

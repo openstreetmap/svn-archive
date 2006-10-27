@@ -5,7 +5,13 @@
 #include "Sync/DirtyList.h"
 
 RoadAddWayCommand::RoadAddWayCommand(Road* R, Way* W)
-: theRoad(R), theWay(W)
+: theRoad(R), theWay(W), Position(theRoad->size())
+{
+	redo();
+}
+
+RoadAddWayCommand::RoadAddWayCommand(Road* R, Way* W, unsigned int aPos)
+: theRoad(R), theWay(W), Position(aPos)
 {
 	redo();
 }
@@ -17,7 +23,7 @@ void RoadAddWayCommand::undo()
 
 void RoadAddWayCommand::redo()
 {
-	theRoad->add(theWay);
+	theRoad->add(theWay, Position);
 }
 
 bool RoadAddWayCommand::buildDirtyList(DirtyList& theList)

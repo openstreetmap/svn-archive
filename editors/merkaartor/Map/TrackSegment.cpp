@@ -73,13 +73,19 @@ double TrackSegment::pixelDistance(const QPointF& , double , const Projection&) 
 	return 1000000;
 }
 
-void TrackSegment::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList)
+void TrackSegment::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Alternatives)
 {
 	for (unsigned int i=0; i<p->Points.size(); ++i)
 	{
 		// TODO don't remove whole list, but just the point in the list
 		if (p->Points[i] == aFeature)
 		{
+			// TODO use alternative if available
+/*			TrackPoint* Alternative = 0;
+			if (Alternatives.size() == 1)
+				Alternative = dynamic_cast<TrackPoint*>(Alternatives[0]);
+			if (Alternative)
+*/
 			theList->add(new RemoveFeatureCommand(theDocument,this));
 			return;
 /*			if (p->Points.size() == 1)

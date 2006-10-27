@@ -19,7 +19,7 @@ class Road : public MapFeature
 		virtual void draw(QPainter& P, const Projection& theProjection);
 		virtual void drawFocus(QPainter& P, const Projection& theProjection);
 		virtual double pixelDistance(const QPointF& Target, double ClearEndDistance, const Projection& theProjection) const;
-		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList);
+		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Alternatives);
 
 		void add(Way* W);
 		void add(Way* W, unsigned int Idx);

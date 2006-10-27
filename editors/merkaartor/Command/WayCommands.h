@@ -24,6 +24,7 @@ class WaySetFromToCommand : public Command
 {
 	public:
 		WaySetFromToCommand(Way* W, TrackPoint* aFrom, TrackPoint* aTo);
+		WaySetFromToCommand(Way* W, TrackPoint* aFrom, TrackPoint* aC1, TrackPoint* aC2, TrackPoint* aTo);
 
 		virtual void redo();
 		virtual void undo();
@@ -32,6 +33,8 @@ class WaySetFromToCommand : public Command
 		Way* theWay;
 		TrackPoint* OldFrom, *OldTo;
 		TrackPoint* NewFrom, *NewTo;
+		TrackPoint* OldControlFrom, *OldControlTo;
+		TrackPoint* NewControlFrom, *NewControlTo;
 };
 
 #endif

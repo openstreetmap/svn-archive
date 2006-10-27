@@ -1,6 +1,8 @@
 #ifndef MERKAARTOR_LINEF_
 #define MERKAARTOR_LINEF_
 
+#include "Map/Coord.h"
+
 #include <QtCore/QPointF>
 
 #include <math.h>
@@ -18,11 +20,22 @@ public:
 	LineF(const QPointF& aP1, const QPointF& aP2)
 		: P1(aP1), P2(aP2), Valid(true)
 	{
+		init();
+	}
+
+	LineF(const Coord& aP1, const Coord& aP2)
+		: P1(aP1.lat(),aP1.lon()), P2(aP2.lat(),aP2.lon()), Valid(true)
+	{
+		init();
+	}
+
+	void init()
+	{
 		A = P2.y()-P1.y();
 		B = -P2.x()+P1.x();
 		C = -P1.y()*B-P1.x()*A;
 		double F = sqrt(A*A+B*B);
-		if (F<0.0001)
+		if (F<0.00000001)
 			Valid=false;
 		else
 		{
@@ -58,6 +71,16 @@ public:
 		}
 		else
 			return sqrt( (P.x()-A)*(P.x()-A) + (P.y()-B)*(P.y()-B) );
+	}
+
+	Coord project(const Coord& P)
+	{
+		if (Valid)
+		{
+			double SD = A*P.lat()+B*P.lon()+C;
+			return Coord(P.lat()-A*SD,P.lon()-B*SD);
+		}
+		return Coord(P1.x(),P1.y());
 	}
 
 

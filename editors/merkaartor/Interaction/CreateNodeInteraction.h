@@ -3,13 +3,13 @@
 
 #include "Interaction/Interaction.h"
 
-class CreateNodeInteraction : public Interaction
+class CreateNodeInteraction : public WaySnapInteraction
 {
 	public:
 		CreateNodeInteraction(MapView* aView);
 		~CreateNodeInteraction(void);
 
-		virtual void mouseReleaseEvent(QMouseEvent * event);
+		virtual void snapMouseReleaseEvent(QMouseEvent * event, Way* aWay);
 		virtual QCursor cursor() const;
 };
 

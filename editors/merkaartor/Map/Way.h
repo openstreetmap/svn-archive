@@ -25,7 +25,8 @@ class Way : public MapFeature
 		TrackPoint* controlFrom();
 		TrackPoint* controlTo();
 		void setFromTo(TrackPoint* From, TrackPoint* To);
-		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList);
+		void setFromTo(TrackPoint* From, TrackPoint* aC1, TrackPoint* aC2, TrackPoint* To);
+		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Alternatives);
 
 	private:
 		TrackPoint* From, *To;

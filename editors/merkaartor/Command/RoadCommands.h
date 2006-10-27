@@ -10,6 +10,7 @@ class RoadAddWayCommand : public Command
 {
 	public:
 		RoadAddWayCommand(Road* R, Way* W);
+		RoadAddWayCommand(Road* R, Way* W, unsigned int Position);
 
 		virtual void undo();
 		virtual void redo();
@@ -18,6 +19,7 @@ class RoadAddWayCommand : public Command
 	private:
 		Road* theRoad;
 		Way* theWay;
+		unsigned int Position;
 };
 
 class RoadRemoveWayCommand : public Command

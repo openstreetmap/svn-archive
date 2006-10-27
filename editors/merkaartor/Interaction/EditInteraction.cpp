@@ -78,9 +78,10 @@ void EditInteraction::on_remove_triggered()
 	{
 		view()->properties()->setSelection(0);
 		main()->editRemoveAction->setEnabled(false);
+		std::vector<MapFeature*> Alternatives;
 		CommandList* theList = new CommandList;
 		for (FeatureIterator it(document()); !it.isEnd(); ++it)
-			it.get()->cascadedRemoveIfUsing(document(), Selection, theList);
+			it.get()->cascadedRemoveIfUsing(document(), Selection, theList, Alternatives);
 		theList->add(new RemoveFeatureCommand(document(), Selection));
 		document()->history().add(theList);
 		view()->update();

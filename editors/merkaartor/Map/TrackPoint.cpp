@@ -52,7 +52,7 @@ double TrackPoint::pixelDistance(const QPointF& Target, double, const Projection
 	return distance(Target,theProjection.project(Position));
 }
 
-void TrackPoint::cascadedRemoveIfUsing(MapDocument*, MapFeature*, CommandList*)
+void TrackPoint::cascadedRemoveIfUsing(MapDocument*, MapFeature*, CommandList*, const std::vector<MapFeature*>&)
 {
 }
 

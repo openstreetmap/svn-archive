@@ -28,7 +28,7 @@ end
 # id, lat, lon, timestamp, tags
 # 'tags' are a hash in format {key1=>value1, key2=>value2...}
 def all_nodes(page)
-  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 #{pageSQL(page)}" do |rows|
+  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 order by id #{pageSQL(page)}" do |rows|
     rows.each do |row|
       yield row[0].to_i, row[1].to_f, row[2].to_f, read_timestamp(row[3]), read_tags(row[4])
     end
@@ -38,7 +38,7 @@ end
 # yields for every segment
 # id, from_id, to_id, timestamp, tags
 def all_segments(page)
-  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1 #{pageSQL(page)}" do |rows|
+  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1 order by id #{pageSQL(page)}" do |rows|
     rows.each do |row|
       yield row[0].to_i, row[1].to_i, row[2].to_i, read_timestamp(row[3]), read_tags(row[4])
     end
@@ -48,7 +48,7 @@ end
 # yields for every way
 # id, [id1,id2,id3...], timestamp, tags
 def all_ways(page)
-  $mysql.query "select id, timestamp from current_ways where visible = 1 #{pageSQL(page)}" do |ways|
+  $mysql.query "select id, timestamp from current_ways where visible = 1 order by id #{pageSQL(page)}" do |ways|
     ways.each do |row|
       id = row[0].to_i
       segs = []
@@ -69,7 +69,6 @@ def out_tags tags
   tags.each {|key, value| puts %{    <tag k="#{CGI.escapeHTML(key)}" v="#{CGI.escapeHTML(value)}" />}}
 end
 
-
 puts '<?xml version="1.0" encoding="UTF-8"?>'
 puts '<osm version="0.3" generator="OpenStreetMap planet.rb">'
 
@@ -78,7 +77,6 @@ page = 0
 
 while not done
   done = true
-  page += 1
   all_nodes(page) do |id, lat, lon, timestamp, tags|
     done = false
     print %{  <node id="#{id}" lat="#{lat}" lon="#{lon}" timestamp="#{timestamp.xmlschema}"}
@@ -90,6 +88,7 @@ while not done
       puts "  </node>"
     end
   end
+  page += 1
 end
 
 done = false
@@ -97,7 +96,6 @@ page = 0
 
 while not done
   done = true
-  page += 1
   all_segments(page) do |id, from, to, timestamp, tags|
     done = false
     print %{  <segment id="#{id}" from="#{from}" to="#{to}" timestamp="#{timestamp.xmlschema}"}
@@ -109,6 +107,7 @@ while not done
       puts "  </segment>"
     end
   end
+  page += 1
 end
 
 done = false
@@ -116,9 +115,7 @@ page = 0
 
 while not done
   done = true
-  page += 1
-
-  all_ways do |id, segs, timestamp, tags|
+  all_ways(page) do |id, segs, timestamp, tags|
     done = false
     print %{  <way id="#{id}" timestamp="#{timestamp.xmlschema}"}
     if tags.empty? and segs.empty?
@@ -130,5 +127,6 @@ while not done
       puts "  </way>"
     end
   end
+  page += 1
 end
 puts "</osm>"

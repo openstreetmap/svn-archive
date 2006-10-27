@@ -7,6 +7,7 @@ v0.04
 	* ADD : user recognizable names in upload window
 	* FIX : use a dotted line for gpx track segments
 	* ADD : split roads by adding a node
+	* ADD : zoom in/out with the scrollwheel
 
 v0.03 25 oct 2006
 	* FIX : compilation fixes for linux

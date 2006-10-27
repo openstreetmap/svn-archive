@@ -76,6 +76,23 @@ void MapView::mouseMoveEvent(QMouseEvent* anEvent)
 		theInteraction->mouseMoveEvent(anEvent);
 }
 
+void MapView::wheelEvent(QWheelEvent* ev)
+{
+	int Steps = ev->delta()/120;
+	if (Steps > 0)
+	{
+		for (unsigned int i=0; i<Steps; ++i)
+			projection().zoom(0.75,rect());
+		update();
+	}
+	else if (Steps < 0)
+	{
+		for (unsigned int i=0; i<-Steps; ++i)
+			projection().zoom(1.25,rect());
+		update();
+	}
+}
+
 void MapView::launch(Interaction* anInteraction)
 {
 	if (theInteraction)

@@ -28,6 +28,7 @@ class MapView :	public QWidget
 		virtual void mousePressEvent(QMouseEvent * event);
 		virtual void mouseReleaseEvent(QMouseEvent * event);
 		virtual void mouseMoveEvent(QMouseEvent* event);
+		virtual void wheelEvent(QWheelEvent* ev);
 		
 		Projection& projection();
 		PropertiesDock* properties();

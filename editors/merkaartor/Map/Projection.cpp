@@ -80,4 +80,12 @@ CoordBox Projection::viewport() const
 	return Viewport;
 }
 
+void Projection::zoom(double d, const QRect& Screen)
+{
+	Coord C = Viewport.center();
+	double DLat = Viewport.latDiff()/(2*d);
+	double DLon = Viewport.lonDiff()/(2*d);
+	setViewport(CoordBox(Coord(C.lat()-DLat,C.lon()-DLon),Coord(C.lat()+DLat,C.lon()+DLon)), Screen);
+}
+
 

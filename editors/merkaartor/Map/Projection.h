@@ -21,6 +21,7 @@ class Projection
 		double latAnglePerM() const;
 		double lonAnglePerM(double Lat) const;
 		Coord inverse(const QPointF& Screen) const;
+		void zoom(double d, const QRect& Screen);
 	private:
 		double ScaleLat, DeltaLat, ScaleLon, DeltaLon;
 		CoordBox Viewport;

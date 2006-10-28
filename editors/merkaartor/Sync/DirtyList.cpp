@@ -60,6 +60,9 @@ static bool isInterestingPoint(MapDocument* theDocument, TrackPoint* Pt)
 	return false;
 }
 
+DirtyList::~DirtyList()
+{
+}
 
 bool DirtyListBuild::add(MapFeature* F)
 {

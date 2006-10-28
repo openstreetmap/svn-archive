@@ -21,6 +21,7 @@ class QWidget;
 class DirtyList
 {
 	public:
+		virtual ~DirtyList() = 0;
 		virtual bool add(MapFeature* F) = 0;
 		virtual bool update(MapFeature* F) = 0;
 		virtual bool erase(MapFeature* F) = 0;

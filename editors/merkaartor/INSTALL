@@ -2,6 +2,9 @@ Need
 * Working C++ compiler
 * Qt 4.2 development environment
 
+On (K)ubuntu Edgy it is sufficient to install the qt4-dev package
+to satisfy these requirements.
+
 Instructions
 
 1. Change directory to the one in which you unpacked Merkaartor
@@ -12,6 +15,9 @@ $ cd /home/me/src/Merkaartor-0.xx
 2. Run qmake
 
 $ qmake
+
+On (K)ubuntu this will probably pick up the qmake from Qt3 so
+you need to explicitly run the correct one : /usr/share/qt4/bin/qmake
 
 3. Run your build tool, make for posix like systems, nmake for
 Windows C++ Build system

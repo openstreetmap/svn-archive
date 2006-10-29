@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = Merkaartor
+TARGET = merkaartor
 DESTDIR = ./release
 QT += network xml
 CONFIG += release

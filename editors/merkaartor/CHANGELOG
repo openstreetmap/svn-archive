@@ -8,6 +8,7 @@ v0.04
 	* FIX : use a dotted line for gpx track segments
 	* ADD : split roads by adding a node
 	* ADD : zoom in/out with the scrollwheel
+	* ADD : debian package
 
 v0.03 25 oct 2006
 	* FIX : compilation fixes for linux

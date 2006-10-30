@@ -13,6 +13,7 @@
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDateTime>
+#include <QtCore/QEventLoop>
 #include <QtCore/QFile>
 #include <QtGui/QMessageBox>
 #include <QtGui/QProgressDialog>
@@ -174,15 +175,14 @@ static void importWay(const QDomElement& Root, MapDocument* theDocument, MapLaye
 }
 
 
-static void importOSM(QWidget* aParent, const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
+static void importOSM(QProgressDialog* dlg, const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
 {
 	unsigned int Count = 0;
 	for(QDomNode n = Root.firstChild(); !n.isNull(); n = n.nextSibling())
 		++Count;
 	unsigned int Done = 0;
-	QProgressDialog* dlg = new QProgressDialog(aParent);
 	dlg->setMaximum(Count);
-	dlg->setMinimumDuration(1000);
+	QEventLoop ev;
 	for(QDomNode n = Root.firstChild(); !n.isNull(); n = n.nextSibling())
 	{
 		QDomElement t = n.toElement();
@@ -197,8 +197,9 @@ static void importOSM(QWidget* aParent, const QDomElement& Root, MapDocument* th
 		}
 		++Done;
 		dlg->setValue(Done);
+		ev.processEvents();
+		if (dlg->wasCanceled()) return;
 	}
-	delete dlg;
 }
 
 bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapLayer* theLayer)
@@ -207,6 +208,11 @@ bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapL
 	QString ErrorStr;
 	int ErrorLine;
 	int ErrorColumn;
+	QProgressDialog* dlg = new QProgressDialog(aParent);
+	dlg->setWindowModality(Qt::ApplicationModal);
+	dlg->setMinimumDuration(0);
+	dlg->setLabelText("Parsing XML");
+	dlg->show();
 	if (!DomDoc.setContent(&File, true, &ErrorStr, &ErrorLine,&ErrorColumn))
 	{
 		File.close();
@@ -226,8 +232,10 @@ bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapL
 	CommandList* theList = new CommandList;
 	theDocument->add(theLayer);
 	MapLayer* conflictLayer = new MapLayer("Conflicts from "+theLayer->name());
-	importOSM(aParent, root, theDocument, theLayer, conflictLayer, theList);
-	if (theList->empty())
+	importOSM(dlg, root, theDocument, theLayer, conflictLayer, theList);
+	bool WasCanceled = dlg->wasCanceled();
+	delete dlg;
+	if (theList->empty() || WasCanceled)
 	{
 		theDocument->remove(theLayer);
 		delete theLayer;

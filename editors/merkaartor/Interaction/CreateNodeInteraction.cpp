@@ -36,9 +36,7 @@ void CreateNodeInteraction::snapMouseReleaseEvent(QMouseEvent * ev, Way* aWay)
 		std::vector<MapFeature*> Alternatives;
 		Alternatives.push_back(W1);
 		Alternatives.push_back(W2);
-		for (FeatureIterator it(document()); !it.isEnd(); ++it)
-			it.get()->cascadedRemoveIfUsing(document(), aWay, theList, Alternatives);
-		theList->add(new RemoveFeatureCommand(document(),aWay));
+		theList->add(new RemoveFeatureCommand(document(),aWay, Alternatives));
 		document()->history().add(theList);
 		view()->update();
 	}

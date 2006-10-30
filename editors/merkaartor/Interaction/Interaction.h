@@ -19,6 +19,8 @@ class QPainter;
 #include <QtGui/QCursor>
 #include <QtGui/QMouseEvent>
 
+#include <algorithm>
+
 class Interaction : public QObject
 {
 	Q_OBJECT
@@ -78,6 +80,14 @@ class GenericFeatureSnapInteraction : public Interaction
 		virtual void snapMouseMoveEvent(QMouseEvent* , FeatureType*)
 		{
 		}
+		void addToNoSnap(FeatureType* F)
+		{
+			NoSnap.push_back(F);
+		}
+		void clearNoSnap()
+		{
+			NoSnap.clear();
+		}
 	private:
 		void updateSnap(QMouseEvent* event)
 		{
@@ -89,6 +99,8 @@ class GenericFeatureSnapInteraction : public Interaction
 				FeatureType* Pt = dynamic_cast<FeatureType*>(it.get());
 				if (Pt)
 				{
+					if (std::find(NoSnap.begin(),NoSnap.end(),Pt) != NoSnap.end())
+						continue;
 					double Distance = Pt->pixelDistance(event->pos(), 5.01, projection());
 					if (Distance < BestDistance)
 					{
@@ -102,6 +114,7 @@ class GenericFeatureSnapInteraction : public Interaction
 		}
 
 		FeatureType* LastSnap;
+		std::vector<FeatureType*> NoSnap;
 };
 
 typedef GenericFeatureSnapInteraction<MapFeature> FeatureSnapInteraction;

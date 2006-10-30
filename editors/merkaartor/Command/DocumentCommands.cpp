@@ -29,8 +29,31 @@ bool AddFeatureCommand::buildDirtyList(DirtyList& theList)
 /* REMOVEFEATURECOMMAND */
 
 RemoveFeatureCommand::RemoveFeatureCommand(MapDocument *theDocument, MapFeature *aFeature)
-: theLayer(0), Idx(0), theFeature(aFeature)
+: theLayer(0), Idx(0), theFeature(aFeature), CascadedCleanUp(0), RemoveExecuted(false)
 {
+	for (FeatureIterator it(theDocument); !it.isEnd(); ++it)
+	{
+		if (it.get() == aFeature)
+		{
+			theLayer = it.layer();
+			Idx = it.index();
+			break;
+		}
+	}
+	redo();
+}
+
+RemoveFeatureCommand::RemoveFeatureCommand(MapDocument *theDocument, MapFeature *aFeature, const std::vector<MapFeature*>& Alternatives)
+: theLayer(0), Idx(0), theFeature(aFeature), CascadedCleanUp(0), RemoveExecuted(false)
+{
+	CascadedCleanUp = new CommandList;
+	for (FeatureIterator it(theDocument); !it.isEnd(); ++it)
+		it.get()->cascadedRemoveIfUsing(theDocument, aFeature, CascadedCleanUp, Alternatives);
+	if (CascadedCleanUp->empty())
+	{
+		delete CascadedCleanUp;
+		CascadedCleanUp = 0;
+	}
 	for (FeatureIterator it(theDocument); !it.isEnd(); ++it)
 	{
 		if (it.get() == aFeature)
@@ -50,15 +73,26 @@ RemoveFeatureCommand::~RemoveFeatureCommand()
 
 void RemoveFeatureCommand::redo()
 {
+	if (CascadedCleanUp)
+		CascadedCleanUp->redo();
 	theLayer->remove(theFeature);
 }
 
 void RemoveFeatureCommand::undo()
 {
+	if (CascadedCleanUp)
+		CascadedCleanUp->undo();
 	theLayer->add(theFeature,Idx);
 }
 
 bool RemoveFeatureCommand::buildDirtyList(DirtyList &theList)
 {
-	return theList.erase(theFeature);
+	if (CascadedCleanUp && CascadedCleanUp->buildDirtyList(theList))
+	{
+		delete CascadedCleanUp;
+		CascadedCleanUp = 0;
+	}
+	if (!RemoveExecuted)
+		RemoveExecuted = theList.erase(theFeature);
+	return RemoveExecuted && (CascadedCleanUp == 0);
 }

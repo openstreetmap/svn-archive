@@ -3,6 +3,8 @@
 
 #include "Command/Command.h"
 
+#include <vector>
+
 class MapDocument;
 class MapLayer;
 class MapFeature;
@@ -26,6 +28,7 @@ class RemoveFeatureCommand : public Command
 {
 	public:
 		RemoveFeatureCommand(MapDocument* theDocument, MapFeature* aFeature);
+		RemoveFeatureCommand(MapDocument* theDocument, MapFeature* aFeature, const std::vector<MapFeature*>& Alternatives);
 		virtual ~RemoveFeatureCommand();
 
 		void undo();
@@ -36,6 +39,8 @@ class RemoveFeatureCommand : public Command
 		MapLayer* theLayer;
 		unsigned int Idx;
 		MapFeature* theFeature;
+		CommandList* CascadedCleanUp;
+		bool RemoveExecuted;
 };
 
 #endif

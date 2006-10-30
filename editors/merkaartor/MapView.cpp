@@ -81,14 +81,14 @@ void MapView::wheelEvent(QWheelEvent* ev)
 	int Steps = ev->delta()/120;
 	if (Steps > 0)
 	{
-		for (unsigned int i=0; i<Steps; ++i)
+		for (int i=0; i<Steps; ++i)
 			projection().zoom(0.75,rect());
 		update();
 	}
 	else if (Steps < 0)
 	{
-		for (unsigned int i=0; i<-Steps; ++i)
-			projection().zoom(1.25,rect());
+		for (int i=0; i<-Steps; ++i)
+			projection().zoom(1/0.75,rect());
 		update();
 	}
 }

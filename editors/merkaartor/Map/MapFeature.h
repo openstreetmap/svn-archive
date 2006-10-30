@@ -9,6 +9,7 @@
 
 class CommandList;
 class MapDocument;
+class MapLayer;
 class Projection;
 
 class QPointF;
@@ -32,6 +33,7 @@ class MapFeature
 		const QString& id() const;
 		ActorType lastUpdated() const;
 		void setLastUpdated(ActorType A);
+		void setLayer(MapLayer* aLayer);
 
 		void setTag(const QString& k, const QString& v);
 		void setTag(unsigned int idx, const QString& k, const QString& v);
@@ -49,6 +51,7 @@ class MapFeature
 		bool IsInOSM;
 		std::vector<std::pair<QString, QString> > Tags;
 		ActorType LastActor;
+		MapLayer* theLayer;
 };
 
 #endif

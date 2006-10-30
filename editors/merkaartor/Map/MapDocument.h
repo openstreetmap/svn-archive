@@ -33,6 +33,7 @@ class MapLayer
 		MapFeature* get(unsigned int i);
 		const MapFeature* get(unsigned int i) const;
 		MapFeature* get(const QString& id);
+		void notifyIdUpdate(const QString& id, MapFeature* aFeature);
 
 	private:
 		MapLayerPrivate* p;

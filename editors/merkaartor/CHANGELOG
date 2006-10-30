@@ -3,6 +3,7 @@ v0.05
 	* FIX : don't crash after undoing deletion and doing something else
 	* ADD : go to selection interaction after upload/import/open/download
 	* FIX : make the Cancel button work in the import OSM progress dialog
+	* FIX : add a id hash map to speed up importing OSM file
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

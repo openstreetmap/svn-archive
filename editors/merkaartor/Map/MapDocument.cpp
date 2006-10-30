@@ -5,6 +5,7 @@
 #include <QtCore/QString>
 
 #include <algorithm>
+#include <map>
 #include <vector>
 
 /* MAPLAYER */
@@ -18,6 +19,7 @@ public:
 			delete Features[i];
 	}
 	std::vector<MapFeature*> Features;
+	std::map<QString, MapFeature*> IdMap;
 	QString Name;
 	bool Visible;
 };
@@ -62,20 +64,28 @@ bool MapLayer::isVisible() const
 void MapLayer::add(MapFeature* aFeature)
 {
 	p->Features.push_back(aFeature);
+	notifyIdUpdate(aFeature->id(),aFeature);
 }
 
 void MapLayer::add(MapFeature* aFeature, unsigned int Idx)
 {
-	p->Features.push_back(aFeature);
+	add(aFeature);
 	std::rotate(p->Features.begin()+Idx,p->Features.end()-1,p->Features.end());
 }
 
+void MapLayer::notifyIdUpdate(const QString& id, MapFeature* aFeature)
+{
+	p->IdMap[id] = aFeature;
+}
 
 void MapLayer::remove(MapFeature* aFeature)
 {
 	std::vector<MapFeature*>::iterator i = std::find(p->Features.begin(),p->Features.end(), aFeature);
 	if (i != p->Features.end())
+	{
 		p->Features.erase(i);
+		notifyIdUpdate(aFeature->id(),0);
+	}
 }
 
 unsigned int MapLayer::size() const
@@ -90,9 +100,9 @@ MapFeature* MapLayer::get(unsigned int i)
 
 MapFeature* MapLayer::get(const QString& id)
 {
-	for (unsigned int i=0; i<p->Features.size(); ++i)
-		if (p->Features[i]->id() == id)
-			return p->Features[i];
+	std::map<QString, MapFeature*>::iterator i = p->IdMap.find(id);
+	if (i != p->IdMap.end())
+		return i->second;
 	return 0;
 }
 

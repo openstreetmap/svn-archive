@@ -1,4 +1,5 @@
 #include "Map/MapFeature.h"
+#include "Map/MapDocument.h"
 
 #include <QtCore/QUuid>
 
@@ -8,13 +9,15 @@ static QString randomId()
 }
 
 MapFeature::MapFeature()
-: LastActor(MapFeature::User)
+: LastActor(MapFeature::User), theLayer(0)
 {
 	setTag("created_by","Merkaartor");
 }
 
 MapFeature::~MapFeature(void)
 {
+	if (theLayer)
+		theLayer->notifyIdUpdate(Id,0);
 }
 
 void MapFeature::setLastUpdated(MapFeature::ActorType A)
@@ -29,13 +32,22 @@ MapFeature::ActorType MapFeature::lastUpdated() const
 
 void MapFeature::setId(const QString& id)
 {
+	if (theLayer)
+	{
+		theLayer->notifyIdUpdate(Id,0);
+		theLayer->notifyIdUpdate(id,this);
+	}
 	Id = id;
 }
 
 const QString& MapFeature::id() const
 {
 	if (Id == "")
+	{
 		Id = randomId();
+		if (theLayer)
+			theLayer->notifyIdUpdate(Id,const_cast<MapFeature*>(this));
+	}
 	return Id;
 }
 

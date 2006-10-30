@@ -4,19 +4,27 @@
 #include "Sync/DirtyList.h"
 
 AddFeatureCommand::AddFeatureCommand(MapLayer* aDocument, MapFeature* aFeature, bool aUserAdded)
-: theLayer(aDocument), theFeature(aFeature), UserAdded(aUserAdded)
+: theLayer(aDocument), theFeature(aFeature), UserAdded(aUserAdded), RemoveOnDelete(false)
 {
 	redo();
+}
+
+AddFeatureCommand::~AddFeatureCommand()
+{
+	if (RemoveOnDelete)
+		delete theFeature;
 }
 
 void AddFeatureCommand::undo()
 {
 	theLayer->remove(theFeature);
+	RemoveOnDelete = true;
 }
 
 void AddFeatureCommand::redo()
 {
 	theLayer->add(theFeature);
+	RemoveOnDelete = false;
 }
 
 bool AddFeatureCommand::buildDirtyList(DirtyList& theList)
@@ -29,7 +37,7 @@ bool AddFeatureCommand::buildDirtyList(DirtyList& theList)
 /* REMOVEFEATURECOMMAND */
 
 RemoveFeatureCommand::RemoveFeatureCommand(MapDocument *theDocument, MapFeature *aFeature)
-: theLayer(0), Idx(0), theFeature(aFeature), CascadedCleanUp(0), RemoveExecuted(false)
+: theLayer(0), Idx(0), theFeature(aFeature), CascadedCleanUp(0), RemoveExecuted(false), RemoveOnDelete(true)
 {
 	for (FeatureIterator it(theDocument); !it.isEnd(); ++it)
 	{
@@ -44,7 +52,7 @@ RemoveFeatureCommand::RemoveFeatureCommand(MapDocument *theDocument, MapFeature 
 }
 
 RemoveFeatureCommand::RemoveFeatureCommand(MapDocument *theDocument, MapFeature *aFeature, const std::vector<MapFeature*>& Alternatives)
-: theLayer(0), Idx(0), theFeature(aFeature), CascadedCleanUp(0), RemoveExecuted(false)
+: theLayer(0), Idx(0), theFeature(aFeature), CascadedCleanUp(0), RemoveExecuted(false), RemoveOnDelete(true)
 {
 	CascadedCleanUp = new CommandList;
 	for (FeatureIterator it(theDocument); !it.isEnd(); ++it)
@@ -63,12 +71,15 @@ RemoveFeatureCommand::RemoveFeatureCommand(MapDocument *theDocument, MapFeature 
 			break;
 		}
 	}
-	redo();
+//	redo();
+	theLayer->remove(theFeature);
 }
 
 RemoveFeatureCommand::~RemoveFeatureCommand()
 {
-	delete theFeature;
+	delete CascadedCleanUp;
+	if (RemoveOnDelete)
+		delete theFeature;
 }
 
 void RemoveFeatureCommand::redo()
@@ -76,13 +87,15 @@ void RemoveFeatureCommand::redo()
 	if (CascadedCleanUp)
 		CascadedCleanUp->redo();
 	theLayer->remove(theFeature);
+	RemoveOnDelete = true;
 }
 
 void RemoveFeatureCommand::undo()
 {
+	theLayer->add(theFeature,Idx);
 	if (CascadedCleanUp)
 		CascadedCleanUp->undo();
-	theLayer->add(theFeature,Idx);
+	RemoveOnDelete = false;
 }
 
 bool RemoveFeatureCommand::buildDirtyList(DirtyList &theList)

@@ -1,5 +1,6 @@
 v0.05
 	* ADD : connection roads by dragging end points
+	* FIX : don't crash after undoing deletion and doing something else
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

@@ -13,6 +13,7 @@ class AddFeatureCommand : public Command
 {
 	public:
 		AddFeatureCommand(MapLayer* aDocument, MapFeature* aFeature, bool aUserAdded);
+		virtual ~AddFeatureCommand();
 
 		void undo();
 		void redo();
@@ -22,6 +23,7 @@ class AddFeatureCommand : public Command
 		MapLayer* theLayer;
 		MapFeature* theFeature;
 		bool UserAdded;
+		bool RemoveOnDelete;
 };
 
 class RemoveFeatureCommand : public Command
@@ -41,6 +43,7 @@ class RemoveFeatureCommand : public Command
 		MapFeature* theFeature;
 		CommandList* CascadedCleanUp;
 		bool RemoveExecuted;
+		bool RemoveOnDelete;
 };
 
 #endif

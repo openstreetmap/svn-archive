@@ -126,6 +126,7 @@ void MainWindow::on_fileImportAction_triggered()
 		if (OK)
 		{
 			on_viewZoomAllAction_triggered();
+			on_editPropertiesAction_triggered();
 			theDocument->history().setActions(editUndoAction,editRedoAction);
 		}
 		else
@@ -159,6 +160,7 @@ void MainWindow::on_fileOpenAction_triggered()
 			theDocument = NewDoc;
 			theView->setDocument(theDocument);
 			on_viewZoomAllAction_triggered();
+			on_editPropertiesAction_triggered();
 			theDocument->history().setActions(editUndoAction,editRedoAction);
 		}
 		else
@@ -172,6 +174,7 @@ void MainWindow::on_fileOpenAction_triggered()
 
 void MainWindow::on_fileUploadAction_triggered()
 {
+	on_editPropertiesAction_triggered();
 	QDialog * dlg = new QDialog(this);
 	QSettings Sets;
 	Sets.beginGroup("downloadosm");
@@ -217,7 +220,10 @@ void MainWindow::on_fileDownloadAction_triggered()
 			Coord(Lat-DifLat,Lon-DifLon),
 			Coord(Lat+DifLat,Lon+DifLon));
 		if (downloadOSM(this,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument))
+		{
 			on_viewZoomAllAction_triggered();
+			on_editPropertiesAction_triggered();
+		}
 		else
 			QMessageBox::warning(this,tr("Error downloading"),tr("The map could not be downloaded"));
 	}

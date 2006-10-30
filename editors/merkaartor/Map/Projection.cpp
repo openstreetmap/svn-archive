@@ -59,10 +59,11 @@ void Projection::setViewport(const CoordBox& Map, const QRect& Screen)
 	Viewport = CoordBox(inverse(Screen.bottomLeft()),inverse(Screen.topRight()));
 }
 
-void Projection::panScreen(const QPoint& p)
+void Projection::panScreen(const QPoint& p, const QRect& Screen)
 {
 	DeltaLon += p.x();
 	DeltaLat += p.y();
+	Viewport = CoordBox(inverse(Screen.bottomLeft()),inverse(Screen.topRight()));
 }
 
 QPointF Projection::project(const Coord& Map) const

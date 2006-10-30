@@ -65,7 +65,7 @@ void EditInteraction::snapMouseMoveEvent(QMouseEvent* event, MapFeature* )
 	{
 		QPoint Delta = LastPan;
 		Delta -= event->pos();
-		view()->projection().panScreen(-Delta);
+		view()->projection().panScreen(-Delta,view()->rect());
 		view()->update();
 		LastPan = event->pos();
 	}

@@ -14,7 +14,7 @@ class Projection
 		~Projection(void);
 
 		void setViewport(const CoordBox& Map, const QRect& Screen); 
-		void panScreen(const QPoint& p);
+		void panScreen(const QPoint& p, const QRect& Screen);
 		CoordBox viewport() const;
 		QPointF project(const Coord& Map) const;
 		double pixelPerM() const;

@@ -17,7 +17,6 @@
 #include "Map/MapFeature.h"
 #include "Sync/SyncOSM.h"
 #include "GeneratedFiles/ui_AboutDialog.h"
-#include "GeneratedFiles/ui_DownloadMapDialog.h"
 #include "GeneratedFiles/ui_UploadMapDialog.h"
 
 #include <QtCore/QSettings>
@@ -195,39 +194,13 @@ void MainWindow::on_fileUploadAction_triggered()
 
 void MainWindow::on_fileDownloadAction_triggered()
 {
-	QDialog * dlg = new QDialog(this);
-	QSettings Sets;
-	Sets.beginGroup("downloadosm");
-	Ui::DownloadMapDialog ui;
-	ui.setupUi(dlg);
-	ui.Website->setText("www.openstreetmap.org");
-	Coord c(theView->projection().inverse(QPointF(width()/2,height()/2)));
-	ui.Latitude->setText(QString::number(radToAng(c.lat())));
-	ui.Longitude->setText(QString::number(radToAng(c.lon())));
-	ui.Username->setText(Sets.value("user").toString());
-	ui.Password->setText(Sets.value("password").toString());
-	ui.Radius->setText(Sets.value("radius","5.0").toString());
-	if (dlg->exec() == QDialog::Accepted)
+	if ( downloadOSM(this,theView->projection().viewport(),theDocument))
 	{
-		Sets.setValue("user",ui.Username->text());
-		Sets.setValue("password",ui.Password->text());
-		Sets.setValue("radius",ui.Radius->text());
-		double Lat = angToRad(ui.Latitude->text().toDouble());
-		double Lon = angToRad(ui.Longitude->text().toDouble());
-		double DifLat = angToRad(theView->projection().latAnglePerM()*ui.Radius->text().toDouble()*1000);
-		double DifLon = angToRad(theView->projection().lonAnglePerM(Lat)*ui.Radius->text().toDouble()*1000);
-		CoordBox Clip(
-			Coord(Lat-DifLat,Lon-DifLon),
-			Coord(Lat+DifLat,Lon+DifLon));
-		if (downloadOSM(this,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument))
-		{
-			on_viewZoomAllAction_triggered();
-			on_editPropertiesAction_triggered();
-		}
-		else
-			QMessageBox::warning(this,tr("Error downloading"),tr("The map could not be downloaded"));
+		on_viewZoomAllAction_triggered();
+		on_editPropertiesAction_triggered();
 	}
-	delete dlg;
+	else
+		QMessageBox::warning(this,tr("Error downloading"),tr("The map could not be downloaded"));
 }
 
 void MainWindow::on_helpAboutAction_triggered()

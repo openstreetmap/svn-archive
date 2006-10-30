@@ -6,7 +6,11 @@
 #include "Map/MapDocument.h"
 #include "Map/MapFeature.h"
 
+#include "GeneratedFiles/ui_DownloadMapDialog.h"
+
 #include <QtCore/QEventLoop>
+#include <QtCore/QSettings>
+#include <QtGui/QComboBox>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMessageBox>
 #include <QtGui/QStatusBar>
@@ -108,4 +112,54 @@ bool checkForConflicts(MapDocument* theDocument)
 	return false;
 }
 
+bool downloadOSM(QMainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument)
+{
+	QDialog * dlg = new QDialog(aParent);
+	QSettings Sets;
+	Sets.beginGroup("downloadosm");
+	Ui::DownloadMapDialog ui;
+	ui.setupUi(dlg);
+	ui.Website->setText("www.openstreetmap.org");
+	QStringList DefaultBookmarks;
+	DefaultBookmarks << "London" << "51.47" << "-0.20" << "51.51" << "-0.08";
+//	DefaultBookmarks << "Rotterdam" << "51.89" << "4.43" << "51.93" << "4.52";
+	QStringList Bookmarks(DefaultBookmarks);
+	QVariant V = Sets.value("bookmarks");
+	if (!V.isNull())
+		Bookmarks = V.toStringList();
+	for (unsigned int i=0; i<Bookmarks.size(); i+=5)
+		ui.Bookmarks->addItem(Bookmarks[i]);
+	ui.Username->setText(Sets.value("user").toString());
+	ui.Password->setText(Sets.value("password").toString());
+	bool OK = true;
+	if (dlg->exec() == QDialog::Accepted)
+	{
+		Sets.setValue("user",ui.Username->text());
+		Sets.setValue("password",ui.Password->text());
+		CoordBox Clip(Coord(0,0),Coord(0,0));
+		if (ui.FromBookmark->isChecked())
+		{
+			unsigned int idx = ui.Bookmarks->currentIndex()*5+1;
+			Clip = CoordBox(Coord(angToRad(Bookmarks[idx].toDouble()),angToRad(Bookmarks[idx+1].toDouble())),
+				Coord(angToRad(Bookmarks[idx+2].toDouble()),angToRad(Bookmarks[idx+3].toDouble())));
+		}
+		else if (ui.FromView->isChecked())
+		{
+			Clip = aBox;
+		}
+		else if (ui.FromviewAndAdd->isChecked())
+		{
+			Clip = aBox;
+			Bookmarks.insert(0,ui.NewBookmark->text());
+			Bookmarks.insert(1,QString::number(radToAng(Clip.bottomLeft().lat())));
+			Bookmarks.insert(2,QString::number(radToAng(Clip.bottomLeft().lon())));
+			Bookmarks.insert(3,QString::number(radToAng(Clip.topRight().lat())));
+			Bookmarks.insert(4,QString::number(radToAng(Clip.topRight().lon())));
+			Sets.setValue("bookmarks",Bookmarks);
+		}
+		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument);
+	}
+	delete dlg;
+	return OK;
+}
 

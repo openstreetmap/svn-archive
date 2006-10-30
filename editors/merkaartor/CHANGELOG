@@ -4,6 +4,7 @@ v0.05
 	* ADD : go to selection interaction after upload/import/open/download
 	* FIX : make the Cancel button work in the import OSM progress dialog
 	* FIX : add a id hash map to speed up importing OSM file
+	* ADD : bookmark system for downloading from OSM
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

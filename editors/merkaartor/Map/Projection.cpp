@@ -56,7 +56,7 @@ void Projection::setViewport(const CoordBox& Map, const QRect& Screen)
 	double PLat = Center.lat()*ScaleLat;
 	DeltaLon = Screen.width()/2 - PLon;
 	DeltaLat = Screen.height()-(Screen.height()/2 - PLat);
-	Viewport = Map;
+	Viewport = CoordBox(inverse(Screen.bottomLeft()),inverse(Screen.topRight()));
 }
 
 void Projection::panScreen(const QPoint& p)

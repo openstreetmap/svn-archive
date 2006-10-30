@@ -5,12 +5,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>569</width>
-    <height>218</height>
+    <width>401</width>
+    <height>251</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>Download</string>
   </property>
   <layout class="QVBoxLayout" >
    <property name="margin" >
@@ -27,24 +27,23 @@
      <property name="spacing" >
       <number>6</number>
      </property>
-     <item rowspan="2" row="4" column="0" >
-      <widget class="QLabel" name="label_5" >
+     <item row="2" column="0" >
+      <widget class="QLabel" name="label_3" >
        <property name="text" >
-        <string>Longitude</string>
+        <string>Password</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0" >
-      <widget class="QLabel" name="label_4" >
-       <property name="text" >
-        <string>Latitude</string>
-       </property>
-      </widget>
+     <item row="1" column="1" >
+      <widget class="QLineEdit" name="Username" />
      </item>
-     <item row="6" column="0" >
-      <widget class="QLabel" name="label_6" >
+     <item row="0" column="1" >
+      <widget class="QLineEdit" name="Website" />
+     </item>
+     <item row="0" column="0" >
+      <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>Radius</string>
+        <string>Website</string>
        </property>
       </widget>
      </item>
@@ -55,56 +54,91 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0" >
-      <widget class="QLabel" name="label_3" >
-       <property name="text" >
-        <string>Password</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1" >
-      <widget class="QLineEdit" name="Latitude" />
-     </item>
-     <item row="1" column="1" >
-      <widget class="QLineEdit" name="Username" />
-     </item>
-     <item rowspan="2" row="5" column="1" >
-      <layout class="QHBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item>
-        <widget class="QLineEdit" name="Radius" />
-       </item>
-       <item>
-        <widget class="QLabel" name="label_7" >
-         <property name="text" >
-          <string>km</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
      <item row="2" column="1" >
       <widget class="QLineEdit" name="Password" />
      </item>
-     <item row="4" column="1" >
-      <widget class="QLineEdit" name="Longitude" />
-     </item>
-     <item row="0" column="0" >
-      <widget class="QLabel" name="label" >
-       <property name="text" >
-        <string>Website</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" >
-      <widget class="QLineEdit" name="Website" />
-     </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Location</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>9</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="FromBookmark" >
+          <property name="text" >
+           <string>Bookmark</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="Bookmarks" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy" >
+           <sizepolicy>
+            <hsizetype>7</hsizetype>
+            <vsizetype>0</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="FromView" >
+        <property name="text" >
+         <string>Current view</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>6</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="FromviewAndAdd" >
+          <property name="text" >
+           <string>Current view and add as bookmark</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="NewBookmark" >
+          <property name="enabled" >
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <spacer>
@@ -114,7 +148,7 @@
      <property name="sizeHint" >
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>16</height>
       </size>
      </property>
     </spacer>
@@ -140,8 +174,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>218</x>
-     <y>198</y>
+     <x>223</x>
+     <y>241</y>
     </hint>
     <hint type="destinationlabel" >
      <x>241</x>
@@ -156,8 +190,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>274</x>
-     <y>193</y>
+     <x>279</x>
+     <y>241</y>
     </hint>
     <hint type="destinationlabel" >
      <x>283</x>
@@ -165,8 +199,37 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>FromBookmark</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Bookmarks</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>59</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>129</x>
+     <y>133</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FromviewAndAdd</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>NewBookmark</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>99</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>361</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>
-
-
-

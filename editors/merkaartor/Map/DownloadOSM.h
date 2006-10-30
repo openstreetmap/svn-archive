@@ -35,7 +35,7 @@ class DownloadReceiver : public QObject
 		int Done, ToDo;
 };
 
-bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser, const QString& aPassword, const CoordBox& aBox , MapDocument* theDocument);
+bool downloadOSM(QMainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument);
 
 bool checkForConflicts(MapDocument* theDocument);
 

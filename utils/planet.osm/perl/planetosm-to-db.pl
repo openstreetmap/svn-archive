@@ -17,6 +17,7 @@ BEGIN {
     $dir =~s,[^/]+/[^/]+$,,;
     unshift(@INC,"$dir/perl");
 
+    unshift(@INC,"./perl");
     unshift(@INC,"../perl");
     unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
@@ -110,9 +111,11 @@ my @exclude_bbox = ();
 my @only_bbox = ();
 
 if($do_bbox) {
+	print "Only adding things within $do_bbox\n";
 	@only_bbox = split(/,/, $do_bbox);
 }
-if($do_exbbox ) {
+if($do_exbbox) {
+	print "Excluding things within $do_exbbox\n";
 	@exclude_bbox = split(/,/, $do_exbbox);
 }
 
@@ -124,7 +127,10 @@ if(@exclude_bbox) {
 	check_bbox_valid(@exclude_bbox);
 }
 
-if ( ! $xml ) {
+# If we're not doing a clean, and don't have planet.osm, then go
+#  ahead and fetch it
+if ( ! $xml && ! $do_empty ) {
+	print "No planet.osm found, downloading it\n";
     $xml = mirror_planet();
 };
 
@@ -397,6 +403,8 @@ while(my $line = <XML>) {
 	elsif($line =~ /^\s*\<\?xml/) {
 	}
 	elsif($line =~ /^\s*\<osm /) {
+	}
+	elsif($line =~ /^\s*\<\/osm\>/) {
 	}
 	elsif($line =~ /^\s*\<\/node\>/) {
 	}

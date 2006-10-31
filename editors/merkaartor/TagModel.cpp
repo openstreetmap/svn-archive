@@ -15,7 +15,17 @@ TagModel::~TagModel(void)
 
 void TagModel::setFeature(MapFeature* aF)
 {
+	if (theFeature)
+	{
+		beginRemoveRows(QModelIndex(),0,theFeature->tagSize());
+		endRemoveRows();
+	}
 	theFeature = aF;
+	if (theFeature)
+	{
+		beginInsertRows(QModelIndex(),0,theFeature->tagSize());
+		endInsertRows();
+	}
 }
 
 int TagModel::rowCount(const QModelIndex &) const

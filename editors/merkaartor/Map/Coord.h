@@ -57,7 +57,7 @@ class CoordBox
 				BottomLeft.setLon(C.lon());
 			if (C.lat() > TopRight.lat())
 				TopRight.setLat(C.lat());
-			if (C.lon() > BottomLeft.lon())
+			if (C.lon() > TopRight.lon())
 				TopRight.setLon(C.lon());
 		}
 
@@ -89,6 +89,15 @@ class CoordBox
 		const Coord& topRight() const
 		{
 			return TopRight;
+		}
+
+		bool disjunctFrom(const CoordBox& B) const
+		{
+			if (BottomLeft.lat() > B.TopRight.lat()) return true;
+			if (BottomLeft.lon() > B.TopRight.lon()) return true;
+			if (TopRight.lat() < B.BottomLeft.lat()) return true;
+			if (TopRight.lon() < B.BottomLeft.lon()) return true;
+			return false;
 		}
 
 	private:

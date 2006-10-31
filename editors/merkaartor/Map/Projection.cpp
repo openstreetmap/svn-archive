@@ -47,11 +47,12 @@ void Projection::setViewport(const CoordBox& Map, const QRect& Screen)
 	double LengthOfOneDegreeLon = LengthOfOneDegreeLat*fabs(cos(Center.lat()));
 	double Aspect = LengthOfOneDegreeLon/LengthOfOneDegreeLat;
 	ScaleLon = Screen.width()/Map.lonDiff()*.9;
-	ScaleLat = Screen.height()/Map.latDiff()*.9;
-	if (ScaleLon/Aspect > ScaleLat)
+	ScaleLat = ScaleLon/Aspect;
+	if ( (ScaleLat*Map.latDiff()*.9) > Screen.height() )
+	{
+		ScaleLat = Screen.height()/Map.latDiff()*.9;
 		ScaleLon = ScaleLat*Aspect;
-	else
-		ScaleLat = ScaleLon/Aspect;
+	}
 	double PLon = Center.lon()*ScaleLon;
 	double PLat = Center.lat()*ScaleLat;
 	DeltaLon = Screen.width()/2 - PLon;
@@ -89,9 +90,6 @@ void Projection::zoom(double d, const QRect& Screen)
 	QPointF F(project(C));
 	DeltaLon += Screen.width()/2-F.x();
 	DeltaLat += Screen.height()/2-F.y();
-	QPointF G(project(C));
-	QPointF H(project(C));
-
 }
 
 

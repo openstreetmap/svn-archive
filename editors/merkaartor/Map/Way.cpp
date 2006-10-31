@@ -136,6 +136,7 @@ static double pixelDistance(const QPointF& Target, const QPointF& P1, const QPoi
 
 void Way::draw(QPainter& P, const Projection& theProjection)
 {
+	if (theProjection.viewport().disjunctFrom(boundingBox())) return;
 	double WW = theProjection.pixelPerM()*width();
 	if (WW<1)
 		WW = 1;

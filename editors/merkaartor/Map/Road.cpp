@@ -124,14 +124,17 @@ void Road::draw(QPainter& thePainter, const Projection& theProjection)
 
 		QPointF P(theProjection.project(half(W)));
 		double Rad = theProjection.pixelPerM()*W->width();
-		thePainter.drawEllipse(P.x()-Rad/2,P.y()-Rad/2,Rad,Rad);
-
-		QPen TP;
-		if (lastUpdated() == MapFeature::OSMServerConflict)
-			TP = QPen(QBrush(QColor(0xff,0,0)),theProjection.pixelPerM()*W->width()/4);
-		else
-			TP = QPen(QBrush(QColor(0x22,0xff,0x22,128)),theProjection.pixelPerM()*W->width()/4);
-		::draw(thePainter,TP,p->Ways[i],theProjection);
+		if (Rad>0.5)
+			thePainter.drawEllipse(P.x()-Rad/2,P.y()-Rad/2,Rad,Rad);
+		if (Rad>1)
+		{
+			QPen TP;
+			if (lastUpdated() == MapFeature::OSMServerConflict)
+				TP = QPen(QBrush(QColor(0xff,0,0)),Rad/4);
+			else
+				TP = QPen(QBrush(QColor(0x22,0xff,0x22,128)),Rad/4);
+			::draw(thePainter,TP,p->Ways[i],theProjection);
+		}
 	}
 }
 

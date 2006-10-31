@@ -5,8 +5,11 @@
 #include "Interaction/EditInteraction.h"
 #include "Interaction/Interaction.h"
 
+#include <QtCore/QTime>
+#include <QtGui/QMainWindow>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
+#include <QtGui/QStatusBar>
 
 MapView::MapView(MainWindow* aMain)
 : Main(aMain), theDocument(0), theInteraction(0)
@@ -40,6 +43,7 @@ MapDocument* MapView::document()
 
 void MapView::paintEvent(QPaintEvent* anEvent)
 {
+	QTime Start(QTime::currentTime());
 	QPainter P(this);
 	P.setRenderHint(QPainter::Antialiasing);
 	P.fillRect(rect(),QBrush(QColor(255,255,255)));
@@ -56,6 +60,9 @@ void MapView::paintEvent(QPaintEvent* anEvent)
 	}
 	if (theInteraction)
 		theInteraction->paintEvent(anEvent,P);
+	QTime Stop(QTime::currentTime());
+	main()->statusBar()->clearMessage();
+	main()->statusBar()->showMessage(QString("Paint took %1ms").arg(Start.msecsTo(Stop)));
 }
 
 void MapView::mousePressEvent(QMouseEvent * event)

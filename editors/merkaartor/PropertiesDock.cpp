@@ -21,10 +21,12 @@ PropertiesDock::PropertiesDock(MainWindow* aParent)
 	setMinimumSize(220,100);
 	switchToNoUi();
 	setWindowTitle(tr("Properties"));
+	theModel = new TagModel(aParent);
 }
 
 PropertiesDock::~PropertiesDock(void)
 {
+	delete theModel;
 }
 
 MapFeature* PropertiesDock::selection()
@@ -109,30 +111,28 @@ void PropertiesDock::resetValues()
 	// to prevent slots to change the values also
 	MapFeature* Current = Selection;
 	Selection = 0;
+	theModel->setFeature(0);
 	if (Way* W = dynamic_cast<Way*>(Current))
 	{
 		WayUi.Width->setText(QString::number(W->width()));
 		WayUi.Id->setText(W->id());
-		TagModel* theTagModel = new TagModel(Main);
-		theTagModel->setFeature(Current);
-		WayUi.TagView->setModel(theTagModel);
+		theModel->setFeature(Current);
+		WayUi.TagView->setModel(theModel);
 	}
 	else if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(Current))
 	{
 		TrackPointUi.Id->setText(Pt->id());
 		TrackPointUi.Latitude->setText(QString::number(radToAng(Pt->position().lat()),'g',8));
 		TrackPointUi.Longitude->setText(QString::number(radToAng(Pt->position().lon()),'g',8));
-		TagModel* theTagModel = new TagModel(Main);
-		theTagModel->setFeature(Current);
-		TrackPointUi.TagView->setModel(theTagModel);
+		theModel->setFeature(Current);
+		TrackPointUi.TagView->setModel(theModel);
 	}
 	else if (Road* R = dynamic_cast<Road*>(Current))
 	{
 		RoadUi.Id->setText(R->id());
 		RoadUi.Name->setText(R->tagValue("name",""));
-		TagModel* theTagModel = new TagModel(Main);
-		theTagModel->setFeature(Current);
-		RoadUi.TagView->setModel(theTagModel);
+		theModel->setFeature(Current);
+		RoadUi.TagView->setModel(theModel);
 	}
 	Selection = Current;
 }
@@ -147,6 +147,7 @@ void PropertiesDock::on_WayWidth_textChanged(const QString& )
 		Main->document()->history().add(
 			new WaySetWidthCommand(W,WayUi.Width->text().toDouble()));
 		Main->invalidateView(false);
+		theModel->setFeature(Selection);
 	}
 }
 void PropertiesDock::on_TrackPointLat_textChanged(const QString&)
@@ -187,6 +188,7 @@ void PropertiesDock::on_RoadName_textChanged(const QString&)
 		else
 			Main->document()->history().add(
 				new SetTagCommand(Selection,"name",RoadUi.Name->text()));
+		theModel->setFeature(Selection);
 	}
 }
 

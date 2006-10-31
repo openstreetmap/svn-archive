@@ -7,6 +7,8 @@ v0.05
 	* ADD : bookmark system for downloading from OSM
 	* FIX : don't jump when zooming after panning
 	* FIX : use the same step to zoom in and out
+	* FIX : calculate correct bounding box
+	* FIX : always update tagview and fix memory leak
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

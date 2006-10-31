@@ -9,6 +9,7 @@
 
 class MainWindow;
 class MapFeature;
+class TagModel;
 
 class PropertiesDock : public QDockWidget
 {
@@ -41,6 +42,7 @@ class PropertiesDock : public QDockWidget
 		Ui::WayProperties WayUi;
 		Ui::TrackPointProperties TrackPointUi;
 		Ui::RoadProperties RoadUi;
+		TagModel* theModel;
 
 		enum { NoUiShowing, WayUiShowing, TrackPointUiShowing, RoadUiShowing } NowShowing ;
 };

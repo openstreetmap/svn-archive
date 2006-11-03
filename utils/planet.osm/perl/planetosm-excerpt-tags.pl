@@ -36,8 +36,9 @@ my @seg_sel_tags = ();
 # Specify which ways to get, based on their tags
 my @way_sel_tags = (
 	['railway',undef],
-	['waterway','river'],
-	['natural','coastline'],
+	['highway','motorway'],
+#	['waterway','river'],
+#	['natural','coastline'], # Gives really huge .osm files
 );
 
 ###########################################################################
@@ -175,18 +176,22 @@ sub processXML {
 			$main_line = $line;
 			$main_type = "node";
 			&$startNewTag();
+			unless($line =~ /\/>\s*$/) { next; }
 		}
 		elsif($line =~ /^\s*<segment/) {
 			$main_line = $line;
 			$main_type = "segment";
 			&$startNewTag();
+			unless($line =~ /\/>\s*$/) { next; }
 		}
 		elsif($line =~ /^\s*\<way/) {
 			$main_line = $line;
 			$main_type = "way";
 			&$startNewTag();
+			unless($line =~ /\/>\s*$/) { next; }
 		}
-		elsif($line =~ /^\s*\<tag/) {
+
+		if($line =~ /^\s*\<tag/) {
 			my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);
 			unless($name) { 
 				unless($line =~ /k="\s*" v="\s*"/) {
@@ -204,27 +209,30 @@ sub processXML {
 			push @segs, $id;
 		}
 
-		# Do the decisions when closing tags
-		elsif($line =~ /^\s*<\/node>/) {
+		# Do the decisions when closing tags - can be self closing
+		elsif($line =~ /^\s*<\/?node/) {
 			my ($id,$lat,$long) = ($main_line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
 
 			unless($id) { warn "Invalid node line '$main_line'"; next; }
+			unless($main_type eq "node") { warn "$main_type ended with $line"; next; }
 			if($nodeH) {
 				&$nodeH($id,$lat,$long,\@tags,$main_line,$line);
 			}
 		}
-		elsif($line =~ /^\s*<\/segment>/) {
+		elsif($line =~ /^\s*<\/?segment/) {
 			my ($id,$from,$to) = ($main_line =~ /^\s*<segment id=['"](\d+)['"] from=['"](\d+)['"] to=['"](\d+)['"]/);
 
 			unless($id) { warn "Invalid segment line '$main_line'"; next; }
+			unless($main_type eq "segment") { warn "$main_type ended with $line"; next; }
 			if($segH) {
 				&$segH($id,$from,$to,\@tags,$main_line,$line);
 			}
 		}
-		elsif($line =~ /^\s*\<\/way/) {
+		elsif($line =~ /^\s*\<\/?way/) {
 			my ($id) = ($main_line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
 
 			unless($id) { warn "Invalid way line '$main_line'"; next; }
+			unless($main_type eq "way") { warn "$main_type ended with $line"; next; }
 			if($wayH) {
 				&$wayH($id,\@tags,\@segs,$main_line,$line);
 			}

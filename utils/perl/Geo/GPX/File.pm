@@ -187,27 +187,6 @@ sub write_gpx_file($$) { # Write an gpx File
 
     my $point_count=0;
 
-    # write Waypoints
-    if ( $write_gpx_wpt ) {
-	for my $wpt ( @{$tracks->{wpt}} ) {
-	    my $lat  = $wpt->{lat};
-	    my $lon  = $wpt->{lon};
-	    print $fh " <wpt lat=\"$lat\" lon=\"$lon\">\n";
-	    #print $fh "     <name>$wpt->{name}</name>\n";
-	    for my $type ( qw ( name ele
-				cmt desc
-				sym
-				course  fix hdop sat speed time )) {
-		my $value = $wpt->{$type};
-		next if $fake_gpx_date && ($type eq "time");
-		if( defined $value ) {
-		    print $fh "     <$type>$value</$type>\n";
-		}
-	    };
-	    print $fh " </wpt>\n";
-	}
-    }
-
     # write tracks
     my $fake_time=0;
     my $track_id=0;
@@ -241,8 +220,7 @@ sub write_gpx_file($$) { # Write an gpx File
 		    $time_usec =~ s/^\.//;
 		}
 		if ( $time_sec && $time_sec < 3600*30 ) {
-		    $time_usec =~s/^\.//;
-		    print "---------------- time_sec: $time_sec\n";
+		    #print "---------------- time_sec: $time_sec\n";
 		}
 		if ( $fake_gpx_date ) {
 		    $fake_time += rand(10);
@@ -274,6 +252,28 @@ sub write_gpx_file($$) { # Write an gpx File
 	
     }
 
+    # write Waypoints
+    if ( $write_gpx_wpt ) {
+	print $fh "\n";
+	for my $wpt ( @{$tracks->{wpt}} ) {
+	    my $lat  = $wpt->{lat};
+	    my $lon  = $wpt->{lon};
+	    print $fh " <wpt lat=\"$lat\" lon=\"$lon\">\n";
+	    #print $fh "     <name>$wpt->{name}</name>\n";
+	    for my $type ( qw ( name ele
+				cmt desc
+				sym
+				course  fix hdop sat speed time )) {
+		my $value = $wpt->{$type};
+		next if $fake_gpx_date && ($type eq "time");
+		if( defined $value ) {
+		    print $fh "     <$type>$value</$type>\n";
+		}
+	    };
+	    print $fh " </wpt>\n";
+	}
+    }
+
     print $fh "</gpx>\n";
     $fh->close();
 
@@ -283,3 +283,35 @@ sub write_gpx_file($$) { # Write an gpx File
 }
 
 1;
+
+=head1 NAME
+
+Geo::GPX::File
+
+=head1 COPYRIGHT
+
+Copyright 2006, Jörg Ostertag
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 AUTHOR
+
+Jörg Ostertag (planet-count-for-openstreetmap@ostertag.name)
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

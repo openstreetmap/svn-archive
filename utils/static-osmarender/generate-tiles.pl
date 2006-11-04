@@ -242,3 +242,34 @@ sub tweakMapFeatures {
 	print OSM $omf;
 	close OSM;
 }
+
+__END__
+
+=head1 NAME
+
+B<generate-tiles.pl>
+
+=head1 DESCRIPTION
+
+Please Fill in
+
+=head1 SYNOPSIS
+
+Please Fill in
+
+=head1 OPTIONS
+
+Please Fill in
+=head1 COPYRIGHT
+
+Please Fill in
+
+=head1 AUTHOR
+
+Please Fill in
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

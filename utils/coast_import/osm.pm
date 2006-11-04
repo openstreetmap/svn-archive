@@ -106,6 +106,10 @@ sub upload(){
   return($response, $http_code);
 }
 
+1;
+
+__END__
+
 =head1 NAME
 
 Geo::OSM - Upload data to OpenStreetMap
@@ -201,5 +205,3 @@ L<http://openstreetmap.org/>
 L<http://wiki.openstreetmap.org/>
 
 =cut
-
-1

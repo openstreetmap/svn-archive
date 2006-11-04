@@ -32,8 +32,6 @@ use Utils::File;
 use Utils::Math;
 use Utils::Debug;
 use Utils::LWP::Utils;
-use Geo::Gpsdrive::DBFuncs;
-use Geo::Gpsdrive::Utils;
 use Geo::OSM::Write;
 use Data::Dumper;
 use XML::Parser;
@@ -430,6 +428,7 @@ sub check_osm_nodes() {
 	    $tag_string =~ s/\s*\]\s*//g;
 	    $tag_string =~ s/class:(node|trackpoint)//g;
 	    $tag_string =~ s/created_by:JOSM//g;
+	    $tag_string =~ s/converted_by:Track2osm//g;
 	    $tag_string =~ s/editor:osmpedit-svn//g;
 	    $tag_string =~ s/editor:osmpedit//g;
 	    $tag_string =~ s/\s*//g;
@@ -633,7 +632,7 @@ Output Filename. Default is standardout.
 I you put a File named ~/.josm/external_tools with the following 
 content you can access it with the tools menu inside josm.
 
-<tools>
+ <tools>
  <group name="sanitizer">
   <tool
     name="Tweety's OSM sanitizer (All)"
@@ -657,7 +656,34 @@ content you can access it with the tools menu inside josm.
     out="replace">
   </tool>
  </group>
-</tools>
-
-
+ </tools>
 =back
+
+
+=head1 COPYRIGHT
+
+Copyright 2006, Jörg Ostertag
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 AUTHOR
+
+Jörg Ostertag (sanitize-for-openstreetmap@ostertag.name)
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

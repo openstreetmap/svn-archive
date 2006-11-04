@@ -105,6 +105,10 @@ sub DoChar(){
   my ($Expat, $String) = @_;
 }
 
+1;
+
+__END__
+
 =head1 NAME
 
 OsmXML - Module for reading OpenStreetMap XML data files
@@ -154,5 +158,3 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 =cut
-
-1

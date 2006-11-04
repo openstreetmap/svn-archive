@@ -371,3 +371,13 @@ B<planertosm-excerpt-tags.pl> <planet.osm.xml> > excerpt.osm
 parse an excerpted planet.osm file, and output the parts that match certain
 tags.
 
+=head1 AUTHOR
+
+=head1 COPYRIGHT
+
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

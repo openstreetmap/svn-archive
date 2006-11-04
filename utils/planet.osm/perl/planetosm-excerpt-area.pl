@@ -334,3 +334,12 @@ planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
 
 =back
 
+=head1 COPYRIGHT
+
+=head1 AUTHOR
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

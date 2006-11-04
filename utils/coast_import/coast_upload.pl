@@ -1,4 +1,4 @@
-  #!/usr/bin/perl
+#!/usr/bin/perl
 #-----------------------------------------------------------------------------
 # coast_upload.pl
 # 
@@ -8,23 +8,7 @@
 #   perl coast_upload.pl LatS LatN LongW LongE [datafile]
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
-#-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-#-----------------------------------------------------------------------------
+
 use Geo::ShapeFile;
 use LWP::Simple;
 use osm;
@@ -131,3 +115,50 @@ sub createCoasts(){
   # Report this segment as finished
   get(sprintf("http://almien.co.uk/OSM/CoastlineUpload/Update/?pg=$PW&action=finish&ID=%d",$ID));
 }
+
+__END__
+
+=head1 NAME
+
+B<coast_upload.pl>
+
+=head1 DESCRIPTION
+
+This program will upload PGS coastlines to openstreetmap
+
+=head1 SYNOPSIS
+
+Usage: 
+   perl coast_upload.pl LatS LatN LongW LongE [datafile]
+
+=head1 OPTIONS
+
+Contact OJW on the Openstreetmap wiki for help using this program
+
+=head1 COPYRIGHT
+
+Copyright 2006, Jörg Ostertag
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 AUTHOR
+
+OJW
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

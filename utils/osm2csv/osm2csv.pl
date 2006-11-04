@@ -503,6 +503,7 @@ B<osm2csv.pl> Version 0.02
 
 B<osm2csv.pl> is a program to convert osm-data from xml format to 
 a plain text file in cvs form.
+This format then is normally used by osmpdfatlas.pl
 
 =head1 SYNOPSIS
 
@@ -539,3 +540,32 @@ print all areas possible
 the file to read from
 
 =back
+
+=head1 COPYRIGHT
+
+Copyright 2006, OJW
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 AUTHOR
+
+OJW <streetmap@blibbleblobble.co.uk>
+Jörg Ostertag (osm2csv-for-openstreetmap@ostertag.name)
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

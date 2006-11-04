@@ -31,6 +31,14 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+=head1 SEE ALSO
+
+osmarender
+
+josm
+
+http://www.openstreetmap.org/
+
 =cut
 use strict;
 use Tk;
@@ -436,42 +444,45 @@ sub FirstTime(){
   print "\n";
   
   LookFor("Browser", 
-    "C:\\Program Files\\Mozilla Firefox\\firefox.exe", 
-    "C:\\windows\\iexplore.exe", 
-    "C:\\winnt\\iexplore.exe", 
-    "C:\\windows\\iexplore.exe", 
-	"C:/Program Files/Internet Explorer/iexplore.exe",
-    "/usr/bin/firefox");
+	  "C:\\Program Files\\Mozilla Firefox\\firefox.exe", 
+	  "C:\\windows\\iexplore.exe", 
+	  "C:\\winnt\\iexplore.exe", 
+	  "C:\\windows\\iexplore.exe", 
+	  "C:/Program Files/Internet Explorer/iexplore.exe",
+	  "/usr/bin/firefox");
   
   LookFor("XmlStarlet", 
-    "C:\\xml\\xml.exe", 
-    "/usr/bin/xmlstarlet");
+	  "C:\\xml\\xml.exe", 
+	  "/usr/bin/xmlstarlet");
   
   LookFor("Inkscape", 
-    "C:\\Program Files\\inkscape\\inkscape.exe", 
-    "/usr/bin/inkscape");
-    
+	  "C:\\Program Files\\inkscape\\inkscape.exe", 
+	  "/usr/bin/inkscape");
+  
   LookFor("ImageMagick", 
-    "/usr/bin/convert");
+	  "/usr/bin/convert");
   
   LookFor("JosmBookmarks", 
-    "~/.josm/Bookmarks",
-	"C:/Documents and Settings/oliverwhite.CUESIM/.josm/bookmarks");
+	  "$ENV{HOME}/.josm/bookmarks",
+	  "$ENV{HOME}/.josm/Bookmarks",
+	  "~/.josm/Bookmarks",
+	  "C:/Documents and Settings/oliverwhite.CUESIM/.josm/bookmarks");
 
   LookFor("JOSM", 
-    "C:/home/osm/josm-latest.jar");
+	  "$ENV{HOME}/bin/josm-latest.jar",
+	  "C:/home/osm/josm-latest.jar");
   
   LookFor("Editor", 
-    "c:/windows/notepad.exe",
-    "c:/winnt/notepad.exe",
-	"/usr/bin/kate",
-	"/usr/bin/emacs");
+	  "c:/windows/notepad.exe",
+	  "c:/winnt/notepad.exe",
+	  "/usr/bin/kate",
+	  "/usr/bin/emacs");
 	
   LookFor("ImageEditor", 
-    "C:/Program Files/GIMP-2.0/bin/gimp-win-remote.exe",
-	"/usr/bin/gimp",
-	"/usr/bin/gqview");
-
+	  "C:/Program Files/GIMP-2.0/bin/gimp-win-remote.exe",
+	  "/usr/bin/gimp",
+	  "/usr/bin/gqview");
+  
   SaveOptions("$Files/options.txt");
   
   # Download files for the first time

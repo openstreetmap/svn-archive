@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.data.coor.EastNorth;
 
 /**
  * This is a layer that grabs the current screen from an WMS server. The data
@@ -28,7 +30,7 @@ public class LandsatLayer extends Layer {
 
 	private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LandsatPlugin.class.getResource("/images/wms.png")));
 
-	private final LandsatImage landsatImage;
+	private final ArrayList<LandsatImage> landsatImages;
 
 	private final String url;
 
@@ -46,20 +48,25 @@ public class LandsatLayer extends Layer {
 							"Can't operate on {0}",Main.proj));
 
 		this.url = url;
-		landsatImage = new LandsatImage(url);
+		//landsatImage = new LandsatImage(url);
+		landsatImages = new ArrayList<LandsatImage>();
 	}
 
 	public void grab() throws IOException
 	{
 		MapView mv = Main.map.mapView;
+		LandsatImage landsatImage = new LandsatImage(url);
 		landsatImage.grab(mv);
+		landsatImages.add(landsatImage);
 	}
 
 	public void grab(double minlat,double minlon,double maxlat,double maxlon)
 	throws IOException
 	{
 		MapView mv = Main.map.mapView;
+		LandsatImage landsatImage = new LandsatImage(url);
 		landsatImage.grab(mv,minlat,minlon,maxlat,maxlon);
+		landsatImages.add(landsatImage);
 	}
 
 	@Override public Icon getIcon() {
@@ -78,7 +85,9 @@ public class LandsatLayer extends Layer {
 	}
 
 	@Override public void paint(Graphics g, final MapView mv) {
-		landsatImage.paint(g,mv);
+		for(LandsatImage landsatImage : landsatImages) {
+			landsatImage.paint(g,mv);
+		}
 	}
 
 	@Override public void visitBoundingBox(BoundingXYVisitor v) {
@@ -95,5 +104,15 @@ public class LandsatLayer extends Layer {
 				new JMenuItem(new LayerListDialog.DeleteLayerAction(this)),
 				new JSeparator(),
 				new JMenuItem(new LayerListPopup.InfoAction(this))};
+	}
+
+	public LandsatImage findImage(EastNorth eastNorth)
+	{
+		for(LandsatImage landsatImage : landsatImages) {
+			if (landsatImage.contains(eastNorth))  {
+				return landsatImage;
+			}
+		}
+		return null;
 	}
 }

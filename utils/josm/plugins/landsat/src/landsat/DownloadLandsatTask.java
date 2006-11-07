@@ -17,12 +17,9 @@ public class DownloadLandsatTask extends PleaseWaitRunnable implements DownloadT
 	private double minlat, minlon, maxlat, maxlon;
 	private JCheckBox checkBox = new JCheckBox(tr("Landsat background images"));
 
-	public DownloadLandsatTask() {
+	public DownloadLandsatTask(LandsatLayer landsatLayer) {
 		super(tr("Downloading data"));
-		landsatLayer = new LandsatLayer
-		("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&"+
-				"layers=global_mosaic&styles=&srs=EPSG:4326&"+
-		"format=image/jpeg");
+		this.landsatLayer = landsatLayer;
 	}
 
 	@Override public void realRun() throws IOException {

@@ -20,7 +20,9 @@ public class LandsatImage
 	String constURL;
 	Image theImage;
 	double grabbedScale;
-	EastNorth topLeft;
+	EastNorth topLeft, bottomRight;
+	double dEast, dNorth;	
+	double minLat,minLon,maxLat,maxLon;
 
 	public LandsatImage(String constURL)
 	{
@@ -55,7 +57,7 @@ public class LandsatImage
 		grabbedScale = nc.getScale(); // enPerPixel
 
 		topLeft = Main.proj.latlon2eastNorth(new LatLon(maxlat,minlon));
-		EastNorth bottomRight = Main.proj.latlon2eastNorth
+		bottomRight = Main.proj.latlon2eastNorth
 		(new LatLon(minlat,maxlon));
 
 		int widthPx = (int)((bottomRight.east()-topLeft.east())/grabbedScale),
@@ -66,12 +68,16 @@ public class LandsatImage
 		{
 			URL url =  doGetURL(p,p2,widthPx,heightPx);
 			doGrab(url);
+			this.minLat=minlat;
+			this.minLon=minlon;
+			this.maxLat=maxlat;
+			this.maxLon=maxlon;
 		}
 		catch(MalformedURLException e)
 		{
 			System.out.println("Illegal url. Error="+e);
 		}
-			}
+	}
 
 	private URL getURL(NavigatableComponent nc) throws MalformedURLException
 	{
@@ -102,42 +108,43 @@ public class LandsatImage
 		Main.map.repaint();
 	}
 
-	public void paint(Graphics g,NavigatableComponent nc) /*,EastNorth bottomLeft,
-		   int x1, int y1, int x2, int y2) */
+	public void displace (double dEast, double dNorth)
+	{
+	 	this.dEast += dEast;	
+	 	this.dNorth += dNorth;	
+	}
+
+	public boolean contains(EastNorth eastNorth)
+	{
+		double e1 = topLeft.east()+dEast, 
+			   e2 = bottomRight.east()+dEast,
+			   n1 = bottomRight.north()+dNorth,
+			   n2 = topLeft.north()+dNorth;
+
+		boolean b =  eastNorth.east()>=e1 && eastNorth.east()<=e2 &&
+				eastNorth.north()>=n1 && eastNorth.north()<=n2;
+		return b;
+	}
+
+	public void paint(Graphics g,NavigatableComponent nc) 
 	{
 		if(theImage!=null)
 		{
-			/*
-			System.out.println("x1="+x1+" y1="+y1+" x2="+x2+" y2="+y2+
-								" img w="+theImage.getWidth(null) +
-								" img h="+theImage.getHeight(null)) ;
-			 */
 			double zoomInFactor = grabbedScale / nc.getScale();
 
 			// Find the image x and y of the supplied bottom left
 			// This will be the difference in EastNorth units, divided by the
 			// grabbed scale in EastNorth/pixel.
 
-			/*
-			double ix = (bottomLeft.east()-this.bottomLeft.east())/grabbedScale,
-			   	   iy = theImage.getHeight(null) -
-				 ((bottomLeft.north() - this.bottomLeft.north())/grabbedScale);
-
-			g.drawImage(theImage,x1,y1,x2,y2,(int)ix,(int)iy,
-					(int)(ix+((x2-x1)/zoomInFactor)),
-					(int)(iy+((y2-y1)/zoomInFactor)), null);
-			 */
 			int w = theImage.getWidth(null), h=theImage.getHeight(null);
-			Point p = nc.getPoint(topLeft);
-			/*
-			System.out.println("topleft: e=" + topLeft.east() + " n="+
-							topLeft.north());
-			System.out.println("Drawing at "+p.x+","+p.y);
-			 */
-			g.drawImage(theImage,p.x,p.y,
-					(int)(p.x+w*zoomInFactor),
-					(int)(p.y+h*zoomInFactor),
+			EastNorth topLeftDisplaced  = 
+				new EastNorth(topLeft.east()+dEast, topLeft.north()+dNorth);
+			Point displacement = Main.map.mapView.getPoint(topLeftDisplaced);
+			g.drawImage(theImage,displacement.x,displacement.y,
+					(int)(displacement.x+w*zoomInFactor),
+					(int)(displacement.y+h*zoomInFactor),
 					0,0,w,h,null);
 		}
 	}
+
 }

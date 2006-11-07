@@ -9,6 +9,7 @@ v0.05
 	* FIX : use the same step to zoom in and out
 	* FIX : calculate correct bounding box
 	* FIX : always update tagview and fix memory leak
+	* FIX : performace improvements
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

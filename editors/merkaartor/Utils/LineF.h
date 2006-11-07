@@ -14,6 +14,30 @@ inline double distance(const QPointF& A, const QPointF& B)
 	return sqrt( dx*dx+dy*dy );
 }
 
+inline double length(const QPointF& A)
+{
+	return sqrt(A.x()*A.x()+A.y()*A.y());
+}
+
+inline double angle(const QPointF& A, const QPointF& B)
+{
+	double d = A.x()*B.x()+A.y()*B.y();
+	double x = A.x()*B.y()-A.y()*B.x();
+	// numerical stability : in extreme cases the argument of asin gets slightly larger than 1
+	if (fabs(d) < 0.00001)
+		return (x>0)?3.141592/2:-3.141592;
+	x = asin(x/(length(A)*length(B)));
+	if (d<0)
+	{
+		if (x > 0)
+			x = 3.141592 - x;
+		else
+			x = -3.141592 - x;
+	}
+	return x;
+
+}
+
 class LineF
 {
 public:

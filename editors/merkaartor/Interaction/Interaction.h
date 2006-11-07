@@ -11,11 +11,15 @@ class QMouseEvent;
 class QPaintEvent;
 class QPainter;
 
+#include "MainWindow.h"
 #include "MapView.h"
 #include "Map/MapDocument.h"
 #include "Map/MapFeature.h"
+#include "Map/Road.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QTime>
+#include <QtGui/QApplication>
 #include <QtGui/QCursor>
 #include <QtGui/QMouseEvent>
 
@@ -47,7 +51,7 @@ class GenericFeatureSnapInteraction : public Interaction
 {
 	public:
 		GenericFeatureSnapInteraction(MapView* theView)
-			: Interaction(theView), LastSnap(0)
+			: Interaction(theView), LastSnap(0), SnapActive(true)
 		{
 		}
 
@@ -80,6 +84,10 @@ class GenericFeatureSnapInteraction : public Interaction
 		virtual void snapMouseMoveEvent(QMouseEvent* , FeatureType*)
 		{
 		}
+		void activateSnap(bool b)
+		{
+			SnapActive = b;
+		}
 		void addToNoSnap(FeatureType* F)
 		{
 			NoSnap.push_back(F);
@@ -91,14 +99,20 @@ class GenericFeatureSnapInteraction : public Interaction
 	private:
 		void updateSnap(QMouseEvent* event)
 		{
+			bool NoRoads = QApplication::keyboardModifiers() & Qt::AltModifier;
 			FeatureType* Prev = LastSnap;
 			LastSnap = 0;
+			if (!SnapActive) return;
+			QTime Start(QTime::currentTime());
+
 			double BestDistance = 5;
 			for (VisibleFeatureIterator it(document()); !it.isEnd(); ++it)
 			{
 				FeatureType* Pt = dynamic_cast<FeatureType*>(it.get());
 				if (Pt)
 				{
+					if (NoRoads && dynamic_cast<Road*>(Pt))
+						continue;
 					if (std::find(NoSnap.begin(),NoSnap.end(),Pt) != NoSnap.end())
 						continue;
 					double Distance = Pt->pixelDistance(event->pos(), 5.01, projection());
@@ -109,12 +123,16 @@ class GenericFeatureSnapInteraction : public Interaction
 					}
 				}
 			}
+			QTime Stop(QTime::currentTime());
+			main()->statusBar()->clearMessage();
+			main()->statusBar()->showMessage(QString("Update took %1ms").arg(Start.msecsTo(Stop)));
 			if (Prev != LastSnap)
 				view()->update();
 		}
 
 		FeatureType* LastSnap;
 		std::vector<FeatureType*> NoSnap;
+		bool SnapActive;
 };
 
 typedef GenericFeatureSnapInteraction<MapFeature> FeatureSnapInteraction;

@@ -165,7 +165,10 @@ static void importWay(const QDomElement& Root, MapDocument* theDocument, MapLaye
 		{
 			R = new Road;
 			for (unsigned int i=0; i<Segments.size(); ++i)
+			{
 				R->add(Segments[i]);
+				Segments[i]->addAsPartOf(R);
+			}
 			R->setId(id);
 			loadTags(Root,R);
 			theList->add(new AddFeatureCommand(theLayer,R, false));

@@ -33,21 +33,46 @@ static void buildCubicPath(QPainterPath& Path, const QPointF& P1, const QPointF&
 void draw(QPainter& thePainter, QPen& thePen, Way* W, const Projection& theProjection)
 {
 	QPainterPath Path;
-	Path.moveTo(theProjection.project(W->from()->position()));
+	QPointF FromF(theProjection.project(W->from()->position()));
+	QPointF ToF(theProjection.project(W->to()->position()));
+	Path.moveTo(FromF);
 	// due to a bug in Qt 4.20
 /*	Path.cubicTo(
 		theProjection.project(W->controlFrom()->position()),
 		theProjection.project(W->controlTo()->position()),
 		theProjection.project(W->to()->position())); */
 	if (W->controlFrom() && W->controlTo())
-		buildCubicPath(Path,theProjection.project(W->from()->position()),
+		buildCubicPath(Path,FromF,
 			theProjection.project(W->controlFrom()->position()),
 			theProjection.project(W->controlTo()->position()),
-			theProjection.project(W->to()->position()));
+			ToF);
 	else
-		Path.lineTo(theProjection.project(W->to()->position()));
+	{
+		Path.lineTo(ToF);
+		if (distance(FromF,ToF) > 30)
+		{
+			QPointF H(FromF+ToF);
+			H *= 0.5;
+			double A = angle(FromF,ToF);
+			QPointF T(10*cos(A),10*sin(A));
+			QPointF V1(6*cos(A+3.141592/6),6*sin(A+3.141592/6));
+			QPointF V2(6*cos(A-3.141592/6),6*sin(A-3.141592/6));
+			MapFeature::TrafficDirectionType TT = W->trafficDirection();
+			if ( (TT == MapFeature::OneWay) || (TT == MapFeature::BothWays) )
+			{
+				thePainter.setPen(QColor(0,0,0));
+				thePainter.drawLine(H+T,H+T-V1);
+				thePainter.drawLine(H+T,H+T-V2);
+			}
+			if ( (TT == MapFeature::OtherWay) || (TT == MapFeature::BothWays) )
+			{
+				thePainter.setPen(QColor(0,0,0));
+				thePainter.drawLine(H-T,H-T+V1);
+				thePainter.drawLine(H-T,H-T+V2);
+			}
+		}
+	}
 	thePainter.strokePath(Path,thePen);
-
 }
 
 

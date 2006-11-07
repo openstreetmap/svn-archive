@@ -48,6 +48,7 @@ void EditInteraction::snapMousePressEvent(QMouseEvent * event, MapFeature* aLast
 	{
 		Panning = true;
 		LastPan = event->pos();
+		activateSnap(false);
 	}	
 }
 
@@ -55,6 +56,7 @@ void EditInteraction::snapMouseReleaseEvent(QMouseEvent * , MapFeature* )
 {
 	if (Panning)
 	{
+		activateSnap(true);
 		Panning = false;
 	}
 }

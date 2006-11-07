@@ -3,12 +3,14 @@
 #include "Command/WayCommands.h"
 #include "Map/Painting.h"
 #include "Map/Projection.h"
+#include "Map/Road.h"
 #include "Map/TrackPoint.h"
 #include "Utils/LineF.h"
 
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
 
+#include <algorithm>
 #include <math.h>
 
 #define DEFAULTWIDTH 4
@@ -25,6 +27,18 @@ Way::Way(TrackPoint* aFrom, TrackPoint* aTo)
 
 Way::~Way(void)
 {
+}
+
+void Way::addAsPartOf(Road* R)
+{
+	PartOf.push_back(R);
+}
+
+void Way::removeAsPartOf(Road* R)
+{
+	std::vector<Road*>::iterator i = std::find(PartOf.begin(),PartOf.end(),R);
+	if (i!=PartOf.end())
+		PartOf.erase(i);
 }
 
 void Way::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* F, CommandList* theList, const std::vector<MapFeature*>& Alternatives)
@@ -45,15 +59,42 @@ void Way::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* F, Command
 		else
 			theList->add(new RemoveFeatureCommand(theDocument,this));
 	}
+	Road* R = dynamic_cast<Road*>(F);
+	if (R) removeAsPartOf(R);
 }
 
 double Way::width() const
 {
-	unsigned int i=findKey("width");
-	if (i<tagSize())
-		return tagValue(i).toDouble();
+	unsigned int idx=findKey("width");
+	if (idx<tagSize())
+		return tagValue(idx).toDouble();
+	for (unsigned int i=0; i<PartOf.size(); ++i)
+	{
+		idx = PartOf[i]->findKey("width");
+		if (idx < PartOf[i]->tagSize())
+			return PartOf[i]->tagValue(idx).toDouble();
+	}
 	return DEFAULTWIDTH;
 }
+
+MapFeature::TrafficDirectionType Way::trafficDirection() const
+{
+	QString d;
+	unsigned int idx=findKey("oneway");
+	if (idx<tagSize())
+		d = tagValue(idx);
+	for (unsigned int i=0; (i<PartOf.size()) && d.isEmpty(); ++i)
+	{
+		idx = PartOf[i]->findKey("oneway");
+		if (idx < PartOf[i]->tagSize())
+			d = PartOf[i]->tagValue(idx);
+	}
+	if (d == "yes") return OneWay;
+	if (d == "no") return BothWays;
+	if (d == "-1") return OtherWay;
+	return UnknownDirection;
+}
+
 
 void Way::setWidth(double w)
 {

@@ -18,7 +18,8 @@ class QPainter;
 class MapFeature
 {
 	public:
-		typedef enum {User, UserResolved, OSMServer, OSMServerConflict} ActorType;
+		typedef enum { User, UserResolved, OSMServer, OSMServerConflict } ActorType;
+		typedef enum { UnknownDirection, BothWays, OneWay, OtherWay } TrafficDirectionType;
 	public:
 		MapFeature();
 		virtual ~MapFeature() = 0;

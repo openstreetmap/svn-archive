@@ -19,11 +19,13 @@ RoadAddWayCommand::RoadAddWayCommand(Road* R, Way* W, unsigned int aPos)
 void RoadAddWayCommand::undo()
 {
 	theRoad->erase(theWay);
+	theWay->removeAsPartOf(theRoad);
 }
 
 void RoadAddWayCommand::redo()
 {
 	theRoad->add(theWay, Position);
+	theWay->addAsPartOf(theRoad);
 }
 
 bool RoadAddWayCommand::buildDirtyList(DirtyList& theList)
@@ -43,11 +45,13 @@ RoadRemoveWayCommand::RoadRemoveWayCommand(Road* R, Way* W)
 void RoadRemoveWayCommand::undo()
 {
 	theRoad->add(theWay,Idx);
+	theWay->addAsPartOf(theRoad);
 }
 
 void RoadRemoveWayCommand::redo()
 {
 	theRoad->erase(theWay);
+	theWay->removeAsPartOf(theRoad);
 }
 
 bool RoadRemoveWayCommand::buildDirtyList(DirtyList& theList)

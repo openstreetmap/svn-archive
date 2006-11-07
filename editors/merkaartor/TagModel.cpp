@@ -115,6 +115,7 @@ bool TagModel::setData(const QModelIndex &index, const QVariant &value, int role
 				Main->document()->history().add(
 					new SetTagCommand(theFeature,index.row(),theFeature->tagKey(index.row()),value.toString()));
 			theFeature->setLastUpdated(MapFeature::User);
+			Main->invalidateView();
 		}
 		emit dataChanged(index, index);
 		return true;

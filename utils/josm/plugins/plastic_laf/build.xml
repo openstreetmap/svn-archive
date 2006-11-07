@@ -1,6 +1,9 @@
 <project name="plastic_laf" default="install" basedir=".">
 
 	<target name="install">
+		<javac srcdir="src" destdir="bin">
+			<include name="**/*.java" />
+		</javac>
 		<unjar dest="bin" src="lib/looks-2.0.4.jar" />
 		<jar destfile="${user.home}/.josm/plugins/plastic_laf.jar" basedir="bin">
 			<manifest>

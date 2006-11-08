@@ -51,6 +51,10 @@ public class DownloadLandsatTask extends PleaseWaitRunnable implements DownloadT
 		checkBox.setEnabled(b); 
 	}
 
+	public void setCheckBoxSelected(boolean b) {
+		checkBox.setSelected(b);
+	}
+
 	public String getPreferencesSuffix() {
 		return "landsat";
 	}

@@ -12,7 +12,6 @@ public class LandsatPlugin extends Plugin {
 
 	DownloadLandsatTask task;
 	LandsatLayer landsatLayer;
-	boolean addedAction;
 
 	public LandsatPlugin() {
 		landsatLayer = new LandsatLayer
@@ -26,14 +25,18 @@ public class LandsatPlugin extends Plugin {
 	}
 
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if(!addedAction) {
+		if(oldFrame==null && newFrame!=null) { 
+			task.setEnabled(true);
+
+			/* re. bug report (Andy Robinson) 08/11/06...
+			 * Neither of these seem to work
+			task.setCheckBoxSelected(false);
+			Main.pref.put("download.landsat",false);
+			*/
+
 			Main.map.toolBarActions.addSeparator();
 			Main.map.toolBarActions.add(new IconToggleButton
 						(new LandsatAdjustAction(Main.map)));
-			addedAction=true;
-		}
-		if(oldFrame==null && newFrame!=null) { 
-			task.setEnabled(true);
 		} else if (oldFrame!=null && newFrame==null ) {
 			task.setEnabled(false);
 		}

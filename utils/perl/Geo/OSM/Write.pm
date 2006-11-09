@@ -30,6 +30,14 @@ sub tags2osm($){
 	    warn "incomplete Object: ".Dumper($obj);
 	}
 	#next unless defined $v;
+
+	# character escaping as per http://www.w3.org/TR/REC-xml/
+	$v =~ s/&/&amp;/g;
+	$v =~ s/'/&apos;/g;
+	$v =~ s/</&lt;/g;
+	$v =~ s/>/&gt;/g;
+	$v =~ s/"/&quot;/g;
+
 	$erg .= "    <tag k=\'$k\' v=\'$v\' />\n";
     }
     return $erg;
@@ -60,6 +68,8 @@ sub write_osm_file($$) { # Write an osm File
     } else {
 	$fh = IO::File->new(">$filename");
     }
+    $fh->binmode(':utf8');
+
     print $fh "<?xml version='1.0' encoding='UTF-8'?>\n";
     print $fh "<osm version=\'0.3\' generator=\'".$osm->{tool}."\'>\n";
     

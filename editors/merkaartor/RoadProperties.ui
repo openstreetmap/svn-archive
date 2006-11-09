@@ -27,6 +27,44 @@
      <property name="spacing" >
       <number>6</number>
      </property>
+     <item row="2" column="0" >
+      <widget class="QLabel" name="label_2" >
+       <property name="text" >
+        <string>Direction</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" >
+      <widget class="QComboBox" name="TrafficDirection" >
+       <item>
+        <property name="text" >
+         <string>Unknown</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Both ways</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>One way</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>Other way</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QLabel" name="Id" >
+       <property name="text" >
+        <string>xxx</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0" >
       <widget class="QLabel" name="label_3" >
        <property name="text" >
@@ -43,13 +81,6 @@
      </item>
      <item row="1" column="1" >
       <widget class="QLineEdit" name="Name" />
-     </item>
-     <item row="0" column="1" >
-      <widget class="QLabel" name="Id" >
-       <property name="text" >
-        <string>xxx</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -68,6 +99,3 @@
  <resources/>
  <connections/>
 </ui>
-
-
-

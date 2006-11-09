@@ -103,6 +103,7 @@ void PropertiesDock::switchToRoadUi()
 		delete CurrentUi;
 	CurrentUi = NewUi;
 	connect(RoadUi.Name,SIGNAL(textChanged(const QString&)),this, SLOT(on_RoadName_textChanged(const QString&)));
+	connect(RoadUi.TrafficDirection,SIGNAL(activated(int)), this, SLOT(on_TrafficDirection_activated(int)));
 	setWindowTitle(tr("Properties - Road"));
 }
 
@@ -131,6 +132,7 @@ void PropertiesDock::resetValues()
 	{
 		RoadUi.Id->setText(R->id());
 		RoadUi.Name->setText(R->tagValue("name",""));
+		RoadUi.TrafficDirection->setCurrentIndex(trafficDirection(R));
 		theModel->setFeature(Current);
 		RoadUi.TagView->setModel(theModel);
 	}
@@ -192,4 +194,22 @@ void PropertiesDock::on_RoadName_textChanged(const QString&)
 	}
 }
 
-
+void PropertiesDock::on_TrafficDirection_activated(int idx)
+{
+	Road* R = dynamic_cast<Road*>(Selection);
+	if (R && (idx != trafficDirection(R)) )
+	{
+		switch (idx)
+		{
+			case MapFeature::OneWay:
+				Main->document()->history().add(new SetTagCommand(R,"oneway","yes")); break;
+			case MapFeature::BothWays:
+				Main->document()->history().add(new SetTagCommand(R,"oneway","no")); break;
+			case MapFeature::OtherWay:
+				Main->document()->history().add(new SetTagCommand(R,"oneway","-1")); break;
+			default:
+				Main->document()->history().add(new ClearTagCommand(R,"oneway")); break;
+		}
+		Main->invalidateView();
+	}
+}

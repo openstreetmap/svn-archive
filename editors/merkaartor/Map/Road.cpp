@@ -211,3 +211,17 @@ void Road::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature,
 		}
 }
 
+MapFeature::TrafficDirectionType trafficDirection(const Road* R)
+{
+	// TODO some duplication with Way trafficDirection
+	QString d;
+	unsigned int idx=R->findKey("oneway");
+	if (idx<R->tagSize())
+		d = R->tagValue(idx);
+	else
+		return MapFeature::UnknownDirection;
+	if (d == "yes") return MapFeature::OneWay;
+	if (d == "no") return MapFeature::BothWays;
+	if (d == "-1") return MapFeature::OtherWay;
+	return MapFeature::UnknownDirection;
+}

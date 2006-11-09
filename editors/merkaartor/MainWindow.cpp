@@ -107,6 +107,11 @@ void MainWindow::on_editAddAction_triggered()
 	emit add_triggered();
 }
 
+void MainWindow::on_editReverseAction_triggered()
+{
+	emit reverse_triggered();
+}
+
 void MainWindow::on_fileImportAction_triggered()
 {
 	QString s = QFileDialog::getOpenFileName(
@@ -224,13 +229,13 @@ void MainWindow::on_viewZoomAllAction_triggered()
 
 void MainWindow::on_viewZoomInAction_triggered()
 {
-	theView->projection().setViewport(theView->projection().viewport().zoomed(0.75),theView->rect());
+	theView->projection().zoom(1.33333, theView->rect());
 	invalidateView();
 }
 
 void MainWindow::on_viewZoomOutAction_triggered()
 {
-	theView->projection().setViewport(theView->projection().viewport().zoomed(1.3333),theView->rect());
+	theView->projection().zoom(0.75, theView->rect());
 	invalidateView();
 }
 

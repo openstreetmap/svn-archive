@@ -186,12 +186,13 @@ void Way::draw(QPainter& P, const Projection& theProjection)
 		TP = QPen(QBrush(QColor(0xff,0,0)),WW);
 	else
 		TP = QPen(QBrush(QColor(0xff,0x88,0x22,128)),WW);
-	::draw(P,TP,this,theProjection);
+	::draw(P,TP,this,WW,theProjection);
 }
 
 void Way::drawFocus(QPainter& P, const Projection& theProjection)
 {
-	QPen TP(QBrush(QColor(0x00,0x00,0xff,128)),theProjection.pixelPerM()*width()/2+1);
+	double W = theProjection.pixelPerM()*width()/2+1;
+	QPen TP(QBrush(QColor(0x00,0x00,0xff,128)),W);
 	QPainterPath Path;
 	::draw(P,TP,this,theProjection);
 }

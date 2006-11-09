@@ -40,11 +40,13 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 		virtual void on_editRemoveAction_triggered();
 		virtual void on_editMoveAction_triggered();
 		virtual void on_editAddAction_triggered();
+		virtual void on_editReverseAction_triggered();
 
 	signals:
 		void remove_triggered();
 		void move_triggered();
 		void add_triggered();
+		void reverse_triggered();
 	public:
 
 		PropertiesDock* properties();

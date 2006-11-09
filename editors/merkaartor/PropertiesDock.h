@@ -29,6 +29,7 @@ class PropertiesDock : public QDockWidget
 		void on_TrackPointLat_textChanged(const QString& s);
 		void on_TrackPointLon_textChanged(const QString& s);
 		void on_RoadName_textChanged(const QString& s);
+		void on_TrafficDirection_activated(int idx);
 
 	private:
 		void switchToWayUi();

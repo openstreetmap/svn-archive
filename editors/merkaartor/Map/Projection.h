@@ -23,8 +23,11 @@ class Projection
 		Coord inverse(const QPointF& Screen) const;
 		void zoom(double d, const QRect& Screen);
 	private:
+		void viewportRecalc(const QRect& Screen);
 		double ScaleLat, DeltaLat, ScaleLon, DeltaLon;
 		CoordBox Viewport;
+
+		
 };
 
 #endif

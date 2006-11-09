@@ -87,6 +87,7 @@
    <addaction name="editRemoveAction" />
    <addaction name="editMoveAction" />
    <addaction name="editAddAction" />
+   <addaction name="editReverseAction" />
   </widget>
   <action name="fileQuitAction" >
    <property name="text" >
@@ -258,6 +259,17 @@
   <action name="createNodeAction" >
    <property name="text" >
     <string>Node</string>
+   </property>
+  </action>
+  <action name="editReverseAction" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="Icons/AllIcons.qrc" >:/Icons/reverse.xpm</iconset>
+   </property>
+   <property name="text" >
+    <string>Reverse</string>
    </property>
   </action>
  </widget>

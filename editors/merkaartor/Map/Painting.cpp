@@ -7,7 +7,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPainterPath>
 
-
+#include <utility>
 
 static void buildCubicPath(QPainterPath& Path, const QPointF& P1, const QPointF& P2, const QPointF& P3, const QPointF& P4)
 {
@@ -30,7 +30,7 @@ static void buildCubicPath(QPainterPath& Path, const QPointF& P1, const QPointF&
 	}
 }
 
-void draw(QPainter& thePainter, QPen& thePen, Way* W, const Projection& theProjection)
+void draw(QPainter& thePainter, QPen& thePen, Way* W, double theWidth, const Projection& theProjection)
 {
 	QPainterPath Path;
 	QPointF FromF(theProjection.project(W->from()->position()));
@@ -49,22 +49,23 @@ void draw(QPainter& thePainter, QPen& thePen, Way* W, const Projection& theProje
 	else
 	{
 		Path.lineTo(ToF);
-		if (distance(FromF,ToF) > 30)
+		double DistFromCenter = theWidth*2;
+		if (distance(FromF,ToF) > std::max(40.0,DistFromCenter*2+4))
 		{
 			QPointF H(FromF+ToF);
 			H *= 0.5;
-			double A = angle(FromF,ToF);
-			QPointF T(10*cos(A),10*sin(A));
-			QPointF V1(6*cos(A+3.141592/6),6*sin(A+3.141592/6));
-			QPointF V2(6*cos(A-3.141592/6),6*sin(A-3.141592/6));
+			double A = angle(FromF-ToF);
+			QPointF T(DistFromCenter*cos(A),DistFromCenter*sin(A));
+			QPointF V1(theWidth*cos(A+3.141592/6),theWidth*sin(A+3.141592/6));
+			QPointF V2(theWidth*cos(A-3.141592/6),theWidth*sin(A-3.141592/6));
 			MapFeature::TrafficDirectionType TT = W->trafficDirection();
-			if ( (TT == MapFeature::OneWay) || (TT == MapFeature::BothWays) )
+			if ( (TT == MapFeature::OtherWay) || (TT == MapFeature::BothWays) )
 			{
 				thePainter.setPen(QColor(0,0,0));
 				thePainter.drawLine(H+T,H+T-V1);
 				thePainter.drawLine(H+T,H+T-V2);
 			}
-			if ( (TT == MapFeature::OtherWay) || (TT == MapFeature::BothWays) )
+			if ( (TT == MapFeature::OneWay) || (TT == MapFeature::BothWays) )
 			{
 				thePainter.setPen(QColor(0,0,0));
 				thePainter.drawLine(H-T,H-T+V1);
@@ -72,6 +73,30 @@ void draw(QPainter& thePainter, QPen& thePen, Way* W, const Projection& theProje
 			}
 		}
 	}
+	thePainter.strokePath(Path,thePen);
+}
+
+
+
+
+void draw(QPainter& thePainter, QPen& thePen, Way* W, const Projection& theProjection)
+{
+	QPainterPath Path;
+	QPointF FromF(theProjection.project(W->from()->position()));
+	QPointF ToF(theProjection.project(W->to()->position()));
+	Path.moveTo(FromF);
+	// due to a bug in Qt 4.20
+/*	Path.cubicTo(
+		theProjection.project(W->controlFrom()->position()),
+		theProjection.project(W->controlTo()->position()),
+		theProjection.project(W->to()->position())); */
+	if (W->controlFrom() && W->controlTo())
+		buildCubicPath(Path,FromF,
+			theProjection.project(W->controlFrom()->position()),
+			theProjection.project(W->controlTo()->position()),
+			ToF);
+	else
+		Path.lineTo(ToF);
 	thePainter.strokePath(Path,thePen);
 }
 

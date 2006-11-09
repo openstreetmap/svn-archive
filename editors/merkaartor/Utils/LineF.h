@@ -38,6 +38,11 @@ inline double angle(const QPointF& A, const QPointF& B)
 
 }
 
+inline double angle(const QPointF& A)
+{
+	return atan2(A.y(),A.x());
+}
+
 class LineF
 {
 public:

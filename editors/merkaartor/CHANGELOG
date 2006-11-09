@@ -10,6 +10,9 @@ v0.05
 	* FIX : calculate correct bounding box
 	* FIX : always update tagview and fix memory leak
 	* FIX : performace improvements
+	* ADD : oneway markers
+	* ADD : reverse way/road action
+	* ADD : traffic direction combobox in road properties
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

@@ -40,6 +40,12 @@ double Projection::lonAnglePerM(double Lat) const
 }
 
 
+void Projection::viewportRecalc(const QRect& Screen)
+{
+	Viewport = CoordBox(inverse(Screen.bottomLeft()),inverse(Screen.topRight()));
+}
+
+
 void Projection::setViewport(const CoordBox& Map, const QRect& Screen)
 {
 	Coord Center(Map.center());
@@ -57,14 +63,14 @@ void Projection::setViewport(const CoordBox& Map, const QRect& Screen)
 	double PLat = Center.lat()*ScaleLat;
 	DeltaLon = Screen.width()/2 - PLon;
 	DeltaLat = Screen.height()-(Screen.height()/2 - PLat);
-	Viewport = CoordBox(inverse(Screen.bottomLeft()),inverse(Screen.topRight()));
+	viewportRecalc(Screen);
 }
 
 void Projection::panScreen(const QPoint& p, const QRect& Screen)
 {
 	DeltaLon += p.x();
 	DeltaLat += p.y();
-	Viewport = CoordBox(inverse(Screen.bottomLeft()),inverse(Screen.topRight()));
+	viewportRecalc(Screen);
 }
 
 QPointF Projection::project(const Coord& Map) const
@@ -90,6 +96,5 @@ void Projection::zoom(double d, const QRect& Screen)
 	QPointF F(project(C));
 	DeltaLon += Screen.width()/2-F.x();
 	DeltaLat += Screen.height()/2-F.y();
+	viewportRecalc(Screen);
 }
-
-

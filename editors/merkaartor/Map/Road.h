@@ -29,8 +29,12 @@ class Road : public MapFeature
 		Way* get(unsigned int idx);
 		const Way* get(unsigned int Idx) const;
 
+
 		RoadPrivate* p;
 };
+
+MapFeature::TrafficDirectionType trafficDirection(const Road* R);
+
 
 #endif
 

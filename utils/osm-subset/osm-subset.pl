@@ -113,7 +113,7 @@ for my $area_name ( split(",",$areas_todo) ) {
     #----------------------------------------------
 
     my $file_out = $Filename;
-    $file_out =~ s/\.osm(.gz)?$/-$area_name.osm/;
+    $file_out =~ s/\.osm(\.gz|\.bz2)?$/-$area_name.osm/;
     parse_planet($Filename,$file_out,$area_name);
 
     printf STDERR "$area_name Done\n";
@@ -135,6 +135,7 @@ sub parse_planet($$$){
     $PARSING_START_TIME=time();
     $READ_FH = data_open($Filename_in);
     $WRITE_FH = IO::File->new(">$Filename_out");
+    $WRITE_FH->binmode(':utf8');
     print $WRITE_FH '<?xml version="1.0" encoding="UTF-8"?>'."\n";
     print $WRITE_FH '<osm version="0.3" generator="OpenStreetMap planet.rb">'."\n";
 
@@ -264,6 +265,14 @@ sub tags2osm($){
 	    warn "incomplete Object: ".Dumper(\$tags);
 	}
 	#next unless defined $v;
+
+	# character escaping as per http://www.w3.org/TR/REC-xml/
+	$v =~ s/&/&amp;/g;
+	$v =~ s/'/&apos;/g;
+	$v =~ s/</&lt;/g;
+	$v =~ s/>/&gt;/g;
+	$v =~ s/"/&quot;/g;
+
 	$erg .= "    <tag k=\"$k\" v=\"$v\" />\n";
     }
     return $erg;

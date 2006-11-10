@@ -36,6 +36,16 @@ use LWP::Simple;
 #-----------------------------------------------------------------------------
 
 my $Password = "user|password";  # Ask OJW for a password to use this script
+
+my $args = shift;
+if($args eq "-h") {
+	print "OpenStreetMap @ Home Client\n\n";
+	print "You will need a username and password for the almien site to participate.\n";
+	print "See http://wiki.openstreetmap.org/index.php/OSM%40home for details\n";
+	exit 1;
+}
+
+# Process
 ProcessRequestFromWeb($Password);
 exit;
 
@@ -87,7 +97,7 @@ sub ProcessRequest(){
   if($ID == -1){
     print STDERR "Nothing to do!\nSleeping for 1 hour: press Ctrl-C to quit\n";
     sleep(3600);
-    exit;
+    exit 1;
   }
   
   UpdateOsmarender();

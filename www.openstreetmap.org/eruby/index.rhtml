@@ -19,20 +19,65 @@ end
     <html>
     <head>
       <script type="text/javascript">
-         lon = <% if cgi['lon'].length > 0 then print cgi['lon'].to_f else print '0' end %>;
-         lat = <% if cgi['lat'].length > 0 then print cgi['lat'].to_f else print '0' end %>;
-         zoom = <% if cgi['zoom'].length > 0 then print cgi['zoom'].to_f else print '0' end %>;
+         var lon = <% if cgi['lon'].length > 0 then print cgi['lon'].to_f else print '-0.1' end %>;
+         var lat = <% if cgi['lat'].length > 0 then print cgi['lat'].to_f else print '51.5' end %>;
+         var zoom = <% if cgi['zoom'].length > 0 then print cgi['zoom'].to_f else print '11' end %>;
+         var PI = 3.14159265358979323846;
+   
          <% if cgi['scale'].length > 0 then %>
            zoom = Math.log(360.0/(( <% print cgi['scale'].to_f() %> ) * 512.0)) / Math.log(2.0);
          <% end %>
+         zoom = zoom -3;
+         lon = lon * 20037508.34 / 180;
+         lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
+         lat = lat * 20037508.34 / 180;
+ 
       </script>
-      <script type="text/javascript" src="/javascript/pngfix.js"></script>
+      <script type="text/javascript" src="/javascript/OpenLayers.js"></script>
+<!--      <script type="text/javascript" src="/javascript/pngfix.js"></script>
       <script type="text/javascript" src="/javascript/tile.js"></script>
-      <script type="text/javascript" src="/javascript/main.js"></script>
+      <script type="text/javascript" src="/javascript/main.js"></script> -->
       <script type="text/javascript" src="/javascript/site.js"></script>
       <link rel="stylesheet" type="text/css" href="/css/style.css" />
       <title>OpenStreetMap</title>
+
+    <script type="text/javascript">
+        <!--
+       // var lon = -60000;
+//        var lat = 6700000;
+  //      var zoom = 8;
+        var map, layer;
+
+
+        function init(){
+
+			OpenLayers.Util.onImageLoadError = function() {
+				this.src = "http://www.openstreetmap.org/javascript/img/404.png";
+			}
+            map = new OpenLayers.Map( "map", 
+				{maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34), maxResolution:156543, units:'meters', projection: "EPSG:41001"} );
+            layer = new OpenLayers.Layer.LikeGoogle( "OSM", "http://artem.dev.openstreetmap.org/osm_tiles/", {type:'png'} );
+            map.addLayer(layer);
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+            map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+
+          map.events.register("moveend", map, function() { 
+           var lonlat = map.getCenter();
+    
+           var lon_deg = (lonlat.lon / 20037508.34) * 180;
+           var lat_deg = (lonlat.lat / 20037508.34) * 180;
+           var PI = 3.14159265358979323846;
+           lat_deg = 180/PI * (2 * Math.atan(Math.exp(lat_deg * PI / 180)) - PI / 2);
+           var zoom = map.getZoom() + 3;
+           updatelinks(lon_deg,lat_deg,zoom);
+          });
+        }        
+        
+        // -->
+    </script>
+      
       </head>
+     
 <body onload='init()'>
                                                                     
 
@@ -45,31 +90,14 @@ end
 </form>
 </div>
 
-<div id="drag" style="WIDTH: 700px; HEIGHT: 500px;">
-  <div id='controls'>
-
-    <a id="zoomout" class="mapcontrol"><img src="/images/map_zoomout.png" alt="zoom out"></a>
-    <a id="zoomin" class="mapcontrol"> <img src="/images/map_zoomin.png" alt="zoom in">  </a>
-  
-  </div>
-</div>
+<div id="map" style="width: 700px; height: 500px; border: 1px solid black;"></div>
 
 <div id="debuginfo"></div>
+
 <% 
 #ERuby.import('include/geocode.rhtml')
 %>
 
-<!--
-<script type="text/javascript">
-
-  var lpi =  3.14159265358979323846;
-  mlat = Math.log( Math.tan( (lpi / 4.0) + (lat / 180.0 * lpi / 2.0))) * 180.0 / lpi ;
-
-  var tileURL = 'http://tile.openstreetmap.org/cgi-bin/steve/mapserv?map=/usr/lib/cgi-bin/steve/wms.map&service=WMS&WMTVER=1.0.0&REQUEST=map&STYLES=&TRANSPARENT=TRUE';
-
-  new tile_engine_new('drag','FULL','',tileURL,lon,mlat,zoom,0,0);
-</script>
--->
 % if !loggedin
 
 <div id="gads"><script type="text/javascript"><!--

@@ -1,5 +1,5 @@
-				OSM Activity
-				------------
+                            OSM Activity
+                            ------------
 
 Scripts for parsing the OSM RSS Feed, and reporting / saving that information
 in useful ways.

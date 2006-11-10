@@ -18,11 +18,16 @@ if($place && $place =~ /^\-?\d+\.\d+/) {
 	$places{$place} = \@ll;
 }
 
-unless($place && $places{$place}) {
+my $need_help = 0;
+if($place eq "-h") { $need_help = 1; }
+unless($place && $places{$place}) { $need_help = 1; }
+
+if($need_help) {
 	print "Use:\n";
 	print "   osm-activity.pl <place>\n";
-	print "\nWhere place is one of:\n";
+	print "\nWhere <place> is one of:\n";
 	print "\t".join(", ", keys %places)."\n";
+	print "\nSee README.txt for more information\n";
 	exit 1;
 }
 

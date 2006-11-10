@@ -16,6 +16,10 @@ while(my $arg = shift) {
 	}
 	elsif($arg eq "-osmarender-scales" || $arg eq "--osmarender-scales" || $arg eq "-scales") {
 		@osmarender_scales = split(/,/, shift);
+	}
+	elsif($arg = "-h") {
+		print `cat README.txt`;
+		exit;
 	} else {
 		$filename = $arg;
 	}

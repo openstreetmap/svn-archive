@@ -1,5 +1,5 @@
-				OSM static osmarender tile generator
-				------------------------------------
+                 OSM static osmarender tile generator
+                 ------------------------------------
 
 Requires:
  * xalan2 or xsltproc

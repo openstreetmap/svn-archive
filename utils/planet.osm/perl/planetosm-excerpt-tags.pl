@@ -312,8 +312,10 @@ processXML(undef, sub {
 
 		# Output
 		print $main_line;
-		&printTags(@$tagsRef);
-		print $line;
+		unless($main_line =~ /\/>/) {
+			&printTags(@$tagsRef);
+			print $line;
+		}
 	} else {
 		# Not wanted, skip
 	}
@@ -340,8 +342,10 @@ processXML(sub {
 	if($wanted) {
 		# Output
 		print $main_line;
-		&printTags(@$tagsRef);
-		print $line;
+		unless($main_line =~ /\/>/) {
+			&printTags(@$tagsRef);
+			print $line;
+		}
 	} else {
 		# Not wanted, skip
 	}

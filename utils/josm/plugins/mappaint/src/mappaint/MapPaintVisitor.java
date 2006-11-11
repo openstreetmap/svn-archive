@@ -184,14 +184,15 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// Shows areas before non-areas
 	public void visitAll(DataSet data) {
 
-		for (final OsmPrimitive osm : data.segments)
-			if (!osm.deleted)
-				osm.visit(this);
-
 		for (final OsmPrimitive osm : data.ways) {
 			if(!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
 				osm.visit(this);
 		}
+
+		for (final OsmPrimitive osm : data.segments)
+			if (!osm.deleted)
+				osm.visit(this);
+
 
 		for (final OsmPrimitive osm : data.ways) {
 			if(!osm.deleted && !MapPaintPlugin.elemStyles.isArea(osm))

@@ -13,6 +13,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.SimplePaintVisitor;
 
 /**
@@ -49,7 +51,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * Want to make un-wayed segments stand out less than ways.
 	 */
 	@Override public void visit(Segment ls) {
-		drawSegment(ls, Color.GRAY);
+		drawSegment(ls, getPreferencesColor("untagged",Color.GRAY));
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Way w) {
-		Color colour = Color.GRAY;
+		Color colour = getPreferencesColor("untagged",Color.GRAY);
 		int width=1;
 		boolean area=false;
 		ElemStyle wayStyle = MapPaintPlugin.elemStyles.getStyle(w);
@@ -125,7 +127,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		String name = (n.keys==null) ? null : n.keys.get("name");
 		if (name!=null)
 		{
-			g.setColor(Color.WHITE);
+			g.setColor( getPreferencesColor ("text", Color.WHITE));
 			g.setFont (new Font("Helvetica", Font.PLAIN, 8));
 			g.drawString (name, p.x+w/2+2, p.y+h/2+2);
 		}
@@ -178,4 +180,30 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		g.drawRect(p.x-1, p.y-1, 2, 2);
 	}
 
+	// NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1
+	// Shows areas before non-areas
+	public void visitAll(DataSet data) {
+
+		for (final OsmPrimitive osm : data.segments)
+			if (!osm.deleted)
+				osm.visit(this);
+
+		for (final OsmPrimitive osm : data.ways) {
+			if(!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
+				osm.visit(this);
+		}
+
+		for (final OsmPrimitive osm : data.ways) {
+			if(!osm.deleted && !MapPaintPlugin.elemStyles.isArea(osm))
+				osm.visit(this);
+		}
+
+		for (final OsmPrimitive osm : data.nodes)
+			if (!osm.deleted)
+				osm.visit(this);
+
+		for (final OsmPrimitive osm : data.getSelected())
+			if (!osm.deleted)
+				osm.visit(this);
+	}
 }

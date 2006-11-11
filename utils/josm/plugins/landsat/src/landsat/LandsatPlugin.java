@@ -35,8 +35,10 @@ public class LandsatPlugin extends Plugin {
 			*/
 
 			Main.map.toolBarActions.addSeparator();
-			Main.map.toolBarActions.add(new IconToggleButton
-						(new LandsatAdjustAction(Main.map)));
+			IconToggleButton button = new IconToggleButton
+						(new LandsatAdjustAction(Main.map));
+			Main.map.toolBarActions.add(button);
+			Main.map.toolGroup.add(button);
 		} else if (oldFrame!=null && newFrame==null ) {
 			task.setEnabled(false);
 		}

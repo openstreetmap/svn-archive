@@ -15,16 +15,15 @@ import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 
-public class LandsatImage
+public class WMSImage
 {
 	String constURL;
-	Image theImage;
-	double grabbedScale;
-	EastNorth topLeft, bottomRight;
+	protected Image theImage;
+	protected double grabbedScale;
+	protected EastNorth topLeft, bottomRight;
 	double dEast, dNorth;	
-	double minLat,minLon,maxLat,maxLon;
 
-	public LandsatImage(String constURL)
+	public WMSImage(String constURL)
 	{
 		this.constURL = constURL;
 	}
@@ -50,15 +49,14 @@ public class LandsatImage
 
 	public void grab(NavigatableComponent nc,double minlat,double minlon,
 			double maxlat,double maxlon) throws IOException
-			{
+	{
 		LatLon p = new LatLon(minlat,minlon),
-		p2 = new LatLon(maxlat,maxlon);
+				p2 = new LatLon(maxlat,maxlon);
 
 		grabbedScale = nc.getScale(); // enPerPixel
 
 		topLeft = Main.proj.latlon2eastNorth(new LatLon(maxlat,minlon));
-		bottomRight = Main.proj.latlon2eastNorth
-		(new LatLon(minlat,maxlon));
+		bottomRight = Main.proj.latlon2eastNorth(new LatLon(minlat,maxlon));
 
 		int widthPx = (int)((bottomRight.east()-topLeft.east())/grabbedScale),
 		heightPx = (int)
@@ -66,12 +64,9 @@ public class LandsatImage
 
 		try
 		{
-			URL url =  doGetURL(p,p2,widthPx,heightPx);
+			URL url =  doGetURL(p.lon(),p.lat(),
+									p2.lon(),p2.lat(),widthPx,heightPx);
 			doGrab(url);
-			this.minLat=minlat;
-			this.minLon=minlon;
-			this.maxLat=maxlat;
-			this.maxLon=maxlon;
 		}
 		catch(MalformedURLException e)
 		{
@@ -87,20 +82,20 @@ public class LandsatImage
 				(topLeft.east(), topLeft.north()-heightEN));
 		LatLon p2 = Main.proj.eastNorth2latlon(new EastNorth
 				(topLeft.east()+widthEN, topLeft.north()));
-		return doGetURL(p,p2,(int)(widthEN/grabbedScale),
-				(int)(heightEN/grabbedScale) );
+		return doGetURL(p.lon(),p.lat(),p2.lon(),p2.lat(),
+						(int)(widthEN/grabbedScale),
+						(int)(heightEN/grabbedScale) );
 	}
 
-	private URL doGetURL(LatLon p, LatLon p2,int w, int h)
-	throws MalformedURLException
+	protected URL doGetURL(double w,double s,double e,double n, int wi, 
+					int ht) throws MalformedURLException
 	{
-		String str = constURL + "&bbox=" + p.lon() +"," + p.lat() + ","+
-		p2.lon()+","+p2.lat() + "&width=" + w
-		+ "&height=" + h;
+		String str = constURL + "&bbox=" + w +"," + s + ","+
+				e+","+n + "&width=" + wi + "&height=" + ht;
 		return new URL(str);
 	}
 
-	private void doGrab (URL url) throws IOException
+	protected void doGrab (URL url) throws IOException
 	{
 		InputStream is = url.openStream();
 		theImage = ImageIO.read(is) ;

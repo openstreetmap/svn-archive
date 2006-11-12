@@ -26,16 +26,16 @@ import org.openstreetmap.josm.data.coor.EastNorth;
  * This is a layer that grabs the current screen from an WMS server. The data
  * fetched this way is tiled and managerd to the disc to reduce server load.
  */
-public class LandsatLayer extends Layer {
+public class WMSLayer extends Layer {
 
-	private static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LandsatPlugin.class.getResource("/images/wms.png")));
+	protected static Icon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(LandsatPlugin.class.getResource("/images/wms.png")));
 
-	private final ArrayList<LandsatImage> landsatImages;
+	protected final ArrayList<WMSImage> wmsImages;
 
-	private final String url;
+	protected final String url;
 
 
-	public LandsatLayer(String url) {
+	public WMSLayer(String url) {
 		super(url.indexOf('/') != -1 ? url.substring(url.indexOf('/')+1) : url);
 
 		// to calculate the world dimension, we assume that the projection does
@@ -48,25 +48,25 @@ public class LandsatLayer extends Layer {
 							"Can't operate on {0}",Main.proj));
 
 		this.url = url;
-		//landsatImage = new LandsatImage(url);
-		landsatImages = new ArrayList<LandsatImage>();
+		//wmsImage = new WMSImage(url);
+		wmsImages = new ArrayList<WMSImage>();
 	}
 
 	public void grab() throws IOException
 	{
 		MapView mv = Main.map.mapView;
-		LandsatImage landsatImage = new LandsatImage(url);
-		landsatImage.grab(mv);
-		landsatImages.add(landsatImage);
+		WMSImage wmsImage = new WMSImage(url);
+		wmsImage.grab(mv);
+		wmsImages.add(wmsImage);
 	}
 
 	public void grab(double minlat,double minlon,double maxlat,double maxlon)
 	throws IOException
 	{
 		MapView mv = Main.map.mapView;
-		LandsatImage landsatImage = new LandsatImage(url);
-		landsatImage.grab(mv,minlat,minlon,maxlat,maxlon);
-		landsatImages.add(landsatImage);
+		WMSImage wmsImage = new WMSImage(url);
+		wmsImage.grab(mv,minlat,minlon,maxlat,maxlon);
+		wmsImages.add(wmsImage);
 	}
 
 	@Override public Icon getIcon() {
@@ -85,8 +85,8 @@ public class LandsatLayer extends Layer {
 	}
 
 	@Override public void paint(Graphics g, final MapView mv) {
-		for(LandsatImage landsatImage : landsatImages) {
-			landsatImage.paint(g,mv);
+		for(WMSImage wmsImage : wmsImages) {
+			wmsImage.paint(g,mv);
 		}
 	}
 
@@ -106,11 +106,11 @@ public class LandsatLayer extends Layer {
 				new JMenuItem(new LayerListPopup.InfoAction(this))};
 	}
 
-	public LandsatImage findImage(EastNorth eastNorth)
+	public WMSImage findImage(EastNorth eastNorth)
 	{
-		for(LandsatImage landsatImage : landsatImages) {
-			if (landsatImage.contains(eastNorth))  {
-				return landsatImage;
+		for(WMSImage wmsImage : wmsImages) {
+			if (wmsImage.contains(eastNorth))  {
+				return wmsImage;
 			}
 		}
 		return null;

@@ -15,16 +15,16 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.IconToggleButton;
 
-public class LandsatAdjustAction extends MapMode implements
+public class WMSAdjustAction extends MapMode implements
 		MouseListener, MouseMotionListener{
 
-	LandsatImage selectedImage; 
+	WMSImage selectedImage; 
 	boolean mouseDown;
 	EastNorth prevEastNorth;
 
-	public LandsatAdjustAction(MapFrame mapFrame) {
+	public WMSAdjustAction(MapFrame mapFrame) {
 		super("landsatAdjust", "movelandsat", 
-						"Adjust the position of the Landsat.", mapFrame, 
+						"Adjust the position of the WMS layer", mapFrame, 
 						ImageProvider.getCursor("normal", "move"));
 	}
 
@@ -45,9 +45,9 @@ public class LandsatAdjustAction extends MapMode implements
 			return;
 
 		 for(Layer layer:Main.map.mapView.getAllLayers()) {
-			if (layer instanceof LandsatLayer) {
+			if (layer instanceof WMSLayer) {
 				prevEastNorth=Main.map.mapView.getEastNorth(e.getX(),e.getY());
-				selectedImage = ((LandsatLayer)layer).findImage(prevEastNorth);
+				selectedImage = ((WMSLayer)layer).findImage(prevEastNorth);
 				if(selectedImage!=null){
 					Main.map.mapView.setCursor
 						(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));

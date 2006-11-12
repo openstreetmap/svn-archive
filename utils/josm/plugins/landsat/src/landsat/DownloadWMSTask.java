@@ -11,24 +11,29 @@ import org.openstreetmap.josm.actions.DownloadAction;
 import org.openstreetmap.josm.actions.DownloadAction.DownloadTask;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 
-public class DownloadLandsatTask extends PleaseWaitRunnable implements DownloadTask {
+public class DownloadWMSTask extends PleaseWaitRunnable 
+		implements DownloadTask {
 
-	private LandsatLayer landsatLayer;
+	private WMSLayer wmsLayer;
 	private double minlat, minlon, maxlat, maxlon;
-	private JCheckBox checkBox = new JCheckBox(tr("Landsat background images"));
+	private JCheckBox checkBox;
+	String name;
 
-	public DownloadLandsatTask(LandsatLayer landsatLayer) {
+	public DownloadWMSTask(WMSLayer wmsLayer, String briefName,
+									String detailedName) {
 		super(tr("Downloading data"));
-		this.landsatLayer = landsatLayer;
+   		checkBox = new JCheckBox(tr(detailedName));
+		this.wmsLayer = wmsLayer;
+		this.name=briefName;
 	}
 
 	@Override public void realRun() throws IOException {
-		landsatLayer.grab(minlat,minlon,maxlat,maxlon);
+		wmsLayer.grab(minlat,minlon,maxlat,maxlon);
 	}
 
 	@Override protected void finish() {
-		if (landsatLayer != null)
-			Main.main.addLayer(landsatLayer);
+		if (wmsLayer != null)
+			Main.main.addLayer(wmsLayer);
 	}
 
 	@Override protected void cancel() {
@@ -56,7 +61,7 @@ public class DownloadLandsatTask extends PleaseWaitRunnable implements DownloadT
 	}
 
 	public String getPreferencesSuffix() {
-		return "landsat";
+		return name; 
 	}
 
 }

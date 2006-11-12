@@ -116,7 +116,15 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		g.setColor( w.selected ?
 						getPreferencesColor("selected", Color.YELLOW) : colour);
 
-		g.fillPolygon(polygon);
+		if(Main.pref.getBoolean("mappaint.fillareas", true))
+			g.fillPolygon(polygon);
+		else
+		{
+			Graphics2D g2d = (Graphics2D)g;
+			g2d.setStroke(new BasicStroke(2));
+			g.drawPolygon(polygon);
+			g2d.setStroke(new BasicStroke(1));
+		}
 	}
 
 	// NEW

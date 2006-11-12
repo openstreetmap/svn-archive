@@ -83,6 +83,7 @@ GetOptions (
 	     'schema'		=> \$do_schema,
 	     'bbox:s'		=> \$do_bbox,
 	     'exbbox:s'		=> \$do_exbbox,
+	     'exbox:s'		=> \$do_exbbox,
 	     'ebbox:s'		=> \$do_exbbox,
 
 	     'dbtype' => \$dbtype,
@@ -784,9 +785,9 @@ planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
 	Only add things inside the bounding box 
      (min lat, min long, max lat, max long)
 
-=item B<--exbox>
+=item B<--exbbox>
 
-planetosm-to-db.pl -exbbox 20,-180,80,-45 <planet.osm.xml>
+planetosm-to-db.pl --exbbox 20,-180,80,-45 <planet.osm.xml>
 
 Add everything except those inside the bounding box
 min lat, min long, max lat, max long)

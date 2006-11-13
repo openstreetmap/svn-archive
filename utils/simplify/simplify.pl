@@ -8,57 +8,43 @@
 #
 # Some code taken from check-osm.pl by Joerg Ostertag
 # 
-# User specifies the minimum "interesting" square grid of D
+# User specifies the minimum "interesting" square grid size in degrees.
 #
 # The rough design is as follows.
-# Note: These were the initial design idea, the implementation does not
-# follow these exactly, but is based on the same core ideas.
+#
 # 
-# Read in all nodes.
-# Nodes are read an Lat / Lon is quantised to nearest multiple of D
-# - If this is a new unique location, it gets added to nodes_unique.
-# - Otherwise added to nodes_dupe with link to node in nodes_unique.
-# - (maybe) store unique nodes in multilevel hash on lat/lon.
-# - (maybe) store dupes as hash with key(dupe id) = value(unique id)
-# - ? store unique nodes in dupe table to with map to self.
+# Read in nodes from OSM file
+# - Lat / Lon is quantised to nearest multiple of the specified grid size
+# - If this is a new unique location, it gets added as a new node.
+# - Otherwise, a small node entry is created pointing back to the existing node for this square
+# - The position of the node representing this grid square is the average of all nodes within the square.
 #
 # Read in all segments
-# - Lookup to/from in nodes_dupe & nodes_unique to find the quantised node for these positions.
-# - If to/from map to the same node then discard the segment
+# - Lookup the to/from endpoints in the node table.
+# - If these nodes are duplicate entries then lookup the node representing this grid position
+# - If to/from map to the same grid position then discard the segment
 # - Search segments list to see if a segment for this to/from pair exists
-# - If a new segment pair, add to segments_unique
-# - If pair already exists add to segments_dupe with reference to segments_unique
+# - If this is a new segment, add it to the list.
+# - If pair already exists, add a small entry pointing to the existing segment
 #
 # Read in all ways, for each segment in a way
-# - Look up each segment in segments_{unique,dupe} to find the unique ID.
+# - Find each segment in the segment list.
 # - If segment not present then assume if maps to the same from/to quantised position and discard.
+# - If this entry is a duplicate segment entry, locate the unique segment for this node pair.
 # - Look through list of segments for this way, discard if already present in list for this way
 # 
-# Once all segments for a way have been read
-# - Check to see if any segments are valid (may all have been discarded).
-# - If at least one valid, write to way table.
-# (maybe) Search list of ways and discard duplicates and/or overlapping 
+# When all segments for a way have been processed
+# - Discard if the way has no segment entries (e.g. doesn't cross a grid square boundary).
 #
-# Iterate all ways
-# - Mark segments which are referenced.
-#
-# Iterate all segments
-# - If segment not referenced by way then skip
-# - Mark nodes which are referenced
-#
-# Iterate all nodes
-# - If node not referenced by segment then skip
-# - Write out referenced unique nodes.
-#
-# Iterate all segments
-# - Write out referenced unique segments.
 # 
-# Iterate all ways
-# - Write out way segments 
+# Once all data has been read in.
+# - Delete duplicate node & segment entries leaving just those that we want
+# - Write out the simplified OSM file.
+#
 
 my $VERSION ="simplify.pl (c) Jon Burgess
 Initial Version (Oct,2006) by Jon Burgess <jburgess@uklinux.net>
-Version 0.01
+Version 0.02
 ";
 
 BEGIN {
@@ -81,7 +67,6 @@ use File::Path;
 use Getopt::Long;
 use HTTP::Request;
 use IO::File;
-use POSIX qw(ceil floor);
 use Pod::Usage;
 use Geo::OSM::Planet;
 use Geo::OSM::Write;
@@ -105,37 +90,91 @@ my $OSM_WAYS     = {};
 my $OSM_OBJ      = undef; # OSM Object currently read
 
 my $count_node=0;
-my $count_segment=0;
-my $count_way=0;
 my $count_node_all=0;
+my $count_segment=0;
 my $count_segment_all=0;
+my $count_way=0;
 my $count_way_all=0;
+my $output;
+
+my $node_positions={};
+my $segment_unique={};
+
 
 # -------------------------------------------------------------------
+sub quantise($) {
+	# Quantise input latitude/longitude to nearest multiple of precision
+	my $input = shift;
+	# Note: int() has 'issues' with some edge cases but it is good enough for our purposes.
+	return int($input/$simplify_degree)*$simplify_degree;
+}
+
+# Remove duplicate node entries.
+# Duplicate nodes are references to the original node so look like they have the wrong ID
+sub delete_duplicate_nodes_data() {
+    for my $node_id ( keys %{$OSM_NODES} ) {
+	if ($OSM_NODES->{$node_id}->{id} != $node_id) {
+		delete $OSM_NODES->{$node_id};
+	}
+    }
+}
+
+# Remove the duplicate segments.
+# Duplicate segments are references to the original segment so look like the have the wrong ID
+sub delete_duplicate_segments() {
+    for my $seg_id ( keys %{$OSM_SEGMENTS} ) {
+	if ($OSM_SEGMENTS->{$seg_id}->{id} != $seg_id) {
+		delete $OSM_SEGMENTS->{$seg_id};
+	}
+    }
+}
+
 
 sub node_ {
     $OSM_OBJ = undef;
 }
+
 sub node {
     my($p, $tag, %attrs) = @_;  
     my $id = delete $attrs{id};
     $OSM_OBJ = {};
-    $OSM_OBJ->{id} = $id;
 
-    $OSM_OBJ->{lat} = delete $attrs{lat};
-    $OSM_OBJ->{lon} = delete $attrs{lon};
-    $OSM_OBJ->{timestamp} = delete $attrs{timestamp} if defined $attrs{timestamp};
+    my $lat = delete $attrs{lat};
+    my $lon = delete $attrs{lon};
+    delete $attrs{timestamp} if defined $attrs{timestamp};
 
     if ( keys %attrs ) {
 	warn "node $id has extra attrs: ".Dumper(\%attrs);
     }
 
+    my $qlat = quantise($lat);
+    my $qlon = quantise($lon);
+    my $dupe_id = $node_positions->{"$qlat,$qlon"};
+
+    if (!defined($dupe_id)) {
+	$node_positions->{"$qlat,$qlon"} = $id;
+	$count_node++;
+	# Create initial data for this unique node, more duplicates may come along later.
+	$OSM_OBJ->{id} = $id;
+	$OSM_OBJ->{lat} = $lat;
+	$OSM_OBJ->{lon} = $lon;
+	$OSM_OBJ->{dupes} = 1;
+    	$OSM_NODES->{$id} = $OSM_OBJ;
+    } else {
+	# Update running average position for the unique node based on this duplicate	
+	my $unique_node = $OSM_NODES->{$dupe_id};
+	my $count = $unique_node->{dupes};
+	$unique_node->{lat} = ($lat + ($unique_node->{lat} * $count)) / ($count + 1);
+	$unique_node->{lon} = ($lon + ($unique_node->{lon} * $count)) / ($count + 1);
+	$unique_node->{dupes} += 1;	
+	# Take reference to the original node at this position
+    	$OSM_NODES->{$id} = $unique_node;
+    }
+
     $count_node_all++;
-    $OSM_NODES->{$id} = $OSM_OBJ;
-    $count_node++;
     if ( $VERBOSE || $DEBUG ) {
 	if (!($count_node_all % 1000) ) {
-	    printf("node %d (%d)\r",$count_node,$count_node_all);
+	    printf("node %d (%d) - %dMB\r",$count_node,$count_node_all, mem_usage('vsz'));
 	}
     }
 }
@@ -149,56 +188,100 @@ sub way_ {
     }
     $OSM_OBJ = undef
 }
+
 sub way {
     my($p, $tag, %attrs) = @_;  
     my $id = delete $attrs{id};
     $OSM_OBJ = {};
     $OSM_OBJ->{id} = $id;
-    $OSM_OBJ->{timestamp} = delete $attrs{timestamp} if defined $attrs{timestamp};
+    delete $attrs{timestamp} if defined $attrs{timestamp};
 
     if ( keys %attrs ) {
 	warn "way $id has extra attrs: ".Dumper(\%attrs);
     }
+
+    if (!$count_way_all ) {
+	# Free memory used for processing segments, not needed for way processing
+	$segment_unique = undef;
+	delete_duplicate_nodes_data();
+    }
+
     print "\n" if !$count_way_all && ($VERBOSE || $DEBUG);
     $count_way_all++;
-    printf("way %d(%d)\r",$count_way,$count_way_all) 
+    printf("way %d(%d) - %dMB\r",$count_way,$count_way_all, mem_usage('vsz')) 
 	if !( $count_way_all % 1000 ) && ($VERBOSE || $DEBUG);
 }
 # --------------------------------------------
 sub segment_ {
     $OSM_OBJ = undef
 }
+
 sub segment {
     my($p, $tag, %attrs) = @_;  
     my $id = delete $attrs{id};
     $OSM_OBJ = {};
     $OSM_OBJ->{id} = $id;
 
-    my $from = $OSM_OBJ->{from} = delete $attrs{from};
-    my $to   = $OSM_OBJ->{to}   = delete $attrs{to};
-    $OSM_OBJ->{timestamp} = delete $attrs{timestamp} if defined $attrs{timestamp};
+    my $from = delete $attrs{from};
+    my $to   = delete $attrs{to};
+
+    delete $attrs{timestamp} if defined $attrs{timestamp};
 
     if ( keys %attrs ) {
 	warn "segment $id has extra attrs: ".Dumper(\%attrs);
     }
+
     if ( defined($OSM_NODES->{$from}) && defined($OSM_NODES->{$to}) ) {
-	$OSM_SEGMENTS->{$id} = $OSM_OBJ;
-	$count_segment++;
+	$from = $OSM_NODES->{$from}->{id};
+	$to   = $OSM_NODES->{$to}->{id};
+
+	if ($from != $to) {
+		# Re-order all segments, we only want one segment for (A->B, B->A)
+		if ($from > $to) {
+			my $tmp = $from;
+			$from = $to;
+			$to = $tmp;
+		}
+	
+		my $dupe_id = $segment_unique->{"$from,$to"};
+		if (!defined($dupe_id)) {
+			$count_segment++;
+			$segment_unique->{"$from,$to"} = $id;
+			$OSM_OBJ->{from} = $from;
+			$OSM_OBJ->{to}   = $to;
+			$OSM_SEGMENTS->{$id} = $OSM_OBJ;
+		} else {
+			# Create reference to original segment
+			$OSM_SEGMENTS->{$id} = $OSM_SEGMENTS->{$dupe_id};
+		}
+	}
     }
+
+    if (!$count_segment_all) {
+	# Free node info which is not used once we process segments
+	$node_positions = undef;
+    }
+
     print "\n" if !$count_segment_all && ($VERBOSE || $DEBUG);
     $count_segment_all++;
-    printf("segment %d (%d)\r",$count_segment,$count_segment_all) 
-	if !($count_segment_all%5000) && ($VERBOSE || $DEBUG);
+    printf("segment %d (%d) - %dMB\r",$count_segment,$count_segment_all, mem_usage('vsz')) 
+	if !($count_segment_all%1000) && ($VERBOSE || $DEBUG);
 }
 # --------------------------------------------
 sub seg {
     my($p, $tag, %attrs) = @_;  
     my $id = $attrs{id};
     delete $attrs{timestamp} if defined $attrs{timestamp};
-    #print "Seg $id for way($OSM_OBJ->{id})\n";
-    if (defined($OSM_SEGMENTS->{$id})) {
-	push(@{$OSM_OBJ->{seg}},$id);
+    return if (!defined($OSM_SEGMENTS->{$id}));
+
+    # If a duplicate segment, locate the unique segment ID.
+    $id = $OSM_SEGMENTS->{$id}->{id};
+
+    for my $exist_id (@{$OSM_OBJ->{seg}}) {
+	return if ($exist_id == $id);
     }
+
+    push(@{$OSM_OBJ->{seg}},$id);
 }
 # --------------------------------------------
 sub tag {
@@ -213,7 +296,7 @@ sub tag {
     if ( keys %attrs ) {
 	print "Unknown Tag value for ".Dumper($OSM_OBJ)."Tags:".Dumper(\%attrs);
     }
-    
+
     my $id = $OSM_OBJ->{id};
     if ( defined( $OSM_OBJ->{tag}->{$k} ) &&
 	 $OSM_OBJ->{tag}->{$k} ne $v
@@ -260,178 +343,6 @@ sub read_osm_file($) {
     return;
 }
 
-
-
-# *****************************************************************************
-
-sub quantise($) {
-	# Quantise input latitude/longitude to nearest multiple of precision
-	my $input = shift;
-	# Note: int() has 'issues' with some edge cases but it is good enough for our purposes.
-	return int($input/$simplify_degree)*$simplify_degree;
-}
-
-# Read in all nodes.
-# Nodes are read an Lat / Lon is quantised to nearest multiple of D
-# - If this is a new unique location, it gets added to nodes_unique.
-# - Otherwise added to nodes_dupe with link to node in nodes_unique.
-# - (maybe) store unique nodes in multilevel hash on lat/lon.
-# - (maybe) store dupes as hash with key(dupe id) = value(unique id)
-# - ? store unique nodes in dupe table to with map to self.
-#
-sub simplify_nodes() {
-    my $count_unique=0;
-    my $count_node=0;
-
-    my $out_nodes = {};
-    
-    print "------------ Simplifying Nodes\n";
-    my $node_positions={};
-    for my $node_id (  keys %{$OSM_NODES} ) {
-	my $node = $OSM_NODES->{$node_id};
-	my $lat = quantise($node->{lat});
-	my $lon = quantise($node->{lon});
-	my $dupe_id = $node_positions->{"$lat,$lon"};
-	if (!defined($dupe_id)) {
-		$dupe_id = $node_id;
-		$node_positions->{"$lat,$lon"} = $node_id;
-		$count_unique++;
-		# Update this node data for output
-		$node->{lat} = $lat;
-		$node->{lon} = $lon;
-		$out_nodes->{$node_id} = $node;
-	}
-	$node->{dupe_id} = $dupe_id;
-	$count_node++;
-#	if ( $VERBOSE || $DEBUG ) {
-	if ( 1 ) {
-		if (!($count_node % 1000) ) {
-	    		printf("node %d (%d)\r",$count_node,$count_unique);
-		}
-	}
-    }
-    printf("Final nodes input=%d, output=%d, shrunk by %d\n",
-	$count_node,$count_unique, $count_node/$count_unique);
-#    for my $position ( keys %{$node_positions} ) {
-#	my $node_id = $node_positions->{$position};
-#	print(" id=$node_id, position=$position\n");
-#    }
-     return $out_nodes;
-}
-
-# Read in all segments
-# - Lookup to/from in nodes_dupe & nodes_unique to find the quantised node for these positions.
-# - If to/from map to the same node then discard the segment
-# - Search segments list to see if a segment for this to/from pair exists
-# - If a new segment pair, add to segments_unique
-# - If pair already exists add to segments_dupe with reference to segments_unique
-#
-sub simplify_segments() {
-    print "------------ Simplify Segments\n";
-
-    my $count_segment = 0;
-    my $count_unique = 0;
-    my $count_interesting = 0;
-    my $segment_unique = {};
-    my $out_segs = {};
-
-    for my $seg_id (  keys %{$OSM_SEGMENTS} ) {
-	my $segment = $OSM_SEGMENTS->{$seg_id};
-	my $node_from = $segment->{from};
-	my $node_to   = $segment->{to};
-	$count_segment++;
-
-	# Find unique node at these positions
-	$node_from = $OSM_NODES->{$node_from}->{dupe_id};
-	$node_to   = $OSM_NODES->{$node_to}->{dupe_id};
-	
-	next if ($node_from == $node_to);
-
-	$count_interesting++;
-
-	# Re-order all segments, we only want one segment for (A->B, B->A)
-	if ($node_from > $node_to) {
-		my $tmp = $node_from;
-		$node_from = $node_to;
-		$node_to = $tmp;
-	}
-	
-	my $dupe_id = $segment_unique->{"$node_from,$node_to"};
-	if (!defined($dupe_id)) {
-		$dupe_id = $seg_id;
-		$segment_unique->{"$node_from,$node_to"} = $seg_id;
-		$count_unique++;
-		# Update segment data for output
-		$segment->{from} = $node_from;
-		$segment->{to} = $node_to;
-		$out_segs->{$seg_id} = $segment;
-	}
-	$segment->{dupe_id} = $dupe_id;	
-
-#	if ( $VERBOSE || $DEBUG ) {
-	if ( 1 ) {
-		if (!($count_segment % 1000) ) {
-	    		printf("segment %d, %d, %d\r",
-				$count_segment, $count_interesting, $count_unique);
-		}
-	}
-   }	
-    printf("Final segments input=%d, interesting=%d, output=%d, shrunk by %d\n",
-	$count_segment, $count_interesting, $count_unique, $count_segment/$count_unique);
-   return $out_segs;
-}
-
-# Read in all ways, for each segment in a way
-# - Look up each segment in segments_{unique,dupe} to find the unique ID.
-# - If segment not present then assume if maps to the same from/to quantised position and discard.
-# - Look through list of segments for this way, discard if already present in list for this way
-# 
-sub simplify_ways() {
-    print "------------ Simplifying Ways\n";
-
-    my $count_way = 0;
-    my $count_interesting = 0;
-    my $out_ways = {};
-
-    for my $way_id ( keys %{$OSM_WAYS} ) {
-	my $way = $OSM_WAYS->{$way_id};
-	my $new_way = {};
-	$count_way++;
-
-	SEGMENT: for my $seg_id ( @{$way->{seg}} ) {
-		my $segment = $OSM_SEGMENTS->{$seg_id};
-	    	next if (!defined $segment);
-
-		my $dupe_id = $segment->{dupe_id};
-		next if (!defined $dupe_id); # zero length segment
-		
-		for my $id (@{$new_way->{seg}}) {
-			next SEGMENT if ($id == $dupe_id);
-		}
-		push(@{$new_way->{seg}},$dupe_id);
-	}
-
-	if (defined @{$new_way->{seg}}) {
-		$count_interesting++;
-		# Update way segments, keep rest of attributes
-		$way->{seg} = $new_way->{seg};
-		$out_ways->{$way_id} = $way;
-	}
-
-#	if ( $VERBOSE || $DEBUG ) {
-	if ( 1 ) {
-		if (!($count_way % 100) ) {
-	    		printf("way %d, %d\r",
-				$count_way, $count_interesting);
-		}
-	}
-    }	
-    printf("Final ways input=%d, output=%d, shrunk by %d\n",
-	$count_way, $count_interesting, $count_way/$count_interesting);
-    return $out_ways;
-}
-
-
 ########################################################################################
 ########################################################################################
 ########################################################################################
@@ -458,6 +369,7 @@ GetOptions (
 
 	     'osm-file=s'          => \$osm_file,
 	     'simplify=s'          => \$simplify_degree,
+	     'out=s'               => \$output,
 	     )
     or pod2usage(1);
 
@@ -474,17 +386,34 @@ if ( ! -s $osm_file ) {
 die "No existing osm File $osm_file\n" 
     unless -s $osm_file;
 
+if (!defined($output)) {
+	$output = $osm_file;
+	$output =~ s/\.osm(\.gz|\.bz2)?$/-simplify-$simplify_degree.osm/;
+}
+
+my $OSM = {};
+$OSM->{tool}     = 'simplify.py';
+$OSM->{nodes}    = $OSM_NODES;
+$OSM->{segments} = $OSM_SEGMENTS;
+$OSM->{ways}     = $OSM_WAYS;
+
+# Make sure we can create the output file before we start processing data
+open(OUTFILE, ">$output") or die "Can’t write to $output: $!";
+close OUTFILE;
+
 my $start_time=time();
 read_osm_file($osm_file);
 
-my $OUT = {};
-$OUT->{tool}     = 'simplify.py';
-$OUT->{nodes}    = simplify_nodes();
-$OUT->{segments} = simplify_segments();
-$OUT->{ways}     = simplify_ways();
-write_osm_file("simplify.osm", $OUT);
+delete_duplicate_segments();
 
-printf "Simplfied output file \"simplified.osm\" produced at $simplify_degree from $osm_file in %.0f sec\n\n",time()-$start_time;
+printf "Finished processing. Final statistics:\n";
+printf " Nodes:    $count_node of $count_node_all\n";
+printf " Segments: $count_segment of $count_segment_all\n";
+printf " Ways:     $count_way of $count_way_all\n";
+
+write_osm_file($output, $OSM);
+
+printf "$output produced at $simplify_degree degrees resolution from $osm_file in %.0f sec\n\n",time()-$start_time;
 
 exit 0;
 
@@ -495,7 +424,7 @@ __END__
 
 =head1 NAME
 
-B<simplify.pl> Version 0.01
+B<simplify.pl> Version 0.02
 
 =head1 DESCRIPTION
 
@@ -512,9 +441,7 @@ So: Have Fun, improve it and send me fixes :-))
 
 B<Common usages:>
 
-simplify.pl [-d] [-v] [-h] --simplify=<Degrees>
-
-Output is written to "simplify.osm"
+simplify.pl [-d] [-v] [-h] --simplify=<Degrees> [--osm-file=planet.osm] [--out=<filename>]
 
 =head1 OPTIONS
 

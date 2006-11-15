@@ -19,12 +19,19 @@
 #include <QtGui/QProgressDialog>
 #include <QtXml/QDomDocument>
 
+/*
+ * Forward decls
+ */
+static void loadTags(const QDomElement& Root, MapFeature* W);
+static void loadTags(const QDomElement& Root, MapFeature* W, CommandList* theList);
+
+
 static void importNode(const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
 {
 	double Lat = Root.attribute("lat").toDouble();
 	double Lon = Root.attribute("lon").toDouble();
 	QString id = "node_"+Root.attribute("id");
-	QDateTime dt(QDateTime::fromString(Root.attribute("timestamp","yyyy-MM-dd HH:mm::ss")));
+//	QDateTime dt(QDateTime::fromString(Root.attribute("timestamp","yyyy-MM-dd HH:mm:ss")));
 	TrackPoint* Pt = dynamic_cast<TrackPoint*>(theDocument->get(id));
 	if (Pt)
 	{
@@ -38,12 +45,16 @@ static void importNode(const QDomElement& Root, MapDocument* theDocument, MapLay
 			theList->add(new AddFeatureCommand(conflictLayer, Pt, false));
 		}
 		else if (Pt->lastUpdated() != MapFeature::UserResolved)
+		{
 			theList->add(new MoveTrackPointCommand(Pt,Coord(angToRad(Lat),angToRad(Lon))));
+			loadTags(Root, Pt, theList);
+		}
 	}
 	else
 	{
 		Pt = new TrackPoint(Coord(angToRad(Lat),angToRad(Lon)));
 		Pt->setId(id);
+		loadTags(Root, Pt);
 		Pt->setLastUpdated(MapFeature::OSMServer);
 		theList->add(new AddFeatureCommand(theLayer,Pt, false));
 	}

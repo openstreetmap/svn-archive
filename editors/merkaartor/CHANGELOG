@@ -13,6 +13,7 @@ v0.05
 	* ADD : oneway markers
 	* ADD : reverse way/road action
 	* ADD : traffic direction combobox in road properties
+	* ADD : load tags for nodes
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

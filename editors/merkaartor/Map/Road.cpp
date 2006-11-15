@@ -133,7 +133,7 @@ void Road::draw(QPainter& thePainter, const Projection& theProjection)
 				TP = QPen(QBrush(QColor(0xff,0,0)),Rad/4);
 			else
 				TP = QPen(QBrush(QColor(0x22,0xff,0x22,128)),Rad/4);
-			::draw(thePainter,TP,p->Ways[i],theProjection);
+			::draw(thePainter, TP, W, theProjection);
 		}
 	}
 }

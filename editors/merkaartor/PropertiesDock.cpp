@@ -112,12 +112,11 @@ void PropertiesDock::resetValues()
 	// to prevent slots to change the values also
 	MapFeature* Current = Selection;
 	Selection = 0;
-	theModel->setFeature(0);
+	theModel->setFeature(Current);
 	if (Way* W = dynamic_cast<Way*>(Current))
 	{
 		WayUi.Width->setText(QString::number(W->width()));
 		WayUi.Id->setText(W->id());
-		theModel->setFeature(Current);
 		WayUi.TagView->setModel(theModel);
 	}
 	else if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(Current))
@@ -125,7 +124,6 @@ void PropertiesDock::resetValues()
 		TrackPointUi.Id->setText(Pt->id());
 		TrackPointUi.Latitude->setText(QString::number(radToAng(Pt->position().lat()),'g',8));
 		TrackPointUi.Longitude->setText(QString::number(radToAng(Pt->position().lon()),'g',8));
-		theModel->setFeature(Current);
 		TrackPointUi.TagView->setModel(theModel);
 	}
 	else if (Road* R = dynamic_cast<Road*>(Current))
@@ -133,7 +131,6 @@ void PropertiesDock::resetValues()
 		RoadUi.Id->setText(R->id());
 		RoadUi.Name->setText(R->tagValue("name",""));
 		RoadUi.TrafficDirection->setCurrentIndex(trafficDirection(R));
-		theModel->setFeature(Current);
 		RoadUi.TagView->setModel(theModel);
 	}
 	Selection = Current;

@@ -1,4 +1,4 @@
-v0.05
+v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points
 	* FIX : don't crash after undoing deletion and doing something else
 	* ADD : go to selection interaction after upload/import/open/download

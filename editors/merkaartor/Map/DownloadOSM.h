@@ -6,6 +6,7 @@ class MapDocument;
 class QHttp;
 class QString;
 class QMainWindow;
+class MainWindow;
 class CoordBox;
 
 #include <QtCore/QByteArray>
@@ -35,7 +36,7 @@ class DownloadReceiver : public QObject
 		int Done, ToDo;
 };
 
-bool downloadOSM(QMainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument);
+bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument);
 
 bool checkForConflicts(MapDocument* theDocument);
 

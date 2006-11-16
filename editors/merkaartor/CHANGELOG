@@ -14,6 +14,9 @@ v0.05
 	* ADD : reverse way/road action
 	* ADD : traffic direction combobox in road properties
 	* ADD : load tags for nodes
+	* ADD : rendering of parks pitches and water reservoirs
+	* ADD : set view to coordinates dialog box
+	* FIX : after downloading from web focus on downloaded area
 
 v0.04 29 oct 2006
 	* FIX : reset brush when drawing zoom window

@@ -9,6 +9,7 @@
 #include "Utils/LineF.h"
 
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
 
 #include <algorithm>
 #include <vector>
@@ -116,6 +117,7 @@ static Coord half(Way* W)
 
 void Road::draw(QPainter& thePainter, const Projection& theProjection)
 {
+	::drawPossibleArea(thePainter,this,theProjection);
 	thePainter.setBrush(QColor(0x22,0xff,0x22,128));
 	thePainter.setPen(QColor(255,255,255,128));
 	for (unsigned int i=0; i<p->Ways.size(); ++i)

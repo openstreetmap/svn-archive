@@ -18,6 +18,7 @@
 #include "Sync/SyncOSM.h"
 #include "GeneratedFiles/ui_AboutDialog.h"
 #include "GeneratedFiles/ui_UploadMapDialog.h"
+#include "GeneratedFiles/ui_SetPositionDialog.h"
 
 #include <QtCore/QSettings>
 #include <QtGui/QDialog>
@@ -201,7 +202,6 @@ void MainWindow::on_fileDownloadAction_triggered()
 {
 	if ( downloadOSM(this,theView->projection().viewport(),theDocument))
 	{
-		on_viewZoomAllAction_triggered();
 		on_editPropertiesAction_triggered();
 	}
 	else
@@ -243,6 +243,32 @@ void MainWindow::on_viewZoomWindowAction_triggered()
 {
 	theView->launch(new ZoomInteraction(theView));
 }
+
+void MainWindow::on_viewSetCoordinatesAction_triggered()
+{
+	QDialog* Dlg = new QDialog(this);
+	Ui::SetPositionDialog Data;
+	Data.setupUi(Dlg);
+	CoordBox B(theView->projection().viewport());
+	Data.Longitude->setText(QString::number(radToAng(B.center().lon())));
+	Data.Latitude->setText(QString::number(radToAng(B.center().lat())));
+	Data.SpanLongitude->setText(QString::number(radToAng(B.lonDiff())));
+	Data.SpanLatitude->setText(QString::number(radToAng(B.latDiff())));
+	if (Dlg->exec() == QDialog::Accepted)
+	{
+		theView->projection().setViewport(CoordBox(
+			Coord(
+				angToRad(Data.Latitude->text().toDouble()-Data.SpanLatitude->text().toDouble()/2),
+				angToRad(Data.Longitude->text().toDouble()-Data.SpanLongitude->text().toDouble()/2)),
+			Coord(
+				angToRad(Data.Latitude->text().toDouble()+Data.SpanLatitude->text().toDouble()/2),
+				angToRad(Data.Longitude->text().toDouble()+Data.SpanLongitude->text().toDouble()/2))), theView->rect());
+		invalidateView();
+	}
+	delete Dlg;
+}
+
+
 void MainWindow::on_createWayAction_triggered()
 {
 	theView->launch(new CreateWayInteraction(this, theView,true));
@@ -268,4 +294,7 @@ MapLayer* MainWindow::activeLayer()
 	return theLayers->activeLayer();
 }
 
-
+MapView* MainWindow::view()
+{
+	return theView;
+}

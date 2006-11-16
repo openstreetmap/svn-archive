@@ -81,7 +81,8 @@ FORMS += \
 ./Sync/SyncListDialog.ui \
 ./TrackPointProperties.ui \
 ./UploadMapDialog.ui \
-./WayProperties.ui
+./WayProperties.ui \
+./SetPositionDialog.ui
 
 #Resource file(s)
 RESOURCES += .\Icons\AllIcons.qrc

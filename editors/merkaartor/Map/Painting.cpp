@@ -1,6 +1,7 @@
 #include "Map/Painting.h"
 #include "Map/Projection.h"
 #include "Map/TrackPoint.h"
+#include "Map/Road.h"
 #include "Map/Way.h"
 #include "Utils/LineF.h"
 
@@ -100,5 +101,32 @@ void draw(QPainter& thePainter, QPen& thePen, Way* W, const Projection& theProje
 	thePainter.strokePath(Path,thePen);
 }
 
+void drawPossibleArea(QPainter& thePainter, Road* R, const Projection& theProjection)
+{
+	if (!R->size() )
+		return;
+	bool Draw = true;
+	QString LandUse = R->tagValue("landuse","");
+	QString Leisure = R->tagValue("leisure","");
+	if (LandUse == "reservoir")
+		thePainter.setBrush(QBrush(QColor(0x22,0x22,0xcc,128),Qt::BDiagPattern));
+	else if ( (LandUse == "forest") || (Leisure == "park") )
+		thePainter.setBrush(QBrush(QColor(0x22,0xcc,0x22,128),Qt::BDiagPattern));
+	else if (Leisure == "pitch")
+		thePainter.setBrush(QBrush(QColor(0xcc,0x22,0x22,128),Qt::BDiagPattern));
+	else
+		Draw = false;
+
+	if ( Draw )
+	{
+		thePainter.setPen(QPen(Qt::NoPen));
+		QPainterPath Path;
+		Path.moveTo(theProjection.project(R->get(0)->from()->position()));
+		for (unsigned int i=0; i<R->size(); ++i)
+			Path.lineTo(theProjection.project(R->get(i)->to()->position()));
+		thePainter.drawPath(Path);
+	}
+
+}
 
 

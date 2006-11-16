@@ -1,6 +1,7 @@
 #include "DownloadOSM.h"
 
 #include "MainWindow.h"
+#include "MapView.h"
 #include "Map/Coord.h"
 #include "Map/ImportOSM.h"
 #include "Map/MapDocument.h"
@@ -112,7 +113,7 @@ bool checkForConflicts(MapDocument* theDocument)
 	return false;
 }
 
-bool downloadOSM(QMainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument)
+bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument)
 {
 	QDialog * dlg = new QDialog(aParent);
 	QSettings Sets;
@@ -158,6 +159,8 @@ bool downloadOSM(QMainWindow* aParent, const CoordBox& aBox , MapDocument* theDo
 			Sets.setValue("bookmarks",Bookmarks);
 		}
 		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument);
+		if (OK)
+			aParent->view()->projection().setViewport(Clip,aParent->view()->rect());
 	}
 	delete dlg;
 	return OK;

@@ -54,7 +54,7 @@ if nodes
     if n.latitude < bllat then bllat = n.latitude end
     if n.longitude < bllon then bllon = n.longitude end
     if n.latitude > bllat then bllat = n.latitude end
-    if n.longitude > bllon then bllat = n.longitue end
+    if n.longitude > bllon then bllon = n.longitude end
   end
 end
 

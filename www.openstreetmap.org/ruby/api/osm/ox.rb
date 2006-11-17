@@ -17,10 +17,10 @@ module OSM
     end
 
     def addbounds(bllat, bllon,trlat, trlon)
-      @root['minlat'] = bllat
-      @root['minlon'] = bllon
-      @root['maxlat'] = trlat
-      @root['maxlon'] = trlon
+      @root['minlat'] = bllat.to_s
+      @root['minlon'] = bllon.to_s
+      @root['maxlat'] = trlat.to_s
+      @root['maxlon'] = trlon.to_s
     end
 
     def add_node(node)

@@ -11,7 +11,6 @@ static QString randomId()
 MapFeature::MapFeature()
 : LastActor(MapFeature::User), theLayer(0)
 {
-	setTag("created_by","Merkaartor");
 }
 
 MapFeature::~MapFeature(void)

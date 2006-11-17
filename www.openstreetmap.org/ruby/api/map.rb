@@ -53,8 +53,8 @@ if nodes
 	  ox.add_node(n) unless !n.visible
     if n.latitude < bllat then bllat = n.latitude end
     if n.longitude < bllon then bllon = n.longitude end
-    if n.latitude > bllat then bllat = n.latitude end
-    if n.longitude > bllon then bllon = n.longitude end
+    if n.latitude > trlat then trlat = n.latitude end
+    if n.longitude > trlon then trlon = n.longitude end
   end
 end
 

@@ -25,8 +25,6 @@ if bllat > trlat || bllon > trlon || bllat < -90 || trlat < -90 || bllat > 90 ||
   exit BAD_REQUEST
 end
 
-
-
 dao = OSM::Dao.instance
 ox = OSM::Ox.new
 
@@ -53,8 +51,14 @@ end
 if nodes
   nodes.each do |i,n|
 	  ox.add_node(n) unless !n.visible
+    if n.latitude < bllat then bllat = n.latitude end
+    if n.longitude < bllon then bllon = n.longitude end
+    if n.latitude > bllat then bllat = n.latitude end
+    if n.longitude > bllon then bllat = n.longitue end
   end
 end
+
+ox.addbounds(bllat,bllon,trlat,trlon)
 
 if linesegments
   linesegments.each do |key, l|
@@ -72,6 +76,8 @@ end
     end
   end
 end
+
+
 
 ox.print_http(r)
 

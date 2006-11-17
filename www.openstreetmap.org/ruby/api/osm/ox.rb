@@ -16,6 +16,13 @@ module OSM
       @doc.root = @root
     end
 
+    def addbounds(bllat, bllon,trlat, trlon)
+      @root['minlat'] = bllat
+      @root['minlon'] = bllon
+      @root['maxlat'] = trlat
+      @root['maxlon'] = trlon
+    end
+
     def add_node(node)
       el1 = Node.new 'node'
       el1['id'] = node.id.to_s

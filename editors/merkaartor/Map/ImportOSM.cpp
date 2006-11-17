@@ -3,6 +3,7 @@
 #include "Command/Command.h"
 #include "Command/DocumentCommands.h"
 #include "Command/FeatureCommands.h"
+#include "Command/RoadCommands.h"
 #include "Command/TrackPointCommands.h"
 #include "Command/WayCommands.h"
 #include "Map/MapDocument.h"
@@ -167,9 +168,11 @@ static void importWay(const QDomElement& Root, MapDocument* theDocument, MapLaye
 			}
 			else if (R->lastUpdated() != MapFeature::UserResolved)
 			{
-/*				theList->add(new WaySetFromToCommand(W,From,To)); */
+				while (R->size())
+					theList->add(new RoadRemoveWayCommand(R,R->get(0)));
+				for (unsigned int i=0; i<Segments.size(); ++i)
+					theList->add(new RoadAddWayCommand(R,Segments[i]));
 				loadTags(Root,R, theList);
-				
 			}
 		}
 		else

@@ -27,7 +27,7 @@
 #include <QtGui/QMouseEvent>
 
 #define MAJORVERSION "0"
-#define MINORVERSION "05"
+#define MINORVERSION "06"
 
 #include "Map/TrackPoint.h"
 #include "Map/Way.h"

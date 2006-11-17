@@ -90,6 +90,8 @@ MapFeature::TrafficDirectionType Way::trafficDirection() const
 			d = PartOf[i]->tagValue(idx);
 	}
 	if (d == "yes") return OneWay;
+	if (d == "true") return OneWay;
+	if (d == "false") return BothWays;
 	if (d == "no") return BothWays;
 	if (d == "-1") return OtherWay;
 	return UnknownDirection;

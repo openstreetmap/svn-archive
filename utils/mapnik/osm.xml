@@ -56,7 +56,7 @@
   
   <Style name="leisure">
     <Rule>
-      <Filter>[landuse] = 'reservoir'</Filter>
+      <Filter>[landuse] = 'reservoir' or [natural] = 'water'</Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>
         <CssParameter name="fill">#89bac6</CssParameter>

@@ -104,6 +104,7 @@ void PropertiesDock::switchToRoadUi()
 	CurrentUi = NewUi;
 	connect(RoadUi.Name,SIGNAL(textChanged(const QString&)),this, SLOT(on_RoadName_textChanged(const QString&)));
 	connect(RoadUi.TrafficDirection,SIGNAL(activated(int)), this, SLOT(on_TrafficDirection_activated(int)));
+	connect(RoadUi.Highway,SIGNAL(activated(int)), this, SLOT(on_Highway_activated(int)));
 	setWindowTitle(tr("Properties - Road"));
 }
 
@@ -132,6 +133,10 @@ void PropertiesDock::resetValues()
 		RoadUi.Name->setText(R->tagValue("name",""));
 		RoadUi.TrafficDirection->setCurrentIndex(trafficDirection(R));
 		RoadUi.TagView->setModel(theModel);
+		unsigned int idx = RoadUi.Highway->findText(R->tagValue("highway","Unknown"));
+		if (idx == -1)
+			idx = 0;
+		RoadUi.Highway->setCurrentIndex(idx);
 	}
 	Selection = Current;
 }
@@ -207,6 +212,19 @@ void PropertiesDock::on_TrafficDirection_activated(int idx)
 			default:
 				Main->document()->history().add(new ClearTagCommand(R,"oneway")); break;
 		}
+		Main->invalidateView();
+	}
+}
+
+void PropertiesDock::on_Highway_activated(int idx)
+{
+	Road* R = dynamic_cast<Road*>(Selection);
+	if (R)
+	{
+		if (idx == 0)
+			Main->document()->history().add(new ClearTagCommand(R,"highway"));
+		else
+			Main->document()->history().add(new SetTagCommand(R,"highway",RoadUi.Highway->currentText()));
 		Main->invalidateView();
 	}
 }

@@ -11,6 +11,7 @@ class CoordBox;
 
 #include <QtCore/QByteArray>
 #include <QtCore/QObject>
+#include <QtCore/QEventLoop>
 
 class DownloadReceiver : public QObject
 {
@@ -31,9 +32,9 @@ class DownloadReceiver : public QObject
 		QMainWindow* Main;
 		QByteArray Content;
 		int Id;
-		bool Break;
 		bool OK;
 		int Done, ToDo;
+		QEventLoop Loop;
 };
 
 bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument);

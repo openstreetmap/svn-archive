@@ -9,7 +9,6 @@
 
 #include "GeneratedFiles/ui_DownloadMapDialog.h"
 
-#include <QtCore/QEventLoop>
 #include <QtCore/QSettings>
 #include <QtGui/QComboBox>
 #include <QtGui/QMainWindow>
@@ -18,7 +17,7 @@
 #include <QtNetwork/QHttp>
 
 DownloadReceiver::DownloadReceiver(QMainWindow* aWindow, QHttp& aRequest)
-: Request(aRequest), Main(aWindow), Break(false)
+: Request(aRequest), Main(aWindow)
 {
 	connect(&Request,SIGNAL(requestFinished(int, bool)), this,SLOT(finished(int, bool)));
 	connect(&Request,SIGNAL(dataReadProgress(int,int)), this,SLOT(transferred(int,int)));
@@ -30,11 +29,7 @@ bool DownloadReceiver::go(const QString& url)
 	Done = ToDo = 0;
 	OK = true;
 	Id = Request.get(url);
-	QEventLoop Loop;
-	while (!Break)
-	{
-		Loop.processEvents(QEventLoop::ExcludeUserInputEvents);
-	}
+	Loop.exec(QEventLoop::ExcludeUserInputEvents);
 	Content = Request.readAll();
 	Main->statusBar()->clearMessage();
 	if (!OK)
@@ -44,10 +39,10 @@ bool DownloadReceiver::go(const QString& url)
 
 void DownloadReceiver::finished(int id, bool error)
 {
-	if (Id == id)
-		Break = true;
 	if (error)
 		OK = false;
+	if (Id == id)
+		Loop.exit();
 }
 
 void DownloadReceiver::transferred(int Now, int Total)

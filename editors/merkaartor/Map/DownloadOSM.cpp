@@ -10,9 +10,12 @@
 #include "GeneratedFiles/ui_DownloadMapDialog.h"
 
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include <QtGui/QComboBox>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMessageBox>
+#include <QtGui/QProgressBar>
+#include <QtGui/QProgressDialog>
 #include <QtGui/QStatusBar>
 #include <QtNetwork/QHttp>
 
@@ -26,15 +29,33 @@ DownloadReceiver::DownloadReceiver(QMainWindow* aWindow, QHttp& aRequest)
 
 bool DownloadReceiver::go(const QString& url)
 {
-	Done = ToDo = 0;
+	QTimer* t = new QTimer(this);
+	connect(t,SIGNAL(timeout()),this,SLOT(animate()));
 	OK = true;
 	Id = Request.get(url);
-	Loop.exec(QEventLoop::ExcludeUserInputEvents);
+	ProgressDialog = new QProgressDialog(Main);
+	ProgressDialog->setWindowModality(Qt::ApplicationModal);
+	QProgressBar* Bar = new QProgressBar(ProgressDialog);
+	Bar->setTextVisible(false);
+	ProgressDialog->setBar(Bar);
+	ProgressDialog->setMinimumDuration(0);
+	ProgressDialog->setLabelText("Downloading from OSM");
+	ProgressDialog->setMaximum(11);
+	t->start(100);
+	int r = ProgressDialog->exec();
+	delete t;
+	delete ProgressDialog;
+	if (r == QProgressDialog::Rejected)
+		return false;
 	Content = Request.readAll();
-	Main->statusBar()->clearMessage();
 	if (!OK)
 		QMessageBox::warning(Main,MainWindow::tr("Download failed"),Request.errorString());
 	return OK;
+}
+
+void DownloadReceiver::animate()
+{
+	ProgressDialog->setValue((ProgressDialog->value()+1) % 11);
 }
 
 void DownloadReceiver::finished(int id, bool error)
@@ -42,16 +63,12 @@ void DownloadReceiver::finished(int id, bool error)
 	if (error)
 		OK = false;
 	if (Id == id)
-		Loop.exit();
+		ProgressDialog->done(QDialog::Accepted);
 }
 
 void DownloadReceiver::transferred(int Now, int Total)
 {
-	Done += Now;
-	ToDo += Total-Now;
-	if (ToDo < 0)
-		ToDo = 0;
-	Main->statusBar()->showMessage(QString("Transferred %1 bytes, still to do %2 bytes").arg(Done).arg(ToDo));
+	ProgressDialog->setLabelText("Waiting for reply...");
 }
 
 QByteArray& DownloadReceiver::content()
@@ -66,7 +83,6 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 		QMessageBox::warning(aParent,MainWindow::tr("Unresolved conflicts"), MainWindow::tr("Please resolve existing conflicts first"));
 		return false;
 	}
-	aParent->setCursor(QCursor(Qt::WaitCursor));
 	QHttp Request;
 	Request.setHost(aWeb);
 	Request.setUser(aUser, aPassword);
@@ -80,7 +96,6 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 		aParent->setCursor(QCursor(Qt::ArrowCursor));
 		return false;
 	}
-	aParent->setCursor(QCursor(Qt::ArrowCursor));
 	int x = Request.lastResponse().statusCode();
 	switch (x)
 	{
@@ -155,7 +170,10 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 		}
 		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument);
 		if (OK)
+		{
 			aParent->view()->projection().setViewport(Clip,aParent->view()->rect());
+			aParent->invalidateView();
+		}
 	}
 	delete dlg;
 	return OK;

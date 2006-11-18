@@ -6,6 +6,7 @@ class MapDocument;
 class QHttp;
 class QString;
 class QMainWindow;
+class QProgressDialog;
 class MainWindow;
 class CoordBox;
 
@@ -26,6 +27,7 @@ class DownloadReceiver : public QObject
 	public slots:
 		void finished( int id, bool error );
 		void transferred(int Now, int Total);
+		void animate();
 
 	private:
 		QHttp& Request;
@@ -33,8 +35,7 @@ class DownloadReceiver : public QObject
 		QByteArray Content;
 		int Id;
 		bool OK;
-		int Done, ToDo;
-		QEventLoop Loop;
+		QProgressDialog* ProgressDialog;
 };
 
 bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument);

@@ -272,7 +272,7 @@
   </Style>
   <Style name="roads">
     <Rule>
-      <Filter>[highway] = 'residential' or [highway] = 'secondary' or [highway] = 'minor'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'secondary' or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
       <MaxScaleDenominator>150000</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
       <LineSymbolizer>
@@ -283,7 +283,7 @@
       </LineSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'residential' or [highway] = 'secondary' or [highway] = 'minor'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'secondary' or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>7500</MinScaleDenominator>
       <LineSymbolizer>
@@ -294,7 +294,7 @@
       </LineSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'residential' or [highway] = 'secondary' or [highway] = 'minor'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'secondary' or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
       <MaxScaleDenominator>7500</MaxScaleDenominator>
       <LineSymbolizer>
         <CssParameter name="stroke">#fff</CssParameter>
@@ -304,7 +304,7 @@
       </LineSymbolizer>
     </Rule>
      <Rule>
-      <Filter>[highway] = 'rail' or [highway] = 'railway' or [highway] = 'railroad'</Filter>
+      <Filter>[railway] = 'rail' or [railway] = 'railway' or [railway] = 'railroad'</Filter>
       <MaxScaleDenominator>1000000</MaxScaleDenominator>
       <LineSymbolizer>
         <CssParameter name="stroke">#000</CssParameter>

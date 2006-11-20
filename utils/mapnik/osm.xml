@@ -82,6 +82,13 @@
      </PolygonSymbolizer>
     </Rule>
      <Rule>
+      <Filter>[landuse] = 'heath'</Filter>
+      <MaxScaleDenominator>2000000</MaxScaleDenominator>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#ffffc0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
 	 <Filter>[leisure] = 'park' or [natural] = 'wood' or [landuse] = 'wood' or [leisure] = 'common' </Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>

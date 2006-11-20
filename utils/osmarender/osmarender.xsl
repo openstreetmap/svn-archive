@@ -145,7 +145,7 @@
 				<xsl:value-of select='/rules/bounds/@minlat'/>
 			</xsl:when>
 			<xsl:when test='$data/osm/bounds'>
-				<xsl:value-of select='$data/osm/bounds/@minlat'/>
+				<xsl:value-of select='$data/osm/bounds/@request_minlat'/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select='$bllat'/>
@@ -158,7 +158,7 @@
 				<xsl:value-of select='/rules/bounds/@minlon'/>
 			</xsl:when>
 			<xsl:when test='$data/osm/bounds'>
-				<xsl:value-of select='$data/osm/bounds/@minlon'/>
+				<xsl:value-of select='$data/osm/bounds/@request_minlon'/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select='$bllon'/>
@@ -171,7 +171,7 @@
 				<xsl:value-of select='/rules/bounds/@maxlat'/>
 			</xsl:when>
 			<xsl:when test='$data/osm/bounds'>
-				<xsl:value-of select='$data/osm/bounds/@maxlat'/>
+				<xsl:value-of select='$data/osm/bounds/@request_maxlat'/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select='$trlat'/>
@@ -184,7 +184,7 @@
 				<xsl:value-of select='/rules/bounds/@maxlon'/>
 			</xsl:when>
 			<xsl:when test='$data/osm/bounds'>
-				<xsl:value-of select='$data/osm/bounds/@maxlon'/>
+				<xsl:value-of select='$data/osm/bounds/@request_maxlon'/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select='$trlon'/>

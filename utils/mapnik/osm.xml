@@ -38,6 +38,11 @@
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
+      <Filter>[natural]='peak'</Filter>
+      <PointSymbolizer file="/home/nick/peak.png" type="png" width="12" height="18" />
+    </Rule>
+    <Rule>
+      <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='recycling'</Filter>
       <PointSymbolizer file="/home/artem/symbols/recycling.png" type="png" width="20" height="20" />
     </Rule>
@@ -77,7 +82,7 @@
      </PolygonSymbolizer>
     </Rule>
      <Rule>
-      <Filter>[leisure] = 'park'</Filter>
+	 <Filter>[leisure] = 'park' or [natural] = 'wood' or [landuse] = 'wood' or [leisure] = 'common' </Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>
         <CssParameter name="fill">#aed1a0</CssParameter>
@@ -99,9 +104,29 @@
       <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="18" fill="#000" halo_radius="2" wrap_width="0"/>
     </Rule>
     <Rule>
+      <Filter>[place] = 'town'</Filter>
+      <MaxScaleDenominator>2000000</MaxScaleDenominator>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="16" fill="#000" halo_radius="2" wrap_width="0"/>
+    </Rule>
+    <Rule>
       <Filter>[place] = 'village'</Filter>
       <MaxScaleDenominator>200000</MaxScaleDenominator>
       <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="14" fill="000" halo_radius="2" wrap_width="20"/>
+    </Rule>
+    <Rule>
+      <Filter>[place] = 'suburb'</Filter>
+      <MaxScaleDenominator>200000</MaxScaleDenominator>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="14" fill="000" halo_radius="2" wrap_width="20"/>
+    </Rule>
+    <Rule>
+      <Filter>[place] = 'hamlet'</Filter>
+      <MaxScaleDenominator>200000</MaxScaleDenominator>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="000" halo_radius="2" wrap_width="20"/>
+    </Rule>
+    <Rule>
+      <Filter>[natural] = 'peak'</Filter>
+      <MaxScaleDenominator>200000</MaxScaleDenominator>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="000" halo_radius="2" wrap_width="20"/>
     </Rule>
     
     <Rule>
@@ -314,7 +339,7 @@
       </LineSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'footpath' or [highway] = 'bridleway' or [highway] = 'cycleway'</Filter>
+      <Filter>[highway] = 'bridleway'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <LineSymbolizer>
         <CssParameter name="stroke">#fff</CssParameter>
@@ -325,6 +350,38 @@
       </LineSymbolizer>
       <LineSymbolizer>
         <CssParameter name="stroke">green</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">4,4</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'cycleway'</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">blue</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">4,4</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unsurfaced'</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">white</CssParameter>
         <CssParameter name="stroke-width">2.0</CssParameter>
         <CssParameter name="stroke-dasharray">4,4</CssParameter>
       </LineSymbolizer>
@@ -438,7 +495,7 @@
       <Parameter name="host">localhost</Parameter>
       <Parameter name="user">postgres</Parameter>
       <Parameter name="dbname">gis</Parameter>
-      <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0) as leisure</Parameter>
+	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length(natural) > 0) as leisure</Parameter>
     </Datasource>
   </Layer>
   

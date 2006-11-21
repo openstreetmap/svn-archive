@@ -170,7 +170,7 @@
 		<rule e="segment|way" k="highway" v="track">
 			<line class='highway-track-casing' />
 		</rule>
-		<rule e="segment|way" k="highway" v="unclassified|residential|minor">
+		<rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary">
 			<line class='highway-unclassified-casing' />
 		</rule>
 		<rule e="segment|way" k="highway" v="unsurfaced">
@@ -238,7 +238,7 @@
 				<line class='highway-track-core otherway' />
 			</rule>
 		</rule>
-		<rule e="segment|way" k="highway" v="unclassified|residential|minor">
+		<rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary">
 			<rule k="oneway" v="~">
 				<line class='highway-unclassified-core' />	
 			</rule>
@@ -474,7 +474,7 @@
 
 		<!-- Draw street names for all highways -->
 		<rule k="osmarender:renderName" v="~|yes">
-			<rule e="segment|way" k="highway" v="unclassified|residential|minor|pedestrian">
+			<rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
 				<text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
 			</rule>
 			<rule e="way" k="highway" v="unsurfaced">

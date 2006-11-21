@@ -55,8 +55,8 @@ sub read_track_NMEA($) {
 	$line =~ s/\*(\S+)\s*$//;
 	$checksumm=$1;
 	($type,$line) = split( /,/,$line,2);
-	$type =~ s/^\s*\$GP//;
-	printf STDERR "type $type, line: $line, checksumm:$checksumm\n"
+	$type =~ s/^\s*\$?GP//; # TomTom GO logger is missing the $ sign this is the reason for \$?
+	printf STDERR "Type: $type, line: $line, checksumm:$checksumm\n"
 	    if $DEBUG>4;
 	if ( $type eq "GGA" ) {
 	    # GGA - Global Positioning System Fix Data
@@ -84,8 +84,8 @@ sub read_track_NMEA($) {
 	    ($time,$lat,$lat_v,$lon,$lon_v,$quality,$dummy,$dummy,$alt,$alt_unit,
 	     $dummy,$dummy,$dummy)
 		= split(/,/,$line);	    
-	    #printf STDERR "(,$time,$status, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality,,, Alt: $alt,$alt_unit,,,,)\n";
-
+	    printf STDERR "GGA: (time: $time, la: $lat,$lat_v, lo: $lon,$lon_v, Q: $quality, Alt: $alt,$alt_unit)\n"
+		if $DEBUG>4;
 	} elsif ( $type eq "RMC" ) {
 	    # RMC - Recommended Minimum Navigation Information
 	    #        1         2 3       4 5        6 7   8   9    10  11|
@@ -105,6 +105,8 @@ sub read_track_NMEA($) {
 	    # 12) Checksum
 	    ($time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$dummy,$date,$mag_variation)
 		= split(/,/,$line);    
+	    printf STDERR "RMC: (Time: $time,Status: $status, la: $lat,$lat_v, lo: $lon,$lon_v, Speed: $speed)\n"
+		if $DEBUG >4;
 	} elsif ( $type eq "GSA" ) {
 	    # GSA - GPS DOP and active satellites
 	    #        1 2 3                        14 15  16  17  18
@@ -173,12 +175,12 @@ sub read_track_NMEA($) {
 	if ( $lat =~ m/(\d\d)(\d\d.\d+)/) {
 	    $lat = $1 + $2/60;
 	} else {
-	    printf STDERR "Error in lat: $lat\n$line\n";
+	    printf STDERR "Error in lat: '$lat'\nLine: $line\n";
 	}
 	if ($lon =~ m/(\d+)(\d\d\.\d+)/){
 	    $lon = $1 + $2/60;
 	} else {
-	    printf STDERR "Error in lon: $lon\n$line\n";
+	    printf STDERR "Error in lon: '$lon'\nLine: $line\n";
 	}
 	$lat = -$lat if $lat_v eq "S";
 	$lon = -$lon if $lon_v eq "W";

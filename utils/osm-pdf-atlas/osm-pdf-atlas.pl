@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 
 BEGIN {
+    my $dir = $0;
+    $dir =~s,[^/]+/[^/]+$,,;
+    unshift(@INC,"$dir/perl");
+
     unshift(@INC,"../perl");
     unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
@@ -14,6 +18,7 @@ use Data::Dumper;
 use constant mm => 25.4/72;
 use Carp qw(cluck confess);
 use Getopt::Long;
+use Pod::Usage;
 
 use Geo::GPX::File;
 use Geo::Geometry;
@@ -21,6 +26,7 @@ use Geo::OSM::Planet;
 use Geo::OSM::SegmentList;
 use Geo::OSM::Tracks2OSM;
 use Geo::OSM::Write;
+use Geo::Filter::Area;
 use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
@@ -28,6 +34,7 @@ use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
+use Geo::OSM::MapFeatures;
 
 sub CreateAtlas($); #{}
 sub LoadOSM($$); #{}
@@ -38,21 +45,34 @@ sub LoadData($); #{}
 sub ReadFile($); #{}
 sub BBoxPages($); #{}
 sub ContentsPage($$); #{}
+sub mapGrid($$$$$$$); #{}
+sub PageFrame($$); #{}
 
 my $ConfigFile = "Config/config.txt";
 Getopt::Long::Configure('no_ignore_case');
-print "Options: -".join(",",@ARGV)."-\n";
+print STDERR "Options: -".join(",",@ARGV)."-\n" if $DEBUG;
 my $CommandLineOptions;
 my $ResultDir=osm_dir().'/pdf-atlas';
+our $man=0;
+our $help=0;
 
 GetOptions ( 
-	     'debug+'     => \$DEBUG,      
-	     'd+'         => \$DEBUG,      
+	     'debug+'     => \$DEBUG,
+	     'd+'         => \$DEBUG,
+	     'v+'         => \$VERBOSE,
+	     'verbose+'   => \$VERBOSE,
+	     'MAN'        => \$man, 
+	     'man'        => \$man, 
+	     'h|help|x'   => \$help, 
+
 	     'c:s'        => \$ConfigFile,
 	     'config:s'   => \$ConfigFile,
 	     'Places:s'   => \$CommandLineOptions->{Places},
 	     'ResultDir:s'=> \$ResultDir,
 	     );
+
+pod2usage(1) if $help;
+pod2usage(-verbose=>2) if $man;
 
 mkdir_if_needed( $ResultDir );
 
@@ -73,6 +93,8 @@ for my $k ( keys %{$CommandLineOptions} ) {
 if ( shift() ) {
     die("Usage: $0 [-d] [--config=<Config file>]\n");
 };
+
+printf STDERR "Memory usage: %s\n",mem_usage() if $DEBUG>1;
     
 CreateAtlas($Options);
 exit;
@@ -98,13 +120,14 @@ sub CreateAtlas($){
     }
 }
 
+
   # Title page
   AddTitlePage($PDF, $Options->{"Title"}) 
       if $Options->{"Title"};
   
-BBoxPages( $Options);
+  BBoxPages( $Options);
   my $Data = LoadData($Options);
-
+#  $Data->{map_features}->load_icons($PDF);
   MapPages($PDF, $Options, $Data);
   
   # License page
@@ -225,12 +248,18 @@ sub LoadData($)
 
   print "Bounds: ".Dumper(\%Bounds) if $DEBUG>10;
   die "No Size defined for ".Dumper($Options)."\n" unless $Size;
-  
+
+  $Data{map_features} = Geo::OSM::MapFeatures->load();
+
   $Data{"Coast"} = LoadGSHHS($Options->{"Coast"}, \%Bounds) if($Options->{"Coast"});
-    
+  printf STDERR "Memory usage: %s\n",mem_usage() if $DEBUG>1;
+
   $Data{"Segments"} = LoadOSM($Options->{"Data"}, \%Bounds) if($Options->{"Data"});
-  $Data{"Points"} = LoadOSM($Options->{"Data_POI"}, \%Bounds) if($Options->{"Data_POI"});
-  
+  printf STDERR "Memory usage: %s\n",mem_usage() if $DEBUG>1;
+
+#  $Data{"Points"} = LoadOSM($Options->{"Data_POI"}, \%Bounds) if($Options->{"Data_POI"});
+  printf STDERR "Memory usage: %s\n",mem_usage() if $DEBUG>1;
+
   printf STDERR "Data loaded\n" if $DEBUG;
   return(\%Data);
 }
@@ -307,11 +336,26 @@ sub LoadOSM($$)
   my ($Filename, $Bounds) = @_;
   $Filename =~ s/\~/$ENV{HOME}/;
 
+  # get alittle bit more. This way we increase the chance
+  # of getting segments which are not completely inside too.
+  my $filter = Geo::Filter::Area->new( lat_min => $Bounds->{"S"}-.1,
+				       lon_min => $Bounds->{"W"}-.1,    
+				       lat_max => $Bounds->{"N"}+.1,
+				       lon_max => $Bounds->{"E"}+.1);
+  
+
+
   printf "Loading OSM Data from %s\n", $Filename;
   open(my $fp, "<", $Filename) 
       or die("Can't open $Filename ($!)\n");
-  my @Lines = <$fp>;
-  chomp @Lines;
+
+  my @Lines;
+  while (  my $line = <$fp> ) {
+      my @col=split(",",$line);
+      next unless $filter->inside({lat=>$col[0],lon=>$col[1]});
+      chomp $line;
+      push (@Lines,$line);
+  }
   close($fp);  
 
   return(\@Lines);
@@ -452,8 +496,8 @@ sub MapContentsPage(){
           
   DrawCoastline($Data->{"Coast"}, $Proj, $gfx);
   DrawOSM($Data->{"Segments"}, $Proj, $gfx, $Data->{"Styles"});
-  DrawOSM_POI($PDF,$Data->{"Points"}, $Proj,  $Data->{"Styles"});
-  WhiteOutEdges($PDF, $Page, $Proj);
+  #DrawOSM_POI($PDF,$Data, $Proj,  $Data->{"Styles"});
+  PageFrame($PDF, $Proj);
 
   my $Count = $PDF->pages + 1;
   my $map_is_on_page=2;
@@ -499,10 +543,14 @@ sub MapContentsPage(){
   }
 }
 
-sub WhiteOutEdges($$$) {
-    my ($PDF, $Page, $Proj) = @_;
-    # White-out the edges of the page (stop maps spilling over)
+# White out the outside of the map
+sub WhiteOutEdges($$) {
+    my ($PDF, $Proj) = @_;
+
+    my $Page  = $PDF->openpage(0);
     my $edges = $Page->gfx;
+
+    # White-out the edges of the page (stop maps spilling over)
     $edges->rect(0/mm, 0/mm, 10/mm, 297/mm); # left
     $edges->rect(0/mm, 0/mm, 210/mm, 10/mm); # bottom
     $edges->rect(200/mm, 0/mm, 210/mm, 297/mm); # right
@@ -510,6 +558,13 @@ sub WhiteOutEdges($$$) {
     $edges->fillcolor("#FFFFFF"); 
     $edges->fill; 
     $edges->endpath;
+}
+
+sub MapBorder($$) {
+    my ($PDF, $Proj) = @_;
+
+    my $Page  = $PDF->openpage(0);
+    my $edges = $Page->gfx;
     
     # Map border
     $edges->strokecolor("#000080");
@@ -517,13 +572,31 @@ sub WhiteOutEdges($$$) {
     $edges->stroke();
     $edges->endpath();
 
-    # Page number
+}
+
+# Add a page Frame with
+#   Page Numbers, URL and Name
+sub PageFrame($$) {
+    my ($PDF, $Proj) = @_;
+
+    WhiteOutEdges($PDF, $Proj);
+    MapBorder($PDF, $Proj);
+
+    my $Page  = $PDF->openpage(0);
     my $Font = $PDF->corefont('Helvetica');
     my $text = $Page->text;  
+
+    # Page number
     $text->fillcolor("#000000"); 
     $text->font($Font, 4/mm );
     $text->translate( 200/mm, 6/mm );
     $text->text_right(sprintf("%d", $PDF->pages));
+
+    # URL
+    $text->font($Font, 4/mm );
+    $text->translate( 10/mm, 6/mm );
+    $text->text("http://openstreetmap.org/");
+
 }
 
 #---------------------------------------------------------
@@ -546,11 +619,11 @@ sub MapPage(){
   DrawCoastline($Data->{"Coast"}, $Proj, $gfx);
 
   DrawOSM($Data->{"Segments"}, $Proj, $gfx, $Data->{"Styles"});
-  DrawOSM_POI($PDF,$Data->{"Points"}, $Proj,  $Data->{"Styles"});
+  #DrawOSM_POI($PDF,$Data, $Proj,  $Data->{"Styles"});
 
   ScaleBar($PDF, $Page, $Proj);
   
-  WhiteOutEdges($PDF, $Page, $Proj);
+  PageFrame($PDF, $Proj);
   
   my $text = $Page->text;  
   $text->fillcolor("#000000"); 
@@ -596,19 +669,20 @@ sub DrawCoastline()
 #---------------------------------------------------------
 sub DrawOSM_POI()
 {
-    my($PDF,$Points, $Proj, $Styles) = @_;
-    
+    my($PDF,$Data, $Proj, $Styles) = @_;
+    my $Points=$Data->{"Points"};
+    my $MapFeatures = $Data->{map_features};
     if($Points)
     {
 	my $Page = $PDF->openpage(0);
 	my $gfx = $Page->gfx;
 	my $text = $Page->text;  
 	$text->font($PDF->corefont('Helvetica'), 4/mm );
-	my $png = $PDF->image_png(' ../../map-icons/square.small/unknown.png');
+	my $scale = Scale($Proj);
 	
 	foreach my $Line(@$Points)
 	{
-	    my($Lat1,$Long1,$Name,$Type) = split(/,/,$Line);
+	    my($Lat1,$Long1,$Name,$Type) = split(/,/,$Line,4);
 	    unless ( $Lat1 && $Long1 ) {
 		confess "$Line\nany of lat/lon is 0\n";
 	    }
@@ -624,8 +698,18 @@ sub DrawOSM_POI()
 		
 		$gfx->move($x1/mm,$y1/mm);
 		$text->translate(($x1-2)/mm, ($y1-2)/mm );
-		$text->text("x  $Name,$Type");
-		$gfx-> image($png, $x1/mm - ($png->width/2),$y1/mm - ($png->height/2));
+
+		print STDERR "Draw_OSM():$Line, $Type\n" 
+		    if $DEBUG>1;
+
+		my $img = $MapFeatures->get_icons($Type,$scale);
+		if ( my $img ) {
+		    $gfx-> image($img, 
+				 $x1/mm - ($img->width/2),
+				 $y1/mm - ($img->height/2));
+		}
+
+		$text->text("x  $Name"); #,$Type");
 	    }
 	}
     }
@@ -633,7 +717,7 @@ sub DrawOSM_POI()
 #---------------------------------------------------------
 # Draw a basic (uncorrelated with anything) grid on a map
 #---------------------------------------------------------
-sub mapGrid()
+sub mapGrid($$$$$$$)
 {
   my ($Page, $x1, $y1, $x2, $y2, $Font, $Proj) = @_;
   my $grid = $Page->gfx;
@@ -707,47 +791,6 @@ sub DrawOSM()
     }
   }
 }
-#---------------------------------------------------------
-# Draw a basic (uncorrelated with anything) grid on a map
-#---------------------------------------------------------
-sub mapGrid()
-{
-  my ($Page, $x1, $y1, $x2, $y2, $Font, $Proj) = @_;
-  my $grid = $Page->gfx;
-  
-  my $xLabels = "ABCDEFG";
-  my $dx = ($x2 - $x1) / 7;
-  my $dy = ($y2 - $y1) / 10;
-  
-  my $gridtext = $Page->text;  
-  $gridtext->fillcolor("#C1E4FF"); 
-  $gridtext->font($Font, 3/mm );
-  
-  my $count = 0;
-  for(my $x = $x1; $x < $x2-1; $x += $dx)
-  {
-    $grid->move($x/mm,$y1/mm);
-    $grid->line($x/mm,$y2/mm); 
-    
-    $gridtext->translate(($x + $dx - 4)/mm, ($y1 - 4)/mm );
-    $gridtext->text(substr($xLabels, $count++, 1));
-  }
-  
-  $count = 1;
-  for(my $y = $y1; $y > $y2+1; $y += $dy)
-  {
-    $grid->move($x1/mm,$y/mm);
-    $grid->line($x2/mm,$y/mm); 
-    
-    $gridtext->translate(($x1 + 2)/mm, ($y + $dy + 2)/mm );
-    $gridtext->text($count++);
-    
-  }
-  
-  $grid->strokecolor("#C1E4FF");
-  $grid->stroke();
-  $grid->endpath();
-}
 
 #---------------------------------------------------------
 # Draw a scalebar on a map
@@ -798,12 +841,9 @@ sub ScaleBar()
   $text->font($PDF->corefont('Helvetica'), 4/mm );
   $text->translate($ScaleX/mm, ($ScaleY - 6)/mm );
   $text->text(FormatNum($ScaleLen) . " km");
+  $text->translate($ScaleX/mm  +$dx/mm, ($ScaleY - 6)/mm );
+  $text->text_right(" 1/".FormatNum(int(Scale($Proj))));
 
-  # URL
-  my $Font = $PDF->corefont('Helvetica');
-  $text->font($Font, 4/mm );
-  $text->translate( 10/mm, 6/mm );
-  $text->text("http://openstreetmap.org/");
 }
 
 #---------------------------------------------------------
@@ -856,6 +896,30 @@ sub PossiblyOn()
   return(0) if($Lat1 < $Proj->{"S"} && $Lat2 < $Proj->{"S"});
   return(0) if($Lat1 > $Proj->{"N"} && $Lat2 > $Proj->{"N"});
   return(1);
+}
+
+#---------------------------------------------------------
+# get back Scale for a given Projection
+#---------------------------------------------------------
+sub Scale($)
+{
+  my ($Proj) = @_;
+  if ( $Proj->{"dLong"} ==0  ) {
+      cluck "Proj-dLong =0\n";
+      return undef;
+  }
+  if ( $Proj->{"dLat"} ==0  ) {
+      cluck "Proj-dat =0\n";
+      return undef;
+  }
+  # TODO:
+  # This is not the correct Formula, but for now it 
+  # gives a wild guess which is good enough
+  my $scale = max($Proj->{"dLat"},$Proj->{"dLong"}); # degrees per page
+  $scale=40*1000*1000*100/360*$scale; # cm in reality/page
+  $scale=$scale/30; #  1/$scale for the page
+  #print "Scale: $scale\n";
+  return $scale;
 }
 
 #---------------------------------------------------------
@@ -961,3 +1025,92 @@ sub ReadFile($){
   printf STDERR "+++++++++++++++++++++++++++++++++++++++++\n" if $DEBUG > 2;
   return(\%Options);
 }
+
+##################################################################
+# Usage/manual
+
+__END__
+
+=head1 NAME
+
+B<osm-pdf-atlas.pl> Version 0.02
+
+=head1 DESCRIPTION
+
+B<osm-pdf-atlas.pl> is a program to create an atlas
+The output is a PDF File
+The data is taken from a osm-file which is converted to a csv file. 
+
+=head1 SYNOPSIS
+
+B<Common usages:>
+
+osm-pdf-atlas.pl [-d] [-v] [-h] <planet_filename.osm>
+
+=head1 OPTIONS
+
+=over 2
+
+=item B<--man> Complete documentation
+
+Complete documentation
+
+=item B<-c|--config> <config.txt> use config.txt
+
+The default is Config/config.txt
+
+=item B<-Places> <places.txt> use places.txt
+
+use places.txt for the list of places to add
+
+=item B<-ResultDir> optional output dir
+
+write the results to this dir. 
+The Default is ~/osm/pdf-atlas/
+
+=back
+
+=head1 TODO
+
+ - Page content a little smaller, so it always fits on A4
+ - Add Page Numbers to overview
+ - Add Main Streets to overview
+ - Overview on Titlepage (optional)
+ - Add City Names to output from places.txt
+ - Add POI from places.txt with icons defined in *.XML scheme
+ - Option to automagically start convert after creating pdf
+ - make configfile for places more flexible: for this change order
+        area,<lat>,<lon>,<size>,<name>
+
+
+=head1 COPYRIGHT
+
+ Copyright 2006, OJW
+ Copyright 2006, Jörg Ostertag
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 AUTHOR
+
+OJW <streetmap@blibbleblobble.co.uk>, 
+Jörg Ostertag (planet-count-for-openstreetmap@ostertag.name)
+
+=head1 SEE ALSO
+
+osm2csv.pl
+
+http://www.openstreetmap.org/
+
+=cut

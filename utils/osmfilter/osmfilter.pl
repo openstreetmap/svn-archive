@@ -84,8 +84,9 @@ our $use_stdin         = 0;
 our $use_stdout        = 0;
 our $out_osm           = undef;
 our $fake_gpx_date     = undef;
-our $write_gpx_wpt     = undef;
+our $write_gpx_wpt     = 0;
 our $out_raw_gpx       = undef;
+our $out_upload_gpx    = undef;
 our $split_tracks      = undef;
 our @filter_area_files = ();
 our $draw_filter_areas = undef;
@@ -483,6 +484,7 @@ sub read_all_filter_areas(@){
 	    print "internal__filter_area_list:".Dumper(\$internal__filter_area_list);
 	}
     }
+    print STDERR Dumper(\$internal__filter_area_list) if $DEBUG>2 || $VERBOSE>5;
 }
 
 # -------------------------------------------------
@@ -490,7 +492,6 @@ sub read_all_filter_areas(@){
 sub check_allowed_area($$){
     my $elem = shift;
     my $filter_area_list = shift;
-    #$internal__filter_area_list
     
     return 1 unless @filter_area_files;
     if ( ref($filter_area_list) ne "ARRAY" ) {
@@ -500,8 +501,10 @@ sub check_allowed_area($$){
 	confess("check_allowed_area(): Unknown Type of Element to check:".Dumper(\$elem));
     };
     
+    # print "check_allowed_area():".Dumper(\$elem).Dumper(\$internal__filter_area_list);
     for my $area ( @{$filter_area_list} ) {
-	if (ref($area) eq "HASH" ) {	    
+	if (ref($area) eq "HASH" ) {
+	    #print "check_allowed_area(HASH):".Dumper(\$elem).Dumper(\$area);
 	    if ( defined ( $area->{wp} ) ) { # Get from GPSDrive ~/.gpsdrive/way.txt Waypoints
 		my $proximity;
 		($area->{lat},$area->{lon},$proximity) = GPSDrive::get_waypoint($area->{wp});
@@ -516,6 +519,7 @@ sub check_allowed_area($$){
 		return ! $area->{block};
 	    }
 	} else {
+	    #print "check_allowed_area(ARRAY):".Dumper(\$elem).Dumper(\$area);
 	    my ($min_lat,$min_lon, $max_lat,$max_lon ) = @{$area};
 	    if ( $min_lat <= $elem->{lat} &&	 $max_lat >= $elem->{lat} &&
 		 $min_lon <= $elem->{lon} &&	 $max_lon >= $elem->{lon} ) {
@@ -603,7 +607,7 @@ sub split_tracks($$){
     my $filename     = $tracks->{filename};
 
     my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || 5000; # 5 Km
+    my $max_allowed_dist  = $config->{max_dist}  || 1000; # 1 Km
     my $max_allowed_time  = $config->{max_time}  || 60;
 
     my $track_number=0;
@@ -696,6 +700,7 @@ sub filter_track_by_area($){
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
 	    my $elem = $track->[$track_pos];
 	    $elem->{good_point} = check_allowed_area($elem,$internal__filter_area_list);
+	    #print Dumper(\$elem);
 	}
     }
 
@@ -725,8 +730,8 @@ sub is_gps_combineable($$){
     for my $track_pos_test ( $track_pos .. $pos_max ) {
 	my $elem2 = $track->[$track_pos_test];
 	$sum_dist = $sum_dist + $elem2->{dist};
-	if ( $sum_dist > 500 ) { # max 500 km distanz
-	    printf STDERR "Elements have $sum_dist Km Distance, which would be too much\n"
+	if ( $sum_dist > 300 ) { # max 300 m distanz
+	    printf STDERR "Elements have $sum_dist m Distance, which would be too much\n"
 		if $DEBUG >10;
 	    last;
 	}
@@ -751,7 +756,7 @@ sub is_gps_combineable($$){
 					      $elem2->{lat},$elem2->{lon},
 					      $elem1->{lat},$elem1->{lon}
 					      );
-	    $dist_over =  1 if $dist > 0.010; # 10 meter
+	    $dist_over =  1 if $dist > 0.05; # 5 meter
 	    printf STDERR "Elem  $track_pos_test1 is $dist m away from line\n"
 		if $DEBUG >10;
 	    last if $dist_over;
@@ -913,19 +918,19 @@ sub filter_dup_trace_segments($$){
 	    }
 #	    print "Track: $track_no sliding_track_pos: $sliding_track_pos ($pos_max)	track_angle: $track_angle\n";
 	    #print Dumper(\@sliding_track_list);
+	    $track_points_done++;
+	    if ( ( $VERBOSE || $DEBUG ) &&
+		 ( time()-$parsing_display_time >.9)
+		 )  {
+		$parsing_display_time= time();
+		print STDERR "Filter dup Trackseg ".mem_usage();
+		print STDERR time_estimate($start_time,$track_points_done,$point_count);
+		print STDERR "\r";
+	    }
 	}
 	while ( $sliding_track_pos < $pos_max ) {
 	    add_trackpoint2segmentlist($segment_list,$track,$sliding_track_pos);
 	    $sliding_track_pos ++;
-	}
-	$track_points_done++;
-	if ( ( $VERBOSE || $DEBUG ) &&
-	     ( time()-$parsing_display_time >.9)
-	     )  {
-	    $parsing_display_time= time();
-	    print STDERR "Filter my own ".mem_usage();
-	    print STDERR time_estimate($start_time,$track_points_done,$point_count);
-	    print STDERR "\r";
 	}
 
     }
@@ -1146,11 +1151,15 @@ sub convert_Data(){
     my $count_files_converted=0;
     while ( my $filename = shift @ARGV ) {
 	my $new_tracks;
+	if ( $filename =~ m/\*/ ){
+	    printf STDERR "$filename: Skipping for read. Filename has wildcard.\n\n";
+	    next;
+	};
 	if ( ( $filename =~ m/-raw(|-osm|-pre-osm|-pre-clew)\.gpx$/ ) ||
-	     ( $filename =~ m/-converted\.gpx(.gz|bz2)?$/ ) ||
-	     ( $filename =~ m/-combination.gpx(.gz|bz2)?$/ ) ||
-	     ( $filename =~ m/00_combination.gpx(.gz|bz2)?$/ ) ||
-	     ( $filename =~ m/00_filter_areas.gpx(.gz|bz2)?$/ )  
+	     ( $filename =~ m/-converted\.gpx(\.gz|\.bz2)?$/ ) ||
+	     ( $filename =~ m/-combination.*\.gpx(\.gz|\.bz2)?$/ ) ||
+	     ( $filename =~ m/00_combination\.gpx(\.gz|\.bz2)?$/ ) ||
+	     ( $filename =~ m/00_filter_areas\.gpx(\.gz|\.bz2)?$/ )  
 	     ){
 	    printf STDERR "$filename: Skipping for read. These are my own files.\n\n";
 	    next;
@@ -1181,6 +1190,8 @@ sub convert_Data(){
 	    $new_tracks = read_track_GpsBabel($filename,"netstumbler");
 	} elsif ( $extention eq "nmea" ) {
 	    $new_tracks = read_track_NMEA($filename);
+	} elsif ( $extention eq "TXT" ) { # This is the NAVI-GPS extention
+	    $new_tracks = read_track_NMEA($filename);
 	} elsif ( $extention eq "sav" ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
 	} else {
@@ -1190,7 +1201,7 @@ sub convert_Data(){
 	my ($track_read_count,$point_read_count) =   count_data($new_tracks);
 	if ( $VERBOSE || $DEBUG) {
 	    my $comment = "read";
-	    printf STDERR "%-35s:	%5d Points in %d Tracks $comment",$filename,$point_read_count,$track_read_count;
+	    printf STDERR "%-35s: %5d Points in %d Tracks $comment",$filename,$point_read_count,$track_read_count;
 	    print  STDERR "\n";
 	}
 
@@ -1281,6 +1292,15 @@ sub convert_Data(){
 		if ( $out_raw_gpx ){
 		    write_gpx_file($all_raw_tracks,"00_combination-raw.gpx");
 		}
+		if ( $out_upload_gpx ){
+		    my $mem1= $out_upload_gpx;
+		    my $mem2 = $fake_gpx_date;
+		    $out_upload_gpx=0;
+		    $fake_gpx_date=1;
+		    write_gpx_file($all_raw_tracks,"00_combination-upload.gpx");
+		    $out_upload_gpx=$mem1;
+		    $fake_gpx_date=$mem2;
+		}
 	    };
 	    
 	} else {
@@ -1319,6 +1339,7 @@ GetOptions (
 
 	     'out-osm!'             => \$out_osm,
 	     'out-raw-gpx!'         => \$out_raw_gpx,
+	     'out-upload-gpx!'      => \$out_upload_gpx,
 	     'split-tracks!'        => \$split_tracks,
 	     'filter-against-osm:s' => \$do_filter_against_osm,
 	     'osm:s'                => \$do_filter_against_osm,
@@ -1335,11 +1356,12 @@ GetOptions (
     or pod2usage(1);
 
 if ( $do_all_filters ) {
-    $out_osm            = 1 unless defined $out_osm;
-    $out_raw_gpx        = 1 unless defined $out_raw_gpx;
-    $split_tracks       = 1 unless defined $split_tracks;
-    $do_filter_reduce_pt  = 1 unless defined $do_filter_reduce_pt;
-    $do_filter_clew     = 1 unless defined $do_filter_clew;
+    $out_osm               = 1 unless defined $out_osm;
+    $out_raw_gpx           = 1 unless defined $out_raw_gpx;
+    $out_upload_gpx        = 1 unless defined $out_upload_gpx;
+    $split_tracks          = 1 unless defined $split_tracks;
+    $do_filter_reduce_pt   = 1 unless defined $do_filter_reduce_pt;
+    $do_filter_clew        = 1 unless defined $do_filter_clew;
     $do_filter_against_osm = 1 unless defined $do_filter_against_osm;
     $do_filter_dup_trace_segments =1 unless defined $do_filter_dup_trace_segments;
     @filter_area_files || push(@filter_area_files,"");
@@ -1359,7 +1381,7 @@ __END__
 
 =head1 NAME
 
-B<osm-filter.pl> Version 0.01
+B<osmfilter.pl> Version 0.05
 
 =head1 DESCRIPTION
 
@@ -1443,7 +1465,9 @@ B<Common usages:>
 
 osm-filter.pl [--man] [-d] [-v] [-h][--out-osm] [--limit-area] <File1.gps> [<File2.sav>,<File2.ns1>,...]
 
-!!!Please be carefull this is still a betta Version. Make Backups of your valuable source Files!!!
+!!!Please be carefull this is still a beta Version. 
+   Make Backups of your valuable source Files
+   and never upload the created data without first checking it!!!
 
 =head1 OPTIONS
 
@@ -1455,7 +1479,12 @@ This shows the Complete documentation
 
 =item B<--out-raw-gpx>
 
-Print raw converted output to filename-raw.gpx
+Write raw converted output to filename-raw.gpx
+
+=item B<--out-upload-gpx>
+
+Write raw converted output to filename-upload.gpx. 
+Without timestamps and without Waypoints.
 
 =item B<--out-osm>
 
@@ -1575,6 +1604,7 @@ This eliminates the date for while writing gpx data.
 =item B<--write-gpx-wpt>
 
 Only if this option is set, Waypoints are written to any of the gpx Files.
+Default is on.
 
 =item <File1.gps> [<File2.gps>,...]
 
@@ -1609,3 +1639,31 @@ use stdin to read GPX track file
 use stdout to write filtered  tracks as GPX
 
 =back
+
+=head1 COPYRIGHT
+
+Copyright 2006, Jörg Ostertag
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+=head1 AUTHOR
+
+Jörg Ostertag (planet-count-for-openstreetmap@ostertag.name)
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+=cut

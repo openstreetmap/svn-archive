@@ -1,5 +1,17 @@
 #!/usr/bin/perl
-use OsmXML;
+
+BEGIN {
+    my $dir = $0;
+    $dir =~s,[^/]+/[^/]+$,,;
+    unshift(@INC,"$dir/perl");
+
+    unshift(@INC,"./perl");
+    unshift(@INC,"../perl");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+}
+
+use Geo::OSM::OsmXML;
 use Data::Dumper;
 
 # Definitions

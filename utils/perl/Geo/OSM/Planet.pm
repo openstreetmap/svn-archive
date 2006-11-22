@@ -31,37 +31,46 @@ use Utils::Debug;
 use Utils::LWP::Utils;
 
 
+# As of planet-061105
 my $estimations = {
-    'way' => {
-	'count' => 2816628,
-	'max_id' => 3222817,
-    },
-    'seg' => {
-	'count' => 9918572,
-	'max_id' => 12584020,
-    },
-    'segment' => {
-	'count' => 11282506,
-	'max_id' => 12579354,
-    },
-    'tag' => {
-	'count' => 14915921,
-	'max_id' => 1,
-    },
-    'node' => {
-	'count' => 14601013,
-	'max_id' => 15763764,
-    },
-    'line' => {
-	'count' => 58546735,
-	'max_id' => 53534640,
-    },
-    'elem' => {
-	'count' => 58546735,
-	'max_id' => 53534640,
-    }
+            'way' => {
+                       'count' => 3582265,
+                       'max_id' => 3991414
+                     },
+            'elem' => {
+                        'count' => 79092674,
+                        'max_id' => 79092674
+                      },
+            'seg' => {
+                       'count' => 14146593,
+                       'max_id' => 17002147
+                     },
+            'segment' => {
+                           'count' => 15700218,
+                           'max_id' => 17002036
+                         },
+            'tag' => {
+                       'count' => 26128933,
+                       'max_id' => 1
+                     },
+            'node' => {
+                        'count' => 19534665,
+                        'max_id' => 20908184
+                      },
+            'line' => {
+                        'count' => 88332986,
+                        'max_id' => 79092674
+                      }
 };
 
+# ------------------------------------------------------------------
+# This routine estimates the maximum id for way,elem,seg,... 
+# The values are taken from older planet.osm Files
+# So they mostly are a little bit to low
+# ARGS: 
+#   $type: line|way|tag|...
+# RETURNS:
+#   $result: number of estimated max_id
 sub estimated_max_id($){
     my $type= shift;
     unless ( defined ($estimations->{$type}->{max_id})) {
@@ -71,6 +80,14 @@ sub estimated_max_id($){
     return $estimations->{$type}->{max_id};
 }
 
+# ------------------------------------------------------------------
+# This routine estimates the maximim number of elements for way,elem,seg,... 
+# The values are taken from older planet.osm Files
+# So they mostly are a little bit to low
+# ARGS: 
+#   $type: line|way|tag|...
+# RETURNS:
+#   $result: number of estimated elements
 sub estimated_max_count($){
     my $type= shift;
     unless ( defined ($estimations->{$type}->{count})) {
@@ -80,6 +97,8 @@ sub estimated_max_count($){
     return $estimations->{$type}->{count};
 }
 
+# ------------------------------------------------------------------
+# returns the osm main directory for holding data
 sub osm_dir() {
     # For later these are the defaults
     # edpending on where we can read/write
@@ -98,6 +117,8 @@ sub osm_dir() {
     return $dir;
 }
 
+# ------------------------------------------------------------------
+# Returns the directory where the planet.osm files will be found
 sub planet_dir() {
     my $dir = osm_dir();
     $dir = "$dir/planet";
@@ -105,10 +126,12 @@ sub planet_dir() {
 }
 
 
-# *****************************************************************************
-# mirror the newest planet.osm File to ~/osm/planet/planet.osm.bz2
+# ------------------------------------------------------------------
+# mirror the newest planet.osm File to
+#  ~/osm/planet/planet.osm.bz2
+# the file is Sanitized afterwards  and the resulting 
+# Filename is returned
 sub mirror_planet(){
-
     my $planet_server="http://planet.openstreetmap.org";
     my $url = "$planet_server";
 
@@ -168,6 +191,15 @@ sub mirror_planet(){
     return $current_file;
 }
 
+# ------------------------------------------------------------------
+# creates a seconf file with a sanitized Version of planet.osm
+# the resulting file can be found at
+#    ~/osm/planet/planet-06XXXX-a.osm.bz2
+# If a recent enought Version is found in ~/osm/planet/
+# nothing is done, but the filename of the file is returned
+# if the routine finds an uncompressed up to date Version 
+#   ~/osm/planet/planet-06XXXX-a.osm
+# this Filename is returned.
 sub UTF8sanitize($){
     my $filename = shift;
 
@@ -175,7 +207,7 @@ sub UTF8sanitize($){
 
     my $filename_new= $filename;
     $filename_new =~ s/\.osm/-a.osm/;
-    my $filename_new_check=newest_filename($filename_new);
+    my $filename_new_check=newest_unpacked_filename($filename_new);
 
     # check if planet-060101-a.osm[.bz2] is newer than  planet-060101.osm.bz2
     return $filename_new_check
@@ -209,6 +241,11 @@ sub UTF8sanitize($){
     return $filename_new;
 }
 
+# ------------------------------------------------------------------
+# find a file in the current Perl Search path. For now this was the 
+# easiest solution to find programms like UTF8Sanitize
+# ARGS: relative filename (relative to @INC-path
+# RETURNS: Absolute path to file
 sub find_file_in_perl_path($){
     my $file = shift;
 
@@ -225,6 +262,8 @@ sub find_file_in_perl_path($){
     print "find_file_in_perl_path($file): --> $found_file\n" if $DEBUG;
     return $found_file;
 }
+
+# ------------------------------------------------------------------
 1;
 
 =head1 NAME

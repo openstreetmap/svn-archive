@@ -8,7 +8,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 @EXPORT = qw( data_open
 	      file_needs_re_generation
 	      mkdir_if_needed
-	      newest_filename
+	      newest_unpacked_filename
 	      );
 use strict;
 use warnings;
@@ -92,8 +92,15 @@ sub file_needs_re_generation($$){
     return $update_needed;
 }
 
-# Given a filename it checks if we have an unpacked Version which is newer 
-sub newest_filename($){
+# ------------------------------------------------------------------
+# Given a filename it checks if we have an unpacked
+# Version which is new enough
+# ARGS: filename.osm.gz|filename.osm
+# RETURNS:
+#   filename.osm if: it exists and is the newest
+#   filename.osm.gz: if no current filename.osm exists
+#   undef:           if we cant find any of the files
+sub newest_unpacked_filename($){
     my $filename = shift;
 
     my $filename_unpacked = $filename;

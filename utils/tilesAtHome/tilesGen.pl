@@ -22,11 +22,8 @@ use LWP::Simple;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 use strict;
-# Not required
-my $Password = "user|password";  
-
-# Requires OSM username for downloading data
-our $Credentials = "user%40domain:password";
+my $Password = "user|password";  # Not required
+our $Credentials = "a%40b:c";
 
 use Math::Trig;
 sub DegToRad($){return pi * shift() / 180;}
@@ -36,42 +33,31 @@ my $LimitY2 = ProjectF(-85.0511);
 my $RangeY = 2 * $LimitY;
 printf "LimitY = %f, %f (R %f)\n", $LimitY, $LimitY2, $RangeY;
 
-# Specify what to render (x,y,zoom, 1)
-GenerateTile(1021*4, 682*4, 13, 1);
+our $MaxZoom = 17;
+GenerateTileset(1021*4, 682*4, 13);
 
-
-#-----------------------------------------------------------------------------
-# Render a tile
-# See [[Slippy Map Tilenames]] for details of what x,y,zoom mean
-#-----------------------------------------------------------------------------
-sub GenerateTile(){
-  my ($X, $Y, $Zoom, $Initial) = @_;
-  return if($Zoom > 17);
+sub GenerateTileset(){
+  my ($X, $Y, $Zoom) = @_;
     
-  
   my ($N, $S) = Project($Y, $Zoom);
   my ($W, $E) = ProjectL($X, $Zoom);
   my $DataFile = "data.osm";
   #------------------------------------------------------
   # Download data
   #------------------------------------------------------
-  if($Initial){
-    unlink $DataFile if -f $DataFile;
-    my $URL = sprintf("http://%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-      $Credentials, $W, $S, $E, $N);
-    
-    DownloadFile($URL, $DataFile, 0, "Map data") if(!-f$DataFile);
-    if(-s $DataFile == 0){
-      print "No data at this location";
-      return;
-    }
+  #killafile($DataFile);
+  my $URL = sprintf("http://%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+    $Credentials, $W, $S, $E, $N);
+  
+  #DownloadFile($URL, $DataFile, 0, "Map data");
+  if(-s $DataFile == 0){
+    print "No data at this location";
+    return;
   }
   
   # Faff around
-  my $Filename = join("_", ($Zoom, $X, $Y)) . ".png";
-  foreach my $OldFile("output.svg", $Filename){
-    unlink $OldFile if(-f $OldFile);
-  }
+  my $SVG = "output.svg";
+  killafile($SVG);
 
   my $Margin = " " x ($Zoom - 8);
   printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
@@ -80,40 +66,63 @@ sub GenerateTile(){
   AddBounds("osm-map-features.xml",$W,$S,$E,$N);
   
   # Transform it to SVG
-  xml2svg("output.svg");
+  xml2svg($SVG);
+  
+  my ($ImgW,$ImgH,$Valid) = getSize($SVG);
+  RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH);
+}
+
+sub RenderTile(){
+  my ($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2) = @_;
+  
+  return if($Zoom > $MaxZoom);
+  
+  my $Filename = "gfx/".join("_", ($Zoom, $X, $Y)) . ".png";
+  #killafile $Filename;
+  
+  printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
   
   # Render it to PNG
   my $Width = 256; # Pixel size of tiles  
-  svg2png("output.svg", $Filename, $Width);
+  svg2png($SVG, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2);
 
   # Upload it
   #upload("output.png", $ID, $Password);
   
   # Say where to find the result
-  printf "Done. Result saved to $Filename (%d bytes)\n", -s $Filename; 
+  #printf "Result saved to $Filename (%d bytes)\n", -s $Filename; 
   
   # Sub-tiles
   my $XA = $X * 2;
   my $XB = $XA + 1;
   my $YA = $Y * 2;
   my $YB = $YA + 1;
-  GenerateTile($XA, $YA, $Zoom+1, 0);
-  GenerateTile($XB, $YA, $Zoom+1, 0);
-  GenerateTile($XA, $YB, $Zoom+1, 0);
-  GenerateTile($XB, $YB, $Zoom+1, 0);
-}
 
-#-----------------------------------------------------------------------------
-# Project latitude to mercatorY
-#-----------------------------------------------------------------------------
+  my $LongC = 0.5 * ($W + $E);
+  
+  my $MercY2 = ProjectF($N);
+  my $MercY1 = ProjectF($S);
+  my $MercYC = 0.5 * ($MercY1 + $MercY2);
+  my $LatC = ProjectMercToLat($MercYC);
+  
+  my $ImgXC = 0.5 * ($ImgX1 + $ImgX2);
+  my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1);
+  my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;
+  
+  RenderTile($SVG, $XA, $YA, $Zoom+1, $N, $LatC, $W, $LongC, $ImgX1, $ImgYC, $ImgXC, $ImgY2);
+  RenderTile($SVG, $XB, $YA, $Zoom+1, $N, $LatC, $LongC, $E, $ImgXC, $ImgYC, $ImgX2, $ImgY2);
+  RenderTile($SVG, $XA, $YB, $Zoom+1, $LatC, $S, $W, $LongC, $ImgX1, $ImgY1, $ImgXC, $ImgYC);
+  RenderTile($SVG, $XB, $YB, $Zoom+1, $LatC, $S, $LongC, $E, $ImgXC, $ImgY1, $ImgX2, $ImgYC);
+}
+sub killafile($){
+  my $file = shift();
+  unlink $file if(! -f $file);
+}
 sub ProjectF($){
   my $Lat = DegToRad(shift());
   my $Y = log(tan($Lat) + sec($Lat));
   return($Y);
 }
-#-----------------------------------------------------------------------------
-# Project Y to latitudes
-#-----------------------------------------------------------------------------
 sub Project(){
   my ($Y, $Zoom) = @_;
   
@@ -124,13 +133,14 @@ sub Project(){
   $relY1 = $LimitY - $RangeY * $relY1;
   $relY2 = $LimitY - $RangeY * $relY2;
     
-  my $Lat1 = RadToDeg(atan(sinh($relY1)));
-  my $Lat2 = RadToDeg(atan(sinh($relY2)));
+  my $Lat1 = ProjectMercToLat($relY1);
+  my $Lat2 = ProjectMercToLat($relY2);
   return(($Lat1, $Lat2));  
 }
-#-----------------------------------------------------------------------------
-# Project X to longitudes
-#-----------------------------------------------------------------------------
+sub ProjectMercToLat($){
+  my $MercY = shift();
+  return(RadToDeg(atan(sinh($MercY))));
+}
 sub ProjectL(){
   my ($X, $Zoom) = @_;
   
@@ -195,11 +205,15 @@ sub xml2svg(){
 # Render a SVG file
 #-----------------------------------------------------------------------------
 sub svg2png(){
-  my($SVG, $PNG, $Size) = @_;	
-  my $Cmd = sprintf("%sinkscape -w %d -h %d --export-png=%s %s", 
+  my($SVG, $PNG, $Size,$X1,$Y1,$X2,$Y2) = @_;
+  
+  
+  
+  my $Cmd = sprintf("%sinkscape -w %d -h %d --export-area=%1.1f:%1.1f:%1.1f:%1.1f --export-png=%s %s", 
     "nice ", # Blank this out for use on windows
     $Size,
     $Size,
+    $X1,$Y1,$X2,$Y2,
     $PNG, 
     $SVG);
   
@@ -248,4 +262,14 @@ sub AddBounds(){
   open(OUT, ">$Filename");
   print OUT $Data;
   close OUT;
+}
+sub getSize($){
+  my $SVG = shift();
+  open(IN,"<",$SVG);
+  while(my $Line = <IN>){
+    if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/){
+      return(($1,$2,1));
+    }
+  }
+  return((0,0,0));
 }

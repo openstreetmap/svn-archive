@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg1872"
+   sodipodi:version="0.32"
+   inkscape:version="0.44.1"
+   sodipodi:docbase="/home/artem/symbols"
+   sodipodi:docname="pint.svg"
+   inkscape:export-filename="/home/artem/symbols/pint.png"
+   inkscape:export-xdpi="26.732674"
+   inkscape:export-ydpi="26.732674">
+  <defs
+     id="defs1874">
+    <linearGradient
+       id="linearGradient3655">
+      <stop
+         style="stop-color:#fdca00;stop-opacity:0.96938777;"
+         offset="0"
+         id="stop3657" />
+      <stop
+         id="stop3663"
+         offset="0.8611111"
+         style="stop-color:#d87b00;stop-opacity:0.48627451;" />
+      <stop
+         style="stop-color:#fdca00;stop-opacity:0;"
+         offset="1"
+         id="stop3659" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3655"
+       id="linearGradient3661"
+       x1="17.818182"
+       y1="35.818182"
+       x2="46.363636"
+       y2="35.818182"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.5"
+     inkscape:cx="32"
+     inkscape:cy="34.184704"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="860"
+     inkscape:window-height="620"
+     inkscape:window-x="10"
+     inkscape:window-y="72" />
+  <metadata
+     id="metadata1877">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <path
+       style="fill:#fff3f3;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 13.818182,3.0909091 L 19.991859,60.181818 L 45.744912,59.819336 L 49.272727,3.4533911 L 13.818182,3.0909091 z "
+       id="path3683" />
+    <path
+       style="fill:url(#linearGradient3661);fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1.0"
+       d="M 17.818182,14 L 46.363636,14 L 43.272727,57.454545 L 21.090909,57.636364 L 17.818182,14 z "
+       id="path2768"
+       inkscape:export-filename="/home/artem/symbols/pint.png"
+       inkscape:export-xdpi="37.125"
+       inkscape:export-ydpi="37.125" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#6b6868;stroke-width:5.76943588;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 15.084718,4.084718 L 20.40826,58.915282 L 47.025968,58.915282 L 51.188009,4.084718 L 15.084718,4.084718 z "
+       id="path1880" />
+  </g>
+</svg>

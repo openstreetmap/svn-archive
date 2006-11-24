@@ -136,9 +136,9 @@ void Road::draw(QPainter& thePainter, const Projection& theProjection)
 
 		QPointF P(theProjection.project(half(W)));
 		double Rad = theProjection.pixelPerM()*W->width();
-		if (Rad>0.5)
+		if (Rad>2)
 			thePainter.drawEllipse(P.x()-Rad/2,P.y()-Rad/2,Rad,Rad);
-		if (Rad>1)
+		if (Rad>2)
 		{
 			QPen TP;
 			if (lastUpdated() == MapFeature::OSMServerConflict)

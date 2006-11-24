@@ -7,6 +7,7 @@ v0.06
 	* FIX : refresh view immediatly after download
 	* FIX : download segments outside original bounding box for roads
 	* FIX : don't call QStatusbar methods from a paintEvent
+	* FIX : speed up drawing of roads when zoomed out
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

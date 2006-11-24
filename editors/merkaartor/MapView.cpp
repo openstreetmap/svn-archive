@@ -16,7 +16,6 @@ MapView::MapView(MainWindow* aMain)
 {
 	setMouseTracking(true);
 	setAttribute(Qt::WA_OpaquePaintEvent);
-
 }
 
 MapView::~MapView(void)
@@ -62,8 +61,8 @@ void MapView::paintEvent(QPaintEvent* anEvent)
 	}
 	if (theInteraction)
 		theInteraction->paintEvent(anEvent,P);
-	QTime Stop(QTime::currentTime());
-	main()->statusBar()->clearMessage();
+//	QTime Stop(QTime::currentTime());
+//	main()->statusBar()->clearMessage();
 //	main()->statusBar()->showMessage(QString("Paint took %1ms").arg(Start.msecsTo(Stop)));
 }
 

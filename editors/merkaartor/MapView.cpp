@@ -81,6 +81,7 @@ void MapView::mouseReleaseEvent(QMouseEvent * event)
 
 void MapView::mouseMoveEvent(QMouseEvent* anEvent)
 {
+	if (!updatesEnabled()) return;
 	if (theInteraction)
 		theInteraction->mouseMoveEvent(anEvent);
 }

@@ -50,6 +50,11 @@ void TrackSegment::draw(QPainter &P, const Projection &theProjection)
 	}
 }
 
+bool TrackSegment::notEverythingDownloaded() const
+{
+	return false;
+}
+
 void TrackSegment::drawFocus(QPainter &, const Projection &)
 {
 	// Can't be selection

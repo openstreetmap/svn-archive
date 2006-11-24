@@ -6,6 +6,7 @@
 #include "Command/RoadCommands.h"
 #include "Command/TrackPointCommands.h"
 #include "Command/WayCommands.h"
+#include "Map/DownloadOSM.h"
 #include "Map/MapDocument.h"
 #include "Map/Road.h"
 #include "Map/TrackPoint.h"
@@ -25,7 +26,7 @@
  */
 static void loadTags(const QDomElement& Root, MapFeature* W);
 static void loadTags(const QDomElement& Root, MapFeature* W, CommandList* theList);
-
+static void importOSM(QProgressDialog* dlg, const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList, Downloader* theDownloader);
 
 static void importNode(const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
 {
@@ -49,6 +50,8 @@ static void importNode(const QDomElement& Root, MapDocument* theDocument, MapLay
 		{
 			theList->add(new MoveTrackPointCommand(Pt,Coord(angToRad(Lat),angToRad(Lon))));
 			loadTags(Root, Pt, theList);
+			if (Pt->lastUpdated() == MapFeature::NotYetDownloaded)
+				Pt->setLastUpdated(MapFeature::OSMServer);
 		}
 	}
 	else
@@ -91,46 +94,60 @@ static void loadTags(const QDomElement& Root, MapFeature* W, CommandList* theLis
 static void importSegment(const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
 {
 	TrackPoint* From = dynamic_cast<TrackPoint*>(theDocument->get("node_"+Root.attribute("from")));
-	TrackPoint* To = dynamic_cast<TrackPoint*>(theDocument->get("node_"+Root.attribute("to")));
-	QString id = "segment_"+Root.attribute("id");
-	if (From && To)
+	if (!From)
 	{
-		Way* W = dynamic_cast<Way*>(theDocument->get(id));
-		if (W)
+		From = new TrackPoint(Coord(0,0));
+		From->setId("node_"+Root.attribute("from"));
+		From->setLastUpdated(MapFeature::NotYetDownloaded);
+		theList->add(new AddFeatureCommand(theLayer, From, false));
+	}
+	TrackPoint* To = dynamic_cast<TrackPoint*>(theDocument->get("node_"+Root.attribute("to")));
+	if (!To)
+	{
+		To = new TrackPoint(Coord(0,0));
+		To->setId("node_"+Root.attribute("to"));
+		To->setLastUpdated(MapFeature::NotYetDownloaded);
+		theList->add(new AddFeatureCommand(theLayer, To, false));
+	}
+	QString id = "segment_"+Root.attribute("id");
+	Way* W = dynamic_cast<Way*>(theDocument->get(id));
+	if (W)
+	{
+		if (W->lastUpdated() == MapFeature::User)
 		{
-			if (W->lastUpdated() == MapFeature::User)
-			{
-				W->setLastUpdated(MapFeature::UserResolved);
-				// conflict
-				TrackPoint* Conflict = dynamic_cast<TrackPoint*>(theDocument->get("conflict_node_"+Root.attribute("from")));
-				if (Conflict) From = Conflict;
-				Conflict = dynamic_cast<TrackPoint*>(theDocument->get("conflict_node_"+Root.attribute("to")));
-				if (Conflict) To = Conflict;
-				Way* W = new Way(From,To);
-				W->setId("conflict_"+id);
-				loadTags(Root,W);
-				theList->add(new AddFeatureCommand(conflictLayer,W, false));
-				W->setLastUpdated(MapFeature::OSMServerConflict);
-			}
-			else if (W->lastUpdated() != MapFeature::UserResolved)
-			{
-				theList->add(new WaySetFromToCommand(W,From,To));
-				loadTags(Root,W, theList);
-			}
-		}
-		else
-		{
-			W = new Way(From,To);
-			W->setId(id);
+			W->setLastUpdated(MapFeature::UserResolved);
+			// conflict
+			TrackPoint* Conflict = dynamic_cast<TrackPoint*>(theDocument->get("conflict_node_"+Root.attribute("from")));
+			if (Conflict) From = Conflict;
+			Conflict = dynamic_cast<TrackPoint*>(theDocument->get("conflict_node_"+Root.attribute("to")));
+			if (Conflict) To = Conflict;
+			Way* W = new Way(From,To);
+			W->setId("conflict_"+id);
 			loadTags(Root,W);
-			theList->add(new AddFeatureCommand(theLayer,W, false));
-			W->setLastUpdated(MapFeature::OSMServer);
+			theList->add(new AddFeatureCommand(conflictLayer,W, false));
+			W->setLastUpdated(MapFeature::OSMServerConflict);
 		}
+		else if (W->lastUpdated() != MapFeature::UserResolved)
+		{
+			theList->add(new WaySetFromToCommand(W,From,To));
+			loadTags(Root,W, theList);
+			if (W->lastUpdated() == MapFeature::NotYetDownloaded)
+				W->setLastUpdated(MapFeature::OSMServer);
+		}
+	}
+	else
+	{
+		W = new Way(From,To);
+		W->setId(id);
+		loadTags(Root,W);
+		theList->add(new AddFeatureCommand(theLayer,W, false));
+		W->setLastUpdated(MapFeature::OSMServer);
 	}
 }
 
 
-static void importWay(const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
+static void importWay(QProgressDialog* dlg, const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, 
+					  MapLayer* conflictLayer, CommandList* theList, Downloader* theDownloader)
 {
 	std::vector<Way*> Segments;
 	for(QDomNode n = Root.firstChild(); !n.isNull(); n = n.nextSibling())
@@ -141,8 +158,14 @@ static void importWay(const QDomElement& Root, MapDocument* theDocument, MapLaye
 			if (t.tagName() == "seg")
 			{
 				Way* Part = dynamic_cast<Way*>(theDocument->get("segment_"+t.attribute("id")));
-				if (Part)
-					Segments.push_back(Part);
+				if (!Part)
+				{
+					Part = new Way(0,0);
+					Part->setId("segment_"+t.attribute("id"));
+					Part->setLastUpdated(MapFeature::NotYetDownloaded);
+					theList->add(new AddFeatureCommand(theLayer, Part, false));
+				}
+				Segments.push_back(Part);
 			}
 		}
 	}
@@ -192,13 +215,14 @@ static void importWay(const QDomElement& Root, MapDocument* theDocument, MapLaye
 }
 
 
-static void importOSM(QProgressDialog* dlg, const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList)
+static void importOSM(QProgressDialog* dlg, const QDomElement& Root, MapDocument* theDocument, MapLayer* theLayer, MapLayer* conflictLayer, CommandList* theList, Downloader* theDownloader)
 {
 	unsigned int Count = 0;
 	for(QDomNode n = Root.firstChild(); !n.isNull(); n = n.nextSibling())
 		++Count;
 	unsigned int Done = 0;
-	dlg->setMaximum(Count);
+	if (dlg)
+		dlg->setMaximum(Count);
 	QEventLoop ev;
 	for(QDomNode n = Root.firstChild(); !n.isNull(); n = n.nextSibling())
 	{
@@ -210,16 +234,138 @@ static void importOSM(QProgressDialog* dlg, const QDomElement& Root, MapDocument
 			else if (t.tagName() == "segment")
 				importSegment(t,theDocument, theLayer, conflictLayer, theList);
 			else if (t.tagName() == "way")
-				importWay(t,theDocument, theLayer, conflictLayer, theList);
+				importWay(dlg, t,theDocument, theLayer, conflictLayer, theList, theDownloader);
 		}
 		++Done;
-		dlg->setValue(Done);
-		ev.processEvents();
-		if (dlg->wasCanceled()) return;
+		if (dlg)
+		{
+			dlg->setValue(Done);
+			ev.processEvents();
+			if (dlg->wasCanceled()) return;
+		}
 	}
 }
 
-bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapLayer* theLayer)
+static void downloadToResolve(const QString& What, const std::vector<MapFeature*>& Resolution, QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
+{
+	for (unsigned int i=0; i<Resolution.size(); i+=10 )
+	{
+		QString URL("/api/0.3/%1?%2=");
+		URL=URL.arg(What).arg(What);
+		URL+=Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1);
+		for (unsigned int j=1; j<10; ++j)
+			if (i+j < Resolution.size())
+			{
+				URL+=",";
+				URL+=Resolution[i+j]->id().right(Resolution[i+j]->id().length()-Resolution[i+j]->id().lastIndexOf('_')-1);
+			}
+		dlg->setLabelText(QString("downloading segment %1 of %2").arg(i).arg(Resolution.size()));
+		if (theDownloader && theDownloader->go(URL))
+		{
+			if (theDownloader->resultCode() == 410)
+				theList->add(new RemoveFeatureCommand(theDocument, Resolution[i], std::vector<MapFeature*>()));
+			else
+			{
+				QByteArray ba(theDownloader->content());
+				QBuffer  File(&ba);
+				dlg->setLabelText(QString("parsing segment %1 of %2").arg(i).arg(Resolution.size()));
+
+				QDomDocument DomDoc;
+				QString ErrorStr;
+				int ErrorLine;
+				int ErrorColumn;
+				if (DomDoc.setContent(&File, true, &ErrorStr, &ErrorLine,&ErrorColumn))
+				{
+					QDomElement root = DomDoc.documentElement();
+					if (root.tagName() == "osm")
+						importOSM(0, root, theDocument, theLayer, 0, theList, 0);
+				}
+			}
+		}
+		dlg->setValue(i);
+	}
+}
+
+// as long as /api/0.3/segments?segments= doesn't work
+static void downloadToResolveSegments(const std::vector<MapFeature*>& Resolution, QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
+{
+	for (unsigned int i=0; i<Resolution.size(); ++i )
+	{
+		dlg->setValue(i);
+		QString URL("/api/0.3/segment/%1");
+		URL=URL.arg(Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1));
+		dlg->setLabelText(QString("downloading segment %1 of %2").arg(i).arg(Resolution.size()));
+		if ("7702310" == Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1))
+			i = i;
+		if (theDownloader && theDownloader->go(URL))
+		{
+			if (theDownloader->resultCode() == 410)
+				theList->add(new RemoveFeatureCommand(theDocument, Resolution[i], std::vector<MapFeature*>()));
+			else
+			{
+				QByteArray ba(theDownloader->content());
+				QBuffer  File(&ba);
+				dlg->setLabelText(QString("parsing segment %1 of %2").arg(i).arg(Resolution.size()));
+
+				QDomDocument DomDoc;
+				QString ErrorStr;
+				int ErrorLine;
+				int ErrorColumn;
+				if (DomDoc.setContent(&File, true, &ErrorStr, &ErrorLine,&ErrorColumn))
+				{
+					QDomElement root = DomDoc.documentElement();
+					if (root.tagName() == "osm")
+						importOSM(0, root, theDocument, theLayer, 0, theList, 0);
+				}
+			}
+		}
+	}
+}
+
+
+static void resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
+{
+	// resolve segments
+	std::vector<MapFeature*> MustResolve;
+	for (unsigned int i=0; i<theLayer->size(); ++i)
+	{
+		Way* W = dynamic_cast<Way*>(theLayer->get(i));
+		if (W && W->lastUpdated() == MapFeature::NotYetDownloaded)
+			MustResolve.push_back(W);
+	}
+	if (MustResolve.size())
+	{
+		dlg->setMaximum(MustResolve.size());
+		dlg->setValue(0);
+		dlg->show();
+		downloadToResolveSegments(MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+	}
+	// resolve nodes
+	MustResolve.clear();
+	for (unsigned int i=0; i<theLayer->size(); ++i)
+	{
+		TrackPoint* P = dynamic_cast<TrackPoint*>(theLayer->get(i));
+		if (P && P->lastUpdated() == MapFeature::NotYetDownloaded)
+			MustResolve.push_back(P);
+	}
+	if (MustResolve.size())
+	{
+		dlg->setMaximum(MustResolve.size());
+		dlg->setValue(0);
+		dlg->show();
+		downloadToResolve("nodes",MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+	}
+	for (unsigned int i=theLayer->size(); i; --i)
+	{
+		if (theLayer->get(i-1)->notEverythingDownloaded())
+		{
+			bool x = theLayer->get(i-1)->notEverythingDownloaded();
+			theList->add(new RemoveFeatureCommand(theDocument,theLayer->get(i-1)));
+		}
+	}
+}
+
+bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapLayer* theLayer, Downloader* theDownloader)
 {
 	QDomDocument DomDoc;
 	QString ErrorStr;
@@ -249,8 +395,10 @@ bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapL
 	CommandList* theList = new CommandList;
 	theDocument->add(theLayer);
 	MapLayer* conflictLayer = new MapLayer("Conflicts from "+theLayer->name());
-	importOSM(dlg, root, theDocument, theLayer, conflictLayer, theList);
+	importOSM(dlg, root, theDocument, theLayer, conflictLayer, theList, theDownloader);
 	bool WasCanceled = dlg->wasCanceled();
+	if (!WasCanceled)
+		resolveNotYetDownloaded(dlg,theDocument,theLayer,theList,theDownloader);
 	delete dlg;
 	if (theList->empty() || WasCanceled)
 	{
@@ -275,13 +423,13 @@ bool importOSM(QWidget* aParent, const QString& aFilename, MapDocument* theDocum
 	QFile File(aFilename);
 	if (!File.open(QIODevice::ReadOnly))
 		 return false;
-	return importOSM(aParent, File, theDocument, theLayer);
+	return importOSM(aParent, File, theDocument, theLayer, 0 );
 }
 
-bool importOSM(QWidget* aParent, QByteArray& Content, MapDocument* theDocument, MapLayer* theLayer)
+bool importOSM(QWidget* aParent, QByteArray& Content, MapDocument* theDocument, MapLayer* theLayer, Downloader* theDownloader)
 {
 	QBuffer File(&Content);
-	return importOSM(aParent, File, theDocument, theLayer);
+	return importOSM(aParent, File, theDocument, theLayer, theDownloader);
 }
 
 

@@ -17,7 +17,48 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QProgressDialog>
 #include <QtGui/QStatusBar>
-#include <QtNetwork/QHttp>
+
+/* DOWNLOADER */
+
+Downloader::Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd)
+: User(aUser), Password(aPwd)
+{
+	Request.setHost(aWeb);
+	Request.setUser(User,Password);
+	connect(&Request,SIGNAL(requestFinished(int, bool)), this,SLOT(finished(int, bool)));
+}
+
+bool Downloader::go(const QString& url)
+{
+	Error = false;
+	Id = Request.get(url);
+	Loop.exec();
+	Content = Request.readAll();
+	Result = Request.lastResponse().statusCode();
+	return !Error;
+}
+
+QByteArray& Downloader::content()
+{
+	return Content;
+}
+
+void Downloader::finished(int id, bool error)
+{
+	if (error)
+		Error = true;
+	if (Id == id)
+		Loop.exit();
+}
+
+int Downloader::resultCode()
+{
+	return Result;
+}
+
+
+
+/* DOWNLOADRECEIVER */
 
 DownloadReceiver::DownloadReceiver(QMainWindow* aWindow, QHttp& aRequest)
 : Request(aRequest), Main(aWindow)
@@ -41,7 +82,7 @@ bool DownloadReceiver::go(const QString& url)
 	ProgressDialog->setMinimumDuration(0);
 	ProgressDialog->setLabelText("Downloading from OSM");
 	ProgressDialog->setMaximum(11);
-	t->start(100);
+	t->start(200);
 	int r = ProgressDialog->exec();
 	delete t;
 	delete ProgressDialog;
@@ -108,8 +149,9 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 		QMessageBox::warning(aParent,MainWindow::tr("Download failed"),MainWindow::tr("Unexpected http status code (%1)").arg(x));
 		return false;
 	}
+	Downloader Down(aWeb, aUser, aPassword);
 	MapLayer* theLayer = new MapLayer("Download");
-	bool OK = importOSM(aParent, Rcv.content(), theDocument, theLayer);
+	bool OK = importOSM(aParent, Rcv.content(), theDocument, theLayer, &Down);
 	if (!OK)
 		delete theLayer;
 	return OK;
@@ -168,7 +210,9 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 			Bookmarks.insert(4,QString::number(radToAng(Clip.topRight().lon())));
 			Sets.setValue("bookmarks",Bookmarks);
 		}
+		aParent->view()->setUpdatesEnabled(false);
 		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument);
+		aParent->view()->setUpdatesEnabled(true);
 		if (OK)
 		{
 			aParent->view()->projection().setViewport(Clip,aParent->view()->rect());

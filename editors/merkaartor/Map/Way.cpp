@@ -34,6 +34,13 @@ void Way::addAsPartOf(Road* R)
 	PartOf.push_back(R);
 }
 
+bool Way::notEverythingDownloaded() const
+{
+	return (lastUpdated() == MapFeature::NotYetDownloaded) ||
+		From->notEverythingDownloaded() ||
+		To->notEverythingDownloaded();
+}
+
 void Way::removeAsPartOf(Road* R)
 {
 	std::vector<Road*>::iterator i = std::find(PartOf.begin(),PartOf.end(),R);

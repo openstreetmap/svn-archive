@@ -20,6 +20,7 @@ class TrackSegment : public MapFeature
 		virtual void drawFocus(QPainter& P, const Projection& theProjection);
 		virtual double pixelDistance(const QPointF& Target, double ClearEndDistance, const Projection& theProjection) const;
 		void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Alternatives);
+		virtual bool notEverythingDownloaded() const;
 
 		void add(TrackPoint* aPoint);
 		unsigned int size() const;

@@ -24,6 +24,11 @@ void TrackPoint::setPosition(const Coord& aCoord)
 	Position = aCoord;
 }
 
+bool TrackPoint::notEverythingDownloaded() const
+{
+	return lastUpdated() == MapFeature::NotYetDownloaded;
+}
+
 CoordBox TrackPoint::boundingBox() const
 {
 	return CoordBox(Position,Position);

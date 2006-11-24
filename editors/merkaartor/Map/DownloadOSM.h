@@ -11,8 +11,34 @@ class MainWindow;
 class CoordBox;
 
 #include <QtCore/QByteArray>
-#include <QtCore/QObject>
 #include <QtCore/QEventLoop>
+#include <QtCore/QObject>
+#include <QtNetwork/QHttp>
+
+
+class Downloader : public QObject
+{
+	Q_OBJECT
+
+	public:
+		Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd);
+
+		bool go(const QString& url);
+		QByteArray& content();
+		int resultCode();
+
+	public slots:
+		void finished( int id, bool error );
+
+	private:
+		QHttp Request;
+		QString User, Password;
+		QByteArray Content;
+		int Result;
+		int Id;
+		bool Error;
+		QEventLoop Loop;
+};
 
 class DownloadReceiver : public QObject
 {

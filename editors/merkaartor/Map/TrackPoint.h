@@ -15,6 +15,7 @@ class TrackPoint : public MapFeature
 		virtual void drawFocus(QPainter& P, const Projection& theProjection);
 		virtual double pixelDistance(const QPointF& Target, double ClearEndDistance, const Projection& theProjection) const;
 		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Alternatives);
+		virtual bool notEverythingDownloaded() const;
 
 		const Coord& position() const;
 		void setPosition(const Coord& aCoord);

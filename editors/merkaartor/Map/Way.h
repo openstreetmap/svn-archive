@@ -17,6 +17,8 @@ class Way : public MapFeature
 		virtual void draw(QPainter& P, const Projection& theProjection);
 		virtual void drawFocus(QPainter& P, const Projection& theProjection);
 		virtual double pixelDistance(const QPointF& Target, double ClearEndDistance, const Projection& theProjection) const;
+		virtual bool notEverythingDownloaded() const;
+
 		double width() const;
 		void setWidth(double w);
 		MapFeature::TrafficDirectionType trafficDirection() const;

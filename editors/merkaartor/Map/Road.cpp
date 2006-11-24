@@ -80,6 +80,16 @@ const Way* Road::get(unsigned int idx) const
 	return p->Ways[idx];
 }
 
+bool Road::notEverythingDownloaded() const
+{
+	if (lastUpdated() == MapFeature::NotYetDownloaded)
+		return true;
+	for (unsigned int i=0; i<p->Ways.size(); ++i)
+		if (p->Ways[i]->notEverythingDownloaded())
+			return true;
+	return false;
+}
+
 CoordBox Road::boundingBox() const
 {
 	if (p->Ways.size())

@@ -6,6 +6,7 @@ v0.06
 	* ADD : progress dialog while downloading from OSM
 	* FIX : refresh view immediatly after download
 	* FIX : download segments outside original bounding box for roads
+	* FIX : don't call QStatusbar methods from a paintEvent
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

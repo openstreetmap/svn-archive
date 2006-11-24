@@ -127,7 +127,11 @@ void MainWindow::on_fileImportAction_triggered()
 		if (s.right(4).toLower() == ".gpx")
 			OK = importGPX(this, s, theDocument, NewLayer);
 		if (s.right(4).toLower() == ".osm")
+		{
+			view()->setUpdatesEnabled(false);
 			OK = importOSM(this, s, theDocument, NewLayer);
+			view()->setUpdatesEnabled(true);
+		}
 		if (OK)
 		{
 			on_viewZoomAllAction_triggered();

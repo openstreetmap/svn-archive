@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use LWP::Simple;
+use LWP::UserAgent;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
 #
@@ -21,35 +22,46 @@ use LWP::Simple;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
-use strict;
-my $Password = "user|password";  # Not required
-our $Credentials = "a%40b:c";
+#use strict;
 
+# For uploading results to website
+my $Password = "user|password";  
+
+# For downloading data from OSM
+our $Credentials = "user%40domain:password";
+
+# Setup a map projection (don't change this)
 use Math::Trig;
-sub DegToRad($){return pi * shift() / 180;}
-sub RadToDeg($){return 180 * shift() / pi;}
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
-my $RangeY = 2 * $LimitY;
-printf "LimitY = %f, %f (R %f)\n", $LimitY, $LimitY2, $RangeY;
+my $RangeY = $LimitY - $LimitY2;
 
+# temporary directory for files (if uploading) or output directory
+our $BaseDir = "gfx";
+
+# This is where you specify what you want to render
 our $MaxZoom = 17;
-GenerateTileset(1021*4, 682*4, 13);
+GenerateTileset(2042, 1364, 12);
 
+#-----------------------------------------------------------------------------
+# Render a tile (and all subtiles, down to a certain depth)
+#-----------------------------------------------------------------------------
 sub GenerateTileset(){
   my ($X, $Y, $Zoom) = @_;
     
   my ($N, $S) = Project($Y, $Zoom);
   my ($W, $E) = ProjectL($X, $Zoom);
+  
+  #printf("%f,%f", ($N+$S)/2, ($W+$E)/2);exit;
   my $DataFile = "data.osm";
   #------------------------------------------------------
   # Download data
   #------------------------------------------------------
-  #killafile($DataFile);
+  killafile($DataFile);
   my $URL = sprintf("http://%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
     $Credentials, $W, $S, $E, $N);
   
-  #DownloadFile($URL, $DataFile, 0, "Map data");
+  DownloadFile($URL, $DataFile, 0, "Map data");
   if(-s $DataFile == 0){
     print "No data at this location";
     return;
@@ -72,13 +84,20 @@ sub GenerateTileset(){
   RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH);
 }
 
+#-----------------------------------------------------------------------------
+# Render a tile
+#   $SVG - SVG file to render
+#   $X, $Y, $Zoom - which tile
+#   $N, $S, $W, $E - bounds of the tile
+#   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
+#-----------------------------------------------------------------------------
 sub RenderTile(){
   my ($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2) = @_;
   
   return if($Zoom > $MaxZoom);
   
-  my $Filename = "gfx/".join("_", ($Zoom, $X, $Y)) . ".png";
-  #killafile $Filename;
+  my $Filename = tileFilename($X, $Y, $Zoom);
+  killafile($Filename);
   
   printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
   
@@ -87,11 +106,8 @@ sub RenderTile(){
   svg2png($SVG, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2);
 
   # Upload it
-  #upload("output.png", $ID, $Password);
-  
-  # Say where to find the result
-  #printf "Result saved to $Filename (%d bytes)\n", -s $Filename; 
-  
+  upload($Filename, $X, $Y, $Zoom, $Password);
+    
   # Sub-tiles
   my $XA = $X * 2;
   my $XB = $XA + 1;
@@ -148,7 +164,8 @@ sub ProjectL(){
   my $Long1 = -180 + $X * $Unit;
   return(($Long1, $Long1 + $Unit));  
 }
-
+sub DegToRad($){return pi * shift() / 180;}
+sub RadToDeg($){return 180 * shift() / pi;}
 
 #-----------------------------------------------------------------------------
 # Gets latest copy of osmarender from repository
@@ -163,7 +180,6 @@ sub UpdateOsmarender(){
     "Osmarender ($File)");
   }
 }
-
 
 #-----------------------------------------------------------------------------
 # 
@@ -194,9 +210,10 @@ sub xml2svg(){
     "osmarender.xsl",
     "osm-map-features.xml",
     $SVG);
-  open OUT, ">update_svg.sh";print OUT $Cmd."\n";close OUT;
   
- print STDERR "Transforming $Cmd...";
+  writeToFile("update_svg.sh", $Cmd."\n");
+  
+  print STDERR "Transforming $Cmd...";
   `$Cmd`;
   print STDERR " done\n";
 }
@@ -206,10 +223,8 @@ sub xml2svg(){
 #-----------------------------------------------------------------------------
 sub svg2png(){
   my($SVG, $PNG, $Size,$X1,$Y1,$X2,$Y2) = @_;
-  
-  
-  
-  my $Cmd = sprintf("%sinkscape -w %d -h %d --export-area=%1.1f:%1.1f:%1.1f:%1.1f --export-png=%s %s", 
+
+  my $Cmd = sprintf("%sinkscape -w %d -h %d --export-area=%f:%f:%f:%f --export-png=%s %s", 
     "nice ", # Blank this out for use on windows
     $Size,
     $Size,
@@ -217,59 +232,92 @@ sub svg2png(){
     $PNG, 
     $SVG);
   
-  open OUT, ">update_png.sh";print OUT $Cmd."\n";close OUT;
+  writeToFile("update_png.sh", $Cmd."\n");
   print STDERR "Rendering $Cmd...";
   `$Cmd`;
   print STDERR " done\n";
 }
-
+sub writeToFile(){
+  open(my $fp, ">", shift()) || return;
+  print $fp shift();
+  close $fp;
+}
 
 #-----------------------------------------------------------------------------
-# Upload a rendered map to almien
+# Upload a rendered map 
 #-----------------------------------------------------------------------------
 sub upload(){
-  my ($File, $ID, $Password) = @_;
-  my $URL = "http://almien.co.uk/OSM/Places/upload.php"; # TODO
+  my ($File, $X, $Y, $Zoom, $Password) = @_;
+  my $URL = "http://osmathome.bandnet.org/test.php"; 
   
   my $ua = LWP::UserAgent->new(env_proxy => 0,
     keep_alive => 1,
     timeout => 60);
+        
   $ua->protocols_allowed( ['http'] );
   $ua->agent("tilesAtHome");
 
   my $res = $ua->post($URL,
     Content_Type => 'form-data',
-    Content => [ file => [$File], id => $ID, mp => $Password ]);
+    Content => [ file => [$File], x => $X, y => $Y, z => $Zoom, mp => $Password ]);
     
   if(!$res->is_success()){
     die("Post error: " . $res->error);
   } 
 }
+#-----------------------------------------------------------------------------
+# Add bounding-box information to an osm-map-features file
+#-----------------------------------------------------------------------------
 sub AddBounds(){
   my ($Filename,$W,$S,$E,$N,$Size) = @_;
-  open(IN, "<", "$Filename");
-  my $Data = join("",<IN>);
-  close IN;
-
+  
+  # Read the old file
+  open(my $fpIn, "<", "$Filename");
+  my $Data = join("",<$fpIn>);
+  close $fpIn;
   die("no such $Filename") if(! -f $Filename);
   
+  # Change some stuff
   my $BoundsInfo = sprintf(
     "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
     $S, $W, $N, $E);
-  print "Adding $BoundsInfo\n";
+  
   $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/\1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n\2/s;
 
-  open(OUT, ">$Filename");
-  print OUT $Data;
-  close OUT;
+  # Save back to the same location
+  open(my $fpOut, ">$Filename");
+  print $fpOut $Data;
+  close $fpOut;
 }
+#-----------------------------------------------------------------------------
+# Get the width and height (in SVG units, must be pixels) of an SVG file
+#-----------------------------------------------------------------------------
 sub getSize($){
   my $SVG = shift();
-  open(IN,"<",$SVG);
-  while(my $Line = <IN>){
+  open(my $fpSvg,"<",$SVG);
+  while(my $Line = <$fpSvg>){
     if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/){
+      close $fpSvg;
       return(($1,$2,1));
     }
   }
+  close $fpSvg;
   return((0,0,0));
+}
+sub tileFilename(){
+  my($X,$Y,$Zoom) = @_;
+  
+  # This line makes all tiles go to the same directory
+  # Comment this out to get the directory-generation code
+  return(sprintf("%s/%d_%d_%d.png",$BaseDir,$Zoom,$X,$Y));
+  
+  
+  my $A = "$BaseDir/$Zoom";
+  mkdir $A if(!-d $A);
+  
+  my $B = "$A/$X";
+  mkdir $B if(!-d $B);
+  
+  my $C = "$B/$Y.png";
+  return($C);
 }

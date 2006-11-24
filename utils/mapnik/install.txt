@@ -15,7 +15,7 @@ postgresql-8.1 postgresql-8.1-plruby postgresql-8.1-postgis \
 postgresql-client-8.1 postgresql-contrib-8.1 postgresql-doc-8.1 \
 postgresql-plperl-8.1 postgresql-plpython-8.1 \
 postgresql-server-dev-8.1 \
-libboost-python-dev python2.4-dev
+libboost-python-dev python2.4-dev imagemagick
 
 cd /home/osm/mapnik
 python scons/scons.py install

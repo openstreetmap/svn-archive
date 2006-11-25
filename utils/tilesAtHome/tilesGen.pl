@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use LWP::Simple;
 use LWP::UserAgent;
+use strict;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
 #
@@ -22,26 +23,59 @@ use LWP::UserAgent;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
-#use strict;
 
-# For uploading results to website
-my $Password = "user|password";  
+# Secrets file, should contain all your passwords
+my ($UploadPassword, $UploadURL, $OsmPassword);
+ReadSecrets("secret.txt");
 
-# For downloading data from OSM
-our $Credentials = "user%40domain:password";
-
-# Setup a map projection (don't change this)
 use Math::Trig;
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
 my $RangeY = $LimitY - $LimitY2;
 
-# temporary directory for files (if uploading) or output directory
-our $BaseDir = "gfx";
+# Command-line parameters (e.g. 2042,1364)
+my $X = shift(); 
+my $Y = shift(); 
+my $Z = 12; 
+if(!$X or !$Y){
+  die("Usage: $0 X Y (coordinates of a zoom-12 tile)");
+}
 
-# This is where you specify what you want to render
+# Options: maximum zoom level to render, temporary directory for tiles
 our $MaxZoom = 17;
-GenerateTileset(2042, 1364, 12);
+our $BaseDir = "gfx";
+mkdir $BaseDir if(!-d $BaseDir);
+
+GenerateTileset($X, $Y, $Z);
+
+
+#-----------------------------------------------------------------------------
+# Read passwords from a configuration textfile
+#-----------------------------------------------------------------------------
+sub ReadSecrets(){
+  open(my $fp, "<", shift()) || die("Check your password file exists!");
+  my ($UploadOK, $OsmOK) = (0,0);
+  
+  while(my $Line = <$fp>){
+    next if($Line =~ /^\s*#/); # Comments
+    
+    if($Line =~ /Upload\((.*) (.*)\)/){
+      $UploadURL = $1;
+      $UploadPassword = $2;
+      $UploadOK = 1;
+    }
+
+    if($Line =~ /OsmPassword\((.*)\)/){
+      $OsmPassword = $1;
+      $OsmOK = 1;
+    }
+  }
+  close $fp;
+  
+  if(!$UploadOK or !$OsmOK){
+    die("Check your secrets file - some passwords not found");
+  }
+}
 
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
@@ -52,14 +86,15 @@ sub GenerateTileset(){
   my ($N, $S) = Project($Y, $Zoom);
   my ($W, $E) = ProjectL($X, $Zoom);
   
-  #printf("%f,%f", ($N+$S)/2, ($W+$E)/2);exit;
+  printf("Doing area around %f,%f\n", ($N+$S)/2, ($W+$E)/2);
+  
   my $DataFile = "data.osm";
   #------------------------------------------------------
   # Download data
   #------------------------------------------------------
   killafile($DataFile);
   my $URL = sprintf("http://%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-    $Credentials, $W, $S, $E, $N);
+    $OsmPassword, $W, $S, $E, $N);
   
   DownloadFile($URL, $DataFile, 0, "Map data");
   if(-s $DataFile == 0){
@@ -81,7 +116,7 @@ sub GenerateTileset(){
   xml2svg($SVG);
   
   my ($ImgW,$ImgH,$Valid) = getSize($SVG);
-  RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH);
+  RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW-1,$ImgH-1);
 }
 
 #-----------------------------------------------------------------------------
@@ -106,7 +141,7 @@ sub RenderTile(){
   svg2png($SVG, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2);
 
   # Upload it
-  upload($Filename, $X, $Y, $Zoom, $Password);
+  upload($Filename, $X, $Y, $Zoom);
     
   # Sub-tiles
   my $XA = $X * 2;
@@ -130,15 +165,26 @@ sub RenderTile(){
   RenderTile($SVG, $XA, $YB, $Zoom+1, $LatC, $S, $W, $LongC, $ImgX1, $ImgY1, $ImgXC, $ImgYC);
   RenderTile($SVG, $XB, $YB, $Zoom+1, $LatC, $S, $LongC, $E, $ImgXC, $ImgY1, $ImgX2, $ImgYC);
 }
+
+#-----------------------------------------------------------------------------
+# Delete a file if it exists
+#-----------------------------------------------------------------------------
 sub killafile($){
   my $file = shift();
   unlink $file if(! -f $file);
 }
+
+#-----------------------------------------------------------------------------
+# Project latitude in degrees to Y coordinates in mercator projection
+#-----------------------------------------------------------------------------
 sub ProjectF($){
   my $Lat = DegToRad(shift());
   my $Y = log(tan($Lat) + sec($Lat));
   return($Y);
 }
+#-----------------------------------------------------------------------------
+# Project Y to latitude bounds
+#-----------------------------------------------------------------------------
 sub Project(){
   my ($Y, $Zoom) = @_;
   
@@ -153,10 +199,18 @@ sub Project(){
   my $Lat2 = ProjectMercToLat($relY2);
   return(($Lat1, $Lat2));  
 }
+
+#-----------------------------------------------------------------------------
+# Convert Y units in mercator projection to latitudes in degrees
+#-----------------------------------------------------------------------------
 sub ProjectMercToLat($){
   my $MercY = shift();
   return(RadToDeg(atan(sinh($MercY))));
 }
+
+#-----------------------------------------------------------------------------
+# Project X to longitude bounds
+#-----------------------------------------------------------------------------
 sub ProjectL(){
   my ($X, $Zoom) = @_;
   
@@ -164,6 +218,10 @@ sub ProjectL(){
   my $Long1 = -180 + $X * $Unit;
   return(($Long1, $Long1 + $Unit));  
 }
+
+#-----------------------------------------------------------------------------
+# Angle unit-conversions
+#-----------------------------------------------------------------------------
 sub DegToRad($){return pi * shift() / 180;}
 sub RadToDeg($){return 180 * shift() / pi;}
 
@@ -247,22 +305,22 @@ sub writeToFile(){
 # Upload a rendered map 
 #-----------------------------------------------------------------------------
 sub upload(){
-  my ($File, $X, $Y, $Zoom, $Password) = @_;
-  my $URL = "http://osmathome.bandnet.org/test.php"; 
+  my ($File, $X, $Y, $Zoom) = @_;
   
   my $ua = LWP::UserAgent->new(env_proxy => 0,
     keep_alive => 1,
     timeout => 60);
-        
+
   $ua->protocols_allowed( ['http'] );
   $ua->agent("tilesAtHome");
 
-  my $res = $ua->post($URL,
+  my $res = $ua->post($UploadURL,
     Content_Type => 'form-data',
-    Content => [ file => [$File], x => $X, y => $Y, z => $Zoom, mp => $Password ]);
+    Content => [ file => [$File], x => $X, y => $Y, z => $Zoom, mp => $UploadPassword ]);
     
   if(!$res->is_success()){
-    die("Post error: " . $res->error);
+    print("Error uploading file");
+    sleep(600); # wait 10 minutes for reconnect before continuing. TODO: this will lose one upload
   } 
 }
 #-----------------------------------------------------------------------------
@@ -304,13 +362,14 @@ sub getSize($){
   close $fpSvg;
   return((0,0,0));
 }
+#-----------------------------------------------------------------------------
+# Temporary filename to store a tile
+#-----------------------------------------------------------------------------
 sub tileFilename(){
   my($X,$Y,$Zoom) = @_;
   
-  # This line makes all tiles go to the same directory
-  # Comment this out to get the directory-generation code
+  # Comment-out this line to generate directories
   return(sprintf("%s/%d_%d_%d.png",$BaseDir,$Zoom,$X,$Y));
-  
   
   my $A = "$BaseDir/$Zoom";
   mkdir $A if(!-d $A);

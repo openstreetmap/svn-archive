@@ -4,7 +4,7 @@
 svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl -v 
 # This takes some time; let it run in the background
 # As soon as this is finished:
-~/svn.openstreetmap.org/utils/osm2pgsql/osm2pgsql planet-061120-a.osm > planet-061120-a.sql
+date; time ~/svn.openstreetmap.org/utils/osm2pgsql/osm2pgsql ~/osm/planet/planet-061120-a.osm > ~/osm/planet/planet-061120-a.sql
 
 # ----------- As User  root:
 apt-get install build-essential libfreetype6-dev libltdl3-dev \
@@ -15,7 +15,7 @@ postgresql-8.1 postgresql-8.1-plruby postgresql-8.1-postgis \
 postgresql-client-8.1 postgresql-contrib-8.1 postgresql-doc-8.1 \
 postgresql-plperl-8.1 postgresql-plpython-8.1 \
 postgresql-server-dev-8.1 \
-libboost-python-dev python2.4-dev imagemagick
+libboost-python-dev python2.4-dev
 
 cd /home/osm/mapnik
 python scons/scons.py install
@@ -23,7 +23,7 @@ python scons/scons.py PGSQL_INCLUDES=/usr/include/postgresql \
        PGSQL_LIBS=/usr/lib/postgresql/8.1/lib install
 
 # ----------- As User Postgres
-su postgres
+su - postgres
 createdb -Upostgres  -EUTF8 gis
 createuser -Upostgres -S -D -R osm
 echo "GRANT ALL ON SCHEMA PUBLIC TO osm;" | psql -Upostgres gis
@@ -45,7 +45,7 @@ echo "ALTER TABLE planet_osm ADD CONSTRAINT pk__planet_osm PRIMARY KEY (osm_type
 echo "CREATE INDEX planet_spatial_idx ON planet_osm USING gist (way GIST_GEOMETRY_OPS);" | psql -Upostgres gis
 
 # Now we need the result from the osm2pgsql command
-time psql -Upostgres gis < ~osm/osm/planet/planet-061120-a.sql >~/insert.log
+date;time psql -Upostgres gis < ~osm/osm/planet/planet-061120-a.sql >~/insert.log
 # takes about 45minutes on a 2GHz machine
 
 
@@ -72,6 +72,8 @@ vi svn.openstreetmap.org/utils/mapnik/osm.xml
 vi svn.openstreetmap.org/utils/mapnik/generate_tiles.py
     replace with your area
     bbox = (-2, 50.0,1.0,52.0)
+
+python /home/osm/svn.openstreetmap.org/utils/mapnik/generate_tiles.py
 
 # Upload the tiles-output to dev.openstreetmap.org or  mail a tar file to steve
 rsync --size-only -r -e ssh ~/osm/tiles dev.openstreetmap.org:

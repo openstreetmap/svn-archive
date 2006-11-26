@@ -54,7 +54,12 @@ sub read_track_NMEA($) {
 	chomp $line;
 	$line =~ s/\*(\S+)\s*$//;
 	$checksumm=$1;
-	($type,$line) = split( /,/,$line,2);
+	# Destinator Line: 160849.006,A,4606.6122,N,01819.4709,E,047.1,074.2,290705,003.1,E*6C^M
+	if ( $line =~ m/^\d+\.\d+,A,\d+\.\d+,[NS],\d+\.\d+,[EW],\d+\.\d+,\d+\.\d+,\d+,\d+\.\d+,\S+$/){
+	    $type = "RMC";
+	} else {
+	    ($type,$line) = split( /,/,$line,2);
+	}
 	$type =~ s/^\s*\$?GP//; # TomTom GO logger is missing the $ sign this is the reason for \$?
 	printf STDERR "Type: $type, line: $line, checksumm:$checksumm\n"
 	    if $DEBUG>4;

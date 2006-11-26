@@ -8,6 +8,8 @@
         <file>toolselect.xpm</file>
         <file>zoomico.xpm</file>
         <file>reverse.xpm</file>
+        <file>edit-undo.xpm</file>
+        <file>edit-redo.xpm</file>
     </qresource>
 </RCC>
 

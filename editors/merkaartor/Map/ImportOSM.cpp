@@ -260,7 +260,7 @@ static void downloadToResolve(const QString& What, const std::vector<MapFeature*
 				URL+=Resolution[i+j]->id().right(Resolution[i+j]->id().length()-Resolution[i+j]->id().lastIndexOf('_')-1);
 			}
 		dlg->setLabelText(QString("downloading segment %1 of %2").arg(i).arg(Resolution.size()));
-		if (theDownloader && theDownloader->go(URL))
+		if (theDownloader->go(URL))
 		{
 			if (theDownloader->resultCode() == 410)
 				theList->add(new RemoveFeatureCommand(theDocument, Resolution[i], std::vector<MapFeature*>()));
@@ -295,9 +295,7 @@ static void downloadToResolveSegments(const std::vector<MapFeature*>& Resolution
 		QString URL("/api/0.3/segment/%1");
 		URL=URL.arg(Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1));
 		dlg->setLabelText(QString("downloading segment %1 of %2").arg(i).arg(Resolution.size()));
-		if ("7702310" == Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1))
-			i = i;
-		if (theDownloader && theDownloader->go(URL))
+		if (theDownloader->go(URL))
 		{
 			if (theDownloader->resultCode() == 410)
 				theList->add(new RemoveFeatureCommand(theDocument, Resolution[i], std::vector<MapFeature*>()));
@@ -325,35 +323,38 @@ static void downloadToResolveSegments(const std::vector<MapFeature*>& Resolution
 
 static void resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
 {
-	// resolve segments
-	std::vector<MapFeature*> MustResolve;
-	for (unsigned int i=0; i<theLayer->size(); ++i)
+	if (theDownloader)
 	{
-		Way* W = dynamic_cast<Way*>(theLayer->get(i));
-		if (W && W->lastUpdated() == MapFeature::NotYetDownloaded)
-			MustResolve.push_back(W);
-	}
-	if (MustResolve.size())
-	{
-		dlg->setMaximum(MustResolve.size());
-		dlg->setValue(0);
-		dlg->show();
-		downloadToResolveSegments(MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
-	}
-	// resolve nodes
-	MustResolve.clear();
-	for (unsigned int i=0; i<theLayer->size(); ++i)
-	{
-		TrackPoint* P = dynamic_cast<TrackPoint*>(theLayer->get(i));
-		if (P && P->lastUpdated() == MapFeature::NotYetDownloaded)
-			MustResolve.push_back(P);
-	}
-	if (MustResolve.size())
-	{
-		dlg->setMaximum(MustResolve.size());
-		dlg->setValue(0);
-		dlg->show();
-		downloadToResolve("nodes",MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+		// resolve segments
+		std::vector<MapFeature*> MustResolve;
+		for (unsigned int i=0; i<theLayer->size(); ++i)
+		{
+			Way* W = dynamic_cast<Way*>(theLayer->get(i));
+			if (W && W->lastUpdated() == MapFeature::NotYetDownloaded)
+				MustResolve.push_back(W);
+		}
+		if (MustResolve.size())
+		{
+			dlg->setMaximum(MustResolve.size());
+			dlg->setValue(0);
+			dlg->show();
+			downloadToResolveSegments(MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+		}
+		// resolve nodes
+		MustResolve.clear();
+		for (unsigned int i=0; i<theLayer->size(); ++i)
+		{
+			TrackPoint* P = dynamic_cast<TrackPoint*>(theLayer->get(i));
+			if (P && P->lastUpdated() == MapFeature::NotYetDownloaded)
+				MustResolve.push_back(P);
+		}
+		if (MustResolve.size())
+		{
+			dlg->setMaximum(MustResolve.size());
+			dlg->setValue(0);
+			dlg->show();
+			downloadToResolve("nodes",MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+		}
 	}
 	for (unsigned int i=theLayer->size(); i; --i)
 	{

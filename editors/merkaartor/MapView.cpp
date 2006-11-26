@@ -61,9 +61,9 @@ void MapView::paintEvent(QPaintEvent* anEvent)
 	}
 	if (theInteraction)
 		theInteraction->paintEvent(anEvent,P);
-//	QTime Stop(QTime::currentTime());
-//	main()->statusBar()->clearMessage();
-//	main()->statusBar()->showMessage(QString("Paint took %1ms").arg(Start.msecsTo(Stop)));
+	QTime Stop(QTime::currentTime());
+	main()->statusBar()->clearMessage();
+	main()->statusBar()->showMessage(QString("Paint took %1ms").arg(Start.msecsTo(Stop)));
 }
 
 void MapView::mousePressEvent(QMouseEvent * event)

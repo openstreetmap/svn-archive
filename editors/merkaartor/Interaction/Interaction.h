@@ -123,9 +123,9 @@ class GenericFeatureSnapInteraction : public Interaction
 					}
 				}
 			}
-			QTime Stop(QTime::currentTime());
+/*			QTime Stop(QTime::currentTime());
 			main()->statusBar()->clearMessage();
-			main()->statusBar()->showMessage(QString("Update took %1ms").arg(Start.msecsTo(Stop)));
+			main()->statusBar()->showMessage(QString("Update took %1ms").arg(Start.msecsTo(Stop))); */
 			if (Prev != LastSnap)
 				view()->update();
 		}

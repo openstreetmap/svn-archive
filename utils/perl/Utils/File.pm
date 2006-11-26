@@ -72,7 +72,7 @@ sub file_needs_re_generation($$){
     }
 
     # dst file does not exist
-    unless ( -e $dst_filename ){
+    unless ( $dst_filename && -e $dst_filename ){
 	print STDERR "Update needed. $dst_filename has no size\n" 
 	    if $VERBOSE>1;
 	return 1;

@@ -61,6 +61,9 @@ sub copy_track_wpt($$){
 
 ##################################################################
 # Copy only those trackpoints with the good_point Flag set
+# The Track Elements have Tags:
+#    $elem->{good_point}  : Ignore this point
+#    $elem->{split_track} : Split track before this point
 # RETURN: Tracks Structure
 sub tracks_only_good_point($){
     my $tracks = shift;
@@ -80,73 +83,33 @@ sub tracks_only_good_point($){
 	# Copy only those with good_point set to 1
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
 	    my $elem=$track->[$track_pos];
-	    next unless $elem->{good_point};
-	    push(@{$new_track},$elem);
-	}
-	if ( scalar(@{$new_track} ) ) {
-	    push(@{$new_tracks->{tracks}},$new_track);
-	}
-    }
-    return $new_tracks;
-}
-
-##################################################################
-# Copy only those trackpoints with the good_point Flag set
-# split tracks at all positions wher we have a gap in good points
-# RETURN: Tracks Structure
-sub tracks_only_good_point_split($){
-    my $tracks = shift;
-
-    my $new_tracks={};
-    copy_track_structure($tracks,$new_tracks);
-    copy_track_wpt($tracks,$new_tracks);
-
-    
-    Carp::Confess("Tracks to copy to musst be of Type Hash")
-	unless ref($new_tracks) eq "HASH";
-
-    for my $track ( @{$tracks->{tracks}} ) {
-	next if !$track;
-	my $new_track=[];
-
-	# Copy only those with good_point set to 1
-	for my $track_pos ( 0 .. $#{@{$track}} ) {
-	    my $elem0=$track->[$track_pos-1];
-	    my $elem1=$track->[$track_pos];
-	    my $elem2=$track->[$track_pos+1];
-	    my $skip_point = !$elem1->{good_point};
-	    # This should only skip the point if the one before and after are skiped too
-	    # But currentls it's not working yet
-	    $skip_point=0 if ( $track_pos > 0             ) && ( $elem0->{good_point} );
-	    $skip_point=0 if ( $track_pos < $#{@{$track}} ) && ( $elem2->{good_point} );
 	    
-	    if ( $skip_point ) {
+	    if ( $elem->{split_track} ) {
 		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem >2 ) {
+		if ( $num_elem >1 ) {
 		    push(@{$new_tracks->{tracks}},$new_track);
 		}
 		$new_track=[];
-	    } else {
-		push(@{$new_track},$elem1);
-	    }
+	    } 
+	    next unless $elem->{good_point};
+	    push(@{$new_track},$elem);
 	}
-	my $num_elem=scalar(@{$new_track});
-	if ( $num_elem >2 ) {
+	if ( scalar(@{$new_track} ) > 1 ) {
 	    push(@{$new_tracks->{tracks}},$new_track);
 	}
     }
     return $new_tracks;
 }
+
 
 
 
 ##################################################################
 # Set number of points in track to bad
-# 
 sub set_number_bad_points($$$){
-    my $track = shift;
-    my $start_pos = shift;
-    my $count = shift;
+    my $track     = shift; # reference to track
+    my $start_pos = shift; # position to start setting the tag
+    my $count     = shift;
 
     return unless $count;
 
@@ -158,9 +121,10 @@ sub set_number_bad_points($$$){
 }
 
 ##################################################################
-# Returns number of points with set good_point
+# Returns number of points with the tag ->{good_point} set
 sub count_good_point($){
-    my $tracks = shift;
+    my $tracks = shift; # A reference to a list of Tracks
+
     my $count =0;
     for my $track ( @{$tracks->{tracks}} ) {
 	next if !$track;

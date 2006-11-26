@@ -180,7 +180,6 @@ sub filter_against_osm($$$){
     #printf STDERR "Track Bounds: ".Dumper(\$bounds);
     my $osm_segments = reduce_segments_list($all_osm_segments,$bounds);
 
-
     enrich_tracks($tracks);
 
     my $parsing_display_time=time();
@@ -190,9 +189,15 @@ sub filter_against_osm($$$){
 	next if !$track;
 
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
-	    $track->[$track_pos]->{good_point} =
-		! is_segment_of_list_nearby($track,$track_pos,$osm_segments);
+	    my $elem = $track->[$track_pos];
 	    $track_points_done++;
+	    if ( ! is_segment_of_list_nearby($track,$track_pos,$osm_segments)){
+		$elem->{good_point} = 1;
+		$elem->{split_track} =0;
+	    } else {
+		$elem->{good_point} = 0;
+		$elem->{split_track} =1;
+	    }
 	    if ( ( $VERBOSE || $DEBUG ) &&
 		 ( time()-$parsing_display_time >10)
 		 )  {
@@ -204,7 +209,7 @@ sub filter_against_osm($$$){
 	}
     }
 
-    my $new_tracks = tracks_only_good_point_split($tracks);
+    my $new_tracks = tracks_only_good_point($tracks);
 
     print_count_data($new_tracks,"after Filtering against existing OSM Data");
     print_time($start_time);
@@ -279,21 +284,22 @@ sub read_gpsdrive_track_file($) {
 }
 
 
-my $CONFIG_DIR          = "$ENV{'HOME'}/.gpsdrive"; # Should we allow config of this?
-my $WAYPT_FILE          = "$CONFIG_DIR/way.txt";
+my $GPSDRIVE_CONFIG_DIR          = "$ENV{'HOME'}/.gpsdrive";
+my $GPSDRIVE_WAYPT_FILE          = "$GPSDRIVE_CONFIG_DIR/way.txt";
 ######################################################################
+# read a GpsDrive-Waypoint from the .gpsdrive/way.txt File
 my $waypoints={};
 sub get_waypoint($) {
     my $waypoint_name = shift;
     
-    # Lok it up if it's cached?
+    # Look it up if it's cached?
     if( defined ( $waypoints->{$waypoint_name} )){
 	return @{$waypoints->{$waypoint_name}};
     }
     # If they give just a filename, we should assume they meant the CONFIG_DIR
-    $WAYPT_FILE = "$CONFIG_DIR/$WAYPT_FILE" unless ($WAYPT_FILE =~ /\//);
+    $GPSDRIVE_WAYPT_FILE = "$GPSDRIVE_CONFIG_DIR/$GPSDRIVE_WAYPT_FILE" unless ($GPSDRIVE_WAYPT_FILE =~ /\//);
     
-    open(WAYPT,"$WAYPT_FILE") || die "ERROR: get_waypoint Can't open: $WAYPT_FILE: $!\n";
+    open(WAYPT,"$GPSDRIVE_WAYPT_FILE") || die "ERROR: get_waypoint Can't open: $GPSDRIVE_WAYPT_FILE: $!\n";
     my ($name,$lat,$lon, $typ,$wlan, $action, $sqlnr, $proximity);
     while (<WAYPT>) {
 	chomp;
@@ -302,7 +308,7 @@ sub get_waypoint($) {
     }
     close(WAYPT);
     unless (($lat) && ($lon)) {
-	printf STDERR "Unable to find waypoint '$waypoint_name' in '$WAYPT_FILE'\n";
+	printf STDERR "Unable to find waypoint '$waypoint_name' in '$GPSDRIVE_WAYPT_FILE'\n";
 	exit;
     }
     $waypoints->{$waypoint_name} = [$lat,$lon];
@@ -467,7 +473,7 @@ sub read_all_filter_areas(@){
 
     if ( $filter_area_files[0] eq ''  ) {
 	shift ( @filter_area_files);
-	push ( @filter_area_files, $WAYPT_FILE) if -s $WAYPT_FILE;
+	push ( @filter_area_files, $GPSDRIVE_WAYPT_FILE) if -s $GPSDRIVE_WAYPT_FILE;
 	push ( @filter_area_files, $FILTER_FILE) if -s $FILTER_FILE;
 	push ( @filter_area_files, 'internal');
     };
@@ -607,7 +613,7 @@ sub split_tracks($$){
     my $filename     = $tracks->{filename};
 
     my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || 1000; # 1 Km
+    my $max_allowed_dist  = $config->{max_dist}  || 500; # 1 Km
     my $max_allowed_time  = $config->{max_time}  || 60;
 
     my $track_number=0;
@@ -622,6 +628,7 @@ sub split_tracks($$){
 	    }
 	    if ( $elem->{fix} && $elem->{fix} eq "none" ) {
 		$elem->{good_point}=0;
+		print STDERR "x ";
 		next;
 	    };		
 	    next if $track_pos >= $max_pos;
@@ -630,12 +637,12 @@ sub split_tracks($$){
 
 	    if ( defined($elem->{time_diff}) && 
 		 ( $elem->{time_diff} > $max_allowed_time ) ) { # ---- Check for Track Split: time diff
-		$elem->{good_point} =0;
+		$elem->{split_track} =1;
 	    }
 
 	    my $dist  = $elem->{dist};   # in Km
 	    if ( $dist > $max_allowed_dist) {             # ---- Check for Track Split: xx Km
-		$elem->{good_point} =0;
+		$elem->{split_track} =1;
 	    }
 	    
 	    # --------- Speed
@@ -646,7 +653,7 @@ sub split_tracks($$){
 	}
     }
 
-    my $new_tracks = tracks_only_good_point_split($tracks);
+    my $new_tracks = tracks_only_good_point($tracks);
 
     print_count_data($new_tracks,"after splitting");
     print_time($start_time);
@@ -700,11 +707,11 @@ sub filter_track_by_area($){
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
 	    my $elem = $track->[$track_pos];
 	    $elem->{good_point} = check_allowed_area($elem,$internal__filter_area_list);
-	    #print Dumper(\$elem);
+	    $elem->{split_track} =! $elem->{good_point};
 	}
     }
 
-    my $new_tracks = tracks_only_good_point_split($tracks);
+    my $new_tracks = tracks_only_good_point($tracks);
 
     print_count_data($new_tracks,"after Filtering Areas");
     print_time($start_time); 
@@ -895,8 +902,10 @@ sub filter_dup_trace_segments($$){
 	my $sliding_track_pos=0;
 	my $pos_max= $#{@{$track}};
 	for my $track_pos ( 1 .. $pos_max ) {
-	    $track->[$track_pos]->{good_point} =
+	    my $elem = $track->[$track_pos];
+	    $elem->{good_point} =
 		! OSM::is_segment_of_list_nearby($track,$track_pos,$segment_list);
+	    $elem->{split_track} =! $elem->{good_point};
 
 	    my $track_angle=0;
 	    while ( ( abs($track_angle = track_part_angle($track,$sliding_track_pos,$track_pos-1)) > 140 ) 
@@ -935,7 +944,7 @@ sub filter_dup_trace_segments($$){
 
     }
 
-    my $new_tracks = tracks_only_good_point_split($tracks);
+    my $new_tracks = tracks_only_good_point($tracks);
 
     print_count_data($new_tracks,"after Filtering my own Tracks.");
     print_time($start_time);
@@ -1078,12 +1087,15 @@ sub filter_gps_clew($$){
 		print STDERR "\r";
 	    }
 	}
-
+	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	    my $elem = $track->[$track_pos];
+	    $elem->{split_track} =! $elem->{good_point};
+	}
     }
 
     #printf STDERR "Good Points: %d\n",count_good_point($tracks);
 
-    my $new_tracks = tracks_only_good_point_split($tracks);
+    my $new_tracks = tracks_only_good_point($tracks);
 
     print_count_data($new_tracks,"after Filtering Clews");
     print_time($start_time);
@@ -1217,6 +1229,11 @@ sub convert_Data(){
 
 	if ( @filter_area_files ) {
 	    $new_tracks = GPS::filter_track_by_area($new_tracks);
+	}
+
+	if ( $split_tracks ) {
+	    $new_tracks = GPS::split_tracks($new_tracks,
+					{ max_speed => 200 });
 	}
 
 	if ( $do_filter_clew ) {
@@ -1660,7 +1677,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 =head1 AUTHOR
 
-Jörg Ostertag (planet-count-for-openstreetmap@ostertag.name)
+Jörg Ostertag (osmfilter-for-openstreetmap@ostertag.name)
 
 =head1 SEE ALSO
 

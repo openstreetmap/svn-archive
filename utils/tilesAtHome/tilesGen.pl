@@ -116,7 +116,7 @@ sub GenerateTileset(){
   xml2svg($SVG);
   
   my ($ImgW,$ImgH,$Valid) = getSize($SVG);
-  RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW-1,$ImgH-1);
+  RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH);
 }
 
 #-----------------------------------------------------------------------------

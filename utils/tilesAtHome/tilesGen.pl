@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use LWP::Simple;
 use LWP::UserAgent;
+use Math::Trig;
 use strict;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
@@ -28,26 +29,101 @@ use strict;
 my ($UploadPassword, $UploadURL, $OsmPassword);
 ReadSecrets("secret.txt");
 
-use Math::Trig;
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
 my $RangeY = $LimitY - $LimitY2;
 
-# Command-line parameters (e.g. 2042,1364)
-my $X = shift(); 
-my $Y = shift(); 
-my $Z = 12; 
-if(!$X or !$Y){
-  die("Usage: $0 X Y (coordinates of a zoom-12 tile)");
-}
-
 # Options: maximum zoom level to render, temporary directory for tiles
-our $MaxZoom = 17;
+our $MaxZoom = 17; # TODO: server should specify this
 our $BaseDir = "gfx";
 mkdir $BaseDir if(!-d $BaseDir);
 
-GenerateTileset($X, $Y, $Z);
+# Handle the command-line
+my $Mode = shift();
+if($Mode eq "xy"){
+  # ----------------------------------
+  # "xy" as first argument means you want to specify a tileset to render
+  # ----------------------------------
+  my $X = shift();
+  my $Y = shift();
+  my $Zoom = 12;
+  print "Generating area $X,$Y,$Zoom\n";
+  GenerateTileset($X, $Y, $Zoom);
+}
+elsif($Mode =~ /-*h(elp)?/i){
+  # ----------------------------------
+  # "help" as first argument tells how to use the program
+  # ----------------------------------
+  my $Bar = "-" x 78;
+  print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
+  print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
+  print "Specific area:\n  \"$0 xy [x] [y]\"\n  (x and y coordinates of a zoom-12 tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
+  print "\nGNU General Public license, version 2 or later\n$Bar\n";
+}
+else{
+  # ----------------------------------
+  # Normal mode downloads request from server
+  # ----------------------------------
+  ProcessRequestsFromServer();
+}
 
+#-----------------------------------------------------------------------------
+# Ask the server what tileset needs rendering next
+#-----------------------------------------------------------------------------
+sub ProcessRequestsFromServer(){
+  my $LocalFilename = "request.txt";
+  
+  # ----------------------------------
+  # Download the request, and check it
+  # Note: to find out exactly what this server is telling you, 
+  # add ?help to the end of the URL and view it in a browser.
+  # It will give you details of other help pages available,
+  # such as the list of fields that it's sending out in requests
+  # ----------------------------------
+  killafile($LocalFilename);
+  DownloadFile(
+    "http://osmathome.bandnet.org/Requests/", 
+    $LocalFilename, 
+    0, 
+    "Request from server");
+    
+  if(! -f $LocalFilename){
+    print "Couldn't get request from server";
+    return;
+  }
+
+  # Read into memory
+  open(my $fp, "<", $LocalFilename) || return;
+  my $Request = <$fp>;
+  chomp $Request;
+  close $fp;
+  
+  # Parse the request
+  my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
+  
+  # First field is always "OK" if the server has actually sent a request
+  if($ValidFlag != "OK"){
+    print "Server didn't really give a good answer\n";
+    return;
+  }
+  
+  # Check what format the results were in
+  # If you get this message, please do check for a new version, rather than
+  # commenting-out the test - it means the field order has changed and this
+  # program no longer makes sense!
+  if($Version != 3){
+    print "Server is speaking a different version of the protocol to us\n";
+    print "Check to see whether a new version of this program was released\n";
+    return;
+  }
+  
+  # Information text to say what's happening
+  print "OK, got something... (from the \"$ModuleName\" server module)\n";
+  print "Doing zoom level $Z, location $X, $Y\n";
+  
+  # Create the tileset requested
+  GenerateTileset($X, $Y, $Z);
+}
 
 #-----------------------------------------------------------------------------
 # Read passwords from a configuration textfile
@@ -322,6 +398,9 @@ sub upload(){
     print("Error uploading file");
     sleep(600); # wait 10 minutes for reconnect before continuing. TODO: this will lose one upload
   } 
+  
+  # Comment-this out to leave your files on local disk after uploading
+  unlink($File);
 }
 #-----------------------------------------------------------------------------
 # Add bounding-box information to an osm-map-features file

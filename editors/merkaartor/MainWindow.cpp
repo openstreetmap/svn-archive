@@ -59,7 +59,7 @@ MainWindow::~MainWindow(void)
 
 void MainWindow::invalidateView(bool UpdateDock)
 {
-	theView->update();
+	theView->invalidate();
 	theLayers->updateContent();
 	if (UpdateDock)
 		theProperties->resetValues();

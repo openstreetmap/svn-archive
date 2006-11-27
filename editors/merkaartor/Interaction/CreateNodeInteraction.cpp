@@ -38,13 +38,13 @@ void CreateNodeInteraction::snapMouseReleaseEvent(QMouseEvent * ev, Way* aWay)
 		Alternatives.push_back(W2);
 		theList->add(new RemoveFeatureCommand(document(),aWay, Alternatives));
 		document()->history().add(theList);
-		view()->update();
+		view()->invalidate();
 	}
 	else
 	{
 		TrackPoint* N = new TrackPoint(P);
 		document()->history().add(new AddFeatureCommand(main()->activeLayer(),N,true));
-		view()->update();
+		view()->invalidate();
 	}
 }
 

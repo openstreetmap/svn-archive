@@ -3,6 +3,7 @@
 
 #include "Map/Projection.h"
 
+#include <QtGui/QPixmap>
 #include <QtGui/QWidget>
 
 class Interaction;
@@ -24,6 +25,8 @@ class MapView :	public QWidget
 		void launch(Interaction* anInteraction);
 		Interaction* interaction();
 
+		void invalidate();
+
 		virtual void paintEvent(QPaintEvent* anEvent);
 		virtual void mousePressEvent(QMouseEvent * event);
 		virtual void mouseReleaseEvent(QMouseEvent * event);
@@ -34,10 +37,13 @@ class MapView :	public QWidget
 		PropertiesDock* properties();
 
 	private:
+		void updateStaticBuffer(QPaintEvent* anEvent);
 		MainWindow* Main;
 		Projection theProjection;
 		MapDocument* theDocument;
 		Interaction* theInteraction;
+		QPixmap* StaticBuffer;
+		bool StaticBufferUpToDate;
 };
 
 #endif

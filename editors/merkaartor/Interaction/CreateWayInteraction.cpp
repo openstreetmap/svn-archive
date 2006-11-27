@@ -42,6 +42,7 @@ void CreateWayInteraction::snapMouseReleaseEvent(QMouseEvent * event, TrackPoint
 		if (From)
 			P1 = projection().project(From->position());
 		HaveFirstPoint = true;
+		view()->update();
 	}
 	else
 	{
@@ -78,7 +79,7 @@ void CreateWayInteraction::snapMouseReleaseEvent(QMouseEvent * event, TrackPoint
 			L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
 		}
 		document()->history().add(L);
-		view()->update();
+		view()->invalidate();
 		view()->properties()->setSelection(W);
 		HaveFirstPoint = false;
 	}

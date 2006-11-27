@@ -54,7 +54,7 @@ void CreateRoadInteraction::snapMouseReleaseEvent(QMouseEvent *anEvent, Way * W)
 			document()->history().add(new RoadAddWayCommand(Current, W));
 	}
 	Current->setLastUpdated(MapFeature::User);
-	view()->update();
+	view()->invalidate();
 }
 
 

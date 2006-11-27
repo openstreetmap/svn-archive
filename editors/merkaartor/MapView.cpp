@@ -12,7 +12,7 @@
 #include <QtGui/QStatusBar>
 
 MapView::MapView(MainWindow* aMain)
-: Main(aMain), theDocument(0), theInteraction(0)
+: Main(aMain), theDocument(0), theInteraction(0), StaticBuffer(0), StaticBufferUpToDate(false)
 {
 	setMouseTracking(true);
 	setAttribute(Qt::WA_OpaquePaintEvent);
@@ -20,6 +20,7 @@ MapView::MapView(MainWindow* aMain)
 
 MapView::~MapView(void)
 {
+	delete StaticBuffer;
 }
 
 MainWindow* MapView::main()
@@ -42,28 +43,47 @@ MapDocument* MapView::document()
 	return theDocument;
 }
 
+void MapView::invalidate()
+{
+	StaticBufferUpToDate = false;
+	update();
+}
+
 void MapView::paintEvent(QPaintEvent* anEvent)
 {
-	QTime Start(QTime::currentTime());
+	updateStaticBuffer(anEvent);
 	QPainter P(this);
+	P.drawPixmap(QPoint(0,0),*StaticBuffer);
+	if (theInteraction)
+	{
+		P.setRenderHint(QPainter::Antialiasing);
+		theInteraction->paintEvent(anEvent,P);
+	}
+}
+
+void MapView::updateStaticBuffer(QPaintEvent* anEvent)
+{
+	if (!StaticBuffer || (StaticBuffer->width() != width()) || (StaticBuffer->height() != height()))
+	{
+		delete StaticBuffer;
+		StaticBuffer = new QPixmap(width(),height());
+		StaticBufferUpToDate = false;
+	}
+	if (StaticBufferUpToDate)
+		return;
+	QTime Start(QTime::currentTime());
+	QPainter P(StaticBuffer);
 	P.setRenderHint(QPainter::Antialiasing);
-	P.fillRect(rect(),QBrush(QColor(255,255,255)));
+	P.fillRect(StaticBuffer->rect(),QBrush(QColor(255,255,255)));
 	if (theDocument)
 	{
-/*		for (unsigned int i=0; i<theDocument->numLayers(); ++i)
-		{
-			MapLayer* theLayer = theDocument->layer(i);
-			for (unsigned int j=0; j<theLayer->size(); ++j)
-				theLayer->get(i)->draw(P,projection());
-		} */
 		for (VisibleFeatureIterator i(theDocument); !i.isEnd(); ++i)
 			i.get()->draw(P,projection());
 	}
-	if (theInteraction)
-		theInteraction->paintEvent(anEvent,P);
-	QTime Stop(QTime::currentTime());
+/*	QTime Stop(QTime::currentTime());
 	main()->statusBar()->clearMessage();
-	main()->statusBar()->showMessage(QString("Paint took %1ms").arg(Start.msecsTo(Stop)));
+	main()->statusBar()->showMessage(QString("Paint took %1ms").arg(Start.msecsTo(Stop))); */
+	StaticBufferUpToDate = true;
 }
 
 void MapView::mousePressEvent(QMouseEvent * event)

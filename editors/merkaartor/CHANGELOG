@@ -9,6 +9,7 @@ v0.06
 	* FIX : don't call QStatusbar methods from a paintEvent
 	* FIX : speed up drawing of roads when zoomed out
 	* ADD : undo/redo icons + actions added to toolbar
+	* FIX : improve speed with a double buffer for static content
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

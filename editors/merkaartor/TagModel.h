@@ -2,6 +2,10 @@
 #define MERKAARTOR_TAGMODEL_H_
 
 #include <QtCore/QAbstractTableModel>
+#include <QtCore/QString>
+
+#include <utility>
+#include <vector>
 
 class MainWindow;
 class MapFeature;
@@ -12,7 +16,7 @@ class TagModel : public QAbstractTableModel
 		TagModel(MainWindow* aMain);
 		~TagModel();
 
-		void setFeature(MapFeature* aFeature);
+		void setFeature(const std::vector<MapFeature*> Features);
 		int rowCount(const QModelIndex &parent = QModelIndex()) const;
 		int columnCount(const QModelIndex &parent = QModelIndex()) const;
 		QVariant data(const QModelIndex &index, int role) const;
@@ -21,7 +25,8 @@ class TagModel : public QAbstractTableModel
 		bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole); 
 	private:
 		MainWindow* Main;
-		MapFeature* theFeature;
+		std::vector<MapFeature*> theFeatures;
+		std::vector<std::pair<QString, QString> > Tags;
 };
 
 #endif

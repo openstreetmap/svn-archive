@@ -3,9 +3,12 @@
 
 #include "GeneratedFiles/ui_TrackPointProperties.h"
 #include "GeneratedFiles/ui_RoadProperties.h"
+#include "GeneratedFiles/ui_MultiProperties.h"
 #include "GeneratedFiles/ui_WayProperties.h"
 
 #include <QtGui/QDockWidget>
+
+#include <vector>
 
 class MainWindow;
 class MapFeature;
@@ -21,7 +24,9 @@ class PropertiesDock : public QDockWidget
 		~PropertiesDock(void);
 
 		void setSelection(MapFeature* aFeature);
-		MapFeature* selection();
+		void toggleSelection(MapFeature* aFeature);
+		MapFeature* selection(unsigned int idx);
+		unsigned int size() const;
 		void resetValues();
 
 	public slots:
@@ -33,20 +38,23 @@ class PropertiesDock : public QDockWidget
 		void on_Highway_activated(int idx);
 
 	private:
+		void switchUi();
 		void switchToWayUi();
 		void switchToNoUi();
 		void switchToTrackPointUi();
 		void switchToRoadUi();
+		void switchToMultiUi();
 
 		MainWindow* Main;
 		QWidget* CurrentUi;
-		MapFeature* Selection;
+		std::vector<MapFeature*> Selection;
 		Ui::WayProperties WayUi;
 		Ui::TrackPointProperties TrackPointUi;
 		Ui::RoadProperties RoadUi;
+		Ui::MultiProperties MultiUi;
 		TagModel* theModel;
 
-		enum { NoUiShowing, WayUiShowing, TrackPointUiShowing, RoadUiShowing } NowShowing ;
+		enum { NoUiShowing, WayUiShowing, TrackPointUiShowing, RoadUiShowing, MultiShowing } NowShowing ;
 };
 
 #endif

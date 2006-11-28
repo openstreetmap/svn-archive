@@ -36,20 +36,32 @@ EditInteraction::~EditInteraction(void)
 
 void EditInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter)
 {
-	if (!Panning && view()->properties()->selection())
-		view()->properties()->selection()->drawFocus(thePainter, projection());
+	if (!Panning)
+		for (unsigned int i=0; i<view()->properties()->size(); ++i)
+			view()->properties()->selection(i)->drawFocus(thePainter, projection());
 	FeatureSnapInteraction::paintEvent(anEvent, thePainter);
 }
 
 void EditInteraction::snapMousePressEvent(QMouseEvent * event, MapFeature* aLast)
 {
-	bool IsRoad = dynamic_cast<Road*>(aLast) != 0;
-	bool IsWay = dynamic_cast<Way*>(aLast) != 0;
-	main()->editRemoveAction->setEnabled(aLast != 0);
-	main()->editMoveAction->setEnabled(dynamic_cast<TrackPoint*>(aLast) != 0);
+	if (event->modifiers() & Qt::ControlModifier)
+		view()->properties()->toggleSelection(aLast);
+	else
+		view()->properties()->setSelection(aLast);
+	bool IsPoint = false;
+	bool IsRoad = false;
+	bool IsWay = false;
+	if (view()->properties()->size() == 1)
+	{
+		IsPoint = dynamic_cast<TrackPoint*>(aLast) != 0;
+		IsRoad = dynamic_cast<Road*>(aLast) != 0;
+		IsWay = dynamic_cast<Way*>(aLast) != 0;
+	}
+	main()->editRemoveAction->setEnabled(view()->properties()->size() == 1);
+	main()->editMoveAction->setEnabled(IsPoint);
 	main()->editAddAction->setEnabled(IsRoad);
 	main()->editReverseAction->setEnabled(IsRoad || IsWay);
-	view()->properties()->setSelection(aLast);
+	
 	view()->update();
 	if (!aLast)
 	{
@@ -65,6 +77,7 @@ void EditInteraction::snapMouseReleaseEvent(QMouseEvent * , MapFeature* )
 	{
 		activateSnap(true);
 		Panning = false;
+		view()->invalidate();
 	}
 }
 
@@ -75,14 +88,14 @@ void EditInteraction::snapMouseMoveEvent(QMouseEvent* event, MapFeature* )
 		QPoint Delta = LastPan;
 		Delta -= event->pos();
 		view()->projection().panScreen(-Delta,view()->rect());
-		view()->update();
+		view()->invalidate();
 		LastPan = event->pos();
 	}
 }
 
 void EditInteraction::on_remove_triggered()
 {
-	MapFeature* Selection = view()->properties()->selection();
+	MapFeature* Selection = view()->properties()->selection(0);
 	if (Selection)
 	{
 		view()->properties()->setSelection(0);
@@ -104,12 +117,12 @@ void EditInteraction::on_move_triggered()
 
 void EditInteraction::on_add_triggered()
 {
-	view()->launch(new CreateRoadInteraction(view(),dynamic_cast<Road*>(view()->properties()->selection())));
+	view()->launch(new CreateRoadInteraction(view(),dynamic_cast<Road*>(view()->properties()->selection(0))));
 }
 
 void EditInteraction::on_reverse_triggered()
 {
-	MapFeature* Selection = view()->properties()->selection();
+	MapFeature* Selection = view()->properties()->selection(0);
 	if (Road* R = dynamic_cast<Road*>(Selection))
 	{
 		std::vector<Way*> Ways;

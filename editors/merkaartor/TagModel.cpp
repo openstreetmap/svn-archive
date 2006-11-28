@@ -5,7 +5,7 @@
 #include "Map/MapFeature.h"
 
 TagModel::TagModel(MainWindow* aMain)
-: Main(aMain), theFeature(0)
+: Main(aMain)
 {
 }
 
@@ -13,25 +13,36 @@ TagModel::~TagModel(void)
 {
 }
 
-void TagModel::setFeature(MapFeature* aF)
+void TagModel::setFeature(const std::vector<MapFeature*> Features)
 {
-	if (theFeature)
+	if (Tags.size())
 	{
-		beginRemoveRows(QModelIndex(),0,theFeature->tagSize());
+		beginRemoveRows(QModelIndex(),0,Tags.size());
 		endRemoveRows();
 	}
-	theFeature = aF;
-	if (theFeature)
+	theFeatures = Features;
+	Tags.clear();
+	if (theFeatures.size())
 	{
-		beginInsertRows(QModelIndex(),0,theFeature->tagSize());
+		MapFeature* F = theFeatures[0];
+		for (unsigned int i=0; i<F->tagSize(); ++i)
+		{
+			unsigned int j=0;
+			for (j=1; j<theFeatures.size(); ++j)
+				if (F->tagValue(i) != theFeatures[j]->tagValue(F->tagKey(i),""))
+					break;
+			if (j == theFeatures.size())
+				Tags.push_back(std::make_pair(F->tagKey(i),F->tagValue(i)));
+		}
+		beginInsertRows(QModelIndex(),0,Tags.size()+1);
 		endInsertRows();
 	}
 }
 
 int TagModel::rowCount(const QModelIndex &) const
 {
-	if (!theFeature) return 0;
-	return theFeature->tagSize()+1;
+	if (!theFeatures.size()) return 0;
+	return Tags.size()+1;
 }
 
 int TagModel::columnCount(const QModelIndex &) const
@@ -41,15 +52,15 @@ int TagModel::columnCount(const QModelIndex &) const
 
 QVariant TagModel::data(const QModelIndex &index, int role) const
 {
-	if (!theFeature)
+	if (!theFeatures.size())
 		return QVariant();
 	if (!index.isValid())
 		return QVariant();
-	if (index.row() > theFeature->tagSize())
+	if (index.row() > Tags.size())
 		return QVariant();
 	if (role == Qt::DisplayRole)
 	{
-		if (index.row() == theFeature->tagSize())
+		if (index.row() == Tags.size())
 		{
 			if (index.column() == 0)
 				return "Edit this to add...";
@@ -59,9 +70,9 @@ QVariant TagModel::data(const QModelIndex &index, int role) const
 		else
 		{
 			if (index.column() == 0)
-				return theFeature->tagKey(index.row());
+				return Tags[index.row()].first;
 			else
-				return theFeature->tagValue(index.row());
+				return Tags[index.row()].second;
 		}
 	}
 	return QVariant();
@@ -90,31 +101,43 @@ Qt::ItemFlags TagModel::flags(const QModelIndex &index) const
 
 bool TagModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-	if (!theFeature) return false;
+	if (!theFeatures.size()) return false;
 	if (index.isValid() && role == Qt::EditRole)
 	{
-		if (index.row() == theFeature->tagSize())
+		if (index.row() == Tags.size())
 		{
 			if (index.column() == 0)
 			{
-				beginInsertRows(QModelIndex(), theFeature->tagSize()+1, theFeature->tagSize()+2);
-				Main->document()->history().add(
-					new SetTagCommand(theFeature,value.toString(),""));
+				beginInsertRows(QModelIndex(), Tags.size()+1, Tags.size()+2);
+				CommandList* L = new CommandList;
+				for (unsigned int i=0; i<theFeatures.size(); ++i)
+				{
+					L->add(new SetTagCommand(theFeatures[i],value.toString(),""));
+					theFeatures[i]->setLastUpdated(MapFeature::User);
+				}
+				Tags.push_back(std::make_pair(value.toString(),""));
+				Main->document()->history().add(L);
 				endInsertRows();
-				theFeature->setLastUpdated(MapFeature::User);
 			}
 			else
 				return false;
 		}
 		else
 		{
+			QString Original(Tags[index.row()].first);
 			if (index.column() == 0)
-				Main->document()->history().add(
-					new SetTagCommand(theFeature,index.row(),value.toString(),theFeature->tagValue(index.row())));
+				Tags[index.row()].first = value.toString();
 			else
-				Main->document()->history().add(
-					new SetTagCommand(theFeature,index.row(),theFeature->tagKey(index.row()),value.toString()));
-			theFeature->setLastUpdated(MapFeature::User);
+				Tags[index.row()].second = value.toString();
+			CommandList* L = new CommandList;	
+			for (unsigned int i=0; i<theFeatures.size(); ++i)
+			{
+				unsigned int j = theFeatures[i]->findKey(Original);
+				if (j<theFeatures[i]->tagSize())
+					L->add(new SetTagCommand(theFeatures[i],j , Tags[index.row()].first, Tags[index.row()].second));
+				theFeatures[i]->setLastUpdated(MapFeature::User);
+			}
+			Main->document()->history().add(L);
 			Main->invalidateView();
 		}
 		emit dataChanged(index, index);

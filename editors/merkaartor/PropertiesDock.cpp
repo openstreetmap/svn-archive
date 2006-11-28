@@ -15,6 +15,8 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QTableView>
 
+#include <algorithm>
+
 PropertiesDock::PropertiesDock(MainWindow* aParent)
 : QDockWidget(aParent), Main(aParent), CurrentUi(0), Selection(0), NowShowing(NoUiShowing)
 {
@@ -29,23 +31,68 @@ PropertiesDock::~PropertiesDock(void)
 	delete theModel;
 }
 
-MapFeature* PropertiesDock::selection()
+unsigned int PropertiesDock::size() const
 {
-	return Selection;
+	return Selection.size();
+}
+
+MapFeature* PropertiesDock::selection(unsigned int idx)
+{
+	if (idx < Selection.size())
+		return Selection[idx];
+	return 0;
 }
 
 void PropertiesDock::setSelection(MapFeature* S)
 {
-	Selection = S;
-	if (dynamic_cast<Way*>(Selection))
-		switchToWayUi();
-	else if (dynamic_cast<TrackPoint*>(Selection))
-		switchToTrackPointUi();
-	else if (dynamic_cast<Road*>(Selection))
-		switchToRoadUi();
+	Selection.clear();
+	if (S)
+		Selection.push_back(S);
+	switchUi();
+}
+
+void PropertiesDock::toggleSelection(MapFeature* S)
+{
+	std::vector<MapFeature*>::iterator i = std::find(Selection.begin(),Selection.end(),S);
+	if (i == Selection.end())
+		Selection.push_back(S);
 	else
+		Selection.erase(i);
+	switchUi();
+}
+
+void PropertiesDock::switchUi()
+{
+	if (Selection.size() == 0)
 		switchToNoUi();
+	else if (Selection.size() == 1)
+	{
+		if (dynamic_cast<Way*>(Selection[0]))
+			switchToWayUi();
+		else if (dynamic_cast<TrackPoint*>(Selection[0]))
+			switchToTrackPointUi();
+		else if (dynamic_cast<Road*>(Selection[0]))
+			switchToRoadUi();
+		else
+			switchToNoUi();
+	}
+	else
+		switchToMultiUi();
 	resetValues();
+}
+
+void PropertiesDock::switchToMultiUi()
+{
+	if (NowShowing == MultiShowing) return;
+	NowShowing = MultiShowing;
+	QWidget* NewUi = new QWidget(this);
+	MultiUi.setupUi(NewUi);
+	MultiUi.TagView->verticalHeader()->hide();
+	setWidget(NewUi);
+	if (CurrentUi)
+		delete CurrentUi;
+	CurrentUi = NewUi;
+	setWindowTitle(tr("Properties - Multiple elements"));
 }
 
 void PropertiesDock::switchToTrackPointUi()
@@ -111,40 +158,45 @@ void PropertiesDock::switchToRoadUi()
 void PropertiesDock::resetValues()
 {
 	// to prevent slots to change the values also
-	MapFeature* Current = Selection;
-	Selection = 0;
+	std::vector<MapFeature*> Current = Selection;
+	Selection.clear();
+	if (Current.size() == 1)
+	{
+		if (Way* W = dynamic_cast<Way*>(Current[0]))
+		{
+			WayUi.Width->setText(QString::number(W->width()));
+			WayUi.Id->setText(W->id());
+			WayUi.TagView->setModel(theModel);
+		}
+		else if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(Current[0]))
+		{
+			TrackPointUi.Id->setText(Pt->id());
+			TrackPointUi.Latitude->setText(QString::number(radToAng(Pt->position().lat()),'g',8));
+			TrackPointUi.Longitude->setText(QString::number(radToAng(Pt->position().lon()),'g',8));
+			TrackPointUi.TagView->setModel(theModel);
+		}
+		else if (Road* R = dynamic_cast<Road*>(Current[0]))
+		{
+			RoadUi.Id->setText(R->id());
+			RoadUi.Name->setText(R->tagValue("name",""));
+			RoadUi.TrafficDirection->setCurrentIndex(trafficDirection(R));
+			RoadUi.TagView->setModel(theModel);
+			unsigned int idx = RoadUi.Highway->findText(R->tagValue("highway","Unknown"));
+			if (idx == -1)
+				idx = 0;
+			RoadUi.Highway->setCurrentIndex(idx);
+		}
+	}
+	else if (Current.size() > 1)
+		MultiUi.TagView->setModel(theModel);
 	theModel->setFeature(Current);
-	if (Way* W = dynamic_cast<Way*>(Current))
-	{
-		WayUi.Width->setText(QString::number(W->width()));
-		WayUi.Id->setText(W->id());
-		WayUi.TagView->setModel(theModel);
-	}
-	else if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(Current))
-	{
-		TrackPointUi.Id->setText(Pt->id());
-		TrackPointUi.Latitude->setText(QString::number(radToAng(Pt->position().lat()),'g',8));
-		TrackPointUi.Longitude->setText(QString::number(radToAng(Pt->position().lon()),'g',8));
-		TrackPointUi.TagView->setModel(theModel);
-	}
-	else if (Road* R = dynamic_cast<Road*>(Current))
-	{
-		RoadUi.Id->setText(R->id());
-		RoadUi.Name->setText(R->tagValue("name",""));
-		RoadUi.TrafficDirection->setCurrentIndex(trafficDirection(R));
-		RoadUi.TagView->setModel(theModel);
-		unsigned int idx = RoadUi.Highway->findText(R->tagValue("highway","Unknown"));
-		if (idx == -1)
-			idx = 0;
-		RoadUi.Highway->setCurrentIndex(idx);
-	}
 	Selection = Current;
 }
 
 void PropertiesDock::on_WayWidth_textChanged(const QString& )
 {
 	if (WayUi.Width->text().isEmpty()) return;
-	Way* W = dynamic_cast<Way*>(Selection);
+	Way* W = dynamic_cast<Way*>(selection(0));
 	if (W)
 	{
 		W->setLastUpdated(MapFeature::User);
@@ -157,7 +209,7 @@ void PropertiesDock::on_WayWidth_textChanged(const QString& )
 void PropertiesDock::on_TrackPointLat_textChanged(const QString&)
 {
 	if (TrackPointUi.Latitude->text().isEmpty()) return;
-	TrackPoint* Pt = dynamic_cast<TrackPoint*>(Selection);
+	TrackPoint* Pt = dynamic_cast<TrackPoint*>(selection(0));
 	if (Pt)
 	{
 		Pt->setLastUpdated(MapFeature::User);
@@ -171,7 +223,7 @@ void PropertiesDock::on_TrackPointLat_textChanged(const QString&)
 void PropertiesDock::on_TrackPointLon_textChanged(const QString&)
 {
 	if (TrackPointUi.Longitude->text().isEmpty()) return;
-	TrackPoint* Pt = dynamic_cast<TrackPoint*>(Selection);
+	TrackPoint* Pt = dynamic_cast<TrackPoint*>(selection(0));
 	if (Pt)
 	{
 		Pt->setLastUpdated(MapFeature::User);
@@ -184,21 +236,21 @@ void PropertiesDock::on_TrackPointLon_textChanged(const QString&)
 
 void PropertiesDock::on_RoadName_textChanged(const QString&)
 {
-	if (Selection)
+	if (selection(0))
 	{
 		if (RoadUi.Name->text().isEmpty())
 			Main->document()->history().add(
-				new ClearTagCommand(Selection,"name"));
+				new ClearTagCommand(selection(0),"name"));
 		else
 			Main->document()->history().add(
-				new SetTagCommand(Selection,"name",RoadUi.Name->text()));
+				new SetTagCommand(selection(0),"name",RoadUi.Name->text()));
 		theModel->setFeature(Selection);
 	}
 }
 
 void PropertiesDock::on_TrafficDirection_activated(int idx)
 {
-	Road* R = dynamic_cast<Road*>(Selection);
+	Road* R = dynamic_cast<Road*>(selection(0));
 	if (R && (idx != trafficDirection(R)) )
 	{
 		switch (idx)
@@ -218,7 +270,7 @@ void PropertiesDock::on_TrafficDirection_activated(int idx)
 
 void PropertiesDock::on_Highway_activated(int idx)
 {
-	Road* R = dynamic_cast<Road*>(Selection);
+	Road* R = dynamic_cast<Road*>(selection(0));
 	if (R)
 	{
 		if (idx == 0)

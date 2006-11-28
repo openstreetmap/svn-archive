@@ -20,8 +20,8 @@
 
 /* DOWNLOADER */
 
-Downloader::Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd)
-: User(aUser), Password(aPwd)
+Downloader::Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd, bool aUse04Api)
+: User(aUser), Password(aPwd), Use04Api(aUse04Api)
 {
 	Request.setHost(aWeb);
 	Request.setUser(User,Password);
@@ -54,6 +54,23 @@ void Downloader::finished(int id, bool error)
 int Downloader::resultCode()
 {
 	return Result;
+}
+
+QString Downloader::getURLtoFetch(const QString &What)
+{
+	QString URL("/api/0.3/%1?%2=");
+	if (Use04Api)
+		URL = QString("/api/0.4/%1?%2=");
+	return URL=URL.arg(What).arg(What);
+}
+
+
+QString Downloader::getURLtoFetch(const QString &What, const QString& Id)
+{
+	QString URL("/api/0.3/%1/%2");
+	if (Use04Api)
+		URL = QString("/api/0.4/%1/%2");
+	return URL=URL.arg(What).arg(Id);
 }
 
 
@@ -117,7 +134,7 @@ QByteArray& DownloadReceiver::content()
 	return Content;
 }
 
-bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser, const QString& aPassword, const CoordBox& aBox , MapDocument* theDocument)
+bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser, const QString& aPassword, bool Use04Api, const CoordBox& aBox , MapDocument* theDocument)
 {
 	if (checkForConflicts(theDocument))
 	{
@@ -129,6 +146,8 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 	Request.setUser(aUser, aPassword);
 
 	QString URL("/api/0.3/map?bbox=%1,%2,%3,%4");
+	if (Use04Api)
+		URL = QString("/api/0.4/map?bbox=%1,%2,%3,%4");
 	URL = URL.arg(radToAng(aBox.bottomLeft().lon())).arg(radToAng(aBox.bottomLeft().lat())).arg(radToAng(aBox.topRight().lon())).arg(radToAng(aBox.topRight().lat()));
 	DownloadReceiver Rcv(aParent, Request);
 
@@ -149,7 +168,7 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 		QMessageBox::warning(aParent,MainWindow::tr("Download failed"),MainWindow::tr("Unexpected http status code (%1)").arg(x));
 		return false;
 	}
-	Downloader Down(aWeb, aUser, aPassword);
+	Downloader Down(aWeb, aUser, aPassword, Use04Api);
 	MapLayer* theLayer = new MapLayer("Download");
 	bool OK = importOSM(aParent, Rcv.content(), theDocument, theLayer, &Down);
 	if (!OK)
@@ -184,11 +203,13 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 		ui.Bookmarks->addItem(Bookmarks[i]);
 	ui.Username->setText(Sets.value("user").toString());
 	ui.Password->setText(Sets.value("password").toString());
+	ui.Use04Api->setChecked(Sets.value("use04api").toBool());
 	bool OK = true;
 	if (dlg->exec() == QDialog::Accepted)
 	{
 		Sets.setValue("user",ui.Username->text());
 		Sets.setValue("password",ui.Password->text());
+		Sets.setValue("use04api",ui.Use04Api->isChecked());
 		CoordBox Clip(Coord(0,0),Coord(0,0));
 		if (ui.FromBookmark->isChecked())
 		{
@@ -211,7 +232,7 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 			Sets.setValue("bookmarks",Bookmarks);
 		}
 		aParent->view()->setUpdatesEnabled(false);
-		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),Clip,theDocument);
+		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),ui.Use04Api->isChecked(),Clip,theDocument);
 		aParent->view()->setUpdatesEnabled(true);
 		if (OK)
 		{

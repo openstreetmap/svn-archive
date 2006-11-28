@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>401</width>
-    <height>251</height>
+    <height>276</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -58,6 +58,13 @@
       <widget class="QLineEdit" name="Password" />
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="Use04Api" >
+     <property name="text" >
+      <string>Use 0.4 API (don't use this option if you don't know)</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox" >
@@ -147,7 +154,7 @@
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
+       <width>383</width>
        <height>16</height>
       </size>
      </property>

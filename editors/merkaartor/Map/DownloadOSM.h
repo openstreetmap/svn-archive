@@ -21,11 +21,13 @@ class Downloader : public QObject
 	Q_OBJECT
 
 	public:
-		Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd);
+		Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd, bool aUse04Api);
 
 		bool go(const QString& url);
 		QByteArray& content();
 		int resultCode();
+		QString getURLtoFetch(const QString& What);
+		QString getURLtoFetch(const QString& What, const QString& Id);
 
 	public slots:
 		void finished( int id, bool error );
@@ -38,6 +40,7 @@ class Downloader : public QObject
 		int Id;
 		bool Error;
 		QEventLoop Loop;
+		bool Use04Api;
 };
 
 class DownloadReceiver : public QObject

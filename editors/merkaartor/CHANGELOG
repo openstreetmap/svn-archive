@@ -12,6 +12,7 @@ v0.06
 	* FIX : improve speed with a double buffer for static content
 	* ADD : change tags on multiple elements at the same time
 	* ADD : delete tag tool
+	* ADD : download with 0.4 API
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

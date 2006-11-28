@@ -40,6 +40,11 @@
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
+      <Filter>[natural]='peak'</Filter>
+      <PointSymbolizer file="/home/nick/peak.png" type="png" width="12" height="18" />
+    </Rule>
+    <Rule>
+      <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='recycling'</Filter>
       <PointSymbolizer file="/home/steve/symbols/recycling.png" type="png" width="20" height="20" />
     </Rule>
@@ -72,7 +77,7 @@
      </PolygonSymbolizer>
     </Rule>
      <Rule>
-      <Filter>[landuse] = 'meadow'</Filter>
+      <Filter>[landuse] = 'meadow' or [landuse] = 'wood' or [landuse] = 'forest'</Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>
         <CssParameter name="fill">#aed1a0</CssParameter>
@@ -80,6 +85,13 @@
     </Rule>
      <Rule>
       <Filter>[leisure] = 'park'</Filter>
+      <MaxScaleDenominator>2000000</MaxScaleDenominator>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#aed1a0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[natural] = 'wood'</Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>
         <CssParameter name="fill">#aed1a0</CssParameter>
@@ -110,9 +122,14 @@
       <MaxScaleDenominator>250000</MaxScaleDenominator>
       <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="13" fill="#000" halo_radius="1" wrap_width="0"/>
     </Rule>
+     <Rule>
+      <Filter>[place] = 'hamlet'</Filter>
+      <MaxScaleDenominator>125000</MaxScaleDenominator>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="#000" halo_radius="1" wrap_width="0"/>
+    </Rule>
     
     <Rule>
-      <Filter>[leisure] &lt;&gt; '' or [landuse] &lt;&gt; '' </Filter>
+      <Filter>[leisure] &lt;&gt; '' or [landuse] &lt;&gt; '' or [natural] &lt;&gt; ''</Filter>
       <MaxScaleDenominator>20000</MaxScaleDenominator>
       <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="11" fill="#000" halo_radius="2" wrap_width="10"/>
     </Rule>
@@ -565,7 +582,7 @@
       <LinePatternSymbolizer file="/home/artem/symbols/rail.png" type="png" width="11" height="4" />
     </Rule>
     <Rule>
-      <Filter>[highway] = 'footpath' or [highway] = 'bridleway' or [highway] = 'cycleway'</Filter>
+      <Filter>[highway] = 'bridleway'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <LineSymbolizer>
         <CssParameter name="stroke">#fff</CssParameter>
@@ -592,6 +609,42 @@
       </LineSymbolizer>
       <LineSymbolizer>
         <CssParameter name="stroke">salmon</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">4,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'cycleway'</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">blue</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">4,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unsurfaced' or [highway] = 'byway'</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#ffc000</CssParameter>
         <CssParameter name="stroke-width">2.0</CssParameter>
         <CssParameter name="stroke-dasharray">4,4</CssParameter>
         <CssParameter name="stroke-linejoin">round</CssParameter>
@@ -697,7 +750,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0) as leisure</Parameter>
+	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length(natural) > 0) as leisure</Parameter>
     </Datasource>
   </Layer>
   
@@ -714,7 +767,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select way,highway,railway,landuse,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,railway,landuse,natural,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
     
@@ -738,7 +791,7 @@
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select way,highway,landuse,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,landuse,natural,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
   

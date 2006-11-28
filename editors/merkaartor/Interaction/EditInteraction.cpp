@@ -45,7 +45,10 @@ void EditInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter)
 void EditInteraction::snapMousePressEvent(QMouseEvent * event, MapFeature* aLast)
 {
 	if (event->modifiers() & Qt::ControlModifier)
-		view()->properties()->toggleSelection(aLast);
+	{
+		if (aLast)
+			view()->properties()->toggleSelection(aLast);
+	}
 	else
 		view()->properties()->setSelection(aLast);
 	bool IsPoint = false;

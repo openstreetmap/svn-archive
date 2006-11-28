@@ -250,7 +250,7 @@ static void downloadToResolve(const QString& What, const std::vector<MapFeature*
 {
 	for (unsigned int i=0; i<Resolution.size(); i+=10 )
 	{
-		QString URL = theDownloader->getURLtoFetch(What);
+		QString URL = theDownloader->getURLToFetch(What);
 		URL+=Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1);
 		for (unsigned int j=1; j<10; ++j)
 			if (i+j < Resolution.size())
@@ -292,7 +292,7 @@ static void downloadToResolveSegments(const std::vector<MapFeature*>& Resolution
 	{
 		dlg->setValue(i);
 //		QString URL("/api/0.3/segment/%1");
-		QString URL(theDownloader->getURLtoFetch("segment",
+		QString URL(theDownloader->getURLToFetch("segment",
 			Resolution[i]->id().right(Resolution[i]->id().length()-Resolution[i]->id().lastIndexOf('_')-1)));
 		dlg->setLabelText(QString("downloading segment %1 of %2").arg(i).arg(Resolution.size()));
 		if (theDownloader->go(URL))

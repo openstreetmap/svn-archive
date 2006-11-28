@@ -102,7 +102,7 @@ class DirtyListExecutor : public QObject, public DirtyListVisit
 	Q_OBJECT
 
 	public:
-		DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks);
+		DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks, bool aUse4Api);
 		virtual ~DirtyListExecutor();
 
 		virtual bool addPoint(TrackPoint* Pt);
@@ -124,6 +124,7 @@ class DirtyListExecutor : public QObject, public DirtyListVisit
 		unsigned int Tasks, Done;
 		QProgressDialog* Progress;
 		QString Web,User,Pwd;
+		bool Use4Api;
 		Downloader* theDownloader;
 };
 

@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>132</height>
+    <height>157</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -60,14 +60,21 @@
     </layout>
    </item>
    <item>
+    <widget class="QCheckBox" name="Use04Api" >
+     <property name="text" >
+      <string>Use 0.4 API (don't use this option if you don't know)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
-       <height>40</height>
+       <width>382</width>
+       <height>16</height>
       </size>
      </property>
     </spacer>
@@ -120,6 +127,3 @@
   </connection>
  </connections>
 </ui>
-
-
-

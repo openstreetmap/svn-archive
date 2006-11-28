@@ -27,8 +27,11 @@ class Downloader : public QObject
 		bool go(const QString& url);
 		QByteArray& content();
 		int resultCode();
-		QString getURLtoFetch(const QString& What);
-		QString getURLtoFetch(const QString& What, const QString& Id);
+		QString getURLToFetch(const QString& What);
+		QString getURLToFetch(const QString& What, const QString& Id);
+		QString getURLToCreate(const QString& What);
+		QString getURLToUpdate(const QString& What, const QString& Id);
+		QString getURLToDelete(const QString& What, const QString& Id);
 
 	public slots:
 		void finished( int id, bool error );

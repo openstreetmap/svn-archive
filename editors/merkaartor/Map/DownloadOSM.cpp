@@ -75,23 +75,46 @@ int Downloader::resultCode()
 	return Result;
 }
 
-QString Downloader::getURLtoFetch(const QString &What)
+QString Downloader::getURLToFetch(const QString &What)
 {
 	QString URL("/api/0.3/%1?%2=");
 	if (Use04Api)
 		URL = QString("/api/0.4/%1?%2=");
-	return URL=URL.arg(What).arg(What);
+	return URL.arg(What).arg(What);
 }
 
 
-QString Downloader::getURLtoFetch(const QString &What, const QString& Id)
+QString Downloader::getURLToFetch(const QString &What, const QString& Id)
 {
 	QString URL("/api/0.3/%1/%2");
 	if (Use04Api)
 		URL = QString("/api/0.4/%1/%2");
-	return URL=URL.arg(What).arg(Id);
+	return URL.arg(What).arg(Id);
 }
 
+QString Downloader::getURLToCreate(const QString &What)
+{
+	QString URL("/api/0.3/%1/0");
+	if (Use04Api)
+		URL = QString("api/0.4/%1/create");
+	return URL.arg(What);
+}
+
+QString Downloader::getURLToUpdate(const QString &What, const QString& Id)
+{
+	QString URL("/api/0.3/%1/%2");
+	if (Use04Api)
+		URL = QString("/api/0.4/%1/%2");
+	return URL.arg(What).arg(Id);
+}
+
+QString Downloader::getURLToDelete(const QString &What, const QString& Id)
+{
+	QString URL("/api/0.3/%1/%2");
+	if (Use04Api)
+		URL = QString("/api/0.4/%1/%2");
+	return URL.arg(What).arg(Id);
+}
 
 
 /* DOWNLOADRECEIVER */

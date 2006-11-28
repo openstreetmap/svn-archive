@@ -273,9 +273,10 @@ bool DirtyListDescriber::eraseRoad(Road* R)
 /* DIRTYLIST */
 
 
-DirtyListExecutor::DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks)
-: DirtyListVisit(aDoc, aFuture, true), Tasks(aTasks), Done(0), Web(aWeb), User(aUser), Pwd(aPwd), theDownloader(0)
+DirtyListExecutor::DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks, bool aUse4Api)
+: DirtyListVisit(aDoc, aFuture, true), Tasks(aTasks), Done(0), Web(aWeb), User(aUser), Pwd(aPwd), Use4Api(aUse4Api), theDownloader(0)
 {
+	theDownloader = new Downloader(Web, User, Pwd, Use4Api);
 }
 
 DirtyListExecutor::~DirtyListExecutor()
@@ -286,9 +287,6 @@ DirtyListExecutor::~DirtyListExecutor()
 
 bool DirtyListExecutor::sendRequest(const QString& Method, const QString& URL, const QString& Data, QString& Rcv)
 {
-	if (!theDownloader)
-		theDownloader = new Downloader(Web, User, Pwd, false);
-
 	if (!theDownloader->request(Method,URL,Data))
 		return false;
 
@@ -330,7 +328,8 @@ bool DirtyListExecutor::addWay(Way* W)
 	W->setId("0");
 	DataIn = wrapOSM(exportOSM(*W));
 	W->setId(OldId);
-	QString URL("/api/0.3/segment/0");
+//	QString URL("/api/0.3/segment/0");
+	QString URL=theDownloader->getURLToCreate("segment");
 	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		// chop off extra spaces, newlines etc
@@ -352,7 +351,8 @@ bool DirtyListExecutor::addRoad(Road *R)
 	R->setId("0");
 	DataIn = wrapOSM(exportOSM(*R));
 	R->setId(OldId);
-	QString URL("/api/0.3/way/0");
+//	QString URL("/api/0.3/way/0");
+	QString URL=theDownloader->getURLToCreate("way");
 	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		// chop off extra spaces, newlines etc
@@ -375,7 +375,8 @@ bool DirtyListExecutor::addPoint(TrackPoint* Pt)
 	Pt->setId("0");
 	DataIn = wrapOSM(exportOSM(*Pt));
 	Pt->setId(OldId);
-	QString URL("/api/0.3/node/0");
+//	QString URL("/api/0.3/node/0");
+	QString URL=theDownloader->getURLToCreate("node");
 	if (sendRequest("PUT",URL,DataIn,DataOut))
 	{
 		// chop off extra spaces, newlines etc
@@ -392,8 +393,9 @@ bool DirtyListExecutor::updateWay(Way* W)
 	Progress->setValue(++Done);
 	Progress->setLabelText(QString("UPDATE link %1").arg(W->id()) + userName(W));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
-	QString URL("/api/0.3/segment/%1");
-	URL = URL.arg(stripToOSMId(W->id()));
+//	QString URL("/api/0.3/segment/%1");
+//	URL = URL.arg(stripToOSMId(W->id()));
+	QString URL = theDownloader->getURLToUpdate("segment",stripToOSMId(W->id()));
 	QString DataIn, DataOut;
 	DataIn = wrapOSM(exportOSM(*W));
 	if (sendRequest("PUT",URL,DataIn,DataOut))
@@ -409,8 +411,9 @@ bool DirtyListExecutor::updateRoad(Road* R)
 	Progress->setValue(++Done);
 	Progress->setLabelText(QString("UPDATE road %1").arg(R->id()) + userName(R));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
-	QString URL("/api/0.3/way/%1");
-	URL = URL.arg(stripToOSMId(R->id()));
+//	QString URL("/api/0.3/way/%1");
+//	URL = URL.arg(stripToOSMId(R->id()));
+	QString URL = theDownloader->getURLToUpdate("way",stripToOSMId(R->id()));
 	QString DataIn, DataOut;
 	DataIn = wrapOSM(exportOSM(*R));
 	if (sendRequest("PUT",URL,DataIn,DataOut))
@@ -426,8 +429,9 @@ bool DirtyListExecutor::updatePoint(TrackPoint* Pt)
 	Progress->setValue(++Done);
 	Progress->setLabelText(QString("UPDATE trackpoint %1").arg(Pt->id()) + userName(Pt));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
-	QString URL("/api/0.3/node/%1");
-	URL = URL.arg(stripToOSMId(Pt->id()));
+//	QString URL("/api/0.3/node/%1");
+//	URL = URL.arg(stripToOSMId(Pt->id()));
+	QString URL = theDownloader->getURLToUpdate("node",stripToOSMId(Pt->id()));
 	QString DataIn, DataOut;
 	DataIn = wrapOSM(exportOSM(*Pt));
 	if (sendRequest("PUT",URL,DataIn,DataOut))
@@ -443,8 +447,9 @@ bool DirtyListExecutor::erasePoint(TrackPoint *Pt)
 	Progress->setValue(++Done);
 	Progress->setLabelText(QString("REMOVE trackpoint %1").arg(Pt->id()) + userName(Pt));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
-	QString URL("/api/0.3/node/%1");
-	URL = URL.arg(stripToOSMId(Pt->id()));
+//	QString URL("/api/0.3/node/%1");
+//	URL = URL.arg(stripToOSMId(Pt->id()));
+	QString URL = theDownloader->getURLToDelete("node",stripToOSMId(Pt->id()));
 	QString DataIn, DataOut;
 	if (sendRequest("DELETE",URL,DataIn,DataOut))
 	{
@@ -459,8 +464,9 @@ bool DirtyListExecutor::eraseRoad(Road *R)
 	Progress->setValue(++Done);
 	Progress->setLabelText(QString("REMOVE road %1").arg(R->id()) + userName(R));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
-	QString URL("/api/0.3/way/%1");
-	URL = URL.arg(stripToOSMId(R->id()));
+//	QString URL("/api/0.3/way/%1");
+//	URL = URL.arg(stripToOSMId(R->id()));
+	QString URL = theDownloader->getURLToDelete("way",stripToOSMId(R->id()));
 	QString DataIn, DataOut;
 	if (sendRequest("DELETE",URL,DataIn,DataOut))
 	{
@@ -475,8 +481,9 @@ bool DirtyListExecutor::eraseWay(Way *W)
 	Progress->setValue(++Done);
 	Progress->setLabelText(QString("REMOVE link %1").arg(W->id()) + userName(W));
 	QEventLoop L; L.processEvents(QEventLoop::ExcludeUserInputEvents);
-	QString URL("/api/0.3/segment/%1");
-	URL = URL.arg(stripToOSMId(W->id()));
+//	QString URL("/api/0.3/segment/%1");
+//	URL = URL.arg(stripToOSMId(W->id()));
+	QString URL = theDownloader->getURLToDelete("segment",stripToOSMId(W->id()));
 	QString DataIn, DataOut;
 	if (sendRequest("DELETE",URL,DataIn,DataOut))
 	{

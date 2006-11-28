@@ -9,6 +9,7 @@ require 'cgi'
 
 $mysql = Mysql.real_connect $DBSERVER, $USERNAME, $PASSWORD, $DATABASE
 
+$mysql.query("SET NAMES 'utf8'")
 # create a hash of entries out of a list of semi colon seperated key=value pairs
 def read_tags tag_str
   tags_arr = tag_str.split(';').collect {|tag| tag =~ /=/ ? [$`,$'] : [tag,""] }

@@ -109,7 +109,7 @@ void EditInteraction::on_remove_triggered()
 			it.get()->cascadedRemoveIfUsing(document(), Selection, theList, Alternatives);
 		theList->add(new RemoveFeatureCommand(document(), Selection));
 		document()->history().add(theList);
-		view()->update();
+		view()->invalidate();
 	}
 }
 
@@ -143,5 +143,5 @@ void EditInteraction::on_reverse_triggered()
 	}
 	else if (Way* W = dynamic_cast<Way*>(Selection))
 		document()->history().add(new WaySetFromToCommand(W,W->to(),W->controlTo(),W->controlFrom(),W->from()));
-	view()->update();
+	view()->invalidate();
 }

@@ -47,7 +47,7 @@ void MoveTrackPointInteraction::snapMouseReleaseEvent(QMouseEvent * event, Track
 		}
 		else
 			document()->history().add(new MoveTrackPointCommand(Moving,projection().inverse(event->pos())));
-		view()->update();
+		view()->invalidate();
 		Moving = 0;
 	}
 	clearNoSnap();
@@ -61,7 +61,7 @@ void MoveTrackPointInteraction::snapMouseMoveEvent(QMouseEvent* event, TrackPoin
 			Moving->setPosition(Closer->position());
 		else
 			Moving->setPosition(projection().inverse(event->pos()));
-		view()->update();
+		view()->invalidate();
 	}
 }
 

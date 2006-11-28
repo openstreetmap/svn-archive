@@ -9,6 +9,7 @@
 
 #include "GeneratedFiles/ui_DownloadMapDialog.h"
 
+#include <QtCore/QBuffer>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QComboBox>
@@ -21,7 +22,7 @@
 /* DOWNLOADER */
 
 Downloader::Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd, bool aUse04Api)
-: User(aUser), Password(aPwd), Use04Api(aUse04Api)
+: Web(aWeb), User(aUser), Password(aPwd), Use04Api(aUse04Api)
 {
 	Request.setHost(aWeb);
 	Request.setUser(User,Password);
@@ -32,6 +33,24 @@ bool Downloader::go(const QString& url)
 {
 	Error = false;
 	Id = Request.get(url);
+	Loop.exec();
+	Content = Request.readAll();
+	Result = Request.lastResponse().statusCode();
+	return !Error;
+}
+
+bool Downloader::request(const QString& Method, const QString& URL, const QString& Data)
+{
+	QByteArray ba(Data.toUtf8());
+	QBuffer Buf(&ba);
+
+	Error = false;
+
+	QHttpRequestHeader Header(Method,URL);
+	Header.setValue("Host",Web);
+
+	Id = Request.request(Header,ba);
+
 	Loop.exec();
 	Content = Request.readAll();
 	Result = Request.lastResponse().statusCode();

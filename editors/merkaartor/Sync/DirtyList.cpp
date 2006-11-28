@@ -1,13 +1,13 @@
 #include "Sync/DirtyList.h"
 #include "Command/Command.h"
 #include "Map/Coord.h"
+#include "Map/DownloadOSM.h"
 #include "Map/ExportOSM.h"
 #include "Map/MapDocument.h"
 #include "Map/Road.h"
 #include "Map/TrackPoint.h"
 #include "Map/Way.h"
 
-#include <QtCore/QBuffer>
 #include <QtCore/QEventLoop>
 #include <QtGui/QDialog>
 #include <QtGui/QListWidget>
@@ -274,35 +274,26 @@ bool DirtyListDescriber::eraseRoad(Road* R)
 
 
 DirtyListExecutor::DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks)
-: DirtyListVisit(aDoc, aFuture, true), Tasks(aTasks), Done(0), Web(aWeb), User(aUser), Pwd(aPwd)
+: DirtyListVisit(aDoc, aFuture, true), Tasks(aTasks), Done(0), Web(aWeb), User(aUser), Pwd(aPwd), theDownloader(0)
 {
+}
+
+DirtyListExecutor::~DirtyListExecutor()
+{
+	delete theDownloader;
 }
 
 
 bool DirtyListExecutor::sendRequest(const QString& Method, const QString& URL, const QString& Data, QString& Rcv)
 {
-	QByteArray ba(Data.toUtf8());
-	QBuffer Buf(&ba);
+	if (!theDownloader)
+		theDownloader = new Downloader(Web, User, Pwd, false);
 
-	QHttp Link;
-	connect(&Link,SIGNAL(requestFinished(int, bool)), this,SLOT(on_Request_finished(int, bool)));
-	Link.setHost(Web);
-	Link.setUser(User, Pwd);
-	QHttpRequestHeader Request(Method,URL);
-	Request.setValue("Host",Web);
-	int y = Request.minorVersion();
-	y = Request.majorVersion();
+	if (!theDownloader->request(Method,URL,Data))
+		return false;
 
-	Finished = false;
-	FinishedId = Link.request(Request,ba);
-	QEventLoop Loop;
-	
-	while (!Finished)
-	{
-		Loop.processEvents(QEventLoop::ExcludeUserInputEvents);
-	}
-	QByteArray Content = Link.readAll();
-	int x = Link.lastResponse().statusCode();
+	QByteArray Content = theDownloader->content();
+	int x = theDownloader->resultCode();
 	
 	if (x==200)
 	{
@@ -324,15 +315,6 @@ bool DirtyListExecutor::executeChanges(QWidget* aParent)
 	document()->history().buildDirtyList(*this);
 	delete Progress;
 	return true;
-}
-
-void DirtyListExecutor::on_Request_finished(int id, bool err)
-{
-	if ( (id == FinishedId) || err)
-	{
-		Finished = true;
-		FinishedError = err;
-	}
 }
 
 bool DirtyListExecutor::addWay(Way* W)

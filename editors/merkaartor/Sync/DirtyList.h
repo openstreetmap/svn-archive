@@ -1,6 +1,7 @@
 #ifndef MERKATOR_DIRTYLIST_H_
 #define MERKATOR_DIRTYLIST_H_
 
+class Downloader;
 class MapDocument;
 class MapFeature;
 class Road;
@@ -102,6 +103,7 @@ class DirtyListExecutor : public QObject, public DirtyListVisit
 
 	public:
 		DirtyListExecutor(MapDocument* aDoc, const DirtyListBuild& aFuture, const QString& aWeb, const QString& aUser, const QString& aPwd, unsigned int aTasks);
+		virtual ~DirtyListExecutor();
 
 		virtual bool addPoint(TrackPoint* Pt);
 		virtual bool addWay(Way* W);
@@ -115,8 +117,6 @@ class DirtyListExecutor : public QObject, public DirtyListVisit
 
 		bool executeChanges(QWidget* Parent);
 
-	private slots:
-		void on_Request_finished(int id, bool);
 	private:
 		bool sendRequest(const QString& Method, const QString& URL, const QString& Out, QString& Rcv);
 
@@ -124,9 +124,7 @@ class DirtyListExecutor : public QObject, public DirtyListVisit
 		unsigned int Tasks, Done;
 		QProgressDialog* Progress;
 		QString Web,User,Pwd;
-		bool Finished;
-		bool FinishedError;
-		int FinishedId;
+		Downloader* theDownloader;
 };
 
 

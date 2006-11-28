@@ -23,6 +23,7 @@ class Downloader : public QObject
 	public:
 		Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd, bool aUse04Api);
 
+		bool request(const QString& Method, const QString& URL, const QString& Out);
 		bool go(const QString& url);
 		QByteArray& content();
 		int resultCode();
@@ -34,7 +35,7 @@ class Downloader : public QObject
 
 	private:
 		QHttp Request;
-		QString User, Password;
+		QString Web, User, Password;
 		QByteArray Content;
 		int Result;
 		int Id;

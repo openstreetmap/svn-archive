@@ -82,7 +82,8 @@ FORMS += \
 ./TrackPointProperties.ui \
 ./UploadMapDialog.ui \
 ./WayProperties.ui \
-./SetPositionDialog.ui
+./SetPositionDialog.ui \
+./MultiProperties.ui
 
 #Resource file(s)
 RESOURCES += .\Icons\AllIcons.qrc

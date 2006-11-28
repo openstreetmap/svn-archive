@@ -92,6 +92,7 @@ void PropertiesDock::switchToMultiUi()
 	if (CurrentUi)
 		delete CurrentUi;
 	CurrentUi = NewUi;
+	connect(MultiUi.RemoveTagButton,SIGNAL(clicked()),this, SLOT(on_RemoveTagButton_clicked()));
 	setWindowTitle(tr("Properties - Multiple elements"));
 }
 
@@ -108,6 +109,7 @@ void PropertiesDock::switchToTrackPointUi()
 	CurrentUi = NewUi;
 	connect(TrackPointUi.Longitude,SIGNAL(textChanged(const QString&)),this, SLOT(on_TrackPointLon_textChanged(const QString&)));
 	connect(TrackPointUi.Latitude,SIGNAL(textChanged(const QString&)),this, SLOT(on_TrackPointLat_textChanged(const QString&)));
+	connect(TrackPointUi.RemoveTagButton,SIGNAL(clicked()),this, SLOT(on_RemoveTagButton_clicked()));
 	setWindowTitle(tr("Properties - Trackpoint"));
 }
 
@@ -123,6 +125,7 @@ void PropertiesDock::switchToWayUi()
 		delete CurrentUi;
 	CurrentUi = NewUi;
 	connect(WayUi.Width,SIGNAL(textChanged(const QString&)),this, SLOT(on_WayWidth_textChanged(const QString&)));
+	connect(WayUi.RemoveTagButton,SIGNAL(clicked()),this, SLOT(on_RemoveTagButton_clicked()));
 	setWindowTitle(tr("Properties - Link"));
 }
 
@@ -152,6 +155,7 @@ void PropertiesDock::switchToRoadUi()
 	connect(RoadUi.Name,SIGNAL(textChanged(const QString&)),this, SLOT(on_RoadName_textChanged(const QString&)));
 	connect(RoadUi.TrafficDirection,SIGNAL(activated(int)), this, SLOT(on_TrafficDirection_activated(int)));
 	connect(RoadUi.Highway,SIGNAL(activated(int)), this, SLOT(on_Highway_activated(int)));
+	connect(RoadUi.RemoveTagButton,SIGNAL(clicked()),this, SLOT(on_RemoveTagButton_clicked()));
 	setWindowTitle(tr("Properties - Road"));
 }
 
@@ -278,5 +282,48 @@ void PropertiesDock::on_Highway_activated(int idx)
 		else
 			Main->document()->history().add(new SetTagCommand(R,"highway",RoadUi.Highway->currentText()));
 		Main->invalidateView();
+	}
+}
+
+void PropertiesDock::on_RemoveTagButton_clicked()
+{
+	QTableView* TagTable = 0;
+	switch (NowShowing)
+	{
+	case WayUiShowing:
+		TagTable = WayUi.TagView; break;
+	case TrackPointUiShowing:
+		TagTable = TrackPointUi.TagView; break;
+	case RoadUiShowing:
+		TagTable = RoadUi.TagView; break;
+	case MultiShowing:
+		TagTable = MultiUi.TagView; break;
+	}
+	if (TagTable)
+	{
+		QModelIndexList indexes = TagTable->selectionModel()->selectedIndexes();
+		QModelIndex index;
+
+		foreach(index, indexes)
+		{
+			QModelIndex idx = index.sibling(index.row(),0);
+			QVariant Content(theModel->data(idx,Qt::DisplayRole));
+			if (Content.isValid())
+			{
+				CommandList* L = new CommandList;
+				QString KeyName = Content.toString();
+				for (unsigned int i=0; i<Selection.size(); ++i)
+					if (Selection[i]->findKey(KeyName) < Selection[i]->tagSize())
+						L->add(new ClearTagCommand(Selection[i],KeyName));
+				if (L->empty())
+					delete L;
+				else
+				{
+					Main->document()->history().add(L);
+					Main->invalidateView();
+					return;
+				}
+			}
+		}
 	}
 }

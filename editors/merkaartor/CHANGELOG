@@ -11,6 +11,7 @@ v0.06
 	* ADD : undo/redo icons + actions added to toolbar
 	* FIX : improve speed with a double buffer for static content
 	* ADD : change tags on multiple elements at the same time
+	* ADD : delete tag tool
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

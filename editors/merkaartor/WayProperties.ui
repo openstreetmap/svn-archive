@@ -54,11 +54,44 @@
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="label_3" >
-     <property name="text" >
-      <string>Tags</string>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
      </property>
-    </widget>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_3" >
+       <property name="text" >
+        <string>Tags</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QToolButton" name="RemoveTagButton" >
+       <property name="text" >
+        <string>...</string>
+       </property>
+       <property name="icon" >
+        <iconset>Icons/small-remove.xpm</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QTableView" name="TagView" />
@@ -70,8 +103,8 @@
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
-       <height>41</height>
+       <width>178</width>
+       <height>16</height>
       </size>
      </property>
     </spacer>
@@ -81,6 +114,3 @@
  <resources/>
  <connections/>
 </ui>
-
-
-

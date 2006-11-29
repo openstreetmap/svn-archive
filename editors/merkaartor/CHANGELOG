@@ -16,6 +16,7 @@ v0.06
 	* ADD : upload with 0.4 API
 	* ADD : draw arrows on GPX tracks
 	* ADD : optionally download trackpoints from OSM
+	* ADD : ability to contact OSM at a different port
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

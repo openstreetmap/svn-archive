@@ -24,36 +24,79 @@
 /* DOWNLOADER */
 
 Downloader::Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd, bool aUse04Api)
-: Web(aWeb), User(aUser), Password(aPwd), Use04Api(aUse04Api)
+: Port(80), Web(aWeb), User(aUser), Password(aPwd), Error(false), Use04Api(aUse04Api), Animator(0)
 {
-	Request.setHost(aWeb);
+	int p = Web.lastIndexOf(':');
+	if (p != -1)
+	{
+		Port = Web.right(Web.length()-(p+1)).toUInt();
+		Web = Web.left(p);
+	}
+	Request.setHost(Web,Port);
 	Request.setUser(User,Password);
 	connect(&Request,SIGNAL(requestFinished(int, bool)), this,SLOT(finished(int, bool)));
 }
 
+
+void Downloader::animate()
+{
+	if (Animator && Animate)
+		Animator->setValue((Animator->value()+1) % Animator->maximum());
+}
+
+void Downloader::setAnimator(QProgressDialog *anAnimator, bool anAnimate)
+{
+	Animator = anAnimator;
+	Animate = anAnimate;
+	if (Animator)
+		connect(Animator,SIGNAL(canceled()),this,SLOT(on_Cancel_clicked()));
+}
+
+void Downloader::on_Cancel_clicked()
+{
+	Error = true;
+	if (Loop.isRunning())
+		Loop.exit(QDialog::Rejected);
+}
+
 bool Downloader::go(const QString& url)
 {
-	Error = false;
+	if (Error) return false;
+	QTimer* t = new QTimer(this);
+	connect(t,SIGNAL(timeout()),this,SLOT(animate()));
+	t->start(200);
+	Content.clear();
 	Id = Request.get(url);
-	Loop.exec();
+	if (Loop.exec() == QDialog::Rejected)
+	{
+		Request.abort();
+		return false;
+	}
 	Content = Request.readAll();
 	Result = Request.lastResponse().statusCode();
+	delete t;
 	return !Error;
 }
 
 bool Downloader::request(const QString& Method, const QString& URL, const QString& Data)
 {
+	if (Error) return false;
 	QByteArray ba(Data.toUtf8());
 	QBuffer Buf(&ba);
 
-	Error = false;
-
 	QHttpRequestHeader Header(Method,URL);
-	Header.setValue("Host",Web);
-
+	if (Port == 80)
+		Header.setValue("Host",Web);
+	else
+		Header.setValue("Host",Web+':'+QString::number(Port));
+	Content.clear();
 	Id = Request.request(Header,ba);
 
-	Loop.exec();
+	if (Loop.exec() == QDialog::Rejected)
+	{
+		Request.abort();
+		return false;
+	}
 	Content = Request.readAll();
 	Result = Request.lastResponse().statusCode();
 	return !Error;
@@ -68,8 +111,8 @@ void Downloader::finished(int id, bool error)
 {
 	if (error)
 		Error = true;
-	if (Id == id)
-		Loop.exit();
+	if ( (Id == id) && (Loop.isRunning()) )
+		Loop.exit(QDialog::Accepted);
 }
 
 int Downloader::resultCode()
@@ -118,64 +161,20 @@ QString Downloader::getURLToDelete(const QString &What, const QString& Id)
 	return URL.arg(What).arg(Id);
 }
 
-
-/* DOWNLOADRECEIVER */
-
-DownloadReceiver::DownloadReceiver(QMainWindow* aWindow, QHttp& aRequest)
-: Request(aRequest), Main(aWindow)
+QString Downloader::getURLToMap()
 {
-	connect(&Request,SIGNAL(requestFinished(int, bool)), this,SLOT(finished(int, bool)));
-	connect(&Request,SIGNAL(dataReadProgress(int,int)), this,SLOT(transferred(int,int)));
-	connect(&Request,SIGNAL(dataSendProgress(int,int)), this,SLOT(transferred(int,int)));
+	QString URL("/api/0.3/map?bbox=%1,%2,%3,%4");
+	if (Use04Api)
+		URL = QString("/api/0.4/map?bbox=%1,%2,%3,%4");
+	return URL;
 }
 
-bool DownloadReceiver::go(const QString& url)
+QString Downloader::getURLToTrackPoints()
 {
-	QTimer* t = new QTimer(this);
-	connect(t,SIGNAL(timeout()),this,SLOT(animate()));
-	OK = true;
-	Id = Request.get(url);
-	ProgressDialog = new QProgressDialog(Main);
-	ProgressDialog->setWindowModality(Qt::ApplicationModal);
-	QProgressBar* Bar = new QProgressBar(ProgressDialog);
-	Bar->setTextVisible(false);
-	ProgressDialog->setBar(Bar);
-	ProgressDialog->setMinimumDuration(0);
-	ProgressDialog->setLabelText("Downloading from OSM");
-	ProgressDialog->setMaximum(11);
-	t->start(200);
-	int r = ProgressDialog->exec();
-	delete t;
-	delete ProgressDialog;
-	if (r == QProgressDialog::Rejected)
-		return false;
-	Content = Request.readAll();
-	if (!OK)
-		QMessageBox::warning(Main,MainWindow::tr("Download failed"),Request.errorString());
-	return OK;
-}
-
-void DownloadReceiver::animate()
-{
-	ProgressDialog->setValue((ProgressDialog->value()+1) % 11);
-}
-
-void DownloadReceiver::finished(int id, bool error)
-{
-	if (error)
-		OK = false;
-	if (Id == id)
-		ProgressDialog->done(QDialog::Accepted);
-}
-
-void DownloadReceiver::transferred(int Now, int Total)
-{
-	ProgressDialog->setLabelText("Waiting for reply...");
-}
-
-QByteArray& DownloadReceiver::content()
-{
-	return Content;
+	QString URL("/api/0.3/trackpoints?bbox=%1,%2,%3,%4&page=%5");
+	if (Use04Api)
+		URL = QString("/api/0.4/trackpoints?bbox=%1,%2,%3,%4&page=%5");
+	return URL;
 }
 
 bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser, const QString& aPassword, bool Use04Api, const CoordBox& aBox , MapDocument* theDocument)
@@ -185,22 +184,27 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 		QMessageBox::warning(aParent,MainWindow::tr("Unresolved conflicts"), MainWindow::tr("Please resolve existing conflicts first"));
 		return false;
 	}
-	QHttp Request;
-	Request.setHost(aWeb);
-	Request.setUser(aUser, aPassword);
-
-	QString URL("/api/0.3/map?bbox=%1,%2,%3,%4");
-	if (Use04Api)
-		URL = QString("/api/0.4/map?bbox=%1,%2,%3,%4");
+	Downloader Rcv(aWeb, aUser, aPassword, Use04Api);
+	QString URL = Rcv.getURLToMap();
 	URL = URL.arg(radToAng(aBox.bottomLeft().lon())).arg(radToAng(aBox.bottomLeft().lat())).arg(radToAng(aBox.topRight().lon())).arg(radToAng(aBox.topRight().lat()));
-	DownloadReceiver Rcv(aParent, Request);
-
+	QProgressDialog* ProgressDialog = new QProgressDialog(aParent);
+	ProgressDialog->setWindowModality(Qt::ApplicationModal);
+	QProgressBar* Bar = new QProgressBar(ProgressDialog);
+	Bar->setTextVisible(false);
+	ProgressDialog->setBar(Bar);
+	ProgressDialog->setMinimumDuration(0);
+	ProgressDialog->setLabelText("Downloading from OSM");
+	ProgressDialog->setMaximum(11);
+	Rcv.setAnimator(ProgressDialog,true);
+	
 	if (!Rcv.go(URL))
 	{
 		aParent->setCursor(QCursor(Qt::ArrowCursor));
+		delete ProgressDialog;
 		return false;
 	}
-	int x = Request.lastResponse().statusCode();
+	delete ProgressDialog;
+	int x = Rcv.resultCode();
 	switch (x)
 	{
 	case 200:
@@ -235,12 +239,11 @@ bool downloadTracksFromOSM(QMainWindow* Main, const QString& aWeb, const QString
 	ProgressDialog.setMaximum(11);
 	ProgressDialog.setValue(1);
 	ProgressDialog.show();
+	theDownloader.setAnimator(&ProgressDialog,true);
 	for (unsigned int Page=0; ;++Page)
 	{
 		ProgressDialog.setLabelText(QString("Downloading trackpoints %1-%2").arg(Page*5000+1).arg(Page*5000+5000));
-		QString URL("/api/0.3/trackpoints?bbox=%1,%2,%3,%4&page=%5");
-		if (Use04Api)
-			URL = QString("/api/0.4/trackpoints?bbox=%1,%2,%3,%4&page=%5");
+		QString URL = theDownloader.getURLToTrackPoints();
 		URL = URL.arg(radToAng(aBox.bottomLeft().lon())).
 				arg(radToAng(aBox.bottomLeft().lat())).
 				arg(radToAng(aBox.topRight().lon())).

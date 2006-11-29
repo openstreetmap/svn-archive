@@ -246,7 +246,7 @@ static void importOSM(QProgressDialog* dlg, const QDomElement& Root, MapDocument
 	}
 }
 
-static void downloadToResolve(const QString& What, const std::vector<MapFeature*>& Resolution, QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
+static bool downloadToResolve(const QString& What, const std::vector<MapFeature*>& Resolution, QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
 {
 	for (unsigned int i=0; i<Resolution.size(); i+=10 )
 	{
@@ -281,12 +281,15 @@ static void downloadToResolve(const QString& What, const std::vector<MapFeature*
 				}
 			}
 		}
+		else
+			return false;
 		dlg->setValue(i);
 	}
+	return true;
 }
 
 // as long as /api/0.3/segments?segments= doesn't work
-static void downloadToResolveSegments(const std::vector<MapFeature*>& Resolution, QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
+static bool downloadToResolveSegments(const std::vector<MapFeature*>& Resolution, QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
 {
 	for (unsigned int i=0; i<Resolution.size(); ++i )
 	{
@@ -317,11 +320,14 @@ static void downloadToResolveSegments(const std::vector<MapFeature*>& Resolution
 				}
 			}
 		}
+		else
+			return false;
 	}
+	return true;
 }
 
 
-static void resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
+static bool resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocument, MapLayer* theLayer, CommandList* theList, Downloader* theDownloader)
 {
 	if (theDownloader)
 	{
@@ -338,7 +344,8 @@ static void resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocume
 			dlg->setMaximum(MustResolve.size());
 			dlg->setValue(0);
 			dlg->show();
-			downloadToResolveSegments(MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+			if (!downloadToResolveSegments(MustResolve,dlg,theDocument,theLayer, theList,theDownloader))
+				return false;
 		}
 		// resolve nodes
 		MustResolve.clear();
@@ -353,7 +360,8 @@ static void resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocume
 			dlg->setMaximum(MustResolve.size());
 			dlg->setValue(0);
 			dlg->show();
-			downloadToResolve("nodes",MustResolve,dlg,theDocument,theLayer, theList,theDownloader);
+			if (!downloadToResolve("nodes",MustResolve,dlg,theDocument,theLayer, theList,theDownloader))
+				return false;
 		}
 	}
 	for (unsigned int i=theLayer->size(); i; --i)
@@ -364,6 +372,7 @@ static void resolveNotYetDownloaded(QProgressDialog* dlg, MapDocument* theDocume
 			theList->add(new RemoveFeatureCommand(theDocument,theLayer->get(i-1)));
 		}
 	}
+	return true;
 }
 
 bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapLayer* theLayer, Downloader* theDownloader)
@@ -377,6 +386,8 @@ bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapL
 	dlg->setMinimumDuration(0);
 	dlg->setLabelText("Parsing XML");
 	dlg->show();
+	if (theDownloader)
+		theDownloader->setAnimator(dlg,false);
 	if (!DomDoc.setContent(&File, true, &ErrorStr, &ErrorLine,&ErrorColumn))
 	{
 		File.close();
@@ -399,14 +410,14 @@ bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapL
 	importOSM(dlg, root, theDocument, theLayer, conflictLayer, theList, theDownloader);
 	bool WasCanceled = dlg->wasCanceled();
 	if (!WasCanceled)
-		resolveNotYetDownloaded(dlg,theDocument,theLayer,theList,theDownloader);
+		WasCanceled = !resolveNotYetDownloaded(dlg,theDocument,theLayer,theList,theDownloader);
 	delete dlg;
 	if (theList->empty() || WasCanceled)
 	{
 		theDocument->remove(theLayer);
-		delete theLayer;
 		delete conflictLayer;
 		delete theList;
+		return false;
 	}
 	else
 	{

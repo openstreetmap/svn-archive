@@ -27,16 +27,22 @@ class Downloader : public QObject
 		bool go(const QString& url);
 		QByteArray& content();
 		int resultCode();
+		QString getURLToMap();
+		QString getURLToTrackPoints();
 		QString getURLToFetch(const QString& What);
 		QString getURLToFetch(const QString& What, const QString& Id);
 		QString getURLToCreate(const QString& What);
 		QString getURLToUpdate(const QString& What, const QString& Id);
 		QString getURLToDelete(const QString& What, const QString& Id);
+		void setAnimator(QProgressDialog* Animator, bool anAnimate);
 
 	public slots:
 		void finished( int id, bool error );
+		void animate();
+		void on_Cancel_clicked();
 
 	private:
+		unsigned int Port;
 		QHttp Request;
 		QString Web, User, Password;
 		QByteArray Content;
@@ -45,30 +51,8 @@ class Downloader : public QObject
 		bool Error;
 		QEventLoop Loop;
 		bool Use04Api;
-};
-
-class DownloadReceiver : public QObject
-{
-	Q_OBJECT
-
-	public:
-		DownloadReceiver(QMainWindow* aWindow, QHttp& aRequest);
-
-		bool go(const QString& url);
-		QByteArray& content();
-
-	public slots:
-		void finished( int id, bool error );
-		void transferred(int Now, int Total);
-		void animate();
-
-	private:
-		QHttp& Request;
-		QMainWindow* Main;
-		QByteArray Content;
-		int Id;
-		bool OK;
-		QProgressDialog* ProgressDialog;
+		QProgressDialog* Animator;
+		bool Animate;
 };
 
 bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument);

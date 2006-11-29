@@ -5,6 +5,8 @@ Need
 On (K)ubuntu Edgy it is sufficient to install the qt4-dev package
 to satisfy these requirements.
 
+On Ubuntu Edgy you need libqt4-dev
+
 Instructions
 
 1. Change directory to the one in which you unpacked Merkaartor

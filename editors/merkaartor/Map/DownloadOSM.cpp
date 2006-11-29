@@ -3,9 +3,11 @@
 #include "MainWindow.h"
 #include "MapView.h"
 #include "Map/Coord.h"
+#include "Map/ImportGPX.h"
 #include "Map/ImportOSM.h"
 #include "Map/MapDocument.h"
 #include "Map/MapFeature.h"
+#include "Map/TrackSegment.h"
 
 #include "GeneratedFiles/ui_DownloadMapDialog.h"
 
@@ -218,6 +220,48 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 	return OK;
 }
 
+
+bool downloadTracksFromOSM(QMainWindow* Main, const QString& aWeb, const QString& aUser, const QString& aPassword, bool Use04Api, const CoordBox& aBox , MapDocument* theDocument)
+{
+	Downloader theDownloader(aWeb, aUser, aPassword, Use04Api);
+	MapLayer* trackLayer = new MapLayer("Downloaded tracks");
+	theDocument->add(trackLayer);
+	QProgressDialog ProgressDialog(Main);
+	ProgressDialog.setWindowModality(Qt::ApplicationModal);
+	QProgressBar* Bar = new QProgressBar(&ProgressDialog);
+	Bar->setTextVisible(false);
+	ProgressDialog.setBar(Bar);
+	ProgressDialog.setMinimumDuration(0);
+	ProgressDialog.setMaximum(11);
+	ProgressDialog.setValue(1);
+	ProgressDialog.show();
+	for (unsigned int Page=0; ;++Page)
+	{
+		ProgressDialog.setLabelText(QString("Downloading trackpoints %1-%2").arg(Page*5000+1).arg(Page*5000+5000));
+		QString URL("/api/0.3/trackpoints?bbox=%1,%2,%3,%4&page=%5");
+		if (Use04Api)
+			URL = QString("/api/0.4/trackpoints?bbox=%1,%2,%3,%4&page=%5");
+		URL = URL.arg(radToAng(aBox.bottomLeft().lon())).
+				arg(radToAng(aBox.bottomLeft().lat())).
+				arg(radToAng(aBox.topRight().lon())).
+				arg(radToAng(aBox.topRight().lat())).
+				arg(Page);
+		if (!theDownloader.go(URL))
+			return false;
+		if (theDownloader.resultCode() != 200)
+			return false;
+		unsigned int Before = trackLayer->size();
+		QByteArray Ar(theDownloader.content());
+		bool OK = importGPX(Main, Ar, theDocument, trackLayer, false);
+		if (!OK)
+			return false;
+		if (Before == trackLayer->size())
+			break;
+	}
+	return true;
+}
+
+
 bool checkForConflicts(MapDocument* theDocument)
 {
 	for (FeatureIterator it(theDocument); !it.isEnd(); ++it)
@@ -228,6 +272,7 @@ bool checkForConflicts(MapDocument* theDocument)
 
 bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDocument)
 {
+	static bool DownloadRaw = true;
 	QDialog * dlg = new QDialog(aParent);
 	QSettings Sets;
 	Sets.beginGroup("downloadosm");
@@ -245,6 +290,7 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 		ui.Bookmarks->addItem(Bookmarks[i]);
 	ui.Username->setText(Sets.value("user").toString());
 	ui.Password->setText(Sets.value("password").toString());
+	ui.IncludeTracks->setChecked(DownloadRaw);
 	ui.Use04Api->setChecked(Sets.value("use04api").toBool());
 	bool OK = true;
 	if (dlg->exec() == QDialog::Accepted)
@@ -252,6 +298,7 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 		Sets.setValue("user",ui.Username->text());
 		Sets.setValue("password",ui.Password->text());
 		Sets.setValue("use04api",ui.Use04Api->isChecked());
+		DownloadRaw = false;
 		CoordBox Clip(Coord(0,0),Coord(0,0));
 		if (ui.FromBookmark->isChecked())
 		{
@@ -275,6 +322,8 @@ bool downloadOSM(MainWindow* aParent, const CoordBox& aBox , MapDocument* theDoc
 		}
 		aParent->view()->setUpdatesEnabled(false);
 		OK = downloadOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),ui.Use04Api->isChecked(),Clip,theDocument);
+		if (OK && ui.IncludeTracks->isChecked())
+			OK = downloadTracksFromOSM(aParent,ui.Website->text(),ui.Username->text(),ui.Password->text(),ui.Use04Api->isChecked(),Clip,theDocument);
 		aParent->view()->setUpdatesEnabled(true);
 		if (OK)
 		{

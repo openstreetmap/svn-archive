@@ -6,12 +6,22 @@
 #include <QtGui/QPainter>
 
 TrackPoint::TrackPoint(const Coord& aCoord)
-: Position(aCoord)
+: Position(aCoord), Time(QDateTime::currentDateTime())
 {
 }
 
 TrackPoint::~TrackPoint(void)
 {
+}
+
+const QDateTime& TrackPoint::time() const
+{
+	return Time;
+}
+
+void TrackPoint::setTime(const QDateTime& time)
+{
+	Time = time;
 }
 
 const Coord& TrackPoint::position() const
@@ -42,6 +52,11 @@ void TrackPoint::draw(QPainter& thePainter, const Projection& theProjection)
 		thePainter.fillRect(R,QColor(255,0,0));
 	else if (theProjection.pixelPerM() > 1)
 		thePainter.fillRect(R,QColor(0,0,0,128));
+	else
+	{
+		thePainter.setPen(QColor(0,0,0,128));
+		thePainter.drawPoint(P);
+	}
 }
 
 void TrackPoint::drawFocus(QPainter& thePainter, const Projection& theProjection)

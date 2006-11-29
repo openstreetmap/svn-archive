@@ -125,8 +125,12 @@ void MainWindow::on_fileImportAction_triggered()
 		bool OK = false;
 		MapLayer* NewLayer = new MapLayer(tr("Import %1").arg(s.right(s.length()-s.lastIndexOf('/')-1)));
 		if (s.right(4).toLower() == ".gpx")
+		{
 			OK = importGPX(this, s, theDocument, NewLayer);
-		if (s.right(4).toLower() == ".osm")
+			if (OK)
+				theDocument->add(NewLayer);
+		}
+		else if (s.right(4).toLower() == ".osm")
 		{
 			view()->setUpdatesEnabled(false);
 			OK = importOSM(this, s, theDocument, NewLayer);

@@ -4,6 +4,8 @@
 #include "Map/Coord.h"
 #include "Map/MapFeature.h"
 
+#include <QtCore/QDateTime>
+
 class TrackPoint : public MapFeature
 {
 	public:
@@ -19,9 +21,12 @@ class TrackPoint : public MapFeature
 
 		const Coord& position() const;
 		void setPosition(const Coord& aCoord);
+		const QDateTime& time() const;
+		void setTime(const QDateTime& aTime);
 
 	private:
 		Coord Position;
+		QDateTime Time;
 };
 
 #endif

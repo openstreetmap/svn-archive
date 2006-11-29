@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>401</width>
-    <height>276</height>
+    <height>301</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -58,6 +58,13 @@
       <widget class="QLineEdit" name="Password" />
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="IncludeTracks" >
+     <property name="text" >
+      <string>Also download raw GPS tracks</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="Use04Api" >
@@ -155,7 +162,7 @@
      <property name="sizeHint" >
       <size>
        <width>383</width>
-       <height>16</height>
+       <height>20</height>
       </size>
      </property>
     </spacer>

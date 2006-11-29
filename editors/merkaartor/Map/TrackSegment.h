@@ -24,6 +24,7 @@ class TrackSegment : public MapFeature
 
 		void add(TrackPoint* aPoint);
 		unsigned int size() const;
+		void sortByTime();
 
 	private:
 		TrackSegmentPrivate* p;

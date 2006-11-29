@@ -29,6 +29,22 @@ TrackSegment::~TrackSegment(void)
 	delete p;
 }
 
+void TrackSegment::sortByTime()
+{
+	for (unsigned int i=0; i<p->Points.size(); ++i)
+	{
+		for (unsigned int j=i+1; j<p->Points.size(); ++j)
+		{
+			if (p->Points[i]->time() > p->Points[j]->time())
+			{
+				QDateTime dt(p->Points[i]->time());
+				p->Points[i]->setTime(p->Points[j]->time());
+				p->Points[j]->setTime(dt);
+			}
+		}
+	}
+}
+
 void TrackSegment::add(TrackPoint* aPoint)
 {
 	p->Points.push_back(aPoint);

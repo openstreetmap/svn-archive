@@ -14,6 +14,7 @@ v0.06
 	* ADD : delete tag tool
 	* ADD : download with 0.4 API
 	* ADD : upload with 0.4 API
+	* ADD : draw arrows on GPX tracks
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

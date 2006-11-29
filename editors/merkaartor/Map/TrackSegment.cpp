@@ -44,9 +44,25 @@ void TrackSegment::draw(QPainter &P, const Projection &theProjection)
 	P.setPen(QPen(QColor(128,128,128),1,Qt::DotLine));
 	for (unsigned int i=1; i<p->Points.size(); ++i)
 	{
-		P.drawLine(
-			theProjection.project(p->Points[i-1]->position()),
-			theProjection.project(p->Points[i]->position()) );
+		QPointF FromF(theProjection.project(p->Points[i-1]->position()));
+		QPointF ToF(theProjection.project(p->Points[i]->position()));
+		P.drawLine(FromF,ToF);
+		if (distance(FromF,ToF) > 30)
+		{
+			double DistFromCenter=10;
+			double theWidth=5;
+			QPointF H(FromF+ToF);
+			H *= 0.5;
+			double A = angle(FromF-ToF);
+			QPointF T(DistFromCenter*cos(A),DistFromCenter*sin(A));
+			QPointF V1(theWidth*cos(A+3.141592/6),theWidth*sin(A+3.141592/6));
+			QPointF V2(theWidth*cos(A-3.141592/6),theWidth*sin(A-3.141592/6));
+			P.setPen(QPen(QColor(128,128,128),1));
+			P.drawLine(H-T,H-T+V1);
+			P.drawLine(H-T,H-T+V2);
+			P.setPen(QPen(QColor(128,128,128),1,Qt::DotLine));
+		}
+
 	}
 }
 

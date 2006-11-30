@@ -36,25 +36,28 @@ void CreateRoadInteraction::paintEvent(QPaintEvent* event, QPainter& thePainter)
 
 void CreateRoadInteraction::snapMouseReleaseEvent(QMouseEvent *anEvent, Way * W)
 {
-	// TODO warn to click on ways?
-	if (!W) return;
-	if (!Current)
+	if (anEvent->button() == Qt::LeftButton)
 	{
-		Current = new Road;
-		Current->add(W);
-		W->addAsPartOf(Current);
-		document()->history().add(new AddFeatureCommand( main()->activeLayer() ,Current, true));
-		main()->properties()->setSelection(Current);
-	}
-	else
-	{
-		if (Current->find(W) < Current->size())
-			document()->history().add(new RoadRemoveWayCommand(Current, W));
+		// TODO warn to click on ways?
+		if (!W) return;
+		if (!Current)
+		{
+			Current = new Road;
+			Current->add(W);
+			W->addAsPartOf(Current);
+			document()->history().add(new AddFeatureCommand( main()->activeLayer() ,Current, true));
+			main()->properties()->setSelection(Current);
+		}
 		else
-			document()->history().add(new RoadAddWayCommand(Current, W));
+		{
+			if (Current->find(W) < Current->size())
+				document()->history().add(new RoadRemoveWayCommand(Current, W));
+			else
+				document()->history().add(new RoadAddWayCommand(Current, W));
+		}
+		Current->setLastUpdated(MapFeature::User);
+		view()->invalidate();
 	}
-	Current->setLastUpdated(MapFeature::User);
-	view()->invalidate();
 }
 
 

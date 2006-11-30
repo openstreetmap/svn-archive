@@ -35,53 +35,56 @@ void CreateWayInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter
 
 void CreateWayInteraction::snapMouseReleaseEvent(QMouseEvent * event, TrackPoint* aLast)
 {
-	if (!HaveFirstPoint)
+	if (event->button() == Qt::LeftButton)
 	{
-		From = aLast;
-		P1 = event->pos();
-		if (From)
-			P1 = projection().project(From->position());
-		HaveFirstPoint = true;
-		view()->update();
-	}
-	else
-	{
-		P2 = event->pos();
-		CommandList* L = new CommandList;
-		if (!From)
+		if (!HaveFirstPoint)
 		{
-			From = new TrackPoint(projection().inverse(P1));
-			L->add(new AddFeatureCommand(Main->activeLayer(),From,true));
-		}
-		TrackPoint* To = aLast;
-		if (!To)
-		{
-			To = new TrackPoint(projection().inverse(P2));
-			L->add(new AddFeatureCommand(Main->activeLayer(),To,true));
-		}
-		Way* W;
-		if (BezierWay)
-		{
-			double DLat = To->position().lat()-From->position().lat();
-			double DLon = To->position().lon()-From->position().lon();
-			TrackPoint* ControlFrom = new TrackPoint(
-				Coord(From->position().lat()+DLat/3,From->position().lon()+DLon/3));
-			TrackPoint* ControlTo = new TrackPoint(
-				Coord(From->position().lat()+2*DLat/3,From->position().lon()+2*DLon/3));
-			W = new Way(From,ControlFrom,ControlTo,To);
-			L->add(new AddFeatureCommand(Main->activeLayer(),ControlFrom,true));
-			L->add(new AddFeatureCommand(Main->activeLayer(),ControlTo,true));
-			L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
+			From = aLast;
+			P1 = event->pos();
+			if (From)
+				P1 = projection().project(From->position());
+			HaveFirstPoint = true;
+			view()->update();
 		}
 		else
 		{
-			W = new Way(From,To);
-			L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
+			P2 = event->pos();
+			CommandList* L = new CommandList;
+			if (!From)
+			{
+				From = new TrackPoint(projection().inverse(P1));
+				L->add(new AddFeatureCommand(Main->activeLayer(),From,true));
+			}
+			TrackPoint* To = aLast;
+			if (!To)
+			{
+				To = new TrackPoint(projection().inverse(P2));
+				L->add(new AddFeatureCommand(Main->activeLayer(),To,true));
+			}
+			Way* W;
+			if (BezierWay)
+			{
+				double DLat = To->position().lat()-From->position().lat();
+				double DLon = To->position().lon()-From->position().lon();
+				TrackPoint* ControlFrom = new TrackPoint(
+					Coord(From->position().lat()+DLat/3,From->position().lon()+DLon/3));
+				TrackPoint* ControlTo = new TrackPoint(
+					Coord(From->position().lat()+2*DLat/3,From->position().lon()+2*DLon/3));
+				W = new Way(From,ControlFrom,ControlTo,To);
+				L->add(new AddFeatureCommand(Main->activeLayer(),ControlFrom,true));
+				L->add(new AddFeatureCommand(Main->activeLayer(),ControlTo,true));
+				L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
+			}
+			else
+			{
+				W = new Way(From,To);
+				L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
+			}
+			document()->history().add(L);
+			view()->invalidate();
+			view()->properties()->setSelection(W);
+			HaveFirstPoint = false;
 		}
-		document()->history().add(L);
-		view()->invalidate();
-		view()->properties()->setSelection(W);
-		HaveFirstPoint = false;
 	}
 }
 

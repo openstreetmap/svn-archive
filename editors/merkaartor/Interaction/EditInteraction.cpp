@@ -18,7 +18,7 @@
 #include <QtGui/QMouseEvent>
 
 EditInteraction::EditInteraction(MapView* theView)
-: FeatureSnapInteraction(theView), Panning(false)
+: FeatureSnapInteraction(theView)
 {
 	connect(main(),SIGNAL(remove_triggered()),this,SLOT(on_remove_triggered()));
 	connect(main(),SIGNAL(move_triggered()),this,SLOT(on_move_triggered()));
@@ -36,7 +36,7 @@ EditInteraction::~EditInteraction(void)
 
 void EditInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter)
 {
-	if (!Panning)
+	if (!panning())
 		for (unsigned int i=0; i<view()->properties()->size(); ++i)
 			view()->properties()->selection(i)->drawFocus(thePainter, projection());
 	FeatureSnapInteraction::paintEvent(anEvent, thePainter);
@@ -66,34 +66,14 @@ void EditInteraction::snapMousePressEvent(QMouseEvent * event, MapFeature* aLast
 	main()->editReverseAction->setEnabled(IsRoad || IsWay);
 	
 	view()->update();
-	if (!aLast)
-	{
-		Panning = true;
-		LastPan = event->pos();
-		activateSnap(false);
-	}	
 }
 
 void EditInteraction::snapMouseReleaseEvent(QMouseEvent * , MapFeature* )
 {
-	if (Panning)
-	{
-		activateSnap(true);
-		Panning = false;
-		view()->invalidate();
-	}
 }
 
 void EditInteraction::snapMouseMoveEvent(QMouseEvent* event, MapFeature* )
 {
-	if (Panning)
-	{
-		QPoint Delta = LastPan;
-		Delta -= event->pos();
-		view()->projection().panScreen(-Delta,view()->rect());
-		view()->invalidate();
-		LastPan = event->pos();
-	}
 }
 
 void EditInteraction::on_remove_triggered()

@@ -11,12 +11,17 @@
 #include <math.h>
 
 Interaction::Interaction(MapView* aView)
-: theView(aView)
+: theView(aView), Panning(false)
 {
 }
 
 Interaction::~Interaction()
 {
+}
+
+bool Interaction::panning() const
+{
+	return Panning;
 }
 
 MainWindow* Interaction::main()
@@ -39,16 +44,34 @@ const Projection& Interaction::projection() const
 	return theView->projection();
 }
 
-void Interaction::mousePressEvent(QMouseEvent * )
+void Interaction::mousePressEvent(QMouseEvent * anEvent)
 {
+	if (anEvent->buttons() & Qt::RightButton)
+	{
+		Panning = true;
+		LastPan = anEvent->pos();
+	}
 }
 
 void Interaction::mouseReleaseEvent(QMouseEvent * )
 {
+	if (Panning)
+	{
+		Panning = false;
+		view()->invalidate();
+	}
 }
 
-void Interaction::mouseMoveEvent(QMouseEvent* )
+void Interaction::mouseMoveEvent(QMouseEvent* anEvent)
 {
+	if (Panning)
+	{
+		QPoint Delta = LastPan;
+		Delta -= anEvent->pos();
+		view()->projection().panScreen(-Delta,view()->rect());
+		view()->invalidate();
+		LastPan = anEvent->pos();
+	}
 }
 
 void Interaction::paintEvent(QPaintEvent*, QPainter&)

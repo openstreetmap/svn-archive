@@ -42,8 +42,11 @@ class Interaction : public QObject
 		MapDocument* document();
 		MainWindow* main();
 		const Projection& projection() const;
+		bool panning() const;
 	private:
 		MapView* theView;
+		bool Panning;
+		QPoint LastPan;
 };
 
 template<class FeatureType>
@@ -64,16 +67,19 @@ class GenericFeatureSnapInteraction : public Interaction
 		{
 			updateSnap(event);
 			snapMousePressEvent(event,LastSnap);
+			Interaction::mousePressEvent(event);
 		}
 		virtual void mouseReleaseEvent(QMouseEvent * event)
 		{
 			updateSnap(event);
 			snapMouseReleaseEvent(event,LastSnap);
+			Interaction::mouseReleaseEvent(event);
 		}
 		virtual void mouseMoveEvent(QMouseEvent* event)
 		{
 			updateSnap(event);
 			snapMouseMoveEvent(event, LastSnap);
+			Interaction::mouseMoveEvent(event);
 		}
 		virtual void snapMousePressEvent(QMouseEvent * , FeatureType*)
 		{
@@ -99,6 +105,11 @@ class GenericFeatureSnapInteraction : public Interaction
 	private:
 		void updateSnap(QMouseEvent* event)
 		{
+			if (panning())
+			{
+				LastSnap = 0;
+				return;
+			}
 			bool NoRoads = QApplication::keyboardModifiers() & Qt::AltModifier;
 			FeatureType* Prev = LastSnap;
 			LastSnap = 0;

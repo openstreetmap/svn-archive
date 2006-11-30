@@ -21,10 +21,6 @@ class EditInteraction :	public FeatureSnapInteraction
 		void on_move_triggered();
 		void on_add_triggered();
 		void on_reverse_triggered();
-
-	private:
-		bool Panning;
-		QPoint LastPan;
 };
 
 #endif

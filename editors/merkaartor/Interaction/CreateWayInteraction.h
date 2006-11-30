@@ -2,6 +2,7 @@
 #define MERKATOR_CREATEWAYINTERACTION_H_
 
 #include "Interaction/Interaction.h"
+#include "Map/Coord.h"
 
 #include <QtCore/QPointF>
 
@@ -23,7 +24,7 @@ class CreateWayInteraction : public TrackPointSnapInteraction
 
 	private:
 		bool HaveFirstPoint;
-		QPointF P1, P2;
+		Coord P1, P2;
 		TrackPoint* From;
 		bool BezierWay;
 		MainWindow* Main;

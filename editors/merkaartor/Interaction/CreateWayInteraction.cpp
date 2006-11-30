@@ -13,7 +13,8 @@
 #include <QtGui/QPainter>
 
 CreateWayInteraction::CreateWayInteraction(MainWindow* aMain, MapView* aView, bool aBezierWay)
-: TrackPointSnapInteraction(aView), HaveFirstPoint(false), From(0), BezierWay(aBezierWay), Main(aMain)
+: TrackPointSnapInteraction(aView), HaveFirstPoint(false), P1(0,0), P2(0,0),
+  From(0), BezierWay(aBezierWay), Main(aMain)
 {
 	view()->properties()->setSelection(0);
 }
@@ -28,7 +29,7 @@ void CreateWayInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter
 	{
 		QPen TP(QBrush(QColor(0xff,0x77,0x11,128)),projection().pixelPerM()*4);
 		thePainter.setPen(TP);
-		thePainter.drawLine(P1,P2);
+		thePainter.drawLine(projection().project(P1),projection().project(P2));
 	}
 	TrackPointSnapInteraction::paintEvent(anEvent, thePainter);
 }
@@ -40,25 +41,25 @@ void CreateWayInteraction::snapMouseReleaseEvent(QMouseEvent * event, TrackPoint
 		if (!HaveFirstPoint)
 		{
 			From = aLast;
-			P1 = event->pos();
+			P1 = projection().inverse(event->pos());
 			if (From)
-				P1 = projection().project(From->position());
+				P1 = From->position();
 			HaveFirstPoint = true;
 			view()->update();
 		}
 		else
 		{
-			P2 = event->pos();
+			P2 = projection().inverse(event->pos());
 			CommandList* L = new CommandList;
 			if (!From)
 			{
-				From = new TrackPoint(projection().inverse(P1));
+				From = new TrackPoint(P1);
 				L->add(new AddFeatureCommand(Main->activeLayer(),From,true));
 			}
 			TrackPoint* To = aLast;
 			if (!To)
 			{
-				To = new TrackPoint(projection().inverse(P2));
+				To = new TrackPoint(P2);
 				L->add(new AddFeatureCommand(Main->activeLayer(),To,true));
 			}
 			Way* W;
@@ -92,9 +93,9 @@ void CreateWayInteraction::snapMouseMoveEvent(QMouseEvent* event, TrackPoint* aL
 {
 	if (HaveFirstPoint)
 	{
-		P2 = event->pos();
+		P2 = projection().inverse(event->pos());
 		if (aLast)
-			P2 = projection().project(aLast->position());
+			P2 = aLast->position();
 		view()->update();
 	}
 }

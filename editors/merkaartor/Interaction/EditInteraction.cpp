@@ -36,36 +36,38 @@ EditInteraction::~EditInteraction(void)
 
 void EditInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter)
 {
-	if (!panning())
-		for (unsigned int i=0; i<view()->properties()->size(); ++i)
-			view()->properties()->selection(i)->drawFocus(thePainter, projection());
+	for (unsigned int i=0; i<view()->properties()->size(); ++i)
+		view()->properties()->selection(i)->drawFocus(thePainter, projection());
 	FeatureSnapInteraction::paintEvent(anEvent, thePainter);
 }
 
 void EditInteraction::snapMousePressEvent(QMouseEvent * event, MapFeature* aLast)
 {
-	if (event->modifiers() & Qt::ControlModifier)
+	if (event->buttons() & Qt::LeftButton)
 	{
-		if (aLast)
-			view()->properties()->toggleSelection(aLast);
+		if (event->modifiers() & Qt::ControlModifier)
+		{
+			if (aLast)
+				view()->properties()->toggleSelection(aLast);
+		}
+		else
+			view()->properties()->setSelection(aLast);
+		bool IsPoint = false;
+		bool IsRoad = false;
+		bool IsWay = false;
+		if (view()->properties()->size() == 1)
+		{
+			IsPoint = dynamic_cast<TrackPoint*>(aLast) != 0;
+			IsRoad = dynamic_cast<Road*>(aLast) != 0;
+			IsWay = dynamic_cast<Way*>(aLast) != 0;
+		}
+		main()->editRemoveAction->setEnabled(view()->properties()->size() == 1);
+		main()->editMoveAction->setEnabled(IsPoint);
+		main()->editAddAction->setEnabled(IsRoad);
+		main()->editReverseAction->setEnabled(IsRoad || IsWay);
+		
+		view()->update();
 	}
-	else
-		view()->properties()->setSelection(aLast);
-	bool IsPoint = false;
-	bool IsRoad = false;
-	bool IsWay = false;
-	if (view()->properties()->size() == 1)
-	{
-		IsPoint = dynamic_cast<TrackPoint*>(aLast) != 0;
-		IsRoad = dynamic_cast<Road*>(aLast) != 0;
-		IsWay = dynamic_cast<Way*>(aLast) != 0;
-	}
-	main()->editRemoveAction->setEnabled(view()->properties()->size() == 1);
-	main()->editMoveAction->setEnabled(IsPoint);
-	main()->editAddAction->setEnabled(IsRoad);
-	main()->editReverseAction->setEnabled(IsRoad || IsWay);
-	
-	view()->update();
 }
 
 void EditInteraction::snapMouseReleaseEvent(QMouseEvent * , MapFeature* )

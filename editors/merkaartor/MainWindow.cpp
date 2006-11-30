@@ -171,6 +171,7 @@ void MainWindow::on_fileOpenAction_triggered()
 			theProperties->setSelection(0);
 			delete theDocument;
 			theDocument = NewDoc;
+			theDocument->add(NewLayer);
 			theView->setDocument(theDocument);
 			on_viewZoomAllAction_triggered();
 			on_editPropertiesAction_triggered();

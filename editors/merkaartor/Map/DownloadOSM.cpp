@@ -21,8 +21,9 @@
 #include <QtGui/QProgressDialog>
 #include <QtGui/QStatusBar>
 
-// #define DEBUG_EVERY_CALL
+#define DEBUG_EVERY_CALL
 #define DEBUG_MAPCALL_ONLY
+#define DEBUG_NONGET_CALL
 
 /* DOWNLOADER */
 
@@ -64,17 +65,24 @@ void Downloader::on_Cancel_clicked()
 
 #include "QtGui/QTextBrowser"
 
-void showDebug(const QString& URL, const QByteArray& arr)
+void showDebug(const QString& Method, const QString& URL, const QString& Sent, const QByteArray& arr)
 {
 	static int Download = 0;
 	++Download;
 	QTextBrowser* b = new QTextBrowser;
-	b->setWindowTitle(URL+" -- "+QString::number(Download));
-	b->setText(QString::fromUtf8(arr));
+	b->setWindowTitle(Method + " " + URL+" -- "+QString::number(Download));
+	if (Sent.length())
+	{
+		b->append(Sent+QString("\n"));
+		b->append(" <======================== "+QString("\n"));
+		b->append(" ========================> "+QString("\n"));
+	}
+	b->append(QString::fromUtf8(arr));
 	b->setAttribute(Qt::WA_DeleteOnClose,true);
 	b->show();
 	b->raise();
 }
+
 
 bool Downloader::go(const QString& url)
 {
@@ -91,7 +99,7 @@ bool Downloader::go(const QString& url)
 	}
 	Content = Request.readAll();
 #ifdef DEBUG_EVERY_CALL
-	showDebug(url,Content);
+	showDebug("GET", url, QByteArray() ,Content);
 #endif
 	Result = Request.lastResponse().statusCode();
 	delete t;
@@ -118,6 +126,9 @@ bool Downloader::request(const QString& Method, const QString& URL, const QStrin
 		return false;
 	}
 	Content = Request.readAll();
+#ifdef DEBUG_NONGET_CALL
+	showDebug(Method,URL,Data,Content);
+#endif
 	Result = Request.lastResponse().statusCode();
 	return !Error;
 }
@@ -225,7 +236,7 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 	}
 	delete ProgressDialog;
 #ifdef DEBUG_MAPCALL_ONLY
-	showDebug(URL,Rcv.content());
+	showDebug("GET", URL,QByteArray(), Rcv.content());
 #endif
 	int x = Rcv.resultCode();
 	switch (x)

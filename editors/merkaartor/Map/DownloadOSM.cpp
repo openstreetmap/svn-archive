@@ -21,9 +21,9 @@
 #include <QtGui/QProgressDialog>
 #include <QtGui/QStatusBar>
 
-#define DEBUG_EVERY_CALL
-#define DEBUG_MAPCALL_ONLY
-#define DEBUG_NONGET_CALL
+// #define DEBUG_EVERY_CALL
+// #define DEBUG_MAPCALL_ONLY
+// #define DEBUG_NONGET_CALL
 
 /* DOWNLOADER */
 
@@ -172,7 +172,7 @@ QString Downloader::getURLToCreate(const QString &What)
 {
 	QString URL("/api/0.3/%1/0");
 	if (Use04Api)
-		URL = QString("api/0.4/%1/create");
+		URL = QString("/api/0.4/%1/create");
 	return URL.arg(What);
 }
 

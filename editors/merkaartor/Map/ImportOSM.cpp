@@ -412,7 +412,7 @@ bool importOSM(QWidget* aParent, QIODevice& File, MapDocument* theDocument, MapL
 	if (!WasCanceled)
 		WasCanceled = !resolveNotYetDownloaded(dlg,theDocument,theLayer,theList,theDownloader);
 	delete dlg;
-	if (theList->empty() || WasCanceled)
+	if (WasCanceled)
 	{
 		theDocument->remove(theLayer);
 		delete conflictLayer;

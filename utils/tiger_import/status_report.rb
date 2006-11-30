@@ -32,6 +32,8 @@ Find.find("#{THIS_DIR}/spider/tiger2005fe") do |f|
 		fips_to_state[fips] = [state]
 	end
 end
+$stderr.puts "state_to_fips = #{state_to_fips.inspect}"
+$stderr.puts "fips_to_state = #{fips_to_state.inspect}"
 
 state_totals = {}
 state_to_fips.keys.sort.each do |state|
@@ -42,6 +44,7 @@ state_to_fips.keys.sort.each do |state|
 	end
 	state_totals[state] = total
 end
+$stderr.puts "state_totals = #{state_totals.inspect}"
 
 done_state_totals = {}
 state_to_fips.keys.sort.each do |state|
@@ -50,27 +53,30 @@ state_to_fips.keys.sort.each do |state|
 		rs = sql("SELECT COUNT(*) FROM street WHERE from_fips = '#{fips}' AND osm_way_id IS NOT NULL;")
 		total += rs.fetch_row[0].to_i
 	end
-	state_totals[state] = total
+	done_state_totals[state] = total
 end
+$stderr.puts "done_state_totals = #{done_state_totals.inspect}"
 
 fips_totals = {}
 fips_to_state.keys.sort.each do |fips|
 	rs = sql("SELECT COUNT(*) FROM street WHERE from_fips = '#{fips}';")
 	fips_totals[fips] = rs.fetch_row[0].to_i
 end
+$stderr.puts "fips_totals = #{fips_totals.inspect}"
 
 done_fips_totals = {}
 fips_to_state.keys.sort.each do |fips|
 	rs = sql("SELECT COUNT(*) FROM street WHERE from_fips = '#{fips}' AND osm_way_id IS NOT NULL;")
 	done_fips_totals[fips] = rs.fetch_row[0].to_i
 end
+$stderr.puts "done_fips_totals = #{done_fips_totals.inspect}"
 
-all_total = 0
+all_totals = 0
 state_totals.keys.each do |state|
 	all_totals += state_totals[state]
 end
 
-done_all_total = 0
+done_all_totals = 0
 done_state_totals.keys.each do |state|
 	done_all_totals += done_state_totals[state]
 end
@@ -82,11 +88,12 @@ end
 puts "TIGER -> OSM Import Status"
 puts "(as of #{Time.now})"
 puts
-puts "Overall\t#{done_all_total} / #{all_total}\t#{percent(done_all_total, all_total)}"
+puts "Overall\t#{done_all_totals} / #{all_totals}\t#{percent(done_all_totals, all_totals)}"
+puts
 state_totals.keys.sort.each do |state|
-	puts "State of #{state}\t#{done_state_totals[state]} / #{state_totals[state]}\t#{percent(done_state_totals[state], state_totals[state])}"
+	puts "State or territory of #{state}\t#{done_state_totals[state]} / #{state_totals[state]}\t#{percent(done_state_totals[state], state_totals[state])}"
 	state_to_fips[state].sort.each do |fips|
-		puts "#{fips}\t#{done_fips_totals[fips]} / #{fips_totals[fips]}\t#{percent(done_fips_totals[fips], fips_totals[fips])}"
+		puts "#{state} FIPS #{fips}\t#{done_fips_totals[fips]} / #{fips_totals[fips]}\t#{percent(done_fips_totals[fips], fips_totals[fips])}"
 	end
 	puts
 end

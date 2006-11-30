@@ -52,3 +52,76 @@ Find.find("#{THIS_DIR}/spider/tiger2005fe") do |f|
 	end
 end
 
+sql("DROP TABLE IF EXISTS fips;")
+sql("CREATE TABLE fips (id INTEGER AUTO_INCREMENT UNIQUE KEY, code VARCHAR(5) UNIQUE, priority FLOAT);")
+sql("CREATE UNIQUE INDEX fips_id_index ON fips (id);")
+sql("CREATE UNIQUE INDEX fips_code_index ON fips (code);")
+sql("CREATE INDEX fips_priority_index ON fips (priority);")
+
+FIRST_FIPS = [
+    "06075",  # San Francisco
+    "06097",  # Sonoma (greater San Francisco, CA)
+    "06041",  # Marin (greater San Francisco, CA)
+    "06001",  # Alameda (greater San Francisco, CA)
+    "06085",  # Santa Clara (greater San Francisco, CA)
+    "06081",  # San Mateo (greater San Francisco, CA)
+    "17031",  # Cook (Chicago, IL)
+    "36061",  # New York (Manhattan)
+    "11001",  # District of Columbia (Washington DC)
+    "48201",  # Harris (Houston, TX)
+    "48167",  # Galveston (greater Houston, TX)
+    "48039",  # Brazoria (greater Houston, TX)
+    "48071",  # Chambers (greater Houston, TX)
+    "18029",  # Dearborn (greater Cincinatti, OH)
+    "21015",  # Boone (greater Cincinatti, OH)
+    "21117",  # Kenton (greater Cincinatti, OH)
+    "21037",  # Campbell (greater Cincinatti, OH)
+    "21191",  # Pendleton (greater Cincinatti, OH)
+    "21023",  # Bracken (greater Cincinatti, OH)
+    "39061",  # Hamilton (greater Cincinatti, OH)
+    "39025",  # Clermont (greater Cincinatti, OH)
+    "39015",  # Brown (greater Cincinatti, OH)
+    "39001",  # Adams (greater Cincinatti, OH)
+    "39017",  # Butler (greater Cincinatti, OH)
+    "39165",  # Warren (greater Cincinatti, OH)
+    "39027",  # Clinton (greater Cincinatti, OH)
+    "39057",  # Greene (greater Cincinatti, OH)
+    "06037",  # California (for Blars, blarson@blars.org)
+    "06059",  # California (for Blars, blarson@blars.org)
+    "06073",  # California (for Blars, blarson@blars.org)
+    "06071",  # California (for Blars, blarson@blars.org)
+    "06065",  # California (for Blars, blarson@blars.org)
+    "06111",  # California (for Blars, blarson@blars.org)
+    "06029",  # California (for Blars, blarson@blars.org)
+    "41029",  # California (for Blars, blarson@blars.org)
+    "06085",  # California (for Blars, blarson@blars.org)
+    "51059",  # Clifton, VA (for Michael Robinson, robinson@fuzzymuzzle.com)
+    "26163",  # Wayne, MI (for Andrew Turner, ajturner@highearthorbit.com)
+    "26125",  # Oakland, MI (for Andrew Turner, ajturner@highearthorbit.com)
+    "26161",  # Washtenaw, MI (for Andrew Turner, ajturner@highearthorbit.com)
+    "36089",  # St. Lawrence, NY (for Russ Nelson, nelson@crynwr.com)
+    "36045",  # Jefferson, NY (for Russ Nelson, nelson@crynwr.com)
+    "36049",  # Lewis, NY (for Russ Nelson, nelson@crynwr.com)
+    "36033",  # Franklin, NY (for Russ Nelson, nelson@crynwr.com)
+    "36019",  # Clinton, NY (for Russ Nelson, nelson@crynwr.com)
+    "36043",  # Herkimer, NY (for Russ Nelson, nelson@crynwr.com)
+    "36041",  # Hamilton, NY (for Russ Nelson, nelson@crynwr.com)
+    "36031",  # Essex, NY (for Russ Nelson, nelson@crynwr.com)
+]
+
+all_fips = FIRST_FIPS
+rs = sql("SELECT DISTINCT from_fips FROM street ORDER BY from_fips ASC;")
+while row = rs.fetch_row do
+	fips = row[0]
+	all_fips << fips
+end
+rs.free
+all_fips.uniq!
+
+all_fips.each_index do |i|
+	fips = all_fips[i]
+	sql("INSERT INTO fips (code, priority) VALUES ('#{esc(fips)}', #{i.to_f});")
+end
+
+$dbh.close
+

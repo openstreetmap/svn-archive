@@ -107,7 +107,10 @@ MapFeature::TrafficDirectionType Way::trafficDirection() const
 
 void Way::setWidth(double w)
 {
-	setTag("width",QString::number(w));
+	if (fabs(w-DEFAULTWIDTH) < 0.01)
+		clearTag("width");
+	else
+		setTag("width",QString::number(w));
 }
 
 CoordBox Way::boundingBox() const

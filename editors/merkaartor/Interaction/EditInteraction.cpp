@@ -55,11 +55,17 @@ void EditInteraction::snapMousePressEvent(QMouseEvent * event, MapFeature* aLast
 		bool IsPoint = false;
 		bool IsRoad = false;
 		bool IsWay = false;
+		bool IsRoads = view()->properties()->size() > 0;
 		if (view()->properties()->size() == 1)
 		{
 			IsPoint = dynamic_cast<TrackPoint*>(aLast) != 0;
 			IsRoad = dynamic_cast<Road*>(aLast) != 0;
 			IsWay = dynamic_cast<Way*>(aLast) != 0;
+		}
+		for (unsigned int i=0; i<view()->properties()->size(); ++i)
+		{
+			if (!dynamic_cast<Road*>(aLast))
+				IsRoads = false;
 		}
 		main()->editRemoveAction->setEnabled(view()->properties()->size() == 1);
 		main()->editMoveAction->setEnabled(IsPoint);

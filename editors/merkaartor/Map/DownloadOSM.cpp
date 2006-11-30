@@ -21,6 +21,9 @@
 #include <QtGui/QProgressDialog>
 #include <QtGui/QStatusBar>
 
+// #define DEBUG_EVERY_CALL
+#define DEBUG_MAPCALL_ONLY
+
 /* DOWNLOADER */
 
 Downloader::Downloader(const QString& aWeb, const QString& aUser, const QString& aPwd, bool aUse04Api)
@@ -59,6 +62,20 @@ void Downloader::on_Cancel_clicked()
 		Loop.exit(QDialog::Rejected);
 }
 
+#include "QtGui/QTextBrowser"
+
+void showDebug(const QString& URL, const QByteArray& arr)
+{
+	static int Download = 0;
+	++Download;
+	QTextBrowser* b = new QTextBrowser;
+	b->setWindowTitle(URL+" -- "+QString::number(Download));
+	b->setText(QString::fromUtf8(arr));
+	b->setAttribute(Qt::WA_DeleteOnClose,true);
+	b->show();
+	b->raise();
+}
+
 bool Downloader::go(const QString& url)
 {
 	if (Error) return false;
@@ -73,6 +90,9 @@ bool Downloader::go(const QString& url)
 		return false;
 	}
 	Content = Request.readAll();
+#ifdef DEBUG_EVERY_CALL
+	showDebug(url,Content);
+#endif
 	Result = Request.lastResponse().statusCode();
 	delete t;
 	return !Error;
@@ -204,6 +224,9 @@ bool downloadOSM(QMainWindow* aParent, const QString& aWeb, const QString& aUser
 		return false;
 	}
 	delete ProgressDialog;
+#ifdef DEBUG_MAPCALL_ONLY
+	showDebug(URL,Rcv.content());
+#endif
 	int x = Rcv.resultCode();
 	switch (x)
 	{

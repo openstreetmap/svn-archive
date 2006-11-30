@@ -19,6 +19,7 @@ v0.06
 	* ADD : ability to contact OSM at a different port
 	* ADD : allow panning with right mouse button from all interactions
 	* FIX : keep correct startpoint when changing view during segment drawing
+	* ADD : debugging mode
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

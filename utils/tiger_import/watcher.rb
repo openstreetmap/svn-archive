@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 THIS_DIR = File.expand_path(File.dirname(__FILE__))
-TIGER_PID_PATH = "#{THIS_DIR}/to_osm.pid"
+TIGER_PID_PATH = "#{THIS_DIR}/import.pid"
 
 def tiger_import_running?
 	return false unless File.exist?(TIGER_PID_PATH)
@@ -10,5 +10,5 @@ def tiger_import_running?
 	$?.to_i.zero?
 end
 
-`#{THIS_DIR}/to_osm #{THIS_DIR}/spider/tiger2005fe` unless tiger_import_running?
+`#{THIS_DIR}/import.rb #{THIS_DIR}/spider/tiger2005fe` unless tiger_import_running?
 

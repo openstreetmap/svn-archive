@@ -28,15 +28,6 @@
     </property>
     <addaction name="helpAboutAction" />
    </widget>
-   <widget class="QMenu" name="menuCreate" >
-    <property name="title" >
-     <string>Create</string>
-    </property>
-    <addaction name="createNodeAction" />
-    <addaction name="createLinearWayAction" />
-    <addaction name="createWayAction" />
-    <addaction name="createRoadAction" />
-   </widget>
    <widget class="QMenu" name="menuView" >
     <property name="title" >
      <string>View</string>
@@ -63,6 +54,16 @@
     <addaction name="fileDownloadAction" />
     <addaction name="fileUploadAction" />
     <addaction name="fileQuitAction" />
+   </widget>
+   <widget class="QMenu" name="menuCreate" >
+    <property name="title" >
+     <string>Create</string>
+    </property>
+    <addaction name="createNodeAction" />
+    <addaction name="createLinearWayAction" />
+    <addaction name="createWayAction" />
+    <addaction name="createRoadAction" />
+    <addaction name="createDoubleWayAction" />
    </widget>
    <addaction name="menuFile" />
    <addaction name="menuEdit" />
@@ -285,6 +286,11 @@
   <action name="viewSetCoordinatesAction" >
    <property name="text" >
     <string>Set coordinates</string>
+   </property>
+  </action>
+  <action name="createDoubleWayAction" >
+   <property name="text" >
+    <string>Double carriage way</string>
    </property>
   </action>
  </widget>

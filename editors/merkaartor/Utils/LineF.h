@@ -74,6 +74,11 @@ public:
 		}		
 	}
 
+	void slide(double d)
+	{
+		C += d*sqrt(A*A+B*B);
+	}
+
 	double distance(const QPointF& P) const
 	{
 		if (Valid)
@@ -110,6 +115,25 @@ public:
 			return Coord(P.lat()-A*SD,P.lon()-B*SD);
 		}
 		return Coord(P1.x(),P1.y());
+	}
+	QPointF project(const QPointF& P)
+	{
+		if (Valid)
+		{
+			double SD = A*P.x()+B*P.y()+C;
+			return QPointF(P.x()-A*SD,P.y()-B*SD);
+		}
+		return P1;
+	}
+
+	QPointF intersectionWith(const LineF& L)
+	{
+		double D = A*L.B - L.A*B;
+		if (fabs(D) < 0.00001)
+			return P2;
+		double x = B*L.C - L.B*C;
+		double y = L.A*C - A*L.C;
+		return QPointF(x/D,y/D);
 	}
 
 

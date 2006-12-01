@@ -6,6 +6,7 @@ HEADERS += \
 ./Command/RoadCommands.h \
 ./Command/TrackPointCommands.h \
 ./Command/WayCommands.h \
+./Interaction/CreateDoubleWayInteraction.h \
 ./Interaction/CreateNodeInteraction.h \
 ./Interaction/CreateRoadInteraction.h \
 ./Interaction/CreateWayInteraction.h \
@@ -57,6 +58,7 @@ SOURCES += \
 ./Map/TrackSegment.cpp \
 ./Map/Way.cpp \
 ./MapView.cpp \
+./Interaction/CreateDoubleWayInteraction.cpp \
 ./Interaction/CreateNodeInteraction.cpp \
 ./Interaction/CreateWayInteraction.cpp \
 ./Interaction/CreateRoadInteraction.cpp \
@@ -83,7 +85,8 @@ FORMS += \
 ./UploadMapDialog.ui \
 ./WayProperties.ui \
 ./SetPositionDialog.ui \
-./MultiProperties.ui
+./MultiProperties.ui \
+./Interaction/CreateDoubleWayDock.ui
 
 #Resource file(s)
 RESOURCES += .\Icons\AllIcons.qrc

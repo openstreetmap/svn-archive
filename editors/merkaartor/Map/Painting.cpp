@@ -31,50 +31,66 @@ static void buildCubicPath(QPainterPath& Path, const QPointF& P1, const QPointF&
 	}
 }
 
-void draw(QPainter& thePainter, QPen& thePen, Way* W, double theWidth, const Projection& theProjection)
+/// draws way with oneway markers
+void draw(QPainter& thePainter, QPen& thePen, MapFeature::TrafficDirectionType TT, const QPointF& FromF, const QPointF& ToF, double theWidth, const Projection& theProjection)
 {
 	QPainterPath Path;
-	QPointF FromF(theProjection.project(W->from()->position()));
-	QPointF ToF(theProjection.project(W->to()->position()));
 	Path.moveTo(FromF);
+	Path.lineTo(ToF);
+	double DistFromCenter = theWidth*2;
+	if (distance(FromF,ToF) > std::max(40.0,DistFromCenter*2+4))
+	{
+		QPointF H(FromF+ToF);
+		H *= 0.5;
+		double A = angle(FromF-ToF);
+		QPointF T(DistFromCenter*cos(A),DistFromCenter*sin(A));
+		QPointF V1(theWidth*cos(A+3.141592/6),theWidth*sin(A+3.141592/6));
+		QPointF V2(theWidth*cos(A-3.141592/6),theWidth*sin(A-3.141592/6));
+//		MapFeature::TrafficDirectionType TT = W->trafficDirection();
+		if ( (TT == MapFeature::OtherWay) || (TT == MapFeature::BothWays) )
+		{
+			thePainter.setPen(QColor(0,0,0));
+			thePainter.drawLine(H+T,H+T-V1);
+			thePainter.drawLine(H+T,H+T-V2);
+		}
+		if ( (TT == MapFeature::OneWay) || (TT == MapFeature::BothWays) )
+		{
+			thePainter.setPen(QColor(0,0,0));
+			thePainter.drawLine(H-T,H-T+V1);
+			thePainter.drawLine(H-T,H-T+V2);
+		}
+	}
+	thePainter.strokePath(Path,thePen);
+}
+
+void draw(QPainter& thePainter, QPen& thePen, MapFeature::TrafficDirectionType TT, const Coord& From, const Coord& To, double theWidth, const Projection& theProjection)
+{
+	QPointF FromF(theProjection.project(From));
+	QPointF ToF(theProjection.project(To));
+	draw(thePainter,thePen,TT,FromF,ToF,theWidth,theProjection);
+}
+
+void draw(QPainter& thePainter, QPen& thePen, Way* W, double theWidth, const Projection& theProjection)
+{
 	// due to a bug in Qt 4.20
 /*	Path.cubicTo(
 		theProjection.project(W->controlFrom()->position()),
 		theProjection.project(W->controlTo()->position()),
 		theProjection.project(W->to()->position())); */
 	if (W->controlFrom() && W->controlTo())
+	{
+		QPainterPath Path;
+		QPointF FromF(theProjection.project(W->from()->position()));
+		QPointF ToF(theProjection.project(W->to()->position()));
+		Path.moveTo(FromF);
 		buildCubicPath(Path,FromF,
 			theProjection.project(W->controlFrom()->position()),
 			theProjection.project(W->controlTo()->position()),
 			ToF);
-	else
-	{
-		Path.lineTo(ToF);
-		double DistFromCenter = theWidth*2;
-		if (distance(FromF,ToF) > std::max(40.0,DistFromCenter*2+4))
-		{
-			QPointF H(FromF+ToF);
-			H *= 0.5;
-			double A = angle(FromF-ToF);
-			QPointF T(DistFromCenter*cos(A),DistFromCenter*sin(A));
-			QPointF V1(theWidth*cos(A+3.141592/6),theWidth*sin(A+3.141592/6));
-			QPointF V2(theWidth*cos(A-3.141592/6),theWidth*sin(A-3.141592/6));
-			MapFeature::TrafficDirectionType TT = W->trafficDirection();
-			if ( (TT == MapFeature::OtherWay) || (TT == MapFeature::BothWays) )
-			{
-				thePainter.setPen(QColor(0,0,0));
-				thePainter.drawLine(H+T,H+T-V1);
-				thePainter.drawLine(H+T,H+T-V2);
-			}
-			if ( (TT == MapFeature::OneWay) || (TT == MapFeature::BothWays) )
-			{
-				thePainter.setPen(QColor(0,0,0));
-				thePainter.drawLine(H-T,H-T+V1);
-				thePainter.drawLine(H-T,H-T+V2);
-			}
-		}
+		thePainter.strokePath(Path,thePen);
 	}
-	thePainter.strokePath(Path,thePen);
+	else
+		draw(thePainter, thePen,W->trafficDirection(), W->from()->position(), W->to()->position(), theWidth, theProjection);
 }
 
 

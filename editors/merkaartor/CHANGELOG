@@ -21,6 +21,7 @@ v0.06
 	* FIX : keep correct startpoint when changing view during segment drawing
 	* ADD : debugging mode
 	* FIX : create node bad url
+	* ADD : double carriageway tool
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

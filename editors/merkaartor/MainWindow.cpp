@@ -4,6 +4,7 @@
 #include "MapView.h"
 #include "PropertiesDock.h"
 #include "Command/Command.h"
+#include "Interaction/CreateDoubleWayInteraction.h"
 #include "Interaction/CreateNodeInteraction.h"
 #include "Interaction/CreateRoadInteraction.h"
 #include "Interaction/CreateWayInteraction.h"
@@ -279,6 +280,10 @@ void MainWindow::on_viewSetCoordinatesAction_triggered()
 	delete Dlg;
 }
 
+void MainWindow::on_createDoubleWayAction_triggered()
+{
+	theView->launch(new CreateDoubleWayInteraction(this, theView));
+}
 
 void MainWindow::on_createWayAction_triggered()
 {

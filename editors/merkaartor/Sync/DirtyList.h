@@ -67,10 +67,13 @@ class DirtyListVisit : public DirtyList
 		virtual bool eraseRoad(Road* R) = 0;
 
 	private:
+		bool notYetAdded(MapFeature* F);
 		MapDocument* theDocument;
 		const DirtyListBuild& Future;
 		bool EraseFromHistory;
 		std::vector<MapFeature*> Updated;
+		std::vector<MapFeature*> AlreadyAdded;
+		std::vector<bool> EraseResponse;
 };
 
 class DirtyListDescriber : public DirtyListVisit
@@ -129,54 +132,6 @@ class DirtyListExecutor : public QObject, public DirtyListVisit
 };
 
 
-/*
-class DirtyListImpl : public QObject, public DirtyList
-{
-	Q_OBJECT
-
-	public:
-		DirtyListImpl(MapDocument* aDoc, const QString& aWeb, const QString& aUser, const QString& aPwd);
-		~DirtyListImpl(void);
-
-		bool isAdded(MapFeature* F);
-		bool isAdded(Way* W);
-		bool isAdded(TrackPoint* Pt);
-		bool isAdded(Road* R);
-		bool isChanged(MapFeature* F);
-		bool isChanged(Way* W);
-		bool isChanged(TrackPoint* Pt);
-		bool isChanged(Road* R);
-		bool isDeleted(MapFeature* F);
-		bool showChanges(QWidget* Parent);
-		bool executeChanges(QWidget* Parent);
-
-	private:
-		void describeAdded(Way* W);
-		void describeAdded(TrackPoint* Pt);
-		void describeAdded(Road* R);
-		void describeChanged(Way* W);
-		void describeChanged(TrackPoint* Pt);
-		void describeChanged(Road* R);
-		bool executeAdded(Way* W);
-		bool executeAdded(TrackPoint* Pt);
-		bool executeAdded(Road* R);
-		bool executeChanged(Way* W);
-		bool executeChanged(TrackPoint* Pt);
-		bool executeChanged(Road* R);
-
-		bool isUpdated(MapFeature* F);
-
-		MapDocument* theDocument;
-		Ui::SyncListDialog Ui;
-		std::vector<MapFeature*> Added, Changed;
-		bool IsExecuting;
-		QProgressDialog* Progress;
-		QString Web,User,Pwd;
-		bool Finished;
-		bool FinishedError;
-		int FinishedId;
-};
-*/
 #endif
 
 

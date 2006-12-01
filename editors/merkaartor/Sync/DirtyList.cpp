@@ -128,21 +128,51 @@ MapDocument* DirtyListVisit::document()
 	return theDocument;
 }
 
+bool DirtyListVisit::notYetAdded(MapFeature* F)
+{
+	return std::find(AlreadyAdded.begin(),AlreadyAdded.end(),F) == AlreadyAdded.end();
+}
+
 bool DirtyListVisit::add(MapFeature* F)
 {
 	if (Future.willBeErased(F))
 		return EraseFromHistory;
+	for (unsigned int i=0; i<AlreadyAdded.size(); ++i)
+		if (AlreadyAdded[i] == F)
+			return EraseResponse[i];
 	if (TrackPoint* Pt = dynamic_cast<TrackPoint*>(F))
 	{
 		if (isInterestingPoint(theDocument,Pt))
-			return addPoint(Pt);
+		{
+			bool x = addPoint(Pt);
+			AlreadyAdded.push_back(F);
+			EraseResponse.push_back(x);
+			return x;
+		}
 		else
 			return EraseFromHistory;
 	}
 	else if (Way* W = dynamic_cast<Way*>(F))
-		return addWay(W);
+	{
+		if (Future.willBeAdded(W->from()) && notYetAdded(W->from()))
+			add(W->from());
+		if (Future.willBeAdded(W->to()) && notYetAdded(W->to()))
+			add(W->to());
+		bool x = addWay(W);
+		AlreadyAdded.push_back(F);
+		EraseResponse.push_back(x);
+		return x;
+	}
 	else if (Road* R = dynamic_cast<Road*>(F))
-		return addRoad(R);
+	{
+		for (unsigned int i=0; i<R->size(); ++i)
+			if (Future.willBeAdded(R->get(i)) && notYetAdded(R->get(i)))
+				add(R->get(i));
+		bool x = addRoad(R);
+		AlreadyAdded.push_back(F);
+		EraseResponse.push_back(x);
+		return x;
+	}
 	return EraseFromHistory;
 }
 

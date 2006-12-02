@@ -89,64 +89,69 @@ void CreateRoundaboutInteraction::testIntersections(CommandList* L, Road* R, uns
 
 void CreateRoundaboutInteraction::mousePressEvent(QMouseEvent * event)
 {
-	if (!HaveCenter)
+	if (event->buttons() & Qt::LeftButton)
 	{
-		HaveCenter = true;
-		Center = view()->projection().inverse(event->pos());
-	}
-	else
-	{
-		QPointF CenterF(view()->projection().project(Center));
-		double Radius = distance(CenterF,LastCursor)/view()->projection().pixelPerM();
-		double Precision = 2.49;
-		if (Radius<2.5)
-			Radius = 2.5;
-		double Angle = 2*acos(1-Precision/Radius);
-		double Steps = ceil(2*3.141592/Angle);
-		Angle = 2*3.141592/Steps;
-		Radius *= view()->projection().pixelPerM();
-		double Modifier = DockData.DriveRight->isChecked()?-1:1;		
-		QPen TP(QBrush(QColor(0xff,0x77,0x11,128)),projection().pixelPerM()*4);
-		QPointF Prev(CenterF.x()+cos(Modifier*Angle/2)*Radius,CenterF.y()+sin(Modifier*Angle/2)*Radius);
-		CommandList* L = new CommandList;
-		TrackPoint* First = new TrackPoint(view()->projection().inverse(Prev));
-		L->add(new AddFeatureCommand(Main->activeLayer(),First,true));
-		TrackPoint* Last = First;
-		Road* R = new Road;
-		R->setTag("oneway","yes");
-		for (double a = Angle*3/2; a<2*3.141592; a+=Angle)
+		if (!HaveCenter)
 		{
-			QPointF Next(CenterF.x()+cos(Modifier*a)*Radius,CenterF.y()+sin(Modifier*a)*Radius);
-			TrackPoint* New = new TrackPoint(view()->projection().inverse(Next));
-			L->add(new AddFeatureCommand(Main->activeLayer(),New,true));
-			Way* W = new Way(Last,New);
+			HaveCenter = true;
+			Center = view()->projection().inverse(event->pos());
+		}
+		else
+		{
+			QPointF CenterF(view()->projection().project(Center));
+			double Radius = distance(CenterF,LastCursor)/view()->projection().pixelPerM();
+			double Precision = 2.49;
+			if (Radius<2.5)
+				Radius = 2.5;
+			double Angle = 2*acos(1-Precision/Radius);
+			double Steps = ceil(2*3.141592/Angle);
+			Angle = 2*3.141592/Steps;
+			Radius *= view()->projection().pixelPerM();
+			double Modifier = DockData.DriveRight->isChecked()?-1:1;		
+			QPen TP(QBrush(QColor(0xff,0x77,0x11,128)),projection().pixelPerM()*4);
+			QPointF Prev(CenterF.x()+cos(Modifier*Angle/2)*Radius,CenterF.y()+sin(Modifier*Angle/2)*Radius);
+			CommandList* L = new CommandList;
+			TrackPoint* First = new TrackPoint(view()->projection().inverse(Prev));
+			L->add(new AddFeatureCommand(Main->activeLayer(),First,true));
+			TrackPoint* Last = First;
+			Road* R = new Road;
+			R->setTag("oneway","yes");
+			for (double a = Angle*3/2; a<2*3.141592; a+=Angle)
+			{
+				QPointF Next(CenterF.x()+cos(Modifier*a)*Radius,CenterF.y()+sin(Modifier*a)*Radius);
+				TrackPoint* New = new TrackPoint(view()->projection().inverse(Next));
+				L->add(new AddFeatureCommand(Main->activeLayer(),New,true));
+				Way* W = new Way(Last,New);
+				R->add(W);
+				W->addAsPartOf(R);
+				L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
+				Last = New;
+			}
+			Way* W = new Way(Last,First);
+			L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
 			R->add(W);
 			W->addAsPartOf(R);
-			L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
-			Last = New;
+			L->add(new AddFeatureCommand(Main->activeLayer(),R,true));
+			std::vector<Way*> ToTest;
+			for (FeatureIterator it(document()); !it.isEnd(); ++it)
+			{
+				Way* W1 = dynamic_cast<Way*>(it.get());
+				if (W1 && !W1->isPartOf(R))
+					ToTest.push_back(W1);
+			}
+			for (unsigned int i=0; i<ToTest.size(); ++i)
+			{
+				Way* W1 = ToTest[i];
+				testIntersections(L,R,0,W1,Radius);
+			}
+			Main->properties()->setSelection(R);
+			document()->history().add(L);
+			view()->invalidate();
+			view()->launch(0);
 		}
-		Way* W = new Way(Last,First);
-		L->add(new AddFeatureCommand(Main->activeLayer(),W,true));
-		R->add(W);
-		W->addAsPartOf(R);
-		L->add(new AddFeatureCommand(Main->activeLayer(),R,true));
-		std::vector<Way*> ToTest;
-		for (FeatureIterator it(document()); !it.isEnd(); ++it)
-		{
-			Way* W1 = dynamic_cast<Way*>(it.get());
-			if (W1 && !W1->isPartOf(R))
-				ToTest.push_back(W1);
-		}
-		for (unsigned int i=0; i<ToTest.size(); ++i)
-		{
-			Way* W1 = ToTest[i];
-			testIntersections(L,R,0,W1,Radius);
-		}
-		Main->properties()->setSelection(R);
-		document()->history().add(L);
-		view()->invalidate();
-		view()->launch(0);
 	}
+	else
+		Interaction::mousePressEvent(event);
 }
 
 void CreateRoundaboutInteraction::mouseMoveEvent(QMouseEvent* event)
@@ -154,6 +159,7 @@ void CreateRoundaboutInteraction::mouseMoveEvent(QMouseEvent* event)
 	LastCursor = event->pos();
 	if (HaveCenter)
 		view()->update();
+	Interaction::mouseMoveEvent(event);
 }
 
 void CreateRoundaboutInteraction::paintEvent(QPaintEvent* anEvent, QPainter& thePainter)

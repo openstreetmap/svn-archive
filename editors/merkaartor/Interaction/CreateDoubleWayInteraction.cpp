@@ -87,6 +87,7 @@ void CreateDoubleWayInteraction::mouseMoveEvent(QMouseEvent* event)
 	LastCursor = event->pos();
 	Interaction::mouseMoveEvent(event);
 	view()->update();
+	Interaction::mouseMoveEvent(event);
 }
 
 void CreateDoubleWayInteraction::mousePressEvent(QMouseEvent* anEvent)
@@ -205,4 +206,6 @@ void CreateDoubleWayInteraction::mousePressEvent(QMouseEvent* anEvent)
 			}
 		}
 	}
+	else
+		Interaction::mousePressEvent(anEvent);
 }

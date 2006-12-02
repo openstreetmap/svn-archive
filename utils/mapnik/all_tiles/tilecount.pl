@@ -30,7 +30,7 @@ my %Tiles;
 
 # precalculate number of tiles in each zoom-level
 my @Num;
-foreach my $Z(0..16){
+foreach my $Z(0..18){
   $Num[$Z] = 2 ** $Z;
 }
     

@@ -7,6 +7,7 @@
 #include "Interaction/CreateDoubleWayInteraction.h"
 #include "Interaction/CreateNodeInteraction.h"
 #include "Interaction/CreateRoadInteraction.h"
+#include "Interaction/CreateRoundaboutInteraction.h"
 #include "Interaction/CreateWayInteraction.h"
 #include "Interaction/EditInteraction.h"
 #include "Interaction/ZoomInteraction.h"
@@ -283,6 +284,11 @@ void MainWindow::on_viewSetCoordinatesAction_triggered()
 void MainWindow::on_createDoubleWayAction_triggered()
 {
 	theView->launch(new CreateDoubleWayInteraction(this, theView));
+}
+
+void MainWindow::on_createRoundaboutAction_triggered()
+{
+	theView->launch(new CreateRoundaboutInteraction(this, theView));
 }
 
 void MainWindow::on_createWayAction_triggered()

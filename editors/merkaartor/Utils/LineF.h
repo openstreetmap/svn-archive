@@ -136,6 +136,15 @@ public:
 		return QPointF(x/D,y/D);
 	}
 
+	bool segmentContains(const QPointF& X)
+	{
+		return
+			( ((P1.x() <= X.x()) && (X.x() <= P2.x())) ||
+			  ((P1.x() >= X.x()) && (X.x() >= P2.x())) ) &&
+			( ((P1.y() <= X.y()) && (X.y() <= P2.y())) ||
+			  ((P1.y() >= X.y()) && (X.y() >= P2.y())) );
+	}
+
 
 private:
 	QPointF P1, P2;

@@ -48,6 +48,11 @@ void Way::removeAsPartOf(Road* R)
 		PartOf.erase(i);
 }
 
+bool Way::isPartOf(Road* R)
+{
+	return std::find(PartOf.begin(),PartOf.end(),R) != PartOf.end();
+}
+
 void Way::cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* F, CommandList* theList, const std::vector<MapFeature*>& Alternatives)
 {
 	if ( (To == F) || (From == F) || (ControlFrom ==F) || (ControlTo == F) )

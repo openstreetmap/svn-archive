@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 		virtual ~MainWindow(void);
 
 	public slots:
+		virtual void on_createRoundaboutAction_triggered();
 		virtual void on_createDoubleWayAction_triggered();
 		virtual void on_createNodeAction_triggered();
 		virtual void on_createWayAction_triggered();

@@ -64,6 +64,7 @@
     <addaction name="createWayAction" />
     <addaction name="createRoadAction" />
     <addaction name="createDoubleWayAction" />
+    <addaction name="createRoundaboutAction" />
    </widget>
    <addaction name="menuFile" />
    <addaction name="menuEdit" />
@@ -291,6 +292,11 @@
   <action name="createDoubleWayAction" >
    <property name="text" >
     <string>Double carriage way</string>
+   </property>
+  </action>
+  <action name="createRoundaboutAction" >
+   <property name="text" >
+    <string>Roundabout</string>
    </property>
   </action>
  </widget>

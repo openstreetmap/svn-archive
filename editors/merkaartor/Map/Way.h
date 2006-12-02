@@ -33,6 +33,7 @@ class Way : public MapFeature
 		virtual void cascadedRemoveIfUsing(MapDocument* theDocument, MapFeature* aFeature, CommandList* theList, const std::vector<MapFeature*>& Alternatives);
 		void addAsPartOf(Road* R);
 		void removeAsPartOf(Road* R);
+		bool isPartOf(Road* R);
 
 	private:
 		TrackPoint* From, *To;

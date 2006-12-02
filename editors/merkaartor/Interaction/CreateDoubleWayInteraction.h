@@ -8,7 +8,7 @@ class MainWindow;
 class Road;
 class Way;
 
-#include <QtGui/QDockWidget>
+class QDockWidget;
 
 class CreateDoubleWayInteraction : public Interaction
 {

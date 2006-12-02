@@ -10,6 +10,7 @@
 #include "MainWindow.h"
 
 #include <QtCore/QSettings>
+#include <QtGui/QDockWidget>
 #include <QtGui/QPainter>
 
 CreateDoubleWayInteraction::CreateDoubleWayInteraction(MainWindow* aMain, MapView* aView)

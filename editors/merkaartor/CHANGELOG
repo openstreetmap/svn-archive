@@ -23,6 +23,7 @@ v0.06
 	* FIX : create node bad url
 	* ADD : double carriageway tool
 	* FIX : upload segments before roads and nodes before segments
+	* ADD : draw roundabout tool
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

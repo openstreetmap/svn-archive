@@ -767,7 +767,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select way,highway,railway,landuse,natural,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,railway,landuse,"natural",waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
     
@@ -791,7 +791,7 @@
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select way,highway,landuse,natural,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,landuse,"natural",waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
   

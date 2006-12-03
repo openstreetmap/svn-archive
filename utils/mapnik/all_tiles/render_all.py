@@ -2,7 +2,7 @@
 
 import fileinput
 from math import pi,cos,sin,log,exp,atan
-from subprocess import Popen
+from subprocess import call
 
 DEG_TO_RAD = pi/180
 RAD_TO_DEG = 180/pi
@@ -91,8 +91,7 @@ def dotile(z,x,y):
 	fh = open(tile_uri,'w+b')
 	im.save(fh, 'PNG', quality=100)
 	command = "convert  -colors 255 %s %s" % (tile_uri,tile_uri)
-	p = Popen(command, shell=True)
-	sts = os.waitpid(p.pid, 0)
+	call(command, shell=True)
 
 for line in fileinput.input():
 	tile_data = line.rstrip('\n').split(':')

@@ -1,5 +1,5 @@
 from math import pi,cos,sin,log,exp,atan
-from subprocess import Popen
+from subprocess import call
 
 DEG_TO_RAD = pi/180
 RAD_TO_DEG = 180/pi
@@ -93,8 +93,7 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18):
                     fh = open(tile_uri,'w+b')
                     im.save(fh, 'PNG', quality=100)
                     command = "convert  -colors 255 %s %s" % (tile_uri,tile_uri)
-                    p = Popen(command, shell=True)
-                    sts = os.waitpid(p.pid, 0)
+                    call(command, shell=True)
              
 
 if __name__ == "__main__":

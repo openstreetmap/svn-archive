@@ -67,12 +67,22 @@ sub Render(){
 
 sub RenderFile(){
   my($X,$Y,$Z,$filename, $Dir) = @_;
-  my $TileFilename = $Dir.sprintf("/%d_%d_%d.png", $Z,$X,$Y);
-  my $TileFilenameTemp = "$TileFilename.part";
-  my $Cmd = "rsvg $filename $TileFilenameTemp -w 500 -h 500 -f png";
-  print "$Cmd\n";
-  `$Cmd`;
   
-  rename($TileFilenameTemp, $TileFilename);
+  for(my $zi = $Z; $zi <= 17; $zi++){
+    my $TileFilename = $Dir.sprintf("/tileset_%d_%d_%d_level%d.png", $Z,$X,$Y, $zi);
+    my $Size = 256 * (2 ** ($zi - $Z));
+    my $TileFilenameTemp = "$TileFilename.part";
+    my $Cmd = sprintf("%s %s %s -w %d -h %d -f png",
+      "rsvg", 
+      $filename,
+      $TileFilenameTemp,
+      $Size,
+      $Size);
+
+    print "$Cmd\n";
+    `$Cmd`;
+    
+    rename($TileFilenameTemp, $TileFilename);
+  }
 }
 

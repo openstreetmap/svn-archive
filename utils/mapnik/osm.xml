@@ -69,6 +69,13 @@
         <CssParameter name="fill">#89bac6</CssParameter>
      </PolygonSymbolizer>
     </Rule>
+    <Rule>
+      <Filter>[natural] = 'water'</Filter>
+      <MaxScaleDenominator>2000000</MaxScaleDenominator>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#89bac6</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
      <Rule>
       <Filter>[landuse] = 'cemetary'</Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
@@ -750,7 +757,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length(natural) > 0) as leisure</Parameter>
+	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length("natural") > 0) as leisure</Parameter>
     </Datasource>
   </Layer>
   

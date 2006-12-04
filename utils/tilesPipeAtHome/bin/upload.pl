@@ -79,5 +79,5 @@ sub upload(){
   } 
   
   # Comment-this out to leave your files on local disk after uploading
-  #unlink($File);
+  unlink($File);
 }

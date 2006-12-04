@@ -87,7 +87,7 @@ sub splitImage(){
           $X * $Size + $xi, 
           $Y * $Size + $yi);
       # Temporary filename
-      my $Filename2 = "$Filename.part.png";
+      my $Filename2 = "$Filename.part";
       
       # Store the tile
       print " -> $Filename\n";

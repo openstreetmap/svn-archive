@@ -45,6 +45,11 @@
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
+      <Filter>[man_made]='mast'</Filter>
+      <PointSymbolizer file="/home/nick/tower.png" type="png" width="12" height="18" />
+    </Rule>
+    <Rule>
+      <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='recycling'</Filter>
       <PointSymbolizer file="/home/steve/symbols/recycling.png" type="png" width="20" height="20" />
     </Rule>
@@ -102,6 +107,13 @@
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>
         <CssParameter name="fill">#aed1a0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[natural] = 'heath'</Filter>
+      <MaxScaleDenominator>2000000</MaxScaleDenominator>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#ffffc0</CssParameter>
      </PolygonSymbolizer>
     </Rule>
     <Rule>
@@ -757,7 +769,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length("natural") > 0) as leisure</Parameter>
+	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length("natural") > 0 or char_length(man_made) > 0) as leisure</Parameter>
     </Datasource>
   </Layer>
   
@@ -774,7 +786,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select way,highway,railway,landuse,"natural",waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,railway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
     
@@ -798,7 +810,7 @@
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">steve</Parameter>
-      <Parameter name="table">(select way,highway,landuse,"natural",waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
   

@@ -56,7 +56,7 @@ sub Render(){
   print "looking in $SvgDir\n";
   opendir(my $dp, $SvgDir) || return;
   while(my $file = readdir($dp)){
-    if($file =~ /(\d+)_(\d+)_(\d+)\.svg/i){
+    if($file =~ /(\d+)_(\d+)_(\d+)\.svg$/i){
       my $filename = "$SvgDir/$file";
       RenderFile($2, $3, $1, $filename, $TileDir);
       unlink($filename);

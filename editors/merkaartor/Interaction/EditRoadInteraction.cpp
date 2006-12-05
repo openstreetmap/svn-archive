@@ -1,4 +1,4 @@
-#include "Interaction/CreateRoadInteraction.h"
+#include "Interaction/EditRoadInteraction.h"
 
 #include "MainWindow.h"
 #include "MapView.h"
@@ -11,30 +11,30 @@
 
 #include <QtGui/QMouseEvent>
 
-CreateRoadInteraction::CreateRoadInteraction(MapView* aView)
+EditRoadInteraction::EditRoadInteraction(MapView* aView)
 : WaySnapInteraction(aView), Current(0)
 {
 	main()->properties()->setSelection(0);
 }
 
-CreateRoadInteraction::CreateRoadInteraction(MapView* aView, Road* R)
+EditRoadInteraction::EditRoadInteraction(MapView* aView, Road* R)
 : WaySnapInteraction(aView), Current(R)
 {
 	main()->properties()->setSelection(0);
 }
 
-CreateRoadInteraction::~CreateRoadInteraction(void)
+EditRoadInteraction::~EditRoadInteraction(void)
 {
 }
 
-void CreateRoadInteraction::paintEvent(QPaintEvent* event, QPainter& thePainter)
+void EditRoadInteraction::paintEvent(QPaintEvent* event, QPainter& thePainter)
 {
 	WaySnapInteraction::paintEvent(event,thePainter);
 	if (Current)
 		Current->drawFocus(thePainter,projection());
 }
 
-void CreateRoadInteraction::snapMouseReleaseEvent(QMouseEvent *anEvent, Way * W)
+void EditRoadInteraction::snapMouseReleaseEvent(QMouseEvent *anEvent, Way * W)
 {
 	if (anEvent->button() == Qt::LeftButton)
 	{

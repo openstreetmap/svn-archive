@@ -7,7 +7,7 @@
 #include "Command/FeatureCommands.h"
 #include "Command/RoadCommands.h"
 #include "Command/WayCommands.h"
-#include "Interaction/CreateRoadInteraction.h"
+#include "Interaction/EditRoadInteraction.h"
 #include "Interaction/MoveTrackPointInteraction.h"
 #include "Map/MapDocument.h"
 #include "Map/MapFeature.h"
@@ -108,7 +108,7 @@ void EditInteraction::on_move_triggered()
 
 void EditInteraction::on_add_triggered()
 {
-	view()->launch(new CreateRoadInteraction(view(),dynamic_cast<Road*>(view()->properties()->selection(0))));
+	view()->launch(new EditRoadInteraction(view(),dynamic_cast<Road*>(view()->properties()->selection(0))));
 }
 
 void EditInteraction::on_reverse_triggered()

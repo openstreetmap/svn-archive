@@ -8,9 +8,9 @@ HEADERS += \
 ./Command/WayCommands.h \
 ./Interaction/CreateDoubleWayInteraction.h \
 ./Interaction/CreateNodeInteraction.h \
-./Interaction/CreateRoadInteraction.h \
 ./Interaction/CreateWayInteraction.h \
 ./Interaction/EditInteraction.h \
+./Interaction/EditRoadInteraction.h \
 ./Interaction/Interaction.h \
 ./Interaction/MoveTrackPointInteraction.h \
 ./Interaction/ZoomInteraction.h \
@@ -61,8 +61,8 @@ SOURCES += \
 ./Interaction/CreateDoubleWayInteraction.cpp \
 ./Interaction/CreateNodeInteraction.cpp \
 ./Interaction/CreateWayInteraction.cpp \
-./Interaction/CreateRoadInteraction.cpp \
 ./Interaction/EditInteraction.cpp \
+./Interaction/EditRoadInteraction.cpp \
 ./Interaction/Interaction.cpp \
 ./Interaction/MoveTrackPointInteraction.cpp \
 ./Interaction/ZoomInteraction.cpp \

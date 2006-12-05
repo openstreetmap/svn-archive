@@ -47,7 +47,7 @@ sub DownloadContinuously(){
     if(CountFilesInDir($DataDir) < $QueueLength){
       DownloadOsm($DataDir, $RequestDir);
     }
-    sleep(5);
+    sleep(2);
   }
 }
 

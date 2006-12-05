@@ -991,7 +991,7 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 		<xsl:variable name='x' select='($width)-((($topRightLongitude)-(@lon))*10000*$scale)' />
 		<xsl:variable name='y' select='($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)'/>
 
-		<circle r='1' cx='{$x}' cy='{$y}'>
+		<circle cx='{$x}' cy='{$y}'>
 			<xsl:apply-templates select='$instruction/@*' mode='copyAttributes' /> <!-- Copy all the svg attributes from the <circle> instruction -->		
 		</circle>
 		
@@ -1044,7 +1044,7 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 
 
 	<!-- Suppress the following attributes, allow everything else -->
-	<xsl:template match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@k" mode='renderTextPath-text'>
+	<xsl:template match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@k|@baseline-shift" mode='renderTextPath-text'>
 	</xsl:template>
 
 	<xsl:template match="@*" mode='renderTextPath-text'>
@@ -1053,7 +1053,7 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 
 
 	<!-- Allow the following attributes, suppress everything else -->
-	<xsl:template match="@startOffset|@method|@spacing|@lengthAdjust|@textLength" mode='renderTextPath-textPath'>
+	<xsl:template match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@baseline-shift" mode='renderTextPath-textPath'>
 		<xsl:copy/>
 	</xsl:template>
 

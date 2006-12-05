@@ -1,0 +1,26 @@
+#
+# Configuration file for TilesAtHome
+#
+
+# File Locations
+WorkingDirectory=c:\temp\
+Inkscape=c:\program files\inkscape\inkscape
+XmlStarlet=c:\program files\xmlstarlet\xml
+Niceness=
+
+# Upload
+UploadUsername=CHANGEME
+UploadPassword=CHANGEME
+UploadURL=http://osmathome.bandnet.org/test.php
+
+# Download
+OsmUsername=name%40domain.com
+OsmPassword=CHANGEME
+
+# Rendering
+BorderN=0.01
+BorderS=0.01
+BorderE=0.05
+BorderW=0.05
+MaxZoom=17
+

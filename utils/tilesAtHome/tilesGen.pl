@@ -2,13 +2,15 @@
 use LWP::Simple;
 use LWP::UserAgent;
 use Math::Trig;
+use File::Copy;
+use English '-no_match_vars';
 use strict;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White
+# Copyright 2006, Oliver White, Etienne Cherdlu
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,18 +27,22 @@ use strict;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
-# Secrets file, should contain all your passwords
-my ($UploadPassword, $UploadURL, $OsmPassword);
-ReadSecrets("secret.txt");
+# conf file, will contain username/password and environment info
+my ($WorkingDirectory, $Inkscape, $XmlStarlet, $Niceness);
+my ($UploadURL, $UploadUsername, $UploadPassword);
+my ($OsmUsername, $OsmPassword);
+my ($BorderN, $BorderS, $BorderE, $BorderW, $MaxZoom);
+ReadConf("tilesAtHome.conf");
 
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
 my $RangeY = $LimitY - $LimitY2;
 
-# Options: maximum zoom level to render, temporary directory for tiles
-our $MaxZoom = 17; # TODO: server should specify this
+# Options: base directory, temporary file for tiles, working directory
 our $BaseDir = "gfx";
+our $TempTile = "${WorkingDirectory}tile-$PID.png";
 mkdir $BaseDir if(!-d $BaseDir);
+mkdir $WorkingDirectory if(!-d $WorkingDirectory);
 
 # Handle the command-line
 my $Mode = shift();
@@ -71,7 +77,7 @@ else{
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------
 sub ProcessRequestsFromServer(){
-  my $LocalFilename = "request.txt";
+  my $LocalFilename = "${WorkingDirectory}request.txt";
   
   # ----------------------------------
   # Download the request, and check it
@@ -125,31 +131,40 @@ sub ProcessRequestsFromServer(){
   GenerateTileset($X, $Y, $Z);
 }
 
+
 #-----------------------------------------------------------------------------
-# Read passwords from a configuration textfile
+# Read environment data from conf file
 #-----------------------------------------------------------------------------
-sub ReadSecrets(){
-  open(my $fp, "<", shift()) || die("Check your password file exists!");
-  my ($UploadOK, $OsmOK) = (0,0);
+sub ReadConf(){
+  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.ini from the template tilesAtHome.ini.linux or tilesAtHome.ini.windows");
+  my $OsmOK = 0;
   
   while(my $Line = <$fp>){
     next if($Line =~ /^\s*#/); # Comments
     
-    if($Line =~ /Upload\((.*) (.*)\)/){
-      $UploadURL = $1;
-      $UploadPassword = $2;
-      $UploadOK = 1;
-    }
+    if ($Line =~ /WorkingDirectory=(.*)/) { $WorkingDirectory=$1; $OsmOK++; } 
+    if ($Line =~ /Inkscape=(.*)/)        { $Inkscape=$1;       $OsmOK++; } 
+    if ($Line =~ /XmlStarlet=(.*)/)      { $XmlStarlet=$1;     $OsmOK++; } 
+    if ($Line =~ /Niceness=(.*)/)        { $Niceness=$1;       $OsmOK++; } 
 
-    if($Line =~ /OsmPassword\((.*)\)/){
-      $OsmPassword = $1;
-      $OsmOK = 1;
-    }
+    if ($Line =~ /UploadURL=(.*)/)       { $UploadURL=$1;      $OsmOK++; } 
+    if ($Line =~ /UploadUsername=(.*)/)  { $UploadUsername=$1; $OsmOK++; } 
+    if ($Line =~ /UploadPassword=(.*)/)  { $UploadPassword=$1; $OsmOK++; } 
+
+    if ($Line =~ /OsmUsername=(.*)/)     { $OsmUsername=$1;    $OsmOK++; } # TODO convert @ to %40
+    if ($Line =~ /OsmPassword=(.*)/)     { $OsmPassword=$1;    $OsmOK++; } 
+
+    if ($Line =~ /BorderN=(.*)/)         { $BorderN=$1;        $OsmOK++; } 
+    if ($Line =~ /BorderS=(.*)/)         { $BorderS=$1;        $OsmOK++; } 
+    if ($Line =~ /BorderE=(.*)/)         { $BorderE=$1;        $OsmOK++; } 
+    if ($Line =~ /BorderW=(.*)/)         { $BorderW=$1;        $OsmOK++; } 
+    if ($Line =~ /MaxZoom=(.*)/)         { $MaxZoom=$1;        $OsmOK++; } 
+
   }
   close $fp;
   
-  if(!$UploadOK or !$OsmOK){
-    die("Check your secrets file - some passwords not found");
+  if($OsmOK != 14){
+    die("Check your .ini file - some entries not found");
   }
 }
 
@@ -163,62 +178,106 @@ sub GenerateTileset(){
   my ($W, $E) = ProjectL($X, $Zoom);
   
   printf("Doing area around %f,%f\n", ($N+$S)/2, ($W+$E)/2);
-  
-  my $DataFile = "data.osm";
+
+  my $DataFile = "data-$PID.osm";
+
+  # Adjust requested area to avoid boundary conditions
+  my $N1 = $N + $BorderN;
+  my $S1 = $S - $BorderS;
+  my $E1 = $E + $BorderE;
+  my $W1 = $W - $BorderW;
+
   #------------------------------------------------------
   # Download data
   #------------------------------------------------------
   killafile($DataFile);
-  my $URL = sprintf("http://%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-    $OsmPassword, $W, $S, $E, $N);
+  my $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+    $OsmUsername, $OsmPassword, $W1, $S1, $E1, $N1);
   
-  DownloadFile($URL, $DataFile, 0, "Map data");
+  DownloadFile($URL, $DataFile, 0, "Map data to $DataFile");
   if(-s $DataFile == 0){
-    print "No data at this location";
-    return;
+    printf("No data at this location\n");
+    printf("Trying smaller slices...\n");
+
+    copy("stub.osm",$DataFile) or die "Cannot create $DataFile from stub.osm"; 
+
+    my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width
+
+    for (my $i = 0 ; $i<10 ; $i++) {
+      $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+        $OsmUsername, $OsmPassword, ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
+      my $DataFile1 = "data-$PID-$i.osm";
+      DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
+      if(-s $DataFile1 == 0){
+        printf("No data here either\n");
+        return;
+      }
+    appendOSMfile($DataFile,$DataFile1);
+    killafile($DataFile1);
+    }
   }
   
   # Faff around
-  my $SVG = "output.svg";
-  killafile($SVG);
+  for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
+    killafile("${WorkingDirectory}output-$PID-z$i.svg");
+  }
 
   my $Margin = " " x ($Zoom - 8);
   printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
   
   # Add bounding box to osmarender
-  AddBounds("osm-map-features.xml",$W,$S,$E,$N);
+  # then set the data source
+  # then transform it to SVG
+  for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
+    copy("osm-map-features-z$i.xml","osm-map-features-$PID-z$i.xml") or die "Cannot make copy of osm-map-features-z$i.xml"; 
+    AddBounds("osm-map-features-$PID-z$i.xml",$W,$S,$E,$N);
+    SetDataSource("osm-map-features-$PID-z$i.xml");
+    xml2svg("osm-map-features-$PID-z$i.xml","${WorkingDirectory}output-$PID-z$i.svg");
+    killafile("osm-map-features-$PID-z$i.xml");
+  }
+  killafile($DataFile);
   
-  # Transform it to SVG
-  xml2svg($SVG);
-  
-  my ($ImgW,$ImgH,$Valid) = getSize($SVG);
-  RenderTile($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH);
+  my ($ImgW,$ImgH,$Valid) = getSize("${WorkingDirectory}output-$PID-z$MaxZoom.svg");
+
+  killafile($TempTile);
+
+  RenderTile($X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+
+  killafile($TempTile);
+
+  # Clean-up output file
+  for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
+    killafile("${WorkingDirectory}output-$PID-z$i.svg");
+  }
 }
 
 #-----------------------------------------------------------------------------
 # Render a tile
-#   $SVG - SVG file to render
 #   $X, $Y, $Zoom - which tile
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #-----------------------------------------------------------------------------
 sub RenderTile(){
-  my ($SVG, $X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2) = @_;
+  my ($X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
   
   return if($Zoom > $MaxZoom);
   
   my $Filename = tileFilename($X, $Y, $Zoom);
-  killafile($Filename);
-  
-  printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
-  
+ 
   # Render it to PNG
-  my $Width = 256; # Pixel size of tiles  
-  svg2png($SVG, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2);
+  if ( $empty == 0) {
+    printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
+    my $Width = 256; # Pixel size of tiles  
+    svg2png($Zoom, $TempTile, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
+  }
 
   # Upload it
   upload($Filename, $X, $Y, $Zoom);
     
+  if (-s $TempTile < 1000) {
+    $empty=1;
+  }
+
   # Sub-tiles
   my $XA = $X * 2;
   my $XB = $XA + 1;
@@ -236,10 +295,10 @@ sub RenderTile(){
   my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1);
   my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;
   
-  RenderTile($SVG, $XA, $YA, $Zoom+1, $N, $LatC, $W, $LongC, $ImgX1, $ImgYC, $ImgXC, $ImgY2);
-  RenderTile($SVG, $XB, $YA, $Zoom+1, $N, $LatC, $LongC, $E, $ImgXC, $ImgYC, $ImgX2, $ImgY2);
-  RenderTile($SVG, $XA, $YB, $Zoom+1, $LatC, $S, $W, $LongC, $ImgX1, $ImgY1, $ImgXC, $ImgYC);
-  RenderTile($SVG, $XB, $YB, $Zoom+1, $LatC, $S, $LongC, $E, $ImgXC, $ImgY1, $ImgX2, $ImgYC);
+  RenderTile($XA, $YA, $Zoom+1, $N, $LatC, $W, $LongC, $ImgX1, $ImgYC, $ImgXC, $ImgY2,$ImageHeight,$empty);
+  RenderTile($XB, $YA, $Zoom+1, $N, $LatC, $LongC, $E, $ImgXC, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
+  RenderTile($XA, $YB, $Zoom+1, $LatC, $S, $W, $LongC, $ImgX1, $ImgY1, $ImgXC, $ImgYC,$ImageHeight,$empty);
+  RenderTile($XB, $YB, $Zoom+1, $LatC, $S, $LongC, $E, $ImgXC, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
 }
 
 #-----------------------------------------------------------------------------
@@ -338,16 +397,17 @@ sub DownloadFile(){
 # Transform an OSM file (using osmarender) into SVG
 #-----------------------------------------------------------------------------
 sub xml2svg(){
-  my($SVG) = @_;
-  my $Cmd = sprintf("%sxmlstarlet tr %s %s > %s",
-    "nice ", # Blank this out for use on windows
+  my($MapFeatures,$SVG) = @_;
+  my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+    $Niceness,
+    $XmlStarlet,
     "osmarender.xsl",
-    "osm-map-features.xml",
+    "$MapFeatures",
     $SVG);
   
   writeToFile("update_svg.sh", $Cmd."\n");
   
-  print STDERR "Transforming $Cmd...";
+  print STDERR "Transforming ...";
   `$Cmd`;
   print STDERR " done\n";
 }
@@ -356,18 +416,20 @@ sub xml2svg(){
 # Render a SVG file
 #-----------------------------------------------------------------------------
 sub svg2png(){
-  my($SVG, $PNG, $Size,$X1,$Y1,$X2,$Y2) = @_;
+  my($Zoom, $PNG, $Size, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
 
-  my $Cmd = sprintf("%sinkscape -w %d -h %d --export-area=%f:%f:%f:%f --export-png=%s %s", 
-    "nice ", # Blank this out for use on windows
+  my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\"", 
+    $Niceness,
+    $Inkscape,
     $Size,
     $Size,
     $X1,$Y1,$X2,$Y2,
-    $PNG, 
-    $SVG);
+    $PNG,
+    $WorkingDirectory,
+    "output-$PID-z$Zoom.svg");
   
   writeToFile("update_png.sh", $Cmd."\n");
-  print STDERR "Rendering $Cmd...";
+  print STDERR "Rendering ...";
   `$Cmd`;
   print STDERR " done\n";
 }
@@ -383,6 +445,11 @@ sub writeToFile(){
 sub upload(){
   my ($File, $X, $Y, $Zoom) = @_;
   
+  
+  # Uncomment the next line to leave a copy of your files on local disk after uploading
+  # copy($TempTile,$File);
+
+  print("Uploading ...");
   my $ua = LWP::UserAgent->new(env_proxy => 0,
     keep_alive => 1,
     timeout => 60);
@@ -392,16 +459,17 @@ sub upload(){
 
   my $res = $ua->post($UploadURL,
     Content_Type => 'form-data',
-    Content => [ file => [$File], x => $X, y => $Y, z => $Zoom, mp => $UploadPassword ]);
+    Content => [ file => [$TempTile], x => $X, y => $Y, z => $Zoom, mp => "$UploadUsername|$UploadPassword" ]);
     
   if(!$res->is_success()){
     print("Error uploading file");
     sleep(600); # wait 10 minutes for reconnect before continuing. TODO: this will lose one upload
   } 
-  
-  # Comment-this out to leave your files on local disk after uploading
-  unlink($File);
+  if($res->is_success()){
+    print("done\n");
+  } 
 }
+
 #-----------------------------------------------------------------------------
 # Add bounding-box information to an osm-map-features file
 #-----------------------------------------------------------------------------
@@ -426,6 +494,31 @@ sub AddBounds(){
   print $fpOut $Data;
   close $fpOut;
 }
+
+#-----------------------------------------------------------------------------
+# Set data source file name in map-features file
+#-----------------------------------------------------------------------------
+sub SetDataSource(){
+  my ($Filename) = @_;
+  
+  # Read the old file
+  open(my $fpIn, "<", "$Filename");
+  my $Data = join("",<$fpIn>);
+  close $fpIn;
+  die("no such $Filename") if(! -f $Filename);
+  
+  # Change some stuff
+  my $DataSource = sprintf("data-%s.osm",
+    $PID);
+  
+  $Data =~ s/(  data=\").*(  scale=\")/\1$DataSource\"\n\2/s;
+
+  # Save back to the same location
+  open(my $fpOut, ">$Filename");
+  print $fpOut $Data;
+  close $fpOut;
+}
+
 #-----------------------------------------------------------------------------
 # Get the width and height (in SVG units, must be pixels) of an SVG file
 #-----------------------------------------------------------------------------
@@ -441,6 +534,7 @@ sub getSize($){
   close $fpSvg;
   return((0,0,0));
 }
+
 #-----------------------------------------------------------------------------
 # Temporary filename to store a tile
 #-----------------------------------------------------------------------------
@@ -458,4 +552,37 @@ sub tileFilename(){
   
   my $C = "$B/$Y.png";
   return($C);
+}
+
+#-----------------------------------------------------------------------------
+# Set data source file name in map-features file
+#-----------------------------------------------------------------------------
+sub appendOSMfile(){
+  my ($Datafile,$Datafile1) = @_;
+  
+  # Strip the trailing </osm> from the datafile
+  open(my $fpIn1, "<", "$Datafile");
+  my $Data = join("",<$fpIn1>);
+  close $fpIn1;
+  die("no such $Datafile") if(! -f $Datafile);
+    
+  $Data =~ s/<\/osm>//s;
+
+  # Save back to the datafile file
+  open(my $fpOut1, ">$Datafile");
+  print $fpOut1 $Data;
+  close $fpOut1;
+
+  # Read the merge file remove the xml prolog and opening <osm> tag and append to the datafile
+  open(my $fpIn2, "<", "$Datafile1");
+  my $Data = join("",<$fpIn2>);
+  close $fpIn2;
+  die("no such $Datafile1") if(! -f $Datafile1);
+    
+  $Data =~ s/.*server\">//s;
+
+  # Append to the data file
+  open(my $fpOut2, ">>", "$Datafile");
+  print $fpOut2 $Data;
+  close $fpOut2;
 }

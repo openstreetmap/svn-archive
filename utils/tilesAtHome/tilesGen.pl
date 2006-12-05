@@ -136,7 +136,7 @@ sub ProcessRequestsFromServer(){
 # Read environment data from conf file
 #-----------------------------------------------------------------------------
 sub ReadConf(){
-  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.conf from the template tilesAtHome.ini.linux or tilesAtHome.conf.windows");
+  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.conf from the template tilesAtHome.conf.linux or tilesAtHome.conf.windows");
   my $OsmOK = 0;
   
   while(my $Line = <$fp>){
@@ -164,7 +164,7 @@ sub ReadConf(){
   close $fp;
   
   if($OsmOK != 14){
-    die("Check your .ini file - some entries not found");
+    die("Check your .conf file - some entries not found");
   }
 }
 

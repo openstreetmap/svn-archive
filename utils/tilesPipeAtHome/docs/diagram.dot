@@ -1,3 +1,9 @@
+/* -------------------------------------------------------------------
+** Diagram of the modules used in tiles@home
+** 
+** This is in the DOT graph language, for interpreting by graphviz
+** -------------------------------------------------------------------
+*/
 digraph{
 
 /* Modules */

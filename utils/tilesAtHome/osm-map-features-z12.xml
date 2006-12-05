@@ -65,9 +65,9 @@
 
 
 		<!-- Draw natural features -->
-		<!--<rule e="way|area" k="natural" v="coastline">
+		<rule e="way|area" k="natural" v="coastline">
 		   <line class='natural-coastline'/>
-		</rule>-->
+		</rule>
 		<rule e="way|area" k="natural" v="land">
 			<area class='natural-land' /> 
 		</rule>
@@ -1164,11 +1164,11 @@
 			  
 			.city-caption {
 			  fill: black;
-			  stroke: white;
-			  stroke-width: 0.4px;
+			  stroke: none;
 			  font-family: verdana;
-			  font-size: 10px;
+			  font-size: 100px;
 			  font-weight: bold;
+			  opacity: 0.5;
 			  }
 			  
 			.town-caption {

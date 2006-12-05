@@ -62,9 +62,9 @@
 
 
 		<!-- Draw natural features -->
-		<!--<rule e="way|area" k="natural" v="coastline">
+		<rule e="way|area" k="natural" v="coastline">
 		   <line class='natural-coastline'/> 
-		</rule>-->
+		</rule>
 		<rule e="way|area" k="natural" v="land">
 			<area class='natural-land' /> 
 		</rule>
@@ -558,9 +558,9 @@
 		<rule e="node" k="place" v="county">
 			<text k="name" class='county-caption' text-anchor='middle' startOffset='50%'/>
 		</rule>-->
-		<rule e="node" k="place" v="city">
+		<!--<rule e="node" k="place" v="city">
 			<text k="name" class='city-caption' text-anchor='middle' startOffset='50%'/>
-		</rule>
+		</rule>-->
 		<rule e="node" k="place" v="town">
 			<text k="name" class='town-caption' text-anchor='middle' startOffset='50%'/>
 		</rule>

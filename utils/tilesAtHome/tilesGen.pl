@@ -40,7 +40,6 @@ my $RangeY = $LimitY - $LimitY2;
 
 # Options: base directory, temporary file for tiles, working directory
 our $BaseDir = "gfx";
-our $TempTile = "${WorkingDirectory}tile-$PID.png";
 mkdir $BaseDir if(!-d $BaseDir);
 mkdir $WorkingDirectory if(!-d $WorkingDirectory);
 
@@ -137,7 +136,7 @@ sub ProcessRequestsFromServer(){
 # Read environment data from conf file
 #-----------------------------------------------------------------------------
 sub ReadConf(){
-  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.conf from the template tilesAtHome.conf.linux or tilesAtHome.conf.windows");
+  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.conf from the template tilesAtHome.ini.linux or tilesAtHome.conf.windows");
   my $OsmOK = 0;
   
   while(my $Line = <$fp>){
@@ -240,11 +239,7 @@ sub GenerateTileset(){
   
   my ($ImgW,$ImgH,$Valid) = getSize("${WorkingDirectory}output-$PID-z$MaxZoom.svg");
 
-  killafile($TempTile);
-
   RenderTile($X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
-
-  killafile($TempTile);
 
   # Clean-up output file
   for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
@@ -269,13 +264,10 @@ sub RenderTile(){
   if ( $empty == 0) {
     printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
     my $Width = 256; # Pixel size of tiles  
-    svg2png($Zoom, $TempTile, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
+    svg2png($Zoom, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
   }
-
-  # Upload it
-  upload($Filename, $X, $Y, $Zoom);
     
-  if (-s $TempTile < 1000) {
+  if (-s $Filename < 1000) {
     $empty=1;
   }
 
@@ -441,37 +433,6 @@ sub writeToFile(){
 }
 
 #-----------------------------------------------------------------------------
-# Upload a rendered map 
-#-----------------------------------------------------------------------------
-sub upload(){
-  my ($File, $X, $Y, $Zoom) = @_;
-  
-  
-  # Uncomment the next line to leave a copy of your files on local disk after uploading
-  # copy($TempTile,$File);
-
-  print("Uploading ...");
-  my $ua = LWP::UserAgent->new(env_proxy => 0,
-    keep_alive => 1,
-    timeout => 60);
-
-  $ua->protocols_allowed( ['http'] );
-  $ua->agent("tilesAtHome");
-
-  my $res = $ua->post($UploadURL,
-    Content_Type => 'form-data',
-    Content => [ file => [$TempTile], x => $X, y => $Y, z => $Zoom, mp => "$UploadUsername|$UploadPassword" ]);
-    
-  if(!$res->is_success()){
-    print("Error uploading file");
-    sleep(600); # wait 10 minutes for reconnect before continuing. TODO: this will lose one upload
-  } 
-  if($res->is_success()){
-    print("done\n");
-  } 
-}
-
-#-----------------------------------------------------------------------------
 # Add bounding-box information to an osm-map-features file
 #-----------------------------------------------------------------------------
 sub AddBounds(){
@@ -541,18 +502,8 @@ sub getSize($){
 #-----------------------------------------------------------------------------
 sub tileFilename(){
   my($X,$Y,$Zoom) = @_;
-  
-  # Comment-out this line to generate directories
-  return(sprintf("%s/%d_%d_%d.png",$BaseDir,$Zoom,$X,$Y));
-  
-  my $A = "$BaseDir/$Zoom";
-  mkdir $A if(!-d $A);
-  
-  my $B = "$A/$X";
-  mkdir $B if(!-d $B);
-  
-  my $C = "$B/$Y.png";
-  return($C);
+
+  return(sprintf("%s/tile_%d_%d_%d.png",$WorkingDirectory,$Zoom,$X,$Y));
 }
 
 #-----------------------------------------------------------------------------

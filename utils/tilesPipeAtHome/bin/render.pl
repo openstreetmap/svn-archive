@@ -72,12 +72,15 @@ sub RenderFile(){
     my $TileFilename = $Dir.sprintf("/tileset_%d_%d_%d_level%d.png", $Z,$X,$Y, $zi);
     my $Size = 256 * (2 ** ($zi - $Z));
     my $TileFilenameTemp = "$TileFilename.part";
-    my $Cmd = sprintf("%s %s %s -w %d -h %d -f png",
+    
+    # Configure this line to your favourite SVG rendering program
+    my $Cmd = sprintf("%s%s -w %d -h %d -f png %s %s",
+      "nice ",
       "rsvg", 
-      $filename,
-      $TileFilenameTemp,
       $Size,
-      $Size);
+      $Size,      
+      $filename,
+      $TileFilenameTemp);
 
     print "$Cmd\n";
     `$Cmd`;

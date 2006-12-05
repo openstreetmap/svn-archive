@@ -24,3 +24,7 @@ BorderE=0.05
 BorderW=0.05
 MaxZoom=17
 
+# Uploads
+UploadChunkSize=1.5   # Megabyte
+UploadURL2=http://osmathome.bandnet.org/Upload/tile2.php
+DeleteZipFilesAfterUpload=0

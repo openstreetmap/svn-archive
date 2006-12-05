@@ -1472,7 +1472,7 @@
 			  }
 
 			.map-background {
-			  fill: #fcfcfc;
+			  fill: #f8f8f8;
 			  stroke: none;
 			  } 
 

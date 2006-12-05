@@ -88,7 +88,9 @@ FORMS += \
 ./WayProperties.ui \
 ./SetPositionDialog.ui \
 ./MultiProperties.ui \
-./Interaction/CreateDoubleWayDock.ui
+./Interaction/CreateDoubleWayDock.ui \
+./Interaction/CreateRoundaboutDock.ui
+
 
 #Resource file(s)
 RESOURCES += .\Icons\AllIcons.qrc

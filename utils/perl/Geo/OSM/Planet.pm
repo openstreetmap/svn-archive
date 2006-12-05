@@ -205,6 +205,11 @@ sub UTF8sanitize($){
 
     my $start_time=time();
 
+    # the newer Files do not need to be sanitized
+    my ($file_date) = ($filename =~ m/planet-(\d+)/ );
+    return $filename
+	if $file_date >= 061205;
+
     my $filename_new= $filename;
     $filename_new =~ s/\.osm/-a.osm/;
     my $filename_new_check=newest_unpacked_filename($filename_new);

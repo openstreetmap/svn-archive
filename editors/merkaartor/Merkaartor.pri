@@ -9,6 +9,7 @@ HEADERS += \
 ./Interaction/CreateDoubleWayInteraction.h \
 ./Interaction/CreateNodeInteraction.h \
 ./Interaction/CreateWayInteraction.h \
+./Interaction/CreateRoundaboutInteraction.h \
 ./Interaction/CreateSingleWayInteraction.h \
 ./Interaction/EditInteraction.h \
 ./Interaction/EditRoadInteraction.h \
@@ -62,6 +63,7 @@ SOURCES += \
 ./Interaction/CreateDoubleWayInteraction.cpp \
 ./Interaction/CreateNodeInteraction.cpp \
 ./Interaction/CreateSingleWayInteraction.cpp \
+./Interaction/CreateRoundaboutInteraction.cpp \
 ./Interaction/CreateWayInteraction.cpp \
 ./Interaction/EditInteraction.cpp \
 ./Interaction/EditRoadInteraction.cpp \

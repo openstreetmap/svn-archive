@@ -2,7 +2,7 @@ These programs are all designed to be run simultaneously
 
 Data flow:
 
-  requests -> download -> transform -> render -> split -> blankTiles -> archive -> upload
+  requests -> download -> transform -> render -> split -> blankTiles -> compress -> upload
 
 
 Done:
@@ -16,7 +16,5 @@ Done:
 * compress - adds multiple tiles to a zip file, to make uploading more efficient
 * upload - uploads the ZIP files to server
 
-To do:
-* server module to receive, check, decompress, and store the incoming zip files
 
 

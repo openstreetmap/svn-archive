@@ -7,6 +7,7 @@
 #include "Interaction/CreateDoubleWayInteraction.h"
 #include "Interaction/CreateNodeInteraction.h"
 #include "Interaction/CreateRoundaboutInteraction.h"
+#include "Interaction/CreateSingleWayInteraction.h"
 #include "Interaction/CreateWayInteraction.h"
 #include "Interaction/EditInteraction.h"
 #include "Interaction/EditRoadInteraction.h"
@@ -303,7 +304,7 @@ void MainWindow::on_createLinearWayAction_triggered()
 
 void MainWindow::on_createRoadAction_triggered()
 {
-//	theView->launch(new CreateRoadInteraction(theView));
+	theView->launch(new CreateSingleWayInteraction(this, theView));
 }
 
 void MainWindow::on_createNodeAction_triggered()

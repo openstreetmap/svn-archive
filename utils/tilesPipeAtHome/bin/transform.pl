@@ -62,11 +62,23 @@ sub Transform(){
       my $filename = "$DataDir/$file";
       if(-s $filename > 1024){
         TransformFile($2, $3, $1, $filename, $Dir);
-      } # TODO: inform server of blank tiles?
+      }
+      else
+      {
+        MarkBlankTile($2, $3, $1);
+      }
       unlink($filename);
     }
   }
   closedir($dp);
+}
+
+sub MarkBlankTile(){
+  my($X,$Y,$Z) = @_;
+  printf("Marking %d %d,%d as blank\n", $Z, $X,$Y);
+  my $OutputFilename = sprintf("../tiles2/%d_%d_%d.png", $Z,$X,$Y);
+  my $BlankFile = "resources/blank.png";
+  copy($BlankFile, $OutputFilename);
 }
 
 sub TransformFile(){

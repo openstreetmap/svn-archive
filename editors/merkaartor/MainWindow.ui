@@ -61,7 +61,6 @@
     </property>
     <addaction name="createNodeAction" />
     <addaction name="createLinearWayAction" />
-    <addaction name="createWayAction" />
     <addaction name="createRoadAction" />
     <addaction name="createDoubleWayAction" />
     <addaction name="createRoundaboutAction" />

@@ -1,4 +1,4 @@
-v0.06
+v0.06 5 dec 2006 
 	* FIX : also recognize true/false for oneway tag
 	* FIX : correctly update roads when downloading the same road twice
 	* ADD : type combobox to set highway tag

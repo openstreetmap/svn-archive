@@ -24,6 +24,7 @@
 #include "GeneratedFiles/ui_SetPositionDialog.h"
 
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include <QtGui/QDialog>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMessageBox>
@@ -53,6 +54,14 @@ MainWindow::MainWindow(void)
 	theProperties->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	addDockWidget(Qt::RightDockWidgetArea, theProperties);
 	on_editPropertiesAction_triggered();
+	QTimer::singleShot(0,this,SLOT(initViewport()));
+}
+
+void MainWindow::initViewport()
+{
+	theView->projection().setViewport(CoordBox(
+		Coord(0.90608700309350998,0.077357771651368701),
+		Coord(0.90611773551427466,0.077409749255956645)),theView->rect());
 }
 
 MainWindow::~MainWindow(void)

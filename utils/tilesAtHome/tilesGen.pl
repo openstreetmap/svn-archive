@@ -56,7 +56,13 @@ if($Mode eq "xy"){
   print "Generating area $X,$Y,$Zoom\n";
   GenerateTileset($X, $Y, $Zoom);
 }
-elsif($Mode =~ /-*h(elp)?/i){
+elsif ($Mode eq "") {
+  # ----------------------------------
+  # Normal mode downloads request from server
+  # ----------------------------------
+  ProcessRequestsFromServer();
+}
+else{
   # ----------------------------------
   # "help" as first argument tells how to use the program
   # ----------------------------------
@@ -65,12 +71,7 @@ elsif($Mode =~ /-*h(elp)?/i){
   print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
   print "Specific area:\n  \"$0 xy [x] [y]\"\n  (x and y coordinates of a zoom-12 tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
   print "\nGNU General Public license, version 2 or later\n$Bar\n";
-}
-else{
-  # ----------------------------------
-  # Normal mode downloads request from server
-  # ----------------------------------
-  ProcessRequestsFromServer();
+
 }
 
 #-----------------------------------------------------------------------------

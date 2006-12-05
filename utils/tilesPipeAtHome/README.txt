@@ -13,7 +13,7 @@ Done:
   (only one copy of render can be running at once)
 * split - splits those images into separate tiles
 * blankTiles - detects and removes blank tile images
-* archive - adds multiple tiles to a zip file, to make uploading more efficient
+* compress - adds multiple tiles to a zip file, to make uploading more efficient
 * upload - uploads the ZIP files to server
 
 To do:

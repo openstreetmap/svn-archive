@@ -137,7 +137,7 @@ sub ProcessRequestsFromServer(){
 # Read environment data from conf file
 #-----------------------------------------------------------------------------
 sub ReadConf(){
-  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.ini from the template tilesAtHome.ini.linux or tilesAtHome.ini.windows");
+  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.conf from the template tilesAtHome.conf.linux or tilesAtHome.conf.windows");
   my $OsmOK = 0;
   
   while(my $Line = <$fp>){

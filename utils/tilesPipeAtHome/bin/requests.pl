@@ -28,11 +28,23 @@ use strict;
 require("lib.pl");
 require("../secret.pl");
 my $Dir = "../requests";
+my $Mode = shift();
 
+if($Mode eq "-f"){
 # Use the -f lag to run the program continuously
 DownloadContinuously($Dir, 10) if(shift() eq "-f");
-
-DownloadRequest("../requests");
+}
+elsif($Mode > 0)
+{
+  # Specify a number of requests to download
+  while(--$Mode >= 0){
+    DownloadRequest("../requests");
+  }
+}
+else
+{
+  DownloadRequest("../requests");
+}
 
 #-----------------------------------------------------------------------------
 # Continuously download requests, to keep a "queue" of N files in the requests

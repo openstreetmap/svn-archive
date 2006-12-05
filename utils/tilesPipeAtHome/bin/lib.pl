@@ -1,4 +1,5 @@
 use strict;
+use Math::Trig;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, library module
 # Functions used by multiple modules

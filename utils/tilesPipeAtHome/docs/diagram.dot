@@ -1,0 +1,49 @@
+digraph{
+
+/* Modules */
+requests [label="requests.pl"];
+download [label="download.pl"];
+transform [label="transform.pl\n(uses osmarender\n and xmlstarlet)"];
+render [label="render.pl\n(uses rsvg)"];
+split [label="split.pl\n(uses perlImLib)"];
+compress [label="compress.pl\n(calls \"zip\")"];
+upload [label="upload.pl"];
+
+/* External */
+requestSite [label="request server\nosmathome.bandnet.org/Requests", style="filled", color="lightyellow"];
+uploadSite [label="upload server\nosmathome.bandnet.org/Upload/", style="filled", color="lightyellow"];
+OSM [label="OSM server\nopenstreetmap.org", style="filled", color="lightyellow"];
+
+
+/* Directories */
+requestList [label="Requests\n/requests/", style="filled", color="lightgrey", shape="box"];
+mapData [label="Map data\n/data/", style="filled", color="lightgrey", shape="box"];
+SVG [label="SVG files\n/SVG/", style="filled", color="lightgrey", shape="box"];
+tilesets [label="Tileset images\n(large PNGs)\n/tiles/", style="filled", color="lightgrey", shape="box"];
+tiles [label="tile images\n(256x256 PNG)\n/tiles2/", style="filled", color="lightgrey", shape="box"];
+archives [label="ZIP files\n/uploadable/", style="filled", color="lightgrey", shape="box"];
+
+/* Data flow */
+requestSite -> requests [label="Download requests"];
+requests->requestList;
+
+requestList->download;
+OSM->download [label="Download map data"];
+download->mapData;
+
+mapData->transform;
+transform->SVG;
+
+SVG->render;
+render->tilesets;
+
+tilesets->split;
+split->tiles;
+
+tiles->compress;
+compress->archives;
+
+archives->upload;
+upload->uploadSite;
+
+}

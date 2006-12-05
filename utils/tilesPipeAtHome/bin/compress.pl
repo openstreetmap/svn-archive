@@ -22,9 +22,26 @@ use strict;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
+my $MB = 1024 * 1024;
 
-compressTiles("../tiles2", "../uploadable");
+getTiles("../tiles2", "../temp", "../uploadable", 0.5 * $MB);
 
+sub getTiles(){
+  my ($TileDir, $TempDir, $OutputDir, $SizeLimit) = @_;
+  
+  my $Size = 0;
+  
+  opendir(my $dp, $TileDir) || return;
+  while((my $file = readdir($dp)) && ($Size < $SizeLimit)){
+    my $Filename1 = "$TileDir/$file";
+    my $Filename2 = "$TempDir/$file";
+    $Size += -s $Filename1;
+    rename($Filename1, $Filename2);
+  }
+  closedir($dp);
+  
+  compressTiles($TempDir, $OutputDir);
+}
 
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating 
@@ -32,11 +49,11 @@ compressTiles("../tiles2", "../uploadable");
 sub compressTiles(){
   my ($Dir, $OutputDir) = @_;
   
-  # ZIP all the PNGs into a single file
+  # ZIP all the tiles into a single file
   my $Command1 = sprintf("%s %s %s",
     "zip",
     "$OutputDir/$$.zip",
-    "$Dir/*.png");
+    "$Dir/*");
   # ZIP filename is currently our process ID - change this if one process
   # becomes capable of generating multiple zip files
   

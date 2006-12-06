@@ -61,6 +61,12 @@ class CoordBox
 				TopRight.setLon(C.lon());
 		}
 
+		bool contains(const Coord& C) const
+		{
+			return (BottomLeft.lat() <= C.lat()) && (BottomLeft.lon() <= C.lon()) &&
+				(C.lat() < TopRight.lat()) && (C.lon() <= TopRight.lon());
+		}
+
 		void merge(const CoordBox& B)
 		{
 			merge(B.BottomLeft);

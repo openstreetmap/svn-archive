@@ -25,6 +25,7 @@ v0.06 5 dec 2006
 	* FIX : upload segments before roads and nodes before segments
 	* ADD : draw roundabout tool
 	* ADD : easy single way creation
+	* FIX : improve speed with large number of trackpoints
 
 v0.05 15 nov 2006
 	* ADD : connection roads by dragging end points

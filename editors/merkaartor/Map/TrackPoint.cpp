@@ -46,16 +46,19 @@ CoordBox TrackPoint::boundingBox() const
 
 void TrackPoint::draw(QPainter& thePainter, const Projection& theProjection)
 {
-	QPointF P(theProjection.project(Position));
-	QRectF R(P-QPointF(2,2),QSize(4,4));
-	if (lastUpdated() == MapFeature::OSMServerConflict)
-		thePainter.fillRect(R,QColor(255,0,0));
-	else if (theProjection.pixelPerM() > 1)
-		thePainter.fillRect(R,QColor(0,0,0,128));
-	else
+	if (theProjection.viewport().contains(Position))
 	{
-		thePainter.setPen(QColor(0,0,0,128));
-		thePainter.drawPoint(P);
+		QPointF P(theProjection.project(Position));
+		QRectF R(P-QPointF(2,2),QSize(4,4));
+		if (lastUpdated() == MapFeature::OSMServerConflict)
+			thePainter.fillRect(R,QColor(255,0,0));
+		else if (theProjection.pixelPerM() > 1)
+			thePainter.fillRect(R,QColor(0,0,0,128));
+		else
+		{
+			thePainter.setPen(QColor(0,0,0,128));
+			thePainter.drawPoint(P);
+		}
 	}
 }
 

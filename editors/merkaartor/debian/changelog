@@ -1,3 +1,9 @@
+merkaartor (0.0.6-1) unstable; urgency=low
+
+  * Upgrade to version 0.0.6 
+
+ -- bart <bart@localhost.localdomain>  Wed,  6 Dec 2006 17:59:51 +0100
+
 merkaartor (0.0.5-1) unstable; urgency=low
 
   * Upgrade to version 0.0.5

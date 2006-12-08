@@ -411,16 +411,18 @@ sub xml2svg(){
 sub svg2png(){
   my($Zoom, $PNG, $Size, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
 
+  my $TempFile = "partial_".$PNG;
   my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\"", 
     $Niceness,
     $Inkscape,
     $Size,
     $Size,
     $X1,$Y1,$X2,$Y2,
-    $PNG,
+    $TempFile,
     $WorkingDirectory,
     "output-$PID-z$Zoom.svg");
   
+  rename($TempFile, $PNG);
   writeToFile("update_png.sh", $Cmd."\n");
   print STDERR "Rendering ...";
   `$Cmd`;

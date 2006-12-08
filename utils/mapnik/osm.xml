@@ -41,12 +41,12 @@
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[natural]='peak'</Filter>
-      <PointSymbolizer file="/home/nick/peak.png" type="png" width="12" height="18" />
+      <PointSymbolizer file="/home/nick/peak.png" type="png" width="8" height="8" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[man_made]='mast'</Filter>
-      <PointSymbolizer file="/home/nick/tower.png" type="png" width="12" height="18" />
+      <PointSymbolizer file="/home/nick/tower.png" type="png" width="32" height="32" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>

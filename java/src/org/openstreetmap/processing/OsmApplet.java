@@ -84,6 +84,7 @@
 package org.openstreetmap.processing;
 
 import java.lang.Math;
+import java.lang.Character;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -105,8 +106,10 @@ import org.openstreetmap.util.Way;
 
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PImage;
 
 public class OsmApplet extends PApplet {
+  private String copyright = "";
 
 	/**
 	 * Window standard width in pixel
@@ -117,7 +120,7 @@ public class OsmApplet extends PApplet {
 	 */
 	private static final int WINDOW_HEIGHT = 500;
 
-	Tile tiles;
+	public Tile tiles;
 
 	private JSObject js;
 
@@ -165,6 +168,9 @@ public class OsmApplet extends PApplet {
 	 * Type: String -> Way
 	 */
 	public Map ways = new Hashtable();
+
+
+  PImage YahooLogo = loadImage("/data/yahoo.png");
 
 	/* image showing GPX tracks - TODO: vector of PImages? one per GPX file? */
 	// private PImage gpxImage;
@@ -224,8 +230,6 @@ public class OsmApplet extends PApplet {
 	EditMode nodeMoveMode = new NodeMoveMode(this);
 	EditMode deleteMode = new DeleteMode(this);
 	EditMode moveMode = new MoveMode(this);
-    EditMode zoomoutMode = new ZoomOutMode(this);
-    EditMode zoominMode = new ZoomInMode(this);
 
 	/*
 	 * if !ready, a wait cursor is shown and input doesn't do anything TODO:
@@ -239,6 +243,10 @@ public class OsmApplet extends PApplet {
 
 	boolean gotGPX = false;
 
+  public void setCopyright(String c) {
+    copyright = c;
+  }
+  
 	public void setup() {
 
 		size(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -257,8 +265,6 @@ public class OsmApplet extends PApplet {
 		modeManager.addMode(nameMode);
 		modeManager.addMode(nodeMoveMode);
 		modeManager.addMode(deleteMode);
-        modeManager.addMode(zoominMode);
-        modeManager.addMode(zoomoutMode);
 
 		modeManager.draw(); // make modeManager set up things
 
@@ -302,7 +308,7 @@ public class OsmApplet extends PApplet {
 				e.printStackTrace();
 			}
 
-			//js = JSObject.getWindow(this);
+			js = JSObject.getWindow(this);
 		}
 
 		println("check webpage applet parameters for a user/pass");
@@ -352,7 +358,6 @@ public class OsmApplet extends PApplet {
 		// try to connect to OSM
 		osm = new Adapter(userName, password, this, apiURL);
 
-        
 		// register as listener of finished commands (to redraw)
 		osm.commandManager.addListener(new CommandManager.Listener(){
 			public void commandFinished(ServerCommand command) {
@@ -680,157 +685,179 @@ public class OsmApplet extends PApplet {
 			}
 
 			// finally draw a scale bar
-			draw_scale_bar();
-		} catch (NullPointerException npe) {
-			npe.printStackTrace();
-		}
-	}
-
-	public void recalcStrokeWeight() {
-		// 20m roads, but min 2px width
-		strokeWeight = max(20.0f / tiles.metersPerPixel(), 2.0f);
-	}
-
-	public void mouseMoved() {
-		if (ready)
-			modeManager.mouseMoved();
-	}
-
-	public void mouseDragged() {
-		if (ready) {
-			modeManager.mouseDragged();
-		}
-	}
-
-	public void mousePressed() {
-		mouseDown = true;
-		if (ready)
-			modeManager.mousePressed();
-	}
-
-	public void mouseReleased() {
-		mouseDown = false;
-		if (ready) {
-			if (!tiles.viewChanged)
-				modeManager.mouseReleased();
-		}
-	}
-
-	public void keyPressed() {
-		// print("keyPressed!");
-		if (ready) {
-			switch (key) {
-			case '[':
-				lastmove = System.currentTimeMillis();
-				tiles.zoomin();
-				updatelinks();
-				break;
-			case ']':
-				tiles.zoomout();
-				updatelinks();
-				break;
-
-			case '+':
-			case '=':
-				strokeWeight += 1.0f;
-				redraw();
-				break;
-			case '-':
-			case '_':
-				if (strokeWeight >= 2.0f)
-					strokeWeight -= 1.0f;
-				redraw();
-				break;
-			}
-			if (modeManager.currentMode == nameMode) {
-				// println(key == CODED);
-				// println(java.lang.Character.getNumericValue(key));
-				// println("key= \"" + key + "\"");
-				// println("keyCode= \"" + keyCode + "\"");
-				// println("BACKSPACE= \"" + BACKSPACE + "\"");
-				// println("CODED= \"" + CODED + "\"");
-				modeManager.keyPressed();
-			}
-		}
-		key = 0; // catch when key = escape otherwise processing dies
-	}
-
-	// bit crufty - TODO tidy up and move into Point
-	public boolean mouseOverPoint(Point p) {
-		if (p.projected) {
-			// /2.0f; so you don't have to be directly on a node for it to light up
-			return sq(p.x - mouseX) + sq(p.y - mouseY) < (strokeWeight*strokeWeight); 
-		}
-		return false;
-	}
-
-	/**
-	 * Get the node or line segment that is nearest to the given coordinates 
-	 * or <code>null</code>, if nothing is in range
-	 */
-	public OsmPrimitive getNearest(float x, float y) {
-		float minDistanceSq = Float.MAX_VALUE;
-		OsmPrimitive min = null;
-		// first search for nodes
-		for (Iterator it = nodes.values().iterator(); it.hasNext();) {
-			Node n = (Node)it.next();
-			float distSq = n.distanceSq(x,y);
-			if (distSq < minDistanceSq) {
-				minDistanceSq = distSq;
-				min = n;
-			}
-		}
-		if (minDistanceSq < 20)
-			return min;
-		minDistanceSq = Float.MAX_VALUE;
-		// search for line segments
-		for (Iterator it = lines.values().iterator(); it.hasNext();) {
-			Line l = (Line)it.next();
-			if (l instanceof LineOnlyId)
-				continue;
-			float c = l.from.distanceSq(l.to.coor.x, l.to.coor.y);
-			float a = l.to.distanceSq(x,y);
-			float b = l.from.distanceSq(x,y);
-			float distSq = a-(a-b+c)*(a-b+c)/4/c;
-			if (distSq < 20 && distSq < minDistanceSq && a < c+20 && b < c+20) {
-				minDistanceSq = distSq;
-				min = l;
-			}
-		}
-		if (minDistanceSq < 20)
-			return min;
-		return null; // nothing within range
-	}
-	
-	public synchronized void reProject() {
-		for (Iterator it = nodes.values().iterator(); it.hasNext();)
-			((Node)it.next()).coor.project(tiles);
-	}
-
-	// bit crufty - TODO tidy up and move into draw()?
-	public void drawPoint(Point p) {
-		if (p.projected) {
-			ellipseMode(CENTER);
-			ellipse(p.x, p.y, strokeWeight - 1, strokeWeight - 1);
-		}
-	}
-
-	public void updatelinks() {
-		js.eval("updatelinks(" + tiles.lon(WINDOW_WIDTH / 2) + "," + tiles.lat(WINDOW_HEIGHT / 2) + "," + tiles.getZoom() + ")");
-	}
+//			draw_scale_bar();
 
 
-	///////////////////////////// BUTTON STUFF //////////////////////////////////
+      image(YahooLogo, WINDOW_WIDTH - 100, 460);
 
-	float buttonWidth = 15.0f;
-	float buttonHeight = 15.0f;
+      int xx = 55;
+      int yy = 495;
+      Character copyrightSymbol = new Character((char)169);
+      String txt = copyrightSymbol + " 2006 Yahoo! Inc";
+      fill(255);
+      text(txt, xx+1,yy+1);
+      fill(0);
+      text(txt, xx,yy);
 
-	// TODO PFont buttonFont; // for tool-tips
+      txt = "Imagery " + copyrightSymbol + " 2006" + copyright ;
+//      print(txt + "___________");
+      xx = WINDOW_WIDTH - (int)textWidth(txt) + 30;
+      yy = 495;
+      fill(255);
+      text(txt, xx +1, yy +1);
+      fill(0);
+      text(txt, xx, yy);
 
-	static public void main(String args[]) {
-		String[] params = new String[args.length+1];
-		params[0] = "org.openstreetmap.processing.OsmApplet";
-		System.arraycopy(args, 0, params, 1, args.length);
-		PApplet.main(params);
-	}
+    } catch (NullPointerException npe) {
+      npe.printStackTrace();
+    }
+  } // paint
+
+  public void recalcStrokeWeight() {
+    // 20m roads, but min 2px width
+    strokeWeight = max(20.0f / tiles.metersPerPixel(), 2.0f);
+  }
+
+  public void mouseMoved() {
+    if (ready)
+      modeManager.mouseMoved();
+  }
+
+  public void mouseDragged() {
+    if (ready) {
+      modeManager.mouseDragged();
+    }
+  }
+
+  public void mousePressed() {
+    mouseDown = true;
+    if (ready)
+      modeManager.mousePressed();
+  }
+
+  public void mouseReleased() {
+    mouseDown = false;
+    if (ready) {
+      if (!tiles.viewChanged)
+        modeManager.mouseReleased();
+    }
+  }
+
+  public void keyPressed() {
+    // print("keyPressed!");
+    if (ready) {
+      switch (key) {
+        case '[':
+          lastmove = System.currentTimeMillis();
+          tiles.zoomin();
+          updatelinks();
+          break;
+        case ']':
+          tiles.zoomout();
+          updatelinks();
+          break;
+
+        case '+':
+        case '=':
+          strokeWeight += 1.0f;
+          redraw();
+          break;
+        case '-':
+        case '_':
+          if (strokeWeight >= 2.0f)
+            strokeWeight -= 1.0f;
+          redraw();
+          break;
+      }
+      if (modeManager.currentMode == nameMode) {
+        // println(key == CODED);
+        // println(java.lang.Character.getNumericValue(key));
+        // println("key= \"" + key + "\"");
+        // println("keyCode= \"" + keyCode + "\"");
+        // println("BACKSPACE= \"" + BACKSPACE + "\"");
+        // println("CODED= \"" + CODED + "\"");
+        modeManager.keyPressed();
+      }
+    }
+    key = 0; // catch when key = escape otherwise processing dies
+  }
+
+  // bit crufty - TODO tidy up and move into Point
+  public boolean mouseOverPoint(Point p) {
+    if (p.projected) {
+      // /2.0f; so you don't have to be directly on a node for it to light up
+      return sq(p.x - mouseX) + sq(p.y - mouseY) < (strokeWeight*strokeWeight); 
+    }
+    return false;
+  }
+
+  /**
+   * Get the node or line segment that is nearest to the given coordinates 
+   * or <code>null</code>, if nothing is in range
+   */
+  public OsmPrimitive getNearest(float x, float y) {
+    float minDistanceSq = Float.MAX_VALUE;
+    OsmPrimitive min = null;
+    // first search for nodes
+    for (Iterator it = nodes.values().iterator(); it.hasNext();) {
+      Node n = (Node)it.next();
+      float distSq = n.distanceSq(x,y);
+      if (distSq < minDistanceSq) {
+        minDistanceSq = distSq;
+        min = n;
+      }
+    }
+    if (minDistanceSq < 20)
+      return min;
+    minDistanceSq = Float.MAX_VALUE;
+    // search for line segments
+    for (Iterator it = lines.values().iterator(); it.hasNext();) {
+      Line l = (Line)it.next();
+      if (l instanceof LineOnlyId)
+        continue;
+      float c = l.from.distanceSq(l.to.coor.x, l.to.coor.y);
+      float a = l.to.distanceSq(x,y);
+      float b = l.from.distanceSq(x,y);
+      float distSq = a-(a-b+c)*(a-b+c)/4/c;
+      if (distSq < 20 && distSq < minDistanceSq && a < c+20 && b < c+20) {
+        minDistanceSq = distSq;
+        min = l;
+      }
+    }
+    if (minDistanceSq < 20)
+      return min;
+    return null; // nothing within range
+  }
+
+  public synchronized void reProject() {
+    for (Iterator it = nodes.values().iterator(); it.hasNext();)
+      ((Node)it.next()).coor.project(tiles);
+  }
+
+  // bit crufty - TODO tidy up and move into draw()?
+  public void drawPoint(Point p) {
+    if (p.projected) {
+      ellipseMode(CENTER);
+      ellipse(p.x, p.y, strokeWeight - 1, strokeWeight - 1);
+    }
+  }
+
+  public void updatelinks() {
+    js.eval("updatelinks(" + tiles.lon(WINDOW_WIDTH / 2) + "," + tiles.lat(WINDOW_HEIGHT / 2) + "," + tiles.getZoom() + ")");
+  }
+
+
+  ///////////////////////////// BUTTON STUFF //////////////////////////////////
+
+  float buttonWidth = 15.0f;
+  float buttonHeight = 15.0f;
+
+  // TODO PFont buttonFont; // for tool-tips
+
+  static public void main(String args[]) {
+    String[] params = new String[args.length+1];
+    params[0] = "org.openstreetmap.processing.OsmApplet";
+    System.arraycopy(args, 0, params, 1, args.length);
+    PApplet.main(params);
+  }
 }

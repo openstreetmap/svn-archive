@@ -94,7 +94,7 @@ public class OxParser extends MinML2 {
 		if(qName.equals("tag")) {
 			String key = atts.getValue("k");
 			String val = atts.getValue("v");
-			current.tags.put(key, val);
+			current.tagsput(key, val);
 		}
 
 	} // startElement

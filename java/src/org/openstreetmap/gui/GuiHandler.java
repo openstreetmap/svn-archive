@@ -68,9 +68,9 @@ public class GuiHandler extends Thinlet {
 
         // fill properties
         Object table = find("advanced_table");
-        for (Iterator it = osm.tags.keySet().iterator(); it.hasNext();) {
+        for (Iterator it = osm.getTags().keySet().iterator(); it.hasNext();) {
             String key = (String)it.next();
-            String value = (String)osm.tags.get(key);
+            String value = (String)osm.getTags().get(key);
             Object row = createRow(key, value);
             add(table, row);
         }
@@ -224,7 +224,7 @@ public class GuiHandler extends Thinlet {
     public void ok() {
         Object tags = find("advanced_table");
         Object[] rows = getItems(tags);
-        osm.tags.clear();
+        osm.getTags().clear();
         for (int i = 0; i < rows.length; ++i) {
             Object keyObj = getItem(rows[i],0);
             Object valueObj = getItem(rows[i],1);
@@ -232,7 +232,7 @@ public class GuiHandler extends Thinlet {
                 continue; // bug in thinlet: old values that did not get deleted properly
             String key = getString(keyObj, "text");
             String value = getString(valueObj,"text");
-            osm.tags.put(key, value);
+            osm.tagsput(key, value);
         }
         cancelled = false;
         lastSelectedTab = getInteger(find("mainTab"), "selected");

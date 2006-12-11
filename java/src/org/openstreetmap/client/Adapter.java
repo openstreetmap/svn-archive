@@ -387,7 +387,7 @@ public class Adapter {
         node.coor.y = newY;
       }
       public boolean connectToServer() throws IOException {
-        String xml = "<osm><node tags=\"" + node.tags + "\" lon=\""
+        String xml = "<osm><node tags=\"" + node.getTags() + "\" lon=\""
           + node.coor.lon + "\" lat=\"" + node.coor.lat + "\" id=\""
           + node.id + "\" /></osm>";
 

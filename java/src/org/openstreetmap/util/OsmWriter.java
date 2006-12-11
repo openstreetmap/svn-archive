@@ -58,7 +58,7 @@ public class OsmWriter {
 	public void visit(Node n) {
 		out.print("  <node id='"+n.id+"'");
 		out.print(" lat='"+n.coor.lat+"' lon='"+n.coor.lon+"'");
-		addTags(n.tags, "node", true);
+		addTags(n.getTags(), "node", true);
 	}
 
 	public void visit(Line ls) {
@@ -66,7 +66,7 @@ public class OsmWriter {
 			throw new IllegalArgumentException("Cannot osmwrite an incomplete line segment.");
 		out.print("  <"+"segment"+" id='"+ls.id+"'");
 		out.print(" from='"+ls.from.id+"' to='"+ls.to.id+"'");
-		addTags(ls.tags, "segment", true);
+		addTags(ls.getTags(), "segment", true);
 	}
 
 	public void visit(Way w) {
@@ -74,7 +74,7 @@ public class OsmWriter {
 		out.println(">");
 		for (Iterator it = w.lines.iterator(); it.hasNext();)
 			out.println("    <seg id='"+((Line)it.next()).id+"' />");
-		addTags(w.tags, "way", false);
+		addTags(w.getTags(), "way", false);
 	}
 
 	private void addTags(Map tags, String tagname, boolean tagOpen) {

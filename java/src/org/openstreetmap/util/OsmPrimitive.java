@@ -20,7 +20,7 @@ abstract public class OsmPrimitive implements Cloneable {
 	 * The tags for this object  
 	 * Key: String  Value: String
 	 */
-	public Map tags = new Hashtable();
+	private Map tags = new Hashtable();
 
 	/**
 	 * @return the main table this primitive is associated with. E.g. node returns
@@ -106,4 +106,23 @@ abstract public class OsmPrimitive implements Cloneable {
 	 * @return 
 	 */
 	abstract protected void doCopyFrom(OsmPrimitive other);
+
+  public Map getTags() {
+    if(tags.containsKey("created_by")) {
+      
+    } else {
+      tags.put("created_by", "YahooApplet 1.0");
+    }
+
+    return tags;
+  }
+
+  public void putTags(Hashtable ht) {
+    tags = ht;
+  }
+
+  public void tagsput(String k, String v) {
+    tags.put(k,v);
+  }
+  
 }

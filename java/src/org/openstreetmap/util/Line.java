@@ -122,11 +122,11 @@ public class Line extends OsmPrimitive {
 	}
 
 	public synchronized void setName(String sName) {
-		tags.put("name", sName);
+		tagsput("name", sName);
 	}
 
 	public synchronized String getName() {
-		String name = (String)tags.get("name");
+		String name = (String)getTags().get("name");
 		return name!=null ? name : "";
 	}
 

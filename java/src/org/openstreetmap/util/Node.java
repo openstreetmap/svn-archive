@@ -92,7 +92,7 @@ public class Node extends OsmPrimitive {
 	}
 
 	public String getName() {
-		String name = (String)tags.get("name");
+		String name = (String)getTags().get("name");
 		return name!=null ? name : "";
 	}
 

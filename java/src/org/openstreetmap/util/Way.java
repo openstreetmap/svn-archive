@@ -28,11 +28,11 @@ public class Way extends OsmPrimitive {
 	}
 
 	public String getName() {
-		return (String)tags.get("name");
+		return (String)getTags().get("name");
 	}
 
 	public Line getNameLineSegment() {
-		String n = (String)tags.get("name_segment");
+		String n = (String)getTags().get("name_segment");
 		if (n != null) {
 			try {
 				long id = Long.parseLong(n);

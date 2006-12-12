@@ -174,47 +174,47 @@ sub parse_planet($$$){
 
 sub display_status($){
     my $mode = shift;
-    if ( ( $VERBOSE || $DEBUG ) &&
-	 ( time()-$PARSING_DISPLAY_TIME >2)
-	 )  {
-	$PARSING_DISPLAY_TIME= time();
-	print STDERR "\r";
-	#print STDERR "$mode(".$AREA_FILTER->name()."): ";
+    return unless $VERBOSE || $DEBUG ;
+    return unless time()-$PARSING_DISPLAY_TIME >2;
 
-	print STDERR time_estimate($PARSING_START_TIME,
-				   $Stats{"elem read"},estimated_max_count("elem"));
+    $PARSING_DISPLAY_TIME= time();
+    print STDERR "\r";
+    #print STDERR "$mode(".$AREA_FILTER->name()."): ";
 
-	my $pos = $READ_FH->tell();
-	printf STDERR " pos:%.2fGB ",$pos/1024/1024/1024;
-	for my $k ( sort keys %Stats ) {
-	    next if $k =~ m/( read)$/;
-	    next if $k =~ m/(tag|mem)$/;
-	    next if $k =~ m/named/ && $VERBOSE <=1;
-	    next if $k !~ m/elem/ && $VERBOSE <=2;
-	    print STDERR "$k:".$Stats{$k};
-	    my $estim=estimated_max_count($k);
-	    if ( defined($Stats{"$k read"}) ) {
-		printf STDERR "=%.0f%%",(100*$Stats{"$k read"}/$estim) 
-		    if $estim;
-	    }
-	    print STDERR "($estim) ";
+    print STDERR time_estimate($PARSING_START_TIME,
+			       $Stats{"elem read"},estimated_max_count("elem"));
+
+    my $pos = $READ_FH->tell();
+    printf STDERR " pos:%.2fGB ",$pos/1024/1024/1024;
+    for my $k ( sort keys %Stats ) {
+	next if $k =~ m/( read)$/;
+	next if $k =~ m/(tag|mem)$/;
+	next if $k =~ m/named/ && $VERBOSE <=1;
+	next if $k !~ m/elem/ && $VERBOSE <=2;
+	print STDERR "$k:".$Stats{$k};
+	my $estim=estimated_max_count($k);
+	if ( defined($Stats{"$k read"}) ) {
+	    printf STDERR "=%.0f%%",(100*$Stats{"$k read"}/$estim) 
+		if $estim;
 	}
-
-	my $vsz = mem_usage('vsz');
-
-	if ( ! $use_max_mem and (mem_info("MemFree")<10) ){
-	    die "\nToo much memory ($vsz MB) used; MemFree: ".mem_info("MemFree")."MB\n";
-	}
-	if ( $use_max_mem >0 and ( $vsz > $use_max_mem ) ) {
-	     die "\nToo much memory($vsz MB) used; max allowed: $use_max_mem MB ".mem_info()."\n";
-	 }
-	
-	print STDERR mem_usage();
-	print STDERR "\r";
-	
-	#print STDERR "\n";
-	#store_mem_arrays();
+	print STDERR "($estim) ";
     }
+
+    my $vsz = mem_usage('vsz');
+
+    if ( ! $use_max_mem and (mem_info("MemFree")<10) ){
+	die "\nToo much memory ($vsz MB) used; MemFree: ".mem_info("MemFree")."MB\n";
+    }
+    if ( $use_max_mem >0 and ( $vsz > $use_max_mem ) ) {
+	die "\nToo much memory($vsz MB) used; max allowed: $use_max_mem MB ".mem_info()."\n";
+    }
+    
+    print STDERR mem_usage();
+    print STDERR "\r";
+    
+    #print STDERR "\n";
+    #store_mem_arrays();
+
 }
 
 
@@ -268,10 +268,10 @@ sub tags2osm($){
 
 	# character escaping as per http://www.w3.org/TR/REC-xml/
 	$v =~ s/&/&amp;/g;
-	$v =~ s/'/&apos;/g;
+	$v =~ s/\'/&apos;/g;
 	$v =~ s/</&lt;/g;
 	$v =~ s/>/&gt;/g;
-	$v =~ s/"/&quot;/g;
+	$v =~ s/\"/&quot;/g;
 
 	$erg .= "    <tag k=\"$k\" v=\"$v\" />\n";
     }

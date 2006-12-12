@@ -27,7 +27,7 @@ CREATE TABLE `area_segments` (
   KEY `area_segments_id_idx` (`id`),
   KEY `area_segments_segment_id_idx` (`segment_id`),
   KEY `area_segments_id_version_idx` (`id`,`version`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `area_tags`
@@ -41,7 +41,7 @@ CREATE TABLE `area_tags` (
   `version` bigint(20) NOT NULL DEFAULT '0',
   `sequence_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`,`version`,`sequence_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `areas`
@@ -55,7 +55,7 @@ CREATE TABLE `areas` (
   `version` bigint(20) NOT NULL AUTO_INCREMENT,
   `visible` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`,`version`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `current_nodes`
@@ -146,8 +146,7 @@ CREATE TABLE `gps_points` (
   `timestamp` datetime DEFAULT NULL,
   KEY `points_idx` (`latitude`,`longitude`,`user_id`),
   KEY `points_uid_idx` (`user_id`),
-  KEY `points_gpxid_idx` (`gpx_id`),
-  KEY `gps_points_timestamp_idx` (`timestamp`)
+  KEY `points_gpxid_idx` (`gpx_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -180,8 +179,9 @@ CREATE TABLE `gpx_files` (
   `description` varchar(255) DEFAULT '',
   `tmpname` varchar(255) DEFAULT NULL,
   `inserted` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9326 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `gpx_files_timestamp_idx` (`timestamp`)
+) ENGINE=MyISAM AUTO_INCREMENT=13430 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `gpx_pending_files`
@@ -204,7 +204,7 @@ CREATE TABLE `meta_areas` (
   `user_id` bigint(20) DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `meta_nodes`
@@ -216,7 +216,7 @@ CREATE TABLE `meta_nodes` (
   `user_id` bigint(20) DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16143608 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=21544373 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `meta_segments`
@@ -228,7 +228,7 @@ CREATE TABLE `meta_segments` (
   `user_id` bigint(20) DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12893941 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=17610036 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `meta_ways`
@@ -240,7 +240,7 @@ CREATE TABLE `meta_ways` (
   `user_id` bigint(20) DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3282563 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4071881 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `nodes`
@@ -293,7 +293,7 @@ CREATE TABLE `users` (
   `display_name` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `users_email_idx` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=3865 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5147 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `way_segments`
@@ -306,7 +306,7 @@ CREATE TABLE `way_segments` (
   `version` bigint(20) NOT NULL DEFAULT '0',
   `sequence_id` bigint(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`,`version`,`sequence_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8459472 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8459472 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `way_tags`
@@ -319,7 +319,7 @@ CREATE TABLE `way_tags` (
   `v` varchar(255) DEFAULT NULL,
   `version` bigint(20) DEFAULT NULL,
   KEY `way_tags_id_version_idx` (`id`,`version`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `ways`
@@ -334,7 +334,7 @@ CREATE TABLE `ways` (
   `visible` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`,`version`),
   KEY `ways_id_version_idx` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3414768 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3414768 DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

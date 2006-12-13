@@ -451,16 +451,16 @@
 			</rule>
 		</rule>-->
 		<rule e="node" k="amenity" v="place_of_worship">
-			<rule e="node" k="denomination" v="~">
+			<rule e="node" k="denomination|religion" v="~">
 				<symbol xlink:href="#church" width='2.5px' height='5px' transform='translate(-1.25,-2.5)' />
 			</rule>
-			<rule e="node" k="denomination" v="christian|church_of_england">
+			<rule e="node" k="denomination|religion" v="christian|church_of_england">
 				<symbol xlink:href="#church" width='2.5px' height='5px' transform='translate(-1.25,-2.5)' />
 			</rule>
-			<rule e="node" k="denomination" v="jewish">
+			<rule e="node" k="denomination|religion" v="jewish">
 				<symbol xlink:href="#synagogue" width='4px' height='4px' transform='translate(-2,-2)' />
 			</rule>
-			<rule e="node" k="denomination" v="muslim">
+			<rule e="node" k="denomination|religion" v="muslim">
 				<symbol xlink:href="#mosque" width='4px' height='4px' transform='translate(-2,-2)' />
 			</rule>
 		</rule>
@@ -1350,7 +1350,7 @@
 			  }
 
 			.landuse-wood {
-			  fill: #b1efc8;
+			  fill: #72bf81;
 			  stroke: #6fc18e;
 			  stroke-width: 0.2px;
 			  }

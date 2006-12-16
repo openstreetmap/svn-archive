@@ -6,12 +6,16 @@
 				<label text="Name" />
 				<textfield name="name" weightx="1" action="nameChanged" />
 			
-				<label text="Class" />
-				<combobox name="class" weightx="1" action="classChanged" >
-					<choice text="wlan" />
-					<choice text="bus stop" />
-					<choice text="roundabout" />
-					<choice text="pub" />
+				<label text="Type" />
+				<combobox name="type" weightx="1" action="typeChanged(this,this.text)" >
+					<choice text="Bus Station" property="osm=amenity=bus_station" />
+					<choice text="Car Park" property="osm=amenity=parking" />
+					<choice text="Mini Roundabout" property="osm=highway=mini_roundabout" />
+					<choice text="Petrol Station" property="osm=amenity=fuel" />
+					<choice text="Pub" property="osm=amenity=pub" />
+					<choice text="Railway Station" property="osm=railway=station" />
+					<choice text="Tourist Attraction" property="osm=tourism=attraction" />
+					<choice text="Tourist Information" property="osm=tourism=information" />
 				</combobox>
 			</panel>
 		</tab>

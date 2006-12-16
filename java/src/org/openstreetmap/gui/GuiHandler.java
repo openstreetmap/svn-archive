@@ -15,15 +15,14 @@ import thinlet.Thinlet;
  * An handler class for the applet gui framework. Subclass this and add your actions
  * specified in the xml as handler functions.
  * 
- * The advanced_table is build up so that the names of the cells are key_name resp.
- * value_name, if "name" is the content of the first row.
+ * The advanced_table is build up so that the names of the cells are 
+ *  key_name resp. value_name, if "name" is the content of the first row.
  * 
  * Example: An table with the following content
  * 
  * name    Baker Street
  * class   primary
  * oneway  0
- * 
  * 
  * would have the following names:
  * 
@@ -47,6 +46,14 @@ public class GuiHandler extends Thinlet {
      * The primitive that is changed via this dialog
      */
     public OsmPrimitive osm;
+    
+    /**
+     * The name (eg 'highway') of the last tag we set via the
+     *  basic tab.
+     * We need to know this, so if the user picks something else
+     *  via the basic tab, we can remove the previous one.
+     */
+    private String lastBasicType = null;
 
     public boolean cancelled = true;
 
@@ -76,6 +83,9 @@ public class GuiHandler extends Thinlet {
         }
     }
 
+    /**
+     * Called when the object's name is changed on the basic tab
+     */
     public void nameChanged() {
         Object name = getTableValue("name");
         String newName = getString(find("name"), "text");
@@ -147,7 +157,15 @@ public class GuiHandler extends Thinlet {
         return s.equals("yes") || s.equals("1") || s.equals("true") || s.equals("on");
     }
 
+    /**
+     * Update the basic tab, based on the values in the advanced tab.
+     * This will always update the name, blanking it if there is none.
+     * If your basic tab is class based, it'll update that
+     * If your basic tab is type based, it'll try to find a name/value pair
+     *  in the type options that matches something you have set.
+     */
     protected void updateBasic() {
+    	// Update the name, with the current name tag
         Object name = find("value_name");
         setString(find("name"), "text", name==null ? "" : getString(name, "text"));
         
@@ -156,12 +174,20 @@ public class GuiHandler extends Thinlet {
         Object cl = find("value_class");
         if(classObj != null) {
         	// Class based
+        	// Just set the basic tab's class field to the current
+        	//  value of the 'class' tag
             setString(classObj, "text", cl==null ? "" : getString(cl, "text"));
         } else {
-        	// Type based. Walk through until we get a match
+        	// Type based.
+        	// Start with blanking the Type field
         	Object type = find("type");
+        	setString(type, "text", "");
+        	
+        	// Walk through the type's choices, until we find one
+        	//  which that tag has been set
         	Object[] choices = getItems( type );
         	for(int i=0; i<choices.length; i++) {
+        		// Grab the details of the current choice
         		String displayText = getString(choices[i], "text");
             	String[] nv = getOSMProperty(choices[i]);
             	if(nv == null) { continue; }
@@ -169,6 +195,8 @@ public class GuiHandler extends Thinlet {
             	String optVal = nv[1];
             	
             	// Do we already have a property with this choice's name?
+            	// (i.e. tag name is 'highway', do they already have a 
+            	//   'highway' entry?)
             	Object nameProp = find("value_" + optName);
             	if(nameProp == null) {
             		// We don't, so skip on
@@ -176,9 +204,13 @@ public class GuiHandler extends Thinlet {
             	}
             	
             	// Does the property have the same value as this choice?
+            	// (i.e. choice is 'highway=trunk', does that match 
+            	//   whatever the current highway tag is?)
             	String valProp = getString(nameProp, "text");
             	if(valProp.equals(optVal)) {
+            		// We have a match, select this for the basic tab
             		setString(type, "text", displayText);
+            		break;
             	}
         	}
         }
@@ -225,9 +257,10 @@ public class GuiHandler extends Thinlet {
     	// Save the new name+value
     	setString( getTableValue(name), "text", value );
     }
-    /** So we can remove things we add via a basic type field */
-    private String lastBasicType = null;
 
+    /**
+     * They have changed something on the advanced tab, update it
+     */
     public void tableSelectionChanged() {
         Object sel = getSelectedItem(find("advanced_table"));
         if (sel == null)
@@ -236,6 +269,9 @@ public class GuiHandler extends Thinlet {
         setString(find("edit_value"), "text", getString(getItem(sel, 1), "text"));
     }
 
+    /**
+     * They have added a new tag
+     */
     public void propAdd() {
         Object sel = getSelectedItem(find("advanced_table"));
         if (sel != null)
@@ -259,6 +295,9 @@ public class GuiHandler extends Thinlet {
         updateBasic();
     }
 
+    /**
+     * They have removed an old tag
+     */
     public void propDelete() {
         Object selected = getSelectedItem(find("advanced_table"));
         if (selected != null) {
@@ -269,6 +308,10 @@ public class GuiHandler extends Thinlet {
         }
     }
 
+    /**
+     * The user has edited the key (eg highway) of an 
+     *  existing entry in the advanced tab
+     */
     public void keyChanged() {
         String key = getString(find("edit_key"), "text");
         Object row = getSelectedItem(find("advanced_table"));
@@ -281,6 +324,11 @@ public class GuiHandler extends Thinlet {
         updateBasic();
     }
 
+    /**
+     * The user has edited the value of a tag (eg primary of
+     *  'highway=primary') of an existing entry in the 
+     *  advanced tab
+     */
     public void valueChanged() {
         String value = getString(find("edit_value"), "text");
         Object row = getSelectedItem(find("advanced_table"));
@@ -290,6 +338,10 @@ public class GuiHandler extends Thinlet {
         updateBasic();
     }
 
+    /**
+     * The user hit ok, so save the tags etc back onto the
+     *  underlying OSM object.
+     */
     public void ok() {
         Object tags = find("advanced_table");
         Object[] rows = getItems(tags);
@@ -318,8 +370,8 @@ public class GuiHandler extends Thinlet {
     }
     
     /**
-     * Grab the OSM property (if there is one) for the given object,
-     *  and return it as a String[] which is node,value
+     * Grab the OSM property (if there is one) for the given (normally
+     *  choice) object, and return it as a String[] which is node,value
      */
     private String[] getOSMProperty(Object o) {
     	Object prop = getProperty(o, "osm");

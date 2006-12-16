@@ -6,9 +6,10 @@
 				<label text="Name" />
 				<textfield name="name" weightx="1" action="nameChanged" />
 			
-				<label text="Class" />
-				<combobox name="class" weightx="1" action="classChanged" >
-					<choice text="tunnel" />
+				<label text="Type" />
+				<combobox name="type" weightx="1" action="typeChanged(this,this.text)" >
+					<choice text="Tunnel" property="osm=tunnel=yes" />
+					<choice text="Bridge" property="osm=bridge=yes" />
 				</combobox>
 			</panel>
 		</tab>

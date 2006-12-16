@@ -83,13 +83,23 @@
 
 package org.openstreetmap.processing;
 
+import java.awt.Image;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.Math;
 import java.lang.Character;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import netscape.javascript.JSObject;
 
@@ -860,4 +870,80 @@ public class OsmApplet extends PApplet {
     System.arraycopy(args, 0, params, 1, args.length);
     PApplet.main(params);
   }
+
+  
+	/**
+	 * Our own version of loadImage, which takes account of and handles
+	 *  Network timeouts properly
+	 */
+	public PImage loadImage(String file) {
+		if(file.startsWith("http://")) {
+			// Do our own, special handling
+			try {
+				return loadImageWithTimeoutAndRetry(
+						new URL(file),
+						5,
+						10,
+						10
+				);
+			} catch(MalformedURLException e) {
+				System.err.println("Skipping invalid image URL " + e);
+				return null;
+			}
+		} else {
+			// Our parent's version should be fine
+			return super.loadImage(file);
+		}
+	}
+  
+	/**
+	 * Fetches the Image from the URL, with the various options for retrying,
+	 *  timing out etc
+	 */
+	public PImage loadImageWithTimeoutAndRetry(URL url, int retries, int connectTimeoutSecs, int readTimeoutSecs) {
+		byte[] data = null;
+		boolean worked = false;
+		int attempts = 0;
+		
+		while(!worked && (attempts <= retries)) {
+			attempts++;
+			System.out.println("Making attempt " + attempts + " of " + (retries+1) + " to fetch " + url);
+			
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				URLConnection conn = url.openConnection();
+				conn.setConnectTimeout(connectTimeoutSecs * 1000);
+				conn.setReadTimeout(readTimeoutSecs * 1000);
+				conn.connect();
+				
+				byte[] tmp = new byte[2048];
+				int read = 0;
+				InputStream inp = conn.getInputStream();
+				while( (read = inp.read(tmp)) > -1 ) {
+					baos.write(tmp, 0, read);
+				}
+				
+				// Save the data, and record it's done
+				data = baos.toByteArray();
+				worked = true;
+			} catch(IOException e) {
+				System.err.println("Error fetching " + url + " - " + e);
+			}
+		}
+		
+		if(data == null || data.length == 0) {
+			// Give up, return null
+			return null;
+		}
+		
+		// Create an image from the data
+		ByteArrayInputStream bais = new ByteArrayInputStream(data);
+		try {
+			Image img = ImageIO.read(bais);
+			return new PImage(img);
+		} catch(IOException e) {
+			// Should never happen, but never mind
+			return null;
+		}
+	}
 }

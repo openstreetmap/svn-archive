@@ -102,6 +102,7 @@ public class Adapter {
 
     /**
      * Retrieve all nodes and lines in the specified boundaries from the server.
+     * Will make two attempts to do the download, in case the first fails
      * @param tl The top left point of the rectangle to fetch.
      * @param br The bottom right point of the rectangle to fetch.
      * @param projection The projection algorithm to use.
@@ -112,29 +113,44 @@ public class Adapter {
       System.out.println("getting nodes and lines");
       String url = apiUrl + "map?bbox=" + tl.lon+","+br.lat+","+br.lon+","+tl.lat;
 
-      System.out.println("trying url: " + url);
-      HttpClient client = getClient();
-
-      // create a method object
-      HttpMethod method = new GzipAwareGetMethod(url);
-      method.setFollowRedirects(true);
-
-      // execute the method
       InputStream responseStream = null;
-      try {
-        client.executeMethod(method);
-        responseStream = method.getResponseBodyAsStream();
-      } catch (HttpException he) {
-        he.printStackTrace();
-      } catch (IOException ioe) {
-        ioe.printStackTrace();
+      HttpMethod method = null;
+      int retries = 1;
+      int attempt = 0;
+      
+      while( (responseStream == null) && (attempt <= retries) ) {
+    	  attempt++;
+    	  
+    	  System.out.println("trying attempt " + attempt + " of url: " + url);
+    	  HttpClient client = getClient();
+
+    	  // create a method object
+    	  method = new GzipAwareGetMethod(url);
+    	  method.setFollowRedirects(true);
+
+	      // execute the method
+	      try {
+	        client.executeMethod(method);
+	        responseStream = method.getResponseBodyAsStream();
+	      } catch (HttpException he) {
+	        he.printStackTrace();
+	      } catch (IOException ioe) {
+	        ioe.printStackTrace();
+	      }
+	      
+	      if (responseStream == null) {
+	          System.out.println("Could not download the main data. The server may be busy?");
+	          method.releaseConnection();
+	      }
       }
+      
       if (responseStream == null) {
-        MsgBox.msg("Could not download the main data. The server may be busy. Try again later.");
-        method.releaseConnection();
-        return;
+          MsgBox.msg("Could not download the main data. The server may be busy. Try again later.");
+          return;
       }
 
+      // Process what we got back
+      // (In future, this may wish to be inside the retry block)
       OxParser gpxp = new OxParser(responseStream);
 
 
@@ -251,7 +267,10 @@ public class Adapter {
       HttpClient client = new HttpClient();
 
       // establish a connection within 5 seconds
-      client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+      client.getHttpConnectionManager().getParams().setConnectionTimeout(5 * 1000);
+      // wait up to 30 seconds for a response
+      client.getHttpConnectionManager().getParams().setSoTimeout(30 * 1000);
+      // use our credentials with the request
       client.getState().setCredentials(AuthScope.ANY, creds);
       return client;
     }

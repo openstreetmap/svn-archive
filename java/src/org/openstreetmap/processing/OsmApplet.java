@@ -277,6 +277,8 @@ public class OsmApplet extends PApplet {
 		modeManager.addMode(nameMode);
 		modeManager.addMode(nodeMoveMode);
 		modeManager.addMode(deleteMode);
+		modeManager.addMode(zoominMode);
+		modeManager.addMode(zoomoutMode);
 
 		modeManager.draw(); // make modeManager set up things
 

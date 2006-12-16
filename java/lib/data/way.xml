@@ -6,16 +6,20 @@
 				<label text="Name" />
 				<textfield name="name" weightx="1" action="nameChanged" />
 			
-				<label text="Class" />
-				<combobox name="class" weightx="1" action="classChanged" >
-					<choice text="motorway" />
-					<choice text="primary" />
-					<choice text="secondary" />
-					<choice text="minor" />
-					<choice text="ferry" />
-					<choice text="tram" />
-					<choice text="railroad" />
-					<choice text="canal" />
+				<label text="Type" />
+				<combobox name="type" weightx="1" action="typeChanged(this,this.text)" >
+					<choice text="Motorway (highway)" property="osm=highway=motorway" />
+					<choice text="Trunk (highway)" property="osm=highway=trunk" />
+					<choice text="Primary (highway)" property="osm=highway=primary" />
+					<choice text="Secondary (highway)" property="osm=highway=secondary" />
+					<choice text="Tertiary (highway)" property="osm=highway=tertiary" />
+					<choice text="Unclassified (highway)" property="osm=highway=unclassified" />
+					<choice text="Residential (highway)" property="osm=highway=residential" />
+					<choice text="Rail (railway)" property="osm=railway=rail" />
+					<choice text="Tram (railway)" property="osm=railway=tram" />
+					<choice text="Subway (railway)" property="osm=railway=subway" />
+					<choice text="River (waterway)" property="osm=waterway=river" />
+					<choice text="Canal (waterway)" property="osm=waterway=canal" />
 				</combobox>
 			
 				<checkbox name="oneway" text="Oneway" action="onewayChanged" />

@@ -150,14 +150,83 @@ public class GuiHandler extends Thinlet {
     protected void updateBasic() {
         Object name = find("value_name");
         setString(find("name"), "text", name==null ? "" : getString(name, "text"));
+        
+        // Is it class based, or type based?
+        Object classObj = find("class");
         Object cl = find("value_class");
-        setString(find("class"), "text", cl==null ? "" : getString(cl, "text"));
+        if(classObj != null) {
+        	// Class based
+            setString(classObj, "text", cl==null ? "" : getString(cl, "text"));
+        } else {
+        	// Type based. Walk through until we get a match
+        	Object type = find("type");
+        	Object[] choices = getItems( type );
+        	for(int i=0; i<choices.length; i++) {
+        		String displayText = getString(choices[i], "text");
+            	String[] nv = getOSMProperty(choices[i]);
+            	if(nv == null) { continue; }
+            	String optName = nv[0];
+            	String optVal = nv[1];
+            	
+            	// Do we already have a property with this choice's name?
+            	Object nameProp = find("value_" + optName);
+            	if(nameProp == null) {
+            		// We don't, so skip on
+            		continue;
+            	}
+            	
+            	// Does the property have the same value as this choice?
+            	String valProp = getString(nameProp, "text");
+            	if(valProp.equals(optVal)) {
+            		setString(type, "text", displayText);
+            	}
+        	}
+        }
     }
 
+    /**
+     * The simple value 'class' has been changed on the
+     *  basic tab
+     */
     public void classChanged() {
         Object name = getTableValue("class");
-        setString(name, "text", getString(find("class"), "text"));
+        String val = getString(find("class"), "text");
+        setString(name, "text", val);
     }
+    
+    /**
+     * The complex value 'type' has been changed on the
+     *  basic tab. Figure out the name/value pair that
+     *  goes with it, and update it
+     */
+    public void typeChanged(Object combobox, String type) {
+    	// Grab the selected choice object
+    	Object choice = getSelectedItem(combobox);
+    	
+    	String text = getString(choice, "text");
+    	if(!text.equals(type)) {
+    		System.err.println("Warning - the two text's didn't match - " + type + " vs " + text);
+    		return;
+    	}
+    	
+    	// Grab OSM data from the choice object
+    	String[] nv = getOSMProperty(choice);
+    	if(nv == null) { return; }
+    	String name = nv[0];
+    	String value = nv[1];
+    	
+    	// Remove the last one, if there is one
+    	if(lastBasicType != null) {
+    		remove( find("key_" + lastBasicType) );
+    		remove( find("value_" + lastBasicType) );
+    	}
+    	lastBasicType = name;
+    	
+    	// Save the new name+value
+    	setString( getTableValue(name), "text", value );
+    }
+    /** So we can remove things we add via a basic type field */
+    private String lastBasicType = null;
 
     public void tableSelectionChanged() {
         Object sel = getSelectedItem(find("advanced_table"));
@@ -246,5 +315,24 @@ public class GuiHandler extends Thinlet {
     
     public void mainTabChanged(int newTab) {
         lastSelectedTab = newTab;
+    }
+    
+    /**
+     * Grab the OSM property (if there is one) for the given object,
+     *  and return it as a String[] which is node,value
+     */
+    private String[] getOSMProperty(Object o) {
+    	Object prop = getProperty(o, "osm");
+    	if(o == null || !(prop instanceof String)) { return null; }
+    	
+    	String osmData = (String)prop;
+    	int splitAt = osmData.indexOf('=');
+    	if(splitAt == -1) {
+    		System.err.println("Warning - OSM data wasn't name=value - " + osmData);
+    	}
+    	String name = osmData.substring(0, splitAt);
+    	String value = osmData.substring(splitAt + 1);
+    	
+    	return new String[] { name, value }; 
     }
 }

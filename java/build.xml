@@ -55,8 +55,8 @@
 
     <mkdir dir="${dist}/rc1/data"/>
     <copy file="${lib}/data/hand.png" tofile="${dist}/rc1/data/hand.png"/>
-    <copy file="${lib}/data/zoomin.png" tofile="${dist}/rc1/data/hand.png"/>
-    <copy file="${lib}/data/zoomout.png" tofile="${dist}/rc1/data/hand.png"/>
+    <copy file="${lib}/data/zoomin.png" tofile="${dist}/rc1/data/zoomin.png"/>
+    <copy file="${lib}/data/zoomout.png" tofile="${dist}/rc1/data/zoomout.png"/>
     <copy file="${lib}/data/yahoo.png" tofile="${dist}/rc1/data/yahoo.png"/>
     <copy file="${lib}/data/way.xml" tofile="${dist}/rc1/data/way.xml"/>
     <copy file="${lib}/data/segment.xml" tofile="${dist}/rc1/data/segment.xml"/>

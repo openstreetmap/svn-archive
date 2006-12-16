@@ -240,6 +240,8 @@ public class OsmApplet extends PApplet {
 	EditMode nodeMoveMode = new NodeMoveMode(this);
 	EditMode deleteMode = new DeleteMode(this);
 	EditMode moveMode = new MoveMode(this);
+	EditMode zoomoutMode = new ZoomOutMode(this);
+	EditMode zoominMode = new ZoomInMode(this);
 
 	/*
 	 * if !ready, a wait cursor is shown and input doesn't do anything TODO:

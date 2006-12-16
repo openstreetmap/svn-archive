@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import java.lang.Math.*;
 
+import org.openstreetmap.gui.MsgBox;
 import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.Point;
 
@@ -440,16 +441,33 @@ public class Tile extends Thread {
   }
 
   public void zoomin() {
-    zoom++;
-    zoom();
+	boolean doZoom = true;
+	zoom++;
+	if(zoom > 18) {
+		zoom = 18;
+		doZoom = false;
+	}
+	if(!doZoom) {
+		MsgBox.msg("You can't zoom in any further");
+	} else {
+		// Do the zoom in
+		zoom();
+	}
   }
 
   public void zoomout() {
-    zoom--;
-    if (zoom < 14) {
-      zoom = 14;
-    }
-    zoom();
+	boolean doZoom = true;
+	System.out.print("Zoom was " + zoom + ", now " + (zoom-1));
+	zoom--;
+	if(zoom < 8) {
+		zoom = 8;
+		doZoom = false;
+	}
+	if(!doZoom) {
+		MsgBox.msg("You can't zoom out any further");
+	} else {
+		zoom();
+	}
   }
 
   public long getZoom() {

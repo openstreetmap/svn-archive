@@ -501,11 +501,17 @@ public class OsmApplet extends PApplet {
 			}
 			noFill();
 
-      // Cache as we want to iterate even though another thread
-      // might be editing it.
-      ArrayList allLines = new ArrayList(lines.values());
+			// We need to have a cache of all the things we want to draw
+			// Otherwise, another Thread might edit the list while we're
+			//  in the middle of drawing it, and we'll crash out with a
+			//  java.util.ConcurrentModificationException
+			
+			ArrayList allNodes = new ArrayList(nodes.values());
+			ArrayList allLines = new ArrayList(lines.values());
+			ArrayList allWays = new ArrayList(ways.values());
+			
 
-      // draw the small black border for every line segment
+			// draw the small black border for every line segment
 			strokeWeight(strokeWeight + 2.0f);
 			stroke(0);
 			for (Iterator it = allLines.iterator(); it.hasNext();) {
@@ -536,7 +542,7 @@ public class OsmApplet extends PApplet {
 			}
 
 			// draw all ways
-			for (Iterator it = ways.values().iterator(); it.hasNext();) {
+			for (Iterator it = allWays.iterator(); it.hasNext();) {
 				Way way = (Way)it.next();
 				for (Iterator itw = way.lines.iterator(); itw.hasNext();) {
 					Line line = (Line)itw.next();
@@ -602,7 +608,7 @@ public class OsmApplet extends PApplet {
 			noStroke();
 			ellipseMode(CENTER);
 
-			for (Iterator it = nodes.values().iterator(); it.hasNext();) {
+			for (Iterator it = allNodes.iterator(); it.hasNext();) {
 				Node node = (Node)it.next();
 				if (modeManager.currentMode == lineMode && mouseOverPoint(node.coor)) {
 					fill(0xffff0000);

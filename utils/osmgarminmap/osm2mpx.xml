@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="osm2mpx.xsl"?>
+
+<rules 
+    data="data.osm"
+    name="OpenStreetMap"
+    mapid="11000204"
+    levels="22 18 14 10">
+
+    <rule e="node" k="amenity" v="parking">
+        <point type="auto" subtype="parking" endlevel="1"/>
+    </rule>
+    <rule e="node" k="amenity" v="telephone">
+        <point type="misc" subtype="telephone" endlevel="1"/>
+    </rule>
+    <rule e="node" k="amenity" v="place-of-worship">
+        <point type="man-made" subtype="church" endlevel="2"/>
+    </rule>
+    <rule e="node" k="amenity" v="fuel">
+        <point type="auto" subtype="petrol" endlevel="2"/>
+    </rule>
+    <rule e="node" k="amenity" v="courthouse">
+        <point type="public" subtype="court" endlevel="1"/>
+    </rule>
+
+    <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
+        <polyline type="trail" endlevel="1"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="pedestrian">
+        <polyline type="road" endlevel="1"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="track">
+        <polyline type="unpaved-road" endlevel="1"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="unclassified|residential|minor">
+        <polyline type="road" endlevel="1"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="unsurfaced">
+        <polyline type="unpaved-road" endlevel="1"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="service">
+        <polyline type="alley" endlevel="1"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="secondary">
+        <polyline type="arterial-road-thin" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="primary|primary_link">
+        <polyline type="arterial-road-medium" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="trunk|trunk_link">
+        <polyline type="principal-highway-thick" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="motorway|motorway_link">
+        <polyline type="principal-highway-thick" endlevel="2"/>
+    </rule>
+
+    <rule e="way" k="landuse" v="forest">
+        <polygon type="woods" endlevel="3"/>
+    </rule>
+    <rule e="way" k="leisure" v="park">
+        <polygon type="city-park" endlevel="2"/>
+    </rule>
+    <rule e="way" k="natural" v="water">
+        <polygon type="lake1"/>
+    </rule>
+    <rule e="way" k="amenity" v="parking">
+        <polygon type="parking-lot"/>
+    </rule>
+
+</rules>

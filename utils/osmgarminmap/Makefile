@@ -1,0 +1,13 @@
+
+CGPSMAPPER=../bin/cgpsmapper-static
+XSLTRANSFORM=xsltproc
+
+map.img:	map.mp
+	$(CGPSMAPPER) $<
+
+map.mp:		map.mpx mpx2mp.xsl feature-list.xml
+	$(XSLTRANSFORM) feature-list.xml >$@
+
+map.mpx:	data.osm osm2mpx.xml osm2mpx.xsl
+	$(XSLTRANSFORM) osm2mpx.xml >$@
+

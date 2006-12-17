@@ -1,0 +1,111 @@
+
+OSMGarminMap
+------------
+
+By Jochen Topf <jochen@remote.org>
+
+This program will convert OpenStreetMap .osm-Files into maps that can be
+loaded into Garmin GPS devices.
+
+It supports showing nodes, segments, ways and areas using Garmin icons etc.
+
+You will also need the "cGPSmapper" program and its companion "sendmap".
+These programs are not Open Source but there is a free version for
+personal use which you can download from http://www.cgpsmapper.com/ .
+
+
+CREATING A MAP
+--------------
+Download some data from OpenStreetMap Server and save it into a file called
+"data.osm". You can then call "make" and it will generate the Garmin map
+file in several steps. The makefile uses xsltproc, but it is easy to change
+to use other XSLT engines. You also have to change the location of the
+cGPSmapper program in the Makefile.
+
+If there is a problem or you want to know about the details, here is a
+step-by-step description:
+
+1. OSM -> MPX
+   In the first step this data will be converted from the OSM XML format
+   into an XML format that is much nearer to the format that Garmin
+   devices can understand. Mapping from the OSM format to the Garmin
+   format you have to decide which OSM features should be mapped to which
+   Garmin features. To describe this process, you can change the osm2mpx.xml
+   File. It uses the same rules as Osmarender uses. In fact I "stole"
+   some of the Osmarender code for this.
+
+   xsltproc osm2mpx.xml >map.mpx
+
+2. MPX -> MP
+   The second step will convert this XML format to a legacy format called
+   the Polish format which can then be read by cGPSmapper. This is where
+   the symbolic names in the .mpx file will get translated into hex codes.
+
+   xsltproc feature-list.xml >map.mp
+
+3. MP -> IMG
+   This file can then be read by cGPSmapper, which will create a .img file.
+
+   cgpsmapper-static map.mp
+
+   This will take a moment. You'll see some output from cGPSmapper ending
+   with:
+    Done!
+    File :map.img is ready to use
+
+
+TRANSFERRING MAP TO GPS UNIT
+----------------------------
+Now you can take this file and transfer it to your GPS unit using the
+sendmap program which is also available from the cGPSmapper website.
+
+  sendmap20 map.img
+
+You might need to use some options depending on where your GPS unit is
+attached (serial port/USB). You might need to be root. Call sendmap
+without any parameters to get help.
+
+
+DEVICES
+-------
+
+This was tested on my Garmin GPSmap 60CSx. Works well except the zooming
+stuff (see below).
+
+
+MAP FEATURES
+------------
+
+The list of map features is created from the OpenOffice spreadsheet file
+called feature-list.ods. To change anything, change this spreadsheet file,
+save as CSV with the vertical bar (|) as field delimiter and no text
+delimiter. Then run the feature-list-csv2xml.pl file like this:
+
+./feature-list-csv2xml.pl feature-list.csv >feature-list.xml
+
+
+KNOWN ISSUES
+------------
+
+* The list of map features that Garmin offers is not complete. The list
+  was created from some incomplete stuff I found on the web. If you find
+  any other code for other features please tell me.
+
+* Currently the conversion of OSM features into Garmin features is very
+  basic. The usual highways are included as well as parks and forests
+  and some amenities like parking lots and telephones. I welcome any
+  additions.
+
+* In theory cGPSmapper can create and Garmin units can use maps in a way
+  that some features are only visible when zoomed in far enough. When
+  zooming out, those features will not be omitted to reduce clutter.
+  For some reason I could not get this to work.
+
+* Ways will be put into the Garmin map not one segment at a time, but
+  as a complete way. If the segments are not ordered properly along the
+  way (something which can easily happen in OSM when adding new segments
+  to a way) you'll get spurious segments zigzaggin around the map. I'll
+  probably not fix this in OSMGarminMap, because it should be fixed in
+  the database itself. That way the fix will help everybody, regardless
+  in which way they are using the data.
+

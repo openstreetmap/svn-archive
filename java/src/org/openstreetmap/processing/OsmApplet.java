@@ -696,12 +696,36 @@ public class OsmApplet extends PApplet {
 						+ tiles.lon(mouseX));
 			}
 
-			// draw command queue icon
-			if (osm.commandManager.size() > 0) {
+			// Draw command queue message
+			// If the yahoo icon changes again, make sure this stays above it 
+			if(osm.commandManager.size() > 0) {
 				pushMatrix();
-				translate(getWidth()-textWidth("uploading..."),getHeight()-45);
-				text("uploading...");
+				
+				textSize(15);
+				String txt = "uploading...";
+				int xx = getWidth()-(int)textWidth(txt);
+				int yy = getHeight()-100;
+				
+				fill(0);
+				text(txt,xx,yy);
+				fill(255);
+				text(txt,xx+1,yy+1);
+				
 				popMatrix();
+			}
+			
+			// If we're downloading data right now, display something
+			//  to alert the user to the fact
+			if(osm.getDownloadingOSMData()) {
+				textSize(15);
+				String txt = "fetching OSM data..."; 
+				int xx = 75;
+				int yy = getHeight() - 50;
+				
+				fill(0);
+				text(txt,xx,yy);
+				fill(255);
+				text(txt,xx+1,yy+1);
 			}
 
 			// finally draw a scale bar

@@ -39,6 +39,11 @@ public class Adapter {
     public final CommandManager commandManager = new CommandManager();
 
     /**
+     * Are we currently downloading OSM data?
+     */
+    private boolean downloadingOSMData = false;
+    
+    /**
      * Back reference to the main applet.
      */
     private OsmApplet applet;
@@ -60,6 +65,11 @@ public class Adapter {
         creds = new UsernamePasswordCredentials(username, password);
         System.out.println("Adapter started");
     }
+    
+    /**
+     * Is the adapter currently downloading data from the OSM server?
+     */
+    public boolean getDownloadingOSMData() { return downloadingOSMData; }
 
     private void getCopyrights() { 
       
@@ -113,6 +123,7 @@ public class Adapter {
       System.out.println("getting nodes and lines");
       String url = apiUrl + "map?bbox=" + tl.lon+","+br.lat+","+br.lon+","+tl.lat;
 
+      downloadingOSMData = true;
       InputStream responseStream = null;
       HttpMethod method = null;
       int retries = 1;
@@ -145,6 +156,7 @@ public class Adapter {
       }
       
       if (responseStream == null) {
+          downloadingOSMData = false;
           MsgBox.msg("Could not download the main data. The server may be busy. Try again later.");
           return;
       }
@@ -176,6 +188,7 @@ public class Adapter {
 
       // clean up the connection resources
       method.releaseConnection();
+      downloadingOSMData = false;
     }
 
 

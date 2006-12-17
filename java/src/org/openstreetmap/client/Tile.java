@@ -581,23 +581,33 @@ class IMBComparator implements java.util.Comparator {
   }
 }
 
+/**
+ * Watcher Thread, that will detect when changes have been made to 
+ *  the tiles shown on the screen, and fetch some matching OSM data
+ *  to go with it.
+ */
 class VFetch extends Thread {
-  private Tile tiles;
-  public VFetch(Tile t) {tiles = t;}
+	private Tile tiles;
+	public VFetch(Tile t) {tiles = t;}
 
-  public void run() {
-    while (true) {
-      try {sleep(1000);} catch (Exception e) {}
-      if (tiles.viewChanged && tiles.timeChanged < System.currentTimeMillis() - 10000) {
-        tiles.viewChanged = false;
-        tiles.applet.lines.clear();
-        tiles.applet.nodes.clear();
-        tiles.applet.ways.clear();
+	public void run() {
+		while (true) {
+			// Sleep for 1 second between checks
+			try {sleep(1000);} catch (Exception e) {}
+			
+			// If the tiles have changed, and they changed more than 6
+			//  seconds ago, then do a re-draw
+			if (tiles.viewChanged && 
+			(tiles.timeChanged < System.currentTimeMillis() - 6000)) {
+				tiles.viewChanged = false;
+				tiles.applet.lines.clear();
+				tiles.applet.nodes.clear();
+				tiles.applet.ways.clear();
 
-        tiles.applet.redraw();
-        tiles.applet.osm.getNodesLinesWays(tiles.getTopLeft(), tiles.getBottomRight(), tiles);
-        tiles.applet.redraw();
-      }
-    }
-  }
+				tiles.applet.redraw();
+				tiles.applet.osm.getNodesLinesWays(tiles.getTopLeft(), tiles.getBottomRight(), tiles);
+				tiles.applet.redraw();
+			}
+		}
+	}
 }

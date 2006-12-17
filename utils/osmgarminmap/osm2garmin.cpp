@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	char username[1024], password[1024], serialport[1024];
 	strcpy(serialport,"/dev/ttyS0");
 	int send=1, tiled=0;
-	double tilesize;
+	double tilesize=0.1;
 
 
 	if(argc>1 && !strcmp(argv[1],"--nosend"))
@@ -34,12 +34,17 @@ int main(int argc, char *argv[])
 		argc--;
 		argv++;
 	}
+	if(argc>1 && !strcmp(argv[1],"--tiled"))
+	{
+		tiled=1;
+		argc--;
+		argv++;
+	}
 	if(argc>2 && !strcmp(argv[1],"--tilesize"))
 	{
 		tilesize=atof(argv[2]);
 		argc-=2;
 		argv+=2;
-		tiled=1;
 	}
 
 
@@ -52,7 +57,7 @@ int main(int argc, char *argv[])
 		
 	if (argc < 7)
 	{
-		printf("Usage: osm2garmin [--nosend] [--tilesize tilesize] ");
+		printf("Usage: osm2garmin [--nosend] [--tiled] [--tilesize tilesize] ");
 		printf("[--serialport serialport] w s e n uname pwd\n");
 		exit(1);
 	}

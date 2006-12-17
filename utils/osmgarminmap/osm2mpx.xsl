@@ -5,6 +5,9 @@
  
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
+    <xsl:param name="mapid" select="rules/@mapid"/>
+    <xsl:param name="name" select="rules/@name"/>
+
 	<xsl:key name='nodeById' match='/osm/node' use='@id'/>
 	<xsl:key name='segmentById' match='/osm/segment' use='@id'/>
 	<xsl:key name='segmentByFromNode' match='/osm/segment' use='@from'/>
@@ -14,7 +17,7 @@
 	<xsl:variable name='data' select='document(/rules/@data)'/>
 
     <xsl:template match="/">
-        <map mapid="{rules/@mapid}" name="{rules/@name}" levels="{rules/@levels}">
+        <map mapid="{$mapid}" name="{$name}" levels="{rules/@levels}">
             <xsl:apply-templates select="/rules/rule">
                 <xsl:with-param name='elements' select='$data/osm/*' />
             </xsl:apply-templates>

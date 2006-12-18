@@ -1,0 +1,8 @@
+<?php
+
+  if(!mysql_connect("localhost","some_username","some_password"))
+    exit;
+
+  if(!mysql_select_db("database_name"))
+    exit;
+?>

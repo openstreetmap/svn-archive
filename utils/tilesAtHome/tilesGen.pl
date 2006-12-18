@@ -29,7 +29,6 @@ use strict;
 
 # conf file, will contain username/password and environment info
 my ($WorkingDirectory, $Inkscape, $XmlStarlet, $Niceness);
-my ($UploadURL, $UploadUsername, $UploadPassword);
 my ($OsmUsername, $OsmPassword);
 my ($BorderN, $BorderS, $BorderE, $BorderW, $MaxZoom);
 ReadConf("tilesAtHome.conf");
@@ -147,10 +146,6 @@ sub ReadConf(){
     if ($Line =~ /XmlStarlet=(.*)/)      { $XmlStarlet=$1;     $OsmOK++; } 
     if ($Line =~ /Niceness=(.*)/)        { $Niceness=$1;       $OsmOK++; } 
 
-    if ($Line =~ /UploadURL=(.*)/)       { $UploadURL=$1;      $OsmOK++; } 
-    if ($Line =~ /UploadUsername=(.*)/)  { $UploadUsername=$1; $OsmOK++; } 
-    if ($Line =~ /UploadPassword=(.*)/)  { $UploadPassword=$1; $OsmOK++; } 
-
     if ($Line =~ /OsmUsername=(.*)/)     { $OsmUsername=$1;    $OsmOK++; } # TODO convert @ to %40
     if ($Line =~ /OsmPassword=(.*)/)     { $OsmPassword=$1;    $OsmOK++; } 
 
@@ -163,9 +158,6 @@ sub ReadConf(){
   }
   close $fp;
   
-  if($OsmOK != 14){
-    die("Check your .conf file - some entries not found");
-  }
 }
 
 #-----------------------------------------------------------------------------

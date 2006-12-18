@@ -11,7 +11,9 @@ Niceness=
 # Upload
 UploadUsername=CHANGEME
 UploadPassword=CHANGEME
-UploadURL=http://osmathome.bandnet.org/test.php
+UploadChunkSize=1.5   # Megabyte
+UploadURL2=http://dev.openstreetmap.org/~ojw/Upload/tile2.php
+DeleteZipFilesAfterUpload=0
 
 # Download
 OsmUsername=name%40domain.com
@@ -23,8 +25,3 @@ BorderS=0.01
 BorderE=0.05
 BorderW=0.05
 MaxZoom=17
-
-# Uploads
-UploadChunkSize=1.5   # Megabyte
-UploadURL2=http://osmathome.bandnet.org/Upload/tile2.php
-DeleteZipFilesAfterUpload=0

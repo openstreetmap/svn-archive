@@ -11,7 +11,7 @@ Niceness=nice
 UploadUsername=CHANGEME
 UploadPassword=CHANGEME
 UploadChunkSize=1.5   # Megabyte
-UploadURL2=http://osmathome.bandnet.org/Upload/tile2.php
+UploadURL2=http://dev.openstreetmap.org/~ojw/Upload/tile2.php
 DeleteZipFilesAfterUpload=0
 
 # Download

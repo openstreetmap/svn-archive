@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="osm2kml.xsl"?>
+
+<rules 
+    data="data.osm"
+    name="OpenStreetMap">
+
+    <rule e="way|area" k="*" v="*">
+        <folder name="Landuse">
+            <rule e="way|area" k="leisure" v="park">
+                <polygon name="Parks" class="park"/>
+            </rule>
+        </folder>
+    </rule>-
+
+    <rule e="node" k="*" v="*">
+        <folder name="Points of Interest">
+            <rule e="node" k="amenity" v="parking">
+                <point class="parking"/>
+            </rule>
+        </folder>
+    </rule>
+
+    <rule e="segment|way" k="highway" v="*">
+        <folder name="Roads">
+            <rule e="segment|way" k="highway" v="motorway|motorway_link">
+                <polyline name="Motorways" class="highway-motorway"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="trunk|trunk_link|primary|primary_link|secondary">
+                <polyline name="Primary Roads" class="highway-primary"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="tertiary|residential|unclassified|service">
+                <polyline name="Other Roads" class="highway-unclassified"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="track">
+                <polyline name="Tracks" class="highway-tracks"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="footway">
+                <polyline name="Footpaths" class="highway-footway"/>
+            </rule>
+
+        </folder>
+    </rule>
+
+    <defs>
+        <Style id="highway-motorway">
+            <LineStyle>
+                <color>afff0000</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-primary">
+            <LineStyle>
+                <color>af00ffff</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-unclassified">
+            <LineStyle>
+                <color>afffffff</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-tracks">
+            <LineStyle>
+                <color>af00ff00</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-footway">
+            <LineStyle>
+                <color>7f00ff00</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="park">
+            <PolyStyle>
+                <color>7f00ff00</color>
+            </PolyStyle> 
+            <LineStyle> 
+                <color>ff00ff00</color>
+                <width>1</width>
+            </LineStyle> 
+        </Style>
+
+        <Style id="parking">
+            <IconStyle id="iconstyle-parking">
+                <Icon>
+                    <href>icon-parking.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+    </defs>
+
+    <overlays>
+        <ScreenOverlay>
+            <name>OpenStreetMap Copyright Notice</name>
+            <Icon>
+                <href>OSMGoogleEarthCopyright.png</href>
+            </Icon>
+            <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+            <screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+            <size x="0" y="0" xunits="fraction" yunits="fraction"/>
+        </ScreenOverlay>
+    </overlays>
+
+</rules>

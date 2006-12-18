@@ -1,0 +1,20 @@
+
+OSMGoogleEarth
+--------------
+
+by Jochen Topf <jochen@topf.org> ([[User:Joto]] in OSM Wiki).
+
+Transform OpenStreetMap .osm file into KML file for Google Earth. 
+
+You need a file called data.osm. When you call make a file map.kmz will
+be generated. This file contains a Google Earth KML file and some icons.
+
+Load it into Google Earth with the menu "Add" -> "Network Link...". It
+will appear in the Places list. Double click it there to fly to the
+place.
+
+Currently only some streets, parks, and parking lots are shown, but it
+is easy to improve on this.
+
+The isle_of_wight.kmz file is provided as an example.
+

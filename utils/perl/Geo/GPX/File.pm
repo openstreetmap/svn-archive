@@ -87,7 +87,7 @@ sub read_gpx_file($;$) {
 	    my $found=0;
 	    for my $type ( qw ( name ele
 				cmt desc
-				sym pdop
+				sym pdop vdop
 				course  fix hdop sat speed time )) {
 		if ( ref($elem) eq "Geo::GPX::File::$type" ){
 		    $new_wpt->{$type} = $elem->{Kids}->[0]->{Text};
@@ -228,7 +228,7 @@ sub write_gpx_file($$) { # Write an gpx File
 		}
 		my $time = strftime("%FT%H:%M:%SZ", localtime($time_sec));
 		#UnixDate("epoch ".$time_sec,"%m/%d/%Y %H:%M:%S");
-		$time .= ".$time_usec" if $time_usec && ! $fake_gpx_date;
+		$time =~ s/Z/.${time_usec}Z/ if $time_usec && ! $fake_gpx_date;
 		if ( $DEBUG >20) {
 		    printf STDERR "elem-time: $elem->{time} UnixDate: $time\n";
 		}

@@ -107,7 +107,7 @@ sub ProcessRequestsFromServer(){
   my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
   
   # First field is always "OK" if the server has actually sent a request
-  if($ValidFlag != "OK"){
+  if($ValidFlag ne "OK"){
     print "Server didn't really give a good answer\n";
     return;
   }

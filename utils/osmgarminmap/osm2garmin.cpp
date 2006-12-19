@@ -14,61 +14,112 @@
 #include <libxslt/xsltutils.h>
 #include "curlstuff.h"
 
-int applyXSLT(const char* infile,const char *xsltfile,const char *outfile);
-int createGPSmap(const char* file);
-int sendmap(const char*, const char files[1024][16], int nfiles);
+int applyXSLT(const char* infile,const char *xsltfile,const char *outfile,
+					const char**);
+int createGPSmap(const char*,const char* file);
+int sendmap(const char*,const char*, const char files[1024][16], int nfiles);
 int makeMap(double w,double s,double e,double n, const char* username,
-					const char* password, int*);
+					const char* password, const char*,int*);
+void error(const char* msg);
+void usage();
 
 int main(int argc, char *argv[])
 {
-	char username[1024], password[1024], serialport[1024];
+	char username[1024], password[1024], serialport[1024], 
+		 cgpsmapper_loc[1024], sendmap_loc[1024];
 	strcpy(serialport,"/dev/ttyS0");
-	int send=1, tiled=0;
-	double tilesize=0.1;
+	strcpy(cgpsmapper_loc,"cgpsmapper");
+	strcpy(sendmap_loc,"sendmap");
+	strcpy(username,"");
+	strcpy(password,"");
+	int send=1, tiled=0, specified_bbox=0;
+	double tilesize=0.1, w, s, e, n;
 
 
-	if(argc>1 && !strcmp(argv[1],"--nosend"))
+	int i=1;
+	while (i<argc)
 	{
-		send=0;
-		argc--;
-		argv++;
-	}
-	if(argc>1 && !strcmp(argv[1],"--tiled"))
-	{
-		tiled=1;
-		argc--;
-		argv++;
-	}
-	if(argc>2 && !strcmp(argv[1],"--tilesize"))
-	{
-		tilesize=atof(argv[2]);
-		argc-=2;
-		argv+=2;
-	}
+		if(!strcmp(argv[i],"-N"))
+		{
+			send=0;
+		}
+		else if(!strcmp(argv[i],"-T"))
+		{
+			tiled=1;
+		}
+
+		else if(!strcmp(argv[i],"-t"))
+		{
+			if(argc<=i+1)
+				error("-t needs a tile size specified!");
+
+			tilesize=atof(argv[i+1]);
+			i++;
+		}
 
 
-	if(argc>2 && !strcmp(argv[1],"--serialport"))
-	{
-		strcpy(serialport,argv[2]);
-		argc-=2;
-		argv+=2;
-	}
-		
-	if (argc < 7)
-	{
-		printf("Usage: osm2garmin [--nosend] [--tiled] [--tilesize tilesize] ");
-		printf("[--serialport serialport] w s e n uname pwd\n");
-		exit(1);
+		else if(!strcmp(argv[i],"-o"))
+		{
+			if(argc<=i+1)
+				error("-o needs a serial port specified!");
+			strcpy(serialport,argv[i+1]);
+			i++;
+		}
+
+		else if (!strcmp(argv[i],"-c"))
+		{
+			if(argc<=i+1)
+				error("-c needs a cGPSmapper location specified!");
+			strcpy(cgpsmapper_loc,argv[i+1]);
+			i++;
+		}
+
+		else if (!strcmp(argv[i],"-s"))
+		{
+			if(argc<=i+1)
+				error("-s needs a sendmap location specified!");
+			strcpy(sendmap_loc,argv[i+1]);
+			i++;
+		}
+
+		else if (!strcmp(argv[i],"-u"))
+		{
+			if(argc<=i+1)
+				error("-u needs a username specified!");
+			strcpy(username,argv[i+1]);
+			i++;
+		}
+		else if (!strcmp(argv[i],"-p"))
+		{
+			if(argc<=i+1)
+				error("-p needs a password specified!");
+			strcpy(password,argv[i+1]);
+			i++;
+		}
+		else if (!strcmp(argv[i],"-b"))
+		{
+			if(argc<=i+4)
+				error("-b needs a bounding box specified!");
+			w=atof(argv[i+1]);
+			s=atof(argv[i+2]);
+			e=atof(argv[i+3]);
+			n=atof(argv[i+4]);
+			specified_bbox=1;
+			i+=4;
+		}
+		else if (!strcmp(argv[i],"-h"))
+		{
+			usage();
+			exit(0);
+		}
+		i++;
 	}
 	
-	double w = atof(argv[1]), 
-		   s = atof(argv[2]),
-		   e = atof(argv[3]),
-		   n = atof(argv[4]);
-
-	strcpy(username,argv[5]);
-	strcpy(password,argv[6]);
+	if(!specified_bbox || !strcmp(username,"") || !strcmp(password,""))
+	{
+		error("You need to specify a bounding box, username and password!");
+		exit(1);
+	}	
 
 	int nmaps=0;
 
@@ -88,7 +139,8 @@ int main(int argc, char *argv[])
 				lat2 = lat+tilesize < n ? lat+tilesize : n;
 
 				printf("Doing tile %lf,%lf,%lf,%lf\n",lon,lat,lon2,lat2);
-				makeMap(lon,lat,lon2,lat2,username,password,&nmaps);
+				makeMap(lon,lat,lon2,lat2,username,password,cgpsmapper_loc,
+								&nmaps);
 				lat += tilesize;
 			}
 			lon += tilesize;
@@ -96,8 +148,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		printf("%lf %lf %lf %lf %s %s\n",w,s,e,n,username,password);
-		makeMap(w,s,e,n,username,password,&nmaps);
+		makeMap(w,s,e,n,username,password,cgpsmapper_loc,&nmaps);
 	}
 	
 	//int send=1, nmaps=1;
@@ -109,14 +160,17 @@ int main(int argc, char *argv[])
 		{
 			sprintf(mapfiles[count],"osm%04d.img", count+1);
 		}
-		sendmap(serialport,mapfiles,nmaps);
+		sendmap(sendmap_loc,serialport,mapfiles,nmaps);
 	}
 
 	return 0;
 }
 
+		
+
 int makeMap(double w,double s,double e,double n, const char* username,
-					const char* password, int *nmaps)
+					const char* password, const char* cgpsmapper_loc,
+					int *nmaps)
 {
 	int retval=1;
 	char MPfile[1024];
@@ -127,6 +181,11 @@ int makeMap(double w,double s,double e,double n, const char* username,
 			 		username, password );
 	fprintf(stderr,"done.\n");
 
+	const char *params[17];
+	char mapid[6];
+	strcpy(mapid,"mapid");
+	char id[10];
+
 	FILE *blah = fopen("data.osm", "w");
 	fwrite( osm->data, osm->nbytes, 1, blah );
 	fclose(blah);
@@ -135,16 +194,24 @@ int makeMap(double w,double s,double e,double n, const char* username,
 	free(osm);
 
 	fprintf(stderr,"Converting OSM to MPX...");
-	if (applyXSLT("osm2mpx.xml", "osm2mpx.xsl", "map.mpx") == 0)
+
+	params[0] = mapid; 
+	sprintf(id,"%d", 65536+ (*nmaps) );
+	params[1] = id;
+	params[2] = NULL;
+
+	if (applyXSLT("osm2mpx.xml", "osm2mpx.xsl", "map.mpx", params) == 0)
 	{
 		fprintf(stderr,"done.\nConverting MPX to MP...");
 		sprintf(MPfile,"osm%04d.mp", (*nmaps)+1);
-		if(applyXSLT("feature-list.xml", "mpx2mp.xsl", MPfile)==0)
+		params[0] = NULL;
+
+		if(applyXSLT("feature-list.xml", "mpx2mp.xsl", MPfile, params)==0)
 		{
 			fprintf(stderr,"done.\n");
-			remove("map.mpx");
-			remove("data.osm");
-			if(createGPSmap(MPfile)==0)
+			//remove("map.mpx");
+			//remove("data.osm");
+			if(createGPSmap(cgpsmapper_loc,MPfile)==0)
 			{
 				(*nmaps)++;
 				retval=0;
@@ -156,7 +223,8 @@ int makeMap(double w,double s,double e,double n, const char* username,
 }
 
 
-int applyXSLT(const char* infile,const char *xsltfile,const char *outfile)
+int applyXSLT(const char* infile,const char *xsltfile,const char *outfile,
+				const char **params)
 {
 	int retval=1;
 
@@ -164,8 +232,6 @@ int applyXSLT(const char* infile,const char *xsltfile,const char *outfile)
 	xmlDocPtr doc; 
 	xmlDocPtr res; 
 
-	const char *params[17];
-	params[0]=NULL;
 
 	FILE *out = fopen(outfile,"w");
 	if(out!=NULL)
@@ -191,18 +257,19 @@ int applyXSLT(const char* infile,const char *xsltfile,const char *outfile)
 }
 
 // TODO: on windows we can use the cgpsmapper DLL directly here
-int createGPSmap(const char* file)
+int createGPSmap(const char* gpsmap_cmd, const char* file)
 {
 	char cmd[1024];
-	sprintf(cmd,"/home/nick/bin/cgpsmapper %s", file);
+	sprintf(cmd,"%s %s", gpsmap_cmd, file);
 	return system(cmd);
 }
 
-int sendmap(const char* serialport,const char files[1024][16], int nfiles)
+int sendmap(const char* sendmap_cmd,const char* serialport,
+				const char files[1024][16], int nfiles)
 {
 	char cmd[1024];
 	char blah[1024];
-	sprintf(cmd,"/home/nick/bin/sendmap %s", serialport);
+	sprintf(cmd,"%s %s", sendmap_cmd, serialport);
 
 	for(int count=0; count<nfiles; count++)
 	{
@@ -213,5 +280,20 @@ int sendmap(const char* serialport,const char files[1024][16], int nfiles)
 	return system(cmd);
 }
 
+void error(const char* msg)
+{
+	fprintf(stderr,"ERROR: %s\n\n",msg);
+	usage();
+	exit(1);
+}
+
+void usage()
+{
+	fprintf(stderr,"Usage: osm2garmin [-N] [-T] [-t tilesize] [-o serialport]");
+	fprintf(stderr," [-c cgpsmapper_location] [-s sendmap_location] [-h] ");
+	fprintf(stderr,"-u username -p password -b west south east north\n");
+	fprintf(stderr,"\n-h: Display this message\n-N: do not send .img to GPS\n");
+	fprintf(stderr,"-T: tiled retrieval if area larger than tilesize\n");
+}
 
 // xmlParseMemory(buffer,size)

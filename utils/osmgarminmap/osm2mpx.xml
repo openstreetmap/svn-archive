@@ -8,63 +8,83 @@
     levels="22 18 14 10">
 
     <rule e="node" k="amenity" v="parking">
-        <point type="auto" subtype="parking" endlevel="1"/>
+        <point type="auto" subtype="parking" endlevel="3"/>
     </rule>
     <rule e="node" k="amenity" v="telephone">
-        <point type="misc" subtype="telephone" endlevel="1"/>
+        <point type="misc" subtype="telephone" endlevel="3"/>
     </rule>
     <rule e="node" k="amenity" v="place-of-worship">
-        <point type="man-made" subtype="church" endlevel="2"/>
+        <point type="man-made" subtype="church" endlevel="3"/>
     </rule>
     <rule e="node" k="amenity" v="fuel">
-        <point type="auto" subtype="petrol" endlevel="2"/>
+        <point type="auto" subtype="petrol" endlevel="5"/>
     </rule>
     <rule e="node" k="amenity" v="courthouse">
-        <point type="public" subtype="court" endlevel="1"/>
+        <point type="public" subtype="court" endlevel="4"/>
     </rule>
 
     <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
-        <polyline type="trail" endlevel="1"/>
+        <polyline type="trail" endlevel="2"/>
     </rule>
     <rule e="segment|way" k="highway" v="pedestrian">
-        <polyline type="road" endlevel="1"/>
+        <polyline type="road" endlevel="3"/>
     </rule>
     <rule e="segment|way" k="highway" v="track">
-        <polyline type="unpaved-road" endlevel="1"/>
+        <polyline type="unpaved-road" endlevel="2"/>
     </rule>
     <rule e="segment|way" k="highway" v="unclassified|residential|minor">
-        <polyline type="road" endlevel="1"/>
+        <polyline type="road" endlevel="3"/>
     </rule>
     <rule e="segment|way" k="highway" v="unsurfaced">
-        <polyline type="unpaved-road" endlevel="1"/>
+        <polyline type="unpaved-road" endlevel="2"/>
     </rule>
     <rule e="segment|way" k="highway" v="service">
-        <polyline type="alley" endlevel="1"/>
+        <polyline type="alley" endlevel="2"/>
     </rule>
     <rule e="segment|way" k="highway" v="secondary">
-        <polyline type="arterial-road-thin" endlevel="2"/>
+        <polyline type="arterial-road-thin" endlevel="4"/>
     </rule>
     <rule e="segment|way" k="highway" v="primary|primary_link">
-        <polyline type="arterial-road-medium" endlevel="2"/>
+        <polyline type="arterial-road-medium" endlevel="5"/>
     </rule>
     <rule e="segment|way" k="highway" v="trunk|trunk_link">
-        <polyline type="principal-highway-thick" endlevel="2"/>
+        <polyline type="principal-highway-thick" endlevel="8"/>
     </rule>
     <rule e="segment|way" k="highway" v="motorway|motorway_link">
-        <polyline type="principal-highway-thick" endlevel="2"/>
+        <polyline type="principal-highway-thick" endlevel="8"/>
+    </rule>
+
+    <rule e="segment|way" k="railway" v="rail">
+        <polyline type="railroad" endlevel="6"/>
+    </rule>
+    <rule e="segment|way" k="railway" v="tram">
+        <polyline type="railroad" endlevel="4"/>
+    </rule>
+    <rule e="segment|way" k="railway" v="light_rail">
+        <polyline type="railroad" endlevel="5"/>
+    </rule>
+
+    <rule e="segment|way" k="waterway" v="river">
+        <polyline type="river" endlevel="6"/>
+    </rule>
+    <rule e="segment|way" k="waterway" v="canal">
+        <polyline type="river" endlevel="6"/>
+    </rule>
+    <rule e="segment|way" k="waterway" v="drain">
+        <polyline type="river" endlevel="3"/>
     </rule>
 
     <rule e="way" k="landuse" v="forest">
-        <polygon type="woods" endlevel="3"/>
+        <polygon type="woods" endlevel="6"/>
     </rule>
     <rule e="way" k="leisure" v="park">
-        <polygon type="city-park" endlevel="2"/>
+        <polygon type="city-park" endlevel="4"/>
     </rule>
     <rule e="way" k="natural" v="water">
-        <polygon type="lake1"/>
+        <polygon type="lake1" endleve="4"/>
     </rule>
     <rule e="way" k="amenity" v="parking">
-        <polygon type="parking-lot"/>
+        <polygon type="parking-lot" endlevel="3"/>
     </rule>
 
 </rules>

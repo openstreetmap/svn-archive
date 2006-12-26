@@ -202,13 +202,15 @@ sub mirror_planet(){
 # this Filename is returned.
 sub UTF8sanitize($){
     my $filename = shift;
-
+    if ( $DEBUG) {
+	print STDERR "UTF8sanitize($filename)\n";
+    }
     my $start_time=time();
 
     # the newer Files do not need to be sanitized
     my ($file_date) = ($filename =~ m/planet-(\d+)/ );
     return $filename
-	if $file_date >= 061205;
+	if ($file_date >= 061205) && ( $file_date < 061213);
 
     my $filename_new= $filename;
     $filename_new =~ s/\.osm/-a.osm/;
@@ -242,7 +244,7 @@ sub UTF8sanitize($){
     if ( ! -s $filename_new ) {
 	die "Cannot sanitize $filename\n";
     }
-    print "now we have a sanitizes $filename_new\n" if $DEBUG || $VERBOSE;
+    print "now we have a sanitized $filename_new\n" if $DEBUG || $VERBOSE;
     return $filename_new;
 }
 

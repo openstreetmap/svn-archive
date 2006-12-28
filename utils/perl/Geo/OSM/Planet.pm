@@ -31,36 +31,36 @@ use Utils::Debug;
 use Utils::LWP::Utils;
 
 
-# As of planet-061105
+# As of planet-061220
 my $estimations = {
-            'way' => {
-                       'count' => 3582265,
-                       'max_id' => 3991414
-                     },
-            'elem' => {
-                        'count' => 79092674,
-                        'max_id' => 79092674
-                      },
-            'seg' => {
-                       'count' => 14146593,
-                       'max_id' => 17002147
-                     },
-            'segment' => {
-                           'count' => 15700218,
-                           'max_id' => 17002036
-                         },
-            'tag' => {
-                       'count' => 26128933,
-                       'max_id' => 1
-                     },
-            'node' => {
-                        'count' => 19534665,
-                        'max_id' => 20908184
-                      },
-            'line' => {
-                        'count' => 88332986,
-                        'max_id' => 79092674
-                      }
+    'way' => {
+	'count' => 200877,
+	'max_id' => 4080938,
+    },
+    'elem' => {
+	'count' => 24620105,
+	'max_id' => 24620105,
+    },
+    'seg' => {
+	'count' => 3044669,
+	'max_id' => 21402132,
+    },
+    'segment' => {
+	'count' => 4191215,
+	'max_id' => 17716919,
+    },
+    'tag' => {
+	'count' => 13258542,
+	'max_id' => 1,
+    },
+    'node' => {
+	'count' => 3924802,
+	'max_id' => 21650908,
+    },
+    'line' => {
+	'count' => 31736573,
+	'max_id' => 24620105,
+    }
 };
 
 # ------------------------------------------------------------------
@@ -188,6 +188,7 @@ sub mirror_planet(){
     $current_file = $unpacked_file
 	unless file_needs_re_generation($current_file,$unpacked_file);
 
+    print STDERR "\nMirror done, using '$current_file'\n" if $VERBOSE || $DEBUG;
     return $current_file;
 }
 

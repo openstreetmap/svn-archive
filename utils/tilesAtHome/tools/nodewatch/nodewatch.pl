@@ -1,6 +1,8 @@
 #!/usr/bin/perl -w
+#---------------------------------------------------------------------
 # Martijn van Oosterhout
-
+# http://lists.openstreetmap.org/pipermail/dev/2006-December/002706.html
+#---------------------------------------------------------------------
 use Math::Trig;
 use POSIX qw(floor);
 use LWP::Simple;

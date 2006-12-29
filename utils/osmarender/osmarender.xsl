@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE xsl:stylesheet [ <!ENTITY nbsp '&#160;'> ]>
 
-<!-- Osmarender.xsl 3.1 -->
+<!-- Osmarender.xsl 3.2 -->
 
 <!-- Revision history:
      1.0 2006-03-21 Initial version
@@ -54,7 +54,14 @@
 					Rendering of external white border is now improved when bounds are specified
 					No external white border when no bounds specified
 					Various tweaks to the rules file
-					
+    3.2 2006-12-29  Added svg namespace to marker elements (Joto)
+                    Added rendering for place=suburb (same as place=village) (Joto)
+                    Added optional "osmfile" parameter to XSL stylesheet which can be used to override default filename for OSM data file (Joto)
+                    Changed rendering order of motorway|trunk|primary[_link] (Joto)
+                    Added icon for amenity=post_box (currently same as post_office) (Joto)
+                    Now draws name for highway=track if available (Joto)
+                    Added call to copyAttributes template to a use element for ways, dashed railway lines and steps now work properly (Joto)
+                    highway=gate was rendered way to large. Icon simplified and made smaller (Joto)
 -->
 
 <!-- Osmarender rules files contain two kinds of element; rules and instructions.  Rule elements provide a
@@ -97,13 +104,15 @@
  
 	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
 
+    <xsl:param name="osmfile" value="/rules/@data"/>
+
 	<xsl:key name='nodeById' match='/osm/node' use='@id'/>
 	<xsl:key name='segmentById' match='/osm/segment' use='@id'/>
 	<xsl:key name='segmentByFromNode' match='/osm/segment' use='@from'/>
 	<xsl:key name='segmentByToNode' match='/osm/segment' use='@to'/>
 	<xsl:key name='wayBySegment' match='/osm/way' use='seg/@id'/>
 	
-	<xsl:variable name='data' select='document(/rules/@data)'/>
+	<xsl:variable name='data' select='document($osmfile)'/>
 
 	<!-- Calculate the size of the bounding box based on the file content -->
 	<xsl:variable name="bllat">
@@ -979,8 +988,10 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 		</xsl:if>
 
 		<!-- Now draw the way itself -->
-		<use xlink:href='#way_{$way/@id}'/>
-			
+		<use xlink:href='#way_{$way/@id}'>
+			<xsl:apply-templates select='$instruction/@*' mode='copyAttributes' />
+		</use>
+
 	</xsl:template>
 
 

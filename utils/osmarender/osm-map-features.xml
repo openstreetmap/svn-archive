@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet type="text/xsl" href="osmarender.xsl"?>
 
-<!-- This file should be used with Osmarender 3.1 -->
+<!-- This file should be used with Osmarender 3.2 -->
 <!-- This file implements a sub-set of the items described at http://wiki.openstreetmap.org/index.php/Map_Features -->
 
 <!-- A scale of 0.1 will make fat roads on a small map, a scale of 5 will draw very thin roads on a large scale map -->
@@ -282,7 +282,7 @@
 				<line class='highway-secondary-core otherway' />		
 			</rule>		
 		</rule>
-		<rule e="segment|way" k="highway" v="primary|primary_link">
+		<rule e="segment|way" k="highway" v="primary_link">
 			<rule k="oneway" v="~">
 				<line class='highway-primary-core' />
 			</rule>
@@ -293,7 +293,7 @@
 				<line class='highway-primary-core otherway' />		
 			</rule>		
 		</rule>
-		<rule e="segment|way" k="highway" v="trunk|trunk_link">
+		<rule e="segment|way" k="highway" v="trunk_link">
 			<rule k="oneway" v="~">
 				<line class='highway-trunk-core' />
 			</rule>
@@ -304,7 +304,40 @@
 				<line class='highway-trunk-core otherway' />		
 			</rule>		
 		</rule>
-		<rule e="segment|way" k="highway" v="motorway|motorway_link">
+		<rule e="segment|way" k="highway" v="motorway_link">
+			<rule k="oneway" v="~">
+				<line class='highway-motorway-core' />
+			</rule>
+			<rule k="oneway" v="1|yes|true">
+				<line class='highway-motorway-core oneway' />	
+			</rule>
+			<rule k="oneway" v="-1">
+				<line class='highway-motorway-core otherway' />		
+			</rule>		
+		</rule>
+		<rule e="segment|way" k="highway" v="primary">
+			<rule k="oneway" v="~">
+				<line class='highway-primary-core' />
+			</rule>
+			<rule k="oneway" v="1|yes|true">
+				<line class='highway-primary-core oneway' />	
+			</rule>
+			<rule k="oneway" v="-1">
+				<line class='highway-primary-core otherway' />		
+			</rule>		
+		</rule>
+		<rule e="segment|way" k="highway" v="trunk">
+			<rule k="oneway" v="~">
+				<line class='highway-trunk-core' />
+			</rule>
+			<rule k="oneway" v="1|yes|true">
+				<line class='highway-trunk-core oneway' />	
+			</rule>
+			<rule k="oneway" v="-1">
+				<line class='highway-trunk-core otherway' />		
+			</rule>		
+		</rule>
+		<rule e="segment|way" k="highway" v="motorway">
 			<rule k="oneway" v="~">
 				<line class='highway-motorway-core' />
 			</rule>
@@ -320,6 +353,7 @@
 		<!-- draw railway lines -->
 		<rule e="segment|way" k="railway" v="rail">
 			<line class='railway-rail' />
+			<line class='railway-rail-dashes' />
 		</rule>
 		<rule e="segment|way" k="railway" v="light_rail|tram">
 			<line class='railway-light-rail' />
@@ -396,6 +430,9 @@
 		<rule e="node" k="place" v="village">
 			<text k="name" class='village-caption' />
 		</rule>
+		<rule e="node" k="place" v="suburb">
+			<text k="name" class='suburb-caption' />
+		</rule>
 		<rule e="node" k="place" v="hamlet">
 			<text k='name' class='hamlet-caption' />
 		</rule>
@@ -433,6 +470,9 @@
 		</rule>
 		<rule e="node" k="amenity" v="post_office">
 			<symbol xlink:href="#postoffice" width='4px' height='2px' transform='translate(-2,-1)' />
+		</rule>
+		<rule e="node" k="amenity" v="post_box">
+			<symbol xlink:href="#postbox" width='4px' height='2px' transform='translate(-2,-1)' />
 		</rule>
 		<rule e="node" k="amenity" v="pub">
 			<symbol xlink:href="#pub" width='1.75px' height='2.5px' transform='translate(-0.9,-1.25)'/>
@@ -477,7 +517,7 @@
 			<rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
 				<text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
 			</rule>
-			<rule e="way" k="highway" v="unsurfaced">
+			<rule e="way" k="highway" v="unsurfaced|track">
 				<text k="name" text-anchor='middle' startOffset='50%' class="highway-unsurfaced-name" />
 			</rule>
 			<rule e="segment|way" k="highway" v="service">
@@ -523,7 +563,7 @@
 		</rule>
 
 		<rule e="node" k="highway" v="gate">
-			<symbol xlink:href="#gate" width='10px' height='5px' transform='translate(-5,-2.5)'/>
+			<symbol xlink:href="#gate" width='3px' height='2px' transform='translate(-1.5,-1)'/>
 		</rule>
 
 		<!--<rule e="segment" node="from|to|any" k="highway" v="gate">
@@ -1079,8 +1119,6 @@
 			  fill: none;
 			  }
 			
-			/* TODO: */
-			/* Figure out why Inkscape doesn't produce dashes for this */
 			.railway-subway-rail {
 			  stroke-width: 0.8px;
 			  stroke-linecap: butt;
@@ -1219,6 +1257,15 @@
 			  }
 			  
 			.village-caption {
+			  fill: black;
+			  stroke: white;
+			  stroke-width: 0.3px;
+			  font-family: verdana;
+			  font-size: 6px;
+			  font-weight: bolder;
+			  }
+			  
+			.suburb-caption {
 			  fill: black;
 			  stroke: white;
 			  stroke-width: 0.3px;
@@ -1494,7 +1541,7 @@
 
 		</style>
 	
-		<marker 
+		<svg:marker 
 			id="triangle"
 			viewBox="0 0 10 10"
 			refX="10px" refY="5px" 
@@ -1505,10 +1552,10 @@
 			markerWidth="1px"
 			markerHeight="1px"
 			orient="auto">
-			<path d="M 0,4 L 6,4 L 6,2 L 10,5 L 6,8 L 6,6 L 0,6 z" />
-		</marker>
+			<svg:path d="M 0,4 L 6,4 L 6,2 L 10,5 L 6,8 L 6,6 L 0,6 z" />
+		</svg:marker>
 
-		<marker 
+		<svg:marker 
 			id="invertedTriangle"
 			viewBox="0 0 10 10"
 			refX="0px" refY="5px" 
@@ -1519,10 +1566,10 @@
 			markerWidth="1px"
 			markerHeight="1px"
 			orient="auto">
-			<path d="M 10,4 L 4,4 L 4,2 L 0,5 L 4,8 L 4,6 L 10,6 z" />
-		</marker>	
+			<svg:path d="M 10,4 L 4,4 L 4,2 L 0,5 L 4,8 L 4,6 L 10,6 z" />
+		</svg:marker>	
 
-		<marker 
+		<svg:marker 
 			id="segment-direction"
 			viewBox="0 0 10 10"
 			refX="10px" refY="5px" 
@@ -1533,8 +1580,8 @@
 			markerWidth="1px"
 			markerHeight="1px"
 			orient="auto">
-			<path d="M 0,2 L 10,5 L 0,8" />
-		</marker>
+			<svg:path d="M 0,2 L 10,5 L 0,8" />
+		</svg:marker>
 
 		<svg:symbol
 		  id="church"
@@ -1574,9 +1621,10 @@
 		  id="gate"
 		  viewBox="0 0 10 10"
 		  fill='none'
-		  stroke-width='0.4px'
+		  stroke-width='0.8px'
 		  stroke='#000000'>
-			<svg:path d="M 0,7 L 10,7 M 0,6 L 10,6 M 0,5 L 10,5 M 0,4 L 10,4 M 0,3 L 10,3 M 0,7 L 0,3 M 10,7 L 10,3 M 0,7 L 10,3" />
+<!--			<svg:path d="M 0,7 L 10,7 M 0,6 L 10,6 M 0,5 L 10,5 M 0,4 L 10,4 M 0,3 L 10,3 M 0,7 L 0,3 M 10,7 L 10,3 M 0,7 L 10,3" />-->
+			<svg:path d="M 0,7 L 10,7 M 0,3 L 10,3 M 0,7 L 0,3 M 10,7 L 10,3 M 0,7 L 10,3" />
 		</svg:symbol>
 			
 		<svg:symbol
@@ -1692,6 +1740,15 @@
 
 		<svg:symbol 
 		  id="postoffice" 
+		  viewBox="0 0 14 8"
+		  fill="none"
+		  stroke="red"
+		  stroke-width="1.5px">
+			<svg:path d="M 0,0 L 14,0 L 14,8 L 0,8 L 0,0 z M 0,0 L 7,4 L 14,0" />
+		</svg:symbol>
+
+		<svg:symbol 
+		  id="postbox" 
 		  viewBox="0 0 14 8"
 		  fill="none"
 		  stroke="red"

@@ -1,29 +1,43 @@
+use strict;
 use LWP::Simple;
 use GD;
 
 # Pick a random zoom-8 tile
-$Z = 8;
-for($X = 0; $X < 256; $X++){
-  for($Y = 0; $Y < 256; $Y++){
-    #lowZoom(127,85,8);
+my $Z = 8;
+my $uploadDir = "../../temp";
+
+my $XC = shift();
+my $YC = shift();
+
+for(my $Xi = -3; $Xi <= 3; $Xi++){
+  for(my $Yi = -3; $Yi <= 3; $Yi++){
+  
+    my $X = $XC + $Xi;
+    my $Y = $YC + $Yi;
+    
+    printf "doing %d,%d...", $X,$Y;
+    flush STDOUT;
+    
     lowZoom($X,$Y,8);
 
     # Move all low-zoom tiles to upload directory
-    moveTiles(tempdir(), "../../temp");
+    moveTiles(tempdir(), $uploadDir);
     
-    `rm temp/*.png`;
+    print "done\n";
   }
 }
+
 
 sub lowZoom(){
   my ($X,$Y,$Z) = @_;
   
   # Get tiles
   if($Z == 12){
-    
-    mirror(remotefile($X,$Y,$Z), localfile($X,$Y,$Z));
+    downloadtile($X,$Y,$Z);
   }
   else{
+    printf(" - generating %d,%d,%d\n", $X,$Y,$Z);
+    
     lowZoom($X*2,$Y*2,$Z+1);
     lowZoom($X*2+1,$Y*2,$Z+1);
     lowZoom($X*2,$Y*2+1,$Z+1);
@@ -31,26 +45,38 @@ sub lowZoom(){
   
     # Create supertile
     supertile($X,$Y,$Z);
-    
-    #print "done";    exit;    
   }
 }
 
+sub downloadtile(){
+  my ($X,$Y,$Z) = @_;
+  my $f1 = remotefile($X,$Y,$Z);
+  my $f2 = localfile($X,$Y,$Z);
+  print " - downloading $X,$Y,$Z ";
+  
+  getstore($f1,$f2);
+  
+  my $Size = -s $f2;
+  printf "   %d bytes\n", $Size;
+  
+  unlink $f2 if($Size < 500);
+}
 sub supertile(){
   my ($X,$Y,$Z) = @_;
   
   # Create the supertile
-  $Image = GD::Image->new(256,256,1);
-  
+  my $Image = GD::Image->new(256,256,1);
+  return if(!$Image);
+    
   # default background
-  $BG = $Image->colorAllocate(200,200,255);
+  my $BG = $Image->colorAllocate(200,200,255);
   $Image->filledRectangle(0,0,256,256,$BG);
   
   # Load the subimages
-  $AA = GD::Image->newFromPng(localfile($X*2,$Y*2,$Z+1), 1);
-  $BA = GD::Image->newFromPng(localfile($X*2+1,$Y*2,$Z+1), 1);
-  $AB = GD::Image->newFromPng(localfile($X*2,$Y*2+1,$Z+1), 1);
-  $BB = GD::Image->newFromPng(localfile($X*2+1,$Y*2+1,$Z+1), 1);
+  my $AA = readLocalImage($X*2,$Y*2,$Z+1);
+  my $BA = readLocalImage($X*2+1,$Y*2,$Z+1);
+  my $AB = readLocalImage($X*2,$Y*2+1,$Z+1);
+  my $BB = readLocalImage($X*2+1,$Y*2+1,$Z+1);
   
   # Copy the parts
   $Image->copyResampled($AA, 0,0,     0,0, 128,128, 256,256) if($AA);
@@ -59,24 +85,42 @@ sub supertile(){
   $Image->copyResampled($BB, 128,128, 0,0, 128,128, 256,256) if($BB);
   
   # Save the supertile
-  open(my $fp, ">", localfile($X,$Y,$Z)) || die($!);
+  my $Filename = localfile($X,$Y,$Z);
+  my $Data = $Image->png();
+  undef $Image;
+  
+  if(length($Data) < 1000){
+    print " - too short, blank\n";
+    return;
+  }
+    
+  open(my $fp, ">", $Filename) || die($!);
   binmode $fp;
-  print $fp $Image->png();
+  print $fp $Data;
   close($fp);
+  print " - OK, $X,$Y,$Z\n";
 }
-
+sub readLocalImage(){
+  my ($X,$Y,$Z) = @_;
+  my $Filename = localfile($X*2+1,$Y*2+1,$Z+1);
+  return(0) if(!-f $Filename);
+  return(GD::Image->newFromPng($Filename));
+}
 sub moveTiles(){
   my ($from, $to) = @_;
-  print "from $from to $to\n";
-  opendir($dp, $from) || die($!);
-  while($file = readdir($dp)){
+  opendir(my $dp, $from) || die($!);
+  while(my $file = readdir($dp)){
     if($file =~ /^tile_(\d+)_(\d+)_(\d+)\.png$/){
-      $Z = $1;
+      my ($Z,$X,$Y) = ($1,$2,$3);
+      my $f1 = "$from/$file";
+      my $f2 = "$to/$file";
       if($Z < 12){
-        $f1 = "$from/$file";
-        $f2 = "$to/$file";
-        
+        print " - moving $X,$Y,$Z\n";
         rename($f1, $f2);
+      }
+      else{
+        print " - deleting $X,$Y,$Z\n";
+        unlink $f1;
       }
     }
   }  

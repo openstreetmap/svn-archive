@@ -11,17 +11,23 @@ use Data::Dumper;
 # ------------------------------------------------------------------
 my $AREA_DEFINITIONS = {
     #                     min    |    max  
-    #                  lat   lon |  lat lon
-    uk         => [ [  49.7,-7.6, 58.8, 3.2  ], # GB
-		            [ 49.9 ,-5.8,   54, 0.8  ], # NI
+    #               [  lat , lon ,  lat, lon ]
+    uk         => [ [  49.7,-7.6,  58.8, 3.2 ], # Great Britain (GB)
+	            [  49.9,-5.8,  54.0, 0.8 ], # NI
 		    ],
+    ni         => [ [  49.9,-5.8,  54.0, 0.8 ] ], # NI
+    gb         => [ [  49.7,-7.6,  58.8, 3.2 ] ],, # Great Britain (GB)
+		    
     iom        => [ [  49  , -11,   64,   3  ] ],
     france     => [ [  42.3,-1.7, 51.1, 8.2  ] ],
     germany    => [ [  47  ,   5,   54,  16  ] ],
+    hamburg    => [ [  53.40133  ,   9.623,   53.7676,  10.36  ] ],
     spain      => [ [  35.5,  -9,   44,   4  ] ],
     europe     => [ [  35  , -12,   75,  35  ],
-		    [  62.2,-24.4,66.8,-12.2], # Iceland
+		    [  62.2,-24.4,66.8,-12.2 ], # Iceland
 		    ],
+    Iceland    => [ [  62.2,-24.4,66.8,-12.2 ] ],
+    australia  => [ [ -44  , -9,    112, 154 ] ],
     africa     => [ [ -45  , -20,   30,  55  ] ],
     # Those eat up all memory on normal machines
     world_east => [ [ -90  , -30,   90, 180  ] ], 
@@ -31,7 +37,7 @@ my $AREA_DEFINITIONS = {
 
 # ------------------------------------
 my $stripe_lon     = -180;
-my $stripe_step    = 5;
+my $stripe_step    = 45;
 my $stripe_overlap = 0.2;
 while ( $stripe_lon < 180 ){
     my $stripe_lon1=$stripe_lon+$stripe_step+$stripe_overlap;

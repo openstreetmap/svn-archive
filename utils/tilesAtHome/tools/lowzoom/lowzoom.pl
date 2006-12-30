@@ -12,34 +12,29 @@ my $MaxZ = shift() || 12;
 my $Options = shift();
 die() if($MaxZ > 12);
 
-print "doing $X,$Y, at $Z to $MaxZ\n";
-flush STDOUT;
+my $Status = new status; 
+$Status->area($X,$Y,$Z,$MaxZ);
 
-my $tilesToDownload = 4 ** ($MaxZ - $Z);
-my $countDownloads = 0;
-
-lowZoom($X,$Y,$Z, $MaxZ);
+lowZoom($X,$Y,$Z, $MaxZ, $Status);
 
 # Move all low-zoom tiles to upload directory
 moveTiles(tempdir(), $uploadDir) if($Options ne "keep");
 
-print "done\n";
+$Status->final();
 
 
 sub lowZoom(){
-  my ($X,$Y,$Z,$MaxZ) = @_;
+  my ($X,$Y,$Z,$MaxZ, $Status) = @_;
   
   # Get tiles
   if($Z >= $MaxZ){
     downloadtile($X,$Y,$Z);
   }
   else{
-    printf(" - generating %d,%d,%d\n", $X,$Y,$Z);
-    
-    lowZoom($X*2,$Y*2,$Z+1,$MaxZ);
-    lowZoom($X*2+1,$Y*2,$Z+1,$MaxZ);
-    lowZoom($X*2,$Y*2+1,$Z+1,$MaxZ);
-    lowZoom($X*2+1,$Y*2+1,$Z+1,$MaxZ);
+    lowZoom($X*2,$Y*2,$Z+1,$MaxZ, $Status);
+    lowZoom($X*2+1,$Y*2,$Z+1,$MaxZ, $Status);
+    lowZoom($X*2,$Y*2+1,$Z+1,$MaxZ, $Status);
+    lowZoom($X*2+1,$Y*2+1,$Z+1,$MaxZ, $Status);
   
     # Create supertile
     supertile($X,$Y,$Z);
@@ -50,12 +45,11 @@ sub downloadtile(){
   my ($X,$Y,$Z) = @_;
   my $f1 = remotefile($X,$Y,$Z);
   my $f2 = localfile($X,$Y,$Z);
-  printf( " - %03.1f%%, downloading %d,%d,%d", 100 * ($countDownloads++ / $tilesToDownload), $X,$Y,$Z);
   
   mirror($f1,$f2);
   
   my $Size = -s $f2;
-  printf " (%1.1f KB)\n", $Size/1024;
+  $Status->downloadCount($X,$Y,$Z,$Size);
   
   unlink $f2 if($Size < 200);
 }
@@ -67,7 +61,7 @@ sub supertile(){
   return if(!$Image);
     
   # default background
-  my $BG = $Image->colorAllocate(200,200,255);
+  my $BG = $Image->colorAllocate(255,255,255);
   $Image->filledRectangle(0,0,256,256,$BG);
   
   # Load the subimages
@@ -134,4 +128,54 @@ sub remotefile(){
 }
 sub tempdir(){
   return("temp");
+}
+
+package status;
+sub new {
+  my $self  = {};
+  $self->{DONE} = 0;
+  $self->{SIZE} = 0;
+  bless($self);
+  return $self;
+}
+sub downloadCount(){
+  my $self = shift();
+  $self->{LAST_X} = shift();
+  $self->{LAST_Y} = shift();
+  $self->{LAST_Z} = shift();
+  $self->{LAST_SIZE} = shift();
+  $self->{DONE}++;
+  $self->{SIZE} += $self->{LAST_SIZE};
+  $self->{PERCENT} = $self->{TODO} ? (100 * ($self->{DONE} / $self->{TODO})) : 0;
+  $self->display();
+}
+sub area(){
+  my $self = shift();
+  $self->{X} = shift();
+  $self->{Y} = shift();
+  $self->{Z} = shift();
+  $self->{MAX_Z} = shift();
+  $self->{RANGE_Z} = $self->{MAX_Z} - $self->{Z};
+  $self->{TODO} = 4 ** $self->{RANGE_Z};
+  $self->display();
+}
+sub display(){
+  my $self = shift();
+  printf( "Job %d,%d,%d: %03.1f%% done (%d,%d,%d = %1.1f KB)\n", 
+    $self->{X},
+    $self->{Y},
+    $self->{Z},
+    $self->{PERCENT}, 
+    $self->{LAST_X},
+    $self->{LAST_Y},
+    $self->{LAST_Z},
+    $self->{LAST_SIZE}/1024
+    );
+  
+}
+sub final(){
+  my $self = shift();
+  printf("Done, %d downloads, %1.1fKB total\n",
+    $self->{DONE},
+    $self->{SIZE} / 1024);
 }

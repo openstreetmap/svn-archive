@@ -15,6 +15,9 @@ die() if($MaxZ > 12);
 print "doing $X,$Y, at $Z to $MaxZ\n";
 flush STDOUT;
 
+my $tilesToDownload = 4 ** ($MaxZ - $Z);
+my $countDownloads = 0;
+
 lowZoom($X,$Y,$Z, $MaxZ);
 
 # Move all low-zoom tiles to upload directory
@@ -47,12 +50,12 @@ sub downloadtile(){
   my ($X,$Y,$Z) = @_;
   my $f1 = remotefile($X,$Y,$Z);
   my $f2 = localfile($X,$Y,$Z);
-  print " - downloading $X,$Y,$Z ";
+  printf( " - %03.1f%%, downloading %d,%d,%d", 100 * ($countDownloads++ / $tilesToDownload), $X,$Y,$Z);
   
   mirror($f1,$f2);
   
   my $Size = -s $f2;
-  printf "   %d bytes\n", $Size;
+  printf " (%1.1f KB)\n", $Size/1024;
   
   unlink $f2 if($Size < 200);
 }
@@ -85,7 +88,6 @@ sub supertile(){
   undef $Image;
   
   if(length($Data) < 200){
-    print " - too short, blank\n";
     return;
   }
     
@@ -93,8 +95,8 @@ sub supertile(){
   binmode $fp;
   print $fp $Data;
   close($fp);
-  print " - OK, $X,$Y,$Z\n";
 }
+
 sub readLocalImage(){
   my ($X,$Y,$Z) = @_;
   my $Filename = localfile($X,$Y,$Z);

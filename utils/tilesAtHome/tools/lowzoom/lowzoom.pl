@@ -54,7 +54,7 @@ sub downloadtile(){
   my $f2 = localfile($X,$Y,$Z);
   print " - downloading $X,$Y,$Z ";
   
-  getstore($f1,$f2);
+  mirror($f1,$f2);
   
   my $Size = -s $f2;
   printf "   %d bytes\n", $Size;
@@ -89,7 +89,7 @@ sub supertile(){
   my $Data = $Image->png();
   undef $Image;
   
-  if(length($Data) < 1000){
+  if(length($Data) < 500){
     print " - too short, blank\n";
     return;
   }

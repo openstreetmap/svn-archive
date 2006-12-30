@@ -3,45 +3,40 @@ use LWP::Simple;
 use GD;
 
 # Pick a random zoom-8 tile
-my $Z = 8;
 my $uploadDir = "../../temp";
 
-my $XC = shift();
-my $YC = shift();
+my $X = shift();
+my $Y = shift();
+my $Z = shift();
+my $MaxZ = shift() || 12;
+my $Options = shift();
+die() if($MaxZ > 12);
 
-for(my $Xi = -3; $Xi <= 3; $Xi++){
-  for(my $Yi = -3; $Yi <= 3; $Yi++){
-  
-    my $X = $XC + $Xi;
-    my $Y = $YC + $Yi;
-    
-    printf "doing %d,%d...", $X,$Y;
-    flush STDOUT;
-    
-    lowZoom($X,$Y,8);
+print "doing $X,$Y, at $Z to $MaxZ\n";
+flush STDOUT;
 
-    # Move all low-zoom tiles to upload directory
-    moveTiles(tempdir(), $uploadDir);
-    
-    print "done\n";
-  }
-}
+lowZoom($X,$Y,$Z, $MaxZ);
+
+# Move all low-zoom tiles to upload directory
+moveTiles(tempdir(), $uploadDir) if($Options ne "keep");
+
+print "done\n";
 
 
 sub lowZoom(){
-  my ($X,$Y,$Z) = @_;
+  my ($X,$Y,$Z,$MaxZ) = @_;
   
   # Get tiles
-  if($Z == 12){
+  if($Z >= $MaxZ){
     downloadtile($X,$Y,$Z);
   }
   else{
     printf(" - generating %d,%d,%d\n", $X,$Y,$Z);
     
-    lowZoom($X*2,$Y*2,$Z+1);
-    lowZoom($X*2+1,$Y*2,$Z+1);
-    lowZoom($X*2,$Y*2+1,$Z+1);
-    lowZoom($X*2+1,$Y*2+1,$Z+1);
+    lowZoom($X*2,$Y*2,$Z+1,$MaxZ);
+    lowZoom($X*2+1,$Y*2,$Z+1,$MaxZ);
+    lowZoom($X*2,$Y*2+1,$Z+1,$MaxZ);
+    lowZoom($X*2+1,$Y*2+1,$Z+1,$MaxZ);
   
     # Create supertile
     supertile($X,$Y,$Z);
@@ -59,7 +54,7 @@ sub downloadtile(){
   my $Size = -s $f2;
   printf "   %d bytes\n", $Size;
   
-  unlink $f2 if($Size < 500);
+  unlink $f2 if($Size < 200);
 }
 sub supertile(){
   my ($X,$Y,$Z) = @_;
@@ -89,7 +84,7 @@ sub supertile(){
   my $Data = $Image->png();
   undef $Image;
   
-  if(length($Data) < 500){
+  if(length($Data) < 200){
     print " - too short, blank\n";
     return;
   }
@@ -102,7 +97,7 @@ sub supertile(){
 }
 sub readLocalImage(){
   my ($X,$Y,$Z) = @_;
-  my $Filename = localfile($X*2+1,$Y*2+1,$Z+1);
+  my $Filename = localfile($X,$Y,$Z);
   return(0) if(!-f $Filename);
   return(GD::Image->newFromPng($Filename));
 }

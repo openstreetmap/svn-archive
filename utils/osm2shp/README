@@ -1,0 +1,11 @@
+osm2shp transforms OSM data to shapefiles; at the moment, one shapefile for
+nodes with tags, and another for ways (assumed to be polylines) is generated.
+
+osm2shp is licenced under the GPL version 2.
+
+osm2shp requires libosm (available in Subversion - the paths in the Makefile
+should be correct), shapelib and expat. The paths for the latter two need
+manually setting up.
+
+shapelib is available from http://shapelib.maptools.org.
+expat is available from http://expat.sourceforge.net.

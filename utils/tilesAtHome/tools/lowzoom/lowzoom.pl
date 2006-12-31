@@ -1,7 +1,6 @@
 use strict;
 use LWP::Simple;
 use GD;
-
 # Pick a random zoom-8 tile
 my $uploadDir = "../../temp";
 
@@ -18,7 +17,7 @@ $Status->area($X,$Y,$Z,$MaxZ);
 lowZoom($X,$Y,$Z, $MaxZ, $Status);
 
 # Move all low-zoom tiles to upload directory
-moveTiles(tempdir(), $uploadDir) if($Options ne "keep");
+moveTiles(tempdir(), $uploadDir, $MaxZ) if($Options ne "keep");
 
 $Status->final();
 
@@ -98,19 +97,17 @@ sub readLocalImage(){
   return(GD::Image->newFromPng($Filename));
 }
 sub moveTiles(){
-  my ($from, $to) = @_;
+  my ($from, $to, $MaxZ) = @_;
   opendir(my $dp, $from) || die($!);
   while(my $file = readdir($dp)){
     if($file =~ /^tile_(\d+)_(\d+)_(\d+)\.png$/){
       my ($Z,$X,$Y) = ($1,$2,$3);
       my $f1 = "$from/$file";
       my $f2 = "$to/$file";
-      if($Z < 12){
-        print " - moving $X,$Y,$Z\n";
+      if($Z < $MaxZ){
         rename($f1, $f2);
       }
       else{
-        print " - deleting $X,$Y,$Z\n";
         unlink $f1;
       }
     }
@@ -131,9 +128,11 @@ sub tempdir(){
 }
 
 package status;
+use Time::HiRes qw(time); # Comment-this out if you want, it's not important
 sub new {
   my $self  = {};
   $self->{DONE} = 0;
+  $self->{TODO} = 1;
   $self->{SIZE} = 0;
   bless($self);
   return $self;
@@ -158,24 +157,37 @@ sub area(){
   $self->{RANGE_Z} = $self->{MAX_Z} - $self->{Z};
   $self->{TODO} = 4 ** $self->{RANGE_Z};
   $self->display();
+  $self->{START_T} = time();
+}
+sub update(){
+  my $self = shift();
+  $self->{T} = time();
+  $self->{DT} = $self->{T} - $self->{START_T};
+  $self->{EXPECT_T} = $self->{DONE} ? ($self->{TODO} * $self->{DT} / $self->{DONE}) : 0;
+  $self->{EXPECT_FINISH} = $self->{START_T} + $self->{EXPECT_T};
+  $self->{REMAIN_T} = $self->{EXPECT_T} - $self->{EXPECT_DT};
 }
 sub display(){
   my $self = shift();
-  printf( "Job %d,%d,%d: %03.1f%% done (%d,%d,%d = %1.1f KB)\n", 
+  $self->update();
+  
+  printf( "Job %d,%d,%d: %03.1f%% done, %1.1f min (%d,%d,%d = %1.1f KB)\n", 
     $self->{X},
     $self->{Y},
     $self->{Z},
     $self->{PERCENT}, 
+    $self->{REMAIN_T} / 60,
     $self->{LAST_X},
     $self->{LAST_Y},
     $self->{LAST_Z},
     $self->{LAST_SIZE}/1024
     );
-  
 }
 sub final(){
   my $self = shift();
-  printf("Done, %d downloads, %1.1fKB total\n",
+  $self->{END_T} = time();
+  printf("Done, %d downloads, %1.1fKB total, took %1.0f seconds\n",
     $self->{DONE},
-    $self->{SIZE} / 1024);
+    $self->{SIZE} / 1024,
+    $self->{DT});
 }

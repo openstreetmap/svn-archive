@@ -224,8 +224,13 @@ sub UTF8sanitize($){
     # We have to create a new one
     print STDERR "UTF8 Sanitize $filename ... \n";
     # Uggly Hack, but for now it works
-    my $UTF8sanitizer=find_file_in_perl_path('../planet.osm/C/UTF8sanitizer');
+    my $UTF8sanitizer=`which UTF8sanitizer`;
+    chomp $UTF8sanitizer;
+    unless ( -x $UTF8sanitizer ) {
+	$UTF8sanitizer=find_file_in_perl_path('../planet.osm/C/UTF8sanitizer');
+    }
     die "Sanitizer not found\n" unless -x $UTF8sanitizer;
+    print STDERR "Sanitizer found at '$UTF8sanitizer'\n" if $DEBUG;
 
     print STDERR "     this may take some time ... \n";
     my $result = `bzip2 -dc $filename | $UTF8sanitizer  | bzip2 >$filename_new.part`;

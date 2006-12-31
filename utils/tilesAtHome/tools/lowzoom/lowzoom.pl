@@ -1,27 +1,55 @@
 use strict;
 use LWP::Simple;
 use GD;
-# Pick a random zoom-8 tile
+#------------------------------------------------------------------------------------
+# LowZoom.pl
+# Generates low-zoom map tiles, by downloading high-zoom map tiles, and merging them
+# together. 
+#
+# Part of the OpenStreetMap tiles@home project
+#
+# Copyright 2007, Oliver White.
+# Copying license: GNU general public license, v2 or later
+#-----------------------------------------------------------------------------------
+
+# Option: Where to move tiles, so that they get uploaded by another program
 my $uploadDir = "../../temp";
 
+# Command-line arguments
 my $X = shift();
 my $Y = shift();
 my $Z = shift();
 my $MaxZ = shift() || 12;
 my $Options = shift();
-die() if($MaxZ > 12);
 
+# Check the command-line arguments, and display usage information
+my $Usage = "Usage: $0 x y z maxZ [keep]\n  x,y,z are the tile to generate\n  maxZ is the zoom level to download tiles from\n  Options: \n    * 'keep' - don't move tiles to an upload area afterwards\nOther options (URLs, upload staging area) are part of the script - change them in source code\n";
+if(($MaxZ > 12)
+  || ($MaxZ <= $Z)
+  || ($Z <= 0)
+  || ($MaxZ > 17)
+  || ($X < 0)
+  || ($Y < 0)  
+  || ($X >= 2 ** $Z)
+  || ($Y >= 2 ** $Z)
+  ){
+  die($Usage);
+}
+
+# What we intend to do
 my $Status = new status; 
 $Status->area($X,$Y,$Z,$MaxZ);
 
+# Create the requested tile
 lowZoom($X,$Y,$Z, $MaxZ, $Status);
 
 # Move all low-zoom tiles to upload directory
 moveTiles(tempdir(), $uploadDir, $MaxZ) if($Options ne "keep");
 
+# Status message, saying what we did
 $Status->final();
 
-
+# Recursively create (including any downloads necessary) a tile
 sub lowZoom(){
   my ($X,$Y,$Z,$MaxZ, $Status) = @_;
   
@@ -30,16 +58,17 @@ sub lowZoom(){
     downloadtile($X,$Y,$Z);
   }
   else{
+    # Recursively get/create the 4 subtiles
     lowZoom($X*2,$Y*2,$Z+1,$MaxZ, $Status);
     lowZoom($X*2+1,$Y*2,$Z+1,$MaxZ, $Status);
     lowZoom($X*2,$Y*2+1,$Z+1,$MaxZ, $Status);
     lowZoom($X*2+1,$Y*2+1,$Z+1,$MaxZ, $Status);
   
-    # Create supertile
+    # Create the tile from those subtiles
     supertile($X,$Y,$Z);
   }
 }
-
+# Download a tile from the tileserver
 sub downloadtile(){
   my ($X,$Y,$Z) = @_;
   my $f1 = remotefile($X,$Y,$Z);
@@ -50,8 +79,10 @@ sub downloadtile(){
   my $Size = -s $f2;
   $Status->downloadCount($X,$Y,$Z,$Size);
   
-  unlink $f2 if($Size < 200);
+  # Don't bother storing blank or invalid tiles
+  unlink $f2 if($Size < 1000);
 }
+# Create a supertile, by merging together 4 local image files, and creating a new local file
 sub supertile(){
   my ($X,$Y,$Z) = @_;
   
@@ -69,33 +100,37 @@ sub supertile(){
   my $AB = readLocalImage($X*2,$Y*2+1,$Z+1);
   my $BB = readLocalImage($X*2+1,$Y*2+1,$Z+1);
   
-  # Copy the parts
+  # Copy the subimages into the 4 quadrants
   $Image->copyResampled($AA, 0,0,     0,0, 128,128, 256,256) if($AA);
   $Image->copyResampled($BA, 128,0,   0,0, 128,128, 256,256) if($BA);
   $Image->copyResampled($AB, 0,128,   0,0, 128,128, 256,256) if($AB);
   $Image->copyResampled($BB, 128,128, 0,0, 128,128, 256,256) if($BB);
   
-  # Save the supertile
   my $Filename = localfile($X,$Y,$Z);
   my $Data = $Image->png();
   undef $Image;
   
-  if(length($Data) < 200){
+  # Don't bother saving blank or invalid images
+  if(length($Data) < 1000){
     return;
   }
-    
+  
+  # Save the image
   open(my $fp, ">", $Filename) || die($!);
   binmode $fp;
   print $fp $Data;
   close($fp);
 }
-
+# Open a PNG file, and return it as a GD image (or 0 if not found)
 sub readLocalImage(){
   my ($X,$Y,$Z) = @_;
   my $Filename = localfile($X,$Y,$Z);
   return(0) if(!-f $Filename);
   return(GD::Image->newFromPng($Filename));
 }
+# Take any tiles that were created (as opposed to downloaded), and move them to
+# an area ready for upload.
+# + Delete any tiles that were downloaded
 sub moveTiles(){
   my ($from, $to, $MaxZ) = @_;
   opendir(my $dp, $from) || die($!);
@@ -114,15 +149,18 @@ sub moveTiles(){
   }  
   close $dp;
 }
-
+# Option: filename for our temporary map tiles
+# (note: this should match whatever is expected by the upload scripts)
 sub localfile(){
   my ($X,$Y,$Z) = @_;
   return sprintf("%s/tile_%d_%d_%d.png", tempdir(), $Z,$X,$Y);
 }
+# Option: URL for downloading tiles
 sub remotefile(){
   my ($X,$Y,$Z) = @_;
   return sprintf("http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", $Z,$X,$Y);
 }
+# Option: what to use as temporary storage for tiles
 sub tempdir(){
   return("temp");
 }

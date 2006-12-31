@@ -50,4 +50,47 @@ void Components::destroy()
         delete i->second;
 }
 
+// Return a vector of the coordinates of all the points making up a way,
+// in lon-lat order.
+// WILL ONLY WORK IF THE WAY IS STORED SENSIBLY, i.e. ALL SEGMENTS ALIGNED IN
+// SAME DIRECTION AND IN LOGICAL ORDER !!! - the way it should be :-) 
+
+std::vector<double> Components::getWayCoords(int id)
+{
+	std::vector<double> coords;
+	Node *n1, *n2;
+	Segment *s;
+	Way *w = getWay(id);
+	if(w)
+	{
+		for(int count=0; count<w->nSegments(); count++)
+		{
+			s = getSegment(w->getSegment(count));
+			if(s)
+			{
+
+				// Add both nodes of first segment
+				if(coords.empty())
+				{
+					n1=getNode(s->firstNode());
+					if(n1)
+					{
+						coords.push_back(n1->getLon());
+						coords.push_back(n1->getLat());
+					}
+				}
+
+				// For all other segments, only add the second node
+				n2 = getNode(s->secondNode());
+				if(n2)
+				{
+					coords.push_back(n2->getLon());
+					coords.push_back(n2->getLat());
+				}
+			}
+		}
+	}
+	return coords;
+}
+
 }

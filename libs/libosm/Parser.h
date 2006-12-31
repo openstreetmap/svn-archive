@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include "Object.h"
 #include "Components.h"
 
@@ -15,6 +16,7 @@ private:
 	static int curID;
 	static bool inNode, inSegment, inWay;
 	static Components* components;
+	static std::string error;
 
 	static void startElement(void *d,const XML_Char* name,
 		const XML_Char** attrs);
@@ -22,6 +24,7 @@ private:
 	static void characters(void*, const XML_Char* txt,int txtlen);
 public:
 	static Components* parse(std::istream&);
+	static std::string getError() { return error; }
 };
 
 }

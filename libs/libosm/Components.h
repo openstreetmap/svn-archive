@@ -108,6 +108,8 @@ public:
 	bool hasMoreNodes() { return nodeIterator!=nodes.end(); }
 	bool hasMoreSegments() { return segmentIterator!=segments.end(); }
 	bool hasMoreWays() { return wayIterator!=ways.end(); }
+
+	std::vector<double> getWayCoords(int);
 };
 
 

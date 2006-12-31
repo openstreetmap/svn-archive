@@ -5,6 +5,9 @@
 #include "Components.h"
 #include <string>
 
+using std::cerr;
+using std::endl;
+
 namespace OSM
 {
 
@@ -12,6 +15,7 @@ namespace OSM
  int Parser::curID=0;
  bool Parser::inNode=false, Parser::inSegment=false, Parser::inWay=false;
  Components* Parser::components=NULL;
+ std::string Parser::error="";
 
 void Parser::startElement(void *d,const XML_Char* element,
 		const XML_Char** attrs)
@@ -78,11 +82,11 @@ void Parser::startElement(void *d,const XML_Char* element,
 			{
 				if(!strcmp(attrs[count],"id"))
 				{
-					segID=atoi(attrs[count]+1);
+					segID=atoi(attrs[count+1]);
+					((Way*)curObject)->addSegment(segID);
 				}
 			}
 
-			((Way*)curObject)->addSegment(segID);
 		}
 		else if (!strcmp(element,"tag"))
 		{
@@ -128,7 +132,7 @@ Components* Parser::parse(std::istream &in)
 	XML_Parser p = XML_ParserCreate(NULL);
 	if(!p)
 	{
-		fprintf(stderr,"error creating parser\n");
+		error = "Error creating parser";
 		return NULL; 
 	}
 
@@ -145,7 +149,7 @@ Components* Parser::parse(std::istream &in)
 
 		if(XML_Parse(p,buf,n,done) == XML_STATUS_ERROR)
 		{
-			fprintf(stderr,"xml parsing error\n");
+			error = "xml parsing error";
 			delete components;
 			return NULL;
 		}

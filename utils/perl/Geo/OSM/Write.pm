@@ -33,10 +33,10 @@ sub tags2osm($){
 
 	# character escaping as per http://www.w3.org/TR/REC-xml/
 	$v =~ s/&/&amp;/g;
-	$v =~ s/'/&apos;/g;
+	$v =~ s/\'/&apos;/g;
 	$v =~ s/</&lt;/g;
 	$v =~ s/>/&gt;/g;
-	$v =~ s/"/&quot;/g;
+	$v =~ s/\"/&quot;/g;
 
 	$erg .= "    <tag k=\'$k\' v=\'$v\' />\n";
     }
@@ -51,6 +51,7 @@ sub write_osm_file($$) { # Write an osm File
     my $osm_segments = $osm->{segments};
     my $osm_ways     = $osm->{ways};
 
+    $osm->{tool} ||= "OSM-Tool";
     my $count_nodes    = 0;
     my $count_segments = 0;
     my $count_ways     = 0;

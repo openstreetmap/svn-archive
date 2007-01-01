@@ -51,10 +51,13 @@ bool makeNodeShp(OSM::Components *comp, const char* shpname)
 			DBFHandle dbf = DBFCreate(shpname);
 			if(dbf)
 			{
-				int amenity = DBFAddField(dbf,"amenity",FTString,255,0);
-				int natural = DBFAddField(dbf,"natural",FTString,255,0);
-				int place = DBFAddField(dbf,"place",FTString,255,0);
-				int name = DBFAddField(dbf,"name",FTString,255,0);
+				std::map<int,std::string> fields;
+				std::set<std::string> nodeTags = comp->getNodeTags();
+				for(std::set<std::string>::iterator i=nodeTags.begin();
+					i!=nodeTags.end(); i++)
+				{
+					fields[DBFAddField(dbf,i->c_str(),FTString,255,0)] = *i;
+				}
 
 				double lon, lat;
 
@@ -71,18 +74,17 @@ bool makeNodeShp(OSM::Components *comp, const char* shpname)
 						SHPObject *object = SHPCreateSimpleObject
 							(SHPT_POINT,1,&lon,&lat,NULL);
 
-						int i = SHPWriteObject(shp, -1, object);
+						int objid = SHPWriteObject(shp, -1, object);
 
 						SHPDestroyObject(object);
 
-						DBFWriteStringAttribute
-							(dbf,i,amenity,node->getTag("amenity").c_str());
-						DBFWriteStringAttribute
-							(dbf,i,natural,node->getTag("natural").c_str());
-						DBFWriteStringAttribute
-							(dbf,i,place,node->getTag("place").c_str());
-						DBFWriteStringAttribute
-							(dbf,i,name,node->getTag("name").c_str());
+						for(std::map<int,std::string>::iterator j=
+								fields.begin(); j!=fields.end(); j++)
+						{
+							DBFWriteStringAttribute
+								(dbf,objid,j->first,
+									node->getTag(j->second).c_str());
+						}
 					}
 				}
 
@@ -112,9 +114,13 @@ bool makeWayShp(OSM::Components *comp, const char* shpname)
 			DBFHandle dbf = DBFCreate(shpname);
 			if(dbf)
 			{
-				int highway = DBFAddField(dbf,"highway",FTString,255,0);
-				int name = DBFAddField(dbf,"name",FTString,255,0);
-				int ref = DBFAddField(dbf,"ref",FTString,255,0);
+				std::map<int,std::string> fields;
+				std::set<std::string> wayTags = comp->getWayTags();
+				for(std::set<std::string>::iterator i=wayTags.begin();
+					i!=wayTags.end(); i++)
+				{
+					fields[DBFAddField(dbf,i->c_str(),FTString,255,0)] = *i;
+				}
 
 				comp->rewindWays();
 				std::vector<double> wayCoords, longs, lats;
@@ -134,16 +140,17 @@ bool makeWayShp(OSM::Components *comp, const char* shpname)
 								(SHPT_ARC,wayCoords.size()/2,
 									&(longs[0]),&(lats[0]),NULL);
 
-							int i = SHPWriteObject(shp, -1, object);
+							int objid = SHPWriteObject(shp, -1, object);
 
 							SHPDestroyObject(object);
 
-							DBFWriteStringAttribute
-								(dbf,i,highway,way->getTag("highway").c_str());
-							DBFWriteStringAttribute
-								(dbf,i,name,way->getTag("name").c_str());
-							DBFWriteStringAttribute
-								(dbf,i,ref,way->getTag("ref").c_str());
+							for(std::map<int,std::string>::iterator j=
+								fields.begin(); j!=fields.end(); j++)
+							{
+								DBFWriteStringAttribute
+								(dbf,objid,j->first,
+									way->getTag(j->second).c_str());
+							}
 						}
 					}
 				}

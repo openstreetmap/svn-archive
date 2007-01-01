@@ -185,7 +185,9 @@ sub filter_against_osm($$$){
     my $parsing_display_time=time();
     my ($track_count,$point_count) =   count_data($tracks);
     my $track_points_done=0;
+    my $track_no=0;
     for my $track ( @{$tracks->{tracks}} ) {
+	$track_no++;
 	next if !$track;
 
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
@@ -202,7 +204,7 @@ sub filter_against_osm($$$){
 		 ( time()-$parsing_display_time >10)
 		 )  {
 		$parsing_display_time= time();
-		print STDERR "Filter against osm ".mem_usage();
+		print STDERR "Filter against osm track $track_no($track_count) ".mem_usage();
 		print STDERR time_estimate($start_time,$track_points_done,$point_count);
 		print STDERR "\r";
 	    }

@@ -1,5 +1,7 @@
+#!/usr/bin/python
 from math import pi,cos,sin,log,exp,atan
 from subprocess import call
+import os
 
 DEG_TO_RAD = pi/180
 RAD_TO_DEG = 180/pi
@@ -45,7 +47,11 @@ from PIL.ImageDraw import Draw
 from StringIO import StringIO
 from mapnik import *
 
-def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18):
+def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown"):
+    print "render_tiles(",bbox, mapfile, tile_dir, minZoom,maxZoom, name,")"
+
+    if not os.path.isdir(tile_dir):
+         os.mkdir(tile_dir)
 
     gprj = GoogleProjection(maxZoom+1) 
     m = Map(2 * 256,2 * 256)
@@ -62,7 +68,7 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18):
             for y in range(int(px0[1]/256.0),int(px1[1]/256.0)+1):
                 p0 = gprj.fromPixelToLL((x * 256.0, (y+1) * 256.0),z)
                 p1 = gprj.fromPixelToLL(((x+1) * 256.0, y * 256.0),z)
-                print z,x,y,p0,p1
+
                 # render a new tile and store it on filesystem
                 c0 = prj.forward(Coord(p0[0],p0[1]))
                 c1 = prj.forward(Coord(p1[0],p1[1]))
@@ -76,16 +82,20 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18):
                 zoom = "%s" % z
                 str_x = "%s" % x
                 str_y = "%s" % y
-                
+
                 if not os.path.isdir(tile_dir + zoom):
                     os.mkdir(tile_dir + zoom)
                 if not os.path.isdir(tile_dir + zoom + '/' + str_x):
                     os.mkdir(tile_dir + zoom + '/' + str_x)
-            
+
                 tile_uri = tile_dir + zoom + '/' + str_x + '/' + str_y + '.png'
+
                 if os.path.isfile(tile_uri):
-                    print "%s already exists, skipping " % tile_uri
+                    print name,"[",minZoom,"-",maxZoom,"]: " ,z,x,y,"p:",p0,p1,"exists"
                 else:
+                    print name,"[",minZoom,"-",maxZoom,"]: " ,z,x,y,"p:",p0,p1
+                
+            
                     im = Image(512, 512)
                     render(m, im)
                     im = fromstring('RGBA', (512, 512), rawdata(im))
@@ -98,8 +108,50 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18):
 
 if __name__ == "__main__":
     bbox = (-2, 50.0,1.0,52.0)
-    mapfile = "/home/artem/osm.xml"
-    tile_dir = "/media/disk/osm/"
+    home = os.environ['HOME']
+    mapfile = home + "/svn.openstreetmap.org/utils/mapnik/osm.xml"
+    tile_dir = home + "/osm/tiles/"
+
     minZoom = 10
     maxZoom = 16
     render_tiles(bbox, mapfile, tile_dir, minZoom, maxZoom)
+
+    # Muenchen
+    bbox = (11.4,48.07, 11.7,48.22)
+    render_tiles(bbox, mapfile, tile_dir, 7, 12 , "Muenchen")
+
+    # Muenchen+
+    bbox = (11.3,48.01, 12.15,48.44)
+    render_tiles(bbox, mapfile, tile_dir, 7, 12 , "Muenchen+")
+
+    # Muenchen++
+    bbox = (10.92,47.7, 12.24,48.61)
+    render_tiles(bbox, mapfile, tile_dir, 7, 12 , "Muenchen++")
+
+    # Nuernberg
+    bbox=(10.903198,49.560441,49.633534,11.038085)
+    render_tiles(bbox, mapfile, tile_dir, 10, 16,"Nuernberg")
+
+    # Karlsruhe
+    bbox=(8.179113,48.933617,8.489252,49.081707)
+    render_tiles(bbox, mapfile, tile_dir, 10, 16,"Karlsruhe")
+
+    # Karlsruhe+
+    bbox = (8.3,48.95,8.5,49.05)
+    render_tiles(bbox, mapfile, tile_dir, 1, 16, "Karlsruhe+")
+
+    # Augsburg
+    bbox = (8.3,48.95,8.5,49.05)
+    render_tiles(bbox, mapfile, tile_dir, 1, 16, "Augsburg")
+
+    # Augsburg+
+    bbox=(10.773251,48.369594,10.883834,48.438577)
+    render_tiles(bbox, mapfile, tile_dir, 10, 14, "Augsburg+")
+
+    # Europe+
+    bbox = (1.0,10.0, 20.6,50.0)
+    render_tiles(bbox, mapfile, tile_dir, 1, 11 , "Europe+")
+
+    # World
+    bbox = (-180.0,-90.0, 180.0,90.0)
+    render_tiles(bbox, mapfile, tile_dir, 1, 6,"World")

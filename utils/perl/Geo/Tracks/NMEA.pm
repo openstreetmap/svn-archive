@@ -47,23 +47,74 @@ sub read_track_NMEA($) {
     my ($sat,$pdop,$hdop,$vdop,$sat_count);
     my $sat_time = 0;
     my $dop_time = 0;
+    my $IS_grosser_reiseplaner=0;
     while ( my $line = $fh->getline() ) {
 	my ($dummy,$type,$time,$status,$lat,$lat_v,$lon,$lon_v,$speed,$alt);
 	my ($date,$mag_variation,$checksumm,$quality,$alt_unit);
 	$alt=0;
 	chomp $line;
-	$line =~ s/\*(\S+)\s*$//;
-	$checksumm=$1;
+
+	my $full_line = $line;
+
+	$IS_grosser_reiseplaner++ if $line =~ m/Logfile for travel center/;
+
+	# Grosser Reisseplaner Line:
+	# 16.08.06 15:47:23 GPGGA,134851.835,4807.8129,N,01136.6276,E,1,04,12.8,815.8,M,47.5,M,0.0,0000*42
+	if ($IS_grosser_reiseplaner){
+	    if ( $line !~ s/^\d\d\.\d\d.\d\d \d\d:\d\d:\d\d GP/\$GP/ ) {
+		printf STDERR "ERROR in Grosser Reiseplaner: $full_line\n"
+		    if $DEBUG>1;
+		next;
+	    };
+	}
+
+
+	# Checksumm is at line-end: for example *EA
+	if ( $line =~ s/\*([\dABCDEF]{2})\s*$// ){
+	    $checksumm=$1;
+	} else {
+	    print "WARNING Checksumm is missing\n";
+	    printf STDERR "Line: $full_line\n"
+		if $DEBUG>1;
+	    next;
+	}
+
 	# Destinator Line: 160849.006,A,4606.6122,N,01819.4709,E,047.1,074.2,290705,003.1,E*6C^M
-	if ( $line =~ m/^\d+\.\d+,A,\d+\.\d+,[NS],\d+\.\d+,[EW],\d+\.\d+,\d+\.\d+,\d+,\d+\.\d+,\S+$/){
+	if ( $line =~ m/^\d+\.\d+,A,\d+\.\d+,[NS],\d+\.\d+,[EW],\d+\.\d+,\d+\.\d+,\d+,\d+\.\d+,(\S+)$/){
 	    $type = "RMC";
 	} else {
 	    ($type,$line) = split( /,/,$line,2);
 	}
-	$type =~ s/^\s*\$?GP//; # TomTom GO logger is missing the $ sign this is the reason for \$?
-	printf STDERR "Type: $type, line: $line, checksumm:$checksumm\n"
+	$type =~ s/^\s*\$?//; # TomTom GO logger is missing the $ sign this is the reason for \$?
+	if ( $type !~ s/^GP// ){
+	    print "WARNING Type is wrong: $type\n";
+	    printf STDERR "Line: $line\n"
+		if $DEBUG>1;
+	    next;
+	}
+	my $count_line=$line;
+	$count_line =~ s/[^,]//g;
+	my $elem_count = length($count_line);
+	printf STDERR "Type: $type, line: $line, checksumm:$checksumm, elem#: $elem_count\n"
 	    if $DEBUG>4;
-	if ( $type eq "GGA" ) {
+	
+	my $elem_soll ={
+	    GGA => 13,
+	    RMC => 10,
+	    GSA => 16,
+	    GSV => 18,
+	    VTG => 7,
+	    GLL => 5,
+	    ZDA => 5,
+	    };
+	if ( $type !~ m/GSV|GSA/ && $elem_count != $elem_soll->{$type} ){
+	    print "!!!!!!! ERROR $elem_count is wrong Number of elements(should be $elem_soll->{$type}): $full_line\n";
+	    next;
+	}
+
+
+	if ( $type eq "VTG" ) {
+	} elsif ( $type eq "GGA" ) {
 	    # GGA - Global Positioning System Fix Data
 	    # Time, Position and fix related data fora GPS receiver.
 	    #        1         2       3 4        5 6 7  8   9  10 |  12 13  14   15
@@ -170,22 +221,24 @@ sub read_track_NMEA($) {
 	    #printf STDERR Dumper(\$sat);
 	    next;
 	} else {
-	    printf STDERR "Ignore Line $type: $line\n"
+	    printf STDERR "Ignore Line $type: $full_line\n"
 		if $DEBUG>6;
 	    next;
 	};
 
-	next unless ($lat ne "" )&& ($lon ne "");
+	next unless defined( $lat) && ($lat ne "" )&& defined( $lon) && ($lon ne "");
 	next if  ($lat eq "0000.0000" ) && ($lon eq "00000.0000");
 	if ( $lat =~ m/(\d\d)(\d\d.\d+)/) {
 	    $lat = $1 + $2/60;
 	} else {
-	    printf STDERR "Error in lat: '$lat'\nLine: $line\n";
+	    printf STDERR "Error in lat: '$lat'\nLine: $full_line\n";
+	    next;
 	}
 	if ($lon =~ m/(\d+)(\d\d\.\d+)/){
 	    $lon = $1 + $2/60;
 	} else {
-	    printf STDERR "Error in lon: '$lon'\nLine: $line\n";
+	    printf STDERR "Error in lon: '$lon'\nLine: $full_line\n";
+	    next;
 	}
 	$lat = -$lat if $lat_v eq "S";
 	$lon = -$lon if $lon_v eq "W";

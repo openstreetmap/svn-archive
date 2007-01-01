@@ -93,4 +93,40 @@ std::vector<double> Components::getWayCoords(int id)
 	return coords;
 }
 
+// get all way tags
+// this could be used eg. to work out how many columns are needed in a shapefile
+std::set<std::string> Components::getWayTags()
+{
+	Way *w;
+	std::set<std::string> tags;
+	std::vector<std::string> curTags;
+
+	rewindWays();
+	while(hasMoreWays())
+	{
+		w = nextWay();
+		curTags = w->getTags();
+		for(int count=0; count<curTags.size(); count++)
+			tags.insert(curTags[count]);
+	}
+	return tags;
+}
+		
+std::set<std::string> Components::getNodeTags()
+{
+	Node *n;	
+	std::set<std::string> tags;
+	std::vector<std::string> curTags;
+
+	rewindNodes();
+	while(hasMoreNodes())
+	{
+		n = nextNode();
+		curTags = n->getTags();
+		for(int count=0; count<curTags.size(); count++)
+			tags.insert(curTags[count]);
+	}
+	return tags;
+}
+
 }

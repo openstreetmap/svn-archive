@@ -25,6 +25,8 @@
 #include <vector>
 #include <utility>
 #include <map>
+#include <set>
+
 using std::vector;
 
 namespace OSM
@@ -110,6 +112,9 @@ public:
 	bool hasMoreWays() { return wayIterator!=ways.end(); }
 
 	std::vector<double> getWayCoords(int);
+
+	std::set<std::string> getWayTags();
+	std::set<std::string> getNodeTags();
 };
 
 

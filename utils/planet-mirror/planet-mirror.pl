@@ -109,7 +109,7 @@ use proxy for download
 Select the "path/planet.osm" file to use for the checks
 
 
-=item B<--print_filename>
+=item B<--print-filename>
 
 print the filename of the mirrored osm file
 

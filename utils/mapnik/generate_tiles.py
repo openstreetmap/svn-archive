@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from math import pi,cos,sin,log,exp,atan
 from subprocess import call
-import os
+import sys, os
 
 DEG_TO_RAD = pi/180
 RAD_TO_DEG = 180/pi
@@ -104,7 +104,10 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown"):
                     im.save(fh, 'PNG', quality=100)
                     command = "convert  -colors 255 %s %s" % (tile_uri,tile_uri)
                     call(command, shell=True)
-             
+
+                bytes=os.stat(tile_uri)[6]
+                if bytes == 137:
+                    print "!!!!!! Empty Tile"
 
 if __name__ == "__main__":
     bbox = (-2, 50.0,1.0,52.0)

@@ -108,7 +108,13 @@ sub ProcessRequestsFromServer(){
   
   # First field is always "OK" if the server has actually sent a request
   if($ValidFlag ne "OK"){
-    print "Server didn't really give a good answer\n";
+    print "Server didn't really give a good answer.\n";
+    print "Either no jobs on the server or server too loaded\n";
+
+    # this timeout should adapt (like exponential backoff), requires the 
+    # looping to happen inside this script, like  requests.pl -f 
+    print "Sleeping a while to reduce server load\n";
+    sleep(30);
     return;
   }
   
@@ -119,7 +125,7 @@ sub ProcessRequestsFromServer(){
   if($Version != 3){
     print "Server is speaking a different version of the protocol to us\n";
     print "Check to see whether a new version of this program was released\n";
-    return;
+    exit(2);
   }
   
   # Information text to say what's happening
@@ -202,7 +208,7 @@ sub GenerateTileset(){
       DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
       if(-s $DataFile1 == 0){
         printf("No data here either\n");
-        return;
+        exit(1);
       }
     appendOSMfile($DataFile,$DataFile1);
     killafile($DataFile1);

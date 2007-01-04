@@ -87,7 +87,7 @@ sub ProcessRequestsFromServer(){
   # ----------------------------------
   killafile($LocalFilename);
   DownloadFile(
-    "http://osmathome.bandnet.org/Requests/", 
+    "http://dev.openstreetmap.org/~ojw/Requests/", 
     $LocalFilename, 
     0, 
     "Request from server");

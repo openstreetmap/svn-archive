@@ -38,8 +38,6 @@ my $LimitY2 = ProjectF(-85.0511);
 my $RangeY = $LimitY - $LimitY2;
 
 # Options: base directory, temporary file for tiles, working directory
-our $BaseDir = "gfx";
-mkdir $BaseDir if(!-d $BaseDir);
 mkdir $WorkingDirectory if(!-d $WorkingDirectory);
 
 # Handle the command-line
@@ -94,6 +92,7 @@ sub ProcessRequestsFromServer(){
     
   if(! -f $LocalFilename){
     print "Couldn't get request from server";
+    sleep(5 * 60);
     return;
   }
 
@@ -107,14 +106,17 @@ sub ProcessRequestsFromServer(){
   my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
   
   # First field is always "OK" if the server has actually sent a request
-  if($ValidFlag ne "OK"){
-    print "Server didn't really give a good answer.\n";
-    print "Either no jobs on the server or server too loaded\n";
+  if($ValidFlag eq "XX"){
+    print "Nothing to do!  Please wait a while, and check later for requests\n";
+    sleep(40 * 60);
+  }
+  elsif($ValidFlag ne "OK"){
+    print "Server doesn't seem to be responding as expected\n";
 
     # this timeout should adapt (like exponential backoff), requires the 
     # looping to happen inside this script, like  requests.pl -f 
     print "Sleeping a while to reduce server load\n";
-    sleep(30);
+    sleep(5 * 60);
     return;
   }
   

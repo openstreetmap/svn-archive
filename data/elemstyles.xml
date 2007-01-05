@@ -1,5 +1,11 @@
 <rules>
 
+
+<rule>
+<condition k="waterway" v="river"/>
+<line width="2" colour="#0000ff" />
+</rule>
+
 <rule>
 <condition k="highway" v="footway"/>
 <line width="1" colour="#00ff00" />

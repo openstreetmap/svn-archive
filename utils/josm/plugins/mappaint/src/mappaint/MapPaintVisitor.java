@@ -61,7 +61,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Way w) {
 		Color colour = getPreferencesColor("untagged",Color.GRAY);
-		int width=1;
+		int width=2;
 		boolean area=false;
 		ElemStyle wayStyle = MapPaintPlugin.elemStyles.getStyle(w);
 		if(wayStyle!=null)

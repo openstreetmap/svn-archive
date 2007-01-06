@@ -21,7 +21,6 @@ There are the following top-categories:
       - food
       - geocache
       - health
-      - historic
       - money
       - nautical
       - misc
@@ -33,7 +32,7 @@ There are the following top-categories:
       - shopping
       - sightseeing
       - sports
-      - transportation
+      - transport
       - unknown
       - vehicle
       - waypoint
@@ -47,4 +46,8 @@ sub-sub-directory. before you start a sub-category you'll have to create an
 icon for this subcategory. This way the renderer can always take the category
 icon if there does not exist a specific icon for this.
 If you are not sure where to put the icon you should consider using 
-the others category(directory)
+the others category(directory).
+There are also some png files with size 0 in the directories. These files
+are placeholders for possible icons and poi-types.
+The file index.html gives you a nice overview of the available icons.
+

@@ -82,6 +82,10 @@ else{
   print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
   print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
   print "Specific area:\n  \"$0 xy [x] [y]\"\n  (x and y coordinates of a zoom-12 tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
+  print "Other modes:\n";
+  print "  $0 loop - runs continuously\n";
+  print "  $0 upload - uploads any tiles\n";
+  print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
   print "\nGNU General Public license, version 2 or later\n$Bar\n";
 
 }

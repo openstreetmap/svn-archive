@@ -3,6 +3,7 @@ use LWP::Simple;
 use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
+use config;
 use English '-no_match_vars';
 use strict;
 #-----------------------------------------------------------------------------
@@ -27,18 +28,17 @@ use strict;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 
-# conf file, will contain username/password and environment info
-my ($WorkingDirectory, $Inkscape, $XmlStarlet, $Niceness);
-my ($OsmUsername, $OsmPassword);
-my ($BorderN, $BorderS, $BorderE, $BorderW, $MaxZoom);
-ReadConf("tilesAtHome.conf");
+# Read the config file
+my %Config = ReadConfig("tilesAtHome.conf");
+CheckConfig(%Config);
 
+# Setup map projection
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
 my $RangeY = $LimitY - $LimitY2;
 
-# Options: base directory, temporary file for tiles, working directory
-mkdir $WorkingDirectory if(!-d $WorkingDirectory);
+# Create the working directory if necessary
+mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 
 # Handle the command-line
 my $Mode = shift();
@@ -51,6 +51,15 @@ if($Mode eq "xy"){
   my $Zoom = 12;
   print "Generating area $X,$Y,$Zoom\n";
   GenerateTileset($X, $Y, $Zoom);
+}
+elsif ($Mode eq "loop") {
+  # ----------------------------------
+  # Continuously process requests from server
+  # ----------------------------------
+  while(1){
+    ProcessRequestsFromServer();
+    sleep(60);
+  }
 }
 elsif ($Mode eq "") {
   # ----------------------------------
@@ -74,7 +83,7 @@ else{
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------
 sub ProcessRequestsFromServer(){
-  my $LocalFilename = "${WorkingDirectory}request.txt";
+  my $LocalFilename = "$Config{WorkingDirectory}request.txt";
   
   # ----------------------------------
   # Download the request, and check it
@@ -85,7 +94,7 @@ sub ProcessRequestsFromServer(){
   # ----------------------------------
   killafile($LocalFilename);
   DownloadFile(
-    "http://dev.openstreetmap.org/~ojw/Requests/", 
+    "http://dev.openstreetmap.org/~ojw/Requests/",  # TODO: this should be in config file
     $LocalFilename, 
     0, 
     "Request from server");
@@ -138,36 +147,6 @@ sub ProcessRequestsFromServer(){
   GenerateTileset($X, $Y, $Z);
 }
 
-
-#-----------------------------------------------------------------------------
-# Read environment data from conf file
-#-----------------------------------------------------------------------------
-sub ReadConf(){
-  open(my $fp, "<", shift()) || die("Please create the file tilesAtHome.conf from the template tilesAtHome.conf.linux or tilesAtHome.conf.windows");
-  my $OsmOK = 0;
-  
-  while(my $Line = <$fp>){
-    next if($Line =~ /^\s*#/); # Comments
-    
-    if ($Line =~ /WorkingDirectory=(.*)/) { $WorkingDirectory=$1; $OsmOK++; } 
-    if ($Line =~ /Inkscape=(.*)/)        { $Inkscape=$1;       $OsmOK++; } 
-    if ($Line =~ /XmlStarlet=(.*)/)      { $XmlStarlet=$1;     $OsmOK++; } 
-    if ($Line =~ /Niceness=(.*)/)        { $Niceness=$1;       $OsmOK++; } 
-
-    if ($Line =~ /OsmUsername=(.*)/)     { $OsmUsername=$1;    $OsmOK++; } # TODO convert @ to %40
-    if ($Line =~ /OsmPassword=(.*)/)     { $OsmPassword=$1;    $OsmOK++; } 
-
-    if ($Line =~ /BorderN=(.*)/)         { $BorderN=$1;        $OsmOK++; } 
-    if ($Line =~ /BorderS=(.*)/)         { $BorderS=$1;        $OsmOK++; } 
-    if ($Line =~ /BorderE=(.*)/)         { $BorderE=$1;        $OsmOK++; } 
-    if ($Line =~ /BorderW=(.*)/)         { $BorderW=$1;        $OsmOK++; } 
-    if ($Line =~ /MaxZoom=(.*)/)         { $MaxZoom=$1;        $OsmOK++; } 
-
-  }
-  close $fp;
-  
-}
-
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
 #-----------------------------------------------------------------------------
@@ -182,17 +161,17 @@ sub GenerateTileset(){
   my $DataFile = "data-$PID.osm";
 
   # Adjust requested area to avoid boundary conditions
-  my $N1 = $N + $BorderN;
-  my $S1 = $S - $BorderS;
-  my $E1 = $E + $BorderE;
-  my $W1 = $W - $BorderW;
+  my $N1 = $N + $Config{BorderN};
+  my $S1 = $S - $Config{BorderS};
+  my $E1 = $E + $Config{BorderE};
+  my $W1 = $W - $Config{BorderW};
 
   #------------------------------------------------------
   # Download data
   #------------------------------------------------------
   killafile($DataFile);
   my $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-    $OsmUsername, $OsmPassword, $W1, $S1, $E1, $N1);
+    $Config{OsmUsername}, $Config{OsmPassword}, $W1, $S1, $E1, $N1);
   
   DownloadFile($URL, $DataFile, 0, "Map data to $DataFile");
   if(-s $DataFile == 0){
@@ -205,7 +184,7 @@ sub GenerateTileset(){
 
     for (my $i = 0 ; $i<10 ; $i++) {
       $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-        $OsmUsername, $OsmPassword, ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
+        $Config{OsmUsername}, $Config{OsmPassword}, ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
       my $DataFile1 = "data-$PID-$i.osm";
       DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
       if(-s $DataFile1 == 0){
@@ -218,8 +197,8 @@ sub GenerateTileset(){
   }
   
   # Faff around
-  for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
-    killafile("${WorkingDirectory}output-$PID-z$i.svg");
+  for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
+    killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
   }
 
   my $Margin = " " x ($Zoom - 8);
@@ -228,22 +207,39 @@ sub GenerateTileset(){
   # Add bounding box to osmarender
   # then set the data source
   # then transform it to SVG
-  for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
-    copy("osm-map-features-z$i.xml","osm-map-features-$PID-z$i.xml") or die "Cannot make copy of osm-map-features-z$i.xml"; 
-    AddBounds("osm-map-features-$PID-z$i.xml",$W,$S,$E,$N);
+  for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
+  
+    # Create a new copy of osmarender
+    copy(
+      "osm-map-features-z$i.xml",
+      "osm-map-features-$PID-z$i.xml")
+       or die "Cannot make copy of osm-map-features-z$i.xml"; 
+    
+    # Update the osmarender with details of what to do (where to get data, what bounds to use)
+    AddBounds("osm-map-features-$PID-z$i.xml",$W,$S,$E,$N);    
     SetDataSource("osm-map-features-$PID-z$i.xml");
-    xml2svg("osm-map-features-$PID-z$i.xml","${WorkingDirectory}output-$PID-z$i.svg");
+    
+    # Render the file
+    xml2svg(
+      "osm-map-features-$PID-z$i.xml",
+      "$Config{WorkingDirectory}output-$PID-z$i.svg");
+    
+    # Delete temporary osmarender
     killafile("osm-map-features-$PID-z$i.xml");
   }
+  
+  # Delete OSM map data
   killafile($DataFile);
   
-  my ($ImgW,$ImgH,$Valid) = getSize("${WorkingDirectory}output-$PID-z$MaxZoom.svg");
+  # Find the size of the SVG file
+  my ($ImgW,$ImgH,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
 
+  # Render it as loads of recursive tiles
   RenderTile($X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
-  # Clean-up output file
-  for (my $i = $Zoom ; $i <= $MaxZoom ; $i++) {
-    killafile("${WorkingDirectory}output-$PID-z$i.svg");
+  # Clean-up he SVG files
+  for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
+    killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
   }
 }
 
@@ -256,7 +252,7 @@ sub GenerateTileset(){
 sub RenderTile(){
   my ($X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
   
-  return if($Zoom > $MaxZoom);
+  return if($Zoom > $Config{MaxZoom});
   
   my $Filename = tileFilename($X, $Y, $Zoom);
  
@@ -360,7 +356,7 @@ sub UpdateOsmarender(){
   foreach my $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png")){
   
     DownloadFile(
-    "http://almien.co.uk/OSM/Places/Download/$File",
+    "http://almien.co.uk/OSM/Places/Download/$File", # TODO: should be config option. TODO: should be SVN. TODO: should be called
     $File,
     1,
     "Osmarender ($File)");
@@ -392,13 +388,11 @@ sub DownloadFile(){
 sub xml2svg(){
   my($MapFeatures,$SVG) = @_;
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-    $Niceness,
-    $XmlStarlet,
+    $Config{Niceness},
+    $Config{XmlStarlet},
     "osmarender.xsl",
     "$MapFeatures",
     $SVG);
-  
-  writeToFile("update_svg.sh", $Cmd."\n");
   
   print STDERR "Transforming ...";
   `$Cmd`;
@@ -414,16 +408,15 @@ sub svg2png(){
   my $TempFile = $PNG."_part";
   
   my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\"", 
-    $Niceness,
-    $Inkscape,
+    $Config{Niceness},
+    $Config{Inkscape},
     $Size,
     $Size,
     $X1,$Y1,$X2,$Y2,
     $TempFile,
-    $WorkingDirectory,
+    $Config{WorkingDirectory},
     "output-$PID-z$Zoom.svg");
   
-  writeToFile("update_png.sh", $Cmd."\n");
   print STDERR "Rendering ...";
   `$Cmd`;
   print STDERR " done\n";
@@ -508,7 +501,7 @@ sub getSize($){
 sub tileFilename(){
   my($X,$Y,$Zoom) = @_;
 
-  return(sprintf("%s/tile_%d_%d_%d.png",$WorkingDirectory,$Zoom,$X,$Y));
+  return(sprintf("%s/tile_%d_%d_%d.png",$Config{WorkingDirectory},$Zoom,$X,$Y));
 }
 
 #-----------------------------------------------------------------------------

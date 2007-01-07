@@ -108,7 +108,7 @@ sub uploadIfEnoughTiles{
 
 sub upload{
   print "Uploading...\n";
-  `upload.pl`;
+  `./upload.pl`;
 }
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next

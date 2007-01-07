@@ -56,7 +56,7 @@ sub CheckConfig{
   if($InkscapeV !~ /Inkscape (\d+\.\d+) /){
     die("Can't find inkscape (using \"$Config{Inkscape}\")\n");
   }
-  if($1 < 0.42 && 0){ # TODO: reenable this
+  if($1 < 0.42){
     die("This version of inkscape ($1) is known not to work with tiles\@home\n");
   }
   print "- Inkscape version $1\n";

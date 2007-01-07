@@ -53,7 +53,7 @@ sub CheckConfig{
   
   # Inkscape version
   $InkscapeV = `$Config{Inkscape} --version`;
-  if($InkscapeV !~ /Inkscape (\d+\.\d+) /){
+  if($InkscapeV !~ /Inkscape (\d+\.\d+)/){
     die("Can't find inkscape (using \"$Config{Inkscape}\")\n");
   }
   if($1 < 0.42){

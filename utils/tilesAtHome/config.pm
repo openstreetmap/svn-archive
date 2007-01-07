@@ -27,7 +27,20 @@ sub ReadConfig{
       }
   }
   close $fp;
+  
+  ApplyConfigLogic(\%Config);
+  
   return %Config;
+}
+
+#--------------------------------------------------------------------------
+# Any application-specific knowledge regarding config file options
+# e.g. correct common errors in config files, or enforce naming conventions
+#--------------------------------------------------------------------------
+sub ApplyConfigLogic{
+  my $Config = shift();
+
+  $Config->{OsmUsername} =~ s/@/%40/;  # Encode the @-symbol in OSM passwords
 }
 
 #--------------------------------------------------------------------------

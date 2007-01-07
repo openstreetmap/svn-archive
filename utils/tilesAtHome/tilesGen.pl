@@ -58,8 +58,15 @@ elsif ($Mode eq "loop") {
   # ----------------------------------
   while(1){
     ProcessRequestsFromServer();
+    uploadIfEnoughTiles();
     sleep(60);
   }
+}
+elsif ($Mode eq "upload") {
+  upload();
+}
+elsif ($Mode eq "upload_conditional") {
+  uploadIfEnoughTiles();
 }
 elsif ($Mode eq "") {
   # ----------------------------------
@@ -79,6 +86,26 @@ else{
 
 }
 
+sub uploadIfEnoughTiles{
+  my $Count = 0;
+  opendir(my $dp, $Config{WorkingDirectory}) || return;
+  while(my $File = readdir($dp)){
+    $Count++ if($File =~ /tile_.*\.png/);
+  }
+  closedir($dp);
+  
+  if($Count < 200){
+    print "Not uploading yet, only $Count tiles\n";
+  }
+  else{
+    upload();
+  }
+}
+
+sub upload{
+  print "Uploading...\n";
+  `upload.pl`;
+}
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------

@@ -3,6 +3,7 @@ use LWP::Simple;
 use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
+use FindBin qw($Bin);
 use config;
 use English '-no_match_vars';
 use strict;
@@ -27,7 +28,6 @@ use strict;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
-
 # Read the config file
 my %Config = ReadConfig("tilesAtHome.conf");
 CheckConfig(%Config);
@@ -107,8 +107,9 @@ sub uploadIfEnoughTiles{
 }
 
 sub upload{
-  print "Uploading...\n";
-  `./upload.pl`;
+  my $UploadScript = "$Bin/upload.pl";
+  print "Uploading... ($UploadScript)\n";
+  `$UploadScript`;
 }
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next

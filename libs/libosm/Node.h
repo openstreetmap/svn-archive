@@ -32,6 +32,7 @@
 #include "Object.h"
 
 using std::ostream;
+using std::endl;
 
 namespace OSM
 {
@@ -71,6 +72,14 @@ public:
 
 	void setCoords(double lat,double lon)
 		{ this->lat=lat; this->lon=lon; }
+
+	void toXML(std::ostream &strm)
+	{
+		strm << "<node id='" << id << "' lat='" << lat << "' lon='" << lon
+			<<"'>" << endl;
+		tagsToXML(strm);
+		strm << "</node>" << endl;
+	}
 };
 
 }

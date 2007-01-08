@@ -1,6 +1,7 @@
 #include "Way.h"
 #include "Components.h"
 #include <cfloat>
+#include <iostream>
 
 /*
 Copyright (C) 2006 Nick Whitelegg, Hogweed Software, nick@hogweed.org
@@ -20,6 +21,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 
  */
+
+using std::endl;
+
 namespace OSM
 {
 
@@ -53,6 +57,15 @@ bool Way::addSegmentAt(int index, int s)
 int Way::getSegment(int i)
 { 
 	return (i>=0 && i<segments.size()) ?  (segments[i]) : -1; 
+}
+
+void Way::toXML(std::ostream &strm)
+{
+	strm << "<way id='" << id << "'>" << endl;
+	for(int count=0; count<segments.size(); count++)
+		strm  << "<seg id='" << segments[count] << "' />" << endl;
+	tagsToXML(strm);
+	strm << "</way>" << endl;
 }
 
 }

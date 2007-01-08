@@ -66,7 +66,19 @@ public:
 		tags[key] = value;
 	}
 
+	std::string getTag(const std::string& tag)
+	{
+		return (tags.find(tag)!=tags.end()) ? tags[tag] : "";
+	}
+
 	std::vector<std::string> getTags();
+
+	bool hasTags()
+	{
+		return tags.size()>0;
+	}
+
+	void tagsToXML(std::ostream &strm);
 };
 
 }

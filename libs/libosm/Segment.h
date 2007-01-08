@@ -20,6 +20,9 @@
 
  */
 #include "Object.h"
+#include <iostream>
+
+using std::endl;
 
 namespace OSM
 {
@@ -66,6 +69,14 @@ public:
 	bool hasNodes()
 	{
 		return nodes[0] && nodes[1];
+	}
+
+	void toXML(std::ostream &strm)
+	{
+		strm << "<segment id='" << id << "' from='" << nodes[0] << "' to='" << 
+			nodes[1] <<"'>" << endl;
+		tagsToXML(strm);
+		strm << "</segment>" << endl;
 	}
 };
 

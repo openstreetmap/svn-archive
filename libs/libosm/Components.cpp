@@ -86,11 +86,33 @@ std::vector<double> Components::getWayCoords(int id)
 				{
 					coords.push_back(n2->getLon());
 					coords.push_back(n2->getLat());
-				}
+				} 
 			}
 		}
 	}
 	return coords;
+}
+
+std::set<int> Components::getWayNodes(int wayid)
+{
+	std::set<int> ids; 
+	Node *n1, *n2;
+	Segment *s;
+	Way *w = getWay(wayid);
+	if(w)
+	{
+		cerr<<"w exists"<<endl;
+		for(int count=0; count<w->nSegments(); count++)
+		{
+			s = getSegment(w->getSegment(count));
+			if(s && getNode(s->firstNode()) && getNode(s->secondNode()))
+			{
+				ids.insert(s->firstNode());
+				ids.insert(s->secondNode());
+			}
+		}
+	}
+	return ids; 
 }
 
 // get all way tags
@@ -127,6 +149,182 @@ std::set<std::string> Components::getNodeTags()
 			tags.insert(curTags[count]);
 	}
 	return tags;
+}
+
+
+std::vector<int> Components::getNodeSegments(int nodeid)
+{
+	cerr << "getNodeSegments: nodeid=" << nodeid<<endl;
+	Node *n = getNode(nodeid);
+	std::vector<int> segments;
+
+	if(n)
+	{
+		rewindSegments();
+		while(hasMoreSegments())
+		{
+			Segment *s = nextSegment();
+			if(s->firstNode()==nodeid || s->secondNode()==nodeid)
+			{
+				cerr<<"    adding segmneet: "<< s->id << endl;
+				segments.push_back(s->id);
+			}
+		}
+	}
+	return segments;
+}
+
+int Components::getParentWayOfSegment(int segid)
+{
+	Segment *s=getSegment(segid);
+	if(s)
+	{
+		rewindWays();
+		while(hasMoreWays())
+		{
+			Way *w=nextWay();
+			for(int count=0; count<w->nSegments(); count++)
+			{
+				if(w->getSegment(count)==segid)
+					return w->id;
+			}
+		}
+	}
+	return 0;
+}
+
+// orders a way.  returns the nodes in order.
+
+std::vector<int> Components::orderWay(int wayid)
+{
+	std::vector<int> orderednodes;
+
+	Way *w = getWay(wayid);
+	std::map<int,std::vector<int> > segsRecordForEachNode;
+
+	std::set<int> nodes = getWayNodes(wayid);
+	for(std::set<int>::iterator i=nodes.begin(); i!=nodes.end(); i++)
+	{
+		cerr << "setting up segs record: node=" << *i << endl;
+		segsRecordForEachNode[*i] = std::vector<int>(); 
+		std::vector<int> v = getNodeSegments(*i);
+		for(int count=0; count<v.size(); count++)
+		{
+			cerr << "getParentWayOfSegment("<<v[count]<<")=" << 
+					getParentWayOfSegment(v[count]) << endl;
+			if(getParentWayOfSegment(v[count])==wayid)
+			{
+				cerr << "    " << v[count] << "belongs to this way, adding"
+					<<endl;
+				segsRecordForEachNode[*i].push_back(v[count]);
+			}
+		}
+	}
+
+	// find the unique node id in the segsRecordForEachNode
+	int id=0;
+	for(std::map<int,vector<int> >::iterator i=segsRecordForEachNode.begin();
+			i!=segsRecordForEachNode.end(); i++)
+	{
+		if (i->second.size()==1)
+		{
+			id=i->first;
+			break;
+		}
+	}
+
+
+	// if there was a unique node (there should be!)
+	if(id!=0)
+	{
+		int firstID = id;
+
+		cerr << "found a node with one segment=" << id << endl;
+		int idx = 0, segid;
+
+		bool found;
+
+		// Loop until we reach another unique node
+		do
+		{
+			// Get the segment we're interested in
+			segid = segsRecordForEachNode[id][idx];
+			cerr << "Parent segment: " << segid << endl;
+			Segment *s = getSegment(segid);
+			found=false;
+
+			// If it's a segment in the data set, work with it. If it's
+			// a null segment we'll just abort this attempt
+			if(s && getNode(s->firstNode()) && getNode(s->secondNode()))
+			{
+				// Add the id of the node to the list of ordered nodes
+				orderednodes.push_back(id);
+
+				// Find the other node in the current segment
+				if(s->firstNode()==id)
+					id=getNode(s->secondNode())->id;
+				else
+					id=getNode(s->firstNode())->id;
+
+
+				cerr << "Found next node: id=" << id << endl;
+			
+				// If we arrive back at the first node again, stop
+				// (circular way)
+
+				if(id!=firstID)
+				{
+					// Find another segment of the new node
+					// If there isn't one, found will be false, so we quit
+
+					for(int count=0; count<segsRecordForEachNode[id].size(); 
+						count++)
+					{
+						if(segsRecordForEachNode[id][count] != segid)
+						{
+							// Save the index so we can identify the segment
+							// next go
+							idx=count;
+							cerr << "Found another segment: idx="<<idx << endl;
+							found=true;
+							break;
+						}
+					}
+				}
+
+				if(!found)
+					orderednodes.push_back(id);
+			} 
+		}while(found);
+	
+		
+
+	}
+	return orderednodes;
+}
+
+void Components::toXML(std::ostream &strm)
+{
+	strm << "<?xml version='1.0'?>"<<endl<<"<osm version='0.3'>" << endl;
+	rewindNodes();
+	while(hasMoreNodes())
+	{
+		Node *n=nextNode();
+		n->toXML(strm);
+	}
+	rewindSegments();
+	while(hasMoreSegments())
+	{
+		Segment *s=nextSegment();
+		s->toXML(strm);
+	}
+	rewindWays();
+	while(hasMoreWays())
+	{
+		Way *w=nextWay();
+		w->toXML(strm);
+	}
+	strm << "</osm>"<<endl;
 }
 
 }

@@ -55,25 +55,28 @@ public:
 	void setDestroyComponents(bool b) { destroyComponents = b; }
 	void destroy();
 
-	void addNode (Node *n)
+	int addNode (Node *n)
 	{
-		int realID = (n->isFromOSM()) ? n->id : nextNodeId--;
+		int realID = (n->id) ? n->id : nextNodeId--;
 		n->id=realID;
 		nodes[realID] = n;
+		return realID;
 	}
 
-	void addSegment (Segment *s)
+	int addSegment (Segment *s)
 	{
-		int realID = (s->isFromOSM()) ? s->id : nextSegmentId--;
+		int realID = (s->id) ? s->id : nextSegmentId--;
 		s->id=realID;
 		segments[realID] = s;
+		return realID;
 	}
 
-	void addWay (Way *w)
+	int addWay (Way *w)
 	{
-		int realID = (w->isFromOSM()) ? w->id : nextWayId--;
+		int realID = (w->id) ? w->id : nextWayId--;
 		w->id=realID;
 		ways[realID] = w;
+		return realID;
 	}
 
 	Node *getNode(int i) { return (nodes.find(i) != nodes.end())?nodes[i]:NULL;}
@@ -113,8 +116,16 @@ public:
 
 	std::vector<double> getWayCoords(int);
 
+	std::vector<int> getNodeSegments(int nodeid);
+	std::set<int> getWayNodes(int wayid);
+	int getParentWayOfSegment(int segid);
+
 	std::set<std::string> getWayTags();
 	std::set<std::string> getNodeTags();
+
+	std::vector<int> orderWay(int wayid);
+
+	void toXML(std::ostream &strm);
 };
 
 

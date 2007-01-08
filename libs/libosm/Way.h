@@ -58,6 +58,8 @@ public:
 
 	int getSegment(int i);
 	int nSegments() { return segments.size(); }
+
+	void toXML(std::ostream &strm);
 };
 
 }

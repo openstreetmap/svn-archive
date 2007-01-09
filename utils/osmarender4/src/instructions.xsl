@@ -233,8 +233,6 @@
 		<!-- Generate the path for the way -->
 		<xsl:variable name='pathData'>
 			<xsl:choose>
-<!--				<xsl:when test='tag[@k="name_direction"]/@v="-1" or tag[@k="osmarender:nameDirection"]/@v="-1" or (key("nodeById",key("segmentById",seg[1]/@id)/@from)/@lon &gt; key("nodeById",key("segmentById",seg[last()]/@id)/@to)/@lon)'>-->
-<!--				<xsl:when test='tag[@k="name_direction"]/@v="-1" or tag[@k="osmarender:nameDirection"]/@v="-1"'>-->
                 <xsl:when test='(tag[@k="name_direction"]/@v="-1" or tag[@k="osmarender:nameDirection"]/@v="-1") != (key("nodeById",key("segmentById",seg [1]/@id)/@from)/@lon &lt; key("nodeById",key("segmentById",seg[last()]/@id)/@to)/@lon)'>
 					<xsl:for-each select='seg[key("segmentById",@id)]'>
 						<xsl:variable name='segmentId' select='@id'/>

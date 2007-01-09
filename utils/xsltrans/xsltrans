@@ -24,15 +24,15 @@
 prgname=`basename $0`
 
 function usage() {
-    echo "Usage: $prgname [options] <xmlfile> [<xslfile>]"
-    echo "Options: -p, --param name=value          Set XSL XPATH parameter"
-    echo "         -s, --stringparam name=value    Set XSL string parameter"
+    echo >&2 "Usage: $prgname [options] <xmlfile> [<xslfile>]"
+    echo >&2 "Options: -p, --param name=value          Set XSL XPATH parameter"
+    echo >&2 "         -s, --stringparam name=value    Set XSL string parameter"
 }
 
 paralist=$(getopt --unquoted "--name=$prgname" --options=p:s: --longoptions=param:,stringparam: -- $@)
 
 if  [ $? -ne 0 ]; then
-    usage >&2
+    usage
     exit 1
 fi
 
@@ -50,14 +50,14 @@ done
 xml="$1"; shift
 if [ "$xml" = "" ]; then
     echo >&2 "$prgname: Missing input XML file"
-    usage >&2
+    usage
     exit 1
 fi
 
 xsl="$1"; shift
 if [ "$*" != '' ]; then
     echo >&2 "$prgname: Too many parameters"
-    usage >&2
+    usage
     exit 1
 fi
 
@@ -114,7 +114,6 @@ if [ "$xsltrans" = "xsltproc" ]; then
         v=${p##*=}
         pl="$pl --stringparam $k $v"
     done
-    echo $command $pl $xsl $xml
     $command $pl $xsl $xml
 elif [ "$xsltrans" = "xmlstarlet" ]; then
     if [ "$xsl" = '' ]; then
@@ -129,7 +128,6 @@ elif [ "$xsltrans" = "xmlstarlet" ]; then
     for p in $ps; do
         pl="$pl -s $p"
     done
-    echo $command tr $xsl $pl $xml
     $command tr $xsl $pl $xml
 elif [ "$xsltrans" = "xalan" ]; then
     pl=''
@@ -146,7 +144,6 @@ elif [ "$xsltrans" = "xalan" ]; then
     if [ "$xsl" != '' ]; then
         xsl="-xsl $xsl"
     fi
-    echo $command $pl -in $xml $xsl
     $command $pl -in $xml $xsl
 elif [ "$xsltrans" = "xalan2.jar" ]; then
     pl=''
@@ -163,7 +160,6 @@ elif [ "$xsltrans" = "xalan2.jar" ]; then
     if [ "$xsl" != '' ]; then
         xsl="-XSL $xsl"
     fi
-    echo $command $pl -IN $xml $xsl
     $command $pl -IN $xml $xsl
 else
     echo >&2 "Unknown XSL transformator '$xsltrans'"

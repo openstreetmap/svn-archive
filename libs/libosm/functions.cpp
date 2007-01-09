@@ -61,4 +61,15 @@ double getAngle(double a, double b, double c)
 	return acos(d);
 }
 
+// These are taken from JOSM
+LatLon Mercator::toLatLon()
+{
+	return LatLon (atan(sinh(n))*180/M_PI, e*180/M_PI);
+}
+
+Mercator LatLon::toMercator()
+{
+	return Mercator (lon*M_PI/180, log(tan(M_PI/4+lat*M_PI/360)));
+}
+
 }

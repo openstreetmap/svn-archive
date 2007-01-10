@@ -18,6 +18,10 @@
             <rule e="node" k="amenity" v="parking">
                 <point class="parking"/>
             </rule>
+
+            <rule e="node" k="amenity" v="supermarket">
+                <point class="shopping"/>
+            </rule>
         </folder>
     </rule>
 
@@ -91,6 +95,15 @@
             <IconStyle id="iconstyle-parking">
                 <Icon>
                     <href>icon-parking.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="shopping">
+            <IconStyle id="iconstyle-shopping">
+                <Icon>
+                    <href>icon-shopping.png</href>
                 </Icon>
                 <scale>0.5</scale>
             </IconStyle>

@@ -17,7 +17,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class AnnotationTesterAction extends JosmAction {
 
 	public AnnotationTesterAction() {
-		super(tr("Annotation Preset Tester"), "annotation-tester", tr("Open the annotation preset test tool for previewing annotation preset dialogs."), KeyEvent.VK_A);
+		super(tr("Annotation Preset Tester"), "annotation-tester", tr("Open the annotation preset test tool for previewing annotation preset dialogs."), KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK, true);
 		Main.main.menu.helpMenu.addSeparator();
 		Main.main.menu.helpMenu.add(this);
 	}

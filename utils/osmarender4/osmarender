@@ -40,6 +40,10 @@ function usage() {
 
 }
 
+if [ "$OSMARENDER" = "" ]; then
+    OSMARENDER="."
+fi
+
 while getopts r:t: opt; do
     case "$opt" in
         r)  rulefile="$OPTARG";;

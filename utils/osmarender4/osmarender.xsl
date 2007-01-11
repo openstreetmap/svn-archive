@@ -596,7 +596,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateWayPath">
 		
-		<!-- Generate the path for the way -->
+		<!-- Generate the path for the way that will be used by the street
+        name rendering. This is horribly inefficient, because we will later
+        also have the path used for the rendering of the path itself. So
+        each path is twice in the SVG file. But this path here needs to
+        have the right direction for the names to render right way up
+        and the other path needs to be the right direction for rendering
+        the oneway arrows. This can probably be done better, but currently
+        I don't know how. -->
 		<xsl:variable name="pathData">
 			<xsl:choose>
                 <xsl:when test="(tag[@k=&quot;name_direction&quot;]/@v=&quot;-1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;-1&quot;) != (key(&quot;nodeById&quot;,key(&quot;segmentById&quot;,seg [1]/@id)/@from)/@lon &lt; key(&quot;nodeById&quot;,key(&quot;segmentById&quot;,seg[last()]/@id)/@to)/@lon)">
@@ -629,7 +636,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 		<path id="way_{@id}t" d="{$pathData}"/>
 
-		<!-- Generate the path for the way -->
+		<!-- Generate the path for the way itself. Used for rendering the
+        way and, possibly, oneway arrows. -->
 		<xsl:variable name="pathDataFixed">
             <xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
                 <xsl:variable name="segmentId" select="@id"/>

@@ -49,5 +49,15 @@ If you are not sure where to put the icon you should consider using
 the others category(directory).
 There are also some png files with size 0 in the directories. These files
 are placeholders for possible icons and poi-types.
-The file index.html gives you a nice overview of the available icons.
+
+Additional files:
+
+- overview.html
+	gives a nice overview of the available Icons with english descriptions
+- overview.de.html
+	gives a nice overview of the available Icons with german descriptions
+- index.html
+	shows all available information about the Icons and POI-Types
+	(not completely done yet)
+
 

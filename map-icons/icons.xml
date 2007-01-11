@@ -556,6 +556,7 @@
     <geoinfo>
       <poi_type_id>52</poi_type_id>
       <name>food.fastfood.burger-king</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -568,6 +569,7 @@
     <geoinfo>
       <poi_type_id>53</poi_type_id>
       <name>food.fastfood.kfc</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -580,6 +582,7 @@
     <geoinfo>
       <poi_type_id>54</poi_type_id>
       <name>food.fastfood.mc-donalds</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -592,18 +595,19 @@
     <geoinfo>
       <poi_type_id>55</poi_type_id>
       <name>food.fastfood.subway</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
   <rule>
-    <condition k="poi" v="food.grapes"/>
+    <condition k="poi" v="food.canteen"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>56</poi_type_id>
-      <name>food.grapes</name>
+      <name>food.canteen</name>
     </geoinfo>
   </rule>
 
@@ -628,6 +632,7 @@
     <geoinfo>
       <poi_type_id>58</poi_type_id>
       <name>food.pizzahut</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1064,14 +1069,14 @@
   </rule>
 
   <rule>
-    <condition k="poi" v="misc.info"/>
+    <condition k="poi" v="misc.information"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>97</poi_type_id>
-      <name>misc.info</name>
+      <name>misc.information</name>
     </geoinfo>
   </rule>
 
@@ -1124,14 +1129,14 @@
   </rule>
 
   <rule>
-    <condition k="poi" v="misc.tap"/>
+    <condition k="poi" v="accommodation.camping.water"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>102</poi_type_id>
-      <name>misc.tap</name>
+      <name>accommodation.camping.water</name>
     </geoinfo>
   </rule>
 
@@ -1168,6 +1173,7 @@
     <geoinfo>
       <poi_type_id>105</poi_type_id>
       <name>money.atm.cashgroup</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1180,6 +1186,7 @@
     <geoinfo>
       <poi_type_id>106</poi_type_id>
       <name>money.atm.sparkasse</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1204,6 +1211,7 @@
     <geoinfo>
       <poi_type_id>108</poi_type_id>
       <name>money.bank.deutsche_bank</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1216,6 +1224,7 @@
     <geoinfo>
       <poi_type_id>109</poi_type_id>
       <name>money.bank.hvb</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1228,18 +1237,20 @@
     <geoinfo>
       <poi_type_id>110</poi_type_id>
       <name>money.bank.postbank</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
   <rule>
-    <condition k="poi" v="money.bank.raiffeisen"/>
+    <condition k="poi" v="money.bank.vr-bank"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>111</poi_type_id>
-      <name>money.bank.raiffeisen</name>
+      <name>money.bank.vr-bank</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1252,6 +1263,7 @@
     <geoinfo>
       <poi_type_id>112</poi_type_id>
       <name>money.bank.sparkasse</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -1364,14 +1376,14 @@
   </rule>
 
   <rule>
-    <condition k="poi" v="people.gpsdrive"/>
+    <condition k="poi" v="people.developer.gpsdrive"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>122</poi_type_id>
-      <name>people.gpsdrive</name>
+      <name>people.developer.gpsdrive</name>
     </geoinfo>
   </rule>
 
@@ -2200,6 +2212,7 @@
     <geoinfo>
       <poi_type_id>196</poi_type_id>
       <name>shopping.diy_store.hagebau</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2212,6 +2225,7 @@
     <geoinfo>
       <poi_type_id>197</poi_type_id>
       <name>shopping.diy_store.hornbach</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2224,6 +2238,7 @@
     <geoinfo>
       <poi_type_id>198</poi_type_id>
       <name>shopping.diy_store.obi</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2236,6 +2251,7 @@
     <geoinfo>
       <poi_type_id>199</poi_type_id>
       <name>shopping.diy_store.praktiker</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2284,6 +2300,7 @@
     <geoinfo>
       <poi_type_id>203</poi_type_id>
       <name>shopping.furniture.ikea</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2488,6 +2505,7 @@
     <geoinfo>
       <poi_type_id>220</poi_type_id>
       <name>shopping.supermarket.aldi</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2500,18 +2518,20 @@
     <geoinfo>
       <poi_type_id>221</poi_type_id>
       <name>shopping.supermarket.aldi_nord</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
   <rule>
-    <condition k="poi" v="shopping.supermarket.edeka"/>
+    <condition k="poi" v="shopping.supermarket.rewe"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>222</poi_type_id>
-      <name>shopping.supermarket.edeka</name>
+      <name>shopping.supermarket.rewe</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2524,6 +2544,7 @@
     <geoinfo>
       <poi_type_id>223</poi_type_id>
       <name>shopping.supermarket.kaufland</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2536,6 +2557,7 @@
     <geoinfo>
       <poi_type_id>224</poi_type_id>
       <name>shopping.supermarket.lidl</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2548,6 +2570,7 @@
     <geoinfo>
       <poi_type_id>225</poi_type_id>
       <name>shopping.supermarket.marktkauf</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2560,6 +2583,7 @@
     <geoinfo>
       <poi_type_id>226</poi_type_id>
       <name>shopping.supermarket.metro</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2572,6 +2596,7 @@
     <geoinfo>
       <poi_type_id>227</poi_type_id>
       <name>shopping.supermarket.minimal</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2584,6 +2609,7 @@
     <geoinfo>
       <poi_type_id>228</poi_type_id>
       <name>shopping.supermarket.norma</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2596,6 +2622,7 @@
     <geoinfo>
       <poi_type_id>229</poi_type_id>
       <name>shopping.supermarket.pennymarkt</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2608,6 +2635,7 @@
     <geoinfo>
       <poi_type_id>230</poi_type_id>
       <name>shopping.supermarket.plus</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -2620,6 +2648,7 @@
     <geoinfo>
       <poi_type_id>231</poi_type_id>
       <name>shopping.supermarket.tengelmann</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3004,6 +3033,7 @@
     <geoinfo>
       <poi_type_id>263</poi_type_id>
       <name>vehicle.car_rental.avis</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3028,6 +3058,7 @@
     <geoinfo>
       <poi_type_id>265</poi_type_id>
       <name>vehicle.car_rental.hertz</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3040,6 +3071,7 @@
     <geoinfo>
       <poi_type_id>266</poi_type_id>
       <name>vehicle.car_rental.sixt</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3112,6 +3144,7 @@
     <geoinfo>
       <poi_type_id>272</poi_type_id>
       <name>vehicle.fuel_station.agip</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3124,6 +3157,7 @@
     <geoinfo>
       <poi_type_id>273</poi_type_id>
       <name>vehicle.fuel_station.aral</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3136,6 +3170,7 @@
     <geoinfo>
       <poi_type_id>274</poi_type_id>
       <name>vehicle.fuel_station.esso</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3148,6 +3183,7 @@
     <geoinfo>
       <poi_type_id>275</poi_type_id>
       <name>vehicle.fuel_station.jet</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3160,6 +3196,7 @@
     <geoinfo>
       <poi_type_id>276</poi_type_id>
       <name>vehicle.fuel_station.omv</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3172,6 +3209,7 @@
     <geoinfo>
       <poi_type_id>277</poi_type_id>
       <name>vehicle.fuel_station.shell</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3184,6 +3222,7 @@
     <geoinfo>
       <poi_type_id>278</poi_type_id>
       <name>vehicle.fuel_station.texaco</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3196,6 +3235,7 @@
     <geoinfo>
       <poi_type_id>279</poi_type_id>
       <name>vehicle.fuel_station.total</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3640,6 +3680,7 @@
     <geoinfo>
       <poi_type_id>317</poi_type_id>
       <name>wlan.pay.eurospot</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3652,6 +3693,7 @@
     <geoinfo>
       <poi_type_id>318</poi_type_id>
       <name>wlan.pay.ganag</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3664,6 +3706,7 @@
     <geoinfo>
       <poi_type_id>319</poi_type_id>
       <name>wlan.pay.t-mobile</name>
+      <restricted>brand</restricted>
     </geoinfo>
   </rule>
 
@@ -3688,6 +3731,933 @@
     <geoinfo>
       <poi_type_id>321</poi_type_id>
       <name>transport.ferry.ferry-pedestrian</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="accommodation.camping.dump-station"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>322</poi_type_id>
+      <name>accommodation.camping.dump-station</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="accommodation.camping.gas-refill"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>323</poi_type_id>
+      <name>accommodation.camping.gas-refill</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="accommodation.camping.hookup"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>324</poi_type_id>
+      <name>accommodation.camping.hookup</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="food.machine.beverages"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>327</poi_type_id>
+      <name>food.machine.beverages</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="food.machine.snacks"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>328</poi_type_id>
+      <name>food.machine.snacks</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.administration.vehicle-registration"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>329</poi_type_id>
+      <name>public.administration.vehicle-registration</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.inspecting-authority"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>330</poi_type_id>
+      <name>public.inspecting-authority</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.inspecting-authority.dekra"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>331</poi_type_id>
+      <name>public.inspecting-authority.dekra</name>
+      <restricted>brand</restricted>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.inspecting-authority.tuev"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>332</poi_type_id>
+      <name>public.inspecting-authority.tuev</name>
+      <restricted>brand</restricted>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.recycling.container.cans"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>333</poi_type_id>
+      <name>public.recycling.container.cans</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.recycling.container.paper"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>334</poi_type_id>
+      <name>public.recycling.container.paper</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.recycling.container.used-glass"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>335</poi_type_id>
+      <name>public.recycling.container.used-glass</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.recycling.recycling-yard"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>336</poi_type_id>
+      <name>public.recycling.recycling-yard</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.recycling.trash-bin"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>337</poi_type_id>
+      <name>public.recycling.trash-bin</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="recreation.kiteflying"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>338</poi_type_id>
+      <name>recreation.kiteflying</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="religion.chapel"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>339</poi_type_id>
+      <name>religion.chapel</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.artists-shop"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>340</poi_type_id>
+      <name>shopping.artists-shop</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.clothing"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>341</poi_type_id>
+      <name>shopping.clothing</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.copy-shop"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>342</poi_type_id>
+      <name>shopping.copy-shop</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.erotic"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>343</poi_type_id>
+      <name>shopping.erotic</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.games"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>344</poi_type_id>
+      <name>shopping.games</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.games.computer"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>345</poi_type_id>
+      <name>shopping.games.computer</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.games.roleplaying"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>346</poi_type_id>
+      <name>shopping.games.roleplaying</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.garden-accessories"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>347</poi_type_id>
+      <name>shopping.garden-accessories</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.groceries.fish"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>348</poi_type_id>
+      <name>shopping.groceries.fish</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.groceries.spices"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>349</poi_type_id>
+      <name>shopping.groceries.spices</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.groceries.tea"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>350</poi_type_id>
+      <name>shopping.groceries.tea</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.kiosk"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>351</poi_type_id>
+      <name>shopping.kiosk</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.kitchen-accessories"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>352</poi_type_id>
+      <name>shopping.kitchen-accessories</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.lighting"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>353</poi_type_id>
+      <name>shopping.lighting</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.machine"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>354</poi_type_id>
+      <name>shopping.machine</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.machine.chewing-gum"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>355</poi_type_id>
+      <name>shopping.machine.chewing-gum</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.machine.cigarette"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>356</poi_type_id>
+      <name>shopping.machine.cigarette</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.machine.condom"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>357</poi_type_id>
+      <name>shopping.machine.condom</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.machine.flower"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>358</poi_type_id>
+      <name>shopping.machine.flower</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.machine.stamps"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>359</poi_type_id>
+      <name>shopping.machine.stamps</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.market"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>360</poi_type_id>
+      <name>shopping.market</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.market-garden"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>361</poi_type_id>
+      <name>shopping.market-garden</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.media"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>362</poi_type_id>
+      <name>shopping.media</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.media.cd-dvd"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>363</poi_type_id>
+      <name>shopping.media.cd-dvd</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.media.hi-fi-store"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>364</poi_type_id>
+      <name>shopping.media.hi-fi-store</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.pet-shop"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>365</poi_type_id>
+      <name>shopping.pet-shop</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.print-shop"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>366</poi_type_id>
+      <name>shopping.print-shop</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.rental"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>367</poi_type_id>
+      <name>shopping.rental</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.rental.event-service"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>368</poi_type_id>
+      <name>shopping.rental.event-service</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.rental.library"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>369</poi_type_id>
+      <name>shopping.rental.library</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.rental.partyservice"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>370</poi_type_id>
+      <name>shopping.rental.partyservice</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.rental.tools"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>371</poi_type_id>
+      <name>shopping.rental.tools</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.rental.video-dvd"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>372</poi_type_id>
+      <name>shopping.rental.video-dvd</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.special"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>373</poi_type_id>
+      <name>shopping.special</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.stamp-shop"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>374</poi_type_id>
+      <name>shopping.stamp-shop</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.stationery"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>375</poi_type_id>
+      <name>shopping.stationery</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.tools"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>376</poi_type_id>
+      <name>shopping.tools</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>377</poi_type_id>
+      <name>shopping.vehicle</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle.accessories"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>378</poi_type_id>
+      <name>shopping.vehicle.accessories</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle.caravan"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>379</poi_type_id>
+      <name>shopping.vehicle.caravan</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle.commercial"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>380</poi_type_id>
+      <name>shopping.vehicle.commercial</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle.motorhome"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>381</poi_type_id>
+      <name>shopping.vehicle.motorhome</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle.trailer"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>382</poi_type_id>
+      <name>shopping.vehicle.trailer</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.vehicle.used-cars"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>383</poi_type_id>
+      <name>shopping.vehicle.used-cars</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.wine"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>384</poi_type_id>
+      <name>shopping.wine</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="transport.funicular"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>385</poi_type_id>
+      <name>transport.funicular</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="transport.ticket-machine"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>386</poi_type_id>
+      <name>transport.ticket-machine</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="vehicle.fuel_station.autogas"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>387</poi_type_id>
+      <name>vehicle.fuel_station.autogas</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="vehicle.fuel_station.electric"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>388</poi_type_id>
+      <name>vehicle.fuel_station.electric</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="vehicle.fuel_station.hydrogen"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>389</poi_type_id>
+      <name>vehicle.fuel_station.hydrogen</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="vehicle.parking.bike"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>390</poi_type_id>
+      <name>vehicle.parking.bike</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="vehicle.parking.motorbike"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>391</poi_type_id>
+      <name>vehicle.parking.motorbike</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="food.machine"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>392</poi_type_id>
+      <name>food.machine</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="misc.information.desk"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>393</poi_type_id>
+      <name>misc.information.desk</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="misc.information.point"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>394</poi_type_id>
+      <name>misc.information.point</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="people.developer"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>396</poi_type_id>
+      <name>people.developer</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="people.developer.openstreetmap"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>397</poi_type_id>
+      <name>people.developer.openstreetmap</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="public.recycling.container"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>398</poi_type_id>
+      <name>public.recycling.container</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.furniture.kitchen"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>399</poi_type_id>
+      <name>shopping.furniture.kitchen</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="vehicle.fuel_station.elf"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>400</poi_type_id>
+      <name>vehicle.fuel_station.elf</name>
+      <restricted>brand</restricted>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="money.bank.raiffeisen"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>401</poi_type_id>
+      <name>money.bank.raiffeisen</name>
     </geoinfo>
   </rule>
 </rules>

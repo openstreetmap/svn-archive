@@ -23,6 +23,12 @@
                 <point class="shopping"/>
             </rule>
         </folder>
+      
+        <folder name="Settlements">
+            <rule e="node" k="place" v="city|town|village">
+                <point class="settlement"/>
+            </rule>
+        </folder>
     </rule>
 
     <rule e="segment|way" k="highway" v="*">
@@ -118,6 +124,16 @@
                 <scale>0.5</scale>
             </IconStyle>
         </Style>
+
+        <Style id="settlement">
+            <IconStyle id="iconstyle-shopping">
+                <Icon>
+                    <href>icon-settlement.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
     </defs>
 
     <overlays>

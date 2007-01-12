@@ -47,6 +47,10 @@
                 <polyline name="Footpaths" class="highway-footway"/>
             </rule>
 
+            <rule e="segment|way" k="highway" v="cycleway">
+                <polyline name="Cycleways" class="highway-cycleway"/>
+            </rule>
+
         </folder>
     </rule>
 
@@ -78,6 +82,12 @@
         <Style id="highway-footway">
             <LineStyle>
                 <color>7f00ff00</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-cycleway">
+            <LineStyle>
+                <color>9000ff00</color>
                 <width>2</width>
             </LineStyle>
         </Style>

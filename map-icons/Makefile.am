@@ -454,4 +454,8 @@ EXTRA_DIST= \
 	$(classic_transport_ferry_DATA) \
 	$(classic_transport_bridge_DATA) \
 	$(nickw_DATA) \
+	CMakeLists.txt \
+	index.html \
+	overview.de.html \
+	overview.html \
 	create_makefile.sh

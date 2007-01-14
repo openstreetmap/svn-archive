@@ -30,4 +30,8 @@ for theme in square.big square.small classic nickw ; do
 	echo '	$('$name'_DATA)' "\\" >>$makefile
     done
 done
+echo '	CMakeLists.txt'  "\\">>$makefile
+echo '	index.html'  "\\">>$makefile
+echo '	overview.de.html'  "\\">>$makefile
+echo '	overview.html'  "\\">>$makefile
 echo '	create_makefile.sh' >>$makefile

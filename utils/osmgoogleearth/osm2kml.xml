@@ -59,7 +59,7 @@
 
         </folder>
 
-        <folder name="Roads">
+        <folder name="Railways">
             
             <rule e="segment|way" k="railway" v="rail">
                 <polyline name="Railways" class="railway-rail"/>
@@ -125,7 +125,7 @@
         <Style id="parking">
             <IconStyle id="iconstyle-parking">
                 <Icon>
-                    <href>icon-parking.png</href>
+                    <href>icons/icon-parking.png</href>
                 </Icon>
                 <scale>0.5</scale>
             </IconStyle>
@@ -134,7 +134,7 @@
         <Style id="shopping">
             <IconStyle id="iconstyle-shopping">
                 <Icon>
-                    <href>icon-shopping.png</href>
+                    <href>icons/icon-shopping.png</href>
                 </Icon>
                 <scale>0.5</scale>
             </IconStyle>
@@ -143,7 +143,7 @@
         <Style id="settlement">
             <IconStyle id="iconstyle-shopping">
                 <Icon>
-                    <href>icon-settlement.png</href>
+                    <href>icons/icon-settlement.png</href>
                 </Icon>
                 <scale>0.5</scale>
             </IconStyle>

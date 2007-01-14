@@ -1,7 +1,7 @@
 
 
-square.big__DATA = square.big//*.png
-square.big_dir = $(datadir)/square.big/
+square.big_DATA = square.big/*.png
+square.bigdir = $(datadir)/square.big
 
 square.big_sightseeing_DATA = square.big/sightseeing/*.png
 square.big_sightseeingdir = $(datadir)/square.big/sightseeing
@@ -151,8 +151,8 @@ square.big_transport_DATA = square.big/transport/*.png
 square.big_transportdir = $(datadir)/square.big/transport
 
 
-square.small__DATA = square.small//*.png
-square.small_dir = $(datadir)/square.small/
+square.small_DATA = square.small/*.png
+square.smalldir = $(datadir)/square.small
 
 square.small_sightseeing_DATA = square.small/sightseeing/*.png
 square.small_sightseeingdir = $(datadir)/square.small/sightseeing
@@ -227,8 +227,8 @@ square.small_transport_DATA = square.small/transport/*.png
 square.small_transportdir = $(datadir)/square.small/transport
 
 
-classic__DATA = classic//*.png
-classic_dir = $(datadir)/classic/
+classic_DATA = classic/*.png
+classicdir = $(datadir)/classic
 
 classic_sightseeing_DATA = classic/sightseeing/*.png
 classic_sightseeingdir = $(datadir)/classic/sightseeing
@@ -336,8 +336,8 @@ classic_transport_bridge_DATA = classic/transport/bridge/*.png
 classic_transport_bridgedir = $(datadir)/classic/transport/bridge
 
 
-nickw__DATA = nickw//*.png
-nickw_dir = $(datadir)/nickw/
+nickw_DATA = nickw/*.png
+nickwdir = $(datadir)/nickw
 
 
 

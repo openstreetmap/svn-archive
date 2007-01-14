@@ -58,6 +58,15 @@
             </rule>
 
         </folder>
+
+        <folder name="Roads">
+            
+            <rule e="segment|way" k="railway" v="rail">
+                <polyline name="Railways" class="railway-rail"/>
+            </rule>
+
+        </folder>
+
     </rule>
 
     <defs>
@@ -94,6 +103,12 @@
         <Style id="highway-cycleway">
             <LineStyle>
                 <color>9000ff00</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="railway-rail">
+            <LineStyle>
+                <color>00000000</color>
                 <width>2</width>
             </LineStyle>
         </Style>

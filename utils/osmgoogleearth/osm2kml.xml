@@ -59,6 +59,10 @@
 
         </folder>
 
+    </rule>
+
+    <rule e="segment|way" k="railway" v="*">
+
         <folder name="Railways">
             
             <rule e="segment|way" k="railway" v="rail">
@@ -108,7 +112,7 @@
         </Style>
         <Style id="railway-rail">
             <LineStyle>
-                <color>00000000</color>
+                <color>ff000000</color>
                 <width>2</width>
             </LineStyle>
         </Style>

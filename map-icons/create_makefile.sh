@@ -21,7 +21,7 @@ echo  >>$makefile
 echo  >>$makefile
 echo "EXTRA_DIST= \\" >>$makefile
 for theme in square.big square.small classic nickw ; do 
-    find $theme/ -type d | grep -v /.svn | while read dir; do
+    find $theme -type d | grep -v /.svn | while read dir; do
 	# if no files in dir
 	echo $dir/*.png | grep -q -e '\*' && continue
 

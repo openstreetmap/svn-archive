@@ -342,7 +342,7 @@ nickwdir = $(datadir)/nickw
 
 
 EXTRA_DIST= \
-	$(square.big__DATA) \
+	$(square.big_DATA) \
 	$(square.big_sightseeing_DATA) \
 	$(square.big_waypoint_DATA) \
 	$(square.big_accommodation_DATA) \
@@ -392,7 +392,7 @@ EXTRA_DIST= \
 	$(square.big_religion_DATA) \
 	$(square.big_religion_church_DATA) \
 	$(square.big_transport_DATA) \
-	$(square.small__DATA) \
+	$(square.small_DATA) \
 	$(square.small_sightseeing_DATA) \
 	$(square.small_waypoint_DATA) \
 	$(square.small_accommodation_DATA) \
@@ -417,7 +417,7 @@ EXTRA_DIST= \
 	$(square.small_people_developer_DATA) \
 	$(square.small_religion_DATA) \
 	$(square.small_transport_DATA) \
-	$(classic__DATA) \
+	$(classic_DATA) \
 	$(classic_sightseeing_DATA) \
 	$(classic_waypoint_DATA) \
 	$(classic_accommodation_DATA) \
@@ -453,5 +453,5 @@ EXTRA_DIST= \
 	$(classic_transport_DATA) \
 	$(classic_transport_ferry_DATA) \
 	$(classic_transport_bridge_DATA) \
-	$(nickw__DATA) \
+	$(nickw_DATA) \
 	create_makefile.sh

@@ -69,93 +69,94 @@ files.each_hash do |row|
   dbh = dao.get_connection #bit hacky, but we need a connection
 
   if File.file?( realfile ) && File.size( realfile ) > 0
-    file = File.new( realfile )
-    parser = REXML::Parsers::SAX2Parser.new( file )
-  
-    # got a file, we hope
 
-    $stderr << "Inserting #{name} for user #{user_id.to_s} from file #{filename} \n" if DEBUG
-  
-    trackseg = 0
-    
-    gpx_id = row['id'].to_i
+    begin
+      file = File.new( realfile )
+      parser = REXML::Parsers::SAX2Parser.new( file )
 
-    if gpx_id == 0
-      $stderr << "bad gpx number!\n"
-      exit
-    end
+      # got a file, we hope
 
-    $stderr << 'new gpx file id: ' + gpx_id.to_s + "\n" if DEBUG
+      $stderr << "Inserting #{name} for user #{user_id.to_s} from file #{filename} \n" if DEBUG
 
-    lat = -1
-    lon = -1
-    ele = -1
-    date = Time.now();
-    gotlatlon = false
-    gotele = false
-    gotdate = false
+      trackseg = 0
 
-    parser.listen( :start_element,  %w{ trkpt }) do |uri,localname,qname,attributes| 
-      lat = attributes['lat'].to_f
-      lon = attributes['lon'].to_f
-      gotlatlon = true
-      poss_points += 1
-    end
-  
-    parser.listen( :characters, %w{ ele } ) do |text|
-      ele = text
-      gotele = true
-    end
+      gpx_id = row['id'].to_i
 
-    parser.listen( :characters, %w{ time } ) do |text|
-      if text && text != ''
-        date = Time.parse(text)
-        gotdate = true
+      if gpx_id == 0
+        $stderr << "bad gpx number!\n"
+        exit
       end
-    end
 
-    parser.listen( :end_element, %w{ trkseg } ) do |uri, localname, qname|
-      trackseg += 1
-    end
-  
-    parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname|
-      if gotlatlon && gotdate
-        ele = '0' unless gotele
-        if lat < 90 && lat > -90 && lon > -180 && lon < 180
-          sql = "insert into gps_points (latitude, longitude, altitude, timestamp, user_id, trackid, gpx_id) values ((#{lat}*10000000), (#{lon}*10000000), #{ele}, '#{date.strftime('%Y-%m-%d %H:%M:%S')}', #{user_id}, #{trackseg}, #{gpx_id})"
-          points += 1
-          dbh.query(sql)
-        end
- 
-      end
+      $stderr << 'new gpx file id: ' + gpx_id.to_s + "\n" if DEBUG
+
+      lat = -1
+      lon = -1
+      ele = -1
+      date = Time.now();
       gotlatlon = false
       gotele = false
       gotdate = false
 
-      #puts lat.to_s + ' ' + lon.to_s + ' ' + ele.to_s + ' ' + date.to_s
-    end
+      parser.listen( :start_element,  %w{ trkpt }) do |uri,localname,qname,attributes| 
+        lat = attributes['lat'].to_f
+        lon = attributes['lon'].to_f
+        gotlatlon = true
+        poss_points += 1
+      end
 
-    error = false;
-    error_msg = ''
-    begin
+      parser.listen( :characters, %w{ ele } ) do |text|
+        ele = text
+        gotele = true
+      end
+
+      parser.listen( :characters, %w{ time } ) do |text|
+        if text && text != ''
+          date = Time.parse(text)
+          gotdate = true
+        end
+      end
+
+      parser.listen( :end_element, %w{ trkseg } ) do |uri, localname, qname|
+        trackseg += 1
+      end
+
+      parser.listen( :end_element, %w{ trkpt } ) do |uri,localname,qname|
+        if gotlatlon && gotdate
+          ele = '0' unless gotele
+          if lat < 90 && lat > -90 && lon > -180 && lon < 180
+            sql = "insert into gps_points (latitude, longitude, altitude, timestamp, user_id, trackid, gpx_id) values ((#{lat}*10000000), (#{lon}*10000000), #{ele}, '#{date.strftime('%Y-%m-%d %H:%M:%S')}', #{user_id}, #{trackseg}, #{gpx_id})"
+            points += 1
+            dbh.query(sql)
+          end
+
+        end
+        gotlatlon = false
+        gotele = false
+        gotdate = false
+
+        #puts lat.to_s + ' ' + lon.to_s + ' ' + ele.to_s + ' ' + date.to_s
+      end
+
+      error = false;
+      error_msg = ''
       parser.parse  
       dao.update_gpx_meta(gpx_id)
       dao.schedule_gpx_delete(gpx_id) if points == 0
     rescue Exception => e
       error = true
       error_msg = e.to_s
-   
+
     end
 
-  
+
     #get rid of the file so we don't insert it again
 
     #send them an email indicating success
-  error = error || points == 0
-  if email_address && email_address != ''
-    msgstr = ''
-    unless error
-      msgstr = <<END_OF_MESSAGE
+    error = error || points == 0
+    if email_address && email_address != ''
+      msgstr = ''
+      unless error
+        msgstr = <<END_OF_MESSAGE
 From: webmaster <webmaster@openstreetmap.org>
 To: #{email_address}
 Bcc: steve@fractalus.com
@@ -164,7 +165,7 @@ Subject: Your gpx file
 Hi,
 
 It looks like your gpx file, 
-  
+
   #{name},
 
 uploaded to OpenStreetMap's database ok with #{points} out of
@@ -179,10 +180,10 @@ Have fun
 
 
 END_OF_MESSAGE
-    
-    else
-      error = false
-      msgstr = <<END_OF_MESSAGE
+
+      else
+        error = false
+        msgstr = <<END_OF_MESSAGE
 From: webmaster <webmaster@openstreetmap.org>
 To: #{email_address}
 Bcc: steve@fractalus.com
@@ -208,31 +209,31 @@ Error message:
 END_OF_MESSAGE
 
 
-    end
-      unless DEBUG
-        Net::SMTP.start('127.0.0.1', 25) do |smtp|
-          smtp.send_message msgstr.untaint,
+      end
+    unless DEBUG
+      Net::SMTP.start('127.0.0.1', 25) do |smtp|
+        smtp.send_message msgstr.untaint,
                             'webmaster@openstreetmap.org'.untaint,
                             email_address.untaint
 
-        end
-      else
-        puts 'I would send this email:'
-        puts msgstr
       end
-       
-   end
+    else
+      puts 'I would send this email:'
+      puts msgstr
+    end
+
+    end
 
   else
     # nil file encountered
     errortext = ''
-      if name == ''
-        errortext = '(blank file name)'
-      else
-        errortext = name
-      end
-      
-      msgstr = <<END_OF_MESSAGE
+    if name == ''
+      errortext = '(blank file name)'
+    else
+      errortext = name
+    end
+
+    msgstr = <<END_OF_MESSAGE
 From: webmaster <webmaster@openstreetmap.org>
 To: #{email_address}
 Bcc: steve@fractalus.com
@@ -258,7 +259,7 @@ END_OF_MESSAGE
       Net::SMTP.start('127.0.0.1', 25) do |smtp|
         smtp.send_message msgstr.untaint,
                          'webmaster@openstreetmap.org'.untaint,
-                          email_address.untaint
+                         email_address.untaint
       end
     else
       puts 'I would send this email:'

@@ -200,6 +200,10 @@
                     <line class='bridge-casing-10' />
                     <line class='bridge-core-10' />
                 </rule>
+                <rule e="segment|way" k="railway" v="rail">
+                    <line class='bridge-casing-25' />
+                    <line class='bridge-core-25' />
+                </rule>
             </layer>
         </rule>
 

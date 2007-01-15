@@ -279,10 +279,10 @@ public class Adapter {
       // create a singular HttpClient object
       HttpClient client = new HttpClient();
 
-      // establish a connection within 5 seconds
-      client.getHttpConnectionManager().getParams().setConnectionTimeout(5 * 1000);
-      // wait up to 30 seconds for a response
-      client.getHttpConnectionManager().getParams().setSoTimeout(30 * 1000);
+      // establish a connection within 15 seconds
+      client.getHttpConnectionManager().getParams().setConnectionTimeout(15 * 1000);
+      // wait up to 600 seconds for a response
+      client.getHttpConnectionManager().getParams().setSoTimeout(600 * 1000);
       // use our credentials with the request
       client.getState().setCredentials(AuthScope.ANY, creds);
       return client;

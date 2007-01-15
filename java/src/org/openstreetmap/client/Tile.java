@@ -175,8 +175,8 @@ public class Tile extends Thread {
         y_y = lat_to_yahoo(lat(0));
         y_x = lon_to_yahoo(lon(0));
 
-        y_y_max = lat_to_yahoo(lat(500)) -1;
-        y_x_max = lon_to_yahoo(lon(700)) + 2;
+        y_y_max = lat_to_yahoo(lat(windowHeight)) -1;
+        y_x_max = lon_to_yahoo(lon(windowWidth)) + 2;
 
         System.out.println("OOOOOOOO=======>    " + y_x + "," + y_y);
 
@@ -261,8 +261,8 @@ public class Tile extends Thread {
     y_y = lat_to_yahoo(lat(0));
     y_x = lon_to_yahoo(lon(0));
 
-    y_y_max = lat_to_yahoo(lat(500)) -1;
-    y_x_max = lon_to_yahoo(lon(700)) + 2;
+    y_y_max = lat_to_yahoo(lat(windowHeight)) -1;
+    y_x_max = lon_to_yahoo(lon(windowWidth)) + 2;
 
     System.out.println("OOOOOOOO=======>    " + y_x + "," + y_y);
 

@@ -121,15 +121,6 @@ import processing.core.PImage;
 public class OsmApplet extends PApplet {
   private String copyright = "";
 
-	/**
-	 * Window standard width in pixel
-	 */
-	private static final int WINDOW_WIDTH = 700;
-	/**
-	 * Window standard height in pixel
-	 */
-	private static final int WINDOW_HEIGHT = 500;
-
 	public Tile tiles;
 
 	private JSObject js;
@@ -139,6 +130,9 @@ public class OsmApplet extends PApplet {
 	 */
 	private int zoom = 15;
 
+	private int windowHeight = 500;
+	private int windowWidth = 700;
+	
 	/**
 	 * Whether the left mouse button is pressed down.
 	 */
@@ -261,26 +255,6 @@ public class OsmApplet extends PApplet {
   
 	public void setup() {
 
-		size(WINDOW_WIDTH, WINDOW_HEIGHT);
-		smooth();
-
-		// this font should have all special characters - open
-		// to suggestions for changes though
-		font = loadFont("/data/LucidaSansUnicode-11.vlw");
-
-		// initialise node manager and add buttons in desired order
-		modeManager = new ModeManager(this);
-		modeManager.addMode(moveMode);
-		modeManager.addMode(nodeMode);
-		modeManager.addMode(lineMode);
-		modeManager.addMode(wayMode);
-		modeManager.addMode(nameMode);
-		modeManager.addMode(nodeMoveMode);
-		modeManager.addMode(deleteMode);
-		modeManager.addMode(zoominMode);
-		modeManager.addMode(zoomoutMode);
-
-		modeManager.draw(); // make modeManager set up things
 
 		// for centre lat/lon and scale (degrees per pixel)
 		float clat = 51.526447f, clon = -0.14746371f;
@@ -288,6 +262,10 @@ public class OsmApplet extends PApplet {
 		zoom = 15;
 
 		if (online) {
+			if (param_float_exists("windowHeight"))
+				windowHeight = parse_param_int("windowHeight");
+			if (param_float_exists("windowWidth"))
+				windowWidth = parse_param_int("windowWidth");
 			if (param_float_exists("clat"))
 				clat = parse_param_float("clat");
 			if (param_float_exists("clon"))
@@ -359,8 +337,35 @@ public class OsmApplet extends PApplet {
 		System.out.println("Got clon: " + clon);
 		System.out.println("Got clat: " + clat);
 		System.out.println("Got zoom: " + zoom);
+		System.out.println("Got windowHeight: " + windowHeight);
+		System.out.println("Got windowWidth: " + windowWidth);
+		System.out.println("--end params--");
 
-		tiles = new Tile(this, wmsURL, clat, clon, WINDOW_WIDTH, WINDOW_HEIGHT, zoom);
+
+
+		size(windowWidth, windowHeight);
+		smooth();
+
+		// this font should have all special characters - open
+		// to suggestions for changes though
+		font = loadFont("/data/LucidaSansUnicode-11.vlw");
+
+		// initialise node manager and add buttons in desired order
+		modeManager = new ModeManager(this);
+		modeManager.addMode(moveMode);
+		modeManager.addMode(nodeMode);
+		modeManager.addMode(lineMode);
+		modeManager.addMode(wayMode);
+		modeManager.addMode(nameMode);
+		modeManager.addMode(nodeMoveMode);
+		modeManager.addMode(deleteMode);
+		modeManager.addMode(zoominMode);
+		modeManager.addMode(zoomoutMode);
+
+		modeManager.draw(); // make modeManager set up things
+
+
+		tiles = new Tile(this, wmsURL, clat, clon, windowWidth, windowHeight, zoom);
 		tiles.start();
 
 		System.out.println(tiles);
@@ -629,9 +634,11 @@ public class OsmApplet extends PApplet {
 				} else if (node == tempLine.from || node == tempLine.to) {
 					fill(0xff000000);
 				} else if (node.lines.size() > 0) {
-					fill(0xffffffff);
+					fill(0xffaaaaaa);
+				} else if(node.id == 0) {
+					fill(0xbbccccff);
 				} else {
-					fill(0xff000000);
+					fill(0xff000080);
 				}
 				drawPoint(node.coor);
 			}
@@ -701,14 +708,14 @@ public class OsmApplet extends PApplet {
 			if(osm.commandManager.size() > 0) {
 				pushMatrix();
 				
-				textSize(15);
+				textSize(25);
 				String txt = "uploading...";
-				int xx = getWidth()-(int)textWidth(txt);
-				int yy = getHeight()-100;
+				int xx = windowWidth - (int)textWidth(txt);
+				int yy = windowHeight - 100;
 				
-				fill(0);
+				fill(0xff0000ff);
 				text(txt,xx,yy);
-				fill(255);
+				fill(0x80ffffff);
 				text(txt,xx+1,yy+1);
 				
 				popMatrix();
@@ -717,14 +724,14 @@ public class OsmApplet extends PApplet {
 			// If we're downloading data right now, display something
 			//  to alert the user to the fact
 			if(osm.getDownloadingOSMData()) {
-				textSize(15);
+				textSize(25);
 				String txt = "fetching OSM data..."; 
-				int xx = 75;
-				int yy = getHeight() - 50;
+				int xx = 150;
+				int yy = windowHeight - 50;
 				
-				fill(0);
+				fill(0xff0000ff);
 				text(txt,xx,yy);
-				fill(255);
+				fill(0x80ffffff);
 				text(txt,xx+1,yy+1);
 			}
 
@@ -732,11 +739,12 @@ public class OsmApplet extends PApplet {
 //			draw_scale_bar();
 
 
-      image(YahooLogo, WINDOW_WIDTH - 100, 460);
+      image(YahooLogo, windowWidth - 100, windowHeight - 40);
 
       int xx = 55;
-      int yy = 495;
+      int yy = windowHeight - 5;
       Character copyrightSymbol = new Character((char)169);
+      textSize(15);
       String txt = copyrightSymbol + " 2006 Yahoo! Inc";
       fill(255);
       text(txt, xx+1,yy+1);
@@ -745,8 +753,8 @@ public class OsmApplet extends PApplet {
 
       txt = "Imagery " + copyrightSymbol + " 2006" + copyright ;
 //      print(txt + "___________");
-      xx = WINDOW_WIDTH - (int)textWidth(txt) + 30;
-      yy = 495;
+      xx = windowWidth - (int)textWidth(txt) + 30;
+      yy = windowHeight - 5;
       fill(255);
       text(txt, xx +1, yy +1);
       fill(0);
@@ -887,7 +895,7 @@ public class OsmApplet extends PApplet {
   }
 
   public void updatelinks() {
-    js.eval("updatelinks(" + tiles.lon(WINDOW_WIDTH / 2) + "," + tiles.lat(WINDOW_HEIGHT / 2) + "," + tiles.getZoom() + ")");
+    js.eval("updatelinks(" + tiles.lon(windowWidth / 2) + "," + tiles.lat(windowHeight / 2) + "," + tiles.getZoom() + ")");
   }
 
 

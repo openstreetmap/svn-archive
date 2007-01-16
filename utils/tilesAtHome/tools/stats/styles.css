@@ -1,0 +1,16 @@
+body{
+  font-family:sans-serif;
+  background-color:lightgrey;
+  color:black;
+}
+h1{
+  background-color:darkgreen;
+  display:block;
+  color:white;
+  padding:1em;
+  margin:0px;
+}
+p{
+  font-size:120%;
+  margin-left:3em;
+}

@@ -25,9 +25,21 @@
         </folder>
       
         <folder name="Settlements">
-            <rule e="node" k="place" v="city|town|village">
-                <point class="settlement"/>
-            </rule>
+            <folder name="cities">
+                <rule e="node" k="place" v="city">
+                    <point class="settlement"/>
+                </rule>
+            </folder>
+            <folder name="towns">
+                <rule e="node" k="place" v="town">
+                    <point class="settlement"/>
+                </rule>
+            </folder>
+            <folder name="villages">
+                <rule e="node" k="place" v="village">
+                    <point class="settlement"/>
+                </rule>
+            </folder>
         </folder>
     </rule>
 

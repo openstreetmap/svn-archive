@@ -157,7 +157,7 @@
         </Style>
 
         <Style id="settlement">
-            <IconStyle id="iconstyle-shopping">
+            <IconStyle id="iconstyle-settlement">
                 <Icon>
                     <href>icons/icon-settlement.png</href>
                 </Icon>

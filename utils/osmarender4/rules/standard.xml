@@ -508,14 +508,20 @@
 
 
         <!-- Railway stations -->
-        <rule e="node" k="railway" v="station">
-            <layer name="Railway stations">
+        <layer name="Railway stations">
+            <rule e="node" k="railway" v="station">
                 <circle r="1.5" class="railway-station" />
                 <rule k="osmarender:renderName" v="~|yes">
                     <text k="name" class='railway-station-caption' dx='2.5px' dy='1.5px' />
                 </rule>
-            </layer>
-        </rule>
+            </rule>
+            <rule e="node" k="railway" v="halt">
+                <circle r="0.7" class="railway-halt" />
+                <rule k="osmarender:renderName" v="~|yes">
+                    <text k="name" class='railway-halt-caption' dx='2.5px' dy='1.5px' />
+                </rule>
+            </rule>
+        </layer>
 
 
         <layer name="Amenities and Leisure symbols">
@@ -1420,6 +1426,21 @@
 			  stroke-width: 0.2px;
 			  font-family: verdana;
 			  font-size: 4px;
+			  font-weight: bolder;
+			  }
+
+			.railway-halt {
+			  fill: black;
+			  stroke: black;
+			  stroke-width: 0.5px;
+			  }
+
+			.railway-halt-caption {
+			  fill: black;
+			  stroke: white;
+			  stroke-width: 0.1px;
+			  font-family: verdana;
+			  font-size: 2px;
 			  font-weight: bolder;
 			  }
 

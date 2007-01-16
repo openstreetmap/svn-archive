@@ -290,10 +290,15 @@ Matched by <xsl:value-of select='count($elements)'/> elements.
                         <xsl:text>3</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
-             </xsl:attribute>
-            <xsl:if test="$way/tag[(@k='name')and(@v!='')]">
-                <label><xsl:value-of select="$way/tag[@k='name']/@v"/></label>
-            </xsl:if>
+            </xsl:attribute>
+            <xsl:choose>
+                <xsl:when test="$way/tag[(@k='name')and(@v!='')]">
+                    <label><xsl:value-of select="$way/tag[@k='name']/@v"/></label>
+                </xsl:when>
+                <xsl:when test="$way/tag[(@k='ref')and(@v!='')]">
+                    <label><xsl:value-of select="$way/tag[@k='ref']/@v"/></label>
+                </xsl:when>
+            </xsl:choose>
             <data level="0">
                 <xsl:for-each select="$way/seg">
                     <xsl:variable name="segment" select='key("segmentById", @id)'/>

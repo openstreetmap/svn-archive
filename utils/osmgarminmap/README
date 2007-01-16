@@ -109,6 +109,12 @@ KNOWN ISSUES
   probably not fix this in OSMGarminMap, because it should be fixed in
   the database itself. That way the fix will help everybody, regardless
   in which way they are using the data.
+ 
+  If you have bad data, you can use the included fix.xsl style sheet
+  created by Ludwig Max Brinckmann to first fix your OSM data files. This
+  will find all non-contiguous ways and split them into one way per segment.
+  Use it like this:
+  xsltproc fix.xsl data.osm >data-with-fix.osm
 
 
 LICENSE

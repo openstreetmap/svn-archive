@@ -219,6 +219,14 @@ public class Adapter {
     public void createLine(Line line, String tempKey) {
       commandManager.add(new LineCreator(line, tempKey));
     }
+    
+    /**
+     * Queue the update of the line segment. Return immediately.
+     */
+    public void updateLine(Line line) {
+        // Cheat
+        updateProperty(line, line);
+    }
 
     /**
      * Queue the change of the line segments name. Return immediatly.

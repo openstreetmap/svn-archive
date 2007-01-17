@@ -5,6 +5,7 @@ package org.openstreetmap.processing;
 
 import java.util.Iterator;
 
+import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
 
 /**
@@ -32,6 +33,17 @@ public class NodeMode extends EditMode {
 			}
 		}
 		if (!overOne) {
+            // Are they actually over a segment?
+            // (If so, we'll insert the node into that)
+            Line lineInto = null;
+            for (Iterator it = applet.lines.values().iterator(); it.hasNext();) {
+                Line l = (Line)it.next();
+                if (l.id != 0 && l.mouseOver(applet.mouseX, applet.mouseY, applet.strokeWeight)) {
+                    lineInto = l;
+                }
+            }
+            
+            // Add the node
 			Node node = new Node(applet.mouseX, applet.mouseY, applet.tiles);
 			String tempKey = "temp_" + Math.random();
 			if (applet.osm != null) {
@@ -39,6 +51,21 @@ public class NodeMode extends EditMode {
 			}
 
 			OsmApplet.println(node);
+            
+            // If we're inserting into a segment, change
+            //  that segment to end of the new node, and 
+            //  add a new segment from that node to the end
+            OsmApplet.println("Line was " + lineInto);
+            Line newLine = new Line(lineInto.to, node);
+            tempKey = "temp_" + Math.random();
+            if (applet.osm != null) {
+                applet.osm.createLine(newLine, tempKey);
+            }
+            lineInto.to = node;
+            applet.osm.updateLine(lineInto);
+            OsmApplet.println("Line now " + lineInto + " and " + newLine);
+            
+            // If this was part of a way, update that too
 		}
 	}
 

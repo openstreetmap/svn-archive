@@ -81,5 +81,6 @@ Revision history:
                 Patch from Johann Gail to draw street names right side up included. Use osmarender:nameDirection=-1 to write in other direction than the automatically chosen one.
                 Bugfix: If a way path was turned around for the street name to show correctly the oneway direction was also changed.
                 This version needs some EXSLT extensions, this could break osmarender in some XSL transformators that don't support this. Tested with xsltproc, xmlstarlet and XALAN Java, the C version of XALAN does not work.
-                Added rendering for railway=halt
+    2007-01-16  Added rendering for railway=halt. (Joto)
+    2007-01-17  Fixed bug where text on segment wasn't rendered. (Joto)
 

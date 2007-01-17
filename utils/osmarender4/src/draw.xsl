@@ -202,7 +202,7 @@
 		<xsl:param name='pathId'/>
 		<text>
 			<xsl:apply-templates select='$instruction/@*' mode='renderTextPath-text'/>
-			<textPath xlink:href="#{$pathId}t">
+			<textPath xlink:href="#{$pathId}">
 				<xsl:apply-templates select='$instruction/@*' mode='renderTextPath-textPath'/>
 				<xsl:call-template name='getSvgAttributesFromOsmTags'/>
 				<xsl:value-of select='tag[@k=$instruction/@k]/@v'/>

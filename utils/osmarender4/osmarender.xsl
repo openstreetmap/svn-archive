@@ -414,7 +414,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		<xsl:param name="pathId"/>
 		<text>
 			<xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
-			<textPath xlink:href="#{$pathId}t">
+			<textPath xlink:href="#{$pathId}">
 				<xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
 				<xsl:call-template name="getSvgAttributesFromOsmTags"/>
 				<xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
@@ -575,7 +575,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 		<xsl:call-template name="renderTextPath">
 			<xsl:with-param name="instruction" select="$instruction"/>
-			<xsl:with-param name="pathId" select="concat(&quot;way_&quot;,@id)"/>
+			<xsl:with-param name="pathId" select="concat(&quot;way_&quot;,@id,&quot;t&quot;)"/>
 		</xsl:call-template>
 
 	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateSegmentPath">

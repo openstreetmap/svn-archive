@@ -201,7 +201,7 @@
 
 		<xsl:call-template name='renderTextPath'>
 			<xsl:with-param name='instruction' select='$instruction'/>
-			<xsl:with-param name='pathId' select='concat("way_",@id)'/>
+			<xsl:with-param name='pathId' select='concat("way_",@id,"t")'/>
 		</xsl:call-template>
 
 	</xsl:template>

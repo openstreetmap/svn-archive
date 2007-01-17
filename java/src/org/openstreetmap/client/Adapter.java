@@ -270,20 +270,36 @@ public class Adapter {
     private String putXMLtoURL(final String xml, final String url) throws IOException {
       System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
-      HttpClient client = getClient();
-
-      PutMethod put = new PutMethod(url);
-      put.setRequestEntity(new StringRequestEntity(xml, null, "UTF-8"));
-
-      client.executeMethod(put);
-
-      int rCode = put.getStatusCode();
-      System.out.println("Got response code " + rCode);
+      int retries = 0;
+      int maxRetries = 4;
       String body = null;
-      if (rCode == 200) {
-        body = put.getResponseBodyAsString();
+      PutMethod put = null;
+
+      // Retry loop
+      while((put == null) && (retries <= maxRetries)) {
+          try {
+              HttpClient client = getClient();
+        
+              put = new PutMethod(url);
+              put.setRequestEntity(new StringRequestEntity(xml, null, "UTF-8"));
+        
+              client.executeMethod(put);
+        
+              int rCode = put.getStatusCode();
+              System.out.println("Got response code " + rCode);
+              if (rCode == 200) {
+                body = put.getResponseBodyAsString();
+              }
+              put.releaseConnection();
+          } catch(IOException e) {
+              // Hit an error - report, close, and retry
+              System.err.println("Error uploading - " + e);
+              retries++;
+              if(put != null) {
+                  put.releaseConnection();
+              }
+          }
       }
-      put.releaseConnection();
       return body;
     }
 
@@ -297,7 +313,7 @@ public class Adapter {
 
       // establish a connection within 15 seconds
       client.getHttpConnectionManager().getParams().setConnectionTimeout(15 * 1000);
-      // wait up to 600 seconds for a response
+      // wait up to 120 seconds for a response
       client.getHttpConnectionManager().getParams().setSoTimeout(600 * 1000);
       // use our credentials with the request
       client.getState().setCredentials(AuthScope.ANY, creds);

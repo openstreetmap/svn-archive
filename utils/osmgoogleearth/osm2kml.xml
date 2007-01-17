@@ -15,13 +15,34 @@
 
     <rule e="node" k="*" v="*">
         <folder name="Points of Interest">
-            <rule e="node" k="amenity" v="parking">
-                <point class="parking"/>
-            </rule>
 
-            <rule e="node" k="amenity" v="supermarket">
-                <point class="shopping"/>
-            </rule>
+            <folder name="Parking">
+                <rule e="node" k="amenity" v="parking">
+                    <point class="parking"/>
+                </rule>
+            </folder>
+
+            <folder name="Shopping">
+                <rule e="node" k="amenity" v="supermarket">
+                    <point class="shopping"/>
+                </rule>
+            </folder>
+
+            <folder name="Places of Worship">
+
+                <rule e="node" k="amenity" v="place_of_worship">
+
+                   <rule e="node" k="religion" v="christian">
+                      <point class="christian_church"/>
+                   </rule>
+
+                   <rule e="node" k="religion" v="jewish">
+                      <point class="jewish_synagogue"/>
+                   </rule>
+
+                </rule>
+
+            </folder>
         </folder>
       
         <folder name="Settlements">
@@ -160,6 +181,24 @@
             <IconStyle id="iconstyle-settlement">
                 <Icon>
                     <href>icons/icon-settlement.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="christian_church">
+            <IconStyle id="iconstyle-church">
+                <Icon>
+                    <href>icons/icon-church.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="jewish_synagogue">
+            <IconStyle id="iconstyle-synagogue">
+                <Icon>
+                    <href>icons/icon-synagogue.png</href>
                 </Icon>
                 <scale>0.5</scale>
             </IconStyle>

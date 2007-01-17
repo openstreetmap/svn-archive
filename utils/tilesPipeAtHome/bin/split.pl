@@ -109,8 +109,8 @@ sub WriteImage(){
   my $png_data = $Image->png;
   
   # Store it
-  open (OUT, ">$Filename") || die;
-  binmode OUT;
-  print OUT $png_data;
-  close OUT;
+  open (my $fp, ">$Filename") || die;
+  binmode $fp;
+  print $fp $png_data;
+  close $fp;
 }

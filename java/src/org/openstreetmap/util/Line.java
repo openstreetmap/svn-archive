@@ -98,6 +98,8 @@ public class Line extends OsmPrimitive {
 	public float distance(float x, float y) {
 		// project x/y onto line a->b
 		// first find parameter (how far along a->b are we?
+        System.err.println("from is " + from);
+        System.err.println("to is " + to);
 		float u = (((x - from.coor.x) * (to.coor.x - from.coor.x)) + ((y - from.coor.y) * (to.coor.y - from.coor.y)))
 				/ ((to.coor.y - from.coor.y) * (to.coor.y - from.coor.y) + (to.coor.x - from.coor.x) * (to.coor.x - from.coor.x));
 		float d = 0.0f;
@@ -118,6 +120,9 @@ public class Line extends OsmPrimitive {
 	 * @return Whether the given coordinates is "over" this line segment. 
 	 */
 	public boolean mouseOver(float mouseX, float mouseY, float strokeWeight) {
+        // If we don't know where we are, they can't be over us
+        if(from == null || to == null) { return false; }
+        // Figure out their distance, and if that's within the range
 		return distance(mouseX, mouseY) < strokeWeight / 2.0;
 	}
 

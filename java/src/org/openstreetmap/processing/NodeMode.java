@@ -3,10 +3,12 @@
  */
 package org.openstreetmap.processing;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.Way;
 
 /**
  * The edit mode to add a new node within the applet.
@@ -66,6 +68,38 @@ public class NodeMode extends EditMode {
             OsmApplet.println("Line now " + lineInto + " and " + newLine);
             
             // If this was part of a way, update that too
+            if(lineInto.ways != null) {
+                for(Iterator it = lineInto.ways.iterator(); it.hasNext(); ) {
+                    Way way = (Way)it.next();
+                    
+                    // Check that the way doesn't already have the
+                    // new segment. (This method is sometimes
+                    // called twice, FNAR)
+                    boolean addSegment = true;
+                    for(Iterator lit = way.lines.iterator(); lit.hasNext(); ) {
+                        Line thisLine = (Line)lit.next();
+                        if(thisLine.key() == newLine.key()) {
+                            addSegment = false;
+                        }
+                    }
+                    
+                    // Add the new segment after the current one
+                    // TODO: Add either before or after based on direction
+                    if(addSegment) {   
+                        ArrayList newLines = new ArrayList();
+                        for(Iterator lit = way.lines.iterator(); lit.hasNext(); ) {
+                            Line thisLine = (Line)lit.next();
+                            newLines.add(thisLine);
+                            if(thisLine.id == lineInto.id) {
+                                newLines.add(newLine);
+                            }
+                        }
+                        way.lines = newLines;
+                        applet.osm.updateWay(way);
+                        OsmApplet.println("Way now " + way);
+                    }
+                }
+            }
 		}
 	}
 

@@ -229,7 +229,15 @@ public class Adapter {
     }
 
     /**
-     * Queue the change of the line segments name. Return immediatly.
+     * Queue the update of the line segment. Return immediately.
+     */
+    public void updateWay(Way way) {
+        // Cheat
+        updateProperty(way, way);
+    }
+
+    /**
+     * Queue the change of the node, segment or ways name. Return immediatly.
      */
     public void updateProperty(OsmPrimitive oldPrimitive, OsmPrimitive newPrimitive) {
       commandManager.add(new PropertyUpdater(oldPrimitive, newPrimitive));

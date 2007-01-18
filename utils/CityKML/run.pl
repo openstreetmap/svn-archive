@@ -20,7 +20,7 @@ for($i = 1; 1; $i++){
   exit if(!-f $GZip);
   
   # If input file exists, but output doesn't
-  if(-f $GZip && ! -f $Output){
+  if((-f $GZip && ! -f $Output) || (-s $Output == 0)){
   
     # Transform OSM to KML
     copy($GZip, $DataG);

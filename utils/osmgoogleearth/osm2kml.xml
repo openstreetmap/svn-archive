@@ -106,6 +106,22 @@
 
     </rule>
 
+    <rule e="segment|way" k="natural" v="*">
+
+        <folder name="Natural">
+
+            <rule e="segment|way" k="natural" v="coastline">
+                <polyline name="Coastline" class="natural-coastline"/>
+            </rule>
+
+            <rule e="segment|way" k="natural" v="water">
+                <polygon name="Water" class="natural-water"/>
+            </rule>
+
+        </folder>
+     
+    </rule>
+
     <defs>
         <Style id="highway-motorway">
             <LineStyle>
@@ -203,6 +219,24 @@
                 <scale>0.5</scale>
             </IconStyle>
         </Style>
+
+        <Style id="natural-coastline">
+            <LineStyle> 
+                <color>7fffff80</color>
+                <width>1</width>
+            </LineStyle> 
+        </Style>
+
+        <Style id="natural-water">
+            <PolyStyle>
+                <color>7fff0000</color>
+            </PolyStyle> 
+            <LineStyle> 
+                <color>ffff0000</color>
+                <width>1</width>
+            </LineStyle> 
+        </Style>
+
 
     </defs>
 

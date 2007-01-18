@@ -29,14 +29,18 @@ while($File = readdir(DIR)){
     mkdir $TempDir;
     copy($KML, "$TempDir/doc.kml");
     
-    if(0){ # Sorry, zip is too crap...
+    if(1){ # Sorry, zip is too crap...
       mkdir "$TempDir/icons";
       `cp $FilesDir/icons/*.png $TempDir/icons`;
     }
     
     `cp $FilesDir/*.png $TempDir/`;
     
-    `zip -r -j $Output $TempDir/*`;
+    chdir $TempDir;
+
+    `zip -r ../$Output *`;
+
+    chdir ".." ;
     
     print "Done $Output\n";
     

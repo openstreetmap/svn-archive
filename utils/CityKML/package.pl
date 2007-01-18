@@ -31,7 +31,7 @@ for($i = 1; 1; $i++){
   mkdir "$TempDir/icons";
   `cp $FilesDir/icons/*.png $TempDir/icons`;
   `cp $FilesDir/*.png $TempDir/`;
-  `zip -r -j $Output $TempDir/*`;
+  `zip -R $Output $TempDir/*`;
   
   print "Done $Output\n";
   

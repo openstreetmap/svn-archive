@@ -8,25 +8,28 @@ use File::Copy;
 # Oliver White, 2007, GNU GPL v2 or later
 #----------------------------------------------------------------
 
-# Search for a file to convert
-for($i = 1; 1; $i++){
-  $GZip = "data/data_$i.osm.gz";
-  $TempDir = "osmgoogleearth";
-  $Data = "$TempDir/data.osm";
-  $DataG = "$Data.gz";
-  $Output = "output/$i.kml";
+# Search for files to convert
+$DataDir = "data";
+opendir(DIR, $DataDir) || die("Can't read data directory ($!) - has any data been downloaded?");
 
-  # If reached end of input files, exit
-  exit if(!-f $GZip);
+while($File = readdir(DIR)){
   
-  # If input file exists, but output doesn't
-  if((-f $GZip && ! -f $Output) || (-s $Output == 0)){
-  
-    # Transform OSM to KML
-    copy($GZip, $DataG);
-    `gunzip $DataG`;
-    `xmlstarlet tr $TempDir/osm2kml.xsl $TempDir/osm2kml.xml > $Output`;
-    unlink($Data);
+  $GZip = "$DataDir/$File";
+  if($File =~ /data_(\d+)\.osm\.gz/){
+    $i = $1;
+    $TempDir = "osmgoogleearth";
+    $Data = "$TempDir/data.osm";
+    $DataG = "$Data.gz";
+    $Output = "output/$i.kml";
+    
+    # If input file exists, but output doesn't
+    if((-f $GZip && ! -f $Output) || (-s $Output == 0)){
+      # Transform OSM to KML
+      copy($GZip, $DataG);
+      `gunzip $DataG`;
+      `xmlstarlet tr $TempDir/osm2kml.xsl $TempDir/osm2kml.xml > $Output`;
+      unlink($Data);
+    }
   }
 }
 

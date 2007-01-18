@@ -16,5 +16,5 @@ for($i = 0; 1; $i++){
   }
   
   # Stop if 20 consecutive numbered items don't exist
-  exit if($numfail++ >20);
+  die("Finished\n") if($numfail++ >20);
 }

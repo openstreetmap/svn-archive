@@ -4727,4 +4727,28 @@
       <restricted>brand</restricted>
     </geoinfo>
   </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.kaufhof"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>401</poi_type_id>
+      <name>shopping.kaufhof</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="shopping.supermarket.real"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>402</poi_type_id>
+      <name>shopping.supermarket.real</name>
+    </geoinfo>
+  </rule>
 </rules>

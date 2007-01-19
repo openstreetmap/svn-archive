@@ -27,10 +27,10 @@ use Utils::Debug;
 use Utils::File;
 use Utils::LWP::Utils;
 use Utils::Math;
+use File::Slurp;
 
 sub combine_way_into_segments($); # {}
 sub output_osm($); # {}
-sub output_named_points($); # {}
 sub output_statistic($); # {}
 sub parse_planet($$); # {}
 
@@ -39,6 +39,7 @@ our $help=0;
 my $areas_todo;
 my $do_list_areas=0;
 my $do_update_only=0;
+my $Filename;
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -51,7 +52,7 @@ GetOptions (
 
 	     'no-mirror'           => \$Utils::LWP::Utils::NO_MIRROR,
 	     'proxy=s'             => \$Utils::LWP::Utils::PROXY,
-
+	     'osm=s'               => \$Filename,
 	     'area=s'              => \$areas_todo,
 	     'list-areas'          => \$do_list_areas,
 	     'update-only'         => \$do_update_only,
@@ -64,7 +65,7 @@ pod2usage(-verbose=>2) if $man;
 
 # TODO:
 # if the input filename is not planet*osm* we have to change the output filename too.
-my $Filename = shift();
+$Filename ||= shift();
 unless ( $Filename && -s $Filename ) {
     $Filename = mirror_planet();
 };
@@ -75,9 +76,10 @@ if ( ! -s $Filename ) {
 pod2usage(1) unless $Filename;
 
 our $READ_FH=undef;
+our $OK_POS=0;
 
-
-$areas_todo ||= 'germany';
+#$areas_todo ||= 'germany';
+$areas_todo ||= 'world';
 $areas_todo=lc($areas_todo);
 if ( $do_list_areas ) {
     print Geo::Filter::Area->list_areas()."\n";
@@ -92,6 +94,9 @@ our (%Nodes, %Segments, %Ways, %Stats);
 our $AREA_FILTER;
 our $PARSING_START_TIME=0;
 our $PARSING_DISPLAY_TIME=0;
+
+my $fn_named_points;
+my $fh_named_points;
 
 
 my $data_dir=planet_dir()."/csv";
@@ -109,6 +114,10 @@ for my $area_name ( split(",",$areas_todo) ) {
     }
     # -----------------------------------------------------------------------------
     # Temporary data
+    $fn_named_points="$data_dir/points-$area_name.csv";
+    #unlink $fn_named_points if -s  $fn_named_points;
+    $fh_named_points = IO::File->new(">$fn_named_points");
+    $fh_named_points->binmode(':utf8');
 
     (%MainAttr,%Tags)=((),());
     $Type='';
@@ -123,6 +132,9 @@ for my $area_name ( split(",",$areas_todo) ) {
     $Stats{"segments estim"} = 10697464;
     $Stats{"ways estim"}     = 2758781;
     $Stats{"tags estim"}     = 53518120;
+    $Stats{"nodes"}     = 0;
+    $Stats{"segments"}     = 0;
+    $Stats{"ways"}     = 0;
 
 
     #----------------------------------------------
@@ -138,7 +150,6 @@ for my $area_name ( split(",",$areas_todo) ) {
 	unless $area_name;
     combine_way_into_segments("$data_dir/ways-$area_name.csv");
     output_osm("$data_dir/osm-$area_name.csv");
-    output_named_points("$data_dir/points-$area_name.csv");
     output_statistic("$data_dir/stats-$area_name.txt");
     printf STDERR "$area_name Done\n";
 }
@@ -171,6 +182,13 @@ sub parse_planet($$){
     };
     if ( $VERBOSE || $DEBUG )  {
 	print STDERR "\n";
+    }
+
+    # Print out not parsed lines
+    my $count=20;
+    $READ_FH->setpos($OK_POS);
+    while ( ($count--) && (my $line = $READ_FH->getline() )) {
+	print "REST: $line";
     }
 
     if ($@) {
@@ -295,46 +313,34 @@ sub output_osm($){
 }
 
 #----------------------------------------------
-# Secondary output (named points)
+# output (named point)
 #----------------------------------------------
-sub output_named_points($){
-    my $filename = shift;
-    print STDERR "Writing Points to $filename\n" if $DEBUG ||$VERBOSE;
-    if(! open(POINTS,">$filename")) {
-	warn "output_osm: Cannot write to $filename\n";
-	return;
-    }
-    my $count=0;
-    foreach my $id ( keys %Nodes ){
-	my $Node = $Nodes{$id};
-	next unless defined $Node;
-	$Stats{"Nodes with zero lat/long"}++ 
-	    if($Node->{"lat"} == 0 and $Node->{"lon"} == 0);
-	
-	if($Node->{"name"} || 
-	   $Node->{"amenity"} || 
-	   $Node->{"class"} || 
-	   $Node->{"abutters"}){
-	    printf POINTS "%f,%f,%s,%s,%s",
-	    $Node->{"lat"},
-	    $Node->{"lon"},
-	    ($Node->{"name"}||''),
-	    ($Node->{"amenity"}||''),
-	    ($Node->{"class"}||'');
-	    foreach my $k ( keys %{$Node} ) {
-		#next if $k =~ m/^(class|name|highway)$/;
-		next if $k =~ m/^(lat|lon)$/;
-		my $v = $Node->{$k};
-		printf POINTS ",%s=%s",$k,$v;
-	    }
-	    printf POINTS "\n";
-	    
-	    $count++;
-	}
-    }
-    close POINTS;
-    print STDERR "Writen $count Points to $filename\n" if $DEBUG ||$VERBOSE;
+sub write_named_point($$){
+    my $fh_named_points = shift;
+    my $Node = shift;
+    return unless defined $Node;
+    $Stats{"Nodes with zero lat/long"}++ 
+	if($Node->{"lat"} == 0 and $Node->{"lon"} == 0);
     
+    my $result = '';
+    if($Node->{"name"} || 
+       $Node->{"amenity"} || 
+       $Node->{"class"} || 
+       $Node->{"abutters"}){
+	$result = sprintf "%f,%f,%s,%s,%s",
+	$Node->{"lat"},
+	$Node->{"lon"},
+	($Node->{"name"}||''),
+	($Node->{"amenity"}||''),
+	($Node->{"class"}||'');
+	foreach my $k ( keys %{$Node} ) {
+	    #next if $k =~ m/^(class|name|highway)$/;
+	    next if $k =~ m/^(lat|lon)$/;
+	    my $v = $Node->{$k};
+	    $result .= sprintf ",%s=%s",$k,$v;
+	}	    
+	print $fh_named_points "$result\n";
+    }
 }
 
 #----------------------------------------------
@@ -396,31 +402,29 @@ sub DoStart()
 #----------------------------------------------
 sub DoEnd(){
     my ($Expat, $Element) = @_;
+    my $ID = $MainAttr{"id"};
     if($Element eq "node"){
-	my $ID = $MainAttr{"id"};
-	my $osm_obj={};
-	$osm_obj->{"lat"} = $MainAttr{"lat"};
-	$osm_obj->{"lon"} = $MainAttr{"lon"};
+	my $node={};
+	$node->{"lat"} = $MainAttr{"lat"};
+	$node->{"lon"} = $MainAttr{"lon"};
 	
-	if ( $AREA_FILTER->inside($osm_obj) ) {
+	if ( $AREA_FILTER->inside($node) ) {
 	    $Nodes{$ID}{"lat"} = $MainAttr{"lat"};
 	    $Nodes{$ID}{"lon"} = $MainAttr{"lon"};
 	    foreach(keys(%Tags)){
 		next if /created_by/;
 		next if /time/;
-		$Nodes{$ID}{$_} = $Tags{$_};
+		$node->{$_} = $Tags{$_};
 	    }
-	    $Stats{"nodes named"}++ if($Nodes{$ID}{"name"});
+	    write_named_point($fh_named_points,$node);
+	    $Stats{"nodes named"}++ if($node->{"name"});
 	    $Stats{"nodes tagged "}++ if($MainAttr{"tags"});
 	    $Stats{"nodes"}++;
 	}
 	$Stats{"nodes read"}++;
-	#print "Node:".join(",",keys(%Tags))."\n" if(scalar(keys(%Tags))>0);
     }
 
     if($Element eq "segment"){
-	my $ID = $MainAttr{"id"};
-
 	my $from = $MainAttr{"from"};
 	my $to   = $MainAttr{"to"};
 	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
@@ -438,7 +442,6 @@ sub DoEnd(){
     }
 
     if($Element eq "way"){
-	my $ID = $MainAttr{"id"};
 	if ( @WaySegments ) {
 	    $Ways{$ID}{"segments"} = join(",",@WaySegments);
 	    foreach(keys(%Tags)){
@@ -452,6 +455,7 @@ sub DoEnd(){
     }
 
     $Stats{"tags read"}++;
+#    $OK_POS=$READ_FH->getpos();
     if ( ( $VERBOSE || $DEBUG ) &&
 #	 ! ( $Stats{"tags read"} % 10000 ) &&
 	 ( time()-$PARSING_DISPLAY_TIME >0.9)
@@ -460,7 +464,9 @@ sub DoEnd(){
 	$PARSING_DISPLAY_TIME= time();
 	print STDERR "\r";
 	print STDERR "Read(".$AREA_FILTER->name()."): ";
-	for my $k ( sort keys %Stats ) {
+	my $last_k='';
+	for my $k ( sort ( qw(tags nodes segments ways ) ,keys %Stats )) {
+	    next if $last_k eq $k; $last_k=$k;
 	    next if $k =~ m/( estim| read)$/;
 	    next if $k =~ m/named/ && $VERBOSE <=1;
 	    next if $k !~ m/tags/ && $VERBOSE <=2;
@@ -473,9 +479,9 @@ sub DoEnd(){
 	    print STDERR " ";
 	}
 
-	my $rss = mem_usage('rss');
+	my $rss = sprintf("%.0f",mem_usage('rss'));
 	$Stats{"max rss"} = max($Stats{"max rss"},$rss) if $rss;
-	my $vsz = mem_usage('vsz');
+	my $vsz = sprintf("%.0f",mem_usage('vsz'));
 	$Stats{"max vsz"} = max($Stats{"max vsz"},$vsz) if $vsz;
 
 	print STDERR mem_usage();
@@ -526,6 +532,10 @@ Use proxy Server to get the newest planet.osm File
 =item B<--no-mirror>
 
 do not try to get the newest planet.osm first
+
+=item B<--osm=filename>
+
+Source File in OSM Format
 
 =item B<--area=germany> Area Filter
 

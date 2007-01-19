@@ -3,7 +3,6 @@
 #include "Components.h"
 #include "Parser.h"
 #include "Way.h"
-#include "osmshp.h"
 #include <vector>
 #include <fstream>
 #include <iostream>
@@ -28,7 +27,7 @@ int main (int argc, char* argv[])
 		in.close();
 		if(comp)
 		{
-			OSM::makeShp(comp,argv[2],argv[3]);
+			comp->makeShp(argv[2],argv[3]);
 			delete comp;
 		}
 		else

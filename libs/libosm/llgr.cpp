@@ -1,38 +1,225 @@
-
-// NOTICE OF AUTHORSHIP: These functions are taken from the LGPL JEEPS library,
-// author and licence info follows....
-
-/********************************************************************
-** @source JEEPS arithmetic/conversion functions
-**
-** @author Copyright (C) 1999 Alan Bleasby
-** @version 1.0 
-** @modified Dec 28 1999 Alan Bleasby. First version
-** @@
-** 
-** This library is free software; you can redistribute it and/or
-** modify it under the terms of the GNU Library General Public
-** License as published by the Free Software Foundation; either
-** version 2 of the License, or (at your option) any later version.
-** 
-** This library is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-** Library General Public License for more details.
-** 
-** You should have received a copy of the GNU Library General Public
-** License along with this library; if not, write to the
-** Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-** Boston, MA  02111-1307, USA.
-********************************************************************/
-
 #include "llgr.h"
 #include <cmath>
-#include <sstream>
-#include <cctype>
 
 namespace OSM
 {
+
+/* @func GPS_Math_UKOSMap_To_WGS84_M ***********************************
+**
+** Transform UK Ordnance survey map position to WGS84 lat/lon
+** Uses Molodensky transformation
+**
+** @param [r] map  [char *] map two letter code
+** @param [r] mE   [double] map easting (metres)
+** @param [r] mN   [double] map northing (metres)
+** @param [w] lat  [double *] WGS84 latitude (deg)
+** @param [w] lon  [double *] WGS84 longitude (deg)
+**
+** @return [int] success
+************************************************************************/
+EarthPoint gr_to_wgs84_ll(EarthPoint& gr)
+{
+	EarthPoint ll(0,0);
+
+    double ht;
+   
+    EarthPoint ll2 = gr_to_ll(gr);
+    GPS_Math_Known_Datum_To_WGS84_M(ll2.y,ll2.x,0,&(ll.y),&(ll.x),&ht);
+
+    return ll;
+}
+
+/* @func GPS_Math_WGS84_To_UKOSMap_M ***********************************
+**
+** Convert WGS84 lat/lon to Ordnance survey map code and easting and
+** northing. Uses Molodensky
+**
+** @param [r] lat  [double] WGS84 latitude (deg)
+** @param [r] lon  [double] WGS84 longitude (deg)
+** @param [w] mE   [double *] map easting (metres)
+** @param [w] mN   [double *] map northing (metres)
+** @param [w] map  [char *] map two letter code
+**
+** @return [int] success
+************************************************************************/
+EarthPoint wgs84_ll_to_gr(EarthPoint& ll)
+{
+	EarthPoint gr(0,0);
+
+	EarthPoint ll2(0,0);
+    double aht;
+
+
+    GPS_Math_WGS84_To_Known_Datum_M(ll.y,ll.x,30,&(ll2.y),&(ll2.x),&aht);
+	gr = ll_to_gr(ll2);
+    return gr;
+}
+
+/* @func GPS_Math_Known_Datum_To_WGS84_M **********************************
+**
+** Transform datum to WGS84 using Molodensky
+**
+** @param [r] Sphi [double] source latitude (deg)
+** @param [r] Slam [double] source longitude (deg)
+** @param [r] SH   [double] source height  (metres)
+** @param [w] Dphi [double *] dest latitude (deg)
+** @param [w] Dlam [double *] dest longitude (deg)
+** @param [w] DH   [double *] dest height  (metres)
+** @param [r] n    [int] datum number from GPS_Datum structure
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Known_Datum_To_WGS84_M(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH)
+{
+    double Sa;
+    double Sif;
+    double Da;
+    double Dif;
+    double x;
+    double y;
+    double z;
+    int    idx;
+    
+    Da  = (double) 6378137.0;
+    Dif = (double) 298.257223563;
+    
+    Sa   = 6378206.400; 
+    Sif  = 294.9786982; 
+    x    = -8; 
+    y    = 160; 
+    z    = 176; 
+
+    GPS_Math_Molodensky(Sphi,Slam,SH,Sa,Sif,Dphi,Dlam,DH,Da,Dif,x,y,z);
+
+    return;
+}
+
+
+
+/* @func GPS_Math_WGS84_To_Known_Datum_M ********************************
+**
+** Transform WGS84 to other datum using Molodensky
+**
+** @param [r] Sphi [double] source latitude (deg)
+** @param [r] Slam [double] source longitude (deg)
+** @param [r] SH   [double] source height  (metres)
+** @param [w] Dphi [double *] dest latitude (deg)
+** @param [w] Dlam [double *] dest longitude (deg)
+** @param [w] DH   [double *] dest height  (metres)
+** @param [r] n    [int] datum number from GPS_Datum structure
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_WGS84_To_Known_Datum_M(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH)
+{
+    double Sa;
+    double Sif;
+    double Da;
+    double Dif;
+    double x;
+    double y;
+    double z;
+    int    idx;
+    
+    Sa  = (double) 6378137.0;
+    Sif = (double) 298.257223563;
+    
+    Da   = 6377563.396; 
+    Dif  = 299.3249646; 
+    x    = -375;
+    y    = 111;
+    z    = -431;
+
+    GPS_Math_Molodensky(Sphi,Slam,SH,Sa,Sif,Dphi,Dlam,DH,Da,Dif,x,y,z);
+
+    return;
+}
+
+/* @func GPS_Math_Molodensky *******************************************
+**
+** Transform one datum to another
+**
+** @param [r] Sphi [double] source latitude (deg)
+** @param [r] Slam [double] source longitude (deg)
+** @param [r] SH   [double] source height  (metres)
+** @param [r] Sa   [double] source semi-major axis (metres)
+** @param [r] Sif  [double] source inverse flattening
+** @param [w] Dphi [double *] dest latitude (deg)
+** @param [w] Dlam [double *] dest longitude (deg)
+** @param [w] DH   [double *] dest height  (metres)
+** @param [r] Da   [double]   dest semi-major axis (metres)
+** @param [r] Dif  [double]   dest inverse flattening
+** @param [r] dx  [double]   dx
+** @param [r] dy  [double]   dy
+** @param [r] dz  [double]   dz
+**
+** @return [void]
+************************************************************************/
+void GPS_Math_Molodensky(double Sphi, double Slam, double SH, double Sa,
+			 double Sif, double *Dphi, double *Dlam,
+			 double *DH, double Da, double Dif, double dx,
+			 double dy, double dz)
+{
+    double Sf;
+    double Df;
+    double esq;
+    double bda;
+    double da;
+    double df;
+    double N;
+    double M;
+    double tmp;
+    double tmp2;
+    double dphi;
+    double dlambda;
+    double dheight;
+    double phis;
+    double phic;
+    double lams;
+    double lamc;
+    
+    Sf = (double)1.0 / Sif;
+    Df = (double)1.0 / Dif;
+    
+    esq = (double)2.0*Sf - pow(Sf,(double)2.0);
+    bda = (double)1.0 - Sf;
+    Sphi = (M_PI/180.0)*(Sphi);
+    Slam = (M_PI/180.0)*(Slam); 
+    
+    da = Da - Sa;
+    df = Df - Sf;
+
+    phis = sin(Sphi);
+    phic = cos(Sphi);
+    lams = sin(Slam);
+    lamc = cos(Slam);
+    
+    N = Sa /  sqrt((double)1.0 - esq*pow(phis,(double)2.0));
+    
+    tmp = ((double)1.0-esq) /pow(((double)1.0-esq*pow(phis,(double)2.0)),1.5);
+    M   = Sa * tmp;
+
+    tmp  = df * ((M/bda)+N*bda) * phis * phic;
+    tmp2 = da * N * esq * phis * phic / Sa;
+    tmp2 += ((-dx*phis*lamc-dy*phis*lams) + dz*phic);
+    dphi = (tmp2 + tmp) / (M + SH);
+    
+    dlambda = (-dx*lams+dy*lamc) / ((N+SH)*phic);
+
+    dheight = dx*phic*lamc + dy*phic*lams + dz*phis - da*(Sa/N) +
+	df*bda*N*phis*phis;
+    
+    *Dphi = Sphi + dphi;
+    *Dlam = Slam + dlambda;
+    *DH   = SH   + dheight;
+    
+    *Dphi = (*Dphi) * (180.0/M_PI);
+    *Dlam = (*Dlam) * (180.0/M_PI);
+
+    return;
+}
 
 // ll_to_gr()
 // Slightly modified version of:

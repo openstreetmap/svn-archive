@@ -31,6 +31,18 @@ public:
 	EarthPoint(double x, double y) { this->x=x; this->y=y; }
 };
 
+EarthPoint gr_to_wgs84_ll(EarthPoint& gr);
+EarthPoint wgs84_ll_to_gr(EarthPoint& ll);
+
+void GPS_Math_Known_Datum_To_WGS84_M(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH);
+void GPS_Math_WGS84_To_Known_Datum_M(double Sphi, double Slam, double SH,
+				     double *Dphi, double *Dlam, double *DH);
+void GPS_Math_Molodensky(double Sphi, double Slam, double SH, double Sa,
+			 double Sif, double *Dphi, double *Dlam,
+			 double *DH, double Da, double Dif, double dx,
+			 double dy, double dz);
+
 EarthPoint ll_to_gr ( const EarthPoint& ll );
 EarthPoint ll_to_gr ( double lat, double lon );
 
@@ -45,7 +57,6 @@ void modGPS_Math_EN_To_LatLon(double E, double N, double *phi,
 			   double *lambda, double N0, double E0,
 			   double phi0, double lambda0,
 			   double F0, double a, double b);
-
 }
 
 #endif

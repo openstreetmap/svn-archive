@@ -27,6 +27,7 @@
 #include <map>
 #include <set>
 
+
 using std::vector;
 
 namespace OSM
@@ -126,6 +127,11 @@ public:
 	std::vector<int> orderWay(int wayid);
 
 	void toXML(std::ostream &strm);
+	void toOSGB();
+	bool makeShp(const std::string& nodes, const std::string& ways);
+	bool makeNodeShp(const std::string& shpname);
+	bool makeWayShp(const std::string &shpname);
+	Components * cleanWays();
 };
 
 

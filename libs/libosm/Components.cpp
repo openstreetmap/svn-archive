@@ -23,7 +23,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 #include <iomanip>
 #include <string>
 #include <sstream>
+#include <libshp/shapefil.h>
+#include "Node.h"
+#include "Parser.h"
+#include "Way.h"
+#include <vector>
+#include <fstream>
 
+#include "llgr.h"
 
 using std::endl;
 using std::setw;
@@ -53,7 +60,7 @@ void Components::destroy()
 // Return a vector of the coordinates of all the points making up a way,
 // in lon-lat order.
 // WILL ONLY WORK IF THE WAY IS STORED SENSIBLY, i.e. ALL SEGMENTS ALIGNED IN
-// SAME DIRECTION AND IN LOGICAL ORDER !!! - the way it should be :-) 
+// SAME DIRECTION AND IN LOGICAL ORDER !!! 
 
 std::vector<double> Components::getWayCoords(int id)
 {
@@ -101,7 +108,6 @@ std::set<int> Components::getWayNodes(int wayid)
 	Way *w = getWay(wayid);
 	if(w)
 	{
-		cerr<<"w exists"<<endl;
 		for(int count=0; count<w->nSegments(); count++)
 		{
 			s = getSegment(w->getSegment(count));
@@ -154,7 +160,6 @@ std::set<std::string> Components::getNodeTags()
 
 std::vector<int> Components::getNodeSegments(int nodeid)
 {
-	cerr << "getNodeSegments: nodeid=" << nodeid<<endl;
 	Node *n = getNode(nodeid);
 	std::vector<int> segments;
 
@@ -166,7 +171,6 @@ std::vector<int> Components::getNodeSegments(int nodeid)
 			Segment *s = nextSegment();
 			if(s->firstNode()==nodeid || s->secondNode()==nodeid)
 			{
-				cerr<<"    adding segmneet: "<< s->id << endl;
 				segments.push_back(s->id);
 			}
 		}
@@ -197,6 +201,7 @@ int Components::getParentWayOfSegment(int segid)
 
 std::vector<int> Components::orderWay(int wayid)
 {
+	cerr << "orderWay()"<<endl;
 	std::vector<int> orderednodes;
 
 	Way *w = getWay(wayid);
@@ -205,17 +210,13 @@ std::vector<int> Components::orderWay(int wayid)
 	std::set<int> nodes = getWayNodes(wayid);
 	for(std::set<int>::iterator i=nodes.begin(); i!=nodes.end(); i++)
 	{
-		cerr << "setting up segs record: node=" << *i << endl;
+		//cerr << "setting up segs record: node=" << *i << endl;
 		segsRecordForEachNode[*i] = std::vector<int>(); 
 		std::vector<int> v = getNodeSegments(*i);
 		for(int count=0; count<v.size(); count++)
 		{
-			cerr << "getParentWayOfSegment("<<v[count]<<")=" << 
-					getParentWayOfSegment(v[count]) << endl;
 			if(getParentWayOfSegment(v[count])==wayid)
 			{
-				cerr << "    " << v[count] << "belongs to this way, adding"
-					<<endl;
 				segsRecordForEachNode[*i].push_back(v[count]);
 			}
 		}
@@ -239,7 +240,7 @@ std::vector<int> Components::orderWay(int wayid)
 	{
 		int firstID = id;
 
-		cerr << "found a node with one segment=" << id << endl;
+		//cerr << "found a node with one segment=" << id << endl;
 		int idx = 0, segid;
 
 		bool found;
@@ -249,7 +250,7 @@ std::vector<int> Components::orderWay(int wayid)
 		{
 			// Get the segment we're interested in
 			segid = segsRecordForEachNode[id][idx];
-			cerr << "Parent segment: " << segid << endl;
+			//cerr << "Parent segment: " << segid << endl;
 			Segment *s = getSegment(segid);
 			found=false;
 
@@ -258,6 +259,7 @@ std::vector<int> Components::orderWay(int wayid)
 			if(s && getNode(s->firstNode()) && getNode(s->secondNode()))
 			{
 				// Add the id of the node to the list of ordered nodes
+				cerr << "Adding the ID: " << id << endl;
 				orderednodes.push_back(id);
 
 				// Find the other node in the current segment
@@ -267,12 +269,24 @@ std::vector<int> Components::orderWay(int wayid)
 					id=getNode(s->firstNode())->id;
 
 
-				cerr << "Found next node: id=" << id << endl;
+				//cerr << "Found next node: id=" << id << endl;
 			
-				// If we arrive back at the first node again, stop
-				// (circular way)
+				// If we arrive back at any previous node again, stop
+				// (way containing loop)
+				bool loop=false;
+				for(int z=0; z<orderednodes.size(); z++)
+				{
+					if(orderednodes[z]==id)	
+					{
+						loop=true;
+						break;
+					}
+				}
 
-				if(id!=firstID)
+				if(loop)
+					cerr<<"   Stopping way as reached a previous id"<<endl;
+
+				if(!loop)
 				{
 					// Find another segment of the new node
 					// If there isn't one, found will be false, so we quit
@@ -285,7 +299,6 @@ std::vector<int> Components::orderWay(int wayid)
 							// Save the index so we can identify the segment
 							// next go
 							idx=count;
-							cerr << "Found another segment: idx="<<idx << endl;
 							found=true;
 							break;
 						}
@@ -293,7 +306,10 @@ std::vector<int> Components::orderWay(int wayid)
 				}
 
 				if(!found)
+				{
+					cerr << "Adding the ID: " << id << endl;
 					orderednodes.push_back(id);
+				}
 			} 
 		}while(found);
 	
@@ -325,6 +341,212 @@ void Components::toXML(std::ostream &strm)
 		w->toXML(strm);
 	}
 	strm << "</osm>"<<endl;
+}
+
+void Components::toOSGB()
+{
+	rewindNodes();
+	while(hasMoreNodes())
+	{
+		Node *n=nextNode();
+		EarthPoint ep (n->getLon(),n->getLat());
+		EarthPoint ep2 = wgs84_ll_to_gr(ep);
+		n->setCoords(ep2.y,ep2.x);
+	}
+}
+
+
+bool Components::makeShp(const std::string& nodes, const std::string& ways)
+{
+		if (makeNodeShp(nodes))
+		{
+			if(makeWayShp(ways))
+			{
+				return true;
+			}
+		}
+		return false;
+}
+
+bool Components::makeNodeShp(const std::string& shpname)
+{
+		SHPHandle shp = SHPCreate(shpname.c_str(),SHPT_POINT);
+		if(shp)
+		{
+			DBFHandle dbf = DBFCreate(shpname.c_str());
+			if(dbf)
+			{
+				std::map<int,std::string> fields;
+				std::set<std::string> nodeTags = getNodeTags();
+				for(std::set<std::string>::iterator i=nodeTags.begin();
+					i!=nodeTags.end(); i++)
+				{
+					fields[DBFAddField(dbf,i->c_str(),FTString,255,0)] = *i;
+				}
+
+				double lon, lat;
+
+				rewindNodes();
+				while(hasMoreNodes())
+				{
+					Node *node = nextNode();
+
+					// We're only interested in nodes with tags
+					if(node && node->hasTags())
+					{
+						lon = node->getLon(); 
+						lat=node->getLat();
+						SHPObject *object = SHPCreateSimpleObject
+							(SHPT_POINT,1,&lon,&lat,NULL);
+
+						int objid = SHPWriteObject(shp, -1, object);
+
+						SHPDestroyObject(object);
+
+						for(std::map<int,std::string>::iterator j=
+								fields.begin(); j!=fields.end(); j++)
+						{
+							DBFWriteStringAttribute
+								(dbf,objid,j->first,
+									node->getTag(j->second).c_str());
+						}
+					}
+				}
+
+				DBFClose(dbf);
+			}
+			else
+			{
+				cerr << "could not open node dbf" << endl;
+				return false;
+			}
+			SHPClose(shp);
+		}
+		else
+		{
+			cerr << "could not open node shp" << endl;
+			return false;
+		}
+	
+	return true;
+}
+
+bool Components::makeWayShp(const std::string &shpname)
+{
+		// ARC means polyline!
+		SHPHandle shp = SHPCreate(shpname.c_str(),SHPT_ARC); 
+		if(shp)
+		{
+			DBFHandle dbf = DBFCreate(shpname.c_str());
+			if(dbf)
+			{
+				std::map<int,std::string> fields;
+				std::set<std::string> wayTags = getWayTags();
+				for(std::set<std::string>::iterator i=wayTags.begin();
+					i!=wayTags.end(); i++)
+				{
+					fields[DBFAddField(dbf,i->c_str(),FTString,255,0)] = *i;
+				}
+
+				std::map<int,Way*>::iterator i=ways.begin();
+				//rewindWays();
+				std::vector<double> wayCoords, longs, lats;
+
+				while(i!=ways.end())
+				//while(hasMoreWays())
+				{
+					//Way *way = nextWay();
+					Way *way= i->second;
+					if(way)
+					{
+						wayCoords = getWayCoords(way->id);
+						if(wayCoords.size())
+						{
+							longs.clear();
+							lats.clear();
+							for(int count=0; count<wayCoords.size();count+=2)
+								longs.push_back(wayCoords[count]);
+							for(int count=1; count<wayCoords.size(); count+=2)
+								lats.push_back(wayCoords[count]);
+
+							SHPObject *object = SHPCreateSimpleObject
+								(SHPT_ARC,wayCoords.size()/2,
+									&(longs[0]),&(lats[0]),NULL);
+
+							int objid = SHPWriteObject(shp, -1, object);
+
+							SHPDestroyObject(object);
+
+							for(std::map<int,std::string>::iterator j=
+								fields.begin(); j!=fields.end(); j++)
+							{
+								DBFWriteStringAttribute
+								(dbf,objid,j->first,
+									way->getTag(j->second).c_str());
+							}
+						}
+					}
+					i++;
+				}
+
+				DBFClose(dbf);
+			}
+			else
+			{
+				cerr << "could not open way dbf" << endl;
+				return false;
+			}
+			SHPClose(shp);
+		}
+		else
+		{
+			cerr << "could not open way shp" << endl;
+			return false;
+		}
+	
+	return true;
+}
+
+Components * Components::cleanWays()
+{
+	Components *compOut = new Components;
+
+	std::map<int,Way*>::iterator i = ways.begin();
+	//rewindWays();
+	while(i!=ways.end())
+	//while(hasMoreWays())
+	{
+		//OSM::Way *w = nextWay();
+		OSM::Way *w = i->second;
+		if(w)
+		{
+			cerr<<"Calling orderWay on way ID " << i->first << " or "  << 
+					w->id << endl;
+			std::vector<int> nodes = orderWay(w->id);
+
+			if(nodes.size())
+			{
+				OSM::Way *way = new OSM::Way;
+				way->tags = w->tags;
+				compOut->addWay(way);
+				for(int i=0; i<nodes.size()-1; i++)
+				{
+					int segid=compOut->addSegment
+						(new OSM::Segment(nodes[i],nodes[i+1]));
+					way->addSegment(segid);
+				}
+			}
+		}
+		i++;
+	}
+
+	rewindNodes();
+	while(hasMoreNodes())
+	{
+		OSM::Node *n = new OSM::Node(*(nextNode()));
+		compOut->addNode(n);
+	}
+	return compOut;
 }
 
 }

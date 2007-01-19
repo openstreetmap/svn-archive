@@ -1,6 +1,6 @@
-CXXFLAGS = -I/usr/local/include 
-LDFLAGS = -L/usr/local/lib -lexpat -lcurl 
-OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o osmshp.o
+CXXFLAGS = -I/home/nick/expat -I/home/nick/shapelib/include 
+LDFLAGS = -L/home/nick/expat/lib -lexpat -lcurl 
+OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o 
 NETOBJ = Client.o
 TESTOBJ = test.o
 CXX = g++
@@ -25,4 +25,3 @@ Way.o: Way.h Object.h
 Parser.o : Parser.h Way.h Object.h Node.h Segment.h
 Client.o : Client.h
 llgr.o: llgr.h
-osmshp.o : osmshp.h

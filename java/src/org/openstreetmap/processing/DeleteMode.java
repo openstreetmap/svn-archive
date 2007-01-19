@@ -27,12 +27,14 @@ public class DeleteMode extends EditMode {
 		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
 			Node p = (Node)it.next();
 			if (applet.mouseOverPoint(p.coor) && p.id != 0) {
-				int answer = MsgBox.show("Really delete the node "+p.getName()+"?", new String[]{"OK", "Cancel"});
-				if (answer == 1)
+                if (p.lines.isEmpty()){
+                    int answer = MsgBox.show("Really delete the node "+p.getName()+"?", new String[]{"OK", "Cancel"});
+                        if (answer == 1)
 					return;
-				OsmApplet.println("deleting " + p);
-				applet.osm.deleteNode(p);
-				return;
+                    OsmApplet.println("deleting " + p);
+                    applet.osm.deleteNode(p);
+                }
+                return;
 			}
 		}
 		for (Iterator it = applet.lines.values().iterator(); it.hasNext();) {

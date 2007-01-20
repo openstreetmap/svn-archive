@@ -125,7 +125,7 @@ if ( ! $force_update ) {
 	exit 0;
     }   
 }
-#CreateAtlas($Options);
+CreateAtlas($Options);
 
 ConvertPDF($pdf_filename);
 exit;
@@ -145,6 +145,11 @@ sub ConvertPDF($){
 
     my $basename=basename($FN_in);
     $basename =~ s/\.pdf$//;
+
+    if ( ! -s $FN_in ) {
+	print STDERR "No pdf file '$FN_in' found, so no conversion.\n";
+	return;
+    }
 
     return if $no_png;
     mkdir_if_needed( dirname($FN_in).'/thumbs');

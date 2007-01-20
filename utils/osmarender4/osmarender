@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #=============================================================================
 #
 #  osmarender [-r rulefile] [-t title] <osmfile> [<svgfile>]

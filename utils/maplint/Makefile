@@ -1,0 +1,62 @@
+#-----------------------------------------------------------------------------
+#
+#  Maplint Makefile
+#
+#-----------------------------------------------------------------------------
+
+all: check
+
+#-----------------------------------------------------------------------------
+#
+#  Build stylesheets and html doc from source. You only need to do this
+#  if you changed any of the tests in the tests directory.
+#
+#-----------------------------------------------------------------------------
+.PHONY: build
+build: tests.xml tests.xsl html/index.html html
+
+# Join all test descriptions into one file
+# This is very ugly and un-xml-like, but it works for now
+tests.xml: tests/*/*xml
+	(echo '<?xml version="1.0" encoding="iso-8859-1" ?>'; echo '<maplint:tests xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'; cat tests/*/*xml | grep -v 'xml version'; echo '</maplint:tests>') | xmlstarlet sel --xml-decl --encoding UTF-8 --template --copy-of / - >$@
+
+tests.xsl: lib/gen-tests-xsl.xsl tests.xml
+	xsltproc $^ >$@
+
+html/index.html: lib/doc-index.xsl tests.xml
+	xsltproc lib/doc-index.xsl tests.xml >$@
+
+.PHONY: html
+html: tests.xml
+	for test in tests/*/*xml; do xsltproc --output html/`basename $$test .xml`.html --stringparam test `basename $$test .xml` lib/doc-test.xsl tests.xml; done
+
+
+#-----------------------------------------------------------------------------
+#
+#  Clean build stuff.
+#
+#-----------------------------------------------------------------------------
+.PHONY: clean
+clean:
+	rm -f tests.xml tests.xsl html/*.html
+
+
+#-----------------------------------------------------------------------------
+#
+#  Run tests on data. (Use bin/maplint shell script to run this.)
+#
+#-----------------------------------------------------------------------------
+data/%-maplint.osm: data/%.osm lib/run-tests.xsl
+	xsltproc lib/run-tests.xsl $< >$@
+
+data/%-maplint-with-tags.osm: data/%-maplint.osm lib/convert-to-tags.xsl
+	xsltproc lib/convert-to-tags.xsl $< >$@
+
+data/%-maplint-stat.txt: data/%-maplint.osm lib/stat.xsl
+	xsltproc lib/stat.xsl $< >$@
+
+data/%-maplint-report.txt: data/%-maplint.osm lib/report.xsl
+	xsltproc lib/report.xsl $< >$@
+
+
+#-- THE END ------------------------------------------------------------------

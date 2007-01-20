@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="base" id="nodes-on-same-spot" version="1" severity="error"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Two or more nodes with the exact same coordinates. This will be
+        reported for every node in the set, so if there are three nodes
+        with the same coordinates, there will be three reports, not one.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="nodesbycoordinates" match="/osm/node" use="concat(@lon,' ', @lat)"/>
+    </maplint:setup>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:variable name="nodes" select="key('nodesbycoordinates', concat(@lon, ' ', @lat))"/>
+        <xsl:variable name="nid" select="@id"/>
+
+        <xsl:if test="count($nodes) != 1">
+            <maplint:result>
+                <xsl:text>Nodes:</xsl:text>
+                <xsl:for-each select="$nodes">
+                    <xsl:if test="@id != $nid">
+                        <xsl:value-of select="concat(' ', @id)"/>
+                    </xsl:if>
+                </xsl:for-each>
+            </maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

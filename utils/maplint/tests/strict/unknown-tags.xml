@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="strict" id="unknown-tags" version="1" severity="notice"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Unknown tags. This is not an error as everybody can invent
+        new tags. But it helps in finding typos etc.
+        The list of known tags is currently incomplete.
+    </maplint:desc>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:for-each select="tag">
+            <xsl:if test="(@k!='created_by') and
+                    (@k!='highway') and
+                    (@k!='railway') and
+                    (@k!='waterway') and
+                    (@k!='amenity') and
+                    (@k!='tourism') and
+                    (@k!='ele') and
+                    (@k!='man_made') and
+                    (@k!='sport') and
+                    (@k!='place') and
+                    (@k!='note') and
+                    (@k!='historic') and
+                    (@k!='layer') and
+                    (@k!='source') and
+                    (@k!='time') and
+                    (@k!='name')">
+                <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
+            </xsl:if>
+        </xsl:for-each>
+    </maplint:check>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:for-each select="tag">
+            <xsl:if test="(@k!='created_by') and
+                    (@k!='highway') and
+                    (@k!='railway') and
+                    (@k!='waterway') and
+                    (@k!='amenity') and
+                    (@k!='tourism') and
+                    (@k!='ele') and
+                    (@k!='man_made') and
+                    (@k!='sport') and
+                    (@k!='place') and
+                    (@k!='note') and
+                    (@k!='historic') and
+                    (@k!='landuse') and
+                    (@k!='oneway') and
+                    (@k!='bridge') and
+                    (@k!='tunnel') and
+                    (@k!='leisure') and
+                    (@k!='junction') and
+                    (@k!='ref') and
+                    (@k!='natural') and
+                    (@k!='layer') and
+                    (@k!='source') and
+                    (@k!='time') and
+                    (@k!='abutters') and
+                    (@k!='name')">
+
+                <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
+            </xsl:if>
+        </xsl:for-each>
+    </maplint:check>
+
+</maplint:test>

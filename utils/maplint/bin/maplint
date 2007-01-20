@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+#  maplint <file>
+#
+
+file=${1%%.osm}
+
+make data/${file}-maplint.osm
+make data/${file}-maplint-with-tags.osm
+make data/${file}-maplint-stat.txt
+make data/${file}-maplint-report.txt
+
+if [ "$OSMARENDER" != '' ]; then
+    cd data
+    osmarender -r $OSMARENDER/rules/maplint.xml ${file}-maplint-with-tags.osm ${file}-maplint.svg
+fi
+

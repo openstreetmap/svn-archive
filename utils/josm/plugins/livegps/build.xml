@@ -1,0 +1,30 @@
+<project name="livegps" default="dist" basedir=".">
+
+	<target name="dist" depends="compile">
+		<!-- images -->
+		<copy todir="build/images">
+			<fileset dir="images" />
+		</copy>
+
+		<!-- create josm-custom.jar -->
+		<jar destfile="livegps.jar" basedir="build">
+			<manifest>
+                <attribute name="Plugin-Class" value="livegps.LiveGpsPlugin" />
+                <attribute name="Plugin-Description" value="Allow live GPS feed from a gpsd server" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="livegps" classpath="../../josm/bin/" destdir="build" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="build" />
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+</project>

@@ -19,6 +19,7 @@ use constant mm => 25.4/72;
 use Carp qw(cluck confess);
 use Getopt::Long;
 use Pod::Usage;
+use File::Basename;
 
 use Geo::GPX::File;
 use Geo::Geometry;
@@ -36,6 +37,7 @@ use Utils::File;
 use Utils::Math;
 use Geo::OSM::MapFeatures;
 
+sub FillDefaults($); # {}
 sub CreateAtlas($); #{}
 sub LoadOSM($$); #{}
 sub AddTitlePage($$); #{}
@@ -47,6 +49,7 @@ sub BBoxPages($); #{}
 sub ContentsPage($$); #{}
 sub mapGrid($$$$$$$); #{}
 sub PageFrame($$); #{}
+sub ConvertPDF($); #{}
 
 my $ConfigFile = "Config/config.txt";
 Getopt::Long::Configure('no_ignore_case');
@@ -55,6 +58,9 @@ my $CommandLineOptions;
 my $ResultDir=osm_dir().'/pdf-atlas';
 our $man=0;
 our $help=0;
+our $force_update=0;
+our $no_png =0;
+our $no_html =0;
 
 GetOptions ( 
 	     'debug+'     => \$DEBUG,
@@ -65,6 +71,10 @@ GetOptions (
 	     'man'        => \$man, 
 	     'h|help|x'   => \$help, 
 
+	     'no-png'     => \$no_png,
+	     'no-html'     => \$no_html,
+	     'forceupdate'   => \$force_update,
+	     'force-update'   => \$force_update,
 	     'c:s'        => \$ConfigFile,
 	     'config:s'   => \$ConfigFile,
 	     'Places:s'   => \$CommandLineOptions->{Places},
@@ -95,23 +105,86 @@ if ( shift() ) {
 };
 
 printf STDERR "Memory usage: %s\n",mem_usage() if $DEBUG>1;
+
+FillDefaults($Options);
+
+my $data_file = expand_filename($Options->{"Data"});
+if ( ! -s ($data_file)){
+    die "!!!!!!!!!!! ERROR: Data File $data_file is missing\n";
+}
+
+my $pdf_filename=$ResultDir."/".$Options->{"Filename"};
+if ( ! $force_update ) {
+
     
-CreateAtlas($Options);
+    #my $Data = LoadData($Options);
+
+    unless( file_needs_re_generation($data_file, $pdf_filename) ||
+	    file_needs_re_generation($ConfigFile, $pdf_filename) ){
+	print "File  $pdf_filename is Up to Date\n";
+	exit 0;
+    }   
+}
+#CreateAtlas($Options);
+
+ConvertPDF($pdf_filename);
 exit;
 
 
 #---------------------------------------------------------
-# Create a PDF road atlas, based on options in a config file
+# Convert a pdf into a list of thumbnails
+# and build a html page arround it
+sub ConvertPDF($){
+    my $FN_in = shift;
+    my $convert=`which convert`;
+    chomp $convert;
+    unless ( $convert !~ m/(^convert|not found)/){
+	print "convert not found, so not converting to png nor building html Page\n";
+	return;
+    }
+
+    my $basename=basename($FN_in);
+    $basename =~ s/\.pdf$//;
+
+    return if $no_png;
+    mkdir_if_needed( dirname($FN_in).'/thumbs');
+    
+    my $FN_out = dirname($FN_in)."/thumbs/TN_$basename.png";
+    # Convert osm_atlas-xy.pdf --> thumbs/TN_osm_atlas-xy-[0..n].png
+    print STDERR "Convert PDF: $convert '$FN_in' '$FN_out' \n"
+	if $DEBUG;
+    my $result =`$convert '$FN_in' '$FN_out'`;
+    
+    # Build Html Page
+    return if $no_html;
+    my $FN_html = dirname($FN_in)."/index_$basename.html";
+    my $fh_html = IO::File->new(">$FN_html");
+    print $fh_html "<html>\n";
+    print $fh_html "<title>Index for $basename</title>\n";
+    print $fh_html "<body>\n";
+    print $fh_html "<h1>Index for $basename</h1>\n";
+    print $fh_html "<table CELLSPACING=\"0\" BORDER=\"1\"><tr>";
+    my $index=0;
+    $FN_out =~ s/\.png$//;
+    while ( -s "$FN_out-$index.png" ) {
+	my $img = "thumbs/TN_$basename-$index.png";
+	print  $fh_html "  <td><img src=\"$img\"></td>\n";
+	print  $fh_html "</tr>\n<tr>\n" if $index % 2;
+	$index++;
+    }
+    print $fh_html "</table\n";
+    print $fh_html "</html>\n";
+    print $fh_html "</body>\n";
+    $fh_html->close();
+}
+
 #---------------------------------------------------------
-sub CreateAtlas($){
-  my $Options = shift;
-  my $PDF = PDF::API2->new();
-
-
-{ # Setting defaults
+sub FillDefaults($){
+    # Setting defaults
+    my $Options = shift;
     my ($guess_name) = ( $Options->{Places}  =~ m/places-(.+).txt/ );
     unless (defined( $Options->{"Filename"} )) {
-	die "Cannot guess name for defaults" unless $guess_name;
+	die "Cannot guess Filename" unless $guess_name;
 	$Options->{"Filename"} = "osm_atlas-$guess_name.pdf";
 	}
     unless (defined( $Options->{"Title"} )) {
@@ -120,6 +193,12 @@ sub CreateAtlas($){
     }
 }
 
+#---------------------------------------------------------
+# Create a PDF road atlas, based on options in a config file
+#---------------------------------------------------------
+sub CreateAtlas($){
+  my $Options = shift;
+  my $PDF = PDF::API2->new();
 
   # Title page
   AddTitlePage($PDF, $Options->{"Title"}) 
@@ -128,7 +207,7 @@ sub CreateAtlas($){
   BBoxPages( $Options);
   my $Data = LoadData($Options);
 #  $Data->{map_features}->load_icons($PDF);
-  MapPages($PDF, $Options, $Data);
+  $PDF = MapPages($PDF, $Options, $Data);
   
   # License page
   TextPage($PDF, $Options->{"License"});
@@ -403,6 +482,7 @@ sub MapPages($$$)
 	  $PDF = PDF::API2->open($pdf_filename);
       }
   }
+  return $PDF;
 }
 
 sub BBoxPages($)
@@ -1059,14 +1139,31 @@ Complete documentation
 
 The default is Config/config.txt
 
-=item B<-Places> <places.txt> use places.txt
+=item B<--Places> <places.txt> use places.txt
 
 use places.txt for the list of places to add
 
-=item B<-ResultDir> optional output dir
+=item B<--ResultDir> optional output dir
 
 write the results to this dir. 
 The Default is ~/osm/pdf-atlas/
+
+=item B<--force-update>
+
+Normally the result File is only updated if the timestamp of the datafile is newer than the 
+Output pdf File
+
+=item B<--no-png>
+
+Normally the resulting PDF-File is also converted with 'convert' to png 
+Files. This makes building an html index and viewing much easier. 
+With this option set no conversion will be done.
+
+=item B<--no-html>
+
+Normally the resulting PDF-File is also converted with 'convert' to png 
+Files. This makes building an html index and viewing much easier. 
+With this option set no conversion will be done.
 
 =back
 

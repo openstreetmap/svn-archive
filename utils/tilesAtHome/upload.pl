@@ -91,7 +91,14 @@ sub uploadTileBatch(){
 sub compressTiles(){
   my ($Dir, $OutputDir) = @_;
   
-  my $Filename = sprintf("%s/%d_%d.zip", $OutputDir, $$, $ZipFileCount++);
+  my $Filename;
+  
+  if($Config{UseHostnameInZipname}){
+      my $hostname = `hostname`."XXX";
+      $Filename = sprintf("%s/%s_%d_%d.zip", $OutputDir, substr($hostname,0,3), $$, $ZipFileCount++);
+  } else {
+      $Filename = sprintf("%s/%d_%d.zip", $OutputDir, $$, $ZipFileCount++);
+  }
   
   # ZIP all the tiles into a single file
   my $Command1 = sprintf("%s %s %s",

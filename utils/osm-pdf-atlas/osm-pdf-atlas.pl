@@ -155,7 +155,7 @@ sub ConvertPDF($){
     my $FN_out_0 = dirname($FN_in)."/thumbs/TN_0.png";
     # convert file.pdf --> thumbs/TN_file_*.png
     if ( $force_update  || 
-	 file_needs_re_generation($FN_out_0,$pdf_filename) ){
+	 file_needs_re_generation($pdf_filename,$FN_out_0) ){
 	print STDERR "$pdf_filename will be converted to  $FN_out_0\n";
 	mkdir_if_needed( dirname($FN_in).'/thumbs');
 	my $FN_out = dirname($FN_in)."/thumbs/TN_$basename.png";
@@ -171,7 +171,7 @@ sub ConvertPDF($){
     return if $no_html;
     my $FN_pdf_html = dirname($FN_in)."/index_$basename.html";
     if ( $force_update  || 
-	 file_needs_re_generation($FN_pdf_html,$pdf_filename) ){
+	 file_needs_re_generation($pdf_filename,$FN_pdf_html) ){
 	print STDERR "$pdf_filename will be converted to  $FN_pdf_html\n";
 	my $fh_html = IO::File->new(">$FN_pdf_html");
 	print $fh_html "<html>\n";

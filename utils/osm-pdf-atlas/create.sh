@@ -81,8 +81,8 @@ for place_config in \
     #echo "CSV File: $pdf_name $osm_csv"
     echo "------------------------------------------------------------------"
     echo "Updating: " $places_name $pdf_name
-    create_atlas_cmd="perl ./osm-pdf-atlas.pl -v -d --config=Config/config.txt  --Data=$osm_csv --Places=$place_config"
-    echo "$create_atlas_cmd"
+    create_atlas_cmd="./osm-pdf-atlas.pl -v -v -d --config=Config/config.txt  --Data=$osm_csv --Places=$place_config"
+    echo "perl $create_atlas_cmd"
     echo "     ..."
-    time perl $create_atlas_cm
+    time perl $create_atlas_cmd
 done

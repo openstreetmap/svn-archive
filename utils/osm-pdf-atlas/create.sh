@@ -31,7 +31,13 @@ for place_config in \
 	*bavari*)
 	    csv_area="germany"
 	    ;;
+        *munich*)
+	    csv_area="germany"
+	    ;;
 	*UK*)
+	    csv_area="uk"
+	    ;;
+	*iow*)
 	    csv_area="uk"
 	    ;;
 	*france*)
@@ -51,11 +57,6 @@ for place_config in \
     if  echo $csv_area | grep \
 	-e world  \
 	-e europe \
-	-e africa \
-	-e  australia \
-	-e france \
-	-e england \
-	-e uk
 	then 
 	echo "Ignoring $place_config with $vsc_area"
 	continue
@@ -63,10 +64,13 @@ for place_config in \
 
     if [ `perl ../osm2csv/osm2csv.pl    --list-areas | grep $csv_area ` ]; then
 	echo "--> Update csv File for Area '$csv_area'"
-	perl ../osm2csv/osm2csv.pl "$planet_file" --area=${csv_area}\
-	    -d -d -d -d --update-only -v -v -v 
+	osm2csv_cmd="perl ../osm2csv/osm2csv.pl --area=${csv_area} --update-only -v -v -v -v"
+	echo "$osm2csv_cmd"
+	$osm2csv_cmd
     fi
     if [ ! -s $osm_csv ] ; then
+	echo "We have not fitting csv File"
+	continue
 	osm_csv=~/osm/planet/csv/osm.csv
     fi
     

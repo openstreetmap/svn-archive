@@ -1,26 +1,41 @@
 # This is a start for an (almost) cut'n past installation description for mapnik-osm-renderer
 
-# ----------- As User osm:
-svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl -v 
-# This takes some time; let it run in the background
-# As soon as this is finished:
-date; time ~/svn.openstreetmap.org/utils/osm2pgsql/osm2pgsql ~/osm/planet/planet-061120-a.osm > ~/osm/planet/planet-061120-a.sql
+# ------ Install some stuff
+sudo apt-get install build-essential libfreetype6-dev libltdl3-dev \
+                libpng12-dev  libtiff4-dev libboost-thread-dev libboost-filesystem-dev \
+                libboost-serialization-dev libboost-regex-dev libboost-python-dev \
+                libboost-program-options-dev proj python-imaging scons \
+                postgresql-8.1 postgresql-8.1-plruby postgresql-8.1-postgis \
+                postgresql-client-8.1 postgresql-contrib-8.1 postgresql-doc-8.1 \
+                postgresql-plperl-8.1 postgresql-plpython-8.1 \
+                postgresql-server-dev-8.1 \
+                libboost-python-dev python2.4-dev \
+		libwww-perl libxml-parser-perl libfile-slurp-perl libtimedate-perl libdate-manip-perl
 
-# ----------- As User  root:
-apt-get install build-essential libfreetype6-dev libltdl3-dev \
-libpng12-dev  libtiff4-dev libboost-thread-dev libboost-filesystem-dev \
-libboost-serialization-dev libboost-regex-dev libboost-python-dev \
-libboost-program-options-dev proj python-imaging scons \
-postgresql-8.1 postgresql-8.1-plruby postgresql-8.1-postgis \
-postgresql-client-8.1 postgresql-contrib-8.1 postgresql-doc-8.1 \
-postgresql-plperl-8.1 postgresql-plpython-8.1 \
-postgresql-server-dev-8.1 \
-libboost-python-dev python2.4-dev
-
-cd /home/osm/mapnik
-python scons/scons.py install
-python scons/scons.py PGSQL_INCLUDES=/usr/include/postgresql \
+# ---- Install mapnik
+  cd
+  svn co svn://svn.berlios.de/mapnik/trunk mapnik 
+  cd mapnik
+  python scons/scons.py
+  sudo python scons/scons.py install
+  sudo python scons/scons.py PGSQL_INCLUDES=/usr/include/postgresql \
        PGSQL_LIBS=/usr/lib/postgresql/8.1/lib install
+
+# ---- Install and run planet-mirror --> planet.sql
+  cd
+  svn co http://svn.openstreetmap.org/
+  # compile UTF8sanitize
+  ( cd svn.openstreetmap.org/utils/planet.osm/C; make)
+  # Get newest planet.osm. This will takes some time
+  svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl -v
+  bunzip2 --keep `svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl -print-filename`
+  export planet_name=`svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl -print-filename`
+  echo "Planet File: $planet_name"
+  # compile osmsql
+  (cd svn.openstreetmap.org/utils/osm2pgsql/; make)
+  # convert osm --> sql. takes about 15 minutes on a 3GHz Machine
+  date; time ~/svn.openstreetmap.org/utils/osm2pgsql/osm2pgsql $planet_name > $planet_name.sql
+
 
 # ----------- As User Postgres
 su - postgres
@@ -44,14 +59,19 @@ echo "SELECT AddGeometryColumn('planet_osm', 'way', 4326, 'GEOMETRY', 2);" | psq
 echo "ALTER TABLE planet_osm ADD CONSTRAINT pk__planet_osm PRIMARY KEY (osm_type, osm_id);" | psql -Upostgres gis
 echo "CREATE INDEX planet_spatial_idx ON planet_osm USING gist (way GIST_GEOMETRY_OPS);" | psql -Upostgres gis
 
+
+# ----------- As User Postgres
 # Now we need the result from the osm2pgsql command
-date;time psql -Upostgres gis < ~osm/osm/planet/planet-061120-a.sql >~/insert.log
+su postgres
+date;time psql -Upostgres gis < $planet_name.sql >~/insert.log
 # takes about 45minutes on a 2GHz machine
 
 
-scp -r dev.openstreetmap.org:/home/artem/vmap0 .
+# ----------- as user osm:
+su osm
+cd
+scp -r dev.openstreetmap.org:/home/artem/vmap0 ~/osm/
 
-# as user osm:
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # From here on the cut'n paste part stopps
@@ -67,6 +87,11 @@ and change the path to your installation:
 vi svn.openstreetmap.org/utils/mapnik/osm.xml
    set the host connection to your local machine:
       <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="port">5433</Parameter>
+      <Parameter name="user">osm</Parameter>
+      <Parameter name="dbname">osm</Parameter>
+      <Parameter name="table">planet_osm</Parameter>
 
 
 vi svn.openstreetmap.org/utils/mapnik/generate_tiles.py

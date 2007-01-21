@@ -79,6 +79,8 @@ GetOptions (
 	     'config:s'   => \$ConfigFile,
 	     'Places:s'   => \$CommandLineOptions->{Places},
 	     'ResultDir:s'=> \$ResultDir,
+	     'Data:s'     => \$CommandLineOptions->{Data},
+	     'csv:s'      => \$CommandLineOptions->{Data},
 	     );
 
 pod2usage(1) if $help;
@@ -114,20 +116,16 @@ if ( ! -s ($data_file)){
 }
 
 my $pdf_filename=$ResultDir."/".$Options->{"Filename"};
-if ( ! $force_update ) {
-
-    
-    #my $Data = LoadData($Options);
-
-    unless( file_needs_re_generation($data_file, $pdf_filename) ||
-	    file_needs_re_generation($ConfigFile, $pdf_filename) ){
-	print "File  $pdf_filename is Up to Date\n";
-	exit 0;
-    }   
+if ( $force_update ||
+     file_needs_re_generation($data_file, $pdf_filename) ||
+     file_needs_re_generation($ConfigFile, $pdf_filename) ){
+    CreateAtlas($Options);
+} else {
+    print "$pdf_filename is Up to Date\n";
 }
-CreateAtlas($Options);
 
 ConvertPDF($pdf_filename);
+
 exit;
 
 
@@ -145,6 +143,7 @@ sub ConvertPDF($){
 
     my $basename=basename($FN_in);
     $basename =~ s/\.pdf$//;
+    my $base_dir = dirname($FN_in);
 
     if ( ! -s $FN_in ) {
 	print STDERR "No pdf file '$FN_in' found, so no conversion.\n";
@@ -152,35 +151,83 @@ sub ConvertPDF($){
     }
 
     return if $no_png;
-    mkdir_if_needed( dirname($FN_in).'/thumbs');
-    
-    my $FN_out = dirname($FN_in)."/thumbs/TN_$basename.png";
-    # Convert osm_atlas-xy.pdf --> thumbs/TN_osm_atlas-xy-[0..n].png
-    print STDERR "Convert PDF: $convert '$FN_in' '$FN_out' \n"
-	if $DEBUG;
-    my $result =`$convert '$FN_in' '$FN_out'`;
-    
-    # Build Html Page
-    return if $no_html;
-    my $FN_html = dirname($FN_in)."/index_$basename.html";
-    my $fh_html = IO::File->new(">$FN_html");
-    print $fh_html "<html>\n";
-    print $fh_html "<title>Index for $basename</title>\n";
-    print $fh_html "<body>\n";
-    print $fh_html "<h1>Index for $basename</h1>\n";
-    print $fh_html "<table CELLSPACING=\"0\" BORDER=\"1\"><tr>";
-    my $index=0;
-    $FN_out =~ s/\.png$//;
-    while ( -s "$FN_out-$index.png" ) {
-	my $img = "thumbs/TN_$basename-$index.png";
-	print  $fh_html "  <td><img src=\"$img\"></td>\n";
-	print  $fh_html "</tr>\n<tr>\n" if $index % 2;
-	$index++;
+
+    my $FN_out_0 = dirname($FN_in)."/thumbs/TN_0.png";
+    # convert file.pdf --> thumbs/TN_file_*.png
+    if ( $force_update  || 
+	 file_needs_re_generation($FN_out_0,$pdf_filename) ){
+	print STDERR "$pdf_filename will be converted to  $FN_out_0\n";
+	mkdir_if_needed( dirname($FN_in).'/thumbs');
+	my $FN_out = dirname($FN_in)."/thumbs/TN_$basename.png";
+	# Convert osm_atlas-xy.pdf --> thumbs/TN_osm_atlas-xy-[0..n].png
+	print STDERR "Convert PDF: $convert '$FN_in' '$FN_out' \n"
+	    if $DEBUG;
+	my $result =`$convert '$FN_in' '$FN_out'`;
+    } else {
+	print "$FN_out_0 is Up to Date\n";
     }
-    print $fh_html "</table\n";
-    print $fh_html "</html>\n";
-    print $fh_html "</body>\n";
-    $fh_html->close();
+
+    # Build Html Page for this pdf File
+    return if $no_html;
+    my $FN_pdf_html = dirname($FN_in)."/index_$basename.html";
+    if ( $force_update  || 
+	 file_needs_re_generation($FN_pdf_html,$pdf_filename) ){
+	print STDERR "$pdf_filename will be converted to  $FN_pdf_html\n";
+	my $fh_html = IO::File->new(">$FN_pdf_html");
+	print $fh_html "<html>\n";
+	print $fh_html "<title>Index for $basename</title>\n";
+	print $fh_html "<body>\n";
+	print $fh_html "<h1>Index for $basename</h1>\n";
+	print $fh_html "<table CELLSPACING=\"0\" BORDER=\"1\"><tr>";
+	my $index=0;
+	while ( -s "$base_dir/thumbs/TN_-$index.png" ) {
+	    my $img = "thumbs/TN_$basename-$index.png";
+	    print  $fh_html "  <td><img src=\"$img\"></td>\n";
+	    print  $fh_html "</tr>\n<tr>\n" if $index % 2;
+	    $index++;
+	}
+	print $fh_html "</table\n";
+	print $fh_html "</html>\n";
+	print $fh_html "</body>\n";
+	$fh_html->close();
+    } else {
+	print "$FN_pdf_html is Up to Date\n";
+    }
+
+    # Build general Index Page
+    my $FN_index_html = dirname($FN_in)."/index.html";
+    if ( $force_update  || 
+	 file_needs_re_generation($FN_pdf_html,$FN_index_html) ){
+	# Build Overview Html Page
+	my $FN_dir = dirname($FN_in);
+	my $fh_html = IO::File->new(">$FN_index_html");
+	print $fh_html "<html>\n";
+	print $fh_html "<title>Index of PDF Files</title>\n";
+	print $fh_html "<body>\n";
+	print $fh_html "<h1>Index of PDF Files</h1>\n";
+	print $fh_html "<table CELLSPACING=\"0\" BORDER=\"1\"><tr>";
+	my $index=0;
+	for my $filename ( glob("$FN_dir/*.pdf") ) {
+	    my $file=basename($filename);
+	    $file=~ s/.pdf//;
+	    my $name = $file;
+	    $name =~ s/osm_atlas-//;
+	    my $img = "thumbs/TN_$file-1.png";
+	    print  $fh_html "  <td> $name <br>\n";
+	    print  $fh_html "    <a href=\"index-$file.html\">\n";
+	    print  $fh_html "       <img height=\"400\" width=\"300\" src=\"$img\">\n";
+	    print  $fh_html "    </a>\n";
+	    print  $fh_html "  </td>\n";
+	    print  $fh_html "</tr>\n<tr>\n" if $index % 2;
+	    $index++;
+	}
+	print $fh_html "</table\n";
+	print $fh_html "</html>\n";
+	print $fh_html "</body>\n";
+	$fh_html->close();
+    } else {
+	print "$FN_index_html is Up to Date\n";
+    }
 }
 
 #---------------------------------------------------------
@@ -1158,7 +1205,8 @@ The Default is ~/osm/pdf-atlas/
 
 =item B<--force-update>
 
-Normally the result File is only updated if the timestamp of the datafile is newer than the 
+Normally the result File is only updated if the timestamp 
+of the datafile is newer than the 
 Output pdf File
 
 =item B<--no-png>

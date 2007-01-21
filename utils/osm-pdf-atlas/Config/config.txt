@@ -11,7 +11,7 @@
 #
 # Coast:	~/osm/GSHHS/gshhs_h.b
 
-Data:	~/osm/planet/csv/osm.csv
+#Data:	~/osm/planet/csv/osm.csv
 Data_POI:	~/osm/planet/csv/points-europe.csv
 
 Styles: Config/styles.txt

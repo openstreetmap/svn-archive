@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # ---------------------- GSHHS
 gshhs=gshhs_h
 echo "check $gshhs.b"
@@ -80,9 +81,8 @@ for place_config in \
     #echo "CSV File: $pdf_name $osm_csv"
     echo "------------------------------------------------------------------"
     echo "Updating: " $places_name $pdf_name
-    echo "perl ./osm-pdf-atlas.pl -d --config=Config/config.txt --Places=$place_config"
+    create_atlas_cmd="perl ./osm-pdf-atlas.pl -v -d --config=Config/config.txt  --Data=$osm_csv --Places=$place_config"
+    echo "$create_atlas_cmd"
     echo "     ..."
-    time perl osm-pdf-atlas.pl -v \
-	--config=Config/config.txt \
-	--Places=$place_config
+    time perl $create_atlas_cm
 done

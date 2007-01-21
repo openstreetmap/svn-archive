@@ -207,14 +207,14 @@ sub ConvertPDF($){
 	print $fh_html "<h1>Index of PDF Files</h1>\n";
 	print $fh_html "<table CELLSPACING=\"0\" BORDER=\"1\"><tr>";
 	my $index=0;
-	for my $filename ( glob("$FN_dir/*.pdf") ) {
+	for my $filename ( sort glob("$FN_dir/*.pdf") ) {
 	    my $file=basename($filename);
 	    $file=~ s/.pdf//;
 	    my $name = $file;
 	    $name =~ s/osm_atlas-//;
 	    my $img = "thumbs/TN_$file-1.png";
 	    print  $fh_html "  <td> $name <br>\n";
-	    print  $fh_html "    <a href=\"index-$file.html\">\n";
+	    print  $fh_html "    <a href=\"index_$file.html\">\n";
 	    print  $fh_html "       <img height=\"400\" width=\"300\" src=\"$img\">\n";
 	    print  $fh_html "    </a>\n";
 	    print  $fh_html "  </td>\n";

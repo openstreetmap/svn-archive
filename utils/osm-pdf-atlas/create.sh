@@ -57,7 +57,7 @@ for place_config in \
     if  echo $csv_area | grep \
 	-e world  \
 	-e europe \
-	then 
+	;then 
 	echo "Ignoring $place_config with $vsc_area"
 	continue
     fi

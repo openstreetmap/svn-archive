@@ -449,18 +449,21 @@ sub DoEnd(){
 	print STDERR "Read(".$AREA_FILTER->name()."): ";
 	for my $k ( qw(tags nodes segments ways ) ) {
 	    next if $k =~ m/( estim| read| named| rss| vsz)$/;
-	    print STDERR "$k:".$Stats{$k};
+	    if ( $DEBUG>6 || $VERBOSE>6) {
+		print STDERR $k;
+	    } else {
+		print STDERR substr($k,0,1);
+	    }
+	    print STDERR ":".$Stats{$k};
 	    printf STDERR "=%.0f%%",(100*$Stats{"$k"}/$Stats{"$k read"})
 		if $Stats{"$k read"};
 	    printf STDERR " named:%d ",($Stats{"$k named"})
 		if $Stats{"$k named"} && ($VERBOSE >4);
-	    if ( $Stats{"$k read"}) {
-		printf STDERR "(%d",($Stats{"$k read"}||0);
-		printf STDERR "=%.0f%%",(100*($Stats{"$k read"}||0)/$Stats{"$k estim"})
-		    if defined($Stats{"$k estim"});
-		print STDERR ") ";
+	    printf STDERR "(%d",($Stats{"$k read"}||0);
+	    if ( $Stats{"$k read"} && defined($Stats{"$k estim"}) ) {
+		printf STDERR "=%.0f%%",(100*($Stats{"$k read"}||0)/$Stats{"$k estim"});
 	    }
-	    printf STDERR " ";
+	    print STDERR ") ";
 	}
 	
 	my $rss = sprintf("%.0f",mem_usage('rss'));

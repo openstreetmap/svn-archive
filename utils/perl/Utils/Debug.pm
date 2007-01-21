@@ -115,7 +115,7 @@ sub time_estimate($$$){
     }
     my $msg = sprintf( " %.${digits}f(%.${digits}f)%s",
 		       $time_diff/$factor,$time_estimated/$factor,$unit);
-    if ( $DEBUG >2 || $VERBOSE>4 ) {
+    if ( $DEBUG >4 || $VERBOSE>6 ) {
 	$msg  .= " since start: $time_diff sec".
 	    sprintf(" (estimate: %.2f sec)",$time_estimated).
 	    " element $elem_no($elem_max) ";

@@ -37,12 +37,14 @@ fi
 
 # We need a render, either librsvg2-bin or inkscape
 dpkg -L librsvg2-bin > /dev/null 2>/dev/null
-HAS_RSVG=$?
+#HAS_RSVG=$?
+HAS_RSVG=1
 dpkg -L inkscape > /dev/null 2>/dev/null
 HAS_INKSCAPE=$?
 if [ $HAS_RSVG == 0 ]; then
 	RENDERER="rsvg -f png data.svg data.png"
 elif [ $HAS_INKSCAPE == 0 ]; then
+#	RENDERER="inkscape -D --export-width=3000 --export-height=4000 -e data.png data.svg"
 	RENDERER="inkscape -D -e data.png data.svg"
 else
 	# No svg renderer found

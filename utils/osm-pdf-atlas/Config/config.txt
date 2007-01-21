@@ -1,19 +1,20 @@
 
-# ------------------------ Norway
-#Places: Config/places-norway.txt
-#Title: Norway road atlas
-#Filename: osm_norway.pdf
-
 # will be filled with the defaults
-#Title:	OSM Africa Atlas
-#Filename: osm_atlas-africa.pdf
-# will be filled with the defaults
+#
+# # ------------------------ Norway
+# Places: Config/places-norway.txt
+# Title: Norway road atlas
+# Filename: osm_norway.pdf
+#
+# Title:	OSM Africa Atlas
+# Filename: osm_atlas-africa.pdf
+#
+# Coast:	~/osm/GSHHS/gshhs_h.b
 
 Data:	~/osm/planet/csv/osm.csv
-#Data:	~/osm/planet/csv/osm-europe.csv
-#Data:	~/osm/planet/csv/osm-germany.csv
+Data_POI:	~/osm/planet/csv/points-europe.csv
+
 Styles: Config/styles.txt
-Coast:	~/osm/GSHHS/gshhs_h.b
 Equivalences: Config/equivalences.txt
 Filters: Config/filter.txt
 License: Config/license.txt

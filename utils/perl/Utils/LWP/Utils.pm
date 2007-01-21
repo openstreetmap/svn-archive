@@ -33,7 +33,7 @@ our $lwp_timer=0;
 		$lwp_bytes += $anz;
 		if ( time() > $lwp_timer+1){
 		    printf STDERR"LWP: got %d Bytes (%.4f MB)\r",$lwp_bytes,$lwp_bytes/1024/1024
-			if $DEBUG || $VERBOSE>1;
+			if $DEBUG>3 || $VERBOSE>4;
 		    $lwp_last_was_bytes=1;
 		    $lwp_timer = time();
 		}
@@ -43,7 +43,7 @@ our $lwp_timer=0;
 		    $lwp_bytes=0;
 		}
 		printf STDERR "LWP: $out_string\n"
-		    if $DEBUG || $VERBOSE>1; 
+		    if $DEBUG>3 || $VERBOSE>6;
 		$lwp_last_was_bytes=0;
 	    }
 	};
@@ -67,7 +67,7 @@ sub mirror_file($$){
         $PROXY ||= $ENV{'PROXY'};
         $PROXY ||= $ENV{'http_proxy'};
         print "Set Proxy to $PROXY\n" 
-	    if $PROXY && ( $DEBUG || $VERBOSE);
+	    if $PROXY && ( $DEBUG >2|| $VERBOSE>4);
     }
     if ( $PROXY ){
         $PROXY = "http://$PROXY" unless $PROXY =~ m,^.?.tp://,;
@@ -77,7 +77,7 @@ sub mirror_file($$){
     
     #$ua->level("+trace") if $DEBUG;
 
-    print STDERR "mirror_file($url --> $local_filename)\n" if $DEBUG || $VERBOSE;
+    print STDERR "mirror_file($url --> $local_filename)\n" if $DEBUG>2 || $VERBOSE>2;
     my $response = $ua->mirror($url,$local_filename);
 #   printf STDERR "success = %d <%s>",$response->is_success,$response->status_line if $DEBUG;
     
@@ -92,7 +92,7 @@ sub mirror_file($$){
             $mirror=0;
         }
     } else {
-        print "mirror_file($url): OK\n" if $DEBUG; 
+        print STDERR "mirror_file($url): OK\n" if $DEBUG>1 || $VERBOSE>4;
     }    
     return $mirror;
 }

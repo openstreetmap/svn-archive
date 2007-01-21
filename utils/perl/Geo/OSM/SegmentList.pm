@@ -26,7 +26,6 @@ use Utils::Math;
 sub load_segment_list($){
     my $do_filter_against_osm = shift;
 
-
     my $osm_segments;
     if ( -s $do_filter_against_osm ) {
 	if (  $do_filter_against_osm =~ m/\.csv/ ) {

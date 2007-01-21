@@ -34,11 +34,11 @@ use Utils::LWP::Utils;
 # As of planet-061220
 my $estimations = {
     'way' => {
-	'count' => 200877,
+	'count' => 349551,
 	'max_id' => 4080938,
     },
     'elem' => {
-	'count' => 24620105,
+	'count' => 82792930,
 	'max_id' => 24620105,
     },
     'seg' => {
@@ -46,15 +46,15 @@ my $estimations = {
 	'max_id' => 21402132,
     },
     'segment' => {
-	'count' => 4191215,
+	'count' => 7725721,
 	'max_id' => 17716919,
     },
     'tag' => {
-	'count' => 13258542,
+	'count' => 82790717,
 	'max_id' => 1,
     },
     'node' => {
-	'count' => 3924802,
+	'count' => 7501130,
 	'max_id' => 21650908,
     },
     'line' => {
@@ -162,7 +162,7 @@ sub mirror_planet(){
 	
 	$url .= "/$current_file";
 	$current_file = "$mirror_dir/$current_file";
-	print STDERR "\nMirror OSM Data from $url\n" if $VERBOSE || $DEBUG;
+	print STDERR "Mirror OSM Data from $url\n" if $VERBOSE || $DEBUG;
 	$result = mirror_file($url,$current_file);
 	return undef unless $result;
 
@@ -180,7 +180,7 @@ sub mirror_planet(){
 
     $current_file = UTF8sanitize($current_file);
 
-    if ( $DEBUG) {
+    if ( $DEBUG >2 || $VERBOSE>3) {
 	print STDERR "Sanitized File: $current_file\n";
     }
 
@@ -188,7 +188,7 @@ sub mirror_planet(){
     $current_file = $unpacked_file
 	unless file_needs_re_generation($current_file,$unpacked_file);
 
-    print STDERR "\nMirror done, using '$current_file'\n" if $VERBOSE || $DEBUG;
+    print STDERR "Mirror done, using '$current_file'\n" if $VERBOSE>1 || $DEBUG>1;
     return $current_file;
 }
 

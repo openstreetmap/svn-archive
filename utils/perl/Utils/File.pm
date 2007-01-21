@@ -9,6 +9,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 	      file_needs_re_generation
 	      mkdir_if_needed
 	      newest_unpacked_filename
+	      expand_filename
 	      );
 use strict;
 use warnings;
@@ -22,9 +23,17 @@ use File::Path;
 use Time::Local;
 
 # -----------------------------------------------------------------------------
+# Expand ~/ against Homedir of user
+sub expand_filename($){
+    my $filename = shift;
+    $filename =~ s/^\~/$ENV{HOME}/;
+    return $filename;
+}
+
+# -----------------------------------------------------------------------------
 # Open Data File in predefined Directories
 sub data_open($){
-    my $filename = shift;
+    my $filename = expand_filename(shift);
     my $fh;
 
     # If it's already an open File
@@ -62,8 +71,8 @@ sub data_open($){
 # ------------------------------------------------------------------
 # Open Data File in predefined Directories
 sub file_needs_re_generation($$){
-    my $src_filename = shift;
-    my $dst_filename = shift;
+    my $src_filename = expand_filename(shift);
+    my $dst_filename = expand_filename(shift);
 
     unless ( -e $src_filename ){
 	print STDERR "No Update makes sense, since we lack the source File: $src_filename\n" 
@@ -85,8 +94,8 @@ sub file_needs_re_generation($$){
     if (  $update_needed ) {
 	if ( $VERBOSE>1 ) {
 	    print STDERR "Update needed.\n";
-	    print STDERR "$dst_filename\t".localtime($dst_mtime)." is older than \n";
-	    print STDERR "$src_filename\t".localtime($src_mtime)."\n";
+	    print STDERR localtime($dst_mtime)."\t$dst_filename is older than \n";
+	    print STDERR localtime($src_mtime)."\t$src_filename\n";
 	}
     }
     return $update_needed;
@@ -116,7 +125,7 @@ sub newest_unpacked_filename($){
 # ------------------------------------------------------------------
 # Create Directory if needed and die if not possible
 sub mkdir_if_needed($){
-    my $dir = shift;
+    my $dir = expand_filename(shift);
     -d "$dir" or mkpath "$dir"
         or die "Cannot create Directory $dir: $!\n";
 }

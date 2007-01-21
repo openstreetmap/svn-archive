@@ -152,7 +152,7 @@ sub ConvertPDF($){
 
     return if $no_png;
 
-    my $FN_out_0 = dirname($FN_in)."/thumbs/TN_0.png";
+    my $FN_out_0 = dirname($FN_in)."/thumbs/TN_$basename-0.png";
     # convert file.pdf --> thumbs/TN_file_*.png
     if ( $force_update  || 
 	 file_needs_re_generation($pdf_filename,$FN_out_0) ){
@@ -171,7 +171,8 @@ sub ConvertPDF($){
     return if $no_html;
     my $FN_pdf_html = dirname($FN_in)."/index_$basename.html";
     if ( $force_update  || 
-	 file_needs_re_generation($pdf_filename,$FN_pdf_html) ){
+	 file_needs_re_generation($pdf_filename,$FN_pdf_html)||
+	 file_needs_re_generation($FN_out_0,$FN_pdf_html) ){
 	print STDERR "$pdf_filename will be converted to  $FN_pdf_html\n";
 	my $fh_html = IO::File->new(">$FN_pdf_html");
 	print $fh_html "<html>\n";
@@ -215,7 +216,7 @@ sub ConvertPDF($){
 	    my $img = "thumbs/TN_$file-1.png";
 	    print  $fh_html "  <td> $name <br>\n";
 	    print  $fh_html "    <a href=\"index_$file.html\">\n";
-	    print  $fh_html "       <img height=\"400\" width=\"300\" src=\"$img\">\n";
+	    print  $fh_html "       <img height=\"600\" width=\"450\" src=\"$img\">\n";
 	    print  $fh_html "    </a>\n";
 	    print  $fh_html "  </td>\n";
 	    print  $fh_html "</tr>\n<tr>\n" if $index % 2;

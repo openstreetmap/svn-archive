@@ -247,6 +247,7 @@ sub AddTitlePage($$)
     "105, 60, 6, centre, black, Created from OpenStreetMap data",
     "105, 50, 6, centre, black, http://openstreetmap.org.uk/",
     "105, 40, 6, centre, black, Published under a Creative Commons license",
+    "105, 20, 6, centre, black, Creation Date: ".localtime(time()),
     ))
     {
     my ($X, $Y, $Size, $Pos, $Colour, $Text) = split(/,\s+/, $Line);
@@ -1130,7 +1131,9 @@ The data is taken from a osm-file which is converted to a csv file.
 
 B<Common usages:>
 
-osm-pdf-atlas.pl [-d] [-v] [-h] <planet_filename.osm>
+osm-pdf-atlas.pl [-d] [-v] [-h]
+                 [-config=<xx.txt>] [--Places=<xx.txt>] 
+                 [--ResultDir=<dir>] [--no-png] [--no-html]
 
 =head1 OPTIONS
 

@@ -29,7 +29,6 @@ use Utils::LWP::Utils;
 use Utils::Math;
 use File::Slurp;
 
-sub combine_way_into_segments($); # {}
 sub output_osm($); # {}
 sub output_statistic($); # {}
 sub parse_planet($$); # {}
@@ -39,7 +38,10 @@ our $help=0;
 my $areas_todo;
 my $do_list_areas=0;
 my $do_update_only=0;
+my $tie_nodes_hash=undef;
 my $Filename;
+
+my @needed_segment_tags=qw( name amenity class highway);
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -50,6 +52,7 @@ GetOptions (
 	     'man'                 => \$man, 
 	     'h|help|x'            => \$help, 
 
+	     'tie-nodes-hash'      => \$tie_nodes_hash,
 	     'no-mirror'           => \$Utils::LWP::Utils::NO_MIRROR,
 	     'proxy=s'             => \$Utils::LWP::Utils::PROXY,
 	     'osm=s'               => \$Filename,
@@ -58,6 +61,31 @@ GetOptions (
 	     'update-only'         => \$do_update_only,
 	     )
     or pod2usage(1);
+
+$areas_todo ||= 'germany';
+$areas_todo=lc($areas_todo);
+
+# See if we'll have to tie the Nodes Hash to a File
+# This is at least 10 times slower, but we have less problems with
+# running out of memory
+if ( ! defined $tie_nodes_hash ) {
+    my $max_ram=mem_info("MemTotal");
+    $max_ram =~ s/MB//;
+    my $estimated_memory = {
+	africa     => 2500,
+	france     =>  192,
+	europe     => 3000,
+	germany    =>  500,
+	uk         =>  660,
+	world      => 4000,
+	world_east => 4000,
+	world_west => 4000,
+    };
+    for my $area ( split(",",$areas_todo )){
+	$tie_nodes_hash=1
+	    if $estimated_memory->{$area} > $max_ram;
+     }
+}
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
@@ -78,9 +106,6 @@ pod2usage(1) unless $Filename;
 our $READ_FH=undef;
 our $OK_POS=0;
 
-#$areas_todo ||= 'germany';
-$areas_todo ||= 'world';
-$areas_todo=lc($areas_todo);
 if ( $do_list_areas ) {
     print Geo::Filter::Area->list_areas()."\n";
     exit;
@@ -90,7 +115,7 @@ our (%MainAttr,$Type,%Tags, @WaySegments);
 # Stats
 our %AllTags;
 # Stored data
-our (%Nodes, %Segments, %Ways, %Stats);
+our (%Nodes, %Segments, %Stats);
 our $AREA_FILTER;
 our $PARSING_START_TIME=0;
 our $PARSING_DISPLAY_TIME=0;
@@ -105,7 +130,6 @@ mkdir_if_needed( $data_dir );
 for my $area_name ( split(",",$areas_todo) ) {
     if ( $do_update_only ) {
 	my $needs_update=0;
-	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/ways-$area_name.csv");
 	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/osm-$area_name.csv");
 	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/points-$area_name.csv");
 	$needs_update ||= file_needs_re_generation($Filename,"$data_dir/stats-$area_name.txt");
@@ -116,26 +140,24 @@ for my $area_name ( split(",",$areas_todo) ) {
     # Temporary data
     $fn_named_points="$data_dir/points-$area_name.csv";
     #unlink $fn_named_points if -s  $fn_named_points;
-    $fh_named_points = IO::File->new(">$fn_named_points");
+    $fh_named_points = IO::File->new(">$fn_named_points.part");
     $fh_named_points->binmode(':utf8');
 
     (%MainAttr,%Tags)=((),());
     $Type='';
     @WaySegments = ();
-    (%AllTags,%Nodes, %Segments, %Ways, %Stats)=((),(),(),(),());
+    (%AllTags,%Nodes, %Segments, %Stats)=((),(),(),(),());
 
     # Currently active Area Filter
     $PARSING_START_TIME=0;
-    # Estimated Number of elements to show readin progress in percent
-    # Currently taken from planet-060818
-    $Stats{"nodes estim"}    = 14135968;
-    $Stats{"segments estim"} = 10697464;
-    $Stats{"ways estim"}     = 2758781;
-    $Stats{"tags estim"}     = 53518120;
-    $Stats{"nodes"}     = 0;
-    $Stats{"segments"}     = 0;
+    # Estimated Number of elements to show progress while reading in percent
+    for my $type ( qw( tag node segment way )) {
+	$Stats{"${type}s estim"} = estimated_max_count($type);
+    }
+    $Stats{"tags"}     = 0;
+    $Stats{"nodes"}    = 0;
+    $Stats{"segments"} = 0;
     $Stats{"ways"}     = 0;
-
 
     #----------------------------------------------
     # Processing stage
@@ -143,12 +165,28 @@ for my $area_name ( split(",",$areas_todo) ) {
 
     print STDERR "creating $data_dir/osm-$area_name.csv\n" if $VERBOSE;
 
+    my $base_filename="$data_dir/osm-$area_name";
+
+    if ( $tie_nodes_hash ) {
+	# maybe we should move this file to /tmp 
+	# and lock it, and delete it in an END {} -Block
+	print STDERR "Tie-ing Nodes Hash to '$base_filename-Nodes.db'\n";
+	dbmopen(%Nodes,"$base_filename-Nodes.db",0666) 
+	    or die "Could not open DBM File '$base_filename-Nodes.db': $!";
+    }
+    $Stats{"Tie Nodes_hash"} = $tie_nodes_hash;
+
     parse_planet($Filename,$area_name);
 
     printf STDERR "Creating output files\n";
     die "No Area Name defined\n"
 	unless $area_name;
-    combine_way_into_segments("$data_dir/ways-$area_name.csv");
+
+    # close and rename poi list
+    $fh_named_points->close();
+    rename("$fn_named_points.part",$fn_named_points)
+	if -s "$fn_named_points.part";
+
     output_osm("$data_dir/osm-$area_name.csv");
     output_statistic("$data_dir/stats-$area_name.txt");
     printf STDERR "$area_name Done\n";
@@ -162,16 +200,12 @@ sub parse_planet($$){
     my $Filename = shift;
     my $area_name = shift;
 
-    print STDERR "Reading and Parsing XML from $Filename for $area_name\n" if $DEBUG;
+    print STDERR "Reading and Parsing XML from $Filename for $area_name\n" if $DEBUG|| $VERBOSE;
 
     $AREA_FILTER = Geo::Filter::Area->new( area => $area_name );
 
     $PARSING_START_TIME=time();
     $READ_FH = data_open($Filename);
-    if ( $VERBOSE || $DEBUG )  {
-	print STDERR "\n";
-	print STDERR "osm2csv: Parsing $Filename for area ".$AREA_FILTER->name()."\n";
-    }
     my $P = new XML::Parser( Handlers => {
 	Start => \&DoStart, 
 	End => \&DoEnd, 
@@ -207,66 +241,6 @@ sub parse_planet($$){
 }
 
 #----------------------------------------------
-# Combine way data into segments
-#----------------------------------------------
-sub combine_way_into_segments($) {
-    my $filename = shift;
-    $PARSING_START_TIME=time();
-
-    print STDERR "Combine way data into segments --> $filename\n" if $DEBUG ||$VERBOSE;
-    if(! open(WAYS,">$filename")) {
-	warn "combine_way_into_segments: Cannot write to $filename\n";
-	return;
-    }
-    my $way_count=0;
-    foreach my $id ( keys %Ways){
-	$way_count++;
-	my $Way = $Ways{$id};
-	next unless defined $Way;
-	if ( ( $VERBOSE || $DEBUG ) &&
-	     ( time()-$PARSING_DISPLAY_TIME >0.9)
-	     )  {
-	    $PARSING_DISPLAY_TIME= time();
-	    print STDERR "Combine way ".mem_usage();
-	    print STDERR time_estimate($PARSING_START_TIME,$way_count,$Stats{"ways"});
-	    print STDERR "\r";
-	}
-	my $segments=$Way->{"segments"};
-	my @SubSegments = split(/,/, $segments);
-	unless ( scalar(@SubSegments) ) {
-	    $Stats{"empty ways"}++; 
-	    if ( $DEBUG ) {
-		printf WAYS "No Segments for Way: Name:%s\n",($Way->{"name"}||'');
-	    }
-	    next;
-	}
-	if ( $DEBUG ) {
-	    printf WAYS "Way: %s,%s\n", $Way->{"segments"}, ($Way->{"name"}||'');
-	}
-	$Stats{"untagged ways"}++ 
-	    unless scalar( keys (%$Way)); 
-	
-	if ( $DEBUG) {
-	    printf WAYS "Copying keys: %s to segments %s\n",
-	    join(",",keys(%$Way)),
-	    join(",",@SubSegments);
-	}
-	
-	# Each segment in a way inherits the way's attributes
-	foreach my $Segment(@SubSegments){
-	    foreach my $Key(keys(%$Way)){
-		$Segments{$Segment}{$Key} = $Way->{$Key}
-	    }
-	}
-    }
-    close WAYS;
-    if ( ( $VERBOSE || $DEBUG ) ) {
-	print STDERR "\n";
-    }
-    $Stats{"time combining"} = time()-$PARSING_START_TIME;
-}
-
-#----------------------------------------------
 # Main output (segments)
 #----------------------------------------------
 sub output_osm($){
@@ -279,6 +253,7 @@ sub output_osm($){
 	warn "output_osm: Cannot write to $filename\n";
 	return;
     }
+    binmode(OSM,":utf8");
     foreach my $id (keys %Segments){
 	my $Segment = $Segments{$id};
 	next unless defined $Segment;
@@ -292,18 +267,17 @@ sub output_osm($){
 	    $Stats{"segments without endpoint nodes defined"}++;
 	    next;
 	}
-	printf OSM "%f,%f,%f,%f,%s,%s,%s",
-	$Nodes{$From}{"lat"},
-	$Nodes{$From}{"lon"},
-	$Nodes{$To}{"lat"},
-	$Nodes{$To}{"lon"},
-	($Segment->{"class"}||''),
-	($Segment->{"name"}||''),
-	($Segment->{"highway"}||'');
+
+	printf OSM "%s,%s,",$Nodes{$From},$Nodes{$To};
+	for  my $tag ( @needed_segment_tags ) {
+	    my $v='';
+	    $v = $Segment->{$tag} if defined $Segment->{$tag};
+	    print OSM "$v,";
+	}
 	foreach my $k ( keys %{$Segment} ){
 	    #next if $k =~ m/^(class|name|highway)$/;
 	    next if $k =~ m/^(from|to|segments)$/;
-	    my $v = $Segment->{$k};
+	    my $v = ($Segment->{$k}||'');
 	    printf OSM ",%s=%s",$k,$v
 	}
 	printf OSM "\n",
@@ -327,15 +301,16 @@ sub write_named_point($$){
        $Node->{"amenity"} || 
        $Node->{"class"} || 
        $Node->{"abutters"}){
-	$result = sprintf "%f,%f,%s,%s,%s",
-	$Node->{"lat"},
-	$Node->{"lon"},
-	($Node->{"name"}||''),
-	($Node->{"amenity"}||''),
-	($Node->{"class"}||'');
+	$result = sprintf( "%f,%f",$Node->{"lat"},$Node->{"lon"});
+	for  my $tag ( @needed_segment_tags ) {
+	    $result .= sprintf( ",%s", ($Node->{$tag}||''));
+	};
 	foreach my $k ( keys %{$Node} ) {
-	    #next if $k =~ m/^(class|name|highway)$/;
-	    next if $k =~ m/^(lat|lon)$/;
+	    next if $k =~ m/created_by/;
+	    next if $k =~ m/converted_by/;
+	    next if $k =~ m/source/;
+	    next if $k =~ m/time/;
+	    next if $k =~ m/^(lat|lon|name|amenity|class|highway)$/;
 	    my $v = $Node->{$k};
 	    $result .= sprintf ",%s=%s",$k,$v;
 	}	    
@@ -353,12 +328,14 @@ sub output_statistic($){
 	warn "output_osm: Cannot write to $filename\n";
 	return;
     }
+    binmode(STATS,":utf8");
+
     foreach(sort {$AllTags{$b} <=> $AllTags{$a}} keys(%AllTags)){
 	printf STATS "* %d %s\n", $AllTags{$_}, $_;
     }
     printf STATS "\n\nStats:\n";
-    foreach(keys(%Stats)){
-	printf STATS "* %d %s\n", $Stats{$_}, $_;
+    for my $k ( keys(%Stats) ){
+	printf STATS "* %5d %s\n", $Stats{$k}, ($k||'');
     }
 }
 
@@ -403,17 +380,25 @@ sub DoStart()
 sub DoEnd(){
     my ($Expat, $Element) = @_;
     my $ID = $MainAttr{"id"};
+    $Stats{"${Element}s read"}++;
+    $Stats{"tags read"}++;
+    if ( defined( $Stats{"${Element}s read"} )
+	 &&( $Stats{"${Element}s read"}== 1 ) ){
+	$Stats{"memory at 1st $Element rss"} = sprintf("%.0f",mem_usage('rss'));
+	$Stats{"memory at 1st $Element vsz"} = sprintf("%.0f",mem_usage('vsz'));
+	if ( $DEBUG >1 || $VERBOSE >1) {
+	    print STDERR "\n";
+	}
+    }
+    
     if($Element eq "node"){
 	my $node={};
 	$node->{"lat"} = $MainAttr{"lat"};
 	$node->{"lon"} = $MainAttr{"lon"};
 	
 	if ( $AREA_FILTER->inside($node) ) {
-	    $Nodes{$ID}{"lat"} = $MainAttr{"lat"};
-	    $Nodes{$ID}{"lon"} = $MainAttr{"lon"};
+	    $Nodes{$ID} = sprintf("%f,%f",$MainAttr{lat}, $MainAttr{lon});
 	    foreach(keys(%Tags)){
-		next if /created_by/;
-		next if /time/;
 		$node->{$_} = $Tags{$_};
 	    }
 	    write_named_point($fh_named_points,$node);
@@ -421,7 +406,6 @@ sub DoEnd(){
 	    $Stats{"nodes tagged "}++ if($MainAttr{"tags"});
 	    $Stats{"nodes"}++;
 	}
-	$Stats{"nodes read"}++;
     }
 
     if($Element eq "segment"){
@@ -430,32 +414,31 @@ sub DoEnd(){
 	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
 	    $Segments{$ID}{"from"} = $from;
 	    $Segments{$ID}{"to"} = $to;
-	    foreach(keys(%Tags)){
-		next if /created_by/;
-		next if /time/;
+
+	    for ( @needed_segment_tags ) {
 		$Segments{$ID}{$_} = $Tags{$_};
 	    }
-	    $Stats{"segments tagged"}++ if($MainAttr{"tags"});
+	    $Stats{"segments tagged"}++ if $MainAttr{"tags"};
 	    $Stats{"segments"}++;
 	}
-	$Stats{"segments read"}++;
     }
 
     if($Element eq "way"){
 	if ( @WaySegments ) {
-	    $Ways{$ID}{"segments"} = join(",",@WaySegments);
-	    foreach(keys(%Tags)){
-		next if /created_by/;
-		next if /time/;
-		$Ways{$ID}{$_} = $Tags{$_};
-	    }    
+	    foreach my $seg_id( @WaySegments ){ # we only have the needed ones in here
+		for my $tag ( @needed_segment_tags ) {
+		    if ( defined($MainAttr{$tag}) && $MainAttr{$tag} ) {
+			$Segments{$seg_id}{$tag} = $MainAttr{$tag};
+		    }
+		    if ( defined($Tags{$tag}) && $Tags{$tag} ) {
+			$Segments{$seg_id}{$tag} = $Tags{$tag};
+		    }
+		}
+	    }
 	    $Stats{"ways"}++;
 	}
-	$Stats{"ways read"}++;
     }
 
-    $Stats{"tags read"}++;
-#    $OK_POS=$READ_FH->getpos();
     if ( ( $VERBOSE || $DEBUG ) &&
 #	 ! ( $Stats{"tags read"} % 10000 ) &&
 	 ( time()-$PARSING_DISPLAY_TIME >0.9)
@@ -464,25 +447,28 @@ sub DoEnd(){
 	$PARSING_DISPLAY_TIME= time();
 	print STDERR "\r";
 	print STDERR "Read(".$AREA_FILTER->name()."): ";
-	my $last_k='';
-	for my $k ( sort ( qw(tags nodes segments ways ) ,keys %Stats )) {
-	    next if $last_k eq $k; $last_k=$k;
-	    next if $k =~ m/( estim| read)$/;
-	    next if $k =~ m/named/ && $VERBOSE <=1;
-	    next if $k !~ m/tags/ && $VERBOSE <=2;
-	    print STDERR " $k:".$Stats{$k};
-	    if ( defined($Stats{"$k read"}) ) {
-		printf STDERR " %.0f%%",(100*$Stats{"$k read"}/$Stats{"$k estim"}) 
+	for my $k ( qw(tags nodes segments ways ) ) {
+	    next if $k =~ m/( estim| read| named| rss| vsz)$/;
+	    print STDERR "$k:".$Stats{$k};
+	    printf STDERR "=%.0f%%",(100*$Stats{"$k"}/$Stats{"$k read"})
+		if $Stats{"$k read"};
+	    printf STDERR " named:%d ",($Stats{"$k named"})
+		if $Stats{"$k named"} && ($VERBOSE >4);
+	    if ( $Stats{"$k read"}) {
+		printf STDERR "(%d",($Stats{"$k read"}||0);
+		printf STDERR "=%.0f%%",(100*($Stats{"$k read"}||0)/$Stats{"$k estim"})
 		    if defined($Stats{"$k estim"});
-		print STDERR "(".$Stats{"$k read"}.") ";
+		print STDERR ") ";
 	    }
-	    print STDERR " ";
+	    printf STDERR " ";
 	}
-
+	
 	my $rss = sprintf("%.0f",mem_usage('rss'));
 	$Stats{"max rss"} = max($Stats{"max rss"},$rss) if $rss;
+	printf STDERR "max-rss %d" ,($Stats{"max rss"}) if $Stats{"max rss"} >$rss*1.3;
 	my $vsz = sprintf("%.0f",mem_usage('vsz'));
 	$Stats{"max vsz"} = max($Stats{"max vsz"},$vsz) if $vsz;
+	printf STDERR "max-vsz %d" ,($Stats{"max vsz"}) if $Stats{"max vsz"} >$vsz*1.3;
 
 	print STDERR mem_usage();
 	print STDERR time_estimate($PARSING_START_TIME,$Stats{"tags read"},$Stats{"tags estim"});
@@ -544,6 +530,15 @@ Only read area for processing
 =item B<--list-areas>
 
 print all areas possible
+
+=item B<--tie-nodes-hash>
+
+if set we will tie the Nodes Hash to a File
+This is at least 10 times slower, but we have less problems with
+running out of memory.
+We have an internal list of estimated memory use and we'll try
+automgically to tie it if you don't have enough memory for a
+specified region.
 
 =item B<planet_filename.osm>
 

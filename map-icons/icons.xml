@@ -199,6 +199,8 @@
 
   <rule>
     <condition k="poi" v="sightseeing"/>
+    <condition k="tourism" v="attraction" />
+    <condition k="class" v="point of interest" />
     <scale_min>1</scale_min>
     <scale_max>25000</scale_max>
     <title lang="de">Sehenswürdigkeit</title>
@@ -660,6 +662,8 @@
 
   <rule>
     <condition k="poi" v="food.pub"/>
+    <condition k="amenity" v="pub" />
+    <condition k="class" v="pub" />
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -1841,6 +1845,8 @@
 
   <rule>
     <condition k="poi" v="places.peak"/>
+    <condition k="natural" v="peak" />
+    <condition k="class" v="hill" />
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2124,6 +2130,8 @@
 
   <rule>
     <condition k="poi" v="religion.church"/>
+    <condition k="class" v="church" />
+    <condition k="amenity" v="place_of_worship" />
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2754,6 +2762,8 @@
 
   <rule>
     <condition k="poi" v="sightseeing.viewpoint"/>
+    <condition k="tourism" v="viewpoint" />
+    <condition k="class" v="viewpoint" />
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -3117,6 +3127,7 @@
 
   <rule>
     <condition k="poi" v="vehicle.caution"/>
+    <condition k="class" v="caution" />
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -3295,6 +3306,8 @@
 
   <rule>
     <condition k="poi" v="vehicle.parking"/>
+    <condition k="amenity" v="parking" />
+    <condition k="class" v="car park" />
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>

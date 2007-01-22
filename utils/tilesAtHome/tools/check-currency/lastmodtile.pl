@@ -49,9 +49,10 @@ my %tile_last_modified;
 
 open(PLANET, "$file") or die "Cannot open $file for reading";
 print STDERR "reading ways...\n";
+my $c = 0;
 while(<PLANET>) 
 {
-    if (/^  <way id="(\d+)" ()()timestamp="(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)/)
+    if (/^  <way id="(\d+)"( )(timestamp=")(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)([+-])(\d\d):(\d\d)/)
     {
         my $lm;
         if ($10 eq "+") 
@@ -71,8 +72,9 @@ while(<PLANET>)
             while(<PLANET>) 
             {
                 last if (/^  <\/way>/);
-                if (/^    <seg id=(\d+)/) 
+                if (/^    <seg id="(\d+)/) 
                 {
+                    $c++;
                     $seg_last_modified{$1} = $lm if ($seg_last_modified{$1}<$lm);
                 }
             }
@@ -81,7 +83,8 @@ while(<PLANET>)
     printf STDERR "\r%dm lines...",$./1000000 if($.%1000000==0);
 }
 close PLANET;
-print STDERR "\rreading segments...\n";
+printf STDERR "\r%d segment references extracted from %d ways\n", 
+    scalar(keys(%seg_last_modified)), $c;
 
 # Step 2: Read segment data
 #
@@ -90,6 +93,8 @@ print STDERR "\rreading segments...\n";
 # in step #1). Store this date as the preliminary last-modified date
 # for each of the nodes used by the segment.
 
+print STDERR "\rreading segments...\n";
+my $c = 0;
 open(PLANET, "$file") or die "Cannot open $file for reading";
 while(<PLANET>) 
 {
@@ -110,6 +115,7 @@ while(<PLANET>)
         } 
         else
         {
+            $c++;
             if (defined($seg_last_modified{$1}))
             {
                 $lm = $seg_last_modified{$1} if ($lm< $seg_last_modified{$1});
@@ -126,6 +132,8 @@ while(<PLANET>)
     printf STDERR "\r%dm lines...",$./1000000 if($.%1000000==0);
 }
 close PLANET;
+printf STDERR "\r%d node references extracted from %d segments\n", 
+    scalar(keys(%node_last_modified)), $c;
 
 undef %seg_last_modified;
 
@@ -137,7 +145,8 @@ undef %seg_last_modified;
 # update the tile's.
 
 open(PLANET, "$file") or die "Cannot open $file for reading";
-print STDERR "\rreading nodes...\n";
+print STDERR "reading nodes...\n";
+my $c=0;
 while(<PLANET>) 
 {
     if (/^  <node id="(\d+)" lat="([0-9.-]+)" lon="([0-9.-]+)" timestamp="(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)([+-])(\d\d):(\d\d)/)
@@ -157,6 +166,7 @@ while(<PLANET>)
         } 
         else
         {
+            $c++;
             if (defined($node_last_modified{$1}))
             {
                 $lm = $node_last_modified{$1} if ($lm<$node_last_modified{$1});
@@ -175,7 +185,11 @@ while(<PLANET>)
 close PLANET;
 
 undef %node_last_modified;
-print STDERR "\rgenerating output...\n";
+
+printf STDERR "\r%d tile references extracted from %d nodes\n", 
+    scalar(keys(%tile_last_modified)), $c;
+
+print STDERR "generating output...\n";
 
 foreach my $tile(keys %tile_last_modified) 
 {

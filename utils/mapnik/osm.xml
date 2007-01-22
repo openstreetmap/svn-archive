@@ -31,37 +31,37 @@
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='post_box'</Filter>
-      <PointSymbolizer file="/home/steve/symbols/postoffice.png" type="png" width="21" height="11" />
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/postoffice.png" type="png" width="21" height="11" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='pub'</Filter>
-      <PointSymbolizer file="/home/steve/symbols/pint.png" type="png" width="12" height="18" />
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/pint.png" type="png" width="12" height="18" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[natural]='peak'</Filter>
-      <PointSymbolizer file="/home/nick/peak.png" type="png" width="8" height="8" />
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/peak.png" type="png" width="8" height="8" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[man_made]='mast'</Filter>
-      <PointSymbolizer file="/home/nick/tower.png" type="png" width="32" height="32" />
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/tower.png" type="png" width="32" height="32" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='recycling'</Filter>
-      <PointSymbolizer file="/home/steve/symbols/recycling.png" type="png" width="20" height="20" />
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/recycling.png" type="png" width="20" height="20" />
     </Rule>
     <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='bus_stop'</Filter>
-      <PointSymbolizer file="/home/steve/symbols/bus_stop.png" type="png" width="30" height="12" />
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/bus_stop.png" type="png" width="30" height="12" />
     </Rule>
      <Rule>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <Filter>[amenity]='parking'</Filter>
-      <PointSymbolizer file="/home/steve/symbols/parking.png" type="png" width="24" height="24" allow_overlap="false"/>
+      <PointSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/parking.png" type="png" width="24" height="24" allow_overlap="false"/>
      </Rule>
   </Style>
   
@@ -599,7 +599,7 @@
     <Rule>
       <Filter>[railway] = 'rail' or [railway] = 'tram' or [railway] = 'light_rail'</Filter>
       <MaxScaleDenominator>25000000</MaxScaleDenominator>
-      <LinePatternSymbolizer file="/home/artem/symbols/rail.png" type="png" width="11" height="4" />
+      <LinePatternSymbolizer file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/rail.png" type="png" width="11" height="4" />
     </Rule>
     <Rule>
       <Filter>[highway] = 'bridleway'</Filter>
@@ -709,13 +709,13 @@
       <Filter>[highway] = 'motorway' and [length] = 2</Filter>
       <MaxScaleDenominator>500000</MaxScaleDenominator>
       <MinScaleDenominator>100</MinScaleDenominator>
-      <ShieldSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="white" placement="line" file="/home/artem/symbols/motorway_shield.png" type="png" width="32" height="24"/>
+      <ShieldSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="white" placement="line" file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/motorway_shield.png" type="png" width="32" height="24"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'motorway' and [length] = 3</Filter>
       <MaxScaleDenominator>500000</MaxScaleDenominator>
       <MinScaleDenominator>100</MinScaleDenominator>
-      <ShieldSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="white" placement="line" file="/home/artem/symbols/motorway_shield2.png" type="png" width="40" height="24"/>
+      <ShieldSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="white" placement="line" file="/home/mapnik/svn.openstreetmap.org/utils/mapnik/symbols/motorway_shield2.png" type="png" width="40" height="24"/>
     </Rule>
     <Rule>
       <Filter>[highway] = 'trunk' or [highway] = 'primary' or [highway] = 'secondary'</Filter>
@@ -741,14 +741,14 @@
     <StyleName>water_poly</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/steve/vmap0/water</Parameter>
+      <Parameter name="file">/home/mapnik/osm/vmap0/water</Parameter>
     </Datasource>
   </Layer>
   <Layer name="world" status="on">
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/steve/vmap0/boundaries</Parameter>
+      <Parameter name="file">/home/mapnik/osm/vmap0/boundaries</Parameter>
     </Datasource>
   </Layer>
   <Layer name="waterway" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
@@ -831,7 +831,7 @@
     <StyleName>places</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/steve/vmap0/places_eu</Parameter>
+      <Parameter name="file">/home/mapnik/osm/vmap0/places_eu</Parameter>
     </Datasource>
   </Layer>
 </Map>

@@ -102,6 +102,10 @@
                 <polyline name="Railways" class="railway-rail"/>
             </rule>
 
+            <rule e="segment|way" k="railway" v="tram">
+                <polyline name="Tramways" class="railway-tram"/>
+            </rule>
+
         </folder>
 
     </rule>
@@ -162,6 +166,12 @@
         <Style id="railway-rail">
             <LineStyle>
                 <color>ff000000</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="railway-tram">
+            <LineStyle>
+                <color>9f000000</color>
                 <width>2</width>
             </LineStyle>
         </Style>

@@ -1,4 +1,4 @@
-Germany:             50.,     12.,     6.0,  area
+Germany:             50.,     11.5,     5.5,  area
 Bayern:              48.140,  11.557,  3.0,  area
 Baden-Wuertenberg:   48.780,   9.172,  2.0,  area
 #Stuttgart:           48.780,   9.172,  0.4,  city

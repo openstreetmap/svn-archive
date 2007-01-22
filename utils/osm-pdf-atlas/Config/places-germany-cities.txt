@@ -1,4 +1,4 @@
-Germany:             50.,     12.,     8.0,  area
+Germany:             50.,     11.5,     6.0,  area
 #
 Stuttgart:           48.780,   9.172,  0.4,  city
 Stuttgart-Center:    48.780,   9.172,  0.1,  city

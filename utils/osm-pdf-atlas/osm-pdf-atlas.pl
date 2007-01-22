@@ -179,11 +179,22 @@ sub ConvertPDF($){
 	print $fh_html "<title>Index for $basename</title>\n";
 	print $fh_html "<body>\n";
 	print $fh_html "<h1>Index for $basename</h1>\n";
+	
+	print  $fh_html "     <a href=\"$basename.pdf\">\n";
+	print  $fh_html "       Link to Complete PDF File $basename.pdf\n";
+	print  $fh_html "     </a>\n";
+	print  $fh_html "     <br>\n";
+	print  $fh_html "     <br>\n";
+
 	print $fh_html "<table CELLSPACING=\"0\" BORDER=\"1\"><tr>";
 	my $index=0;
-	while ( -s "$base_dir/thumbs/TN_-$index.png" ) {
+	while ( -s "$base_dir/thumbs/TN_$basename-$index.png" ) {
 	    my $img = "thumbs/TN_$basename-$index.png";
-	    print  $fh_html "  <td><img src=\"$img\"></td>\n";
+	    print  $fh_html "  <td>\n";
+	    print  $fh_html "     <a href=\"$img\">\n";
+	    print  $fh_html "       <img src=\"$img\">\n";
+	    print  $fh_html "     </a>\n";
+	    print  $fh_html "  </td>\n";
 	    print  $fh_html "</tr>\n<tr>\n" if $index % 2;
 	    $index++;
 	}

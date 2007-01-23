@@ -4,6 +4,8 @@
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="tofrom2segment" match="/osm/segment" use="concat(@to, ' ', @from)"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="nodesbycoordinates" match="/osm/node" use="concat(@lon,' ', @lat)"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment2way" match="/osm/way" use="seg/@id"/>
+  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node-from" match="/osm/segment" use="@from"/>
+  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node-to" match="/osm/segment" use="@to"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node" match="/osm/node" use="@id"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment" match="/osm/segment" use="@id"/>
   <xslout:template name="all-tests">
@@ -14,6 +16,7 @@
     <maplint:test agent="xsltests" group="base" id="segment-with-from-equals-to" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="base" id="segment-without-way" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="tagged-segment" version="1" severity="error"/>
+    <maplint:test agent="xsltests" group="base" id="untagged-unconnected-node" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="ways-with-unordered-segments" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="deprecated-tags" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="motorway-without-ref" version="1" severity="error"/>
@@ -27,6 +30,7 @@
   </xslout:template>
   <xslout:template name="call-tests-node">
     <xslout:call-template name="test-base-nodes-on-same-spot-node"/>
+    <xslout:call-template name="test-base-untagged-unconnected-node-node"/>
     <xslout:call-template name="test-strict-unknown-tags-node"/>
   </xslout:template>
   <xslout:template name="call-tests-segment">
@@ -69,6 +73,11 @@
                     </xsl:if>
                 </xsl:for-each>
             </maplint:result>
+        </xsl:if>
+    </xslout:template>
+  <xslout:template name="test-base-untagged-unconnected-node-node">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(tag[@k != 'created_by'] or key('node-from', @id) or key('node-to', @id))">
+            <maplint:result ref="untagged-unconnected-node"/>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-strict-unknown-tags-node">

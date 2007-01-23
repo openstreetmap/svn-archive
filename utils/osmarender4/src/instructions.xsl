@@ -75,7 +75,49 @@
 		</xsl:call-template>
 
 	</xsl:template>
-	
+
+
+	<!-- Process a <tunnel> instruction -->
+	<xsl:template match='tunnel'>
+		<xsl:param name='elements' />
+		<xsl:param name='layer' />
+		<xsl:param name='classes' />
+
+		<!-- This is the instruction that is currently being processed -->
+		<xsl:variable name='instruction' select='.'/>
+
+		<g>
+			<xsl:apply-templates select='@*' mode='copyAttributes'> <!-- Add all the svg attributes of the <tunnel> instruction to the <g> element -->
+                <xsl:with-param name="classes" select="$classes"/>
+			</xsl:apply-templates>
+
+			<!-- For each segment and way -->
+			<xsl:apply-templates select='$elements' mode='tunnel'>
+				<xsl:with-param name='instruction' select='$instruction' />
+				<xsl:with-param name='layer' select='$layer' />
+				<xsl:with-param name='classes' select='$classes' />
+			</xsl:apply-templates>
+		</g>
+	</xsl:template>
+
+	<!-- Draw tunnel for a way (draw all the segments that belong to the way) -->
+	<xsl:template match='way' mode='tunnel'>
+		<xsl:param name='instruction' />
+		<xsl:param name='layer' />
+		<xsl:param name='classes' />
+
+		<!-- The current <way> element -->
+		<xsl:variable name='way' select='.' />
+		
+		<xsl:call-template name='drawTunnel'>
+			<xsl:with-param name='instruction' select='$instruction'/>
+			<xsl:with-param name='way' select='$way'/>
+			<xsl:with-param name='layer' select='$layer' />
+			<xsl:with-param name='classes' select='$classes' />
+		</xsl:call-template>
+
+	</xsl:template>
+
 
 	<!-- Process an <area> instruction -->
 	<xsl:template match='area'>
@@ -92,7 +134,6 @@
 			<xsl:apply-templates select='$elements' mode='area'>
 				<xsl:with-param name='instruction' select='$instruction' />
 			</xsl:apply-templates>
-
 		</g>
 	</xsl:template>
 

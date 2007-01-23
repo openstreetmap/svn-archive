@@ -83,4 +83,5 @@ Revision history:
                 This version needs some EXSLT extensions, this could break osmarender in some XSL transformators that don't support this. Tested with xsltproc, xmlstarlet and XALAN Java, the C version of XALAN does not work.
     2007-01-16  Added rendering for railway=halt. (Joto)
     2007-01-17  Fixed bug where text on segment wasn't rendered. (Joto)
+4.1 2007-01-23  Improved tunnel rendering (Joto)
 

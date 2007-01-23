@@ -88,67 +88,103 @@
 		<xsl:param name='classes'/>
 
         <xsl:variable name="tunnel" select="$way/tag[@k='tunnel']"/>
-    <xsl:if test="not($tunnel and ($tunnel/@v = 'yes') or ($tunnel/@v = 'true'))">
-		<!-- For the first and last segments in the way if the start or end is a continuation, then draw a round-capped stub segment
-				that is 1/10th the length of the segment and without any markers.  TODO: do this for all sub-paths within the path.
-		     Count the number of segments that link to the from node of this segment.  Only count them if they belong to a way that
-		     has a layer tag that is greater than the layer of this way.  If there are any such segments then draw rounded
-		     end fragments. -->
-		<!-- Process the first segment in the way -->
-		<xsl:variable name='firstSegment' select='key("segmentById",$way/seg[1]/@id)'/>
-		<xsl:variable name='firstSegmentFromNode' select='key("nodeById",$firstSegment/@from)'/>
-		<xsl:variable name='firstSegmentToNode' select='key("nodeById",$firstSegment/@to)'/>
-		<xsl:variable name='firstSegmentInboundLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$firstSegmentFromNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
-		<xsl:variable name='firstSegmentInboundNoLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$firstSegmentFromNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
-		<xsl:variable name='firstSegmentOutboundLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$firstSegmentFromNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
-		<xsl:variable name='firstSegmentOutboundNoLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$firstSegmentFromNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
-		<xsl:variable name='firstSegmentLayerCount' select='($firstSegmentInboundLayerCount+$firstSegmentInboundNoLayerCount+$firstSegmentOutboundLayerCount+$firstSegmentOutboundNoLayerCount)>1' />
+        <xsl:variable name="railway" select="$way/tag[@k='railway' and @v='rail']"/>
 
-		<xsl:if test='$firstSegmentLayerCount'>
-			<xsl:variable name='x1' select='($width)-((($topRightLongitude)-($firstSegmentFromNode/@lon))*10000*$scale)' />
-			<xsl:variable name='y1' select='($height)+((($bottomLeftLatitude)-($firstSegmentFromNode/@lat))*10000*$scale*$projection)' />
-			<xsl:variable name='x2' select='($width)-((($topRightLongitude)-($firstSegmentToNode/@lon))*10000*$scale)' />
-			<xsl:variable name='y2' select='($height)+((($bottomLeftLatitude)-($firstSegmentToNode/@lat))*10000*$scale*$projection)' />
-			<xsl:call-template name='drawSegmentFragment'>
-				<xsl:with-param name='x1' select='$x1'/>
-				<xsl:with-param name='y1' select='$y1'/>
-				<xsl:with-param name='x2' select='number($x1)+((number($x2)-number($x1)) div 10)'/>
-				<xsl:with-param name='y2' select='number($y1)+((number($y2)-number($y1)) div 10)'/>
-			</xsl:call-template>
-		</xsl:if>
+        <xsl:if test="not($tunnel and ($tunnel/@v = 'yes') or ($tunnel/@v = 'true'))">  <!-- if this is not a tunnel -->
 
-		<!-- Process the last segment in the way -->
-    	<xsl:variable name='lastSegment' select='key("segmentById",$way/seg[last()]/@id)'/>
-		<xsl:variable name='lastSegmentFromNode' select='key("nodeById",$lastSegment/@from)'/>
-		<xsl:variable name='lastSegmentToNode' select='key("nodeById",$lastSegment/@to)'/>
-		<xsl:variable name='lastSegmentToNodeLayer' select='(count(key("segmentByFromNode",$lastSegmentToNode/@id)[@k="layer" and @v &gt; $layer])+count(key("segmentByToNode",$lastSegmentToNode/@id)[@k="layer" and @v &gt; $layer]))>0' />
-		<xsl:variable name='lastSegmentInboundLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$lastSegmentToNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
-		<xsl:variable name='lastSegmentInboundNoLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$lastSegmentToNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
-		<xsl:variable name='lastSegmentOutboundLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$lastSegmentToNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
-		<xsl:variable name='lastSegmentOutboundNoLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$lastSegmentToNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
-		<xsl:variable name='lastSegmentLayerCount' select='($lastSegmentInboundLayerCount+$lastSegmentInboundNoLayerCount+$lastSegmentOutboundLayerCount+$lastSegmentOutboundNoLayerCount)>1' />
+            <xsl:if test="not($railway)">
 
-		<xsl:if test='$lastSegmentLayerCount'>
-			<xsl:variable name='x1' select='($width)-((($topRightLongitude)-($lastSegmentFromNode/@lon))*10000*$scale)' />
-			<xsl:variable name='y1' select='($height)+((($bottomLeftLatitude)-($lastSegmentFromNode/@lat))*10000*$scale*$projection)' />
-			<xsl:variable name='x2' select='($width)-((($topRightLongitude)-($lastSegmentToNode/@lon))*10000*$scale)' />
-			<xsl:variable name='y2' select='($height)+((($bottomLeftLatitude)-($lastSegmentToNode/@lat))*10000*$scale*$projection)' />
-			<xsl:call-template name='drawSegmentFragment'>
-				<xsl:with-param name='x1' select='number($x2)-((number($x2)-number($x1)) div 10)'/>
-				<xsl:with-param name='y1' select='number($y2)-((number($y2)-number($y1)) div 10)'/>
-				<xsl:with-param name='x2' select='$x2'/>
-				<xsl:with-param name='y2' select='$y2'/>
-			</xsl:call-template>
-		</xsl:if>
-    </xsl:if>
+                <!-- For the first and last segments in the way if the start or end is a continuation, then draw a round-capped stub segment
+                        that is 1/10th the length of the segment and without any markers.  TODO: do this for all sub-paths within the path.
+                    Count the number of segments that link to the from node of this segment.  Only count them if they belong to a way that
+                    has a layer tag that is greater than the layer of this way.  If there are any such segments then draw rounded
+                    end fragments. -->
+                <!-- Process the first segment in the way -->
+                <xsl:variable name='firstSegment' select='key("segmentById",$way/seg[1]/@id)'/>
+                <xsl:variable name='firstSegmentFromNode' select='key("nodeById",$firstSegment/@from)'/>
+                <xsl:variable name='firstSegmentToNode' select='key("nodeById",$firstSegment/@to)'/>
+                <xsl:variable name='firstSegmentInboundLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$firstSegmentFromNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
+                <xsl:variable name='firstSegmentInboundNoLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$firstSegmentFromNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
+                <xsl:variable name='firstSegmentOutboundLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$firstSegmentFromNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
+                <xsl:variable name='firstSegmentOutboundNoLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$firstSegmentFromNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
+                <xsl:variable name='firstSegmentLayerCount' select='($firstSegmentInboundLayerCount+$firstSegmentInboundNoLayerCount+$firstSegmentOutboundLayerCount+$firstSegmentOutboundNoLayerCount)>1' />
 
-		<!-- Now draw the way itself -->
-		<use xlink:href='#way_{$way/@id}'>
-			<xsl:apply-templates select='$instruction/@*' mode='copyAttributes'>
-                <xsl:with-param name="classes" select="$classes"/>
-			</xsl:apply-templates>
-		</use>
+                <xsl:if test='$firstSegmentLayerCount'>
+                    <xsl:variable name='x1' select='($width)-((($topRightLongitude)-($firstSegmentFromNode/@lon))*10000*$scale)' />
+                    <xsl:variable name='y1' select='($height)+((($bottomLeftLatitude)-($firstSegmentFromNode/@lat))*10000*$scale*$projection)' />
+                    <xsl:variable name='x2' select='($width)-((($topRightLongitude)-($firstSegmentToNode/@lon))*10000*$scale)' />
+                    <xsl:variable name='y2' select='($height)+((($bottomLeftLatitude)-($firstSegmentToNode/@lat))*10000*$scale*$projection)' />
+                    <xsl:call-template name='drawSegmentFragment'>
+                        <xsl:with-param name='x1' select='$x1'/>
+                        <xsl:with-param name='y1' select='$y1'/>
+                        <xsl:with-param name='x2' select='number($x1)+((number($x2)-number($x1)) div 10)'/>
+                        <xsl:with-param name='y2' select='number($y1)+((number($y2)-number($y1)) div 10)'/>
+                    </xsl:call-template>
+                </xsl:if>
 
+                <!-- Process the last segment in the way -->
+                <xsl:variable name='lastSegment' select='key("segmentById",$way/seg[last()]/@id)'/>
+                <xsl:variable name='lastSegmentFromNode' select='key("nodeById",$lastSegment/@from)'/>
+                <xsl:variable name='lastSegmentToNode' select='key("nodeById",$lastSegment/@to)'/>
+                <xsl:variable name='lastSegmentToNodeLayer' select='(count(key("segmentByFromNode",$lastSegmentToNode/@id)[@k="layer" and @v &gt; $layer])+count(key("segmentByToNode",$lastSegmentToNode/@id)[@k="layer" and @v &gt; $layer]))>0' />
+                <xsl:variable name='lastSegmentInboundLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$lastSegmentToNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
+                <xsl:variable name='lastSegmentInboundNoLayerCount' select='count(key("wayBySegment",key("segmentByToNode",$lastSegmentToNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
+                <xsl:variable name='lastSegmentOutboundLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$lastSegmentToNode/@id)/@id)/tag[@k="layer" and @v &gt;= $layer])' />
+                <xsl:variable name='lastSegmentOutboundNoLayerCount' select='count(key("wayBySegment",key("segmentByFromNode",$lastSegmentToNode/@id)/@id)[count(tag[@k="layer"])=0 and $layer &lt; 1])' />
+                <xsl:variable name='lastSegmentLayerCount' select='($lastSegmentInboundLayerCount+$lastSegmentInboundNoLayerCount+$lastSegmentOutboundLayerCount+$lastSegmentOutboundNoLayerCount)>1' />
+
+                <xsl:if test='$lastSegmentLayerCount'>
+                    <xsl:variable name='x1' select='($width)-((($topRightLongitude)-($lastSegmentFromNode/@lon))*10000*$scale)' />
+                    <xsl:variable name='y1' select='($height)+((($bottomLeftLatitude)-($lastSegmentFromNode/@lat))*10000*$scale*$projection)' />
+                    <xsl:variable name='x2' select='($width)-((($topRightLongitude)-($lastSegmentToNode/@lon))*10000*$scale)' />
+                    <xsl:variable name='y2' select='($height)+((($bottomLeftLatitude)-($lastSegmentToNode/@lat))*10000*$scale*$projection)' />
+                    <xsl:call-template name='drawSegmentFragment'>
+                        <xsl:with-param name='x1' select='number($x2)-((number($x2)-number($x1)) div 10)'/>
+                        <xsl:with-param name='y1' select='number($y2)-((number($y2)-number($y1)) div 10)'/>
+                        <xsl:with-param name='x2' select='$x2'/>
+                        <xsl:with-param name='y2' select='$y2'/>
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:if>
+
+            <!-- Now draw the way itself -->
+            <use xlink:href='#way_{$way/@id}'>
+                <xsl:apply-templates select='$instruction/@*' mode='copyAttributes'>
+                    <xsl:with-param name="classes" select="$classes"/>
+                </xsl:apply-templates>
+            </use>
+        </xsl:if>
+
+	</xsl:template>
+
+
+    <!-- Draw a tunnel -->
+	<xsl:template name='drawTunnel'>
+		<xsl:param name='instruction'/>
+		<xsl:param name='way'/>
+		<xsl:param name='layer'/>
+		<xsl:param name='classes'/>
+
+        <xsl:choose>
+            <xsl:when test="$instruction/@width &gt; 0">
+                <!-- wide tunnels use a dashed line as wide as the road casing with a mask as wide as the road core which will be
+                rendered as a double dotted line -->
+                <mask id="mask_{@id}" maskUnits="userSpaceOnUse">
+                    <use xlink:href="#way_{@id}" style="stroke:black;fill:none;" class="{$instruction/@class}-core"/>
+                    <rect x='0px' y='0px' height='{$documentHeight}px' width='{$documentWidth}px' style="fill:white;"/>
+                </mask>
+                <use xlink:href='#way_{$way/@id}' mask="url(#mask_{@id})" style="stroke-dasharray:0.2,0.2;" class="{$instruction/@class}-casing"/>
+                <use xlink:href='#way_{$way/@id}' class="tunnel-casing" style="stroke-width:{$instruction/@width}px;"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- narrow tunnels will use a single dotted line -->
+                <use xlink:href='#way_{$way/@id}'>
+                    <xsl:apply-templates select='$instruction/@*' mode='copyAttributes'>
+                        <xsl:with-param name="classes" select="$classes"/>
+                    </xsl:apply-templates>
+                </use>
+            </xsl:otherwise>
+        </xsl:choose>
 	</xsl:template>
 
 
@@ -164,7 +200,6 @@
 		</circle>
 
 	</xsl:template>
-
 
 	<!-- Draw a symbol for the current <node> element using the formatting of the current <symbol> instruction -->
 	<xsl:template name='drawSymbol'>

@@ -192,17 +192,25 @@
                     <line class='bridge-casing-25' />
                     <line class='bridge-core-25' />
                 </rule>
+                <rule e="segment|way" k="railway" v="rail">
+                    <line class='bridge-casing-25' />
+                    <line class='bridge-core-25' />
+                </rule>
+                <rule e="segment|way" k="railway" v="light_rail|subway|tram">
+                    <line class='bridge-casing-20' />
+                    <line class='bridge-core-20' />
+                </rule>
                 <rule e="segment|way" k="highway" v="cycleway">
                     <line class='bridge-casing-20' />
                     <line class='bridge-core-20' />
                 </rule>
-                <rule e="segment|way" k="highway" v="service|footway">
+                <rule e="segment|way" k="highway" v="service">
+                    <line class='bridge-casing-15' />
+                    <line class='bridge-core-15' />
+                </rule>
+                <rule e="segment|way" k="highway" v="footway">
                     <line class='bridge-casing-10' />
                     <line class='bridge-core-10' />
-                </rule>
-                <rule e="segment|way" k="railway" v="rail">
-                    <line class='bridge-casing-25' />
-                    <line class='bridge-core-25' />
                 </rule>
             </layer>
         </rule>
@@ -212,7 +220,7 @@
         <layer name="Roads and Paths">
 
 		    <!-- Highway casings -->
-            <addclass e="segment|way" k="tunnel" v="yes|true" class="tunnel-dashed">
+            <rule e="segment|way" k="tunnel" v="~|no">
                 <rule e="segment|way" k="highway" v="pedestrian">
                     <line class='highway-pedestrian-casing' />
                 </rule>
@@ -249,7 +257,7 @@
                 <rule e="segment|way" k="highway" v="motorway_link">
                     <line class='highway-motorway-link-casing' />
                 </rule>
-            </addclass>
+            </rule>
 
             <!-- Mini roundabout -->
             <rule e="node" k="highway" v="mini_roundabout">
@@ -257,10 +265,10 @@
             </rule>
 
 
-            <!-- Paths for tunnels -->
+            <!-- Paths in tunnels -->
             <rule e="segment|way" k="tunnel" v="yes|true">
                 <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
-                    <line class='highway-tunnel-small' />
+                    <tunnel width="0" class='highway-tunnel-narrow' />
                 </rule>
             </rule>
 
@@ -288,53 +296,95 @@
             </rule>
 
 
-            <!-- Highway cores -->
-            <addclass e="segment|way" k="bridge" v="yes|true" class="round">
-                <rule e="segment|way" k="highway" v="pedestrian">
-                    <line class='highway-pedestrian-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="track">
-                    <line class='highway-track-core' />
-                </rule>
-                <addclass k="oneway" v="1|yes|true" class="oneway">
-                    <addclass k="oneway" v="-1" class="otherway">
-                        <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary">
-                            <line class='highway-unclassified-core' />
-                        </rule>
-                        <rule e="segment|way" k="highway" v="unsurfaced">
-                            <line class='highway-unsurfaced-core' />
-                        </rule>
-                        <rule e="segment|way" k="highway" v="service">
-                            <line class='highway-service-core' />
-                        </rule>
-                        <rule e="segment|way" k="highway" v="secondary">
-                            <line class='highway-secondary-core' />
-                        </rule>
-                        <rule e="segment|way" k="highway" v="primary_link">
-                            <line class='highway-primary-link-core' />
-                        </rule>
-                    </addclass>
-                </addclass>
-                <rule e="segment|way" k="highway" v="trunk_link">
-                    <line class='highway-trunk-link-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="motorway_link">
-                    <line class='highway-motorway-link-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="primary">
+            <!-- Highway cores (not in tunnel) -->
+            <rule e="segment|way" k="tunnel" v="~|false|no">
+                <addclass e="segment|way" k="bridge" v="yes|true" class="round">
+                    <rule e="segment|way" k="highway" v="pedestrian">
+                        <line class='highway-pedestrian-core' />
+                    </rule>
+                    <rule e="segment|way" k="highway" v="track">
+                        <line class='highway-track-core' />
+                    </rule>
                     <addclass k="oneway" v="1|yes|true" class="oneway">
                         <addclass k="oneway" v="-1" class="otherway">
-                            <line class='highway-primary-core' />
+                            <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary">
+                                <line class='highway-unclassified-core' />
+                            </rule>
+                            <rule e="segment|way" k="highway" v="unsurfaced">
+                                <line class='highway-unsurfaced-core' />
+                            </rule>
+                            <rule e="segment|way" k="highway" v="service">
+                                <line class='highway-service-core' />
+                            </rule>
+                            <rule e="segment|way" k="highway" v="secondary">
+                                <line class='highway-secondary-core' />
+                            </rule>
+                            <rule e="segment|way" k="highway" v="primary_link">
+                                <line class='highway-primary-link-core' />
+                            </rule>
                         </addclass>
                     </addclass>
+                    <rule e="segment|way" k="highway" v="trunk_link">
+                        <line class='highway-trunk-link-core' />
+                    </rule>
+                    <rule e="segment|way" k="highway" v="motorway_link">
+                        <line class='highway-motorway-link-core' />
+                    </rule>
+                    <rule e="segment|way" k="highway" v="primary">
+                        <addclass k="oneway" v="1|yes|true" class="oneway">
+                            <addclass k="oneway" v="-1" class="otherway">
+                                <line class='highway-primary-core' />
+                            </addclass>
+                        </addclass>
+                    </rule>
+                    <rule e="segment|way" k="highway" v="trunk">
+                        <line class='highway-trunk-core' />
+                    </rule>
+                    <rule e="segment|way" k="highway" v="motorway">
+                        <line class='highway-motorway-core' />
+                    </rule>
+                </addclass>
+            </rule>
+
+            <!-- Highway tunnels -->
+            <rule e="segment|way" k="tunnel" v="true|yes">
+                <rule e="segment|way" k="highway" v="pedestrian">
+                    <tunnel width="2" class='highway-pedestrian' />
+                </rule>
+                <rule e="segment|way" k="highway" v="track">
+                    <tunnel width="2" class='highway-track' />
+                </rule>
+                <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary">
+                    <tunnel width="2" class='highway-unclassified' />
+                </rule>
+                <rule e="segment|way" k="highway" v="unsurfaced">
+                    <tunnel width="2" class='highway-unsurfaced' />
+                </rule>
+                <rule e="segment|way" k="highway" v="service">
+                    <tunnel width="1" class='highway-service' />
+                </rule>
+                <rule e="segment|way" k="highway" v="secondary">
+                    <tunnel width="3" class='highway-secondary' />
+                </rule>
+                <rule e="segment|way" k="highway" v="primary_link">
+                    <tunnel width="3" class='highway-primary-link' />
+                </rule>
+                <rule e="segment|way" k="highway" v="trunk_link">
+                    <tunnel width="3" class='highway-trunk-link' />
+                </rule>
+                <rule e="segment|way" k="highway" v="motorway_link">
+                    <tunnel width="3" class='highway-motorway-link' />
+                </rule>
+                <rule e="segment|way" k="highway" v="primary">
+                    <tunnel width="3" class='highway-primary' />
                 </rule>
                 <rule e="segment|way" k="highway" v="trunk">
-                    <line class='highway-trunk-core' />
+                    <tunnel width="4" class='highway-trunk' />
                 </rule>
                 <rule e="segment|way" k="highway" v="motorway">
-                    <line class='highway-motorway-core' />
+                    <tunnel width="4" class='highway-motorway' />
                 </rule>
-            </addclass>
+            </rule>
 
             <rule e="node" k="highway" v="mini_roundabout">
                 <circle r="0.8px" class="mini-roundabout-core"/>
@@ -347,7 +397,8 @@
         <rule e="segment|way" k="railway" v="*">
             <layer name="Railway/Subway/Tram">
 
-                <rule e="segment|way" k="tunnel" v="~|no">
+                <!-- not in tunnel -->
+                <rule e="segment|way" k="tunnel" v="~|no|false">
                     <rule e="segment|way" k="railway" v="rail">
                         <line class='railway-rail' />
                         <line class='railway-rail-dashes' />
@@ -360,38 +411,16 @@
                     </rule>
                 </rule>
 
+                <!-- in tunnel -->
                 <rule e="segment|way" k="tunnel" v="true|yes">
                     <rule e="segment|way" k="railway" v="rail">
-                        <line class='railway-rail-tunnel-casing' />
-                        <line class='railway-rail-tunnel-core' />
+                        <tunnel width="3" class='railway-rail' />
                     </rule>
-                    <rule e="segment|way" k="railway" v="light_rail|tram">
-                        <line class='railway-light-rail-tunnel' />
-                    </rule>
-                    <rule e="segment|way" k="railway" v="subway">
-                        <line class='railway-subway-rail' />
+                    <rule e="segment|way" k="railway" v="light_rail|subway|tram">
+                        <tunnel width="0" class='railway-tunnel-narrow' />
                     </rule>
                 </rule>
 
-            </layer>
-        </rule>
-
-
-        <!-- Tunnel endings -->
-        <rule e="segment|way" k="tunnel" v="yes|true">
-            <layer name="Tunnels">
-                <rule e="segment|way" k="highway" v="motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary">
-                    <line class='tunnel-casing-3' />
-                </rule>
-                <rule e="segment|way" k="highway" v="unclassified|residential|pedestrian|track|cycleway">
-                    <line class='tunnel-casing-2' />
-                </rule>
-                <rule e="segment|way" k="highway" v="service|footway">
-                    <line class='tunnel-casing-1' />
-                </rule>
-                <rule e="segment|way" k="railway" v="*">
-                    <line class='tunnel-casing-2' />
-                </rule>
             </layer>
         </rule>
 
@@ -577,60 +606,64 @@
 
 		<!-- Street names for all highways -->
         <rule k="osmarender:renderName" v="~|yes">
-            <rule e="segment|way" k="highway" v="*">
-                <layer name="Street names">
-                    <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
-                    </rule>
-                    <rule e="way" k="highway" v="unsurfaced|track">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-unsurfaced-name" />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="service">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="secondary">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="primary">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="trunk">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-trunk-name" />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="motorway">
-                        <text k="name" text-anchor='middle' startOffset='50%' class="highway-motorway-name" />
-                    </rule>
-                </layer>
+            <rule e="segment|way" k="tunnel" v="~|no|false">    <!-- no names in tunnels -->
+                <rule e="segment|way" k="highway" v="*">
+                    <layer name="Street names">
+                        <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
+                        </rule>
+                        <rule e="way" k="highway" v="unsurfaced|track">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unsurfaced-name" />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="service">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="secondary">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="primary">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="trunk">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-trunk-name" />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="motorway">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-motorway-name" />
+                        </rule>
+                    </layer>
+                </rule>
             </rule>
         </rule>
 
 
 		<!-- Road numbers for all highways -->
         <rule k="osmarender:renderRef" v="~|yes">
-            <rule e="segment|way" k="highway" v="*">
-                <layer name="Road numbers">
-                    <rule e="segment|way" k="highway" v="unclassified|residential">
-                        <text k="ref" class='highway-unclassified-ref' dx='2.5px' dy='-2.5px' />
-                    </rule>
-                    <rule e="way" k="highway" v="unsurfaced">
-                        <text k="ref" class='highway-unsurfaced-ref' dx='2.5px' dy='-2.5px' />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="service">
-                        <text k="ref" class='highway-service-ref' dx='2.5px' dy='-2.5px' />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="secondary">
-                        <text k="ref" class='highway-secondary-ref' dx='2.5px' dy='-2.5px' />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="primary">
-                        <text k="ref" text-anchor='middle' startOffset='60%' class="highway-primary-name" />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="trunk">
-                        <text k="ref" class='highway-trunk-ref' dx='2.5px' dy='-2.5px' />
-                    </rule>
-                    <rule e="segment|way" k="highway" v="motorway">
-                        <text k="ref" class='highway-motorway-ref' dx='2.5px' dy='-2.5px' />
-                    </rule>
-                </layer>
+            <rule e="segment|way" k="tunnel" v="~|no|false">    <!-- no road numbers in tunnels -->
+                <rule e="segment|way" k="highway" v="*">
+                    <layer name="Road numbers">
+                        <rule e="segment|way" k="highway" v="unclassified|residential">
+                            <text k="ref" class='highway-unclassified-ref' dx='2.5px' dy='-2.5px' />
+                        </rule>
+                        <rule e="way" k="highway" v="unsurfaced">
+                            <text k="ref" class='highway-unsurfaced-ref' dx='2.5px' dy='-2.5px' />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="service">
+                            <text k="ref" class='highway-service-ref' dx='2.5px' dy='-2.5px' />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="secondary">
+                            <text k="ref" class='highway-secondary-ref' dx='2.5px' dy='-2.5px' />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="primary">
+                            <text k="ref" text-anchor='middle' startOffset='60%' class="highway-primary-name" />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="trunk">
+                            <text k="ref" class='highway-trunk-ref' dx='2.5px' dy='-2.5px' />
+                        </rule>
+                        <rule e="segment|way" k="highway" v="motorway">
+                            <text k="ref" class='highway-motorway-ref' dx='2.5px' dy='-2.5px' />
+                        </rule>
+                    </layer>
+                </rule>
             </rule>
         </rule>
 
@@ -759,6 +792,15 @@
                 marker-start: url(#bridge-casing-start);
                 marker-end: url(#bridge-casing-end);
             }
+            .bridge-casing-15 {
+                stroke-width: 1.5px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #222222;
+                fill: none;
+                marker-start: url(#bridge-casing-start);
+                marker-end: url(#bridge-casing-end);
+            }
             .bridge-casing-10 {
                 stroke-width: 1px;
                 stroke-linecap: butt;
@@ -799,6 +841,13 @@
 			    stroke: #fcfcfc;
                 fill: none;
             }
+            .bridge-core-15 {
+                stroke-width: 1.25px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+			    stroke: #fcfcfc;
+                fill: none;
+            }
             .bridge-core-10 {
                 stroke-width: 0.75px;
                 stroke-linecap: butt;
@@ -809,32 +858,13 @@
 
 
             /* Tunnels */
-            .tunnel-casing-3 {
-                stroke-width: 3px;
-                stroke: #222222;
-                stroke-dasharray: 0.01,100000;
-                fill: none;
-                marker-start: url(#tunnel-start);
-                marker-end: url(#tunnel-end);
-            }
-            .tunnel-casing-2 {
+            .tunnel-casing {
                 stroke-width: 2px;
                 stroke-dasharray: 0.01,100000;
                 stroke: #222222;
                 fill: none;
-                marker-start: url(#tunnel-start);
-                marker-end: url(#tunnel-end);
-            }
-            .tunnel-casing-1 {
-                stroke-width: 1px;
-                stroke: #222222;
-                stroke-dasharray: 0.01,100000;
-                fill: none;
-                marker-start: url(#tunnel-start);
-                marker-end: url(#tunnel-end);
-            }
-            .tunnel-dashed {
-                stroke-dasharray: 0.2,0.2;
+                marker-start: url(#tunnel-start-wide);
+                marker-end: url(#tunnel-end-wide);
             }
 
 
@@ -1084,7 +1114,7 @@
 			  stroke: #ffffff;
 			  fill: none;
 			  }
-			 
+
 			.highway-pedestrian-casing {
 			  stroke-width: 1.5px;
 			  stroke-linejoin: round;
@@ -1096,7 +1126,7 @@
 			  stroke-width: 1.2px;
 			  stroke-linejoin: round;
 			  stroke: #eeeeee;
-			  fill: none;
+              fill: none;
 			  }
 			 
 			.highway-service-casing {
@@ -1157,7 +1187,6 @@
 
 			.highway-cycleway {
 			  stroke-width: 1px;
-			  stroke-linecap: round;
 			  stroke-linejoin: round;
 			  stroke: #008102;
 			  fill: none;
@@ -1174,7 +1203,6 @@
 
 			.highway-footway {
 			  stroke-width: 0.5px;
-			  stroke-linecap: round;
 			  stroke-linejoin: round;
 			  stroke: #d79331;
 			  fill: none;
@@ -1197,13 +1225,16 @@
 			  stroke-dasharray: 0.1px, 0.3px;
 			  fill: none;
 			  }
-			.highway-tunnel-small {
+
+			.highway-tunnel-narrow {
 			  stroke-width: 0.1px;
 			  stroke-dasharray: 0.2,0.2;
 			  stroke-linecap: butt;
 			  stroke-linejoin: round;
 			  stroke: #000000;
 			  fill: none;
+              marker-start: url(#tunnel-start-narrow);
+              marker-end: url(#tunnel-end-narrow);
 			  }
 		
             .round {
@@ -1359,23 +1390,6 @@
 			  fill: none;
 			  }
 		
-			.railway-rail-tunnel-casing {
-			  stroke-width: 1.5px;
-			  stroke-dasharray: 1,2;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #000000;
-			  fill: none;
-			  }
-
-			.railway-rail-tunnel-core {
-			  stroke-width: 1px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #ffffff;
-			  fill: none;
-			  }
-		
 			.railway-light-rail {
 			  stroke-width: 0.8px;
 			  stroke-linecap: butt;
@@ -1384,13 +1398,15 @@
 			  fill: none;
 			  }
 
-			.railway-light-rail-tunnel {
-			  stroke-width: 0.8px;
+			.railway-tunnel-narrow {
+			  stroke-width: 0.2px;
 			  stroke-dasharray: 1,2;
 			  stroke-linecap: butt;
 			  stroke-linejoin: round;
 			  stroke: #000000;
 			  fill: none;
+              marker-start: url(#tunnel-start-narrow);
+              marker-end: url(#tunnel-end-narrow);
 			  }
 		
 			.railway-subway-rail {
@@ -1870,6 +1886,10 @@
             }
 		</style>
 
+		<svg:pattern id="pedestrian-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+            <svg:path d="M0,10 L10,0" fill="none" stroke="red" width="1"/>
+        </svg:pattern>
+
 		<svg:marker
 			id="bridge-casing-start"
 			fill='none'
@@ -1893,7 +1913,7 @@
 		</svg:marker>
 
 		<svg:marker
-			id="tunnel-start"
+			id="tunnel-start-wide"
 			fill='none'
 			stroke-width='0.1px'
 			stroke='#222222'
@@ -1905,7 +1925,7 @@
 		</svg:marker>
 
 		<svg:marker
-			id="tunnel-end"
+			id="tunnel-end-wide"
 			fill='none'
 			stroke-width='0.1px'
 			stroke='#222222'
@@ -1914,6 +1934,30 @@
             refX="0.15"
 			orient="auto">
 			<svg:path d="M0.25,0.75 L0.1,0.5 L0.1,-0.5 L0.25,-0.75" />
+		</svg:marker>
+
+		<svg:marker
+			id="tunnel-start-narrow"
+			fill='none'
+			stroke-width='1px'
+			stroke='#222222'
+			markerWidth="0.1px"
+			markerHeight="0.1px"
+            refX="-1.5"
+			orient="auto">
+			<svg:path d="M-2.5,7.5 L-1,5 L-1,-5 L-2.5,-7.5" />
+		</svg:marker>
+
+		<svg:marker
+			id="tunnel-end-narrow"
+			fill='none'
+			stroke-width='1px'
+			stroke='#222222'
+			markerWidth="0.1px"
+			markerHeight="0.1px"
+            refX="1.5"
+			orient="auto">
+			<svg:path d="M2.5,7.5 L1,5 L1,-5 L2.5,-7.5" />
 		</svg:marker>
 
 		<svg:marker

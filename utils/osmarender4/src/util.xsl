@@ -19,6 +19,10 @@
         </xsl:attribute>
 	</xsl:template>
 
+    <!-- type attribute shouldn't be copied -->
+	<xsl:template match='@type' mode='copyAttributes'>
+	</xsl:template>
+
 	<!-- Copy all attributes  -->
 	<xsl:template match='@*' mode='copyAttributes'>
         <xsl:param name="classes"/>

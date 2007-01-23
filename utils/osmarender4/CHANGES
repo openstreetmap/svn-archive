@@ -84,4 +84,5 @@ Revision history:
     2007-01-16  Added rendering for railway=halt. (Joto)
     2007-01-17  Fixed bug where text on segment wasn't rendered. (Joto)
 4.1 2007-01-23  Improved tunnel rendering (Joto)
+                Bugfix: When all meta data is suppressed the empty white background box is also suppressed
 

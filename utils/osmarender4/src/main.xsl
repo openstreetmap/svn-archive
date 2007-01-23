@@ -135,33 +135,35 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             </g>
 
             <!-- Draw map meta data -->
-            <svg id="meta" inkscape:groupmode="layer" inkscape:label="Map meta data">
-                <!-- Draw the title -->
-                <xsl:if test="$title!=''">
-                    <xsl:call-template name="titleDraw">
-                        <xsl:with-param name="title" select="$title"/>
-                    </xsl:call-template>
-                </xsl:if>
-
-                <g id="meta-bottom" inkscape:groupmode="layer" inkscape:label="Map meta data (Bottom)" transform="translate(0,{$metaTopHeight})">
-                    <!-- Draw background for meta stuff at bottom -->
-			        <rect id="meta-background" x='0px' y='{$documentHeight + 5}px' height='40px' width='{$documentWidth}px' class='map-meta-background'/>
-
-                    <!-- Draw the scale in the bottom left corner -->
-                    <xsl:if test='/rules/@showScale="yes"'>
-                        <xsl:call-template name="scaleDraw"/>
-                    </xsl:if>
-
-                    <!-- Draw Creative commons license -->
-                    <xsl:if test='/rules/@showLicense="yes"'>
-                        <xsl:call-template name="in-image-license">
-                            <xsl:with-param name="year" select="2007"/>
-                            <xsl:with-param name="dx" select="$documentWidth"/>
-                            <xsl:with-param name="dy" select="$documentHeight"/>
+            <xsl:if test="($title != '') or (/rules/@showScale = 'yes') or (/rules/@showLicense = 'yes')">
+                <svg id="meta" inkscape:groupmode="layer" inkscape:label="Map meta data">
+                    <!-- Draw the title -->
+                    <xsl:if test="$title!=''">
+                        <xsl:call-template name="titleDraw">
+                            <xsl:with-param name="title" select="$title"/>
                         </xsl:call-template>
                     </xsl:if>
-                </g>
-            </svg>
+
+                    <g id="meta-bottom" inkscape:groupmode="layer" inkscape:label="Map meta data (Bottom)" transform="translate(0,{$metaTopHeight})">
+                        <!-- Draw background for meta stuff at bottom -->
+                        <rect id="meta-background" x='0px' y='{$documentHeight + 5}px' height='40px' width='{$documentWidth}px' class='map-meta-background'/>
+
+                        <!-- Draw the scale in the bottom left corner -->
+                        <xsl:if test='/rules/@showScale="yes"'>
+                            <xsl:call-template name="scaleDraw"/>
+                        </xsl:if>
+
+                        <!-- Draw Creative commons license -->
+                        <xsl:if test='/rules/@showLicense="yes"'>
+                            <xsl:call-template name="in-image-license">
+                                <xsl:with-param name="year" select="2007"/>
+                                <xsl:with-param name="dx" select="$documentWidth"/>
+                                <xsl:with-param name="dy" select="$documentHeight"/>
+                            </xsl:call-template>
+                        </xsl:if>
+                    </g>
+                </svg>
+            </xsl:if>
 
 			<!-- Draw labels and controls that are in a static position -->
 			<g id="staticElements" transform="scale(1) translate(0,0)">

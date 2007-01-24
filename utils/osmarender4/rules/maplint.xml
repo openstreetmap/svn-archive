@@ -31,7 +31,7 @@
 
 	<!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
 	<!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-	<rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
+	<rule e="node|segment|waysegment|way" k="osmarender:render" v="~|yes">
 
         <layer name="Maplint">
 <!--            <rule e="way" k="maplint:notice" v="*">

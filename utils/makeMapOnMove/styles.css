@@ -1,0 +1,35 @@
+body{
+  font-family:sans;
+  font-size: 120%;
+}
+.keypad {
+  border: 1px solid grey;
+  background-color:#111;
+}
+.keypad td{
+  border:1px solid grey;
+  background-color:#CCC;
+  height:3em;
+}
+.keyname{
+  color:black;
+  font-size:small;
+}
+.keyaction{
+  color:darkblue;
+  font-weight:bold;
+  font-size: large;
+}
+
+.attributes tr{
+  margin:0px;
+}
+.attributes td{
+  margin:0px;
+  border-bottom: 1px solid grey;
+  border-bottom: 1px solid grey;
+  font-weight:bold;
+}
+.maintable{
+
+}

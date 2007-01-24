@@ -8,7 +8,7 @@ for($i = 0; 1; $i++){
   $File = "data/data_$i.osm.gz";
   
   # If we don't already have a file, download it
-  if(!-f $File){
+  if(!-f $File){  
     if(is_success(getstore($URL,$File))){
       print "We've got file $i!\n";
       exit;

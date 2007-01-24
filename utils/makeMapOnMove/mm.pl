@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 use strict;
 #---------------------------------------------------------------------------------
 # Make map on move
@@ -31,6 +32,7 @@ use strict;
 require Term::Screen;
 my $scr = new Term::Screen;
 die("Can't init term::screen\n") if(!$scr);
+$scr->clrscr();
 
 # Setup stuff for a fake GPS (that reads a logfile)
 use Time::HiRes qw(sleep);

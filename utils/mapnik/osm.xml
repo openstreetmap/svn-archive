@@ -741,14 +741,14 @@
     <StyleName>water_poly</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/mapnik/osm/vmap0/water</Parameter>
+      <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/water</Parameter>
     </Datasource>
   </Layer>
   <Layer name="world" status="on" srs="+proj=merc +datum=WGS84">
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/mapnik/osm/vmap0/world_bnd_m</Parameter>
+      <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/world_bnd_m</Parameter>
     </Datasource>
   </Layer>
   <Layer name="waterway" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
@@ -758,7 +758,7 @@
       <Parameter name="host">dev.openstreetmap.org</Parameter>
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
-      <Parameter name="dbname">steve</Parameter>
+      <Parameter name="dbname">mapnik</Parameter>
       <Parameter name="table">(select * from planet_osm where char_length(waterway) > 0) as water</Parameter>
     </Datasource>
   </Layer>
@@ -769,7 +769,7 @@
       <Parameter name="host">dev.openstreetmap.org</Parameter>
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
-      <Parameter name="dbname">steve</Parameter>
+      <Parameter name="dbname">mapnik</Parameter>
 	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length("natural") > 0 or char_length(man_made) > 0) as leisure</Parameter>
     </Datasource>
   </Layer>
@@ -786,7 +786,7 @@
       <Parameter name="host">dev.openstreetmap.org</Parameter>
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
-      <Parameter name="dbname">steve</Parameter>
+      <Parameter name="dbname">mapnik</Parameter>
       <Parameter name="table">(select way,highway,railway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
@@ -798,7 +798,7 @@
       <Parameter name="host">dev.openstreetmap.org</Parameter>
       <Parameter name="port">5433</Parameter>	   
      <Parameter name="user">steve</Parameter>	   
-      <Parameter name="dbname">steve</Parameter>
+      <Parameter name="dbname">mapnik</Parameter>
       <Parameter name="table">(select * from planet_osm where char_length(amenity) > 0) as amenity</Parameter>
     </Datasource>
   </Layer>
@@ -810,7 +810,7 @@
       <Parameter name="host">dev.openstreetmap.org</Parameter>
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
-      <Parameter name="dbname">steve</Parameter>
+      <Parameter name="dbname">mapnik</Parameter>
       <Parameter name="table">(select way,highway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
     </Datasource>
    </Layer>
@@ -822,7 +822,7 @@
       <Parameter name="host">dev.openstreetmap.org</Parameter>
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
-      <Parameter name="dbname">steve</Parameter>
+      <Parameter name="dbname">mapnik</Parameter>
       <Parameter name="table">planet_osm</Parameter>
     </Datasource>
   </Layer>
@@ -831,7 +831,7 @@
     <StyleName>places</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/mapnik/osm/vmap0/places_eu</Parameter>
+      <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/places_eu</Parameter>
     </Datasource>
   </Layer>
 </Map>

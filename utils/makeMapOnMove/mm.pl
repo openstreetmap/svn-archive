@@ -142,12 +142,12 @@ sub getHtmlKeypad{
 
 sub getHtmlAttributes{
   # Get the current way's attributes, as an HTML table
-#  my $Html = "<table class=\"attributes\">";
-#  while(my($k,$v) = each(%$$CurrentWay->{"tags"})){
-#    $Html .= "<tr><td>$k</td><td>$v</td></tr>\n";
-#  }
-#  return($Html ."</table>");
-return("TODO");
+  my $Html = "<table class=\"attributes\">";
+  my $TagRef = $CurrentWay->{"tags"};
+  while(my($k,$v) = each(%$TagRef)){
+    $Html .= "<tr><td>$k</td><td>$v</td></tr>\n";
+  }
+  return($Html ."</table>");
 }
 sub processInput{
   # Handle any keyboard input
@@ -202,7 +202,6 @@ sub splitWay{
   my $OldHighway = $CurrentWay->{"tags"}->{"highway"};
   push(@Ways, $CurrentWay);
   startNewWay($OldHighway);
-  printf "%d ways\n", scalar @Ways;
 }
 sub addPoi{
   # Add a node as POI (not in route)

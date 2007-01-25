@@ -1,0 +1,15 @@
+Kirchheim bei München:           48.217,	11.833,	0.120,  area
+Kirchheim bei München:           48.183,	11.750,	0.020,  city
+Anzing:                          48.150,	11.850,	0.0220, city
+Aschheim:                        48.167,	11.717,	0.0220, city
+Feldkirchen:                     48.150,	11.733,	0.0220, city
+Finsing:                         48.217,	11.833,	0.0220, city
+Forstern:                        48.183,	11.983,	0.0220, city
+Forstinning:                     48.167,	11.917,	0.0220, city
+Markt Schwaben:                  48.200,	11.883,	0.0220, city
+Neuching:                        48.233,	11.850,	0.0220, city
+Ottenhofen:                      48.217,	11.883,	0.0220, city
+Pastetten:                       48.200,	11.950,	0.0220, city
+Pliening:                        48.200,	11.800,	0.0220, city
+Poing:                           48.167,	11.817,	0.0220, city
+Wörth:                           48.233,	11.900,	0.0220, city

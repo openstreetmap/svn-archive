@@ -1,0 +1,8 @@
+Dorfen:                          48.267,	12.17,	0.080000, area
+Dorfen Ost:                      48.267,	12.195,	0.030000, area
+Dorfen West:                     48.267,	12.15,	0.030000, area
+Schwindegg:                      48.267,	12.250,	0.030000, area
+Sankt Wolfgang:                  48.217,	12.133,	0.030000, area
+Kirchdorf:                       48.183,	12.200,	0.030000, area
+Isen:                            48.217,	12.067,	0.030000, area
+Haag:                            48.167,	12.183,	0.030000, area

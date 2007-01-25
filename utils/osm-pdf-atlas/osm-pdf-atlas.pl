@@ -740,8 +740,7 @@ sub PageFrame($$) {
     # URL
     $text->font($Font, 4/mm );
     $text->translate( 10/mm, 6/mm );
-    $text->text("http://openstreetmap.org/");
-
+    $text->text("http://openstreetmap.org/  © 2002-2007 CC-by-SA 2.0 license");
 }
 
 #---------------------------------------------------------
@@ -1214,6 +1213,11 @@ use places.txt for the list of places to add
 
 write the results to this dir. 
 The Default is ~/osm/pdf-atlas/
+
+=item B<--Data>=<optional Data File>
+
+Where is the csv Data read from instead of 
+~/osm/planet/csv/osm.csv
 
 =item B<--force-update>
 

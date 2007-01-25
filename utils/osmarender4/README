@@ -90,7 +90,7 @@ adding a <layer/> element like this:
 
     <rule e="node" k="amenity" v="*">
         <layer name="Amenities">
-            <rule e="node" k="amenity" v="telehone">
+            <rule e="node" k="amenity" v="telephone">
                 ...
             </rule>
             ...

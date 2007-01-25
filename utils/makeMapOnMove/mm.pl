@@ -39,9 +39,7 @@ use Time::HiRes qw(sleep);
 open(my $fpLogIn, "<log.nmea") || die("Can't open log");
 
 # Global variables
-my (@Nodes, @CurrentWay, @Poi);
-my %Tags = ("highway"=>"unclassified"); # default tags
-my $NodeCount = 0; my $SegCount = 0;
+my ($CurrentWay, @Poi, @Ways);
 my ($posLat,$posLon) = (0,0);
 my $Mode = "default";
 my ($LastKey, $LastError);
@@ -50,17 +48,7 @@ my @Interface;
 # Interface commands
 loadInterface("interface.txt");
 
-# Obsolete: remove
-my %WayTypes = (
-"1" => "Track",
-"2" => "Unclassified",
-"3" => "Residential",
-"4" => "Secondary",
-"5" => "Primary",
-"6" => "Motorway",
-"7" => "Trunk",
-"8" => "Motorway link",
-"9" => "Service");
+startNewWay("unclassified");
 
 # Run (100 steps only in testing)
 foreach(1..100){
@@ -69,6 +57,11 @@ foreach(1..100){
   sleep(0.2);
 }
 
+sub startNewWay{
+  $CurrentWay = {};
+  $CurrentWay->{"tags"} = {"highway"=>shift()}; # default tags
+  $CurrentWay->{"nodes"} = [];
+}
 
 # Updates everything
 sub update{
@@ -81,13 +74,10 @@ sub update{
     $posLon = $lon;
   }
   processInput();
-  showInterface();
   showHtml();
   outputOsm();
 }
-sub showInterface{
-  # Obsolete: remove
-}
+
 sub showHtml{
   # Create an HTML page as output
   
@@ -152,11 +142,12 @@ sub getHtmlKeypad{
 
 sub getHtmlAttributes{
   # Get the current way's attributes, as an HTML table
-  my $Html = "<table class=\"attributes\">";
-  while(my($k,$v) = each(%Tags)){
-    $Html .= "<tr><td>$k</td><td>$v</td></tr>\n";
-  }
-  return($Html ."</table>");
+#  my $Html = "<table class=\"attributes\">";
+#  while(my($k,$v) = each(%$$CurrentWay->{"tags"})){
+#    $Html .= "<tr><td>$k</td><td>$v</td></tr>\n";
+#  }
+#  return($Html ."</table>");
+return("TODO");
 }
 sub processInput{
   # Handle any keyboard input
@@ -170,7 +161,7 @@ sub processInput{
   foreach my $Interface(@Interface){
     my($ifMode,$ifKey,$ifLabel,$ifAction,$ifParams) = split(/:/,$Interface);
     if($ifMode eq $Mode and $ifKey eq $c){
-      handleAction($ifAction, $ifParams);
+      handleInputEvent($ifAction, $ifParams);
       return;
     }
   }
@@ -178,7 +169,7 @@ sub processInput{
   return;
   
 }
-sub handleAction{
+sub handleInputEvent{
   # Do something as the result of a keypress
   my ($action, $params) = @_;
   if($action eq "mode"){
@@ -192,10 +183,26 @@ sub handleAction{
     addPoi($params);
   }
   elsif($action eq "action"){
+  doAction($params);
+  }
+  else{
+    $LastError = "Unrecognised input event $action";
+  }
+}
+sub doAction{
+  my $action = shift();
+  if($action eq "split_way"){
+    splitWay();
   }
   else{
     $LastError = "Unrecognised action $action";
   }
+}
+sub splitWay{
+  my $OldHighway = $CurrentWay->{"tags"}->{"highway"};
+  push(@Ways, $CurrentWay);
+  startNewWay($OldHighway);
+  printf "%d ways\n", scalar @Ways;
 }
 sub addPoi{
   # Add a node as POI (not in route)
@@ -214,7 +221,7 @@ sub addPoi{
 sub setTags{
   # Set attributes of the current Way
   my ($k,$v) = @_;
-  $Tags{$k} = $v;
+  $CurrentWay->{"tags"}->{$k} = $v;
 }
 
 sub addNode{
@@ -222,10 +229,51 @@ sub addNode{
   my $Node;
   $Node->{lat} = shift();
   $Node->{lon} = shift();
-  push @Nodes, $Node;
-  push @CurrentWay, scalar(@Nodes);
+  my $Ref = $CurrentWay->{"nodes"};
+  push @$Ref, $Node;
 }
+sub outputOsmWay{
+  my ($Way, 
+    $NodeCountRef, $SegmentCountRef, $WayCountRef, 
+    $NodeXmlRef, $SegmentXmlRef, $WayXmlRef) = @_;
+  
+  my $NodesRef = $Way->{"nodes"};
+  my $TagsRef = $Way->{"tags"};
+  
+  my $WaySegmentData = "";
+  
+  my $LocalCount = 0;
+  
+  foreach my $Node (@$NodesRef){
+    $$NodeXmlRef .= sprintf("<node id='%d' lat='%f' lon='%f' />\n",
+      ++$$NodeCountRef,
+      $Node->{lat},
+      $Node->{lon});
+      
+    if($LocalCount > 0){
+      $$SegmentXmlRef .= sprintf("<segment id='%d' from='%d' to='%d' />\n",
+        ++$$SegmentCountRef,
+        $$NodeCountRef-1,
+        $$NodeCountRef);
+      
+      $WaySegmentData .= sprintf("<seg id='%d' />\n",
+        $$SegmentCountRef);
+    }
+    
+    $LocalCount++;
+  }
+  
+  my $TagData = "";
+  while(my ($k,$v) = each(%$TagsRef)){
+     $TagData .= sprintf("<tag k='%s' v='%s' />\n",$k,$v);
+   }
 
+  $$WayXmlRef .= sprintf("<way id='%d'>\n%s%s\n</way>\n", 
+    ++$$WayCountRef,
+    $WaySegmentData,
+    $TagData);
+  
+}
 sub outputOsm{
   # Save everything we know as an OSM file
   open(my $fp, ">data.osm") || die("Can't write to OSM file\n");
@@ -233,70 +281,55 @@ sub outputOsm{
   print $fp "<?xml version='1.0' encoding='UTF-8'?>\n";
   print $fp "<osm version='0.3' generator='mm'>\n";
 
-  my $Count = 0;
+  my($NodeID, $SegmentID, $WayID) = (0,0,0);
+  my($NodeXML,$SegmentXML,$WayXML) = ("","","");
+
+
+  outputOsmWay(
+    $CurrentWay, 
+    \$NodeID, \$SegmentID, \$WayID, 
+    \$NodeXML, \$SegmentXML, \$WayXML);
   
-  # Save route nodes to OSM file
-  foreach my $Node (@Nodes){
-    printf $fp "<node id='%d' lat='%f' lon='%f' />\n",
-      ++$Count,
-      $Node->{lat},
-      $Node->{lon};
+  foreach my $Way(@Ways){
+    outputOsmWay(
+      $Way, 
+      \$NodeID, \$SegmentID, \$WayID, 
+      \$NodeXML, \$SegmentXML, \$WayXML);
   }
+
   
   # Save POI nodes to OSM file
   foreach my $Poi (@Poi){
-    printf $fp "<node id='%d' lat='%f' lon='%f'>\n", ++$Count, $Poi->{"lat"},$Poi->{"lon"};
+    $NodeXML .= sprintf(
+      "<node id='%d' lat='%f' lon='%f'>\n", 
+      ++$NodeID, 
+      $Poi->{"lat"},
+      $Poi->{"lon"});
+      
     while(my($k,$v) = each(%$Poi)){
-      printf $fp "<tag k='%s' v='%s' />\n",$k,$v if($k !~ /^(lat|lon)$/);
+      $NodeXML .= sprintf("<tag k='%s' v='%s' />\n",$k,$v) if($k !~ /^(lat|lon)$/);
     }
-    printf $fp "</node>\n",
+    $NodeXML .= "</node>\n",
   }
   
   # Save current position as a node
-  printf $fp "<node id='%d' lat='%f' lon='%f'>\n", ++$Count, $posLat, $posLon;
-  printf $fp "<tag k='mapmaker' v='current_position' />\n";
-  printf $fp "</node>\n",
+  $NodeXML .= sprintf("<node id='%d' lat='%f' lon='%f'>\n", ++$NodeID, $posLat, $posLon);
+  $NodeXML .= "<tag k='mapmaker' v='current_position' />\n";
+  $NodeXML .= "</node>\n",
   
   # Save bounding box, makes osmarender give a map centred on the current position
   my $HalfAreaLat = 0.003;
   my $HalfAreaLon = $HalfAreaLat * (cos($posLon / 57));
-  
   printf $fp "<bounds returned_minlat=\"%f\" returned_minlon=\"%f\" returned_maxlat=\"%f\" returned_maxlon=\"%f\" />\n",
     $posLat - $HalfAreaLat,
     $posLon - $HalfAreaLon,
     $posLat + $HalfAreaLat,
     $posLon + $HalfAreaLon;
   
+  print $fp $NodeXML;
+  print $fp $SegmentXML;
+  print $fp $WayXML;
   
-  # Save the current Way
-  $Count = 0;
-  my $LastPoint;
-  
-  my @WaySegs;
-  foreach my $Point (@CurrentWay){
-    if($Count > 0){
-      printf $fp "<segment id='%d' from='%d' to='%d' />\n",
-        $Count,
-        $LastPoint,
-        $Point;
-      push(@WaySegs, $Count);
-    }
-    $Count++;
-    $LastPoint = $Point;
-  }
-  
-  my $Segs = "";
-  foreach my $Seg (@WaySegs){
-    $Segs .= sprintf("<seg id='%d' />\n", $Seg);
-  }
-
-  my $Tags = "";
-  while(my ($k,$v) = each(%Tags)){
-    $Tags .= sprintf("<tag k='%s' v='%s' />\n",$k,$v);
-  }
-  
-  printf $fp "<way id='1'>\n$Segs$Tags\n</way>\n";
-
   print $fp "</osm>";
   close $fp;
 }

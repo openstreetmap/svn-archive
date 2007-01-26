@@ -90,12 +90,10 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown"):
 
                 tile_uri = tile_dir + zoom + '/' + str_x + '/' + str_y + '.png'
 
+		exists= ""
                 if os.path.isfile(tile_uri):
-                    print name,"[",minZoom,"-",maxZoom,"]: " ,z,x,y,"p:",p0,p1,"exists"
+                    exists= "exists"
                 else:
-                    print name,"[",minZoom,"-",maxZoom,"]: " ,z,x,y,"p:",p0,p1
-                
-            
                     im = Image(512, 512)
                     render(m, im)
                     im = fromstring('RGBA', (512, 512), rawdata(im))
@@ -105,9 +103,13 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown"):
                     command = "convert  -colors 255 %s %s" % (tile_uri,tile_uri)
                     call(command, shell=True)
 
+
                 bytes=os.stat(tile_uri)[6]
+		empty= ''
                 if bytes == 137:
-                    print "!!!!!! Empty Tile"
+                    empty = " Empty Tile "
+
+                print name,"[",minZoom,"-",maxZoom,"]: " ,z,x,y,"p:",p0,p1,exists, empty
 
 if __name__ == "__main__":
     bbox = (-2, 50.0,1.0,52.0)
@@ -119,9 +121,15 @@ if __name__ == "__main__":
     maxZoom = 16
     render_tiles(bbox, mapfile, tile_dir, minZoom, maxZoom)
 
+    # Start with an overview
+    # World
+    bbox = (-180.0,-90.0, 180.0,90.0)
+    render_tiles(bbox, mapfile, tile_dir, 1, 5,"World")
+
     # Muenchen
     bbox = (11.4,48.07, 11.7,48.22)
-    render_tiles(bbox, mapfile, tile_dir, 7, 12 , "Muenchen")
+    render_tiles(bbox, mapfile, tile_dir, 1, 12 , "Muenchen")
+
 
     # Muenchen+
     bbox = (11.3,48.01, 12.15,48.44)

@@ -267,6 +267,7 @@ sub GenerateTileset(){
   my ($ImgW,$ImgH,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
 
   # Render it as loads of recursive tiles
+  my $progress = 0;
   RenderTile($X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
   # Clean-up he SVG files
@@ -285,19 +286,36 @@ sub RenderTile(){
   my ($X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
   
   return if($Zoom > $Config{MaxZoom});
+
+  # no need to render subtiles if empty
+  return if($empty == 1);
   
   my $Filename = tileFilename($X, $Y, $Zoom);
- 
+
   # Render it to PNG
-  if ( $empty == 0) {
-    printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
-    my $Width = 256; # Pixel size of tiles  
-    svg2png($Zoom, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
-  }
-    
+  printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
+  my $Width = 256; # Pixel size of tiles  
+  svg2png($Zoom, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
+
   if (-s $Filename < 1000) {
     $empty=1;
   }
+
+  # Get progress percentage 
+  if($empty == 1) {
+    # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
+    for (my $j = $Config{MaxZoom} ; $j >= $Zoom ; $j--) {
+      $GenerateTileset::progress += 4 ** ($Config{MaxZoom}-$j);
+    }
+  }
+  else {
+    $GenerateTileset::progress += 1;
+  }
+  my $progress=$GenerateTileset::progress;  
+  #TODO: instead of putting 1365 calculate number of tiles depending on min and max zoom:
+  my $progressPercent=$progress*100/1365;
+  printf "Job %1.3f \% done.\n", $progressPercent;
+
 
   # Sub-tiles
   my $XA = $X * 2;
@@ -320,6 +338,7 @@ sub RenderTile(){
   RenderTile($XB, $YA, $Zoom+1, $N, $LatC, $LongC, $E, $ImgXC, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
   RenderTile($XA, $YB, $Zoom+1, $LatC, $S, $W, $LongC, $ImgX1, $ImgY1, $ImgXC, $ImgYC,$ImageHeight,$empty);
   RenderTile($XB, $YB, $Zoom+1, $LatC, $S, $LongC, $E, $ImgXC, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
+
 }
 
 #-----------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 # Title:	OSM Africa Atlas
 # Filename: osm_atlas-africa.pdf
 #
-# Coast:	~/osm/GSHHS/gshhs_h.b
+Coast:	~/osm/GSHHS/gshhs_h.b
 
 #Data:	~/osm/planet/csv/osm.csv
 Data_POI:	~/osm/planet/csv/points-europe.csv

@@ -1177,11 +1177,11 @@ __END__
 
 =head1 NAME
 
-B<osm-pdf-atlas.pl> Version 0.02
+B<pdf-atlas.pl> Version 0.02
 
 =head1 DESCRIPTION
 
-B<osm-pdf-atlas.pl> is a program to create an atlas
+B<pdf-atlas.pl> is a program to create an atlas
 The output is a PDF File
 The data is taken from a osm-file which is converted to a csv file. 
 
@@ -1189,7 +1189,7 @@ The data is taken from a osm-file which is converted to a csv file.
 
 B<Common usages:>
 
-osm-pdf-atlas.pl [-d] [-v] [-h]
+pdf-atlas.pl [-d] [-v] [-h]
                  [-config=<xx.txt>] [--Places=<xx.txt>] 
                  [--ResultDir=<dir>] [--no-png] [--no-html]
 

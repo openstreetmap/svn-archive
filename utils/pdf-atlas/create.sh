@@ -5,7 +5,8 @@
 gshhs=gshhs_h
 echo "check $gshhs.b"
 mkdir -p ~/osm/GSHHS/
-wget -nd -P ~/osm/GSHHS/ -nv  --mirror http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/version1.2/$gshhs.b.gz 
+#wget -nd -P ~/osm/GSHHS/ -nv  --mirror http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/version1.2/$gshhs.b.gz 
+wget -nd -P ~/osm/GSHHS/ -nv  --mirror http://www.ngdc.noaa.gov/mgg/shorelines/data/gshhs/oldversions/$gshhs.b.gz 
 
 if [ ~/osm/GHHS/$gshhs.b.gz" -nt ~/osm/GHHS/$gshhs.b" ] ; then
     echo "Unpack ~/osm/GSHHS/$gshhs.b.gz"

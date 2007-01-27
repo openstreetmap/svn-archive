@@ -198,6 +198,18 @@ sub GenerateTileset(){
   my $E1 = $E + $Config{BorderE};
   my $W1 = $W - $Config{BorderW};
 
+
+  # TODO: verify the current system cannot handle segments/ways crossing the 
+  # 180/-180 deg meridian and implement proper handling of this case, until 
+  # then use this workaround: 
+
+  if($W1 <= -180) {
+    $W1 = -180; # api apparently can handle -180°
+  }
+  if($E > 180) {
+    $E1 = 180;
+  }
+
   #------------------------------------------------------
   # Download data
   #------------------------------------------------------

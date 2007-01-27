@@ -314,7 +314,7 @@ sub RenderTile(){
   my $progress=$GenerateTileset::progress;  
   #TODO: instead of putting 1365 calculate number of tiles depending on min and max zoom:
   my $progressPercent=$progress*100/1365;
-  printf "Job %1.3f %% done.\n", $progressPercent;
+  printf "Job %1.1f %% done.\n", $progressPercent;
 
 
   # Sub-tiles

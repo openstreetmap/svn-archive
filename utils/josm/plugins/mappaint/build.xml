@@ -23,7 +23,7 @@
 		<jar destfile="dist/mappaint.jar" basedir="build">
 			<manifest>
 				<attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
-				<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;You need an elemstyle.xml saved into ~/.josm/plugins/mappaint/" />
+				<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;You need an elemstyles.xml saved into ~/.josm/plugins/mappaint/" />
 			</manifest>
 		</jar>
 	</target>

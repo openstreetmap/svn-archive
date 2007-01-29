@@ -30,7 +30,7 @@ my $AREA_DEFINITIONS = {
 		    [  35.0,  10.0,    42.0,  18.0   ],
 		    ],
     australia  => [ [ -44.0, 110.0,   -10.0, 154.0   ] ],
-    newseeland => [ [ -50.0, 160.0,   -30.0, 180.0   ] ],
+    newzealand => [ [ -50.0, 160.0,   -30.0, 180.0   ] ],
     norway     => [ [  56.0,   2.0,    78.0,  16.0   ] ],
     africa     => [ [ -35.0, -20.0,    38.0,  55.0   ] ],
     # Those eat up all memory on normal machines

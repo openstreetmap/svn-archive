@@ -82,7 +82,7 @@
      </PolygonSymbolizer>
     </Rule>
      <Rule>
-      <Filter>[landuse] = 'cemetary'</Filter>
+      <Filter>[landuse] = 'cemetery'</Filter>
       <MaxScaleDenominator>2000000</MaxScaleDenominator>
       <PolygonSymbolizer>
         <CssParameter name="fill">grey</CssParameter>

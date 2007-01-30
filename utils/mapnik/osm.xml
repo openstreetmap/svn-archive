@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
-<Map bgcolor="#f2efe9" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +no_defs">
+<Map bgcolor="#f2efe9" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
   <Style name="water_poly">
     <Rule>
       <MaxScaleDenominator>250000000</MaxScaleDenominator>
@@ -744,14 +744,14 @@
       <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/water</Parameter>
     </Datasource>
   </Layer>
-  <Layer name="world" status="on" srs="+proj=merc +datum=WGS84">
+  <Layer name="world" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
       <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/world_bnd_m</Parameter>
     </Datasource>
   </Layer>
-  <Layer name="waterway" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
+  <Layer name="waterway" status="on" srs="+proj=latlong +ellps=GRS80 +over +no_defs">
     <StyleName>water</StyleName>
     <Datasource>
       <Parameter name="type">postgis</Parameter>

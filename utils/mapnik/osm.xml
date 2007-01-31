@@ -741,14 +741,14 @@
     <StyleName>water_poly</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/water</Parameter>
+      <Parameter name="file">/home/mapnik/svn.openstreetmap.org/data/vmap0/water</Parameter>
     </Datasource>
   </Layer>
   <Layer name="world" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
     <StyleName>world</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/world_bnd_m</Parameter>
+      <Parameter name="file">/home/mapnik/svn.openstreetmap.org/data/vmap0/world_bnd_m</Parameter>
     </Datasource>
   </Layer>
   <Layer name="waterway" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
@@ -831,7 +831,7 @@
     <StyleName>places</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">/home/mapnik/svn.openstreetmap.orgosm/vmap0/places_eu</Parameter>
+      <Parameter name="file">/home/mapnik/svn.openstreetmap.org/data/vmap0/places_eu</Parameter>
     </Datasource>
   </Layer>
 </Map>

@@ -60,7 +60,7 @@
   <rule>
     <condition k="poi" v="geocache"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="de">Geocache</title>
     <title lang="en">Geocache</title>
     <description lang="de">Geocaches</description>
@@ -199,8 +199,8 @@
 
   <rule>
     <condition k="poi" v="sightseeing"/>
-    <condition k="tourism" v="attraction" />
-    <condition k="class" v="point of interest" />
+    <condition k="tourism" v="attraction"/>
+    <condition k="class" v="point of interest"/>
     <scale_min>1</scale_min>
     <scale_max>25000</scale_max>
     <title lang="de">Sehenswürdigkeit</title>
@@ -662,8 +662,8 @@
 
   <rule>
     <condition k="poi" v="food.pub"/>
-    <condition k="amenity" v="pub" />
-    <condition k="class" v="pub" />
+    <condition k="amenity" v="pub"/>
+    <condition k="class" v="pub"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -809,7 +809,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_drivein"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -821,7 +821,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_earth"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -833,7 +833,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_event"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -845,7 +845,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_math"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -857,7 +857,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_multi"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -869,7 +869,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_mystery"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -881,7 +881,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_night"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -893,7 +893,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_traditional"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -905,7 +905,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_virtual"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -917,7 +917,7 @@
   <rule>
     <condition k="poi" v="geocache.geocache_webcam"/>
     <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_max>100000</scale_max>
     <title lang="en"></title>
     <description lang="en"></description>
     <geoinfo>
@@ -1775,8 +1775,8 @@
 
   <rule>
     <condition k="poi" v="places.settlement.capital"/>
-    <scale_min>1</scale_min>
-    <scale_max>50000</scale_max>
+    <scale_min>100000</scale_min>
+    <scale_max>50000000</scale_max>
     <title lang="en">Capital</title>
     <title lang="de">Großstadt</title>
     <description lang="en">Settlement with more than 200000 inhabitants</description>
@@ -1845,8 +1845,8 @@
 
   <rule>
     <condition k="poi" v="places.peak"/>
-    <condition k="natural" v="peak" />
-    <condition k="class" v="hill" />
+    <condition k="natural" v="peak"/>
+    <condition k="class" v="hill"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2130,8 +2130,8 @@
 
   <rule>
     <condition k="poi" v="religion.church"/>
-    <condition k="class" v="church" />
-    <condition k="amenity" v="place_of_worship" />
+    <condition k="class" v="church"/>
+    <condition k="amenity" v="place_of_worship"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2762,8 +2762,8 @@
 
   <rule>
     <condition k="poi" v="sightseeing.viewpoint"/>
-    <condition k="tourism" v="viewpoint" />
-    <condition k="class" v="viewpoint" />
+    <condition k="tourism" v="viewpoint"/>
+    <condition k="class" v="viewpoint"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -3127,7 +3127,7 @@
 
   <rule>
     <condition k="poi" v="vehicle.caution"/>
-    <condition k="class" v="caution" />
+    <condition k="class" v="caution"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -3306,8 +3306,8 @@
 
   <rule>
     <condition k="poi" v="vehicle.parking"/>
-    <condition k="amenity" v="parking" />
-    <condition k="class" v="car park" />
+    <condition k="amenity" v="parking"/>
+    <condition k="class" v="car park"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -4762,6 +4762,19 @@
     <geoinfo>
       <poi_type_id>402</poi_type_id>
       <name>shopping.supermarket.real</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_found"/>
+    <scale_min>1</scale_min>
+    <scale_max>6500000</scale_max>
+    <title lang="en"></title>
+    <description lang="en">A Geocache you have already logged as found</description>
+    <description lang="de">Ein Geocache, der bereits als gefunden geloggt wurde</description>
+    <geoinfo>
+      <poi_type_id>403</poi_type_id>
+      <name>geocache.geocache_found</name>
     </geoinfo>
   </rule>
 </rules>

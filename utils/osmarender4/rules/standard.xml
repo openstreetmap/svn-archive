@@ -124,7 +124,7 @@
 
 
 	 	<!-- Landuse -->
-        <rule e="way" k="landuse" v="*">
+        <rule e="way" k="landuse|natural" v="*">
             <layer name="Land use">
                 <rule e="way" k="landuse" v="residential">
                     <area class='landuse-residential'/>

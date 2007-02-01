@@ -6,6 +6,7 @@ use File::Copy;
 use FindBin qw($Bin);
 use config;
 use English '-no_match_vars';
+use GD; 
 use strict;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
@@ -280,7 +281,7 @@ sub GenerateTileset(){
 
   # Render it as loads of recursive tiles
   my $progress = 0;
-  RenderTile($X, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+  RenderTile($X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
   # Clean-up he SVG files
   for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
@@ -295,7 +296,7 @@ sub GenerateTileset(){
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #-----------------------------------------------------------------------------
 sub RenderTile(){
-  my ($X, $Y, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
+  my ($X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
   
   return if($Zoom > $Config{MaxZoom});
 
@@ -306,10 +307,11 @@ sub RenderTile(){
 
   # Render it to PNG
   printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
-  my $Width = 256; # Pixel size of tiles  
-  svg2png($Zoom, $Filename, $Width,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight);
+  my $Width = 256 * (2 ** ($Config{MaxZoom} - 12));  # Pixel size of tiles  
+  my $Height = 256; # Pixel height of tile
+  svg2png($Zoom, $Filename, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile);
 
-  if (-s $Filename < 1000) {
+  if ((-s $Filename < 1000) and ( $Zoom == 12 )) {
     $empty=1;
   }
 
@@ -330,26 +332,19 @@ sub RenderTile(){
 
 
   # Sub-tiles
-  my $XA = $X * 2;
-  my $XB = $XA + 1;
-  my $YA = $Y * 2;
-  my $YB = $YA + 1;
-
-  my $LongC = 0.5 * ($W + $E);
-  
   my $MercY2 = ProjectF($N);
   my $MercY1 = ProjectF($S);
   my $MercYC = 0.5 * ($MercY1 + $MercY2);
   my $LatC = ProjectMercToLat($MercYC);
   
-  my $ImgXC = 0.5 * ($ImgX1 + $ImgX2);
   my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1);
   my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;
   
-  RenderTile($XA, $YA, $Zoom+1, $N, $LatC, $W, $LongC, $ImgX1, $ImgYC, $ImgXC, $ImgY2,$ImageHeight,$empty);
-  RenderTile($XB, $YA, $Zoom+1, $N, $LatC, $LongC, $E, $ImgXC, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
-  RenderTile($XA, $YB, $Zoom+1, $LatC, $S, $W, $LongC, $ImgX1, $ImgY1, $ImgXC, $ImgYC,$ImageHeight,$empty);
-  RenderTile($XB, $YB, $Zoom+1, $LatC, $S, $LongC, $E, $ImgXC, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
+  my $YA = $Ytile * 2;
+  my $YB = $YA + 1;
+
+  RenderTile($X, $Y, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
+  RenderTile($X, $Y, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
 
 }
 
@@ -466,15 +461,15 @@ sub xml2svg(){
 # Render a SVG file
 #-----------------------------------------------------------------------------
 sub svg2png(){
-  my($Zoom, $PNG, $Size, $X1, $Y1, $X2, $Y2, $ImageHeight) = @_;
+  my($Zoom, $PNG, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
 
   my $TempFile = $PNG."_part";
   
   my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\"", 
     $Config{Niceness},
     $Config{Inkscape},
-    $Size,
-    $Size,
+    $SizeX,
+    $SizeY,
     $X1,$Y1,$X2,$Y2,
     $TempFile,
     $Config{WorkingDirectory},
@@ -483,9 +478,12 @@ sub svg2png(){
   print STDERR "Rendering ...";
   `$Cmd`;
   print STDERR " done\n";
+
+  splitImageX($TempFile, $Config{WorkingDirectory}, 12, $X, $Y, $Zoom, $Ytile);
   
-  print "renaming $TempFile to $PNG\n";
-  rename($TempFile, $PNG);
+#  print "renaming $TempFile to $PNG\n";
+#  rename($TempFile, $PNG);
+  unlink($TempFile);
 }
 sub writeToFile(){
   open(my $fp, ">", shift()) || return;
@@ -598,4 +596,91 @@ sub appendOSMfile(){
   open(my $fpOut2, ">>", "$Datafile");
   print $fpOut2 $Data;
   close $fpOut2;
+}
+
+
+##-----------------------------------------------------------------------------
+## Split a directory full of tilesets into individual tiles
+##-----------------------------------------------------------------------------
+#sub splitTiles(){
+#  my ($Dir, $OutputDir) = @_;
+#  
+#  opendir(my $dp, $Dir) || return;
+#  while(my $file = readdir($dp)){
+#    if($file =~ /^tileset_(\d+)_(\d+)_(\d+)_level(\d+)\.png$/){
+#      my $Filename = "$Dir/$file";
+#      
+#      # Split the tileset
+#      splitImage($Filename, $OutputDir, $1, $2, $3, $4);
+#      
+#      # Delete the source image after use
+#      unlink $Filename;
+#    }
+#  }
+#  closedir($dp);
+#}
+
+#-----------------------------------------------------------------------------
+# Split a tileset image into tiles
+#-----------------------------------------------------------------------------
+sub splitImageX(){
+  my ($File, $OutputDir, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
+  
+  # Size of tiles
+  my $Pixels = 256;
+  
+  # Number of tiles
+  my $Size = 2 ** ($Z - $ZOrig);
+  
+  # Load the tileset image
+  print "Loading $File ($Size x $Size)\n";
+  my $Image = newFromPng GD::Image($File);
+  
+  # Use one subimage for everything, and keep copying data into it
+  my $SubImage = new GD::Image($Pixels,$Pixels);
+  
+  # For each subimage
+  for(my $xi = 0; $xi < $Size; $xi++){
+  
+    # Get a tiles'worth of data from the main image
+    $SubImage->copy($Image,
+      0,                   # Dest X offset
+      0,                   # Dest Y offset
+      $xi * $Pixels,       # Source X offset
+      0,                   # Source Y offset # always 0 because we only cut from one row
+      $Pixels,             # Copy width
+      $Pixels);            # Copy height
+  
+    # Decide what the tile should be called
+    my $Filename = $OutputDir . "/" . 
+      sprintf("tile_%d_%d_%d.png", 
+        $Z, 
+        $X * $Size + $xi, 
+        $Ytile); 
+    # Temporary filename
+    my $Filename2 = "$Filename.cut";
+    
+    # Store the tile
+    print " -> $Filename\n";
+    WriteImage($SubImage,$Filename2);
+    rename($Filename2, $Filename);
+    
+  }
+  undef $SubImage;
+}
+
+#-----------------------------------------------------------------------------
+# Write a GD image to disk
+#-----------------------------------------------------------------------------
+sub WriteImage(){
+  my ($Image, $Filename) = @_;
+  
+  # Get the image as PNG data
+  my $png_data = $Image->png;
+  
+  # Store it
+  open (my $fp, ">$Filename") || die;
+  binmode $fp;
+  print $fp $png_data;
+  close $fp;
 }

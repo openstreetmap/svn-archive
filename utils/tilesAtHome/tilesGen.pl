@@ -319,14 +319,14 @@ sub RenderTile(){
   if($empty == 1) {
     # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
     for (my $j = $Config{MaxZoom} ; $j >= $Zoom ; $j--) {
-      $GenerateTileset::progress += 4 ** ($Config{MaxZoom}-$j);
+      $GenerateTileset::progress += 2 ** ($Config{MaxZoom}-$j);
     }
   }
   else {
     $GenerateTileset::progress += 1;
   }
   my $progress=$GenerateTileset::progress;  
-  #TODO: instead of putting 1365 calculate number of tiles depending on min and max zoom:
+  #TODO: instead of putting 63 calculate number of tiles depending on min and max zoom:
   my $progressPercent=$progress*100/63;
   printf "Job %1.1f %% done.\n", $progressPercent;
 

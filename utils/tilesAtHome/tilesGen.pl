@@ -481,9 +481,8 @@ sub svg2png(){
 
   splitImageX($TempFile, $Config{WorkingDirectory}, 12, $X, $Y, $Zoom, $Ytile);
   
-#  print "renaming $TempFile to $PNG\n";
-#  rename($TempFile, $PNG);
-#  unlink($TempFile);
+  unlink($TempFile);
+
 }
 sub writeToFile(){
   open(my $fp, ">", shift()) || return;
@@ -598,27 +597,6 @@ sub appendOSMfile(){
   close $fpOut2;
 }
 
-
-##-----------------------------------------------------------------------------
-## Split a directory full of tilesets into individual tiles
-##-----------------------------------------------------------------------------
-#sub splitTiles(){
-#  my ($Dir, $OutputDir) = @_;
-#  
-#  opendir(my $dp, $Dir) || return;
-#  while(my $file = readdir($dp)){
-#    if($file =~ /^tileset_(\d+)_(\d+)_(\d+)_level(\d+)\.png$/){
-#      my $Filename = "$Dir/$file";
-#      
-#      # Split the tileset
-#      splitImage($Filename, $OutputDir, $1, $2, $3, $4);
-#      
-#      # Delete the source image after use
-#      unlink $Filename;
-#    }
-#  }
-#  closedir($dp);
-#}
 
 #-----------------------------------------------------------------------------
 # Split a tileset image into tiles

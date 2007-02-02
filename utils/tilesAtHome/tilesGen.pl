@@ -13,7 +13,7 @@ use strict;
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White, Etienne Cherdlu
+# Copyright 2006, Oliver White, Etienne Cherdlu, Dirk-Lueder Kreie
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

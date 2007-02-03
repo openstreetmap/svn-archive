@@ -54,6 +54,7 @@
 					Rendering of external white border is now improved when bounds are specified
 					No external white border when no bounds specified
 					Various tweaks to the rules file
+	3.1.1 2007-02-03  Fixed rendering artifact with areas containing holes (eg islands in lakes).  Version 3.3 in trunk. (80n)
 					
 -->
 
@@ -749,16 +750,39 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 		<xsl:variable name='pathData'>
 			<xsl:for-each select='seg[key("segmentById",@id)]'>
 				<xsl:variable name='segmentId' select='@id'/>
-				<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=key("segmentById",preceding-sibling::seg[1]/@id)/@to'/>
+				<xsl:variable name='previousSegmentToNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@to' />
+				<xsl:variable name='previousSegmentFromNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@from' />
+				
+				<!-- The linkedSegment flag indicates whether the previous segment is connected to the current segment.  If it isn't
+				     then we will need to draw an additional line (segmentLineToStart) from the end of the previous segment to the
+				     start of the current segment. 
+				-->
+				<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=$previousSegmentToNodeId'/>
+		
+				<!--  Now we count the number of segments in this way that have a from node that is equal to the previous segment's to node.
+				      We do this to find out if the previous segment is connected to some other segment in the way.  If it is, and it
+				      is not linked to the current segment then we actually have the start of a new sub-path.  In this case we shouldn't
+				      draw an additional line between the end of the previous segment and the start of the current segment.
+				-->
+				<xsl:variable name='connectedSegmentCount' select='count(../*[key("segmentById",@id)/@from=$previousSegmentToNodeId])' />
+				
 				<xsl:variable name='segmentSequence' select='position()'/>
 				<xsl:for-each select='key("segmentById",$segmentId)'>
-						<xsl:if test='$segmentSequence=1'>
+					<xsl:choose>
+						<!-- If this is the start of the way then we always have to move to the start of the segment. -->
+						<xsl:when test='$segmentSequence=1'>
 							<xsl:call-template name='segmentMoveToStart'/>				
-						</xsl:if>
-						<xsl:if test='not($linkedSegment)'>
+						</xsl:when>
+						<!-- If the previous segment was "connected" to another segment but the current segment is not linked then start a new sub-path -->
+						<xsl:when test='$connectedSegmentCount>0 and not($linkedSegment)'>
+							<xsl:call-template name='segmentMoveToStart'/>				
+						</xsl:when>
+						<!-- If the previous segment is not linked to this one we need to draw an artificial line -->
+						<xsl:when test='not($linkedSegment)'>
 							<xsl:call-template name='segmentLineToStart'/>				
-						</xsl:if>
-						<xsl:call-template name='segmentLineToEnd'/>
+						</xsl:when>
+					</xsl:choose>
+					<xsl:call-template name='segmentLineToEnd'/>
 				</xsl:for-each>
 			</xsl:for-each>
 			<xsl:text>Z</xsl:text>

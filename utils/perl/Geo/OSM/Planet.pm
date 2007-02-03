@@ -139,43 +139,44 @@ sub mirror_planet(){
     mkdir_if_needed( $mirror_dir );
     
     my $current_file;
-    if ( $Utils::LWP::Utils::NO_MIRROR ) {
-	my @files= sort { $b cmp $a}  
-	      grep { $_ !~ m/planet-061008/ } 
-	      glob("$mirror_dir/planet-*.osm.bz2");
-	if ( $DEBUG) {
-	    print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
-	}
-	$current_file = $files[0];
-    } else {
+    if ( !$Utils::LWP::Utils::NO_MIRROR ) {
 	# Get Index.html of Planet.osm.org
-	my $apache_sort_hy_date="/?C=M;O=D";
+	my $apache_sort_hy_date="?C=M;O=D";
 	my $index_file="$mirror_dir/planet_index.html";
 	my $result = mirror_file("$url/$apache_sort_hy_date",$index_file);
-	return undef unless $result;
-	my $index_content = read_file( $index_file ) ;
+	if ( $result ) {
+	    my $index_content = read_file( $index_file ) ;
 
-	# Get the current planet.osm File
-	my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/g);
-	( $current_file ) = grep { $_ !~ m/planet-061008/ } @all_files;
-	return undef unless $current_file;
-	
-	$url .= "/$current_file";
-	$current_file = "$mirror_dir/$current_file";
-	print STDERR "Mirror OSM Data from $url\n" if $VERBOSE || $DEBUG;
-	$result = mirror_file($url,$current_file);
-	return undef unless $result;
-
-	if ( $result == 1 ) { # Modified
-	    # Link the current File to planet.osm(.bz2)
-	    # symlink
+	    # Get the current planet.osm File
+	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/g);
+	    ( $current_file ) = grep { $_ !~ m/planet-061008/ } @all_files;
+	    if ( $current_file ) {
+		$url .= "/$current_file";
+		$current_file = "$mirror_dir/$current_file";
+		print STDERR "Mirror OSM Data from $url\n" if $VERBOSE || $DEBUG;
+		$result = mirror_file($url,$current_file);
+		#return undef unless $result;
+		
+		if ( $result == 1 ) { # Modified
+		    # Link the current File to planet.osm(.bz2)
+		    # symlink
+		}
+	    }
 	}
     }
 
+    my @files= sort { $b cmp $a}  
+    grep { $_ !~ m/planet-061008/ } 
+    glob("$mirror_dir/planet-*.osm.bz2");
+    if ( $DEBUG) {
+	print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
+    }
+    $current_file = $files[0];
+    
     if ( $DEBUG) {
 	print STDERR "Choosen File: $current_file\n";
     }
-
+    
     return undef unless $current_file;
 
     $current_file = UTF8sanitize($current_file);

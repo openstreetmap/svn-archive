@@ -12,7 +12,7 @@ for theme in square.big square.small classic nickw ; do
 	name=${name//\//_}
 	echo "" >>$makefile
 	echo $name'_DATA = '$dir'/*.png' >>$makefile
-	echo $name'dir = $(datadir)/'$dir >>$makefile
+	echo $name'dir = $(datadir)/map-icons/'$dir >>$makefile
     done
     echo  >>$makefile
 done

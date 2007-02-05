@@ -2,24 +2,28 @@
 # Configuration file for TilesAtHome
 #
 
-# File Locations
+## File Locations
 WorkingDirectory=c:\temp\
 Inkscape=c:\program files\inkscape\inkscape
 XmlStarlet=c:\program files\xmlstarlet\xml
 Niceness=
 
-# Upload
+## Upload
 UploadUsername=CHANGEME
 UploadPassword=CHANGEME
+
+# upload.pl will use whatever limit is reached first, either ChunkSize or Filecount.
 UploadChunkSize=1.5   # Megabyte
+UploadChunkCount=683  # default: half a tileset
+
 UploadURL2=http://dev.openstreetmap.org/~ojw/Upload/tile2.php
 DeleteZipFilesAfterUpload=0
 
-# Download
+## Download
 OsmUsername=name%40domain.com
 OsmPassword=CHANGEME
 
-# Rendering
+## Rendering
 BorderN=0.01
 BorderS=0.01
 BorderE=0.05

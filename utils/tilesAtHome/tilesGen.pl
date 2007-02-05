@@ -612,7 +612,7 @@ sub splitImageX(){
   my $Size = 2 ** ($Z - $ZOrig);
   
   # Load the tileset image
-  print "Loading $File ($Size x $Size)\n";
+  print "Loading $File ($Size x 1)\n";
   my $Image = newFromPng GD::Image($File);
   
   # Use one subimage for everything, and keep copying data into it

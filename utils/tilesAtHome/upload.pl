@@ -57,13 +57,17 @@ sub uploadTileBatch(){
   my ($Size,$Count) = (0,0);
   my $MB = 1024*1024;
   my $SizeLimit = $Config{"UploadChunkSize"} * $MB;
-  
+  my $CountLimit = $Config{"UploadChunkCount"};
+
+  #prevent too small zips, 683=half a tileset
+  $CountLimit = 683 if ($CountLimit < 100);
+
   mkdir $TempDir if ! -d $TempDir;
   mkdir $OutputDir if ! -d $OutputDir;
   
   print "Searching for tiles in $TileDir\n";
   opendir(my $dp, $TileDir) || return;
-  while((my $file = readdir($dp)) && ($Size < $SizeLimit)){
+  while((my $file = readdir($dp)) && ($Size < $SizeLimit) && ($Count < $CountLimit)){
     my $Filename1 = "$TileDir/$file";
     my $Filename2 = "$TempDir/$file";
     if($file =~ /tile_\d+_\d+_\d+\.png$/i){

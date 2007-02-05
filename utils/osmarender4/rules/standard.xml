@@ -74,6 +74,9 @@
             <rule e="way" k="landuse" v="forest|wood">
                 <area class='landuse-wood'/>
             </rule>
+            <rule e="way" k="natural" v="forest|wood">
+                <area class='landuse-wood'/>
+            </rule>
             <rule e="way" k="landuse" v="field|meadow">
                 <area class='landuse-field'/>
             </rule>

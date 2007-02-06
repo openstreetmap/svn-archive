@@ -611,6 +611,9 @@ sub splitImageX(){
   # Number of tiles
   my $Size = 2 ** ($Z - $ZOrig);
   
+  # Switch GD into trueColor mode 
+  GD::Image->trueColor(1);
+
   # Load the tileset image
   print "Loading $File ($Size x 1)\n";
   my $Image = newFromPng GD::Image($File);

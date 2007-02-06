@@ -40,6 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<xsl:variable name="data" select="document($osmfile)"/>
 	<xsl:variable name="scale" select="/rules/@scale"/>
 	<xsl:variable name="withOSMLayers" select="/rules/@withOSMLayers"/>
+	<xsl:variable name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
 
     <xsl:variable name="metaTopHeight">
         <xsl:choose>
@@ -188,6 +189,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <g id="map" clip-path="url(#map-clipping)" inkscape:groupmode="layer" inkscape:label="Map" transform="translate(0,{$metaTopHeight})">
                 <!-- Draw a nice background layer -->
                 <rect id="background" x="0px" y="0px" height="{$documentHeight}px" width="{$documentWidth}px" class="map-background"/>
+
+                <!-- If this is set we first draw all untagged segments not belonging to any way -->
+			    <xsl:if test="$withUntaggedSegments=&quot;yes&quot;">
+                    <xsl:call-template name="drawUntaggedSegments"/>
+                </xsl:if>
 
                 <!-- Process all the rules drawing all map features -->
                 <xsl:call-template name="processRules"/>
@@ -472,6 +478,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			<xsl:attribute name="{substring-after(@k,&quot;svg:&quot;)}"><xsl:value-of select="@v"/></xsl:attribute>
 		</xsl:for-each>
 	</xsl:template>
+    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="drawUntaggedSegments">
+        <g id="segments" inkscape:groupmode="layer" inkscape:label="Segments">
+            <xsl:for-each select="$data/osm/segment[not(key('wayBySegment', @id))]">
+                <xsl:if test="not(tag[@key!='created_by'])">
+                    <xsl:variable name="fromNode" select="key('nodeById', @from)"/>
+                    <xsl:variable name="toNode" select="key('nodeById', @to)"/>
+                    <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+                    <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+                    <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+                    <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+                    <line class="untagged-segments" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
+                </xsl:if>
+            </xsl:for-each>
+        </g>
+    </xsl:template>
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" match="line">
 		<xsl:param name="elements"/>
 		<xsl:param name="layer"/>

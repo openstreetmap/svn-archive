@@ -11,6 +11,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svg="http://www.w3.org/2000/svg"
     data="data.osm"
+    svgBaseProfile="full"
     scale="1"
     minimumMapWidth="4"
     minimumMapHeight="3"

@@ -43,10 +43,10 @@ if(opendir(ZIPDIR, $ZipDir)){
 }
 
 # Group and upload the tiles
-uploadTileBatch(
+while (uploadTileBatch(
   $Config{WorkingDirectory}, 
   $Config{WorkingDirectory} . "/gather", 
-  $ZipDir);
+  $ZipDir)) {};
 
 #-----------------------------------------------------------------------------
 # Moves tiles into a "gather" directory until a certain size is reached,
@@ -81,11 +81,12 @@ sub uploadTileBatch(){
   
   if($Count){
     printf("Got %d files (%d bytes), compressing...", $Count, $Size);
-    compressTiles($TempDir, $OutputDir);
+    return compressTiles($TempDir, $OutputDir);
   }
   else
   {
-    print "No tiles found\n";
+    print "Finished.\n";
+    return 0;
   }
 }
 
@@ -123,7 +124,7 @@ sub compressTiles(){
   `$Command1`;
   `$Command2`;
   
-  upload($Filename);
+  return upload($Filename);
 }
 
 #-----------------------------------------------------------------------------
@@ -147,7 +148,7 @@ sub upload(){
     
   if(!$res->is_success()){
     print("Error uploading file");
-    return;
+    return 0;
   } 
   
   if($Config{DeleteZipFilesAfterUpload}){
@@ -157,6 +158,8 @@ sub upload(){
   {
     rename($File, $File."_uploaded");
   }
+  
+  return 1;
 }
 
 sub ReadConfigFile(){

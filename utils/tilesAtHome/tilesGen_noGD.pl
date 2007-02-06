@@ -277,7 +277,7 @@ sub GenerateTileset(){
   killafile($DataFile);
   
   # Find the size of the SVG file
-  my ($ImgW,$ImgH,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
+  my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
 
   # Render it as loads of recursive tiles
   my $progress = 0;

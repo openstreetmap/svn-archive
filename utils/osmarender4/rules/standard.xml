@@ -15,6 +15,7 @@
     minimumMapWidth="4"
     minimumMapHeight="3"
     withOSMLayers="yes"
+    withUntaggedSegments="yes"
     showScale="yes"
     showGrid="yes"
     showBorder="yes"
@@ -720,6 +721,14 @@
 			  stroke-linecap: round;
 			  stroke: red;
 			  }
+
+            .untagged-segments {
+                stroke-width: 0.5px;
+                stroke-linejoin: butt;
+                stroke-linecap: butt;
+                stroke: #e0e0e0;
+                stroke-dasharray: 0.5,0.5;
+            }
 
 			.abutters-residential {
 			  stroke-width: 9px;

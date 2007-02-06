@@ -87,4 +87,5 @@ Revision history:
                 Bugfix: When all meta data is suppressed the empty white background box is also suppressed
     2007-02-04  Bugfix for drawing areas with holes (80n)
     2007-02-05  Added rendering for natural=forest|wood to standard rule (Joto)
+    2007-02-06  Added option withUntaggedSegments="yes" to rule file. If this is set all segments belonging to no way and without any tags (except "created_by") are rendered as dotted faint grey lines. (Joto)
 

@@ -53,6 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<xsl:variable name='data' select='document($osmfile)'/>
 	<xsl:variable name='scale' select='/rules/@scale'/>
 	<xsl:variable name='withOSMLayers' select='/rules/@withOSMLayers'/>
+	<xsl:variable name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
 
     <xsl:variable name="metaTopHeight">
         <xsl:choose>
@@ -117,6 +118,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <!-- Draw a nice background layer -->
                 <rect id="background" x='0px' y='0px' height='{$documentHeight}px' width='{$documentWidth}px' class='map-background'/>
 
+                <!-- If this is set we first draw all untagged segments not belonging to any way -->
+			    <xsl:if test='$withUntaggedSegments="yes"'>
+                    <xsl:call-template name="drawUntaggedSegments"/>
+                </xsl:if>
+
                 <!-- Process all the rules drawing all map features -->
                 <xsl:call-template name="processRules"/>
             </g>
@@ -178,6 +184,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <!-- include templates from all the other files -->
     <xi:include href="draw.xsl" xpointer="xpointer(/*/*)"/>
+    <xi:include href="segments.xsl" xpointer="xpointer(/*/*)"/>
     <xi:include href="instructions.xsl" xpointer="xpointer(/*/*)"/>
     <xi:include href="util.xsl" xpointer="xpointer(/*/*)"/>
 

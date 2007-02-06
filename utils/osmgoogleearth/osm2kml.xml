@@ -28,6 +28,12 @@
                 </rule>
             </folder>
 
+            <folder name="Hostels">
+                <rule e="node" k="tourism" v="hostel">
+                    <point class="tourism-hostel"/>
+                </rule>
+            </folder>
+
             <folder name="Places of Worship">
 
                 <rule e="node" k="amenity" v="place_of_worship">
@@ -43,6 +49,7 @@
                 </rule>
 
             </folder>
+ 
         </folder>
       
         <folder name="Settlements">
@@ -200,6 +207,15 @@
                     <href>icons/icon-shopping.png</href>
                 </Icon>
                 <scale>0.7</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="tourism-hostel">
+            <IconStyle id="iconstyle-hostel">
+                <Icon>
+                    <href>icons/icon-hostel.png</href>
+                </Icon>
+                <scale>0.5</scale>
             </IconStyle>
         </Style>
 

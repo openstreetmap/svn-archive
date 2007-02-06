@@ -1893,7 +1893,7 @@
                 fill: white;
             }
 
-            .map-meta-background {
+            .map-marginalia-background {
                 fill: white;
             }
 		</style>

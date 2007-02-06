@@ -55,7 +55,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<xsl:variable name='withOSMLayers' select='/rules/@withOSMLayers'/>
 	<xsl:variable name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
 
-    <xsl:variable name="metaTopHeight">
+    <xsl:variable name="marginaliaTopHeight">
         <xsl:choose>
             <xsl:when test="$title!=''">40</xsl:when>
             <xsl:otherwise>0</xsl:otherwise>
@@ -114,7 +114,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <rect id="map-clipping-rect" x='0px' y='0px' height='{$documentHeight}px' width='{$documentWidth}px'/>
             </clipPath>
 
-            <g id="map" clip-path="url(#map-clipping)" inkscape:groupmode="layer" inkscape:label="Map" transform="translate(0,{$metaTopHeight})">
+            <g id="map" clip-path="url(#map-clipping)" inkscape:groupmode="layer" inkscape:label="Map" transform="translate(0,{$marginaliaTopHeight})">
                 <!-- Draw a nice background layer -->
                 <rect id="background" x='0px' y='0px' height='{$documentHeight}px' width='{$documentWidth}px' class='map-background'/>
 
@@ -128,7 +128,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             </g>
 
             <!-- Draw map decoration -->
-            <g id="map-decoration" inkscape:groupmode="layer" inkscape:label="Map decoration" transform="translate(0,{$metaTopHeight})">
+            <g id="map-decoration" inkscape:groupmode="layer" inkscape:label="Map decoration" transform="translate(0,{$marginaliaTopHeight})">
                 <!-- Draw a grid if required -->
                 <xsl:if test='/rules/@showGrid="yes"'>
                     <xsl:call-template name="gridDraw"/>
@@ -140,9 +140,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 </xsl:if>
             </g>
 
-            <!-- Draw map meta data -->
+            <!-- Draw map marginalia -->
             <xsl:if test="($title != '') or (/rules/@showScale = 'yes') or (/rules/@showLicense = 'yes')">
-                <svg id="meta" inkscape:groupmode="layer" inkscape:label="Map meta data">
+                <svg id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
                     <!-- Draw the title -->
                     <xsl:if test="$title!=''">
                         <xsl:call-template name="titleDraw">
@@ -150,9 +150,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                         </xsl:call-template>
                     </xsl:if>
 
-                    <g id="meta-bottom" inkscape:groupmode="layer" inkscape:label="Map meta data (Bottom)" transform="translate(0,{$metaTopHeight})">
-                        <!-- Draw background for meta stuff at bottom -->
-                        <rect id="meta-background" x='0px' y='{$documentHeight + 5}px' height='40px' width='{$documentWidth}px' class='map-meta-background'/>
+                    <g id="marginalia-bottom" inkscape:groupmode="layer" inkscape:label="Marginalia (Bottom)" transform="translate(0,{$marginaliaTopHeight})">
+                        <!-- Draw background for marginalia at bottom -->
+                        <rect id="marginalia-background" x='0px' y='{$documentHeight + 5}px' height='40px' width='{$documentWidth}px' class='map-marginalia-background'/>
 
                         <!-- Draw the scale in the bottom left corner -->
                         <xsl:if test='/rules/@showScale="yes"'>

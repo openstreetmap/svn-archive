@@ -42,7 +42,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<xsl:variable name="withOSMLayers" select="/rules/@withOSMLayers"/>
 	<xsl:variable name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
 
-    <xsl:variable name="metaTopHeight">
+    <xsl:variable name="marginaliaTopHeight">
         <xsl:choose>
             <xsl:when test="$title!=''">40</xsl:when>
             <xsl:otherwise>0</xsl:otherwise>
@@ -186,7 +186,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <rect id="map-clipping-rect" x="0px" y="0px" height="{$documentHeight}px" width="{$documentWidth}px"/>
             </clipPath>
 
-            <g id="map" clip-path="url(#map-clipping)" inkscape:groupmode="layer" inkscape:label="Map" transform="translate(0,{$metaTopHeight})">
+            <g id="map" clip-path="url(#map-clipping)" inkscape:groupmode="layer" inkscape:label="Map" transform="translate(0,{$marginaliaTopHeight})">
                 <!-- Draw a nice background layer -->
                 <rect id="background" x="0px" y="0px" height="{$documentHeight}px" width="{$documentWidth}px" class="map-background"/>
 
@@ -200,7 +200,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             </g>
 
             <!-- Draw map decoration -->
-            <g id="map-decoration" inkscape:groupmode="layer" inkscape:label="Map decoration" transform="translate(0,{$metaTopHeight})">
+            <g id="map-decoration" inkscape:groupmode="layer" inkscape:label="Map decoration" transform="translate(0,{$marginaliaTopHeight})">
                 <!-- Draw a grid if required -->
                 <xsl:if test="/rules/@showGrid=&quot;yes&quot;">
                     <xsl:call-template name="gridDraw"/>
@@ -212,9 +212,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 </xsl:if>
             </g>
 
-            <!-- Draw map meta data -->
+            <!-- Draw map marginalia -->
             <xsl:if test="($title != '') or (/rules/@showScale = 'yes') or (/rules/@showLicense = 'yes')">
-                <svg id="meta" inkscape:groupmode="layer" inkscape:label="Map meta data">
+                <svg id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
                     <!-- Draw the title -->
                     <xsl:if test="$title!=''">
                         <xsl:call-template name="titleDraw">
@@ -222,9 +222,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                         </xsl:call-template>
                     </xsl:if>
 
-                    <g id="meta-bottom" inkscape:groupmode="layer" inkscape:label="Map meta data (Bottom)" transform="translate(0,{$metaTopHeight})">
-                        <!-- Draw background for meta stuff at bottom -->
-                        <rect id="meta-background" x="0px" y="{$documentHeight + 5}px" height="40px" width="{$documentWidth}px" class="map-meta-background"/>
+                    <g id="marginalia-bottom" inkscape:groupmode="layer" inkscape:label="Marginalia (Bottom)" transform="translate(0,{$marginaliaTopHeight})">
+                        <!-- Draw background for marginalia at bottom -->
+                        <rect id="marginalia-background" x="0px" y="{$documentHeight + 5}px" height="40px" width="{$documentWidth}px" class="map-marginalia-background"/>
 
                         <!-- Draw the scale in the bottom left corner -->
                         <xsl:if test="/rules/@showScale=&quot;yes&quot;">
@@ -1259,9 +1259,9 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
 		<xsl:variable name="x" select="$documentWidth div 2"/>
 		<xsl:variable name="y" select="30"/>
 
-        <svg id="meta-title" inkscape:groupmode="layer" inkscape:label="Title">
-			<rect id="meta-title-background" x="0px" y="0px" height="{$metaTopHeight - 5}px" width="{$documentWidth}px" class="map-title-background"/>
-		    <text id="meta-title-text" class="map-title" x="{$x}" y="{$y}"><xsl:value-of select="$title"/></text>
+        <svg id="marginalia-title" inkscape:groupmode="layer" inkscape:label="Title">
+			<rect id="marginalia-title-background" x="0px" y="0px" height="{$marginaliaTopHeight - 5}px" width="{$documentWidth}px" class="map-title-background"/>
+		    <text id="marginalia-title-text" class="map-title" x="{$x}" y="{$y}"><xsl:value-of select="$title"/></text>
         </svg>
 	</xsl:template>
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="scaleDraw">
@@ -1270,18 +1270,18 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
 		<xsl:variable name="x2" select="$x1+$km"/>
 		<xsl:variable name="y2" select="$y1"/>
 
-        <svg id="meta-scale" inkscape:groupmode="layer" inkscape:label="Scale">
-            <line id="meta-scale-casing" class="map-scale-casing" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
+        <svg id="marginalia-scale" inkscape:groupmode="layer" inkscape:label="Scale">
+            <line id="marginalia-scale-casing" class="map-scale-casing" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
             
-            <line id="meta-scale-core" class="map-scale-core" stroke-dasharray="{($km div 10)}" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
+            <line id="marginalia-scale-core" class="map-scale-core" stroke-dasharray="{($km div 10)}" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
 
-            <line id="meta-scale-bookend-from" class="map-scale-bookend" x1="{$x1}" y1="{$y1 + 2}" x2="{$x1}" y2="{$y1 - 10}"/>
+            <line id="marginalia-scale-bookend-from" class="map-scale-bookend" x1="{$x1}" y1="{$y1 + 2}" x2="{$x1}" y2="{$y1 - 10}"/>
 
-            <line id="meta-scale-bookend-to" class="map-scale-bookend" x1="{$x2}" y1="{$y2 + 2}" x2="{$x2}" y2="{$y2 - 10}"/>
+            <line id="marginalia-scale-bookend-to" class="map-scale-bookend" x1="{$x2}" y1="{$y2 + 2}" x2="{$x2}" y2="{$y2 - 10}"/>
 
-            <text id="meta-scale-text-from" class="map-scale-caption" x="{$x1}" y="{$y1 - 10}">0</text>
+            <text id="marginalia-scale-text-from" class="map-scale-caption" x="{$x1}" y="{$y1 - 10}">0</text>
 
-            <text id="meta-scale-text-to" class="map-scale-caption" x="{$x2}" y="{$y2 - 10}">1km</text>
+            <text id="marginalia-scale-text-to" class="map-scale-caption" x="{$x2}" y="{$y2 - 10}">1km</text>
         </svg>
 	</xsl:template>
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" name="metadata">

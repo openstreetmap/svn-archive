@@ -33,6 +33,13 @@ use strict;
 my %Config = ReadConfig("tilesAtHome.conf");
 CheckConfig(%Config);
 
+# check GD
+eval GD::Image->trueColor(1);
+if ($@ ne '') {
+  print "please update your libgd to version 2 for trueColor support";
+  exit(3);
+}
+
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
@@ -151,6 +158,7 @@ sub ProcessRequestsFromServer(){
   if($ValidFlag eq "XX"){
     print "Nothing to do!  Please wait a while, and check later for requests\n";
     sleep(40 * 60);
+    return;
   }
   elsif($ValidFlag ne "OK"){
     print "Server doesn't seem to be responding as expected\n";
@@ -281,7 +289,8 @@ sub GenerateTileset(){
   my ($ImgW,$ImgH,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
 
   # Render it as loads of recursive tiles
-  my $progress = 0;
+  my $progress;
+  $progress = 0;
   RenderTile($X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
   # Clean-up he SVG files
@@ -611,9 +620,6 @@ sub splitImageX(){
   # Number of tiles
   my $Size = 2 ** ($Z - $ZOrig);
   
-  # Switch GD into trueColor mode 
-  GD::Image->trueColor(1);
-
   # Load the tileset image
   print "Loading $File ($Size x 1)\n";
   my $Image = newFromPng GD::Image($File);

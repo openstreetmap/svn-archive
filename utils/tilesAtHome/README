@@ -18,6 +18,8 @@ to upload tiles use "upload.pl"
 
 (might need multiple calls to upload everything, depending on your setup)
 
+if you get Errors about libGD run tilesGen_noGD.pl instead of tilesGen.pl
+
 
 further reading: http://wiki.openstreetmap.org/index.php/Tiles%40home
 

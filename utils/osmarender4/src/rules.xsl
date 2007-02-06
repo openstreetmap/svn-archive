@@ -59,13 +59,13 @@
         <xsl:param name="layer" />
         <xsl:param name='elements' select='$data/osm/*[not(@action="delete") and tag[@k="layer" and @v=$layer]]' />
 
-        <svg inkscape:groupmode="layer" id="layer{$layer}" inkscape:label="Layer {$layer}">
+        <g inkscape:groupmode="layer" id="layer{$layer}" inkscape:label="Layer {$layer}">
             <xsl:apply-templates select='/rules/rule'>
                 <xsl:with-param name='elements' select='$elements' />
                 <xsl:with-param name='layer' select='$layer' />
                 <xsl:with-param name='classes' select="''" />
             </xsl:apply-templates>
-        </svg>
+        </g>
 	</xsl:template>
 			
 	<xsl:template match='rule'>

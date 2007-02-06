@@ -54,6 +54,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<xsl:variable name='scale' select='/rules/@scale'/>
 	<xsl:variable name='withOSMLayers' select='/rules/@withOSMLayers'/>
 	<xsl:variable name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
+	<xsl:variable name='svgBaseProfile' select='/rules/@svgBaseProfile'/>
 
     <xsl:variable name="marginaliaTopHeight">
         <xsl:choose>
@@ -77,7 +78,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		<svg
 		 id='main'
 		 version="1.1"
-		 baseProfile="full"
+		 baseProfile="{$svgBaseProfile}"
 		 height="100%"
 		 width="100%">		
 			<xsl:if test='/rules/@interactive="yes"'>
@@ -142,7 +143,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
             <!-- Draw map marginalia -->
             <xsl:if test="($title != '') or (/rules/@showScale = 'yes') or (/rules/@showLicense = 'yes')">
-                <svg id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
+                <g id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
                     <!-- Draw the title -->
                     <xsl:if test="$title!=''">
                         <xsl:call-template name="titleDraw">
@@ -168,7 +169,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                             </xsl:call-template>
                         </xsl:if>
                     </g>
-                </svg>
+                </g>
             </xsl:if>
 
 			<!-- Draw labels and controls that are in a static position -->

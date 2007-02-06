@@ -32,7 +32,7 @@
             </xsl:if>
         </xsl:variable>
 
-        <svg inkscape:groupmode="layer" id="{@name}-{$layer}" inkscape:label="{@name}">
+        <g inkscape:groupmode="layer" id="{@name}-{$layer}" inkscape:label="{@name}">
             <xsl:if test="concat($opacity,$display)!=''">
                 <xsl:attribute name="style">
                     <xsl:value-of select="concat($opacity,$display)"/>
@@ -43,7 +43,7 @@
                 <xsl:with-param name='elements' select='$elements' />
                 <xsl:with-param name='classes' select='$classes' />
             </xsl:apply-templates>
-        </svg>
+        </g>
 
 	</xsl:template>
 

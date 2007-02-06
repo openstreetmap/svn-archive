@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	<xsl:variable name="scale" select="/rules/@scale"/>
 	<xsl:variable name="withOSMLayers" select="/rules/@withOSMLayers"/>
 	<xsl:variable name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
+	<xsl:variable name="svgBaseProfile" select="/rules/@svgBaseProfile"/>
 
     <xsl:variable name="marginaliaTopHeight">
         <xsl:choose>
@@ -151,7 +152,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			</xsl:processing-instruction>
 		</xsl:if>
 
-		<svg id="main" version="1.1" baseProfile="full" height="100%" width="100%">		
+		<svg id="main" version="1.1" baseProfile="{$svgBaseProfile}" height="100%" width="100%">		
 			<xsl:if test="/rules/@interactive=&quot;yes&quot;">
 				<xsl:attribute name="onscroll">fnOnScroll(evt)</xsl:attribute>
 				<xsl:attribute name="onzoom">fnOnZoom(evt)</xsl:attribute>
@@ -214,7 +215,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
             <!-- Draw map marginalia -->
             <xsl:if test="($title != '') or (/rules/@showScale = 'yes') or (/rules/@showLicense = 'yes')">
-                <svg id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
+                <g id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
                     <!-- Draw the title -->
                     <xsl:if test="$title!=''">
                         <xsl:call-template name="titleDraw">
@@ -240,7 +241,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                             </xsl:call-template>
                         </xsl:if>
                     </g>
-                </svg>
+                </g>
             </xsl:if>
 
 			<!-- Draw labels and controls that are in a static position -->
@@ -875,13 +876,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:param name="layer"/>
         <xsl:param name="elements" select="$data/osm/*[not(@action=&quot;delete&quot;) and tag[@k=&quot;layer&quot; and @v=$layer]]"/>
 
-        <svg inkscape:groupmode="layer" id="layer{$layer}" inkscape:label="Layer {$layer}">
+        <g inkscape:groupmode="layer" id="layer{$layer}" inkscape:label="Layer {$layer}">
             <xsl:apply-templates select="/rules/rule">
                 <xsl:with-param name="elements" select="$elements"/>
                 <xsl:with-param name="layer" select="$layer"/>
                 <xsl:with-param name="classes" select="''"/>
             </xsl:apply-templates>
-        </svg>
+        </g>
 	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="rule">
 		<xsl:param name="elements"/>
 		<xsl:param name="layer"/>
@@ -1197,7 +1198,7 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             </xsl:if>
         </xsl:variable>
 
-        <svg inkscape:groupmode="layer" id="{@name}-{$layer}" inkscape:label="{@name}">
+        <g inkscape:groupmode="layer" id="{@name}-{$layer}" inkscape:label="{@name}">
             <xsl:if test="concat($opacity,$display)!=''">
                 <xsl:attribute name="style">
                     <xsl:value-of select="concat($opacity,$display)"/>
@@ -1208,13 +1209,13 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
                 <xsl:with-param name="elements" select="$elements"/>
                 <xsl:with-param name="classes" select="$classes"/>
             </xsl:apply-templates>
-        </svg>
+        </g>
 
 	</xsl:template>
 	
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="borderDraw">
         <!-- dasharray definitions here can be overridden in stylesheet -->
-        <svg id="border" inkscape:groupmode="layer" inkscape:label="Map Border">
+        <g id="border" inkscape:groupmode="layer" inkscape:label="Map Border">
             <line id="border-left-casing" x1="0" y1="0" x2="0" y2="{$documentHeight}" class="map-border-casing" stroke-dasharray="{($km div 10) - 1},1"/>
             <line id="border-top-casing" x1="0" y1="0" x2="{$documentWidth}" y2="0" class="map-border-casing" stroke-dasharray="{($km div 10) - 1},1"/>
             <line id="border-bottom-casing" x1="0" y1="{$documentHeight}" x2="{$documentWidth}" y2="{$documentHeight}" class="map-border-casing" stroke-dasharray="{($km div 10) - 1},1"/>
@@ -1224,17 +1225,17 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <line id="border-top-core" x1="0" y1="0" x2="{$documentWidth}" y2="0" class="map-border-core" stroke-dasharray="{($km div 10) - 1},1"/>
             <line id="border-bottom-core" x1="0" y1="{$documentHeight}" x2="{$documentWidth}" y2="{$documentHeight}" class="map-border-core" stroke-dasharray="{($km div 10) - 1},1"/>
             <line id="border-right-core" x1="{$documentWidth}" y1="0" x2="{$documentWidth}" y2="{$documentHeight}" class="map-border-core" stroke-dasharray="{($km div 10) - 1},1"/>
-        </svg>
+        </g>
 	</xsl:template>
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="gridDraw">
-        <svg id="grid" inkscape:groupmode="layer" inkscape:label="Grid">
+        <g id="grid" inkscape:groupmode="layer" inkscape:label="Grid">
             <xsl:call-template name="gridDrawHorizontals">
                 <xsl:with-param name="line" select="&quot;1&quot;"/>
             </xsl:call-template>
             <xsl:call-template name="gridDrawVerticals">
                 <xsl:with-param name="line" select="&quot;1&quot;"/>
             </xsl:call-template>
-        </svg>
+        </g>
 	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="gridDrawHorizontals">
 		<xsl:param name="line"/>
 		<xsl:if test="($line*$km) &lt; $documentHeight">
@@ -1259,10 +1260,10 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
 		<xsl:variable name="x" select="$documentWidth div 2"/>
 		<xsl:variable name="y" select="30"/>
 
-        <svg id="marginalia-title" inkscape:groupmode="layer" inkscape:label="Title">
+        <g id="marginalia-title" inkscape:groupmode="layer" inkscape:label="Title">
 			<rect id="marginalia-title-background" x="0px" y="0px" height="{$marginaliaTopHeight - 5}px" width="{$documentWidth}px" class="map-title-background"/>
 		    <text id="marginalia-title-text" class="map-title" x="{$x}" y="{$y}"><xsl:value-of select="$title"/></text>
-        </svg>
+        </g>
 	</xsl:template>
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="scaleDraw">
 		<xsl:variable name="x1" select="14"/>
@@ -1270,7 +1271,7 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
 		<xsl:variable name="x2" select="$x1+$km"/>
 		<xsl:variable name="y2" select="$y1"/>
 
-        <svg id="marginalia-scale" inkscape:groupmode="layer" inkscape:label="Scale">
+        <g id="marginalia-scale" inkscape:groupmode="layer" inkscape:label="Scale">
             <line id="marginalia-scale-casing" class="map-scale-casing" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
             
             <line id="marginalia-scale-core" class="map-scale-core" stroke-dasharray="{($km div 10)}" x1="{$x1}" y1="{$y1}" x2="{$x2}" y2="{$y2}"/>
@@ -1282,7 +1283,7 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <text id="marginalia-scale-text-from" class="map-scale-caption" x="{$x1}" y="{$y1 - 10}">0</text>
 
             <text id="marginalia-scale-text-to" class="map-scale-caption" x="{$x2}" y="{$y2 - 10}">1km</text>
-        </svg>
+        </g>
 	</xsl:template>
     <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" name="metadata">
         <xsl:variable name="date" select="date:date()"/>

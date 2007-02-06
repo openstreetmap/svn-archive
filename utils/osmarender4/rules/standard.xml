@@ -11,6 +11,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svg="http://www.w3.org/2000/svg"
     data="data.osm"
+    svgBaseProfile="full"
     scale="1"
     minimumMapWidth="4"
     minimumMapHeight="3"
@@ -20,7 +21,7 @@
     showGrid="yes"
     showBorder="yes"
     showLicense="yes"
-    interactive="no">
+    interactive="yes">
 
 	<!-- Uncomment this element if you want to explicitly specify the bounding box for a map, or you can add a <bounds> element to
 	     your data.osm file, which is probably a better thing to do. -->

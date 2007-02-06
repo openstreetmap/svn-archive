@@ -13,7 +13,7 @@
 
 	<xsl:template name='borderDraw'>
         <!-- dasharray definitions here can be overridden in stylesheet -->
-        <svg id="border" inkscape:groupmode="layer" inkscape:label="Map Border">
+        <g id="border" inkscape:groupmode="layer" inkscape:label="Map Border">
             <line id="border-left-casing" x1="0" y1="0" x2="0" y2="{$documentHeight}" class='map-border-casing' stroke-dasharray="{($km div 10) - 1},1" />
             <line id="border-top-casing" x1="0" y1="0" x2="{$documentWidth}" y2="0" class='map-border-casing' stroke-dasharray="{($km div 10) - 1},1" />
             <line id="border-bottom-casing" x1="0" y1="{$documentHeight}" x2="{$documentWidth}" y2="{$documentHeight}" class='map-border-casing' stroke-dasharray="{($km div 10) - 1},1" />
@@ -23,6 +23,6 @@
             <line id="border-top-core" x1="0" y1="0" x2="{$documentWidth}" y2="0" class='map-border-core' stroke-dasharray="{($km div 10) - 1},1" />
             <line id="border-bottom-core" x1="0" y1="{$documentHeight}" x2="{$documentWidth}" y2="{$documentHeight}" class='map-border-core' stroke-dasharray="{($km div 10) - 1},1" />
             <line id="border-right-core" x1="{$documentWidth}" y1="0" x2="{$documentWidth}" y2="{$documentHeight}" class='map-border-core' stroke-dasharray="{($km div 10) - 1},1" />
-        </svg>
+        </g>
 	</xsl:template>
 </xsl:stylesheet>

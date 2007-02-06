@@ -17,7 +17,7 @@
 		<xsl:variable name='x2' select='$x1+$km'/>
 		<xsl:variable name='y2' select='$y1'/>
 
-        <svg id="marginalia-scale" inkscape:groupmode="layer" inkscape:label="Scale">
+        <g id="marginalia-scale" inkscape:groupmode="layer" inkscape:label="Scale">
             <line id="marginalia-scale-casing" class='map-scale-casing'
                 x1='{$x1}'
                 y1='{$y1}'
@@ -45,6 +45,6 @@
             <text id="marginalia-scale-text-from" class='map-scale-caption' x='{$x1}' y='{$y1 - 10}'>0</text>
 
             <text id="marginalia-scale-text-to" class='map-scale-caption' x='{$x2}' y='{$y2 - 10}'>1km</text>
-        </svg>
+        </g>
 	</xsl:template>
 </xsl:stylesheet>

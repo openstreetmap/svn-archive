@@ -12,14 +12,14 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<xsl:template name='gridDraw'>
-        <svg id="grid" inkscape:groupmode="layer" inkscape:label="Grid">
+        <g id="grid" inkscape:groupmode="layer" inkscape:label="Grid">
             <xsl:call-template name='gridDrawHorizontals'>
                 <xsl:with-param name='line' select='"1"'/>
             </xsl:call-template>
             <xsl:call-template name='gridDrawVerticals'>
                 <xsl:with-param name='line' select='"1"'/>
             </xsl:call-template>
-        </svg>
+        </g>
 	</xsl:template>
 	
 	<xsl:template name='gridDrawHorizontals'>

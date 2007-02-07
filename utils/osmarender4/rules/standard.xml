@@ -932,7 +932,7 @@
 
             .highway-motorway-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1.5px;
                 font-weight: normal;
             }
@@ -941,7 +941,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: .4px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 7px;
                 font-weight: bolder;
             }
@@ -976,7 +976,7 @@
 
             .highway-trunk-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1.5px;
                 font-weight: normal;
             }
@@ -985,7 +985,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.4px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
                 font-weight: bolder;
             }
@@ -1020,7 +1020,7 @@
 
             .highway-primary-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
                 font-weight: bolder;
                 stroke: #ffffff;
@@ -1029,7 +1029,7 @@
 
             .highway-primary-ref {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
                 font-weight: bolder;
                 stroke: white;
@@ -1052,7 +1052,7 @@
 
             .highway-secondary-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
                 font-weight: bolder;
             }
@@ -1061,7 +1061,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 5px;
                 font-weight: bolder;
             }
@@ -1082,7 +1082,7 @@
 
             .highway-unclassified-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
                 font-weight: bold;
              }
@@ -1091,7 +1091,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4.5px;
                 font-weight: bolder;
             }
@@ -1113,7 +1113,7 @@
 
             .highway-unsurfaced-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
                 font-weight: bold;
              }
@@ -1122,7 +1122,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4.5px;
                 font-weight: bolder;
             }
@@ -1171,7 +1171,7 @@
 
             .highway-service-name {
                 fill: black;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 0.3px;
                 font-weight: bold;
             }
@@ -1180,7 +1180,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4.5px;
                 font-weight: bolder;
             }
@@ -1205,7 +1205,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
                 font-weight: bolder;
             }
@@ -1221,7 +1221,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
                 font-weight: bolder;
             }
@@ -1237,7 +1237,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
                 font-weight: bolder;
             }
@@ -1321,7 +1321,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
                 font-weight: bolder;
             }
@@ -1330,7 +1330,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 10px;
                 font-weight: bolder;
             }
@@ -1465,7 +1465,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.2px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
                 font-weight: bolder;
             }
@@ -1480,7 +1480,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.1px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 2px;
                 font-weight: bolder;
             }
@@ -1533,7 +1533,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.6px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 20px;
                 font-weight: bolder;
             }
@@ -1542,7 +1542,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.5px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 18px;
                 font-weight: bolder;
             }
@@ -1551,7 +1551,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.5px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 16px;
                 font-weight: bolder;
             }
@@ -1560,7 +1560,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.4px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 14px;
                 font-weight: bolder;
             }
@@ -1569,7 +1569,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.4px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 12px;
                 font-weight: bolder;
             }
@@ -1578,7 +1578,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.4px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 10px;
                 font-weight: bolder;
             }
@@ -1587,7 +1587,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.4px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 8px;
                 font-weight: bolder;
             }
@@ -1596,7 +1596,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
                 font-weight: bolder;
             }
@@ -1605,7 +1605,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
                 font-weight: bolder;
             }
@@ -1614,7 +1614,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.2px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
                 font-weight: bolder;
             }
@@ -1623,7 +1623,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.1px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 3px;
                 font-weight: bold;
             }
@@ -1632,7 +1632,7 @@
                 fill: black;
                 stroke: white;
                 stroke-width: 0.3px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 5px;
                 font-weight: bold;
             }
@@ -1776,7 +1776,7 @@
                 fill: #f124cb;
                 stroke: white;
                 stroke-width: 0px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 3px;
                 font-weight: bolder;
             }
@@ -1785,7 +1785,7 @@
                 fill: #e21e2f;
                 stroke: white;
                 stroke-width: 0px;
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
                 font-weight: bolder;
             }
@@ -1899,7 +1899,7 @@
             }
 
             .map-scale-caption {
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 10px;
                 fill: #8080ff;
             }
@@ -1910,7 +1910,7 @@
             }
 
             .map-title {
-                font-family: verdana;
+                font-family: "DejaVu Sans",sans-serif;
                 font-size: 20px;
                 text-anchor: middle;
                 fill: black;

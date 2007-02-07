@@ -1328,7 +1328,7 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <style type="text/css"><![CDATA[
                 .license-text {
                     text-anchor: left;
-                    font-family: Verdana;
+                    font-family: "DejaVu Sans",sans-serif;
                     font-size: 6px;
                     fill: black;
                 }

@@ -461,6 +461,16 @@
         </rule>
 
 
+        <!-- Aerialways -->
+        <rule e="node|way" k="aerialway" v="*">
+            <layer name="Aerialways">
+                <line class='aerialway-line'/>
+                <line class='aerialway-struts'/>
+            </layer>
+        </rule>
+
+
+
         <!-- Power lines and pylons -->
         <rule e="node|way" k="power" v="*">
             <layer name="Power lines">
@@ -1800,6 +1810,20 @@
                 stroke-width: 0.2px;
             }
 
+
+            /* Aerialway */
+            .aerialway-line {
+                fill: none;
+                stroke: #202020;
+                stroke-width: 0.2px;
+            }
+
+            .aerialway-struts {
+                fill: none;
+                stroke: #202020;
+                stroke-width: 2px;
+                stroke-dasharray: 0.2,10;
+            }
 
             /* Power line */
             .power-line {

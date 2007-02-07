@@ -92,4 +92,5 @@ Revision history:
                 New svgBaseProfile attribute on <rules/> element allows setting to "full", "tiny", or "basic" for different SVG profiles. This is preliminary support for Mobile SVG. (Joto)
                 Standardised indents in all files (Joto)
                 Fixed long standing bug where street names were rendered too far up in inkscape (this was because inscape doesn't support baseline-shift). Used dy attribute on tspan element instead of baseline-shift (Joto)
+                Added rendering of aerialway (Joto)
 

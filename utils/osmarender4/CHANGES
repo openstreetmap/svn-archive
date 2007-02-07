@@ -94,4 +94,4 @@ Revision history:
                 Fixed long standing bug where street names were rendered too far up in inkscape (this was because inscape doesn't support baseline-shift). Used dy attribute on tspan element instead of baseline-shift (Joto)
                 Added rendering of aerialway (Joto)
                 Changed font to free font "DejaVu Sans" with fallback to sans-serif (Joto)
-
+                Changed width/height/viewBox of master <svg/> to do the right thing in all cases (depending on marginalia shown etc.) (Joto)

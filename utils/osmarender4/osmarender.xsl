@@ -31,21 +31,54 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="osmfile" select="/rules/@data"/>
     <xsl:param name="title" select="/rules/@title"/>
 
+    <xsl:param name="scale" select="/rules/@scale"/>
+    <xsl:param name="withOSMLayers" select="/rules/@withOSMLayers"/>
+    <xsl:param name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
+    <xsl:param name="svgBaseProfile" select="/rules/@svgBaseProfile"/>
+
+    <xsl:param name="showGrid" select="/rules/@showGrid"/>
+    <xsl:param name="showBorder" select="/rules/@showBorder"/>
+    <xsl:param name="showScale" select="/rules/@showScale"/>
+    <xsl:param name="showLicense" select="/rules/@showLicense"/>
+
     <xsl:key name="nodeById" match="/osm/node" use="@id"/>
     <xsl:key name="segmentById" match="/osm/segment" use="@id"/>
     <xsl:key name="segmentByFromNode" match="/osm/segment" use="@from"/>
     <xsl:key name="segmentByToNode" match="/osm/segment" use="@to"/>
     <xsl:key name="wayBySegment" match="/osm/way" use="seg/@id"/>
-    
-    <xsl:variable name="data" select="document($osmfile)"/>
-    <xsl:variable name="scale" select="/rules/@scale"/>
-    <xsl:variable name="withOSMLayers" select="/rules/@withOSMLayers"/>
-    <xsl:variable name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
-    <xsl:variable name="svgBaseProfile" select="/rules/@svgBaseProfile"/>
 
+    <xsl:variable name="data" select="document($osmfile)"/>
+
+    <!-- extra height for marginalia at top -->
     <xsl:variable name="marginaliaTopHeight">
         <xsl:choose>
-            <xsl:when test="$title!=''">40</xsl:when>
+            <xsl:when test="$title != ''">40</xsl:when>
+            <xsl:when test="($title = '') and ($showBorder = 'yes')">1.5</xsl:when>
+            <xsl:otherwise>0</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- extra height for marginalia at bottom -->
+    <xsl:variable name="marginaliaBottomHeight">
+        <xsl:choose>
+            <xsl:when test="($showScale = 'yes') or ($showLicense = 'yes')">45</xsl:when>
+            <xsl:when test="($showScale != 'yes') and ($showLicense != 'yes') and ($showBorder = 'yes')">1.5</xsl:when>
+            <xsl:otherwise>0</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- extra width for border -->
+    <xsl:variable name="extraWidth">
+        <xsl:choose>
+            <xsl:when test="$showBorder = 'yes'">3</xsl:when>
+            <xsl:otherwise>0</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- extra height for border -->
+    <xsl:variable name="extraHeight">
+        <xsl:choose>
+            <xsl:when test="($title = '') and ($showBorder = 'yes')">3</xsl:when>
             <xsl:otherwise>0</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
@@ -152,7 +185,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             </xsl:processing-instruction>
         </xsl:if>
 
-        <svg id="main" version="1.1" baseProfile="{$svgBaseProfile}" height="100%" width="100%">        
+        <xsl:variable name="svgWidth" select="$documentWidth + $extraWidth"/>
+        <xsl:variable name="svgHeight" select="$documentHeight + $marginaliaTopHeight + $marginaliaBottomHeight"/>
+
+        <svg id="main" version="1.1" baseProfile="{$svgBaseProfile}" width="{$svgWidth}px" height="{$svgHeight}px" viewBox="{-$extraWidth div 2} {-$extraHeight div 2} {$svgWidth} {$svgHeight}">
             <xsl:if test="/rules/@interactive=&quot;yes&quot;">
                 <xsl:attribute name="onscroll">fnOnScroll(evt)</xsl:attribute>
                 <xsl:attribute name="onzoom">fnOnZoom(evt)</xsl:attribute>
@@ -203,18 +239,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <!-- Draw map decoration -->
             <g id="map-decoration" inkscape:groupmode="layer" inkscape:label="Map decoration" transform="translate(0,{$marginaliaTopHeight})">
                 <!-- Draw a grid if required -->
-                <xsl:if test="/rules/@showGrid=&quot;yes&quot;">
+                <xsl:if test="$showGrid=&quot;yes&quot;">
                     <xsl:call-template name="gridDraw"/>
                 </xsl:if>
 
                 <!-- Draw a border if required -->
-                <xsl:if test="/rules/@showBorder=&quot;yes&quot;">
+                <xsl:if test="$showBorder=&quot;yes&quot;">
                     <xsl:call-template name="borderDraw"/>
                 </xsl:if>
             </g>
 
             <!-- Draw map marginalia -->
-            <xsl:if test="($title != '') or (/rules/@showScale = 'yes') or (/rules/@showLicense = 'yes')">
+            <xsl:if test="($title != '') or ($showScale = 'yes') or ($showLicense = 'yes')">
                 <g id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
                     <!-- Draw the title -->
                     <xsl:if test="$title!=''">
@@ -223,24 +259,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                         </xsl:call-template>
                     </xsl:if>
 
-                    <g id="marginalia-bottom" inkscape:groupmode="layer" inkscape:label="Marginalia (Bottom)" transform="translate(0,{$marginaliaTopHeight})">
-                        <!-- Draw background for marginalia at bottom -->
-                        <rect id="marginalia-background" x="0px" y="{$documentHeight + 5}px" height="40px" width="{$documentWidth}px" class="map-marginalia-background"/>
+                    <xsl:if test="($showScale = 'yes') or ($showLicense = 'yes')">
+                        <g id="marginalia-bottom" inkscape:groupmode="layer" inkscape:label="Marginalia (Bottom)" transform="translate(0,{$marginaliaTopHeight})">
+                            <!-- Draw background for marginalia at bottom -->
+                            <rect id="marginalia-background" x="0px" y="{$documentHeight + 5}px" height="40px" width="{$documentWidth}px" class="map-marginalia-background"/>
 
-                        <!-- Draw the scale in the bottom left corner -->
-                        <xsl:if test="/rules/@showScale=&quot;yes&quot;">
-                            <xsl:call-template name="scaleDraw"/>
-                        </xsl:if>
+                            <!-- Draw the scale in the bottom left corner -->
+                            <xsl:if test="$showScale=&quot;yes&quot;">
+                                <xsl:call-template name="scaleDraw"/>
+                            </xsl:if>
 
-                        <!-- Draw Creative commons license -->
-                        <xsl:if test="/rules/@showLicense=&quot;yes&quot;">
-                            <xsl:call-template name="in-image-license">
-                                <xsl:with-param name="year" select="2007"/>
-                                <xsl:with-param name="dx" select="$documentWidth"/>
-                                <xsl:with-param name="dy" select="$documentHeight"/>
-                            </xsl:call-template>
-                        </xsl:if>
-                    </g>
+                            <!-- Draw Creative commons license -->
+                            <xsl:if test="$showLicense=&quot;yes&quot;">
+                                <xsl:call-template name="in-image-license">
+                                    <xsl:with-param name="year" select="2007"/>
+                                    <xsl:with-param name="dx" select="$documentWidth"/>
+                                    <xsl:with-param name="dy" select="$documentHeight"/>
+                                </xsl:call-template>
+                            </xsl:if>
+                        </g>
+                    </xsl:if>
                 </g>
             </xsl:if>
 

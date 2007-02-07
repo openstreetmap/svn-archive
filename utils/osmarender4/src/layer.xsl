@@ -4,18 +4,18 @@
 
 <!-- Draw SVG layers -->
 
-<xsl:stylesheet 
+<xsl:stylesheet
     version="1.0"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-	<xsl:template match='layer'>
-		<xsl:param name='elements' />
-		<xsl:param name='layer' />
-		<xsl:param name='rule' />
-		<xsl:param name='classes' />
+    <xsl:template match='layer'>
+        <xsl:param name='elements' />
+        <xsl:param name='layer' />
+        <xsl:param name='rule' />
+        <xsl:param name='classes' />
 
         <xsl:message>Processing SVG layer: <xsl:value-of select="@name"/> (at OSM layer <xsl:value-of select="$layer"/>)
 </xsl:message>
@@ -45,6 +45,6 @@
             </xsl:apply-templates>
         </g>
 
-	</xsl:template>
+    </xsl:template>
 
 </xsl:stylesheet>

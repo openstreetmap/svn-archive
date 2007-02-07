@@ -90,4 +90,6 @@ Revision history:
     2007-02-06  Added option withUntaggedSegments="yes" to rule file. If this is set all segments belonging to no way and without any tags (except "created_by") are rendered as dotted faint grey lines. (Joto)
                 Changed "meta" to "marginalia" in many places better describing what it is. (Joto)
                 New svgBaseProfile attribute on <rules/> element allows setting to "full", "tiny", or "basic" for different SVG profiles. This is preliminary support for Mobile SVG. (Joto)
+                Standardised indents in all files (Joto)
+                Fixed long standing bug where street names were rendered too far up in inkscape (this was because inscape doesn't support baseline-shift). Used dy attribute on tspan element instead of baseline-shift (Joto)
 

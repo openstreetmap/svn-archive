@@ -4,7 +4,7 @@
 
 <!-- Templates for licensing stuff -->
 
-<xsl:stylesheet 
+<xsl:stylesheet
     version="1.0"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -58,7 +58,7 @@
         <xsl:param name="dy"/>
 
         <xsl:variable name="year" select="date:year()"/>
-        
+
         <g id="license" inkscape:groupmode="layer" inkscape:label="Copyright" transform="translate({$dx},{$dy})">
             <style type="text/css"><![CDATA[
                 .license-text {

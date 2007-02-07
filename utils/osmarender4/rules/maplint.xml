@@ -22,17 +22,17 @@
     showLicense="yes"
     interactive="no">
 
-	<!-- Uncomment this element if you want to explicitly specify the bounding box for a map, or you can add a <bounds> element to
-	     your data.osm file, which is probably a better thing to do. -->
-	<!--<bounds
-	    minlat="51.50583362991789"
-	    minlon="-0.13313005495563884"
-	    maxlat="51.516556840221504"
-	    maxlon="-0.10891295872251346" />-->
+    <!-- Uncomment this element if you want to explicitly specify the bounding box for a map, or you can add a <bounds> element to
+         your data.osm file, which is probably a better thing to do. -->
+    <!--<bounds
+        minlat="51.50583362991789"
+        minlon="-0.13313005495563884"
+        maxlat="51.516556840221504"
+        maxlon="-0.10891295872251346" />-->
 
-	<!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
-	<!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-	<rule e="node|segment|waysegment|way" k="osmarender:render" v="~|yes">
+    <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
+    <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
+    <rule e="node|segment|waysegment|way" k="osmarender:render" v="~|yes">
 
         <layer name="Maplint">
 <!--            <rule e="way" k="maplint:notice" v="*">
@@ -69,7 +69,7 @@
             </rule>
         </layer>
 
-		<!-- Waterways -->
+        <!-- Waterways -->
         <layer name="Waterways">
             <rule e="segment|way" k="waterway" v="*">
                 <line class='waterway-river'/>
@@ -99,7 +99,7 @@
         </layer>
 
 
-		<!-- Railway lines -->
+        <!-- Railway lines -->
         <rule e="segment|way" k="railway" v="*">
             <layer name="Railway/Subway/Tram">
 
@@ -118,7 +118,7 @@
         </rule>
 
 
-		<!-- Airfields and airports -->
+        <!-- Airfields and airports -->
         <rule e="node|segment|way" k="aeroway" v="*">
             <layer name="Airfields and airports">
                 <rule e="segment|way" k="aeroway" v="runway">
@@ -131,7 +131,7 @@
         </rule>
 
 
-		<!-- Power lines and pylons -->
+        <!-- Power lines and pylons -->
         <rule e="node|way" k="power" v="*">
             <layer name="Power lines">
                 <rule e="way" k="power" v="line">
@@ -141,7 +141,7 @@
         </rule>
 
 
-		<!-- Non-pysical routes -->
+        <!-- Non-pysical routes -->
         <rule e="segment|way" k="route" v="ferry">
             <layer name="Ferry">
                 <line class='route-ferry' />
@@ -179,341 +179,341 @@
     </rule>
 
 
-	<!-- SVG Definitions - markers, symbols etc go here -->
-	<defs>
+    <!-- SVG Definitions - markers, symbols etc go here -->
+    <defs>
 
-		<style id="styles" type="text/css" xmlns="http://www.w3.org/2000/svg">
-			/* Highways */
+        <style id="styles" type="text/css" xmlns="http://www.w3.org/2000/svg">
+            /* Highways */
 
-			.highway-major {
-			  stroke-width: 2px;
-			  stroke-linejoin: round;
-			  stroke: #909090;
-			  fill: none;
-			  }
+            .highway-major {
+                stroke-width: 2px;
+                stroke-linejoin: round;
+                stroke: #909090;
+                fill: none;
+            }
 
-			.highway-primary {
-			  stroke-width: 1.5px;
-			  stroke-linejoin: round;
-			  stroke: #909090;
-			  fill: none;
-			  }
+            .highway-primary {
+                stroke-width: 1.5px;
+                stroke-linejoin: round;
+                stroke: #909090;
+                fill: none;
+            }
 
-			.highway-minor {
-			  stroke-width: 1.2px;
-			  stroke-linejoin: round;
-			  stroke: #909090;
-			  fill: none;
-			  }
+            .highway-minor {
+                stroke-width: 1.2px;
+                stroke-linejoin: round;
+                stroke: #909090;
+                fill: none;
+            }
 
-			.highway-small {
-			  stroke-width: 1px;
-			  stroke-linejoin: round;
-			  stroke: #a0a0a0;
-			  fill: none;
-			  }
-			 
-			/* Aeroways */
-			.aeroway-taxiway-core {
-			  stroke-width: 1px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #CCCCCC;
-			  fill: none;
-			  }
+            .highway-small {
+                stroke-width: 1px;
+                stroke-linejoin: round;
+                stroke: #a0a0a0;
+                fill: none;
+            }
 
-			.aeroway-runway-core {
-			  stroke-width: 5px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #CCCCCC;
-			  fill: none;
-			  }
+            /* Aeroways */
+            .aeroway-taxiway-core {
+                stroke-width: 1px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #CCCCCC;
+                fill: none;
+            }
 
-			.aeroway-aerodrome-caption {
-			  fill: black;
-			  stroke: white;
-			  stroke-width: 0.3px;
-			  font-family: verdana;
-			  font-size: 6px;
-			  font-weight: bolder;
-			  }
+            .aeroway-runway-core {
+                stroke-width: 5px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #CCCCCC;
+                fill: none;
+            }
 
-			.aeroway-airport-caption {
-			  fill: black;
-			  stroke: white;
-			  stroke-width: 0.3px;
-			  font-family: verdana;
-			  font-size: 10px;
-			  font-weight: bolder;
-			  }
+            .aeroway-aerodrome-caption {
+                fill: black;
+                stroke: white;
+                stroke-width: 0.3px;
+                font-family: verdana;
+                font-size: 6px;
+                font-weight: bolder;
+            }
+
+            .aeroway-airport-caption {
+                fill: black;
+                stroke: white;
+                stroke-width: 0.3px;
+                font-family: verdana;
+                font-size: 10px;
+                font-weight: bolder;
+            }
 
 
-			/* Waterways */
-			.waterway-river {
-			  stroke-width: 3px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #89bac6;
-			  fill: none;
-			  }
+            /* Waterways */
+            .waterway-river {
+                stroke-width: 3px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #89bac6;
+                fill: none;
+            }
 
-			.railway-rail {
-			  stroke-width: 1.5px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #000000;
-			  fill: none;
-			  }
-		
-			.railway-light-rail {
-			  stroke-width: 0.8px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #000000;
-			  fill: none;
-			  }
+            .railway-rail {
+                stroke-width: 1.5px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #000000;
+                fill: none;
+            }
 
-			.railway-subway-rail {
-			  stroke-width: 0.8px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #aaaaaa;
-			  fill: none;
-			  stroke-dasharray: 3px, 1px;
-			  stroke-dashoffset: 0;
-			  stroke-opacity: 1;
-			  }
-		
-			.railway-rail-dashes {
-			  stroke-width: 1px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #ffffff;
-			  fill: none;
-			  stroke-dasharray: 3px, 3px;
-			  stroke-opacity: 1;
-			  }
-						
-			.railway-station {
-			  fill: red;
-			  stroke: black;
-			  stroke-width: 0.5px;
-			  }
+            .railway-light-rail {
+                stroke-width: 0.8px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #000000;
+                fill: none;
+            }
 
-			.railway-station-caption {
-			  fill: black;
-			  stroke: white;
-			  stroke-width: 0.2px;
-			  font-family: verdana;
-			  font-size: 4px;
-			  font-weight: bolder;
-			  }
+            .railway-subway-rail {
+                stroke-width: 0.8px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #aaaaaa;
+                fill: none;
+                stroke-dasharray: 3px, 1px;
+                stroke-dashoffset: 0;
+                stroke-opacity: 1;
+            }
 
-			.railway-halt {
-			  fill: black;
-			  stroke: black;
-			  stroke-width: 0.5px;
-			  }
+            .railway-rail-dashes {
+                stroke-width: 1px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #ffffff;
+                fill: none;
+                stroke-dasharray: 3px, 3px;
+                stroke-opacity: 1;
+            }
 
-			.railway-halt-caption {
-			  fill: black;
-			  stroke: white;
-			  stroke-width: 0.1px;
-			  font-family: verdana;
-			  font-size: 2px;
-			  font-weight: bolder;
-			  }
+            .railway-station {
+                fill: red;
+                stroke: black;
+                stroke-width: 0.5px;
+            }
+
+            .railway-station-caption {
+                fill: black;
+                stroke: white;
+                stroke-width: 0.2px;
+                font-family: verdana;
+                font-size: 4px;
+                font-weight: bolder;
+            }
+
+            .railway-halt {
+                fill: black;
+                stroke: black;
+                stroke-width: 0.5px;
+            }
+
+            .railway-halt-caption {
+                fill: black;
+                stroke: white;
+                stroke-width: 0.1px;
+                font-family: verdana;
+                font-size: 2px;
+                font-weight: bolder;
+            }
 
 
             /* Ferry */
-			.route-ferry {
-			  stroke-width: 0.5px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #777777;
-			  fill: none;
-			  }
+            .route-ferry {
+                stroke-width: 0.5px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #777777;
+                fill: none;
+            }
 
 
             /* Points of interest */
-			.point-of-interest {
-			  fill: red;
-			  stroke: black;
-			  stroke-width: 0.5px;
-			  }
+            .point-of-interest {
+                fill: red;
+                stroke: black;
+                stroke-width: 0.5px;
+            }
 
 
             /* JOSM Debugging */
-			.josm-segment {
-			  stroke-width: 0.2px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #008000;
-			  fill: none;
-			  marker-end: url(#segment-direction);
-			  }
+            .josm-segment {
+                stroke-width: 0.2px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #008000;
+                fill: none;
+                marker-end: url(#segment-direction);
+            }
 
 
             /* Power line */
-			.power-line {
-			  stroke-width: 0.1px;
-			  stroke-linecap: butt;
-			  stroke-linejoin: round;
-			  stroke: #cccccc;
-			  stroke-dasharray: 1px ,1px;
-			  fill: none;
-			  }
+            .power-line {
+                stroke-width: 0.1px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #cccccc;
+                stroke-dasharray: 1px ,1px;
+                fill: none;
+            }
 
 
             /* Maplint */
             .maplint-node-error {
-			  fill: #e74444;
+                fill: #e74444;
             }
 
             .maplint-node-warning {
-			  fill: #f89559;
+                fill: #f89559;
             }
 
             .maplint-node-notice {
-			  fill: #e2f91d;
+                fill: #e2f91d;
             }
 
             .maplint-node-dot {
-			  fill: black;
+                fill: black;
             }
 
             .maplint-segment-error {
-			  fill: none;
-			  stroke: #e74444;
-			  stroke-width: 5px;
+                fill: none;
+                stroke: #e74444;
+                stroke-width: 5px;
             }
 
             .maplint-segment-warning {
-			  fill: none;
-			  stroke: #f89559;
-			  stroke-width: 5px;
+                fill: none;
+                stroke: #f89559;
+                stroke-width: 5px;
             }
 
             .maplint-segment-notice {
-			  fill: none;
-			  stroke: #e2f91d;
-			  stroke-width: 5px;
+                fill: none;
+                stroke: #e2f91d;
+                stroke-width: 5px;
             }
 
             .maplint-way-error-casing {
-			  fill: none;
-			  stroke: #e74444;
-			  stroke-width: 5px;
+                fill: none;
+                stroke: #e74444;
+                stroke-width: 5px;
             }
 
             .maplint-way-warning-casing {
-			  fill: none;
-			  stroke: #f89559;
-			  stroke-width: 5px;
+                fill: none;
+                stroke: #f89559;
+                stroke-width: 5px;
             }
 
             .maplint-way-notice-casing {
-			  fill: none;
-			  stroke: #e2f91d;
-			  stroke-width: 5px;
+                fill: none;
+                stroke: #e2f91d;
+                stroke-width: 5px;
             }
 
             .maplint-way-error-core {
-			  fill: none;
-			  stroke: #fcfcfc;
-			  stroke-width: 3.5px;
+                fill: none;
+                stroke: #fcfcfc;
+                stroke-width: 3.5px;
             }
 
             .maplint-way-warning-core {
-			  fill: none;
-			  stroke: #fcfcfc;
-			  stroke-width: 3.5px;
+                fill: none;
+                stroke: #fcfcfc;
+                stroke-width: 3.5px;
             }
 
             .maplint-way-notice-core {
-			  fill: none;
-			  stroke: #fcfcfc;
-			  stroke-width: 3.5px;
+                fill: none;
+                stroke: #fcfcfc;
+                stroke-width: 3.5px;
             }
 
             .maplint-text {
-			  fill: black;
-			  font-family: verdana;
-			  font-size: 2px;
-			  font-weight: bold;
-              text-anchor: middle
+                fill: black;
+                font-family: verdana;
+                font-size: 2px;
+                font-weight: bold;
+                text-anchor: middle
             }
 
             .maplint-caption {
-			  fill: black;
-			  stroke: white;
-			  stroke-width: 0.2px;
-			  font-family: verdana;
-			  font-size: 3px;
-			  font-weight: bolder;
+                fill: black;
+                stroke: white;
+                stroke-width: 0.2px;
+                font-family: verdana;
+                font-size: 3px;
+                font-weight: bolder;
             }
 
             /* Map decoration */
-			.map-grid-line {
-			  fill: none;
-			  stroke: #8080ff;
-			  stroke-width: 0.1px;
-			  stroke-opacity: 0.5;
-			  }
+            .map-grid-line {
+                fill: none;
+                stroke: #8080ff;
+                stroke-width: 0.1px;
+                stroke-opacity: 0.5;
+            }
 
-			.map-border-casing {
-			  fill: none;
-			  stroke: #8080ff;
-			  stroke-width: 3px;
-			  stroke-miterlimit: 4;
-			  stroke-dasharray: none;
-			  stroke-opacity: 1;
-			  stroke-linecap: round;
-			  }
+            .map-border-casing {
+                fill: none;
+                stroke: #8080ff;
+                stroke-width: 3px;
+                stroke-miterlimit: 4;
+                stroke-dasharray: none;
+                stroke-opacity: 1;
+                stroke-linecap: round;
+            }
 
-			.map-border-core {
-			  fill: none;
-			  fill-opacity: 1;
-			  fill-rule: nonzero;
-			  stroke: #ffffff;
-			  stroke-width: 2px;
-			  stroke-miterlimit: 0;
-			  stroke-dashoffset: -0.5px;
-			  stroke-opacity: 1;
-			  }
+            .map-border-core {
+                fill: none;
+                fill-opacity: 1;
+                fill-rule: nonzero;
+                stroke: #ffffff;
+                stroke-width: 2px;
+                stroke-miterlimit: 0;
+                stroke-dashoffset: -0.5px;
+                stroke-opacity: 1;
+            }
 
-			.map-scale-casing {
-			  fill: none;
-			  stroke: #8080ff;
-			  stroke-width: 4px;
-			  stroke-linecap: butt;
-			  }
-		
-			.map-scale-core {
-			  fill: none;
-			  stroke: #ffffff;
-			  stroke-width: 3px;
-			  stroke-linecap: butt;
-			  }
+            .map-scale-casing {
+                fill: none;
+                stroke: #8080ff;
+                stroke-width: 4px;
+                stroke-linecap: butt;
+            }
 
-			.map-scale-bookend {
-			  fill: none;
-			  stroke: #8080ff;
-			  stroke-width: 1px;
-			  stroke-linecap: butt;
-			  }
-			 
-			.map-scale-caption {
-			  font-family: verdana;
-			  font-size: 10px;
-			  fill: #8080ff;
-			  }
+            .map-scale-core {
+                fill: none;
+                stroke: #ffffff;
+                stroke-width: 3px;
+                stroke-linecap: butt;
+            }
 
-			.map-background {
-			  fill: #fcfcfc;
-			  stroke: none;
-			  }
+            .map-scale-bookend {
+                fill: none;
+                stroke: #8080ff;
+                stroke-width: 1px;
+                stroke-linecap: butt;
+            }
+
+            .map-scale-caption {
+                font-family: verdana;
+                font-size: 10px;
+                fill: #8080ff;
+            }
+
+            .map-background {
+                fill: #fcfcfc;
+                stroke: none;
+            }
 
             .map-title {
                 font-family: verdana;
@@ -529,22 +529,22 @@
             .map-marginalia-background {
                 fill: white;
             }
-		</style>
+        </style>
 
-		<svg:marker
-			id="segment-direction"
-			viewBox="0 0 10 10"
-			refX="10px" refY="5px"
-			markerUnits="userSpaceOnUse"
-			fill='none'
-			stroke-width='1px'
-			stroke='#008000'
-			markerWidth="1px"
-			markerHeight="1px"
-			orient="auto">
-			<svg:path d="M 0,2 L 10,5 L 0,8" />
-		</svg:marker>
+        <svg:marker
+            id="segment-direction"
+            viewBox="0 0 10 10"
+            refX="10px" refY="5px"
+            markerUnits="userSpaceOnUse"
+            fill='none'
+            stroke-width='1px'
+            stroke='#008000'
+            markerWidth="1px"
+            markerHeight="1px"
+            orient="auto">
+            <svg:path d="M 0,2 L 10,5 L 0,8" />
+        </svg:marker>
 
-	</defs>
+    </defs>
 
 </rules>

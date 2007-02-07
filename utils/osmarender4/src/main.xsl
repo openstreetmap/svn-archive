@@ -39,22 +39,22 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     extension-element-prefixes="date set"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
  
-	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
+    <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
 
     <xsl:param name="osmfile" select="/rules/@data"/>
-	<xsl:param name="title" select="/rules/@title"/>
+    <xsl:param name="title" select="/rules/@title"/>
 
-	<xsl:key name='nodeById' match='/osm/node' use='@id'/>
-	<xsl:key name='segmentById' match='/osm/segment' use='@id'/>
-	<xsl:key name='segmentByFromNode' match='/osm/segment' use='@from'/>
-	<xsl:key name='segmentByToNode' match='/osm/segment' use='@to'/>
-	<xsl:key name='wayBySegment' match='/osm/way' use='seg/@id'/>
-	
-	<xsl:variable name='data' select='document($osmfile)'/>
-	<xsl:variable name='scale' select='/rules/@scale'/>
-	<xsl:variable name='withOSMLayers' select='/rules/@withOSMLayers'/>
-	<xsl:variable name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
-	<xsl:variable name='svgBaseProfile' select='/rules/@svgBaseProfile'/>
+    <xsl:key name='nodeById' match='/osm/node' use='@id'/>
+    <xsl:key name='segmentById' match='/osm/segment' use='@id'/>
+    <xsl:key name='segmentByFromNode' match='/osm/segment' use='@from'/>
+    <xsl:key name='segmentByToNode' match='/osm/segment' use='@to'/>
+    <xsl:key name='wayBySegment' match='/osm/way' use='seg/@id'/>
+    
+    <xsl:variable name='data' select='document($osmfile)'/>
+    <xsl:variable name='scale' select='/rules/@scale'/>
+    <xsl:variable name='withOSMLayers' select='/rules/@withOSMLayers'/>
+    <xsl:variable name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
+    <xsl:variable name='svgBaseProfile' select='/rules/@svgBaseProfile'/>
 
     <xsl:variable name="marginaliaTopHeight">
         <xsl:choose>
@@ -65,50 +65,50 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <xi:include href="boundingbox.xsl" xpointer="xpointer(/*/*)"/>
 
-	<!-- Main template -->
-	<xsl:template match="/rules">     
+    <!-- Main template -->
+    <xsl:template match="/rules">     
 
-		<!-- Include an external css stylesheet if one was specified in the rules file -->
-		<xsl:if test='@xml-stylesheet'>
-			<xsl:processing-instruction name='xml-stylesheet'>
-				href="<xsl:value-of select='@xml-stylesheet'/>" type="text/css"
-			</xsl:processing-instruction>
-		</xsl:if>
+        <!-- Include an external css stylesheet if one was specified in the rules file -->
+        <xsl:if test='@xml-stylesheet'>
+            <xsl:processing-instruction name='xml-stylesheet'>
+                href="<xsl:value-of select='@xml-stylesheet'/>" type="text/css"
+            </xsl:processing-instruction>
+        </xsl:if>
 
-		<svg
-		 id='main'
-		 version="1.1"
-		 baseProfile="{$svgBaseProfile}"
-		 height="100%"
-		 width="100%">		
-			<xsl:if test='/rules/@interactive="yes"'>
-				<xsl:attribute name='onscroll'>fnOnScroll(evt)</xsl:attribute>
-				<xsl:attribute name='onzoom'>fnOnZoom(evt)</xsl:attribute>
-				<xsl:attribute name='onload'>fnOnLoad(evt)</xsl:attribute>
-				<xsl:attribute name='onmousedown'>fnOnMouseDown(evt)</xsl:attribute>
-				<xsl:attribute name='onmousemove'>fnOnMouseMove(evt)</xsl:attribute>
-				<xsl:attribute name='onmouseup'>fnOnMouseUp(evt)</xsl:attribute>
-			</xsl:if>
+        <svg
+         id='main'
+         version="1.1"
+         baseProfile="{$svgBaseProfile}"
+         height="100%"
+         width="100%">        
+            <xsl:if test='/rules/@interactive="yes"'>
+                <xsl:attribute name='onscroll'>fnOnScroll(evt)</xsl:attribute>
+                <xsl:attribute name='onzoom'>fnOnZoom(evt)</xsl:attribute>
+                <xsl:attribute name='onload'>fnOnLoad(evt)</xsl:attribute>
+                <xsl:attribute name='onmousedown'>fnOnMouseDown(evt)</xsl:attribute>
+                <xsl:attribute name='onmousemove'>fnOnMouseMove(evt)</xsl:attribute>
+                <xsl:attribute name='onmouseup'>fnOnMouseUp(evt)</xsl:attribute>
+            </xsl:if>
 
             <xsl:call-template name="metadata"/>
 
-			<!-- Include javaScript functions for all the dynamic stuff --> 
-			<xsl:if test='/rules/@interactive="yes"'>
-				<xsl:call-template name='javaScript'/>
-			</xsl:if>
+            <!-- Include javaScript functions for all the dynamic stuff --> 
+            <xsl:if test='/rules/@interactive="yes"'>
+                <xsl:call-template name='javaScript'/>
+            </xsl:if>
 
-			<defs id="defs-rulefile">
-				<!-- Get any <defs> and styles from the rules file -->
-				<xsl:copy-of select='defs/*'/>
-			</defs>
+            <defs id="defs-rulefile">
+                <!-- Get any <defs> and styles from the rules file -->
+                <xsl:copy-of select='defs/*'/>
+            </defs>
 
-			<!-- Pre-generate named path definitions for all ways -->
-			<xsl:variable name='allWays' select='$data/osm/way' />
-			<defs id="paths-of-ways">
-				<xsl:for-each select='$allWays'>
-					<xsl:call-template name='generateWayPath'/>
-				</xsl:for-each>
-			</defs>
+            <!-- Pre-generate named path definitions for all ways -->
+            <xsl:variable name='allWays' select='$data/osm/way' />
+            <defs id="paths-of-ways">
+                <xsl:for-each select='$allWays'>
+                    <xsl:call-template name='generateWayPath'/>
+                </xsl:for-each>
+            </defs>
 
             <!-- Clipping rectangle for map -->
             <clipPath id="map-clipping">
@@ -120,7 +120,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <rect id="background" x='0px' y='0px' height='{$documentHeight}px' width='{$documentWidth}px' class='map-background'/>
 
                 <!-- If this is set we first draw all untagged segments not belonging to any way -->
-			    <xsl:if test='$withUntaggedSegments="yes"'>
+                <xsl:if test='$withUntaggedSegments="yes"'>
                     <xsl:call-template name="drawUntaggedSegments"/>
                 </xsl:if>
 
@@ -172,16 +172,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 </g>
             </xsl:if>
 
-			<!-- Draw labels and controls that are in a static position -->
-			<g id="staticElements" transform="scale(1) translate(0,0)">
-				<!-- Draw the +/- zoom controls -->
-				<xsl:if test='/rules/@interactive="yes"'>
-					<xsl:call-template name="zoomControl"/>
-				</xsl:if>
-			</g>
-		</svg>
+            <!-- Draw labels and controls that are in a static position -->
+            <g id="staticElements" transform="scale(1) translate(0,0)">
+                <!-- Draw the +/- zoom controls -->
+                <xsl:if test='/rules/@interactive="yes"'>
+                    <xsl:call-template name="zoomControl"/>
+                </xsl:if>
+            </g>
+        </svg>
 
-	</xsl:template>
+    </xsl:template>
 
     <!-- include templates from all the other files -->
     <xi:include href="draw.xsl" xpointer="xpointer(/*/*)"/>
@@ -191,7 +191,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <xi:include href="rules.xsl" xpointer="xpointer(/*/*)"/>
     <xi:include href="layer.xsl" xpointer="xpointer(/*/*)"/>
-	
+    
     <xi:include href="border.xsl" xpointer="xpointer(/*/*)"/>
     <xi:include href="grid.xsl" xpointer="xpointer(/*/*)"/>
 

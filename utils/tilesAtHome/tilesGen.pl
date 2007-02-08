@@ -655,8 +655,7 @@ sub splitImageX(){
         $Ytile); 
    
     # convert Tile to paletted file This *will* break stuff if different libGD versions are used
-    $SubImage->trueColorToPalette($dither,$numcolors);
-
+    # $SubImage->trueColorToPalette($dither,$numcolors);
 
     # Temporary filename
     my $Filename2 = "$Filename.cut";

@@ -42,10 +42,17 @@ if(opendir(ZIPDIR, $ZipDir)){
   close ZIPDIR;
 }
 
+my $TileDir = $Config{WorkingDirectory};
+
 # Group and upload the tiles
+print "Searching for tiles in $TileDir\n";
+opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
+my @tiles = grep { /tile_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
+closedir($dp);
+
 while (uploadTileBatch(
-  $Config{WorkingDirectory}, 
-  $Config{WorkingDirectory} . "/gather", 
+  $TileDir, 
+  $TileDir . "/gather", 
   $ZipDir)) {};
 
 #-----------------------------------------------------------------------------
@@ -65,9 +72,9 @@ sub uploadTileBatch(){
   mkdir $TempDir if ! -d $TempDir;
   mkdir $OutputDir if ! -d $OutputDir;
   
-  print "Searching for tiles in $TileDir\n";
-  opendir(my $dp, $TileDir) || return;
-  while((my $file = readdir($dp)) && ($Size < $SizeLimit) && ($Count < $CountLimit)){
+  print @tiles . " tiles to process\n";
+
+  while((my $file = shift @tiles) && ($Size < $SizeLimit) && ($Count < $CountLimit)){
     my $Filename1 = "$TileDir/$file";
     my $Filename2 = "$TempDir/$file";
     if($file =~ /tile_\d+_\d+_\d+\.png$/i){
@@ -77,7 +84,6 @@ sub uploadTileBatch(){
       rename($Filename1, $Filename2);
     }
   }
-  closedir($dp);
   
   if($Count){
     printf("Got %d files (%d bytes), compressing...", $Count, $Size);

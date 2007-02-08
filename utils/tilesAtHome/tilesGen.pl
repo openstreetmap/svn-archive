@@ -39,6 +39,14 @@ if ($@ ne '') {
   print "please update your libgd to version 2 for trueColor support";
   exit(3);
 }
+# Setup GD options
+my $numcolors = 256; # 256 is maximum for paletted output and should be used
+my $dither = 0; # dithering on or off.
+
+# dithering off should try to find a good palette, might look ugly on 
+# neighboring tiles with different features as the "optimal" palette might 
+# be different for adjacent tiles. To be tested.
+
 
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
@@ -645,6 +653,11 @@ sub splitImageX(){
         $Z, 
         $X * $Size + $xi, 
         $Ytile); 
+   
+    # convert Tile to paletted file This *will* break stuff if different libGD versions are used
+    $SubImage->trueColorToPalette($dither,$numcolors);
+
+
     # Temporary filename
     my $Filename2 = "$Filename.cut";
     

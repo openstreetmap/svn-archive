@@ -83,6 +83,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                     Added call to copyAttributes template to a use element for ways, dashed railway lines and steps now work properly (Joto)
                     highway=gate was rendered way to large. Icon simplified and made smaller (Joto)
 	3.3 2007-02-03  Fixed rendering artifact with areas containing holes (eg islands in lakes) (80n)
+	3.4 2007-02-09  Further fix for rendering artifact with areas containing holes, specifically for islands in rivers (80n)
 
 -->
 
@@ -780,8 +781,9 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 		<xsl:variable name='pathData'>
 			<xsl:for-each select='seg[key("segmentById",@id)]'>
 				<xsl:variable name='segmentId' select='@id'/>
+				<xsl:variable name='currentSegmentToNodeId' select='key("segmentById",@id)/@to' />
+				<xsl:variable name='currentSegmentFromNodeId' select='key("segmentById",@id)/@from' />
 				<xsl:variable name='previousSegmentToNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@to' />
-				<xsl:variable name='previousSegmentFromNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@from' />
 				
 				<!-- The linkedSegment flag indicates whether the previous segment is connected to the current segment.  If it isn't
 				     then we will need to draw an additional line (segmentLineToStart) from the end of the previous segment to the
@@ -789,12 +791,12 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 				-->
 				<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=$previousSegmentToNodeId'/>
 		
-				<!--  Now we count the number of segments in this way that have a from node that is equal to the previous segment's to node.
-				      We do this to find out if the previous segment is connected to some other segment in the way.  If it is, and it
-				      is not linked to the current segment then we actually have the start of a new sub-path.  In this case we shouldn't
+				<!--  Now we count the number of segments in this way that have a to node that is equal to the current segment's from node.
+				      We do this to find out if the current segment is connected from some other segment in the way.  If it is, and it
+				      is not linked to the current segment then we can assume we have the start of a new sub-path.  In this case we shouldn't
 				      draw an additional line between the end of the previous segment and the start of the current segment.
 				-->
-				<xsl:variable name='connectedSegmentCount' select='count(../*[key("segmentById",@id)/@from=$previousSegmentToNodeId])' />
+				<xsl:variable name='connectedSegmentCount' select='count(../*[key("segmentById",@id)/@to=$currentSegmentFromNodeId])' />
 				
 				<xsl:variable name='segmentSequence' select='position()'/>
 				<xsl:for-each select='key("segmentById",$segmentId)'>
@@ -803,8 +805,10 @@ Matched by <xsl:value-of select='count($elements)'/> elements for layer <xsl:val
 						<xsl:when test='$segmentSequence=1'>
 							<xsl:call-template name='segmentMoveToStart'/>				
 						</xsl:when>
-						<!-- If the previous segment was "connected" to another segment but the current segment is not linked then start a new sub-path -->
+						<!-- If the segment is "connected" to another segment (at the from end) but is not linked to the
+							 previous segment, then start a new sub-path -->
 						<xsl:when test='$connectedSegmentCount>0 and not($linkedSegment)'>
+							<xsl:text>Z</xsl:text>
 							<xsl:call-template name='segmentMoveToStart'/>				
 						</xsl:when>
 						<!-- If the previous segment is not linked to this one we need to draw an artificial line -->

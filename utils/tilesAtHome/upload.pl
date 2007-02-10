@@ -2,6 +2,7 @@
 use strict;
 use LWP::UserAgent;
 use File::Copy;
+use config;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, upload module
 # Takes any tiles generated, adds them into ZIP files, and uploads them
@@ -26,9 +27,8 @@ use File::Copy;
 #-----------------------------------------------------------------------------
 
 # conf file, will contain username/password and environment info
-my %Config;
+my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf");
 my $ZipFileCount = 0;
-ReadConfigFile("tilesAtHome.conf");
 
 my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
 
@@ -166,15 +166,5 @@ sub upload(){
   }
   
   return 1;
-}
-
-sub ReadConfigFile(){
-  open(my $fp, "<", shift()) || die("Can't open config file\n");
-  foreach my $Line(<$fp>){
-    $Line =~ s/\s*#.*$//; # Strip out comments
-    if($Line =~ /(\w+)=(.*)/){
-      $Config{$1} = $2;
-    }
-  }
 }
 

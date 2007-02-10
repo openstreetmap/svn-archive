@@ -97,6 +97,13 @@
                 <polyline name="Cycleways" class="highway-cycleway"/>
             </rule>
 
+            <rule e="segment|way" k="highway" v="under_construction">
+                <rule e="segment|way" k="construction" v="motorway">
+                    <polyline name="furure Motorways" class="highway-construction-motorway"/>
+                </rule>
+            </rule>
+
+
         </folder>
 
     </rule>
@@ -168,6 +175,12 @@
             <LineStyle>
                 <color>9000ff00</color>
                 <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-construction-motorway">
+            <LineStyle>
+                <color>afa08080</color>
+                <width>4</width>
             </LineStyle>
         </Style>
         <Style id="railway-rail">

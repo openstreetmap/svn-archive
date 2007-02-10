@@ -29,7 +29,7 @@ use strict;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 # Read the config file
-my %Config = ReadConfig("tilesAtHome.conf");
+my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf");
 CheckConfig(%Config);
 
 # Setup map projection
@@ -126,7 +126,7 @@ sub ProcessRequestsFromServer(){
   # ----------------------------------
   killafile($LocalFilename);
   DownloadFile(
-    "http://dev.openstreetmap.org/~ojw/Requests/",  # TODO: this should be in config file
+    $Config{RequestURL},  # TODO: this should be in config file
     $LocalFilename, 
     0, 
     "Request from server");

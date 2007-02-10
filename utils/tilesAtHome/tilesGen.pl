@@ -147,7 +147,7 @@ sub ProcessRequestsFromServer(){
   # ----------------------------------
   killafile($LocalFilename);
   DownloadFile(
-    "$Config{RequestUrl}",  # TODO: this should be in config file
+    "$Config{RequestURL}",  # TODO: this should be in config file
     $LocalFilename, 
     0, 
     "Request from server");

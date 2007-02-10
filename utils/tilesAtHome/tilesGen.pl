@@ -33,6 +33,11 @@ use strict;
 my %Config = ReadConfig("tilesAtHome.conf");
 CheckConfig(%Config);
 
+# Testing, OJW
+my $Version = '$Revision: 123 $';
+$Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
+printf "This is version %d\n", $Version;
+
 # check GD
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
@@ -221,7 +226,7 @@ sub GenerateTileset(){
   # then use this workaround: 
 
   if($W1 <= -180) {
-    $W1 = -180; # api apparently can handle -180°
+    $W1 = -180; # api apparently can handle -180
   }
   if($E > 180) {
     $E1 = 180;

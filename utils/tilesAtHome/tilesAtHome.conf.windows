@@ -10,4 +10,6 @@ Niceness=
 
 # Upload
 DeleteZipFilesAfterUpload=0
+UploadChunkSize=1.5   # Megabyte
+UploadChunkCount=683  # default: half a tileset
 

@@ -13,5 +13,9 @@ Niceness=nice
 # to allow identification of uploads from different machines in the 
 # upload log
 UseHostnameInZipName=0
+
+# Upload settings
+UploadChunkSize=1.5   # Megabyte
+UploadChunkCount=683  # default: half a tileset
 DeleteZipFilesAfterUpload=0
 

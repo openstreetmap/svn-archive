@@ -5,29 +5,30 @@
 # Reads a tiles@home config file, returns a hash array
 #--------------------------------------------------------------------------
 sub ReadConfig{
-  my $Filename = shift();
   my %Config;
+  while (my $Filename = shift()){
   
-  open(my $fp,"<$Filename") || die("Can't open \"$Filename\" ($!)\n");
-  while(my $Line = <$fp>){
-    $Line =~ s/#.*$//; # Comments
-    $Line =~ s/\s*$//; # Trailing whitespace
-    
-    if($Line =~ m{
-      (\w+)         # Keyword: just one single word no spaces
-      \s*           # Optional whitespace
-      =             # Equals
-      \s*           # Optional whitespace
-      (.*)          # Value
-      }x){
+    open(my $fp,"<$Filename") || die("Can't open \"$Filename\" ($!)\n");
+    while(my $Line = <$fp>){
+      $Line =~ s/#.*$//; # Comments
+      $Line =~ s/\s*$//; # Trailing whitespace
       
-      # Store config options in a hash array
-      $Config{$1} = $2;
-      print "Found $1 ($2)\n" if(0); # debug option
-      }
+      if($Line =~ m{
+        (\w+)         # Keyword: just one single word no spaces
+        \s*           # Optional whitespace
+        =             # Equals
+        \s*           # Optional whitespace
+        (.*)          # Value
+        }x){
+        
+        # Store config options in a hash array
+        $Config{$1} = $2;
+        print "Found $1 ($2)\n" if(0); # debug option
+        }
+    }
+    close $fp;
+
   }
-  close $fp;
-  
   ApplyConfigLogic(\%Config);
   
   return %Config;
@@ -77,7 +78,7 @@ sub CheckConfig{
   if($Config{"UploadURL"} ne $Config{"UploadURL2"}){
     printf "! Please set UploadURL to %s, this will become the default UploadURL soon\n", $Config{"UploadURL2"};
   } 
-  if($Config{"UploadChunkSize"} > 10){
+  if($Config{"UploadChunkSize"} > 2){
     print "! Upload chunks may be too large for server\n";
   }
   
@@ -92,11 +93,16 @@ sub CheckConfig{
     print "- Deleting ZIP files after upload\n";
   }
 
+  if($Config{"RequestUrl"}){
+    print "- Using $Config{RequestUrl} for Requests\n";
+  }
+
   # OSM username
   if($Config{OsmUsername} !~ /%40/){
     die("OsmUsername should be an email address, with the \@ replaced by %40\n");
   }
   print "- Using OSM username \"$Config{OsmUsername}\"\n";
+
   $Config{"OsmPassword"};
   
   # Misc stuff

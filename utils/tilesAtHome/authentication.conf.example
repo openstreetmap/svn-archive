@@ -1,0 +1,16 @@
+#
+# Config file for TilesAtHome 
+#
+
+# Edit this file and save as "authentication.conf"
+
+### Authentication:
+## Upload
+UploadUsername=CHANGEME
+UploadPassword=CHANGEME
+
+## Download
+OsmUsername=name%40domain.com
+OsmPassword=CHANGEME
+
+

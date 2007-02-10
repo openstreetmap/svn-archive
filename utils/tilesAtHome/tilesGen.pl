@@ -34,7 +34,7 @@ my %Config = ReadConfig("tilesAtHome.conf");
 CheckConfig(%Config);
 
 # Testing, OJW
-my $Version = '$Revision: 123 $';
+my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
 printf "This is version %d\n", $Version;
 

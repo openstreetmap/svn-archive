@@ -33,10 +33,10 @@ use strict;
 my %Config = ReadConfig("tilesAtHome.conf");
 CheckConfig(%Config);
 
-# Testing, OJW
+# Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
-printf "This is version %d\n", $Version; 
+printf "This is version %d of tilesgen\n", $Version;
 
 # check GD
 eval GD::Image->trueColor(1);

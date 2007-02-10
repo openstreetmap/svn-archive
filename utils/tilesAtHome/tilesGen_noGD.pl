@@ -33,7 +33,7 @@ my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf
 CheckConfig(%Config);
 
 # Get version number from version-control system, as integer
-my $Version = '$Revision: 2084 $';
+my $Version = '$Rev$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
 printf "This is version %d of tilesgen_noGD\n", $Version;
 

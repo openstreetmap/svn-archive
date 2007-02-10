@@ -30,10 +30,6 @@ use config;
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf");
 my $ZipFileCount = 0;
 
-my $Version = '$Revision$';
-$Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
-
-
 my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
 
 # Upload any ZIP files which are still waiting to go
@@ -154,7 +150,7 @@ sub upload(){
   print "Uploading \n  $File\n  to $URL\n";
   my $res = $ua->post($URL,
     Content_Type => 'form-data',
-    Content => [ file => [$File], mp => $Password, version => $Version]);
+    Content => [ file => [$File], mp => $Password]);
     
   if(!$res->is_success()){
     print("Error uploading file");

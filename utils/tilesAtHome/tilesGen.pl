@@ -36,7 +36,7 @@ CheckConfig(%Config);
 # Testing, OJW
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
-printf "This is version %d\n", $Version;
+printf "This is version %d\n", $Version; 
 
 # check GD
 eval GD::Image->trueColor(1);

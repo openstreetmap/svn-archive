@@ -830,22 +830,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 		<path id="area_{@id}" d="{$pathData}"/>
 
-	</xsl:template>
-
-
-    <!-- Generate a MoveTo command for a segment start -->
-    <xsl:template name='segmentMoveToStart'>
-        <xsl:variable name='from' select='@from'/>
-        <xsl:variable name='fromNode' select='key("nodeById",$from)'/>
-
-        <xsl:variable name='x1' select='($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)' />
-        <xsl:variable name='y1' select='($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)'/>
-        <xsl:text>M</xsl:text>
-        <xsl:value-of select='$x1'/>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select='$y1'/>
-
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentMoveToStart">
+	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentMoveToStart">
         <xsl:variable name="from" select="@from"/>
         <xsl:variable name="fromNode" select="key(&quot;nodeById&quot;,$from)"/>
 

@@ -130,8 +130,10 @@ sub ProcessRequestsFromServer(){
   # such as the list of fields that it's sending out in requests
   # ----------------------------------
   killafile($LocalFilename);
+  my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername};
+  # DEBUG: print "using URL " . $RequestUrlString . "\n";
   DownloadFile(
-    $Config{RequestURL},  # TODO: this should be in config file
+    $RequestUrlString,
     $LocalFilename, 
     0, 
     "Request from server");

@@ -35,7 +35,7 @@ CheckConfig(%Config);
 # Get version number from version-control system, as integer
 my $Version = '$Rev$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
-printf "This is version %d of tilesgen_noGD\n", $Version;
+printf "This is version %d (%s) of tilesgen_noGD\n", $Version, $Config{ClientVersion};
 
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
@@ -73,6 +73,9 @@ elsif ($Mode eq "upload") {
 elsif ($Mode eq "upload_conditional") {
   uploadIfEnoughTiles();
 }
+elsif ($Mode eq "version") {
+  exit(1);
+}
 elsif ($Mode eq "") {
   # ----------------------------------
   # Normal mode downloads request from server
@@ -91,6 +94,7 @@ else{
   print "  $0 loop - runs continuously\n";
   print "  $0 upload - uploads any tiles\n";
   print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
+  print "  $0 version - prints out version string and exits\n";
   print "\nGNU General Public license, version 2 or later\n$Bar\n";
 
 }

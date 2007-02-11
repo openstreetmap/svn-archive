@@ -36,7 +36,7 @@ CheckConfig(%Config);
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
-printf "This is version %d of tilesgen\n", $Version;
+printf "This is version %d (%s) of tilesgen\n", $Version, $Config{ClientVersion};
 
 # check GD
 eval GD::Image->trueColor(1);
@@ -89,6 +89,9 @@ elsif ($Mode eq "upload") {
 elsif ($Mode eq "upload_conditional") {
   uploadIfEnoughTiles();
 }
+elsif ($Mode eq "version") {
+  exit(1);
+}
 elsif ($Mode eq "") {
   # ----------------------------------
   # Normal mode downloads request from server
@@ -107,6 +110,7 @@ else{
   print "  $0 loop - runs continuously\n";
   print "  $0 upload - uploads any tiles\n";
   print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
+  print "  $0 version - prints out version string and exits\n";
   print "\nGNU General Public license, version 2 or later\n$Bar\n";
 
 }

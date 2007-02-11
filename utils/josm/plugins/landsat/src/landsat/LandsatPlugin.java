@@ -27,13 +27,17 @@ public class LandsatPlugin extends Plugin {
 		npeTask = new DownloadWMSTask(npeLayer, "npe", 
 			"New Popular Edition maps - " +
 			"see npemap.org.uk for conditions of use");
+
+		/* can now do these always
 		task.setEnabled(false);
 		npeTask.setEnabled(false);
+		*/
 		Main.main.menu.download.downloadTasks.add(task);
 		Main.main.menu.download.downloadTasks.add(npeTask);
 	}
 
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+		/* don't do anything now
 		if(oldFrame==null && newFrame!=null) { 
 			task.setEnabled(true);
 			npeTask.setEnabled(true);
@@ -53,5 +57,6 @@ public class LandsatPlugin extends Plugin {
 			task.setEnabled(false);
 			npeTask.setEnabled(false);
 		}
+		*/
 	}
 }

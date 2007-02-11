@@ -64,9 +64,59 @@ public class WMSLayer extends Layer {
 	throws IOException
 	{
 		MapView mv = Main.map.mapView;
+		initMapView(mv);
 		WMSImage wmsImage = new WMSImage(url);
 		wmsImage.grab(mv,minlat,minlon,maxlat,maxlon);
 		wmsImages.add(wmsImage);
+	}
+
+	protected void initMapView(MapView mv)
+	{
+		// If there is no data we need to initialise the centre and scale
+		// of the map view, so that we can display the Landsat/OSGB image.
+		// To do this, we centre the map in the centre point of the requested
+		// data, and set the scale so that the requested data is just
+		// completely within the visible area, even if it's a non-square area.
+
+		if(mv.getCenter()==null)
+		{
+			EastNorth centre = Main.proj.latlon2eastNorth
+			 			(new LatLon(minlat+(maxlat-minlat)/2 , 
+						minlon+(maxlon-minlon)/2)),
+				oldBottomLeft = Main.proj.latlon2eastNorth
+						(new LatLon(minlat,minlon)),
+				oldTopRight = Main.proj.latlon2eastNorth
+						(new LatLon(maxlat,maxlon)),
+				bottomLeft,
+				topRight;
+
+			if(oldTopRight.north-oldBottomLeft.north < 
+					oldTopRight.east-oldBottomLeft.east)
+			{	
+				bottomLeft = new EastNorth 
+					( oldBottomLeft.east(), centre.north() - 
+							(oldTopRight.east()-oldBottomLeft.east()/2);
+				topRight = new EastNorth 
+					( oldTopRight.east(), centre.north() + 
+							(oldTopRight.east()-oldBottomLeft.east()/2);
+			}
+			else
+			{
+				bottomLeft = new EastNorth 
+					( centre.east() - 
+							(oldTopRight.north()-oldBottomLeft.north()/2),
+						oldBottomLeft.north() );
+				topRight = new EastNorth 
+					( centre.east() + 
+							(oldTopRight.north()-oldBottomLeft.north()/2),
+						oldTopRight.north() );
+			}
+
+			// scale is enPerPixel
+			double scale = (topRight.east()-bottomLeft.east())/
+									mapView.getWidth();
+			mv.zoomTo(centre,scale);
+		}
 	}
 
 	@Override public Icon getIcon() {

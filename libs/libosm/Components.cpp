@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 // 180306 updated for 0.3    
 #include "Components.h"
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <sstream>
@@ -29,8 +30,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 #include "Way.h"
 #include <vector>
 #include <fstream>
-
+#include "RulesParser.h"
 #include "llgr.h"
+
+#include "LatLng.h"
+#include "OSRef.h"
 
 using std::endl;
 using std::setw;
@@ -100,6 +104,7 @@ std::vector<double> Components::getWayCoords(int id)
 	return coords;
 }
 
+// 310107 adds null node IDs too
 std::set<int> Components::getWayNodes(int wayid)
 {
 	std::set<int> ids; 
@@ -111,7 +116,7 @@ std::set<int> Components::getWayNodes(int wayid)
 		for(int count=0; count<w->nSegments(); count++)
 		{
 			s = getSegment(w->getSegment(count));
-			if(s && getNode(s->firstNode()) && getNode(s->secondNode()))
+			if(s)// && getNode(s->firstNode()) && getNode(s->secondNode()))
 			{
 				ids.insert(s->firstNode());
 				ids.insert(s->secondNode());
@@ -123,7 +128,8 @@ std::set<int> Components::getWayNodes(int wayid)
 
 // get all way tags
 // this could be used eg. to work out how many columns are needed in a shapefile
-std::set<std::string> Components::getWayTags()
+std::set<std::string> Components::getWayTags(ElemStyles *elemStyles,
+												bool doArea)
 {
 	Way *w;
 	std::set<std::string> tags;
@@ -133,9 +139,14 @@ std::set<std::string> Components::getWayTags()
 	while(hasMoreWays())
 	{
 		w = nextWay();
-		curTags = w->getTags();
-		for(int count=0; count<curTags.size(); count++)
-			tags.insert(curTags[count]);
+		if ( (elemStyles==NULL) ||
+			(doArea==true && elemStyles->getFeatureClass(w)=="area") ||
+			(doArea==false && elemStyles->getFeatureClass(w)!="area") )
+		{
+			curTags = w->getTags();
+			for(int count=0; count<curTags.size(); count++)
+				tags.insert(curTags[count]);
+		}
 	}
 	return tags;
 }
@@ -160,10 +171,11 @@ std::set<std::string> Components::getNodeTags()
 
 std::vector<int> Components::getNodeSegments(int nodeid)
 {
-	Node *n = getNode(nodeid);
+	//Node *n = getNode(nodeid);
 	std::vector<int> segments;
 
-	if(n)
+	//if(n)
+	if(1)
 	{
 		rewindSegments();
 		while(hasMoreSegments())
@@ -235,7 +247,21 @@ std::vector<int> Components::orderWay(int wayid)
 	}
 
 
-	// if there was a unique node (there should be!)
+	// if no unique node could be found but there are nodes in this way, it's
+	// a circular way so just take the first node that's not NULL
+	if(id==0) 
+	{
+		int count=0;
+		std::set<int>::iterator i = nodes.begin();
+		while(id==0 && i!=nodes.end())
+		{
+			if(getNode(*i))
+				id=*i;
+			count++;
+		}
+	}
+
+	// if there is now a valid node (there should be!)
 	if(id!=0)
 	{
 		int firstID = id;
@@ -256,17 +282,23 @@ std::vector<int> Components::orderWay(int wayid)
 
 			// If it's a segment in the data set, work with it. If it's
 			// a null segment we'll just abort this attempt
-			if(s && getNode(s->firstNode()) && getNode(s->secondNode()))
+			// 310107 do not quit on null nodes. 
+			if(s) // 310107&&getNode(s->firstNode())&&getNode(s->secondNode()))
 			{
 				// Add the id of the node to the list of ordered nodes
 				cerr << "Adding the ID: " << id << endl;
-				orderednodes.push_back(id);
+
+				// 310107 only add a non null node
+				if(getNode(id))
+					orderednodes.push_back(id);
 
 				// Find the other node in the current segment
 				if(s->firstNode()==id)
-					id=getNode(s->secondNode())->id;
+					//id=getNode(s->secondNode())->id;
+					id=s->secondNode();
 				else
-					id=getNode(s->firstNode())->id;
+					//id=getNode(s->firstNode())->id;
+					id = s->firstNode();
 
 
 				//cerr << "Found next node: id=" << id << endl;
@@ -308,7 +340,8 @@ std::vector<int> Components::orderWay(int wayid)
 				if(!found)
 				{
 					cerr << "Adding the ID: " << id << endl;
-					orderednodes.push_back(id);
+					if(getNode(id))
+						orderednodes.push_back(id);
 				}
 			} 
 		}while(found);
@@ -349,23 +382,35 @@ void Components::toOSGB()
 	while(hasMoreNodes())
 	{
 		Node *n=nextNode();
-		EarthPoint ep (n->getLon(),n->getLat());
-		EarthPoint ep2 = wgs84_ll_to_gr(ep);
-		n->setCoords(ep2.y,ep2.x);
+		LatLng latLng (n->getLat(),n->getLon());
+		latLng.toOSGB36();
+		OSRef ref = latLng.toOSRef();
+		n->setCoords(ref.getNorthing(),ref.getEasting());
 	}
 }
 
 
-bool Components::makeShp(const std::string& nodes, const std::string& ways)
+bool Components::makeShp(const std::string& nodes, const std::string& ways,
+						 const std::string& areas, 
+						 const std::string &rulesFile)
 {
-		if (makeNodeShp(nodes))
+	std::ifstream in(rulesFile.c_str());
+	if(in.good())
+	{
+		ElemStyles *elemStyles = RulesParser::parse(in);
+		in.close();
+		if (elemStyles && makeNodeShp(nodes))
 		{
-			if(makeWayShp(ways))
+			if(makeWayShp(ways,elemStyles))
 			{
-				return true;
+				if(makeWayShp(areas,elemStyles,true))
+				{
+					return true;
+				}
 			}
 		}
-		return false;
+	}
+	return false;
 }
 
 bool Components::makeNodeShp(const std::string& shpname)
@@ -431,17 +476,19 @@ bool Components::makeNodeShp(const std::string& shpname)
 	return true;
 }
 
-bool Components::makeWayShp(const std::string &shpname)
+bool Components::makeWayShp(const std::string &shpname,
+								ElemStyles *elemStyles, bool doArea)
 {
+		int shpclass = (doArea==true) ? SHPT_POLYGON: SHPT_ARC;
 		// ARC means polyline!
-		SHPHandle shp = SHPCreate(shpname.c_str(),SHPT_ARC); 
+		SHPHandle shp = SHPCreate(shpname.c_str(),shpclass); 
 		if(shp)
 		{
 			DBFHandle dbf = DBFCreate(shpname.c_str());
 			if(dbf)
 			{
 				std::map<int,std::string> fields;
-				std::set<std::string> wayTags = getWayTags();
+				std::set<std::string> wayTags = getWayTags(elemStyles,doArea);
 				for(std::set<std::string>::iterator i=wayTags.begin();
 					i!=wayTags.end(); i++)
 				{
@@ -460,7 +507,10 @@ bool Components::makeWayShp(const std::string &shpname)
 					if(way)
 					{
 						wayCoords = getWayCoords(way->id);
-						if(wayCoords.size())
+						if(wayCoords.size() 
+			&& ((doArea==true && elemStyles->getFeatureClass(way)=="area") ||
+				(doArea==false && elemStyles->getFeatureClass(way)!="area"))
+						  )
 						{
 							longs.clear();
 							lats.clear();
@@ -470,7 +520,7 @@ bool Components::makeWayShp(const std::string &shpname)
 								lats.push_back(wayCoords[count]);
 
 							SHPObject *object = SHPCreateSimpleObject
-								(SHPT_ARC,wayCoords.size()/2,
+								(shpclass,wayCoords.size()/2,
 									&(longs[0]),&(lats[0]),NULL);
 
 							int objid = SHPWriteObject(shp, -1, object);

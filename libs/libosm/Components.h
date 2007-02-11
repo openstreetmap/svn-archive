@@ -22,6 +22,7 @@
 #include "Node.h"
 #include "Segment.h"
 #include "Way.h"
+#include "ElemStyles.h"
 #include <vector>
 #include <utility>
 #include <map>
@@ -121,16 +122,18 @@ public:
 	std::set<int> getWayNodes(int wayid);
 	int getParentWayOfSegment(int segid);
 
-	std::set<std::string> getWayTags();
+	std::set<std::string> getWayTags(ElemStyles *elemStyles=NULL, 
+											bool doArea=false);
 	std::set<std::string> getNodeTags();
 
 	std::vector<int> orderWay(int wayid);
 
 	void toXML(std::ostream &strm);
 	void toOSGB();
-	bool makeShp(const std::string& nodes, const std::string& ways);
+	bool makeShp(const std::string& nodes, const std::string& ways,
+					const std::string&, const std::string&);
 	bool makeNodeShp(const std::string& shpname);
-	bool makeWayShp(const std::string &shpname);
+	bool makeWayShp(const std::string &shpname,ElemStyles*,bool=false);
 	Components * cleanWays();
 };
 

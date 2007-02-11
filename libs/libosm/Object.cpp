@@ -19,12 +19,13 @@ std::vector<std::string> Object::getTags()
 	return t;
 }
 
+// 260107 converted ' to "
 void Object::tagsToXML(std::ostream &strm)
 {
 	for(std::map<std::string,std::string>::iterator i=tags.begin(); 
 			i!=tags.end(); i++)
 	{
-		strm << "<tag k='" << i->first << "' v='" << i->second << "' />" << 
+		strm << "<tag k=\"" << i->first << "\" v=\"" << i->second << "\" />" << 
 			endl;
 	}
 }

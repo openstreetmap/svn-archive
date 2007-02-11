@@ -146,7 +146,6 @@ Components* Parser::parse(std::istream &in)
 		in.read(buf,4096);
 		n = in.gcount();
 		done = (n!=4096);
-
 		if(XML_Parse(p,buf,n,done) == XML_STATUS_ERROR)
 		{
 			error = "xml parsing error";

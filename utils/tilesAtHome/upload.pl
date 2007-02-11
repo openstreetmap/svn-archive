@@ -150,7 +150,7 @@ sub upload(){
   print "Uploading \n  $File\n  to $URL\n";
   my $res = $ua->post($URL,
     Content_Type => 'form-data',
-    Content => [ file => [$File], mp => $Password]);
+    Content => [ file => [$File], mp => $Password, version => $Config{ClientVersion} ]);
     
   if(!$res->is_success()){
     print("Error uploading file");

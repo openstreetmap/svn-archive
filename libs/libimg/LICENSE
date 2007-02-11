@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2005 Nick Whitelegg, Hogweed Software, nick@hogweed.org
+    Copyright (C) 2007 Robert Hart, rob@bathterror.free-online.co.uk
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

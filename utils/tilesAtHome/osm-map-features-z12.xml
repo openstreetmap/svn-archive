@@ -41,10 +41,15 @@
             <area class='natural-land' />
         </rule>
 
-        <!-- Highway shading (abutters) first -->
+        <!-- Highway shading (abutters) -->
         <layer name="Abutters">
-            <rule k="highway" v="residential|retail|industrial|commercial|mixed">
-                <line class='abutters-residential' />
+			<!-- highway=residential implies abutters=residential so render residential shading in this case -->
+            <rule k="highway" v="residential">
+                <line class='abutters-all' />
+            </rule>
+            <!-- at zoom 12 render all abutters in the same colour so it doesn't look to psychodelic -->
+            <rule k="abutters" v="residential|retail|industrial|commercial|mixed">
+                <line class='abutters-all' />
             </rule>
             <!--<rule k="abutters" v="residential">
                 <line class='abutters-residential'/>
@@ -70,7 +75,7 @@
             <rule e="way" k="natural" v="coastline">
                 <line class='natural-coastline'/>
             </rule>
-            <rule e="way" k="landuse" v="forest|wood">
+            <rule e="way" k="landuse|natural" v="forest|wood">
                 <area class='landuse-wood'/>
             </rule>
             <rule e="way" k="landuse" v="field|meadow">
@@ -92,7 +97,7 @@
          <layer name="Land use">
 		    <rule e="way" k="landuse|natural" v="*">
                 <rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
-                    <area class='landuse-residential'/>
+                    <area class='landuse-all'/>
                 </rule>
                 <!-- all drawn as residential for z12
                 <rule e="way" k="landuse" v="retail">
@@ -330,6 +335,9 @@
                     <rule e="segment|way" k="railway" v="subway">
                         <line class='railway-subway-rail' />
                     </rule>
+                    <rule e="segment|way" k="railway" v="preserved">
+                        <line class='railway-preserved' />
+                    </rule>
                 </rule>
 
                 <!-- in tunnel -->
@@ -339,6 +347,9 @@
                     </rule>
                     <rule e="segment|way" k="railway" v="light_rail|subway|tram">
                         <tunnel width="0" class='railway-tunnel-narrow' />
+                    </rule>
+                    <rule e="segment|way" k="railway" v="preserved">
+                        <tunnel width="1" class='railway-preserved' />
                     </rule>
                 </rule>
 
@@ -653,6 +664,15 @@
                 stroke-dasharray: 0.5,0.5;
             }
 
+
+            /* Abutters */
+            .abutters-all {
+                stroke-width: 30px;
+                stroke-linecap: round;
+                stroke: #f0f0f0;
+                fill: none;
+            }
+
             .abutters-residential {
                 stroke-width: 30px;
                 stroke-linecap: round;
@@ -660,7 +680,6 @@
                 fill: none;
             }
 
-            /* Abutters */
             .abutters-retail {
                 stroke-width: 20px;
                 stroke-linecap: butt;
@@ -1308,8 +1327,16 @@
                 fill: none;
             }
 
+            .railway-preserved {
+                stroke-width: 8px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #666666;
+                fill: none;
+            }
+
             .railway-light-rail {
-                stroke-width: 6px;
+                stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;
@@ -1534,6 +1561,11 @@
 
 
             /* Landuse */
+            .landuse-all {
+                stroke: none;
+                fill: #f0f0f0;
+            }
+
             .landuse-wood {
                 fill: #72bf81;
                 stroke: #6fc18e;

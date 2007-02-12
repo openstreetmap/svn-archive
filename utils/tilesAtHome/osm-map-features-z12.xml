@@ -36,19 +36,17 @@
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
     <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
 
-        <!-- moved here for z12 -->
+        <!-- Draw land areas first -->
         <rule e="way" k="natural" v="land">
             <area class='natural-land' />
         </rule>
 
         <!-- Highway shading (abutters) first -->
         <layer name="Abutters">
-            <rule k="highway" v="residential">
+            <rule k="highway" v="residential|retail|industrial|commercial|mixed">
                 <line class='abutters-residential' />
             </rule>
-            <!-- old (osmarender3) tiels@home style for z12 did not draw abutters
-            except for highway=residential 
-            <rule k="abutters" v="residential">
+            <!--<rule k="abutters" v="residential">
                 <line class='abutters-residential'/>
             </rule>
             <rule k="abutters" v="retail">
@@ -72,15 +70,7 @@
             <rule e="way" k="natural" v="coastline">
                 <line class='natural-coastline'/>
             </rule>
-            <!-- moved upwards in file for z12
-            <rule e="way" k="natural" v="land">
-                <area class='natural-land' />
-            </rule>
-            -->
             <rule e="way" k="landuse" v="forest|wood">
-                <area class='landuse-wood'/>
-            </rule>
-            <rule e="way" k="natural" v="forest|wood">
                 <area class='landuse-wood'/>
             </rule>
             <rule e="way" k="landuse" v="field|meadow">
@@ -98,44 +88,10 @@
         </layer>
 
 
-        <!-- Waterways -->
-        <rule e="segment|way" k="waterway" v="*">
-            <layer name="Waterways">
-                <rule e="way" k="waterway" v="riverbank">
-                    <area class='waterway-riverbank'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="river">
-                    <line class='waterway-river-casing'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="stream">
-                    <line class='waterway-stream-casing'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="canal">
-                    <line class='waterway-canal-casing'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="drain">
-                    <line class='waterway-drain-casing'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="river">
-                    <line class='waterway-river-core'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="stream">
-                    <line class='waterway-stream-core'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="canal">
-                    <line class='waterway-canal-core'/>
-                </rule>
-                <rule e="segment|way" k="waterway" v="drain">
-                    <line class='waterway-drain-core'/>
-                </rule>
-            </layer>
-        </rule>
-
-
          <!-- Landuse -->
-        <rule e="way" k="landuse|natural" v="*">
-            <layer name="Land use">
-                <rule e="way" k="landuse" v="residential|retail|industrial|commercial">
+         <layer name="Land use">
+		    <rule e="way" k="landuse|natural" v="*">
+                <rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
                     <area class='landuse-residential'/>
                 </rule>
                 <!-- all drawn as residential for z12
@@ -148,21 +104,12 @@
                 <rule e="way" k="landuse" v="commercial">
                     <area class="landuse-commercial" />
                 </rule>
-                -->
-                <rule e="way" k="natural" v="water|pond|lake">
-                    <area class='natural-water' />
-                </rule>
-                <rule e="way" k="landuse" v="reservoir">
-                    <area class='natural-water' />
-                </rule>
-                <rule e="way" k="landuse" v="basin">
-                    <area class='natural-water' />
-                </rule>
                 <rule e="way" k="landuse" v="cemetery">
                     <area class='landuse-cemetery' />
                 </rule>
-            </layer>
-        </rule>
+                -->
+	        </rule>
+         </layer>
 
 
         <!-- Man-made areas -->
@@ -186,6 +133,49 @@
                 <area class='building-residential'/>
             </rule>
         </layer>
+
+
+        <!-- Waterways -->
+        <layer name="Waterways">
+            <rule e="way" k="waterway" v="riverbank">
+                <area class='waterway-riverbank'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="river">
+                <line class='waterway-river-casing'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="stream">
+                <line class='waterway-stream-casing'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="canal">
+                <line class='waterway-canal-casing'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="drain">
+                <line class='waterway-drain-casing'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="river">
+                <line class='waterway-river-core'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="stream">
+                <line class='waterway-stream-core'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="canal">
+                <line class='waterway-canal-core'/>
+            </rule>
+            <rule e="segment|way" k="waterway" v="drain">
+                <line class='waterway-drain-core'/>
+            </rule>
+            <rule e="way" k="natural" v="water|pond|lake">
+                <area class='natural-water' />
+            </rule>
+            <rule e="way" k="landuse" v="reservoir">
+                <area class='natural-water' />
+            </rule>
+            <rule e="way" k="landuse" v="basin">
+                <area class='natural-water' />
+            </rule>
+        </layer>
+
+
 
 
         <!-- Roads and paths -->
@@ -388,12 +378,12 @@
 
 
         <!-- Aerialways -->
-        <rule e="node|way" k="aerialway" v="*">
+        <!--<rule e="node|way" k="aerialway" v="*">
             <layer name="Aerialways">
                 <line class='aerialway-line'/>
                 <line class='aerialway-struts'/>
             </layer>
-        </rule>
+        </rule>-->
 
 
 
@@ -483,19 +473,17 @@
 
 
         <!-- Railway stations -->
-        <layer name="Railway stations">
+        <!--<layer name="Railway stations">
             <rule e="node" k="railway" v="station">
                 <circle r="10" class="railway-station" />
-                <!--
                 <rule k="osmarender:renderName" v="~|yes">
                     <text k="name" class='railway-station-caption' dx='2.5px' dy='1.5px' />
                 </rule>
-                -->
             </rule>
-        </layer>
+        </layer>-->
 
 
-        <layer name="Amenities and Leisure symbols">
+        <!--<layer name="Amenities and Leisure symbols">-->
             <!-- Amenities -->
             <!-- not drawn on z12
             <rule e="node" k="amenity" v="hospital">
@@ -547,11 +535,11 @@
                 <symbol xlink:href="#slipway" width='4px' height='4px' transform='translate(-2,-2)' />
             </rule>
             -->
-        </layer>
+        <!--</layer>-->
 
 
         <!-- Street names for all highways -->
-        <rule k="osmarender:renderName" v="~|yes">
+        <!--<rule k="osmarender:renderName" v="~|yes">-->
             <!-- not on zoom 13 and below
             <rule e="segment|way" k="tunnel" v="~|no|false">  
                 <rule e="segment|way" k="highway" v="*">
@@ -581,11 +569,11 @@
                 </rule>
             </rule>
             -->
-        </rule>
+        <!--</rule>-->
 
 
         <!-- Road numbers for all highways -->
-        <rule k="osmarender:renderRef" v="~|yes">
+        <!--<rule k="osmarender:renderRef" v="~|yes">-->
             <!-- not on z13 and below
             <rule e="segment|way" k="tunnel" v="~|no|false">    
                 <rule e="segment|way" k="highway" v="*">
@@ -615,7 +603,7 @@
                 </rule>
             </rule>
             -->
-        </rule>
+        <!--</rule>-->
 
 
         <!-- Use the following three rules to display nodes, segments and ways as they would appear in JOSM, overlayed on top of anything else -->
@@ -666,8 +654,8 @@
             }
 
             .abutters-residential {
-                stroke-width: 30;
-                stroke-linecap: butt;
+                stroke-width: 30px;
+                stroke-linecap: round;
                 stroke: #f0f0f0;
                 fill: none;
             }
@@ -682,21 +670,21 @@
 
             .abutters-industrial {
                 stroke-width: 20px;
-                stroke-linecap: butt;
+                stroke-linecap: round;
                 stroke: #ecd8ff;
                 fill: none;
             }
 
             .abutters-commercial {
                 stroke-width: 20px;
-                stroke-linecap: butt;
+                stroke-linecap: round;
                 stroke: #fcffc9;
                 fill: none;
             }
 
             .abutters-mixed {
                 stroke-width: 20px;
-                stroke-linecap: butt;
+                stroke-linecap: round;
                 stroke: #d8feff;
                 fill: none;
             }
@@ -824,6 +812,7 @@
             /* Highways */
             .highway-motorway-casing {
                 stroke-width: 22px;
+				stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #222222;
                 fill: none;
@@ -831,6 +820,7 @@
 
             .highway-motorway-core {
                 stroke-width: 20px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #809BC0;
                 fill: none;
@@ -848,12 +838,13 @@
 			  stroke: none;
 			  stroke-width: .4px;
               font-family: "DejaVu Sans",sans-serif;
-			  font-size: 30;
-			  font-weight: bolder;
+			  font-size: 30px;
+			  font-weight: bold;
 			}		
 
             .highway-trunk-casing {
                 stroke-width: 18px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #222222;
                 fill: none;
@@ -861,6 +852,7 @@
 
             .highway-trunk-core {
                 stroke-width: 16px;
+			    stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #7fc97f;
                 fill: none;
@@ -870,7 +862,7 @@
                 fill: black;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 28px;
-                font-weight: normal;
+                font-weight: bold;
                 stroke: none;
             }
 
@@ -880,11 +872,12 @@
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-primary-casing {
                 stroke-width: 14px;
+			    stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #222222;
                 fill: none;
@@ -892,6 +885,7 @@
 
             .highway-primary-link-casing {
                 stroke-width: 6px;
+				stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #222222;
                 fill: none;
@@ -899,6 +893,7 @@
 
             .highway-primary-core {
                 stroke-width: 13px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #f39d9d;
                 fill: none;
@@ -908,8 +903,8 @@
                 fill: black;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 24px;
-                font-weight: bolder;
-                stroke: #ffffff;
+                font-weight: bold;
+                stroke: white;
                 stroke-width: 1px;
             }
 
@@ -917,13 +912,14 @@
                 fill: white;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 50px;
-                font-weight: bolder;
+                font-weight: bold;
                 stroke: black;
                 stroke-width: 2px;
             }
 
             .highway-secondary-casing {
                 stroke-width: 12px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #222222;
                 fill: none;
@@ -931,6 +927,7 @@
 
             .highway-secondary-core {
                 stroke-width: 11px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #FDBF6F;
                 fill: none;
@@ -940,7 +937,7 @@
                 fill: black;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-secondary-ref {
@@ -949,11 +946,12 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 5px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-unclassified-casing {
                 stroke-width: 5px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
                 stroke: #c0c0c0;
@@ -961,6 +959,7 @@
 
             .highway-unclassified-core {
                 stroke-width: 1.2px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #ffffff;
                 fill: none;
@@ -979,11 +978,12 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4.5px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-unsurfaced-casing {
                 stroke-width: 1.5px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
                 stroke: #222222;
@@ -992,6 +992,7 @@
 
             .highway-unsurfaced-core {
                 stroke-width: 1.2px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #ffffff;
                 fill: none;
@@ -1010,11 +1011,12 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4.5px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-track-casing {
                 stroke-width: 1.5px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
                 stroke: #d79331;
@@ -1022,6 +1024,7 @@
 
             .highway-track-core {
                 stroke-width: 1.2px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #ffffff;
                 fill: none;
@@ -1029,6 +1032,7 @@
 
             .highway-pedestrian-casing {
                 stroke-width: 1.5px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
                 stroke: #aaaaaa;
@@ -1036,6 +1040,7 @@
 
             .highway-pedestrian-core {
                 stroke-width: 1.2px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #eeeeee;
                 fill: none;
@@ -1043,6 +1048,7 @@
 
             .highway-service-casing {
                 stroke-width: 0.7px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 fill: none;
                 stroke: #222222;
@@ -1050,6 +1056,7 @@
 
             .highway-service-core {
                 stroke-width: 0.4px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #ffffff;
                 fill: none;
@@ -1068,12 +1075,12 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4.5px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-bridleway {
                 stroke-width: 1px;
-                stroke-linecap: round;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #70b971;
                 fill: none;
@@ -1081,7 +1088,7 @@
 
             .highway-byway {
                 stroke-width: 1px;
-                stroke-linecap: round;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #ef7771;
                 fill: none;
@@ -1093,11 +1100,12 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-cycleway {
                 stroke-width: 1px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #008102;
                 fill: none;
@@ -1109,11 +1117,12 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-footway {
                 stroke-width: 0.5px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #d79331;
                 fill: none;
@@ -1125,7 +1134,7 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .highway-steps {
@@ -1207,7 +1216,7 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .aeroway-airport-caption {
@@ -1216,7 +1225,7 @@
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 10px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
 
@@ -1244,7 +1253,7 @@
             }
 
             .waterway-stream-casing {
-                stroke-width: 4px;
+                stroke-width: 0.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #aaaaaa;
@@ -1252,7 +1261,7 @@
             }
 
             .waterway-stream-core {
-                stroke-width: 3px;
+                stroke-width: 0.4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #89bac6;
@@ -1292,7 +1301,7 @@
             }
 
             .railway-rail {
-                stroke-width: 8px;
+                stroke-width: 14px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;
@@ -1300,7 +1309,7 @@
             }
 
             .railway-light-rail {
-                stroke-width: 2px;
+                stroke-width: 6px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;
@@ -1339,7 +1348,7 @@
                 stroke-width: 0.2px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 20px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             /* Ferry */
@@ -1391,7 +1400,7 @@
                 stroke-width: 0.6px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 20px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1401,7 +1410,7 @@
                 stroke-width: 0.5px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 18px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1411,7 +1420,7 @@
                 stroke-width: 0.5px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 16px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1421,7 +1430,7 @@
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 14px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1431,7 +1440,7 @@
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 12px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1441,7 +1450,7 @@
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 100px;
-                font-weight: bolder;
+                font-weight: bold;
                 opacity: 0.5;
                 text-anchor: middle;
             }
@@ -1449,31 +1458,27 @@
             .town-caption {
                 fill: black;
                 stroke: none;
-                stroke-width: 8px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 65px;
                 font-weight: bold;
-                opacity: 0.5;
                 text-anchor: middle;
             }
 
             .village-caption {
                 fill: black;
                 stroke: none;
-                stroke-width: 3px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 40px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
             .suburb-caption {
                 fill: black;
-                stroke: white;
-                stroke-width: 0.3px;
+                stroke: none;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 6px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1483,7 +1488,7 @@
                 stroke-width: 0.2px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 4px;
-                font-weight: bolder;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -1549,7 +1554,7 @@
 
             .landuse-residential {
                 stroke: none;
-                fill: #f2f2f2;
+                fill: #f0f0f0;
             }
 
             .landuse-retail {
@@ -1585,14 +1590,14 @@
 
             /* colour might want tweaking slightly */
             .leisure-stadium {
-                fill: #672a8e;
-                stroke: #461d61;
+                fill: #bde3cb;
+                stroke: #6fc18e;
                 stroke-width: 0.2px;
             }
 
             .leisure-track {
-                fill: #ba4752;
-                stroke: #532226;
+                fill: #bde3cb;
+                stroke: #6fc18e;
                 stroke-width: 0.2px;
             }
 
@@ -1648,7 +1653,7 @@
                 stroke-width: 0px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 3px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
             .amenity-pub-caption {
@@ -1657,7 +1662,7 @@
                 stroke-width: 0px;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;
-                font-weight: bolder;
+                font-weight: bold;
             }
 
 
@@ -1763,7 +1768,7 @@
             }
 
             .map-background {
-                fill: #fcfcfc;
+                fill: #f8f8f8;
                 stroke: none;
             }
 

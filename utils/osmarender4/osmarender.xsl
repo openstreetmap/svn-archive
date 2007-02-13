@@ -481,20 +481,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
         <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
 
-        <xsl:variable name="scaling">
-            <xsl:choose>
-                <xsl:when test="$instruction/@scale">
-                    <xsl:value-of select="$instruction/@scale * $symbolScale"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="$symbolScale"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-
-        <use xlink:href="#symbol-{$instruction/@ref}" x="{$x}" y="{$y}" width="{$scaling}" height="{$scaling}"> <!-- transform="scale({$scaling})"-->
-            <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the attributes from the <symbol> instruction -->
-        </use>
+        <g transform="translate({$x},{$y}) scale({$symbolScale})">
+            <use xlink:href="#symbol-{$instruction/@ref}" width="1" height="1">
+                <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the attributes from the <symbol> instruction -->
+            </use>
+        </g>
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="renderText">
         <xsl:param name="instruction"/>
 

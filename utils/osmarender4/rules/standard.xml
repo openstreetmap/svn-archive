@@ -448,7 +448,7 @@
                     <line class='aeroway-taxiway-core'/>
                 </rule>
                 <rule e="node" k="aeroway" v="aerodrome">
-                    <symbol ref="airport" scale="2" />
+                    <symbol ref="airport" transform="scale(2)" />
                     <rule k="osmarender:renderName" v="~|yes">
                         <text k="name" class='aeroway-aerodrome-caption' dx='4px' dy='2.5px'/>
                     </rule>
@@ -738,7 +738,7 @@
         <!-- Traffic symbols -->
         <layer name="Traffic symbols">
             <rule e="node" k="highway" v="gate">
-                <symbol ref="gate" scale="0.6"/>
+                <symbol ref="gate" transform="scale(0.6)"/>
             </rule>
             <rule e="node" k="highway" v="traffic_signals">
                 <symbol ref="traffic_signal" />

@@ -509,12 +509,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="renderTextPath">
         <xsl:param name="instruction"/>
         <xsl:param name="pathId"/>
-        <text>
+        <text dy="0.35">
             <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
             <textPath xlink:href="#{$pathId}">
                 <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
                 <xsl:call-template name="getSvgAttributesFromOsmTags"/>
-                <tspan dy="0.35"><xsl:value-of select="tag[@k=$instruction/@k]/@v"/></tspan>
+                <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
             </textPath>
         </text>
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@k" mode="renderTextPath-text">

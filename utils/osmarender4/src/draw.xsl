@@ -242,12 +242,12 @@
     <xsl:template name='renderTextPath'>
         <xsl:param name='instruction'/>
         <xsl:param name='pathId'/>
-        <text>
+        <text dy="0.35">
             <xsl:apply-templates select='$instruction/@*' mode='renderTextPath-text'/>
             <textPath xlink:href="#{$pathId}">
                 <xsl:apply-templates select='$instruction/@*' mode='renderTextPath-textPath'/>
                 <xsl:call-template name='getSvgAttributesFromOsmTags'/>
-                <tspan dy="0.35"><xsl:value-of select='tag[@k=$instruction/@k]/@v'/></tspan>
+                <xsl:value-of select='tag[@k=$instruction/@k]/@v'/>
             </textPath>
         </text>
     </xsl:template>

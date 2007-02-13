@@ -97,4 +97,5 @@ Revision history:
                 Changed width/height/viewBox of master <svg/> to do the right thing in all cases (depending on marginalia shown etc.) (Joto)
                 Removed debugging output in osmarender bin (Joto)
     2007-02-13  Changed the symbol handling. There is now a new subdirectory "symbols" which contains all the symbols. From these files the symbols.svg is created, which gets included into map SVG files. See [[Osmarender/Symbols]] in the wiki for details. (Joto)
+                Somewhat simplified SVG code for text along path. (Joto)
 

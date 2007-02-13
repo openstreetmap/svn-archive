@@ -2,6 +2,12 @@
 			---------------------------------------------
 
 
++-------------------------------------------------------------------------+
+| THIS IS AN OLD VERSION OF OSMARENDER. IT IS RECOMMENDED THAT YOU SWITCH |
+| TO OSMARENDER4 WHICH IS IN THE utils/osmarender4 DIRECTORY.             |
++-------------------------------------------------------------------------+
+
+
 Osmarender is a rule based rendering tool for generating SVG images of OSM 
 data.
 

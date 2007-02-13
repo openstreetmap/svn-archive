@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
 <symbol
     id="symbol-pharmacy_dispensing" viewBox="18 18 36 36">
     <rect style="fill:#00cc00" x="0" y="0" width="36" height="36" rx="2" ry="2"/>
@@ -8,3 +11,5 @@
     7.44 L30 7.44 L30 35.44 L2 35.44 Z"
     transform="translate(2,-3.44)"/>
 </symbol>
+    </defs>
+</svg>

@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
 <symbol 
     id="symbol-theatre" 
     viewBox="220 207 440 550"
@@ -21,3 +24,5 @@
     <path d="M61.4,258c0,0,0-4,14,16s10,36,44,34s38-45,55-42s13,8,7,20s-23,23-32,35s5,40-39,38s-43-44-49-48S61.4,258,61.4,258z"/>
 
 </symbol>
+    </defs>
+</svg>

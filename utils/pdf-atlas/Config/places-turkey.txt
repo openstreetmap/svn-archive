@@ -1,0 +1,6 @@
+Turkey:              39.15,   35.5,    9.5,  area
+# Western Turkey:      39.15,   30.75,   4.75, area
+# Eastern Turkey:      39.15,   40.25,   4.75, area
+Western Turkey:      39.15,   29.17,     3.18, area
+Central Turkey:      39.15,   35.5,      3.18, area
+Eastern Turkey:      39.15,   41.83,     3.18, area

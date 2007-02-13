@@ -17,7 +17,7 @@ fi
 for place_config in \
     Config/places-germany.txt \
     Config/places-bavaria*.txt \
-    Config/places-germany*.txt \
+    Config/places-turkey*.txt \
     Config/places-UK.txt \
     Config/places-france.txt \
     Config/places-france.txt \

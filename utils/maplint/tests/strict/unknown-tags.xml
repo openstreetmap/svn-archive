@@ -16,6 +16,10 @@
                     (@k!='railway') and
                     (@k!='waterway') and
                     (@k!='amenity') and
+                    (@k!='recycling:glas') and
+                    (@k!='recycling:batteries') and
+                    (@k!='recycling:clothes') and
+                    (@k!='recycling:paper') and
                     (@k!='tourism') and
                     (@k!='ele') and
                     (@k!='man_made') and
@@ -53,6 +57,8 @@
                     (@k!='leisure') and
                     (@k!='junction') and
                     (@k!='ref') and
+                    (@k!='int_ref') and
+                    (@k!='nat_ref') and
                     (@k!='natural') and
                     (@k!='layer') and
                     (@k!='source') and

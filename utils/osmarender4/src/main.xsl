@@ -50,7 +50,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name='withOSMLayers' select='/rules/@withOSMLayers'/>
     <xsl:param name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
     <xsl:param name='svgBaseProfile' select='/rules/@svgBaseProfile'/>
-    <xsl:param name='symbolsFile' select='/rules/@symbolsFile'/>
+    <xsl:param name='symbolsDir' select='/rules/@symbolsDir'/>
 
     <xsl:param name='showGrid' select='/rules/@showGrid'/>
     <xsl:param name='showBorder' select='/rules/@showBorder'/>
@@ -142,10 +142,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:copy-of select='defs/*'/>
             </defs>
 
-            <xsl:if test="$symbolsFile != ''">
+            <xsl:if test="$symbolsDir != ''">
+                <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
                 <defs id="defs-symbols">
-                    <!-- Get any <defs> from a symbols file -->
-                    <xsl:copy-of select='document($symbolsFile)/svg:svg/svg:defs/svg:symbol'/>
+                    <xsl:for-each select="/rules//symbol/@ref">
+                        <xsl:copy-of select="document(concat($symbolsDir,'/', ., '.svg'))/svg:svg/svg:defs/svg:symbol"/>
+                    </xsl:for-each>
                 </defs>
             </xsl:if>
 

@@ -18,7 +18,7 @@
     minimumMapHeight="3"
     withOSMLayers="yes"
     withUntaggedSegments="yes"
-    symbolsFile="../symbols.svg"
+    symbolsDir="symbols"
     showScale="yes"
     showGrid="yes"
     showBorder="yes"

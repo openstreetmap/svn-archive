@@ -209,7 +209,12 @@
         <xsl:variable name='y' select='($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)'/>
 
         <g transform="translate({$x},{$y}) scale({$symbolScale})">
-            <use xlink:href="#symbol-{$instruction/@ref}" width="1" height="1">
+            <use width="1" height="1">
+                <xsl:if test="$instruction/@ref">
+                    <xsl:attribute name="xlink:href">
+                        <xsl:value-of select="concat('#symbol-', $instruction/@ref)"/>
+                    </xsl:attribute>
+                </xsl:if>
                 <xsl:apply-templates select='$instruction/@*' mode='copyAttributes'/> <!-- Copy all the attributes from the <symbol> instruction -->
             </use>
         </g>

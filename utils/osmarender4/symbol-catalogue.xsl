@@ -38,30 +38,30 @@
     }
 </xsl:text>
                 </style>
+
+            <xsl:apply-templates select="/dir/f[substring-after(@n, '.') = 'svg']" mode="defs"/>
             </defs>
 
-            <xsl:apply-templates select="svg:svg/svg:defs"/>
-
             <g id="catalogue" transform="scale({$scale})">
-                <xsl:apply-templates select="svg:svg/svg:defs/svg:symbol"/>
+                <xsl:apply-templates select="/dir/f[substring-after(@n, '.') = 'svg']" mode="draw"/>
             </g>
         </svg>
     </xsl:template>
 
-    <xsl:template match="svg:defs">
-        <xsl:copy-of select="."/>
+    <xsl:template match="f" mode="defs">
+        <xsl:copy-of select="document(concat('symbols/', @n))/svg:svg/svg:defs/svg:symbol"/>
     </xsl:template>
 
-    <xsl:template match="svg:symbol">
-        <g id="demo-{substring-after(@id, '-')}" transform="translate({2 + (position()-1) mod $columns * 20}, {2 + floor((position()-1) div $columns) * 3})">
+    <xsl:template match="f" mode="draw">
+        <g id="demo-{substring-before(@n, '.')}" transform="translate({2 + (position()-1) mod $columns * 20}, {2 + floor((position()-1) div $columns) * 3})">
             <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
             <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
             <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
             <line class="crosshair-fine" x1="-1" y1="0" x2="1" y2="0"/>
             <line class="crosshair-fine" x1="0" y1="-1" x2="0" y2="1"/>
             <rect class="crosshair-fine" x="-0.5" y="-0.5" width="1" height="1"/>
-            <use xlink:href="#{@id}" width="1" height="1"/>
-            <text class="desc" x="3" y="0.4"><xsl:value-of select="substring-after(@id, '-')"/></text>
+            <use xlink:href="#symbol-{substring-before(@n, '.')}" width="1" height="1"/>
+            <text class="desc" x="3" y="0.4"><xsl:value-of select="substring-before(@n, '.')"/></text>
         </g>
     </xsl:template>
 

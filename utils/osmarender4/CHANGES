@@ -95,3 +95,5 @@ Revision history:
                 Added rendering of aerialway (Joto)
                 Changed font to free font "DejaVu Sans" with fallback to sans-serif (Joto)
                 Changed width/height/viewBox of master <svg/> to do the right thing in all cases (depending on marginalia shown etc.) (Joto)
+                Removed debugging output in osmarender bin (Joto)
+

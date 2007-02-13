@@ -79,7 +79,7 @@ if [ "$mapfile" = "" ]; then
 fi
 
 case "$osmfile" in
-    /*) echo slash;;
+    /*) ;;
     *) osmfile=`pwd`"/$osmfile";;
 esac
 

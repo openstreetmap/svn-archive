@@ -19,8 +19,8 @@
         </xsl:attribute>
     </xsl:template>
 
-    <!-- type attribute shouldn't be copied -->
-    <xsl:template match='@type' mode='copyAttributes'>
+    <!-- Some attribute shouldn't be copied -->
+    <xsl:template match='@type|@ref|@scale' mode='copyAttributes'>
     </xsl:template>
 
     <!-- Copy all attributes  -->

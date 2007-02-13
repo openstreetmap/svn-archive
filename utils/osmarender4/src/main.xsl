@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 <xsl:stylesheet 
     version="1.0"
     xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -45,9 +46,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="title" select="/rules/@title"/>
 
     <xsl:param name='scale' select='/rules/@scale'/>
+    <xsl:param name='symbolScale' select='/rules/@symbolScale'/>
     <xsl:param name='withOSMLayers' select='/rules/@withOSMLayers'/>
     <xsl:param name='withUntaggedSegments' select='/rules/@withUntaggedSegments'/>
     <xsl:param name='svgBaseProfile' select='/rules/@svgBaseProfile'/>
+    <xsl:param name='symbolsFile' select='/rules/@symbolsFile'/>
 
     <xsl:param name='showGrid' select='/rules/@showGrid'/>
     <xsl:param name='showBorder' select='/rules/@showBorder'/>
@@ -139,9 +142,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:copy-of select='defs/*'/>
             </defs>
 
+            <xsl:if test="$symbolsFile != ''">
+                <defs id="defs-symbols">
+                    <!-- Get any <defs> from a symbols file -->
+                    <xsl:copy-of select='document($symbolsFile)/svg:svg/svg:defs/svg:symbol'/>
+                </defs>
+            </xsl:if>
+
             <!-- Pre-generate named path definitions for all ways -->
             <xsl:variable name='allWays' select='$data/osm/way' />
-            <defs id="paths-of-ways">
+            <defs id="defs-ways">
                 <xsl:for-each select='$allWays'>
                     <xsl:call-template name='generateWayPath'/>
                 </xsl:for-each>

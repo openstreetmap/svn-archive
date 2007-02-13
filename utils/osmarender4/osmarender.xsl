@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 ==============================================================================
 -->
-<xsl:stylesheet xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:date="http://exslt.org/dates-and-times" xmlns:set="http://exslt.org/sets" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" extension-element-prefixes="date set">
+<xsl:stylesheet xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:date="http://exslt.org/dates-and-times" xmlns:set="http://exslt.org/sets" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" extension-element-prefixes="date set">
  
     <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
 
@@ -32,9 +32,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:param name="title" select="/rules/@title"/>
 
     <xsl:param name="scale" select="/rules/@scale"/>
+    <xsl:param name="symbolScale" select="/rules/@symbolScale"/>
     <xsl:param name="withOSMLayers" select="/rules/@withOSMLayers"/>
     <xsl:param name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
     <xsl:param name="svgBaseProfile" select="/rules/@svgBaseProfile"/>
+    <xsl:param name="symbolsFile" select="/rules/@symbolsFile"/>
 
     <xsl:param name="showGrid" select="/rules/@showGrid"/>
     <xsl:param name="showBorder" select="/rules/@showBorder"/>
@@ -210,9 +212,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:copy-of select="defs/*"/>
             </defs>
 
+            <xsl:if test="$symbolsFile != ''">
+                <defs id="defs-symbols">
+                    <!-- Get any <defs> from a symbols file -->
+                    <xsl:copy-of select="document($symbolsFile)/svg:svg/svg:defs/svg:symbol"/>
+                </defs>
+            </xsl:if>
+
             <!-- Pre-generate named path definitions for all ways -->
             <xsl:variable name="allWays" select="$data/osm/way"/>
-            <defs id="paths-of-ways">
+            <defs id="defs-ways">
                 <xsl:for-each select="$allWays">
                     <xsl:call-template name="generateWayPath"/>
                 </xsl:for-each>
@@ -466,13 +475,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the svg attributes from the <circle> instruction -->
         </circle>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="drawSymbol">
+    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="drawSymbol">
         <xsl:param name="instruction"/>
 
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
         <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
 
-        <use x="{$x}" y="{$y}">
+        <xsl:variable name="scaling">
+            <xsl:choose>
+                <xsl:when test="$instruction/@scale">
+                    <xsl:value-of select="$instruction/@scale * $symbolScale"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$symbolScale"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <use xlink:href="#symbol-{$instruction/@ref}" x="{$x}" y="{$y}" width="{$scaling}" height="{$scaling}"> <!-- transform="scale({$scaling})"-->
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the attributes from the <symbol> instruction -->
         </use>
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="renderText">
@@ -784,45 +804,45 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateAreaPath">
 
 		<!-- Generate the path for the area -->
-		<xsl:variable name='pathData'>
-			<xsl:for-each select='seg[key("segmentById",@id)]'>
-				<xsl:variable name='segmentId' select='@id'/>
-				<xsl:variable name='currentSegmentToNodeId' select='key("segmentById",@id)/@to' />
-				<xsl:variable name='currentSegmentFromNodeId' select='key("segmentById",@id)/@from' />
-				<xsl:variable name='previousSegmentToNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@to' />
+		<xsl:variable name="pathData">
+			<xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
+				<xsl:variable name="segmentId" select="@id"/>
+				<xsl:variable name="currentSegmentToNodeId" select="key(&quot;segmentById&quot;,@id)/@to"/>
+				<xsl:variable name="currentSegmentFromNodeId" select="key(&quot;segmentById&quot;,@id)/@from"/>
+				<xsl:variable name="previousSegmentToNodeId" select="key(&quot;segmentById&quot;,preceding-sibling::seg[1]/@id)/@to"/>
 				
 				<!-- The linkedSegment flag indicates whether the previous segment is connected to the current segment.  If it isn't
 				     then we will need to draw an additional line (segmentLineToStart) from the end of the previous segment to the
 				     start of the current segment. 
 				-->
-				<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=$previousSegmentToNodeId'/>
+				<xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,@id)/@from=$previousSegmentToNodeId"/>
 		
 				<!--  Now we count the number of segments in this way that have a to node that is equal to the current segment's from node.
 				      We do this to find out if the current segment is connected from some other segment in the way.  If it is, and it
 				      is not linked to the current segment then we can assume we have the start of a new sub-path.  In this case we shouldn't
 				      draw an additional line between the end of the previous segment and the start of the current segment.
 				-->
-				<xsl:variable name='connectedSegmentCount' select='count(../*[key("segmentById",@id)/@to=$currentSegmentFromNodeId])' />
+				<xsl:variable name="connectedSegmentCount" select="count(../*[key(&quot;segmentById&quot;,@id)/@to=$currentSegmentFromNodeId])"/>
 				
-				<xsl:variable name='segmentSequence' select='position()'/>
-				<xsl:for-each select='key("segmentById",$segmentId)'>
+				<xsl:variable name="segmentSequence" select="position()"/>
+				<xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
 					<xsl:choose>
 						<!-- If this is the start of the way then we always have to move to the start of the segment. -->
-						<xsl:when test='$segmentSequence=1'>
-							<xsl:call-template name='segmentMoveToStart'/>				
+						<xsl:when test="$segmentSequence=1">
+							<xsl:call-template name="segmentMoveToStart"/>				
 						</xsl:when>
 						<!-- If the segment is "connected" to another segment (at the from end) but is not linked to the
 							 previous segment, then start a new sub-path -->
-						<xsl:when test='$connectedSegmentCount>0 and not($linkedSegment)'>
+						<xsl:when test="$connectedSegmentCount&gt;0 and not($linkedSegment)">
 							<xsl:text>Z</xsl:text>
-							<xsl:call-template name='segmentMoveToStart'/>				
+							<xsl:call-template name="segmentMoveToStart"/>				
 						</xsl:when>
 						<!-- If the previous segment is not linked to this one we need to draw an artificial line -->
-						<xsl:when test='not($linkedSegment)'>
-							<xsl:call-template name='segmentLineToStart'/>				
+						<xsl:when test="not($linkedSegment)">
+							<xsl:call-template name="segmentLineToStart"/>				
 						</xsl:when>
 					</xsl:choose>
-					<xsl:call-template name='segmentLineToEnd'/>
+					<xsl:call-template name="segmentLineToEnd"/>
 				</xsl:for-each>
 			</xsl:for-each>
 			<xsl:text>Z</xsl:text>
@@ -830,7 +850,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 		<path id="area_{@id}" d="{$pathData}"/>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentMoveToStart">
+	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentMoveToStart">
         <xsl:variable name="from" select="@from"/>
         <xsl:variable name="fromNode" select="key(&quot;nodeById&quot;,$from)"/>
 
@@ -876,7 +896,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:attribute name="class">
             <xsl:value-of select="normalize-space(concat($classes,' ',.))"/>
         </xsl:attribute>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@type" mode="copyAttributes">
+    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@type|@ref|@scale" mode="copyAttributes">
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@*" mode="copyAttributes">
         <xsl:param name="classes"/>
         <xsl:copy/>

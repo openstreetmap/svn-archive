@@ -90,6 +90,10 @@ if ( ! defined $tie_nodes_hash ) {
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
+if ( $do_list_areas ) {
+    print Geo::Filter::Area->list_areas()."\n";
+    exit;
+}
 
 # TODO:
 # if the input filename is not planet*osm* we have to change the output filename too.
@@ -106,10 +110,6 @@ pod2usage(1) unless $Filename;
 our $READ_FH=undef;
 our $OK_POS=0;
 
-if ( $do_list_areas ) {
-    print Geo::Filter::Area->list_areas()."\n";
-    exit;
-}
 
 our (%MainAttr,$Type,%Tags, @WaySegments);
 # Stats

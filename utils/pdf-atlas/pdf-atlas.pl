@@ -986,7 +986,7 @@ sub ScaleBar()
   $text->translate($ScaleX/mm, ($ScaleY - 6)/mm );
   $text->text(FormatNum($ScaleLen) . " km");
   $text->translate($ScaleX/mm  +$dx/mm, ($ScaleY - 6)/mm );
-  $text->text_right(" 1/".FormatNum(int(Scale($Proj))));
+  $text->text_right(" 1:".FormatNum(int(Scale($Proj))));
 
 }
 

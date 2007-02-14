@@ -71,7 +71,7 @@ for place_config in \
 	$osm2csv_cmd
     fi
     if [ ! -s $osm_csv ] ; then
-	echo "We have not fitting csv File"
+	echo "Cannot find apropriate csv File ($osm_csv)"
 	continue
 	osm_csv=~/osm/planet/csv/osm.csv
     fi

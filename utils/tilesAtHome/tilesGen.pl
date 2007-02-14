@@ -78,9 +78,11 @@ elsif ($Mode eq "loop") {
   # Continuously process requests from server
   # ----------------------------------
   while(1){
-    ProcessRequestsFromServer();
+    my $did_something = ProcessRequestsFromServer();
     uploadIfEnoughTiles();
-    sleep(60);
+    if ( $did_something == 0) {
+	sleep(60);
+    }
   }
 }
 elsif ($Mode eq "upload") {
@@ -160,8 +162,8 @@ sub ProcessRequestsFromServer(){
     
   if(! -f $LocalFilename){
     print "Couldn't get request from server";
-    sleep(5 * 60);
-    return;
+    #sleep(5 * 60);
+    return 0;
   }
 
   # Read into memory
@@ -176,8 +178,8 @@ sub ProcessRequestsFromServer(){
   # First field is always "OK" if the server has actually sent a request
   if($ValidFlag eq "XX"){
     print "Nothing to do!  Please wait a while, and check later for requests\n";
-    sleep(40 * 60);
-    return;
+    #sleep(40 * 60);
+    return 0;
   }
   elsif($ValidFlag ne "OK"){
     print "Server doesn't seem to be responding as expected\n";
@@ -185,8 +187,8 @@ sub ProcessRequestsFromServer(){
     # this timeout should adapt (like exponential backoff), requires the 
     # looping to happen inside this script, like  requests.pl -f 
     print "Sleeping a while to reduce server load\n";
-    sleep(5 * 60);
-    return;
+    #sleep(5 * 60);
+    return 0;
   }
   
   # Check what format the results were in
@@ -205,6 +207,7 @@ sub ProcessRequestsFromServer(){
   
   # Create the tileset requested
   GenerateTileset($X, $Y, $Z);
+  return 1;
 }
 
 #-----------------------------------------------------------------------------

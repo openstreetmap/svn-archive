@@ -32,14 +32,19 @@ my $ZipFileCount = 0;
 
 my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
 
+my @sorted;
+
 # Upload any ZIP files which are still waiting to go
 if(opendir(ZIPDIR, $ZipDir)){
-  while(my $File = readdir(ZIPDIR)){
+  my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
+  close ZIPDIR;
+  @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
+  while(my $File = shift @sorted){
+    print @sorted . " zip files to upload\n";
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
   }
-  close ZIPDIR;
 }
 
 my $TileDir = $Config{WorkingDirectory};

@@ -39,11 +39,12 @@ if(opendir(ZIPDIR, $ZipDir)){
   my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
   close ZIPDIR;
   @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
+  print @sorted . " zip files to upload\n";
   while(my $File = shift @sorted){
-    print @sorted . " zip files to upload\n";
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
+    print @sorted . " zip files left to upload\n";
   }
 }
 

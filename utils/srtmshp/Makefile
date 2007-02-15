@@ -1,5 +1,5 @@
-CXXFLAGS = -I/home/nick/shapelib/include  -I/home/nick/src/libs/libosm
-LDFLAGS = -L/home/nick/shapelib/lib /home/nick/shapelib/lib/libshp.a  /home/nick/src/libs/libosm/libosm.a /home/nick/src/libs/ccoord/libccoord.a
+CXXFLAGS =  -I../../libs/libosm
+LDFLAGS = -L../../libs/libosm -L../../libs/ccoord -lshp -losm -lccoord
 OBJ = srtm2shp.o SRTMGeneral.o SRTMDataGrid.o SRTMConGen.o 
 
 srtm2shp: $(OBJ)

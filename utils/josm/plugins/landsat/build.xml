@@ -1,7 +1,8 @@
 <project name="landsat" default="build" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="../../../../../josm/bin" />
+	<property name="josm" location="../../../../editors/josm/dist/josm-custom.jar" 
+/>
 
 
 

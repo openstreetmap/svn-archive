@@ -183,6 +183,13 @@
             </rule>
         </layer>
 
+        <!-- Contours -->
+        <rule e="segment|way" k="contour" v="*">
+            <layer name="Contours">
+                <line class='contour' />
+                <text k="contour" text-anchor='middle' startOffset='50%' class="contour-name" />
+            </layer>
+        </rule>
 
         <!-- Bridges -->
         <rule e="segment|way" k="bridge" v="yes|true">
@@ -775,6 +782,20 @@
                 stroke-width: 0.1px;
                 stroke-linecap: round;
                 stroke: gray;
+                /* marker-end: url(#segment-direction); */
+            }
+
+            .contour-name {
+                fill: black;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 3px;
+            }
+
+            .contour {
+                stroke-width: 0.4px;
+                stroke-linecap: round;
+                stroke: gray;
+                fill: none;
                 /* marker-end: url(#segment-direction); */
             }
 

@@ -20,7 +20,7 @@
 #include "Map.h"
 #include "llgr.h"
 #include <cmath>
-#include <libshp/shapefil.h>
+#include <shapefil.h>
 
 using OSM::EarthPoint;
 

@@ -1,0 +1,33 @@
+Overview
+========
+
+Utility to create contours in OSM format for use with OSMARENDER. This
+is not intended for upload into the OSM database!
+
+The SRTM height data needs to be obtained from :
+http://srtm.csi.cgiar.org/
+
+The real work is done by gnuplot - however gnuplot is NOT GPL (despite
+the name - apparently they thought of it first) and is being very
+stubborn about changing.
+
+Instructions
+============
+
+Determine the latitude and longitude of your map, and then download
+the SRTM data in ASCII format from http://srtm.csi.cgiar.org/
+
+Unzip the file, and edit example.sh to include the name of that file,
+and the bounding box of the map file. Your OSM file should be called
+data.osm, or you can update example.sh to suit.
+
+Run example.sh. 
+
+contours.osm is created, which contains the actual contours in OSM format,
+and map.osm, which contains both the contours and any map data supplied.
+
+You will need to patch some rules into osmarender before rendering the map.
+Do not load into JOSM or attempt to upload to OSM!
+
+See osmarender4.diff for an example.
+

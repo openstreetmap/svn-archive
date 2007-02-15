@@ -156,13 +156,13 @@
 
         <layer name="Maplint text">
 <!--            <rule e="segment|way" k="maplint:notice" v="*">
-                <text k="maplint:notice" startOffset="50%" class='maplint-text'/>
+                <text k="maplint:notice" startOffset="50%" class='maplint-text' dy="0.33" />
             </rule>-->
             <rule e="segment|way" k="maplint:warning" v="*">
-                <text k="maplint:warning" startOffset="50%" class='maplint-text'/>
+                <text k="maplint:warning" startOffset="50%" class='maplint-text' dy="0.33" />
             </rule>
             <rule e="segment|way" k="maplint:error" v="*">
-                <text k="maplint:error" startOffset="50%" class='maplint-text'/>
+                <text k="maplint:error" startOffset="50%" class='maplint-text' dy="0.33" />
             </rule>
 
             <rule e="node" k="maplint:notice" v="*">

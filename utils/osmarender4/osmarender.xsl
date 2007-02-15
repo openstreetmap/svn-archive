@@ -509,7 +509,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="renderTextPath">
         <xsl:param name="instruction"/>
         <xsl:param name="pathId"/>
-        <text dy="0.35">
+        <text>
             <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
             <textPath xlink:href="#{$pathId}">
                 <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>

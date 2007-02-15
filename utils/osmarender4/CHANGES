@@ -98,4 +98,6 @@ Revision history:
                 Removed debugging output in osmarender bin (Joto)
     2007-02-13  Changed the symbol handling. There is now a new subdirectory "symbols" which contains all the symbols. From these files the symbols.svg is created, which gets included into map SVG files. See [[Osmarender/Symbols]] in the wiki for details. (Joto)
                 Somewhat simplified SVG code for text along path. (Joto)
+    2007-02-15  Removed @dy attribute from text element in src/draw.xsl and added it to all <text> elements in the rules file. (Joto)
+                Symbols in catalogue now sorted alphabetically. (Joto)
 

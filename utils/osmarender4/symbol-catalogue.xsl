@@ -39,11 +39,15 @@
 </xsl:text>
                 </style>
 
-            <xsl:apply-templates select="/dir/f[substring-after(@n, '.') = 'svg']" mode="defs"/>
+            <xsl:apply-templates select="/dir/f[substring-after(@n, '.') = 'svg']" mode="defs">
+                <xsl:sort select="@n"/>
+            </xsl:apply-templates>
             </defs>
 
             <g id="catalogue" transform="scale({$scale})">
-                <xsl:apply-templates select="/dir/f[substring-after(@n, '.') = 'svg']" mode="draw"/>
+                <xsl:apply-templates select="/dir/f[substring-after(@n, '.') = 'svg']" mode="draw">
+                    <xsl:sort select="@n"/>
+                </xsl:apply-templates>
             </g>
         </svg>
     </xsl:template>

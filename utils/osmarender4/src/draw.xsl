@@ -242,7 +242,7 @@
     <xsl:template name='renderTextPath'>
         <xsl:param name='instruction'/>
         <xsl:param name='pathId'/>
-        <text dy="0.35">
+        <text>
             <xsl:apply-templates select='$instruction/@*' mode='renderTextPath-text'/>
             <textPath xlink:href="#{$pathId}">
                 <xsl:apply-templates select='$instruction/@*' mode='renderTextPath-textPath'/>

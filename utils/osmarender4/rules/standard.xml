@@ -582,32 +582,32 @@
             <rule e="node" k="amenity" v="hospital">
                 <symbol ref="hospital" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="pharmacy">
                 <symbol ref="pharmacy_dispensing" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
 
             <rule e="node" k="amenity" v="school">
                 <symbol ref="school" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="university">
                 <symbol ref="university" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="library">
                 <symbol ref="library" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
 
@@ -623,19 +623,37 @@
             <rule e="node" k="amenity" v="cinema">
                 <symbol ref="cinema" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="theatre">
                 <symbol ref="theatre" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
+                </rule>
+            </rule>
+            <rule e="node" k="amenity" v="restaurant">
+                <symbol ref="restaurant" />
+                <rule k="osmarender:renderName" v="~|yes">
+                    <text k='name' class='amenity-pub-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="pub">
-                <symbol href="pub" />
+                <symbol ref="pub" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-pub-caption' dx='1px' dy='0.5px'/>
+                    <text k='name' class='amenity-pub-caption' dx='1px' dy='0.4px'/>
+                </rule>
+            </rule>
+            <rule e="node" k="amenity" v="supermarket">
+                <symbol ref="supermarket" />
+                <rule k="osmarender:renderName" v="~|yes">
+                    <text k='name' class='amenity-pub-caption' dx='2px' dy='0.4px'/>
+                </rule>
+            </rule>
+            <rule e="node" k="amenity" v="courthouse">
+                <symbol ref="courthouse" />
+                <rule k="osmarender:renderName" v="~|yes">
+                    <text k='name' class='amenity-pub-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="place_of_worship">
@@ -652,7 +670,7 @@
                     <symbol ref="mosque" />
                 </rule>
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule e="node" k="amenity" v="parking">
@@ -661,11 +679,19 @@
             <rule e="node" k="amenity" v="fuel">
                 <symbol ref="petrol_station" />
                 <rule k="osmarender:renderName" v="~|yes">
-                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.5px'/>
+                    <text k='name' class='amenity-misc-caption' dx='2px' dy='0.4px'/>
                 </rule>
             </rule>
             <rule k="amenity" v="recycling">
                 <symbol ref="recycling" />
+            </rule>
+
+            <!-- Historic symbols -->
+            <rule e="node" k="historic" v="museum">
+                <symbol ref="museum" />
+                <rule k="osmarender:renderName" v="~|yes">
+                    <text k='name' class='amenity-pub-caption' dx='1px' dy='0.4px'/>
+                </rule>
             </rule>
 
             <!-- Leisure symbols -->

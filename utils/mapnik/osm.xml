@@ -349,6 +349,42 @@
       </LineSymbolizer>
     </Rule>    
     <Rule>
+      <Filter>[highway] = 'unsurfaced' or [highway] = 'track'</Filter>
+      <MaxScaleDenominator>75000</MaxScaleDenominator>
+      <MinScaleDenominator>50000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+		<CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-width">3</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unsurfaced' or [highway]='track'</Filter>
+      <MaxScaleDenominator>50000</MaxScaleDenominator>
+      <MinScaleDenominator>25000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+		<CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-width">4.5</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unsurfaced' or [highway]='track'</Filter>
+      <MaxScaleDenominator>25000</MaxScaleDenominator>
+      <MinScaleDenominator>1000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+		<CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-width">11</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>    
+    <Rule>
       <ElseFilter/>
       <MaxScaleDenominator>15000</MaxScaleDenominator>
       <MinScaleDenominator>7500</MinScaleDenominator>
@@ -551,7 +587,7 @@
   </Style>  
   <Style name="roads">
     <Rule>
-      <Filter>[highway] = 'residential' or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'minor' or [highway] = 'unclassified' or [highway] = 'unsurfaced' or [highway] = 'track'</Filter>
       <MaxScaleDenominator>150000</MaxScaleDenominator>
       <MinScaleDenominator>75000</MinScaleDenominator>
       <LineSymbolizer>
@@ -562,7 +598,7 @@
       </LineSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'residential' or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'minor' or [highway] = 'unclassified' or [highway] = 'unsurfaced' or [highway] = 'track'</Filter>
       <MaxScaleDenominator>75000</MaxScaleDenominator>
       <MinScaleDenominator>50000</MinScaleDenominator>
       <LineSymbolizer>
@@ -573,7 +609,7 @@
       </LineSymbolizer>
     </Rule>
        <Rule>
-      <Filter>[highway] = 'residential'  or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'minor' or [highway] = 'unclassified' or [highway] = 'unsurfaced' or [highway] = 'track'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <MinScaleDenominator>15000</MinScaleDenominator>
       <LineSymbolizer>
@@ -585,7 +621,7 @@
     </Rule>
     
    <Rule>
-      <Filter>[highway] = 'residential'  or [highway] = 'minor' or [highway] = 'unclassified'</Filter>
+      <Filter>[highway] = 'residential' or [highway] = 'minor' or [highway] = 'unclassified' or [highway] = 'unsurfaced' or [highway] = 'track'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>
       <MinScaleDenominator>1000</MinScaleDenominator>
       <LineSymbolizer>
@@ -654,7 +690,7 @@
       </LineSymbolizer>
     </Rule>
     <Rule>
-      <Filter>[highway] = 'unsurfaced' or [highway] = 'byway'</Filter>
+      <Filter>[highway] = 'byway'</Filter>
       <MaxScaleDenominator>50000</MaxScaleDenominator>
       <LineSymbolizer>
         <CssParameter name="stroke">#fff</CssParameter>

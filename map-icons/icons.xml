@@ -392,6 +392,7 @@
     <description lang="en">Hostel is something between a Hotel and a
     youth Hostel</description>
     <geoinfo>
+      <poi_type_id>405</poi_type_id>
       <name>accommodation.hostel</name>
     </geoinfo>
   </rule>
@@ -438,6 +439,7 @@
 
   <rule>
     <condition k="poi" v="education.school"/>
+    <condition k="amenity" v="school"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">School</title>
@@ -640,6 +642,7 @@
 
   <rule>
     <condition k="poi" v="food.icecream"/>
+    <condition k="amenity" v="ice cream parlour"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -691,6 +694,8 @@
 
   <rule>
     <condition k="poi" v="food.restaurant"/>
+    <condition k="amenity" v="restaurant"/>
+    <condition k="class" v="restaurant"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -1027,6 +1032,7 @@
 
   <rule>
     <condition k="poi" v="health.pharmacy"/>
+    <condition k="amenity" v="pharmacy"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -1867,7 +1873,6 @@
   <rule>
     <condition k="poi" v="places.settlement.suburb"/>
     <condition k="place" v="suburb"/>
-    <condition k="place" v="suburb"/>
     <scale_min>1</scale_min>
     <scale_max>5000</scale_max>
     <title lang="en">Suburb</title>
@@ -1875,6 +1880,7 @@
     <description lang="en">Area inside a Settlement</description>
     <description lang="de">Gebiet in einer Stadt</description>
     <geoinfo>
+      <poi_type_id>404</poi_type_id>
       <name>places.settlement.settlement</name>
     </geoinfo>
   </rule>
@@ -1983,6 +1989,7 @@
 
   <rule>
     <condition k="poi" v="public.police"/>
+    <condition k="amenity" v="police"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Police Station</title>
@@ -1996,6 +2003,7 @@
 
   <rule>
     <condition k="poi" v="public.post_box"/>
+    <condition k="amenity" v="post_box"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2009,6 +2017,7 @@
 
   <rule>
     <condition k="poi" v="public.post_office"/>
+    <condition k="amenity" v="post_office"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2022,6 +2031,7 @@
 
   <rule>
     <condition k="poi" v="public.recycling"/>
+    <condition k="amenity" v="recycling"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2034,6 +2044,7 @@
 
   <rule>
     <condition k="poi" v="public.telephone"/>
+    <condition k="amenity" v="telephone"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2046,6 +2057,7 @@
 
   <rule>
     <condition k="poi" v="public.toilet"/>
+    <condition k="amenity" v="toilets"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2082,6 +2094,7 @@
 
   <rule>
     <condition k="poi" v="recreation.cinema"/>
+    <condition k="amenity" v="cinema"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2130,6 +2143,8 @@
 
   <rule>
     <condition k="poi" v="recreation.playground"/>
+    <condition k="leisure" v="playground"/>
+    <condition k="amenity" v="playground"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2181,6 +2196,7 @@
   <rule>
     <condition k="poi" v="religion.church.catholic"/>
     <condition k="religion" v="christian"/>
+    <condition k="denomination" v="catholic"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2403,6 +2419,7 @@
 
   <rule>
     <condition k="poi" v="shopping.groceries.bakery"/>
+    <condition k="amenity" v="bakery"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2571,6 +2588,7 @@
 
   <rule>
     <condition k="poi" v="shopping.supermarket"/>
+    <condition k="amenity" v="supermarket"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2751,6 +2769,7 @@
 
   <rule>
     <condition k="poi" v="sightseeing.castle"/>
+    <condition k="historic" v="castle"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -4817,6 +4836,18 @@
     <geoinfo>
       <poi_type_id>403</poi_type_id>
       <name>geocache.geocache_found</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="places.settlement.suburb"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>404</poi_type_id>
+      <name>places.settlement.suburb</name>
     </geoinfo>
   </rule>
 </rules>

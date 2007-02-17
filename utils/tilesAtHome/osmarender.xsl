@@ -707,15 +707,25 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         </xsl:call-template>
 
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateSegmentPath">
-        <xsl:variable name="pathData">
+        <xsl:variable name='pathData'>
             <xsl:choose>
-                <xsl:when test="tag[@k=&quot;name_direction&quot;]/@v=&quot;-1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;-1&quot; or (key(&quot;nodeById&quot;,@from)/@lon &gt; key(&quot;nodeById&quot;,@to)/@lon)">
-                    <xsl:call-template name="segmentMoveToEnd"/>
-                    <xsl:call-template name="segmentLineToStart"/>
+				<!-- Manual override -->
+                <xsl:when test='tag[@k="name_direction"]/@v="-1" or tag[@k="osmarender:nameDirection"]/@v="-1"'>
+                    <xsl:call-template name='segmentMoveToEnd'/>
+                    <xsl:call-template name='segmentLineToStart'/>
+                </xsl:when>
+                <xsl:when test='tag[@k="name_direction"]/@v="1" or tag[@k="osmarender:nameDirection"]/@v="1"'>
+                    <xsl:call-template name='segmentMoveToStart'/>
+                    <xsl:call-template name='segmentLineToEnd'/>
+                </xsl:when>
+                <!-- Automatic direction -->
+                <xsl:when test='(key("nodeById",@from)/@lon &gt; key("nodeById",@to)/@lon)'>
+                    <xsl:call-template name='segmentMoveToEnd'/>
+                    <xsl:call-template name='segmentLineToStart'/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:call-template name="segmentMoveToStart"/>
-                    <xsl:call-template name="segmentLineToEnd"/>
+                    <xsl:call-template name='segmentMoveToStart'/>
+                    <xsl:call-template name='segmentLineToEnd'/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -732,32 +742,23 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         and the other path needs to be the right direction for rendering
         the oneway arrows. This can probably be done better, but currently
         I don't know how. -->
-        <xsl:variable name="pathData">
+        <xsl:variable name='pathData'>
             <xsl:choose>
-                <xsl:when test="(tag[@k=&quot;name_direction&quot;]/@v=&quot;-1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;-1&quot;) != (key(&quot;nodeById&quot;,key(&quot;segmentById&quot;,seg [1]/@id)/@from)/@lon &lt; key(&quot;nodeById&quot;,key(&quot;segmentById&quot;,seg[last()]/@id)/@to)/@lon)">
-                    <xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
-                        <xsl:variable name="segmentId" select="@id"/>
-                        <xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,@id)/@from=key(&quot;segmentById&quot;,preceding-sibling::seg[1]/@id)/@to"/>
-                        <xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
-                            <xsl:if test="not($linkedSegment)">
-                                <xsl:call-template name="segmentMoveToStart"/>
-                            </xsl:if>
-                                <xsl:call-template name="segmentLineToEnd"/>
-                        </xsl:for-each>
-                    </xsl:for-each>
+				<!-- Manual override, reverse direction -->
+                <xsl:when test='tag[@k="name_direction"]/@v="-1" or tag[@k="osmarender:nameDirection"]/@v="-1"'>
+					<xsl:call-template name='generateWayPathReverse'/>
                 </xsl:when>
+				<!-- Manual override, normal direction -->
+                <xsl:when test='tag[@k="name_direction"]/@v="1" or tag[@k="osmarender:nameDirection"]/@v="1"'>
+					<xsl:call-template name='generateWayPathNormal'/>
+                </xsl:when>
+				<!-- Automatic, reverse direction -->
+                <xsl:when test='(key("nodeById",key("segmentById",seg[1]/@id)/@from)/@lon &gt; key("nodeById",key("segmentById",seg[last()]/@id)/@to)/@lon)'>
+					<xsl:call-template name='generateWayPathReverse'/>
+                </xsl:when>
+				<!-- Automatic, normal direction -->
                 <xsl:otherwise>
-                    <xsl:for-each select="seg">
-                        <xsl:sort select="position()" data-type="number" order="descending"/>
-                        <xsl:variable name="segmentId" select="@id"/>
-                        <xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,following-sibling::seg[1]/@id)/@from=key(&quot;segmentById&quot;,@id)/@to"/>
-                        <xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
-                            <xsl:if test="not($linkedSegment)">
-                                <xsl:call-template name="segmentMoveToEnd"/>
-                            </xsl:if>
-                                <xsl:call-template name="segmentLineToStart"/>
-                        </xsl:for-each>
-                    </xsl:for-each>
+					<xsl:call-template name='generateWayPathNormal'/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -767,21 +768,46 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <!-- Generate the path for the way itself. Used for rendering the
         way and, possibly, oneway arrows. -->
         <xsl:variable name="pathDataFixed">
-            <xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
-                <xsl:variable name="segmentId" select="@id"/>
-                <xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,@id)/@from=key(&quot;segmentById&quot;,preceding-sibling::seg[1]/@id)/@to"/>
-                <xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
-                    <xsl:if test="not($linkedSegment)">
-                        <xsl:call-template name="segmentMoveToStart"/>
-                    </xsl:if>
-                        <xsl:call-template name="segmentLineToEnd"/>
-                </xsl:for-each>
-            </xsl:for-each>
+			<xsl:call-template name='generateWayPathNormal'/>
         </xsl:variable>
 
         <path id="way_{@id}" d="{$pathDataFixed}"/>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateAreaPath">
+    </xsl:template>
+    
+    
+    <!-- Generate a way path in the normal order of the segments in the way -->
+    <xsl:template name="generateWayPathNormal">
+        <xsl:for-each select='seg[key("segmentById",@id)]'>
+            <xsl:variable name='segmentId' select='@id'/>
+            <xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=key("segmentById",preceding-sibling::seg[1]/@id)/@to'/>
+            <xsl:for-each select='key("segmentById",$segmentId)'>
+                <xsl:if test='not($linkedSegment)'>
+                    <xsl:call-template name='segmentMoveToStart'/>
+                </xsl:if>
+                    <xsl:call-template name='segmentLineToEnd'/>
+            </xsl:for-each>
+        </xsl:for-each>
+    </xsl:template>
+
+
+    <!-- Generate a way path in the reverse order of the segments in the way -->
+    <xsl:template name="generateWayPathReverse">
+		<xsl:for-each select='seg'>
+		    <xsl:sort select='position()' data-type='number' order='descending'/>
+		    <xsl:variable name='segmentId' select='@id'/>
+		    <xsl:variable name='linkedSegment' select='key("segmentById",following-sibling::seg[1]/@id)/@from=key("segmentById",@id)/@to'/>
+		    <xsl:for-each select='key("segmentById",$segmentId)'>
+		        <xsl:if test='not($linkedSegment)'>
+		            <xsl:call-template name='segmentMoveToEnd'/>
+		        </xsl:if>
+		            <xsl:call-template name='segmentLineToStart'/>
+		    </xsl:for-each>
+		</xsl:for-each>    
+    </xsl:template>
+    
+    
+    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateAreaPath">
 
 		<!-- Generate the path for the area -->
 		<xsl:variable name='pathData'>

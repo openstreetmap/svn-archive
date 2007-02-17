@@ -201,6 +201,7 @@
     <condition k="poi" v="sightseeing"/>
     <condition k="tourism" v="attraction"/>
     <condition k="class" v="point of interest"/>
+    <condition k="leisure" v="point_of_interest"/>
     <scale_min>1</scale_min>
     <scale_max>25000</scale_max>
     <title lang="de">Sehenswürdigkeit</title>
@@ -285,6 +286,7 @@
 
   <rule>
     <condition k="poi" v="waypoint"/>
+    <condition k="class" v="waypoint"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="de">Wegpunkt</title>
@@ -374,10 +376,23 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Youth Hostel</title>
-    <description lang="en"></description>
+    <description lang="en">Youth Hostel</description>
     <geoinfo>
       <poi_type_id>37</poi_type_id>
       <name>accommodation.youth-hostel</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="accommodation.hostel"/>
+    <condition k="tourism" v="hostel"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Hostel</title>
+    <description lang="en">Hostel is something between a Hotel and a
+    youth Hostel</description>
+    <geoinfo>
+      <name>accommodation.hostel</name>
     </geoinfo>
   </rule>
 
@@ -1789,6 +1804,7 @@
 
   <rule>
     <condition k="poi" v="places.settlement.city"/>
+    <condition k="place" v="city"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">City</title>
@@ -1803,6 +1819,8 @@
 
   <rule>
     <condition k="poi" v="places.settlement.hamlet"/>
+    <condition k="class" v="hamlet"/>
+    <condition k="place" v="hamlet"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Hamlet</title>
@@ -1817,6 +1835,7 @@
 
   <rule>
     <condition k="poi" v="places.settlement.town"/>
+    <condition k="place" v="town"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Town</title>
@@ -1831,6 +1850,8 @@
 
   <rule>
     <condition k="poi" v="places.settlement.village"/>
+    <condition k="place" v="village"/>
+    <condition k="class" v="village"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Village</title>
@@ -1840,6 +1861,21 @@
     <geoinfo>
       <poi_type_id>158</poi_type_id>
       <name>places.settlement.village</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="places.settlement.suburb"/>
+    <condition k="place" v="suburb"/>
+    <condition k="place" v="suburb"/>
+    <scale_min>1</scale_min>
+    <scale_max>5000</scale_max>
+    <title lang="en">Suburb</title>
+    <title lang="de">Stadteil</title>
+    <description lang="en">Area inside a Settlement</description>
+    <description lang="de">Gebiet in einer Stadt</description>
+    <geoinfo>
+      <name>places.settlement.settlement</name>
     </geoinfo>
   </rule>
 
@@ -2144,6 +2180,7 @@
 
   <rule>
     <condition k="poi" v="religion.church.catholic"/>
+    <condition k="religion" v="christian"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2776,6 +2813,7 @@
 
   <rule>
     <condition k="poi" v="sports.golf"/>
+    <condition k="sport" v="golf"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2848,6 +2886,9 @@
 
   <rule>
     <condition k="poi" v="transport.bridge"/>
+    <condition k="bridge" v="yes"/>
+    <condition k="type" v="bridge"/>
+    <condition k="class" v="bridge"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -3177,6 +3218,7 @@
 
   <rule>
     <condition k="poi" v="vehicle.fuel_station"/>
+    <condition k="amenity" v="fuel"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>

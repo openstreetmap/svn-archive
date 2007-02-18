@@ -169,6 +169,9 @@
             <rule e="way" k="amenity" v="parking">
                 <area class='amenity-parking'/>
             </rule>
+            <rule e="way" k="amenity" v="school|university|college">
+                <area class='school-area'/>
+            </rule>
             <rule e="way" k="tourism" v="attraction">
                 <area class='tourism-attraction'/>
             </rule>
@@ -1833,6 +1836,12 @@
             .amenity-parking {
                 fill: #f7efb7;
                 stroke: #e9dd72;
+                stroke-width: 0.2px;
+            }
+
+            .school-area {
+                fill: #B9ACD8;
+                stroke: #a18bd8;
                 stroke-width: 0.2px;
             }
 

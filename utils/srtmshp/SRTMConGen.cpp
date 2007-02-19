@@ -17,10 +17,6 @@
 
  */
 #include "SRTMConGen.h"
-#include "Map.h"
-#include "llgr.h"
-#include <cmath>
-#include <shapefil.h>
 
 using OSM::EarthPoint;
 
@@ -180,58 +176,143 @@ void SRTMConGen::do_contours (DrawSurface *ds,int row,int col,
 	}
 }
 
+
+// This method by Artem
+
+void SRTMConGen::merge_segments 
+	(Contour & contour, LineString & line, unsigned maxlength)
+{
+   bool first = true;
+   unsigned max = contour.size()*contour.size();
+   unsigned i = 0;
+   double start_x;
+   double start_y;
+   double end_x;
+   double end_y;
+   
+   while (contour.size() && i++ < max)
+   {
+      LINE * seg = *(contour.end() - 1);
+      double x0 = seg->p[0].x;
+      double y0 = seg->p[0].y;
+      double x1 = seg->p[1].x;
+      double y1 = seg->p[1].y;
+      contour.pop_back();
+      
+      if (first)
+      {
+         first = false;
+         start_x = x0;
+         start_y = y0;
+         end_x = x1;
+         end_y = y1;
+         line.add_last(x0,y0);
+         line.add_last(x1,y1);
+      }
+      else if (start_x == x0 && start_y == y0)
+      {
+         start_x = x1;
+         start_y = y1;
+         line.add_first(x1,y1);
+      }
+      else if (start_x == x1 && start_y == y1)
+      {
+         start_x = x0;
+         start_y = y0;
+         line.add_first(x0,y0);
+      }
+      else if (end_x == x0 && end_y == y0)
+      {
+         end_x = x1;
+         end_y = y1;
+         line.add_last(x1,y1);
+      }
+      else if (end_x == x1 && end_y == y1)
+      {
+         end_x = x0;
+         end_y = y0;
+         line.add_last(x0,y0);
+      } 
+      else
+      {
+         contour.push_front(seg);
+      }
+      if (line.length() > maxlength) break;
+   }
+} 
+
 void SRTMConGen::generateShp (const char* shpname,int interval)
 {
-	SHPHandle shp = SHPCreate(shpname,SHPT_ARC);
-	DBFHandle dbf = DBFCreate(shpname);
-	int htidx = DBFAddField(dbf,"height",FTInteger,255,0);
-	int mjridx = DBFAddField(dbf,"major",FTInteger,255,0);
-	double xs[2], ys[2];
-	for(int row=0; row<sampledata->getHeight()-1; row++)
-	{
-		// Do each point of the current row
-		for(int col=0; col<sampledata->getWidth()-1; col++)
-		{
-			sampledata->setPoint (row,col);
-			int start_ht = sampledata->startHeight(interval),
-			end_ht = sampledata->endHeight(interval);
-			
-
-			LINE lines[2];
-			int n_line_pts;
-			char htstr[1024];
-
-			for(int ht=start_ht; ht<=end_ht; ht+=interval)
-			{
-				n_line_pts=0;
-				sampledata->getLine(lines,&n_line_pts,ht,false);
+   SHPHandle shp = SHPCreate(shpname,SHPT_ARC);
+   DBFHandle dbf = DBFCreate(shpname);
+   int htidx = DBFAddField(dbf,"height",FTInteger,255,0);
+   int mjridx = DBFAddField(dbf,"major",FTInteger,255,0);
+   double xs[2], ys[2];
+   
+   SegmentCache segments;
+   Range heights;
+   for(int row=0; row<sampledata->getHeight()-1; row++)
+   {
+      // Do each point of the current row
+      for(int col=0; col<sampledata->getWidth()-1; col++)
+      {
+         sampledata->setPoint (row,col);
+         int start_ht = sampledata->startHeight(interval),
+            end_ht = sampledata->endHeight(interval);
 
 
-				// draw line
-				if(n_line_pts!=0)
-				{
-					for(int count=0; count<n_line_pts; count++)
-					{
-						xs[0] = lines[count].p[0].x;
-						xs[1] = lines[count].p[1].x;
-						ys[0] = lines[count].p[0].y;
-						ys[1] = lines[count].p[1].y;
+         LINE lines[2];
+         int n_line_pts;
+         char htstr[1024];
 
-						SHPObject *object = SHPCreateSimpleObject
-							(SHPT_ARC,2,xs,ys,NULL);
-						int objid = SHPWriteObject(shp,-1,object);
-						SHPDestroyObject(object);
-						
-						DBFWriteIntegerAttribute (dbf,objid,htidx,ht);
-						DBFWriteIntegerAttribute (dbf,objid,mjridx,
-							( ht%(interval*5) == 0 ? 1:0));
-					}		
-				}
-			}
-		}
-	}
-	DBFClose(dbf);
-	SHPClose(shp);
+         for(int ht=start_ht; ht<=end_ht; ht+=interval)
+         {
+            n_line_pts=0;
+            sampledata->getLine(lines,&n_line_pts,ht,false);
+            // draw line
+            if(n_line_pts!=0)
+            {
+               for(int count=0; count<n_line_pts; count++)
+               {
+                  segments.insert(std::make_pair(ht,lines[count]));
+                  heights.insert(ht);
+               }
+            }
+         }
+      }
+   }
+   
+   shape_writer writer(shp,dbf,htidx,mjridx,interval);
+   //std::for_each(segments.begin(),segments.end(),writer);
+   
+   Range::iterator itr = heights.begin();
+   Range::iterator end = heights.end();
+   
+   while (itr != end)
+   {
+      int height = *itr;
+      Contour contour;
+      SegmentCache::iterator pos;
+      
+      std::cout << "height = " <<  height << "\n";
+      for ( pos = segments.lower_bound(height);
+            pos != segments.upper_bound(height);
+            ++pos)
+      {
+         contour.push_back(&(pos->second));
+      }
+      
+      while (contour.size() > 0)
+      {
+         LineString line(height);
+         merge_segments(contour,line,1000);
+         writer(line);
+      }
+      ++itr;
+   }
+   
+   DBFClose(dbf);
+   SHPClose(shp);
 }
 
 void SRTMConGen::generateShading(DrawSurface *ds,double shadingres)

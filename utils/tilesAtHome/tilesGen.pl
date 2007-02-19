@@ -61,6 +61,10 @@ my $RangeY = $LimitY - $LimitY2;
 # Create the working directory if necessary
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 
+# set the progress indicator variables
+my $progress = 0;
+my $progressJobs = 0;
+
 # Handle the command-line
 my $Mode = shift();
 if($Mode eq "xy"){
@@ -311,8 +315,8 @@ sub GenerateTileset(){
   my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
 
   # Render it as loads of recursive tiles
-  my $progress;
   $progress = 0;
+  $progressJobs++;
   RenderTile($X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
   # Clean-up he SVG files
@@ -351,16 +355,16 @@ sub RenderTile(){
   if($empty == 1) {
     # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
     for (my $j = $Config{MaxZoom} ; $j >= $Zoom ; $j--) {
-      $GenerateTileset::progress += 2 ** ($Config{MaxZoom}-$j);
+      $progress += 2 ** ($Config{MaxZoom}-$j);
     }
   }
   else {
-    $GenerateTileset::progress += 1;
+    $progress += 1;
   }
-  my $progress=$GenerateTileset::progress;  
+  #my $progress=$GenerateTileset::progress;  
   #TODO: instead of putting 63 calculate number of tiles depending on min and max zoom:
   my $progressPercent=$progress*100/63;
-  printf "Job %1.1f %% done.\n", $progressPercent;
+  printf "Job Nr.%d %1.1f %% done.\n",$progressJobs, $progressPercent;
 
 
   # Sub-tiles

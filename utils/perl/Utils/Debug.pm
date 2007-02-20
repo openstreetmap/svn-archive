@@ -58,8 +58,11 @@ sub mem_usage(;$){
 	return $vsz if $type eq "vsz";
 	return $mem_statistics->{"max rss"} if $type eq "max rss";
 	return $mem_statistics->{"max vsz"} if $type eq "max vsz";
-	$msg .= sprintf( "MEM: %.0f(%.0f/%.0f) MB ",$vsz,mem_info("MemTotal"),mem_info("MemFree"));
-	#$msg .= sprintf( "RSS: %.0f MB ",$rss);
+	$msg .= sprintf( "MEM:%.0fMB",$vsz);
+	$msg .= sprintf( "(A:%.0fF:%.0f)",mem_info("MemTotal"),mem_info("MemFree"))
+	    if $DEBUG>3 || $VERBOSE >3;
+	$msg .= sprintf( "RSS: %.0f MB ",$rss)
+	    if $DEBUG>7 || $VERBOSE>7;
 	#$msg .= mem_info();
     }
     return $msg;

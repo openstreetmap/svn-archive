@@ -795,7 +795,7 @@
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">mapnik</Parameter>
-      <Parameter name="table">(select * from planet_osm where char_length(waterway) > 0) as water</Parameter>
+      <Parameter name="table">(select * from planet_osm where waterway IS NOT NULL) as water</Parameter>
     </Datasource>
   </Layer>
   <Layer name="leisure" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
@@ -806,7 +806,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">mapnik</Parameter>
-	  <Parameter name="table">(select * from planet_osm where char_length(leisure) > 0 or  char_length(landuse) > 0 or char_length("natural") > 0 or char_length(man_made) > 0) as leisure</Parameter>
+	  <Parameter name="table">(select * from planet_osm where leisure IS NOT NULL or  landuse IS NOT NULL or "natural" IS NOT NULL or man_made IS NOT NULL) as leisure</Parameter>
     </Datasource>
   </Layer>
   
@@ -823,7 +823,7 @@
       <Parameter name="port">5433</Parameter>     
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">mapnik</Parameter>
-      <Parameter name="table">(select way,highway,railway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,railway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where waterway IS NULL and leisure IS NULL and landuse IS NULL) as roads</Parameter>
     </Datasource>
    </Layer>
     
@@ -835,7 +835,7 @@
       <Parameter name="port">5433</Parameter>	   
      <Parameter name="user">steve</Parameter>	   
       <Parameter name="dbname">mapnik</Parameter>
-      <Parameter name="table">(select * from planet_osm where char_length(amenity) > 0) as amenity</Parameter>
+      <Parameter name="table">(select * from planet_osm where amenity IS NOT NULL) as amenity</Parameter>
     </Datasource>
   </Layer>
   
@@ -847,7 +847,7 @@
       <Parameter name="port">5433</Parameter>
       <Parameter name="user">steve</Parameter>
       <Parameter name="dbname">mapnik</Parameter>
-      <Parameter name="table">(select way,highway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where char_length(waterway) = 0 and char_length(leisure)=0 and char_length(landuse)=0) as roads</Parameter>
+      <Parameter name="table">(select way,highway,landuse,"natural",man_made,waterway,tourism,learning,amenity,place,name,char_length(name) as length from planet_osm where waterway IS NULL and leisure IS NULL and landuse IS NULL) as roads</Parameter>
     </Datasource>
    </Layer>
   

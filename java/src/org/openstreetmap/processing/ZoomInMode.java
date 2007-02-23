@@ -4,6 +4,7 @@ import processing.core.PImage;
 
 public class ZoomInMode extends EditMode {
 
+
     /*
      * Back reference to the applet 
      *
@@ -47,4 +48,7 @@ public class ZoomInMode extends EditMode {
         return "Click to zoom in";
     }
 
+    public int getMinAppletStatus() {
+      return OsmApplet.BROWSEABLE;
+    }
 }

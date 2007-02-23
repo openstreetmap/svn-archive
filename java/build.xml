@@ -6,6 +6,10 @@
   <property name="lib" location="lib"/>
   <property name="jsp" location="jsp"/>
   <property name="bin" location="bin"/>
+  <property name="html" location="html"/>
+	
+	<property name="keystore.alias" value="steveC"/>
+	<property name="keystore.pass" value="blahblah"/>
 
   <target name="init">
     <tstamp/>
@@ -35,12 +39,17 @@
     <copy file="${lib}/commons-httpclient-3.0-rc3.jar" tofile="${dist}/commons-httpclient-3.0-rc3.jar"/>
     <copy file="${lib}/core.jar" tofile="${dist}/core.jar"/>
     <copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
-    <copy file="${lib}/plugin.jar" tofile="${dist}/plugin.jar"/>
     <copy file="${lib}/thinlet.jar" tofile="${dist}/thinlet.jar"/>
 
     <copy file="${lib}/data/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/data/LucidaSansUnicode-11.vlw"/>
 
-    <copy todir="${dist}/rc1/org/openstreetmap/processing/">
+    <copy todir="${dist}">
+      <fileset dir="${html}"/>
+    </copy>
+  	<replace file="${dist}/test_osm_applet.html" token="@user@" value="${test.user}"/>
+  	<replace file="${dist}/test_osm_applet.html" token="@pass@" value="${test.pass}"/>
+
+    	<copy todir="${dist}/rc1/org/openstreetmap/processing/">
       <fileset dir="${build}/org/openstreetmap/processing"/>
     </copy>
     <copy todir="${dist}/rc1/org/openstreetmap/gui/">
@@ -69,19 +78,25 @@
 
   <target name="sign" depends="dist">
     <!-- FIXME figure out which really need signing (no its not just httpclient) -->
-    <signjar jar="${dist}/commons-codec-1.3.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/commons-httpclient-3.0-rc3.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/commons-logging.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/core.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/MinML2.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/OSMApplet.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/plugin.jar" alias="steveC" storepass="blahblah"/>
-    <signjar jar="${dist}/thinlet.jar" alias="steveC" storepass="blahblah"/>
+    <signjar jar="${dist}/commons-codec-1.3.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/commons-httpclient-3.0-rc3.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/commons-logging.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/core.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/MinML2.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/OSMApplet.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/thinlet.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
   </target>
   
   <target name="clean">
     <delete dir="${build}"/>
     <delete dir="${dist}"/>
+  </target>
+
+  <target name="run.windows" depends="sign">
+    <exec executable="cmd">
+    	<arg value="/c"/>
+    	<arg file="dist/test_osm_applet.html"/>
+    </exec>
   </target>
 
 </project>

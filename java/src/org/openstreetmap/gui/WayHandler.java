@@ -11,6 +11,7 @@ import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.processing.PropertiesMode;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.LineOnlyId;
+import org.openstreetmap.util.OsmPrimitive;
 import org.openstreetmap.util.Way;
 
 import thinlet.Thinlet;
@@ -40,32 +41,36 @@ public final class WayHandler extends GuiHandler {
 	public void updateSegmentsFromList() {
 		Object segments = find("segments");
 		removeAll(segments);
-		for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();) {
-			Line line = (Line)it.next();
-			Object item = Thinlet.create("item");
-			if (line.getName().equals("")) {
-				if (line instanceof LineOnlyId)
-					setString(item, "text", line.id+" (incomplete)");
-				else
-					setString(item, "text", line.id+" ("+line.from.id+" -> "+line.to.id+")");
-			} else
-				setString(item, "text", line.getName());
-			add(segments, item);
-			putProperty(item, "line_object", line);
-		}
+    synchronized (map) {
+      for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();) {
+        Line line = (Line)it.next();
+        Object item = Thinlet.create("item");
+        if (line.getName().equals("")) {
+          if (line instanceof LineOnlyId)
+            setString(item, "text", line.id+" (incomplete)");
+          else
+            setString(item, "text", line.id+" ("+line.from.id+" -> "+line.to.id+")");
+        } else
+          setString(item, "text", line.getName());
+        add(segments, item);
+        putProperty(item, "line_object", line);
+      }
+    }
 	}
 	
 	/**
 	 * Updates the selected segment list from the gui thinlet list
 	 */
 	private void updateListFromSegments() {
-		Way way = ((Way)osm);
-		way.unregister();
-		way.lines.clear();
-		Object[] segs = getItems(find("segments"));
-		for (int i = 0; i < segs.length; ++i)
-			way.lines.add(getProperty(segs[i], "line_object"));
-		way.register();
+    synchronized (map) {
+      Way way = ((Way)osm);
+      way.unregister();
+      way.lines.clear();
+      Object[] segs = getItems(find("segments"));
+      for (int i = 0; i < segs.length; ++i)
+        way.lines.add(getProperty(segs[i], "line_object"));
+      way.register();
+    }
 		applet.redraw();
 	}
 	
@@ -94,7 +99,7 @@ public final class WayHandler extends GuiHandler {
 
 	public void cancel() {
 		applet.extraHighlightedLine = null;
-		applet.selectedLine.clear();
+		applet.clearSelectedLine();
 		super.cancel();
 	}
 
@@ -136,9 +141,11 @@ public final class WayHandler extends GuiHandler {
 		if (sel == null)
 			return;
 		Object segment = getProperty(sel, "line_object");
-		if (applet.extraHighlightedLine == ((Line)segment).key())
+		if (applet.extraHighlightedLine == ((OsmPrimitive)segment).key())
 			applet.extraHighlightedLine = null;
-		applet.selectedLine.remove(((Line)segment).key());
+    synchronized (applet) { // prevent conc mod error wrt draw
+      applet.selectedLine.remove(((OsmPrimitive)segment).key());
+    }
 		remove(sel);
 		updateListFromSegments();
 		if (getCount(list) == 0 && mode == null)
@@ -149,20 +156,23 @@ public final class WayHandler extends GuiHandler {
 	 * Go into the select-deselect line segments modus.
 	 */
 	public void changeSegment() {
-		applet.selectedLine.clear();
+		applet.clearSelectedLine();
 		boolean sel = getBoolean(find("changeSegment"), "selected");
 		if (mode != null)
 			mode.changeSegmentMode = sel;
 		if (sel)
-			for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();)
-				applet.selectedLine.add(((Line)it.next()).key());
+      synchronized (applet) { // prevent conc mod error wrt draw
+        // should not need sync on map, since read-only and all map edits done on this thread
+        for (Iterator it = ((Way)osm).lines.iterator(); it.hasNext();)
+          applet.selectedLine.add(((OsmPrimitive)it.next()).key());
+      }
 		applet.redraw();
 	}
 
 	public void segmentSelectionChanged() {
 		Object sel = getSelectedItem(find("segments"));
 		if (sel != null)
-			applet.extraHighlightedLine = ((Line)getProperty(sel, "line_object")).key();
+			applet.extraHighlightedLine = ((OsmPrimitive)getProperty(sel, "line_object")).key();
 		else
 			applet.extraHighlightedLine = null;
 		applet.redraw();

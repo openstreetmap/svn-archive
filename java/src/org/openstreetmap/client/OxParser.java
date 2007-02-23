@@ -83,7 +83,7 @@ public class OxParser extends MinML2 {
 
 		if (qName.equals("seg")) {
 			long id = Long.parseLong(atts.getValue("id"));
-			Line line = (Line)lines.get(new Long(id));
+			OsmPrimitive line = (OsmPrimitive)lines.get(new Long(id));
 			if (line == null) {
 				line = new LineOnlyId(id);
 				lines.put(new Long(id), line);

@@ -3,6 +3,7 @@ package org.openstreetmap.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.SocketException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -23,9 +24,10 @@ import org.openstreetmap.util.Node;
 import org.openstreetmap.util.OsmPrimitive;
 import org.openstreetmap.util.OsmWriter;
 import org.openstreetmap.util.Point;
+import org.openstreetmap.util.Releaseable;
 import org.openstreetmap.util.Way;
 
-public class Adapter {
+public class Adapter implements Releaseable {
 
     /**
      * Base url string to connect to the osm server api.
@@ -36,21 +38,37 @@ public class Adapter {
     /**
      * The server command manager to deploy server commands.
      */
-    public final CommandManager commandManager = new CommandManager();
+    public final CommandManager commandManager;
 
     /**
      * Are we currently downloading OSM data?
      */
-    private boolean downloadingOSMData = false;
+    volatile private boolean downloadingOSMData = false;
     
     /**
      * Back reference to the main applet.
      */
     private OsmApplet applet;
+    
+    /**
+     * Back reference to the applet's map data.
+     */
+    private MapData map;
+    
     /**
      * The apache http credentials for the username and password.
      */
     private Credentials creds = null;
+    
+    /**
+     * The method used to download data.
+     */
+    volatile private HttpMethod abortableMethod = null;
+
+    /**
+     * Flags that user has requested abort of full map download.
+     */
+    volatile private boolean abortingMapGet = false;
 
     /**
      * Create the adapter.
@@ -61,9 +79,12 @@ public class Adapter {
      */
     public Adapter(String username, String password, OsmApplet applet, String apiUrl) {
         this.applet = applet;
+        this.map = applet.getMapData();
         this.apiUrl = apiUrl;
         creds = new UsernamePasswordCredentials(username, password);
-        System.out.println("Adapter started");
+        commandManager = new CommandManager();
+        commandManager.start();
+        debug("Adapter started");
     }
     
     /**
@@ -81,7 +102,7 @@ public class Adapter {
         + this.applet.tiles.y_y + "&col1=" + this.applet.tiles.y_x +
         "&zoom1=1&version1=1.6";
 
-      System.out.println("url is " + url);
+      debug("getCopyrights url is " + url);
 
       HttpClient client = getClient();
 
@@ -116,49 +137,74 @@ public class Adapter {
      * @param tl The top left point of the rectangle to fetch.
      * @param br The bottom right point of the rectangle to fetch.
      * @param projection The projection algorithm to use.
+     * @return Map if succeeded, <code>null</code> otherwise.
      */
-    public void getNodesLinesWays(Point tl, Point br, Tile projection) {
+    public MapData getNodesLinesWays(Point tl, Point br, Projection projection) {
       getCopyrights();
 
-      System.out.println("getting nodes and lines");
+      MapData newMap = new MapData();
+      debug("Getting OSM vector data...");
       String url = apiUrl + "map?bbox=" + tl.lon+","+br.lat+","+br.lon+","+tl.lat;
 
-      downloadingOSMData = true;
+      downloadingOSMData = true; applet.redraw();
+      
       InputStream responseStream = null;
-      HttpMethod method = null;
-      int retries = 1;
+      abortableMethod = null;
+      int retries = applet.retries;
       int attempt = 0;
       
       while( (responseStream == null) && (attempt <= retries) ) {
     	  attempt++;
     	  
-    	  System.out.println("trying attempt " + attempt + " of url: " + url);
+    	  if (attempt > 1) {
+    	    debug("retrying attempt " + attempt + " of url: " + url);
+        }
     	  HttpClient client = getClient();
 
     	  // create a method object
-    	  method = new GzipAwareGetMethod(url);
-    	  method.setFollowRedirects(true);
+    	  abortableMethod = new GzipAwareGetMethod(url);
+    	  abortableMethod.setFollowRedirects(true);
 
 	      // execute the method
 	      try {
-	        client.executeMethod(method);
-	        responseStream = method.getResponseBodyAsStream();
+	        client.executeMethod(abortableMethod);
+          debug("Connected to '" + url + "'.");
+	        responseStream = abortableMethod.getResponseBodyAsStream();
 	      } catch (HttpException he) {
 	        he.printStackTrace();
+        } catch (SocketException se) {
+          if (abortingMapGet) {
+            debug("SocketException caught: Broken out of connection."); // assume OK
+          }
+          else {
+            se.printStackTrace();
+          }
 	      } catch (IOException ioe) {
 	        ioe.printStackTrace();
 	      }
+        finally {
+          if (abortingMapGet) {
+            debug("Connection aborted.");
+            abortableMethod.releaseConnection();
+            abortableMethod = null;
+            abortingMapGet = false;
+            downloadingOSMData = false;
+            applet.redraw();
+            return null;
+          }
+        }
 	      
 	      if (responseStream == null) {
-	          System.out.println("Could not download the main data. The server may be busy?");
-	          method.releaseConnection();
+	          debug("Could not download the main data. The server may be busy?");
+	          abortableMethod.releaseConnection();
+            abortableMethod = null;
 	      }
       }
       
       if (responseStream == null) {
-          downloadingOSMData = false;
+          downloadingOSMData = false; applet.redraw();
           MsgBox.msg("Could not download the main data. The server may be busy. Try again later.");
-          return;
+          return null;
       }
 
       // Process what we got back
@@ -171,24 +217,28 @@ public class Adapter {
       while (it.hasNext()) {
         Node n = (Node)it.next();
         n.coor.project(projection);
-        applet.nodes.put(n.key(), n);
+        newMap.putNode(n);
       }
 
       it = gpxp.getLines().iterator();
       while (it.hasNext()) {
-        Line l = (Line)it.next();
-        applet.lines.put(l.key(), l);
+        Line l = (Line) it.next();
+        newMap.putLine(l);
       }
 
       it = gpxp.getWays().iterator();
       while (it.hasNext()) {
         Way w = (Way)it.next();
-        applet.ways.put(w.key(), w);
+        newMap.putWay(w);
       }
 
       // clean up the connection resources
-      method.releaseConnection();
+      abortableMethod.releaseConnection();
+      abortableMethod = null;
       downloadingOSMData = false;
+      debug("OSM data download completed.  Got " + newMap.getWays().size() + " ways and " 
+          + newMap.getNodes().size() + " nodes and " + newMap.getLines().size() + " lines.");
+      return newMap;
     }
 
 
@@ -223,8 +273,11 @@ public class Adapter {
     /**
      * Queue the update of the line segment. Return immediately.
      */
-    public void updateLine(Line line) {
-        // Cheat
+    public void updateLine(OsmPrimitive line) {
+        // Cheat. Cheat as in use property updater to update line to/from
+        // only problem being rollback - passing same line as new and old,
+        // so if fails, it will appear as if line updated, but that will
+        // not appear so on server.
         updateProperty(line, line);
     }
 
@@ -232,7 +285,7 @@ public class Adapter {
      * Queue the update of the line segment. Return immediately.
      */
     public void updateWay(Way way) {
-        // Cheat
+        // Cheat (see updateLine() comment above)
         updateProperty(way, way);
     }
 
@@ -268,10 +321,10 @@ public class Adapter {
      * @throws IOException If there is some sort of network error.
      */
     private String putXMLtoURL(final String xml, final String url) throws IOException {
-      System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+      debug("Trying to PUT xml \"" + xml + "\" to URL " + url);
 
       int retries = 0;
-      int maxRetries = 4;
+      int maxRetries = applet.retries;
       String body = null;
       PutMethod put = null;
 
@@ -286,7 +339,7 @@ public class Adapter {
               client.executeMethod(put);
         
               int rCode = put.getStatusCode();
-              System.out.println("Got response code " + rCode);
+              //debug("Got response code " + rCode);
               if (rCode == 200) {
                 body = put.getResponseBodyAsString();
               }
@@ -298,6 +351,9 @@ public class Adapter {
               if(put != null) {
                   put.releaseConnection();
               }
+          }
+          catch (Exception e) {
+            System.err.println("Error uploading - " + e);
           }
       }
       return body;
@@ -311,15 +367,26 @@ public class Adapter {
       // create a singular HttpClient object
       HttpClient client = new HttpClient();
 
-      // establish a connection within 15 seconds
-      client.getHttpConnectionManager().getParams().setConnectionTimeout(15 * 1000);
+      // establish a connection within (default 15) seconds 
+      client.getHttpConnectionManager().getParams().setConnectionTimeout(applet.timeout);
+      
       // wait up to 120 seconds for a response
-      client.getHttpConnectionManager().getParams().setSoTimeout(600 * 1000);
+      client.getHttpConnectionManager().getParams().setSoTimeout(120 * 1000);
       // use our credentials with the request
       client.getState().setCredentials(AuthScope.ANY, creds);
       return client;
     }
 
+    /**
+     * Abort HTTP get of map data.
+     */
+    public void abortMapGet() {
+      if (abortableMethod != null && downloadingOSMData) {
+        debug("attempting to abort HTTP get...");
+        abortableMethod.abort();
+        abortingMapGet = true;
+      }
+    }
 
     /**
      * Delete a specific node in the intern node list.
@@ -328,18 +395,18 @@ public class Adapter {
       private Node node;
       public NodeDeleter(Node node) {this.node = node;}
       public void preConnectionModifyData() {
-        System.out.println("tyring to delete node with " + node.lines.size() + " lines");
-        applet.nodes.remove(node.key());
-        for (Iterator it = node.lines.iterator(); it.hasNext();) {
-          Line line = (Line)it.next();
-          applet.lines.remove(line.key());
-          // TODO - does the database do this automagically?
-          // deleteLine(line);
+        synchronized (map) {
+          debug("trying to delete node with " + node.lines.size() + " lines");
+          map.removeNode(node.key());
+          for (Iterator it = node.lines.iterator(); it.hasNext();) {
+            Line line = (Line)it.next();
+            map.removeLine(line);
+          }
         }
       }
       public boolean connectToServer() throws IOException {
         String url = apiUrl + "node/" + node.id;
-        System.out.println("trying to delete node by throwing HTTP DELETE at " + url);
+        debug("trying to delete node by throwing HTTP DELETE at " + url);
 
         HttpClient client = getClient();
 
@@ -349,7 +416,7 @@ public class Adapter {
         del.releaseConnection();
 
         if (rCode == 200) {
-          System.err.println("node removed successfully: " + node);
+          debug("node removed successfully: " + node);
           return true;
         }
         System.err.println("error removing node: " + node);
@@ -357,10 +424,12 @@ public class Adapter {
         return false;
       }
       public void undoModifyData() {
-        applet.nodes.put(node.key(), node);
-        for (Iterator it = node.lines.iterator(); it.hasNext();) {
-          Line line = (Line)it.next();
-          applet.lines.put(line.key(), line);
+        synchronized (map) {
+          map.putNode(node);
+          for (Iterator it = node.lines.iterator(); it.hasNext();) {
+            Line line = (Line) it.next();
+            map.putLine(line);
+          }
         }
       }
       public void postConnectionModifyData() {}
@@ -380,40 +449,43 @@ public class Adapter {
       }
 
       public void preConnectionModifyData() {
-        applet.nodes.put(tempKey, node);
+        map.putNewNode(tempKey, node);
       }
 
       public boolean connectToServer() throws IOException {
-        String xml = "<osm><node id=\"0\" tags=\"\" lon=\"" + node.coor.lon + "\" lat=\"" + node.coor.lat + "\" /></osm>";
+        String xml;
         String url = apiUrl + "node/0";
-
-        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+        synchronized (map) {
+          StringWriter s = new StringWriter();
+          OsmWriter.output(s, node);
+          xml = s.getBuffer().toString();
+        }
 
         String response = putXMLtoURL(xml, url);
         if (response != null) {
-          System.out.println("got reponse " + response);
+          if (response != "") debug("got response " + response);
           response = response.trim(); // get rid of leading and trailing whitespace
           id = Long.parseLong(response);
         }
 
         if (id != -1) {
-          System.err.println("node created successfully: " + node);
+          debug("node created successfully: " + node);
           return true;
         }
         System.err.println("error creating node: " + node);
         return false;
       }
 
-
-
       public void undoModifyData() {
-        applet.nodes.remove(tempKey);
+        map.removeNode(tempKey);
       }
 
       public void postConnectionModifyData() {
-        node.id = id;
-        applet.nodes.remove(tempKey);
-        applet.nodes.put(node.key(), node);
+        synchronized (map) {
+          node.id = id;
+          map.removeNode(tempKey);
+          map.putNode(node);
+        }
       }
     }
 
@@ -433,44 +505,52 @@ public class Adapter {
       private final float oldY;
 
       public NodeMover(Node node, double newLat, double newLon, float newX, float newY) {
-        this.node = node;
-        this.newLat = newLat;
-        this.newLon = newLon;
-        this.newX = newX;
-        this.newY = newY;
-        oldLat = node.coor.lat;
-        oldLon = node.coor.lon;
-        oldX = node.coor.x;
-        oldY = node.coor.y;
+        synchronized (map) { // just keeping consistent
+          this.node = node;
+          this.newLat = newLat;
+          this.newLon = newLon;
+          this.newX = newX;
+          this.newY = newY;
+          oldLat = node.coor.lat;
+          oldLon = node.coor.lon;
+          oldX = node.coor.x;
+          oldY = node.coor.y;
+        }
       }
 
       public void preConnectionModifyData() {
-        node.coor.lat = newLat;
-        node.coor.lon = newLon;
-        node.coor.x = newX;
-        node.coor.y = newY;
+        synchronized (map) { // just keeping updates atomic
+          node.coor.lat = newLat;
+          node.coor.lon = newLon;
+          node.coor.x = newX;
+          node.coor.y = newY;
+        }
       }
       public boolean connectToServer() throws IOException {
-        String xml = "<osm><node tags=\"" + node.getTags() + "\" lon=\""
-          + node.coor.lon + "\" lat=\"" + node.coor.lat + "\" id=\""
-          + node.id + "\" /></osm>";
-
-        String url = apiUrl + "node/" + node.id;
-
-        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+        String xml;
+        String url;
+        synchronized (map) {
+          StringWriter s = new StringWriter();
+          OsmWriter.output(s, node);
+          xml = s.getBuffer().toString();
+          url = apiUrl + "node/" + node.id;
+        }
 
         String response = putXMLtoURL(xml, url);
         if (response == null) {
           System.err.println("error moving node: " + node + ", got response '" + response + "' from the abyss");
           return false;
         }
+        debug("node moved successfully: " + node);
         return true;
       }
       public void undoModifyData() {
-        node.coor.lat = oldLat;
-        node.coor.lon = oldLon;
-        node.coor.x = oldX;
-        node.coor.y = oldY;
+        synchronized (map) {
+          node.coor.lat = oldLat;
+          node.coor.lon = oldLon;
+          node.coor.x = oldX;
+          node.coor.y = oldY;
+        }
       }
       public void postConnectionModifyData() {}
     }
@@ -479,7 +559,8 @@ public class Adapter {
      * Create a line segment in the intern map.
      */
     private class LineCreator implements ServerCommand {
-      private Line line;
+      /** New line, or shallow clone of it once added to map */
+      private Line line;  
       private String tempKey;
       private long id = -1;
 
@@ -489,33 +570,59 @@ public class Adapter {
       }
 
       public void preConnectionModifyData() {
-        applet.lines.put(tempKey, line);
-        line.register();
+        synchronized (map) {
+          map.putNewLine(tempKey, line); 
+          line.register();
+        }
       }
-      public boolean connectToServer() throws IOException {
-        String xml = "<osm><segment id=\"0\" tags=\"\" from=\"" + line.from.id + "\" to=\"" + line.to.id + "\" /></osm>";
-        String url = apiUrl + "segment/0";
+      
+      // e.g. currently, applet doesn't allow deletion, or property edit of new lines: 
+      // that should be allowed, but in queueing deletion it would unregister()
+      // the node references of the line - any pending line creator would
+      // subsequently fail in connecttoServer() because the underlying data
+      // has been modified.
+      //
+      // obviously preferable to clone for this add then UI can delete fine.
+      // next step would be analysing if actions can be performed on queued
+      // commands only (i.e. a delete after a queued add can be implemented
+      // as undo of add instead).
+      // (see CommandManager comments for more on ideal processing of command 
+      // queue). 
 
-        System.out.println("Trying to PUT xml \"" + xml + "\" to URL " + url);
+      public boolean connectToServer() throws IOException {
+        String xml;
+        String url = apiUrl + "segment/0";
+        // NB: have been hanging onto line outside of map - what grim fate awaits?
+        synchronized (map) {
+          StringWriter s = new StringWriter();
+          OsmWriter.output(s, line);
+          xml = s.getBuffer().toString();
+        }
 
         String response = putXMLtoURL(xml, url);
         if (response != null) {
-          System.out.println("got reponse " + response);
+          //debug("got response " + response);
           id = Long.parseLong(response.trim());
-          System.err.println("line created successfully: " + line);
+          debug("line created successfully: " + id);
           return true;
         }
         System.err.println("error creating line: " + line);
         return false;
       }
       public void undoModifyData() {
-        applet.lines.remove(tempKey);
-        line.unregister();
+        // TODO without checking, these could fail - e.g. new map
+        // would need to re-acquire references to nodes
+        synchronized (map) {
+          map.removeLine(tempKey);
+          line.unregister();
+        }
       }
       public void postConnectionModifyData() {
-        line.id = id;
-        applet.lines.remove(tempKey);
-        applet.lines.put(line.key(), line);
+        synchronized (map) {
+          line.id = id;
+          map.removeLine(tempKey);
+          map.putLine(line); // places at key based on new id
+        }
       }
     }
 
@@ -526,6 +633,7 @@ public class Adapter {
       private OsmPrimitive oldPrimitive;
       private OsmPrimitive newPrimitive;
       public PropertyUpdater(OsmPrimitive oldPrimitive, OsmPrimitive newPrimitive) {
+        // ids and classes not editable, so don't worry about sync
         if (oldPrimitive.getClass() != newPrimitive.getClass())
           throw new IllegalArgumentException("Class mismatch");
         if (oldPrimitive.id != newPrimitive.id)
@@ -535,6 +643,7 @@ public class Adapter {
       }
 
       public void preConnectionModifyData() {
+        // already updated by properties editor?
       }
 
       public boolean connectToServer() throws IOException {
@@ -545,7 +654,8 @@ public class Adapter {
 
         String response = putXMLtoURL(xml, url);
         if (response != null) {
-          System.out.println("got reponse " + response);
+          //debug("got response " + response);
+          debug("updated primitive successfully: " + newPrimitive);
           return true;
         }
         System.err.println("error updating line: " + newPrimitive );
@@ -570,8 +680,10 @@ public class Adapter {
       }
 
       public void preConnectionModifyData() {
-        applet.ways.put(tempKey, way);
-        way.register();
+        synchronized (map) {
+          map.putNewWay(tempKey, way);
+          way.register();
+        }
       }
       public boolean connectToServer() throws IOException {
         StringWriter s = new StringWriter();
@@ -579,16 +691,15 @@ public class Adapter {
         String xml = s.getBuffer().toString();
         String url = apiUrl + "way/0";
 
-
         String response = putXMLtoURL(xml, url);
         if (response != null) {
           try {
             id = Long.parseLong(response.trim());
           } catch (NumberFormatException e) {
-            System.out.println("got strange reponse " + response);
+            debug("got strange response " + response);
             return false;
           }
-          System.err.println("way created successfully: " + way);
+          debug("way created successfully: " + way);
           return true;
         }
         System.err.println("error creating way: " + way);
@@ -596,18 +707,23 @@ public class Adapter {
       }
 
       public void undoModifyData() {
-        applet.ways.remove(tempKey);
-        way.unregister();
+        synchronized (map) {
+          map.removeWay(tempKey);
+          way.unregister();
+        }
       }
       public void postConnectionModifyData() {
-        way.id = id;
-        applet.ways.remove(tempKey);
-        applet.ways.put(way.key(), way);
+        synchronized (map) {
+          way.id = id;
+          map.removeWay(tempKey);
+          map.putWay(way);
+        }
       }
     }
 
     /**
      * Remove (delete) any primitive from the server.
+     * TODO Overlap with NodeDeleter?
      */
     private class Remover implements ServerCommand {
       private OsmPrimitive osm;
@@ -617,31 +733,46 @@ public class Adapter {
       }
 
       public void preConnectionModifyData() {
-        osm.getMainTable(applet).remove(osm.key());
-        osm.unregister();
+        synchronized (map) {
+          osm.getMainTable(applet).remove(osm.key());
+          osm.unregister();
+        }
       }
       public boolean connectToServer() throws IOException {
         String url = apiUrl + osm.getTypeName() + "/" + osm.id;
-        System.out.println("trying to delete object HTTP DELETE at " + url);
+        debug("trying to delete object HTTP DELETE at " + url);
         HttpClient client = getClient();
 
+        // TODO add retries to delete?
         DeleteMethod del = new DeleteMethod(url);
         client.executeMethod(del);
         int rCode = del.getStatusCode();
         del.releaseConnection();
         if (rCode == 200) {
-          System.err.println("removed successfully: " + osm);
+          debug("removed successfully: " + osm);
           return true;
         }
         System.err.println("error removing: " + osm);
         return false;
       }
       public void undoModifyData() {
-        osm.getMainTable(applet).put(osm.key(), osm);
-        osm.register();
+        synchronized (map) {
+          osm.getMainTable(applet).put(osm.key(), osm);
+          osm.register();
+        }
       }
       public void postConnectionModifyData() {
-        applet.redraw();
       }
+    }
+    private void debug(String s) {
+        applet.debug(s);
+    }
+
+    /* (non-Javadoc)
+     * @see org.openstreetmap.util.Releaseable#release()
+     */
+    public void release() {
+      commandManager.release();
+      applet = null;
     }
 }

@@ -5,7 +5,9 @@ package org.openstreetmap.processing;
 
 import java.util.Iterator;
 
+import org.openstreetmap.client.MapData;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
 
 /**
  * Edit mode to move a node.
@@ -32,19 +34,20 @@ public class NodeMoveMode extends EditMode {
 	}
 
 	public void mousePressed() {
-		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
-			Node p = (Node)it.next();
-			if (applet.mouseOverPoint(p.coor)) {
-				applet.selectedNode = p;
-				OsmApplet.println("selected: " + p);
-				lastOffsetX = p.coor.x - applet.mouseX;
-				lastOffsetY = p.coor.y - applet.mouseY;
-				origX = p.coor.x;
-				origY = p.coor.y;
-				break;
+    OsmPrimitive p = applet.getNearest();
+    if (p instanceof Node) {
+			Node n = (Node) p;
+			if (applet.mouseOverPoint(n.coor)) {
+				applet.selectedNode = n;
+				applet.debug("selected: " + n);
+				lastOffsetX = n.coor.x - applet.mouseX;
+				lastOffsetY = n.coor.y - applet.mouseY;
+				origX = n.coor.x;
+				origY = n.coor.y;
+        applet.setOpacity(40); // make roads/nodes see through to ease accurate positioning
 			}
 		}
-		OsmApplet.println("selected: " + applet.selectedNode);
+		applet.debug("selected: " + applet.selectedNode);
 	}
 
 	public void mouseDragged() {
@@ -56,6 +59,7 @@ public class NodeMoveMode extends EditMode {
 		} else {
 			OsmApplet.println("no selectedNode");
 		}
+    applet.redraw();
 	}
 
 	public void mouseReleased() {
@@ -72,6 +76,7 @@ public class NodeMoveMode extends EditMode {
 	}
 
 	public void unset() {
+    applet.setOpacity(255);
 		if (applet.selectedNode != null) {
 			double origLat = applet.selectedNode.coor.lat;
 			double origLon = applet.selectedNode.coor.lon;

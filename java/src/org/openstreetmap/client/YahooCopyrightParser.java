@@ -4,16 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
 
-import org.openstreetmap.util.Line;
-import org.openstreetmap.util.LineOnlyId;
-import org.openstreetmap.util.Node;
-import org.openstreetmap.util.OsmPrimitive;
-import org.openstreetmap.util.Way;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

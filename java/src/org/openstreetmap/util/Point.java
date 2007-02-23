@@ -19,7 +19,7 @@
 
 package org.openstreetmap.util;
 
-import org.openstreetmap.client.Tile;
+import org.openstreetmap.client.Projection;
 
 /**
  * Minimal representation of OpenStreetMap GPX point (lat/lon pair)
@@ -35,7 +35,7 @@ public class Point {
 		this.lon = lon;
 	}
 
-	public Point(float x, float y, Tile projection) {
+	public Point(float x, float y, Projection projection) {
 		this.x = x;
 		this.y = y;
 		this.lat = projection.lat(y);
@@ -43,29 +43,47 @@ public class Point {
 		projected = true;
 	}
 
-	public void project(Tile projection){
+	public void project(Projection projection){
 		x = (float)projection.x(lon);
 		y = (float)projection.y(lat);
 		projected = true;
 	}
 
-	public void unproject(Tile projection){
+	public void unproject(Projection projection){
 		this.lat = projection.lat(y);
 		this.lon = projection.lon(x);
 	}
 
+  /**
+   * Provides absolute distance between this point at the specified
+   * point, in projected space.
+   * 
+   * <b>NB: For efficiency in using relative distance comparisons for,
+   * e.g., nearest searchs, use distanceSq</b>
+   */
 	public float distance(Point other) {
 		return distance(other.x,other.y);
 	}
 
 	/**
-	 * @deprecated Imi thinks, Node.distanceSq is better.
+   * Provides absolute distance between this point at the specified
+   * point, in projected space.
+   * 
+   * <b>NB: For efficiency in using relative distance comparisons for,
+   * e.g., nearest searchs, use distanceSq</b>
 	 */
 	public float distance(float x, float y) {
-		if (projected && (this.x != x || this.y != y)) {
-			return (float)Math.sqrt((x-this.x)*(x-this.x)+(y-this.y)*(y-this.y));
-		}
-		return 0.0f;
+  	return (float)Math.sqrt(distanceSq(x, y));
 	}
+
+  /**
+   * @return Square of distance between this and specified point.
+   */
+  public float distanceSq(float x, float y) {
+    if (projected && (this.x != x || this.y != y)) {
+      return (float) (x-this.x)*(x-this.x)+(y-this.y)*(y-this.y);
+    }
+    return 0.0f;
+  }
 }
 

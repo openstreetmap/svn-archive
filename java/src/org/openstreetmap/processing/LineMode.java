@@ -5,8 +5,10 @@ package org.openstreetmap.processing;
 
 import java.util.Iterator;
 
+import org.openstreetmap.client.MapData;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
 
 /**
  * Edit mode to draw a line segment between two points.
@@ -25,32 +27,29 @@ public class LineMode extends EditMode {
 	}
 
 	public void mousePressed() {
-		for (Iterator it = applet.nodes.values().iterator(); it.hasNext();) {
-			Node p = (Node)it.next();
-			if (applet.mouseOverPoint(p.coor)) {
-				applet.start = p;
-				break;
-			}
-		}
+    OsmPrimitive p = applet.getNearest();
+    if (p instanceof Node) {
+      if (applet.mouseOverPoint(((Node) p).coor)) {
+        applet.start = (Node) p;
+      }
+    }
 	}
 
 	public void mouseReleased() {
-		for (Iterator e = applet.nodes.values().iterator(); e.hasNext();) {
-			Node p = (Node)e.next();
-			if (applet.mouseOverPoint(p.coor)) {
-				if (applet.start != null) {
-					Line line = new Line(applet.start, p);
-					String tempKey = "temp_" + Math.random();
-					if (applet.osm != null) {
-						applet.osm.createLine(line, tempKey);
-					}
-				}
-				break;
-			}
-		}
+    OsmPrimitive p = applet.getNearest();
+    if (p instanceof Node) {
+      if (applet.mouseOverPoint(((Node) p).coor)) {
+        if (applet.start != null && !applet.start.equals(p)) {
+          Line line = new Line(applet.start, (Node) p);
+          String tempKey = "temp_" + Math.random();
+          if (applet.osm != null) {
+            applet.osm.createLine(line, tempKey);
+          }
+        }
+      }
+    }
 		applet.start = null;
-		applet.tempLine.from = null;
-		applet.tempLine.to = null;
+		applet.resetTempLine();
 	}
 
 	public void draw() {
@@ -66,4 +65,8 @@ public class LineMode extends EditMode {
 	public String getDescription() {
 		return "Drag to draw a line segment";
 	}
+
+  public void mouseDragged() {
+    applet.redraw();
+  }
 }

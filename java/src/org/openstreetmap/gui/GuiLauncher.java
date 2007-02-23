@@ -48,6 +48,7 @@ public class GuiLauncher extends Dialog implements WindowListener {
 		y = (screen.height-getPreferredSize().height)/2;
 		setLocation(x,y);
 
+    // TODO exposure of this during construction potentially unsafe
 		if (handler instanceof GuiHandler)
 			((GuiHandler)handler).dlg = this;
 

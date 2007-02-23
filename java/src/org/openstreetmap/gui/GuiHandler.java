@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 
+import org.openstreetmap.client.MapData;
 import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.OsmPrimitive;
 
@@ -40,6 +41,7 @@ public class GuiHandler extends Thinlet {
     GuiLauncher dlg;
 
     protected final OsmApplet applet;
+    protected final MapData map;
     private static int lastSelectedTab = 0;
 
     /**
@@ -63,6 +65,7 @@ public class GuiHandler extends Thinlet {
     public GuiHandler(OsmPrimitive osm, OsmApplet applet) {
         this.osm = osm;
         this.applet = applet;
+        this.map = applet.getMapData();
         URL ressource = getClass().getResource("/data/"+osm.getTypeName()+".xml");
         try {
             add(parse(ressource.openStream()));
@@ -345,15 +348,17 @@ public class GuiHandler extends Thinlet {
     public void ok() {
         Object tags = find("advanced_table");
         Object[] rows = getItems(tags);
-        osm.getTags().clear();
-        for (int i = 0; i < rows.length; ++i) {
-            Object keyObj = getItem(rows[i],0);
-            Object valueObj = getItem(rows[i],1);
-            if (keyObj == null || valueObj == null)
-                continue; // bug in thinlet: old values that did not get deleted properly
-            String key = getString(keyObj, "text");
-            String value = getString(valueObj,"text");
-            osm.tagsput(key, value);
+        synchronized (map) {  // updating map collection (tag), so must sync
+          osm.getTags().clear();
+          for (int i = 0; i < rows.length; ++i) {
+              Object keyObj = getItem(rows[i],0);
+              Object valueObj = getItem(rows[i],1);
+              if (keyObj == null || valueObj == null)
+                  continue; // bug in thinlet: old values that did not get deleted properly
+              String key = getString(keyObj, "text");
+              String value = getString(valueObj,"text");
+              osm.tagsput(key, value);
+          }
         }
         cancelled = false;
         lastSelectedTab = getInteger(find("mainTab"), "selected");

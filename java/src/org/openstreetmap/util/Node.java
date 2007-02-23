@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Vector;
 
-import org.openstreetmap.client.Tile;
+import org.openstreetmap.client.Projection;
 import org.openstreetmap.processing.OsmApplet;
 
 /**
@@ -45,7 +45,7 @@ public class Node extends OsmPrimitive {
 	/**
 	 * Create the node from projected values.
 	 */
-	public Node(float x, float y, Tile projection) {
+	public Node(float x, float y, Projection projection) {
 		coor = new Point(x, y, projection);
 	}
 
@@ -84,7 +84,7 @@ public class Node extends OsmPrimitive {
 	}
 
 	public Map getMainTable(OsmApplet applet) {
-		return applet.nodes;
+		return applet.getMapData().getNodes();
 	}
 
 	public String getTypeName() {

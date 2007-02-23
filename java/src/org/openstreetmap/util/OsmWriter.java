@@ -73,7 +73,7 @@ public class OsmWriter {
 		out.print("  <"+"way"+" id='"+w.id+"'");
 		out.println(">");
 		for (Iterator it = w.lines.iterator(); it.hasNext();)
-			out.println("    <seg id='"+((Line)it.next()).id+"' />");
+			out.println("    <seg id='"+((OsmPrimitive)it.next()).id+"' />");
 		addTags(w.getTags(), "way", false);
 	}
 

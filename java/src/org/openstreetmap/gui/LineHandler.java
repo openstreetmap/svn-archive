@@ -3,6 +3,7 @@ package org.openstreetmap.gui;
 import org.openstreetmap.processing.OsmApplet;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
 
 /**
  * Handles line segment editing
@@ -11,19 +12,22 @@ import org.openstreetmap.util.Node;
  */
 public class LineHandler extends GuiHandler {
 
-    public LineHandler(Line line, OsmApplet applet) {
+    public LineHandler(OsmPrimitive line, OsmApplet applet) {
         super(line, applet);
         updateBasic();
         updateNodeTabFromOsm();
     }
 
     public void turnAround() {
+      // sync not essential to prevent concurrent mod, but keeps everything consistent
+      synchronized (map) { 
         Line ls = ((Line)osm);
         Node n = ls.from;
         ls.from = ls.to;
         ls.to = n;
-        updateNodeTabFromOsm();
-        applet.redraw();
+      }
+      updateNodeTabFromOsm();
+      applet.redraw();
     }
 
     public void updateLineNode(String what) {
@@ -35,7 +39,7 @@ public class LineHandler extends GuiHandler {
             MsgBox.msg("Please enter the id of the target node.");
             return;
         }
-        Node newNode = (Node)applet.nodes.get(Node.key(id));
+        Node newNode = (Node) map.getNode(Node.key(id));
         if (newNode == null) {
             MsgBox.msg("Node with id "+id+" not found.");
             return;

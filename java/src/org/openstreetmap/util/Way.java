@@ -54,7 +54,7 @@ public class Way extends OsmPrimitive {
 	}
 
 	public Map getMainTable(OsmApplet applet) {
-		return applet.ways;
+		return applet.getMapData().getWays();
 	}
 
 	public String getTypeName() {
@@ -71,6 +71,7 @@ public class Way extends OsmPrimitive {
 			((Line)it.next()).ways.remove(this);
 	}
 
+  // TODO confusing breakdown of responsibilities w.r.t. doCopyFrom()
 	public Object clone() {
 		Way way = (Way)super.clone();
 		way.lines = new ArrayList(lines); 
@@ -80,4 +81,12 @@ public class Way extends OsmPrimitive {
 	public void doCopyFrom(OsmPrimitive other) {
 		lines = ((Way)other).lines;
 	}
+
+  /**
+   * Whether way is one way, and if it is, which way round.
+   * @return ONEWAY_NOT, ONEWAY_FORWARDS, ONEWAY_BACKWARDS or ONEWAY_UNDEFINED.
+   */
+  public byte getOneWay() {
+    return getOneWay(getTags());
+  }
 }

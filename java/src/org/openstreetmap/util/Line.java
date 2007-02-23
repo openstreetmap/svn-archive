@@ -80,41 +80,59 @@ public class Line extends OsmPrimitive {
 	 * @return The pixel length, if projected.
 	 */
 	public float length() {
-		// TODO check != 0
 		return from.coor.distance(to.coor);
 	}
 
-	
-	/**
-	 * @return The pixel distance to node c, if projected.
-	 */
-	public float distance(Node c) {
-		return distance(c.coor.x, c.coor.y);
-	}
+  /**
+   * @return The square of pixel distance to node c, if projected.
+   */
+  public float distanceSq(Node c) {
+    return distanceSq(c.coor.x, c.coor.y);
+  }
 
 	/**
-	 * @return The pixel distance to point x,y, if projected.
+	 * @return The square of pixel distance to point x,y, if projected.
 	 */
-	public float distance(float x, float y) {
+	public float distanceSq(float x, float y) {
 		// project x/y onto line a->b
 		// first find parameter (how far along a->b are we?
 		float u = (((x - from.coor.x) * (to.coor.x - from.coor.x)) + ((y - from.coor.y) * (to.coor.y - from.coor.y)))
 				/ ((to.coor.y - from.coor.y) * (to.coor.y - from.coor.y) + (to.coor.x - from.coor.x) * (to.coor.x - from.coor.x));
 		float d = 0.0f;
 		if (u <= 0.0f) {
-			d = from.coor.distance(x, y);
+			d = from.coor.distanceSq(x, y);
 		} else if (u >= 1.0f) {
-			d = to.coor.distance(x, y);
+			d = to.coor.distanceSq(x, y);
 		} else {
 			// project x/y onto line a->b
 			float px = from.coor.x + (u * (to.coor.x - from.coor.x));
 			float py = from.coor.y + (u * (to.coor.y - from.coor.y));
-			d = (float)Math.sqrt((x - px) * (x - px) + (y - py) * (y - py));
+			d = (x - px) * (x - px) + (y - py) * (y - py);
 		}
 		return d;
 	}
 	
-	/**
+  /**
+   * <b>NB: For efficiency in using relative distance comparisons for,
+   * e.g., nearest searchs, use distanceSq</b>
+   *
+   * @return The pixel distance to node c, if projected.
+   */
+  public float distance(Node c) {
+    return (float)Math.sqrt(distanceSq(c.coor.x, c.coor.y));
+  }
+
+  /**
+   * <b>NB: For efficiency in using relative distance comparisons for,
+   * e.g., nearest searchs, use distanceSq</b>
+   *
+   * @return The pixel distance to point x,y, if projected.
+   */
+  public float distance(float x, float y) {
+    return (float)Math.sqrt(distanceSq(x, y));
+  }
+
+  /**
 	 * @return Whether the given coordinates is "over" this line segment. 
 	 */
 	public boolean mouseOver(float mouseX, float mouseY, float strokeWeight) {
@@ -141,7 +159,7 @@ public class Line extends OsmPrimitive {
 	}
 
 	public Map getMainTable(OsmApplet applet) {
-		return applet.lines;
+		return applet.getMapData().getLines();
 	}
 
 	public String getTypeName() {
@@ -173,5 +191,28 @@ public class Line extends OsmPrimitive {
 		from = ((Line)other).from;
 		to = ((Line)other).to;
 	}
+  
+  /**
+   * Whether segment is one way, and if it is, which way round.
+   * @return ONEWAY_NOT, ONEWAY_FORWARDS, ONEWAY_BACKWARDS or ONEWAY_UNDEFINED.
+   */
+  public byte getOneWay() {
+    byte segOneWay = getOneWay(getTags());
+    if (segOneWay != ONEWAY_UNDEFINED || ways.isEmpty()) {
+      return segOneWay;  // segment takes precedence over way one-wayness
+    }
+    byte wayOneWay = ((Way) ways.get(0)).getOneWay();
+    for (int i=1; i < ways.size(); i++) {
+      byte nextOneWay = ((Way) ways.get(i)).getOneWay();
+      if (wayOneWay == ONEWAY_UNDEFINED) {
+        wayOneWay = nextOneWay; // UNDEFINED is overriden by any other value
+      }
+      else if (nextOneWay != ONEWAY_UNDEFINED && nextOneWay != wayOneWay) {
+        System.err.println("Conflicting oneway definitions for segment " + id);
+        return ONEWAY_UNDEFINED; // conflict between two way definitions for segment!
+      }
+    }
+    return wayOneWay;
+  }
 }
 

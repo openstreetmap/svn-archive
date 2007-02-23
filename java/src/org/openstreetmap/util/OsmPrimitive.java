@@ -11,7 +11,13 @@ import org.openstreetmap.processing.OsmApplet;
  * @author Imi
  */
 abstract public class OsmPrimitive implements Cloneable {
-	/**
+
+  public static final byte ONEWAY_FORWARDS = 1;
+  public static final byte ONEWAY_NOT = 0;
+  public static final byte ONEWAY_BACKWARDS = -1;
+  public static final byte ONEWAY_UNDEFINED = -2;
+  
+  /**
 	 * The unique (among all other objects of the same type) identifier.
 	 */
 	public long id = 0;
@@ -95,13 +101,15 @@ abstract public class OsmPrimitive implements Cloneable {
 	final public void copyFrom(OsmPrimitive other) {
 		unregister();
 		id = other.id;
+    System.out.println("OsmPrimitive.copyFrom(): other.tags == tags? " + (other.tags == tags));
 		tags = other.tags;
 		doCopyFrom(other);
 		register();
 	}
 
 	/**
-	 * Implementation of subclasses must copy the references of the other object to itself.
+	 * Implementation of subclasses must copy the references (other than the tags)
+   * of the other object to itself.
 	 * They may assume that the class of the parameter match their own class.
 	 * @return 
 	 */
@@ -125,4 +133,25 @@ abstract public class OsmPrimitive implements Cloneable {
     tags.put(k,v);
   }
   
+  /**
+   * Whether feature is one way, and if it is, which way round.
+   * @return ONEWAY_NOT, ONEWAY_FORWARDS, ONEWAY_BACKWARDS or ONEWAY_UNDEFINED.
+   */
+  protected static byte getOneWay(Map map) {
+    if (map == null) return 0;
+    String oneWay = (String) map.get("oneway");
+    if (oneWay == null) {
+      return ONEWAY_UNDEFINED;
+    }
+    else if (oneWay.equals("-1")) {
+      return ONEWAY_BACKWARDS;
+    }
+    else if (oneWay.equals("yes") || oneWay.equals("true")) {
+      return ONEWAY_FORWARDS;
+    }
+    else if (oneWay.equals("no") || oneWay.equals("false")) {
+      return ONEWAY_NOT;
+    }
+    return ONEWAY_UNDEFINED;
+  }
 }

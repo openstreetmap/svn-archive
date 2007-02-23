@@ -25,15 +25,18 @@ public class MoveMode extends EditMode {
 	PImage hand;
 
 	public void mouseReleased() {
-		applet.cursor(OsmApplet.ARROW);
+    applet.cursor(OsmApplet.HAND);
+    applet.redraw();
 	}
 
 	public void mousePressed() {
+    applet.cursor(OsmApplet.MOVE);
 		lastmX = applet.mouseX;
 		lastmY = applet.mouseY;
 	}
 
 	public void mouseDragged() {
+    applet.cursor(OsmApplet.MOVE);
 		applet.tiles.drag(lastmX - applet.mouseX, applet.mouseY - lastmY);
 		lastmX = applet.mouseX;
 		lastmY = applet.mouseY;
@@ -53,4 +56,8 @@ public class MoveMode extends EditMode {
 	public String getDescription() {
 		return "Move the displayed area";
 	}
+
+  public int getMinAppletStatus() {
+    return OsmApplet.BROWSEABLE;
+  }
 }

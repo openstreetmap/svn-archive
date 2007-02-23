@@ -3,12 +3,14 @@ package org.openstreetmap.processing;
 import java.awt.Point;
 import java.util.Iterator;
 
+import org.openstreetmap.client.MapData;
 import org.openstreetmap.gui.GuiHandler;
 import org.openstreetmap.gui.GuiLauncher;
+import org.openstreetmap.gui.MsgBox;
 import org.openstreetmap.gui.WayHandler;
 import org.openstreetmap.util.Line;
 import org.openstreetmap.util.LineOnlyId;
-import org.openstreetmap.util.Node;
+import org.openstreetmap.util.OsmPrimitive;
 import org.openstreetmap.util.Way;
 
 /**
@@ -27,43 +29,60 @@ public class WayMode extends EditMode {
 		this.applet = applet;
 	}
 
-	//TODO: There should be already a near* function in OsmApplet. Use this.
 	public void mouseReleased() {
-		Line nearLine = null;
-		float nearDist = Float.MAX_VALUE;
-		for (Iterator it = applet.lines.values().iterator(); it.hasNext();) {
-			Line line = (Line)it.next();
-			if (line instanceof LineOnlyId)
-				continue;
-			Node n = new Node(applet.mouseX, applet.mouseY, applet.tiles);
-			float dist = line.distance(n);
-			if (dist < nearDist) {
-				nearDist = dist;
-				nearLine = line;
-			}
-		}
-		if (nearDist < 20) {
-			if (applet.selectedLine.contains(nearLine.key())) {
-				applet.selectedLine.remove(nearLine.key());
-				if (applet.selectedLine.isEmpty() && dlg != null)
-					dlg.setVisible(false);
-			} else {
-				applet.selectedLine.add(nearLine.key());
-				if (applet.selectedLine.size() == 1)
-					openProperties();
-			}
+    Line nearLine = null;
+    OsmPrimitive nearPrimitive = null;
+    
+    nearPrimitive = applet.getNearest();
+    if (nearPrimitive instanceof Line) {
+      if (nearPrimitive.id == 0) {
+        MsgBox.msg("Cannot use new segment, still awaiting server response.");
+      }
+      else {
+        nearLine = (Line) nearPrimitive;
+      }
+    }
+    if (nearLine == null) {
+      // MsgBox.msg("No line selected."); // TODO error message display that doesn't require OK
+    }
+    else {
+      boolean closeDialog = false;
+      boolean openDialog = false;
+      synchronized (applet) { // guard against concurrent mods in selected line
+        if (applet.selectedLine.contains(nearLine.key())) {
+          applet.selectedLine.remove(nearLine.key());
+          if (applet.selectedLine.isEmpty() && dlg != null)
+            closeDialog = true;
+        } else {
+          applet.selectedLine.add(nearLine.key());
+          if (applet.selectedLine.size() == 1)
+            openDialog = true;
+        }
+      }
+      // NB: call from outside of applet sync
+      if (closeDialog) {
+        dlg.setVisible(false);
+      }
+      else if (openDialog) {
+        openProperties();
+      }
 			if (dlg != null) {
 				Way way = (Way)((GuiHandler)dlg.handler).osm;
-				way.lines.clear();
-				for (Iterator it = applet.selectedLine.iterator(); it.hasNext();) {
-					String lineKey = (String)it.next();
-					Line line = (Line)applet.lines.get(lineKey);
-					if (line != null)
-						way.lines.add(line);
-					else
-						way.lines.add(new LineOnlyId(Line.getIdFromKey(lineKey)));
-				}
-				((WayHandler)dlg.handler).updateSegmentsFromList();
+        // sync'ed iteration to prevent concurrent mod - .osm still points to object in map
+        MapData map = applet.getMapData();
+        synchronized (map) {
+          way.lines.clear();
+          // no need to sync on selectedline - all updates done on this event thread
+          for (Iterator it = applet.selectedLine.iterator(); it.hasNext();) {
+            String lineKey = (String)it.next();
+            Line line = (Line) map.getLine(lineKey);
+            if (line != null)
+              way.lines.add(line);
+            else
+              way.lines.add(new LineOnlyId(Line.getIdFromKey(lineKey)));
+          }
+          ((WayHandler)dlg.handler).updateSegmentsFromList();
+        }
 			}
 			applet.redraw();
 		}
@@ -104,15 +123,20 @@ public class WayMode extends EditMode {
 						applet.osm.createWay(way);
 						handler = null;
 					}
-					applet.selectedLine.clear();
+					applet.clearSelectedLine();
 					applet.redraw();
 					dlg = null;
 				}
 				super.setVisible(visible);
 			}
 		};
-		if (location != null)
+		if (location != null) {
 			dlg.setLocation(location);
+    }
 		dlg.setVisible(true);
 	}
+
+  public void mouseDragged() {
+    applet.redraw();
+  }
 }

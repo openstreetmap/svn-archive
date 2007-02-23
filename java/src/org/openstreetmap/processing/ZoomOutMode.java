@@ -47,4 +47,7 @@ public class ZoomOutMode extends EditMode {
         return "Click to zoom out";
     }
 
+    public int getMinAppletStatus() {
+      return OsmApplet.BROWSEABLE;
+    }
 }

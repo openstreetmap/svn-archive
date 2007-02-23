@@ -5,6 +5,7 @@ package org.openstreetmap.processing;
 
 import java.awt.Point;
 
+import org.openstreetmap.client.MapData;
 import org.openstreetmap.gui.GuiHandler;
 import org.openstreetmap.gui.GuiLauncher;
 import org.openstreetmap.gui.LineHandler;
@@ -49,41 +50,51 @@ public class PropertiesMode extends EditMode {
 	}
 
 	public void mouseReleased() {
-		OsmPrimitive released = applet.getNearest(applet.mouseX, applet.mouseY);
+		OsmPrimitive released = applet.getNearest();
 		if (released == null)
 			return;
-		if (changeSegmentMode) {
+    MapData map = applet.getMapData();
+		if (changeSegmentMode) {  // changing which segments are in a way
 			if (!(released instanceof Line))
 				return;
-			if (applet.selectedLine.contains(released.key())) {
-				applet.selectedLine.remove(released.key());
-				if (primitive instanceof Way) {
-					((Way)primitive).lines.remove(released);
-					((Line)released).ways.remove(primitive);
-				}
-			} else {
-				applet.selectedLine.add(released.key());
-				if (primitive instanceof Way) {
-					((Way)primitive).lines.add(released);
-					((Line)released).ways.add(primitive);
-				}
-			}
-			if (dlg != null)
-				((WayHandler)dlg.handler).updateSegmentsFromList();
+      // applet draw thread accesses selected line + need to sync map
+      // NB: always lock (1) applet then (2) map
+      synchronized (applet) {
+        synchronized (map) {
+          // changes to lines / ways:
+          if (applet.selectedLine.contains(released.key())) {
+            applet.selectedLine.remove(released.key());
+            if (primitive instanceof Way) {
+              ((Way)primitive).lines.remove(released);
+              ((Line)released).ways.remove(primitive);
+            }
+          } else {
+            applet.selectedLine.add(released.key());
+            if (primitive instanceof Way) {
+              ((Way)primitive).lines.add(released);
+              ((Line)released).ways.add(primitive);
+            }
+          }
+    			if (dlg != null)
+    				((WayHandler)dlg.handler).updateSegmentsFromList();
+        } // sync map
+      } // sync applet
 			applet.redraw();
 		} else {
 			// cycle through all ways and the line segment if subsequent selecting 
 			// the point
-			if (released instanceof Line && !((Line)released).ways.isEmpty()) {
-				Line line = (Line)released;
-				if (lastSelected != line.ways.get(line.ways.size()-1)) {
-					int i = line.ways.indexOf(lastSelected);
-					if (i != -1 && i < line.ways.size()-1)
-						released = (OsmPrimitive)line.ways.get(i+1);
-					else
-						released = (OsmPrimitive)line.ways.get(0);
-				}
-			}
+      synchronized (map) { // ensure consistent read
+        if (released instanceof Line && !((Line)released).ways.isEmpty()) {
+          Line line = (Line)released;
+          if (lastSelected != line.ways.get(line.ways.size()-1)) {
+            int i = line.ways.indexOf(lastSelected);
+            if (i != -1 && i < line.ways.size()-1)
+              released = (OsmPrimitive)line.ways.get(i+1);
+            else
+              released = (OsmPrimitive)line.ways.get(0);
+          }
+        }
+      }
 			lastSelected = released;
 			openProperties(released);
 		}
@@ -103,14 +114,18 @@ public class PropertiesMode extends EditMode {
 		if (dlg != null)
 			dlg.setVisible(false);
 
+    // this only does shallow copy.... tag values are held in
+    // tags table rows, and overwrite the primitive's tags on ok().
+    // TODO this will overwrite old primitives tags so that undo()
+    // will fail on server update failure
 		final OsmPrimitive old = (OsmPrimitive)p.clone();
 		primitive = p;
 		if (primitive instanceof Way) {
 			guiHandler = new WayHandler((Way)primitive, applet, this);
 			name = ((Way)primitive).getName();
 		} else if (primitive instanceof Line) {
-			guiHandler = new LineHandler((Line)primitive, applet);
-			name = ((Line)primitive).getName();
+			guiHandler = new LineHandler((OsmPrimitive)primitive, applet);
+			name = ((OsmPrimitive)primitive).getName();
 		} else if (primitive instanceof Node) {
 			guiHandler = new NodeHandler((Node)primitive, applet);
 			name = (String)primitive.getTags().get("name");
@@ -154,7 +169,8 @@ public class PropertiesMode extends EditMode {
 	private void doDone(final OsmPrimitive old, GuiHandler handler) {
 		if (!handler.cancelled) {
 			// ok pressed. Send something to the server.
-			// first reset to the status quo. Since the WayHandler has changed the registration
+
+      // first reset to the status quo. Since the WayHandler has changed the registration
 			// back references for 'primitive', we have first to change back to 'old'
 			primitive.unregister();
 			old.register();
@@ -170,7 +186,7 @@ public class PropertiesMode extends EditMode {
 		dlg = null;
 		primitive = null;
 		changeSegmentMode = false;
-		applet.selectedLine.clear();
+		applet.clearSelectedLine();
 		applet.extraHighlightedLine = null;
 		applet.redraw();
 	}

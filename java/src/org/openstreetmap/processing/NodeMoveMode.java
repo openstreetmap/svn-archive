@@ -44,7 +44,7 @@ public class NodeMoveMode extends EditMode {
 				lastOffsetY = n.coor.y - applet.mouseY;
 				origX = n.coor.x;
 				origY = n.coor.y;
-        applet.setOpacity(40); // make roads/nodes see through to ease accurate positioning
+        applet.setOpacity(100); // make roads/nodes see through to ease accurate positioning
 			}
 		}
 		applet.debug("selected: " + applet.selectedNode);

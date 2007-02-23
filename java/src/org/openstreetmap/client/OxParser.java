@@ -40,7 +40,7 @@ public class OxParser extends MinML2 {
 	public OxParser(InputStream i) {
 		System.out.println("OSM XML parser started...");
 		try {
-			parse(new InputStreamReader(new BufferedInputStream(i, 1024), "ISO-8859-1"));
+			parse(new InputStreamReader(new BufferedInputStream(i, 1024), "UTF-8"));
 		} catch (IOException e) {
 			System.out.println("IOException: " + e);
 			e.printStackTrace();

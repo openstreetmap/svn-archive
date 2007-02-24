@@ -182,7 +182,7 @@
                 <rule e="segment|way" k="highway" v="track">
                     <line class='highway-track-casing' />
                 </rule>
-                <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary">
+                <rule e="segment|way" k="highway" v="unclassified|residential|minor">
                     <line class='highway-unclassified-casing' />
                 </rule>
                 <rule e="segment|way" k="highway" v="tertiary">
@@ -773,7 +773,7 @@
             }
 
             .highway-motorway-link-core {
-                stroke-width: 5.5;
+                stroke-width: 5.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #809BC0;
@@ -790,6 +790,7 @@
 
             .highway-trunk-core {
                 stroke-width: 13px;
+                stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #7FC97F;
                 fill: none;

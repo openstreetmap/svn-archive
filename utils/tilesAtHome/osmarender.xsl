@@ -462,7 +462,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
         <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
 
-        <circle r="1" cx="{$x}" cy="{$y}">
+        <circle cx="{$x}" cy="{$y}">
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the svg attributes from the <circle> instruction -->
         </circle>
 
@@ -496,7 +496,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <textPath xlink:href="#{$pathId}">
                 <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
                 <xsl:call-template name="getSvgAttributesFromOsmTags"/>
-                <tspan dy="0.35"><xsl:value-of select="tag[@k=$instruction/@k]/@v"/></tspan>
+                <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
             </textPath>
         </text>
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@k" mode="renderTextPath-text">

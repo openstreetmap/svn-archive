@@ -357,6 +357,9 @@
                     <rule e="segment|way" k="railway" v="subway">
                         <line class='railway-subway-rail' />
                     </rule>
+                    <rule e="segment|way" k="railway" v="preserved">
+                        <line class='railway-preserved' />
+                    </rule>
                 </rule>
 
                 <!-- in tunnel -->
@@ -366,6 +369,9 @@
                     </rule>
                     <rule e="segment|way" k="railway" v="light_rail|subway|tram">
                         <tunnel width="0" class='railway-tunnel-narrow' />
+                    </rule>
+                    <rule e="segment|way" k="railway" v="preserved">
+                        <tunnel width="3" class='railway-preserved' />
                     </rule>
                 </rule>
 
@@ -1271,6 +1277,14 @@
 
             .railway-rail {
                 stroke-width: 8px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #666666;
+                fill: none;
+            }
+
+            .railway-preserved {
+                stroke-width: 5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;

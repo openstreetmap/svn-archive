@@ -18,8 +18,13 @@ to upload tiles use "upload.pl"
 
 (might need multiple calls to upload everything, depending on your setup)
 
-if you get Errors about libGD run tilesGen_noGD.pl instead of tilesGen.pl
+== Troubleshooting ==
 
+if you get Errors about libGD run tilesGen_noGD.pl instead of tilesGen.pl
+this will be significantly slower, so you might want to investigate how to 
+get libgd working with your perl installation.
+
+== Other sources of information ==
 
 further reading: http://wiki.openstreetmap.org/index.php/Tiles%40home
 

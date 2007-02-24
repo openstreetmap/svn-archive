@@ -473,7 +473,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
         <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)"/>
 
-        <circle r="1" cx="{$x}" cy="{$y}">
+        <circle cx="{$x}" cy="{$y}">
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the svg attributes from the <circle> instruction -->
         </circle>
 

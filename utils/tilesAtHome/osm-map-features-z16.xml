@@ -195,7 +195,7 @@
                     <line class='bridge-casing-25' />
                     <line class='bridge-core-25' />
                 </rule>
-                <rule e="segment|way" k="railway" v="light_rail|subway|tram">
+                <rule e="segment|way" k="railway" v="light_rail|subway|tram|preserved">
                     <line class='bridge-casing-20' />
                     <line class='bridge-core-20' />
                 </rule>
@@ -408,6 +408,9 @@
                     <rule e="segment|way" k="railway" v="subway">
                         <line class='railway-subway-rail' />
                     </rule>
+                    <rule e="segment|way" k="railway" v="preserved">
+                        <line class='railway-preserved' />
+                    </rule>
                 </rule>
 
                 <!-- in tunnel -->
@@ -417,6 +420,9 @@
                     </rule>
                     <rule e="segment|way" k="railway" v="light_rail|subway|tram">
                         <tunnel width="0" class='railway-tunnel-narrow' />
+                    </rule>
+                    <rule e="segment|way" k="railway" v="preserved">
+                        <tunnel width="3" class='railway-preserved' />
                     </rule>
                 </rule>
 
@@ -1405,6 +1411,14 @@
 
             .railway-rail {
                 stroke-width: 1.5px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #000000;
+                fill: none;
+            }
+
+            .railway-preserved {
+                stroke-width: 1.1px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #000000;

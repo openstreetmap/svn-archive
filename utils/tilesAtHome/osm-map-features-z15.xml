@@ -627,25 +627,25 @@
                 <rule e="segment|way" k="highway" v="*">
                     <layer name="Street names">
                         <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" dy='0.35px' />
                         </rule>
                         <rule e="way" k="highway" v="unsurfaced|track">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unsurfaced-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unsurfaced-name" dy='0.35px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="service">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" dy='0.35px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="secondary">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" dy='0.35px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="primary">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" dy='0.35px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="trunk">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-trunk-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-trunk-name" dy='0.35px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="motorway">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-motorway-name" />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-motorway-name" dy='0.35px' />
                         </rule>
                     </layer>
                 </rule>
@@ -745,7 +745,8 @@
 
             .abutters-residential {
                 stroke-width: 9px;
-                stroke-linecap: butt;
+                stroke-linejoin: butt;
+                stroke-linecap: round;
                 stroke: #f2f2f2;
                 fill: none;
             }
@@ -753,28 +754,32 @@
             /* Abutters */
             .abutters-retail {
                 stroke-width: 9px;
-                stroke-linecap: butt;
+                stroke-linejoin: butt;
+                stroke-linecap: round;
                 stroke: #ffebeb;
                 fill: none;
             }
 
             .abutters-industrial {
                 stroke-width: 9px;
-                stroke-linecap: butt;
+                stroke-linejoin: butt;
+                stroke-linecap: round;
                 stroke: #ecd8ff;
                 fill: none;
             }
 
             .abutters-commercial {
                 stroke-width: 9px;
-                stroke-linecap: butt;
+                stroke-linejoin: butt;
+                stroke-linecap: round;
                 stroke: #fcffc9;
                 fill: none;
             }
 
             .abutters-mixed {
                 stroke-width: 9px;
-                stroke-linecap: butt;
+                stroke-linejoin: butt;
+                stroke-linecap: round;
                 stroke: #d8feff;
                 fill: none;
             }

@@ -80,7 +80,7 @@ sub uploadTileBatch(){
   
   print @tiles . " tiles to process\n";
 
-  while((my $file = shift @tiles) && ($Size < $SizeLimit) && ($Count < $CountLimit)){
+  while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles)){
     my $Filename1 = "$TileDir/$file";
     my $Filename2 = "$TempDir/$file";
     if($file =~ /tile_\d+_\d+_\d+\.png$/i){

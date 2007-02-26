@@ -22,6 +22,8 @@ public class CommandManager implements Releaseable {
 
 	/**
 	 * Listener gets notified about some events of the command manager.
+   * NB: Should not acquire any locks (call-back from low-level could lead to
+   * order reversal, e.g. commandManager lock then applet lock.
 	 * @author Imi
 	 */
 	static public interface Listener {

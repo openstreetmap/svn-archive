@@ -27,7 +27,9 @@
         <param name="debugToPage" value="false" /> <!-- true = output to appletDebug() fn -->
         <param name="abortable" value="true" /> <!-- true = allow abort of map download -->
         <param name="timeout" value="5"/> <!-- server connect timeout in seconds -->
+        <param name="socketTimeout" value="30"/> <!-- server connect timeout in seconds -->
         <param name="retries" value="5"/> <!-- max number of server retries -->
+        <param name="injectTimeouts" value="30"/> <!-- percent chance of (simulated) timeout, for testing, 0 = live i.e. no timeouts -->
       </applet>
       <div style="font-size: small; position: relative; left: 800px; top:-600px; height: 600px; width: 400px; overflow: scroll; visibility: hidden" >
         <p>Debug output from applet</p>

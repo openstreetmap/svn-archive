@@ -73,6 +73,7 @@
 
 package org.openstreetmap.processing;
 
+import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -253,8 +254,17 @@ public class OsmApplet extends PApplet implements Releaseable {
   /** Set true to cause shutdown of all threads */
   volatile public boolean shutdown = false;
 
-  /** Timeout for map server API calls, miliseconds. */
+  /** Timeout (connection) for map server API calls, miliseconds. */
   public int timeout = 15 * 1000;
+
+  /** Timeout (stalled socket) for map server API calls, miliseconds. */
+  public int socketTimeout = 120 * 1000;
+
+  /** 
+   * Randomly creates timeouts on connections, for testing/debug only.
+   * Likelihood in percent from 0 (never) to 100(always). 
+   */
+  public int injectTimeouts = 0;
 
   /** Max number of retries in map server API calls. */
   public int retries = 4;
@@ -292,7 +302,11 @@ public class OsmApplet extends PApplet implements Releaseable {
         retries = parse_param_int("retries");
       if (param_float_exists("timeout"))
         timeout = (int) (parse_param_float("timeout") * 1000);
-
+      if (param_float_exists("socketTimeout"))
+        socketTimeout = (int) (parse_param_float("socketTimeout") * 1000);
+      if (param_float_exists("injectTimeouts"))
+        injectTimeouts = (int) parse_param_int("injectTimeouts");
+      
 			try {
 				String wmsURLfromParam = param("wmsurl");
 				if (wmsURLfromParam != null && !wmsURLfromParam.equals("")) {
@@ -367,6 +381,12 @@ public class OsmApplet extends PApplet implements Releaseable {
         if (args[i].startsWith("--timeout=")) {
           timeout = (int) (1000 * Float.parseFloat(args[i].substring(args[i].indexOf('=')+1)));
         }
+        if (args[i].startsWith("--socketTimeout=")) {
+          socketTimeout = (int) (1000 * Float.parseFloat(args[i].substring(args[i].indexOf('=')+1)));
+        }
+        if (args[i].startsWith("--injectTimeouts=")) {
+          injectTimeouts = Integer.parseInt(args[i].substring(args[i].indexOf('=')+1));
+        }
 			}
 		}
 
@@ -382,6 +402,8 @@ public class OsmApplet extends PApplet implements Releaseable {
     debug("Got abortable: " + abortable);
     debug("Got retries: " + retries);
     debug("Got timeout: " + timeout);
+    debug("Got socketTimeout: " + timeout);
+    debug("Got injectTimeouts: " + injectTimeouts);
 		debug("--end params--");
 
 
@@ -423,7 +445,9 @@ public class OsmApplet extends PApplet implements Releaseable {
 		// register as listener of finished commands (to redraw)
 		osm.commandManager.addListener(new CommandManager.Listener(){
 			public void commandFinished(ServerCommand command) {
-				redraw(); // NB: this will sync on applet - better make sure callback is on event thread
+        // NB: don't call redraw() directly, as call-back acquiring higher-level
+        // applet lock could cause deadlock
+        redrawNoLock();
 			}
 		});
 
@@ -432,6 +456,22 @@ public class OsmApplet extends PApplet implements Releaseable {
 		redraw();
 	} // setup
 
+  /**
+   * Causes a redraw() to be called at next available opporunity, without locking
+   * on current thread.
+   */
+  public void redrawNoLock() {
+    // TODO could be working on event thread (thus causing redraws) so ideally
+    // cause redraw at next possible opportunity.  however, we'd need a new
+    // thread for this - unconvincing at mo since only makes difference on
+    // command queue abort - just queue a redraw for later on current event thread.
+    EventQueue.invokeLater(new Runnable() {
+      public void run() {
+        redraw(); // can call here, since no low-level locks held
+      }
+    });
+  }
+  
 	
   /* (non-Javadoc)
    * @see org.openstreetmap.util.Releaseable#release()
@@ -794,7 +834,8 @@ public class OsmApplet extends PApplet implements Releaseable {
 			// Draw command queue message
 			// If the yahoo icon changes again, make sure this stays above it
       final int HTTP_NOTIFY_HEIGHT = 55; 
-			if(osm.commandManager.size() > 0) {
+			if(osm.commandManager.size() > 0) {  // NB: will lock commandManager.sleeper 
+                                           // - i.e. locking (1) applet then (2) sleeper 
 				drawUploadingNotification(HTTP_NOTIFY_HEIGHT);
 			}
 			
@@ -1044,7 +1085,7 @@ public class OsmApplet extends PApplet implements Releaseable {
    * 
    * NB: locks <code>map</map>
    */
-  public OsmPrimitive getNearest(float x, float y) {
+  public OsmPrimitive getNearest(float x, float y, boolean nodesOnly) {
    float minDistanceSq = Float.MAX_VALUE;
     OsmPrimitive min = null;
     synchronized (map) { // see MapData comments
@@ -1082,10 +1123,18 @@ public class OsmApplet extends PApplet implements Releaseable {
   }
   
   /**
+   * @param nodesOnly Forces to match only nodes.
+   * @return Nearest map node or primitive to current mouse position.
+   */
+  public OsmPrimitive getNearest(boolean nodesOnly) {
+    return getNearest(mouseX, mouseY, nodesOnly);
+  }
+
+  /**
    * @return Nearest map primitive to current mouse position.
    */
   public OsmPrimitive getNearest() {
-    return getNearest(mouseX, mouseY);
+    return getNearest(mouseX, mouseY, false);
   }
 
   /**

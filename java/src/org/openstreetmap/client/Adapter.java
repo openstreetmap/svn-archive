@@ -3,6 +3,7 @@ package org.openstreetmap.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,6 +36,12 @@ public class Adapter implements Releaseable {
      */
     private String apiUrl = "http://www.openstreetmap.org/api/0.3/";
 
+    /**
+     * Resource location qualifier to PUT to to create a primitive.
+     * To be changed to 'create' for 0.4 api.
+     */
+    private static final String API_CREATE_ID = "0";
+    
     /**
      * The server command manager to deploy server commands.
      */
@@ -311,52 +318,108 @@ public class Adapter implements Releaseable {
     }
 
     /**
-     * Helper method used by the inner classes. Takes XML, and the URL to upload it to and uploads it with a PUT.
-     * If the URL returns 200, it returns the body of the response as a string, otherwise it returns null.
+     * Helper method used by the inner classes. Takes XML and uploads it with a PUT to
+     * the appropriate API url for given primitive type and id
+     * If the URL returns 200, it returns the body of the response as a string, 
+     * otherwise it returns null.
      *
-     *
-     * @param xml The XML to put.
-     * @param url The URL to put it to.
+     * @param xml The XML to send.
+     * @param type The API resource type the XML concerns.
+     * @param id The primitive ID (or API_CREATE_ID if putting new resource on
+     *   server).
      * @return The response sent by the server (if it had a code of 200), null otherwise.
-     * @throws IOException If there is some sort of network error.
      */
-    private String putXMLtoURL(final String xml, final String url) throws IOException {
-      debug("Trying to PUT xml \"" + xml + "\" to URL " + url);
-
+    private String putXMLtoURL(final String xml, final String type, final String id) {
+      return sendApiRequest(PutMethod.class, type, id, xml);
+    }
+    
+    /**
+     * Helper method used by the inner classes. Takes a URL and optionally a XML (for PUTs) 
+     * and sends it with a PUT or DELETE.
+     * @param methodClass Class of HttpMethod to use - either PutMethod.class 
+     *   or DeleteMethod.class
+     * @param type The API resource type the request concerns
+     * @param id The resource primitive ID (or API_CREATE_ID if putting new resource on
+     *   server).
+     * @param xml The XML to send, if any (PUT only).
+     *
+     * @return If successful (response code 200), the response sent by the server (returns "OK" 
+     * if none sent), null if failed.
+     */
+    private String sendApiRequest(Class methodClass, final String type, final String id, final String xml) {
+      String url = apiUrl + type + "/" + id;
+      debug("Sending (" + methodClass.getSimpleName() + ") '" + xml + "' to URL " + url);
+      
       int retries = 0;
       int maxRetries = applet.retries;
       String body = null;
-      PutMethod put = null;
+      HttpMethod method = null;
 
       // Retry loop
-      while((put == null) && (retries <= maxRetries)) {
-          try {
-              HttpClient client = getClient();
-        
-              put = new PutMethod(url);
-              put.setRequestEntity(new StringRequestEntity(xml, null, "UTF-8"));
-        
-              client.executeMethod(put);
-        
-              int rCode = put.getStatusCode();
-              //debug("Got response code " + rCode);
-              if (rCode == 200) {
-                body = put.getResponseBodyAsString();
-              }
-              put.releaseConnection();
-          } catch(IOException e) {
-              // Hit an error - report, close, and retry
-              System.err.println("Error uploading - " + e);
-              retries++;
-              if(put != null) {
-                  put.releaseConnection();
-              }
+      while(retries <= maxRetries) {
+        if (retries > 0) debug("retry no. " + retries + " of " + maxRetries);
+        if (applet.injectTimeouts > 0) {
+          if (applet.injectTimeouts > 0 && applet.injectTimeouts > (int) (Math.random() * 100)) {
+            debug("Simulated timeout (" + applet.injectTimeouts + "%)"); 
+            retries++; continue;
           }
-          catch (Exception e) {
-            System.err.println("Error uploading - " + e);
+        }
+        int rCode = 0;
+        try {
+          HttpClient client = getClient();
+          if (methodClass == PutMethod.class) {
+            method = new PutMethod(url);
+            addXmlToRequest(xml, (PutMethod) method);
           }
+          else if (methodClass == DeleteMethod.class) {
+            method = new DeleteMethod(url);
+          }
+          client.executeMethod(method);
+          rCode = method.getStatusCode();
+          if (methodClass == PutMethod.class && rCode == 200) {
+            body = method.getResponseBodyAsString();
+          }
+        } catch(Exception e) {
+          debug("Error uploading - " + e);
+        }
+        finally {
+          if(method != null) {
+            method.releaseConnection();
+            method = null;
+          }
+          if (rCode == 200) {
+            debug(methodClass.getSimpleName() + " upload success for " + type + "/" + id + " to " + url);
+            if (body == null) body = "OK";
+            return body;
+          }
+          else if (rCode == 0) {
+            System.err.println(methodClass.getSimpleName() +  " error " + type + "/" + id);
+            retries++; // error, not reported by server - retry
+          }
+          else { // error reported from server - don't retry
+            debug("Failed to upload to " + url);
+            return null;
+          }
+        }
       }
-      return body;
+      return null; // out of retries
+    }
+
+    private void addXmlToRequest(final String xml, PutMethod method) throws UnsupportedEncodingException {
+      method.setRequestEntity(new StringRequestEntity(xml, null, "UTF-8"));
+    }
+
+    /**
+     * Send delete request to server, with retries.
+     * 
+     * @param p The OSM primitive to delete.
+     * @return <code>true</code> if deleted successfully.
+     */
+    private boolean sendDeleteRequest(final OsmPrimitive p)  {
+      if ("OK" == sendApiRequest(DeleteMethod.class, p.getTypeName(), "" + p.id, "")) {
+        return true;
+      }
+      return false;
     }
 
     /**
@@ -370,8 +433,8 @@ public class Adapter implements Releaseable {
       // establish a connection within (default 15) seconds 
       client.getHttpConnectionManager().getParams().setConnectionTimeout(applet.timeout);
       
-      // wait up to 120 seconds for a response
-      client.getHttpConnectionManager().getParams().setSoTimeout(120 * 1000);
+      // wait up to (default 120) seconds for a response
+      client.getHttpConnectionManager().getParams().setSoTimeout(applet.socketTimeout);
       // use our credentials with the request
       client.getState().setCredentials(AuthScope.ANY, creds);
       return client;
@@ -405,23 +468,7 @@ public class Adapter implements Releaseable {
         }
       }
       public boolean connectToServer() throws IOException {
-        String url = apiUrl + "node/" + node.id;
-        debug("trying to delete node by throwing HTTP DELETE at " + url);
-
-        HttpClient client = getClient();
-
-        DeleteMethod del = new DeleteMethod(url);
-        client.executeMethod(del);
-        int rCode = del.getStatusCode();
-        del.releaseConnection();
-
-        if (rCode == 200) {
-          debug("node removed successfully: " + node);
-          return true;
-        }
-        System.err.println("error removing node: " + node);
-        System.err.println("HTTP DELETE got response " + rCode + " back from the abyss");
-        return false;
+        return sendDeleteRequest(node);
       }
       public void undoModifyData() {
         synchronized (map) {
@@ -454,20 +501,18 @@ public class Adapter implements Releaseable {
 
       public boolean connectToServer() throws IOException {
         String xml;
-        String url = apiUrl + "node/0";
         synchronized (map) {
           StringWriter s = new StringWriter();
           OsmWriter.output(s, node);
           xml = s.getBuffer().toString();
         }
 
-        String response = putXMLtoURL(xml, url);
+        String response = putXMLtoURL(xml, "node", API_CREATE_ID);
         if (response != null) {
           if (response != "") debug("got response " + response);
           response = response.trim(); // get rid of leading and trailing whitespace
           id = Long.parseLong(response);
         }
-
         if (id != -1) {
           debug("node created successfully: " + node);
           return true;
@@ -528,15 +573,12 @@ public class Adapter implements Releaseable {
       }
       public boolean connectToServer() throws IOException {
         String xml;
-        String url;
         synchronized (map) {
           StringWriter s = new StringWriter();
           OsmWriter.output(s, node);
           xml = s.getBuffer().toString();
-          url = apiUrl + "node/" + node.id;
         }
-
-        String response = putXMLtoURL(xml, url);
+        String response = putXMLtoURL(xml, "node", "" + node.id);
         if (response == null) {
           System.err.println("error moving node: " + node + ", got response '" + response + "' from the abyss");
           return false;
@@ -591,15 +633,13 @@ public class Adapter implements Releaseable {
 
       public boolean connectToServer() throws IOException {
         String xml;
-        String url = apiUrl + "segment/0";
         // NB: have been hanging onto line outside of map - what grim fate awaits?
         synchronized (map) {
           StringWriter s = new StringWriter();
           OsmWriter.output(s, line);
           xml = s.getBuffer().toString();
         }
-
-        String response = putXMLtoURL(xml, url);
+        String response = putXMLtoURL(xml, "segment", API_CREATE_ID);
         if (response != null) {
           //debug("got response " + response);
           id = Long.parseLong(response.trim());
@@ -650,9 +690,8 @@ public class Adapter implements Releaseable {
         StringWriter s = new StringWriter();
         OsmWriter.output(s, newPrimitive);
         String xml = s.getBuffer().toString();
-        String url = apiUrl + newPrimitive.getTypeName()+"/" + newPrimitive.id;
 
-        String response = putXMLtoURL(xml, url);
+        String response = putXMLtoURL(xml, newPrimitive.getTypeName(), "" + newPrimitive.id);
         if (response != null) {
           //debug("got response " + response);
           debug("updated primitive successfully: " + newPrimitive);
@@ -689,9 +728,8 @@ public class Adapter implements Releaseable {
         StringWriter s = new StringWriter();
         OsmWriter.output(s, way);
         String xml = s.getBuffer().toString();
-        String url = apiUrl + "way/0";
 
-        String response = putXMLtoURL(xml, url);
+        String response = putXMLtoURL(xml, "way", API_CREATE_ID);
         if (response != null) {
           try {
             id = Long.parseLong(response.trim());
@@ -731,7 +769,6 @@ public class Adapter implements Releaseable {
       public Remover(OsmPrimitive osm) {
         this.osm = osm;
       }
-
       public void preConnectionModifyData() {
         synchronized (map) {
           osm.getMainTable(applet).remove(osm.key());
@@ -739,21 +776,7 @@ public class Adapter implements Releaseable {
         }
       }
       public boolean connectToServer() throws IOException {
-        String url = apiUrl + osm.getTypeName() + "/" + osm.id;
-        debug("trying to delete object HTTP DELETE at " + url);
-        HttpClient client = getClient();
-
-        // TODO add retries to delete?
-        DeleteMethod del = new DeleteMethod(url);
-        client.executeMethod(del);
-        int rCode = del.getStatusCode();
-        del.releaseConnection();
-        if (rCode == 200) {
-          debug("removed successfully: " + osm);
-          return true;
-        }
-        System.err.println("error removing: " + osm);
-        return false;
+        return sendDeleteRequest(osm);
       }
       public void undoModifyData() {
         synchronized (map) {

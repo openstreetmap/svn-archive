@@ -31,6 +31,7 @@ public class MoveMode extends EditMode {
 
 	public void mousePressed() {
     applet.cursor(OsmApplet.MOVE);
+    applet.tiles.startDrag();
 		lastmX = applet.mouseX;
 		lastmY = applet.mouseY;
 	}

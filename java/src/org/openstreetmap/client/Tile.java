@@ -297,6 +297,10 @@ public class Tile implements Projection, Releaseable {
     applet.redraw();
   } // drag
 
+  public void startDrag() {
+    skippedx = skippedy = 0;
+  }
+
   private int lon_to_yahoo(double lon, int yzoom) {
     return (int) Math.floor(((((lon + 180) / 360) * 131072) / (1 << (yzoom - 1))));
   } // lon_to_yahoo

@@ -36,7 +36,7 @@ public class LineMode extends EditMode {
 	}
 
 	public void mouseReleased() {
-    OsmPrimitive p = applet.getNearest();
+    OsmPrimitive p = applet.getNearest(true);
     if (p instanceof Node) {
       if (applet.mouseOverPoint(((Node) p).coor)) {
         if (applet.start != null && !applet.start.equals(p)) {

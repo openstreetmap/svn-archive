@@ -87,7 +87,7 @@ sub CheckConfig{
     print "! Using default upload chunk size of 1.0 MB\n";
   }
   
-  $Config{"UploadURL2"};
+  # $Config{"UploadURL2"};
 
   if($Config{"DeleteZipFilesAfterUpload"}){
     print "- Deleting ZIP files after upload\n";
@@ -103,7 +103,7 @@ sub CheckConfig{
   }
   print "- Using OSM username \"$Config{OsmUsername}\"\n";
 
-  $Config{"OsmPassword"};
+  # $Config{"OsmPassword"};
   
   # Misc stuff
   foreach(qw(N S E W)){

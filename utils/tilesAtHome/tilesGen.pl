@@ -35,13 +35,13 @@ CheckConfig(%Config);
 
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
-$Version =~ s/\$Revision:\s*(\d+)\s*\$/\1/;
+$Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf "This is version %d (%s) of tilesgen\n", $Version, $Config{ClientVersion};
 
 # check GD
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
-  print "please update your libgd to version 2 for trueColor support";
+  print "please update your libgd to version 2 for TrueColor support";
   exit(3);
 }
 # Setup GD options
@@ -77,15 +77,17 @@ if($Mode eq "xy"){
   print "Generating area $X,$Y,$Zoom\n";
   GenerateTileset($X, $Y, $Zoom);
 }
-elsif ($Mode eq "loop") {
+elsif ($Mode eq "loop") 
+{
   # ----------------------------------
   # Continuously process requests from server
   # ----------------------------------
-  while(1){
+  while(1) 
+  {
     my $did_something = ProcessRequestsFromServer();
     uploadIfEnoughTiles();
-    if ( $did_something == 0) {
-	sleep(60);
+    if ($did_something == 0) {
+	  sleep(60);
     }
   }
 }
@@ -145,7 +147,7 @@ sub upload{
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------
-sub ProcessRequestsFromServer(){
+sub ProcessRequestsFromServer {
   my $LocalFilename = "$Config{WorkingDirectory}request.txt";
   
   # ----------------------------------
@@ -217,7 +219,7 @@ sub ProcessRequestsFromServer(){
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
 #-----------------------------------------------------------------------------
-sub GenerateTileset(){
+sub GenerateTileset {
   my ($X, $Y, $Zoom) = @_;
     
   my ($N, $S) = Project($Y, $Zoom);
@@ -268,7 +270,7 @@ sub GenerateTileset(){
       DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
       if(-s $DataFile1 == 0){
         printf("No data here either\n");
-        return if ($Main::Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+        return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
         exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
       }
     appendOSMfile($DataFile,$DataFile1);
@@ -331,7 +333,7 @@ sub GenerateTileset(){
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #-----------------------------------------------------------------------------
-sub RenderTile(){
+sub RenderTile {
   my ($X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
   
   return if($Zoom > $Config{MaxZoom});
@@ -395,7 +397,7 @@ sub killafile($){
 #-----------------------------------------------------------------------------
 # Project latitude in degrees to Y coordinates in mercator projection
 #-----------------------------------------------------------------------------
-sub ProjectF($){
+sub ProjectF {
   my $Lat = DegToRad(shift());
   my $Y = log(tan($Lat) + sec($Lat));
   return($Y);
@@ -403,7 +405,7 @@ sub ProjectF($){
 #-----------------------------------------------------------------------------
 # Project Y to latitude bounds
 #-----------------------------------------------------------------------------
-sub Project(){
+sub Project {
   my ($Y, $Zoom) = @_;
   
   my $Unit = 1 / (2 ** $Zoom);
@@ -429,7 +431,7 @@ sub ProjectMercToLat($){
 #-----------------------------------------------------------------------------
 # Project X to longitude bounds
 #-----------------------------------------------------------------------------
-sub ProjectL(){
+sub ProjectL {
   my ($X, $Zoom) = @_;
   
   my $Unit = 360 / (2 ** $Zoom);
@@ -446,7 +448,7 @@ sub RadToDeg($){return 180 * shift() / pi;}
 #-----------------------------------------------------------------------------
 # Gets latest copy of osmarender from repository
 #-----------------------------------------------------------------------------
-sub UpdateOsmarender(){
+sub UpdateOsmarender {
   foreach my $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png")){
   
     DownloadFile(
@@ -460,7 +462,7 @@ sub UpdateOsmarender(){
 #-----------------------------------------------------------------------------
 # 
 #-----------------------------------------------------------------------------
-sub DownloadFile(){
+sub DownloadFile {
   my ($URL, $File, $UseExisting, $Title) = @_;
   
   print STDERR "Downloading: $Title";
@@ -479,7 +481,7 @@ sub DownloadFile(){
 #-----------------------------------------------------------------------------
 # Transform an OSM file (using osmarender) into SVG
 #-----------------------------------------------------------------------------
-sub xml2svg(){
+sub xml2svg {
   my($MapFeatures,$SVG) = @_;
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
@@ -496,7 +498,7 @@ sub xml2svg(){
 #-----------------------------------------------------------------------------
 # Render a SVG file
 #-----------------------------------------------------------------------------
-sub svg2png(){
+sub svg2png {
   my($Zoom, $PNG, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
 
   my $TempFile = $PNG."_part";
@@ -515,12 +517,12 @@ sub svg2png(){
   `$Cmd`;
   print STDERR " done\n";
 
-  splitImageX($TempFile, $Config{WorkingDirectory}, 12, $X, $Y, $Zoom, $Ytile);
+  splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile);
   
-  unlink($TempFile);
+  killafile($TempFile);
 
 }
-sub writeToFile(){
+sub writeToFile {
   open(my $fp, ">", shift()) || return;
   print $fp shift();
   close $fp;
@@ -529,7 +531,7 @@ sub writeToFile(){
 #-----------------------------------------------------------------------------
 # Add bounding-box information to an osm-map-features file
 #-----------------------------------------------------------------------------
-sub AddBounds(){
+sub AddBounds {
   my ($Filename,$W,$S,$E,$N,$Size) = @_;
   
   # Read the old file
@@ -543,7 +545,7 @@ sub AddBounds(){
     "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
     $S, $W, $N, $E);
   
-  $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/\1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n\2/s;
+  $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n$2/s;
 
   # Save back to the same location
   open(my $fpOut, ">$Filename");
@@ -554,7 +556,7 @@ sub AddBounds(){
 #-----------------------------------------------------------------------------
 # Set data source file name in map-features file
 #-----------------------------------------------------------------------------
-sub SetDataSource(){
+sub SetDataSource {
   my ($Filename) = @_;
   
   # Read the old file
@@ -567,7 +569,7 @@ sub SetDataSource(){
   my $DataSource = sprintf("data-%s.osm",
     $PID);
   
-  $Data =~ s/(  data=\").*(  scale=\")/\1$DataSource\"\n\2/s;
+  $Data =~ s/(  data=\").*(  scale=\")/$1$DataSource\"\n$2/s;
 
   # Save back to the same location
   open(my $fpOut, ">$Filename");
@@ -594,7 +596,7 @@ sub getSize($){
 #-----------------------------------------------------------------------------
 # Temporary filename to store a tile
 #-----------------------------------------------------------------------------
-sub tileFilename(){
+sub tileFilename {
   my($X,$Y,$Zoom) = @_;
 
   return(sprintf("%s/tile_%d_%d_%d.png",$Config{WorkingDirectory},$Zoom,$X,$Y));
@@ -603,7 +605,7 @@ sub tileFilename(){
 #-----------------------------------------------------------------------------
 # Set data source file name in map-features file
 #-----------------------------------------------------------------------------
-sub appendOSMfile(){
+sub appendOSMfile {
   my ($Datafile,$Datafile1) = @_;
   
   # Strip the trailing </osm> from the datafile
@@ -621,7 +623,7 @@ sub appendOSMfile(){
 
   # Read the merge file remove the xml prolog and opening <osm> tag and append to the datafile
   open(my $fpIn2, "<", "$Datafile1");
-  my $Data = join("",<$fpIn2>);
+  $Data = join("",<$fpIn2>);
   close $fpIn2;
   die("no such $Datafile1") if(! -f $Datafile1);
     
@@ -637,8 +639,8 @@ sub appendOSMfile(){
 #-----------------------------------------------------------------------------
 # Split a tileset image into tiles
 #-----------------------------------------------------------------------------
-sub splitImageX(){
-  my ($File, $OutputDir, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
+sub splitImageX {
+  my ($File, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
   
   # Size of tiles
   my $Pixels = 256;
@@ -666,11 +668,7 @@ sub splitImageX(){
       $Pixels);            # Copy height
   
     # Decide what the tile should be called
-    my $Filename = $OutputDir . "/" . 
-      sprintf("tile_%d_%d_%d.png", 
-        $Z, 
-        $X * $Size + $xi, 
-        $Ytile); 
+    my $Filename = tileFilename($X * $Size + $xi, $Ytile, $Z);
    
     # convert Tile to paletted file This *will* break stuff if different libGD versions are used
     # $SubImage->trueColorToPalette($dither,$numcolors);
@@ -690,7 +688,7 @@ sub splitImageX(){
 #-----------------------------------------------------------------------------
 # Write a GD image to disk
 #-----------------------------------------------------------------------------
-sub WriteImage(){
+sub WriteImage {
   my ($Image, $Filename) = @_;
   
   # Get the image as PNG data

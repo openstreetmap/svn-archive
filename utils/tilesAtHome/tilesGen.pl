@@ -270,11 +270,7 @@ sub GenerateTileset {
       DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
       if(-s $DataFile1 == 0){
         printf("No data here either\n");
-<<<<<<< .mine
         return 0 if ($Main::Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
-=======
-        return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
->>>>>>> .r2180
         exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
       }
     appendOSMfile($DataFile,$DataFile1);

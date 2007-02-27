@@ -30,8 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
 #include "Way.h"
 #include <vector>
 #include <fstream>
-#include "RulesParser.h"
 #include "llgr.h"
+#include "FeatureClassification.h"
+#include "FeaturesParser.h"
 
 #include "LatLng.h"
 #include "OSRef.h"
@@ -128,8 +129,8 @@ std::set<int> Components::getWayNodes(int wayid)
 
 // get all way tags
 // this could be used eg. to work out how many columns are needed in a shapefile
-std::set<std::string> Components::getWayTags(ElemStyles *elemStyles,
-												bool doArea)
+std::set<std::string> Components::getWayTags
+	(FeatureClassification *classification, bool doArea)
 {
 	Way *w;
 	std::set<std::string> tags;
@@ -139,9 +140,9 @@ std::set<std::string> Components::getWayTags(ElemStyles *elemStyles,
 	while(hasMoreWays())
 	{
 		w = nextWay();
-		if ( (elemStyles==NULL) ||
-			(doArea==true && elemStyles->getFeatureClass(w)=="area") ||
-			(doArea==false && elemStyles->getFeatureClass(w)!="area") )
+		if ( (classification==NULL) ||
+			(doArea==true && classification->getFeatureClass(w)=="area") ||
+			(doArea==false && classification->getFeatureClass(w)!="area") )
 		{
 			curTags = w->getTags();
 			for(int count=0; count<curTags.size(); count++)
@@ -392,18 +393,18 @@ void Components::toOSGB()
 
 bool Components::makeShp(const std::string& nodes, const std::string& ways,
 						 const std::string& areas, 
-						 const std::string &rulesFile)
+						 const std::string &featuresFile)
 {
-	std::ifstream in(rulesFile.c_str());
+	std::ifstream in(featuresFile.c_str());
 	if(in.good())
 	{
-		ElemStyles *elemStyles = RulesParser::parse(in);
+		FeatureClassification *featureClassification=FeaturesParser::parse(in);
 		in.close();
-		if (elemStyles && makeNodeShp(nodes))
+		if (featureClassification && makeNodeShp(nodes))
 		{
-			if(makeWayShp(ways,elemStyles))
+			if(makeWayShp(ways,featureClassification))
 			{
-				if(makeWayShp(areas,elemStyles,true))
+				if(makeWayShp(areas,featureClassification,true))
 				{
 					return true;
 				}
@@ -477,7 +478,7 @@ bool Components::makeNodeShp(const std::string& shpname)
 }
 
 bool Components::makeWayShp(const std::string &shpname,
-								ElemStyles *elemStyles, bool doArea)
+				FeatureClassification *classification, bool doArea)
 {
 		int shpclass = (doArea==true) ? SHPT_POLYGON: SHPT_ARC;
 		// ARC means polyline!
@@ -488,7 +489,8 @@ bool Components::makeWayShp(const std::string &shpname,
 			if(dbf)
 			{
 				std::map<int,std::string> fields;
-				std::set<std::string> wayTags = getWayTags(elemStyles,doArea);
+				std::set<std::string> wayTags = 
+						getWayTags(classification,doArea);
 				for(std::set<std::string>::iterator i=wayTags.begin();
 					i!=wayTags.end(); i++)
 				{
@@ -508,8 +510,8 @@ bool Components::makeWayShp(const std::string &shpname,
 					{
 						wayCoords = getWayCoords(way->id);
 						if(wayCoords.size() 
-			&& ((doArea==true && elemStyles->getFeatureClass(way)=="area") ||
-				(doArea==false && elemStyles->getFeatureClass(way)!="area"))
+	&& ((doArea==true && classification->getFeatureClass(way)=="area") ||
+		(doArea==false && classification->getFeatureClass(way)!="area"))
 						  )
 						{
 							longs.clear();

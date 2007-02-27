@@ -1,0 +1,34 @@
+<?xml version='1.0'?>
+<features>
+
+<ways>
+<condition k="highway" v="footway"/>
+<condition k="highway" v="bridleway"/>
+<condition k="highway" v="byway"/>
+<condition k="highway" v="unsurfaced"/>
+<condition k="highway" v="primary"/>
+<condition k="highway" v="secondary"/>
+<condition k="highway" v="tertiary"/>
+<condition k="highway" v="motorway"/>
+<condition k="highway" v="trunk"/>
+<condition k="highway" v="cycleway"/>
+<condition k="highway" v="unclassified"/>
+<condition k="highway" v="residential"/>
+<condition k="railway" v="rail"/>
+<condition k="natural" v="coastline"/>
+<condition k="waterway" v="river" />
+<condition k="waterway" v="canal" />
+</ways>
+
+<areas>
+<condition k="natural" v="wood"/>
+<condition k="landuse" v="wood"/>
+<condition k="landuse" v="forest"/>
+<condition k="natural" v="heath"/>
+<condition k="natural" v="water"/>
+<condition k="leisure" v="park"/>
+<condition k="leisure" v="common"/>
+<condition k="leisure" v="golf_course"/>
+</areas>
+
+</features>

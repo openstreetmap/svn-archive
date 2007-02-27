@@ -1,36 +1,31 @@
-#ifndef RULESPARSER_H
-#define RULESPARSER_H
+#ifndef FEATURESPARSER_H
+#define FEATURESPARSER_H
 
 #include <expat.h>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <vector>
-#include "ElemStyles.h"
-#include "ElemStyle.h"
+#include "FeatureClassification.h"
 
 namespace OSM
 {
 
-class RulesParser
+class FeaturesParser
 {
 private:
-	static bool inDoc, inRule;
-	static ElemStyle* curStyle; 
-	static ElemStyles* elemStyles; 
+ 	static FeatureClassification* featureClassification;
+
+ 	static bool inDoc, inWays, inAreas;
+
 	static std::string error;
-	static std::vector<Rule> curRules;
-	static bool curAnnotate;
-	static int curLineWidth, curMinZoom;
-	static std::string curIconSrc, curColour;
 
 	static void startElement(void *d,const XML_Char* name,
 		const XML_Char** attrs);
 	static void endElement(void *d,const XML_Char* name);
 	static void characters(void*, const XML_Char* txt,int txtlen);
 public:
-	static ElemStyles* parse(std::istream&);
+	static FeatureClassification* parse(std::istream&);
 	static std::string getError() { return error; }
 };
 

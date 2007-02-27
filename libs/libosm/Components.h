@@ -22,7 +22,7 @@
 #include "Node.h"
 #include "Segment.h"
 #include "Way.h"
-#include "ElemStyles.h"
+#include "FeatureClassification.h"
 #include <vector>
 #include <utility>
 #include <map>
@@ -122,8 +122,8 @@ public:
 	std::set<int> getWayNodes(int wayid);
 	int getParentWayOfSegment(int segid);
 
-	std::set<std::string> getWayTags(ElemStyles *elemStyles=NULL, 
-											bool doArea=false);
+	std::set<std::string> getWayTags
+			(FeatureClassification* classification=NULL , bool doArea=false);
 	std::set<std::string> getNodeTags();
 
 	std::vector<int> orderWay(int wayid);
@@ -133,7 +133,8 @@ public:
 	bool makeShp(const std::string& nodes, const std::string& ways,
 					const std::string&, const std::string&);
 	bool makeNodeShp(const std::string& shpname);
-	bool makeWayShp(const std::string &shpname,ElemStyles*,bool=false);
+	bool makeWayShp(const std::string &shpname,
+						FeatureClassification*,bool=false);
 	Components * cleanWays();
 };
 

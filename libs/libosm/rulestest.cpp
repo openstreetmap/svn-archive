@@ -4,23 +4,20 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "ElemStyles.h"
-#include "LineElemStyle.h"
-#include "AreaElemStyle.h"
-#include "IconElemStyle.h"
-#include "RulesParser.h"
+#include "FeatureClassification.h"
+#include "FeaturesParser.h"
 
 using std::cout;
 using std::cerr;
 using std::endl;
 
-void dotest(OSM::Components *comp1, OSM::ElemStyles*);
+void dotest(OSM::Components *comp1, OSM::FeatureClassification*);
 
 int main(int argc,char* argv[])
 {
 	if(argc<3)
 	{
-		cerr<<"Usage: test InOsmFile RulesFile" << endl;
+		cerr<<"Usage: test InOsmFile FeaturesFile" << endl;
 		exit(1);
 	}
 	
@@ -29,19 +26,19 @@ int main(int argc,char* argv[])
 	OSM::Components *comp1 = OSM::Parser::parse(in);
 	in.close();
 	cerr<<"done"<<endl;
-	cerr<<"parsig ruelsfiel"<<endl;
+	cerr<<"parsing rulesfile"<<endl;
 	std::ifstream in2(argv[2]);
-	OSM::ElemStyles *elemStyles = OSM::RulesParser::parse(in2);
+	OSM::FeatureClassification *classification=OSM::FeaturesParser::parse(in2);
 	cerr<<"done"<<endl;
 	in2.close();
 	if(comp1) 
 		cerr<<"comp1 exists"<<endl;
-	if(elemStyles) 
-		cerr<<"elemStyles exists"<<endl;
-	if(comp1&&elemStyles)
+	if(classification) 
+		cerr<<"classification exists"<<endl;
+	if(comp1&&classification)
 	{
-		dotest(comp1,elemStyles);
-		delete elemStyles;
+		dotest(comp1,classification);
+		delete classification;
 		delete comp1;
 	}
 
@@ -49,37 +46,12 @@ int main(int argc,char* argv[])
 
 }
 
-void dotest(OSM::Components *comp1, OSM::ElemStyles* elemStyles)
+void dotest(OSM::Components *comp1, OSM::FeatureClassification* classification)
 {
 	comp1->rewindNodes();
 	comp1->rewindSegments();
 	comp1->rewindWays();
 
-	while(comp1->hasMoreNodes())
-	{
-		OSM::Node *n = comp1->nextNode();
-		cout << endl << "Node id: " << n->id << " lat: " << n->getLat()
-				<<" lon: " << n->getLon() << endl << "tags:" << endl;
-
-		std::vector<std::string> keys = n->getTags();
-
-		for(int count=0; count<keys.size(); count++)
-		{
-			cout  << "Key: " << keys[count] << " Value: " << 
-				n->tags[keys[count]] << endl;
-		}
-
-		cout << endl << "Info from elemstyles:" << endl;
-		OSM::ElemStyle * style = elemStyles->getStyle(n);
-		if(style)
-		{
-			if(style->getFeatureClass()=="point")
-			{
-				OSM::IconElemStyle *i = (OSM::IconElemStyle*) style;
-				cout << "Icon: " << i->getIcon()  << endl;
-			}
-		}
-	}
 	while(comp1->hasMoreWays())
 	{
 		OSM::Way *w = comp1->nextWay();
@@ -92,22 +64,8 @@ void dotest(OSM::Components *comp1, OSM::ElemStyles* elemStyles)
 			cout  << "Key: " << keys[count] << " Value: " << 
 				w->tags[keys[count]] << endl;
 		}
-		cout << endl << "Info from elemstyles:" << endl;
-		OSM::ElemStyle * style = elemStyles->getStyle(w);
-		cout << "Feature class: " << elemStyles->getFeatureClass(w);
-		if(style)
-		{
-			if(style->getFeatureClass()=="polyline")
-			{
-				OSM::LineElemStyle *l = (OSM::LineElemStyle*) style;
-				cout << "Width: " << l->getWidth()  << endl;
-				cout << "Colour: " << l->getColour()  << endl;
-			}
-			else if(style->getFeatureClass()=="area")
-			{
-				OSM::AreaElemStyle *a = (OSM::AreaElemStyle*) style;
-				cout << "Colour: " << a->getColour()  << endl;
-			}
-		}
+		cout << endl << "Info from featureClassification:" << endl;
+		cout << "Feature class: " << classification->getFeatureClass(w)
+									 <<endl<<endl;
 	}
 }

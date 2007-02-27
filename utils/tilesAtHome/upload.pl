@@ -2,7 +2,7 @@
 use strict;
 use LWP::UserAgent;
 use File::Copy;
-use config;
+use tahconfig;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, upload module
 # Takes any tiles generated, adds them into ZIP files, and uploads them

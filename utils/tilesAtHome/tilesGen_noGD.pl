@@ -4,7 +4,7 @@ use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
 use FindBin qw($Bin);
-use config;
+use tahconfig;
 use English '-no_match_vars';
 use strict;
 #-----------------------------------------------------------------------------

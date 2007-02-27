@@ -4,7 +4,7 @@ use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
 use FindBin qw($Bin);
-use config;
+use tahconfig;
 use English '-no_match_vars';
 use GD; 
 use strict;
@@ -270,7 +270,11 @@ sub GenerateTileset {
       DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
       if(-s $DataFile1 == 0){
         printf("No data here either\n");
+<<<<<<< .mine
+        return 0 if ($Main::Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+=======
         return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+>>>>>>> .r2180
         exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
       }
     appendOSMfile($DataFile,$DataFile1);
@@ -321,10 +325,11 @@ sub GenerateTileset {
   $progressJobs++;
   RenderTile($X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
-  # Clean-up he SVG files
+  # Clean-up the SVG files
   for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
     killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
   }
+  return 1;
 }
 
 #-----------------------------------------------------------------------------

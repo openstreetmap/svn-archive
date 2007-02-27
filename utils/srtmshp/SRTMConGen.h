@@ -170,11 +170,16 @@ private:
 				int interval, std::map<int,vector<int> >&last_pt );
 
 public:
+	SRTMConGen() { sampledata = NULL; }
 	SRTMConGen(Map& map, int f);
-	~SRTMConGen() { delete sampledata; }
+	~SRTMConGen() { if(sampledata) delete sampledata; }
+	void makeGrid(Map& map,int f);
+	void deleteGrid() { delete sampledata; sampledata=NULL; }
 	void generate(DrawSurface *ds);
 	void generateShading(DrawSurface *ds,double shadingres);
 	void generateShp (const char*,int interval);
+	void appendShp(SHPHandle shp,DBFHandle dbf,int interval,
+								int htidx, int mjridx);
 	void merge_segments 
 		(Contour & contour, LineString & line, unsigned maxlength);
 };

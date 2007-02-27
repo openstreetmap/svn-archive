@@ -22,6 +22,11 @@ using OSM::EarthPoint;
 
 SRTMConGen::SRTMConGen(Map& map, int f)
 {
+	makeGrid(map,f);
+}
+
+void SRTMConGen::makeGrid(Map& map,int f)
+{
 	int w, h;
 
 	// Get the bounding rectangles for all lat/long squares 
@@ -247,6 +252,14 @@ void SRTMConGen::generateShp (const char* shpname,int interval)
    DBFHandle dbf = DBFCreate(shpname);
    int htidx = DBFAddField(dbf,"height",FTInteger,255,0);
    int mjridx = DBFAddField(dbf,"major",FTInteger,255,0);
+   appendShp(shp,dbf,interval,htidx,mjridx);
+   DBFClose(dbf);
+   SHPClose(shp);
+}
+
+void SRTMConGen::appendShp(SHPHandle shp,DBFHandle dbf,int interval,
+								int htidx, int mjridx)
+{
    double xs[2], ys[2];
    
    SegmentCache segments;
@@ -311,8 +324,6 @@ void SRTMConGen::generateShp (const char* shpname,int interval)
       ++itr;
    }
    
-   DBFClose(dbf);
-   SHPClose(shp);
 }
 
 void SRTMConGen::generateShading(DrawSurface *ds,double shadingres)

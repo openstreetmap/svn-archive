@@ -41,9 +41,21 @@ private:
 	bool gridref;
 
 public:
+	Map(double scale) { this->scale=scale; }
 	Map(double x,double y, double s, int w, int h)
 		{ bottomLeft=EarthPoint(x,y); scale=s; width=w; height=h;
 		  gridref=false; }
+
+	void setBBOX(double w,double s,double e,double n)
+	{
+		bottomLeft=EarthPoint(w,s);
+		this->scale=scale;
+		ScreenPos pos = getScreenPos(e,n);
+		width=pos.x;
+		height=pos.y;
+	}
+
+
 
 	ScreenPos getScreenPos(const EarthPoint& pos)
 		{ return ScreenPos ((pos.x-bottomLeft.x)*scale,

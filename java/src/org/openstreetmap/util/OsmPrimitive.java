@@ -146,7 +146,7 @@ abstract public class OsmPrimitive implements Cloneable {
     else if (oneWay.equals("-1")) {
       return ONEWAY_BACKWARDS;
     }
-    else if (oneWay.equals("yes") || oneWay.equals("true")) {
+    else if (oneWay.equals("1") || oneWay.equals("yes") || oneWay.equals("true")) {
       return ONEWAY_FORWARDS;
     }
     else if (oneWay.equals("no") || oneWay.equals("false")) {

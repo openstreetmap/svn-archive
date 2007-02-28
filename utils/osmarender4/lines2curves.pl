@@ -45,6 +45,8 @@ use strict;
 use Carp;
 use Math::Vec qw(:terse);
 
+my $min_angle = 0.5;
+my $min_scale = 0;
 #
 # transform linear paths to curves
 #
@@ -59,7 +61,7 @@ my %to_transform;      # ways that need transforming
 while (<>) {
     my $line = $_;
     $svg_lines[$line_position] = $line;
-    if ( $line =~ m{(<path \s id=\"way_\d+\" \s d=\") # the prefix of the path
+    if ( $line =~ m{(<path \s id=\"(?:way|area)_\d+\" \s d=\") # the prefix of the path
                     ([^\"Z]+)                          # the core path itself
                     (.*/>)$                           # the rest
                    }x ) { # found a path
@@ -103,7 +105,7 @@ foreach my $line (@svg_lines) {
 # Get all the points in a path, removing duplicates along the way...
 sub path_points {
     my $path_string = shift;
-    my $path_points;
+    my $path_points_ref;
 
     # there may be multiple moves in a path so get each one
     my @move_segments = split /M\s*/, $path_string;
@@ -114,11 +116,11 @@ sub path_points {
         # get all the points in the path
         my $tmp_points_ref = [map [split /(?:\s|,)/, $_], split('L', $move_segment)];
         # stop those occasional divide by zero errors...
-        my $clean_points_ref = remove_duplicate_points($tmp_points_ref);
-        push @$path_points, @$clean_points_ref; 
+        push @$path_points_ref, @$tmp_points_ref; 
     }
 
-    return $path_points;
+    my $clean_points_ref = remove_duplicate_points($path_points_ref);
+    return $clean_points_ref;
 }
 
 sub remove_duplicate_points {
@@ -129,7 +131,7 @@ sub remove_duplicate_points {
 
     foreach my $point_ref (@$points_ref) {
         if ($point_ref->[0].$point_ref->[1] eq
-                $clean_points_ref->[0][0].$clean_points_ref->[0][1]) {
+                $clean_points_ref->[-1][0].$clean_points_ref->[-1][1]) {
                 next;
         }
 
@@ -138,6 +140,45 @@ sub remove_duplicate_points {
     if (scalar(@$points_ref)+1 != scalar(@$clean_points_ref)) {
     } 
     return $clean_points_ref;
+}
+
+sub remove_spur_points {
+    my $points_ref = shift;
+
+# spur points are when you get a way that goes A->B->A->C. The point 'B' is a
+# spur point & we don't like 'em.
+
+    my $clean_points_ref = [$points_ref->[0]];
+
+    shift @$points_ref;
+
+    for(my $i=0; $i < scalar(@$points_ref)-1; $i++) {
+        if ($clean_points_ref->[-1][0].$clean_points_ref->[-1][1] ne 
+            $points_ref->[$i+1][0].$points_ref->[$i+1][1]
+           ) {
+           push @$clean_points_ref, $points_ref->[$i];
+        }
+    }
+    push @$clean_points_ref, $points_ref->[-1];
+
+    return $clean_points_ref;
+}
+
+sub dup_points {
+    my $points_ref = shift;
+
+    foreach my $p (@$points_ref) {
+        my $count = 0;
+        foreach my $q (@$points_ref) {
+            if (join('', @$p) eq join('', @$q)) {
+                $count++;
+            }
+        }
+        if ($count > 1) {
+            return 1;
+        }
+    }
+    return;
 }
 
 # splits up the path string and calls 'from_lines_to_curves' appropriately to
@@ -165,8 +206,12 @@ sub curvify_path {
         # get all the points in the path
         my @path_points = map [split /(?:\s|,)/, $_], split('L', $move_segment);
 
-        $bezier_path_string 
-            .= 'M'.from_lines_to_curves(\@path_points, $way_id);
+        if ($way_id =~ /way_/ && dup_points(\@path_points)) {
+            $bezier_path_string .= "M$path_string"; 
+        } else {
+            $bezier_path_string 
+                .= 'M'.from_lines_to_curves(\@path_points, $way_id);
+        }
     }
 
     return $bezier_path_string;
@@ -184,6 +229,16 @@ sub get_second_point {
 #    return undef;
     my $ways_ref = $point_is_in{$start_point};
 
+    if ($way_id =~ /area_/) { # areas are easier...
+        my $way_points = $to_transform{$way_id}->[3];
+        if ($way_points->[0][0].$way_points->[0][1] eq $start_point) {
+            return $way_points->[-1];
+        } else {
+            return $way_points->[0];
+        }
+    }
+
+    # now do normal ways...
     # more than two ways meet - dont curve these.
     return undef if @$ways_ref != 2;
 
@@ -192,7 +247,7 @@ sub get_second_point {
     # maybe there wasn't another way.
     return undef if !$otherway;
     # maybe this way has a loop in it.
-    return undef if $otherway eq $way_id;
+#    return undef if $otherway eq $way_id;
 
     my $way_points = $to_transform{$otherway}->[3];
     
@@ -211,9 +266,8 @@ sub from_lines_to_curves {
     my $points_ref = shift;
     my $way_id     = shift;
 
+    my $cp_range = 0.5;
     my $incremental_string = q{};
-
-    my $pl;
 
     # Add a point at either end of the set of points to make it easy to
     # generate the correct control points. If this way is standalone, then the
@@ -225,7 +279,13 @@ sub from_lines_to_curves {
     my $start_point = $points_ref->[0][0].$points_ref->[0][1];
     my $end_point   = $points_ref->[-1][0].$points_ref->[-1][1];
 
-    my $second_point_ref = get_second_point($start_point, $way_id);
+    my $second_point_ref;
+    
+    if ($start_point eq $end_point && $way_id =~ /area_/) {
+        $second_point_ref = $points_ref->[-2];
+    } else {
+        $second_point_ref = get_second_point($start_point, $way_id);
+    }
     if ($second_point_ref && $second_point_ref->[0].$second_point_ref->[1] ne
     $points_ref->[1][0].$points_ref->[1][1]) {
         unshift @$points_ref, $second_point_ref;
@@ -236,7 +296,11 @@ sub from_lines_to_curves {
                                -$points_ref->[1][1] + $points_ref->[0][1] ];
     }
 
-    $second_point_ref = get_second_point($end_point, $way_id);
+    if ($start_point eq $end_point && $way_id =~ /area_/) {
+        $second_point_ref = $points_ref->[1];
+    } else {
+        $second_point_ref = get_second_point($end_point, $way_id);
+    }
     if ($second_point_ref && $second_point_ref->[0].$second_point_ref->[1] ne
     $points_ref->[-2][0].$points_ref->[-2][1]) {
         push @$points_ref, $second_point_ref;
@@ -247,6 +311,7 @@ sub from_lines_to_curves {
                             +$points_ref->[-1][1] - $points_ref->[-2][1] ];
     }
 
+    $points_ref = remove_duplicate_points(remove_spur_points($points_ref));
     my $points_in_line     = scalar(@$points_ref);
     my $current_point      = 0;
     my $path_start_ref     = shift @$points_ref;
@@ -258,6 +323,12 @@ sub from_lines_to_curves {
     my $control_v;
     my $control_scale;
 
+    my $pl;
+
+    foreach my $p (@$points_ref) {
+        $pl .= "\n\t".join(':', @$p);
+    }
+#    print "$way_id: $pl\n";
 
     # go round each set of 3 points to generate the bezier points
     while (@$points_ref >= 3) {
@@ -269,12 +340,16 @@ sub from_lines_to_curves {
         # points if this node is only referenced in one 'way' or we are at the
         # beginning/end of a way that only joins with one other way. This makes ways
         # that 'T' sharp on the join.
-        if (@{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 1
+        if (   $way_id =~ /area_/
+            || @{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 1
             || (   $current_point == 0 
                 && @{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 2)
             || (   $current_point == $points_in_line-3 
                 && @{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 2)
             ) {
+
+#            print "\n\t->".join(':', @$path_start_ref)." ".join(':',
+#            @$path_mid_ref)." ".join(':',@$path_end_ref)."\n";
             $incremental_string .= ' C ';
             # work out control point 1 from $path_start, $path_mid & $path_end
             $start_v = V($path_start_ref->[0], $path_start_ref->[1]);
@@ -284,7 +359,7 @@ sub from_lines_to_curves {
             $mid_start_v = V($start_v->[0]-$mid_v->[0], $start_v->[1]-$mid_v->[1]);
             $mid_end_v   = V($end_v->[0]-$mid_v->[0], $end_v->[1]-$mid_v->[1]);
             $control_scale = normalise_cp($mid_start_v, $mid_end_v);
-            $control_v = $mid_v + V($start_mid_nv->ScalarMult($control_scale*abs($end_v-$mid_v)/2));
+            $control_v = $mid_v + V($start_mid_nv->ScalarMult($control_scale*abs($end_v-$mid_v)*$cp_range));
 
             $incremental_string .= $control_v->[0].','.$control_v->[1].q{ };
             
@@ -302,7 +377,7 @@ sub from_lines_to_curves {
             $mid_start_v = V($start_v->[0]-$mid_v->[0], $start_v->[1]-$mid_v->[1]);
             $mid_end_v   = V($end_v->[0]-$mid_v->[0], $end_v->[1]-$mid_v->[1]);
                 $control_scale = normalise_cp($mid_start_v, $mid_end_v);
-            $control_v = $mid_v + V($start_mid_nv->ScalarMult($control_scale * abs($mid_v-$start_v)/2));
+            $control_v = $mid_v + V($start_mid_nv->ScalarMult($control_scale * abs($mid_v-$start_v)*$cp_range));
     
             $incremental_string .= $control_v->[0].','.$control_v->[1].q{ };
     
@@ -324,16 +399,16 @@ sub from_lines_to_curves {
 # if the angle of the control point is less than 90 degrees return 0
 # between 90 & 180 degrees return a number between 0 & 1.
 sub normalise_cp {
-    my $PI = 3.1415926;
     my ($start_v, $end_v) = @_;
-
+    my $PI = 3.1415926;
+    my $max_angle = $PI/2; # 180degrees
     my $angle = $start_v->InnerAngle($end_v);
     
-    if ($angle < $PI*4/8) { # too small, so 
+    if ($angle < $PI*$min_angle) { # too small, so 
         return 0;
     }
 
     # angle is between $PI/4 and $PI/2
-    $angle = $angle - $PI*4/8;
-    return $angle / ($PI*4/8);
+    $angle = $angle - $PI*$min_angle;
+    return $angle / ($PI*$min_angle);
 }

@@ -28,6 +28,8 @@
                     (@k!='note') and
                     (@k!='historic') and
                     (@k!='layer') and
+                    (@k!='religion') and
+                    (@k!='denomination') and
                     (@k!='source') and
                     (@k!='time') and
                     (@k!='name')">

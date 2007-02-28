@@ -36,12 +36,20 @@ CheckConfig(%Config);
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
-printf "This is version %d (%s) of tilesgen\n", $Version, $Config{ClientVersion};
+printf STDERR "This is version %d (%s) of tilesgen\n", 
+    $Version, $Config{ClientVersion};
+
+unless ($Config{Verbose})
+{
+    # TODO: remove this later.
+    printf STDERR "Running in concise mode. Set config option Verbose=1\n";
+    printf STDERR "for old, chatty behaviour.\n";
+}
 
 # check GD
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
-  print "please update your libgd to version 2 for TrueColor support";
+  print STDERR "please update your libgd to version 2 for TrueColor support";
   exit(3);
 }
 # Setup GD options
@@ -64,6 +72,8 @@ mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 # set the progress indicator variables
 my $progress = 0;
 my $progressJobs = 0;
+my $progressPercent = 0;
+my $lastmsglen = 0;
 
 # Handle the command-line
 my $Mode = shift();
@@ -74,7 +84,6 @@ if($Mode eq "xy"){
   my $X = shift();
   my $Y = shift();
   my $Zoom = 12;
-  print "Generating area $X,$Y,$Zoom\n";
   GenerateTileset($X, $Y, $Zoom);
 }
 elsif ($Mode eq "loop") 
@@ -84,10 +93,10 @@ elsif ($Mode eq "loop")
   # ----------------------------------
   while(1) 
   {
-    my $did_something = ProcessRequestsFromServer();
+    my ($did_something, $message) = ProcessRequestsFromServer();
     uploadIfEnoughTiles();
     if ($did_something == 0) {
-	  sleep(60);
+	  talkInSleep($message, 60);
     }
   }
 }
@@ -131,18 +140,19 @@ sub uploadIfEnoughTiles{
   }
   closedir($dp);
   
-  if($Count < 200){
-    print "Not uploading yet, only $Count tiles\n";
+  if ($Count < 200)
+  {
+    # print "Not uploading yet, only $Count tiles\n";
   }
-  else{
+  else
+  {
     upload();
   }
 }
 
 sub upload{
-  my $UploadScript = "$Bin/upload.pl";
-  print "Uploading... ($UploadScript)\n";
-  `$UploadScript`;
+  my $UploadScript = "$Bin/upload.pl $progressJobs $progressPercent";
+  runCommand("Uploading", $UploadScript);
 }
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next
@@ -167,9 +177,7 @@ sub ProcessRequestsFromServer {
     "Request from server");
     
   if(! -f $LocalFilename){
-    print "Couldn't get request from server";
-    #sleep(5 * 60);
-    return 0;
+    return (0, "Error reading request from server");
   }
 
   # Read into memory
@@ -182,38 +190,33 @@ sub ProcessRequestsFromServer {
   my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
   
   # First field is always "OK" if the server has actually sent a request
-  if($ValidFlag eq "XX"){
-    print "Nothing to do!  Please wait a while, and check later for requests\n";
-    #sleep(40 * 60);
-    return 0;
+  if ($ValidFlag eq "XX")
+  {
+      return (0, "Server has no work for us"); 
   }
-  elsif($ValidFlag ne "OK"){
-    print "Server doesn't seem to be responding as expected\n";
-
-    # this timeout should adapt (like exponential backoff), requires the 
-    # looping to happen inside this script, like  requests.pl -f 
-    print "Sleeping a while to reduce server load\n";
-    #sleep(5 * 60);
-    return 0;
+  elsif ($ValidFlag ne "OK")
+  {
+      return (0, "Server dysfunctional");
   }
   
   # Check what format the results were in
   # If you get this message, please do check for a new version, rather than
   # commenting-out the test - it means the field order has changed and this
   # program no longer makes sense!
-  if($Version != 3){
-    print "Server is speaking a different version of the protocol to us\n";
-    print "Check to see whether a new version of this program was released\n";
-    exit(2);
+  if ($Version != 3)
+  {
+      print STDERR "\n";
+      print STDERR "Server is speaking a different version of the protocol to us.\n";
+      print STDERR "Check to see whether a new version of this program was released!\n";
+      exit(2);
   }
   
   # Information text to say what's happening
-  print "OK, got something... (from the \"$ModuleName\" server module)\n";
-  print "Doing zoom level $Z, location $X, $Y\n";
+  statusMessage("Got work from the \"$ModuleName\" server module");
   
   # Create the tileset requested
   GenerateTileset($X, $Y, $Z);
-  return 1;
+  return (1, "");
 }
 
 #-----------------------------------------------------------------------------
@@ -225,7 +228,11 @@ sub GenerateTileset {
   my ($N, $S) = Project($Y, $Zoom);
   my ($W, $E) = ProjectL($X, $Zoom);
   
-  printf("Doing area around %f,%f\n", ($N+$S)/2, ($W+$E)/2);
+  $progress = 0;
+  $progressJobs++;
+
+  statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), 1);
+  
 
   my $DataFile = "data-$PID.osm";
 
@@ -270,7 +277,7 @@ sub GenerateTileset {
       DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
       if(-s $DataFile1 == 0){
         printf("No data here either\n");
-        return 0 if ($Main::Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+        return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
         exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
       }
     appendOSMfile($DataFile,$DataFile1);
@@ -284,7 +291,7 @@ sub GenerateTileset {
   }
 
   my $Margin = " " x ($Zoom - 8);
-  printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
+  #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
   
   # Add bounding box to osmarender
   # then set the data source
@@ -304,7 +311,8 @@ sub GenerateTileset {
     # Render the file
     xml2svg(
       "osm-map-features-$PID-z$i.xml",
-      "$Config{WorkingDirectory}output-$PID-z$i.svg");
+      "$Config{WorkingDirectory}output-$PID-z$i.svg",
+      "zoom level $i");
     
     # Delete temporary osmarender
     killafile("osm-map-features-$PID-z$i.xml");
@@ -317,8 +325,6 @@ sub GenerateTileset {
   my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
 
   # Render it as loads of recursive tiles
-  $progress = 0;
-  $progressJobs++;
   RenderTile($X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
   # Clean-up the SVG files
@@ -345,7 +351,7 @@ sub RenderTile {
   my $Filename = tileFilename($X, $Ytile, $Zoom);
 
   # Render it to PNG
-  printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
+  # printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
   my $Width = 256 * (2 ** ($Zoom - 12));  # Pixel size of tiles  
   my $Height = 256; # Pixel height of tile
   svg2png($Zoom, $Filename, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile);
@@ -364,11 +370,22 @@ sub RenderTile {
   else {
     $progress += 1;
   }
-  #my $progress=$GenerateTileset::progress;  
-  #TODO: instead of putting 63 calculate number of tiles depending on min and max zoom:
-  my $progressPercent=$progress*100/63;
-  printf "Job Nr.%d %1.1f %% done.\n",$progressJobs, $progressPercent;
 
+  if (($progressPercent=$progress*100/63) == 100)
+  {
+      statusMessage("Finished $X,$Y", 1);
+  }
+  else
+  {
+      if ($Config{Verbose})
+      {
+          printf STDERR "Job No. %d %1.1f %% done.\n",$progressJobs, $progressPercent;
+      }
+      else
+      {
+          statusMessage("Working");
+      }
+  }
 
   # Sub-tiles
   my $MercY2 = ProjectF($N);
@@ -466,16 +483,17 @@ sub UpdateOsmarender {
 sub DownloadFile {
   my ($URL, $File, $UseExisting, $Title) = @_;
   
-  print STDERR "Downloading: $Title";
+  statusMessage("Downloading: $Title");
   
-  if($UseExisting){
+  if($UseExisting) 
+  {
     mirror($URL, $File);
-    }
-  else{
+  } 
+  else
+  {
     getstore($URL, $File);
-    }
-  
-  printf STDERR " done, %d bytes\n", -s $File;
+  }
+  doneMessage(sprintf("done, %d bytes", -s $File));
   
 }
 
@@ -483,7 +501,7 @@ sub DownloadFile {
 # Transform an OSM file (using osmarender) into SVG
 #-----------------------------------------------------------------------------
 sub xml2svg {
-  my($MapFeatures,$SVG) = @_;
+  my($MapFeatures, $SVG, $what) = @_;
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
     $Config{XmlStarlet},
@@ -491,9 +509,63 @@ sub xml2svg {
     "$MapFeatures",
     $SVG);
   
-  print STDERR "Transforming ...";
-  `$Cmd`;
-  print STDERR " done\n";
+  runCommand("Transforming $what", $Cmd);
+}
+
+#-----------------------------------------------------------------------------
+# Run a shell command. Suppress command's stderr output unless it terminates
+# with an error code.
+#
+# Return 1 if ok, 0 on error.
+#-----------------------------------------------------------------------------
+sub runCommand
+{
+    my ($message, $cmd) = @_;
+
+    statusMessage($message);
+
+    if ($Config{Verbose})
+    {
+        my $retval = system($cmd);
+        return ($retval<0) ? 0 : ($retval>>8) ? 0 : 1;
+    }
+
+    my $ErrorFile = $Config{WorkingDirectory}."/".$PID.".stderr";
+    my $retval = system("$cmd 2> $ErrorFile");
+    my $ok = 0;
+
+    # <0 means that the process could not start
+    if ($retval < 0)
+    {
+        print STDERR "ERROR:\n";
+        print STDERR "  Could not run the following command:\n";
+        print STDERR "  $cmd\n";
+        print STDERR "  Please check your installation.\n";
+    } 
+    else
+    {
+        $retval = $retval >> 8;
+        if ($retval)
+        {
+            print STDERR "ERROR\n";
+            print STDERR "  The following command produced an error message:\n";
+            print STDERR "  $cmd\n";
+            print STDERR "  Debug output follows:\n";
+            open(ERR, $ErrorFile);
+            while(<ERR>)
+            {
+                print STDERR "  | $_";
+            }
+            close(ERR);
+        }
+        else
+        {
+            $ok = 1;
+        }
+    }
+    
+    killafile($ErrorFile);
+    return $ok;
 }
 
 #-----------------------------------------------------------------------------
@@ -504,7 +576,7 @@ sub svg2png {
 
   my $TempFile = $PNG."_part";
   
-  my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\"", 
+  my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > /dev/null", 
     $Config{Niceness},
     $Config{Inkscape},
     $SizeX,
@@ -514,9 +586,7 @@ sub svg2png {
     $Config{WorkingDirectory},
     "output-$PID-z$Zoom.svg");
   
-  print STDERR "Rendering ...";
-  `$Cmd`;
-  print STDERR " done\n";
+  runCommand("Rendering", $Cmd);
 
   splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile);
   
@@ -650,7 +720,7 @@ sub splitImageX {
   my $Size = 2 ** ($Z - $ZOrig);
   
   # Load the tileset image
-  print "Loading $File ($Size x 1)\n";
+  statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size));
   my $Image = newFromPng GD::Image($File);
   
   # Use one subimage for everything, and keep copying data into it
@@ -678,7 +748,7 @@ sub splitImageX {
     my $Filename2 = "$Filename.cut";
     
     # Store the tile
-    print " -> $Filename\n";
+    statusMessage(" -> $Filename") if ($Config{Verbose});
     WriteImage($SubImage,$Filename2);
     rename($Filename2, $Filename);
     
@@ -700,4 +770,68 @@ sub WriteImage {
   binmode $fp;
   print $fp $png_data;
   close $fp;
+}
+
+#-----------------------------------------------------------------------------
+# Prints status message without newline, overwrites previous message
+# (if $newline set, starts new line after message)
+#-----------------------------------------------------------------------------
+sub statusMessage 
+{
+    my ($msg, $newline) = @_;
+
+    if ($Config{Verbose})
+    {
+        print STDERR "$msg\n";
+        return;
+    }
+
+    my $toprint = sprintf("[#%d %3d%%] %s%s ", $progressJobs, $progressPercent+.5, $msg, ($newline) ? "" : "...");
+    print STDERR "\r";
+    print STDERR " " x $lastmsglen;
+    print STDERR "\r$toprint";
+    if ($newline)
+    {
+        $lastmsglen = 0;
+        print STDERR "\n";
+    }
+    else
+    {
+        $lastmsglen = length($toprint);
+    }
+}
+
+#-----------------------------------------------------------------------------
+# Used to display task completion. Only for verbose mode.
+#-----------------------------------------------------------------------------
+sub doneMessage
+{
+    my $msg = shift;
+    $msg = "done" if ($msg eq "");
+
+    if ($Config{Verbose})
+    {
+        print STDERR "$msg\n";
+        return;
+    }
+}
+
+#-----------------------------------------------------------------------------
+# A sleep function with visible countdown
+#-----------------------------------------------------------------------------
+sub talkInSleep
+{
+    my ($message, $duration) = @_;
+    if ($Config{Verbose})
+    {
+        print STDERR "$message: sleeping $duration seconds\n";
+        sleep $duration;
+        return;
+    }
+
+    for (my $i = 0; $i< $duration; $i++)
+    {
+        statusMessage(sprintf("%s, sleeping (%d)", $message, $duration - $i));
+        sleep 1;
+    }
 }

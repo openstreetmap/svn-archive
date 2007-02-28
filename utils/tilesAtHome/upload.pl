@@ -34,24 +34,29 @@ my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
 
 my @sorted;
 
+# when called from tilesGen, use these for nice display
+my $progressJobs = $ARGV[0] or 1;
+my $progressPercent = $ARGV[1] or 0;
+my $lastmsglen;
+
 # Upload any ZIP files which are still waiting to go
 if(opendir(ZIPDIR, $ZipDir)){
   my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
   close ZIPDIR;
   @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
-  print @sorted . " zip files to upload\n";
+  statusMessage(scalar(@sorted)." zip files to upload");
   while(my $File = shift @sorted){
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
-    print @sorted . " zip files left to upload\n";
+    statusMessage(scalar(@sorted)." zip files left to upload");
   }
 }
 
 my $TileDir = $Config{WorkingDirectory};
 
 # Group and upload the tiles
-print "Searching for tiles in $TileDir\n";
+statusMessage("Searching for tiles in $TileDir");
 opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
 my @tiles = grep { /tile_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
 closedir($dp);
@@ -78,7 +83,7 @@ sub uploadTileBatch(){
   mkdir $TempDir if ! -d $TempDir;
   mkdir $OutputDir if ! -d $OutputDir;
   
-  print @tiles . " tiles to process\n";
+  statusMessage(scalar(@tiles)." tiles to process");
 
   while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles)){
     my $Filename1 = "$TileDir/$file";
@@ -92,12 +97,12 @@ sub uploadTileBatch(){
   }
   
   if($Count){
-    printf("Got %d files (%d bytes), compressing...", $Count, $Size);
+    statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size));
     return compressTiles($TempDir, $OutputDir);
   }
   else
   {
-    print "Finished.\n";
+    statusMessage("upload finished");
     return 0;
   }
 }
@@ -153,13 +158,15 @@ sub upload(){
   my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
   my $URL = $Config{"UploadURL2"};
   
-  print "Uploading \n  $File\n  to $URL\n";
+  statusMessage("Uploading $File");
   my $res = $ua->post($URL,
     Content_Type => 'form-data',
     Content => [ file => [$File], mp => $Password, version => $Config{ClientVersion} ]);
     
   if(!$res->is_success()){
-    print("Error uploading file");
+    print STDERR "ERROR\n";
+    print STDERR "  Error uploading $File to $URL:\n";
+    print STDERR "  ".$res->status_line."\n";
     return 0;
   } 
   
@@ -173,4 +180,75 @@ sub upload(){
   
   return 1;
 }
+
+# =====================================================================
+# The following is duplicated from tilesGen.pl; TODO: make nice little
+# module from it
+# =====================================================================
+
+#-----------------------------------------------------------------------------
+# Prints status message without newline, overwrites previous message
+# (if $newline set, starts new line after message)
+#-----------------------------------------------------------------------------
+sub statusMessage 
+{
+    my ($msg, $newline) = @_;
+
+    if ($Config{Verbose})
+    {
+        print STDERR "$msg\n";
+        return;
+    }
+
+    my $toprint = sprintf("[#%d %3d%%] %s%s ", $progressJobs, $progressPercent+.5, $msg, ($newline) ? "" : "...");
+    print STDERR "\r";
+    print STDERR " " x $lastmsglen;
+    print STDERR "\r$toprint";
+    if ($newline)
+    {
+        $lastmsglen = 0;
+        print STDERR "\n";
+    }
+    else
+    {
+        $lastmsglen = length($toprint);
+    }
+}
+
+#-----------------------------------------------------------------------------
+# Used to display task completion. Only for verbose mode.
+#-----------------------------------------------------------------------------
+sub doneMessage
+{
+    my $msg = shift;
+    $msg = "done" if ($msg eq "");
+
+    if ($Config{Verbose})
+    {
+        print STDERR "$msg\n";
+        return;
+    }
+}
+
+#-----------------------------------------------------------------------------
+# A sleep function with visible countdown
+#-----------------------------------------------------------------------------
+sub talkInSleep
+{
+    my ($message, $duration) = @_;
+    if ($Config{Verbose})
+    {
+        print STDERR "$message: sleeping $duration seconds\n";
+        sleep $duration;
+        return;
+    }
+
+    for (my $i = 0; $i< $duration; $i++)
+    {
+        statusMessage(sprintf("%s, sleeping (%d)", $message, $duration - $i));
+        sleep 1;
+    }
+}
+
+
 

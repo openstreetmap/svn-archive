@@ -517,14 +517,31 @@ sub DownloadFile {
 #-----------------------------------------------------------------------------
 sub xml2svg {
   my($MapFeatures, $SVG, $what) = @_;
+  my $TSVG = "$SVG-temp.svg";
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
     $Config{XmlStarlet},
     "osmarender.xsl",
     "$MapFeatures",
+    $TSVG);
+    runCommand("Transforming $what", $Cmd);
+#-----------------------------------------------------------------------------
+# Process lines to Bezier curve hinting
+#-----------------------------------------------------------------------------
+  my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
+    $Config{Niceness},
+    $TSVG,
     $SVG);
-  
-  runCommand("Transforming $what", $Cmd);
+    runCommand("Beziercurvehinting $what", $Cmd);
+#-----------------------------------------------------------------------------        
+# Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
+#-----------------------------------------------------------------------------
+  my $filesize= -s $SVG;
+  if (!$filesize) {
+    copy($TSVG,$SVG);
+    statusMessage("Error on Bezier Curve hinting, rendering without bezier curves");
+    }
+    killafile($TSVG);
 }
 
 #-----------------------------------------------------------------------------

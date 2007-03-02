@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 use LWP::Simple;
+use File::Copy;
 #-----------------------------------------------------------------------------
 # OpenStreetMap @ Home
 # 
@@ -34,7 +35,16 @@ use LWP::Simple;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
-
+# Prerequisites for the program :
+# Perl
+# xmlstarlet
+# inkscape
+# perlmodules LWP::Simple, File::Copy and Math::Vec. First two modules are
+# normally included in a standard perl installation, and the latter module
+# can be installed via CPAN (or PPM on Windows). Debian users can also
+# install the latter module with this command : "apt-get install libmath-vec-perl"
+#
+#------------------------------------------------------------------------------
 my $Password = "user|password";  # Ask OJW for a password to use this script
 
 my $args = shift;
@@ -46,7 +56,11 @@ if($args eq "-h") {
 }
 
 # Process
+UpdateOsmarender();
+while(1){
 ProcessRequestFromWeb($Password);
+sleep(60);
+};
 exit;
 
 #-----------------------------------------------------------------------------
@@ -56,7 +70,7 @@ sub UpdateOsmarender(){
   foreach $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png")){
   
     DownloadFile(
-    "http://almien.co.uk/OSM/Places/Download/$File",
+    "http://svn.openstreetmap.org/utils/osmAtHome/$File",
     $File,
     1,
     "Osmarender ($File)");
@@ -94,13 +108,14 @@ sub ProcessRequest(){
     print STDERR "Please download latest script and run that instead of this one\n";
     exit;
   }
-  if($ID == -1){
-    print STDERR "Nothing to do!\nSleeping for 1 hour: press Ctrl-C to quit\n";
+  if($ID == -1){ 
+    print STDERR "Nothing to do!\nSleeping for 1 hour : press Ctrl-C to quit\n";
     sleep(3600);
-    exit 1;
-  }
+#    exit 1;
+    return;
+ }
   
-  UpdateOsmarender();
+#  UpdateOsmarender();
   
   print STDERR "Using interface version $Version\n";
   print STDERR "Downloading $ID from $URL\n";
@@ -151,13 +166,31 @@ sub DownloadFile(){
 #-----------------------------------------------------------------------------
 sub xml2svg(){
   my($SVG) = @_;
+  my($TSVG) = "temp.svg";
   my $Cmd = sprintf("%sxmlstarlet tr %s %s > %s",
     "nice ", # Blank this out for use on windows
     "osmarender.xsl",
     "osm-map-features.xml",
-    $SVG);
+    $TSVG);
   print STDERR "Transforming...";
   `$Cmd`;
+#-----------------------------------------------------------------------------
+# Process lines to bezier
+#-----------------------------------------------------------------------------
+  my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
+     "nice ",
+     $TSVG,
+     $SVG);
+  print STDERR "Lines to Bezier..";
+  `$Cmd`;
+#------------------------------------------------------------------------------
+# Quickfix in case lines2curves found a zerolenght segment
+#------------------------------------------------------------------------------  
+  my $filesize = -s "output.svg";
+  if (!$filesize) {
+  copy($TSVG,$SVG);
+  print STDERR "zerolenght segment, no bezier hinting. Rendering without bezier hinting.\n";
+    } 
   print STDERR " done\n";
 }
 

@@ -285,6 +285,21 @@ sub GenerateTileset {
     }
   }
   
+  # Check for correct UTF8 (else inkscape will run amok later)
+  statusMessage("Checking for UTF-8 errors in $DataFile", 0);
+  open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
+  my @toCheck = <OSMDATA>;
+  close(OSMDATA);
+  while (my $osmline = shift @toCheck)
+  {
+    if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
+    {
+      statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom",1);
+      return 0 if ($Mode eq "loop");
+      exit(1);
+    }
+  }
+
   # Faff around
   for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
     killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");

@@ -1,5 +1,4 @@
-
-
+use strict; 
 
 #--------------------------------------------------------------------------
 # Reads a tiles@home config file, returns a hash array
@@ -53,7 +52,7 @@ sub CheckConfig{
   printf "- Using working directory %s\n", $Config{"WorkingDirectory"};
   
   # Inkscape version
-  $InkscapeV = `$Config{Inkscape} --version`;
+  my $InkscapeV = `$Config{Inkscape} --version`;
   if($InkscapeV !~ /Inkscape (\d+\.\d+)/){
     die("Can't find inkscape (using \"$Config{Inkscape}\")\n");
   }
@@ -63,11 +62,20 @@ sub CheckConfig{
   print "- Inkscape version $1\n";
 
   # XmlStarlet version
-  $XmlV = `$Config{XmlStarlet} --version`;
+  my $XmlV = `$Config{XmlStarlet} --version`;
   if($XmlV !~ /(\d+\.\d+\.\d+)/){
     die("Can't find xmlstarlet (using \"$Config{XmlStarlet}\")\n");
   }
   print "- xmlstarlet version $1\n";
+
+  # Zip version
+  $Config{Zip} = "zip" unless defined($Config{Zip});
+  my $ZipV = `$Config{Zip} -v`;
+  if ($ZipV eq "") 
+  {
+    die("Can't find zip (using \"$Config{Zip}\")\n");
+  }
+  print "- zip is present\n";
   
   # Upload URL, username
   printf "- Uploading with username \"$Config{UploadUsername}\"\n", ;

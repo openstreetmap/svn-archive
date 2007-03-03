@@ -520,7 +520,10 @@ sub DownloadFile {
 #-----------------------------------------------------------------------------
 sub xml2svg {
   my($MapFeatures, $SVG, $what) = @_;
-  my $TSVG = "$SVG-temp.svg";
+  my $TSVG = "$SVG";
+  if (!$Config{NoBezier}) {
+    $TSVG = "$SVG-temp.svg";
+    }
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
     $Config{XmlStarlet},
@@ -528,9 +531,13 @@ sub xml2svg {
     "$MapFeatures",
     $TSVG);
     runCommand("Transforming $what", $Cmd);
+    if ($Config{NoBezier}) {
+    statusMessage("Bezier Curve hinting disabled.");
+    }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
 #-----------------------------------------------------------------------------
+  if (!$Config{NoBezier}) {
   my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
     $Config{Niceness},
     $TSVG,
@@ -545,6 +552,7 @@ sub xml2svg {
     statusMessage("Error on Bezier Curve hinting, rendering without bezier curves");
     }
     killafile($TSVG);
+  }
 }
 
 #-----------------------------------------------------------------------------

@@ -19,3 +19,5 @@ UploadChunkSize=1.5   # Megabyte
 UploadChunkCount=683  # default: half a tileset
 DeleteZipFilesAfterUpload=0
 
+# Beziercurve hinting
+NoBezier=0  # Set to 1 on a AMD64 box running Gentoo. Math rounding errors in the libs.

@@ -113,7 +113,10 @@ elsif ($Mode eq "") {
   # ----------------------------------
   # Normal mode downloads request from server
   # ----------------------------------
-  ProcessRequestsFromServer();
+  my ($did_something, $message) = ProcessRequestsFromServer();
+  
+  talkInSleep($message, 60) unless($did_something);
+  
 }
 else{
   # ----------------------------------

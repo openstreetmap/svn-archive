@@ -7,6 +7,7 @@ int main()
 {
 	OSRef ref (489600, 128500);
 	LatLng latLng = ref.toLatLng();
+	cout << "Ref as six figure string: " << ref.toSixFigureString() << endl;
 	cout << latLng.getLat() << " " << latLng.getLng() << endl;
 	latLng.toWGS84();
 	cout << latLng.getLat() << " " << latLng.getLng() << endl;

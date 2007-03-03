@@ -5,6 +5,7 @@
 #include "LatLng.h"
 #include "util.h"
 #include <cmath>
+#include <string>
 
 // Based on Jonathan Stott's JCoord.
 // Licenced under the GNU GPL.
@@ -82,6 +83,13 @@ public:
    */
   double getNorthing() {
     return northing;
+  }
+
+  std::string toSixFigureString();
+
+  std::string getGridSquare()
+  {
+	return toSixFigureString().substr(0,2);
   }
 };
 

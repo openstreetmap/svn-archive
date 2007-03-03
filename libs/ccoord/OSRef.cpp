@@ -4,6 +4,13 @@
 #include "RefEll.h"
 #include <cmath>
 
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+
+using std::setfill;
+using std::setw;
+
 // Based on Jonathan Stott's JCoord.
 // Licenced under the GNU GPL.
 
@@ -79,4 +86,48 @@ LatLng OSRef::toLatLng()
             + (XII * pow(E - E0, 5.0)) - (XIIA * pow(E - E0, 7.0));
 
     return LatLng(toDegrees(phi), toDegrees(lambda));
+  }
+
+  /**
+   * Return a String representation of this OSGB grid reference using the
+   * six-figure notation in the form XY123456
+   * 
+   * @return a String representing this OSGB grid reference in six-figure
+   *         notation
+   * @since 1.0
+   */
+	std::string OSRef::toSixFigureString() 
+	{
+    int hundredkmE = (int) floor(easting / 100000);
+    int hundredkmN = (int) floor(northing / 100000);
+	char firstLetter;
+    if (hundredkmN < 5) {
+      if (hundredkmE < 5) {
+        firstLetter = 'S';
+      } else {
+        firstLetter = 'T';
+      }
+    } else if (hundredkmN < 10) {
+      if (hundredkmE < 5) {
+        firstLetter = 'N';
+      } else {
+        firstLetter = 'O';
+      }
+    } else {
+      firstLetter = 'H';
+    }
+
+    int index = 65 + ((4 - (hundredkmN % 5)) * 5) + (hundredkmE % 5);
+    // int ti = index;
+    if (index >= 73)
+      index++;
+	char secondLetter = (char) index;
+
+    int e = (int) floor((easting - (100000 * hundredkmE)) / 100);
+    int n = (int) floor((northing - (100000 * hundredkmN)) / 100);
+
+	std::ostringstream sstream;
+	sstream << firstLetter << secondLetter << setfill('0') << 
+			setw(3) << e << setfill('0') << setw(3) <<  n;
+	return sstream.str();
   }

@@ -38,6 +38,8 @@ open(COMMANDS, '<', $Config) || die($Usage);
 my $PDF = PDF::API2->new();
 my ($Page, @Attributions);
 my $PageNum = 1;
+# Default options
+my %Option = (dpi=>150); 
 
 newPage();
 my $Font = $PDF->corefont('Helvetica');
@@ -52,10 +54,29 @@ while(my $Line = <COMMANDS>){
     $             # to end of line
     }{}x;         # with nothing
 
+  #---------------------------------------------------------------------------
+  #  New page
+  #---------------------------------------------------------------------------
   if($Line =~ m{==page==}i){
     $Page = $PDF->page;
     $PageNum++;
   }
+  #---------------------------------------------------------------------------
+  #  Change an option
+  #---------------------------------------------------------------------------
+  elsif($Line =~ m{
+    option:       # command
+    \s*           #
+    (\w+)         # option name
+    \s* = \s*     #  =
+    (.*)          # value
+    }x){
+    $Option{$1} = $2;
+    print "Setting option \"$1\" to \"$2\"\n";
+  }
+  #---------------------------------------------------------------------------
+  #  Add a line of text
+  #---------------------------------------------------------------------------
   elsif($Line =~ m{
     text:               # command
     \s*                 #
@@ -70,6 +91,9 @@ while(my $Line = <COMMANDS>){
     print "Adding \"$1\" at $2, $3, size $4\n";
     textAt($1,$2,$3,$4);
   }
+  #---------------------------------------------------------------------------
+  #  Add a list of images used within the document
+  #---------------------------------------------------------------------------
   elsif($Line =~ m{
     attribution:        # command
     \s*                 #
@@ -93,6 +117,9 @@ while(my $Line = <COMMANDS>){
       $Y -= $Size * 1.25;
     }
   }
+  #---------------------------------------------------------------------------
+  #  Add a JPEG image to the page
+  #---------------------------------------------------------------------------
   elsif($Line =~ m{
     image:             # Command
     \s*                #
@@ -117,6 +144,9 @@ while(my $Line = <COMMANDS>){
     # (this text needs to identify which image we're talking about, hence the description)
     push(@Attributions, "Page $PageNum: Image \"$7\", by $6");
     }
+  #---------------------------------------------------------------------------
+  #  Add a map to the page
+  #---------------------------------------------------------------------------
   elsif($Line =~ m{
     map:               # Command
     \s*                #
@@ -130,23 +160,35 @@ while(my $Line = <COMMANDS>){
     my ($MapOptions, $PositionOptions) = ($1, $2);
     my ($Lat, $Long, $Size, $Zoom) = split(/\s*,\s*/, $MapOptions);
     my ($X,$Y,$W,$H) = split(/\s*,\s*/, $PositionOptions);
-    my $Filename = datafile("png");
-    print "Creating map around $Lat, $Long\n";
-    my %Area = (lat=>$Lat, long=>$Long, zoom=>$Zoom, width=>1000, height=>1000, size=>$Size);
+    
+    # Process those map options
+    my $Filename = datafile('png');
+    my $AspectRatio = $W / $H;
+    my $ImgW = ($W / 25) * $Option{dpi}; # pixels = width in inches * DPI
+    my $ImgH = $ImgW / $AspectRatio;
+    my %Area = (lat=>$Lat, long=>$Long, zoom=>$Zoom, width=>$ImgW, height=>$ImgH, size=>$Size);
+    
+    # Create the map
+    print "Creating map around $Lat, $Long, from zoom $Zoom tiles\nUsing image $ImgW x $ImgH\n";
     getTileArea::createArea(\%Area, $Filename);
 
-    
+    # Add map to page
     my $PageGfx = $Page->gfx;
     my $Image = $PDF->image_png($Filename) || print("Failed to load");
     $PageGfx->image($Image, $X/mm, $Y/mm, $W/mm, $H/mm ); # from left, from bottom, width, height
 
     }
+  #---------------------------------------------------------------------------
+  #  Unrecognised lines of input
+  #---------------------------------------------------------------------------
   else{
     #print "Misunderstood $Line\n";
   }
   
   
 }
+
+print "Saving PDF to $Filename\n";
 $PDF->saveas($Filename);
 
 BEGIN {

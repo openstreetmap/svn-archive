@@ -149,9 +149,13 @@ while(my $Line = <COMMANDS>){
 }
 $PDF->saveas($Filename);
 
-sub datafile{
-  my $Suffix = shift();
-  return("Data/file.$Suffix");
+BEGIN {
+  my $NextFileNum = 1;
+  sub datafile{
+    my $Suffix = shift();
+    return
+      sprintf("Data/%05d.$Suffix", $NextFileNum++);
+  }
 }
 sub textAt{
   my ($Text, $X, $Y, $Size) = @_;

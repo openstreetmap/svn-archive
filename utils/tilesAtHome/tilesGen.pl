@@ -289,6 +289,7 @@ sub GenerateTileset {
   }
   
   # Check for correct UTF8 (else inkscape will run amok later)
+  # TODO: This doesn't seem to catch all string errors that inkscape trips over.
   statusMessage("Checking for UTF-8 errors in $DataFile", 0);
   open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
   my @toCheck = <OSMDATA>;
@@ -629,7 +630,12 @@ sub svg2png {
     $Config{WorkingDirectory},
     "output-$PID-z$Zoom.svg");
   
-  runCommand("Rendering", $Cmd);
+  # stop rendering the current job when inkscape fails
+  if (not runCommand("Rendering", $Cmd)){
+    statusMessage("$Cmd failed",1);
+    return 0 if ($Mode eq "loop");
+    exit(1);
+  }
 
   splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile);
   

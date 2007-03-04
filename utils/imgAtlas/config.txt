@@ -15,6 +15,10 @@ map: (51.3, -0.5, 256, 13) at (10, 10, 190, 260)
 
 ==page==
 
+map: (51.5, -0.12, 256, 14) at (10, 10, 190, 260)
+
+==page==
+
 # Final page
 text: Copyright 2007, various OpenStreetMap contributors. (20, 260, 4)
 text: http://openstreetmap.org (20, 252, 4)

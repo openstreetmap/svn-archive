@@ -45,8 +45,17 @@ sub createArea{
     $Area->{height},
     $BackgroundColour);
   
-  my $GridSize = 1;
+  $Area->{aspect} = $Area->{width} /$Area->{height};
   my $Tilesize = getTile::size();
+  
+  # Gridsize = how many tiles to go outwards from the centre when looking for
+  # things to add to the picture
+  my $GridSize = ($Area->{aspect} > 0)
+    ? (0.5 * $Area->{width} / $Tilesize)
+    : (0.5 * $Area->{height} / $Tilesize);
+  $GridSize = int($GridSize) + 1;
+  
+  #printf "Using gridsize %d (%d pixels)\n", $GridSize, $GridSize * $Tilesize; exit;
   
   my ($XA, $YA) = (int($X), int($Y));
   my ($OffsetX, $OffsetY) = ($X - $XA, $Y - $YA);

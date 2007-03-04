@@ -27,14 +27,6 @@ use osm::tileCoords;
 sub createArea{
   my ($Area, $Filename) = @_;
   
-  printf "Pos %f,%f, size %dx%d, using Z-%d tiles at %1.1fpx\n",
-  $Area->{lat},
-  $Area->{long},
-  $Area->{width},
-  $Area->{height},
-  $Area->{zoom}, 
-  $Area->{size};
-
   my ($X, $Y) = tileCoords::LLZ_to_XY(
     $Area->{lat},
     $Area->{long},
@@ -101,10 +93,12 @@ sub createArea{
   }
 
   # Debug: mark centre
-  my $OverlayColour = $Image->colorAllocate(0,0,0); 
-  $Image->line(0, $ImgCentreY, $Area->{width}, $ImgCentreY, $OverlayColour);
-  $Image->line($ImgCentreX, 0, $ImgCentreX, $Area->{height},$OverlayColour);
-
+  if(0){
+    my $OverlayColour = $Image->colorAllocate(0,0,0); 
+    $Image->line(0, $ImgCentreY, $Area->{width}, $ImgCentreY, $OverlayColour);
+    $Image->line($ImgCentreX, 0, $ImgCentreX, $Area->{height},$OverlayColour);
+  }
+  
   savePng($Image, $Filename);
 }
 

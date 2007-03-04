@@ -23,23 +23,21 @@ use strict;
 use LWP::Simple;
 
 sub size{
+  # Tile size in pixels
   return(256);
 }
 
 sub tile{
   my ($X, $Y, $Z) = @_;
-  
+  # Download a tile and return its contents as PNG data
   my $URL = URL($X,$Y,$Z);
-  
   my $Data = get($URL); 
-  
-  printf "Getting $X, $Y, $Z from $URL - %d bytes\n", length($Data);
   return $Data;
 }
   
 sub URL{
   my ($X,$Y,$Z) = @_;
-  
+  # Locate a tile's URL
   return
     sprintf
       "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 

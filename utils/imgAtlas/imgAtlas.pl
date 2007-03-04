@@ -1,10 +1,17 @@
 #!/usr/bin/perl
 #-----------------------------------------------------------------------------
-# Currently just generic image-to-PDF stuff
+# Document-creation system, for PDF output
+# Supports the layout of:
+#  * JPEG photos
+#  * OpenStreetMap maps
+#  * Simple text
 #
+#-----------------------------------------------------------------------------
 # Copyright 2007
 #  * Oliver White
-# 
+#
+#    (Add your name here if you edit the program)
+#-----------------------------------------------------------------------------
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -20,6 +27,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 #-----------------------------------------------------------------------------
 use strict;
+use osm::getTileArea;
 use PDF::API2;
 use constant mm => 25.4 / 72;
 my $Usage = "$0 [config file] [output pdf filename]\n";
@@ -62,7 +70,7 @@ while(my $Line = <COMMANDS>){
     print "Adding \"$1\" at $2, $3, size $4\n";
     textAt($1,$2,$3,$4);
   }
-  if($Line =~ m{
+  elsif($Line =~ m{
     attribution:        # command
     \s*                 #
     \(                  # (
@@ -109,6 +117,30 @@ while(my $Line = <COMMANDS>){
     # (this text needs to identify which image we're talking about, hence the description)
     push(@Attributions, "Page $PageNum: Image \"$7\", by $6");
     }
+  elsif($Line =~ m{
+    map:               # Command
+    \s*                #
+    \((.*?)\)          # Map options
+    \s*                #
+    at                 # at
+    \s*                #
+    \((.*?)\)          # Position options
+    }ix)
+    {
+    my ($MapOptions, $PositionOptions) = ($1, $2);
+    my ($Lat, $Long, $Size, $Zoom) = split(/\s*,\s*/, $MapOptions);
+    my ($X,$Y,$W,$H) = split(/\s*,\s*/, $PositionOptions);
+    my $Filename = datafile("png");
+    print "Creating map around $Lat, $Long\n";
+    my %Area = (lat=>$Lat, long=>$Long, zoom=>$Zoom, width=>1000, height=>1000, size=>$Size);
+    getTileArea::createArea(\%Area, $Filename);
+
+    
+    my $PageGfx = $Page->gfx;
+    my $Image = $PDF->image_png($Filename) || print("Failed to load");
+    $PageGfx->image($Image, $X/mm, $Y/mm, $W/mm, $H/mm ); # from left, from bottom, width, height
+
+    }
   else{
     #print "Misunderstood $Line\n";
   }
@@ -117,6 +149,10 @@ while(my $Line = <COMMANDS>){
 }
 $PDF->saveas($Filename);
 
+sub datafile{
+  my $Suffix = shift();
+  return("Data/file.$Suffix");
+}
 sub textAt{
   my ($Text, $X, $Y, $Size) = @_;
   

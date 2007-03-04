@@ -158,7 +158,7 @@ while(my $Line = <COMMANDS>){
     }ix)
     {
     my ($MapOptions, $PositionOptions) = ($1, $2);
-    my ($Lat, $Long, $Size, $Zoom) = split(/\s*,\s*/, $MapOptions);
+    my ($Lat, $Long, $SizeKm, $Zoom) = split(/\s*,\s*/, $MapOptions);
     my ($X,$Y,$W,$H) = split(/\s*,\s*/, $PositionOptions);
     
     # Process those map options
@@ -166,7 +166,12 @@ while(my $Line = <COMMANDS>){
     my $AspectRatio = $W / $H;
     my $ImgW = ($W / 25) * $Option{dpi}; # pixels = width in inches * DPI
     my $ImgH = $ImgW / $AspectRatio;
-    my %Area = (lat=>$Lat, long=>$Long, zoom=>$Zoom, width=>$ImgW, height=>$ImgH, size=>$Size);
+    
+    my $SizeOfTileKm = 10 * (2 ** (12 - $Zoom));  # Z-12 is about 10km, and each additional zoom halves that
+    my $WidthInTiles = $SizeKm / $SizeOfTileKm;   # How many tiles should fit across the map
+    my $SizeOfTilePx = $ImgW / $WidthInTiles;     # How wide each tile should be made, in pixels
+    print "$SizeKm km across, $SizeOfTileKm km per tile =  $WidthInTiles tiles, so $SizeOfTilePx px per tile\n";
+    my %Area = (lat=>$Lat, long=>$Long, zoom=>$Zoom, width=>$ImgW, height=>$ImgH, size=>$SizeOfTilePx);
     
     # Create the map
     print "Creating map around $Lat, $Long, from zoom $Zoom tiles\nUsing image $ImgW x $ImgH\n";

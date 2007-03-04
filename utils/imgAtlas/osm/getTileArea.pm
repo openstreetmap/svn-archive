@@ -50,12 +50,12 @@ sub createArea{
   
   # Gridsize = how many tiles to go outwards from the centre when looking for
   # things to add to the picture
-  my $GridSize = ($Area->{aspect} > 0)
-    ? (0.5 * $Area->{width} / $Tilesize)
-    : (0.5 * $Area->{height} / $Tilesize);
+  my $GridSize = ($Area->{aspect} > 1)
+    ? (0.5 * $Area->{width} / $Area->{size})
+    : (0.5 * $Area->{height} / $Area->{size});
   $GridSize = int($GridSize) + 1;
   
-  #printf "Using gridsize %d (%d pixels)\n", $GridSize, $GridSize * $Tilesize; exit;
+  printf "Using gridsize $GridSize\n"; 
   
   my ($XA, $YA) = (int($X), int($Y));
   my ($OffsetX, $OffsetY) = ($X - $XA, $Y - $YA);
@@ -75,8 +75,8 @@ sub createArea{
       my $ToX = $ImgCentreX + ((-$OffsetX + $xi) * $Area->{size});
       my $ToY = $ImgCentreY + ((-$OffsetY + $yi) * $Area->{size});
 
-      if($ToX > -$Tilesize && $ToX < $Area->{width}
-        && $ToY > -$Tilesize && $ToY < $Area->{height}){
+      if($ToX > -$Area->{size} && $ToX < $Area->{width}
+        && $ToY > -$Area->{size} && $ToY < $Area->{height}){
         
         my $PartData = getTile::tile($XA + $xi, $YA + $yi, $Area->{zoom});
         if(defined $PartData){
@@ -94,12 +94,14 @@ sub createArea{
               $Area->{size},
               $Tilesize, 
               $Tilesize);
+            print '.'; flush STDOUT;
             }
           }
+        printf " To %1.3f, %1.3f (%1.3f px square)\n", $ToX, $ToY, $Area->{size};
         }
-      #printf "%1.3f, %1.3f (%1.1f, %1.1f)\n", $ToX, $ToY, $XA, $YA;
     }
   }
+  print "\n"; 
 
   # Debug: mark centre
   if(0){

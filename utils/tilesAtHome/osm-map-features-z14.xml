@@ -101,6 +101,34 @@
         </rule>
 
 
+		<!-- Airports and runways -->
+		<rule e="way" k="landuse" v="runway">
+			<rule e="way" k="use_status" v="~">
+				<area class='landuse-runway' />
+			</rule>
+			<rule e="way" k="use_status" v="disused">
+				<area class='landuse-runway-disused' />
+			</rule>
+			<rule e="way" k="use_status" v="dismantled">
+				<area class='landuse-runway-dismantled' />
+			</rule>
+		</rule>
+
+
+		<!-- Raceways and racetracks -->
+		<rule e="way" k="landuse" v="raceway">
+			<rule e="way" k="use_status" v="~">
+				<area class='landuse-raceway' />
+			</rule>
+			<rule e="way" k="use_status" v="disused">
+				<area class='landuse-raceway-disused' />
+			</rule>
+			<rule e="way" k="use_status" v="dismantled">
+				<area class='landuse-raceway-dismantled' />
+			</rule>
+		</rule>
+
+
         <!-- Man-made areas -->
         <rule e="way" k="sport" v="rugby|soccer|cricket|horse_racing|golf|hockey|tennis|football|baseball|bowls|basketball">
             <area class='sport'/>
@@ -199,6 +227,17 @@
         <!-- Roads and paths -->
         <!-- Highway casings -->
         <rule e="segment|way" k="tunnel" v="~|no">
+			<rule e="segment|way" k="highway" v="raceway">
+				<rule e="way" k="use_status" v="~">
+					<line class='highway-raceway-casing' />
+				</rule>
+				<rule e="way" k="use_status" v="disused">
+					<line class='highway-raceway-casing-disused' />
+				</rule>
+				<rule e="way" k="use_status" v="dismantled">
+					<line class='highway-raceway-casing-dismantled' />
+				</rule>
+			</rule>
             <rule e="segment|way" k="highway" v="pedestrian">
                 <line class='highway-pedestrian-casing' />
             </rule>
@@ -276,7 +315,18 @@
         <!-- Highway cores (not in tunnel) -->
         <rule e="segment|way" k="tunnel" v="~|false|no">
             <addclass e="segment|way" k="bridge" v="yes|true" class="round">
-                <rule e="segment|way" k="highway" v="pedestrian">
+                <rule e="segment|way" k="highway" v="raceway">
+					<rule e="way" k="use_status" v="~">
+						<line class='highway-raceway-core' />
+					</rule>
+					<rule e="way" k="use_status" v="disused">
+						<line class='highway-raceway-core-disused' />
+					</rule>
+					<rule e="way" k="use_status" v="dismantled">
+						<line class='highway-raceway-core-dismantled' />
+					</rule>
+				</rule>
+				<rule e="segment|way" k="highway" v="pedestrian">
                     <line class='highway-pedestrian-core' />
                 </rule>
                 <rule e="segment|way" k="highway" v="track">
@@ -421,10 +471,10 @@
             <line class='aeroway-taxiway-core'/>
         </rule>
         <rule e="node" k="aeroway" v="aerodrome">
-            <symbol xlink:href="#airport" width='5px' height='5px' transform='translate(-2.5,-2.5)' />
+            <symbol xlink:href="#airport" width='10px' height='10px' transform='translate(-5,-5)' />
         </rule>
         <rule e="node" k="aeroway" v="airport">
-            <symbol xlink:href="#airport" width='10px' height='10px' transform='translate(-5,-5)' />
+            <symbol xlink:href="#airport" width='25px' height='25px' transform='translate(-12.5,-12.5)' opacity='0.5'/>
         </rule>
 
 
@@ -452,10 +502,6 @@
 
 
         <!-- Tourist features -->
-		<!-- Only show tourist attractions and hotels at zoom 14 -->
-        <rule e="node" k="tourism" v="attraction">
-            <text k='name' class='tourism-attraction-caption' />
-        </rule>
         <rule e="node" k="tourism" v="hotel">
             <symbol xlink:href="#hotel" width='8px' height='8px' transform='translate(-4,-4)' />
         </rule>
@@ -480,7 +526,7 @@
 
         <!-- Leisure symbols -->
         <rule e="node" k="leisure" v="golf_course">
-            <symbol xlink:href="#golfCourse" width='15px' height='15px' transform='translate(-7.5,-7.5)' />
+            <symbol xlink:href="#golfCourse" width='10px' height='10px' transform='translate(-5,-5)' />
         </rule>
         <rule e="node" k="leisure" v="slipway">
             <symbol xlink:href="#slipway" width='4px' height='4px' transform='translate(-2,-2)' />
@@ -525,10 +571,13 @@
 			    <text k="name" class='railway-station-caption' dx='0px' dy='-5px' />
 			</rule>
 			<rule e="node" k="aeroway" v="aerodrome">
-			    <text k="name" class='aeroway-aerodrome-caption' dx='4px' dy='2.5px'/>
+			    <text k="name" class='aeroway-aerodrome-caption' dy='-7.5px'/>
 			</rule>
 			<rule e="node" k="aeroway" v="airport">
-			    <text k="name" class='aeroway-airport-caption' dx='8px' dy='4px' />
+			    <text k="name" class='aeroway-airport-caption' dy='-12.5px' />
+			</rule>
+			<rule e="node" k="tourism" v="attraction">
+			    <text k='name' class='tourism-attraction-caption' />
 			</rule>
         </rule>
 
@@ -1083,8 +1132,9 @@
                 stroke: white;
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 6px;
+                font-size: 8px;
                 font-weight: bold;
+                text-anchor: middle;
             }
 
             .aeroway-airport-caption {
@@ -1092,8 +1142,10 @@
                 stroke: white;
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 10px;
+                font-size: 20px;
                 font-weight: bold;
+                text-anchor: middle;
+                opacity: 0.5;
             }
 
 
@@ -1480,6 +1532,27 @@
                 stroke-width: 0.2px;
             }
 
+			.landuse-runway {
+			  stroke-width: 0.3px;
+			  stroke: #808080;
+			  fill: #d4dcbd;
+			  }
+
+			.landuse-runway-disused {
+			  stroke-width: 0.3px;
+			  stroke: #808080;
+			  fill: #d4dcbd;
+			  stroke-dasharray: 1px, 1px;
+			  }
+
+			.landuse-runway-dismantled {
+			  stroke-width: 0.3px;
+			  stroke: #808080;
+			  fill: #fcffef;
+			  stroke-dasharray: 0.3px, 1.7px;
+			  opacity: 0.5;
+			  }
+
 
             /* Leisure */
             .leisure-park {
@@ -1512,6 +1585,88 @@
                 stroke: #e9dd72;
                 stroke-width: 0.2px;
             }
+
+			/* Racetracks */
+			.highway-raceway-casing {
+			  stroke-width: 2px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #101010;
+			  }
+
+			.highway-raceway-casing-disused {
+			  stroke-width: 2px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #808080;
+			  stroke-dasharray: 1px, 1px;
+			  }
+
+			.highway-raceway-casing-dismantled {
+			  stroke-width: 2px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #808080;
+			  stroke-dasharray: 0.3px, 1.7px;
+			  opacity: 0.5;
+			  }
+
+			.highway-raceway-core {
+			  stroke-width: 1.5px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #f0f0f0;
+			  }
+
+			.highway-raceway-core-disused {
+			  stroke-width: 1.5px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke-dasharray: 1px, 1px;
+			  stroke: #f7f7f7;
+			  }
+
+			.highway-raceway-core-dismantled {
+			  stroke-width: 1.5px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: none;
+			  stroke: #fbfbfb;
+			  stroke-dasharray: 0.3px, 1.7px;
+			  opacity: 0.5;
+			  }
+			  
+			.landuse-raceway {
+			  stroke-width: 0.3px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: #f0f0f0;
+			  stroke: #101010;
+			  }
+
+			.landuse-raceway-disused {
+			  stroke-width: 0.3px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: #f7f7f7;
+			  stroke: #808080;
+			  stroke-dasharray: 1px, 1px;
+			  }
+
+			.landuse-raceway-dismantled {
+			  stroke-width: 0.3px; 
+			  stroke-linecap: butt; 
+			  stroke-linejoin: round; 
+			  fill: #fbfbfb;
+			  stroke: #808080;
+			  stroke-dasharray: 0.3px, 1.7px;
+			  opacity: 0.5;
+			  }
 
 
             /* Boundary */

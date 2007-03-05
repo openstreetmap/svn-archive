@@ -970,14 +970,14 @@
             .highway-trunk-core {
                 stroke-width: 2px;
                 stroke-linejoin: round;
-                stroke: #e46d71;
+                stroke: #7FC97F;
                 fill: none;
             }
 
             .highway-trunk-link-core {
                 stroke-width: 1.5px;
                 stroke-linejoin: round;
-                stroke: #e46d71;
+                stroke: #7FC97F;
                 fill: none;
             }
 
@@ -1014,14 +1014,14 @@
             .highway-primary-core {
                 stroke-width: 1.5px;
                 stroke-linejoin: round;
-                stroke: #7FC97F;
+                stroke: #e46d71;
                 fill: none;
             }
 
             .highway-primary-link-core {
                 stroke-width: 1.5px;
                 stroke-linejoin: round;
-                stroke: #7FC97F;
+                stroke: #e46d71;
                 fill: none;
             }
 

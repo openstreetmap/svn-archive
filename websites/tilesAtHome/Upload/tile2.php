@@ -2,88 +2,81 @@
 # Tiles upload handler, accepts ZIP files, saves to database 
 # OJW 2006, GNU GPL v2 or later
 
-# All error-messages etc are plain text for use by clients
-header("Content-type:text/plain");
-
 if(0){ // Option to turn off uploads
-  print "Disabled, temporary"; 
-  exit;
+  AbortWithError(503, "Uploads temporarily disabled");
 }
 
 # Include a function which checks passwords
 include("passwords/passwords.inc");
 include("../lib/log.inc");
+include("../lib/tilenames.inc");
 
 # Get password from posted form data (format mp=user|pass)
 $Password = $_POST["mp"];
 list($User,$Pass) = explode("|", $Password);
 
 # If credentials are valid
-if(testPassword($Password) == "ok"){
+if(testPassword($Password) != "ok"){
+  AbortWithError(401, "Invalid username");
+  exit; # Redundant, failsafe
+}
+
+# TODO: check $_POST["version"];
+
+HandleUpload($_FILES['file'], $User);
+
+exit;
+
+function AbortWithError($Code, $Message){
+  header(sprintf("HTTP/1.0 %d %s", $Code, $Message));
+  header("Content-type:text/plain");
+  printf("%s\n", $Message);
+  exit;
+}
+
+
+function HandleUpload($File, $User){
+
+  # All error-messages etc are plain text for use by clients
+  header("Content-type:text/plain");
   
   # Connect to the database
-  include("../connect/connect.php");
-
-  # Keep going if the user presses stop, to ensure temporary directories get erased
-  # see also register_shutdown_function() for another option
-  ignore_user_abort();
+  #include("../connect/connect.php");
+  
 
   # Decide on the name of a Temporary directory
   $Dir = TempDir();
   
   # Check the uploaded ZIP file
-  $Size = $_FILES['file']['size'];
+  $Size = $File['size'];
   
-  $SQL = sprintf("insert into `tiles_log` (`user`,`size`,`time`,`filename`) values('%s','%d','%d','%s');",
-    mysql_escape_string($User),
-    $Size,
-    time(),
-    mysql_escape_string($_FILES['file']['name']));
-  mysql_query($SQL);
-  
-  if($Size > 0){
-  
-    # Create temporary directory
-    if(mkdir($Dir)){
+  if($Size <= 0){
+    AbortWithError(400, "No file uploaded");
+  }
+
+  # Keep going if the user presses stop, to ensure temporary directories get erased
+  # see also register_shutdown_function() for another option
+  ignore_user_abort();
+    
+  # Create temporary directory
+  if(!mkdir($Dir)){
+    header("HTTP/1.0 503 Can't create temporary directory");
+  }
       
-      # Store the ZIP file
-      $Filename = "$Dir/incoming.zip";
-      move_uploaded_file($_FILES['file']['tmp_name'], $Filename);
+  # Uncompress the uploaded tiles
+  # -j means to ignore any pathnames in the ZIP file
+  # -d $Dir specifies the directory to unzip to
+  # $Filename is the zip file
+  system(sprintf("unzip -j -d %s %s", $Dir, $File['tmp_name']));
       
-      # Uncompress the uploaded tiles
-      # -j means to ignore any pathnames in the ZIP file
-      # -d $Dir specifies the directory to unzip to
-      # $Filename is the zip file
-      system("unzip -j -d $Dir $Filename");
-      
-      # Process all the tiles (return number of tiles done)
-      $Count = HandleDir($Dir, $User);
+  # Process all the tiles (return number of tiles done)
+  $Count = HandleDir($Dir, $User);
         
-      # Delete the temporary directory and everything inside
-      DelDir($Dir);
-      
-      if($Count == 0){
-        logMsg("Upload with no tiles, from $User", 3);
-        print "No tiles";
-        }
-      else
-        printf("OK, %d", $Count);
-    }
-    else
-    {
-      print "Can't create temp directory";
-      logMsg("Upload can't create temp directory", 3);
-    }
-  }
-  else
-  {
-    print "No file uploaded\n";
-    logMsg("No file uploaded, from $User", 4);
-  }
-}
-else
-{
-  print "No such user/password\n";
+  # Delete the temporary directory and everything inside
+  DelDir($Dir);
+  
+  logMsg("$User uploaded $Count tiles in $Size bytes", 3);
+  printf("OK, %d", $Count);
 }
 
 #----------------------------------------------------------------------
@@ -123,54 +116,74 @@ function HandleFile($Filename, $User){
     $Z = $Matches[1];
     $X = $Matches[2];
     $Y = $Matches[3];
-    $Valid = tileValid($X,$Y,$Z);
+    $Valid = TileValid($X,$Y,$Z);
     if($Valid){
       
-      $ImageData = file_get_contents($Filename);
-      InsertTile($X,$Y,$Z,$User,$ImageData);
+      InsertTile($X,$Y,$Z,$User,$Filename);
 
       return(1);
     }
     else{
-      logMsg("Invalid tile $Filename from $User", 3);
+      #logMsg("Invalid tile $Filename from $User", 3);
     }
   }
   return(0);
 }
 
-function InsertTile($X,$Y,$Z,$User,$ImageData){
-  if(!tileValid($X,$Y,$Z)){
+function InsertTile($X,$Y,$Z,$User,$OldFilename){
+  if(!TileValid($X,$Y,$Z)){
     printf("INVALID %d,%d,%d\n", $X,$Y,$Z);
     return;
   }
   
-  if(0){ # Optionally delete tiles first
-    $SQL = sprintf("delete from tiles where `x`=%d and `y`=%d and `z`=%d;",$X,$Y,$Z); 
-    mysql_query($SQL);
-    if(mysql_errno())
-      printf("! %s\n", mysql_error());
-    logSqlError();
-  }
 
-  $SQL = sprintf("replace into tiles (`x`,`y`,`z`,`tile`,`user`,`exists`,`date`,`size`) values('%d','%d','%d','%s','%s','1','%d','%d');",
-    $X,
-    $Y,
-    $Z,
-    mysql_escape_string($ImageData),
-    mysql_escape_string($User),
-    time(),
-    strlen($ImageData));
-
-  mysql_query($SQL);
-  if(mysql_errno())
-    printf("! %s\n", mysql_error());
-  else
-    printf("+ %d,%d,%d\n", $X,$Y,$Z);
-  logSqlError();
+  $NewFilename = TileName($X,$Y,$Z);
+  #if(preg_match("{^(.*)\/(.*?)$}", $NewFilename, $Matches)){    $Dir = $Matches[1];    $File = $Matches[2];
   
-  if($Z == 12){
-    NotifyOfTileset($X,$Y, $User,$ImageData);
+  CreateDirectoryToHold($NewFilename);
+  
+  rename($OldFilename, $NewFilename);
+  printf("%s -> %s\n", $OldFilename, $NewFilename);
+
+}
+
+function CreateDirectoryToHold($Filename){
+  # Get the components of the directory structure
+  $Parts = explode("/", $Filename);
+  
+  # Remove the last element, which is the filename
+  array_pop($Parts);
+  # and the first element, which is a zero-length string
+  array_shift($Parts);
+  
+  $AssumedToExist = 4; // var/www/ojw/Tiles don't get created
+  
+  # For each part...
+  $Dir = "";
+  $Count = 0;
+  foreach($Parts as $Part){
+    $Dir .= "/".$Part;
+    $Count++;
+    
+    if($Count > $AssumedToExist){ 
+      CreateDir($Dir);
+    }
   }
+}
+
+function CreateDir($Dir){
+  if(file_exists($Dir)){
+    #printf("Directory exists: %s\n", $Dir);
+    return(1);
+  }
+  
+  if(!mkdir($Dir, 0777)){
+    printf("Failed to create directory %s\n", $Dir);
+    return(0);
+  }
+  
+  #printf("Creating dir \"%s\"\n", $Dir);
+  return(1);
 }
 
 #----------------------------------------------------------------------
@@ -178,12 +191,18 @@ function InsertTile($X,$Y,$Z,$User,$ImageData){
 # (tileset identifier)
 #----------------------------------------------------------------------
 function NotifyOfTileset($X,$Y, $User,$ImageData){
+  # Mark that tileset as "sent to client, but not necessarily done yet"
+  $SQL = sprintf("delete from tiles_queue where `x`=%d and `y`=%d and `sent`=2;",
+    $X,
+    $Y);
+  $Result = mysql_query($SQL);
 
-  if(strlen($ImageData) > 5000){
-    $SQL = sprintf("update `tiles_misc` set `last_12x`=%d, `last_12y`=%d, last_user='%s' where 1;", $X,$Y, mysql_escape_string($User));
-    mysql_query($SQL);
-    logSqlError();
-  }
+  $SQL = sprintf("update tiles_queue set `sent`=2, `date_uploaded`=now(), `uploaded_by`='%s' where `x`=%d and `y`=%d and `sent`=1;",
+    mysql_escape_string($User),
+    $X,
+    $Y);
+  $Result = mysql_query($SQL);
+
 }
 #----------------------------------------------------------------------
 # Chooses the name for a temporary directory
@@ -196,30 +215,4 @@ function TempDir(){
   return(sprintf("temp/%s", md5(uniqid(rand(), 1))));
 }
 
-#----------------------------------------------------------------------
-# Tests if a tile coordinate is valid
-#
-# See [[Slippy Map Tilenames]] on openstreetmap wiki for details
-#----------------------------------------------------------------------
-function tileValid($X,$Y,$Zoom){
-  # Tiles below zoom-12: special case. currently just let them through
-  if(0)
-    if($Zoom < 12)
-      return(0);
-    
-  # Zoom depth is limited to 17
-  if($Zoom > 17)
-    return(0);
-    
-  if($Zoom < 0)
-    return(0);
-    
-  # Check that the specified x,y exist at this zoom level
-  if($X < 0 || $Y < 0)
-    return(0);
-  $Limit = pow(2,$Zoom);
-  if($X >= $Limit || $Y >= $Limit)
-    return(0);
-  return(1);
-}
 ?>

@@ -43,8 +43,8 @@
 
 use strict;
 use Carp;
-use Math::Vec qw(:terse);
 use Math::Complex;
+use Math::Vec qw(:terse);
 
 my $min_angle = 0.5;
 my $min_scale = 0;
@@ -202,16 +202,20 @@ sub curvify_path {
     my @move_segments = split /M\s*/, $path_string;
 
     foreach my $move_segment (@move_segments) {
+        my $postfix = q{};
         next if !$move_segment; # there is no pre-seg if there is only 1 'M'
 
+        if ($move_segment =~ s/Z$//) {
+            $postfix = 'Z';
+        }
         # get all the points in the path
         my @path_points = map [split /(?:\s|,)/, $_], split('L', $move_segment);
 
         if ($way_id =~ /way_/ && dup_points(\@path_points)) {
-            $bezier_path_string .= "M$path_string"; 
+            $bezier_path_string .= "M$path_string$postfix"; 
         } else {
             $bezier_path_string 
-                .= 'M'.from_lines_to_curves(\@path_points, $way_id);
+                .= 'M'.from_lines_to_curves(\@path_points, $way_id).$postfix;
         }
     }
 
@@ -341,15 +345,19 @@ sub from_lines_to_curves {
         # points if this node is only referenced in one 'way' or we are at the
         # beginning/end of a way that only joins with one other way. This makes ways
         # that 'T' sharp on the join.
-        if (   $way_id =~ /area_/
+        if ( $path_start_ref->[0].$path_start_ref->[1] ne
+             $path_end_ref->[0].$path_end_ref->[1] &&
+             $path_mid_ref->[0].$path_mid_ref->[1] ne
+             $points_ref->[2][0].$points_ref->[2][1]
+             && ($way_id =~ /area_/
             || @{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 1
             || (   $current_point == 0 
                 && @{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 2)
             || (   $current_point == $points_in_line-3 
                 && @{$point_is_in{$path_mid_ref->[0].$path_mid_ref->[1]}} == 2)
-            ) {
+            )) {
 
-#            print "\n\t->".join(':', @$path_start_ref)." ".join(':',
+#           print "\n\t->".join(':', @$path_start_ref)." ".join(':',
 #            @$path_mid_ref)." ".join(':',@$path_end_ref)."\n";
             $incremental_string .= ' C ';
             # work out control point 1 from $path_start, $path_mid & $path_end
@@ -370,6 +378,8 @@ sub from_lines_to_curves {
             $path_end_ref   = $points_ref->[2];
             shift @$points_ref;
     
+#           print "\n\t-->".join(':', @$path_start_ref)." ".join(':',
+#            @$path_mid_ref)." ".join(':',@$path_end_ref)."\n";
             # work out control point 2 from new $path_start, $path_mid & path_end
             $start_v = V($path_start_ref->[0], $path_start_ref->[1]);
             $mid_v   = V($path_mid_ref->[0], $path_mid_ref->[1]);
@@ -405,7 +415,7 @@ sub normalise_cp {
     my $max_angle = $PI/2; # 180degrees
     my $angle = $start_v->InnerAngle($end_v);
 
-    $angle = Re($angle); 
+    $angle = Re($angle);
     
     if ($angle < $PI*$min_angle) { # too small, so 
         return 0;

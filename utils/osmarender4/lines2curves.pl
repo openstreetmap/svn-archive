@@ -43,6 +43,7 @@
 
 use strict;
 use Carp;
+use Math::Complex;
 use Math::Vec qw(:terse);
 
 my $min_angle = 0.5;
@@ -413,6 +414,8 @@ sub normalise_cp {
     my $PI = 3.1415926;
     my $max_angle = $PI/2; # 180degrees
     my $angle = $start_v->InnerAngle($end_v);
+
+    $angle = Re($angle);
     
     if ($angle < $PI*$min_angle) { # too small, so 
         return 0;

@@ -1,0 +1,43 @@
+<?php
+
+function TileName($X,$Y,$Z){
+  return("/home/ojw/tiles-ojw/Tiles/".TilePartName($X,$Y,$Z));;
+}
+function TileURL($X,$Y,$Z){
+  return(sprintf("/~ojw/Tiles/tile.php/%d/%d/%d.png", $Z, $X,$Y));
+}
+  
+function TilePartName($X,$Y,$Z){
+  return sprintf(
+    "%02d/%03d/%03d/%03d/%03d.png",
+    $Z,
+    $X/1000, 
+    $X%1000,
+    $Y/1000,
+    $Y%1000);
+}
+
+
+#----------------------------------------------------------------------
+# Tests if a tile coordinate is valid
+#
+# See [[Slippy Map Tilenames]] on openstreetmap wiki for details
+#----------------------------------------------------------------------
+function TileValid($X,$Y,$Z){
+  
+  # Zoom depth is limited to 17
+  if($Z > 17)
+    return(0);
+    
+  if($Z < 0)
+    return(0);
+    
+  # Check that the specified x,y exist at this zoom level
+  if($X < 0 || $Y < 0)
+    return(0);
+  $Limit = pow(2,$Z);
+  if($X >= $Limit || $Y >= $Limit)
+    return(0);
+  return(1);
+}
+?>

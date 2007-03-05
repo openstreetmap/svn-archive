@@ -1,11 +1,12 @@
 <?php
 
 function logMsg($Text, $Priority){
+  $Filename = sprintf("/home/ojw/public_html/Log/Data/messages_p%d.txt", $Priority);
+  $fp = fopen($Filename, "a");
+  if(!$fp)
+    return;
   
-  $SQL = sprintf("insert delayed into tiles_msg (`text`,`priority`) values ('%s',%d);", 
-    mysql_escape_string($Text), 
-    $Priority);
-  mysql_query($SQL);
+  fputs($fp, date("Y-m-d H:i:s ") . $Text . "\n");
 }
 
 function logSqlError(){

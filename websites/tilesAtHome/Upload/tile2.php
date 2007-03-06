@@ -120,6 +120,8 @@ function SaveMetadata($TileList, $UserID, $VersionID){
   # Connect to the database
   include("../connect/connect.php");
   
+  SaveUserStats($UserID, $VersionID, count($TileList));
+  
   # Each element in TileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($TileList as $SqlSnippet){
     
@@ -132,6 +134,20 @@ function SaveMetadata($TileList, $UserID, $VersionID){
   
   # Disconnect from database
   mysql_close();
+}
+
+
+function SaveUserStats($UserID, $VersionID, $NumTiles){
+  $SQL = 
+    "update `tiles_users` set ".
+      "`uploads` = `uploads` + 1, ".
+      sprintf("`tiles` = `tiles` + %d, ", $NumTiles).
+      sprintf("`version` = %d, ", $VersionID).
+      "`last_upload` = now() ".
+    " where ".
+    sprintf("`id`=%d;", $UserID);
+    
+  mysql_query($SQL);
 }
 
 #----------------------------------------------------------------------

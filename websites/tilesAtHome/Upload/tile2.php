@@ -21,9 +21,15 @@ if(testPassword($Password) != "ok"){
   exit; # Redundant, failsafe
 }
 
+include("../lib/users.inc");
+include("../lib/versions.inc");
+$UserID = checkUser($User, $Pass);
+$VersionID = checkVersion($_POST["version"]);
+
+
 # TODO: check $_POST["version"];
 
-HandleUpload($_FILES['file'], $User);
+HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
 
 exit;
 
@@ -35,21 +41,17 @@ function AbortWithError($Code, $Message){
 }
 
 
-function HandleUpload($File, $User){
+function HandleUpload($File, $User, $UserID, $VersionID){
 
   # All error-messages etc are plain text for use by clients
   header("Content-type:text/plain");
   
-  # Connect to the database
-  #include("../connect/connect.php");
-  
-
   # Decide on the name of a Temporary directory
   $Dir = TempDir();
   
   # Check the uploaded ZIP file
   $Size = $File['size'];
-  
+
   if($Size <= 0){
     AbortWithError(400, "No file uploaded");
   }
@@ -70,12 +72,13 @@ function HandleUpload($File, $User){
   system(sprintf("unzip -j -d %s %s", $Dir, $File['tmp_name']));
       
   # Process all the tiles (return number of tiles done)
-  $Count = HandleDir($Dir, $User);
+  $Layer = 1;
+  $Count = HandleDir($Dir, $Layer, $User, $UserID, $VersionID);
         
   # Delete the temporary directory and everything inside
   DelDir($Dir);
   
-  logMsg("$User uploaded $Count tiles in $Size bytes", 3);
+  logMsg("$User (user #$UserID, version #$VersionID) uploaded $Count tiles in $Size bytes", 3);
   printf("OK, %d", $Count);
 }
 
@@ -97,21 +100,44 @@ function DelDir($Dir){
 #----------------------------------------------------------------------
 # Processes tiles that are currently sitting in a temp directory
 #----------------------------------------------------------------------
-function HandleDir($Dir, $User){
+function HandleDir($Dir, $Layer, $User, $UserID, $VersionID){
   $Count = 0;
   $dp = opendir($Dir);
+  $TileList = array();
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
-    $Count += HandleFile($Filename, $User);
+    $Count += HandleFile($Filename, $Layer, $User, $TileList);
   }
   closedir($dp);
+  
+  SaveMetadata($TileList, $UserID, $VersionID);
   return($Count);
+}
+
+function SaveMetadata($TileList, $UserID, $VersionID){
+  #logMsg(sprintf("%d, %d -- ", $UserID, $VersionID) . implode(": ", $TileList), 5);
+  
+  # Connect to the database
+  include("../connect/connect.php");
+  
+  # Each element in TileList is a snippet of values (x,y,z,type,size) for each tile
+  foreach($TileList as $SqlSnippet){
+    
+    $Fields = "x, y, z, type, size, date, user, version";
+    $Values = sprintf("%s, now(), %d, %d", $SqlSnippet, $UserID, $VersionID);
+    
+    $SQL = sprintf("insert into `tiles_meta` (%s) values (%s);", $Fields, $Values);
+    mysql_query($SQL);
+  }
+  
+  # Disconnect from database
+  mysql_close();
 }
 
 #----------------------------------------------------------------------
 # Processes tile PNG images
 #----------------------------------------------------------------------
-function HandleFile($Filename, $User){
+function HandleFile($Filename, $Layer, $User, &$TileList){
   if(preg_match("/tile_(\d+)_(\d+)_(\d+)\.png/", $Filename, $Matches)){
     $Z = $Matches[1];
     $X = $Matches[2];
@@ -119,7 +145,7 @@ function HandleFile($Filename, $User){
     $Valid = TileValid($X,$Y,$Z);
     if($Valid){
       
-      InsertTile($X,$Y,$Z,$User,$Filename);
+      InsertTile($X,$Y,$Z,$Layer,$User,$Filename, $TileList);
 
       return(1);
     }
@@ -130,12 +156,15 @@ function HandleFile($Filename, $User){
   return(0);
 }
 
-function InsertTile($X,$Y,$Z,$User,$OldFilename){
+function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, &$TileList){
   if(!TileValid($X,$Y,$Z)){
     printf("INVALID %d,%d,%d\n", $X,$Y,$Z);
     return;
   }
   
+  
+  $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, filesize($OldFilename));
+  array_push($TileList, $SqlSnippet);
 
   $NewFilename = TileName($X,$Y,$Z);
   #if(preg_match("{^(.*)\/(.*?)$}", $NewFilename, $Matches)){    $Dir = $Matches[1];    $File = $Matches[2];

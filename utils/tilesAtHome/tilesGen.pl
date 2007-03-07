@@ -620,7 +620,7 @@ sub svg2png {
 
   my $TempFile = $PNG."_part";
   
-  my stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
+  my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
 
   my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
     $Config{Niceness},

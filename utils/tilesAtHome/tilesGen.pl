@@ -620,7 +620,9 @@ sub svg2png {
 
   my $TempFile = $PNG."_part";
   
-  my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > /dev/null", 
+  my stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
+
+  my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
     $Config{Niceness},
     $Config{Inkscape},
     $SizeX,
@@ -628,7 +630,8 @@ sub svg2png {
     $X1,$Y1,$X2,$Y2,
     $TempFile,
     $Config{WorkingDirectory},
-    "output-$PID-z$Zoom.svg");
+    "output-$PID-z$Zoom.svg",
+    $stdOut);
   
   # stop rendering the current job when inkscape fails
   if (not runCommand("Rendering", $Cmd)){
@@ -638,7 +641,8 @@ sub svg2png {
   }
 
   splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile);
-  
+
+  killafile($stdOut);
   killafile($TempFile);
 
 }

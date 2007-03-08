@@ -811,8 +811,6 @@ sub splitImageX {
       $Pixels);            # Copy height
   
     # Detect empty tile here:
-    # TODO
-    # for now just skip the check and tell the script all is well
     if ($SubImage->compare($EmptyImage) & GD_CMP_IMAGE)  # true if images are different. (i.e. non-empty tile)
     {
       # If at least one tile is not empty set $allempty false:
@@ -834,7 +832,10 @@ sub splitImageX {
       ## DEBUG:
       #WriteImage($EmptyImage,$Filename2);
     }
-    
+#    else
+#    {
+#      here be code to record that the tile is really empty 
+#    }
   }
   undef $SubImage;
   # tell the rendering queue wether the tiles are empty or not

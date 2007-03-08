@@ -383,9 +383,12 @@ sub RenderTile {
   # printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
   my $Width = 256 * (2 ** ($Zoom - 12));  # Pixel size of tiles  
   my $Height = 256; # Pixel height of tile
-  svg2png($Zoom, $Filename, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile);
 
-  if ((-s $Filename < 1000) and ( $Zoom == 12 )) {
+  # svg2png returns true if all tiles extracted were empty. this might break 
+  # if a higher zoom tile would contain data that is not rendered at the 
+  # current zoom level. 
+  if (svg2png($Zoom, $Filename, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{RenderFullTileset}) 
+  {
     $empty=1;
   }
 
@@ -650,10 +653,13 @@ sub svg2png {
     exit(1);
   }
 
-  splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile);
-
   killafile($stdOut);
+
+  my $ReturnValue = splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
+
   killafile($TempFile);
+
+  return $ReturnValue; #return true if empty
 
 }
 sub writeToFile {
@@ -831,16 +837,8 @@ sub splitImageX {
     
   }
   undef $SubImage;
-  # tell the rendering queue it doesn't need to render subtiles. (what's with features that only appear on high zooms?)
-  # needs to be implemented above
-  if ($allempty)  
-  {
-    return 0;
-  }
-  else
-  {
-    return 1; 
-  }
+  # tell the rendering queue wether the tiles are empty or not
+  return $allempty;
 }
 
 #-----------------------------------------------------------------------------

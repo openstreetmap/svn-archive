@@ -13,3 +13,8 @@ DeleteZipFilesAfterUpload=0
 UploadChunkSize=1.5   # Megabyte
 UploadChunkCount=683  # default: half a tileset
 
+# Always render full tileset? default: 0
+# set to 1 if you want to force checking of wether subtiles of empty tiles really are empty
+# needed for example when tiles that contained data now are empty (i.e. sea tiles with moved ferry routes)
+RenderFullTileset=0
+

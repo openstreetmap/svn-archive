@@ -21,3 +21,8 @@ DeleteZipFilesAfterUpload=0
 
 # Beziercurve hinting
 NoBezier=0  # Set to 1 on a AMD64 box running Gentoo. Math rounding errors in the libs.
+
+# Always render full tileset? default: 0 
+# set to 1 if you want to force checking of wether subtiles of empty tiles really are empty
+# needed for example when tiles that contained data now are empty (i.e. sea tiles with moved ferry routes)
+RenderFullTileset=0

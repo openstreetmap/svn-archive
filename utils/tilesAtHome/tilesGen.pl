@@ -6,7 +6,7 @@ use File::Copy;
 use FindBin qw($Bin);
 use tahconfig;
 use English '-no_match_vars';
-use GD; 
+use GD qw(:DEFAULT :cmp); 
 use strict;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home
@@ -52,14 +52,24 @@ if ($@ ne '') {
   print STDERR "please update your libgd to version 2 for TrueColor support";
   exit(3);
 }
+
 # Setup GD options
-my $numcolors = 256; # 256 is maximum for paletted output and should be used
-my $dither = 0; # dithering on or off.
+# currently unused (GD 2 truecolor mode)
+#
+#   my $numcolors = 256; # 256 is maximum for paletted output and should be used
+#   my $dither = 0; # dithering on or off.
+#
+# dithering off should try to find a good palette, looks ugly on 
+# neighboring tiles with different map features as the "optimal" 
+# palette is chosen differently for different tiles.
 
-# dithering off should try to find a good palette, might look ugly on 
-# neighboring tiles with different features as the "optimal" palette might 
-# be different for adjacent tiles. To be tested.
+# create a comparison blank image
+my $EmptyImage = new GD::Image(256,256);
+my $MapBackground = $EmptyImage->colorAllocate(248,248,248);
+$EmptyImage->fill(127,127,$MapBackground);
 
+# No documentation whatsoever if this is really creating a f8f8f8 colored blank 
+# truecolor image
 
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
@@ -771,6 +781,9 @@ sub splitImageX {
   
   # Number of tiles
   my $Size = 2 ** ($Z - $ZOrig);
+
+  # Assume the tileset is empty by default
+  my $allempty=1;
   
   # Load the tileset image
   statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size));
@@ -791,22 +804,43 @@ sub splitImageX {
       $Pixels,             # Copy width
       $Pixels);            # Copy height
   
-    # Decide what the tile should be called
-    my $Filename = tileFilename($X * $Size + $xi, $Ytile, $Z);
-   
-    # convert Tile to paletted file This *will* break stuff if different libGD versions are used
-    # $SubImage->trueColorToPalette($dither,$numcolors);
+    # Detect empty tile here:
+    # TODO
+    # for now just skip the check and tell the script all is well
+    if ($SubImage->compare($EmptyImage) & GD_CMP_IMAGE)  # true if images are different. (i.e. non-empty tile)
+    {
+      # If at least one tile is not empty set $allempty false:
+      $allempty = 0;
 
-    # Temporary filename
-    my $Filename2 = "$Filename.cut";
+      # Decide what the tile should be called
+      my $Filename = tileFilename($X * $Size + $xi, $Ytile, $Z);
+   
+      # convert Tile to paletted file This *will* break stuff if different libGD versions are used
+      # $SubImage->trueColorToPalette($dither,$numcolors);
+
+      # Temporary filename
+      my $Filename2 = "$Filename.cut";
     
-    # Store the tile
-    statusMessage(" -> $Filename") if ($Config{Verbose});
-    WriteImage($SubImage,$Filename2);
-    rename($Filename2, $Filename);
+      # Store the tile
+      statusMessage(" -> $Filename") if ($Config{Verbose});
+      WriteImage($SubImage,$Filename2);
+      rename($Filename2, $Filename);
+      ## DEBUG:
+      #WriteImage($EmptyImage,$Filename2);
+    }
     
   }
   undef $SubImage;
+  # tell the rendering queue it doesn't need to render subtiles. (what's with features that only appear on high zooms?)
+  # needs to be implemented above
+  if ($allempty)  
+  {
+    return 0;
+  }
+  else
+  {
+    return 1; 
+  }
 }
 
 #-----------------------------------------------------------------------------

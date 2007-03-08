@@ -810,32 +810,32 @@ sub splitImageX {
       $Pixels,             # Copy width
       $Pixels);            # Copy height
   
+
+    # Decide what the tile should be called
+    my $Filename = tileFilename($X * $Size + $xi, $Ytile, $Z);
+   
+    # Temporary filename
+    my $Filename2 = "$Filename.cut";
+    
     # Detect empty tile here:
     if ($SubImage->compare($EmptyImage) & GD_CMP_IMAGE)  # true if images are different. (i.e. non-empty tile)
     {
       # If at least one tile is not empty set $allempty false:
       $allempty = 0;
 
-      # Decide what the tile should be called
-      my $Filename = tileFilename($X * $Size + $xi, $Ytile, $Z);
-   
       # convert Tile to paletted file This *will* break stuff if different libGD versions are used
       # $SubImage->trueColorToPalette($dither,$numcolors);
 
-      # Temporary filename
-      my $Filename2 = "$Filename.cut";
-    
       # Store the tile
       statusMessage(" -> $Filename") if ($Config{Verbose});
       WriteImage($SubImage,$Filename2);
-      rename($Filename2, $Filename);
-      ## DEBUG:
-      #WriteImage($EmptyImage,$Filename2);
     }
-#    else
-#    {
-#      here be code to record that the tile is really empty 
-#    }
+    else
+    {
+      copy("empty.png", $Filename2);
+    }
+
+    rename($Filename2, $Filename);
   }
   undef $SubImage;
   # tell the rendering queue wether the tiles are empty or not

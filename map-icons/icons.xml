@@ -304,6 +304,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Camping Site</title>
+    <title lang="de">Campingplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>31</poi_type_id>
@@ -313,6 +314,7 @@
 
   <rule>
     <condition k="poi" v="accommodation.hotel"/>
+    <condition k="amenity" v="hotel"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Hotel</title>
@@ -376,6 +378,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Youth Hostel</title>
+    <title lang="de">Jugendherberge</title>
     <description lang="en">Youth Hostel</description>
     <geoinfo>
       <poi_type_id>37</poi_type_id>
@@ -544,7 +547,8 @@
     <condition k="poi" v="food.beergarden"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Beergarden</title>
+    <title lang="de">Biergarten</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>49</poi_type_id>
@@ -556,7 +560,7 @@
     <condition k="poi" v="food.cafe"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Cafe</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>50</poi_type_id>
@@ -568,8 +572,8 @@
     <condition k="poi" v="food.fastfood"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <description lang="en"></description>
+    <title lang="en">Fastfood</title>
+    <description lang="en">Fastfood-Restaurant</description>
     <geoinfo>
       <poi_type_id>51</poi_type_id>
       <name>food.fastfood</name>
@@ -580,8 +584,8 @@
     <condition k="poi" v="food.fastfood.burger-king"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <description lang="en"></description>
+    <title lang="en">BurgerKing</title>
+    <description lang="en">Burger King Restaurant</description>
     <geoinfo>
       <poi_type_id>52</poi_type_id>
       <name>food.fastfood.burger-king</name>
@@ -593,8 +597,8 @@
     <condition k="poi" v="food.fastfood.kfc"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <description lang="en"></description>
+    <title lang="en">KFC</title>
+    <description lang="en">Kentucky Fried Chicken Restaurant</description>
     <geoinfo>
       <poi_type_id>53</poi_type_id>
       <name>food.fastfood.kfc</name>
@@ -606,8 +610,8 @@
     <condition k="poi" v="food.fastfood.mc-donalds"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <description lang="en"></description>
+    <title lang="en">McDonalds</title>
+    <description lang="en">McDonalds Restaurant</description>
     <geoinfo>
       <poi_type_id>54</poi_type_id>
       <name>food.fastfood.mc-donalds</name>
@@ -619,8 +623,8 @@
     <condition k="poi" v="food.fastfood.subway"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <description lang="en"></description>
+    <title lang="en">Subway</title>
+    <description lang="en">Subway Sandwich Restaurant</description>
     <geoinfo>
       <poi_type_id>55</poi_type_id>
       <name>food.fastfood.subway</name>
@@ -645,7 +649,8 @@
     <condition k="amenity" v="ice cream parlour"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Icecream</title>
+    <title lang="de">Eisdiele</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>57</poi_type_id>
@@ -657,8 +662,8 @@
     <condition k="poi" v="food.pizzahut"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <description lang="en"></description>
+    <title lang="en">Pizzahut</title>
+    <description lang="en">Pizzahut Restaurant</description>
     <geoinfo>
       <poi_type_id>58</poi_type_id>
       <name>food.pizzahut</name>
@@ -684,7 +689,8 @@
     <condition k="class" v="pub"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Pub</title>
+    <title lang="de">Kneipe</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>60</poi_type_id>
@@ -698,7 +704,7 @@
     <condition k="class" v="restaurant"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Restaurant</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>61</poi_type_id>
@@ -794,7 +800,8 @@
     <condition k="poi" v="food.snacks"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Snack Stand</title>
+    <title lang="de">Imbissbude</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>69</poi_type_id>
@@ -818,7 +825,8 @@
     <condition k="poi" v="food.wine_tavern"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Wine Tavern</title>
+    <title lang="de">Weinstube</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>71</poi_type_id>
@@ -830,7 +838,7 @@
     <condition k="poi" v="geocache.geocache_drivein"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">DriveIn Cache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>72</poi_type_id>
@@ -842,7 +850,7 @@
     <condition k="poi" v="geocache.geocache_earth"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Earthcache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>73</poi_type_id>
@@ -854,7 +862,7 @@
     <condition k="poi" v="geocache.geocache_event"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Eventcache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>74</poi_type_id>
@@ -866,7 +874,7 @@
     <condition k="poi" v="geocache.geocache_math"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Math Cache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>75</poi_type_id>
@@ -878,7 +886,7 @@
     <condition k="poi" v="geocache.geocache_multi"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Multicache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>76</poi_type_id>
@@ -890,7 +898,7 @@
     <condition k="poi" v="geocache.geocache_mystery"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Mysterycache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>77</poi_type_id>
@@ -902,7 +910,7 @@
     <condition k="poi" v="geocache.geocache_night"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Nightcache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>78</poi_type_id>
@@ -914,7 +922,7 @@
     <condition k="poi" v="geocache.geocache_traditional"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Traditional</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>79</poi_type_id>
@@ -926,7 +934,7 @@
     <condition k="poi" v="geocache.geocache_virtual"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Virtual Cache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>80</poi_type_id>
@@ -938,7 +946,7 @@
     <condition k="poi" v="geocache.geocache_webcam"/>
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Webcam Cache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>81</poi_type_id>
@@ -974,7 +982,7 @@
     <condition k="poi" v="health.doctor"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Doctor</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>84</poi_type_id>
@@ -1008,9 +1016,11 @@
 
   <rule>
     <condition k="poi" v="health.hospital"/>
+    <condition k="amenity" v="hospital"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Hospital</title>
+    <title lang="de">Krankenhaus</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>87</poi_type_id>
@@ -1035,7 +1045,8 @@
     <condition k="amenity" v="pharmacy"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Pharmacy</title>
+    <title lang="de">Apotheke</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>89</poi_type_id>
@@ -1059,7 +1070,8 @@
     <condition k="poi" v="health.veterinary"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Veterinary</title>
+    <title lang="de">Tierarzt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>91</poi_type_id>
@@ -1386,7 +1398,8 @@
     <condition k="poi" v="people.friends"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">friend</title>
+    <title lang="de">Freund</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>119</poi_type_id>
@@ -1761,7 +1774,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">My Work</title>
-    <title lang="de">Mein Arbeitsplatz</title>
+    <title lang="de">Arbeitsplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>150</poi_type_id>
@@ -1976,6 +1989,7 @@
 
   <rule>
     <condition k="poi" v="public.firebrigade"/>
+    <condition k="amenity" v="fire_station"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Firebrigade</title>
@@ -1990,6 +2004,7 @@
   <rule>
     <condition k="poi" v="public.police"/>
     <condition k="amenity" v="police"/>
+    <condition k="amenity" v="police_station"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Police Station</title>
@@ -2045,6 +2060,7 @@
   <rule>
     <condition k="poi" v="public.telephone"/>
     <condition k="amenity" v="telephone"/>
+    <condition k="amenity" v="phone_box"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -2794,6 +2810,7 @@
 
   <rule>
     <condition k="poi" v="sightseeing.monument"/>
+    <condition k="historic" v="monument"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -4422,6 +4439,7 @@
 
   <rule>
     <condition k="poi" v="shopping.rental.library"/>
+    <condition k="amenity" v="library"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
@@ -4830,7 +4848,8 @@
     <condition k="poi" v="geocache.geocache_found"/>
     <scale_min>1</scale_min>
     <scale_max>6500000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Found Cache</title>
+    <title lang="de">Gefundener Cache</title>
     <description lang="en">A Geocache you have already logged as found</description>
     <description lang="de">Ein Geocache, der bereits als gefunden geloggt wurde</description>
     <geoinfo>
@@ -4843,7 +4862,8 @@
     <condition k="poi" v="places.settlement.suburb"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Suburb</title>
+    <title lang="de">Vorort</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>404</poi_type_id>

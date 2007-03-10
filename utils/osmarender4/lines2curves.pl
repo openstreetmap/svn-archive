@@ -53,32 +53,23 @@ my $min_scale = 0;
 #
 # Globals...
 my $line_position = 0; # current line position in the svg file
-my $text_class = "";   # last seen text class
 my @svg_lines = ();    # the lines from the svg file
 my %point_is_in;       # lookup for 'what ways is this point in?'
 my %to_transform;      # ways that need transforming
-my %text_to_transform; # text that needs transforming
-my %path_length;       # lengths of all the paths
 
 # first pass, read in the svg lines, build the %point_is_in @svg_lines &
 # %to_transform structures.
 while (<>) {
     my $line = $_;
     $svg_lines[$line_position] = $line;
-    if ( $line =~ m{(<path \s id=\"(?:way|area)_[\w-]+\" \s d=\") # the prefix of the path
+    if ( $line =~ m{(<path \s id=\"(?:way|area)_\w+\" \s d=\") # the prefix of the path
                     ([^\"Z]+)                          # the core path itself
                     (.*/>)$                           # the rest
                    }x ) { # found a path
-
         my $path_prefix    = $1;
         my $path_statement = $2;
         my $path_suffix    = $3;
         my $path_points_ref = path_points($path_statement);
-	my $path_id = $1 if ( $path_prefix =~ /id=\"([^\"]*)\"/ );
-
-	#calculate the length for text fitting purposes.
-	$path_length{"$path_id"} = path_length($path_points_ref);
-
         foreach my $point (@$path_points_ref) {
             my $point_index = $point->[0].$point->[1];
             my $way_list_ref = $point_is_in{$point_index};
@@ -89,16 +80,6 @@ while (<>) {
         $to_transform{$path_prefix}
             = [$line_position, $path_statement, $path_suffix, $path_points_ref];
         
-    }
-    if ( $line =~ /<text.*>/) {
-	#found a possible text element
-	$text_class = $1 if ( $line =~ /class=\"([^\"]*)\"/ ) ; # keep an eye on what the most recent class is.
-	if ( $line =~ /href=\"\#(way[^\"]*)\".*>([^<]*)</ ) {
-	    #looks like the label on a way.
-	    my $text_path = $1;
-	    my $text = $2;
-	    $text_to_transform{$text_path} = [$line_position, $text, $text_class];
-	}
     }
     $line_position++;
 }
@@ -114,21 +95,6 @@ foreach my $path (keys %to_transform) {
 
     my $transformed_path = curvify_path($path_statement, $path);
     $svg_lines[$line_index] = $path.$transformed_path.$path_suffix."\n";
-}
-
-# Third pass, modify text
-foreach my $text_path (keys %text_to_transform) {
-    # transform text
-    my $text_ref   = $text_to_transform{$text_path};
-    my $line_index = $text_ref->[0];
-    my $text = $text_ref->[1];
-    my $text_class = $text_ref->[2];
-    #my $newtext = int($path_length{$text_path}); #puts path length on roads (useful for debugging)
-    my $newtext = abbreviate($text, $path_length{$text_path}, $text_class);
-
-    print STDERR "$text abbreviated to $newtext\n" if($text ne $newtext);
-
-    $svg_lines[$line_index] =~ s/$text/$newtext/;
 }
 
 # print out the transformed svg file.
@@ -156,17 +122,6 @@ sub path_points {
 
     my $clean_points_ref = remove_duplicate_points($path_points_ref);
     return $clean_points_ref;
-}
-
-#calculate length of path (based on straight lines)
-sub path_length {
-    my $points_ref = shift;
-    my $len = 0;
-    for (my $i=0; $i<scalar(@$points_ref)-1; $i++) {
-	$len += sqrt( ($points_ref->[$i]->[0] - $points_ref->[$i-1]->[0])**2 +
-		      ($points_ref->[$i]->[1] - $points_ref->[$i-1]->[1])**2 )
-    }
-    return $len;
 }
 
 sub remove_duplicate_points {
@@ -469,57 +424,4 @@ sub normalise_cp {
     # angle is between $PI/4 and $PI/2
     $angle = $angle - $PI*$min_angle;
     return $angle / ($PI*$min_angle);
-}
-
-sub abbreviate {
-    my ($orig_text, $space, $class) = @_;
-
-    #need mechanism to read fontsizes from osmarender style files
-    my %fontsizes = ( "highway-unclassified-name", 1,
-		     "highway-primary-name", 1,
-		     "highway-secondary-name", 1,
-		     "highway-tertiary-name", 1,
-		     "highway-trunk-name", 1.5,
-		     "highway-service-name", 0.3,
-		     "highway-motorway-name", 1.5
-		     );
-
-    #very anglo-centric list. probably should be conf-file.
-    my %abbrevs = ( "North", "N.",
-		    "South", "S.",
-		    "West", "W.",
-		    "East", "E.",
-		    "Saint", "St.",
-		    "Street", "St.",
-		    "Road", "Rd.",
-		    "Avenue", "Ave.",
-		    "Buildings", "Blds.",
-		    "Place", "Pl.",
-		    "Square", "Sq.",
-		    "Great", "Gt.",
-		    "Boulevard", "Bv.",
-		    "Route", "Rt.",
-		    "Passage", "Psg.",
-		    "Motorway", "Mway.",
-		    "Gardens", "Gdns."
-		    );
-
-    return $orig_text if(!defined($space) || $space eq ""); #can't do anything if we don't know required length.
-    return $orig_text if($orig_text=~/&/);                  #cowardly refuse to deal with escaped strings.
-    return $orig_text if(!defined($fontsizes{$class}));     #bailout if we don't know the font size.
-
-    my $maxchars = $space * $fontsizes{$class};             #hack - needs calibrating
-    
-    return $orig_text if (length($orig_text) < $maxchars);  #if text already fits return it
-
-    #work through abbreviations list until text fits.
-
-    foreach my $key (keys(%abbrevs)){
-	$orig_text =~ s/$key/$abbrevs{$key}/ ;
-	return $orig_text if (length($orig_text) < $maxchars);
-    }
-
-    #give up
-    return "";
-
 }

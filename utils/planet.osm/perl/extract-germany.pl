@@ -49,12 +49,32 @@ while(<DATA>)
     elsif (/^END/)
     {
         my $pol = Math::Polygon->new(points => $currentpoints);
+
+        # --------------------------------------------------------------
+        # Simplification of the polygon. If you replace the Germany 
+        # border polygon by a simpler one, then do not use simplification.
+        # It is only intended for polygons with a large number of points
+        # and will reduce the number of points. If applied to simple
+        # polygons, they will become deformed.
+        #
+        # If you only use one simple polygon then replace the lines 
+        # between this comment block and the "end" comment by:
+        #
+        # push(@{$borderpolys}, $pol);
+        #
+        # --------------------------------------------------------------
+
         # this seems like a good rule of thumb:
         my $simp = $pol->simplify(max_points=>($pol->nrPoints+2*sqrt($pol->nrPoints))/3, slope=>0.001);
         # drop polygons that have an "area" (computed based on pure lat/lon,
         # so not really an area but again sufficient as rule of thumb) of
         # less than 5; minor islands and such 
         push(@{$borderpolys}, $simp) unless ($simp->area < 5);
+
+        # --------------------------------------------------------------
+        # End of simplification.
+        # --------------------------------------------------------------
+
         undef $currentpoints;
     }
     elsif (defined($currentpoints))

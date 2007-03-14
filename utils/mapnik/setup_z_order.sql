@@ -15,7 +15,7 @@ commit;
 
 delete from geometry_columns where f_table_name='planet_osm_roads';
 drop table planet_osm_roads ;
-create table planet_osm_roads as select * from planet_osm_line where highway='motorway' or highway='motorway_link' or highway='trunk' or highway='trunk_link' or highway='primary' or highway='primary_link' or char_length(railway) > 0;
+create table planet_osm_roads as select * from planet_osm_line where highway='motorway' or highway='motorway_link' or highway='trunk' or highway='trunk_link' or highway='primary' or highway='primary_link' or highway='secondary' or highway='secondary_trunk' or char_length(railway) > 0;
 insert into geometry_columns values('','public','planet_osm_roads','way',2,4326,'LINESTRING');
 create index planet_osm_roads_spidx on planet_osm_roads using GIST (way GIST_GEOMETRY_OPS);
 vacuum analyze planet_osm_roads;

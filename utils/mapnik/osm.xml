@@ -141,7 +141,7 @@
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='parking'</Filter>
       <PointSymbolizer file="/Users/artem/symbols/parking.png" type="png" width="16" height="16" allow_overlap="false"/>
-     </Rule>
+    </Rule>
     <Rule>
       <MaxScaleDenominator>5000</MaxScaleDenominator>
       <Filter>[amenity]='place_of_worship'</Filter>
@@ -302,6 +302,11 @@
          <CssParameter name="fill">#f7efb7</CssParameter>
       </PolygonSymbolizer>
     </Rule>
+    <Rule>
+      <MaxScaleDenominator>5000</MaxScaleDenominator>
+      <Filter>[amenity]='parking'</Filter>
+      <PointSymbolizer file="/Users/artem/symbols/parking.png" type="png" width="16" height="16" allow_overlap="false"/>
+    </Rule>
     
     <Rule>
       <Filter>[railway] = 'station' or [building] = 'station'</Filter>
@@ -383,6 +388,7 @@
       <MaxScaleDenominator>20000</MaxScaleDenominator>
       <TextSymbolizer name="name" face_name="DejaVu Sans Book" size="10" fill="#000" halo_radius="2" wrap_width="10"/>
     </Rule>
+    
   </Style>
   
    <Style name="water">

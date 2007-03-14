@@ -840,10 +840,21 @@
     </Rule>
     
     <!-- level 11 ..-->
-
+   <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      <MaxScaleDenominator>150000</MaxScaleDenominator>
+      <MinScaleDenominator>75000</MinScaleDenominator>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fdbf6f</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    
     <Rule>
       <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
-      <MaxScaleDenominator>100000</MaxScaleDenominator>
+      <MaxScaleDenominator>75000</MaxScaleDenominator>
       <MinScaleDenominator>25000</MinScaleDenominator>
       <LineSymbolizer>
         <CssParameter name="stroke">#fdbf6f</CssParameter>
@@ -852,6 +863,7 @@
         <CssParameter name="stroke-linecap">round</CssParameter>
       </LineSymbolizer>
     </Rule>
+    
     <Rule>
       <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
       <MaxScaleDenominator>25000</MaxScaleDenominator>

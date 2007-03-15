@@ -122,5 +122,47 @@ public class WMSPreferenceEditor implements PreferenceSetting {
 		if (change) WMSPlugin.refreshMenu();
 	}
 	
+    /**
+     * Updates a server URL in the preferences dialog. Used by other plugins.
+     * 
+     * @param server The server name
+     * @param url The server URL
+     */
+    public void setServerUrl(String server, String url)
+    {
+        for (int i = 0; i < model.getRowCount(); i++) 
+        {
+            String name = model.getValueAt(i,1).toString();
+            if( name.equals(server) )
+            {
+                model.setValueAt(url, i, 2);
+                return;
+            }
+        }        
+
+        highestIdUsed++;
+        model.addRow(new String[]{Integer.toString(highestIdUsed), server, url});
+    }
+    
+    /**
+     * Gets a server URL in the preferences dialog. Used by other plugins.
+     * 
+     * @param server The server name
+     * @return The server URL
+     */
+    public String getServerUrl(String server)
+    {
+        for (int i = 0; i < model.getRowCount(); i++) 
+        {
+            String name = model.getValueAt(i,1).toString();
+            if( name.equals(server) )
+            {
+                String url = model.getValueAt(i,2).toString();
+                return url;
+            }
+        }
+        
+        return null;
+    }
 }
 

@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <script type="text/javascript">
+    function configure()
+    {
+    	// Require privileges to change configuration
+	    netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect UniversalPreferencesWrite UniversalPreferencesRead");
+    	var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+		var ok = true;
+
+		// when this properties are created with "string" instead of "boolean", it throws an error
+		// Jus delete the profile and create again.
+    	try
+    	{
+	    	// Enable dump to console
+	    	prefs.setBoolPref("browser.dom.window.dump.enabled", true);
+			// navigator.preference("browser.dom.window.dump.enabled", true);
+		}
+		catch(err)
+		{
+			ok = false;
+			alert( "Error setting 'browser.dom.window.dump.enabled'=true :" + err );
+		}
+
+    	try
+    	{
+			// Disable resume from crash
+	    	prefs.setBoolPref("browser.sessionstore.resume_from_crash",false);
+			// navigator.preference("browser.sessionstore.resume_from_crash", "false");
+		}
+		catch(err)
+		{
+			ok = false;
+			alert( "Error setting 'browser.sessionstore.resume_from_crash'=false :" + err );
+		}
+		
+		if( ok )
+		{
+			document.getElementById("closeMsg").style.visibility = "inherit";
+			document.getElementById("errorMsg").style.visibility = "hidden";
+		}		// Seems that both configuration changes need differente ways of modification. Some mozilla bug??		
+		
+		else
+		{
+			document.getElementById("closeMsg").style.visibility = "hidden";
+			document.getElementById("errorMsg").style.visibility = "inherit";
+		}
+	}
+    </script>
+  
+  </head>
+
+<body>
+  <h2>YWMS Plugin configuration</h2>
+  
+  The configuration of the profile needs some extra modificationsof the
+  browser profile:
+  <ol>
+  <li><h4>The Javascript method <i>dump</i> must be active.</h4>
+  	  This method allows Javascrip code to write data to the output stream of the browser, 
+  	  and can be activated with the config option <i>browser.dom.window.dump.enabled</i>.</li><br>
+  <li><h4>Session recovery must be inactive</h4>
+      Session crash recovery will try to reopen the pages you were viewing before a browser crash, 
+      but for this JOSM plugin, this feature is not useful. This feature can be deactivated 
+      with the config option <i>browser.sessionstore.resume_from_crash</i>
+  </li>
+  </ol>
+  
+  These configuration propoerties can be modified automatically just clicking in the button below, 
+  that will ask for permissions to do so. Just accept to allow the modifications.
+  <br>
+  <br>
+  <button type="button" name="configure" value="Configure" onClick="configure()">Make changes</button>
+  <br>
+  <br>
+  <div id="closeMsg" style="visibility:hidden;"><blink>Close this browser window to start using JOSM with the YWMS plugin</blink></div>
+  <div id="errorMsg" style="visibility:hidden;"><blink>Configuration properties not properly modified.</blink></div>
+  
+</body>
+</html>

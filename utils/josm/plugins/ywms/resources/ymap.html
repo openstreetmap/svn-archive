@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <script type="text/javascript">
+		var bbox = "";
+        var width  = 800;
+        var height = 800;
+
+		// Parse query string and set variables
+		var url = location.href;
+        var queryStringPos = url.indexOf("?");
+		if( queryStringPos != -1 )
+        {
+            url = url.substring(queryStringPos + 1);
+	    	var variables = url.split ("&");
+            for (i = 0; i < variables.length; i++) 
+            {
+            	if( !variables[i] )
+            		continue;
+                var keyValue = variables[i].split("=");
+                eval ('var '+keyValue[0].toLowerCase()+'="'+keyValue[1]+'"');
+            }
+        }
+        else
+        {
+            dump("YWMS ERROR: no queryString\n");
+        }
+        
+        // Limit size to current window's, to avoid memory problems
+        width = Math.min(width, screen.width);
+        height = Math.min(height, screen.height);
+        
+		// Don't know how to hide the window, so resize for the user to see it loading the aerial photo
+        window.moveTo(0,0);
+        window.resizeTo(width,height);
+    </script>
+    <script type="text/javascript" src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=YahooDemo"></script>
+  </head>
+  
+  <body style="margin: 0px">
+    <div id="map"></div>
+    <script type="text/javascript">
+      if( !bbox || !width || !height)
+      {
+          alert("YWMS ERROR: invalid parameters\n");
+      }
+      else
+      {
+          // Resize map container to parameter dimension
+          var mapDiv = document.getElementById("map");
+          mapDiv.style.width  = width;
+          mapDiv.style.height = height;
+
+          // Get the bounding box
+          var coords = bbox.split(",");
+          var tllon  = coords[0], tllat = coords[1];
+          var brlon  = coords[2], brlat = coords[3];
+
+          var points = new Array();
+          points[0] = new YGeoPoint(tllat, tllon);
+          points[1] = new YGeoPoint(brlat, brlon);
+
+          // other map types work as well but only satellite allowed for use with OSM!
+          var map = new YMap(document.getElementById("map"), YAHOO_MAP_SAT);
+          var zac = map.getBestZoomAndCenter(points);
+          var level = zac.zoomLevel;
+
+          // funny Yahoo bug seems to return 0 if your section is too small
+          if (level==0) level=1;
+
+          map.drawZoomAndCenter(zac.YGeoPoint,level);
+          var bounds = map.getBoundsLatLon();
+
+          // Dumps the actual bounding box
+          dump("bbox=" + bounds.LonMin + "," + bounds.LatMin + "," + bounds.LonMax + "," + bounds.LatMax + "\n");
+      }
+    </script>
+  </body>
+</html>

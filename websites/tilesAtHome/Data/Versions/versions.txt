@@ -1,0 +1,6 @@
+1|OK|Agadir
+2|OK|Athens
+3|OK|Bangkok
+4|OK|Bangkok_nocurves
+5|OK|Cambridge
+6|OK|Cambridge_nocurves

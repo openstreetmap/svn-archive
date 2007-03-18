@@ -185,13 +185,12 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList){
     }
   }
   
+  # Don't store *really* blank tiles, no matter who they're from
   if($Size < 100){
-    logMsg("Tile of size $Size discarded by version #$VersionID", 5);
-    return;
-  }
+    
+    # TODO: this is a request to delete existing tiles - need to handle it!
   
-  if($Size < 1000){
-    logMsg("Tile of size $Size uploaded by version #$VersionID", 5);
+    return;
   }
   
   # Remember tile details, in a form that can be added to SQL easily

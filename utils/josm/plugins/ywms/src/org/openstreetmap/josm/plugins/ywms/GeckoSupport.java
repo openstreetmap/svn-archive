@@ -1,5 +1,7 @@
 package org.openstreetmap.josm.plugins.ywms;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,8 +36,27 @@ public class GeckoSupport
 		// Set Mozilla environment variable to avoid reusing same window if already open
 		builder.environment().put("MOZ_NO_REMOTE", "1");
 		
-		return builder.start();
+        return startProcess(builder);
 	}
+
+    /**
+     * Starts the process
+     * 
+     * @param builder The builder for the process
+     * @return The started process
+     * @throws IOException If coulnd't start the process
+     */
+    private static Process startProcess(ProcessBuilder builder) throws IOException
+    {
+        try
+        {
+            return builder.start();
+        }
+        catch(IOException ioe)
+        {
+            throw new IOException( tr("Could not start browser. Please check that the executable path is correct.")); 
+        }
+    }
 	
 	/**
 	 * Browses a URL using a profile.
@@ -69,7 +90,7 @@ public class GeckoSupport
 		if( dump )
 			environment.put("MOZ_FORCE_PAINT_AFTER_ONLOAD", System.getProperty("java.io.tmpdir") + "/ywms");
 		
-		return builder.start();
+		return startProcess(builder);
 	}
 	
 	/**

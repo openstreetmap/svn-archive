@@ -58,13 +58,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   xmlns:osma="http://wiki.openstreetmap.org/index.php/Osmarender/Frollo/1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes='osma'>
 
-	<xsl:variable name='osmaNamespace' select='"http://wiki.openstreetmap.org/index.php/Osmarender/Frollo/1.0"'/>
- 
     <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
 
 	<!-- Some xsl processors are a bit recursion challenged (eg xalan-j).  This variable enables you to restrict the number of segs that
 	     get sorted.  If a way has more than this number of segs then the rest just get output in their original order.  -->
-	<xsl:variable name='maximumNumberOfSegs' select='"500"'/>
+	<xsl:variable name='maximumNumberOfSegs' select='"800"'/>
 		
 
 	<!-- Keys -->
@@ -108,8 +106,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		<!-- A loose-end is any seg that has no other segs connecting to/from it in this way.  We prefer "from" loose-ends but
 		     will be happy with "to" loose-ends if necessary.  If there are no loose-ends (eg a roundabout) then use the
 		     first unprocessed seg in the set.  -->
-		<xsl:variable name='fromLooseEnds' select='../seg[not(contains($processedSegs,concat("|",@id,"|")))][@osma:fromSegmentCount="0"]'/>
-		<xsl:variable name='toLooseEnds' select='../seg[not(contains($processedSegs,concat("|",@id,"|")))][@osma:toSegmentCount="0"]'/>
+		<xsl:variable name='fromLooseEnds' select='../seg[not(contains($processedSegs,concat("|",@id,"|")))][@osma:fromCount="0"]'/>
+		<xsl:variable name='toLooseEnds' select='../seg[not(contains($processedSegs,concat("|",@id,"|")))][@osma:toCount="0"]'/>
 
 		<xsl:choose>
 			<!-- are there any "from" loose ends? -->
@@ -162,7 +160,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 		<!-- Output current seg -->
 		<seg>
-			<xsl:attribute name='id'><xsl:value-of select='$currentSeg/@id'/></xsl:attribute>
+			<xsl:apply-templates select='$currentSeg/@*|$currentSeg'/>			
+			<!--<xsl:attribute name='id'><xsl:value-of select='$currentSeg/@id'/></xsl:attribute>-->
 			<xsl:if test='$reverse'>
 				<xsl:attribute name='osma:reverse'>1</xsl:attribute>
 			</xsl:if>
@@ -176,7 +175,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		<xsl:variable name='newProcessedSegs' select='concat($processedSegs,$currentSeg/@id,"|")'/>
 	
 		<xsl:choose>
-			<xsl:when test='string-length(translate($processedSegs,"0123456789",""))&lt;$maximumNumberOfSegs'>
+			<xsl:when test='string-length(translate($processedSegs,"-0123456789",""))&lt;$maximumNumberOfSegs'>
 				<!-- Start searching for next seg -->
 				<xsl:variable name='nextSeg' select='$currentSeg/following-sibling::seg[1]'/>
 				<xsl:variable name='alreadyProcessed' select='contains($newProcessedSegs,concat("|",$nextSeg/@id,"|"))'/>
@@ -257,7 +256,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			<xsl:otherwise> <!-- If there are too many segments, output the remainder in original order -->
 				<xsl:for-each select='../seg[not(contains($newProcessedSegs,concat("|",@id,"|")))]'>
 					<seg>
-						<xsl:apply-templates select='@*[not(namespace-uri()=$osmaNamespace)]|node()'/>			
+						<xsl:apply-templates select='@*|node()'/>			
 					</seg>
 				</xsl:for-each>
 			</xsl:otherwise>

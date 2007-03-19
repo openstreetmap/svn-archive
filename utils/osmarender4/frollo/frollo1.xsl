@@ -4,8 +4,8 @@
 
 Frollo - Osmarender pre-processor
          Part 1, count the number of segments that connect to each end of
-         each segment in a way.  Output two attributes, osma:fromSegmentCount
-         and osma:toSegmentCount for each <seg> in a <way>.
+         each segment in a way.  Output two attributes, osma:fromCount
+         and osma:toCount for each <seg> in a <way>.
 
 ==============================================================================
 
@@ -49,21 +49,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			<!-- Count the number of segments *in this way* that connect to the from node of this segment -->
 			<xsl:variable name='currentSegmentFromNodeId' select='key("segmentById",@id)/@from' />
 			<xsl:if test='$currentSegmentFromNodeId'>
-				<xsl:variable name='fromSegmentCount' 
+				<xsl:variable name='fromCount' 
 					select='count(../seg[key("segmentById",@id)/@to=$currentSegmentFromNodeId])
 					        + count(../seg[key("segmentById",@id)/@from=$currentSegmentFromNodeId]) 
 					        - 1' />
-				<xsl:attribute name='osma:fromSegmentCount'><xsl:value-of select='$fromSegmentCount'/></xsl:attribute>					
+				<xsl:attribute name='osma:fromCount'><xsl:value-of select='$fromCount'/></xsl:attribute>					
 			</xsl:if>
 
 			<!-- Count the number of segments *in this way* that connect to the to node of this segment -->
 			<xsl:variable name='currentSegmentToNodeId' select='key("segmentById",@id)/@to' />
 			<xsl:if test='$currentSegmentToNodeId'>
-				<xsl:variable name='toSegmentCount' 
+				<xsl:variable name='toCount' 
 					select='count(../seg[key("segmentById",@id)/@to=$currentSegmentToNodeId])
 					        + count(../seg[key("segmentById",@id)/@from=$currentSegmentToNodeId]) 
 					        - 1' />
-				<xsl:attribute name='osma:toSegmentCount'><xsl:value-of select='$toSegmentCount'/></xsl:attribute>					
+				<xsl:attribute name='osma:toCount'><xsl:value-of select='$toCount'/></xsl:attribute>					
 			</xsl:if>
 
 		</seg>

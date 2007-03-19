@@ -37,28 +37,6 @@
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
     <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
 
-        <!-- Highway shading (abutters) first -->
-        <layer name="Abutters">
-            <rule k="highway" v="residential">
-                <line class='abutters-residential' />
-            </rule>
-            <rule k="abutters" v="residential">
-                <line class='abutters-residential'/>
-            </rule>
-            <rule k="abutters" v="retail">
-                <line class='abutters-retail'/>
-            </rule>
-            <rule k="abutters" v="industrial">
-                <line class='abutters-industrial'/>
-            </rule>
-            <rule k="abutters" v="commercial">
-                <line class='abutters-commercial'/>
-            </rule>
-            <rule k="abutters" v="mixed">
-                <line class='abutters-mixed'/>
-            </rule>
-        </layer>
-
 
         <!-- Natural features -->
         <layer name="Natural features and leisure">
@@ -168,14 +146,8 @@
 			<rule e="way" k="aeroway" v="terminal">
 			    <area class='building-block'/>
 			</rule>
-            <rule e="way" k="building" v="barn|warehouse|oast_house|tower|castle|monument|hall|shed|store|stadium">
-                <area class='building'/>
-            </rule>
-            <rule e="way" k="building" v="barn|warehouse|oast_house|block|tower|castle|monument|hall|shed|store|stadium">
+            <rule e="way" k="building" v="*">
                 <area class='building-block'/>
-            </rule>
-            <rule e="way" k="building" v="detached|semi|terrace|apartments">
-                <area class='building-residential'/>
             </rule>
         </layer>
 
@@ -1827,7 +1799,7 @@
             }
 
             .building-block {
-                fill: #a18bd8;
+                fill: #F3D6B6;
                 stroke: #6a5a8e;
                 stroke-width: 0.2px;
             }

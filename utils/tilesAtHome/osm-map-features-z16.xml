@@ -1788,7 +1788,7 @@
             }
 
             .building-block {
-                fill: #a18bd8;
+                fill: #F3D6B6;
                 stroke: #6a5a8e;
                 stroke-width: 0.2px;
             }

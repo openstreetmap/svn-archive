@@ -52,9 +52,10 @@ public class ImageLoader
 
 	private URL yahooUrl;
 	double[] orig_bbox = null;
-	double[] final_bbox = null;
-	int width = -1;
-	int height = -1;
+    int width = -1;
+    int height = -1;
+    int final_width = -1;
+    int final_height = -1;
 	Image image;
 	List<String> firefoxFiles = new ArrayList<String>();
 
@@ -127,11 +128,14 @@ public class ImageLoader
 	        while( line != null ) 
 	        {
 	        	System.out.println("YWMS::" + line);
-	            if( line.startsWith("bbox=") )
-	            {
-	            	final_bbox = getBbox(line);
-	                // System.out.println("YWMS::BBOX: (" + final_bbox[0] + "," + final_bbox[1] + "), (" + final_bbox[2] + "," + final_bbox[3] + ")");
-	            }
+                if( line.startsWith("new_width=") )
+                {
+                    final_width = (int)Math.round( Double.parseDouble( line.substring(10)) );
+                }
+                else if( line.startsWith("new_height=") )
+                {
+                    final_height = (int)Math.round( Double.parseDouble( line.substring(11)) );
+                }
 	            else if( line.startsWith(GECKO_DEBUG_LINE))
 	            {
 	            	// Find out the screenshot file
@@ -167,13 +171,13 @@ public class ImageLoader
 	            line = in.readLine();
 	        }
 
-	        if( final_bbox == null  && imageFilePpm == null && !firefoxFiles.isEmpty() )
+	        if( final_width == -1 && imageFilePpm == null && !firefoxFiles.isEmpty() )
 	        {
 	        	throw new ImageLoaderException("Is there any other firefox window open with same profile?");
 	        }
-	        if( final_bbox == null )
+	        if( final_width == -1)
 	        {
-	        	throw new ImageLoaderException("Couldn't find bounding box. Is browser.dom.window.dump.enabled set in Firefox config?");
+	        	throw new ImageLoaderException("Couldn't find new dimension. Is browser.dom.window.dump.enabled set in Firefox config?");
 	        }
 	        if( imageFilePpm == null )
 	        {
@@ -220,19 +224,12 @@ public class ImageLoader
 	 */
 	private void resizeImage() 
 	{
-		int calcwidth = (int)Math.round((final_bbox[2] - final_bbox[0]) * width / (orig_bbox[2] - orig_bbox[0]));
-		int calcheight = (int)Math.round((final_bbox[3] - final_bbox[1]) * height / (orig_bbox[3] - orig_bbox[1]));
-
-		int cropWidth = (calcwidth - width) / 2;
-		int cropHeight = (calcheight - height) / 2;
-	
 		Toolkit tk = Toolkit.getDefaultToolkit();
-        // save("/tmp/image_orig.jpg");
-        image = tk.createImage (new FilteredImageSource (image.getSource(), new CropImageFilter(0, 0, width, height)));
-        image = tk.createImage (new FilteredImageSource (image.getSource(), new ReplicateScaleFilter(calcwidth, calcheight)));
-        image = tk.createImage (new FilteredImageSource (image.getSource(), new CropImageFilter(cropWidth, cropHeight, width, height)));
-		// BufferedImage img = (BufferedImage)image.getScaledInstance(calcwidth, calcwidth, BufferedImage.SCALE_DEFAULT);
-		// image = img.getSubimage(cropl, cropt, width, height);
+        //save("/tmp/image_orig.png");
+        image = tk.createImage (new FilteredImageSource (image.getSource(), new CropImageFilter(0, 0, final_width, final_height)));
+        //save("/tmp/image_crop.png");
+        image = tk.createImage (new FilteredImageSource (image.getSource(), new ReplicateScaleFilter(width, height)));
+        //save("/tmp/image_scale.png");
 	}
 
 	/**
@@ -264,11 +261,18 @@ public class ImageLoader
 	 * @param fileName The name of the new file 
 	 * @throws IOException When error saving the file
 	 */
-	public void save(String fileName) throws IOException
+	public void save(String fileName)
 	{
-        FileOutputStream fileStream = new FileOutputStream(fileName);
-        ImageIO.write(getBufferedImage(), "png", fileStream);
-        fileStream.close();
+        try
+        {
+            FileOutputStream fileStream = new FileOutputStream(fileName);
+            ImageIO.write(getBufferedImage(), "png", fileStream);
+            fileStream.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 	}
 	
 	/**

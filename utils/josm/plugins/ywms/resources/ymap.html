@@ -33,7 +33,7 @@
         window.moveTo(0,0);
         window.resizeTo(width,height);
     </script>
-    <script type="text/javascript" src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=YahooDemo"></script>
+    <script type="text/javascript" src="http://api.maps.yahoo.com/ajaxymap?v=3.4&appid=z7qRk3_V34HAbY_SkC7u7GAgG5nDTblw.cuL1OS5LWGwkIIUeGjg4qsnJDPpmhoF"></script>
   </head>
   
   <body style="margin: 0px">
@@ -61,17 +61,44 @@
 
           // other map types work as well but only satellite allowed for use with OSM!
           var map = new YMap(document.getElementById("map"), YAHOO_MAP_SAT);
+          map.removeZoomScale();
           var zac = map.getBestZoomAndCenter(points);
           var level = zac.zoomLevel;
+           
+           // funny Yahoo bug seems to return 0 if your section is too small
+           if( level == 0 ) level = 1;
+           if (level>1) level--;
+           
+           map.drawZoomAndCenter(zac.YGeoPoint,level);
 
-          // funny Yahoo bug seems to return 0 if your section is too small
-          if (level==0) level=1;
-
-          map.drawZoomAndCenter(zac.YGeoPoint,level);
+		  // Get the on-screen coordinates of the points
+		  xy0 = map.convertLatLonXY(points[0]);
+		  xy1 = map.convertLatLonXY(points[1]);
+		  
+		  // Create a new size for the map. This makes the need of clipping the image unnecesary.
+		  new_width  = Math.abs( xy0.x - xy1.x);
+		  new_height = Math.abs( xy0.y - xy1.y);
+		  
+		  // Apply the new width-height
+          mapDiv.style.width  = new_width;
+          mapDiv.style.height = new_height;
+          map.resizeTo( new YSize(new_width, new_height));
+          
+		  /// DEBUG: colour the interesting area
+		  var cPT2 = new YGeoPoint(tllat, tllon); 
+		  var cPT3 = new YGeoPoint(tllat, brlon); 
+		  var cPT4 = new YGeoPoint(brlat, brlon); 
+		  var cPT5 = new YGeoPoint(brlat, tllon); 
+		  // args: array of pts, color, width, alpha 
+		  var poly1 = new YPolyline([cPT2,cPT3,cPT4,cPT5, cPT2],'blue',7,0.7); 
+		  //map.addOverlay(poly1);
+		 
           var bounds = map.getBoundsLatLon();
 
           // Dumps the actual bounding box
           dump("bbox=" + bounds.LonMin + "," + bounds.LatMin + "," + bounds.LonMax + "," + bounds.LatMax + "\n");
+          dump("new_width=" + new_width + "\n");
+          dump("new_height=" + new_height + "\n");
       }
     </script>
   </body>

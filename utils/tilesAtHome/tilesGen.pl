@@ -322,6 +322,9 @@ sub GenerateTileset {
   my $Margin = " " x ($Zoom - 8);
   #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
   
+  # Pre-process the data file using frollo
+  frollo("data-$PID.osm");    
+  
   # Add bounding box to osmarender
   # then set the data source
   # then transform it to SVG
@@ -527,6 +530,28 @@ sub DownloadFile {
   }
   doneMessage(sprintf("done, %d bytes", -s $File));
   
+}
+
+#-----------------------------------------------------------------------------
+# Pre-process on OSM file (using frollo)
+#-----------------------------------------------------------------------------
+sub frollo(){
+  my($dataFile) = @_;
+  my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+    $Config{Niceness},
+    $Config{XmlStarlet},
+    "frollo1.xsl",
+    "$dataFile",
+    "temp-$PID.osm"); 
+  runCommand("Frolloizing (part I) ...", $Cmd);
+
+  my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+    $Config{Niceness},
+    $Config{XmlStarlet},
+    "frollo2.xsl",
+    "temp-$PID.osm",
+    "$dataFile");
+  runCommand("Frolloizing (part II) ...", $Cmd);
 }
 
 #-----------------------------------------------------------------------------

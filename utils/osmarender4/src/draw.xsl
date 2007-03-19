@@ -209,7 +209,7 @@
         <xsl:variable name='y' select='($height)+((($bottomLeftLatitude)-(@lat))*10000*$scale*$projection)'/>
 
         <g transform="translate({$x},{$y}) scale({$symbolScale})">
-            <use width="1" height="1">
+            <use>
                 <xsl:if test="$instruction/@ref">
                     <xsl:attribute name="xlink:href">
                         <xsl:value-of select="concat('#symbol-', $instruction/@ref)"/>

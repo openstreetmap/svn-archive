@@ -325,32 +325,87 @@
 
     <!-- Generate a way path in the normal order of the segments in the way -->
     <xsl:template name="generateWayPathNormal">
-        <xsl:for-each select='seg[key("segmentById",@id)]'>
-            <xsl:variable name='segmentId' select='@id'/>
-            <xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=key("segmentById",preceding-sibling::seg[1]/@id)/@to'/>
-            <xsl:for-each select='key("segmentById",$segmentId)'>
-                <xsl:if test='not($linkedSegment)'>
-                    <xsl:call-template name='segmentMoveToStart'/>
-                </xsl:if>
-                    <xsl:call-template name='segmentLineToEnd'/>
-            </xsl:for-each>
-        </xsl:for-each>
+		<xsl:choose>
+			<xsl:when test='$bFrollo'>			
+				<xsl:for-each select='seg[key("segmentById",@id)]'>
+				    <xsl:variable name='segmentId' select='@id'/>
+					<xsl:variable name='bReverseSeg' select='@osma:reverse="1"'/>
+					<xsl:variable name='bSubPath' select='(position()=1) or (@osma:sub-path="1")'/>
+				    <xsl:for-each select='key("segmentById",$segmentId)'>
+						<xsl:choose>
+							<xsl:when test='$bReverseSeg'>
+								<xsl:if test='$bSubPath'>
+								    <xsl:call-template name='segmentMoveToEnd'/>
+								</xsl:if>
+								<xsl:call-template name='segmentLineToStart'/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test='$bSubPath'>
+								    <xsl:call-template name='segmentMoveToStart'/>
+								</xsl:if>
+								<xsl:call-template name='segmentLineToEnd'/>
+							</xsl:otherwise>				
+						</xsl:choose>
+				    </xsl:for-each>
+				</xsl:for-each>				
+			</xsl:when>
+			<xsl:otherwise> <!-- Not pre-processed by frollo -->
+			    <xsl:for-each select='seg[key("segmentById",@id)]'>
+					<xsl:variable name='segmentId' select='@id'/>
+					<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=key("segmentById",preceding-sibling::seg[1]/@id)/@to'/>
+					<xsl:for-each select='key("segmentById",$segmentId)'>
+						<xsl:if test='not($linkedSegment)'>
+							<xsl:call-template name='segmentMoveToStart'/>
+						</xsl:if>
+						<xsl:call-template name='segmentLineToEnd'/>
+					</xsl:for-each>
+				</xsl:for-each>
+			</xsl:otherwise>		
+		</xsl:choose>
     </xsl:template>
 
 
     <!-- Generate a way path in the reverse order of the segments in the way -->
     <xsl:template name="generateWayPathReverse">
-		<xsl:for-each select='seg'>
-		    <xsl:sort select='position()' data-type='number' order='descending'/>
-		    <xsl:variable name='segmentId' select='@id'/>
-		    <xsl:variable name='linkedSegment' select='key("segmentById",following-sibling::seg[1]/@id)/@from=key("segmentById",@id)/@to'/>
-		    <xsl:for-each select='key("segmentById",$segmentId)'>
-		        <xsl:if test='not($linkedSegment)'>
-		            <xsl:call-template name='segmentMoveToEnd'/>
-		        </xsl:if>
-		            <xsl:call-template name='segmentLineToStart'/>
-		    </xsl:for-each>
-		</xsl:for-each>    
+		<xsl:choose>
+			<xsl:when test='$bFrollo'>			
+				<xsl:for-each select='seg'>
+				    <xsl:sort select='position()' data-type='number' order='descending'/>
+				    <xsl:variable name='segmentId' select='@id'/>
+					<xsl:variable name='bReverseSeg' select='@osma:reverse="1"'/>
+					<xsl:variable name='bSubPath' select='(position()=1) or (preceding-sibling::seg/@osma:sub-path="1")'/>
+				    <xsl:for-each select='key("segmentById",$segmentId)'>
+						<xsl:choose>
+							<xsl:when test='$bReverseSeg'>
+								<xsl:if test='$bSubPath'>
+								    <xsl:call-template name='segmentMoveToStart'/>
+								</xsl:if>
+								<xsl:call-template name='segmentLineToEnd'/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test='$bSubPath'>
+								    <xsl:call-template name='segmentMoveToEnd'/>
+								</xsl:if>
+								<xsl:call-template name='segmentLineToStart'/>
+							</xsl:otherwise>				
+						</xsl:choose>
+				    </xsl:for-each>
+				</xsl:for-each>    
+			</xsl:when>
+			<xsl:otherwise> <!-- Not pre-processed by frollo -->
+				<xsl:for-each select='seg'>
+				    <xsl:sort select='position()' data-type='number' order='descending'/>
+				    <xsl:variable name='segmentId' select='@id'/>
+				    <xsl:variable name='linkedSegment' select='key("segmentById",following-sibling::seg[1]/@id)/@from=key("segmentById",@id)/@to'/>
+				    <xsl:for-each select='key("segmentById",$segmentId)'>
+						<xsl:if test='not($linkedSegment)'>
+							<xsl:call-template name='segmentMoveToStart'/>
+						</xsl:if>
+						<xsl:call-template name='segmentLineToEnd'/>
+				    </xsl:for-each>
+				</xsl:for-each>	
+			</xsl:otherwise>
+		</xsl:choose>
     </xsl:template>
 
 
@@ -359,47 +414,111 @@
 
 		<!-- Generate the path for the area -->
 		<xsl:variable name='pathData'>
-			<xsl:for-each select='seg[key("segmentById",@id)]'>
-				<xsl:variable name='segmentId' select='@id'/>
-				<xsl:variable name='currentSegmentToNodeId' select='key("segmentById",@id)/@to' />
-				<xsl:variable name='currentSegmentFromNodeId' select='key("segmentById",@id)/@from' />
-				<xsl:variable name='previousSegmentToNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@to' />
-				
-				<!-- The linkedSegment flag indicates whether the previous segment is connected to the current segment.  If it isn't
-				     then we will need to draw an additional line (segmentLineToStart) from the end of the previous segment to the
-				     start of the current segment. 
-				-->
-				<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=$previousSegmentToNodeId'/>
+			<xsl:choose>
+				<xsl:when test='$bFrollo'>			
+					<xsl:for-each select='seg[key("segmentById",@id)]'>
+						<xsl:variable name='segmentId' select='@id'/>
+						<xsl:variable name='bReverseSeg' select='@osma:reverse="1"'/>
+						<xsl:variable name='bSubPath' select='@osma:sub-path="1"'/>						
+						<xsl:variable name='fromCount' select='@osma:fromCount'/>						
+						<xsl:variable name='segmentSequence' select='position()'/>
+						<xsl:for-each select='key("segmentById",$segmentId)'>
+							<xsl:choose>
+								<xsl:when test='not($bReverseSeg)'>
+									<xsl:choose>
+										<!-- If this is the start of the way then we always have to move to the start of the segment. -->
+										<xsl:when test='$segmentSequence=1'>
+											<xsl:call-template name='segmentMoveToStart'/>				
+										</xsl:when>
+										
+										<!-- If the segment is connected to another segment (at the from end) and is the start of a new
+											 sub-path then start a new sub-path -->
+										<xsl:when test='$fromCount>0 and $bSubPath'>
+											<xsl:text>Z</xsl:text>
+											<xsl:call-template name='segmentMoveToStart'/>				
+										</xsl:when>
+										
+										<!-- If the segment is the start of a new sub-path, but is not connected to any previous
+										     segment then draw an artificial line.  Typically this happens when a tile boundary chops
+										     through the middle of an area or a river is segmented into manageable chunks. -->
+										<xsl:otherwise>
+											<xsl:call-template name='segmentLineToStart'/>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:call-template name='segmentLineToEnd'/>								
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<!-- If this is the start of the way then we always have to move to the start of the segment. -->
+										<xsl:when test='$segmentSequence=1'>
+											<xsl:call-template name='segmentMoveToEnd'/>				
+										</xsl:when>
+										
+										<!-- If the segment is connected to another segment (at the from end) and is the start of a new
+											 sub-path then start a new sub-path -->
+										<xsl:when test='$fromCount>0 and $bSubPath'>
+											<xsl:text>Z</xsl:text>
+											<xsl:call-template name='segmentMoveToEnd'/>				
+										</xsl:when>
+										
+										<!-- If the segment is the start of a new sub-path, but is not connected to any previous
+										     segment then draw an artificial line.  Typically this happens when a tile boundary chops
+										     through the middle of an area or a river is segmented into manageable chunks. -->
+										<xsl:otherwise>
+											<xsl:call-template name='segmentLineToEnd'/>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:call-template name='segmentLineToStart'/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:for-each>
+					<xsl:text>Z</xsl:text>
+				</xsl:when>
+				<xsl:otherwise> <!-- Not pre-processed by frollo -->
+					<xsl:for-each select='seg[key("segmentById",@id)]'>
+						<xsl:variable name='segmentId' select='@id'/>
+						<xsl:variable name='currentSegmentToNodeId' select='key("segmentById",@id)/@to' />
+						<xsl:variable name='currentSegmentFromNodeId' select='key("segmentById",@id)/@from' />
+						<xsl:variable name='previousSegmentToNodeId' select='key("segmentById",preceding-sibling::seg[1]/@id)/@to' />
+						
+						<!-- The linkedSegment flag indicates whether the previous segment is connected to the current segment.  If it isn't
+						     then we will need to draw an additional line (segmentLineToStart) from the end of the previous segment to the
+						     start of the current segment. 
+						-->
+						<xsl:variable name='linkedSegment' select='key("segmentById",@id)/@from=$previousSegmentToNodeId'/>
 		
-				<!--  Now we count the number of segments in this way that have a to node that is equal to the current segment's from node.
-				      We do this to find out if the current segment is connected from some other segment in the way.  If it is, and it
-				      is not linked to the current segment then we can assume we have the start of a new sub-path.  In this case we shouldn't
-				      draw an additional line between the end of the previous segment and the start of the current segment.
-				-->
-				<xsl:variable name='connectedSegmentCount' select='count(../*[key("segmentById",@id)/@to=$currentSegmentFromNodeId])' />
-				
-				<xsl:variable name='segmentSequence' select='position()'/>
-				<xsl:for-each select='key("segmentById",$segmentId)'>
-					<xsl:choose>
-						<!-- If this is the start of the way then we always have to move to the start of the segment. -->
-						<xsl:when test='$segmentSequence=1'>
-							<xsl:call-template name='segmentMoveToStart'/>				
-						</xsl:when>
-						<!-- If the segment is "connected" to another segment (at the from end) but is not linked to the
-							 previous segment, then start a new sub-path -->
-						<xsl:when test='$connectedSegmentCount>0 and not($linkedSegment)'>
-							<xsl:text>Z</xsl:text>
-							<xsl:call-template name='segmentMoveToStart'/>				
-						</xsl:when>
-						<!-- If the previous segment is not linked to this one we need to draw an artificial line -->
-						<xsl:when test='not($linkedSegment)'>
-							<xsl:call-template name='segmentLineToStart'/>				
-						</xsl:when>
-					</xsl:choose>
-					<xsl:call-template name='segmentLineToEnd'/>
-				</xsl:for-each>
-			</xsl:for-each>
-			<xsl:text>Z</xsl:text>
+						<!--  Now we count the number of segments in this way that have a to node that is equal to the current segment's from node.
+						      We do this to find out if the current segment is connected from some other segment in the way.  If it is, and it
+						      is not linked to the current segment then we can assume we have the start of a new sub-path.  In this case we shouldn't
+						      draw an additional line between the end of the previous segment and the start of the current segment.
+						-->
+						<xsl:variable name='connectedSegmentCount' select='count(../*[key("segmentById",@id)/@to=$currentSegmentFromNodeId])' />
+						
+						<xsl:variable name='segmentSequence' select='position()'/>
+						<xsl:for-each select='key("segmentById",$segmentId)'>
+							<xsl:choose>
+								<!-- If this is the start of the way then we always have to move to the start of the segment. -->
+								<xsl:when test='$segmentSequence=1'>
+									<xsl:call-template name='segmentMoveToStart'/>				
+								</xsl:when>
+								<!-- If the segment is "connected" to another segment (at the from end) but is not linked to the
+									 previous segment, then start a new sub-path -->
+								<xsl:when test='$connectedSegmentCount>0 and not($linkedSegment)'>
+									<xsl:text>Z</xsl:text>
+									<xsl:call-template name='segmentMoveToStart'/>				
+								</xsl:when>
+								<!-- If the previous segment is not linked to this one we need to draw an artificial line -->
+								<xsl:when test='not($linkedSegment)'>
+									<xsl:call-template name='segmentLineToStart'/>				
+								</xsl:when>
+							</xsl:choose>
+							<xsl:call-template name='segmentLineToEnd'/>
+						</xsl:for-each>
+					</xsl:for-each>
+					<xsl:text>Z</xsl:text>	
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 
 		<path id="area_{@id}" d="{$pathData}"/>

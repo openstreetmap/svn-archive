@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:date="http://exslt.org/dates-and-times"
     xmlns:set="http://exslt.org/sets"
+    xmlns:osma="http://wiki.openstreetmap.org/index.php/Osmarender/Frollo/1.0" 
     extension-element-prefixes="date set"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
  
@@ -64,6 +65,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:key name='wayBySegment' match='/osm/way' use='seg/@id'/>
 
     <xsl:variable name='data' select='document($osmfile)'/>
+	<xsl:variable name="bFrollo" select='$data/osm/@osma:frollo="1"'/>
 
     <!-- extra height for marginalia at top -->
     <xsl:variable name="marginaliaTopHeight">

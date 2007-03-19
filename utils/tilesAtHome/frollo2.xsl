@@ -1,1 +1,0 @@
-../osmarender4/frollo/frollo2.xsl

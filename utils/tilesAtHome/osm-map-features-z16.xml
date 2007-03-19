@@ -13,6 +13,7 @@
     data="data.osm"
     svgBaseProfile="full"
     scale="1"
+	symbolScale="1"
     minimumMapWidth="1"
     minimumMapHeight="1"
     withOSMLayers="yes"
@@ -80,6 +81,9 @@
 
 
 		<!-- Airports and runways -->
+		<rule e="way" k="aeroway" v="apron">
+			<area class='aeroway-apron'/>			
+		</rule>
 		<rule e="way" k="landuse" v="runway">
 			<rule e="way" k="use_status" v="~">
 				<area class='landuse-runway' />
@@ -93,7 +97,7 @@
 		</rule>
 
 
-		<!-- Raceways and racetracks -->
+		<!-- Raceways and racetracks (cars and horses etc) -->
 		<rule e="way" k="landuse" v="raceway">
 			<rule e="way" k="use_status" v="~">
 				<area class='landuse-raceway' />
@@ -117,14 +121,11 @@
         <rule e="way" k="tourism" v="attraction">
             <area class='tourism-attraction'/>
         </rule>
-        <rule e="way" k="building" v="barn|warehouse|oast_house|tower|castle|monument|hall|shed|store|stadium">
-            <area class='building'/>
-        </rule>
-        <rule e="way" k="building" v="barn|warehouse|oast_house|block|tower|castle|monument|hall|shed|store|stadium">
+        <rule e="way" k="aeroway" v="terminal">
             <area class='building-block'/>
         </rule>
-        <rule e="way" k="building" v="detached|semi|terrace|apartments">
-            <area class='building-residential'/>
+        <rule e="way" k="building" v="*">
+            <area class='building-block'/>
         </rule>
 
 
@@ -443,13 +444,18 @@
         <rule e="segment|way" k="tunnel" v="~|no|false">
             <rule e="segment|way" k="railway" v="rail">
                 <line class='railway-rail' />
-                <!-- <line class='railway-rail-dashes' /> -->
             </rule>
             <rule e="segment|way" k="railway" v="light_rail|tram">
                 <line class='railway-light-rail' />
             </rule>
             <rule e="segment|way" k="railway" v="subway">
                 <line class='railway-subway-rail' />
+            </rule>
+            <rule e="segment|way" k="railway" v="monorail">
+                <line class='railway-monorail-rail-casing' />
+            </rule>
+            <rule e="segment|way" k="railway" v="monorail">
+                <line class='railway-monorail-rail-core' />
             </rule>
             <rule e="segment|way" k="railway" v="preserved">
                 <line class='railway-preserved' />
@@ -582,13 +588,13 @@
                             <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" dy='0.75px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="tertiary">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-tertiary-name" dy='1px' />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-tertiary-name" dy='0.75px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="secondary">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" dy='1.2px' />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-secondary-name" dy='1px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="primary">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" dy='1.25px' />
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-primary-name" dy='1px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="trunk">
                             <text k="name" text-anchor='middle' startOffset='50%' class="highway-trunk-name" dy='1.5px' />
@@ -927,8 +933,8 @@
             }
 
             .highway-primary-name {
-                font-size: 3.25px;
-                stroke-width: 0.05px;
+                font-size: 2.75px;
+                stroke-width: 0.0px;
             }
 
             .highway-primary-ref {
@@ -957,8 +963,8 @@
             }
 
             .highway-secondary-name {
-                font-size: 3.25px;
-                stroke-width: 0.05px;
+                font-size: 2.75px;
+                stroke-width: 0.0px;
             }
 
             .highway-secondary-ref {
@@ -967,18 +973,18 @@
             }
 
 			.highway-tertiary-casing {
-				stroke-width: 2.5px; 
+				stroke-width: 2.75px; 
                 stroke: #222222;
 			}
 			                          
 			.highway-tertiary-core {
-				stroke-width: 2.25px; 
+				stroke-width: 2.5px; 
 				stroke: #FEF970;
 			}
 
             .highway-tertiary-name {
-                font-size: 2.5px;
-                stroke-width: 0.05px;
+                font-size: 2.25px;
+                stroke-width: 0.0px;
              }
 
             .highway-tertiary-ref {
@@ -1156,27 +1162,33 @@
 
 
             /* Aeroways */
-            .aeroway-taxiway-core {
-                stroke-width: 1px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #CCCCCC;
-                fill: none;
+            .aeroway-apron {
+                stroke-width: 0.3px;
+                stroke: none;
+                fill: #f0f0f0;
             }
 
             .aeroway-taxiway-casing {
-                stroke-width: 3px;
+                stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #000000;
                 fill: none;
             }
 
-            .aeroway-runway-core {
-                stroke-width: 5px;
+            .aeroway-taxiway-core {
+                stroke-width: 1.7px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #CCCCCC;
+                stroke: #d4dcbd;
+                fill: none;
+            }
+
+            .aeroway-runway-core {
+                stroke-width: 6px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #d4dcbd;
                 fill: none;
             }
 
@@ -1321,6 +1333,24 @@
                 fill: none;
                 stroke-dasharray: 3px, 1px;
                 stroke-dashoffset: 0;
+                stroke-opacity: 1;
+            }
+
+            .railway-monorail-rail-casing {
+                stroke-width: 1.0px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #666666;
+                fill: none;
+                stroke-opacity: 1;
+            }
+
+            .railway-monorail-rail-core {
+                stroke-width: 0.8px;
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: #a65ca3;
+                fill: none;
                 stroke-opacity: 1;
             }
 

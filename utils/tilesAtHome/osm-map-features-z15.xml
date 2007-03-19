@@ -13,6 +13,7 @@
     data="data.osm"
     svgBaseProfile="full"
     scale="1"
+    symbolScale="1"
     minimumMapWidth="1"
     minimumMapHeight="1"
     withOSMLayers="yes"
@@ -35,26 +36,6 @@
     <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
     <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
-
-        <!-- Highway shading (abutters) first -->
-        <rule k="highway" v="residential">
-            <line class='abutters-residential' />
-        </rule>
-        <rule k="abutters" v="residential">
-            <line class='abutters-residential'/>
-        </rule>
-        <rule k="abutters" v="retail">
-            <line class='abutters-retail'/>
-        </rule>
-        <rule k="abutters" v="industrial">
-            <line class='abutters-industrial'/>
-        </rule>
-        <rule k="abutters" v="commercial">
-            <line class='abutters-commercial'/>
-        </rule>
-        <rule k="abutters" v="mixed">
-            <line class='abutters-mixed'/>
-        </rule>
 
 
         <!-- Landuse -->
@@ -100,6 +81,9 @@
 
 
 		<!-- Airports and runways -->
+		<rule e="way" k="aeroway" v="apron">
+			<area class='aeroway-apron'/>			
+		</rule>
 		<rule e="way" k="landuse" v="runway">
 			<rule e="way" k="use_status" v="~">
 				<area class='landuse-runway' />
@@ -136,6 +120,9 @@
         </rule>
         <rule e="way" k="tourism" v="attraction">
             <area class='tourism-attraction'/>
+        </rule>
+        <rule e="way" k="aeroway" v="terminal">
+            <area class='building-block'/>
         </rule>
         <rule e="way" k="building" v="barn|warehouse|oast_house|tower|castle|monument|hall|shed|store|stadium">
             <area class='building'/>
@@ -1248,11 +1235,17 @@
 
 
             /* Aeroways */
+            .aeroway-apron {
+                stroke-width: 0.3px;
+                stroke: none;
+                fill: #f0f0f0;
+            }
+
             .aeroway-taxiway-core {
-                stroke-width: 1px;
+                stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #CCCCCC;
+                stroke: #d4dcbd;
                 fill: none;
             }
 
@@ -1268,7 +1261,7 @@
                 stroke-width: 5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #CCCCCC;
+                stroke: #d4dcbd;
                 fill: none;
             }
 

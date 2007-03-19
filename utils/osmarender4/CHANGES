@@ -100,4 +100,5 @@ Revision history:
                 Somewhat simplified SVG code for text along path. (Joto)
     2007-02-15  Removed @dy attribute from text element in src/draw.xsl and added it to all <text> elements in the rules file. (Joto)
                 Symbols in catalogue now sorted alphabetically. (Joto)
-
+    2007-03-19  Support for frolloized osm files.  Will use the hints provided to draw street names and areas better. (80n)
+                Missing symbolScale attribute added to standard.xml. (80n)

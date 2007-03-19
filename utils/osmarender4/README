@@ -1,5 +1,5 @@
 
-            OsmARender - a SVG renderer for OpenStreetMap
+            Osmarender - a SVG renderer for OpenStreetMap
 			---------------------------------------------
 
 Osmarender is a rule based rendering tool for generating SVG images of OSM 
@@ -9,10 +9,10 @@ It takes as its input an OpenStreetMap dataset and a rules file. It outputs
 an SVG image that is marked up in accordance with the styles defined in the 
 rule file. 
 
-For more information on OsmARender, see the wiki page:
+For more information on Osmarender, see the wiki page:
 	http://wiki.openstreetmap.org/index.php/Osmarender
 
-For guidance on getting the best out of OsmARender, picking the options
+For guidance on getting the best out of Osmarender, picking the options
 to use with it etc, see the following wiki pages:
 	http://wiki.openstreetmap.org/index.php/Osmarender#Tricks.2C_tips_and_hints
 
@@ -20,7 +20,7 @@ to use with it etc, see the following wiki pages:
 CALLING OSMARENDER
 ------------------
 
-On Linux you can call OsmARender through the osmarender shell wrapper. See
+On Linux you can call Osmarender through the osmarender shell wrapper. See
 the comments at the beginning for instruction on how to call this.
 
 
@@ -133,7 +133,7 @@ classes "xyz" and "oneway".
 DEVELOPING OSMARENDER
 ---------------------
 
-If you want to change the inner workings of OsmARender, change the files
+If you want to change the inner workings of Osmarender, change the files
 in the src directory and call 'make' to regenerate the 'osmarender.xsl'
 file from the source files. It uses xmllint to pull all files together.
 As a "side effect" xmllint checks your XML syntax, too. If you don't have

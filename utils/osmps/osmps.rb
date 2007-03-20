@@ -66,6 +66,17 @@ PSResource = <<EOR# {{{
   end
   pop
 } def
+/reversepathtomark
+  { newpath exch x exch y moveto
+    counttomark 2 sub -2 0
+    { pop exch x exch y lineto
+    } for
+    pop
+  } def
+/pathisrtol
+  { counttomark 1 sub index
+    2 index gt
+  } def
 /pathcopy { counttomark 1 add copy } def
 /area { pathtomark fill } def
 /line { pathtomark stroke } def
@@ -221,7 +232,10 @@ end
 /roadname
   { roadnamedict begin
     /text exch def
-    pathtomark
+    pathisrtol
+      { reversepathtomark }
+      { pathtomark }
+      ifelse
     gsave
     /plen pathlen def
     grestore

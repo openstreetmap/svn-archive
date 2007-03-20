@@ -785,8 +785,9 @@ class Graph#{{{
   #}}}
   def eps(width, height)# {{{
     ps = "%!PS-Adobe-3.0 EPSF-2.0\n"
-    ps += "%%Creator: osmgraph.rb\n"
+    ps += "%%Creator: osmps.rb\n"
     ps += "%%BoundingBox: 0 0 #{width} #{height}\n"
+    ps += "%%EndComments\n"
     mm = bbox()
     ps += PSResource
     ps += <<EOP
@@ -848,7 +849,7 @@ EOP
       end
     end
     
-    ps += "showpage\n"
+    ps += "%%EOF\n"
     ps
   end
 
@@ -1212,13 +1213,23 @@ for bridge in [false, true]
   g.addstyle(s)
 
   s = Style.new()
+  s.addtag("highway", "primary_link")
+  setroad(s, 2050, 2440, 0.7, bridge, "0 0 0", "255 50 50")
+  g.addstyle(s)
+
+  s = Style.new()
+  s.addtag("highway", "secondary_link")
+  setroad(s, 2050, 2420, 0.5, bridge, "0 0 0", "250 75 10")
+  g.addstyle(s)
+
+  s = Style.new()
   s.addtag("highway", "service")
-  setroad(s, 2050, 2440, 0.5, bridge, "0 0 0", "250 250 250")
+  setroad(s, 2050, 2400, 0.5, bridge, "0 0 0", "250 250 250")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "track")
-  setroad(s, 2030, 2420, 0.5, bridge, "80 30 0", "250 250 250")
+  setroad(s, 2030, 2380, 0.5, bridge, "80 30 0", "250 250 250")
   g.addstyle(s)
 
   s = Style.new()

@@ -1,0 +1,40 @@
+OSMPS - a PostScript renderer for OpenStreetMap files
+=====================================================
+
+OSMPS generates Encapsulated PostScript files from OSM XML files.
+Rules for generating parts of the output are currently contained
+within the program and describe PostScript code to be utilised for
+particular tags.
+
+PostScript is sent to standard output. Typical usage would be
+
+  osmps.rb map.osm > map.ps
+
+as a subsequent step a PDF file may be generated with the common
+ps2pdf tool (which is a wrapper around GhostScript), or with Adobe
+Distiller.
+
+  ps2pdf map.ps
+
+Internal data structure
+-----------------------
+
+OSMPS possibly uses an odd method of processing the data. First
+nodes and segments are read from the file. Ways are then read but
+the tags are purely "pushed down" onto the segments that are in
+each way. Finally, paths are created from adjacent segments that
+are (a) pointing in the same direction and (b) have exactly the
+same tag set.
+
+Features
+--------
+
+Current features include basic areas, roads, simple bridges and
+road names. Planned next are oneway arrows and nodes such as
+churches and fuel stations, possibly followed by little dots that
+can tell you where people are. But don't count on it.
+
+
+Matthew Newton
+20 March 2007
+

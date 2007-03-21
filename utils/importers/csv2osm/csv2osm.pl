@@ -137,21 +137,19 @@ sub format_latlong($,$) {
 	my @data = @_;
 	my @out;
 	foreach my $val (@data) {
+		my $sign = 1;
 		if($val =~ /([NE])$/i) {
 			chop $val;
 		}
 		if($val =~ /([SW])$/i) {
 			chop $val;
-			$val = "-".$val;
+			$sign = -1;
 		}
 
 		if($val =~ /^(\-?\d+)[-:](\d+)[-:](\d+)$/) {
 			my ($h,$m,$s) = (int($1),int($2),int($3));
-			if($h >= 0) {
-				$val = $h + ($m/60) + ($s/60/60);	
-			} else {
-				$val = $h - ($m/60) - ($s/60/60);	
-			}
+			$val = $h + ($m/60) + ($s/60/60);	
+			$val *= $sign;
 		} elsif($val =~ /^(\-?\d+\.\d+)$/) {
 			# In right format already
 		} else {

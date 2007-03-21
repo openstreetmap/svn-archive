@@ -1,10 +1,11 @@
 #!/usr/bin/perl -w
 #-----------------------------------------------------------------------------
 #
-#  lines2curves.pl
+#  osm-svg-beautifier.pl
 #
 #  This script post-processes Osmarender output to change lines in ways
-#  into smooth bezier curves.
+#  into smooth bezier curves, and to abbreviate (or completely remove) 
+#  street names that don't fit onto their street.
 #
 #  This is what it does for each 'way' in the svg:
 #     For each pair of lines that make up the way it will replace the two
@@ -17,13 +18,20 @@
 #     junction for example), it leaves those segments untouched (i.e. it
 #     doesn't introduce curves for those segments).
 #
+#  This is what it does for each street name:
+
+#     Guess the length of the rendered text, and compare it to the
+#     length of the way it's on. If it fits, output it as is. If not,
+#     abbreviate it and try again. There are a range of different
+#     abbreviations including getting rid of the text entirely.
+
 #  Call it as follows:
 #
-#    lines2curves.pl YourSVGFile.svg >SVGFileWithCurves.svg
+#    osm-svg-beautifier.pl YourSVGFile.svg >SVGFileWithCurves.svg
 #
 #-----------------------------------------------------------------------------
 #
-#  Copyright 2007 by Barry Crabtree
+#  Copyright 2007 by Barry Crabtree, Robert Hart
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

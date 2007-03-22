@@ -166,7 +166,9 @@ pathtextdict begin
   gsave
     cpx cpy itransform translate
     dy dx atan rotate
-	  0 charbaseoffset neg moveto char show 0 charbaseoffset rmoveto
+    0 charbaseoffset neg moveto
+    char show
+    0 charbaseoffset rmoveto
     currentpoint transform
     /cpy exch def /cpx exch def
   grestore
@@ -238,12 +240,21 @@ end
       ifelse
     gsave
     /plen pathlen def
-    grestore
+    RoadNameCoreFont
     /tlen text stringwidth pop def
+    grestore
     tlen 0.0 gt plen 0.0 gt and
     plen tlen gt and
     { gsave
+      1 1 1 setrgbcolor
+      RoadNameOutlineFont
+      text
+      plen 2 div tlen 2 div sub
+      pathtext
+      grestore
+      gsave
       0 0 0 setrgbcolor
+      RoadNameCoreFont
       text
       plen 2 div tlen 2 div sub
       pathtext
@@ -252,7 +263,43 @@ end
     end
   } def
 
-/Helvetica-Bold findfont 0.5 scalefont setfont
+/RoadNameFont
+  { /Helvetica-Bold findfont 
+  } def
+
+/RoadNameOutline 
+RoadNameFont
+dup maxlength 1 add
+exch /UniqueID known not { 1 add } if
+dict def
+
+RoadNameFont
+{ exch dup /FID ne
+  { exch RoadNameOutline 3 1 roll put }
+  { pop pop }
+  ifelse
+} forall
+
+RoadNameOutline
+dup /PaintType 2 put
+dup /StrokeWidth 300 put
+dup /FontName /RoadNameOutline put
+dup /UniqueID 1001 put
+/RoadNameOutline exch definefont pop
+
+/RoadNameCoreFont
+  { RoadNameFont
+    0.5 scalefont
+    setfont
+  } def
+
+/RoadNameOutlineFont
+  { /RoadNameOutline findfont
+    0.5 scalefont
+    setfont
+  } def
+
+RoadNameCoreFont
 
 %%EndResource
 EOR

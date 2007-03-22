@@ -323,7 +323,12 @@ sub GenerateTileset {
   #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
   
   # Pre-process the data file using frollo
-  frollo("data-$PID.osm");    
+  if (not frollo("data-$PID.osm")) 
+  {
+     return 0 if ($Mode eq "loop");
+     exit(1);
+  }
+ 
   
   # Add bounding box to osmarender
   # then set the data source
@@ -535,7 +540,7 @@ sub DownloadFile {
 #-----------------------------------------------------------------------------
 # Pre-process on OSM file (using frollo)
 #-----------------------------------------------------------------------------
-sub frollo(){
+sub frollo {
   my($dataFile) = @_;
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
@@ -543,7 +548,13 @@ sub frollo(){
     "frollo1.xsl",
     "$dataFile",
     "temp-$PID.osm"); 
-  runCommand("Frolloizing (part I) ...", $Cmd);
+  if (not runCommand("Frolloizing (part I) ...", $Cmd))
+  {
+    killafile("temp-$PID.osm");
+    # this should probably be more differentiated, but no harm done so far 
+    # (other that no frolloizing has taken place)
+    return 1; 
+  }
 
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
@@ -551,7 +562,14 @@ sub frollo(){
     "frollo2.xsl",
     "temp-$PID.osm",
     "$dataFile");
-  runCommand("Frolloizing (part II) ...", $Cmd);
+  if (not runCommand("Frolloizing (part II) ...", $Cmd))
+  {
+    killafile("temp-$PID.osm");
+    killafile($dataFile); # which is now probably corrupted/zero size
+    return 0; 
+  }
+
+  return 1;
 }
 
 #-----------------------------------------------------------------------------

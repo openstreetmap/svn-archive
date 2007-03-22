@@ -114,17 +114,18 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown"):
 if __name__ == "__main__":
     bbox = (-2, 50.0,1.0,52.0)
     home = os.environ['HOME']
-    mapfile = home + "/svn.openstreetmap.org/utils/mapnik/osm.xml"
-    tile_dir = home + "/osm/tiles/"
+    mapfile = "/export/osm/svn/utils/mapnik/osm.xml"
+    tile_dir = "/export/osm/tiles/"
 
     minZoom = 10
-    maxZoom = 16
-    render_tiles(bbox, mapfile, tile_dir, minZoom, maxZoom)
+    maxZoom = 11
+    #render_tiles(bbox, mapfile, tile_dir, minZoom, maxZoom)
 
     # Start with an overview
     # World
     bbox = (-180.0,-90.0, 180.0,90.0)
-    render_tiles(bbox, mapfile, tile_dir, 1, 5,"World")
+    render_tiles(bbox, mapfile, tile_dir, 1, 3,"World")
+    os._exit(0)
 
     # Muenchen
     bbox = (11.4,48.07, 11.7,48.22)

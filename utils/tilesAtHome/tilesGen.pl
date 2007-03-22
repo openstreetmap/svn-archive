@@ -548,27 +548,32 @@ sub frollo {
     "frollo1.xsl",
     "$dataFile",
     "temp-$PID.osm"); 
-  if (not runCommand("Frolloizing (part I) ...", $Cmd))
+  if(runCommand("Frolloizing (part I) ...", $Cmd))
   {
+    my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+      $Config{Niceness},
+      $Config{XmlStarlet},
+      "frollo2.xsl",
+      "temp-$PID.osm",
+      "temp2-$PID.osm");
+    if(runCommand("Frolloizing (part II) ...", $Cmd))
+    {
+      copy("temp2-$PID.osm","$dataFile");
+      statusMessage("Frollification successful");
+    } 
+    else 
+    {
+      statusMessage("Frollotation failure (part II)");
+      killafile("temp2-$PID.osm");
+    }
+  } 
+  else 
+  {
+    statusMessage("Failure of Frollotron (part I)");
     killafile("temp-$PID.osm");
-    # this should probably be more differentiated, but no harm done so far 
-    # (other that no frolloizing has taken place)
-    return 1; 
   }
 
-  my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-    $Config{Niceness},
-    $Config{XmlStarlet},
-    "frollo2.xsl",
-    "temp-$PID.osm",
-    "$dataFile");
-  if (not runCommand("Frolloizing (part II) ...", $Cmd))
-  {
-    killafile("temp-$PID.osm");
-    killafile($dataFile); # which is now probably corrupted/zero size
-    return 0; 
-  }
-
+  ## worst case is it doesn't do anything so always return success
   return 1;
 }
 

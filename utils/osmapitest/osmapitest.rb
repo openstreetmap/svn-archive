@@ -1,11 +1,14 @@
-# hello_test.rb
+# OSMAPITEST
 
-module PMAPITEST
+module OSMAPITEST
 
 require 'test/unit'
 require 'net/http'
 require 'bboxfrompoint'
 include Net
+
+$USERNAME = 
+$PASSWORD = 
 
 class MapTest# < Test::Unit::TestCase
 
@@ -15,27 +18,11 @@ class MapTest# < Test::Unit::TestCase
     @diam_range = diam_range
   end
 
-  # called before every single test
-  def setup
-    @var1 = 'value1'
-    @var2 = 42
-  end
-  
-  @@urlbase = '/api/0.4/'
-
-  # called after every single test
-  def teardown
-  end
-
-  def test_get_map
-    assert true
-  end
-
   def get_node
    
-    Net::HTTP.start('www.peoplesmap.com') do |http|
+    Net::HTTP.start('www.openstreetmap.org') do |http|
         req = Net::HTTP::Get.new(@@urlbase+'node/40')
-        req.basic_auth 'nickblack1@gmail.com', 'test'
+        req.basic_auth $USERNAME, $PASSWORD
         response = http.request(req)
         print response.body
      end
@@ -54,32 +41,32 @@ class MapTest# < Test::Unit::TestCase
 
   def generate_map_request(params)
 
-    x = params[0]
-    y = params[1]
+    lon = params[0]
+    lat = params[1]
     d = params[2]
 
     bbox = BboxFromPoint.new.bbox_from_point(x,y,d)
     outdir = create_test_dir
     begin
-      `curl -i -u test1@peoplesmap.com:test1 http://www.peoplesmap.com/api/0.4/#{bbox} > #{outdir}`
+      `curl -i -u #{$USERNAME}@openstreetmap.org:#{PASSWORD} http://www.openstreetmap.org/api/0.4/#{bbox} > #{outdir}`
     rescue SystemCallError
       $stderr.print "Bbox request failed at #{outdir}" + $!
     end
 
-    return "Bbox request made to #{outdir} - centreX: #{x} centreY: #{y} diameter: #{d}"
+    return "Bbox request made to #{outdir} - centreX: #{longitude} centreY: #{latitude} diameter: #{d}"
   end
 
 
   def get_range
     xmin = @range[0]
-    xmax = @range[1]
+    longitudemax = @range[1]
     ymin = @range[2]
-    ymax = @range[3]
+    latitudemax = @range[3]
     dmin = @diam_range[0]
     dmax = @diam_range[1]
     res = [] 
-    res[0] = (rand(xmax - xmin)) + xmin
-    res[1] = (rand(ymax - ymin)) + ymin
+    res[0] = (rand(longitudemax - xmin)) + xmin
+    res[1] = (rand(latitudemax - ymin)) + ymin
     res[2] = (rand(dmax - dmin)) + dmin
     
     return res
@@ -104,7 +91,7 @@ end
 
   class CreateTest
 
-    #Bbox = [xmin, xmax, ymin, ymax]
+    #Bbox = [xmin, longitudemax, ymin, latitudemax]
     def initialize(bbox, urlbase, user, pass)
       @bbox = bbox
       @urlbase = urlbase
@@ -135,23 +122,23 @@ end
     end
 
     #Returns the xml for a new node
-    def node_to_xml(x,y)
-      return "<pmx> <node id='0' x='#{x}' y='#{y}' /></pmx>"
+    def node_to_xml(lon,lat)
+      return "<osm> <node id='0' longitude='#{longitude}' latitude='#{latitude}' /></osm>"
     end 
 
     def seg_to_xml(from_node, to_node)
 
-      seg_xml = "<pmx version=\"0.4\" generator=\"PeoplesMap server\"> 
+      seg_xml = "<osm version=\"0.4\" generator=\"OpenStreetMap server\"> 
                     <segment id=\"0\" from=\"#{from_node}\" to=\"#{to_node}\" visible=\"true\" timestamp=\"#{Time.now}\"> 
                     </segment>
-                 </pmx>"
+                 </osm>"
 
     return seg_xml
     end
 
     def way_to_xml(seg_id)
       way_xml_body = ""
-      way_xml_head = "<pmx version=\"0.4\" generator=\"PeoplesMap server\">
+      way_xml_head = "<osm version=\"0.4\" generator=\"OpenStreetMap server\">
        <way id=\"0\" visible=\"true\" timestamp=\"#{Time.now}\">"
 
       seg_id.each do |seg|
@@ -161,7 +148,7 @@ end
       way_tags = "<tag k=\"name\" v=\"foo\"/>
          <tag k=\"ref\" v=\"bar\"/> "
 
-       way_xml = way_xml_head + way_xml_body + way_tags + "</way></pmx>"
+       way_xml = way_xml_head + way_xml_body + way_tags + "</way></osm>"
 
        return way_xml
     end
@@ -169,24 +156,24 @@ end
     #Creates new nodes and puts them to the server via the API
     #Retuns an array of new node objects
     #@@Params: n = number of nodes to create
-    #@@Params: xinc = x incrementation in meters
-    def makenode(n, xinc, yinc)
-      x = @bbox[0]
-      y = @bbox[2]
+    #@@Params: loninc = x incrementation in meters
+    def makenode(n, loninc, latinc)
+      lon = @bbox[0]
+      lat = @bbox[2]
       nodes = []
       i = 0
       api_ext = '/api/0.4/node/create'
 
       while i < n 
-          unless x > @bbox[1] or y > @bbox[3]
+          unless lon > @bbox[1] or lat > @bbox[3]
             begin
               node_id =  put_to_api(api_ext, node_to_xml(x,y))
               puts "Created a node with node id #{node_id}"
-              nodes << [node_id,x,y]
-              x = x + xinc
-              y = y + yinc
+              nodes << [node_id,lon,lat]
+              lon = lon + loninc
+              lat = lat + latinc
             rescue Net::HTTPServerException
-              $stderr.print "#{Net::HTTPServerException} whilst attempting to PUT #{node_to_xml(x,y)} to #{api_ext}" 
+              $stderr.print "#{Net::HTTPServerException} whilst attempting to PUT #{node_to_xml(lon,lat)} to #{api_ext}" 
             ensure
               i+=1
             end

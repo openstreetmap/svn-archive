@@ -1,5 +1,5 @@
 CXXFLAGS = -I/usr/local/include -I../ccoord
-LDFLAGS = -L/usr/local/lib -lexpat -lcurl -lshp -lccoord
+LDFLAGS = -L/usr/local/lib -lexpat -lcurl -lshp -lccoord -L../ccoord/
 OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o FeaturesParser.o
 NETOBJ = Client.o
 TESTOBJ = test.o
@@ -18,8 +18,11 @@ test: $(TESTOBJ) libosm.a libosmnet.a
 rulestest: $(RULESTESTOBJ) libosm.a 
 	$(CXX) -o rulestest $(RULESTESTOBJ) libosm.a $(LDFLAGS)
 
-test2: test2.o libosm.a 
+test2: test2.o libosm.a libosmnet.a 
 	$(CXX) -o test2 test2.o libosm.a libosmnet.a $(LDFLAGS)
+
+test3: test3.o libosm.a libosmnet.a 
+	$(CXX) -o test3 test3.o libosm.a libosmnet.a $(LDFLAGS)
 
 clean:
 	rm -f *.{o,a}

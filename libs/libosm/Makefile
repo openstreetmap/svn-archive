@@ -27,6 +27,8 @@ test3: test3.o libosm.a libosmnet.a
 clean:
 	rm -f *.{o,a}
 
+test.o test2.o test3.o rulestest.o: Parser.h Way.h Object.h Node.h Segment.h Client.h 
+
 Object.o : Object.h
 Way.o: Way.h Object.h
 Parser.o : Parser.h Way.h Object.h Node.h Segment.h

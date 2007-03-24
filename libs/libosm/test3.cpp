@@ -23,6 +23,11 @@ int main(int argc,char* argv[])
 	OSM::Components *comp1 = OSM::Parser::parse(in);
 	in.close();
 
+	if (comp1 == NULL) {
+		cerr << "Error occurred while parsing: " << argv[1] << endl;
+		return 1;
+	}
+	
         comp1->toXML(std::cout);
 
 	delete comp1;

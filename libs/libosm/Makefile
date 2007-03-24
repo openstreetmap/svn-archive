@@ -1,4 +1,4 @@
-CXXFLAGS = -I/usr/local/include -I../ccoord
+CXXFLAGS = -g -I/usr/local/include -I../ccoord
 LDFLAGS = -L/usr/local/lib -lexpat -lcurl -lshp -lccoord -L../ccoord/
 OBJ = Object.o Way.o Parser.o Components.o functions.o llgr.o FeaturesParser.o
 NETOBJ = Client.o

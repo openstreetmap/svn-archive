@@ -75,10 +75,17 @@ public:
 
 	void toXML(std::ostream &strm)
 	{
-		strm << "<node id='" << id << "' lat='" << lat << "' lon='" << lon
-			<<"'>" << endl;
-		tagsToXML(strm);
-		strm << "</node>" << endl;
+		std::streamsize old = strm.precision(15);
+		if (hasTags()) {
+			strm << "  <node id='" << id << "' lat='" << lat << "' lon='" << lon
+					<<"'>" << endl;
+			tagsToXML(strm);
+			strm << "  </node>" << endl;
+		} else {
+			strm << "  <node id='" << id << "' lat='" << lat << "' lon='" << lon
+					<<"'/>" << endl;
+		}
+		strm.precision(old);
 	}
 };
 

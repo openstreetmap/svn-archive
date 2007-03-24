@@ -61,11 +61,17 @@ int Way::getSegment(int i)
 
 void Way::toXML(std::ostream &strm)
 {
-	strm << "<way id='" << id << "'>" << endl;
-	for(int count=0; count<segments.size(); count++)
-		strm  << "<seg id='" << segments[count] << "' />" << endl;
-	tagsToXML(strm);
-	strm << "</way>" << endl;
+
+	if (hasTags() || segments.size()) {
+		strm << "  <way id='" << id << "'>" << endl;
+		for(int count=0; count<segments.size(); count++)
+			strm  << "    <seg id='" << segments[count] << "'/>" << endl;
+		tagsToXML(strm);
+		strm << "  </way>" << endl;
+	} else {
+		strm << "  <way id='" << id << "'/>" << endl;
+	}
+
 }
 
 }

@@ -72,11 +72,16 @@ public:
 	}
 
 	void toXML(std::ostream &strm)
-	{
-		strm << "<segment id='" << id << "' from='" << nodes[0] << "' to='" << 
-			nodes[1] <<"'>" << endl;
-		tagsToXML(strm);
-		strm << "</segment>" << endl;
+	{	
+		if (hasTags()) {
+			strm << "  <segment id='" << id << "' from='" << nodes[0] << "' to='" << 
+				nodes[1] <<"'>" << endl;
+			tagsToXML(strm);
+			strm << "  </segment>" << endl;
+		} else {
+			strm << "  <segment id='" << id << "' from='" << nodes[0] << "' to='" << 
+				nodes[1] <<"'/>" << endl;
+		}
 	}
 };
 

@@ -564,15 +564,15 @@ sub frollo {
     else 
     {
       statusMessage("Frollotation failure (part II)");
-      killafile("temp2-$PID.osm");
     }
   } 
   else 
   {
     statusMessage("Failure of Frollotron (part I)");
-    killafile("temp-$PID.osm");
   }
 
+  killafile("temp-$PID.osm");
+  killafile("temp2-$PID.osm");
   ## worst case is it doesn't do anything so always return success
   return 1;
 }

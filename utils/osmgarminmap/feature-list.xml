@@ -183,19 +183,19 @@
     <feature subtype="woods" garmin_id="0x66" type="natural-land" garmin_subid="0x18" />
   </point>
   <city id="RGN20">
-    <feature garmin_id="0x01" type="city1" />
-    <feature garmin_id="0x02" type="city2" />
-    <feature garmin_id="0x03" type="city3" />
-    <feature garmin_id="0x04" type="city4" />
-    <feature garmin_id="0x05" type="city5" />
-    <feature garmin_id="0x06" type="city6" />
-    <feature garmin_id="0x07" type="city7" />
-    <feature garmin_id="0x08" type="city8" />
-    <feature garmin_id="0x09" type="city9" />
-    <feature garmin_id="0x0a" type="city10" />
-    <feature garmin_id="0x0b" type="city11" />
-    <feature garmin_id="0x0c" type="city12" />
-    <feature garmin_id="0x0d" type="city13" />
+    <feature garmin_id="0x01" type="large-city1" />
+    <feature garmin_id="0x02" type="large-city2" />
+    <feature garmin_id="0x03" type="large-city3" />
+    <feature garmin_id="0x04" type="large-city4" />
+    <feature garmin_id="0x05" type="large-city5" />
+    <feature garmin_id="0x06" type="large-city6" />
+    <feature garmin_id="0x07" type="medium-city1" />
+    <feature garmin_id="0x08" type="medium-city2" />
+    <feature garmin_id="0x09" type="small-city1" />
+    <feature garmin_id="0x0a" type="small-city2" />
+    <feature garmin_id="0x0b" type="small-city3" />
+    <feature garmin_id="0x0c" type="small-town" />
+    <feature garmin_id="0x0d" type="unknown-city" />
   </city>
   <polyline id="RGN40">
     <feature garmin_id="0x01" type="major-highway-thick" />

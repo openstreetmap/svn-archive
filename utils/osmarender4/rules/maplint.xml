@@ -37,6 +37,21 @@
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
     <rule e="node|segment|waysegment|way" k="osmarender:render" v="~|yes">
 
+        <layer name="Areas">
+            <rule e="way" k="landuse" v="forest|wood">
+                <area class='area-green'/>
+            </rule>
+            <rule e="way" k="natural" v="forest|wood">
+                <area class='area-green'/>
+            </rule>
+            <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
+                <area class='area-green'/>
+            </rule>
+            <rule e="way" k="natural" v="water|pond|lake">
+                <area class='area-lake' />
+            </rule>
+        </layer>
+
         <layer name="Maplint">
 <!--            <rule e="way" k="maplint:notice" v="*">
                 <line class="maplint-way-notice-casing"/>
@@ -344,6 +359,17 @@
                 fill: red;
                 stroke: black;
                 stroke-width: 0.5px;
+            }
+
+
+            /* Areas */
+            .area-green {
+                fill: #f5f5f5;
+                stroke: none;
+            }
+            .area-lake {
+                fill: #89bac6;
+                stroke: none;
             }
 
 

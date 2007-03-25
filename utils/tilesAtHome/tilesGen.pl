@@ -325,8 +325,9 @@ sub GenerateTileset {
   # Pre-process the data file using frollo
   if (not frollo("data-$PID.osm")) 
   {
-     return 0 if ($Mode eq "loop");
-     exit(1);
+     # stop rendering if frollo fails, as current osmarender is dependent on frollo hints
+     return 0 if ($Mode eq "loop"); 
+     exit(1); 
   }
  
   
@@ -560,19 +561,24 @@ sub frollo {
     {
       copy("temp2-$PID.osm","$dataFile");
       statusMessage("Frollification successful");
+      killafile("temp-$PID.osm");
+      killafile("temp2-$PID.osm");
     } 
     else 
     {
       statusMessage("Frollotation failure (part II)");
+      killafile("temp-$PID.osm");
+      killafile("temp2-$PID.osm");
+      return 0;
     }
   } 
   else 
   {
     statusMessage("Failure of Frollotron (part I)");
+    killafile("temp-$PID.osm");
+    return 0;
   }
 
-  killafile("temp-$PID.osm");
-  killafile("temp2-$PID.osm");
   ## worst case is it doesn't do anything so always return success
   return 1;
 }

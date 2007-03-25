@@ -8,7 +8,6 @@
     </maplint:desc>
 
     <maplint:setup type="application/xsl+xml">
-        <xsl:key name="node" match="/osm/node" use="@id"/>
         <xsl:key name="segment" match="/osm/segment" use="@id"/>
     </maplint:setup>
 
@@ -19,10 +18,10 @@
                     <xsl:variable name="thissegment" select="key('segment',@id)"/>
                     <xsl:variable name="next" select="position()+1"/>
                     <xsl:variable name="nextsegment" select="key('segment',../seg[$next]/@id)"/>
-                    <xsl:variable name="to" select="key('node',$thissegment/@to)"/>
-                    <xsl:variable name="from" select="key('node',$nextsegment/@from)"/>
+                    <xsl:variable name="to" select="$thissegment/@to"/>
+                    <xsl:variable name="from" select="$nextsegment/@from"/>
                     <xsl:if test="$to != $from">
-                        <xsl:value-of select="../@id"/>fail
+                        <xsl:text>fail</xsl:text>
                     </xsl:if>
                 </xsl:if>
             </xsl:for-each>

@@ -6,7 +6,6 @@
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment2way" match="/osm/way" use="seg/@id"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node-from" match="/osm/segment" use="@from"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node-to" match="/osm/segment" use="@to"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node" match="/osm/node" use="@id"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment" match="/osm/segment" use="@id"/>
   <xslout:template name="all-tests">
     <maplint:test agent="xsltests" group="base" id="empty-tag-key" version="1" severity="error"/>
@@ -82,7 +81,7 @@
     </xslout:template>
   <xslout:template name="test-strict-unknown-tags-node">
         <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
-            <xsl:if test="(@k!='created_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='recycling:glas') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='layer') and                     (@k!='source') and                     (@k!='time') and                     (@k!='name')">
+            <xsl:if test="(@k!='created_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='recycling:glas') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='layer') and                     (@k!='religion') and                     (@k!='denomination') and                     (@k!='source') and                     (@k!='time') and                     (@k!='name')">
                 <maplint:result ref="unknown-tags"><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>
         </xsl:for-each>
@@ -136,10 +135,10 @@
                     <xsl:variable name="thissegment" select="key('segment',@id)"/>
                     <xsl:variable name="next" select="position()+1"/>
                     <xsl:variable name="nextsegment" select="key('segment',../seg[$next]/@id)"/>
-                    <xsl:variable name="to" select="key('node',$thissegment/@to)"/>
-                    <xsl:variable name="from" select="key('node',$nextsegment/@from)"/>
+                    <xsl:variable name="to" select="$thissegment/@to"/>
+                    <xsl:variable name="from" select="$nextsegment/@from"/>
                     <xsl:if test="$to != $from">
-                        <xsl:value-of select="../@id"/>fail
+                        <xsl:text>fail</xsl:text>
                     </xsl:if>
                 </xsl:if>
             </xsl:for-each>

@@ -232,12 +232,13 @@ sub ProcessRequestsFromServer {
   return (1, "");
 }
 
-sub PutRequestBackToServer { ## TODO: Actually call this.
+sub PutRequestBackToServer { 
+  ## TODO: Actually call this.
   my $X = shift();
   my $Y = shift();
   my $Cause = shift();
 
-  my $Prio = $Config{ReRequestPrio}
+  my $Prio = $Config{ReRequestPrio};
 
   my $LocalFilename = "$Config{WorkingDirectory}requesting.txt";
 

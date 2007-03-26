@@ -232,6 +232,42 @@ sub ProcessRequestsFromServer {
   return (1, "");
 }
 
+sub PutRequestBackToServer { ## TODO: Actually call this.
+  my $X = shift();
+  my $Y = shift();
+  my $Cause = shift();
+
+  my $Prio = $Config{ReRequestPrio}
+
+  my $LocalFilename = "$Config{WorkingDirectory}requesting.txt";
+
+  killafile($LocalFilename);
+
+  # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
+  my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=ReRequest:" . $Cause . ":" . $Config{UploadUsername};
+
+  DownloadFile(
+    $RequestUrlString, 
+    $LocalFilename, 
+    0, 
+    "Request from server");
+
+  if(! -f $LocalFilename){
+    return (0, "Error reading response from server");
+  }
+
+  # Read into memory
+  open(my $fp, "<", $LocalFilename) || return;
+  my $Request = <$fp>;
+  chomp $Request;
+  close $fp;
+  
+  ## TODO: Check response for "OK"
+
+  killafile($LocalFilename);
+
+}
+
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
 #-----------------------------------------------------------------------------

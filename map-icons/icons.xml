@@ -317,6 +317,7 @@
     <condition k="amenity" v="hotel"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
+    <title lang="de">Hotel</title>
     <title lang="en">Hotel</title>
     <description lang="en"></description>
     <geoinfo>
@@ -330,6 +331,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Five-Star Hotel </title>
+    <title lang="de">Fünf-Sterne-Hotel</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>33</poi_type_id>
@@ -342,6 +344,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Four-Star Hotel</title>
+    <title lang="de">Vier-Sterne-Hotel</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>34</poi_type_id>
@@ -354,6 +357,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Three-Star Hotel</title>
+    <title lang="de">Drei-Sterne-Hotel</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>35</poi_type_id>
@@ -366,6 +370,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Two-Star Hotel</title>
+    <title lang="de">Zwei-Sterne-Hotel</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>36</poi_type_id>
@@ -392,6 +397,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Hostel</title>
+    <title lang="de">Herberge</title>
     <description lang="en">Hostel is something between a Hotel and a
     youth Hostel</description>
     <geoinfo>
@@ -535,7 +541,8 @@
     <condition k="poi" v="food.bar"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Bar</title>
+    <title lang="de">Bar</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>48</poi_type_id>
@@ -561,6 +568,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Cafe</title>
+    <title lang="de">Cafe</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>50</poi_type_id>
@@ -573,6 +581,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Fastfood</title>
+    <title lang="de">Scnellrestaurant</title>
     <description lang="en">Fastfood-Restaurant</description>
     <geoinfo>
       <poi_type_id>51</poi_type_id>
@@ -585,6 +594,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">BurgerKing</title>
+    <title lang="de">Burger King</title>
     <description lang="en">Burger King Restaurant</description>
     <geoinfo>
       <poi_type_id>52</poi_type_id>
@@ -598,6 +608,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">KFC</title>
+    <title lang="de">Kentucky Fried Chicken</title>
     <description lang="en">Kentucky Fried Chicken Restaurant</description>
     <geoinfo>
       <poi_type_id>53</poi_type_id>
@@ -611,6 +622,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">McDonalds</title>
+    <title lang="de">McDonalds</title>
     <description lang="en">McDonalds Restaurant</description>
     <geoinfo>
       <poi_type_id>54</poi_type_id>
@@ -624,6 +636,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Subway</title>
+    <title lang="de">Subway</title>
     <description lang="en">Subway Sandwich Restaurant</description>
     <geoinfo>
       <poi_type_id>55</poi_type_id>
@@ -636,7 +649,8 @@
     <condition k="poi" v="food.canteen"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Canteen</title>
+    <title lang="de">Kantine</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>56</poi_type_id>
@@ -663,6 +677,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Pizzahut</title>
+    <title lang="de">Pizzahut</title>
     <description lang="en">Pizzahut Restaurant</description>
     <geoinfo>
       <poi_type_id>58</poi_type_id>
@@ -705,6 +720,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Restaurant</title>
+    <title lang="de">Restaurant</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>61</poi_type_id>
@@ -716,7 +732,8 @@
     <condition k="poi" v="food.restaurant.chinese"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Chinese Restaurant</title>
+    <title lang="de">Chinesisch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>62</poi_type_id>
@@ -728,7 +745,8 @@
     <condition k="poi" v="food.restaurant.german"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">German Restaurant</title>
+    <title lang="de">Deutsch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>63</poi_type_id>
@@ -740,7 +758,8 @@
     <condition k="poi" v="food.restaurant.greek"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Greek Restaurant</title>
+    <title lang="de">Griechisch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>64</poi_type_id>
@@ -752,7 +771,8 @@
     <condition k="poi" v="food.restaurant.indian"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Indian Restaurant</title>
+    <title lang="de">Indisch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>65</poi_type_id>
@@ -764,7 +784,8 @@
     <condition k="poi" v="food.restaurant.italian"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Italian Restaurant</title>
+    <title lang="de">Italienisch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>66</poi_type_id>
@@ -776,7 +797,8 @@
     <condition k="poi" v="food.restaurant.japanese"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Japanese Restaurant</title>
+    <title lang="de">Japanisch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>67</poi_type_id>
@@ -788,7 +810,8 @@
     <condition k="poi" v="food.restaurant.mexican"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Mexican Restaurant</title>
+    <title lang="de">Mexikanisch</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>68</poi_type_id>
@@ -813,7 +836,8 @@
     <condition k="poi" v="food.snacks.pizza"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Pizzasnacks</title>
+    <title lang="de">Pizzaimbiss</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>70</poi_type_id>
@@ -911,6 +935,7 @@
     <scale_min>1</scale_min>
     <scale_max>100000</scale_max>
     <title lang="en">Nightcache</title>
+    <title lang="de">Nachtcache</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>78</poi_type_id>
@@ -958,7 +983,8 @@
     <condition k="poi" v="health.chemist"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Chemist</title>
+    <title lang="de">Drogerie</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>82</poi_type_id>
@@ -970,7 +996,8 @@
     <condition k="poi" v="health.dentist"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Dentist</title>
+    <title lang="de">Zahnarzt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>83</poi_type_id>
@@ -983,6 +1010,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en">Doctor</title>
+    <title lang="de">Arzt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>84</poi_type_id>
@@ -994,7 +1022,8 @@
     <condition k="poi" v="health.emergency"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Emergency Room</title>
+    <title lang="de">Notaufnahme</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>85</poi_type_id>
@@ -1006,7 +1035,8 @@
     <condition k="poi" v="health.eye_specialist"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Eye Specialist</title>
+    <title lang="de">Augenarzt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>86</poi_type_id>
@@ -1032,7 +1062,8 @@
     <condition k="poi" v="health.optician"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Optician</title>
+    <title lang="de">Optiker</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>88</poi_type_id>
@@ -1058,7 +1089,8 @@
     <condition k="poi" v="health.physiotherapist"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Physiotherapist</title>
+    <title lang="de">Physiotherapeut</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>90</poi_type_id>
@@ -1119,7 +1151,7 @@
     <condition k="poi" v="misc.information"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Information</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>97</poi_type_id>
@@ -1155,7 +1187,8 @@
     <condition k="poi" v="misc.no_smoking"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">No Smoking</title>
+    <title lang="de">Rauchverbot</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>100</poi_type_id>
@@ -1179,7 +1212,8 @@
     <condition k="poi" v="accommodation.camping.water"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Water Tap</title>
+    <title lang="de">Trinkwasser</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>102</poi_type_id>
@@ -1191,7 +1225,8 @@
     <condition k="poi" v="misc.tap_drinking"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Water Dispenser</title>
+    <title lang="de">Wasserspender</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>103</poi_type_id>
@@ -1245,7 +1280,8 @@
     <condition k="poi" v="money.bank"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Bank</title>
+    <title lang="de">Bank</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>107</poi_type_id>
@@ -1257,7 +1293,7 @@
     <condition k="poi" v="money.bank.deutsche_bank"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Deutsche Bank</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>108</poi_type_id>
@@ -1270,7 +1306,7 @@
     <condition k="poi" v="money.bank.hvb"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">HypoVereinsBank</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>109</poi_type_id>
@@ -1350,7 +1386,8 @@
     <condition k="poi" v="nautical.anchor"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Anchor</title>
+    <title lang="de">Anker</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>115</poi_type_id>
@@ -1362,7 +1399,7 @@
     <condition k="poi" v="nautical.boat"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Boat</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>116</poi_type_id>
@@ -1374,7 +1411,8 @@
     <condition k="poi" v="nautical.dive_flag"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Diver</title>
+    <title lang="de">Taucher</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>117</poi_type_id>
@@ -1386,7 +1424,8 @@
     <condition k="poi" v="people.boy"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Boy</title>
+    <title lang="de">Mann</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>118</poi_type_id>
@@ -1423,7 +1462,8 @@
     <condition k="poi" v="people.girl"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Girl</title>
+    <title lang="de">Frau</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>121</poi_type_id>
@@ -1461,7 +1501,7 @@
     <condition k="poi" v="people.people_a"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">A</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>124</poi_type_id>
@@ -1485,7 +1525,7 @@
     <condition k="poi" v="people.people_c"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">C</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>126</poi_type_id>
@@ -1497,7 +1537,7 @@
     <condition k="poi" v="people.people_d"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">D</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>127</poi_type_id>
@@ -1509,7 +1549,7 @@
     <condition k="poi" v="people.people_e"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">E</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>128</poi_type_id>
@@ -1521,7 +1561,7 @@
     <condition k="poi" v="people.people_f"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">F</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>129</poi_type_id>
@@ -1533,7 +1573,7 @@
     <condition k="poi" v="people.people_g"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">G</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>130</poi_type_id>
@@ -1545,7 +1585,7 @@
     <condition k="poi" v="people.people_h"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">H</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>131</poi_type_id>
@@ -1557,7 +1597,7 @@
     <condition k="poi" v="people.people_i"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">I</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>132</poi_type_id>
@@ -1569,7 +1609,7 @@
     <condition k="poi" v="people.people_j"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">J</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>133</poi_type_id>
@@ -1581,7 +1621,7 @@
     <condition k="poi" v="people.people_k"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">K</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>134</poi_type_id>
@@ -1593,7 +1633,7 @@
     <condition k="poi" v="people.people_l"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">L</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>135</poi_type_id>
@@ -1605,7 +1645,7 @@
     <condition k="poi" v="people.people_m"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">M</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>136</poi_type_id>
@@ -1617,7 +1657,7 @@
     <condition k="poi" v="people.people_n"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">N</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>137</poi_type_id>
@@ -1629,7 +1669,7 @@
     <condition k="poi" v="people.people_o"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">O</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>138</poi_type_id>
@@ -1641,7 +1681,7 @@
     <condition k="poi" v="people.people_p"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">P</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>139</poi_type_id>
@@ -1653,7 +1693,7 @@
     <condition k="poi" v="people.people_q"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Q</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>140</poi_type_id>
@@ -1665,7 +1705,7 @@
     <condition k="poi" v="people.people_r"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">R</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>141</poi_type_id>
@@ -1677,7 +1717,7 @@
     <condition k="poi" v="people.people_s"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">S</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>142</poi_type_id>
@@ -1689,7 +1729,7 @@
     <condition k="poi" v="people.people_t"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">T</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>143</poi_type_id>
@@ -1701,7 +1741,7 @@
     <condition k="poi" v="people.people_u"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">U</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>144</poi_type_id>
@@ -1713,7 +1753,7 @@
     <condition k="poi" v="people.people_v"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">V</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>145</poi_type_id>
@@ -1725,7 +1765,7 @@
     <condition k="poi" v="people.people_w"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">W</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>146</poi_type_id>
@@ -1737,7 +1777,7 @@
     <condition k="poi" v="people.people_x"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">X</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>147</poi_type_id>
@@ -1749,7 +1789,7 @@
     <condition k="poi" v="people.people_y"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Y</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>148</poi_type_id>
@@ -1761,7 +1801,7 @@
     <condition k="poi" v="people.people_z"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Z</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>149</poi_type_id>
@@ -1786,7 +1826,7 @@
     <condition k="poi" v="places.mine"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Mine</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>152</poi_type_id>
@@ -1904,7 +1944,8 @@
     <condition k="class" v="hill"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Peak</title>
+    <title lang="de">Gipfel</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>159</poi_type_id>
@@ -1916,7 +1957,7 @@
     <condition k="poi" v="places.tower"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Tower</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>164</poi_type_id>
@@ -1928,7 +1969,7 @@
     <condition k="poi" v="places.trees"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Tree(s)</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>165</poi_type_id>
@@ -1940,7 +1981,8 @@
     <condition k="poi" v="public.administration"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Administration</title>
+    <title lang="de">Verwaltung</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>166</poi_type_id>
@@ -1952,7 +1994,7 @@
     <condition k="poi" v="public.administration.registration_office"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Registration Office</title>
     <title lang="de">Einwohnermeldeamt</title>
     <description lang="en"></description>
     <geoinfo>
@@ -1965,7 +2007,7 @@
     <condition k="poi" v="public.administration.tax_office"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Tax Office</title>
     <title lang="de">Finanzamt</title>
     <description lang="en"></description>
     <geoinfo>
@@ -1978,7 +2020,7 @@
     <condition k="poi" v="public.administration.townhall"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Townhall</title>
     <title lang="de">Rathaus</title>
     <description lang="en"></description>
     <geoinfo>
@@ -2021,7 +2063,7 @@
     <condition k="amenity" v="post_box"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Post Box</title>
     <title lang="de">Briefkasten</title>
     <description lang="en"></description>
     <geoinfo>
@@ -2035,7 +2077,7 @@
     <condition k="amenity" v="post_office"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Post Office</title>
     <title lang="de">Postamt</title>
     <description lang="en"></description>
     <geoinfo>
@@ -2049,7 +2091,7 @@
     <condition k="amenity" v="recycling"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Recycling</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>174</poi_type_id>
@@ -2063,7 +2105,8 @@
     <condition k="amenity" v="phone_box"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Public Phone</title>
+    <title lang="de">Öffentliches Telefon</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>175</poi_type_id>
@@ -2076,7 +2119,8 @@
     <condition k="amenity" v="toilets"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Toilets</title>
+    <title lang="de">Toilette</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>176</poi_type_id>
@@ -2113,7 +2157,8 @@
     <condition k="amenity" v="cinema"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Cinema</title>
+    <title lang="de">Kino</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>179</poi_type_id>
@@ -2125,7 +2170,7 @@
     <condition k="poi" v="sports.dart"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Dart</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>180</poi_type_id>
@@ -2137,7 +2182,8 @@
     <condition k="poi" v="recreation.music"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Music</title>
+    <title lang="de">Musik</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>181</poi_type_id>
@@ -2149,7 +2195,8 @@
     <condition k="poi" v="recreation.nightclub"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Nightclub</title>
+    <title lang="de">Nachtclub</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>182</poi_type_id>
@@ -2163,7 +2210,8 @@
     <condition k="amenity" v="playground"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Playground</title>
+    <title lang="de">Spielplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>183</poi_type_id>
@@ -2175,7 +2223,7 @@
     <condition k="poi" v="recreation.theater"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Theater</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>184</poi_type_id>
@@ -2187,7 +2235,8 @@
     <condition k="poi" v="religion.cemetary"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Cemetary</title>
+    <title lang="de">Friedhof</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>185</poi_type_id>
@@ -2201,7 +2250,8 @@
     <condition k="amenity" v="place_of_worship"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Church</title>
+    <title lang="de">Kirche</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>186</poi_type_id>
@@ -2215,7 +2265,8 @@
     <condition k="denomination" v="catholic"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Catholic Church</title>
+    <title lang="de">Katholische Kirche</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>187</poi_type_id>
@@ -2227,7 +2278,8 @@
     <condition k="poi" v="religion.church.mosque"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Mosque</title>
+    <title lang="de">Moschee</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>188</poi_type_id>
@@ -2239,7 +2291,8 @@
     <condition k="poi" v="religion.church.protestant"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Protestant Church</title>
+    <title lang="de">Evangelische Kirche</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>189</poi_type_id>
@@ -2251,7 +2304,7 @@
     <condition k="poi" v="religion.church.synagoge"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Synagoge</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>190</poi_type_id>
@@ -2263,7 +2316,8 @@
     <condition k="poi" v="shopping.books"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Bookshop</title>
+    <title lang="de">Buchhandlung</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>191</poi_type_id>
@@ -2275,7 +2329,8 @@
     <condition k="poi" v="shopping.centre"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Shopping Centre/Mall</title>
+    <title lang="de">Einkaufszentrum</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>192</poi_type_id>
@@ -2287,7 +2342,8 @@
     <condition k="poi" v="shopping.computers"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Computershop</title>
+    <title lang="de">Computerladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>193</poi_type_id>
@@ -2299,7 +2355,8 @@
     <condition k="poi" v="shopping.confectioner"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Confectioner</title>
+    <title lang="de">Konditor</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>194</poi_type_id>
@@ -2311,8 +2368,8 @@
     <condition k="poi" v="shopping.diy_store"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
-    <title lang="de">Heimwerkermarkt</title>
+    <title lang="en">DIY Store</title>
+    <title lang="de">Heimwerkermarkt/Baumarkt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>195</poi_type_id>
@@ -2325,6 +2382,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Hagebau</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>196</poi_type_id>
@@ -2338,6 +2396,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Hornbach</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>197</poi_type_id>
@@ -2351,6 +2410,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">OBI</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>198</poi_type_id>
@@ -2364,6 +2424,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Praktiker</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>199</poi_type_id>
@@ -2376,7 +2437,8 @@
     <condition k="poi" v="shopping.dry_cleaner"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Dry Cleaner</title>
+    <title lang="de">Reinigung</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>200</poi_type_id>
@@ -2388,7 +2450,8 @@
     <condition k="poi" v="shopping.flea_market"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Fleamarket</title>
+    <title lang="de">Flohmarkt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>201</poi_type_id>
@@ -2400,7 +2463,8 @@
     <condition k="poi" v="shopping.furniture"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Furniture</title>
+    <title lang="de">Enrichtungshaus</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>202</poi_type_id>
@@ -2412,7 +2476,7 @@
     <condition k="poi" v="shopping.furniture.ikea"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">IKEA</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>203</poi_type_id>
@@ -2425,7 +2489,8 @@
     <condition k="poi" v="shopping.groceries"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Groceries</title>
+    <title lang="de">Lebensmittel</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>204</poi_type_id>
@@ -2438,7 +2503,8 @@
     <condition k="amenity" v="bakery"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Bakery</title>
+    <title lang="de">Bäckerei</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>205</poi_type_id>
@@ -2450,7 +2516,8 @@
     <condition k="poi" v="shopping.groceries.beverages"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Drinks cash-and-carry</title>
+    <title lang="de">Getränkemarkt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>206</poi_type_id>
@@ -2462,7 +2529,8 @@
     <condition k="poi" v="shopping.groceries.butcher"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Butcher</title>
+    <title lang="de">Metzgerei</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>207</poi_type_id>
@@ -2474,7 +2542,8 @@
     <condition k="poi" v="shopping.groceries.fruits"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Fruit</title>
+    <title lang="de">Obst</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>208</poi_type_id>
@@ -2486,7 +2555,8 @@
     <condition k="poi" v="shopping.groceries.vegetables"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Vegetables</title>
+    <title lang="de">Gemüse</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>209</poi_type_id>
@@ -2498,7 +2568,8 @@
     <condition k="poi" v="shopping.music"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Music Shop</title>
+    <title lang="de">Musikladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>210</poi_type_id>
@@ -2510,7 +2581,8 @@
     <condition k="poi" v="shopping.perfumery"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Perfumery</title>
+    <title lang="de">Parfümerie</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>211</poi_type_id>
@@ -2522,7 +2594,8 @@
     <condition k="poi" v="shopping.sports"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Sports Shop</title>
+    <title lang="de">Sportgeschäft</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>212</poi_type_id>
@@ -2534,7 +2607,8 @@
     <condition k="poi" v="shopping.sports.diving"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Diving Shop</title>
+    <title lang="de">Tauchsportgeschäft</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>213</poi_type_id>
@@ -2546,7 +2620,8 @@
     <condition k="poi" v="shopping.sports.fishing"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Fishing Shop</title>
+    <title lang="de">Angelzubehör</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>214</poi_type_id>
@@ -2558,7 +2633,8 @@
     <condition k="poi" v="shopping.sports.outdoor"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Outdoor Shop</title>
+    <title lang="de">Outdoor Ausrüstung</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>215</poi_type_id>
@@ -2570,7 +2646,8 @@
     <condition k="poi" v="shopping.sports.skiing"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Wintersports Shop</title>
+    <title lang="de">Wintersportzubehör</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>216</poi_type_id>
@@ -2582,7 +2659,8 @@
     <condition k="poi" v="shopping.sports.tennis"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Tennis Shop</title>
+    <title lang="de">Tennis Zubehör</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>217</poi_type_id>
@@ -2594,7 +2672,8 @@
     <condition k="poi" v="shopping.sports.weaponry"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Weaponry</title>
+    <title lang="de">Waffengeschäft</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>218</poi_type_id>
@@ -2607,7 +2686,8 @@
     <condition k="amenity" v="supermarket"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Supermarket</title>
+    <title lang="de">Supermarkt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>219</poi_type_id>
@@ -2619,7 +2699,9 @@
     <condition k="poi" v="shopping.supermarket.aldi"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Aldi</title>
+    <title lang="de">Aldi Süd</title>
+    <title lang="at">Hofer</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>220</poi_type_id>
@@ -2633,6 +2715,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Aldi Nord</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>221</poi_type_id>
@@ -2646,6 +2729,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">REWE</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>222</poi_type_id>
@@ -2659,6 +2743,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Kaufland</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>223</poi_type_id>
@@ -2672,6 +2757,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Lidl</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>224</poi_type_id>
@@ -2685,6 +2771,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Marktkauf</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>225</poi_type_id>
@@ -2697,7 +2784,7 @@
     <condition k="poi" v="shopping.supermarket.metro"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Metro</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>226</poi_type_id>
@@ -2711,6 +2798,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Minimal</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>227</poi_type_id>
@@ -2724,6 +2812,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Norma</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>228</poi_type_id>
@@ -2736,7 +2825,7 @@
     <condition k="poi" v="shopping.supermarket.pennymarkt"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Penny Markt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>229</poi_type_id>
@@ -2750,6 +2839,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Plus Markt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>230</poi_type_id>
@@ -2763,6 +2853,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Tengelmann</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>231</poi_type_id>
@@ -2775,7 +2866,8 @@
     <condition k="poi" v="shopping.toys"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Toy Store</title>
+    <title lang="de">Spielzeugladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>232</poi_type_id>
@@ -2788,7 +2880,8 @@
     <condition k="historic" v="castle"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Castle</title>
+    <title lang="de">Burg</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>233</poi_type_id>
@@ -2800,7 +2893,8 @@
     <condition k="poi" v="sightseeing.memorial"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Memorial</title>
+    <title lang="de">Denkmal</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>234</poi_type_id>
@@ -2813,7 +2907,7 @@
     <condition k="historic" v="monument"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Monument</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>235</poi_type_id>
@@ -2825,7 +2919,8 @@
     <condition k="poi" v="sightseeing.ruin"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Ruin</title>
+    <title lang="de">Ruine</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>236</poi_type_id>
@@ -2839,7 +2934,8 @@
     <condition k="class" v="viewpoint"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Viewpoint</title>
+    <title lang="de">Aussichtspunkt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>237</poi_type_id>
@@ -2852,7 +2948,8 @@
     <condition k="sport" v="golf"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Golf course</title>
+    <title lang="de">Golfplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>238</poi_type_id>
@@ -2876,7 +2973,8 @@
     <condition k="poi" v="sports.skiing"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Ski run</title>
+    <title lang="de">Skipiste</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>240</poi_type_id>
@@ -2888,7 +2986,8 @@
     <condition k="poi" v="sports.soccer"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Soccerfield</title>
+    <title lang="de">Fußballplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>241</poi_type_id>
@@ -2912,7 +3011,8 @@
     <condition k="poi" v="transport.airport"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Airport</title>
+    <title lang="de">Flughafen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>243</poi_type_id>
@@ -2927,7 +3027,8 @@
     <condition k="class" v="bridge"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Bridge</title>
+    <title lang="de">Brücke</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>244</poi_type_id>
@@ -2939,7 +3040,8 @@
     <condition k="poi" v="transport.bridge.bridge-car"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Carbridge</title>
+    <title lang="de">Autobrücke</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>245</poi_type_id>
@@ -2951,7 +3053,8 @@
     <condition k="poi" v="transport.bridge.bridge-pedestrian"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Pedestrian Bridge</title>
+    <title lang="de">Fußgängerbrücke</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>246</poi_type_id>
@@ -2963,7 +3066,8 @@
     <condition k="poi" v="transport.bridge.bridge-train"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Railway Bridge</title>
+    <title lang="de">Eisenbahnbrücke</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>247</poi_type_id>
@@ -2975,7 +3079,8 @@
     <condition k="poi" v="transport.bus"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Bus Stop</title>
+    <title lang="de">Bushaltestelle</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>248</poi_type_id>
@@ -2999,7 +3104,8 @@
     <condition k="poi" v="transport.ferry"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Ferry</title>
+    <title lang="de">Fähre</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>250</poi_type_id>
@@ -3011,7 +3117,8 @@
     <condition k="poi" v="transport.ferry.ferry-car"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Car Ferry</title>
+    <title lang="de">Autofähre</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>251</poi_type_id>
@@ -3035,7 +3142,8 @@
     <condition k="poi" v="transport.harbour"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Harbour</title>
+    <title lang="de">Hafen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>253</poi_type_id>
@@ -3047,7 +3155,7 @@
     <condition k="poi" v="transport.park_ride"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Park + Ride</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>254</poi_type_id>
@@ -3071,7 +3179,8 @@
     <condition k="poi" v="transport.railway"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Railway Station</title>
+    <title lang="de">Bahnhof</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>256</poi_type_id>
@@ -3083,7 +3192,8 @@
     <condition k="poi" v="transport.rapid_train"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Rapidtrain Station</title>
+    <title lang="de">S-Bahnhof</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>257</poi_type_id>
@@ -3095,7 +3205,8 @@
     <condition k="poi" v="transport.taxi"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Taxi Stand</title>
+    <title lang="de">Taxistand</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>258</poi_type_id>
@@ -3107,7 +3218,8 @@
     <condition k="poi" v="transport.tram"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Tram Station</title>
+    <title lang="de">Trambahn Haltestelle</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>259</poi_type_id>
@@ -3119,7 +3231,8 @@
     <condition k="poi" v="transport.underground"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Underground Station</title>
+    <title lang="de">U-Bahnhof</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>260</poi_type_id>
@@ -3143,7 +3256,8 @@
     <condition k="poi" v="vehicle.car_rental"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Car Rental</title>
+    <title lang="de">Autovermietung</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>262</poi_type_id>
@@ -3155,7 +3269,7 @@
     <condition k="poi" v="vehicle.car_rental.avis"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">AVIS</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>263</poi_type_id>
@@ -3168,7 +3282,7 @@
     <condition k="poi" v="vehicle.car_rental.europcar"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Europcar</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>264</poi_type_id>
@@ -3180,7 +3294,7 @@
     <condition k="poi" v="vehicle.car_rental.hertz"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Hertz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>265</poi_type_id>
@@ -3193,7 +3307,7 @@
     <condition k="poi" v="vehicle.car_rental.sixt"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Sixt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>266</poi_type_id>
@@ -3207,7 +3321,8 @@
     <condition k="class" v="caution"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Caution</title>
+    <title lang="de">Gefahrenstelle</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>267</poi_type_id>
@@ -3219,7 +3334,8 @@
     <condition k="poi" v="vehicle.dead_end"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Dead End</title>
+    <title lang="de">Sackgasse</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>268</poi_type_id>
@@ -3231,7 +3347,8 @@
     <condition k="poi" v="vehicle.emergency_phone"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Emergency Phone</title>
+    <title lang="de">Notrufsäule</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>269</poi_type_id>
@@ -3257,7 +3374,7 @@
     <condition k="amenity" v="fuel"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Fuel Station</title>
     <title lang="de">Tankstelle</title>
     <description lang="en"></description>
     <geoinfo>
@@ -3270,7 +3387,7 @@
     <condition k="poi" v="vehicle.fuel_station.agip"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Agip</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>272</poi_type_id>
@@ -3283,7 +3400,7 @@
     <condition k="poi" v="vehicle.fuel_station.aral"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Aral</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>273</poi_type_id>
@@ -3296,7 +3413,7 @@
     <condition k="poi" v="vehicle.fuel_station.esso"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Esso</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>274</poi_type_id>
@@ -3309,7 +3426,7 @@
     <condition k="poi" v="vehicle.fuel_station.jet"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Jet</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>275</poi_type_id>
@@ -3322,7 +3439,7 @@
     <condition k="poi" v="vehicle.fuel_station.omv"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">OMV</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>276</poi_type_id>
@@ -3335,7 +3452,7 @@
     <condition k="poi" v="vehicle.fuel_station.shell"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Shell</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>277</poi_type_id>
@@ -3348,7 +3465,7 @@
     <condition k="poi" v="vehicle.fuel_station.texaco"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Texaco</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>278</poi_type_id>
@@ -3361,7 +3478,7 @@
     <condition k="poi" v="vehicle.fuel_station.total"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Total</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>279</poi_type_id>
@@ -3388,7 +3505,8 @@
     <condition k="class" v="car park"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Parking</title>
+    <title lang="de">Parkplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>282</poi_type_id>
@@ -3400,7 +3518,8 @@
     <condition k="poi" v="vehicle.parking.car"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Car Parking</title>
+    <title lang="de">Autoparkplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>283</poi_type_id>
@@ -3412,7 +3531,8 @@
     <condition k="poi" v="vehicle.parking.garage"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Parking Garage</title>
+    <title lang="de">Parkhaus</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>284</poi_type_id>
@@ -3424,7 +3544,8 @@
     <condition k="poi" v="vehicle.parking.handicapped"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Handicapped Parking</title>
+    <title lang="de">Behindertenparkplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>285</poi_type_id>
@@ -3436,7 +3557,8 @@
     <condition k="poi" v="vehicle.parking.hiking"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Hiking Parking</title>
+    <title lang="de">Wanderparkplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>286</poi_type_id>
@@ -3448,7 +3570,8 @@
     <condition k="poi" v="vehicle.parking.park_ride"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">P+R Parking</title>
+    <title lang="de">P+R Parkplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>287</poi_type_id>
@@ -3460,7 +3583,8 @@
     <condition k="poi" v="vehicle.parking.restarea"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Restarea</title>
+    <title lang="de">Rastplatz</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>288</poi_type_id>
@@ -3472,7 +3596,8 @@
     <condition k="poi" v="vehicle.parking.restarea-toilet"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Restarea with Toilet</title>
+    <title lang="de">Rastplatz mit Toilette</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>289</poi_type_id>
@@ -3496,7 +3621,8 @@
     <condition k="poi" v="vehicle.repair_shop"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Repairshop</title>
+    <title lang="de">Werkstatt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>291</poi_type_id>
@@ -3520,7 +3646,7 @@
     <condition k="poi" v="vehicle.road_works"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Road Works</title>
     <title lang="de">Baustelle</title>
     <description lang="en"></description>
     <geoinfo>
@@ -3533,7 +3659,7 @@
     <condition k="poi" v="vehicle.speed_trap"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Speed Trap</title>
     <title lang="de">Radarfalle</title>
     <description lang="en"></description>
     <geoinfo>
@@ -3570,7 +3696,8 @@
     <condition k="poi" v="vehicle.toll_station"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Toll Station</title>
+    <title lang="de">Mautstation</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>297</poi_type_id>
@@ -3606,7 +3733,8 @@
     <condition k="poi" v="waypoint.wpt1"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 1</title>
+    <title lang="de">Wegpunkt 1</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>300</poi_type_id>
@@ -3618,8 +3746,9 @@
     <condition k="poi" v="waypoint.wpt2"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 2</title>
     <description lang="en"></description>
+    <title lang="de">Wegpunkt 2</title>
     <geoinfo>
       <poi_type_id>301</poi_type_id>
       <name>waypoint.wpt2</name>
@@ -3630,7 +3759,8 @@
     <condition k="poi" v="waypoint.wpt3"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 3</title>
+    <title lang="de">Wegpunkt 3</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>302</poi_type_id>
@@ -3642,7 +3772,8 @@
     <condition k="poi" v="waypoint.wpt4"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 4</title>
+    <title lang="de">Wegpunkt 4</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>303</poi_type_id>
@@ -3654,7 +3785,8 @@
     <condition k="poi" v="waypoint.wpt5"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 5</title>
+    <title lang="de">Wegpunkt 5</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>304</poi_type_id>
@@ -3666,7 +3798,8 @@
     <condition k="poi" v="waypoint.wpt6"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 6</title>
+    <title lang="de">Wegpunkt 6</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>305</poi_type_id>
@@ -3678,7 +3811,8 @@
     <condition k="poi" v="waypoint.wpt7"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 7</title>
+    <title lang="de">Wegpunkt 7</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>306</poi_type_id>
@@ -3690,7 +3824,8 @@
     <condition k="poi" v="waypoint.wpt8"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 8</title>
+    <title lang="de">Wegpunkt 8</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>307</poi_type_id>
@@ -3702,7 +3837,8 @@
     <condition k="poi" v="waypoint.wpt9"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint 9</title>
+    <title lang="de">Wegpunkt 9</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>308</poi_type_id>
@@ -3714,7 +3850,8 @@
     <condition k="poi" v="waypoint.wptblue"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint blue</title>
+    <title lang="de">Wegpunkt blau</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>309</poi_type_id>
@@ -3726,7 +3863,8 @@
     <condition k="poi" v="waypoint.wptgreen"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint green</title>
+    <title lang="de">Wegpunkt grün</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>310</poi_type_id>
@@ -3738,7 +3876,8 @@
     <condition k="poi" v="waypoint.wptorange"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint orange</title>
+    <title lang="de">Wegpunkt orange</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>311</poi_type_id>
@@ -3750,7 +3889,8 @@
     <condition k="poi" v="waypoint.wptred"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint red</title>
+    <title lang="de">Wegpunkt rot</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>312</poi_type_id>
@@ -3762,7 +3902,8 @@
     <condition k="poi" v="waypoint.wptyellow"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Waypoint yellow</title>
+    <title lang="de">Wegpunkt gelb</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>313</poi_type_id>
@@ -3774,7 +3915,8 @@
     <condition k="poi" v="wlan.closed"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Closed WLAN</title>
+    <title lang="de">WLAN geschlossen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>314</poi_type_id>
@@ -3786,7 +3928,8 @@
     <condition k="poi" v="wlan.open"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Open WLAN</title>
+    <title lang="de">WLAN offen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>315</poi_type_id>
@@ -3798,7 +3941,8 @@
     <condition k="poi" v="wlan.pay"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">WLAN requiring fee</title>
+    <title lang="de">kostenpflichtiges WLAN</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>316</poi_type_id>
@@ -3810,7 +3954,7 @@
     <condition k="poi" v="wlan.pay.eurospot"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Swisscom Eurospot</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>317</poi_type_id>
@@ -3823,7 +3967,7 @@
     <condition k="poi" v="wlan.pay.ganag"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Ganag</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>318</poi_type_id>
@@ -3836,7 +3980,7 @@
     <condition k="poi" v="wlan.pay.t-mobile"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">T-Mobile</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>319</poi_type_id>
@@ -3849,7 +3993,8 @@
     <condition k="poi" v="wlan.wep"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">WEP encrypted WLAN</title>
+    <title lang="de">WLAN WEP verschlüsselt</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>320</poi_type_id>
@@ -3861,7 +4006,8 @@
     <condition k="poi" v="transport.ferry.ferry-pedestrian"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Pedestrian Ferry</title>
+    <title lang="de">Fußgänger Fähre</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>321</poi_type_id>
@@ -4065,7 +4211,8 @@
     <condition k="poi" v="religion.chapel"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Chapel</title>
+    <title lang="de">Kapelle</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>339</poi_type_id>
@@ -4104,6 +4251,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Copyshop</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>342</poi_type_id>
@@ -4115,7 +4263,8 @@
     <condition k="poi" v="shopping.erotic"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Erotic Store</title>
+    <title lang="de">Erotikladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>343</poi_type_id>
@@ -4127,7 +4276,8 @@
     <condition k="poi" v="shopping.games"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Games Store</title>
+    <title lang="de">Spieleladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>344</poi_type_id>
@@ -4139,7 +4289,7 @@
     <condition k="poi" v="shopping.games.computer"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Computergames</title>
     <title lang="de">Computerspieleladen</title>
     <description lang="en"></description>
     <geoinfo>
@@ -4152,7 +4302,7 @@
     <condition k="poi" v="shopping.games.roleplaying"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Roleplayinggames</title>
     <title lang="de">Rollenspielladen</title>
     <description lang="en"></description>
     <geoinfo>
@@ -4179,6 +4329,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Fischladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>348</poi_type_id>
@@ -4191,6 +4342,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Gewürzladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>349</poi_type_id>
@@ -4202,7 +4354,8 @@
     <condition k="poi" v="shopping.groceries.tea"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Tea Shop</title>
+    <title lang="de">Teeladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>350</poi_type_id>
@@ -4214,7 +4367,8 @@
     <condition k="poi" v="shopping.kiosk"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">Kiosk</title>
+    <title lang="de">Kiosk</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>351</poi_type_id>
@@ -4240,6 +4394,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Beleuchtung</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>353</poi_type_id>
@@ -4357,6 +4512,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Medienladen</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>362</poi_type_id>
@@ -4368,7 +4524,8 @@
     <condition k="poi" v="shopping.media.cd-dvd"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">CD/DVD Store</title>
+    <title lang="de">CD/DVD Laden</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>363</poi_type_id>
@@ -4380,7 +4537,8 @@
     <condition k="poi" v="shopping.media.hi-fi-store"/>
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
-    <title lang="en"></title>
+    <title lang="en">HiFi Store</title>
+    <title lang="de">HiFi Laden</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>364</poi_type_id>
@@ -4393,6 +4551,7 @@
     <scale_min>1</scale_min>
     <scale_max>50000</scale_max>
     <title lang="en"></title>
+    <title lang="de">Zoohandlung/Tierbedarf</title>
     <description lang="en"></description>
     <geoinfo>
       <poi_type_id>365</poi_type_id>
@@ -4868,6 +5027,19 @@
     <geoinfo>
       <poi_type_id>404</poi_type_id>
       <name>places.settlement.suburb</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="places.settlement.part"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Part of Town</title>
+    <title lang="de">Stadtteil</title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>405</poi_type_id>
+      <name>places.settlement.part</name>
     </geoinfo>
   </rule>
 </rules>

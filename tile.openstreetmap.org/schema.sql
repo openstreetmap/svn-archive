@@ -16,6 +16,16 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `access`
+--
+
+DROP TABLE IF EXISTS `access`;
+CREATE TABLE `access` (
+  `ip` varchar(255) default NULL,
+  `hits` bigint(20) default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `tiles`
 --
 
@@ -26,10 +36,10 @@ CREATE TABLE `tiles` (
   `z` int(11) default NULL,
   `data` mediumblob,
   `created_at` datetime default NULL,
-  `dirty` binary(1) default '0',
+  `dirty` binary(1) NOT NULL,
   KEY `tile_idx` (`x`,`y`,`z`),
   KEY `dirty_idx` (`dirty`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

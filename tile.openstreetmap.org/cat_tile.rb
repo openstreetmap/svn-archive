@@ -34,6 +34,33 @@ return res #        if res.nil? then return true else return res end
     end
   end
 end
+
+#first check number of accesses
+
+include Apache
+ip = Apache.request.connection.remote_ip
+fb = Foo::Bar.new
+
+res = fb.call_local_sql { "select hits from access where ip='#{ip}'" }
+
+if res.num_rows == 0
+  res = fb.call_local_sql { "insert into access (ip,hits) values('#{ip}',1)" }
+else
+  hits = 0 
+  res.each_hash do |row|
+    hits = row['hits'].to_i
+  end
+  hits += 1
+  res = fb.call_local_sql { "update access set hits=#{hits} where ip='#{ip}'" }
+  if hits > 1000
+    puts `cat /home/www/tile/images/limit.png`
+  end
+end
+
+#res = fb.call_local_sql { "select hits from access where ip=#{ip}" }
+
+
+#now send the tile
 x = cgi['x']
 y = cgi['y']
 z = cgi['z']
@@ -42,7 +69,6 @@ if z and (z.to_i > 18 or z.to_i < 2)
   exit
 end
 
-fb = Foo::Bar.new
 
 res = fb.call_local_sql { "select data, dirty, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
 

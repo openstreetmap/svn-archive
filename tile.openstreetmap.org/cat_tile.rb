@@ -44,7 +44,7 @@ fb = Foo::Bar.new
 res = fb.call_local_sql { "select hits from access where ip='#{ip}'" }
 
 if res.num_rows == 0
-  res = fb.call_local_sql { "insert into access (ip,hits) values('#{ip}',1)" }
+  res = fb.call_local_sql { "insert into access (ip,hits) values('#{ip}',1) ON DUPLICATE KEY UPDATE hits=hits+1;" }
 else
   hits = 0 
   res.each_hash do |row|

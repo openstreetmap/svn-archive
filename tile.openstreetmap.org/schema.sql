@@ -21,8 +21,9 @@
 
 DROP TABLE IF EXISTS `access`;
 CREATE TABLE `access` (
-  `ip` varchar(255) default NULL,
-  `hits` bigint(20) default NULL
+  `ip` varchar(255) NOT NULL default '',
+  `hits` bigint(20) default NULL,
+  PRIMARY KEY  (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

@@ -52,13 +52,11 @@ else
   end
   hits += 1
   res = fb.call_local_sql { "update access set hits=#{hits} where ip='#{ip}'" }
-  if hits > 1000
+  if hits > 2500
     puts `cat /home/www/tile/images/limit.png`
+    exit
   end
 end
-
-#res = fb.call_local_sql { "select hits from access where ip=#{ip}" }
-
 
 #now send the tile
 x = cgi['x']
@@ -68,7 +66,6 @@ z = cgi['z']
 if z and (z.to_i > 18 or z.to_i < 2)
   exit
 end
-
 
 res = fb.call_local_sql { "select data, dirty, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
 

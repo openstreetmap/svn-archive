@@ -1,0 +1,4 @@
+# crontab for tile help
+
+# every day at 2am delete tiles which havn't been looked at in more than a month
+0 2 * * * /usr/bin/mysql -u tile -ptile tile -e 'delete from tiles where created_at < NOW() - interval 28 day;'

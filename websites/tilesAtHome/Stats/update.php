@@ -21,7 +21,7 @@ function UpdateStats(){
   set_time_limit(10 * 60);
   $Filename = "/home/ojw/public_html/Stats/Data/latest.txt";
   
-  if(!QueryInto("select * from tiles_meta", $Filename))
+  if(!QueryInto("select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version` from `tiles_meta`", $Filename))
     return(0);
   
   $CompressedFilename = $Filename.".gz";

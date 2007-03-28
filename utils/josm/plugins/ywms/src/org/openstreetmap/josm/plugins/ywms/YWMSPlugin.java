@@ -83,6 +83,10 @@ public class YWMSPlugin extends Plugin
 	 */
 	public YWMSPlugin()
 	{
+        WARNING. This compilation error is made on purpose. 
+        We are not allowed to use this plugin at present.
+        Please, don't use it until all legal issues are resolved.
+        
 		try
 		{
 			copy("/resources/ymap.html", "ymap.html");

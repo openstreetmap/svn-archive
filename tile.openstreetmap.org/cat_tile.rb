@@ -52,7 +52,7 @@ else
   end
   hits += 1
   res = fb.call_local_sql { "update access set hits=#{hits} where ip='#{ip}'" }
-  if hits > 2500
+  if hits > 10_000
     puts `cat /home/www/tile/images/limit.png`
     exit
   end

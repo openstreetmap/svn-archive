@@ -62,7 +62,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 	<!-- Some xsl processors are a bit recursion challenged (eg xalan-j).  This variable enables you to restrict the number of segs that
 	     get sorted.  If a way has more than this number of segs then the rest just get output in their original order.  -->
-	<xsl:variable name='maximumNumberOfSegs' select='"800"'/>
+    <!-- reduced from 800 to 400 by framm as some t@h renderers were reporting
+    "possible endless recursion" errors -->
+	<xsl:variable name='maximumNumberOfSegs' select='"400"'/>
 		
 
 	<!-- Keys -->

@@ -9,6 +9,7 @@
   <p class="title">Tile metadata</p>
   <hr>
   
+<h2>List of tiles</h2>
 <p><a href="Data/latest.txt.gz"><b>Download</b> the tile details</a> (as a large gzipped textfile)</p>  
 
 <?php
@@ -34,14 +35,15 @@
 <li>x, y, zoom</li>
 <li>Type - which tile layer (default: 1 = osmarender)</li>
 <li>Filesize in bytes</li>
-<li>Date of upload</li>
+<li>Date of upload, as unix timestamp</li>
 <li>User ID (<a href="Data/userlist.txt">see list of users</a>)</li>
 <li>Software version used to upload (<a href="../Versions/">see list of versions</a>)</li>
-<li>Spare</li>
-<li>Spare</li>
 </ul></p>
 
-<h3>Other files</h3>
+<h2>Access statistics</h2>
+<p><a href="Data/access.htm">Previous day's access logs</a>, as HTML page</p>
+
+<h2>Other files</h2>
 
 <p>There may be other stuff created from time to time - 
 <a href="Data/">view the data directory</a> to see them</p>

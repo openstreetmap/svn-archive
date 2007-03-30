@@ -102,3 +102,5 @@ Revision history:
                 Symbols in catalogue now sorted alphabetically. (Joto)
     2007-03-19  Support for frolloized osm files.  Will use the hints provided to draw street names and areas better. (80n)
                 Missing symbolScale attribute added to standard.xml. (80n)
+    2007-03-30  Reverted fix from 80n in draw.xsl as it breaks symbol rendering (Joto)
+

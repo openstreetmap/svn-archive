@@ -14,13 +14,15 @@
                 postgresql-server-dev-8.1 postgresql-8.1-postgis \
                 libboost-python-dev python2.4-dev \
                 libwww-perl libxml-parser-perl libfile-slurp-perl \
-                libtimedate-perl libdate-manip-perl imagemagick
+                libtimedate-perl libdate-manip-perl imagemagick \
+		libavl-dev
   sudo apt-get install \
                 ttf-arabeyes \
                 ttf-arphic-ukai \
                 ttf-arphic-uming \
                 ttf-thai-tlwg \
-                ttf-devanagari-fonts \
+                ttf-devanagari-fonts
+  sudo apt-get install \
                 ttf-dejavu
 
 # ---- get software from OSM-SVN and compile

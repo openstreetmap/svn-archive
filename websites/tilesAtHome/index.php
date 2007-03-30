@@ -23,6 +23,10 @@
   <a href="Log/">recent uploads and messages</a> can be viewed, as can 
   the <a href="Log/Requests/">areas people are requesting</a> to be rendered.</p>
   
+  <p>A <a href="Credits/">list of people uploading tiles</a> is here</p>
+  
+  <p><a href="Stats/">Metadata</a> and <a href="Stats/Data/access.htm">access logs</a></p>
+  
   <?php
   $Z = 16;
   $X = 32684;
@@ -52,9 +56,7 @@
   <a href="http://wiki.openstreetmap.org/index.php/Tiles%40home">tiles@home wiki page</a>,
   including development activity, the people involved, and discussing future directions
   for the project</p>
-  
-  <p>A <a href="Credits/">list of people uploading tiles</a> is here</p>
-  
+    
   
 </div>
 </body>

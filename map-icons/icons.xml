@@ -5042,4 +5042,149 @@
       <name>places.settlement.part</name>
     </geoinfo>
   </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage01"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 01</title>
+    <description lang="en">Stage 01 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>406</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage01</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="waypoint.wpttemp"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Temporary Waypoint</title>
+    <title lang="de">Temporärer Wegpunkt</title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>407</poi_type_id>
+      <name>waypoint.wpttemp</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="wlan.pay.fon"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">FON Accesspoint</title>
+    <description lang="en">http://www.fon.com</description>
+    <geoinfo>
+      <poi_type_id>408</poi_type_id>
+      <name>wlan.pay.fon</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage02"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 02</title>
+    <description lang="en">Stage 02 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>409</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage02</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage03"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 03</title>
+    <description lang="en">Stage 03 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>410</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage03</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage04"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 04</title>
+    <description lang="en">Stage 04 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>411</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage04</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage05"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 05</title>
+    <description lang="en">Stage 05 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>412</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage05</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage06"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 06</title>
+    <description lang="en">Stage 06 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>413</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage06</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage07"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 07</title>
+    <description lang="en">Stage 07 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>414</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage07</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage08"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 08</title>
+    <description lang="en">Stage 08 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>415</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage08</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage09"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 09</title>
+    <description lang="en">Stage 09 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>416</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage09</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="geocache.geocache_multi.multi_stage10"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en">Stage 10</title>
+    <description lang="en">Stage 10 of a Multicache</description>
+    <geoinfo>
+      <poi_type_id>417</poi_type_id>
+      <name>geocache.geocache_multi.multi_stage10</name>
+    </geoinfo>
+  </rule>
 </rules>

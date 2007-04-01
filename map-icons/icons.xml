@@ -5187,4 +5187,40 @@
       <name>geocache.geocache_multi.multi_stage10</name>
     </geoinfo>
   </rule>
+
+  <rule>
+    <condition k="poi" v="waypoint.wpttemp.wpttemp-green"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>418</poi_type_id>
+      <name>waypoint.wpttemp.wpttemp-green</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="waypoint.wpttemp.wpttemp-red"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>419</poi_type_id>
+      <name>waypoint.wpttemp.wpttemp-red</name>
+    </geoinfo>
+  </rule>
+
+  <rule>
+    <condition k="poi" v="waypoint.wpttemp.wpttemp-yellow"/>
+    <scale_min>1</scale_min>
+    <scale_max>50000</scale_max>
+    <title lang="en"></title>
+    <description lang="en"></description>
+    <geoinfo>
+      <poi_type_id>420</poi_type_id>
+      <name>waypoint.wpttemp.wpttemp-yellow</name>
+    </geoinfo>
+  </rule>
 </rules>

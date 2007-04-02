@@ -39,9 +39,9 @@ if(!mysql_error()){
       array_push($Row, sprintf("<b>%s</b>",htmlentities($Data["name"])));
       
       # Upload details
-      array_push($Row, sprintf("%d tiles in %d uploads",
-        $Data["tiles"],
-        $Data["uploads"]));
+      array_push($Row, sprintf("%s tiles in %s uploads",
+        number_format($Data["tiles"], 0, ".", ","),
+        number_format($Data["uploads"], 0, ".", ",")));
     
       # Time last seen
       array_push($Row, ageOf($Data["unixtime"]));

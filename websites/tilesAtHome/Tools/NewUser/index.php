@@ -21,10 +21,22 @@ function CreateUser($User, $Pass){
   
 
   printf("<p>Creating %s, %s</p>", htmlentities($User), htmlentities($Pass));
-  printf("<p>%s</p>", htmlentities($SQL));
+  //printf("<p>%s</p>", htmlentities($SQL));
   
   mysql_query($SQL);  
-  printf("<p>%s</p>", mysql_error());
+  if(mysql_error()){
+    printf("<p>Error: %s</p>", mysql_error());
+    return;
+    }
+  
+  $ID = mysql_insert_id();
+  
+  printf("<pre>Welcome to tiles@home. Your upload username is: &quot;%s&quot;, with password &quot;%s&quot;.\n\nUploads can be checked at\n* %s\n* %s\n\nManual upload is at %s\n</pre>",
+    $User, 
+    $Pass,
+    "http://dev.openstreetmap.org/~ojw/Credits/",
+    "http://dev.openstreetmap.org/~ojw/Credits/ByUser/?id=$ID",
+    "http://dev.openstreetmap.org/~ojw/Upload/");
 }
 
 ?>

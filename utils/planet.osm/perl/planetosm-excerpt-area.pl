@@ -50,7 +50,12 @@ pod2usage(-verbose=>2) if $man;
 
 # Grab the filename
 my $xml = shift||'';
-pod2usage(1) unless $xml;
+if (!$xml)
+{
+    print STDERR "Input file name must be given on command line - reading \n";
+    print STDERR "from stdin not supported.\n";
+    pod2usage(1);
+}
 
 # Should we warn for things we skip due to the bbox?
 my $warn_bbox_skip = 0;
@@ -318,7 +323,7 @@ B<planetosm-excerpt-area.pl>
 B<Common usages:>
 
 
-B<planertosm-excerpt-area.pl> -bbox 54,-1.5,55,-1.4 <planet.osm.xml> > excerpt.osm
+B<planertosm-excerpt-area.pl> -bbox 54,-1.5,55,-1.4 planet.osm.xml > excerpt.osm
 
 parse planet.osm file, and output the parts between the bbox
 
@@ -328,7 +333,7 @@ parse planet.osm file, and output the parts between the bbox
 
 =item B<--bbox>
 
-planetosm-to-db.pl -bbox 10,-3.5,11,-3 <planet.osm.xml>
+planetosm-to-db.pl -bbox 10,-3.5,11,-3 planet.osm.xml
 	Only output things inside the bounding box 
      (min lat, min long, max lat, max long)
 

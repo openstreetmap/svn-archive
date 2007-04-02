@@ -587,6 +587,9 @@
                         <rule e="segment|way" k="highway" v="unclassified|residential|minor">
                             <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" dy='0.75px' />
                         </rule>
+                        <rule e="way" k="highway" v="footway|cycleway|bridleway">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-footway-name" dy='0.35px' />
+                        </rule>
                         <rule e="segment|way" k="highway" v="tertiary">
                             <text k="name" text-anchor='middle' startOffset='50%' class="highway-tertiary-name" dy='0.75px' />
                         </rule>

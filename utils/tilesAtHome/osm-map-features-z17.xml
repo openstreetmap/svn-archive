@@ -608,8 +608,8 @@
                         <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
                             <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" dy='0.35px' />
                         </rule>
-                        <rule e="way" k="highway" v="unsurfaced|track">
-                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-unsurfaced-name" dy='0.35px' />
+                        <rule e="way" k="highway" v="footway|cycleway|bridleway">
+                            <text k="name" text-anchor='middle' startOffset='50%' class="highway-footway-name" dy='0.35px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="service">
                             <text k="name" text-anchor='middle' startOffset='50%' class="highway-unclassified-name" dy='0.35px' />
@@ -1098,6 +1098,13 @@
             }
 
             .highway-unsurfaced-name {
+                fill: black;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 1px;
+                font-weight: bold;
+             }
+
+            .highway-footway-name {
                 fill: black;
                 font-family: "DejaVu Sans",sans-serif;
                 font-size: 1px;

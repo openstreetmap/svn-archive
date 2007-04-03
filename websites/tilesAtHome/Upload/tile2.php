@@ -10,6 +10,7 @@ include("../lib/log.inc");
 include("../lib/tilenames.inc");
 include("../lib/users.inc");
 include("../lib/versions.inc");
+include("../lib/layers.inc");
 
 # Get password from posted form data (format mp=user|pass)
 $Password = $_POST["mp"];
@@ -69,8 +70,7 @@ function HandleUpload($File, $User, $UserID, $VersionID){
   system(sprintf("unzip -j -d %s %s", $Dir, $File['tmp_name']));
       
   # Process all the tiles (return number of tiles done)
-  $Layer = 1;
-  $Count = HandleDir($Dir, $Layer, $User, $UserID, $VersionID);
+  $Count = HandleDir($Dir, $User, $UserID, $VersionID);
         
   # Delete the temporary directory and everything inside
   DelDir($Dir);
@@ -97,13 +97,13 @@ function DelDir($Dir){
 #----------------------------------------------------------------------
 # Processes tiles that are currently sitting in a temp directory
 #----------------------------------------------------------------------
-function HandleDir($Dir, $Layer, $User, $UserID, $VersionID){
+function HandleDir($Dir, $User, $UserID, $VersionID){
   $Count = 0;
   $dp = opendir($Dir);
   $TileList = array();
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
-    $Count += HandleFile($Filename, $Layer, $User, $VersionID, $TileList);
+    $Count += HandleFile($Filename, $User, $VersionID, $TileList);
   }
   closedir($dp);
   
@@ -150,17 +150,23 @@ function SaveUserStats($UserID, $VersionID, $NumTiles){
 #----------------------------------------------------------------------
 # Processes tile PNG images
 #----------------------------------------------------------------------
-function HandleFile($Filename, $Layer, $User, $VersionID, &$TileList){
-  if(preg_match("/tile_(\d+)_(\d+)_(\d+)\.png/", $Filename, $Matches)){
-    $Z = $Matches[1];
-    $X = $Matches[2];
-    $Y = $Matches[3];
+function HandleFile($Filename, $User, $VersionID, &$TileList){
+  if(preg_match("/([a-z]+)_(\d+)_(\d+)_(\d+)\.png/", $Filename, $Matches)){
+    $Layername = $Matches[1];
+    $Z = $Matches[2];
+    $X = $Matches[3];
+    $Y = $Matches[4];
     $Valid = TileValid($X,$Y,$Z);
     if($Valid){
       
-      InsertTile($X,$Y,$Z,$Layer,$User,$Filename, $VersionID, $TileList);
-
-      return(1);
+      $Layer = checkLayer($Layername);
+      if($Layer > 0){
+        InsertTile($X,$Y,$Z,$Layer,$User,$Filename, $VersionID, $TileList);
+        return(1);
+      }
+      else{
+        logMsg("Invalid layer $Layer from $User", 2);
+      }
     }
     else{
       #logMsg("Invalid tile $Filename from $User", 3);
@@ -198,7 +204,11 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList){
   array_push($TileList, $SqlSnippet);
   
   # Decide on a filename
-  $NewFilename = TileName($X,$Y,$Z);
+  $NewFilename = TileName($X,$Y,$Z, layerDir($Layer));
+  if(!$NewFilename){
+    logMsg("Invalid filename created for $X,$Y,$Z,$Layer",2);
+    return;
+  }
   
   # Check directory exists
   CreateDirectoryToHold($NewFilename);

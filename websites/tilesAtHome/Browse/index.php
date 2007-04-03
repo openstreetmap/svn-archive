@@ -137,8 +137,7 @@
     implode(", ", array(
       TilesetLink(0,"Dev"), 
       TilesetLink(1,"Mapnik"),
-      TilesetLink(2,"Bandnet"),
-      TilesetLink(3,"Dev filesystem"))));
+      TilesetLink(2,"Cycle"))));
   
   if($z >= 12){
     printf("<tr><td colspan=\"%d\" class=\"tbl\">%s</td></tr>\n",
@@ -199,10 +198,7 @@
       return(sprintf("http://artem.dev.openstreetmap.org/osm_tiles/%d/%d/%d.png", $z,$x,$y));
     
     if($tileset == "2")
-      return(sprintf("http://osmathome.bandnet.org/Tiles/%d/%d/%d.png", $z,$x,$y));
-
-    if($tileset == "3")
-      return(sprintf("../Tiles/fstile.php/%d/%d/%d.png", $z,$x,$y));
+      return(sprintf("../Tiles/cycle.php/%d/%d/%d.png", $z,$x,$y));
       
     return(sprintf("../Tiles/tile.php/%d/%d/%d.png",$z,$x,$y));
   }

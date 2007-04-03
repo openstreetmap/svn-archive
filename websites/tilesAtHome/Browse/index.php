@@ -137,7 +137,8 @@
     implode(", ", array(
       TilesetLink(0,"Dev"), 
       TilesetLink(1,"Mapnik"),
-      TilesetLink(2,"Cycle"))));
+      TilesetLink(2,"Cycle"),
+      TilesetLink(3,"Maplint"))));
   
   if($z >= 12){
     printf("<tr><td colspan=\"%d\" class=\"tbl\">%s</td></tr>\n",
@@ -199,6 +200,9 @@
     
     if($tileset == "2")
       return(sprintf("../Tiles/cycle.php/%d/%d/%d.png", $z,$x,$y));
+    
+    if($tileset == "3")
+      return(sprintf("../Tiles/maplint.php/%d/%d/%d.png", $z,$x,$y));
       
     return(sprintf("../Tiles/tile.php/%d/%d/%d.png",$z,$x,$y));
   }

@@ -1,14 +1,16 @@
 <?php
 
-function TileName($X,$Y,$Z){
+function TileName($X,$Y,$Z,$Layer="Tiles"){
+  if(!$Layer)
+    return("");
   if(!TileValid($X,$Y,$Z))
     return("");
-  return("/home/ojw/tiles-ojw/Tiles/".TilePartName($X,$Y,$Z));;
+  return("/home/ojw/tiles-ojw/$Layer/".TilePartName($X,$Y,$Z));;
 }
-function TileURL($X,$Y,$Z){
+function TileURL($X,$Y,$Z,$Layer="tile"){
   if(!TileValid($X,$Y,$Z))
     return("");
-  return(sprintf("/~ojw/Tiles/tile.php/%d/%d/%d.png", $Z, $X,$Y));
+  return(sprintf("/~ojw/Tiles/%s.php/%d/%d/%d.png",$Layer,$Z,$X,$Y));
 }
   
 function TilePartName($X,$Y,$Z){

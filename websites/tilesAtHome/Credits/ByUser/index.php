@@ -46,8 +46,15 @@ function showByUser($User){
     if(rand() % $Divisor == 1){
       $Row = array();
       
+      $URL = sprintf(
+        "../../Browse/?z=%d&amp;x=%d&amp;y=%d",
+        $Data["z"],
+        $Data["x"],
+        $Data["y"]);
+        
       array_push($Row, sprintf(
-      "<img src=\"/~ojw/Tiles/tile.php/%d/%d/%d.png\" width=\"256\" height=\"256\">",
+      "<a href=\"%s\"><img src=\"/~ojw/Tiles/tile.php/%d/%d/%d.png\" width=\"256\" height=\"256\"></a>",
+        $URL,
         $Data["z"],
         $Data["x"],
         $Data["y"]));

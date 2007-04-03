@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+print STDERR "HALLOOOO\n\n";
 use LWP::Simple;
 use LWP::UserAgent;
 use Math::Trig;
@@ -13,7 +14,8 @@ use strict;
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White, Etienne Cherdlu, Dirk-Lueder Kreie
+# Copyright 2006, Oliver White, Etienne Cherdlu, Dirk-Lueder Kreie,
+# and others
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -84,31 +86,61 @@ my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
 my $lastmsglen = 0;
+my $progstart = time();
+my $idleSeconds = 0;
+my $dirent; 
 
 # Handle the command-line
 my $Mode = shift();
-if($Mode eq "xy"){
-  # ----------------------------------
-  # "xy" as first argument means you want to specify a tileset to render
-  # ----------------------------------
-  my $X = shift();
-  my $Y = shift();
-  my $Zoom = 12;
-  GenerateTileset($X, $Y, $Zoom);
+
+if($Mode eq "xy")
+{
+    # ----------------------------------
+    # "xy" as first argument means you want to specify a tileset to render
+    # ----------------------------------
+    my $X = shift();
+    my $Y = shift();
+    my $Zoom = 12;
+    GenerateTileset($X, $Y, $Zoom);
 }
 elsif ($Mode eq "loop") 
 {
-  # ----------------------------------
-  # Continuously process requests from server
-  # ----------------------------------
-  while(1) 
-  {
-    my ($did_something, $message) = ProcessRequestsFromServer();
-    uploadIfEnoughTiles();
-    if ($did_something == 0) {
-	  talkInSleep($message, 60);
+    # ----------------------------------
+    # Continuously process requests from server
+    # ----------------------------------
+
+    # if this is a re-exec, we want to capture some of our status
+    # information from the command line. this feature allows setting
+    # any numeric variable by specifying "variablename=value" on the
+    # command line after the keyword "reexec". Currently unsuitable 
+    # for alphanumeric variables.
+    
+    if (shift() eq "reexec")
+    {
+        while(my $evalstr = shift())
+        {
+            die unless $evalstr =~ /^[A-Za-z]+=\d+/;
+            eval('$'.$evalstr);
+        }
     }
-  }
+
+    # this is the actual processing loop
+    
+    while(1) 
+    {
+        reExecIfRequired();
+        my ($did_something, $message) = ProcessRequestsFromServer();
+        uploadIfEnoughTiles();
+        if ($did_something == 0) 
+        {
+            my $totalseconds = time() - $progstart;
+            $message = sprintf("Client %d%% idle. %s", 
+                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100, 
+                $message);
+            talkInSleep($message, 60);
+            $idleSeconds += 60;
+        }
+    }
 }
 elsif ($Mode eq "upload") {
   upload();
@@ -1012,3 +1044,36 @@ sub talkInSleep
         sleep 1;
     }
 }
+
+#-----------------------------------------------------------------------------
+# A function to re-execute the program.  
+#
+# This function attempts to detect whether the perl script has changed
+# since it was invoked initially, and if so, just runs the new version.
+# This can be used to update the program while it is running (as it is
+# sometimes hard to hit Ctrl-C at exactly the right moment!)
+#-----------------------------------------------------------------------------
+sub reExecIfRequired()
+{
+    # until proven to work with other systems, only attempt a re-exec
+    # on linux. 
+    return unless ($^O eq "linux");
+
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
+        $ctime,$blksize,$blocks) = stat($0);
+    my $de = "$size/$mtime/$ctime";
+    if (!defined($dirent))
+    {
+        $dirent = $de; 
+        return;
+    }
+    elsif ($dirent ne $de)
+    {
+        statusMessage("tilesGen.pl has changed, re-start new version", 1);
+        exec "perl", $0, "loop", "reexec", 
+            "progressJobs=$progressJobs", 
+            "idleSeconds=$idleSeconds", 
+            "progstart=$progstart" or die;
+    }
+}
+

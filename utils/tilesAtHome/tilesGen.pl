@@ -31,7 +31,7 @@ use strict;
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #-----------------------------------------------------------------------------
 # Read the config file
-my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf");
+my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 CheckConfig(%Config);
 
 # Get version number from version-control system, as integer
@@ -176,22 +176,30 @@ else{
 
 }
 
-sub uploadIfEnoughTiles{
-  my $Count = 0;
-  opendir(my $dp, $Config{WorkingDirectory}) || return;
-  while(my $File = readdir($dp)){
-    $Count++ if($File =~ /tile_.*\.png/);
-  }
-  closedir($dp);
-  
-  if ($Count < 200)
-  {
-    # print "Not uploading yet, only $Count tiles\n";
-  }
-  else
-  {
-    upload();
-  }
+sub uploadIfEnoughTiles
+{
+    my $Count = 0;
+
+    # compile a list of the "Prefix" values of all configured layers,
+    # separated by |
+    my $allowedPrefixes = join("|", 
+        map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
+
+    opendir(my $dp, $Config{WorkingDirectory}) || return;
+    while(my $File = readdir($dp))
+    {
+        $Count++ if ($File =~ /($allowedPrefixes)_.*\.png/);
+    }
+    closedir($dp);
+
+    if ($Count < 200)
+    {
+        # print "Not uploading yet, only $Count tiles\n";
+    }
+    else
+    {
+        upload();
+    }
 }
 
 sub upload{
@@ -341,30 +349,41 @@ sub GenerateTileset {
   killafile($DataFile);
   my $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
     $Config{OsmUsername}, $Config{OsmPassword}, $W1, $S1, $E1, $N1);
+  my @tempfiles;
+  push(@tempfiles, $DataFile);
   
   DownloadFile($URL, $DataFile, 0, "Map data to $DataFile");
-  if(-s $DataFile == 0){
-    printf("No data at this location\n");
-    printf("Trying smaller slices...\n");
 
-    copy("stub.osm",$DataFile) or die "Cannot create $DataFile from stub.osm"; 
+    if (-s $DataFile == 0)
+    {
+        printf("No data at this location\n");
+        printf("Trying smaller slices...\n");
 
-    my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width
+        my $filelist = [];
 
-    for (my $i = 0 ; $i<10 ; $i++) {
-      $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-        $Config{OsmUsername}, $Config{OsmPassword}, ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
-      my $DataFile1 = "data-$PID-$i.osm";
-      DownloadFile($URL, $DataFile1, 0, "Map data to $DataFile1");
-      if(-s $DataFile1 == 0){
-        printf("No data here either\n");
-        return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
-        exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
-      }
-    appendOSMfile($DataFile,$DataFile1);
-    killafile($DataFile1);
+        my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width
+
+        for (my $i = 0 ; $i<10 ; $i++) 
+        {
+            $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+                $Config{OsmUsername}, $Config{OsmPassword}, ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
+            my $partialFile = "data-$PID-$i.osm";
+            DownloadFile($URL, $partialFile, 0, "Map data to $partialFile");
+            if (-s $partialFile == 0)
+            {
+                printf("No data here either\n");
+                return if ($Main::Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+                exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
+            }
+            push(@{$filelist}, $partialFile);
+        }
+
+        mergeOsmFiles($DataFile, $filelist);
+        foreach my $file (@{$filelist}) 
+        {
+            killafile($file);
+        }
     }
-  }
   
   # Check for correct UTF8 (else inkscape will run amok later)
   # TODO: This doesn't seem to catch all string errors that inkscape trips over.
@@ -376,68 +395,122 @@ sub GenerateTileset {
   {
     if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
     {
-      statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom",1);
+      statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", 1);
       return 0 if ($Mode eq "loop");
       exit(1);
     }
   }
 
-  # Faff around
-  for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
-    killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
-  }
+    foreach my $layer(split(/,/, $Config{Layers}))
+    {
+        my $maxzoom = $Config{"Layer.$layer.MaxZoom"};
+        my $layerDataFile;
 
-  my $Margin = " " x ($Zoom - 8);
-  #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
-  
-  # Pre-process the data file using frollo
-  if (not frollo("data-$PID.osm")) 
-  {
-     # stop rendering if frollo fails, as current osmarender is dependent on frollo hints
-     return 0 if ($Mode eq "loop"); 
-     exit(1); 
-  }
- 
-  
-  # Add bounding box to osmarender
-  # then set the data source
-  # then transform it to SVG
-  for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
-  
-    # Create a new copy of osmarender
-    copy(
-      "osm-map-features-z$i.xml",
-      "osm-map-features-$PID-z$i.xml")
-       or die "Cannot make copy of osm-map-features-z$i.xml"; 
-    
-    # Update the osmarender with details of what to do (where to get data, what bounds to use)
-    AddBounds("osm-map-features-$PID-z$i.xml",$W,$S,$E,$N);    
-    SetDataSource("osm-map-features-$PID-z$i.xml");
-    
-    # Render the file
-    xml2svg(
-      "osm-map-features-$PID-z$i.xml",
-      "$Config{WorkingDirectory}output-$PID-z$i.svg",
-      "zoom level $i");
-    
-    # Delete temporary osmarender
-    killafile("osm-map-features-$PID-z$i.xml");
-  }
-  
-  # Delete OSM map data
-  killafile($DataFile);
-  
-  # Find the size of the SVG file
-  my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$Config{MaxZoom}.svg");
+        # Faff around
+        for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
+        {
+            killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
+        }
 
-  # Render it as loads of recursive tiles
-  RenderTile($X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my $Margin = " " x ($Zoom - 8);
+        #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
+  
+        if ($Config{"Layer.$layer.Preprocessor"} eq "frollo")
+        {
+            $layerDataFile = "data-$PID-frollo.osm";
+            if (-f $layerDataFile)
+            {
+                # no action; frollo files seem to have been created by another
+                # layer already!
+            }
+            else
+            {
+                # Pre-process the data file using frollo
+                if (not frollo("data-$PID.osm", $layerDataFile))
+                {
+                    # stop rendering if frollo fails, as current osmarender is dependent on frollo hints
+                    return 0 if ($Mode eq "loop"); 
+                    exit(1); 
+                }
+                push(@tempfiles, $layerDataFile);
+            }
+        }
+        elsif ($Config{"Layer.$layer.Preprocessor"} eq "maplint")
+        {
+            $layerDataFile = "data-$PID-maplint.osm";
+            if (-f $layerDataFile)
+            {
+                # no action; maplint files seem to have been created by another
+                # layer already!
+            }
+            else
+            {
+                # Pre-process the data file using maplint
+                my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\" 2>/dev/null",
+                        $Config{Niceness},
+                        $Config{XmlStarlet},
+                        "maplint/lib/run-tests.xsl",
+                        "$DataFile",
+                        "tmp.$PID");
+                runCommand("Running maplint", $Cmd);
+                $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\" 2>/dev/null",
+                        $Config{Niceness},
+                        $Config{XmlStarlet},
+                        "maplint/lib/convert-to-tags.xsl",
+                        "tmp.$PID",
+                        "$layerDataFile");
+                runCommand("Creating tags from maplint", $Cmd);
+                killafile("tmp.$PID");
+                push(@tempfiles, $layerDataFile);
+            }
+        }
+        else
+        {
+            # no preprocessor
+            $layerDataFile = $DataFile;
+        }
 
-  # Clean-up the SVG files
-  for (my $i = $Zoom ; $i <= $Config{MaxZoom} ; $i++) {
-    killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
-  }
-  return 1;
+        # Add bounding box to osmarender
+        # then set the data source
+        # then transform it to SVG
+        for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
+        {
+            # Create a new copy of rules file
+            # don't need zoom or layer in name of file as we'll
+            # process one after the other
+            my $source = $Config{"Layer.$layer.Rules.$i"};
+            copy($source, "map-features-$PID.xml")
+                or die "Cannot make copy of $source";
+
+            # Update the rules file  with details of what to do (where to get data, what bounds to use)
+            AddBounds("map-features-$PID.xml",$W,$S,$E,$N);    
+            SetDataSource($layerDataFile, "map-features-$PID.xml");
+
+            # Render the file
+            xml2svg(
+                    "map-features-$PID.xml",
+                    "$Config{WorkingDirectory}output-$PID-z$i.svg",
+                    "zoom level $i");
+
+            # Delete temporary rules file
+            killafile("map-features-$PID.xml");
+        }
+
+        # Find the size of the SVG file
+        my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$maxzoom.svg");
+
+        # Render it as loads of recursive tiles
+        RenderTile($layer, $X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+
+        # Clean-up the SVG files
+        for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
+        {
+            killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
+        }
+    }
+
+    foreach my $file(@tempfiles) { killafile($file); }
+    return 1;
 }
 
 #-----------------------------------------------------------------------------
@@ -446,70 +519,72 @@ sub GenerateTileset {
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #-----------------------------------------------------------------------------
-sub RenderTile {
-  my ($X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
-  
-  return if($Zoom > $Config{MaxZoom});
+sub RenderTile 
+{
+    my ($layer, $X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
 
-  # no need to render subtiles if empty
-  return if($empty == 1);
-  
-  my $Filename = tileFilename($X, $Ytile, $Zoom);
+    return if($Zoom > $Config{"Layer.$layer.MaxZoom"});
 
-  # Render it to PNG
-  # printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
-  my $Width = 256 * (2 ** ($Zoom - 12));  # Pixel size of tiles  
-  my $Height = 256; # Pixel height of tile
+    # no need to render subtiles if empty
+    return if($empty == 1);
 
-  # svg2png returns true if all tiles extracted were empty. this might break 
-  # if a higher zoom tile would contain data that is not rendered at the 
-  # current zoom level. 
-  if (svg2png($Zoom, $Filename, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{RenderFullTileset}) 
-  {
-    $empty=1;
-  }
+    # Render it to PNG
+    # printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
+    my $Width = 256 * (2 ** ($Zoom - 12));  # Pixel size of tiles  
+    my $Height = 256; # Pixel height of tile
 
-  # Get progress percentage 
-  if($empty == 1) {
-    # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
-    for (my $j = $Config{MaxZoom} ; $j >= $Zoom ; $j--) {
-      $progress += 2 ** ($Config{MaxZoom}-$j);
+    # svg2png returns true if all tiles extracted were empty. this might break 
+    # if a higher zoom tile would contain data that is not rendered at the 
+    # current zoom level. 
+    if (svg2png($Zoom, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{RenderFullTileset}) 
+    {
+        $empty=1;
     }
-  }
-  else {
-    $progress += 1;
-  }
 
-  if (($progressPercent=$progress*100/63) == 100)
-  {
-      statusMessage("Finished $X,$Y", 1);
-  }
-  else
-  {
-      if ($Config{Verbose})
-      {
-          printf STDERR "Job No. %d %1.1f %% done.\n",$progressJobs, $progressPercent;
-      }
-      else
-      {
-          statusMessage("Working");
-      }
-  }
+    # Get progress percentage 
+    if($empty == 1) 
+    {
+        # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
+        for (my $j = $Config{"Layer.$layer.MaxZoom"}; $j >= $Zoom ; $j--) 
+        {
+            $progress += 2 ** ($Config{"Layer.$layer.MaxZoom"}-$j);
+        }
+    }
+    else 
+    {
+        $progress += 1;
+    }
 
-  # Sub-tiles
-  my $MercY2 = ProjectF($N);
-  my $MercY1 = ProjectF($S);
-  my $MercYC = 0.5 * ($MercY1 + $MercY2);
-  my $LatC = ProjectMercToLat($MercYC);
-  
-  my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1);
-  my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;
-  
-  my $YA = $Ytile * 2;
-  my $YB = $YA + 1;
+    if (($progressPercent=$progress*100/63) == 100)
+    {
+        statusMessage("Finished $X,$Y for layer $layer", 1);
+    }
+    else
+    {
+        if ($Config{Verbose})
+        {
+            printf STDERR "Job No. %d %1.1f %% done.\n",$progressJobs, $progressPercent;
+        }
+        else
+        {
+            statusMessage("Working");
+        }
+    }
 
-  RenderTile($X, $Y, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
-  RenderTile($X, $Y, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
+    # Sub-tiles
+    my $MercY2 = ProjectF($N);
+    my $MercY1 = ProjectF($S);
+    my $MercYC = 0.5 * ($MercY1 + $MercY2);
+    my $LatC = ProjectMercToLat($MercYC);
+
+    my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1);
+    my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;
+
+    my $YA = $Ytile * 2;
+    my $YB = $YA + 1;
+
+    RenderTile($layer, $X, $Y, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
+    RenderTile($layer, $X, $Y, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
 
 }
 
@@ -610,7 +685,7 @@ sub DownloadFile {
 # Pre-process on OSM file (using frollo)
 #-----------------------------------------------------------------------------
 sub frollo {
-  my($dataFile) = @_;
+  my($dataFile, $outputFile) = @_;
   my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
     $Config{Niceness},
     $Config{XmlStarlet},
@@ -624,19 +699,17 @@ sub frollo {
       $Config{XmlStarlet},
       "frollo2.xsl",
       "temp-$PID.osm",
-      "temp2-$PID.osm");
+      "$outputFile");
     if(runCommand("Frolloizing (part II) ...", $Cmd))
     {
-      copy("temp2-$PID.osm","$dataFile");
       statusMessage("Frollification successful");
       killafile("temp-$PID.osm");
-      killafile("temp2-$PID.osm");
     } 
     else 
     {
       statusMessage("Frollotation failure (part II)");
       killafile("temp-$PID.osm");
-      killafile("temp2-$PID.osm");
+      killafile($outputFile);
       return 0;
     }
   } 
@@ -751,9 +824,9 @@ sub runCommand
 # Render a SVG file
 #-----------------------------------------------------------------------------
 sub svg2png {
-  my($Zoom, $PNG, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
+  my($Zoom, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
 
-  my $TempFile = $PNG."_part";
+  my $TempFile = $Config{WorkingDirectory}."/$PID.part.png";
   
   my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
 
@@ -777,7 +850,7 @@ sub svg2png {
 
   killafile($stdOut);
 
-  my $ReturnValue = splitImageX($TempFile, 12, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
+  my $ReturnValue = splitImageX($TempFile, $layer, 12, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
 
   killafile($TempFile);
 
@@ -818,25 +891,22 @@ sub AddBounds {
 #-----------------------------------------------------------------------------
 # Set data source file name in map-features file
 #-----------------------------------------------------------------------------
-sub SetDataSource {
-  my ($Filename) = @_;
-  
-  # Read the old file
-  open(my $fpIn, "<", "$Filename");
-  my $Data = join("",<$fpIn>);
-  close $fpIn;
-  die("no such $Filename") if(! -f $Filename);
-  
-  # Change some stuff
-  my $DataSource = sprintf("data-%s.osm",
-    $PID);
-  
-  $Data =~ s/(  data=\").*(  scale=\")/$1$DataSource\"\n$2/s;
+sub SetDataSource 
+{
+    my ($Datafile, $Rulesfile) = @_;
 
-  # Save back to the same location
-  open(my $fpOut, ">$Filename");
-  print $fpOut $Data;
-  close $fpOut;
+    # Read the old file
+    open(my $fpIn, "<", "$Rulesfile");
+    my $Data = join("",<$fpIn>);
+    close $fpIn;
+    die("no such $Rulesfile") if(! -f $Rulesfile);
+
+    $Data =~ s/(  data=\").*(  scale=\")/$1$Datafile\"\n$2/s;
+
+    # Save back to the same location
+    open(my $fpOut, ">$Rulesfile");
+    print $fpOut $Data;
+    close $fpOut;
 }
 
 #-----------------------------------------------------------------------------
@@ -859,50 +929,82 @@ sub getSize($){
 # Temporary filename to store a tile
 #-----------------------------------------------------------------------------
 sub tileFilename {
-  my($X,$Y,$Zoom) = @_;
+  my($layer,$X,$Y,$Zoom) = @_;
 
-  return(sprintf("%s/tile_%d_%d_%d.png",$Config{WorkingDirectory},$Zoom,$X,$Y));
+  return(sprintf("%s/%s_%d_%d_%d.png",$Config{WorkingDirectory},$Config{"Layer.$layer.Prefix"},$Zoom,$X,$Y));
 }
 
 #-----------------------------------------------------------------------------
-# Set data source file name in map-features file
+# Merge multiple OSM files into one, making sure that elements are present in
+# the destination file only once even if present in more than one of the input
+# files.
+# 
+# This has become necessary in the course of supporting maplint, which would
+# get upset about duplicate objects created by combining downloaded stripes.
 #-----------------------------------------------------------------------------
-sub appendOSMfile {
-  my ($Datafile,$Datafile1) = @_;
-  
-  # Strip the trailing </osm> from the datafile
-  open(my $fpIn1, "<", "$Datafile");
-  my $Data = join("",<$fpIn1>);
-  close $fpIn1;
-  die("no such $Datafile") if(! -f $Datafile);
-    
-  $Data =~ s/<\/osm>//s;
+sub mergeOsmFiles()
+{
+    my ($destFile, $sourceFiles) = @_;
+    my $existing = {};
 
-  # Save back to the datafile file
-  open(my $fpOut1, ">$Datafile");
-  print $fpOut1 $Data;
-  close $fpOut1;
+    open (DEST, "> $destFile");
 
-  # Read the merge file remove the xml prolog and opening <osm> tag and append to the datafile
-  open(my $fpIn2, "<", "$Datafile1");
-  $Data = join("",<$fpIn2>);
-  close $fpIn2;
-  die("no such $Datafile1") if(! -f $Datafile1);
-    
-  $Data =~ s/.*server\">//s;
+    # first, copy stub
+    open (STUB, "stub.osm");
+    while(<STUB>)
+    {
+        print DEST;
+    }
+    close(STUB);
 
-  # Append to the data file
-  open(my $fpOut2, ">>", "$Datafile");
-  print $fpOut2 $Data;
-  close $fpOut2;
+    foreach my $sourceFile(@{$sourceFiles})
+    {
+        open(SOURCE, $sourceFile);
+        my $copy = 0;
+        while(<SOURCE>)
+        {
+            if ($copy)
+            {
+                last if (/^\s*<\/osm>/);
+                if (/^\s*<(node|segment|way) id="(\d+)".*(.)>/)
+                {
+                    my ($what, $id, $slash) = ($1, $2, $3);
+                    my $key = substr($what, 0, 1) . $id;
+                    if (defined($existing->{$key}))
+                    {
+                        # object exists already. skip!
+                        next if ($slash eq "/");
+                        while(<SOURCE>)
+                        {
+                            last if (/^\s*<\/$what>/);
+                        }
+                        next;
+                    }
+                    else
+                    {
+                        # object didn't exist, note
+                        $existing->{$key} = 1;
+                    }
+                }
+                print DEST;
+            }
+            else
+            {
+                $copy = 1 if (/^\s*<osm /);
+            }
+        }
+        close(SOURCE);
+    }
+    print DEST "</osm>\n";
+    close(DEST);
 }
-
 
 #-----------------------------------------------------------------------------
 # Split a tileset image into tiles
 #-----------------------------------------------------------------------------
-sub splitImageX {
-  my ($File, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
+sub splitImageX 
+{
+  my ($File, $layer, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
   
   # Size of tiles
   my $Pixels = 256;
@@ -934,7 +1036,7 @@ sub splitImageX {
   
 
     # Decide what the tile should be called
-    my $Filename = tileFilename($X * $Size + $xi, $Ytile, $Z);
+    my $Filename = tileFilename($layer, $X * $Size + $xi, $Ytile, $Z);
    
     # Temporary filename
     my $Filename2 = "$Filename.cut";
@@ -1059,7 +1161,7 @@ sub talkInSleep
 # This can be used to update the program while it is running (as it is
 # sometimes hard to hit Ctrl-C at exactly the right moment!)
 #-----------------------------------------------------------------------------
-sub reExecIfRequired()
+sub reExecIfRequired
 {
     # until proven to work with other systems, only attempt a re-exec
     # on linux. 

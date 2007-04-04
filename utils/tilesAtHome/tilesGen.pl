@@ -38,8 +38,8 @@ CheckConfig(%Config);
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
-printf STDERR "This is version %d (%s) of tilesgen\n", 
-    $Version, $Config{ClientVersion};
+printf STDERR "This is version %d (%s) of tilesgen running on %s\n", 
+    $Version, $Config{ClientVersion}, $^O;
 
 unless ($Config{Verbose})
 {
@@ -88,6 +88,7 @@ my $progressPercent = 0;
 my $lastmsglen = 0;
 my $progstart = time();
 my $idleSeconds = 0;
+my $idleFor = 0;
 my $dirent; 
 
 # Handle the command-line
@@ -133,12 +134,11 @@ elsif ($Mode eq "loop")
         uploadIfEnoughTiles();
         if ($did_something == 0) 
         {
-            my $totalseconds = time() - $progstart;
-            $message = sprintf("Client %d%% idle. %s", 
-                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100, 
-                $message);
             talkInSleep($message, 60);
-            $idleSeconds += 60;
+        } 
+        else 
+        {
+            $idleFor = 0;
         }
     }
 }
@@ -1040,8 +1040,15 @@ sub talkInSleep
 
     for (my $i = 0; $i< $duration; $i++)
     {
-        statusMessage(sprintf("%s, sleeping (%d)", $message, $duration - $i));
+	my $totalseconds = time() - $progstart;
+
+        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ", 
+                $message,
+                $idleFor/60, $idleFor%60,
+                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100));
         sleep 1;
+	$idleFor++;
+	$idleSeconds++;
     }
 }
 
@@ -1057,7 +1064,7 @@ sub reExecIfRequired()
 {
     # until proven to work with other systems, only attempt a re-exec
     # on linux. 
-    return unless ($^O eq "linux");
+    return unless ($^O eq "linux" || $^O eq "cygwin");
 
     my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
         $ctime,$blksize,$blocks) = stat($0);
@@ -1073,6 +1080,7 @@ sub reExecIfRequired()
         exec "perl", $0, "loop", "reexec", 
             "progressJobs=$progressJobs", 
             "idleSeconds=$idleSeconds", 
+            "idleFor=$idleSeconds", 
             "progstart=$progstart" or die;
     }
 }

@@ -11,6 +11,7 @@ include("../lib/tilenames.inc");
 include("../lib/users.inc");
 include("../lib/versions.inc");
 include("../lib/layers.inc");
+include("../lib/requests.inc");
 
 # Get password from posted form data (format mp=user|pass)
 $Password = $_POST["mp"];
@@ -119,6 +120,8 @@ function SaveMetadata($TileList, $UserID, $VersionID){
   
   SaveUserStats($UserID, $VersionID, count($TileList));
   
+  RemoveFromQueue($TileList);
+  
   # Each element in TileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($TileList as $SqlSnippet){
     
@@ -133,6 +136,16 @@ function SaveMetadata($TileList, $UserID, $VersionID){
   mysql_close();
 }
 
+function RemoveFromQueue($TileList){
+  foreach($TileList as $CSV){
+    list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
+    if($Z == 12){
+      logMsg("Uploaded $X,$Y on $Layer", 4);
+      
+      moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE);
+    }
+  }
+}
 
 function SaveUserStats($UserID, $VersionID, $NumTiles){
   $SQL = 
@@ -258,24 +271,6 @@ function CreateDir($Dir){
   return(1);
 }
 
-#----------------------------------------------------------------------
-# Handles any special-cases to do with uploading a zoom-12 tile
-# (tileset identifier)
-#----------------------------------------------------------------------
-function NotifyOfTileset($X,$Y, $User,$ImageData){
-  # Mark that tileset as "sent to client, but not necessarily done yet"
-  $SQL = sprintf("delete from tiles_queue where `x`=%d and `y`=%d and `sent`=2;",
-    $X,
-    $Y);
-  $Result = mysql_query($SQL);
-
-  $SQL = sprintf("update tiles_queue set `sent`=2, `date_uploaded`=now(), `uploaded_by`='%s' where `x`=%d and `y`=%d and `sent`=1;",
-    mysql_escape_string($User),
-    $X,
-    $Y);
-  $Result = mysql_query($SQL);
-
-}
 #----------------------------------------------------------------------
 # Chooses the name for a temporary directory
 #

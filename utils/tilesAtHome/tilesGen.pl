@@ -555,7 +555,7 @@ sub RenderTile
         $progress += 1;
     }
 
-    if (($progressPercent=$progress*100/63) == 100)
+    if (($progressPercent=$progress*100/(2^($Config{"Layer.$layer.MaxZoom"}-12+1)-1)) == 100)
     {
         statusMessage("Finished $X,$Y for layer $layer", 1);
     }

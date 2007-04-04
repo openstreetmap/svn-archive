@@ -23,16 +23,10 @@
   
   include("../connect/connect.php");
   include("../lib/log.inc");
+  include("../lib/requests.inc");
 
-  $SQL = "select x,y from tiles_queue where `sent`=0 limit 1;";
+  $SQL = "select x,y from tiles_queue where `status`=0 or `status`=1 limit 1;";
   $Result = mysql_query($SQL);
-  
-  if(0){
-    logMsg(sprintf("request from version \"%s\", claims to be user \"%s\"", 
-      addslashes($_GET["version"]), 
-      addslashes($_GET["user"])),
-      4);
-  }
   
   if(mysql_errno()){
     print "XX|3||||error";
@@ -51,16 +45,12 @@
     
   # Call this page with ?test=1 to test the interface without downloading anything
   if($_REQUEST["test"] != 1){
-    # Mark that tileset as "sent to client, but not necessarily done yet"
-    $SQL = sprintf("delete from tiles_queue where `x`=%d and `y`=%d and `sent`=1;",
+    moveRequest(
       $Data["x"],
-      $Data["y"]);
-    $Result = mysql_query($SQL);
-  
-    $SQL = sprintf("update tiles_queue set `sent`=1, `date_taken`=now() where `x`=%d and `y`=%d and `sent`=0;",
-      $Data["x"],
-      $Data["y"]);
-    $Result = mysql_query($SQL);
+      $Data["y"],
+      $Data["status"],
+      2,
+      $_GET["debug"]==1);
   }
 
 ?>

@@ -14,39 +14,34 @@
   ** OJW 2006
   ** License: GNU GPL v2 or at your option any later version
   */
+  include("../../connect/connect.php");
+  include("../../lib/requests.inc");
+  
   ListRenderRequests();
   
   function ListRenderRequests(){
-    # Database connection - connects to MySQL and selects a database
-    include("../../connect/connect.php");
-    RenderList(
-      "Requested",
-      "SELECT * FROM tiles_queue WHERE `sent`=0 ORDER BY date desc limit 30;",
-      "date");
     
-    RenderList(
-      "Being rendered",
-      "SELECT * FROM tiles_queue WHERE `sent`=1 ORDER BY date desc limit 30;",
-      "date_taken");
-      
-    RenderList(
-      "Completed",
-      "SELECT * FROM tiles_queue WHERE `sent`=2 ORDER BY date desc limit 30;",
-      "date_uploaded");
+    RenderList("Pending", REQUEST_PENDING, "Date requested");
+    RenderList("New", REQUEST_NEW, "Date requested");
+    RenderList("Active", REQUEST_ACTIVE, "Date taken by renderer");
+    RenderList("Completed", REQUEST_DONE, "Date uploaded");
     
-    print "<p><i>(max 30 requests shown)</i></p>";
+    print "<p><i>max 30 requests shown in each categeory</i></p>";
+    print "<p><i>*may not link to the correct layer</i></p>";
+
     }
     
-  /* Show a filtered view of rendering requests
-  **  * Title - what to call this list
-  **  * SQL - SQL statement which gives the list
-  **  * Datefield - which of the datetime fields to display
-  */
-  function RenderList($Title, $SQL, $DateField){
+  function RenderList($Title, $Status, $DateLabel="Date"){
+  
+    $SQL = sprintf(
+      "SELECT * FROM tiles_queue WHERE `status`=%d ORDER BY date desc limit 30;",
+      $Status);
+      
     # SQL query to get those records
     $Result = mysql_query($SQL);
     
-    print("<h2>$Title</h2>\n");
+    print("<h2>$Title (status=$Status)</h2>\n");
+    
     # Check for SQL errors
     if(mysql_error()){
       printf("<p>%s</p>\n", htmlentities(mysql_error()));
@@ -61,32 +56,36 @@
       return;
       }
     
-    # printf("<p>%d areas requested since %s</p>\n", $NumRows, $DateLimit);
-    
     # Display the logfile itself, as a table
     print "<table border=\"1\" cellpadding=\"5\">";
   
     # Table header
-    print(TableRow(Array("Tileset", "Source", "Priority", $DateField, "Uploaded by")));
+    print(TableRow(Array("Tileset", "Source", "Status", "Priority", $DateLabel,"Tile details*")));
     
     # For each entry...
     while($Data = mysql_fetch_assoc($Result)){
+      $X = $Data["x"];
+      $Y = $Data["y"];
+      $Z = 12;
       
-      $Link = sprintf("../../Browse/?x=%d&amp;y=%d&amp;z=12", $Data["x"],$Data["y"]);
+      $BrowseURL = sprintf("../../Browse/?x=%d&amp;y=%d&amp;z=12",$X,$Y,$Z);
+      $DetailsURL = sprintf("../../Tiles/tile.php/%d/%d/%d.png_details",$Z,$X,$Y);
       
-      # Logfile entry
+      $TileHtml = sprintf("<a href=\"%s\">%d,%d</a>", $BrowseURL, $X, $Y);
+      $DetailsHtml = sprintf("<a href=\"%s\">...</a>", $DetailsURL);
+      
       print(TableRow(Array(
-        sprintf("<a href=\"%s\">%d,%d</a>", $Link,$Data["x"],$Data["y"]),
+        $TileHtml,
         htmlentities($Data["src"]),
+        $Data["status"],
         $Data["priority"],
-        $Data[$DateField],
-        $Data["uploaded_by"])));
-      
+        $Data["date"],
+        $DetailsHtml)));
     }
     print "</table>\n";
   }
 
-  # Displays an array, as items in an HTML table
+  # Displays an array of items in an HTML table
   function TableRow($Array){
     return("<tr><td>".implode("</td>\n<td>", $Array)."</td></tr>\n");
   }

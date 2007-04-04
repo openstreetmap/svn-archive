@@ -1,5 +1,6 @@
 <?php
   include("../../connect/connect.php");
+  include("../../lib/requests.php");
   
   showTileRequestStatus($_GET["x"], $_GET["y"]);
   
@@ -10,7 +11,7 @@
   
   function tileRequestStatus($X,$Y){
     $SQL = sprintf(
-      "select * from tiles_queue where `x`=%d and `y`=%d order by `sent` limit 1;",
+      "select * from tiles_queue where `x`=%d and `y`=%d order by `status` limit 1;",
       $X,
       $Y);
     
@@ -20,13 +21,17 @@
       }
     
     $Data = mysql_fetch_assoc($Result);
-    switch($Data["sent"]){
-      case 0: return("1|REQUESTED");
-      case 1: return("1|RENDERING");
-      case 2: return("0|HISTORICAL");
-      default: return("0|ERROR_UNKNOWN_STATUS");
+    switch($Data["status"]){
+      case REQUEST_PENDING:
+      case REQUEST_NEW:
+        return("1|REQUESTED");
+      case REQUEST_ACTIVE:
+        return("1|RENDERING");
+      case REQUEST_DONE:
+        return("0|HISTORICAL");
+      default:
+        return("0|ERROR_UNKNOWN_STATUS");
     }
-    
   }
     
 

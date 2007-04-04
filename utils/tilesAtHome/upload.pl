@@ -27,7 +27,7 @@ use tahconfig;
 #-----------------------------------------------------------------------------
 
 # conf file, will contain username/password and environment info
-my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf");
+my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 my $ZipFileCount = 0;
 
 my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
@@ -58,20 +58,25 @@ my $TileDir = $Config{WorkingDirectory};
 # Group and upload the tiles
 statusMessage("Searching for tiles in $TileDir");
 opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
-my @tiles = grep { /tile_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
+# compile a list of the "Prefix" values of all configured layers,
+#     # separated by |
+my $allowedPrefixes = join("|",
+  map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
+
+my @tiles = grep { /($allowedPrefixes)_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
 closedir($dp);
 
 while (uploadTileBatch(
   $TileDir, 
   $TileDir . "/gather", 
-  $ZipDir)) {};
+  $ZipDir, $allowedPrefixes)) {};
 
 #-----------------------------------------------------------------------------
 # Moves tiles into a "gather" directory until a certain size is reached,
 # then compress and upload those files
 #-----------------------------------------------------------------------------
 sub uploadTileBatch(){
-  my ($TileDir, $TempDir, $OutputDir) = @_;
+  my ($TileDir, $TempDir, $OutputDir, $allowedPrefixes) = @_;
   my ($Size,$Count) = (0,0);
   my $MB = 1024*1024;
   my $SizeLimit = $Config{"UploadChunkSize"} * $MB;
@@ -88,7 +93,7 @@ sub uploadTileBatch(){
   while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles)){
     my $Filename1 = "$TileDir/$file";
     my $Filename2 = "$TempDir/$file";
-    if($file =~ /tile_\d+_\d+_\d+\.png$/i){
+    if($file =~ /($allowedPrefixes)_\d+_\d+_\d+\.png$/i){
       $Size += -s $Filename1;
       $Count++;
       

@@ -3,22 +3,31 @@
 header("Content-type: text/plain");
 include("../lib/tilenames.inc");
 include("../lib/users.inc");
+include("../lib/layers.inc");
 include("../connect/connect.php");
 
 
-if(preg_match("{/(\d+)/(\d+)/(\d+)\.png_(\w+)}", $_SERVER["REQUEST_URI"], $Matches)){
+if(preg_match("{(\w+)\.php/(\d+)/(\d+)/(\d+)\.png_(\w+)}", $_SERVER["REQUEST_URI"], $Matches)){
+  
+  $LayerID = checkLayer($Matches[1]);
+  if(LayerID < 0){
+    FormatOutput(0, $Matches[5]);
+    return;
+    }
   
   DisplayDetails(
-    $Matches[2],
+    $LayerID,
     $Matches[3],
-    $Matches[1],
-    $Matches[4]);
+    $Matches[4],
+    $Matches[2],
+    $Matches[5]);
+    
 }
 
-function DisplayDetails($X,$Y,$Z,$Mode){
+function DisplayDetails($LayerID,$X,$Y,$Z,$Mode){
   
   // Check tile x,y,z is valid
-  if(!TileValid($X,$Y,$Z)){
+  if(!TileValid($X,$Y,$Z, layerDir($LayerID))){
     FormatOutput(0, $Mode);
     return;
   }
@@ -28,7 +37,7 @@ function DisplayDetails($X,$Y,$Z,$Mode){
     printf("Requested %d, %d, %d\n", $X,$Y,$Z);
   
   // Find the tile in the database
-  $SQL = sprintf("select size, user, unix_timestamp(`date`) as unixtime from tiles_meta where `x`=%d and `y`=%d and `z`=%d and `type`=1 limit 1", $X,$Y,$Z);
+  $SQL = sprintf("select size, user, unix_timestamp(`date`) as unixtime from tiles_meta where `x`=%d and `y`=%d and `z`=%d and `type`=%d limit 1", $X,$Y,$Z, $LayerID);
   $Result = mysql_query($SQL);
   
   // Check for errors

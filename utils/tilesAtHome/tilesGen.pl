@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-print STDERR "HALLOOOO\n\n";
 use LWP::Simple;
 use LWP::UserAgent;
 use Math::Trig;

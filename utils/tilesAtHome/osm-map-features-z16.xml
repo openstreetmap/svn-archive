@@ -1039,6 +1039,13 @@
                 stroke-width: 0.05px;
              }
 
+            .highway-footway-name {
+                fill: black;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 1px;
+             }
+
+
             .highway-unsurfaced-ref {
                 stroke-width: 0.3px;
                 font-size: 2px;

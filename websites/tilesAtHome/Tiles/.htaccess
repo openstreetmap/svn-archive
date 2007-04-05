@@ -12,6 +12,3 @@ RewriteRule ^0*([0-9]{2})/0*([0-9]{3})([0-9]{3})/0*([0-9]{3})([0-9]{3}).png data
 
 RewriteRule ^(.*)_exists details.php
 RewriteRule ^(.*)_details details.php
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* db.php?tile=%{REQUEST_URI}

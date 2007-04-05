@@ -1,3 +1,4 @@
+ErrorDocument 404 /~ojw/Tiles/404.png
 RewriteEngine on
 RewriteBase /~ojw/Tiles/
 

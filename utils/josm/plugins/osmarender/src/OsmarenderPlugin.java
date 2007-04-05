@@ -95,7 +95,7 @@ public class OsmarenderPlugin extends Plugin {
         JMenuBar menu = Main.main.menu;
         view = null;
         for (int i = 0; i < menu.getMenuCount(); ++i) {
-            if (menu.getMenu(i) != null && tr("View").equals(menu.getMenu(i).getName())) {
+            if (menu.getMenu(i) != null && tr("View").equals(menu.getMenu(i).getText())) {
                 view = menu.getMenu(i);
                 break;
             }

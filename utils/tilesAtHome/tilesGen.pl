@@ -84,11 +84,17 @@ mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
+
+# set message output beautification vars
 my $lastmsglen = 0;
+
+# keep track of time running
 my $progstart = time();
 my $idleSeconds = 0;
 my $idleFor = 0;
 my $dirent; 
+
+my $currentSubTask;
 
 # Handle the command-line
 my $Mode = shift();
@@ -206,6 +212,7 @@ sub upload{
   my $UploadScript = "$Bin/upload.pl $progressJobs $progressPercent";
   runCommand("Uploading", $UploadScript);
 }
+
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------
@@ -319,6 +326,7 @@ sub GenerateTileset {
   
   $progress = 0;
   $progressJobs++;
+  $currentSubTask = "Preproc";
 
   statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), 1);
   
@@ -403,6 +411,10 @@ sub GenerateTileset {
 
     foreach my $layer(split(/,/, $Config{Layers}))
     {
+        #reset progress for each layer
+        $progress=0;
+        $currentSubTask = $layer;
+
         my $maxzoom = $Config{"Layer.$layer.MaxZoom"};
         my $layerDataFile;
 
@@ -411,10 +423,10 @@ sub GenerateTileset {
         {
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
-
+        
         my $Margin = " " x ($Zoom - 8);
         #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
-  
+        
         if ($Config{"Layer.$layer.Preprocessor"} eq "frollo")
         {
             $layerDataFile = "data-$PID-frollo.osm";
@@ -469,7 +481,7 @@ sub GenerateTileset {
             # no preprocessor
             $layerDataFile = $DataFile;
         }
-
+        
         # Add bounding box to osmarender
         # then set the data source
         # then transform it to SVG
@@ -555,7 +567,7 @@ sub RenderTile
         $progress += 1;
     }
 
-    if (($progressPercent=$progress*100/(2^($Config{"Layer.$layer.MaxZoom"}-12+1)-1)) == 100)
+    if (($progressPercent=$progress*100/(2**($Config{"Layer.$layer.MaxZoom"}-12+1)-1)) == 100)
     {
         statusMessage("Finished $X,$Y for layer $layer", 1);
     }
@@ -826,7 +838,7 @@ sub runCommand
 sub svg2png {
   my($Zoom, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
 
-  my $TempFile = $Config{WorkingDirectory}."/$PID.part.png";
+  my $TempFile = $Config{WorkingDirectory}."/$PID.png_part";
   
   my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
 
@@ -1096,7 +1108,7 @@ sub statusMessage
         return;
     }
 
-    my $toprint = sprintf("[#%d %3d%%] %s%s ", $progressJobs, $progressPercent+.5, $msg, ($newline) ? "" : "...");
+    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
     print STDERR "\r";
     print STDERR " " x $lastmsglen;
     print STDERR "\r$toprint";

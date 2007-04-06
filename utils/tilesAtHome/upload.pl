@@ -39,6 +39,8 @@ my $progressJobs = $ARGV[0] or 1;
 my $progressPercent = $ARGV[1] or 0;
 my $lastmsglen;
 
+my $currentSubTask = " upload";
+
 # Upload any ZIP files which are still waiting to go
 if(opendir(ZIPDIR, $ZipDir)){
   my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
@@ -205,7 +207,7 @@ sub statusMessage
         return;
     }
 
-    my $toprint = sprintf("[#%d %3d%%] %s%s ", $progressJobs, $progressPercent+.5, $msg, ($newline) ? "" : "...");
+    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
     print STDERR "\r";
     print STDERR " " x $lastmsglen;
     print STDERR "\r$toprint";

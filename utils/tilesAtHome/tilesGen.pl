@@ -413,6 +413,7 @@ sub GenerateTileset {
     {
         #reset progress for each layer
         $progress=0;
+        $progressPercent=0;
         $currentSubTask = $layer;
 
         my $maxzoom = $Config{"Layer.$layer.MaxZoom"};

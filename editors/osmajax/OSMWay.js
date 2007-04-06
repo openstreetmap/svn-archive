@@ -16,8 +16,22 @@ OpenLayers.Feature.OSMWay.prototype =
 		},
 
 		addSeg: function(sid) {
-			segs.push(sid);
+			this.segs.push(sid);
 		},
+	
+		/*
+		toXML : function() { 
+			var xml = "<way id='" + (this.fid>0 ? this.fid : 0)  +
+						"'>";
+			for(seg in this.segs) {
+				xml += "<seg id='" + this.segs[seg] + "' />";
+			}
+
+			xml += this.tagsToXML();
+			xml += "</way>";	
+			return xml;
+		},
+		*/
 
 		CLASS_NAME : "OpenLayers.Feature.OSMWay"
 });

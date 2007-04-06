@@ -117,7 +117,7 @@
 			{
 				map.addControl(controls[key]);
 			}
-			controls.select.activate();
+			controls.select.deactivate();
 
 			drawControls = {
 				line: new OpenLayers.Control.DrawOSMFeature
@@ -181,9 +181,9 @@
   <body onload="init()">
     <div id="map"></div>
 	<p>
-	<input type='button' value='navigate' onclick='nav()' id='navbtn'/>
-	<input type='button' value='select' onclick='sel()' id='selbtn'
+	<input type='button' value='navigate' onclick='nav()' id='navbtn'
 		disabled='disabled'/>
+	<input type='button' value='select' onclick='sel()' id='selbtn' />
 	<input type='button' value='draw' onclick='drw()' id='drwbtn'/>
 	<input type='button' value='change' onclick='chng()' id='chngbtn' />
 	</p>

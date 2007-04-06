@@ -15,10 +15,10 @@ OpenLayers.Feature.OSM.prototype =
 			this.tags[k] = v;
 		},
 
-		tagsToString: function() {
+		tagsToXML: function() {
 			var str = "";
 			for ( k in this.tags) {
-				str += k + "=" + this.tags[k] + ";";
+				str += "<tag k='" + k + "' v='" + this.tags[k] + "' />";
 			}
 			return str;
 		},

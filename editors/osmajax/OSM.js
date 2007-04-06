@@ -51,15 +51,28 @@ OpenLayers.Layer.OSM.prototype =
 		
 			// Create point feature 
 			var point = new OpenLayers.Geometry.Point(lon,lat);
+			//var point = new OpenLayers.Geometry.OSMNode(lon,lat);
+			//point.id = id;
 
 			var tags = n[count].getElementsByTagName("tag");
 			for(var count2=0; count2<tags.length; count2++)
 			{
 				var k = tags[count2].getAttribute("k");
 				var v = tags[count2].getAttribute("v");
+				//point.addTag(k,v);
 			}
 
 			this.nodes[id] = point;
+
+			// If the node is a point of interest (i.e. contains tags other
+			// than 'created_by'), add it to the vector layer as a point 
+			// feature.
+			/*
+			if (point.isPOI())
+			{
+				this.addFeatures(new OpenLayers.Feature.Vector(point));
+			}
+			*/
 		}
 
 		for(var count=0; count<s.length; count++)
@@ -75,11 +88,22 @@ OpenLayers.Layer.OSM.prototype =
 			if(this.nodes[from] && this.nodes[to])
 			{
 				this.segments[id] = [ from, to ]; 
+				/*
+				this.segments[id] = new OSMSegment();
+				this.segments[id].id = id;
+				this.segments[id].setNodes(from,to);
+				var tags = s[count].getElementsByTagName("tag");
+				for(var count2=0; count2<tags.length; count2++)
+				{
+					var k = tags[count2].getAttribute("k");
+					var v = tags[count2].getAttribute("v");
+					this.segments[id].addTag(k,v);
+				}
+				*/
 			}
 		}
 
-		// Ways are not OpenLayers features, but just collections of segment
-		// IDs. Nonetheless we parent each segment feature with the way ID.
+		// Ways become OpenLayers LineStrings. 
 		for(var count=0; count<w.length; count++)
 		{
 			var id = w[count].getAttribute("id");

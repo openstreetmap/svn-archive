@@ -17,8 +17,7 @@ function moveRequest($X, $Y, $FromMode, $ToMode, $Debug = 0){
  
   if($Debug)
     printf("\n\n%s", $SqlDelete);
-  else
-    mysql_query($SqlDelete);
+  mysql_query($SqlDelete);
 
   $SqlMove = sprintf(
     "update %s set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `status`=%d;",
@@ -30,8 +29,7 @@ function moveRequest($X, $Y, $FromMode, $ToMode, $Debug = 0){
   
   if($Debug)
     printf("\n\n%s", $SqlMove);
-  else
-    $Result = mysql_query($SqlMove);
+  $Result = mysql_query($SqlMove);
 }
 
 ?>

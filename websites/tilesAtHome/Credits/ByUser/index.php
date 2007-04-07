@@ -18,6 +18,8 @@ User ID: <input type="text" name="id">
 <?php
 include("../../connect/connect.php");
 include("../../lib/versions.inc");
+include("../../lib/tilenames.inc");
+include("../../lib/layers.inc");
 
 showByUser($_GET["id"]);
 
@@ -45,25 +47,26 @@ function showByUser($User){
   while($Data = mysql_fetch_assoc($Result)){
     if(rand() % $Divisor == 1){
       $Row = array();
+
+      $X = $Data["x"];
+      $Y = $Data["y"];
+      $Z = $Data["z"];
       
-      $URL = sprintf(
-        "../../Browse/?z=%d&amp;x=%d&amp;y=%d",
-        $Data["z"],
-        $Data["x"],
-        $Data["y"]);
+      $URL = sprintf("../../Browse/?z=%d&amp;x=%d&amp;y=%d", $Z, $X, $Y);
         
       array_push($Row, sprintf(
-      "<a href=\"%s\"><img src=\"/~ojw/Tiles/tile.php/%d/%d/%d.png\" width=\"256\" height=\"256\"></a>",
+      "<a href=\"%s\"><img src=\"%s\" width=\"256\" height=\"256\"></a>",
         $URL,
+        TileURL($X,$Y,$Z,LayerName($Data["type"])),
         $Data["z"],
         $Data["x"],
         $Data["y"]));
       
       array_push($Row, sprintf(
       "%d, %d at zoom-%d, type %d<br>%s<br>%1.1f KB",
-        $Data["x"],
-        $Data["y"],
-        $Data["z"],
+        $X,
+        $Y,
+        $Z,
         $Data["type"],
         htmlentities($Data["date"]),
         $Data["size"]/1024));

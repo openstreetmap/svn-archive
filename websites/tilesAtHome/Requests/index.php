@@ -25,7 +25,7 @@
   include("../lib/log.inc");
   include("../lib/requests.inc");
 
-  $SQL = "select x,y from tiles_queue where `status`=0 or `status`=1 limit 1;";
+  $SQL = "select x,y,status from tiles_queue where `status`=0 or `status`=1 limit 1;";
   $Result = mysql_query($SQL);
   
   if(mysql_errno()){
@@ -43,14 +43,11 @@
     $Data["y"],
     12);
     
-  # Call this page with ?test=1 to test the interface without downloading anything
-  if($_REQUEST["test"] != 1){
-    moveRequest(
-      $Data["x"],
-      $Data["y"],
-      $Data["status"],
-      2,
-      $_GET["debug"]==1);
-  }
+  moveRequest(
+    $Data["x"],
+    $Data["y"],
+    $Data["status"],
+    2,
+    $_GET["debug"]==1);
 
 ?>

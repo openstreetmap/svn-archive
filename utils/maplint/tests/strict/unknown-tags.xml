@@ -36,14 +36,9 @@
                     (@k!='religion') and
                     (@k!='denomination') and
                     (@k!='source') and
-                    (@k!='access') and
-                    (@k!='foot') and
-                    (@k!='bicycle') and
-                    (@k!='motorcycle') and
-                    (@k!='maxspeed') and
                     (@k!='is_in') and
-                    (@k!='horse') and
                     (@k!='time') and
+                    (@k!='access') and
                     (@k!='name')">
                 <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>
@@ -78,6 +73,12 @@
                     (@k!='source') and
                     (@k!='time') and
                     (@k!='abutters') and
+                    (@k!='maxspeed') and
+                    (@k!='access') and
+                    (@k!='foot') and
+                    (@k!='bicycle') and
+                    (@k!='motorcycle') and
+                    (@k!='horse') and
                     (@k!='name')">
 
                 <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>

@@ -14,8 +14,7 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
     
-  // Find anything older than a certain time-limit that's still
-  // in the "being done" queue, and re-request it
+  // Find old requests in the "active" queue
   $AgeLimit = 6; // hours
   $SQL = sprintf(
     "select * from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 

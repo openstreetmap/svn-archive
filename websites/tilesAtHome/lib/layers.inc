@@ -34,6 +34,18 @@ function layerDir($ID){
       return("");
     }
 }
+function layerName($ID){
+  switch($ID){
+    case 1:
+      return("tile");
+    case 2:
+      return("cycle");
+    case 3:
+      return("maplint");
+    default:
+      return("");
+    }
+}
 
 
 ?>

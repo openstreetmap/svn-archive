@@ -54,8 +54,8 @@ if(opendir(ZIPDIR, $ZipDir)){
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
-    $progress++
-    $progressPercent = $progress * 100 / scalar(@sorted)
+    $progress++;
+    $progressPercent = $progress * 100 / scalar(@sorted);
     statusMessage(scalar(@sorted)." zip files left to upload");
   }
 }

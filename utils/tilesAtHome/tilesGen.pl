@@ -209,7 +209,7 @@ sub uploadIfEnoughTiles
 }
 
 sub upload{
-  my $UploadScript = "$Bin/upload.pl $progressJobs $progressPercent";
+  my $UploadScript = "$Bin/upload.pl $progressJobs";
   runCommand("Uploading", $UploadScript);
 }
 

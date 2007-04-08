@@ -35,14 +35,17 @@ my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
 my @sorted;
 
 # when called from tilesGen, use these for nice display
+my $progress = 0;
 my $progressJobs = $ARGV[0] or 1;
-my $progressPercent = $ARGV[1] or 0;
+my $progressPercent = 0;
+my $currentSubTask;
+ 
 my $lastmsglen;
-
-my $currentSubTask = " upload";
 
 # Upload any ZIP files which are still waiting to go
 if(opendir(ZIPDIR, $ZipDir)){
+  $currentSubTask = "uploadZ";
+  $progress = 0;
   my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
   close ZIPDIR;
   @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
@@ -51,9 +54,18 @@ if(opendir(ZIPDIR, $ZipDir)){
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
+    $progress++
+    $progressPercent = $progress * 100 / scalar(@sorted)
     statusMessage(scalar(@sorted)." zip files left to upload");
   }
 }
+
+$currentSubTask = " upload";
+
+# We calculate % differently this time so we don't need "progress"
+# $progress = 0;
+
+$progressPercent = 0;
 
 my $TileDir = $Config{WorkingDirectory};
 
@@ -67,6 +79,8 @@ my $allowedPrefixes = join("|",
 
 my @tiles = grep { /($allowedPrefixes)_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
 closedir($dp);
+
+my $tileCount = scalar(@tiles);
 
 while (uploadTileBatch(
   $TileDir, 
@@ -89,7 +103,8 @@ sub uploadTileBatch(){
 
   mkdir $TempDir if ! -d $TempDir;
   mkdir $OutputDir if ! -d $OutputDir;
-  
+ 
+  $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
   statusMessage(scalar(@tiles)." tiles to process");
 
   while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles)){
@@ -109,6 +124,7 @@ sub uploadTileBatch(){
   }
   else
   {
+    $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
     statusMessage("upload finished");
     return 0;
   }

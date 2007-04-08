@@ -21,9 +21,30 @@ trlat = bbox[3].to_f
 to = nil
 to = Time.parse(cgi['to']) unless cgi['to'] == ''
 
-if bllat > trlat || bllon > trlon || bllat < -90 || trlat < -90 || bllat > 90 || trlat > 90 || bllon < -180 || trlon < -180 || bllon > 180 || trlon > 180 # ||  ( (trlon - bllon) * (trlat - bllat) ) > (0.0035 * 4)
-  exit BAD_REQUEST
+if bllat > trlat || bllon > trlon
+  cgi.header(
+      "status" => "BAD_REQUEST",
+      "Error" => "The minimum longitude must be less than the maximum longitude, and the minimum latitude must be less than the maximum latitude"
+  )
+  exit
 end
+
+if bllat < -90 || trlat < -90 || bllat > 90 || trlat > 90 || bllon < -180 || trlon < -180 || bllon > 180 || trlon > 180 # ||  ( (trlon - bllon) * (trlat - bllat) ) > (0.0035 * 4)
+  cgi.header(
+      "status" => "BAD_REQUEST",
+      "Error" => "The latitudes must be between -90 and 90, and longitudes between -180 and 180"
+  )
+  exit
+end
+
+if ( (trlon - bllon) * (trlat - bllat) ) > (0.0035 * 4)
+  cgi.header(
+      "status" => "BAD_REQUEST",
+      "Error" => "Your requested bounding box was too large. Either request a smaller area, or use planet.osm"
+  )
+  exit
+end
+
 
 dao = OSM::Dao.instance
 ox = OSM::Ox.new

@@ -49,13 +49,14 @@ if(opendir(ZIPDIR, $ZipDir)){
   my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
   close ZIPDIR;
   @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
+  $zipCount = scalar(@sorted);
   statusMessage(scalar(@sorted)." zip files to upload");
   while(my $File = shift @sorted){
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
     $progress++;
-    $progressPercent = $progress * 100 / scalar(@sorted);
+    $progressPercent = $progress * 100 / $zipCount;
     statusMessage(scalar(@sorted)." zip files left to upload");
   }
 }

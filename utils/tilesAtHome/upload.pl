@@ -83,6 +83,8 @@ closedir($dp);
 
 my $tileCount = scalar(@tiles);
 
+exit if ($tileCount == 0);
+
 while (uploadTileBatch(
   $TileDir, 
   $TileDir . "/gather", 

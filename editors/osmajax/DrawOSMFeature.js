@@ -13,7 +13,7 @@ OpenLayers.Control.DrawOSMFeature.prototype =
 	drawFeature : function(geometry) {
 
 		var ll1, ll2;
-		var prev=null, feature, lastId, thisId, segs = new Array();
+		var prev=null, feat, lastId, thisId, segs = new Array();
 
 		if(geometry instanceof OpenLayers.Geometry.LineString) 
 		{
@@ -25,17 +25,21 @@ OpenLayers.Control.DrawOSMFeature.prototype =
 				var found=false;
 				for(nodeid in this.layer.nodes)	
 				{
-					ll1 = new OpenLayers.LonLat
-							(this.layer.nodes[nodeid].x,
-						 	this.layer.nodes[nodeid].y);
-
-					ll2 = new OpenLayers.LonLat (geometry.components[count].x,
-								geometry.components[count].y);
-
-					if(OpenLayers.Util.distVincenty(ll1,ll2) < 0.01) 
+					if(this.layer.nodes[nodeid]) 
 					{
-						found=nodeid;
-						break;
+						ll1 = new OpenLayers.LonLat
+							(this.layer.nodes[nodeid].point.x,
+						 	this.layer.nodes[nodeid].point.y);
+
+						ll2 = new OpenLayers.LonLat 
+							(geometry.components[count].x,
+							geometry.components[count].y);
+
+						if(OpenLayers.Util.distVincenty(ll1,ll2) < 0.01) 
+						{
+							found=nodeid;
+							break;
+						}
 					} 
 				}
 
@@ -44,23 +48,28 @@ OpenLayers.Control.DrawOSMFeature.prototype =
 				if(found!==false)
 				{
 					alert('point ' + count + ' near an existing node ');
-					geometry.components[count] = this.layer.nodes[nodeid];
+					geometry.components[count] = this.layer.nodes[found].point;
 					thisId = found; 
 				}
 				// If not, add the geometry point to the node list and give 
 				// it a negative ID to indicate it's not in OSM yet.
 				else
 				{
-					alert('point ' + count + ' not near an existing node');
+					//alert('point ' + count + ' not near an existing node');
 					thisId = this.layer.nextNodeFid--;
-					this.layer.nodes[thisId]=geometry.components[count];
+					this.layer.nodes[thisId]=new OSMNode();
+					this.layer.nodes[thisId].point = geometry.components[count];
+					this.layer.nodes[thisId].nid = thisId;
 				}
 
 				// Create a new segment.
 				if(count>0)
 				{
-					this.layer.segments[this.layer.nextSegmentFid] = 
-							[ lastId, thisId ];
+					var segment =	new OSMSegment();
+					segment.id = this.layer.nextSegmentFid;
+					segment.setNodes(this.layer.nodes[lastId], 
+										this.layer.nodes[thisId]);
+					this.layer.segments[this.layer.nextSegmentFid] = segment;
 					segs.push(this.layer.nextSegmentFid--);
 				}
 
@@ -81,5 +90,12 @@ OpenLayers.Control.DrawOSMFeature.prototype =
 		this.featureAdded(feat);
 		alert('added new feature.');
 	},
+
+	featureAdded: function (feature)
+	{
+		// upload the feature to OSM
+		this.layer.uploadNewWay(feature);
+	},
+
 	CLASS_NAME: "OpenLayers.Control.DrawOSMFeature"
 });

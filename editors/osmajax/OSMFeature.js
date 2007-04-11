@@ -18,7 +18,9 @@ OpenLayers.Feature.OSM.prototype =
 		tagsToXML: function() {
 			var str = "";
 			for ( k in this.tags) {
-				str += "<tag k='" + k + "' v='" + this.tags[k] + "' />";
+				if (this.tags[k]!==null) {
+					str += "<tag k='" + k + "' v='" + this.tags[k] + "' />";
+				}
 			}
 			return str;
 		},

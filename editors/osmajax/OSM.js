@@ -1,4 +1,14 @@
 
+function in_array(nodes,nodeid)
+{
+	for(var idx in nodes)
+	{
+		if(nodes[idx].nid == nodeid)
+			return true;
+	}
+	return false;
+}
+
 OpenLayers.Layer.OSM = OpenLayers.Class.create();
 OpenLayers.Layer.OSM.prototype = 
 	OpenLayers.Class.inherit (OpenLayers.Layer.Vector, {
@@ -11,6 +21,8 @@ OpenLayers.Layer.OSM.prototype =
 	nextNodeFid : -1,
 	nextSegmentFid : -1,
 	nextWayFid: -1,
+	numNodesToBeUploaded : 0,
+	numSegsToBeUploaded : 0,
 
 	initialize: function(name,options) {
 		OpenLayers.Layer.Vector.prototype.initialize.apply(this,arguments);
@@ -18,7 +30,6 @@ OpenLayers.Layer.OSM.prototype =
 		this.segments = new Array();
 		this.ways = new Array();
 		this.routeTypes = new RouteTypes();
-
 	},
 
 	load: function(bounds) {
@@ -50,16 +61,20 @@ OpenLayers.Layer.OSM.prototype =
 
 		
 			// Create point feature 
-			var point = new OpenLayers.Geometry.Point(lon,lat);
-			//var point = new OpenLayers.Geometry.OSMNode(lon,lat);
-			//point.id = id;
+			//var point = new OpenLayers.Geometry.Point(lon,lat);
+			var point = new OSMNode();
+			point.point = new OpenLayers.Geometry.Point(lon,lat);
+			point.nid = id;
 
 			var tags = n[count].getElementsByTagName("tag");
-			for(var count2=0; count2<tags.length; count2++)
+			if(tags)
 			{
-				var k = tags[count2].getAttribute("k");
-				var v = tags[count2].getAttribute("v");
-				//point.addTag(k,v);
+				for(var count2=0; count2<tags.length; count2++)
+				{
+					var k = tags[count2].getAttribute("k");
+					var v = tags[count2].getAttribute("v");
+					point.addTag(k,v);
+				}
 			}
 
 			this.nodes[id] = point;
@@ -67,13 +82,14 @@ OpenLayers.Layer.OSM.prototype =
 			// If the node is a point of interest (i.e. contains tags other
 			// than 'created_by'), add it to the vector layer as a point 
 			// feature.
-			/*
+			
 			if (point.isPOI())
 			{
-				this.addFeatures(new OpenLayers.Feature.Vector(point));
+				this.addFeatures(new OpenLayers.Feature.OSM(point.point));
 			}
-			*/
+			
 		}
+		//alert('nodes set up');
 
 		for(var count=0; count<s.length; count++)
 		{
@@ -87,21 +103,24 @@ OpenLayers.Layer.OSM.prototype =
 			// this.nodes is an array of node features
 			if(this.nodes[from] && this.nodes[to])
 			{
-				this.segments[id] = [ from, to ]; 
-				/*
+				//this.segments[id] = [ from, to ]; 
+				
 				this.segments[id] = new OSMSegment();
 				this.segments[id].id = id;
-				this.segments[id].setNodes(from,to);
+				this.segments[id].setNodes(this.nodes[from], this.nodes[to]);
 				var tags = s[count].getElementsByTagName("tag");
-				for(var count2=0; count2<tags.length; count2++)
+				if(tags)
 				{
-					var k = tags[count2].getAttribute("k");
-					var v = tags[count2].getAttribute("v");
-					this.segments[id].addTag(k,v);
+					for(var count2=0; count2<tags.length; count2++)
+					{
+						var k = tags[count2].getAttribute("k");
+						var v = tags[count2].getAttribute("v");
+						this.segments[id].addTag(k,v);
+					}
 				}
-				*/
 			}
 		}
+		//alert('segments set up');
 
 		// Ways become OpenLayers LineStrings. 
 		for(var count=0; count<w.length; count++)
@@ -114,33 +133,39 @@ OpenLayers.Layer.OSM.prototype =
 
 
 			var segs = w[count].getElementsByTagName("seg");
+				
 
 
 			var t = w[count].getElementsByTagName("tag");
 			//alert('way id : ' + id + ' tags=' +  tags.length);
-
-			var tags = new Array();
-			var polygon=false;
-
-			for(var count2=0; count2<t.length; count2++)
+	
+			if(t)
 			{
-				var k = t[count2].getAttribute("k");
-				var v = t[count2].getAttribute("v");
-				tags[k] = v;
-				if( (k=="natural" && v=="wood") || (k=="natural" && v=="water")
-					|| (k=="natural" && v=="heath"))
+				var tags = new Array();
+				var polygon=false;
+
+				for(var count2=0; count2<t.length; count2++)
 				{
-					polygon=true;
+					var k = t[count2].getAttribute("k");
+					var v = t[count2].getAttribute("v");
+					tags[k] = v;
+					
+
+					// TODO: proper tag testing
+					if( (k=="natural" && v=="wood") || 
+					(k=="natural" && v=="water")
+					|| (k=="natural" && v=="heath"))
+					{
+						polygon=true;
+					}
 				}
 			}
 
 			//alert(curWay.tagsToString());
-			var tp = (this.routeTypes.getType(tags));
+			var tp = this.routeTypes.getType(tags);
 
 			var colour = this.routeTypes.getColour(tp);
 			var width = this.routeTypes.getWidth(tp);
-			//alert('Type: ' + tp + ' colour: ' + colour +  ' width: ' + width);
-
 
 			if(!polygon)
 			{
@@ -156,10 +181,10 @@ OpenLayers.Layer.OSM.prototype =
 						if(wayGeom.components.length==0)
 						{
 							wayGeom.addComponent 
-								(this.nodes[this.segments[sid][0]]);
+								(this.segments[sid].nodes[0].point);
 						}
 						wayGeom.addComponent 
-							(this.nodes[this.segments[sid][1]]);
+							(this.segments[sid].nodes[1].point);
 					}
 				}
 
@@ -167,13 +192,15 @@ OpenLayers.Layer.OSM.prototype =
 							strokeColor: colour, strokeOpacity: 1,
 							strokeWidth: width };
 				var curWay = new OpenLayers.Feature.OSMWay(wayGeom,null,style);
-				curWay.setFid(id);
+				curWay.fid=id;
 				curWay.tags = tags;
 				curWay.setType(tp);
+				curWay.segs = segids;
 				this.addFeatures(curWay);
 			}
 			}
 		}
+		//alert('ways set up');
 	},
 
 	/*
@@ -182,7 +209,6 @@ OpenLayers.Layer.OSM.prototype =
 	addFeatures : function(feature) {
 		// default addFeatures()
 
-		// Test we don't have an existing feature there...
 		OpenLayers.Layer.Vector.prototype.addFeatures.apply(this,arguments);
 
 
@@ -195,6 +221,166 @@ OpenLayers.Layer.OSM.prototype =
 				feature.fid=this.nextWayFid--;
 			}
 			this.ways[feature.fid] = feature;
+		}
+	},
+
+	uploadNewWay: function(way)
+	{
+
+		// Loop through nodes
+		// Upload nodes with ID > 0
+		// Count nodes with ID>0, in callback function reduce 
+		// count by 1
+		// when count=0, start 
+
+		if(way.fid < 0)
+		{
+			alert('uploadNewWay(): uploading a new way');
+			var newNodes = new Array();
+			var info = { 'way' : way, 'node' : null }; 
+
+			for(var count=0; count<way.segs.length; count++)
+			{
+				if(this.segments[way.segs[count]].nodes[0].nid<0 && 
+			!in_array(newNodes,this.segments[way.segs[count]].nodes[0].nid))
+				{
+					newNodes.push(this.segments[way.segs[count]].nodes[0]);
+					alert('seg: ' + way.segs[count] + 
+							' adding new node ID ' +
+							this.segments[way.segs[count]].nodes[0].nid);
+				}
+				if(this.segments[way.segs[count]].nodes[1].nid<0 &&
+			!in_array(newNodes,this.segments[way.segs[count]].nodes[1].nid))
+				{
+					newNodes.push(this.segments[way.segs[count]].nodes[1]);
+					alert('seg: ' + way.segs[count] + 
+							' adding new node ID ' +
+							this.segments[way.segs[count]].nodes[1].nid);
+				}
+			}
+
+			this.numNodesToBeUploaded = newNodes.length;
+			alert('uploadNewWay(): no. of new nodes: ' + 
+				this.numNodesToBeUploaded);
+
+			for(var count=0; count<newNodes.length; count++)
+			{
+				var info1 = new Array();
+				info1.node = newNodes[count];
+				info1.way = way;
+				newNodes[count].upload
+					('http://www.free-map.org.uk/vector/dummy.php',
+						this,this.newWayNodeHandler,info1);
+			}
+
+			// If no nodes to upload, go straight to uploading segments
+			if(!newNodes.length)
+			{
+				this.uploadWaySegments(way);
+			}
+		}
+	},
+
+	newWayNodeHandler: function(xmlHTTP, info)
+	{
+		alert('newWayNodeHandler: old id was: ' + info.node.nid +
+			' new id is: ' + xmlHTTP.responseText );
+		var nodeid = parseInt(xmlHTTP.responseText);
+
+		// Blank original negative node index
+		this.nodes[info.node.nid] = null;
+		info.node.nid = nodeid;
+
+		// Index the new node
+		this.nodes[info.node.nid] = info.node;
+
+		if(--this.numNodesToBeUploaded==0)
+		{
+			alert('all nodes have an ID. doing segments');
+			this.uploadWaySegments(info.way);
+		}
+	},
+
+	uploadWaySegments: function(way)
+	{
+		alert('uploadWaySegments');
+		var newSegs = new Array();
+		var info = { 'way' : way, 'segment' : null }; 
+
+		for(var count=0; count<way.segs.length; count++)
+		{
+			if(way.segs[count] < 0)
+			{
+				newSegs.push(this.segments[way.segs[count]]);
+			}
+		}
+
+		this.numSegsToBeUploaded = newSegs.length;
+		alert('uploadWaySegments: number of segments=' + newSegs.length);
+		if(newSegs.length)
+		{
+			for(var count=0; count<newSegs.length; count++)
+			{
+				var info1 = new Array();
+				info1.segment = newSegs[count];
+				info1.way = way;
+				newSegs[count].upload
+					('http://www.free-map.org.uk/vector/dummy.php',
+						this,this.newWaySegmentHandler,info1);
+			}
+		}
+		else
+		{
+			way.upload('http://www.free-map.org.uk/vector/dummy.php',
+						this,this.wayDone);
+		}
+	},
+
+	newWaySegmentHandler : function(xmlHTTP, info)
+	{
+		var segid = parseInt(xmlHTTP.responseText);
+		alert('newWaySegmentHandler: old id was: ' + info.segment.id +
+			' new id is: ' + xmlHTTP.responseText );
+
+		// Blank original negative segment index
+		this.segments[info.segment.id] = null;
+
+		// Change the segment ID in the parent way
+		for (var count=0; count<info.way.segs.length; count++)
+		{
+			if(info.way.segs[count] == info.segment.id)
+				info.way.segs[count] = segid;
+		}
+
+		info.segment.id = segid;
+
+		// Index the new segment
+		this.segments[info.segment.id] = info.segment;
+
+
+		if(--this.numSegsToBeUploaded==0)
+		{
+			alert('done all segments, now doing the way');
+			info.way.upload('http://www.free-map.org.uk/vector/dummy.php',
+							this,this.wayDone);
+		}
+	},
+
+	wayDone : function(xmlHTTP,info) {
+
+		// If info was passed it's a new way
+		if(info) {
+			var wayid = parseInt(xmlHTTP.responseText);
+			alert('way uploaded. Way ID=' + wayid);
+
+			// Blank original negative node index
+			this.ways[info.fid] = null;
+			info.fid = wayid;
+
+			// Index the new node
+			this.ways[info.fid] = info;
+
+			alert('done.');
 		}
 	},
 

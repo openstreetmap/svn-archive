@@ -10,21 +10,26 @@
     <script src="http://www.openlayers.org/dev/lib/OpenLayers.js"></script>
     <script src="OSM.js"></script>
     <script src="OSMFeature.js"></script>
+    <script src="OSMNode.js"></script>
     <script src="OSMSegment.js"></script>
     <script src="OSMWay.js"></script>
     <script src="routetypes.js"></script>
     <script src="DrawOSMFeature.js"></script>
+    <script src="ajax.js"></script>
     <!--<script src="../lib/Firebug/debug.js"></script>-->
     <script type="text/javascript">
         var map, controls, drawControls;
 		var vectorLayer;
 		var selectedFeature;
 
-		function selectUp(geometry)
+		function selectUp(f)
 		{
-			var f = geometry.feature;
-			alert('You selected a ' + f.type + ' with an ID of ' + f.fid);
-			selectedFeature = f.fid;
+			if(f instanceof OpenLayers.Feature.OSMWay)
+			{
+				alert('You selected a ' + f.type + ' with an ID of ' + f.fid);
+				selectedFeature = f; 
+				alert('XML: ' + f.toXML());
+			}
 
 			/*
 			// If we select a segment, add ID to the list of selected segments
@@ -53,22 +58,27 @@
 		{
 			if(selectedFeature)
 			{
-				vectorLayer.ways[selectedFeature].setType(t);
+				selectedFeature.setType(t);
 				var newTags = vectorLayer.routeTypes.getTags(t);
 				if(newTags)
 				{
 					for(tag in newTags)
 					{
-						vectorLayer.ways[selectedFeature].tags[tag] = 
-								newTags[tag];
+						selectedFeature.tags[tag] = newTags[tag];
 					}
-					var colour = vectorLayer.routeTypes.getColour(t);
-					var width = vectorLayer.routeTypes.getWidth(t);
-					var style = { fillColor: colour, fillOpacity: 0.4,
-							strokeColor: colour, strokeOpacity: 1,
-							strokeWidth: width };
-					vectorLayer.redrawFeature(selectedFeature,style);
-					vectorLayer.ways[selectedFeature].style=style;
+
+					// Blank any tags which should no longer be there
+					for(tag in selectedFeature.tags)
+					{
+						if(!newTags[tag])
+							selectedFeature.tags[tag]=null;
+					}
+
+					var URL = 'http://www.free-map.org.uk/common/osmproxy2.php'
+							+ '?call=way&id=' + selectedFeature.fid;
+
+					selectedFeature.upload
+										( URL, null, refreshStyle );
 				}
 				else
 				{
@@ -81,6 +91,20 @@
 			}
 		}
 
+		function refreshStyle(xmlHTTP,way)
+		{
+			alert('Changes uploaded to server. Response=' + 
+				xmlHTTP.responseText);
+			var t = way.type;
+			var colour = vectorLayer.routeTypes.getColour(t);
+			var width = vectorLayer.routeTypes.getWidth(t);
+			var style = { fillColor: colour, fillOpacity: 0.4,
+					strokeColor: colour, strokeOpacity: 1,
+					strokeWidth: width };
+			vectorLayer.redrawFeature(way.fid,style);
+			way.style=style;
+		}
+
         function init(){
             map = new OpenLayers.Map( $('map') );
             var layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
@@ -91,7 +115,7 @@
             // create a point feature
             var point = new OpenLayers.Geometry.Point(-0.72, 51.05);
             var pointFeature = new OpenLayers.Feature.Vector(point);
-			pointFeature.setFid(390356);
+			pointFeature.fid=390356;
 			vectorLayer.addFeatures(pointFeature);
             
             // create a line feature from a list of points
@@ -176,6 +200,31 @@
 				alert('chng(): no selected feature');
 			}
 		}
+
+		function placeSearch()
+		{
+			var loc = document.getElementById('search').value;
+			var country = document.getElementById('country').value;
+			ajaxrequest("http://www.free-map.org.uk/common/geocoder_ajax.php", 
+				'POST',"place="+loc+"&country="+country, searchCallback);
+		}
+
+		function searchCallback(xmlHTTP, addData)
+		{
+			var latlon = xmlHTTP.responseText.split(",");
+			if(latlon[0]!="0" && latlon[1]!="0")
+			{
+				var normLL = new OpenLayers.LonLat
+					(parseFloat(latlon[1]),parseFloat(latlon[0]));
+				map.setCenter(normLL, map.getZoom() );
+				var bounds = map.getExtent();
+				vectorLayer.load(bounds);
+			}
+			else
+			{
+				alert("That place is not in the database");
+			}
+		}
     </script>
   </head>
   <body onload="init()">
@@ -186,6 +235,19 @@
 	<input type='button' value='select' onclick='sel()' id='selbtn' />
 	<input type='button' value='draw' onclick='drw()' id='drwbtn'/>
 	<input type='button' value='change' onclick='chng()' id='chngbtn' />
+	<input id='search'/>
+	<select id='country'>
+	<option>uk</option>
+	<option>fr</option>
+	<option>de</option>
+	<option>it</option>
+	<option>se</option>
+	<option>no</option>
+	<option>es</option>
+	<option>be</option>
+	<option>nl</option>
+	</select>
+	<input type='button' value='Search' onclick='placeSearch()' />
 	</p>
 
   </body>

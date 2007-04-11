@@ -72,6 +72,13 @@ function RouteTypes()
 				  colour : 'gray',
 				  width : 4
 				},
+				river:
+				{
+					conditions:
+					{waterway: 'river' },
+					colour: 'blue',
+					width: 4
+				},
 				unknown :
 				{ colour : 'gray',
 				  width : 4 
@@ -100,27 +107,29 @@ function RouteTypes()
 					//alert('this key is in the supplied keyvals');
 					for(suppliedKey in kv)
 					{
-						//alert('suppliedKey=' + suppliedKey);
-						// Matching keys/values - increase match count
-						if(conditionKey==suppliedKey && 
+						if(suppliedKey[kv]!==null)
+						{
+							//alert('suppliedKey=' + suppliedKey);
+							// Matching keys/values - increase match count
+							if(conditionKey==suppliedKey && 
 							rt[routeType]['conditions'][conditionKey]==
 							kv[suppliedKey])
-						{
-							//alert('match');
-							match++;
-						}
-						// Matching keys but non-matching values - not a match
-						else if ( (conditionKey==suppliedKey && 
-						rt[routeType]['conditions'][conditionKey]!=
-						kv[suppliedKey])  )
-						{
-							//alert('mismatch');
-							match=0;
-							mismatch=true;
-							break;
+							{
+								//alert('match');
+								match++;
+							}
+							// Matching keys but non-matching values-not a match
+							else if ( (conditionKey==suppliedKey && 
+							rt[routeType]['conditions'][conditionKey]!=
+							kv[suppliedKey])  )
+							{
+								//alert('mismatch');
+								match=0;
+								mismatch=true;
+								break;
+							}
 						}
 					}
-
 				}
 				else
 				{

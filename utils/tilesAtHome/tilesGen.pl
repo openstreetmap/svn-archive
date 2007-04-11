@@ -380,7 +380,7 @@ sub GenerateTileset {
             if (-s $partialFile == 0)
             {
                 printf("No data here either\n");
-                return if ($Main::Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+                return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
                 exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
             }
             push(@{$filelist}, $partialFile);
@@ -1155,7 +1155,6 @@ sub talkInSleep
     for (my $i = 0; $i< $duration; $i++)
     {
 	my $totalseconds = time() - $progstart;
-
         statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ", 
                 $message,
                 $idleFor/60, $idleFor%60,

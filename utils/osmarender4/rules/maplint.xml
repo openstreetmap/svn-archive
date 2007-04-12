@@ -53,34 +53,34 @@
         </layer>
 
         <layer name="Maplint">
-<!--            <rule e="way" k="maplint:notice" v="*">
+            <rule e="way" k="maplint:notice" v="*">
                 <line class="maplint-way-notice-casing"/>
                 <line class="maplint-way-notice-core"/>
-            </rule>-->
+            </rule>
+            <rule e="segment" k="maplint:notice" v="*">
+                <line class="maplint-segment-notice"/>
+            </rule>
+            <rule e="node" k="maplint:notice" v="*">
+                <circle r="4" class="maplint-node-notice"/>
+            </rule>
+
             <rule e="way" k="maplint:warning" v="*">
                 <line class="maplint-way-warning-casing"/>
                 <line class="maplint-way-warning-core"/>
             </rule>
+            <rule e="segment" k="maplint:warning" v="*">
+                <line class="maplint-segment-warning"/>
+            </rule>
+            <rule e="node" k="maplint:warning" v="*">
+                <circle r="4" class="maplint-node-warning"/>
+            </rule>
+
             <rule e="way" k="maplint:error" v="*">
                 <line class="maplint-way-error-casing"/>
                 <line class="maplint-way-error-core"/>
             </rule>
-
-            <rule e="segment" k="maplint:notice" v="*">
-                <line class="maplint-segment-notice"/>
-            </rule>
-            <rule e="segment" k="maplint:warning" v="*">
-                <line class="maplint-segment-warning"/>
-            </rule>
             <rule e="segment" k="maplint:error" v="*">
                 <line class="maplint-segment-error"/>
-            </rule>
-
-            <rule e="node" k="maplint:notice" v="*">
-                <circle r="4" class="maplint-node-notice"/>
-            </rule>
-            <rule e="node" k="maplint:warning" v="*">
-                <circle r="4" class="maplint-node-warning"/>
             </rule>
             <rule e="node" k="maplint:error" v="*">
                 <circle r="4" class="maplint-node-error"/>
@@ -173,9 +173,9 @@
         </layer>
 
         <layer name="Maplint text">
-<!--            <rule e="segment|way" k="maplint:notice" v="*">
+            <rule e="segment|way" k="maplint:notice" v="*">
                 <text k="maplint:notice" startOffset="50%" class='maplint-text' dy="0.33" />
-            </rule>-->
+            </rule>
             <rule e="segment|way" k="maplint:warning" v="*">
                 <text k="maplint:warning" startOffset="50%" class='maplint-text' dy="0.33" />
             </rule>
@@ -280,7 +280,7 @@
                 stroke-width: 1.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #000000;
+                stroke: #808080;
                 fill: none;
             }
 
@@ -288,7 +288,7 @@
                 stroke-width: 0.8px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #000000;
+                stroke: #808080;
                 fill: none;
             }
 
@@ -314,8 +314,8 @@
             }
 
             .railway-station {
-                fill: red;
-                stroke: black;
+                fill: #808080;
+                stroke: #808080;
                 stroke-width: 0.5px;
             }
 
@@ -329,8 +329,8 @@
             }
 
             .railway-halt {
-                fill: black;
-                stroke: black;
+                fill: #808080;
+                stroke: #808080;
                 stroke-width: 0.5px;
             }
 

@@ -139,7 +139,7 @@ elsif ($Mode eq "loop")
         uploadIfEnoughTiles();
         if ($did_something == 0) 
         {
-            talkInSleep($message, 60);
+            talkInSleep($message, rand(5)+20);
         } 
         else 
         {
@@ -162,7 +162,7 @@ elsif ($Mode eq "") {
   # ----------------------------------
   my ($did_something, $message) = ProcessRequestsFromServer();
   
-  talkInSleep($message, 60) unless($did_something);
+  talkInSleep($message, rand(5)+20) unless($did_something);
   
 }
 else{
@@ -1071,8 +1071,16 @@ sub splitImageX
     {
       copy("empty.png", $Filename2);
     }
+#-----------------------------------------------------------------------------
+# Run pngcrush on each split tile, then delete the temporary cut file
+#-----------------------------------------------------------------------------
+      my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
+      $Config{Niceness},
+      $Filename2,
+      $Filename);
+      runCommand("Pngcrushing $Filename", $Cmd);
+      unlink($Filename2);
 
-    rename($Filename2, $Filename);
   }
   undef $SubImage;
   # tell the rendering queue wether the tiles are empty or not

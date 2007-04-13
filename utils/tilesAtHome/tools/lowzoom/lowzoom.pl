@@ -30,7 +30,7 @@ my $Options = shift();
 my $Usage = "Usage: $0 x y z maxZ [layer] [keep]\n  x,y,z are the tile to generate\n  maxZ is the zoom level to download tiles from\n  Options: \n    * layer - which layer to run lowzoom on (tile (default) or maplint)\n    * 'keep' - don't move tiles to an upload area afterwards\nOther options (URLs, upload staging area) are part of the script - change them in source code\n";
 if(($MaxZ > 12)
   || ($MaxZ <= $Z)
-  || ($Z <= 0)
+  || ($Z < 0)
   || ($MaxZ > 17)
   || ($X < 0)
   || ($Y < 0)  
@@ -155,7 +155,7 @@ sub moveTiles(){
   my ($from, $to, $MaxZ) = @_;
   opendir(my $dp, $from) || die($!);
   while(my $file = readdir($dp)){
-    if(($file =~ /^tile_(\d+)_(\d+)_(\d+)\.png$/) || ($file =~ /^maplint_(\d+)_(\d+)_(\d+)\.png$/)){
+    if($file =~ /^${Layer}_(\d+)_(\d+)_(\d+)\.png$/o){
       my ($Z,$X,$Y) = ($1,$2,$3);
       my $f1 = "$from/$file";
       my $f2 = "$to/$file";

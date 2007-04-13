@@ -139,8 +139,6 @@ function RemoveFromQueue($TileList){
   foreach($TileList as $CSV){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
     if($Z == 12){
-      logMsg("Uploaded $X,$Y on $Layer", 4);
-      
       moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE);
     }
   }

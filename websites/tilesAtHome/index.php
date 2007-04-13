@@ -19,11 +19,9 @@
   to select the &quot;osmarender&quot; layer using the + to the right of the map.
   </p>
   
-  <p><a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap.html">Performance graphs</a> are available, to say how the server is coping with all this data.
-  <a href="Log/">recent uploads and messages</a> can be viewed, as can 
-  the <a href="Log/Requests/">areas people are requesting</a> to be rendered.</p>
+  <p><a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap.html">Performance graphs</a> are available, to say how the server is coping with all this data.</p>
   
-  <p>A <a href="Credits/">list of people uploading tiles</a> is here</p>
+  <p>A <a href="Credits/">credits page</a> (list of people uploading tiles)</p>
   
   <p><a href="Stats/">Metadata</a> and <a href="Stats/Data/access.htm">access logs</a></p>
   

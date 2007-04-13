@@ -1071,16 +1071,24 @@ sub splitImageX
     {
       copy("empty.png", $Filename2);
     }
+
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
-      my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
-      $Config{Niceness},
-      $Filename2,
-      $Filename);
-      runCommand("Pngcrushing $Filename", $Cmd);
+    my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
+    $Config{Niceness},
+    $Filename2,
+    $Filename);
+    if(runCommand("Pngcrushing $Filename", $Cmd))
+    {
       unlink($Filename2);
-
+    }
+    else
+    {
+      statusMessage("Pngcrushing $Filename failed",1);
+      rename($Filename2, $Filename);
+    }
+     
   }
   undef $SubImage;
   # tell the rendering queue wether the tiles are empty or not

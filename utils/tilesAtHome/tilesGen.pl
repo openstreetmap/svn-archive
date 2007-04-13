@@ -1066,27 +1066,26 @@ sub splitImageX
       # Store the tile
       statusMessage(" -> $Filename") if ($Config{Verbose});
       WriteImage($SubImage,$Filename2);
-    }
-    else
-    {
-      copy("empty.png", $Filename2);
-    }
-
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
-    my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
-    $Config{Niceness},
-    $Filename2,
-    $Filename);
-    if(runCommand("Pngcrushing $Filename", $Cmd))
-    {
-      unlink($Filename2);
+        my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
+	$Config{Niceness},
+        $Filename2,
+        $Filename);
+        if(runCommand("Pngcrushing $Filename", $Cmd))
+        {
+          unlink($Filename2);
+        }
+        else
+        {
+          statusMessage("Pngcrushing $Filename failed",1);
+          rename($Filename2, $Filename);
+        }
     }
     else
     {
-      statusMessage("Pngcrushing $Filename failed",1);
-      rename($Filename2, $Filename);
+      copy("empty.png", $Filename);
     }
      
   }

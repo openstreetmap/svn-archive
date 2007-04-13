@@ -76,7 +76,6 @@ function HandleUpload($File, $User, $UserID, $VersionID){
   # Delete the temporary directory and everything inside
   DelDir($Dir);
   
-  logMsg("$User (user #$UserID, version #$VersionID) uploaded $Count tiles in $Size bytes", 3);
   printf("OK, %d", $Count);
 }
 

@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# This script copies the eruby, ruby, html, css and images
+# to the right places on www.openstreetmap
+
+# This is for dev.openstreetmap.org only. Use the Makefile to set up
+# your server at home.
+
+
+USER=$1
+ROOT=/var/www/$USER
+
+if [ "$1" = "" ]; then
+  echo Usage: install_www some-user-name
+  exit
+fi
+
+
+if [ "$USER" = "openstreetmap" ]; then
+  echo "Won't delete things as we're deploying the real thing"
+else
+  echo "Deleting things"
+  rm -rf $ROOT/*
+  rm -rf ../bin
+fi
+
+
+# eruby
+mkdir $ROOT/eruby
+cp -r www.openstreetmap.org/* $ROOT
+
+# applet
+cd java
+ant clean && ant && cp dist/*.jar $ROOT/
+cd ..
+
+# REST
+
+mkdir -p $ROOT/ruby/api/0.3
+mkdir -p $ROOT/ruby/api/osm
+mkdir -p $ROOT/ruby/api/apache
+
+cp www.openstreetmap.org/ruby/api/*.rb $ROOT/ruby/api/0.3/
+cp www.openstreetmap.org/ruby/api/osm/*.rb $ROOT/ruby/api/osm/
+
+ln -s $ROOT/ruby/api/osm $ROOT/ruby/osm
+
+# Apache simple-auth for REST
+cp www.openstreetmap.org/ruby/api/apache/simple-auth.rb $ROOT/ruby/api/apache/
+
+# GPX parser
+
+# this stuff doesnt go on the webserver
+
+#mkdir -p ../bin
+#mkdir -p ../bin/osm
+#cp ruby/eruby/support/insert_gpx_files.rb ../bin/
+#cp ruby/api/osm/* ../bin/osm
+

@@ -5,6 +5,7 @@ use Math::Trig;
 use File::Copy;
 use FindBin qw($Bin);
 use tahconfig;
+use tahlib;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp); 
 use strict;

@@ -1,0 +1,7 @@
+For contours to appear you need to download the appropriate .hgt files from
+NASA:
+
+ftp://e0srp01u.ecs.nasa.gov/srtm/version2/SRTM3/
+
+and place them in the data directory.
+They are not included here as they are rather big :-)

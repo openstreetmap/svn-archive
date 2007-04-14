@@ -1,0 +1,91 @@
+#!/bin/bash
+#=============================================================================
+#
+#  osmarender [-r rulefile] [-t title] <osmfile> [<svgfile>]
+#
+#  This is a wrapper around the osmarender XSL transformation. If you don't
+#  specify a <svgfile> it will use <osmfile> with .svg suffix instead.
+#
+#  To use this set the environment variable OSMARENDER to the path to your
+#  osmarender4 directory. In bash this works like this:
+#
+#  > export OSMARENDER=~/osm/osmarender4
+# 
+#=============================================================================
+#
+#  Copyright (C) 2006-2007  OpenStreetMap Foundation
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
+#
+#=============================================================================
+
+prgname=`basename $0`
+
+function usage() {
+    echo "Usage: $prgname [options] <osmfile> [<svgfile>]"
+    echo "Options: -r   Set rulefile"
+    echo "         -t   Set title for map"
+
+}
+
+if [ "$OSMARENDER" = "" ]; then
+    OSMARENDER="."
+fi
+
+while getopts r:t: opt; do
+    case "$opt" in
+        r)  rulefile="$OPTARG";;
+        t)  title="$OPTARG";;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+osmfile=$1; shift
+mapfile=$1; shift
+
+if [ "$osmfile" = "" ]; then
+    echo >&2 "Too few parameters"
+    usage >&2
+    exit 1
+fi
+
+if [ "$1" != "" ]; then
+    echo >&2 "Too many parameters"
+    usage >&2
+    exit 1
+fi
+
+# if there is no rulefile given we use standard.xml
+if [ "$rulefile" = "" ]; then
+    echo >&2 "Using standard rule file: standard.xml"
+    rulefile="$OSMARENDER/rules/standard.xml"
+fi
+
+# if there is no mapfile given we use osm data file name with changed suffix
+if [ "$mapfile" = "" ]; then
+    mapfile="${osmfile%.osm}.svg"
+fi
+
+case "$osmfile" in
+    /*) ;;
+    *) osmfile=`pwd`"/$osmfile";;
+esac
+
+if [ "$title" == '' ]; then
+    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile $rulefile $OSMARENDER/osmarender.xsl > $mapfile
+else
+    $OSMARENDER/xsltrans --stringparam osmfile=$osmfile --stringparam title="$title" $rulefile $OSMARENDER/osmarender.xsl > $mapfile
+fi
+

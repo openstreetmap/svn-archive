@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+<symbol id="symbol-bar" viewBox="57 57 100 100">
+	<path fill="black" stroke-width="0.4" stroke="black" d="M 16.8725 9.81954 L 96.3004 9.81954 L 59.4774 46.3164 L 59.4774 94.9796 C 59.575 94.9796 57.9896 100.587 84.2324 102.6 L 84.2324 103.99 L 31.0262 103.99 L 31.0275 102.6 C 56.4414 100.587 54.9906 94.9796 54.9906 94.9796 L 54.9906 46.3164 L 16.8725 9.81954 z " />
+</symbol>
+    </defs>
+</svg>

@@ -1,0 +1,170 @@
+#!/bin/bash
+#
+#  xsltrans [options] <xmlfile> [<xslfile>]
+#
+#  This little utility script will call the XSL transformator of your choice.
+#
+#  Options:
+#     -p, --param name=value          Set XSL XPATH parameter
+#     -s, --stringparam name=value    Set XSL string parameter
+#
+#  The <xmlfile> is the input XML file. The <xslfile> is the XSL stylesheet.
+#  If you have a xml-stylesheet processing instruction in your XML file,
+#  you don't need to add the <xslfile>. Output is always on STDOUT.
+#
+#  If the environment variable XSLTRANS is set, it will call the program
+#  named in the variable. If the content of XSLTRANS ends in .jar, it will
+#  call java with this JAR file as a parameter.
+#
+#  xsltrans knows the calling syntax of xsltproc, xmlstarlet, xalan (c++)
+#  and xalan (Java) and will supply the parameters in the right form.
+#  Note that not all programs support all options.
+#
+
+#set -x
+
+prgname=`basename $0`
+
+function usage() {
+    echo >&2 "Usage: $prgname [options] <xmlfile> [<xslfile>]"
+    echo >&2 "Options: -p, --param name=value          Set XSL XPATH parameter"
+    echo >&2 "         -s, --stringparam name=value    Set XSL string parameter"
+}
+
+paralist=$(getopt --unquoted "--name=$prgname" --options=p:s: --longoptions=param:,stringparam: -- $@)
+
+if  [ $? -ne 0 ]; then
+    usage
+    exit 1
+fi
+
+set -- $paralist
+pp=""
+ps=""
+for option
+    do case "$option" in
+        -p|--param)       shift; pp="$pp $1"; shift;;
+        -s|--stringparam) shift; ps="$ps $1"; shift;;
+        --)               shift; break;;
+    esac
+done
+
+xml="$1"; shift
+if [ "$xml" = "" ]; then
+    echo >&2 "$prgname: Missing input XML file"
+    usage
+    exit 1
+fi
+
+xsl="$1"; shift
+if [ "$*" != '' ]; then
+    echo >&2 "$prgname: Too many parameters"
+    usage
+    exit 1
+fi
+
+##echo "pp=$pp"
+##echo "ps=$ps"
+##echo "xml=$xml"
+##echo "xsl=$xsl"
+
+# if XSLTRANS environment variable is not set, we try to autodetect it
+if [ "$XSLTRANS" = "" ]; then
+    XSLTRANS=`which xsltproc`
+    if [ "$XSLTRANS" = "" ]; then
+        XSLTRANS=`which xmlstarlet`
+        if [ "$XSLTRANS" = "" ]; then
+            XSLTRANS=`which xalan`
+            if [ "$XSLTRANS" = "" ]; then
+                if [ -e /usr/share/java/xalan2.jar ]; then
+                    XSLTRANS="/usr/share/java/xalan2.jar"
+                fi
+            fi
+        fi
+    fi
+fi
+
+if [ "$XSLTRANS" = "" ]; then
+    echo >&2 "Can't find any XSL transformer on your system."
+    echo >&2 "Please set the XSLTRANS environment variable to path of an XSL transformer."
+    exit 2
+fi
+
+##echo "XSLTRANS=$XSLTRANS"
+
+# We now have the XSL transformator we want to use in XSLTRANS
+
+# If the transformator is a java .jar file, change the command to call java
+command="$XSLTRANS"
+if [[ "$command" =~ '\.jar$' ]]; then
+    command="java -jar /usr/share/java/$XSLTRANS"
+fi
+
+##echo "command=$command"
+
+xsltrans=`basename $XSLTRANS`
+
+if [ "$xsltrans" = "xsltproc" ]; then
+    pl=''
+    for p in $pp; do
+        k=${p%%=*}
+        v=${p##*=}
+        pl="$pl --param $k $v"
+    done
+    for p in $ps; do
+        k=${p%%=*}
+        v=${p##*=}
+        pl="$pl --stringparam $k $v"
+    done
+    $command $pl $xsl $xml
+elif [ "$xsltrans" = "xmlstarlet" ]; then
+    if [ "$xsl" = '' ]; then
+        echo >&2 "xmlstarlet doesn't work without explicit stylesheet"
+        exit 4
+    fi
+
+    pl=''
+    for p in $pp; do
+        pl="$pl -p $p"
+    done
+    for p in $ps; do
+        pl="$pl -s $p"
+    done
+    $command tr $xsl $pl $xml
+elif [ "$xsltrans" = "xalan" ]; then
+    pl=''
+    for p in $pp; do
+        k=${p%%=*}
+        v=${p##*=}
+        pl="$pl -param $k $v"
+    done
+    for p in $ps; do
+        k=${p%%=*}
+        v=${p##*=}
+        pl="$pl -param $k '$v'"
+    done
+    if [ "$xsl" != '' ]; then
+        xsl="-xsl $xsl"
+    fi
+    $command $pl -in $xml $xsl
+elif [ "$xsltrans" = "xalan2.jar" ]; then
+    pl=''
+    for p in $pp; do
+        k=${p%%=*}
+        v=${p##*=}
+        pl="$pl -PARAM $k $v"
+    done
+    for p in $ps; do
+        k=${p%%=*}
+        v=${p##*=}
+        pl="$pl -PARAM $k $v"
+    done
+    if [ "$xsl" != '' ]; then
+        xsl="-XSL $xsl"
+    fi
+    $command $pl -IN $xml $xsl
+else
+    echo >&2 "Unknown XSL transformator '$xsltrans'"
+    exit 3
+fi
+

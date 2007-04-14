@@ -1,0 +1,142 @@
+
+            Osmarender - a SVG renderer for OpenStreetMap
+			---------------------------------------------
+
+Osmarender is a rule based rendering tool for generating SVG images of OSM 
+data.
+
+It takes as its input an OpenStreetMap dataset and a rules file. It outputs 
+an SVG image that is marked up in accordance with the styles defined in the 
+rule file. 
+
+For more information on Osmarender, see the wiki page:
+	http://wiki.openstreetmap.org/index.php/Osmarender
+
+For guidance on getting the best out of Osmarender, picking the options
+to use with it etc, see the following wiki pages:
+	http://wiki.openstreetmap.org/index.php/Osmarender#Tricks.2C_tips_and_hints
+
+
+CALLING OSMARENDER
+------------------
+
+On Linux you can call Osmarender through the osmarender shell wrapper. See
+the comments at the beginning for instruction on how to call this.
+
+
+RULES
+-----
+
+Osmarender rules files contain two kinds of element; rules and instructions.
+Rule elements provide a simple selection mechanism.  Instructions define what
+to do with the elements that match the rules. 
+
+See the rules directory for some rule files. For normal maps use
+rules/standard.xml.
+
+Rules are simple filters based on elements, keys and values (the e, k and v
+attributes).  For example:
+
+    <rule e="way" k="highway" v="motorway">...</rule> 
+
+will select all ways that have a key of highway with a value of motorway.
+Rules can be nested to provide a logical "and".  For example:
+
+    <rule e="way" k="highway" v="primary">
+        <rule e="way" k="abutters" v="retail">
+        ...
+        </rule>
+    </rule>
+
+would select all ways that are primary roads *and* abutted by retail premises. 
+
+Each filter attribute can contain a | separated list of values.  For example
+e="node|way" will match all nodes and all ways.  k="highway|waterway" will
+match all elements with a key of highway or waterway. v="primary|secondary"
+will match all elements that have key values equal to primary or secondary.
+
+    k="*" means all keys.
+    k="~" means no keys.
+    v="*" means all values.
+    v="~" means no value.
+        
+Instructions define what to do with the elements that match the rules.
+Typically, they render the element in some way by generating an svg commandto
+draw a line or circle etc.  In most cases the attributes of the instruction are
+copied to the corresponding svg command.  For example:
+
+    <line stroke-width="10"/> 
+
+will generate a corresponding svg command to draw a line with a width of 10px.
+
+The following instructions can be used:
+
+    <line>     - draw a line
+    <area>     - draw an area
+    <circle>   - draw a circle
+    <text>     - write some text
+    <symbol>   - draw an icon or image
+    <layer>    - start a new SVG layer (see below)
+    <addclass> - add SVG classes to child elements
+
+
+SVG Layers
+----------
+
+Osmarender creates a few default layers in your SVG file for the map, border,
+etc. Inkscape for instance shows them in the layers dialog and allows them
+to be switched on and off. You can add your own layers in the rule file by
+adding a <layer/> element like this:
+
+    <rule e="node" k="amenity" v="*">
+        <layer name="Amenities">
+            <rule e="node" k="amenity" v="telephone">
+                ...
+            </rule>
+            ...
+        </layer>
+    </rule>
+
+The name attribute on the layer element is a descriptive name used as the
+label for the layer. You can also use the display and opacity attributes:
+
+    <layer name="..." display="none"/>  Display of this layer is switched
+                                        off by default
+
+    <layer name="..." opacity="0.5"/>   Layer opacity is 50%.
+
+Don't confuse this with OSM layers set by the "layer" key!
+
+
+The <addclass/> element
+-----------------------
+
+You can use the <addclass/> element to add SVG classes to all its child
+elements. This is usefor for things like oneways, so that you can write
+your rules more concisely. Example:
+
+<addclass e="way" k="oneway" v="1|yes|true" class="oneway">
+    <addclass e="way" k="oneway" v="-1" class="otherway">
+
+        <rule e="way" k="highway" v="unclassified">
+            <line class="xyz"/>
+        </rule>
+        ...
+
+    </addclass>
+</addclass>
+
+If there is an unclassified road which is also a oneway, it will get
+classes "xyz" and "oneway".
+
+
+DEVELOPING OSMARENDER
+---------------------
+
+If you want to change the inner workings of Osmarender, change the files
+in the src directory and call 'make' to regenerate the 'osmarender.xsl'
+file from the source files. It uses xmllint to pull all files together.
+As a "side effect" xmllint checks your XML syntax, too. If you don't have
+xmllint, you can use any other XML tool that understands xinclude.
+
+

@@ -1,0 +1,106 @@
+Revision history:
+
+1.0 2006-03-21  Initial version
+1.1 2006-03-23  Remove <html> and <body> tags
+1.2 2006-03-24  Support for ways
+1.3 2006-04-10  width key will override line width
+                Implements nested rules
+                General restructuring
+                Implements <symbol> instruction
+1.4 2006-04-11  Implements <textPath> instruction for text on Segments and Ways
+1.5 2006-04-11  Fix bug that generated invalid xsl-stylesheet PI
+                Fix bug resulting in superflous white space output
+                Fix bug causing dy attribute on <textPath> element rather than <text> element
+1.6 2006-04-12  Fix bug with <text> instructions choking on <segment> and <way> elements in Batik
+2.0 2006-07-07  Implements <area> instruction for areas and ways
+                Fix bug to enable stroke-linecap="butt"
+                Implements e attribute for rules, allowing selection by element type
+                Implements v="*" for rules
+                Implements k="*" for rules
+                Implements e="node|segment|way|area" for rules
+                Implements v="rag|tag|bobtail" for rules
+                Implements k="rag|tag|bobtail" for rules
+                Generates progress message as each rule is processed
+                Elements with tags that have a key starting with svg: will be applied to the corresponding rendered element
+                Use of width key (eg <tag k="width" v="5px"/>) desupported in favour of svg:stroke-width (eg <tag k="svg:stroke-width" v="5px"/>
+                Use of x-offset and y-offset attributes desupported in favour of dx and dy for <text> instructions and transform='translate(x,y)'
+                    for <symbol> instructions.
+                Implements name_direction='-1' tag on segments and ways to draw street names in the reverse direction.
+                Use of <textPath> instruction desupported in favour of <text> instruction which now does the right thing for both segments and ways.
+                Copyright and attribution captions dynamically re-positioned top-left.  
+3.0 2006-09-23  Fix bug with non-contiguous segments in an area
+                Ignore elements with action='delete' for use with locally edited JOSM files
+                Apply linked segment optimisation to ways that have name_direction=-1
+                Added a switch to make copyright and attribution stuff optional
+                Made copyright and attribution stuff smaller
+                Fix bug with butt-capped ways that abut each other and caused cracks in roads
+                Fix bug with butt-capped ways and name_direction=-1 that caused cracks in roads
+                Implements layering using the layer tag.
+                Implements approximate mercator projection.
+                Implements pan and zoom controls.
+                Implement border and 1km square grid.
+                Implements osmarender:nameDirection as a preferred alternative to name_direction
+                <bounds> element in rules file allows bounding box of map to be specified
+                <bounds> element in .osm file allows bounding box of map to be specified
+                Improved rules file, lots of new tags, icons and cleaner look and feel
+                Rules file does not select segments for rendering by default (this encourages everyone to tag ways) 
+                Tested with IE 6.x, Firefox 1.5, xalan, xmlstarlet, xsltproc, Adobe ASV3, Inkscape, Batik-Squiggle
+3.1 2006-09-30  Implements waysegment pseudo-element to enable segments that are part of a way to be selected
+                Grid lines are now generated properly
+                Rendering of external white border is now improved when bounds are specified
+                No external white border when no bounds specified
+                Various tweaks to the rules file
+3.2 2006-12-29  Added svg namespace to marker elements (Joto)
+                Added rendering for place=suburb (same as place=village) (Joto)
+                Added optional "osmfile" parameter to XSL stylesheet which can be used to override default filename for OSM data file (Joto)
+                Changed rendering order of motorway|trunk|primary[_link] (Joto)
+                Added icon for amenity=post_box (currently same as post_office) (Joto)
+                Now draws name for highway=track if available (Joto)
+                Added call to copyAttributes template to a use element for ways, dashed railway lines and steps now work properly (Joto)
+                highway=gate was rendered way to large. Icon simplified and made smaller (Joto)
+
+4.0 2007-01-06  Split up osmarender.xsl into many smaller files which are easier to handle for developers
+                Changes list is now in this file, rules doc now in README
+                New makefile to pull those smaller files together again for easier usage by users
+                Pulled out call to rendering rules into new processRules template which takes a boolean parameter withOSMLayers
+                Got rid of xsl:attribute's in favour of {} in scale drawing code
+                Added osmarender shell wrapper
+                Interactive javascript stuff (zoom/pan control) will only be added if /rules/@interactive="yes", default is "no"
+                Optional map title added
+                Draw scale and attribution/copyright outside map area
+                Draw Creative Commons copyright logo as SVG instead of included PNG, removed OpenStreetMap logo
+                Added meta data and copyright info in DublinCore/RDF format (can be retrieved automatically, for instance in Inkscape)
+                Deletes e=area from rule file, because they don't exist (use ways instead)
+                Replaced makeshift bounding box by SVG clipping (but this does not work in Firefox!)
+                Added groupings, ids and inkscape layers to some SVG elements like borders, grids, the map itself, etc. Allows enabling and disabling parts of SVG file
+                Added <layer/> element for rules file to create SVG layers with part of the data. <layer/> has optional "display" and "opacity" attributes.
+                Put all feature in standard styles into several SVG layers
+                Added <addclass/> element for rules file. (See README)
+                Mini roundabouts (nodes) are drawn
+                Bridges and tunnels sort of work now. Bridges works reasonably well, tunnels definitely need some more work
+                Patch from Johann Gail to draw street names right side up included. Use osmarender:nameDirection=-1 to write in other direction than the automatically chosen one.
+                Bugfix: If a way path was turned around for the street name to show correctly the oneway direction was also changed.
+                This version needs some EXSLT extensions, this could break osmarender in some XSL transformators that don't support this. Tested with xsltproc, xmlstarlet and XALAN Java, the C version of XALAN does not work.
+    2007-01-16  Added rendering for railway=halt. (Joto)
+    2007-01-17  Fixed bug where text on segment wasn't rendered. (Joto)
+4.1 2007-01-23  Improved tunnel rendering (Joto)
+                Bugfix: When all meta data is suppressed the empty white background box is also suppressed
+    2007-02-04  Bugfix for drawing areas with holes (80n)
+    2007-02-05  Added rendering for natural=forest|wood to standard rule (Joto)
+    2007-02-06  Added option withUntaggedSegments="yes" to rule file. If this is set all segments belonging to no way and without any tags (except "created_by") are rendered as dotted faint grey lines. (Joto)
+                Changed "meta" to "marginalia" in many places better describing what it is. (Joto)
+                New svgBaseProfile attribute on <rules/> element allows setting to "full", "tiny", or "basic" for different SVG profiles. This is preliminary support for Mobile SVG. (Joto)
+                Standardised indents in all files (Joto)
+                Fixed long standing bug where street names were rendered too far up in inkscape (this was because inscape doesn't support baseline-shift). Used dy attribute on tspan element instead of baseline-shift (Joto)
+                Added rendering of aerialway (Joto)
+                Changed font to free font "DejaVu Sans" with fallback to sans-serif (Joto)
+                Changed width/height/viewBox of master <svg/> to do the right thing in all cases (depending on marginalia shown etc.) (Joto)
+                Removed debugging output in osmarender bin (Joto)
+    2007-02-13  Changed the symbol handling. There is now a new subdirectory "symbols" which contains all the symbols. From these files the symbols.svg is created, which gets included into map SVG files. See [[Osmarender/Symbols]] in the wiki for details. (Joto)
+                Somewhat simplified SVG code for text along path. (Joto)
+    2007-02-15  Removed @dy attribute from text element in src/draw.xsl and added it to all <text> elements in the rules file. (Joto)
+                Symbols in catalogue now sorted alphabetically. (Joto)
+    2007-03-19  Support for frolloized osm files.  Will use the hints provided to draw street names and areas better. (80n)
+                Missing symbolScale attribute added to standard.xml. (80n)
+    2007-03-30  Reverted fix from 80n in draw.xsl as it breaks symbol rendering (Joto)
+

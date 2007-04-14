@@ -1,5 +1,5 @@
 use strict; 
-use tahconfg;
+use tahconfig;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl

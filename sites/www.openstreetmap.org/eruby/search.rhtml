@@ -1,0 +1,144 @@
+<%
+include Math
+include Apache
+  require 'net/http'
+  require 'rexml/document'
+r = Apache.request
+
+loggedin = false
+cgi = nil
+dao = nil
+
+ERuby.import('include/top.rhtml')
+query = cgi['query']
+
+%>
+<div id="main_area">
+
+<br />
+<font size="+3">Search</font><br /><br />
+
+<% if cgi['action'] == 'citysearch' 
+  %>
+  <form action="/search.html">
+  <input type="text" name="query" value="<%=query%>">
+  <input type="hidden" name="action" value="citysearch">
+  <input type="submit" value="City Search">
+  </form>
+  <a href="/search.html?query=<%=query%>">search OSM data</a><br>
+  Contacting <a href="http://www.geonames.org/export/#ws">geonames.org</a>...
+
+
+<%  require 'net/http'
+  require 'rexml/document'
+  Net::HTTP.start('ws.geonames.org') do |http|
+    res = http.get("/search?q=#{query}&maxRows=10")
+    %> <%=res.code%> <%=res.message%><br /><br /><%
+    xml = REXML::Document.new(res.body)
+    xml.elements.each("/geonames/geoname") do |ele|
+      name = ''
+      country = ''
+      lat = ''
+      lon = ''
+      ele.elements.each("name"){ |n| name = n.text }
+      ele.elements.each("countryCode"){ |n| country = n.text }
+      ele.elements.each("lat"){ |n| lat = n.text }
+      ele.elements.each("lng"){ |n| lon= n.text }
+      %> 
+      <a href="index.html?lat=<%=lat%>&lon=<%=lon%>&zoom=12"><%=name %> (<%=country%>)</a><br />
+      <%
+    end
+  end
+
+%>
+<% else%>
+<form action="/search.html">
+<input type="text" name="query" value="<%=query%>">
+<input type="submit" value="Search">
+Would you like to perform a <a href="/search.html?action=citysearch&query=<%=query%>">city search</a>?
+</form><br>
+
+<!--Postcode stuff-->
+<%querycap = query.upcase
+
+ if (querycap.match(/[A-Z]\d/) ||
+    querycap.match(/[A-Z][A-Z]\d/) ||
+    querycap.match(/[A-Z]\d\d/) ||
+    querycap.match(/[A-Z]\w\d\d/) ||
+    querycap.match(/[A-Z][A-Z]\d[A-Z]/) ||
+    querycap.match(/[A-Z]\d[A-Z]/) ) 
+
+puts "Postcode Matched"
+
+    Net::HTTP.start('www.freethepostcode.org') do |http|
+     resp = http.get("/geocode?postcode=#{query}")
+     
+     bod = resp.body
+     split = bod.split
+
+       if split[5] == nil || split[6] == nil
+          %><p>Sorry, we can't find that postcode.  If you are sure that it exits, why not add it to <a href="http://www.freethepostcode.org">FreeThePostCode</a>?<%
+       else %>                               
+      <a href="index.html?lat=<%=split[5]%>&lon=<%=split[6]%>&zoom=12">Go to <%=querycap %></a><br />
+     <%end
+   end
+  end
+%>
+
+<%
+
+page = 0
+
+page = cgi['page'].to_i
+
+limit = page * 10
+
+#FIXME this should be in the API
+
+if query != ''
+  res = dao.call_sql { "select * from current_way_tags join current_ways where match(v) against ('#{dao.q(query)}') and current_way_tags.id = current_ways.id limit #{limit}, 11;" }
+%> 
+
+
+<% if page > 0 %>
+  <a href="/search.html?page=<%=page-1%>&query=<%=query%>">Previous page</a>
+<% else %>
+  <font color="gray">Previous page</font>
+<% end %>
+|
+<% if res.num_rows == 11 %>
+  <a href="/search.html?page=<%=page+1%>&query=<%=query%>">Next page</a>
+<% else %>
+  <font color="gray">Next page</font>
+<% end %>
+
+<br><br>
+<table border="0"> <%
+
+i = 0
+res.each_hash do |row|
+i += 1
+break if i == 11
+%>
+<tr>
+<td>
+<a href="/goto/way/<%=row['id']%>"><%=row['v']%></a> (k:<%=row['k']%>)<br>
+  <font size="-2" color="green">
+Way <%=row['id']%> (<%=row['timestamp']%>)
+<a href="/goto/way/<%=row['id']%>">Map</a> - 
+<a href="/api/0.3/way/<%=row['id']%>">API</a>
+<br /><br/ >
+</font>
+</td></tr>
+<%
+end
+else
+  %>0 results<%
+end
+end
+%>
+</table>
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+%>

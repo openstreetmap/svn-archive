@@ -1,0 +1,67 @@
+
+
+<div id="geocoder">
+  <%= start_form_tag :controller => 'way_tag', :action => 'search' %>
+  <%= text_field 'query', 'query'%>
+  <%= submit_tag 'Search' %>
+  <%= end_form_tag %>
+</div>
+
+
+
+<% lon =  params['lon'] || '-0.1' %>
+<% lat =  params['lat'] || '51.5' %>
+<% zoom =  params['zoom'] || '4' %>
+
+<script type="text/javascript">
+  var lon = <%= lon %>;
+  var lat = <%= lat %>;
+  var zoom = <%= zoom %>;
+  var PI = 3.14159265358979323846;
+
+  <% if params['scale'] and params['scale'].length > 0 then %>
+  zoom = Math.log(360.0/(( <% print params['scale'].to_f() %> ) * 512.0)) / Math.log(2.0);
+  <% end %>
+  zoom = zoom;
+  lon = lon * 20037508.34 / 180;
+  lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
+  lat = lat * 20037508.34 / 180;
+
+</script>
+<script type="text/javascript" src="/javascripts/OpenLayers.js"></script>
+
+<script type="text/javascript">
+  <!--
+  var map, layer;
+
+
+  function init(){
+
+    OpenLayers.Util.onImageLoadError = function() {
+      this.src = "http://www.openstreetmap.org/javascript/img/404.png";
+    }
+    map = new OpenLayers.Map( "map", 
+        {maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34), maxZoomLevel:18, maxResolution:156543, units:'meters', projection: "EPSG:41001"} );
+    layer = new OpenLayers.Layer.LikeGoogle( "Mapnik", "http://tile.openstreetmap.org/", {type:'png'} );
+    map.addLayer(layer);
+    layer = new OpenLayers.Layer.LikeGoogle( "Osmarender", "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/", {type:'png'} );
+    map.addLayer(layer);
+
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+    map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+
+    map.events.register("moveend", map, function() { 
+        var lonlat = map.getCenter();
+
+        var lon_deg = (lonlat.lon / 20037508.34) * 180;
+        var lat_deg = (lonlat.lat / 20037508.34) * 180;
+        var PI = 3.14159265358979323846;
+        lat_deg = 180/PI * (2 * Math.atan(Math.exp(lat_deg * PI / 180)) - PI / 2);
+        var zoom = map.getZoom();
+        updatelinks(lon_deg,lat_deg,zoom);
+        });
+  }        
+
+init();
+// -->
+</script>

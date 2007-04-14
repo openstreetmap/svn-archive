@@ -1,0 +1,150 @@
+<%
+
+require 'stringio'
+
+dao = nil
+cgi = nil
+loggedin = false
+user = {}
+user_id = -1
+alltags = []
+
+ERuby.import('include/top.rhtml')
+%>
+
+<div id="main_area">
+
+  <h1>Your GPS Traces</h1>
+  <a href="/traces" title="all traces">see traces from all users</a>
+
+<br /><br />
+
+<%
+if cgi['action'] == 'mytraces' && loggedin
+%>
+
+  <form action="/traces/mine" enctype="multipart/form-data" method="post">
+    <table>
+      <tr><td align="right">upload GPX file:</td><td><input type="file" name="gpxfile" size="60"></td></tr>
+      <tr><td align="right">description:</td><td><input type="text" name="description" size="60" maxlength="255"></td></tr>
+      <tr><td align="right">tags:</td><td><input type="text" name="tags" size="60" maxlength="255"></td></tr>
+      <tr><td align="right">public?</td><td><input type="checkbox" name="public" checked></td></tr>
+      <tr><td></td><td><input type="submit" value="Upload"> | 
+      <a href="http://wiki.openstreetmap.org/index.php/Upload">help</a>
+      </td></tr>
+    </table>
+  </form>
+
+<%
+end
+
+gpxfile = cgi['gpxfile']
+
+if gpxfile != '' && loggedin
+  # get uri of tx'd file (in tmp normally)
+  tmpfile = cgi.params['gpxfile'].first.path
+  # create a Tempfile reference
+  fromfile = cgi.params['gpxfile'].first
+  description = cgi.params['description'][0].string
+  tags = cgi.params['tags'][0].string
+  pub = !cgi.params['public'][0].nil? && cgi.params['public'][0].string
+  # create output file reference as original filename in our chosen directory
+  tofile = '/home/osm/' + rand.to_s
+
+  File.open(tofile.untaint, 'w') do |file|
+    file.chmod(0666)
+    file << fromfile.read
+  end
+
+  if (!tmpfile.nil? || fromfile.length != 0) && dao.schedule_gpx_upload(fromfile.original_filename, tofile, user_id, description, tags, pub)
+    %>
+    <i>Uploaded gpx file scheduled for insertion, you will get an email when complete.</i> <a href="/traces/mine">Upload another</a>.<br>
+    <%
+  else
+    %>
+    <i>Something went wrong scheduling that file. See the wiki / mailing list for help.</i><a href="/traces/mine">Go back</a>.<br>
+    <%
+  end
+
+end
+
+
+if loggedin
+  if cgi['action'] == 'update'
+    dao.gpx_ids_for_user(user_id).each_hash do |row|
+      id = row['id']
+      rm = cgi["rm_#{id}"] == 'on'
+      priv = cgi["priv_#{id}"] == 'on'
+      rowexists = cgi.has_key?("priv_#{id}")
+      if rm
+        dao.schedule_gpx_delete(id.to_i)
+        %>
+        <i>The gpx file <%= row['name'] %> has been scheduled for deletion.</i><br>
+        <%
+      end
+      dao.gpx_set_private(id.to_i, !priv) if dao.does_user_own_gpx?(user_id, id.to_i) && rowexists
+    end
+  end
+
+  if cgi['action'] == 'edit'
+    gpx_id = cgi['gpx_id'].to_i
+    if gpx_id != 0 
+      dao.gpx_get(user_id, gpx_id).each_hash do |gpx|
+      %>
+      <h2>Editing the trace <%=gpx['name']%></h2>
+      <img src="/traces/mine/<%=gpx['id']%>/image.png" /><br />
+      <form action="/traces/mine">
+        <table border="0">
+          <tr><td>filename:</td><td><%=gpx['name']%></td></tr>
+          <tr><td>uploaded:</td><td><%=gpx['timestamp']%></td></tr>
+          <tr><td>description:</td><td><input type="text" name="description" value="<%=gpx['description']%>" size="60" maxlength="255" /></td></tr>
+          <tr><td>tags:</td><td><input type="text" name="tags" value="<%=dao.gpx_tags(gpx_id).join(' ')%>" size="60" maxlength="255" /></td></tr>
+        </table>
+        <input type="hidden" name="gpx_id" value="<%=gpx_id%>" />
+        <input type="hidden" name="action" value="save" />
+        <input type="submit" value="Save" />
+      </form>
+      <%
+      end
+    end
+  end
+    
+  if cgi['gpxfile'] == '' && cgi['description'] != ''
+    dao.gpx_update_desc(cgi['gpx_id'].to_i, cgi['description'], cgi['tags']) if dao.does_user_own_gpx?(user_id, cgi['gpx_id'].to_i)
+  end
+end
+    
+# show pending files
+
+
+gpxfiles = []
+
+if loggedin
+  case cgi['action']
+  when 'mytag'
+    gpxfiles = dao.gpx_files(false, '', cgi['tag'], user_id)
+  when 'mytraces'
+    gpxfiles = dao.gpx_files(false, '','',user_id)
+  when 'edit'
+  else 
+    if cgi['gpxfile'] == ''
+      gpxfiles = dao.gpx_files(false, cgi['display_name'], cgi['tag'], user_id, cgi['page'].to_i)
+    else
+#      gpxfiles = dao.gpx_files(false, '','',user_id)
+    end
+  end
+end
+
+if gpxfiles != []
+ ERuby.import('render_gpx_list.rhtml')
+ 
+end
+  %>
+</div>
+
+</div>
+<%
+
+
+ERuby.import('include/bottom.rhtml')
+%>

@@ -1,0 +1,96 @@
+<%
+
+include Math
+include Apache
+
+r = Apache.request
+
+loggedin = false
+cgi = nil
+dao = nil
+
+ERuby.import('include/top.rhtml')
+%>
+<div id="main_area">
+<%
+action = cgi['action']
+
+args = '';
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+	args = '?lat=' + cgi['lat'] + '&lon=' + cgi['lon'] + '&zoom=' + cgi['zoom']
+end
+
+loginhtml = '<h1>Login:</h1><br>
+    Please login or <a href="create-account.html' + args + '">create an account</a>.<br>
+    <form method="post" action="/login.html">
+    <table>
+    <tr><td>email address:</td><td><input type="text" name="email"></td></tr>
+    <tr><td>password:</td><td><input type="password" name="pass"></td></tr>'
+
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+
+	loginhtml += '<input type="hidden" name="lat" value="' + cgi['lat'] + '">
+    <input type="hidden" name="lon" value="' + cgi['lon'] + '">
+    <input type="hidden" name="zoom" value="' + cgi['zoom'] + '">'
+
+end
+
+loginhtml += '<tr><td></td><td><input type="submit" value="Go!"></td></tr>
+    </table>
+    <input type="hidden" name="action" value="login">
+    </form><br><a href="forgot-password.html' + args + '">Forgotten password?</a>'
+
+if loggedin 
+  %>
+  You're already logged in :-)
+  <%
+
+else
+  if action == ''
+    %>
+    <%=loginhtml%>
+    <%
+  end
+
+
+  if action == 'login'
+    pass = cgi['pass']
+    email = cgi['email']
+
+    if pass != '' && email != ''
+      token = dao.login(email, pass)
+      if token && token != ''
+
+        dao.set_cookie(r, token);
+
+	r.status_line = '302 Found'
+	redirect = '/index.html'
+	if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != '' then
+		redirect += '?lat=' + cgi['lat'] + '&lon=' + cgi['lon'] + '&zoom=' + cgi['zoom']
+	end
+	r.headers_out.add('Location', redirect)
+        r.send_http_header
+	exit
+
+      else
+        %>
+        <i>Login failed</i><br>
+        <%=loginhtml%>
+        <%
+      end
+    else
+    %>
+    <i>Login failed</i><br>
+    <%=loginhtml%>
+    <%
+    end
+
+  end
+
+end
+%>
+
+</div>
+<%
+ERuby.import('include/bottom.rhtml')
+%>

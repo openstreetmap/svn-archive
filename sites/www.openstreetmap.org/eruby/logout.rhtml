@@ -1,0 +1,33 @@
+<%
+require 'cgi'
+require 'osm/dao.rb'
+cgi = CGI.new
+dao = OSM::Dao.instance
+
+include Math
+include Apache
+
+r = Apache.request
+r.status_line = "302 Found"
+
+url = '/index.html'
+if cgi['lat'] != '' && cgi['lon'] != '' && cgi['zoom'] != ''
+	url += '?lat=' + cgi['lat'] + '&lon=' + cgi['lon'] + '&zoom=' + cgi['zoom']
+end
+
+r.headers_out.add('Location', url)
+
+loggedin = false
+user_id = -1
+
+token,user_id = dao.check_cookie?(cgi);
+
+if user_id then
+  dao.logout(user_id)
+end
+
+ed = CGI.rfc1123_date(Time.now + (60 * 60 * 24))
+r.headers_out.add('Set-Cookie', 'openstreetmap=loggedout; path=/; expires=' + ed)
+r.send_http_header
+exit
+%>

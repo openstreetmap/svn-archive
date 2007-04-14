@@ -1,0 +1,5 @@
+$DBSERVER = 'someserver'
+$DATABASE= 'thedatabase'
+$USERNAME = 'database_username'
+$PASSWORD = 'database_password'
+$SERVER_NAME = 'what_ther_server_is_called'

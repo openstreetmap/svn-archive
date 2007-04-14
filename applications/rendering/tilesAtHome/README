@@ -1,0 +1,33 @@
+== Getting Started == 
+
+To use this copy the correct config template to tilesAtHome.conf then edit
+to set you username and password (both for osm data and for tiles upload)
+
+== Running the client ==
+
+to start generating tiles run "tilesGen.pl" CAUTION: if your country uses 
+a comma for decimal separator (like Germany) you need to set LANG=C 
+beforehand on unix-like systems. If you don't do this inkscape will complain 
+and generate empty tiles.
+if you want to render a specific tile run tilesGen.pl with the xy option
+for example if you want to render the tile number x=2148 y=1332 
+(zoom 12 is always the default and cannot be changed) you would run
+./tilesGen.pl xy 2148 1332
+
+to upload tiles use "upload.pl"
+
+(might need multiple calls to upload everything, depending on your setup)
+
+== Troubleshooting ==
+
+if you get Errors about libGD run tilesGen_noGD.pl instead of tilesGen.pl
+this will be significantly slower, so you might want to investigate how to 
+get libgd working with your perl installation.
+
+== Other sources of information ==
+
+further reading: http://wiki.openstreetmap.org/index.php/Tiles%40home
+
+--
+
+TODO: add windows-specific info into this file

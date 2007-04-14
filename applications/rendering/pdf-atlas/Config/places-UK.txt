@@ -1,0 +1,24 @@
+Scotland:  56.5, -4, 2.5, area
+Northern England:  54.5, -2, 1.5, area
+Wales:  52.5, -3.5, 1.1, area
+Northwest:  52.5, -1.5, 1.1, area
+Anglia:  52.25, 0.5, 1.1, area
+Southwest:  50.5, -4.0, 1.0, area
+Solent:  51.0, -1.0, 0.5, area
+Greater London:  51.5, 0.0, 0.8, area
+South:  50.8, 0.0, 0.6, area
+Kent:  51.2, 1.0, 0.7, area
+Addlestone:  51.3, -0.5, 0.05, city
+Bedford:  52.15, -0.475, 0.1, city
+Birmingham:  52.5, -1.88, 0.2, city
+Cambridge:  52.2, -0.1, 0.1, city
+Dublin:  53, -6.2, 0.15, city
+Glasgow:  55.85, -4.25, 0.15, city 
+Lancaster:  54, -2.75, 0.1, city
+London:  51.5, -0.1, 0.1, city
+Manchester:  53.47, -2.24, 0.12, city
+Oxford:  51.7, -1.2, 0.1, city
+Southampton:  50.7, -1.3, 0.1, city
+Wakefield:  53.6, -1.5, 0.1, city
+Weybridge:  51.375, -0.45, 0.1, city
+Worcester: 52.2, -2.2, 0.1, city

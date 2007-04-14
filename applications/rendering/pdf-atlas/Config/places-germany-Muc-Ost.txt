@@ -1,0 +1,32 @@
+Albaching:                       48.117,	12.117,	0.030000, area
+Anzing:                          48.150,	11.850,	0.030000, area
+Aschheim:                        48.167,	11.717,	0.030000, area
+Dorfen:                          48.267,	12.150,	0.030000, area
+Feldkirchen:                     48.150,	11.733,	0.030000, area
+Finsing:                         48.217,	11.833,	0.030000, area
+Forstern:                        48.183,	11.983,	0.030000, area
+Forstinning:                     48.167,	11.917,	0.030000, area
+Gars am Inn:                     48.150,	12.283,	0.030000, area
+Haag in Oberbayern:              48.167,	12.183,	0.030000, area
+Haar:                            48.100,	11.733,	0.030000, area
+Isen:                            48.217,	12.067,	0.030000, area
+Kirchdorf:                       48.183,	12.200,	0.030000, area
+Kirchheim bei München:           48.183,	11.750,	0.030000, area
+Lengdorf:                        48.267,	12.050,	0.030000, area
+Maitenbeth:                      48.150,	12.100,	0.030000, area
+Markt Schwaben:                  48.200,	11.883,	0.030000, area
+Moosinning:                      48.283,	11.850,	0.030000, area
+Neuching:                        48.233,	11.850,	0.030000, area
+Obertaufkirchen:                 48.267,	12.283,	0.030000, area
+Ottenhofen:                      48.217,	11.883,	0.030000, area
+Pastetten:                       48.200,	11.950,	0.030000, area
+Pliening:                        48.200,	11.800,	0.030000, area
+Poing:                           48.167,	11.817,	0.030000, area
+Rechtmehring:                    48.117,	12.167,	0.030000, area
+Reichertsheim:                   48.200,	12.283,	0.030000, area
+Sankt Wolfgang:                  48.217,	12.133,	0.030000, area
+Schwindegg:                      48.267,	12.250,	0.030000, area
+Soyen:                           48.117,	12.200,	0.030000, area
+Vaterstetten:                    48.117,	11.783,	0.030000, area
+Walpertskirchen:                 48.250,	11.967,	0.030000, area
+Wörth:                           48.233,	11.900,	0.030000, area

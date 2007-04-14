@@ -1,0 +1,10 @@
+Germany:             50.,     11.5,     5.5,  area
+Bayern:              48.140,  11.557,  3.0,  area
+Baden-Wuertenberg:   48.780,   9.172,  2.0,  area
+#Stuttgart:           48.780,   9.172,  0.4,  city
+#Hamburg:             53.548,   9.976,  0.8,  city
+#Berlin:              52.5146, 13.4033, 0.8,  city
+#Munich:              48.140,  11.567,  0.3,  city
+#Munich-Center:       48.140,  11.567,  0.1,  city
+#Kirchheim/Muenchen:  48.175,  11.754,  0.03, city
+#Dorfen:              48.2757, 12.149,  0.08, city

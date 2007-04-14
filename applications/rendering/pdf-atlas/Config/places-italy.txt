@@ -1,0 +1,8 @@
+Italy:          40.5,  13.0,  5.0, area
+Italy north:          43.7,  11.4,  1.8, area
+Italy middle:          42.0,  14.0,  1.8, area
+Italy south:          39.7,  16.6,  1.8, area
+Sizilien:          37.2,  14.0,  1.5, area
+Sardinien north:          42.1,  9.1,  1.0, area
+Sardinien south:          40.0,  9.4,  1.4, area
+xy:          43.8,  11.2,  .4, city

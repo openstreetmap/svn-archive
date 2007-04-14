@@ -1,0 +1,6 @@
+Africa:    0,16, 39, area
+Africa:    0,16, 39, city
+Africa-NO:  10,24, 20, city
+Africa-NW:  10,8,  20, city
+Africa-SO: -10,24, 20, city
+Africa-SW: -10,8,  20, city

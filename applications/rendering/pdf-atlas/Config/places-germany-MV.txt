@@ -1,0 +1,6 @@
+Greifswald:                      54.100,	13.383,	0.300000, area
+Neubrandenburg:                  53.567,	13.267,	0.300000, area
+Rostock:                         54.083,	12.133,	0.300000, area
+Schwerin:                        53.633,	11.417,	0.300000, area
+Stralsund:                       54.300,	13.100,	0.300000, area
+Wismar:                          53.900,	11.467,	0.300000, area

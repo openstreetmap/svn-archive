@@ -1,0 +1,94 @@
+Albaching:                       48.117,	12.117,	0.080000, area
+Anzing:                          48.150,	11.850,	0.080000, area
+Aschheim:                        48.167,	11.717,	0.080000, area
+Aying:                           47.967,	11.783,	0.080000, area
+Babensham:                       48.083,	12.267,	0.080000, area
+Baierbrunn:                      48.017,	11.483,	0.080000, area
+Baiern:                          47.950,	11.900,	0.080000, area
+Bruck:                           48.017,	11.917,	0.080000, area
+Brunnthal:                       48.017,	11.683,	0.080000, area
+Dachau:                          48.267,	11.433,	0.080000, area
+Dorfen:                          48.267,	12.150,	0.080000, area
+Ebersberg:                       48.083,	11.967,	0.080000, area
+Edling:                          48.067,	12.167,	0.080000, area
+Egling:                          47.917,	11.517,	0.080000, area
+Eiselfing:                       48.050,	12.233,	0.080000, area
+Feldkirchen:                     48.150,	11.733,	0.080000, area
+Feldkirchen-Westerham:           47.900,	11.850,	0.080000, area
+Finning:                         48.017,	11.000,	0.080000, area
+Finsing:                         48.217,	11.833,	0.080000, area
+Forstern:                        48.183,	11.983,	0.080000, area
+Forstinning:                     48.167,	11.917,	0.080000, area
+Frauenneuharting:                48.032,	12.056,	0.080000, area
+Garching bei München:            48.250,	11.650,	0.080000, area
+Gars am Inn:                     48.150,	12.283,	0.080000, area
+Glonn:                           47.983,	11.867,	0.080000, area
+GrÃ¤felfing:                     48.100,	11.450,	0.080000, area
+Grafing bei München:             48.050,	11.967,	0.080000, area
+Grasbrunn:                       48.083,	11.750,	0.080000, area
+GroÃŸkarolinenfeld:              47.900,	12.083,	0.080000, area
+Grünwald:                        48.050,	11.517,	0.080000, area
+Haag in Oberbayern:              48.167,	12.183,	0.080000, area
+Haar:                            48.100,	11.733,	0.080000, area
+Halfing:                         47.950,	12.283,	0.080000, area
+Höhenkirchen-Siegertsbrunn:      48.017,	11.733,	0.080000, area
+Hohenbrunn:                      48.050,	11.700,	0.080000, area
+Icking:                          47.950,	11.433,	0.080000, area
+Isen:                            48.217,	12.067,	0.080000, area
+Ismaning:                        48.233,	11.683,	0.080000, area
+Karlsfeld:                       48.217,	11.467,	0.080000, area
+Kirchdorf:                       48.183,	12.200,	0.080000, area
+Kirchheim bei München:           48.183,	11.750,	0.080000, area
+Kirchseeon:                      48.067,	11.900,	0.080000, area
+Krailling:                       48.100,	11.400,	0.080000, area
+Lengdorf:                        48.267,	12.050,	0.080000, area
+Maitenbeth:                      48.150,	12.100,	0.080000, area
+Markt Schwaben:                  48.200,	11.883,	0.080000, area
+Moosach:                         48.033,	11.883,	0.080000, area
+Moosinning:                      48.283,	11.850,	0.080000, area
+München:                         48.150,	11.583,	0.080000, area
+Neubiberg:                       48.083,	11.683,	0.080000, area
+Neuching:                        48.233,	11.850,	0.080000, area
+Neuried:                         48.100,	11.467,	0.080000, area
+Oberhaching:                     48.033,	11.600,	0.080000, area
+Oberpframmern:                   48.017,	11.817,	0.080000, area
+OberschleiÃŸheim:                48.250,	11.567,	0.080000, area
+Obertaufkirchen:                 48.267,	12.283,	0.080000, area
+Ottenhofen:                      48.217,	11.883,	0.080000, area
+Otterfing:                       47.917,	11.683,	0.080000, area
+Ottobrunn:                       48.067,	11.683,	0.080000, area
+Pastetten:                       48.200,	11.950,	0.080000, area
+Pfaffing:                        48.050,	12.117,	0.080000, area
+Planegg:                         48.100,	11.417,	0.080000, area
+Pliening:                        48.200,	11.800,	0.080000, area
+Poing:                           48.167,	11.817,	0.080000, area
+Prutting:                        47.900,	12.200,	0.080000, area
+Pullach im Isartal:              48.050,	11.533,	0.080000, area
+Putzbrunn:                       48.083,	11.717,	0.080000, area
+Ramerberg:                       48.017,	12.150,	0.080000, area
+Rechtmehring:                    48.117,	12.167,	0.080000, area
+Reichertsheim:                   48.200,	12.283,	0.080000, area
+Rott am Inn:                     47.983,	12.133,	0.080000, area
+Sankt Wolfgang:                  48.217,	12.133,	0.080000, area
+Sauerlach:                       47.967,	11.650,	0.080000, area
+SchÃ¤ftlarn:                     47.983,	11.467,	0.080000, area
+Schechen:                        47.933,	12.133,	0.080000, area
+Schonstett:                      47.983,	12.250,	0.080000, area
+Schwindegg:                      48.267,	12.250,	0.080000, area
+Söchtenau:                       47.933,	12.233,	0.080000, area
+Soyen:                           48.117,	12.200,	0.080000, area
+Steindorf:                       48.217,	11.000,	0.080000, area
+Steinhöring:                     48.083,	12.033,	0.080000, area
+Taufkirchen:                     48.050,	11.617,	0.080000, area
+Tuntenhausen:                    47.933,	12.017,	0.080000, area
+Unterföhring:                    48.200,	11.647,	0.080000, area
+Unterhaching:                    48.050,	11.633,	0.080000, area
+UnterschleiÃŸheim:               48.283,	11.567,	0.080000, area
+Valley:                          47.900,	11.783,	0.080000, area
+Vaterstetten:                    48.117,	11.783,	0.080000, area
+Vogtareuth:                      47.950,	12.183,	0.080000, area
+Walpertskirchen:                 48.250,	11.967,	0.080000, area
+Wasserburg am Inn:               48.067,	12.233,	0.080000, area
+Wörth:                           48.233,	11.900,	0.080000, area
+Wolfratshausen:                  47.917,	11.417,	0.080000, area
+Zorneding:                       48.083,	11.833,	0.080000, area

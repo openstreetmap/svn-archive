@@ -1,0 +1,11 @@
+New Zealand:                -41.0, 172.0, 8, area
+New Zealand-North Island:   -38.0, 176.0, 4, area
+New Zealand-South Island:   -44.0, 170.0, 4, area
+New Zealand-Stewart Island: -46.98,167.84, 2, area
+Auckland:     -36.85, 174.76, .5, city
+Hamilton:     -37.78, 175.27, .5, city
+Wellington:   -41.29, 174.78, .5, city
+Nelson:       -41.27, 173.28, .5, city
+Christchurch: -43.53, 172.64, .5, city
+Dunedin:      -45.87, 170.50, .5, city
+Invercargill: -46.42, 168.35, .5, city

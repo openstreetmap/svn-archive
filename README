@@ -6,6 +6,7 @@ lib/
 sites/          
 utils/
 applications/
+    editors/
+    rendering/
 etc/   
-rendering/
 

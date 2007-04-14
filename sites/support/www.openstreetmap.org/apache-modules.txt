@@ -1,0 +1,9 @@
+The following apache modules need to be loaded with
+update-apache2-modules --add <modulename>
+update-apache2-modules --enable <modulename>
+
+
+rewrite
+headers
+proxy
+ruby

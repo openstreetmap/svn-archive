@@ -1,0 +1,13 @@
+Source: osm-autologger
+Section: utils
+Priority: optional
+Maintainer: Petter Reinholdtsen <pere@debian.org>
+Build-Depends: debhelper (>> 4.0.0)
+Standards-Version: 3.6.2
+
+Package: osm-autologger
+Architecture: any
+Depends: ${shlibs:Depends}, gpsd
+Suggest: gpx2shp, qgis
+Description: Log GPX files and submit them to OpenStreetmap.org
+ Everything out of the box.

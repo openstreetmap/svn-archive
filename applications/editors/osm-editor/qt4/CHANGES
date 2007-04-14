@@ -1,0 +1,16 @@
+Changes since rev 633/Windows 161005 version
+============================================
+
+Sorted problem with off screen points (triedOffScrn) which caused strange
+lines to be drawn when a track disappeared off the visible screen area.
+
+Improved Landsat to use tiles; somewhat quicker now as it only downloads the
+changed area. Really need to do some sort of caching, but not that
+straightforward due to the floating point nature of latitude and longitude.
+
+Removed the zero-length-trackseg bug.
+
+When data is read from GPS, GPX file or GPX server, map is centred on the
+read-in data.
+
+29/10/05

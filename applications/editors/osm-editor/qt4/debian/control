@@ -1,0 +1,13 @@
+Source: osmeditor
+Section: utils
+Priority: optional
+Maintainer: Petter Reinholdtsen <pere@debian.org>
+Build-Depends: debhelper (>> 4.0.0), libqt3-dev, libwww-ssl-dev, libxmlrpc-c3-dev, libcurl3-dev
+Standards-Version: 3.6.2
+
+Package: osmeditor
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggest: gpx2shp, gpsd, qgis
+Description: Edit GPX files
+ Great look tool.

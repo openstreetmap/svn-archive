@@ -1,0 +1,1196 @@
+#!/usr/bin/env perl
+
+#    Copyright (C) 2005 Tommy Persson, tpe@ida.liu.se
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
+
+
+use landsat;
+use trackcollection;
+use osm;
+
+use strict;
+
+my $trackcollection = new trackcollection;
+
+use Tk;
+use Tk::JPEG;
+use Image::Size;
+
+
+use vars qw ($opt_lat $opt_lon $opt_petersfield $opt_passwd $opt_user);
+use Getopt::Mixed;
+Getopt::Mixed::getOptions("lat=s lon=s petersfield passwd=s user=s");
+
+my $password = $ENV{OSMPASSWD};
+my $user = $ENV{OSMUSER};
+
+$user = $opt_user if defined $opt_user;
+$password = $opt_passwd if defined $opt_passwd;
+
+
+if (not $user or not $password) {
+    print STDERR "\nOSM user and passsword has to be specified using the\n";
+    print STDERR "environment variables OSMUSER and OSMPASSWD or using\n";
+    print STDERR "the options --user and --passwd.\n";
+    exit 0;
+}
+
+$opt_lat = 51.015 if defined $opt_petersfield;
+$opt_lon = -0.95 if defined $opt_petersfield;
+
+my $move_image_state = 0;
+
+my $editmode = "segment";
+##my $editmode = "create";
+my $movedid = 0;
+my $from_node_uid = 0;
+my $segment_create_id = 0;
+my $marked_item_id = 0;
+my $marked_item_colour = "white";
+
+my $x_motionimage = 0;
+my $y_motionimage = 0;
+
+my $lat_motionimage = 0;
+my $lon_motionimage = 0;
+
+my $point_lat = 0;
+my $point_lon = 0;
+
+my $goto_lat = 51.5;
+my $goto_lon = 0;
+
+my $segment_key = "";
+my $segment_value = "";
+
+my @extra_keys = ();
+my @extra_values = ();
+
+my $way_key = "";
+my $way_value = "";
+
+my @way_extra_keys = ();
+my @way_extra_values = ();
+
+my @initial_segments_in_way = ();
+my %initial_segments_in_way = ();
+
+
+my $main = new MainWindow;
+$main->title ("OSMPEDIT");
+
+my $tbframe = $main->Frame ()->pack (-side => "top");
+
+my $can_frame  = $main->Frame->pack (-side => "top");
+
+my $left_side_frame = $can_frame->Frame->pack (-side => "left");
+
+my $can = $can_frame->Canvas (-width => 600,
+			      -height => 500)->pack (-side => "left");
+
+my $right_side_frame = $can_frame->Frame->pack (-side => "left");
+
+create_events ($can);
+
+my $landsat = new landsat ();
+$landsat->set_frame ($can_frame);
+$landsat->set_canvas ($can);
+
+foreach my $filename (@ARGV) {
+#    print STDERR "TRACK FILE: $filename\n";
+    my $track = new track ();
+    $track->parse_file ($filename);
+    $trackcollection->add_track ($track);
+}
+$landsat->set_track_collection ($trackcollection);
+
+my ($start_lat, $start_lon) = (58.4, 15.6);
+print "NTRACKS: ", $trackcollection->get_n_tracks (), "\n";
+
+if ($trackcollection->get_n_tracks () > 0) {
+    ($start_lat, $start_lon) = $trackcollection->get_center ();
+    print STDERR "CENTER: $start_lat $start_lon\n";
+}
+
+$start_lat = $opt_lat if defined $opt_lat;
+$start_lon = $opt_lon if defined $opt_lon;
+
+my $scale = 100;
+
+#my ($clamp_lat, $clamp_lon) =
+#    $landsat->clamp_to_center_of_tile ($start_lat, $start_lon, $scale);
+#print STDERR "CLAMP: $start_lat $start_lon\n";
+
+my $osm = new osm ();
+$osm->set_username ($user);
+$osm->set_password ($password);
+$osm->parse ($landsat);
+
+$landsat->set_osm ($osm);
+$landsat->set_center ($start_lat, $start_lon);
+$landsat->set_scale ($scale);
+
+
+# Temporarily removed since it blocked the application
+#$can_frame->after( 10000,
+#                   sub{
+#                       printf "Timer %s\n",''.localtime(time());
+#                       $landsat->fill_cache(1,$can_frame);
+#                    });
+#
+
+##$landsat->display_tile (58.4090, 15.561, 100);
+##$landsat->display_tile ($lat, $lon, $scale);
+$landsat->display ();
+$landsat->update_tracks ();
+$landsat->update_osm ();
+
+
+#
+# Left side
+#
+
+my $fwidth = 8;
+my $entrywidth = 10;
+my $tmpframe;
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Lat:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$point_lat,
+		  -width => $entrywidth,
+		  -state => "disabled")->pack (-side => "left");
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Lon:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$point_lon,
+		  -width => $entrywidth,
+		  -state => "disabled")->pack (-side => "left");
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Goto Lat:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$goto_lat,
+		  -width => $entrywidth)->pack (-side => "left");
+
+$tmpframe = $left_side_frame->Frame ()->pack (-side => "top");
+$tmpframe->Label (-text => "Goto Lon:",
+		  -width => $fwidth)->pack (-side => "left");
+$tmpframe->Entry (-textvariable => \$goto_lon,
+		  -width => $entrywidth)->pack (-side => "left");
+
+$left_side_frame->Button (-text => "GOTO",
+		 -command => sub { 
+		     $landsat->set_center ($goto_lat, $goto_lon);
+		     $landsat->set_scale ($scale);
+		     $landsat->display ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		     }
+		 )->pack (-side => "top");
+
+#
+# Right side
+#
+
+my ($seg_key_menu, $seg_value_menu,
+    $way_key_menu, $way_value_menu) = key_value_frame ();
+
+#
+# Bottom button row
+#
+
+my $bframe = $main->Frame ()->pack ();
+
+$bframe->Button (-text => "Reset View",
+		 -command => sub { 
+		     $landsat->set_center ($start_lat, $start_lon);
+		     $landsat->set_scale ($scale);
+		     $landsat->display ();
+		     $landsat->update_tracks ();
+		     $landsat->update_osm ();
+		     $landsat->fix_order ();
+		     }
+		 )->pack (-side => "left");
+
+
+$bframe->Button (-text => "North",
+		 -command => sub { 
+		     $landsat->north ();
+		     update_display ();
+		 }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "South",
+		 -command => sub {
+		     $landsat->south ();
+		     update_display ();
+		 }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "West",
+		 -command => sub { 
+		     $landsat->west ();
+		     update_display ();
+		 }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "East",
+		 -command => sub {
+		     $landsat->east ();
+		     update_display ();
+		 }
+		 )->pack (-side => "left");
+
+
+$bframe->Button (-text => "ZoomIn",
+		 -command => sub { 
+		     $landsat->zoomin ();
+		     update_display ();
+		     }
+		 )->pack (-side => "left");
+
+$bframe->Button (-text => "ZoomOut",
+		 -command => sub { 
+		     $landsat->zoomout ();
+		     update_display ();
+		 }
+		 )->pack (-side => "left");
+
+
+$bframe->Button (-text => "Reload OSM",
+		 -command => sub { 
+		     $landsat->load_osm ();
+		     $seg_key_menu->menu ()->delete (0, "end");
+		     $seg_value_menu->menu ()->delete (0, "end");
+		     update_segment_key_menu ($seg_key_menu);
+		     update_segment_value_menu ($seg_value_menu);
+		 }
+		 )->pack (-side => "left");
+
+
+#
+# Top button row
+#
+
+$tbframe->Button (-text => "Toggle tracks",
+		  -command => sub { $landsat->toggle_tracks ()}
+		  )->pack (-side => "left");
+
+
+$tbframe->Button (-text => "Toggle nodes",
+		  -command => sub { $landsat->toggle_nodes ()}
+		  )->pack (-side => "left");
+
+$tbframe->Button (-text => "Toggle segments",
+		  -command => sub { $landsat->toggle_segments ()}
+		  )->pack (-side => "left");
+
+$tbframe->Button (-text => "Toggle ways",
+		  -command => sub { $landsat->toggle_ways ()}
+		  )->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Move",
+                       -value => "move",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Create",
+                       -value => "create",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Delete",
+                       -value => "delete",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Segment",
+                       -value => "segment",
+                       -state => "normal")->pack (-side => "left");
+
+$tbframe->Radiobutton (-variable => \$editmode,
+                       -text => "Way",
+                       -value => "way",
+                       -state => "normal")->pack (-side => "left");
+
+###create_class_menu ($tbframe);
+
+
+
+
+
+MainLoop;
+
+
+
+#
+# Buttons
+#
+
+sub button1 {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+    $x = $can->canvasx($x);
+    $y = $can->canvasy($y);
+    my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
+    print STDERR "POSITION: $lat $lon\n";
+
+    if ($editmode eq "create") {
+	my $segment = $osm->get_segment_from_item ($id);
+	my $uid = $osm->create_node ($lat, $lon);
+	if ($segment and $uid) {
+	    my $seguid = $segment->get_uid ();
+	    # Create new segments
+	    my $from = $segment->get_from ();
+	    my $to = $segment->get_to ();
+
+	    my $suid0 = $osm->create_segment ($from, $uid, "");
+	    my $suid1 = $osm->create_segment ($uid, $to, "");
+
+	    if ($suid0 and $suid1) {
+		# delete the old segment
+		osmutil::delete_segment ($seguid, $user, $password);
+		  my $sid0 = create_segment_item (0, 0, 0, 0);
+		  my $sid1 = create_segment_item (0, 0, 0, 0);
+		  my $s0 = $osm->get_segment ($suid0);
+		  my $s1 = $osm->get_segment ($suid1);
+
+		  $s0->set_tags ($segment->get_tags ());
+		  $s1->set_tags ($segment->get_tags ());
+
+		  $osm->connect_uid_item ($suid0, $sid0);
+		  $osm->connect_uid_item ($suid1, $sid1);
+
+		  $osm->update_segment_colour ($sid0, $can);
+		  $osm->update_segment_colour ($sid1, $can);
+
+		  $can->coords ($sid0, $osm->get_segment_canvas_coords ($landsat, $s0));
+		  $can->coords ($sid1, $osm->get_segment_canvas_coords ($landsat, $s1));
+
+		  $can->delete ($id);
+	      } else {
+		# Failed to create two new segments.  Cleanup.
+		osmutil::delete_segment ($suid0, $user, $password) if ($suid0);
+		osmutil::delete_segment ($suid1, $user, $password) if ($suid1);
+	    }
+	}
+	if ($uid) {
+	    my $item = $osm->draw_node ($can, $x, $y, 0);
+	    $osm->connect_uid_item ($uid, $item);
+	} else {
+	    print STDERR "WARNING: Failed to create node: $uid\n";
+	}
+    }
+
+    if ($editmode eq "delete") {
+	if ($osm->delete ($id)) {
+	    $can->delete ($id);
+	} else {
+	    print STDERR "WARNING: Delete failed\n";
+	}
+    }
+
+    if ($editmode eq "way") {
+	my $seg = $osm->get_segment_from_item ($id);
+	if ($seg) {
+	    my $uid = $seg->get_uid ();
+	    print STDERR "Add segment to way: $uid\n";
+	    push @initial_segments_in_way, $uid;
+	    $initial_segments_in_way{$id} = $marked_item_colour;
+	    print STDERR "Saved colour: $marked_item_colour\n";
+	    $can->itemconfigure ($id, -fill => "green");
+	}
+    }
+
+    if ($editmode eq "segment" and not $from_node_uid) {
+	$from_node_uid = 0;
+	my $node = $osm->get_node_from_item ($id);
+	if ($node) {
+	    $from_node_uid = $node->get_uid ();
+	    my ($x0, $y0, $x1, $y1) = $can->coords ($id);
+	    my $xx = ($x0+$x1)/2;
+	    my $yy = ($y0+$y1)/2;
+	    $segment_create_id = create_segment_item ($xx, $yy, $xx, $yy);
+	}
+	
+	#
+	# Adding new value for one key
+	# 
+
+	my $seg = $osm->get_segment_from_item ($id);
+	if ($seg) {
+	    print STDERR "Update segment key: $segment_key\n";
+##	    $osm->update_segment_class ($id);
+	    $osm->update_segment_key_value ($id, $segment_key, $segment_value);
+	    $osm->update_segments_key_colour ($segment_key, $can);
+	    $osm->update_segments_value_colour ($segment_value, $can);
+##	    $osm->update_segment_colour ($id, $can);
+	    $marked_item_colour = $can->itemcget ($id, "-fill");
+	}
+	return;
+    }
+
+    if ($editmode eq "segment" and $from_node_uid) {
+	my $tonode = $osm->get_node_from_item ($id);
+	my $fromnode = $osm->get_node ($from_node_uid);
+	if ($tonode and $from_node_uid) {
+	    my $touid = $tonode->get_uid ();
+	    print STDERR "CREATE SEGMENT: $from_node_uid -> $touid\n";
+	    my $class = "";
+	    if ($segment_key eq "class") {
+		$class = $segment_value;
+	    }
+	    my $suid = $osm->create_segment ($fromnode->get_osmuid(), 
+					     $tonode->get_osmuid(), $class);
+	    if ($suid) {
+		$osm->connect_uid_item ($suid, $segment_create_id);
+		$osm->update_segment_colour ($segment_create_id, $can);
+		$fromnode->add_from ($suid);
+		$tonode->add_to ($suid);
+	    } else {
+		$can->delete ($segment_create_id);
+	    }
+	} else {
+	    $can->delete ($segment_create_id);
+	}
+	$segment_create_id = 0;
+	$from_node_uid = 0;
+	return;
+    }
+
+
+}
+
+sub key_value_frame {
+
+    my $entrywidth = 25;
+    my $fwidth = 8;
+    my $tmpframe;
+
+    #
+    # Way part
+    #
+
+    $right_side_frame->Button (-text => "Create way",
+			       -command => sub {
+				   print STDERR "Create way\n";
+				   $osm->create_way (@initial_segments_in_way);
+			       },
+			       -width => $fwidth
+			       )->pack (-side => "top");
+
+
+    $right_side_frame->Label (-text => "Way")->pack (-side => "top");
+
+    #
+    # Key menu button
+    #
+
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Label (-text => "Key:",
+		      -width => $fwidth)->pack (-side => "left");
+
+    my $way_key_menu =  $tmpframe->Menubutton (-relief => 'raised',
+					       -bg => "yellow",
+					       -width => 20,
+						   );
+    $way_key_menu->configure (-text => "none");
+    
+
+    $way_key_menu->pack (-side => 'left',
+			 -fill => "x",
+			 -expand => 1);
+    update_way_key_menu ($way_key_menu);
+
+    my $wskey = "";
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Button (-text => "New key:",
+		       -command => sub {
+			   push @way_extra_keys, $wskey;
+			   $way_key_menu->menu ()->delete (0, "end");
+			   update_way_key_menu ($way_key_menu);
+			   $way_key_menu->menu ()->invoke ("$wskey");
+##			   print STDERR "SEGMENT_KEY: $way_key\n";
+		       },
+		       -width => $fwidth
+		       )->pack (-side => "left");
+    $tmpframe->Entry (-textvariable => \$wskey,
+		      -width => $entrywidth)->pack (-side => "left");
+
+    #
+    # Value menu button
+    #
+    
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Label (-text => "Value:",
+		      -width => $fwidth)->pack (-side => "left");
+
+    
+    my $way_value_menu = $tmpframe->Menubutton (-text => "name",
+						-relief => 'raised',
+						-bg => "green",
+						-width => 20,
+						);
+
+    $way_value_menu->configure (-text => "none");
+
+    $way_value_menu->pack (-side => 'left',
+			   -fill => "x",
+			   -expand => 1);
+    
+    update_way_value_menu ($way_value_menu);
+
+    #
+    # New value entry
+    #
+    my $wsvalue = "";
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Button (-text => "New value:",
+		       -command => sub {
+			   push @way_extra_values, $wsvalue;
+			   $way_value_menu->menu ()->delete (0, "end");
+			   update_way_value_menu ($way_value_menu);
+			   $way_value_menu->menu ()->invoke ("$wsvalue");
+		       },
+		       -width => $fwidth
+		       )->pack (-side => "left");
+    $tmpframe->Entry (-textvariable => \$wsvalue,
+		      -width => $entrywidth)->pack (-side => "left");
+
+
+
+
+    #
+    # Segment part
+    #
+
+    $right_side_frame->Label (-text => "Segment")->pack (-side => "top");
+
+    #
+    # Key menu button
+    #
+
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Label (-text => "Key:",
+		      -width => $fwidth)->pack (-side => "left");
+
+    my $segment_key_menu =  $tmpframe->Menubutton (-relief => 'raised',
+						   -bg => "yellow",
+						   -width => 20,
+						   );
+    $segment_key_menu->configure (-text => "none");
+    
+
+   $segment_key_menu->pack (-side => 'left',
+			     -fill => "x",
+			     -expand => 1);
+    update_segment_key_menu ($segment_key_menu);
+
+    my $skey = "";
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Button (-text => "New key:",
+		       -command => sub {
+			   push @extra_keys, $skey;
+			   $seg_key_menu->menu ()->delete (0, "end");
+			   update_segment_key_menu ($seg_key_menu);
+			   $seg_key_menu->menu ()->invoke ("$skey");
+##			   print STDERR "SEGMENT_KEY: $segment_key\n";
+		       },
+		       -width => $fwidth
+		       )->pack (-side => "left");
+    $tmpframe->Entry (-textvariable => \$skey,
+		      -width => $entrywidth)->pack (-side => "left");
+
+    #
+    # Value menu button
+    #
+    
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Label (-text => "Value:",
+		      -width => $fwidth)->pack (-side => "left");
+
+    
+    my $segment_value_menu = $tmpframe->Menubutton (-text => "name",
+						    -relief => 'raised',
+						    -bg => "green",
+						    -width => 20,
+						    );
+
+    $segment_value_menu->configure (-text => "none");
+
+    $segment_value_menu->pack (-side => 'left',
+			       -fill => "x",
+			       -expand => 1);
+    
+    update_segment_value_menu ($segment_value_menu);
+
+    #
+    # New value entry
+    #
+    my $svalue = "";
+    $tmpframe = $right_side_frame->Frame ()->pack (-side => "top");
+    $tmpframe->Button (-text => "New value:",
+		       -command => sub {
+			   push @extra_values, $svalue;
+			   $seg_value_menu->menu ()->delete (0, "end");
+			   update_segment_value_menu ($seg_value_menu);
+			   $seg_value_menu->menu ()->invoke ("$svalue");
+		       },
+		       -width => $fwidth
+		       )->pack (-side => "left");
+    $tmpframe->Entry (-textvariable => \$svalue,
+		      -width => $entrywidth)->pack (-side => "left");
+
+
+    return ($segment_key_menu, $segment_value_menu,
+	    $way_key_menu, $way_value_menu);
+}
+
+sub button1release {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+##    print "Item: $id\n";
+    $x = $can->canvasx($x);
+    $y = $can->canvasy($y);
+
+##    print STDERR "CANPOS: $x $y\n";
+    my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
+    print STDERR "$lat $lon\n";
+
+    if ($editmode eq "move") {
+	if ($editmode eq "move" and $movedid) {
+	    if (not $osm->update_node ($movedid, $lat, $lon)) {
+		print STDERR "WARNING UPDATE OF NODE FAILED\n";
+	    }
+	}
+	$movedid = 0;
+    }
+
+}
+
+
+sub button2 {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+    if ($editmode eq "way") {
+	print STDERR "Clearing saved way segments\n";
+	@initial_segments_in_way = ();
+	foreach my $id (keys %initial_segments_in_way) {
+	    my $c = $initial_segments_in_way{$id};
+	    $can->itemconfigure ($id, -fill => "$c");
+	}
+	$marked_item_colour = $initial_segments_in_way{$marked_item_id};
+	%initial_segments_in_way = ();
+    }
+}
+
+sub button3 {
+    my($c, $x, $y) = @_;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+
+##    print "Info for Item: $id\n";
+
+    my $node = $osm->get_node_from_item ($id);
+
+    if ($node) {
+	$node->print ();
+    }
+
+    my $seg = $osm->get_segment_from_item ($id);
+
+    if ($seg) {
+	$seg->print ();
+    }
+
+    my $way = $osm->get_way_from_item ($id);
+
+    if ($way) {
+	$way->print ();
+    }
+
+#    my $keyvalues = $osm->key_value_hash ($id);
+#    if ($keyvalues) {
+#	foreach my $k (keys %{$keyvalues}) {
+#	    print STDERR "$k - $keyvalues->{$k}\n";
+#	}
+#   }
+}
+
+sub motion {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+    $x = $can->canvasx($x);
+    $y = $can->canvasy($y);
+
+    ($point_lat, $point_lon) = $landsat->ctowgs84 ($x, $y);
+
+##    print "MOTION: $id\n";
+    my $node = $osm->get_node_from_item ($id);
+    my $seg = $osm->get_segment_from_item ($id);
+
+    if ($marked_item_id) {
+	$can->itemconfigure ($marked_item_id, -fill => $marked_item_colour);
+	if ($initial_segments_in_way{$marked_item_id}) {
+	    $can->itemconfigure ($marked_item_id, -fill => "green");
+	}
+    }
+    if ($node or $seg) {
+	$marked_item_id = $id;
+	$marked_item_colour = $can->itemcget ($id, "-fill");
+	$can->itemconfigure ($id, -fill => "red");
+    } 
+
+    if ($editmode eq "segment" and $from_node_uid) {
+##	print STDERR "Bt-motion: $id $x $y\n";
+	if ($segment_create_id) {
+	    my ($x0, $y0, $x1, $y1) = $can->coords ($segment_create_id);
+	    $can->coords ($segment_create_id, $x0, $y0, $x, $y);
+	}
+
+    }
+
+
+##    $x = $can->canvasx($x);
+##    $y = $can->canvasy($y);
+##    $can->itemconfigure ($x, $y);
+#    ($global_xpos, $global_ypos) = $viewinfo->ctom ($x, $y);
+}
+
+sub b1motion {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+
+    if ($editmode eq "move") {
+	my $node = $osm->get_node_from_item ($id);
+	if ($node) {
+	    $movedid = $id;
+	    $x = $can->canvasx($x);
+	    $y = $can->canvasy($y);
+##	print STDERR "Bt-motion: $id $x $y\n";
+	    $osm->move_node ($id, $x, $y, $can);
+	}
+    }
+
+}
+
+
+sub b1motionimage {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'image');
+    my $id = $item[0];
+
+    my $dx = $x - $x_motionimage;
+    my $dy = $y - $y_motionimage;
+
+    my ($lat, $lon) = $landsat->ctowgs84 ($x, $y);
+    my $dlat = ($lat_motionimage - $lat)/10;
+    my $dlon = ($lon_motionimage - $lon)/10;
+
+    if ($move_image_state == 1) {
+	$move_image_state = 2;
+	$can->delete ("track");
+	$can->delete ("osmnode");
+	$can->delete ("osmsegment");
+    }
+
+
+###    print STDERR "btmotionimage: $dx $dy  --- $dlat $dlon\n";
+
+    $landsat->add_to_center ($dlat, $dlon);
+    $landsat->display ();
+
+#    foreach my $item (@item) {
+#	my ($x0, $y0) = $can->coords ($id);
+#	$x0 += $dx;
+#	$y0 += $dy;
+#	$can->coords ($id, $x0, $y0);
+#    }
+
+    $x_motionimage = $x;
+    $y_motionimage = $y;
+
+}
+
+sub start_motionimage {
+    my $x = shift;
+    my $y = shift;
+    my @item = $can->find ('withtag', 'current');
+    my $id = $item[0];
+
+##    print STDERR "startmotionimage: $x $y\n";
+    
+    $x_motionimage = $x;
+    $y_motionimage = $y;
+
+    ($lat_motionimage, $lon_motionimage) = $landsat->ctowgs84 ($x, $y);
+    $move_image_state = 1;
+}
+
+sub release_motionimage {
+    if ($move_image_state == 2) {
+	update_display ();
+    }
+    $move_image_state = 0;
+}
+
+
+
+sub create_events {
+    my $can = shift;
+
+    $can->CanvasBind('<1>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button1 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<ButtonRelease-1>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button1release ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<2>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button2 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<Shift 2>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        shift_button2 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<3>' => sub {
+        my($c) = @_;
+        my $e = $c->XEvent;
+        button3 ($c, $e->x, $e->y);
+    });
+
+    $can->CanvasBind('<Motion>' => sub {
+	motion ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->CanvasBind('<B1-Motion>' => sub {
+	b1motion ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->bind("image", '<B1-Motion>' => sub {
+	b1motionimage ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->bind("image", '<1>' => sub {
+	start_motionimage ($Tk::event->x, $Tk::event->y);
+    });
+
+    $can->bind("image", '<ButtonRelease-1>' => sub {
+	release_motionimage ($Tk::event->x, $Tk::event->y);
+    });
+}
+
+sub update_segment_key_menu {
+    my $mb = shift;
+
+    $mb->command (-label => "none",
+		  -command => sub { 
+		      $osm->update_segments_key_colour ("none", $can);
+		      $mb->configure (-text => "none");
+		  });
+
+    my @keys = $osm->get_segment_keys ();
+    foreach my $k (@keys, @extra_keys) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_segments_key_colour ($k, $can);
+			  $mb->configure (-text => $k);
+			  $seg_value_menu->menu ()->delete (0, "end");
+			  update_segment_value_menu ($seg_value_menu);
+			  $segment_key = $k;
+		      },
+		      );
+    }
+}
+
+sub update_way_key_menu {
+    my $mb = shift;
+
+    $mb->command (-label => "none",
+		  -command => sub { 
+		      $osm->update_ways_key_colour ("none", $can);
+		      $mb->configure (-text => "none");
+		  });
+
+    my @keys = $osm->get_way_keys ();
+    foreach my $k (@keys, @way_extra_keys) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_ways_key_colour ($k, $can);
+			  $mb->configure (-text => $k);
+			  $way_value_menu->menu ()->delete (0, "end");
+			  update_way_value_menu ($way_value_menu);
+			  $way_key = $k;
+		      },
+		      );
+    }
+}
+
+
+sub update_segment_value_menu {
+    my $mb = shift;
+
+    $mb->command (-label => "none",
+		  -command => sub { 
+		      $osm->update_segments_value_colour ("none", $can);
+		      $mb->configure (-text => "none");
+		  });
+
+    foreach my $k ($osm->get_segment_values (), @extra_values) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_segments_value_colour ($k, $can);
+			  $mb->configure (-text => $k);
+			  $segment_value = $k;
+		      },
+		      );
+    }
+}
+
+
+sub update_way_value_menu {
+    my $mb = shift;
+
+    $mb->command (-label => "none",
+		  -command => sub { 
+		      $osm->update_ways_value_colour ("none", $can);
+		      $mb->configure (-text => "none");
+		  });
+
+    foreach my $k ($osm->get_way_values (), @way_extra_values) {
+	$mb->command (-label => $k,
+		      -command => sub {
+			  $osm->update_ways_value_colour ($k, $can);
+			  $mb->configure (-text => $k);
+			  $way_value = $k;
+		      },
+		      );
+    }
+}
+
+
+sub create_segment_item {
+    my ($x0, $y0, $x1, $y1) = @_;
+    my $id = $can->create ('line', $x0, $y0, $x1, $y1,
+			   -fill => "white",
+			   -width => 2,
+			   -tag => "osmsegment");
+    $can->raise ("osmnode", "osmsegment");
+    return $id;
+}
+
+sub update_display {
+    $landsat->update_tracks ();
+    $landsat->update_osm ();
+    $landsat->fix_order ();
+    if ($segment_key) {
+	$osm->update_segments_key_colour ($segment_key, $can);
+	if ($segment_value) {
+	    $osm->update_segments_value_colour ($segment_value, $can);
+	}
+    }
+    if ($way_key) {
+	$osm->update_ways_key_colour ($way_key, $can);
+	if ($way_value) {
+	    $osm->update_ways_value_colour ($way_value, $can);
+	}
+    }
+}
+
+
+
+    #
+    # Fix buttons, code should maybe be somewhere else
+    #
+
+##    my @nodes = $self->get_osm ()->get_nodes ();
+##    foreach my $node (@nodes) {
+##	my $keyvalues = $node->key_value_hash ();
+##	if ($keyvalues) {
+##	    foreach my $k (keys %{$keyvalues}) {
+#####		print STDERR "$k - $keyvalues->{$k}\n";
+##		if ($k eq "class") {
+##		    my $value = $keyvalues->{$k};
+##		    if (not defined $self->{CLASSBUTTONMAP}->{$value}) {
+##			$self->{CLASSBUTTONMAP}->{$value} = 1;
+##			$self->make_class_button ($value);
+##		    }
+##		}
+##	    }
+##	}
+##    }
+##
+##    $self->fix_order ();
+
+
+sub make_class_button {
+    my $self = shift;
+    my $name = shift;
+    my $frame = shift;
+    $frame->Button (-text => $name,
+		    -width => 20,
+		    -command => sub { 
+			print "CLASS: $name\n"; 
+			my $can = $self->get_canvas ();
+			$self->get_osm ()->toggle_colour ($can, $name);
+		    }
+		  )->pack (-side => "top");
+
+}
+
+
+
+=pod
+
+=head1 NAME
+
+osmpedit - Editor for Open Street Map data
+
+=head1 SYNOPSIS
+
+osmpedit [--lat lat] [--lon lon] [--user user] [--passwd passwd] 
+         [track1.gpx track2.gpx ...]
+
+=head1 DESCRIPTION
+
+Editor for Open Street Map data.  You need to have an internet connection
+to be able to edit the data.
+
+If track files are given they are read in and the start position for
+the editor is centered on the tracks.
+
+Landsat tiles will be loaded and cached in $HOME/.osmpedit/cache/.
+You navigate by pressing B<North>, B<South>, B<West>, B<East>,
+B<ZoomIn> and B<ZoomOut>.  You can also navigate by pressing the left
+button on the background image and move the mouse.
+
+To load the OSM data press B<Reload OSM>.  This data is cached in
+$HOME/.osmpedit/cache/lastosm.xml and the nodes and segments in this
+file will be shown when B<osmpedit> is started.
+
+B<Toggle tracks>, B<Toggle nodes>, B<Toggle segments> and B<Toggle
+ways> toggles what is shown in the editing area.
+
+Pressing the right button on some item often print some information
+about the item in the window where B<osmpedit> was started. The left
+button is used for most of the editing.
+
+There are for editing modes: B<Move>, B<Create>, B<Delete> and
+B<Segment>.
+
+In B<Move> mode you can move a node by pressing the left button, move
+the mouse and then release the button at the wanted position.  When
+you release the button the data is updated in the OSM server.
+
+In B<Create> mode pressing the left button will create a new node in
+the OSM server and display it in the editing area.  If you try to
+create a node on a segment the segment will be split into two parts
+and the two parts will be connected to the new node.  Two new segments
+will be created and the old segment will be deleted from the OSM
+server.  The two new segments will have the same value of their tags
+field as the deleted segment. NOT YET UPDATED FOR WAYS.
+
+In B<Delete> mode pressing the left button over a node will delete it.
+Pressing it over a segment will delete the segment.  It is probably
+best to delete segments before nodes.
+
+In B<Segment> mode a new segment is created by pressing and releasing
+the left button over the B<from> node.  Then move the cursor to the
+B<to> node and press and release the left button.  The new segment is
+created in the OSM server when the left button is pressed over the
+B<to> node.  If a value for key "class" is specified (see below) then
+the segment will be created with the key class set to this value.
+Also some other key values will be set (e.g, car=yes for roads where
+cars usually travels).
+
+B<Segment> mode is also used for editing key/values for a segment.
+When the OSM data is loaded the B<Key> menu is initialized with an
+entry for all the keys used in the data.  Selecting one key will
+change the colour of all segments containing that key to yellow and
+initalize the B<Value> menu with an entry for each value used in the
+data for the selected key.  Choosing one value will change the colour
+of the segments with this key/value pair to green.  Pressing the left
+button on a segment will set the key value in the server.  This is a
+very efficient way to for example set the name of a street by setting
+it for each segment.  The B<New key> button is used to create a new
+key and the B<New value> button is used to create a new values.  These
+new keys and values will be available in the key and value menues.
+
+
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--lat latitude>
+
+Latitude for start position.  This overrides the value computed from input
+tracks.
+
+=item B<--lon longitude>
+
+Longitude for start position.  This overrides the value computed from input
+tracks.
+
+=item B<--user username>
+
+Specify the OSM user name.  This value overrides the value of the enviroment
+variable OSMUSER.
+
+=item B<--passwd password>
+
+Specify the OSM user name.  This value overrides the value of the enviroment
+variable OSMPASSWD.
+
+=back
+
+=head1 EXAMPLES
+
+   osmpedit --lat 58.4 --lon 16.6
+
+   osmpedit --user tpe@ida.liu.se --passwd secret buss213.gpx
+
+   env OSMUSER=tpe@ida.liu.se OSMPASSWD=secret osmpedit buss213.gpx
+
+=head1 AUTHOR
+
+Tommy Persson (tpe@ida.liu.se)
+
+=cut
+

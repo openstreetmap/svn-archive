@@ -1,0 +1,46 @@
+OpenStreetMap Editor
+====================
+
+Current version: osmeditor2. Build with "make osmeditor2".
+
+IMPORTANT
+=========
+
+If you get a linker error 'cannot find -lqt' change the following line:
+
+QTLIB = -lqt
+
+to
+
+QTLIB = -lqt-mt
+
+===============================================================================
+Notes:
+- Requires Qt3 and cURL to compile. 
+- There are some real GPX files to play with. Look at the lats and longs
+therein and start osmeditor2 with the appropriate options.
+- Instructions on the OSM wiki. 
+
+
+Loading SRTM height data
+------------------------
+
+If the NASA height files are present in a subdirectory (of the data
+you run the executable from) called "data", osmeditor will now draw
+contours for your current position.
+
+NASA height files can be obtained from
+
+  ftp://e0mss21u.ecs.nasa.gov/srtm/Eurasia/
+
+e.g. N51W001.hgt is the square with SW corner 51N, 1W.
+
+Building
+--------
+
+To build on Debian/sarge, one need to install the following dependencies:
+
+  libqt3-dev libcurl3-dev
+
+Nick Whitelegg
+26/03/06

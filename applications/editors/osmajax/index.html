@@ -1,0 +1,254 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <style type="text/css">
+        #map {
+            width: 800px;
+            height: 475px;
+            border: 1px solid black;
+        }
+    </style>
+    <script src="http://www.openlayers.org/dev/lib/OpenLayers.js"></script>
+    <script src="OSM.js"></script>
+    <script src="OSMFeature.js"></script>
+    <script src="OSMNode.js"></script>
+    <script src="OSMSegment.js"></script>
+    <script src="OSMWay.js"></script>
+    <script src="routetypes.js"></script>
+    <script src="DrawOSMFeature.js"></script>
+    <script src="ajax.js"></script>
+    <!--<script src="../lib/Firebug/debug.js"></script>-->
+    <script type="text/javascript">
+        var map, controls, drawControls;
+		var vectorLayer;
+		var selectedFeature;
+
+		function selectUp(f)
+		{
+			if(f instanceof OpenLayers.Feature.OSMWay)
+			{
+				alert('You selected a ' + f.type + ' with an ID of ' + f.fid);
+				selectedFeature = f; 
+				alert('XML: ' + f.toXML());
+			}
+
+			/*
+			// If we select a segment, add ID to the list of selected segments
+			if(f.type=="segment")
+			{
+				this.selectedSegments[this.selectedSegments.length] = f.fid;
+			}
+			*/
+		}
+
+		function selectOver()
+		{
+			//alert('selectOver');
+		}
+
+		function mouseUpHandler(e)
+		{
+			if(!(controls.select.active))
+			{
+				var bounds = map.getExtent();
+				vectorLayer.load(bounds);
+			}
+		}
+
+		function setType(t)
+		{
+			if(selectedFeature)
+			{
+				selectedFeature.setType(t);
+				var newTags = vectorLayer.routeTypes.getTags(t);
+				if(newTags)
+				{
+					for(tag in newTags)
+					{
+						selectedFeature.tags[tag] = newTags[tag];
+					}
+
+					// Blank any tags which should no longer be there
+					for(tag in selectedFeature.tags)
+					{
+						if(!newTags[tag])
+							selectedFeature.tags[tag]=null;
+					}
+
+					var URL = 'http://www.free-map.org.uk/common/osmproxy2.php'
+							+ '?call=way&id=' + selectedFeature.fid;
+
+					selectedFeature.upload
+										( URL, null, refreshStyle );
+				}
+				else
+				{
+					alert('unrecognised feature type');
+				}
+			}
+			else
+			{
+				alert('setType(): no selected feature');
+			}
+		}
+
+		function refreshStyle(xmlHTTP,way)
+		{
+			alert('Changes uploaded to server. Response=' + 
+				xmlHTTP.responseText);
+			var t = way.type;
+			var colour = vectorLayer.routeTypes.getColour(t);
+			var width = vectorLayer.routeTypes.getWidth(t);
+			var style = { fillColor: colour, fillOpacity: 0.4,
+					strokeColor: colour, strokeOpacity: 1,
+					strokeWidth: width };
+			vectorLayer.redrawFeature(way.fid,style);
+			way.style=style;
+		}
+
+        function init(){
+            map = new OpenLayers.Map( $('map') );
+            var layer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
+                    "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'} );
+            map.addLayer(layer);
+            vectorLayer = new OpenLayers.Layer.OSM("OSM Layer");
+            
+            // create a point feature
+            var point = new OpenLayers.Geometry.Point(-0.72, 51.05);
+            var pointFeature = new OpenLayers.Feature.Vector(point);
+			pointFeature.fid=390356;
+			vectorLayer.addFeatures(pointFeature);
+            
+            // create a line feature from a list of points
+            var pointList = [];
+            var newPoint = point;
+            for(var p=0; p<5; ++p) {
+                newPoint = new OpenLayers.Geometry.Point
+					(newPoint.x + Math.random(1),
+				 	newPoint.y + Math.random(1));
+                pointList.push(newPoint);
+            }
+            var lineFeature = new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.LineString(pointList));
+
+			vectorLayer.addFeatures(lineFeature);
+            map.addLayer(vectorLayer);
+
+			controls = {
+				select: new OpenLayers.Control.SelectFeature
+					(vectorLayer,{callbacks:{'up':selectUp,'over':selectOver}})
+						};
+			for(var key in controls)
+			{
+				map.addControl(controls[key]);
+			}
+			controls.select.deactivate();
+
+			drawControls = {
+				line: new OpenLayers.Control.DrawOSMFeature
+					(vectorLayer,OpenLayers.Handler.Path)
+			};
+			for(var key in drawControls)
+			{
+				map.addControl(drawControls[key]);
+			}
+			
+			drawControls.line.deactivate();
+            //vectorLayer.addFeatures([pointFeature, lineFeature]);
+
+            map.setCenter(new OpenLayers.LonLat(point.x, point.y),15);
+			map.events.register('mouseup',map,mouseUpHandler);
+			var bounds = map.getExtent();
+			vectorLayer.load(bounds);
+        }
+
+		function nav()
+		{
+			controls.select.deactivate();
+			drawControls.line.deactivate();
+			document.getElementById('navbtn').disabled='disabled';
+			document.getElementById('selbtn').disabled=null;
+			document.getElementById('drwbtn').disabled=null;
+			selectedFeature=null;
+		}
+		function sel()
+		{
+			controls.select.activate();
+			drawControls.line.deactivate();
+			document.getElementById('selbtn').disabled='disabled';
+			document.getElementById('navbtn').disabled=null;
+			document.getElementById('drwbtn').disabled=null;
+		}
+		function drw()
+		{
+			drawControls.line.activate();
+			controls.select.deactivate();
+			document.getElementById('drwbtn').disabled='disabled';
+			document.getElementById('navbtn').disabled=null;
+			document.getElementById('selbtn').disabled=null;
+			selectedFeature=null;
+		}
+
+		function chng()
+		{
+			if(selectedFeature)
+			{
+				var newType = prompt('Please enter the new classification');
+				setType(newType);
+			}
+			else
+			{
+				alert('chng(): no selected feature');
+			}
+		}
+
+		function placeSearch()
+		{
+			var loc = document.getElementById('search').value;
+			var country = document.getElementById('country').value;
+			ajaxrequest("http://www.free-map.org.uk/common/geocoder_ajax.php", 
+				'POST',"place="+loc+"&country="+country, searchCallback);
+		}
+
+		function searchCallback(xmlHTTP, addData)
+		{
+			var latlon = xmlHTTP.responseText.split(",");
+			if(latlon[0]!="0" && latlon[1]!="0")
+			{
+				var normLL = new OpenLayers.LonLat
+					(parseFloat(latlon[1]),parseFloat(latlon[0]));
+				map.setCenter(normLL, map.getZoom() );
+				var bounds = map.getExtent();
+				vectorLayer.load(bounds);
+			}
+			else
+			{
+				alert("That place is not in the database");
+			}
+		}
+    </script>
+  </head>
+  <body onload="init()">
+    <div id="map"></div>
+	<p>
+	<input type='button' value='navigate' onclick='nav()' id='navbtn'
+		disabled='disabled'/>
+	<input type='button' value='select' onclick='sel()' id='selbtn' />
+	<input type='button' value='draw' onclick='drw()' id='drwbtn'/>
+	<input type='button' value='change' onclick='chng()' id='chngbtn' />
+	<input id='search'/>
+	<select id='country'>
+	<option>uk</option>
+	<option>fr</option>
+	<option>de</option>
+	<option>it</option>
+	<option>se</option>
+	<option>no</option>
+	<option>es</option>
+	<option>be</option>
+	<option>nl</option>
+	</select>
+	<input type='button' value='Search' onclick='placeSearch()' />
+	</p>
+
+  </body>
+</html>

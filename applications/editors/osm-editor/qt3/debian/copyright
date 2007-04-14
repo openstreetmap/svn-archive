@@ -1,0 +1,17 @@
+This package was debianized by Petter Reinholdtsen 2005-07-05 23:28
++0200.
+
+It was downloaded from Subversion repository
+"http://www.openstreetmap.org/svn/osm-editor".
+
+Upstream Author: Nick Whitelegg <nick@hogweed.org>
+  
+Copyright:
+
+These programs are free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option) any
+later version.
+
+On Debian GNU/Linux systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.

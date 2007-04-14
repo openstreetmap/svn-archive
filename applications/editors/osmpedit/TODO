@@ -1,0 +1,40 @@
+- Take care of the case with wrong username or password.  Now it
+  leaves a bad file     in the cache and you cannot start osmpedit
+  without removing the file.
+
+- Add timestamp in key/value?
+
+- Fetch data for segment before changing tags.  Merge it
+
+- Houses as closed loops of segments.  Generate .osg?
+
+- Enter and display street names.  How to handle street numbers?
+
+- Offline editing?  Maybe saving all transactions and then replaying
+  them.
+
+- prefetch landsat tiles
+
+- Prefetch osm data and save it in a named file that can be found
+  automatically.
+
+- upload track file button
+
+- save navigation points that you can jump to
+
+- Save where you are in file
+
+- --no-landsat
+
+- Remove cache???  Toggle may solve this problem.
+
+- Fix bug with segments end point outside of tile area.
+
+- Save image with nodes and segments as gif or jpg.
+
+- Filter on HDOP value (throw away points with value less than 4?).
+
+- Road type Sweden: Motorväg, Motorled, 4-fältsväg, Vanlig väg
+
+- Road category Sweden: Europaväg, Riksväg, Primär länsväg, Sekundär länsväg, 
+                 Sekundär länsväg, Tertiär länsväg, Sek-tert länsväg,

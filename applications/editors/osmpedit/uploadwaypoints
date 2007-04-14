@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+
+#    Copyright (C) 2005 Tommy Persson, tpe@ida.liu.se
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
+
+use strict;
+
+use osmnode;
+
+use vars qw ($opt_lat $opt_lon $opt_passwd $opt_user $opt_creator);
+use Getopt::Mixed;
+Getopt::Mixed::getOptions("lat=s lon=s passwd=s user=s creator=s");
+
+if (not defined $opt_creator) {
+    print "--creator must be specifies\n";
+    exit 0;
+}
+
+
+
+foreach my $file (@ARGV) {
+    print STDERR "NAME: $file\n";
+    my $node = new osmnode;
+    $node->parse_waypoint ($file, "buss stop", $opt_creator);
+    $node->print ();
+    my $uid = $node->upload_osm_node ($opt_user, $opt_passwd);
+    if ($uid) {
+	my $data = osmutil::get_node ($uid, $opt_user, $opt_passwd);
+	print STDERR "$data\n";
+    } else {
+	print "WARNING: UPLOAD FAILED\n";
+    }
+}
+

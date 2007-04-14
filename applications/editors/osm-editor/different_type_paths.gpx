@@ -1,0 +1,1149 @@
+<!-- This data is copyright Nick Whitelegg and licenced under the
+     Creative Commons Licence (Attribution/ShareAlike) v2.0. -->
+<gpx version="1.0" creator="Hogweed Software Freemap::Components class" xmlns="http://www.topografix.com/GPX/1/0">
+<wpt lat="50.827" lon="-1.62608">
+<name>001</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8208" lon="-1.60777">
+<name>633:Whitemoor</name>
+<type>car park</type>
+</wpt>
+<wpt lat="50.8487" lon="-1.60476">
+<name>1044:BOG2</name>
+<type>caution</type>
+</wpt>
+<wpt lat="50.8421" lon="-1.59725">
+<name>1029:014</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8496" lon="-1.5911">
+<name>1028:013</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8433" lon="-1.59724">
+<name>1059:Deer sanctuary</name>
+<type>point of interest</type>
+</wpt>
+<wpt lat="50.8395" lon="-1.59255">
+<name>1076:010</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8351" lon="-1.60184">
+<name>1077:011</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8311" lon="-1.60236">
+<name>1078:012</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8273" lon="-1.60239">
+<name>1079:013</name>
+<type>bridge</type>
+</wpt>
+<wpt lat="50.8292" lon="-1.60236">
+<name>1081:Aldridge Hill Cottage</name>
+<type>farm</type>
+</wpt>
+<wpt lat="50.8228" lon="-1.59824">
+<name>1082:Beachern Wood</name>
+<type>car park</type>
+</wpt>
+<wpt lat="50.8378" lon="-1.60949">
+<name>1085:FEORD</name>
+<type>caution</type>
+</wpt>
+<wpt lat="50.8352" lon="-1.60295">
+<name>1088:Red Deer</name>
+<type>point of interest</type>
+</wpt>
+<wpt lat="50.8226" lon="-1.61197">
+<name></name>
+<type>car park</type>
+</wpt>
+<wpt lat="50.8317" lon="-1.62619">
+<name> </name>
+<type>farm</type>
+</wpt>
+<trk>
+<number>5216</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.84192946" lon="-1.597334585">
+<time></time>
+</trkpt>
+<trkpt lat="50.84238016" lon="-1.597629002">
+<time></time>
+</trkpt>
+<trkpt lat="50.84338589" lon="-1.599793694">
+<time></time>
+</trkpt>
+<trkpt lat="50.84412071" lon="-1.601648273">
+<time></time>
+</trkpt>
+<trkpt lat="50.84439999" lon="-1.601787947">
+<time></time>
+</trkpt>
+<trkpt lat="50.84497735" lon="-1.602308629">
+<time></time>
+</trkpt>
+<trkpt lat="50.84673684" lon="-1.603998375">
+<time></time>
+</trkpt>
+<trkpt lat="50.84765575" lon="-1.604459398">
+<time></time>
+</trkpt>
+<trkpt lat="50.84808704" lon="-1.604342101">
+<time></time>
+</trkpt>
+<trkpt lat="50.8490335" lon="-1.60497339">
+<time></time>
+</trkpt>
+<trkpt lat="50.84916085" lon="-1.605398513">
+<time></time>
+</trkpt>
+<trkpt lat="50.84944074" lon="-1.605722905">
+<time></time>
+</trkpt>
+<trkpt lat="50.84944074" lon="-1.605722905">
+<time></time>
+</trkpt>
+<trkpt lat="50.84982957" lon="-1.606344727">
+<time></time>
+</trkpt>
+<trkpt lat="50.85057611" lon="-1.606366857">
+<time></time>
+</trkpt>
+<trkpt lat="50.85085691" lon="-1.606961193">
+<time></time>
+</trkpt>
+<trkpt lat="50.85182459" lon="-1.608558499">
+<time></time>
+</trkpt>
+<trkpt lat="50.85261571" lon="-1.608466631">
+<time></time>
+</trkpt>
+<trkpt lat="50.85334555" lon="-1.608872549">
+<time></time>
+</trkpt>
+<trkpt lat="50.85354054" lon="-1.608018442">
+<time></time>
+</trkpt>
+<trkpt lat="50.8542039" lon="-1.607373515">
+<time></time>
+</trkpt>
+<trkpt lat="50.85461476" lon="-1.606531778">
+<time></time>
+</trkpt>
+<trkpt lat="50.85523449" lon="-1.60628502">
+<time></time>
+</trkpt>
+<trkpt lat="50.85581665" lon="-1.605569686">
+<time></time>
+</trkpt>
+<trkpt lat="50.8555369" lon="-1.605287875">
+<time></time>
+</trkpt>
+<trkpt lat="50.85562481" lon="-1.604690373">
+<time></time>
+</trkpt>
+<trkpt lat="50.85654035" lon="-1.604156906">
+<time></time>
+</trkpt>
+<trkpt lat="50.85723056" lon="-1.603483237">
+<time></time>
+</trkpt>
+<trkpt lat="50.8578746" lon="-1.602454708">
+<time></time>
+</trkpt>
+<trkpt lat="50.85832431" lon="-1.602465094">
+<time></time>
+</trkpt>
+<trkpt lat="50.85849402" lon="-1.602122625">
+<time></time>
+</trkpt>
+<trkpt lat="50.86025374" lon="-1.60124084">
+<time></time>
+</trkpt>
+<trkpt lat="50.8594407" lon="-1.600182045">
+<time></time>
+</trkpt>
+<trkpt lat="50.85976139" lon="-1.599284083">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5232</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.83634059" lon="-1.588491778">
+<time></time>
+</trkpt>
+<trkpt lat="50.83710807" lon="-1.589351409">
+<time></time>
+</trkpt>
+<trkpt lat="50.83745236" lon="-1.590072743">
+<time></time>
+</trkpt>
+<trkpt lat="50.83801184" lon="-1.590607564">
+<time></time>
+</trkpt>
+<trkpt lat="50.8389714" lon="-1.592388812">
+<time></time>
+</trkpt>
+<trkpt lat="50.83968385" lon="-1.592950754">
+<time></time>
+</trkpt>
+<trkpt lat="50.84075331" lon="-1.595313528">
+<time></time>
+</trkpt>
+<trkpt lat="50.84170203" lon="-1.596583712">
+<time></time>
+</trkpt>
+<trkpt lat="50.84204667" lon="-1.597418803">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5234</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.83691162" lon="-1.610756889">
+<time></time>
+</trkpt>
+<trkpt lat="50.83586237" lon="-1.608961891">
+<time></time>
+</trkpt>
+<trkpt lat="50.83543592" lon="-1.607843462">
+<time></time>
+</trkpt>
+<trkpt lat="50.8356685" lon="-1.602160508">
+<time></time>
+</trkpt>
+<trkpt lat="50.83490325" lon="-1.601925575">
+<time></time>
+</trkpt>
+<trkpt lat="50.83490325" lon="-1.601925575">
+<time></time>
+</trkpt>
+<trkpt lat="50.83421159" lon="-1.602172894">
+<time></time>
+</trkpt>
+<trkpt lat="50.83075868" lon="-1.602358456">
+<time></time>
+</trkpt>
+<trkpt lat="50.82978803" lon="-1.602551312">
+<time></time>
+</trkpt>
+<trkpt lat="50.82882517" lon="-1.602389083">
+<time></time>
+</trkpt>
+<trkpt lat="50.82880704" lon="-1.602346636">
+<time></time>
+</trkpt>
+<trkpt lat="50.82749275" lon="-1.601988601">
+<time></time>
+</trkpt>
+<trkpt lat="50.8273052" lon="-1.602373595">
+<time></time>
+</trkpt>
+<trkpt lat="50.8260543" lon="-1.602142827">
+<time></time>
+</trkpt>
+<trkpt lat="50.82445218" lon="-1.601773068">
+<time></time>
+</trkpt>
+<trkpt lat="50.82380302" lon="-1.601295827">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5120</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.81850299" lon="-1.613834586">
+<time></time>
+</trkpt>
+<trkpt lat="50.81829934" lon="-1.612090005">
+<time></time>
+</trkpt>
+<trkpt lat="50.81749574" lon="-1.608448034">
+<time></time>
+</trkpt>
+<trkpt lat="50.81509802" lon="-1.606835512">
+<time></time>
+</trkpt>
+<trkpt lat="50.81430114" lon="-1.605223855">
+<time></time>
+</trkpt>
+<trkpt lat="50.81410127" lon="-1.604629309">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5119</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.80960165" lon="-1.628400667">
+<time></time>
+</trkpt>
+<trkpt lat="50.81049696" lon="-1.629954999">
+<time></time>
+</trkpt>
+<trkpt lat="50.8109969" lon="-1.631626062">
+<time></time>
+</trkpt>
+<trkpt lat="50.81129909" lon="-1.633341293">
+<time></time>
+</trkpt>
+<trkpt lat="50.81179867" lon="-1.634913056">
+<time></time>
+</trkpt>
+<trkpt lat="50.81269938" lon="-1.635346096">
+<time></time>
+</trkpt>
+<trkpt lat="50.8141044" lon="-1.633120586">
+<time></time>
+</trkpt>
+<trkpt lat="50.81449635" lon="-1.631925044">
+<time></time>
+</trkpt>
+<trkpt lat="50.81589675" lon="-1.625454627">
+<time></time>
+</trkpt>
+<trkpt lat="50.81660147" lon="-1.623660203">
+<time></time>
+</trkpt>
+<trkpt lat="50.81759648" lon="-1.622644218">
+<time></time>
+</trkpt>
+<trkpt lat="50.81849993" lon="-1.621132023">
+<time></time>
+</trkpt>
+<trkpt lat="50.81909741" lon="-1.619565466">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5102</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.81930193" lon="-1.592247725">
+<time></time>
+</trkpt>
+<trkpt lat="50.81930221" lon="-1.589763152">
+<time></time>
+</trkpt>
+<trkpt lat="50.81950406" lon="-1.588341622">
+<time></time>
+</trkpt>
+<trkpt lat="50.8194999" lon="-1.587163256">
+<time></time>
+</trkpt>
+<trkpt lat="50.81859953" lon="-1.584345924">
+<time></time>
+</trkpt>
+<trkpt lat="50.81800278" lon="-1.583456801">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5101</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.81789833" lon="-1.592075386">
+<time></time>
+</trkpt>
+<trkpt lat="50.8189965" lon="-1.592349768">
+<time></time>
+</trkpt>
+<trkpt lat="50.81930193" lon="-1.592247725">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5099</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.81789833" lon="-1.592075386">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5098</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.8220997" lon="-1.597647147">
+<time></time>
+</trkpt>
+<trkpt lat="50.8195972" lon="-1.596987166">
+<time></time>
+</trkpt>
+<trkpt lat="50.81900408" lon="-1.597120048">
+<time></time>
+</trkpt>
+<trkpt lat="50.81849942" lon="-1.596826247">
+<time></time>
+</trkpt>
+<trkpt lat="50.81770359" lon="-1.595555363">
+<time></time>
+</trkpt>
+<trkpt lat="50.8174036" lon="-1.594635151">
+<time></time>
+</trkpt>
+<trkpt lat="50.81789833" lon="-1.592075386">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5097</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.81489961" lon="-1.637202862">
+<time></time>
+</trkpt>
+<trkpt lat="50.817704" lon="-1.636684237">
+<time></time>
+</trkpt>
+<trkpt lat="50.8193003" lon="-1.635223702">
+<time></time>
+</trkpt>
+<trkpt lat="50.8206037" lon="-1.632146794">
+<time></time>
+</trkpt>
+<trkpt lat="50.8208044" lon="-1.630200092">
+<time></time>
+</trkpt>
+<trkpt lat="50.82000078" lon="-1.626373047">
+<time></time>
+</trkpt>
+<trkpt lat="50.82029788" lon="-1.623673086">
+<time></time>
+</trkpt>
+<trkpt lat="50.8195968" lon="-1.621023764">
+<time></time>
+</trkpt>
+<trkpt lat="50.8190007" lon="-1.620247729">
+<time></time>
+</trkpt>
+<trkpt lat="50.81920445" lon="-1.619294843">
+<time></time>
+</trkpt>
+<trkpt lat="50.81840364" lon="-1.616433506">
+<time></time>
+</trkpt>
+<trkpt lat="50.8183991" lon="-1.615056408">
+<time></time>
+</trkpt>
+<trkpt lat="50.81860328" lon="-1.614245482">
+<time></time>
+</trkpt>
+<trkpt lat="50.81850191" lon="-1.613508057">
+<time></time>
+</trkpt>
+<trkpt lat="50.8202998" lon="-1.610554262">
+<time></time>
+</trkpt>
+<trkpt lat="50.82109988" lon="-1.607764781">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5213</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.8605139" lon="-1.59842503">
+<time></time>
+</trkpt>
+<trkpt lat="50.86023574" lon="-1.598612149">
+<time></time>
+</trkpt>
+<trkpt lat="50.85992963" lon="-1.598515307">
+<time></time>
+</trkpt>
+<trkpt lat="50.85958818" lon="-1.598603498">
+<time></time>
+</trkpt>
+<trkpt lat="50.85843044" lon="-1.599309699">
+<time></time>
+</trkpt>
+<trkpt lat="50.85804582" lon="-1.599923996">
+<time></time>
+</trkpt>
+<trkpt lat="50.85776776" lon="-1.600139513">
+<time></time>
+</trkpt>
+<trkpt lat="50.85748921" lon="-1.600212941">
+<time></time>
+</trkpt>
+<trkpt lat="50.85720959" lon="-1.599973778">
+<time></time>
+</trkpt>
+<trkpt lat="50.85720798" lon="-1.599504893">
+<time></time>
+</trkpt>
+<trkpt lat="50.85658633" lon="-1.599183413">
+<time></time>
+</trkpt>
+<trkpt lat="50.85639522" lon="-1.598531446">
+<time></time>
+</trkpt>
+<trkpt lat="50.85487213" lon="-1.597606772">
+<time></time>
+</trkpt>
+<trkpt lat="50.85398603" lon="-1.596236213">
+<time></time>
+</trkpt>
+<trkpt lat="50.85269902" lon="-1.593377373">
+<time></time>
+</trkpt>
+<trkpt lat="50.85180591" lon="-1.592589523">
+<time></time>
+</trkpt>
+<trkpt lat="50.85124778" lon="-1.592438105">
+<time></time>
+</trkpt>
+<trkpt lat="50.85025524" lon="-1.591509096">
+<time></time>
+</trkpt>
+<trkpt lat="50.84950716" lon="-1.591046808">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5214</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.84973239" lon="-1.591158493">
+<time></time>
+</trkpt>
+<trkpt lat="50.84950716" lon="-1.591046808">
+<time></time>
+</trkpt>
+<trkpt lat="50.84821723" lon="-1.589949993">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5215</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="unsurfaced"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.84821723" lon="-1.589949993">
+<time></time>
+</trkpt>
+<trkpt lat="50.84820084" lon="-1.590404739">
+<time></time>
+</trkpt>
+<trkpt lat="50.84804314" lon="-1.591599447">
+<time></time>
+</trkpt>
+<trkpt lat="50.84807231" lon="-1.592224268">
+<time></time>
+</trkpt>
+<trkpt lat="50.84789512" lon="-1.59299295">
+<time></time>
+</trkpt>
+<trkpt lat="50.84738532" lon="-1.593807132">
+<time></time>
+</trkpt>
+<trkpt lat="50.84615532" lon="-1.594414452">
+<time></time>
+</trkpt>
+<trkpt lat="50.84576801" lon="-1.594247343">
+<time></time>
+</trkpt>
+<trkpt lat="50.84542484" lon="-1.593838361">
+<time></time>
+</trkpt>
+<trkpt lat="50.84427221" lon="-1.593422215">
+<time></time>
+</trkpt>
+<trkpt lat="50.84192946" lon="-1.597334585">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5233</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="unsurfaced"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.84204667" lon="-1.597418803">
+<time></time>
+</trkpt>
+<trkpt lat="50.84219604" lon="-1.599008421">
+<time></time>
+</trkpt>
+<trkpt lat="50.84236396" lon="-1.600768346">
+<time></time>
+</trkpt>
+<trkpt lat="50.84227854" lon="-1.602090095">
+<time></time>
+</trkpt>
+<trkpt lat="50.84215563" lon="-1.602971818">
+<time></time>
+</trkpt>
+<trkpt lat="50.84204522" lon="-1.604890355">
+<time></time>
+</trkpt>
+<trkpt lat="50.84171973" lon="-1.612421408">
+<time></time>
+</trkpt>
+<trkpt lat="50.84030386" lon="-1.611254213">
+<time></time>
+</trkpt>
+<trkpt lat="50.84030386" lon="-1.611254213">
+<time></time>
+</trkpt>
+<trkpt lat="50.83972857" lon="-1.611344215">
+<time></time>
+</trkpt>
+<trkpt lat="50.83972857" lon="-1.611344215">
+<time></time>
+</trkpt>
+<trkpt lat="50.83869797" lon="-1.609747788">
+<time></time>
+</trkpt>
+<trkpt lat="50.83796842" lon="-1.609427199">
+<time></time>
+</trkpt>
+<trkpt lat="50.83764509" lon="-1.609557726">
+<time></time>
+</trkpt>
+<trkpt lat="50.83691162" lon="-1.610756889">
+<time></time>
+</trkpt>
+<trkpt lat="50.83687305" lon="-1.611599922">
+<time>2005-10-16T11:44:56Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>5235</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="unsurfaced"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.82380302" lon="-1.601295827">
+<time></time>
+</trkpt>
+<trkpt lat="50.82315773" lon="-1.599327701">
+<time></time>
+</trkpt>
+<trkpt lat="50.82283935" lon="-1.598279728">
+<time></time>
+</trkpt>
+<trkpt lat="50.82283935" lon="-1.598279728">
+<time></time>
+</trkpt>
+<trkpt lat="50.82242995" lon="-1.596920185">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>555123</number>
+<name>Rhinefield Road</name>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.82242995" lon="-1.596920185">
+<time></time>
+</trkpt>
+<trkpt lat="50.82286487" lon="-1.595255201">
+<time></time>
+</trkpt>
+<trkpt lat="50.82309742" lon="-1.594884024">
+<time></time>
+</trkpt>
+<trkpt lat="50.82330901" lon="-1.593661099">
+<time></time>
+</trkpt>
+<trkpt lat="50.82331474" lon="-1.592723931">
+<time></time>
+</trkpt>
+<trkpt lat="50.82305036" lon="-1.591703925">
+<time></time>
+</trkpt>
+<trkpt lat="50.82305592" lon="-1.590724167">
+<time></time>
+</trkpt>
+<trkpt lat="50.82290129" lon="-1.590228567">
+<time></time>
+</trkpt>
+<trkpt lat="50.82292388" lon="-1.588978888">
+<time></time>
+</trkpt>
+<trkpt lat="50.82294308" lon="-1.586777927">
+<time></time>
+</trkpt>
+<trkpt lat="50.8223715" lon="-1.582849992">
+<time></time>
+</trkpt>
+<trkpt lat="50.82127302" lon="-1.579991753">
+<time></time>
+</trkpt>
+<trkpt lat="50.82028182" lon="-1.579461127">
+<time></time>
+</trkpt>
+<trkpt lat="50.81936532" lon="-1.57969652">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>505048</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.81939981" lon="-1.57928448">
+<time></time>
+</trkpt>
+<trkpt lat="50.81849685" lon="-1.580783311">
+<time></time>
+</trkpt>
+<trkpt lat="50.81780183" lon="-1.582592565">
+<time></time>
+</trkpt>
+<trkpt lat="50.81740291" lon="-1.584214577">
+<time></time>
+</trkpt>
+<trkpt lat="50.81650396" lon="-1.586863146">
+<time></time>
+</trkpt>
+<trkpt lat="50.81630444" lon="-1.588937616">
+<time></time>
+</trkpt>
+<trkpt lat="50.81610363" lon="-1.590657166">
+<time></time>
+</trkpt>
+<trkpt lat="50.81560207" lon="-1.593827354">
+<time></time>
+</trkpt>
+<trkpt lat="50.81470394" lon="-1.596773748">
+<time></time>
+</trkpt>
+<trkpt lat="50.81339772" lon="-1.60138442">
+<time></time>
+</trkpt>
+<trkpt lat="50.81289563" lon="-1.604483336">
+<time></time>
+</trkpt>
+<trkpt lat="50.8122013" lon="-1.606604313">
+<time></time>
+</trkpt>
+<trkpt lat="50.81129584" lon="-1.607463626">
+<time></time>
+</trkpt>
+<trkpt lat="50.81080242" lon="-1.613216723">
+<time></time>
+</trkpt>
+<trkpt lat="50.81109646" lon="-1.617841883">
+<time></time>
+</trkpt>
+<trkpt lat="50.81090338" lon="-1.624855786">
+<time></time>
+</trkpt>
+<trkpt lat="50.8111964" lon="-1.626485873">
+<time></time>
+</trkpt>
+<trkpt lat="50.81110414" lon="-1.628573282">
+<time></time>
+</trkpt>
+<trkpt lat="50.81139725" lon="-1.630245984">
+<time></time>
+</trkpt>
+<trkpt lat="50.81130437" lon="-1.632163057">
+<time></time>
+</trkpt>
+<trkpt lat="50.81089679" lon="-1.634110972">
+<time></time>
+</trkpt>
+<trkpt lat="50.81049853" lon="-1.636172339">
+<time></time>
+</trkpt>
+<trkpt lat="50.80859648" lon="-1.637649125">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>505016</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.82109988" lon="-1.607764781">
+<time></time>
+</trkpt>
+<trkpt lat="50.82089855" lon="-1.60407498">
+<time></time>
+</trkpt>
+<trkpt lat="50.8208958" lon="-1.603265715">
+<time></time>
+</trkpt>
+<trkpt lat="50.82210268" lon="-1.598513223">
+<time></time>
+</trkpt>
+<trkpt lat="50.8220997" lon="-1.597647147">
+<time></time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.82095146" lon="-1.629731655">
+<time>2005-10-16T10:57:51Z</time>
+</trkpt>
+<trkpt lat="50.82135916" lon="-1.630911827">
+<time>2005-10-16T10:59:11Z</time>
+</trkpt>
+<trkpt lat="50.82307577" lon="-1.629753113">
+<time>2005-10-16T11:02:01Z</time>
+</trkpt>
+<trkpt lat="50.82350492" lon="-1.629838943">
+<time>2005-10-16T11:02:41Z</time>
+</trkpt>
+<trkpt lat="50.8237195" lon="-1.629817486">
+<time>2005-10-16T11:03:02Z</time>
+</trkpt>
+<trkpt lat="50.82397699" lon="-1.62968874">
+<time>2005-10-16T11:03:40Z</time>
+</trkpt>
+<trkpt lat="50.8253932" lon="-1.628358364">
+<time>2005-10-16T11:06:22Z</time>
+</trkpt>
+<trkpt lat="50.82601547" lon="-1.627070904">
+<time>2005-10-16T11:07:59Z</time>
+</trkpt>
+<trkpt lat="50.82738876" lon="-1.62571907">
+<time>2005-10-16T11:10:25Z</time>
+</trkpt>
+<trkpt lat="50.82758188" lon="-1.625697613">
+<time>2005-10-16T11:10:45Z</time>
+</trkpt>
+<trkpt lat="50.83045721" lon="-1.627221107">
+<time>2005-10-16T11:15:01Z</time>
+</trkpt>
+<trkpt lat="50.83058596" lon="-1.626877785">
+<time>2005-10-16T11:16:37Z</time>
+</trkpt>
+<trkpt lat="50.83116531" lon="-1.626598835">
+<time>2005-10-16T11:17:48Z</time>
+</trkpt>
+<trkpt lat="50.83170176" lon="-1.627070904">
+<time>2005-10-16T11:19:01Z</time>
+</trkpt>
+<trkpt lat="50.83262444" lon="-1.627542973">
+<time>2005-10-16T11:20:24Z</time>
+</trkpt>
+<trkpt lat="50.83262444" lon="-1.627542973">
+<time>2005-10-16T11:20:26Z</time>
+</trkpt>
+<trkpt lat="50.83380461" lon="-1.628100872">
+<time>2005-10-16T11:22:38Z</time>
+</trkpt>
+<trkpt lat="50.83412647" lon="-1.627929211">
+<time>2005-10-16T11:23:03Z</time>
+</trkpt>
+<trkpt lat="50.83438396" lon="-1.627500057">
+<time>2005-10-16T11:23:40Z</time>
+</trkpt>
+<trkpt lat="50.83455563" lon="-1.626598835">
+<time>2005-10-16T11:24:30Z</time>
+</trkpt>
+<trkpt lat="50.83513498" lon="-1.625418663">
+<time>2005-10-16T11:26:08Z</time>
+</trkpt>
+<trkpt lat="50.83489895" lon="-1.625139713">
+<time>2005-10-16T11:27:24Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.83687305" lon="-1.62350893">
+<time>2005-10-16T11:31:02Z</time>
+</trkpt>
+<trkpt lat="50.8368516" lon="-1.623036861">
+<time>2005-10-16T11:31:34Z</time>
+</trkpt>
+<trkpt lat="50.83674431" lon="-1.622436047">
+<time>2005-10-16T11:32:21Z</time>
+</trkpt>
+<trkpt lat="50.83650827" lon="-1.620311737">
+<time>2005-10-16T11:34:24Z</time>
+</trkpt>
+<trkpt lat="50.83650827" lon="-1.619839668">
+<time>2005-10-16T11:34:56Z</time>
+</trkpt>
+<trkpt lat="50.83702326" lon="-1.617200375">
+<time>2005-10-16T11:37:34Z</time>
+</trkpt>
+<trkpt lat="50.83764553" lon="-1.614561081">
+<time>2005-10-16T11:40:08Z</time>
+</trkpt>
+<trkpt lat="50.8381875" lon="-1.6130625">
+<time></time>
+</trkpt>
+<trkpt lat="50.83704472" lon="-1.611750126">
+<time>2005-10-16T11:44:38Z</time>
+</trkpt>
+<trkpt lat="50.83687305" lon="-1.611599922">
+<time>2005-10-16T11:44:56Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.82732439" lon="-1.602523327">
+<time>2005-10-16T15:34:38Z</time>
+</trkpt>
+<trkpt lat="50.82678795" lon="-1.603209972">
+<time>2005-10-16T15:36:18Z</time>
+</trkpt>
+<trkpt lat="50.82659483" lon="-1.604304314">
+<time>2005-10-16T15:37:13Z</time>
+</trkpt>
+<trkpt lat="50.82638025" lon="-1.604754925">
+<time>2005-10-16T15:37:33Z</time>
+</trkpt>
+<trkpt lat="50.82603693" lon="-1.607651711">
+<time>2005-10-16T15:40:22Z</time>
+</trkpt>
+<trkpt lat="50.82597256" lon="-1.608316898">
+<time>2005-10-16T15:40:48Z</time>
+</trkpt>
+<trkpt lat="50.82558632" lon="-1.60848856">
+<time>2005-10-16T15:42:03Z</time>
+</trkpt>
+<trkpt lat="50.82500696" lon="-1.608359814">
+<time>2005-10-16T15:42:48Z</time>
+</trkpt>
+<trkpt lat="50.82449198" lon="-1.608424187">
+<time>2005-10-16T15:43:31Z</time>
+</trkpt>
+<trkpt lat="50.82410574" lon="-1.608746052">
+<time>2005-10-16T15:44:09Z</time>
+</trkpt>
+<trkpt lat="50.82401991" lon="-1.609067917">
+<time>2005-10-16T15:44:29Z</time>
+</trkpt>
+<trkpt lat="50.82296848" lon="-1.611578465">
+<time>2005-10-16T15:49:49Z</time>
+</trkpt>
+<trkpt lat="50.82296848" lon="-1.611578465">
+<time>2005-10-16T15:50:15Z</time>
+</trkpt>
+<trkpt lat="50.82290411" lon="-1.611599922">
+<time>2005-10-16T15:53:18Z</time>
+</trkpt>
+<trkpt lat="50.82290411" lon="-1.611599922">
+<time>2005-10-16T15:54:00Z</time>
+</trkpt>
+<trkpt lat="50.82264662" lon="-1.612029076">
+<time>2005-10-16T15:59:32Z</time>
+</trkpt>
+<trkpt lat="50.8223033" lon="-1.611943245">
+<time>2005-10-16T15:59:40Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="no"/>
+<property key="bike" value="no"/>
+<property key="car" value="no"/>
+<property key="class" value="path"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.82232475" lon="-1.612136364">
+<time>2005-10-16T10:36:40Z</time>
+</trkpt>
+<trkpt lat="50.82142353" lon="-1.612308025">
+<time>2005-10-16T10:38:12Z</time>
+</trkpt>
+<trkpt lat="50.82123041" lon="-1.612887383">
+<time>2005-10-16T10:38:54Z</time>
+</trkpt>
+<trkpt lat="50.82112312" lon="-1.613917351">
+<time>2005-10-16T10:39:59Z</time>
+</trkpt>
+<trkpt lat="50.8207798" lon="-1.615355015">
+<time>2005-10-16T10:41:28Z</time>
+</trkpt>
+<trkpt lat="50.82017899" lon="-1.616835594">
+<time>2005-10-16T10:43:07Z</time>
+</trkpt>
+<trkpt lat="50.81964254" lon="-1.617715359">
+<time>2005-10-16T10:44:26Z</time>
+</trkpt>
+<trkpt lat="50.81942797" lon="-1.618852615">
+<time>2005-10-16T10:45:35Z</time>
+</trkpt>
+</trkseg>
+</trk>
+<trk>
+<number>0</number>
+<extensions>
+<property key="foot" value="yes"/>
+<property key="horse" value="yes"/>
+<property key="bike" value="yes"/>
+<property key="car" value="yes"/>
+<property key="class" value="minor"/>
+</extensions>
+<trkseg>
+<trkpt lat="50.83489895" lon="-1.625139713">
+<time>2005-10-16T11:27:24Z</time>
+</trkpt>
+<trkpt lat="50.83509207" lon="-1.625010967">
+<time>2005-10-16T11:28:01Z</time>
+</trkpt>
+<trkpt lat="50.83584309" lon="-1.624538898">
+<time>2005-10-16T11:28:54Z</time>
+</trkpt>
+<trkpt lat="50.83687305" lon="-1.62350893">
+<time>2005-10-16T11:31:02Z</time>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

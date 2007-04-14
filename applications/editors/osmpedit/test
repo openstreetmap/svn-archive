@@ -1,0 +1,243 @@
+#    Copyright (C) 2005 Tommy Persson, tpe@ida.liu.se
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111 USA
+
+use strict;
+use osmutil;
+
+use vars qw ($opt_getnode $opt_getnodehistory $opt_createnode $opt_deletenode
+	     $opt_getseg $opt_getseghistory $opt_createseg $opt_deleteseg 
+	     $opt_getsegways $opt_getsegareas
+	     $opt_getway $opt_getwayhistory $opt_createway $opt_deleteway 
+	     $opt_from 
+	     $opt_to $opt_passwd $opt_user
+	     $opt_nodetagupdate $opt_getmap);
+
+use Getopt::Mixed;
+Getopt::Mixed::getOptions("getseg=s getseghistory=s createseg deletesegment=s 
+                           getsegways=s getsegareas=s
+                           getnode=s getnodehistory=s createnode deletenode=s
+                           getway=s getwayhistory=s createway deleteway=s
+                           from=s to=s
+                           passwd=s user=s
+			   nodetagupdate getmap");
+
+
+my $username = $opt_user;
+my $password = $opt_passwd;
+my $lat = 58.408306;
+my $lon = 15.558601;
+
+my $lat0 = 58.38626835; #North/south
+my $lat1 = 58.43626835;
+my $lon0 = 15.54252335; #east/west
+my $lon1 = 15.64252335;
+
+
+if (defined $opt_getmap) {
+    my $data = curl::grab_osm ($lon0, $lat0, $lon1, $lat1, 
+			       $username, $password);
+    print "$data\n";
+    exit 0;
+}
+
+
+if (defined $opt_createnode) {
+    my $tags = {};
+    my $uid = osmutil::create_node ($lat, $lon, $tags, $username, $password);
+    print STDERR "UID: $uid\n";
+    exit 0;
+}
+
+if (defined $opt_deletenode) {
+    my $resp = osmutil::delete_node ($opt_deletenode, $username, $password);
+    print STDERR "DELETE: $resp\n";
+    exit 0;
+}
+
+if (defined $opt_getnode) {
+    my $node = osmutil::get_node ($opt_getnode, $username, $password);
+    print "NODE: $node\n";
+    exit 0;
+}
+
+if (defined $opt_getnodehistory) {
+    my $node = osmutil::get_node_history ($opt_getnodehistory, $username, $password);
+    print "NODE: $node\n";
+    exit 0;
+}
+
+
+if (defined $opt_getseg) {
+    my $s = osmutil::get_segment ($opt_getseg, $username, $password);
+    print "SEGMENT: $s\n";
+    exit 0;
+}
+
+if (defined $opt_getseghistory) {
+    my $s = osmutil::get_segment_history ($opt_getseghistory, $username, $password);
+    print "SEGMENT: $s\n";
+    exit 0;
+}
+
+if (defined $opt_getsegways) {
+    my $s = osmutil::get_segment_ways ($opt_getsegways, $username, $password);
+    print "SEGMENT $opt_getsegways WAYS: $s\n";
+    exit 0;
+}
+
+if (defined $opt_getsegareas) {
+    my $s = osmutil::get_segment_areas ($opt_getsegareas, $username, $password);
+    print "SEGMENT $opt_getsegways AREAS: $s\n";
+    exit 0;
+}
+
+
+if (defined $opt_createseg) {
+    my $tags = {};
+    if (not defined $opt_from) {
+	print STDERR "--from must be defined\n";
+	exit 1;
+    }
+    if (not defined $opt_to) {
+	print STDERR "--to must be defined\n";
+	exit 1;
+    }
+    my $resp = osmutil::create_segment ($opt_from, $opt_to, $tags, $username, 
+					$password);
+    print "Segment created: $resp\n";
+    exit 0;
+}
+
+if (defined $opt_deleteseg) {
+    my $uid = $opt_deleteseg;
+    my $resp = osmutil::delete_segment ($uid, $username, $password);
+    if (not $resp) {
+	print "DELETE FAILED: $uid\n";
+    } else {
+	print "Segment $uid deleted\n";;
+    }
+    exit 0;
+}
+
+
+
+if (defined $opt_getway) {
+    my $s = osmutil::get_way ($opt_getway, $username, $password);
+    print "WAY: $s\n";
+    exit 0;
+}
+
+if (defined $opt_getwayhistory) {
+    my $s = osmutil::get_way_history ($opt_getwayhistory, $username, $password);
+    print "WAY: $s\n";
+    exit 0;
+}
+
+if (defined $opt_createway) {
+    my $tags = {};
+    my $resp = osmutil::create_way ($tags, $username, $password);
+    print "Way created: $resp\n";
+    exit 0;
+}
+
+if (defined $opt_deleteway) {
+    my $uid = $opt_deleteway;
+    my $resp = osmutil::delete_way ($uid, $username, $password);
+    if (not $resp) {
+	print "DELETE FAILED: $uid\n";
+    } else {
+	print "Way $uid deleted\n";;
+    }
+    exit 0;
+}
+
+if (defined $opt_nodetagupdate) {
+
+    #
+    # Does not work, old method
+    #
+
+    my $uid = osmutil::create_node ($lat, $lon, "", $username, $password);
+    print STDERR "UID: $uid\n";
+
+    if ($uid < 0) {
+	print STDERR "Failure creating node\n";
+	exit 0;
+    }
+    
+    my $node = osmutil::get_node ($uid, $username, $password);
+    print STDERR "NODE: $node\n";
+    
+    if (not osmutil::update_node ($uid, $lat, $lon, "name=Tommy1;", 
+				  $username, $password)) {
+	print STDERR "Update failed\n";
+    }
+    
+    $node = osmutil::get_node ($uid, $username, $password);
+    print STDERR "UPDATED NODE 1: $node\n";
+    
+    if (not osmutil::update_node ($uid, $lat, $lon, "name=Tommy2;", 
+				  $username, $password)) {
+	print STDERR "Update failed\n";
+    }
+    
+    my $node = osmutil::get_node ($uid, $username, $password);
+    print STDERR "UPDATED NODE 2: $node\n";
+    
+#    if (not osmutil::update_node_tags ($uid, "name=Tommy3;", 
+#				       $username, $password)) {
+#	print STDERR "Update tags failed\n";
+#    }
+    
+#    my $node = osmutil::get_node ($uid, $username, $password);
+#    print STDERR "UPDATED NODE 3: $node\n";
+    
+    
+    my $resp = osmutil::delete_node ($uid, $username, $password);
+    if (not $resp) {
+	print "DELETE FAILED: $uid\n";
+    } else {
+	print "Node $uid deleted\n";;
+    }
+    exit 0;
+}
+
+
+#my $nodes = osmutil::get_nodes ($username, $password, "247989,264385,270534");
+#print STDERR "NODE: $nodes\n";
+
+exit 0;
+
+my $data = "<osm version='0.2'>
+<node lon='15.558601' tags='' lat='58.408306'/>
+</osm>";
+
+my $uid = curl::put_data ("newnode", $data, "$username", $password);
+
+##my $uid = 275900;
+
+my $resp = curl::get ("node/$uid", "$username", $password);
+
+print "RESP: $resp\n";
+
+$resp = curl::delete ("node/$uid", "$username", $password);
+
+print "RESP: $resp\n";
+
+my $resp = curl::get ("node/$uid", "$username", $password);
+
+print "RESP: $resp\n";
+

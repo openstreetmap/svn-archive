@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel columns="1" gap="10" top="10" left="10" right="10" bottom="10" width="250" height="300">
+	<tabbedpane name="mainTab" weightx="1" weighty="1" action="mainTabChanged(this.selected)">
+		<tab text="Basic">
+			<panel columns="2" gap="4" top="10" left="10" right="10" bottom="10">
+				<label text="Name" />
+				<textfield name="name" weightx="1" action="nameChanged" />
+			
+				<label text="Type" />
+				<combobox name="type" weightx="1" action="typeChanged(this,this.text)" >
+					<choice text="Motorway (highway)" property="osm=highway=motorway" />
+					<choice text="Trunk (highway)" property="osm=highway=trunk" />
+					<choice text="Primary (highway)" property="osm=highway=primary" />
+					<choice text="Secondary (highway)" property="osm=highway=secondary" />
+					<choice text="Tertiary (highway)" property="osm=highway=tertiary" />
+					<choice text="Unclassified (highway)" property="osm=highway=unclassified" />
+					<choice text="Residential (highway)" property="osm=highway=residential" />
+					<choice text="Rail (railway)" property="osm=railway=rail" />
+					<choice text="Tram (railway)" property="osm=railway=tram" />
+					<choice text="Subway (railway)" property="osm=railway=subway" />
+					<choice text="River (waterway)" property="osm=waterway=river" />
+					<choice text="Canal (waterway)" property="osm=waterway=canal" />
+				</combobox>
+			
+				<checkbox name="oneway" text="Oneway" action="onewayChanged" />
+				<label />
+			</panel>
+		</tab>
+		<tab text="Advanced">
+			<panel columns="1" gap="5">
+				<table name="advanced_table" weightx="1" weighty="1" action="tableSelectionChanged">
+					<header>
+						<column text="Key" />
+						<column text="Value" />
+					</header>
+				</table>
+				<panel columns="3" gap="5" halign="right">
+					<button text="Add" action="propAdd" />
+					<button text="Delete" action="propDelete" />
+				</panel>
+				<panel columns="2" gap="5" top="5" left="5" bottom="5" right="5">
+					<label text="Key" />
+					<textfield name="edit_key" action="keyChanged" weightx="1" />
+					<label text="Value" />
+					<textfield name="edit_value" action="valueChanged" weightx="1" />
+				</panel>
+			</panel>			
+		</tab>
+		<tab text="Segments">
+			<panel columns="1" gap="3" top="3">
+				<label text="Segments" />
+				<list name="segments" weightx="1" weighty="1" action="segmentSelectionChanged" />
+				<panel columns="4" gap="5" halign="right" bottom="5">
+					<checkbox name="changeSegment" text="Change" action="changeSegment" />
+					<button text="Up" action="up" />
+					<button text="Down" action="down" />
+					<button text="Delete" action="deleteSegment" />
+				</panel>
+			</panel>			
+		</tab>
+	</tabbedpane>
+
+	<panel colspan="2" columns="2" gap="10" top="5" halign="center">
+		<button text="OK" type="default" action="ok" />
+		<button text="Cancel" type="cancel" action="cancel" />
+	</panel>
+</panel>

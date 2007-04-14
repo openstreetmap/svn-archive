@@ -1,0 +1,102 @@
+<project name="openstreetmap" default="dist" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  <property name="lib" location="lib"/>
+  <property name="jsp" location="jsp"/>
+  <property name="bin" location="bin"/>
+  <property name="html" location="html"/>
+	
+	<property name="keystore.alias" value="steveC"/>
+	<property name="keystore.pass" value="blahblah"/>
+
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${build}/gui"/>
+  	<mkdir dir="${dist}"/>
+    <mkdir dir="${dist}/api"/>
+    <mkdir dir="${dist}/rc1/org"/>
+    <mkdir dir="${dist}/rc1/org/openstreetmap"/>
+    <mkdir dir="${dist}/rc1/org/openstreetmap/processing"/>
+  </target>
+
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src}"
+      classpath="${lib}/core.jar:${lib}/commons-httpclient-3.0-rc3.jar:${lib}/commons-logging.jar:${lib}/commons-codec-1.3.jar:${lib}/MinML2.jar:${lib}/plugin.jar:${lib}/thinlet.jar"
+      debug="true"
+      optimize="off"
+      destdir="${build}"
+      />
+
+  </target>
+
+  <target name="dist" depends="compile">
+    <copy file="${lib}/commons-codec-1.3.jar" tofile="${dist}/commons-codec-1.3.jar"/>
+    <copy file="${lib}/commons-logging.jar" tofile="${dist}/commons-logging.jar"/>
+    <copy file="${lib}/commons-httpclient-3.0-rc3.jar" tofile="${dist}/commons-httpclient-3.0-rc3.jar"/>
+    <copy file="${lib}/core.jar" tofile="${dist}/core.jar"/>
+    <copy file="${lib}/MinML2.jar" tofile="${dist}/MinML2.jar"/>
+    <copy file="${lib}/thinlet.jar" tofile="${dist}/thinlet.jar"/>
+
+    <copy file="${lib}/data/LucidaSansUnicode-11.vlw" tofile="${dist}/rc1/data/LucidaSansUnicode-11.vlw"/>
+
+    <copy todir="${dist}">
+      <fileset dir="${html}"/>
+    </copy>
+  	<replace file="${dist}/test_osm_applet.html" token="@user@" value="${test.user}"/>
+  	<replace file="${dist}/test_osm_applet.html" token="@pass@" value="${test.pass}"/>
+
+    	<copy todir="${dist}/rc1/org/openstreetmap/processing/">
+      <fileset dir="${build}/org/openstreetmap/processing"/>
+    </copy>
+    <copy todir="${dist}/rc1/org/openstreetmap/gui/">
+      <fileset dir="${build}/org/openstreetmap/gui"/>
+    </copy>
+    <copy todir="${dist}/rc1/org/openstreetmap/client/">
+      <fileset dir="${build}/org/openstreetmap/client"/>
+    </copy>
+    <copy todir="${dist}/rc1/org/openstreetmap/util/">
+      <fileset dir="${build}/org/openstreetmap/util"/>
+    </copy>
+
+    <mkdir dir="${dist}/rc1/data"/>
+    <copy file="${lib}/data/hand.png" tofile="${dist}/rc1/data/hand.png"/>
+    <copy file="${lib}/data/zoomin.png" tofile="${dist}/rc1/data/zoomin.png"/>
+    <copy file="${lib}/data/zoomout.png" tofile="${dist}/rc1/data/zoomout.png"/>
+    <copy file="${lib}/data/yahoo.png" tofile="${dist}/rc1/data/yahoo.png"/>
+    <copy file="${lib}/data/way.xml" tofile="${dist}/rc1/data/way.xml"/>
+    <copy file="${lib}/data/segment.xml" tofile="${dist}/rc1/data/segment.xml"/>
+    <copy file="${lib}/data/node.xml" tofile="${dist}/rc1/data/node.xml"/>
+    <copy file="${lib}/data/msgbox.xml" tofile="${dist}/rc1/data/msgbox.xml"/>
+
+    <jar destfile="${dist}/OSMApplet.jar" basedir="${dist}/rc1" />
+
+  </target>
+
+  <target name="sign" depends="dist">
+    <!-- FIXME figure out which really need signing (no its not just httpclient) -->
+    <signjar jar="${dist}/commons-codec-1.3.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/commons-httpclient-3.0-rc3.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/commons-logging.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/core.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/MinML2.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/OSMApplet.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+    <signjar jar="${dist}/thinlet.jar" alias="${keystore.alias}" storepass="${keystore.pass}"/>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <target name="run.windows" depends="sign">
+    <exec executable="cmd">
+    	<arg value="/c"/>
+    	<arg file="dist/test_osm_applet.html"/>
+    </exec>
+  </target>
+
+</project>

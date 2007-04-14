@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel name="root" columns="1" gap="30" top="10" left="10" right="10" bottom="10">
+	<label name="msg" />
+	<panel name="buttons" columns="2" gap="5" halign="center">
+	</panel>
+</panel>

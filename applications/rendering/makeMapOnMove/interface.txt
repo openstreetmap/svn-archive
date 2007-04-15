@@ -1,0 +1,59 @@
+# Usage: 
+# * Mode in which to display this tool
+# * Keypad code
+# * Description (can be HTML)
+# * action, one of:
+#   * mode:new_mode
+#   * set:name=value
+#   * add:name=value
+#   * action:action_name
+#   * --
+
+default:1:Junction:action:split_way
+default:2:Road type:mode:waytype
+default:3:POI:mode:poi
+default:5:Name:mode:name
+default:9:One-way:set:oneway=yes
+    
+waytype:0:&larr;:mode:default # Back
+waytype:1:Track:set:highway=track
+waytype:2:Unclassified:set:highway=unclassified
+waytype:3:Residential:set:highway=residential
+waytype:4:Secondary:set:highway=secondary
+waytype:5:Primary:set:highway=primary
+waytype:6:Motorway:set:highway=motorway
+waytype:7:Trunk:set:highway=trunk
+waytype:8:Motorway link:set:highway=motorway_link
+waytype:9:Service:set:highway=service
+
+poi:0:&larr;:mode:default # Back
+poi:1:Food &amp; drink:mode:poi_food
+poi:2:Buildings:mode:poi_building
+poi:3:Post:mode:poi_post
+poi:4:Amenity:mode:poi_amenity
+poi:5:Nature:mode:poi_natural
+
+poi_food:0:&larr;:mode:poi # Back
+poi_food:1:Pub:add:amenity=pub,name=The unlabelled pub
+poi_food:2:Cafe:add:amenity=cafe
+poi_food:3:Restaurant:add:amenity=restaurant
+poi_food:4:Services:add:amenity=services
+
+poi_building:0:&larr;:mode:poi # Back
+poi_building:1:Church:add:place_of_worship=church,amenity=church
+poi_building:2:Town hall:add:building=town_hall
+
+poi_post:0:&larr;:mode:poi # Back
+poi_post:1:Postbox:add:amenity=postbox
+poi_post:2:Post office:add:amenity=post_office
+
+poi_amenity:0:&larr;:mode:poi # Back
+poi_amenity:1:Shops:add:notes=shops
+poi_amenity:2:Supermarket:add:amenity=supermarket
+
+
+
+
+
+
+

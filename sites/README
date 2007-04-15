@@ -1,3 +1,7 @@
 This folder is for openstreetmap and other sites
 
-/rails_port/ the upcoming OSM port with API 0.4
+tile.openstreetmap.org/ - the code which makes the mapnik layer go
+www.openstreetmap.org/ - the existing ruby/eruby code which makes the site and API go
+rails_port/ - the upcoming OSM port with API 0.4
+support/ - support files for the core websites
+other/ - other websites which are on the dev or other servers

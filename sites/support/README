@@ -1,0 +1,7 @@
+This folder is for files which support various sites
+
+dev/ - for dev.openstreetmap.org
+osm-autologger/ - FIXME
+www.openstreetmap.org/ - for the main site
+log-anonymiser/ - to take a apache log from OSM and strip out usernames and replace with hash(username + salt)
+tile/ - for tile.openstreetmap.org

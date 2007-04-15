@@ -1,7 +1,18 @@
+== What this is about == 
+
+Maintainer: Oliver J White (OJW) / Dirk-Lueder Kreie (Deelkar)
+
+Purpose: Rendering maps with osmarender for the slippy map osmarender 
+         layer from live OSM data.
+
+On the Wiki: [[Tiles@home]]
+
+
 == Getting Started == 
 
 To use this copy the correct config template to tilesAtHome.conf then edit
 to set you username and password (both for osm data and for tiles upload)
+
 
 == Running the client ==
 
@@ -18,11 +29,13 @@ to upload tiles use "upload.pl"
 
 (might need multiple calls to upload everything, depending on your setup)
 
+
 == Troubleshooting ==
 
 if you get Errors about libGD run tilesGen_noGD.pl instead of tilesGen.pl
 this will be significantly slower, so you might want to investigate how to 
 get libgd working with your perl installation.
+
 
 == Other sources of information ==
 

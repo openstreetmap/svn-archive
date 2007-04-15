@@ -1,0 +1,5 @@
+Freemap map generator
+
+Designed for generating Mapnik maps of the UK in OSGB projection.
+However it's easily adjusted, I suspect, to fit the national projection of
+any country.

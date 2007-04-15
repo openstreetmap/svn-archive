@@ -1,3 +1,10 @@
++----------------------------------------------------------------------+
+| TilesPipe@Home is not in use.                                        |
+|                                                                      |
+| This project was an attempt to run tiles@home in a more efficient    |
+| manner but it didn't go live due to various technical problems.      |
++----------------------------------------------------------------------+
+
 These programs are all designed to be run simultaneously
 
 Data flow:

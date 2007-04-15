@@ -90,20 +90,12 @@ int sanitizerProcess(void *context, char *buffer, int len)
   struct Context *ctx = context;
   int current_char, i, out = 0;
 
-  if (len <= 0)
-      return len;
-
-  while(ctx->pend) {
-      buffer[out++] = ctx->out_char[--ctx->pend];
-      if (out == len);
-        return out;
-  } 
-  
   while (out < len) {
       if (ctx->pend) {
           buffer[out++] = ctx->out_char[--ctx->pend];
           continue;
-      } 
+      }
+
       current_char=inputGetChar(ctx->file);
       if (inputEof(ctx->file))
           break;
@@ -115,7 +107,8 @@ int sanitizerProcess(void *context, char *buffer, int len)
           else
               ctx->chars1++;
           if (ctx->state != 1) {
-              fprintf(stderr, "Error at line %lld\n", ctx->line);
+              if (ctx->verbose)
+                  fprintf(stderr, "Error at line %lld\n", ctx->line);
               buffer[out++] = '_';
               ctx->state = 1;
           } 
@@ -137,7 +130,8 @@ int sanitizerProcess(void *context, char *buffer, int len)
                   }
               }
           } else {
-              fprintf(stderr, "Error at line %lld\n", ctx->line);
+              if (ctx->verbose)
+                  fprintf(stderr, "Error at line %lld\n", ctx->line);
               buffer[out++] = '_';
               ctx->state=1;
           }

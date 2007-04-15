@@ -3,6 +3,7 @@ Misc utility scripts etc. go into this directory.
 
 Please also use the following subdirectories if they apply:
 
-import  - Software that imports external data into OSM
-export  - Software that exports OSM data into different formats such as Garmin Maps, PostGIS, etc.
+import      - Software that imports external data into OSM
+export      - Software that exports OSM data into different formats such as Garmin Maps, PostGIS, etc.
+gps-tracks  - Software that has something to do with GPS tracks
 

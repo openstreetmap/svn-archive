@@ -1,0 +1,14 @@
+liveGPS plugin for josm
+-----------------------
+
+Author: Frederik Ramm <frederik@remote.org>
+
+* Install like any other plugin
+* start the unix program "gpsd" on the local machine
+  (http://gpsd.berlios.de/)
+* run josm
+* activate track acquisition in "LiveGPS" menu
+
+Current version has "localhost:2947" hardcoded as the gpsd address.
+Some problems exist! 
+

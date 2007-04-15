@@ -1,0 +1,2308 @@
+# translation of fr.po to
+# Frederic Bonifas <fredericbonifas@gmail.com>, 2006. <>, 2006.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: fr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-10-22 21:32+0200\n"
+"PO-Revision-Date: 2006-10-14 12:17+0200\n"
+"Last-Translator: Frederic Bonifas <fredericbonifas@gmail.com>\n"
+"Language-Team: French <josm-fr@eigenheimstrasse.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddSegmentAction.java:52
+msgid "Add segment"
+msgstr "Ajouter un segment."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddSegmentAction.java:54
+msgid "Add a segment between two nodes."
+msgstr "Ajouter un segment entre deux noeuds."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:56
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:322
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:59
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:370
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/DeleteCommand.java:46
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/DeleteCommand.java:58
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:58
+msgid "Delete nodes, streets or segments."
+msgstr "Supprimer des noeuds, des rues ou des segments."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:152
+msgid "Cannot delete node."
+msgstr "Impossible de supprimer le noeud."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:156
+msgid "This object is in use."
+msgstr "Cet objet est en utilisation."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:173
+msgid "Used by more than two segments."
+msgstr "Utilis� par plus de deux segments."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:178
+msgid "Used by only one segment."
+msgstr "Utilis� par un seul segment."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:187
+msgid "Wrong direction of segments."
+msgstr "Segments dans la mauvaise direction."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:190
+msgid "Conflicting keys"
+msgstr "Cl�s conflictuelles"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:196
+msgid "Segments are part of different ways."
+msgstr "Les segments appartiennent � diff�rents chemins."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/DeleteAction.java:214
+msgid "Delete Node"
+msgstr "Supprimer un noeud"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:46
+msgid "Zoom"
+msgstr "Zoom"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/ZoomAction.java:46
+msgid "Zoom in by dragging. (Ctrl+up,left,down,right,+,-)"
+msgstr ""
+"Zoomer en s�lectionnant une zone � la souris. (Ctrl+haut, gauche, bas, "
+"droite, +, -)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/SelectionAction.java:73
+msgid "Selection"
+msgstr "S�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/SelectionAction.java:73
+msgid "Select objects by dragging or clicking."
+msgstr ""
+"S�lectionner des objets en cliquant ou en d�finissant une zone � la souris."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/SelectionAction.java:74
+msgid "Straight line"
+msgstr "Ligne droite"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/SelectionAction.java:74
+msgid "Select objects in a straight line."
+msgstr "S�lectionner des objets sur une ligne droite."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/MoveAction.java:52
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/MoveCommand.java:122
+msgid "Move"
+msgstr "D�placer"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/MoveAction.java:54
+msgid "Move around objects that are under the mouse or selected."
+msgstr "D�placer les objets sous la souris ou s�lectionn�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/MoveAction.java:102
+msgid "Cannot move objects outside of the world."
+msgstr "Impossible de d�placer des objets en dehors de la Terre."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:61
+msgid "Add Way"
+msgstr "Ajouter un chemin"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:61
+msgid "Add a new way to the data."
+msgstr "Ajouter un nouveau chemin aux donn�es;"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:95
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:143
+msgid ""
+"Warning: This way is incomplete. Try to download it, before adding segments."
+msgstr ""
+"Attention : ce chemin est incomplet.Essayez de le t�l�charger en entier "
+"avant d'ajouter des segments."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:162
+#, fuzzy, java-format
+msgid ""
+"{0} way has been selected.\n"
+"Do you wish to select all segments belonging to the way instead?"
+msgid_plural ""
+"{0} ways have been selected.\n"
+"Do you wish to select all segments belonging to the ways instead?"
+msgstr[0] ""
+"{0} chemin a �t� s�lectionn�.\n"
+"Pr�f�rez-vous s�lectionner tous les segments appartenant � ce chemin ?{0} "
+"chemins�ont �t� s�lectionn�s.\n"
+"Pr�f�rez-vous s�lectionner tous les segments appartenant � ces chemins ?"
+msgstr[1] ""
+"{0} chemin a �t� s�lectionn�.\n"
+"Pr�f�rez-vous s�lectionner tous les segments appartenant � ce chemin ?{0} "
+"chemins�ont �t� s�lectionn�s.\n"
+"Pr�f�rez-vous s�lectionner tous les segments appartenant � ces chemins ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:162
+msgid "Add segments from ways"
+msgstr "Ajouter des segments aux chemins"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:168
+msgid "Do you want to add all other selected segments to the one selected way?"
+msgstr ""
+"Souhaitez-vous ajouter tous les autres segments s�lectionn�s au chemin "
+"s�lectionn� ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:168
+msgid "Add segments to way?"
+msgstr "Ajouter des segments au chemin ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:173
+msgid "Reorder all line segments?"
+msgstr "R�organiser tous les segments de la ligne ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:173
+msgid "Reorder?"
+msgstr "R�organiser ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:232
+#, java-format
+msgid "Create a new way out of {0} segment?"
+msgid_plural "Create a new way out of {0} segments?"
+msgstr[0] "Cr�er un nouveau chemin constitu� de {0} segment ?"
+msgstr[1] "Cr�er un nouveau chemin constitu� de {0} segments ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddWayAction.java:232
+msgid "Create new way"
+msgstr "Cr�er un nouveau chemin"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddNodeAction.java:47
+msgid "Add node"
+msgstr "Ajouter un noeud"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddNodeAction.java:47
+msgid "Add a new node to the map"
+msgstr "Ajouter un nouveau noeud � la carte"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddNodeAction.java:48
+msgid "Add node into segment"
+msgstr "Ajouter un noeud dans un segment"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddNodeAction.java:48
+msgid "Add a node into an existing segment"
+msgstr "Ajouter un noeud dans un segment existant"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddNodeAction.java:85
+msgid "Can not add a node outside of the world."
+msgstr "Impossible d'ajouter un noeud en dehors de la Terre."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/mapmode/AddNodeAction.java:134
+msgid "Add Node into Segment"
+msgstr "Ajouter un noeud dans un segment"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:23
+msgid "Raw GPS data"
+msgstr "Donn�es GPS brutes"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadGpsTask.java:26
+msgid "Downloading GPS data"
+msgstr "T�l�chargement des donn�es GPS"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:25
+msgid "OpenStreetMap data"
+msgstr "Donn�es OpenStreetMap"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:28
+#: ../../plugins/landsat/src/landsat/DownloadLandsatTask.java:21
+msgid "Downloading data"
+msgstr "T�l�chargement des donn�es"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:39
+msgid "No data imported."
+msgstr "Aucune donn�e import�e"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/downloadtasks/DownloadOsmTask.java:40
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:76
+msgid "Data Layer"
+msgstr "Calque de donn�es"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ReverseSegmentAction.java:26
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ReverseSegmentAction.java:53
+msgid "Reverse Segments"
+msgstr "Retourne les segments."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ReverseSegmentAction.java:26
+msgid "Revert the direction of all selected Segments."
+msgstr "Retourne les segments s�lectionn�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ReverseSegmentAction.java:39
+msgid "Please select at least one segment."
+msgstr "S�lectionner au moins un segment."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/PreferencesAction.java:21
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:209
+msgid "Preferences"
+msgstr "Pr�f�rences"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/PreferencesAction.java:21
+msgid "Open a preferences page for global settings."
+msgstr "Ouvrir la page des pr�f�rences pour les r�glages g�n�raux."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:40
+msgid "Open"
+msgstr "Ouvrir"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:40
+msgid "Open a file."
+msgstr "Ouvrir un fichier"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:73
+msgid "CSV Data import for non-GPS data is not implemented yet."
+msgstr ""
+"L'import des donn�es CSV pour les donn�es non GPS n'est pas encore "
+"impl�ment�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:76
+#, java-format
+msgid "Unknown file extension: {0}"
+msgstr "Extension de fichier inconnue : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:83
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:59
+#, java-format
+msgid "Error while parsing {0}"
+msgstr "Erreur pendant le traitement {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/OpenAction.java:86
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:63
+#, java-format
+msgid "Could not read \"{0}\""
+msgstr "Impossible de lire \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:71
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:287
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:302
+#, java-format
+msgid "Executing {0}"
+msgstr "Ex�cute {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:146
+msgid "The Tool requires some data to be loaded."
+msgstr "Cette fonctionnalit� n�cessite que des donn�es soient charg�es."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:306
+#, java-format
+msgid "Could not execute command: {0}"
+msgstr "Impossible d'ex�cuter la commande {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:317
+msgid "Tools"
+msgstr "Outils"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExternalToolsAction.java:352
+msgid "Could not read external tool configuration."
+msgstr "Impossible de lire le fichier externe de configuration."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:29
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:69
+msgid "Align Nodes in Circle"
+msgstr "Placer les noeuds en cercle"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:29
+msgid "Move the selected nodes into a circle."
+msgstr "D�placer les noeuds s�lectionn�s en un cercle."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AlignInCircleAction.java:39
+msgid "Please select at least four nodes."
+msgstr "S�lectionner au moins quatre noeuds."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RenameLayerAction.java:35
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RenameLayerAction.java:56
+msgid "Rename layer"
+msgstr "Renommer le calque"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RenameLayerAction.java:44
+msgid "Also rename the file"
+msgstr "Renommer �galement le fichier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RenameLayerAction.java:80
+#, java-format
+msgid "Could not rename the file \"{0}\"."
+msgstr "Impossible de renommer le fichier \"{0}\"."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UndoAction.java:23
+msgid "Undo"
+msgstr "Annuler"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UndoAction.java:23
+msgid "Undo the last action."
+msgstr "Annuler la derni�re action."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:87
+msgid "Download from OSM"
+msgstr "T�l�charger depuis OSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:87
+msgid "Download map data from the OSM server."
+msgstr "T�l�charger les donn�es de la carte depuis le serveur OSM."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:102
+msgid ""
+"Move and zoom the image like the main map. Select an area to download by "
+"dragging."
+msgstr ""
+"D�placer ou zoomer sur l'image comme pour la carte principale. S�lectionner "
+"une zone � t�l�charger en faisant glisser la souris bouton principal enfonc�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:105
+msgid "Bounding box"
+msgstr "Zone s�lectionn�e"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:106
+msgid "min lat"
+msgstr "lat min"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:108
+msgid "min lon"
+msgstr "lon min"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:110
+msgid "max lat"
+msgstr "lat max"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:112
+msgid "max lon"
+msgstr "lon max"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:122
+msgid "Download the following data:"
+msgstr "T�l�chargement des donn�es :"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:129
+msgid "URL from www.openstreetmap.org"
+msgstr "URL � partir de www.openstreetmap.org"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:182
+msgid "Bookmarks"
+msgstr "Marque-pages"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:198
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:320
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:344
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/AddCommand.java:52
+msgid "Add"
+msgstr "Ajouter"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:203
+msgid "Please enter the desired coordinates first."
+msgstr "Entrer les coordonn�es d�sir�es en premier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:206
+msgid "Please enter a name for the location."
+msgstr "Entrer un nom pour cet emplacement."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:214
+msgid "Remove"
+msgstr "Supprimer"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:219
+msgid "Select a bookmark first."
+msgstr "S�lectionner un marque-page en premier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:238
+msgid "Choose an area"
+msgstr "Choisir une zone"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:261
+msgid "Please enter the desired coordinates or click on a bookmark."
+msgstr "Entrer les coordonn�es d�sir�es ou cliquer sur un marque-page."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadAction.java:263
+msgid "Please select at least one download data type."
+msgstr "S�lectionner au moins un type de donn�es � t�l�charger."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExitAction.java:18
+msgid "Exit"
+msgstr "Quitter"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExitAction.java:18
+msgid "Exit the application."
+msgstr "Quitter l'application."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:57
+msgid "About"
+msgstr "� propos"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:57
+msgid "Display the about screen."
+msgstr "Montrer l'� propos."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:67
+#, java-format
+msgid "Java OpenStreetMap Editor Version {0}"
+msgstr "Java OpenStreetMap Editor Version {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:68
+#, java-format
+msgid "last change at {0}"
+msgstr "dernier changement le {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:69
+#, java-format
+msgid "Java Version {0}"
+msgstr "Java Version {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:70
+msgid "Homepage"
+msgstr "Page d'accueil"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:72
+msgid "Bug Reports"
+msgstr "Rapports de bug"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:74
+msgid "News about JOSM"
+msgstr "Nouveut�s sur JOSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:78
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListPopup.java:25
+msgid "Info"
+msgstr "Info"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:79
+msgid "Readme"
+msgstr "Lisez-moi"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:80
+msgid "Revision"
+msgstr "R�vision"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:81
+msgid "Contribution"
+msgstr "Contribution"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:85
+msgid "About JOSM..."
+msgstr "� propos de JOSM..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AboutAction.java:95
+msgid "File could not be found."
+msgstr "Impossible de trouver le fichier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:25
+msgid "No document open so nothing to save."
+msgstr "Aucun document ouvert donc rien � sauvegarder."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:28
+msgid "The document contains no data. Save anyway?"
+msgstr "Le document ne contient aucune donn�e. Sauvegarder quand m�me ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:28
+msgid "Empty document"
+msgstr "Document vide"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:32
+msgid ""
+"There are unresolved conflicts. Conflicts will not be saved and handled as "
+"if you rejected all. Continue?"
+msgstr ""
+"Certains conflits ne sont pas r�solus. Les conflits ne seront pas "
+"sauvegard�s si vous ne les traitez pas. Continuer ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:32
+msgid "Conflicts"
+msgstr "Conflits"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:79
+msgid "File exists. Overwrite?"
+msgstr "Le fichier existe d�j�. �crire dessus ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DiskAccessAction.java:79
+msgid "Overwrite"
+msgstr "�crire dessus"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:29
+msgid "data"
+msgstr "donn�es"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:30
+msgid "selection"
+msgstr "s�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:31
+msgid "layer"
+msgstr "calque"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:32
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:141
+msgid "conflict"
+msgstr "conflit"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:40
+#, java-format
+msgid "Auto Scale: {0}"
+msgstr "Zoom auto : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/AutoScaleAction.java:43
+#, java-format
+msgid "Auto zoom the view (to {0}. Disabled if the view is moved)"
+msgstr ""
+"Zoomer automatiquement sur la vue ({0}) (Annul� si la vue est d�plac�e)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAsAction.java:28
+msgid "Save as"
+msgstr "Sauvegarder sous"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAsAction.java:28
+msgid "Save the current data to a new file."
+msgstr "Sauvegarder les donn�es actuelles dans un nouveau fichier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:25
+msgid "OSM Server Files (.osm .xml)"
+msgstr "Fichiers d'un serveur OSM (.osm .xml)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:26
+msgid "GPX Files (.gpx)"
+msgstr "Fichiers GPX (.gpx)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/ExtensionFileFilter.java:27
+msgid "CSV Files (.csv .txt)"
+msgstr "Fichiers CSV (.csv .txt)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:36
+msgid "Upload to OSM"
+msgstr "Charger sur OSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:36
+msgid "Upload all changes to the OSM server."
+msgstr "Charger tous les changements sur le serveur OSM."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:41
+msgid "Nothing to upload. Get some data first."
+msgstr "Rien � charger. Obtenez d'abord des donn�es."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:46
+msgid "There are unresolved conflicts. You have to resolve these first."
+msgstr ""
+"Certains conflits ne sont pas r�solus. Vous devez d'abord les r�soudre."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:75
+msgid "Uploading data"
+msgstr "Chargement des donn�es"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:97
+msgid "No changes to upload."
+msgstr "Aucun changement � charger."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:106
+msgid "Objects to add:"
+msgstr "Objets � ajouter : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:114
+msgid "Objects to modify:"
+msgstr "Objets � modifier : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:122
+msgid "Objects to delete:"
+msgstr "Objets � supprimer : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/UploadAction.java:129
+msgid "Upload this changes?"
+msgstr "Charger ces changements ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:54
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:55
+msgid "Help"
+msgstr "Aide"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/HelpAction.java:106
+msgid "Can only edit help pages from JOSM Online Help"
+msgstr ""
+"Les pages d'aide ne peuvent �tre �dit�es que depuis l'aide en ligne de JOSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:39
+#, java-format
+msgid "Downloading {0} segment"
+msgid_plural "Downloading {0} segments"
+msgstr[0] "T�l�chargement de {0} segment"
+msgstr[1] "T�l�chargement de {0} segments"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:57
+msgid "Download incomplete objects"
+msgstr "T�l�charger les objets incomplets"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:57
+msgid "Download all (selected) incomplete ways from the OSM server."
+msgstr ""
+"T�l�charger tous les chemins s�lectionn�s incomplets depuis le serveur OSM."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:66
+msgid "Please select an incomplete way."
+msgstr "S�lectionner un chemin incomplet"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:69
+#, java-format
+msgid "Download {0} incomplete ways?"
+msgstr "T�l�charger {0} chemins incomplets ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/DownloadIncompleteAction.java:69
+msgid "Download?"
+msgstr "T�l�charger ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RedoAction.java:23
+msgid "Redo"
+msgstr "Refaire"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/RedoAction.java:23
+msgid "Redo the last undone action."
+msgstr "Refaire la derni�re action annul�e"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:40
+msgid ""
+"Note: GPL is not compatible to the OSM license. Do not upload GPL licensed "
+"tracks."
+msgstr ""
+"Note : La GPL n'est pas compatible avec la licence d'OSM. Ne pas importer "
+"des traces sous licence GPL."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:45
+msgid "Export to GPX"
+msgstr "Exporter en GPX"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:45
+msgid "Export the data to GPX file."
+msgstr "Exporter les donn�es en un fichier GPX."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:51
+msgid "Nothing to export. Get some data first."
+msgstr "Rien � exporter.Obtenez d'abord des donn�es."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:75
+msgid "gps track description"
+msgstr "description de la trace GPS"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:81
+msgid "Add author information"
+msgstr "Ajouter des informations sur l'auteur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:84
+msgid "Real name"
+msgstr "Nom r�el"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:88
+msgid "Email"
+msgstr "E-mail"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:92
+msgid "Copyright (URL)"
+msgstr "Copyright (URL)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:96
+msgid "Predefined"
+msgstr "Pr�d�fini"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:98
+msgid "Copyright year"
+msgstr "Ann�e du copyright"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:106
+msgid "Keywords"
+msgstr "Mots-cl�s"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:110
+msgid "Export options"
+msgstr "Options d'export"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:131
+#, java-format
+msgid "Error while exporting {0}"
+msgstr "Erreur � l'export {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:131
+msgid "Error"
+msgstr "Erreur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/GpxExportAction.java:185
+msgid "Choose a predefined license"
+msgstr "Choisir une licence pr�d�finie"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAction.java:31
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAction.java:31
+msgid "Save the current data."
+msgstr "Sauvegarder les donn�es actuelles"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAction.java:58
+msgid "CSV output not supported yet."
+msgstr "Sortie en CSV pas encore support�e."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAction.java:61
+msgid "Unknown file extension."
+msgstr "Extension de fichier inconnue."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/actions/SaveAction.java:67
+msgid "An error occoured while saving."
+msgstr "Une erreur s'est produite pendant la sauvegarde."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:44
+#, java-format
+msgid ""
+"The plugin {0} throwed an exception: {1}\n"
+"It may be outdated. Please contact the plugin's autor.\n"
+"This message will not shown again until JOSM is restarted."
+msgstr ""
+"Le greffon {0} signale une exception : {1}\n"
+"Il est possible qu'il ne soit pas � jour. Merci de contacter l'auteur du "
+"greffon.\n"
+"Ce message ne r�apparaitra pas jusqu'au prochain d�marrage de JOSM."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:50
+msgid "Do nothing"
+msgstr "Ne rien faire"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:50
+msgid "Report Bug"
+msgstr "Rapporter un bug"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:51
+msgid ""
+"An unexpected exception occoured.\n"
+"\n"
+"This is always a coding error. If you are running the latest\n"
+"version of JOSM, please consider be kind and file a bug report."
+msgstr ""
+"Une exception inattendue est apparue.\n"
+"\n"
+"Cela est toujours du � une erreur de code. Si vous utilisez la derni�re "
+"version de JOSM, il serait aimable de produire un rapport de bug."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:54
+msgid "Unexpected Exception"
+msgstr "Exception inattendue"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:62
+msgid ""
+"Please send this to josm@eigenheimstrasse.de\n"
+"\n"
+msgstr ""
+"Merci d'envoyer cela � josm@eigenheimstrasse.de\n"
+"\n"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/BugReportExceptionHandler.java:83
+msgid ""
+"Please send an email with the following information to josm@eigenheimstrasse."
+"de"
+msgstr ""
+"Merci d'envoyer un e-mail avec les informations suivantes � "
+"josm@eigenheimstrasse.de"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/ShortCutLabel.java:12
+msgid "Ctrl-"
+msgstr "Ctrl-"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/ShortCutLabel.java:14
+msgid "Alt-"
+msgstr "Alt-"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/ShortCutLabel.java:16
+msgid "AltGr-"
+msgstr "AltGr-"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/tools/ShortCutLabel.java:18
+msgid "Shift-"
+msgstr "Shift-"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/plugins/PluginException.java:17
+#, java-format
+msgid "An error occoured in plugin {0}"
+msgstr "Une erreur s'est produite avec le greffon {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:63
+msgid "Load Selection"
+msgstr "Charger la s�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:70
+#, java-format
+msgid "Contact {0}..."
+msgstr "Contact de {0}..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:75
+msgid "Downloading..."
+msgstr "T�l�chargement..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:87
+#, java-format
+msgid "Could not read from url: \"{0}\""
+msgstr "Impossible de lire quelque chose depuis l'URL : \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:90
+#, java-format
+msgid "Parsing error in url: \"{0}\""
+msgstr "Erreur d'analyse dans l'URL : \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:113
+msgid "Current Selection"
+msgstr "S�lection actuelle"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:113
+msgid "Open a selection list window."
+msgstr "Afficher une liste de la s�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:143
+msgid "Please enter a search string."
+msgstr "Entrer le texte � rechercher."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:145
+msgid ""
+"<html>Fulltext search.<ul><li><code>Baker Street</code>  - 'Baker' and "
+"'Street' in any key or name.</li><li><code>\"Baker Street\"</code>  - 'Baker "
+"Street' in any key or name.</li><li><code>name:Bak</code>  - 'Bak' anywhere "
+"in the name.</li><li><code>-name:Bak</code>  - not 'Bak' in the name.</"
+"li><li><code>foot:</code>  - key=foot set to any value.</ul></html>"
+msgstr ""
+"<html>Recherche du texte entier<ul><li><code>Baker�Street</code>��-"
+"�'Baker'�et�'Street'�dans les cl�s et les noms.</li><li><code>\"Baker�Street"
+"\"</code>��-�'Baker�Street'�dans les cl�s et les noms.</li><li><code>name:"
+"Bak</code>��-�'Bak'�n'importe o� dans le nom.</li><li><code>-name:Bak</"
+"code>��-�pas de�'Bak'�dans le nom.</li><li><code>foot:</code>��-"
+"�key=foot�associ� � n'importe quelle valeur.</ul></html>"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:153
+msgid "replace selection"
+msgstr "remplacer la s�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:154
+msgid "add to selection"
+msgstr "ajouter � la s�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:155
+msgid "remove from selection"
+msgstr "supprimer de la s�lection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/SelectionListDialog.java:172
+msgid "Search"
+msgstr "Chercher"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:51
+msgid "Conflict"
+msgstr "Conflit"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:51
+msgid "Merging conflicts."
+msgstr "G�rer les conflits"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:63
+msgid "Resolve"
+msgstr "R�soudre"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:64
+msgid "Open a merge dialog of all selected items in the list above."
+msgstr ""
+"Ouvrir une une fen�tre de fusion des �l�ments s�lectionn�s dans cette liste."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:73
+msgid "Select"
+msgstr "S�lectionner"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:74
+msgid ""
+"Set the selected elements on the map to the selected items in the list above."
+msgstr ""
+"Remplacer les �l�ments de la carte par les �l�ments s�lectionn�s de cette "
+"liste."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:108
+msgid "Please select something from the conflict list."
+msgstr "S�lectionnez un �l�ment de la liste des conflits."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/ConflictDialog.java:117
+msgid "Resolve Conflicts"
+msgstr "R�soudre les conflits"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:82
+msgid "Click Reload to refresh list"
+msgstr "Cliquer sur Recharger pour rafraichir la liste"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:83
+msgid "Reload"
+msgstr "Recharger"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:84
+msgid "Revert"
+msgstr "Retourner"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:87
+msgid "History"
+msgstr "Historique"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:87
+msgid "Display the history of all selected items."
+msgstr "Afficher l'historique des objets s�lectionn�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:96
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MapStatus.java:225
+msgid "Object"
+msgstr "Objet"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:96
+msgid "Date"
+msgstr "Date"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:131
+msgid "Reload all currently selected objects and refresh the list."
+msgstr "Recharger les objets s�lectionn�s et rafraichir la liste."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:135
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:180
+msgid "Not implemented yet."
+msgstr "Pas encore impl�ment�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/HistoryDialog.java:138
+msgid ""
+"Revert the state of all currently selected objects to the version selected "
+"in the history list."
+msgstr ""
+"R�tablir l'�tat des objets s�lectionn�s � la version s�lectionn�e dans "
+"l'historique."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
+msgid "Command Stack"
+msgstr "Pile de commandes"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/CommandStackDialog.java:31
+msgid "Open a list of all commands (undo buffer)."
+msgstr "Ouvrir une liste de toutes les commandes (annuler le buffer)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:99
+msgid "Please select the objects you want to change properties for."
+msgstr "S�lectionner les objets dont vous voulez changer les propri�t�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:102
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:156
+#, java-format
+msgid "This will change {0} object."
+msgid_plural "This will change {0} objects."
+msgstr[0] "Cela changera {0} objet."
+msgstr[1] "Cela changera {0} objets."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:102
+#, java-format
+msgid ""
+"Please select a new value for \"{0}\".<br>(Empty string deletes the key.)"
+msgstr ""
+"Merci de s�lectionner une valeur pour \"{0}\". <br>(une cha�ne de caract�res "
+"vide supprime la cl�)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:114
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:178
+msgid "Change values?"
+msgstr "Changer les valeurs ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:132
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:284
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:369
+msgid "<different>"
+msgstr "<diff�rent>"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:151
+msgid "Please select objects for which you want to change properties."
+msgstr "S�lectionnez les objets dont vous voulez changer les propri�t�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:156
+msgid "Please select a key"
+msgstr "S�lectionner une cl�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:169
+msgid "Please select a value"
+msgstr "S�lectionner une valeur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:222
+msgid "Properties"
+msgstr "Propri�t�s"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:222
+msgid "Property for selected objects."
+msgstr "Propri�t�s des objets s�lectionn�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:241
+#, java-format
+msgid "Could not read annotation preset source: {0}"
+msgstr "Impossible de lire le fichier d'annotations : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:244
+#, java-format
+msgid "Error parsing {0}: "
+msgstr "Erreur de traitement {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:263
+#, java-format
+msgid "Change {0} object"
+msgid_plural "Change {0} objects"
+msgstr[0] "Cela changera {0} objet."
+msgstr[1] "Change {0} objets."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:276
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/ConflictResolver.java:81
+msgid "Key"
+msgstr "Cl�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:276
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/ConflictResolver.java:81
+msgid "Value"
+msgstr "Valeur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:309
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:359
+msgid "Please select the row to edit."
+msgstr "S�lectionnez l'�tage � �diter."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:314
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:374
+msgid "Please select the row to delete."
+msgstr "S�lectionner l'�tage � supprimer."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:320
+msgid "Add a new key/value pair to all objects"
+msgstr "Ajouter un nouveau couple cl�/valeur � tous les objets"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:321
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:53
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:355
+#: ../../plugins/grid/src/grid/GridPlugin.java:43
+#: ../../plugins/grid/src/grid/GridPlugin.java:49
+msgid "Edit"
+msgstr "�diter"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:321
+msgid "Edit the value of the selected key for all objects"
+msgstr "�diter la valeur de la cl� selectionn�e pour tous les objets"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/PropertiesDialog.java:322
+msgid "Delete the selected key in all objects"
+msgstr "Supprimer la cl� s�lectionn�e de tous les objets"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:60
+msgid "Delete the selected layer."
+msgstr "Supprimer le calque s�lectionn�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:82
+msgid "Show/Hide"
+msgstr "Montrer/Cacher"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:83
+msgid "Toggle visible state of the selected layer."
+msgstr "Change la visibilit� du calque s�lectionn�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:122
+msgid "Layers"
+msgstr "Calque"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:122
+msgid "Open a list of all loaded layers."
+msgstr "Ouvrir une liste de tous les calques charg�s."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:196
+msgid "Move the selected layer one row up."
+msgstr "D�placer le calque s�lectionn� un �tage au-dessus."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:202
+msgid "Move the selected layer one row down."
+msgstr "D�placer le calque s�lectionn� un �tage en-dessous."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/dialogs/LayerListDialog.java:216
+msgid "Merge the selected layer into the layer directly below."
+msgstr ""
+"Fusionner les calques s�lectionn�s dans le calque directement en dessous."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:160
+#, java-format
+msgid "Unknown type at line {0}"
+msgstr "Type inconnu � la ligne : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:178
+#, java-format
+msgid "Cannot have a writable combobox with default values (line {0})"
+msgstr ""
+"Impossible d'avoir une combobox avec des valeurs par d�faut (ligne {0})"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:183
+#, java-format
+msgid ""
+"display_values ({0}) and values ({1}) must be of same number of elements."
+msgstr ""
+"display_values�({0})�et�values�({1})�doivent contenir le m�me nombre "
+"d'�l�ments."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:184
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:185
+msgid "element"
+msgid_plural "elements"
+msgstr[0] "�l�ment"
+msgstr[1] "�l�ments"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:190
+#, java-format
+msgid "Unknown annotation object {0} at line {1} column {2}"
+msgstr "Objet d'annotation inconnu : {0} � la ligne {1} colonne {2}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/annotation/AnnotationPreset.java:258
+msgid "Change Properties"
+msgstr "Changer les propri�t�s"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:161
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:66
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:135
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/MoveCommand.java:122
+msgid "node"
+msgid_plural "nodes"
+msgstr[0] "noeud"
+msgstr[1] "noeuds"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:162
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:53
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:136
+msgid "segment"
+msgid_plural "segments"
+msgstr[0] "segment"
+msgstr[1] "segments"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:163
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:92
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:137
+msgid "way"
+msgid_plural "ways"
+msgstr[0] "chemin"
+msgstr[1] "chemins"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:178
+msgid "There were conflicts during import."
+msgstr "Il y a eu des conflits pendant l'import."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:317
+#, java-format
+msgid "{0} consists of:"
+msgstr "{0} consiste en :"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/OsmDataLayer.java:321
+#, java-format
+msgid " ({0} deleted.)"
+msgstr " ({0} supprim�s)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:57
+msgid "Convert to data layer"
+msgstr "Convertir en un calque de donn�es"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:159
+msgid "track"
+msgid_plural "tracks"
+msgstr[0] "trace"
+msgstr[1] "traces"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:160
+msgid "point"
+msgid_plural "points"
+msgstr[0] "point"
+msgstr[1] "points"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:185
+#, java-format
+msgid "a track with {0} point"
+msgid_plural "a track with {0} points"
+msgstr[0] "une trace avec {0} point"
+msgstr[1] "une trace avec {0} points"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:189
+#, java-format
+msgid "{0} consists of {1} track"
+msgid_plural "{0} consists of {1} tracks"
+msgstr[0] "{0} consiste en {1} trace"
+msgstr[1] "{0} consiste en {1} traces"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:189
+#, java-format
+msgid "{0} point"
+msgid_plural "{0} points"
+msgstr[0] "{0} point"
+msgstr[1] "{0} points"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:193
+msgid "Customize line drawing"
+msgstr "Personnaliser le dessin des lignes"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:197
+msgid "Use global settings."
+msgstr "Utiliser les r�glages g�n�raux."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:198
+msgid "Draw lines between points for this layer."
+msgstr "Dessiner des lignes entre les points pour ce calque."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:199
+msgid "Do not draw lines between points for this layer."
+msgstr "Ne pas dessiner de ligne entre les points pour ce calque."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:211
+msgid "Select line drawing options"
+msgstr "Options de dessin des lignes"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:222
+msgid "Customize Color"
+msgstr "Personnaliser la couleur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:227
+msgid "OK"
+msgstr "OK"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:227
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:24
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:227
+msgid "Default"
+msgstr "Par d�faut"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:228
+msgid "Choose a color"
+msgstr "Choisir une couleur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:243
+msgid "Import images"
+msgstr "Import des images"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/RawGpsLayer.java:255
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:349
+msgid "JPEG images (*.jpg)"
+msgstr "images JPEG (*.jpg)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:90
+#, java-format
+msgid "Images for {0}"
+msgstr "Images pour {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:95
+msgid "Read GPS..."
+msgstr "Lecture du GPS..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:102
+#, java-format
+msgid "No time for point {0} x {1}"
+msgstr "Aucune heure pour le point {0}�x�{1}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:107
+#, java-format
+msgid "Cannot read time \"{0}\" from point {1} x {2}"
+msgstr "Impossible de lire l'heure \"{0}\" du point {1} x {2}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:114
+msgid "No images with readable timestamps found."
+msgstr "Aucune image avec des informations horaires lisibles trouv�e."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:125
+#, java-format
+msgid "Reading {0}..."
+msgstr "Lecture de {0}..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:191
+msgid "Geotagged Images"
+msgstr "Images g�omarqu�es"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:269
+#, java-format
+msgid "GPS start: {0}"
+msgstr "Allumage du GPS : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:270
+#, java-format
+msgid "GPS end: {0}"
+msgstr "Extinction du GPS : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:272
+#, java-format
+msgid "current delta: {0}s"
+msgstr "variation actuelle : {0}s"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:273
+msgid "timezone difference: "
+msgstr "diff�rence de fuseau horaire : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:297
+msgid "image"
+msgid_plural "images"
+msgstr[0] "image"
+msgstr[1] "images"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:297
+#, java-format
+msgid "{0} within the track."
+msgstr "{0} dans la trace."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:338
+msgid "Sync clock"
+msgstr "Synchroniser l'horloge"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:395
+#, java-format
+msgid "The date in file \"{0}\" could not be parsed."
+msgstr "La date du fichier \"{0}\" ne peut �tre analys�e."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:399
+#, java-format
+msgid "There is no EXIF time within the file \"{0}\"."
+msgstr "Il n'y a aucune heure EXIF associ�e au fichier \"{0}\"."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:403
+msgid "Image"
+msgstr "Image"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:405
+msgid "Enter shown date (mm/dd/yyyy HH:MM:SS)"
+msgstr "Entrez la date et l'heure montr�es (mm/jj/aaaa HH:MM:SS)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:408
+msgid "GPS unit timezome (difference to photo)"
+msgstr "Zone horaire de l'unit� GPS (diff�rence avec la photo)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:416
+msgid "Syncronize Time with GPS Unit"
+msgstr "Synchroniser l'heure avec l'unit� GPS"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:432
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/layer/GeoImageLayer.java:434
+msgid "Time entered could not be parsed."
+msgstr "L'heure indiqu�e ne peut �tre analys�e."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/BookmarkList.java:74
+msgid "Could not read bookmarks."
+msgstr "Impossible de lire les marque-pages."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/BookmarkList.java:98
+msgid "Could not write bookmark."
+msgstr "Impossible d'�crire un marque-page."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MapView.java:123
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:171
+msgid "Java Open Street Map - Editor"
+msgstr "Java Open Street Map - Editor"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MapView.java:163
+msgid "layer not in list."
+msgstr "le calque n'est pas dans la liste."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:55
+msgid "Hint: Some changes came from uploading new data to the server."
+msgstr ""
+"Indication : Certains changements viennent du chargment de nouvelles donn�es "
+"sur le serveur."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:57
+msgid "There are unsaved changes. Really quit?"
+msgstr "Certains changements ne sont pas sauvegard�s. Quitter quand m�me ?"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:58
+msgid "Unsaved Changes"
+msgstr "Changements non sauvegard�s"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:144
+msgid "Java OpenStreetMap Editor"
+msgstr "Java OpenStreetMap Editor"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:145
+msgid "usage"
+msgstr "usage"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:147
+msgid "options"
+msgstr "Options"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:148
+msgid "Show this help"
+msgstr "Montrer cette aide"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:149
+msgid "Standard unix geometry argument"
+msgstr "Argument de g�om�trie standard UNIX"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:150
+msgid "Download the bounding box"
+msgstr "T�l�charge la zone s�lectionn�e"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:151
+msgid "Download the location at the url (with lat=x&lon=y&zoom=z)"
+msgstr "T�l�charge l'emplacement donn� par l'URL (avec lat=x&lon=y&zoom=z)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:152
+msgid "Open file (as raw gps, if .gpx or .csv)"
+msgstr "Ouvrir un fichier (en GPS brut si .gpx ou .csv)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:153
+msgid "Download the bounding box as raw gps"
+msgstr "T�l�charger la zone s�lectionn�e en GPS brut."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:154
+msgid "Select with the given search"
+msgstr "S�lectionner les r�sultats de la recherche."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:155
+msgid "Don't launch in fullscreen mode"
+msgstr "Ne pas lancer en plein �cran"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:156
+msgid "Reset the preferences to default"
+msgstr "R�tablir les pr�f�rences par d�faut"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:157
+msgid "Set the language. Example: "
+msgstr "Choisir la langue. Exemple : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:158
+msgid "examples"
+msgstr "exemples"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:164
+msgid ""
+"Parameters are read in the order they are specified, so make sure you load\n"
+"some data before --selection"
+msgstr ""
+"Les param�tres sont lus dans l'ordre dans lequel ils sont sp�cifi�s, soyez "
+"donc\n"
+"sur d'avoir charg� des donn�es avant --selection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplication.java:166
+msgid "Instead of --download=<bbox> you may specify osm://<bbox>\n"
+msgstr "Au lieu de --download=<bbox> vous devriez indiquer osm://<bbox>\n"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:52
+msgid "Layer"
+msgstr "Calque"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:56
+msgid "Files"
+msgstr "Fichiers"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainMenu.java:57
+msgid "Connection"
+msgstr "Connexion"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PleaseWaitDialog.java:22
+msgid "Contacting the OSM server..."
+msgstr "Contact du serveur OSM..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MapStatus.java:223
+msgid "Lat/Lon"
+msgstr "Lat/Lon"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/ConflictResolver.java:232
+#, java-format
+msgid "{0} object has conflicts:"
+msgid_plural "{0} objects have conflicts:"
+msgstr[0] "{0} objet est conflictuel : "
+msgstr[1] "{0} objets sont conflictuels :"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/ConflictResolver.java:235
+msgid "my version:"
+msgstr "ma version :"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/ConflictResolver.java:241
+msgid "their version:"
+msgstr "version du serveur : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/ConflictResolver.java:247
+msgid "resolved version:"
+msgstr "version choisie : "
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:77
+msgid "Error while parsing"
+msgstr "Erreur d'analyse"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PleaseWaitRunnable.java:80
+msgid "File Not found"
+msgstr "Fichier non trouv�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:34
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:35
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:36
+msgid "string"
+msgstr "texte"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:34
+msgid "Name of the user."
+msgstr "Nom de l'utilisateur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:35
+msgid "OSM Password."
+msgstr "Mot de passe OSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:36
+msgid "Size the applet to the given geometry (format: WIDTHxHEIGHT)"
+msgstr ""
+"Redimensionner l'applet aux proportions donnn�es (format LARGEURxHAUTEUR)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:37
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:38
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:39
+msgid "string;string;..."
+msgstr "texte;texte;..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:37
+msgid ""
+"Download each. Can be x1,y1,x2,y2 an url containing lat=y&lon=x&zoom=z or a "
+"filename"
+msgstr ""
+"Les t�l�charge tous. Peut �tre sous la forme \"x1,y1,x2,z2\" ou un URL "
+"contenant lat=y&lon=x&zoom=z ou encore un nom de fichier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:38
+msgid ""
+"Download each as raw gps. Can be x1,y1,x2,y2 an url containing "
+"lat=y&lon=x&zoom=z or a filename"
+msgstr ""
+"T�l�charger comme donn�es GPS brutes. Peut �tre sous la forme x1,y1,x2,"
+"y2�un�URL�contenant�lat=y&lon=x&zoom=z ou un nom de fichier."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:39
+msgid ""
+"Add each to the initial selection. Can be a google-like search string or an "
+"url which returns osm-xml"
+msgstr ""
+"Les ajoute tous � la s�lection initale. Cela peut �tre un texte de recherche "
+"comme pour Google ou un URL retournant du osm-xml"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:40
+msgid "any"
+msgstr "n'importe"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:40
+msgid "If specified, reset the configuration instead of reading it."
+msgstr ""
+"Si sp�cifi�, r�tablir la configuration par d�faut au lieu de lire ceci."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:65
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:68
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/MainApplet.java:68
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:71
+msgid "Password"
+msgstr "Mot de passe"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:123
+msgid "You have to restart JOSM for some settings to take effect."
+msgstr "Vous devez red�marrer JOSM pour que certains r�glages prennent effet."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:185
+msgid "Draw lines between raw gps points."
+msgstr "Dessiner des lignes entre les points GPS bruts."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:189
+msgid "Force lines if no segments imported."
+msgstr "Forcer les lignes si aucun segment import�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:190
+msgid "Draw large GPS points."
+msgstr "Dessiner de gros points GPS."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:191
+msgid "Draw Direction Arrows"
+msgstr "Dessiner les fl�ches de direction"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:250
+msgid ""
+"Force drawing of lines if the imported data contain no line information."
+msgstr ""
+"Force le dessin de lignes si les donn�es import�es ne contiennent pas "
+"d'informationsur les lignes."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:254
+msgid "Draw larger dots for the GPS points."
+msgstr "Dessine de plus gros points GPS."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:255
+msgid "Draw direction hints for all segments."
+msgstr "Dessine les fl�ches de direction pour tous les segments."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:306
+msgid "Color"
+msgstr "Couleur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:307
+msgid "Name"
+msgstr "Nom"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:328
+msgid "Choose"
+msgstr "Choisir"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:332
+msgid "Please select a color."
+msgstr "S�lectionner une couleur"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:337
+#, java-format
+msgid "Choose a color for {0}"
+msgstr "Choisir une couleur pour {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:347
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:361
+msgid "Annotation preset source"
+msgstr "Source du fichier d'annotations"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:386
+msgid "The base URL to the OSM server (REST API)"
+msgstr "L'URL de base du serveur OSM (API)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:387
+msgid "Login name (email) to the OSM account."
+msgstr "Nom d'utilisateur (e-mail) de votre compte OSM."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:388
+msgid ""
+"Login password to the OSM account. Leave blank to not store any password."
+msgstr ""
+"Mot de passe d'identification au compte OSM. Laisser blanc pour ne stocker "
+"aucun mot de passe."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:389
+msgid "The base URL to the server retrieving WMS background pictures from."
+msgstr "L'URL du serveur r�cup�rant les images de l'arri�re-plan WMS."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:390
+msgid ""
+"<html>Import string specification. lat/lon and time are imported.<br><b>lat</"
+"b>: The latitude coordinate<br><b>lon</b>: The longitude "
+"coordinate<br><b>time</b>: The measured time as string<br><b>ignore</b>: "
+"Skip this field<br>An example: \"ignore ignore lat lon\" will use ' ' as "
+"delimiter, skip the first two values and read then lat/lon.<br>Other "
+"example: \"lat,lon\" will just read lat/lon values comma seperated.</html>"
+msgstr ""
+"<html>Import des sp�cifications. lat/lon et time sont import�s.<br><b>lat</"
+"b> : la latitude<br><b>lon</b> :la longitude<br><b>time</b> :l'heure "
+"mesur�e<br><b>ignore</b>:�sauter ce champ<br>Un exemple : "
+"\"ignore�ignore�lat�lon\"�utilisera�'�'�comme d�limiteur, sautera les deux "
+"premi�res valeurs, et lira ensuite la latitude et la longitude<br>Un autre "
+"exemple : \"lat,lon\"�lira simplement la latitude et la longitude s�par�es "
+"par une virgule.</html>"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:397
+msgid ""
+"If your gps device draw to few lines, select this to draw lines along your "
+"way."
+msgstr ""
+"Si votre unit� GPS dessine trop peu de lignes, s�lectionnez ceci pour "
+"dessiner des lignes le long de votre chemin."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:398
+msgid "Colors used by different objects in JOSM."
+msgstr "Couleurs utilis�es par les diff�rents objets de JOSM."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:399
+msgid ""
+"The sources (url or filename) of annotation preset definition files. See "
+"http://josm.eigenheimstrasse.de/wiki/AnnotationPresets for help."
+msgstr ""
+"Sources (URL ou fichier) des fichiers d'annotations pr�d�finies. Voir http://"
+"josm.eigenheimstrasse.de/wiki/AnnotationPresets pour de l'aide (en anglais)."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:400
+msgid "Add a new annotation preset source to the list."
+msgstr "Ajouter un nouveau fichier d'annotations � la liste."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:401
+msgid "Delete the selected source from the list."
+msgstr "Supprimer la source s�lectionn� de la liste."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:406
+msgid "Display Settings"
+msgstr "R�glages d'affichage"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:406
+msgid ""
+"Various settings that influence the visual representation of the whole "
+"program."
+msgstr "Divers r�glages de l'apparence de tout le programme."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:407
+msgid "Look and Feel"
+msgstr "Apparence et comportement"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:414
+msgid "Colors"
+msgstr "Couleurs"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:421
+msgid "Connection Settings"
+msgstr "R�glages de connexion"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:421
+msgid "Connection Settings to the OSM server."
+msgstr "R�glages de connexion au serveur OSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:422
+msgid "Base Server URL"
+msgstr "URL du serveur de base"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:424
+msgid "OSM username (email)"
+msgstr "Nom d'utilisateur OSM (e-mail)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:426
+msgid "OSM password"
+msgstr "Mot de passe OSM"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:428
+msgid ""
+"<html>WARNING: The password is stored in plain text in the preferences file."
+"<br>The password is transfered in plain text to the server, encoded in the "
+"url.<br><b>Do not use a valuable Password.</b></html>"
+msgstr ""
+"<html>ATTENTION : Le mot de passe est stock� en texte brut dans le fichier "
+"de pr�f�rences.<br>Le mot de passe est transf�r� en texte brut au serveur, "
+"encod� dans l'URL.<br><b>N'utilisez pas un mot de passe de valeur.</b></html>"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:437
+msgid "CSV import specification (empty: read from first line in data)"
+msgstr ""
+"Sp�cifications de l'import CSV (vide : lire depuis la premi�re ligne de "
+"donn�es)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:442
+msgid "Map Settings"
+msgstr "R�glages de la carte"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:442
+msgid "Settings for the map projection and data interpretation."
+msgstr ""
+"R�glages pour la projection de la carte et l'interpr�tation des donn�es."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:443
+msgid "Projection method"
+msgstr "M�thode de projection"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:446
+msgid "Annotation preset sources"
+msgstr "Sources des annotations pr�d�finies"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:462
+msgid "Plugins"
+msgstr "Greffons"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:462
+msgid "Configure available Plugins."
+msgstr "Configurer les greffons disponibles."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/gui/PreferenceDialog.java:465
+msgid "Get more plugins"
+msgstr "Obtenir plus de greffons"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:45
+#, java-format
+msgid "Downloading points {0} to {1}..."
+msgstr "T�l�chargement des points {0} {1}..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/BoundingBoxDownloader.java:89
+msgid "Downloading OSM data..."
+msgstr "T�l�chargement des donn�es OSM..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:101
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:103
+msgid "Unknown version"
+msgstr "Version inconnue"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:119
+msgid "Found <seg> tag on non-way."
+msgstr "Tag <seg> trouv� en dehors d'un chemin."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:122
+msgid "Incomplete segment with id=0"
+msgstr "Le segment avec l'id=0 est incomplet"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:131
+msgid "NullPointerException. Possible some missing tags."
+msgstr "NullPointerException.�Certains tags peuvent manquer."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:146
+msgid "Illegal object with id=0"
+msgstr "L'objet avec l'id=0 est ill�gal"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:154
+#, java-format
+msgid "Couldn''t read time format \"{0}\"."
+msgstr "Impossible de lire le format horaire \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:169
+#, java-format
+msgid "Missing required attirbute \"{0}\"."
+msgstr "Attribut requis \"{0}\" manquant."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:239
+msgid "Preparing data..."
+msgstr "Pr�paration des donn�es..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmReader.java:249
+msgid "Illformed Node id"
+msgstr "id du noeud malform�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmServerWriter.java:71
+#, java-format
+msgid "Upload {0} {1} ({2})..."
+msgstr "Charge {0} {1} ({2})..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmServerWriter.java:185
+msgid "Unknown host"
+msgstr "H�te inconnu"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawGpsReader.java:43
+#: ../../plugins/waypoints/src/WaypointReader.java:55
+#, java-format
+msgid "Data error: lat value \"{0}\" is out of bound."
+msgstr "Erreur de donn�es : La valeur de latitude \"{0}\" est hors limite."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawGpsReader.java:45
+#: ../../plugins/waypoints/src/WaypointReader.java:59
+#, java-format
+msgid "Data error: lon value \"{0}\" is out of bound."
+msgstr "Erreur de donn�es : La valeur de longitude \"{0}\" est hors limite."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:39
+msgid "Could not detect data format string."
+msgstr "Impossible de d�tecter le texte de format des donn�es."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:62
+msgid ""
+"Format string in data is incomplete or not found. Try setting an manual "
+"format string in Preferences."
+msgstr ""
+"Le format des donn�es est incomplet ou non trouv�. Essayez de r�gler le "
+"format manuellement dans les pr�f�rences."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:63
+msgid ""
+"Format string is incomplete. Need at least 'lat' and 'lon' specification"
+msgstr ""
+"Le texte de format est incomplet. Les sp�cifications 'lat' et 'long' au "
+"minimum sont requises."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:83
+#, java-format
+msgid "Unknown data type: \"{0}\"."
+msgstr "Type de donn�es inconnu : \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:83
+msgid "Maybe add an format string in preferences."
+msgstr "D�finissez peut-�tre le format dans les pr�f�rences."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/RawCsvReader.java:88
+#, java-format
+msgid "Parsing error in line {0}"
+msgstr "Analyse de l'erreur ligne {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:67
+msgid "Incorrect password or username."
+msgstr "Mot de passe ou nom d'utilisateur incorrect."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:74
+msgid "Warning: The password is transferred unencrypted."
+msgstr "Attention : Le mot de passe est transf�r� non-crypt�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:78
+msgid "Save user and password (unencrypted)"
+msgstr "Sauvegarder l'utilisateur et le mot de passe (non crypt�)"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:81
+msgid "Enter Password"
+msgstr "Entrer un mot de passe"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmConnection.java:116
+msgid "Aborting..."
+msgstr "�chec..."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/IncompleteDownloader.java:80
+#, java-format
+msgid "Data error: Segment {0} is deleted but part of Way {1}"
+msgstr ""
+"Erreur de donn�es : le segment {0} est supprim� mais appartient au chemin {1}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/IncompleteDownloader.java:115
+#, java-format
+msgid "Data error: Node {0} is deleted but part of Segment {1}"
+msgstr ""
+"Erreur de donn�es : le noeud {0} est supprim� mais appartient au segment {1}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/io/OsmIdReader.java:34
+msgid "Error during parse."
+msgstr "Erreur pendant l'analyse."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/PositionConflict.java:19
+msgid "position"
+msgstr "position"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/ConflictItem.java:33
+msgid "different"
+msgstr "diff�rent"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/DeleteConflict.java:14
+msgid "deleted"
+msgstr "supprim�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/DeleteConflict.java:18
+msgid "true"
+msgstr "vrai"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/DeleteConflict.java:18
+msgid "false"
+msgstr "faux"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/SegmentConflict.java:21
+msgid "none"
+msgstr "rien"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/SegmentConflict.java:25
+msgid "segments"
+msgstr "segments"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/ToConflict.java:19
+msgid "to"
+msgstr "depuis"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/conflict/FromConflict.java:19
+msgid "from"
+msgstr "�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:48
+msgid "new"
+msgstr "nouveau"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:48
+msgid "unknown"
+msgstr "inconnu"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:87
+#, java-format
+msgid "{0} node"
+msgid_plural "{0} nodes"
+msgstr[0] "{0} noeud"
+msgstr[1] "{0} noeuds"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/osm/visitor/NameVisitor.java:89
+msgid "incomplete"
+msgstr "incomplet"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:134
+msgid "background"
+msgstr "arri�re plan"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:138
+msgid "incomplete way"
+msgstr "chemin incomplet"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:139
+msgid "selected"
+msgstr "s�lectionn�"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:140
+msgid "gps point"
+msgstr "point GPS"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/data/Preferences.java:142
+msgid "scale"
+msgstr "mesure"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/ConflictResolveCommand.java:77
+#, java-format
+msgid "Resolve {0} conflicts in {1} objects"
+msgstr "R�soudre {0} conflits dans {1} objets"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/ChangeCommand.java:37
+msgid "Change"
+msgstr "Changer"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/SequenceCommand.java:51
+msgid "Sequence"
+msgstr "S�quence"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:66
+#, java-format
+msgid "Remove \"{0}\" for"
+msgstr "Supprime \"{0}\" pour"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:66
+#, java-format
+msgid "Set {0}={1} for"
+msgstr "Affecte {0}={1} pour"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/command/ChangePropertyCommand.java:72
+msgid "object"
+msgid_plural "objects"
+msgstr[0] "objet"
+msgstr[1] "objets"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:201
+#, java-format
+msgid "Plugin not found: {0}."
+msgstr "Greffon non trouv� : {0}"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:204
+#, java-format
+msgid "Could not load plugin {0}."
+msgstr "Impossible de charger le greffon \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:228
+msgid "unnamed"
+msgstr "sans-nom"
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:271
+msgid "The projection could not be read from preferences. Using EPSG:4263."
+msgstr ""
+"La projection ne peut �tre lue depuis les pr�f�rences. EPSG:4263 sera "
+"utilis�."
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:329
+#, java-format
+msgid "Ignoring malformed url: \"{0}\""
+msgstr "Ignore l'URL malform� : \"{0}\""
+
+#: ../../../../editors/josm/src/org/openstreetmap/josm/Main.java:341
+#, java-format
+msgid "Ignoring malformed file url: \"{0}\""
+msgstr "Ignore le fichier malform� d'URL : \"{0}\""
+
+#: ../../plugins/osmarender/src/OsmarenderPlugin.java:102
+#: ../../plugins/osmarender/src/OsmarenderPlugin.java:108
+msgid "View"
+msgstr "Voir"
+
+#: ../../plugins/landsat/src/landsat/DownloadLandsatTask.java:18
+msgid "Landsat background images"
+msgstr "Images satellites landsat"
+
+#: ../../plugins/landsat/src/landsat/LandsatLayer.java:45
+msgid "Wrong longitude transformation for tile manager. Can't operate on {0}"
+msgstr ""
+"Mauvaise transformation de longitude pour le cache. Ne peut pas op�rer sur "
+"{0}"
+
+#: ../../plugins/landsat/src/landsat/LandsatLayer.java:70
+#, java-format
+msgid "WMS layer: {0}"
+msgstr "calque WMS :{0}"
+
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
+msgid "Annotation Preset Tester"
+msgstr "Testeur d'annotations pr�d�finies"
+
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:20
+msgid ""
+"Open the annotation preset test tool for previewing annotation preset "
+"dialogs."
+msgstr ""
+"Ouvrir le testeur d'annotations pr�d�finies pour en pr�visualiser le "
+"fonctionnement."
+
+#: ../../plugins/annotation-tester/src/annotationtester/AnnotationTesterAction.java:28
+msgid "You have to specify annotation sources in the preferences first."
+msgstr ""
+"Vous devez d'abord sp�cifier la source des annotations dans les pr�f�rences."
+
+#: ../../plugins/grid/src/grid/GridLayer.java:74
+#, fuzzy
+msgid "Grid layer:"
+msgstr "calque"
+
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:33
+#, fuzzy
+msgid "Open waypoints file"
+msgstr "Ouvrir un fichier"
+
+#: ../../plugins/waypoints/src/WaypointOpenAction.java:33
+#, fuzzy
+msgid "Open a waypoints file."
+msgstr "Ouvrir un fichier"
+
+#~ msgid "Download {0} ways containing a total of {1} segments?"
+#~ msgstr ""
+#~ "TÃÂ©lÃÂ©charger {0} chemins contenant un total de {1} segments ?"
+
+#~ msgid "Refresh the selection list."
+#~ msgstr "Actualiser la liste de sÃÂ©lection"
+
+#~ msgid "Search for objects."
+#~ msgstr "Rechercher des objets"
+
+#~ msgid "Language"
+#~ msgstr "Langue"
+
+#~ msgid "Conflicts in disjunct objects"
+#~ msgstr "Conflits dans des objets disjoints"
+
+#~ msgid "Downloading {0} {1}"
+#~ msgstr "TÃÂ©lÃÂ©chargement {0} {1}"
+
+#~ msgid "Got more than one object when expecting only one."
+#~ msgstr "Plus de deux objets acquis alors qu'un seul ÃÂ©tait attendu."
+
+#~ msgid "Used in a way."
+#~ msgstr "UtilisÃÂ© par un chemin."
+
+#~ msgid "Move selected objects around."
+#~ msgstr "DÃÂ©placer les objets sÃÂ©lectionnÃÂ©s."
+
+#~ msgid "Open as raw gps data"
+#~ msgstr "Ouvrir avec les donnÃÂ©es GPS brutes"
+
+#~ msgid "Show background"
+#~ msgstr "Montrer l'arriÃÂ¨re-plan"
+
+#~ msgid "Images"
+#~ msgstr "Images"
+
+#~ msgid "Time loop in gps data."
+#~ msgstr "Boucle horaire dans les donnÃÂ©es GPS."
+
+#~ msgid "OptionPane.okButtonText"
+#~ msgstr "OptionPane.okButtonText"
+
+#~ msgid "OptionPane.cancelButtonText"
+#~ msgstr "OptionPane.cancelButtonText"
+
+#~ msgid "Cannot open preferences directory: {0}"
+#~ msgstr ""
+#~ "Impossible d'ouvrir le rÃÂÃÂÃÂÃÂ©pertoire des "
+#~ "prÃÂÃÂÃÂÃÂ©fÃÂÃÂÃÂÃÂ©rences : {0}"
+
+#~ msgid ""
+#~ "Preferences could not be loaded. Write default preference file to \"{0}\"."
+#~ msgstr ""
+#~ "Les prÃÂÃÂÃÂÃÂ©fÃÂÃÂÃÂÃÂ©rences pourraient ne pas "
+#~ "ÃÂÃÂÃÂÃÂªtre chargÃÂÃÂÃÂÃÂ©es. ÃÂÃÂÃÂÃÂcrivez les "
+#~ "prÃÂÃÂÃÂÃÂ©fÃÂÃÂÃÂÃÂ©rences par dÃÂÃÂÃÂÃÂ©faut "
+#~ "dans \"{0}\"."
+
+#~ msgid ""
+#~ "Java OpenStreetMap Editor\n"
+#~ "\n"
+#~ "usage:\n"
+#~ "\tjava -jar josm.jar <option> <option> <option>...\n"
+#~ "\n"
+#~ "options:\n"
+#~ "\t--help|-?|-h                              Show this help\n"
+#~ "\t--geometry=widthxheight(+|-)x(+|-)y       Standard unix geometry "
+#~ "argument\n"
+#~ "\t[--download=]minlat,minlon,maxlat,maxlon  Download the bounding box\n"
+#~ "\t[--download=]<url>                        Download the location at the "
+#~ "url (with lat=x&lon=y&zoom=z)\n"
+#~ "\t[--download=]<filename>                   Open file (as raw gps, if ."
+#~ "gpx or .csv)\n"
+#~ "\t--downloadgps=minlat,minlon,maxlat,maxlon Download the bounding box as "
+#~ "raw gps\n"
+#~ "\t--selection=<searchstring>                Select with the given search\n"
+#~ "\t--no-fullscreen                           Don't launch in fullscreen "
+#~ "mode\n"
+#~ "\t--reset-preferences                       Reset the preferences to "
+#~ "default\n"
+#~ "\n"
+#~ "examples:\n"
+#~ "\tjava -jar josm.jar track1.gpx track2.gpx london.osm\n"
+#~ "\tjava -jar josm.jar http://www.openstreetmap.org/index.html?"
+#~ "lat=43.2&lon=11.1&zoom=13\n"
+#~ "\tjava -jar josm.jar london.osm --selection=http://www.ostertag.name/osm/"
+#~ "OSM_errors_node-duplicate.xml\n"
+#~ "\tjava -jar josm.jar 43.2,11.1,43.4,11.4\n"
+#~ "\n"
+#~ "Parameters are read in the order they are specified, so make sure you "
+#~ "load\n"
+#~ "some data before --selection\n"
+#~ "\n"
+#~ "Instead of --download=<bbox> you may specify osm://<bbox>\n"
+#~ msgstr ""
+#~ "JavaÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·OpenStreetMapÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·Editor\n"
+#~ "\n"
+#~ "usage:\n"
+#~ "\tjavaÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·-"
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·josm."
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·<option>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·<option>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·<option>...\n"
+#~ "\n"
+#~ "options:\n"
+#~ "\t--help|-?|-"
+#~ "hÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·Montre "
+#~ "cette aide\n"
+#~ "\t--geometry=widthxheight(+|-)x(+|-)"
+#~ "yÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·Argument "
+#~ "de "
+#~ "gÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©omÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©trie "
+#~ "standard d'UNIX\n"
+#~ "\t[--download=]minlat,minlon,maxlat,"
+#~ "maxlonÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·TÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©lÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©charge "
+#~ "la "
+#~ "boÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ®te "
+#~ "de "
+#~ "coordonnÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©es\n"
+#~ "\t[--download=]"
+#~ "<url>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·TÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©lÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©charge "
+#~ "ce qui ce situe "
+#~ "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ  "
+#~ "l'URLÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·"
+#~ "(avecÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·lat=x&lon=y&zoom=z)\n"
+#~ "\t[--download=]"
+#~ "<nomdufichier>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ouvrir "
+#~ "un "
+#~ "fichierÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·"
+#~ "(en GPS brut "
+#~ "siÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·."
+#~ "gpxÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ouÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·."
+#~ "csv)\n"
+#~ "\t--downloadgps=minlat,minlon,maxlat,"
+#~ "maxlonÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·TÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©lÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©charge "
+#~ "la "
+#~ "boÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ®te "
+#~ "de "
+#~ "coordonnÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©es "
+#~ "en GPS brut.\n"
+#~ "\t--"
+#~ "selection=<texte>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·SÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©lectionne "
+#~ "en fonction de l'objet de recherche\n"
+#~ "\t--no-"
+#~ "fullscreenÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·Ne "
+#~ "pas lancer en mode plein "
+#~ "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©cran\n"
+#~ "\t--reset-"
+#~ "preferencesÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ· "
+#~ "PrÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©fÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©rences "
+#~ "par "
+#~ "dÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©faut\n"
+#~ "\n"
+#~ "examples:\n"
+#~ "\tjavaÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·-"
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·josm."
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·track1."
+#~ "gpxÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·track2."
+#~ "gpxÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·london."
+#~ "osm\n"
+#~ "\tjavaÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·-"
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·josm."
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·http://"
+#~ "www.openstreetmap.org/index.html?lat=43.2&lon=11.1&zoom=13\n"
+#~ "\tjavaÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·-"
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·josm."
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·london."
+#~ "osmÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·--"
+#~ "selection=http://www.ostertag.name/osm/OSM_errors_node-duplicate.xml\n"
+#~ "\tjavaÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·-"
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·josm."
+#~ "jarÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·43.2,11.1,43.4,11.4\n"
+#~ "\n"
+#~ "Les "
+#~ "paramÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¨tres "
+#~ "sont lus dans l'ordre dans lequel ils sont "
+#~ "spÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©cifiÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©s, "
+#~ "soyez donc sur d'avoir des "
+#~ "donnÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©es "
+#~ "avant --selection\n"
+#~ "\n"
+#~ "Au lieu de --"
+#~ "download=<bbox>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·vous "
+#~ "pouvez "
+#~ "spÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©cifierÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ·osm://"
+#~ "<bbox>\n"

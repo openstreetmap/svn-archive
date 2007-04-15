@@ -1,0 +1,30 @@
+<project name="slippymap" default="dist" basedir=".">
+
+	<target name="dist" depends="compile">
+		<!-- images -->
+		<copy todir="build/images">
+			<fileset dir="images" />
+		</copy>
+
+		<!-- create josm-custom.jar -->
+		<jar destfile="slippymap.jar" basedir="build">
+			<manifest>
+                <attribute name="Plugin-Class" value="slippymap.SlippyMapPlugin" />
+                <attribute name="Plugin-Description" value="Displays a slippy map tile grid, and tile status info" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="slippymap" classpath="../../josm/bin/" destdir="build" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="build" />
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+</project>

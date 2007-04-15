@@ -1,0 +1,42 @@
+<project name="waypoints" default="build" basedir=".">
+
+	<!-- point to your JOSM directory -->
+	<property name="josm" location="/home/nick/josm/dist/josm-latest.jar" />
+
+
+
+	<target name="init">
+		<mkdir dir="build"></mkdir>
+		<mkdir dir="dist"></mkdir>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
+			<!--
+		<copy todir="build/images">
+			<fileset dir="images"></fileset>
+		</copy>
+		-->
+		<jar destfile="dist/waypoints.jar" basedir="build">
+			<manifest>
+				<attribute name="Plugin-Class" value="waypoints.WaypointPlugin" />
+				<attribute name="Plugin-Description" value="Automatic conversion of waypoints in a GPX file to OSM nodes." />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+
+	<target name="install" depends="build">
+		<copy file="dist/waypoints.jar" todir="${user.home}/.josm/plugins"/>
+	</target>
+
+</project>

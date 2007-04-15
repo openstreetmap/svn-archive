@@ -1,0 +1,48 @@
+<project name="validator" default="build" basedir=".">
+
+	<!-- point to your JOSM directory -->
+	<property name="josm" location="../josm/dist/josm-custom.jar" />
+
+
+	
+	<target name="init">
+		<mkdir dir="build"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<target name="build" depends="clean, compile">
+		<copy todir="build/resources">
+			<fileset dir="resources"/>
+		</copy>
+		<copy todir="build/images">
+			<fileset dir="images"/>
+		</copy>
+		<jar destfile="validator.jar" basedir="build">
+			<manifest>
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin"/>
+				<attribute name="Plugin-Description" value="A OSM data validator"/>
+				<attribute name="Author" value="Francisco R. Santos &lt;frsantos@gmail.com>"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+	<target name="install" depends="build">
+		<copy file="validator.jar" todir="${user.home}/.josm/plugins"/>
+	</target>
+
+	<target name="test" depends="install">
+		<java jar="${josm}" fork="true">
+			<arg value="/home/frsantos/Desktop/JOSM/Tracks/Auto_1007_13.gpx"/>
+		</java>
+	</target>
+
+</project>

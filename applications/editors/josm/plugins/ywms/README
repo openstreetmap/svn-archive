@@ -1,0 +1,25 @@
+A plugin for JOSM that acts as a WMS server for Yahoo satellite imagery. Used with wmsplugin.
+
+From the announcement on talk:
+
+With this new plugin, you can now work with Yahoo satellite images inside
+JOSM, the same way the applet or the flash editor does. It is a port to java
+of the perl script that Frederik Ramm made a couple of months ago, so it
+uses the same approach: spawn a browser window that asks Yahoo the images
+using its API. However, this plugin works in windows too.
+
+To use Yahoo imagery, follow this steps:
+
+1.- Download and install YWMS from [1].
+2.- Download and install/update WMS plugin from [2]. IMPORTANT!!: upgrade if
+you already have this plugin.
+3.- Activate both plugins in JOSM and restart.
+4.- In preference settings, Yahoo tab, set the path to firefox executable,
+the name of a new profile for firefox and click  "create". This opens a new
+browser window. Click "Make changes" and accept the question. Close the
+browser.
+5.- Go to your favorite area, and click the menu option "WMS -> Yahoo" .
+6.- Enjoy
+
+Any modern Gecko browser ([3]) should work, not only firefox. However, I
+have only tested firefox (>1.5.)

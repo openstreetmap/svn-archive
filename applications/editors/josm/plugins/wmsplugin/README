@@ -1,0 +1,7 @@
+A plugin for JOSM that can query any WMS server for background images.
+Also supports Metacarta's map rectifier.
+Supersedes the "Landsat" plugin, as the WMS plugin can do everything the
+landsat plugin could plus more.
+
+See also utils/ywms for a way to get Yahoo satellite images with this
+plugin (Linux required for ywms).

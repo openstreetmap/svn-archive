@@ -1,0 +1,148 @@
+<annotations>
+  <item name="Highway" type="way">
+    <label text="Inserting a highway" />
+    <text key="name" text="Highway (e.g. M3)" />
+    <combo key="highway" text="Highway type" values="unclassified,residential,primary,secondary,motorway,motorway_link,trunk,trunk_link,primary,primary_link,secondary,unclassified,track,residential,service,bridleway,cyclway,footway,steps" />
+  </item>
+
+  <item name="Junction">
+    <label text="Inserting a junction" />
+    <text key="name" text="Junction name" />
+    <combo key="junction" text="Junction type" values="roundabout" />
+  </item>
+
+  <item name="Highway nodes" type="node">
+    <label text="Highway node types" />
+    <text key="name" text="Node name" />
+    <combo key="highway" text="Highway node type" values="mini_roundabout,stop,traffic_signals,crossing,gate,stile,cattle_grid,toll_booth,incline,incline_steep,bridge,viaduct,motorway_junction,services,ford,bus_stop " />
+  </item>
+
+  <item name="Cycleway" type="way">
+    <label text="Inserting a cycleway" />
+    <text key="name" text="Cycleway name" />
+    <combo key="cycleway" text="Cycleway type" values="lane,track,opposite_lane,opposite_track,opposite" />
+  </item>
+
+  <item name="Waterway" type="way">
+    <label text="Inserting a waterway" />
+    <text key="name" text="Waterway name" />
+    <combo key="waterway" text="Waterway type" values="river,canal,drain" />
+  </item>
+
+  <item name="Waterway nodes" type="node">
+    <label text="Inserting a waterway node" />
+    <text key="name" text="Waterway node name" />
+    <combo key="waterway" text="Waterway node type" values="lock_gate,water_point,turning_point,aqueduct,boatyard,waste_disposal,mooring,weir" />
+  </item>
+
+  <item name="Railway" type="way">
+    <label text="Inserting a railway" />
+    <text key="name" text="Railway name" />
+    <combo key="railway" text="Railway type" values="rail,tram,light_rail,subway,preserved,disused,abandoned,narrow_gauge" />
+  </item>
+
+  <item name="Railway nodes" type="node">
+    <label text="Inserting a railway node" />
+    <text key="name" text="Railway node name" />
+    <combo key="railway" text="Railway node type" values="station,halt,viaduct,crossing" />
+  </item>
+
+  <item name="Aeroway" type="way">
+    <label text="Inserting an aeroway" />
+    <text key="name" text="Aeroway name" />
+    <combo key="aeroway" text="Aeroway type" values="runway,taxiway" />
+  </item>
+
+  <item name="Aeroway nodes" type="node">
+    <label text="Inserting an aeroway node" />
+    <text key="name" text="Aeroway node name" />
+    <combo key="aeroway" text="Aeroway node type" values="aerodrome,terminal" />
+  </item>
+
+  <item name="Aerialway" type="way">
+    <label text="Inserting an aerialway" />
+    <text key="name" text="Aerialway name" />
+    <combo key="aerialway" text="Aerialway type" values="cable_car,chair_lift,drag_lift,overhead_lines" />
+  </item>
+
+  <item name="Man made" type="node">
+    <label text="Inserting a man made node" />
+    <text key="name" text="Man made node name" />
+    <combo key="man_made" text="Man made type" values="works,beacon,survey_point,power_wind,power_hydro,power_fossil,power_nuclear,tower,water_tower,gasometer,reservoir_covered,lighthouse" />
+  </item>
+
+  <item name="Man made area" type="way">
+    <label text="Inserting a man made area" />
+    <text key="name" text="Man made area name" />
+    <combo key="man_made" text="Man made area type" values="reservoir_covered" />
+  </item>
+
+  <item name="Leisure">
+    <label text="Inserting a leisure node/area" />
+    <text key="name" text="Leisure node/area name" />
+    <combo key="leisure" text="Leisure node/area type" values="sports_centre,golf_course,stadium,marina,track,pitch,water_park,slipway,fishing,nature_reserve,park,garden,common" />
+  </item>
+
+  <item name="Amenity">
+    <label text="Inserting an amenity" />
+    <text key="name" text="Amenity name" />
+    <combo key="amenity" text="Amenity type" values="pub,parking,fuel,telephone,toilets,public_building,place_of_worship,grave_yard,post_office,post_box,school,supermarket,hospital,library,police,fire_station,biergarten,restaurant,fast_food,bus_station" />
+  </item>
+
+  <item name="Tourism">
+    <label text="Inserting a tourism node/area" />
+    <text key="name" text="Tourism node/area name" />
+    <combo key="tourism" text="Tourism node/area type" values="information,camp_site,caravan_site,picnic_site,viewpoint,theme_park,hotel,motel,guest_house,hostel,attraction" />
+  </item>
+
+  <item name="Historic">
+    <label text="Inserting an historic node/area" />
+    <text key="name" text="Historic node/area name" />
+    <combo key="historic" text="Historic node/area type" values="castle,monument,museum,archaeological_site,icon,ruins" />
+  </item>
+
+  <item name="Land use">
+    <label text="Inserting a land use node/area" />
+    <text key="name" text="Land use node/area name" />
+    <combo key="landuse" text="Land use node/area type" values="farm,quarry,landfill,basin,reservoir,forest,allotments,residential,retail,commercial,industrial,brownfield,greenfield,cemetery" />
+  </item>
+
+  <item name="Military">
+    <label text="Inserting a military node/area" />
+    <text key="name" text="Military node/area name" />
+    <combo key="military" text="Military node/area type" values="danger_area,range,airfield,bunker,barracks" />
+  </item>
+
+  <item name="Natural">
+    <label text="Inserting a natural node/segment/area" />
+    <text key="name" text="Natural node/segment/area name" />
+    <combo key="natural" text="Natural node/segment/area type" values="spring,peak,cliff,scree,scrub,fell,heath,wood,marsh,water,coastline,mud,beach,bay" />
+  </item>
+
+  <item name="Route" type="way">
+    <label text="Inserting a route linear" />
+    <text key="name" text="Route linear name" />
+    <combo key="route" text="Route linear type" values="bus,ferry,flight,ncn,subsea,ski,tour,pub_crawl" />
+  </item>
+
+  <item name="Boundary" type="way">
+    <label text="Inserting a boundary linear" />
+    <text key="name" text="Boundary linear name" />
+    <combo key="boundary" text="Boundary linear type" values="national,administrative,civil,political,national_park" />
+  </item>
+
+  <item name="Sport">
+    <label text="Inserting a sport node/area" />
+    <text key="name" text="Sport node/area name" />
+    <combo key="sport" text="Sport node/area type" values="multi,10pin,athletics,baseball,basketball,bowls,climbing,cricket,cricket_nets,croquet,cycling,dog_racing,football,golf,gymnastics,hockey,horse_racing,motor,racquet,rugby,skating,skateboard,soccer,swimming,skiing,table_tennis,tennis" />
+  </item>
+
+  <item name="Abutters" type="way">
+    <label text="Inserting an abutter linear" />
+    <text key="name" text="Abutter linear name" />
+    <combo key="abutter" text=" type" values="residential,retail,industrial,commercial,mixed" />
+  </item>
+
+
+</annotations>
+

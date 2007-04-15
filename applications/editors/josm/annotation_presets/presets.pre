@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<annotations>
+<item name="Highway">
+	<label text="highway"/>
+	<combo key="highway" text="Type" values="unclassified,residential,service,unsurfaced,secondary,secondary_link,primary,primary_link,trunk,trunk_link,motorway,motorway_link"/>
+	<check key="oneway" text="Oneway?" values="1,-1"/>
+</item>
+<item name="Road Number">
+	<label text="Road Number"/>
+	<text key="ref" text="Number"/>
+	<combo key="source:ref" text="Source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:ref" text="Source url"/>
+</item>
+<item name="Road Name">
+	<label text="Road Name"/>
+	<text key="name" text="Name"/>
+	<combo key="source:name" text="Source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Source url"/>
+</item>
+<item name="Roundabout">
+	<label text="Roundabout"/>
+	<key key="junction" value="roundabout"/>
+	<combo key="highway" text="Type" values="secondary,primary,trunk,motorway_link,residential,unclassified,service"/>
+</item>
+<item name="Footway">
+	<label text="Footway"/>
+	<combo key="highway" text="Type" values="footway,steps,cycleway,bridleway,byway"/>
+</item>
+<item name="Place">
+	<label text="Place"/>
+	<combo key="place" text="Type" values="hamlet,village,town,city,county,state"/>
+	<text key="name" text="Name"/>
+	<combo key="source:name" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Name source url"/>
+</item>
+<item name="Gate">
+	<label text="Gate"/>
+	<key key="highway" value="gate"/>
+</item>
+<item name="Parking">
+	<label text="Parking"/>
+	<key key="amenity" value="parking"/>
+</item>
+<item name="Telephone">
+	<label text="Telephone"/>
+	<key key="amenity" value="telephone"/>
+	<text key="post_code" text="Post code"/>
+</item>
+<item name="Post Box">
+	<label text="Post Box"/>
+	<key key="amenity" value="post_box"/>
+	<text key="ref" text="Letter box number"/>
+</item>
+<item name="Church">
+	<label text="Church"/>
+	<key key="amenity" value="place_of_worship"/>
+	<combo key="denomination" text="Type" values="church_of_england,catholic,muslim,hindu,buddist,sikh,jewish,&lt;other - please specify&gt;"/>
+	<text key="name" text="Name"/>
+	<combo key="source:name" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Name source url"/>
+</item>
+<item name="Waterway">
+	<label text="Waterway"/>
+	<combo key="waterway" text="Type" values="river,canal,drain,"/>
+	<text key="name" text="Name"/>
+	<combo key="source:name" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Name source url"/>
+</item>
+<item name="Railway">
+	<label text="Railway"/>
+	<combo key="railway" text="Type" values="rail,tram,light_rail,subway,preserved,disused,abandoned,narrow_gauge"/>
+	<text key="name" text="Name"/>
+	<combo key="source:name" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Name source url"/>
+</item>
+<item name="Railway Feature">
+	<label text="Railway Stations, halts, etc"/>
+	<combo key="railway" text="Type" values="station,halt,viaduct,crossing"/>
+	<text key="name" text="Name"/>
+	<combo key="source:name" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Name source url"/>
+</item>
+<item name="Data Source">
+	<label text="Way/Segment/Node Data Source, if not GPS trackpoints"/>
+	<combo key="source" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref" text="Source url"/>
+</item>
+<item name="Street Name Source">
+	<label text="Street Name Source."/>
+	<combo key="source:name" text="Name source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:name" text="Name source url"/>
+</item>
+<item name="Road Number Source">
+	<label text="Road Number Source."/>
+	<combo key="source:ref" text="Number source" values="landsat,photograph,local knowledge,common knowledge,dictaphone"/>
+	<text key="source_ref:ref" text="Number source url"/>
+</item>
+<item name="Power Line">
+	<label text="Power Line"/>
+	<key key="power" value="line"/>
+	<text key="voltage" text="Voltage"/>
+</item>
+<item name="Pylon">
+	<label text="Power Line Pylon"/>
+	<key key="power" value="tower"/>
+	<text key="ref" text="Tower Id"/>
+</item>
+<item name="Layer">
+	<label text="Layer indicates whether a feature is above or below another feature"/>
+	<combo key="layer" text="Layer" values="-5,-4,-3,-2,-1,0,1,2,3,4,5"/>
+</item>
+</annotations>

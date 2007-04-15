@@ -1,0 +1,9 @@
+
+Two scripts that calculate length of segments and ways in an OSM file.
+
+osm-length:
+    version with proper XML parsing which is rather slow
+
+osm-length-2.pl:
+    modified version without SAX, runs 50x faster but will break if input structure changes
+

@@ -6,7 +6,7 @@
 <form action="tile2.php" method="post" enctype="multipart/form-data">
 <p>
   Upload file <input type="file" name="file" size="50">
-  <input type="hidden" name="version" size="website">
+  <input type="hidden" name="version" value="website_upload">
   with credentials <input type="input" name="mp" value="username|password">
   <input type="submit" value="OK">
 </p>

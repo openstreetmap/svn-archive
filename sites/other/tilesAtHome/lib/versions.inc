@@ -1,6 +1,13 @@
 <?php
 
 function checkVersion($VersionString){
+
+  # x_ prefix means an experimental client (ID=11) which is default-accept
+  if(substr($VersionString, 0, 2) == "x_"){
+    return(11);
+  }
+
+  # Look in the list of versions
   $fp = fopen(versionFilename(), "r");
   if(!$fp){
     return(-1);
@@ -10,16 +17,20 @@ function checkVersion($VersionString){
         if($Matches[3] == $VersionString){
           fclose($fp);
 
+          # Disabled versions
           if($Matches[2] != "OK"){
             return(-2);
           }
  
+          # Version name found
           return($Matches[1]);
         }
       }
     }
 
   fclose($fp);
+
+  # None found
   return(-1);
 }
 

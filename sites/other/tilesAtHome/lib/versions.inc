@@ -9,6 +9,11 @@ function checkVersion($VersionString){
     if(preg_match("/(\d+)\|(\w+)\|(\w+)/", $Line, $Matches)){
         if($Matches[3] == $VersionString){
           fclose($fp);
+
+          if($Matches[2] != "OK"){
+            return(-2);
+          }
+ 
           return($Matches[1]);
         }
       }

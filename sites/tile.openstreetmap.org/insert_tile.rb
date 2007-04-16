@@ -44,7 +44,7 @@ else
 
   data = Mysql.quote(file.read)
 
-  call_local_sql { "update tiles set data='#{data}', created_at=NOW(), dirty=false where x=#{x} and y=#{y} and z=#{z};" }
+  call_local_sql { "update tiles set data='#{data}', created_at=NOW(), dirty_t='false' where x=#{x} and y=#{y} and z=#{z};" }
   puts `ls -l #{filename}`
 end
 `rm #{filename}`

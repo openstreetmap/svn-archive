@@ -67,15 +67,15 @@ if z and (z.to_i > 18 or z.to_i < 2)
   exit
 end
 
-res = fb.call_local_sql { "select data, dirty, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
+res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
 
 if res.num_rows == 0
-  fb.call_local_sql { "insert into tiles (x,y,z,dirty, created_at) values (#{x},#{y},#{z},1,NOW())" }
+  fb.call_local_sql { "insert into tiles (x,y,z,dirty_t, created_at) values (#{x},#{y},#{z},'true',NOW())" }
 else
   res.each_hash do |row|
     puts row['data']
-    if row['dirty'] == '0' and Time.parse(row['created_at']) < (Time.now - (60*60*24*7))
-      fb.call_local_sql { "update tiles set dirty = 1 where x = #{x} and y=#{y} and z=#{z}" }
+    if row['dirty_t'] == 'false' and Time.parse(row['created_at']) < (Time.now - (60*60*24*7))
+      fb.call_local_sql { "update tiles set dirty_t = 'true' where x = #{x} and y=#{y} and z=#{z}" }
     end
   end
 end

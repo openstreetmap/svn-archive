@@ -37,9 +37,10 @@ CREATE TABLE `tiles` (
   `z` int(11) default NULL,
   `data` mediumblob,
   `created_at` datetime default NULL,
-  `dirty` binary(1) NOT NULL,
+  `dirty_t` varchar(255) default 'true',
   KEY `tile_idx` (`x`,`y`,`z`),
-  KEY `dirty_idx` (`dirty`)
+  KEY `tile_created_at_idx` (`created_at`),
+  KEY `tiles_dirty_t` (`dirty_t`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

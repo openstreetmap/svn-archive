@@ -1,10 +1,10 @@
-1|OK|Agadir
-2|OK|Athens
-3|OK|Bangkok
-4|OK|Bangkok_nocurves
-5|OK|Cambridge
-6|OK|Cambridge_nocurves
-7|OK|Dublin
+1|NO|Agadir
+2|NO|Athens
+3|NO|Bangkok
+4|NO|Bangkok_nocurves
+5|NO|Cambridge
+6|NO|Cambridge_nocurves
+7|NO|Dublin
 8|OK|Essen
 9|OK|Frederikssund
 10|OK|website_upload

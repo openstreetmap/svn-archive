@@ -91,12 +91,11 @@ sub file_needs_re_generation($$){
     my ($dst_mtime) = (stat($dst_filename))[9] || 0;
 
     my $update_needed=$src_mtime > $dst_mtime;
-    if (  $update_needed ) {
-	if ( $VERBOSE>1 ) {
-	    print STDERR "Update needed.\n";
-	    print STDERR localtime($dst_mtime)."\t$dst_filename is older than \n";
-	    print STDERR localtime($src_mtime)."\t$src_filename\n";
-	}
+    if ( $VERBOSE>5 ) {
+	print STDERR "Update needed.\n";
+	print STDERR localtime($dst_mtime)."\t$dst_filename is ";
+	print STDERR ($update_needed?"older":"newer")." than \n";
+	print STDERR localtime($src_mtime)."\t$src_filename\n";
     }
     return $update_needed;
 }

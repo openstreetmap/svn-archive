@@ -44,10 +44,10 @@ end
 
 fb = Foo::Bar.new
 
-res = fb.call_local_sql { "select dirty, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
+res = fb.call_local_sql { "select dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
 
 res.each_hash do |row|
   puts "tile created at #{row['created_at']}"
-  puts "tile is awaiting re-render: #{row['dirty']}"
+  puts "tile is awaiting re-render: #{row['dirty_t']}"
 end
 

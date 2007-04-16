@@ -25,7 +25,7 @@ def call_local_sql
   nil
 end
 
-res = call_local_sql { "select x,y,z from tiles where dirty=true order by created_at asc limit 1000" }
+res = call_local_sql { "select x,y,z from tiles where dirty_t='true' limit 10000" }
 
 res.each_hash do |row|
   puts "#{row['x']} #{row['y']} #{row['z']}"

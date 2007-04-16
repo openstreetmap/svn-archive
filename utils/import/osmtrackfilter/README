@@ -1,7 +1,7 @@
 
 This Script converts GPS-Track-Data to OSM data doing all sorts of filtering.
 
-See http://wiki.openstreetmap.org/index.php/HowTo_OSMFilter
+See http://wiki.openstreetmap.org/index.php/HowTo_OSMTrackFilter
 
-Run 'perldoc osmfilter.pl' to get documentation.
+Run 'perldoc osmtrackfilter.pl' to get documentation.
 

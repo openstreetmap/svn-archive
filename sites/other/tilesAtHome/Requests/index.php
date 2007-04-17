@@ -29,7 +29,6 @@
   # Check whether the client version is allowed to upload
   # (if they can't, there's no point in them taking requests)
   $VersionID = checkVersion($_GET["version"]);
-  logMsg(sprintf("Version %d", $VersionID), 3);
   if($VersionID == -1){
     print "XX|3||||client_version_unacceptable";
     exit;

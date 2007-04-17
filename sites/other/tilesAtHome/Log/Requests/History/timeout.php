@@ -4,7 +4,7 @@
   ** License: GNU GPL v2 or at your option any later version
   */
   header("Content-type:text/plain");
-  if(0){
+  if(1){
     if($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]){
       print "This page can only be run by the dev server\n";
       exit;

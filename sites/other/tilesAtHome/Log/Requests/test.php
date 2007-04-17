@@ -1,6 +1,6 @@
 <?php
   include("../../connect/connect.php");
-  include("../../lib/requests.php");
+  include("../../lib/requests.inc");
   
   showTileRequestStatus($_GET["x"], $_GET["y"]);
   

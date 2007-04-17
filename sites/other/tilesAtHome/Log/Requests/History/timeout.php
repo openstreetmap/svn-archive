@@ -4,7 +4,7 @@
   ** License: GNU GPL v2 or at your option any later version
   */
   header("Content-type:text/plain");
-  if(1){
+  if(0){
     if($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]){
       print "This page can only be run by the dev server\n";
       exit;
@@ -13,33 +13,47 @@
 
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
-    
-  // Find old requests in the "active" queue
-  $AgeLimit = 6; // hours
-  $SQL = sprintf(
-    "select * from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
-    $AgeLimit,
-    REQUEST_ACTIVE);
 
-  print $SQL . "\n";
+  timeout(REQUEST_ACTIVE, 6, "restart");
 
-  $Result = mysql_query($SQL);
-  $Count = mysql_num_rows($Result);
-  printf("%d items found. %s\n", $Count, mysql_error());
+  #---------------------------------------------------------------------------
+  # timeout a set of requests
+  # 
+  # Parmameters:
+  #   Status - what status a request must be, to be considered
+  #   MaxAge - how many hours old the request must be
+  #   Effect - what happens to it when this age is reached
+  #     : "restart" - put it back in the queue
+  #     : "delete" - delete it
+  #--------------------------------------------------------------------------
+  function timeout($Status, $MaxAge, $Effect){    
+    printf("Requests of status %d more than %1.1f hours old, %s:\n", $Status, $MaxAge, $Effect);
 
-  // For each request that hasn't been done after x hours...
-  while($Data = mysql_fetch_assoc($Result)){
+    // Find old requests in the "active" queue
+    $SQL = sprintf(
+      "select * from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
+      $MaxAge,
+      $Status);
 
-    // ...move it to the "new requests" queue
-    moveRequest($Data["x"], $Data["y"], REQUEST_ACTIVE, REQUEST_NEW);
+    $Result = mysql_query($SQL);
+    $Count = mysql_num_rows($Result);
 
-    // Display some details to the browser
-    printf("\n----\n%d,%d (%d) at %s. %s\n", 
-      $Data["x"], 
-      $Data["y"], 
-      $Data["status"], 
-      $Data["date"], 
-      mysql_error());
+    // For each request that hasn't been done after x hours...
+    while($Data = mysql_fetch_assoc($Result)){
+      printf("  - %d, %d, %d\n", $Data["x"], $Data["y"], $Data["status"]);
+
+      switch($Effect){
+        case "restart":
+          // ...move it to the "new requests" queue
+          moveRequest($Data["x"], $Data["y"], REQUEST_ACTIVE, REQUEST_NEW);
+          break;
+        default:
+          print "Error: unknown effect\n";
+          break;
+      }
+
+    }
+
   }
 
   

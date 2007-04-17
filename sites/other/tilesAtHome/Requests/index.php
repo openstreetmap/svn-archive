@@ -24,6 +24,16 @@
   include("../connect/connect.php");
   include("../lib/log.inc");
   include("../lib/requests.inc");
+  include("../lib/versions.inc");
+
+  # Check whether the client version is allowed to upload
+  # (if they can't, there's no point in them taking requests)
+  $VersionID = checkVersion($_GET["version"]);
+  logMsg(sprintf("Version %d", $VersionID), 3);
+  if($VersionID == -1){
+    print "XX|3||||client_version_unacceptable";
+    exit;
+  }
 
   $SQL = "select x,y,status from tiles_queue where `status`=0 or `status`=1 limit 1;";
   $Result = mysql_query($SQL);

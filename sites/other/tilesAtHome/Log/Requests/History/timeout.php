@@ -15,6 +15,7 @@
   include("../../../lib/requests.inc");
 
   timeout(REQUEST_ACTIVE, 6, "restart");
+  timeout(REQUEST_DONE, 7 * 24, "delete");
 
   #---------------------------------------------------------------------------
   # timeout a set of requests
@@ -45,7 +46,10 @@
       switch($Effect){
         case "restart":
           // ...move it to the "new requests" queue
-          moveRequest($Data["x"], $Data["y"], REQUEST_ACTIVE, REQUEST_NEW);
+          moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
+          break;
+        case "delete":
+          deleteRequest($Data["x"], $Data["y"], $Data["status"]);
           break;
         default:
           print "Error: unknown effect\n";

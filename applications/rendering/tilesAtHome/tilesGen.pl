@@ -211,8 +211,12 @@ sub uploadIfEnoughTiles
 
 sub upload
 {
+    ## Run upload directly because it uses same messaging as tilesGen.pl, 
+    ## no need to hide output at all.
+
     my $UploadScript = "$Bin/upload.pl $progressJobs";
-    runCommand("Uploading", $UploadScript);
+    my $retval = system($UploadScript);
+    return $retval;
 }
 
 #-----------------------------------------------------------------------------

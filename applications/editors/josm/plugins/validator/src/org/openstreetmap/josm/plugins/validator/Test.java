@@ -1,9 +1,12 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
 
@@ -29,6 +32,9 @@ public class Test implements Visitor
 
 	/** The list of errors */
 	protected List<TestError> errors = new ArrayList<TestError>(30);
+
+	/** Whether the test is run on a partial selection data */
+	protected boolean partialSelection;
 
 	/**
 	 * Constructor
@@ -65,6 +71,15 @@ public class Test implements Visitor
 	{
 		errors = new ArrayList<TestError>(30);
 	}
+
+	/**
+	 * Flag notifying that this test is run over a partial data selection
+	 * @param partialSelection Whether the test is on a partial selection data
+	 */ 
+	public void setPartialSelection(boolean partialSelection) 
+	{
+		this.partialSelection = partialSelection;
+	}
 	
 	/**
 	 * Gets the validation errors accumulated until this moment.
@@ -91,7 +106,8 @@ public class Test implements Visitor
     {
         for (OsmPrimitive p : selection)
         {
-            p.visit(this);
+        	if( !p.deleted )
+        		p.visit(this);
         }
     }
 
@@ -115,4 +131,26 @@ public class Test implements Visitor
 	public void ok() 
 	{
 	}
+	
+	/**
+	 * Fixes the error with the appropiate command
+	 * 
+	 * @param testError
+	 * @return The command to fix the error
+	 */
+	public Command fixError(TestError testError)
+	{
+		return null;
+	}
+	
+	/**
+	 * Returns true if the given error can be fixed automatically
+	 * 
+	 * @param testError The error to check if can be fixed
+	 * @return true if the error can be fixed
+	 */
+	public boolean isFixable(TestError testError)
+	{
+		return false;
+	}	
 }

@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.util.List;
 
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -18,7 +19,7 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
 public class DuplicateSegment extends Test 
 {
 	/** Bag of all segments */
-	Bag<CompoundLatLon, Segment> segments;
+	Bag<CompoundLatLon, OsmPrimitive> segments;
 	
 	/**
 	 * Constructor
@@ -34,17 +35,17 @@ public class DuplicateSegment extends Test
 	@Override
 	public void startTest() 
 	{
-		segments = new Bag<CompoundLatLon, Segment>(1000);
+		segments = new Bag<CompoundLatLon, OsmPrimitive>(1000);
 	}
 
 	@Override
 	public void endTest() 
 	{
-		for(List<Segment> duplicated : segments.values() )
+		for(List<OsmPrimitive> duplicated : segments.values() )
 		{
 			if( duplicated.size() > 1)
 			{
-				errors.add( new TestError(Severity.ERROR, tr("Duplicated segments"), duplicated) );
+				errors.add( new TestError(this, Severity.ERROR, tr("Duplicated segments"), duplicated) );
 			}
 		}
 		segments = null;

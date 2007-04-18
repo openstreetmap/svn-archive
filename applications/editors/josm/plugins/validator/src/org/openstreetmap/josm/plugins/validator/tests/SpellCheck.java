@@ -12,6 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.ChangePropertyCommand;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
 import org.openstreetmap.josm.gui.annotation.AnnotationPreset.*;
@@ -44,6 +47,13 @@ public class SpellCheck extends Test
 	/** Preferences checkbox */
 	protected JCheckBox prefCheckValues;
 
+	/** Empty values error */
+	protected static int EMPTY_VALUES 	= 0;
+	/** Invalid key error */
+	protected static int INVALID_KEY  	= 1;
+	/** Invalid value error */
+	protected static int INVALID_VALUE 	= 2;
+	
 	/**
 	 * Constructor
 	 */
@@ -160,12 +170,12 @@ public class SpellCheck extends Test
 			String value = prop.getValue();
 			if( (value==null || value.trim().length() == 0) && !withErrors.contains(p, "EV"))
 			{
-				errors.add( new TestError(Severity.WARNING, tr("Tags with empty value"), p) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Tags with empty values"), p, EMPTY_VALUES) );
 				withErrors.add(p, "EV");
 			}
 			if( spellCheckKeyData.containsKey(key) && !withErrors.contains(p, "IPK"))
 			{
-				errors.add( new TestError(Severity.WARNING, tr("Invalid property key"), p) );
+				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property keys"), p, INVALID_KEY) );
 				withErrors.add(p, "IPK");
 			}
 			if( checkValues && value != null && value.length() > 0 )
@@ -173,7 +183,7 @@ public class SpellCheck extends Test
 				List<String> values = spellCheckValueData.get(key);
 				if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
 				{
-					errors.add( new TestError(Severity.OTHER, tr("Unknown property value"), p) );
+					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"), p, INVALID_VALUE) );
 					withErrors.add(p, "UPV");
 				}
 			}
@@ -276,6 +286,50 @@ public class SpellCheck extends Test
 	{
 		Main.pref.put(PREF_CHECK_VALUES, prefCheckValues.isSelected());
 	}
+	
+	@Override
+	public Command fixError(TestError testError)
+	{
+		List<Command> commands = new ArrayList<Command>(50);
+		
+		int i = -1;
+		List<OsmPrimitive> primitives = testError.getPrimitives();
+		for(OsmPrimitive p : primitives )
+		{
+			i++;
+			Map<String, String> tags = p.keys;
+			if( tags == null || tags.size() == 0 )
+				continue;
+		
+			for(Entry<String, String> prop: tags.entrySet() )
+			{
+				String key = prop.getKey();
+				String value = prop.getValue();
+				if( value == null || value.trim().length() == 0 )
+					commands.add( new ChangePropertyCommand(primitives.subList(i, i+1), key, null) );
+				else
+				{
+					String replacementKey = spellCheckKeyData.get(key);
+					if( replacementKey != null )
+						commands.add( new ChangePropertyKeyCommand(primitives.subList(i, i+1), key, replacementKey) );					
+				}
+			}
+		}
+		
+		return commands.size() > 1 ? new SequenceCommand("Fix properties", commands) : commands.get(0);
+	}
+	
+	@Override
+	public boolean isFixable(TestError testError)
+	{
+		if( testError.getTester() instanceof SpellCheck)
+		{
+			int code = testError.getInternalCode();
+			return code == INVALID_KEY || code == EMPTY_VALUES;
+		}
+		
+		return false;
+	}	
 }
 	
 	

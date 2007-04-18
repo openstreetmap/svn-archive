@@ -2,8 +2,10 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.Map;
+import java.util.*;
 
+import org.openstreetmap.josm.command.*;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -34,14 +36,49 @@ public class TaggedSegment extends Test
 		Map<String, String> tags = s.keys;
 		if( tags == null )
 			return;
-		
-		int numAllowedTags = 0;
+		tags = new HashMap<String, String>(tags);
 		for( String tag : allowedTags)
-			if( tags.containsKey(tag) ) numAllowedTags++;
+			tags.remove(tag);
 		
-		if( tags.size() - numAllowedTags > 0 )
+		if( tags.size() > 0 )
 		{
-			errors.add( new TestError(Severity.WARNING, tr("Segments with tags"), s) );
+			errors.add( new TestError(this, Severity.WARNING, tr("Segments with tags"), s) );
 		}
 	}
+	
+	@Override
+	public Command fixError(TestError testError)
+	{
+		List<Command> commands = new ArrayList<Command>(50);
+		
+		int i = -1;
+		List<OsmPrimitive> primitives = testError.getPrimitives();
+		for(OsmPrimitive p : primitives )
+		{
+			i++;
+			Map<String, String> tags = p.keys;
+			if( tags == null )
+				continue;
+			
+			tags = new HashMap<String, String>(tags);
+			for( String tag : allowedTags)
+				tags.remove(tag);
+			
+			if( tags.size() == 0 )
+				continue;
+		
+			for(String key : tags.keySet() )
+			{
+				commands.add( new ChangePropertyCommand(primitives.subList(i, i+1), key, null) );
+			}
+		}
+		
+		return commands.size() > 1 ? new SequenceCommand("Remove keys", commands) : commands.get(0);
+	}
+	
+	@Override
+	public boolean isFixable(TestError testError)
+	{
+		return (testError.getTester() instanceof TaggedSegment);
+	}	
 }

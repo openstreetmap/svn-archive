@@ -23,6 +23,9 @@ public class ValidateAction extends JosmAction
 	/** Serializable ID */
     private static final long serialVersionUID = -2304521273582574603L;
 
+	/** Last selection used to validate */
+	private Collection<OsmPrimitive> lastSelection;
+	
     /**
 	 * Constructor
 	 */
@@ -33,6 +36,21 @@ public class ValidateAction extends JosmAction
 
 	public void actionPerformed(ActionEvent ev)
 	{
+		doValidate(ev, true);
+	}
+	
+	/**
+	 * Does the validation.
+	 * <p>
+	 * If getSelectedItems is true, the selected items (or all items, if no one
+	 * is selected) are validated. If it is false, last selected items are
+	 * revalidated
+	 * 
+	 * @param ev The event
+	 * @param getSelectedItems If selected or last selected items must be validated
+	 */
+	public void doValidate(ActionEvent ev, boolean getSelectedItems)
+	{
 		OSMValidatorPlugin plugin = OSMValidatorPlugin.getPlugin();
 		plugin.errors = new ArrayList<TestError>();
 		plugin.validationDialog.setVisible(true);
@@ -41,17 +59,33 @@ public class ValidateAction extends JosmAction
 		if( tests.isEmpty() )
 			return;
 		
-		Collection<OsmPrimitive> selection = Main.ds.getSelected();
-		if( selection.isEmpty() )
-			selection = Main.ds.allNonDeletedPrimitives();
+		Collection<OsmPrimitive> selection;
+		if( getSelectedItems )
+		{
+			selection = Main.ds.getSelected();
+			if( selection.isEmpty() )
+			{
+				selection = Main.ds.allNonDeletedPrimitives();
+				lastSelection = null;
+			}
+			else
+			{
+				AgregatePrimitivesVisitor v = new AgregatePrimitivesVisitor();
+				selection = v.visit(selection);
+				lastSelection = selection;
+			}
+		}
 		else
 		{
-			AgregatePrimitivesVisitor v = new AgregatePrimitivesVisitor();
-			selection = v.visit(selection);
+			if( lastSelection == null )
+				selection = Main.ds.allNonDeletedPrimitives();
+			else
+				selection = lastSelection;
 		}
 
 		for(Test test : tests) 
         {
+			test.setPartialSelection(lastSelection != null);
 		    test.startTest();
 		    test.visit(selection);
 			test.endTest();

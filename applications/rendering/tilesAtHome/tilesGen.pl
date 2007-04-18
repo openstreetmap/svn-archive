@@ -51,8 +51,8 @@ unless ($Config{Verbose})
 # check GD
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
-  print STDERR "please update your libgd to version 2 for TrueColor support";
-  exit(3);
+    print STDERR "please update your libgd to version 2 for TrueColor support";
+    exit(3);
 }
 
 # Setup GD options
@@ -84,13 +84,8 @@ my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
 
-# set message output beautification vars
-#my $lastmsglen = 0;
-
 # keep track of time running
 my $progstart = time();
-#my $idleSeconds = 0;
-#my $idleFor = 0;
 my $dirent; 
 
 # Keep track of pseudo-XML open tags in case we have to abort
@@ -148,39 +143,43 @@ elsif ($Mode eq "loop")
         }
     }
 }
-elsif ($Mode eq "upload") {
-  upload();
+elsif ($Mode eq "upload") 
+{
+    upload();
 }
-elsif ($Mode eq "upload_conditional") {
-  uploadIfEnoughTiles();
+elsif ($Mode eq "upload_conditional") 
+{
+    uploadIfEnoughTiles();
 }
-elsif ($Mode eq "version") {
-  exit(1);
+elsif ($Mode eq "version") 
+{
+    exit(1);
 }
-elsif ($Mode eq "") {
-  # ----------------------------------
-  # Normal mode downloads request from server
-  # ----------------------------------
-  my ($did_something, $message) = ProcessRequestsFromServer();
-  
-  talkInSleep($message, 60) unless($did_something);
-  
+elsif ($Mode eq "") 
+{
+    # ----------------------------------
+    # Normal mode downloads request from server
+    # ----------------------------------
+    my ($did_something, $message) = ProcessRequestsFromServer();
+    
+    talkInSleep($message, 60) unless($did_something);
+    
 }
-else{
-  # ----------------------------------
-  # "help" as first argument tells how to use the program
-  # ----------------------------------
-  my $Bar = "-" x 78;
-  print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
-  print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
-  print "Specific area:\n  \"$0 xy [x] [y]\"\n  (x and y coordinates of a zoom-12 tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
-  print "Other modes:\n";
-  print "  $0 loop - runs continuously\n";
-  print "  $0 upload - uploads any tiles\n";
-  print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
-  print "  $0 version - prints out version string and exits\n";
-  print "\nGNU General Public license, version 2 or later\n$Bar\n";
-
+else
+{
+    # ----------------------------------
+    # "help" as first argument tells how to use the program
+    # ----------------------------------
+    my $Bar = "-" x 78;
+    print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
+    print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
+    print "Specific area:\n  \"$0 xy [x] [y]\"\n  (x and y coordinates of a zoom-12 tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
+    print "Other modes:\n";
+    print "  $0 loop - runs continuously\n";
+    print "  $0 upload - uploads any tiles\n";
+    print "  $0 upload_conditional - uploads tiles if there are many waiting\n";
+    print "  $0 version - prints out version string and exits\n";
+    print "\nGNU General Public license, version 2 or later\n$Bar\n";
 }
 
 sub uploadIfEnoughTiles
@@ -209,159 +208,165 @@ sub uploadIfEnoughTiles
     }
 }
 
-sub upload{
-  my $UploadScript = "$Bin/upload.pl $progressJobs";
-  runCommand("Uploading", $UploadScript);
+sub upload
+{
+    my $UploadScript = "$Bin/upload.pl $progressJobs";
+    runCommand("Uploading", $UploadScript);
 }
 
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------
 sub ProcessRequestsFromServer {
-  my $LocalFilename = "$Config{WorkingDirectory}request.txt";
-  
-  # ----------------------------------
-  # Download the request, and check it
-  # Note: to find out exactly what this server is telling you, 
-  # add ?help to the end of the URL and view it in a browser.
-  # It will give you details of other help pages available,
-  # such as the list of fields that it's sending out in requests
-  # ----------------------------------
-  killafile($LocalFilename);
-  my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername};
-  # DEBUG: print "using URL " . $RequestUrlString . "\n";
-  DownloadFile(
-    $RequestUrlString, 
-    $LocalFilename, 
-    0, 
-    "Request from server");
+    my $LocalFilename = "$Config{WorkingDirectory}request.txt";
     
-  if(! -f $LocalFilename){
-    return (0, "Error reading request from server");
-  }
+    # ----------------------------------
+    # Download the request, and check it
+    # Note: to find out exactly what this server is telling you, 
+    # add ?help to the end of the URL and view it in a browser.
+    # It will give you details of other help pages available,
+    # such as the list of fields that it's sending out in requests
+    # ----------------------------------
+    killafile($LocalFilename);
+    my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername};
+    # DEBUG: print "using URL " . $RequestUrlString . "\n";
+    DownloadFile(
+        $RequestUrlString, 
+        $LocalFilename, 
+        0, 
+        "Request from server");
+    
+    if(! -f $LocalFilename){
+        return (0, "Error reading request from server");
+    }
 
-  # Read into memory
-  open(my $fp, "<", $LocalFilename) || return;
-  my $Request = <$fp>;
-  chomp $Request;
-  close $fp;
-  
-  # Parse the request
-  my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
-  
-  # First field is always "OK" if the server has actually sent a request
-  if ($ValidFlag eq "XX")
-  {
-      return (0, "Server has no work for us"); 
-  }
-  elsif ($ValidFlag ne "OK")
-  {
-      return (0, "Server dysfunctional");
-  }
-  
-  # Check what format the results were in
-  # If you get this message, please do check for a new version, rather than
-  # commenting-out the test - it means the field order has changed and this
-  # program no longer makes sense!
-  if ($Version != 3)
-  {
-      print STDERR "\n";
-      print STDERR "Server is speaking a different version of the protocol to us.\n";
-      print STDERR "Check to see whether a new version of this program was released!\n";
-      exit(2);
-  }
-  
-  # Information text to say what's happening
-  statusMessage("Got work from the \"$ModuleName\" server module", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-  
-  # Create the tileset requested
-  GenerateTileset($X, $Y, $Z);
-  return (1, "");
+    # Read into memory
+    open(my $fp, "<", $LocalFilename) || return;
+    my $Request = <$fp>;
+    chomp $Request;
+    close $fp;
+    
+    # Parse the request
+    my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
+    
+    # First field is always "OK" if the server has actually sent a request
+    if ($ValidFlag eq "XX")
+    {
+        return (0, "Server has no work for us"); 
+    }
+    elsif ($ValidFlag ne "OK")
+    {
+        return (0, "Server dysfunctional");
+    }
+    
+    # Check what format the results were in
+    # If you get this message, please do check for a new version, rather than
+    # commenting-out the test - it means the field order has changed and this
+    # program no longer makes sense!
+    if ($Version != 3)
+    {
+        print STDERR "\n";
+        print STDERR "Server is speaking a different version of the protocol to us.\n";
+        print STDERR "Check to see whether a new version of this program was released!\n";
+        exit(2);
+    }
+    
+    # Information text to say what's happening
+    statusMessage("Got work from the \"$ModuleName\" server module", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    
+    # Create the tileset requested
+    GenerateTileset($X, $Y, $Z);
+    return (1, "");
 }
 
-sub PutRequestBackToServer { 
-  ## TODO: Actually call this.
-  my $X = shift();
-  my $Y = shift();
-  my $Cause = shift();
+sub PutRequestBackToServer 
+{ 
+    ## TODO: Actually call this.
+    my $X = shift();
+    my $Y = shift();
+    my $Cause = shift();
+    
+    my $Prio = $Config{ReRequestPrio};
+    
+    my $LocalFilename = "$Config{WorkingDirectory}requesting.txt";
+    
+    killafile($LocalFilename);
+    
+    # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
+    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=ReRequest:" . $Cause . ":" . $Config{UploadUsername};
+    
+    DownloadFile(
+        $RequestUrlString, 
+        $LocalFilename, 
+        0, 
+        "Request from server");
 
-  my $Prio = $Config{ReRequestPrio};
+    if(! -f $LocalFilename)
+    {
+        return (0, "Error reading response from server");
+    }
 
-  my $LocalFilename = "$Config{WorkingDirectory}requesting.txt";
-
-  killafile($LocalFilename);
-
-  # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
-  my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=ReRequest:" . $Cause . ":" . $Config{UploadUsername};
-
-  DownloadFile(
-    $RequestUrlString, 
-    $LocalFilename, 
-    0, 
-    "Request from server");
-
-  if(! -f $LocalFilename){
-    return (0, "Error reading response from server");
-  }
-
-  # Read into memory
-  open(my $fp, "<", $LocalFilename) || return;
-  my $Request = <$fp>;
-  chomp $Request;
-  close $fp;
-  
-  ## TODO: Check response for "OK"
-
-  killafile($LocalFilename);
+    # Read into memory
+    open(my $fp, "<", $LocalFilename) || return;
+    my $Request = <$fp>;
+    chomp $Request;
+    close $fp;
+    
+    ## TODO: Check response for "OK"
+    
+    killafile($LocalFilename);
 
 }
 
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
 #-----------------------------------------------------------------------------
-sub GenerateTileset {
-  my ($X, $Y, $Zoom) = @_;
+sub GenerateTileset 
+{
+    my ($X, $Y, $Zoom) = @_;
     
-  my ($N, $S) = Project($Y, $Zoom);
-  my ($W, $E) = ProjectL($X, $Zoom);
-  
-  $progress = 0;
-  $progressJobs++;
-  $currentSubTask = "Preproc";
+    my ($N, $S) = Project($Y, $Zoom);
+    my ($W, $E) = ProjectL($X, $Zoom);
+    
+    $progress = 0;
+    $progressPercent = 0;
+    $progressJobs++;
+    $currentSubTask = "jobinit";
 
-  statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
-  
+    statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+    
+    $currentSubTask = "Preproc";
+    
+    my $DataFile = "data-$PID.osm";
+    
+    # Adjust requested area to avoid boundary conditions
+    my $N1 = $N + $Config{BorderN};
+    my $S1 = $S - $Config{BorderS};
+    my $E1 = $E + $Config{BorderE};
+    my $W1 = $W - $Config{BorderW};
 
-  my $DataFile = "data-$PID.osm";
 
-  # Adjust requested area to avoid boundary conditions
-  my $N1 = $N + $Config{BorderN};
-  my $S1 = $S - $Config{BorderS};
-  my $E1 = $E + $Config{BorderE};
-  my $W1 = $W - $Config{BorderW};
+    # TODO: verify the current system cannot handle segments/ways crossing the 
+    # 180/-180 deg meridian and implement proper handling of this case, until 
+    # then use this workaround: 
 
+    if($W1 <= -180) {
+      $W1 = -180; # api apparently can handle -180
+    }
+    if($E > 180) {
+      $E1 = 180;
+    }
 
-  # TODO: verify the current system cannot handle segments/ways crossing the 
-  # 180/-180 deg meridian and implement proper handling of this case, until 
-  # then use this workaround: 
-
-  if($W1 <= -180) {
-    $W1 = -180; # api apparently can handle -180
-  }
-  if($E > 180) {
-    $E1 = 180;
-  }
-
-  #------------------------------------------------------
-  # Download data
-  #------------------------------------------------------
-  killafile($DataFile);
-  my $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
-    $Config{OsmUsername}, $Config{OsmPassword}, $W1, $S1, $E1, $N1);
-  my @tempfiles;
-  push(@tempfiles, $DataFile);
-  
-  DownloadFile($URL, $DataFile, 0, "Map data to $DataFile");
+    #------------------------------------------------------
+    # Download data
+    #------------------------------------------------------
+    killafile($DataFile);
+    my $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+      $Config{OsmUsername}, $Config{OsmPassword}, $W1, $S1, $E1, $N1);
+    my @tempfiles;
+    push(@tempfiles, $DataFile);
+    
+    DownloadFile($URL, $DataFile, 0, "Map data to $DataFile");
 
     if (-s $DataFile == 0)
     {
@@ -381,8 +386,11 @@ sub GenerateTileset {
             if (-s $partialFile == 0)
             {
                 printf("No data here either\n");
-                return if ($Mode eq "loop"); # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
-                exit(1); # or else exit with an error. (to enable wrappers to better handle this situation i.e. tell the server the job hasn't been done yet)
+                # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
+                # or else exit with an error. (to enable wrappers to better handle this situation 
+                # i.e. tell the server the job hasn't been done yet)
+                return if ($Mode eq "loop"); 
+                exit(1); 
             }
             push(@{$filelist}, $partialFile);
         }

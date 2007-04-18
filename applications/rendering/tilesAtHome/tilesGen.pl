@@ -33,7 +33,7 @@ use strict;
 #-----------------------------------------------------------------------------
 # Read the config file
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
-CheckConfig(%Config);
+my %EnvironmentInfo = CheckConfig(%Config);
 
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
@@ -70,9 +70,6 @@ my $EmptyImage = new GD::Image(256,256);
 my $MapBackground = $EmptyImage->colorAllocate(248,248,248);
 $EmptyImage->fill(127,127,$MapBackground);
 
-# No documentation whatsoever if this is really creating a f8f8f8 colored blank 
-# truecolor image
-
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
@@ -82,6 +79,7 @@ my $RangeY = $LimitY - $LimitY2;
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 
 # set the progress indicator variables
+my $currentSubTask;
 my $progress = 0;
 my $progressJobs = 0;
 my $progressPercent = 0;
@@ -95,7 +93,9 @@ my $idleSeconds = 0;
 my $idleFor = 0;
 my $dirent; 
 
-my $currentSubTask;
+# Keep track of pseudo-XML open tags in case we have to abort
+my $xmltagsOpen;
+my $xmlIndent = 0;
 
 # Handle the command-line
 my $Mode = shift();
@@ -394,21 +394,21 @@ sub GenerateTileset {
         }
     }
   
-  # Check for correct UTF8 (else inkscape will run amok later)
-  # TODO: This doesn't seem to catch all string errors that inkscape trips over.
-  statusMessage("Checking for UTF-8 errors in $DataFile", 0);
-  open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
-  my @toCheck = <OSMDATA>;
-  close(OSMDATA);
-  while (my $osmline = shift @toCheck)
-  {
-    if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
+    # Check for correct UTF8 (else inkscape will run amok later)
+    # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
+    statusMessage("Checking for UTF-8 errors in $DataFile", 0);
+    open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
+    my @toCheck = <OSMDATA>;
+    close(OSMDATA);
+    while (my $osmline = shift @toCheck)
     {
-      statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", 1);
-      return 0 if ($Mode eq "loop");
-      exit(1);
+      if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
+      {
+        statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", 1);
+        return 0 if ($Mode eq "loop");
+        exit(1);
+      }
     }
-  }
 
     foreach my $layer(split(/,/, $Config{Layers}))
     {
@@ -416,7 +416,9 @@ sub GenerateTileset {
         $progress=0;
         $progressPercent=0;
         $currentSubTask = $layer;
-
+        
+        
+        
         my $maxzoom = $Config{"Layer.$layer.MaxZoom"};
         my $layerDataFile;
 

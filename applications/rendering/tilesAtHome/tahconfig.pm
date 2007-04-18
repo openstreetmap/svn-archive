@@ -87,23 +87,31 @@ sub ApplyConfigLogic{
 #--------------------------------------------------------------------------
 sub CheckConfig{
     my %Config = @_;
+    my %EnvironmentInfo;
 
     printf "- Using working directory %s\n", $Config{"WorkingDirectory"};
 
     # Inkscape version
     my $InkscapeV = `$Config{Inkscape} --version`;
-    if($InkscapeV !~ /Inkscape (\d+\.\d+)/)
+    $EnvironmentInfo{Inkscape}=$InkscapeV;
+
+    if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
     {
         die("Can't find inkscape (using \"$Config{Inkscape}\")\n");
     }
 
-    if($1 < 0.42){
+    if($2 < 42.0){
         die("This version of inkscape ($1) is known not to work with tiles\@home\n");
     }
-    print "- Inkscape version $1\n";
+    if($2 < 45.1){
+        print "- Please upgrade to version 0.45.1 due to security problems with your inkscape version\n"
+    }
+    print "- Inkscape version $1.$2\n";
 
     # XmlStarlet version
     my $XmlV = `$Config{XmlStarlet} --version`;
+    $EnvironmentInfo{Xml}=$XmlV;
+
     if($XmlV !~ /(\d+\.\d+\.\d+)/){
         die("Can't find xmlstarlet (using \"$Config{XmlStarlet}\")\n");
     }
@@ -112,11 +120,25 @@ sub CheckConfig{
     # Zip version
     $Config{Zip} = "zip" unless defined($Config{Zip});
     my $ZipV = `$Config{Zip} -v`;
+    $EnvironmentInfo{Zip}=$ZipV;
+
     if ($ZipV eq "") 
     {
         die("Can't find zip (using \"$Config{Zip}\")\n");
     }
     print "- zip is present\n";
+
+    # PNGCrush version
+    $Config{Pngcrush} = "pngcrush" unless defined($Config{Pngcrush});
+    my $PngcrushV = `$Config{Pngcrush} -version`;
+    $EnvironmentInfo{Pngcrush}=$PngcrushV;
+
+    if ($PngcrushV !~ /[Pp]ngcrush\s+(\d+\.\d+\.?\d*)/) 
+    {
+        # die here if pngcrush shall be mandatory
+        print "Can't find pngcrush (using \"$Config{Pngcrush}\")\n";
+    }
+    print "- pngcrush version $1\n";
 
     # Upload URL, username
     printf "- Uploading with username \"$Config{UploadUsername}\"\n", ;
@@ -158,7 +180,7 @@ sub CheckConfig{
 
     # Misc stuff
     foreach(qw(N S E W)){
-        if($Config{"Border$_"} > 0.5){
+        if($Config{"Border$_"} > 0.2){
             printf "Border$_ looks abnormally large\n";
         }
     }
@@ -207,6 +229,9 @@ sub CheckConfig{
         }
 
     }
+
+    return %EnvironmentInfo;
+
 }
 
 1;

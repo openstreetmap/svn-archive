@@ -42,7 +42,7 @@ public class OrphanSegment extends Test
 	{
 		for(Segment segment : segments )
 		{
-			errors.add( new TestError(Severity.OTHER, tr("Segments not in a way"), segment) );
+			errors.add( new TestError(this, Severity.OTHER, tr("Segments not in a way"), segment) );
 		}
 		segments = null;
 	}

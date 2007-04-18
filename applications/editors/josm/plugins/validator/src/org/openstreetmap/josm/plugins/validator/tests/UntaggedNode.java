@@ -2,11 +2,13 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -18,12 +20,12 @@ import org.openstreetmap.josm.plugins.validator.TestError;
  */
 public class UntaggedNode extends Test 
 {
-	/** Tags allowed in a segment */
+	/** Tags allowed in a node */
 	public static String[] allowedTags = new String[] { "created_by" };
 	
 	/** Bag of all nodes */
 	Set<Node> emptyNodes;
-
+	
 	/**
 	 * Constructor
 	 */
@@ -39,6 +41,29 @@ public class UntaggedNode extends Test
 		emptyNodes = new HashSet<Node>(100);
 	}
 	
+	@Override
+    public void visit(Collection<OsmPrimitive> selection) 
+    {
+		// If there is a partial selection, it may be false positives if a
+		// node is selected, but not the container segment. So, in this
+		// case, we must visit all segments, selected or not.
+
+		for (OsmPrimitive p : selection)
+        {
+        	if( !p.deleted )
+        	{
+        		if( !partialSelection || p instanceof Node )
+        			p.visit(this);
+        	}
+        }
+        
+		if( partialSelection )
+		{
+			for( Segment s : Main.ds.segments)
+				visit(s);
+		}
+    }
+    
 	@Override
 	public void visit(Node n) 
 	{
@@ -69,8 +94,20 @@ public class UntaggedNode extends Test
 	{
 		for(Node node : emptyNodes)
 		{
-			errors.add( new TestError(Severity.OTHER, tr("Untagged and unconnected nodes"), node) );
+			errors.add( new TestError(this, Severity.OTHER, tr("Untagged and unconnected nodes"), node) );
 		}
 		emptyNodes = null;
 	}
+	
+	@Override
+	public Command fixError(TestError testError)
+	{
+		return new DeleteCommand(testError.getPrimitives());
+	}
+	
+	@Override
+	public boolean isFixable(TestError testError)
+	{
+		return (testError.getTester() instanceof UntaggedNode);
+	}		
 }

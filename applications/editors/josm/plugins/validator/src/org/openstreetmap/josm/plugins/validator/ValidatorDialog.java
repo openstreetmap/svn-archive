@@ -8,12 +8,14 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
@@ -40,6 +42,11 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
      * The display tree.
      */
     protected JTree tree = new JTree(treeModel);
+
+    /** 
+     * The fix button
+     */
+	private JButton fixButton;
     
 
     /**
@@ -53,7 +60,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		tree.setShowsRootHandles(true);
 		tree.expandRow(0);
 		tree.setVisibleRowCount(8);
-		tree.addMouseListener(new DblClickWatch());
+		tree.addMouseListener(new ClickWatch());
+		tree.addTreeSelectionListener(new SelectionWatch());
 		tree.setCellRenderer(new ErrorTreeRenderer());
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
@@ -64,6 +72,10 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         buttonPanel.add(Util.createButton("Select", "mapmode/selection/select", "Set the selected elements on the map to the selected items in the list above.", this)); 
         add(buttonPanel, BorderLayout.SOUTH);
         buttonPanel.add(Util.createButton("Validate", "dialogs/refresh", "Validate the data.", this)); 
+        add(buttonPanel, BorderLayout.SOUTH);
+        fixButton = Util.createButton("Fix", "dialogs/fix", "Fix the selected errors.", this);
+        fixButton.setEnabled(false);
+        buttonPanel.add(fixButton); 
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -135,11 +147,72 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		tree.scrollRowToVisible(treeModel.getChildCount(rootNode)-1);
 	}
 	
+	/**
+	 * Fix selected errors
+	 * @param e 
+	 */
+	@SuppressWarnings("unchecked")
+	private void fixErrors(ActionEvent e) 
+	{
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+    	if( node == null )
+    		return;
+
+        Bag<String, Command> commands = new Bag<String, Command>();
+
+		Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
+		while( children.hasMoreElements() )
+		{
+    		DefaultMutableTreeNode childNode = children.nextElement();
+    		Object nodeInfo = childNode.getUserObject();
+    		if( nodeInfo instanceof TestError)
+    		{
+    			TestError error = (TestError)nodeInfo;
+    			Command fixCommand = error.getFix();
+    			if( fixCommand != null )
+    			{
+    				commands.add(error.getMessage(), fixCommand);
+    			}
+    		}
+		}
+		
+		Command fixCommand = null;
+		if( commands.size() == 0 )
+			return;
+		else if( commands.size() > 1 )
+		{
+			List<Command> allComands = new ArrayList<Command>(50);
+			for( Entry<String, List<Command>> errorType : commands.entrySet())
+			{
+				String description = errorType.getKey();
+				List<Command> errorCommands = errorType.getValue();
+				allComands.add( new SequenceCommand("Fix " + description, errorCommands) );
+			}
+			
+			fixCommand = new SequenceCommand("Fix errors", allComands);
+		}
+		else 
+		{
+			for( Entry<String, List<Command>> errorType : commands.entrySet())
+			{
+				String description = errorType.getKey();
+				List<Command> errorCommands = errorType.getValue();
+				fixCommand = new SequenceCommand("Fix " + description, errorCommands);
+			}
+		}
+		
+		Main.main.editLayer().add( fixCommand );
+		Main.map.repaint();
+		Main.ds.fireSelectionChanged(Main.ds.getSelected());
+		       
+    	OSMValidatorPlugin.getPlugin().validateAction.doValidate(e, false);
+	}	
+	
     /**
      * Sets the selection of the map to the current selected items.
      */
     @SuppressWarnings("unchecked")
-    public void setSelectedItems() 
+    private void setSelectedItems() 
     {
         Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
 
@@ -159,17 +232,21 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         		}
     		}
         }
+        
         Main.ds.setSelected(sel);
     }
 
 	public void actionPerformed(ActionEvent e) 
 	{
-		if( e.getActionCommand().equals("Select"))
+		String actionCommand = e.getActionCommand();
+		if( actionCommand.equals("Select"))
 			setSelectedItems();
-		else if( e.getActionCommand().equals("Validate"))
+		else if( actionCommand.equals("Validate"))
 	    	OSMValidatorPlugin.getPlugin().validateAction.actionPerformed(e);
+		else if( actionCommand.equals("Fix"))
+	    	fixErrors(e); 
 	}
-	
+
 	/**
 	 * Refresh the error messages display
 	 */
@@ -178,37 +255,89 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		buildTree();
 	}
 	
-	/**
-	 * Watches for double clicks and from editing or new property, depending on the
-	 * location, the click was.
-	 * @author imi
-	 */
-	public class DblClickWatch extends MouseAdapter 
+    /**
+     * Checks for fixes in selected element and, if needed, adds to the sel parameter all selected elements
+     * @param sel The collection where to add all selected elements
+     * @param addSelected if true, add all selected elements to collection
+     * @return whether the selected elements has any fix
+     */
+    @SuppressWarnings("unchecked")
+	private boolean setSelection(Collection<OsmPrimitive> sel, boolean addSelected)
 	{
-        @SuppressWarnings("unchecked")
+		boolean hasFixes = false;
+
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+    	if( node == null ) 
+    		return hasFixes;
+
+		Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
+		while( children.hasMoreElements() )
+		{
+    		DefaultMutableTreeNode childNode = children.nextElement();
+    		Object nodeInfo = childNode.getUserObject();
+    		if( nodeInfo instanceof TestError)
+    		{
+    			TestError error = (TestError)nodeInfo;
+    			hasFixes = hasFixes || error.isFixable();
+    			if( addSelected )
+    			{
+        			sel.addAll( error.getPrimitives() );
+    			}
+    		}
+		}
+		
+		return hasFixes;
+	}
+    
+	/**
+	 * Watches for clicks.
+	 */
+	public class ClickWatch extends MouseAdapter 
+	{
         @Override 
 		public void mouseClicked(MouseEvent e) 
 		{
-			if (e.getClickCount() < 2 || e.getSource() instanceof JScrollPane)
+	        fixButton.setEnabled(false);
+        	
+			if(e.getSource() instanceof JScrollPane)
 				return;
-			else 
-			{
-		        Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
+        	
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        	if( node == null )
+        		return;
 
-	        	DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-	    		Enumeration<DefaultMutableTreeNode> children = node.breadthFirstEnumeration();
-	    		while( children.hasMoreElements() )
-	    		{
-	        		DefaultMutableTreeNode childNode = children.nextElement();
-	        		Object nodeInfo = childNode.getUserObject();
-	        		if( nodeInfo instanceof TestError)
-	        		{
-	        			TestError error = (TestError)nodeInfo;
-	        			sel.addAll( error.getPrimitives() );
-	        		}
-	    		}
+	        Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
+			boolean isDblClick = e.getClickCount() > 1;
+			
+			boolean hasFixes = setSelection(sel, isDblClick);
+	        fixButton.setEnabled(hasFixes);
+	        
+	        if( isDblClick)
+			{
 	    		Main.ds.setSelected(sel);
 			}
+		}
+	}
+	
+	/**
+	 * Watches for tree selection.
+	 */
+	public class SelectionWatch implements TreeSelectionListener 
+	{
+        @SuppressWarnings("unchecked")
+		public void valueChanged(TreeSelectionEvent e) 
+		{
+	        fixButton.setEnabled(false);
+        	
+			if(e.getSource() instanceof JScrollPane)
+				return;
+        	
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        	if( node == null )
+        		return;
+
+			boolean hasFixes = setSelection(null, false);
+	        fixButton.setEnabled(hasFixes);
 		}
 	}
 }

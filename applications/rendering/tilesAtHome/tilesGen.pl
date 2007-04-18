@@ -89,8 +89,9 @@ my $progstart = time();
 my $dirent; 
 
 # Keep track of pseudo-XML open tags in case we have to abort
-my $xmltagsOpen;
-my $xmlIndent = 0;
+#my @xmltagsOpen; 
+## TODO: find a way to not excessively open/close file and still be able to 
+##       write a rendering summary for the server for each tile/tileset
 
 # Handle the command-line
 my $Mode = shift();
@@ -424,8 +425,6 @@ sub GenerateTileset
         $progress=0;
         $progressPercent=0;
         $currentSubTask = $layer;
-        
-        
         
         my $maxzoom = $Config{"Layer.$layer.MaxZoom"};
         my $layerDataFile;
@@ -1153,3 +1152,4 @@ sub reExecIfRequired
             "progstart=$progstart" or die;
     }
 }
+

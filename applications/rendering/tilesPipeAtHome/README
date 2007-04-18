@@ -7,8 +7,9 @@
 
 These programs are all designed to be run simultaneously
 
-Data flow:
+*** DO NOT USE ***
 
+Data flow:
   requests -> download -> transform -> render -> split -> blankTiles -> compress -> upload
 
 
@@ -22,6 +23,3 @@ Done:
 * blankTiles - detects and removes blank tile images
 * compress - adds multiple tiles to a zip file, to make uploading more efficient
 * upload - uploads the ZIP files to server
-
-
-

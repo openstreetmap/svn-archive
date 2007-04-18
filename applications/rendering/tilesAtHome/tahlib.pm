@@ -1,9 +1,13 @@
 use strict; 
-use tahconfig;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
 # =====================================================================
+
+my $lastmsglen = 0;
+
+my $idleFor = 0;
+my $idleSeconds = 0;
 
 #-----------------------------------------------------------------------------
 # Prints status message without newline, overwrites previous message
@@ -11,18 +15,18 @@ use tahconfig;
 #-----------------------------------------------------------------------------
 sub statusMessage 
 {
-    my ($msg, $newline) = @_;
+    my ($msg, $Verbose, $currentSubTask, $progressJobs, $progressPercent, $newline) = @_;
 
-    if ($Config{Verbose})
+    if ($Verbose)
     {
         print STDERR "$msg\n";
         return;
     }
 
     my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
-    print STDERR "\r";
-    print STDERR " " x $lastmsglen;
+    my $curmsglen = length($toprint);
     print STDERR "\r$toprint";
+    print STDERR " " x ($lastmsglen-$curmsglen);
     if ($newline)
     {
         $lastmsglen = 0;
@@ -30,8 +34,9 @@ sub statusMessage
     }
     else
     {
-        $lastmsglen = length($toprint);
+        $lastmsglen = $curmsglen;
     }
+
 }
 
 #-----------------------------------------------------------------------------
@@ -39,10 +44,10 @@ sub statusMessage
 #-----------------------------------------------------------------------------
 sub doneMessage
 {
-    my $msg = shift;
+    my ($msg,$Verbose) = @_;
     $msg = "done" if ($msg eq "");
 
-    if ($Config{Verbose})
+    if ($Verbose)
     {
         print STDERR "$msg\n";
         return;
@@ -54,8 +59,8 @@ sub doneMessage
 #-----------------------------------------------------------------------------
 sub talkInSleep
 {
-    my ($message, $duration) = @_;
-    if ($Config{Verbose})
+    my ($message, $duration,$progstart,$idleFor,$idleSeconds,$Verbose) = @_;
+    if ($Verbose)
     {
         print STDERR "$message: sleeping $duration seconds\n";
         sleep $duration;
@@ -74,4 +79,26 @@ sub talkInSleep
 	$idleSeconds++;
     }
 }
+
+sub setIdle
+{
+    my ($idleNow,$idleTotal) = @_;
+    $idleFor = $idleNow;
+    $idleSeconds = $idleTotal;
+}
+
+sub getIdle
+{
+    my $getTotal = @_;
+    if ($getTotal)
+    {
+      return $idleSeconds;
+    }
+    else
+    {
+      return $idleFor;
+    }
+}
+
+1;
 

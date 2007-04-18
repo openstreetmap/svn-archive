@@ -73,17 +73,17 @@ public class AgregatePrimitivesVisitor implements Visitor
 		{
 			if( o1 instanceof Node)
 			{
-				return o2 instanceof Node ? o1.compareTo(o2) : -1;
+				return o2 instanceof Node ? o1.hashCode() - o2.hashCode() : -1;
 			}
 			else if( o1 instanceof Way)
 			{
-				return o2 instanceof Way ? o1.compareTo(o2) : 1;
+				return o2 instanceof Way ? o1.hashCode() - o2.hashCode() : 1;
 			}
 			else // o1 is a segment
 			{
 				if( o2 instanceof Node ) return 1;
 				if( o2 instanceof Way ) return -1;
-				return o1.compareTo(o2);
+				return o1.hashCode() - o2.hashCode();
 			}
 		}
 	}

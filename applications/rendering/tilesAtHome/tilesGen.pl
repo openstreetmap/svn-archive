@@ -140,7 +140,7 @@ elsif ($Mode eq "loop")
         } 
         else 
         {
-            setIdle(0,getIdle(1));
+            setIdle(0,0);
         }
     }
 }

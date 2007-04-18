@@ -82,9 +82,15 @@ sub talkInSleep
 
 sub setIdle
 {
-    my ($idleNow,$idleTotal) = @_;
-    $idleFor = $idleNow;
-    $idleSeconds = $idleTotal;
+    my ($idle,$setTotal) = @_;
+    if ($setTotal)
+    {
+        $idleSeconds = $idle;
+    }
+    else
+    {
+        $idleFor = $idle;
+    }
 }
 
 sub getIdle

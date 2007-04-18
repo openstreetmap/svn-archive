@@ -25,7 +25,7 @@ res = dao.call_sql { "select part1, part2, lat, lon, date from codes where confi
   description_el = Element.new 'description', channel
   description_el.text = description
   link = Element.new 'link', channel
-  link.text = 'http://www.freethepostcode.org/'
+  link.text = 'http://www.openstreetmap.org/'
 
   image = Element.new 'image', channel
   url = Element.new 'url', image
@@ -37,7 +37,7 @@ res = dao.call_sql { "select part1, part2, lat, lon, date from codes where confi
   height = Element.new 'height', image
   height.text = 100
   link = Element.new 'link', image
-  link.text = 'http://www.freethepostcode.org/'
+  link.text = 'http://www.openstreetmap.org/'
  
   res.each_hash do |row|
     item = Element.new 'item', channel

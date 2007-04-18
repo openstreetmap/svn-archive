@@ -5,7 +5,7 @@ use Math::Trig;
 use File::Copy;
 use FindBin qw($Bin);
 use tahconfig;
-#use tahlib;
+use tahlib;
 use English '-no_match_vars';
 use GD qw(:DEFAULT :cmp); 
 use strict;
@@ -85,12 +85,12 @@ my $progressJobs = 0;
 my $progressPercent = 0;
 
 # set message output beautification vars
-my $lastmsglen = 0;
+#my $lastmsglen = 0;
 
 # keep track of time running
 my $progstart = time();
-my $idleSeconds = 0;
-my $idleFor = 0;
+#my $idleSeconds = 0;
+#my $idleFor = 0;
 my $dirent; 
 
 # Keep track of pseudo-XML open tags in case we have to abort
@@ -144,7 +144,7 @@ elsif ($Mode eq "loop")
         } 
         else 
         {
-            $idleFor = 0;
+            setIdleFor(0);
         }
     }
 }
@@ -272,7 +272,7 @@ sub ProcessRequestsFromServer {
   }
   
   # Information text to say what's happening
-  statusMessage("Got work from the \"$ModuleName\" server module");
+  statusMessage("Got work from the \"$ModuleName\" server module", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
   
   # Create the tileset requested
   GenerateTileset($X, $Y, $Z);
@@ -329,7 +329,7 @@ sub GenerateTileset {
   $progressJobs++;
   $currentSubTask = "Preproc";
 
-  statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), 1);
+  statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
   
 
   my $DataFile = "data-$PID.osm";
@@ -396,7 +396,7 @@ sub GenerateTileset {
   
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
-    statusMessage("Checking for UTF-8 errors in $DataFile", 0);
+    statusMessage("Checking for UTF-8 errors in $DataFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
     open(OSMDATA, $DataFile) || die ("could not open $DataFile for UTF-8 check");
     my @toCheck = <OSMDATA>;
     close(OSMDATA);
@@ -404,7 +404,7 @@ sub GenerateTileset {
     {
       if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
       {
-        statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", 1);
+        statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         return 0 if ($Mode eq "loop");
         exit(1);
       }
@@ -573,7 +573,7 @@ sub RenderTile
 
     if (($progressPercent=$progress*100/(2**($Config{"Layer.$layer.MaxZoom"}-12+1)-1)) == 100)
     {
-        statusMessage("Finished $X,$Y for layer $layer", 1);
+        statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     }
     else
     {
@@ -583,7 +583,7 @@ sub RenderTile
         }
         else
         {
-            statusMessage("Working");
+            statusMessage("Working", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         }
     }
 
@@ -683,7 +683,7 @@ sub UpdateOsmarender {
 sub DownloadFile {
   my ($URL, $File, $UseExisting, $Title) = @_;
   
-  statusMessage("Downloading: $Title");
+  statusMessage("Downloading: $Title", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
   
   if($UseExisting) 
   {
@@ -718,12 +718,12 @@ sub frollo {
       "$outputFile");
     if(runCommand("Frolloizing (part II) ...", $Cmd))
     {
-      statusMessage("Frollification successful");
+      statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
       killafile("temp-$PID.osm");
     } 
     else 
     {
-      statusMessage("Frollotation failure (part II)");
+      statusMessage("Frollotation failure (part II)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
       killafile("temp-$PID.osm");
       killafile($outputFile);
       return 0;
@@ -731,7 +731,7 @@ sub frollo {
   } 
   else 
   {
-    statusMessage("Failure of Frollotron (part I)");
+    statusMessage("Failure of Frollotron (part I)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     killafile("temp-$PID.osm");
     return 0;
   }
@@ -757,7 +757,7 @@ sub xml2svg {
     $TSVG);
     runCommand("Transforming $what", $Cmd);
     if ($Config{NoBezier}) {
-    statusMessage("Bezier Curve hinting disabled.");
+    statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
@@ -774,7 +774,7 @@ sub xml2svg {
   my $filesize= -s $SVG;
   if (!$filesize) {
     copy($TSVG,$SVG);
-    statusMessage("Error on Bezier Curve hinting, rendering without bezier curves");
+    statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     }
     killafile($TSVG);
   }
@@ -790,7 +790,7 @@ sub runCommand
 {
     my ($message, $cmd) = @_;
 
-    statusMessage($message);
+    statusMessage($message, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 
     if ($Config{Verbose})
     {
@@ -859,7 +859,7 @@ sub svg2png {
   
   # stop rendering the current job when inkscape fails
   if (not runCommand("Rendering", $Cmd)){
-    statusMessage("$Cmd failed",1);
+    statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     return 0 if ($Mode eq "loop");
     exit(1);
   }
@@ -1032,7 +1032,7 @@ sub splitImageX
   my $allempty=1;
   
   # Load the tileset image
-  statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size));
+  statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
   my $Image = newFromPng GD::Image($File);
   
   # Use one subimage for everything, and keep copying data into it
@@ -1067,7 +1067,7 @@ sub splitImageX
       # $SubImage->trueColorToPalette($dither,$numcolors);
 
       # Store the tile
-      statusMessage(" -> $Filename") if ($Config{Verbose});
+      statusMessage(" -> $Filename", $Config{Verbose}, 0) if ($Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
       WriteImage($SubImage,$Filename2);
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
@@ -1082,7 +1082,7 @@ sub splitImageX
         }
         else
         {
-          statusMessage("Pngcrushing $Filename failed",1);
+          statusMessage("Pngcrushing $Filename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
           rename($Filename2, $Filename);
         }
     }
@@ -1137,86 +1137,11 @@ sub reExecIfRequired
     }
     elsif ($dirent ne $de)
     {
-        statusMessage("tilesGen.pl has changed, re-start new version", 1);
+        statusMessage("tilesGen.pl has changed, re-start new version", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         exec "perl", $0, "loop", "reexec", 
             "progressJobs=$progressJobs", 
-            "idleSeconds=$idleSeconds", 
-            "idleFor=$idleSeconds", 
+            "idleSeconds=" . getIdle(1), 
+            "idleFor=" . getIdle(0), 
             "progstart=$progstart" or die;
     }
 }
-
-# =====================================================================
-# The following is duplicated from tilesGen.pl
-# =====================================================================
-
-#-----------------------------------------------------------------------------
-# Prints status message without newline, overwrites previous message
-# (if $newline set, starts new line after message)
-#-----------------------------------------------------------------------------
-sub statusMessage 
-{
-    my ($msg, $newline) = @_;
-
-    if ($Config{Verbose})
-    {
-        print STDERR "$msg\n";
-        return;
-    }
-
-    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
-    print STDERR "\r";
-    print STDERR " " x $lastmsglen;
-    print STDERR "\r$toprint";
-    if ($newline)
-    {
-        $lastmsglen = 0;
-        print STDERR "\n";
-    }
-    else
-    {
-        $lastmsglen = length($toprint);
-    }
-}
-
-#-----------------------------------------------------------------------------
-# Used to display task completion. Only for verbose mode.
-#-----------------------------------------------------------------------------
-sub doneMessage
-{
-    my $msg = shift;
-    $msg = "done" if ($msg eq "");
-
-    if ($Config{Verbose})
-    {
-        print STDERR "$msg\n";
-        return;
-    }
-}
-
-#-----------------------------------------------------------------------------
-# A sleep function with visible countdown
-#-----------------------------------------------------------------------------
-sub talkInSleep
-{
-    my ($message, $duration) = @_;
-    if ($Config{Verbose})
-    {
-        print STDERR "$message: sleeping $duration seconds\n";
-        sleep $duration;
-        return;
-    }
-
-    for (my $i = 0; $i< $duration; $i++)
-    {
-	my $totalseconds = time() - $progstart;
-        statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ", 
-                $message,
-                $idleFor/60, $idleFor%60,
-                $totalseconds ? $idleSeconds * 100 / $totalseconds : 100));
-        sleep 1;
-	$idleFor++;
-	$idleSeconds++;
-    }
-}
-

@@ -3,7 +3,7 @@ use strict;
 use LWP::UserAgent;
 use File::Copy;
 use tahconfig;
-#use tahlib;
+use tahlib;
 #-----------------------------------------------------------------------------
 # OpenStreetMap tiles@home, upload module
 # Takes any tiles generated, adds them into ZIP files, and uploads them
@@ -37,8 +37,8 @@ my @sorted;
 
 # when called from tilesGen, use these for nice display
 my $progress = 0;
-my $progressJobs = $ARGV[0] or 1;
 my $progressPercent = 0;
+my $progressJobs = $ARGV[0] or 1;
 my $currentSubTask;
  
 my $lastmsglen;
@@ -51,14 +51,14 @@ if(opendir(ZIPDIR, $ZipDir)){
   close ZIPDIR;
   @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
   my $zipCount = scalar(@sorted);
-  statusMessage(scalar(@sorted)." zip files to upload");
+  statusMessage(scalar(@sorted)." zip files to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
   while(my $File = shift @sorted){
     if($File =~ /\.zip$/i){
       upload("$ZipDir/$File");
     }
     $progress++;
     $progressPercent = $progress * 100 / $zipCount;
-    statusMessage(scalar(@sorted)." zip files left to upload");
+    statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
   }
 }
 
@@ -72,7 +72,7 @@ $progressPercent = 0;
 my $TileDir = $Config{WorkingDirectory};
 
 # Group and upload the tiles
-statusMessage("Searching for tiles in $TileDir");
+statusMessage("Searching for tiles in $TileDir", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
 # compile a list of the "Prefix" values of all configured layers,
 #     # separated by |
@@ -84,7 +84,7 @@ closedir($dp);
 
 my $tileCount = scalar(@tiles);
 
-return if ($tileCount == 0);
+exit if ($tileCount == 0);
 
 while (uploadTileBatch(
   $TileDir, 
@@ -109,7 +109,7 @@ sub uploadTileBatch(){
   mkdir $OutputDir if ! -d $OutputDir;
  
   $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
-  statusMessage(scalar(@tiles)." tiles to process");
+  statusMessage(scalar(@tiles)." tiles to process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 
   while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles)){
     my $Filename1 = "$TileDir/$file";
@@ -123,13 +123,13 @@ sub uploadTileBatch(){
   }
   
   if($Count){
-    statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size));
+    statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     return compressTiles($TempDir, $OutputDir);
   }
   else
   {
     $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
-    statusMessage("upload finished");
+    statusMessage("upload finished", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     return 0;
   }
 }
@@ -185,7 +185,7 @@ sub upload(){
   my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
   my $URL = $Config{"UploadURL2"};
   
-  statusMessage("Uploading $File");
+  statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
   my $res = $ua->post($URL,
     Content_Type => 'form-data',
     Content => [ file => [$File], mp => $Password, version => $Config{ClientVersion} ]);
@@ -207,75 +207,4 @@ sub upload(){
   
   return 1;
 }
-
-# =====================================================================
-# The following is duplicated from tilesGen.pl
-# =====================================================================
-
-#-----------------------------------------------------------------------------
-# Prints status message without newline, overwrites previous message
-# (if $newline set, starts new line after message)
-#-----------------------------------------------------------------------------
-sub statusMessage 
-{
-    my ($msg, $newline) = @_;
-
-    if ($Config{Verbose})
-    {
-        print STDERR "$msg\n";
-        return;
-    }
-
-    my $toprint = sprintf("[#%d %3d%% %s] %s%s ", $progressJobs, $progressPercent+.5, $currentSubTask, $msg, ($newline) ? "" : "...");
-    print STDERR "\r";
-    print STDERR " " x $lastmsglen;
-    print STDERR "\r$toprint";
-    if ($newline)
-    {
-        $lastmsglen = 0;
-        print STDERR "\n";
-    }
-    else
-    {
-        $lastmsglen = length($toprint);
-    }
-}
-
-#-----------------------------------------------------------------------------
-# Used to display task completion. Only for verbose mode.
-#-----------------------------------------------------------------------------
-sub doneMessage
-{
-    my $msg = shift;
-    $msg = "done" if ($msg eq "");
-
-    if ($Config{Verbose})
-    {
-        print STDERR "$msg\n";
-        return;
-    }
-}
-
-#-----------------------------------------------------------------------------
-# A sleep function with visible countdown
-#-----------------------------------------------------------------------------
-sub talkInSleep
-{
-    my ($message, $duration) = @_;
-    if ($Config{Verbose})
-    {
-        print STDERR "$message: sleeping $duration seconds\n";
-        sleep $duration;
-        return;
-    }
-
-    for (my $i = 0; $i< $duration; $i++)
-    {
-        statusMessage(sprintf("%s, sleeping (%d)", $message, $duration - $i));
-        sleep 1;
-    }
-}
-
-
-
 

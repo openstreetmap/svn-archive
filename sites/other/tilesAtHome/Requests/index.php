@@ -56,7 +56,6 @@
     $Data["x"],
     $Data["y"],
     $Data["status"],
-    2,
-    $_GET["debug"]==1);
+    REQUEST_ACTIVE);
 
 ?>

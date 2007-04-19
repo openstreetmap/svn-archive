@@ -27,6 +27,9 @@ if($UserID < 1){
 }
 
 # TODO: check whether version number is acceptable
+if($VersionID < 0){
+  AbortWithError(401, "Client version not acceptable");
+}
 
 HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
 

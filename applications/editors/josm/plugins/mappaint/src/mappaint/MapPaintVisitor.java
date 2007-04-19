@@ -87,12 +87,25 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		}
 		else
 		{
+			int orderNumber = 0;
 			for (Segment ls : w.segments)
 			{
-				if ((!ls.selected) && (isSegmentVisible(ls))) // selected already in good color
-					drawSegment(ls, w.selected ?
-						getPreferencesColor("selected", Color.YELLOW) : colour,
-						width);
+				orderNumber++;
+				if (isSegmentVisible(ls))
+				{
+					if (!ls.selected) // selected already in good color
+						drawSegment(ls, w.selected ?
+							getPreferencesColor("selected", Color.YELLOW) : colour,
+							width);
+					if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
+					{
+						try
+						{
+							drawOrderNumber(ls, orderNumber);
+						}
+						catch (IllegalAccessError e) {} //SimplePaintVisitor::drawOrderNumber was private prior to rev #211
+					}
+				}
 			}
 		}
 	}
@@ -139,7 +152,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	}
 
 	/**
-	 * Checks is the given segment is int the visible area.
+	 * Checks if the given segment is in the visible area.
 	 * NOTE: This will return true for a small number of non-visible
 	 *       segments.
 	 */
@@ -163,8 +176,10 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		if (name!=null)
 		{
 			g.setColor( getPreferencesColor ("text", Color.WHITE));
+			Font defaultFont = g.getFont();
 			g.setFont (new Font("Helvetica", Font.PLAIN, 8));
 			g.drawString (name, p.x+w/2+2, p.y+h/2+2);
+			g.setFont(defaultFont);
 		}
 		if (n.selected)
 		{

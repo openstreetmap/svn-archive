@@ -1,0 +1,67 @@
+<annotations>
+  <item name="Autobahn" type="way">
+    <label text="Autobahnen in Deutschland"/>
+
+    <text key="name" text="Autobahn (z.B. A99)"/>
+
+    <!-- Autobahns are usually oneway -->
+    <check key="oneway" text="Oneway" default="on"/>
+
+    <!-- Always setting class=Autobahn -->
+    <key key="highway" value="motorway"/>
+    <key key="class" value="Autobahn"/>
+  </item>
+
+  <item name="Bundesstrasse" type="way">
+    <label text="Bundesstrassen in Deutschland"/>
+
+    <text key="name" text="Bundesstrasse (z.B. B11)"/>
+
+    <!-- Bundesstrasses are usually not oneway -->
+    <check key="oneway" text="Oneway" default="off"/>
+
+    <!-- Always setting class=Bundesstrasse -->
+    <key key="highway" value="primary"/>
+    <key key="class" value="Bundesstrasse"/>
+  </item>
+
+  <item name="Landstrasse" type="way">
+    <label text="Landstrassen in Deutschland"/>
+
+    <text key="name" text="Name"/>
+
+    <!-- Landstrasses are usually not oneway -->
+    <check key="oneway" text="Oneway" default="off"/>
+
+    <!-- Always setting class=Landstrasse -->
+    <key key="highway" value="secondary"/>
+    <key key="class" value="Landstrasse"/>
+  </item>
+
+  <item name="Nebenstrasse" type="way">
+    <label text="Nebenstrasse in Deutschland"/>
+
+    <text key="name" text="Name"/>
+
+    <!-- Nebenstrasses are usually not oneway -->
+    <check key="oneway" text="Oneway" default="off"/>
+
+    <!-- Always setting class=Landstrasse -->
+    <key key="highway" value="unclassified"/>
+    <key key="class" value="Nebenstrasse"/>
+  </item>
+
+  <item name="Wohnstrasse" type="way">
+    <label text="Wohnstrasse in Deutschland"/>
+
+    <text key="name" text="Name"/>
+
+    <!-- Wohnstrasses are usually not oneway -->
+    <check key="oneway" text="Oneway" default="off"/>
+
+    <!-- Always setting class=Wohnstrasse -->
+    <key key="highway" value="residential"/>
+    <key key="class" value="Wohnstrasse"/>
+  </item>
+
+</annotations>

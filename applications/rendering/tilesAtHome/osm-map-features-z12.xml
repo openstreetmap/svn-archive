@@ -1060,7 +1060,7 @@
             .natural-coastline {
                 fill: none;
                 stroke: #89bac6;
-                stroke-width: 0.4px;
+                stroke-width: 1.5px;
             }
 
             .natural-land {

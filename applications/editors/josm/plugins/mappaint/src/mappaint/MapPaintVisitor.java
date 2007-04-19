@@ -31,17 +31,19 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Node n) {
-		ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
-		if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
-			if(nodeStyle instanceof IconElemStyle) {
-				drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
+		if (isNodeVisible(n)) {
+			ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
+			if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
+				if(nodeStyle instanceof IconElemStyle) {
+					drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
+				} else {
+					// throw some sort of exception
+				}
 			} else {
-				// throw some sort of exception
+				drawNode(n, n.selected ? getPreferencesColor("selected",
+										Color.YELLOW)
+					: getPreferencesColor("node", Color.RED));
 			}
-		} else {
-			drawNode(n, n.selected ? getPreferencesColor("selected",
-									Color.YELLOW)
-				: getPreferencesColor("node", Color.RED));
 		}
 	}
 
@@ -51,7 +53,8 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * Want to make un-wayed segments stand out less than ways.
 	 */
 	@Override public void visit(Segment ls) {
-		drawSegment(ls, getPreferencesColor("untagged",Color.GRAY));
+		if (isSegmentVisible(ls))
+			drawSegment(ls, getPreferencesColor("untagged",Color.GRAY));
 	}
 
 	/**
@@ -86,7 +89,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		{
 			for (Segment ls : w.segments)
 			{
-				if (!ls.selected) // selected already in good color
+				if ((!ls.selected) && (isSegmentVisible(ls))) // selected already in good color
 					drawSegment(ls, w.selected ?
 						getPreferencesColor("selected", Color.YELLOW) : colour,
 						width);
@@ -125,6 +128,30 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			g.drawPolygon(polygon);
 			g2d.setStroke(new BasicStroke(1));
 		}
+	}
+
+	/**
+	 * Checks if the given node is in the visible area.
+	 */
+	protected boolean isNodeVisible(Node n) {
+		Point p = nc.getPoint(n.eastNorth);
+		return !((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight()));
+	}
+
+	/**
+	 * Checks is the given segment is int the visible area.
+	 * NOTE: This will return true for a small number of non-visible
+	 *       segments.
+	 */
+	protected boolean isSegmentVisible(Segment ls) {
+		if (ls.incomplete) return false;
+		Point p1 = nc.getPoint(ls.from.eastNorth);
+		Point p2 = nc.getPoint(ls.to.eastNorth);
+		if ((p1.x < 0) && (p2.x < 0)) return false;
+		if ((p1.y < 0) && (p2.y < 0)) return false;
+		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return false;
+		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return false;
+		return true;
 	}
 
 	// NEW

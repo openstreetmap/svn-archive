@@ -80,31 +80,29 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 				area = true;
 			}
 		}
-
-		if(area)
+		boolean fillAreas = Main.pref.getBoolean("mappaint.fillareas", true);
+		
+		if (area && fillAreas)
+			drawWayAsArea(w, colour);
+		int orderNumber = 0;
+		for (Segment ls : w.segments)
 		{
-			drawWayAsArea(w,colour);
-		}
-		else
-		{
-			int orderNumber = 0;
-			for (Segment ls : w.segments)
+			orderNumber++;
+			if (isSegmentVisible(ls))
 			{
-				orderNumber++;
-				if (isSegmentVisible(ls))
+				if (area && fillAreas)
+					//Draw segments in a different colour so direction arrows show against the fill
+					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY), width);
+				else
+					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour, width);
+				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
 				{
-					if (!ls.selected) // selected already in good color
-						drawSegment(ls, w.selected ?
-							getPreferencesColor("selected", Color.YELLOW) : colour,
-							width);
-					if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
+					try
 					{
-						try
-						{
-							drawOrderNumber(ls, orderNumber);
-						}
-						catch (IllegalAccessError e) {} //SimplePaintVisitor::drawOrderNumber was private prior to rev #211
+						g.setColor(w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour);
+						drawOrderNumber(ls, orderNumber);
 					}
+					catch (IllegalAccessError e) {} //SimplePaintVisitor::drawOrderNumber was private prior to rev #211
 				}
 			}
 		}
@@ -132,15 +130,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		g.setColor( w.selected ?
 						getPreferencesColor("selected", Color.YELLOW) : colour);
 
-		if(Main.pref.getBoolean("mappaint.fillareas", true))
-			g.fillPolygon(polygon);
-		else
-		{
-			Graphics2D g2d = (Graphics2D)g;
-			g2d.setStroke(new BasicStroke(2));
-			g.drawPolygon(polygon);
-			g2d.setStroke(new BasicStroke(1));
-		}
+		g.fillPolygon(polygon);
 	}
 
 	/**
@@ -233,21 +223,17 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1
 	// Shows areas before non-areas
 	public void visitAll(DataSet data) {
-
-		for (final OsmPrimitive osm : data.ways) {
-			if(!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
-				osm.visit(this);
-		}
-
 		for (final OsmPrimitive osm : data.segments)
 			if (!osm.deleted)
 				osm.visit(this);
-
-
-		for (final OsmPrimitive osm : data.ways) {
-			if(!osm.deleted && !MapPaintPlugin.elemStyles.isArea(osm))
+				
+		for (final OsmPrimitive osm : data.ways)
+			if (!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
 				osm.visit(this);
-		}
+
+		for (final OsmPrimitive osm : data.ways)
+			if (!osm.deleted && !MapPaintPlugin.elemStyles.isArea(osm))
+				osm.visit(this);
 
 		for (final OsmPrimitive osm : data.nodes)
 			if (!osm.deleted)

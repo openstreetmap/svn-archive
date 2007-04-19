@@ -5,7 +5,6 @@ define("REQUEST_ACTIVE", 2);
 define("REQUEST_DONE", 3);
 
 function deleteRequest($X, $Y, $Mode){
-  printf("Deleting request $X, $Y, $Mode\n");
 
   $SQL = sprintf(
     "delete from tiles_queue where `x`=%d and `y`=%d and `status`=%d;",

@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
 BEGIN {
-    unshift(@INC,"../perl");
-    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"../perl_lib");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl_lib");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl_lib");
 }
 
 

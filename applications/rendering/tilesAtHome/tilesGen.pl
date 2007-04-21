@@ -81,6 +81,9 @@ my $progressPercent = 0;
 my $progstart = time();
 my $dirent; 
 
+# hash for MagicMkdir
+my %madeDir;
+
 # Keep track of pseudo-XML open tags in case we have to abort
 #my @xmltagsOpen; 
 ## TODO: find a way to not excessively open/close file and still be able to 
@@ -215,8 +218,17 @@ sub upload
 #-----------------------------------------------------------------------------
 # Ask the server what tileset needs rendering next
 #-----------------------------------------------------------------------------
-sub ProcessRequestsFromServer {
+sub ProcessRequestsFromServer 
+{
     my $LocalFilename = "$Config{WorkingDirectory}request.txt";
+
+    if ($Config{"LocalSlippymap"})
+    {
+        print "Config option LocalSlippymap is set. Downloading requests\n";
+        print "from the server in this mode would take them from the tiles\@home\n";
+        print "queue and never upload the results. Program aborted.\n";
+        exit 1;
+    }
     
     # ----------------------------------
     # Download the request, and check it
@@ -968,10 +980,15 @@ sub getSize($){
 #-----------------------------------------------------------------------------
 # Temporary filename to store a tile
 #-----------------------------------------------------------------------------
-sub tileFilename {
-  my($layer,$X,$Y,$Zoom) = @_;
-
-  return(sprintf("%s/%s_%d_%d_%d.png",$Config{WorkingDirectory},$Config{"Layer.$layer.Prefix"},$Zoom,$X,$Y));
+sub tileFilename 
+{
+    my($layer,$X,$Y,$Zoom) = @_;
+    return(sprintf($Config{LocalSlippymap} ? "%s/%s/%d/%d/%d.png" : "%s/%s_%d_%d_%d.png",
+        $Config{WorkingDirectory},
+        $Config{"Layer.$layer.Prefix"},
+        $Zoom,
+        $X,
+        $Y));
 }
 
 #-----------------------------------------------------------------------------
@@ -1077,6 +1094,7 @@ sub splitImageX
 
     # Decide what the tile should be called
     my $Filename = tileFilename($layer, $X * $Size + $xi, $Ytile, $Z);
+    MagicMkdir($Filename) if ($Config{"LocalSlippymap"});
    
     # Temporary filename
     my $Filename2 = "$Filename.cut";
@@ -1135,6 +1153,28 @@ sub WriteImage {
   binmode $fp;
   print $fp $png_data;
   close $fp;
+}
+
+#-----------------------------------------------------------------------------
+# Create a directory and all its parent directories
+# (equivalent to a "mkdir -p" on Unix, but stores already-created dirs
+# in a hash to avoid unnecessary system calls)
+#-----------------------------------------------------------------------------
+sub MagicMkdir
+{
+    my $file = shift;
+    my @paths = split("/", $file);
+    pop(@paths);
+    my $dir = "";
+    foreach my $path(@paths)
+    {
+        $dir .= "/".$path;
+        if (!defined($madeDir{$dir}))
+        {
+            mkdir $dir;
+            $madeDir{$dir}=1;
+        }
+    }
 }
 
 #-----------------------------------------------------------------------------

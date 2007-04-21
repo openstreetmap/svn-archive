@@ -41,6 +41,11 @@ function RouteTypes()
 				  colour : '#fb8059',
 				  width : 6
 				},
+			   'trunk road' :
+			    { conditions : { highway : 'trunk' },
+				  colour : '#477147',
+				  width : 6
+				},
 			   motorway :
 			    { conditions: { highway : 'motorway' },
 				  colour : '#809bc0',
@@ -66,9 +71,9 @@ function RouteTypes()
 				  colour : 'magenta',
 				  width: 4
 				},
-			   track :
+			   'unsurfaced road' :
 			    { conditions :  
-					{highway : 'unsurfaced', foot: 'permissive' },
+					{highway : 'unsurfaced'},
 				  colour : 'gray',
 				  width : 4
 				},
@@ -78,6 +83,41 @@ function RouteTypes()
 					{waterway: 'river' },
 					colour: 'blue',
 					width: 4
+				},
+				wood:
+				{
+					conditions: { natural: 'wood'},
+					colour : '#c0ffc0',
+					polygon: true,
+					width: 3
+				},
+				heath:
+				{
+					conditions: { natural: 'heath'},
+					colour : '#ffe0c0',
+					polygon: true,
+					width: 3
+				},
+				lake:
+				{
+					conditions: { natural: 'water'},
+					colour : '#c0c0ff',
+					polygon: true,
+					width: 3
+				},
+				common:
+				{
+					conditions: { leisure: 'common'},
+					colour : '#c0ffc0',
+					polygon: true,
+					width: 3
+				},
+				'golf course':
+				{
+					conditions: { amenity: 'golf_course'},
+					colour : '#c0ffc0',
+					polygon: true,
+					width: 3
 				},
 				unknown :
 				{ colour : 'gray',
@@ -152,6 +192,10 @@ function RouteTypes()
 	}
 
 	this.getWidth = function(type) { 
-		return rt[type]['width'];
+		return (rt[type]['width']) ? rt[type]['width'] : false;
+	}
+
+	this.isPolygon = function(type) {
+		return rt[type]['polygon'] ? true:false;
 	}
 }		

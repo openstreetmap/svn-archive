@@ -3,26 +3,21 @@ OpenLayers.Feature.OSM =  OpenLayers.Class.create();
 
 OpenLayers.Feature.OSM.prototype = 
 	OpenLayers.Class.inherit (OpenLayers.Feature.Vector, {
-		tags : null,
 
-		initialize : function(geometry,data,style) {
+		osmitem: null,
+
+		initialize : function(osmi,data,style) {
+			var newArguments = new Array();
+			newArguments.push(osmi.geometry);
+			newArguments.push(data);
+			newArguments.push(style);
 			OpenLayers.Feature.Vector.prototype.initialize.apply
-				(this,arguments);
-			this.tags = new Array();
+				(this,newArguments);
+			this.osmitem = osmi;
 		},
 
-		addTag: function (k,v) {
-			this.tags[k] = v;
-		},
-
-		tagsToXML: function() {
-			var str = "";
-			for ( k in this.tags) {
-				if (this.tags[k]!==null) {
-					str += "<tag k='" + k + "' v='" + this.tags[k] + "' />";
-				}
-			}
-			return str;
+		toXML: function() {
+			return this.osmitem.toXML();
 		},
 
 		CLASS_NAME : "OpenLayers.Feature.OSM"

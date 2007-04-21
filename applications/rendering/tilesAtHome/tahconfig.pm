@@ -219,8 +219,9 @@ sub CheckConfig{
             die "config option Layer.$layer.Prefix is not set";
         }
 
+        # any combination of comma-separated preprocessor names is allowed
         die "config option Layer.$layer.Preprocessor has invalid value" 
-            unless ($Config{"Layer.$layer.Preprocessor"} =~ /^(frollo|maplint)?$/);
+            if (grep { $_ !~ /frollo|maplint|close-areas/} split(/,/, $Config{"Layer.$layer.Preprocessor"}));
 
         foreach my $reqfile(split(/,/, $Config{"Layer.$layer.RequiredFiles"}))
         {

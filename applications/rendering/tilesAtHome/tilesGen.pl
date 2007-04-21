@@ -41,13 +41,6 @@ $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
 printf STDERR "This is version %d (%s) of tilesgen running on %s\n", 
     $Version, $Config{ClientVersion}, $^O;
 
-unless ($Config{Verbose})
-{
-    # TODO: remove this later.
-    printf STDERR "Running in concise mode. Set config option Verbose=1\n";
-    printf STDERR "for old, chatty behaviour.\n";
-}
-
 # check GD
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
@@ -423,6 +416,10 @@ sub GenerateTileset
       }
     }
 
+    #------------------------------------------------------
+    # Handle all layers, one after the other
+    #------------------------------------------------------
+
     foreach my $layer(split(/,/, $Config{Layers}))
     {
         #reset progress for each layer
@@ -442,60 +439,76 @@ sub GenerateTileset
         my $Margin = " " x ($Zoom - 8);
         #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
         
-        if ($Config{"Layer.$layer.Preprocessor"} eq "frollo")
+    
+        #------------------------------------------------------
+        # Go through preprocessing steps for the current layer
+        #------------------------------------------------------
+        my @ppchain = ($PID);
+        # config option may be empty, or a comma separated list of preprocessors
+        foreach my $preprocessor(split /,/, $Config{"Layer.$layer.Preprocessor"})
         {
-            $layerDataFile = "data-$PID-frollo.osm";
-            if (-f $layerDataFile)
+            my $inputFile = sprintf("data-%s.osm", 
+                join("-", @ppchain));
+            push(@ppchain, $preprocessor);
+            my $outputFile = sprintf("data-%s.osm", 
+                join("-", @ppchain));
+
+            if (-f $outputFile)
             {
-                # no action; frollo files seem to have been created by another
-                # layer already!
+                # no action; files for this preprocessing step seem to have been created 
+                # by another layer already!
             }
-            else
+            elsif ($preprocessor eq "frollo")
             {
                 # Pre-process the data file using frollo
-                if (not frollo("data-$PID.osm", $layerDataFile))
+                if (not frollo($inputFile, $outputFile))
                 {
-                    # stop rendering if frollo fails, as current osmarender is dependent on frollo hints
+                    # stop rendering if frollo fails, as current osmarender is 
+                    # dependent on frollo hints
                     return 0 if ($Mode eq "loop"); 
                     exit(1); 
                 }
-                push(@tempfiles, $layerDataFile);
             }
-        }
-        elsif ($Config{"Layer.$layer.Preprocessor"} eq "maplint")
-        {
-            $layerDataFile = "data-$PID-maplint.osm";
-            if (-f $layerDataFile)
-            {
-                # no action; maplint files seem to have been created by another
-                # layer already!
-            }
-            else
+            elsif ($preprocessor eq "maplint")
             {
                 # Pre-process the data file using maplint
-                my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\" 2>/dev/null",
+                # TODO may put this into a subroutine of its own
+                my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
                         $Config{Niceness},
                         $Config{XmlStarlet},
                         "maplint/lib/run-tests.xsl",
-                        "$DataFile",
+                        "$inputFile",
                         "tmp.$PID");
                 runCommand("Running maplint", $Cmd);
-                $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\" 2>/dev/null",
+                $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
                         $Config{Niceness},
                         $Config{XmlStarlet},
                         "maplint/lib/convert-to-tags.xsl",
                         "tmp.$PID",
-                        "$layerDataFile");
+                        "$outputFile");
                 runCommand("Creating tags from maplint", $Cmd);
                 killafile("tmp.$PID");
-                push(@tempfiles, $layerDataFile);
             }
+            elsif ($preprocessor eq "close-areas")
+            {
+                my $Cmd = sprintf("%s perl close-areas.pl < %s > %s",
+                        $Config{Niceness},
+                        "$inputFile",
+                        "$outputFile");
+                runCommand("Running close-areas", $Cmd);
+            }
+            else
+            {
+                die "Invalid preprocessing step '$preprocessor'";
+            }
+            push(@tempfiles, $outputFile);
         }
-        else
-        {
-            # no preprocessor
-            $layerDataFile = $DataFile;
-        }
+
+        #------------------------------------------------------
+        # Preprocessing finished, start rendering
+        #------------------------------------------------------
+
+        $layerDataFile = sprintf("data-%s.osm", join("-", @ppchain));
         
         # Add bounding box to osmarender
         # then set the data source

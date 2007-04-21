@@ -1,6 +1,9 @@
 The Debian Package openstreetmap
 ----------------------------
 
-Comments regarding the Package
+This is currently work in progress. I started a central debian directory to 
+give packaging of osm a start. So everyone is invited to add/correct the stuff in here.
+The Idea is to have different packages for the different subparts of osm.
+Which all depend from the main Package OpenStreetMap.
 
- -- tweety <tweety@moby.dasch.ostertag.name>  Sun, 15 Apr 2007 22:32:43 +0200
+ -- Joerg <OpenStreetmap@ostertag.name>  Sun, 15 Apr 2007 22:32:43 +0200

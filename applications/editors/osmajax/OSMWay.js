@@ -1,14 +1,19 @@
 
-OpenLayers.Feature.OSMWay =  OpenLayers.Class.create();
+OpenLayers.OSMWay =  OpenLayers.Class.create();
 
-OpenLayers.Feature.OSMWay.prototype = 
-	OpenLayers.Class.inherit (OpenLayers.Feature.OSM, {
+OpenLayers.OSMWay.prototype = 
+	OpenLayers.Class.inherit (OpenLayers.GeometriedOSMItem, {
 		type : null,
 		segs : null,
-		initialize : function(geometry,data,style) {
-			OpenLayers.Feature.OSM.prototype.initialize.apply
-				(this,arguments);
-			segs = new Array();
+
+		initialize: function() {
+			OpenLayers.GeometriedOSMItem.prototype.initialize.apply
+					(this,arguments);
+			//OpenLayers.OSMItem.prototype.initialize.apply(this);
+		},
+
+		setGeometry: function(g) {
+			geometry=g;
 		},
 
 		setType: function(t) { 
@@ -20,7 +25,7 @@ OpenLayers.Feature.OSMWay.prototype =
 		},
 	
 		toXML : function() { 
-			var xml = "<way id='" + (this.fid>0 ? this.fid : 0)  +
+			var xml = "<way id='" + (this.osmid>0 ? this.osmid : 0)  +
 						"'>";
 			for(seg in this.segs) {
 				xml += "<seg id='" + this.segs[seg] + "' />";
@@ -31,18 +36,6 @@ OpenLayers.Feature.OSMWay.prototype =
 			return xml;
 		},
 
-		upload: function(url,receiver,callback) {
-
-				//loadURL won't handle PUT
-				//OpenLayers.loadURL(url,null,this,this.uploaded);
-				var data = 
-					"method=PUT&data=<osm version='0.3'>"+this.toXML()+"</osm>";
-				var realCB = (receiver) ? callback.bind(receiver) : callback;
-				alert('uploading the following XML: to ' + url + ' ' + data);
-				ajaxrequest(url,'POST',data,realCB, this);
-		},
-
-
-		CLASS_NAME : "OpenLayers.Feature.OSMWay"
+		CLASS_NAME : "OpenLayers.OSMWay"
 });
 			

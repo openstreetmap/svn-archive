@@ -1,42 +1,40 @@
 // OSMNode class 
 // Represents an OSM node
-// 
-// It's a bit hacky putting IDs and tags in a "Geometry", but it's to deal
-// with the fact that we don't want to create Features out of nodes which are 
-// just points within ways, rather than proper features in their own right.
 
-function OSMNode()
-{
-		this.nid=null;
-		this.point=null;
-		this.tags=new Array();
+OpenLayers.OSMNode = OpenLayers.Class.create();
 
-		// TODO - does the JavaScript prototype library do multiple 
-		// inheritance? Good to put all the OSM stuff in a class of its own.
+OpenLayers.OSMNode.prototype = 
+	OpenLayers.Class.inherit (OpenLayers.GeometriedOSMItem, {
 
-		this.toXML = function() { 
-			var xml = "<node id='" + (this.nid>0 ? this.nid : 0)  +
-						"' lat='" + this.point.y + "' lon='" + this.point.x
-						+ "'>";
+		initialize: function() {
+			OpenLayers.GeometriedOSMItem.prototype.initialize.apply
+					(this,arguments);
+			//OpenLayers.OSMItem.prototype.initialize.apply(this);
+		},
 
-			for ( k in this.tags) {
-				xml += "<tag k='" + k + "' v='" + this.tags[k] + "' />";
+		setGeometry: function(g) {
+			if (g instanceof OpenLayers.Geometry.Point) {
+				geometry=g;
 			}
+		},
+
+		toXML : function() { 
+			var cvtr=new converter("OSGB");
+			var a = new OpenLayers.LonLat(this.geometry.x,
+							this.geometry.y);
+			var b=cvtr.customToNorm(a);
+			var xml = "<node id='" + (this.osmid>0 ? this.osmid : 0)  +
+						"' lat='" + b.lat + "' lon='" + 
+						b.lon + "'>";
+
+			xml += this.tagsToXML();
 			xml += "</node>";	
 			return xml;
-		}
-
-		this.addTag = function(k,v) {
-			this.tags[k] = v;
-		}
-
-		this.setID =  function(id) {
-			this.nid=id;
-		}
+		},
 
 		// Is this node a point of interest?
 		// If it contains tags other than 'created_by', it is considered so.
-		this.isPOI= function() {
+		isPOI:  function() {
 			if(this.tags) {
 				for(k in this.tags) {
 					if (k != 'created_by') {
@@ -45,13 +43,8 @@ function OSMNode()
 				}
 			}
 			return false;
-		}
+		},
 
-		this.upload = function(URL,receiver,callback,info) {
-			var realCB = callback.bind(receiver);
-			var data = "data=<osm version='0.3'>"+this.toXML()+"</osm>";
-			alert('uploading the following XML: to ' + URL + ' ' + data);
-			ajaxrequest(URL,'PUT',data,realCB,info);
-		}
-}
+		CLASS_NAME : "OpenLayers.OSMNode"
+});
 			

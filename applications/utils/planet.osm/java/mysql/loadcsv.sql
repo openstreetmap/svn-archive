@@ -1,0 +1,5 @@
+load data local infile 'nodes.csv' into table current_nodes fields terminated by ',' optionally enclosed by '"' escaped by '"' lines terminated by '\r\n' ignore 1 lines (id, latitude, longitude, timestamp, tags) set user_id = 5147, visible = 1;
+load data local infile 'segments.csv' into table current_segments fields terminated by ',' optionally enclosed by '"' escaped by '"' lines terminated by '\r\n' ignore 1 lines (id, node_a, node_b, timestamp, tags) set user_id = 5147, visible = 1;
+load data local infile 'ways.csv' into table current_ways fields terminated by ',' optionally enclosed by '"' escaped by '"' lines terminated by '\r\n' ignore 1 lines (id, timestamp) set user_id = 5147, visible = 1;
+load data local infile 'waysegs.csv' into table current_way_segments fields terminated by ',' optionally enclosed by '"' escaped by '"' lines terminated by '\r\n' ignore 1 lines (id, segment_id, sequence_id);
+load data local infile 'waytags.csv' into table current_way_tags fields terminated by ',' optionally enclosed by '"' escaped by '"' lines terminated by '\r\n' ignore 1 lines (id, k, v);

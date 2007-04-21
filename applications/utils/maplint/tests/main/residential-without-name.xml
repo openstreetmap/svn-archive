@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="main" id="residential-without-name" version="1" severity="warning"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Find ways with tag highway=residential, but without a name tag.
+    </maplint:desc>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

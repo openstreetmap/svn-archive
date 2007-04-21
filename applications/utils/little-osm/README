@@ -1,0 +1,31 @@
+This is an simple and primitive OSM server, aimed to be executed at anyone's home machine.
+
+The current OSM server can hardly stand all the requests. Caches are needed. So 
+little-osm is a start for any users that just want to read the data in their favourite
+application.
+
+little-osm is intended as a read only server!
+
+Installation:
+- install ruby
+- install mysql ("gem install mysql")
+- Get the planet.osm into little-osm directory
+- run readxml.rb to convert the database. This will take a while.
+- run server.rb
+- point your favourite programm to http://localhost:3000
+
+
+Some files of interest:
+readxml.rb - Script to convert a planet.osm into a sqlite database
+server.rb  - Main http server.
+planet.osm - here, you have to copy the planet.osm to read in. Make sure, it
+             is the fixed version without the incomplete segments. My
+             filesize is 82125276 bytes.
+planet.db  - This will be the generated sqlite database (will be about 130 MB)
+test/*     - Some unit tests.
+api/*      - All API files reside here.
+
+
+License of the whole stuff: GPL 2.0, Ruby license or both (at your choice).
+
+Ciao, Imi.

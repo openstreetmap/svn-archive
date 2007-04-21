@@ -1,0 +1,53 @@
+Extracting subsets from planet.osm
+----------------------------------
+
+In this directory you will find a Perl script that allows you to extract
+a subset of the data from within the weekly planet.osm file.  Running the
+script is as simple as:
+
+	extract-polygon.pl -i planet.osm -o gb.osm -p gb.poly
+
+The options used in this example are -i to specify the input file (or you
+can use STDIN), -o to specify the ouput file (or you can use STDOUT), and
+-p to specify the polygon file.  The polygon file is the only required 
+option.
+
+If you run the script with the -h option it will print a full list of the
+available options.
+
+
+Polygon files
+-------------
+
+Polygon files are ASCII text files containing a list of longitudes and 
+latitudes.  A file can contain more than one polygon so you can extract a
+number of different areas with a single command.  An example of a polygon 
+defining Great Britain and Ireland (and some of the smaller islands) is:
+
+1
+        -0.6450E+01     0.4980E+02
+        -0.2000E+01     0.4890E+02
+        -0.1850E+01     0.4925E+02
+        -0.2080E+01     0.4973E+02
+         0.1350E+01     0.5090E+02
+         0.2250E+01     0.5258E+02
+        -0.0500E+01     0.6130E+02
+        -0.8920E+01     0.5785E+02
+        -0.1140E+02     0.5130E+02
+        -0.6450E+01     0.4980E+02
+END
+
+
+Contributed polygon files
+-------------------------
+
+In this directory, along with the extract-polygon.pl script and this README
+file you will find polygon files contributed by the OSM community.  If you 
+want to contribute a polygon either add it to this directory and update the
+list below, or email it to Keith Sharp <kms@passback.co.uk>.
+
+Available polygon files:
+
+gb-irl.poly : Great Britain, Ireland, and the Islands.
+at.poly     : Austria, <christof@dallermassl.at>
+

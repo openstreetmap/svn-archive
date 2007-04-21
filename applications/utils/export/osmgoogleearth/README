@@ -1,0 +1,39 @@
+
+OSMGoogleEarth
+--------------
+
+by Jochen Topf <jochen@topf.org> ([[User:Joto]] in OSM Wiki).
+
+Transform OpenStreetMap .osm file into KML file for Google Earth. 
+
+You need a file called data.osm. When you call make a file map.kmz will
+be generated. This file contains a Google Earth KML file and some icons.
+
+Load it into Google Earth with the menu "Add" -> "Network Link...". It
+will appear in the Places list. Double click it there to fly to the
+place.
+
+Currently only some streets, parks, and parking lots are shown, but it
+is easy to improve on this.
+
+The isle_of_wight.kmz file is provided as an example.
+
+
+LICENSE
+-------
+Copyright (C) 2006  Jochen Topf <jochen@remote.org>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
+

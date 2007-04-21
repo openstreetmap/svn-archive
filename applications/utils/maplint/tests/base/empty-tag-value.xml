@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="base" id="empty-tag-value" version="1" severity="warning"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Elements with empty tag value.
+    </maplint:desc>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="tag[@v='']">
+            <maplint:result>Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

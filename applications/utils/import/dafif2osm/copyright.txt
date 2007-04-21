@@ -1,0 +1,49 @@
+1.  The DAFIF, or the "Digital Aeronautical Flight Information File," is a 
+product of the National Geospatial-Intelligence Agency ('NGA') of the United
+States Department of Defense ('DOD'). Although NGA makes no copyright
+claim under Title 17 U.S.C., NGA claims copyrights under other legal regimes.
+NGA hereby grants to each user of DAFIF a license to use and distribute the
+product, and develop derivative works.
+
+2.  The product name --  DAFIF  -- is a registered trademark of the National;
+Geospatial-Intelligence Agency, and may only be used to refer to the source of
+the data.
+
+3.  NGA requests that products developed using DAFIF acknowledge the
+source of the data with the following statement:
+
+			"This product was developed using DAFIF, a product
+			of the National Geospatial-Intelligence Agency."
+
+4.  When product developers and other customers acknowledge DAFIF as the
+source of the data, please be aware that under the United States Code, 10
+U.S.C. 425, the names of the National Imagery and Mapping Agency or the
+former Defense Mapping Agency, their respective initials, or seals cannot
+be used to imply that a product is approved, endorsed, or authorized by the
+Secretary of Defense.
+
+    Fortunately, a simple disclaimer to the effect that, "This product has not
+been endorsed or otherwise approved by the National Geospatial-Intelligence Agency or the former National Imagery and Mapping Agency, or the United States Department of Defense (10 U.S.C. 425)," is sufficient to resolve any ambiguity.
+
+5.  NGA and its personnel are not required to provide technical support or
+general assistance with respect to DAFIF.
+
+6.  Finally, NGA requires that product developers and manufacturers include
+warranty disclaimers as follows:
+	
+a.  Under 10 U.S.C. 456, no civil action may be brought against the United
+States on the basis of the content of a navigational aid prepared or
+disseminated by either the former Defense Mapping Agency (DMA),
+National Imagery and Mapping Agency (NIMA)or the National Geospatial-Intelligence Agency (NGA).
+
+	b.  The DAFIF product is provided "as is," and no warranty, express or
+implied, including, but not limited to the implied warranties of
+merchantability and fitness for particular purpose or arising by statute or 
+otherwise in law or from a course of dealing or usage in trade, is made by
+NGA as to the accuracy and functioning of the product.
+	
+	c.  Neither NGA nor its personnel will be liable for any claims, losses, or
+damages arising from or connected with the use of this product.  The user
+agrees to hold harmless the United States National Geospatial-Intelligence
+Agency.  The user's sole and exclusive remedy is to stop using the DAFIF
+product.  

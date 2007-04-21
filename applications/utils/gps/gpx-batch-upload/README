@@ -1,0 +1,13 @@
+This Perl script extracts a GPX file from a PostgreSQL database
+and uploads it to the OpenStreetMap site via an HTTP POST.
+
+The HTTP POST performs a login with password using a cookie,
+the cookie is stored in a permanent file and eventually reused.
+
+The cookie become invalid if - in the meantime - the same userid
+logs-in via another user agent (browser).
+
+Author:       Niccolo Rigacci <niccolo@rigacci.org>
+
+Version:      1.0     2006-06-06
+

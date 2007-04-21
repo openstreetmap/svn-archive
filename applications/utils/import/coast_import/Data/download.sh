@@ -1,0 +1,1 @@
+wget -i list.txt

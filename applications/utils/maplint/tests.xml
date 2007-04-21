@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<maplint:tests xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<maplint:test group="base" id="empty-tag-key" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Elements with empty tag keys.
+    </maplint:desc>
+
+    <maplint:desc xml:lang="de">
+        Elemente mit leerem Schlüsselwort im Tag.
+    </maplint:desc>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="tag[@k='']">
+            <maplint:result>Value=<xsl:value-of select="tag[@k='']/@v"/></maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="empty-tag-value" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Elements with empty tag value.
+    </maplint:desc>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="tag[@v='']">
+            <maplint:result>Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="multiple-segments-on-same-nodes" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Find segments which use the same nodes. Either with the same direction
+        or with different directions.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="fromto2segment" match="/osm/segment" use="concat(@from, ' ', @to)"/>
+        <xsl:key name="tofrom2segment" match="/osm/segment" use="concat(@to, ' ', @from)"/>
+    </maplint:setup>
+
+    <maplint:check data="segment" type="application/xsl+xml">
+        <xsl:variable name="segment-samedir" select="key('fromto2segment', concat(@from, ' ', @to))"/>
+        <xsl:variable name="segment-otherdir" select="key('tofrom2segment', concat(@to, ' ', @from))"/>
+        <xsl:variable name="sid" select="@id"/>
+        <xsl:if test="count($segment-samedir) &gt; 1">
+            <maplint:result>
+                <xsl:text>Segments with same @from/@to:</xsl:text>
+                <xsl:for-each select="$segment-samedir">
+                    <xsl:if test="@id != $sid">
+                        <xsl:value-of select="concat(' ', @id)"/>
+                    </xsl:if>
+                </xsl:for-each>
+            </maplint:result>
+        </xsl:if>
+        <xsl:if test="count($segment-otherdir) &gt; 1">
+                <xsl:text>Segments with @from/@to reversed:</xsl:text>
+                <xsl:for-each select="$segment-otherdir">
+                    <xsl:if test="@id != $sid">
+                        <xsl:value-of select="concat(' ', @id)"/>
+                    </xsl:if>
+                </xsl:for-each>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="nodes-on-same-spot" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Two or more nodes with the exact same coordinates. This will be
+        reported for every node in the set, so if there are three nodes
+        with the same coordinates, there will be three reports, not one.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="nodesbycoordinates" match="/osm/node" use="concat(@lon,' ', @lat)"/>
+    </maplint:setup>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:variable name="nodes" select="key('nodesbycoordinates', concat(@lon, ' ', @lat))"/>
+        <xsl:variable name="nid" select="@id"/>
+
+        <xsl:if test="count($nodes) != 1">
+            <maplint:result>
+                <xsl:text>Nodes:</xsl:text>
+                <xsl:for-each select="$nodes">
+                    <xsl:if test="@id != $nid">
+                        <xsl:value-of select="concat(' ', @id)"/>
+                    </xsl:if>
+                </xsl:for-each>
+            </maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="segment-with-from-equals-to" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Finds segments going from a node to the same node.
+    </maplint:desc>
+
+    <maplint:check data="segment" type="application/xsl+xml">
+        <xsl:if test="@from=@to">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="segment-without-way" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Find segments which don't belong to any way. That is not
+        necessarily an error, but helps with finding places where
+        more works need to be done.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="segment2way" match="/osm/way" use="seg/@id"/>
+    </maplint:setup>
+
+    <maplint:check data="segment" type="application/xsl+xml">
+        <xsl:if test="not(key('segment2way', @id))">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="tagged-segment" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Segment with any tag (except "created_by"). Tagging segments is
+        deprecated. Please create ways and tag them instead.
+    </maplint:desc>
+
+    <maplint:check data="segment" type="application/xsl+xml">
+        <xsl:if test="tag[@k!='created_by']">
+            <maplint:result>
+                <xsl:for-each select="tag[@k!='created_by']">
+                    <xsl:value-of select="concat(@k,'=',@v,' ')"/>
+                </xsl:for-each>
+            </maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="untagged-unconnected-node" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Nodes without any tags (except with key "created_by") which are not
+        connected to any other nodes by segments.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="node-from" match="/osm/segment" use="@from"/>
+        <xsl:key name="node-to" match="/osm/segment" use="@to"/>
+    </maplint:setup>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:if test="not(tag[@k != 'created_by'] or key('node-from', @id) or key('node-to', @id))">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="base" id="ways-with-unordered-segments" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Ways in which the segments are not ordered and sequenced properly.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="segment" match="/osm/segment" use="@id"/>
+    </maplint:setup>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:variable name="error">
+            <xsl:for-each select="seg">
+                <xsl:if test="position() != last()">
+                    <xsl:variable name="thissegment" select="key('segment',@id)"/>
+                    <xsl:variable name="next" select="position()+1"/>
+                    <xsl:variable name="nextsegment" select="key('segment',../seg[$next]/@id)"/>
+                    <xsl:variable name="to" select="$thissegment/@to"/>
+                    <xsl:variable name="from" select="$nextsegment/@from"/>
+                    <xsl:if test="$to != $from">
+                        <xsl:text>fail</xsl:text>
+                    </xsl:if>
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+
+        <xsl:if test="$error != ''">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="main" id="deprecated-tags" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        Find deprecated tags: class=*
+    </maplint:desc>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="tag/@k='class'">
+            <maplint:result>class</maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="main" id="motorway-without-ref" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        This test finds all motorways (highway=motorway) without a ref tag.
+    </maplint:desc>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:if test="tag[@k='highway' and @v='motorway']">
+            <xsl:if test="not(tag[@k='ref'])">
+                <maplint:result/>
+            </xsl:if>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="main" id="residential-without-name" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Find ways with tag highway=residential, but without a name tag.
+    </maplint:desc>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="strict" id="unknown-tags" version="1" severity="notice">
+
+    <maplint:desc xml:lang="en">
+        Unknown tags. This is not an error as everybody can invent
+        new tags. But it helps in finding typos etc.
+        The list of known tags is currently incomplete.
+    </maplint:desc>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:for-each select="tag">
+            <xsl:if test="(@k!='created_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='dispensing') and                     (@k!='religion') and                     (@k!='military') and                     (@k!='denomination') and                     (@k!='leisure') and                     (@k!='recycling:glass') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='layer') and                     (@k!='religion') and                     (@k!='denomination') and                     (@k!='source') and                     (@k!='is_in') and                     (@k!='time') and                     (@k!='access') and                     (@k!='name')">
+                <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
+            </xsl:if>
+        </xsl:for-each>
+    </maplint:check>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:for-each select="tag">
+            <xsl:if test="(@k!='created_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='landuse') and                     (@k!='oneway') and                     (@k!='bridge') and                     (@k!='tunnel') and                     (@k!='leisure') and                     (@k!='junction') and                     (@k!='ref') and                     (@k!='int_ref') and                     (@k!='nat_ref') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='source') and                     (@k!='time') and                     (@k!='abutters') and                     (@k!='maxspeed') and                     (@k!='access') and                     (@k!='foot') and                     (@k!='bicycle') and                     (@k!='motorcycle') and                     (@k!='horse') and                     (@k!='name')">
+
+                <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
+            </xsl:if>
+        </xsl:for-each>
+    </maplint:check>
+
+</maplint:test>
+</maplint:tests>

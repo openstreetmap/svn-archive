@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="main" id="deprecated-tags" version="1" severity="error"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Find deprecated tags: class=*
+    </maplint:desc>
+
+    <maplint:check data="any" type="application/xsl+xml">
+        <xsl:if test="tag/@k='class'">
+            <maplint:result>class</maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

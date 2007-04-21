@@ -1,0 +1,9 @@
+CXX = g++
+OBJ = osm2garmin.o curlstuff.o
+LDFLAGS = -lxml2 -lxslt -lcurl
+
+osm2garmin: $(OBJ)
+	$(CXX) -o osm2garmin $(OBJ) $(LDFLAGS)
+
+osm2garmin.o : curlstuff.h
+curlstuff.o : curlstuff.h

@@ -1,0 +1,143 @@
+#!/usr/bin/perl
+#
+#  osm-length
+#
+#  Reads an OSM XML file and calculates the length of each segment and
+#  way according to the Haversine formula. It writes out the OSM file
+#  again with the length of each segment and way included.
+#  It also adds up all the lengths of ways with key highway and display
+#  it on STDERR.
+#
+#  All lengths are in meters.
+#
+#  2007-01-17  First version by Jochen Topf (Joto)
+#
+
+use strict;
+
+use XML::SAX::Machines qw(Pipeline);
+use XML::SAX::Writer;
+
+#use XML::SAX::ParserFactory;
+
+
+my $w = XML::SAX::Writer->new( Output => 'length.osm' );
+
+my $parser = Pipeline(
+    OSMDistance => $w
+);
+
+$parser->parse_uri("data.osm");
+
+print STDERR OSMDistance::sum(), "\n";
+
+exit 0;
+
+#---
+
+package OSMDistance;
+
+use base qw(XML::SAX::Base);
+
+use constant PI => 4 * atan2 1, 1;
+use constant DEGRAD => PI / 180;
+use constant RADIUS => 6367000; # in meters
+
+use vars qw(%latlon %segments $waysum $highway $sum);
+
+%latlon = ();
+%segments = ();
+$waysum = 0;
+$highway = 0;
+$sum = 0;
+
+sub start_element {
+    my ($self, $el) = @_;
+
+    if ($el->{'LocalName'} eq 'node') {
+        my $nid = $el->{'Attributes'}->{'{}id'}->{'Value'};
+        my $lat = $el->{'Attributes'}->{'{}lat'}->{'Value'};
+        my $lon = $el->{'Attributes'}->{'{}lon'}->{'Value'};
+        $latlon{$nid} = "$lat $lon";
+    } elsif ($el->{'LocalName'} eq 'segment') {
+        my $segmentid =  $el->{'Attributes'}->{'{}id'}->{'Value'};
+        my $fromid =  $el->{'Attributes'}->{'{}from'}->{'Value'};
+        my $toid =  $el->{'Attributes'}->{'{}to'}->{'Value'};
+        my ($fromlat, $fromlon) = split(' ', $latlon{$fromid});
+        my ($tolat, $tolon) = split(' ', $latlon{$toid});
+
+        my $distance = calc_distance($fromlat, $fromlon, $tolat, $tolon);
+        $el->{'Attributes'}->{'{}length'} = {
+            LocalName => 'length',
+            NamespaceURI => '',
+            Name => 'length',
+            Prefix => '',
+            Value => $distance,
+        };
+        $segments{$segmentid} = $distance;
+    } elsif ($el->{'LocalName'} eq 'way') {
+        $waysum = 0;
+        $highway = 0;
+    } elsif ($el->{'LocalName'} eq 'seg') {
+        my $segmentid =  $el->{'Attributes'}->{'{}id'}->{'Value'};
+        $waysum += $segments{$segmentid};
+    } elsif ($el->{'LocalName'} eq 'tag') {
+        my $k = $el->{'Attributes'}->{'{}k'}->{'Value'};
+        my $v = $el->{'Attributes'}->{'{}v'}->{'Value'};
+        $highway=1 if ($k eq 'highway');
+    }
+
+    $self->SUPER::start_element($el);
+}
+
+
+sub end_element {
+    my ($self, $el) = @_;
+    
+    if ($el->{'LocalName'} eq 'way') {
+
+        my $attr = {
+            LocalName => 'length',
+            NamespaceURI => '',
+            Name => 'length',
+            Prefix => '',
+            Value => $waysum,
+        };
+
+        my $dis = {
+            LocalName => 'd',
+            NamespaceURI => '',
+            Name => 'd',
+            Prefix => '',
+            Attributes => { '{}length' => $attr },
+        };
+
+        $self->SUPER::start_element($dis);
+        delete $dis->{'Attributes'};
+        $self->SUPER::end_element($dis);
+
+        if ($highway == 1) {
+            $sum += $waysum;
+        }
+    }
+
+    $self->SUPER::end_element($el);
+}
+
+
+sub calc_distance {
+    my ($latd1, $lond1, $latd2, $lond2) = @_;
+
+    my ($lat1, $lon1, $lat2, $lon2) = ($latd1 * DEGRAD, $lond1 * DEGRAD, $latd2 * DEGRAD, $lond2 * DEGRAD);
+
+    my $dlon = ($lon2 - $lon1);
+    my $dlat = ($lat2 - $lat1);
+    my $a = (sin($dlat/2))**2 + cos($lat1) * cos($lat2) * (sin($dlon/2))**2;
+    my $c = 2 * atan2(sqrt($a), sqrt(1-$a)) ;
+    return RADIUS * $c;
+}
+
+sub sum {
+    return $sum;
+}
+

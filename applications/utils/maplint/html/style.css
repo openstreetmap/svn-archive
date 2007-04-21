@@ -1,0 +1,80 @@
+/* Maplint documentation stylesheet */
+
+body {
+    background-color: #f0f0f0;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+}
+
+table.testlist {
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    border-collapse: collapse;
+}
+
+table.testlist th {
+    padding: 6px;
+    border-bottom: 3px solid #e0e0e0;
+}
+
+table.testlist td {
+    padding: 6px;
+    border-bottom: 1px dotted #e0e0e0;
+}
+
+table.testlist td.newgroup {
+    border-bottom: 3px solid #e0e0e0;
+}
+
+table.test {
+    margin-top: 10px;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+}
+
+table.test th {
+    text-align: left;
+    font-weight: normal;
+    font-size: small;
+    padding: 4px 10px 4px 10px;
+    border-right: 1ps solid #e0e0e0;
+}
+
+table.test td {
+    padding: 4px 10px 4px 10px;
+    font-size: large;
+    font-weight: bold;
+    border-right: 1ps solid #e0e0e0;
+}
+
+table.description {
+    margin-top: 10px;
+    background-color: #ffffff;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.description td {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.error {
+    background-color: #e74444;
+}
+
+.warning {
+    background-color: #f89559;
+}
+
+.notice {
+    background-color: #e2f91d;
+}
+
+div.nav {
+    width: 100%;
+    text-align: center;
+}
+

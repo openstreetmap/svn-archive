@@ -1,0 +1,32 @@
+$username = 'my@email.address';
+$password = 'PASSWORD';
+
+$input_csv = '/home/nick/osm/places.csv';
+
+$search_distance = 150; # In meters
+@search_attrs = (       # Any of
+	'place=town',
+	'place=village'
+);
+
+# Use $COL1 for the 1st column, $COL3 for third etc
+# Use special entries latitude and longitude for node lat+long
+@output_mapping = (
+	'place=village',
+	'name=$COL5',
+	'type=$COL3',
+	'latitude=$COL7',
+	'longitude=$COL8',
+	'is_in=$COL2,$COL1',
+	'source=CSV_to_OSM'
+);
+
+# Special Subroute to call to tweak CSV data, before mappings applied
+sub csv_tweaker {
+	my $csv_ref = shift;
+
+	# Nothing to do
+}
+
+# Script must return 1, as it'll be included
+1;

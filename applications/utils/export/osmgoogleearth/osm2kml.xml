@@ -1,0 +1,362 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="osm2kml.xsl"?>
+
+<rules 
+    data="data.osm"
+    name="OpenStreetMap">
+
+    <rule e="way|area" k="*" v="*">
+        <folder name="Landuse">
+            <rule e="way|area" k="leisure" v="park">
+                <polygon name="Parks" class="park"/>
+            </rule>
+        </folder>
+    </rule>-
+
+    <rule e="node" k="*" v="*">
+        <folder name="Points of Interest">
+
+            <folder name="Parking">
+                <rule e="node" k="amenity" v="parking">
+                    <point class="parking"/>
+                </rule>
+            </folder>
+
+            <folder name="Shopping">
+                <rule e="node" k="amenity" v="supermarket">
+                    <point class="shopping"/>
+                </rule>
+            </folder>
+
+            <folder name="Hostels">
+                <rule e="node" k="tourism" v="hostel">
+                    <point class="tourism-hostel"/>
+                </rule>
+            </folder>
+
+            <folder name="Places of Worship">
+
+                <rule e="node" k="amenity" v="place_of_worship">
+
+                   <rule e="node" k="religion" v="christian">
+                      <point class="christian_church"/>
+                   </rule>
+
+                   <rule e="node" k="religion" v="jewish">
+                      <point class="jewish_synagogue"/>
+                   </rule>
+
+                </rule>
+
+            </folder>
+ 
+        </folder>
+      
+        <folder name="Settlements">
+            <folder name="cities">
+                <rule e="node" k="place" v="city">
+                    <point class="settlement"/>
+                </rule>
+            </folder>
+            <folder name="towns">
+                <rule e="node" k="place" v="town">
+                    <point class="settlement"/>
+                </rule>
+            </folder>
+            <folder name="villages">
+                <rule e="node" k="place" v="village">
+                    <point class="settlement"/>
+                </rule>
+            </folder>
+        </folder>
+    </rule>
+
+    <rule e="segment|way" k="highway" v="*">
+        <folder name="Roads">
+            <rule e="segment|way" k="highway" v="motorway|motorway_link">
+                <polyline name="Motorways" class="highway-motorway"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="trunk|trunk_link|primary|primary_link|secondary">
+                <polyline name="Primary Roads" class="highway-primary"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="tertiary|residential|unclassified|service">
+                <polyline name="Other Roads" class="highway-unclassified"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="track">
+                <polyline name="Tracks" class="highway-tracks"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="footway">
+                <polyline name="Footpaths" class="highway-footway"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="cycleway">
+                <polyline name="Cycleways" class="highway-cycleway"/>
+            </rule>
+
+            <rule e="segment|way" k="highway" v="under_construction">
+                <rule e="segment|way" k="construction" v="motorway">
+                    <polyline name="future Motorways" class="highway-construction-motorway"/>
+                </rule>
+            </rule>
+
+
+        </folder>
+
+    </rule>
+
+    <rule e="segment|way" k="railway" v="*">
+
+        <folder name="Railways">
+            
+            <rule e="segment|way" k="railway" v="rail">
+                <polyline name="Railways" class="railway-rail"/>
+            </rule>
+
+            <rule e="segment|way" k="railway" v="tram">
+                <polyline name="Tramways" class="railway-tram"/>
+            </rule>
+
+        </folder>
+
+    </rule>
+
+    <rule e="segment|way" k="aeroway" v="*">
+
+        <folder name="Aeroways">
+
+            <rule e="segment|way" k="aeroway" v="runway">
+                <polyline name="Runways" class="runway"/>
+            </rule>
+       
+            <rule e="segment|way" k="aeroway" v="taxiway">
+                <polyline name="Taxiways" class="taxiway"/>
+            </rule>
+       
+        </folder>
+
+    </rule>
+ 
+
+    <rule e="segment|way" k="waterway" v="*">
+
+        <folder name="Waterways">
+
+            <rule e="segment|way" k="waterway" v="drain">
+                <polyline name="Drains" class="water-drain"/>
+            </rule>
+       
+            <rule e="segment|way" k="waterway" v="river">
+                <polyline name="Rivers" class="water-river"/>
+            </rule>
+
+            <rule e="segment|way" k="waterway" v="canal">
+                <polyline name="Canals" class="water-canal"/>
+            </rule>
+       
+        </folder>
+
+    </rule>
+ 
+
+    <rule e="segment|way" k="natural" v="*">
+
+        <folder name="Natural">
+
+            <rule e="segment|way" k="natural" v="coastline">
+                <polyline name="Coastline" class="natural-coastline"/>
+            </rule>
+
+            <rule e="segment|way" k="natural" v="water">
+                <polygon name="Water" class="natural-water"/>
+            </rule>
+
+        </folder>
+     
+    </rule>
+
+    <defs>
+        <Style id="highway-motorway">
+            <LineStyle>
+                <color>afff0000</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-primary">
+            <LineStyle>
+                <color>af00ffff</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-unclassified">
+            <LineStyle>
+                <color>afffffff</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-tracks">
+            <LineStyle>
+                <color>af00ff00</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-footway">
+            <LineStyle>
+                <color>7f00ff00</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-cycleway">
+            <LineStyle>
+                <color>9000ff00</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="highway-construction-motorway">
+            <LineStyle>
+                <color>afa08080</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="railway-rail">
+            <LineStyle>
+                <color>ff000000</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="railway-tram">
+            <LineStyle>
+                <color>9f000000</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="runway">
+            <LineStyle>
+                <color>ff000000</color>
+                <width>4</width>
+            </LineStyle>
+        </Style>
+        <Style id="taxiway">
+            <LineStyle>
+                <color>ff000000</color>
+                <width>1</width>
+            </LineStyle>
+        </Style>
+        <Style id="water-drain">
+            <LineStyle>
+                <color>90ff0000</color>
+                <width>1</width>
+            </LineStyle>
+        </Style>
+        <Style id="water-river">
+            <LineStyle>
+                <color>90ff0000</color>
+                <width>3</width>
+            </LineStyle>
+        </Style>
+        <Style id="water-canal">
+            <LineStyle>
+                <color>90ff0000</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+        <Style id="park">
+            <PolyStyle>
+                <color>7f00ff00</color>
+            </PolyStyle> 
+            <LineStyle> 
+                <color>ff00ff00</color>
+                <width>1</width>
+            </LineStyle> 
+        </Style>
+
+        <Style id="parking">
+            <IconStyle id="iconstyle-parking">
+                <Icon>
+                    <href>icons/icon-parking.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="shopping">
+            <IconStyle id="iconstyle-shopping">
+                <Icon>
+                    <href>icons/icon-shopping.png</href>
+                </Icon>
+                <scale>0.7</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="tourism-hostel">
+            <IconStyle id="iconstyle-hostel">
+                <Icon>
+                    <href>icons/icon-hostel.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="settlement">
+            <IconStyle id="iconstyle-settlement">
+                <Icon>
+                    <href>icons/icon-settlement.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="christian_church">
+            <IconStyle id="iconstyle-church">
+                <Icon>
+                    <href>icons/icon-church.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="jewish_synagogue">
+            <IconStyle id="iconstyle-synagogue">
+                <Icon>
+                    <href>icons/icon-synagogue.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="natural-coastline">
+            <LineStyle> 
+                <color>7fffff80</color>
+                <width>1</width>
+            </LineStyle> 
+        </Style>
+
+        <Style id="natural-water">
+            <PolyStyle>
+                <color>7fff0000</color>
+            </PolyStyle> 
+            <LineStyle> 
+                <color>ffff0000</color>
+                <width>1</width>
+            </LineStyle> 
+        </Style>
+
+
+    </defs>
+
+    <overlays>
+        <ScreenOverlay>
+            <name>OpenStreetMap Copyright Notice</name>
+            <Icon>
+                <href>OSMGoogleEarthCopyright.png</href>
+            </Icon>
+            <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+            <screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+            <size x="0" y="0" xunits="fraction" yunits="fraction"/>
+        </ScreenOverlay>
+    </overlays>
+
+</rules>

@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="osm2mpx.xsl"?>
+
+<rules 
+    data="data.osm"
+    name="OpenStreetMap"
+    mapid="11000204"
+    levels="22 18 14 10">
+
+    <!-- POINTS OF INTEREST -->
+    <!-- amenities -->
+    <rule e="node" k="amenity" v="parking">
+        <point type="misc" subtype="parking" endlevel="3"/>
+    </rule>
+    <rule e="node" k="amenity" v="telephone">
+        <point type="misc" subtype="telephone" endlevel="3"/>
+    </rule>
+    <rule e="node" k="amenity" v="place_of_worship">
+        <point type="man-made" subtype="church" endlevel="3"/>
+    </rule>
+    <rule e="node" k="amenity" v="fuel">
+        <point type="auto" subtype="petrol" endlevel="5"/>
+    </rule>
+    <rule e="node" k="amenity" v="courthouse">
+        <point type="public" subtype="court" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="restaurant">
+        <point type="misc" subtype="restaurant" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="school">
+        <point type="amenity" subtype="school" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="pub">
+        <point type="leisure" subtype="bar" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="cinema">
+        <point type="leisure" subtype="cinema" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="post_office">
+        <point type="man-made" subtype="post-office" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="pharmacy">
+        <point type="shopping" subtype="pharmacie" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="supermarket">
+        <point type="shopping" subtype="shopping-center" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="hospital">
+        <point type="public" subtype="hospital" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="hotel">
+        <point type="accommodation" subtype="hotel" endlevel="4"/>
+    </rule>
+    <rule e="node" k="amenity" v="hotel">
+        <point type="accommodation" subtype="hotel" endlevel="4"/>
+    </rule>
+    
+    <rule e="node" k="history" v="museum">
+        <point type="museum-history" subtype="amenity" endlevel="4"/>
+    </rule>
+
+    <!-- CITIES -->
+    <rule e="node" k="place" v="city">
+        <city type="unknown-city" endlevel="8"/>
+    </rule>
+
+    <rule e="node" k="place" v="suburb">
+        <city type="small-city1" endlevel="4"/>
+    </rule>
+
+    <rule e="node" k="place" v="village">
+        <city type="small-town" endlevel="4"/>
+    </rule>
+
+    <!-- POLYLINES -->
+    <!-- highways, roads, paths, ... -->
+    <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
+        <polyline type="trail" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="pedestrian">
+        <polyline type="road" endlevel="3"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="track">
+        <polyline type="unpaved-road" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="unclassified|residential|minor">
+        <polyline type="road" endlevel="3"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="unsurfaced">
+        <polyline type="unpaved-road" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="service">
+        <polyline type="alley" endlevel="2"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="secondary">
+        <polyline type="arterial-road-thin" endlevel="4"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="primary|primary_link">
+        <polyline type="arterial-road-medium" endlevel="5"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="trunk|trunk_link">
+        <polyline type="principal-highway-thick" endlevel="8"/>
+    </rule>
+    <rule e="segment|way" k="highway" v="motorway|motorway_link">
+        <polyline type="principal-highway-thick" endlevel="8"/>
+    </rule>
+
+    <!-- railways -->
+    <rule e="way" k="railway" v="rail">
+        <polyline type="railroad" endlevel="6"/>
+    </rule>
+    <rule e="way" k="railway" v="tram">
+        <polyline type="railroad" endlevel="4"/>
+    </rule>
+    <rule e="way" k="railway" v="light_rail">
+        <polyline type="railroad" endlevel="5"/>
+    </rule>
+
+    <!-- waterways -->
+    <rule e="way" k="waterway" v="river">
+        <polyline type="river" endlevel="6"/>
+    </rule>
+    <rule e="way" k="waterway" v="canal">
+        <polyline type="river" endlevel="6"/>
+    </rule>
+    <rule e="way" k="waterway" v="drain">
+        <polyline type="river" endlevel="3"/>
+    </rule>
+
+    <!-- POLYGONS -->
+    <!-- landuse and other areas -->
+    <rule e="way" k="landuse" v="forest">
+        <polygon type="woods" endlevel="6"/>
+    </rule>
+    <rule e="way" k="landuse" v="industrial">
+        <polygon type="industrial" endlevel="6"/>
+    </rule>
+    <rule e="way" k="landuse" v="cemetary">
+        <polygon type="cemetary" endlevel="6"/>
+    </rule>
+    <rule e="way" k="sport" v="*">
+        <polygon type="sport" endlevel="6"/>
+    </rule>
+    <rule e="way" k="leisure" v="park">
+        <polygon type="city-park" endlevel="4"/>
+    </rule>
+    <rule e="way" k="natural" v="water">
+        <polygon type="lake1" endleve="4"/>
+    </rule>
+    <rule e="way" k="amenity" v="parking">
+        <polygon type="parking-lot" endlevel="3"/>
+    </rule>
+    <rule e="way" k="amenity" v="university|college">
+        <polygon type="university" endlevel="6"/>
+    </rule>
+
+</rules>

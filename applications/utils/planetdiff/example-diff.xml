@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<planetdiff version="0.1" generator="OpenStreetMap planetdiff" from="a.osm" to="b.osm">
+  <add>
+    <node id="10310557" timestamp="2006-07-10 23:17:35" lat="51.7670078090236" lon="-0.471281873153888">
+      <tag k="created_by" v="JOSM"/>
+    </node>
+  </add>
+  <add>
+    <node id="13602100" timestamp="2006-08-16 00:02:13" lat="51.778541285096" lon="-0.448173637230418"/>
+  </add>
+  <delete>
+    <node id="26983956" lat="51.77874880458334" lon="-0.450481106821043">
+      <tag k="created_by" v="JOSM"/>
+    </node>
+  </delete>
+  <add>
+    <node id="26983956" lat="51.77874880458334" lon="-0.450481106821043">
+      <tag k="created_by" v="JOSMXX"/>
+    </node>
+  </add>
+  <delete>
+    <node id="26983967" lat="51.7781814770256" lon="-0.45308893673786643">
+      <tag k="created_by" v="JOSM"/>
+    </node>
+  </delete>
+  <add>
+    <node id="26983967" lat="51.778181477" lon="-0.45308893673786643">
+      <tag k="created_by" v="JOSM"/>
+    </node>
+  </add>
+  <delete>
+    <way id="4410273">
+      <tag k="highway" v="residential"/>
+      <tag k="name" v="Argyll Road"/>
+      <tag k="created_by" v="JOSM"/>
+      <seg id="22991155"/>
+      <seg id="22991154"/>
+    </way>
+  </delete>
+  <add>
+    <way id="4410273">
+      <tag k="highway" v="residential"/>
+      <tag k="name" v="Argyll Road"/>
+      <tag k="created_by" v="JOSM"/>
+      <seg id="22991155"/>
+      <seg id="22991153"/>
+      <seg id="22991154"/>
+    </way>
+  </add>
+  <delete>
+    <way id="4410274">
+      <tag k="created_by" v="JOSM"/>
+      <seg id="22991161"/>
+    </way>
+  </delete>
+  <add>
+    <way id="4410274">
+      <tag k="highway" v="service"/>
+      <tag k="created_by" v="JOSM"/>
+      <seg id="22991161"/>
+    </way>
+  </add>
+  <delete>
+    <way id="4410275">
+      <tag k="highway" v="residential"/>
+      <tag k="name" v="Argyll Road"/>
+      <tag k="created_by" v="JOSM"/>
+      <seg id="22991166"/>
+    </way>
+  </delete>
+  <add>
+    <way id="4410275">
+      <tag k="highway" v="residential"/>
+      <tag k="name" v="Argyll Road"/>
+      <seg id="22991166"/>
+    </way>
+  </add>
+  <delete>
+    <way id="4410276">
+      <tag k="highway" v="residential"/>
+      <tag k="name" v="Argyll Road"/>
+      <tag k="created_by" v="JOSM"/>
+      <seg id="22991170"/>
+      <seg id="22991167"/>
+      <seg id="22991168"/>
+      <seg id="22991169"/>
+    </way>
+  </delete>
+  <add>
+    <way id="4410276">
+      <tag k="highway" v="residential"/>
+      <tag k="name" v="Argyll Road"/>
+      <tag k="created_by" v="JOSM"/>
+      <tag k="problem values" v="&amp;&quot;&lt;&gt;&apos;"/>
+      <seg id="22991170"/>
+      <seg id="22991167"/>
+      <seg id="22991169"/>
+    </way>
+  </add>
+</planetdiff>

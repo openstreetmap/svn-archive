@@ -1,0 +1,17 @@
+README for utils/osm-extract directory
+--------------------------------------
+
+This directory contains various scripts to extract part of an OSM file
+(e.g. the planet file).
+
+The "polygons" subdirectory contains a script that extracts based on a 
+polygon or a set of polygons, as well as definitions of such polygons.
+
+The planetosm-extract-area.pl and planetosm-extract-tags.pl scripts 
+extract a rectangular area and/or items based on certain tag values.
+
+osm-subset.pl does something similar but uses pre-defined bounding
+boxes as opposed to bounding boxes specified on the command line.
+
+PLEASE EXPAND AND CHANGE THIS README IF YOU MAKE CHANGES!
+

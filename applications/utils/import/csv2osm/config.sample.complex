@@ -1,0 +1,39 @@
+$username = 'my@email.address';
+$password = 'PASSWORD';
+
+$input_csv = '/home/nick/osm/airports-latlongcsv.txt';
+
+$search_distance = 150; # In meters
+@search_attrs = (       # Any of
+	'aeroway=airport',
+	'place=airport',
+	'amenity=airport'
+);
+
+# Use $COL1 for the 1st column, $COL3 for third etc
+# Use special entries latitude and longitude for node lat+long
+@output_mapping = (
+	'aeroway=airport',
+	'place=airport',
+	'name=$COL5',
+	'type=civil',
+	'iata=$COL2',
+	'icao=$COL1',
+	'latitude=$COL7',
+	'longitude=$COL8',
+	'is_in=$COL3,$COL4,$COL6',
+	'source=Gagravarr_Airports'
+);
+
+# Special Subroute to call to tweak CSV data, before mappings applied
+sub csv_tweaker {
+	my $csv_ref = shift;
+
+	# If the name is International or Intl, add on the place name too
+	if($csv_ref->[4] eq "International" || $csv_ref->[4] eq "Intl") {
+		$csv_ref->[4] = $csv_ref->[2]." ".$csv_ref->[4];
+	}
+}
+
+# Script must return 1, as it'll be included
+1;

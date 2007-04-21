@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type='text/xsl' href='mpx2mp.xsl'?>
+<!-- This file was generated from a CSV file with the script garmin-features-csv2xml.pl. Do not change! -->
+<defs data="map.mpx">
+  <point id="RGN10">
+    <feature subtype="exit" garmin_id="0x00" type="exit" garmin_subid="0x20" />
+    <feature subtype="facilities" garmin_id="0x00" type="exit" garmin_subid="0x21" />
+    <feature subtype="restroom" garmin_id="0x00" type="exit" garmin_subid="0x22" />
+    <feature subtype="convenience-store" garmin_id="0x00" type="exit" garmin_subid="0x23" />
+    <feature subtype="weight-station" garmin_id="0x00" type="exit" garmin_subid="0x24" />
+    <feature subtype="toll-booth" garmin_id="0x00" type="exit" garmin_subid="0x25" />
+    <feature subtype="information" garmin_id="0x00" type="exit" garmin_subid="0x26" />
+    <feature subtype="exit2" garmin_id="0x00" type="exit" garmin_subid="0x27" />
+    <feature subtype="special" garmin_id="0x00" type="exit" garmin_subid="0x2f" />
+    <feature subtype="big1" garmin_id="0x01" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="big2" garmin_id="0x06" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="small1" garmin_id="0x0b" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="small2" garmin_id="0x0c" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="small3" garmin_id="0x0d" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="big3" garmin_id="0x0e" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="big4" garmin_id="0x14" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="middle" garmin_id="0x1e" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="small4" garmin_id="0x28" type="namedpoint" garmin_subid="0x00" />
+    <feature subtype="american" garmin_id="0x2a" type="dining" garmin_subid="0x01" />
+    <feature subtype="asian" garmin_id="0x2a" type="dining" garmin_subid="0x02" />
+    <feature subtype="barbecue" garmin_id="0x2a" type="dining" garmin_subid="0x03" />
+    <feature subtype="chinese" garmin_id="0x2a" type="dining" garmin_subid="0x04" />
+    <feature subtype="deli-bakery" garmin_id="0x2a" type="dining" garmin_subid="0x05" />
+    <feature subtype="international" garmin_id="0x2a" type="dining" garmin_subid="0x06" />
+    <feature subtype="fast-food" garmin_id="0x2a" type="dining" garmin_subid="0x07" />
+    <feature subtype="italian" garmin_id="0x2a" type="dining" garmin_subid="0x08" />
+    <feature subtype="mexican" garmin_id="0x2a" type="dining" garmin_subid="0x09" />
+    <feature subtype="pizza" garmin_id="0x2a" type="dining" garmin_subid="0x0a" />
+    <feature subtype="sea-food" garmin_id="0x2a" type="dining" garmin_subid="0x0b" />
+    <feature subtype="steak-grill" garmin_id="0x2a" type="dining" garmin_subid="0x0c" />
+    <feature subtype="bagel-donut" garmin_id="0x2a" type="dining" garmin_subid="0x0d" />
+    <feature subtype="cafe-diner" garmin_id="0x2a" type="dining" garmin_subid="0x0e" />
+    <feature subtype="french" garmin_id="0x2a" type="dining" garmin_subid="0x0f" />
+    <feature subtype="german" garmin_id="0x2a" type="dining" garmin_subid="0x10" />
+    <feature subtype="british-isle" garmin_id="0x2a" type="dining" garmin_subid="0x11" />
+    <feature subtype="hotel" garmin_id="0x2b" type="accommodation" garmin_subid="0x00" />
+    <feature subtype="motel" garmin_id="0x2b" type="accommodation" garmin_subid="0x01" />
+    <feature subtype="bed-and-breakfast" garmin_id="0x2b" type="accommodation" garmin_subid="0x02" />
+    <feature subtype="camping" garmin_id="0x2b" type="accommodation" garmin_subid="0x03" />
+    <feature subtype="resort" garmin_id="0x2b" type="accommodation" garmin_subid="0x04" />
+    <feature subtype="amusement-park" garmin_id="0x2c" type="amenity" garmin_subid="0x01" />
+    <feature subtype="museum-history" garmin_id="0x2c" type="amenity" garmin_subid="0x02" />
+    <feature subtype="library" garmin_id="0x2c" type="amenity" garmin_subid="0x03" />
+    <feature subtype="land-mark" garmin_id="0x2c" type="amenity" garmin_subid="0x04" />
+    <feature subtype="school" garmin_id="0x2c" type="amenity" garmin_subid="0x05" />
+    <feature subtype="park" garmin_id="0x2c" type="amenity" garmin_subid="0x06" />
+    <feature subtype="zoo" garmin_id="0x2c" type="amenity" garmin_subid="0x07" />
+    <feature subtype="sportcenter-stadion-race" garmin_id="0x2c" type="amenity" garmin_subid="0x08" />
+    <feature subtype="conference" garmin_id="0x2c" type="amenity" garmin_subid="0x09" />
+    <feature subtype="vine" garmin_id="0x2c" type="amenity" garmin_subid="0x0a" />
+    <feature subtype="theatre" garmin_id="0x2d" type="leisure" garmin_subid="0x01" />
+    <feature subtype="bar" garmin_id="0x2d" type="leisure" garmin_subid="0x02" />
+    <feature subtype="cinema" garmin_id="0x2d" type="leisure" garmin_subid="0x03" />
+    <feature subtype="casino" garmin_id="0x2d" type="leisure" garmin_subid="0x04" />
+    <feature subtype="golf" garmin_id="0x2d" type="leisure" garmin_subid="0x05" />
+    <feature subtype="skiing" garmin_id="0x2d" type="leisure" garmin_subid="0x06" />
+    <feature subtype="bowling" garmin_id="0x2d" type="leisure" garmin_subid="0x07" />
+    <feature subtype="ice-skate" garmin_id="0x2d" type="leisure" garmin_subid="0x08" />
+    <feature subtype="swimming" garmin_id="0x2d" type="leisure" garmin_subid="0x09" />
+    <feature subtype="sports" garmin_id="0x2d" type="leisure" garmin_subid="0x0a" />
+    <feature subtype="sport-airport" garmin_id="0x2d" type="leisure" garmin_subid="0x0b" />
+    <feature subtype="department-store" garmin_id="0x2e" type="shopping" garmin_subid="0x01" />
+    <feature subtype="grocery" garmin_id="0x2e" type="shopping" garmin_subid="0x02" />
+    <feature subtype="general-merchendiser" garmin_id="0x2e" type="shopping" garmin_subid="0x03" />
+    <feature subtype="shopping-center" garmin_id="0x2e" type="shopping" garmin_subid="0x04" />
+    <feature subtype="pharmacie" garmin_id="0x2e" type="shopping" garmin_subid="0x05" />
+    <feature subtype="convenience" garmin_id="0x2e" type="shopping" garmin_subid="0x06" />
+    <feature subtype="petrol" garmin_id="0x2f" type="auto" garmin_subid="0x01" />
+    <feature subtype="auto-rental" garmin_id="0x2f" type="auto" garmin_subid="0x02" />
+    <feature subtype="auto-repair" garmin_id="0x2f" type="auto" garmin_subid="0x03" />
+    <feature subtype="airport" garmin_id="0x2f" type="auto" garmin_subid="0x04" />
+    <feature subtype="post-office" garmin_id="0x2f" type="auto" garmin_subid="0x05" />
+    <feature subtype="bank" garmin_id="0x2f" type="auto" garmin_subid="0x06" />
+    <feature subtype="auto-vendor" garmin_id="0x2f" type="auto" garmin_subid="0x07" />
+    <feature subtype="bus-station" garmin_id="0x2f" type="auto" garmin_subid="0x08" />
+    <feature subtype="marina" garmin_id="0x2f" type="auto" garmin_subid="0x09" />
+    <feature subtype="wrecker-service" garmin_id="0x2f" type="auto" garmin_subid="0x0a" />
+    <feature subtype="parking" garmin_id="0x2f" type="auto" garmin_subid="0x0b" />
+    <feature subtype="restroom" garmin_id="0x2f" type="auto" garmin_subid="0x0c" />
+    <feature subtype="automobil-club" garmin_id="0x2f" type="auto" garmin_subid="0x0d" />
+    <feature subtype="car-wash" garmin_id="0x2f" type="auto" garmin_subid="0x0e" />
+    <feature subtype="police" garmin_id="0x30" type="public" garmin_subid="0x01" />
+    <feature subtype="hospital" garmin_id="0x30" type="public" garmin_subid="0x02" />
+    <feature subtype="public-office" garmin_id="0x30" type="public" garmin_subid="0x03" />
+    <feature subtype="court" garmin_id="0x30" type="public" garmin_subid="0x04" />
+    <feature subtype="disco" garmin_id="0x30" type="public" garmin_subid="0x05" />
+    <feature subtype="customs" garmin_id="0x30" type="public" garmin_subid="0x06" />
+    <feature subtype="golf" garmin_id="0x40" type="misc" garmin_subid="0x00" />
+    <feature subtype="fish" garmin_id="0x41" type="misc" garmin_subid="0x00" />
+    <feature subtype="wreck" garmin_id="0x42" type="misc" garmin_subid="0x00" />
+    <feature subtype="marina" garmin_id="0x43" type="misc" garmin_subid="0x00" />
+    <feature subtype="petrol" garmin_id="0x44" type="misc" garmin_subid="0x00" />
+    <feature subtype="restaurant" garmin_id="0x45" type="misc" garmin_subid="0x00" />
+    <feature subtype="bar" garmin_id="0x46" type="misc" garmin_subid="0x00" />
+    <feature subtype="boat-ramp" garmin_id="0x47" type="misc" garmin_subid="0x00" />
+    <feature subtype="camping" garmin_id="0x48" type="misc" garmin_subid="0x00" />
+    <feature subtype="park" garmin_id="0x49" type="misc" garmin_subid="0x00" />
+    <feature subtype="picnic-area" garmin_id="0x4a" type="misc" garmin_subid="0x00" />
+    <feature subtype="hospital" garmin_id="0x4b" type="misc" garmin_subid="0x00" />
+    <feature subtype="information" garmin_id="0x4c" type="misc" garmin_subid="0x00" />
+    <feature subtype="parking" garmin_id="0x4d" type="misc" garmin_subid="0x00" />
+    <feature subtype="restroom" garmin_id="0x4e" type="misc" garmin_subid="0x00" />
+    <feature subtype="shower" garmin_id="0x4f" type="misc" garmin_subid="0x00" />
+    <feature subtype="drinking-water" garmin_id="0x50" type="misc" garmin_subid="0x00" />
+    <feature subtype="telephone" garmin_id="0x51" type="misc" garmin_subid="0x00" />
+    <feature subtype="scenic-area" garmin_id="0x52" type="misc" garmin_subid="0x00" />
+    <feature subtype="skiing" garmin_id="0x53" type="misc" garmin_subid="0x00" />
+    <feature subtype="swimming" garmin_id="0x54" type="misc" garmin_subid="0x00" />
+    <feature subtype="dam" garmin_id="0x55" type="misc" garmin_subid="0x00" />
+    <feature subtype="danger-area" garmin_id="0x57" type="misc" garmin_subid="0x00" />
+    <feature subtype="airport" garmin_id="0x59" type="airport" garmin_subid="0x00" />
+    <feature subtype="heliport" garmin_id="0x59" type="airport" garmin_subid="0x04" />
+    <feature subtype="airport2" garmin_id="0x59" type="airport" garmin_subid="0x05" />
+    <feature subtype="bridge" garmin_id="0x64" type="man-made" garmin_subid="0x01" />
+    <feature subtype="building" garmin_id="0x64" type="man-made" garmin_subid="0x02" />
+    <feature subtype="cemetary" garmin_id="0x64" type="man-made" garmin_subid="0x03" />
+    <feature subtype="church" garmin_id="0x64" type="man-made" garmin_subid="0x04" />
+    <feature subtype="civil" garmin_id="0x64" type="man-made" garmin_subid="0x05" />
+    <feature subtype="crossing" garmin_id="0x64" type="man-made" garmin_subid="0x06" />
+    <feature subtype="dam" garmin_id="0x64" type="man-made" garmin_subid="0x07" />
+    <feature subtype="hospital" garmin_id="0x64" type="man-made" garmin_subid="0x08" />
+    <feature subtype="levee" garmin_id="0x64" type="man-made" garmin_subid="0x09" />
+    <feature subtype="locale" garmin_id="0x64" type="man-made" garmin_subid="0x0a" />
+    <feature subtype="military" garmin_id="0x64" type="man-made" garmin_subid="0x0b" />
+    <feature subtype="mine" garmin_id="0x64" type="man-made" garmin_subid="0x0c" />
+    <feature subtype="oil-field" garmin_id="0x64" type="man-made" garmin_subid="0x0d" />
+    <feature subtype="park" garmin_id="0x64" type="man-made" garmin_subid="0x0e" />
+    <feature subtype="post-office" garmin_id="0x64" type="man-made" garmin_subid="0x0f" />
+    <feature subtype="school" garmin_id="0x64" type="man-made" garmin_subid="0x10" />
+    <feature subtype="tower" garmin_id="0x64" type="man-made" garmin_subid="0x11" />
+    <feature subtype="trial" garmin_id="0x64" type="man-made" garmin_subid="0x12" />
+    <feature subtype="tunnel" garmin_id="0x64" type="man-made" garmin_subid="0x13" />
+    <feature subtype="drinking-water" garmin_id="0x64" type="man-made" garmin_subid="0x14" />
+    <feature subtype="ghost-town" garmin_id="0x64" type="man-made" garmin_subid="0x15" />
+    <feature subtype="subdivision" garmin_id="0x64" type="man-made" garmin_subid="0x16" />
+    <feature subtype="arroyo" garmin_id="0x65" type="natural-marine" garmin_subid="0x01" />
+    <feature subtype="sand-bar" garmin_id="0x65" type="natural-marine" garmin_subid="0x02" />
+    <feature subtype="bay" garmin_id="0x65" type="natural-marine" garmin_subid="0x03" />
+    <feature subtype="bend" garmin_id="0x65" type="natural-marine" garmin_subid="0x04" />
+    <feature subtype="canal" garmin_id="0x65" type="natural-marine" garmin_subid="0x05" />
+    <feature subtype="channel" garmin_id="0x65" type="natural-marine" garmin_subid="0x06" />
+    <feature subtype="cove" garmin_id="0x65" type="natural-marine" garmin_subid="0x07" />
+    <feature subtype="falls" garmin_id="0x65" type="natural-marine" garmin_subid="0x08" />
+    <feature subtype="geyser" garmin_id="0x65" type="natural-marine" garmin_subid="0x09" />
+    <feature subtype="glacier" garmin_id="0x65" type="natural-marine" garmin_subid="0x0a" />
+    <feature subtype="harbor" garmin_id="0x65" type="natural-marine" garmin_subid="0x0b" />
+    <feature subtype="island" garmin_id="0x65" type="natural-marine" garmin_subid="0x0c" />
+    <feature subtype="lake" garmin_id="0x65" type="natural-marine" garmin_subid="0x0d" />
+    <feature subtype="rapids" garmin_id="0x65" type="natural-marine" garmin_subid="0x0e" />
+    <feature subtype="reservoir" garmin_id="0x65" type="natural-marine" garmin_subid="0x0f" />
+    <feature subtype="sea" garmin_id="0x65" type="natural-marine" garmin_subid="0x10" />
+    <feature subtype="spring" garmin_id="0x65" type="natural-marine" garmin_subid="0x11" />
+    <feature subtype="stream" garmin_id="0x65" type="natural-marine" garmin_subid="0x12" />
+    <feature subtype="swamp" garmin_id="0x65" type="natural-marine" garmin_subid="0x13" />
+    <feature subtype="arch" garmin_id="0x66" type="natural-land" garmin_subid="0x01" />
+    <feature subtype="area" garmin_id="0x66" type="natural-land" garmin_subid="0x02" />
+    <feature subtype="basin" garmin_id="0x66" type="natural-land" garmin_subid="0x03" />
+    <feature subtype="beach1" garmin_id="0x66" type="natural-land" garmin_subid="0x04" />
+    <feature subtype="beach2" garmin_id="0x66" type="natural-land" garmin_subid="0x05" />
+    <feature subtype="cape" garmin_id="0x66" type="natural-land" garmin_subid="0x06" />
+    <feature subtype="cliff" garmin_id="0x66" type="natural-land" garmin_subid="0x07" />
+    <feature subtype="crater" garmin_id="0x66" type="natural-land" garmin_subid="0x08" />
+    <feature subtype="flat" garmin_id="0x66" type="natural-land" garmin_subid="0x09" />
+    <feature subtype="forest" garmin_id="0x66" type="natural-land" garmin_subid="0x0a" />
+    <feature subtype="gap" garmin_id="0x66" type="natural-land" garmin_subid="0x0b" />
+    <feature subtype="gut" garmin_id="0x66" type="natural-land" garmin_subid="0x0c" />
+    <feature subtype="isthmus" garmin_id="0x66" type="natural-land" garmin_subid="0x0d" />
+    <feature subtype="lava" garmin_id="0x66" type="natural-land" garmin_subid="0x0e" />
+    <feature subtype="pillar" garmin_id="0x66" type="natural-land" garmin_subid="0x0f" />
+    <feature subtype="plain" garmin_id="0x66" type="natural-land" garmin_subid="0x10" />
+    <feature subtype="range" garmin_id="0x66" type="natural-land" garmin_subid="0x11" />
+    <feature subtype="reserve" garmin_id="0x66" type="natural-land" garmin_subid="0x12" />
+    <feature subtype="ridge" garmin_id="0x66" type="natural-land" garmin_subid="0x13" />
+    <feature subtype="rock" garmin_id="0x66" type="natural-land" garmin_subid="0x14" />
+    <feature subtype="slope" garmin_id="0x66" type="natural-land" garmin_subid="0x15" />
+    <feature subtype="summit" garmin_id="0x66" type="natural-land" garmin_subid="0x16" />
+    <feature subtype="valley" garmin_id="0x66" type="natural-land" garmin_subid="0x17" />
+    <feature subtype="woods" garmin_id="0x66" type="natural-land" garmin_subid="0x18" />
+  </point>
+  <city id="RGN20">
+    <feature garmin_id="0x01" type="large-city1" />
+    <feature garmin_id="0x02" type="large-city2" />
+    <feature garmin_id="0x03" type="large-city3" />
+    <feature garmin_id="0x04" type="large-city4" />
+    <feature garmin_id="0x05" type="large-city5" />
+    <feature garmin_id="0x06" type="large-city6" />
+    <feature garmin_id="0x07" type="medium-city1" />
+    <feature garmin_id="0x08" type="medium-city2" />
+    <feature garmin_id="0x09" type="small-city1" />
+    <feature garmin_id="0x0a" type="small-city2" />
+    <feature garmin_id="0x0b" type="small-city3" />
+    <feature garmin_id="0x0c" type="small-town" />
+    <feature garmin_id="0x0d" type="unknown-city" />
+  </city>
+  <polyline id="RGN40">
+    <feature garmin_id="0x01" type="major-highway-thick" />
+    <feature garmin_id="0x02" type="principal-highway-thick" />
+    <feature garmin_id="0x03" type="principal-highway-medium" />
+    <feature garmin_id="0x04" type="arterial-road-medium" />
+    <feature garmin_id="0x05" type="arterial-road-thin" />
+    <feature garmin_id="0x06" type="road" />
+    <feature garmin_id="0x07" type="alley" />
+    <feature garmin_id="0x08" type="ramp1" />
+    <feature garmin_id="0x09" type="ramp2" />
+    <feature garmin_id="0x0a" type="unpaved-road" />
+    <feature garmin_id="0x0b" type="major-highway-connector" />
+    <feature garmin_id="0x0c" type="roundabout" />
+    <feature garmin_id="0x14" type="railroad" />
+    <feature garmin_id="0x15" type="shoreline" />
+    <feature garmin_id="0x16" type="trail" />
+    <feature garmin_id="0x18" type="stream" />
+    <feature garmin_id="0x19" type="time-zone" />
+    <feature garmin_id="0x1a" type="ferry1" />
+    <feature garmin_id="0x1b" type="ferry2" />
+    <feature garmin_id="0x1c" type="boundary-political" />
+    <feature garmin_id="0x1d" type="boundary-continent" />
+    <feature garmin_id="0x1e" type="boundary-international" />
+    <feature garmin_id="0x1f" type="river" />
+    <feature garmin_id="0x20" type="land-contour-thin" />
+    <feature garmin_id="0x21" type="land-contour-medium" />
+    <feature garmin_id="0x22" type="land-contour-thick" />
+    <feature garmin_id="0x23" type="depth-contour-thin" />
+    <feature garmin_id="0x24" type="depth-contour-medium" />
+    <feature garmin_id="0x25" type="depth-contour-thick" />
+    <feature garmin_id="0x26" type="intermittent-river" />
+    <feature garmin_id="0x27" type="airport-runway" />
+    <feature garmin_id="0x28" type="pipeline" />
+    <feature garmin_id="0x29" type="powerline" />
+    <feature garmin_id="0x2a" type="marine-boundary" />
+    <feature garmin_id="0x2b" type="marine-hazard" />
+  </polyline>
+  <polygon id="RGN80">
+    <feature garmin_id="0x01" type="city1" />
+    <feature garmin_id="0x02" type="city2" />
+    <feature garmin_id="0x03" type="city3" />
+    <feature garmin_id="0x04" type="military" />
+    <feature garmin_id="0x05" type="parking-lot" />
+    <feature garmin_id="0x06" type="parking-garage" />
+    <feature garmin_id="0x07" type="airport" />
+    <feature garmin_id="0x08" type="shopping" />
+    <feature garmin_id="0x09" type="marina" />
+    <feature garmin_id="0x0a" type="university" />
+    <feature garmin_id="0x0b" type="hospital" />
+    <feature garmin_id="0x0c" type="industrial" />
+    <feature garmin_id="0x0d" type="reservation" />
+    <feature garmin_id="0x0e" type="airport-runway" />
+    <feature garmin_id="0x14" type="national-park1" />
+    <feature garmin_id="0x15" type="national-park2" />
+    <feature garmin_id="0x16" type="national-park3" />
+    <feature garmin_id="0x17" type="city-park" />
+    <feature garmin_id="0x18" type="golf" />
+    <feature garmin_id="0x19" type="sport" />
+    <feature garmin_id="0x1a" type="cemetary" />
+    <feature garmin_id="0x1e" type="state-park1" />
+    <feature garmin_id="0x1f" type="state-park2" />
+    <feature garmin_id="0x28" type="ocean" />
+    <feature garmin_id="0x32" type="sea" />
+    <feature garmin_id="0x3c" type="lake1" />
+    <feature garmin_id="0x3d" type="lake2" />
+    <feature garmin_id="0x3e" type="lake3" />
+    <feature garmin_id="0x3f" type="lake4" />
+    <feature garmin_id="0x40" type="lake5" />
+    <feature garmin_id="0x41" type="lake6" />
+    <feature garmin_id="0x42" type="lake7" />
+    <feature garmin_id="0x43" type="lake8" />
+    <feature garmin_id="0x44" type="lake9" />
+    <feature garmin_id="0x46" type="river1" />
+    <feature garmin_id="0x47" type="river2" />
+    <feature garmin_id="0x48" type="river3" />
+    <feature garmin_id="0x49" type="river4" />
+    <feature garmin_id="0x4c" type="intermittent-water" />
+    <feature garmin_id="0x4d" type="glacier" />
+    <feature garmin_id="0x50" type="woods" />
+    <feature garmin_id="0x51" type="wetland" />
+    <feature garmin_id="0x53" type="flats" />
+  </polygon>
+</defs>

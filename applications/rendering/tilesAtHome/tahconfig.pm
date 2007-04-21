@@ -140,30 +140,37 @@ sub CheckConfig{
     }
     print "- pngcrush version $1\n";
 
-    # Upload URL, username
-    printf "- Uploading with username \"$Config{UploadUsername}\"\n", ;
-    if($Config{"UploadPassword"} =~ /\W/){
-        die("Check your upload password\n");
-    }
-
-    if($Config{"UploadURL"} ne $Config{"UploadURL2"})
+    if ($Config{"LocalSlippymap"})
     {
-        printf "! Please set UploadURL to %s, this will become the default ".
-            "UploadURL soon\n", $Config{"UploadURL2"};
-    } 
-    if($Config{"UploadChunkSize"} > 2){
-        print "! Upload chunks may be too large for server\n";
+        print "- Writing LOCAL slippy map directory hierarchy, no uploading\n";
     }
+    else
+    {
+        # Upload URL, username
+        printf "- Uploading with username \"$Config{UploadUsername}\"\n", ;
+        if($Config{"UploadPassword"} =~ /\W/){
+            die("Check your upload password\n");
+        }
 
-    if($Config{"UploadChunkSize"} < 0.1){
-        $Config{"UploadChunkSize"} = 1;
-        print "! Using default upload chunk size of 1.0 MB\n";
-    }
+        if($Config{"UploadURL"} ne $Config{"UploadURL2"})
+        {
+            printf "! Please set UploadURL to %s, this will become the default ".
+                "UploadURL soon\n", $Config{"UploadURL2"};
+        } 
+        if($Config{"UploadChunkSize"} > 2){
+            print "! Upload chunks may be too large for server\n";
+        }
 
-    # $Config{"UploadURL2"};
+        if($Config{"UploadChunkSize"} < 0.1){
+            $Config{"UploadChunkSize"} = 1;
+            print "! Using default upload chunk size of 1.0 MB\n";
+        }
 
-    if($Config{"DeleteZipFilesAfterUpload"}){
-        print "- Deleting ZIP files after upload\n";
+        # $Config{"UploadURL2"};
+
+        if($Config{"DeleteZipFilesAfterUpload"}){
+            print "- Deleting ZIP files after upload\n";
+        }
     }
 
     if($Config{"RequestUrl"}){

@@ -29,6 +29,13 @@ use tahlib;
 
 # conf file, will contain username/password and environment info
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
+
+if ($Config{"LocalSlippymap"})
+{
+    print "No upload - LocalSlippymap set in config file\n";
+    exit 1;
+}
+
 my $ZipFileCount = 0;
 
 my $ZipDir = $Config{WorkingDirectory} . "/uploadable";

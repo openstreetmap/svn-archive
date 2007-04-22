@@ -5,8 +5,8 @@
 </head>
 <body>
 <div class="all">
-<h1 class="title"><img src="../../Gfx/tah.png" alt="tiles@home" width="600" height="109"></h1>
-<p class="title">Rendering requests</p>
+<h1 class="title"><a href="../../"><img src="../../Gfx/tah.png" alt="tiles@home" width="600" height="109"></a></h1>
+<p class="title">Rendering request queues</p>
 <hr>
 
 <?php
@@ -14,83 +14,59 @@
   ** OJW 2006
   ** License: GNU GPL v2 or at your option any later version
   */
-  include("../../connect/connect.php");
   include("../../lib/requests.inc");
-  
-  ListRenderRequests();
-  
-  function ListRenderRequests(){
-    
-    RenderList("Pending", REQUEST_PENDING, "Date requested");
-    RenderList("New", REQUEST_NEW, "Date requested");
-    RenderList("Active", REQUEST_ACTIVE, "Date taken by renderer");
-    RenderList("Completed", REQUEST_DONE, "Date uploaded");
-    
-    print "<p><i>max 30 requests shown in each categeory</i></p>";
-    print "<p><i>*may not link to the correct layer</i></p>";
+?>
 
-    }
-    
-  function RenderList($Title, $Status, $DateLabel="Date"){
-  
-    $SQL = sprintf(
-      "SELECT * FROM tiles_queue WHERE `status`=%d ORDER BY date desc limit 30;",
-      $Status);
-      
-    # SQL query to get those records
-    $Result = mysql_query($SQL);
-    
-    print("<h2>$Title (status=$Status)</h2>\n");
-    
-    # Check for SQL errors
-    if(mysql_error()){
-      printf("<p>%s</p>\n", htmlentities(mysql_error()));
-      return;
-      }
-  
-    # Check for zero results
-    $NumRows = mysql_num_rows($Result);
-    if($NumRows < 1)
-      {
-      print "<p>None</p>\n";
-      return;
-      }
-    
-    # Display the logfile itself, as a table
-    print "<table border=\"1\" cellpadding=\"5\">";
-  
-    # Table header
-    print(TableRow(Array("Tileset", "Source", "Status", "Priority", $DateLabel,"Tile details*")));
-    
-    # For each entry...
-    while($Data = mysql_fetch_assoc($Result)){
-      $X = $Data["x"];
-      $Y = $Data["y"];
-      $Z = 12;
-      
-      $BrowseURL = sprintf("../../Browse/?x=%d&amp;y=%d&amp;z=12",$X,$Y,$Z);
-      $DetailsURL = sprintf("../../Tiles/tile.php/%d/%d/%d.png_details",$Z,$X,$Y);
-      
-      $TileHtml = sprintf("<a href=\"%s\">%d,%d</a>", $BrowseURL, $X, $Y);
-      $DetailsHtml = sprintf("<a href=\"%s\">...</a>", $DetailsURL);
-      
-      print(TableRow(Array(
-        $TileHtml,
-        htmlentities($Data["src"]),
-        $Data["status"],
-        $Data["priority"],
-        $Data["date"],
-        $DetailsHtml)));
-    }
-    print "</table>\n";
-  }
+<p>The <a href="Recent/">latest 30 requests in each queue</a> are available (which used to be displayed on this page)</p>
 
-  # Displays an array of items in an HTML table
-  function TableRow($Array){
-    return("<tr><td>".implode("</td>\n<td>", $Array)."</td></tr>\n");
-  }
+<h2>Today</h2>
+<p><img src="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap-tilesathome-day.png"></p>
+
+<h2>This week</h2>
+<p><img src="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap-tilesathome-week.png"></p>
+
+<p>Munin has a <a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap-tilesathome.html">page for these graphs</a>, and for <a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap.html">the dev server</a> in general</p>
   
-  ?>
+<h2>Notes</h2>
+  
+<ul>
+<li><b>Pending</b> requests are created when you ask for an area to be rerendered. (see the <a href="http://wiki.openstreetmap.org/index.php/Tiles%40home/APIs">API</a> if you want to know how to make those requests)</li>
+
+<li><b>New</b> requests are pretty similar to pending ones, in that they get downloaded by tiles@home clients.  In this case, <b>new</b> means that it's been re-requested.</li>
+
+<li><b>Active</b> requests have been taken by tiles@home clients to render</li>
+
+<li><b>Done</b> means the result has been uploaded, and the request is effectively closed.</li>
+</ul>
+
+<h3>So what does that mean?</h3>
+
+<ul>
+
+<li><b>Green goes up</b> - something's been requested</li>
+
+<li><b>Green to red</b> - tiles@home client has taken a request</li>
+
+<li><b>Red to blue</b> - they failed to upload, and it's been put back in the queue</li>
+
+<li><b>Blue to red</b> - client has taken a request that someone else failed to do</li>
+
+<li><b>Red to turquoise</b> - a successful rendering</li>
+
+<li><b>Turquoise goes down</b> - requests from one week ago got cleared-out of the done queue</li>
+
+</ul>
+
+<h3>What's the difference between new and pending?</h3>
+
+<p>Nothing really. There was an idea to use it for some sort of delay mechanism, so that multiple low-priority automated requests for the same area could be grouped together.  That's probably not going to happen though.</p>
+
+<h3>Request timeouts</h3>
+
+<p>After 6 hours in the <b>active</b> queue, requests are moved to the <b>new</b> queue.  This is when someone said that they'd render something but failed to upload the result</p>
+
+<p>After 2 &times; 24 hours in the <b>done</b> queue, requests are deleted.</p>
+
 </div>
 </body>
 </html>

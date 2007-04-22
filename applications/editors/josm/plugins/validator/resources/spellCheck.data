@@ -7,7 +7,13 @@
 -ubutters
 +abutter
 +address
++aka
++ambulance
 +amenity
+-ameninty
+-amienty
+-amienity
+-amenitzy
 -amenety
 -amenitry
 -amnity
@@ -28,6 +34,7 @@
 -amenty
 -Amenity
 -maenity
+-emenity
 +amenitylanduse
 +atm
 +bicycle
@@ -45,11 +52,13 @@
 +classification
 +ele
 +emity
++email
 +code_departement
 +code_INSEE
 +commercial
 -comercial
 +comment
++COMMENTLINE
 +confirmed
 +created_by
 -created by
@@ -80,6 +89,8 @@
 +height
 -hieght
 +highway
+-highwaay
+-HighWay
 -huighway
 -highwayt
 -ghway
@@ -136,6 +147,7 @@
 +hvg
 +iata_ref
 +icao_ref
++IM2
 +image
 -imaqge
 +island
@@ -181,11 +193,14 @@
 +name_4
 +named_by
 +names
++name_right
++name_left
 +note
 -Note
--note 
++note:fa 
 +Number
 +oneway
+-aneway
 -onewway
 -onewau
 -oneay
@@ -197,6 +212,7 @@
 -onway
 - oneway
 -oeway
+-eway
 +onte
 +osmarender:nameDirection
 -name_direction
@@ -206,15 +222,18 @@
 -place 
 -Place
 +passing
++passing_places
 +railway
 - railway
 -Railway
 -raillway
++re
 +regional_name
 +ref
 -ref 
 -ref:
 -Ref
++ref:fa
 +ref:source
 +ref_nat
 +ref_int
@@ -272,6 +291,7 @@
 +abutts
 +access
 +accident_and_emergency
++active_volcano
 +aerialway
 -areilway
 -areialway
@@ -304,6 +324,7 @@
 +area
 +art
 +ascii_name
++asphalt
 +author
 +autocar
 +b test tag
@@ -321,10 +342,12 @@
 +blackadder:civic
 +bicycles
 +boat
++bogus_footpath_going_nowhere
 +border
 +borded
 +border_edit
 +border_type
++bottles
 +boundary
 +boundary_name
 +boundary_type
@@ -341,11 +364,14 @@
 -brige
 -brigde
 -bridgw
++bridge_name
 +bridleway
 +building
+-buidling
 -buillding
 -buiding
 -bulding
++building_name
 +build_date
 +bus
 +buss
@@ -357,6 +383,9 @@
 +Car
 +car
 +cars
++car park at rear
+- car park at rear
++car_repair
 +carsharing
 +category
 +caution
@@ -369,6 +398,7 @@
 +city
 -citya
 +city_id
++clinic
 +clothes
 +cmt
 +complete
@@ -387,6 +417,7 @@
 +creator
 +cycle
 +cycleRoute
++cycle_route
 +cycleway
 -cycleway:
 +cykel
@@ -413,6 +444,7 @@
 +destination
 +difficulty
 +direction
++direction_to
 +dispensing
 +distance
 +distance_meter
@@ -435,6 +467,7 @@
 +ev_charge
 +facility
 +farezone
++farm_vehicles
 +fastfood
 +FACC_CODE
 +feature
@@ -471,6 +504,7 @@
 +gate
 +geoname_id
 +glass
++glass_bottles
 +glutenfree
 +gluten_free
 +goods
@@ -528,6 +562,7 @@
 +is_in:de
 +is_in:es
 +junction
+-junctoin
 -junctioin
 -juntion
 -junctiion
@@ -556,6 +591,7 @@
 +learning
 +length
 +level
++level crossing
 +license
 +liftStation
 +liftType
@@ -566,6 +602,7 @@
 +linje
 +lit
 +loc_ref
++loc_ref:fa
 +loc_name
 -loc_name 
 +loc_name:fa
@@ -575,9 +612,12 @@
 +locality
 +long_name
 +lorries
++Loyola Heights
 +ma,e
 +main
++major
 +man_made
+-man-made
 -man_made 
 -mand_made
 -nan_made
@@ -588,13 +628,17 @@
 +maplint:notice
 +maplint:warning
 +mapping_status
+-mapping status
+-mappingstatus
 +markedtrail
 +marker
 +marching_step
 +min_speed
 +minspeed
 +max_speed
-+max speed
+-max speed
+-maxsepeed
+-maxseep
 +maxheight
 -max_hieght
 -max_height
@@ -612,6 +656,7 @@
 +memorial
 +menu
 +military
++missing_street
 +mixed
 +monument
 +more_data
@@ -624,6 +669,7 @@
 +motorcars
 -motocars
 +motorcycle
+-motorcylce
 -motocycle
 -motorcycle 
 +motorway
@@ -631,6 +677,7 @@
 +motorway_junction
 +munro
 +museum
++nad_ref
 +name.2
 +name.alt
 +name.en
@@ -639,6 +686,7 @@
 +name:cy
 +name:de
 +name:en
++name:en-cy
 +name:es
 +name:eu
 +name:fa
@@ -664,6 +712,7 @@
 +name_segment
 +namelayer
 +name:ref
++name_ref
 +nat_name
 +nat_ref
 +nat_pref
@@ -710,6 +759,7 @@
 +old_name
 -oldname
 +old_name:fa
++old_full_name:fa
 +old_ref
 +opened
 +open_in
@@ -762,9 +812,11 @@
 - postal_code
 -posatl_code
 +postcode
++post_office
 +power
 +primary
 +private
+-privat
 +provided
 +Properties
 +problem
@@ -782,10 +834,11 @@
 +recycling:batteries
 +recycling:bicycles
 +recycling:books
++recycling:clothing
++recycling:clothes
 +recycling:glas
 -recyling:glas
 +recycling:shoes
-+recycling:clothes
 +recycling:engine_oil
 +recycling:glass_bottles
 +recycling:green_waste
@@ -816,10 +869,13 @@
 +recycling:white_goods
 +recycling:wood
 +recycling:tyres
++red
 +reference
 +ref_direction
++reg
 +reg_name
 +reg_ref
++reg_reg
 +region_id
 +religion
 -relgion
@@ -850,6 +906,7 @@
 +sidewalk
 +sign
 +single_track
++singletrack
 +shop
 +shopping
 +size
@@ -889,12 +946,14 @@
 +street
 +street_name
 +steps
++structure
 +subtype
 +suburb
 +suggested
 +surface
 -sruface
 +surfaced
++survey_ref
 +svg:font-size
 +svg:stroke-width
 +svg_font-size
@@ -908,11 +967,14 @@
 +telephone
 +telephone:operator
 +telephone_number
++telephonenumber
 +telephone_type
 +test
 +testing
 +testnode
 + this was a children's playarea with a path leading through it. Didn't want to look too dodgy :)
++the Netherlands
++NL
 +thoroughfare
 +time_diff
 +times
@@ -925,6 +987,7 @@
 +toll
 +topspeed
 +tourism
+-tourismn
 -tourim
 -tourism 
 -toursim
@@ -968,6 +1031,7 @@
 +url
 +use
 +use_status
++usage
 +utility
 +vdop
 +vehicle
@@ -976,6 +1040,7 @@
 +view
 +village
 +visited_by
++volcano
 +voltage
 +warning
 +water
@@ -996,4 +1061,5 @@
 +wrong
 +www
 +zip
++zip_code
 +{}

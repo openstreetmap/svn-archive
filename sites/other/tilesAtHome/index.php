@@ -19,11 +19,16 @@
   to select the &quot;osmarender&quot; layer using the + to the right of the map.
   </p>
   
-  <p><a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap.html">Performance graphs</a> are available, to say how the server is coping with all this data.</p>
   
-  <p>A <a href="Credits/">credits page</a> (list of people uploading tiles)</p>
-  
-  <p><a href="Stats/">Metadata</a> and <a href="Stats/Data/access.htm">access logs</a></p>
+  <p>Status pages:<ul>
+	<li><a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap.html">Server status graphs</a></li>
+	<li><a href="Credits/">List of people uploading tiles</a></li>
+	<li><a href="Stats/">Downloadable list of all tiles</a></li>
+	<li><a href="Stats/Data/access.htm">Access logs</a></li>
+	<li><a href="Log/Requests/">Status of the requests queue</a></li>
+	<li><a href="Log/Requests/Recent/">Recent requests</a></li>
+	<li><a href="Log/">Error messages</a></li>
+  </ul></p>
   
   <?php
   $Z = 16;

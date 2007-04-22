@@ -3,7 +3,7 @@ use strict;
 # =====================================================================
 # The following is duplicated from tilesGen.pl
 # =====================================================================
-
+my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 my $lastmsglen = 0;
 
 my $idleFor = 0;
@@ -104,6 +104,65 @@ sub getIdle
     {
       return $idleFor;
     }
+}
+
+
+#-----------------------------------------------------------------------------
+# Run a shell command. Suppress command's stderr output unless it terminates
+# with an error code.
+#
+# Return 1 if ok, 0 on error.
+#-----------------------------------------------------------------------------
+sub runCommand
+{
+    my ($cmd,$mainPID) = @_;
+
+    # $message is deprecated, issue statusmessage prior to exec.
+    # statusMessage($message, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+
+
+    if ($Config{Verbose})
+    {
+        my $retval = system($cmd);
+        return ($retval<0) ? 0 : ($retval>>8) ? 0 : 1;
+    }
+
+    my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";
+    my $retval = system("$cmd 2> $ErrorFile");
+    my $ok = 0;
+
+    # <0 means that the process could not start
+    if ($retval < 0)
+    {
+        print STDERR "ERROR:\n";
+        print STDERR "  Could not run the following command:\n";
+        print STDERR "  $cmd\n";
+        print STDERR "  Please check your installation.\n";
+    } 
+    else
+    {
+        $retval = $retval >> 8;
+        if ($retval)
+        {
+            print STDERR "ERROR\n";
+            print STDERR "  The following command produced an error message:\n";
+            print STDERR "  $cmd\n";
+            print STDERR "  Debug output follows:\n";
+            open(ERR, $ErrorFile);
+            while(<ERR>)
+            {
+                print STDERR "  | $_";
+            }
+            close(ERR);
+        }
+        else
+        {
+            $ok = 1;
+        }
+    }
+    
+    killafile($ErrorFile);
+    return $ok;
 }
 
 1;

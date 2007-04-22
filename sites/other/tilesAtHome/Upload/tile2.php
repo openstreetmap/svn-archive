@@ -26,9 +26,9 @@ if($UserID < 1){
   exit; # Redundant, failsafe
 }
 
-# TODO: check whether version number is acceptable
+# Check whether version number is acceptable
 if($VersionID < 0){
-  AbortWithError(401, "Client version not acceptable");
+  AbortWithError(401, "Client version not recognised or too old");
 }
 
 HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
@@ -142,7 +142,11 @@ function RemoveFromQueue($TileList){
   foreach($TileList as $CSV){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
     if($Z == 12){
-      moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE);
+    
+      moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
+        
+      #logMsg(sprintf("Moving tile %d, %d from %d to %d", $X, $Y, REQUEST_ACTIVE, REQUEST_DONE), 4);
+      logSqlError();
     }
   }
 }
@@ -178,7 +182,7 @@ function HandleFile($Filename, $User, $VersionID, &$TileList){
         return(1);
       }
       else{
-        logMsg("Invalid layer $Layer from $User", 2);
+        logMsg("Invalid layer $Layer from $User ($Layername)", 2);
       }
     }
     else{

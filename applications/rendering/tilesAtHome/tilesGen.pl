@@ -837,7 +837,8 @@ sub svg2png {
     $stdOut);
   
   # stop rendering the current job when inkscape fails
-  if (not runCommand("Rendering", $Cmd)){
+  statusMessage("Rendering", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+  if (not runCommand($Cmd,$PID)){
     statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     return 0 if ($Mode eq "loop");
     exit(1);
@@ -1061,7 +1062,9 @@ sub splitImageX
 	$Config{Niceness},
         $Filename2,
         $Filename);
-        if(runCommand("Pngcrushing $Filename", $Cmd))
+
+        statusMessage("Pngcrushing $Filename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        if(runCommand($Cmd,$PID))
         {
           unlink($Filename2);
         }

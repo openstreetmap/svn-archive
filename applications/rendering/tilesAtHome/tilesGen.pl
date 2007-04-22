@@ -491,14 +491,16 @@ sub GenerateTileset
                         "maplint/lib/run-tests.xsl",
                         "$inputFile",
                         "tmp.$PID");
-                runCommand("Running maplint", $Cmd);
+                statusMessage("Running maplint", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                runCommand($Cmd,$PID);
                 $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
                         $Config{Niceness},
                         $Config{XmlStarlet},
                         "maplint/lib/convert-to-tags.xsl",
                         "tmp.$PID",
                         "$outputFile");
-                runCommand("Creating tags from maplint", $Cmd);
+                statusMessage("Creating tags from maplint", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                runCommand($Cmd,$PID);
                 killafile("tmp.$PID");
             }
             elsif ($preprocessor eq "close-areas")
@@ -507,7 +509,8 @@ sub GenerateTileset
                         $Config{Niceness},
                         "$inputFile",
                         "$outputFile");
-                runCommand("Running close-areas", $Cmd);
+                statusMessage("Running close-areas", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                runCommand($Cmd,$PID);
             }
             else
             {
@@ -744,7 +747,8 @@ sub frollo {
     "frollo1.xsl",
     "$dataFile",
     "temp-$PID.osm"); 
-  if(runCommand("Frolloizing (part I) ...", $Cmd))
+  statusMessage("Frolloizing (part I) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+  if(runCommand($Cmd,$PID))
   {
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},
@@ -752,7 +756,8 @@ sub frollo {
       "frollo2.xsl",
       "temp-$PID.osm",
       "$outputFile");
-    if(runCommand("Frolloizing (part II) ...", $Cmd))
+    statusMessage("Frolloizing (part II) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    if(runCommand($Cmd,$PID))
     {
       statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
       killafile("temp-$PID.osm");
@@ -791,7 +796,8 @@ sub xml2svg {
     "osmarender.xsl",
     "$MapFeatures",
     $TSVG);
-    runCommand("Transforming $what", $Cmd);
+    statusMessage("Transforming $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    runCommand($Cmd,$PID);
     if ($Config{NoBezier}) {
     statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     }
@@ -803,7 +809,8 @@ sub xml2svg {
     $Config{Niceness},
     $TSVG,
     $SVG);
-    runCommand("Beziercurvehinting $what", $Cmd);
+    statusMessage("Beziercurvehinting $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    runCommand($Cmd,$PID);
 #-----------------------------------------------------------------------------        
 # Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
 #-----------------------------------------------------------------------------
@@ -814,62 +821,6 @@ sub xml2svg {
     }
     killafile($TSVG);
   }
-}
-
-#-----------------------------------------------------------------------------
-# Run a shell command. Suppress command's stderr output unless it terminates
-# with an error code.
-#
-# Return 1 if ok, 0 on error.
-#-----------------------------------------------------------------------------
-sub runCommand
-{
-    my ($message, $cmd) = @_;
-
-    statusMessage($message, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-
-    if ($Config{Verbose})
-    {
-        my $retval = system($cmd);
-        return ($retval<0) ? 0 : ($retval>>8) ? 0 : 1;
-    }
-
-    my $ErrorFile = $Config{WorkingDirectory}."/".$PID.".stderr";
-    my $retval = system("$cmd 2> $ErrorFile");
-    my $ok = 0;
-
-    # <0 means that the process could not start
-    if ($retval < 0)
-    {
-        print STDERR "ERROR:\n";
-        print STDERR "  Could not run the following command:\n";
-        print STDERR "  $cmd\n";
-        print STDERR "  Please check your installation.\n";
-    } 
-    else
-    {
-        $retval = $retval >> 8;
-        if ($retval)
-        {
-            print STDERR "ERROR\n";
-            print STDERR "  The following command produced an error message:\n";
-            print STDERR "  $cmd\n";
-            print STDERR "  Debug output follows:\n";
-            open(ERR, $ErrorFile);
-            while(<ERR>)
-            {
-                print STDERR "  | $_";
-            }
-            close(ERR);
-        }
-        else
-        {
-            $ok = 1;
-        }
-    }
-    
-    killafile($ErrorFile);
-    return $ok;
 }
 
 #-----------------------------------------------------------------------------

@@ -6,6 +6,7 @@
 WorkingDirectory=c:\temp\
 Inkscape=c:\program files\inkscape\inkscape
 XmlStarlet=c:\program files\xmlstarlet\xml
+Zip=c:\program files\zip\zip
 Niceness=
 
 # Upload

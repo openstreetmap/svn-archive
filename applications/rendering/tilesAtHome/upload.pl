@@ -175,12 +175,22 @@ sub compressTiles(){
   closedir (GATHERDIR);
 
   # Run the two commands
-  runCommand($Command1,$PID) or die("error creating zip, tried: $Command1");
-  while(my $File = shift @zippedFiles)
+  if (runCommand($Command1,$PID)) 
   {
-    killafile ($Dir . "/" . $File);
+    while(my $File = shift @zippedFiles)
+    {
+      killafile ($Dir . "/" . $File);
+    }
+    return upload($Filename);
   }
-  return upload($Filename);
+  else
+  {
+    while(my $File = shift @zippedFiles)
+    {
+      rename($Dir . "/" . $File, $Config{WorkingDirectory} . $File);
+    }
+    return upload($Filename);
+  }
 }
 
 #-----------------------------------------------------------------------------

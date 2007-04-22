@@ -167,13 +167,13 @@ sub compressTiles(){
   # becomes capable of generating multiple zip files
   
   # Delete files in the gather directory
-  my $Command2 = sprintf("%s %s",
-    "rm",
-    "$Dir/*.png");
-    
+  opendir (GATHERDIR, $Dir);
+  my @zippedFiles = grep(/.png$/,readdir(GATHERDIR));
+  closedir (GATHERDIR);
+
   # Run the two commands
-  `$Command1`;
-  `$Command2`;
+  runCommand("$Command1") or die("error creating zip, tried: $Command1");
+  unlink @zippedFiles;
   
   return upload($Filename);
 }

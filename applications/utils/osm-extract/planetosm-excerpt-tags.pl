@@ -50,12 +50,12 @@ my @way_sel_tags = (
 BEGIN {
     my $dir = $0;
     $dir =~s,[^/]+/[^/]+$,,;
-    unshift(@INC,"$dir/perl");
+    unshift(@INC,"$dir/perl_lib");
 
-    unshift(@INC,"./perl");
-    unshift(@INC,"../perl");
-    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"./perl_lib");
+    unshift(@INC,"../perl_lib");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl_lib");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl_lib");
 }
 
 use Getopt::Long;

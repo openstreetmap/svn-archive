@@ -1059,7 +1059,7 @@ sub splitImageX
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
         my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
-	$Config{Niceness},
+        $Config{Niceness},
         $Filename2,
         $Filename);
 

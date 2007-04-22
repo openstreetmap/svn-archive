@@ -160,10 +160,12 @@ sub compressTiles(){
   }
   
   # ZIP all the tiles into a single file
-  my $Command1 = sprintf("%s %s %s",
+  my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
+  my $Command1 = sprintf("%s %s %s > %s",
     "zip",
     $Filename,
-    "$Dir/*");
+    "$Dir/*",
+    $stdOut);
   # ZIP filename is currently our process ID - change this if one process
   # becomes capable of generating multiple zip files
   

@@ -15,7 +15,7 @@
   include("../../../lib/requests.inc");
 
   timeout(REQUEST_ACTIVE, 6, "restart");
-  timeout(REQUEST_DONE, 7 * 24, "delete");
+  timeout(REQUEST_DONE, 2 * 24, "delete");
 
   #---------------------------------------------------------------------------
   # timeout a set of requests

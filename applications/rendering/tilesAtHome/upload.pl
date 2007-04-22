@@ -2,6 +2,7 @@
 use strict;
 use LWP::UserAgent;
 use File::Copy;
+use English '-no_match_vars';
 use tahconfig;
 use tahlib;
 #-----------------------------------------------------------------------------
@@ -172,7 +173,7 @@ sub compressTiles(){
   closedir (GATHERDIR);
 
   # Run the two commands
-  runCommand("$Command1") or die("error creating zip, tried: $Command1");
+  runCommand($Command1,$PID) or die("error creating zip, tried: $Command1");
   unlink @zippedFiles;
   
   return upload($Filename);

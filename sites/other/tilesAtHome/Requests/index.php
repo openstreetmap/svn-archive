@@ -34,7 +34,7 @@
     exit;
   }
 
-  $SQL = "select x,y,status from tiles_queue where `status`=0 or `status`=1 limit 1;";
+  $SQL = "select `x`,`y`,`status` from `tiles_queue` where `status`=0 or `status`=1 limit 1;";
   $Result = mysql_query($SQL);
   
   if(mysql_errno()){
@@ -51,11 +51,22 @@
     $Data["x"],
     $Data["y"],
     12);
-    
+  
+  if(0){
+  printf("Moving %d,%d... %d to %d\n", 
+    $Data["x"],
+    $Data["y"],
+    $Data["status"],
+    REQUEST_ACTIVE);
+  }
+  
   moveRequest(
     $Data["x"],
     $Data["y"],
     $Data["status"],
     REQUEST_ACTIVE);
+    
+  #print mysql_error();
+  logSqlError();
 
 ?>

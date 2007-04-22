@@ -1063,7 +1063,7 @@ sub splitImageX
         $Filename2,
         $Filename);
 
-        statusMessage("Pngcrushing $Filename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("Pngcrushing $Filename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         if(runCommand($Cmd,$PID))
         {
           unlink($Filename2);

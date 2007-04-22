@@ -8,13 +8,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.command.ChangePropertyCommand;
-import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
 import org.openstreetmap.josm.gui.annotation.AnnotationPreset.*;
@@ -117,7 +114,7 @@ public class SpellCheck extends Test
 	 */
 	public static void initializePresets(@SuppressWarnings("unused") OSMValidatorPlugin plugin) throws Exception
 	{
-		if( Main.pref.getBoolean(PREF_CHECK_VALUES) )
+		if( !Main.pref.getBoolean(PREF_CHECK_VALUES) )
 			return;
 		
 		Collection<AnnotationPreset> presets = AnnotationPresetPreference.annotationPresets;
@@ -253,13 +250,11 @@ public class SpellCheck extends Test
 			} 
 			catch (IOException e) 
 			{
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.parent, tr("Could not read annotation preset source: {0}",source));
+				// Error already reported by JOSM
 			} 
 			catch (SAXException e) 
 			{
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: ", source)+e.getMessage());
+                // Error already reported by JOSM
 			}
 		}
 	}
@@ -267,7 +262,7 @@ public class SpellCheck extends Test
 	@Override
 	public void startTest() 
 	{
-		checkValues = Main.pref.getBoolean("tests." + getClass().getSimpleName() + ".checkValues");
+		checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES);
 	}
 
 	@Override

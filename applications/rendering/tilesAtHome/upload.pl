@@ -115,7 +115,7 @@ sub uploadTileBatch(){
 
   mkdir $TempDir if ! -d $TempDir;
   mkdir $OutputDir if ! -d $OutputDir;
- 
+  
   $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
   statusMessage(scalar(@tiles)." tiles to process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 
@@ -171,13 +171,15 @@ sub compressTiles(){
   
   # Delete files in the gather directory
   opendir (GATHERDIR, $Dir);
-  my @zippedFiles = grep(/.png$/,readdir(GATHERDIR));
+  my @zippedFiles = grep { /.png$/ } readdir(GATHERDIR);
   closedir (GATHERDIR);
 
   # Run the two commands
   runCommand($Command1,$PID) or die("error creating zip, tried: $Command1");
-  unlink @zippedFiles;
-  
+  while(my $File = shift @zippedFiles)
+  {
+    killafile ($Dir . "/" . $File);
+  }
   return upload($Filename);
 }
 

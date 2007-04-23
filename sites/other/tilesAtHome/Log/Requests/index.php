@@ -10,8 +10,8 @@
 <hr>
 
 <?php
-  /* Displays logfiles of recent requests for the tiles@home website
-  ** OJW 2006
+  /* Graph of tiles@home render requests
+  ** OJW 2007
   ** License: GNU GPL v2 or at your option any later version
   */
   include("../../lib/requests.inc");
@@ -53,7 +53,7 @@
 
 <li><b>Red to turquoise</b> - a successful rendering</li>
 
-<li><b>Turquoise goes down</b> - requests from one week ago got cleared-out of the done queue</li>
+<li><b>Turquoise goes down</b> - requests from two days ago got cleared-out of the done queue</li>
 
 </ul>
 

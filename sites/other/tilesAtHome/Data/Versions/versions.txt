@@ -9,3 +9,4 @@
 9|OK|Frederikssund
 10|OK|website_upload
 11|OK|experimental
+12|OK|Glencoe

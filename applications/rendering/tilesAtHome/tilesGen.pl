@@ -505,7 +505,7 @@ sub GenerateTileset
             }
             elsif ($preprocessor eq "close-areas")
             {
-                my $Cmd = sprintf("%s perl close-areas.pl < %s > %s",
+                my $Cmd = sprintf("%s perl close-areas.pl $X $Y < %s > %s",
                         $Config{Niceness},
                         "$inputFile",
                         "$outputFile");

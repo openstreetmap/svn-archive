@@ -65,7 +65,7 @@
 
         <!-- Natural features -->
         <rule e="way" k="natural" v="coastline">
-            <line class='natural-coastline'/>
+            <area class='natural-coastline'/>
         </rule>
         <rule e="way" k="landuse|natural" v="forest|wood">
             <area class='landuse-wood'/>
@@ -1058,7 +1058,7 @@
             }
 
             .natural-coastline {
-                fill: none;
+                fill: #b5d6f1;
                 stroke: #89bac6;
                 stroke-width: 1.5px;
             }

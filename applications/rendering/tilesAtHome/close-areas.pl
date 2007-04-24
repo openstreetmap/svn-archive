@@ -157,7 +157,7 @@ foreach my $seg(keys(%$segments))
         # returns 0, 1, or 2 points.
         # (may probably return 3 or 4 points in freak cases)
         my $intersect = compute_bbox_intersections($fromnode, $tonode);
-        printf "intersections for $seg: %d\n", scalar(@$intersect);
+        printf "intersections for $seg: %d\n", scalar(@$intersect) if ($debug);
 
         if (!scalar(@$intersect))
         {
@@ -167,11 +167,13 @@ foreach my $seg(keys(%$segments))
                 # this segment is fully outside the bounding box, and of 
                 # no concern to us. 
                 delete $segments->{$seg};
-                print "delete $seg fully out\n";
+                print "delete $seg fully out\n" if ($debug);
             }
         }
         elsif (scalar(@$intersect) == 1)
         {
+            # this segments enters OR exits the bounding box. find out which,
+            # and tag accordingly.
             if (node_is_inside($fromnode))
             {
                 $segments->{$seg}->{"exit_intersect"} = $intersect->[0];
@@ -187,6 +189,14 @@ foreach my $seg(keys(%$segments))
         }
         else
         {
+            # this segments enters AND exits the bounding box. as intersection
+            # points are ordered by distance from the segment's origin, we 
+            # assume that the very first intersection is the entry point and
+            # the very last is the exit point.
+            #   
+            # FIXME: segments like this - probably a very long one cutting right
+            # through the box or a short one cutting diagonally at one edge - 
+            # are very little tested.
             $segments->{$seg}->{"entry_intersect_angle"} =
                 compute_angle_from_bbox_center($intersect->[0]);
             $segments->{$seg}->{"exit_intersect_angle"} =
@@ -197,7 +207,7 @@ foreach my $seg(keys(%$segments))
     }
     else
     {
-            print "delete 2 $seg\n";
+        print "delete 2 $seg\n" if ($debug);
         delete $segments->{$seg};
     }
 }
@@ -586,10 +596,10 @@ sub compute_bbox_intersections
     $s_maxlat = $to->{"lat"} if ($to->{"lat"} > $s_maxlat);
 
     printf "BBOX:\n minlat %f\n minlon %f\n maxlat %f\n maxlon %f\n",
-        $minlat, $minlon, $maxlat, $maxlon;
+        $minlat, $minlon, $maxlat, $maxlon if ($debug);
 
     printf "SBBOX:\n minlat %f\n minlon %f\n maxlat %f\n maxlon %f\n",
-        $s_minlat, $s_minlon, $s_maxlat, $s_maxlon;
+        $s_minlat, $s_minlon, $s_maxlat, $s_maxlon if ($debug);
 
     # only if the segment is not horizontal
     if ($latd != 0)

@@ -16,7 +16,13 @@ use Image::Magick;
 $|=1;
 
 # Option: Where to move tiles, so that they get uploaded by another program
-my $uploadDir = "/home/tiles/lowzoom/tmp";
+my $uploadDir = "";
+die "please configure uploadDir variable in lowzoom.pl" if ($uploadDir eq "");
+
+# Initialise a blue tile to be used for water areas
+my $blueTile = new Image::Magick;
+die "cannot open blue.png" if (my $err = $blueTile->Read("blue.png"));
+die "cannot find oceantiles_12.dat (from t\@h distribution)" unless (-f "oceantiles_12.dat");
 
 # Command-line arguments
 my $X = shift();
@@ -30,10 +36,10 @@ my $Options = shift();
 my $Usage = "Usage: $0 x y z maxZ [layer] [keep]\n  x,y,z are the tile to generate\n  maxZ is the zoom level to download tiles from\n  Options: \n    * layer - which layer to run lowzoom on (tile (default) or maplint)\n    * 'keep' - don't move tiles to an upload area afterwards\nOther options (URLs, upload staging area) are part of the script - change them in source code\n";
 if(($MaxZ > 12)
   || ($MaxZ <= $Z)
-  || ($Z < 0)
+  || ($Z < 0) || (!defined($Z))
   || ($MaxZ > 17)
-  || ($X < 0)
-  || ($Y < 0)  
+  || ($X < 0) || (!defined($X))
+  || ($Y < 0) || (!defined($Y))
   || ($X >= 2 ** $Z)
   || ($Y >= 2 ** $Z)
   ){
@@ -135,19 +141,26 @@ sub supertile(){
   #   return;
   # }
 }
+
 # Open a PNG file, and return it as a Magick image (or 0 if not found)
-sub readLocalImage(){
-  my ($X,$Y,$Z,$Layer) = @_;
-  my $Filename = localfile($X,$Y,$Z,$Layer);
-  return undef unless(-f $Filename);
-  my $Image = new Image::Magick;
-  if (my $err = $Image->Read($Filename))
-  {
-      print STDERR "$err\n";
-      return undef;
-  }
-  return($Image);
+sub readLocalImage()
+{
+    my ($X,$Y,$Z,$Layer) = @_;
+    my $Filename = localfile($X,$Y,$Z,$Layer); 
+    if (!-f $Filename)
+    {
+        return undef if ($Z != 12);
+        return (is_ocean_tile($X, $Y) ? $blueTile : undef);
+    }
+    my $Image = new Image::Magick;
+    if (my $err = $Image->Read($Filename))
+    {
+        print STDERR "$err\n";
+        return undef;
+    }
+    return($Image);
 }
+
 # Take any tiles that were created (as opposed to downloaded), and move them to
 # an area ready for upload.
 # + Delete any tiles that were downloaded
@@ -183,6 +196,21 @@ sub remotefile(){
 # Option: what to use as temporary storage for tiles
 sub tempdir(){
   return("temp");
+}
+sub is_ocean_tile
+{
+    my ($tilex, $tiley) = @_;
+    my $tileoffset = ($tiley * (2**12)) + $tilex;
+    my $fh;
+    open($fh, "<", "oceantiles_12.dat") or return 0;
+    seek $fh, int($tileoffset / 4), 0;
+    my $buffer;
+    read $fh, $buffer, 1;
+    $buffer = substr( $buffer."\0", 0, 1 );
+    $buffer = unpack "B*", $buffer;
+    my $str = substr( $buffer, 2*($tileoffset % 4), 2 );
+    close($fh);
+    return ($str eq "10");
 }
 
 package status;
@@ -252,3 +280,5 @@ sub final(){
     $self->{SIZE} / 1024,
     $self->{DT});
 }
+
+

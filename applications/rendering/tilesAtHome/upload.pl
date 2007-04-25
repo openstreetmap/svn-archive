@@ -51,6 +51,8 @@ my $currentSubTask;
  
 my $lastmsglen;
 
+my $failures = 0;
+
 # Upload any ZIP files which are still waiting to go
 if(opendir(ZIPDIR, $ZipDir)){
   $currentSubTask = "uploadZ";
@@ -62,11 +64,25 @@ if(opendir(ZIPDIR, $ZipDir)){
   statusMessage(scalar(@sorted)." zip files to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
   while(my $File = shift @sorted){
     if($File =~ /\.zip$/i){
-      upload("$ZipDir/$File");
+      if (upload("$ZipDir/$File")) 
+      {
+        $failures=0;
+      }
+      else
+      {
+        $failures++;
+      }
     }
     $progress++;
     $progressPercent = $progress * 100 / $zipCount;
     statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+
+    ## sleep for 2, 4, 8, 16... seconds for each consecutive failure
+    if ($failures)
+    {
+      sleep (2 ** $failures);
+      statusMessage($failures . " consecutive upload failures, sleeping for " . (2 ** $failures) . "seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    }
   }
 }
 
@@ -94,6 +110,8 @@ my $tileCount = scalar(@tiles);
 
 exit if ($tileCount == 0);
 
+## the following exits on error so no exponential backoff done here. 
+## the critical part should be the upload of the leftover zips above anyway.
 while (uploadTileBatch(
   $TileDir, 
   $TileDir . "/gather", 
@@ -132,7 +150,7 @@ sub uploadTileBatch(){
   
   if($Count){
     statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    return compressTiles($TempDir, $OutputDir);
+    return compressAndUpload($TempDir, $OutputDir);
   }
   else
   {
@@ -145,7 +163,7 @@ sub uploadTileBatch(){
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating 
 #-----------------------------------------------------------------------------
-sub compressTiles(){
+sub compressAndUpload(){
   my ($Dir, $OutputDir) = @_;
   
   my $Filename;

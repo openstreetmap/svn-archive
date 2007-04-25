@@ -39,6 +39,7 @@ if ($Config{"LocalSlippymap"})
 
 my $ZipFileCount = 0;
 
+## FIXME: this is one of the things that make upload.pl not multithread safe
 my $ZipDir = $Config{WorkingDirectory} . "/uploadable";
 
 my @sorted;
@@ -51,7 +52,21 @@ my $currentSubTask;
  
 my $lastmsglen;
 
-my $failures = 0;
+### TODO: implement locking, this is one of the things that make upload not multithread-safe.
+my $failures;
+my $failFile = $Config{WorkingDirectory} . "/failurecount.txt";
+if (open(FAILFILE, "<", $failFile))
+{
+  $failures = <FAILFILE>;
+  chomp $failures;
+  close FAILFILE;
+}
+elsif (open(FAILFILE, ">", $failFile))
+{
+  $failures = 0;
+  print FAILFILE $failures;
+  close FAILFILE;
+}
 
 # Upload any ZIP files which are still waiting to go
 if(opendir(ZIPDIR, $ZipDir)){
@@ -108,14 +123,22 @@ closedir($dp);
 
 my $tileCount = scalar(@tiles);
 
+if (open(FAILFILE, ">", $failFile))
+{
+    print FAILFILE $failures;
+    close FAILFILE;
+}
+
 exit if ($tileCount == 0);
 
 ## the following exits on error so no exponential backoff done here. 
 ## the critical part should be the upload of the leftover zips above anyway.
 while (uploadTileBatch(
   $TileDir, 
+  ## FIXME: this is one of the things that make upload.pl not multithread safe
   $TileDir . "/gather", 
   $ZipDir, $allowedPrefixes)) {};
+
 
 #-----------------------------------------------------------------------------
 # Moves tiles into a "gather" directory until a certain size is reached,
@@ -187,6 +210,7 @@ sub compressAndUpload(){
   # ZIP filename is currently our process ID - change this if one process
   # becomes capable of generating multiple zip files
   
+  ## FIXME: this is one of the things that make upload.pl not multithread safe
   # Delete files in the gather directory
   opendir (GATHERDIR, $Dir);
   my @zippedFiles = grep { /.png$/ } readdir(GATHERDIR);

@@ -32,7 +32,7 @@ my $nodes;
 
 # The direction in which areas are closed - cw (clockwise), or ccw
 # (counter-clockwise). For OSM we normally use cw, which means that
-# area boundaries are drawn such that the are is "to the right" of 
+# area boundaries are drawn such that the area is "to the right" of 
 # the segment (i.e. coastline segments have water on their right).
 #
 # "ccw" is unused but supported in case somebody needs it.
@@ -220,8 +220,8 @@ undef $nodes;
 
 if (!scalar(%$segments))
 {
-    $border_crossed = 1;
-    lookup_handler($helpernodes, $tilex, $tiley);
+    ## instead of filling the tile here, we do it at the end...
+    $border_crossed = 0;
     goto ENDOSM;
 }
 
@@ -475,7 +475,11 @@ ENDOSM:
 # if we had no coastline intersection with the bounding box, but coastline
 # was present, we have an island situation and need to add a blue background.
 # FIXME what if we have a "little lake" situation?
-addBlueRectangle($helpernodes) unless $border_crossed;
+
+if (lookup_handler($helpernodes, $tilex, $tiley) >= 10)
+{
+  addBlueRectangle($helpernodes) unless $border_crossed;
+}
 make_way(\@coastline_segments);
 print "</osm>\n";
 
@@ -529,10 +533,8 @@ sub lookup_handler
     # $str eq "01" => known land
     # $str eq "10" => known sea
     # $str eq "11" => known edge tile
-    if ($str eq "10")
-    {
-        addBlueRectangle($helpernodes);
-    }
+
+    return $str; 
 }
 
 sub addBlueRectangle

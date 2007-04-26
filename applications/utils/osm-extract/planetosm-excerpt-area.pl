@@ -323,7 +323,7 @@ B<planetosm-excerpt-area.pl>
 B<Common usages:>
 
 
-B<planertosm-excerpt-area.pl> -bbox 54,-1.5,55,-1.4 planet.osm.xml > excerpt.osm
+B<planetosm-excerpt-area.pl> -bbox 54,-1.5,55,-1.4 planet.osm.xml > excerpt.osm
 
 parse planet.osm file, and output the parts between the bbox
 
@@ -333,7 +333,7 @@ parse planet.osm file, and output the parts between the bbox
 
 =item B<--bbox>
 
-planetosm-to-db.pl -bbox 10,-3.5,11,-3 planet.osm.xml
+planetosm-excerpt-area.pl -bbox 10,-3.5,11,-3 planet.osm.xml
 	Only output things inside the bounding box 
      (min lat, min long, max lat, max long)
 

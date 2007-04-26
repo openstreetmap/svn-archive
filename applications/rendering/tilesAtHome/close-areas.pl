@@ -47,6 +47,9 @@ my $minlon;
 my $maxlat;
 my $maxlon;
 my $border_crossed;
+my $emulate_frollo=1;
+# hash containing information about segments that start a subpath
+my $subpath_start;
 
 if (scalar(@ARGV) == 2)
 {
@@ -77,62 +80,67 @@ my $is_coastline;
 my @seglist;
 while(<STDIN>)
 {
-    if (/^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'].*lon=["']([0-9.-]+)["']/)
-    {
-        $nodes->{$1} = { "lat" => $2, "lon" => $3 };
-    }
-    elsif (/^\s*<segment.*id=["'](\d+)['"].*from=["']([0-9.-]+)["'].*to=["']([0-9.-]+)["']/)
-    {
-        $segments->{$1} = { "from" => $2, "to" => $3 };
-    }
-    elsif (/^\s*<way /)
-    {
-        $copy = 0;
-        undef $waybuf;
-        undef @seglist;
-        undef $is_coastline;
-    }
-    elsif(/^\s*<\/osm/)
-    {
-        last;
-    }
+    while(/(<[^'"<>]*((["'])[^\3]*?\3[^<>"']*)*>)/og)
 
-    if ($copy)
     {
-        print;
-    }
-    elsif (/^\s*<tag k=['"]natural["'].*v=["']coastline['"]/)
-    {
-        $is_coastline = 1;  
-    }
-    elsif (/^\s*<seg id=['"](\d+)["']/)
-    {
-        $waybuf .= $_;
-        push(@seglist, $1);
-    }
-    elsif (/^\s*<\/way/)
-    {
-        $copy = 1;
-        # non-coastal ways are written and forgotten
-        if (!$is_coastline)
+        my $xmltag = $1;
+        if ($xmltag =~ /^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'].*lon=["']([0-9.-]+)["']/)
         {
-            print $waybuf;
-            print;
+            $nodes->{$1} = { "lat" => $2, "lon" => $3 };
         }
-        # coastal ways are forgotten too, but they pass on their "coastal"
-        # information to the segments.
+        elsif ($xmltag =~ /^\s*<segment.*id=["'](\d+)['"].*from=["']([0-9.-]+)["'].*to=["']([0-9.-]+)["']/)
+        {
+            $segments->{$1} = { "from" => $2, "to" => $3 };
+        }
+        elsif ($xmltag =~ /^\s*<way /)
+        {
+            $copy = 0;
+            undef $waybuf;
+            undef @seglist;
+            undef $is_coastline;
+        }
+        elsif($xmltag =~ /^\s*<\/osm/)
+        {
+            last;
+        }
+
+        if ($copy)
+        {
+            print $xmltag."\n";
+        }
+        elsif ($xmltag =~ /^\s*<tag k=['"]natural["'].*v=["']coastline['"]/)
+        {
+            $is_coastline = 1;  
+        }
+        elsif ($xmltag =~ /^\s*<seg id=['"](\d+)["']/)
+        {
+            $waybuf .= $xmltag . "\n";
+            push(@seglist, $1);
+        }
+        elsif ($xmltag =~ /^\s*<\/way/)
+        {
+            $copy = 1;
+            # non-coastal ways are written and forgotten
+            if (!$is_coastline)
+            {
+                print $waybuf;
+                print $xmltag . "\n";
+            }
+            # coastal ways are forgotten too, but they pass on their "coastal"
+            # information to the segments.
+            else
+            {
+                foreach my $seg(@seglist)
+                {
+                    $segments->{$seg}->{"coast"} = 1 if (defined($segments->{$seg}));
+                }
+                        
+            }
+        }
         else
         {
-            foreach my $seg(@seglist)
-            {
-                $segments->{$seg}->{"coast"} = 1 if (defined($segments->{$seg}));
-            }
-                    
+            $waybuf .= $xmltag . "\n";
         }
-    }
-    else
-    {
-        $waybuf .= $_;
     }
 }
 
@@ -290,6 +298,7 @@ STRING:
         # loop detected. store the segment list for later output,
         # and move on trying to connect the rest.
         push(@coastline_segments, @seglist);
+        $subpath_start->{$seglist[0]} = 1;
         next;
     }
 
@@ -458,6 +467,7 @@ STRING:
     {
         printf("CLOSED\n") if ($debug);
         push(@coastline_segments, @seglist);
+        $subpath_start->{$seglist[0]} = 1;
         next;
     }
 
@@ -507,7 +517,16 @@ sub make_way
     print "  <tag k='natural' v='coastline' />\n";
     print "  <tag k='created-with' v='close-areas.pl' />\n";
     print "  <tag k='close-areas.pl:debug' v='open way' />\n" if ($open);
-    foreach my $seg(@$seglist) { print "  <seg id='$seg' />\n"; }
+    foreach my $seg(@$seglist) 
+    { 
+        print "  <seg id='$seg' ";
+        if ($emulate_frollo)
+        {
+            print "osma:fromCount='1' osma:toCount='1' ";
+            print "osma:sub-path='1' " if ($subpath_start->{$seg}) ;
+        }
+        print " />\n";
+    }
     print "</way>\n";
     return $id;
 }
@@ -559,6 +578,7 @@ sub addBlueRectangle
         }
     }
     push(@coastline_segments, @s);
+    $subpath_start->{$s[0]} = 1;
 }
 
 # this takes two points (hashes with lat/lon keys) as arguments and returns 

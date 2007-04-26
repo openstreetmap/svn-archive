@@ -67,8 +67,10 @@ public class OSMValidatorPlugin extends Plugin
 	{
 		if (newFrame != null)
 		{
+            errors = new ArrayList<TestError>(50);
 		    validationDialog = new ValidatorDialog();
 	        newFrame.addToggleDialog(validationDialog);
+            Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
 		}
 	}
 

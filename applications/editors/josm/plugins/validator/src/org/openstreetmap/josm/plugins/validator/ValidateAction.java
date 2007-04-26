@@ -49,7 +49,7 @@ public class ValidateAction extends JosmAction
 	 * @param ev The event
 	 * @param getSelectedItems If selected or last selected items must be validated
 	 */
-	public void doValidate(ActionEvent ev, boolean getSelectedItems)
+	public void doValidate(@SuppressWarnings("unused") ActionEvent ev, boolean getSelectedItems)
 	{
 		OSMValidatorPlugin plugin = OSMValidatorPlugin.getPlugin();
 		plugin.errors = new ArrayList<TestError>();
@@ -94,5 +94,8 @@ public class ValidateAction extends JosmAction
 		tests = null;
 		
 		plugin.validationDialog.refresh();
+        Main.map.repaint();
+        Main.ds.fireSelectionChanged(Main.ds.getSelected());
+        
 	}
 }

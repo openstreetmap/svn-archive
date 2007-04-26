@@ -1,5 +1,5 @@
-CXXFLAGS = -I/usr/local/include -I../../libs/libosm 
-OSMLIBS = ../../libs/libosm.a ../../libs/libccoord.a
+CXXFLAGS = -I/usr/local/include -I../../../../lib/libosm 
+OSMLIBS = ../../../../lib/libosm/libosm.a ../../../../lib/ccoord/libccoord.a
 LDFLAGS = -L/usr/local/lib $(OSMLIBS)  -lexpat  -lshp
 OBJ = wayclean.o
 CXX = g++

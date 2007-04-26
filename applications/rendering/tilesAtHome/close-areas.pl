@@ -441,8 +441,8 @@ STRING:
     }
     else
     {
-        my $min_once = (($exit_angle < $entry_angle) &&
-            !($exit_side == 0 and $entry_side == 0 and $exit_angle < pi() and $entry_angle > pi()));
+        my $min_once = (($exit_angle < $entry_angle) ||
+            ($exit_side == 0 and $entry_side == 0 and $exit_angle > pi() and $entry_angle < pi()));
         printf("min_once=%d\n", $min_once) if $debug;
         for (my $i = $exit_side;; $i--)
         {

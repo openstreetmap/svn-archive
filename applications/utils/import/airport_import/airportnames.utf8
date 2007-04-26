@@ -1,0 +1,108 @@
+LTAF	Asia,Turkey,Adana	Şakirpaşa Airport
+LTCP	Asia,Turkey,Adıyaman	Adıyaman Airport
+LTAH	Asia,Turkey,Afyon	Afyon Airport
+LTCO	Asia,Turkey,Ağrı	Ağrı Airport
+LTAC	Asia,Turkey,Ankara	Esenboğa International Airport
+LTAI	Asia,Turkey,Antalya	Antalya International Airport
+LTBF	Asia,Turkey,Balıkesir	Balıkesir Airport
+LTFD	Asia,Turkey,Balıkesir	Edremit Körfez Airport
+LTBG	Asia,Turkey,Balıkesir	Bandırma Airport
+LTCJ	Asia,Turkey,Batman	Batman
+LTBR	Asia,Turkey,Bursa	Yenişehir Airport
+LTBH	Asia,Turkey,Çanakkale	Çanakkale Airport
+LTAY	Asia,Turkey,Denizli	Çardak Airport
+LTCC	Asia,Turkey,Diyarbakır	Diyarbakır Airport
+LTCA	Asia,Turkey,Elazığ	Elazığ Airport
+LTCD	Asia,Turkey,Erzincan	Erzincan Airport
+LTCE	Asia,Turkey,Erzurum	Erzurum Airport
+LTBI	Asia,Turkey,Eskişehir	Eskişehir Airport
+LTAJ	Asia,Turkey,Gaziantep	Oğuzeli Airport
+LTFC	Asia,Turkey,Isparta	Süleyman Demirel Airport
+LTBA	Asia,Turkey,İstanbul	Atatürk International Airport
+LTFJ	Asia,Turkey,İstanbul	Sabiha Gökçen International Airport
+LTBJ	Asia,Turkey,İzmir	Adnan Menderes International Airport
+LTCN	Asia,Turkey,Kahramanmaraş 	Kahramanmaraş Airport
+LTCF	Asia,Turkey,Kars	Kars Airport
+LTAU	Asia,Turkey,Kayseri	Erkilet Airport
+LTAN	Asia,Turkey,Konya	Konya Airport
+LTAT	Asia,Turkey,Malatya	Erhaç Airport
+LTCR	Asia,Turkey,Mardin	Mardin Airport
+LTFE	Asia,Turkey,Muğla	Milas-Bodrum Airport
+LTBS	Asia,Turkey,Muğla	Dalaman Airport
+LTCK	Asia,Turkey,Muş		Muş Airport
+LTAZ	Asia,Turkey,Nevşehir	Kapadokya Airport
+LTFH	Asia,Turkey,Samsun	Çarşamba Airport
+LTCH	Asia,Turkey,Şanlıurfa	Şanlıurfa Airport
+LTCL	Asia,Turkey,Siirt	Siirt Airport
+LTAR	Asia,Turkey,Sivas	Sivas Airport
+LTBU	Asia,Turkey,Tekirdağ	Çorlu Airport
+LTAW	Asia,Turkey,Tokat	Tokat Airport
+LTCG	Asia,Turkey,Trabzon	Trabzon Airport
+LTBO	Asia,Turkey,Uşak	Uşak Airport
+LTCI	Asia,Turkey,Van		Van Airport
+
+
+#
+#   Additional from http://en.wikipedia.org/wiki/List_of_airports_in_Turkey
+#
+LTAP	Asia,Turkey,Amasya 	Merzifon Airport
+LTAL    Asia,Turkey,Kastamonu   Kastamonu Airport
+LTCM    Asia,Turkey,Sinop       Sinop Airport
+LTAS    Asia,Turkey,Zonguldak   Zonguldak Airport
+
+LTBY	Asia,Turkey,Anadolu	Anadolu
+
+
+#
+#   Partly in neighbour countries
+#
+LTBL	Asia,Turkey	Cigli
+LTFB	Asia,Turkey	Efes
+LTBK	Asia,Turkey	Gaziemir
+LTAB	Asia,Turkey	Güvercinlik
+LTBV	Asia,Turkey	Imsik
+LTAG	Asia,Turkey	Incirlik AB
+LTAK	Asia,Turkey	Iskenderun
+LTBM	Asia,Turkey	Isparta
+LTBN	Asia,Turkey	Kütahya
+LTBX	Asia,Turkey	Samandira
+LTAV	Asia,Turkey	Sivrihisar
+LTBP	Asia,Turkey,Yalova	Yalova
+
+
+
+LTBQ	Asia	Topel
+LTAO	Asia	Tulga
+LGSM	Asia	Samos
+UDLS	Asia	Stepanavan
+ORTF	Asia	Tall Afar
+UGTB	Asia	Tbilisi
+UG22	Asia	Tbilisi Marneuli
+UG24	Asia	Tbilisi Soganlug
+LGLE	Asia	Leros
+LGRD	Asia	Maritsa
+OS71	Asia	Minakh
+LGMT	Asia	Mitilini
+ORBM	Asia	Mosul
+LB38	Asia	Mustrak
+OS66	Asia	Rasin El Aboud
+OSKL	Asia	Kamishly
+OITK	Asia	Khoy
+LGKO	Asia	Kos
+OS62	Asia	Jirah
+LTFA	Asia	Kaklic
+UD19	Asia	Kalinino
+LGHI	Asia	Chios
+LGRP	Asia	Diagoras
+UDSG	Asia	Gyumri
+LGIK	Asia	Ikaria
+LTAE	Asia	Akinci
+OSAP	Asia	Aleppo Intl
+LGPL	Asia	Astypalaia
+ORBR	Asia	Bashur
+UGSB	Asia	Batumi
+UD21	Asia	Yerevan Yegvard
+UDYZ	Asia	Zvartnots
+ORER	Asia	Erbil Intl
+UDYE	Asia	Erebuni
+LTAD	Asia	Etimesgut

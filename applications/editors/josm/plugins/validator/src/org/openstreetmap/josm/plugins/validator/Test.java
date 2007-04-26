@@ -138,7 +138,7 @@ public class Test implements Visitor
 	 * @param testError
 	 * @return The command to fix the error
 	 */
-	public Command fixError(TestError testError)
+	public Command fixError(@SuppressWarnings("unused") TestError testError)
 	{
 		return null;
 	}
@@ -149,7 +149,7 @@ public class Test implements Visitor
 	 * @param testError The error to check if can be fixed
 	 * @return true if the error can be fixed
 	 */
-	public boolean isFixable(TestError testError)
+	public boolean isFixable(@SuppressWarnings("unused") TestError testError)
 	{
 		return false;
 	}	

@@ -36,7 +36,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     /**
      * The validation data.
      */
-	private DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
+	protected DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
 
 	/**
      * The display tree.
@@ -46,8 +46,15 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     /** 
      * The fix button
      */
-	private JButton fixButton;
+    private JButton fixButton;
     
+    /** 
+     * The select button
+     */
+    private JButton selectButton;
+    
+    /** Last selected truee element */
+    private DefaultMutableTreeNode lastSelectedNode = null;
 
     /**
      * Constructor
@@ -69,10 +76,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
         JPanel buttonPanel = new JPanel(new GridLayout(1,2));
 
-        buttonPanel.add(Util.createButton("Select", "mapmode/selection/select", "Set the selected elements on the map to the selected items in the list above.", this)); 
-        add(buttonPanel, BorderLayout.SOUTH);
+        selectButton = Util.createButton("Select", "mapmode/selection/select", "Set the selected elements on the map to the selected items in the list above.", this);
+        selectButton.setEnabled(false);
+        buttonPanel.add(selectButton); 
+        //add(buttonPanel, BorderLayout.SOUTH);
         buttonPanel.add(Util.createButton("Validate", "dialogs/refresh", "Validate the data.", this)); 
-        add(buttonPanel, BorderLayout.SOUTH);
+        // add(buttonPanel, BorderLayout.SOUTH);
         fixButton = Util.createButton("Fix", "dialogs/fix", "Fix the selected errors.", this);
         fixButton.setEnabled(false);
         buttonPanel.add(fixButton); 
@@ -214,9 +223,15 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     @SuppressWarnings("unchecked")
     private void setSelectedItems() 
     {
+        if( tree == null )
+            return;
+        
         Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
 
         TreePath[] selectedPaths = tree.getSelectionPaths();
+        if( selectedPaths == null)
+            return;
+        
         for( TreePath path : selectedPaths)
         {
         	DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
@@ -266,7 +281,23 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 	{
 		boolean hasFixes = false;
 
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        if( lastSelectedNode != null && !lastSelectedNode.equals(node) )
+        {
+            Enumeration<DefaultMutableTreeNode> children = lastSelectedNode.breadthFirstEnumeration();
+            while( children.hasMoreElements() )
+            {
+                DefaultMutableTreeNode childNode = children.nextElement();
+                Object nodeInfo = childNode.getUserObject();
+                if( nodeInfo instanceof TestError)
+                {
+                    TestError error = (TestError)nodeInfo;
+                    error.setSelected(false);
+                }
+            }  
+        }
+        
+        lastSelectedNode = node;
     	if( node == null ) 
     		return hasFixes;
 
@@ -278,6 +309,8 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     		if( nodeInfo instanceof TestError)
     		{
     			TestError error = (TestError)nodeInfo;
+                error.setSelected(true);
+                
     			hasFixes = hasFixes || error.isFixable();
     			if( addSelected )
     			{
@@ -285,6 +318,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     			}
     		}
 		}
+        selectButton.setEnabled(true);
 		
 		return hasFixes;
 	}
@@ -297,17 +331,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         @Override 
 		public void mouseClicked(MouseEvent e) 
 		{
-	        fixButton.setEnabled(false);
-        	
-			if(e.getSource() instanceof JScrollPane)
-				return;
-        	
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        	if( node == null )
-        		return;
-
-	        Collection<OsmPrimitive> sel = new HashSet<OsmPrimitive>(40);
+            System.out.println("mouseClicked " + e.getClickCount() + " " + e.getSource());
+            fixButton.setEnabled(false);
+            selectButton.setEnabled(false);
+            
 			boolean isDblClick = e.getClickCount() > 1;
+            Collection<OsmPrimitive> sel = isDblClick ? new HashSet<OsmPrimitive>(40) : null;
 			
 			boolean hasFixes = setSelection(sel, isDblClick);
 	        fixButton.setEnabled(hasFixes);
@@ -327,17 +356,19 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         @SuppressWarnings("unchecked")
 		public void valueChanged(TreeSelectionEvent e) 
 		{
+            System.out.println("valueChanged");
 	        fixButton.setEnabled(false);
+            selectButton.setEnabled(false);
         	
 			if(e.getSource() instanceof JScrollPane)
-				return;
+            {
+                System.out.println(e.getSource());
+                return;
+            }
         	
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        	if( node == null )
-        		return;
-
 			boolean hasFixes = setSelection(null, false);
 	        fixButton.setEnabled(hasFixes);
+            Main.map.repaint();            
 		}
 	}
 }

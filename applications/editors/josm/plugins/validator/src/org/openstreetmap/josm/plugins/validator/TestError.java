@@ -1,10 +1,13 @@
 package org.openstreetmap.josm.plugins.validator;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.gui.MapView;
 
 /**
  * Validation error
@@ -22,6 +25,8 @@ public class TestError
 	private Test tester;
 	/** Internal code used by testers to classify errors */
 	private int internalCode;
+    /** If this error is selected */
+    private boolean selected;
 	
 	/**
 	 * Constructor
@@ -182,5 +187,158 @@ public class TestError
 			return null;
 		
 		return tester.fixError(this);
-	}	
+	}
+
+    /**
+     * Paints the error on affected primitives
+     * 
+     * @param g The graphics
+     * @param mv The MapView
+     */
+    public void paint(Graphics g, MapView mv)
+    {
+        PaintVisitor v = new PaintVisitor(g, mv);
+        for( OsmPrimitive p : primitives)
+        {
+            if( !p.deleted )
+                p.visit(v);
+        }
+    }	
+    
+    class PaintVisitor implements Visitor
+    {
+        /** The graphics */
+        private final Graphics g;
+        /** The MapView */
+        private final MapView mv;
+        
+        /**
+         * Constructor 
+         * @param g The graphics 
+         * @param mv The Mapview
+         */
+        public PaintVisitor(Graphics g, MapView mv)
+        {
+            this.g = g;
+            this.mv = mv;
+        }
+
+        /**
+         * Draws a circle around the node 
+         * @param n The node
+         * @param color The circle color
+         */
+        public void drawNode(Node n, Color color)
+        {
+            Point p = mv.getPoint(n.eastNorth);
+            g.setColor(color);
+            if( selected )
+            {
+                g.fillOval(p.x-5, p.y-5, 10, 10);
+            }
+            else
+                g.drawOval(p.x-5, p.y-5, 10, 10);
+        }
+
+        /**
+         * Draws a line around the segment
+         * 
+         * @param s The segment
+         * @param color The color
+         */
+        public void drawSegment(Segment s, Color color)
+        {
+            Point p1 = mv.getPoint(s.from.eastNorth);
+            Point p2 = mv.getPoint(s.to.eastNorth);
+            g.setColor(color);
+            
+            double t = Math.atan2(p2.x-p1.x, p2.y-p1.y);
+            double cosT = Math.cos(t);
+            double sinT = Math.sin(t);
+            int deg = (int)Math.toDegrees(t);
+            if( selected )
+            {
+                int[] x = new int[] {(int)(p1.x + 5*cosT), (int)(p2.x + 5*cosT), (int)(p2.x - 5*cosT), (int)(p1.x - 5*cosT)};
+                int[] y = new int[] {(int)(p1.y - 5*sinT), (int)(p2.y - 5*sinT), (int)(p2.y + 5*sinT), (int)(p1.y + 5*sinT)};
+                g.fillPolygon(x, y, 4);
+                g.fillArc(p1.x-5, p1.y-5, 10, 10, deg, 180 );
+                g.fillArc(p2.x-5, p2.y-5, 10, 10, deg, -180);
+            }
+            else
+            {
+                g.drawLine((int)(p1.x + 5*cosT), (int)(p1.y - 5*sinT), (int)(p2.x + 5*cosT), (int)(p2.y - 5*sinT));
+                g.drawLine((int)(p1.x - 5*cosT), (int)(p1.y + 5*sinT), (int)(p2.x - 5*cosT), (int)(p2.y + 5*sinT));
+                g.drawArc(p1.x-5, p1.y-5, 10, 10, deg, 180 );
+                g.drawArc(p2.x-5, p2.y-5, 10, 10, deg, -180);
+            }
+        }
+
+
+        
+        /**
+         * Draw a small rectangle. 
+         * White if selected (as always) or red otherwise.
+         * 
+         * @param n The node to draw.
+         */
+        public void visit(Node n) 
+        {
+            if( isNodeVisible(n) )
+                drawNode(n, severity.getColor());
+        }
+
+        /**
+         * Draw just a line between the points.
+         * White if selected (as always) or green otherwise.
+         */
+        public void visit(Segment ls) 
+        {
+            if( isSegmentVisible(ls) )
+                drawSegment(ls, severity.getColor());
+        }
+        
+        public void visit(Way w)
+        {
+            for (Segment ls : w.segments)
+            {
+                if (isSegmentVisible(ls))
+                {
+                    drawSegment(ls, severity.getColor());
+                }
+            }
+        }
+        
+        /**
+         * Checks if the given node is in the visible area.
+         */
+        protected boolean isNodeVisible(Node n) {
+            Point p = mv.getPoint(n.eastNorth);
+            return !((p.x < 0) || (p.y < 0) || (p.x > mv.getWidth()) || (p.y > mv.getHeight()));
+        }
+
+        /**
+         * Checks if the given segment is in the visible area.
+         * NOTE: This will return true for a small number of non-visible
+         *       segments.
+         */
+        protected boolean isSegmentVisible(Segment ls) {
+            if (ls.incomplete) return false;
+            Point p1 = mv.getPoint(ls.from.eastNorth);
+            Point p2 = mv.getPoint(ls.to.eastNorth);
+            if ((p1.x < 0) && (p2.x < 0)) return false;
+            if ((p1.y < 0) && (p2.y < 0)) return false;
+            if ((p1.x > mv.getWidth()) && (p2.x > mv.getWidth())) return false;
+            if ((p1.y > mv.getHeight()) && (p2.y > mv.getHeight())) return false;
+            return true;
+        }
+    }
+
+    /**
+     * Sets the selection flag of this error
+     * @param selected if this error is selected
+     */
+    public void setSelected(boolean selected)
+    {
+        this.selected = selected;
+    }
 }

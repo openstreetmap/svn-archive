@@ -4,6 +4,8 @@
 use DBI;
 
 
+$FEET_TO_METER = 0.3048;
+
 $APT_VERSION="AptNav200701XP810";
 $APT_FILE=$ENV{HOME} . "/osm/" . $APT_VERSION . "/apt.dat";
 $MYSELF="airport_import " . qw($Revision$);
@@ -14,8 +16,6 @@ sub save_airport
     return if (!(defined($icao_code)));
 
     local $tablename = "airport_place_node";
-
-    # print "    $icao_code -> '$airport_name'\n";
 
     $sql = "select id from $tablename where icao = ?";
     $select_place_id_sth = $dbh->prepare($sql);
@@ -74,6 +74,8 @@ sub save_airport
 
 	$max_lat = $center_lat if ($max_lat < $center_lat);
 	$max_lon = $center_lon if ($max_lon < $center_lon);
+
+	create_way($place_node_id, $_);
     }
 
     $lat = $sum_lat / ( $#ways + 1 );
@@ -96,48 +98,162 @@ sub save_airport
     #
     #   Tags of the airport node
     #
-    # create_airport_node_tag($place_node_id, "icao"); # is already in the master table
-    # create_airport_node_tag($place_node_id, "iata", "unknown"); # Where do I get the IATA from?
-    # create_airport_node_tag($place_node_id, "name"); # is already in the master table
-    # create_airport_node_tag($place_node_id, "is_in", "Asia,Europe,Turkey"); # Ask geonames for that data...
-    create_airport_node_tag($place_node_id, "created_by", $MYSELF);
-    create_airport_node_tag($place_node_id, "source", $APT_VERSION);
-    create_airport_node_tag($place_node_id, "aeroway", "aerodrome");
-    create_airport_node_tag($place_node_id, "place", "airport");
-    create_airport_node_tag($place_node_id, "type", "civil"); # This is not always right. Where do I get correct data from?
+    # create_tag($place_node_id, "P", "icao"); # is already in the master table
+    # create_tag($place_node_id, "P", "iata", "unknown"); # Where do I get the IATA from?
+    # create_tag($place_node_id, "P", "name"); # is already in the master table
+    # create_tag($place_node_id, "P", "is_in", "Asia,Europe,Turkey"); # Ask geonames for that data...
+    create_tag($place_node_id, "P", "is_in", $is_in->{$icao_code}) if defined($is_in->{$icao_code});
+    create_tag($place_node_id, "P", "created_by", $MYSELF);
+    create_tag($place_node_id, "P", "source", $APT_VERSION);
+    create_tag($place_node_id, "P", "aeroway", "aerodrome");
+    create_tag($place_node_id, "P", "place", "airport");
+    create_tag($place_node_id, "P", "type", "civil"); # This is not always right. Where do I get correct data from?
 }
 
 
-sub create_airport_node_tag
+sub create_tag
 {
-    my ($parent_id, $key, $value) = @_;
+    my ($parent_id, $type, $key, $value) = @_;
 
-    local $tablename = "airport_place_node_tags";
+    local $tablename = "airport_tags";
 
-    my $select_tag_id_sql = "select id from $tablename where parent_id = ? and key = ?";
+    my $select_tag_id_sql = "select id from $tablename where parent_id = ? and type = ? and key = ?";
     my $select_tag_id_sth = $dbh->prepare($select_tag_id_sql);
     $select_tag_id_sth->bind_param(1, $parent_id);
-    $select_tag_id_sth->bind_param(2, $key);
+    $select_tag_id_sth->bind_param(2, $type);
+    $select_tag_id_sth->bind_param(3, $key);
     $select_tag_id_sth->execute();
     my @row = $select_tag_id_sth->fetchrow_array;
     if ($#row == -1)
     {
-	my $insert_sql = "insert into $tablename (parent_id, key) values (?, ?)";
+	my $insert_sql = "insert into $tablename (parent_id, type, key) values (?, ?, ?)";
 	my $insert_sth = $dbh->prepare($insert_sql);
 	$insert_sth->bind_param(1, $parent_id);
-	$insert_sth->bind_param(2, $key);
+	$insert_sth->bind_param(2, $type);
+	$insert_sth->bind_param(3, $key);
 	$insert_sth->execute();
 	$insert_sth->finish();
     }
     $select_tag_id_sth->finish();
 
-    my $update_sql = "update $tablename set value = ? where parent_id = ? and key = ?";
+    my $update_sql = "update $tablename set value = ? where parent_id = ? and type = ? and key = ?";
     my $update_sth = $dbh->prepare($update_sql);
     $update_sth->bind_param(1, $value);
     $update_sth->bind_param(2, $parent_id);
-    $update_sth->bind_param(3, $key);
+    $update_sth->bind_param(3, $type);
+    $update_sth->bind_param(4, $key);
     $update_sth->execute();
     $update_sth->finish();
+}
+
+
+sub create_node
+{
+    my ($parent_id, $type, $lon, $lat) = @_;
+
+    local $tablename = "airport_nodes";
+
+    my $select_tag_id_sql = "select id from $tablename where parent_id = ? and type = ?";
+    my $select_tag_id_sth = $dbh->prepare($select_tag_id_sql);
+    $select_tag_id_sth->bind_param(1, $parent_id);
+    $select_tag_id_sth->bind_param(2, $type);
+    $select_tag_id_sth->execute();
+    my @row = $select_tag_id_sth->fetchrow_array;
+    if ($#row == -1)
+    {
+	my $insert_sql = "insert into $tablename (parent_id, type) values (?, ?)";
+	my $insert_sth = $dbh->prepare($insert_sql);
+	$insert_sth->bind_param(1, $parent_id);
+	$insert_sth->bind_param(2, $type);
+	$insert_sth->execute();
+	$insert_sth->finish();
+    }
+    $select_tag_id_sth->finish();
+
+    my $update_sql = "update $tablename set lon = ?, lat = ? where parent_id = ? and type = ?";
+    my $update_sth = $dbh->prepare($update_sql);
+    $update_sth->bind_param(1, $lon);
+    $update_sth->bind_param(2, $lat);
+    $update_sth->bind_param(3, $parent_id);
+    $update_sth->bind_param(4, $type);
+    $update_sth->execute();
+    $update_sth->finish();
+}
+
+
+sub create_way
+{
+    my ($parent_id, $wayline) = @_;
+
+    local $tablename = "airport_ways";
+
+    local $way_id;
+
+    local ($x, $center_lat, $center_lon, $name, $heading, $length, $x, $width) = split(/\s+/, $wayline);
+
+    my $select_way_id_sql = "select id from $tablename where center_lon = ? and center_lat = ?";
+    my $select_way_id_sth = $dbh->prepare($select_way_id_sql);
+    $select_way_id_sth->bind_param(1, $center_lon);
+    $select_way_id_sth->bind_param(2, $center_lat);
+    $select_way_id_sth->execute();
+    my @row = $select_way_id_sth->fetchrow_array;
+    if ($#row == -1)
+    {
+	my $insert_way_sql = "insert into $tablename (parent_id, center_lon, center_lat) values (?, ?, ?)";
+	my $insert_way_sth = $dbh->prepare($insert_way_sql);
+	$insert_way_sth->bind_param(1, $parent_id);
+	$insert_way_sth->bind_param(2, $center_lon);
+	$insert_way_sth->bind_param(3, $center_lat);
+	$insert_way_sth->execute();
+	$insert_way_sth->finish();
+
+	$select_way_id_sth->execute();
+	@row = $select_way_id_sth->fetchrow_array;
+    }
+    $select_way_id_sth->finish();
+
+    $way_id = $row[0];
+
+    my $update_way_sql = "update $tablename set runway_number = ?, heading = ?, length = ?, width = ? where parent_id = ? and center_lon = ? and center_lat = ?";
+    my $update_way_sth = $dbh->prepare($update_way_sql);
+    $update_way_sth->bind_param(1, $name);
+    $update_way_sth->bind_param(2, $heading);
+    $update_way_sth->bind_param(3, $length * $FEET_TO_METER);
+    $update_way_sth->bind_param(4, $width  * $FEET_TO_METER);
+    $update_way_sth->bind_param(5, $parent_id);
+    $update_way_sth->bind_param(6, $center_lon);
+    $update_way_sth->bind_param(7, $center_lat);
+    $update_way_sth->execute();
+    $update_way_sth->finish();
+
+    create_node($way_id, "C", $center_lon, $center_lat);
+
+    my ($lon_s, $lat_s) = moveTo($center_lon, $center_lat,  $heading, $length / 2);
+    create_node($way_id, "S", $lon_s, $lat_s);
+
+    my ($lon_e, $lat_e) = moveTo($center_lon, $center_lat, -$heading, $length / 2);
+    create_node($way_id, "E", $lon_e, $lat_e);
+}
+
+
+sub moveTo
+{
+    my ($lat_from, $lon_from, $distance, $heading) = @_;
+    local ($lon, $lat, $dlon);
+
+    $lat_from = $lat_from / 100;
+    $lon_from = $lon_from / 100;
+    $heading  = $heading  / 360;
+
+    #
+    # $lat = asin(sin($lat_from) * cos($distance) + cos($lat_from) * sin($distance) * cos($heading))
+    # $dlon = atan2(sin($heading) * sin($distance) * cos($lat_from) , cos($distance) - sin($lat_from) * sin($lat))
+    # $lon = mod($lon_from - $dlon + $PI , 2 *  $PI ) - $PI
+    #
+
+    $lon = -999;
+    $lat = -999;
+
 }
 
 
@@ -168,6 +284,8 @@ sub read_airports_file
 
 	    $icao_code = $foo[4];
 	    $airport_name = join(" ", @foo[ 5 .. $#foo ]);
+	    $airport_name = $utf8_names->{$icao_code} if (defined($utf8_names->{$icao_code}));
+
 	    @ways = ();
 
 	    # print "    $icao_code -> '$airport_name'\n";
@@ -190,10 +308,40 @@ sub read_airports_file
 }
 
 
+sub read_utf8_airport_names
+{
+    open (UTF8, "< airportnames.utf8");
+    while (<UTF8>)
+    {
+	chomp();
+	next if (/^\#/);
+
+	@foo = split(/\t+/, $_);
+	if ($#foo == 2)
+	{
+	    # print "'" . $foo[0] . "' - '" . $foo[1] . "' - '" . $foo[2] . "'\n";
+	    $icao_code = $foo[0];
+
+	    $is_in->{$icao_code} = $foo[1] if (!($foo[1] =~ /^\?/));
+	    $utf8_names->{$icao_code} = $foo[2];
+	}
+    }
+    close (UTF8);
+}
+
+
 #
 #
 #
 $dbh = DBI->connect('dbi:Pg:dbname=osm') || die ("Can't connect to database: " . $DBI::errstr);
+
+$dbh->do("SET client_encoding to UNICODE");
+
+undef %is_in;
+undef %utf8_names;
+
+read_utf8_airport_names();
 read_airports_file();
+
 $dbh->disconnect();
 

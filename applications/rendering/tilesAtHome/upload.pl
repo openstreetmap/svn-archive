@@ -68,8 +68,47 @@ elsif (open(FAILFILE, ">", $failFile))
   close FAILFILE;
 }
 
+my $tileCount;
+
+my @tiles;
+
+if($Config{MultipleClients}) #Trigger the _other_ codepath...
+# move the finished tiles to a subfolder of UploadDirectory
+# First name the folder timestamp_hostname_inprogress
+# then rename the folder to timestamp_hostname
+{
+  my $epochtime = time;
+  my $hostname = `hostname`;
+  chomp $hostname;
+  $hostname.="XXXXXXXX";
+  my $UploadDir = $Config{UploadDirectory};
+  my $WorkDir = $Config{WorkingDirectory};
+  my $folder = sprintf("%s/%s_%s_%d", $UploadDir, $epochtime, substr($hostname,0,8),$$);
+  while(-e $folder)  # avoid the improbable... the folder exists.
+  {
+    $folder .= "x";
+  }  
+  my $inprogress = $folder."_inprogress";
+  print "Making dir\n";
+  mkdir($inprogress);
+  print "Moving to progress\n";
+  for my $tilefile ( glob "$WorkDir/*" ) 
+  {
+     next if -d $tilefile; # skip folders
+print "Moving $tilefile to $inprogress\n";
+     move($tilefile,$inprogress) or die "$!\n";
+  }  
+  print "Rename progress dir\n";
+  move("$folder"."_inprogress",$folder) or die "$!\n"; 
+
+  # the files should be on the upload computer now!!!
+}
+else
+{
+
 # Upload any ZIP files which are still waiting to go
-if(opendir(ZIPDIR, $ZipDir)){
+if(opendir(ZIPDIR, $ZipDir))
+{
   $currentSubTask = "uploadZ";
   $progress = 0;
   my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
@@ -118,10 +157,10 @@ opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
 my $allowedPrefixes = join("|",
   map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
 
-my @tiles = grep { /($allowedPrefixes)_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
+  @tiles = grep { /($allowedPrefixes)_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
 closedir($dp);
 
-my $tileCount = scalar(@tiles);
+  $tileCount = scalar(@tiles);
 
 if (open(FAILFILE, ">", $failFile))
 {
@@ -139,6 +178,8 @@ while (uploadTileBatch(
   $TileDir . "/gather", 
   $ZipDir, $allowedPrefixes)) {};
 
+
+} #done main/else.
 
 #-----------------------------------------------------------------------------
 # Moves tiles into a "gather" directory until a certain size is reached,

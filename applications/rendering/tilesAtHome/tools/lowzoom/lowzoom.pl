@@ -90,7 +90,7 @@ sub downloadtile(){
   $Status->downloadCount($Layer,$X,$Y,$Z,$Size);
   
   # Don't bother storing blank or invalid tiles
-  unlink $f2 if($Size < 1000);
+  unlink $f2 if($Size < 500);
 }
 # Create a supertile, by merging together 4 local image files, and creating a new local file
 sub supertile(){

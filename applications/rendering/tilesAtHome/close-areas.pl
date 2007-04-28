@@ -425,8 +425,17 @@ STRING:
     {
         # $min_once is for the special case where entry and exit side are 
         # identical but we still need to go all the way around the box.
-        my $min_once = (($exit_angle > $entry_angle) || 
-            ($exit_side == 0 and $entry_side == 0 and $exit_angle < pi() and $entry_angle > pi()));
+	my $min_once;
+	if ($exit_side == 0 and $entry_side == 0) 
+	{
+	    # Take into account that the angle flips from 2*pi() to zero at this side
+	    $min_once = (($exit_angle > $entry_angle and ($exit_angle - $entry_angle) < pi()) ||
+			 ($exit_angle < pi() and $entry_angle > pi()));
+	}
+	else 
+	{
+	    $min_once = ($exit_angle > $entry_angle); 
+	}
         printf("min_once=%d\n", $min_once) if $debug;
         for (my $i = $exit_side;; $i++)
         {
@@ -441,8 +450,16 @@ STRING:
     }
     else
     {
-        my $min_once = (($exit_angle < $entry_angle) ||
-            ($exit_side == 0 and $entry_side == 0 and $exit_angle > pi() and $entry_angle < pi()));
+	my $min_once;
+	if ($exit_side == 0 and $entry_side == 0)
+	{
+	    $min_once = (($exit_angle < $entry_angle and ($entry_angle - $exit_angle) < pi()) ||
+			 ($exit_angle > pi() and $entry_angle < pi()));
+	}
+	else
+	{
+	    $min_once = ($exit_angle < $entry_angle);
+	}
         printf("min_once=%d\n", $min_once) if $debug;
         for (my $i = $exit_side;; $i--)
         {
@@ -486,9 +503,35 @@ ENDOSM:
 # was present, we have an island situation and need to add a blue background.
 # FIXME what if we have a "little lake" situation?
 
-if (lookup_handler($helpernodes, $tilex, $tiley) >= 10)
+unless( $border_crossed )
 {
-  addBlueRectangle($helpernodes) unless $border_crossed;
+  my $state = lookup_handler($helpernodes, $tilex, $tiley);
+  if( $state eq "10" )
+  {
+    # sea
+    addBlueRectangle($helpernodes);
+  }
+  elsif ( $state eq "01" )
+  {
+    #land
+  }
+  else
+  {  
+    my %temp = ("00"=>0, "10"=>0, "01"=>0, "11"=>0);;
+    $temp{lookup_handler($helpernodes, $tilex-1, $tiley)}++;
+    $temp{lookup_handler($helpernodes, $tilex+1, $tiley)}++;
+    $temp{lookup_handler($helpernodes, $tilex, $tiley-1)}++;
+    $temp{lookup_handler($helpernodes, $tilex, $tiley+1)}++;
+
+    if( $temp{"10"} > $temp{"01"} )
+    {
+      addBlueRectangle($helpernodes);
+    }
+    else
+    {
+      #land
+    }
+  }
 }
 make_way(\@coastline_segments);
 print "</osm>\n";

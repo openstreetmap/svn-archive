@@ -1,5 +1,8 @@
 package mappaint;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -54,7 +57,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	@Override public void visit(Segment ls) {
 		if (isSegmentVisible(ls))
-			drawSegment(ls, getPreferencesColor("untagged",Color.GRAY));
+			drawSegment(ls, getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"));
 	}
 
 	/**
@@ -182,7 +185,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * Draw a line with the given color.
 	 */
 	// Altered - now specify width
-	@Override protected void drawSegment(Segment ls, Color col) {
+	@Override protected void drawSegment(Segment ls, Color col,boolean showDirection) {
 			drawSegment(ls,col,1);
 	}
 
@@ -223,6 +226,8 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1
 	// Shows areas before non-areas
 	public void visitAll(DataSet data) {
+
+		Collection<Way> noAreaWays = new LinkedList<Way>();
 		for (final OsmPrimitive osm : data.segments)
 			if (!osm.deleted)
 				osm.visit(this);
@@ -230,10 +235,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		for (final OsmPrimitive osm : data.ways)
 			if (!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
 				osm.visit(this);
+			else if (!osm.deleted)
+				noAreaWays.add((Way)osm);
 
-		for (final OsmPrimitive osm : data.ways)
-			if (!osm.deleted && !MapPaintPlugin.elemStyles.isArea(osm))
-				osm.visit(this);
+		for (final OsmPrimitive osm : noAreaWays)
+			osm.visit(this);
 
 		for (final OsmPrimitive osm : data.nodes)
 			if (!osm.deleted)

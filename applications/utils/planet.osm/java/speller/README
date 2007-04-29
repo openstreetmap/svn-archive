@@ -1,0 +1,26 @@
+This program will try to spellcheck the keynames used in OSM.
+You need the latest planet dump to use it.
+
+This program uses the bzip2.jar library. I got it from
+<http://www.kohsuke.org/bzip2/> and got this license:
+Apache Software License (see jar-file)
+
+Compile in windows:
+>"c:\Program Files\Java\jdk1.5.0_08\bin\javac.exe" -classpath bzip2.jar *.java
+Compile in linux:
+>/opt/jdk1.6.0/bin/javac -encoding ISO8859-1 -classpath .:bzip2.jar *.java
+
+Run:
+java -classpath .;bzip2.jar -Xmx512m OSMspeller
+/opt/jdk1.6.0/bin/java -classpath .:bzip2.jar -Xmx512m OSMspeller >stdout.log 2>stderr.log
+
+NOTE: Due to delay it seems bad to run this of an network mounted volume.
+At least if mounted from an old Samba-server.
+
+
+TODO:
+
+- Limit use of ctrl-c while writing resume-file
+- sort word list alpabeticly
+- interactive correcting of unknown spellings and save new misspellings in config file
+- do spelling of values and attributes?

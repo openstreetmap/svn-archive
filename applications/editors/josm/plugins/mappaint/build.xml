@@ -1,7 +1,8 @@
 <project name="mappaint" default="build" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="../../../../editors/josm/dist/josm-custom.jar" /> 
+	<!-- <property name="josm" location="../../../../editors/josm/dist/josm-custom.jar" /> -->
+	<property name="josm" location="../josm/josm-latest.jar" ></property>
 
 
 

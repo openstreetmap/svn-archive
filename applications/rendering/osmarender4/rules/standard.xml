@@ -156,6 +156,9 @@
                 </rule>
                 <rule e="way" k="landuse" v="cemetery">
                     <area class='landuse-cemetery' />
+                    <rule e="way" k="religion" v="christian">
+		        <area class='landuse-cemetery-christian' />
+                    </rule>
                 </rule>
             </layer>
         </rule>
@@ -1777,7 +1780,13 @@
             }
 
             .landuse-cemetery {
-                fill: #bde3cb;
+                fill: url(#cemetery-pattern);
+                stroke: #eeeeee;
+                stroke-width: 0.2px;
+            }
+
+            .landuse-cemetery-christian {
+                fill: url(#cemetery-christian-pattern);
                 stroke: #eeeeee;
                 stroke-width: 0.2px;
             }
@@ -2049,6 +2058,18 @@
                 fill: white;
             }
         </style>
+
+        <svg:pattern id="cemetery-pattern" x="0" y="0" width="10" 
+height="10" patternUnits="userSpaceOnUse">
+           <svg:rect fill="#bde3cb" width="10" height="10" x="0" y="0" />
+           <svg:path fill="#919191" stroke-width="0.1" d="M 1.48,0.13 C 2.12,0.13 2.63,0.64 2.63,1.28 L 2.63,4.27 L 0.33,4.27 L 0.33,1.28 C 0.33,0.64 0.85,0.13 1.48,0.13 z " />
+<!--           <svg:path fill="#919191" stroke-width="0.1" d="M 6.64,5.78 C 7.27,5.78 7.79,6.29 7.79,6.92 L 7.79,9.91 L 5.49,9.91 L 5.49,6.92 C 5.49,6.29 6.00,5.78 6.64,5.78 z " />-->
+        </svg:pattern>
+
+        <svg:pattern id="cemetery-christian-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+           <svg:rect fill="#bde3cb" width="11" height="11" x="0" y="0" />
+            <svg:path stroke="black" stroke-width="0.2" d="M1,1 L3,1 M2,0 L2,3 M6,6 L8,6 M7,5 L7,8"/>
+        </svg:pattern>
 
         <svg:pattern id="pedestrian-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
             <svg:path d="M0,10 L10,0" fill="none" stroke="red" width="1"/>

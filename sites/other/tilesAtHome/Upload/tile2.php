@@ -209,7 +209,7 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList){
   }
   
   # Don't store *really* blank tiles, no matter who they're from
-  if($Size < 100){
+  if($Size < 68){
     
     # TODO: this is a request to delete existing tiles - need to handle it!
   

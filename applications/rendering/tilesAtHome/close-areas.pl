@@ -726,7 +726,7 @@ sub compute_bbox_intersections
     {
         my @tmp = sort 
             { (($a->{"lat"} - $from->{"lat"})**2 + ($a->{"lon"} - $from->{"lon"})**2) <=> 
-              (($b->{"lat"} - $from->{"lat"})**2 + ($b->{"lat"} - $from->{"lat"})**2) } @$result;
+              (($b->{"lat"} - $from->{"lat"})**2 + ($b->{"lon"} - $from->{"lon"})**2) } @$result;
         $result = \@tmp;
     }
 

@@ -34,7 +34,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Node n) {
-		if (isNodeVisible(n)) {
+		if (!n.shown) {
 			ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
 			if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
 				if(nodeStyle instanceof IconElemStyle) {
@@ -56,7 +56,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * Want to make un-wayed segments stand out less than ways.
 	 */
 	@Override public void visit(Segment ls) {
-		if (isSegmentVisible(ls))
 			drawSegment(ls, getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"));
 	}
 
@@ -91,13 +90,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		for (Segment ls : w.segments)
 		{
 			orderNumber++;
-			if (isSegmentVisible(ls))
-			{
 				if (area && fillAreas)
 					//Draw segments in a different colour so direction arrows show against the fill
-					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY), width);
+					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"), width);
 				else
-					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour, width);
+					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width);
 				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
 				{
 					try
@@ -107,7 +104,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 					}
 					catch (IllegalAccessError e) {} //SimplePaintVisitor::drawOrderNumber was private prior to rev #211
 				}
-			}
 		}
 	}
 
@@ -136,33 +132,12 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		g.fillPolygon(polygon);
 	}
 
-	/**
-	 * Checks if the given node is in the visible area.
-	 */
-	protected boolean isNodeVisible(Node n) {
-		Point p = nc.getPoint(n.eastNorth);
-		return !((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight()));
-	}
-
-	/**
-	 * Checks if the given segment is in the visible area.
-	 * NOTE: This will return true for a small number of non-visible
-	 *       segments.
-	 */
-	protected boolean isSegmentVisible(Segment ls) {
-		if (ls.incomplete) return false;
-		Point p1 = nc.getPoint(ls.from.eastNorth);
-		Point p2 = nc.getPoint(ls.to.eastNorth);
-		if ((p1.x < 0) && (p2.x < 0)) return false;
-		if ((p1.y < 0) && (p2.y < 0)) return false;
-		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return false;
-		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return false;
-		return true;
-	}
-
 	// NEW
 	protected void drawNode(Node n, ImageIcon icon) {
+		if (n.shown) return;
+		n.shown=true;
 		Point p = nc.getPoint(n.eastNorth);
+		if ((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight())) return;
 		int w = icon.getIconWidth(), h=icon.getIconHeight();
 		icon.paintIcon ( Main.map.mapView, g, p.x-w/2, p.y-h/2 );
 		String name = (n.keys==null) ? null : n.keys.get("name");
@@ -186,11 +161,15 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered - now specify width
 	@Override protected void drawSegment(Segment ls, Color col,boolean showDirection) {
-			drawSegment(ls,col,1);
+			drawSegment(ls,col,showDirection,1);
 	}
 
+
 	// Altered - now specify width
-	private void drawSegment (Segment ls, Color col, int width) {
+	private void drawSegment (Segment ls, Color col,boolean showDirection, int width) {
+		//do not draw already visible segments
+		if (ls.shown) return;
+		ls.shown=true;
 		Graphics2D g2d = (Graphics2D)g;
 		if (ls.incomplete)
 			return;
@@ -201,13 +180,20 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		g2d.setStroke(new BasicStroke(width));
 		Point p1 = nc.getPoint(ls.from.eastNorth);
 		Point p2 = nc.getPoint(ls.to.eastNorth);
+		// checking if this Point is visible
+		if ((p1.x < 0) && (p2.x < 0)) return ;
+		if ((p1.y < 0) && (p2.y < 0)) return ;
+		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return ;
+		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return ;
+
 		g.drawLine(p1.x, p1.y, p2.x, p2.y);
 
-		if (Main.pref.getBoolean("draw.segment.direction")) {
+		if (showDirection) {
 			double t = Math.atan2(p2.y-p1.y, p2.x-p1.x) + Math.PI;
-	        g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
-	        g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
+	    g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
+	    g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
 		}
+		
 	}
 
 
@@ -219,6 +205,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	@Override public void drawNode(Node n, Color color) {
 		Point p = nc.getPoint(n.eastNorth);
+		if ((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight())) return;
 		g.setColor(color);
 		g.drawRect(p.x-1, p.y-1, 2, 2);
 	}
@@ -228,9 +215,14 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	public void visitAll(DataSet data) {
 
 		Collection<Way> noAreaWays = new LinkedList<Way>();
+
 		for (final OsmPrimitive osm : data.segments)
 			if (!osm.deleted)
-				osm.visit(this);
+				osm.shown=false;
+
+		for (final OsmPrimitive osm : data.nodes)
+			if (!osm.deleted)
+				osm.shown=false;
 				
 		for (final OsmPrimitive osm : data.ways)
 			if (!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
@@ -241,12 +233,18 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		for (final OsmPrimitive osm : noAreaWays)
 			osm.visit(this);
 
+		for (final OsmPrimitive osm : data.segments)
+			if (!osm.deleted)
+				osm.visit(this);
+
 		for (final OsmPrimitive osm : data.nodes)
 			if (!osm.deleted)
 				osm.visit(this);
 
 		for (final OsmPrimitive osm : data.getSelected())
-			if (!osm.deleted)
+			if (!osm.deleted){
+				osm.shown=false; //to be sure it will be drawn
 				osm.visit(this);
+			}
 	}
 }

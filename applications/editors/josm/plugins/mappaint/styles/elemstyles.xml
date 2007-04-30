@@ -1,0 +1,329 @@
+<rules>
+<rule>
+<condition k="highway" v="footway"/>
+<line width="1" colour="#00ff00" />
+</rule>
+
+<rule>
+<condition k="highway" v="bridleway"/>
+<line width="1" colour="#c08000" />
+</rule>
+
+<rule>
+<condition k="highway" v="unsurfaced"/>
+<line width="1" colour="#ff0000" />
+</rule>
+
+<rule>
+<condition k="highway" v="primary"/>
+<line width="3" colour="#fb805f"/>
+</rule>
+
+<rule>
+<condition k="highway" v="primary_link"/>
+<line width="3" colour="#fb805f"/>
+</rule>
+
+<rule>
+<condition k="highway" v="secondary"/>
+<line width="3" colour="#fdbf6f"/>
+</rule>
+
+<rule>
+<condition k="highway" v="motorway"/>
+<line width="3" colour="#809bc0"/>
+</rule>
+
+<rule>
+<condition k="highway" v="motorway_link"/>
+<line width="3" colour="#809bc0"/>
+</rule>
+
+<rule>
+<condition k="highway" v="trunk"/>
+<line width="3" colour="#7fc97f"/>
+</rule>
+
+<rule>
+<condition k="highway" v="cycleway"/>
+<line width="1" colour="#ff00ff"/>
+</rule>
+
+<rule>
+<condition k="highway" v="unclassified"/>
+<line width="2" colour="#c0c0c0"/>
+</rule>
+
+<rule>
+<condition k="highway" v="residential"/>
+<line width="2" colour="#c0c0c0"/>
+</rule>
+
+<rule>
+<condition k="highway" v="pedestrian"/>
+<line width="1" colour="#aaaaaa"/>
+</rule>
+
+<rule>
+<condition k="highway" />
+	<rule>
+		<condition k="bridge" v="yes|true" />
+	</rule>
+</rule>
+
+<rule>
+<condition k="waterway" v="river"/>
+<line width="2" colour="#0000ff" />
+</rule>
+
+<rule>
+<condition k="waterway" v="canal"/>
+<line width="2" colour="#0000ff" />
+</rule>
+
+<rule>
+<condition k="waterway" v="riverbank"/>
+<line widht="1" colour="#0000ff"/>
+</rule>
+
+
+<rule>
+<condition k="class" v="hill" />
+<icon annotate="true" src="peak_small.png"  />
+</rule>
+
+<rule>
+<condition k="natural" v="peak" />
+<icon annotate="true" src="peak_small.png"  />
+</rule>
+
+<rule>
+<condition k="class" v="farm" />
+<icon annotate="true" src="farm.png"  />
+</rule>
+
+<rule>
+<condition k="residence" v="farm" />
+<icon annotate="true" src="farm.png" />
+</rule>
+
+<rule>
+<condition k="class" v="pub" />
+<icon annotate="true" src="pub.png"  />
+</rule>
+
+<rule>
+<condition k="amenity" v="pub" />
+<icon annotate="true" src="pub.png"  />
+</rule>
+
+<rule>
+<condition k="class" v="viewpoint" />
+<icon annotate="true" src="viewpoint.png"  />
+</rule>
+
+<rule>
+<condition k="tourism" v="viewpoint" />
+<icon annotate="true" src="viewpoint.png" />
+</rule>
+
+<rule>
+<condition k="class" v="church" />
+<icon annotate="true" src="church.png" />
+</rule>
+
+<rule>
+<condition k="amenity" v="place_of_worship" />
+<icon annotate="true" src="church.png" />
+</rule>
+
+<rule>
+<condition k="class" v="railway station" />
+<icon annotate="true" src="station.png" />
+</rule>
+
+<rule>
+<condition k="railway" v="rail"/>
+<line width="2" colour="#808080"/>
+</rule>
+
+<rule>
+<condition k="railway" v="station" />
+<icon annotate="true" src="station.png" />
+</rule>
+
+<rule>
+<condition k="railway" v="level_crossing" />
+<icon annotate="true" src="crossing.png" />
+</rule>
+
+<rule>
+<condition k="class" v="mast" />
+<icon annotate="true" src="mast.png"  />
+</rule>
+
+<rule>
+<condition k="man_made" v="mast" />
+<icon annotate="true" src="mast.png" />
+</rule>
+
+<rule>
+<condition k="class" v="car park" />
+<icon annotate="true" src="carpark.png" />
+</rule>
+
+<rule>
+<condition k="amenity" v="parking" />
+<icon annotate="true" src="carpark.png" />
+</rule>
+
+<rule>
+<condition k="amenity" v="hospital" />
+<!-- <icon annotate="true" src="hospital.png" /> -->
+<line width="1" />
+</rule>
+
+<rule>
+<condition k="class" v="point of interest" />
+<icon annotate="true" src="interest.png" />
+</rule>
+
+<rule>
+<condition k="tourism" v="attraction" />
+<icon annotate="true" src="interest.png" />
+</rule>
+
+<rule>
+<condition k="class" v="caution" />
+<icon annotate="true" src="caution.png" />
+</rule>
+
+<rule>
+<condition k="class" v="amenity" />
+<icon annotate="true" src="amenity.png" />
+</rule>
+
+<rule>
+<condition k="class" v="tea shop" />
+<icon annotate="true" src="teashop.png" />
+</rule>
+
+<rule>
+<condition k="class" v="restaurant" />
+<icon annotate="true" src="restaurant.png" />
+</rule>
+
+<rule>
+<condition k="class" v="campsite" />
+<icon annotate="true" src="campsite.png" />
+</rule>
+
+<rule>
+<condition k="tourism" v="camp_site" />
+<icon annotate="true" src="campsite.png" />
+</rule>
+
+
+<rule>
+<condition k="place" v="village" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="place" v="town" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="place" v="city" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="place" v="hamlet" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="place" v="suburb" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="class" v="village" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="class" v="town" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="class" v="city" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="class" v="hamlet" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="class" v="suburb" />
+<icon annotate="true" src="place.png" />
+</rule>
+
+<rule>
+<condition k="landuse" v="wood"/>
+<area colour="#b1efc8" />
+</rule>
+
+<rule>
+<condition k="landuse" v="forest"/>
+<area colour="#b1efc8" />
+</rule>
+
+<rule>
+<condition k="landuse" v="cemetery"/>
+<line widht="1" colour="#bde3cb"/>
+</rule>
+
+<rule>
+<condition k="landuse" v="residential"/>
+<area colour="#f0f0f0"/>
+</rule>
+
+<rule>
+<condition k="landuse" v="industrial"/>
+<area colour="#ecd8ff"/>
+</rule>
+
+<rule>
+<condition k="natural" v="heath"/>
+<line widht="1" colour="#ffffc0"/>
+</rule>
+
+<rule>
+<condition k="natural" v="water"/>
+<area colour="#0000ff"/>
+</rule>
+
+<rule>
+<condition k="leisure" v="park"/>
+<area colour="#c7f1a3"/>
+</rule>
+
+<rule>
+<condition k="sport" v="soccer" />
+<area colour="#bde3cb"/>
+</rule>
+
+
+
+<rule>
+<condition k="natural" v="coastline"/>
+<line width="1" colour="#0000ff"/>
+</rule>
+
+</rules>

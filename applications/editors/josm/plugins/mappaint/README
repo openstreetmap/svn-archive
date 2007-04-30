@@ -1,0 +1,15 @@
+This is the MapPaint Plugin for JOSM.
+
+Ways are shown in different colours and width.
+
+Install:
+
+LINUX:
+	Copy the mappaint.jar file into your ./josm/plugins/ folder.
+	Copy the elemstyles.xml to your ./josm/plugins/mappaint/ folder
+
+Directories:
+ 	styles:
+	  Some day you will find different style files here, currently MapPaint supports only one Style.
+	images:
+		Icons which will apear in the map.

@@ -136,7 +136,7 @@ elsif ($Mode eq "loop")
         uploadIfEnoughTiles();
         if ($did_something == 0) 
         {
-            talkInSleep($message, rand(5) + 20);
+            talkInSleep($message, 60);
         } 
         else 
         {
@@ -163,7 +163,7 @@ elsif ($Mode eq "")
     # ----------------------------------
     my ($did_something, $message) = ProcessRequestsFromServer();
     
-    talkInSleep($message, rand(5) + 20) unless($did_something);
+    talkInSleep($message, 60) unless($did_something);
     
 }
 else

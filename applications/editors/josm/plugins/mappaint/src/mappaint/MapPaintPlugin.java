@@ -15,8 +15,15 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 
 	public static ElemStyles elemStyles = new ElemStyles();
+	
+	public static String iconsDir;
+
+	public static String getIconsDir(){
+		return iconsDir;
+	}
 
 	public MapPaintPlugin() {
+		iconsDir = getPluginDir()+"icons/"; //some day we will support diferent icon directories over options
 		String elemStylesFile = getPluginDir()+"elemstyles.xml";
 		File f = new File(elemStylesFile);
 		if (f.exists())

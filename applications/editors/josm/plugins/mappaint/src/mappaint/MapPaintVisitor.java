@@ -34,19 +34,17 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Node n) {
-		if (!n.shown) {
-			ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
-			if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
-				if(nodeStyle instanceof IconElemStyle) {
-					drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
-				} else {
-					// throw some sort of exception
-				}
+		ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
+		if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
+			if(nodeStyle instanceof IconElemStyle) {
+				drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
 			} else {
-				drawNode(n, n.selected ? getPreferencesColor("selected",
-										Color.YELLOW)
-					: getPreferencesColor("node", Color.RED));
+				// throw some sort of exception
 			}
+		} else {
+			drawNode(n, n.selected ? getPreferencesColor("selected",
+									Color.YELLOW)
+				: getPreferencesColor("node", Color.RED));
 		}
 	}
 
@@ -134,8 +132,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 
 	// NEW
 	protected void drawNode(Node n, ImageIcon icon) {
-		if (n.shown) return;
-		n.shown=true;
 		Point p = nc.getPoint(n.eastNorth);
 		if ((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight())) return;
 		int w = icon.getIconWidth(), h=icon.getIconHeight();
@@ -220,10 +216,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			if (!osm.deleted)
 				osm.shown=false;
 
-		for (final OsmPrimitive osm : data.nodes)
-			if (!osm.deleted)
-				osm.shown=false;
-				
 		for (final OsmPrimitive osm : data.ways)
 			if (!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
 				osm.visit(this);

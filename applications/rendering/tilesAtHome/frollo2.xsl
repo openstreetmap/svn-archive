@@ -64,7 +64,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 	     get sorted.  If a way has more than this number of segs then the rest just get output in their original order.  -->
     <!-- reduced from 800 to 400 by framm as some t@h renderers were reporting
     "possible endless recursion" errors -->
-	<xsl:variable name='maximumNumberOfSegs' select='"400"'/>
+    <!-- increased from 400 to 600 by Dutch as some tiles were not rendered correctly after close-areas preprocessor was
+    implemented -->
+
+	<xsl:variable name='maximumNumberOfSegs' select='"600"'/>
 		
 
 	<!-- Keys -->

@@ -26,3 +26,8 @@ NoBezier=0  # Set to 1 on a AMD64 box running Gentoo. Math rounding errors in th
 # set to 1 if you want to force checking of wether subtiles of empty tiles really are empty
 # needed for example when tiles that contained data now are empty (i.e. sea tiles with moved ferry routes)
 RenderFullTileset=0
+
+#Upload layers when they are done? default: 0
+# set to 1, if you want to upload layers as they are done, instead of waiting for all
+# layers in the tileset to be rendered.
+LayerUpload=0

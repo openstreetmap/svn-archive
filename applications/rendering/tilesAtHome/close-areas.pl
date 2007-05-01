@@ -84,7 +84,7 @@ while(<STDIN>)
 
     {
         my $xmltag = $1;
-        if ($xmltag =~ /^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'].*lon=["']([0-9.-]+)["']/)
+        if ($xmltag =~ /^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.Ee-]+)["'].*lon=["']([0-9.Ee-]+)["']/)
         {
             $nodes->{$1} = { "lat" => $2, "lon" => $3 };
         }
@@ -158,7 +158,7 @@ foreach my $seg(keys(%$segments))
         if (!(defined($fromnode) && defined($tonode)))
         {
             delete $segments->{$seg};
-            print "delete $seg\n";
+            print "delete segment - incomplete $seg\n" if ($debug);
             next;
         }
 

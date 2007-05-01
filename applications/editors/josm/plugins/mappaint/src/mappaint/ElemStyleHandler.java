@@ -1,5 +1,6 @@
 package mappaint;
 
+import java.io.File;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.net.URL;
@@ -7,6 +8,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.tools.ColorHelper;
+import org.openstreetmap.josm.plugins.Plugin;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -95,8 +97,20 @@ public class ElemStyleHandler extends DefaultHandler
                 for(int count=0; count<atts.getLength(); count++)
                 {
                     if(atts.getQName(count).equals("src")) {
-                        URL path = getClass().getResource("/images/nodes/"+atts.getValue(count));
-                        curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+												String imageFile = MapPaintPlugin.getIconsDir()+atts.getValue(count); 
+												File f = new File(imageFile);
+												if (f.exists()){
+													//open icon from user directory
+                        	curIcon = new ImageIcon(imageFile);
+												} else {
+													URL path = getClass().getResource("/standard/icons/"+atts.getValue(count));
+													if (path != null ) {
+														curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+													} else{
+														path = getClass().getResource("/standard/icons/amenity.png");
+														curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+													}
+												}
                     } else if (atts.getQName(count).equals("annotate"))
                         curAnnotate = Boolean.parseBoolean
                                         (atts.getValue(count));

@@ -97,7 +97,7 @@ public class ElemStyleHandler extends DefaultHandler
                 for(int count=0; count<atts.getLength(); count++)
                 {
                     if(atts.getQName(count).equals("src")) {
-												String imageFile = MapPaintPlugin.getIconsDir()+atts.getValue(count); 
+												String imageFile = MapPaintPlugin.getStyleDir()+"icons/"+atts.getValue(count); 
 												File f = new File(imageFile);
 												if (f.exists()){
 													//open icon from user directory

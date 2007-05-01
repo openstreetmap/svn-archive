@@ -16,15 +16,15 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 
 	public static ElemStyles elemStyles = new ElemStyles();
 	
-	public static String iconsDir;
+	public static String styleDir;
 
-	public static String getIconsDir(){
-		return iconsDir;
+	public static String getStyleDir(){
+		return styleDir;
 	}
 
 	public MapPaintPlugin() {
-		iconsDir = getPluginDir()+"icons/"; //some day we will support diferent icon directories over options
-		String elemStylesFile = getPluginDir()+"elemstyles.xml";
+		styleDir = getPluginDir()+"standard/"; //some day we will support diferent icon directories over options
+		String elemStylesFile = getStyleDir()+"elemstyles.xml";
 		File f = new File(elemStylesFile);
 		if (f.exists())
 		{
@@ -42,6 +42,27 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 			{
 				throw new RuntimeException(e);
 			}
+		} 
+		else{ //just for backwards compatibility
+			elemStylesFile = getPluginDir()+"elemstyles.xml";
+			f = new File(elemStylesFile);
+			if (f.exists())
+			{
+				try
+				{
+					XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+					ElemStyleHandler handler = new ElemStyleHandler();
+					xmlReader.setContentHandler(handler);
+					xmlReader.setErrorHandler(handler);
+					handler.setElemStyles(elemStyles);
+					// temporary only!
+					xmlReader.parse(new InputSource(new FileReader(f)));
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException(e);
+				}
+			} 
 		}
 	}
 

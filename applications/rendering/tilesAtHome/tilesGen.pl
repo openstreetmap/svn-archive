@@ -59,9 +59,13 @@ if ($@ ne '') {
 # palette is chosen differently for different tiles.
 
 # create a comparison blank image
-my $EmptyImage = new GD::Image(256,256);
-my $MapBackground = $EmptyImage->colorAllocate(248,248,248);
-$EmptyImage->fill(127,127,$MapBackground);
+my $EmptyLandImage = new GD::Image(256,256);
+my $MapLandBackground = $EmptyLandImage->colorAllocate(248,248,248);
+$EmptyLandImage->fill(127,127,$MapLandBackground);
+
+my $EmptySeaImage = new GD::Image(256,256);
+my $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
+$EmptySeaImage->fill(127,127,$MapSeaBackground);
 
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
@@ -132,7 +136,7 @@ elsif ($Mode eq "loop")
         uploadIfEnoughTiles();
         if ($did_something == 0) 
         {
-            talkInSleep($message, 60);
+            talkInSleep($message, rand(5) + 20);
         } 
         else 
         {
@@ -159,7 +163,7 @@ elsif ($Mode eq "")
     # ----------------------------------
     my ($did_something, $message) = ProcessRequestsFromServer();
     
-    talkInSleep($message, 60) unless($did_something);
+    talkInSleep($message, rand(5) + 20) unless($did_something);
     
 }
 else
@@ -562,6 +566,7 @@ sub GenerateTileset
         {
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
+    if ($Config{LayerUpload}) {uploadIfEnoughTiles()};
     }
 
     foreach my $file(@tempfiles) { killafile($file); }
@@ -1034,7 +1039,6 @@ sub splitImageX
       0,                   # Source Y offset # always 0 because we only cut from one row
       $Pixels,             # Copy width
       $Pixels);            # Copy height
-  
 
     # Decide what the tile should be called
     my $Filename = tileFilename($layer, $X * $Size + $xi, $Ytile, $Z);
@@ -1042,9 +1046,13 @@ sub splitImageX
    
     # Temporary filename
     my $Filename2 = "$Filename.cut";
-    
+    my $NotEmptyLand = 0;
+    my $NotEmptySea = 0;
+
     # Detect empty tile here:
-    if ($SubImage->compare($EmptyImage) & GD_CMP_IMAGE)  # true if images are different. (i.e. non-empty tile)
+    if ($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE) {$NotEmptyLand = 1};  # true if images are different. (i.e. non-empty Land tile)
+    if ($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE) {$NotEmptySea = 1};    # true if images are different. (i.e. non-empty Sea tile)
+    if (($NotEmptyLand) and ($NotEmptySea)) # If both is true, then generate a tile, otherwise copy the prerendered tile
     {
       # If at least one tile is not empty set $allempty false:
       $allempty = 0;
@@ -1076,7 +1084,16 @@ sub splitImageX
     }
     else
     {
-      copy("empty.png", $Filename);
+      if (!$NotEmptyLand) {
+        copy("emptyland.png", $Filename)
+	}
+	else
+	{
+	if (!$NotEmptySea) {
+	copy("emptysea.png",$Filename);
+#	$allempty = 0; # enable this line if/when serverside empty tile methods is implemented. Used to make sure we generate all blank seatiles in a tileset.
+	};
+	}
     }
      
   }

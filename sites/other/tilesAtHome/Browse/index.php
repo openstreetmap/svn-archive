@@ -135,10 +135,11 @@
   printf("<tr><td colspan=\"%d\" class=\"tbl\">Display tileset: %s</td></tr>\n",
     $Grid + 2,
     implode(", ", array(
-      TilesetLink(0,"Dev"), 
+      TilesetLink(0,"Tiles@home"), 
       TilesetLink(1,"Mapnik"),
       TilesetLink(2,"Cycle"),
-      TilesetLink(3,"Maplint"))));
+      TilesetLink(3,"Maplint"),
+      TilesetLink(4,"Sea"))));
   
   if($z >= 12){
     printf("<tr><td colspan=\"%d\" class=\"tbl\">%s</td></tr>\n",
@@ -196,13 +197,16 @@
   function ImageURL($x,$y,$z){
     global $tileset;
     if($tileset == "1")
-      return(sprintf("http://artem.dev.openstreetmap.org/osm_tiles/%d/%d/%d.png", $z,$x,$y));
+      return(sprintf("http://tile.openstreetmap.org/%d/%d/%d.png", $z,$x,$y));
     
     if($tileset == "2")
       return(sprintf("../Tiles/cycle.php/%d/%d/%d.png", $z,$x,$y));
     
     if($tileset == "3")
       return(sprintf("../Tiles/maplint.php/%d/%d/%d.png", $z,$x,$y));
+      
+    if($tileset == "4")
+      return(sprintf("../Tiles/landsea.php/%d/%d/%d.png", $z,$x,$y));
       
     return(sprintf("../Tiles/tile.php/%d/%d/%d.png",$z,$x,$y));
   }

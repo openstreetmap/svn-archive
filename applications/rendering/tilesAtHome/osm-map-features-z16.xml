@@ -1600,6 +1600,7 @@
                 stroke: #eeeeee;
                 stroke-width: 0.2px;
             }
+
             .landuse-field {
                 fill: #bde3cb;
                 stroke: #6fc13d;

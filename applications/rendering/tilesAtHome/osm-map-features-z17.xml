@@ -587,7 +587,7 @@
                 <symbol xlink:href="#parking" width='4px' height='4px' transform='translate(-2,-2)' />
             </rule>
             <rule e="node" k="amenity" v="fuel">
-                <symbol xlink:href="#petrolStation" width='2.5px' height='5px' transform='translate(-1.25,-3.5)' />
+                <symbol xlink:href="#petrolStation" width='2.5px' height='3px' transform='translate(-1.25,-1.5)' />
             </rule>
             <rule k="amenity" v="recycling">
                 <symbol xlink:href="#recycling" width='4px' height='4px' transform='translate(-2,-2)'/>

@@ -1,0 +1,7 @@
+Author:  Petter Reinholdtsen
+Date:    2005-03-23
+License: GPL
+
+Parse a GPX file, and add lat/lon bounding information into the meta
+header.
+

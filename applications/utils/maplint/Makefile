@@ -66,7 +66,12 @@ data/%-maplint-report.txt: data/%-maplint.osm lib/report.xsl
 distdir:
 	echo "Please add an installation routine here"
 	echo "For now this is handled in the upper directory"
+
 dist:
+	echo "Please add an installation routine here"
+	echo "For now this is handled in the upper directory"
+
+install:
 	echo "Please add an installation routine here"
 	echo "For now this is handled in the upper directory"
 

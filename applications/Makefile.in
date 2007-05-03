@@ -14,12 +14,15 @@
 
 @SET_MAKE@
 
+# Makefile.am for scripts/perl_lib
+
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ../../..
+top_builddir = ../..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 INSTALL = @INSTALL@
 install_sh_DATA = $(install_sh) -c -m 644
@@ -35,8 +38,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = scripts/osm/utils
-DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+UTF8sanitizer_PROGRAMS = UTF8sanitizer$(EXEEXT)
+subdir = scripts/osm
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/lib-ld.m4 \
@@ -49,11 +53,28 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
+am__installdirs = "$(DESTDIR)$(UTF8sanitizerdir)" \
+	"$(DESTDIR)$(bindir)"
+UTF8sanitizerPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+PROGRAMS = $(UTF8sanitizer_PROGRAMS)
+am_UTF8sanitizer_OBJECTS = UTF8sanitizer.$(OBJEXT)
+UTF8sanitizer_OBJECTS = $(am_UTF8sanitizer_OBJECTS)
+UTF8sanitizer_LDADD = $(LDADD)
 binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
 SCRIPTS = $(bin_SCRIPTS)
-SOURCES =
-DIST_SOURCES =
+DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+am__depfiles_maybe = depfiles
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+SOURCES = $(UTF8sanitizer_SOURCES)
+DIST_SOURCES = $(UTF8sanitizer_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -221,129 +242,23 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-
-# Makefile.am for scripts
-SUBDIRS = \
-	export \
-	import \
-	little-osm \
-	osm-data \
-	osm-extract \
-	perl_lib \
-	planet.osm \
-	xsltrans \
-	maplint \
-	filter
-
+SUBDIRS = pdf-atlas planet.osm
 DIST_SUBDIRS = $(SUBDIRS)
-bin_SCRIPTS = 
+bin_SCRIPTS = \
+	utils/import/osmtrackfilter/osmtrackfilter.pl
+
+UTF8sanitizerdir = $(bindir)
+UTF8sanitizer_SOURCES = utils/planet.osm/C/UTF8sanitizer.c
 EXTRA_DIST = $(bin_SCRIPTS) \
-	export/CityKML/download.pl \
-	export/CityKML/download_specific.pl \
-	export/CityKML/package.pl \
-	export/CityKML/run.pl \
-	export/osm2csv/osm2csv.pl \
-	export/osm2kml/osm2kml.py \
-	export/osm2pgsql/build_geometry.cpp \
-	export/osm2pgsql/build_geometry.h \
-	export/osm2pgsql/experimental/build_geometry.cpp \
-	export/osm2pgsql/experimental/build_geometry.h \
-	export/osm2pgsql/experimental/keyvals.c \
-	export/osm2pgsql/experimental/keyvals.h \
-	export/osm2pgsql/experimental/middle-pgsql.c \
-	export/osm2pgsql/experimental/middle-pgsql.h \
-	export/osm2pgsql/experimental/middle-ram.c \
-	export/osm2pgsql/experimental/middle-ram.h \
-	export/osm2pgsql/experimental/middle.h \
-	export/osm2pgsql/experimental/osm2pgsql.c \
-	export/osm2pgsql/experimental/osmtypes.h \
-	export/osm2pgsql/experimental/output-pgsql.c \
-	export/osm2pgsql/experimental/output-pgsql.h \
-	export/osm2pgsql/experimental/output.h \
-	export/osm2pgsql/osm2pgsql.c \
-	export/osm2shp/osm2shp.cpp \
-	export/osm2singleline_per_tag/osm2singleline_per_tag.pl \
-	export/osmgarminmap/curlstuff.cpp \
-	export/osmgarminmap/curlstuff.h \
-	export/osmgarminmap/feature-list-csv2xml.pl \
-	export/osmgarminmap/feature-list.csv \
-	export/osmgarminmap/osm2garmin.cpp \
-	filter/osm-length/osm-length-2.pl \
-	filter/simplify/simplify.pl \
-	filter/wayclean/wayclean.cpp \
-	gps/gpx-batch-upload/gpx-batch-upload.pl \
-	import/airport_import/import_apt.pl \
-	import/coast_import/coast_upload.pl \
-	import/coast_import/osm.pm \
-	import/csv2osm/config.sample.complex \
-	import/csv2osm/csv2osm.pl \
-	import/dafif2osm/dafif2osm.pl \
-	import/osmtrackfilter/osmtrackfilter.pl \
-	import/srtm2osm/extractdata.pl \
-	import/srtm2osm/merge.pl \
-	import/srtm2osm/mkcntr.pl \
-	maplint/README \
-	maplint/html/*.html \
-	maplint/html/style.css \
-	maplint/lib/*.xsl \
-	maplint/tests/base/*.xml \
-	maplint/tests/main/*.xml \
-	maplint/tests/strict/*.xml \
-	osm-extract/osm-subset.pl \
-	osm-extract/planetosm-excerpt-area.pl \
-	osm-extract/planetosm-excerpt-tags.pl \
-	osm-extract/polygons/extract-germany.pl \
-	osm-extract/polygons/extract-polygon.pl \
-	osmapitest/*.rb \
-	planet-mirror/planet-mirror.pl \
-	planet.osm/C/UTF8sanitizer.c \
-	planet.osm/java/speller/words.cfg \
-	planet.osm/perl/check_osm.pl \
-	planet.osm/perl/planetcount.pl \
-	planet.osm/perl/planetosm-to-db.pl \
-	planet.osm/perl/reorder-ways.pl \
-	planet.osm/python/utf8osmchecker.py \
-	planetdiff/*.txt \
-	planetdiff/*.xml \
-	planetdiff/UTF8sanitizer.c \
-	planetdiff/input.c \
-	planetdiff/input.h \
-	planetdiff/keyvals.c \
-	planetdiff/keyvals.h \
-	planetdiff/planetdiff.c \
-	planetdiff/sanitizer.h \
-	sanitize/sanitize.pl \
-	serverStatus/ServerStatusToWiki.pl \
-	srtmshp/Canvas.cpp \
-	srtmshp/Canvas.h \
-	srtmshp/EarthPoint.h \
-	srtmshp/Map.h \
-	srtmshp/SRTMConGen.cpp \
-	srtmshp/SRTMConGen.h \
-	srtmshp/SRTMDataGrid.cpp \
-	srtmshp/SRTMDataGrid.h \
-	srtmshp/SRTMGeneral.cpp \
-	srtmshp/SRTMGeneral.h \
-	srtmshp/srtm.cpp \
-	srtmshp/srtm2shp.cpp \
-	where_are_they/geo_helper.py \
-	where_are_they/mini_osm.py \
-	where_are_they/osm_io_helper.py \
-	where_are_they/test_mini_osm.py \
-	where_are_they/where_am_i.py \
-	where_are_they/where_is_it.py \
-	osm-activity/osm-activity.pl \
-	osm-activity/README.txt \
-	maplint/bin/maplint \
-	maplint/*.xml \
-	maplint/*.xsl \
-	georss/*.js \
-	georss/README \
-	georss/*.html
+	$(PRGS) \
+	utils/export/osm2csv/create_all.sh \
+	utils/import/csv2osm/csv2osm.pl\
+	utils/import/coast_import/coast_upload.pl
 
 all: all-recursive
 
 .SUFFIXES:
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -353,9 +268,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/utils/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  scripts/osm/utils/Makefile
+	  $(AUTOMAKE) --gnu  scripts/osm/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -373,6 +288,37 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+install-UTF8sanitizerPROGRAMS: $(UTF8sanitizer_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(UTF8sanitizerdir)" || $(mkdir_p) "$(DESTDIR)$(UTF8sanitizerdir)"
+	@list='$(UTF8sanitizer_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(UTF8sanitizerPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(UTF8sanitizerdir)/$$f'"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(UTF8sanitizerPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(UTF8sanitizerdir)/$$f" || exit 1; \
+	  else :; fi; \
+	done
+
+uninstall-UTF8sanitizerPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(UTF8sanitizer_PROGRAMS)'; for p in $$list; do \
+	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f '$(DESTDIR)$(UTF8sanitizerdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(UTF8sanitizerdir)/$$f"; \
+	done
+
+clean-UTF8sanitizerPROGRAMS:
+	@list='$(UTF8sanitizer_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
+	done
+UTF8sanitizer$(EXEEXT): $(UTF8sanitizer_OBJECTS) $(UTF8sanitizer_DEPENDENCIES) 
+	@rm -f UTF8sanitizer$(EXEEXT)
+	$(LINK) $(UTF8sanitizer_LDFLAGS) $(UTF8sanitizer_OBJECTS) $(UTF8sanitizer_LDADD) $(LIBS)
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(mkdir_p) "$(DESTDIR)$(bindir)"
@@ -392,6 +338,49 @@ uninstall-binSCRIPTS:
 	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
 	done
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/UTF8sanitizer.Po@am__quote@
+
+.c.o:
+@am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c $<
+
+.c.obj:
+@am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ `$(CYGPATH_W) '$<'`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+.c.lo:
+@am__fastdepCC_TRUE@	if $(LTCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Plo"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+UTF8sanitizer.o: utils/planet.osm/C/UTF8sanitizer.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT UTF8sanitizer.o -MD -MP -MF "$(DEPDIR)/UTF8sanitizer.Tpo" -c -o UTF8sanitizer.o `test -f 'utils/planet.osm/C/UTF8sanitizer.c' || echo '$(srcdir)/'`utils/planet.osm/C/UTF8sanitizer.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/UTF8sanitizer.Tpo" "$(DEPDIR)/UTF8sanitizer.Po"; else rm -f "$(DEPDIR)/UTF8sanitizer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='utils/planet.osm/C/UTF8sanitizer.c' object='UTF8sanitizer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o UTF8sanitizer.o `test -f 'utils/planet.osm/C/UTF8sanitizer.c' || echo '$(srcdir)/'`utils/planet.osm/C/UTF8sanitizer.c
+
+UTF8sanitizer.obj: utils/planet.osm/C/UTF8sanitizer.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT UTF8sanitizer.obj -MD -MP -MF "$(DEPDIR)/UTF8sanitizer.Tpo" -c -o UTF8sanitizer.obj `if test -f 'utils/planet.osm/C/UTF8sanitizer.c'; then $(CYGPATH_W) 'utils/planet.osm/C/UTF8sanitizer.c'; else $(CYGPATH_W) '$(srcdir)/utils/planet.osm/C/UTF8sanitizer.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/UTF8sanitizer.Tpo" "$(DEPDIR)/UTF8sanitizer.Po"; else rm -f "$(DEPDIR)/UTF8sanitizer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='utils/planet.osm/C/UTF8sanitizer.c' object='UTF8sanitizer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o UTF8sanitizer.obj `if test -f 'utils/planet.osm/C/UTF8sanitizer.c'; then $(CYGPATH_W) 'utils/planet.osm/C/UTF8sanitizer.c'; else $(CYGPATH_W) '$(srcdir)/utils/planet.osm/C/UTF8sanitizer.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -536,7 +525,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/export/CityKML $(distdir)/export/osm2csv $(distdir)/export/osm2kml $(distdir)/export/osm2pgsql $(distdir)/export/osm2pgsql/experimental $(distdir)/export/osm2shp $(distdir)/export/osm2singleline_per_tag $(distdir)/export/osmgarminmap $(distdir)/filter/osm-length $(distdir)/filter/simplify $(distdir)/filter/wayclean $(distdir)/georss $(distdir)/gps/gpx-batch-upload $(distdir)/import/airport_import $(distdir)/import/coast_import $(distdir)/import/csv2osm $(distdir)/import/dafif2osm $(distdir)/import/osmtrackfilter $(distdir)/import/srtm2osm $(distdir)/maplint $(distdir)/maplint/bin $(distdir)/maplint/html $(distdir)/maplint/lib $(distdir)/maplint/tests/base $(distdir)/maplint/tests/main $(distdir)/maplint/tests/strict $(distdir)/osm-activity $(distdir)/osm-extract $(distdir)/osm-extract/polygons $(distdir)/osmapitest $(distdir)/planet-mirror $(distdir)/planet.osm/C $(distdir)/planet.osm/java/speller $(distdir)/planet.osm/perl $(distdir)/planet.osm/python $(distdir)/planetdiff $(distdir)/sanitize $(distdir)/serverStatus $(distdir)/srtmshp $(distdir)/where_are_they
+	$(mkdir_p) $(distdir)/utils/export/osm2csv $(distdir)/utils/import/coast_import $(distdir)/utils/import/csv2osm $(distdir)/utils/import/osmtrackfilter
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -580,10 +569,10 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(SCRIPTS)
+all-am: Makefile $(PROGRAMS) $(SCRIPTS)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(UTF8sanitizerdir)" "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-recursive
@@ -612,12 +601,14 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-UTF8sanitizerPROGRAMS clean-generic clean-libtool \
+	mostlyclean-am
 
 distclean: distclean-recursive
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-libtool \
-	distclean-tags
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-libtool distclean-tags
 
 dvi: dvi-recursive
 
@@ -629,7 +620,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am:
+install-data-am: install-UTF8sanitizerPROGRAMS
 
 install-exec-am: install-binSCRIPTS
 
@@ -640,12 +631,14 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
 pdf: pdf-recursive
 
@@ -655,24 +648,54 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-binSCRIPTS uninstall-info-am
+uninstall-am: uninstall-UTF8sanitizerPROGRAMS uninstall-binSCRIPTS \
+	uninstall-info-am
 
 uninstall-info: uninstall-info-recursive
 
 .PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am \
-	clean clean-generic clean-libtool clean-recursive ctags \
-	ctags-recursive distclean distclean-generic distclean-libtool \
+	clean clean-UTF8sanitizerPROGRAMS clean-generic clean-libtool \
+	clean-recursive ctags ctags-recursive distclean \
+	distclean-compile distclean-generic distclean-libtool \
 	distclean-recursive distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-binSCRIPTS \
-	install-data install-data-am install-exec install-exec-am \
-	install-info install-info-am install-man install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic \
-	maintainer-clean-recursive mostlyclean mostlyclean-generic \
+	html-am info info-am install install-UTF8sanitizerPROGRAMS \
+	install-am install-binSCRIPTS install-data install-data-am \
+	install-exec install-exec-am install-info install-info-am \
+	install-man install-strip installcheck installcheck-am \
+	installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic maintainer-clean-recursive \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool mostlyclean-recursive pdf pdf-am ps ps-am \
-	tags tags-recursive uninstall uninstall-am \
-	uninstall-binSCRIPTS uninstall-info-am
+	tags tags-recursive uninstall uninstall-UTF8sanitizerPROGRAMS \
+	uninstall-am uninstall-binSCRIPTS uninstall-info-am
 
+	planet-mirror/planet-mirror.pl \
+	utils/osm-extract/osm-subset.pl \
+	simplify/simplify.pl \
+	utils/export/osm2csv/osm2csv.pl \
+	utils/planet.osm/C/UTF8sanitizer
+	utils/import/coast_utils/import/coast_upload.pl\
+	utils/import/coast_utils/import/osm.pm\
+	utils/import/srtm2osm/merge.pl\
+	utils/import/srtm2osm/mkcntr.pl\
+	utils/import/srtm2osm/extractdata.pl\
+	utils/import/osmtrackfilter/osmtrackfilter.pl\
+	utils/export/osm2singleline_per_tag/osm2singleline_per_tag.pl\
+	utils/export/CityKML/run.pl\
+	utils/export/CityKML/download_specific.pl\
+	utils/export/CityKML/download.pl\
+	utils/export/CityKML/package.pl\
+	utils/export/osm2csv/osm2csv.pl\
+	utils/export/osmgarminmap/feature-list-csv2xml.pl\
+	utils/export/osm2kml/osm2kml.py\
+	utils/osm-extract/osm-subset.pl\
+	utils/filter/osm-length/osm-length-2.pl\
+	utils/filter/simplify/simplify.pl\
+	utils/planet.osm/perl/planetosm-to-db.pl\
+	utils/planet.osm/perl/reorder-ways.pl\
+	utils/planet.osm/perl/check_osm.pl\
+	utils/planet.osm/perl/planetcount.pl\
+	utils/planet.osm/python/utf8osmchecker.py
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

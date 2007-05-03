@@ -58,5 +58,16 @@ data/%-maplint-stat.txt: data/%-maplint.osm lib/stat.xsl
 data/%-maplint-report.txt: data/%-maplint.osm lib/report.xsl
 	xsltproc lib/report.xsl $< >$@
 
+#-----------------------------------------------------------------------------
+#
+# TODO: For installing maplint we need some more CODE
+#
+#-----------------------------------------------------------------------------
+distdir:
+	echo "Please add an installation routine here"
+	echo "For now this is handled in the upper directory"
+dist:
+	echo "Please add an installation routine here"
+	echo "For now this is handled in the upper directory"
 
 #-- THE END ------------------------------------------------------------------

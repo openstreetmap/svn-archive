@@ -13,9 +13,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
-# Makefile.am for scripts/perl_lib
-
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -37,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = scripts/osm/utils/perl_lib
+subdir = scripts/osm/utils/osm-data
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
@@ -53,27 +50,6 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(Geodir)" "$(DESTDIR)$(Geo_Filterdir)" \
-	"$(DESTDIR)$(Geo_GPXdir)" "$(DESTDIR)$(Geo_Gpsdrivedir)" \
-	"$(DESTDIR)$(Geo_OSMdir)" "$(DESTDIR)$(Geo_Tracksdir)" \
-	"$(DESTDIR)$(Utilsdir)" "$(DESTDIR)$(Utils_LWPdir)"
-GeoDATA_INSTALL = $(INSTALL_DATA)
-Geo_FilterDATA_INSTALL = $(INSTALL_DATA)
-Geo_GPXDATA_INSTALL = $(INSTALL_DATA)
-Geo_GpsdriveDATA_INSTALL = $(INSTALL_DATA)
-Geo_OSMDATA_INSTALL = $(INSTALL_DATA)
-Geo_TracksDATA_INSTALL = $(INSTALL_DATA)
-UtilsDATA_INSTALL = $(INSTALL_DATA)
-Utils_LWPDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(Geo_DATA) $(Geo_Filter_DATA) $(Geo_GPX_DATA) \
-	$(Geo_Gpsdrive_DATA) $(Geo_OSM_DATA) $(Geo_Tracks_DATA) \
-	$(Utils_DATA) $(Utils_LWP_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 pkgdatadir = @pkgdatadir@
 ACLOCAL = @ACLOCAL@
@@ -233,28 +209,9 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-gpsdrivedir = $(datadir)/gpsdrive
-Geodir = $(PERL_PACKAGE_DIR)/Geo
-Geo_DATA = Geo/*.pm
-Geo_Gpsdrivedir = $(PERL_PACKAGE_DIR)/Geo/Gpsdrive
-Geo_Gpsdrive_DATA = Geo/Gpsdrive/*.pm
-Geo_Tracksdir = $(PERL_PACKAGE_DIR)/Geo/Tracks
-Geo_Tracks_DATA = Geo/Tracks/*.pm
-Geo_OSMdir = $(PERL_PACKAGE_DIR)/Geo/OSM
-Geo_OSM_DATA = Geo/OSM/*.pm
-Geo_GPXdir = $(PERL_PACKAGE_DIR)/Geo/GPX
-Geo_GPX_DATA = Geo/GPX/*.pm
-Geo_Filterdir = $(PERL_PACKAGE_DIR)/Geo/Filter
-Geo_Filter_DATA = Geo/Filter/*.pm
-Utilsdir = $(PERL_PACKAGE_DIR)/Utils
-Utils_DATA = Utils/*.pm
-Utils_LWPdir = $(PERL_PACKAGE_DIR)/Utils/LWP
-Utils_LWP_DATA = Utils/LWP/*.pm
-EXTRA_DIST = \
-	$(Geo_DATA) $(Geo_Gpsdrive_DATA) $(Geo_OSM_DATA) $(Geo_GPX_DATA)\
-	$(Geo_Tracks_DATA) \
-	$(Geo_Filter_DATA)  $(Utils_DATA) \
-	$(Utils_LWP_DATA)
+EXTRA_DIST = $(bin_SCRIPTS) \
+	lib/osm/*.rb \
+	test/*.rb
 
 all: all-am
 
@@ -268,9 +225,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/utils/perl_lib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/utils/osm-data/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  scripts/osm/utils/perl_lib/Makefile
+	  $(AUTOMAKE) --gnu  scripts/osm/utils/osm-data/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -298,142 +255,6 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
-install-GeoDATA: $(Geo_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geodir)" || $(mkdir_p) "$(DESTDIR)$(Geodir)"
-	@list='$(Geo_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(GeoDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geodir)/$$f'"; \
-	  $(GeoDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geodir)/$$f"; \
-	done
-
-uninstall-GeoDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geodir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geodir)/$$f"; \
-	done
-install-Geo_FilterDATA: $(Geo_Filter_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_Filterdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_Filterdir)"
-	@list='$(Geo_Filter_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_FilterDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_Filterdir)/$$f'"; \
-	  $(Geo_FilterDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_Filterdir)/$$f"; \
-	done
-
-uninstall-Geo_FilterDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_Filter_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_Filterdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_Filterdir)/$$f"; \
-	done
-install-Geo_GPXDATA: $(Geo_GPX_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_GPXdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_GPXdir)"
-	@list='$(Geo_GPX_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_GPXDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_GPXdir)/$$f'"; \
-	  $(Geo_GPXDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_GPXdir)/$$f"; \
-	done
-
-uninstall-Geo_GPXDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_GPX_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_GPXdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_GPXdir)/$$f"; \
-	done
-install-Geo_GpsdriveDATA: $(Geo_Gpsdrive_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_Gpsdrivedir)" || $(mkdir_p) "$(DESTDIR)$(Geo_Gpsdrivedir)"
-	@list='$(Geo_Gpsdrive_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_GpsdriveDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_Gpsdrivedir)/$$f'"; \
-	  $(Geo_GpsdriveDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_Gpsdrivedir)/$$f"; \
-	done
-
-uninstall-Geo_GpsdriveDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_Gpsdrive_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_Gpsdrivedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_Gpsdrivedir)/$$f"; \
-	done
-install-Geo_OSMDATA: $(Geo_OSM_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_OSMdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_OSMdir)"
-	@list='$(Geo_OSM_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_OSMDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_OSMdir)/$$f'"; \
-	  $(Geo_OSMDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_OSMdir)/$$f"; \
-	done
-
-uninstall-Geo_OSMDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_OSM_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_OSMdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_OSMdir)/$$f"; \
-	done
-install-Geo_TracksDATA: $(Geo_Tracks_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_Tracksdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_Tracksdir)"
-	@list='$(Geo_Tracks_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_TracksDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_Tracksdir)/$$f'"; \
-	  $(Geo_TracksDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_Tracksdir)/$$f"; \
-	done
-
-uninstall-Geo_TracksDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_Tracks_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_Tracksdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_Tracksdir)/$$f"; \
-	done
-install-UtilsDATA: $(Utils_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Utilsdir)" || $(mkdir_p) "$(DESTDIR)$(Utilsdir)"
-	@list='$(Utils_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(UtilsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Utilsdir)/$$f'"; \
-	  $(UtilsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Utilsdir)/$$f"; \
-	done
-
-uninstall-UtilsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Utils_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Utilsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Utilsdir)/$$f"; \
-	done
-install-Utils_LWPDATA: $(Utils_LWP_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Utils_LWPdir)" || $(mkdir_p) "$(DESTDIR)$(Utils_LWPdir)"
-	@list='$(Utils_LWP_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Utils_LWPDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Utils_LWPdir)/$$f'"; \
-	  $(Utils_LWPDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Utils_LWPdir)/$$f"; \
-	done
-
-uninstall-Utils_LWPDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Utils_LWP_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Utils_LWPdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Utils_LWPdir)/$$f"; \
-	done
 tags: TAGS
 TAGS:
 
@@ -442,7 +263,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/Geo $(distdir)/Geo/Filter $(distdir)/Geo/GPX $(distdir)/Geo/Gpsdrive $(distdir)/Geo/OSM $(distdir)/Geo/Tracks $(distdir)/Utils $(distdir)/Utils/LWP
+	$(mkdir_p) $(distdir)/lib/osm $(distdir)/test
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -471,11 +292,8 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(DATA)
+all-am: Makefile
 installdirs:
-	for dir in "$(DESTDIR)$(Geodir)" "$(DESTDIR)$(Geo_Filterdir)" "$(DESTDIR)$(Geo_GPXdir)" "$(DESTDIR)$(Geo_Gpsdrivedir)" "$(DESTDIR)$(Geo_OSMdir)" "$(DESTDIR)$(Geo_Tracksdir)" "$(DESTDIR)$(Utilsdir)" "$(DESTDIR)$(Utils_LWPdir)"; do \
-	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
-	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -518,10 +336,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-GeoDATA install-Geo_FilterDATA \
-	install-Geo_GPXDATA install-Geo_GpsdriveDATA \
-	install-Geo_OSMDATA install-Geo_TracksDATA install-UtilsDATA \
-	install-Utils_LWPDATA
+install-data-am:
 
 install-exec-am:
 
@@ -547,26 +362,16 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-GeoDATA uninstall-Geo_FilterDATA \
-	uninstall-Geo_GPXDATA uninstall-Geo_GpsdriveDATA \
-	uninstall-Geo_OSMDATA uninstall-Geo_TracksDATA \
-	uninstall-UtilsDATA uninstall-Utils_LWPDATA uninstall-info-am
+uninstall-am: uninstall-info-am
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-GeoDATA \
-	install-Geo_FilterDATA install-Geo_GPXDATA \
-	install-Geo_GpsdriveDATA install-Geo_OSMDATA \
-	install-Geo_TracksDATA install-UtilsDATA install-Utils_LWPDATA \
-	install-am install-data install-data-am install-exec \
-	install-exec-am install-info install-info-am install-man \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-GeoDATA uninstall-Geo_FilterDATA \
-	uninstall-Geo_GPXDATA uninstall-Geo_GpsdriveDATA \
-	uninstall-Geo_OSMDATA uninstall-Geo_TracksDATA \
-	uninstall-UtilsDATA uninstall-Utils_LWPDATA uninstall-am \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-exec install-exec-am \
+	install-info install-info-am install-man install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
 	uninstall-info-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

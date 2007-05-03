@@ -1,14 +1,14 @@
 Source: openstreetmap
 Section: unknown
 Priority: extra
-Maintainer: tweety <tweety@moby.dasch.ostertag.name>
+Maintainer: Joerg <OpenStreetMap@ostertag.name>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
 
 Package: openstreetmap
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
+Description: This is the masterpackage for all OpenStreetmap relevant Stuff
  <insert long description, indented with spaces>
 
 Package: josm

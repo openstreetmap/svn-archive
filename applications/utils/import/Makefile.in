@@ -14,8 +14,7 @@
 
 @SET_MAKE@
 
-# Makefile.am for scripts/perl_lib
-
+# Makefile.am for scripts
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -37,7 +36,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = scripts/osm/utils/perl_lib
+subdir = scripts/osm/utils/import
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
@@ -53,27 +52,15 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(Geodir)" "$(DESTDIR)$(Geo_Filterdir)" \
-	"$(DESTDIR)$(Geo_GPXdir)" "$(DESTDIR)$(Geo_Gpsdrivedir)" \
-	"$(DESTDIR)$(Geo_OSMdir)" "$(DESTDIR)$(Geo_Tracksdir)" \
-	"$(DESTDIR)$(Utilsdir)" "$(DESTDIR)$(Utils_LWPdir)"
-GeoDATA_INSTALL = $(INSTALL_DATA)
-Geo_FilterDATA_INSTALL = $(INSTALL_DATA)
-Geo_GPXDATA_INSTALL = $(INSTALL_DATA)
-Geo_GpsdriveDATA_INSTALL = $(INSTALL_DATA)
-Geo_OSMDATA_INSTALL = $(INSTALL_DATA)
-Geo_TracksDATA_INSTALL = $(INSTALL_DATA)
-UtilsDATA_INSTALL = $(INSTALL_DATA)
-Utils_LWPDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(Geo_DATA) $(Geo_Filter_DATA) $(Geo_GPX_DATA) \
-	$(Geo_Gpsdrive_DATA) $(Geo_OSM_DATA) $(Geo_Tracks_DATA) \
-	$(Utils_DATA) $(Utils_LWP_DATA)
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-exec-recursive install-info-recursive \
+	install-recursive installcheck-recursive installdirs-recursive \
+	pdf-recursive ps-recursive uninstall-info-recursive \
+	uninstall-recursive
+ETAGS = etags
+CTAGS = ctags
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 pkgdatadir = @pkgdatadir@
 ACLOCAL = @ACLOCAL@
@@ -233,30 +220,29 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-gpsdrivedir = $(datadir)/gpsdrive
-Geodir = $(PERL_PACKAGE_DIR)/Geo
-Geo_DATA = Geo/*.pm
-Geo_Gpsdrivedir = $(PERL_PACKAGE_DIR)/Geo/Gpsdrive
-Geo_Gpsdrive_DATA = Geo/Gpsdrive/*.pm
-Geo_Tracksdir = $(PERL_PACKAGE_DIR)/Geo/Tracks
-Geo_Tracks_DATA = Geo/Tracks/*.pm
-Geo_OSMdir = $(PERL_PACKAGE_DIR)/Geo/OSM
-Geo_OSM_DATA = Geo/OSM/*.pm
-Geo_GPXdir = $(PERL_PACKAGE_DIR)/Geo/GPX
-Geo_GPX_DATA = Geo/GPX/*.pm
-Geo_Filterdir = $(PERL_PACKAGE_DIR)/Geo/Filter
-Geo_Filter_DATA = Geo/Filter/*.pm
-Utilsdir = $(PERL_PACKAGE_DIR)/Utils
-Utils_DATA = Utils/*.pm
-Utils_LWPdir = $(PERL_PACKAGE_DIR)/Utils/LWP
-Utils_LWP_DATA = Utils/LWP/*.pm
-EXTRA_DIST = \
-	$(Geo_DATA) $(Geo_Gpsdrive_DATA) $(Geo_OSM_DATA) $(Geo_GPX_DATA)\
-	$(Geo_Tracks_DATA) \
-	$(Geo_Filter_DATA)  $(Utils_DATA) \
-	$(Utils_LWP_DATA)
+SUBDIRS = \
+	osmtrackfilter
 
-all: all-am
+EXTRA_DIST = \
+	csv2osm/*.pl \
+	csv2osm/*.txt \
+	csv2osm/*.sample \
+	tiger_import/status \
+	tiger_import/*.rb \
+	tiger_import/tiger/*.rb \
+	tiger_import/spider/*.rb \
+	srtm2osm/*.diff \
+	srtm2osm/*.sh \
+	srtm2osm/README \
+	dafif2osm/*.txt \
+	dafif2osm/*.TXT \
+	coast_import/Data/*.sh \
+	coast_import/Data/*.txt \
+	airport_import/README \
+	airport_import/*.sql \
+	airport_import/*.utf8
+
+all: all-recursive
 
 .SUFFIXES:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -268,9 +254,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/utils/perl_lib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/utils/import/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  scripts/osm/utils/perl_lib/Makefile
+	  $(AUTOMAKE) --gnu  scripts/osm/utils/import/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -298,151 +284,141 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
-install-GeoDATA: $(Geo_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geodir)" || $(mkdir_p) "$(DESTDIR)$(Geodir)"
-	@list='$(Geo_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(GeoDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geodir)/$$f'"; \
-	  $(GeoDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geodir)/$$f"; \
+
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+ctags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
 	done
 
-uninstall-GeoDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geodir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geodir)/$$f"; \
-	done
-install-Geo_FilterDATA: $(Geo_Filter_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_Filterdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_Filterdir)"
-	@list='$(Geo_Filter_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_FilterDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_Filterdir)/$$f'"; \
-	  $(Geo_FilterDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_Filterdir)/$$f"; \
-	done
-
-uninstall-Geo_FilterDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_Filter_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_Filterdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_Filterdir)/$$f"; \
-	done
-install-Geo_GPXDATA: $(Geo_GPX_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_GPXdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_GPXdir)"
-	@list='$(Geo_GPX_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_GPXDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_GPXdir)/$$f'"; \
-	  $(Geo_GPXDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_GPXdir)/$$f"; \
-	done
-
-uninstall-Geo_GPXDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_GPX_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_GPXdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_GPXdir)/$$f"; \
-	done
-install-Geo_GpsdriveDATA: $(Geo_Gpsdrive_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_Gpsdrivedir)" || $(mkdir_p) "$(DESTDIR)$(Geo_Gpsdrivedir)"
-	@list='$(Geo_Gpsdrive_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_GpsdriveDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_Gpsdrivedir)/$$f'"; \
-	  $(Geo_GpsdriveDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_Gpsdrivedir)/$$f"; \
-	done
-
-uninstall-Geo_GpsdriveDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_Gpsdrive_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_Gpsdrivedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_Gpsdrivedir)/$$f"; \
-	done
-install-Geo_OSMDATA: $(Geo_OSM_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_OSMdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_OSMdir)"
-	@list='$(Geo_OSM_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_OSMDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_OSMdir)/$$f'"; \
-	  $(Geo_OSMDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_OSMdir)/$$f"; \
-	done
-
-uninstall-Geo_OSMDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_OSM_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_OSMdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_OSMdir)/$$f"; \
-	done
-install-Geo_TracksDATA: $(Geo_Tracks_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Geo_Tracksdir)" || $(mkdir_p) "$(DESTDIR)$(Geo_Tracksdir)"
-	@list='$(Geo_Tracks_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Geo_TracksDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Geo_Tracksdir)/$$f'"; \
-	  $(Geo_TracksDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Geo_Tracksdir)/$$f"; \
-	done
-
-uninstall-Geo_TracksDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Geo_Tracks_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Geo_Tracksdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Geo_Tracksdir)/$$f"; \
-	done
-install-UtilsDATA: $(Utils_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Utilsdir)" || $(mkdir_p) "$(DESTDIR)$(Utilsdir)"
-	@list='$(Utils_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(UtilsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Utilsdir)/$$f'"; \
-	  $(UtilsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Utilsdir)/$$f"; \
-	done
-
-uninstall-UtilsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Utils_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Utilsdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Utilsdir)/$$f"; \
-	done
-install-Utils_LWPDATA: $(Utils_LWP_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(Utils_LWPdir)" || $(mkdir_p) "$(DESTDIR)$(Utils_LWPdir)"
-	@list='$(Utils_LWP_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(Utils_LWPDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(Utils_LWPdir)/$$f'"; \
-	  $(Utils_LWPDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(Utils_LWPdir)/$$f"; \
-	done
-
-uninstall-Utils_LWPDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(Utils_LWP_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(Utils_LWPdir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(Utils_LWPdir)/$$f"; \
-	done
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique
 tags: TAGS
-TAGS:
 
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      tags="$$tags $$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	if test -z "$(ETAGS_ARGS)$$tags$$unique"; then :; else \
+	  test -n "$$unique" || unique=$$empty_fix; \
+	  $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	    $$tags $$unique; \
+	fi
 ctags: CTAGS
-CTAGS:
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(CTAGS_ARGS)$$tags$$unique" \
+	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
+	     $$tags $$unique
 
+GTAGS:
+	here=`$(am__cd) $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/Geo $(distdir)/Geo/Filter $(distdir)/Geo/GPX $(distdir)/Geo/Gpsdrive $(distdir)/Geo/OSM $(distdir)/Geo/Tracks $(distdir)/Utils $(distdir)/Utils/LWP
+	$(mkdir_p) $(distdir)/airport_import $(distdir)/coast_import/Data $(distdir)/csv2osm $(distdir)/dafif2osm $(distdir)/srtm2osm $(distdir)/tiger_import $(distdir)/tiger_import/spider $(distdir)/tiger_import/tiger
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -469,22 +445,35 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-check-am: all-am
-check: check-am
-all-am: Makefile $(DATA)
-installdirs:
-	for dir in "$(DESTDIR)$(Geodir)" "$(DESTDIR)$(Geo_Filterdir)" "$(DESTDIR)$(Geo_GPXdir)" "$(DESTDIR)$(Geo_Gpsdrivedir)" "$(DESTDIR)$(Geo_OSMdir)" "$(DESTDIR)$(Geo_Tracksdir)" "$(DESTDIR)$(Utilsdir)" "$(DESTDIR)$(Utils_LWPdir)"; do \
-	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
+	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d "$(distdir)/$$subdir" \
+	    || $(mkdir_p) "$(distdir)/$$subdir" \
+	    || exit 1; \
+	    distdir=`$(am__cd) $(distdir) && pwd`; \
+	    top_distdir=`$(am__cd) $(top_distdir) && pwd`; \
+	    (cd $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$top_distdir" \
+	        distdir="$$distdir/$$subdir" \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+check-am: all-am
+check: check-recursive
+all-am: Makefile
+installdirs: installdirs-recursive
+installdirs-am:
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
@@ -500,74 +489,67 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-generic clean-libtool mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-libtool
+distclean-am: clean-am distclean-generic distclean-libtool \
+	distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
-info: info-am
+info: info-recursive
 
 info-am:
 
-install-data-am: install-GeoDATA install-Geo_FilterDATA \
-	install-Geo_GPXDATA install-Geo_GpsdriveDATA \
-	install-Geo_OSMDATA install-Geo_TracksDATA install-UtilsDATA \
-	install-Utils_LWPDATA
+install-data-am:
 
 install-exec-am:
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-man:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-GeoDATA uninstall-Geo_FilterDATA \
-	uninstall-Geo_GPXDATA uninstall-Geo_GpsdriveDATA \
-	uninstall-Geo_OSMDATA uninstall-Geo_TracksDATA \
-	uninstall-UtilsDATA uninstall-Utils_LWPDATA uninstall-info-am
+uninstall-am: uninstall-info-am
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-GeoDATA \
-	install-Geo_FilterDATA install-Geo_GPXDATA \
-	install-Geo_GpsdriveDATA install-Geo_OSMDATA \
-	install-Geo_TracksDATA install-UtilsDATA install-Utils_LWPDATA \
-	install-am install-data install-data-am install-exec \
-	install-exec-am install-info install-info-am install-man \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-GeoDATA uninstall-Geo_FilterDATA \
-	uninstall-Geo_GPXDATA uninstall-Geo_GpsdriveDATA \
-	uninstall-Geo_OSMDATA uninstall-Geo_TracksDATA \
-	uninstall-UtilsDATA uninstall-Utils_LWPDATA uninstall-am \
-	uninstall-info-am
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am \
+	clean clean-generic clean-libtool clean-recursive ctags \
+	ctags-recursive distclean distclean-generic distclean-libtool \
+	distclean-recursive distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-exec install-exec-am install-info \
+	install-info-am install-man install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic maintainer-clean-recursive \
+	mostlyclean mostlyclean-generic mostlyclean-libtool \
+	mostlyclean-recursive pdf pdf-am ps ps-am tags tags-recursive \
+	uninstall uninstall-am uninstall-info-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

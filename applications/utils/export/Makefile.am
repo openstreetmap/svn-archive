@@ -1,0 +1,53 @@
+# Makefile.am
+
+EXTRA_DIST = \
+	osm2pgsql/experimental/output-pgsql.h \
+	osm2pgsql/experimental/middle-ram.h \
+	osm2pgsql/experimental/middle-pgsql.h \
+	osm2pgsql/experimental/middle-pgsql.c \
+	osm2pgsql/experimental/middle-ram.c \
+	osm2pgsql/experimental/build_geometry.h \
+	osm2pgsql/experimental/output.h \
+	osm2pgsql/experimental/keyvals.h \
+	osm2pgsql/experimental/middle.h \
+	osm2pgsql/experimental/osm2pgsql.c \
+	osm2pgsql/experimental/osmtypes.h \
+	osm2pgsql/experimental/keyvals.c \
+	osm2pgsql/experimental/build_geometry.cpp \
+	osm2pgsql/experimental/output-pgsql.c \
+	osm2pgsql/build_geometry.h \
+	osm2pgsql/osm2pgsql.c \
+	osm2pgsql/build_geometry.cpp \
+	osm2singleline_per_tag/osm2singleline_per_tag.pl \
+	osm2shp/osm2shp.cpp \
+	osm2shp/README \
+	CityKML/README \
+	CityKML/*.sh \
+	CityKML/*.pl \
+	CityKML/*.txt \
+	CityKML/download_specific.pl \
+	CityKML/download.pl \
+	CityKML/package.pl \
+	osm2csv/osm2csv.pl \
+	osmgarminmap/CHANGES \
+	osmgarminmap/curlstuff.cpp \
+	osmgarminmap/osm2garmin.cpp \
+	osmgarminmap/curlstuff.h \
+	osmgarminmap/feature-list.csv \
+	osmgarminmap/feature-list-csv2xml.pl \
+	osm2kml/osm2kml.py \
+	osmgoogleearth/*.kmz \
+	osmgoogleearth/*.xml \
+	osmgoogleearth/*.xsl \
+	osmgoogleearth/icons/*.png \
+	osmgoogleearth/*.png \
+	osmgoogleearth/README \
+	osmgarminmap/README \
+	osmgarminmap/*.xsl \
+	osmgarminmap/*.xml \
+	osmgarminmap/*.ods \
+	osmgarminmap/CHANGES \
+	osmgarminmap/Makefile.osm2garmin \
+	osm2pgsql/*.txt \
+	osm2pgsql/experimental/*.txt
+

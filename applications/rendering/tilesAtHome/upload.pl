@@ -136,8 +136,8 @@ else
             ## sleep for 2, 4, 8, 16... seconds for each consecutive failure
             if ($failures)
             {
-                sleep (2 ** $failures);
                 statusMessage($failures . " consecutive upload failures, sleeping for " . (2 ** $failures) . "seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                sleep (2 ** $failures);
             }
         }
     }

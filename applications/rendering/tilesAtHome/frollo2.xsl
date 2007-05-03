@@ -66,8 +66,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     "possible endless recursion" errors -->
     <!-- increased from 400 to 600 by Dutch as some tiles were not rendered correctly after close-areas preprocessor was
     implemented -->
+    <!-- decreased to 400 from 600 by Deelkar because of "possible endless recursion. since frollo runs first currently not really needed at 600 -->
 
-	<xsl:variable name='maximumNumberOfSegs' select='"600"'/>
+	<xsl:variable name='maximumNumberOfSegs' select='"400"'/>
 		
 
 	<!-- Keys -->

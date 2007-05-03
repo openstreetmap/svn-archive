@@ -53,6 +53,7 @@ my $currentSubTask;
 my $lastmsglen;
 
 ### TODO: implement locking, this is one of the things that make upload not multithread-safe.
+my $sleepdelay = 0;
 my $failures;
 my $failFile = $Config{WorkingDirectory} . "/failurecount.txt";
 if (open(FAILFILE, "<", $failFile))
@@ -133,11 +134,12 @@ else
             $progressPercent = $progress * 100 / $zipCount;
             statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         
-            ## sleep for 2, 4, 8, 16... seconds for each consecutive failure
+## sleep for 2, 4, 8, 16... seconds for each consecutive failure to a max of 6 hours (21600 seconds)
             if ($failures)
             {
-                statusMessage($failures . " consecutive upload failures, sleeping for " . (2 ** $failures) . "seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-                sleep (2 ** $failures);
+                $sleepdelay=($failures > 14) ? 21600 : (2 ** $failures);
+                statusMessage($failures . " consecutive upload failures, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                sleep ($sleepdelay);
             }
         }
     }

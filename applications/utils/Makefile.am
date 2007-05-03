@@ -61,6 +61,7 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	import/srtm2osm/merge.pl \
 	import/srtm2osm/mkcntr.pl \
 	maplint/README \
+	maplint/Makefile \
 	maplint/html/*.html \
 	maplint/html/style.css \
 	maplint/lib/*.xsl \

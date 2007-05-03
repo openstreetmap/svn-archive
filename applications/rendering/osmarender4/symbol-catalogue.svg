@@ -71,6 +71,10 @@
                 <path d="M 71.9,66.0 L 77.2,17.8 L 86.6,66.6 L 86.6,66.6 L 86.6,66.6"/>
             </g>
         </symbol>
+    <symbol id="symbol-customs" viewBox="15 15 30 30">
+    <path fill="white" stroke="red" stroke-width="3.5" d="M 15 2 A 13 13 0 1 1  14.99,2 z"/>
+    <rect fill="#000000" stroke="none" width="20" height="4" x="5" y="13" ry="2" rx="2"/>
+  </symbol>
     <symbol id="symbol-doctor" viewBox="18 18 36 36">
             <ellipse fill="#00cc00" cx="18" cy="18" rx="18" ry="18"/>
             <path fill="#ffffff" d="M32 21.44 A16 16 -180 1 0 0 21.44 A16 16 -180 1 0 32 21.44 Z M10 6.94 L22 6.94 L22 15.44 L30.5 15.44 L30.5 27.44 L22 27.44 L22 35.94 L10 35.94 L10 27.44 L1.5 27.44 L1.5 15.44 L10 15.44 L 10 6.94 Z" transform="translate(2,-3.44)"/>
@@ -312,7 +316,17 @@
       <use xlink:href="#symbol-courthouse" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">courthouse</text>
     </g>
-    <g id="demo-doctor" transform="translate(22, 11)">
+    <g id="demo-customs" transform="translate(22, 11)">
+      <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
+      <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
+      <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
+      <line class="crosshair-fine" x1="-1" y1="0" x2="1" y2="0"/>
+      <line class="crosshair-fine" x1="0" y1="-1" x2="0" y2="1"/>
+      <rect class="crosshair-fine" x="-0.5" y="-0.5" width="1" height="1"/>
+      <use xlink:href="#symbol-customs" width="1" height="1"/>
+      <text class="desc" x="3" y="0.4">customs</text>
+    </g>
+    <g id="demo-doctor" transform="translate(2, 14)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -322,7 +336,7 @@
       <use xlink:href="#symbol-doctor" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">doctor</text>
     </g>
-    <g id="demo-gate" transform="translate(2, 14)">
+    <g id="demo-gate" transform="translate(22, 14)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -332,7 +346,7 @@
       <use xlink:href="#symbol-gate" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">gate</text>
     </g>
-    <g id="demo-golf_course" transform="translate(22, 14)">
+    <g id="demo-golf_course" transform="translate(2, 17)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -342,7 +356,7 @@
       <use xlink:href="#symbol-golf_course" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">golf_course</text>
     </g>
-    <g id="demo-hospital" transform="translate(2, 17)">
+    <g id="demo-hospital" transform="translate(22, 17)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -352,7 +366,7 @@
       <use xlink:href="#symbol-hospital" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">hospital</text>
     </g>
-    <g id="demo-hostel" transform="translate(22, 17)">
+    <g id="demo-hostel" transform="translate(2, 20)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -362,7 +376,7 @@
       <use xlink:href="#symbol-hostel" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">hostel</text>
     </g>
-    <g id="demo-hotel" transform="translate(2, 20)">
+    <g id="demo-hotel" transform="translate(22, 20)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -372,7 +386,7 @@
       <use xlink:href="#symbol-hotel" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">hotel</text>
     </g>
-    <g id="demo-library" transform="translate(22, 20)">
+    <g id="demo-library" transform="translate(2, 23)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -382,7 +396,7 @@
       <use xlink:href="#symbol-library" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">library</text>
     </g>
-    <g id="demo-mosque" transform="translate(2, 23)">
+    <g id="demo-mosque" transform="translate(22, 23)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -392,7 +406,7 @@
       <use xlink:href="#symbol-mosque" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">mosque</text>
     </g>
-    <g id="demo-museum" transform="translate(22, 23)">
+    <g id="demo-museum" transform="translate(2, 26)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -402,7 +416,7 @@
       <use xlink:href="#symbol-museum" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">museum</text>
     </g>
-    <g id="demo-parking" transform="translate(2, 26)">
+    <g id="demo-parking" transform="translate(22, 26)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -412,7 +426,7 @@
       <use xlink:href="#symbol-parking" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">parking</text>
     </g>
-    <g id="demo-petrol_station" transform="translate(22, 26)">
+    <g id="demo-petrol_station" transform="translate(2, 29)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -422,7 +436,7 @@
       <use xlink:href="#symbol-petrol_station" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">petrol_station</text>
     </g>
-    <g id="demo-pharmacy_dispensing" transform="translate(2, 29)">
+    <g id="demo-pharmacy_dispensing" transform="translate(22, 29)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -432,7 +446,7 @@
       <use xlink:href="#symbol-pharmacy_dispensing" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">pharmacy_dispensing</text>
     </g>
-    <g id="demo-post_box" transform="translate(22, 29)">
+    <g id="demo-post_box" transform="translate(2, 32)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -442,7 +456,7 @@
       <use xlink:href="#symbol-post_box" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">post_box</text>
     </g>
-    <g id="demo-post_office" transform="translate(2, 32)">
+    <g id="demo-post_office" transform="translate(22, 32)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -452,7 +466,7 @@
       <use xlink:href="#symbol-post_office" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">post_office</text>
     </g>
-    <g id="demo-power_tower" transform="translate(22, 32)">
+    <g id="demo-power_tower" transform="translate(2, 35)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -462,7 +476,7 @@
       <use xlink:href="#symbol-power_tower" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">power_tower</text>
     </g>
-    <g id="demo-pub" transform="translate(2, 35)">
+    <g id="demo-pub" transform="translate(22, 35)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -472,7 +486,7 @@
       <use xlink:href="#symbol-pub" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">pub</text>
     </g>
-    <g id="demo-recycling" transform="translate(22, 35)">
+    <g id="demo-recycling" transform="translate(2, 38)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -482,7 +496,7 @@
       <use xlink:href="#symbol-recycling" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">recycling</text>
     </g>
-    <g id="demo-restaurant" transform="translate(2, 38)">
+    <g id="demo-restaurant" transform="translate(22, 38)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -492,7 +506,7 @@
       <use xlink:href="#symbol-restaurant" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">restaurant</text>
     </g>
-    <g id="demo-roundabout_left" transform="translate(22, 38)">
+    <g id="demo-roundabout_left" transform="translate(2, 41)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -502,7 +516,7 @@
       <use xlink:href="#symbol-roundabout_left" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">roundabout_left</text>
     </g>
-    <g id="demo-roundabout_right" transform="translate(2, 41)">
+    <g id="demo-roundabout_right" transform="translate(22, 41)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -512,7 +526,7 @@
       <use xlink:href="#symbol-roundabout_right" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">roundabout_right</text>
     </g>
-    <g id="demo-school" transform="translate(22, 41)">
+    <g id="demo-school" transform="translate(2, 44)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -522,7 +536,7 @@
       <use xlink:href="#symbol-school" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">school</text>
     </g>
-    <g id="demo-slipway" transform="translate(2, 44)">
+    <g id="demo-slipway" transform="translate(22, 44)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -532,7 +546,7 @@
       <use xlink:href="#symbol-slipway" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">slipway</text>
     </g>
-    <g id="demo-supermarket" transform="translate(22, 44)">
+    <g id="demo-supermarket" transform="translate(2, 47)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -542,7 +556,7 @@
       <use xlink:href="#symbol-supermarket" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">supermarket</text>
     </g>
-    <g id="demo-synagogue" transform="translate(2, 47)">
+    <g id="demo-synagogue" transform="translate(22, 47)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -552,7 +566,7 @@
       <use xlink:href="#symbol-synagogue" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">synagogue</text>
     </g>
-    <g id="demo-telephone" transform="translate(22, 47)">
+    <g id="demo-telephone" transform="translate(2, 50)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -562,7 +576,7 @@
       <use xlink:href="#symbol-telephone" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">telephone</text>
     </g>
-    <g id="demo-theatre" transform="translate(2, 50)">
+    <g id="demo-theatre" transform="translate(22, 50)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -572,7 +586,7 @@
       <use xlink:href="#symbol-theatre" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">theatre</text>
     </g>
-    <g id="demo-traffic_signal" transform="translate(22, 50)">
+    <g id="demo-traffic_signal" transform="translate(2, 53)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -582,7 +596,7 @@
       <use xlink:href="#symbol-traffic_signal" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">traffic_signal</text>
     </g>
-    <g id="demo-university" transform="translate(2, 53)">
+    <g id="demo-university" transform="translate(22, 53)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>
@@ -592,7 +606,7 @@
       <use xlink:href="#symbol-university" width="1" height="1"/>
       <text class="desc" x="3" y="0.4">university</text>
     </g>
-    <g id="demo-windmill" transform="translate(22, 53)">
+    <g id="demo-windmill" transform="translate(2, 56)">
       <line class="crosshair" x1="-1" y1="0" x2="1" y2="0"/>
       <line class="crosshair" x1="0" y1="-1" x2="0" y2="1"/>
       <rect class="crosshair" x="-0.5" y="-0.5" width="1" height="1"/>

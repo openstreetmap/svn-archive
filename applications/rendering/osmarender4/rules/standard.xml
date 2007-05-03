@@ -507,6 +507,15 @@
         </rule>
 
 
+        <!-- Boundaries -->
+        <rule e="node" k="boundary" v="*">
+            <layer name="Boundaries">
+                <rule e="node" k="boundary" v="national">
+                    <symbol ref="customs" />
+                </rule>
+            </layer>
+        </rule>
+
         <!-- Place names  -->
         <rule e="node" k="place" v="*">
             <layer name="Place names">

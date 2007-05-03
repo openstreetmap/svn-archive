@@ -1,3 +1,6 @@
-
 This create a SVG (Scalable Vector Graphics) file from a GPX track.
+
+Run this in a directory with gpx files in it, it will spit out a svg file
+
+example `./svg.rb > myfile.svg`
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <symbol id="symbol-customs" viewBox="15 15 30 30">
+    <path fill="white" stroke="red" stroke-width="3.5" d="M 15 2 A 13 13 0 1 1  14.99,2 z" />
+    <rect fill="#000000" stroke="none" width="20" height="4" x="5" y="13" ry="2" rx="2" />
+  </symbol>
+ </defs>
+</svg>

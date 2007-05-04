@@ -192,10 +192,10 @@ sub CheckConfig{
         }
     }
 
-    # not used any longer, superseded by per-layer value
-    if($Config{"MaxZoom"} < 12 || $Config{"MaxZoom"} > 20){
-        print "Check MaxZoom\n";
-    }
+    ## not used any longer, superseded by per-layer value
+    #if($Config{"MaxZoom"} < 12 || $Config{"MaxZoom"} > 20){
+    #    print "Check MaxZoom\n";
+    #}
 
     # layers
     foreach my $layer(split(/,/, $Config{"Layers"}))

@@ -40,7 +40,7 @@ GetOptions (
 	     'man'              => \$man, 
 	     'h|help|x'         => \$help, 
 
-	     'bbox:s'		=> \$bbox_opts,
+	     'bbox=s'		=> \$bbox_opts,
 	     ) or pod2usage(1);
 
 pod2usage(1) if $help;

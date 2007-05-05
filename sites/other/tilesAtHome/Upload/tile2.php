@@ -104,9 +104,10 @@ function HandleDir($Dir, $User, $UserID, $VersionID){
   $Count = 0;
   $dp = opendir($Dir);
   $TileList = array();
+  $BlankTileList = array();
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
-    $Count += HandleFile($Filename, $User, $VersionID, $TileList);
+    $Count += HandleFile($Filename, $User, $VersionID, $TileList, $BlankTileList);
   }
   closedir($dp);
   
@@ -167,7 +168,7 @@ function SaveUserStats($UserID, $VersionID, $NumTiles){
 #----------------------------------------------------------------------
 # Processes tile PNG images
 #----------------------------------------------------------------------
-function HandleFile($Filename, $User, $VersionID, &$TileList){
+function HandleFile($Filename, $User, $VersionID, &$TileList, &$BlankTileList){
   if(preg_match("/([a-z]+)_(\d+)_(\d+)_(\d+)\.png/", $Filename, $Matches)){
     $Layername = $Matches[1];
     $Z = $Matches[2];
@@ -178,7 +179,7 @@ function HandleFile($Filename, $User, $VersionID, &$TileList){
       
       $Layer = checkLayer($Layername);
       if($Layer > 0){
-        InsertTile($X,$Y,$Z,$Layer,$User,$Filename, $VersionID, $TileList);
+        InsertTile($X,$Y,$Z,$Layer,$User,$Filename, $VersionID, $TileList, $BlankTileList);
         return(1);
       }
       else{
@@ -192,7 +193,7 @@ function HandleFile($Filename, $User, $VersionID, &$TileList){
   return(0);
 }
 
-function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList){
+function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, &$BlankTileList){
   if(!TileValid($X,$Y,$Z)){
     printf("INVALID %d,%d,%d\n", $X,$Y,$Z);
     return;
@@ -209,11 +210,16 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList){
   }
   
   if($Size == 67){
-    # TODO: this is a request to delete existing tiles and create a "blank land" tile
+    # This is a request to delete existing tiles and create a "blank land" tile
+    # TODO: make an enumeration for blank land/sea
+    $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, 2);
+    array_push($BlankTileList, $SqlSnippet);
     return;
   }
   if($Size == 69){
-    # TODO: this is a request to create a sea tile
+    # This is a request to create a sea tile
+    $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, 1);
+    array_push($BlankTileList, $SqlSnippet);
     return;
   }
   if($Size < 100){

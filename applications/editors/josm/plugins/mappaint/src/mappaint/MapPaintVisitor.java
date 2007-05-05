@@ -90,9 +90,12 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			orderNumber++;
 				if (area && fillAreas)
 					//Draw segments in a different colour so direction arrows show against the fill
-					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"), width);
+					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"), width,true);
 				else
-					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width);
+					if (area)
+						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,true);
+					else
+						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,false);
 				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
 				{
 					try
@@ -157,12 +160,12 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered - now specify width
 	@Override protected void drawSegment(Segment ls, Color col,boolean showDirection) {
-			drawSegment(ls,col,showDirection,1);
+			drawSegment(ls,col,showDirection,1,false);
 	}
 
 
 	// Altered - now specify width
-	private void drawSegment (Segment ls, Color col,boolean showDirection, int width) {
+	private void drawSegment (Segment ls, Color col,boolean showDirection, int width,boolean dashed) {
 		//do not draw already visible segments
 		if (ls.shown) return;
 		ls.shown=true;
@@ -173,7 +176,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			col = getPreferencesColor("selected", Color.YELLOW);
 		g.setColor(col);
 		//g.setWidth(width);
-		g2d.setStroke(new BasicStroke(width));
+		if (dashed) 
+			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
+		else 
+			g2d.setStroke(new BasicStroke(width));
+
 		Point p1 = nc.getPoint(ls.from.eastNorth);
 		Point p2 = nc.getPoint(ls.to.eastNorth);
 		// checking if this Point is visible

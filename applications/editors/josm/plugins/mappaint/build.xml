@@ -18,8 +18,8 @@
 	</target>
 
 	<target name="build" depends="compile">
-		<copy todir="build/standard/icons">
-			<fileset dir="styles/standard/icons"></fileset>
+		<copy todir="build/standard">
+			<fileset dir="styles/standard"></fileset>
 		</copy>
 		<jar destfile="dist/mappaint.jar" basedir="build">
 			<manifest>

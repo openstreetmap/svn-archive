@@ -111,11 +111,11 @@ function HandleDir($Dir, $User, $UserID, $VersionID){
   }
   closedir($dp);
   
-  SaveMetadata($TileList, $UserID, $VersionID);
+  SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID);
   return($Count);
 }
 
-function SaveMetadata($TileList, $UserID, $VersionID){
+function SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID){
   #logMsg(sprintf("%d, %d -- ", $UserID, $VersionID) . implode(": ", $TileList), 5);
   
   # Connect to the database
@@ -134,6 +134,18 @@ function SaveMetadata($TileList, $UserID, $VersionID){
     $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);
   }
+  
+  # Each element in BlankTileList is a snippet of values (x,y,z,type,size) for each tile
+  foreach($BlankTileList as $SqlSnippet){
+    
+    $Fields = "x, y, z, layer, type, date, user";
+    $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
+    
+    $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
+    mysql_query($SQL);
+    if(mysql_errno()) printf("%s\n", mysql_error());
+  }
+  
   
   # Disconnect from database
   mysql_close();

@@ -208,11 +208,16 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList){
     }
   }
   
-  # Don't store *really* blank tiles, no matter who they're from
-  if($Size < 68){
-    
-    # TODO: this is a request to delete existing tiles - need to handle it!
-  
+  if($Size == 67){
+    # TODO: this is a request to delete existing tiles and create a "blank land" tile
+    return;
+  }
+  if($Size == 69){
+    # TODO: this is a request to create a sea tile
+    return;
+  }
+  if($Size < 100){
+    # TODO: WTF is this tile
     return;
   }
   

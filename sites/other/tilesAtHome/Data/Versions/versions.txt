@@ -5,8 +5,10 @@
 5|NO|Cambridge
 6|NO|Cambridge_nocurves
 7|NO|Dublin
-8|OK|Essen
-9|OK|Frederikssund
+8|NO|Essen
+9|NO|Frederikssund
 10|OK|website_upload
 11|OK|experimental
-12|OK|Glencoe
+12|NO|Glencoe
+12|OK|Headingley
+

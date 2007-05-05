@@ -202,7 +202,7 @@
 
 <rule>
 <condition k="natural" v="heath"/>
-<line widht="1" colour="#ffffc0"/>
+<line width="1" colour="#ffffc0"/>
 </rule>
 
 <rule>

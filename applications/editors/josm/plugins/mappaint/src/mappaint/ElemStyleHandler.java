@@ -103,13 +103,8 @@ public class ElemStyleHandler extends DefaultHandler
 													//open icon from user directory
                         	curIcon = new ImageIcon(imageFile);
 												} else {
-													URL path = getClass().getResource("/standard/icons/"+atts.getValue(count));
-													if (path != null ) {
+														URL path = getClass().getResource("/standard/icons/amenity.png");
 														curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
-													} else{
-														path = getClass().getResource("/standard/icons/amenity.png");
-														curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
-													}
 												}
                     } else if (atts.getQName(count).equals("annotate"))
                         curAnnotate = Boolean.parseBoolean

@@ -3,6 +3,8 @@ package mappaint;
 import java.io.File;
 import java.io.FileReader;
 
+import java.net.URL;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -23,7 +25,8 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 	}
 
 	public MapPaintPlugin() {
-		styleDir = getPluginDir()+"standard/"; //some day we will support diferent icon directories over options
+		String styleName = Main.pref.get("mappaint.style", "standard");
+		styleDir = getPluginDir()+styleName+"/"; //some day we will support diferent icon directories over options
 		String elemStylesFile = getStyleDir()+"elemstyles.xml";
 		File f = new File(elemStylesFile);
 		if (f.exists())
@@ -43,10 +46,9 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 				throw new RuntimeException(e);
 			}
 		} 
-		else{ //just for backwards compatibility
-			elemStylesFile = getPluginDir()+"elemstyles.xml";
-			f = new File(elemStylesFile);
-			if (f.exists())
+		else{ //use the standart elemstyle of this style 
+			URL elemStylesPath = getClass().getResource("/"+styleName+"/elemstyles.xml");
+			if (elemStylesPath != null)
 			{
 				try
 				{
@@ -56,7 +58,7 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 					xmlReader.setErrorHandler(handler);
 					handler.setElemStyles(elemStyles);
 					// temporary only!
-					xmlReader.parse(new InputSource(new FileReader(f)));
+					xmlReader.parse(new InputSource(elemStylesPath.openStream()));
 				}
 				catch (Exception e)
 				{

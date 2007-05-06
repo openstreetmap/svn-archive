@@ -83,3 +83,9 @@ function getEventElement(e)
 		return e.srcElement;
 	return e.target;
 }
+
+function placeSearch()
+{
+	alert('placeSearch');
+	c.placeSearch();
+}

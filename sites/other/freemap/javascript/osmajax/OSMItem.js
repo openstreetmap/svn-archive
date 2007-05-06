@@ -34,6 +34,13 @@ OpenLayers.OSMItem.prototype = {
 //			alert('uploading the following XML: to ' + URL + ' ' + data);
 			ajaxrequest(URL,'PUT',data,realCB,info);
 		},
+
+		del: function(URL,receiver,callback,info) {
+			var realCB = (receiver===null) ? callback:callback.bind(receiver);
+			var data = "method=DELETE";
+			ajaxrequest(URL,'DELETE',data,realCB,info);
+		},
+
 		CLASS_NAME : "OpenLayers.OSMItem"
 }
 			

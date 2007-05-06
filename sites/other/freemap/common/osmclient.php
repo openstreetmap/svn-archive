@@ -57,21 +57,24 @@ if($valid)
 
 	if($method=="PUT")
 	{
-	$data = stripslashes($input['data']);
-	$out .=" doing a PUT request with data $data ";
-	curl_setopt($ch,CURLOPT_PUT,1);
-	$fp=tmpfile();
-	fwrite($fp, $data);
-	fseek($fp, 0);
-	curl_setopt($ch,CURLOPT_INFILE,$fp);
-	curl_setopt($ch,CURLOPT_INFILESIZE,strlen($data));
-	//echo "PUTting to live OSM server temporarily disabled";
+		$data = stripslashes($input['data']);
+		$out .=" doing a PUT request with data $data ";
+		curl_setopt($ch,CURLOPT_PUT,1);
+		$fp=tmpfile();
+		fwrite($fp, $data);
+		fseek($fp, 0);
+		curl_setopt($ch,CURLOPT_INFILE,$fp);
+		curl_setopt($ch,CURLOPT_INFILESIZE,strlen($data));
 	}
+	elseif($method=="DELETE")
+	{
+		curl_setopt($ch,CURLOPT_CUSTOMREQUEST,"DELETE");
+	}
+
 	$resp=curl_exec($ch);
 	$httpCode=curl_getinfo($ch,CURLINFO_HTTP_CODE);
 	curl_close($ch);
 	if($fp) fclose($fp);
-	//echo $out." ".$resp;
 	return array ("content" => $resp, "code"=>$httpCode);
 }
 

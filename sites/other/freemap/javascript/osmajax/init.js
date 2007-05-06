@@ -16,6 +16,12 @@
 				else if (item instanceof OpenLayers.OSMNode)
 				{
 					alert('You selected a POI. XML=' + item.toXML());
+					/*
+					var ll = new OpenLayers.LonLat(item.geometry.x,
+									item.geometry.y);
+					var px = map.getViewPortPxFromLonLat(ll);
+					alert("px=" + px);
+					*/
 				}
 
 				selectedFeature = f; 
@@ -126,21 +132,28 @@
 				{buffer:1} );
 
 			var tpts = new OpenLayers.Layer.WMS( "OSM Trackpoints", 
-				"http://www.free-map.org.uk/freemap/common/trackpoints.php",
+				"http://www.free-map.org.uk/freemap/common/tp.php",
 				{'layers': 'trackpoints'} , {buffer:1} );
 
 			var npe = new OpenLayers.Layer.WMS( "New Popular Edition", 
 				"http://nick.dev.openstreetmap.org/openpaths/freemap.php",
 				{'layers': 'npe'},{buffer:1} );
 
+			/*
+			var landsat = new OpenLayers.Layer.WMS( "None", 
+				"http://www.free-map.org.uk/freemap/common/trackpoints.php",
+				{'layers': 'landsat'},{buffer:1} );
+			*/
+
 			map.addLayer(blank);
 			map.addLayer(tpts);
 			map.addLayer(npe);
+			//map.addLayer(landsat);
 			
 			map.setCenter(new OpenLayers.LonLat(easting,northing));
 			map.addControl(new OpenLayers.Control.LayerSwitcher());
 
-//			map.zoom = 1;
+			map.zoom = 1;
 
 			/*	NPE END */
 
@@ -278,14 +291,24 @@
 			{
 				var normLL = new OpenLayers.LonLat
 					(parseFloat(latlon[1]),parseFloat(latlon[0]));
-				map.setCenter(normLL, map.getZoom() );
-				//var bounds = map.getExtent();
 				var cvtr = new converter("OSGB");
+				var convLL  = cvtr.normToCustom(normLL);
+				map.setCenter(convLL);
+				//var bounds = map.getExtent();
 				var bounds = cvtr.customToNormBounds(map.getExtent());
 				vectorLayer.load(bounds);
 			}
 			else
 			{
 				alert("That place is not in the database");
+			}
+		}
+
+		function test()
+		{
+			alert('zoom is : ' +  map.zoom);
+			for(var a in map.baseLayer.resolutions)
+			{
+				alert('key=' + a + ' value=' + map.baseLayer.resolutions[a]);
 			}
 		}

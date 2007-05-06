@@ -99,6 +99,7 @@ OpenLayers.Layer.OSM.prototype =
 			
 	//		alert('testing point of itnerest');
 			if (point.isPOI())
+//			if(true)
 			{
 				var f = new OpenLayers.Feature.OSM(point);
 				this.addFeatures(f);
@@ -196,6 +197,7 @@ OpenLayers.Layer.OSM.prototype =
 						}
 						wayGeom.addComponent 
 							(this.segments[sid].nodes[1].geometry);
+						this.segments[sid].way = id; 
 					}
 				}
 
@@ -246,6 +248,7 @@ OpenLayers.Layer.OSM.prototype =
 			statusMsg('uploadNewWay(): uploading a new way');
 			var newNodes = new Array();
 			var info = { 'way' : way, 'node' : null }; 
+			var newNodeFirst = null, newNodeLast = null;
 
 			for(var count=0; count<way.segs.length; count++)
 			{
@@ -256,6 +259,11 @@ OpenLayers.Layer.OSM.prototype =
 					statusMsg('seg: ' + way.segs[count] + 
 							' adding new node ID ' +
 							this.segments[way.segs[count]].nodes[0].osmid);
+
+					if(count==0)
+					{
+						newNodeFirst = 0;
+					}
 				}
 				if(this.segments[way.segs[count]].nodes[1].osmid<0 &&
 			!in_array(newNodes,this.segments[way.segs[count]].nodes[1].osmid))
@@ -264,6 +272,11 @@ OpenLayers.Layer.OSM.prototype =
 					statusMsg('seg: ' + way.segs[count] + 
 							' adding new node ID ' +
 							this.segments[way.segs[count]].nodes[1].osmid);
+
+					if(count==way.segs.length-1)
+					{
+						newNodeLast = newNodes.length-1;
+					}
 				}
 			}
 
@@ -276,6 +289,8 @@ OpenLayers.Layer.OSM.prototype =
 				var info1 = new Array();
 				info1.node = newNodes[count];
 				info1.way = way;
+				if(count===newNodeFirst || count===newNodeLast)
+					info1.split=true;
 				newNodes[count].upload
 					//('http://www.free-map.org.uk/vector/dummy.php',
 					('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=node&id=0',
@@ -314,6 +329,13 @@ OpenLayers.Layer.OSM.prototype =
 					('All nodes were uploaded successfully. Doing segments');
 				this.uploadWaySegments(info.way);
 			}
+
+			/*
+			if(info.split)
+			{
+				this.waySplit(info.node);
+			}
+			*/
 		}
 		// Otherwise it's just a node so create a feature out of it
 		else
@@ -375,7 +397,7 @@ OpenLayers.Layer.OSM.prototype =
 		this.segments[info.segment.osmid] = null;
 
 		// Change the segment ID in the parent way
-		for (var count=0; count<info.w.osmitem.segs.length; count++)
+		for (var count=0; count<info.way.segs.length; count++)
 		{
 			if(info.way.segs[count] == info.segment.osmid)
 				info.way.segs[count] = segid;
@@ -391,8 +413,8 @@ OpenLayers.Layer.OSM.prototype =
 		{
 			statusMsg('all segments uploaded successfully, now doing the way');
 //			info.w.osmitem.upload('http://www.free-map.org.uk/vector/dummy.php',
-			way.upload('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=way&id=0',
-							this,this.wayDone,info.w.osmitem);
+			info.way.upload('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=way&id=0',
+							this,this.wayDone,info.way);
 		}
 	},
 
@@ -415,10 +437,117 @@ OpenLayers.Layer.OSM.prototype =
 							strokeColor: 'gray', strokeOpacity: 1,
 							strokeWidth: 3 };
 			var wayFeature= new OpenLayers.Feature.OSM(info,null,style);
-			this.layer.addFeatures(wayFeature);
+			this.addFeatures(wayFeature);
+
+			for(var count=0; count<info.segs.length; count++) {
+				this.segments[info.segs[count]].way = wayid;
+			}
+			
 			statusMsg('Way uploaded successfully. ID=' + wayid);
 		}
 	},
+
+	/*
+
+	waySplit : function(node) {
+		var seg = this.findNearestSegmentToNode(node);
+		if(seg.segid && seg.waypos) {
+			var info1=new Array();
+			info1.wayid = this.segments[seg.segid].way;
+			info1.waypos = seg.waypos;
+			info1.point = point;
+			info1.segment = this.segments[seg.segid];
+			this.segments[seg.segid].del
+					('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=segment&id='+seg.segid,this,this.waySplit2,info1);
+		}
+	},
+
+	waySplit2 : function(xmlHTTP, info) {
+		var node = new OpenLayers.OSMNode();
+		node.geometry = info.point;
+		info.segcount=0;
+		info.segs = new Array();
+		info.segs[0] = new OpenLayers.OSMSegment();
+		info.segs[1] = new OpenLayers.OSMSegment();
+		info.segs[0].setNodes (info.segment.nodes[0], node);
+		info.segs[1].setNodes (node, info.segment.nodes[1] );
+		this.segments[info.segment.osmid] = null;
+		info.node=node;
+		node.upload
+			('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=node&id=0",this,this.waySplit3,info);
+	},
+
+	waySplit3: function(xmlHTTP,info) {
+		if(info.segcount==0) {
+			info.node.osmid = xmlHTTP.responseText;
+			this.nodes[info.node.osmid] = info.node;
+		} else {
+			info.segs[info.segcount-1].osmid = xmlHTTP.responseText;
+			this.segments[info.segs[segcount-1].osmid] = info.segs[segcount-1];
+		}
+
+		if (info.segcount<2) {
+			info.segs[info.segcount].upload
+				('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=segment&id=0",this,this.waySplit3,info);
+		} else {
+			this.ways[info.wayid].segs.splice(info.waypos,1,
+					info.segs[0].osmid,info.segs[1].osmid);
+			this.ways[info.wayid].upload
+				('http://www.free-map.org.uk/freemap/common/osmproxy2.php?call=way&id="+info,wayid,this,this.waySplit4,info);
+		}
+	},
+
+	waySplit4: function(xmlHTTP,info) {
+		statusMsg("way split complete");
+	},
+
+	findNearestSegmentToNode: function (node) {
+
+		var dist, lowestDist=1000000, nearestSeg=new Array(), ll1,ll2,px1,px2;
+
+		for(segidx in this.segments) {
+			if (this.segments.nodes[0] != node &&
+				this.segments.nodes[1] != node) {
+
+				ll1 = new OpenLayers.LonLat
+					(this.segments[segidx].nodes[0].geometry.x,
+					this.segments[segidx].nodes[0].geometry.y);
+				ll2 = new OpenLayers.LonLat
+					(this.segments[segidx].nodes[1].geometry.x,
+					this.segments[segidx].nodes[1].geometry.y);
+
+				px1 = this.layer.map.getViewPortPxFromLonLat(ll1);
+				px2 = this.layer.map.getViewPortPxFromLonLat(ll2);
+
+				dist = this.distp(node.geometry.x,node.geometry.y,px1.x,px1.y,
+					px2.x,px2.y);
+				if(dist < lowestDist && dist < 3 && dist>=0) {
+					nearestSeg.segid = segidx;
+					nearestSeg.waypos = 
+					this.ways[this.segments[segidx].way].findSegmentPos(segidx);
+				}
+			}
+		}
+		return nearestSeg;
+	},
+
+	// find the distance from a point to a line
+ 	// based on theory at:
+ 	// astronomy.swin.edu.au/~pbourke/geometry/pointline/
+
+	distp: function(px,py,x1,y1,x2,y2) {
+		var u = ((px-x1)*(x2-x1)+(py-y1)*(y2-y1)) / 
+			(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+		var xintersection = x1+u*(x2-x1), yintersection=y1+u*(y2-y1);
+		return (u>=0&&u<=1) ? this.dist(px,py,xintersection,yintersection):
+					-1;
+	},
+	
+	dist: function(x1,y1,x2,y2) {
+		var dx=x2-x1,dy=y2-y1;
+		return Math.sqrt(dx*dx + dy*dy);
+	},
+	*/
 
 	CLASS_NAME: "OpenLayers.Layer.OSM"
 });

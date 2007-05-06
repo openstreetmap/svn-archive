@@ -54,12 +54,10 @@ function write_sidebar($mainpage=false)
 	<div id='links'>
 
 	<?php
-	$links = array ("Main Map" => array("/freemap/index.php?mode=mapnik","mapnikLink"),
+	$links = array ("Main Map" => array("/freemap/index.php?mode=mapnik",
+					"mapnikLink"),
 					"NPE map" => array("/freemap/index.php?mode=npe","npeLink"),
-					"POI Editor" => array("/freemap/index.php?mode=POIeditor",
-											"POIeditorLink"),
-					"osmajax" => array("/freemap/index.php?mode=osmajax",
-											"osmajaxLink"),
+					"osmajax" => array("/freemap/edit.php", "osmajaxLink"),
 					"Blog" => "/wordpress/index.php" ,
 					"Wiki" => "/wiki/index.php",
 					"Login" => "/freemap/common/login.php",
@@ -140,7 +138,7 @@ function write_searchbar()
 <option>be</option>
 <option>nl</option>
 </select>
-<input type='button' id='searchButton' value='Go!' onclick='placeSearch()'/>
+<input type='button' id='searchButton' value='Go!'/>
 <?php
 }
 
@@ -161,15 +159,21 @@ function write_milometer()
 
 function write_editcontrols()
 {
-?>
-<input type='button' value='navigate' onclick='nav()' id='navbtn'
-disabled='disabled'/>
-<input type='button' value='select' onclick='sel()' id='selbtn'/>
-<input type='button' value='draw' onclick='drw()' id='drwbtn'/>
-<input type='button' value='polygon' onclick='drwpoly()' id='drwpolybtn'/>
-<input type='button' value='change' onclick='chng()' id='chngbtn'/>
-<?php
+$controls = array("navigate","select","draw","polygon");
+echo "<div id='menubar'>";
+$first=true;
+foreach ($controls as $control)
+{
+	if($first)
+		$first=false;
+	else
+		echo "|";
+	echo "<span id=\"mode_$control\" onclick=\"setEditMode('$control')\"".
+		 "$control</span>";
 }
+echo "</div>";
+}
+
 
 function write_osmloginform($post_script="")
 {
@@ -193,5 +197,29 @@ function write_osmloginform($post_script="")
 	</p>
 	</form>
 	<?php
+}
+
+function do_coords($proj,$inp)
+{
+	$_SESSION['lon'] = isset($inp['lon']) ? $inp['lon']:
+		(isset($_SESSION['lon'])  ? $_SESSION['lon'] : -0.72 );
+	$_SESSION['lat'] = isset($inp['lat']) ? $inp['lat']:
+		(isset($_SESSION['lat'])  ? $_SESSION['lat'] : 51.05 );
+
+	switch($proj)
+	{
+		case "Mercator":
+			$en = ll_to_merc ($_SESSION['lat'],$_SESSION['lon']);
+			break;
+	
+		case "OSGB":
+			$en = wgs84_ll_to_gr 
+			(array("lat"=>$_SESSION['lat'],"long"=>$_SESSION['lon']));
+			break;
+
+		default:
+			$en = array ("e"=>$_SESSION['lon'], "n"=>$_SESSION['lat']);
+	}
+	return $en;
 }
 ?>

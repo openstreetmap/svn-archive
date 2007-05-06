@@ -3,6 +3,7 @@
 #
 # Copyright 2007
 #  * Oliver White
+#  * Hakan Tandogan
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,27 +23,35 @@ package getTile;
 use strict;
 use LWP::Simple;
 
-sub size{
-  # Tile size in pixels
-  return(256);
+sub size
+{
+    # Tile size in pixels
+    return(256);
 }
 
-sub tile{
-  my ($X, $Y, $Z) = @_;
-  # Download a tile and return its contents as PNG data
-  my $URL = URL($X,$Y,$Z);
-  my $Data = get($URL); 
-  return $Data;
+sub tile
+{
+    my ($X, $Y, $Z) = @_;
+    # Download a tile and return its contents as PNG data
+    my $URL = URL($X,$Y,$Z);
+    # print "   ...  Fetching $URL\n";
+    my $Data = get($URL); 
+    return $Data;
 }
   
-sub URL{
-  my ($X,$Y,$Z) = @_;
-  # Locate a tile's URL
-  return
-    sprintf
-      "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 
-      $Z, 
-      $X, 
-      $Y;
+sub URL
+{
+    my ($X,$Y,$Z) = @_;
+    # Locate a tile's URL
+    # "http://tile.openstreetmap.org/%d/%d/%d.png", 
+    # "http://dev.openstreetmap.org/~ojw/Tiles/maplint.php/%d/%d/%d.png", 
+    # "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 
+    return
+	sprintf
+	"http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 
+	$Z, 
+	$X, 
+	$Y;
 }
+
 1

@@ -3,6 +3,7 @@
 #
 # Copyright 2007
 #  * Oliver White
+#  * Hakan Tandogan
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,106 +20,113 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 #-----------------------------------------------------------------------------
 package getTileArea;
+
 use GD;
 use strict;
 use osm::getTile;
 use osm::tileCoords;
 
-sub createArea{
-  my ($Area, $Filename) = @_;
+sub createArea
+{
+    my ($Area, $Filename) = @_;
   
-  my ($X, $Y) = tileCoords::LLZ_to_XY(
-    $Area->{lat},
-    $Area->{long},
-    $Area->{zoom});
+    my ($X, $Y) = tileCoords::LLZ_to_XY(
+					$Area->{lat},
+					$Area->{long},
+					$Area->{zoom});
   
-  my $Image = GD::Image->new(
-    $Area->{width},
-    $Area->{height},
-    1);
+    my $Image = GD::Image->new(
+			       $Area->{width},
+			       $Area->{height},
+			       1);
 
-  my $BackgroundColour = $Image->colorAllocate(255,255,255); 
-  $Image->filledRectangle(
-    0,
-    0,
-    $Area->{width},
-    $Area->{height},
-    $BackgroundColour);
+    my $BackgroundColour = $Image->colorAllocate(255,255,255); 
+    $Image->filledRectangle(
+			    0,
+			    0,
+			    $Area->{width},
+			    $Area->{height},
+			    $BackgroundColour);
   
-  $Area->{aspect} = $Area->{width} /$Area->{height};
-  my $Tilesize = getTile::size();
+    $Area->{aspect} = $Area->{width} /$Area->{height};
+    my $Tilesize = getTile::size();
   
-  # Gridsize = how many tiles to go outwards from the centre when looking for
-  # things to add to the picture
-  my $GridSize = ($Area->{aspect} > 1)
-    ? (0.5 * $Area->{width} / $Area->{size})
-    : (0.5 * $Area->{height} / $Area->{size});
-  $GridSize = int($GridSize) + 1;
+    # Gridsize = how many tiles to go outwards from the centre when looking for
+    # things to add to the picture
+    my $GridSize = ($Area->{aspect} > 1)
+	? (0.5 * $Area->{width} / $Area->{size})
+	: (0.5 * $Area->{height} / $Area->{size});
+    $GridSize = int($GridSize) + 1;
   
-  printf "Using gridsize $GridSize\n"; 
+    printf "Using gridsize $GridSize\n"; 
   
-  my ($XA, $YA) = (int($X), int($Y));
-  my ($OffsetX, $OffsetY) = ($X - $XA, $Y - $YA);
-  my ($ImgCentreX, $ImgCentreY) = ($Area->{width}/2, $Area->{height}/2);
+    my ($XA, $YA) = (int($X), int($Y));
+    my ($OffsetX, $OffsetY) = ($X - $XA, $Y - $YA);
+    my ($ImgCentreX, $ImgCentreY) = ($Area->{width}/2, $Area->{height}/2);
   
-  if(0){
-    print "Location is $X, $Y\n";
-    print "Centre tile is $XA, $YA\n";
-    print "Offset by $OffsetX, $OffsetY\n";
-    print "Image centred on $ImgCentreX, $ImgCentreY\n";
-  }
-  
-  
-  for(my $xi = -$GridSize; $xi <= $GridSize; $xi++){
-    for(my $yi = -$GridSize; $yi <= $GridSize; $yi++){
-
-      my $ToX = $ImgCentreX + ((-$OffsetX + $xi) * $Area->{size});
-      my $ToY = $ImgCentreY + ((-$OffsetY + $yi) * $Area->{size});
-
-      if($ToX > -$Area->{size} && $ToX < $Area->{width}
-        && $ToY > -$Area->{size} && $ToY < $Area->{height}){
-        
-        my $PartData = getTile::tile($XA + $xi, $YA + $yi, $Area->{zoom});
-        if(defined $PartData){
-          
-          my $PartImage = GD::Image->newFromPngData($PartData, 1);
-          if($PartImage){
-          
-            $Image->copyResampled(
-              $PartImage, 
-              $ToX,
-              $ToY, 
-              0, 
-              0, 
-              $Area->{size},
-              $Area->{size},
-              $Tilesize, 
-              $Tilesize);
-            print '.'; flush STDOUT;
-            }
-          }
-        printf " To %1.3f, %1.3f (%1.3f px square)\n", $ToX, $ToY, $Area->{size};
-        }
+    if (0)
+    {
+	print "Location is $X, $Y\n";
+	print "Centre tile is $XA, $YA\n";
+	print "Offset by $OffsetX, $OffsetY\n";
+	print "Image centred on $ImgCentreX, $ImgCentreY\n";
     }
-  }
-  print "\n"; 
-
-  # Debug: mark centre
-  if(0){
-    my $OverlayColour = $Image->colorAllocate(0,0,0); 
-    $Image->line(0, $ImgCentreY, $Area->{width}, $ImgCentreY, $OverlayColour);
-    $Image->line($ImgCentreX, 0, $ImgCentreX, $Area->{height},$OverlayColour);
-  }
   
-  savePng($Image, $Filename);
+  
+    for(my $xi = -$GridSize; $xi <= $GridSize; $xi++)
+    {
+	for(my $yi = -$GridSize; $yi <= $GridSize; $yi++)
+	{
+	    my $ToX = $ImgCentreX + ((-$OffsetX + $xi) * $Area->{size});
+	    my $ToY = $ImgCentreY + ((-$OffsetY + $yi) * $Area->{size});
+
+	    if($ToX > -$Area->{size} && $ToX < $Area->{width}
+	       && $ToY > -$Area->{size} && $ToY < $Area->{height})
+	    {
+		my $PartData = getTile::tile($XA + $xi, $YA + $yi, $Area->{zoom});
+		if(defined $PartData)
+		{
+		    my $PartImage = GD::Image->newFromPngData($PartData, 1);
+		    if($PartImage)
+		    {
+			$Image->copyResampled(
+					      $PartImage, 
+					      $ToX,
+					      $ToY, 
+					      0, 
+					      0, 
+					      $Area->{size},
+					      $Area->{size},
+					      $Tilesize, 
+					      $Tilesize);
+			print '.'; flush STDOUT;
+		    }
+		}
+		# printf " To %1.3f, %1.3f (%1.3f px square)\n", $ToX, $ToY, $Area->{size};
+	    }
+	}
+    }
+    print "\n"; 
+
+    # Debug: mark centre
+    if (0)
+    {
+	my $OverlayColour = $Image->colorAllocate(0,0,0); 
+	$Image->line(0, $ImgCentreY, $Area->{width}, $ImgCentreY, $OverlayColour);
+	$Image->line($ImgCentreX, 0, $ImgCentreX, $Area->{height},$OverlayColour);
+    }
+
+    savePng($Image, $Filename);
 }
 
-sub savePng{
-  my ($Image, $Filename) = @_;
+sub savePng
+{
+    my ($Image, $Filename) = @_;
   
-  open(my $fp , '>', $Filename) || return;
-  binmode $fp;
-  print $fp $Image->png;
-  close $fp;
+    open(my $fp , '>', $Filename) || return;
+    binmode $fp;
+    print $fp $Image->png;
+    close $fp;
 }
+
 1

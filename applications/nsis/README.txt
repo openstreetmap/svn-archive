@@ -2,8 +2,9 @@ This is the Win32 installer generator for OpenStreetMap, to create a Windows
 like installer. This should ease installation and provides a reasonable set of 
 default preferences for Windows users.
 
-Currently only josm is included in the installer. Probably, other osm related 
-applications like osmarender and mapnik will be added later.
+Currently only josm and a small assortment of josm plugins is included in the 
+installer. Probably, other osm related applications like osmarender and mapnik 
+will be added later.
 
 
 install

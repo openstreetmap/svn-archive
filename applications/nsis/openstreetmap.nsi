@@ -13,7 +13,6 @@ SetCompressor /SOLID lzma
 ; work with JAVA ini strings
 !include "INIStrNS.nsh"
 
-!define VERSION "0.0.5"
 !define DEST "openstreetmap"
 
 InstType "OpenStreetMap (full install)"
@@ -368,8 +367,8 @@ SectionIn 1 2
 SetShellVarContext current
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\mappaint.jar"
-SetOutPath $APPDATA\JOSM\plugins\mappaint
-File "downloads\elemstyles.xml"
+;SetOutPath $APPDATA\JOSM\plugins\mappaint
+;File "downloads\elemstyles.xml"
 SectionEnd
 
 Section "osmarender" SecOsmarenderPlugin
@@ -456,9 +455,9 @@ Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
 Delete "$APPDATA\JOSM\plugins\mappaint.jar"
-Delete "$APPDATA\JOSM\plugins\mappaint\elemstyles.xml"
+;Delete "$APPDATA\JOSM\plugins\mappaint\elemstyles.xml"
 RMDir "$APPDATA\JOSM\plugins\osmarender"
-RMDir "$APPDATA\JOSM\plugins\mappaint"
+;RMDir "$APPDATA\JOSM\plugins\mappaint"
 RMDir "$APPDATA\JOSM\plugins"
 RMDir "$APPDATA\JOSM"
 SectionEnd

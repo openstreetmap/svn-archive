@@ -1,0 +1,33 @@
+# Title page
+text: OpenStreetMap  (65, 170, 12)
+text: Istanbul - WIP (70, 110, 12)
+==page==
+
+# Istanbul, Auto-Zoom (gives 12)
+map: (41.112272, 28.900000, 50) at (10, 10, 190, 260)
+# option: tilesource = default
+text: Istanbul, Auto-Zoom 12 - 50 km (10, 271, 10)
+==page==
+
+# Istanbul, Auto-Zoom (gives 12), Maplint
+option: tilesource = maplint
+map: (41.112272, 28.900000, 50) at (10, 10, 190, 260)
+text: Istanbul, Auto-Zoom 12 - 50 km - maplint (10, 271, 10)
+==page==
+
+# Istanbul, Auto-Zoom (gives 12), Mapnik
+option: tilesource = mapnik
+map: (41.112272, 28.900000, 50) at (10, 10, 190, 260)
+text: Istanbul, Auto-Zoom 12 - 50 km - mapnik (10, 271, 10)
+==page==
+
+# Final page
+text: Copyright 2007, various OpenStreetMap contributors. (20, 260, 4)
+text: http://openstreetmap.org (20, 252, 4)
+text: This atlas is licensed under the  (20, 245, 4)
+text: Creative Commons Attribution ShareAlike license v2.0. (20, 240, 4)
+text: http://creativecommons.org/licenses/by-sa/2.0/ (20, 235, 4)
+
+# This lists all the external resources that have been included:
+attribution: (20, 220, 4)
+

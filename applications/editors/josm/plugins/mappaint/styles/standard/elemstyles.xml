@@ -234,6 +234,10 @@ a little help:
 <area colour="#bde3cb"/>
 </rule>
 
+<rule>
+<condition k="military" v="danger_area" />
+	<area colour="#b62c2c"/>
+</rule>
 
 <rule>
 <condition k="natural" v="peak" />

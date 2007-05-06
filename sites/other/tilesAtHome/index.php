@@ -21,7 +21,7 @@
   
   
   <p>Status pages:<ul>
-	<li><a href="http://www.openstreetmap.org/munin/openstreetmap/dev.openstreetmap.html">Server status graphs</a></li>
+	<li><a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html">Server status graphs</a></li>
 	<li><a href="Credits/">List of people uploading tiles</a></li>
 	<li><a href="Stats/">Downloadable list of all tiles</a></li>
 	<li><a href="Stats/Data/access.htm">Access logs</a></li>

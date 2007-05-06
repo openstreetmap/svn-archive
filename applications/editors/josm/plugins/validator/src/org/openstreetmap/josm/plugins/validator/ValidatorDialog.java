@@ -159,7 +159,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		Main.ds.fireSelectionChanged(Main.ds.getSelected());
 		       
     	OSMValidatorPlugin.getPlugin().validateAction.doValidate(e, false);
-        // TODO keep the tree open as it was before the fix
 	}	
 	
     /**

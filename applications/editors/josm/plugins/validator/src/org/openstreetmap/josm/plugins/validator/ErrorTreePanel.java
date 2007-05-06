@@ -76,7 +76,28 @@ public class ErrorTreePanel extends JTree
 			treeModel.setRoot(rootNode);
 			return;
 		}
-		
+
+        // Remember the currently expanded rows
+        Set<Object> oldSelectedRows = new HashSet<Object>();
+        Enumeration<TreePath> expanded = getExpandedDescendants( new TreePath(getRoot()) );
+        if( expanded != null )
+        {
+            while( expanded.hasMoreElements() )
+            {
+                TreePath path = expanded.nextElement();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent(); 
+                Object userObject = node.getUserObject();
+                if( userObject instanceof Severity )
+                    oldSelectedRows.add(userObject);
+                else if (userObject instanceof String)
+                {
+                    String msg = (String)userObject;
+                    msg = msg.substring(0, msg.lastIndexOf(" ("));
+                    oldSelectedRows.add(msg);
+                }
+            }
+        }
+        
 		Map<Severity, Bag<String, TestError>> errorTree = new HashMap<Severity, Bag<String, TestError>>();
 		for(Severity s : Severity.values())
 		{
@@ -88,6 +109,7 @@ public class ErrorTreePanel extends JTree
 			errorTree.get(e.getSeverity()).add(e.getMessage(), e);
 		}
 		
+        List<TreePath> expandedPaths = new ArrayList<TreePath>();
 		for(Severity s : Severity.values())
 		{
 			Bag<String,	TestError> severityErrors = errorTree.get(s);
@@ -97,7 +119,10 @@ public class ErrorTreePanel extends JTree
 			// Severity node
 			DefaultMutableTreeNode severityNode = new DefaultMutableTreeNode(s);
 			rootNode.add(severityNode);
-			
+            
+			if( oldSelectedRows.contains(s))
+                expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode} ) );
+            
 			for(Entry<String, List<TestError>> msgErrors : severityErrors.entrySet()  )
 			{
 				// Message node
@@ -105,7 +130,10 @@ public class ErrorTreePanel extends JTree
 				String msg = msgErrors.getKey() + " (" + errors.size() + ")";
 				DefaultMutableTreeNode messageNode = new DefaultMutableTreeNode(msg);
 				severityNode.add(messageNode);
-				
+
+                if( oldSelectedRows.contains(msgErrors.getKey()))
+                    expandedPaths.add( new TreePath( new Object[] {rootNode, severityNode, messageNode} ) );
+                
 				for (TestError error : errors) 
 				{
 					// Error node
@@ -115,8 +143,11 @@ public class ErrorTreePanel extends JTree
 			}
 		}
 
-		treeModel.setRoot(rootNode);
-		this.scrollRowToVisible(treeModel.getChildCount(rootNode)-1);
+        treeModel.setRoot(rootNode);
+        for( TreePath path : expandedPaths)
+        {
+            this.expandPath(path);
+        }
 	}
 
     /**
@@ -134,7 +165,7 @@ public class ErrorTreePanel extends JTree
     @SuppressWarnings("unchecked")
     public void expandAll()
     {
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
+        DefaultMutableTreeNode root = getRoot();
         
         int row = 0;
         Enumeration<DefaultMutableTreeNode> children = root.breadthFirstEnumeration();

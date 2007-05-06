@@ -64,6 +64,8 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Way w) {
 		double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
+		boolean showDirection =	Main.pref.getBoolean("draw.segment.direction") ;
+		if (Main.pref.getBoolean("mappaint.useRealWidth",false) && showDirection && !w.selected) showDirection = false;
 		Color colour = getPreferencesColor("untagged",Color.GRAY);
 		int width = 2;
 		int realWidth = 0; //the real width of the element in meters 
@@ -93,17 +95,17 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			orderNumber++;
 				if (area && fillAreas)
 					//Draw segments in a different colour so direction arrows show against the fill
-					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"), width,true);
+					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY),showDirection, width,true);
 				else
 					if (area)
-						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,true);
+						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,showDirection, width,true);
 					else
-						if (realWidth > 0 && Main.pref.getBoolean("mappaint.useRealWidth",false)){
+						if (realWidth > 0 && Main.pref.getBoolean("mappaint.useRealWidth",false) && !showDirection){
 							int tmpWidth = (int) (100 /  (float) (circum / realWidth));
 							if (tmpWidth > width) width = tmpWidth;
 						}
 
-						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,false);
+						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,showDirection, width,false);
 				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
 				{
 					try
@@ -168,6 +170,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered - now specify width
 	@Override protected void drawSegment(Segment ls, Color col,boolean showDirection) {
+			if (Main.pref.getBoolean("mappaint.useRealWidth",false) && showDirection && !ls.selected) showDirection = false;
 			drawSegment(ls,col,showDirection,1,false);
 	}
 
@@ -187,7 +190,8 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		if (dashed) 
 			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
 		else 
-			g2d.setStroke(new BasicStroke(width));
+			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+			//g2d.setStroke(new BasicStroke(width));
 
 		Point p1 = nc.getPoint(ls.from.eastNorth);
 		Point p2 = nc.getPoint(ls.to.eastNorth);

@@ -3,10 +3,9 @@ package org.openstreetmap.josm.plugins.validator.util;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -162,5 +161,77 @@ public class Util
 				}
 			}
 		}
+    }
+    
+    /**
+     * Mirrors a file to a local file.
+     * <p>
+     * The file mirrored is only downloaded if it has been more than one day since last download
+     * 
+     * @param url The URL of the remote file
+     * @param destDir The destionation dir of the mirrored file
+     * @return The local file
+     * @throws IOException If any error reading or writing the file
+     */
+    public static File mirror(URL url, String destDir) throws IOException
+    {
+        if( url.getProtocol().equals("file") )
+            return new File(url.toString() ) ;
+        
+        String localPath = Main.pref.get("tests.mirror." + url);
+        File oldFile = null;
+        if( localPath != null && localPath.length() > 0)
+        {
+            StringTokenizer st = new StringTokenizer(localPath, ";");
+            long checkDate = Long.parseLong(st.nextToken());
+            localPath = st.nextToken();
+            oldFile = new File(localPath);
+            if( System.currentTimeMillis() - checkDate < 24 * 60 * 60 * 1000 )
+            {
+                if( oldFile.exists() )
+                    return oldFile;
+            }
+        }
+
+        localPath = destDir + System.currentTimeMillis() + "-" + new File(url.getPath()).getName(); 
+        BufferedOutputStream bos = null;
+        BufferedInputStream bis = null;
+        try 
+        {
+            bis = new BufferedInputStream(url.openStream());
+            bos = new BufferedOutputStream( new FileOutputStream(localPath) );
+            byte[] buffer = new byte[4096];
+            int length;
+            while( (length = bis.read( buffer )) > -1 )
+            {
+                bos.write( buffer, 0, length );
+            }
+        }
+        finally
+        {
+            if( bis != null )
+            {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if( bos != null )
+            {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        Main.pref.put("tests.mirror." + url, System.currentTimeMillis() + ";" + localPath);
+        
+        if( oldFile != null )
+            oldFile.delete();
+
+        return new File(localPath);
     }
 }

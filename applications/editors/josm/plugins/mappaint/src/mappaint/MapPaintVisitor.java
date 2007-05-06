@@ -180,6 +180,13 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		//do not draw already visible segments
 		if (ls.shown) return;
 		ls.shown=true;
+		Point p1 = nc.getPoint(ls.from.eastNorth);
+		Point p2 = nc.getPoint(ls.to.eastNorth);
+		// checking if this segment is visible
+		if ((p1.x < 0) && (p2.x < 0)) return ;
+		if ((p1.y < 0) && (p2.y < 0)) return ;
+		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return ;
+		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return ;
 		Graphics2D g2d = (Graphics2D)g;
 		if (ls.incomplete)
 			return;
@@ -191,15 +198,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
 		else 
 			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-			//g2d.setStroke(new BasicStroke(width));
-
-		Point p1 = nc.getPoint(ls.from.eastNorth);
-		Point p2 = nc.getPoint(ls.to.eastNorth);
-		// checking if this Point is visible
-		if ((p1.x < 0) && (p2.x < 0)) return ;
-		if ((p1.y < 0) && (p2.y < 0)) return ;
-		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return ;
-		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return ;
 
 		g.drawLine(p1.x, p1.y, p2.x, p2.y);
 
@@ -208,6 +206,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	    g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
 	    g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
 		}
+		g2d.setStroke(new BasicStroke(1));
 		
 	}
 

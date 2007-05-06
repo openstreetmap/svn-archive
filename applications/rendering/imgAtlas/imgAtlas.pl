@@ -160,12 +160,32 @@ while(my $Line = <COMMANDS>){
     my ($MapOptions, $PositionOptions) = ($1, $2);
     my ($Lat, $Long, $SizeKm, $Zoom) = split(/\s*,\s*/, $MapOptions);
     my ($X,$Y,$W,$H) = split(/\s*,\s*/, $PositionOptions);
-    
+
     # Process those map options
     my $Filename = datafile('png');
     my $AspectRatio = $W / $H;
     my $ImgW = ($W / 25) * $Option{dpi}; # pixels = width in inches * DPI
     my $ImgH = $ImgW / $AspectRatio;
+    
+    if (!(defined($Zoom)))
+    {
+	my $DesiredSizeOfTilePx = getTile::size();
+	# print "  .... auto-determiner: DesiredSizeOfTilePx = $DesiredSizeOfTilePx\n";
+
+	my $DesiredWidthInTiles = $ImgW / $DesiredSizeOfTilePx;
+	# print "  .... auto-determiner: ImgW = $ImgW\n";
+	# print "  .... auto-determiner: DesiredWidthInTiles = $DesiredWidthInTiles\n";
+
+	my $DesiredSizeOfTileKm = $SizeKm / $DesiredWidthInTiles;
+	# print "  .... auto-determiner: SizeKm = $SizeKm\n";
+	# print "  .... auto-determiner: DesiredSizeOfTileKm = $DesiredSizeOfTileKm\n";
+
+	my $DesiredZoom = 12 - log($DesiredSizeOfTileKm / 10) / log(2);		
+	print "  .... auto-determiner: DesiredZoom = $DesiredZoom\n";
+
+	$Zoom = int($DesiredZoom + 0.5);
+	print "Auto-Determined Zoom: $Zoom\n";
+    }
     
     my $SizeOfTileKm = 10 * (2 ** (12 - $Zoom));  # Z-12 is about 10km, and each additional zoom halves that
     my $WidthInTiles = $SizeKm / $SizeOfTileKm;   # How many tiles should fit across the map
@@ -196,15 +216,19 @@ while(my $Line = <COMMANDS>){
 print "Saving PDF to $Filename\n";
 $PDF->saveas($Filename);
 
-BEGIN {
+BEGIN
+{
   my $NextFileNum = 1;
-  sub datafile{
+  sub datafile
+  {
     my $Suffix = shift();
     return
       sprintf("Data/%05d.$Suffix", $NextFileNum++);
   }
 }
-sub textAt{
+
+sub textAt
+{
   my ($Text, $X, $Y, $Size) = @_;
   
   my $TextHandler = $Page->text;
@@ -214,7 +238,9 @@ sub textAt{
   $TextHandler->text($Text);
   
 }
-sub newPage{
+
+sub newPage
+{
   # A4 page
   $Page = $PDF->page;
   $Page->mediabox(210/mm, 297/mm);

@@ -63,8 +63,10 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Way w) {
+		double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
 		Color colour = getPreferencesColor("untagged",Color.GRAY);
-		int width=2;
+		int width = 2;
+		int realWidth = 0; //the real width of the element in meters 
 		boolean area=false;
 		ElemStyle wayStyle = MapPaintPlugin.elemStyles.getStyle(w);
 		if(wayStyle!=null)
@@ -73,6 +75,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			{
 				colour = ((LineElemStyle)wayStyle).getColour();
 				width = ((LineElemStyle)wayStyle).getWidth();
+				realWidth = ((LineElemStyle)wayStyle).getRealWidth();	
 			}
 			else if (wayStyle instanceof AreaElemStyle)
 			{
@@ -95,6 +98,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 					if (area)
 						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,true);
 					else
+						if (realWidth > 0 && Main.pref.getBoolean("mappaint.useRealWith",false)){
+							int tmpWidth = (int) (100 /  (float) (circum / realWidth));
+							if (tmpWidth > width) width = tmpWidth;
+						}
+
 						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,false);
 				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
 				{
@@ -216,7 +224,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1
 	// Shows areas before non-areas
 	public void visitAll(DataSet data) {
-
+		
 		Collection<Way> noAreaWays = new LinkedList<Way>();
 
 		for (final OsmPrimitive osm : data.segments)

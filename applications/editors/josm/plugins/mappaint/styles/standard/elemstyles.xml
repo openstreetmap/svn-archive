@@ -2,7 +2,7 @@
 <!-- highway tags -->
 	<rule>
 		<condition k="highway" v="footway"/>
-		<line width="1" colour="#00ff00" />
+		<line width="1" realwidth="1" colour="#00ff00" />
 	</rule>
 
 	<rule>
@@ -17,7 +17,7 @@
 
 	<rule>
 		<condition k="highway" v="primary"/>
-		<line width="3" colour="#fb805f"/>
+		<line width="3" realwidth="8" colour="#fb805f"/>
 	</rule>
 
 	<rule>
@@ -27,12 +27,12 @@
 
 	<rule>
 		<condition k="highway" v="secondary"/>
-		<line width="3" colour="#fdbf6f"/>
+		<line width="3" realwidth="6" colour="#fdbf6f"/>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="motorway"/>
-		<line width="3" colour="#809bc0"/>
+		<line width="3" realwidth="8" colour="#809bc0"/>
 	</rule>
 
 	<rule>
@@ -47,7 +47,7 @@
 
 	<rule>
 		<condition k="highway" v="cycleway"/>
-		<line width="1" colour="#ff00ff"/>
+		<line width="1" realwidth="2" colour="#ff00ff"/>
 	</rule>
 
 	<rule>
@@ -57,7 +57,7 @@
 
 	<rule>
 		<condition k="highway" v="residential"/>
-		<line width="2" colour="#c0c0c0"/>
+		<line width="2" realwidth="5" colour="#c0c0c0"/> 
 	</rule>
 
 	<rule>
@@ -68,7 +68,7 @@
 <!--waterway tags -->
 	<rule>
 		<condition k="waterway" v="river"/>
-		<line width="2" colour="#0000ff" />
+		<line realwidth="10" colour="#0000ff" />
 	</rule>
 
 	<rule>
@@ -78,7 +78,7 @@
 
 	<rule>
 		<condition k="waterway" v="riverbank"/>
-		<line widht="1" colour="#0000ff"/>
+		<line width="1" colour="#0000ff"/>
 	</rule>
 
 
@@ -187,7 +187,7 @@
 
 <rule>
 <condition k="landuse" v="cemetery"/>
-<line widht="1" colour="#bde3cb"/>
+<line width="1" colour="#bde3cb"/>
 </rule>
 
 <rule>

@@ -17,7 +17,8 @@ public class ElemStyleHandler extends DefaultHandler
     boolean inDoc, inRule, inCondition, inElemStyle, inLine, inIcon, inArea;
     ElemStyle curStyle;
     ElemStyles styles;
-    String curWidth, curKey, curValue;
+    String curKey, curValue ;
+		int curWidth = 1, curRealWidth = 0;
 	int curMinZoom;
     ImageIcon curIcon;
     Color curColour;
@@ -77,9 +78,11 @@ public class ElemStyleHandler extends DefaultHandler
                 for(int count=0; count<atts.getLength(); count++)
                 {
                     if(atts.getQName(count).equals("width"))
-                        curWidth = atts.getValue(count);
+                        curWidth = Integer.parseInt(atts.getValue(count));
                     else if (atts.getQName(count).equals("colour"))
                         curColour=ColorHelper.html2color(atts.getValue(count));
+										else if (atts.getQName(count).equals("realwidth"))
+												curRealWidth=Integer.parseInt(atts.getValue(count));
                 }
             }
 			else if (qName.equals("zoom"))
@@ -136,8 +139,10 @@ public class ElemStyleHandler extends DefaultHandler
         else if (inLine && qName.equals("line"))
         {
             inLine = false;
-            curStyle = new LineElemStyle(Integer.parseInt(curWidth), curColour,
+            curStyle = new LineElemStyle(curWidth,curRealWidth, curColour,
 										curMinZoom);
+						curWidth=1;
+						curRealWidth = 0;
         }
         else if (inIcon && qName.equals("icon"))
         {

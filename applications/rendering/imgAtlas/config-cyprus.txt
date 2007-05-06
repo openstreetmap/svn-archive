@@ -1,0 +1,48 @@
+#
+# Cyprus
+#
+# Lat: 34.50 - 35.70
+# Lon: 32.00 - 34.65
+#
+
+
+# Title page
+text: OpenStreetMap (65, 170, 12)
+text:      Cyprus   (90, 110, 12)
+==page==
+
+# Auto-Zoomed page
+map: (35.100000, 33.325000, 300) at (10, 10, 190, 260)
+text: Cyprus, Auto-Zoom (10, 265, 10)
+==page==
+
+# Zoom Level 8 page
+map: (35.100000, 33.325000, 300, 8) at (10, 10, 190, 260)
+text: Cyprus, Zoom Level 8 (10, 265, 10)
+==page==
+
+# Zoom Level 9 page
+map: (35.100000, 33.325000, 300, 9) at (10, 10, 190, 260)
+text: Cyprus, Zoom Level 9 (10, 265, 10)
+==page==
+
+# Zoom Level 10 page
+map: (35.100000, 33.325000, 300, 10) at (10, 10, 190, 260)
+text: Cyprus, Zoom Level 10 (10, 265, 10)
+==page==
+
+# Zoom Level 11 page
+map: (35.100000, 33.325000, 300, 11) at (10, 10, 190, 260)
+text: Cyprus, Zoom Level 10 (10, 265, 11)
+==page==
+
+# Final page
+text: Copyright 2007, various OpenStreetMap contributors. (20, 260, 4)
+text: http://openstreetmap.org (20, 252, 4)
+text: This atlas is licensed under the  (20, 245, 4)
+text: Creative Commons Attribution ShareAlike license v2.0. (20, 240, 4)
+text: http://creativecommons.org/licenses/by-sa/2.0/ (20, 235, 4)
+
+# This lists all the external resources that have been included:
+attribution: (20, 220, 4)
+

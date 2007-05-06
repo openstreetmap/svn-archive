@@ -52,6 +52,9 @@ public class ValidateAction extends JosmAction
 	public void doValidate(@SuppressWarnings("unused") ActionEvent ev, boolean getSelectedItems)
 	{
 		OSMValidatorPlugin plugin = OSMValidatorPlugin.getPlugin();
+        if( plugin.validateAction == null || Main.map == null || !Main.map.isVisible() )
+            return;
+        
 		plugin.errors = new ArrayList<TestError>();
 		plugin.validationDialog.setVisible(true);
 		
@@ -93,7 +96,7 @@ public class ValidateAction extends JosmAction
 		}
 		tests = null;
 		
-		plugin.validationDialog.refresh();
+		plugin.validationDialog.refresh(plugin.errors);
         Main.map.repaint();
         Main.ds.fireSelectionChanged(Main.ds.getSelected());
         

@@ -22,26 +22,21 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.Util;
 
 /**
- * A small tool dialog for displaying the current selection. The selection manager
+ * A small tool dialog for displaying the current errors. The selection manager
  * respects clicks into the selection list. Ctrl-click will remove entries from
  * the list while single click will make the clicked entry the only selection.
  *
- * @author imi
+ * @author frsantos
  */
 public class ValidatorDialog extends ToggleDialog implements ActionListener
 {
     /** Serializable ID */
     private static final long serialVersionUID = 2952292777351992696L;
 
-    /**
-     * The validation data.
-     */
-	protected DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode());
-
 	/**
      * The display tree.
      */
-    protected JTree tree = new JTree(treeModel);
+    protected ErrorTreePanel tree;
 
     /** 
      * The fix button
@@ -53,7 +48,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
      */
     private JButton selectButton;
     
-    /** Last selected truee element */
+    /** Last selected element */
     private DefaultMutableTreeNode lastSelectedNode = null;
 
     /**
@@ -63,14 +58,9 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     {
         super(tr("Validation errors"), "validator", tr("Open the validation window."), KeyEvent.VK_V, 150);
         
-		tree.setRootVisible(false);
-		tree.setShowsRootHandles(true);
-		tree.expandRow(0);
-		tree.setVisibleRowCount(8);
+        tree = new ErrorTreePanel();
 		tree.addMouseListener(new ClickWatch());
 		tree.addTreeSelectionListener(new SelectionWatch());
-		tree.setCellRenderer(new ErrorTreeRenderer());
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
@@ -89,73 +79,16 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
     }
 
     @Override 
-    public void setVisible(boolean v) {
-		if (v)
-			buildTree();
-		else if (tree != null)
-			treeModel.setRoot(new DefaultMutableTreeNode());
+    public void setVisible(boolean v) 
+    {
+        if( tree != null )
+            tree.setVisible(v);
 		if( action != null && action.button != null )
 			action.button.setSelected(v);
 		super.setVisible(v);
 	}
     
     
-	/**
-	 * Builds the errors tree
-	 */
-	private void buildTree() 
-	{
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-
-		List<TestError> errorList = OSMValidatorPlugin.getPlugin().errors;
-		if( errorList == null || errorList.isEmpty() )
-		{
-			treeModel.setRoot(rootNode);
-			return;
-		}
-		
-		Map<Severity, Bag<String, TestError>> errorTree = new HashMap<Severity, Bag<String, TestError>>();
-		for(Severity s : Severity.values())
-		{
-			errorTree.put(s, new Bag<String, TestError>(20));
-		}
-		
-		for(TestError e : errorList)
-		{
-			errorTree.get(e.getSeverity()).add(e.getMessage(), e);
-		}
-		
-		for(Severity s : Severity.values())
-		{
-			Bag<String,	TestError> severityErrors = errorTree.get(s);
-			if( severityErrors.isEmpty() )
-				continue;
-			
-			// Severity node
-			DefaultMutableTreeNode severityNode = new DefaultMutableTreeNode(s);
-			rootNode.add(severityNode);
-			
-			for(Entry<String, List<TestError>> msgErrors : severityErrors.entrySet()  )
-			{
-				// Message node
-				List<TestError> errors = msgErrors.getValue();
-				String msg = msgErrors.getKey() + " (" + errors.size() + ")";
-				DefaultMutableTreeNode messageNode = new DefaultMutableTreeNode(msg);
-				severityNode.add(messageNode);
-				
-				for (TestError error : errors) 
-				{
-					// Error node
-					DefaultMutableTreeNode errorNode = new DefaultMutableTreeNode(error);
-					messageNode.add(errorNode);
-				}
-			}
-		}
-
-		treeModel.setRoot(rootNode);
-		tree.scrollRowToVisible(treeModel.getChildCount(rootNode)-1);
-	}
-	
 	/**
 	 * Fix selected errors
 	 * @param e 
@@ -215,6 +148,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		Main.ds.fireSelectionChanged(Main.ds.getSelected());
 		       
     	OSMValidatorPlugin.getPlugin().validateAction.doValidate(e, false);
+        // TODO keep the tree open as it was before the fix
 	}	
 	
     /**
@@ -264,10 +198,12 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 
 	/**
 	 * Refresh the error messages display
+	 * @param errors The errors to display
 	 */
-	public void refresh()
+	public void refresh(List<TestError> errors)
 	{
-		buildTree();
+        tree.setErrors(errors);
+		tree.buildTree();
 	}
 	
     /**
@@ -331,7 +267,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         @Override 
 		public void mouseClicked(MouseEvent e) 
 		{
-            System.out.println("mouseClicked " + e.getClickCount() + " " + e.getSource());
             fixButton.setEnabled(false);
             selectButton.setEnabled(false);
             
@@ -356,7 +291,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
         @SuppressWarnings("unchecked")
 		public void valueChanged(TreeSelectionEvent e) 
 		{
-            System.out.println("valueChanged");
 	        fixButton.setEnabled(false);
             selectButton.setEnabled(false);
         	

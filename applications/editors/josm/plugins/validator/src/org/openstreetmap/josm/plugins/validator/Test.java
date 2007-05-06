@@ -1,14 +1,15 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
+import org.openstreetmap.josm.tools.GBC;
 
 /**
  * Parent class for all validation tests.
@@ -27,8 +28,17 @@ public class Test implements Visitor
 	/** Description of the test */
 	protected String description;
 	
-	/** Whether this test is enabled. Used by peferences */
-	protected boolean enabled;
+    /** Whether this test is enabled. Used by peferences */
+    protected boolean enabled;
+
+    /** The preferences check for validation on upload */
+    protected JCheckBox checkBeforeUpload;
+    
+    /** Whether this test must check before upload. Used by peferences */
+    protected boolean testBeforeUpload;
+
+    /** Whether this test is performing just before an upload */
+    protected boolean isBeforeUpload;
 
 	/** The list of errors */
 	protected List<TestError> errors = new ArrayList<TestError>(30);
@@ -123,13 +133,27 @@ public class Test implements Visitor
 	 */
 	public void addGui(@SuppressWarnings("unused") JPanel testPanel) 
 	{
+        checkBeforeUpload = new JCheckBox();
+        checkBeforeUpload.setSelected(testBeforeUpload);
+        testPanel.add(checkBeforeUpload, GBC.eop().insets(20,0,0,0));
 	}
+
+    /**
+     * Enables or disables the test in the preferences gui
+     * @param enabled
+     */
+    public void setGuiEnabled(boolean enabled)
+    {
+        checkBeforeUpload.setEnabled(enabled);
+    }   
 
 	/**
 	 * Called when the used submits the preferences
 	 */
 	public void ok() 
 	{
+        String simpleName = getClass().getSimpleName();
+        Main.pref.put("tests." + simpleName + ".checkBeforeUpload", checkBeforeUpload.isSelected() );
 	}
 	
 	/**
@@ -152,5 +176,23 @@ public class Test implements Visitor
 	public boolean isFixable(@SuppressWarnings("unused") TestError testError)
 	{
 		return false;
-	}	
+	}
+
+    /**
+     * Returns true if this plugin must check the uploaded data before uploading
+     * @return true if this plugin must check the uploaded data before uploading
+     */
+    public boolean testBeforeUpload()
+    {
+        return testBeforeUpload;
+    }
+
+    /**
+     * Sets the flag that marks an upload check
+     * @param isUpload if true, the test is before upload
+     */
+    public void setBeforeUpload(boolean isUpload)
+    {
+        this.isBeforeUpload = isUpload;
+    }
 }

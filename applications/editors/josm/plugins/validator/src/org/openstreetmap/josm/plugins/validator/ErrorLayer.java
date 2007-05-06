@@ -7,9 +7,11 @@ import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -20,7 +22,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  * @author frsantos
  */
-public class ErrorLayer extends Layer
+public class ErrorLayer extends Layer implements LayerChangeListener
 {
 	/**
 	 * Constructor 
@@ -29,6 +31,7 @@ public class ErrorLayer extends Layer
 	public ErrorLayer(String name) 
     {
 		super(name);
+        Main.map.mapView.addLayerChangeListener(this); 
 	}
 
 	/**
@@ -47,7 +50,7 @@ public class ErrorLayer extends Layer
     @Override 
     public void paint(final Graphics g, final MapView mv) 
     {
-        DefaultMutableTreeNode root = (DefaultMutableTreeNode) OSMValidatorPlugin.getPlugin().validationDialog.treeModel.getRoot();
+        DefaultMutableTreeNode root = OSMValidatorPlugin.getPlugin().validationDialog.tree.getRoot();
         if( root == null || root.getChildCount() == 0)
             return;
         
@@ -112,4 +115,19 @@ public class ErrorLayer extends Layer
     }
 
 	@Override public void destroy() { }
+
+    public void activeLayerChange(Layer oldLayer, Layer newLayer) { }
+
+    public void layerAdded(Layer newLayer) { }
+
+    /**
+     * If layer is the OSM Data layer, remove all errors
+     */
+    public void layerRemoved(Layer oldLayer)
+    {
+        if(oldLayer == Main.map.mapView.editLayer ) 
+        {
+            Main.map.mapView.removeLayer(this); 
+        }
+    }
 }

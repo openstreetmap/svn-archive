@@ -31,22 +31,29 @@ public class PreferenceEditor implements PreferenceSetting
 		JPanel testPanel = new JPanel(new GridBagLayout());
 		testPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		
+        testPanel.add( new JLabel(), GBC.std() );
+        testPanel.add( new JLabel("On upload"), GBC.eop() );
+        
 		allTests = OSMValidatorPlugin.getTests(false);
 		for(final Test test: allTests) 
 		{
 			final JCheckBox testCheck = new JCheckBox(test.name, test.enabled);
 			testCheck.setToolTipText(test.description);
-			testPanel.add(testCheck, GBC.eop().insets(20,0,0,0));
-			test.addGui(testPanel);
+			testPanel.add(testCheck, GBC.std().insets(20,0,0,0));
 
-			testCheck.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					test.enabled = testCheck.isSelected();
-				}
-			});
+            testCheck.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    boolean selected = testCheck.isSelected();
+                    test.enabled = selected;
+                    test.setGuiEnabled(selected );
+                }
+            });
+            
+            test.addGui(testPanel);
+            test.setGuiEnabled(test.enabled);
 		}
 		
-		JScrollPane testPane = new JScrollPane(testPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane testPane = new JScrollPane(testPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		testPane.setBorder(null);
 
 		Version ver = Util.getVersion();

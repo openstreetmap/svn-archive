@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -71,6 +72,14 @@ public class OSMValidatorPlugin extends Plugin
 		    validationDialog = new ValidatorDialog();
 	        newFrame.addToggleDialog(validationDialog);
             Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
+            try
+            {
+                ((UploadAction)Main.main.menu.upload).uploadHooks.add( new ValidateUploadHook() );
+            }
+            catch(Throwable t)
+            {
+                // JOSM has no upload hooks in older versions 
+            }
 		}
 	}
 
@@ -106,7 +115,10 @@ public class OSMValidatorPlugin extends Plugin
 				continue;
 			}
 			test.enabled = true;
-			enabledTests.put(testClass.getSimpleName(), test);
+            
+            String simpleName = testClass.getSimpleName();
+            test.testBeforeUpload = Main.pref.getBoolean( "tests." + simpleName + ".checkBeforeUpload");            
+			enabledTests.put(simpleName, test);
 		}
 
 		Pattern regexp = Pattern.compile("(\\w+)=(true|false),?");

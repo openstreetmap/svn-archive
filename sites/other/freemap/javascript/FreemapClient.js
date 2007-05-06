@@ -84,8 +84,6 @@ function FreemapClient(map,addFeatureURL,georssURL,
 			'/freemap/index.php?mode=mapnik&lat='+lat+'&lon='+lon;
 		document.getElementById('npeLink').href =
 			'/freemap/index.php?mode=npe&lat='+lat+'&lon='+lon;
-		document.getElementById('POIeditorLink').href =
-			'/freemap/index.php?mode=POIeditor&lat='+lat+'&lon='+lon;
 		document.getElementById('osmajaxLink').href =
 			'/freemap/index.php?mode=osmajax&lat='+lat+'&lon='+lon;
 	}
@@ -163,7 +161,7 @@ function FreemapClient(map,addFeatureURL,georssURL,
 		{
 			var normLL = new OpenLayers.LonLat
 				(parseFloat(latlon[1]),parseFloat(latlon[0]));
-			this.updateLinks(normLL.lon,normLL.lat);
+			self.updateLinks(normLL.lon,normLL.lat);
 			var prjLL = self.cvtr.normToCustom(normLL);
 			map.setCenter(prjLL, self.parent.map.getZoom() );
 		}
@@ -176,12 +174,12 @@ function FreemapClient(map,addFeatureURL,georssURL,
 	this.placeSearch = function()
 	{
 		var loc = document.getElementById('search').value;
-		self.parent.ajax("http://www.free-map.org.uk/common/geocoder_ajax.php", 
+		self.parent.ajax("http://www.free-map.org.uk/freemap/common/geocoder_ajax.php", 
 			"place="+loc+"&country=uk", self.searchCallback);
 	}
 
 	document.getElementById(rd).onclick = this.resetDistance;
 	document.getElementById(u).onchange = this.changeUnits;
-	document.getElementById('searchButton').onclick = this.placeSearch;
+	document.getElementById('searchButton').onclick = placeSearch;
 
 }

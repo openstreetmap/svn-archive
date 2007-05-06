@@ -82,7 +82,14 @@ OpenLayers.Control.DrawOSMFeature.prototype =
 							(realComponents[count].x,
 							realComponents[count].y);
 
-						if(OpenLayers.Util.distVincenty(ll1,ll2) < 0.01) 
+						var px1 = this.layer.map.getViewPortPxFromLonLat(ll1);
+						var px2 = this.layer.map.getViewPortPxFromLonLat(ll2);
+						
+						var dx = px2.x-px1.x;
+						var dy = px2.y-px1.y;
+						var dist = Math.sqrt(dx*dx + dy*dy);
+//						if(OpenLayers.Util.distVincenty(ll1,ll2) < 0.01) 
+						if(dist < 3)
 						{
 							found=nodeid;
 							break;

@@ -5,7 +5,8 @@ session_start();
 
 if(isset($_SESSION["osmusername"]) && isset($_SESSION["osmpassword"]))
 {
-	$result = callOSM ($_REQUEST['call'], 
+	$call = (isset($_REQUEST['call'])) ? $_REQUEST['call']: 'map';
+	$result = callOSM ($call, 
 					$_SESSION['osmusername'], $_SESSION['osmpassword'],
 					$_REQUEST['method'], $_REQUEST);
 	echo $result["content"];

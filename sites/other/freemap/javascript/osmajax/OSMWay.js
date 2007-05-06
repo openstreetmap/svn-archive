@@ -23,7 +23,7 @@ OpenLayers.OSMWay.prototype =
 		addSeg: function(sid) {
 			this.segs.push(sid);
 		},
-	
+			
 		toXML : function() { 
 			var xml = "<way id='" + (this.osmid>0 ? this.osmid : 0)  +
 						"'>";
@@ -34,6 +34,15 @@ OpenLayers.OSMWay.prototype =
 			xml += this.tagsToXML();
 			xml += "</way>";	
 			return xml;
+		},
+
+		findSegmentPos: function(sid) {
+			for(var count=0; count<this.segs.length; count++) {
+				if (this.segs[count]==sid) {
+					return count;
+				}
+			}
+			return -1;
 		},
 
 		CLASS_NAME : "OpenLayers.OSMWay"

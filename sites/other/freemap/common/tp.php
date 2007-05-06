@@ -1,4 +1,5 @@
 <?php
+session_start();
 ################################################################################
 # This file forms part of the Freemap source code.                             #
 # (c) 2004-06 Nick Whitelegg (Hogweed Software)                                #
@@ -24,12 +25,13 @@ class Image
 	var $im, 
 		$map, 
 		$backcol,
-		$trackpoint_colour;
+		$trackpoint_colour,
+		$bottomleft_ll,
+		$topright_ll;
 
 	var $debug;
 
-	var $trackpoints, $landsat;
-	var $bottomleft_ll, $topright_ll;
+	var $trackpoints;
 
 	function Image ($w, $s, $e, $n, $width, $height, $layers)
 	{
@@ -42,55 +44,42 @@ class Image
 		$this->bottomleft_ll = gr_to_wgs84_ll(array("e"=>$w, "n"=>$s));
 		$this->topright_ll = gr_to_wgs84_ll(array("e"=>$e, "n"=>$n));
 
-		if(strstr($layers,"trackpoints"))
-		{
-			$this->trackpoints=grabGPX($this->bottomleft_ll['long'],
-							   $this->bottomleft_ll['lat'],
-							   $this->topright_ll['long'],
-							   $this->topright_ll['lat']);
-		}
 
-		$this->landsat = (strstr($layers,"landsat")) ?  true:false;
+		/*
+		echo "trackpoints:";
+		print_r($this->trackpoints);
+		*/
 	}
 
 	function draw()
 	{
-		if($this->trackpoints)
-			$this->draw_trackpoints();
-		if($this->landsat)
-			$this->draw_landsat();
+		$this->draw_trackpoints();
 		ImagePNG($this->im);	
 	}
 	
 	function draw_trackpoints()
 	{
-		for ($count=0; $count<count($this->trackpoints); $count++)
+		$conn=mysql_connect('localhost',DB_USERNAME,DB_PASSWORD);
+		mysql_select_db(DB_DBASE);
+
+			$q=
+			("select * from trackpoints where lat between ".
+				$this->bottomleft_ll['lat'] ." and ".
+				$this->topright_ll['lat']. " and lon between ".
+				$this->bottomleft_ll['long'] ." and ".
+				$this->topright_ll['long']). " and trackid=$_SESSION[trackid]";
+
+		$result=mysql_query($q);
+		//echo "QUERY : $q";
+		while($row=mysql_fetch_array($result))
 		{
-			$gr = wgs84_ll_to_gr ($this->trackpoints[$count]);
+			$gr = wgs84_ll_to_gr 
+				(array("lat"=>$row['lat'],"long"=>$row['lon']));
 			$p = $this->map->get_point ($gr);
+			ImageFilledEllipse($this->im,$p['x'],$p['y'],5,5,$this->trackpoint_colour);
+		}
 
-			//ImageFilledEllipse($this->im,$p['x'],$p['y'],1,1,$colour);
-			ImageSetPixel($this->im,$p['x'],$p['y'],$this->trackpoint_colour);
-		}	
-	}
-
-	function draw_landsat()
-	{
-		$url = 
-				("http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&width=".
-//		("http://landsat.openstreetmap.org:3128/wms.cgi?request=GetMap&width=".
-	 	                        $this->map->width."&height=".$this->map->height.
-	 	                        "&layers=modis,global_mosaic&styles=".
-								"&srs=EPSG:4326&".
-	 	                        "format=image/jpeg&bbox=".
-								$this->bottomleft_ll['long'].",".
-								$this->bottomleft_ll['lat'].",".
-								$this->topright_ll['long'].",".
-								$this->topright_ll['lat']);
-//		echo "URL: $url";
-		$img=ImageCreateFromJPEG($url);
-		ImageCopy($this->im,$img,0,0,0,0,
-						$this->map->width,$this->map->height);
+		mysql_close($conn);
 	}
 }
 

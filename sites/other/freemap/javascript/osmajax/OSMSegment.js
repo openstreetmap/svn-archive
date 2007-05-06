@@ -6,6 +6,7 @@ OpenLayers.OSMSegment.prototype =
 	OpenLayers.Class.inherit (OpenLayers.OSMItem, {
 
 	nodes: null,
+	way: null,
 	
 	initialize: function () {
 		OpenLayers.OSMItem.prototype.initialize.apply(this,arguments);

@@ -1,10 +1,10 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import static org.openstreetmap.josm.tools.I18n.trn;
 import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.Component;
 import java.awt.Graphics;
-import java.util.*;
+import java.util.Enumeration;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -72,7 +72,7 @@ sub write_osm_file($$) { # Write an osm File
     $fh->binmode(':utf8');
 
     print $fh "<?xml version='1.0' encoding='UTF-8'?>\n";
-    print $fh "<osm version=\'0.3\' generator=\'".$osm->{tool}."\'>\n";
+    print $fh "<osm version=\'0.4\' generator=\'".$osm->{tool}."\'>\n";
     
     # --- Nodes
     for my $node_id (  sort keys %{$osm_nodes} ) {

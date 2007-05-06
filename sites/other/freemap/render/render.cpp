@@ -44,7 +44,7 @@ int main()
 			freetype_engine::instance()->register_font
 				("/usr/local/lib/mapnik/fonts/Vera.ttf");
 
-			Map m (t.width,t.height);
+			Map m ((t.width/5)*6,(t.height/5)*6);
 			load_map(m,"/home/nick/render/osmmerc.xml");
 
 			std::string tileImg = t.get_filename("/var/www/images/tiles");
@@ -53,9 +53,11 @@ int main()
 			if(! (boost::filesystem::exists(p) ) || 
 				boost::filesystem::last_write_time(p) < 
 				time(NULL)-SECS_IN_7_DAYS)
-			if(true)
+//			if(true)
 			{
-				Envelope<double> bbox (t.w,t.s,t.e,t.n);
+				double margin_x = (t.e-t.w)/10, margin_y = (t.n-t.s)/10;
+				Envelope<double> bbox (t.w-margin_x,t.s-margin_y,
+										t.e+margin_x,t.n+margin_y);
 				m.zoomToBox(bbox);
 
 				Image32 buf (m.getWidth(), m.getHeight());
@@ -71,10 +73,14 @@ int main()
 			if(in)
 			{
 				printf("Content-type: image/png\n\n");
-				gdImagePtr image;
-				image=gdImageCreateFromPng(in);
+				gdImagePtr image, image2;
+				image=gdImageCreateTrueColor(t.width,t.height);
+				image2=gdImageCreateFromPng(in);
 				fclose(in);
+				gdImageCopy(image,image2,0,0,t.width/10,t.height/10,
+								t.width,t.height);
 				gdImagePng(image,stdout);
+				gdImageDestroy(image2);
 				gdImageDestroy(image);
 			}
 			else

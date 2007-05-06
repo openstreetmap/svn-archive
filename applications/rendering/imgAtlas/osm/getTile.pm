@@ -23,6 +23,8 @@ package getTile;
 use strict;
 use LWP::Simple;
 
+my $tilesource = "http://dev.openstreetmap.org/~ojw/Tiles/tile.php";
+
 sub size
 {
     # Tile size in pixels
@@ -38,17 +40,37 @@ sub tile
     my $Data = get($URL); 
     return $Data;
 }
-  
+
+sub setTileSource
+{
+    my ($source) = @_;
+
+    if ($source eq "default")
+    {
+	$tilesource = "http://dev.openstreetmap.org/~ojw/Tiles/tile.php";
+    }
+    elsif ($source eq "maplint")
+    {
+	$tilesource = "http://dev.openstreetmap.org/~ojw/Tiles/maplint.php";
+    }
+    elsif ($source eq "mapnik")
+    {
+	$tilesource = "http://tile.openstreetmap.org";
+    }
+    else
+    {
+	# Last chance... it might be a local tilserver...
+	$tilesource = $source;
+    }
+}
+
 sub URL
 {
     my ($X,$Y,$Z) = @_;
     # Locate a tile's URL
-    # "http://tile.openstreetmap.org/%d/%d/%d.png", 
-    # "http://dev.openstreetmap.org/~ojw/Tiles/maplint.php/%d/%d/%d.png", 
-    # "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 
     return
 	sprintf
-	"http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 
+	$tilesource . "/%d/%d/%d.png",
 	$Z, 
 	$X, 
 	$Y;

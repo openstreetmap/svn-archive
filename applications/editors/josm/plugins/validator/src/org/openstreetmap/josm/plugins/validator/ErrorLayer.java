@@ -1,8 +1,10 @@
 package org.openstreetmap.josm.plugins.validator;
 
+import static org.openstreetmap.josm.tools.I18n.trn;
+import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Component;
 import java.awt.Graphics;
-import java.util.Enumeration;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -15,6 +17,7 @@ import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -77,7 +80,23 @@ public class ErrorLayer extends Layer implements LayerChangeListener
 	@Override 
     public String getToolTipText() 
     {
-        return null;
+        Bag<Severity, TestError> errorTree = new Bag<Severity, TestError>();
+        for(TestError e : OSMValidatorPlugin.getPlugin().errors)
+        {
+            errorTree.add(e.getSeverity(), e);
+        }
+        
+        StringBuilder b = new StringBuilder();
+        for(Severity s : Severity.values())
+        {
+            if( errorTree.containsKey(s) )
+                b.append(tr(s.toString())).append(": ").append(errorTree.get(s).size()).append("<br>");
+        }
+        
+        if( b.length() == 0 )
+            return "<html>"+tr("No validation errors") + "</html>";
+        else
+            return "<html>" + tr("Validation errors") + ":<br>" + b + "</html>";
 	}
 
 	@Override public void mergeFrom(Layer from) {}
@@ -90,17 +109,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener
 
 	@Override public Object getInfoComponent() 
     {
-        /*
-		StringBuilder b = new StringBuilder();
-		int points = 0;
-		for (Collection<GpsPoint> c : data) {
-			b.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+trn("a track with {0} point","a track with {0} points", c.size(), c.size())+"<br>");
-			points += c.size();
-		}
-		b.append("</html>");
-		return "<html>"+trn("{0} consists of {1} track", "{0} consists of {1} tracks", data.size(), name, data.size())+" ("+trn("{0} point", "{0} points", points, points)+")<br>"+b.toString();
-        */
-        return "<html>Validation errors</html>"; // TODO
+	    return getToolTipText();
 	}
 
 	@Override public Component[] getMenuEntries() 

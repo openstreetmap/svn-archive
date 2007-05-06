@@ -9,6 +9,7 @@
 #-----------------------------------------------------------------------------
 # Copyright 2007
 #  * Oliver White
+#  * Hakan Tandogan
 #
 #    (Add your name here if you edit the program)
 #-----------------------------------------------------------------------------
@@ -76,6 +77,11 @@ while(my $Line = <COMMANDS>)
     {
 	$Option{$1} = $2;
 	print "Setting option \"$1\" to \"$2\"\n";
+
+	if ($1 eq "tilesource")
+	{
+	    getTile::setTileSource($2);
+	}
     }
     #---------------------------------------------------------------------------
     #  Add a line of text
@@ -154,7 +160,7 @@ while(my $Line = <COMMANDS>)
     #  Add a map to the page
     #---------------------------------------------------------------------------
     elsif($Line =~ m{
-      map:               # Command
+      map:                 # Command
 	\s*                #
 	\((.*?)\)          # Map options
 	\s*                #
@@ -187,7 +193,7 @@ while(my $Line = <COMMANDS>)
 	    # print "  .... auto-determiner: DesiredSizeOfTileKm = $DesiredSizeOfTileKm\n";
 
 	    my $DesiredZoom = 12 - log($DesiredSizeOfTileKm / 10) / log(2);		
-	    print "  .... auto-determiner: DesiredZoom = $DesiredZoom\n";
+	    # print "  .... auto-determiner: DesiredZoom = $DesiredZoom\n";
 
 	    $Zoom = int($DesiredZoom + 0.5);
 	    print "Auto-Determined Zoom: $Zoom\n";

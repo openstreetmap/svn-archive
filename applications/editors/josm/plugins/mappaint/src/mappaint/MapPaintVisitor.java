@@ -98,7 +98,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 					if (area)
 						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,Main.pref.getBoolean("draw.segment.direction"), width,true);
 					else
-						if (realWidth > 0 && Main.pref.getBoolean("mappaint.useRealWith",false)){
+						if (realWidth > 0 && Main.pref.getBoolean("mappaint.useRealWidth",false)){
 							int tmpWidth = (int) (100 /  (float) (circum / realWidth));
 							if (tmpWidth > width) width = tmpWidth;
 						}

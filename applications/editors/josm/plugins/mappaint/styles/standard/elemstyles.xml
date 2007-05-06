@@ -1,3 +1,17 @@
+<!--
+a little help:
+1. every rule starts with <rule> and ends with </rule>
+2. every rule needs a condition
+3. line attributes
+		- width absolute width in pixel in every zoom level
+		- realwidth relative width which will be scaled in meters, integer
+		- colour
+4. area attributes
+		- colour
+5. amenity attributes
+		- icon path to icon , relative from where this file is
+-->
+
 <rules>
 <!-- highway tags -->
 	<rule>

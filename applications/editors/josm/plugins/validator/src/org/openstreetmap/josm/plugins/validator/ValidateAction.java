@@ -56,7 +56,6 @@ public class ValidateAction extends JosmAction
             return;
         
 		plugin.errors = new ArrayList<TestError>();
-		plugin.validationDialog.setVisible(true);
 		
 		Collection<Test> tests = OSMValidatorPlugin.getTests(true);
 		if( tests.isEmpty() )
@@ -96,7 +95,8 @@ public class ValidateAction extends JosmAction
 		}
 		tests = null;
 		
-		plugin.validationDialog.refresh(plugin.errors);
+		plugin.validationDialog.tree.setErrors(plugin.errors);
+        plugin.validationDialog.setVisible(true);
         Main.map.repaint();
         Main.ds.fireSelectionChanged(Main.ds.getSelected());
         

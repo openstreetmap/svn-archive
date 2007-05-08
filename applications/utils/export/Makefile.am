@@ -5,6 +5,11 @@ EXTRA_DIST = \
 	osm2pgsql/*.c \
 	osm2pgsql/*.cpp \
 	osm2pgsql/*.txt \
+	osm2pgsql/Makefile \
+	osm2pgsql/legacy/*.h \
+	osm2pgsql/legacy/*.c \
+	osm2pgsql/legacy/*.cpp \
+	osm2pgsql/legacy/Makefile \
 	osm2singleline_per_tag/*.pl \
 	osm2shp/*.cpp \
 	osm2shp/README \

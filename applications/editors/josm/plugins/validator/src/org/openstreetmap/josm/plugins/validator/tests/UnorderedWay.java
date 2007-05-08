@@ -2,16 +2,10 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.*;
-
 import org.openstreetmap.josm.actions.ReorderAction;
-import org.openstreetmap.josm.command.*;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Segment;
-import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.validator.Severity;
-import org.openstreetmap.josm.plugins.validator.Test;
-import org.openstreetmap.josm.plugins.validator.TestError;
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.data.osm.*;
+import org.openstreetmap.josm.plugins.validator.*;
 
 /**
  * Check for unordered ways
@@ -47,18 +41,12 @@ public class UnorderedWay extends Test
 	@Override
 	public Command fixError(TestError testError)
 	{
-		List<Command> commands = new ArrayList<Command>(50);
-		
 		for(OsmPrimitive p : testError.getPrimitives() )
 		{
-			Way w = (Way)p;
-			Way newWay = new Way(w);
-			newWay.segments.clear();
-			newWay.segments.addAll(ReorderAction.sortSegments(new HashSet<Segment>(w.segments)));
-			return new ChangeCommand(p, newWay);
+            return ReorderAction.reorderWay((Way)p);
 		}
 		
-		return commands.size() > 1 ? new SequenceCommand("Remove keys", commands) : commands.get(0);
+		return null;
 	}
 	
 	@Override

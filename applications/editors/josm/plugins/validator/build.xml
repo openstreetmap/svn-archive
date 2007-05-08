@@ -1,7 +1,7 @@
 <project name="validator" default="build" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="../josm/dist/josm-custom.jar" />
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
 
 
 	

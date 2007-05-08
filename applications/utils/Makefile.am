@@ -22,34 +22,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	export/CityKML/run.pl \
 	export/osm2csv/osm2csv.pl \
 	export/osm2kml/osm2kml.py \
-	export/osm2pgsql \
-	export/osm2pgsql/output-pgsql.h \
-	export/osm2pgsql/input.h \
-	export/osm2pgsql/middle-ram.h \
-	export/osm2pgsql/reprojection.c \
-	export/osm2pgsql/middle-pgsql.h \
-	export/osm2pgsql/middle-pgsql.c \
-	export/osm2pgsql/middle-ram.c \
-	export/osm2pgsql/sanitizer.h \
-	export/osm2pgsql/Makefile \
-	export/osm2pgsql/build_geometry.h \
-	export/osm2pgsql/legacy \
-	export/osm2pgsql/legacy/Makefile \
-	export/osm2pgsql/legacy/build_geometry.h \
-	export/osm2pgsql/legacy/osm2pgsql.c \
-	export/osm2pgsql/legacy/build_geometry.cpp \
-	export/osm2pgsql/output.h \
-	export/osm2pgsql/reprojection.h \
-	export/osm2pgsql/keyvals.h \
-	export/osm2pgsql/input.c \
-	export/osm2pgsql/middle.h \
-	export/osm2pgsql/osm2pgsql.c \
-	export/osm2pgsql/readme.txt \
-	export/osm2pgsql/osmtypes.h \
-	export/osm2pgsql/UTF8sanitizer.c \
-	export/osm2pgsql/keyvals.c \
-	export/osm2pgsql/build_geometry.cpp \
-	export/osm2pgsql/output-pgsql.c \
 	export/osm2shp/osm2shp.cpp \
 	export/osm2singleline_per_tag/osm2singleline_per_tag.pl \
 	export/osmgarminmap/curlstuff.cpp \

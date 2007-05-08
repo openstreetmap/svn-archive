@@ -60,7 +60,7 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	filter/osm-length/osm-length-2.pl \
 	filter/simplify/simplify.pl \
 	filter/wayclean/wayclean.cpp \
-	gps/gpx-batch-upload/gpx-batch-upload.pl \
+	gps-tracks/gpx-batch-upload/gpx-batch-upload.pl \
 	import/airport_import/import_apt.pl \
 	import/coast_import/coast_upload.pl \
 	import/coast_import/osm.pm \

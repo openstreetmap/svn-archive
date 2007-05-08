@@ -74,7 +74,7 @@ public class OSMValidatorPlugin extends Plugin
             Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
             try
             {
-                ((UploadAction)Main.main.menu.upload).uploadHooks.add( new ValidateUploadHook() );
+                ((UploadAction)Main.main.menu.upload).uploadHooks.add( 0, new ValidateUploadHook() );
             }
             catch(Throwable t)
             {

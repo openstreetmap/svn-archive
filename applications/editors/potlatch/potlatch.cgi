@@ -7,10 +7,9 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 24.4.2007 (pannable when drawing line, dimming, pointers, bugfixes)
+	# last update 8.5.2007 (segment id fix)
 	# next steps: 
 	#	make resizable (change getgps code too)
-	#	check database code now that schema has been changed for 0.4
 	#	add see-through panel behind top-right hints (line 1573)
 
 	# You may do what you like with this file, but please think very
@@ -478,10 +477,16 @@
 				if (_root.t_details.text==result[0]) { _root.t_details.text=nw; }
 				if (wayselected==result[0]) { wayselected=nw; }
 			}
-			_root.map.ways[nw].xmin=result[3];
-			_root.map.ways[nw].xmax=result[4];
-			_root.map.ways[nw].ymin=result[5];
-			_root.map.ways[nw].ymax=result[6];
+			_root.map.ways[nw].xmin=result[4];
+			_root.map.ways[nw].xmax=result[5];
+			_root.map.ways[nw].ymin=result[6];
+			_root.map.ways[nw].ymax=result[7];
+
+			// update segment IDs
+			z=result[3];
+			for (qs in z) {
+				_root.map.ways[nw].path[qs][5]=result[3][qs];
+			}
 
 			// check if renumbered nodes occur in any other ways
 			for (qway in _root.map.ways) {

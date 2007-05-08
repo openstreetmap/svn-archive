@@ -59,7 +59,7 @@ sub doneMessage
 #-----------------------------------------------------------------------------
 sub talkInSleep
 {
-    my ($message, $duration,$progstart,$idleFor,$idleSeconds,$Verbose) = @_;
+    my ($message, $duration,$progstart,$Verbose) = @_;
     if ($Verbose)
     {
         print STDERR "$message: sleeping $duration seconds\n";

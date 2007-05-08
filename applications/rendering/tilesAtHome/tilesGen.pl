@@ -120,11 +120,15 @@ elsif ($Mode eq "loop")
     
     if (shift() eq "reexec")
     {
+	my $idleSeconds; my $idleFor;
         while(my $evalstr = shift())
         {
             die unless $evalstr =~ /^[A-Za-z]+=\d+/;
             eval('$'.$evalstr);
+	    #print "$evalstr\n";
         }
+	setIdle($idleSeconds, 1);
+	setIdle($idleFor, 0);
     }
 
     # this is the actual processing loop

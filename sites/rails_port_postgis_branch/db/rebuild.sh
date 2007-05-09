@@ -5,7 +5,7 @@ POSTGIS=/usr/share/postgresql-8.1-postgis
 
 #################
 dropdb $1
-created $1
+createdb -E UTF-8 $1
 createlang plpgsql $1
 psql $1 <${POSTGIS}/lwpostgis.sql
 psql $1 <${POSTGIS}/spatial_ref_sys.sql

@@ -55,10 +55,9 @@ CREATE TABLE "current_nodes" (
   "user_id" bigint default NULL,
   "visible" bool NOT NULL default true,
   "tags" text NOT NULL,
-  "timestamp" timestamp default NULL
+  "timestamp" timestamp default NULL,
+  PRIMARY KEY  ("id")
 );
-
-create index "current_nodes_id_idx" on current_nodes ("id");
 
 create index "current_nodes_lat_lon_idx" on current_nodes ("latitude","longitude");
 
@@ -74,10 +73,10 @@ CREATE TABLE "current_segments" (
   "user_id" bigint default NULL,
   "visible" bool NOT NULL default true,
   "tags" text NOT NULL,
-  "timestamp" timestamp default NULL
+  "timestamp" timestamp default NULL,
+  PRIMARY KEY  ("id")
 );
 
-create index "current_segments_id_visible_idx" on current_segments ("id","visible");
 create index "current_segments_a_idx" on current_segments ("node_a");
 create index "current_segments_b_idx" on current_segments ("node_b");
 

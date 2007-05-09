@@ -1,32 +1,16 @@
-Creating database
-===================
+OSM-on-Rails-on-PostGIS
+-----------------------
 
-OSM server uses a database with the following name:
+last updated 30 Apr 2007
 
-openstreetmap
+rebuild.sh      -- shell script to rebuild the database from scratch
+    * edit to point to lwpostgis.sql etc. on your system
+    * run as "sh rebuild.sh openstreetmap"
 
-You may create it with your preferable client or run next (linux) command:
+import_osm.py   -- import script.
+    * run as "python import_osm.py openstreetmap <planet.osm"
 
-$ mysqladmin -u <uid> -p create openstreetmap
+osm_server.sql  -- server tables
 
-(change <uid> with appropriate username of administrative user eg. root )
+spatial.sql     -- spatial columns, indexes, functions, triggers
 
-Creating user, password, and access rights
-============================================
-
-$ mysql -u <uid> -p
-
-(change <uid> with appropriate username of administrative user eg. root )
-
-> grant all privileges on openstreetmap.* to 'openstreetmap'@'localhost' identified by 'openstreetmap';
-> flush privileges;
-> exit
-
-Creating database skeleton tables
-===================================
-
-Run this command from the root of your rails direcotry:
-
-$ rake db:migrate
-
-This will create the db for you

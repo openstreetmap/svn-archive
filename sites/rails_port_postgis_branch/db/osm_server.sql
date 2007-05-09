@@ -39,7 +39,7 @@ CREATE TABLE "areas" (
   "user_id" bigint default NULL,
   "timestamp" timestamp default NULL,
   "version" serial NOT NULL,
-  "visible" bool default '1',
+  "visible" bool NOT NULL default true,
   PRIMARY KEY  ("id","version")
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE "current_nodes" (
   "latitude" float default NULL,
   "longitude" float default NULL,
   "user_id" bigint default NULL,
-  "visible" bool default NULL,
+  "visible" bool NOT NULL default true,
   "tags" text NOT NULL,
   "timestamp" timestamp default NULL
 );
@@ -72,7 +72,7 @@ CREATE TABLE "current_segments" (
   "node_a" bigint default NULL,
   "node_b" bigint default NULL,
   "user_id" bigint default NULL,
-  "visible" bool default NULL,
+  "visible" bool NOT NULL default true,
   "tags" text NOT NULL,
   "timestamp" timestamp default NULL
 );
@@ -117,7 +117,7 @@ CREATE TABLE "current_ways" (
   "id" serial NOT NULL,
   "user_id" bigint default NULL,
   "timestamp" timestamp default NULL,
-  "visible" bool default NULL,
+  "visible" bool NOT NULL default true,
   PRIMARY KEY  ("id")
 );
 
@@ -177,7 +177,7 @@ DROP TABLE "gpx_files" CASCADE;
 CREATE TABLE "gpx_files" (
   "id" serial NOT NULL,
   "user_id" bigint default NULL,
-  "visible" bool NOT NULL default '1',
+  "visible" bool NOT NULL default true,
   "name" varchar(255) NOT NULL default '',
   "size" bigint default NULL,
   "latitude" float default NULL,
@@ -223,7 +223,7 @@ CREATE TABLE "nodes" (
   "latitude" float default NULL,
   "longitude" float default NULL,
   "user_id" bigint default NULL,
-  "visible" bool default NULL,
+  "visible" bool NOT NULL default true,
   "tags" text NOT NULL,
   "timestamp" timestamp default NULL
 );
@@ -240,7 +240,7 @@ CREATE TABLE "segments" (
   "node_a" bigint default NULL,
   "node_b" bigint default NULL,
   "user_id" bigint default NULL,
-  "visible" bool default NULL,
+  "visible" bool NOT NULL default true,
   "tags" text NOT NULL,
   "timestamp" timestamp default NULL
 );
@@ -257,14 +257,14 @@ CREATE TABLE "users" (
   "email" varchar(255) default NULL,
   "id" serial NOT NULL,
   "token" varchar(255) default NULL,
-  "active" int NOT NULL default '0',
+  "active" boolean NOT NULL default FALSE,
   "pass_crypt" varchar(255) default NULL,
   "creation_time" timestamp default NULL,
   "timeout" timestamp default NULL,
   "display_name" varchar(255) default '',
   "preferences" text,
   "data_public" bool default '0',
-  "description" text NOT NULL,
+  "description" text,
   "home_lat" float default NULL,
   "home_lon" float default NULL,
   PRIMARY KEY  ("id")
@@ -310,7 +310,7 @@ CREATE TABLE "ways" (
   "user_id" bigint default NULL,
   "timestamp" timestamp default NULL,
   "version" serial NOT NULL,
-  "visible" bool default '1',
+  "visible" bool NOT NULL default true,
   PRIMARY KEY  ("id","version")
 );
 create index  "ways_id_version_idx" on ways ("id");

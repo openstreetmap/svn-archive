@@ -1,0 +1,30 @@
+<project name="tways" default="jar" basedir=".">
+
+  <property name="josm" location="../../core/dist/josm-custom.jar" />
+
+  <target name="compile">
+    <mkdir dir="build"></mkdir>
+    <javac srcdir="src" debug="true" classpath="${josm}" destdir="build">
+      <include name="**/*.java" />
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar destfile="tways.jar" basedir="build">
+      <manifest>
+        <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.tways.TwaysPlugin" />
+        <attribute name="Plugin-Description" value="Create ways automagically" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean">
+    <delete dir="build" />
+    <delete file="tways.jar" />
+  </target>
+
+  <target name="install" depends="jar">
+    <copy file="tways.jar" todir="${user.home}/.josm/plugins"/>
+  </target>
+
+</project>

@@ -17,9 +17,9 @@ import org.openstreetmap.josm.plugins.Plugin;
 public class TwaysPlugin extends Plugin {
 
     public TwaysPlugin() {
-        JMenu waysMenu = new JMenu(tr("Ways"));
-        waysMenu.add(new JMenuItem(new CreateLinearWaysAction()));
-        Main.main.menu.add(waysMenu, 2);
+        JMenu twaysMenu = new JMenu(tr("Tways"));
+        twaysMenu.add(new JMenuItem(new CreateLinearWaysAction()));
+        Main.main.menu.add(twaysMenu, 2);
     }
 
 }

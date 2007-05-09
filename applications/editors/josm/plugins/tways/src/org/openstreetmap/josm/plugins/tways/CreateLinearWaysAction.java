@@ -27,7 +27,7 @@ import org.openstreetmap.josm.data.osm.Way;
 class CreateLinearWaysAction extends AbstractAction {
 
     public CreateLinearWaysAction() {
-	super("Create linear ways");
+	super("Create ways");
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -73,6 +73,7 @@ class CreateLinearWaysAction extends AbstractAction {
 		orphanSegments.remove(nextSegment);
 		nextSegment = pss.getSegmentFromNode(nextSegment.to);
 	    }
+	    way.put("created_by", "Tways 0.2");
 	    ways.add(way);
 	    commands.add(new AddCommand(way));
 	}

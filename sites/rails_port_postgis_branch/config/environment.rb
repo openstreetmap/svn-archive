@@ -2,7 +2,7 @@
 
 # Uncomment below to force Rails into production mode when 
 # you don't control web/app server and can't set it the proper way
-# ENV['RAILS_ENV'] ||= 'production'
+ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '1.2.3'
@@ -61,3 +61,20 @@ ActionMailer::Base.server_settings = {
   :port  => 25, 
   :domain  => 'localhost',
 } 
+
+
+# HTTP CODES
+
+# 200's
+
+HTTP_OK = 200
+
+# 400's
+
+HTTP_PRECONDITION_FAILED = 412
+HTTP_EXPECTATION_FAILED = 417
+
+#Taming FCGI
+#
+COUNT = 0
+MAX_COUNT = 10

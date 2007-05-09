@@ -107,7 +107,7 @@ class TraceController < ApplicationController
     @trace.timestamp = Time.now
 
     if @trace.save
-      saved_filename = "/tmp/#{@trace.id}.gpx"
+      saved_filename = "/home/osm/gpx/#{@trace.id}.gpx"
       File.rename(filename, saved_filename)
 
       logger.info("id is #{@trace.id}")
@@ -115,7 +115,8 @@ class TraceController < ApplicationController
       redirect_to :action => 'mine'
     else
       # fixme throw an error here
-      # render :action => 'mine'
+       redirect_to :action => 'mine'
+       flash[:notice] = "You haven't entered a tag or a description for yoru traces."
     end
   end
 

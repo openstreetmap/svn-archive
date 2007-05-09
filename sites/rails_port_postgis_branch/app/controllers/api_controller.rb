@@ -3,15 +3,27 @@ class ApiController < ApplicationController
   before_filter :authorize
   after_filter :compress_output
 
+  helper :user
+  model :user
+
+  #COUNT is the number of map requests to allow before exiting and stating a new process
+  @@count = COUNT
+
+  def authorize_web
+    @current_user = User.find_by_token(session[:token])
+  end
+
   # The maximum area you're allowed to request, in square degrees
   MAX_REQUEST_AREA = 0.25
 
   def map
-    response.headers["Content-Type"] = 'application/xml'
+    @@count+=1
+
+    response.headers["Content-Type"] = 'text/xml'
     # Figure out the bbox
     bbox = params['bbox']
     unless bbox and bbox.count(',') == 3
-       report_error("The parameter bbox is required, and must be of the form min_lon,min_lat,max_lon,max_lat")
+      report_error("The parameter bbox is required, and must be of the form min_lon,min_lat,max_lon,max_lat")
       return
     end
 
@@ -24,22 +36,22 @@ class ApiController < ApplicationController
 
     # check the bbox is sane
     unless min_lon <= max_lon
-       report_error("The minimum longitude must be less than the maximum longitude, but it wasn't")
+      report_error("The minimum longitude must be less than the maximum longitude, but it wasn't")
       return
     end
     unless min_lat <= max_lat
-       report_error("The minimum latitude must be less than the maximum latitude, but it wasn't")
+      report_error("The minimum latitude must be less than the maximum latitude, but it wasn't")
       return
     end
-	unless min_lon >= -180 && min_lat >= -90 && max_lon <= 180 && max_lat <= 90
-       report_error("The latitudes must be between -90 and 90, and longitudes between -180 and 180")
+    unless min_lon >= -180 && min_lat >= -90 && max_lon <= 180 && max_lat <= 90
+      report_error("The latitudes must be between -90 and 90, and longitudes between -180 and 180")
       return
-	end
+    end
 
     # check the bbox isn't too large
     requested_area = (max_lat-min_lat)*(max_lon-min_lon)
     if requested_area > MAX_REQUEST_AREA
-       report_error("The maximum bbox size is " + MAX_REQUEST_AREA.to_s + ", and your request was too large. Either request a smaller area, or use planet.osm")
+      report_error("The maximum bbox size is " + MAX_REQUEST_AREA.to_s + ", and your request was too large. Either request a smaller area, or use planet.osm")
       return
     end
 
@@ -68,7 +80,7 @@ class ApiController < ApplicationController
     # get missing nodes if there are any
     nodes += Node.find(missing_nodes) if missing_nodes.length > 0
 
-    doc = OSM::API.get_xml_doc
+    doc = OSM::API.new.get_xml_doc
 
     # get ways
     # find which ways are needed
@@ -93,6 +105,13 @@ class ApiController < ApplicationController
     end 
 
     render :text => doc.to_s
+    
+    #exit when we have too many requests
+    if @@count > MAX_COUNT
+      render :text => doc.to_s
+      @@count = COUNT
+      exit!
+    end
 
   end
 end

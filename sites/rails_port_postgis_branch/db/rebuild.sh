@@ -1,7 +1,11 @@
 #!/bin/sh
 #
 
-POSTGIS=/usr/share/postgresql-8.1-postgis
+# Fink installed postgis location
+[ -d /sw/share/doc/postgis82 ] && POSTGIS=/sw/share/doc/postgis82
+
+# Linux installed postgis location
+[ -d /usr/share/postgresql-8.1-postgis ] && POSTGIS=/usr/share/postgresql-8.1-postgis
 
 #################
 dropdb $1

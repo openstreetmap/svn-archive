@@ -39,7 +39,6 @@ class TraceController < ApplicationController
     end
     conditions[0] += " AND users.display_name != ''" # users need to set display name before traces will be exposed
     
-    opt[:order] = 'timestamp DESC'
     if params[:tag]
       @tag = params[:tag]
       conditions[0] += " AND gpx_file_tags.tag = ?"
@@ -54,6 +53,7 @@ class TraceController < ApplicationController
     
     # last step before fetch - add paging options
     opt[:limit] = @traces_per_page
+    opt[:order] = 'timestamp DESC'
     if page_index > 0
       opt[:offset] = @traces_per_page * page_index
     end

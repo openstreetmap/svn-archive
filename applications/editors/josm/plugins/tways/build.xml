@@ -14,6 +14,8 @@
       <manifest>
         <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.tways.TwaysPlugin" />
         <attribute name="Plugin-Description" value="Create ways automagically" />
+        <attribute name="Plugin-Version" value="0.2"/>
+        <attribute name="Author" value="Thomas Walraet &lt;thomas@walraet.com>"/>
       </manifest>
     </jar>
   </target>

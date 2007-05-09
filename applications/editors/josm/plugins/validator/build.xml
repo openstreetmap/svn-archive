@@ -22,10 +22,17 @@
 		<copy todir="build/images">
 			<fileset dir="images"/>
 		</copy>
+		<exec append="false" output="build/resources/REVISION" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="."/>
+		</exec>
+		<property file="build/resources/REVISION" />
 		<jar destfile="validator.jar" basedir="build">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin"/>
 				<attribute name="Plugin-Description" value="A OSM data validator"/>
+				<attribute name="Plugin-Version" value="${Revision}"/>
 				<attribute name="Author" value="Francisco R. Santos &lt;frsantos@gmail.com>"/>
 			</manifest>
 		</jar>
@@ -41,7 +48,6 @@
 
 	<target name="test" depends="install">
 		<java jar="${josm}" fork="true">
-			<arg value="/home/frsantos/Desktop/JOSM/Tracks/Auto_1007_13.gpx"/>
 		</java>
 	</target>
 

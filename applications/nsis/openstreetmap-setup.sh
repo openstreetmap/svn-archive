@@ -19,7 +19,7 @@ wget -nc http://josm.eigenheimstrasse.de/browser/LICENSE?format=raw
 cp LICENSE?format=raw LICENSE
 
 # get latest plugin (and supporting files) versions
-wget -nc http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/
+wget -nc http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
 # wget -nc http://www.free-map.org.uk/downloads/josm/mappaint.jar
 # wget -nc http://www.free-map.org.uk/downloads/josm/elemstyles.xml
 wget -nc http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar

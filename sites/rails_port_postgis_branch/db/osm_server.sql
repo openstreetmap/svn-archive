@@ -105,7 +105,7 @@ CREATE TABLE "current_way_tags" (
   "v" varchar(255) NOT NULL default ''
 );
 
-create index  "current_way_tags_id_idx" on current_way_tags ("id");
+create index "current_way_tags_id_idx" on current_way_tags ("id");
 create index "current_way_tags_v_idx" on current_way_tags ("v"); -- FULLTEXT
 
 --
@@ -135,6 +135,20 @@ CREATE TABLE "diary_entries" (
   "updated_at" timestamp default NULL,
   PRIMARY KEY  ("id")
 );
+
+--
+-- Table structure for table "friends"
+--
+
+DROP TABLE "friends" CASCADE;
+CREATE TABLE "friends" (
+  "id" serial NOT NULL,
+  "user_id" bigint NOT NULL,
+  "friend_user_id" bigint NOT NULL,
+  PRIMARY KEY  ("id")
+);
+
+create index "user_id_idx" on friends ("friend_user_id");
 
 --
 -- Table structure for table "gps_points"
@@ -200,6 +214,28 @@ CREATE TABLE "gpx_pending_files" (
   "tmpname" varchar(255) default NULL,
   "user_id" bigint default NULL
 );
+
+
+
+--
+-- Table structure for table "messages"
+--
+
+DROP TABLE "messages" CASCADE;
+CREATE TABLE "messages" (
+  "id" serial NOT NULL,
+  "user_id" bigint NOT NULL,
+  "from_user_id" bigint NOT NULL,
+  "from_display_name" varchar(255) default '',
+  "title" varchar(255) default NULL,
+  "body" text,
+  "sent_on" timestamp default NULL,
+  "message_read" boolean NOT NULL default FALSE,
+  "to_user_id" bigint NOT NULL,
+  PRIMARY KEY  ("id")
+);
+
+create index "from_name_idx" on messages ("from_display_name");
 
 --
 -- Table structure for table "meta_areas"

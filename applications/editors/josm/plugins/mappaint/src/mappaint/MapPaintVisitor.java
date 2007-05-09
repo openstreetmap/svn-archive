@@ -20,6 +20,9 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.SimplePaintVisitor;
 
+import java.awt.event.MouseEvent;
+
+
 /**
  * A visitor that paints the OSM components in a map-like style.
  */
@@ -180,16 +183,17 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		//do not draw already visible segments
 		if (ls.shown) return;
 		ls.shown=true;
+		if (ls.incomplete)
+			return;
 		Point p1 = nc.getPoint(ls.from.eastNorth);
 		Point p2 = nc.getPoint(ls.to.eastNorth);
+
 		// checking if this segment is visible
 		if ((p1.x < 0) && (p2.x < 0)) return ;
 		if ((p1.y < 0) && (p2.y < 0)) return ;
 		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return ;
 		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return ;
 		Graphics2D g2d = (Graphics2D)g;
-		if (ls.incomplete)
-			return;
 		if (ls.selected)
 			col = getPreferencesColor("selected", Color.YELLOW);
 		g.setColor(col);
@@ -203,8 +207,8 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 
 		if (showDirection) {
 			double t = Math.atan2(p2.y-p1.y, p2.x-p1.x) + Math.PI;
-	    g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
-	    g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
+			g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
+			g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
 		}
 		g2d.setStroke(new BasicStroke(1));
 		
@@ -246,7 +250,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		for (final OsmPrimitive osm : data.segments)
 			if (!osm.deleted)
 				osm.visit(this);
-
+		
 		for (final OsmPrimitive osm : data.nodes)
 			if (!osm.deleted)
 				osm.visit(this);
@@ -258,3 +262,4 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			}
 	}
 }
+

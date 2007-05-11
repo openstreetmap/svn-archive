@@ -63,9 +63,23 @@ x = cgi['x']
 y = cgi['y']
 z = cgi['z']
 
-if z and (z.to_i > 18 or z.to_i < 2)
+if z and (z.to_i > 18 or z.to_i < 0)
   exit
 end
+
+# valid x/y for tiles are 0 ... 2^zoom-1
+limit = (2 ** z.to_i) - 1
+
+if x and (x.to_i < 0 or x.to_i > limit)
+  puts `cat /home/www/tile/images/blank-000000.png`
+  exit
+end
+
+if y and (y.to_i < 0 or y.to_i > limit)
+  puts `cat /home/www/tile/images/blank-000000.png`
+  exit
+end
+
 
 res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
 

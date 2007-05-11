@@ -772,7 +772,7 @@
                             <text k="ref" class='highway-secondary-ref' dx='2.5px' dy='-2.5px' />
                         </rule>
                         <rule e="segment|way" k="highway" v="primary">
-                            <text k="ref" text-anchor='middle' startOffset='60%' class="highway-primary-name" />
+                            <text k="ref" text-anchor='middle' startOffset='60%' class="highway-primary-ref" />
                         </rule>
                         <rule e="segment|way" k="highway" v="trunk">
                             <text k="ref" class='highway-trunk-ref' dx='2.5px' dy='-2.5px' />

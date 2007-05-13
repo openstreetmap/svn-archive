@@ -32,21 +32,20 @@
     BlankTile("error");
     }
     
-  // SearchFilesystem($X,$Y,$Z);
+  SearchFilesystem($X,$Y,$Z,$Layer);
   
-  SearchDatabase($X,$Y,$Z);
+  SearchDatabase($X,$Y,$Z,$LayerID);
   
   // Look for a file on the filesystem
-  function SearchFilesystem($X,$Y,$Z){
-    $Filename = TileName($X,$Y,$Z);
+  function SearchFilesystem($X,$Y,$Z,$Layer){
+    $Filename = TileName($X,$Y,$Z,$Layer,1);
     if(file_exists($Filename)){
-      
       readfile($Filename);
       exit;
     }
   }
   
-  function SearchDatabase($X,$Y,$Z){
+  function SearchDatabase($X,$Y,$Z,$LayerID){
     if(0){ // option to turn-off database lookups
       BlankTile();
     }

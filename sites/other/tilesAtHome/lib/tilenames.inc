@@ -1,11 +1,17 @@
 <?php
 
-function TileName($X,$Y,$Z,$Layer="Tiles"){
+function TileName($X,$Y,$Z,$Layer="Tiles",$Old=0){
   if(!$Layer)
     return("");
   if(!TileValid($X,$Y,$Z))
     return("");
-  return("/home/ojw/tiles-ojw/$Layer/".TilePartName($X,$Y,$Z));;
+
+  if($Old==1 && $Layer == "Tiles")
+    $BaseDir = "/home/ojw/tiles-ojw";
+  else
+    $BaseDir = "/home/ojw/tiles-ojw2";
+
+  return("$BaseDir/$Layer/".TilePartName($X,$Y,$Z));
 }
 function TileURL($X,$Y,$Z,$Layer="tile"){
   if(!TileValid($X,$Y,$Z))

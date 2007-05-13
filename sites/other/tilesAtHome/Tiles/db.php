@@ -41,6 +41,7 @@
     $LayerName = LayerDir($LayerID);
     $Filename = TileName($X,$Y,$Z,$LayerName,1);
     if(file_exists($Filename)){
+      header("Content-type: image/PNG");
       readfile($Filename);
       exit;
     }

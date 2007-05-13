@@ -16,18 +16,19 @@
      exit;
   }
   
-  if($P != 1){
+  if($P < 1 || $P > 2){
      print "Invalid P\n";
      exit;
   }
   
   include("../connect/connect.php");
   $SQL = sprintf(
-    "insert into tiles_queue (`x`,`y`,`status`,`src`,`date`) values (%d,%d,%d,'%s',now());", 
+    "insert into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`) values (%d,%d,%d,'%s',now(),%s);", 
     $X, 
     $Y, 
     REQUEST_PENDING,
-    mysql_escape_string($Src));
+    mysql_escape_string($Src),
+    $P);
   
   
   mysql_query($SQL);

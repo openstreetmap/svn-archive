@@ -32,13 +32,14 @@
     BlankTile("error");
     }
     
-  SearchFilesystem($X,$Y,$Z,$Layer);
+  SearchFilesystem($X,$Y,$Z,$LayerID);
   
   SearchDatabase($X,$Y,$Z,$LayerID);
   
   // Look for a file on the filesystem
-  function SearchFilesystem($X,$Y,$Z,$Layer){
-    $Filename = TileName($X,$Y,$Z,$Layer,1);
+  function SearchFilesystem($X,$Y,$Z,$LayerID){
+    $LayerName = LayerDir($LayerID);
+    $Filename = TileName($X,$Y,$Z,$LayerName,1);
     if(file_exists($Filename)){
       readfile($Filename);
       exit;

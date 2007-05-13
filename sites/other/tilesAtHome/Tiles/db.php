@@ -68,7 +68,10 @@
     }
     
     if(mysql_num_rows($Result) == 0){
-      BlankTile("assumed_sea");// political decision: make unknown areas blue
+      if($Z <= 12)
+        BlankTile("assumed_sea");// political decision: make unknown areas blue
+      else
+        BlankTile("404");
     }
   
     $Data = mysql_fetch_assoc($Result);

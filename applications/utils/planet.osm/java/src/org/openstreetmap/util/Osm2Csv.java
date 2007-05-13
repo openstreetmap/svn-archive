@@ -66,15 +66,15 @@ public class Osm2Csv extends MinML2 {
     if (control == null) control = "";
     try 
     {
-      if (control.contains("N")) doNodes = true;
-      if (control.contains("S")) doSegments = true;
-      if (control.contains("W")) doWays = true;
-      if (control.contains("w")) doWaySegs = true;
+      if (contains(control, "N")) doNodes = true;
+      if (contains(control, "S")) doSegments = true;
+      if (contains(control, "W")) doWays = true;
+      if (contains(control, "w")) doWaySegs = true;
       String colOptions = "";
-      if (control.contains("i")) {
+      if (contains(control, "i")) {
         includeTimes = true; colOptions += ",timestamp";
       }
-      if (control.contains("a")) {
+      if (contains(control, "a")) {
         includeTags = true; colOptions += ",taglist";
       }
       if (doNodes) {
@@ -279,12 +279,16 @@ public class Osm2Csv extends MinML2 {
   }
   
   private String delimited(String raw) {
-    if (raw.contains("\"") || raw.contains(",")) {
-      return "\"" + raw.replace("\"", "\"\"") + "\"";      
+    if (contains(raw, "\"") || contains(raw, ",")) {
+      return "\"" + raw.replaceAll("\"", "\"\"") + "\"";      
     }
     else {
       return raw;
     }
+  }
+  
+  private boolean contains(String searched, String sought) {
+	return searched.indexOf(sought) != -1;
   }
 }
 

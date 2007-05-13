@@ -257,6 +257,10 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, 
   rename($OldFilename, $NewFilename);
   printf("%s -> %s\n", $OldFilename, $NewFilename);
 
+  # Make world-writeable, so that it's easier to move files using shell
+  # (note: anyone with shell account on dev can access these files anyway
+  #  through their website running as htuser)
+  chmod($NewFilename, 0666);
 }
 
 function CreateDirectoryToHold($Filename){

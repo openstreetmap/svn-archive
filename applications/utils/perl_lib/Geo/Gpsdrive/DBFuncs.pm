@@ -934,7 +934,7 @@ sub create_db(){
                       `alt`           double                default \'0\',
 		      `proximity`     float                 default \'10\',
                       `comment`       varchar(255)          default NULL,
-                      `last_modified` date  NOT NULL default \'0000-00-00\',
+                      `last_modified` datetime  NOT NULL default \'0000-00-00\',
                       `address_id`    int(11)               default \'0\',
                       `source_id`     int(11)      NOT NULL default \'1\',
 		      `private`       char(1)               default NULL,
@@ -944,15 +944,15 @@ sub create_db(){
 
     db_exec('CREATE TABLE IF NOT EXISTS `poi_extra` (
                       `poi_id` int(11)            NOT NULL default \'0\',
-                      `field_id`  varchar(160)  NOT NULL default \'0\',
+                      `field_name`  varchar(160)  NOT NULL default \'0\',
                       `entry`   varchar(8192)     default NULL,
-                      PRIMARY KEY  (`poi_id`)
+                      INDEX  (`poi_id`)
                     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;
     add_index('poi_extra');
 
     db_exec('CREATE TABLE IF NOT EXISTS `poi_extra_fields` (
                       `poi_type_id` int(11)       NOT NULL default \'0\',
-                      `field_id`  varchar(160)  NOT NULL default \'0\',
+                      `field_name`  varchar(160)  NOT NULL default \'0\',
                       `description_en` varchar(160) NULL default \'\',
                       PRIMARY KEY  (`poi_type_id`)
                     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;

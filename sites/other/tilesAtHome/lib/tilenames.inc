@@ -11,7 +11,8 @@ function TileName($X,$Y,$Z,$Layer="Tiles",$Old=0){
   else
     $BaseDir = "/home/ojw/tiles-ojw2";
 
-  return("$BaseDir/$Layer/".TilePartName($X,$Y,$Z));
+  $Filename = $BaseDir . "/" . $Layer . "/" . TilePartName($X,$Y,$Z);
+  return($Filename);
 }
 function TileURL($X,$Y,$Z,$Layer="tile"){
   if(!TileValid($X,$Y,$Z))

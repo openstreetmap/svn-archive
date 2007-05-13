@@ -34,7 +34,16 @@
     exit;
   }
 
-  $SQL = "select `x`,`y`,`status` from `tiles_queue` where `status`=0 or `status`=1 limit 1;";
+  CheckForRequest(1);
+  CheckForRequest(2);
+  print "XX|3||||nothing_to_do";
+
+
+function CheckForRequest($Priority){
+  $SQL = sprintf("select `x`,`y`,`status` from `tiles_queue` where (`status`=0 or `status`=1) and `priority`=%d limit 1;",
+    $Priority);
+
+//  print "$SQL\n";return;
   $Result = mysql_query($SQL);
   
   if(mysql_errno()){
@@ -42,8 +51,7 @@
     exit;
   }
   if(mysql_num_rows($Result) == 0){
-    print "XX|3||||nothing_to_do";
-    exit;
+    return;
   }
   
   $Data = mysql_fetch_assoc($Result);
@@ -52,21 +60,14 @@
     $Data["y"],
     12);
   
-  if(0){
-  printf("Moving %d,%d... %d to %d\n", 
-    $Data["x"],
-    $Data["y"],
-    $Data["status"],
-    REQUEST_ACTIVE);
-  }
-  
   moveRequest(
     $Data["x"],
     $Data["y"],
     $Data["status"],
     REQUEST_ACTIVE);
     
-  #print mysql_error();
   logSqlError();
+  exit;
+}
 
 ?>

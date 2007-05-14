@@ -38,11 +38,7 @@ host_triplet = @host@
 subdir = scripts/osm/utils
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/lib-ld.m4 \
-	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/acinclude.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -236,7 +232,17 @@ SUBDIRS = \
 	filter
 
 DIST_SUBDIRS = $(SUBDIRS)
-bin_SCRIPTS = 
+bin_SCRIPTS = \
+	export/osm2csv/osm2csv.pl \
+	filter/simplify/simplify.pl \
+	import/osmtrackfilter/osmtrackfilter.pl \
+	osm-extract/planetosm-excerpt-area.pl \
+	osm-extract/planetosm-excerpt-tags.pl \
+	osm-extract/polygons/extract-germany.pl \
+	osm-extract/polygons/extract-polygon.pl \
+	planet-mirror/planet-mirror.pl \
+	export/osm2csv/osm2csv.pl
+
 EXTRA_DIST = $(bin_SCRIPTS) \
 	export/CityKML/download.pl \
 	export/CityKML/download_specific.pl \
@@ -244,23 +250,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	export/CityKML/run.pl \
 	export/osm2csv/osm2csv.pl \
 	export/osm2kml/osm2kml.py \
-	export/osm2pgsql/build_geometry.cpp \
-	export/osm2pgsql/build_geometry.h \
-	export/osm2pgsql/experimental/build_geometry.cpp \
-	export/osm2pgsql/experimental/build_geometry.h \
-	export/osm2pgsql/experimental/keyvals.c \
-	export/osm2pgsql/experimental/keyvals.h \
-	export/osm2pgsql/experimental/middle-pgsql.c \
-	export/osm2pgsql/experimental/middle-pgsql.h \
-	export/osm2pgsql/experimental/middle-ram.c \
-	export/osm2pgsql/experimental/middle-ram.h \
-	export/osm2pgsql/experimental/middle.h \
-	export/osm2pgsql/experimental/osm2pgsql.c \
-	export/osm2pgsql/experimental/osmtypes.h \
-	export/osm2pgsql/experimental/output-pgsql.c \
-	export/osm2pgsql/experimental/output-pgsql.h \
-	export/osm2pgsql/experimental/output.h \
-	export/osm2pgsql/osm2pgsql.c \
 	export/osm2shp/osm2shp.cpp \
 	export/osm2singleline_per_tag/osm2singleline_per_tag.pl \
 	export/osmgarminmap/curlstuff.cpp \
@@ -271,7 +260,7 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	filter/osm-length/osm-length-2.pl \
 	filter/simplify/simplify.pl \
 	filter/wayclean/wayclean.cpp \
-	gps/gpx-batch-upload/gpx-batch-upload.pl \
+	gps-tracks/gpx-batch-upload/gpx-batch-upload.pl \
 	import/airport_import/import_apt.pl \
 	import/coast_import/coast_upload.pl \
 	import/coast_import/osm.pm \
@@ -283,6 +272,7 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	import/srtm2osm/merge.pl \
 	import/srtm2osm/mkcntr.pl \
 	maplint/README \
+	maplint/Makefile \
 	maplint/html/*.html \
 	maplint/html/style.css \
 	maplint/lib/*.xsl \
@@ -296,7 +286,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	osm-extract/polygons/extract-polygon.pl \
 	osmapitest/*.rb \
 	planet-mirror/planet-mirror.pl \
-	planet.osm/C/UTF8sanitizer.c \
 	planet.osm/java/speller/words.cfg \
 	planet.osm/perl/check_osm.pl \
 	planet.osm/perl/planetcount.pl \
@@ -305,27 +294,18 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	planet.osm/python/utf8osmchecker.py \
 	planetdiff/*.txt \
 	planetdiff/*.xml \
-	planetdiff/UTF8sanitizer.c \
-	planetdiff/input.c \
-	planetdiff/input.h \
-	planetdiff/keyvals.c \
-	planetdiff/keyvals.h \
-	planetdiff/planetdiff.c \
-	planetdiff/sanitizer.h \
+	planetdiff/*.h \
+	planetdiff/*.c \
 	sanitize/sanitize.pl \
 	serverStatus/ServerStatusToWiki.pl \
 	srtmshp/Canvas.cpp \
 	srtmshp/Canvas.h \
 	srtmshp/EarthPoint.h \
 	srtmshp/Map.h \
-	srtmshp/SRTMConGen.cpp \
+	srtmshp/*.cpp \
 	srtmshp/SRTMConGen.h \
-	srtmshp/SRTMDataGrid.cpp \
 	srtmshp/SRTMDataGrid.h \
-	srtmshp/SRTMGeneral.cpp \
 	srtmshp/SRTMGeneral.h \
-	srtmshp/srtm.cpp \
-	srtmshp/srtm2shp.cpp \
 	where_are_they/geo_helper.py \
 	where_are_they/mini_osm.py \
 	where_are_they/osm_io_helper.py \
@@ -536,7 +516,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/export/CityKML $(distdir)/export/osm2csv $(distdir)/export/osm2kml $(distdir)/export/osm2pgsql $(distdir)/export/osm2pgsql/experimental $(distdir)/export/osm2shp $(distdir)/export/osm2singleline_per_tag $(distdir)/export/osmgarminmap $(distdir)/filter/osm-length $(distdir)/filter/simplify $(distdir)/filter/wayclean $(distdir)/georss $(distdir)/gps/gpx-batch-upload $(distdir)/import/airport_import $(distdir)/import/coast_import $(distdir)/import/csv2osm $(distdir)/import/dafif2osm $(distdir)/import/osmtrackfilter $(distdir)/import/srtm2osm $(distdir)/maplint $(distdir)/maplint/bin $(distdir)/maplint/html $(distdir)/maplint/lib $(distdir)/maplint/tests/base $(distdir)/maplint/tests/main $(distdir)/maplint/tests/strict $(distdir)/osm-activity $(distdir)/osm-extract $(distdir)/osm-extract/polygons $(distdir)/osmapitest $(distdir)/planet-mirror $(distdir)/planet.osm/C $(distdir)/planet.osm/java/speller $(distdir)/planet.osm/perl $(distdir)/planet.osm/python $(distdir)/planetdiff $(distdir)/sanitize $(distdir)/serverStatus $(distdir)/srtmshp $(distdir)/where_are_they
+	$(mkdir_p) $(distdir)/export/CityKML $(distdir)/export/osm2csv $(distdir)/export/osm2kml $(distdir)/export/osm2shp $(distdir)/export/osm2singleline_per_tag $(distdir)/export/osmgarminmap $(distdir)/filter/osm-length $(distdir)/filter/simplify $(distdir)/filter/wayclean $(distdir)/georss $(distdir)/gps-tracks/gpx-batch-upload $(distdir)/import/airport_import $(distdir)/import/coast_import $(distdir)/import/csv2osm $(distdir)/import/dafif2osm $(distdir)/import/osmtrackfilter $(distdir)/import/srtm2osm $(distdir)/maplint $(distdir)/maplint/bin $(distdir)/maplint/html $(distdir)/maplint/lib $(distdir)/maplint/tests/base $(distdir)/maplint/tests/main $(distdir)/maplint/tests/strict $(distdir)/osm-activity $(distdir)/osm-extract $(distdir)/osm-extract/polygons $(distdir)/osmapitest $(distdir)/planet-mirror $(distdir)/planet.osm/java/speller $(distdir)/planet.osm/perl $(distdir)/planet.osm/python $(distdir)/planetdiff $(distdir)/sanitize $(distdir)/serverStatus $(distdir)/srtmshp $(distdir)/where_are_they
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

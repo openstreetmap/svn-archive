@@ -24,11 +24,6 @@ bin_SCRIPTS= \
 	planet-mirror/planet-mirror.pl \
 	export/osm2csv/osm2csv.pl
 
-#UTF8sanitizerdir = $(bindir)
-#UTF8sanitizer_PROGRAMS = UTF8sanitizer
-#UTF8sanitizer_SOURCES = planet.osm/C/UTF8sanitizer.c
-
-
 EXTRA_DIST = $(bin_SCRIPTS) \
 	export/CityKML/download.pl \
 	export/CityKML/download_specific.pl \
@@ -80,26 +75,18 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	planet.osm/python/utf8osmchecker.py \
 	planetdiff/*.txt \
 	planetdiff/*.xml \
-	planetdiff/input.c \
-	planetdiff/input.h \
-	planetdiff/keyvals.c \
-	planetdiff/keyvals.h \
-	planetdiff/planetdiff.c \
-	planetdiff/sanitizer.h \
+	planetdiff/*.h \
+	planetdiff/*.c \
 	sanitize/sanitize.pl \
 	serverStatus/ServerStatusToWiki.pl \
 	srtmshp/Canvas.cpp \
 	srtmshp/Canvas.h \
 	srtmshp/EarthPoint.h \
 	srtmshp/Map.h \
-	srtmshp/SRTMConGen.cpp \
+	srtmshp/*.cpp \
 	srtmshp/SRTMConGen.h \
-	srtmshp/SRTMDataGrid.cpp \
 	srtmshp/SRTMDataGrid.h \
-	srtmshp/SRTMGeneral.cpp \
 	srtmshp/SRTMGeneral.h \
-	srtmshp/srtm.cpp \
-	srtmshp/srtm2shp.cpp \
 	where_are_they/geo_helper.py \
 	where_are_they/mini_osm.py \
 	where_are_they/osm_io_helper.py \
@@ -114,6 +101,3 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	georss/*.js \
 	georss/README \
 	georss/*.html
-
-#	planet.osm/C/UTF8sanitizer.c 
-#	planetdiff/UTF8sanitizer.c 

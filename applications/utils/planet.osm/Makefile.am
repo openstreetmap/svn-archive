@@ -1,3 +1,6 @@
+SUBDIRS =      C
+DIST_SUBDIRS = $(SUBDIRS)
+
 EXTRA_DIST = \
 	perl/*.pl \
 	python/*.py \
@@ -12,3 +15,6 @@ EXTRA_DIST = \
 	*.osm \
 	*.sh \
 	C/UTF8sanitizer.exe
+#	C/UTF8sanitizer.c 
+
+

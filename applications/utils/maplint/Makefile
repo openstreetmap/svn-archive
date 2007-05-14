@@ -75,4 +75,8 @@ install:
 	echo "Please add an installation routine here"
 	echo "For now this is handled in the upper directory"
 
+distclean: clean
+	echo "Please add an installation routine here"
+	echo "For now this is handled in the upper directory"
+
 #-- THE END ------------------------------------------------------------------

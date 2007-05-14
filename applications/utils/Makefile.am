@@ -13,7 +13,21 @@ SUBDIRS =      \
 
 DIST_SUBDIRS = $(SUBDIRS)
 
-bin_SCRIPTS=	
+bin_SCRIPTS= \
+	export/osm2csv/osm2csv.pl \
+	filter/simplify/simplify.pl \
+	import/osmtrackfilter/osmtrackfilter.pl \
+	osm-extract/planetosm-excerpt-area.pl \
+	osm-extract/planetosm-excerpt-tags.pl \
+	osm-extract/polygons/extract-germany.pl \
+	osm-extract/polygons/extract-polygon.pl \
+	planet-mirror/planet-mirror.pl \
+	export/osm2csv/osm2csv.pl
+
+#UTF8sanitizerdir = $(bindir)
+#UTF8sanitizer_PROGRAMS = UTF8sanitizer
+#UTF8sanitizer_SOURCES = planet.osm/C/UTF8sanitizer.c
+
 
 EXTRA_DIST = $(bin_SCRIPTS) \
 	export/CityKML/download.pl \
@@ -58,7 +72,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	osm-extract/polygons/extract-polygon.pl \
 	osmapitest/*.rb \
 	planet-mirror/planet-mirror.pl \
-	planet.osm/C/UTF8sanitizer.c \
 	planet.osm/java/speller/words.cfg \
 	planet.osm/perl/check_osm.pl \
 	planet.osm/perl/planetcount.pl \
@@ -67,7 +80,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	planet.osm/python/utf8osmchecker.py \
 	planetdiff/*.txt \
 	planetdiff/*.xml \
-	planetdiff/UTF8sanitizer.c \
 	planetdiff/input.c \
 	planetdiff/input.h \
 	planetdiff/keyvals.c \
@@ -102,3 +114,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	georss/*.js \
 	georss/README \
 	georss/*.html
+
+#	planet.osm/C/UTF8sanitizer.c 
+#	planetdiff/UTF8sanitizer.c 

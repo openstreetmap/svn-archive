@@ -205,7 +205,7 @@ public class OsmApplet extends PApplet implements Releaseable {
 
 	// "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=modis,global_mosaic&styles=&srs=EPSG:4326&format=image/jpeg";
 
-	String apiURL = "http://www.openstreetmap.org/api/0.3/";
+	String apiURL = "http://www.openstreetmap.org/api/0.4/";
 
 	/* modes - input is passed to the current mode, assigned by node manager */
 	ModeManager modeManager;

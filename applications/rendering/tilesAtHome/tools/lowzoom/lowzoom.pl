@@ -19,11 +19,6 @@ $|=1;
 my $uploadDir = "";
 die "please configure uploadDir variable in lowzoom.pl" if ($uploadDir eq "");
 
-# Initialise a blue tile to be used for water areas
-my $blueTile = new Image::Magick;
-die "cannot open blue.png" if (my $err = $blueTile->Read("blue.png"));
-die "cannot find oceantiles_12.dat (from t\@h distribution)" unless (-f "oceantiles_12.dat");
-
 # Command-line arguments
 my $X = shift();
 my $Y = shift();
@@ -90,7 +85,7 @@ sub downloadtile(){
   $Status->downloadCount($Layer,$X,$Y,$Z,$Size);
   
   # Don't bother storing blank or invalid tiles
-  unlink $f2 if($Size < 500);
+  unlink $f2 if($Size < 300);
 }
 # Create a supertile, by merging together 4 local image files, and creating a new local file
 sub supertile(){
@@ -149,8 +144,7 @@ sub readLocalImage()
     my $Filename = localfile($X,$Y,$Z,$Layer); 
     if (!-f $Filename)
     {
-        return undef if ($Z != 12);
-        return (is_ocean_tile($X, $Y) ? $blueTile : undef);
+        return undef;
     }
     my $Image = new Image::Magick;
     if (my $err = $Image->Read($Filename))
@@ -196,21 +190,6 @@ sub remotefile(){
 # Option: what to use as temporary storage for tiles
 sub tempdir(){
   return("temp");
-}
-sub is_ocean_tile
-{
-    my ($tilex, $tiley) = @_;
-    my $tileoffset = ($tiley * (2**12)) + $tilex;
-    my $fh;
-    open($fh, "<", "oceantiles_12.dat") or return 0;
-    seek $fh, int($tileoffset / 4), 0;
-    my $buffer;
-    read $fh, $buffer, 1;
-    $buffer = substr( $buffer."\0", 0, 1 );
-    $buffer = unpack "B*", $buffer;
-    my $str = substr( $buffer, 2*($tileoffset % 4), 2 );
-    close($fh);
-    return ($str eq "10");
 }
 
 package status;

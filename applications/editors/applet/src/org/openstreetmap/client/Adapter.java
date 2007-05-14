@@ -34,13 +34,13 @@ public class Adapter implements Releaseable {
      * Base url string to connect to the osm server api.
      * Default value not used.
      */
-    private String apiUrl = "http://www.openstreetmap.org/api/0.3/";
+    private String apiUrl = "http://www.openstreetmap.org/api/0.4/";
 
     /**
      * Resource location qualifier to PUT to to create a primitive.
      * To be changed to 'create' for 0.4 api.
      */
-    private static final String API_CREATE_ID = "0";
+    private static final String API_CREATE_ID = "create";
     
     /**
      * The server command manager to deploy server commands.

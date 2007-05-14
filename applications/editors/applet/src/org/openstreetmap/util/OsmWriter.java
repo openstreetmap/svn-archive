@@ -36,7 +36,7 @@ public class OsmWriter {
 	public static void output(Writer out, Object obj) {
 		OsmWriter writer = new OsmWriter(out);
 		writer.out.println("<?xml version='1.0' encoding='UTF-8'?>");
-		writer.out.println("<osm version='0.3' generator='applet'>");
+		writer.out.println("<osm version='0.4' generator='applet'>");
 		if (obj instanceof Node)
 			writer.visit((Node)obj);
 		else if (obj instanceof Line)

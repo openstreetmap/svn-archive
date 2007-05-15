@@ -1,5 +1,5 @@
 package osm;
-use WWW::Curl::easy;
+use WWW::Curl::Easy;
 
 sub new(){bless{}};
 
@@ -10,7 +10,7 @@ sub setup(){
   $self->{UserAgent} = shift();
   
   # You might need to change this to Easy with a capital E
-  $self->{Curl} = new WWW::Curl::easy;
+  $self->{Curl} = new WWW::Curl::Easy;
 
 }
 
@@ -30,7 +30,7 @@ sub uploadWay(){
   }
   
   my $Way = "<way id=\"0\">$Segments$Tags</way>";
-  my $OSM = "<osm version=\"0.3\">$Way</osm>";
+  my $OSM = "<osm version=\"0.4\">$Way</osm>";
   my $data = "<?xml version=\"1.0\"?>\n$OSM";
   my $path = "way/0";
 
@@ -43,7 +43,7 @@ sub uploadSegment(){
   $Tags .= sprintf("<tag k=\"created_by\" v=\"%s\"/>", $self->{UserAgent});
   
   my $Segment = sprintf("<segment id=\"0\" from=\"%d\" to=\"%d\">$Tags</segment>", $Node1,$Node2);
-  my $OSM = "<osm version=\"0.3\">$Segment</osm>";
+  my $OSM = "<osm version=\"0.4\">$Segment</osm>";
   my $data = "<?xml version=\"1.0\"?>\n$OSM";
   my $path = "segment/0";
 
@@ -58,7 +58,7 @@ sub uploadNode(){
   $Tags .= sprintf("<tag k=\"created_by\" v=\"%s\"/>", $self->{UserAgent});
   
   my $Node = sprintf("<node id=\"0\" lon=\"%f\" lat=\"%f\">$Tags</node>", $Long, $Lat);
-  my $OSM = "<osm version=\"0.3\">$Node</osm>";
+  my $OSM = "<osm version=\"0.4\">$Node</osm>";
   my $data = "<?xml version=\"1.0\"?>\n$OSM";
   my $path = "node/0";
 
@@ -77,7 +77,7 @@ sub upload(){
   print $FileToSend $data;
   close $FileToSend;
   
-  my $url = "http://www.openstreetmap.org/api/0.3/$path";  
+  my $url = "http://www.openstreetmap.org/api/0.4/$path";  
   my $curl = $self->{Curl};
   open(my $TxFile, "<", $self->{file1});
   open(my $RxFile, ">",$self->{file2});

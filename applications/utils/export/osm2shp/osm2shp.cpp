@@ -13,9 +13,10 @@ using std::endl;
 
 int main (int argc, char* argv[])
 {
-	if(argc<3)
+	if(argc<6)
 	{
-		cerr << "Usage: osm2shp OSMfile nodeSHPfile waySHPfile" << endl;
+		cerr << "Usage: osm2shp OSMfile nodeSHPfile waySHPfile " << 
+			 << " areaSHPfile features.xml" << endl;
 		exit(1);
 	}
 
@@ -27,7 +28,7 @@ int main (int argc, char* argv[])
 		in.close();
 		if(comp)
 		{
-			comp->makeShp(argv[2],argv[3]);
+			comp->makeShp(argv[2],argv[3],argv[4],argv[5]);
 			delete comp;
 		}
 		else

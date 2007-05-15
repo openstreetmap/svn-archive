@@ -15,7 +15,7 @@ int main (int argc, char* argv[])
 {
 	if(argc<6)
 	{
-		cerr << "Usage: osm2shp OSMfile nodeSHPfile waySHPfile " << 
+		cerr << "Usage: osm2shp OSMfile nodeSHPfile waySHPfile " 
 			 << " areaSHPfile features.xml" << endl;
 		exit(1);
 	}

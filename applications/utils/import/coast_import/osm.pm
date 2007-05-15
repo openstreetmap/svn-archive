@@ -32,7 +32,7 @@ sub uploadWay(){
   my $Way = "<way id=\"0\">$Segments$Tags</way>";
   my $OSM = "<osm version=\"0.4\">$Way</osm>";
   my $data = "<?xml version=\"1.0\"?>\n$OSM";
-  my $path = "way/0";
+  my $path = "way/create";
 
   my ($response, $http_code) = $self->upload($data, $path);
   return($response);
@@ -45,7 +45,7 @@ sub uploadSegment(){
   my $Segment = sprintf("<segment id=\"0\" from=\"%d\" to=\"%d\">$Tags</segment>", $Node1,$Node2);
   my $OSM = "<osm version=\"0.4\">$Segment</osm>";
   my $data = "<?xml version=\"1.0\"?>\n$OSM";
-  my $path = "segment/0";
+  my $path = "segment/create";
 
   my ($response, $http_code) = $self->upload($data, $path);
   
@@ -60,7 +60,7 @@ sub uploadNode(){
   my $Node = sprintf("<node id=\"0\" lon=\"%f\" lat=\"%f\">$Tags</node>", $Long, $Lat);
   my $OSM = "<osm version=\"0.4\">$Node</osm>";
   my $data = "<?xml version=\"1.0\"?>\n$OSM";
-  my $path = "node/0";
+  my $path = "node/create";
 
   my ($response, $http_code) = $self->upload($data, $path);
   

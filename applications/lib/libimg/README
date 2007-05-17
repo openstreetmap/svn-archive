@@ -1,0 +1,22 @@
+This is the beginnings of an IMG library intended for use with OSM.
+
+It does not yet work, and is probably the most hideous C++ code you
+have ever seen, so unless you are me, I'd advise you go away and come
+back later... much later...
+
+All the code is based on the document "Garmin IMG File Format" by John
+Mechalas.
+
+The development strategy is roughly:
+
+Phase 1: img2img - a utility that reads in an IMG file, and then
+   writes it out again. Smart, huh?
+
+Phase 2: osm2omg - a utility that reads in an OSM file, and then
+   writes out an IMG file.
+
+Phase 3: Utilities required to deal with needing different data at
+different zoom levels. This may be of generic use for other renderers
+too. Also some kind of online interface to allow people to get bang
+upto date img for their town/area etc.
+ 

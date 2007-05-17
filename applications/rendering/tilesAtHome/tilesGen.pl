@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-use LWP::Simple;
 use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
@@ -720,21 +719,26 @@ sub UpdateOsmarender {
 #-----------------------------------------------------------------------------
 # 
 #-----------------------------------------------------------------------------
-sub DownloadFile {
-  my ($URL, $File, $UseExisting, $Title) = @_;
-  
-  statusMessage("Downloading: $Title", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-  
-  if($UseExisting) 
-  {
-    mirror($URL, $File);
-  } 
-  else
-  {
-    getstore($URL, $File);
-  }
-  doneMessage(sprintf("done, %d bytes", -s $File));
-  
+sub DownloadFile 
+{
+    my ($URL, $File, $UseExisting, $Title) = @_;
+
+    statusMessage("Downloading: $Title", $Config{Verbose}, 
+        $currentSubTask, $progressJobs, $progressPercent,0);
+
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);
+    $ua->agent("tilesAtHome");
+    $ua->env_proxy();
+
+    if($UseExisting) 
+    {
+        $ua->mirror($URL, $File);
+    } 
+    else
+    {
+        $ua->get($URL, $File);
+    }
+    doneMessage(sprintf("done, %d bytes", -s $File));
 }
 
 #-----------------------------------------------------------------------------

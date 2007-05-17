@@ -296,9 +296,10 @@ sub upload()
     my ($File) = @_;
     
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);
-  
+
     $ua->protocols_allowed( ['http'] );
     $ua->agent("tilesAtHomeZip");
+    $ua->env_proxy();
     
     my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
     my $URL = $Config{"UploadURL2"};

@@ -1,0 +1,35 @@
+<project name="namefinder" default="dist" basedir=".">
+
+    <fileset id="required_libs" dir="../../josm/lib">
+            <include name="MinML2.jar"/>
+    </fileset>
+
+	<target name="dist" depends="compile">
+
+        <!-- jars -->
+        <unjar dest="build">
+                <fileset refid="required_libs" />
+        </unjar>
+
+		<!-- create josm-custom.jar -->
+		<jar destfile="namefinder.jar" basedir="build">
+			<manifest>
+                <attribute name="Plugin-Class" value="namefinder.NameFinderPlugin" />
+                <attribute name="Plugin-Description" value="Allows selection of download areas by name, using an external service" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="namefinder" classpath="../../josm/build/:../../josm/lib/MinML2.jar" destdir="build" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="build" />
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+</project>

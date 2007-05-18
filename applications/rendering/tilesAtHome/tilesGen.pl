@@ -736,7 +736,7 @@ sub DownloadFile
     } 
     else
     {
-        $ua->get($URL, $File);
+        $ua->get($URL, ':content_file' => $File);
     }
     doneMessage(sprintf("done, %d bytes", -s $File));
 }

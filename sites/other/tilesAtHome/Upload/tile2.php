@@ -128,11 +128,14 @@ function SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID){
   # Each element in TileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($TileList as $SqlSnippet){
     
-    $Fields = "x, y, z, type, size, date, user, version";
-    $Values = sprintf("%s, now(), %d, %d", $SqlSnippet, $UserID, $VersionID);
-    
-    $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
-    mysql_query($SQL);
+    list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
+    if($Z == 12){
+        $Fields = "x, y, z, type, size, date, user, version";
+        $Values = sprintf("%s, now(), %d, %d", $SqlSnippet, $UserID, $VersionID);
+        
+        $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
+        mysql_query($SQL);
+    }
   }
   
   # Each element in BlankTileList is a snippet of values (x,y,z,type,size) for each tile

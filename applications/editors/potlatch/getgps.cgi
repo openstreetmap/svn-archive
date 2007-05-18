@@ -3,6 +3,8 @@
 	# ----------------------------------------------------------------
 	# getgps.cgi
 	# GPX responder for Potlatch Openstreetmap editor
+	# Perl/Ming version
+	# === now superseded by pure Ruby version ===
 	#	
 	# editions Systeme D / Richard Fairhurst 2006
 	# public domain

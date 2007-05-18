@@ -35,6 +35,13 @@ function DisplayDetails($LayerID,$X,$Y,$Z,$Mode){
   // Optional debug
   if(0)
     printf("Requested %d, %d, %d\n", $X,$Y,$Z);
+
+  // if detail request is for a tile below Z=12, look up matching Z=12 tile instead
+  if($Z>12) {
+      $Z=12;
+      $X = $X>>($Z-12);
+      $Y = $Y>>($Z-12);
+  }
   
   // Find the tile in the database
   $SQL = sprintf("select size, user, unix_timestamp(`date`) as unixtime from tiles_meta where `x`=%d and `y`=%d and `z`=%d and `type`=%d limit 1", $X,$Y,$Z, $LayerID);

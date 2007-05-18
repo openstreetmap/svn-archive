@@ -72,7 +72,7 @@
       if($Z <= 12)
         BlankTile("assumed_sea");// political decision: make unknown areas blue
       else
-        BlankTile("404");
+        SearchDatabase($X>>1,$Y>>1,$Z-1,$LayerID);
     }
   
     $Data = mysql_fetch_assoc($Result);

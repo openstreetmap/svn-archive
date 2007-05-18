@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 8.5.2007 (segment id fix)
+	# last update 18.5.2007 (whichways accepts points)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -1636,8 +1636,10 @@
 
 	function loadGPS() {
 		_root.map.createEmptyMovieClip('gps',3);
-		if (Key.isDown(Key.SHIFT)) { loadMovie('/potlatch/getgps.cgi?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&token='+_root.usertoken,_root.map.gps); }
-							  else { loadMovie('/potlatch/getgps.cgi?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale,_root.map.gps); }
+//		gpsurl='/potlatch/getgps.cgi';
+		gpsurl='../api/0.4/swf/trackpoints';
+		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&token='+_root.usertoken,_root.map.gps); }
+							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale,_root.map.gps); }
 	}
 
 
@@ -1651,8 +1653,10 @@
 		whichresponder=function() {};
 		whichresponder.onResult=function(result) {
 			_root.whichreceived+=1;
-			for (i in result) {
-				way=result[i];
+			waylist  =result[0];
+			pointlist=result[1];
+			for (i in waylist) {
+				way=waylist[i];
 				if (!_root["map"]["ways"][way]) {
 					_root.map.ways.attachMovie("way",way,++waydepth);
 					_root["map"]["ways"][way].load(way);
@@ -1660,6 +1664,11 @@
 					_root.waysrequested+=1;
 				}
 			}
+			// - to read pointlist:
+			//   for (i in pointlist) {
+			//     if (pointlist[i][1]['name']) { _root.chat.text+=pointlist[i][1]['name']+','; }
+			//   }
+			// - will need to count and purge POIs too
 		};
 		remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
 		_root.whichrequested+=1;
@@ -1687,6 +1696,9 @@
 	// Pointer handling
 	
 	function trackMouse() {
+		// if (_root.map.gps.hitTest(_root._xmouse,_root._ymouse,true)) {
+		//	// we're over the GPS area
+		// }
 		_root.pointer._x=_root._xmouse;
 		_root.pointer._y=_root._ymouse;
 		updateAfterEvent();

@@ -730,14 +730,11 @@ sub DownloadFile
     $ua->agent("tilesAtHome");
     $ua->env_proxy();
 
-    if($UseExisting) 
+    if(!$UseExisting) 
     {
-        $ua->mirror($URL, $File);
-    } 
-    else
-    {
-        $ua->get($URL, ':content_file' => $File);
+        killafile($File);
     }
+    $ua->mirror($URL, $File);
     doneMessage(sprintf("done, %d bytes", -s $File));
 }
 

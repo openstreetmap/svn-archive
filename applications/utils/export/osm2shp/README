@@ -1,1 +1,36 @@
 osm2shp - the osm to shape conversion application.
+
+
+The following is copied from a corresponding mail thread about dependencies
+(http://lists.openstreetmap.org/pipermail/talk/2007-May/013854.html):
+
+You also need to supply the shapefile to store areas, and the XML file which 
+differentiates, by tags, polylines and areas. (This is in SVN in the libosm 
+directory - it's the file features.xml)
+
+You also need the "libosm" and, I think, "ccoord" library available from 
+the "libs" directory of the source tree.
+With "libosm", once you have done "make", you can use "make install" (as 
+root) to copy the library to /usr/local/lib and the header files to 
+/usr/local/include.
+
+With "ccoord" there is no "make install" option (I would add one but have 
+no access to SVN from where I am now), so you should enter "make" and then 
+manually type (as root)
+
+cp libccoord.a /usr/local/lib
+cp *.h /usr/local/include
+
+You can then change directory to osm2shp (I can't find this in the latest 
+SVN by the way... is it still there?), and then type "make". It should 
+work - let me know if not (together with error messages).
+
+There are other dependencies too: you need shapelib (library for creating 
+shapefiles) and expat 2.0 (simple XML parser). These compile and install 
+without problems using a standard ./configure followed by make and make 
+install.
+
+These are available from:
+
+shapelib.maptools.org/ 
+expat.sourceforge.net/ 

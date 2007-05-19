@@ -71,9 +71,11 @@ public class SurveyorShowAction extends AbstractAction {
             surveyorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             surveyorFrame.setTitle((String)getValue(AbstractAction.NAME));
             // <FIXXME date="28.04.2007" author="cdaller">
-            // TODO get old size/pos of frame from properties
+            // TODO get old pos of frame from properties
             // </FIXXME> 
+            SurveyorPlugin.setSurveyorFrame(surveyorFrame);
         }
+        surveyorFrame.setAlwaysOnTop(true);
         surveyorFrame.setVisible(true);
 
     }
@@ -90,7 +92,7 @@ public class SurveyorShowAction extends AbstractAction {
         }
         SurveyorComponent component= null;
         try {
-            if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
+            if (source.startsWith("http://") || source.startsWith("ftp://") || source.startsWith("file:"))
                 in = new URL(source).openStream();
             else if (source.startsWith("resource://"))
                 in = getClass().getResourceAsStream(source.substring("resource:/".length()));

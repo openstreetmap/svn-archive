@@ -14,6 +14,7 @@
     <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/b.ogg"/>
   </button>
   <button label="Village/City" hotkey="V" icon="place">
+    <action class="SetNodeAction" params=""/>
     <action class="AnnotationPresetAction" params="Places"/>
     <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/v.ogg"/>
   </button>
@@ -31,6 +32,7 @@
   </button>
   <button label="Fuel Station" hotkey="F" icon="fuel">
     <action class="SetNodeAction" params="amenity=fuel"/>
+    <!--action class="AnnotationPresetAction" params="Fuel"/-->
     <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/f.ogg"/>
   </button>
   <button label="Hotel" hotkey="H" icon="bed">

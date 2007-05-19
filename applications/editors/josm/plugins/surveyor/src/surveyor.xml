@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<surveyor rows="3" columns="3" width="0" height="0">
+  <!-- icons can either be absolute paths or relative paths to the .josm directory -->
+  <!-- action class: either fully qualified classnames or if not found, 
+       package at.dallermassl.josm.plugin.surveyor.action is assumed -->
+  <button label="Tunnel Start" hotkey="T" icon="tunnel">
+    <action class="ConsolePrinterAction" params="tunnel start,tunnel"/>
+    <action class="SetWaypointAction" params="tunnel start"/>
+    <!--action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/-->
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/t.ogg"/>
+  </button>
+  <button label="Bridge" hotkey="B" type="toggle">
+    <action class="SetWaypointAction" params="bridge"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/b.ogg"/>
+  </button>
+  <button label="Village/City" hotkey="V" icon="place">
+    <action class="AnnotationPresetAction" params="Places"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/v.ogg"/>
+  </button>
+  <button label="Parking" hotkey="P" icon="parking">
+    <action class="SetNodeAction" params="amenity=parking"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/p.ogg"/>
+  </button>
+  <button label="One Way" hotkey="O" icon="noentry">
+    <action class="SetWaypointAction" params="oneway=yes"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/o.ogg"/>
+  </button>
+  <button label="Church" hotkey="C" icon="church">
+    <action class="SetNodeAction" params="amenity=place_of_worship,denomination=christian"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/c.ogg"/>
+  </button>
+  <button label="Fuel Station" hotkey="F" icon="fuel">
+    <action class="SetNodeAction" params="amenity=fuel"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/f.ogg"/>
+  </button>
+  <button label="Hotel" hotkey="H" icon="bed">
+    <action class="SetNodeAction" params="tourism=hotel"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/h.ogg"/>
+  </button>
+  <button label="Motorway" hotkey="1">
+    <action class="SetWaypointAction" params="Motorway"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+  </button>
+  <button label="Primary" hotkey="2">
+    <action class="SetWaypointAction" params="Primary"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+  </button>
+  <button label="Secondary" hotkey="3">
+    <action class="SetWaypointAction" params="Secondary"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+  </button>
+  <button label="Unclassified" hotkey="4">
+    <action class="SetWaypointAction" params="Unclassified"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+  </button>
+  <button label="Residential" hotkey="5">
+    <action class="SetWaypointAction" params="Residential"/>
+    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+  </button>
+</surveyor>

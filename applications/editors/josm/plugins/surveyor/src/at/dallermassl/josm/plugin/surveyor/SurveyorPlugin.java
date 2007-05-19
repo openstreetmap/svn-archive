@@ -5,6 +5,7 @@ package at.dallermassl.josm.plugin.surveyor;
 
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
@@ -20,6 +21,8 @@ import livegps.LiveGpsPlugin;
  *
  */
 public class SurveyorPlugin extends LiveGpsPlugin {
+    
+    private static JFrame surveyorFrame;
 
     /**
      * 
@@ -37,6 +40,20 @@ public class SurveyorPlugin extends LiveGpsPlugin {
         JCheckBoxMenuItem autoSaveMenu = new JCheckBoxMenuItem(autoSaveAction);
         getLgpsMenu().add(autoSaveMenu);
         
+    }
+
+    /**
+     * @return the surveyorFrame
+     */
+    public static JFrame getSurveyorFrame() {
+        return surveyorFrame;
+    }
+
+    /**
+     * @param surveyorFrame the surveyorFrame to set
+     */
+    public static void setSurveyorFrame(JFrame surveyorFrame) {
+        SurveyorPlugin.surveyorFrame = surveyorFrame;
     }
     
 }

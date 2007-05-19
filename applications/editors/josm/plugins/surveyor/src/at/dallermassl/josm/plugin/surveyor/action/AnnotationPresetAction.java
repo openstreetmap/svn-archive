@@ -48,8 +48,6 @@ public class AnnotationPresetAction implements SurveyorAction {
         Main.map.repaint();
         
         // call an annotationpreset to add additional properties...
-        
-        AnnotationPreset preset = getAnnotationPreset("Restrictions");
         preset.actionPerformed(null);
 
     }

@@ -3,24 +3,24 @@
 
   if(0){ // Option to kill database access, but keep sending request queries
     printf("OK|3|%d|%d|%d|dev_random",
-    	rand(0,4095),
-    	rand(0,4095),
-	    12);
-	exit;
+      rand(0,4095),
+      rand(0,4095),
+      12);
+  exit;
   }
-  
+
   if(0){ // Option to kill request queries
     print "XX|3||||disabled";
     exit;
   }
-  
+
   if(0){
     if(rand(0,3) != 0){
       print "XX|3||||rate_limiting";
       exit;
     }
   }
-  
+
   include("../connect/connect.php");
   include("../lib/log.inc");
   include("../lib/requests.inc");
@@ -34,18 +34,21 @@
     exit;
   }
 
-  CheckForRequest(1);
-  CheckForRequest(2);
+  CheckForRequest();
   print "XX|3||||nothing_to_do";
+  // Queue empty, return a random tile
+  //$x = rand(0,4095);
+  //$y = rand(0,4095);
+  //printf("OK|3|%d|%d|%d|dev_random",$x,$y,12);
 
-
-function CheckForRequest($Priority){
-  $SQL = sprintf("select `x`,`y`,`status` from `tiles_queue` where (`status`=0 or `status`=1) and `priority`=%d limit 1;",
-    $Priority);
+function CheckForRequest(){
+  $SQL =  "select `x`,`y`,`status` from `tiles_queue` where `status`=0 union ";
+  $SQL .= "select `x`,`y`,`status` from `tiles_queue` where `status`=1 ";
+  $SQL .= "order by `priority` desc,`date` limit 1;";
 
 //  print "$SQL\n";return;
   $Result = mysql_query($SQL);
-  
+
   if(mysql_errno()){
     print "XX|3||||error";
     exit;
@@ -53,19 +56,19 @@ function CheckForRequest($Priority){
   if(mysql_num_rows($Result) == 0){
     return;
   }
-  
+
   $Data = mysql_fetch_assoc($Result);
-  printf("OK|3|%d|%d|%d|db", 
+  printf("OK|3|%d|%d|%d|db",
     $Data["x"],
     $Data["y"],
     12);
-  
+
   moveRequest(
     $Data["x"],
     $Data["y"],
     $Data["status"],
     REQUEST_ACTIVE);
-    
+
   logSqlError();
   exit;
 }

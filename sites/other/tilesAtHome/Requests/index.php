@@ -42,8 +42,8 @@
   //printf("OK|3|%d|%d|%d|dev_random",$x,$y,12);
 
 function CheckForRequest(){
-  $SQL =  "select `x`,`y`,`status`,`priority` from `tiles_queue` where `status`=0 union ";
-  $SQL .= "select `x`,`y`,`status`,`priority` from `tiles_queue` where `status`=1 ";
+  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status`=0 union ";
+  $SQL .= "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status`=1 ";
   $SQL .= "order by `priority`,`date` limit 1;";
 
 //  print "$SQL\n";return;

@@ -4,7 +4,6 @@
 package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.Action;
 
@@ -39,13 +38,13 @@ public class AnnotationPresetAction implements SurveyorAction {
         LatLon coordinates = event.getCoordinates();
         System.out.println(getClass().getSimpleName() + " KOORD: " + coordinates.lat() + ", " 
             + coordinates.lon() + ", preset=" + presetName);
-        Node node = new Node(coordinates);
-        node.put("created_by", "JOSM-surveyor-plugin");
-        synchronized(LiveGpsLock.class) {
-            Main.main.editLayer().data.nodes.add(node);
-            Main.ds.setSelected(node);
-        }
-        Main.map.repaint();
+//        Node node = new Node(coordinates);
+//        node.put("created_by", "JOSM-surveyor-plugin");
+//        synchronized(LiveGpsLock.class) {
+//            Main.main.editLayer().data.nodes.add(node);
+//            Main.ds.setSelected(node);
+//        }
+//        Main.map.repaint();
         
         // call an annotationpreset to add additional properties...
         preset.actionPerformed(null);

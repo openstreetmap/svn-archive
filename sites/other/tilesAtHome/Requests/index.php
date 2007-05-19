@@ -50,7 +50,7 @@ function CheckForRequest(){
   $Result = mysql_query($SQL);
 
   if(mysql_errno()){
-    print "XX|3||||error";
+    print "XX|3||||error: " . mysql_error();
     exit;
   }
   if(mysql_num_rows($Result) == 0){

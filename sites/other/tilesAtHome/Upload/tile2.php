@@ -13,6 +13,10 @@ include("../lib/versions.inc");
 include("../lib/layers.inc");
 include("../lib/requests.inc");
 
+if($_POST["single_tileset"] != "yes"){
+  AbortWithError(401, "We're testing LA2's single-tileset uploads, normal ones are being discarded for now");    
+}
+
 # Get password from posted form data (format mp=user|pass)
 $Password = $_POST["mp"];
 list($User,$Pass) = explode("|", $Password);

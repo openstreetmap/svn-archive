@@ -6,7 +6,7 @@ function TileName($X,$Y,$Z,$Layer="Tiles",$Old=0){
   if(!TileValid($X,$Y,$Z))
     return("");
 
-  if($Old==1 && $Layer == "Tiles")
+  if($Old==1 || $Layer != "Tiles")
     $BaseDir = "/home/ojw/tiles-ojw";
   else
     $BaseDir = "/home/ojw/tiles-ojw2";

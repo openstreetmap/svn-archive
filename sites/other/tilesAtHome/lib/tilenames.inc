@@ -36,7 +36,7 @@ function TilePartName($X,$Y,$Z){
 # Gets the tileset this tile is in
 #----------------------------------------------------------------------
 function WhichTileset($X,$Y,$Z){
-  if($Z < 12)
+  if($Z < 12 || $Z > 20)
     return(array(0,0,0));
   if($Z == 12)
     return(array(1,$X,$Y));

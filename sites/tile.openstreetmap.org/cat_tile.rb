@@ -85,6 +85,22 @@ res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x =
 
 if res.num_rows == 0
   fb.call_local_sql { "insert into tiles (x,y,z,dirty_t, created_at) values (#{x},#{y},#{z},'true',NOW())" }
+
+  res = fb.call_local_sql { "select count(dirty_t) as dirty from tiles where dirty_t='true'" }
+  res.each_hash do |row|
+    if row['dirty'].to_i < 16
+      render = IO.popen("/home/jburgess/osm/svn.openstreetmap.org/sites/tile.openstreetmap.org/render_from_list.py > /dev/null", "w+")
+      render.puts "#{x} #{y} #{z}"
+      render.close
+    else
+      exit
+    end
+  end
+end
+
+res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
+if res.num_rows == 0
+  exit
 else
   res.each_hash do |row|
     puts row['data']

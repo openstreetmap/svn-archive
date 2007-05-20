@@ -32,6 +32,20 @@ function TilePartName($X,$Y,$Z){
     $Y%1000);
 }
 
+#----------------------------------------------------------------------
+# Gets the tileset this tile is in
+#----------------------------------------------------------------------
+function WhichTileset($X,$Y,$Z){
+  if($Z < 12)
+    return(array(0,0,0));
+  if($Z == 12)
+    return(array(1,$X,$Y));
+  
+  $X2 = $X >> ($Z - 12);
+  $Y2 = $Y >> ($Z - 12);
+  
+  return(array(1, $X2, $Y2));
+}
 
 #----------------------------------------------------------------------
 # Tests if a tile coordinate is valid

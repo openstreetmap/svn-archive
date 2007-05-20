@@ -82,7 +82,6 @@
     $Data = mysql_fetch_assoc($Result);
     mysql_close();
 
-    $CacheDays = 14;
     switch($Data["type"]){
       case 1:
         BlankTile("sea");
@@ -98,11 +97,12 @@
   
   function BlankTile($Type="404"){
     $Filename = "Gfx/$Type.png";
-    
-    header("Content-type:image/PNG");
+    $CacheDays = 14;
+      
+    header("Content-type:image/png");
     header('Last-Modified: ' . gmdate('D, j M Y H:i:s T',  $Data["date"]));
-    header('Cache-Control: ' . $CacheDays * 86400);
-    header('Expires: ' . gmdate('D, j M Y H:i:s T',  $Data["date"] + $CacheDays * 86400));
+    header('Cache-Control: max-age=' . $CacheDays * 86400);
+    header('Expires: ' . gmdate('D, j M Y H:i:s T',  time() + $CacheDays * 86400));
 
     readfile($Filename);
     exit;

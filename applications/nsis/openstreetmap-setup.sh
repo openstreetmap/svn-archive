@@ -2,7 +2,7 @@
 
 ## settings ##
 
-VERSION=0.0.6
+VERSION=0.0.7
 
 PROGRAM_FILES="/cygdrive/c/Program Files"
 
@@ -19,7 +19,13 @@ wget -nc http://josm.eigenheimstrasse.de/browser/LICENSE?format=raw
 cp LICENSE?format=raw LICENSE
 
 # get latest plugin (and supporting files) versions
-wget -nc http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
+cp ../../editors/josm/plugins/mappaint/mappaint.jar .
+cp ../../editors/josm/plugins/namefinder/namefinder.jar .
+#cp ../../editors/josm/plugins/osmarender/osmarender.jar .
+#cp ../../editors/josm/plugins/annotation-tester/annotation-tester.jar .
+#cp ../../editors/josm/plugins/wmsplugin/wmsplugin.jar .
+
+# wget -nc http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
 # wget -nc http://www.free-map.org.uk/downloads/josm/mappaint.jar
 # wget -nc http://www.free-map.org.uk/downloads/josm/elemstyles.xml
 wget -nc http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar

@@ -388,13 +388,21 @@ SetOutPath $APPDATA\JOSM\plugins
 File "downloads\wmsplugin.jar"
 SectionEnd
 
+Section "namefinder" SecNamefinderPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "downloads\namefinder.jar"
+SectionEnd
+
 SectionGroupEnd	; "Plugins"
 
 Section "-PluginSetting"
 ;-------------------------------------------
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 SetShellVarContext current
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder"
 SectionEnd
 
 
@@ -414,7 +422,7 @@ IfErrors 0 NoJOSMErrorMsg
 	Abort "Please note: josm.exe could not be removed, it's probably in use! Abort uninstall process!"
 NoJOSMErrorMsg:
 
-DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\JOSM"
+DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\josm.exe"
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe"
 
@@ -444,6 +452,7 @@ SectionIn 2
 SetShellVarContext current
 Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
+Delete "$APPDATA\JOSM\de-streets.xml"
 RMDir "$APPDATA\JOSM"
 SectionEnd
 
@@ -455,6 +464,7 @@ Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
 Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
 Delete "$APPDATA\JOSM\plugins\mappaint.jar"
+Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 ;Delete "$APPDATA\JOSM\plugins\mappaint\elemstyles.xml"
 RMDir "$APPDATA\JOSM\plugins\osmarender"
 ;RMDir "$APPDATA\JOSM\plugins\mappaint"
@@ -482,6 +492,7 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMappaintPlugin} "An alternative renderer for the map with colouring, line thickness, icons after tags."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecOsmarenderPlugin} "Displays the current screen as nicely rendered SVG graphics in FireFox."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN

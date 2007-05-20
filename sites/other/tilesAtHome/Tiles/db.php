@@ -37,9 +37,18 @@
     SearchFilesystem($X,$Y,$Z,$LayerID);
   
   // Optional: look for landsea tiles if everything else fails
-  if(1)
+  if(1){
+      
+    $NoExitOnDbFail = 1;
+    include("../connect/connect.php");
+    
+    if(!$DbSuccess){
+      BlankTile("database_error");
+    }
+      
     SearchDatabase($X,$Y,$Z,$LayerID);
-  
+  }
+
   // Look for a file on the filesystem
   function SearchFilesystem($X,$Y,$Z,$LayerID){
     $LayerName = LayerDir($LayerID);
@@ -55,14 +64,7 @@
     if(0){ // option to turn-off database lookups
       BlankTile();
     }
-    
-    $NoExitOnDbFail = 1;
-    include("../connect/connect.php");
-    
-    if(!$DbSuccess){
-      BlankTile("database_error");
-    }
-   
+       
     $SQL = sprintf("select * from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;", 
       $X, $Y, $Z, $LayerID);
     #printf("<p>%s</p>\n", htmlentities($SQL));

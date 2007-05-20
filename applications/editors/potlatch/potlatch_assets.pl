@@ -23,9 +23,9 @@
 
 	$ec=new SWF::Sprite();
 	$ch=new SWF::Shape();
-	$ch->setRightFill(255,0,0); $ch->movePenTo(-2,-2);
-	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
-	$ch->drawLine(-4,0); $ch->drawLine(0,-4);
+	$ch->setRightFill(255,0,0); $ch->movePenTo(-4,-4);
+	$ch->drawLine( 8,0); $ch->drawLine(0, 8);
+	$ch->drawLine(-8,0); $ch->drawLine(0,-8);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"anchor");
 
@@ -33,9 +33,9 @@
 
 	$ec=new SWF::Sprite();
 	$ch=new SWF::Shape();
-	$ch->setRightFill(0,0,255); $ch->movePenTo(-2,-2);
-	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
-	$ch->drawLine(-4,0); $ch->drawLine(0,-4);
+	$ch->setRightFill(0,0,255); $ch->movePenTo(-4,-4);
+	$ch->drawLine( 8,0); $ch->drawLine(0, 8);
+	$ch->drawLine(-8,0); $ch->drawLine(0,-8);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"anchorhint");
 

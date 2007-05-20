@@ -64,7 +64,4 @@ function CheckUploadDir($Dir){
   return(array(1,$X2,$Y2,$Layer));
 }
 
-header("Content-type: text/plain");
-list($Valid,$X,$Y,$Layer) = CheckUploadDir("example");
-printf( "Checking: %d, %d, %d", $Valid,$X,$Y);
 ?>

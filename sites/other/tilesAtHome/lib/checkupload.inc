@@ -1,8 +1,5 @@
 <?php
 
-include("log.inc");
-include("tilenames.inc");
-
 #-------------------------------------------------------------------
 # Looks at an uploaded directory, and tests whether it is one
 # complete tileset

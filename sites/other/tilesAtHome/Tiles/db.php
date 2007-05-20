@@ -31,10 +31,14 @@
   if($LayerID < 0){
     BlankTile("error");
     }
-    
-  SearchFilesystem($X,$Y,$Z,$LayerID);
+
+  // Optional: look on old filesystem
+  if(0)
+    SearchFilesystem($X,$Y,$Z,$LayerID);
   
-  SearchDatabase($X,$Y,$Z,$LayerID);
+  // Optional: look for landsea tiles if everything else fails
+  if(1)
+    SearchDatabase($X,$Y,$Z,$LayerID);
   
   // Look for a file on the filesystem
   function SearchFilesystem($X,$Y,$Z,$LayerID){
@@ -69,16 +73,15 @@
     }
     
     if(mysql_num_rows($Result) == 0){
-      if($Z <= 12)
-        BlankTile("assumed_sea");// political decision: make unknown areas blue
-      else
-        SearchDatabase($X>>1,$Y>>1,$Z-1,$LayerID);
+	if($Z < 2)
+	  BlankTile("404");
+	else
+          SearchDatabase($X>>1,$Y>>1,$Z-1,$LayerID);
     }
   
     $Data = mysql_fetch_assoc($Result);
     mysql_close();
 
-    
     $CacheDays = 14;
     switch($Data["type"]){
       case 1:
@@ -88,7 +91,7 @@
         BlankTile("land");
         break;
       default:
-        BlankTile("unknwown"); // probably shouldn't reach this line
+        BlankTile("unknown"); // probably shouldn't reach this line
         break;
       }
   }

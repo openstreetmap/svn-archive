@@ -114,7 +114,7 @@ function HandleDir($Dir, $User, $UserID, $VersionID){
   $TileList = array();
   $BlankTileList = array();
 
-  list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer) = CheckTilesetDir($Dir);
+  list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer) = CheckUploadDir($Dir);
 
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
@@ -125,7 +125,7 @@ function HandleDir($Dir, $User, $UserID, $VersionID){
   # Connect to the database
   include("../connect/connect.php");
 
-  if($ValidTileset)
+  if($ValidTileset && 0) # Not enabled yet
     SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer, $UserID, $VersionID);
   else
     SaveMetadata($TileList, $UserID, $VersionID);

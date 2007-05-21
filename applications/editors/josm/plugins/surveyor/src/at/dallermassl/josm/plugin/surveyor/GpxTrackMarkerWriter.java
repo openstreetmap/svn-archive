@@ -12,7 +12,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.layer.RawGpsLayer.GpsPoint;
 import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.io.XmlWriter;
-import org.openstreetmap.josm.io.XmlWriter.OsmWriterInterface;
 
 /**
  * Gpx writer that writes tracks and markers as waypoints.

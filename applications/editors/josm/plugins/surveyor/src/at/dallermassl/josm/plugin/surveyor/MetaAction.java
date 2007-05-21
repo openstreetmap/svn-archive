@@ -3,27 +3,12 @@
  */
 package at.dallermassl.josm.plugin.surveyor;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
-import test.DialogClosingThread;
-
 
 import livegps.LiveGpsData;
 
@@ -34,6 +19,7 @@ import livegps.LiveGpsData;
  * 
  */
 public class MetaAction extends AbstractAction {
+    private static final long serialVersionUID = -1523524381092575809L;
     private List<SurveyorActionDescription> actions;
     private GpsDataSource gpsDataSource;
     private long lastActionCall = 0;

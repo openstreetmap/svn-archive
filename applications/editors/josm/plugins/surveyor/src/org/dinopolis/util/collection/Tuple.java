@@ -100,6 +100,7 @@ public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

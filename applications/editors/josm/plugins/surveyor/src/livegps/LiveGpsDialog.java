@@ -28,6 +28,7 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
  *
  */
 public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListener {
+    private static final long serialVersionUID = 6183400754671501117L;
     private JLabel statusLabel;
     private JLabel wayLabel;
     private JLabel latLabel;

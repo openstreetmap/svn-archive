@@ -12,13 +12,11 @@ import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
-import livegps.LiveGpsLayer;
 import livegps.LiveGpsLock;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.RawGpsLayer;
-import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.io.GpxWriter;
 import org.openstreetmap.josm.io.XmlWriter;
 

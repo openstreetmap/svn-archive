@@ -6,9 +6,6 @@ package at.dallermassl.josm.plugin.surveyor.action;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -21,7 +18,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.openstreetmap.josm.Main;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
-import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
 
 /**
  * Action that plays an audio file.

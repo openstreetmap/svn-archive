@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -18,14 +17,6 @@ import javax.swing.JFrame;
 
 import livegps.LiveGpsData;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.Check;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.Combo;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.Item;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.Key;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.Label;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.Text;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
 
@@ -34,7 +25,7 @@ import org.xml.sax.SAXException;
  * 
  */
 public class SurveyorComponent extends JComponent implements PropertyChangeListener, GpsDataSource {
-    
+    private static final long serialVersionUID = 4539838472057529042L;
     private LiveGpsData gpsData;
     private int rows = 3;
     private int columns = 3;

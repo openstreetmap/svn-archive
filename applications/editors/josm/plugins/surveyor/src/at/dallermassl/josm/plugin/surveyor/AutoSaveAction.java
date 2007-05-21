@@ -21,6 +21,7 @@ import livegps.LiveGpsLayer;
  *
  */
 public class AutoSaveAction extends AbstractAction {
+    private static final long serialVersionUID = -8608679323231116043L;
     private static final long AUTO_SAVE_PERIOD_SEC = 60; // once a minute
     public static final String GPS_FILE_NAME_PATTERN = "surveyor-{0,date,yyyyMMdd-HHmmss}.gpx";
     public static final String OSM_FILE_NAME_PATTERN = "surveyor-{0,date,yyyyMMdd-HHmmss}.osm";

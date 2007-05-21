@@ -185,6 +185,8 @@ function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
   
   moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
   
+  logMsg("Tileset $X,$Y uploaded",2);
+  
   $LayerID = checkLayer($Layer);
 
   $Fields = "x, y, z, type, size, date, user, version";
@@ -192,6 +194,8 @@ function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
  
   $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
   mysql_query($SQL);
+  
+  logSqlError();
 
 }
 

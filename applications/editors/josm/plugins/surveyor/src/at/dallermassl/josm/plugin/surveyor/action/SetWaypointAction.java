@@ -7,7 +7,6 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.JToggleButton;
 
@@ -20,7 +19,6 @@ import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
-import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
 
 /**
  * Action that sets a marker into a marker layer. The first parameter of the action

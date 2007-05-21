@@ -7,11 +7,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import livegps.LiveGpsLock;
-
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
 import org.openstreetmap.josm.gui.preferences.AnnotationPresetPreference;
 

@@ -5,15 +5,10 @@ package at.dallermassl.josm.plugin.surveyor.action;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
-import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
 
 /**
  * @author cdaller
@@ -27,7 +22,7 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
     @Override
     public void actionPerformed(GpsActionEvent event) {
         final ProcessBuilder builder = new ProcessBuilder(getParameters());
-        Map<String, String> environ = builder.environment();
+        //Map<String, String> environ = builder.environment();
         builder.directory(new File(System.getProperty("user.home")));
 
         System.out.println("Directory : " + builder.directory());

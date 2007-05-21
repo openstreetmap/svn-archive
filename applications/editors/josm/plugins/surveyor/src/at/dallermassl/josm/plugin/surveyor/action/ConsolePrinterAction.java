@@ -3,13 +3,8 @@
  */
 package at.dallermassl.josm.plugin.surveyor.action;
 
-import java.util.List;
-
-import javax.swing.AbstractButton;
-
 import org.openstreetmap.josm.data.coor.LatLon;
 
-import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 
 /**

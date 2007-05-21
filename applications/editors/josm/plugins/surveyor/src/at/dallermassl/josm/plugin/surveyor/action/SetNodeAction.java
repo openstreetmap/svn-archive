@@ -8,16 +8,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.swing.Action;
-
 import livegps.LiveGpsLock;
 
 import org.dinopolis.util.collection.Tuple;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
-import org.openstreetmap.josm.gui.preferences.AnnotationPresetPreference;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 import at.dallermassl.josm.plugin.surveyor.SurveyorAction;
@@ -53,7 +49,7 @@ public class SetNodeAction implements SurveyorAction {
             if(pos > 0) {
                 key = keyValuePair.substring(0, pos);
                 value = keyValuePair.substring(pos + 1);
-                keyValues.add(new Tuple(key, value));
+                keyValues.add(new Tuple<String, String>(key, value));
             } else {
                 System.err.println("SetNodeAction: ignoring invalid key value pair: " + keyValuePair);
             }

@@ -161,9 +161,22 @@ else
     my $allowedPrefixes = join("|",
       map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
     
-      @tiles = grep { /($allowedPrefixes)_[0-9]*_[0-9]*_[0-9]*\.png$/ } readdir($dp);
+    my @dir = readdir($dp);
+    @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
+    my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
     
+    foreach (@tilesets) {       # not split into chunks
+      my $set = "$TileDir/$_";
+      $set =~ s|\.dir$||;
+      if (rename "$set.dir", "$set.upload") {
+        compressAndUpload("$set.upload", $ZipDir, 'yes');
+        rmdir "$set.upload";    # should be empty now
+      } else {
+        print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
+      }
+    }
+
     $tileCount = scalar(@tiles);
     
     if (open(FAILFILE, ">", $failFile))
@@ -222,7 +235,7 @@ sub uploadTileBatch()
     if($Count)
     {
         statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        return compressAndUpload($TempDir, $OutputDir);
+        return compressAndUpload($TempDir, $OutputDir, 'no');
     }
     else
     {
@@ -237,7 +250,8 @@ sub uploadTileBatch()
 #-----------------------------------------------------------------------------
 sub compressAndUpload()
 {
-    my ($Dir, $OutputDir) = @_;
+    my ($Dir, $OutputDir, $SingleTileset) = @_;
+    $SingleTileset = ($SingleTileset eq 'yes' ? '_tileset' : '');
   
     my $Filename;
 
@@ -246,11 +260,13 @@ sub compressAndUpload()
     if($Config{UseHostnameInZipname})
     {
         my $hostname = `hostname`."XXX";
-        $Filename = sprintf("%s/%s_%d_%d.zip", $OutputDir, substr($hostname,0,3), $$, $ZipFileCount++);
+        $Filename = sprintf("%s/%s_%d_%d%s.zip", $OutputDir,
+          substr($hostname,0,3), $$, $ZipFileCount++, $SingleTileset);
     } 
     else 
     {
-        $Filename = sprintf("%s/%d_%d_%d.zip", $OutputDir, $epochtime, $$, $ZipFileCount++);
+        $Filename = sprintf("%s/%d_%d_%d%s.zip", $OutputDir,
+          $epochtime, $$, $ZipFileCount++, $SingleTileset);
     }
   
     # ZIP all the tiles into a single file
@@ -294,6 +310,7 @@ sub compressAndUpload()
 sub upload()
 {
     my ($File) = @_;
+    my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);
 
@@ -307,7 +324,9 @@ sub upload()
     statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     my $res = $ua->post($URL,
       Content_Type => 'form-data',
-      Content => [ file => [$File], mp => $Password, version => $Config{ClientVersion} ]);
+      Content => [ file => [$File], mp => $Password,
+                   version => $Config{ClientVersion},
+                   single_tileset => $SingleTileset ]);
       
     if(!$res->is_success())
     {

@@ -74,6 +74,10 @@ my $RangeY = $LimitY - $LimitY2;
 # Create the working directory if necessary
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 
+# Subdirectory for the current job (layer & z12 tileset),
+# as used in sub GenerateTileset() and tileFilename()
+my $JobDirectory;
+
 # set the progress indicator variables
 my $currentSubTask;
 my $progress = 0;
@@ -199,6 +203,7 @@ sub uploadIfEnoughTiles
     while(my $File = readdir($dp))
     {
         $Count++ if ($File =~ /($allowedPrefixes)_.*\.png/);
+        $Count += 200 if ($File =~ /($allowedPrefixes)_.*\.dir/);
     }
     closedir($dp);
 
@@ -446,6 +451,12 @@ sub GenerateTileset
         $progressPercent=0;
         $currentSubTask = $layer;
         
+        $JobDirectory = sprintf("%s%s_%d_%d_%d.tmpdir",
+                                $Config{WorkingDirectory},
+                                $Config{"Layer.$layer.Prefix"},
+                                $Zoom, $X, $Y);
+        mkdir $JobDirectory unless -d $JobDirectory;
+
         my $maxzoom = $Config{"Layer.$layer.MaxZoom"};
         my $layerDataFile;
 
@@ -569,6 +580,13 @@ sub GenerateTileset
         {
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
+
+        # This directory is now ready for upload.
+        # How should errors in renaming be handled?
+        my $Dir = $JobDirectory;
+        $Dir =~ s|\.tmpdir|.dir|;
+        rename $JobDirectory, $Dir;
+
     if ($Config{LayerUpload}) {uploadIfEnoughTiles()};
     }
 
@@ -938,7 +956,7 @@ sub tileFilename
 {
     my($layer,$X,$Y,$Zoom) = @_;
     return(sprintf($Config{LocalSlippymap} ? "%s/%s/%d/%d/%d.png" : "%s/%s_%d_%d_%d.png",
-        $Config{WorkingDirectory},
+        $Config{LocalSlippymap} ? $Config{WorkingDirectory} : $JobDirectory,
         $Config{"Layer.$layer.Prefix"},
         $Zoom,
         $X,
@@ -1053,6 +1071,8 @@ sub splitImageX
     my $Filename2 = "$Filename.cut";
     my $NotEmptyLand = 0;
     my $NotEmptySea = 0;
+    my $Basename = $Filename;   # used for statusMessage()
+    $Basename =~ s|.*/||;
 
     # Detect empty tile here:
     if ($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE) {$NotEmptyLand = 1};  # true if images are different. (i.e. non-empty Land tile)
@@ -1066,7 +1086,7 @@ sub splitImageX
       # $SubImage->trueColorToPalette($dither,$numcolors);
 
       # Store the tile
-      statusMessage(" -> $Filename", $Config{Verbose}, 0) if ($Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+      statusMessage(" -> $Basename", $Config{Verbose}, 0) if ($Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
       WriteImage($SubImage,$Filename2);
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
@@ -1076,14 +1096,14 @@ sub splitImageX
         $Filename2,
         $Filename);
 
-        statusMessage("Pngcrushing $Filename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         if(runCommand($Cmd,$PID))
         {
           unlink($Filename2);
         }
         else
         {
-          statusMessage("Pngcrushing $Filename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+          statusMessage("Pngcrushing $Basename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
           rename($Filename2, $Filename);
         }
     }

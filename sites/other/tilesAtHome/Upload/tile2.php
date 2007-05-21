@@ -15,7 +15,7 @@ include("../lib/requests.inc");
 include("../lib/checkupload.inc");
 
 # Option to turn-off non-single-tileset uploads (was only used for testing)
-if(0){
+if(1){
   if($_POST["single_tileset"] != "yes"){
     AbortWithError(401, "We're testing LA2's single-tileset uploads, normal ones are being discarded for now");    
   }
@@ -125,7 +125,7 @@ function HandleDir($Dir, $User, $UserID, $VersionID){
   # Connect to the database
   include("../connect/connect.php");
 
-  if($ValidTileset && 0) # Not enabled yet
+  if($ValidTileset)
     SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer, $UserID, $VersionID);
   else
     SaveMetadata($TileList, $UserID, $VersionID);
@@ -182,6 +182,17 @@ function SaveBlankTiles($BlankTileList, $UserID){
 #-----------------------------------------------------------------------------
 function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
   SaveUserStats($UserID, $VersionID, 1365);
+  
+  moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
+  
+  $LayerID = checkLayer($Layer);
+
+  $Fields = "x, y, z, type, size, date, user, version";
+  $Values = sprintf("%d,%d,%d,%d,%d,now(), %d, %d", $X,$Y,12, $LayerID, 0, $UserID, $VersionID);
+ 
+  $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
+  mysql_query($SQL);
+
 }
 
 #-----------------------------------------------------------------------------

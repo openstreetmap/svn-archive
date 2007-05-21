@@ -12,9 +12,13 @@ include("../lib/users.inc");
 include("../lib/versions.inc");
 include("../lib/layers.inc");
 include("../lib/requests.inc");
+include("../lib/checkupload.inc");
 
-if($_POST["single_tileset"] != "yes"){
-  AbortWithError(401, "We're testing LA2's single-tileset uploads, normal ones are being discarded for now");    
+# Option to turn-off non-single-tileset uploads (was only used for testing)
+if(0){
+  if($_POST["single_tileset"] != "yes"){
+    AbortWithError(401, "We're testing LA2's single-tileset uploads, normal ones are being discarded for now");    
+  }
 }
 
 # Get password from posted form data (format mp=user|pass)
@@ -76,7 +80,7 @@ function HandleUpload($File, $User, $UserID, $VersionID){
   # -d $Dir specifies the directory to unzip to
   # $Filename is the zip file
   system(sprintf("unzip -j -d %s %s", $Dir, $File['tmp_name']));
-      
+  
   # Process all the tiles (return number of tiles done)
   $Count = HandleDir($Dir, $User, $UserID, $VersionID);
         
@@ -109,21 +113,35 @@ function HandleDir($Dir, $User, $UserID, $VersionID){
   $dp = opendir($Dir);
   $TileList = array();
   $BlankTileList = array();
+
+  list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer) = CheckTilesetDir($Dir);
+
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
     $Count += HandleFile($Filename, $User, $VersionID, $TileList, $BlankTileList);
   }
   closedir($dp);
-  
-  SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID);
+
+  # Connect to the database
+  include("../connect/connect.php");
+
+  if($ValidTileset)
+    SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer, $UserID, $VersionID);
+  else
+    SaveMetadata($TileList, $UserID, $VersionID);
+
+  SaveBlankTiles($BlankTileList, $UserID);
+
+  # Disconnect from database
+  mysql_close();
+
   return($Count);
 }
 
-function SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID){
-  #logMsg(sprintf("%d, %d -- ", $UserID, $VersionID) . implode(": ", $TileList), 5);
-  
-  # Connect to the database
-  include("../connect/connect.php");
+#-----------------------------------------------------------------------------------
+# Save metadata for each tile in the upload
+#-----------------------------------------------------------------------------------
+function SaveMetadata($TileList, $UserID, $VersionID){
   
   SaveUserStats($UserID, $VersionID, count($TileList));
   
@@ -137,11 +155,16 @@ function SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID){
 
     $Fields = "x, y, z, type, size, date, user, version";
     $Values = sprintf("%s, now(), %d, %d", $SqlSnippet, $UserID, $VersionID);
-        
+ 
     $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);
   }
-  
+}
+
+#------------------------------------------------------------------------------------
+# Save uploaded blank tiles in the database
+#------------------------------------------------------------------------------------
+function SaveBlankTiles($BlankTileList, $UserID){
   # Each element in BlankTileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($BlankTileList as $SqlSnippet){
     
@@ -152,12 +175,19 @@ function SaveMetadata($TileList, $BlankTileList, $UserID, $VersionID){
     mysql_query($SQL);
     if(mysql_errno()) printf("%s\n", mysql_error());
   }
-  
-  
-  # Disconnect from database
-  mysql_close();
 }
 
+#-----------------------------------------------------------------------------
+# Save metadata when an entire tileset is uploaded at once
+#-----------------------------------------------------------------------------
+function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
+  SaveUserStats($UserID, $VersionID, 1365);
+}
+
+#-----------------------------------------------------------------------------
+# Removes completed* tilesets from queue
+# * where completed means "z12 was uploaded"
+#-----------------------------------------------------------------------------
 function RemoveFromQueue($TileList){
   foreach($TileList as $CSV){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
@@ -171,6 +201,9 @@ function RemoveFromQueue($TileList){
   }
 }
 
+#---------------------------------------------------------------------------
+# Update user info with their latest upload
+#---------------------------------------------------------------------------
 function SaveUserStats($UserID, $VersionID, $NumTiles){
   $SQL = 
     "update `tiles_users` set ".

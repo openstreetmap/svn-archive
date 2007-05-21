@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 18.5.2007 (whichways accepts points)
+	# last update 21.5.2007 (segment ordering of new ways)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -1400,13 +1400,13 @@
 
 	function addEndPoint(x,y,node) {
 		newpoint=new Array(x,y,node,0,new Array(),0);
-		if (_root.drawpoint==0) {				// add to start or end of path?
-			_root.map.ways[wayselected].path.unshift(newpoint);
-			_root.map.ways[wayselected].path[1][3]=1;	// set first line to 'draw', not 'move'
-		} else {
-			newpoint[3]=1;
+		if (_root.drawpoint==_root.map.ways[wayselected].path.length-1) {
+			newpoint[3]=1;						// add to end
 			_root.map.ways[wayselected].path.push(newpoint);
 			_root.drawpoint=_root.map.ways[wayselected].path.length-1;
+		} else {
+			_root.map.ways[wayselected].path.unshift(newpoint);	// drawpoint=0, add to start
+			_root.map.ways[wayselected].path[1][3]=1;	// set first line to 'draw', not 'move'
 		}
 	
 		// Redraw map

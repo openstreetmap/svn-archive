@@ -4,7 +4,6 @@ SUBDIRS =      \
 	import \
 	little-osm \
 	osm-data \
-	osm-extract \
 	perl_lib \
 	planet.osm \
 	xsltrans \

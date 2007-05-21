@@ -153,8 +153,8 @@ function SaveMetadata($TileList, $UserID, $VersionID){
     // Use this line if you need access to separate fields
     // list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
 
-    $Fields = "x, y, z, type, size, date, user, version";
-    $Values = sprintf("%s, now(), %d, %d", $SqlSnippet, $UserID, $VersionID);
+    $Fields = "x, y, z, type, size, date, user, version, tileset";
+    $Values = sprintf("%s, now(), %d, %d, 0", $SqlSnippet, $UserID, $VersionID);
  
     $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);
@@ -189,8 +189,8 @@ function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
   
   $LayerID = checkLayer($Layer);
 
-  $Fields = "x, y, z, type, size, date, user, version";
-  $Values = sprintf("%d,%d,%d,%d,%d,now(), %d, %d", $X,$Y,12, $LayerID, 0, $UserID, $VersionID);
+  $Fields = "x, y, z, type, size, date, user, version, tileset";
+  $Values = sprintf("%d,%d,%d,%d,%d,now(), %d, %d, 1", $X,$Y,12, $LayerID, 0, $UserID, $VersionID);
  
   $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
   mysql_query($SQL);

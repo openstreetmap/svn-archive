@@ -45,7 +45,8 @@ if(!mysql_error()){
     
       # Time last seen
       $Age = ageOf($Data["unixtime"]);
-      $OnNow = $Age < 10 * 60;
+      $OnNow = ($Age < 10 * 60)
+        && ($Data["tiles"] != 0);
       array_push($Row, FormatAge($Age));
      
       # Version ID

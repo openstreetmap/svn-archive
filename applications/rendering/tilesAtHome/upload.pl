@@ -274,7 +274,7 @@ sub compressAndUpload()
     my $Command1 = sprintf("%s %s %s > %s",
       "zip",
       $Filename,
-      "$Dir/*",
+      "$Dir",
       $stdOut);
     # ZIP filename is currently our process ID - change this if one process
     # becomes capable of generating multiple zip files
@@ -292,7 +292,6 @@ sub compressAndUpload()
         {
             killafile ($Dir . "/" . $File);
         }
-        return upload($Filename);
     }
     else
     {
@@ -300,6 +299,19 @@ sub compressAndUpload()
         {
             rename($Dir . "/" . $File, $Config{WorkingDirectory} . $File);
         }
+    }
+
+    my $ZipSize += -s $Filename;
+    if($ZipSize > 2000000) 
+    {
+        StatusMessage("zip is larger than 2 MB, not uploading.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        runCommand("unzip -j -d $Config{WorkingDirectory}",$PID)
+        killafile $Filename;
+
+        return 0;
+    }
+    else
+    {
         return upload($Filename);
     }
 }

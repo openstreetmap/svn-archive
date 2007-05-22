@@ -155,12 +155,12 @@ else
     
     # Group and upload the tiles
     statusMessage("Searching for tiles in $TileDir", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     my $allowedPrefixes = join("|",
       map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
     
+    opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
     my @dir = readdir($dp);
     @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
@@ -177,13 +177,20 @@ else
       }
     }
 
-    $tileCount = scalar(@tiles);
-    
     if (open(FAILFILE, ">", $failFile))
     {
         print FAILFILE $failures;
         close FAILFILE;
     }
+
+    ## look again in the workdir, there might be new files from split tilesets:
+    
+    opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
+    my @dir = readdir($dp);
+    @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
+    closedir($dp);
+
+    $tileCount = scalar(@tiles);
     
     exit if ($tileCount == 0);
     

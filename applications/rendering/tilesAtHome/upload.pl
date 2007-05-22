@@ -301,19 +301,7 @@ sub compressAndUpload()
         }
     }
 
-    my $ZipSize += -s $Filename;
-    if($ZipSize > 2000000) 
-    {
-        StatusMessage("zip is larger than 2 MB, not uploading.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
-        runCommand("unzip -j -d $Config{WorkingDirectory}",$PID);
-        killafile($Filename);
-
-        return 0;
-    }
-    else
-    {
-        return upload($Filename);
-    }
+    return upload($Filename);
 }
 
 #-----------------------------------------------------------------------------
@@ -322,6 +310,23 @@ sub compressAndUpload()
 sub upload()
 {
     my ($File) = @_;
+    my $ZipSize += -s $File;
+    if($ZipSize > 2000000) 
+    {
+        statusMessage("zip is larger than 2 MB, not uploading.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
+
+        if($Config{DeleteZipFilesAfterUpload})
+        {
+            unlink($File);
+        }
+        else
+        {
+            rename($File, $File."_oversized"); 
+        }
+
+        return 0;
+    }
     my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);

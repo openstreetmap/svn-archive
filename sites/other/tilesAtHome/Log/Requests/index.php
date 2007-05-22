@@ -67,6 +67,9 @@
 
 <p>After 2 &times; 24 hours in the <b>done</b> queue, requests are deleted.</p>
 
+<h3>How many tiles are being uploaded</h3>
+<p></p>The 'done' queue represents the number of <i>tilesets</i> being uploaded per two days</p>
+	
 </div>
 </body>
 </html>

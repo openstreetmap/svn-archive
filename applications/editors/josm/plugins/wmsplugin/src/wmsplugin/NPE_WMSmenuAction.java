@@ -37,12 +37,12 @@ public class NPE_WMSmenuAction extends AbstractAction {
 		
 		//need to reset the particular download task
 		//DownloadWMSTask
-		;
-		for (int i = 0; i < Main.main.menu.download.downloadTasks.size(); ++i) {
+		
+		for (int i = 0; i < Main.main.menu.download.dialog.downloadTasks.size(); ++i) {
 			
-			if (Main.main.menu.download.downloadTasks.get(i).getPreferencesSuffix().compareTo("wmsplugin") == 0){
+			if (Main.main.menu.download.dialog.downloadTasks.get(i).getPreferencesSuffix().compareTo("wmsplugin") == 0){
 				
-				Main.main.menu.download.downloadTasks.remove(i);
+				Main.main.menu.download.dialog.downloadTasks.remove(i);
 			}
 		}
 

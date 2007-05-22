@@ -169,6 +169,10 @@ function SaveBlankTiles($BlankTileList, $UserID){
   foreach($BlankTileList as $SqlSnippet){
 
     // TODO: blank tiles can be z-12, which means they can fulfil a request
+    list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
+    if($Z == 12){
+      moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
+    }
     
     $Fields = "x, y, z, layer, type, date, user";
     $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);

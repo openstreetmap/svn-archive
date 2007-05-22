@@ -313,7 +313,7 @@ sub upload()
     my $ZipSize += -s $File;
     if($ZipSize > 2000000) 
     {
-        statusMessage("zip is larger than 2 MB, not uploading.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("zip is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
         runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})

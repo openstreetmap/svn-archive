@@ -451,7 +451,7 @@ sub GenerateTileset
         $progressPercent=0;
         $currentSubTask = $layer;
         
-        $JobDirectory = sprintf("%s%s_%d_%d_%d.tmpdir",
+        $JobDirectory = sprintf("%s/%s_%d_%d_%d.tmpdir",
                                 $Config{WorkingDirectory},
                                 $Config{"Layer.$layer.Prefix"},
                                 $Zoom, $X, $Y);

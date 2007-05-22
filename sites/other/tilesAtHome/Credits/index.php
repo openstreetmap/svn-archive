@@ -44,8 +44,10 @@ if(!mysql_error()){
         number_format($Data["uploads"], 0, ".", ",")));
     
       # Time last seen
-      array_push($Row, ageOf($Data["unixtime"]));
-      
+      $Age = ageOf($Data["unixtime"]);
+      $OnNow = $Age < 10 * 60;
+      array_push($Row, FormatAge($Age));
+     
       # Version ID
       array_push($Row, htmlentities(versionName($Data["version"])));
       
@@ -53,7 +55,10 @@ if(!mysql_error()){
       array_push($Row, sprintf("<a href=\"ByUser/?id=%d\">...</a>", $Data["id"]));
       
       # Convert all the data into a row of HTML table
-      print "<tr><td>" . implode("</td><td>", $Row) . "</td><tr>\n";
+      $Style = $OnNow
+        ? "background-color:#44C"
+        : "background-color:#444";
+      print "<tr style=\"$Style\"><td>" . implode("</td><td>", $Row) . "</td><tr>\n";
     
     }
     ##-------------------------------------------------------
@@ -66,6 +71,10 @@ function ageOf($Timestamp){
     return("never");
   
   $Age = time() - $Timestamp;
+  return($Age);
+}
+
+function FormatAge($Age){
   if($Age < 0)
     return("future");
   if($Age < 120)

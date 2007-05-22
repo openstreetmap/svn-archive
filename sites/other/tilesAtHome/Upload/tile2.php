@@ -15,7 +15,7 @@ include("../lib/requests.inc");
 include("../lib/checkupload.inc");
 
 # Option to turn-off non-single-tileset uploads (was only used for testing)
-if(1){
+if(0){
   if($_POST["single_tileset"] != "yes"){
     AbortWithError(401, "We're testing LA2's single-tileset uploads, normal ones are being discarded for now");    
   }
@@ -167,6 +167,8 @@ function SaveMetadata($TileList, $UserID, $VersionID){
 function SaveBlankTiles($BlankTileList, $UserID){
   # Each element in BlankTileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($BlankTileList as $SqlSnippet){
+
+    // TODO: blank tiles can be z-12, which means they can fulfil a request
     
     $Fields = "x, y, z, layer, type, date, user";
     $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
@@ -365,7 +367,7 @@ function CreateDir($Dir){
 # * uniqid means multiple threads are unlikely to conflict
 #----------------------------------------------------------------------
 function TempDir(){
-  return(sprintf("temp/%s", md5(uniqid(rand(), 1))));
+  return(sprintf("/home/ojw/tiles-ojw2/temp/%s", md5(uniqid(rand(), 1))));
 }
 
 ?>

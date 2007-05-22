@@ -12,7 +12,7 @@
 <p>The following people have been uploading tiles to the program:</p>
 
 <p><i>Counting began 10pm, 6<sup>th</sup> March 2007 - no records are available for earlier uploads. Blank tiles not included in count.</i></p>
-
+<p>blue row = upload within the last 10 minutes.</p>
 <?php
 include("../connect/connect.php");
 include("../lib/versions.inc");

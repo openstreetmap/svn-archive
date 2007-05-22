@@ -63,7 +63,7 @@ function HandleUpload($File, $User, $UserID, $VersionID){
   $Size = $File['size'];
 
   if($Size <= 0){
-    AbortWithError(400, "No file uploaded");
+    AbortWithError(400, "No file uploaded or file too large");
   }
 
   # Keep going if the user presses stop, to ensure temporary directories get erased

@@ -306,7 +306,7 @@ sub compressAndUpload()
     {
         StatusMessage("zip is larger than 2 MB, not uploading.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
         runCommand("unzip -j -d $Config{WorkingDirectory}",$PID)
-        killafile $Filename;
+        killafile($Filename);
 
         return 0;
     }

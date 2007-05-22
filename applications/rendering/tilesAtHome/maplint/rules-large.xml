@@ -30,21 +30,6 @@
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
     <rule e="node|segment|waysegment|way" k="osmarender:render" v="~|yes">
 
-        <layer name="Areas">
-            <rule e="way" k="landuse" v="forest|wood">
-                <area class='area-green'/>
-            </rule>
-            <rule e="way" k="natural" v="forest|wood">
-                <area class='area-green'/>
-            </rule>
-            <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
-                <area class='area-green'/>
-            </rule>
-            <rule e="way" k="natural" v="water|pond|lake">
-                <area class='area-lake' />
-            </rule>
-        </layer>
-
         <layer name="Maplint">
             <rule e="way" k="maplint:notice" v="*">
                 <line class="maplint-way-notice-casing"/>
@@ -79,85 +64,6 @@
                 <circle r="4" class="maplint-node-error"/>
             </rule>
         </layer>
-
-        <!-- Waterways -->
-        <layer name="Waterways">
-            <rule e="segment|way" k="waterway" v="*">
-                <line class='waterway-river'/>
-            </rule>
-        </layer>
-
-
-        <!-- Roads and paths -->
-        <layer name="Roads and Paths">
-
-            <rule e="segment|way" k="highway" v="service|unsurfaced|track|byway|bridleway|cycleway|footway|steps">
-                <line class='highway-small' />
-            </rule>
-
-            <rule e="segment|way" k="highway" v="unclassified|residential|minor|tertiary|pedestrian">
-                <line class='highway-minor' />
-            </rule>
-
-            <rule e="segment|way" k="highway" v="secondary|primary|primary_link">
-                <line class='highway-primary' />
-            </rule>
-
-            <rule e="segment|way" k="highway" v="motorway_link|motorway|trunk_link|trunk">
-                <line class='highway-major' />
-            </rule>
-
-        </layer>
-
-
-        <!-- Railway lines -->
-        <rule e="segment|way" k="railway" v="*">
-            <layer name="Railway/Subway/Tram">
-
-                <rule e="segment|way" k="railway" v="rail">
-                    <line class='railway-rail' />
-                    <line class='railway-rail-dashes' />
-                </rule>
-                <rule e="segment|way" k="railway" v="light_rail|tram">
-                    <line class='railway-light-rail' />
-                </rule>
-                <rule e="segment|way" k="railway" v="subway">
-                    <line class='railway-subway-rail' />
-                </rule>
-
-            </layer>
-        </rule>
-
-
-        <!-- Airfields and airports -->
-        <rule e="node|segment|way" k="aeroway" v="*">
-            <layer name="Airfields and airports">
-                <rule e="segment|way" k="aeroway" v="runway">
-                    <line class='aeroway-runway-core'/>
-                </rule>
-                <rule e="segment|way" k="aeroway" v="taxiway">
-                    <line class='aeroway-taxiway-core'/>
-                </rule>
-            </layer>
-        </rule>
-
-
-        <!-- Power lines and pylons -->
-        <rule e="node|way" k="power" v="*">
-            <layer name="Power lines">
-                <rule e="way" k="power" v="line">
-                    <line class='power-line'/>
-                </rule>
-            </layer>
-        </rule>
-
-
-        <!-- Non-pysical routes -->
-        <rule e="segment|way" k="route" v="ferry">
-            <layer name="Ferry">
-                <line class='route-ferry' />
-            </layer>
-        </rule>
 
         <layer name="Maplint node dots">
             <rule e="node" k="maplint:notice|maplint:warning|maplint:error" v="*">

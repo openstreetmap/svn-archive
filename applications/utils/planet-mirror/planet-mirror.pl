@@ -67,10 +67,10 @@ B<planet-mirror.pl> Version 0.1
 B<planet-mirror.pl> is a program download the current planet.osm
 
 This program will have a look at http://planet.openstreetmap.org/ 
-and see if there is a newer planet-xx.osm.bz2 File to download.
+and see if there is a newer planet-xx.osm.7z File to download.
 If ther is it will download it to ~/osm/planet/
 After this it will Sanitize the File and write the result to
-planet-xx-a.osm.bz2
+planet-xx-a.osm.7z
 If you want your planet File to always be up to date you can i
 add the following line to your crontab
  01 9 * * * /home/<yourname>/svn.openstreetmap.org/utils/planet-mirror/planet-mirror.pl

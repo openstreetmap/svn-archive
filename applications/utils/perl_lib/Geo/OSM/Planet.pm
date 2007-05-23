@@ -128,7 +128,7 @@ sub planet_dir() {
 
 # ------------------------------------------------------------------
 # mirror the newest planet.osm File to
-#  ~/osm/planet/planet.osm.bz2
+#  ~/osm/planet/planet.osm.7z
 # the file is Sanitized afterwards  and the resulting 
 # Filename is returned
 sub mirror_planet(){
@@ -148,7 +148,7 @@ sub mirror_planet(){
 	    my $index_content = read_file( $index_file ) ;
 
 	    # Get the current planet.osm File
-	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/g);
+	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.7z)/g);
 	    ( $current_file ) = grep { $_ !~ m/planet-061008/ } @all_files;
 	    if ( $current_file ) {
 		$url .= "/$current_file";
@@ -158,7 +158,7 @@ sub mirror_planet(){
 		#return undef unless $result;
 		
 		if ( $result == 1 ) { # Modified
-		    # Link the current File to planet.osm(.bz2)
+		    # Link the current File to planet.osm(.7z)
 		    # symlink
 		}
 	    }
@@ -167,7 +167,7 @@ sub mirror_planet(){
 
     my @files= sort { $b cmp $a}  
     grep { $_ !~ m/planet-061008/ } 
-    glob("$mirror_dir/planet-*.osm.bz2");
+    glob("$mirror_dir/planet-*.osm.7z");
     if ( $DEBUG) {
 	print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
     }
@@ -196,11 +196,11 @@ sub mirror_planet(){
 # ------------------------------------------------------------------
 # creates a seconf file with a sanitized Version of planet.osm
 # the resulting file can be found at
-#    ~/osm/planet/planet-06XXXX-a.osm.bz2
+#    ~/osm/planet/planet-07XXXX-a.osm.7z
 # If a recent enought Version is found in ~/osm/planet/
 # nothing is done, but the filename of the file is returned
 # if the routine finds an uncompressed up to date Version 
-#   ~/osm/planet/planet-06XXXX-a.osm
+#   ~/osm/planet/planet-07XXXX-a.osm
 # this Filename is returned.
 sub UTF8sanitize($){
     my $filename = shift;
@@ -218,7 +218,7 @@ sub UTF8sanitize($){
     $filename_new =~ s/\.osm/-a.osm/;
     my $filename_new_check=newest_unpacked_filename($filename_new);
 
-    # check if planet-060101-a.osm[.bz2] is newer than  planet-060101.osm.bz2
+    # check if planet-070101-a.osm[.7z] is newer than  planet-070101.osm.7z
     return $filename_new_check
 	unless file_needs_re_generation($filename,$filename_new_check);
 

@@ -272,6 +272,14 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, 
   
   $Size = filesize($OldFilename);
 
+  
+  # Decide on a filename
+  $NewFilename = TileName($X,$Y,$Z, layerDir($Layer));
+  if(!$NewFilename){
+    logMsg("Invalid filename created for $X,$Y,$Z,$Layer",2);
+    return;
+  }
+  
   if($VersionID < 5){ // Prior to "cambridge", no blank-tile detection
     # Don't store blank tiles
     if($Size < 1000){
@@ -285,12 +293,22 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, 
     # TODO: make an enumeration for blank land/sea
     $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, 2);
     array_push($BlankTileList, $SqlSnippet);
+    
+    # Delete any existing tile of the same name
+    if(file_exists($NewFilename))
+      unlink($NewFilename);
+      
     return;
   }
   if($Size == 69){
     # This is a request to create a sea tile
     $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, 1);
     array_push($BlankTileList, $SqlSnippet);
+    
+    # Delete any existing tile of the same name
+    if(file_exists($NewFilename))
+      unlink($NewFilename);
+          
     return;
   }
   if($Size < 100){
@@ -301,13 +319,7 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, 
   # Remember tile details, in a form that can be added to SQL easily
   $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, $Size);
   array_push($TileList, $SqlSnippet);
-  
-  # Decide on a filename
-  $NewFilename = TileName($X,$Y,$Z, layerDir($Layer));
-  if(!$NewFilename){
-    logMsg("Invalid filename created for $X,$Y,$Z,$Layer",2);
-    return;
-  }
+
   
   # Check directory exists
   CreateDirectoryToHold($NewFilename);

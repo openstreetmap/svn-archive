@@ -79,6 +79,11 @@ sub ApplyConfigLogic{
                 $Config->{"Layer.$layer.Preprocessor"} = "frollo";
             }
         }
+
+        if (!defined($Config->{"Layer.$layer.Transparent"}))
+        {
+            $Config->{"Layer.$layer.Transparent"} = 0;
+        }
     }
 }
 

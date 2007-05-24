@@ -16,7 +16,7 @@ use Image::Magick;
 $|=1;
 
 # Option: Where to move tiles, so that they get uploaded by another program
-my $uploadDir = "";
+my $uploadDir = "tmp";
 die "please configure uploadDir variable in lowzoom.pl" if ($uploadDir eq "");
 
 # Command-line arguments
@@ -60,7 +60,7 @@ sub lowZoom(){
   
   # Get tiles
   if($Z >= $MaxZ){
-    downloadtile($X,$Y,$Z,$Layer);
+		downloadtile($X,$Y,$Z,$Layer);
   }
   else{
     # Recursively get/create the 4 subtiles
@@ -85,52 +85,76 @@ sub downloadtile(){
   $Status->downloadCount($Layer,$X,$Y,$Z,$Size);
   
   # Don't bother storing blank or invalid tiles
-  unlink $f2 if($Size < 300);
+	
+	unlink $f2 if($Size < 230);
 }
 # Create a supertile, by merging together 4 local image files, and creating a new local file
 sub supertile(){
   my ($X,$Y,$Z,$Layer) = @_;
   
-  # Create the supertile
-  my $Image = Image::Magick->new;
-  $Image->Set(size=>'512x512');
-  $Image->ReadImage('xc:white');
-    
   # Load the subimages
   my $AA = readLocalImage($X*2,$Y*2,$Z+1,$Layer);
   my $BA = readLocalImage($X*2+1,$Y*2,$Z+1,$Layer);
   my $AB = readLocalImage($X*2,$Y*2+1,$Z+1,$Layer);
   my $BB = readLocalImage($X*2+1,$Y*2+1,$Z+1,$Layer);
   
-  # Copy the subimages into the 4 quadrants
-  foreach my $x (0, 1)
-  {
-      foreach my $y (0, 1)
-      {
-          next unless (($Z < 9) || (($x == 0) && ($y == 0)));
-          $Image->Composite(image => $AA, 
-                  geometry => sprintf("512x512+%d+%d", $x, $y),
-                  compose => "darken") if ($AA);
+	my $Filename = localfile($X,$Y,$Z,$Layer);
+	print "generating $Filename \n";
 
-          $Image->Composite(image => $BA, 
-                  geometry => sprintf("512x512+%d+%d", $x + 256, $y),
-                  compose => "darken") if ($BA);
+	# all images the same size? 
+	if ($AA == undef) { $AA = Image::Magick->new; }
+	if ($AB == undef) { $AB = Image::Magick->new; }
+	if ($BA == undef) { $BA = Image::Magick->new; }
+	if ($BB == undef) { $BB = Image::Magick->new; }
+	if((($AA->Get('filesize') == 230 ) || ($AA->Get('filesize') == 609 ) ) && ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
+	{#if its a "404 sea" or a "sea.png" and all 4 sizes are the same, make one 69 bytes sea of it
+			my $SeaFilename = "../../emptysea.png"; 
+			link($SeaFilename,$Filename);
+			return;
+	}
+	elsif((($AA->Get('filesize') == 329 ) || ($AA->Get('filesize') == 605 ) )&& ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
+	{#if its a "blank land" or a "land.png" and all 4 sizes are the same, make one 69 bytes land of it
+			my $LandFilename = "../../emptyland.png"; 
+			link($LandFilename,$Filename);
+			return;
+	}
+	else{
+		my $Image = Image::Magick->new;
 
-          $Image->Composite(image => $AB, 
-                  geometry => sprintf("512x512+%d+%d", $x, $y + 256),
-                  compose => "darken") if ($AB);
+		# Create the supertile
+		$Image->Set(size=>'512x512');
+		$Image->ReadImage('xc:white');
 
-          $Image->Composite(image => $BB, 
-                  geometry => sprintf("512x512+%d+%d", $x + 256, $y + 256),
-                  compose => "darken") if ($BB);
-      }
-  }
+		# Copy the subimages into the 4 quadrants
+		foreach my $x (0, 1)
+		{
+				foreach my $y (0, 1)
+				{
+						next unless (($Z < 9) || (($x == 0) && ($y == 0)));
+						$Image->Composite(image => $AA, 
+										geometry => sprintf("512x512+%d+%d", $x, $y),
+										compose => "darken") if ($AA);
 
-  $Image->Scale(width => "256", height => "256");
-  my $Filename = localfile($X,$Y,$Z,$Layer);
-  $Image->Set(type=>"Palette");
-  $Image->Write($Filename);
- 
+						$Image->Composite(image => $BA, 
+										geometry => sprintf("512x512+%d+%d", $x + 256, $y),
+										compose => "darken") if ($BA);
+
+						$Image->Composite(image => $AB, 
+										geometry => sprintf("512x512+%d+%d", $x, $y + 256),
+										compose => "darken") if ($AB);
+
+						$Image->Composite(image => $BB, 
+										geometry => sprintf("512x512+%d+%d", $x + 256, $y + 256),
+										compose => "darken") if ($BB);
+				}
+		}
+
+		$Image->Scale(width => "256", height => "256");
+		$Image->Set(type=>"Palette");
+		$Image->Write($Filename);
+	}
+
+	 
   # Don't bother saving blank or invalid images
   # if(length($Data) < 1000){
   #   return;
@@ -152,6 +176,26 @@ sub readLocalImage()
         print STDERR "$err\n";
         return undef;
     }
+		if ($Image->Get('filesize') == 69) 
+		{
+			# do not return 1x1 pixel images since we might have to put them into a lower zoom
+			@$Image=();
+			if (my $err = $Image->Read("sea.png"))
+			{
+					print STDERR "$err\n";
+					return undef;
+			}
+		}
+		if ($Image->Get('filesize') == 67) 
+		{
+			# do not return 1x1 pixel images since we might have to put them into a lower zoom
+			@$Image=();
+			if (my $err = $Image->Read("land.png"))
+			{
+					print "$err\n";
+					return undef;
+			}
+		}
     return($Image);
 }
 

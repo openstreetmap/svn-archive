@@ -16,7 +16,7 @@ use Image::Magick;
 $|=1;
 
 # Option: Where to move tiles, so that they get uploaded by another program
-my $uploadDir = "tmp";
+my $uploadDir = "";
 die "please configure uploadDir variable in lowzoom.pl" if ($uploadDir eq "");
 
 # Command-line arguments

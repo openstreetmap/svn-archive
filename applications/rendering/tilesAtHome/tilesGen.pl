@@ -1082,7 +1082,7 @@ sub splitImageX
       # If at least one tile is not empty set $allempty false:
       $allempty = 0;
 
-      if ($layer=="maplint") {
+      if ($layer eq "maplint") {
         $SubImage->transparent($SubImage->colorAllocate(248,248,248));
       } else {
         $SubImage->transparent(-1);

@@ -15,9 +15,33 @@ use Image::Magick;
 
 $|=1;
 
+## nicked from tahconfig.pm from main t@h. 
+## FIXME: use the actual module instead.
+open(CONFIG,"<lowzoom.conf") || die("Can't open \"lowzoom.conf\" ($!)\n");
+while(my $Line = <$fp>){
+    $Line =~ s/#.*$//; # Comments
+    $Line =~ s/\s*$//; # Trailing whitespace
+    if($Line =~ m{
+        ^
+        \s*
+        ([A-Za-z0-9._-]+) # Keyword: just one single word no spaces
+        \s*            # Optional whitespace
+        =              # Equals
+        \s*            # Optional whitespace
+        (.*)           # Value
+        }x){
+
+# Store config options in a hash array
+        $Config{$1} = $2;
+        print "Found $1 ($2)\n" if(0); # debug option
+    }
+}
+close CONFIG;
+
 # Option: Where to move tiles, so that they get uploaded by another program
-my $uploadDir = "";
-die "please configure uploadDir variable in lowzoom.pl" if ($uploadDir eq "");
+my $uploadDir = $Config{UploadDir};
+
+#die "can't find upload directory \"$uploadDir\"" unless (-d $uploadDir);
 
 # Command-line arguments
 my $X = shift();

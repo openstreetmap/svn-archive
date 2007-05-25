@@ -103,11 +103,11 @@ while(<STDIN>)
         {
             last;
         }
-				elsif($xmltag =~ /^\s*<osm.*\/>/)
-				{
-					$copy = 0;
-					print "<osm>\n";
-				}
+        elsif($xmltag =~ /^\s*<osm.*\/>/)
+        {
+            $copy = 0;
+            print "<osm xmlns:osma='http://wiki.openstreetmap.org/index.php/Osmarender/Frollo/1.0' version='0.4'>\n";
+        }
 
         if ($copy)
         {

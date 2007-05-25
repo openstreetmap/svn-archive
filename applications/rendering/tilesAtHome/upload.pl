@@ -336,7 +336,7 @@ sub upload()
     }
     my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
     $ua->protocols_allowed( ['http'] );
     $ua->agent("tilesAtHomeZip");

@@ -12,23 +12,10 @@
   }
 
   include("../../../connect/connect.php");
-  include("../../../lib/requests.inc");
 
-  countRequests(REQUEST_PENDING, "pending");
-  countRequests(REQUEST_NEW, "new");
-  countRequests(REQUEST_ACTIVE, "active");
-  countRequests(REQUEST_DONE, "done");
-
-  function countRequests($Status, $Label){    
-
-    // Find old requests in the "active" queue
-    $SQL = sprintf("select NULL from `tiles_queue` where `status`=%d;", $Status);
-
-    $Result = mysql_query($SQL);
-    $Count = mysql_num_rows($Result);
-
-    printf("%s.value %d\n", $Label, $Count);
+  $statuses = array('pending', 'new', 'active', 'done');
+  $Result = mysql_query("select `status`,count(*) as count from `tiles_queue` group by `status` order by `status`;");
+  while ($row = mysql_fetch_array($Result)) {
+    printf("%s.value %d\n", $statuses[$row['status']],$row['count']);
   }
-
-  
-  ?>
+?>

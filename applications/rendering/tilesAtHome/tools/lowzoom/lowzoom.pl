@@ -17,7 +17,8 @@ $|=1;
 
 ## nicked from tahconfig.pm from main t@h. 
 ## FIXME: use the actual module instead.
-open(CONFIG,"<lowzoom.conf") || die("Can't open \"lowzoom.conf\" ($!)\n");
+my %Config;
+open(my $fp,"<lowzoom.conf") || die("Can't open \"lowzoom.conf\" ($!)\n");
 while(my $Line = <$fp>){
     $Line =~ s/#.*$//; # Comments
     $Line =~ s/\s*$//; # Trailing whitespace
@@ -36,12 +37,12 @@ while(my $Line = <$fp>){
         print "Found $1 ($2)\n" if(0); # debug option
     }
 }
-close CONFIG;
+close $fp;
 
 # Option: Where to move tiles, so that they get uploaded by another program
 my $uploadDir = $Config{UploadDir};
 
-#die "can't find upload directory \"$uploadDir\"" unless (-d $uploadDir);
+die "can't find upload directory \"$uploadDir\"" unless (-d $uploadDir);
 
 # Command-line arguments
 my $X = shift();

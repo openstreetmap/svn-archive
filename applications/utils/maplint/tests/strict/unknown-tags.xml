@@ -12,6 +12,7 @@
     <maplint:check data="node" type="application/xsl+xml">
         <xsl:for-each select="tag">
             <xsl:if test="(@k!='created_by') and
+                    (@k!='converted_by') and
                     (@k!='highway') and
                     (@k!='railway') and
                     (@k!='waterway') and
@@ -48,6 +49,7 @@
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:for-each select="tag">
             <xsl:if test="(@k!='created_by') and
+                    (@k!='converted_by') and
                     (@k!='highway') and
                     (@k!='railway') and
                     (@k!='waterway') and

@@ -136,9 +136,9 @@
     </maplint:desc>
 
     <maplint:check data="segment" type="application/xsl+xml">
-        <xsl:if test="tag[@k!='created_by']">
+        <xsl:if test="tag[(@k!='created_by') and (@k!='converted_by')]">
             <maplint:result>
-                <xsl:for-each select="tag[@k!='created_by' and @key!='converted_by']">
+                <xsl:for-each select="tag[(@k!='created_by') and (@k!='converted_by')]">
                     <xsl:value-of select="concat(@k,'=',@v,' ')"/>
                 </xsl:for-each>
             </maplint:result>

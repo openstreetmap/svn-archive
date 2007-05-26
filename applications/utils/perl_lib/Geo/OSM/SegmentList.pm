@@ -186,6 +186,8 @@ sub node {
 
     delete $attrs{timestamp};
     delete $attrs{action};
+    delete $attrs{visible};
+    delete $attrs{user};
 
     if ( keys %attrs ) {
 	warn "node $id has extra attrs: ".Dumper(\%attrs);
@@ -207,6 +209,11 @@ sub segment {
 
     $read_osm_obj->{from} = delete $attrs{from};
     $read_osm_obj->{to}   = delete $attrs{to};
+
+    delete $attrs{timestamp};
+    delete $attrs{action};
+    delete $attrs{visible};
+    delete $attrs{user};
 
     if ( keys %attrs ) {
 	warn "segment $id has extra attrs: ".Dumper(\%attrs);

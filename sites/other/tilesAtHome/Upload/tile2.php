@@ -176,7 +176,11 @@ function SaveBlankTiles($BlankTileList, $UserID){
     
     $Fields = "x, y, z, layer, type, date, user";
     $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
-    
+
+		$SQL = sprintf("DELETE FROM `tiles_meta` WHERE x=$s AND y=$s AND z=$s AND layer=$s;",x,y,z,layer);
+    mysql_query($SQL);
+    if(mysql_errno()) printf("%s\n", mysql_error());
+
     $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);
     if(mysql_errno()) printf("%s\n", mysql_error());

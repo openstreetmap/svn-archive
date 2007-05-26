@@ -752,7 +752,14 @@ sub DownloadFile
     {
         killafile($File);
     }
-    $ua->mirror($URL, $File);
+		my $response =  $ua->mirror($URL, $File);
+	  if ($response->content =~ /Application Error/)
+	  {
+	     open(my $fp, ">", $File) || return;
+		   print $fp "<osm></osm>"; 
+		   close $fp;
+	  } 
+
     doneMessage(sprintf("done, %d bytes", -s $File));
 }
 

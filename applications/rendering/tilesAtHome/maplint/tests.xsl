@@ -120,9 +120,9 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-base-tagged-segment-segment">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="tag[@k!='created_by']">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="tag[(@k!='created_by') and (@k!='converted_by')]">
             <maplint:result ref="tagged-segment">
-                <xsl:for-each select="tag[@k!='created_by' and @key!='converted_by']">
+                <xsl:for-each select="tag[(@k!='created_by') and (@k!='converted_by')]">
                     <xsl:value-of select="concat(@k,'=',@v,' ')"/>
                 </xsl:for-each>
             </maplint:result>

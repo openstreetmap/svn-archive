@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -171,9 +172,8 @@ public class Util
      * @param url The URL of the remote file
      * @param destDir The destionation dir of the mirrored file
      * @return The local file
-     * @throws IOException If any error reading or writing the file
      */
-    public static File mirror(URL url, String destDir) throws IOException
+    public static File mirror(URL url, String destDir)
     {
         if( url.getProtocol().equals("file") )
             return new File(url.toString() ) ;
@@ -198,7 +198,9 @@ public class Util
         BufferedInputStream bis = null;
         try 
         {
-            bis = new BufferedInputStream(url.openStream());
+            URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(5000);
+            bis = new BufferedInputStream(conn.getInputStream());
             bos = new BufferedOutputStream( new FileOutputStream(localPath) );
             byte[] buffer = new byte[4096];
             int length;
@@ -206,6 +208,13 @@ public class Util
             {
                 bos.write( buffer, 0, length );
             }
+        }
+        catch(IOException ioe)
+        {
+            if( oldFile != null )
+                return oldFile;
+            else
+                return null;
         }
         finally
         {

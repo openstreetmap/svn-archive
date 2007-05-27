@@ -45,6 +45,8 @@ public class SpellCheck extends Test
     public static final String PREF_CHECK_VALUES = "tests." + SpellCheck.class.getSimpleName() + ".checkValues";
     /** Preference name for checking values */
     public static final String PREF_CHECK_KEYS = "tests." + SpellCheck.class.getSimpleName() + ".checkKeys";
+    /** Preference name for checking FIXMES */
+    public static final String PREF_CHECK_FIXMES = "tests." + SpellCheck.class.getSimpleName() + ".checkFixmes";
     /** Preference name for sources */
     public static final String PREF_SOURCES = "tests." + SpellCheck.class.getSimpleName() + ".sources";
     /** Preference name for global upload check */
@@ -53,20 +55,28 @@ public class SpellCheck extends Test
     public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkKeysBeforeUpload";
     /** Preference name for values upload check */
     public static final String PREF_CHECK_VALUES_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkValuesBeforeUpload";
+    /** Preference name for fixmes upload check */
+    public static final String PREF_CHECK_FIXMES_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkFixmesBeforeUpload";
 	
     /** Whether to check keys */
     protected boolean checkKeys = false;
     /** Whether to check values */
     protected boolean checkValues = false;
+    /** Whether to check for fixmes in values */
+    protected boolean checkFixmes = false;
 
     /** Preferences checkbox for keys */
     protected JCheckBox prefCheckKeys;
     /** Preferences checkbox for values */
     protected JCheckBox prefCheckValues;
+    /** Preferences checkbox for FIXMES */
+    protected JCheckBox prefCheckFixmes;
     /** The preferences checkbox for validation of keys on upload */
     protected JCheckBox prefCheckKeysBeforeUpload;
     /** The preferences checkbox for validation of values on upload */
     protected JCheckBox prefCheckValuesBeforeUpload;
+    /** The preferences checkbox for validation of fixmes on upload */
+    protected JCheckBox prefCheckFixmesBeforeUpload;
     /** The add button */
     protected JButton addSrcButton;
     /** The edit button */
@@ -78,8 +88,10 @@ public class SpellCheck extends Test
 	protected static int EMPTY_VALUES 	= 0;
 	/** Invalid key error */
 	protected static int INVALID_KEY  	= 1;
-	/** Invalid value error */
-	protected static int INVALID_VALUE 	= 2;
+    /** Invalid value error */
+    protected static int INVALID_VALUE  = 2;
+    /** fixme error */
+    protected static int FIXME          = 3;
 	
     /** List of sources for spellcheck data */
     protected JList spellcheckSources;
@@ -88,14 +100,16 @@ public class SpellCheck extends Test
     protected boolean testKeysBeforeUpload;
     /** Whether this test must check the values before upload. Used by peferences */
     protected boolean testValuesBeforeUpload;
+    /** Whether this test must check form fixmes in values before upload. Used by peferences */
+    protected boolean testFixmesBeforeUpload;
     
 	/**
 	 * Constructor
 	 */
 	public SpellCheck() 
 	{
-		super(tr("Properties spell checker."),
-			  tr("This plugin checks misspelled property keys and values."));
+		super(tr("Properties checker."),
+			  tr("This plugin checks for errors in property keys and values."));
 	}
 
 	public static void initialize(OSMValidatorPlugin plugin) throws Exception
@@ -123,10 +137,17 @@ public class SpellCheck extends Test
             sources = SPELLCHECK_DATA_FILE;
         
         StringTokenizer st = new StringTokenizer(sources, ";");
+        StringBuilder errorSources = new StringBuilder();
         while (st.hasMoreTokens())
         {
             String source = st.nextToken();
             File sourceFile = Util.mirror(new URL(source), plugin.getPluginDir());
+            if( sourceFile == null || !sourceFile.exists() )
+            {
+                errorSources.append(source).append("\n");
+                continue;
+            }
+            
             BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
 
     		String okValue = null;
@@ -153,6 +174,10 @@ public class SpellCheck extends Test
     		}
     		while( true );
         }
+
+        if( errorSources.length() > 0 )
+            throw new IOException( tr("Could not download spellcheck data file:\n {0}", errorSources) );
+
 	}
 	
 	/**
@@ -222,15 +247,23 @@ public class SpellCheck extends Test
 				errors.add( new TestError(this, Severity.WARNING, tr("Invalid property keys"), p, INVALID_KEY) );
 				withErrors.add(p, "IPK");
 			}
-			if( checkValues && value != null && value.length() > 0 )
-			{
-				List<String> values = spellCheckValueData.get(key);
-				if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
-				{
-					errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"), p, INVALID_VALUE) );
-					withErrors.add(p, "UPV");
-				}
-			}
+            if( checkValues && value != null && value.length() > 0 && spellCheckValueData != null)
+            {
+                List<String> values = spellCheckValueData.get(key);
+                if( values != null && !values.contains(prop.getValue()) && !withErrors.contains(p, "UPV"))
+                {
+                    errors.add( new TestError(this, Severity.OTHER, tr("Unknown property values"), p, INVALID_VALUE) );
+                    withErrors.add(p, "UPV");
+                }
+            }
+            if( checkFixmes && value != null && value.length() > 0 )
+            {
+                if( value.contains("FIXME") && !withErrors.contains(p, "FIXME"))
+                {
+                    errors.add( new TestError(this, Severity.OTHER, tr("FIXMES"), p, FIXME) );
+                    withErrors.add(p, "FIXME");
+                }
+            }
 		}
 	}
 	
@@ -311,11 +344,15 @@ public class SpellCheck extends Test
 	{
         checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS);
         if( isBeforeUpload )
-            checkKeys = checkKeys && Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD);
+            checkKeys = checkKeys && Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD, true);
 
         checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES);
         if( isBeforeUpload )
-            checkValues = checkValues && Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD);
+            checkValues = checkValues && Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD, true);
+
+        checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES);
+        if( isBeforeUpload )
+            checkFixmes = checkFixmes && Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true);
 	}
 
     @Override
@@ -330,13 +367,13 @@ public class SpellCheck extends Test
 	{
         testPanel.add( new JLabel(), GBC.eol());
         
-        boolean checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS);
+        boolean checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS, true);
         prefCheckKeys = new JCheckBox(tr("Check property keys."), checkKeys);
         prefCheckKeys .setToolTipText(tr("Validate that property keys are valid checking against list of words."));
         testPanel.add(prefCheckKeys, GBC.std().insets(40,0,0,0));
 
         prefCheckKeysBeforeUpload = new JCheckBox();
-        prefCheckKeysBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD));
+        prefCheckKeysBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_KEYS_BEFORE_UPLOAD, true));
         testPanel.add(prefCheckKeysBeforeUpload, GBC.eop().insets(20,0,0,0));
         
         spellcheckSources = new JList(new DefaultListModel());
@@ -410,15 +447,23 @@ public class SpellCheck extends Test
         spellcheckSources.setEnabled( checkKeys );
         buttonPanel.setEnabled( checkKeys );
         
-        boolean checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES);
+        boolean checkValues = Main.pref.getBoolean(PREF_CHECK_VALUES, true);
         prefCheckValues = new JCheckBox(tr("Check property values."), checkValues);
         prefCheckValues .setToolTipText(tr("Validate that property values are valid checking against presets."));
 		testPanel.add(prefCheckValues, GBC.std().insets(40,0,0,0));
 
         prefCheckValuesBeforeUpload = new JCheckBox();
-        prefCheckValuesBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD));
+        prefCheckValuesBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_VALUES_BEFORE_UPLOAD, true));
         testPanel.add(prefCheckValuesBeforeUpload, GBC.eop().insets(20,0,0,0));
-        
+
+        boolean checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES, true);
+        prefCheckFixmes = new JCheckBox(tr("Check for FIXMES."), checkFixmes);
+        prefCheckFixmes.setToolTipText(tr("Looks for nodes, segments or ways with FIXME in any property value."));
+        testPanel.add(prefCheckFixmes, GBC.std().insets(40,0,0,0));
+
+        prefCheckFixmesBeforeUpload = new JCheckBox();
+        prefCheckFixmesBeforeUpload.setSelected(Main.pref.getBoolean(PREF_CHECK_FIXMES_BEFORE_UPLOAD, true));
+        testPanel.add(prefCheckFixmesBeforeUpload, GBC.eop().insets(20,0,0,0));
 	}
 
     public void setGuiEnabled(boolean enabled)
@@ -431,6 +476,8 @@ public class SpellCheck extends Test
         deleteSrcButton.setEnabled(enabled);
         prefCheckValues.setEnabled(enabled);
         prefCheckValuesBeforeUpload.setEnabled(enabled);
+        prefCheckFixmes.setEnabled(enabled);
+        prefCheckFixmesBeforeUpload.setEnabled(enabled);
     } 
     
 	@Override
@@ -438,9 +485,11 @@ public class SpellCheck extends Test
 	{
         Main.pref.put(PREF_CHECK_VALUES, prefCheckValues.isSelected());
         Main.pref.put(PREF_CHECK_KEYS, prefCheckKeys.isSelected());
+        Main.pref.put(PREF_CHECK_FIXMES, prefCheckFixmes.isSelected());
         Main.pref.put(PREF_CHECK_VALUES_BEFORE_UPLOAD, prefCheckValuesBeforeUpload.isSelected());
         Main.pref.put(PREF_CHECK_KEYS_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected());
-        Main.pref.put(PREF_CHECK_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected());            
+        Main.pref.put(PREF_CHECK_FIXMES_BEFORE_UPLOAD, prefCheckFixmesBeforeUpload.isSelected());            
+        Main.pref.put(PREF_CHECK_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected() || prefCheckFixmesBeforeUpload.isSelected());
         String sources = "";
         if( spellcheckSources.getModel().getSize() > 0 )
         {

@@ -2,6 +2,7 @@ package org.openstreetmap.josm.plugins.validator;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
+import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
@@ -42,11 +44,14 @@ public class OSMValidatorPlugin extends Plugin
     	DuplicateNode.class, 
     	DuplicateSegment.class, 
     	SingleNodeSegment.class, 
+        UntaggedNode.class, 
     	TaggedSegment.class, 
+        UntaggedWay.class,
     	UnorderedWay.class, 
     	SpellCheck.class,
-    	UntaggedNode.class, 
     	OrphanSegment.class, 
+        ReusedSegment.class, 
+        CrossingSegments.class, 
     };
 
 	/**
@@ -72,15 +77,29 @@ public class OSMValidatorPlugin extends Plugin
 		    validationDialog = new ValidatorDialog();
 	        newFrame.addToggleDialog(validationDialog);
             Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
-            try
-            {
-                ((UploadAction)Main.main.menu.upload).uploadHooks.add( 0, new ValidateUploadHook() );
-            }
-            catch(Throwable t)
-            {
-                // JOSM has no upload hooks in older versions 
-            }
 		}
+        
+        // Add/Remove the upload hook
+        try
+        {
+            LinkedList<UploadHook> hooks = ((UploadAction)Main.main.menu.upload).uploadHooks;
+            Iterator<UploadHook> hooksIt = hooks.iterator(); 
+            while( hooksIt.hasNext() )
+            {
+                if( hooksIt.next() instanceof ValidateUploadHook )
+                {
+                    if( newFrame == null )
+                        hooksIt.remove();
+                    break;
+                }
+            }
+            if( newFrame != null )
+                hooks.add( 0, new ValidateUploadHook() );
+        }
+        catch(Throwable t)
+        {
+            // JOSM has no upload hooks in older versions 
+        }        
 	}
 
 	
@@ -117,7 +136,7 @@ public class OSMValidatorPlugin extends Plugin
 			test.enabled = true;
             
             String simpleName = testClass.getSimpleName();
-            test.testBeforeUpload = Main.pref.getBoolean( "tests." + simpleName + ".checkBeforeUpload");            
+            test.testBeforeUpload = Main.pref.getBoolean( "tests." + simpleName + ".checkBeforeUpload", true);            
 			enabledTests.put(simpleName, test);
 		}
 
@@ -164,11 +183,16 @@ public class OSMValidatorPlugin extends Plugin
 					test.getClass().getMethod("initialize", new Class[] { OSMValidatorPlugin.class} ).invoke(null, new Object[] {this});
 				}
 			} 
-			catch(Exception e) 
-			{
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, tr("Error initializing test {0}.", test.getClass().getSimpleName()));
-			}
+            catch(InvocationTargetException ite) 
+            {
+                ite.getCause().printStackTrace();
+                JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}", test.getClass().getSimpleName(), ite.getCause().getMessage()));
+            }
+            catch(Exception e) 
+            {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}", test.getClass().getSimpleName(), e));
+            }
 		}
 	}
 }

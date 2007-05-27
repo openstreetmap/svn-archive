@@ -205,6 +205,10 @@ public class TestError
         }
     }	
     
+    /**
+     * Visitor that highlights the primitives affected by this error
+     * @author frsantos
+     */
     class PaintVisitor implements Visitor
     {
         /** The graphics */
@@ -310,6 +314,8 @@ public class TestError
         
         /**
          * Checks if the given node is in the visible area.
+         * @param n The node to check for visibility
+         * @return true if the node is visible
          */
         protected boolean isNodeVisible(Node n) {
             Point p = mv.getPoint(n.eastNorth);
@@ -320,6 +326,8 @@ public class TestError
          * Checks if the given segment is in the visible area.
          * NOTE: This will return true for a small number of non-visible
          *       segments.
+         * @param ls The segment to check
+         * @return true if the segment is visible
          */
         protected boolean isSegmentVisible(Segment ls) {
             if (ls.incomplete) return false;

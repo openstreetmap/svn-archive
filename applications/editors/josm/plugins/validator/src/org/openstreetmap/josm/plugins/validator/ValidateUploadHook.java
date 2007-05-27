@@ -60,6 +60,7 @@ public class ValidateUploadHook implements UploadHook
     /**
      * Displays a screen where the actions that would be taken are displayed and
      * give the user the possibility to cancel the upload.
+     * @param errors The errors displayed in the screen
      * @return <code>true</code>, if the upload should continue. <code>false</code>
      *          if the user requested cancel.
      */

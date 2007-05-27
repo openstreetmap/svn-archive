@@ -27,6 +27,7 @@ public enum Severity {
 	 * 
 	 * @param message Description
 	 * @param icon Associated icon
+	 * @param color The color of this severity
 	 */
     Severity(String message, String icon, Color color) 
     {

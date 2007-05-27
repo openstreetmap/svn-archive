@@ -10,6 +10,7 @@ include("../connect/connect.php");
 header("Content-type: text/plain");
 ExportUserlist();
 UpdateStats();
+UpdateBlank();
 
 function ExportUserlist(){
   QueryInto(
@@ -22,6 +23,25 @@ function UpdateStats(){
   $Filename = "/home/ojw/public_html/Stats/Data/latest.txt";
   
   if(!QueryInto("select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version` from `tiles_meta`", $Filename))
+    return(0);
+  
+  $CompressedFilename = $Filename.".gz";
+  
+  system("gzip -f $Filename");
+  
+  if(file_exists($Filename)){
+    unlink($Filename);
+    print "Textfile still exists after gzip\n";
+    return(0);
+  }
+  return(1);
+}
+
+function UpdateBlank(){
+  set_time_limit(10 * 60);
+  $Filename = "/home/ojw/public_html/Stats/Data/latest_blank.txt";
+  
+  if(!QueryInto("select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version` from `tiles_blank`", $Filename))
     return(0);
   
   $CompressedFilename = $Filename.".gz";

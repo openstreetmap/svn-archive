@@ -27,7 +27,7 @@ public class TaggedSegment extends Test
 	public TaggedSegment() 
 	{
 		super(tr("Tagged segments"),
-			  tr("This test checks that no segment segment is tagged. Only ways should be tagged."));
+			  tr("This test checks that no segment is tagged. Only ways should be tagged."));
 	}
 
 	@Override

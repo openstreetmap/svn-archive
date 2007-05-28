@@ -1,4 +1,9 @@
 <?php
+#-----------------------------------------------------------------------------
+# Creates a map image, by tiling together slippy map images
+# Oliver White
+# GNU GPL version 2 or later
+#-----------------------------------------------------------------------------
 
 include("../lib/tilenames.inc");
 
@@ -9,10 +14,12 @@ if(!tryMap(
   $_GET["w"], 
   $_GET["h"],
   $_GET["format"])){
-  print "Error in parameters";
+  CreateForm($_GET);
   }
 
-
+#-----------------------------------------------------------------------------
+# Validate a set of inputs. if ok, then output map to browser, otherwise return 0
+#-----------------------------------------------------------------------------
 function tryMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
   if($Lat < -90 || $Lat > 90)
     return(0);
@@ -27,7 +34,9 @@ function tryMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
   doMap($Lat, $Long, $Zoom, $Width, $Height, $Format);
   return(1);
 }
-  
+#-----------------------------------------------------------------------------
+# Create a map, output it to browser
+#-----------------------------------------------------------------------------
 function doMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
   $Tilesize = 256;
   $GridSize = 10;
@@ -74,9 +83,16 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
     imagepng($Image);
   }
 }
+
+#-----------------------------------------------------------------------------
+# Location of map tiles
+#-----------------------------------------------------------------------------
 function tileURLB($X,$Y,$Z){
   return(sprintf("http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", $Z, $X, $Y));
 }
+#-----------------------------------------------------------------------------
+# Slippy map coordinate functions: should probably use a library
+#-----------------------------------------------------------------------------
 function XY($Lat, $Long, $Zoom){
   $PortionY = Lat2Y($Lat);
   $PortionX = Long2X($Long);
@@ -100,5 +116,51 @@ function ProjectF($Lat){
   $Lat = deg2rad($Lat);
   $Y = log(tan($Lat) + (1/cos($Lat)));
   return($Y);
+}
+
+#-----------------------------------------------------------------------------
+# HTML form that lets you enter map parameters
+#-----------------------------------------------------------------------------
+function CreateForm($ParamArray){
+  print "<table cellpadding=\"6\" cellspacing=\"0\">";
+  print "<form action=\"./\" method=\"GET\">\n";
+  
+  print TableRow("Map centre lat/long", 
+    FormNumericInput("lat", "%1.8f") . FormNumericInput("long", "%1.8f"));
+  
+  print TableRow("Zoom", DropdownInput("z", range(7, 17)));
+  
+  print TableRow("Image size, pixels",
+    FormNumericInput("w", "%d") . " x " . FormNumericInput("h", "%d"));
+    
+  print TableRow("Output", DropdownInput("format", array("jpeg", "png")));
+  
+  print TableRow("&nbsp;", "<input type=\"submit\" value=\"OK\">");
+  
+  print "</form></table>\n";
+}
+
+#-----------------------------------------------------------------------------
+# Create a row containing two items: a and b
+#-----------------------------------------------------------------------------
+function TableRow($A, $B){
+ return("<tr><td>$A</td><td>$B</td></tr>\n");
+}
+#-----------------------------------------------------------------------------
+# HTML select field, with a list of options
+#-----------------------------------------------------------------------------
+function DropdownInput($Name, $Options){
+  $Html = "<select name=\"$Name\">\n";
+  foreach($Options as $Option){
+    $Html .= "<option value=\"$Option\">$Option</option>\n";
+  }
+  $Html .= "</select>\n";
+  return($Html);
+}
+#-----------------------------------------------------------------------------
+# HTML input field
+#-----------------------------------------------------------------------------
+function FormNumericInput($Name, $Format){
+  return(sprintf("<input type=\"text\" name=\"%s\">", $Name));
 }
 ?>

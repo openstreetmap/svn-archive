@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 21.5.2007 (segment ordering of new ways)
+	# last update 21.5.2007 (queue uploads; clicks less sensitive)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -40,6 +40,13 @@
 	// =====================================================================================
 	// Initialise
 
+	// Site-specific URLs
+//	var apiurl='rubyamf.cgi';
+//	var gpsurl='/potlatch/getgps.cgi';
+	var apiurl='../api/0.4/amf';
+	var gpsurl='../api/0.4/swf/trackpoints';
+
+	// Master movieclip for map
 	_root.createEmptyMovieClip("map",10);
 	_root.map.setMask(_root.masksquare);
 
@@ -104,6 +111,8 @@
 	var pointertype='';				// current mouse pointer
 	var redopropertywindow=0;		// need to redraw property window after deletion?
 	var savedProperties=new Array();// clipboard for properties
+	var tolerance=4/Math.pow(2,_root.scale-12);
+
 	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
 	
 	// Way styling
@@ -239,8 +248,7 @@
 	var loaderWaiting=false;
 
 	remote=new NetConnection();
-	remote.connect("../api/0.4/amf");
-//	remote.connect("rubyamf.cgi");
+	remote.connect(apiurl);
 
 	preresponder = function() { };
 	preresponder.onResult = function(result) {
@@ -401,6 +409,7 @@
 		// each point is an array: (x,y,node_id,0 move|1 draw,tag array,segment id)
 		this.attr=new Array();
 		this.clean=1;
+		this.uploading=0;
 		this.xmin=0;
 		this.xmax=0;
 		this.ymin=0;
@@ -481,6 +490,7 @@
 			_root.map.ways[nw].xmax=result[5];
 			_root.map.ways[nw].ymin=result[6];
 			_root.map.ways[nw].ymax=result[7];
+			_root.map.ways[nw].uploading=0;
 
 			// update segment IDs
 			z=result[3];
@@ -501,9 +511,12 @@
 				}
 			}
 		};
-		this.attr['created_by']="Potlatch alpha";
-		remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);
-		_root.map.ways[this._name].clean=1;
+		if (this.uploading==0) {
+			this.attr['created_by']="Potlatch alpha";
+			this.uploading=1;
+			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);
+			this.clean=1;
+		}
 	};
 
 	// ----	Click handling	
@@ -577,7 +590,7 @@
 	};
 
 	OSMWay.prototype.highlightPoints=function(d,atype) {
-		anchorsize=120/Math.pow(2,Math.min(_root.scale,16)-12);
+		anchorsize=120/Math.pow(2,_root.scale-12);
 		group=atype+"s";
 		_root.map.createEmptyMovieClip(group,d);
 		for (i=0; i<this.path.length; i+=1) {
@@ -1358,6 +1371,7 @@
 									else { _root.i_zoomout._alpha=100; }
 		if (_root.scale==_root.maxscale) { _root.i_zoomin._alpha =25;  }
 									else { _root.i_zoomin._alpha =100; }
+		_root.tolerance=4/Math.pow(2,_root.scale-12);
 	}
 
 	
@@ -1420,8 +1434,11 @@
 	// processDrag, moveMap - process map dragging
 
 	function processDrag() {
-		if (_root.pointertype!='hand') { setPointer('hand'); }
-		moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
+		if (Math.abs(_root.firstxmouse-_root._xmouse)>(tolerance*4) ||
+			Math.abs(_root.firstymouse-_root._ymouse)>(tolerance*4)) {
+			if (_root.pointertype!='hand') { setPointer('hand'); }
+			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
+		}
 	}
 	
 	function moveMap(xdiff,ydiff) {
@@ -1453,62 +1470,18 @@
 
 	function mouseRelease() {
 		_root.map.onMouseMove=function() {};
-		tolerance=4/Math.pow(2,_root.scale-12);
-
-		// ------------------------------------------
-		// Double-clicked on point while drawing line
-
-		if (_root.drawpoint==-2) {
-			stopDrawing();
-
-		// -------------------------------
-		// Clicked on map without dragging
-
-		} else if (Math.abs(_root.firstxmouse-_root._xmouse)<tolerance &&
-				   Math.abs(_root.firstymouse-_root._ymouse)<tolerance) {
-
-			_root.dragmap=-1;
-			// Adding a point to the way being drawn
-			if (_root.drawpoint>-1) {
-				_root.newnodeid--;
-				if (_root.pointselected>-2) {
-					setTypeText("Way",_root.wayselected);
-					populatePropertyWindow('way');
-				}
-				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
-
-			// Deselecting a way
-			} else if (_root.wayselected) {
-				uploadSelected(); deselectAll();
-
-			// Starting a new way
-			} else {
-				_root.newnodeid--; startNewWay(_root.map._xmouse,_root.map._ymouse,_root.newnodeid);
-			}
-
-		// ----------------------
-		// Dragged map, so redraw
-
-		} else if (_root.dragmap==1) {
-			redrawYahoo(); whichWays();
-			_root.dragmap=-1;
-			if (_root.wayselected) { setPointer(''); }
-							  else { setPointer('pen'); }
-		}
-
-		// -------------
-		// Dragged point
 
 		if (_root.dragpoint!=-1) {
+
+			// -------------
+			// Dragged point
+
 			newx=_root.map._xmouse;
 			newy=_root.map._ymouse;
-			inbounds=Math.abs(newx-_root.map.ways[wayselected].path[dragpoint][0])>tolerance || 
-					 Math.abs(newy-_root.map.ways[wayselected].path[dragpoint][1])>tolerance;
-
+			inbounds=Math.abs(newx-_root.map.ways[wayselected].path[dragpoint][0])>=tolerance/2 || 
+					 Math.abs(newy-_root.map.ways[wayselected].path[dragpoint][1])>=tolerance/2;
 			if (inbounds) {
-
 				// ====	Move existing point
-
 				for (qway in _root.map.ways) {
 					qdirty=0;
 					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
@@ -1548,7 +1521,48 @@
 //				_root.drawpoint=-1;
 			}
 			_root.dragpoint=-1;
+
+		// ------------------------------------------
+		// Double-clicked on point while drawing line
+
+		} else if (_root.drawpoint==-2) {
+			stopDrawing();
+
+		// -------------------------------
+		// Clicked on map without dragging
+
+		} else if (Math.abs(_root.firstxmouse-_root._xmouse)<(tolerance*4) &&
+				   Math.abs(_root.firstymouse-_root._ymouse)<(tolerance*4)) {
+
+			_root.dragmap=-1;
+			// Adding a point to the way being drawn
+			if (_root.drawpoint>-1) {
+				_root.newnodeid--;
+				if (_root.pointselected>-2) {
+					setTypeText("Way",_root.wayselected);
+					populatePropertyWindow('way');
+				}
+				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
+
+			// Deselecting a way
+			} else if (_root.wayselected) {
+				uploadSelected(); deselectAll();
+
+			// Starting a new way
+			} else {
+				_root.newnodeid--; startNewWay(_root.map._xmouse,_root.map._ymouse,_root.newnodeid);
+			}
+
+		// ----------------------
+		// Dragged map, so redraw
+
+		} else if (_root.dragmap==1) {
+			redrawYahoo(); whichWays();
+			_root.dragmap=-1;
+			if (_root.wayselected) { setPointer(''); }
+							  else { setPointer('pen'); }
 		}
+		
 	}
 
 
@@ -1636,8 +1650,6 @@
 
 	function loadGPS() {
 		_root.map.createEmptyMovieClip('gps',3);
-//		gpsurl='/potlatch/getgps.cgi';
-		gpsurl='../api/0.4/swf/trackpoints';
 		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&token='+_root.usertoken,_root.map.gps); }
 							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale,_root.map.gps); }
 	}

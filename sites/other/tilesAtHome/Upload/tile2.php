@@ -177,13 +177,33 @@ function SaveBlankTiles($BlankTileList, $UserID){
     $Fields = "x, y, z, layer, type, date, user";
     $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
 
-		$SQL = sprintf("DELETE FROM `tiles_meta` WHERE x=$s AND y=$s AND z=$s AND layer=$s;",x,y,z,layer);
-    mysql_query($SQL);
-    if(mysql_errno()) printf("%s\n", mysql_error());
+    DeleteRealTile($X,$Y,$Z,$Layer);
 
     $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);
-    if(mysql_errno()) printf("%s\n", mysql_error());
+    
+    logSqlError();
+  }
+}
+
+#------------------------------------------------------------------------------------
+# Delete a tile and its metadata (usually when a blank tile is uploaded in its place)
+#------------------------------------------------------------------------------------
+function DeleteRealTile($X,$Y,$Z,$LayerID){
+  
+  # Delete the meta database entry
+  $SQL = sprintf(
+    "DELETE FROM `tiles_meta` WHERE `x`=%d AND `y`=%d AND `z`=%d AND `layer`=%d;",
+      $X,$Y,$X,$LayerID);
+  mysql_query($SQL);
+  logSqlError();
+  
+  # Delete the image, if exists
+  $NewFilename = TileName($X,$Y,$Z, layerDir($LayerID));
+  if($NewFilename){
+    if(file_exists($NewFilename)){
+      unlink($NewFilename);
+    }
   }
 }
 
@@ -297,22 +317,12 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, 
     # TODO: make an enumeration for blank land/sea
     $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, 2);
     array_push($BlankTileList, $SqlSnippet);
-    
-    # Delete any existing tile of the same name
-    if(file_exists($NewFilename))
-      unlink($NewFilename);
-      
     return;
   }
   if($Size == 69){
     # This is a request to create a sea tile
     $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, 1);
     array_push($BlankTileList, $SqlSnippet);
-    
-    # Delete any existing tile of the same name
-    if(file_exists($NewFilename))
-      unlink($NewFilename);
-          
     return;
   }
   if($Size < 100){

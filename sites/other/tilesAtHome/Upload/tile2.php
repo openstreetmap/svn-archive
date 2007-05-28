@@ -193,7 +193,7 @@ function DeleteRealTile($X,$Y,$Z,$LayerID){
   
   # Delete the meta database entry
   $SQL = sprintf(
-    "DELETE FROM `tiles_meta` WHERE `x`=%d AND `y`=%d AND `z`=%d AND `layer`=%d;",
+    "DELETE FROM `tiles_meta` WHERE `x`=%d AND `y`=%d AND `z`=%d AND `type`=%d;",
       $X,$Y,$X,$LayerID);
   mysql_query($SQL);
   logSqlError();

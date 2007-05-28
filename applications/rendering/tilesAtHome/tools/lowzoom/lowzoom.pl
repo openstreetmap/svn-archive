@@ -111,7 +111,7 @@ sub downloadtile(){
   
   # Don't bother storing blank or invalid tiles
 	
-	unlink $f2 if($Size < 230);
+	unlink $f2 if($Size < 103);
 }
 # Create a supertile, by merging together 4 local image files, and creating a new local file
 sub supertile(){
@@ -131,13 +131,14 @@ sub supertile(){
 	if ($AB == undef) { $AB = Image::Magick->new; }
 	if ($BA == undef) { $BA = Image::Magick->new; }
 	if ($BB == undef) { $BB = Image::Magick->new; }
-	if((($AA->Get('filesize') == 230 ) || ($AA->Get('filesize') == 609 ) ) && ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
+
+	if(($AA->Get('filesize') == 103 )  && ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
 	{#if its a "404 sea" or a "sea.png" and all 4 sizes are the same, make one 69 bytes sea of it
 			my $SeaFilename = "../../emptysea.png"; 
 			link($SeaFilename,$Filename);
 			return;
 	}
-	elsif((($AA->Get('filesize') == 329 ) || ($AA->Get('filesize') == 605 ) )&& ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
+	elsif(($AA->Get('filesize') == 179 ) && ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
 	{#if its a "blank land" or a "land.png" and all 4 sizes are the same, make one 69 bytes land of it
 			my $LandFilename = "../../emptyland.png"; 
 			link($LandFilename,$Filename);

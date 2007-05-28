@@ -582,7 +582,7 @@ sub GenerateTileset
         }
 
 				#if $empty then the next zoom level was empty, so we only upload one tile
-				if ($empty == 1 && !$Config{UploadBlankAsSet}) 
+				if ($empty == 1 && $Config{GatherBlankTiles}) 
 				{
 					my $Filename=sprintf("%s_%s_%s_%s.png",$Config{"Layer.$layer.Prefix"}, $Zoom, $X, $Y);
 					my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 

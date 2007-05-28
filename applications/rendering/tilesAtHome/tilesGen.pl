@@ -573,7 +573,7 @@ sub GenerateTileset
         my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
-        RenderTile($layer, $X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
@@ -581,11 +581,22 @@ sub GenerateTileset
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
 
-        # This directory is now ready for upload.
-        # How should errors in renaming be handled?
-        my $Dir = $JobDirectory;
-        $Dir =~ s|\.tmpdir|.dir|;
-        rename $JobDirectory, $Dir;
+				#if $empty then the next zoom level was empty, so we only upload one tile
+				if ($empty == 1 && !$Config{UploadBlankAsSet}) 
+				{
+					my $Filename=sprintf("%s_%s_%s_%s.png",$Config{"Layer.$layer.Prefix"}, $Zoom, $X, $Y);
+					my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 
+					my $newFilename = sprintf("%s/%s",$Config{WorkingDirectory},$Filename);
+					rename($oldFilename, $newFilename);
+					rmdir($JobDirectory);
+				}
+				else{
+					# This directory is now ready for upload.
+					# How should errors in renaming be handled?
+					my $Dir = $JobDirectory;
+					$Dir =~ s|\.tmpdir|.dir|;
+					rename $JobDirectory, $Dir;
+				}
 
     if ($Config{LayerUpload}) {uploadIfEnoughTiles()};
     }
@@ -605,7 +616,7 @@ sub RenderTile
     my ($layer, $X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
 
     return if($Zoom > $Config{"Layer.$layer.MaxZoom"});
-
+		
     # no need to render subtiles if empty
     return if($empty == 1);
 
@@ -666,7 +677,8 @@ sub RenderTile
 
     RenderTile($layer, $X, $Y, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
     RenderTile($layer, $X, $Y, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
-
+	
+		return $empty;
 }
 
 #-----------------------------------------------------------------------------

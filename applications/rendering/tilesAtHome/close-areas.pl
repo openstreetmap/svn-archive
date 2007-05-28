@@ -103,10 +103,10 @@ while(<STDIN>)
         {
             last;
         }
-        elsif($xmltag =~ /^\s*<osm.*\/>/)
+        elsif($xmltag =~ /^\s*<(osm.*)\/>/)
         {
             $copy = 0;
-            print $xmltag."\n";
+            print "<$1>\n";
         }
 
         if ($copy)

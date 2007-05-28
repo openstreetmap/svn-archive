@@ -33,6 +33,6 @@ RenderFullTileset=0
 LayerUpload=0
 
 #if a set is empty and RenderFullTileset = 0 only one tile is created
-# set to 0 if the tile should be stored in workdir, so you can upload a bunch of them
-# if set to 1 this tile will be uploaded as a set
-UploadBlankAsSet=1
+# set to 1 if the tile should be stored in workdir, so you can upload a bunch of them
+# if set to 0 this tile will be uploaded as a set
+GatherBlankTiles=0

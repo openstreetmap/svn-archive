@@ -116,7 +116,7 @@
 
 
         <!-- Man-made areas -->
-        <rule e="way" k="sport" v="rugby|soccer|cricket|horse_racing|golf|hockey|tennis|football|baseball|bowls|basketball">
+        <rule e="way" k="sport" v="*">
             <area class='sport'/>
         </rule>
         <rule e="way" k="amenity" v="parking">
@@ -212,7 +212,10 @@
             <rule e="segment|way" k="highway" v="trunk|trunk_link">
                 <line class='highway-casing highway-trunk-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="motorway|motorway_link">
+            <rule e="segment|way" k="highway" v="motorway_link">
+                <line class='highway-casing highway-motorway-link-casing' />
+            </rule>
+            <rule e="segment|way" k="highway" v="motorway">
                 <line class='highway-casing highway-motorway-casing' />
             </rule>
         </rule>
@@ -285,7 +288,10 @@
                 <rule e="segment|way" k="highway" v="trunk|trunk_link">
                     <line class='highway-core highway-trunk-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="motorway|motorway_link">
+                <rule e="segment|way" k="highway" v="motorway_link">
+                    <line class='highway-core highway-motorway-link-core' />
+                </rule>
+                <rule e="segment|way" k="highway" v="motorway">
                     <line class='highway-core highway-motorway-core' />
                 </rule>
             </addclass>
@@ -294,34 +300,34 @@
         <!-- Highway cores in tunnels -->
         <rule e="segment|way" k="tunnel" v="true|yes">
             <rule e="segment|way" k="highway" v="pedestrian">
-                <tunnel width="2" class='highway-pedestrian' />
+                <tunnel width="2" class='highway-core highway-pedestrian' />
             </rule>
             <rule e="segment|way" k="highway" v="track">
-                <tunnel width="2" class='highway-track' />
+                <tunnel width="2" class='highway-core highway-track' />
             </rule>
             <rule e="segment|way" k="highway" v="unclassified|residential|minor">
-                <tunnel width="2" class='highway-unclassified' />
+                <tunnel width="2" class='highway-core highway-unclassified' />
             </rule>
             <rule e="segment|way" k="highway" v="unsurfaced">
-                <tunnel width="2" class='highway-unsurfaced' />
+                <tunnel width="2" class='highway-core highway-unsurfaced' />
             </rule>
             <rule e="segment|way" k="highway" v="service">
-                <tunnel width="1" class='highway-service' />
+                <tunnel width="1" class='highway-core highway-service' />
             </rule>
             <rule e="segment|way" k="highway" v="tertiary">
-                <tunnel width="2" class='highway-tertiary' />
+                <tunnel width="2" class='highway-core highway-tertiary' />
             </rule>
             <rule e="segment|way" k="highway" v="secondary">
-                <tunnel width="3" class='highway-secondary' />
+                <tunnel width="3" class='highway-core highway-secondary' />
             </rule>
             <rule e="segment|way" k="highway" v="primary|primary_link">
-                <tunnel width="3" class='highway-primary' />
+                <tunnel width="3" class='highway-core highway-primary' />
             </rule>
             <rule e="segment|way" k="highway" v="trunk|trunk_link">
-                <tunnel width="4" class='highway-trunk' />
+                <tunnel width="4" class='highway-core highway-trunk' />
             </rule>
             <rule e="segment|way" k="highway" v="motorway|motorway_link">
-                <tunnel width="4" class='highway-motorway' />
+                <tunnel width="4" class='highway-core highway-motorway' />
             </rule>
         </rule>
 
@@ -571,7 +577,7 @@
                 fill: none;
             }
 
-            /* Highways */
+            /* Highways - generic style */
             .highway-casing {
 				stroke-linecap: butt;
                 stroke-linejoin: round;
@@ -584,6 +590,22 @@
                 fill: none;
             }
 
+            .highway-ref {
+                fill: #666666;
+                stroke: white;
+                font-family: "DejaVu Sans",sans-serif;
+                font-weight: normal;
+            }
+
+            .highway-name {
+                fill: black;
+                font-family: "DejaVu Sans",sans-serif;
+                font-weight: normal;
+                stroke: white;
+             }
+
+
+			/* Highways - street specific style */
             .highway-motorway-casing {
                 stroke-width: 22px;
                 stroke: #222222;
@@ -591,6 +613,16 @@
 
             .highway-motorway-core {
                 stroke-width: 20px;
+                stroke: #809BC0;
+            }
+
+            .highway-motorway-link-casing {
+                stroke-width: 9px;
+                stroke: #222222;
+            }
+
+            .highway-motorway-link-core {
+                stroke-width: 8.5px;
                 stroke: #809BC0;
             }
 
@@ -636,7 +668,7 @@
 			            
 			.highway-tertiary-core {
 				stroke-width: 4.75px; 
-				stroke: #FEF970;
+				stroke: #f7f496;
 			}
               
             .highway-unclassified-casing {

@@ -13,11 +13,36 @@ include("../lib/versions.inc");
 include("../lib/layers.inc");
 include("../lib/requests.inc");
 include("../lib/checkupload.inc");
+include("../lib/cpu.inc");
 
 # Option to turn-off non-single-tileset uploads (was only used for testing)
 if(0){
   if($_POST["single_tileset"] != "yes"){
     AbortWithError(401, "We're testing LA2's single-tileset uploads, normal ones are being discarded for now");    
+  }
+}
+
+if(1){
+  $Load = GetLoadAvg();
+  //logMsg("$Load load", 4);
+  if($Load < 0){
+    logMsg("Load average failed", 4);
+  }
+  elseif($Load > 3){
+    AbortWithError(503, "Server is very very busy...");
+  }
+}
+
+
+# Option to limit by CPU
+if(0){
+  $Idle = GetLoad("idle");
+  logMsg("$Idle idle", 4);
+  if($Idle < 0){
+    logMsg("Idle count failed", 4);
+  }
+  elseif($Idle < 25){
+    AbortWithError(503, "Server is very very busy...");
   }
 }
 

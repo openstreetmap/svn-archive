@@ -35,7 +35,7 @@ function moveRequest($X, $Y, $FromMode, $ToMode, $Debug = 0){
 
   # Move the specified request to the new mode
   $SQL = sprintf(
-    "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `status`=%d;",
+    "update `tiles_queue` set `status`=%d, `retries`=`retries`+1, `date`=now() where `x`=%d and `y`=%d and `status`=%d;",
     $ToMode,
     $X,
     $Y,

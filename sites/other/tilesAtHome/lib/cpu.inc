@@ -8,11 +8,25 @@ function TestLoad(){
   }
 }
 
+function GetLoadAvg()
+{
+  if(!($fp = fopen("/proc/loadavg", "r"))){
+    return(-1);
+  }
+  $Info = fgets($fp, 4096);
+  fclose($fp);
+  
+  # Split into fields
+  $Parts  = explode(" ", $Info);
+
+  return($Parts[0]);
+}
+
 function GetLoad($Type = "idle"){
   # Get first line from /proc/stat, of the form:
   # "cpu  41644332 829140 7041132 54137011 110995115 807596 568065 0"
   if(!($fp = fopen("/proc/stat", "r"))){
-    return(0);
+    return(-1);
   }
   $Info = fgets($fp, 4096);
   fclose($fp);

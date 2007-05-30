@@ -3,38 +3,28 @@ package namefinder;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 import org.openstreetmap.josm.tools.GBC;
@@ -169,12 +159,13 @@ public class PlaceSelection implements DownloadSelection {
 		panel.add(new JLabel(tr("Enter a place name to search for:")), GBC.eol());
 		panel.add(searchTerm, GBC.std().fill(GBC.HORIZONTAL));
 		panel.add(submitSearch, GBC.eol());
-
 		
-		GBC c = GBC.eol();
-		c.gridwidth = 2;
-		panel.add(new JScrollPane(searchResultDisplay), c);
-		gui.tabpane.add(panel, "Places");
+		GBC c = GBC.std().fill();
+		JScrollPane scrollPane = new JScrollPane(searchResultDisplay);
+		panel.add(scrollPane, c);
+		gui.tabpane.add(panel, tr("Places"));
+		
+		scrollPane.setPreferredSize(scrollPane.getPreferredSize());
 		
 		// when the button is clicked
 		submitSearch.addActionListener(new ActionListener() {

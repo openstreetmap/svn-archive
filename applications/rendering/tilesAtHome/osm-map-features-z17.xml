@@ -537,10 +537,10 @@
             <symbol xlink:href="#hospital" width='5px' height='5px' transform='translate(-2.5,-2.5)' />
         </rule>
         <rule e="node" k="amenity" v="post_office">
-            <symbol xlink:href="#postoffice" width='4px' height='2px' transform='translate(-2,-1)' />
+            <symbol xlink:href="#postoffice" width='3px' height='3px' transform='translate(-1.5,-1.5)' />
         </rule>
         <rule e="node" k="amenity" v="post_box">
-            <symbol xlink:href="#postbox" width='2px' height='1px' transform='translate(-1,-0.5)' />
+            <symbol xlink:href="#postbox" width='1.5px' height='1.5px' transform='translate(-0.75,-0.75)' />
         </rule>
         <rule e="node" k="amenity" v="speed_trap">
             <symbol xlink:href="#postbox" width='2px' height='1px' transform='translate(-1,-0.5)' />
@@ -725,7 +725,7 @@
 			    <text k="name" class='railway-halt-caption' dy='-2px' />
 			</rule>
 			<rule e="node" k="amenity" v="pub">
-			    <text k="name" class='amenity-pub-caption' dy='-3px' />
+			    <text k="name" class='amenity-pub-caption' dy='-2px' />
 			</rule>
 			<rule e="node" k="amenity" v="cinema">
 			    <text k="name" class='amenity-cinema-caption' dy='-3px' />
@@ -980,140 +980,47 @@
             .highway-secondary-name                 { stroke-width: 0px;     font-size: 1.5px;}
             .highway-secondary-ref                  { stroke-width: 0px;     font-size: 2px; }
 
-			.highway-tertiary-casing                { stroke-width: 2.75px;  stroke: #222222; }
-			.highway-tertiary-core                  { stroke-width: 2.5px;   stroke: #f7f496; }
-            .highway-tertiary-name                  { stroke-width: 0.0px;   font-size: 2.25px; }
+			.highway-tertiary-casing                { stroke-width: 1.75px;  stroke: #222222; }
+			.highway-tertiary-core                  { stroke-width: 1.5px;   stroke: #f7f496; }
+            .highway-tertiary-name                  { stroke-width: 0px;     font-size: 1.25px; }
+            .highway-tertiary-ref					{ stroke-width: 0.1px;   font-size: 1.5px; }
 
-            .highway-tertiary-ref {
-                stroke-width: 0.1px;
-                font-size: 2.5px;
-            }
+            .highway-unclassified-casing            { stroke-width: 1.75px;  stroke: #222222; }
+            .highway-unclassified-core              { stroke-width: 1.5px;   stroke: #ffffff; }
+            .highway-unclassified-name              { stroke-width: 0px;     font-size: 1.25px; }
+            .highway-unclassified-ref               { stroke-width: 0.3px;   font-size: 1.5px; }
 
-            .highway-unclassified-casing {
-                stroke-width: 1.75px;
-                stroke: #222222;
-            }
+            .highway-unsurfaced-casing              { stroke-width: 1.5px;   stroke: #222222; stroke-dasharray: 1px, 0.5px; }
+            .highway-unsurfaced-core                { stroke-width: 1.2px;   stroke: #ffffff; }
+            .highway-unsurfaced-name                { stroke-width: 0px;     font-size: 1px; }
+            .highway-unsurfaced-ref                 { stroke-width: 0.3px;   font-size: 1.25px; }
 
-            .highway-unclassified-core {
-                stroke-width: 1.5px;
-                stroke: #ffffff;
-            }
+            .highway-track-casing                   { stroke-width: 1.5px;   stroke: #d79331; }
+            .highway-track-core                     { stroke-width: 1.2px;   stroke: #ffffff; }
 
-            .highway-unclassified-name {
-                font-size: 1.25px;
-                stroke-width: 0.0px;
-             }
+            .highway-pedestrian-casing              { stroke-width: 1.5px;   stroke: #aaaaaa; }
+            .highway-pedestrian-core                { stroke-width: 1.2px;   stroke: #eeeeee; }
+            .highway-pedestrian-name                { stroke-width: 0px;     font-size: 1px; }
+            .highway-pedestrian-ref                 { stroke-width: 0.3px;   font-size: 1.25px; }
 
-            .highway-unclassified-ref {
-                stroke-width: 0.3px;
-                font-size: 4.5px;
-            }
+            .highway-service-casing                 { stroke-width: 1px;     stroke: #222222; }
+            .highway-service-core                   { stroke-width: 0.8px;   stroke: #ffffff; }
+            .highway-service-name                   { stroke-width: 0px;     font-size: 0.8px; }
+            .highway-service-ref                    { stroke-width: 0px;     font-size: 1px; }
 
-            .highway-unsurfaced-casing {
-                stroke-width: 1.5px;
-                stroke: #222222;
-                stroke-dasharray: 1px, .5px;
-            }
+            .highway-bridleway                      { stroke-width: 1px;     stroke: #70b971; }
+            .highway-bridleway-ref                  { stroke-width: 0px;     font-size: 1.25px; }
 
-            .highway-unsurfaced-core {
-                stroke-width: 1.2px;
-                stroke: #ffffff;
-            }
+            .highway-byway                          { stroke-width: 1px;     stroke: #ef7771; }
+            .highway-byway-ref                      { stroke-width: 0px;     font-size: 1.25px; }
 
-            .highway-unsurfaced-name {
-                font-size: 1px;
-                stroke-width: 0.0px;
-             }
+            .highway-cycleway                       { stroke-width: 1px;     stroke: #008102; }
+            .highway-cycleway-ref                   { stroke-width: 0px;     font-size: 1.25px; }
 
-            .highway-unsurfaced-ref {
-                stroke-width: 0.3px;
-                font-size: 4.5px;
-            }
+            .highway-footway                        { stroke-width: 0.5px;   stroke: #d79331; }
+            .highway-footway-ref                    { stroke-width: 0px;     font-size: 1.25px; }
 
-            .highway-track-casing {
-                stroke-width: 1.5px;
-                stroke: #d79331;
-            }
-
-            .highway-track-core {
-                stroke-width: 1.2px;
-                stroke: #ffffff;
-            }
-
-            .highway-pedestrian-casing {
-                stroke-width: 1.5px;
-                stroke: #aaaaaa;
-            }
-
-            .highway-pedestrian-core {
-                stroke-width: 1.2px;
-                stroke: #eeeeee;
-            }
-
-            .highway-service-casing {
-                stroke-width: 1px;
-                stroke: #222222;
-            }
-
-            .highway-service-core {
-                stroke-width: 0.8px;
-                stroke: #ffffff;
-            }
-
-            .highway-service-name {
-                font-size: 0.8px;
-                stroke-width: 0.0px;
-            }
-
-            .highway-service-ref {
-                stroke-width: 0px;
-                font-size: 1.75px;
-            }
-
-            .highway-bridleway {
-                stroke-width: 1px;
-                stroke: #70b971;
-            }
-            .highway-bridleway-ref {
-                stroke-width: 0px;
-                font-size: 1.25px;
-            }
-
-            .highway-byway {
-                stroke-width: 1px;
-                stroke: #ef7771;
-            }
-
-            .highway-byway-ref {
-                stroke-width: 0px;
-                font-size: 1.25px;
-            }
-
-            .highway-cycleway {
-                stroke-width: 1px;
-                stroke: #008102;
-            }
-
-            .highway-cycleway-ref {
-                stroke-width: 0px;
-                font-size: 1.25px;
-            }
-
-            .highway-footway {
-                stroke-width: 0.5px;
-                stroke: #d79331;
-            }
-
-            .highway-footway-ref {
-                stroke-width: 0px;
-                font-size: 1.25px;
-            }
-
-            .highway-steps {
-                stroke-width: 0.5px;
-                stroke: #707070;
-                stroke-dasharray: 0.1px, 0.3px;
-            }
+            .highway-steps                          { stroke-width: 0.5px;   stroke: #707070; stroke-dasharray: 0.1px, 0.3px; }
 
             .highway-tunnel-narrow {
                 stroke-width: 0.1px;

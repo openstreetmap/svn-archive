@@ -17,7 +17,7 @@
     <target name="compile" depends="init">
     <javac srcdir="namefinder" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <classpath>
-        <pathelement path="${josm.prj.dir}/bin"/>
+        <pathelement path="${josm.prj.dir}/build"/>
         <fileset dir="${josm.prj.dir}/lib">
           <include name="**/*.jar"/>
         </fileset>

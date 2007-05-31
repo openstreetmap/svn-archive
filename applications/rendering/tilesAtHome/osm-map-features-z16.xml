@@ -1277,7 +1277,7 @@
                 stroke-width: 0.5px;
             }
 
-            .railway-station-caption-core {
+            .railway-station-caption-casing {
                 fill: #ec2d2d;
                 stroke: white;
                 stroke-width: 2px;

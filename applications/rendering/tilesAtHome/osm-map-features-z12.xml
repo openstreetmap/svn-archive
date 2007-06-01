@@ -44,9 +44,11 @@
 
 
         <!-- Highway shading (abutters) -->
-		<!-- highway=residential implies abutters=residential so render residential shading in this case -->
+	<!-- highway=residential implies abutters=residential except on bridges -->
         <rule k="highway" v="residential">
-            <line class='abutters-all' />
+            <rule e="segment|way" k="bridge" v="~|no">            
+                <line class='abutters-all' />
+            </rule>
         </rule>
         <!-- at zoom 12 render all abutters in the same colour so it doesn't look too psychadelic -->
         <rule k="abutters" v="residential|retail|industrial|commercial|mixed">

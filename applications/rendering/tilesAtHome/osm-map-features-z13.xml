@@ -39,7 +39,9 @@
 
         <!-- Highway shading (abutters) first -->
         <rule k="highway" v="residential">
-            <line class='abutters-residential' />
+            <rule e="segment|way" k="bridge" v="~|no">            
+                <line class='abutters-residential' />
+            </rule>
         </rule>
         <rule k="abutters" v="residential">
             <line class='abutters-residential'/>

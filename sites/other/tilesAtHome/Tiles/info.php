@@ -1,7 +1,18 @@
+<html>
+<head>
+<title>tiles@home - lookup tile meta-information</title>
+<link rel="stylesheet" href="../styles.css">
 <style>
 .chat{color:#AAA;font-size:small;}
 .notes{color:#4F4; font-size:small}
-	</style>
+</style>
+<meta name="robots" content="nofollow,noindex">
+</head>
+<body>
+<div class="all">
+<h1 class="title"><a href="../"><img src="../Gfx/tah.png" alt="tiles@home" width="600" height="109"></a></h1>
+<p class="title">Lookup tile meta-information</p>
+<hr>
 <?php
   
   include("../lib/tilenames.inc");
@@ -18,10 +29,10 @@
   if($Layer=="")$Layer="tile";
 
   print "<p><form action=\"./info.php\" action=\"get\">\n";
-  printf("<input type=\"text\" name=\"x\" size=5 value=\"%d\">\n", $X);
-  printf("<input type=\"text\" name=\"y\" size=5 value=\"%d\">\n", $Y);
-  printf("<input type=\"text\" name=\"z\" size=3 value=\"%d\">\n", $Z);
-  printf("<input type=\"text\" name=\"layer\" size=7 value=\"%s\">\n", htmlentities($Layer));
+  printf("x <input type=\"text\" name=\"x\" size=5 value=\"%d\">\n", $X);
+  printf("y <input type=\"text\" name=\"y\" size=5 value=\"%d\">\n", $Y);
+  printf("z <input type=\"text\" name=\"z\" size=3 value=\"%d\">\n", $Z);
+  printf("layer <input type=\"text\" name=\"layer\" size=7 value=\"%s\">\n", htmlentities($Layer));
   print "<input type=\"submit\" value=\"Lookup\">";
   print "</form></p>";
 
@@ -43,7 +54,7 @@
   print "<h2>Tiles on the new disk</h2>\n";
   SearchMetaDB($X,$Y,$Z,$LayerID,0);
   SearchFilesystem($X,$Y,$Z,$LayerID,0);
-  print "<p class=\"notes\">Date and size should match, if the image was uploaded through the proper interface. If database has an entry, but no file exists, it might be on the old filesystem (see below).</p>\n";
+  print "<p class=\"notes\">Date and size should match if the image was uploaded through the proper interface. If database has an entry, but no file exists, it might be on the old filesystem (see below).</p>\n";
   
   // Look for a complete tileset in new system
   if($Z > 12){
@@ -174,3 +185,6 @@
     exit;
   }
 ?>
+</div>
+</body>
+</html>

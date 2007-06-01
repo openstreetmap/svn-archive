@@ -46,7 +46,7 @@
   print "<p class=\"notes\">Date and size should match, if the image was uploaded through the proper interface. If database has an entry, but no file exists, it might be on the old filesystem (see below).</p>\n";
   
   // Look for a complete tileset in new system
-  if($Z != 12){
+  if($Z > 12){
     list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
     if($Valid){
       print "<h2>Tileset-at-once uploads</h2>\n";

@@ -3,11 +3,19 @@
  */
 package at.dallermassl.josm.plugin.surveyor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
+import java.util.Iterator;
+
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.PluginProxy;
 
 import livegps.LiveGpsPlugin;
 
@@ -20,25 +28,52 @@ import livegps.LiveGpsPlugin;
  * @author cdaller
  *
  */
-public class SurveyorPlugin extends LiveGpsPlugin {
+public class SurveyorPlugin {
     
     private static JFrame surveyorFrame;
+    public static final String PREF_KEY_STREET_NAME_FONT_SIZE = "surveyor.way.fontsize";
 
     /**
      * 
      */
     public SurveyorPlugin() {
         super();
-        SurveyorShowAction surveyorAction = new SurveyorShowAction("Surveyor", this);
+        
+        // try to determine if the livegps plugin was already loaded:
+        try {
+            Class.forName("livegps.LiveGpsPlugin");
+        } catch(ClassNotFoundException cnfe) {
+            String message = 
+                tr("SurveyorPlugin depends on LiveGpsPlugin!") + "\n" +
+                tr("LiveGpsPlugin not found, please install and activate.") + "\n" +
+                tr("SurveyorPlugin is disabled for the moment"); 
+            JOptionPane.showMessageDialog(Main.parent, message, tr("SurveyorPlugin"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
+        LiveGpsPlugin gpsPlugin = null;
+        Iterator<PluginProxy> proxyIter = Main.plugins.iterator();
+        while(proxyIter.hasNext()) {
+            Object plugin = proxyIter.next().plugin;
+            if(plugin instanceof LiveGpsPlugin) {
+                gpsPlugin = (LiveGpsPlugin) plugin;
+                break;
+            }
+        }
+        if(gpsPlugin == null) {
+            throw new IllegalStateException("SurveyorPlugin needs LiveGpsPlugin, but could not find it!");
+        }
+        SurveyorShowAction surveyorAction = new SurveyorShowAction("Surveyor", gpsPlugin);
         JMenuItem surveyorMenuItem = new JMenuItem(surveyorAction);
         surveyorAction.putValue(AbstractAction.ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt S"));
 //        surveyorMenuItem.addActionListener(new ActionListener() {
-        getLgpsMenu().addSeparator();
-        getLgpsMenu().add(surveyorMenuItem);
+        gpsPlugin.getLgpsMenu().addSeparator();
+        gpsPlugin.getLgpsMenu().add(surveyorMenuItem);
         
         AutoSaveAction autoSaveAction = new AutoSaveAction("AutoSave LiveData");
         JCheckBoxMenuItem autoSaveMenu = new JCheckBoxMenuItem(autoSaveAction);
-        getLgpsMenu().add(autoSaveMenu);
+        gpsPlugin.getLgpsMenu().add(autoSaveMenu);
         
     }
 

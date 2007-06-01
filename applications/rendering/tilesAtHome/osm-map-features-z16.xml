@@ -859,15 +859,14 @@
                 fill: none;
             }
 
-			.bridge-casing {
-				stroke-linecap: butt;
-				stroke-linejoin: round;
-				stroke: black;
-				stroke-width: 6.5px;
-				fill: none;
-				marker-start: url(#bridge-casing-start);
-				marker-end: url(#bridge-casing-end);
-			}
+            .bridge-casing {
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                stroke: black;
+                fill: none;
+                marker-start: url(#bridge-casing-start);
+                marker-end: url(#bridge-casing-end);
+            }
 			
 			.bridge-core {
                 stroke-linecap: butt;

@@ -1,30 +1,57 @@
 <project name="livegps" default="dist" basedir=".">
 
-	<target name="dist" depends="compile">
-		<!-- images -->
-		<copy todir="build/images">
-			<fileset dir="images" />
-		</copy>
+  <property name="josm.build.dir" value="../../josm"/>
+  <property name="josm.home.dir" value="${user.home}/.josm"/>
+  <property name="plugin.build.dir" value="build"/>
 
-		<!-- create josm-custom.jar -->
-		<jar destfile="livegps.jar" basedir="build">
-			<manifest>
-                <attribute name="Plugin-Class" value="livegps.LiveGpsPlugin" />
-                <attribute name="Plugin-Description" value="Allow live GPS feed from a gpsd server" />
-			</manifest>
-		</jar>
-	</target>
 
-	<target name="compile" depends="init">
-		<javac srcdir="livegps" classpath="../../josm/bin/" destdir="build" />
-	</target>
+  
+  <target name="dist" depends="compile">
+    <!-- images -->
+    <copy todir="${plugin.build.dir}/images">
+      <fileset dir="images" />
+    </copy>
+      <!-- copy configuration xml files -->
+  	<!-- 
+    <copy todir="${plugin.build.dir}">
+      <fileset dir="src"> 
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    -->
+  	
+    <!-- create plugin jar -->
+    <jar destfile="${ant.project.name}.jar" basedir="${plugin.build.dir}">
+      <manifest>
+        <attribute name="Plugin-Class" value="livegps.LiveGpsPlugin" />
+        <attribute name="Plugin-Description" value="Allow live GPS feed from a gpsd server" />
+        <attribute name="Plugin-Stage" value="50" />
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="init">
-		<mkdir dir="build" />
-	</target>
+  <target name="compile" depends="init">
+    <mkdir dir="${plugin.build.dir}"/>
+    <javac srcdir="livegps" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
+      <classpath>
+        <pathelement path="${josm.build.dir}/build"/>
+        <fileset dir="${josm.build.dir}/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
 
-	<target name="clean">
-		<delete dir="build" />
-	</target>
+  <target name="install" depends="dist">
+    <copy file="${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
+  </target>
+
+  <target name="init">
+  	<mkdir dir="${plugin.build.dir}" />
+  </target>
+
+  <target name="clean">
+    <delete dir="${plugin.build.dir}" />
+  </target>
 
 </project>

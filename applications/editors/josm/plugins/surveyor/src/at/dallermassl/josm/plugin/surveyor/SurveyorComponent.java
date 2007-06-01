@@ -3,6 +3,7 @@
  */
 package at.dallermassl.josm.plugin.surveyor;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
@@ -14,9 +15,12 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import livegps.LiveGpsData;
 
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
 
@@ -31,9 +35,19 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     private int columns = 3;
     private int width = 0;
     private int height = 0;
+    private JLabel streetLabel;
+    private JPanel buttonPanel;
 
     public SurveyorComponent() {
         super();
+        setLayout(new BorderLayout());
+        streetLabel = new JLabel("Way: ");
+        float fontSize = Float.parseFloat(Main.pref.get(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, "35"));
+        Main.pref.put(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, String.valueOf(fontSize));
+        streetLabel.setFont(streetLabel.getFont().deriveFont(35f));
+        add(streetLabel, BorderLayout.NORTH);
+        buttonPanel = new JPanel();
+        add(buttonPanel, BorderLayout.CENTER);
     }
     
     /**
@@ -42,7 +56,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
      */
     public void setRows(String rowsString) {
         rows = Integer.parseInt(rowsString);
-        setLayout(new GridLayout(rows, columns));
+        buttonPanel.setLayout(new GridLayout(rows, columns));
     }
     
     /**
@@ -51,7 +65,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
      */
     public void setColumns(String columnsString) {
         columns = Integer.parseInt(columnsString);
-        setLayout(new GridLayout(rows, columns));
+        buttonPanel.setLayout(new GridLayout(rows, columns));
     }
     
     /**
@@ -82,7 +96,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
 
     public void addButton(ButtonDescription description) {
         description.setGpsDataSource(this);
-        add(description.createComponent());
+        buttonPanel.add(description.createComponent());
     }
     
     
@@ -146,6 +160,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     public void propertyChange(PropertyChangeEvent evt) {
         if("gpsdata".equals(evt.getPropertyName())) {
             gpsData = (LiveGpsData) evt.getNewValue();
+            streetLabel.setText("Way: " + gpsData.getWay());
         }
         
     }

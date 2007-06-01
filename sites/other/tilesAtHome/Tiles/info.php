@@ -1,9 +1,13 @@
-<style>.chat{color:#AAA;font-size:small;}
+<style>
+.chat{color:#AAA;font-size:small;}
+.notes{color:#4F4; font-size:small}
 	</style>
 <?php
   
   include("../lib/tilenames.inc");
   include("../lib/layers.inc");
+  include("../lib/users.inc");
+  include("../lib/versions.inc");
   
   
   $Layer = $_GET["layer"];
@@ -33,47 +37,101 @@
     }
 
   // Open database connection
-  $NoExitOnDbFail = 1;
   include("../connect/connect.php");
-  if(!$DbSuccess){
-    dieMessage("Can't open database to check anything else");
-  }
 
   // look on new filesystem
-  print "<h2>New disk</h2>\n";
+  print "<h2>Tiles on the new disk</h2>\n";
+  SearchMetaDB($X,$Y,$Z,$LayerID,0);
   SearchFilesystem($X,$Y,$Z,$LayerID,0);
-
+  print "<p class=\"notes\">Date and size should match, if the image was uploaded through the proper interface. If database has an entry, but no file exists, it might be on the old filesystem (see below).</p>\n";
+  
+  // Look for a complete tileset in new system
+  if($Z != 12){
+    list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
+    if($Valid){
+      print "<h2>Tileset-at-once uploads</h2>\n";
+      if(SearchMetaDB($X12,$Y12,12,$LayerID,1)){
+        SearchFilesystem($X12,$Y12,12,$LayerID,0);
+      }
+      print "<p class=\"notes\">If there is both a tile and a tileset entry, the one with the latest timestamp is the correct one</p>\n";
+    }
+  }
+  
   // look on old filesystem
-  print "<h2>Old disk</h2>\n";  
+  print "<h2>Images on the old disk</h2>\n";  
   SearchFilesystem($X,$Y,$Z,$LayerID,1);
-
+  print "<p class=\"notes\">If these files exist, they can be shown instead of a blank tile.  Compare with the database details above - if they match, then this is the correct one</p>\n";
+  
   // look for blank tiles
   print "<h2>Blank db</h2>\n";  
-  SearchDatabase($X,$Y,$Z,$LayerID);
-
-
+  SearchBlankTiles($X,$Y,$Z,$LayerID);
+  print "<p class=\"notes\">Blank tiles are shown only if no images exist, and they're recursively-searched so that one tile can cover many zoom levels</p>\n";
+  
   // Look for a file on the filesystem
   function SearchFilesystem($X,$Y,$Z,$LayerID,$Old){
     $LayerName = LayerDir($LayerID);
     $Filename = TileName($X,$Y,$Z,$LayerName,$Old);
+    
     if(file_exists($Filename)){
-      $ActualSize = filesize($Filename);
-      $ActualDate = filemtime($Filename);
-      printf("<p>Found %s (%d bytes, modified %s)</p>", 
-	     htmlentities($Filename), 
-	     $ActualSize,
-	     date("r", $ActualDate));
+      FormatFilenameInfo($Filename);
     }
   }
   
-  function SearchDatabase($X,$Y,$Z,$LayerID){
+  function SearchMetaDB($X,$Y,$Z,$LayerID,$RequireTileset){
+    $Data = MetaInfo($X,$Y,$Z,$LayerID);
+    if(!$Data["valid"]){
+      printf("<p>No entry in meta db</p>\n");
+      return(0);
+    }
+    if($RequireTileset && $Data["tileset"] != 1){
+      printf("<p>None found</p>\n");
+      return(0);
+    }
+    printf("<p>Database says %s</p>\n", FormatMetaInfo($Data));
+    return(1);
+  }
+      
+  function FormatFilenameInfo($Filename){
+      $ActualSize = filesize($Filename);
+      $ActualDate = filemtime($Filename);
+      
+      printf("<p>Found image: %d bytes, modified %s</p>", 
+        $ActualSize,
+        date("Y-m-d H:i:s", $ActualDate));  
+  }
+  function FormatMetaInfo($Data){
+    return(sprintf(
+      "%d bytes, uploaded %s by user %d '<b>%s</b>' with version %d '<b>%s</b>'",
+      $Data["size"],
+      $Data["date"],
+      $Data["user"],
+      htmlentities(lookupUser($Data["user"])),
+      $Data["version"],
+      htmlentities(versionName($Data["version"]))));
+  }
+  
+  function MetaInfo($X,$Y,$Z,$LayerID){
+    $SQL = sprintf("select * from tiles_meta where `x`=%d and `y`=%d and `z`=%d and `type`=%d limit 1;", 
+      $X, $Y, $Z, $LayerID);
+    $Result = mysql_query($SQL);
+    if(mysql_error()){
+      dieMsg("<p>Error in SQL</p>");
+    }
+    if(mysql_num_rows($Result) == 0){
+      return(Array("valid"=>0));
+    }
+    $Data = mysql_fetch_assoc($Result);
+    $Data["valid"] = 1;
+    return($Data);
+  }
+  function SearchBlankTiles($X,$Y,$Z,$LayerID){
 
     $SQL = sprintf("select * from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;", 
       $X, $Y, $Z, $LayerID);
     
     $Result = mysql_query($SQL);
     if(mysql_error()){
-      BlankTile("error");
+      dieMsg("<p>Error in SQL</p>");
     }
     
     if(mysql_num_rows($Result) == 0){
@@ -85,7 +143,7 @@
 	else
 	{
 	  print "<p class=\"chat\">Nothing found at z-$Z, searching upwards...</p>\n";
-          SearchDatabase($X>>1,$Y>>1,$Z-1,$LayerID);
+          SearchBlankTiles($X>>1,$Y>>1,$Z-1,$LayerID);
 	  return;
 	}
     }
@@ -94,16 +152,20 @@
 
     switch($Data["type"]){
       case 1:
-        $TypeName = "sea";
+        $TypeName = "blank sea";
         break;
       case 2:
-        $TypeName = "land";
+        $TypeName = "blank land";
         break;
       default:
-        $TypeName = "unknown type";
+        $TypeName = "an unknown type";
         break;
       }
-    printf("<p>$X,$Y at z-$Z is a blank tile of type %d = %s", $Data["type"], $TypeName);
+    printf("<p>$X,$Y at z-$Z is %s, uploaded by user %d '<b>%s</b>' on %s", 
+      $TypeName,
+      $Data["user"],
+      htmlentities(lookupUser($Data["user"])), 
+      $Data["date"]);
   }
   
 

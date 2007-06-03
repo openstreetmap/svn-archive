@@ -33,6 +33,7 @@
                     (@k!='place') and
                     (@k!='note') and
                     (@k!='historic') and
+                    (@k!='natural') and
                     (@k!='layer') and
                     (@k!='religion') and
                     (@k!='denomination') and

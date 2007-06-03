@@ -26,6 +26,7 @@
                     (@k!='recycling:batteries') and
                     (@k!='recycling:clothes') and
                     (@k!='recycling:paper') and
+                    (@k!='recycling:green_waste') and
                     (@k!='tourism') and
                     (@k!='ele') and
                     (@k!='man_made') and

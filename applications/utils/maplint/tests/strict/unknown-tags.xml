@@ -83,6 +83,7 @@
                     (@k!='bicycle') and
                     (@k!='motorcycle') and
                     (@k!='horse') and
+                    (@k!='osmarender:renderName') and
                     (@k!='name')">
 
                 <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>

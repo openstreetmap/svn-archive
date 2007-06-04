@@ -82,6 +82,7 @@
                     (@k!='foot') and
                     (@k!='bicycle') and
                     (@k!='motorcycle') and
+                    (@k!='motorcar') and
                     (@k!='horse') and
                     (@k!='osmarender:renderName') and
                     (@k!='name')">

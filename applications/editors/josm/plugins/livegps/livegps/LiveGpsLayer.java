@@ -41,6 +41,7 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 	
 	void setCurrentPosition(double lat, double lon)
 	{
+	    //System.out.println("adding pos " + lat + "," + lon);
 		LatLon thisPos = new LatLon(lat, lon);
 		if ((lastPos != null) && (thisPos.equalsEpsilon(lastPos))) {
 			// no change in position
@@ -94,31 +95,35 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 
 	@Override public void paint(Graphics g, MapView mv)
 	{
-		super.paint(g, mv);
-//		int statusHeight = 50;
-//		Rectangle mvs = mv.getBounds();
-//		mvs.y = mvs.y + mvs.height - statusHeight;
-//		mvs.height = statusHeight;
-//		g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f)); 
-//		g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
-		
-		if (lastPoint != null)
-		{
-			Point screen = mv.getPoint(lastPoint.eastNorth);
-			g.setColor(Color.RED);
-			g.drawOval(screen.x-10, screen.y-10,20,20);
-			g.drawOval(screen.x-9, screen.y-9,18,18);
-		}
-        
-//		lbl.setText("gpsd: "+status+" Speed: " + speed + " Course: "+course);
-//		lbl.setBounds(0, 0, mvs.width-10, mvs.height-10);
-//		Graphics sub = g.create(mvs.x+5, mvs.y+5, mvs.width-10, mvs.height-10);
-//		lbl.paint(sub);
-        
-//        if(status != null) {
-//            g.setColor(Color.WHITE);
-//            g.drawString("gpsd: " + status, 5, mv.getBounds().height - 15); // lower left corner
-//        }
+	    //System.out.println("in paint");
+	    synchronized (LiveGpsLock.class) {
+	        //System.out.println("in synced paint");
+	        super.paint(g, mv);
+//	        int statusHeight = 50;
+//	        Rectangle mvs = mv.getBounds();
+//	        mvs.y = mvs.y + mvs.height - statusHeight;
+//	        mvs.height = statusHeight;
+//	        g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f)); 
+//	        g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
+
+	        if (lastPoint != null)
+	        {
+	            Point screen = mv.getPoint(lastPoint.eastNorth);
+	            g.setColor(Color.RED);
+	            g.drawOval(screen.x-10, screen.y-10,20,20);
+	            g.drawOval(screen.x-9, screen.y-9,18,18);
+	        }
+
+//	        lbl.setText("gpsd: "+status+" Speed: " + speed + " Course: "+course);
+//	        lbl.setBounds(0, 0, mvs.width-10, mvs.height-10);
+//	        Graphics sub = g.create(mvs.x+5, mvs.y+5, mvs.width-10, mvs.height-10);
+//	        lbl.paint(sub);
+
+//	        if(status != null) {
+//	        g.setColor(Color.WHITE);
+//	        g.drawString("gpsd: " + status, 5, mv.getBounds().height - 15); // lower left corner
+//	        }
+	    }
 	}
     
     /* (non-Javadoc)

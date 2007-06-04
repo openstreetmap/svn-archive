@@ -19,6 +19,7 @@
   to select the &quot;osmarender&quot; layer using the + to the right of the map.
   </p>
   
+  <p><a href="MapOf/">Download a map image</a> of anywhere you like</p>
   
   <p>Status pages:<ul>
 	<li><a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html">Server status graphs</a></li>

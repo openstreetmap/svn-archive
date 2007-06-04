@@ -80,7 +80,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                 courseLabel.setText(data.getCourse() + "deg");
                 
                 String wayString = data.getWay();
-                if(wayString.length() == 0) {
+                if(wayString.length() > 0) {
                     wayLabel.setText(wayString);
                 } else {
                     wayLabel.setText("unknown");

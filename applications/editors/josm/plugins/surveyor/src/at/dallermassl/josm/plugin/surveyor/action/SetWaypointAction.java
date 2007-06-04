@@ -19,6 +19,8 @@ import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 
 import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
+import at.dallermassl.josm.plugin.surveyor.SurveyorPlugin;
+import at.dallermassl.josm.plugin.surveyor.action.gui.WaypointDialog;
 
 /**
  * Action that sets a marker into a marker layer. The first parameter of the action
@@ -30,6 +32,7 @@ import at.dallermassl.josm.plugin.surveyor.GpsActionEvent;
 public class SetWaypointAction extends AbstractSurveyorAction {
     private MarkerLayer markerLayer;
     public static final String MARKER_LAYER_NAME = "surveyorwaypointlayer";
+    private WaypointDialog dialog;
     
     /**
      * Default Condstructor
@@ -56,9 +59,19 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             }
         }
         
+        if(dialog == null) {
+            dialog = new WaypointDialog();
+        }
+        
+        String markerText = markerTitle;
+        String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), "Waypoint Description");
+        if(inputText != null && inputText.length() > 0) {
+            markerText = markerText + " " + inputText;
+        }
+        
         String iconName = getParameters().size() > 1 ? getParameters().get(1) : null;
         synchronized(LiveGpsLock.class) {
-            layer.data.add(new Marker(event.getCoordinates(), markerTitle, iconName));
+            layer.data.add(new Marker(event.getCoordinates(), markerText, iconName));
         }
         Main.map.repaint();
     }

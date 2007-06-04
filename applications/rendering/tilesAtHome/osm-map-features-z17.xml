@@ -35,7 +35,7 @@
 
     <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-    <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
+    <rule e="node|way" k="osmarender:render" v="~|yes">
 
 
         <!-- Landuse -->
@@ -569,7 +569,7 @@
             </rule>
         </rule>
         <rule e="node" k="amenity" v="parking">
-            <symbol xlink:href="#parking" width='4px' height='4px' transform='translate(-2,-2)' />
+            <symbol xlink:href="#parking" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
         <rule e="node" k="amenity" v="fuel">
             <symbol xlink:href="#petrolStation" width='3px' height='3px' transform='translate(-1.5,-1.5)' />

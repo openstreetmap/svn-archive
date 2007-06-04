@@ -35,24 +35,11 @@
 
     <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-    <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
+    <rule e="node|way" k="osmarender:render" v="~|yes">
 
         <!-- Draw land areas first -->
         <rule e="way" k="natural" v="land">
             <area class='natural-land' />
-        </rule>
-
-
-        <!-- Highway shading (abutters) -->
-	<!-- highway=residential implies abutters=residential except on bridges -->
-        <rule k="highway" v="residential">
-            <rule e="segment|way" k="bridge" v="~|no">            
-                <line class='abutters-all' />
-            </rule>
-        </rule>
-        <!-- at zoom 12 render all abutters in the same colour so it doesn't look too psychadelic -->
-        <rule k="abutters" v="residential|retail|industrial|commercial|mixed">
-            <line class='abutters-all' />
         </rule>
 
 
@@ -450,15 +437,6 @@
             }
 
 
-            /* Abutters */
-            .abutters-all {
-                stroke-width: 30px;
-                stroke-linecap: round;
-                stroke: #f0f0f0;
-                fill: none;
-            }
-
-
             /* Bridge casing */
             .bridge-casing-35 {
                 stroke-width: 24px;
@@ -650,7 +628,7 @@
 
             .highway-primary-core {
                 stroke-width: 13px;
-                stroke: #f39d9d;
+                stroke: #e46d71;
             }
 
             .highway-secondary-casing {

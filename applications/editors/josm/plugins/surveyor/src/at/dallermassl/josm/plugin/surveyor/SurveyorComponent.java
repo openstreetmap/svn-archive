@@ -31,8 +31,8 @@ import org.xml.sax.SAXException;
 public class SurveyorComponent extends JComponent implements PropertyChangeListener, GpsDataSource {
     private static final long serialVersionUID = 4539838472057529042L;
     private LiveGpsData gpsData;
-    private int rows = 3;
-    private int columns = 3;
+    private int rows = 0;
+    private int columns = 0;
     private int width = 0;
     private int height = 0;
     private JLabel streetLabel;
@@ -64,6 +64,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
      * @param columnsString the column string.
      */
     public void setColumns(String columnsString) {
+        System.out.println("setting columns to " +columnsString);
         columns = Integer.parseInt(columnsString);
         buttonPanel.setLayout(new GridLayout(rows, columns));
     }
@@ -95,6 +96,9 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     }
 
     public void addButton(ButtonDescription description) {
+        if(rows == 0 && columns == 0) {
+            setColumns("4");
+        }
         description.setGpsDataSource(this);
         buttonPanel.add(description.createComponent());
     }

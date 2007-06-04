@@ -37,30 +37,7 @@
 
     <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-    <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
-
-        <!-- Highway shading (abutters) first -->
-        <rule k="highway" v="residential">
-            <rule e="segment|way" k="bridge" v="~|no">            
-                <line class='abutters-residential' />
-            </rule>
-        </rule>
-        <rule k="abutters" v="residential">
-            <line class='abutters-residential'/>
-        </rule>
-        <rule k="abutters" v="retail">
-            <line class='abutters-retail'/>
-        </rule>
-        <rule k="abutters" v="industrial">
-            <line class='abutters-industrial'/>
-        </rule>
-        <rule k="abutters" v="commercial">
-            <line class='abutters-commercial'/>
-        </rule>
-        <rule k="abutters" v="mixed">
-            <line class='abutters-mixed'/>
-        </rule>
-
+    <rule e="node|way" k="osmarender:render" v="~|yes">
 
         <!-- Landuse -->
         <rule e="way" k="landuse" v="residential">
@@ -617,47 +594,6 @@
                 stroke-dasharray: 0.5,0.5;
             }
 
-            .abutters-residential {
-                stroke-width: 40px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #f2f2f2;
-                fill: none;
-            }
-
-            /* Abutters */
-            .abutters-retail {
-                stroke-width: 40px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #ffebeb;
-                fill: none;
-            }
-
-            .abutters-industrial {
-                stroke-width: 40px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #ecd8ff;
-                fill: none;
-            }
-
-            .abutters-commercial {
-                stroke-width: 40px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #fcffc9;
-                fill: none;
-            }
-
-            .abutters-mixed {
-                stroke-width: 40px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #d8feff;
-                fill: none;
-            }
-
 
             /* Bridge casing */
             .bridge-casing-35 {
@@ -877,7 +813,7 @@
 
             .highway-primary-core {
                 stroke-width: 4px;
-                stroke: #f39d9d;
+                stroke: #e46d71;
             }
 
             .highway-primary-ref-casing {

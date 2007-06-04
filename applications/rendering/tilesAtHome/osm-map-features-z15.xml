@@ -35,7 +35,7 @@
 
     <!-- Select all nodes, waysegments and ways (unless they have an osmarender:render=no tag) -->
     <!-- If you really want to render segments then you will need to add segment to the element list, but please don't - tag the ways instead. -->
-    <rule e="node|waysegment|way" k="osmarender:render" v="~|yes">
+    <rule e="node|way" k="osmarender:render" v="~|yes">
 
 
         <!-- Landuse -->
@@ -632,47 +632,6 @@
                 stroke-dasharray: 0.5,0.5;
             }
 
-            .abutters-residential {
-                stroke-width: 9px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #f2f2f2;
-                fill: none;
-            }
-
-            /* Abutters */
-            .abutters-retail {
-                stroke-width: 9px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #ffebeb;
-                fill: none;
-            }
-
-            .abutters-industrial {
-                stroke-width: 9px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #ecd8ff;
-                fill: none;
-            }
-
-            .abutters-commercial {
-                stroke-width: 9px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #fcffc9;
-                fill: none;
-            }
-
-            .abutters-mixed {
-                stroke-width: 9px;
-                stroke-linejoin: butt;
-                stroke-linecap: round;
-                stroke: #d8feff;
-                fill: none;
-            }
-
 
             /* Bridge casing */
             .bridge-casing-35 {
@@ -896,7 +855,7 @@
 
             .highway-primary-core {
                 stroke-width: 4.75px;
-                stroke: #f39d9d;
+                stroke: #e46d71;
             }
 
             .highway-primary-name {

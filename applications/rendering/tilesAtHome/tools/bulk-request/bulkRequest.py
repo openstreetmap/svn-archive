@@ -32,7 +32,7 @@ def go(xmin,ymin,xmax,ymax,xskip,yskip,name):
     for y in range(ystart,ymax+1):
       if not count%50:
         checkOutstanding()
-      print "%s,%s # (%s):" % (x,y,count),
+      print "%s,%s # (%s):" % (x,y,count+1),
       sys.stdout.flush()
       url = "http://dev.openstreetmap.org/~ojw/NeedRender/?x=%s&y=%s&priority=2&src=bulk0.1_%s" % (x,y,name)
       startTime = time.time()

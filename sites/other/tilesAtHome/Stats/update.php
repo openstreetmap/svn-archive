@@ -19,12 +19,10 @@ function ExportUserlist(){
 }
 
 function UpdateStats(){
-  if(0)
     QueryIntoZip(
       "select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version`, `tileset` from `tiles_meta`",
       "/home/ojw/public_html/Stats/Data/latest.txt");
     
-  if(1)
     QueryIntoZip(
       "select `x`, `y`, `z`, `layer`, unix_timestamp(`date`) as `date`, `user`, `type` from `tiles_blank`",
       "/home/ojw/public_html/Stats/Data/blank_tiles.txt");

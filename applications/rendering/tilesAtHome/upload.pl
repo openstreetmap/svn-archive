@@ -138,7 +138,7 @@ else
             if ($failures)
             {
                 $sleepdelay=($failures > 13) ? 10800 : (2 ** $failures);
-                $sleepdelay += rand($sleepdelay/4);
+                $sleepdelay += int(rand($sleepdelay/4));
                 statusMessage($failures . " consecutive upload failures, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 sleep ($sleepdelay);
             }

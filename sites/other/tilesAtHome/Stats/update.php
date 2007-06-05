@@ -6,11 +6,11 @@ if($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]){
 }
 
 include("../connect/connect.php");
+include("../lib/log.inc");
 
 header("Content-type: text/plain");
 ExportUserlist();
 UpdateStats();
-UpdateBlank();
 
 function ExportUserlist(){
   QueryInto(
@@ -19,29 +19,21 @@ function ExportUserlist(){
 }
 
 function UpdateStats(){
-  set_time_limit(10 * 60);
-  $Filename = "/home/ojw/public_html/Stats/Data/latest.txt";
-  
-  if(!QueryInto("select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version` from `tiles_meta`", $Filename))
-    return(0);
-  
-  $CompressedFilename = $Filename.".gz";
-  
-  system("gzip -f $Filename");
-  
-  if(file_exists($Filename)){
-    unlink($Filename);
-    print "Textfile still exists after gzip\n";
-    return(0);
-  }
-  return(1);
+  if(0)
+    QueryIntoZip(
+      "select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version`, `tileset` from `tiles_meta`",
+      "/home/ojw/public_html/Stats/Data/latest.txt");
+    
+  if(1)
+    QueryIntoZip(
+      "select `x`, `y`, `z`, `layer`, unix_timestamp(`date`) as `date`, `user`, `type` from `tiles_blank`",
+      "/home/ojw/public_html/Stats/Data/blank_tiles.txt");
 }
 
-function UpdateBlank(){
-  set_time_limit(10 * 60);
-  $Filename = "/home/ojw/public_html/Stats/Data/latest_blank.txt";
+function QueryIntoZip($SQL, $Filename){
+  set_time_limit(30 * 60);
   
-  if(!QueryInto("select `x`, `y`, `z`, `type`, `size`, unix_timestamp(`date`) as `date`, `user`, `version` from `tiles_blank`", $Filename))
+  if(!QueryInto($SQL, $Filename))
     return(0);
   
   $CompressedFilename = $Filename.".gz";
@@ -50,7 +42,7 @@ function UpdateBlank(){
   
   if(file_exists($Filename)){
     unlink($Filename);
-    print "Textfile still exists after gzip\n";
+    logMsg("Textfile still exists after gzip\n",2);
     return(0);
   }
   return(1);
@@ -66,7 +58,7 @@ function QueryInto($SqlSnippet, $Filename){
   
   $Result = mysql_query($SQL);
   if(mysql_error()){
-    print mysql_error() . "\n";
+    logMsg(mysql_error(), 2);
     return(0);
     }
   return(1);

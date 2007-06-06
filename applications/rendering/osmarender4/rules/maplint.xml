@@ -52,6 +52,12 @@
             </rule>
         </layer>
 
+        <layer name="Todo">
+            <rule e="node" k="todo" v="*">
+                <circle r="4" class="maplint-node-todo"/>
+            </rule>
+        </layer>
+
         <layer name="Maplint">
             <rule e="way" k="maplint:notice" v="*">
                 <line class="maplint-way-notice-casing"/>
@@ -167,7 +173,7 @@
         </rule>
 
         <layer name="Maplint node dots">
-            <rule e="node" k="maplint:notice|maplint:warning|maplint:error" v="*">
+            <rule e="node" k="maplint:notice|maplint:warning|maplint:error|todo" v="*">
                 <circle r="0.8" class="maplint-node-dot"/>
             </rule>
         </layer>
@@ -406,6 +412,10 @@
 
             .maplint-node-notice {
                 fill: #e2f91d;
+            }
+
+            .maplint-node-todo {
+                fill: #0000e0;
             }
 
             .maplint-node-dot {

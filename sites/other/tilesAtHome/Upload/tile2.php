@@ -28,7 +28,7 @@ if(1){
   if($Load < 0){
     logMsg("Load average failed", 4);
   }
-  elseif($Load > 3){
+  elseif($Load > 2.7){
     AbortWithError(503, "Server is very very busy...");
   }
 }

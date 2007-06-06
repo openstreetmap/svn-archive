@@ -88,6 +88,9 @@ my $progressPercent = 0;
 my $progstart = time();
 my $dirent; 
 
+# keep track of the server time for current job
+my $JobTime;
+
 # hash for MagicMkdir
 my %madeDir;
 
@@ -424,6 +427,9 @@ sub GenerateTileset
         }
     }
   
+    # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
+    $JobTime = [stat $DataFile]->[9];
+    
     # Check for correct UTF8 (else inkscape will run amok later)
     # FIXME: This doesn't seem to catch all string errors that inkscape trips over.
     statusMessage("Checking for UTF-8 errors in $DataFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
@@ -764,6 +770,8 @@ sub DownloadFile
     {
         killafile($File);
     }
+    # Note: mirror sets the time on the file to match the server time. This
+    # is important for the handling of JobTime later.
 		 $ua->mirror($URL, $File);
 
     doneMessage(sprintf("done, %d bytes", -s $File));
@@ -1142,7 +1150,8 @@ sub splitImageX
 	};
 	}
     }
-     
+    # Assign the job time to this file
+    utime $JobTime, $JobTime, $Filename;
   }
   undef $SubImage;
   # tell the rendering queue wether the tiles are empty or not

@@ -7,6 +7,8 @@
         Find ways with tag highway=residential, but without a name tag.
     </maplint:desc>
 
+    <maplint:garmin short="RESNONAME" icon="Navaid, White"/>
+
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
             <maplint:result/>

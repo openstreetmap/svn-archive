@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="main" id="place-of-worship-without-religion" version="1" severity="warning"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Place of worship without associated religion key.
+    </maplint:desc>
+
+    <maplint:garmin short="PWNOREL" icon="Navaid, White"/>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:if test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

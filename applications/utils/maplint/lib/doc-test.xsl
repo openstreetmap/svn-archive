@@ -62,12 +62,25 @@
                     <xsl:sort select="@xml:lang"/>
                 </xsl:apply-templates>
             </table>
+
+            <xsl:if test="maplint:garmin">
+                <table class="description">
+                    <tr>
+                        <th>Garmin:</th>
+                        <td>
+                            <xsl:value-of select="maplint:garmin/@short"/>
+                            <xsl:text> / </xsl:text>
+                            <xsl:value-of select="maplint:garmin/@icon"/>
+                        </td>
+                    </tr>
+                </table>
+            </xsl:if>
         </xsl:if>
     </xsl:template>
 
     <xsl:template match="maplint:desc">
         <tr>
-            <td><xsl:value-of select="@xml:lang"/></td>
+            <th><xsl:value-of select="@xml:lang"/></th>
             <td><xsl:value-of select="normalize-space(text())"/></td>
         </tr>
     </xsl:template>

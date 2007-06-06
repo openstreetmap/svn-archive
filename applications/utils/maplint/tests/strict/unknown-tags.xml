@@ -9,10 +9,14 @@
         The list of known tags is currently incomplete.
     </maplint:desc>
 
+    <maplint:garmin short="UNKNTAG" icon="Skull and Crossbones"/>
+
     <maplint:check data="node" type="application/xsl+xml">
         <xsl:for-each select="tag">
             <xsl:if test="(@k!='created_by') and
                     (@k!='converted_by') and
+                    (@k!='todo') and
+                    (@k!='note') and
                     (@k!='highway') and
                     (@k!='railway') and
                     (@k!='waterway') and
@@ -32,7 +36,6 @@
                     (@k!='man_made') and
                     (@k!='sport') and
                     (@k!='place') and
-                    (@k!='note') and
                     (@k!='historic') and
                     (@k!='natural') and
                     (@k!='layer') and
@@ -84,7 +87,9 @@
                     (@k!='motorcycle') and
                     (@k!='motorcar') and
                     (@k!='horse') and
+                    (@k!='surface') and
                     (@k!='osmarender:renderName') and
+                    (@k!='osmarender:nameDirection') and
                     (@k!='name')">
 
                 <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>

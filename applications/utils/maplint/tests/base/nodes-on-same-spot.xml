@@ -9,6 +9,8 @@
         with the same coordinates, there will be three reports, not one.
     </maplint:desc>
 
+    <maplint:garmin short="DBLNOD" icon="Navaid, Violet"/>
+
     <maplint:setup type="application/xsl+xml">
         <xsl:key name="nodesbycoordinates" match="/osm/node" use="concat(@lon,' ', @lat)"/>
     </maplint:setup>

@@ -58,6 +58,10 @@ data/%-maplint-stat.txt: data/%-maplint.osm lib/stat.xsl
 data/%-maplint-report.txt: data/%-maplint.osm lib/report.xsl
 	xsltproc lib/report.xsl $< >$@
 
+data/%-maplint-waypoints.gpx: data/%-maplint.osm lib/convert-to-gpx.xsl
+	xsltproc lib/convert-to-gpx.xsl $< >$@
+
+
 #-----------------------------------------------------------------------------
 #
 # TODO: For installing maplint we need some more CODE
@@ -78,5 +82,6 @@ install:
 distclean: clean
 	echo "Please add an installation routine here"
 	echo "For now this is handled in the upper directory"
+
 
 #-- THE END ------------------------------------------------------------------

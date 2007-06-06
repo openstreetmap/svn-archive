@@ -11,6 +11,8 @@
         Elemente mit leerem Schlüsselwort im Tag.
     </maplint:desc>
 
+    <maplint:garmin short="NOKEY" icon="Navaid, Red"/>
+
     <maplint:check data="any" type="application/xsl+xml">
         <xsl:if test="tag[@k='']">
             <maplint:result>Value=<xsl:value-of select="tag[@k='']/@v"/></maplint:result>

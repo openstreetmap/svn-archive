@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="main" id="poi-without-name" version="1" severity="warning"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Point of Interest such as as church, cinema, or pharmacy without a name.
+    </maplint:desc>
+
+    <maplint:garmin short="POINONAME" icon="Navaid, White"/>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:if test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
+            <maplint:result>
+                <xsl:text>amenity=</xsl:text>
+                <xsl:value-of select="tag[@k='amenity']/@v"/>
+            </maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

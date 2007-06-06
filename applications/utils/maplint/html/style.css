@@ -55,10 +55,19 @@ table.description {
     border-collapse: collapse;
 }
 
+table.description th {
+    width: 10%;
+}
+
 table.description td {
+    width: 90%;
+}
+
+table.description td, table.description th {
     border: 1px solid #e0e0e0;
     padding: 10px;
     vertical-align: top;
+    text-align: left;
 }
 
 .error {

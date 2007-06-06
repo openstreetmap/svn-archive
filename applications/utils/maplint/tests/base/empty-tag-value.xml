@@ -7,6 +7,8 @@
         Elements with empty tag value.
     </maplint:desc>
 
+    <maplint:garmin short="NOVAL" icon="Navaid, Red"/>
+
     <maplint:check data="any" type="application/xsl+xml">
         <xsl:if test="tag[@v='']">
             <maplint:result>Key=<xsl:value-of select="tag[@v='']/@k"/></maplint:result>

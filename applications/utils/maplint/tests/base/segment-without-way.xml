@@ -9,6 +9,8 @@
         more works need to be done.
     </maplint:desc>
 
+    <maplint:garmin short="SEGNOWAY" icon="Navaid, Blue"/>
+
     <maplint:setup type="application/xsl+xml">
         <xsl:key name="segment2way" match="/osm/way" use="seg/@id"/>
     </maplint:setup>

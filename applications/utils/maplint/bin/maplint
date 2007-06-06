@@ -9,6 +9,7 @@ make data/${file}-maplint.osm
 make data/${file}-maplint-with-tags.osm
 make data/${file}-maplint-stat.txt
 make data/${file}-maplint-report.txt
+make data/${file}-maplint-waypoints.gpx
 
 if [ "$OSMARENDER" != '' ]; then
     cd data

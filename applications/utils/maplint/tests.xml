@@ -10,6 +10,8 @@
         Elemente mit leerem Schlüsselwort im Tag.
     </maplint:desc>
 
+    <maplint:garmin short="NOKEY" icon="Navaid, Red"/>
+
     <maplint:check data="any" type="application/xsl+xml">
         <xsl:if test="tag[@k='']">
             <maplint:result>Value=<xsl:value-of select="tag[@k='']/@v"/></maplint:result>
@@ -22,6 +24,8 @@
     <maplint:desc xml:lang="en">
         Elements with empty tag value.
     </maplint:desc>
+
+    <maplint:garmin short="NOVAL" icon="Navaid, Red"/>
 
     <maplint:check data="any" type="application/xsl+xml">
         <xsl:if test="tag[@v='']">
@@ -75,6 +79,8 @@
         with the same coordinates, there will be three reports, not one.
     </maplint:desc>
 
+    <maplint:garmin short="DBLNOD" icon="Navaid, Violet"/>
+
     <maplint:setup type="application/xsl+xml">
         <xsl:key name="nodesbycoordinates" match="/osm/node" use="concat(@lon,' ', @lat)"/>
     </maplint:setup>
@@ -116,6 +122,8 @@
         necessarily an error, but helps with finding places where
         more works need to be done.
     </maplint:desc>
+
+    <maplint:garmin short="SEGNOWAY" icon="Navaid, Blue"/>
 
     <maplint:setup type="application/xsl+xml">
         <xsl:key name="segment2way" match="/osm/way" use="seg/@id"/>
@@ -203,6 +211,8 @@
         Find deprecated tags: class=*
     </maplint:desc>
 
+    <maplint:garmin short="DEPTAG" icon="Shipwreck"/>
+
     <maplint:check data="any" type="application/xsl+xml">
         <xsl:if test="tag/@k='class'">
             <maplint:result>class</maplint:result>
@@ -216,6 +226,8 @@
         This test finds all motorways (highway=motorway) without a ref tag.
     </maplint:desc>
 
+    <maplint:garmin short="MOTNOREF" icon="Navaid, White"/>
+
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:if test="tag[@k='highway' and @v='motorway']">
             <xsl:if test="not(tag[@k='ref'])">
@@ -225,11 +237,46 @@
     </maplint:check>
 
 </maplint:test>
+<maplint:test group="main" id="place-of-worship-without-religion" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Place of worship without associated religion key.
+    </maplint:desc>
+
+    <maplint:garmin short="PWNOREL" icon="Navaid, White"/>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:if test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
+<maplint:test group="main" id="poi-without-name" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Point of Interest such as as church, cinema, or pharmacy without a name.
+    </maplint:desc>
+
+    <maplint:garmin short="POINONAME" icon="Navaid, White"/>
+
+    <maplint:check data="node" type="application/xsl+xml">
+        <xsl:if test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
+            <maplint:result>
+                <xsl:text>amenity=</xsl:text>
+                <xsl:value-of select="tag[@k='amenity']/@v"/>
+            </maplint:result>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
 <maplint:test group="main" id="residential-without-name" version="1" severity="warning">
 
     <maplint:desc xml:lang="en">
         Find ways with tag highway=residential, but without a name tag.
     </maplint:desc>
+
+    <maplint:garmin short="RESNONAME" icon="Navaid, White"/>
 
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:if test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
@@ -246,9 +293,11 @@
         The list of known tags is currently incomplete.
     </maplint:desc>
 
+    <maplint:garmin short="UNKNTAG" icon="Skull and Crossbones"/>
+
     <maplint:check data="node" type="application/xsl+xml">
         <xsl:for-each select="tag">
-            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='dispensing') and                     (@k!='religion') and                     (@k!='military') and                     (@k!='denomination') and                     (@k!='leisure') and                     (@k!='recycling:glass') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='recycling:green_waste') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='religion') and                     (@k!='denomination') and                     (@k!='source') and                     (@k!='is_in') and                     (@k!='time') and                     (@k!='access') and                     (@k!='name')">
+            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='todo') and                     (@k!='note') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='dispensing') and                     (@k!='religion') and                     (@k!='military') and                     (@k!='denomination') and                     (@k!='leisure') and                     (@k!='recycling:glass') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='recycling:green_waste') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='historic') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='religion') and                     (@k!='denomination') and                     (@k!='source') and                     (@k!='is_in') and                     (@k!='time') and                     (@k!='access') and                     (@k!='name')">
                 <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>
         </xsl:for-each>
@@ -256,7 +305,7 @@
 
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:for-each select="tag">
-            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='landuse') and                     (@k!='oneway') and                     (@k!='bridge') and                     (@k!='tunnel') and                     (@k!='leisure') and                     (@k!='junction') and                     (@k!='ref') and                     (@k!='int_ref') and                     (@k!='nat_ref') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='source') and                     (@k!='time') and                     (@k!='abutters') and                     (@k!='maxspeed') and                     (@k!='access') and                     (@k!='foot') and                     (@k!='bicycle') and                     (@k!='motorcycle') and                     (@k!='motorcar') and                     (@k!='horse') and                     (@k!='osmarender:renderName') and                     (@k!='name')">
+            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='landuse') and                     (@k!='oneway') and                     (@k!='bridge') and                     (@k!='tunnel') and                     (@k!='leisure') and                     (@k!='junction') and                     (@k!='ref') and                     (@k!='int_ref') and                     (@k!='nat_ref') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='source') and                     (@k!='time') and                     (@k!='abutters') and                     (@k!='maxspeed') and                     (@k!='access') and                     (@k!='foot') and                     (@k!='bicycle') and                     (@k!='motorcycle') and                     (@k!='motorcar') and                     (@k!='horse') and                     (@k!='surface') and                     (@k!='osmarender:renderName') and                     (@k!='osmarender:nameDirection') and                     (@k!='name')">
 
                 <maplint:result><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>

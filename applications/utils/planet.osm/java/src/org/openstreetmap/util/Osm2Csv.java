@@ -145,7 +145,7 @@ public class Osm2Csv extends MinML2 {
         taglist.append("=");
         taglist.append(v);
         
-        if (doWays) { // extra output of way tags to waytags.csv
+        if (doWays && section == 'w') { // extra output of way tags to waytags.csv
           waytags.print(id);
           waytags.print(",");
           waytags.print(k);

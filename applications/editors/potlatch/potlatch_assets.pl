@@ -13,19 +13,18 @@
 	$ec->nextFrame();
 	$m->addExport($ec,"keyvalue");
 
-	#		Empty movie-clip for pop-up menu
+	#		Empty movie-clip for UI components
 
-	$ec=new SWF::Sprite();
-	$ec->nextFrame();
-	$m->addExport($ec,"menu");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
+	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
 
 	#		Anchor (selected)
 
 	$ec=new SWF::Sprite();
 	$ch=new SWF::Shape();
-	$ch->setRightFill(255,0,0); $ch->movePenTo(-4,-4);
-	$ch->drawLine( 8,0); $ch->drawLine(0, 8);
-	$ch->drawLine(-8,0); $ch->drawLine(0,-8);
+	$ch->setRightFill(255,0,0); $ch->movePenTo(-2,-2);
+	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
+	$ch->drawLine(-4,0); $ch->drawLine(0,-4);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"anchor");
 
@@ -33,9 +32,9 @@
 
 	$ec=new SWF::Sprite();
 	$ch=new SWF::Shape();
-	$ch->setRightFill(0,0,255); $ch->movePenTo(-4,-4);
-	$ch->drawLine( 8,0); $ch->drawLine(0, 8);
-	$ch->drawLine(-8,0); $ch->drawLine(0,-8);
+	$ch->setRightFill(0,0,255); $ch->movePenTo(-2,-2);
+	$ch->drawLine( 4,0); $ch->drawLine(0, 4);
+	$ch->drawLine(-4,0); $ch->drawLine(0,-4);
 	$ec->add($ch); $ec->nextFrame();
 	$m->addExport($ec,"anchorhint");
 
@@ -71,6 +70,162 @@
 	$bq->movePenTo(6,9); $bq->drawLineTo(14,9);
 	$ec->add($bq); $ec->nextFrame();
 	$m->addExport($ec,"zoomout");
+
+	# ------ exclamation sprite
+	
+	$ec=new SWF::Sprite();
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,0,0);
+	$s->movePenTo(20.50,19.73);
+	$s->drawCurveTo(15.70,11.43,9.91,1.39);
+	$s->drawCurveTo(8.92,-0.32,7.70,0.00);
+	$s->drawCurveTo(7.01,0.18,5.98,1.96);
+	$s->drawCurveTo(3.21,6.76,-0.40,13.01);
+	$s->drawCurveTo(-2.56,16.76,-3.35,18.13);
+	$s->drawCurveTo(-3.36,18.14,-3.85,18.92);
+	$s->drawCurveTo(-4.48,19.92,-4.50,20.53);
+	$s->drawCurveTo(-4.54,22.24,-2.43,22.24);
+	$s->drawCurveTo(-2.43,22.24,2.00,22.24);
+	$s->drawCurveTo(2.00,22.24,15.52,22.24);
+	$s->drawCurveTo(15.52,22.24,18.97,22.24);
+	$s->drawCurveTo(20.66,22.24,20.72,20.60);
+	$s->drawCurveTo(20.73,20.15,20.50,19.73);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(18.09,20.01);
+	$s->drawCurveTo(18.09,20.01,-1.84,20.01);
+	$s->drawCurveTo(-1.84,20.01,-1.86,20.01);
+	$s->drawCurveTo(-1.79,19.88,5.59,7.10);
+	$s->drawCurveTo(6.98,4.68,8.10,2.75);
+	$s->drawCurveTo(8.10,2.75,8.11,2.73);
+	$s->drawCurveTo(14.90,14.50,18.07,19.99);
+	$s->drawCurveTo(18.08,19.99,18.09,20.01);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(0,0,0);
+	$s->movePenTo(9.60,17.78);
+	$s->drawCurveTo(9.58,16.10,7.84,16.37);
+	$s->drawCurveTo(6.62,16.56,6.62,17.78);
+	$s->drawCurveTo(6.62,19.46,8.37,19.20);
+	$s->drawCurveTo(9.58,19.00,9.60,17.78);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(0,0,0);
+	$s->movePenTo(9.99,9.04);
+	$s->drawCurveTo(10.34,7.48,8.88,6.80);
+	$s->drawCurveTo(8.18,6.49,7.45,6.75);
+	$s->drawCurveTo(5.86,7.33,6.41,9.72);
+	$s->drawCurveTo(6.44,9.82,6.46,9.93);
+	$s->drawCurveTo(6.47,9.95,7.21,12.89);
+	$s->drawCurveTo(7.61,14.45,7.88,15.52);
+	$s->drawCurveTo(7.93,15.71,8.29,15.55);
+	$s->drawCurveTo(8.34,15.52,8.35,15.49);
+	$s->drawCurveTo(8.35,15.48,8.54,14.74);
+	$s->drawCurveTo(8.56,14.64,8.59,14.56);
+	$s->drawCurveTo(9.02,12.85,9.43,11.25);
+	$s->drawCurveTo(9.84,9.61,9.99,9.04);
+	$ec->add($s);
+	
+	$ec->nextFrame(); $m->addExport($ec,"exclamation");
+
+	# ------ potlatch_rotation sprite
+	
+	$ec=new SWF::Sprite();
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	drawLargeCircle();
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(5.68,0.63);
+	$s->drawLineTo(6.39,-6.49);
+	$s->drawLineTo(-0.72,-5.78);
+	$s->drawLineTo(5.68,0.63);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-4.22,6.41);
+	$s->drawLineTo(-6.41,4.22);
+	$s->drawLineTo(2.80,-5.00);
+	$s->drawLineTo(5.00,-2.80);
+	$s->drawLineTo(-4.22,6.41);
+	$ec->add($s);
+	
+	$ec->nextFrame(); $m->addExport($ec,"rotation");
+	
+	# ------ potlatch_roundabout sprite
+	
+	$ec=new SWF::Sprite();
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(127,127,127);
+	drawLargeCircle();
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-7.44,-0.00);
+	$s->drawLineTo(-6.04,-1.34);
+	$s->drawCurveTo(-6.04,-1.33,-6.03,-1.33);
+	$s->drawCurveTo(-5.94,-1.26,-5.84,-1.18);
+	$s->drawCurveTo(-4.73,-0.35,-4.71,-0.48);
+	$s->drawCurveTo(-4.28,-4.74,0.00,-4.74);
+	$s->drawCurveTo(0.53,-4.74,1.04,-4.62);
+	$s->drawLineTo(2.60,-5.36);
+	$s->drawLineTo(2.17,-7.12);
+	$s->drawCurveTo(1.12,-7.44,0.00,-7.44);
+	$s->drawCurveTo(-5.96,-7.44,-7.27,-1.61);
+	$s->drawCurveTo(-7.44,-0.82,-7.44,-0.00);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(3.68,6.42);
+	$s->drawLineTo(1.82,5.88);
+	$s->drawLineTo(2.33,4.08);
+	$s->drawCurveTo(-1.77,6.45,-4.14,2.34);
+	$s->drawCurveTo(-4.47,1.77,-4.63,1.14);
+	$s->drawCurveTo(-4.66,1.02,-5.98,0.41);
+	$s->drawCurveTo(-6.11,0.35,-6.21,0.31);
+	$s->drawCurveTo(-6.22,0.30,-6.23,0.30);
+	$s->drawCurveTo(-6.23,0.30,-6.23,0.30);
+	$s->drawCurveTo(-6.29,0.35,-6.40,0.47);
+	$s->drawCurveTo(-7.34,1.42,-7.32,1.54);
+	$s->drawCurveTo(-7.07,2.68,-6.48,3.70);
+	$s->drawCurveTo(-3.31,9.20,2.64,6.92);
+	$s->drawCurveTo(3.18,6.71,3.68,6.42);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(3.73,-6.48);
+	$s->drawLineTo(4.19,-4.60);
+	$s->drawCurveTo(4.18,-4.60,4.17,-4.60);
+	$s->drawCurveTo(4.07,-4.55,3.95,-4.50);
+	$s->drawCurveTo(2.66,-3.96,2.77,-3.88);
+	$s->drawCurveTo(5.52,-1.91,4.54,1.34);
+	$s->drawCurveTo(4.38,1.86,4.11,2.33);
+	$s->drawCurveTo(3.97,2.57,3.81,2.79);
+	$s->drawCurveTo(3.71,2.92,3.46,4.63);
+	$s->drawCurveTo(3.43,4.79,3.42,4.92);
+	$s->drawCurveTo(3.41,4.93,3.41,4.94);
+	$s->drawCurveTo(3.41,4.94,3.42,4.94);
+	$s->drawCurveTo(3.50,4.97,3.66,5.02);
+	$s->drawCurveTo(5.04,5.45,5.17,5.33);
+	$s->drawCurveTo(5.92,4.60,6.45,3.68);
+	$s->drawCurveTo(7.79,1.37,7.34,-1.29);
+	$s->drawCurveTo(6.75,-4.74,3.73,-6.48);
+	$ec->add($s);
+	
+	$ec->nextFrame(); $m->addExport($ec,"roundabout");
 
 	#		Scissors (auto-generated from AI-to-Ming script)
 
@@ -1002,41 +1157,6 @@
 
 	# -----	Set up screen layout
 
-	#		Text and font
-	
-	$allchars='';
-	for ($i=32; $i<127; $i++) { $allchars.=chr($i); }
-	
-	$txt=new SWF::TextField();
-	$txt->setHeight(14);
-	$txt->setBounds(300,30);
-	$txt->setColor(0,0,0);
-	$txt->setFont(new SWF::Font("fonts/$fontroot.fdb"));
-	$txt->addChars($allchars);
-	$txt->addString(" ");
-	$i=$m->add($txt);
-	$i->moveTo(0,180);
-
-	$txt=new SWF::TextField();
-	$txt->setHeight(14);
-	$txt->setBounds(300,30);
-	$txt->setColor(0,0,0);
-	$txt->setFont(new SWF::Font("fonts/${fontroot}_Bold.fdb"));
-	$txt->addChars($allchars);
-	$txt->addString(" ");
-	$i=$m->add($txt);
-	$i->moveTo(0,180);
-
-	$txt=new SWF::TextField();
-	$txt->setHeight(14);
-	$txt->setBounds(300,30);
-	$txt->setColor(0,0,0);
-	$txt->setFont(new SWF::Font("fonts/${fontroot}_Italic.fdb"));
-	$txt->addChars($allchars);
-	$txt->addString(" ");
-	$i=$m->add($txt);
-	$i->moveTo(0,180);
-
 	#		Properties window
 
 	$ch=new SWF::Shape();
@@ -1171,6 +1291,7 @@
 	
 	$ec=new SWF::Sprite();
 	drawPen();
+	$s=new SWF::Shape();
 	$s->setLine(2,0,0,0);
 	$s->setRightFill(255,255,255);
 	$s->movePenTo(7,16); $s->drawCircle(2);
@@ -1179,6 +1300,7 @@
 	# ------ penso pointer (solid o)
 	
 	$ec=new SWF::Sprite();
+	$s=new SWF::Shape();
 	drawPen();
 	$s->setLine(2,0,0,0);
 	$s->movePenTo(7,16); $s->drawCircle(2);

@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 21.5.2007 (queue uploads; clicks less sensitive)
+	# last update 5.6.2007 (use _sans; direction arrow; pointer option)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -109,6 +109,7 @@
 	var newnodeid=-2;				// new node ID (for those not yet saved)
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
+	var custompointer=true;			// use custom pointers?
 	var redopropertywindow=0;		// need to redraw property window after deletion?
 	var savedProperties=new Array();// clipboard for properties
 	var tolerance=4/Math.pow(2,_root.scale-12);
@@ -149,13 +150,13 @@
 	_root.i_scissors.onRollOut =function() { clearFloater(); };
 
 	_root.attachMovie("gps","i_gps",36);
-	with (_root.i_gps) { _x=40; _y=583; };
+	with (_root.i_gps) { _x=65; _y=583; };
 	_root.i_gps.onPress   =function() { loadGPS(); };
 	_root.i_gps.onRollOver=function() { setFloater("Show GPS tracks (G)"); };
 	_root.i_gps.onRollOut =function() { clearFloater(); };
 
 	_root.attachMovie("prefs","i_prefs",37);
-	with (_root.i_prefs) { _x=65; _y=583; };
+	with (_root.i_prefs) { _x=90; _y=583; };
 	_root.i_prefs.onPress   =function() { openOptionsWindow(); };
 	_root.i_prefs.onRollOver=function() { setFloater("Set options (choose the map background)"); };
 	_root.i_prefs.onRollOut =function() { clearFloater(); };
@@ -171,6 +172,16 @@
 	_root.i_repeatattr.onPress=function() { repeatAttributes(); };
 	_root.i_repeatattr.onRollOver=function() { setFloater("Repeat attributes from the previously selected way (R)"); };
 	_root.i_repeatattr.onRollOut =function() { clearFloater(); };
+
+	_root.attachMovie("exclamation","i_warning",35);
+	with (_root.i_warning) { _x=10; _y=545; _visible=false; };
+
+	_root.attachMovie("rotation","i_direction",39);
+	with (_root.i_direction) { _x=40; _y=583; _rotation=-45; _visible=true; _alpha=50; };
+
+	_root.attachMovie("roundabout","i_circular",40);
+	with (_root.i_circular) { _x=40; _y=583; _rotation=-45; _visible=false; };
+
 
 //	_root.attachMovie("nextattr","i_nextattr",35);
 //	with (_root.i_nextattr) { _x=690; _y=545; };
@@ -198,9 +209,8 @@
 		text="HERE";
 	};
 
-	_root.createTextField('floater',0xFFFFFF,15,30,200,17);
+	_root.createTextField('floater',0xFFFFFF,15,30,200,18);
 	with (floater) {
-		embedFonts=true;
 		background=true;
 		backgroundColor=0xFFEEEE;
 		border=true;
@@ -212,30 +222,30 @@
 
 	// Text formats
 	
-	plainText =new TextFormat(); plainText.color =0x000000; plainText.size =14; plainText.font ="$fontroot";
-	plainSmall=new TextFormat(); plainSmall.color=0x000000;	plainSmall.size=12; plainSmall.font="$fontroot";
-	greySmall =new TextFormat(); greySmall.color =0x888888;	greySmall.size =12; greySmall.font ="$fontroot";
-	boldText  =new TextFormat(); boldText.color  =0x000000; boldText.size  =14; boldText.font  ="$fontroot"; boldText.italic =true;	// italics and bold are wrong way round!
-	boldSmall =new TextFormat(); boldSmall.color =0x000000; boldSmall.size =12; boldSmall.font ="$fontroot"; boldSmall.italic=true;	//  |
-	boldWhite =new TextFormat(); boldWhite.color =0xFFFFFF; boldWhite.size =12; boldWhite.font ="$fontroot"; boldWhite.italic=true;	//  |
-	menu_on	  =new TextFormat(); menu_on.color   =0x000000; menu_on.size   =12; menu_on.font   ="$fontroot"; menu_on.italic  =true;	//  |
-	menu_off  =new TextFormat(); menu_off.color  =0xFFFFFF; menu_off.size  =12; menu_off.font  ="$fontroot"; menu_off.italic =true;	//  |
+	plainText =new TextFormat(); plainText.color =0x000000; plainText.size =14; plainText.font ="_sans";
+	plainSmall=new TextFormat(); plainSmall.color=0x000000;	plainSmall.size=12; plainSmall.font="_sans";
+	greySmall =new TextFormat(); greySmall.color =0x888888;	greySmall.size =12; greySmall.font ="_sans";
+	boldText  =new TextFormat(); boldText.color  =0x000000; boldText.size  =14; boldText.font  ="_sans"; boldText.bold =true;	// italics and bold are wrong way round!
+	boldSmall =new TextFormat(); boldSmall.color =0x000000; boldSmall.size =12; boldSmall.font ="_sans"; boldSmall.bold=true;	//  |
+	boldWhite =new TextFormat(); boldWhite.color =0xFFFFFF; boldWhite.size =12; boldWhite.font ="_sans"; boldWhite.bold=true;	//  |
+	menu_on	  =new TextFormat(); menu_on.color   =0x000000; menu_on.size   =12; menu_on.font   ="_sans"; menu_on.bold  =true;	//  |
+	menu_off  =new TextFormat(); menu_off.color  =0xFFFFFF; menu_off.size  =12; menu_off.font  ="_sans"; menu_off.bold =true;	//  |
 
 	// Text fields
 
 	populatePropertyWindow('');	
 
 	_root.createTextField('waysloading',22,580,5,150,20);
-	with (_root.waysloading) { embedFonts=true; text="loading ways"; setTextFormat(plainSmall); type='dynamic'; _visible=false; };
+	with (_root.waysloading) { text="loading ways"; setTextFormat(plainSmall); type='dynamic'; _visible=false; };
 
-	_root.createTextField('tooltip',41,580,25,150,100);
-	with (_root.tooltip  ) { embedFonts=true; text=""; setTextFormat(plainSmall); selectable=false; type='dynamic'; };
+	_root.createTextField('tooltip',46,580,25,150,100);
+	with (_root.tooltip  ) { text=""; setTextFormat(plainSmall); selectable=false; type='dynamic'; };
 
 	_root.createTextField('t_type',23,5,505,220,20);
-	with (_root.t_type	 ) { embedFonts=true; text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
+	with (_root.t_type	 ) { text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
 	
 	_root.createTextField('t_details',24,5,523,220,20);
-	with (_root.t_details) { embedFonts=true; text="Potlatch v0.1"; setTextFormat(plainText); };
+	with (_root.t_details) { text="Potlatch v0.1"; setTextFormat(plainText); };
 	
 	_root.createEmptyMovieClip("properties",50);
 	with (_root.properties) { _x=110; _y=525; }; // 110,505
@@ -459,6 +469,28 @@
 		}
 	};
 
+	OSMWay.prototype.direction=function() {
+		if (this.path.length<2) {
+			_root.i_circular._visible=false;
+			_root.i_direction._visible=true;
+			_root.i_direction._alpha=50;
+		} else {
+			dx=this.path[this.path.length-1][0]-this.path[0][0];
+			dy=this.path[this.path.length-1][1]-this.path[0][1];
+			if (dx==0 && dy==0) {
+				_root.i_circular._visible=true;
+				_root.i_direction._visible=false;
+			} else {
+				_root.i_direction._rotation=180-Math.atan2(dx,dy)*(180/Math.PI)-45;
+				_root.i_direction._alpha=100;
+				_root.i_direction._visible=true;
+				_root.i_circular._visible=false;
+			}
+		}
+//		_root.chat.text="From "+this.path[0][0]+","+this.path[0][1];
+//		_root.chat.text+=" to "+this.path[this.path.length-1][0]+","+this.path[this.path.length-1][1];
+	};
+
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function() {
@@ -587,6 +619,7 @@
 				}
 			}
 		}
+		this.direction();
 	};
 
 	OSMWay.prototype.highlightPoints=function(d,atype) {
@@ -713,6 +746,9 @@
 		wayselected=0;
 		pointselected=-2;
 		removeMovieClip(_root.map.highlight);
+		_root.i_circular._visible=false;
+		_root.i_direction._visible=true;
+		_root.i_direction._alpha=50;
 		clearTooltip();
 		setTypeText("","");
 		populatePropertyWindow('');
@@ -735,6 +771,56 @@
 	// =====================================================================================
 	// Standard UI
 
+	// Checkboxes
+	// UICheckbox.init(x,y,text,state,changefunction)
+
+	UICheckbox=function() {
+	};
+	UICheckbox.prototype=new MovieClip();
+	UICheckbox.prototype.init=function(x,y,prompttext,state,changefunction) {
+		this._x=x;
+		this._y=y;
+		this.state=state;
+		this.doOnChange=changefunction;
+		this.createTextField('prompt',0,13,-5,200,19);
+		this.prompt.text=prompttext;
+		this.prompt.setTextFormat(plainSmall);
+		tw=this.prompt._width=this.prompt.textWidth+5;
+
+		this.createEmptyMovieClip('hitregion',1);
+		with (this.hitregion) {
+			clear(); beginFill(0,0);
+			moveTo(0,0); lineTo(tw+15,0);
+			lineTo(tw+15,15); lineTo(0,15);
+			endFill();
+ 		};
+		this.hitregion.onPress=function() {
+			this._parent.state=!this._parent.state;
+			this._parent.draw();
+			this._parent.doOnChange(this._parent.state);
+		};
+
+		this.createEmptyMovieClip('box',2);
+		this.draw();
+	};
+	UICheckbox.prototype.draw=function() {
+		with (this.box) {
+			clear();
+			lineStyle(2,0,100);
+			moveTo(1,0);
+			lineTo(9,0);
+			lineTo(9,9);
+			lineTo(0,9);
+			lineTo(0,0);
+			if (this.state==true) {
+				lineStyle(2,0,100);
+				moveTo(1,1); lineTo(8,8);
+				moveTo(8,1); lineTo(1,8);
+			}
+		}
+	};
+	Object.registerClass("checkbox",UICheckbox);
+
 	// Pop-up menu
 	// UIMenu.init(x,y,selected option,array of options,tooltip,
 	//			   function to call on close,width)
@@ -753,11 +839,10 @@
 		// create child for each option
 		this.tw=0;
 		for (i=0; i<options.length; i+=1) {
-			this.opened.createTextField(i,i+1,3,i*15+1,100,15);
+			this.opened.createTextField(i,i+1,3,i*16-1,100,19);
 			this.opened[i].text=options[i];
 			this.opened[i].background=true;
 			this.opened[i].backgroundColor=0x888888;
-			this.opened[i].embedFonts=true;
 			this.opened[i].setTextFormat(menu_off);
 			if (this.opened[i].textWidth*1.05>this.tw) { this.tw=this.opened[i].textWidth*1.05; }
 		};
@@ -767,8 +852,9 @@
 		// create box around menu
 		this.opened.createEmptyMovieClip("box",0);
 		w=this.tw+7;
-		h=options.length*15+5;
+		h=options.length*16+5;
 		with (this.opened.box) {
+			_y=-2;
 			clear();
 			beginFill(0x888888,100);
 			lineTo(w,0); lineTo(w,h);
@@ -788,12 +874,11 @@
 			moveTo(w-11,7); lineTo(w-3,7);
 			lineTo(w-7,13); lineTo(w-11,7); endFill();
 		};
-		this.closed.createTextField("current",2,3,0,this.tw,17);
+		this.closed.createTextField("current",2,3,-1,this.tw,19);
 		this.closed.current.text=options[selected];
-		this.closed.current.embedFonts=true;
 		this.closed.current.setTextFormat(menu_off);
-		this.closed.current.background=true;
-		this.closed.current.backgroundColor=0x888888;
+		this.closed.current.background=false;
+//		this.closed.current.backgroundColor=0x888888;
 
 		this.onPress=function() { clearFloater(); this.openMenu(); };
 		this.onRelease=function() { this.closeMenu(); };
@@ -801,7 +886,6 @@
 		this.onMouseMove=function() { this.trackMenu(); };
 		this.doOnClose=closefunction;
 		this.opened[this.selected].backgroundColor=0xDDDDDD;
-		this.opened[this.selected].embedFonts=true;
 		this.opened[this.selected].setTextFormat(menu_on);
 
 		if (tooltip!='') {
@@ -933,7 +1017,7 @@
 
 		_root.modal.box.ok.createTextField("oktext",1,14,0,40,20);
 		with (_root.modal.box.ok.oktext) {
-			embedFonts=true; text="Ok"; setTextFormat(boldWhite);
+			text="Ok"; setTextFormat(boldWhite);
 			selectable=false; type='dynamic';
 		}
 	}
@@ -944,18 +1028,22 @@
 	}
 
 	function openOptionsWindow() {
-		createModalDialogue(270,70);
-		_root.modal.box.createTextField("prompt1",2,10,10,80,20);
+		createModalDialogue(275,80);
+		_root.modal.box.createTextField("prompt1",2,7,10,80,20);
 		with (_root.modal.box.prompt1) {
-			embedFonts=true; text="Background:"; setTextFormat(plainSmall);
+			text="Background:"; setTextFormat(plainSmall);
 			selectable=false; type='dynamic';
 		}
 		_root.modal.box.attachMovie("menu","background",3);
-		_root.modal.box.background.init(90,10,_root.baselayer,
+		_root.modal.box.background.init(87,10,_root.baselayer,
 			new Array("None","Yahoo! satellite","Yahoo! satellite (dimmed)"),
 			'Choose the background to display',setBackground,0);
-	}
 
+		_root.modal.box.attachMovie("checkbox","pointer",4);
+		_root.modal.box.pointer.init(10,40,"Use pen and hand pointers",_root.custompointer,function(n) { _root.custompointer=n; });
+
+	}
+	
 	function setBackground(n) {
 		_root.baselayer=n;
 		switch (n) {
@@ -973,11 +1061,10 @@
 	function KeyValue() {
 		this._x=_root.propx;
 		this._y=_root.propy;
-		_root.propy+=18; if (_root.propy>54) { _root.propy=0; _root.propx+=190; }
+		_root.propy+=19; if (_root.propy>57) { _root.propy=0; _root.propx+=190; }
 
-		this.createTextField('keyname',1,0,0,70,17);
+		this.createTextField('keyname',1,0,-1,70,18);
 		with (this.keyname) {
-			embedFonts=true;
 			backgroundColor=0xBBBBBB;
 			background=true;
 			text=this._name;
@@ -985,7 +1072,7 @@
 			setNewTextFormat(boldSmall);
 		};
 
-		this.createTextField('value',2,72,0,110,17);
+		this.createTextField('value',2,72,-1,110,18);
 		this.value.onSetFocus =function() { if (this.textColor==0x888888) { this.text=''; this.textColor=0x000000; }
 											this.addListener(textfieldListener); Key.removeListener(keyListener); _root.elselected=this._name;
 											_root.map.ways[_root.wayselected].clean=0; };
@@ -994,7 +1081,6 @@
 											if (_root.currentproptype=='way') { _root.map.ways[wayselected].redraw(); }
 											reflectPresets(); };
 		with (this.value) {
-			this.value.embedFonts=true;
 			this.value.backgroundColor=0xDDDDDD;
 			this.value.background=true;
 			this.value.type='input';
@@ -1590,7 +1676,7 @@
 	function setTooltip(txt,delay) {
 		_root.tooltip.text=txt;
 		_root.tooltip.setTextFormat(plainSmall);
-		_root.createEmptyMovieClip('ttbackground',40,580,25,150,100);
+		_root.createEmptyMovieClip('ttbackground',45,580,25,150,100);
 // draw a white box at the relevant size, _alpha=50
 // _root.ttbackground.color=0xFFFFFF;
 // _root.ttbackground._alpha=50;
@@ -1717,7 +1803,7 @@
 	}
 	
 	function setPointer(ptype) {
-		if (ptype) {
+		if ((ptype) && _root.custompointer==true) {
 			_root.attachMovie(ptype,"pointer",65535);
 			trackMouse();
 			Mouse.addListener(mouseListener);

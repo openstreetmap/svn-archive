@@ -44,11 +44,9 @@
 
 
 		<!-- Landuse -->
-		<rule e="way" k="landuse|natural" v="*">
-			<!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychadelic -->
-		    <rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
-		        <area class='landuse-all'/>
-		    </rule>
+		<!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychadelic -->
+		<rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
+		    <area class='landuse-all'/>
 		</rule>
 
 
@@ -61,6 +59,9 @@
         </rule>
         <rule e="way" k="landuse" v="field|village_green|meadow">
             <area class='landuse-field'/>
+        </rule>
+        <rule e="way" k="amenity" v="school|college|university">
+            <area class='landuse-all'/>
         </rule>
         <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
             <area class='leisure-park'/>
@@ -621,11 +622,6 @@
                 stroke: #222222;
             }
 
-            .highway-primary-link-casing {
-                stroke-width: 6px;
-                stroke: #222222;
-            }
-
             .highway-primary-core {
                 stroke-width: 13px;
                 stroke: #e46d71;
@@ -819,7 +815,7 @@
 
             /* Waterways */
             .waterway-riverbank {
-                fill: #89bac6;
+                fill: #b5e2f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
@@ -836,7 +832,7 @@
                 stroke-width: 8px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -852,7 +848,7 @@
                 stroke-width: 0.4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -868,7 +864,7 @@
                 stroke-width: 1px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -884,7 +880,7 @@
                 stroke-width: 0.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1065,14 +1061,14 @@
 
             /* Natural */
             .natural-water {
-                fill: #89bac6;
+                fill: #b5e2f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
 
             .natural-coastline {
                 fill: #b5d6f1;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 stroke-width: 1.5px;
             }
 
@@ -1164,7 +1160,6 @@
                 stroke-width: 0.2px;
             }
 
-            /* colour might want tweaking slightly */
             .leisure-stadium {
                 fill: #bde3cb;
                 stroke: #6fc18e;

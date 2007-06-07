@@ -73,6 +73,9 @@
         <rule e="way" k="landuse" v="field|village_green|meadow">
             <area class='landuse-field'/>
         </rule>
+        <rule e="way" k="amenity" v="school|college|university">
+            <area class='amenity-school'/>
+        </rule>
         <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
             <area class='leisure-park'/>
         </rule>
@@ -833,7 +836,7 @@
 
             .highway-primary-link-core {
                 stroke-width: 2.5px;
-                stroke: #f39d9d;
+                stroke: #e46d71;
             }
 
             .highway-secondary-casing {
@@ -1034,7 +1037,7 @@
 
             /* Waterways */
             .waterway-riverbank {
-                fill: #89bac6;
+                fill: #b5e2f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
@@ -1051,7 +1054,7 @@
                 stroke-width: 3.75px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1067,7 +1070,7 @@
                 stroke-width: 0.75px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1083,7 +1086,7 @@
                 stroke-width: 2.75px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1099,7 +1102,7 @@
                 stroke-width: 0.75px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1351,14 +1354,14 @@
 
             /* Natural */
             .natural-water {
-                fill: #89bac6;
+                fill: #b5e2f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
 
             .natural-coastline {
                 fill: #b5d6f1;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 stroke-width: 0.4px;
             }
 
@@ -1451,7 +1454,6 @@
                 stroke-width: 0.2px;
             }
 
-            /* colour might want tweaking slightly */
             .leisure-stadium {
                 fill: #bde3cb;
                 stroke: #6fc18e;
@@ -1472,6 +1474,12 @@
 
             .amenity-parking {
                 fill: #f7efb7;
+                stroke: #e9dd72;
+                stroke-width: 0.2px;
+            }
+
+            .amenity-school {
+                fill: #dfafdd;
                 stroke: #e9dd72;
                 stroke-width: 0.2px;
             }

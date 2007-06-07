@@ -110,6 +110,7 @@
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
 	var custompointer=true;			// use custom pointers?
+	var unwayed=false;				// show unwayed segments?
 	var redopropertywindow=0;		// need to redraw property window after deletion?
 	var savedProperties=new Array();// clipboard for properties
 	var tolerance=4/Math.pow(2,_root.scale-12);
@@ -1015,7 +1016,7 @@
 		_root.modal.box.ok.onPress=function() { clearModalDialogue(); };
 		_root.modal.box.ok.useHandCursor=true;
 
-		_root.modal.box.ok.createTextField("oktext",1,14,0,40,20);
+		_root.modal.box.ok.createTextField("oktext",1,14,-1,40,20);
 		with (_root.modal.box.ok.oktext) {
 			text="Ok"; setTextFormat(boldWhite);
 			selectable=false; type='dynamic';
@@ -1028,8 +1029,8 @@
 	}
 
 	function openOptionsWindow() {
-		createModalDialogue(275,80);
-		_root.modal.box.createTextField("prompt1",2,7,10,80,20);
+		createModalDialogue(275,110);
+		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		with (_root.modal.box.prompt1) {
 			text="Background:"; setTextFormat(plainSmall);
 			selectable=false; type='dynamic';
@@ -1042,6 +1043,8 @@
 		_root.modal.box.attachMovie("checkbox","pointer",4);
 		_root.modal.box.pointer.init(10,40,"Use pen and hand pointers",_root.custompointer,function(n) { _root.custompointer=n; });
 
+		_root.modal.box.attachMovie("checkbox","unwayed",5);
+		_root.modal.box.unwayed.init(10,60,"Display unwayed segments with GPS",_root.unwayed,function(n) { _root.unwayed=n; });
 	}
 	
 	function setBackground(n) {
@@ -1736,8 +1739,8 @@
 
 	function loadGPS() {
 		_root.map.createEmptyMovieClip('gps',3);
-		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&token='+_root.usertoken,_root.map.gps); }
-							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale,_root.map.gps); }
+		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&unwayed='+_root.unwayed+'&token='+_root.usertoken,_root.map.gps); }
+							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&unwayed='+_root.unwayed,_root.map.gps); }
 	}
 
 

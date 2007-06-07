@@ -522,13 +522,13 @@
 
         <!-- Tourist features -->
         <rule e="node" k="tourism" v="hotel">
-            <symbol xlink:href="#hotel" width='4px' height='4px' transform='translate(-2,-2)' />
+            <symbol xlink:href="#hotel" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
         <rule e="node" k="tourism" v="hostel">
-            <symbol xlink:href="#hostel" width='6px' height='4px' transform='translate(-3,-2)' />
+            <symbol xlink:href="#hostel" width='3px' height='2px' transform='translate(-1.5,-1)' />
         </rule>
         <rule e="node" k="tourism" v="camp_site">
-            <symbol xlink:href="#campSite" width='4px' height='4px' transform='translate(-1.5,-1.5)' />
+            <symbol xlink:href="#campSite" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
 
 
@@ -778,6 +778,10 @@
 			    <text k="name" class='caption-core generic-caption-core' dy='-3px' />
 			</rule>
 			<rule e="node" k="amenity" v="supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site">
+			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
+			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
+			</rule>
+			<rule e="node" k="tourism" v="hotel|hostel|camp_site">
 			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
 			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
 			</rule>

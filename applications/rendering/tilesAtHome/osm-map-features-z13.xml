@@ -158,6 +158,9 @@
         <rule e="segment|way" k="waterway" v="drain">
             <line class='waterway-drain-core'/>
         </rule>
+        <rule e="way" k="waterway" v="dock">
+            <area class='natural-water' />
+        </rule>
         <rule e="way" k="natural" v="water|pond|lake">
             <area class='natural-water' />
         </rule>
@@ -167,6 +170,15 @@
         <rule e="way" k="landuse" v="basin">
             <area class='natural-water' />
         </rule>
+
+
+		<!-- Non-physical boundaries -->
+		<rule e="way" k="boundary" v="administrative">
+			<rule e="way" k="border_type" v="state">
+				<line class="boundary boundary-administrative-state-casing" />
+				<line class="boundary boundary-administrative-state-core" />
+			</rule>	
+		</rule>
 
 
         <!-- Roads and paths -->
@@ -1227,6 +1239,28 @@
                 stroke: #e9dd72;
                 stroke-width: 0.2px;
             }
+
+
+
+			/* Non-physical boundaries */
+            .boundary {
+                stroke-linecap: butt;
+                stroke-linejoin: round;
+                fill: none;
+            }
+
+			.boundary-administrative-state-casing {
+				stroke-width: 40px; 
+				stroke: #ffff00;
+				opacity: 0.5;
+			}
+
+			.boundary-administrative-state-core {
+				stroke-width: 8px; 
+				stroke: #f9574b;
+				stroke-dasharray: 40, 8, 8, 8;
+			}
+
 
 			/* Racetracks */
 			.highway-raceway-casing {

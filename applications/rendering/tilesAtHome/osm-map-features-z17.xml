@@ -72,6 +72,9 @@
         <rule e="way" k="landuse" v="field|village_green|meadow">
             <area class='landuse-field'/>
         </rule>
+        <rule e="way" k="amenity" v="school|college|university">
+            <area class='amenity-school'/>
+        </rule>
         <rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
             <area class='leisure-park'/>
         </rule>
@@ -261,6 +264,9 @@
             <rule e="segment|way" k="highway" v="pedestrian">
                 <line class='highway-casing highway-pedestrian-casing' />
             </rule>
+            <rule e="segment|way" k="highway" v="cycleway">
+                <line class='highway-casing highway-cycleway-casing' />
+            </rule>
             <rule e="segment|way" k="highway" v="track">
                 <line class='highway-casing highway-track-casing' />
             </rule>
@@ -307,7 +313,7 @@
 
         <!-- Paths in tunnels -->
         <rule e="segment|way" k="tunnel" v="yes|true">
-            <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
+            <rule e="segment|way" k="highway" v="footway|steps|bridleway|byway">
                 <tunnel width="0" class='highway-tunnel-narrow' />
             </rule>
         </rule>
@@ -319,9 +325,6 @@
             </rule>
             <rule e="segment|way" k="highway" v="steps">
                 <line class='highway-core highway-steps' />
-            </rule>
-            <rule e="segment|way" k="highway" v="cycleway">
-                <line class='highway-core highway-cycleway' />
             </rule>
             <rule e="segment|way" k="highway" v="bridleway">
                 <line class='highway-core highway-bridleway' />
@@ -348,6 +351,9 @@
 				</rule>
                 <rule e="segment|way" k="highway" v="pedestrian">
                     <line class='highway-core highway-pedestrian-core' />
+                </rule>
+                <rule e="segment|way" k="highway" v="cycleway">
+                    <line class='highway-core highway-cycleway-core' />
                 </rule>
                 <rule e="segment|way" k="highway" v="track">
                     <line class='highway-core highway-track-core' />
@@ -400,6 +406,9 @@
         <rule e="segment|way" k="tunnel" v="true|yes">
             <rule e="segment|way" k="highway" v="pedestrian">
                 <tunnel width="2" class='highway-core highway-pedestrian' />
+            </rule>
+            <rule e="segment|way" k="highway" v="cycleway">
+                <tunnel width="2" class='highway-core highway-cycleway' />
             </rule>
             <rule e="segment|way" k="highway" v="track">
                 <tunnel width="2" class='highway-core highway-track' />
@@ -536,6 +545,13 @@
         <rule e="node" k="amenity" v="hospital">
             <symbol xlink:href="#hospital" width='5px' height='5px' transform='translate(-2.5,-2.5)' />
         </rule>
+        <rule e="node" k="amenity" v="doctors">
+            <symbol xlink:href="#symbol-doctor" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
+        <rule e="node" k="amenity" v="pharmacy">
+            <symbol xlink:href="#symbol-pharmacy" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
+
         <rule e="node" k="amenity" v="post_office">
             <symbol xlink:href="#postoffice" width='3px' height='3px' transform='translate(-1.5,-1.5)' />
         </rule>
@@ -543,7 +559,7 @@
             <symbol xlink:href="#postbox" width='1.5px' height='1.5px' transform='translate(-0.75,-0.75)' />
         </rule>
         <rule e="node" k="amenity" v="speed_trap">
-            <symbol xlink:href="#postbox" width='2px' height='1px' transform='translate(-1,-0.5)' />
+            <symbol xlink:href="#speed_trap" width='2px' height='1px' transform='translate(-1,-0.5)' />
         </rule>
         <rule e="node" k="amenity" v="pub">
             <symbol xlink:href="#pub" width='1.5px' height='2px' transform='translate(-0.75,-1)'/>
@@ -554,28 +570,49 @@
         <rule e="node" k="amenity" v="theatre">
             <symbol xlink:href="#theatre" width='1.75px' height='2.5px' transform='translate(-0.9,-1.25)'/>
         </rule>
+        <rule e="node" k="man_made" v="windmill">
+            <symbol xlink:href="#symbol-windmill" width='2px' height='2px' transform='translate(-1,-1)'/>
+        </rule>
         <rule e="node" k="amenity" v="place_of_worship">
             <rule e="node" k="denomination|religion" v="~">
-                <symbol xlink:href="#church" width='2.5px' height='5px' transform='translate(-1.25,-2.5)' />
+                <symbol xlink:href="#church" width='2px' height='4px' transform='translate(-1,-2)' />
             </rule>
             <rule e="node" k="denomination|religion" v="christian|church_of_england">
-                <symbol xlink:href="#church" width='2.5px' height='5px' transform='translate(-1.25,-2.5)' />
+                <symbol xlink:href="#church" width='2px' height='4px' transform='translate(-1,-2)' />
             </rule>
             <rule e="node" k="denomination|religion" v="jewish">
-                <symbol xlink:href="#synagogue" width='4px' height='4px' transform='translate(-2,-2)' />
+                <symbol xlink:href="#synagogue" width='2px' height='2px' transform='translate(-1,-1)' />
             </rule>
             <rule e="node" k="denomination|religion" v="muslim">
-                <symbol xlink:href="#mosque" width='4px' height='4px' transform='translate(-2,-2)' />
+                <symbol xlink:href="#mosque" width='2px' height='2px' transform='translate(-1,-1)' />
             </rule>
         </rule>
         <rule e="node" k="amenity" v="parking">
             <symbol xlink:href="#parking" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
+        <rule e="node" k="highway" v="traffic_signals">
+            <symbol xlink:href="#symbol-traffic_signal" width='2px' height='2px' transform='translate(0,0)'/>
+        </rule>
+        <rule e="node" k="amenity" v="school">
+            <symbol xlink:href="#symbol-school" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
+        <rule e="node" k="amenity" v="university|college">
+            <symbol xlink:href="#symbol-university" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
+        <rule e="node" k="amenity" v="supermarket">
+            <symbol xlink:href="#symbol-supermarket" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
+        <rule e="node" k="amenity" v="library">
+            <symbol xlink:href="#symbol-library" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
+        <rule e="node" k="amenity" v="parking">
+            <symbol xlink:href="#parking" width='2px' height='2px' transform='translate(-1,-1)' />
+        </rule>
         <rule e="node" k="amenity" v="fuel">
-            <symbol xlink:href="#petrolStation" width='3px' height='3px' transform='translate(-1.5,-1.5)' />
+            <symbol xlink:href="#petrolStation" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
         <rule k="amenity" v="recycling">
-            <symbol xlink:href="#recycling" width='4px' height='4px' transform='translate(-2,-2)'/>
+            <symbol xlink:href="#recycling" width='2px' height='2px' transform='translate(-1,-1)'/>
         </rule>
 
         <!-- Leisure symbols -->
@@ -627,7 +664,7 @@
 					    <text k="name" text-anchor='middle' startOffset='50%' class="highway-name highway-unclassified-name" dy='0.5px' />
 					</rule>
 					<rule e="way" k="highway" v="tertiary">
-					    <text k="name" text-anchor='middle' startOffset='50%' class="highway-name highway-unsurfaced-name" dy='0.35px' />
+					    <text k="name" text-anchor='middle' startOffset='50%' class="highway-name highway-tertiary-name" dy='0.5px' />
 					</rule>
 					<rule e="way" k="highway" v="secondary">
 					    <text k="name" text-anchor='middle' startOffset='50%' class="highway-name highway-secondary-name" dy='0.5px' />
@@ -642,7 +679,7 @@
 					    <text k="name" text-anchor='middle' startOffset='50%' class="highway-name highway-motorway-name" dy='0.35px' />
 					</rule>
 				</rule>
-				<rule e="way" k="junction" v="*">
+				<rule e="way" k="junction" v="*"> <!-- Roundabouts, motorway exits etc -->
                     <rule e="way" k="highway" v="unsurfaced|track">
                         <areaText k="name" text-anchor='middle' startOffset='50%' class="highway-name highway-unsurfaced-name" dy='0.75px' />
                     </rule>
@@ -725,13 +762,24 @@
 			    <text k="name" class='railway-halt-caption' dy='-2px' />
 			</rule>
 			<rule e="node" k="amenity" v="pub">
-			    <text k="name" class='amenity-pub-caption' dy='-2px' />
+			    <text k="name" class='caption-casing amenity-pub-caption-casing' dy='-2px' />
+			    <text k="name" class='caption-core amenity-pub-caption-core' dy='-2px' />
 			</rule>
 			<rule e="node" k="amenity" v="cinema">
-			    <text k="name" class='amenity-cinema-caption' dy='-3px' />
+			    <text k="name" class='caption-casing amenity-cinema-caption-casing' dy='-3px' />
+			    <text k="name" class='caption-core amenity-cinema-caption-core' dy='-3px' />
 			</rule>
 			<rule e="node" k="amenity" v="theatre">
-			    <text k="name" class='amenity-theatre-caption' dy='-3px' />
+			    <text k="name" class='caption-casing amenity-theatre-caption-casing' dy='-3px' />
+			    <text k="name" class='caption-core amenity-theatre-caption-core' dy='-3px' />
+			</rule>
+			<rule e="node" k="amenity" v="school|college|university">
+			    <text k="name" class='caption-casing generic-caption-casing' dy='-3px' />
+			    <text k="name" class='caption-core generic-caption-core' dy='-3px' />
+			</rule>
+			<rule e="node" k="amenity" v="supermarket|library|doctors|pharmacy|place_of_worship|parking|post_office|hospital|hotel|hostel|camp_site">
+			    <text k="name" class='caption-casing generic-caption-casing' dy='-2.5px' />
+			    <text k="name" class='caption-core generic-caption-core' dy='-2.5px' />
 			</rule>
 		</rule>
 
@@ -1014,7 +1062,8 @@
             .highway-byway                          { stroke-width: 1px;     stroke: #ef7771; }
             .highway-byway-ref                      { stroke-width: 0px;     font-size: 1.25px; }
 
-            .highway-cycleway                       { stroke-width: 1px;     stroke: #008102; }
+            .highway-cycleway-casing                { stroke-width: 1px;     stroke: #222222; }
+            .highway-cycleway-core                  { stroke-width: 0.8px;     stroke: #5b9b5c; }
             .highway-cycleway-ref                   { stroke-width: 0px;     font-size: 1.25px; }
 
             .highway-footway                        { stroke-width: 0.5px;   stroke: #d79331; }
@@ -1115,7 +1164,7 @@
 
             /* Waterways */
             .waterway-riverbank {
-                fill: #89bac6;
+                fill: #b5e2f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
@@ -1124,7 +1173,7 @@
                 stroke-width: 4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1132,7 +1181,7 @@
                 stroke-width: 3px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1140,7 +1189,7 @@
                 stroke-width: 0.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1148,7 +1197,7 @@
                 stroke-width: 0.4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1156,7 +1205,7 @@
                 stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1164,7 +1213,7 @@
                 stroke-width: 1px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1172,7 +1221,7 @@
                 stroke-width: 1px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1180,7 +1229,7 @@
                 stroke-width: 0.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 fill: none;
             }
 
@@ -1313,6 +1362,23 @@
 
 
             /* Place names */
+            /* Base styles */
+            .caption-casing {
+				fill: white;
+                stroke: white;
+                font-family: "DejaVu Sans",sans-serif;
+                font-weight: bold;
+                text-anchor: middle;
+            }
+
+            .caption-core {
+                stroke: white;
+                stroke-width: 0px;
+                font-family: "DejaVu Sans",sans-serif;
+                font-weight: bold;
+                text-anchor: middle;
+            }
+
             .continent-caption {
                 fill: black;
                 stroke: white;
@@ -1425,14 +1491,14 @@
 
             /* Natural */
             .natural-water {
-                fill: #89bac6;
+                fill: #b5e2f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
 
             .natural-coastline {
                 fill: #b5d6f1;
-                stroke: #89bac6;
+                stroke: #b5e2f1;
                 stroke-width: 0.4px;
             }
 
@@ -1542,7 +1608,6 @@
                 stroke-width: 0.2px;
             }
 
-            /* colour might want tweaking slightly */
             .leisure-stadium {
                 fill: #bde3cb;
                 stroke: #6fc18e;
@@ -1567,6 +1632,11 @@
                 stroke-width: 0.2px;
             }
 
+            .amenity-school {
+                fill: #dfafdd;
+                stroke: #e9dd72;
+                stroke-width: 0.2px;
+            }
 
 			/* Racetracks */
 			.highway-raceway-casing {
@@ -1668,35 +1738,18 @@
                 text-anchor: middle;
             }
 
-            .amenity-pub-caption {
-                fill: #e21e2f;
-                stroke: white;
-                stroke-width: 0px;
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 1.25px;
-                font-weight: bold;
-                text-anchor: middle;
-            }
 
-            .amenity-cinema-caption {
-                 fill: #f124cb;
-                 stroke: white;
-                 stroke-width: 0px;
-                 font-family: "DejaVu Sans",sans-serif;
-                 font-size: 1px;
-                 font-weight: bold;
-                 text-anchor: middle;
-             }
+            .amenity-pub-caption-casing          { stroke-width: 1px;    font-size: 1px; }
+            .amenity-pub-caption-core            { fill: #e21e2f;        font-size: 1px; }
 
-             .amenity-theatre-caption {
-                 fill: #f124cb;
-                 stroke: white;
-                 stroke-width: 0px;
-                 font-family: "DejaVu Sans",sans-serif;
-                 font-size: 1px;
-                 font-weight: bold;
-                 text-anchor: middle;
-             }
+            .amenity-cinema-caption-casing       { stroke-width: 1px;    font-size: 1px; }
+            .amenity-cinema-caption-core         { fill: #f124cb;        font-size: 1px; }
+
+            .amenity-theatre-caption-casing      { stroke-width: 1px;    font-size: 1px; }
+            .amenity-theatre-caption-core        { fill: #f124cb;        font-size: 1px; }
+
+            .generic-caption-casing              { stroke-width: .5px;   font-size: 1px; }
+            .generic-caption-core                { fill: #2e3ae6;        font-size: 1px; }
 
             /* Building */
             .building {
@@ -1862,9 +1915,6 @@
         <svg:pattern id="cemetery-christian-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
            <svg:rect fill="#bde3cb" width="11" height="11" x="0" y="0" />
             <svg:path stroke="black" stroke-width="0.2" d="M1,1 L3,1 M2,0 L2,3 M6,6 L8,6 M7,5 L7,8"/>
-        </svg:pattern>
-        <svg:pattern id="pedestrian-pattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-            <svg:path d="M0,10 L10,0" fill="none" stroke="red" width="1"/>
         </svg:pattern>
 
         <svg:marker
@@ -2154,6 +2204,11 @@
 			</svg:g>
 		</svg:symbol>
 
+		<svg:symbol id="symbol-windmill" viewBox="158 240 315.9 480.2" >
+			<svg:path fill="#000000" d="M106.7,148.2l104-1l61,333l-231-1" />
+			<svg:path fill="none" stroke="#000000" stroke-width="24" d="M6.7,201 l284-191" />
+			<svg:path fill="none" stroke="#000000" stroke-width="24" d="M19.7,17.5 l290,176" />
+		</svg:symbol>
 
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
         <svg:symbol
@@ -2201,7 +2256,22 @@
             <svg:path stroke-width="1px" d="M 14.5 7.5 A 7 7 0 1 1 0.5,7.5 A 7 7 0 1 1 14.5 7.5 z" />
         </svg:symbol>
 
-		<svg:symbol id="postoffice" viewBox="0 0 36 36">
+		<svg:symbol id="symbol-doctor" viewBox="18 18 36 36">
+			<svg:ellipse fill="#00cc00" cx="18" cy="18" rx="18" ry="18"/>
+			<svg:path fill="#ffffff" d="M32 21.44 A16 16 -180 1 0 0 21.44 A16 16 -180 1 0 32 21.44 Z M10 6.94 L22 6.94 L22 15.44 L30.5 15.44 L30.5 27.44 L22 27.44 L22 35.94 L10 35.94 L10 27.44 L1.5 27.44 L1.5 15.44 L10 15.44 L 10 6.94 Z" transform="translate(2,-3.44)"/>
+		</svg:symbol>
+
+       <svg:symbol id="symbol-pharmacy" viewBox="18 18 36 36">
+            <svg:rect style="fill:#00cc00" x="0" y="0" width="36" height="36" rx="2" ry="2"/>
+            <svg:path style="fill:#ffffff" d="M20.14 17.3 L20.14 9.44 L11.86 9.44 L11.86 17.3 L4 17.3 
+            L4 25.58 L11.86 25.58 L11.86 33.44 L20.14 33.44 L20.14 25.58 L28 25.58 L28 17.3 L20.14 17.3 Z
+            M0.5 37.44 L31.5 37.44 a0.5 0.5 -180 0 0 0.5 -0.5 L32 5.94 a0.5 0.5 -180 0 0 -0.5 -0.5 
+            L0.5 5.44 a0.5 0.5 -180 0 0 -0.5 0.5 L0 36.94 a0.5 0.5 -180 0 0 0.5 0.5 Z M2 35.44 L2
+            7.44 L30 7.44 L30 35.44 L2 35.44 Z"
+            transform="translate(2,-3.44)"/>
+        </svg:symbol>
+        
+        <svg:symbol id="postoffice" viewBox="0 0 36 36">
 			<svg:ellipse style="fill:#ff0000" cx="18" cy="18" rx="18" ry="18"/>
 			<svg:path style="fill:#ffffff" d="M26 25.44 L26 35.44 L2 35.44 L2 25.44 L14 31.44 L26 25.44 Z M2 23.44 L26 23.44 L14 29.44 L2 23.44 Z M0 37.44 L28 37.44 L28 21.44 L0 21.44 L0 37.44 Z" transform="translate(4,-11.44)"/>
 		</svg:symbol>
@@ -2221,8 +2291,64 @@
             <svg:rect fill="#0087ff" width="20" height="20" x="0" y="-10" rx="4" ry="4" />
             <svg:path fill="white" d="M 5,8 L 5,-7 L 12,-7 C 14,-7 15.5,-5.3 16,-4 C 16.5,-2.77 16.5,-1.23 16,0 C 15.41,1.42 14,3 12,3 L 8,3 L 8,8 L 5,8 z M 8,-4 L 8,0 C 9.3,0 11,0 12.32,-0.31 C 13.6,-0.76 13.5,-2.8 12.5,-3.48 C 11.5,-4.1 8.6,-4 8,-4 z "/>
         </svg:symbol>
+        
+		<svg:symbol id="symbol-traffic_signal" viewBox="106 278.6 557.3 557.3" >
+			<svg:path d="M212.1,105c0,58-47.5,105-106,105c-58.6,0-106-47-106-105 C0,47,47.5,0,106,0C164.6,0,212.1,47,212.1,105z"/>
+			<svg:path d="M212.1,452.3c0,58-47.5,105-106,105c-58.6,0-106-47-106-105 c0-58,47.5-105,106-105C164.6,347.3,212.1,394.3,212.1,452.3z"/>
+			<svg:path d="M211.3,458.9H0V106.7h211.3V458.9z"/>
+			<svg:path fill="#F90000" d="M190,103c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84s37.6-84,84-84C152.4,19,190,56.6,190,103z"/>
+			<svg:path fill="#00D305" d="M190,455c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84c0-46.4,37.6-84,84-84C152.4,371.1,190,408.7,190,455z"/>
+			<svg:path fill="#F9FF00" d="M190,279c0,46.4-37.6,84-84,84 c-46.4,0-84-37.6-84-84c0-46.4,37.6-84,84-84C152.4,195,190,232.6,190,279z"/>
+		</svg:symbol>
 
-		<svg:symbol id="speed_trap" wiewBox="0 0 72 36">
+		<svg:symbol id="symbol-school" viewBox="160 216 320.8 432.5">
+			<svg:path fill="#AF7519" d="M93,284.7c0,11-9,20-20,20s-20-9-20-20s9-20,20-20S93,273.7,93,284.7z" />
+			<svg:path fill="#AF7519" d="M237,328.7c0,11-9,20-20,20s-20-9-20-20s9-20,20-20S237,317.7,237,328.7z" />
+			<svg:path fill="none" stroke="#AF7519" stroke-width="20" d="M163,4.7l-116,361" />
+			<svg:path fill="none" stroke="#AF7519" stroke-width="18.9041" d="M163,4.7L232,431" />
+			<svg:path fill="none" stroke="#AF7519" stroke-width="20" d="M163,4.7l149,277" />
+			<svg:path d="M6,53.7c0,0,283,67,284,70s-3,222-3,222l-287-97L6,53.7z" />
+			<svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M36,128.7c-1.2-8.1,16.8-17.4,25-17.2 c14.7,0.4,20,10.1,26.8,23.3c7.8,15,10.9,36,12.3,53c0.5,6.2,1.3,40.2,4.9,39.9" />
+			<svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M94,158.7c-17.5-12.4-58.4,7.4-59,28 c-0.5,17.8,16,23,29.9,26c15.4,3.2,19.2,0.8,29.1-11" />
+			<svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M136,101.7c-11.6,26.2-2.8,64-5,92.9 c-1.2,16.3,0.7,40.2-2,54.1" />
+			<svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M131,176.7c10.8-4.2,18.3-17.9,32.8-10 c11.5,6.3,13.7,23.1,14.2,34.9c0.7,15.6-3.3,26.4-18.8,31.8c-7.6,2.7-25.5,5.8-24.2-7.7" />
+			<svg:path fill="none" stroke="#FFFFFF" stroke-width="20" d="M261,196.7c-4.1-11.8-20.9-19.9-33.1-16.8 c-16.3,4.2-23.3,25-21.9,40.1c2.3,25.4,29.8,56.5,52,31.7" />
+		</svg:symbol>
+        
+		<svg:symbol id="symbol-university" viewBox="244.5 110 489 219.9">
+			<svg:path d="M79,43l57,119c0,0,21-96,104-96s124,106,124,106l43-133l82-17L0,17L79,43z"/>
+			<svg:path fill="none" stroke="#000000" stroke-width="20" d="M94,176l-21,39"/>
+			<svg:path d="M300,19c0,10.5-22.6,19-50.5,19S199,29.5,199,19s22.6-19,50.5-19S300,8.5,300,19z"/>
+			<svg:path fill="none" stroke="#000000" stroke-width="20" d="M112,216l-16-38L64,88c0,0-9-8-4-35s16-24,16-24"/>
+		</svg:symbol>
+        
+		<svg:symbol id="symbol-supermarket" viewBox="14.5 13.5 29 27">
+			<svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.158;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.9801324" d="M 13.711,19.263 C 13.711,19.754 13.319,20.153 12.836,20.153 C 12.353,20.153 11.962,19.754 11.962,19.263 C 11.962,18.771793 12.353,18.373 12.836,18.373 C 13.319,18.373 13.711,18.771 13.711,19.263 z" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 1.496,6.889 L 16.443,2.987 L 25.387,6.367 L 7.7960,10.054 L 1.496,6.889 z" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 1.540,16.974 L 7.7331,20.521 L 22.605,17.745 L 14.549,13.961 L 1.540,16.974 z" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 7.812,10.136 L 7.812,20.500" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 22.841,21.164 L 26.462,6.6923 C 26.610,5.3945 27.232,4.939 28.105,4.932" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:0.90399998;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 14.1281,17.1309 L 16.5851,2.98845 C 16.5652,2.09899 16.8043,1.34902 17.8289,1.02204" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 0.761,16.846 L 0.761,6.781" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:0.160;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M 17.707,0.991 C 17.727,0.991 17.748,0.991 17.707,0.991 z" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:1.27;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 17.707,1.022 L 28.196,4.902" />
+			<svg:path style="fill:none;fill-rule:evenodd;stroke:black;stroke-width:0.732;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 14.009,17.240 L 3.853,20.726 C 1.229,21.787 3.228,23.365 4.126,23.909 C 5.447,24.711 6.096,25.159 9.340,24.728 C 13.993,24.109 22.709,21.211 22.709,21.211" />
+			<svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.159;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.980" d="M 5.601,21.945 C 5.601,22.437 5.209,22.834 4.727,22.835 C 4.244,22.835 3.853,22.437 3.853,21.945 C 3.853,21.454 4.244,21.056 4.727,21.056 C 5.2095,21.056 5.601,21.454 5.601,21.945 z" />
+			<svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.159;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.980" d="M 11.254,25.962 C 11.254,26.453 10.863,26.852 10.380,26.852 C 9.898,26.852 9.506,26.453 9.506,25.962 C 9.506,25.471 9.898,25.072 10.380,25.072 C 10.863,25.072 11.254,25.471 11.254,25.962 z" />
+			<svg:path style="fill:black;fill-opacity:1;stroke:none;stroke-width:0.159;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.980" d="M 21.926,23.143 C 21.926,23.635 21.535,24.033 21.052,24.033 C 20.569,24.033 20.177,23.632 20.177,23.143 C 20.177,22.652 20.569,22.253 21.052,22.253 C 21.535,22.253 21.926,22.652 21.926,23.143 z" />
+		</svg:symbol>
+
+		<svg:symbol id="symbol-library" viewBox="160 310 319.3 621.3">
+			<svg:path fill="#FFFFFF" stroke="#000000" stroke-width="32.0585" d="M136,165.5l5.1,414l162.2-163.5V46.6 L136,165.5z"/>
+			<svg:path fill="#FFFFFF" stroke="#000000" stroke-width="32.1739" d="M20.2,136.7l-3.9,422.1c0,0-6.4,45,43.8,46.3 c56.6,1.5,68.2-10.3,68.2-10.3l2.6-426c0,0-18,14.2-57.9,12.9C22.8,180.1,20.2,136.7,20.2,136.7z"/>
+			<svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M175.9,229.4l79.8-48.9"/>
+			<svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M182.3,289.9l69.5-42.5"/>
+			<svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M184.9,351.6l75.9-48.9"/>
+			<svg:path fill="none" stroke="#000000" stroke-width="26.7171" d="M13.7,147L191.3,10.6 c-18.3,17.1,13.9,32.3,37.3,33.5c51.5,2.6,81.1-7.7,81.1-7.7"/>
+			<svg:path fill="#FFFFFF" stroke="#000000" d="M36.7,143.9l144-116c0,0-7,18,26,25s59,1,59,1l-149,107c0,0-27,16-59,1 S36.7,143.9,36.7,143.9z"/>
+		</svg:symbol>
+        
+        <svg:symbol id="speed_trap" wiewBox="0 0 72 36">
 			<svg:rect style='fill:#ffff00' x="0" y="0" width="36" height="36" rx="2" ry="2" />
 			<svg:path style='fill:#000000'
 			d="M0.5 37.44 L31.5 37.44 a0.5 0.5 -180 0 0 0.5 -0.5 L32 5.94 a0.5 0.5 -180 0 0 -0.5 -0.5 L0.5 5.44 a0.5 0.5 -180

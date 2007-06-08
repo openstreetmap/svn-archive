@@ -1107,7 +1107,7 @@
 
             /* Waterways */
             .waterway-riverbank {
-                fill: #b5e2f1;
+                fill: #b5d6f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
@@ -1116,7 +1116,7 @@
                 stroke-width: 4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1124,7 +1124,7 @@
                 stroke-width: 3px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1132,7 +1132,7 @@
                 stroke-width: 0.5px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1140,7 +1140,7 @@
                 stroke-width: 0.4px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1148,7 +1148,7 @@
                 stroke-width: 3px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1156,7 +1156,7 @@
                 stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1164,7 +1164,7 @@
                 stroke-width: 2px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1172,7 +1172,7 @@
                 stroke-width: 1px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 fill: none;
             }
 
@@ -1344,14 +1344,14 @@
 
             /* Natural */
             .natural-water {
-                fill: #b5e2f1;
+                fill: #b5d6f1;
                 stroke: #aaaaaa;
                 stroke-width: 0px;
             }
 
             .natural-coastline {
                 fill: #b5d6f1;
-                stroke: #b5e2f1;
+                stroke: #b5d6f1;
                 stroke-width: 0.4px;
             }
 

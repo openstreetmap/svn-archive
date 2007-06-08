@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 5.6.2007 (use _sans; direction arrow; pointer option)
+	# last update 8.6.2007 (traps unsuccessful uploads)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -19,7 +19,6 @@
 
 	use SWF qw(:ALL);
 	use SWF::Constants qw(:Button);
-	$fontroot ='Helmet';
 
 	# -----	Initialise
 
@@ -176,13 +175,13 @@
 
 	_root.attachMovie("exclamation","i_warning",35);
 	with (_root.i_warning) { _x=10; _y=545; _visible=false; };
+	_root.i_warning.onPress=function() { handleWarning(); };
 
 	_root.attachMovie("rotation","i_direction",39);
 	with (_root.i_direction) { _x=40; _y=583; _rotation=-45; _visible=true; _alpha=50; };
 
 	_root.attachMovie("roundabout","i_circular",40);
 	with (_root.i_circular) { _x=40; _y=583; _rotation=-45; _visible=false; };
-
 
 //	_root.attachMovie("nextattr","i_nextattr",35);
 //	with (_root.i_nextattr) { _x=690; _y=545; };
@@ -260,6 +259,9 @@
 
 	remote=new NetConnection();
 	remote.connect(apiurl);
+	remote.onStatus=function(info) { 
+		_root.i_warning._visible=true;
+	};
 
 	preresponder = function() { };
 	preresponder.onResult = function(result) {
@@ -673,6 +675,30 @@
 	// =====================================================================================
 	// Support functions
 
+	function handleWarning() {
+		createModalDialogue(275,130,new Array('Retry','Cancel'),handleWarningAction);
+		_root.modal.box.createTextField("prompt",2,7,9,250,100);
+		with (_root.modal.box.prompt) {
+			text="Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?";
+			wordWrap=true;
+			setTextFormat(plainSmall);
+			selectable=false; type='dynamic';
+		}
+	};
+
+	function handleWarningAction(choice) {
+		if (choice=='Retry') {
+			// loop through all ways which are uploading, and reupload
+			_root.i_warning._visible=false;
+			for (qway in _root.map.ways) {
+				if (_root.map.ways[qway].uploading) {
+					_root.map.ways[qway].uploading=0;
+					_root.map.ways[qway].upload();
+				}
+			}
+		}
+	};
+
 	function keyDelete(doall) {
 		if (_root.pointselected>-2) {
 			if (doall==1) {
@@ -961,26 +987,9 @@
 
 	Object.registerClass("menu",UIMenu);
 	
+	// modalDialogue
 
-
-	// =====================================================================================
-	// Start
-
-	_root.attachMovie("menu","presetmenu",60);
-	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset attributes describing the way',setAttributesFromPreset,151);
-	_root.presetmenu._visible=false;
-
-	redrawMap(_root.map._x,_root.map._y);
-	redrawYahoo();
-	whichWays();
-	_root.onEnterFrame=function() { everyFrame(); };
-
-
-
-	// =====================================================================================
-	// Options window
-	
-	function createModalDialogue(w,h) {
+	function createModalDialogue(w,h,buttons,closefunction) {
 		clearFloater();
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
 		ox=(uwidth-w)/2; oy=(uheight-100-h)/2;	// -100 for visual appeal
@@ -1004,32 +1013,58 @@
 			lineTo(w,0); lineTo(w,h);
 			lineTo(0,h); lineTo(0,0); endFill();
 		}
-		// Create 'Ok' button
-		_root.modal.box.createEmptyMovieClip("ok",1);
-		with (_root.modal.box.ok) {
-			_x=w-60; _y=h-30;
-			beginFill(0x7F7F7F,100);
-			moveTo(0,0);
-			lineTo(50,0); lineTo(50,17);
-			lineTo(0,17); lineTo(0,0); endFill();
-		}
-		_root.modal.box.ok.onPress=function() { clearModalDialogue(); };
-		_root.modal.box.ok.useHandCursor=true;
 
-		_root.modal.box.ok.createTextField("oktext",1,14,-1,40,20);
-		with (_root.modal.box.ok.oktext) {
-			text="Ok"; setTextFormat(boldWhite);
-			selectable=false; type='dynamic';
-		}
-	}
+		// Create buttons
+		for (i=0; i<buttons.length; i+=1) {
+			_root.modal.box.createEmptyMovieClip(i,i*2+1);
+			with (_root.modal.box[i]) {
+				_x=w-60*(buttons.length-i); _y=h-30;
+				beginFill(0x7F7F7F,100);
+				moveTo(0,0);
+				lineTo(50,0); lineTo(50,17);
+				lineTo(0,17); lineTo(0,0); endFill();
+			}
+			_root.modal.box[i].onPress=function() {
+				if (closefunction) { closefunction(buttons[this._name]); }
+				clearModalDialogue();
+			};
+			_root.modal.box[i].useHandCursor=true;
 	
-	function clearModalDialogue() {
-		_root.createEmptyMovieClip("modal",0xFFFFFE);
-		Key.addListener(keyListener);
+			_root.modal.box[i].createTextField('btext',1,0,-1,48,20);
+			with (_root.modal.box[i].btext) {
+				text=buttons[i]; setTextFormat(boldWhite);
+				selectable=false; type='dynamic';
+				_x=(45-textWidth)/2;
+			}
+		}
 	}
 
+	function clearModalDialogue() {
+		Key.addListener(keyListener);
+		_root.createEmptyMovieClip("modal",0xFFFFFE);
+	}
+
+
+
+	// =====================================================================================
+	// Start
+
+	_root.attachMovie("menu","presetmenu",60);
+	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset attributes describing the way',setAttributesFromPreset,151);
+	_root.presetmenu._visible=false;
+
+	redrawMap(_root.map._x,_root.map._y);
+	redrawYahoo();
+	whichWays();
+	_root.onEnterFrame=function() { everyFrame(); };
+
+
+
+	// =====================================================================================
+	// Options window
+	
 	function openOptionsWindow() {
-		createModalDialogue(275,110);
+		createModalDialogue(275,110,new Array('Ok'),null);
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		with (_root.modal.box.prompt1) {
 			text="Background:"; setTextFormat(plainSmall);

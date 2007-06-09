@@ -1,4 +1,6 @@
 #!/usr/bin/perl
+# Copyright (C) 2006,2007, and GNU GPL'd, by Joerg Ostertag
+#
 # This Script converts/filters GPS-Track-Data 
 # Input is one of the folowing:
 #   - Kismet-GPS File   *.gps 
@@ -8,7 +10,7 @@
 #   - Garmin gdb File   *.gdb
 #   - Netstumbler Files *.ns1
 #
-# Standars Filters:
+# Standard Filters:
 #	- are points are inside [ -90.0  , -180  , 90.0    , 180   ], # World
 #	- minimum good points          > 5 Points/Track
 #	- distance between trackpoints < 2 Km
@@ -21,7 +23,10 @@
 #   - 00_collection.gpx, 00_collection.osm (one File with all good tracks)
 #   - 00_filter_areas.gpx with al the area filters 
 #
-# Joerg Ostertag <osm-filter.openstreetmap@ostertag.name>
+# Joerg Ostertag <osm-track-filter.openstreetmap@ostertag.name>
+# Anyone is welcome to test, find Bugs, add new features
+# , correct existing bugs or/and improve this Code.
+#
 # TODO:
 #   - eliminate duplicate waypoints
 #   - area filter for waypoints
@@ -65,6 +70,7 @@ use Geo::OSM::Write;
 use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
+use Geo::Tracks::TRK;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -1204,6 +1210,8 @@ sub convert_Data(){
 	    $new_tracks = read_track_GpsBabel($filename,"netstumbler");
 	} elsif ( $extention eq "nmea" ) {
 	    $new_tracks = read_track_NMEA($filename);
+	} elsif ( $extention eq "trk" ) {
+	    $new_tracks = read_track_TRK($filename); # Aldi Tevion Navigation Unit
 	} elsif ( $extention eq "TXT" ) { # This is the NAVI-GPS extention
 	    $new_tracks = read_track_NMEA($filename);
 	} elsif ( $extention eq "sav" ) {
@@ -1406,7 +1414,7 @@ B<osmfilter.pl> Version 0.05
 
 =head1 DESCRIPTION
 
-B<osm-filter.pl> is a program to convert and filter Track Files 
+B<osmtrackfilter.pl> is a program to convert and filter Track Files 
 to a *.gpx and *.osm File. This File then can then be loaded into josm,
 corrected and then uploaded to OSM.
 
@@ -1427,7 +1435,7 @@ But since it's a perl script it shouldn't be too much effort
 to change them. If you think we need some of these in a config-file 
 i can try to add a config file to the script too.
 
-The Idea behind the osm-filter is:
+The Idea behind the osm-track-filter is:
  - reading some different input formats. 
        Input is currently one of the folowing:
          - Kismet-GPS File   *.gps 
@@ -1454,11 +1462,11 @@ The Idea behind the osm-filter is:
     If you want to see the filter areas in the resulting gpx file you can 
     use the option    --draw_filter_areas. This will draw in the check areas 
     as seperate tracks.
- - Then osm-filter then enriches the Data for internal use by adding:
+ - Then osm-track-filter then enriches the Data for internal use by adding:
 	- speed of each segment (if necessary)
         - distance to last point 
         - angle to last segment (Which would represent steering wheel angle)
- - Then osm-filter is splitting the tracks if necessary.
+ - Then osm-track-filter is splitting the tracks if necessary.
    This is needed if you have for example gathered Tracks 
    with a Garmin handheld. There the Tracks get combined 
    even if you had no reception or switched of the unit inbetween.
@@ -1469,7 +1477,7 @@ The Idea behind the osm-filter is:
    Then each Track with less than 3 points is discarded.
  - if you use the option 
        --generate_ways
-   osm-filter tries to determin continuous ways by looking 
+   osm-track-filter tries to determin continuous ways by looking 
    at the angle to the last segment, the speed and distance.
 
  - This is now done for all input Files. So you can also use 
@@ -1477,14 +1485,14 @@ The Idea behind the osm-filter is:
    output File.
 
  - After this all now existing data iw written to a gpx file.
- - If you add the option  --out-osm. osm-filter tries 
+ - If you add the option  --out-osm. osm-track-filter tries 
    to generate an *.osm file out of this Data.
 
 =head1 SYNOPSIS
 
 B<Common usages:>
 
-osm-filter.pl [--man] [-d] [-v] [-h][--out-osm] [--limit-area] <File1.gps> [<File2.sav>,<File2.ns1>,...]
+osmtrackfilter.pl [--man] [-d] [-v] [-h][--out-osm] [--limit-area] <File1.gps> [<File2.sav>,<File2.ns1>,...]
 
 !!!Please be carefull this is still a beta Version. 
    Make Backups of your valuable source Files
@@ -1545,7 +1553,7 @@ and once call "create.sh".
 If you provide a filename this file is read instead of the osm.csv file. 
 The Filename provided can be a csv-file or a standard osm-file.
 
-you can use --osm=0 in combination with --filter-all to not let osm-filter 
+you can use --osm=0 in combination with --filter-all to not let osm-track-filter 
 check against osm Data.
 
 =item B<--filter-dup-seg>
@@ -1639,6 +1647,7 @@ Default is on.
    - Garmin gdb File   *.gdb
    - Netstumbler Files *.ns1
    - NMEA              *.nmea
+   - Tevion Tracks     *.trk
    - via gpsbabel gpsbabel:<type>:*
 
 For each File read a File *-converted.gpx will be written
@@ -1646,7 +1655,7 @@ All input filenames ending with -converted.gpx will be skiped.
 
 To read all Files in a specified directory at once do the following:
 
- find <kismet_dir>/log -name "*.gps" | xargs ./osm-filter.pl
+ find <kismet_dir>/log -name "*.gps" | xargs ./osmtrackfilter.pl
 
 If you define multiple Files a summary File will automagically be written:
  ./00_combination.gpx
@@ -1663,7 +1672,7 @@ use stdout to write filtered  tracks as GPX
 
 =head1 COPYRIGHT
 
-Copyright 2006, Jörg Ostertag
+Copyright (C) 2006,2007, and GNU GPL'd, by Joerg Ostertag
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

@@ -199,12 +199,21 @@ function SaveBlankTiles($BlankTileList, $UserID){
       moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
     }
     
-    $Fields = "x, y, z, layer, type, date, user";
-    $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
+    # Make a blank tile
+    if( $Type >= 0 )
+    {
+      $Fields = "x, y, z, layer, type, date, user";
+      $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
 
+      $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
+    }
+    else
+    {
+      # Delete a blank tile
+      $SQL = sprintf("delete from `tiles_blank` where `x`=%d AND `y`=%s AND `z`=%s AND `layer`=%d", $X, $Y, $Z, $Layer);
+    }
     DeleteRealTile($X,$Y,$Z,$Layer);
 
-    $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);
     
     logSqlError();
@@ -350,6 +359,13 @@ function InsertTile($X,$Y,$Z,$Layer,$User,$OldFilename, $VersionID, &$TileList, 
     array_push($BlankTileList, $SqlSnippet);
     return;
   }
+  if($Size == 0){
+    # This is a request to delete a tile (both real and blank)
+    $SqlSnippet = sprintf("%d,%d,%d,%d,%d", $X, $Y, $Z, $Layer, -1);
+    array_push($BlankTileList, $SqlSnippet);
+    return;
+  }
+
   if($Size < 100){
     # TODO: WTF is this tile
     return;

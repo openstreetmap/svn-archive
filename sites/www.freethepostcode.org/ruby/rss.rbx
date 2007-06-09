@@ -59,7 +59,7 @@ res = dao.call_sql { "select part1, part2, lat, lon, date from codes where confi
 
     lat_el = Element.new 'geo:lat', item
     lat_el.text = lat
-    lon_el = Element.new 'geo:lon', item
+    lon_el = Element.new 'geo:long', item
     lon_el.text = lon
   end
 

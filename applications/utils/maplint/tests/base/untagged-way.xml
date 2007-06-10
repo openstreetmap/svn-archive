@@ -8,7 +8,7 @@
     </maplint:desc>
 
     <maplint:check data="way" type="application/xsl+xml">
-        <xsl:if test="not(tag[@k != 'created_by']">
+        <xsl:if test="not(tag[@k != 'created_by'])">
             <maplint:result/>
         </xsl:if>
     </maplint:check>

@@ -148,7 +148,7 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-base-untagged-way-way">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(tag[@k != 'created_by']">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(tag[@k != 'created_by'])">
             <maplint:result ref="untagged-way"/>
         </xsl:if>
     </xslout:template>

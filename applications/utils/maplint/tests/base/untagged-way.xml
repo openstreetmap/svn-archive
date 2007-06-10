@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<maplint:test group="base" id="untagged-way" version="1" severity="warning"
+    xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <maplint:desc xml:lang="en">
+        Way without any tags (except "created_by").
+    </maplint:desc>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:if test="not(tag[@k != 'created_by']">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>

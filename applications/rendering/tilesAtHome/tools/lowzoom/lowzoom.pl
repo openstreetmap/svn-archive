@@ -124,6 +124,8 @@ sub supertile(){
   my $BB = readLocalImage($X*2+1,$Y*2+1,$Z+1,$Layer);
   
 	my $Filename = localfile($X,$Y,$Z,$Layer);
+	# Always delete file first. The use of hardlinks means we might accedently overwrite other files.
+	unlink($Filename);
 	print "generating $Filename \n";
 
 	# all images the same size? 

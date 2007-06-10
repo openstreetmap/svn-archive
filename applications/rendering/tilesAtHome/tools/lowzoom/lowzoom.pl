@@ -80,7 +80,7 @@ moveTiles(tempdir(), $uploadDir, $MaxZ) if($Options ne "keep");
 $Status->final();
 
 # Recursively create (including any downloads necessary) a tile
-sub lowZoom(){
+sub lowZoom {
   my ($X,$Y,$Z,$MaxZ, $Prefix, $Status) = @_;
   
   # Get tiles
@@ -99,7 +99,7 @@ sub lowZoom(){
   }
 }
 # Download a tile from the tileserver
-sub downloadtile(){
+sub downloadtile {
   my ($X,$Y,$Z,$Layer) = @_;
   my $f1 = remotefile($X,$Y,$Z,$Layer);
   my $f2 = localfile($X,$Y,$Z,$Layer);
@@ -114,7 +114,7 @@ sub downloadtile(){
 	unlink $f2 if($Size < 103);
 }
 # Create a supertile, by merging together 4 local image files, and creating a new local file
-sub supertile(){
+sub supertile {
   my ($X,$Y,$Z,$Layer) = @_;
   
   # Load the subimages
@@ -190,7 +190,7 @@ sub supertile(){
 }
 
 # Open a PNG file, and return it as a Magick image (or 0 if not found)
-sub readLocalImage()
+sub readLocalImage
 {
     my ($X,$Y,$Z,$Layer) = @_;
     my $Filename = localfile($X,$Y,$Z,$Layer); 
@@ -230,7 +230,7 @@ sub readLocalImage()
 # Take any tiles that were created (as opposed to downloaded), and move them to
 # an area ready for upload.
 # + Delete any tiles that were downloaded
-sub moveTiles(){
+sub moveTiles {
   my ($from, $to, $MaxZ) = @_;
   opendir(my $dp, $from) || die($!);
   while(my $file = readdir($dp)){
@@ -251,17 +251,17 @@ sub moveTiles(){
 }
 # Option: filename for our temporary map tiles
 # (note: this should match whatever is expected by the upload scripts)
-sub localfile(){
+sub localfile {
   my ($X,$Y,$Z,$Layer) = @_;
   return sprintf("%s/%s_%d_%d_%d.png", tempdir(), $Layer,$Z,$X,$Y);
 }
 # Option: URL for downloading tiles
-sub remotefile(){
+sub remotefile {
   my ($X,$Y,$Z,$Layer) = @_;
   return sprintf("http://dev.openstreetmap.org/~ojw/Tiles/%s.php/%d/%d/%d.png", $Layer,$Z,$X,$Y);
 }
 # Option: what to use as temporary storage for tiles
-sub tempdir(){
+sub tempdir {
   return("temp");
 }
 

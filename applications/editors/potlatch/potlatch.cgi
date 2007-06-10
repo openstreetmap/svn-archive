@@ -1053,7 +1053,8 @@
 	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset attributes describing the way',setAttributesFromPreset,151);
 	_root.presetmenu._visible=false;
 
-	redrawMap(_root.map._x,_root.map._y);
+	redrawMap(350-350*Math.pow(2,_root.scale-12),
+			  250-250*Math.pow(2,_root.scale-12));
 	redrawYahoo();
 	whichWays();
 	_root.onEnterFrame=function() { everyFrame(); };
@@ -1397,12 +1398,15 @@
 			case 167:		cyclePresetIcon(); break;							// '¤' - cycle presets
 			case 187:		enterNewAttribute(); break;							// '+' - add new attribute
 			case 189:		keyDelete(0); break;								// '-' - delete node from this way only
+			case 76:		showPosition(); break;								// L - show latitude/longitude
 			// default:		_root.chat.text=Key.getCode()+" pressed";
 		};
 	}
 
-	function startCount() { z=new Date(); _root.startTime=z.getTime(); }
-	function endCount(id) { z=new Date(); zz=Math.floor((z.getTime()-_root.startTime)*100);
+	function showPosition() { setTooltip("lat "+Math.floor(coord2lat (_root.map._ymouse)*10000)/10000
+									  +"\nlon "+Math.floor(coord2long(_root.map._xmouse)*10000)/10000,0); }
+	function startCount()	{ z=new Date(); _root.startTime=z.getTime(); }
+	function endCount(id)	{ z=new Date(); zz=Math.floor((z.getTime()-_root.startTime)*100);
 							if (zz>100) { _root.chat.text+=id+":"+zz+";"; } }
 	
 

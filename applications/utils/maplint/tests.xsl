@@ -16,6 +16,7 @@
     <maplint:test agent="xsltests" group="base" id="segment-without-way" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="tagged-segment" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="base" id="untagged-unconnected-node" version="1" severity="warning"/>
+    <maplint:test agent="xsltests" group="base" id="untagged-way" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="ways-with-unordered-segments" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="deprecated-tags" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="motorway-without-ref" version="1" severity="error"/>
@@ -43,6 +44,7 @@
     <xslout:call-template name="test-base-tagged-segment-segment"/>
   </xslout:template>
   <xslout:template name="call-tests-way">
+    <xslout:call-template name="test-base-untagged-way-way"/>
     <xslout:call-template name="test-base-ways-with-unordered-segments-way"/>
     <xslout:call-template name="test-main-motorway-without-ref-way"/>
     <xslout:call-template name="test-main-residential-without-name-way"/>
@@ -143,6 +145,11 @@
                     <xsl:value-of select="concat(@k,'=',@v,' ')"/>
                 </xsl:for-each>
             </maplint:result>
+        </xsl:if>
+    </xslout:template>
+  <xslout:template name="test-base-untagged-way-way">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(tag[@k != 'created_by']">
+            <maplint:result ref="untagged-way"/>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-base-ways-with-unordered-segments-way">

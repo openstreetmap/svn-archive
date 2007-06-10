@@ -173,6 +173,19 @@
     </maplint:check>
 
 </maplint:test>
+<maplint:test group="base" id="untagged-way" version="1" severity="warning">
+
+    <maplint:desc xml:lang="en">
+        Way without any tags (except "created_by").
+    </maplint:desc>
+
+    <maplint:check data="way" type="application/xsl+xml">
+        <xsl:if test="not(tag[@k != 'created_by']">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
 <maplint:test group="base" id="ways-with-unordered-segments" version="1" severity="error">
 
     <maplint:desc xml:lang="en">

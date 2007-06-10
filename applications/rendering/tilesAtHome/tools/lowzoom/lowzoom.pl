@@ -237,7 +237,8 @@ sub moveTiles(){
       my $f1 = "$from/$file";
       my $f2 = "$to/$file";
       if($Z < $MaxZ){
-        rename($f1, $f2);
+        # Rename can fail if the target is on a different filesystem
+        rename($f1, $f2) or system("mv",$f1,$f2);
       }
       else{
         unlink $f1;

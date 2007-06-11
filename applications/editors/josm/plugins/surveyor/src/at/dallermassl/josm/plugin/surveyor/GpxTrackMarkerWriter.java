@@ -24,7 +24,7 @@ public class GpxTrackMarkerWriter implements XmlWriter.OsmWriterInterface {
 	
 	private final Collection<Collection<GpsPoint>> gpsData;
 	private final Collection<Marker> markers;
-	private static final SimpleDateFormat gpxDateFormat = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SSSZ");
+	private static final SimpleDateFormat gpxDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 	
 	public GpxTrackMarkerWriter(Collection<Collection<GpsPoint>> gpsData, Collection<Marker> markers) {
 		this.gpsData = gpsData;

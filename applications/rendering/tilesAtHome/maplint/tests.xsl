@@ -16,9 +16,12 @@
     <maplint:test agent="xsltests" group="base" id="segment-without-way" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="tagged-segment" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="base" id="untagged-unconnected-node" version="1" severity="warning"/>
+    <maplint:test agent="xsltests" group="base" id="untagged-way" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="ways-with-unordered-segments" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="deprecated-tags" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="motorway-without-ref" version="1" severity="error"/>
+    <maplint:test agent="xsltests" group="main" id="place-of-worship-without-religion" version="1" severity="warning"/>
+    <maplint:test agent="xsltests" group="main" id="poi-without-name" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="main" id="residential-without-name" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="strict" id="unknown-tags" version="1" severity="notice"/>
   </xslout:template>
@@ -30,6 +33,8 @@
   <xslout:template name="call-tests-node">
     <xslout:call-template name="test-base-nodes-on-same-spot-node"/>
     <xslout:call-template name="test-base-untagged-unconnected-node-node"/>
+    <xslout:call-template name="test-main-place-of-worship-without-religion-node"/>
+    <xslout:call-template name="test-main-poi-without-name-node"/>
     <xslout:call-template name="test-strict-unknown-tags-node"/>
   </xslout:template>
   <xslout:template name="call-tests-segment">
@@ -39,6 +44,7 @@
     <xslout:call-template name="test-base-tagged-segment-segment"/>
   </xslout:template>
   <xslout:template name="call-tests-way">
+    <xslout:call-template name="test-base-untagged-way-way"/>
     <xslout:call-template name="test-base-ways-with-unordered-segments-way"/>
     <xslout:call-template name="test-main-motorway-without-ref-way"/>
     <xslout:call-template name="test-main-residential-without-name-way"/>
@@ -79,9 +85,22 @@
             <maplint:result ref="untagged-unconnected-node"/>
         </xsl:if>
     </xslout:template>
+  <xslout:template name="test-main-place-of-worship-without-religion-node">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='amenity' and @v='place_of_worship']) and not(tag[@k='religion'])">
+            <maplint:result ref="place-of-worship-without-religion"/>
+        </xsl:if>
+    </xslout:template>
+  <xslout:template name="test-main-poi-without-name-node">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='amenity' and (@v='place_of_worship' or @v='cinema' or @v='pharmacy' or @v='pub' or @v='restaurant' or @v='school' or @v='university' or @v='hospital' or @v='library' or @v='theatre' or @v='courthouse' or @v='bank')]) and not(tag[@k='name'])">
+            <maplint:result ref="poi-without-name">
+                <xsl:text>amenity=</xsl:text>
+                <xsl:value-of select="tag[@k='amenity']/@v"/>
+            </maplint:result>
+        </xsl:if>
+    </xslout:template>
   <xslout:template name="test-strict-unknown-tags-node">
         <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
-            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='dispensing') and                     (@k!='religion') and                     (@k!='military') and                     (@k!='denomination') and                     (@k!='leisure') and                     (@k!='recycling:glass') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='layer') and                     (@k!='religion') and                     (@k!='denomination') and                     (@k!='source') and                     (@k!='is_in') and                     (@k!='time') and                     (@k!='access') and                     (@k!='name')">
+            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='todo') and                     (@k!='note') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='dispensing') and                     (@k!='religion') and                     (@k!='military') and                     (@k!='denomination') and                     (@k!='leisure') and                     (@k!='recycling:glass') and                     (@k!='recycling:batteries') and                     (@k!='recycling:clothes') and                     (@k!='recycling:paper') and                     (@k!='recycling:green_waste') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='historic') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='religion') and                     (@k!='denomination') and                     (@k!='source') and                     (@k!='is_in') and                     (@k!='time') and                     (@k!='access') and                     (@k!='name')">
                 <maplint:result ref="unknown-tags"><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>
         </xsl:for-each>
@@ -128,6 +147,11 @@
             </maplint:result>
         </xsl:if>
     </xslout:template>
+  <xslout:template name="test-base-untagged-way-way">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(tag[@k != 'created_by'])">
+            <maplint:result ref="untagged-way"/>
+        </xsl:if>
+    </xslout:template>
   <xslout:template name="test-base-ways-with-unordered-segments-way">
         <xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="error">
             <xsl:for-each select="seg">
@@ -162,7 +186,8 @@
     </xslout:template>
   <xslout:template name="test-strict-unknown-tags-way">
         <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
-            <xsl:if test="(@k!='highway') and (@k!='junction') and (@k!='cycleway') and (@k!='bicycle') and (@k!='waterway') and (@k!='railway') and (@k!='aeroway') and (@k!='aerialway') and (@k!='power') and (@k!='man_made') and (@k!='leisure') and (@k!='amenity') and (@k!='shop') and (@k!='tourism') and (@k!='historic') and (@k!='landuse') and (@k!='military') and (@k!='natural') and (@k!='route') and (@k!='boundary') and (@k!='sport') and (@k!='abutters') and (@k!='fenced') and (@k!='lit') and (@k!='width') and (@k!='lanes') and (@k!='bridge') and (@k!='tunnel') and (@k!='cutting') and (@k!='embankment') and (@k!='layer') and (@k!='surface') and (@k!='start_date') and (@k!='end_date') and (@k!='access') and (@k!='foot') and (@k!='horse') and (@k!='motorcycle') and (@k!='motorcar') and (@k!='goods') and (@k!='hgv') and (@k!='psv') and (@k!='motorboat') and (@k!='boat') and (@k!='oneway') and (@k!='noexit') and (@k!='date_on') and (@k!='date_off') and (@k!='day_on') and (@k!='day_off') and (@k!='hour_on') and (@k!='hour_off') and (@k!='maxweight') and (@k!='maxheight') and (@k!='maxwidth') and (@k!='maxlength') and (@k!='maxspeed') and (@k!='minspeed') and (@k!='toll') and (@k!='name') and (@k!='int_name') and (@k!='nat_name') and (@k!='reg_name') and (@k!='loc_name') and (@k!='old_name') and (@k!='ref') and (@k!='int_ref') and (@k!='nat_ref') and (@k!='reg_ref') and (@k!='loc_ref') and (@k!='old_ref') and (@k!='ncn_ref') and (@k!='source_ref') and (@k!='place') and (@k!='place_name') and (@k!='place_numbers') and (@k!='postal_code') and (@k!='is_in') and (@k!='note') and (@k!='image') and (@k!='source') and (@k!='created_by') and (@k!='converted_by')">
+            <xsl:if test="(@k!='created_by') and                     (@k!='converted_by') and                     (@k!='highway') and                     (@k!='railway') and                     (@k!='waterway') and                     (@k!='amenity') and                     (@k!='tourism') and                     (@k!='ele') and                     (@k!='man_made') and                     (@k!='sport') and                     (@k!='place') and                     (@k!='note') and                     (@k!='historic') and                     (@k!='landuse') and                     (@k!='oneway') and                     (@k!='bridge') and                     (@k!='tunnel') and                     (@k!='leisure') and                     (@k!='junction') and                     (@k!='ref') and                     (@k!='int_ref') and                     (@k!='nat_ref') and                     (@k!='natural') and                     (@k!='layer') and                     (@k!='source') and                     (@k!='time') and                     (@k!='abutters') and                     (@k!='maxspeed') and                     (@k!='access') and                     (@k!='foot') and                     (@k!='bicycle') and                     (@k!='motorcycle') and                     (@k!='motorcar') and                     (@k!='horse') and                     (@k!='surface') and                     (@k!='osmarender:renderName') and                     (@k!='osmarender:nameDirection') and                     (@k!='name')">
+
                 <maplint:result ref="unknown-tags"><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>
         </xsl:for-each>

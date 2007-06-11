@@ -4,6 +4,7 @@
 package at.dallermassl.josm.plugin.surveyor;
 
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 import org.openstreetmap.josm.Main;
@@ -23,6 +24,7 @@ public class GpxTrackMarkerWriter implements XmlWriter.OsmWriterInterface {
 	
 	private final Collection<Collection<GpsPoint>> gpsData;
 	private final Collection<Marker> markers;
+	private static final SimpleDateFormat gpxDateFormat = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss.SSS");
 	
 	public GpxTrackMarkerWriter(Collection<Collection<GpsPoint>> gpsData, Collection<Marker> markers) {
 		this.gpsData = gpsData;
@@ -56,7 +58,7 @@ public class GpxTrackMarkerWriter implements XmlWriter.OsmWriterInterface {
 					out.print("      <trkpt lat='"+ll.lat()+"' lon='"+ll.lon()+"'");
 					if (p.time != null && p.time.length()!=0) {
 						out.println(">");
-						out.println("        <time>"+p.time+"</time>");
+						out.println("        <time>" + gpxDateFormat.format(p.time) + "</time>");
 						out.println("      </trkpt>");
 					} else
 						out.println(" />");

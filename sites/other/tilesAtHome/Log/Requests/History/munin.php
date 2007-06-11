@@ -16,6 +16,11 @@
   $statuses = array('pending', 'new', 'active', 'done');
   $Result = mysql_query("select `status`,count(*) as count from `tiles_queue` group by `status` order by `status`;");
   while ($row = mysql_fetch_array($Result)) {
-    printf("%s.value %d\n", $statuses[$row['status']],$row['count']);
+    if ($row['status'] == 3) {
+      // Divide done by 48 as it represents all that have been done in the last 48 hours.
+      printf("done.value %d\n", $row['count']/48);
+    } else {
+      printf("%s.value %d\n", $statuses[$row['status']],$row['count']);
+    }
   }
 ?>

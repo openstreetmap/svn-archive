@@ -66,6 +66,9 @@ if(($MaxZ > 12)
   die($Usage);
 }
 
+# Timestamp to assign to generated tiles
+my $Timestamp = time();
+
 # What we intend to do
 my $Status = new status; 
 $Status->area($Layer,$X,$Y,$Z,$MaxZ);
@@ -179,7 +182,9 @@ sub supertile {
 
 		$Image->Scale(width => "256", height => "256");
 		$Image->Set(type=>"Palette");
+		$Image->Set(quality => 90);  # compress image
 		$Image->Write($Filename);
+		utime $Timestamp, $Timestamp, $Filename;
 	}
 
 	 

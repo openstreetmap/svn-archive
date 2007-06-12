@@ -15,6 +15,9 @@ use IO::File;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
+use Date::Manip;
+use Date::Parse;
+use Time::Local;
 
 # -----------------------------------------------------------------------------
 # Read GPS Data from TRK - File
@@ -31,20 +34,40 @@ sub read_track_TRK($) {
     printf STDERR ("Reading $filename\n") if $VERBOSE || $DEBUG;
     printf STDERR "$filename:	".(-s $filename)." Bytes\n" if $DEBUG;
 
+    my ($fn_mtime) = (stat($filename))[9] || 0;
+    #print "$filename mtime: ".localtime($fn_mtime)."\n";
+    my $date ="01-01-2007";
+
     my $fh = data_open($filename);
     return $new_tracks unless $fh;
     my $new_track=[];
+    
     while ( my $line = $fh->getline() ) {
 	chomp $line;
-	
-	print "$line\n"
-	    if $DEBUG>10;
 
-	my $full_line = $line;
+	print "$line\n" if $DEBUG>10;
 
-	my ($date,$time,$lon,$lat,$alt,$speed,$test1,$test2,$test3) = split(/\s*,\s*/,$line);
-	printf STDERR "	time: $date, $time, la: $lat, lo: $lon, Alt: $alt, Speed: $speed, Test: $test1,$test2,$test3\n"
-	    if $DEBUG >3;
+	my ($dummy1,$time,$lon,$lat,$heading,$speed,$test1,$test2,$test3) = split(/\s*,\s*/,$line);
+	my $alt=0;
+	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
+
+	$time = str2time("$date ${time}");
+	if ( $DEBUG >3) {
+	    printf STDERR "".localtime($time)."\t, la: $lat, lo: $lon,";
+	    printf STDERR "\tHeading: %6.2f",$heading;
+	    printf STDERR "\tSpeed: %8.4f",$speed;
+	    printf STDERR "\tTest1($test1)";
+	    printf STDERR "\tdop?($test2)";
+	    printf STDERR "\tSat#?: $test3";
+	    printf STDERR "\tdummy1: $dummy1\n";
+	};
+
+
+	if ( $heading>360) {
+	    print STDERR "Here something is wrong the heading ($heading) ".
+		"is larger than 360 degrees\n";
+	    print STDERR "Line: $line\n";
+	}
 	my ($msg_anz,$msg_no,$rest);
 
 	unless ( defined( $lat) && ($lat ne "" )&& defined( $lon) && ($lon ne "")) {
@@ -53,6 +76,7 @@ sub read_track_TRK($) {
 	};
 
 	my $elem ={};
+	$elem->{pdop} = $test2;
 	$elem->{lat} = $lat;
 	$elem->{lon} = $lon;
 	$elem->{alt} = $alt if defined $alt;

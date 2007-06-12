@@ -84,6 +84,11 @@ sub ApplyConfigLogic{
         {
             $Config->{"Layer.$layer.Transparent"} = 0;
         }
+
+        if (!defined($Config->{"Layer.$layer.RenderFullTileset"}))
+        {
+            $Config->{"Layer.$layer.RenderFullTileset"} = 0;
+        }
     }
 }
 
@@ -195,6 +200,11 @@ sub CheckConfig{
         if($Config{"Border$_"} > 0.2){
             printf "Border$_ looks abnormally large\n";
         }
+    }
+
+    if (defined($Config{"RenderFullTileset"}))
+    {
+        die "You have the RenderFullTileset option mentioned in one of your config files. This option is no longer supported and has been replaced by a layer-specific option of the same name set in layers.conf. Please remove RenderFullTileset to avoid confusion - ";
     }
 
     ## not used any longer, superseded by per-layer value

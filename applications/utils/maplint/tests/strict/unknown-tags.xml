@@ -16,6 +16,7 @@
             <xsl:if test="(@k!='created_by') and
                     (@k!='converted_by') and
                     (@k!='todo') and
+                    (@k!='landuse') and
                     (@k!='note') and
                     (@k!='highway') and
                     (@k!='railway') and
@@ -42,6 +43,8 @@
                     (@k!='religion') and
                     (@k!='denomination') and
                     (@k!='source') and
+                    (@k!='source:ref') and
+                    (@k!='source:name') and
                     (@k!='is_in') and
                     (@k!='time') and
                     (@k!='access') and
@@ -78,6 +81,8 @@
                     (@k!='natural') and
                     (@k!='layer') and
                     (@k!='source') and
+                    (@k!='source:ref') and
+                    (@k!='source:name') and
                     (@k!='time') and
                     (@k!='abutters') and
                     (@k!='maxspeed') and

@@ -116,6 +116,31 @@ sub downloadtile {
 	
 	unlink $f2 if($Size < 103);
 }
+
+# Delete blank subtiles of a blank tile
+# When we notice that a tile is blank because all its subtiles are blank,
+# because of the fallback mechanism in the server we can delete those
+# subtiles. However, to avoid the fallback on the server having to work too
+# hard, we ensure that there are still real blank tiles every few zoom
+# levels.
+sub deleteBlankSubtiles
+{
+  my($X,$Y,$Z,$Layer) = @_;
+  return if $Z >= 11;  # Not lowzoom's problem
+  # This keeps real blank tiles at zooms 3,6 and 9
+  return if ($Z+1)%3 == 0;
+  
+  for my $x (0,1)
+  {
+    for my $y (0,1)
+    {
+      my $f = localfile(2*$X + $x, 2*$Y + $y, $Z+1, $Layer);
+      # Unlink prior to creating, file may be a hard link
+      unlink $f;
+      open my $fh, ">", $f;  # Make zero byte file, the marker for the server to delete the tile
+    }
+  }
+}
 # Create a supertile, by merging together 4 local image files, and creating a new local file
 sub supertile {
   my ($X,$Y,$Z,$Layer) = @_;
@@ -141,12 +166,14 @@ sub supertile {
 	{#if its a "404 sea" or a "sea.png" and all 4 sizes are the same, make one 69 bytes sea of it
 			my $SeaFilename = "../../emptysea.png"; 
 			link($SeaFilename,$Filename);
+			deleteBlankSubtiles($X,$Y,$Z,$Layer);
 			return;
 	}
 	elsif(($AA->Get('filesize') == 179 ) && ($AA->Get('filesize') == $BA->Get('filesize')) && ($BA->Get('filesize') == $AB->Get('filesize')) && ( $AB->Get('filesize') == $BB->Get('filesize')) ) 
 	{#if its a "blank land" or a "land.png" and all 4 sizes are the same, make one 69 bytes land of it
 			my $LandFilename = "../../emptyland.png"; 
 			link($LandFilename,$Filename);
+			deleteBlankSubtiles($X,$Y,$Z,$Layer);
 			return;
 	}
 	else{

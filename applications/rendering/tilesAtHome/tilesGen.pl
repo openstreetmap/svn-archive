@@ -67,11 +67,23 @@ my $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
 $EmptySeaImage->fill(127,127,$MapSeaBackground);
 
 # Check the on disk image tiles havn't been corrupted
-if( -s "emptyland.png" != 67 or
-    -s "emptysea.png" != 69 )
+if( -s "emptyland.png" != 67 )
 {
-  print STDERR "Corruption detected in empty(land/sea).png files. Please redownload.\n";
-  exit(3);
+    print STDERR "Corruption detected in emptyland.png. Trying to redownload from svn automatically.\n";
+    DownloadFile(
+      "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptyland.png", # TODO: should be svn update, instead of http get... 
+      "emptyland.png",
+      0, ## 0=delete old file from disk first
+      "emptyland.png");
+}
+if( -s "emptysea.png" != 69 )
+{
+    print STDERR "Corruption detected in emptysea.png. Trying to redownload from svn automatically.\n";
+    DownloadFile(
+      "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptysea.png", # TODO: should be svn update, instead of http get... 
+      "emptysea.png",
+      0, ## 0=delete old file from disk first
+      "emptysea.png");
 }
 
 # Setup map projection

@@ -5,11 +5,7 @@
  <br/><br/>
 <% end %>
 <span class="rsssmall"><a href="<%= url_for :controller => 'trace', :action => 'georss' %>"><img src="/images/RSS.gif" border="0"></a></span> | 
-<% if @user %>
-  <%= link_to 'See just your traces', {:controller => 'trace', :action => 'mine'} %>
-<% else %>
-  <%= link_to 'login', {:controller => 'user', :action => 'login'} %> to see just your traces
-<% end %>
+<%= link_to 'See just your traces, or upload a trace', {:controller => 'trace', :action => 'mine'} %>
 <% if @tag %>
  | <%= link_to 'See all traces', {:controller => 'trace', :action => 'list'} %>
 <% end %>
@@ -18,7 +14,7 @@
 <br />
 <br />
 
-<%= render (:partial => 'trace_paging_nav') %>
+<%= render :partial => 'trace_paging_nav' %>
 
 <table id="keyvalue" cellpadding="3">
   <tr>
@@ -27,6 +23,6 @@
   </tr>
   <%= render :partial => 'trace', :collection => @traces %>
 </table>
-<%= render (:partial => 'trace_paging_nav') %>
+<%= render :partial => 'trace_paging_nav' %>
 
-<%= render (:partial => 'trace_optionals') %>
+<%= render :partial => 'trace_optionals' %>

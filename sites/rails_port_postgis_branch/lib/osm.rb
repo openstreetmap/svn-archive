@@ -68,14 +68,12 @@ module OSM
     attr_reader :tracksegs
 
     def initialize(filename)
-      @filename = filename
       @possible_points = 0
       @actual_points = 0
       @tracksegs = 0
-    end
+      @points = []
 
-    def points
-      file = File.new(@filename)
+      file = File.new(filename)
       parser = REXML::Parsers::SAX2Parser.new( file )
 
       lat = -1
@@ -114,7 +112,7 @@ module OSM
           ele = '0' unless gotele
           if lat < 90 && lat > -90 && lon > -180 && lon < 180
             @actual_points += 1
-            yield Hash['latitude' => lat,'longitude' => lon,'timestamp' => date,'altitude' => ele,'segment' => @tracksegs]
+            @points.push(Hash['latitude' => lat,'longitude' => lon,'timestamp' => date,'altitude' => ele,'segment' => @tracksegs])
           end
         end
         gotlatlon = false
@@ -122,6 +120,10 @@ module OSM
         gotdate = false
       end
       parser.parse
+    end
+
+    def points
+      @points.each { |p| yield p }
     end
 
     def get_picture(min_lat, min_lon, max_lat, max_lon, num_points)
@@ -239,7 +241,7 @@ module OSM
   end
 
   class GeoRSS
-    def initialize(description='OpenStreetMap GPS Traces')
+    def initialize(feed_title='OpenStreetMap GPS Traces', feed_description='OpenStreetMap GPS Traces', feed_url='http://www.openstreetmap.org/traces/')
       @doc = XML::Document.new
       @doc.encoding = 'UTF-8' 
       
@@ -250,14 +252,14 @@ module OSM
       @channel = XML::Node.new 'channel'
       rss << @channel
       title = XML::Node.new 'title'
-      title <<  'OpenStreetMap GPS Traces'
+      title <<  feed_title
       @channel << title
       description_el = XML::Node.new 'description'
       @channel << description_el
 
-      description_el << description
+      description_el << feed_description
       link = XML::Node.new 'link'
-      link << 'http://www.openstreetmap.org/traces/'
+      link << feed_url
       @channel << link
       image = XML::Node.new 'image'
       @channel << image
@@ -274,7 +276,7 @@ module OSM
       height << '100'
       image << height
       link = XML::Node.new 'link'
-      link << 'http://www.openstreetmap.org/traces/'
+      link << feed_url
       image << link
     end
 
@@ -296,13 +298,17 @@ module OSM
       pubDate << timestamp.xmlschema
       item << pubDate
 
-      lat_el = XML::Node.new 'geo:lat'
-      lat_el << latitude.to_s
-      item << lat_el
+      if latitude
+        lat_el = XML::Node.new 'geo:lat'
+        lat_el << latitude.to_s
+        item << lat_el
+      end
 
-      lon_el = XML::Node.new 'geo:lon'
-      lon_el << longitude.to_s
-      item << lon_el
+      if longitude
+        lon_el = XML::Node.new 'geo:long'
+        lon_el << longitude.to_s
+        item << lon_el
+      end
 
       @channel << item
     end

@@ -1,23 +1,4 @@
-
-
-<div id="geocoder">
-  <%= start_form_tag :controller => 'geocoder', :action => 'search' %>
-  <%= text_field 'query', 'postcode' %>
-  <%= text_field 'query', 'place_name'%>
-  <%= submit_tag 'Search' %>
-  <%= end_form_tag %>
-
-  <div id="geocoder-attribution">
-    Geolocation provided by <a href="http://npemap.org.uk/">npemap.org.uk</a>,
-    <a href="http://geocoder.us/">geocoder.us</a>, <a href="http://geocoder.ca/">geocoder.ca</a> and <a href="http://www.geonames.org/">geonames.org</a>
-  </div>
-  <div id="postcode-helper">
-    Enter a postcode or zip code, eg: SW15 6JH, 95472 
-  </div>
-  <div id="placename-helper">
-    Enter a place-name, eg:Essen
-  </div>
-</div>
+<%= render :partial => 'search' %>
 
 <% if params['mlon'] and params['mlat'] %>
 <% marker = true %>
@@ -93,24 +74,28 @@
     markers.addMarker(marker);
     <%end%>
 
-      map.addControl(new OpenLayers.Control.LayerSwitcher());
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
     map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
 
-    map.events.register("moveend", map, function() { 
-        var lonlat = map.getCenter();
-
-        var lon_deg = (lonlat.lon / 20037508.34) * 180;
-        var lat_deg = (lonlat.lat / 20037508.34) * 180;
-        var PI = 3.14159265358979323846;
-        lat_deg = 180/PI * (2 * Math.atan(Math.exp(lat_deg * PI / 180)) - PI / 2);
-        var zoom = map.getZoom();
-        updatelinks(lon_deg,lat_deg,zoom);
-        });
+    map.events.register("moveend", map, updateLocation);
     document.getElementById( 'map_OpenLayers_ViewPort' ).style.position = 'absolute';
     if( ie6 ) {
       handleResize();
     }
+    updateLocation();
   }        
+
+  function updateLocation() {
+    var lonlat = map.getCenter();
+
+    var lon_deg = (lonlat.lon / 20037508.34) * 180;
+    var lat_deg = (lonlat.lat / 20037508.34) * 180;
+    var PI = 3.14159265358979323846;
+    lat_deg = 180/PI * (2 * Math.atan(Math.exp(lat_deg * PI / 180)) - PI / 2);
+    var zoom = map.getZoom();
+
+    updatelinks(lon_deg,lat_deg,zoom);
+  }
 
   function getStyle( el, property ) {
     var style;
@@ -166,6 +151,10 @@
       el.style.height = new_height + 'px';
     }
     map.updateSize();
+    el.style.display = 'none';
+    setTimeout( function() {
+        el.style.display = '';
+        }, 200 );
   }
 
 if( ie6 ) {

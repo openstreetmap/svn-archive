@@ -7,7 +7,7 @@
     <%= javascript_include_tag 'site.js' %>
 
     <link rel="stylesheet" type="text/css" href="/stylesheets/site.css" />
-    <title>OpenStreetMap</title>
+    <title>OpenStreetMap<%= ' | '+@title if @title %></title>
   </head>
   <body>
 
@@ -25,10 +25,10 @@
 
     <span id="greeting">
       <% if @user %>
-        Welcome, <%= link_to @user.display_name, {:controller => 'user', :action => 'view', :display_name => @user.display_name}, {:id => 'loginanchor'}%> |
-        <%= link_to 'logout', {:controller => 'user', :action => 'logout'}, {:id => 'loginanchor'}%>
+        Welcome, <%= link_to @user.display_name, {:controller => 'user', :action => 'view', :display_name => @user.display_name}%> |
+        <%= link_to 'logout', {:controller => 'user', :action => 'logout', :referer => request.request_uri}, {:id => 'logoutanchor'}%>
       <% else %>
-        <%= link_to 'log in', {:controller => 'user', :action => 'login'}, {:id => 'loginanchor'}%> |
+        <%= link_to 'log in', {:controller => 'user', :action => 'login', :referer => request.request_uri}, {:id => 'loginanchor'}%> |
         <%= link_to 'sign up', {:controller => 'user', :action => 'new'}, {:id => 'registeranchor'} %>
       <% end %>
     </span>
@@ -40,6 +40,7 @@
         traceclass = ''
         viewclass = 'active' if params['controller'] == 'site' and params['action'] == 'index' 
         editclass = 'active' if params['controller'] == 'site' and params['action'] == 'edit' 
+        editcalss = 'active' if params['controller'] == 'campaign'
         traceclass = 'active' if params['controller'] == 'trace'
         %>
         <li><%= link_to 'View', {:controller => 'site', :action => 'index'}, {:id => 'viewanchor', :title => 'view maps', :class => viewclass  } %></li>
@@ -53,7 +54,7 @@
       <div id="logo">
         <center>
           <h1>OpenStreetMap</h1>
-          <img src="/images/osm_logo.png" width="120" height="120"/><br/>
+          <%= link_to(image_tag("osm_logo.png", :size => "120x120", :border => 0), :controller => 'site', :action => 'index') %><br/>
           <nobr><h2>The Free Wiki World Map</h2></nobr>
         </center>
       </div>
@@ -72,7 +73,16 @@
 		<%= link_to "Users' diaries", {:controller => 'diary_entry', :action => 'list'} %><br />
         <a href="http://www.opengeodata.org/">News blog</a><br />
         <a href="http://wiki.openstreetmap.org/index.php/Merchandise">Shop</a><br />
+</div>
+
+
+      <div id="left_menu">
+    <div id="sotminfo">
+Come to the first OpenStreetMap Conference, <a href="http://www.stateofthemap.org">The State of the Map</a>: 14th-15th July 2007, Manchester, UK.
+</div>
       </div>
+
+
       <%= yield :optionals %>
       <div id="cclogo">
         <center>

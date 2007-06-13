@@ -2,7 +2,7 @@ class TraceController < ApplicationController
   before_filter :authorize_web  
   before_filter :authorize, :only => [:api_details, :api_data, :api_create]
   layout 'site'
-  
+ 
   # Counts and selects pages of GPX traces for various criteria (by user, tags, public etc.).
   #  target_user - if set, specifies the user to fetch traces for.  if not set will fetch all traces
   #  paging_action - the action that will be linked back to from view
@@ -13,6 +13,8 @@ class TraceController < ApplicationController
     # from display name, pick up user id if one user's traces only
     display_name = params[:display_name]
     if target_user.nil? and display_name and display_name != ''
+      @paging_action = 'view'
+      @display_name = display_name
       target_user = User.find(:first, :conditions => [ "display_name = ?", display_name])
     end
 
@@ -82,7 +84,7 @@ class TraceController < ApplicationController
     if @user
       list(@user, 'mine') unless @user.nil?
     else
-      redirect_to :controller => 'user', :action => 'login'
+      redirect_to :controller => 'user', :action => 'login', :referer => request.request_uri
     end
   end
 
@@ -98,10 +100,10 @@ class TraceController < ApplicationController
   def create
     filename = "/tmp/#{rand}"
 
-    File.open(filename, "w") { |f| f.write(@params['trace']['gpx_file'].read) }
-    @params['trace']['name'] = @params['trace']['gpx_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-    @params['trace'].delete('gpx_file') # remove the field from the hash, because there's no such field in the DB
-    @trace = Trace.new(@params['trace'])
+    File.open(filename, "w") { |f| f.write(params[:trace][:gpx_file].read) }
+    params[:trace][:name] = params[:trace][:gpx_file].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
+    params[:trace].delete('gpx_file') # remove the field from the hash, because there's no such field in the DB
+    @trace = Trace.new(params[:trace])
     @trace.inserted = false
     @trace.user = @user
     @trace.timestamp = Time.now
@@ -113,17 +115,13 @@ class TraceController < ApplicationController
       logger.info("id is #{@trace.id}")
       flash[:notice] = "Your GPX file has been uploaded and is awaiting insertion in to the database. This will usually happen within half an hour, and an email will be sent to you on completion."
       redirect_to :action => 'mine'
-    else
-      # fixme throw an error here
-       redirect_to :action => 'mine'
-       flash[:notice] = "You haven't entered a tag or a description for yoru traces."
     end
   end
 
   def data
     trace = Trace.find(params[:id])
     if trace.public? or (@user and @user == trace.user)
-      send_data(File.open("/tmp/#{trace.id}.gpx",'r').read , :filename => "#{trace.id}.gpx", :type => 'text/plain', :disposition => 'inline')
+      send_data(File.open("/home/osm/gpx/#{trace.id}.gpx",'r').read , :filename => "#{trace.id}.gpx", :type => 'text/plain', :disposition => 'inline')
     end
   end
 
@@ -178,17 +176,17 @@ class TraceController < ApplicationController
     
     filename = "/tmp/#{rand}"
     File.open(filename, "w") { |f| f.write(request.raw_post) }
-    @params['trace'] = {}
-    @params['trace']['name'] = params[:filename]
-    @params['trace']['tagstring'] = params[:tags]
-    @params['trace']['description'] = params[:description]
-    @trace = Trace.new(@params['trace'])
+    params[:trace] = {}
+    params[:trace][:name] = params[:filename]
+    params[:trace][:tagstring] = params[:tags]
+    params[:trace][:description] = params[:description]
+    @trace = Trace.new(params[:trace])
     @trace.inserted = false
     @trace.user = @user
     @trace.timestamp = Time.now
 
     if @trace.save
-      saved_filename = "/tmp/#{@trace.id}.gpx"
+      saved_filename = "/home/osm/gpx/#{@trace.id}.gpx"
       File.rename(filename, saved_filename)
       logger.info("id is #{@trace.id}")
       flash[:notice] = "Your GPX file has been uploaded and is awaiting insertion in to the database. This will usually happen within half an hour, and an email will be sent to you on completion."

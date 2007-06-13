@@ -13,6 +13,9 @@ class User < ActiveRecord::Base
   validates_length_of :pass_crypt, :minimum => 8
   validates_length_of :display_name, :minimum => 3, :allow_nil => true
   validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+  validates_format_of :display_name, :with => /^[^\/;.,?]*$/
+
+  before_save :encrypt_password
 
   def set_defaults
     self.creation_time = Time.now
@@ -20,12 +23,8 @@ class User < ActiveRecord::Base
     self.token = User.make_token()
   end
 
-  def pass_crypt=(str) 
-    write_attribute("pass_crypt", Digest::MD5.hexdigest(str)) 
-  end
-
-  def pass_crypt_confirmation=(str) 
-    write_attribute("pass_crypt_confirm", Digest::MD5.hexdigest(str)) 
+  def encrypt_password
+    self.pass_crypt = Digest::MD5.hexdigest(pass_crypt) unless pass_crypt_confirmation.nil?
   end
 
   def self.authenticate(email, passwd)
@@ -62,7 +61,7 @@ class User < ActiveRecord::Base
 
   def nearby(lat_range=1, lon_range=1)
       if self.home_lon and self.home_lat 
-          nearby = User.find(:all,  :conditions => "#{self.home_lon} > home_lon - #{lon_range} and #{self.home_lon} < home_lon + #{lon_range} and  #{self.home_lon} > home_lon - #{lon_range} and #{self.home_lon} < home_lon + #{lon_range} and data_public = 1 and id != #{self.id}") 
+          nearby = User.find(:all,  :conditions => "#{self.home_lon} > home_lon - #{lon_range} and #{self.home_lon} < home_lon + #{lon_range} and  #{self.home_lat} > home_lat - #{lat_range} and #{self.home_lat} < home_lat + #{lat_range} and data_public = 1 and id != #{self.id}") 
       else
           nearby = []
       end

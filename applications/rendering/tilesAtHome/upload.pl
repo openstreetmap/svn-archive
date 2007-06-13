@@ -186,8 +186,8 @@ else
 
     ## look again in the workdir, there might be new files from split tilesets:
     
-    opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
-    my @dir = readdir($dp);
+    opendir($dp, $TileDir) or die("Can't open directory $TileDir\n");
+    @dir = readdir($dp);
     @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
     closedir($dp);
 
@@ -210,7 +210,7 @@ else
 # Moves tiles into a "gather" directory until a certain size is reached,
 # then compress and upload those files
 #-----------------------------------------------------------------------------
-sub uploadTileBatch()
+sub uploadTileBatch
 {
     my ($TileDir, $TempDir, $OutputDir, $allowedPrefixes) = @_;
     my ($Size,$Count) = (0,0);
@@ -256,7 +256,7 @@ sub uploadTileBatch()
 #-----------------------------------------------------------------------------
 # Compress all PNG files from one directory, creating 
 #-----------------------------------------------------------------------------
-sub compressAndUpload()
+sub compressAndUpload
 {
     my ($Dir, $OutputDir, $SingleTileset) = @_;
     $SingleTileset = ($SingleTileset eq 'yes' ? '_tileset' : '');
@@ -321,7 +321,7 @@ sub compressAndUpload()
 #-----------------------------------------------------------------------------
 # Upload a ZIP file
 #-----------------------------------------------------------------------------
-sub upload()
+sub upload
 {
     my ($File) = @_;
     my $ZipSize += -s $File;

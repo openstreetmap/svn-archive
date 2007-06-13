@@ -882,7 +882,8 @@ sub svg2png {
   
   my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
 
-  my $Cmd = sprintf("%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
+  my $Cmd = sprintf("%s%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
+    $Config{i18n} ? "LANG=C " : "",
     $Config{Niceness},
     $Config{Inkscape},
     $SizeX,

@@ -265,6 +265,12 @@ sub compressAndUpload()
 
     my $epochtime = time;
   
+    # Create the output directory if it doesn't exist...
+    if( ! -e $OutputDir )
+    {
+        mkdir $OutputDir;
+    }
+    
     if($Config{UseHostnameInZipname})
     {
         my $hostname = `hostname`."XXX";

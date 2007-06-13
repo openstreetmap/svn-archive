@@ -9,6 +9,9 @@ XmlStarlet=c:\program files\xmlstarlet\xml
 Zip=c:\program files\zip\zip
 Niceness=
 
+## Workaround for inkscape internationalisation problems. Default off (0) for windows
+i18n=0
+
 # Upload
 DeleteZipFilesAfterUpload=0
 UploadChunkSize=1.5   # Megabyte

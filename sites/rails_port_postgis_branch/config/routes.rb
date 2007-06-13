@@ -13,10 +13,13 @@ ActionController::Routing::Routes.draw do |map|
   
   map.connect "api/#{API_VERSION}/way/create", :controller => 'way', :action => 'create'
   map.connect "api/#{API_VERSION}/way/:id/history", :controller => 'old_way', :action => 'history', :id => nil
+  map.connect "api/#{API_VERSION}/way/:id/full", :controller => 'way', :action => 'full', :id => nil
   map.connect "api/#{API_VERSION}/way/:id", :controller => 'way', :action => 'rest', :id => nil
   map.connect "api/#{API_VERSION}/ways", :controller => 'way', :action => 'ways', :id => nil
 
   map.connect "api/#{API_VERSION}/map", :controller => 'api', :action => 'map'
+  
+  map.connect "api/#{API_VERSION}/trackpoints", :controller => 'api', :action => 'trackpoints'
   
   map.connect "api/#{API_VERSION}/search", :controller => 'search', :action => 'search_all'
   map.connect "api/#{API_VERSION}/way/search", :controller => 'search', :action => 'search_ways'
@@ -30,12 +33,18 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "api/#{API_VERSION}/gpx/:id/details", :controller => 'trace', :action => 'api_details'
   map.connect "api/#{API_VERSION}/gpx/:id/data", :controller => 'trace', :action => 'api_data'
   
+  # Potlatch API
+  
+  map.connect "api/#{API_VERSION}/amf", :controller =>'amf', :action =>'talk'
+  map.connect "api/#{API_VERSION}/swf/trackpoints", :controller =>'swf', :action =>'trackpoints'
+  
   # web site
 
   map.connect '/', :controller => 'site', :action => 'index'
   map.connect '/user/save', :controller => 'user', :action => 'save'
   map.connect '/user/confirm', :controller => 'user', :action => 'confirm'
   map.connect '/user/go_public', :controller => 'user', :action => 'go_public'
+  map.connect '/user/reset_password', :controller => 'user', :action => 'reset_password'
   map.connect '/index.html', :controller => 'site', :action => 'index'
   map.connect '/edit.html', :controller => 'site', :action => 'edit'
   map.connect '/search.html', :controller => 'way_tag', :action => 'search'
@@ -62,17 +71,35 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/traces/tag/:tag/page/:page', :controller => 'trace', :action => 'list', :id => nil
 
   # user pages
+  map.connect '/user/:display_name/make_friend', :controller => 'user', :action => 'make_friend'
   map.connect '/user/:display_name', :controller => 'user', :action => 'view'
   map.connect '/user/:display_name/diary', :controller => 'user', :action => 'diary'
+  map.connect '/user/:display_name/diary/rss', :controller => 'user', :action => 'rss'
   map.connect '/user/:display_name/diary/newpost', :controller => 'diary_entry', :action => 'new'
-  map.connect '/user/:display_name/edit', :controller => 'user', :action => 'edit'
   map.connect '/user/:display_name/account', :controller => 'user', :action => 'account'
+  map.connect '/user/:display_name/set_home', :controller => 'user', :action => 'set_home'
+  map.connect '/diary', :controller => 'diary_entry', :action => 'list'
+  map.connect '/diary/rss', :controller => 'diary_entry', :action => 'rss'
+  map.connect '/diary/:language', :controller => 'diary_entry', :action => 'list'
+  map.connect '/diary/:language/rss', :controller => 'diary_entry', :action => 'rss'
 
   # test pages
   map.connect '/test/populate/:table/:from/:count', :controller => 'test', :action => 'populate'
   map.connect '/test/populate/:table/:count', :controller => 'test', :action => 'populate', :from => 1
 
+  # geocoder
+  map.connect '/geocoder/search/', :controller => 'geocoder', :action => 'search'
+  map.connect '/geocoder/results/', :controller => 'geocoder', :action => 'results'
+  map.connect '/postcode/:postcode/', :controller => 'geocoder', :action => 'search'
+
+  # messages
+
+  map.connect '/user/:display_name/inbox', :controller => 'message', :action => 'inbox'
+  map.connect '/message/new/:user_id', :controller => 'message', :action => 'new'
+  map.connect '/message/read/:message_id', :controller => 'message', :action => 'read'
+  map.connect '/message/mark/:message_id', :controller => 'message', :action => 'mark'
+  
   # fall through
-  map.connect ':controller/:id/:action'
+     map.connect ':controller/:id/:action'
   map.connect ':controller/:action'
 end

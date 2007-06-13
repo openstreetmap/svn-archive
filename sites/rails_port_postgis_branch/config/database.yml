@@ -32,4 +32,5 @@ production:
   database: openstreetmap
   username: openstreetmap
   password: openstreetmap
-  host: 128.40.58.203
+  host: db.openstreetmap.org
+

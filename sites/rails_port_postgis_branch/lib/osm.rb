@@ -68,14 +68,12 @@ module OSM
     attr_reader :tracksegs
 
     def initialize(filename)
-      @filename = filename
       @possible_points = 0
       @actual_points = 0
       @tracksegs = 0
-    end
+      @points = []
 
-    def points
-      file = File.new(@filename)
+      file = File.new(filename)
       parser = REXML::Parsers::SAX2Parser.new( file )
 
       lat = -1
@@ -114,7 +112,7 @@ module OSM
           ele = '0' unless gotele
           if lat < 90 && lat > -90 && lon > -180 && lon < 180
             @actual_points += 1
-            yield Hash['latitude' => lat,'longitude' => lon,'timestamp' => date,'altitude' => ele,'segment' => @tracksegs]
+            @points.push(Hash['latitude' => lat,'longitude' => lon,'timestamp' => date,'altitude' => ele,'segment' => @tracksegs])
           end
         end
         gotlatlon = false
@@ -124,7 +122,12 @@ module OSM
       parser.parse
     end
 
+    def points
+      @points.each { |p| yield p }
+    end
+
     def get_picture(min_lat, min_lon, max_lat, max_lon, num_points)
+      #puts "getting picfor bbox #{min_lat},#{min_lon} - #{max_lat},#{max_lon}"
       frames = 10
       width = 250
       height = 250
@@ -157,13 +160,14 @@ module OSM
           images[n].stroke_width(1)
           images[n].stroke('#BBBBBB')
           images[n].fill('#BBBBBB')
+        #  puts "A #{px},#{py} - #{oldpx},#{oldpy}"
           images[n].line(px, py, oldpx, oldpy ) unless first
         end
         images[mm].stroke_width(3)
         images[mm].stroke('#000000')
         images[mm].fill('#000000')
         images[mm].line(px, py, oldpx, oldpy ) unless first
-
+      #  puts "B #{px},#{py} - #{oldpx},#{oldpy}"
         m +=1
         if m > num_points.to_f / frames.to_f * (mm+1)
           mm += 1
@@ -193,6 +197,7 @@ module OSM
     end
 
     def get_icon(min_lat, min_lon, max_lat, max_lon)
+      puts "getting icon for bbox #{min_lat},#{min_lon} - #{max_lat},#{max_lon}"
       width = 50
       height = 50
       rat= Math.cos( ((max_lat + min_lat)/2.0) /  180.0 * 3.141592)
@@ -216,6 +221,7 @@ module OSM
         px = proj.x(p['longitude'])
         py = proj.y(p['latitude'])
         gc.line(px, py, oldpx, oldpy ) unless first
+       # puts "C #{px},#{py} - #{oldpx},#{oldpy}"
         first = false
         oldpy = py
         oldpx = px
@@ -235,7 +241,7 @@ module OSM
   end
 
   class GeoRSS
-    def initialize(description='OpenStreetMap GPS Traces')
+    def initialize(feed_title='OpenStreetMap GPS Traces', feed_description='OpenStreetMap GPS Traces', feed_url='http://www.openstreetmap.org/traces/')
       @doc = XML::Document.new
       @doc.encoding = 'UTF-8' 
       
@@ -246,14 +252,14 @@ module OSM
       @channel = XML::Node.new 'channel'
       rss << @channel
       title = XML::Node.new 'title'
-      title <<  'OpenStreetMap GPS Traces'
+      title <<  feed_title
       @channel << title
       description_el = XML::Node.new 'description'
       @channel << description_el
 
-      description_el << description
+      description_el << feed_description
       link = XML::Node.new 'link'
-      link << 'http://www.openstreetmap.org/traces/'
+      link << feed_url
       @channel << link
       image = XML::Node.new 'image'
       @channel << image
@@ -270,7 +276,7 @@ module OSM
       height << '100'
       image << height
       link = XML::Node.new 'link'
-      link << 'http://www.openstreetmap.org/traces/'
+      link << feed_url
       image << link
     end
 
@@ -292,13 +298,17 @@ module OSM
       pubDate << timestamp.xmlschema
       item << pubDate
 
-      lat_el = XML::Node.new 'geo:lat'
-      lat_el << latitude.to_s
-      item << lat_el
+      if latitude
+        lat_el = XML::Node.new 'geo:lat'
+        lat_el << latitude.to_s
+        item << lat_el
+      end
 
-      lon_el = XML::Node.new 'geo:lon'
-      lon_el << longitude.to_s
-      item << lon_el
+      if longitude
+        lon_el = XML::Node.new 'geo:long'
+        lon_el << longitude.to_s
+        item << lon_el
+      end
 
       @channel << item
     end

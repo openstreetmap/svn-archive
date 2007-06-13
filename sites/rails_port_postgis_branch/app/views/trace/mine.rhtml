@@ -14,7 +14,7 @@
 
 <% if @user %>
 
-<%= start_form_tag({:action => 'create'}, :multipart => true) %>
+<% form_tag({:action => 'create'}, :multipart => true) do %>
 <table>
 <table>
 <tr><td align="right">upload GPX file:</td><td><%= file_field('trace', 'gpx_file', {:size => 50, :maxlength => 255}) %></td></tr>
@@ -26,18 +26,18 @@
 </td></tr>
 </table>
 
-<%= end_form_tag %> 
+<% end %>
 
-<%= render (:partial => 'trace_paging_nav') %>
+<%= render :partial => 'trace_paging_nav' %>
 <table id="keyvalue" cellpadding="3">
   <tr>
     <th></th>
     <th></th>
   </tr>
-  <%= render (:partial => 'trace', :collection => @traces) unless @traces.nil? %>
+  <%= render :partial => 'trace', :collection => @traces unless @traces.nil? %>
 </table>
-<%= render (:partial => 'trace_paging_nav') %>
+<%= render :partial => 'trace_paging_nav' %>
 
 <% end %>
 
-<%= render (:partial => 'trace_optionals') %>
+<%= render :partial => 'trace_optionals' %>

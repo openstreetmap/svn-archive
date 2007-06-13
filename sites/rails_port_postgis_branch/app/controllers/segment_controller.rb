@@ -5,7 +5,7 @@ class SegmentController < ApplicationController
   after_filter :compress_output
 
   def create
-    response.headers["Content-Type"] = 'application/xml'
+    response.headers["Content-Type"] = 'text/xml'
     if request.put?
       segment = Segment.from_xml(request.raw_post, true)
 
@@ -14,9 +14,15 @@ class SegmentController < ApplicationController
 
         segment.from_node = Node.find(segment.node_a.to_i)
         segment.to_node = Node.find(segment.node_b.to_i)
+          
+        if segment.from_node == segment.to_node
+          render :nothing => true, :status => HTTP_EXPECTATION_FAILED
+          return
+        end
         
         unless segment.preconditions_ok? # are the nodes visible?
-          render :nothing => true, :status => 412
+          render :nothing => true, :status => HTTP_PRECONDITION_FAILED
+          return
         end
 
         if segment.save_with_history
@@ -36,7 +42,7 @@ class SegmentController < ApplicationController
   end
 
   def rest
-    response.headers["Content-Type"] = 'application/xml'
+    response.headers["Content-Type"] = 'text/xml'
     unless Segment.exists?(params[:id])
       render :nothing => true, :status => 404
       return
@@ -65,13 +71,19 @@ class SegmentController < ApplicationController
       segment.timestamp = Time.now
       segment.user_id = @user.id
 
+      if new_segment.node_a == new_segment.node_b
+        render :nothing => true, :status => HTTP_EXPECTATION_FAILED
+        return
+      end
+
       segment.node_a = new_segment.node_a
       segment.node_b = new_segment.node_b
+      
       segment.tags = new_segment.tags
       segment.visible = new_segment.visible
 
       if segment.id == new_segment.id and segment.save_with_history
-        render :nothing => true, :status => 200
+        render :nothing => true, :status => HTTP_OK
       else
         render :nothing => true, :status => 500
       end
@@ -81,7 +93,7 @@ class SegmentController < ApplicationController
   end
 
   def segments
-    response.headers["Content-Type"] = 'application/xml'
+    response.headers["Content-Type"] = 'text/xml'
     ids = params['segments'].split(',').collect {|s| s.to_i }
     if ids.length > 0
       segmentlist = Segment.find(ids)

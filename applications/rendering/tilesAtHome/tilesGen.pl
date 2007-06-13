@@ -66,6 +66,14 @@ my $EmptySeaImage = new GD::Image(256,256);
 my $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
 $EmptySeaImage->fill(127,127,$MapSeaBackground);
 
+# Check the on disk image tiles havn't been corrupted
+if( -s "emptyland.png" != 67 or
+    -s "emptysea.png" != 69 )
+{
+  print STDERR "Corruption detected in empty(land/sea).png files. Please redownload.\n";
+  exit(3);
+}
+
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);

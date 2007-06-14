@@ -66,6 +66,12 @@ my $EmptySeaImage = new GD::Image(256,256);
 my $MapSeaBackground = $EmptySeaImage->colorAllocate(181,214,241);
 $EmptySeaImage->fill(127,127,$MapSeaBackground);
 
+# Some broken versions of Inkscape occasionally produce totally black
+# output. We detect this case and throw an error when that happens.
+my $BlackTileImage = new GD::Image(256,256);
+my $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
+$BlackTileImage->fill(127,127,$BlackTileBackground);
+
 # Check the on disk image tiles havn't been corrupted
 if( -s "emptyland.png" != 67 )
 {
@@ -1115,6 +1121,13 @@ sub splitImageX
     my $NotEmptySea = 0;
     my $Basename = $Filename;   # used for statusMessage()
     $Basename =~ s|.*/||;
+
+    # Check for black tile output
+    if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
+    {
+      print STDERR "ERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
+      exit(3);
+    }
 
     # Detect empty tile here:
     if ($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE) {$NotEmptyLand = 1};  # true if images are different. (i.e. non-empty Land tile)

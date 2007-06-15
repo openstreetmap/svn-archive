@@ -14,31 +14,31 @@ Description: This is the masterpackage for all OpenStreetmap relevant Stuff
 Package: josm
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
+Description: Openstreetmap Editot josm
  <insert long description, indented with spaces>
 
 Package: openstreetmap-utils
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
+Description: Openstreetmap Utils
  <insert long description, indented with spaces>
 
 Package: openstreetmap-mapnik
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
+Description: Openstreetmap Renderer MapNik
  <insert long description, indented with spaces>
 
 Package: openstreetmap-osmarender
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
+Description: Openstreetmap Renderer OsmARender
  <insert long description, indented with spaces>
 
 Package: openstreetmap-data
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
+Description: Openstreetmap Data Package
  <insert long description, indented with spaces>
 
 Package: openstreetmap-doc

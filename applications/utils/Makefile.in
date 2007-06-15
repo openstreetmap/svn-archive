@@ -17,10 +17,9 @@
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
-pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ..
+top_builddir = ../../..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 INSTALL = @INSTALL@
 install_sh_DATA = $(install_sh) -c -m 644
@@ -34,13 +33,17 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-subdir = utils
+build_triplet = @build@
+host_triplet = @host@
+subdir = scripts/osm/utils
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(install_sh) -d
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
@@ -56,10 +59,12 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+pkgdatadir = @pkgdatadir@
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
+AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -70,27 +75,74 @@ CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DBUS_CFLAGS = @DBUS_CFLAGS@
+DBUS_GLIB_LIBS = @DBUS_GLIB_LIBS@
+DBUS_LIBS = @DBUS_LIBS@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DISABLEGARMIN_FALSE = @DISABLEGARMIN_FALSE@
+DISABLEGARMIN_TRUE = @DISABLEGARMIN_TRUE@
+DISABLEGDAL_FALSE = @DISABLEGDAL_FALSE@
+DISABLEGDAL_TRUE = @DISABLEGDAL_TRUE@
+DISABLEPLUGINS_FALSE = @DISABLEPLUGINS_FALSE@
+DISABLEPLUGINS_TRUE = @DISABLEPLUGINS_TRUE@
+ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FFLAGS = @FFLAGS@
+FRIENDSSERVERVERSION = @FRIENDSSERVERVERSION@
+GDAL_CFLAGS = @GDAL_CFLAGS@
+GDAL_CONFIG = @GDAL_CONFIG@
+GDAL_LDADD = @GDAL_LDADD@
+GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
+GLIB_LIBS = @GLIB_LIBS@
+GLIB_MKENUMS = @GLIB_MKENUMS@
+GMSGFMT = @GMSGFMT@
+GMSGFMT_015 = @GMSGFMT_015@
+GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
+HAVE_DBUS_FALSE = @HAVE_DBUS_FALSE@
+HAVE_DBUS_TRUE = @HAVE_DBUS_TRUE@
+HAVE_GDAL_FALSE = @HAVE_GDAL_FALSE@
+HAVE_GDAL_TRUE = @HAVE_GDAL_TRUE@
+HAVE_GTK_FALSE = @HAVE_GTK_FALSE@
+HAVE_GTK_TRUE = @HAVE_GTK_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INTLLIBS = @INTLLIBS@
+INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 LDFLAGS = @LDFLAGS@
+LIBADD_DL = @LIBADD_DL@
+LIBICONV = @LIBICONV@
+LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
+LTLIBICONV = @LTLIBICONV@
+LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MSGFMT = @MSGFMT@
+MSGFMT_015 = @MSGFMT_015@
+MSGMERGE = @MSGMERGE@
+NOGARMIN = @NOGARMIN@
+NOGDAL = @NOGDAL@
+NOPLUGINS = @NOPLUGINS@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -99,13 +151,28 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PCRE_CONFIG = @PCRE_CONFIG@
+PERL_PACKAGE_DIR = @PERL_PACKAGE_DIR@
+PKGCONFIG_CFLAGS = @PKGCONFIG_CFLAGS@
+PKGCONFIG_LIBS = @PKGCONFIG_LIBS@
+PKG_CONFIG = @PKG_CONFIG@
+POSUB = @POSUB@
 POW_LIB = @POW_LIB@
+RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+XGETTEXT = @XGETTEXT@
+XGETTEXT_015 = @XGETTEXT_015@
+XML_CFLAGS = @XML_CFLAGS@
+XML_LIBS = @XML_LIBS@
+YACC = @YACC@
+YFLAGS = @YFLAGS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
+ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -116,13 +183,21 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
+build = @build@
 build_alias = @build_alias@
+build_cpu = @build_cpu@
+build_os = @build_os@
+build_vendor = @build_vendor@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+host = @host@
 host_alias = @host_alias@
+host_cpu = @host_cpu@
+host_os = @host_os@
+host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -164,14 +239,12 @@ bin_SCRIPTS = \
 	osm-extract/planetosm-excerpt-tags.pl \
 	osm-extract/polygons/extract-germany.pl \
 	osm-extract/polygons/extract-polygon.pl \
-	planet-mirror/planet-mirror.pl \
-	export/osm2csv/osm2csv.pl
+	planet-mirror/planet-mirror.pl
 
 EXTRA_DIST = $(bin_SCRIPTS) \
-	export/CityKML/download.pl \
+	export/CityKML/*.pl \
 	export/CityKML/download_specific.pl \
-	export/CityKML/package.pl \
-	export/CityKML/run.pl \
+	export/osm2csv/create_all.sh \
 	export/osm2csv/osm2csv.pl \
 	export/osm2kml/osm2kml.py \
 	export/osm2shp/osm2shp.cpp \
@@ -184,65 +257,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	filter/osm-length/osm-length-2.pl \
 	filter/simplify/simplify.pl \
 	filter/wayclean/wayclean.cpp \
-	gps-tracks/gpx-batch-upload/gpx-batch-upload.pl \
-	import/airport_import/import_apt.pl \
-	import/coast_import/coast_upload.pl \
-	import/coast_import/osm.pm \
-	import/csv2osm/config.sample.complex \
-	import/csv2osm/csv2osm.pl \
-	import/dafif2osm/dafif2osm.pl \
-	import/osmtrackfilter/osmtrackfilter.pl \
-	import/srtm2osm/extractdata.pl \
-	import/srtm2osm/merge.pl \
-	import/srtm2osm/mkcntr.pl \
-	maplint/README \
-	maplint/Makefile \
-	maplint/html/*.html \
-	maplint/html/style.css \
-	maplint/lib/*.xsl \
-	maplint/tests/base/*.xml \
-	maplint/tests/main/*.xml \
-	maplint/tests/strict/*.xml \
-	osm-extract/osm-subset.pl \
-	osm-extract/planetosm-excerpt-area.pl \
-	osm-extract/planetosm-excerpt-tags.pl \
-	osm-extract/polygons/extract-germany.pl \
-	osm-extract/polygons/extract-polygon.pl \
-	osmapitest/*.rb \
-	planet-mirror/planet-mirror.pl \
-	planet.osm/java/speller/words.cfg \
-	planet.osm/perl/check_osm.pl \
-	planet.osm/perl/planetcount.pl \
-	planet.osm/perl/planetosm-to-db.pl \
-	planet.osm/perl/reorder-ways.pl \
-	planet.osm/python/utf8osmchecker.py \
-	planetdiff/*.txt \
-	planetdiff/*.xml \
-	planetdiff/*.h \
-	planetdiff/*.c \
-	sanitize/sanitize.pl \
-	serverStatus/ServerStatusToWiki.pl \
-	srtmshp/Canvas.cpp \
-	srtmshp/Canvas.h \
-	srtmshp/EarthPoint.h \
-	srtmshp/Map.h \
-	srtmshp/*.cpp \
-	srtmshp/SRTMConGen.h \
-	srtmshp/SRTMDataGrid.h \
-	srtmshp/SRTMGeneral.h \
-	where_are_they/geo_helper.py \
-	where_are_they/mini_osm.py \
-	where_are_they/osm_io_helper.py \
-	where_are_they/test_mini_osm.py \
-	where_are_they/where_am_i.py \
-	where_are_they/where_is_it.py \
-	osm-activity/osm-activity.pl \
-	osm-activity/README.txt \
-	maplint/bin/maplint \
-	maplint/*.xml \
-	maplint/*.xsl \
-	georss/*.js \
-	georss/README \
 	georss/*.html
 
 all: all-recursive
@@ -257,9 +271,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  utils/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/utils/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  utils/Makefile
+	  $(AUTOMAKE) --gnu  scripts/osm/utils/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -296,6 +310,15 @@ uninstall-binSCRIPTS:
 	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
 	done
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
 uninstall-info-am:
 
 # This directory's subdirectories are mostly independent; you can cd
@@ -431,7 +454,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/export/CityKML $(distdir)/export/osm2csv $(distdir)/export/osm2kml $(distdir)/export/osm2shp $(distdir)/export/osm2singleline_per_tag $(distdir)/export/osmgarminmap $(distdir)/filter/osm-length $(distdir)/filter/simplify $(distdir)/filter/wayclean $(distdir)/georss $(distdir)/gps-tracks/gpx-batch-upload $(distdir)/import/airport_import $(distdir)/import/coast_import $(distdir)/import/csv2osm $(distdir)/import/dafif2osm $(distdir)/import/osmtrackfilter $(distdir)/import/srtm2osm $(distdir)/maplint $(distdir)/maplint/bin $(distdir)/maplint/html $(distdir)/maplint/lib $(distdir)/maplint/tests/base $(distdir)/maplint/tests/main $(distdir)/maplint/tests/strict $(distdir)/osm-activity $(distdir)/osm-extract $(distdir)/osm-extract/polygons $(distdir)/osmapitest $(distdir)/planet-mirror $(distdir)/planet.osm/java/speller $(distdir)/planet.osm/perl $(distdir)/planet.osm/python $(distdir)/planetdiff $(distdir)/sanitize $(distdir)/serverStatus $(distdir)/srtmshp $(distdir)/where_are_they
+	$(mkdir_p) $(distdir)/export/CityKML $(distdir)/export/osm2csv $(distdir)/export/osm2kml $(distdir)/export/osm2shp $(distdir)/export/osm2singleline_per_tag $(distdir)/export/osmgarminmap $(distdir)/filter/osm-length $(distdir)/filter/simplify $(distdir)/filter/wayclean $(distdir)/georss $(distdir)/import/osmtrackfilter $(distdir)/osm-extract $(distdir)/osm-extract/polygons $(distdir)/planet-mirror
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -507,11 +530,12 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-tags
+distclean-am: clean-am distclean-generic distclean-libtool \
+	distclean-tags
 
 dvi: dvi-recursive
 
@@ -539,7 +563,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
 pdf: pdf-recursive
 
@@ -554,18 +578,72 @@ uninstall-am: uninstall-binSCRIPTS uninstall-info-am
 uninstall-info: uninstall-info-recursive
 
 .PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am \
-	clean clean-generic clean-recursive ctags ctags-recursive \
-	distclean distclean-generic distclean-recursive distclean-tags \
-	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-binSCRIPTS install-data install-data-am \
-	install-exec install-exec-am install-info install-info-am \
-	install-man install-strip installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic maintainer-clean-recursive \
-	mostlyclean mostlyclean-generic mostlyclean-recursive pdf \
-	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
+	clean clean-generic clean-libtool clean-recursive ctags \
+	ctags-recursive distclean distclean-generic distclean-libtool \
+	distclean-recursive distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-binSCRIPTS \
+	install-data install-data-am install-exec install-exec-am \
+	install-info install-info-am install-man install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-generic \
+	mostlyclean-libtool mostlyclean-recursive pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am \
 	uninstall-binSCRIPTS uninstall-info-am
 
+	georss/*.js \
+	georss/README \
+	gps-tracks/gpx-batch-upload/gpx-batch-upload.pl \
+	import/airport_import/import_apt.pl \
+	import/coast_import/coast_upload.pl \
+	import/coast_import/osm.pm \
+	import/csv2osm/config.sample.complex \
+	import/csv2osm/csv2osm.pl \
+	import/dafif2osm/dafif2osm.pl \
+	import/osmtrackfilter/osmtrackfilter.pl \
+	import/srtm2osm/*.pl \
+	maplint/*.xml \
+	maplint/*.xsl \
+	maplint/Makefile \
+	maplint/README \
+	maplint/bin/maplint \
+	maplint/html/*.html \
+	maplint/html/style.css \
+	maplint/lib/*.xsl \
+	maplint/tests/base/*.xml \
+	maplint/tests/main/*.xml \
+	maplint/tests/strict/*.xml \
+	osm-activity/README.txt \
+	osm-activity/osm-activity.pl \
+	osm-extract/*.pl \
+	osmapitest/*.rb \
+	planet-mirror/planet-mirror.pl \
+	planet.osm/java/speller/words.cfg \
+	planet.osm/perl/check_osm.pl \
+	planet.osm/perl/planetcount.pl \
+	planet.osm/perl/planetosm-to-db.pl \
+	planet.osm/perl/reorder-ways.pl \
+	planet.osm/python/utf8osmchecker.py \
+	planetdiff/*.c \
+	planetdiff/*.h \
+	planetdiff/*.txt \
+	planetdiff/*.xml \
+	sanitize/sanitize.pl \
+	serverStatus/ServerStatusToWiki.pl \
+	srtmshp/*.cpp \
+	srtmshp/Canvas.cpp \
+	srtmshp/Canvas.h \
+	srtmshp/EarthPoint.h \
+	srtmshp/Map.h \
+	srtmshp/SRTMConGen.h \
+	srtmshp/SRTMDataGrid.h \
+	srtmshp/SRTMGeneral.h \
+	where_are_they/geo_helper.py \
+	where_are_they/mini_osm.py \
+	where_are_they/osm_io_helper.py \
+	where_are_they/test_mini_osm.py \
+	where_are_they/where_am_i.py \
+	where_are_they/where_is_it.py
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

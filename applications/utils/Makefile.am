@@ -20,14 +20,12 @@ bin_SCRIPTS= \
 	osm-extract/planetosm-excerpt-tags.pl \
 	osm-extract/polygons/extract-germany.pl \
 	osm-extract/polygons/extract-polygon.pl \
-	planet-mirror/planet-mirror.pl \
-	export/osm2csv/osm2csv.pl
+	planet-mirror/planet-mirror.pl
 
 EXTRA_DIST = $(bin_SCRIPTS) \
-	export/CityKML/download.pl \
+	export/CityKML/*.pl \
 	export/CityKML/download_specific.pl \
-	export/CityKML/package.pl \
-	export/CityKML/run.pl \
+	export/osm2csv/create_all.sh \
 	export/osm2csv/osm2csv.pl \
 	export/osm2kml/osm2kml.py \
 	export/osm2shp/osm2shp.cpp \
@@ -40,6 +38,9 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	filter/osm-length/osm-length-2.pl \
 	filter/simplify/simplify.pl \
 	filter/wayclean/wayclean.cpp \
+	georss/*.html
+	georss/*.js \
+	georss/README \
 	gps-tracks/gpx-batch-upload/gpx-batch-upload.pl \
 	import/airport_import/import_apt.pl \
 	import/coast_import/coast_upload.pl \
@@ -48,22 +49,21 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	import/csv2osm/csv2osm.pl \
 	import/dafif2osm/dafif2osm.pl \
 	import/osmtrackfilter/osmtrackfilter.pl \
-	import/srtm2osm/extractdata.pl \
-	import/srtm2osm/merge.pl \
-	import/srtm2osm/mkcntr.pl \
-	maplint/README \
+	import/srtm2osm/*.pl \
+	maplint/*.xml \
+	maplint/*.xsl \
 	maplint/Makefile \
+	maplint/README \
+	maplint/bin/maplint \
 	maplint/html/*.html \
 	maplint/html/style.css \
 	maplint/lib/*.xsl \
 	maplint/tests/base/*.xml \
 	maplint/tests/main/*.xml \
 	maplint/tests/strict/*.xml \
-	osm-extract/osm-subset.pl \
-	osm-extract/planetosm-excerpt-area.pl \
-	osm-extract/planetosm-excerpt-tags.pl \
-	osm-extract/polygons/extract-germany.pl \
-	osm-extract/polygons/extract-polygon.pl \
+	osm-activity/README.txt \
+	osm-activity/osm-activity.pl \
+	osm-extract/*.pl \
 	osmapitest/*.rb \
 	planet-mirror/planet-mirror.pl \
 	planet.osm/java/speller/words.cfg \
@@ -72,17 +72,17 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	planet.osm/perl/planetosm-to-db.pl \
 	planet.osm/perl/reorder-ways.pl \
 	planet.osm/python/utf8osmchecker.py \
+	planetdiff/*.c \
+	planetdiff/*.h \
 	planetdiff/*.txt \
 	planetdiff/*.xml \
-	planetdiff/*.h \
-	planetdiff/*.c \
 	sanitize/sanitize.pl \
 	serverStatus/ServerStatusToWiki.pl \
+	srtmshp/*.cpp \
 	srtmshp/Canvas.cpp \
 	srtmshp/Canvas.h \
 	srtmshp/EarthPoint.h \
 	srtmshp/Map.h \
-	srtmshp/*.cpp \
 	srtmshp/SRTMConGen.h \
 	srtmshp/SRTMDataGrid.h \
 	srtmshp/SRTMGeneral.h \
@@ -91,12 +91,4 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	where_are_they/osm_io_helper.py \
 	where_are_they/test_mini_osm.py \
 	where_are_they/where_am_i.py \
-	where_are_they/where_is_it.py \
-	osm-activity/osm-activity.pl \
-	osm-activity/README.txt \
-	maplint/bin/maplint \
-	maplint/*.xml \
-	maplint/*.xsl \
-	georss/*.js \
-	georss/README \
-	georss/*.html
+	where_are_they/where_is_it.py

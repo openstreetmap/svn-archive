@@ -4,9 +4,9 @@ LICENSE
 data/
 lib/           
 sites/          
-utils/
 applications/
     editors/
     rendering/
+    utils/
 etc/   
 

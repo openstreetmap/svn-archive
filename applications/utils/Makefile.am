@@ -38,7 +38,7 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	filter/osm-length/osm-length-2.pl \
 	filter/simplify/simplify.pl \
 	filter/wayclean/wayclean.cpp \
-	georss/*.html
+	georss/*.html \
 	georss/*.js \
 	georss/README \
 	gps-tracks/gpx-batch-upload/gpx-batch-upload.pl \
@@ -54,7 +54,6 @@ EXTRA_DIST = $(bin_SCRIPTS) \
 	maplint/*.xsl \
 	maplint/Makefile \
 	maplint/README \
-	maplint/bin/maplint \
 	maplint/html/*.html \
 	maplint/html/style.css \
 	maplint/lib/*.xsl \

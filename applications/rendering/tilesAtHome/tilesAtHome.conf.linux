@@ -18,13 +18,21 @@ i18n=1
 # upload log
 UseHostnameInZipName=0
 
-# Upload settings
-UploadChunkSize=1.5   # Megabyte
+## Upload settings
+# UploadChunkSize is the maximum Zip size in MiB (1024^2 byte)
+UploadChunkSize=1.5   # Megabyte, hard limit 1.9 MiB (2 MB)
+
+# UploadChunkCount is the maximum count of png files compressed in one zip
+# 	if you don't suffer from posix command line limits, you can increase 
+# 	this limit to arbitrary sizes. (keep in mind that some FS cannot 
+# 	support more than a couple thousand files in a directory.
 UploadChunkCount=683  # default: half a tileset
+
+# if set to 0 the zip files will get renamed to zip_uploaded after upload.
 DeleteZipFilesAfterUpload=0
 
-# Beziercurve hinting
-NoBezier=0  # Set to 1 on a AMD64 box running Gentoo. Math rounding errors in the libs.
+## Beziercurve hinting
+NoBezier=0  # Set to 1 if beziercurvehinting causes errors.
 
 #Upload layers when they are done? default: 0
 # set to 1, if you want to upload layers as they are done, instead of waiting for all

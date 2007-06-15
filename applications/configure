@@ -703,7 +703,8 @@ am__fastdepCXX_FALSE
 LN_S
 LIBOBJS
 POW_LIB
-LTLIBOBJS'
+LTLIBOBJS
+PERL_PACKAGE_DIR'
 ac_subst_files=''
       ac_precious_vars='build_alias
 host_alias
@@ -10144,7 +10145,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile share/Makefile share/map-icons/Makefile utils/export/Makefile utils/filter/Makefile utils/import/Makefile utils/import/osmtrackfilter/Makefile utils/little-osm/Makefile utils/Makefile utils/osm-data/Makefile utils/perl_lib/Makefile utils/planet.osm/Makefile utils/planet.osm/C/Makefile utils/xsltrans/Makefile"
+ac_config_files="$ac_config_files Makefile debian/Makefile share/Makefile share/map-icons/Makefile utils/Makefile utils/export/Makefile utils/filter/Makefile utils/import/Makefile utils/import/osmtrackfilter/Makefile utils/little-osm/Makefile utils/osm-data/Makefile utils/perl_lib/Makefile utils/planet.osm/C/Makefile utils/planet.osm/Makefile utils/xsltrans/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -10753,18 +10754,19 @@ do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "debian/Makefile") CONFIG_FILES="$CONFIG_FILES debian/Makefile" ;;
     "share/Makefile") CONFIG_FILES="$CONFIG_FILES share/Makefile" ;;
     "share/map-icons/Makefile") CONFIG_FILES="$CONFIG_FILES share/map-icons/Makefile" ;;
+    "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
     "utils/export/Makefile") CONFIG_FILES="$CONFIG_FILES utils/export/Makefile" ;;
     "utils/filter/Makefile") CONFIG_FILES="$CONFIG_FILES utils/filter/Makefile" ;;
     "utils/import/Makefile") CONFIG_FILES="$CONFIG_FILES utils/import/Makefile" ;;
     "utils/import/osmtrackfilter/Makefile") CONFIG_FILES="$CONFIG_FILES utils/import/osmtrackfilter/Makefile" ;;
     "utils/little-osm/Makefile") CONFIG_FILES="$CONFIG_FILES utils/little-osm/Makefile" ;;
-    "utils/Makefile") CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
     "utils/osm-data/Makefile") CONFIG_FILES="$CONFIG_FILES utils/osm-data/Makefile" ;;
     "utils/perl_lib/Makefile") CONFIG_FILES="$CONFIG_FILES utils/perl_lib/Makefile" ;;
-    "utils/planet.osm/Makefile") CONFIG_FILES="$CONFIG_FILES utils/planet.osm/Makefile" ;;
     "utils/planet.osm/C/Makefile") CONFIG_FILES="$CONFIG_FILES utils/planet.osm/C/Makefile" ;;
+    "utils/planet.osm/Makefile") CONFIG_FILES="$CONFIG_FILES utils/planet.osm/Makefile" ;;
     "utils/xsltrans/Makefile") CONFIG_FILES="$CONFIG_FILES utils/xsltrans/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
@@ -11376,4 +11378,14 @@ if test "$no_create" != yes; then
   # would make configure fail if this is the last instruction.
   $ac_cs_success || { (exit 1); exit 1; }
 fi
+
+
+
+
+
+#PERL_PACKAGE_DIR=`perl -V:installsitearch | sed "s/installsitearch='//" | sed "s/';//"`
+# default on debian should be: /usr/share/perl5/
+PERL_VENDORLIB=`perl -V:vendorlib | sed "s,vendorlib=',," | sed "s/';//"`
+#PERL_PACKAGE_DIR=`echo ${PERL_VENDORLIB} | sed "s,/usr,-${prefix}-,"`
+PERL_PACKAGE_DIR=`echo ${PERL_VENDORLIB} | sed "s,/usr/share,${datadir},"`
 

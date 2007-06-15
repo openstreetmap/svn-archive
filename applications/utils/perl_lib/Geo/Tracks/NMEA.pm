@@ -13,8 +13,6 @@ use warnings;
 use Data::Dumper;
 use Date::Manip;
 use Date::Parse;
-use Date::Parse;
-use Date::Parse;
 use IO::File;
 use Math::Trig;
 

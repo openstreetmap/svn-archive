@@ -234,7 +234,9 @@ sub UTF8sanitize($){
     print STDERR "Sanitizer found at '$UTF8sanitizer'\n" if $DEBUG;
 
     print STDERR "     this may take some time ... \n";
-    my $result = `7z -so -si <$filename | $UTF8sanitizer  | bzip2 >$filename_new.part`;
+    my $cmd = " 7z e  -so $filename | $UTF8sanitizer  | bzip2 >$filename_new.part";
+    print "Command: $cmd" if $DEBUG || $VERBOSE;
+    my $result = `$cmd`;
     print $result if $DEBUG || $VERBOSE;
   
     print "Sanitized $filename " if $DEBUG || $VERBOSE;

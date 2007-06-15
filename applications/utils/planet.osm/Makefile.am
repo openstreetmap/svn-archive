@@ -13,8 +13,6 @@ EXTRA_DIST = \
 	php/planet_to_mysql.phps \
 	*.rb \
 	*.osm \
-	*.sh \
-	C/UTF8sanitizer.exe
-#	C/UTF8sanitizer.c 
+	*.sh
 
 

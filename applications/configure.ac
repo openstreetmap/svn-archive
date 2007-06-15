@@ -82,6 +82,7 @@ AC_CHECK_FUNCS([atexit floor memmove memset pow select sqrt strchr strdup strnca
 
 AC_CONFIG_FILES([
 	Makefile
+	share/Makefile
 	share/map-icons/Makefile
 	utils/export/Makefile
 	utils/filter/Makefile
@@ -92,6 +93,7 @@ AC_CONFIG_FILES([
 	utils/osm-data/Makefile
 	utils/perl_lib/Makefile
 	utils/planet.osm/Makefile
+	utils/planet.osm/C/Makefile
 	utils/xsltrans/Makefile
 	])
 AC_OUTPUT

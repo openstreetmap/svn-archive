@@ -1,14 +1,7 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 # Sample debian/rules that uses debhelper.
-#
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
-#
-# Modified to make a template file for a multi-binary package with separated
-# build-arch and build-indep targets  by Bill Allombert 2001
+# GNU copyright 1997 to 1999 by Joey Hess.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -30,6 +23,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
+	./configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info
 
 	touch configure-stamp
 
@@ -41,14 +35,14 @@ build-arch: build-arch-stamp
 build-arch-stamp: configure-stamp 
 
 	# Add here commands to compile the arch part of the package.
-	#$(MAKE) 
+	$(MAKE) 
 	touch $@
 
 build-indep: build-indep-stamp
 build-indep-stamp: configure-stamp 
 
 	# Add here commands to compile the indep part of the package.
-	#$(MAKE) doc
+	# $(MAKE) doc
 	touch $@
 
 clean:
@@ -72,6 +66,8 @@ install-indep:
 	# debian/<package>-doc.
 	#INSTALLDOC#
 
+	$(MAKE) install prefix=$(destdir)
+
 	dh_install -i
 
 install-arch:
@@ -91,7 +87,7 @@ install-arch:
 binary-common:
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs 
+	dh_installchangelogs
 	dh_installdocs
 	dh_installexamples
 #	dh_installmenu

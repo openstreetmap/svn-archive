@@ -352,6 +352,7 @@ ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "download.osm" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "layerlist.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "commandstack.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "true"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "projection" "org.openstreetmap.josm.data.projection.Epsg4326"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
@@ -396,13 +397,21 @@ SetOutPath $APPDATA\JOSM\plugins
 File "downloads\namefinder.jar"
 SectionEnd
 
+Section "validator" SecValidatorPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "downloads\validator.jar"
+SectionEnd
+
 SectionGroupEnd	; "Plugins"
 
 Section "-PluginSetting"
 ;-------------------------------------------
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 SetShellVarContext current
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator"
 SectionEnd
 
 
@@ -465,6 +474,7 @@ Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
 Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
+Delete "$APPDATA\JOSM\plugins\validator.jar"
 ;Delete "$APPDATA\JOSM\plugins\mappaint\elemstyles.xml"
 RMDir "$APPDATA\JOSM\plugins\osmarender"
 ;RMDir "$APPDATA\JOSM\plugins\mappaint"
@@ -493,6 +503,7 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecOsmarenderPlugin} "Displays the current screen as nicely rendered SVG graphics in FireFox."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} "Validates edited data if it conforms to common suggestions."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN

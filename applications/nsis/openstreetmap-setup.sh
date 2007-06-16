@@ -2,7 +2,7 @@
 
 ## settings ##
 
-VERSION=0.0.7
+VERSION=0.0.8
 
 PROGRAM_FILES="/cygdrive/c/Program Files"
 
@@ -31,6 +31,7 @@ cp ../../editors/josm/plugins/namefinder/namefinder.jar .
 wget -nc http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
 wget -nc http://www.eigenheimstrasse.de/josm/plugins/annotation-tester.jar
 wget -nc http://chippy2005.googlepages.com/wmsplugin.jar
+wget -nc http://personales.ya.com/frsantos/validator.jar
 
 cd ..
 

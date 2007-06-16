@@ -15,6 +15,37 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 
+dnl Checks select argument types
+AC_FUNC_SELECT_ARGTYPES
+AC_HEADER_TIME
+
+dnl ************************
+dnl Program locations
+dnl ************************
+
+AC_PREFIX_DEFAULT("/usr/local")
+
+if test "${prefix}" == "NONE"; then
+	prefix=${ac_default_prefix}
+	AC_SUBST(prefix)
+fi
+
+pkgdatadir=${datadir}/${PACKAGE}/
+AC_SUBST(pkgdatadir)
+
+dnl *******************************
+dnl   GETTEXT
+dnl *******************************
+
+AM_GNU_GETTEXT([external]) 
+GETTEXT_PACKAGE=openstreetmap
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE([GETTEXT_PACKAGE],"openstreetmap", this is the gettext domain name)
+
+localedir='${prefix}/share/locale'
+AC_SUBST(localedir)
+
+
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lbz2':
@@ -105,10 +136,9 @@ AC_OUTPUT
 dnl ********************************************
 dnl Perl Path
 dnl Setup install path root for perl.
-dnl Yep, its ebil, but I don't know better...
-#PERL_PACKAGE_DIR=`perl -V:installsitearch | sed "s/installsitearch='//" | sed "s/';//"`
-# default on debian should be: /usr/share/perl5/
+dnl Yep, its ultra evil, but I don't know better...
+dnl default on debian should be: /usr/share/perl5/
 PERL_VENDORLIB=`perl -V:vendorlib | sed "s,vendorlib=',," | sed "s/';//"`
-#PERL_PACKAGE_DIR=`echo ${PERL_VENDORLIB} | sed "s,/usr,-${prefix}-,"`
+AC_SUBST(PERL_VENDORLIB)
 PERL_PACKAGE_DIR=`echo ${PERL_VENDORLIB} | sed "s,/usr/share,${datadir},"`
 AC_SUBST(PERL_PACKAGE_DIR)

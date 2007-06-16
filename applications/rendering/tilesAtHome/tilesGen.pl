@@ -91,7 +91,13 @@ if( -s "emptysea.png" != 69 )
       0, ## 0=delete old file from disk first
       "emptysea.png");
 }
-
+# Check the on disk image tiles are now in order
+if( -s "emptyland.png" != 67 or
+    -s "emptysea.png" != 69 )
+{
+  print STDERR "\nAutomatic fix failed. Exiting.\n";
+  exit(3);
+}
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);

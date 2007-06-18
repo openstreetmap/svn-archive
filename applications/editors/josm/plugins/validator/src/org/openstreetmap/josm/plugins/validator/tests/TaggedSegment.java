@@ -72,8 +72,12 @@ public class TaggedSegment extends Test
 				commands.add( new ChangePropertyCommand(primitives.subList(i, i+1), key, null) );
 			}
 		}
-		
-		return commands.size() > 1 ? new SequenceCommand("Remove keys", commands) : commands.get(0);
+		if( commands.size() == 0 )
+			return null;
+		else if( commands.size() == 1 )
+			return commands.get(0);
+		else
+			return new SequenceCommand("Remove keys", commands) ;
 	}
 	
 	@Override

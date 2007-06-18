@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 	String status;
 	//JLabel lbl;
 	boolean autocenter;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 	
 	public LiveGpsLayer(Collection<Collection<GpsPoint>> data)
 	{
@@ -50,7 +52,7 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 		}
 			
 		lastPos = thisPos;
-		lastPoint = new GpsPoint (thisPos, new Date().toString());
+		lastPoint = new GpsPoint (thisPos, dateFormat.format(new Date()));
 		// synchronize when adding data, as otherwise the autosave action
 		// needs concurrent access and this results in an exception!
 		synchronized (LiveGpsLock.class) {

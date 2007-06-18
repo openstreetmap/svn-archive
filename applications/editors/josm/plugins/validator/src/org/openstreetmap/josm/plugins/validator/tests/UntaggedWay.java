@@ -2,7 +2,7 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.Map;
+import java.util.*;
 
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.validator.*;
@@ -13,9 +13,22 @@ import org.openstreetmap.josm.plugins.validator.*;
  */
 public class UntaggedWay extends Test 
 {
-	/** Tags allowed in a way */
-	public static String[] allowedTags = new String[] { "created_by", "converted_by" };
-	
+    /** Tags allowed in a way */
+    public static final String[] ALLOWED_TAGS = new String[] { "created_by", "converted_by" };
+
+    /** Ways that must have a name */
+    public static final Set<String> NAMED_WAYS = new HashSet<String>();
+    static
+    {
+        NAMED_WAYS.add( "motorway" ); 
+        NAMED_WAYS.add( "trunk" ); 
+        NAMED_WAYS.add( "primary" ); 
+        NAMED_WAYS.add( "secondary" ); 
+        NAMED_WAYS.add( "tertiary" ); 
+        NAMED_WAYS.add( "residential" ); 
+        NAMED_WAYS.add( "pedestrian" ); ;
+    }
+    
     /**
 	 * Constructor
 	 */
@@ -33,10 +46,11 @@ public class UntaggedWay extends Test
 		if( tags != null )
 		{
 			numTags = tags.size();
-			for( String tag : allowedTags)
+			for( String tag : ALLOWED_TAGS)
 				if( tags.containsKey(tag) ) numTags--;
             
-            if( numTags != 0 && tags.containsKey("highway" ) )
+            String highway = tags.get("highway");
+            if( numTags != 0 && highway != null && NAMED_WAYS.contains(highway))
             {
                 if( !tags.containsKey("name") && !tags.containsKey("ref") )
                 {

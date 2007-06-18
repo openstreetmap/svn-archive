@@ -51,7 +51,8 @@ public class OSMValidatorPlugin extends Plugin
     	SpellCheck.class,
     	OrphanSegment.class, 
         ReusedSegment.class, 
-        CrossingSegments.class, 
+        CrossingSegments.class,
+        SimilarNamedWays.class,
     };
 
 	/**

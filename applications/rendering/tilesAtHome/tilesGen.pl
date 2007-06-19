@@ -228,6 +228,7 @@ else
 sub uploadIfEnoughTiles
 {
     my $Count = 0;
+    my $ZipCount = 0;
 
     # compile a list of the "Prefix" values of all configured layers,
     # separated by |
@@ -242,14 +243,21 @@ sub uploadIfEnoughTiles
     }
     closedir($dp);
 
-    if ($Count < 200)
+    opendir(my $dp, $Config{WorkingDirectory}."/uploadable") || return;
+    while(my $File = readdir($dp))
     {
-        # print "Not uploading yet, only $Count tiles\n";
+        $ZipCount++ if ($File =~ /\.zip/);
     }
-    else
+    closedir($dp);
+
+    if (($Count >= 200) or ($ZipCount >= 1))
     {
         upload();
     }
+    #else
+    #{
+    #    print "Not uploading yet, only $Count tiles\n";
+    #}
 }
 
 sub upload

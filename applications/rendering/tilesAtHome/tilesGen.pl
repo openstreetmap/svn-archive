@@ -619,24 +619,28 @@ sub GenerateTileset
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
 
-				#if $empty then the next zoom level was empty, so we only upload one tile
-				if ($empty == 1 && $Config{GatherBlankTiles}) 
-				{
-					my $Filename=sprintf("%s_%s_%s_%s.png",$Config{"Layer.$layer.Prefix"}, $Zoom, $X, $Y);
-					my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 
-					my $newFilename = sprintf("%s/%s",$Config{WorkingDirectory},$Filename);
-					rename($oldFilename, $newFilename);
-					rmdir($JobDirectory);
-				}
-				else{
-					# This directory is now ready for upload.
-					# How should errors in renaming be handled?
-					my $Dir = $JobDirectory;
-					$Dir =~ s|\.tmpdir|.dir|;
-					rename $JobDirectory, $Dir;
-				}
+        #if $empty then the next zoom level was empty, so we only upload one tile
+        if ($empty == 1 && $Config{GatherBlankTiles}) 
+        {
+            my $Filename=sprintf("%s_%s_%s_%s.png",$Config{"Layer.$layer.Prefix"}, $Zoom, $X, $Y);
+            my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 
+            my $newFilename = sprintf("%s/%s",$Config{WorkingDirectory},$Filename);
+            rename($oldFilename, $newFilename);
+            rmdir($JobDirectory);
+        }
+        else
+        {
+            # This directory is now ready for upload.
+            # How should errors in renaming be handled?
+            my $Dir = $JobDirectory;
+            $Dir =~ s|\.tmpdir|.dir|;
+            rename $JobDirectory, $Dir;
+        }
 
-    if ($Config{LayerUpload}) {uploadIfEnoughTiles()};
+        if ($Config{LayerUpload}) 
+        {
+            uploadIfEnoughTiles();
+        }
     }
 
     foreach my $file(@tempfiles) { killafile($file); }

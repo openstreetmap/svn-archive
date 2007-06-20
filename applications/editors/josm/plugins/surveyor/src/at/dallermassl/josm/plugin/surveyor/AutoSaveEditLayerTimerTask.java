@@ -43,14 +43,18 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
         try {
             DataSet dataset = layer.data;
 
-            File outFile = layer.associatedFile;
-            if(outFile == null) {
-                outFile = file;
-            }
-            System.out.println("AutoSaving osm data to file " + outFile.getAbsolutePath());
+//            File outFile = layer.associatedFile;
+//            if(outFile == null) {
+//                outFile = file;
+//            }
+            
+            // write to temporary file, on success, rename tmp file to target file:
+            File tmpFile = new File(file.getAbsoluteFile()+".tmp");
+            System.out.println("AutoSaving osm data to file " + file.getAbsolutePath());
             synchronized(LiveGpsLock.class) {
-                XmlWriter.output(new FileOutputStream(outFile), new OsmWriter.All(dataset, false));
+                XmlWriter.output(new FileOutputStream(tmpFile), new OsmWriter.All(dataset, false));
             }
+            tmpFile.renameTo(file);
             System.out.println("AutoSaving finished");
         } catch (IOException x) {
             x.printStackTrace();

@@ -4,59 +4,73 @@
   <!-- action class: either fully qualified classnames or if not found, 
        package at.dallermassl.josm.plugin.surveyor.action is assumed -->
   <button label="Tunnel Start" hotkey="T" icon="tunnel">
-    <action class="ConsolePrinterAction" params="tunnel start,tunnel"/>
     <action class="SetWaypointAction" params="tunnel start"/>
-    <!--action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/-->
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/t.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
+    <!--action class="ConsolePrinterAction" params="tunnel start,tunnel"/-->
+    <!--action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/-->
   </button>
   <button label="Bridge" hotkey="B" type="toggle">
     <action class="SetWaypointAction" params="bridge"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/b.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Village/City" hotkey="V" icon="place">
+    <action class="SetWaypointAction" params="village"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
+    <!--
     <action class="SetNodeAction" params=""/>
     <action class="AnnotationPresetAction" params="Places"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/v.ogg"/>
+    -->
   </button>
   <button label="Parking" hotkey="P" icon="parking">
     <action class="SetNodeAction" params="amenity=parking"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/p.ogg"/>
+    <action class="SetWaypointAction" params="Parking"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="One Way" hotkey="O" icon="noentry">
     <action class="SetWaypointAction" params="oneway=yes"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/o.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Church" hotkey="C" icon="church">
     <action class="SetNodeAction" params="amenity=place_of_worship,denomination=christian"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/c.ogg"/>
+    <action class="SetWaypointAction" params="Church"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Fuel Station" hotkey="F" icon="fuel">
     <action class="SetNodeAction" params="amenity=fuel"/>
-    <!--action class="AnnotationPresetAction" params="Fuel"/-->
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/f.ogg"/>
+    <action class="SetWaypointAction" params="Fuel"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Hotel" hotkey="H" icon="bed">
-    <action class="SetNodeAction" params="tourism=hotel"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/h.ogg"/>
+    <action class="SetWaypointAction" params="Hotel"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
+  </button>
+  <button label="Restaurant" hotkey="R" icon="restaurant">
+    <action class="SetNodeAction" params="amenity=restaurant"/>
+    <action class="SetWaypointAction" params="Restaurant"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
+  </button>
+  <button label="Exit" hotkey="E">
+    <action class="SetWaypointAction" params="Exit"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Motorway" hotkey="1">
     <action class="SetWaypointAction" params="Motorway"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Primary" hotkey="2">
     <action class="SetWaypointAction" params="Primary"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Secondary" hotkey="3">
     <action class="SetWaypointAction" params="Secondary"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Unclassified" hotkey="4">
     <action class="SetWaypointAction" params="Unclassified"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
   <button label="Residential" hotkey="5">
     <action class="SetWaypointAction" params="Residential"/>
-    <action class="SystemExecuteAction" params="mplayer,-quiet,/usr/share/apps/klettres/de/alpha/x.ogg"/>
+    <action class="PlayAudioAction" params="/usr/share/sounds/KDE_Window_Iconify.wav"/>
   </button>
 </surveyor>

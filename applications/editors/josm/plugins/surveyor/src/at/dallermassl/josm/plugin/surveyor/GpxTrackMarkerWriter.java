@@ -58,7 +58,7 @@ public class GpxTrackMarkerWriter implements XmlWriter.OsmWriterInterface {
 					out.print("      <trkpt lat='"+ll.lat()+"' lon='"+ll.lon()+"'");
 					if (p.time != null && p.time.length()!=0) {
 						out.println(">");
-						out.println("        <time>" + gpxDateFormat.format(p.time) + "</time>");
+						out.println("        <time>" + p.time + "</time>");
 						out.println("      </trkpt>");
 					} else
 						out.println(" />");

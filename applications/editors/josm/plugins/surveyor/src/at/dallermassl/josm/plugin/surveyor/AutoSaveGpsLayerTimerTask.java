@@ -57,17 +57,20 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
      */
     @Override
     public void run() {
-        System.out.println("AutoSaving data to file " + file.getAbsolutePath());
 
-        try {
+        try {            
             XmlWriter.OsmWriterInterface writer = getXmlWriter();
             if(writer != null) {
+                // write to temporary file, on success, rename tmp file to target file:
+                File tmpFile = new File(file.getAbsoluteFile()+".tmp");
+                System.out.println("AutoSaving data to file " + file.getAbsolutePath());
                 // synchronize on layer to prevent concurrent adding of data to the layer
                 // quite a hack, but no other object to sync available :-(
                 // @see LiveGpsLayer
                 synchronized(LiveGpsLock.class) {
-                    XmlWriter.output(new FileOutputStream(file), writer);
-                }                
+                    XmlWriter.output(new FileOutputStream(tmpFile), writer);
+                }   
+                tmpFile.renameTo(file);
             }
         } catch (IOException x) {
             x.printStackTrace();

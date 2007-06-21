@@ -119,7 +119,7 @@ abstract public class OsmPrimitive implements Cloneable {
     if(tags.containsKey("created_by")) {
       
     } else {
-      tags.put("created_by", "YahooApplet 1.0");
+      tags.put("created_by", "YahooApplet 1.1");
     }
 
     return tags;

@@ -78,7 +78,7 @@ public class NodeMode extends EditMode {
       // that segment to end of the new node, and
       // add a new segment from that node to the end
       applet.debug("Line was " + lineInto);
-      newLine = new Line(lineInto.to, node);
+      newLine = new Line(node, lineInto.to);
       lineInto.to = node;
       tempKey = "temp_" + Math.random();
       applet.debug("Line now " + lineInto + " and " + newLine);

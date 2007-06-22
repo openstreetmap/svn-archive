@@ -73,6 +73,18 @@ my $Timestamp = time();
 my $Status = new status; 
 $Status->area($Layer,$X,$Y,$Z,$MaxZ);
 
+#open oceantiles.dat and leave it open if UseOceantilesDat is on
+my $oceantiles;
+if ($Config{UseOceantilesDat}) {
+	open($oceantiles, "<", "../../oceantiles_12.dat") or die("../../oceantiles-z12.dat not found");
+}
+
+#open a file for the suspicious tiles
+my $suspiciousTiles;
+if ($Config{WriteSuspicious}){
+	open($suspiciousTiles, ">", "suspicious_tiles.txt");
+}
+
 # Create the requested tile
 lowZoom($X,$Y,$Z, $MaxZ, $Layer, $Status);
 
@@ -112,9 +124,32 @@ sub downloadtile {
   my $Size = -s $f2;
   $Status->downloadCount($Layer,$X,$Y,$Z,$Size);
   
+	#check the tile
+	if ($Config{UseOceantilesDat}) {
+		if ($Z eq 12) {
+			if (($Size == 103) && (askOceantiles($X,$Y) eq "land")) {
+				if ($Config{WriteSuspicious}) {
+					print $suspiciousTiles "$X $Y : downloaded tile is sea, oceantiles says land \n";
+				}
+				if ($Config{BlankSource} eq "oceantiles") {
+					unlink $f2;
+					link("../../emptyland.png", $f2);
+				}
+			}elsif (($Size == 179) && (askOceantiles($X,$Y) eq "sea")) {
+				if ($Config{WriteSuspicious}) {
+					print $suspiciousTiles "$X $Y : downloaded tile is land, oceantiles says sea \n";
+				}
+				if ($Config{BlankSource} eq "oceantiles") {
+					unlink $f2;
+					link("../../emptysea.png", $f2);
+				}
+			}
+		}
+	}
+
   # Don't bother storing blank or invalid tiles
-	
 	unlink $f2 if($Size < 103);
+
 }
 
 # Delete blank subtiles of a blank tile
@@ -214,11 +249,18 @@ sub supertile {
 		utime $Timestamp, $Timestamp, $Filename;
 	}
 
-	 
-  # Don't bother saving blank or invalid images
-  # if(length($Data) < 1000){
-  #   return;
-  # }
+	 #remove tiles which will not be uploaded
+	if (($Z == $MaxZ ) && ($Options ne "keep")){
+		for my $x (0,1)
+		{
+			for my $y (0,1)
+			{
+				my $f = localfile(2*$X + $x, 2*$Y + $y, $Z+1, $Layer);
+				unlink $f;
+			}
+		}
+	};
+
 }
 
 # Open a PNG file, and return it as a Magick image (or 0 if not found)
@@ -281,6 +323,34 @@ sub moveTiles {
   }  
   close $dp;
 }
+
+# takes x and y coordinates and returns if the corresponding tile 
+# should be sea or land
+sub askOceantiles {
+	my ($X, $Y) = @_;
+
+	my $tileoffset = ($Y * (2**12)) + $X;
+	seek $oceantiles, int($tileoffset / 4), 0;  
+	my $buffer;
+	read $oceantiles, $buffer, 1;
+	$buffer = substr( $buffer."\0", 0, 1 );
+	$buffer = unpack "B*", $buffer;
+	my $str = substr( $buffer, 2*($tileoffset % 4), 2 );
+
+#	print("lookup handler finds: $str\n") ;
+	if ($str eq "10") {	return "sea"; };
+	if ($str eq "01") {	 return "land"; };
+	if ($str eq "11") {	return "land"; };
+
+	return "unknown";
+
+	# $str eq "00" => unknown (not yet checked)
+	# $str eq "01" => known land
+	# $str eq "10" => known sea
+	# $str eq "11" => known edge tile
+
+}
+
 # Option: filename for our temporary map tiles
 # (note: this should match whatever is expected by the upload scripts)
 sub localfile {

@@ -1,7 +1,7 @@
 <project name="wmsplugin" default="build" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="C:\Documents and Settings\tim\java\josm\dist\josm-custom.jar" />
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
 
 
 

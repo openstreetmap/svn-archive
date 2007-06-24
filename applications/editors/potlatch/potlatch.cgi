@@ -176,6 +176,9 @@
 	_root.attachMovie("exclamation","i_warning",35);
 	with (_root.i_warning) { _x=10; _y=545; _visible=false; };
 	_root.i_warning.onPress=function() { handleWarning(); };
+	_root.i_warning.onRollOver=function() { setFloater("An error occurred - click for details"); };
+	_root.i_warning.onRollOut =function() { clearFloater(); };
+	wflashid=setInterval(function() { _root.i_warning._alpha=150-_root.i_warning._alpha; }, 750);
 
 	_root.attachMovie("rotation","i_direction",39);
 	with (_root.i_direction) { _x=40; _y=583; _rotation=-45; _visible=true; _alpha=50; };

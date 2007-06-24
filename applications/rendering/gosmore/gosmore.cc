@@ -1,27 +1,43 @@
 /* gosmore - European weed widely naturalized in North America having yellow
    flower heads and leaves resembling a cat's ears */
    
-/* This software is placed by in the public domain by its author, Nic Roets */
+/* This software is placed by in the public domain by its authors. */
+/* Written by Nic Roets with contribution(s) from Dave Hansen. */
 
-/* Dual core with 1GB RAM  : real   8m12.369s user 11m7.727s sys 0m15.199s
-1.4 Ghz 1 core with 256 MB : real 190m57.072s user 23m9.907s sys 0m53.107s
+/* 
+Dual core with 1GB RAM  : real   8m12.369s user 11m7.727s sys 0m15.199s
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <sys/mman.h>
 #include <ctype.h>
 #include <gtk/gtk.h>
-#include <obstack.h> /* For obstack_printf in GetDirections */
 #include <assert.h>
+#include <unistd.h>
+#include <sys/types.h>
+#ifdef USE_GPSD
+#include <gps.h>
+#endif
+
+#ifdef USE_FLITE
+#include <flite/flite.h>
+extern "C" {
+  cst_voice *register_cmu_us_kal (void);
+}
+#endif
+FILE *flitePipe = stdout;
 
 #define stricmp strcasecmp
 
 #define BUCKETS (1<<22) /* Must be power of 2 */
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)
+
+#define MAX_NODES 20100800
+#define MAX_SEGMENTS 20100800
+#define MAX_NAMED_NODES 100000
 
 inline int Hash (int lon, int lat)
 { /* This is a universal hashfuntion in GF(2^31-1). The hexadecimal numbers */
@@ -69,7 +85,7 @@ struct wayBuildType {
 enum { motorway, motorway_link, trunk, primary, secondary, tertiary,
   unclassified, residential, service, track, footway, rail, river, stream,
   canel, city, town, station, suburb, village, hamlet, junction, place,
-  unwayed
+  unsupportedWayType, unwayed
 };
 
 struct highwayType {
@@ -102,19 +118,30 @@ struct highwayType {
   { "place",   "village"      , "black",  1, 1.0, GDK_LINE_SOLID },
   { "place",   "halmet"       , "black",  1, 1.0, GDK_LINE_SOLID },
   { "place",   "junction"     , "black",  1, 1.0, GDK_LINE_SOLID },
-  { NULL, NULL /* named node of unidentified type */  , "gray",   1, 1.0,
-    GDK_LINE_SOLID },
+  { NULL, NULL /* named node of unidentified type i.e. place */  , "gray",
+    1, 1.0, GDK_LINE_SOLID },
+  { NULL, NULL /* unsupportedWayType */, "gray",   1, 99.0, GDK_LINE_SOLID },
   { NULL, NULL /* unwayed */  , "gray",   1, 99.0, GDK_LINE_SOLID }
 };
 
-int NodeIdCmp (const void *a, const void *b)
+inline nodeType *FindNode (nodeType *table, int id)
 {
-  return ((nodeType*)a)->id - ((nodeType*)b)->id;
+  unsigned hash = id;
+  for (;;) {
+    nodeType *n = &table[hash % MAX_NODES];
+    if (n->id < 0 || n->id == id) return n;
+    hash = hash * (long long) 1664525 + 1013904223;
+  }
 }
 
-int HalfSegIdCmp (const void *a, const void *b)
+inline halfSegType *FindSegment (halfSegType *table, int id)
 {
-  return ((halfSegType*)a)->other - ((halfSegType *)b)->other;
+  unsigned hash = id;
+  for (;;) {
+    halfSegType *s = &table[(hash % MAX_SEGMENTS) * 2];
+    if (s->wayPtr < 0 || s->other == id) return s;
+    hash = hash * (long long) 1664525 + 1013904223;
+  }
 }
 
 int HalfSegCmp (const halfSegType *a, const halfSegType *b)
@@ -234,7 +261,7 @@ struct routeNodeType {
   routeNodeType *shortest;
   int best, heapIdx;
 } *route = NULL, *shortest = NULL, **routeHeap;
-int dhashSize, routeHeapSize, limit, tlat, tlon, flat, flon;
+int dhashSize, routeHeapSize, limit, tlat, tlon, flat, flon, car, fastest;
 
 #define Sqr(x) ((x)*(x))
 int Best (routeNodeType *n)
@@ -249,7 +276,7 @@ void AddHs (halfSegType *hs, int cost, routeNodeType *shortest)
      segments (hs, hs->other), (shortest->hs, shortest->hs->other),
      (shortest->shortest->hs, shortest->shortest->hs->other), .., 'to'
      with cost 'cost'. */
-  unsigned hash = (int) hs, i = 0;
+  unsigned hash = (intptr_t) hs, i = 0;
   routeNodeType *n;
   do {
     if (i++ > 10) {
@@ -280,13 +307,15 @@ void AddHs (halfSegType *hs, int cost, routeNodeType *shortest)
   }
 }
 
-void Route (int car, int fastest)
-{ /* We start by finding the segment that is closest to 'from' and 'to' */
+void Route (gboolean recalculate)
+{ /* Recalculate is faster but only valid if 'to', 'car' and 'fastest' did not
+     change */
+/* We start by finding the segment that is closest to 'from' and 'to' */
   halfSegType *endHs[2][2];
   int toEndHs[2][2];
   
   shortest = NULL;
-  for (int i = 0; i < 2; i++) {
+  for (int i = recalculate ? 0 : 1; i < 2; i++) {
     int lon = i ? flon : tlon, lat = i ? flat : tlat;
     long long bestd = 4000000000000000000LL;
     /* find min (Sqr (distance)). Use long long so we don't loose accuracy */
@@ -306,7 +335,7 @@ void Route (int car, int fastest)
       long long d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
         dlon * lon1 <= - dlat * lat1 ? Sqr (lon1) + Sqr (lat1) :
         Sqr ((dlon * lat1 - dlat * lon1) / segLen);
-      if (d < bestd) {
+      if (segLen > 0 /* Don't start or end at named nodes */ && d < bestd) {
         int firstSeg = itr.hs[0]->wayPtr == TO_HALFSEG ? 1 : 0, oneway =
           ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->oneway;
           
@@ -335,17 +364,30 @@ void Route (int car, int fastest)
       return;
     }
   } /* For 'from' and 'to', find the corresponding hs */
-  free (route);
-  dhashSize = (Sqr ((tlon - flon) >> 17) + Sqr ((tlat - flat) >> 17)) *
-    1000 + 1000;
-  if (dhashSize > 10000000) dhashSize = 10000000;
-  route = (routeNodeType*) calloc (dhashSize, sizeof (*route));
-  
+  if (recalculate) {
+    free (route);
+    dhashSize = Sqr ((tlon - flon) >> 17) + Sqr ((tlat - flat) >> 17) + 20;
+    dhashSize = dhashSize < 10000 ? dhashSize * 1000 : 10000000;
+    route = (routeNodeType*) calloc (dhashSize, sizeof (*route));
+  }
+
   routeHeapSize = 1; /* Leave position 0 open to simplify the math */
   routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
   
-  for (int j = 0; j < 2; j++) AddHs (endHs[0][j], toEndHs[0][j], NULL);
-  for (limit = 2000000000; routeHeapSize > 1;) {
+  limit = 2000000000; // AddHs checks this when adding to the heap
+  if (recalculate) {
+    for (int j = 0; j < 2; j++) AddHs (endHs[0][j], toEndHs[0][j], NULL);
+  }
+  else {
+    for (int i = 0; i < dhashSize; i++) {
+      if (route[i].hs) {
+        route[i].best++; // Force re-add to the heap
+        AddHs (route[i].hs, route[i].best - 1, route[i].shortest);
+      }
+    }
+  }
+  
+  while (routeHeapSize > 1) {
     routeNodeType *root = routeHeap[1];
     routeHeapSize--;
     int beste = Best (routeHeap[routeHeapSize]);
@@ -367,11 +409,12 @@ void Route (int car, int fastest)
     if (root->best + lrint (sqrt (Sqr (root->hs->lon - tlon) +
                                   Sqr (root->hs->lat - tlat))) < limit) {
       for (int i = 0; i < 2; i++) {
-        if (root->hs == endHs[1][i] && limit > root->best + toEndHs[1][i]) {
+        if (root->hs == endHs[1][i] &&
+            limit > root->best + toEndHs[1][1 - i]) {
           shortest = root;
           /* if (limit == 2000000000) rebuild the heap for the new metric.
           Shouldn't be necessary */
-          limit = root->best + toEndHs[1][i];
+          limit = root->best + toEndHs[1][1 - i];
         }
       }
       halfSegType *hs = root->hs, *other;
@@ -406,13 +449,111 @@ void Route (int car, int fastest)
 #define ZOOM_PAD_SIZE 20
 #define STATUS_BAR    0
 
-GtkWidget *draw, *car, *fastest;
+GtkWidget *draw, *carBtn, *fastestBtn;
 int clon, clat, zoom;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
-gint Click (GtkWidget *widget, GdkEventButton *event)
+#if defined (USE_GPSD) || defined (ROUTE_TEST)
+GtkWidget *followGPSr;
+
+#ifdef ROUTE_TEST
+gint RouteTest (GtkWidget *widget, GdkEventButton *event, void *)
+{
+  static int ptime = 0;
+  if (TRUE) {
+    ptime = time (NULL);
+    int w = draw->allocation.width - ZOOM_PAD_SIZE;
+    int perpixel = zoom / w;
+    clon += lrint ((event->x - w / 2) * perpixel);
+    clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
+    int plon = clon + lrint ((event->x - w / 2) * perpixel);
+    int plat = clat -
+      lrint ((event->y - draw->allocation.height / 2) * perpixel);
+#else
+void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
+{
+  if (gps->fix.mode >= MODE_2D &&
+      gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (followGPSr))) {
+    clon = Longitude (gps->fix.longitude);
+    clat = Latitude (gps->fix.latitude);
+    int plon = Longitude (gps->fix.longitude + gps->fix.speed * 3600.0 /
+      40000000.0 / cos (gps->fix.latitude * (M_PI / 180.0)) *
+      sin (gps->fix.track * (M_PI / 180.0)));
+    int plat = Latitude (gps->fix.latitude + gps->fix.speed * 3600.0 /
+      40000000.0 * cos (gps->fix.track * (M_PI / 180.0)));
+    // Predict the vector that will be traveled in the next 10seconds
+    printf ("%5.1lf m/s Heading %3.0lf\n", gps->fix.speed, gps->fix.track);
+#endif
+    
+    flon = clon;
+    flat = clat;
+    Route (FALSE);
+    if (shortest) {
+      long long dlon = plon - clon, dlat = plat - clat;
+      if (!shortest->shortest && dlon * (tlon - clon) > dlat * (clat - tlat)
+                             && dlon * (tlon - plon) < dlat * (plat - tlat)) {
+        // Only stop once both C and P are acute angles in CPT, according to
+        // Pythagoras.
+        fprintf (flitePipe, "%d Stop\n", time (NULL));
+      }
+      char *oldName = NULL;
+      for (routeNodeType *ahead = shortest; ahead;
+           ahead = ahead->shortest) {
+        long long alon = ((halfSegType *)(ahead->hs->other + data))->lon -
+          ahead->hs->lon;
+        long long alat = ((halfSegType *)(ahead->hs->other + data))->lat -
+          ahead->hs->lat;
+        long long divisor = dlon * alat - dlat * alon;
+        long long dividend = dlon * alon + dlat * alat;
+        long long slon = ahead->hs->lon - clon;
+        long long slat = ahead->hs->lat - clat;
+        if (ahead == shortest && ahead->shortest && dividend < 0 &&
+            dividend < divisor && divisor < -dividend &&
+            Sqr (slon + alon) + Sqr (slat + alat) > 64000000) {
+          fprintf (flitePipe, "%d U turn\n", time (NULL));
+          break; // Only when first node is far behind us.
+        }
+        long long dintercept = divisor == 0 ? 9223372036854775807LL :
+            dividend * (dlon * slat - dlat * slon) /
+            divisor + dlon * slon + dlat * slat;
+        char *name = data + ((wayType *)(data +
+          (ahead->hs->wayPtr == TO_HALFSEG ? (halfSegType*)
+                  (ahead->hs->other + data) : ahead->hs)->wayPtr))->name;
+        if (dividend < 0 || divisor > dividend || divisor < -dividend) {
+          // If segment goes "back" or makes a 45 degree angle with the
+          // motion vector.
+          //flite_text_to_speech ("U turn", fliteV, "play");
+          if (dintercept < dlon * dlon + dlat * dlat) {
+            // Found a turn that should be made in the next 10 seconds.
+            fprintf (flitePipe, "%d %s in %s\n", time (NULL),
+              divisor > 0 ? "Left" : "Right", name);
+          }
+          break;
+        }
+        if (name[0] != '\0') {
+          if (oldName && stricmp (oldName, name)) {
+            if (dintercept < dlon * dlon + dlat * dlat) {
+              fprintf (flitePipe, "%d %s\n", time (NULL), name);
+            }
+            break;
+          }
+          oldName = name;
+        }
+      } // While looking for a turn ahead.
+    } // If the routing was successful
+    gtk_widget_queue_clear (draw);
+  } // If following the GPSr and it has a fix.
+}
+#endif
+
+gint Click (GtkWidget *widget, GdkEventButton *event, void *para)
 {
   int w = draw->allocation.width - ZOOM_PAD_SIZE;
+  #ifdef ROUTE_TEST
+  if (event->state) {
+    return RouteTest (widget, event, para);
+  }
+  #endif
   if (event->x > w) {
     zoom = lrint (exp (8 - 8*event->y / draw->allocation.width) * 10000);
   }
@@ -421,6 +562,9 @@ gint Click (GtkWidget *widget, GdkEventButton *event)
     if (event->button == 1) {
       clon += lrint ((event->x - w / 2) * perpixel);
       clat -= lrint ((event->y - draw->allocation.height / 2) * perpixel);
+      #ifdef USE_GPSD
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
+      #endif
     }
     else if (event->button == 2) {
       flon = clon + lrint ((event->x - w / 2) * perpixel);
@@ -430,60 +574,72 @@ gint Click (GtkWidget *widget, GdkEventButton *event)
       tlon = clon + lrint ((event->x - w / 2) * perpixel);
       tlat = clat -
         lrint ((event->y - draw->allocation.height / 2) * perpixel);
-      Route (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (car)),
-             gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fastest)));
+      car = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (carBtn));
+      fastest = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fastestBtn));
+      Route (TRUE);
     }
   }
   gtk_widget_queue_clear (draw);
+  return FALSE;
 }
-
-#define obstack_chunk_alloc malloc
-#define obstack_chunk_free free
 
 void GetDirections (GtkWidget *, gpointer)
 {
-  struct obstack o;
-  obstack_init (&o);
-  if (!shortest) obstack_printf (&o,
+  char *msg;
+  if (!shortest) msg = strdup (
     "Mark the starting point with the middle button and the\n"
     "end point with the right button. Then click Get Directions again\n");
   else {
-    char *last = "";
-    long long dlon = 0, dlat = 1, bSqr = 1; /* Point North */
-    for (routeNodeType *x = shortest; x; x = x->shortest) {
-      halfSegType *other = (halfSegType *)(data + x->hs->other);
-      int forward = x->hs->wayPtr != TO_HALFSEG;
-      wayType *w = (wayType *)(data + (forward ? x->hs : other)->wayPtr);
-      
-      long long nlon = other->lon - x->hs->lon, nlat = other->lat-x->hs->lat;
-      long long cSqr = Sqr (nlon) + Sqr (nlat);
-      long long lhs = bSqr + cSqr - Sqr (nlon - dlon) - Sqr (nlat - dlat);
-      /* Use cosine rule to determine if the angle is obtuse or greater than
-         45 degrees */
-      if (lhs < 0 || Sqr (lhs) < 2 * bSqr * cSqr) {
-        /* (-nlat,nlon) is perpendicular to (nlon,nlat). Then we use
-           Pythagoras test for obtuse angle for left and right */
-        obstack_printf (&o, "%s turn\n",
-          nlon * dlat < nlat * dlon ? "Left" : "Right");
+    for (int i = 0; i < 2; i++) {
+      int len = 0;
+      char *last = "";
+      long long dlon = 0, dlat = 1, bSqr = 1; /* Point North */
+      for (routeNodeType *x = shortest; x; x = x->shortest) {
+        halfSegType *other = (halfSegType *)(data + x->hs->other);
+        int forward = x->hs->wayPtr != TO_HALFSEG;
+        wayType *w = (wayType *)(data + (forward ? x->hs : other)->wayPtr);
+        
+        // I think the formula below can be substantially simplified using
+        // the method used in GpsMove
+        long long nlon = other->lon - x->hs->lon, nlat = other->lat-x->hs->lat;
+        long long cSqr = Sqr (nlon) + Sqr (nlat);
+        long long lhs = bSqr + cSqr - Sqr (nlon - dlon) - Sqr (nlat - dlat);
+        /* Use cosine rule to determine if the angle is obtuse or greater than
+           45 degrees */
+        if (lhs < 0 || Sqr (lhs) < 2 * bSqr * cSqr) {
+          /* (-nlat,nlon) is perpendicular to (nlon,nlat). Then we use
+             Pythagoras test for obtuse angle for left and right */
+          if (!i) len += 11;
+          else len += sprintf (msg + len, "%s turn\n",
+            nlon * dlat < nlat * dlon ? "Left" : "Right");
+        }
+        dlon = nlon;
+        dlat = nlat;
+        bSqr = cSqr;
+        
+        if (strcmp (w->name + data, last)) {
+          last = w->name + data;
+          if (!i) len += strlen (last);
+          else len += sprintf (msg + len, "%s\n", last);
+        }
       }
-      dlon = nlon;
-      dlat = nlat;
-      bSqr = cSqr;
-      
-      if (strcmp (w->name + data, last)) {
-        last = w->name + data;
-        obstack_printf (&o, "%s\n", last);
-      }
-    }
+      if (!i) msg = (char*) malloc (len + 1);
+    } // First calculate len, then create message.
   }
-  obstack_1grow (&o, '\0');
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *view = gtk_text_view_new ();
+  GtkWidget *scrol = gtk_scrolled_window_new (NULL, NULL);
+//  gtk_scrolled_winGTK_POLICY_AUTOMATIC,
+//    GTK_POLICY_ALWAYS);
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-  gtk_text_buffer_set_text (buffer, (char *) obstack_finish (&o), -1);
-  obstack_free (&o, NULL);
-  gtk_container_add (GTK_CONTAINER (window), view);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (view), FALSE);
+  gtk_text_buffer_set_text (buffer, msg, -1);
+  free (msg);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrol), view);
+  gtk_container_add (GTK_CONTAINER (window), scrol);
+  gtk_widget_set_size_request (window, 300, 300);
   gtk_widget_show (view);
+  gtk_widget_show (scrol);
   gtk_widget_show (window);
 }
 
@@ -683,13 +839,33 @@ void SelectName (GtkWidget *w, gint row, gint column, GdkEventButton *ev,
   clon = incrementalWay[row].clon;
   clat = incrementalWay[row].clat;
   zoom = incrementalWay[row].zoom16384 + 2 << 14;
+  #ifdef USE_GPSD
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (followGPSr), FALSE);
+  #endif
   gtk_widget_queue_clear (draw);
 }
 
 int main (int argc, char *argv[])
 {
   FILE *pak;
-
+  printf ("%s is in the public domain and comes without warrantee\n",argv[0]);
+  #ifdef USE_FLITE
+    int pyp[2];
+    pipe (pyp);
+    if (fork () == 0) { // A simple child to play all the voices it has
+      FILE *rpipe = fdopen (pyp[0], "r");
+      flite_init ();    // time for without blocking the main process
+      cst_voice *fliteV = register_cmu_us_kal ();
+      for (;;) {
+        char msg[301];
+        time_t preread = time (NULL), other;
+        fscanf (rpipe, "%d %300[^\n]", &other, msg);
+        if (preread <= other) flite_text_to_speech (msg, fliteV, "play");
+      }
+    }
+    flitePipe = fdopen (pyp[1], "w");
+    setlinebuf (flitePipe);
+  #endif
   if (argc > 1) {
     if (argc > 2 || stricmp (argv[1], "rebuild")) {
       fprintf (stderr, "Usage : %s [rebuild]\n", argv[0]);
@@ -703,20 +879,30 @@ int main (int argc, char *argv[])
     // written to location 0 when we encounter the first <way> tag.
   
     char tag[301], key[301], value[301], quote, feature[301];
-    int wayCnt = 0, from, nodeCnt = 0, halfSegCnt = 0;
+    int wayCnt = 0, from, segId;
     enum { doNodes, doSegments, doWays } mode = doNodes;
     int wleft, wright, wtop, wbottom;
 
     printf ("Reading nodes...\n");
-    nodeType *node = (nodeType *) malloc (sizeof (*node) * 15000000);
+    nodeType *node = (nodeType *) malloc (sizeof (*node) * MAX_NODES), *n;
     halfSegType *halfSeg = (halfSegType *) malloc (sizeof (*halfSeg) *
-      30000000); /* (Number of segments + nodes with names) * 2 */
-/* This array is sorted twice : First time 'other' is the segment id so
-   we add the two halfs together and we sort by id.
-   Second time 'other' is the index into the array before it is sorted. Then
-   we sort by bucket number, lon and lat. Then we set 'other'
-   to the offset of the other half in the sorted pak file. */
+      (MAX_SEGMENTS + MAX_NAMED_NODES) * 2);
+    halfSegType *namedNodeHs = halfSeg + 2 * MAX_SEGMENTS;
     wayBuildType *w = (wayBuildType *) calloc (sizeof (*w), 2000000);
+    if (!node || !halfSeg || !w) {
+      fprintf (stderr, "Out of memory. It may work if MAX_SEGMENTS and / or\n"
+        "MAX_NODES are reduced\n");
+      return 3;
+    }
+    memset (node, -1, sizeof (*node) * MAX_NODES);
+    memset (halfSeg, -1, sizeof (*halfSeg) * MAX_SEGMENTS * 2);
+/* Initially this array is a hashtable with 2 adjacent entries for each
+   segment and the segment id stored in 'other'.
+   
+   After processing the ways the named nodes are added and the blanks are
+   removed. 'other' then is the index into the array before it is sorted.
+   Then we sort by bucket number, lon and lat. Then we set 'other'
+   to the offset of the other half in the sorted pak file. */
     w[wayCnt].idx = wayCnt;
     w[wayCnt].w.type = unwayed;
     w[wayCnt].w.layer = 5; // 5 means show duplicated segments clearly.
@@ -736,93 +922,10 @@ int main (int argc, char *argv[])
               scanf ("%300[^ ]", value); /* " */
             }
             //printf (" %s='%s'", key, value);
-            if (mode == doNodes && !stricmp (tag, "node")) {
-              if (!stricmp (key, "id")) node[nodeCnt].id = atoi (value);
-              if (!stricmp (key, "lat")) {
-                node[nodeCnt].lat = Latitude (atof (value));
-              }
-              if (!stricmp (key, "lon")) {
-                node[nodeCnt++].lon = Longitude (atof (value));
-                
-                if (w[wayCnt].name) halfSegCnt = wayCnt++ * 2;
-                /* Now there is a way for the unwayed segment plus
-                   wayCnt - 1 nodes with names, each with 2 half segments */
-                w[wayCnt].w.type = place; /* generic */
-                w[wayCnt].idx = wayCnt;
-                w[wayCnt].w.clat = node[nodeCnt - 1].lat;
-                w[wayCnt].w.clon = node[nodeCnt - 1].lon;
-                w[wayCnt].w.zoom16384 = 10;
-                /* We prepare a way and two segments in case this node has
-                   a name. */
-                halfSeg[halfSegCnt].other = -1; /* Unused segment id */
-                halfSeg[halfSegCnt].lat = w[wayCnt].w.clat;
-                halfSeg[halfSegCnt].lon = w[wayCnt].w.clon;
-                halfSeg[halfSegCnt].wayPtr = wayCnt;
-                memcpy (halfSeg + halfSegCnt + 1, halfSeg + halfSegCnt,
-                  sizeof (halfSeg[0]));
-                
-                if (nodeCnt % 100000 == 0) printf ("%9d nodes\n", nodeCnt);
-              }
-            }
-            else if (mode <= doSegments && !stricmp (tag, "segment")) {
-              if (mode < doSegments) {
-                printf ("Sorting nodes...\n");
-                quicksort (node, nodeCnt, sizeof (node[0]), NodeIdCmp);
-                mode = doSegments;
-              }
-              if (!stricmp (key, "id")) {
-                if (w[wayCnt].name) halfSegCnt = wayCnt++ * 2;
-                halfSeg[halfSegCnt].other = atoi (value);
-              }
-              if (!stricmp (key, "from")) {
-                from = atoi (value);
-                if (halfSegCnt % 200000 == 0) {
-                  printf ("%9d segments\n", halfSegCnt / 2);
-                }
-              }
-              if (!stricmp (key, "to")) {
-                nodeType key, *n;
-                for (int i = 0; i < 2; i++) {
-                  key.id = i ? atoi (value) : from;
-                  n = (nodeType *) bsearch (&key, node, nodeCnt,
-                    sizeof (key), NodeIdCmp);
-                  if (!n) break;
-                  halfSeg[i + halfSegCnt].lon = n->lon;
-                  halfSeg[i + halfSegCnt].lat = n->lat;
-                }
-                if (n) {
-                  halfSeg[halfSegCnt++].wayPtr = 0; /* unwayed */
-                  halfSeg[halfSegCnt++].wayPtr = TO_HALFSEG;
-                }
-              }
-            }
-            else if (!stricmp (tag, "way")) {
-              if (mode < doWays) {
-                printf ("Sorting segments\n");
-                quicksort (halfSeg, halfSegCnt / 2, sizeof (*halfSeg) * 2,
-                  HalfSegIdCmp);
-                mode = doWays;
-                printf ("Creating ways\n");
-              }
-              else {
-                if (!w[wayCnt].name) w[wayCnt].name = strdup ("");
-                wayCnt++; // Flush way built in previous iteration
-              }
-              
-              w[wayCnt].idx = wayCnt;
-              w[wayCnt].w.type = sizeof (highway) / sizeof (highway[0]) - 1;
-              wleft = INT_MAX;
-              wright = -INT_MAX;
-              wbottom = INT_MAX;
-              wtop = -INT_MAX;
-              if (wayCnt % 100000 == 0) printf ("%9d ways\n", wayCnt);
-            }
-            else if (mode == doWays && !stricmp (tag, "seg") &&
+            if (mode == doWays && !stricmp (tag, "seg") &&
                 !stricmp (key, "id")) {
-              halfSegType key[2], *hs;
-              key[0].other = atoi (value);
-              if ((hs = (halfSegType *) bsearch (key, halfSeg, halfSegCnt / 2,
-                      sizeof (*halfSeg) * 2, HalfSegIdCmp)) != NULL) {
+              halfSegType *hs = FindSegment (halfSeg, atoi (value));
+              if (hs->wayPtr >= 0) {
                 hs->wayPtr = wayCnt;
                 for (int i = 0; i < 2; i++) {
                   if (wleft > hs[i].lon) wleft = hs[i].lon;
@@ -844,8 +947,10 @@ int main (int argc, char *argv[])
                   tolower (value[0]) == 'y') w[wayCnt].w.oneway = 1;
                 else if (!strcmp (feature, "layer"))
                   w[wayCnt].w.layer = atoi (value);
-                else if (!strcmp (feature, "name"))
+                else if (!strcmp (feature, "name")) {
                   w[wayCnt].name = strdup (value);
+                  if (mode == doNodes) namedNodeHs += 2;
+                }
                 //else if (!strcmp (feature, "ref")) strcpy (ref, value);
                 else for (int i = 0; highway[i].name; i++) {
 		  if (!stricmp (highway[i].feature, feature) &&
@@ -853,17 +958,80 @@ int main (int argc, char *argv[])
                 }
               }
             }
-            else if (strcmp (tag, "?xml") && strcmp (tag, "osm"))
-              fprintf (stderr, "Unexpected tag %s\n", tag);
+            else if (strcmp (tag, "?xml") && strcmp (tag, "osm")) {
+              /* First flush out a way in progress */
+              if (mode == doWays && !w[wayCnt].name) {
+                w[wayCnt].name = strdup ("");
+              }
+              if (w[wayCnt].name) wayCnt++;
+              mode = doNodes;
+              if (!stricmp (tag, "node")) {
+                if (!stricmp (key, "id")) {
+                  n = FindNode (node, atoi (value));
+                  n->id = atoi (value);
+                }
+                if (!stricmp (key, "lat")) n->lat = Latitude (atof (value));
+                if (!stricmp (key, "lon")) {
+                  n->lon = Longitude (atof (value));
+                  
+                  if (w[wayCnt].name) wayCnt++;
+                  /* Now there is a way for the unwayed segment plus
+                     wayCnt - 1 nodes with names, each with 2 half segments */
+                  w[wayCnt].w.type = place; /* generic */
+                  w[wayCnt].idx = wayCnt;
+                  w[wayCnt].w.clat = n->lat;
+                  w[wayCnt].w.clon = n->lon;
+                  w[wayCnt].w.zoom16384 = 10;
+                  /* We prepare a way and two segments in case this node has
+                     a name. */
+                  /* namedNodeHs->other = 0; */
+                  namedNodeHs->lat = w[wayCnt].w.clat;
+                  namedNodeHs->lon = w[wayCnt].w.clon;
+                  namedNodeHs->wayPtr = wayCnt;
+                  memcpy (namedNodeHs+1, namedNodeHs, sizeof (*namedNodeHs));
+                  
+                  //if (nodeCnt % 100000 == 0) printf ("%9d nodes\n", nodeCnt);
+                }
+              }
+              else if (!stricmp (tag, "segment")) {
+                mode = doSegments;
+                if (!stricmp (key, "id")) segId = atoi (value);
+                if (!stricmp (key, "from")) n = FindNode (node, atoi (value));
+                if (!stricmp (key, "to") && n->id != -1) {
+                  nodeType *to = FindNode (node, atoi (value));
+                  if (to->id != -1) {
+                    halfSegType *seg = FindSegment (halfSeg, segId);
+                    seg[0].other = segId;
+                    seg[0].wayPtr = 0;
+                    seg[0].lon = n->lon;
+                    seg[0].lat = n->lat;
+                    /* seg[1].other = ; */
+                    seg[1].wayPtr = TO_HALFSEG;
+                    seg[1].lon = to->lon;
+                    seg[1].lat = to->lat;
+                  }
+                }
+              }
+              else if (!stricmp (tag, "way")) {
+                mode = doWays;
+                w[wayCnt].idx = wayCnt;
+                w[wayCnt].w.type = unsupportedWayType;
+                wleft = INT_MAX;
+                wright = -INT_MAX;
+                wbottom = INT_MAX;
+                wtop = -INT_MAX;
+              }
+              else fprintf (stderr, "Unexpected tag %s\n", tag);
+            } /* If we expected a node, a segment or a way */
           } /* if key / value pair found */
         } /* while search for key / value pairs */
       } while (getchar () != '>');
       //printf ("\n");
     } /* while we found another tag */
-    if (mode == doWays) {
-      if (!w[wayCnt].name) w[wayCnt].name = strdup ("");
-      wayCnt++; // Flush way built above
+    if (mode == doWays && !w[wayCnt].name) {
+      w[wayCnt].name = strdup ("");
     }
+    if (w[wayCnt].name) wayCnt++; /* Flush the last way */
     free (node);
     printf ("Sorting ways by name\n");
     qsort (w, wayCnt, sizeof (*w), WayBuildCmp);
@@ -881,7 +1049,20 @@ int main (int argc, char *argv[])
     }
     free (w);
     printf ("Preparing for sorting half segments\n");
-    for (int i = 0; i < halfSegCnt; i++) halfSeg[i].other = i;
+    int halfSegCnt;
+    for (halfSegCnt = 0; halfSeg + halfSegCnt < namedNodeHs; ) {
+      if (namedNodeHs[-2].wayPtr == -1) namedNodeHs -= 2;
+      else {
+        if (halfSeg[halfSegCnt].wayPtr == -1) {
+          memcpy (&halfSeg[halfSegCnt], namedNodeHs - 2,
+            sizeof (*halfSeg) * 2);
+          namedNodeHs -= 2;
+        }
+        halfSeg[halfSegCnt].other = halfSegCnt;
+        halfSeg[halfSegCnt + 1].other = halfSegCnt + 1;
+        halfSegCnt += 2;
+      }
+    }
     printf ("Sorting\n");
     quicksort (halfSeg, halfSegCnt, sizeof (*halfSeg),
 	       (int (*)(const void*, const void*)) HalfSegCmp);
@@ -889,6 +1070,8 @@ int main (int argc, char *argv[])
     printf ("Calculating addresses\n");
     int *hsIdx = (int *) malloc (sizeof (*hsIdx) * halfSegCnt);
     int hsBase = ftell (pak);
+    if (hsBase & 15) hsBase += fwrite (&hsBase, 1, 16 - (hsBase & 15), pak);
+    /* Align to 16 bytes */
     for (int i = halfSegCnt - 1; i >= 0; i--)
 	       hsIdx[halfSeg[i].other] = hsBase + i * sizeof (*halfSeg);
     printf ("Writing Data\n");
@@ -915,16 +1098,15 @@ int main (int argc, char *argv[])
     /* It has BUCKETS + 1 entries so that we can easily look up where each
        bucket begins and ends */
   } /* if rebuilding */
-  if (!(pak = fopen ("gosmore.pak", "r"))) {
+  GMappedFile *gmap = g_mapped_file_new ("gosmore.pak", FALSE, NULL);
+  if (!gmap) {
     fprintf (stderr, "Cannot read gosmore.pak\nYou can (re)build it from\n"
       "the planet file e.g. bzip2 -d planet-...osm.bz2 | %s rebuild\n",
       argv[0]);
-    return 3;
+    return 4;
   }
-  fseek (pak, 0, SEEK_END);
-  data = (char*)
-    mmap (0, ftell (pak), PROT_READ, MAP_SHARED, fileno (pak), 0);
-  hashTable = (int *) (data + ftell (pak)) - BUCKETS - 1;
+  data = (char*) g_mapped_file_get_contents (gmap);
+  hashTable = (int *) (data + g_mapped_file_get_length (gmap)) - BUCKETS - 1;
 
   wayType *w = 0 + (wayType *) data;
   //printf ("%d ways %d\n", w[0].name / sizeof (w[0]), w[w[0].name / sizeof (w[0]) - 1].name);
@@ -939,7 +1121,8 @@ int main (int argc, char *argv[])
     (GtkSignalFunc) Expose, NULL);
   gtk_signal_connect (GTK_OBJECT (draw), "button_press_event",
     (GtkSignalFunc) Click, NULL);
-  gtk_widget_set_events (draw, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
+  gtk_widget_set_events (draw, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK |
+    GDK_POINTER_MOTION_MASK);
   gtk_signal_connect (GTK_OBJECT (draw), "scroll_event",
                        (GtkSignalFunc) Scroll, NULL);
   
@@ -961,33 +1144,54 @@ int main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (list), "select_row",
     GTK_SIGNAL_FUNC (SelectName), NULL);
     
-  car = gtk_radio_button_new_with_label (NULL, "car");
-  gtk_box_pack_start (GTK_BOX (vbox), car, FALSE, FALSE, 5);
+  carBtn = gtk_radio_button_new_with_label (NULL, "car");
+  gtk_box_pack_start (GTK_BOX (vbox), carBtn, FALSE, FALSE, 5);
   GtkWidget *bike = gtk_radio_button_new_with_label (
-    gtk_radio_button_get_group (GTK_RADIO_BUTTON (car)), "bike");
+    gtk_radio_button_get_group (GTK_RADIO_BUTTON (carBtn)), "bike");
   gtk_box_pack_start (GTK_BOX (vbox), bike, FALSE, FALSE, 5);
 
-  fastest = gtk_radio_button_new_with_label (NULL, "fastest");
-  gtk_box_pack_start (GTK_BOX (vbox), fastest, FALSE, FALSE, 5);
-  GtkWidget *shortestRB = gtk_radio_button_new_with_label (
-    gtk_radio_button_get_group (GTK_RADIO_BUTTON (fastest)), "shortest");
-  gtk_box_pack_start (GTK_BOX (vbox), shortestRB, FALSE, FALSE, 5);
+  fastestBtn = gtk_radio_button_new_with_label (NULL, "fastest");
+  gtk_box_pack_start (GTK_BOX (vbox), fastestBtn, FALSE, FALSE, 5);
+  GtkWidget *shortestBtn = gtk_radio_button_new_with_label (
+    gtk_radio_button_get_group (GTK_RADIO_BUTTON (fastestBtn)), "shortest");
+  gtk_box_pack_start (GTK_BOX (vbox), shortestBtn, FALSE, FALSE, 5);
   
   GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
   gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
   gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
     GTK_SIGNAL_FUNC (GetDirections), NULL);
 
+#ifdef USE_GPSD
+  followGPSr = gtk_check_button_new_with_label ("Follow GPSr");
+  gtk_box_pack_start (GTK_BOX (vbox), followGPSr, FALSE, FALSE, 5);
+  //gtk_signal_connect (GTK_OBJECT (followGPSr), "clicked",
+
+#ifndef ROUTE_TEST
+  gps_data_t *gpsData = gps_open ("127.0.0.1", "2947");
+  if (gpsData) {
+    gtk_widget_show (followGPSr);
+    
+    gps_set_raw_hook (gpsData, GpsMove);
+    gps_query (gpsData, "w+x\n");
+    gdk_input_add (gpsData->gps_fd, GDK_INPUT_READ,
+      (GdkInputFunction) gps_poll, gpsData);
+    /* gps_poll will just ignore the parameters he doesn't expect */
+    
+  }
+#endif
+#endif
+
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+  
   gtk_widget_set_usize (window, 400, 300);
   gtk_widget_show (search);
   gtk_widget_show (list);
   gtk_widget_show (draw);
-  gtk_widget_show (car);
+  gtk_widget_show (carBtn);
   gtk_widget_show (bike);
-  gtk_widget_show (fastest);
-  gtk_widget_show (shortestRB);
+  gtk_widget_show (fastestBtn);
+  gtk_widget_show (shortestBtn);
   gtk_widget_show (getDirs);
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);

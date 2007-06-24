@@ -546,7 +546,7 @@
 				}
 			}
 		};
-		if (this.uploading==0) {
+		if (this.uploading==0 && this.path.length>1) {
 			this.attr['created_by']="Potlatch alpha";
 			this.uploading=1;
 			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);

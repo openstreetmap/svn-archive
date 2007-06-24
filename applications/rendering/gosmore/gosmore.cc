@@ -15,7 +15,7 @@ sys     0m15.199s
 #include <sys/mman.h>
 #include <ctype.h>
 #include <gtk/gtk.h>
-//#include <gtk/gtklist.h>
+#include <obstack.h> /* For obstack_printf in GetDirections */
 
 #define stricmp strcasecmp
 
@@ -74,30 +74,31 @@ enum { rail, residential, motorway, motorway_link, trunk, primary, secondary,
 struct highwayType {
   char *feature, *name, *colour;
   int width;
+  double invSpeed; /* 1.0 is the fastest. Everything else must be bigger. */
   GdkLineStyle style;
 } highway[] = {
   /* ways */
-  { "railway", "rail"         , "black",  3, GDK_LINE_ON_OFF_DASH },
-  { "highway", "residential"  , "white",  1, GDK_LINE_SOLID },
-  { "highway", "motorway"     , "blue",   3, GDK_LINE_SOLID },
-  { "highway", "motorway_link", "blue",   3, GDK_LINE_SOLID },
-  { "highway", "trunk"        , "green",  3, GDK_LINE_SOLID },
-  { "highway", "primary"      , "red",    2, GDK_LINE_SOLID },
-  { "highway", "secondary"    , "orange", 2, GDK_LINE_SOLID },
-  { "highway", "tertiary"     , "yellow", 1, GDK_LINE_SOLID },
-  { "highway", "track"        , "brown",  1, GDK_LINE_SOLID },
+  { "railway", "rail"         , "black",  3, 99.0, GDK_LINE_ON_OFF_DASH },
+  { "highway", "residential"  , "white",  1, 120.0 / 34.0, GDK_LINE_SOLID },
+  { "highway", "motorway"     , "blue",   3, 1.0, GDK_LINE_SOLID },
+  { "highway", "motorway_link", "blue",   3, 1.0, GDK_LINE_SOLID },
+  { "highway", "trunk"        , "green",  3, 120.0 / 70.0, GDK_LINE_SOLID },
+  { "highway", "primary"      , "red",    2, 120.0 / 60.0, GDK_LINE_SOLID },
+  { "highway", "secondary"    , "orange", 2, 120.0 / 50.0, GDK_LINE_SOLID },
+  { "highway", "tertiary"     , "yellow", 1, 120.0 / 40.0, GDK_LINE_SOLID },
+  { "highway", "track"        , "brown",  1, 120.0 / 30.0, GDK_LINE_SOLID },
 //  { "highway", "footway"        , "brown",  1, GDK_LINE_SOLID },
   /* nodes : */
-  { "railway", "station"      , "red",    1, GDK_LINE_SOLID },
-  { "place",   "suburb"       , "black",  2, GDK_LINE_SOLID },
-  { "place",   "junction"     , "black",  1, GDK_LINE_SOLID },
-  { "place",   "halmet"       , "black",  1, GDK_LINE_SOLID },
-  { "place",   "village"      , "black",  1, GDK_LINE_SOLID },
-  { "place",   "town"         , "black",  2, GDK_LINE_SOLID },
-  { "place",   "city"         , "black",  3, GDK_LINE_SOLID },
-  { NULL, NULL /* named node of unidentified type */  , "gray",   1,
+  { "railway", "station"      , "red",    1, 1.0, GDK_LINE_SOLID },
+  { "place",   "suburb"       , "black",  2, 1.0, GDK_LINE_SOLID },
+  { "place",   "junction"     , "black",  1, 1.0, GDK_LINE_SOLID },
+  { "place",   "halmet"       , "black",  1, 1.0, GDK_LINE_SOLID },
+  { "place",   "village"      , "black",  1, 1.0, GDK_LINE_SOLID },
+  { "place",   "town"         , "black",  2, 1.0, GDK_LINE_SOLID },
+  { "place",   "city"         , "black",  3, 1.0, GDK_LINE_SOLID },
+  { NULL, NULL /* named node of unidentified type */  , "gray",   1, 1.0,
     GDK_LINE_SOLID },
-  { NULL, NULL /* unwayed */  , "gray",   1, GDK_LINE_SOLID }
+  { NULL, NULL /* unwayed */  , "gray",   1, 99.0, GDK_LINE_SOLID }
 };
 
 int NodeIdCmp (const void *a, const void *b)
@@ -125,7 +126,7 @@ int WayBuildCmp (const void *a, const void *b)
 
 void quicksort (void *base, int n, int size,
   int (*cmp)(const void *, const void*))
-{ /* Buildin qsort performs badly when dataset does not fit into memory,
+{ /* Builtin qsort performs badly when dataset does not fit into memory,
      probably because it uses mergesort. quicksort quickly divides the
      problem into sections that is small enough to fit into memory and
      finishes them before tackling the rest. */
@@ -215,29 +216,81 @@ halfSegType *FirstHalfSegAtNode (halfSegType *hs)
   return hs;
 }
 
+/* Routing starts at the 'to' point and moves to the 'from' point. This will
+   help when we do in car navigation because the 'from' point will change
+   often while the 'to' point stays fixed, so we can keep the array of nodes.
+   It also makes the generation of the directions easier.
+
+   We use "double hashing" to keep track of the shortest distance to each
+   node. So we guess an upper limit for the number of nodes that will be
+   considered and then multiply by a few so that there won't be too many
+   clashes. For short distances we allow for dense urban road networks,
+   but beyond a certain point there is bound to be farmland or seas.
+
+   We call nodes that rescently had their "best" increased "active". The
+   active nodes are stored in a heap so that we can quickly find the most
+   promissing one. */
 struct routeNodeType {
   halfSegType *hs;
   routeNodeType *shortest;
-  int active, best;
-} route[50000], *shortest = NULL;
+  int best, heapIdx;
+} *route = NULL, *shortest = NULL, **routeHeap;
+int dhashSize, routeHeapSize, limit, tlat, tlon, flat, flon;
 
 #define Sqr(x) ((x)*(x))
-void Route (int flon, int flat, int tlon, int tlat)
+int Best (routeNodeType *n)
+{
+  return limit < 2000000000 ? n->best : n->best +
+    lrint (sqrt (Sqr ((long long)(n->hs->lon - flon)) +
+                 Sqr ((long long)(n->hs->lat - flat))));
+}
+
+void AddRouteNode (halfSegType *hs, int best, routeNodeType *shortest)
+{
+  unsigned hash = (int) hs, i = 0;
+  routeNodeType *n;
+  do {
+    if (i++ > 10) {
+      fprintf (stderr, "Double hash bailout : Table full or hash function "
+        "bad. Route will not be found or will be suboptimal\n");
+      return;
+    }
+    hash = hash * (long long) 1664525 + 1013904223;
+    /* Linear congruential generator from wikipedia */
+    n = route + hash % dhashSize;
+    if (n->hs == NULL) { /* First visit of this node */
+      n->hs = hs;
+      n->best = best + 1;
+      /* Will do later : routeHeap[routeHeapSize] = n; */
+      n->heapIdx = routeHeapSize++;
+    }
+  } while (n->hs != hs);
+  if (n->best > best) {
+    n->best = best;
+    n->shortest = shortest;
+    if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
+    for (; n->heapIdx > 1 &&
+         Best (n) < Best (routeHeap[n->heapIdx / 2]); n->heapIdx /= 2) {
+      routeHeap[n->heapIdx] = routeHeap[n->heapIdx / 2];
+      routeHeap[n->heapIdx]->heapIdx = n->heapIdx;
+    }
+    routeHeap[n->heapIdx] = n;
+  }
+}
+
+void Route (int car, int fastest)
 { /* We start by finding the segment that is closest to 'from' and 'to' */
-  int toToNode[2];
-  int routeCnt = 0, car = 1;
-  route[2].shortest = NULL;
-  route[3].shortest = NULL;
+  halfSegType *endHs[2][2];
+  int toEndHs[2][2];
   
+  shortest = NULL;
   for (int i = 0; i < 2; i++) {
     int lon = i ? flon : tlon, lat = i ? flat : tlat;
     long long bestd = 4000000000000000000LL;
     /* find min (Sqr (distance)). Use long long so we don't loose accuracy */
-    OsmItr itr (lon - 300000, lat - 300000, lon + 300000, lat + 300000);
+    OsmItr itr (lon - 100000, lat - 100000, lon + 100000, lat + 100000);
     /* Search 1km x 1km around 'from' for the nearest segment to it */
     while (Next (itr)) {
-      int firstSeg = itr.hs[0]->wayPtr == TO_HALFSEG, oneway =
-        ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->oneway;
       long long lon0 = lon - itr.hs[0]->lon, lat0 = lat - itr.hs[0]->lat,
                 lon1 = lon - itr.hs[1]->lon, lat1 = lat - itr.hs[1]->lat,
                 dlon = itr.hs[0]->lon - itr.hs[1]->lon,
@@ -252,112 +305,98 @@ void Route (int flon, int flat, int tlon, int tlat)
         Sqr ((dlon * lat1 - dlat * lon1) /
           lrint (sqrt (Sqr(dlon) + Sqr (dlat))));
       if (d < bestd) {
+        int firstSeg = itr.hs[0]->wayPtr == TO_HALFSEG ? 1 : 0, oneway =
+          ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->oneway;
+          
         bestd = d;
-        for (int j = 0; j < 2; j++) {
-          route[i * 2 + j].best = 2000000000;
-          route[i * 2 + j].hs = FirstHalfSegAtNode (itr.hs[j]);
-          route[i * 2 + j].active = i;
-        }
-        if (!i) {
-          toToNode[0] = lrint (sqrt (Sqr (lon0) + Sqr (lat0)));
-          toToNode[1] = lrint (sqrt (Sqr (lon1) + Sqr (lat1)));
-          if (dlon * lon1 <= -dlat * lat1) toToNode[0] = 100000000;
-          else if (dlon * lon0 >= - dlat * lat0) toToNode[1] = 100000000;
-          if (oneway) toToNode[firstSeg] = 200000000;
-        }
-        else {
-          route[2].best = lrint (sqrt (Sqr (lon0) + Sqr (lat0)));
-          route[3].best = lrint (sqrt (Sqr (lon1) + Sqr (lat1)));
-          if (dlon * lon1 <= -dlat * lat1) route[2].best += route[3].best;
-          else if (dlon * lon0 >= - dlat*lat0) route[3].best += route[2].best;
-          if (oneway) route[2 + firstSeg].best = 200000000;
-        }
+        double invSpeed = !fastest ? 1.0 : highway[
+          ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->type].invSpeed;
+        toEndHs[i][0] = lrint (sqrt (Sqr (lon0) + Sqr (lat0)) * invSpeed);
+        toEndHs[i][1] = lrint (sqrt (Sqr (lon1) + Sqr (lat1)) * invSpeed);
+        if (dlon * lon1 <= -dlat * lat1) toEndHs[i][0] += toEndHs[i][1];
+        else if (dlon * lon0 >= - dlat * lat0) toEndHs[i][1] += toEndHs[i][0];
+        if (oneway) toEndHs[i][i ? firstSeg : 1 - firstSeg] = 200000000;
+        endHs[i][0] = FirstHalfSegAtNode (itr.hs[0]);
+        endHs[i][1] = FirstHalfSegAtNode (itr.hs[1]);
       }
     } /* For each candidate segment */
     if (bestd == 4000000000000000000LL) {
       fprintf (stderr, "No segment nearby\n");
       return;
     }
-  } /* For 'from' and 'to' */
-  routeCnt = 4; // 2 'from' nodes and 2 'to' nodes
-  for (int limit = 2000000000;;) {
-    int n;
-    if (limit == 2000000000) {
-      /* First step is find a route with our heurisitc : Find the node n such
-         that d(n,from) + n->best is smallest. */
-      int bestd = 2000000000, d;
-      for (int i = 0; i < routeCnt; i++) {
-        if (route[i].active && bestd > (d = route[i].best + lrint (sqrt (
-        Sqr (route[i].hs->lon - tlon) + Sqr (route[i].hs->lat - tlat))))) {
-          bestd = d;
-          n = i;
-        }
+  } /* For 'from' and 'to', find the corresponding hs */
+  free (route);
+  dhashSize = (Sqr ((tlon - flon) >> 17) + Sqr ((tlat - flat) >> 17)) *
+    1000 + 1000;
+  if (dhashSize > 10000000) dhashSize = 10000000;
+  route = (routeNodeType*) calloc (dhashSize, sizeof (*route));
+  
+  routeHeapSize = 1; /* Leave position 0 open to simplify the math */
+  routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
+  
+  for (int j = 0; j < 2; j++) AddRouteNode (endHs[0][j], toEndHs[0][j], NULL);
+  for (limit = 2000000000; routeHeapSize > 1;) {
+    routeNodeType *root = routeHeap[1];
+    routeHeapSize--;
+    int beste = Best (routeHeap[routeHeapSize]);
+    for (int i = 2; ; ) {
+      int besti = i < routeHeapSize ? Best (routeHeap[i]) : beste;
+      int bestipp = i + 1 < routeHeapSize ? Best (routeHeap[i + 1]) : beste;
+      if (besti > bestipp) i++;
+      else bestipp = besti;
+      if (beste <= bestipp) {
+        routeHeap[i / 2] = routeHeap[routeHeapSize];
+        routeHeap[i / 2]->heapIdx = i / 2;
+        break;
       }
-      if (bestd == 2000000000) {
-        fprintf (stderr, "Route does not exist\n");
-        return;
-      }
+      routeHeap[i / 2] = routeHeap[i];
+      routeHeap[i / 2]->heapIdx = i / 2;
+      i = i * 2;
     }
-    else {
-      for (n = 0; n < routeCnt && !route[n].active; n++) {}
-      if (n >= routeCnt) break; // No active nodes left, so we're done
-        // Figure out which nodes belong to the shortest route
-      if (route[n].best + Sqr (route[n].hs->lon - tlon) +
-                          Sqr (route[n].hs->lat - tlat) > limit) {
-        route[n].active = 0;
-        continue; // Over the limit. No evaluation necessary 
+    root->heapIdx = -1; /* Root now removed from the heap */
+    if (root->best + lrint (sqrt (Sqr (root->hs->lon - tlon) +
+                                  Sqr (root->hs->lat - tlat))) < limit) {
+      for (int i = 0; i < 2; i++) {
+        if (root->hs == endHs[1][i] && limit > root->best + toEndHs[1][i]) {
+          shortest = root;
+          /* if (limit == 2000000000) rebuild the heap for the new metric.
+          Shouldn't be necessary */
+          limit = root->best + toEndHs[1][i];
+        }
       }
-    }
-    /* Then work through the segments connected to n. Repeat. */
-    halfSegType *hs = route[n].hs, *other;
-    do {
-      other = (halfSegType *)(data + hs->other);
-      int forward = hs->wayPtr != TO_HALFSEG;
-      wayType *w = (wayType *)(data + (forward ? hs : other)->wayPtr);
-      if (w->type < unwayed && (forward || !w->oneway) &&
-            (car ? 1 /* w->type != footway */ :
-            w->type != motorway && w->type != motorway_link)) {
-        int d = route[n].best + lrint (sqrt (
-          Sqr ((long long)(hs->lon - other->lon)) +
-          Sqr ((long long)(hs->lat - other->lat))));
-        other = FirstHalfSegAtNode (other);
-        int i;
-        for (i = 0; i < routeCnt && route[i].hs != other; i++) {}
-        if (i >= sizeof (route) / sizeof (route[0])) {
-          fprintf (stderr, "To many nodes\n");
-          /* route[0].shortest = NULL; Perhaps we found a road... */
-          return;
-        }
-        if (i >= routeCnt || route[i].best > d) {
-          if (i >= routeCnt) {
-            routeCnt++;
-            route[i].hs = other;
-          }
-          route[i].best = d;
-          route[i].shortest = route + n;
-          route[i].active = 1;
-          if (i < 2 && limit > d + toToNode[i]) {
-            limit = d + toToNode[i];
-            shortest = route + i;
-          }
-        }
-      } // If we found a segment we may follow
-    } while ((char*)++hs < data + hashTable[BUCKETS] &&
-             hs->lon == hs[-1].lon && hs->lat == hs[-1].lat);
-    route[n].active = 0;
-  } // forever : while we're searching for the shortest route
+      halfSegType *hs = root->hs, *other;
+      /* Now work through the segments connected to root. */
+      do {
+        other = (halfSegType *)(data + hs->other);
+        int forward = hs->wayPtr != TO_HALFSEG;
+        wayType *w = (wayType *)(data + (forward ? hs : other)->wayPtr);
+        if (w->type < unwayed && (!forward || !w->oneway) &&
+              (car ? 1 /* w->type != footway */ :
+              w->type != motorway && w->type != motorway_link)) {
+          int d = lrint (sqrt (Sqr ((long long)(hs->lon - other->lon)) +
+                               Sqr ((long long)(hs->lat - other->lat))) *
+                               (fastest ? highway[w->type].invSpeed : 1.0));
+          other = FirstHalfSegAtNode (other);
+          AddRouteNode (other, root->best + d, root);
+        } // If we found a segment we may follow
+      } while ((char*)++hs < data + hashTable[BUCKETS] &&
+               hs->lon == hs[-1].lon && hs->lat == hs[-1].lat);
+    } // if root->best is a candidate
+  } // While there are active nodes left
+  free (routeHeap + 1);
+//  if (fastest) printf ("%lf
+  printf ("%lf km\n", limit / 100000.0);
 }
 
 #define ZOOM_PAD_SIZE 20
 #define STATUS_BAR    0
 
-GtkWidget *draw;
+GtkWidget *draw, *car, *fastest;
 int clon, clat, zoom;
 /* zoom is the amount that fits into the window (regardless of window size) */
 
 gint Click (GtkWidget *widget, GdkEventButton *event)
 {
-  static int flat = 0, flon = 0;
   int w = draw->allocation.width - ZOOM_PAD_SIZE;
   if (event->x > w) {
     zoom = lrint (exp (8 - 8*event->y / draw->allocation.width) * 10000);
@@ -373,12 +412,53 @@ gint Click (GtkWidget *widget, GdkEventButton *event)
       flat = clat - lrint ((event->y - draw->allocation.height/2) * perpixel);
     }
     else {
-      Route (flon, flat,
-        clon + lrint ((event->x - w / 2) * perpixel),
-        clat - lrint ((event->y - draw->allocation.height / 2) * perpixel));
+      tlon = clon + lrint ((event->x - w / 2) * perpixel);
+      tlat = clat -
+        lrint ((event->y - draw->allocation.height / 2) * perpixel);
+      Route (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (car)),
+             gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fastest)));
+      printf ("%d\n", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (car)));
     }
   }
   gtk_widget_queue_clear (draw);
+}
+
+#define obstack_chunk_alloc malloc
+#define obstack_chunk_free free
+
+void GetDirections (GtkWidget *, gpointer)
+{
+  struct obstack o;
+  obstack_init (&o);
+  if (!shortest) obstack_printf (&o,
+    "Mark the starting point with the middle button and the\n"
+    "end point with the right button. Then click Get Directions again\n");
+  else {
+    for (routeNodeType *x = shortest; x; x = x->shortest) {
+    }
+  }
+  obstack_1grow (&o, '\0');
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *view = gtk_text_view_new ();
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
+  gtk_text_buffer_set_text (buffer, (char *) obstack_finish (&o), -1);
+  obstack_free (&o, NULL);
+  gtk_container_add (GTK_CONTAINER (window), view);
+  gtk_widget_show (view);
+  gtk_widget_show (window);
+}
+
+gint Scroll (GtkWidget *widget, GdkEventScroll *event, void *w_current)
+{
+   switch (event->direction) {
+   case(GDK_SCROLL_UP):
+           zoom = zoom*3/4;
+           break;
+   case(GDK_SCROLL_DOWN):
+           zoom = zoom*4/3;
+           break;
+   }
+   gtk_widget_queue_clear (draw);
 }
 
 struct name2renderType { // Build a list of names, sort by name,
@@ -505,13 +585,25 @@ gint Expose (void)
   gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[0]);
   gdk_gc_set_line_attributes (draw->style->fg_gc[0],
     1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-  for (routeNodeType *x = shortest; x && x->shortest; ) {
+  if (shortest) {
+    routeNodeType *x = shortest;
+    gdk_draw_line (draw->window, draw->style->fg_gc[0],
+      (flon - clon) / perpixel + clip.width / 2,
+      clip.height / 2 - (flat - clat) / perpixel,
+      (shortest->hs->lon - clon) / perpixel + clip.width / 2,
+      clip.height / 2 - (shortest->hs->lat - clat) / perpixel);
+    for (; x->shortest; x = x->shortest) {
+      gdk_draw_line (draw->window, draw->style->fg_gc[0],
+        (x->hs->lon - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (x->hs->lat - clat) / perpixel,
+        (x->shortest->hs->lon - clon) / perpixel + clip.width / 2,
+        clip.height / 2 - (x->shortest->hs->lat - clat) / perpixel);
+    }
     gdk_draw_line (draw->window, draw->style->fg_gc[0],
       (x->hs->lon - clon) / perpixel + clip.width / 2,
       clip.height / 2 - (x->hs->lat - clat) / perpixel,
-      (x->shortest->hs->lon - clon) / perpixel + clip.width / 2,
-      clip.height / 2 - (x->shortest->hs->lat - clat) / perpixel);
-    x = x->shortest;
+      (tlon - clon) / perpixel + clip.width / 2,
+      clip.height / 2 - (tlat - clat) / perpixel);
   }
 /*
   clip.height = draw->allocation.height;
@@ -539,7 +631,7 @@ gint IncrementalSearch (void)
   incrementalWay = wayArray + l;
   gtk_clist_freeze (GTK_CLIST (list));
   gtk_clist_clear (GTK_CLIST (list));
-  for (i = 0; i < 60 && i + l < wayCount; i++) {
+  for (i = 0; i < 40 && i + l < wayCount; i++) {
     char *name = data + incrementalWay[i].name;
     gtk_clist_append (GTK_CLIST (list), &name);
   }
@@ -794,9 +886,6 @@ int main (int argc, char *argv[])
     mmap (0, ftell (pak), PROT_READ, MAP_SHARED, fileno (pak), 0);
   hashTable = (int *) (data + ftell (pak)) - BUCKETS - 1;
 
-/*  Route (Longitude (28.29302), Latitude (-25.77761),
-         Longitude (27.9519540115356), Latitude (-26.0750263440503));
-*/
   wayType *w = 0 + (wayType *) data;
   //printf ("%d ways %d\n", w[0].name / sizeof (w[0]), w[w[0].name / sizeof (w[0]) - 1].name);
   clon = Longitude (28.30803);
@@ -811,6 +900,8 @@ int main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (draw), "button_press_event",
     (GtkSignalFunc) Click, NULL);
   gtk_widget_set_events (draw, GDK_EXPOSURE_MASK | GDK_BUTTON_PRESS_MASK);
+  gtk_signal_connect (GTK_OBJECT (draw), "scroll_event",
+                       (GtkSignalFunc) Scroll, NULL);
   
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 5), *vbox = gtk_vbox_new (FALSE, 0);
@@ -829,15 +920,37 @@ int main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), list, TRUE, TRUE, 5);
   gtk_signal_connect (GTK_OBJECT (list), "select_row",
     GTK_SIGNAL_FUNC (SelectName), NULL);
+    
+  car = gtk_radio_button_new_with_label (NULL, "car");
+  gtk_box_pack_start (GTK_BOX (vbox), car, FALSE, FALSE, 5);
+  GtkWidget *bike = gtk_radio_button_new_with_label (
+    gtk_radio_button_get_group (GTK_RADIO_BUTTON (car)), "bike");
+  gtk_box_pack_start (GTK_BOX (vbox), bike, FALSE, FALSE, 5);
+
+  fastest = gtk_radio_button_new_with_label (NULL, "fastest");
+  gtk_box_pack_start (GTK_BOX (vbox), fastest, FALSE, FALSE, 5);
+  GtkWidget *shortestRB = gtk_radio_button_new_with_label (
+    gtk_radio_button_get_group (GTK_RADIO_BUTTON (fastest)), "shortest");
+  gtk_box_pack_start (GTK_BOX (vbox), shortestRB, FALSE, FALSE, 5);
+  
+  GtkWidget *getDirs = gtk_button_new_with_label ("Get Directions");
+  gtk_box_pack_start (GTK_BOX (vbox), getDirs, FALSE, FALSE, 5);
+  gtk_signal_connect (GTK_OBJECT (getDirs), "clicked",
+    GTK_SIGNAL_FUNC (GetDirections), NULL);
 
   gtk_signal_connect (GTK_OBJECT (window), "delete_event",
     GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   gtk_widget_set_usize (window, 400, 300);
-  gtk_widget_show (hbox);
-  gtk_widget_show (vbox);
   gtk_widget_show (search);
   gtk_widget_show (list);
   gtk_widget_show (draw);
+  gtk_widget_show (car);
+  gtk_widget_show (bike);
+  gtk_widget_show (fastest);
+  gtk_widget_show (shortestRB);
+  gtk_widget_show (getDirs);
+  gtk_widget_show (hbox);
+  gtk_widget_show (vbox);
   gtk_widget_show (window);
   IncrementalSearch ();
   gtk_main ();

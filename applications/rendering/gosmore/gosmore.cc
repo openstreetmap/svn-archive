@@ -13,8 +13,8 @@
 
 #define stricmp strcasecmp
 
-#define BUCKETS (1<<24) // (1<<24) /* Must be power of 2 */
-#define TILEEXP (13)
+#define BUCKETS (1<<22) /* Must be power of 2 */
+#define TILEEXP (18)
 #define TILESIZE (1<<TILEEXP)
 
 int Hash (int lon, int lat)
@@ -39,44 +39,71 @@ struct nodeType {
   int id, lon, lat;
 } *node;
 
-int nodeCnt = 0;
+#define TO_HALFSEG -1
 
 struct halfSegType {
-  int lon, lat, next, wayPtr;
-};
+  int lon, lat, other, wayPtr;
+} *halfSeg;
+/* This array is sorted twice : First time 'other' is the segment id so
+   we add the two halfs together and we sort by id.
+   Second time we sort by bucket number, lon and lat. Then we set 'other'
+   to the offset of the other half. */
+   
+struct wayType {
+  int type;
+} way;
 
-/*
-struct segType {
-  int id, from, to;
-} seg[30000000]; */
+struct highwayType {
+  char *name, *colour;
+} highway[] = {
+  { "residential", "white" },
+  { "motorway", "blue" },
+  { "motorway_link", "blue" },
+  { "trunk", "green" },
+  { "primary", "red" },
+  { "secondary", "orange" },
+  { "tertiary", "yellow" },
+  { "track", "brown" },
+  { NULL /* everything else except*/, "black" },
+  { NULL /* unwayed */, "gray" }
+};
+GdkColor highwayColour[sizeof (highway) / sizeof (highway[0])];
+
+int nodeCnt = 0, halfSegCnt = 0;
 
 int NodeIdCmp (const void *a, const void *b)
 {
-  return ((nodeType*)b)->id - ((nodeType*)a)->id;
+  return ((nodeType*)a)->id - ((nodeType*)b)->id;
+}
+
+int HalfSegIdCmp (const void *a, const void *b)
+{
+  return ((halfSegType*)a)->other - ((halfSegType *)b)->other;
+}
+
+int HalfSegCmp (const void *aidx, const void *bidx)
+{
+  halfSegType *a = halfSeg + *(int *) aidx, *b = halfSeg + *(int *) bidx;
+  int hasha = Hash (a->lon, a->lat), hashb = Hash (b->lon, b->lat);
+  return hasha != hashb ? hasha - hashb : a->lon != b->lon ? a->lon - b->lon :
+    a->lat - b->lat;
 }
 
 int *hashTable;
 FILE *pak;
 
-void WriteSeg (int wayPtr, int from, int to)
+void WriteSeg (int from, int to)
 {
   nodeType key, *n;
-  int bucket, i;
-  halfSegType hs[2];
-  for (i = 0; i < 2; i++) {
+  for (int i = 0; i < 2; i++) {
     key.id = i ? to : from;
     n = (nodeType *) bsearch (&key, node, nodeCnt, sizeof (key), NodeIdCmp);
     if (!n) return;
-    hs[i].lon = n->lon;
-    hs[i].lat = n->lat;
+    halfSeg[i + halfSegCnt].lon = n->lon;
+    halfSeg[i + halfSegCnt].lat = n->lat;
   }
-  for (i = 0; i < 2; i++) {
-    bucket = Hash (hs[i].lon, hs[i].lat);
-    hs[i].next = hashTable[bucket];
-    hs[i].wayPtr = i ? 0 : wayPtr;
-    hashTable[bucket] = ftell (pak);
-    fwrite (hs + i, sizeof (hs[i]), 1, pak);
-  }
+  halfSeg[halfSegCnt++].wayPtr = 0;
+  halfSeg[halfSegCnt++].wayPtr = TO_HALFSEG;
 }
 
 GtkWidget *draw;
@@ -122,6 +149,8 @@ gint Expose (void)
   int top = (clat - perpixel * draw->allocation.height) & (~(TILESIZE-1));
   int bottom = (clat + perpixel * draw->allocation.height + TILESIZE - 1) &
     (~(TILESIZE-1));
+  // Widen this a bit so that we render nodes that are just a bit offscreen ?
+    
   GdkRectangle clip;
   clip.x = 0;
   clip.y = 0;
@@ -129,29 +158,39 @@ gint Expose (void)
   clip.height = draw->allocation.height;
   gdk_gc_set_clip_rectangle (draw->style->fg_gc[0], &clip);
   
+  for (int i = 0; i < sizeof (highway) / sizeof (highway[0]); i++) {
+    gdk_color_parse (highway[i].colour, &highwayColour[i]);
+    gdk_colormap_alloc_color (gdk_window_get_colormap (draw->window),
+      &highwayColour[i], FALSE, TRUE); /* Possibly only at startup ? */
+  }
   /* Here we wrap around from N85 to S85 ! */
   for (int slat = top; slat != bottom; slat += TILESIZE) {
     for (int slon = left; slon != right; slon += TILESIZE) {
-      for (int hsOff = hashTable[Hash (slon, slat)]; hsOff != -1; ) {
-        halfSegType *hs = (halfSegType *)(data + hsOff);
-        hsOff = hs->next;
-        /* If hs is not on the (slat, slon) tile, continue.
-           If hs is the first half of a segment that is completely
+      int bucket = Hash (slon, slat);
+      for (halfSegType *hs = (halfSegType *)(data + hashTable[bucket]);
+           hs < (halfSegType *)(data + hashTable[bucket + 1]); hs++) {
+        /* If hs is not on the (slat, slon) tile, continue. */
+        if (((hs->lat ^ slat) >> TILEEXP) ||
+            ((hs->lon ^ slon) >> TILEEXP)) continue;
+        halfSegType *other = (halfSegType *)(data + hs->other);
+        /* If hs is the first half of a segment that is completely
            contained on the tiles that cover the window, continue because
            we will draw it when we see the other hs. Test doesn't work for
            wrapping... */
-        if (((hs->lat ^ slat) >> TILEEXP) ||
-            ((hs->lon ^ slon) >> TILEEXP) ||
-            (hs->wayPtr && top <= hs[1].lat && hs[1].lat < bottom &&
-            left <= hs[1].lon && hs[1].lon < right)) continue;
-        if (!hs->wayPtr) hs--; /* Find first part of segment */
+        if (hs->wayPtr != TO_HALFSEG && left <= other->lon && other->lon <
+          right && top <= other->lat && other->lat < bottom) continue;
+          
+        wayType *w = (wayType *)(data +
+          (hs->wayPtr != TO_HALFSEG ? hs->wayPtr : other->wayPtr));
+        gdk_gc_set_foreground (draw->style->fg_gc[0],
+          &highwayColour[w->type]);
         gdk_draw_line (draw->window, draw->style->fg_gc[0],
           (hs->lon - clon) / perpixel + width / 2,
           draw->allocation.height / 2 - (hs->lat - clat) / perpixel,
-          (hs[1].lon - clon) / perpixel + width / 2,
-          draw->allocation.height / 2 - (hs[1].lat - clat) / perpixel);
+          (other->lon - clon) / perpixel + width / 2,
+          draw->allocation.height / 2 - (other->lat - clat) / perpixel);
       }
-    }
+    } /* for each visible tile */
   }
   
   return FALSE;
@@ -159,6 +198,7 @@ gint Expose (void)
 
 int main (int argc, char *argv[])
 {
+
   if (argc > 1) {
     if (argc > 2 || stricmp (argv[1], "rebuild")) {
       fprintf (stderr, "Usage : %s [rebuild]\n", argv[0]);
@@ -168,26 +208,27 @@ int main (int argc, char *argv[])
       fprintf (stderr, "Cannot create gosmore.pak\n");
       return 2;
     }
+    way.type = sizeof (highway) / sizeof (highway[0]) - 1;
+    // Set up something for unwayed segments to point to. This will be
+    // written to location 0 when we encounter the first <way> tag.
   
-    FILE *in = stdin; //fopen ("/dosc/OSM/northr4.osm", "r");
-    char tag[81], key[81], value[81], quote;
-    int segCnt = 0, from;
+    char tag[301], key[301], value[301], quote, feature[301];
+    int nodesSorted = 1, doWays = 0, from;
 
     printf ("Reading nodes...\n");
-    node = (nodeType *) malloc (sizeof (*node) * 30000000);
-    hashTable = (int *) malloc (sizeof (*hashTable) * BUCKETS);
-    memset (hashTable, -1, sizeof (*hashTable) * BUCKETS);
-    while (fscanf (in, " <%80[a-zA-Z0-9?/]", tag) == 1) {
+    node = (nodeType *) malloc (sizeof (*node) * 15000000);
+    halfSeg = (halfSegType *) malloc (sizeof (*halfSeg) * 30000000);
+    while (scanf (" <%300[a-zA-Z0-9?/]", tag) == 1) {
       //printf ("%s", tag);
       do {
-        while (fscanf (in, " %80[a-zA-Z0-9]", key)) {
-          if (getc (in) == '=') {
-            quote = getc (in);
-            if (quote == '\'') fscanf (in, "%80[^']'", value); /* " */
-            else if (quote == '"') fscanf (in, "%80[^\"]\"", value); /* " */
+        while (scanf (" %300[a-zA-Z0-9]", key)) {
+          if (getchar () == '=') {
+            quote = getchar ();
+            if (quote == '\'') scanf ("%300[^']'", value); /* " */
+            else if (quote == '"') scanf ("%300[^\"]\"", value); /* " */
             else {
-              ungetc (quote, in);
-              fscanf (in, "%80[^ ]", value); /* " */
+              ungetc (quote, stdin);
+              scanf ("%300[^ ]", value); /* " */
             }
             //printf (" %s='%s'", key, value);
             if (!stricmp (tag, "node")) {
@@ -198,30 +239,84 @@ int main (int argc, char *argv[])
               if (!stricmp (key, "lon")) {
                 node[nodeCnt++].lon = Longitude (atof (value));
                 if (nodeCnt % 100000 == 0) printf ("%9d nodes\n", nodeCnt);
+                nodesSorted = 0;
               }
             }
             if (!stricmp (tag, "segment")) {
-              //if (!stricmp (key, "id")) seg[segCnt].id = atoi (value);
+              if (!stricmp (key, "id")) {
+                halfSeg[halfSegCnt].other = atoi (value);
+                doWays = 0;
+              }
               if (!stricmp (key, "from")) {
-                if (segCnt == 0) {
+                if (!nodesSorted++) {
                   printf ("Sorting nodes...\n");
                   qsort (node, nodeCnt, sizeof (node[0]), NodeIdCmp);
                   printf ("%d %d\n", node[0].id, node[1].id);
                   printf ("Reading segments..\n");
                 }
                 from = atoi (value);
-                if (++segCnt % 10000 == 0) printf ("%9d segments\n", segCnt);
+                if (halfSegCnt % 20000 == 0) {
+                  printf ("%9d segments\n", halfSegCnt / 2);
+                }
               }
-              if (!stricmp (key, "to")) WriteSeg (1, from, atoi (value));
+              if (!stricmp (key, "to")) WriteSeg (from, atoi (value));
+            }
+            if (!stricmp (tag, "way")) {
+              if (!doWays++) {
+                printf ("Sorting segments\n");
+                qsort (halfSeg, halfSegCnt / 2, sizeof (*halfSeg) * 2,
+                  HalfSegIdCmp);
+                printf ("Reading ways\n");
+              }
+              fwrite (&way, sizeof (way), 1, pak);
+            }
+            if (doWays && !stricmp (tag, "seg") && !stricmp (key, "id")) {
+              halfSegType key[2], *hs;
+              key[0].other = atoi (value);
+              if ((hs = (halfSegType *) bsearch (key, halfSeg, halfSegCnt / 2,
+                      sizeof (*halfSeg) * 2, HalfSegIdCmp)) != NULL) {
+                hs->wayPtr = ftell (pak);
+              }
+            }
+            if (doWays && !stricmp (tag, "tag")) {
+              if (!stricmp (key, "k")) strcpy (feature, value);
+              if (!stricmp (key, "v") && !stricmp (feature, "highway")) {
+                for (way.type = 0; highway[way.type].name &&
+                  stricmp (value, highway[way.type].name); way.type++) {}
+              }
             }
           } /* if key / value pair found */
         } /* while search for key / value pairs */
-      } while (getc (in) != '>');
+      } while (getchar () != '>');
       //printf ("\n");
     } /* while we found another tag */
-    fwrite (hashTable, sizeof (*hashTable), BUCKETS, pak);
-    free (hashTable);
     free (node);
+    fwrite (&way, sizeof (way), 1, pak); /* Flush out the last one */
+    printf ("Sorting data\n");
+    int *hsIdx = (int *) malloc (sizeof (*hsIdx) * halfSegCnt);
+    for (int i = 0; i < halfSegCnt; i++) hsIdx[i] = i;
+    qsort (hsIdx, halfSegCnt, sizeof (*hsIdx), HalfSegCmp);
+    int hsBase = ftell (pak);
+    printf ("Calculating addresses\n");
+    for (int i = 0; i < halfSegCnt; i++) {
+      halfSeg[hsIdx[i] ^ 1].other = i * sizeof (*halfSeg) + hsBase;
+    }
+    printf ("Writing Data\n");
+    for (int i = 0; i < halfSegCnt; i++) {
+      fwrite (halfSeg + hsIdx[i], sizeof (*halfSeg), 1, pak);
+    }
+    printf ("Writing hash table\n");
+    fwrite (&hsBase, sizeof (hsBase), 1, pak);
+    for (int bucket = 0, i = 0; bucket < BUCKETS; bucket++) {
+      while (i < halfSegCnt &&
+             Hash (halfSeg[hsIdx[i]].lon, halfSeg[hsIdx[i]].lat) == bucket) {
+        i++;
+        hsBase += sizeof (*halfSeg);
+      }
+      fwrite (&hsBase, sizeof (hsBase), 1, pak);
+    }
+    /* It has BUCKETS + 1 entries so that we can easily look up where each
+       bucket begins and ends */
   } /* if rebuilding */
   else if (!(pak = fopen ("gosmore.pak", "r"))) {
     fprintf (stderr, "Cannot read gosmore.pak\nYou can (re)build it from\n"
@@ -232,10 +327,10 @@ int main (int argc, char *argv[])
   fseek (pak, 0, SEEK_END);
   data = (char*)
     mmap (0, ftell (pak), PROT_READ, MAP_SHARED, fileno (pak), 0);
-  hashTable = (int *) (data + ftell (pak)) - BUCKETS;
+  hashTable = (int *) (data + ftell (pak)) - BUCKETS - 1;
   
-  clon = Longitude (28.20);
-  clat = Latitude (-25.7);
+  clon = Longitude (27.9);
+  clat = Latitude (-26.1);
   zoom = lrint (0.1 / 180 * 2147483648.0 * cos (26.1 / 180 * M_PI));
 
   gtk_init (&argc, &argv);

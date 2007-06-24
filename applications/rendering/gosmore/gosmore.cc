@@ -3,9 +3,8 @@
    
 /* This software is placed by in the public domain by its author, Nic Roets */
 
-/* real    8m12.369s
-user    11m7.727s
-sys     0m15.199s
+/* Dual core with 1GB RAM  : real   8m12.369s user 11m7.727s sys 0m15.199s
+1.4 Ghz 1 core with 256 MB : real 190m57.072s user 23m9.907s sys 0m53.107s
 */
 
 #include <stdio.h>
@@ -16,6 +15,7 @@ sys     0m15.199s
 #include <ctype.h>
 #include <gtk/gtk.h>
 #include <obstack.h> /* For obstack_printf in GetDirections */
+#include <assert.h>
 
 #define stricmp strcasecmp
 
@@ -66,9 +66,10 @@ struct wayBuildType {
   int idx;
 };
 
-enum { rail, residential, motorway, motorway_link, trunk, primary, secondary,
-  tertiary, /* track, footway, */ unwayed /* = lastway */, station, suburb,
-  junction, hamlet, village, town, city, place /* = lastnode */
+enum { motorway, motorway_link, trunk, primary, secondary, tertiary,
+  unclassified, residential, service, track, footway, rail, river, stream,
+  canel, city, town, station, suburb, village, hamlet, junction, place,
+  unwayed
 };
 
 struct highwayType {
@@ -78,24 +79,29 @@ struct highwayType {
   GdkLineStyle style;
 } highway[] = {
   /* ways */
-  { "railway", "rail"         , "black",  3, 99.0, GDK_LINE_ON_OFF_DASH },
-  { "highway", "residential"  , "white",  1, 120.0 / 34.0, GDK_LINE_SOLID },
   { "highway", "motorway"     , "blue",   3, 1.0, GDK_LINE_SOLID },
   { "highway", "motorway_link", "blue",   3, 1.0, GDK_LINE_SOLID },
   { "highway", "trunk"        , "green",  3, 120.0 / 70.0, GDK_LINE_SOLID },
   { "highway", "primary"      , "red",    2, 120.0 / 60.0, GDK_LINE_SOLID },
   { "highway", "secondary"    , "orange", 2, 120.0 / 50.0, GDK_LINE_SOLID },
   { "highway", "tertiary"     , "yellow", 1, 120.0 / 40.0, GDK_LINE_SOLID },
+  { "highway", "unclassified" , "darkgrey", 1, 120.0 / 40.0, GDK_LINE_SOLID },
+  { "highway", "residential"  , "white",  1, 120.0 / 34.0, GDK_LINE_SOLID },
+  { "highway", "service"      , "darkgrey", 1, 120.0 / 40.0, GDK_LINE_SOLID },
   { "highway", "track"        , "brown",  1, 120.0 / 30.0, GDK_LINE_SOLID },
-//  { "highway", "footway"        , "brown",  1, GDK_LINE_SOLID },
+  { "highway", "footway"      , "brown",  1, 120.0 / 5.0, GDK_LINE_SOLID },
+  { "railway", "rail"         , "black",  3, 99.0, GDK_LINE_ON_OFF_DASH },
+  { "waterway", "river"       , "blue",   2, 120.0 / 5.0, GDK_LINE_SOLID },
+  { "waterway", "stream"      , "brown",  1, 120.0 / 5.0, GDK_LINE_SOLID },
+  { "waterway", "canal"       , "brown",  1, 120.0 / 5.0, GDK_LINE_SOLID },
   /* nodes : */
+  { "place",   "city"         , "black",  3, 1.0, GDK_LINE_SOLID },
+  { "place",   "town"         , "black",  2, 1.0, GDK_LINE_SOLID },
   { "railway", "station"      , "red",    1, 1.0, GDK_LINE_SOLID },
   { "place",   "suburb"       , "black",  2, 1.0, GDK_LINE_SOLID },
-  { "place",   "junction"     , "black",  1, 1.0, GDK_LINE_SOLID },
-  { "place",   "halmet"       , "black",  1, 1.0, GDK_LINE_SOLID },
   { "place",   "village"      , "black",  1, 1.0, GDK_LINE_SOLID },
-  { "place",   "town"         , "black",  2, 1.0, GDK_LINE_SOLID },
-  { "place",   "city"         , "black",  3, 1.0, GDK_LINE_SOLID },
+  { "place",   "halmet"       , "black",  1, 1.0, GDK_LINE_SOLID },
+  { "place",   "junction"     , "black",  1, 1.0, GDK_LINE_SOLID },
   { NULL, NULL /* named node of unidentified type */  , "gray",   1, 1.0,
     GDK_LINE_SOLID },
   { NULL, NULL /* unwayed */  , "gray",   1, 99.0, GDK_LINE_SOLID }
@@ -209,13 +215,6 @@ has already or will soon be iterated over. Test doesn't work for wrapping. */
   return TRUE;
 }
 
-halfSegType *FirstHalfSegAtNode (halfSegType *hs)
-{
-  while ((char *) hs > data + hashTable[0] && hs[-1].lon == hs->lon &&
-    hs[-1].lat == hs->lat) hs--;
-  return hs;
-}
-
 /* Routing starts at the 'to' point and moves to the 'from' point. This will
    help when we do in car navigation because the 'from' point will change
    often while the 'to' point stays fixed, so we can keep the array of nodes.
@@ -245,14 +244,17 @@ int Best (routeNodeType *n)
                  Sqr ((long long)(n->hs->lat - flat))));
 }
 
-void AddRouteNode (halfSegType *hs, int best, routeNodeType *shortest)
-{
+void AddHs (halfSegType *hs, int cost, routeNodeType *shortest)
+{ /* This function is called when we find a valid route that consists of the
+     segments (hs, hs->other), (shortest->hs, shortest->hs->other),
+     (shortest->shortest->hs, shortest->shortest->hs->other), .., 'to'
+     with cost 'cost'. */
   unsigned hash = (int) hs, i = 0;
   routeNodeType *n;
   do {
     if (i++ > 10) {
-      fprintf (stderr, "Double hash bailout : Table full or hash function "
-        "bad. Route will not be found or will be suboptimal\n");
+      fprintf (stderr, "Double hash bailout : Table full, hash function "
+        "bad or no route exists\n");
       return;
     }
     hash = hash * (long long) 1664525 + 1013904223;
@@ -260,13 +262,13 @@ void AddRouteNode (halfSegType *hs, int best, routeNodeType *shortest)
     n = route + hash % dhashSize;
     if (n->hs == NULL) { /* First visit of this node */
       n->hs = hs;
-      n->best = best + 1;
+      n->best = cost + 1;
       /* Will do later : routeHeap[routeHeapSize] = n; */
       n->heapIdx = routeHeapSize++;
     }
   } while (n->hs != hs);
-  if (n->best > best) {
-    n->best = best;
+  if (n->best > cost) {
+    n->best = cost;
     n->shortest = shortest;
     if (n->heapIdx < 0) n->heapIdx = routeHeapSize++;
     for (; n->heapIdx > 1 &&
@@ -300,10 +302,10 @@ void Route (int car, int fastest)
          If the point is "behind" hs[0], measure distance to hs[0] with
          Pythagoras. If it's "behind" hs[1], use Pythagoras to hs[1]. If
          neither, use perpendicular distance from a point to a line */
+      int segLen = lrint (sqrt (Sqr(dlon) + Sqr (dlat)));
       long long d = dlon * lon0 >= - dlat * lat0 ? Sqr (lon0) + Sqr (lat0) :
         dlon * lon1 <= - dlat * lat1 ? Sqr (lon1) + Sqr (lat1) :
-        Sqr ((dlon * lat1 - dlat * lon1) /
-          lrint (sqrt (Sqr(dlon) + Sqr (dlat))));
+        Sqr ((dlon * lat1 - dlat * lon1) / segLen);
       if (d < bestd) {
         int firstSeg = itr.hs[0]->wayPtr == TO_HALFSEG ? 1 : 0, oneway =
           ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->oneway;
@@ -313,11 +315,19 @@ void Route (int car, int fastest)
           ((wayType *)(data + itr.hs[firstSeg]->wayPtr))->type].invSpeed;
         toEndHs[i][0] = lrint (sqrt (Sqr (lon0) + Sqr (lat0)) * invSpeed);
         toEndHs[i][1] = lrint (sqrt (Sqr (lon1) + Sqr (lat1)) * invSpeed);
-        if (dlon * lon1 <= -dlat * lat1) toEndHs[i][0] += toEndHs[i][1];
-        else if (dlon * lon0 >= - dlat * lat0) toEndHs[i][1] += toEndHs[i][0];
+        if (dlon * lon1 <= -dlat * lat1) toEndHs[i][0] += toEndHs[i][1] * 9;
+        if (dlon * lon0 >= - dlat * lat0) toEndHs[i][1] += toEndHs[i][0] * 9;
         if (oneway) toEndHs[i][i ? firstSeg : 1 - firstSeg] = 200000000;
-        endHs[i][0] = FirstHalfSegAtNode (itr.hs[0]);
-        endHs[i][1] = FirstHalfSegAtNode (itr.hs[1]);
+        /* It's possible to go up a oneway at the end, but at a huge penalty*/
+        /* It's also possible to go up a 1 segment of a footway with a car
+           without penalty. */
+        memcpy (endHs[i], itr.hs, sizeof (endHs[i]));
+        /* The router only stops after it has traversed endHs[1], so if we
+           want 'limit' to be accurate, we must subtract it's length
+        if (i) {
+          toEndHs[1][0] -= segLen; 
+          toEndHs[1][1] -= segLen;
+        } */
       }
     } /* For each candidate segment */
     if (bestd == 4000000000000000000LL) {
@@ -334,7 +344,7 @@ void Route (int car, int fastest)
   routeHeapSize = 1; /* Leave position 0 open to simplify the math */
   routeHeap = ((routeNodeType**) malloc (dhashSize*sizeof (*routeHeap))) - 1;
   
-  for (int j = 0; j < 2; j++) AddRouteNode (endHs[0][j], toEndHs[0][j], NULL);
+  for (int j = 0; j < 2; j++) AddHs (endHs[0][j], toEndHs[0][j], NULL);
   for (limit = 2000000000; routeHeapSize > 1;) {
     routeNodeType *root = routeHeap[1];
     routeHeapSize--;
@@ -365,19 +375,24 @@ void Route (int car, int fastest)
         }
       }
       halfSegType *hs = root->hs, *other;
+      while ((char *) hs > data + hashTable[0] && hs[-1].lon == hs->lon &&
+        hs[-1].lat == hs->lat) hs--; /* Find first hs in node */
+
       /* Now work through the segments connected to root. */
       do {
+        if (hs == root->hs) continue;
+        /* Don't consider an immediate U-turn to reach root->hs->other.
+           This doesn't exclude 179.99 degree turns though. */
+        
         other = (halfSegType *)(data + hs->other);
         int forward = hs->wayPtr != TO_HALFSEG;
         wayType *w = (wayType *)(data + (forward ? hs : other)->wayPtr);
-        if (w->type < unwayed && (!forward || !w->oneway) &&
-              (car ? 1 /* w->type != footway */ :
-              w->type != motorway && w->type != motorway_link)) {
+        if (w->type <= footway && (!forward || !w->oneway) &&
+              (car ? w->type != footway : w->type > motorway_link)) {
           int d = lrint (sqrt (Sqr ((long long)(hs->lon - other->lon)) +
                                Sqr ((long long)(hs->lat - other->lat))) *
                                (fastest ? highway[w->type].invSpeed : 1.0));
-          other = FirstHalfSegAtNode (other);
-          AddRouteNode (other, root->best + d, root);
+          AddHs (other, root->best + d, root);
         } // If we found a segment we may follow
       } while ((char*)++hs < data + hashTable[BUCKETS] &&
                hs->lon == hs[-1].lon && hs->lat == hs[-1].lat);
@@ -385,7 +400,7 @@ void Route (int car, int fastest)
   } // While there are active nodes left
   free (routeHeap + 1);
 //  if (fastest) printf ("%lf
-  printf ("%lf km\n", limit / 100000.0);
+//  printf ("%lf km\n", limit / 100000.0);
 }
 
 #define ZOOM_PAD_SIZE 20
@@ -417,7 +432,6 @@ gint Click (GtkWidget *widget, GdkEventButton *event)
         lrint ((event->y - draw->allocation.height / 2) * perpixel);
       Route (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (car)),
              gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (fastest)));
-      printf ("%d\n", gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (car)));
     }
   }
   gtk_widget_queue_clear (draw);
@@ -434,7 +448,32 @@ void GetDirections (GtkWidget *, gpointer)
     "Mark the starting point with the middle button and the\n"
     "end point with the right button. Then click Get Directions again\n");
   else {
+    char *last = "";
+    long long dlon = 0, dlat = 1, bSqr = 1; /* Point North */
     for (routeNodeType *x = shortest; x; x = x->shortest) {
+      halfSegType *other = (halfSegType *)(data + x->hs->other);
+      int forward = x->hs->wayPtr != TO_HALFSEG;
+      wayType *w = (wayType *)(data + (forward ? x->hs : other)->wayPtr);
+      
+      long long nlon = other->lon - x->hs->lon, nlat = other->lat-x->hs->lat;
+      long long cSqr = Sqr (nlon) + Sqr (nlat);
+      long long lhs = bSqr + cSqr - Sqr (nlon - dlon) - Sqr (nlat - dlat);
+      /* Use cosine rule to determine if the angle is obtuse or greater than
+         45 degrees */
+      if (lhs < 0 || Sqr (lhs) < 2 * bSqr * cSqr) {
+        /* (-nlat,nlon) is perpendicular to (nlon,nlat). Then we use
+           Pythagoras test for obtuse angle for left and right */
+        obstack_printf (&o, "%s turn\n",
+          nlon * dlat < nlat * dlon ? "Left" : "Right");
+      }
+      dlon = nlon;
+      dlat = nlat;
+      bSqr = cSqr;
+      
+      if (strcmp (w->name + data, last)) {
+        last = w->name + data;
+        obstack_printf (&o, "%s\n", last);
+      }
     }
   }
   obstack_1grow (&o, '\0');
@@ -544,7 +583,7 @@ gint Expose (void)
             name[nameCnt].x < clip.width + width / 2) name[nameCnt++].w = w;
       }
       
-      if (w->type <= unwayed || w->type > place) {
+      if (w->type < city || w->type == unwayed) {
         gdk_gc_set_foreground (draw->style->fg_gc[0],
           &highwayColour[w->type]);
         gdk_gc_set_line_attributes (draw->style->fg_gc[0],
@@ -582,16 +621,16 @@ gint Expose (void)
     }
   }
   
-  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[0]);
+  gdk_gc_set_foreground (draw->style->fg_gc[0], &highwayColour[rail]);
   gdk_gc_set_line_attributes (draw->style->fg_gc[0],
     1, GDK_LINE_SOLID, GDK_CAP_PROJECTING, GDK_JOIN_MITER);
-  if (shortest) {
-    routeNodeType *x = shortest;
+  routeNodeType *x;
+  if (shortest && (x  = shortest->shortest)) {
     gdk_draw_line (draw->window, draw->style->fg_gc[0],
       (flon - clon) / perpixel + clip.width / 2,
       clip.height / 2 - (flat - clat) / perpixel,
-      (shortest->hs->lon - clon) / perpixel + clip.width / 2,
-      clip.height / 2 - (shortest->hs->lat - clat) / perpixel);
+      (x->hs->lon - clon) / perpixel + clip.width / 2,
+      clip.height / 2 - (x->hs->lat - clat) / perpixel);
     for (; x->shortest; x = x->shortest) {
       gdk_draw_line (draw->window, draw->style->fg_gc[0],
         (x->hs->lon - clon) / perpixel + clip.width / 2,
@@ -679,9 +718,10 @@ int main (int argc, char *argv[])
    to the offset of the other half in the sorted pak file. */
     wayBuildType *w = (wayBuildType *) calloc (sizeof (*w), 2000000);
     w[wayCnt].idx = wayCnt;
-    w[wayCnt].w.type = sizeof (highway) / sizeof (highway[0]) - 1;
+    w[wayCnt].w.type = unwayed;
     w[wayCnt].w.layer = 5; // 5 means show duplicated segments clearly.
     w[wayCnt].name = strdup ("_unwayed");
+    assert (unwayed == sizeof (highway) / sizeof (highway[0]) - 1);
    
     while (scanf (" <%300[a-zA-Z0-9?/]", tag) == 1) {
       //printf ("%s", tag);
@@ -707,7 +747,7 @@ int main (int argc, char *argv[])
                 if (w[wayCnt].name) halfSegCnt = wayCnt++ * 2;
                 /* Now there is a way for the unwayed segment plus
                    wayCnt - 1 nodes with names, each with 2 half segments */
-                w[wayCnt].w.type = sizeof (highway) / sizeof (highway[0]) - 2;
+                w[wayCnt].w.type = place; /* generic */
                 w[wayCnt].idx = wayCnt;
                 w[wayCnt].w.clat = node[nodeCnt - 1].lat;
                 w[wayCnt].w.clon = node[nodeCnt - 1].lon;

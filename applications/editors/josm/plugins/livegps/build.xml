@@ -1,6 +1,6 @@
 <project name="livegps" default="dist" basedir=".">
 
-  <property name="josm.build.dir" value="../../josm"/>
+  <property name="josm.build.dir" value="../JOSM"/>
   <property name="josm.home.dir" value="${user.home}/.josm"/>
   <property name="plugin.build.dir" value="build"/>
 
@@ -25,6 +25,7 @@
       <manifest>
         <attribute name="Plugin-Class" value="livegps.LiveGpsPlugin" />
         <attribute name="Plugin-Description" value="Allow live GPS feed from a gpsd server" />
+        <attribute name="Plugin-Version" value="1.0" />
         <attribute name="Plugin-Stage" value="50" />
       </manifest>
     </jar>

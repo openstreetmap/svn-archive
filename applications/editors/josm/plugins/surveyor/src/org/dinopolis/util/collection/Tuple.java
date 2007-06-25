@@ -64,7 +64,7 @@ public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1
     /* (non-Javadoc)
      * @see java.util.Map.Entry#getKey()
      */
-    @Override
+    //@Override
     public T1 getKey() {
         return getFirst();
     }
@@ -72,7 +72,7 @@ public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1
     /* (non-Javadoc)
      * @see java.util.Map.Entry#getValue()
      */
-    @Override
+    //@Override
     public T2 getValue() {
         return getSecond();
     }
@@ -80,7 +80,7 @@ public class Tuple<T1 extends Object, T2 extends Object> implements Map.Entry<T1
     /* (non-Javadoc)
      * @see java.util.Map.Entry#setValue(java.lang.Object)
      */
-    @Override
+    //@Override
     public T2 setValue(T2 value) {
         return setSecond(value);
     }

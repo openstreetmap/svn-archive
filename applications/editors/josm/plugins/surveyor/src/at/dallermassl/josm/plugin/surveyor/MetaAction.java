@@ -90,7 +90,7 @@ public class MetaAction extends AbstractAction {
         putValue(ActionConstants.SELECTED_KEY, selected);
 
         LiveGpsData gpsData = gpsDataSource.getGpsData();
-        if (gpsData != null) {
+        if (gpsData != null && gpsData.isFix()) {
             double latitude = gpsData.getLatitude();
             double longitude = gpsData.getLongitude();
             GpsActionEvent gpsEvent = new GpsActionEvent(e, latitude, longitude);

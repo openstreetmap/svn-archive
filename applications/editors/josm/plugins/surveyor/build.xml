@@ -24,7 +24,8 @@
 			<manifest>
         <attribute name="Plugin-Class" value="at.dallermassl.josm.plugin.surveyor.SurveyorPlugin" />
         <attribute name="Plugin-Description" value="Allow adding markers/nodes on current gps positions." />
-        <attribute name="Plugin-Dependencies" value="livegps" />
+        <!--attribute name="Plugin-Dependencies" value="livegps(1.0)" /-->
+        <attribute name="Plugin-Version" value="1.1" />
         <attribute name="Plugin-Stage" value="60" />
 			</manifest>
 		</jar>

@@ -1,5 +1,6 @@
 package livegps;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -39,7 +40,7 @@ public class LiveGpsPlugin extends Plugin
         lgpsmenu = new JMenu("LiveGPS");
         lgpsmenu.setMnemonic(KeyEvent.VK_G);
         menu.add(lgpsmenu, 2);
-        lgpscapture = new JCheckBoxMenuItem("Capture GPS Track");
+        lgpscapture = new JCheckBoxMenuItem(tr("Capture GPS Track"));
         lgpscapture.setSelected(false);
         lgpscapture.setAccelerator(KeyStroke.getKeyStroke("alt R"));
         lgpscapture.addActionListener(new ActionListener() {
@@ -49,24 +50,46 @@ public class LiveGpsPlugin extends Plugin
         });
         lgpsmenu.add(lgpscapture);
 
-        lgpscenter = new JMenuItem("Center Once", KeyEvent.VK_C);
+        lgpscenter = new JMenuItem(tr("Center Once"), KeyEvent.VK_C);
         lgpscenter.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent ev) {
-        		lgpslayer.center();
+        	    if(lgpslayer != null) {
+        	        lgpslayer.center();
+        	    }
         	}
         });
         lgpsmenu.add(lgpscenter);
         
         
-        lgpsautocenter = new JCheckBoxMenuItem("Auto-Center on current position");
-        lgpsautocenter.setSelected(false);
+        lgpsautocenter = new JCheckBoxMenuItem(tr("Auto-Center on current position"));
+        lgpsautocenter.setSelected(true);
+        lgpsautocenter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
         lgpsautocenter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                lgpslayer.setAutoCenter(lgpsautocenter.isSelected());
-                if (lgpsautocenter.isSelected()) lgpslayer.center();
+                setAutoCenter(lgpsautocenter.isSelected());
             }
         });
         lgpsmenu.add(lgpsautocenter);        
+    }
+    
+    /**
+     * Set to <code>true</code> if the current position should always be in the center of the map.
+     * @param autoCenter if <code>true</code> the map is always centered.
+     */
+    public void setAutoCenter(boolean autoCenter) {
+        lgpsautocenter.setSelected(autoCenter); // just in case this method was not called from the menu
+        if(lgpslayer != null) {
+            lgpslayer.setAutoCenter(autoCenter);
+            if (autoCenter) lgpslayer.center();
+        }
+    }
+    
+    /**
+     * Returns <code>true</code> if autocenter is selected.
+     * @return <code>true</code> if autocenter is selected.
+     */
+    public boolean isAutoCenter() {
+        return lgpsautocenter.isSelected();
     }
     
     /**
@@ -86,6 +109,7 @@ public class LiveGpsPlugin extends Plugin
                 if (lgpslayer == null) {
                     lgpslayer = new LiveGpsLayer(data);
                     Main.main.addLayer(lgpslayer);
+                    lgpslayer.setAutoCenter(isAutoCenter());
                 }
                 // connect layer with acquirer:
                 addPropertyChangeListener(lgpslayer);

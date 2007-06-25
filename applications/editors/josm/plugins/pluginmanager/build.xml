@@ -1,0 +1,58 @@
+<project name="pluginmanager" default="dist" basedir=".">
+
+	<property name="josm.build.dir" value="../JOSM"/>
+	<property name="josm.home.dir" value="${user.home}/.josm"/>
+	<property name="plugin.build.dir" value="bin"/>
+
+
+	
+	<target name="dist" depends="compile">
+		<!-- images -->
+		<!-- 
+		<copy todir="${plugin.build.dir}/images">
+			<fileset dir="src/images" />
+		</copy>
+		-->
+			<!-- copy configuration xml files -->
+		<copy todir="${plugin.build.dir}">
+			<fileset dir="src"> 
+				<include name="*.xml"/>
+  		</fileset>
+		</copy>
+		
+		<!-- create josm-custom.jar -->
+		<jar destfile="${ant.project.name}.jar" basedir="${plugin.build.dir}">
+			<manifest>
+        <attribute name="Plugin-Class" value="at.dallermassl.josm.plugin.pluginmanager.PluginManagerPlugin" />
+        <attribute name="Plugin-Description" value="Manage plugins and provide update mechanism." />
+        <attribute name="Plugin-Version" value="0.1" />
+        <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="compile" depends="init">
+		<mkdir dir="${plugin.build.dir}"/>
+		<javac srcdir="src" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
+			<classpath>
+				<pathelement path="${josm.build.dir}/build"/>
+	      <fileset dir="${josm.build.dir}/lib">
+	        <include name="**/*.jar"/>
+	      </fileset>
+			</classpath>
+	  </javac>
+	</target>
+
+	<target name="install" depends="dist">
+		<copy file="${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
+	</target>
+
+  <target name="init">
+  	 <echo>java version: ${java.version}</echo>
+	 </target>
+
+	<target name="clean">
+		<delete dir="${plugin.build.dir}" />
+	</target>
+
+</project>

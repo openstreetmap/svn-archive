@@ -20,6 +20,7 @@ public class LiveGpsData {
     private float speed;
     private boolean fix;
     private String wayString;
+    private Way way;
     
     /**
      * @param latitude
@@ -116,18 +117,57 @@ public class LiveGpsData {
      * 
      * @return the name of the way that is closest to the current coordinates.
      */
-    public String getWay() {
+    public String getWayInfo() {
         if(wayString == null) {
-            EastNorth eastnorth = Main.proj.latlon2eastNorth(getLatLon()); 
-            Point xy = Main.map.mapView.getPoint(eastnorth); 
-            Way way = Main.map.mapView.getNearestWay(xy);
+            Way way = getWay();
             if(way != null) {
-                wayString = way.get("name") + " (" + way.get("highway") + ")";
+                StringBuilder builder = new StringBuilder();
+                String tmp = way.get("name");
+                if(tmp != null) {
+                    builder.append(tmp);
+                } else {
+                    builder.append("no name");
+                }
+                tmp = way.get("ref");
+                if(tmp != null) {
+                    builder.append(" (").append(tmp).append(")");
+                }
+                tmp = way.get("highway");
+                if(tmp != null) {
+                    builder.append(" {").append(tmp).append("}");
+                }
+                String type = "";
+                tmp = way.get("tunnel");
+                if(tmp != null) {
+                    type = type + "T";
+                }
+                tmp = way.get("bridge");
+                if(tmp != null) {
+                    type = type + "B";
+                }
+                if(type.length() > 0) {
+                    builder.append(" [").append(type).append("]");
+                }
+                wayString = builder.toString();
             } else {
                 wayString = "";
             }
         }
         return wayString;
+    }
+    
+    /**
+     * Returns the closest way to this position.
+     * @return the closest way to this position.
+     */
+    public Way getWay() {
+        if(way == null) {
+            EastNorth eastnorth = Main.proj.latlon2eastNorth(getLatLon()); 
+            Point xy = Main.map.mapView.getPoint(eastnorth); 
+            way = Main.map.mapView.getNearestWay(xy);
+        }
+        return way;
+        
     }
     
     /* (non-Javadoc)

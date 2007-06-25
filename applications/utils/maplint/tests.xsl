@@ -18,6 +18,7 @@
     <maplint:test agent="xsltests" group="base" id="untagged-unconnected-node" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="untagged-way" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="base" id="ways-with-unordered-segments" version="1" severity="error"/>
+    <maplint:test agent="xsltests" group="main" id="bridge-or-tunnel-without-layer" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="main" id="deprecated-tags" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="motorway-without-ref" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="main" id="place-of-worship-without-religion" version="1" severity="warning"/>
@@ -46,6 +47,7 @@
   <xslout:template name="call-tests-way">
     <xslout:call-template name="test-base-untagged-way-way"/>
     <xslout:call-template name="test-base-ways-with-unordered-segments-way"/>
+    <xslout:call-template name="test-main-bridge-or-tunnel-without-layer-way"/>
     <xslout:call-template name="test-main-motorway-without-ref-way"/>
     <xslout:call-template name="test-main-residential-without-name-way"/>
     <xslout:call-template name="test-strict-unknown-tags-way"/>
@@ -170,6 +172,11 @@
 
         <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="$error != ''">
             <maplint:result ref="ways-with-unordered-segments"/>
+        </xsl:if>
+    </xslout:template>
+  <xslout:template name="test-main-bridge-or-tunnel-without-layer-way">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[(@k='bridge' or @k='tunnel') and @v='true']) and not(tag[@k='layer'])">
+            <maplint:result ref="bridge-or-tunnel-without-layer"/>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-main-motorway-without-ref-way">

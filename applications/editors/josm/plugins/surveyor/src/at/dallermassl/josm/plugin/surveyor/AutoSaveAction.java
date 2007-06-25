@@ -31,6 +31,9 @@ public class AutoSaveAction extends AbstractAction {
     
     public AutoSaveAction(String name) {
         super(name);
+        // <FIXXME date="23.06.2007" author="cdaller">
+        // TODO set accelerator key
+        // </FIXXME> 
     }
 
     /* (non-Javadoc)

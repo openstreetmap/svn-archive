@@ -57,25 +57,25 @@ public class SurveyorActionDescription {
     /**
      * @return the actionClass
      */
-    private String getActionClass() {
+    public String getActionClass() {
         return this.actionClass;
     }
     /**
      * @param actionClass the actionClass to set
      */
-    private void setActionClass(String actionClass) {
+    public void setActionClass(String actionClass) {
         this.actionClass = actionClass;
     }
     /**
      * @return the params
      */
-    private List<String> getParameterList() {
+    public List<String> getParameterList() {
         return this.params;
     }
     /**
      * @param params the params to set
      */
-    private void setParameterList(List<String> params) {
+    public void setParameterList(List<String> params) {
         this.params = params;
     }
     

@@ -4,7 +4,7 @@ README for png2tileinfo
 This is the "source" for the oceantiles_12.dat file used in 
 close-areas.pl and in lowzoom.pl.
 
-The oceantiles_12.dat file contains two bytes for every level-12
+The oceantiles_12.dat file contains two bits for every level-12
 tile in the world, specifying whether it is a land tile, a sea tile,
 a coastal tile, or unknown.
 

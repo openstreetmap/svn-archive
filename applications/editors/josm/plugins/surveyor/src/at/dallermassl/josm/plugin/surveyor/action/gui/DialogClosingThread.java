@@ -21,7 +21,6 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     private static long DEFAULT_TIMEOUT = 5000;
     private JDialog dialog;
     private long timeout;
-    private String dialogTitle;
     private long loopCount;
     
     /**
@@ -68,7 +67,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
-    @Override
+    //@Override
     public void keyPressed(KeyEvent e) {
         reset();
         System.out.println("keypressed: " + e.getKeyCode());
@@ -77,7 +76,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
      */
-    @Override
+    //@Override
     public void keyReleased(KeyEvent e) {
         reset();
         System.out.println("keyreleased: " + e.getKeyCode());
@@ -86,7 +85,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
      */
-    @Override
+    //@Override
     public void keyTyped(KeyEvent e) {
         reset();
         System.out.println("keytyped: " + e.getKeyCode());
@@ -116,7 +115,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     /* (non-Javadoc)
      * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
      */
-    @Override
+    //@Override
     public void changedUpdate(DocumentEvent e) {
         reset();
         System.out.println("changedUpdate: " + e);        
@@ -125,7 +124,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     /* (non-Javadoc)
      * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
      */
-    @Override
+    //@Override
     public void insertUpdate(DocumentEvent e) {
         reset();
         System.out.println("insertUpdate: " + e);
@@ -134,7 +133,7 @@ public class DialogClosingThread extends Thread implements KeyListener, Document
     /* (non-Javadoc)
      * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
      */
-    @Override
+    //@Override
     public void removeUpdate(DocumentEvent e) {
         reset();
         System.out.println("removeUpdate: " + e);        

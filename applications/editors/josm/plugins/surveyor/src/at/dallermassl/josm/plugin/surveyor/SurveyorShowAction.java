@@ -6,6 +6,7 @@ package at.dallermassl.josm.plugin.surveyor;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,8 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import livegps.LiveGpsPlugin;
 
@@ -30,6 +34,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class SurveyorShowAction extends AbstractAction {
+    private static final long serialVersionUID = 2184570223633094734L;
     private static final String DEFAULT_SOURCE = "resource://surveyor.xml";
     private JFrame surveyorFrame;
     private LiveGpsPlugin gpsPlugin;
@@ -66,6 +71,37 @@ public class SurveyorShowAction extends AbstractAction {
             
             // add component as gps event listener:
             gpsPlugin.addPropertyChangeListener(comp);
+            
+            // add some hotkeys to the component:
+            ActionMap actionMap = comp.getActionMap();
+            InputMap inputMap = comp.getInputMap();
+            // zoomout:
+            actionMap.put("zoomout", new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if(Main.map != null && Main.map.mapView != null) {
+                        Main.map.mapView.zoomTo(Main.map.mapView.getCenter(), Main.map.mapView.getScale()*2);
+                    }
+                }
+            });
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "zoomout");
+            // zoomin:
+            actionMap.put("zoomin", new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if(Main.map != null && Main.map.mapView != null) {
+                        Main.map.mapView.zoomTo(Main.map.mapView.getCenter(), Main.map.mapView.getScale()/2);
+                    }
+                }
+            });
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "zoomin");
+            // autocenter:
+            actionMap.put("autocenter", new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // toggle autocenter
+                    gpsPlugin.setAutoCenter(!gpsPlugin.isAutoCenter());
+                }
+            });
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), "autocenter");
+           
             surveyorFrame.add(comp);
             surveyorFrame.pack();
             surveyorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);

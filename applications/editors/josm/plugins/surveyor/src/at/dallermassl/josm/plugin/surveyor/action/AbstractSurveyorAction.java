@@ -25,7 +25,7 @@ public abstract class AbstractSurveyorAction implements SurveyorAction {
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
      */
-    @Override
+    //@Override
     public void setParameters(List<String> parameters) {
         this.parameters = parameters;
     }

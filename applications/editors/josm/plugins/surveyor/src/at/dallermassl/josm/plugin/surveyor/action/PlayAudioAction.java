@@ -31,7 +31,7 @@ public class PlayAudioAction extends AbstractSurveyorAction {
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
      */
-    @Override
+    //@Override
     public void actionPerformed(GpsActionEvent event) {
         try {
             if(audioFile == null) {

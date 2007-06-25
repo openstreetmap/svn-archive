@@ -38,7 +38,7 @@ public class SetNodeAction implements SurveyorAction {
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
      */
-    @Override
+    //@Override
     public void setParameters(List<String> parameters) {
         keyValues = new ArrayList<Tuple<String, String>>();
         int pos;

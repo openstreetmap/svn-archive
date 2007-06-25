@@ -79,7 +79,7 @@ public class LiveGpsDialog extends ToggleDialog implements PropertyChangeListene
                 speedLabel.setText((data.getSpeed() * 3.6f) + "km/h"); // m(s to km/h
                 courseLabel.setText(data.getCourse() + "deg");
                 
-                String wayString = data.getWay();
+                String wayString = data.getWayInfo();
                 if(wayString.length() > 0) {
                     wayLabel.setText(wayString);
                 } else {

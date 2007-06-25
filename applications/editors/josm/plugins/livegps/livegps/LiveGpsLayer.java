@@ -90,7 +90,7 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 		//Main.map.repaint();
 	}
 	
-	void setAutoCenter(boolean ac)
+	public void setAutoCenter(boolean ac)
 	{
 		autocenter = ac;
 	}

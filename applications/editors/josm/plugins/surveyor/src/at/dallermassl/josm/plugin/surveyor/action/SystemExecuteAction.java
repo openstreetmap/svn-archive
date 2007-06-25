@@ -19,7 +19,7 @@ public class SystemExecuteAction extends AbstractSurveyorAction {
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent, java.util.List)
      */
-    @Override
+    //@Override
     public void actionPerformed(GpsActionEvent event) {
         final ProcessBuilder builder = new ProcessBuilder(getParameters());
         //Map<String, String> environ = builder.environment();

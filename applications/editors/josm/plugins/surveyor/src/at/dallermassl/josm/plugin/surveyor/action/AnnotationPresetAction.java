@@ -26,7 +26,7 @@ public class AnnotationPresetAction implements SurveyorAction {
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#actionPerformed(at.dallermassl.josm.plugin.surveyor.GpsActionEvent)
      */
-    @Override
+    //@Override
     public void actionPerformed(GpsActionEvent event) {
         if(preset == null) {
             return;
@@ -51,7 +51,7 @@ public class AnnotationPresetAction implements SurveyorAction {
     /* (non-Javadoc)
      * @see at.dallermassl.josm.plugin.surveyor.SurveyorAction#setParameters(java.util.List)
      */
-    @Override
+    //@Override
     public void setParameters(List<String> parameters) {
         if(parameters.size() == 0) {
             throw new IllegalArgumentException("No annotation preset name given!");

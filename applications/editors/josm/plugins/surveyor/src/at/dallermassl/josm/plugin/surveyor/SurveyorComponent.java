@@ -11,11 +11,14 @@ import java.beans.PropertyChangeListener;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import livegps.LiveGpsData;
@@ -37,9 +40,11 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     private int height = 0;
     private JLabel streetLabel;
     private JPanel buttonPanel;
+    private Set<String>hotKeys;
 
     public SurveyorComponent() {
         super();
+        hotKeys = new HashSet<String>();
         setLayout(new BorderLayout());
         streetLabel = new JLabel("Way: ");
         float fontSize = Float.parseFloat(Main.pref.get(SurveyorPlugin.PREF_KEY_STREET_NAME_FONT_SIZE, "35"));
@@ -96,11 +101,21 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     }
 
     public void addButton(ButtonDescription description) {
-        if(rows == 0 && columns == 0) {
-            setColumns("4");
+        if(hotKeys.contains(description.getHotkey())) {
+            // <FIXXME date="23.06.2007" author="cdaller">
+            // TODO if i18n is done
+            //JOptionPane.showMessageDialog(Main.parent, tr("Duplicate hotkey for button '{0}' - button will be ignored!",description.getLabel()));
+            JOptionPane.showMessageDialog(Main.parent, "Duplicate hotkey for button '" + description.getLabel() 
+                + "' - button will be ignored!");
+            // </FIXXME> 
+        } else {
+            if(rows == 0 && columns == 0) {
+                setColumns("4");
+            }
+            description.setGpsDataSource(this);
+            buttonPanel.add(description.createComponent());
+            hotKeys.add(description.getHotkey());
         }
-        description.setGpsDataSource(this);
-        buttonPanel.add(description.createComponent());
     }
     
     
@@ -164,7 +179,7 @@ public class SurveyorComponent extends JComponent implements PropertyChangeListe
     public void propertyChange(PropertyChangeEvent evt) {
         if("gpsdata".equals(evt.getPropertyName())) {
             gpsData = (LiveGpsData) evt.getNewValue();
-            streetLabel.setText("Way: " + gpsData.getWay());
+            streetLabel.setText("Way: " + gpsData.getWayInfo());
         }
         
     }

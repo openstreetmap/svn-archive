@@ -32,7 +32,7 @@ public class SurveyorPlugin {
     
     private static JFrame surveyorFrame;
     public static final String PREF_KEY_STREET_NAME_FONT_SIZE = "surveyor.way.fontsize";
-
+    
     /**
      * 
      */
@@ -72,9 +72,9 @@ public class SurveyorPlugin {
         gpsPlugin.getLgpsMenu().add(surveyorMenuItem);
         
         AutoSaveAction autoSaveAction = new AutoSaveAction("AutoSave LiveData");
+        autoSaveAction.putValue(AbstractAction.ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt ctrl S"));
         JCheckBoxMenuItem autoSaveMenu = new JCheckBoxMenuItem(autoSaveAction);
-        gpsPlugin.getLgpsMenu().add(autoSaveMenu);
-        
+        gpsPlugin.getLgpsMenu().add(autoSaveMenu);  
     }
 
     /**

@@ -29,6 +29,7 @@ import javax.swing.plaf.ActionMapUIResource;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
+ * this class represents a button as it is described in the xml file.
  * @author cdaller
  *
  */
@@ -85,7 +86,11 @@ public class ButtonDescription {
         this.label = label;
         this.hotkey = hotkey;
         this.iconName = iconName;
-        this.type = type == null ? ButtonType.SINGLE : type;
+        if(type == null) {
+            this.type = ButtonType.SINGLE;
+        } else {
+            this.type = type;
+        }
         this.actions = actions;
     }
 

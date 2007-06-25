@@ -21,6 +21,8 @@ public class LiveGpsAcquirer implements Runnable {
 	int gpsdPort = 2947;
 	boolean shutdownFlag = false;
     private List<PropertyChangeListener> propertyChangeListener = new ArrayList<PropertyChangeListener>();
+    private PropertyChangeEvent lastStatusEvent;
+    private PropertyChangeEvent lastDataEvent;
 	
 	public LiveGpsAcquirer() {
 		
@@ -44,7 +46,10 @@ public class LiveGpsAcquirer implements Runnable {
      */
     public void fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus status, String statusMessage) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsstatus", null, new LiveGpsStatus(status, statusMessage));
-        firePropertyChangeEvent(event);
+        if(!event.equals(lastStatusEvent)) {
+            firePropertyChangeEvent(event);
+            lastStatusEvent = event;
+        }
     }
 
     /**
@@ -55,7 +60,10 @@ public class LiveGpsAcquirer implements Runnable {
      */
     public void fireGpsDataChangeEvent(LiveGpsData oldData, LiveGpsData newData) {
         PropertyChangeEvent event = new PropertyChangeEvent(this, "gpsdata", oldData, newData);
-        firePropertyChangeEvent(event);
+        if(!event.equals(lastDataEvent)) {
+            firePropertyChangeEvent(event);
+            lastDataEvent = event;
+        }
     }
     
     /**
@@ -83,6 +91,7 @@ public class LiveGpsAcquirer implements Runnable {
 			{
 				if (!connected)
 				{
+				    System.out.println("LiveGps try to connect to gpsd");
                     fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
 					InetAddress[] addrs = InetAddress.getAllByName(gpsdHost);
 					for (int i=0; i < addrs.length && gpsdSocket == null; i++) {
@@ -98,14 +107,17 @@ public class LiveGpsAcquirer implements Runnable {
 					{
 						gpsdReader = new BufferedReader(new InputStreamReader(gpsdSocket.getInputStream()));
 						gpsdSocket.getOutputStream().write(new byte[] { 'w', 13, 10 });
-                        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTED, tr("Connected"));
+                        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
 						connected = true;
 					}
 				}
 
 
                 if(connected) {
+                    // <FIXXME date="23.06.2007" author="cdaller">
+                    // TODO this read is blocking if gps is connected but has no fix, so gpsd does not send positions
                     String line = gpsdReader.readLine();
+                    // </FIXXME> 
                     if (line == null) break;
                     String words[] = line.split(",");
 
@@ -154,6 +166,7 @@ public class LiveGpsAcquirer implements Runnable {
                         default:
                             // not interested
                         }
+                        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTED, tr("Connected"));
                         gpsData.setFix(haveFix);
                         if (haveFix) {
                             //view.setCurrentPosition(lat, lon);
@@ -165,19 +178,22 @@ public class LiveGpsAcquirer implements Runnable {
                     }
                 } else {
                     // not connected:
+                    fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
                     try { Thread.sleep(1000); } catch (InterruptedException ignore) {};
                 }
 			} catch(IOException iox) {
 				connected = false;
-                gpsData.setFix(false);
-                fireGpsDataChangeEvent(oldGpsData, gpsData);
+				if(gpsData != null) {
+				    gpsData.setFix(false);
+				    fireGpsDataChangeEvent(oldGpsData, gpsData);
+				}
                 fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTION_FAILED, tr("Connection Failed"));
 				try { Thread.sleep(1000); } catch (InterruptedException ignore) {};
 				// send warning to layer
 
 			}
 		}
-        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Disconnected"));
+        fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.DISCONNECTED, tr("Not connected"));
 		if (gpsdSocket != null) try { gpsdSocket.close(); } catch (Exception ignore) {};
 	}
     

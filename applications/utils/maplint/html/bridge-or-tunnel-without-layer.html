@@ -2,15 +2,15 @@
 <html>
   <!--This file was created automatically. Don't change.-->
   <head>
-    <title>Maplint Test: deprecated-tags</title>
+    <title>Maplint Test: bridge-or-tunnel-without-layer</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
   </head>
   <body>
-    <div class="nav"><a href="bridge-or-tunnel-without-layer.html">prev</a>
+    <div class="nav"><a href="ways-with-unordered-segments.html">prev</a>
 
                 | <a href="index.html">list</a> |
 
-                <a href="motorway-without-ref.html">next</a></div>
+                <a href="deprecated-tags.html">next</a></div>
     <table class="test">
       <tr>
         <th width="52%">Test ID</th>
@@ -19,22 +19,16 @@
         <th width="16%">Severity</th>
       </tr>
       <tr>
-        <td width="52%">deprecated-tags</td>
+        <td width="52%">bridge-or-tunnel-without-layer</td>
         <td width="16%">main</td>
         <td width="16%">1</td>
-        <td width="16%"><span class="error">   </span> error</td>
+        <td width="16%"><span class="warning">   </span> warning</td>
       </tr>
     </table>
     <table class="description">
       <tr>
         <th>en</th>
-        <td>Find deprecated tags: class=*</td>
-      </tr>
-    </table>
-    <table class="description">
-      <tr>
-        <th>Garmin:</th>
-        <td>DEPTAG / Shipwreck</td>
+        <td>Find ways with bridge or tunnel tag without a layer tag. In most cases this is an error, but it is only tagged as warning because the crossing way could have a layer tag.</td>
       </tr>
     </table>
   </body>

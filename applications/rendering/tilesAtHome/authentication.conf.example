@@ -5,10 +5,6 @@
 # Edit this file and save as "authentication.conf"
 
 ### Authentication:
-## Download
-OsmUsername=name%40domain.com
-OsmPassword=CHANGEME
-
 ## Upload
 # this is handed out by Ojw/almien only. OSM or Wiki account will NOT work.
 UploadUsername=CHANGEME

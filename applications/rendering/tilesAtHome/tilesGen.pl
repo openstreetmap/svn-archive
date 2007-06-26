@@ -426,8 +426,8 @@ sub GenerateTileset
     # Download data
     #------------------------------------------------------
     killafile($DataFile);
-    my $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
-      $Config{OsmUsername}, $Config{OsmPassword}, $W1, $S1, $E1, $N1);
+    my $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
+      $W1, $S1, $E1, $N1);
     my @tempfiles;
     push(@tempfiles, $DataFile);
     
@@ -444,8 +444,8 @@ sub GenerateTileset
 
         for (my $i = 0 ; $i<10 ; $i++) 
         {
-            $URL = sprintf("http://%s:%s\@www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
-                $Config{OsmUsername}, $Config{OsmPassword}, ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
+            $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
+                ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
             my $partialFile = "data-$PID-$i.osm";
             DownloadFile($URL, $partialFile, 0, "Map data to $partialFile");
             if (-s $partialFile == 0)

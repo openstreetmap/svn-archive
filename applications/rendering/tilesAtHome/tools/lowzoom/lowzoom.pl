@@ -79,10 +79,16 @@ if ($Config{UseOceantilesDat}) {
 	open($oceantiles, "<", "../../oceantiles_12.dat") or die("../../oceantiles-z12.dat not found");
 }
 
+#If UseLatestTxt, store info from latest.txt here
+my %notBlanks ;
+if ($Config{UseLatestTxt}) {
+	parseLatestTxt();
+}
+
 #open a file for the suspicious tiles
 my $suspiciousTiles;
 if ($Config{WriteSuspicious}){
-	open($suspiciousTiles, ">", "suspicious_tiles.txt");
+	open($suspiciousTiles, ">>", "suspicious_tiles.txt");
 }
 
 # Create the requested tile
@@ -116,40 +122,54 @@ sub lowZoom {
 # Download a tile from the tileserver
 sub downloadtile {
   my ($X,$Y,$Z,$Layer) = @_;
-  my $f1 = remotefile($X,$Y,$Z,$Layer);
-  my $f2 = localfile($X,$Y,$Z,$Layer);
-  
-  mirror($f1,$f2);
-  
-  my $Size = -s $f2;
-  $Status->downloadCount($Layer,$X,$Y,$Z,$Size);
-  
-	#check the tile
-	if ($Config{UseOceantilesDat}) {
-		if ($Z eq 12) {
-			if (($Size == 103) && (askOceantiles($X,$Y) eq "land")) {
-				if ($Config{WriteSuspicious}) {
-					print $suspiciousTiles "$X $Y : downloaded tile is sea, oceantiles says land \n";
-				}
-				if ($Config{BlankSource} eq "oceantiles") {
-					unlink $f2;
-					link("../../emptyland.png", $f2);
-				}
-			}elsif (($Size == 179) && (askOceantiles($X,$Y) eq "sea")) {
-				if ($Config{WriteSuspicious}) {
-					print $suspiciousTiles "$X $Y : downloaded tile is land, oceantiles says sea \n";
-				}
-				if ($Config{BlankSource} eq "oceantiles") {
-					unlink $f2;
-					link("../../emptysea.png", $f2);
+	my $f2 = localfile($X,$Y,$Z,$Layer);
+	my $key = sprintf("%s,%s,%s",$X,$Y,$Z);
+
+	if(($Z < 13) || (($Z == 12) && ($notBlanks{$key} > 0))){ 
+		
+		my $f1 = remotefile($X,$Y,$Z,$Layer);
+
+		mirror($f1,$f2);
+		
+		my $Size = -s $f2;
+		
+		if ($Config{UseOceantilesDat}) {
+			if ($Z eq 12) {
+				if (($Size == 103) && (askOceantiles($X,$Y) eq "land")) {
+					if ($Config{WriteSuspicious}) {
+						print $suspiciousTiles "$X $Y : downloaded tile is sea, oceantiles says land \n";
+					}
+					if ($Config{BlankSource} eq "oceantiles") {
+						unlink $f2;
+						link("../../emptyland.png", $f2);
+					}
+				}elsif (($Size == 179) && (askOceantiles($X,$Y) eq "sea")) {
+					if ($Config{WriteSuspicious}) {
+						print $suspiciousTiles "$X $Y : downloaded tile is land, oceantiles says sea \n";
+					}
+					if ($Config{BlankSource} eq "oceantiles") {
+						unlink $f2;
+						link("../../emptysea.png", $f2);
+					}
 				}
 			}
 		}
+		$Status->downloadCount($Layer,$X,$Y,$Z,$Size);
+		
+		return;
+	}  
+  
+	unlink $f2;
+
+	if (askOceantiles($X,$Y) eq "land" ) {
+			link("land.png", $f2);
+	}else {
+			link("./sea.png", $f2);
 	}
 
-  # Don't bother storing blank or invalid tiles
-	unlink $f2 if($Size < 103);
-
+	my $Size = 0;
+  $Status->downloadCount($Layer,$X,$Y,$Z,$Size);
+	
 }
 
 # Delete blank subtiles of a blank tile
@@ -161,6 +181,16 @@ sub downloadtile {
 sub deleteBlankSubtiles
 {
   my($X,$Y,$Z,$Layer) = @_;
+	if (($Z == 11 ) && ($Options ne "keep")){
+		for my $x (0,1)
+		{
+			for my $y (0,1)
+			{
+				my $f = localfile(2*$X + $x, 2*$Y + $y, $Z+1, $Layer);
+				unlink $f;
+			}
+		}
+	};
   return if $Z >= 11;  # Not lowzoom's problem
   # This keeps real blank tiles at zooms 3,6 and 9
   return if ($Z+1)%3 == 0;
@@ -189,7 +219,7 @@ sub supertile {
 	my $Filename = localfile($X,$Y,$Z,$Layer);
 	# Always delete file first. The use of hardlinks means we might accedently overwrite other files.
 	unlink($Filename);
-	print "generating $Filename \n";
+#	print "generating $Filename \n";
 
 	# all images the same size? 
 	if ($AA == undef) { $AA = Image::Magick->new; }
@@ -250,7 +280,7 @@ sub supertile {
 	}
 
 	 #remove tiles which will not be uploaded
-	if (($Z == $MaxZ ) && ($Options ne "keep")){
+	if (($Z == 11 ) && ($Options ne "keep")){
 		for my $x (0,1)
 		{
 			for my $y (0,1)
@@ -348,6 +378,42 @@ sub askOceantiles {
 	# $str eq "01" => known land
 	# $str eq "10" => known sea
 	# $str eq "11" => known edge tile
+
+}
+
+#parses the latest.txt file and stores info about tiles
+sub parseLatestTxt {
+
+ open (fh,"<","latest_12.txt");
+
+printf("searching for zoom %d tiles where X is between %d and %d \n",$MaxZ,$X*2**($MaxZ-$Z),($X+1)*2**($MaxZ-$Z));
+printf("searching for zoom %d tiles where Y is between %d and %d \n",$MaxZ,$Y*2**($MaxZ-$Z),($Y+1)*2**($MaxZ-$Z));
+my $notBlankCount = 0;
+my $newCount = 0;
+my @tileinfo;
+my $key;
+while (my $line = <fh>){
+ 	if ( $line =~ /^[0-9]*\,[0-9]*,[0-9]*,/ ) {
+ 		@tileinfo = split(/,/,$line);		if ($Z <= $tileinfo[2] && $tileinfo[2] <= $MaxZ) {
+			if ($X*2**($MaxZ-$Z) <= $tileinfo[0] && $tileinfo[0] <= ($X+1)*2**($MaxZ-$Z)) {
+				if ($Y*2**($MaxZ-$Z) <= $tileinfo[1] && $tileinfo[1] <= ($Y+1)*2**($MaxZ-$Z)) {
+					$key = sprintf("%s,%s,%s",$tileinfo[0],$tileinfo[1],$tileinfo[2]);
+					if ($tileinfo[5] > (time()-3600*1)) {
+						$newCount++;
+						$notBlanks{$key} = 2;
+					}else{
+						$notBlanks{$key} = 1;
+					}
+					$notBlankCount++;
+				}
+			}
+		}
+	}
+}
+
+close(fh);
+
+printf("latest.txt parsed, found %i notBlanks (%i new)\n",$notBlankCount,$newCount);
 
 }
 

@@ -28,7 +28,7 @@ if(1){
   if($Load < 0){
     logMsg("Load average failed", 4);
   }
-  elseif($Load > 2.7){
+  elseif($Load > 2.6){
     AbortWithError(503, "Server is very very busy...");
   }
 }
@@ -66,7 +66,27 @@ if($VersionID < 0){
 
 HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
 
+// OJW testing
+if(rand(0,100) == 1) 
+  PlaceInQueue($_FILES['file'], $UserID, $VersionID);
+
 exit;
+
+
+function PlaceInQueue($Filename, $UserID, $VersionID){
+  $QueueLocation = "/home/ojw/tiles-ojw2/Queue/";
+  $Name = md5(uniqid(rand(), true));
+  
+  $MetaFile = $QueueLocation . $Name . ".txt";
+  $fp = fopen($MetaFile, "w");
+  if(!$fp)
+      return;
+  fputs($fp, "user = $UserID\nversion = $VersionID\n");
+  fclose($fp);
+  
+  $ZipFile = $QueueLocation . $Name . ".zip";
+  move_uploaded_file($Filename["tmp_name"], $ZipFile);
+}
 
 function AbortWithError($Code, $Message){
   header(sprintf("HTTP/1.0 %d %s", $Code, $Message));

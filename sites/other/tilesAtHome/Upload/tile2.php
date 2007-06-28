@@ -67,15 +67,17 @@ if($VersionID < 0){
 HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
 
 // OJW testing
-if(rand(0,100) == 1) 
+if(rand(0,50) == 1) 
   PlaceInQueue($_FILES['file'], $UserID, $VersionID);
 
 exit;
 
 
 function PlaceInQueue($Filename, $UserID, $VersionID){
-  $QueueLocation = "/home/ojw/tiles-ojw2/Queue/";
+  $QueueLocation = QueueDirectory();
   $Name = md5(uniqid(rand(), true));
+  
+  logMsg(sprintf("Queue is %d items", QueueLength()), 4);
   
   $MetaFile = $QueueLocation . $Name . ".txt";
   $fp = fopen($MetaFile, "w");
@@ -88,6 +90,23 @@ function PlaceInQueue($Filename, $UserID, $VersionID){
   move_uploaded_file($Filename["tmp_name"], $ZipFile);
 }
 
+function QueueLength(){
+  $dp = opendir(QueueDirectory());
+  if(!$dp)
+    AbortWithError(500, "Can't read queue directory");
+    
+  while($File = readdir($dp)){
+    if(substr($File,0,1) != "."){
+      $Count++;
+    }
+  }
+  closedir($dp);
+  return($Count);
+}
+
+function QueueDirectory(){
+  return("/home/ojw/tiles-ojw2/Queue/");
+}
 function AbortWithError($Code, $Message){
   header(sprintf("HTTP/1.0 %d %s", $Code, $Message));
   header("Content-type:text/plain");

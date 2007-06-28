@@ -5,7 +5,7 @@
   
   $Value = QueueLength();
   $Min = 10;
-  $Max = 500;
+  $Max = MaxQueueLength();
   
   $Portion = ($Max - $Value) / ($Max - $Min);
   if($Portion < 0) $Portion = 0;

@@ -235,7 +235,7 @@ sub uploadIfEnoughTiles
     my $allowedPrefixes = join("|", 
         map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
 
-    if opendir(my $dp, $Config{WorkingDirectory})
+    if (opendir(my $dp, $Config{WorkingDirectory}))
     {
         while(my $File = readdir($dp))
         {
@@ -249,7 +249,7 @@ sub uploadIfEnoughTiles
         mkdir $Config{WorkingDirectory};
     }
 
-    if opendir(my $dp, $Config{WorkingDirectory}."/uploadable")
+    if (opendir(my $dp, $Config{WorkingDirectory}."/uploadable"))
     {
         while(my $File = readdir($dp))
         {

@@ -235,20 +235,32 @@ sub uploadIfEnoughTiles
     my $allowedPrefixes = join("|", 
         map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
 
-    opendir(my $dp, $Config{WorkingDirectory}) || return;
-    while(my $File = readdir($dp))
+    if opendir(my $dp, $Config{WorkingDirectory})
     {
-        $Count++ if ($File =~ /($allowedPrefixes)_.*\.png/);
-        $Count += 200 if ($File =~ /($allowedPrefixes)_.*\.dir/);
+        while(my $File = readdir($dp))
+        {
+            $Count++ if ($File =~ /($allowedPrefixes)_.*\.png/);
+            $Count += 200 if ($File =~ /($allowedPrefixes)_.*\.dir/);
+        }
+        closedir($dp);
+    } 
+    else
+    {
+        mkdir $Config{WorkingDirectory};
     }
-    closedir($dp);
 
-    opendir(my $dp, $Config{WorkingDirectory}."/uploadable") || return;
-    while(my $File = readdir($dp))
+    if opendir(my $dp, $Config{WorkingDirectory}."/uploadable")
     {
-        $ZipCount++ if ($File =~ /\.zip/);
+        while(my $File = readdir($dp))
+        {
+            $ZipCount++ if ($File =~ /\.zip/);
+        }
+        closedir($dp);
     }
-    closedir($dp);
+    else 
+    {
+        mkdir $Config{WorkingDirectory}."/uploadable";
+    }
 
     if (($Count >= 200) or ($ZipCount >= 1))
     {

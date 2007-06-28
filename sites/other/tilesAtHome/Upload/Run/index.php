@@ -32,9 +32,9 @@ if(0){
 
 
 $QueueDir = "/home/ojw/tiles-ojw2/Queue/";
-$Done = HandleNextFilesFromQueue($QueueDir, 1);
+$Done = HandleNextFilesFromQueue($QueueDir, 4);
 
-printf("Done %d items\n", $Done);
+logMsg(sprintf("Queue runner - done %d items\n", $Done), 3);
 
 
 function HandleNextFilesFromQueue($Dir, $NumToProcess){

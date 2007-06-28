@@ -379,6 +379,10 @@ sub upload
             rename($File, $File."_uploaded");
         }
     }
+    else
+    {
+        return 0;
+    }
     
     return 1;
 }

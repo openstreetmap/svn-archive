@@ -12,3 +12,4 @@
 12|NO|Glencoe
 13|OK|Headingley
 14|OK|Inverness
+15|OK|Jever

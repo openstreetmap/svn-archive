@@ -134,11 +134,16 @@ else
             $progressPercent = $progress * 100 / $zipCount;
             statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         
-## sleep for 2, 4, 8, 16... seconds for each consecutive failure to a max of 3 hours (10800 seconds)
+## sleep for exponentially increasing amount of time for each consecutive failure to a max of 1 hour (3600 seconds)
             if ($failures)
             {
-                $sleepdelay=($failures > 13) ? 10800 : (2 ** $failures);
-                $sleepdelay += int(rand($sleepdelay/4));
+                $sleepdelay=1.5 ** $failures;
+                $sleepdelay += rand($sleepdelay/4);
+                $sleepdelay = int($sleepdelay);
+                if ($sleepdelay > 3600)
+                {
+                    $sleepdelay = 3600;
+                }
                 statusMessage($failures . " consecutive upload failures, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 sleep ($sleepdelay);
             }

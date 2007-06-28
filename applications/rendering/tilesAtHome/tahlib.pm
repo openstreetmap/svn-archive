@@ -173,5 +173,29 @@ sub killafile($){
   unlink $file if(-f $file);
 }
 
+#-----------------------------------------------------------------------------
+# 
+#-----------------------------------------------------------------------------
+sub DownloadFile 
+{
+    my ($URL, $File, $UseExisting) = @_;
+
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);
+    $ua->agent("tilesAtHome");
+    $ua->env_proxy();
+
+    if(!$UseExisting) 
+    {
+        killafile($File);
+    }
+    # Note: mirror sets the time on the file to match the server time. This
+    # is important for the handling of JobTime later.
+		 $ua->mirror($URL, $File);
+
+    doneMessage(sprintf("done, %d bytes", -s $File));
+}
+
+
+
 1;
 

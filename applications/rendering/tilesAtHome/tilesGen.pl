@@ -72,24 +72,30 @@ my $BlackTileImage = new GD::Image(256,256);
 my $BlackTileBackground = $BlackTileImage->colorAllocate(0,0,0);
 $BlackTileImage->fill(127,127,$BlackTileBackground);
 
+# set the progress indicator variables
+my $currentSubTask;
+my $progress = 0;
+my $progressJobs = 0;
+my $progressPercent = 0;
+
 # Check the on disk image tiles havn't been corrupted
 if( -s "emptyland.png" != 67 )
 {
     print STDERR "Corruption detected in emptyland.png. Trying to redownload from svn automatically.\n";
+    statusMessage("Downloading: emptyland.png", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
       "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptyland.png", # TODO: should be svn update, instead of http get... 
       "emptyland.png",
-      0, ## 0=delete old file from disk first
-      "emptyland.png");
+      0); ## 0=delete old file from disk first
 }
 if( -s "emptysea.png" != 69 )
 {
     print STDERR "Corruption detected in emptysea.png. Trying to redownload from svn automatically.\n";
+    statusMessage("Downloading: emptysea.png", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
       "http://svn.openstreetmap.org/applications/rendering/tilesAtHome/emptysea.png", # TODO: should be svn update, instead of http get... 
       "emptysea.png",
-      0, ## 0=delete old file from disk first
-      "emptysea.png");
+      0); ## 0=delete old file from disk first
 }
 # Check the on disk image tiles are now in order
 if( -s "emptyland.png" != 67 or
@@ -109,12 +115,6 @@ mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
 # Subdirectory for the current job (layer & z12 tileset),
 # as used in sub GenerateTileset() and tileFilename()
 my $JobDirectory;
-
-# set the progress indicator variables
-my $currentSubTask;
-my $progress = 0;
-my $progressJobs = 0;
-my $progressPercent = 0;
 
 # keep track of time running
 my $progstart = time();
@@ -307,11 +307,11 @@ sub ProcessRequestsFromServer
     killafile($LocalFilename);
     my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername};
     # DEBUG: print "using URL " . $RequestUrlString . "\n";
+    statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
         $RequestUrlString, 
         $LocalFilename, 
-        0, 
-        "Request from server");
+        0);
     
     if(! -f $LocalFilename){
         return (0, "Error reading request from server");
@@ -372,11 +372,11 @@ sub PutRequestBackToServer
     # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
     my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=ReRequest:" . $Cause . ":" . $Config{UploadUsername};
     
+    statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
         $RequestUrlString, 
         $LocalFilename, 
-        0, 
-        "Request from server");
+        0);
 
     if(! -f $LocalFilename)
     {
@@ -442,8 +442,9 @@ sub GenerateTileset
       $W1, $S1, $E1, $N1);
     my @tempfiles;
     push(@tempfiles, $DataFile);
-    
-    DownloadFile($URL, $DataFile, 0, "Map data to $DataFile");
+
+    statusMessage("Downloading: Map data to $DataFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    DownloadFile($URL, $DataFile, 0);
 
     if (-s $DataFile == 0)
     {
@@ -459,7 +460,8 @@ sub GenerateTileset
             $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
                 ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
             my $partialFile = "data-$PID-$i.osm";
-            DownloadFile($URL, $partialFile, 0, "Map data to $partialFile");
+            statusMessage("Downloading: Map data to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            DownloadFile($URL, $partialFile, 0);
             if (-s $partialFile == 0)
             {
                 printf("No data here either\n");
@@ -800,38 +802,14 @@ sub RadToDeg($){return 180 * shift() / pi;}
 sub UpdateOsmarender {
   foreach my $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png")){
   
+    statusMessage("Downloading: Osmarender ($File)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
     "http://almien.co.uk/OSM/Places/Download/$File", # TODO: should be config option. TODO: should be SVN. TODO: should be called
     $File,
-    1,
-    "Osmarender ($File)");
+    1);
   }
 }
 
-#-----------------------------------------------------------------------------
-# 
-#-----------------------------------------------------------------------------
-sub DownloadFile 
-{
-    my ($URL, $File, $UseExisting, $Title) = @_;
-
-    statusMessage("Downloading: $Title", $Config{Verbose}, 
-        $currentSubTask, $progressJobs, $progressPercent,0);
-
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 120);
-    $ua->agent("tilesAtHome");
-    $ua->env_proxy();
-
-    if(!$UseExisting) 
-    {
-        killafile($File);
-    }
-    # Note: mirror sets the time on the file to match the server time. This
-    # is important for the handling of JobTime later.
-		 $ua->mirror($URL, $File);
-
-    doneMessage(sprintf("done, %d bytes", -s $File));
-}
 
 #-----------------------------------------------------------------------------
 # Pre-process on OSM file (using frollo)

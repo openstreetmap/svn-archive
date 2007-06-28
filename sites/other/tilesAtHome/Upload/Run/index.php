@@ -19,7 +19,7 @@ include("../../lib/checkupload.inc");
 include("../../lib/cpu.inc");
 include("../../connect/connect.php");
 
-if(0){
+if(1){
   $Load = GetLoadAvg();
   //logMsg("$Load load", 4);
   if($Load < 0){
@@ -32,13 +32,14 @@ if(0){
 
 
 $QueueDir = "/home/ojw/tiles-ojw2/Queue/";
-$Done = HandleNextFilesFromQueue($QueueDir, 4);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 1);
 
-logMsg(sprintf("Queue runner - done %d items\n", $Done), 3);
+logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 2);
 
 
 function HandleNextFilesFromQueue($Dir, $NumToProcess){
-  $Count = 0;
+  $CountUploads = 0;
+  $CountTiles = 0;
   $fp = opendir($Dir);
   if(!$fp)
       return;
@@ -47,13 +48,13 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
       if(preg_match("{(\w+)\.txt}", $File, $Matches)){
         $Name = $Matches[1];
         printf( "\n\n===%s===\n\n", htmlentities($Name));
-        HandleQueueItem($Name, $Dir);
-        $Count++;
+        $CountTiles += HandleQueueItem($Name, $Dir);
+        $CountUploads++;
       }
     }
   }
   closedir($fp);
-  return($Count);
+  return(array($CountUploads, $CountTiles));
 }
 
 function HandleQueueItem($Name, $Dir){
@@ -67,16 +68,17 @@ function HandleQueueItem($Name, $Dir){
 	print "No zip file\n";
 	return;
     }
-    print "OK\n";
-    $Meta = MetaFileInfo($MetaFile);
-    foreach($Meta as $k => $v){
-	printf("\n * '%s' = '%s'\n", htmlentities($k), htmlentities($v));
-    }
     
-    HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
+    $Meta = MetaFileInfo($MetaFile);
+    
+    logMsg(sprintf("Doing %s by user %d version %d", $ZipFile, $Meta["user"], $Meta["version"]), 3);
+    
+    $Count = HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
     
     unlink($MetaFile);
     unlink($ZipFile);
+    
+    return($Count);
 }
 function MetaFileInfo($File){
     $fp = fopen($File, "r");
@@ -93,19 +95,21 @@ function MetaFileInfo($File){
     
 }
 function AbortWithError($Message){
+  logMsg("Aborted with $Message", 5);
   printf("\n\nError: %s\n", $Message);
   exit;
 }
 
 
 function HandleUpload($File, $UserID, $VersionID){
-  
   # Decide on the name of a Temporary directory
   $Dir = TempDir();
   
   # Check the uploaded ZIP file
   $Size = filesize($File);
 
+  logMsg("Handling $File ($Size bytes) by $UserID (version $VersionID)", 4);
+  
   if($Size <= 0){
     AbortWithError("No file uploaded or file too large");
   }
@@ -124,8 +128,10 @@ function HandleUpload($File, $UserID, $VersionID){
   # -d $Dir specifies the directory to unzip to
   # $Filename is the zip file
   $Command = sprintf("unzip -j -d %s %s", $Dir, $File);
-  print "Running '$Command'\n";
+  logMsg("Running '$Command'", 3);
   system($Command);
+  
+  logMsg("Handling directory $Dir", 3);
   
   # Process all the tiles (return number of tiles done)
   $Count = HandleDir($Dir, $UserID, $VersionID);
@@ -133,7 +139,8 @@ function HandleUpload($File, $UserID, $VersionID){
   # Delete the temporary directory and everything inside
   DelDir($Dir);
   
-  printf("OK, %d\n", $Count);
+  logMsg("OK, $Count tiles in upload", 3);
+  return($Count);
 }
 
 #----------------------------------------------------------------------
@@ -156,18 +163,18 @@ function DelDir($Dir){
 #----------------------------------------------------------------------
 function HandleDir($Dir, $UserID, $VersionID){
   $Count = 0;
-  $dp = opendir($Dir);
   $TileList = array();
   $BlankTileList = array();
 
   list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer) = CheckUploadDir($Dir);
-
+  
+  $dp = opendir($Dir);
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
+    logMsg("Handling file $file", 6);
     $Count += HandleFile($Filename, $VersionID, $TileList, $BlankTileList);
   }
   closedir($dp);
-
 
   if($ValidTileset)
     SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer, $UserID, $VersionID);
@@ -175,9 +182,6 @@ function HandleDir($Dir, $UserID, $VersionID){
     SaveMetadata($TileList, $UserID, $VersionID);
 
   SaveBlankTiles($BlankTileList, $UserID);
-
-  # Disconnect from database
-  mysql_close();
 
   return($Count);
 }
@@ -335,8 +339,11 @@ function HandleFile($Filename, $VersionID, &$TileList, &$BlankTileList){
       }
     }
     else{
-      #logMsg("Invalid tile $Filename from $UserID", 3);
+      logMsg("Invalid tile $Filename from $UserID", 3);
     }
+  }
+  else{
+    # logMsg("$Filename doesn't match regular expression", 2);
   }
   return(0);
 }

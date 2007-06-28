@@ -17,4 +17,9 @@ function QueueLength(){
 function QueueDirectory(){
   return("/home/ojw/tiles-ojw2/Queue/");
 }
+
+function MaxQueueLength(){
+  return(200);
+}
+
 ?>

@@ -14,6 +14,7 @@ include("../lib/layers.inc");
 include("../lib/requests.inc");
 include("../lib/checkupload.inc");
 include("../lib/cpu.inc");
+include("../lib/queue.inc");
 
 # Option to turn-off non-single-tileset uploads (was only used for testing)
 if(0){
@@ -22,7 +23,7 @@ if(0){
   }
 }
 
-if(1){
+if(0){
   $Load = GetLoadAvg();
   //logMsg("$Load load", 4);
   if($Load < 0){
@@ -64,20 +65,25 @@ if($VersionID < 0){
   AbortWithError(401, "Client version not recognised or too old");
 }
 
-HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
 
-// OJW testing
-if(rand(0,50) == 1) 
+if(0){
+  // Old method
+  HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
+}
+else
+{
+  // New method
+  if(QueueLength() > MaxQueueLength())
+    AbortWithError(503, "too much stuff in the queue already");
+
   PlaceInQueue($_FILES['file'], $UserID, $VersionID);
-
+}
 exit;
 
 
 function PlaceInQueue($Filename, $UserID, $VersionID){
   $QueueLocation = QueueDirectory();
   $Name = md5(uniqid(rand(), true));
-  
-  logMsg(sprintf("Queue is %d items", QueueLength()), 4);
   
   $MetaFile = $QueueLocation . $Name . ".txt";
   $fp = fopen($MetaFile, "w");
@@ -90,23 +96,6 @@ function PlaceInQueue($Filename, $UserID, $VersionID){
   move_uploaded_file($Filename["tmp_name"], $ZipFile);
 }
 
-function QueueLength(){
-  $dp = opendir(QueueDirectory());
-  if(!$dp)
-    AbortWithError(500, "Can't read queue directory");
-    
-  while($File = readdir($dp)){
-    if(substr($File,0,1) != "."){
-      $Count++;
-    }
-  }
-  closedir($dp);
-  return($Count);
-}
-
-function QueueDirectory(){
-  return("/home/ojw/tiles-ojw2/Queue/");
-}
 function AbortWithError($Code, $Message){
   header(sprintf("HTTP/1.0 %d %s", $Code, $Message));
   header("Content-type:text/plain");

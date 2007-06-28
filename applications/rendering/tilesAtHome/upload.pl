@@ -352,30 +352,40 @@ sub upload
     my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
     my $URL = $Config{"UploadURL2"};
     
-    statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    my $res = $ua->post($URL,
-      Content_Type => 'form-data',
-      Content => [ file => [$File], mp => $Password,
-                   version => $Config{ClientVersion},
-                   single_tileset => $SingleTileset ]);
+    if (UploadOkOrNot()) 
+    {
+        statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        my $res = $ua->post($URL,
+          Content_Type => 'form-data',
+          Content => [ file => [$File], 
+          mp => $Password,
+          version => $Config{ClientVersion},
+          single_tileset => $SingleTileset ]);
       
-    if(!$res->is_success())
-    {
-        print STDERR "ERROR\n";
-        print STDERR "  Error uploading $File to $URL:\n";
-        print STDERR "  ".$res->status_line."\n";
-        return 0;
-    } 
+        if(!$res->is_success())
+        {
+            print STDERR "ERROR\n";
+            print STDERR "  Error uploading $File to $URL:\n";
+            print STDERR "  ".$res->status_line."\n";
+            return 0;
+        } 
     
-    if($Config{DeleteZipFilesAfterUpload})
-    {
-        unlink($File);
+        if($Config{DeleteZipFilesAfterUpload})
+        {
+            unlink($File);
+        }
+        else
+        {
+            rename($File, $File."_uploaded");
+        }
     }
-    else
-    {
-        rename($File, $File."_uploaded");
-    }
-  
+    
     return 1;
 }
 
+sub UploadOkOrNot
+{
+    DownloadFile("http://dev.openstreetmap.org/~ojw/Upload/go_nogo.php", $Config{WorkingDirectory} . "/go-nogo.tmp", 1);
+    ## actually do some comparison and handle it appropiately.
+    return 1; # return true for now.
+}

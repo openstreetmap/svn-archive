@@ -385,7 +385,21 @@ sub upload
 
 sub UploadOkOrNot
 {
-    DownloadFile("http://dev.openstreetmap.org/~ojw/Upload/go_nogo.php", $Config{WorkingDirectory} . "/go-nogo.tmp", 1);
-    ## actually do some comparison and handle it appropiately.
-    return 1; # return true for now.
+    my $LocalFilename = $Config{WorkingDirectory} . "/go-nogo.tmp";
+    DownloadFile("http://dev.openstreetmap.org/~ojw/Upload/go_nogo.php", $LocalFilename, 1);
+    open(my $fp, "<", $LocalFilename) || return;
+    my $Load = <$fp>; ##read first line from file
+    chomp $Load;
+    close $fp;
+    $Load=1-$Load;
+    ## print STDERR "\nLoad: $Load \n";
+    if ($Load > 0.8) 
+    {
+        statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        return 0; 
+    }
+    else
+    {
+        return 1;
+    }
 }

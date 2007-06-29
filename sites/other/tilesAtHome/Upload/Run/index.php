@@ -45,7 +45,7 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
   if(!$fp)
       return;
   while($File = readdir($fp)){
-    if($Count < $NumToProcess){
+    if($CountUploads < $NumToProcess){
       if(preg_match("{(\w+)\.txt}", $File, $Matches)){
         $Name = $Matches[1];
         printf( "\n\n===%s===\n\n", htmlentities($Name));

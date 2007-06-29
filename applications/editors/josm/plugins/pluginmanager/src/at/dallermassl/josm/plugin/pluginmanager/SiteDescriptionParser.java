@@ -3,6 +3,9 @@
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -86,7 +89,19 @@ public class SiteDescriptionParser extends MinML2 {
             }
         } else if("site".equals(qName)) {
             if(atts.getIndex("ref") >= 0) {
-                System.out.println("Handling referenced sites...");
+                String urlString = atts.getValue("ref");
+                System.out.println("Handling referenced site " + urlString);
+                try {
+                    SiteDescription subsite = new SiteDescription(urlString);
+                    subsite.loadFromUrl();
+                    // add the subsite's plugins to this site:
+                    for(PluginDescription desc : subsite.getPlugins()) {
+                        siteDescription.addPlugin(desc);
+                        System.out.println("adding plugin " + desc.getName());
+                    }
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
             } else if(!"1.0".equals(atts.getValue("version"))) {
                 throw new SAXException("Unknown version of site description (must be '1.0')!");
             }

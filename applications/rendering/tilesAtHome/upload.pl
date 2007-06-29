@@ -134,15 +134,17 @@ else
             $progressPercent = $progress * 100 / $zipCount;
             statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         
-## sleep for exponentially increasing amount of time for each consecutive failure to a max of 1 hour (3600 seconds)
+## sleep for exponentially increasing amount of time for each consecutive failure to a max of 20 minutes (1200 seconds)
+## FIXME: discern between "soft" and "hard" failures ("soft" failure being a not started upload because of full queue and "hard" being an actual failed upload
+## CHANGEME: since the checking of the queue is much less costly than trying to upload, need to further adapt (reduce) the max delay.
             if ($failures)
             {
                 $sleepdelay=1.5 ** $failures;
                 $sleepdelay += rand($sleepdelay/4);
                 $sleepdelay = int($sleepdelay);
-                if ($sleepdelay > 3600)
+                if ($sleepdelay > 1200)
                 {
-                    $sleepdelay = 3600;
+                    $sleepdelay = 1200;
                 }
                 statusMessage($failures . " consecutive upload failures, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 sleep ($sleepdelay);

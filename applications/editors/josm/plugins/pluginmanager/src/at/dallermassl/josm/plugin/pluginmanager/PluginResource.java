@@ -77,6 +77,11 @@ public class PluginResource {
      */
     public void install() {
        File targetFile = new File(target);
+       if(targetFile.isDirectory() 
+          || targetFile.getAbsolutePath().endsWith("/") 
+          || targetFile.getAbsolutePath().endsWith("\\")) {
+           targetFile = new File(targetFile, resourceUrl.getFile());
+       }
        File parentDir = targetFile.getParentFile();
        if(!parentDir.exists() && !parentDir.mkdirs()) {
            errorMessage = "Could not create the target directory: " + parentDir.getAbsolutePath();

@@ -17,7 +17,7 @@ include("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
 include("../../lib/cpu.inc");
-include("../../connect/connect.php");
+
 
 if(1){
   $Load = GetLoadAvg();
@@ -25,11 +25,12 @@ if(1){
   if($Load < 0){
     logMsg("Load average failed", 4);
   }
-  elseif($Load > 2.6){
+  elseif($Load > 2.0){
     AbortWithError("Too busy...");
   }
 }
 
+include("../../connect/connect.php");
 
 $QueueDir = "/home/ojw/tiles-ojw2/Queue/";
 list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 1);

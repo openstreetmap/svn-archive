@@ -33,7 +33,7 @@ if(1){
 include("../../connect/connect.php");
 
 $QueueDir = "/home/ojw/tiles-ojw2/Queue/";
-list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 1);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 4);
 
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 2);
 

@@ -6,44 +6,11 @@
 	  <site-url>http://www.tegmento.org/~cdaller/josm/</site-url>
   </site-info>
 
-  <!-- plugins available on this site -->
-  <plugins>
-    <plugin id="surveyor" version="1.0">
-      <name>Surveyor</name>
-      <description lang="de">Erlaubt das Hinzufügen von Markern an der aktuellen GPS Position (vom LiveGps Plugin).</description>
-      <description lang="en">Allows to add markers at the current gps postion (from livegps plugins).</description>
-      <resources>
-        <resource src="http://www.tegmento.org/~cdaller/josm/surveyor.jar"
-                  target="${josm.user.dir}/plugins/surveyor.jar"/>
-        <!--
-        <resource src="http://www.tegmento.org/~cdaller/surveyor.xml"
-                  target="${josm.user.dir}/test/plugins/surveyor/surveyor.xml"/>
-        -->
-      </resources>
-    </plugin>
-
-    <plugin id="livegps" version="1.0">
-      <name>LiveGPS</name>
-      <description lang="en">Reads position from a gps device and shows it on the map.</description>
-      <resources>
-        <resource src="http://www.tegmento.org/~cdaller/josm/livegps.jar"
-                  target="${josm.user.dir}/plugins/livegps.jar"/>
-      </resources>
-    </plugin>
-
-    <plugin id="colorscheme" version="0.5">
-      <name>Color Scheme</name>
-      <description lang="en">Allows the user to create and use multiple colorschemes.</description>
-      <resources>
-        <resource src="http://www.tegmento.org/~cdaller/josm/colorscheme.jar"
-                  target="${josm.user.dir}/plugins/colorscheme.jar"/>
-      </resources>
-    </plugin>
-
-  </plugins>
-
   <!-- include other update site locations -->
   <sites>
-    <site ref="http://www.other.update.site.org/update"/>
+    <site ref="http://www.tegmento.org/~cdaller/josm/pluginmanager/"/>
+    <site ref="http://www.tegmento.org/~cdaller/josm/surveyor/"/>
+    <site ref="http://www.tegmento.org/~cdaller/josm/livegps/"/>
+    <site ref="http://www.tegmento.org/~cdaller/josm/colorscheme/"/>
   </sites>
 </site> 

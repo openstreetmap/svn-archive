@@ -3,11 +3,12 @@
  */
 package at.dallermassl.josm.plugin.pluginmanager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.josm.plugins.PluginInformation;
+import javax.swing.JOptionPane;
+
+import org.openstreetmap.josm.Main;
 
 /**
  * @author cdaller
@@ -119,14 +120,22 @@ public class PluginDescription {
      * Copies all resources from the update site into the target directory.
      */
     public void install() {
+        boolean errorReported = false;
+        StringBuilder errorMessages = new StringBuilder();
         for(PluginResource resource : resources) {
             resource.install();
             if(resource.getErrorMessage() != null) {
+                errorReported = true;
+                errorMessages.append(resource.getErrorMessage()).append(", ");
                 System.err.println("ERROR: " + resource.getErrorMessage());
             }
             if(resource.getErrorException() != null) {
+                errorReported = true;
                 resource.getErrorException().printStackTrace();
             }
+        }
+        if(errorReported) {
+            JOptionPane.showMessageDialog(Main.parent, "One or more installs had an error: " + errorMessages.toString());            
         }
     }
     

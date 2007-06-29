@@ -71,6 +71,7 @@ public class SiteDescription {
      * @throws IOException 
      */
     public void loadFromUrl() throws IOException {
+        plugins.clear();
         URL xmlUrl = new URL(url, SITE_FILE_NAME);
         System.out.println("loading from url " + xmlUrl);
         URLConnection connection = xmlUrl.openConnection();

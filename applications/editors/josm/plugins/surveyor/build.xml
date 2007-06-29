@@ -1,13 +1,27 @@
 <project name="surveyor" default="dist" basedir=".">
 
-	<property name="josm.build.dir" value="../JOSM"/>
-	<property name="josm.home.dir" value="${user.home}/.josm"/>
-  <property name="livegpsplugin.jar" value="${josm.home.dir}/plugins/livegps.jar"/>
-	<property name="plugin.build.dir" value="bin"/>
+	 <!-- compilation properties -->
+	  <property name="josm.build.dir" value="../JOSM"/>
+	  <property name="josm.home.dir" value="${user.home}/.josm"/>
+	  <property name="plugin.build.dir" value="bin"/>
+	  <property name="plugin.name" value="${ant.project.name}"/>
+	  <property name="plugin.jar" value="${plugin.name}.jar"/>
+    <property name="livegpsplugin.jar" value="${josm.home.dir}/plugins/livegps.jar"/>
+	  
+	  <!-- plugin meta data (enter new version number if anything changed!) -->
+	  <property name="plugin.version" value="1.1"/>
+	  <property name="plugin.description" value="Allow adding markers/nodes on current gps positions (V${plugin.version})."/>
+	  <property name="plugin.stage" value="60"/>
+    <property name="plugin.class" value="at.dallermassl.josm.plugin.surveyor.SurveyorPlugin"/>
+	  
+	  <!-- update site meta data -->
+	  <property name="plugin.site.file" value="josm-site.xml"/>
+	  <property name="plugin.site.description" value="Josm's Surveyor Update Site"/>
+	  <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/surveyor/"/>
+	  <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/surveyor/"/>
+	  
 
-
-	
-	<target name="dist" depends="compile">
+	<target name="dist" depends="compile,site">
 		<!-- images -->
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="src/images" />
@@ -19,16 +33,16 @@
   		</fileset>
 		</copy>
 		
-		<!-- create josm-custom.jar -->
-		<jar destfile="${ant.project.name}.jar" basedir="${plugin.build.dir}">
-			<manifest>
-        <attribute name="Plugin-Class" value="at.dallermassl.josm.plugin.surveyor.SurveyorPlugin" />
-        <attribute name="Plugin-Description" value="Allow adding markers/nodes on current gps positions." />
-        <!--attribute name="Plugin-Dependencies" value="livegps(1.0)" /-->
-        <attribute name="Plugin-Version" value="1.1" />
-        <attribute name="Plugin-Stage" value="60" />
-			</manifest>
-		</jar>
+    <!-- create jar file -->
+    <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+      <manifest>
+        <attribute name="Plugin-Class" value="${plugin.class}" />
+        <attribute name="Plugin-Description" value="${plugin.description}" />
+        <attribute name="Plugin-Version" value="${plugin.version}" />
+        <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
+        <attribute name="Plugin-Stage" value="${plugin.stage}" />
+      </manifest>
+    </jar>
 	</target>
 
 	<target name="compile" depends="init">
@@ -44,15 +58,54 @@
 	  </javac>
 	</target>
 
-	<target name="install" depends="dist">
-		<copy file="${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
-	</target>
+  <target name="install" depends="dist">
+    <copy file="${plugin.jar}" todir="${josm.home.dir}/plugins" />
+  </target>
 
   <target name="init">
-	 </target>
+     <echo>java version: ${java.version}</echo>
+   </target>
 
-	<target name="clean">
-		<delete dir="${plugin.build.dir}" />
-	</target>
+  <target name="clean">
+    <delete dir="${plugin.build.dir}" />
+    <delete dir="${plugin.site.file}" />
+    <delete dir="${plugin.jar}" />
+  </target>
+
+  <!-- write site description for the given plugin -->
+  <target name="site">
+    <echo message="creating site description in ${plugin.site.file}"/>
+    <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
+&lt;site version="1.0">
+  &lt;!-- meta data of site -->
+  &lt;site-info>
+    &lt;site-name>${plugin.site.description}&lt;/site-name>
+    &lt;site-url>${plugin.site.url}&lt;/site-url>
+  &lt;/site-info>
+
+  &lt;!-- plugins available on this site -->
+  &lt;plugins>
+    &lt;plugin id="${ant.project.name}" version="${plugin.version}">
+      &lt;name>${ant.project.name}&lt;/name>
+      &lt;description>${plugin.description}&lt;/description>
+      &lt;resources>
+        &lt;resource src="${plugin.site.url}/${plugin.jar}"
+                  target="$${josm.user.dir}/plugins/${plugin.jar}"/>
+      &lt;/resources>
+    &lt;/plugin>
+  &lt;/plugins>
+&lt;/site>
+    </echo>
+  </target>
+
+  <!-- upload the site description and the jar file via ssh -->
+  <target name="upload" depends="dist,site">
+    <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
+    <exec executable="scp">
+      <arg value="${plugin.jar}"/>
+      <arg value="${plugin.site.file}"/>
+      <arg value="${plugin.site.upload.target}"/>
+    </exec>
+  </target>
 
 </project>

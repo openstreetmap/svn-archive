@@ -129,8 +129,10 @@ sub planet_dir() {
 # ------------------------------------------------------------------
 # mirror the newest planet.osm File to
 #  ~/osm/planet/planet.osm.7z
-# the file is Sanitized afterwards  and the resulting 
+# and the resulting 
 # Filename is returned
+#
+# the file is -----NO LONGER--- Sanitized afterwards  
 sub mirror_planet(){
     my $planet_server="http://planet.openstreetmap.org";
     my $url = "$planet_server";
@@ -179,11 +181,10 @@ sub mirror_planet(){
     
     return undef unless $current_file;
 
-    $current_file = UTF8sanitize($current_file);
-
-    if ( $DEBUG >2 || $VERBOSE>3) {
-	print STDERR "Sanitized File: $current_file\n";
-    }
+#    $current_file = UTF8sanitize($current_file);
+#    if ( $DEBUG >2 || $VERBOSE>3) {
+#	print STDERR "Sanitized File: $current_file\n";
+#    }
 
     my ($unpacked_file) = ($current_file=~ m/(.*\.osm)/);
     $current_file = $unpacked_file

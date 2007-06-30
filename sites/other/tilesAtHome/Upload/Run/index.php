@@ -31,7 +31,9 @@ if(1){
     logMsg("Load average failed", 4);
   }
   elseif($Load > 2.0){
-    AbortWithError("Too busy...");
+    logMsg("Too busy...", 2);
+    print "Too busy";
+    exit;
   }
 }
 

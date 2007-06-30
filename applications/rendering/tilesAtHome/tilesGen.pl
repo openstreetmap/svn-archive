@@ -430,7 +430,7 @@ sub GenerateTileset
     if($W1 <= -180) {
       $W1 = -180; # api apparently can handle -180
     }
-    if($E > 180) {
+    if($E1 > 180) {
       $E1 = 180;
     }
 

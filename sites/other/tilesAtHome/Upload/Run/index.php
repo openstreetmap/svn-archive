@@ -5,6 +5,11 @@
 # All error-messages etc are plain text for use by clients
 header("Content-type:text/plain");
 
+if($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]){
+  print "This page can only be run by the dev server\n";
+  exit;
+}
+
 if(0){ // Option to turn off uploads
   AbortWithError("Disabled");
 }

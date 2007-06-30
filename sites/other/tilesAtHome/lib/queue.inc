@@ -11,6 +11,11 @@ function QueueLength(){
     }
   }
   closedir($dp);
+  
+  # We counted both textfiles and zipfiles, which are parts of the
+same upload
+  $Count /= 2;
+  
   return($Count);
 }
 
@@ -19,7 +24,7 @@ function QueueDirectory(){
 }
 
 function MaxQueueLength(){
-  return(200);
+  return(100);
 }
 
 ?>

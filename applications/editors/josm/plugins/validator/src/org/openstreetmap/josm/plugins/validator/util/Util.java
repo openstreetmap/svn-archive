@@ -46,17 +46,13 @@ public class Util
     }
     
 	/** 
-	 * Returns the plugin's directory of a plugin
-	 * <p>
-	 * Utility method for classes that can't acces the plugin object
+	 * Returns the plugin's directory of the plugin
 	 * 
-	 * @param clazz The plugin class to look for
 	 * @return The directory of the plugin
 	 */
-	public static String getStaticPluginDir(Class<? extends Plugin> clazz)
+	public static String getPluginDir()
 	{
-	    Plugin plugin = getPlugin(clazz);
-	    return ( plugin != null ) ? plugin.getPluginDir() : null;
+		return Main.pref.getPreferencesDir() + "plugins/validator/";
 	}
 
 	/**
@@ -171,9 +167,10 @@ public class Util
      * 
      * @param url The URL of the remote file
      * @param destDir The destionation dir of the mirrored file
+     * @param maxTime The time interval, in seconds, to check if the file changed. If less than 0, it defaults to 1 week 
      * @return The local file
      */
-    public static File mirror(URL url, String destDir)
+    public static File mirror(URL url, String destDir, long maxTime)
     {
         if( url.getProtocol().equals("file") )
             return new File(url.toString() ) ;
@@ -186,14 +183,19 @@ public class Util
             long checkDate = Long.parseLong(st.nextToken());
             localPath = st.nextToken();
             oldFile = new File(localPath);
-            if( System.currentTimeMillis() - checkDate < 24 * 60 * 60 * 1000 )
+            maxTime = (maxTime <= 0) ? 7 * 24 * 60 * 60 * 1000 : maxTime * 1000;
+            if( System.currentTimeMillis() - checkDate < maxTime )
             {
                 if( oldFile.exists() )
                     return oldFile;
             }
         }
 
-        localPath = destDir + System.currentTimeMillis() + "-" + new File(url.getPath()).getName(); 
+        File destDirFile = new File(destDir);
+        if( !destDirFile.exists() )
+            destDirFile.mkdirs();
+
+        localPath = destDir + System.currentTimeMillis() + "-" + new File(url.getPath()).getName();
         BufferedOutputStream bos = null;
         BufferedInputStream bis = null;
         try 

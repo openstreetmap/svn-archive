@@ -141,7 +141,7 @@ public class SpellCheck extends Test
         while (st.hasMoreTokens())
         {
             String source = st.nextToken();
-            File sourceFile = Util.mirror(new URL(source), plugin.getPluginDir());
+            File sourceFile = Util.mirror(new URL(source), Util.getPluginDir(), -1);
             if( sourceFile == null || !sourceFile.exists() )
             {
                 errorSources.append(source).append("\n");

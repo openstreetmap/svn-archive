@@ -132,27 +132,19 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		Command fixCommand = null;
 		if( commands.size() == 0 )
 			return;
-		else if( commands.size() > 1 )
+		
+		List<Command> allComands = new ArrayList<Command>(50);
+		for( Entry<String, List<Command>> errorType : commands.entrySet())
 		{
-			List<Command> allComands = new ArrayList<Command>(50);
-			for( Entry<String, List<Command>> errorType : commands.entrySet())
-			{
-				String description = errorType.getKey();
-				List<Command> errorCommands = errorType.getValue();
-				allComands.add( new SequenceCommand("Fix " + description, errorCommands) );
-			}
-			
+			String description = errorType.getKey();
+			List<Command> errorCommands = errorType.getValue();
+			allComands.add( new SequenceCommand("Fix " + description, errorCommands) );
+		}
+		
+		if( allComands.size() > 1 )
 			fixCommand = new SequenceCommand("Fix errors", allComands);
-		}
 		else 
-		{
-			for( Entry<String, List<Command>> errorType : commands.entrySet())
-			{
-				String description = errorType.getKey();
-				List<Command> errorCommands = errorType.getValue();
-				fixCommand = new SequenceCommand("Fix " + description, errorCommands);
-			}
-		}
+			fixCommand = (Command)allComands.get(0);
 		
 		Main.main.editLayer().add( fixCommand );
 		Main.map.repaint();

@@ -369,7 +369,7 @@
         <ScreenOverlay>
             <name>OpenStreetMap Copyright Notice</name>
             <Icon>
-                <href>OSMGoogleEarthCopyright.png</href>
+                <href>OSMCopyright.png</href>
             </Icon>
             <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
             <screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>

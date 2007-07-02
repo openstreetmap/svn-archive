@@ -630,7 +630,7 @@ sub poi_type_id($$){
 }
 
 # ------------------------------------------------------------------
-# load the complete ixons.xml into memory
+# load the complete icons.xml into memory
 # in the end we have a hash structure where you get the poi_type_id 
 # by simply asking for 
 #     $ICON_RULES->{$k}->{$v};
@@ -923,8 +923,9 @@ sub import_Data($@){
     $icons_filename = "data/map-icons/icons.xml" unless -s $icons_filename;
     load_icons( $icons_filename );
     my $elemstyles_filename = "$ENV{HOME}/.josm/plugins/mappaint/elemstyles.xml";
-    $elemstyles_filename ="$ENV{HOME}/svn.openstreetmap.org/data/elemstyles.xml" unless -s  $elemstyles_filename;
-    $elemstyles_filename ="../data/elemstyles.xml" unless -s  $elemstyles_filename;
+    $elemstyles_filename ="$ENV{HOME}/svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/styles/standard/elemstyles.xml" unless -s  $elemstyles_filename;
+    $elemstyles_filename ="../../editors/josm/plugins/mappaint/styles/standard/elemstyles.xml" unless -s  $elemstyles_filename;
+    $elemstyles_filename ="../../etc/elemstyles.xml" unless -s  $elemstyles_filename;
     load_elemstyles($elemstyles_filename);
 
     disable_keys('streets');

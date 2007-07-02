@@ -15,18 +15,23 @@ a little help:
 <rules>
 <!-- highway tags -->
 	<rule>
-		<condition k="highway" v="footway"/>
-		<line width="1" realwidth="1" colour="#00ff00" />
+		<condition k="highway" v="motorway"/>
+		<line width="3" realwidth="8" colour="#809bc0"/>
 	</rule>
 
 	<rule>
-		<condition k="highway" v="bridleway"/>
-		<line width="1" colour="#c08000" />
+		<condition k="highway" v="motorway_link"/>
+		<line width="3" colour="#809bc0"/>
 	</rule>
 
 	<rule>
-		<condition k="highway" v="unsurfaced"/>
-		<line width="1" colour="#ff0000" />
+		<condition k="highway" v="trunk"/>
+		<line width="3" colour="#7fc97f"/>
+	</rule>
+
+	<rule>
+		<condition k="highway" v="trunk_link"/>
+		<line width="3" colour="#7fc97f"/>
 	</rule>
 
 	<rule>
@@ -45,18 +50,18 @@ a little help:
 	</rule>
 
 	<rule>
-		<condition k="highway" v="motorway"/>
-		<line width="3" realwidth="8" colour="#809bc0"/>
+		<condition k="highway" v="unclassified"/>
+		<line width="2" colour="#c0c0c0"/>
 	</rule>
 
 	<rule>
-		<condition k="highway" v="motorway_link"/>
-		<line width="3" colour="#809bc0"/>
+		<condition k="highway" v="residential"/>
+		<line width="2" realwidth="5" colour="#c0c0c0"/> 
 	</rule>
 
 	<rule>
-		<condition k="highway" v="trunk"/>
-		<line width="3" colour="#7fc97f"/>
+		<condition k="highway" v="bridleway"/>
+		<line width="1" colour="#c08000" />
 	</rule>
 
 	<rule>
@@ -65,13 +70,8 @@ a little help:
 	</rule>
 
 	<rule>
-		<condition k="highway" v="unclassified"/>
-		<line width="2" colour="#c0c0c0"/>
-	</rule>
-
-	<rule>
-		<condition k="highway" v="residential"/>
-		<line width="2" realwidth="5" colour="#c0c0c0"/> 
+		<condition k="highway" v="footway"/>
+		<line width="1" realwidth="1" colour="#00ff00" />
 	</rule>
 
 	<rule>
@@ -102,165 +102,162 @@ a little help:
 	</rule>
 
 <!-- railway tags -->
-<rule>
-<condition k="railway" v="rail"/>
-<line width="2" colour="#808080"/>
-</rule>
+	<rule>
+		<condition k="railway" v="station" />
+		<icon annotate="true" src="station.png" />
+	</rule>
 
-<rule>
-<condition k="railway" v="station" />
-<icon annotate="true" src="station.png" />
-</rule>
+	<rule>
+		<condition k="railway" v="rail"/>
+		<line width="2" colour="#808080"/>
+	</rule>
 
-<rule>
-<condition k="railway" v="level_crossing" />
-<icon annotate="true" src="crossing.png" />
-</rule>
+	<rule>
+		<condition k="railway" v="level_crossing" />
+		<icon annotate="true" src="crossing.png" />
+	</rule>
 
+<!--man_made tags -->
+	<rule>
+		<condition k="man_made" v="mast" />
+		<icon annotate="true" src="mast.png" />
+	</rule>
 
-<rule>
-<condition k="man_made" v="mast" />
-<icon annotate="true" src="mast.png" />
-</rule>
+<!--leisure tags -->
+	<rule>
+		<condition k="leisure" v="park"/>
+		<area colour="#c7f1a3"/>
+	</rule>
 
-<rule>
-<condition k="amenity" v="parking" />
-<icon annotate="true" src="carpark.png" />
-</rule>
+	<rule>
+		<condition k="leisure" v="playground"/>
+		<area colour="#c7f1a3"/>
+	</rule>
 
-<rule>
-<condition k="amenity" v="point of interest" />
-<icon annotate="true" src="interest.png" />
-</rule>
+<!--amenity tags -->
+	<rule>
+		<condition k="amenity" v="restaurant" />
+		<icon annotate="true" src="restaurant.png" />
+	</rule>
 
-<rule>
-<condition k="tourism" v="attraction" />
-<icon annotate="true" src="interest.png" />
-</rule>
+	<rule>
+		<condition k="amenity" v="pub" />
+		<icon annotate="true" src="pub.png"  />
+	</rule>
 
-<rule>
-<condition k="amenity" v="caution" />
-<icon annotate="true" src="caution.png" />
-</rule>
+	<rule>
+		<condition k="amenity" v="biergarten" />
+		<icon annotate="true" src="pub.png"  />
+	</rule>
 
-<rule>
-<condition k="amenity" v="tea shop" />
-<icon annotate="true" src="teashop.png" />
-</rule>
+	<rule>
+		<condition k="amenity" v="fast_food" />
+		<icon annotate="true" src="fast_food.png" />
+	</rule>
 
-<rule>
-<condition k="amenity" v="restaurant" />
-<icon annotate="true" src="restaurant.png" />
-</rule>
+	<rule>
+		<condition k="amenity" v="parking" />
+		<icon annotate="true" src="carpark.png" />
+	</rule>
 
-<rule>
-<condition k="class" v="campsite" />
-<icon annotate="true" src="campsite.png" />
-</rule>
+	<rule>
+		<condition k="amenity" v="place_of_worship" />
+		<icon annotate="true" src="church.png" />
+	</rule>
 
-<rule>
-<condition k="tourism" v="camp_site" />
-<icon annotate="true" src="campsite.png" />
-</rule>
+<!--shop tags -->
 
+<!--tourism tags -->
+	<rule>
+		<condition k="tourism" v="camp_site" />
+		<icon annotate="true" src="campsite.png" />
+	</rule>
 
-<rule>
-<condition k="place" v="village" />
-<icon annotate="true" src="place.png" />
-</rule>
+	<rule>
+		<condition k="tourism" v="viewpoint" />
+		<icon annotate="true" src="viewpoint.png"  />
+	</rule>
 
-<rule>
-<condition k="place" v="town" />
-<icon annotate="true" src="place.png" />
-</rule>
+<!--historic tags -->
 
-<rule>
-<condition k="place" v="city" />
-<icon annotate="true" src="place.png" />
-</rule>
+<!--landuse tags -->
+	<rule>
+		<condition k="landuse" v="farm" />
+		<icon annotate="true" src="farm.png"  />
+	</rule>
 
-<rule>
-<condition k="place" v="hamlet" />
-<icon annotate="true" src="place.png" />
-</rule>
+	<rule>
+		<condition k="landuse" v="forest"/>
+		<area colour="#b1efc8" />
+	</rule>
 
-<rule>
-<condition k="place" v="suburb" />
-<icon annotate="true" src="place.png" />
-</rule>
+	<rule>
+		<condition k="landuse" v="cemetery"/>
+		<line width="1" colour="#bde3cb"/>
+	</rule>
 
-<rule>
-<condition k="landuse" v="wood"/>
-<area colour="#b1efc8" />
-</rule>
+	<rule>
+		<condition k="landuse" v="residential"/>
+		<area colour="#f0f0f0"/>
+	</rule>
 
-<rule>
-<condition k="landuse" v="forest"/>
-<area colour="#b1efc8" />
-</rule>
+	<rule>
+		<condition k="landuse" v="industrial"/>
+		<area colour="#ecd8ff"/>
+	</rule>
 
-<rule>
-<condition k="landuse" v="cemetery"/>
-<line width="1" colour="#bde3cb"/>
-</rule>
+<!--military tags -->
+	<rule>
+		<condition k="military" v="danger_area" />
+		<area colour="#b62c2c"/>
+	</rule>
 
-<rule>
-<condition k="landuse" v="residential"/>
-<area colour="#f0f0f0"/>
-</rule>
+<!--natural tags -->
+	<rule>
+		<condition k="natural" v="heath"/>
+		<line width="1" colour="#ffffc0"/>
+	</rule>
 
-<rule>
-<condition k="landuse" v="industrial"/>
-<area colour="#ecd8ff"/>
-</rule>
+	<rule>
+		<condition k="natural" v="water"/>
+		<area colour="#0000ff"/>
+	</rule>
 
-<rule>
-<condition k="natural" v="heath"/>
-<line width="1" colour="#ffffc0"/>
-</rule>
+	<rule>
+		<condition k="natural" v="peak" />
+		<icon annotate="true" src="peak_small.png"  />
+	</rule>
 
-<rule>
-<condition k="natural" v="water"/>
-<area colour="#0000ff"/>
-</rule>
+<!--sport tags -->
+	<rule>
+		<condition k="sport" v="soccer" />
+		<area colour="#bde3cb"/>
+	</rule>
 
-<rule>
-<condition k="leisure" v="park"/>
-<area colour="#c7f1a3"/>
-</rule>
+<!--place tags -->
+	<rule>
+		<condition k="place" v="city" />
+		<icon annotate="true" src="place.png" />
+	</rule>
 
-<rule>
-<condition k="sport" v="soccer" />
-<area colour="#bde3cb"/>
-</rule>
+	<rule>
+		<condition k="place" v="town" />
+		<icon annotate="true" src="place.png" />
+	</rule>
 
-<rule>
-<condition k="military" v="danger_area" />
-	<area colour="#b62c2c"/>
-</rule>
+	<rule>
+		<condition k="place" v="village" />
+		<icon annotate="true" src="place.png" />
+	</rule>
 
-<rule>
-<condition k="natural" v="peak" />
-<icon annotate="true" src="peak_small.png"  />
-</rule>
+	<rule>
+		<condition k="place" v="hamlet" />
+		<icon annotate="true" src="place.png" />
+	</rule>
 
-<rule>
-<condition k="amenity" v="farm" />
-<icon annotate="true" src="farm.png"  />
-</rule>
+	<rule>
+		<condition k="place" v="suburb" />
+		<icon annotate="true" src="place.png" />
+	</rule>
 
-<rule>
-<condition k="amenity" v="pub" />
-<icon annotate="true" src="pub.png"  />
-</rule>
-
-<rule>
-<condition k="amenity" v="viewpoint" />
-<icon annotate="true" src="viewpoint.png"  />
-</rule>
-
-<rule>
-<condition k="amenity" v="place_of_worship" />
-<icon annotate="true" src="church.png" />
-</rule>
 </rules>

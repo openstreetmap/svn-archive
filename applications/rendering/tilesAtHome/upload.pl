@@ -397,6 +397,7 @@ sub upload
 sub UploadOkOrNot
 {
     my $LocalFilename = $Config{WorkingDirectory} . "/go-nogo.tmp";
+    statusMessage("Checking server queue", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile("http://dev.openstreetmap.org/~ojw/Upload/go_nogo.php", $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file
@@ -406,7 +407,8 @@ sub UploadOkOrNot
     ## print STDERR "\nLoad: $Load \n";
     if ($Load > 0.8) 
     {
-        statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        sleep(1);
         return 0; 
     }
     else

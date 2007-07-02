@@ -64,9 +64,11 @@ for place_config in \
 	continue
     fi
 
-    if [ `perl ../osm2csv/osm2csv.pl    --list-areas | grep $csv_area ` ]; then
+    OSM2CSV="../../utils/export/osm2csv/osm2csv.pl"
+
+    if [ `perl $OSM2CSV   --list-areas | grep $csv_area ` ]; then
 	echo "--> Update csv File for Area '$csv_area'"
-	osm2csv_cmd="perl ../osm2csv/osm2csv.pl --area=${csv_area} --update-only -v -v -v -v"
+	osm2csv_cmd="perl $OSM2CSV --area=${csv_area} --update-only -v -v -v -v"
 	echo "$osm2csv_cmd"
 	$osm2csv_cmd
     fi

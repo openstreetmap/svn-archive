@@ -16,9 +16,12 @@
     <rule e="node" k="*" v="*">
         <folder name="Points of Interest">
 
-            <folder name="Parking">
+            <folder name="Car">
                 <rule e="node" k="amenity" v="parking">
                     <point class="parking"/>
+                </rule>
+                <rule e="node" k="amenity" v="fuel">
+                    <point class="fuel"/>
                 </rule>
             </folder>
 
@@ -28,9 +31,9 @@
                 </rule>
             </folder>
 
-            <folder name="Hostels">
-                <rule e="node" k="tourism" v="hostel">
-                    <point class="tourism-hostel"/>
+            <folder name="Hotels">
+                <rule e="node" k="tourism" v="hotel">
+                    <point class="tourism-hotel"/>
                 </rule>
             </folder>
 
@@ -81,7 +84,7 @@
                 <polyline name="Primary Roads" class="highway-primary"/>
             </rule>
 
-            <rule e="segment|way" k="highway" v="tertiary|residential|unclassified|service">
+            <rule e="segment|way" k="highway" v="tertiary|residential|unclassified|service|pedestrian">
                 <polyline name="Other Roads" class="highway-unclassified"/>
             </rule>
 
@@ -114,6 +117,10 @@
             
             <rule e="segment|way" k="railway" v="rail">
                 <polyline name="Railways" class="railway-rail"/>
+            </rule>
+
+            <rule e="segment|way" k="railway" v="light_rail">
+                <polyline name="Railways" class="railway-lightrail"/>
             </rule>
 
             <rule e="segment|way" k="railway" v="tram">
@@ -227,6 +234,12 @@
                 <width>2</width>
             </LineStyle>
         </Style>
+        <Style id="railway-lightrail">
+            <LineStyle>
+                <color>ffe0e0e0</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
         <Style id="railway-tram">
             <LineStyle>
                 <color>9f000000</color>
@@ -278,25 +291,31 @@
                 <Icon>
                     <href>icons/icon-parking.png</href>
                 </Icon>
-                <scale>0.5</scale>
+                <scale>0.7</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="fuel">
+            <IconStyle id="iconstyle-fuel">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/pal2/icon21.png</href>
+                </Icon>
             </IconStyle>
         </Style>
 
         <Style id="shopping">
             <IconStyle id="iconstyle-shopping">
                 <Icon>
-                    <href>icons/icon-shopping.png</href>
+                    <href>http://maps.google.com/mapfiles/kml/pal3/icon18.png</href>
                 </Icon>
-                <scale>0.7</scale>
             </IconStyle>
         </Style>
 
-        <Style id="tourism-hostel">
-            <IconStyle id="iconstyle-hostel">
+        <Style id="tourism-hotel">
+            <IconStyle id="iconstyle-hotel">
                 <Icon>
-                    <href>icons/icon-hostel.png</href>
+                    <href>http://maps.google.com/mapfiles/kml/pal2/icon20.png</href>
                 </Icon>
-                <scale>0.5</scale>
             </IconStyle>
         </Style>
 
@@ -312,9 +331,8 @@
         <Style id="christian_church">
             <IconStyle id="iconstyle-church">
                 <Icon>
-                    <href>icons/icon-church.png</href>
+                    <href>http://maps.google.com/mapfiles/kml/pal2/icon3.png</href>
                 </Icon>
-                <scale>0.5</scale>
             </IconStyle>
         </Style>
 

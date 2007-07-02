@@ -5,7 +5,7 @@
 
 <!--
 
-Copyright (C) 2006  Jochen Topf <jochen@remote.org>
+Copyright (C) 2006, 2007  Jochen Topf <jochen@topf.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,13 +25,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
+    <xsl:param name="osmfile" select="/rules/@data"/>
+
 	<xsl:key name='nodeById' match='/osm/node' use='@id'/>
 	<xsl:key name='segmentById' match='/osm/segment' use='@id'/>
 	<xsl:key name='segmentByFromNode' match='/osm/segment' use='@from'/>
 	<xsl:key name='segmentByToNode' match='/osm/segment' use='@to'/>
 	<xsl:key name='wayBySegment' match='/osm/way' use='seg/@id'/>
 	
-	<xsl:variable name='data' select='document(/rules/@data)'/>
+	<xsl:variable name='data' select='document($osmfile)'/>
 	<xsl:variable name='defs' select='/rules/defs'/>
 	<xsl:variable name='overlays' select='/rules/overlays'/>
 

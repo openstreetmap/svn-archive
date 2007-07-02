@@ -61,6 +61,10 @@ sub data_open($){
     } elsif ( $filename =~ m/\.bz2$/ ) {
 	$fh = IO::File->new("bzip2 -dc $filename|")
 	    or die("cannot open $filename: $!");
+    } elsif ( $filename =~ m/\.7z$/ ) {
+	printf STDERR "Opening $filename with 7z\n" if $DEBUG;
+	$fh = IO::File->new("7z e  -so $filename |")
+	    or die("cannot open $filename: $!");
     } else {
 	$fh = IO::File->new("$filename",'r')
 	    or die("cannot open $filename: $!");

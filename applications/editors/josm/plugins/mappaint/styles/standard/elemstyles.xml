@@ -160,6 +160,13 @@ a little help:
 	</rule>
 
     <rule>
+        <condition k="waterway" v="stream"/>
+        <line width="1" colour="#6600cc" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
         <condition k="waterway" v="drain"/>
         <line width="1" colour="#0000ff"/>
         <scale_min>1</scale_min>
@@ -184,6 +191,8 @@ a little help:
 	<rule>
 		<condition k="railway" v="level_crossing" />
 		<icon annotate="true" src="crossing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
@@ -216,6 +225,27 @@ a little help:
     
 <!--aeroway tags -->
 
+    <rule>
+        <condition k="aeroway" v="runway"/>
+        <line width="3" colour="#330000" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="aeroway" v="taxiway"/>
+        <line width="2" colour="#660000" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="aeroway" v="apron"/>
+        <area colour="#D8D8D8" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
 <!--aerialway tags -->
 
 <!--power tags -->
@@ -224,6 +254,8 @@ a little help:
 	<rule>
 		<condition k="man_made" v="mast" />
 		<icon annotate="true" src="mast.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
 <!--leisure tags -->
@@ -265,7 +297,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="fast_food" />
-		<icon annotate="true" src="fast_food.png" />
+		<icon annotate="true" src="restaurant.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -314,8 +346,31 @@ a little help:
 	<rule>
 		<condition k="landuse" v="farm" />
 		<icon annotate="true" src="farm.png"  />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
+    <rule>
+        <condition k="landuse" v="quarry"/>
+        <area colour="#cccccc" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="landuse" v="landfill"/>
+        <area colour="#663300" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+
+	<rule>
+		<condition k="landuse" v="bassin"/>
+		<area colour="#0000bf" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+	
 	<rule>
 		<condition k="landuse" v="forest"/>
 		<area colour="#b1efc8" />
@@ -326,28 +381,36 @@ a little help:
 	<rule>
 		<condition k="landuse" v="cemetery"/>
 		<line width="1" colour="#bde3cb"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="landuse" v="residential"/>
 		<area colour="#f0f0f0"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="landuse" v="industrial"/>
 		<area colour="#ecd8ff"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
 <!--military tags -->
 	<rule>
 		<condition k="military" v="danger_area" />
 		<area colour="#b62c2c"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
 	</rule>
 
 <!--natural tags -->
     <rule>
         <condition k="natural" v="peak"/>
-        <icon annotate="true" src="peak_small.png"
+        <icon annotate="true" src="peak_small.png"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -360,6 +423,13 @@ a little help:
     </rule>
 
 	<rule>
+        <condition k="natural" v="scrub" />
+        <area colour="#007000" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
 		<condition k="natural" v="heath"/>
         <area colour="#ffffc0"/>
         <scale_min>1</scale_min>
@@ -367,6 +437,13 @@ a little help:
 	</rule>
 
 	<rule>
+        <condition k="natural" v="wood"/>
+        <area colour="#008000" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
 		<condition k="natural" v="water"/>
 		<area colour="#0000ff"/>
         <scale_min>1</scale_min>
@@ -385,6 +462,13 @@ a little help:
 <!--boundary tags -->
 
 <!--sport tags -->
+	<rule>
+        <condition k="landuse" v="football"/>
+        <area colour="#99ff99" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+
 	<rule>
 		<condition k="sport" v="soccer" />
 		<area colour="#bde3cb"/>

@@ -1,12 +1,25 @@
 <project name="pluginmanager" default="dist" basedir=".">
 
+	<!-- compilation properties -->
 	<property name="josm.build.dir" value="../JOSM"/>
 	<property name="josm.home.dir" value="${user.home}/.josm"/>
 	<property name="plugin.build.dir" value="bin"/>
-
-
+  <property name="plugin.name" value="${ant.project.name}"/>
+	<property name="plugin.jar" value="${plugin.name}.jar"/>
 	
-	<target name="dist" depends="compile">
+	<!-- plugin meta data (enter new version number if anything changed!) -->
+	<property name="plugin.version" value="0.3.0"/>
+	<property name="plugin.description" value="Manage plugins and provide update mechanism (V${plugin.version})."/>
+  <property name="plugin.class" value="at.dallermassl.josm.plugin.pluginmanager.PluginManagerPlugin"/>
+
+	<!-- update site meta data -->
+	<property name="plugin.site.file" value="josm-site.xml"/>
+	<property name="plugin.site.description" value="Josm's PluginManager Update Site"/>
+  <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/pluginmanager/"/>
+  <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/pluginmanager/"/>
+	
+
+	<target name="dist" depends="compile, site">
 		<!-- images -->
 		<!-- 
 		<copy todir="${plugin.build.dir}/images">
@@ -20,12 +33,12 @@
   		</fileset>
 		</copy>
 		
-		<!-- create josm-custom.jar -->
-		<jar destfile="${ant.project.name}.jar" basedir="${plugin.build.dir}">
+		<!-- create jar file -->
+		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
 			<manifest>
-        <attribute name="Plugin-Class" value="at.dallermassl.josm.plugin.pluginmanager.PluginManagerPlugin" />
-        <attribute name="Plugin-Description" value="Manage plugins and provide update mechanism." />
-        <attribute name="Plugin-Version" value="0.1" />
+        <attribute name="Plugin-Class" value="${plugin.class}" />
+        <attribute name="Plugin-Description" value="${plugin.description}" />
+        <attribute name="Plugin-Version" value="${plugin.version}" />
         <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
 			</manifest>
 		</jar>
@@ -44,7 +57,7 @@
 	</target>
 
 	<target name="install" depends="dist">
-		<copy file="${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
+		<copy file="${plugin.jar}" todir="${josm.home.dir}/plugins" />
 	</target>
 
   <target name="init">
@@ -53,6 +66,44 @@
 
 	<target name="clean">
 		<delete dir="${plugin.build.dir}" />
+    <delete dir="${plugin.site.file}" />
+    <delete dir="${plugin.jar}" />
+	</target>
+
+	<!-- write site description for the given plugin -->
+  <target name="site">
+  	<echo message="creating site description in ${plugin.site.file}"/>
+  	<echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
+&lt;site version="1.0">
+  &lt;!-- meta data of site -->
+  &lt;site-info>
+    &lt;site-name>${plugin.site.description}&lt;/site-name>
+    &lt;site-url>${plugin.site.url}&lt;/site-url>
+  &lt;/site-info>
+
+  &lt;!-- plugins available on this site -->
+  &lt;plugins>
+    &lt;plugin id="${ant.project.name}" version="${plugin.version}">
+      &lt;name>${ant.project.name}&lt;/name>
+      &lt;description>${plugin.description}&lt;/description>
+      &lt;resources>
+        &lt;resource src="${plugin.site.url}/${plugin.jar}"
+                  target="$${josm.user.dir}/plugins/${plugin.jar}"/>
+      &lt;/resources>
+    &lt;/plugin>
+  &lt;/plugins>
+&lt;/site>
+  	</echo>
+  </target>
+
+	<!-- upload the site description and the jar file via ssh -->
+	<target name="upload" depends="dist,site">
+		<echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
+		<exec executable="scp">
+			<arg value="${plugin.jar}"/>
+      <arg value="${plugin.site.file}"/>
+			<arg value="${plugin.site.upload.target}"/>
+		</exec>
 	</target>
 
 </project>

@@ -1133,7 +1133,7 @@ sub splitImageX
     # Check for black tile output
     if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
     {
-      print STDERR "ERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
+      print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
       exit(3);
     }
 

@@ -359,7 +359,9 @@ sub upload
     my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
     my $URL = $Config{"UploadURL2"};
     
-    if (UploadOkOrNot()) 
+    my $UploadToken = UploadOkOrNot();
+    
+    if ($UploadToken) 
     {
         statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         my $res = $ua->post($URL,
@@ -367,7 +369,8 @@ sub upload
           Content => [ file => [$File], 
           mp => $Password,
           version => $Config{ClientVersion},
-          single_tileset => $SingleTileset ]);
+          single_tileset => $SingleTileset,
+          token => $UploadToken ]);
       
         if(!$res->is_success())
         {
@@ -401,10 +404,13 @@ sub UploadOkOrNot
     DownloadFile("http://dev.openstreetmap.org/~ojw/Upload/go_nogo.php", $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file
+    my $Token = <$fp>; ##read another line from file
     chomp $Load;
+    chomp $Token;
     close $fp;
     $Load=1-$Load;
     ## print STDERR "\nLoad: $Load \n";
+    $Token=1 if (! $Token);
     if ($Load > 0.8) 
     {
         statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -413,6 +419,7 @@ sub UploadOkOrNot
     }
     else
     {
-        return 1;
+        print STDERR "\n $Token\n";
+        return $Token;
     }
 }

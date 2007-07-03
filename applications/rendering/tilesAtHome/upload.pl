@@ -419,7 +419,7 @@ sub UploadOkOrNot
     }
     else
     {
-        print STDERR "\n $Token\n";
+        #DEBUG: print STDERR "\n $Token\n";
         return $Token;
     }
 }

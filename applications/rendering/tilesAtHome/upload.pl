@@ -411,8 +411,8 @@ sub UploadOkOrNot
     close $fp;
     killafile($LocalFilename);
     $Load=1-$Load;
-    ## print STDERR "\nLoad: $Load \n";
-    $Token=1 if (! $Token);
+    ##DEBUG print STDERR "\nLoad: $Load \n";
+    # $Token=1 if (! $Token);
     if ($Load > 0.8) 
     {
         statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);

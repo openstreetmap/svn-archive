@@ -309,6 +309,7 @@ sub compressAndUpload
     # Run the two commands
     if (runCommand($Command1,$PID)) 
     {
+        killafile($stdOut);
         while(my $File = shift @zippedFiles)
         {
             killafile ($Dir . "/" . $File);
@@ -321,7 +322,7 @@ sub compressAndUpload
             rename($Dir . "/" . $File, $Config{WorkingDirectory} . $File);
         }
     }
-
+    
     return upload($Filename);
 }
 

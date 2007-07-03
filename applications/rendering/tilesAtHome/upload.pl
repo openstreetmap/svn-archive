@@ -292,7 +292,7 @@ sub compressAndUpload
   
     # ZIP all the tiles into a single file
     my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
-    my $Command1 = sprintf("%s -r %s %s > %s",
+    my $Command1 = sprintf("%s -r -j %s %s > %s",
       "zip",
       $Filename,
       "$Dir",

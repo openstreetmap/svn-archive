@@ -15,6 +15,7 @@ include("../lib/requests.inc");
 include("../lib/checkupload.inc");
 include("../lib/cpu.inc");
 include("../lib/queue.inc");
+include("../lib/tokens.inc");
 
 # Option to turn-off non-single-tileset uploads (was only used for testing)
 if(0){
@@ -63,6 +64,18 @@ if($UserID < 1){
 # Check whether version number is acceptable
 if($VersionID < 0){
   AbortWithError(401, "Client version not recognised or too old");
+}
+
+# Option to check upload tokens
+if(1){
+  list($Token1, $Token2) = GetTokens(-1, "testing");
+  $Token = $_POST["token"];
+  if($Token == $Token1 || $Token == $Token2){
+    logMsg("Valid token from user $UserID", 5);
+  }
+  else{
+    //logMsg("Invalid token from user $UserID", 5);
+  }
 }
 
 

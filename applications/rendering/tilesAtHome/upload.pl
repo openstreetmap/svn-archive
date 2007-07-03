@@ -408,6 +408,7 @@ sub UploadOkOrNot
     chomp $Load;
     chomp $Token;
     close $fp;
+    killafile($LocalFilename);
     $Load=1-$Load;
     ## print STDERR "\nLoad: $Load \n";
     $Token=1 if (! $Token);

@@ -399,9 +399,9 @@ sub upload
 
 sub UploadOkOrNot
 {
-    my $LocalFilename = $Config{WorkingDirectory} . "/go-nogo.tmp";
+    my $LocalFilename = $Config{WorkingDirectory} . "/go-nogo-".$PID.".tmp";
     statusMessage("Checking server queue", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile("http://dev.openstreetmap.org/~ojw/Upload/go_nogo.php", $LocalFilename, 1);
+    DownloadFile($Config{GoNogoURL}, $LocalFilename, 1);
     open(my $fp, "<", $LocalFilename) || return;
     my $Load = <$fp>; ##read first line from file
     my $Token = <$fp>; ##read another line from file

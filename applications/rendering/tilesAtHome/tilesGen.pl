@@ -1125,8 +1125,8 @@ sub splitImageX
    
     # Temporary filename
     my $Filename2 = "$Filename.cut";
-    my $NotEmptyLand = 0;
-    my $NotEmptySea = 0;
+    my $EmptyLand = 0;
+    my $EmptySea = 0;
     my $Basename = $Filename;   # used for statusMessage()
     $Basename =~ s|.*/||;
 
@@ -1138,9 +1138,19 @@ sub splitImageX
     }
 
     # Detect empty tile here:
-    if ($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE) {$NotEmptyLand = 1};  # true if images are different. (i.e. non-empty Land tile)
-    if ($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE) {$NotEmptySea = 1};    # true if images are different. (i.e. non-empty Sea tile)
-    if (($NotEmptyLand) and ($NotEmptySea)) # If both is true, then generate a tile, otherwise copy the prerendered tile
+     
+    $EmptyLand = not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE); # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn't look like an empty land tile
+    $EmptySea = not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE); # same for Sea tiles
+    if ($EmptyLand)
+    {
+        copy("emptyland.png", $Filename)
+    }
+    elsif ($EmptySea)
+    {
+	copy("emptysea.png",$Filename);
+#	$allempty = 0; # TODO: enable this line if/when serverside empty tile methods is implemented. Used to make sure we generate all blank seatiles in a tileset.
+    }
+    else
     {
       # If at least one tile is not empty set $allempty false:
       $allempty = 0;
@@ -1178,19 +1188,6 @@ sub splitImageX
           statusMessage("Pngcrushing $Basename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
           rename($Filename2, $Filename);
         }
-    }
-    else
-    {
-      if (!$NotEmptyLand) {
-        copy("emptyland.png", $Filename)
-	}
-	else
-	{
-	if (!$NotEmptySea) {
-	copy("emptysea.png",$Filename);
-#	$allempty = 0; # enable this line if/when serverside empty tile methods is implemented. Used to make sure we generate all blank seatiles in a tileset.
-	};
-	}
     }
     # Assign the job time to this file
     utime $JobTime, $JobTime, $Filename;

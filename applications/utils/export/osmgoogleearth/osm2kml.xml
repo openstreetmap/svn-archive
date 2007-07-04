@@ -100,7 +100,7 @@
                 <polyline name="Cycleways" class="highway-cycleway"/>
             </rule>
 
-            <rule e="segment|way" k="highway" v="under_construction">
+            <rule e="segment|way" k="highway" v="construction">
                 <rule e="segment|way" k="construction" v="motorway">
                     <polyline name="future Motorways" class="highway-construction-motorway"/>
                 </rule>

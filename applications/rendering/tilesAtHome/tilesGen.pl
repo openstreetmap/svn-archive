@@ -1089,108 +1089,108 @@ sub mergeOsmFiles()
 #-----------------------------------------------------------------------------
 sub splitImageX 
 {
-  my ($File, $layer, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
+    my ($File, $layer, $ZOrig, $X, $Y, $Z, $Ytile) = @_;
   
-  # Size of tiles
-  my $Pixels = 256;
+    # Size of tiles
+    my $Pixels = 256;
   
-  # Number of tiles
-  my $Size = 2 ** ($Z - $ZOrig);
+    # Number of tiles
+    my $Size = 2 ** ($Z - $ZOrig);
 
-  # Assume the tileset is empty by default
-  my $allempty=1;
+    # Assume the tileset is empty by default
+    my $allempty=1;
   
-  # Load the tileset image
-  statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
-  my $Image = newFromPng GD::Image($File);
+    # Load the tileset image
+    statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
+    my $Image = newFromPng GD::Image($File);
   
-  # Use one subimage for everything, and keep copying data into it
-  my $SubImage = new GD::Image($Pixels,$Pixels);
+    # Use one subimage for everything, and keep copying data into it
+    my $SubImage = new GD::Image($Pixels,$Pixels);
   
-  # For each subimage
-  for(my $xi = 0; $xi < $Size; $xi++){
-  
-    # Get a tiles'worth of data from the main image
-    $SubImage->copy($Image,
-      0,                   # Dest X offset
-      0,                   # Dest Y offset
-      $xi * $Pixels,       # Source X offset
-      0,                   # Source Y offset # always 0 because we only cut from one row
-      $Pixels,             # Copy width
-      $Pixels);            # Copy height
+    # For each subimage
+    for(my $xi = 0; $xi < $Size; $xi++)
+    {
+        # Get a tiles'worth of data from the main image
+        $SubImage->copy($Image,
+          0,                   # Dest X offset
+          0,                   # Dest Y offset
+          $xi * $Pixels,       # Source X offset
+          0,                   # Source Y offset # always 0 because we only cut from one row
+          $Pixels,             # Copy width
+          $Pixels);            # Copy height
 
-    # Decide what the tile should be called
-    my $Filename = tileFilename($layer, $X * $Size + $xi, $Ytile, $Z);
-    MagicMkdir($Filename) if ($Config{"LocalSlippymap"});
+        # Decide what the tile should be called
+        my $Filename = tileFilename($layer, $X * $Size + $xi, $Ytile, $Z);
+        MagicMkdir($Filename) if ($Config{"LocalSlippymap"});
    
-    # Temporary filename
-    my $Filename2 = "$Filename.cut";
-    #my $EmptyLand = 0;
-    #my $EmptySea = 0;
-    my $Basename = $Filename;   # used for statusMessage()
-    $Basename =~ s|.*/||;
+        # Temporary filename
+        my $Filename2 = "$Filename.cut";
+        #my $EmptyLand = 0;
+        #my $EmptySea = 0;
+        my $Basename = $Filename;   # used for statusMessage()
+        $Basename =~ s|.*/||;
 
-    # Check for black tile output
-    if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
-    {
-      print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-      exit(3);
-    }
-    # Detect empty tile here:
-    elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
-    {
-        copy("emptyland.png", $Filename);
-    }
-    elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
-    {
-	copy("emptysea.png",$Filename);
-#	$allempty = 0; # TODO: enable this line if/when serverside empty tile methods is implemented. Used to make sure we generate all blank seatiles in a tileset.
-    }
-    else
-    {
-      # If at least one tile is not empty set $allempty false:
-      $allempty = 0;
-
-      if ($Config{"Layer.$layer.Transparent"}) 
-      {
-        $SubImage->transparent($SubImage->colorAllocate(248,248,248));
-      } 
-      else 
-      {
-        $SubImage->transparent(-1);
-      }
-
-      # convert Tile to paletted file This *will* break stuff if different libGD versions are used
-      # $SubImage->trueColorToPalette($dither,$numcolors);
-
-      # Store the tile
-      statusMessage(" -> $Basename", $Config{Verbose}, 0) if ($Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-      WriteImage($SubImage,$Filename2);
-#-----------------------------------------------------------------------------
-# Run pngcrush on each split tile, then delete the temporary cut file
-#-----------------------------------------------------------------------------
-        my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
-        $Config{Niceness},
-        $Filename2,
-        $Filename);
-
-        statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        if(runCommand($Cmd,$PID))
+        # Check for black tile output
+        if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
-          unlink($Filename2);
+            print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
+            exit(3);
+        }
+        # Detect empty tile here:
+        elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
+        {
+            copy("emptyland.png", $Filename);
+        }
+        elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
+        {
+            copy("emptysea.png",$Filename);
+#            $allempty = 0; # TODO: enable this line if/when serverside empty tile methods is implemented. Used to make sure we                                     generate all blank seatiles in a tileset.
         }
         else
         {
-          statusMessage("Pngcrushing $Basename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
-          rename($Filename2, $Filename);
+            # If at least one tile is not empty set $allempty false:
+            $allempty = 0;
+    
+            if ($Config{"Layer.$layer.Transparent"}) 
+            {
+                $SubImage->transparent($SubImage->colorAllocate(248,248,248));
+            } 
+            else 
+            {
+                $SubImage->transparent(-1);
+            }
+
+            # convert Tile to paletted file This *will* break stuff if different libGD versions are used
+            # $SubImage->trueColorToPalette($dither,$numcolors);
+
+            # Store the tile
+            statusMessage(" -> $Basename", $Config{Verbose}, 0) if ($Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            WriteImage($SubImage,$Filename2);
+#-----------------------------------------------------------------------------
+# Run pngcrush on each split tile, then delete the temporary cut file
+#-----------------------------------------------------------------------------
+            my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
+              $Config{Niceness},
+              $Filename2,
+              $Filename);
+
+            statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            if(runCommand($Cmd,$PID))
+            {
+                unlink($Filename2);
+            }
+            else
+            {
+                statusMessage("Pngcrushing $Basename failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+                rename($Filename2, $Filename);
+            }
         }
+        # Assign the job time to this file
+        utime $JobTime, $JobTime, $Filename;
     }
-    # Assign the job time to this file
-    utime $JobTime, $JobTime, $Filename;
-  }
-  undef $SubImage;
-  # tell the rendering queue wether the tiles are empty or not
-  return $allempty;
+    undef $SubImage;
+    # tell the rendering queue wether the tiles are empty or not
+    return $allempty;
 }
 
 #-----------------------------------------------------------------------------

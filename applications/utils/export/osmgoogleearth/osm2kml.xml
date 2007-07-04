@@ -185,6 +185,35 @@
      
     </rule>
 
+    <rule e="node|segment|way" k="power" v="*">
+
+        <folder name="Power">
+
+            <rule e="segment|way" k="power" v="line">
+                <polyline name="Power lines" class="power-line"/>
+            </rule>
+
+            <folder name="Power towers">
+
+                <rule e="node" k="power" v="tower">
+                    <point class="power-tower"/>
+                </rule>
+    
+            </folder>
+
+            <folder name="Power stations">
+
+                <rule e="node" k="power" v="station">
+                    <point class="power-station"/>
+                </rule>
+
+            </folder>
+
+        </folder>
+
+    </rule>
+
+
     <defs>
         <Style id="highway-motorway">
             <LineStyle>
@@ -360,6 +389,31 @@
                 <color>ffff0000</color>
                 <width>1</width>
             </LineStyle> 
+        </Style>
+
+        <Style id="power-line">
+            <LineStyle>
+                <color>7f000000</color>
+                <width>1</width>
+            </LineStyle>
+        </Style>
+
+        <Style id="power-tower">
+            <IconStyle id="iconstyle-power">
+                <Icon>
+                    <href>icons/power-tower.png</href>
+                </Icon>
+                <scale>0.25</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="power-station">
+            <IconStyle id="iconstyle-power-building">
+                <Icon>
+                    <href>icons/power-station.png</href>
+                </Icon>
+                <scale>0.7</scale>
+            </IconStyle>
         </Style>
 
 

@@ -1125,8 +1125,8 @@ sub splitImageX
    
     # Temporary filename
     my $Filename2 = "$Filename.cut";
-    my $EmptyLand = 0;
-    my $EmptySea = 0;
+    #my $EmptyLand = 0;
+    #my $EmptySea = 0;
     my $Basename = $Filename;   # used for statusMessage()
     $Basename =~ s|.*/||;
 
@@ -1136,16 +1136,12 @@ sub splitImageX
       print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
       exit(3);
     }
-
     # Detect empty tile here:
-     
-    $EmptyLand = not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE); # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn't look like an empty land tile
-    $EmptySea = not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE); # same for Sea tiles
-    if ($EmptyLand)
+    elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile
     {
-        copy("emptyland.png", $Filename)
+        copy("emptyland.png", $Filename);
     }
-    elsif ($EmptySea)
+    elsif (not($SubImage->compare($EmptySeaImage) & GD_CMP_IMAGE)) # same for Sea tiles
     {
 	copy("emptysea.png",$Filename);
 #	$allempty = 0; # TODO: enable this line if/when serverside empty tile methods is implemented. Used to make sure we generate all blank seatiles in a tileset.

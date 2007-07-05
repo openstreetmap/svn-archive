@@ -14,7 +14,7 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  timeout(REQUEST_ACTIVE, 6, "restart");
+  // timeout(REQUEST_ACTIVE, 6, "restart");
   timeout(REQUEST_DONE, 2 * 24, "delete");
 
   #---------------------------------------------------------------------------

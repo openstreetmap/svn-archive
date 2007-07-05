@@ -108,6 +108,7 @@ sub processOldZips
     @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
     my $zipCount = scalar(@sorted);
     statusMessage(scalar(@sorted)." zip files to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    my $Reason = "queue full";
     while(my $File = shift @sorted)
     {
         if($File =~ /\.zip$/i)
@@ -123,10 +124,12 @@ sub processOldZips
                 if ($FailureMode > 10)
                 {
                     $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($FailureMode/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
+                    $Reason = "queue full";
                 }
                 elsif ($FailureMode == 1) ## success
                 {
                     $sleepdelay = 0.75 * $sleepdelay; # reduce sleepdelay by 25%
+                    $Reason = "uploaded ".$File;
                 }
                 $sleepdelay = int($sleepdelay) + 1; 
                 if ($sleepdelay > 600)  ## needs adjusting based on real-world experience, if this check is true the above load adapting failed and the server is too overloaded to reasonably process the queue relative to the rendering speed
@@ -134,7 +137,7 @@ sub processOldZips
                    $sleepdelay = 600; ## FIXME: since the checking of the queue is much less costly than trying to upload, need to further adapt the max delay.
                 }
 
-                statusMessage("queue full, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                statusMessage($Reason.", sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 sleep ($sleepdelay);
             }
 

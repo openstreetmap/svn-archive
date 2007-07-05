@@ -174,15 +174,19 @@ else
     my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
     closedir($dp);
     
-    foreach (@tilesets) {       # not split into chunks
-      my $set = "$TileDir/$_";
-      $set =~ s|\.dir$||;
-      if (rename "$set.dir", "$set.upload") {
-        compressAndUpload("$set.upload", $ZipDir, 'yes');
-        rmdir "$set.upload";    # should be empty now
-      } else {
-        print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
-      }
+    foreach (@tilesets)        # not split into chunks
+    {
+        my $set = "$TileDir/$_";
+        $set =~ s|\.dir$||;
+        if (rename "$set.dir", "$set.upload") 
+        {
+            compressAndUpload("$set.upload", $ZipDir, 'yes');
+            rmdir "$set.upload";    # should be empty now
+        } 
+        else 
+        {
+            print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
+        }
     }
 
     if (open(FAILFILE, ">", $failFile))
@@ -210,7 +214,6 @@ else
       $TileDir . "/gather", 
       $ZipDir, $allowedPrefixes)) {};
     
-
 } #done main/else.
 
 #-----------------------------------------------------------------------------
@@ -230,7 +233,7 @@ sub uploadTileBatch
 
     mkdir $TempDir if ! -d $TempDir;
     mkdir $OutputDir if ! -d $OutputDir;
-  
+
     $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
     statusMessage(scalar(@tiles)." tiles to process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 
@@ -242,11 +245,11 @@ sub uploadTileBatch
         {
             $Size += -s $Filename1;
             $Count++;
-      
+
             rename($Filename1, $Filename2);
         }
     }
-  
+
     if($Count)
     {
         statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -283,7 +286,7 @@ sub compressAndUpload
         my $hostname = `hostname`."XXX";
         $Filename = sprintf("%s/%s_%d_%d%s.zip", $OutputDir,
           substr($hostname,0,3), $$, $ZipFileCount++, $SingleTileset);
-    } 
+    }
     else 
     {
         $Filename = sprintf("%s/%d_%d_%d%s.zip", $OutputDir,

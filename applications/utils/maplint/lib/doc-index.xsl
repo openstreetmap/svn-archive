@@ -17,6 +17,14 @@
             <body>
                 <h1>Maplint tests</h1>
 
+                <p>This is a list of tests known to the Maplint program.
+                Maplint checks
+                <a href="http://www.openstreetmap.org/">OpenStreetMap</a>
+                data for inconsistencies and other problems.
+                See the
+                <a href="http://wiki.openstreetmap.org/index.php/Maplint">Maplint
+                wiki page</a> for more information.</p>
+
                 <xsl:apply-templates select="maplint:tests"/>
             </body>
         </html>

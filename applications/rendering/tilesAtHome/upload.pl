@@ -54,19 +54,18 @@ my $currentSubTask;
 my $lastmsglen;
 
 ### TODO: implement locking, this is one of the things that make upload not multithread-safe.
-my $sleepdelay = 0;
-my $failures;
+my $sleepdelay;
 my $failFile = $Config{WorkingDirectory} . "/failurecount.txt";
 if (open(FAILFILE, "<", $failFile))
 {
-    $failures = <FAILFILE>;
-    chomp $failures;
+    $sleepdelay = <FAILFILE>;
+    chomp $sleepdelay;
     close FAILFILE;
 }
 elsif (open(FAILFILE, ">", $failFile))
 {
-    $failures = 0;
-    print FAILFILE $failures;
+    $sleepdelay = 0; 
+    print FAILFILE $sleepdelay;
     close FAILFILE;
 }
 
@@ -78,14 +77,6 @@ if(opendir(ZIPDIR, $ZipDir))
     processOldZips(1);
 }
 
-## update the failFile with current failure count
-
-if (open(FAILFILE, ">", $failFile))
-{
-    print FAILFILE $failures;
-    close FAILFILE;
-}
-
 # We might have created lots of single tiles if some tileset zips were larger than 2 MB, so re-check here
 
 compress(2); ## second (and last) run.
@@ -95,6 +86,14 @@ compress(2); ## second (and last) run.
 if(opendir(ZIPDIR, $ZipDir))
 {
     processOldZips(2);
+}
+
+## update the failFile with current failure count from processOldZips
+
+if (open(FAILFILE, ">", $failFile))
+{
+    print FAILFILE $sleepdelay;
+    close FAILFILE;
 }
 
 ## end main
@@ -113,34 +112,37 @@ sub processOldZips
     {
         if($File =~ /\.zip$/i)
         {
-            if (upload("$ZipDir/$File")) 
+            my $FailureMode = 0; # 0 ->hard failure (i.e. Err503 on upload), 
+                                 # 1 ->no failure,
+                                 # 10..1000 ->soft failure (with load% * 10)
+            while ($FailureMode != 1) # while not upload success or complete failure
             {
-                $failures=0;
+                $FailureMode = upload("$ZipDir/$File");
+
+
+                if ($FailureMode > 10)
+                {
+                    $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($FailureMode/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
+                }
+                elsif ($FailureMode == 1) ## success
+                {
+                    $sleepdelay = 0.75 * $sleepdelay; # reduce sleepdelay by 25%
+                }
+                $sleepdelay = int($sleepdelay) + 1; 
+                if ($sleepdelay > 600)  ## needs adjusting based on real-world experience, if this check is true the above load adapting failed and the server is too overloaded to reasonably process the queue relative to the rendering speed
+                {
+                   $sleepdelay = 600; ## FIXME: since the checking of the queue is much less costly than trying to upload, need to further adapt the max delay.
+                }
+
+                statusMessage("queue full, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                sleep ($sleepdelay);
             }
-            else
-            {
-                $failures++;
-            }
+
         }
         $progress++;
         $progressPercent = $progress * 100 / $zipCount;
         statusMessage(scalar(@sorted)." zip files left to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         
-## sleep for exponentially increasing amount of time for each consecutive failure to a max of 20 minutes (1200 seconds)
-## FIXME: discern between "soft" and "hard" failures ("soft" failure being a not started upload because of full queue and "hard" being an actual failed upload
-## CHANGEME: since the checking of the queue is much less costly than trying to upload, need to further adapt (reduce) the max delay.
-        if ($failures)
-        {
-            $sleepdelay=1.5 ** $failures;
-            $sleepdelay += rand($sleepdelay/4);
-            $sleepdelay = int($sleepdelay);
-            if ($sleepdelay > 1200)
-            {
-               $sleepdelay = 1200;
-            }
-            statusMessage($failures . " consecutive upload failures, sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-            sleep ($sleepdelay);
-        }
     }
 }
 
@@ -178,7 +180,7 @@ sub upload
     my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
     my $URL = $Config{"UploadURL2"};
     
-    my $UploadToken = UploadOkOrNot();
+    my ($UploadToken,$Load) = UploadOkOrNot();
     
     if ($UploadToken) 
     {
@@ -196,7 +198,7 @@ sub upload
             print STDERR "ERROR\n";
             print STDERR "  Error uploading $File to $URL:\n";
             print STDERR "  ".$res->status_line."\n";
-            return 0;
+            return 0; # hard fail
         } 
     
         if($Config{DeleteZipFilesAfterUpload})
@@ -210,7 +212,7 @@ sub upload
     }
     else
     {
-        return 0;
+        return $Load; #soft fail
     }
     
     return 1;
@@ -253,6 +255,6 @@ sub UploadOkOrNot
     else
     {
         #DEBUG: print STDERR "\n $Token\n";
-        return $Token;
+        return ($Token,$Load*1000);
     }
 }

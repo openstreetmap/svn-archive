@@ -38,14 +38,14 @@ table.test th {
     font-weight: normal;
     font-size: small;
     padding: 4px 10px 4px 10px;
-    border-right: 1ps solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
 }
 
 table.test td {
     padding: 4px 10px 4px 10px;
     font-size: large;
     font-weight: bold;
-    border-right: 1ps solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
 }
 
 table.description {

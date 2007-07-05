@@ -859,113 +859,123 @@ sub frollo {
 #-----------------------------------------------------------------------------
 # Transform an OSM file (using osmarender) into SVG
 #-----------------------------------------------------------------------------
-sub xml2svg {
-  my($MapFeatures, $SVG, $what) = @_;
-  my $TSVG = "$SVG";
-  if (!$Config{NoBezier}) {
-    $TSVG = "$SVG-temp.svg";
+sub xml2svg 
+{
+    my($MapFeatures, $SVG, $what) = @_;
+    my $TSVG = "$SVG";
+    if (!$Config{NoBezier}) 
+    {
+        $TSVG = "$SVG-temp.svg";
     }
-  my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-    $Config{Niceness},
-    $Config{XmlStarlet},
-    "osmarender.xsl",
-    "$MapFeatures",
-    $TSVG);
+    my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+      $Config{Niceness},
+      $Config{XmlStarlet},
+      "osmarender.xsl",
+      "$MapFeatures",
+      $TSVG);
+
     statusMessage("Transforming $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID);
-    if ($Config{NoBezier}) {
-    statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    if ($Config{NoBezier}) 
+    {
+        statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
 #-----------------------------------------------------------------------------
-  if (!$Config{NoBezier}) {
-  my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
-    $Config{Niceness},
-    $TSVG,
-    $SVG);
-    statusMessage("Beziercurvehinting $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    runCommand($Cmd,$PID);
+    if (!$Config{NoBezier}) 
+    {
+        my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
+          $Config{Niceness},
+          $TSVG,
+          $SVG);
+        statusMessage("Beziercurvehinting $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand($Cmd,$PID);
 #-----------------------------------------------------------------------------        
 # Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
 #-----------------------------------------------------------------------------
-  my $filesize= -s $SVG;
-  if (!$filesize) {
-    copy($TSVG,$SVG);
-    statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        my $filesize= -s $SVG;
+        if (!$filesize) 
+        {
+            copy($TSVG,$SVG);
+            statusMessage("Error on Bezier Curve hinting, rendering without bezier curves", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        }
+        killafile($TSVG);
     }
-    killafile($TSVG);
-  }
 }
 
 #-----------------------------------------------------------------------------
 # Render a SVG file
 #-----------------------------------------------------------------------------
-sub svg2png {
-  my($Zoom, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
-
-  my $TempFile = $Config{WorkingDirectory}."/$PID.png_part";
+sub svg2png 
+{
+    my($Zoom, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
+    
+    my $TempFile = $Config{WorkingDirectory}."/$PID.png_part";
+    
+    my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
   
-  my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
+    my $Cmd = sprintf("%s%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
+      $Config{i18n} ? "LANG=C " : "",
+      $Config{Niceness},
+      $Config{Inkscape},
+      $SizeX,
+      $SizeY,
+      $X1,$Y1,$X2,$Y2,
+      $TempFile,
+      $Config{WorkingDirectory},
+      "output-$PID-z$Zoom.svg",
+      $stdOut);
+    
+    # stop rendering the current job when inkscape fails
+    statusMessage("Rendering", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    if (not runCommand($Cmd,$PID))
+    {
+        statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        return 0 if ($Mode eq "loop");
+        exit(1);
+    }
 
-  my $Cmd = sprintf("%s%s \"%s\" -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
-    $Config{i18n} ? "LANG=C " : "",
-    $Config{Niceness},
-    $Config{Inkscape},
-    $SizeX,
-    $SizeY,
-    $X1,$Y1,$X2,$Y2,
-    $TempFile,
-    $Config{WorkingDirectory},
-    "output-$PID-z$Zoom.svg",
-    $stdOut);
-  
-  # stop rendering the current job when inkscape fails
-  statusMessage("Rendering", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-  if (not runCommand($Cmd,$PID)){
-    statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
-    return 0 if ($Mode eq "loop");
-    exit(1);
-  }
-
-  killafile($stdOut);
-
-  my $ReturnValue = splitImageX($TempFile, $layer, 12, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
-
-  killafile($TempFile);
-
-  return $ReturnValue; #return true if empty
-
+    killafile($stdOut);
+    
+    my $ReturnValue = splitImageX($TempFile, $layer, 12, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
+    
+    killafile($TempFile);
+    
+    return $ReturnValue; #return true if empty
 }
-sub writeToFile {
-  open(my $fp, ">", shift()) || return;
-  print $fp shift();
-  close $fp;
+
+sub writeToFile 
+{
+    open(my $fp, ">", shift()) || return;
+    print $fp shift();
+    close $fp;
 }
 
 #-----------------------------------------------------------------------------
 # Add bounding-box information to an osm-map-features file
 #-----------------------------------------------------------------------------
-sub AddBounds {
-  my ($Filename,$W,$S,$E,$N,$Size) = @_;
-  
-  # Read the old file
-  open(my $fpIn, "<", "$Filename");
-  my $Data = join("",<$fpIn>);
-  close $fpIn;
-  die("no such $Filename") if(! -f $Filename);
-  
-  # Change some stuff
-  my $BoundsInfo = sprintf(
-    "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
-    $S, $W, $N, $E);
-  
-  $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n$2/s;
-
-  # Save back to the same location
-  open(my $fpOut, ">$Filename");
-  print $fpOut $Data;
-  close $fpOut;
+sub AddBounds 
+{
+    my ($Filename,$W,$S,$E,$N,$Size) = @_;
+    
+    # Read the old file
+    open(my $fpIn, "<", "$Filename");
+    my $Data = join("",<$fpIn>);
+    close $fpIn;
+    die("no such $Filename") if(! -f $Filename);
+    
+    # Change some stuff
+    my $BoundsInfo = sprintf(
+      "<bounds minlat=\"%f\" minlon=\"%f\" maxlat=\"%f\" maxlon=\"%f\" />",
+      $S, $W, $N, $E);
+    
+    $Data =~ s/(<!--bounds_mkr1-->).*(<!--bounds_mkr2-->)/$1\n<!-- Inserted by tilesGen -->\n$BoundsInfo\n$2/s;
+    
+    # Save back to the same location
+    open(my $fpOut, ">$Filename");
+    print $fpOut $Data;
+    close $fpOut;
 }
 
 #-----------------------------------------------------------------------------
@@ -992,17 +1002,20 @@ sub SetDataSource
 #-----------------------------------------------------------------------------
 # Get the width and height (in SVG units, must be pixels) of an SVG file
 #-----------------------------------------------------------------------------
-sub getSize($){
-  my $SVG = shift();
-  open(my $fpSvg,"<",$SVG);
-  while(my $Line = <$fpSvg>){
-    if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/){
-      close $fpSvg;
-      return(($1,$2,1));
+sub getSize($)
+{
+    my $SVG = shift();
+    open(my $fpSvg,"<",$SVG);
+    while(my $Line = <$fpSvg>)
+    {
+        if($Line =~ /height=\"(.*)px\" width=\"(.*)px\"/)
+        {
+            close $fpSvg;
+            return(($1,$2,1));
+        }
     }
-  }
-  close $fpSvg;
-  return((0,0,0));
+    close $fpSvg;
+    return((0,0,0));
 }
 
 #-----------------------------------------------------------------------------
@@ -1196,17 +1209,18 @@ sub splitImageX
 #-----------------------------------------------------------------------------
 # Write a GD image to disk
 #-----------------------------------------------------------------------------
-sub WriteImage {
-  my ($Image, $Filename) = @_;
-  
-  # Get the image as PNG data
-  my $png_data = $Image->png;
-  
-  # Store it
-  open (my $fp, ">$Filename") || die;
-  binmode $fp;
-  print $fp $png_data;
-  close $fp;
+sub WriteImage 
+{
+    my ($Image, $Filename) = @_;
+    
+    # Get the image as PNG data
+    my $png_data = $Image->png;
+    
+    # Store it
+    open (my $fp, ">$Filename") || die;
+    binmode $fp;
+    print $fp $png_data;
+    close $fp;
 }
 
 #-----------------------------------------------------------------------------

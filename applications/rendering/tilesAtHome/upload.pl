@@ -133,7 +133,7 @@ sub processOldZips
                 }
                 elsif ($FailureMode == 0) ## hard fail
                 {
-                    break;
+                    last;
                 }
                 $sleepdelay = int($sleepdelay) + 1; 
                 if ($sleepdelay > 600)  ## needs adjusting based on real-world experience, if this check is true the above load adapting failed and the server is too overloaded to reasonably process the queue relative to the rendering speed

@@ -113,13 +113,13 @@ sub processOldZips
     {
         if($File =~ /\.zip$/i)
         {
+            
             my $FailureMode = 0; # 0 ->hard failure (i.e. Err503 on upload), 
                                  # 1 ->no failure,
                                  # 10..1000 ->soft failure (with load% * 10)
             while ($FailureMode != 1) # while not upload success or complete failure
             {
                 $FailureMode = upload("$ZipDir/$File");
-
 
                 if ($FailureMode > 10)
                 {
@@ -134,7 +134,7 @@ sub processOldZips
                 $sleepdelay = int($sleepdelay) + 1; 
                 if ($sleepdelay > 600)  ## needs adjusting based on real-world experience, if this check is true the above load adapting failed and the server is too overloaded to reasonably process the queue relative to the rendering speed
                 {
-                   $sleepdelay = 600; ## FIXME: since the checking of the queue is much less costly than trying to upload, need to further adapt the max delay.
+                    $sleepdelay = 600; ## FIXME: since the checking of the queue is much less costly than trying to upload, need to further adapt the max delay.
                 }
 
                 statusMessage($Reason.", sleeping for " . $sleepdelay . " seconds", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -253,7 +253,7 @@ sub UploadOkOrNot
     {
         statusMessage("Not uploading, server queue full", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         sleep(1);
-        return 0; 
+        return (0,$Load*1000);
     }
     else
     {

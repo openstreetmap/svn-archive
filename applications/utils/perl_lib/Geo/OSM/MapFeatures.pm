@@ -85,7 +85,8 @@ sub load_icons($$){
 	for my $path ( qw( ../../freemap/images
 			   ../../map-icons/square.small
 			   ../../map-icons/square.big
-			   ../../map-icons/classic
+			   ../../map-icons/classic.big
+			   ../../map-icons/classic.small
 			   ../../map-icons/nick
 			   ../../map-icons/classic/other
 			   ) ) {

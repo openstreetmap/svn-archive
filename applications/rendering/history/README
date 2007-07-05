@@ -1,0 +1,77 @@
+The scripts in this directory together form the "history service"
+as operated on http://openstreetmap.gryph.de/history/.
+
+All are written by Frederik Ramm <frederik@remote.org> and released
+into the Public Domain.
+
+The scripts are not really designed to be operated by others and
+thus some things are not well documented and some assumptions are
+hard-coded but I'll give a quick overview:
+
+* You need a MySQL database holding your data. The bulk of data
+  will reside in the "nodes" table, basically having the lat/lon
+  of every node plus information about the planet file where the
+  node first appeared and where it was last seen (in case it has
+  been deleted). Another table simply lists the planet files that
+  have been imported, and one keeps track of user requests (jobs).
+  The create table statement for the job table is at the end of 
+  this readme.
+
+  That databases is assumed to be named "osmhistory" and accessible
+  without password.
+
+  The program uses integer values for dates (2007-10-05 becoming
+  71005) and for lat/lon values (multiplying them by 10,000).
+
+* The "import.pl" script takes a planet file on stdin and updates
+  the "nodes" and "planet" tables. It creates these if they do not
+  exist. It updates existing "node" records (extending their life
+  time so to speak) or inserts new records. It is important that
+  planet files are imported in a strict chronological order.
+  Give the date for the planet file on the command line, e.g. 
+  71005 if you're importing planet-071005.osm.
+
+* The "index.cgi" script displays existing jobs and accepts new
+  jobs into the queue. It is really just a simple CGI, working with
+  the "jobs" table exclusively.
+
+* The "hqrun.pl" script is the queue runner. It reads jobs from the
+  queue and creates the animated gif images. It requires the Proj
+  and GD modules, plus the external application "gifsicle" for 
+  creating the animations. hqrun.pl makes some assumptions about
+  the image destination paths; adjust these.
+
+
+                      -----------------------
+
+
+
+CREATE TABLE `jobs` (
+  `id` int(11) NOT NULL auto_increment,
+  `minlat` float default NULL,
+  `maxlat` float default NULL,
+  `minlon` float default NULL,
+  `maxlon` float default NULL,
+  `projection` int(11) default NULL,
+  `width` int(11) default NULL,
+  `height` int(11) default NULL,
+  `status` enum('waiting','processing','failed','finished') default NULL,
+  `errmsg` varchar(255) default NULL,
+  `filename` varchar(255) default NULL,
+  `filesize` int(11) default NULL,
+  `num_frames` int(11) default NULL,
+  `label` varchar(255) default NULL,
+  `user` varchar(255) default NULL,
+  `fromdate` int(11) default NULL,
+  `todate` int(11) default NULL,
+  `frequency` int(11) default NULL,
+  `bgimage` int(11) default NULL,
+  `color` int(11) default NULL,
+  `pixel` int(11) default NULL,
+  `delay` int(11) default NULL,
+  `date_entered` int(11) default NULL,
+  `date_started` int(11) default NULL,
+  `date_finished` int(11) default NULL,
+  `max_nodes` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+)

@@ -128,22 +128,6 @@ while(1)
     }
 }
 
-my $t=<<'EOF';
-my $inp = {
-    "projection" => 2,
-    "minlat" => 48.925,
-    "minlon" => 8.32,
-    "maxlat" => 49.05,
-    "maxlon" => 8.47,
-    "width" => 600,
-    "color" => 0,
-    "bgimage" => 2, 
-    "height" => undef,
-    "delay" => 100,
-    "filedates" => [ 60818, 70307, 70620 ]
-};
-EOF
-
 sub doit
 {
     my $input = shift;
@@ -370,7 +354,8 @@ EOF
         push(@tmpfiles, $tmp);
     }
 
-    system "gifsicle --colors 256 --delay ".$input->{"delay"}." -O2 ".join(" ", @tmpfiles)." > $outfile";
+    my $loop = ($input->{"loopflag"}) ? "--loopcount" : "";
+    system "gifsicle --colors 256 $loop --delay ".$input->{"delay"}." -O2 ".join(" ", @tmpfiles)." > $outfile";
     foreach my $tmp (@tmpfiles) { unlink $tmp; }
     $output->{"filename"} = $outfile;
 

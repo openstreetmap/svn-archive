@@ -7,7 +7,7 @@ use strict;
 
 
 my $cgi = CGI->new();
-my $values = 'label,user,minlat,minlon,maxlat,maxlon,projection,bgimage,width,height,pixel,color,fromdate,todate,frequency,delay';
+my $values = 'label,user,minlat,minlon,maxlat,maxlon,projection,bgimage,width,height,pixel,color,fromdate,todate,frequency,delay,loopflag';
 
 
 print <<EOF;
@@ -204,6 +204,13 @@ print $cgi->popup_menu(
     200 => "2 seconds per frame", 500 => "5 seconds per frame" }
 );
 
+print $cgi->checkbox(
+    "loopflag",
+    0,
+    "1",
+    "loop"
+);
+
 print <<EOF;
 </td></tr>
 
@@ -279,7 +286,7 @@ else
 
 print <<EOF;
 <hr>
-<em>Scripts written in Perl by Frederik Ramm &lt;frederik\@remote.org&gt;, Public Domain, source available on request.<br>
+<em>Scripts written in Perl by Frederik Ramm &lt;frederik\@remote.org&gt;, Public Domain, source available in OSM SVN (applications/rendering/history).<br>
 All images use OpenStreetMap data which is licensed under <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA 2.0</a>.</em>
 </body></html>
 EOF

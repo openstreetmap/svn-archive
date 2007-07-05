@@ -17,7 +17,7 @@ hard-coded but I'll give a quick overview:
   The create table statement for the job table is at the end of 
   this readme.
 
-  That databases is assumed to be named "osmhistory" and accessible
+  That database is assumed to be named "osmhistory" and accessible
   without password.
 
   The program uses integer values for dates (2007-10-05 becoming
@@ -69,6 +69,7 @@ CREATE TABLE `jobs` (
   `color` int(11) default NULL,
   `pixel` int(11) default NULL,
   `delay` int(11) default NULL,
+  `loopflag` int(11) default NULL,
   `date_entered` int(11) default NULL,
   `date_started` int(11) default NULL,
   `date_finished` int(11) default NULL,

@@ -158,15 +158,15 @@ elsif ($Mode eq "loop")
     
     if (shift() eq "reexec")
     {
-	my $idleSeconds; my $idleFor;
+        my $idleSeconds; my $idleFor;
         while(my $evalstr = shift())
         {
             die unless $evalstr =~ /^[A-Za-z]+=\d+/;
             eval('$'.$evalstr);
-	    #print "$evalstr\n";
+            #print "$evalstr\n";
         }
-	setIdle($idleSeconds, 1);
-	setIdle($idleFor, 0);
+        setIdle($idleSeconds, 1);
+        setIdle($idleFor, 0);
     }
 
     # this is the actual processing loop
@@ -480,7 +480,7 @@ sub GenerateTileset
             killafile($file);
         }
     }
-  
+    
     # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
     $JobTime = [stat $DataFile]->[9];
     
@@ -680,7 +680,7 @@ sub RenderTile
     my ($layer, $X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
 
     return if($Zoom > $Config{"Layer.$layer.MaxZoom"});
-		
+    
     # no need to render subtiles if empty
     return if($empty == 1);
 
@@ -741,53 +741,57 @@ sub RenderTile
 
     RenderTile($layer, $X, $Y, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
     RenderTile($layer, $X, $Y, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
-	
-		return $empty;
+
+    return $empty;
 }
 
 #-----------------------------------------------------------------------------
 # Project latitude in degrees to Y coordinates in mercator projection
 #-----------------------------------------------------------------------------
-sub ProjectF {
-  my $Lat = DegToRad(shift());
-  my $Y = log(tan($Lat) + sec($Lat));
-  return($Y);
+sub ProjectF 
+{
+    my $Lat = DegToRad(shift());
+    my $Y = log(tan($Lat) + sec($Lat));
+    return($Y);
 }
 #-----------------------------------------------------------------------------
 # Project Y to latitude bounds
 #-----------------------------------------------------------------------------
-sub Project {
-  my ($Y, $Zoom) = @_;
-  
-  my $Unit = 1 / (2 ** $Zoom);
-  my $relY1 = $Y * $Unit;
-  my $relY2 = $relY1 + $Unit;
-  
-  $relY1 = $LimitY - $RangeY * $relY1;
-  $relY2 = $LimitY - $RangeY * $relY2;
+sub Project 
+{
+    my ($Y, $Zoom) = @_;
     
-  my $Lat1 = ProjectMercToLat($relY1);
-  my $Lat2 = ProjectMercToLat($relY2);
-  return(($Lat1, $Lat2));  
+    my $Unit = 1 / (2 ** $Zoom);
+    my $relY1 = $Y * $Unit;
+    my $relY2 = $relY1 + $Unit;
+    
+    $relY1 = $LimitY - $RangeY * $relY1;
+    $relY2 = $LimitY - $RangeY * $relY2;
+    
+    my $Lat1 = ProjectMercToLat($relY1);
+    my $Lat2 = ProjectMercToLat($relY2);
+    return(($Lat1, $Lat2));  
 }
 
 #-----------------------------------------------------------------------------
 # Convert Y units in mercator projection to latitudes in degrees
 #-----------------------------------------------------------------------------
-sub ProjectMercToLat($){
-  my $MercY = shift();
-  return(RadToDeg(atan(sinh($MercY))));
+sub ProjectMercToLat($)
+{
+    my $MercY = shift();
+    return(RadToDeg(atan(sinh($MercY))));
 }
 
 #-----------------------------------------------------------------------------
 # Project X to longitude bounds
 #-----------------------------------------------------------------------------
-sub ProjectL {
-  my ($X, $Zoom) = @_;
-  
-  my $Unit = 360 / (2 ** $Zoom);
-  my $Long1 = -180 + $X * $Unit;
-  return(($Long1, $Long1 + $Unit));  
+sub ProjectL 
+{
+    my ($X, $Zoom) = @_;
+    
+    my $Unit = 360 / (2 ** $Zoom);
+    my $Long1 = -180 + $X * $Unit;
+    return(($Long1, $Long1 + $Unit));  
 }
 
 #-----------------------------------------------------------------------------
@@ -799,61 +803,66 @@ sub RadToDeg($){return 180 * shift() / pi;}
 #-----------------------------------------------------------------------------
 # Gets latest copy of osmarender from repository
 #-----------------------------------------------------------------------------
-sub UpdateOsmarender {
-  foreach my $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png")){
-  
-    statusMessage("Downloading: Osmarender ($File)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile(
-    "http://almien.co.uk/OSM/Places/Download/$File", # TODO: should be config option. TODO: should be SVN. TODO: should be called
-    $File,
-    1);
-  }
+sub UpdateOsmarender 
+{
+    foreach my $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png"))
+    {
+        statusMessage("Downloading: Osmarender ($File)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        DownloadFile(
+          "http://almien.co.uk/OSM/Places/Download/$File", 
+          $File,
+          1);
+    }
+    # TODO: should be config option. 
+    # TODO: should be SVN. 
+    # TODO: should be called at all
+    # TODO: should update other aspects of the client as well
 }
 
 
 #-----------------------------------------------------------------------------
 # Pre-process on OSM file (using frollo)
 #-----------------------------------------------------------------------------
-sub frollo {
-  my($dataFile, $outputFile) = @_;
-  my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-    $Config{Niceness},
-    $Config{XmlStarlet},
-    "frollo1.xsl",
-    "$dataFile",
-    "temp-$PID.osm"); 
-  statusMessage("Frolloizing (part I) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-  if(runCommand($Cmd,$PID))
-  {
+sub frollo 
+{
+    my($dataFile, $outputFile) = @_;
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},
       $Config{XmlStarlet},
-      "frollo2.xsl",
-      "temp-$PID.osm",
-      "$outputFile");
-    statusMessage("Frolloizing (part II) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+      "frollo1.xsl",
+      "$dataFile",
+      "temp-$PID.osm"); 
+    statusMessage("Frolloizing (part I) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     if(runCommand($Cmd,$PID))
     {
-      statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-      killafile("temp-$PID.osm");
+        my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
+          $Config{Niceness},
+          $Config{XmlStarlet},
+          "frollo2.xsl",
+          "temp-$PID.osm",
+          "$outputFile");
+        statusMessage("Frolloizing (part II) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        if(runCommand($Cmd,$PID))
+        {
+            statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            killafile("temp-$PID.osm");
+        }
+        else 
+        {
+            statusMessage("Frollotation failure (part II)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            killafile("temp-$PID.osm");
+            killafile($outputFile);
+            return 0;
+        }
     } 
     else 
     {
-      statusMessage("Frollotation failure (part II)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-      killafile("temp-$PID.osm");
-      killafile($outputFile);
-      return 0;
+        statusMessage("Failure of Frollotron (part I)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        killafile("temp-$PID.osm");
+        return 0;
     }
-  } 
-  else 
-  {
-    statusMessage("Failure of Frollotron (part I)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    killafile("temp-$PID.osm");
-    return 0;
-  }
-
-  ## worst case is it doesn't do anything so always return success
-  return 1;
+    
+    return 1;
 }
 
 #-----------------------------------------------------------------------------

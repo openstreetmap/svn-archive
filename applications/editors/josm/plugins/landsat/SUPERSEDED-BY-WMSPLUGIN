@@ -1,7 +1,0 @@
-The landsat plugin is not developed any further. It has been superseded by
-the WMSplugin which can access landsat and other WMS sources.
-
-The WMSplugin is slightly different in usage; it does not show an extra
-download checkbox in the download dialog, but instead has a new menu ("WMS")
-from which you can select a download source. The download is always done 
-for the currently visible bounding box.

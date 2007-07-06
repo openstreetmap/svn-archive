@@ -1,7 +1,7 @@
 <project name="lang" default="install-all" basedir=".">
 
-	<property name="josm" value="../../../../editors/josm" />
-	<property name="plugins" value="../.."/>
+	<property name="josm" value="../../core" />
+	<property name="plugins" value=".."/>
 
 	<target name="install-all" depends="josm-build,keys.pot">
 		<ant target="install"><property name="language" value="de"/></ant>

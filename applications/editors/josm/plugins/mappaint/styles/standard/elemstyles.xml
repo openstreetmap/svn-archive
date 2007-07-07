@@ -133,9 +133,38 @@ a little help:
         <scale_max>10000</scale_max>
 	</rule>
 
+	<!-- mini_roundabout tag -->
+	<!-- stop tag -->
+	<!-- traffic signals tag -->
+	<!-- crossing tag -->
+	<!-- gate tag -->
+	<!-- stile tag -->
+	<!-- cattle_grid tag -->
+	<!-- toll_booth tag -->
+	<!-- incline tag -->
+	<!-- incline_steep tag -->
+	<!-- viaduct tag -->
+	<!-- motorway_junction tag -->
+	<!-- services tag -->
+	<!-- ford tag -->
+	<!-- bus_stop tag -->
+	<!-- junction/roundabout tag -->
+
 <!-- cycleway tags -->
 
+	<!-- lane tag -->
+	<!-- track tag -->
+	<!-- opposite_lane tag -->
+	<!-- opposite_track tag -->
+	<!-- opposite tag -->
+
 <!-- tracktype tags -->
+
+	<!-- grade1 tag -->
+	<!-- grade2 tag -->
+	<!-- grade3 tag -->
+	<!-- grade4 tag -->
+	<!-- grade5 tag -->
 
 <!--waterway tags -->
 	<rule>
@@ -226,6 +255,20 @@ a little help:
 <!--aeroway tags -->
 
     <rule>
+        <condition k="aeroway" v="aerodrome"/>
+		<icon annotate="true" src="airport.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="aeroway" v="airport"/>
+		<icon annotate="true" src="airport.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
         <condition k="aeroway" v="runway"/>
         <line width="3" colour="#330000" />
         <scale_min>1</scale_min>
@@ -276,7 +319,7 @@ a little help:
 <!--amenity tags -->
 	<rule>
 		<condition k="amenity" v="restaurant" />
-		<icon annotate="true" src="restaurant.png" />
+		<icon annotate="true" src="food.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -297,7 +340,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="fast_food" />
-		<icon annotate="true" src="restaurant.png" />
+		<icon annotate="true" src="fastfood.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -309,9 +352,202 @@ a little help:
         <scale_max>50000</scale_max>
 	</rule>
 
+<!-- enabling parking areas will hide single parking nodes COMPLETELY.
+     unless this is fixed in mappaint, disable the area for now!
+	<rule>
+		<condition k="amenity" v="parking" />
+		<icon annotate="true" src="carpark.png" />
+		<area colour="#f7efb7"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+-->
+
+	<rule>
+		<condition k="amenity" v="bicycle_parking" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="fuel" />
+		<icon annotate="true" src="fuel.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="telephone" />
+		<icon annotate="true" src="telephone.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="toilets" />
+		<icon annotate="true" src="toilets.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="recycling" />
+		<icon annotate="true" src="recycling.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="public_building" />
+		<icon annotate="true" src="public.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
 	<rule>
 		<condition k="amenity" v="place_of_worship" />
 		<icon annotate="true" src="church.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="grave_yard" />
+		<icon annotate="true" src="grave.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="post_office" />
+		<icon annotate="true" src="post_office.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="post_box" />
+		<icon annotate="true" src="post_box.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="school" />
+		<icon annotate="true" src="school.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="university" />
+		<icon annotate="true" src="university.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="college" />
+		<icon annotate="true" src="college.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="supermarket" />
+		<icon annotate="true" src="shopping.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="pharmacy" />
+		<icon annotate="true" src="pharmacy.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="hospital" />
+		<icon annotate="true" src="hospital.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="library" />
+		<icon annotate="true" src="library.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="police" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="fire_station" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="bus_station" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="theatre" />
+		<icon annotate="true" src="theatre.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="cinema" />
+		<icon annotate="true" src="cinema.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="arts_centre" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="courthouse" />
+		<icon annotate="true" src="courthouse.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="prison" />
+		<icon annotate="true" src="prison.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="bank" />
+		<icon annotate="true" src="money.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="amenity" v="atm" />
+		<icon annotate="true" src="money.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -320,6 +556,13 @@ a little help:
 
 <!--tourism tags -->
 	<rule>
+		<condition k="tourism" v="information" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
 		<condition k="tourism" v="camp_site" />
 		<icon annotate="true" src="campsite.png" />
         <scale_min>1</scale_min>
@@ -327,8 +570,57 @@ a little help:
 	</rule>
 
 	<rule>
+		<condition k="tourism" v="caravan_site" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="picnic_site" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
 		<condition k="tourism" v="viewpoint" />
-		<icon annotate="true" src="viewpoint.png"  />
+		<icon annotate="true" src="viewpoint.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="theme_park" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="hotel" />
+		<icon annotate="true" src="hotel.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="motel" />
+		<icon annotate="true" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="guest_house" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="hostel" />
+		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -341,6 +633,47 @@ a little help:
     </rule>
 
 <!--historic tags -->
+	<rule>
+		<condition k="historic" v="castle" />
+		<icon annotate="true" src="castle.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="monument" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="museum" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="archeological_site" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="icon" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="tourism" v="ruins" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
 
 <!--landuse tags -->
 	<rule>

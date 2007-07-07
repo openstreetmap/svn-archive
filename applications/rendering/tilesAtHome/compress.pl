@@ -234,7 +234,7 @@ sub compress
         $Filename = sprintf("%s/%d_%d_%d%s.zip", $OutputDir,
           $epochtime, $$, $ZipFileCount++, $SingleTileset);
     }
-  
+    
     # ZIP all the tiles into a single file
     my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
     my $Command1 = sprintf("%s -r -j %s %s > %s",
@@ -242,15 +242,14 @@ sub compress
       $Filename,
       "$Dir",
       $stdOut);
-    # ZIP filename is currently our process ID - change this if one process
-    # becomes capable of generating multiple zip files
-  
+    # ZIP filename is currently our process ID plus a counter
+    
     ## FIXME: this is one of the things that make upload.pl not multithread safe
     # Delete files in the gather directory
     opendir (GATHERDIR, $Dir);
     my @zippedFiles = grep { /.png$/ } readdir(GATHERDIR);
     closedir (GATHERDIR);
-  
+    
     # Run the two commands
     if (runCommand($Command1,$PID)) 
     {
@@ -268,5 +267,22 @@ sub compress
         }
     }
     
+    my $ZipSize += -s $Filename; ## Add the 2 MB check here.
+    if($ZipSize > 2000000) 
+    {
+        statusMessage("zip is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
+
+        if($Config{DeleteZipFilesAfterUpload})
+        {
+            unlink($File);
+        }
+        else
+        {
+            rename($File, $File."_oversized"); 
+        }
+
+    }
+
     return 1;
 }

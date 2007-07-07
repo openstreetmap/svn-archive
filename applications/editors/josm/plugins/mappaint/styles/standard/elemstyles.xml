@@ -345,10 +345,115 @@ a little help:
 
 <!--power tags -->
 
+	<rule>
+		<condition k="power" v="tower" />
+		<icon annotate="true" src="power_tower.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="power" v="line" />
+        <line width="1" colour="#eeeeee" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
 <!--man_made tags -->
 	<rule>
-		<condition k="man_made" v="mast" />
-		<icon annotate="true" src="mast.png" />
+		<condition k="man_made" v="works" />
+		<icon annotate="true" src="works.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="beacon" />
+		<icon annotate="true" src="beacon.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="survey_point" />
+		<icon annotate="true" src="survey_point.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="power_wind" />
+		<icon annotate="true" src="power_wind.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="power_hydro" />
+		<icon annotate="true" src="power_hydro.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="power_fossil" />
+		<icon annotate="true" src="power_fossil.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="power_nuclear" />
+		<icon annotate="true" src="power_nuclear.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="tower" />
+		<icon annotate="true" src="tower.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="water_tower" />
+		<icon annotate="true" src="water_tower.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="gasometer" />
+		<icon annotate="true" src="gasometer.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="reservoir_covered" />
+		<icon annotate="true" src="reservoir_covered.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="lighthouse" />
+		<icon annotate="true" src="lighthouse.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="windmill" />
+		<icon annotate="true" src="windmill.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="man_made" v="pier" />
+        <line width="2" colour="#660000" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

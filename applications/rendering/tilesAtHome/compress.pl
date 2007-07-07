@@ -270,16 +270,16 @@ sub compress
     my $ZipSize += -s $Filename; ## Add the 2 MB check here.
     if($ZipSize > 2000000) 
     {
-        statusMessage("zip is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
+        statusMessage($Filename." is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        runCommand("unzip -qj $Filename -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})
         {
-            unlink($File);
+            unlink($Filename);
         }
         else
         {
-            rename($File, $File."_oversized"); 
+            rename($Filename, $Filename."_oversized"); 
         }
 
     }

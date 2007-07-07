@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 8.6.2007 (traps unsuccessful uploads)
+	# last update 7.7.2007 (buggy merge fixed)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -398,16 +398,16 @@
 						_root.map.ways[wayselected].attr[i]=z[i];
 					}
 				}
-				_root.map.ways[this.way].remove();
-				removeMovieClip(_root.map.anchorhints);
+				_root.drawpoint=-1;
 				_root.map.ways[wayselected].clean=0;
 				_root.map.ways[wayselected].redraw();
-				_root.map.ways[wayselected].select();
+				_root.map.ways[wayselected].upload();
+				_root.map.ways[this.way].remove();
 				clearTooltip();
 				setTypeText("Way",wayselected);
 				populatePropertyWindow('way');
 				_root.map.feedback.clear();
-				_root.drawpoint=-1;
+				_root.map.ways[wayselected].select();	// removes anchorhints, so must be must be last
 			}
 		} else { addEndPoint(_root.map._xmouse,_root.map._ymouse,this.node); }
 	};

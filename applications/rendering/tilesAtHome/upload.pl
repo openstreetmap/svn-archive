@@ -121,7 +121,7 @@ sub processOldZips
             {
                 $FailureMode = upload("$ZipDir/$File");
 
-                if ($FailureMode > 10)
+                if ($FailureMode >= 10)
                 {
                     $sleepdelay = 1.25 * $sleepdelay * (1.25 * ($FailureMode/1000)); ## 1.25 * 0.8 = 1 -> try to keep the queue at 80% full, if more increase sleepdelay by 25% plus the amount the queue is too full.
                     $Reason = "queue full";

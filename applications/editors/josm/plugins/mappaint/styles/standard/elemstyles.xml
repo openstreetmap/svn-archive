@@ -460,6 +460,76 @@ a little help:
 
 <!--leisure tags -->
 	<rule>
+		<condition k="leisure" v="sports_centre" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="golf_course" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="stadium" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="marina" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="track" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="pitch" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="water_park" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="slipway" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="fishing" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="nature_reserve" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
 		<condition k="leisure" v="park"/>
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
@@ -469,6 +539,20 @@ a little help:
 	<rule>
 		<condition k="leisure" v="playground"/>
 		<area colour="#c7f1a3"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="garden" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="leisure" v="common" />
+		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -719,14 +803,14 @@ a little help:
 <!--shop tags -->
 
 	<rule>
-		<condition k="tourism" v="bakers" />
+		<condition k="shop" v="bakers" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
-		<condition k="tourism" v="butchers" />
+		<condition k="shop" v="butchers" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -798,7 +882,7 @@ a little help:
 
 	<rule>
 		<condition k="tourism" v="hostel" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="hostel.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -819,35 +903,35 @@ a little help:
 	</rule>
 
 	<rule>
-		<condition k="tourism" v="monument" />
+		<condition k="historic" v="monument" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
-		<condition k="tourism" v="museum" />
+		<condition k="historic" v="museum" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
-		<condition k="tourism" v="archeological_site" />
+		<condition k="historic" v="archeological_site" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
-		<condition k="tourism" v="icon" />
+		<condition k="historic" v="icon" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
-		<condition k="tourism" v="ruins" />
+		<condition k="historic" v="ruins" />
 		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>

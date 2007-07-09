@@ -501,7 +501,7 @@ sub display(){
   my $self = shift();
   $self->update();
   
-  printf( "Job %s(%d,%d,%d): %03.1f%% done, %1.1f min (%d,%d,%d = %1.1f KB)\r", 
+  printf( "\rJob %s(%d,%d,%d): %03.1f%% done, %1.1f min (%d,%d,%d = %1.1f KB)", 
     $self->{LAYER},
     $self->{X},
     $self->{Y},

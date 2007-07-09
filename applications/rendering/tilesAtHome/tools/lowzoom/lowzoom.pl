@@ -131,7 +131,7 @@ sub downloadtile {
     my $f2 = localfile($X,$Y,$Z,$Layer);
     my $key = sprintf("%s,%s,%s",$X,$Y,$Z);
 
-    if(($Z < 13) || (($Z == 12) && ($notBlanks{$key} > 0))){ 
+    if(($Z < 13) || (($Z == 12) && ($notBlanks{$key} > 0))){ ## FIXME: this check doesn't make sense
         
         my $f1 = remotefile($X,$Y,$Z,$Layer);
 
@@ -140,7 +140,7 @@ sub downloadtile {
         my $Size = -s $f2;
         
         my $Image = newFromPng GD::Image($f2, 1);
-        if (not($Image->compare($BlackTileImage) & GD_CMP_IMAGE)) {
+        if (not($Image->compare($BlackTileImage) & GD_CMP_IMAGE)) {  ## FIXME: this only makes sense if z=12
             unlink $f2;
             if (askOceantiles($X,$Y) eq "land" ) {
                 link("land.png", $f2);
@@ -377,7 +377,7 @@ sub moveTiles {
 }
 
 # takes x and y coordinates and returns if the corresponding tile 
-# should be sea or land
+# should be sea or land 
 sub askOceantiles {
     if ($Config{UseOceantilesDat}) {
 
@@ -405,7 +405,8 @@ sub askOceantiles {
     }
     else
     {
-        die("need UseOceantilesDat config option to proceed");
+        print "need UseOceantilesDat config option to proceed for tile $X $Y 12\n";
+        exit (1);
     }
 }
 

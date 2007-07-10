@@ -133,7 +133,12 @@ a little help:
         <scale_max>10000</scale_max>
 	</rule>
 
-	<!-- mini_roundabout tag -->
+	<rule>
+		<condition k="highway" v="mini_roundabout" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
 
 	<rule>
 		<condition k="highway" v="stop" />
@@ -149,7 +154,12 @@ a little help:
         <scale_max>50000</scale_max>
 	</rule>
 	
-	<!-- crossing tag -->
+	<rule>
+		<condition k="highway" v="crossing" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
 
 	<rule>
 		<condition k="highway" v="gate" />
@@ -179,11 +189,34 @@ a little help:
         <scale_max>50000</scale_max>
 	</rule>
 	
-	<!-- incline tag -->
-	<!-- incline_steep tag -->
-	<!-- viaduct tag -->
-	<!-- motorway_junction tag -->
-	
+	<rule>
+		<condition k="highway" v="incline" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="highway" v="incline_steep" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="highway" v="viaduct" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="highway" v="motorway_junction" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
 	<rule>
 		<condition k="highway" v="services" />
 		<icon annotate="true" src="services.png" />
@@ -191,7 +224,12 @@ a little help:
         <scale_max>50000</scale_max>
 	</rule>
 	
-	<!-- ford tag -->
+	<rule>
+		<condition k="highway" v="ford" />
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
 
 	<rule>
 		<condition k="highway" v="bus_stop" />
@@ -200,7 +238,7 @@ a little help:
         <scale_max>50000</scale_max>
 	</rule>
 	
-	<!-- junction/roundabout tag - probably no icon needed, it's obvious from the context -->
+<!-- junction/roundabout tag - probably no icon needed, it's obvious from the context -->
 
 <!-- cycleway tags -->
 

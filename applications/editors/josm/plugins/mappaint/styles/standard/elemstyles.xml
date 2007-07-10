@@ -468,21 +468,21 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="golf_course" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="golf_course.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="leisure" v="stadium" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="stadium.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="leisure" v="marina" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="marina.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -496,7 +496,7 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="pitch" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="pitch.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -510,7 +510,7 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="slipway" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="slipway.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -560,7 +560,7 @@ a little help:
 <!--amenity tags -->
 	<rule>
 		<condition k="amenity" v="restaurant" />
-		<icon annotate="true" src="food.png" />
+		<icon annotate="true" src="restaurant.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -574,7 +574,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="biergarten" />
-		<icon annotate="true" src="pub.png"  />
+		<icon annotate="true" src="biergarten.png"  />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -613,7 +613,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="bicycle_parking" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="bicycle_parking.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -732,7 +732,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="police" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="police.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -804,7 +804,7 @@ a little help:
 
 	<rule>
 		<condition k="shop" v="bakers" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="bakers.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -819,7 +819,7 @@ a little help:
 <!--tourism tags -->
 	<rule>
 		<condition k="tourism" v="information" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="information.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -833,14 +833,14 @@ a little help:
 
 	<rule>
 		<condition k="tourism" v="caravan_site" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="caravan_site.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="tourism" v="picnic_site" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="picnic_site.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -854,7 +854,7 @@ a little help:
 
 	<rule>
 		<condition k="tourism" v="theme_park" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="theme_park.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -868,7 +868,7 @@ a little help:
 
 	<rule>
 		<condition k="tourism" v="motel" />
-		<icon annotate="true" />
+		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -911,7 +911,7 @@ a little help:
 
 	<rule>
 		<condition k="historic" v="museum" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="museum.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

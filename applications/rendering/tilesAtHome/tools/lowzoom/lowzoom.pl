@@ -379,29 +379,30 @@ sub moveTiles {
 # takes x and y coordinates and returns if the corresponding tile 
 # should be sea or land 
 sub askOceantiles {
-    if ($Config{UseOceantilesDat}) {
 
     my ($X, $Y) = @_;
 
     my $tileoffset = ($Y * (2**12)) + $X;
-    seek $oceantiles, int($tileoffset / 4), 0;  
-    my $buffer;
-    read $oceantiles, $buffer, 1;
-    $buffer = substr( $buffer."\0", 0, 1 );
-    $buffer = unpack "B*", $buffer;
-    my $str = substr( $buffer, 2*($tileoffset % 4), 2 );
 
-#    print("lookup handler finds: $str\n") ;
-    if ($str eq "10") {    return "sea"; };
-    if ($str eq "01") {     return "land"; };
-    if ($str eq "11") {    return "land"; };
+    if ($Config{UseOceantilesDat}) {
+        seek $oceantiles, int($tileoffset / 4), 0;  
+        my $buffer;
+        read $oceantiles, $buffer, 1;
+        $buffer = substr( $buffer."\0", 0, 1 );
+        $buffer = unpack "B*", $buffer;
+        my $str = substr( $buffer, 2*($tileoffset % 4), 2 );
 
-    return "unknown";
+#        print("lookup handler finds: $str\n") ;
+        if ($str eq "10") {    return "sea"; };
+        if ($str eq "01") {     return "land"; };
+        if ($str eq "11") {    return "land"; };
 
-    # $str eq "00" => unknown (not yet checked)
-    # $str eq "01" => known land
-    # $str eq "10" => known sea
-    # $str eq "11" => known edge tile
+        return "unknown";
+
+        # $str eq "00" => unknown (not yet checked)
+        # $str eq "01" => known land
+        # $str eq "10" => known sea
+        # $str eq "11" => known edge tile
     }
     else
     {

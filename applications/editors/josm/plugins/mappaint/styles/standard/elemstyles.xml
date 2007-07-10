@@ -739,7 +739,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="fire_station" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="fire_station.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

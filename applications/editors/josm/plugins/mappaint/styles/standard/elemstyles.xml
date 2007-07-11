@@ -741,13 +741,6 @@ a little help:
 	</rule>
 
 	<rule>
-		<condition k="amenity" v="supermarket" />
-		<icon annotate="true" src="shopping.png" />
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
-	</rule>
-
-	<rule>
 		<condition k="amenity" v="pharmacy" />
 		<icon annotate="true" src="pharmacy.png" />
         <scale_min>1</scale_min>
@@ -841,15 +834,22 @@ a little help:
 <!--shop tags -->
 
 	<rule>
-		<condition k="shop" v="bakers" />
-		<icon annotate="true" src="bakers.png" />
+		<condition k="shop" v="bakery" />
+		<icon annotate="true" src="bakery.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
-		<condition k="shop" v="butchers" />
+		<condition k="shop" v="butcher" />
 		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="shop" v="supermarket" />
+		<icon annotate="true" src="shopping.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

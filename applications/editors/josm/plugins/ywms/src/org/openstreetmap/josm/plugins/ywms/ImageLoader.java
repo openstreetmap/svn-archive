@@ -50,13 +50,21 @@ public class ImageLoader
 	/** Firefox writes lines starting with this for each file loadded */
 	public static final String GECKO_DEBUG_LINE = "GECKO: PAINT FORCED AFTER ONLOAD:";
 
+	/** THe yahoo URL request */
 	private URL yahooUrl;
+	/** Original bounding box */
 	double[] orig_bbox = null;
+	/** Original width */
     int width = -1;
+	/** Original height */
     int height = -1;
+	/** Final image width */
     int final_width = -1;
+	/** Final image width */
     int final_height = -1;
+    /** The loaded image */
 	Image image;
+	/** Files created by firefox, that can be deleted */
 	List<String> firefoxFiles = new ArrayList<String>();
 
 	/** The regular expression used to locate the bounding boxes */
@@ -66,7 +74,6 @@ public class ImageLoader
 	 * Constructor.
 	 * 
 	 * @param wmsUrl The WMS request
-	 * @param pluginDir The directory of the plugin
 	 * @throws ImageLoaderException When error loading the image
 	 */
 	public ImageLoader(String wmsUrl) throws ImageLoaderException
@@ -75,7 +82,7 @@ public class ImageLoader
 		try {
 			URL request = new URL("file:///page" + wmsUrl);
 			String query = request.getQuery().toLowerCase();
-			yahooUrl = new File(YWMSPlugin.getStaticPluginDir(), "ymap.html").toURI().toURL();
+			yahooUrl = new File(Util.getPluginDir(), "ymap.html").toURI().toURL();
 			yahooUrl = new URL( yahooUrl.toExternalForm() + "?" + query);
 			
 			// Parse query to find original bounding box and dimensions
@@ -259,7 +266,6 @@ public class ImageLoader
 	/**
 	 * Saves the current image as a PNG file
 	 * @param fileName The name of the new file 
-	 * @throws IOException When error saving the file
 	 */
 	public void save(String fileName)
 	{

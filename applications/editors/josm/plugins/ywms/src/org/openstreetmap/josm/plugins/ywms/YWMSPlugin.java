@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
-import org.openstreetmap.josm.plugins.PluginProxy;
 
 /**
  * 
@@ -76,6 +75,7 @@ import org.openstreetmap.josm.plugins.PluginProxy;
  */
 public class YWMSPlugin extends Plugin 
 {
+	/** The HTTP server this plugin launches */
 	static HTTPServer server;
     
 	/**
@@ -83,10 +83,6 @@ public class YWMSPlugin extends Plugin
 	 */
 	public YWMSPlugin()
 	{
-        WARNING. This compilation error is made on purpose. 
-        We are not allowed to use this plugin at present.
-        Please, don not use it until all legal issues are resolved.
-        
 		try
 		{
 			copy("/resources/ymap.html", "ymap.html");
@@ -135,35 +131,4 @@ public class YWMSPlugin extends Plugin
 			ioe.printStackTrace();
 		}
 	}
-	
-    /** 
-     * Returns the plugin's directory
-     * <p>
-     * Utility method for classes that can't acces the plugin object
-     * 
-     * @return The directory of the plugin
-     */
-    public static String getStaticPluginDir()
-    {
-        YWMSPlugin plugin = getPlugin();
-        return ( plugin != null ) ? plugin.getPluginDir() : null;
-    }
-
-    /**
-     * Utility method to retrieve the plugin for classes that can't access to the plugin object directly.
-     * 
-     * @return The YWMS plugin
-     */
-    public static YWMSPlugin getPlugin()
-    {
-        for (PluginProxy plugin : Main.plugins)
-        {
-            if( plugin.info.className.equals(YWMSPlugin.class.getName()) )
-            {
-                return (YWMSPlugin)plugin.plugin;
-            }
-        }
-        
-        return null;
-    }
 }

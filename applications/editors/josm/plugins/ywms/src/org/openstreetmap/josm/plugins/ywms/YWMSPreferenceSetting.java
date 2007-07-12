@@ -13,6 +13,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.plugins.ywms.Util.Version;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -28,8 +29,11 @@ public class YWMSPreferenceSetting implements PreferenceSetting
     /** WMS URL server parameters */
     public static final String WMS_URL_PARAMS = "/ymap?request=GetMap&format=image/jpeg";
 
+    /** Firefox path text field */
     private JTextField firefox = new JTextField(10);
+    /** Server port text field */
     private JTextField port    = new JTextField(10);
+    /** Firefox profile text field */
     private JTextField profile = new JTextField(10);
     
     public void addGui( final PreferenceDialog gui ) 
@@ -45,7 +49,11 @@ public class YWMSPreferenceSetting implements PreferenceSetting
     							  "about failed sessions with 'browser.sessionstore.resume_from_crash=false' in the about:config page"
     							 ));
 
-    	JPanel ywms = gui.createPreferenceTab("yahoo.gif", I18n.tr("Yahoo! WMS server"), I18n.tr("Settings for the Yahoo! imagery server."));
+		Version ver = Util.getVersion();
+		String description = tr("A WMS server for Yahoo imagery based on Firefox.");
+		if( ver != null )
+			description += "<br><br>" + tr("Version: {0}<br>Last change at {1}", ver.revision, ver.time);
+    	JPanel ywms = gui.createPreferenceTab("yahoo.gif", I18n.tr("Yahoo! WMS server"), description + I18n.tr("Settings for the Yahoo! imagery server."));
     	ywms.add(new JLabel(tr("YWMS options")), GBC.eol().insets(0,5,0,0));
 
     	ywms.add(new JLabel(tr("Firefox executable")), GBC.std().insets(10,5,5,0));
@@ -78,7 +86,7 @@ public class YWMSPreferenceSetting implements PreferenceSetting
         Main.pref.put("ywms.port", port.getText());
         if( !oldPort.equals(port.getText()) )
         {
-            YWMSPlugin plugin = YWMSPlugin.getPlugin();
+            YWMSPlugin plugin = (YWMSPlugin)Util.getPlugin(YWMSPlugin.class);
             plugin.restartServer();
         }
     }
@@ -89,6 +97,7 @@ public class YWMSPreferenceSetting implements PreferenceSetting
      */
     private final class WMSConfigurationActionListener implements ActionListener, FocusListener
     {
+    	/** If the action is already handled */
         boolean alreadyHandled = false;
         public void actionPerformed(ActionEvent e) 
         {
@@ -144,7 +153,7 @@ public class YWMSPreferenceSetting implements PreferenceSetting
                             throw ioe;
                         }
                         
-                        String configFile = new File(YWMSPlugin.getStaticPluginDir(), "config.html").toURL().toString(); 
+                        String configFile = new File(Util.getPluginDir(), "config.html").toURL().toString(); 
                         GeckoSupport.browse(firefox.getText(), profile.getText(), configFile, false);
                         configureWMSPluginPreferences();
                     }
@@ -170,7 +179,6 @@ public class YWMSPreferenceSetting implements PreferenceSetting
     
     /**
      * Configures WMSPlugin preferences with a server "Yahoo" pointing to YWMS  
-     * @param gui 
      */
     private void configureWMSPluginPreferences()
     {

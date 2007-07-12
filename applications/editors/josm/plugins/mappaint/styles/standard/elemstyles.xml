@@ -135,7 +135,7 @@ a little help:
 
 	<rule>
 		<condition k="highway" v="mini_roundabout" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="roundabout.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -156,7 +156,7 @@ a little help:
 	
 	<rule>
 		<condition k="highway" v="crossing" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="zebra_crossing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -205,14 +205,14 @@ a little help:
 
 	<rule>
 		<condition k="highway" v="viaduct" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="viaduct.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="motorway_junction" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="exit.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -226,14 +226,14 @@ a little help:
 	
 	<rule>
 		<condition k="highway" v="ford" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="ford.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="highway" v="bus_stop" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="bus_stop.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -292,9 +292,65 @@ a little help:
         <scale_max>50000</scale_max>
     </rule>
 
+    <rule>
+        <condition k="waterway" v="dock"/>
+        <line width="1" colour="#0000cf"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+
 	<rule>
-		<condition k="natural" v="coastline"/>
-		<line width="1" colour="#0000ff"/>
+		<condition k="waterway" v="lock_gate" />
+		<icon annotate="true" src="lock_gate.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="turning_point" />
+		<icon annotate="true" src="water_turning.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="aqueduct" />
+		<icon annotate="true" src="aqueduct.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="boatyard" />
+		<icon annotate="true" src="boatyard.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="water_point" />
+		<icon annotate="true" src="water.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="waste_disposal" />
+		<icon annotate="true" src="water_disposal.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="mooring" />
+		<icon annotate="true" src="marina.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="waterway" v="weir" />
+		<icon annotate="true" src="weir.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -541,7 +597,7 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="water_park" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="water_park.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -555,7 +611,7 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="fishing" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="fishing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -583,14 +639,14 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="garden" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="garden.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="leisure" v="common" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="common.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -777,7 +833,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="bus_station" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="bus.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -798,7 +854,7 @@ a little help:
 
 	<rule>
 		<condition k="amenity" v="arts_centre" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="arts_centre.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -842,7 +898,7 @@ a little help:
 
 	<rule>
 		<condition k="shop" v="butcher" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="butcher.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -906,7 +962,7 @@ a little help:
 
 	<rule>
 		<condition k="tourism" v="motel" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="motel.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -956,7 +1012,7 @@ a little help:
 
 	<rule>
 		<condition k="historic" v="archeological_site" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="archeological.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -970,7 +1026,7 @@ a little help:
 
 	<rule>
 		<condition k="historic" v="ruins" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="ruins.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1194,7 +1250,7 @@ a little help:
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
-
+	
     <rule>
         <condition k="natural" v="coastline"/>
         <line width="1" colour="#0000ff"/>

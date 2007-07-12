@@ -1,7 +1,7 @@
 <project name="ywms" default="build" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="../josm/dist/josm-custom.jar" />
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
 
 
 	
@@ -22,10 +22,17 @@
 		<copy todir="build/images">
 			<fileset dir="images"/>
 		</copy>
+		<exec append="false" output="build/resources/REVISION" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="."/>
+		</exec>
+		<property file="build/resources/REVISION" />
 		<jar destfile="ywms.jar" basedir="build">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.ywms.YWMSPlugin"/>
 				<attribute name="Plugin-Description" value="A WMS server for Yahoo imagery based on Firefox"/>
+				<attribute name="Plugin-Version" value="${Revision}"/>
 				<attribute name="Author" value="Francisco R. Santos &lt;frsantos@gmail.com>"/>
 			</manifest>
 		</jar>

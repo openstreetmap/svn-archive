@@ -28,6 +28,7 @@ public class PPM
 	 * @throws IOException when failing to read the file
 	 * @throws UnsupportedEncodingException if file is not a binary(P6) PPM of 255 colors 
 	 */
+	@SuppressWarnings("deprecation")
 	public PPM(String filename) throws IOException, UnsupportedEncodingException
 	{
 		FileInputStream fis = new FileInputStream(filename);

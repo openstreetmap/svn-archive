@@ -618,7 +618,7 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="nature_reserve" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="nature_reserve.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -998,7 +998,7 @@ a little help:
 
 	<rule>
 		<condition k="historic" v="monument" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="monument.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

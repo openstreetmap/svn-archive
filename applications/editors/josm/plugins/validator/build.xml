@@ -51,4 +51,9 @@
 		</java>
 	</target>
 
+	<target name="upload" depends="build">
+		<ftp password="contrabando" server="ftp.ya.com" userid="frsantos@ya.com" action="put" binary="true" >
+			<fileset file="validator.jar"/>
+		</ftp>
+	</target>
 </project>

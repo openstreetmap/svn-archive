@@ -19,13 +19,13 @@ import javax.imageio.ImageIO;
  */
 public class RequestProcessor extends Thread 
 {
+	/** The socket this processor listens */
 	private Socket request;
   
 	/**
 	 * Constructor
 	 * 
 	 * @param request The WMS request
-	 * @param pluginDir The directory of the plugin
 	 */
 	public RequestProcessor(Socket request) 
 	{
@@ -118,6 +118,8 @@ public class RequestProcessor extends Thread
 
 	/**
 	 * Sends a 500 error: server error
+	 * @param out The writer where the error is written
+	 * @throws IOException If the error can not be written
 	 */
 	private void sendError(Writer out) throws IOException
 	{
@@ -133,6 +135,8 @@ public class RequestProcessor extends Thread
 
 	/**
 	 * Sends a 501 error: not implemented
+	 * @param out The writer where the error is written
+	 * @throws IOException If the error can not be written
 	 */
 	private void sendNotImplemented(Writer out) throws IOException
 	{

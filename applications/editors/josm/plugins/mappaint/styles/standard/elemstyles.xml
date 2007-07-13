@@ -364,6 +364,27 @@ a little help:
 	</rule>
 
 	<rule>
+		<condition k="railway" v="halt" />
+		<icon annotate="true" src="railway_small.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="railway" v="viaduct" />
+		<icon annotate="true" src="viaduct.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="railway" v="crossing" />
+		<icon annotate="true" src="crossing_small.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
 		<condition k="railway" v="level_crossing" />
 		<icon annotate="true" src="crossing.png" />
         <scale_min>1</scale_min>
@@ -555,7 +576,7 @@ a little help:
 <!--leisure tags -->
 	<rule>
 		<condition k="leisure" v="sports_centre" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="sports_centre.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -583,7 +604,7 @@ a little help:
 
 	<rule>
 		<condition k="leisure" v="track" />
-		<icon annotate="true" src="icon_missing.png" />
+		<icon annotate="true" src="track.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1183,7 +1204,7 @@ a little help:
 <!--natural tags -->
     <rule>
         <condition k="natural" v="spring"/>
-        <icon annotate="true" src="icon_missing.png"/>
+        <icon annotate="true" src="spring.png"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>

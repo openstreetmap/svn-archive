@@ -328,7 +328,7 @@
     <tag k='name' v='place' />
     <tag k='tourism' v='attraction' />
   </node>
-  <node id='-83' action='modify' visible='true' lat='9.728678522838399' lon='-63.58033371304564'>
+  <node id='-83' action='modify' visible='true' lat='9.72869348309905' lon='-63.58249968902282'>
     <tag k='railway' v='station' />
     <tag k='name' v='station' />
   </node>
@@ -392,7 +392,7 @@
     <tag k='name' v='slipway' />
     <tag k='leisure' v='slipway' />
   </node>
-  <node id='-99' action='modify' visible='true' lat='8.693421711860674' lon='-63.550909061375386'>
+  <node id='-99' action='modify' visible='true' lat='10.094376464275635' lon='-62.068739540704485'>
     <tag k='name' v='aeroway' />
     <tag k='tourism' v='attraction' />
   </node>
@@ -400,11 +400,11 @@
     <tag k='name' v='nature_reserve' />
     <tag k='leisure' v='nature_reserve' />
   </node>
-  <node id='-101' action='modify' visible='true' lat='7.926347147182446' lon='-63.55161279950813'>
+  <node id='-101' action='modify' visible='true' lat='9.327301899597407' lon='-62.06944327883723'>
     <tag k='aeroway' v='airport' />
     <tag k='name' v='airport' />
   </node>
-  <node id='-102' action='modify' visible='true' lat='9.367052917109921' lon='-63.580665479656396'>
+  <node id='-102' action='modify' visible='true' lat='8.524449696454546' lon='-63.59081732568839'>
     <tag k='railway' v='level_crossing' />
     <tag k='name' v='level_crossing' />
   </node>
@@ -412,7 +412,7 @@
     <tag k='name' v='sports_centre' />
     <tag k='leisure' v='sports_centre' />
   </node>
-  <node id='-104' action='modify' visible='true' lat='8.298910997537996' lon='-63.55127099781055'>
+  <node id='-104' action='modify' visible='true' lat='9.699865749952957' lon='-62.06910147713965'>
     <tag k='aeroway' v='aerodrome' />
     <tag k='name' v='aerodrome' />
   </node>
@@ -480,28 +480,40 @@
     <tag k='name' v='turning_point' />
     <tag k='waterway' v='turning_point' />
   </node>
-  <node id='-121' action='modify' visible='true' lat='12.920184870925038' lon='-59.52919291575181'>
+  <node id='-121' action='modify' visible='true' lat='9.092988031987261' lon='-63.58689046689297'>
+    <tag k='railway' v='viaduct' />
+    <tag k='name' v='viaduct' />
+  </node>
+  <node id='-122' action='modify' visible='true' lat='9.417901722914394' lon='-63.584646308310816'>
+    <tag k='railway' v='halt' />
+    <tag k='name' v='halt' />
+  </node>
+  <node id='-123' action='modify' visible='true' lat='12.920184870925038' lon='-59.52919291575181'>
     <tag k='name' v='aqueduct' />
     <tag k='waterway' v='aqueduct' />
   </node>
-  <node id='-122' action='modify' visible='true' lat='12.51411102964534' lon='-59.52919291575181'>
+  <node id='-124' action='modify' visible='true' lat='12.51411102964534' lon='-59.52919291575181'>
     <tag k='name' v='boatyard' />
     <tag k='waterway' v='boatyard' />
   </node>
-  <node id='-123' action='modify' visible='true' lat='12.128340880429626' lon='-59.52919291575181'>
+  <node id='-125' action='modify' visible='true' lat='12.128340880429626' lon='-59.52919291575181'>
     <tag k='name' v='water_point' />
     <tag k='waterway' v='water_point' />
   </node>
-  <node id='-124' action='modify' visible='true' lat='11.722267039149926' lon='-59.52919291575181'>
+  <node id='-126' action='modify' visible='true' lat='11.722267039149926' lon='-59.52919291575181'>
     <tag k='name' v='waste_disposal' />
     <tag k='waterway' v='waste_disposal' />
   </node>
-  <node id='-125' action='modify' visible='true' lat='11.36695242803019' lon='-59.52919291575181'>
+  <node id='-127' action='modify' visible='true' lat='11.36695242803019' lon='-59.52919291575181'>
     <tag k='name' v='mooring' />
     <tag k='waterway' v='mooring' />
   </node>
-  <node id='-126' action='modify' visible='true' lat='10.99133412484647' lon='-59.52919291575181'>
+  <node id='-128' action='modify' visible='true' lat='10.99133412484647' lon='-59.52919291575181'>
     <tag k='name' v='weir' />
     <tag k='waterway' v='weir' />
+  </node>
+  <node id='-129' action='modify' visible='true' lat='8.81883114982702' lon='-63.58878405136521'>
+    <tag k='railway' v='crossing' />
+    <tag k='name' v='crossing' />
   </node>
 </osm>

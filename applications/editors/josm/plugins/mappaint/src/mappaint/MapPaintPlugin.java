@@ -26,13 +26,19 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 
 	public MapPaintPlugin() {
 		String styleName = Main.pref.get("mappaint.style", "standard");
-		styleDir = getPluginDir()+styleName+"/"; //some day we will support diferent icon directories over options
+		styleDir = Main.pref.getPreferencesDir()+"plugins/mappaint/"+styleName+"/"; //some day we will support different icon directories over options
 		String elemStylesFile = getStyleDir()+"elemstyles.xml";
+		
+		// System.out.println("mappaint: Using style: " + styleName);
+		// System.out.println("mappaint: Using style dir: " + styleDir);
+		// System.out.println("mappaint: Using style file: " + elemStylesFile);
+		
 		File f = new File(elemStylesFile);
 		if (f.exists())
 		{
-			try
+			try	// reading file from file system
 			{
+				// System.out.println("mappaint: Using style file: \"" + f + "\"");
 				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 				ElemStyleHandler handler = new ElemStyleHandler();
 				xmlReader.setContentHandler(handler);
@@ -46,8 +52,10 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 				throw new RuntimeException(e);
 			}
 		} 
-		else{ //use the standart elemstyle of this style 
+		else{	// reading the builtin file from the plugin jar file
 			URL elemStylesPath = getClass().getResource("/"+styleName+"/elemstyles.xml");
+			
+			// System.out.println("mappaint: Using jar's elemstyles.xml: \"" + elemStylesPath + "\"");
 			if (elemStylesPath != null)
 			{
 				try
@@ -64,7 +72,9 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 				{
 					throw new RuntimeException(e);
 				}
-			} 
+			} else {
+				System.out.println("mappaint: Couldn't find style: \"" + styleDir + "\"elemstyles.xml");
+			}
 		}
 	}
 

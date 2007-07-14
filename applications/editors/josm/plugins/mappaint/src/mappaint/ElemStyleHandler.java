@@ -15,7 +15,9 @@ import org.xml.sax.helpers.DefaultHandler;
 public class ElemStyleHandler extends DefaultHandler
 {
     boolean inDoc, inRule, inCondition, inElemStyle, inLine, inIcon, inArea;
-    ElemStyle curStyle;
+    ElemStyle curLineStyle=null;
+    ElemStyle curIconStyle=null;
+    ElemStyle curAreaStyle=null;
     ElemStyles styles;
     String curKey, curValue ;
 		int curWidth = 1, curRealWidth = 0;
@@ -139,14 +141,28 @@ public class ElemStyleHandler extends DefaultHandler
         if(inRule && qName.equals("rule"))
         {
             inRule = false;
-            styles.add (curKey, curValue, curStyle);
+			if(curLineStyle != null)
+			{
+            	styles.add (curKey, curValue, curLineStyle);
+				curLineStyle = null;
+			}
+			if(curIconStyle != null)
+			{
+            	styles.add (curKey, curValue, curIconStyle);
+				curIconStyle = null;
+			}
+			if(curAreaStyle != null)
+			{
+            	styles.add (curKey, curValue, curAreaStyle);
+				curAreaStyle = null;
+			}
         }
         else if (inCondition && qName.equals("condition"))
             inCondition = false;
         else if (inLine && qName.equals("line"))
         {
             inLine = false;
-            curStyle = new LineElemStyle(curWidth,curRealWidth, curColour,
+            curLineStyle = new LineElemStyle(curWidth,curRealWidth, curColour,
 										curMinZoom);
 						curWidth=1;
 						curRealWidth = 0;
@@ -154,12 +170,12 @@ public class ElemStyleHandler extends DefaultHandler
         else if (inIcon && qName.equals("icon"))
         {
             inIcon = false;
-            curStyle = new IconElemStyle(curIcon,curAnnotate,curMinZoom);
+            curIconStyle = new IconElemStyle(curIcon,curAnnotate,curMinZoom);
         }
         else if (inArea && qName.equals("area"))
         {
             inArea = false;
-            curStyle = new AreaElemStyle (curColour,curMinZoom);
+            curAreaStyle = new AreaElemStyle (curColour,curMinZoom);
         }
 
     }

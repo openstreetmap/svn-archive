@@ -8,8 +8,10 @@ a little help:
 		- colour
 4. area attributes
 		- colour
-5. amenity attributes
+5. icon attributes
 		- icon path to icon , relative from where this file is
+
+Using both area and line attributes for the same key/value pair doesn't work!
 -->
 
 <rules>
@@ -711,20 +713,10 @@ a little help:
 	<rule>
 		<condition k="amenity" v="parking" />
 		<icon annotate="true" src="carpark.png" />
-        <scale_min>1</scale_min>
-        <scale_max>50000</scale_max>
-	</rule>
-
-<!-- enabling parking areas will hide single parking nodes COMPLETELY.
-     unless this is fixed in mappaint, disable the area for now!
-	<rule>
-		<condition k="amenity" v="parking" />
-		<icon annotate="true" src="carpark.png" />
 		<area colour="#f7efb7"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
--->
 
 	<rule>
 		<condition k="amenity" v="bicycle_parking" />

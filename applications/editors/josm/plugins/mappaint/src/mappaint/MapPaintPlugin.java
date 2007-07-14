@@ -73,7 +73,7 @@ public class MapPaintPlugin extends Plugin implements LayerChangeListener {
 					throw new RuntimeException(e);
 				}
 			} else {
-				System.out.println("mappaint: Couldn't find style: \"" + styleDir + "\"elemstyles.xml");
+				System.out.println("mappaint: Couldn't find style: \"" + styleDir + "elemstyles.xml\"");
 			}
 		}
 	}

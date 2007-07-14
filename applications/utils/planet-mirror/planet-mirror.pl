@@ -24,6 +24,8 @@ use strict;
 use warnings;
 
 my $do_print_filename=0;
+my $planet_dir='';
+my $no_symlink=0;
 # ------------------------------------------------------------------
 # Set defaults and get options from command line
 Getopt::Long::Configure('no_ignore_case');
@@ -39,16 +41,33 @@ GetOptions (
 	     'no-mirror'  => \$Utils::LWP::Utils::NO_MIRROR,
 	     'proxy=s'    => \$Utils::LWP::Utils::PROXY,
 
-	     'print-filename'     => \$do_print_filename,
+	     'print-filename'  => \$do_print_filename,
+	     'no-symlink'      => \$no_symlink,
+	     'planet-dir:s'    => \$planet_dir,
 	     )
     or pod2usage(1);
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
-my $filename = mirror_planet();
+Geo::OSM::Planet::planet_dir($planet_dir)
+    if $planet_dir;
+
+my $new_filename = mirror_planet();
+
+if ( ! $no_symlink ) {
+    my $planet_filename =  $new_filename;
+    $planet_filename =~ s/(planet)-\d+(\.osm\..+)$/$1$2/;
+    if ( -e $planet_filename ) {
+	unlink($planet_filename);
+    }
+    symlink($new_filename,$planet_filename)
+	or warn "cannot symlink $new_filename ==> $planet_filename: $@\n";
+    
+}
+
 if ( $do_print_filename ) {
-    print "$filename\n";
+    print "$new_filename\n";
 }
 
 
@@ -104,10 +123,16 @@ files found on local Filesystem.
 
 use proxy for download
 
-=item B<--osm-file=path/planet.osm>
+=item B<--planet-dir=[path-to-planet-files]>
 
-Select the "path/planet.osm" file to use for the checks
+The ddirectory to put and check the planet Files.
+Default is ~/osm/planet/
 
+=item B<--no-symlink>
+
+normally the current planet file is symlinked to 
+a file named planet.osm.* in the smae directory.
+If this option is set this will not be done.
 
 =item B<--print-filename>
 

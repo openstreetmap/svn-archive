@@ -101,7 +101,7 @@ sub estimated_max_count($){
 # returns the osm main directory for holding data
 sub osm_dir() {
     # For later these are the defaults
-    # edpending on where we can read/write
+    # on where we can read/write
     #  ~/osm
     # /var/data/osm
     my $dir;
@@ -118,11 +118,18 @@ sub osm_dir() {
 }
 
 # ------------------------------------------------------------------
-# Returns the directory where the planet.osm files will be found
-sub planet_dir() {
-    my $dir = osm_dir();
-    $dir = "$dir/planet";
-    return $dir;
+# Returns (or sets) the directory where the planet.osm files will be found
+my $PLANET_DIR='';
+sub planet_dir(;$) {
+    my $new_dir=shift;
+
+    if ( $new_dir ) {
+	$PLANET_DIR  = $new_dir;
+    } elsif( ! $PLANET_DIR) {
+	my $dir = osm_dir();
+	$PLANET_DIR  = "$dir/planet";
+    }
+    return $PLANET_DIR;
 }
 
 

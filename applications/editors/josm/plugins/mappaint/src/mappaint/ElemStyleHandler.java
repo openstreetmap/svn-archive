@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class ElemStyleHandler extends DefaultHandler
 {
-    boolean inDoc, inRule, inCondition, inElemStyle, inLine, inIcon, inArea, inScaleMax;
+    boolean inDoc, inRule, inCondition, inElemStyle, inLine, inIcon, inArea, inScaleMax, inScaleMin;
     ElemStyles styles = null;
     String curKey = null;
 	String curValue = null;
@@ -26,6 +26,7 @@ public class ElemStyleHandler extends DefaultHandler
     ImageIcon curIcon = null;
     boolean curIconAnnotate = true;
 	int curScaleMax = 1000000000;
+	int curScaleMin = 0;
 
     public ElemStyleHandler(  )
     {
@@ -94,6 +95,10 @@ public class ElemStyleHandler extends DefaultHandler
 			{
 				inScaleMax = true;
 			}
+			else if (qName.equals("scale_min"))
+			{
+				inScaleMin = true;
+			}
             else if (qName.equals("icon"))
             {
                 inIcon = true;
@@ -142,7 +147,7 @@ public class ElemStyleHandler extends DefaultHandler
 			if(curLineWidth != -1)
 			{
             	newStyle = new LineElemStyle(curLineWidth, curLineRealWidth, curLineColour, 
-										curLineDashed, curScaleMax);
+										curLineDashed, curScaleMax, curScaleMin);
             	styles.add (curKey, curValue, newStyle);
 				curLineWidth	= 1;
 				curLineRealWidth= 0;
@@ -151,18 +156,19 @@ public class ElemStyleHandler extends DefaultHandler
 			}
 			if(curIcon != null)
 			{
-				newStyle = new IconElemStyle(curIcon,curIconAnnotate,curScaleMax);
+				newStyle = new IconElemStyle(curIcon, curIconAnnotate, curScaleMax, curScaleMin);
             	styles.add (curKey, curValue, newStyle);
 				curIcon 		= null;
 				curIconAnnotate = true;
 			}
 			if(curAreaColour != null)
 			{
-            	newStyle = new AreaElemStyle (curAreaColour,curScaleMax);
+            	newStyle = new AreaElemStyle (curAreaColour, curScaleMax, curScaleMin);
             	styles.add (curKey, curValue, newStyle);
 				curAreaColour 	= null;
 			}
 			curScaleMax = 1000000000;
+			curScaleMin = 0;
 
         }
         else if (inCondition && qName.equals("condition"))
@@ -174,9 +180,9 @@ public class ElemStyleHandler extends DefaultHandler
         else if (inArea && qName.equals("area"))
             inArea = false;
 		else if (qName.equals("scale_max"))
-			{
-				inScaleMax = false;
-			}
+			inScaleMax = false;
+		else if (qName.equals("scale_min"))
+			inScaleMin = false;
     }
 
     @Override public void characters(char ch[], int start, int length)
@@ -185,6 +191,11 @@ public class ElemStyleHandler extends DefaultHandler
 			String content = new String(ch, start, length);
 
 			curScaleMax = Integer.parseInt(content);
+		}
+		if(	inScaleMin == true) {
+			String content = new String(ch, start, length);
+
+			curScaleMin = Integer.parseInt(content);
 		}
     }
 }

@@ -46,7 +46,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			}
 		}
 		
-		if(circum>=e.getMinZoom() / 70) {
+		if(circum>=e.getMaxScale() / 70 || circum<e.getMinScale() / 70) {
 			return false;
 		} else {
 			return true;

@@ -5,10 +5,11 @@ public class AreaElemStyle extends ElemStyle
 {
 	Color colour;
 
-	public AreaElemStyle (Color colour, int minZoom)
+	public AreaElemStyle (Color colour, int maxScale, int minScale)
 	{
 		this.colour = colour;
-		this.minZoom = minZoom;
+		this.maxScale = maxScale;
+		this.minScale = minScale;
 	}
 
 	public Color getColour()

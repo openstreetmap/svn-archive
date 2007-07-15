@@ -6,12 +6,14 @@ public class LineElemStyle extends ElemStyle
 	int width;
 	int realWidth = 0; //the real width of this line in meter
 	Color colour;
+	boolean dashed = false;
 
-	public LineElemStyle (int width, int realWidth, Color colour, int minZoom)
+	public LineElemStyle (int width, int realWidth, Color colour, boolean dashed, int minZoom)
 	{
 		this.width = width;
 		this.realWidth = realWidth;
 		this.colour = colour;
+		this.dashed = dashed;
 		this.minZoom = minZoom;
 	}
 
@@ -32,6 +34,6 @@ public class LineElemStyle extends ElemStyle
 
 	@Override public String toString()
 	{
-		return "LineElemStyle:  width= " + width +  " colour=" + colour;
+		return "LineElemStyle:  width= " + width + "realWidth= " + realWidth +  " colour=" + colour + " dashed=" + dashed;
 	}
 }

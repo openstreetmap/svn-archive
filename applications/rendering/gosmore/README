@@ -1,4 +1,28 @@
 Gosmore
 =======
 
-Home page: http://wiki.openstreetmap.org/index.php/Gosmore
+Gosmore is a viewer of the OpenStreetmap.org XML data such as the
+planet.
+
+The project home page is at
+<URL:http://wiki.openstreetmap.org/index.php/Gosmore>
+
+Downloading latest version
+--------------------------
+
+The source is available from subversion.  Use
+
+  svn co http://svn.openstreetmap.org/applications/rendering/gosmore/
+
+to download it.
+
+Reporting bugs and improvements
+-------------------------------
+
+[Need to be documented]
+
+License
+-------
+
+This software is placed by in the public domain by its authors.
+Written by Nic Roets with contribution(s) from Dave Hansen.

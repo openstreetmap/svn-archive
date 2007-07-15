@@ -14,17 +14,17 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class ElemStyleHandler extends DefaultHandler
 {
-    boolean inDoc, inRule, inCondition, inElemStyle, inLine, inIcon, inArea;
-    ElemStyle curLineStyle=null;
-    ElemStyle curIconStyle=null;
-    ElemStyle curAreaStyle=null;
-    ElemStyles styles;
-    String curKey, curValue ;
-		int curWidth = 1, curRealWidth = 0;
-	int curMinZoom;
-    ImageIcon curIcon;
-    Color curColour;
-    boolean curAnnotate;
+    boolean inDoc, inRule, inCondition, inElemStyle, inLine, inIcon, inArea, inScaleMax;
+    ElemStyles styles = null;
+    String curKey = null;
+	String curValue = null;
+	int curLineWidth = 1;
+	int curLineRealWidth = 0;
+    Color curLineColour = null;
+    Color curAreaColour = null;
+    ImageIcon curIcon = null;
+    boolean curIconAnnotate = true;
+	int curScaleMax = 1000000000;
 
     public ElemStyleHandler(  )
     {
@@ -80,22 +80,17 @@ public class ElemStyleHandler extends DefaultHandler
                 for(int count=0; count<atts.getLength(); count++)
                 {
                     if(atts.getQName(count).equals("width"))
-                        curWidth = Integer.parseInt(atts.getValue(count));
+                        curLineWidth = Integer.parseInt(atts.getValue(count));
                     else if (atts.getQName(count).equals("colour"))
-                        curColour=ColorHelper.html2color(atts.getValue(count));
+                        curLineColour=ColorHelper.html2color(atts.getValue(count));
 										else if (atts.getQName(count).equals("realwidth"))
-												curRealWidth=Integer.parseInt(atts.getValue(count));
+												curLineRealWidth=Integer.parseInt(atts.getValue(count));
                 }
             }
-			else if (qName.equals("zoom"))
+			else if (qName.equals("scale_max"))
 			{
-				curMinZoom = 0;
-                for(int count=0; count<atts.getLength(); count++)
-                {
-                    if(atts.getQName(count).equals("min"))
-                        curMinZoom = Integer.parseInt(atts.getValue(count));
-                }
-			}	
+				inScaleMax = true;
+			}
             else if (qName.equals("icon"))
             {
                 inIcon = true;
@@ -119,7 +114,7 @@ public class ElemStyleHandler extends DefaultHandler
 													}
 												}
                     } else if (atts.getQName(count).equals("annotate"))
-                        curAnnotate = Boolean.parseBoolean
+                        curIconAnnotate = Boolean.parseBoolean
                                         (atts.getValue(count));
                 }
             }
@@ -129,59 +124,64 @@ public class ElemStyleHandler extends DefaultHandler
                 for(int count=0; count<atts.getLength(); count++)
                 {
                     if (atts.getQName(count).equals("colour"))
-                        curColour=ColorHelper.html2color(atts.getValue(count));
+                        curAreaColour=ColorHelper.html2color(atts.getValue(count));
                 }
             }
         }
     }
 
-
     @Override public void endElement(String uri,String name, String qName)
     {
         if(inRule && qName.equals("rule"))
         {
+			ElemStyle newStyle;
             inRule = false;
-			if(curLineStyle != null)
+			if(curLineWidth != -1)
 			{
-            	styles.add (curKey, curValue, curLineStyle);
-				curLineStyle = null;
+            	newStyle = new LineElemStyle(curLineWidth, curLineRealWidth, curLineColour,
+										curScaleMax);
+            	styles.add (curKey, curValue, newStyle);
+				curLineWidth	= 1;
+				curLineRealWidth= 0;
+				curLineColour 	= null;
 			}
-			if(curIconStyle != null)
+			if(curIcon != null)
 			{
-            	styles.add (curKey, curValue, curIconStyle);
-				curIconStyle = null;
+				newStyle = new IconElemStyle(curIcon,curIconAnnotate,curScaleMax);
+            	styles.add (curKey, curValue, newStyle);
+				curIcon 		= null;
+				curIconAnnotate = true;
 			}
-			if(curAreaStyle != null)
+			if(curAreaColour != null)
 			{
-            	styles.add (curKey, curValue, curAreaStyle);
-				curAreaStyle = null;
+            	newStyle = new AreaElemStyle (curAreaColour,curScaleMax);
+            	styles.add (curKey, curValue, newStyle);
+				curAreaColour 	= null;
 			}
+			curScaleMax = 1000000000;
+
         }
         else if (inCondition && qName.equals("condition"))
             inCondition = false;
         else if (inLine && qName.equals("line"))
-        {
             inLine = false;
-            curLineStyle = new LineElemStyle(curWidth,curRealWidth, curColour,
-										curMinZoom);
-						curWidth=1;
-						curRealWidth = 0;
-        }
         else if (inIcon && qName.equals("icon"))
-        {
             inIcon = false;
-            curIconStyle = new IconElemStyle(curIcon,curAnnotate,curMinZoom);
-        }
         else if (inArea && qName.equals("area"))
-        {
             inArea = false;
-            curAreaStyle = new AreaElemStyle (curColour,curMinZoom);
-        }
-
+		else if (qName.equals("scale_max"))
+			{
+				inScaleMax = false;
+			}
     }
 
     @Override public void characters(char ch[], int start, int length)
     {
+		if(	inScaleMax == true) {
+			String content = new String(ch, start, length);
+
+			curScaleMax = Integer.parseInt(content);
+		}
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

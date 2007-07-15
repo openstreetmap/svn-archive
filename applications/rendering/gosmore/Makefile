@@ -1,3 +1,7 @@
+DESTDIR
+prefix = /usr/local
+bindir = $(prefix)/bin
+
 USE_FLITE=-DUSE_FLITE -lflite_cmu_us_kal16 -lflite_usenglish -lflite_cmulex \
   -lflite
 CFLAGS=-O2 -W -Wall
@@ -24,3 +28,7 @@ commit:		gosmore
 
 CountColours:	CountColours.c
 		gcc `pkg-config --cflags --libs gtk+-2.0` CountColours.c -o CountColours
+
+install:
+	mkdir -p $(DESTDIR)$(bindir)
+	cp gosmore $(DESTDIR)$(bindir)/.

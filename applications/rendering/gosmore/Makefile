@@ -1,6 +1,6 @@
 USE_FLITE=-DUSE_FLITE -lflite_cmu_us_kal16 -lflite_usenglish -lflite_cmulex \
   -lflite
-CFLAGS=-O2
+CFLAGS=-O2 -W -Wall
 
 ifneq (${OS},Windows_NT)
 EXTRA=`pkg-config --cflags --libs gtk+-2.0`

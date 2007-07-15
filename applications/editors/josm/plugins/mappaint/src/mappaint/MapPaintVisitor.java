@@ -65,7 +65,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		if(nodeStyle!=null){
 			if(nodeStyle instanceof IconElemStyle) {
 				if(isZoomOk(nodeStyle)) {
-					drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
+					drawNode(n, ((IconElemStyle)nodeStyle).getIcon(), ((IconElemStyle)nodeStyle).doAnnotate());
 				}
 			} else {
 				// throw some sort of exception
@@ -101,6 +101,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		Color colour = getPreferencesColor("untagged",Color.GRAY);
 		int width = 2;
 		int realWidth = 0; //the real width of the element in meters 
+		boolean dashed = false;
 		boolean area=false;
 		ElemStyle wayStyle = MapPaintPlugin.elemStyles.getStyle(w);
 		
@@ -115,6 +116,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 				colour = ((LineElemStyle)wayStyle).getColour();
 				width = ((LineElemStyle)wayStyle).getWidth();
 				realWidth = ((LineElemStyle)wayStyle).getRealWidth();	
+				dashed = ((LineElemStyle)wayStyle).dashed;
 			}
 			else if (wayStyle instanceof AreaElemStyle)
 			{
@@ -142,7 +144,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 							if (tmpWidth > width) width = tmpWidth;
 						}
 
-						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,showDirection, width,false);
+						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,showDirection, width,dashed);
 				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
 				{
 					try
@@ -181,13 +183,13 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	}
 
 	// NEW
-	protected void drawNode(Node n, ImageIcon icon) {
+	protected void drawNode(Node n, ImageIcon icon, boolean annotate) {
 		Point p = nc.getPoint(n.eastNorth);
 		if ((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight())) return;
 		int w = icon.getIconWidth(), h=icon.getIconHeight();
 		icon.paintIcon ( Main.map.mapView, g, p.x-w/2, p.y-h/2 );
 		String name = (n.keys==null) ? null : n.keys.get("name");
-		if (name!=null)
+		if (name!=null && annotate)
 		{
 			g.setColor( getPreferencesColor ("text", Color.WHITE));
 			Font defaultFont = g.getFont();

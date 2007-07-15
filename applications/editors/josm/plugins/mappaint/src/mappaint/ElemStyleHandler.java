@@ -20,6 +20,7 @@ public class ElemStyleHandler extends DefaultHandler
 	String curValue = null;
 	int curLineWidth = 1;
 	int curLineRealWidth = 0;
+	boolean curLineDashed = false;
     Color curLineColour = null;
     Color curAreaColour = null;
     ImageIcon curIcon = null;
@@ -85,6 +86,8 @@ public class ElemStyleHandler extends DefaultHandler
                         curLineColour=ColorHelper.html2color(atts.getValue(count));
 										else if (atts.getQName(count).equals("realwidth"))
 												curLineRealWidth=Integer.parseInt(atts.getValue(count));
+										else if (atts.getQName(count).equals("dashed"))
+												curLineDashed=Boolean.parseBoolean(atts.getValue(count));
                 }
             }
 			else if (qName.equals("scale_max"))
@@ -138,11 +141,12 @@ public class ElemStyleHandler extends DefaultHandler
             inRule = false;
 			if(curLineWidth != -1)
 			{
-            	newStyle = new LineElemStyle(curLineWidth, curLineRealWidth, curLineColour,
-										curScaleMax);
+            	newStyle = new LineElemStyle(curLineWidth, curLineRealWidth, curLineColour, 
+										curLineDashed, curScaleMax);
             	styles.add (curKey, curValue, newStyle);
 				curLineWidth	= 1;
 				curLineRealWidth= 0;
+				curLineDashed   = false;
 				curLineColour 	= null;
 			}
 			if(curIcon != null)

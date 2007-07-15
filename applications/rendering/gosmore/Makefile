@@ -1,4 +1,4 @@
-DESTDIR
+DESTDIR=
 prefix = /usr/local
 bindir = $(prefix)/bin
 

@@ -240,15 +240,50 @@ Using both area and line attributes for the same key/value pair doesn't work!
         <scale_max>50000</scale_max>
 	</rule>
 	
-<!-- junction/roundabout tag - probably no icon needed, it's obvious from the context -->
+<!-- junction tag -->
+
+	<rule>
+		<condition k="junction" v="roundabout" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
 
 <!-- cycleway tags -->
 
-	<!-- lane tag -->
-	<!-- track tag -->
-	<!-- opposite_lane tag -->
-	<!-- opposite_track tag -->
-	<!-- opposite tag -->
+	<rule>
+		<condition k="cycleway" v="lane"/>
+		<line width="1" realwidth="2" colour="#ff00ff"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="cycleway" v="track"/>
+		<line width="1" realwidth="2" colour="#ff00ff"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+	
+	<rule>
+		<condition k="cycleway" v="opposite_lane"/>
+		<line width="1" realwidth="2" colour="#ff00ff"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+	
+	<rule>
+		<condition k="cycleway" v="opposite_track"/>
+		<line width="1" realwidth="2" colour="#ff00ff"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+	
+	<rule>
+		<condition k="cycleway" v="opposite"/>
+		<line width="1" realwidth="2" colour="#ff00ff"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
 
 <!-- tracktype tags -->
 
@@ -395,28 +430,63 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="railway" v="rail"/>
-		<line width="2" colour="#808080"/>
+		<line width="2" colour="#808080" dashed="true"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
     <rule>
         <condition k="railway" v="tram"/>
-        <line width="1" colour="#606060"/>
+        <line width="1" colour="#606060" dashed="true"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
 
     <rule>
         <condition k="railway" v="light_rail"/>
-        <line width="2" colour="#808080"/>
+        <line width="2" colour="#808080" dashed="true"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
     
     <rule>
         <condition k="railway" v="subway"/>
-        <line width="1" colour="#202020"/>
+        <line width="1" colour="#202020" dashed="true"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="railway" v="preserved"/>
+        <line width="1" colour="#202020" dashed="true"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="railway" v="disused"/>
+        <line width="1" colour="#202020" dashed="true"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="railway" v="abandoned"/>
+        <line width="1" colour="#202020" dashed="true"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="railway" v="narrow_gauge"/>
+        <line width="1" colour="#202020" dashed="true"/>
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="railway" v="monorail"/>
+        <line width="1" colour="#202020" dashed="true"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -431,8 +501,15 @@ Using both area and line attributes for the same key/value pair doesn't work!
     </rule>
     
     <rule>
-        <condition k="aeroway" v="airport"/>
-		<icon annotate="true" src="airport.png" />
+        <condition k="aeroway" v="terminal"/>
+		<icon annotate="true" src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+    </rule>
+    
+    <rule>
+        <condition k="aeroway" v="helipad"/>
+		<icon annotate="true" src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -648,6 +725,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="leisure" v="park"/>
+		<icon annotate="true" src="icon_missing.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -655,6 +733,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="leisure" v="playground"/>
+		<icon annotate="true" src="icon_missing.png" />
 		<area colour="#c7f1a3"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
@@ -1055,6 +1134,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
     <rule>
         <condition k="landuse" v="quarry"/>
         <area colour="#cccccc" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1062,6 +1142,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
     <rule>
         <condition k="landuse" v="landfill"/>
         <area colour="#663300" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1069,6 +1150,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="basin"/>
 		<area colour="#0000bf" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1076,6 +1158,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="reservoir"/>
 		<area colour="#0000bf" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1083,6 +1166,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="forest"/>
 		<area colour="#b1efc8" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1090,6 +1174,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="allotments"/>
 		<area colour="#b1e0c2" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1097,6 +1182,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="residential"/>
 		<area colour="#f0f0f0"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1104,6 +1190,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="retail"/>
 		<area colour="#dbdbdb"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1111,6 +1198,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="commercial"/>
 		<area colour="#dbdbdb"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1118,6 +1206,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="industrial"/>
 		<area colour="#ecd8ff"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1125,6 +1214,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="brownfield"/>
 		<area colour="#ecba32"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1132,6 +1222,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="greenfield"/>
 		<area colour="#b1ec5c"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1139,6 +1230,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="cemetery"/>
 		<line width="1" colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1146,6 +1238,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="village_green"/>
 		<area colour="#b1e0c2" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1153,6 +1246,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	<rule>
 		<condition k="landuse" v="recreation_ground"/>
 		<area colour="#b1e0c2" />
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1396,8 +1490,233 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 <!--sport tags -->
 	<rule>
+		<condition k="sport" v="10pin" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="athletics" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="baseball" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="basketball" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="bowls" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="climbing" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="cricket" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="cricket_nets" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="croquet" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="cycling" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="dog_racing" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="equestrain" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="football" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="golf" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="gymnastics" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="hockey" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="horse_racing" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="motor" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="multi" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="pelota" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="racquet" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="rubgy" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="skating" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="skateboard" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
 		<condition k="sport" v="soccer" />
 		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="swimming" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="skiing" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="table_tennis" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
+        <scale_min>1</scale_min>
+        <scale_max>50000</scale_max>
+	</rule>
+
+	<rule>
+		<condition k="sport" v="tennis" />
+		<area colour="#bde3cb"/>
+		<icon src="icon_missing.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>

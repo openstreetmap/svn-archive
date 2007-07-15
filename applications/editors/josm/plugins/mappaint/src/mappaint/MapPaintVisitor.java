@@ -29,6 +29,30 @@ import java.awt.event.MouseEvent;
 
 public class MapPaintVisitor extends SimplePaintVisitor {
 
+	protected boolean isZoomOk(ElemStyle e) {
+		double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
+		
+		/* show everything, if the user wishes so */
+		if(!Main.pref.getBoolean("mappaint.zoomLevelDisplay",false)) {
+			return true;
+		}
+			
+		if(e == null) {
+			/* the default for things that don't have a rule (show, if scale is smaller than 1500m) */
+			if(circum < 1500) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		if(circum>=e.getMinZoom() / 70) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	/**
 	 * Draw a small rectangle.
 	 * White if selected (as always) or red otherwise.
@@ -38,9 +62,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Node n) {
 		ElemStyle nodeStyle = MapPaintPlugin.elemStyles.getStyle(n);
-		if(nodeStyle!=null && Main.map.mapView.zoom()>=nodeStyle.getMinZoom()){
+		if(nodeStyle!=null){
 			if(nodeStyle instanceof IconElemStyle) {
-				drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
+				if(isZoomOk(nodeStyle)) {
+					drawNode(n, ((IconElemStyle)nodeStyle).getIcon());
+				}
 			} else {
 				// throw some sort of exception
 			}
@@ -57,7 +83,10 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * Want to make un-wayed segments stand out less than ways.
 	 */
 	@Override public void visit(Segment ls) {
+		ElemStyle segmentStyle = MapPaintPlugin.elemStyles.getStyle(ls);
+		if(isZoomOk(segmentStyle)) {
 			drawSegment(ls, getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"));
+		}
 	}
 
 	/**
@@ -74,6 +103,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		int realWidth = 0; //the real width of the element in meters 
 		boolean area=false;
 		ElemStyle wayStyle = MapPaintPlugin.elemStyles.getStyle(w);
+		
+		if(!isZoomOk(wayStyle)) {
+			return;
+		}
+		
 		if(wayStyle!=null)
 		{
 			if(wayStyle instanceof LineElemStyle)
@@ -187,7 +221,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			return;
 		Point p1 = nc.getPoint(ls.from.eastNorth);
 		Point p2 = nc.getPoint(ls.to.eastNorth);
-
+		
 		// checking if this segment is visible
 		if ((p1.x < 0) && (p2.x < 0)) return ;
 		if ((p1.y < 0) && (p2.y < 0)) return ;
@@ -222,10 +256,12 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * @param color The color of the node.
 	 */
 	@Override public void drawNode(Node n, Color color) {
-		Point p = nc.getPoint(n.eastNorth);
-		if ((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight())) return;
-		g.setColor(color);
-		g.drawRect(p.x-1, p.y-1, 2, 2);
+		if(isZoomOk(null)) {
+			Point p = nc.getPoint(n.eastNorth);
+			if ((p.x < 0) || (p.y < 0) || (p.x > nc.getWidth()) || (p.y > nc.getHeight())) return;
+			g.setColor(color);
+			g.drawRect(p.x-1, p.y-1, 2, 2);
+		}
 	}
 
 	// NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1

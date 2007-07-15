@@ -25,6 +25,6 @@ public class IconElemStyle extends ElemStyle
 
 	@Override public String toString()
 	{
-		return "LineElemStyle:  icon= " + icon +  " annotate=" + annotate;
+		return "IconElemStyle:  icon= " + icon +  " annotate=" + annotate;
 	}
 }

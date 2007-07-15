@@ -494,7 +494,7 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
                              && dlon * (tlon - plon) < dlat * (plat - tlat)) {
         // Only stop once both C and P are acute angles in CPT, according to
         // Pythagoras.
-        fprintf (flitePipe, "%d Stop\n", time (NULL));
+        fprintf (flitePipe, "%ld Stop\n", (long)time (NULL));
       }
       char *oldName = NULL;
       for (routeNodeType *ahead = shortest; ahead;
@@ -510,7 +510,7 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
         if (ahead == shortest && ahead->shortest && dividend < 0 &&
             dividend < divisor && divisor < -dividend &&
             Sqr (slon + alon) + Sqr (slat + alat) > 64000000) {
-          fprintf (flitePipe, "%d U turn\n", time (NULL));
+          fprintf (flitePipe, "%ld U turn\n", (long)time (NULL));
           break; // Only when first node is far behind us.
         }
         long long dintercept = divisor == 0 ? 9223372036854775807LL :
@@ -525,7 +525,7 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
           //flite_text_to_speech ("U turn", fliteV, "play");
           if (dintercept < dlon * dlon + dlat * dlat) {
             // Found a turn that should be made in the next 10 seconds.
-            fprintf (flitePipe, "%d %s in %s\n", time (NULL),
+            fprintf (flitePipe, "%ld %s in %s\n", (long)time (NULL),
               divisor > 0 ? "Left" : "Right", name);
           }
           break;
@@ -533,7 +533,7 @@ void GpsMove (gps_data_t *gps, char */*buf*/, size_t /*len*/, int /*level*/)
         if (name[0] != '\0') {
           if (oldName && stricmp (oldName, name)) {
             if (dintercept < dlon * dlon + dlat * dlat) {
-              fprintf (flitePipe, "%d %s\n", time (NULL), name);
+              fprintf (flitePipe, "%ld %s\n", (long)time (NULL), name);
             }
             break;
           }

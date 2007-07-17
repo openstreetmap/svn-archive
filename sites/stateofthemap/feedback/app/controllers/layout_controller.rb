@@ -1,0 +1,2 @@
+class LayoutController < ApplicationController
+end

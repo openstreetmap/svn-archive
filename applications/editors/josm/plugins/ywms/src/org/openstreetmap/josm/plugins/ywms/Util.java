@@ -245,4 +245,24 @@ public class Util
 
         return new File(localPath);
     }
+    
+	/**
+	 * Copies the ressource 'from' to the file in the plugin directory named 'to'.
+	 * @param from The source directory
+	 * @param to The destination directory
+	 * @throws FileNotFoundException 
+	 * @throws IOException 
+	 */
+	public static void copy(String from, String to) throws FileNotFoundException, IOException {
+		File pluginDir = new File(getPluginDir());
+		if (!pluginDir.exists())
+			pluginDir.mkdirs();
+    	FileOutputStream out = new FileOutputStream(getPluginDir()+to);
+    	InputStream in = Util.class.getResourceAsStream(from);
+    	byte[] buffer = new byte[8192];
+    	for(int len = in.read(buffer); len > 0; len = in.read(buffer))
+    		out.write(buffer, 0, len);
+    	in.close();
+    	out.close();
+    }
 }

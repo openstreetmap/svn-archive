@@ -85,8 +85,8 @@ public class YWMSPlugin extends Plugin
 	{
 		try
 		{
-			copy("/resources/ymap.html", "ymap.html");
-			copy("/resources/config.html", "config.html");
+			Util.copy("/resources/ymap.html", "ymap.html");
+			Util.copy("/resources/config.html", "config.html");
 			restartServer();
 		}
 		catch(IOException e)

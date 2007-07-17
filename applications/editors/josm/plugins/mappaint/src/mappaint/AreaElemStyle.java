@@ -5,7 +5,7 @@ public class AreaElemStyle extends ElemStyle
 {
 	Color colour;
 
-	public AreaElemStyle (Color colour, int maxScale, int minScale)
+	public AreaElemStyle (Color colour, long maxScale, long minScale)
 	{
 		this.colour = colour;
 		this.maxScale = maxScale;

@@ -3,14 +3,14 @@ package mappaint;
 abstract public class ElemStyle
 {
 	// zoom range to display the feature
-	protected int minScale;
-	protected int maxScale;
+	protected long minScale;
+	protected long maxScale;
 
-	public int getMinScale()
+	public long getMinScale()
 	{
 		return minScale;
 	}
-	public int getMaxScale()
+	public long getMaxScale()
 	{
 		return maxScale;
 	}

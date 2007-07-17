@@ -25,8 +25,8 @@ public class ElemStyleHandler extends DefaultHandler
     Color curAreaColour = null;
     ImageIcon curIcon = null;
     boolean curIconAnnotate = true;
-	int curScaleMax = 1000000000;
-	int curScaleMin = 0;
+	long curScaleMax = 1000000000;
+	long curScaleMin = 0;
 
     public ElemStyleHandler(  )
     {
@@ -190,12 +190,12 @@ public class ElemStyleHandler extends DefaultHandler
 		if(	inScaleMax == true) {
 			String content = new String(ch, start, length);
 
-			curScaleMax = Integer.parseInt(content);
+			curScaleMax = Long.parseLong(content);
 		}
 		if(	inScaleMin == true) {
 			String content = new String(ch, start, length);
 
-			curScaleMin = Integer.parseInt(content);
+			curScaleMin = Long.parseLong(content);
 		}
     }
 }

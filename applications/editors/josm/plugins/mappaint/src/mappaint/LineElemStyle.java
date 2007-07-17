@@ -8,7 +8,7 @@ public class LineElemStyle extends ElemStyle
 	Color colour;
 	boolean dashed = false;
 
-	public LineElemStyle (int width, int realWidth, Color colour, boolean dashed, int maxScale, int minScale)
+	public LineElemStyle (int width, int realWidth, Color colour, boolean dashed, long maxScale, long minScale)
 	{
 		this.width = width;
 		this.realWidth = realWidth;

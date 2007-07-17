@@ -56,6 +56,7 @@ my $line_position = 0; # current line position in the svg file
 my @svg_lines = ();    # the lines from the svg file
 my %point_is_in;       # lookup for 'what ways is this point in?'
 my %to_transform;      # ways that need transforming
+my $last_way_href;     # way last referenced in <use>
 
 # first pass, read in the svg lines, build the %point_is_in @svg_lines &
 # %to_transform structures.
@@ -80,6 +81,38 @@ while (<>) {
         $to_transform{$path_prefix}
             = [$line_position, $path_statement, $path_suffix, $path_points_ref];
         
+    }
+    # the following is a hack to find out whether anything that references
+    # a path is tagged with bezier="no"; if so, then the path is removed 
+    # from the "to_transform" list. This makes the assumption that osmarender
+    # creates only the plain path and the one with "t" at the end.
+    elsif ($line =~ /<(use|textPath) xlink:href="#((way|area)_\w+)"/)
+    {
+        my $path_prefix = "<path id=\"$2\" d=\""; # need this as hash key
+        if ($line =~ /bezier="no"/)
+        {
+            # if the "use" or "textPath" contains the bezier=no right away,
+            # then drop it from the to_transform list
+            delete $to_transform{$path_prefix};
+        }
+        else
+        {
+            # otherwise save the id in case the following line is a 
+            # <line> instruction that belatedly adds the bezier=no
+            $last_way_href = $path_prefix;
+        }
+    }
+    elsif ($line =~ /<line.*bezier="no"/)
+    {
+        # a <line> instruction with bezier=no; drop previously referenced
+        # way from to_transfrom list
+        delete $to_transform{$last_way_href} if defined($last_way_href);
+    }
+    else
+    {
+        # make sure that the <line> only affects an <use> that came directly
+        # before.
+        undef $last_way_href;
     }
     $line_position++;
 }

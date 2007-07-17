@@ -439,6 +439,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:apply-templates select="$instruction/@*" mode="copyAttributes">
                     <xsl:with-param name="classes" select="$classes"/>
                 </xsl:apply-templates>
+                <xsl:call-template name="getSvgAttributesFromOsmTags"/>
             </use>
         </xsl:if>
 
@@ -530,6 +531,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
         <use xlink:href="#{$pathId}">
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
+            <xsl:call-template name="getSvgAttributesFromOsmTags"/>
         </use>
     </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="getSvgAttributesFromOsmTags">
         <xsl:for-each select="tag[contains(@k,&quot;svg:&quot;)]">

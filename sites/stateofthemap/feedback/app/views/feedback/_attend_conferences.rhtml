@@ -1,0 +1,12 @@
+<ul>
+<li>Times per year</li>
+<% 1..5.times do |n| %>
+<%n +=1%>
+<li>
+<%= question[:freqeuncy] %> 
+<%= radio_button question[:variable], question[:attribute], question[:frequency] %>
+</li>
+<%end%>
+</ul>
+
+

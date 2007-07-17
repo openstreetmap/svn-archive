@@ -1,0 +1,43 @@
+<h2>Feedback - Conference</h2>
+
+<div id='question'>
+<%= form_tag :controller => 'feedback', :action => 'index'%>
+<p>
+Would you attend again next year?
+<p>
+<li>Yes
+<%= radio_button 'conference', 'attend_next', 1 %></li>
+<li>No
+<%= radio_button 'conference', 'works_in_geospatial', 0 %></li>
+
+<p>
+ Tag things that were good about the conference - seperate tags with commas eg talks, kro bar, curry
+<p>
+<%= render :partial => 'feedback/comments', :object => @conference_good_comments %>
+<p>
+
+ Tag things that were bad about the conference - seperate tags with commas eg rain, too short, curry
+<p>
+<%= render :partial => 'feedback/comments', :object => @conference_bad_comments %>
+
+<p>Was SOTM good value for money?
+<p>
+<li>Yes
+<%= radio_button 'conference', 'value_for_money', 1 %></li>
+<li>No
+<%= radio_button 'conference', 'value_for_money', 0 %></li>
+
+<p>Should the conference have been longer?
+<p>
+<li>Yes
+<%= radio_button 'conference', 'longer', 1 %></li>
+<li>No
+<%= radio_button 'conference', 'longer', 0 %></li>
+
+<p>Please leave any comments more comments:
+<p><%= render :partial => 'feedback/comments', :object => @conference_comments %>
+
+
+<%= submit_tag 'Submit'%>
+<%=end_form_tag%>
+</div>

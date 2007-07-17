@@ -1,0 +1,45 @@
+<h2>Feedback - Background </h2>
+
+<div id='question'>
+<%= form_tag :controller => 'feedback', :action => 'index'%>
+
+<p>What was your level of involvement in OSM before attending SOTM?
+<p><li>No previous involvement with OSM
+<%= radio_button 'background', 'involvement', 0 %></li>
+<li>Some invovement
+<%= radio_button 'background', 'involvement', 1 %></li>
+<li>Regular contributor
+<%= radio_button 'background', 'involvement', 2 %></li>
+<li>Mapping maniac
+<%= radio_button 'background', 'involvement', 3 %></li>
+<li>Extremely involved with OSM
+<%= radio_button 'background', 'involvement', 4 %></li>
+
+<p>
+How many conferences do you attend each year?
+<p><li>None
+<%= radio_button 'background', 'conferences_attended', 0 %></li>
+<li>1-3
+<%= radio_button 'background', 'conferences_attended', 2 %></li>
+<li>3-5
+<%= radio_button 'background', 'conferences_attended', 4 %></li>
+<li>More than 5
+<%= radio_button 'background', 'conferences_attended', 6 %></li>
+
+<p>
+Were you primarily at SOTM for business/commercial interests or for pleasure?
+<p><li>Business/Commercial
+<%= radio_button 'background', 'business_pleasure', 0 %></li>
+<li>Pleasure
+<%= radio_button 'background', 'business_pleasure', 1 %></li>
+
+<p>
+<p>Do you work in the geo-spatial industry?
+<li>Yes
+<%= radio_button 'background', 'works_in_geospatial', 1 %></li>
+<li>No
+<%= radio_button 'background', 'works_in_geospatial', 0 %></li>
+<p>
+<%= submit_tag 'Submit'%>
+<%=end_form_tag%>
+</div>

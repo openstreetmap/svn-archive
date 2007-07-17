@@ -1,0 +1,13 @@
+<ul>
+<li>Strongly disagree</li>
+<% 1..5.times do |n| %>
+<%n +=1%>
+<li>
+<%= n %>
+<%= radio_button question[:variable], question[:attribute], n %>
+</li>
+<%end%>
+<li>Strongly agree</li>
+</ul>
+
+

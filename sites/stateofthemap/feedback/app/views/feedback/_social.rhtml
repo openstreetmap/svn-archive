@@ -1,0 +1,32 @@
+<h2>Feedback - Social </h2>
+
+<div id='intro'>
+<p>Please rate how strongly you agree or disagree with the following statements, where 1 is strongly disagree and 5 is strongly agree:
+</div>
+
+<div id='question'>
+<%= form_tag :controller => 'feedback', :action => 'index'%>
+There was a good balance between talks and social opportunities at SOTM
+<%= render :partial => 'feedback/question', :object => @social_balance %>
+<br />
+The opportunity to meet people involved with OpenStreetMap was an important decision when deciding the attend the conference
+<%= render :partial => 'feedback/question', :object => @social_meet_people %>
+<br />
+The social venues (Kro Bar, Saturday night's restaurant) were well chosen and suited my needs
+<%= render :partial => 'feedback/question', :object => @social_venues %>
+<br />
+The catering at the conference:
+<br />
+<li>Was below my expectations
+<%= radio_button 'social', 'catering', 1 %></li>
+<li>Meet my expectations
+<%= radio_button 'social', 'catering', 2 %></li>
+<li>Exceeded my expectations
+<%= radio_button 'social', 'catering', 3 %></li>
+
+<p>Please leave any comments about social opportunities or the catering::
+<p><%= render :partial => 'feedback/comments', :object => @social_comments %>
+
+<%= submit_tag 'Submit'%>
+<%=end_form_tag%>
+</div>

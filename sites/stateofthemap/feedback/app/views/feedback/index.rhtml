@@ -1,0 +1,38 @@
+<h1> Feedback for SOTM07 </h1>
+
+<%= error_messages_for :user %>
+
+
+<%unless @current_user %>
+Please enter the email address that you used to register for the State of the Map:
+
+<%= form_tag :controller => 'feedback', :action => 'login' %>
+<table>
+<tr><td>email address: </td><td><%= text_field :user, :email, {:size => '30', :maxlength => '40'} %></td></tr>
+<tr><td><%= submit_tag 'Lookup' %></td></tr>
+</table>
+<%= end_form_tag %>
+<% end%>
+
+<% if @current_user %>
+<p><%= @current_user.email %> 
+
+<%unless @stage%>
+<%= render :partial => 'feedback/talks' %>
+<%end%>
+<% if @stage == 'social' %>
+<%= render :partial => 'feedback/social' %>
+<% elsif @stage == 'background' %>
+<%= render :partial => 'feedback/background' %>
+<% elsif @stage == 'conference' %>
+<%= render :partial => 'feedback/conference' %>
+<% elsif @stage == 'end' %>
+<%= render :partial => 'feedback/final' %>
+<%end%>
+
+
+<p>
+<%= link_to 'log out', {:controller => 'feedback', :action => 'logout'} %> 
+<%end%>
+
+

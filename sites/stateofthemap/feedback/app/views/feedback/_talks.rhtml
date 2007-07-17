@@ -1,0 +1,27 @@
+<h2>Feedback - Talks</h2>
+
+<div id='intro'>
+Please rate how strongly you agree or disagree with the following statements, where 1 is strongly disagree and 5 is strongly agree:
+</div>
+
+<div id='question'>
+<%= form_tag :controller => 'feedback', :action => 'index'%>
+The talks at SOTM were relevant to my interests
+<%= render :partial => 'feedback/question', :object => @talks_relevant %>
+<br />
+The technical level of the talks at SOTM was too high
+<%= render :partial => 'feedback/question', :object => @talks_technical_level %>
+<br />
+The talks at SOTM were well varied, covering a variety of relevant subjects
+<%= render :partial => 'feedback/question', :object => @talks_variety %>
+<br />
+There should have been more lightning talks at SOTM
+<%= render :partial => 'feedback/question', :object => @talks_lightning_talks %>
+<br />
+Please leave any comments about the talks and presentations at the conference:
+<p><%= render :partial => 'feedback/comments', :object => @talks_comments %>
+</div>
+
+
+<%= submit_tag 'Submit'%>
+<%=end_form_tag%>

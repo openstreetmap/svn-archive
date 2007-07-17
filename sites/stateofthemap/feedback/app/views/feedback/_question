@@ -1,0 +1,12 @@
+Strongly disagree
+<ul>
+<% 1..5.times do |n| %>
+<%n +=1%>
+<li>
+<%= n %>
+<%= radio_button :question['variable'], :question['attribute'], n %>
+</li>
+<%end%>
+</ul>
+Strongly agree
+

@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.PluginProxy;
 
 import livegps.LiveGpsPlugin;
@@ -40,6 +41,15 @@ public class SurveyorPlugin {
         super();
         
         // try to determine if the livegps plugin was already loaded:
+//        PluginInformation pluginInfo = PluginInformation.getLoaded("livegps");
+//        if (pluginInfo == null) {
+//          JOptionPane.showMessageDialog(null, "Please install wmsplugin");
+//          return;
+//        }
+//        if (!pluginInfo.version.equals("2")) {
+//          JOptionPane.showMessageDialog(null, "livegps Version 2 required.");
+//          return;
+//        }
         try {
             Class.forName("livegps.LiveGpsPlugin");
         } catch(ClassNotFoundException cnfe) {

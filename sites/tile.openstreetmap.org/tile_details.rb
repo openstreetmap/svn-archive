@@ -9,19 +9,10 @@ module Foo
   require 'singleton'
 
   class Bar
-    def get_local_connection
-      begin
-        return Mysql.real_connect('localhost', 'tile', 'tile', 'tile')
-      rescue MysqlError => e
-        mysql_error(e)
-      end
-    end
-
-
     def call_local_sql
       dbh = nil
       begin
-        dbh = get_local_connection
+        dbh = Mysql.real_connect('localhost', 'tile', 'tile', 'tile')
         sql = yield
         res = dbh.query(sql)
 return res #        if res.nil? then return true else return res end
@@ -45,6 +36,9 @@ end
 fb = Foo::Bar.new
 
 res = fb.call_local_sql { "select dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
+if res.nil?
+  exit
+end
 
 res.each_hash do |row|
   puts "tile created at #{row['created_at']}"

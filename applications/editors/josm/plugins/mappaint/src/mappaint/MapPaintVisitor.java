@@ -51,7 +51,10 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		//
 		// so the exact "correcting value" below depends only on the screen size and resolution
 		// XXX - do we need a Preference setting for this (if things vary widely)?
-		System.out.println("Circum: " + circum + " max: " + e.getMaxScale() + " min:" + e.getMinScale());
+		/*System.out.println(
+			"Circum: " + circum + 
+			" max: " + e.getMaxScale() + "(" + e.getMaxScale()/22 + ")" +
+			" min:" + e.getMinScale() + "(" + e.getMinScale()/22 + ")");*/
 		if(circum>=e.getMaxScale() / 22 || circum<e.getMinScale() / 22) {
 			return false;
 		} else {

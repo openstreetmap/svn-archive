@@ -48,6 +48,7 @@ else
 
   # User gets nothing once they hit upper limit (and not even counted any more)
   if hits > 75_000
+    sleep 3
     exit
   end
 

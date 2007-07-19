@@ -46,10 +46,11 @@ else
   end
   hits += 1
 
-  # User gets nothing once they hit upper limit (and not even counted any more)
+  # User gets an error once they hit upper limit (and not even counted any more)
   if hits > 75_000
     sleep 3
-    exit
+    cgi.header("status"=>"403 Your IP has downloaded too many tiles today. Please try again tomorrow or use planet.osm and render them yourself!")
+   exit
   end
 
   fb.call_local_sql { "update access set hits=#{hits} where ip='#{ip}'" }

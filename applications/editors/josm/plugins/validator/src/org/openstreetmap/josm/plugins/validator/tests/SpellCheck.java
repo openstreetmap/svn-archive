@@ -114,8 +114,8 @@ public class SpellCheck extends Test
 
 	public static void initialize(OSMValidatorPlugin plugin) throws Exception
 	{
-		initializeSpellCheck(plugin);
-		initializePresets(plugin);
+		initializeSpellCheck();
+		initializePresets();
 	}
 
 	/**
@@ -125,11 +125,10 @@ public class SpellCheck extends Test
 	 * the word is valid, but if it starts with -, the word should be replaced
 	 * by the nearest + word before this.
 	 * 
-	 * @param plugin The validator plugin 
 	 * @throws FileNotFoundException 
 	 * @throws IOException 
 	 */
-	private static void initializeSpellCheck(OSMValidatorPlugin plugin) throws FileNotFoundException, IOException 
+	private static void initializeSpellCheck() throws FileNotFoundException, IOException 
 	{
 		spellCheckKeyData = new HashMap<String, String>();
         String sources = Main.pref.get( PREF_SOURCES );
@@ -186,7 +185,7 @@ public class SpellCheck extends Test
 	 * @param plugin The validator plugin
 	 * @throws Exception
 	 */
-	public static void initializePresets(@SuppressWarnings("unused") OSMValidatorPlugin plugin) throws Exception
+	public static void initializePresets() throws Exception
 	{
 		if( !Main.pref.getBoolean(PREF_CHECK_VALUES) )
 			return;
@@ -531,7 +530,12 @@ public class SpellCheck extends Test
 			}
 		}
 		
-		return commands.size() > 1 ? new SequenceCommand("Fix properties", commands) : commands.get(0);
+        if( commands.size() == 0 )
+            return null;
+        else if( commands.size() == 1 )
+            return commands.get(0);
+        else
+            return new SequenceCommand("Fix properties", commands);
 	}
 	
 	@Override

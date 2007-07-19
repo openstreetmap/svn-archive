@@ -45,36 +45,38 @@ else
     hits = row['hits'].to_i
   end
   hits += 1
-  fb.call_local_sql { "update access set hits=#{hits} where ip='#{ip}'" }
 
-  if hits > 100_000
+  # User gets nothing once they hit upper limit (and not even counted any more)
+  if hits > 75_000
     exit
   end
+
+  fb.call_local_sql { "update access set hits=#{hits} where ip='#{ip}'" }
   if hits > 50_000
-    puts `cat /home/www/tile/images/limit.png`
+    print IO.read("/home/www/tile/images/limit.png")
     exit
   end
 end
 
 #now send the tile
-x = cgi['x']
-y = cgi['y']
-z = cgi['z']
+x = cgi['x'].to_i
+y = cgi['y'].to_i
+z = cgi['z'].to_i
 
-if z and (z.to_i > 18 or z.to_i < 0)
+if z and (z > 18 or z < 0)
   exit
 end
 
 # valid x/y for tiles are 0 ... 2^zoom-1
-limit = (2 ** z.to_i) - 1
+limit = (2 ** z) - 1
 
-if x and (x.to_i < 0 or x.to_i > limit)
-  puts `cat /home/www/tile/images/blank-000000.png`
+if x and (x < 0 or x > limit)
+  print IO.read("/home/www/tile/images/blank-000000.png")
   exit
 end
 
-if y and (y.to_i < 0 or y.to_i > limit)
-  puts `cat /home/www/tile/images/blank-000000.png`
+if y and (y < 0 or y > limit)
+  print IO.read("/home/www/tile/images/blank-000000.png")
   exit
 end
 
@@ -111,7 +113,7 @@ if res.num_rows == 0
   exit
 else
   res.each_hash do |row|
-    puts row['data']
+    print row['data']
     if row['dirty_t'] == 'false' and Time.parse(row['created_at']) < (Time.now - (60*60*24*3))
       fb.call_local_sql { "update tiles set dirty_t = 'true' where x = #{x} and y=#{y} and z=#{z}" }
     end

@@ -25,17 +25,17 @@ return res #        if res.nil? then return true else return res end
     end
   end
 end
-x = cgi['x']
-y = cgi['y']
-z = cgi['z']
+x = cgi['x'].to_i
+y = cgi['y'].to_i
+z = cgi['z'].to_i
 
-if z and (z.to_i > 18 or z.to_i < 2)
+if z and (z > 18 or z < 0)
   exit
 end
 
 fb = Foo::Bar.new
 
-res = fb.call_local_sql { "select dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
+res = fb.call_local_sql { "select dirty_t, created_at from tiles where x=#{x} and y=#{y} and z=#{z} limit 1" }
 if res.nil?
   exit
 end

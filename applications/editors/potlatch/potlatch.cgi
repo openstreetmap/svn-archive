@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 7.7.2007 (buggy merge fixed)
+	# last update 19.7.2007 (smarter whichways behaviour)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -113,6 +113,8 @@
 	var redopropertywindow=0;		// need to redraw property window after deletion?
 	var savedProperties=new Array();// clipboard for properties
 	var tolerance=4/Math.pow(2,_root.scale-12);
+	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
+	var bigedge_b=999999; var bigedge_t=-999999; //  |
 
 	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
 	
@@ -122,7 +124,9 @@
 	colours["motorway"		]=0x3366CC; 
 	colours["motorway_link"	]=0x3366CC;	
 	colours["trunk"			]=0x007700;	// primary A road
+	colours["trunk_link"	]=0x007700; //  |
 	colours["primary"		]=0x770000;	// non-primary A road
+	colours["primary_link"	]=0x770000; //  |
 	colours["secondary"		]=0xCC6600;	// B road
 	colours["footway"		]=0xFF6644;	
 	colours["cycleway"		]=0xFF6644;	
@@ -409,7 +413,10 @@
 				_root.map.feedback.clear();
 				_root.map.ways[wayselected].select();	// removes anchorhints, so must be must be last
 			}
-		} else { addEndPoint(_root.map._xmouse,_root.map._ymouse,this.node); }
+		} else { 
+			// Join ways (i.e. junction)
+			addEndPoint(this._x,this._y,this.node);
+		}
 	};
 	Object.registerClass("anchorhint",AnchorHint);
 
@@ -521,7 +528,7 @@
 			nw=result[1];	// new way ID
 			if (result[0]!=nw) {
 				_root.map.ways[result[0]]._name=nw;
-				if (_root.t_details.text==result[0]) { _root.t_details.text=nw; }
+				if (_root.t_details.text==result[0]) { _root.t_details.text=nw; _root.t_details.setTextFormat(plainText); }
 				if (wayselected==result[0]) { wayselected=nw; }
 			}
 			_root.map.ways[nw].xmin=result[4];
@@ -1390,6 +1397,7 @@
 			case 112:		setBackground(0); break; 							// f1 - no base layer
 			case 113:		setBackground(2-1*(Key.isDown(Key.SHIFT))); break;	// f2 - Yahoo! base layer
 			case 71:		loadGPS(); break;									// G - load GPS
+			case 70:		handleWarningAction('Retry'); break;				// F - force reupload
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
 			case 88:		_root.map.ways[wayselected].splitWay(); break;		// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
@@ -1793,28 +1801,37 @@
 
 	function whichWays() {
 		if (_root.waycount>500) { purgeWays(); }
-		whichresponder=function() {};
-		whichresponder.onResult=function(result) {
-			_root.whichreceived+=1;
-			waylist  =result[0];
-			pointlist=result[1];
-			for (i in waylist) {
-				way=waylist[i];
-				if (!_root["map"]["ways"][way]) {
-					_root.map.ways.attachMovie("way",way,++waydepth);
-					_root["map"]["ways"][way].load(way);
-					_root.waycount+=1;
-					_root.waysrequested+=1;
+		if (_root.edge_l>_root.bigedge_l &&
+			_root.edge_r<_root.bigedge_r &&
+			_root.edge_b>_root.bigedge_b &&
+			_root.edge_t<_root.bigedge_t) {
+			// we have already loaded this area, so ignore
+		} else {
+			whichresponder=function() {};
+			whichresponder.onResult=function(result) {
+				_root.whichreceived+=1;
+				waylist  =result[0];
+				pointlist=result[1];
+				for (i in waylist) {
+					way=waylist[i];
+					if (!_root["map"]["ways"][way]) {
+						_root.map.ways.attachMovie("way",way,++waydepth);
+						_root["map"]["ways"][way].load(way);
+						_root.waycount+=1;
+						_root.waysrequested+=1;
+					}
 				}
-			}
-			// - to read pointlist:
-			//   for (i in pointlist) {
-			//     if (pointlist[i][1]['name']) { _root.chat.text+=pointlist[i][1]['name']+','; }
-			//   }
-			// - will need to count and purge POIs too
-		};
-		remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
-		_root.whichrequested+=1;
+				// - to read pointlist:
+				//   for (i in pointlist) {
+				//     if (pointlist[i][1]['name']) { _root.chat.text+=pointlist[i][1]['name']+','; }
+				//   }
+				// - will need to count and purge POIs too
+			};
+			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
+			_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
+			_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
+			_root.whichrequested+=1;
+		}
 	}
 
 	// purgeWays - remove any clean ways outside current view
@@ -1832,6 +1849,8 @@
 				_root.waycount-=1;
 			}
 		}
+		_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
+		_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 	}
 
 

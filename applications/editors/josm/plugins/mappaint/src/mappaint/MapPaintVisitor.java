@@ -36,7 +36,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		if(!Main.pref.getBoolean("mappaint.zoomLevelDisplay",false)) {
 			return true;
 		}
-			
+					
 		if(e == null) {
 			/* the default for things that don't have a rule (show, if scale is smaller than 1500m) */
 			if(circum < 1500) {
@@ -46,7 +46,13 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			}
 		}
 		
-		if(circum>=e.getMaxScale() / 70 || circum<e.getMinScale() / 70) {
+		// formular to calculate a map scale: natural size / map size = scale
+		// example: 876000mm (876m as displayed) / 22mm (roughly estimated screen size of legend bar) = 39818
+		//
+		// so the exact "correcting value" below depends only on the screen size and resolution
+		// XXX - do we need a Preference setting for this (if things vary widely)?
+		System.out.println("Circum: " + circum + " max: " + e.getMaxScale() + " min:" + e.getMinScale());
+		if(circum>=e.getMaxScale() / 22 || circum<e.getMinScale() / 22) {
 			return false;
 		} else {
 			return true;

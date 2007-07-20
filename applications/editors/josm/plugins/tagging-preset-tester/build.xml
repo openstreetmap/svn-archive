@@ -1,9 +1,9 @@
-<project name="annotation-tester" default="build" basedir=".">
+<project name="tagging-preset-tester" default="build" basedir=".">
 
 	<target name="build">
-		<jar destfile="${user.home}/.josm/plugins/annotation-tester.jar" 
+		<jar destfile="${user.home}/.josm/plugins/tagging-preset-tester.jar" 
 			 basedir="bin"
-			 manifest="src/org/openstreetmap/josm/plugins/annotationtester/MANIFEST.MF">
+			 manifest="src/org/openstreetmap/josm/plugins/taggingpresettester/MANIFEST.MF">
 			<fileset dir="."><include name="images/*"/></fileset>
 		</jar>
 	</target>

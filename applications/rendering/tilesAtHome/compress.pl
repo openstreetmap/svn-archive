@@ -268,9 +268,9 @@ sub compress
     }
     
     my $ZipSize += -s $Filename; ## Add the 10 MB check here.
-    if($ZipSize > 10000000) 
+    if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
     {
-        statusMessage($Filename." is larger than 10 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage($Filename." is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand("unzip -qj $Filename -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})

@@ -268,7 +268,7 @@ sub compress
     }
     
     my $ZipSize += -s $Filename; ## Add the 2 MB check here.
-    if($ZipSize > 2000000) 
+    if($ZipSize > 10000000) 
     {
         statusMessage($Filename." is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand("unzip -qj $Filename -d $Config{WorkingDirectory}",$PID);

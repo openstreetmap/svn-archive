@@ -160,7 +160,7 @@ sub upload
 {
     my ($File) = @_;
     my $ZipSize += -s $File;
-    if($ZipSize > 2000000) 
+    if($ZipSize > 10000000) 
     {
         statusMessage("zip is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
         runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);

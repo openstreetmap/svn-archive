@@ -77,7 +77,7 @@ if(opendir(ZIPDIR, $ZipDir))
     processOldZips(1);
 }
 
-# We might have created lots of single tiles if some tileset zips were larger than 2 MB, so re-check here
+# We might have created lots of single tiles if some tileset zips were larger than 10 MB, so re-check here
 
 compress(2); ## second (and last) run.
 
@@ -162,7 +162,7 @@ sub upload
     my $ZipSize += -s $File;
     if($ZipSize > 10000000) 
     {
-        statusMessage("zip is larger than 2 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("zip is larger than 10 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
         runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})

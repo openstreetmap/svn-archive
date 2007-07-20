@@ -126,11 +126,6 @@ my $JobTime;
 # hash for MagicMkdir
 my %madeDir;
 
-# Keep track of pseudo-XML open tags in case we have to abort
-#my @xmltagsOpen; 
-## TODO: find a way to not excessively open/close file and still be able to 
-##       write a rendering summary for the server for each tile/tileset
-
 # Handle the command-line
 my $Mode = shift();
 
@@ -357,41 +352,39 @@ sub ProcessRequestsFromServer
 }
 
 sub PutRequestBackToServer 
-{ 
-    ## TODO: Actually call this.
-    my $X = shift();
-    my $Y = shift();
-    my $Cause = shift();
+{
+    ## TODO: will not be called in some libGD abort situations
+    my ($X,$Y,$Cause) = @_;
     
     my $Prio = $Config{ReRequestPrio};
     
-    my $LocalFilename = "$Config{WorkingDirectory}requesting.txt";
+    my $LocalFilename = $Config{WorkingDirectory}."/requesting.txt";
     
-    killafile($LocalFilename);
+    killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
     # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
-    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=ReRequest:" . $Cause . ":" . $Config{UploadUsername};
+    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahClientReRequest:" . $Cause;
     
-    statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(
         $RequestUrlString, 
         $LocalFilename, 
         0);
-
+    
     if(! -f $LocalFilename)
     {
         return (0, "Error reading response from server");
     }
-
+    
     # Read into memory
     open(my $fp, "<", $LocalFilename) || return;
     my $Request = <$fp>;
     chomp $Request;
     close $fp;
     
-    ## TODO: Check response for "OK"
+    ## TODO: Check response for "OK" or "Duplicate Entry" (which would be OK, too)
     
-    killafile($LocalFilename);
+    killafile($LocalFilename); # don't leave old files laying around
 
 }
 
@@ -465,9 +458,10 @@ sub GenerateTileset
             if (-s $partialFile == 0)
             {
                 printf("No data here either\n");
-                # if loop was requested just return (FIXME: tell the server that the job has not been done yet)
-                # or else exit with an error. (to enable wrappers to better handle this situation 
+                # if loop was requested just return  or else exit with an error. 
+                # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
+                PutRequestBackToServer($X,$Y,"NoData");
                 return if ($Mode eq "loop"); 
                 exit(1); 
             }
@@ -495,6 +489,7 @@ sub GenerateTileset
       if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
       {
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        PutRequestBackToServer($X,$Y,"BadUTF8");
         return 0 if ($Mode eq "loop");
         exit(1);
       }
@@ -555,6 +550,7 @@ sub GenerateTileset
                 {
                     # stop rendering if frollo fails, as current osmarender is 
                     # dependent on frollo hints
+                    PutRequestBackToServer($X,$Y,"FrolloFail");
                     return 0 if ($Mode eq "loop"); 
                     exit(1); 
                 }
@@ -671,7 +667,8 @@ sub GenerateTileset
 
 #-----------------------------------------------------------------------------
 # Render a tile
-#   $X, $Y, $Zoom - which tile
+#   $X, $Y - which tileset (Always the z12 tilenumbers)
+#   $Ytile, $Zoom - which tilestripe
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #-----------------------------------------------------------------------------
@@ -915,6 +912,8 @@ sub xml2svg
 
 #-----------------------------------------------------------------------------
 # Render a SVG file
+# $X, $Y - tilemnumbers of the z12 tile containing the data we're working on
+# $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
 #-----------------------------------------------------------------------------
 sub svg2png 
 {
@@ -941,6 +940,8 @@ sub svg2png
     if (not runCommand($Cmd,$PID))
     {
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+        ## TODO: check this actually gets the correct coords 
+        PutRequestBackToServer($X,$Y,"BadSVG");
         return 0 if ($Mode eq "loop");
         exit(1);
     }
@@ -1147,8 +1148,6 @@ sub splitImageX
    
         # Temporary filename
         my $Filename2 = "$Filename.cut";
-        #my $EmptyLand = 0;
-        #my $EmptySea = 0;
         my $Basename = $Filename;   # used for statusMessage()
         $Basename =~ s|.*/||;
 
@@ -1156,6 +1155,7 @@ sub splitImageX
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
+            PutRequestBackToServer($X,$Y,"BlackTile");
             exit(3);
         }
         # Detect empty tile here:

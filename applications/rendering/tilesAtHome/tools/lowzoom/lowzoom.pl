@@ -423,8 +423,9 @@ my $newCount = 0;
 my @tileinfo;
 my $key;
 while (my $line = <fh>){
-     if ( $line =~ /^[0-9]*\,[0-9]*,[0-9]*,/ ) {
-         @tileinfo = split(/,/,$line);        if ($Z <= $tileinfo[2] && $tileinfo[2] <= $MaxZ) {
+    if ( $line =~ /^[0-9]*\,[0-9]*,[0-9]*,/ ) {
+        @tileinfo = split(/,/,$line);
+        if ($Z <= $tileinfo[2] && $tileinfo[2] <= $MaxZ) {
             if ($X*2**($MaxZ-$Z) <= $tileinfo[0] && $tileinfo[0] <= ($X+1)*2**($MaxZ-$Z)) {
                 if ($Y*2**($MaxZ-$Z) <= $tileinfo[1] && $tileinfo[1] <= ($Y+1)*2**($MaxZ-$Z)) {
                     $key = sprintf("%s,%s,%s",$tileinfo[0],$tileinfo[1],$tileinfo[2]);

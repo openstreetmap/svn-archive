@@ -1,4 +1,4 @@
-package org.openstreetmap.josm.plugins.annotationtester;
+package org.openstreetmap.josm.plugins.taggingpresettester;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -18,32 +18,32 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.gui.annotation.AnnotationCellRenderer;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingCellRenderer;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
 import org.xml.sax.SAXException;
 
-public class AnnotationTester extends JFrame {
+public class TaggingPresetTester extends JFrame {
 
-	private JComboBox annotationPresets;
+	private JComboBox taggingPresets;
 	private final String[] args;
-	private JPanel annotationPanel = new JPanel(new BorderLayout());
+	private JPanel taggingPresetPanel = new JPanel(new BorderLayout());
 	private JPanel panel = new JPanel(new BorderLayout());
 
 	public void reload() {
-		Vector<AnnotationPreset> allPresets = new Vector<AnnotationPreset>();
+		Vector<TaggingPreset> allPresets = new Vector<TaggingPreset>();
 		for (String source : args) {
 			InputStream in = null;
 			try {
 				if (source.startsWith("http") || source.startsWith("ftp") || source.startsWith("file"))
 					in = new URL(source).openStream();
 				else if (source.startsWith("resource://"))
-					in = AnnotationTester.class.getResourceAsStream(source.substring("resource:/".length()));
+					in = TaggingPresetTester.class.getResourceAsStream(source.substring("resource:/".length()));
 				else
 					in = new FileInputStream(source);
-				allPresets.addAll(AnnotationPreset.readAll(in));
+				allPresets.addAll(TaggingPreset.readAll(in));
 			} catch (IOException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Could not read annotation preset source: "+source);
+				JOptionPane.showMessageDialog(null, "Could not read tagging preset source: "+source);
 			} catch (SAXException e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Error parsing "+source+": "+e.getMessage());
@@ -55,32 +55,32 @@ public class AnnotationTester extends JFrame {
 			} catch (IOException e) {
 			}
 		}
-		annotationPresets.setModel(new DefaultComboBoxModel(allPresets));
+		taggingPresets.setModel(new DefaultComboBoxModel(allPresets));
 	}
 
 	public void reselect() {
-		annotationPanel.removeAll();
-		AnnotationPreset preset = (AnnotationPreset)annotationPresets.getSelectedItem();
+		taggingPresetPanel.removeAll();
+		TaggingPreset preset = (TaggingPreset)taggingPresets.getSelectedItem();
 		if (preset == null)
 			return;
 		JPanel p = preset.createPanel();
 		p.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		if (p != null)
-			annotationPanel.add(p, BorderLayout.NORTH);
+			taggingPresetPanel.add(p, BorderLayout.NORTH);
 		panel.validate();
 		panel.repaint();
 	}
 
-	public AnnotationTester(String[] args) {
-		super("Annotation Preset Tester");
+	public TaggingPresetTester(String[] args) {
+		super("Tagging Preset Tester");
 		this.args = args;
-		annotationPresets = new JComboBox();
-		annotationPresets.setRenderer(new AnnotationCellRenderer());
+		taggingPresets = new JComboBox();
+		taggingPresets.setRenderer(new TaggingCellRenderer());
 		reload();
 
-		panel.add(annotationPresets, BorderLayout.NORTH);
-		panel.add(annotationPanel, BorderLayout.CENTER);
-		annotationPresets.addActionListener(new ActionListener(){
+		panel.add(taggingPresets, BorderLayout.NORTH);
+		panel.add(taggingPresetPanel, BorderLayout.CENTER);
+		taggingPresets.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				reselect();
 			}
@@ -90,9 +90,9 @@ public class AnnotationTester extends JFrame {
 		JButton b = new JButton("Reload");
 		b.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				int i = annotationPresets.getSelectedIndex();
+				int i = taggingPresets.getSelectedIndex();
 				reload();
-				annotationPresets.setSelectedIndex(i);
+				taggingPresets.setSelectedIndex(i);
 			}
 		});
 		panel.add(b, BorderLayout.SOUTH);
@@ -109,7 +109,7 @@ public class AnnotationTester extends JFrame {
 				return;
 			args = new String[]{c.getSelectedFile().getPath()};
 		}
-		JFrame f = new AnnotationTester(args);
+		JFrame f = new TaggingPresetTester(args);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

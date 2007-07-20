@@ -18,7 +18,7 @@ public class ElemStyleHandler extends DefaultHandler
     ElemStyles styles = null;
     String curKey = null;
 	String curValue = null;
-	int curLineWidth = 1;
+	int curLineWidth = -1;
 	int curLineRealWidth = 0;
 	boolean curLineDashed = false;
     Color curLineColour = null;
@@ -149,7 +149,7 @@ public class ElemStyleHandler extends DefaultHandler
             	newStyle = new LineElemStyle(curLineWidth, curLineRealWidth, curLineColour, 
 										curLineDashed, curScaleMax, curScaleMin);
             	styles.add (curKey, curValue, newStyle);
-				curLineWidth	= 1;
+				curLineWidth	= -1;
 				curLineRealWidth= 0;
 				curLineDashed   = false;
 				curLineColour 	= null;

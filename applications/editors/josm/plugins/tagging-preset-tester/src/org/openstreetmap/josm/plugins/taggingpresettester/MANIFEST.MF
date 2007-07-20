@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTester
+Plugin-Class: org.openstreetmap.josm.plugins.taggingpresettester.TaggingPresetTesterAction
+Plugin-Description: Make the Tagging Preset Tester tool available in
+  the help menu.

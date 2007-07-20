@@ -15,9 +15,9 @@ import javax.swing.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.*;
 import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset;
-import org.openstreetmap.josm.gui.annotation.AnnotationPreset.*;
-import org.openstreetmap.josm.gui.preferences.AnnotationPresetPreference;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset;
+import org.openstreetmap.josm.gui.tagging.TaggingPreset.*;
+import org.openstreetmap.josm.gui.preferences.TaggingPresetPreference;
 import org.openstreetmap.josm.plugins.validator.*;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.plugins.validator.util.Util;
@@ -190,7 +190,7 @@ public class SpellCheck extends Test
 		if( !Main.pref.getBoolean(PREF_CHECK_VALUES) )
 			return;
 		
-		Collection<AnnotationPreset> presets = AnnotationPresetPreference.annotationPresets;
+		Collection<TaggingPreset> presets = TaggingPresetPreference.taggingPresets;
 		if( presets == null || presets.isEmpty() )
 		{
 			// Skip re-reading presets if there are none available
@@ -286,7 +286,7 @@ public class SpellCheck extends Test
 		}
 		
 		XmlObjectParser parser = new XmlObjectParser();
-		parser.mapOnStart("item", AnnotationPreset.class);
+		parser.mapOnStart("item", TaggingPreset.class);
 		parser.map("text", Text.class);
 		parser.map("check", Check.class);
 		parser.map("combo", Combo.class);
@@ -306,11 +306,11 @@ public class SpellCheck extends Test
 	}
 
 	/**
-	 * Reads the annotations presets
+	 * Reads the tagging presets
 	 */
 	public static void readPresetFromPreferences() 
 	{
-		String allAnnotations = Main.pref.get("annotation.sources");
+		String allAnnotations = Main.pref.get("taggingpreset.sources");
 		StringTokenizer st = new StringTokenizer(allAnnotations, ";");
 		while (st.hasMoreTokens()) 
 		{

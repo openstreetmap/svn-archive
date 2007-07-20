@@ -160,9 +160,9 @@ sub upload
 {
     my ($File) = @_;
     my $ZipSize += -s $File;
-    if($ZipSize > 10000000) 
+    if($ZipSize > $Config{ZipHardLimit} * 1000 * 1000) 
     {
-        statusMessage("zip is larger than 10 MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        statusMessage("zip is larger than ".$Config{ZipHardLimit}." MB, retrying as split tileset.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
         runCommand("unzip -qj $File -d $Config{WorkingDirectory}",$PID);
 
         if($Config{DeleteZipFilesAfterUpload})

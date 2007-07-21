@@ -42,7 +42,7 @@ if(1){
 include("../../connect/connect.php");
 
 $QueueDir = "/home/ojw/tiles-ojw2/Queue/";
-list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 24);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 2);
 
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 2);
 
@@ -202,6 +202,9 @@ function HandleDir($Dir, $UserID, $VersionID){
   return($Count);
 }
 
+function GetKey($X,$Y,$Z,$Layer){
+  return(sprintf("%d_%d_%d_%d", $Layer,$X,$Y,$Z));
+}
 #-----------------------------------------------------------------------------------
 # Save metadata for each tile in the upload
 #-----------------------------------------------------------------------------------
@@ -215,10 +218,12 @@ function SaveMetadata($TileList, $UserID, $VersionID){
   foreach($TileList as $SqlSnippet){
     
     // Use this line if you need access to separate fields
-    // list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
+    list($X, $Y, $Z, $Layer, $Size) = explode(",", $SqlSnippet);
+    
+    $Key = GetKey($X,$Y,$Z,$Layer);
 
-    $Fields = "x, y, z, type, size, date, user, version, tileset";
-    $Values = sprintf("%s, now(), %d, %d, 0", $SqlSnippet, $UserID, $VersionID);
+    $Fields = "x, y, z, type, size, date, user, version, tileset, key";
+    $Values = sprintf("%s, now(), %d, %d, %d, '%s'", $SqlSnippet, $UserID, $VersionID, 0, $Key);
  
     $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
     mysql_query($SQL);

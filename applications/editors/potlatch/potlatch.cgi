@@ -408,8 +408,6 @@
 				_root.map.ways[wayselected].upload();
 				_root.map.ways[this.way].remove();
 				clearTooltip();
-				setTypeText("Way",wayselected);
-				populatePropertyWindow('way');
 				_root.map.feedback.clear();
 				_root.map.ways[wayselected].select();	// removes anchorhints, so must be must be last
 			}
@@ -456,6 +454,26 @@
 		};
 		remote.call('getway',responder,this._name,wayid,baselong,basey,masterscale);
 	};
+
+	//		Variation to create from unwayed segments
+
+	function loadFromUnwayed() {
+		makeresponder=function() { };
+		makeresponder.onResult=function(result) {
+			if (result[0]==0) { return; }
+			_root.newwayid--;
+			_root.map.ways.attachMovie("way",newwayid,++waydepth);
+			_root.map.ways[newwayid].path=result[0];
+			_root.map.ways[newwayid].xmin=result[1];
+			_root.map.ways[newwayid].xmax=result[2];
+			_root.map.ways[newwayid].ymin=result[3];
+			_root.map.ways[newwayid].ymax=result[4];
+			_root.map.ways[newwayid].clean=0;
+			_root.map.ways[newwayid].redraw();
+			_root.map.ways[newwayid].select();
+		};
+		remote.call('makeway',makeresponder,_root.map._xmouse,_root.map._ymouse,baselong,basey,masterscale);
+	}
 
 	// ----	Draw line
 
@@ -597,8 +615,6 @@
 			// click way: select
 			this.select();
 			clearTooltip();
-			setTypeText("Way",this._name);
-			populatePropertyWindow('way');
 		}
 	};
 	
@@ -609,6 +625,8 @@
 		this.highlightPoints(5000,"anchor");
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
+		setTypeText("Way",this._name);
+		populatePropertyWindow('way');
 	};
 	
 	OSMWay.prototype.highlight=function() {
@@ -676,8 +694,6 @@
 			_root.map.ways[newwayid].upload();							//  |
 
 			pointselected=-2;
-			setTypeText("Way",_root.wayselected);
-			populatePropertyWindow('way');
 			this.select();
 		};
 	};
@@ -752,8 +768,6 @@
 			clearTooltip();
 			if (_root.wayselected) {
 				_root.map.ways[_root.wayselected].select();
-				setTypeText("Way",_root.wayselected);
-				populatePropertyWindow('way');
 			}
 		}
 	};
@@ -1403,6 +1417,7 @@
 			case 71:		loadGPS(); break;									// G - load GPS
 			case 70:		handleWarningAction('Retry'); break;				// F - force reupload
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
+			case 85:		if (_root.unwayed) { loadFromUnwayed(); } break;	// U - get from unwayed segments
 			case 88:		_root.map.ways[wayselected].splitWay(); break;		// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
@@ -1723,8 +1738,6 @@
 		_root.map.ways[newwayid].clean=0;
 		_root.drawpoint=0;
 		setTooltip("click to add point\ndouble-click/Return\nto end line",0);
-		setTypeText("Way",_root.wayselected);
-		populatePropertyWindow('way');
 	}
 
 	// =====================================================================

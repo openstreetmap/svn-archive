@@ -5,9 +5,11 @@
 # All error-messages etc are plain text for use by clients
 header("Content-type:text/plain");
 
-if($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]){
-  print "This page can only be run by the dev server\n";
-  exit;
+if(1){
+  if($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"]){
+    print "This page can only be run by the dev server\n";
+    exit;
+  }
 }
 
 if(0){ // Option to turn off uploads
@@ -30,7 +32,7 @@ if(1){
   if($Load < 0){
     logMsg("Load average failed", 4);
   }
-  elseif($Load > 2.0){
+  elseif($Load > 4.0){
     logMsg("Too busy...", 2);
     print "Too busy";
     exit;
@@ -40,7 +42,7 @@ if(1){
 include("../../connect/connect.php");
 
 $QueueDir = "/home/ojw/tiles-ojw2/Queue/";
-list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 4);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 24);
 
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 2);
 
@@ -68,12 +70,17 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
 function HandleQueueItem($Name, $Dir){
     $MetaFile = $Dir . $Name . ".txt";
     $ZipFile = $Dir . $Name . ".zip";
+    print "$ZipFile\n";
     if(!file_exists($MetaFile)){
 	print "No meta file\n";
+        if(file_exists($ZipFile))
+          unlink($ZipFile);        
 	return;
     }
     if(!file_exists($ZipFile)){
 	print "No zip file\n";
+        if(file_exists($MetaFile))
+          unlink($MetaFile);
 	return;
     }
     
@@ -118,8 +125,9 @@ function HandleUpload($File, $UserID, $VersionID){
 
   logMsg("Handling $File ($Size bytes) by $UserID (version $VersionID)", 4);
   
-  if($Size <= 0){
-    AbortWithError("No file uploaded or file too large");
+  if($Size <= 0){ 
+    print("No file uploaded or file too large\n");
+    return;
   }
 
   # Keep going if the user presses stop, to ensure temporary directories get erased
@@ -279,6 +287,7 @@ function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
   SaveUserStats($UserID, $VersionID, 1365);
   
   moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
+  logMsg("Tileset $X,$Y uploaded at once\n", 4);
   
   $LayerID = checkLayer($Layer);
 
@@ -303,7 +312,7 @@ function RemoveFromQueue($TileList){
     
       moveRequest($X, $Y, REQUEST_ACTIVE, REQUEST_DONE, 0);
         
-      #logMsg(sprintf("Moving tile %d, %d from %d to %d", $X, $Y, REQUEST_ACTIVE, REQUEST_DONE), 4);
+      logMsg(sprintf("Tileset %d, %d moved from mode %d to mode %d", $X, $Y, REQUEST_ACTIVE, REQUEST_DONE), 4);
       logSqlError();
     }
   }

@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 19.7.2007 (smarter whichways behaviour)
+	# last update 21.7.2007 (can now drag new points)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -583,7 +583,10 @@
 	OSMWay.prototype.onPress=function() {
 		if (Key.isDown(Key.SHIFT) && this._name==_root.wayselected) {
 			// shift-click current way: insert point
-			insertAnchorPoint(this._name);
+			_root.lastxmouse=_root._xmouse;
+			_root.lastymouse=_root._ymouse;
+			_root.dragpoint=insertAnchorPoint(this._name);
+			_root.pointselected=_root.dragpoint;
 			this.highlightPoints(5000,"anchor");
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
@@ -1374,6 +1377,7 @@
 		_root.map.ways[way].path.splice(closei,0,newpoint);
 		_root.map.ways[way].clean=0;
 		_root.map.ways[way].redraw();
+		return closei;
 	}
 
 	// =====================================================================================

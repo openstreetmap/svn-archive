@@ -472,7 +472,7 @@
 			_root.map.ways[newwayid].redraw();
 			_root.map.ways[newwayid].select();
 		};
-		remote.call('makeway',makeresponder,_root.map._xmouse,_root.map._ymouse,baselong,basey,masterscale);
+		remote.call('makeway',makeresponder,_root.usertoken,_root.map._xmouse,_root.map._ymouse,baselong,basey,masterscale);
 	}
 
 	// ----	Draw line

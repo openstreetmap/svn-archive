@@ -1,5 +1,5 @@
 This java application allows to upload gpx tracks to openstreetmap.org 
-without user interaction (batch mode).
+without user interaction (batch mode) via the API (version 4.0).
 
 Usage:
 java GpxUpload <description> <tags> <files*>
@@ -14,3 +14,6 @@ Examples:
 java GpxUpload "taking a ride in Graz, Austria" "graz austria" gpxfile.gpx
 
 java GpxUpload "taking a ride in Graz, Austria" "graz austria" gpxfiles*.gpx | xargs -i mv '{}' /home/cdaller/targetdir
+
+Christof Dallermassl
+christof@dallermassl.at

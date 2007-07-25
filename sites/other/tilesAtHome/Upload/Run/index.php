@@ -12,7 +12,7 @@ if(1){
   }
 }
 
-if(0){ // Option to turn off uploads
+if(1){ // Option to turn off uploads
   AbortWithError("Disabled");
 }
 
@@ -41,10 +41,10 @@ if(1){
 
 include("../../connect/connect.php");
 
-$QueueDir = "/home/ojw/tiles-ojw2/Queue/";
+$QueueDir = "/home/ojw/tiles-ojw/Queue/";
 list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 2);
 
-logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 2);
+logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 
 function HandleNextFilesFromQueue($Dir, $NumToProcess){
@@ -484,7 +484,7 @@ function CreateDir($Dir){
 # * uniqid means multiple threads are unlikely to conflict
 #----------------------------------------------------------------------
 function TempDir(){
-  return(sprintf("/home/ojw/tiles-ojw2/temp/%s", md5(uniqid(rand(), 1))));
+  return(sprintf("/home/ojw/tiles-ojw/temp/%s", md5(uniqid(rand(), 1))));
 }
 
 ?>

@@ -71,10 +71,10 @@ if(1){
   list($Token1, $Token2) = GetTokens(-1, "testing");
   $Token = $_POST["token"];
   if($Token == $Token1 || $Token == $Token2){
-    logMsg("Valid token from user $UserID", 5);
+    //logMsg("Valid token from user $UserID", 5);
   }
   else{
-    //logMsg("Invalid token from user $UserID", 5);
+    logMsg(sprintf("Invalid token from user %d (%s)", $UserID, htmlentities(lookupUser($UserID))), 5);
   }
 }
 
@@ -477,7 +477,7 @@ function CreateDir($Dir){
 # * uniqid means multiple threads are unlikely to conflict
 #----------------------------------------------------------------------
 function TempDir(){
-  return(sprintf("/home/ojw/tiles-ojw2/temp/%s", md5(uniqid(rand(), 1))));
+  return(sprintf("/home/ojw/tiles-ojw/temp/%s", md5(uniqid(rand(), 1))));
 }
 
 ?>

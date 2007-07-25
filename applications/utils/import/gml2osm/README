@@ -1,0 +1,65 @@
+GML 2 OSM
+=========
+
+
+Overview
+--------
+
+This set of scripts is able to convert data from a GML file into a OSM file, suitable for loading into JOSM and uploading.
+
+GML stands for "Geographic Markup Language", and is a OpenGeoSpatial Consortium standard. It only cares about the geometry of the data.
+
+Metadata ("tags") are not defined by GML; the definition of the meanings of the metadata (i.e. xml nodes in a namespace different than wfs or gml) are defined somewhere else. For example, the EuroGeographics group publishes the EuroGlobalMap data catalogue.
+
+
+
+Features
+--------
+
+Features, as v0.2, include:
+- Import of Points, Linestrings, MultiLinestrings and Multipolygons
+- Detection of nodes and segments used more than once: no data duplication
+- Partial EGM metadata translation to OSM Map Features: Roads, Railways, Ferries, Populated places
+
+
+Features not implemented yet:
+- Support of polygons with inner hulls
+- Full EGM metadata translation
+- Add custom tags to every piece of data, to mark attribution of the data source.
+
+
+Usage
+-----
+
+You'll need a recent version of PHP, along with the SimpleXML extension enabled, to run these scripts. You will need the "cs2cs" executable (part of the "proj4" suite) in order to project the data from a coordinate system to another. Run as follows:
+
+php5 gml2osm foobar.gml baz foobar.osm
+
+Where:
+foobar.gml is the input GML file
+foobar.osm is the output GML file
+"baz" is the data namespace. Peek at the GML file, and you should see another namespace, not 'gml' and not 'wfs'; feed that to the script.
+
+
+This has been tested against GML data obtained from the IDEE WFS (www.idee.es -> "descarga de datos"). There is no warranty that the script will work with GML data from another provider.
+
+
+Legal Stuff
+-------
+
+gml2osm scripts
+Copyright (C) 2007 Iván Sánchez Ortega <ivansanchez@escomposlinux.org
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+

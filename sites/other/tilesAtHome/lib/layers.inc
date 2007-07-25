@@ -20,10 +20,11 @@ function checkLayer($LayerString){
 function layerValid($Name){
   return($checkLayer($Name) != -1);
 }
+
 function layerDir($ID){
   switch($ID){
     case 1:
-      return("Tiles");
+      return("tile");
     case 2:
       return("cycle");
     case 3:
@@ -34,6 +35,7 @@ function layerDir($ID){
       return("");
     }
 }
+
 function layerName($ID){
   switch($ID){
     case 1:

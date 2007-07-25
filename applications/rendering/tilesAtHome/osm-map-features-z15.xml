@@ -282,7 +282,7 @@
         <rule e="node" k="highway" v="mini_roundabout">
             <circle r="0.95px" class="mini-roundabout-casing"/>
         </rule>
-
+        
 
         <!-- Paths in tunnels -->
         <rule e="segment|way" k="tunnel" v="yes|true">
@@ -418,6 +418,13 @@
         <rule e="node" k="highway" v="mini_roundabout">
             <circle r="0.8px" class="mini-roundabout-core"/>
             <circle r="0.2px" class="mini-roundabout-dot"/>
+        </rule>
+
+        <!-- highway motorway-junctions -->
+        <rule e="node" k="highway" v="motorway_junction">
+          <circle r="2" class="highway-motorway-junction" />
+          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
+          <text k="ref" class='highway-motorway-junction-caption' dy='+6px' />
         </rule>
 
 
@@ -648,7 +655,6 @@
                 stroke-dasharray: 0.5,0.5;
             }
 
-
             /* Bridge casing */
             .bridge-casing-35 {
                 stroke-width: 3.5px;
@@ -785,6 +791,22 @@
                 fill: none;
             }
 
+            .highway-motorway-junction {
+            fill: yellow;
+            stroke: #4D5D73;
+            stroke-width: 1px;
+            }
+            
+            .highway-motorway-junction-caption {
+            fill: black;
+            stroke: black;
+            stroke-width: 0.2px;
+            font-family: "DejaVu Sans",sans-serif;
+            font-size: 5px;
+            font-weight: bold;
+            text-anchor: middle;
+            }
+            
             .highway-ref {
                 fill: #666666;
                 stroke: white;

@@ -12,19 +12,19 @@ function QueueLength(){
   }
   closedir($dp);
   
-  # We counted both textfiles and zipfiles, which are parts of the
-same upload
-  $Count /= 2;
+  # We counted both textfiles and zipfiles, 
+  # which are parts of the same upload
+  $Count = $Count / 2;
   
   return($Count);
 }
 
 function QueueDirectory(){
-  return("/home/ojw/tiles-ojw2/Queue/");
+  return("/home/ojw/tiles-ojw/Queue/");
 }
 
 function MaxQueueLength(){
-  return(100);
+  return(2000);
 }
 
 ?>

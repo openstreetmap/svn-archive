@@ -26,6 +26,7 @@ import java.util.Properties;
 public class GpxUpload {
     public static final String API_VERSION = "0.4";
     private static final int BUFFER_SIZE = 65535;
+    private static final String BASE64_ENC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     
     public GpxUpload() {
         
@@ -49,7 +50,7 @@ public class GpxUpload {
             con.setConnectTimeout(15000);
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
-            con.addRequestProperty("Authorization", "Basic "+Base64.encode(username+":"+password));
+            con.addRequestProperty("Authorization", "Basic "+encodeBase64(username+":"+password));
             con.connect();
             OutputStream out = con.getOutputStream();
             //  copy file to out:
@@ -160,6 +161,20 @@ public class GpxUpload {
         		"was sent successfully is printed to stdout, so you may use the output of this " +
         		"program in a pipe for other calls (like \"| xargs -i mv '{}' target_dir\"");
         
+    }
+    
+
+    public static String encodeBase64(String s) {
+      StringBuilder out = new StringBuilder();
+      for (int i = 0; i < (s.length()+2)/3; ++i) {
+        int l = Math.min(3, s.length()-i*3);
+        String buf = s.substring(i*3, i*3+l);
+        out.append(BASE64_ENC.charAt(buf.charAt(0)>>2));
+        out.append(BASE64_ENC.charAt((buf.charAt(0) & 0x03) << 4 | (l==1?0:(buf.charAt(1) & 0xf0) >> 4)));
+        out.append(l>1 ? BASE64_ENC.charAt((buf.charAt(1) & 0x0f) << 2 | (l==2 ? 0 : (buf.charAt(2) & 0xc0) >> 6)) : '=');
+        out.append(l>2 ? BASE64_ENC.charAt(buf.charAt(2) & 0x3f) : '=');
+      }
+      return out.toString();
     }
 
 }

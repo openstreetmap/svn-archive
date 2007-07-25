@@ -536,7 +536,7 @@ static int patchFiles(void)
 
 static void usageDiff(const char *arg0)
 {
-    fprintf(stderr, "Usage:\n\t%s planet1.osm planet2.osm > planet.diff\n\nGenerates patch-compatible difference file between the two input planet.osm files\n", arg0);
+    fprintf(stderr, "Usage:\n\t%s planet1.osm planet2.osm > planet.diff\n\nGenerates patch-compatible difference file between the two input planet.osm files.\nThis binary is based on SVN revision: $Rev$.\n", arg0);
     exit(1);
 }
 

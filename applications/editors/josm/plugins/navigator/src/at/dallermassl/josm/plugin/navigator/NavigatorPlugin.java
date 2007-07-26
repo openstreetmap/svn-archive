@@ -62,9 +62,11 @@ public class NavigatorPlugin extends Plugin {
      * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
      */
     @Override
-    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {    
-        newFrame.toolBarActions.add(
-            new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer)));
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
+        if(newFrame != null) {
+            newFrame.toolBarActions.add(
+                new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer)));
+        }
     }
 
     /**

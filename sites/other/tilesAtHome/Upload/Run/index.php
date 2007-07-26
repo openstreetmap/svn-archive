@@ -12,10 +12,6 @@ if(1){
   }
 }
 
-if(1){ // Option to turn off uploads
-  AbortWithError("Disabled");
-}
-
 include("../../lib/log.inc");
 include("../../lib/tilenames.inc");
 include("../../lib/users.inc");
@@ -24,6 +20,11 @@ include("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
 include("../../lib/cpu.inc");
+
+
+if(1){ // Option to turn off uploads
+  AbortWithError("Disabled");
+}
 
 
 if(1){

@@ -8,8 +8,8 @@
 	  <property name="plugin.jar" value="${plugin.name}.jar"/>
 	  
 	  <!-- plugin meta data (enter new version number if anything changed!) -->
-	  <property name="plugin.version" value="0.1"/>
-	  <property name="plugin.description" value="Provides routing functionality (V${plugin.version})."/>
+	  <property name="plugin.version" value="0.2"/>
+	  <property name="plugin.description" value="Provides navigation/autorouting functionality (V${plugin.version})."/>
 	  <property name="plugin.stage" value="50"/>
     <property name="plugin.class" value="at.dallermassl.josm.plugin.navigator.NavigatorPlugin"/>
 	  
@@ -40,9 +40,8 @@
         <attribute name="Plugin-Class" value="${plugin.class}" />
         <attribute name="Plugin-Description" value="${plugin.description}" />
         <attribute name="Plugin-Version" value="${plugin.version}" />
-        <!--attribute name="Plugin-Dependencies" value="org.eigenheimstrasse.josm" /-->
+        <attribute name="Plugin-Dependencies" value="jgrapht-jdk1.5" />
         <attribute name="Plugin-Stage" value="${plugin.stage}" />
-        <attribute name="Class-Path" value="navigator/lib/jgrapht-jdk1.5.jar" />
       </manifest>
     </jar>
 	</target>
@@ -64,8 +63,7 @@
 
   <target name="install" depends="dist">
     <copy file="${plugin.jar}" todir="${josm.home.dir}/plugins" />
-  	<mkdir dir="${josm.home.dir}/plugins/${ant.project.name}/lib"/>
-    <copy todir="${josm.home.dir}/plugins/${ant.project.name}/lib">
+    <copy todir="${josm.home.dir}/plugins">
     	<fileset dir="lib">
         <include name="**/*.jar"/>
     	</fileset>

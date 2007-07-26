@@ -154,7 +154,7 @@ public class ColorSchemePreference implements PreferenceSetting {
 	public void setColorScheme(String schemeName, Map<String, String> colorMap) {
 	    String key;
 	    for(String colorKey : colorMap.keySet()) {
-	        key = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + ColorPreference.PREF_COLOR_PREFIX + colorKey;
+	        key = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX + colorKey;
 	        Main.pref.put(key, colorMap.get(colorKey));
 	    }
 	}
@@ -166,7 +166,7 @@ public class ColorSchemePreference implements PreferenceSetting {
 	 */
 	public Map<String, String> getColorMap(String schemeName) {
 	    String colorKey;
-	    String prefix = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + ColorPreference.PREF_COLOR_PREFIX;
+	    String prefix = PREF_KEY_SCHEMES_PREFIX + schemeName + "." + PREF_KEY_COLOR_PREFIX;
 	    Map<String, String>colorMap = new HashMap<String, String>();
 	    for(String schemeColorKey : Main.pref.getAllPrefix(prefix).keySet()) {
 	        colorKey = schemeColorKey.substring(prefix.length());

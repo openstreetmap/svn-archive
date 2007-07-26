@@ -1,8 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -127,7 +125,7 @@ public class GpxUpload {
                 System.err.println("using username and password from josm preferences");
                 Properties josmProps = new Properties();
                 try {
-                    josmProps.load(new FileReader(josmPropFile));
+                    josmProps.load(new FileInputStream(josmPropFile));
                     username = josmProps.getProperty("osm-server.username");
                     password = josmProps.getProperty("osm-server.password");
                 } catch (IOException e) {

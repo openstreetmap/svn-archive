@@ -8,8 +8,8 @@
   <property name="plugin.jar" value="${plugin.name}.jar"/>
   
   <!-- plugin meta data (enter new version number if anything changed!) -->
-  <property name="plugin.version" value="0.5.1"/>
-  <property name="plugin.description" value="Manage multiple colorschemes (V${plugin.version})."/>
+  <property name="plugin.version" value="0.5.2"/>
+  <property name="plugin.description" value="Allows the user to create different color schemes and to switch between them. Just change the colors and create a new scheme. Used to switch to a white background with matching colors for better visibility in bright sunlight. See dialog in JOSM's preferences and 'Map Settings' (strange but true :-) (V${plugin.version})."/>
   <property name="plugin.class" value="at.dallermassl.josm.plugin.colorscheme.ColorSchemePlugin"/>
 
   <!-- update site meta data -->
@@ -69,8 +69,22 @@
     <delete dir="${plugin.jar}" />
   </target>
 
-  <!-- write site description for the given plugin -->
+  <!-- write site description for the given plugin so josm will accept it -->
   <target name="site">
+    <echo message="creating site description in ${plugin.site.file}"/>
+    <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
+  &lt;plugins>
+    &lt;plugin id="${ant.project.name}" version="${plugin.version}">
+      &lt;name>${ant.project.name}&lt;/name>
+      &lt;description>${plugin.description}&lt;/description>
+      &lt;resource>${plugin.site.url}${plugin.jar}&lt;/resource>
+    &lt;/plugin>
+  &lt;/plugins>
+    </echo>
+  </target>
+
+	<!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
+  <target name="site-full-donotuse">
     <echo message="creating site description in ${plugin.site.file}"/>
     <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
 &lt;site version="1.0">
@@ -86,8 +100,8 @@
       &lt;name>${ant.project.name}&lt;/name>
       &lt;description>${plugin.description}&lt;/description>
       &lt;resources>
-        &lt;resource src="${plugin.site.url}/${plugin.jar}"
-                  target="$${josm.user.dir}/plugins/${plugin.jar}"/>
+        &lt;resource src="${plugin.site.url}${plugin.jar}"
+                  target="${josm.home.dir}/plugins/${plugin.jar}"/>
       &lt;/resources>
     &lt;/plugin>
   &lt;/plugins>

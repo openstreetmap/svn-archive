@@ -6,7 +6,7 @@ function TileName($X,$Y,$Z,$Layer="Tiles"){
   if(!TileValid($X,$Y,$Z))
     return("");
 
-    $BaseDir = "/home/ojw/tiles-ojw";
+    $BaseDir = "/home/ojw/tiles-ojw/Tiles";
 
   $Filename = $BaseDir . "/" . $Layer . "/" . TilePartName($X,$Y,$Z);
   return($Filename);

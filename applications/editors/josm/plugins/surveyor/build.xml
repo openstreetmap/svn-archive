@@ -9,7 +9,7 @@
     <property name="livegpsplugin.jar" value="${josm.home.dir}/plugins/livegps.jar"/>
 	  
 	  <!-- plugin meta data (enter new version number if anything changed!) -->
-	  <property name="plugin.version" value="1.1"/>
+	  <property name="plugin.version" value="1.2"/>
 	  <property name="plugin.description" value="Allow adding markers/nodes on current gps positions (V${plugin.version})."/>
 	  <property name="plugin.stage" value="60"/>
     <property name="plugin.class" value="at.dallermassl.josm.plugin.surveyor.SurveyorPlugin"/>
@@ -72,8 +72,22 @@
     <delete dir="${plugin.jar}" />
   </target>
 
-  <!-- write site description for the given plugin -->
+  <!-- write site description for the given plugin so josm will accept it -->
   <target name="site">
+    <echo message="creating site description in ${plugin.site.file}"/>
+    <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
+  &lt;plugins>
+    &lt;plugin id="${ant.project.name}" version="${plugin.version}">
+      &lt;name>${ant.project.name}&lt;/name>
+      &lt;description>${plugin.description}&lt;/description>
+      &lt;resource>${plugin.site.url}${plugin.jar}&lt;/resource>
+    &lt;/plugin>
+  &lt;/plugins>
+    </echo>
+  </target>
+
+  <!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
+  <target name="site-full-donotuse">
     <echo message="creating site description in ${plugin.site.file}"/>
     <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
 &lt;site version="1.0">
@@ -89,14 +103,15 @@
       &lt;name>${ant.project.name}&lt;/name>
       &lt;description>${plugin.description}&lt;/description>
       &lt;resources>
-        &lt;resource src="${plugin.site.url}/${plugin.jar}"
-                  target="$${josm.user.dir}/plugins/${plugin.jar}"/>
+        &lt;resource src="${plugin.site.url}${plugin.jar}"
+                  target="${josm.home.dir}/plugins/${plugin.jar}"/>
       &lt;/resources>
     &lt;/plugin>
   &lt;/plugins>
 &lt;/site>
     </echo>
   </target>
+
 
   <!-- upload the site description and the jar file via ssh -->
   <target name="upload" depends="dist,site">

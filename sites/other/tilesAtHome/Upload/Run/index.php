@@ -52,8 +52,7 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
   $CountUploads = 0;
   $CountTiles = 0;
 
-  while($File = each(SortFiles($Dir))) {  
-  #foreach (SortFiles($Dir) as $File){ #foreach doesn't work due to PHP4 bug!
+  foreach(SortFiles($Dir) as $File => $Time) {
     if($CountUploads < $NumToProcess){
       if(preg_match("{(\w+)\.txt}", $File, $Matches)){
         $Name = $Matches[1];
@@ -498,6 +497,6 @@ function SortFiles($Dir){
  }
  closedir($fd);
  asort($times);
- return array(array_keys($times));
+ return $times;
 }
 ?>

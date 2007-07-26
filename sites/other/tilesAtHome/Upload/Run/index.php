@@ -250,8 +250,9 @@ function SaveBlankTiles($BlankTileList, $UserID){
     {
       $Fields = "x, y, z, layer, type, date, user";
       $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
+      $UpdateValues = sprintf("type = VALUES(type), date = VALUES(date), user = VALUES(user)");
 
-      $SQL = sprintf("replace into `tiles_blank` (%s) values (%s);", $Fields, $Values);
+      $SQL = sprintf("INSERT INTO `tiles_blank` (%s) values (%s) ON DUPLICATE KEY UPDATE %s;", $Fields, $Values , $UpdateValues);
     }
     else
     {

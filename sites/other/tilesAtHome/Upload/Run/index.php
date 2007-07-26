@@ -51,10 +51,11 @@ logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles)
 function HandleNextFilesFromQueue($Dir, $NumToProcess){
   $CountUploads = 0;
   $CountTiles = 0;
-  $fp = opendir($Dir);
-  if(!$fp)
-      return;
-  while($File = readdir($fp)){
+  //$fp = opendir($Dir);
+  //if(!$fp)
+  //    return;
+  //while($File = readdir($fp)){
+  while($File = exec("ls -t $Dir |grep .txt|tail -n 1")){
     if($CountUploads < $NumToProcess){
       if(preg_match("{(\w+)\.txt}", $File, $Matches)){
         $Name = $Matches[1];
@@ -64,7 +65,7 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
       }
     }
   }
-  closedir($fp);
+  //closedir($fp);
   return(array($CountUploads, $CountTiles));
 }
 

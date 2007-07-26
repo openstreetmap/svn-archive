@@ -108,56 +108,56 @@ else
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     
-  foreach my $UploadLayer (split(/,/,$Config{"Layers"}))
-  {
-    my $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
-    
-    opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
-    my @dir = readdir($dp);
-    @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
-    my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
-    closedir($dp);
-    
-    foreach (@tilesets)        # not split into chunks
+    foreach my $UploadLayer (split(/,/,$Config{"Layers"}))
     {
-        my $set = "$TileDir/$_";
-        $set =~ s|\.dir$||;
-        if (rename "$set.dir", "$set.upload") 
+        my $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
+        
+        opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
+        my @dir = readdir($dp);
+        @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
+        my @tilesets = grep { /($allowedPrefixes)_\d+_\d+_\d+\.dir$/ } @dir;
+        closedir($dp);
+        
+        foreach (@tilesets)        # not split into chunks
         {
-            compress("$set.upload", $ZipDir, 'yes', $allowedPrefixes);
-            rmdir "$set.upload";    # should be empty now
-        } 
-        else 
-        {
-            print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
+            my $set = "$TileDir/$_";
+            $set =~ s|\.dir$||;
+            if (rename "$set.dir", "$set.upload") 
+            {
+                compress("$set.upload", $ZipDir, 'yes', $allowedPrefixes);
+                rmdir "$set.upload";    # should be empty now
+            } 
+            else 
+            {
+                print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
+            }
         }
+
+        ## look again in the workdir, there might be new files from split tilesets:
+        
+        opendir($dp, $TileDir) or die("Can't open directory $TileDir\n");
+        @dir = readdir($dp);
+        @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
+        closedir($dp);
+        
+        $tileCount = scalar(@tiles);
+        
+        if ($tileCount == 0) 
+        {
+            statusMessage("nothing to be done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            exit;
+        }
+        
+        while (processTileBatch(
+          $TileDir, 
+          $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
+          $ZipDir, 
+          $allowedPrefixes)) 
+        {};
+
+        statusMessage("done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0); 
+        ## TODO: fix progress display
     }
-
-    ## look again in the workdir, there might be new files from split tilesets:
-    
-    opendir($dp, $TileDir) or die("Can't open directory $TileDir\n");
-    @dir = readdir($dp);
-    @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
-    closedir($dp);
-
-    $tileCount = scalar(@tiles);
-    
-    if ($tileCount == 0) 
-    {
-        statusMessage("nothing to be done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        exit;
-    }
-    
-    while (processTileBatch(
-      $TileDir, 
-      $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
-      $ZipDir, 
-      $allowedPrefixes)) 
-    {};
-
-    statusMessage("done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0); 
-    ## TODO: fix progress display
-  }
 } #done main/else.
 
 #-----------------------------------------------------------------------------

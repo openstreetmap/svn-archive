@@ -101,6 +101,8 @@ else
     
     $progressPercent = 0;
     
+    my $allowedPrefixes;
+    
     my $TileDir = $Config{WorkingDirectory};
     
     # Group and upload the tiles
@@ -108,10 +110,10 @@ else
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
     
-    foreach my $UploadLayer (split(/,/,$Config{"Layers"}))
+    foreach my $UploadLayer (split(/,/, $Config{"Layers"}))
     {
-        my $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
-        
+        $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
+        print "\n.$allowedPrefixes.\n";
         opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
         my @dir = readdir($dp);
         @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;
@@ -126,8 +128,8 @@ else
             {
                 compress("$set.upload", $ZipDir, 'yes', $allowedPrefixes);
                 rmdir "$set.upload";    # should be empty now
-            } 
-            else 
+            }
+            else
             {
                 print STDERR "ERROR\n  Failed to rename $set.dir to $set.upload --tileset not uploaded\n";
             }
@@ -142,19 +144,15 @@ else
         
         $tileCount = scalar(@tiles);
         
-        if ($tileCount == 0) 
+        if ($tileCount) 
         {
-            statusMessage("nothing to be done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-            exit;
+            while (processTileBatch(
+              $TileDir, 
+              $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
+              $ZipDir, 
+              $allowedPrefixes)) 
+            {};
         }
-        
-        while (processTileBatch(
-          $TileDir, 
-          $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
-          $ZipDir, 
-          $allowedPrefixes)) 
-        {};
-
         statusMessage("done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0); 
         ## TODO: fix progress display
     }

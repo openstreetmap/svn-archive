@@ -29,7 +29,7 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 	
 	public LiveGpsLayer(Collection<Collection<GpsPoint>> data)
 	{
-		super (data, LAYER_NAME, null);
+		super (false, data, LAYER_NAME, null);
 		if (data.isEmpty())
 		{
 			data.add(new ArrayList<GpsPoint>());

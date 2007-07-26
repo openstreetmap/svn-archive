@@ -107,8 +107,10 @@ else
     statusMessage("Searching for tiles in $TileDir", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     # compile a list of the "Prefix" values of all configured layers,
     #     # separated by |
-    my $allowedPrefixes = join("|",
-      map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
+    
+  foreach my $UploadLayer (split(/,/,$Config{"Layers"}))
+  {
+    my $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
     
     opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
     my @dir = readdir($dp);
@@ -122,7 +124,7 @@ else
         $set =~ s|\.dir$||;
         if (rename "$set.dir", "$set.upload") 
         {
-            compress("$set.upload", $ZipDir, 'yes');
+            compress("$set.upload", $ZipDir, 'yes', $allowedPrefixes);
             rmdir "$set.upload";    # should be empty now
         } 
         else 
@@ -146,16 +148,16 @@ else
         exit;
     }
     
-    ## the following exits on error so no exponential backoff done here. 
-    ## the critical part should be the upload of the leftover zips above anyway.
     while (processTileBatch(
       $TileDir, 
-      ## FIXME: this is one of the things that make upload.pl not multithread safe
-      $TileDir . "/gather", 
-      $ZipDir, $allowedPrefixes)) {};
+      $TileDir . "/gather", ## FIXME: this is one of the things that make compress.pl not multithread safe
+      $ZipDir, 
+      $allowedPrefixes)) 
+    {};
 
-    statusMessage("done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-
+    statusMessage("done", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0); 
+    ## TODO: fix progress display
+  }
 } #done main/else.
 
 #-----------------------------------------------------------------------------
@@ -177,7 +179,7 @@ sub processTileBatch
     mkdir $OutputDir if ! -d $OutputDir;
 
     $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
-    statusMessage(scalar(@tiles)." tiles to process", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage(scalar(@tiles)." tiles to process for ".$allowedPrefixes, $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
 
     while(($Size < $SizeLimit) && ($Count < $CountLimit) && (my $file = shift @tiles))
     {
@@ -195,12 +197,12 @@ sub processTileBatch
     if($Count)
     {
         statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        return compress($TempDir, $OutputDir, 'no');
+        return compress($TempDir, $OutputDir, 'no', $allowedPrefixes);
     }
     else
     {
         $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
-        statusMessage("upload finished", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("compress finished", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         return 0;
     }
 }
@@ -210,7 +212,7 @@ sub processTileBatch
 #-----------------------------------------------------------------------------
 sub compress
 {
-    my ($Dir, $OutputDir, $SingleTileset) = @_;
+    my ($Dir, $OutputDir, $SingleTileset, $Layer) = @_;
     $SingleTileset = ($SingleTileset eq 'yes' ? '_tileset' : '');
   
     my $Filename;
@@ -226,13 +228,13 @@ sub compress
     if($Config{UseHostnameInZipname})
     {
         my $hostname = `hostname`."XXX";
-        $Filename = sprintf("%s/%s_%d_%d%s.zip", $OutputDir,
-          substr($hostname,0,3), $$, $ZipFileCount++, $SingleTileset);
+        $Filename = sprintf("%s/%s_%d_%d_%s%s.zip", $OutputDir,
+          substr($hostname,0,3), $$, $ZipFileCount++, $Layer, $SingleTileset);
     }
     else 
     {
-        $Filename = sprintf("%s/%d_%d_%d%s.zip", $OutputDir,
-          $epochtime, $$, $ZipFileCount++, $SingleTileset);
+        $Filename = sprintf("%s/%d_%d_%d_%s%s.zip", $OutputDir,
+          $epochtime, $$, $ZipFileCount++, $Layer, $SingleTileset);
     }
     
     # ZIP all the tiles into a single file
@@ -244,7 +246,7 @@ sub compress
       $stdOut);
     # ZIP filename is currently our process ID plus a counter
     
-    ## FIXME: this is one of the things that make upload.pl not multithread safe
+    ## FIXME: this is one of the things that make compress.pl not multithread safe
     # Delete files in the gather directory
     opendir (GATHERDIR, $Dir);
     my @zippedFiles = grep { /.png$/ } readdir(GATHERDIR);

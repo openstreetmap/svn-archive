@@ -19,75 +19,59 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Segment;
+import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.plugins.Plugin;
 
 /**
  * Plugin that allows navigation in josm
  * 
  * @author cdaller
- *
+ * 
  */
-public class NavigatorPlugin {
-  private Graph graph;
+public class NavigatorPlugin extends Plugin {
+    private NavigatorLayer navigatorLayer;
+    private NavigatorModel navigatorModel;
 
-  
-  /**
-   * 
-   */
-  public NavigatorPlugin() {
-    super();
-    JMenuBar menu = Main.main.menu;
-    JMenu navigatorMenu = new JMenu(tr("Navigation"));
-    JMenuItem navigatorMenuItem = new JMenuItem(new NavigatorAction(this));
-    navigatorMenu.add(navigatorMenuItem);
-    JMenuItem resetMenuItem = new JMenuItem(tr("Reset Graph"));
-    resetMenuItem.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        graph = null;        
-      }      
-    });
-    navigatorMenu.add(resetMenuItem);
-    menu.add(navigatorMenu);
-    
-  }
-  
-  public Graph<Node, SegmentEdge> getGraph() {
-    if(graph == null) {
-      OsmGraphCreator graphCreator = new OsmGraphCreator();
-      //graph = graphCreator.createGraph();
-      graph = graphCreator.createSegmentGraph();
+    /**
+     * 
+     */
+    public NavigatorPlugin() {
+        super();
+        
+        navigatorModel = new NavigatorModel();
+        navigatorLayer = new NavigatorLayer(tr("Navigation"));
+        navigatorLayer.setNavigatorNodeModel(navigatorModel);
+        
+        JMenuBar menu = Main.main.menu;
+        JMenu navigatorMenu = new JMenu(tr("Navigation"));
+        JMenuItem navigatorMenuItem = new JMenuItem(new NavigatorAction(this));
+        navigatorMenu.add(navigatorMenuItem);
+        JMenuItem resetMenuItem = new JMenuItem(tr("Reset Graph"));
+        resetMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                navigatorModel.resetGraph();
+            }
+        });
+        navigatorMenu.add(resetMenuItem);
+        menu.add(navigatorMenu);
     }
-    return graph;
-  }
+    
+    /* (non-Javadoc)
+     * @see org.openstreetmap.josm.plugins.Plugin#mapFrameInitialized(org.openstreetmap.josm.gui.MapFrame, org.openstreetmap.josm.gui.MapFrame)
+     */
+    @Override
+    public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {    
+        newFrame.toolBarActions.add(
+            new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer)));
+    }
 
-  /**
-   * @param startNode
-   * @param endNode
-   */
-  public void navigate(List<Node> nodes) {
-    System.out.print("navigate nodes ");
-    for(Node node : nodes) {
-      System.out.print(node.id + ",");
+    /**
+     * @param startNode
+     * @param endNode
+     */
+    public void navigate() {
+        navigatorLayer.navigate();
     }
-    System.out.println();
-    
-    DijkstraShortestPath<Node, SegmentEdge> routing;
-    List<SegmentEdge> fullPath = new ArrayList<SegmentEdge>();
-    List<SegmentEdge> path;
-    for(int index = 1; index < nodes.size(); ++index) {
-      routing = new DijkstraShortestPath<Node, SegmentEdge>(getGraph(), nodes.get(index - 1), nodes.get(index));
-      path = routing.getPathEdgeList();
-      if(path == null) {
-        System.out.println("no path found!");
-        return;
-      }
-      fullPath.addAll(path);
-    }
-    List<Segment> segmentPath = new ArrayList<Segment>();
-    for(SegmentEdge edge : fullPath) {
-      segmentPath.add(edge.getSegment());
-    }
-    Main.ds.setSelected(segmentPath);
-    Main.map.mapView.repaint();
-    System.out.println("shortest path found: " + fullPath);
-  }
 }

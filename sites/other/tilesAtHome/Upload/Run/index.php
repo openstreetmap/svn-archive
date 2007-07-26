@@ -225,8 +225,9 @@ function SaveMetadata($TileList, $UserID, $VersionID){
 
     $Fields = "x, y, z, type, size, date, user, version, tileset, key";
     $Values = sprintf("%s, now(), %d, %d, %d, '%s'", $SqlSnippet, $UserID, $VersionID, 0, $Key);
- 
-    $SQL = sprintf("replace into `tiles_meta` (%s) values (%s);", $Fields, $Values);
+    $UpdateValues = sprintf ("size = VALUES(size), date = VALUES(date), user = VALUES(user), version = VALUES(version), tileset = VALUES(tileset), key = VALUES(key)");
+
+    $SQL = sprintf("INSERT INTO `tiles_meta` (%s) values (%s) ON DUPLICATE KEY UPDATE %s;", $Fields, $Values, $UpdateValues);
     mysql_query($SQL);
   }
 }

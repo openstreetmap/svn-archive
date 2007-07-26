@@ -41,6 +41,7 @@ public class OsmGraphCreator {
     highwayWeight.put("secondary", 70.0);
     highwayWeight.put("unclassified", 50.0);
     highwayWeight.put("residential", 40.0);
+    highwayWeight.put("footway", 1.0);
   }
   
   public Graph<Node, SegmentEdge> createSegmentGraph() {
@@ -93,8 +94,8 @@ public class OsmGraphCreator {
     } else {
       weight = weightValue.doubleValue();
     }
-    double distance = segment.from.coor.distance(segment.to.coor) * 111000; // deg to m (at equator :-)
-    return distance / weight;
+    double distance = Math.sqrt(segment.from.coor.distance(segment.to.coor)) * 111000; // deg to m (at equator :-)
+    return distance; // weight;
   }
   
   public boolean isOneWay(Way way) {

@@ -2,7 +2,7 @@
 
 ## settings ##
 
-VERSION=0.0.9
+VERSION=latest
 
 PROGRAM_FILES="/cygdrive/c/Program Files"
 

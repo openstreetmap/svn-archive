@@ -6,7 +6,7 @@
 	  <property name="plugin.build.dir" value="bin"/>
 	  <property name="plugin.name" value="${ant.project.name}"/>
 	  <property name="plugin.jar" value="${plugin.name}.jar"/>
-    <property name="livegpsplugin.jar" value="${josm.home.dir}/plugins/livegps.jar"/>
+    <property name="livegpsplugin.jar" value="../livegps/livegps.jar"/>
 	  
 	  <!-- plugin meta data (enter new version number if anything changed!) -->
 	  <property name="plugin.version" value="1.2"/>

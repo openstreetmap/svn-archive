@@ -32,6 +32,7 @@ wget -nc http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
 wget -nc http://www.eigenheimstrasse.de/josm/plugins/annotation-tester.jar
 wget -nc http://chippy2005.googlepages.com/wmsplugin.jar
 wget -nc http://personales.ya.com/frsantos/validator.jar
+wget -nc http://thomas.walraet.net/tways/tways-0.2.jar
 
 cd ..
 

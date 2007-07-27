@@ -16,7 +16,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="slippymap" classpath="../../josm/bin/" destdir="build" />
+		<javac srcdir="slippymap" classpath="../../core/dist/josm-custom.jar" destdir="build" />
 	</target>
 
 	<target name="init">

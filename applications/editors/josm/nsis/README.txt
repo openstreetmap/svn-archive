@@ -5,14 +5,14 @@ default preferences for Windows users.
 Currently only josm and a small assortment of josm plugins is included in the 
 installer.
 
-As other osm related applications like osmarender and mapnik have a lot of more
+As other osm related applications like osmarender and mapnik have a lot more
 UNIX related dependencies that will make them complicated to install, only JOSM
 is currently installed "the easy way".
 
 
 install
 -------
-simply execute josm-setup-x.x.x.exe
+simply execute josm-setup-latest.exe
 
 uninstall
 ---------
@@ -49,13 +49,13 @@ how the installer is build
 First, wget will download the required files (e.g. the josm plugins) into the 
 downloads subdir. Then jaunch4j wraps the josm.jar into a josm.exe, which 
 makes registration of file extensions a lot easier. Then NSIS is called to 
-create the actual josm-setup-x.x.x.exe.
+create the actual josm-setup-latest.exe.
 
 known issues
 ------------
 - absolute paths in openstreetmap-setup.sh
 - bookmarks are of ulfl's personal interest (should be replaced e.g. by some "well known" places)
-- version number fixed to 0.0.x (better use SVN version?)
+- version number fixed to latest (JOSM and Plugins have different SVN versions, some plugins not even in SVN)
 - localisation/internationalisation settings (currently only english supported)
 - josm should support "global settings" instead of only the personal profile
 - josm should use some defaults already instead of the installer ones

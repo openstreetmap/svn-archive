@@ -22,11 +22,14 @@
 	<target name="build" depends="compile">
 		<ant dir="../core" antfile="build.xml" target="dist"/>
 		<ant dir="mappaint" antfile="build.xml" target="build"/>
+		<ant dir="namefinder" antfile="build.xml" target="dist"/>
 		<ant dir="navigator" antfile="build.xml" target="dist"/>
 	</target>
 
 	<target name="clean">
+		<ant dir="../core" antfile="build.xml" target="clean"/>
 		<ant dir="mappaint" antfile="build.xml" target="clean"/>
+		<ant dir="namefinder" antfile="build.xml" target="clean"/>
 		<ant dir="navigator" antfile="build.xml" target="clean"/>
 	</target>
 

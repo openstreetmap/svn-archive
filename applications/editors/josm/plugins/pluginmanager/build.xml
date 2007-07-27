@@ -1,7 +1,7 @@
 <project name="pluginmanager" default="dist" basedir=".">
 
 	<!-- compilation properties -->
-	<property name="josm.build.dir" value="../JOSM"/>
+	<property name="josm.build.dir" value="../../core"/>
 	<property name="josm.home.dir" value="${user.home}/.josm"/>
 	<property name="plugin.build.dir" value="bin"/>
   <property name="plugin.name" value="${ant.project.name}"/>

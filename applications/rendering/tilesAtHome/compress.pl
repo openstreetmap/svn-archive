@@ -113,7 +113,7 @@ else
     foreach my $UploadLayer (split(/,/, $Config{"Layers"}))
     {
         $allowedPrefixes = $Config{"Layer.$UploadLayer.Prefix"}; #just select the current layer for compressing
-        print "\n.$allowedPrefixes.\n";
+        ## DEBUG print "\n.$allowedPrefixes.\n";
         opendir(my $dp, $TileDir) or die("Can't open directory $TileDir\n");
         my @dir = readdir($dp);
         @tiles = grep { /($allowedPrefixes)_\d+_\d+_\d+\.png$/ } @dir;

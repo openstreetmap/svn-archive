@@ -1,6 +1,6 @@
-<project name="plastic_laf" default="install" basedir=".">
+<project name="plastic_laf" default="build" basedir=".">
 
-	<target name="install">
+	<target name="build">
 		<mkdir dir="dist"></mkdir>
 		<unjar dest="bin" src="lib/looks-2.0.4.jar" />
 		<javac srcdir="src" destdir="bin">

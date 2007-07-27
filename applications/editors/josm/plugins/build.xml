@@ -21,6 +21,9 @@
 
 	<target name="build" depends="compile">
 		<ant dir="../core" antfile="build.xml" target="dist"/>
+		<ant dir="colorscheme" antfile="build.xml" target="dist"/>
+		<!--<ant dir="grid" antfile="build.xml" target="build"/>-->
+		<!--<ant dir="lang" antfile="build.xml" target="dist"/>-->
 		<ant dir="livegps" antfile="build.xml" target="dist"/>
 		<ant dir="mappaint" antfile="build.xml" target="build"/>
 		<ant dir="namefinder" antfile="build.xml" target="dist"/>
@@ -29,6 +32,9 @@
 
 	<target name="clean">
 		<ant dir="../core" antfile="build.xml" target="clean"/>
+		<ant dir="colorscheme" antfile="build.xml" target="clean"/>
+		<!--<ant dir="grid" antfile="build.xml" target="clean"/>-->
+		<!--<ant dir="lang" antfile="build.xml" target="clean"/>-->
 		<ant dir="livegps" antfile="build.xml" target="clean"/>
 		<ant dir="mappaint" antfile="build.xml" target="clean"/>
 		<ant dir="namefinder" antfile="build.xml" target="clean"/>

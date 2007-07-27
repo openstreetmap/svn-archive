@@ -398,17 +398,18 @@ sub GenerateTileset
     my ($N, $S) = Project($Y, $Zoom);
     my ($W, $E) = ProjectL($X, $Zoom);
     
+    $progress = 0;
+    $progressPercent = 0;
+    $progressJobs++;
+    $currentSubTask = "jobinit";
+    
+    statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+    
     if ( ($X < 0) or ($X > 4095) or ($Y < 0) or ($Y > 4095) )
     {
         #maybe do something else here
         die("\n Coordinates out of bounds (0..4095)\n");
     }
-    $progress = 0;
-    $progressPercent = 0;
-    $progressJobs++;
-    $currentSubTask = "jobinit";
-
-    statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     
     $currentSubTask = "Preproc";
     

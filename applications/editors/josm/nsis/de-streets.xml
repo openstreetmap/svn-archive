@@ -7,9 +7,7 @@
     <!-- Autobahns are usually oneway -->
     <check key="oneway" text="Oneway" default="on"/>
 
-    <!-- Always setting class=Autobahn -->
     <key key="highway" value="motorway"/>
-    <key key="class" value="Autobahn"/>
   </item>
 
   <item name="Bundesstrasse" type="way">
@@ -20,9 +18,7 @@
     <!-- Bundesstrasses are usually not oneway -->
     <check key="oneway" text="Oneway" default="off"/>
 
-    <!-- Always setting class=Bundesstrasse -->
     <key key="highway" value="primary"/>
-    <key key="class" value="Bundesstrasse"/>
   </item>
 
   <item name="Landstrasse" type="way">
@@ -33,9 +29,7 @@
     <!-- Landstrasses are usually not oneway -->
     <check key="oneway" text="Oneway" default="off"/>
 
-    <!-- Always setting class=Landstrasse -->
     <key key="highway" value="secondary"/>
-    <key key="class" value="Landstrasse"/>
   </item>
 
   <item name="Nebenstrasse" type="way">
@@ -46,9 +40,7 @@
     <!-- Nebenstrasses are usually not oneway -->
     <check key="oneway" text="Oneway" default="off"/>
 
-    <!-- Always setting class=Landstrasse -->
     <key key="highway" value="unclassified"/>
-    <key key="class" value="Nebenstrasse"/>
   </item>
 
   <item name="Wohnstrasse" type="way">
@@ -59,9 +51,21 @@
     <!-- Wohnstrasses are usually not oneway -->
     <check key="oneway" text="Oneway" default="off"/>
 
-    <!-- Always setting class=Wohnstrasse -->
     <key key="highway" value="residential"/>
-    <key key="class" value="Wohnstrasse"/>
+  </item>
+  
+  <item name="Bus Halt" type="node">
+    <label text="Bushaltestelle in Deutschland"/>
+
+    <text key="name" text="Name"/>
+
+    <key key="highway" value="bus_stop"/>
+  </item>
+  
+  <item name="Fussweg" type="way">
+    <label text="Fussweg in Deutschland"/>
+
+    <key key="highway" value="footway"/>
   </item>
 
 </annotations>

@@ -25,14 +25,14 @@ cp ../../plugins/namefinder/namefinder.jar .
 #cp ../../plugins/annotation-tester/annotation-tester.jar .
 #cp ../../plugins/wmsplugin/wmsplugin.jar .
 
-# wget -nc http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
-# wget -nc http://www.free-map.org.uk/downloads/josm/mappaint.jar
-# wget -nc http://www.free-map.org.uk/downloads/josm/elemstyles.xml
-wget -nc http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
-wget -nc http://www.eigenheimstrasse.de/josm/plugins/annotation-tester.jar
-wget -nc http://chippy2005.googlepages.com/wmsplugin.jar
-wget -nc http://personales.ya.com/frsantos/validator.jar
-wget -nc http://thomas.walraet.net/tways/tways-0.2.jar
+# wget -N http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
+# wget -N http://www.free-map.org.uk/downloads/josm/mappaint.jar
+# wget -N http://www.free-map.org.uk/downloads/josm/elemstyles.xml
+wget -N http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
+wget -N http://www.eigenheimstrasse.de/josm/plugins/annotation-tester.jar
+wget -N http://chippy2005.googlepages.com/wmsplugin.jar
+wget -N http://personales.ya.com/frsantos/validator.jar
+wget -N http://thomas.walraet.net/tways/tways-0.2.jar
 
 cd ..
 

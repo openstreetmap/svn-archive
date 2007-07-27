@@ -21,6 +21,7 @@ def checkOutstanding():
     print "Lots (%s) outstanding, pausing" % outstanding
     time.sleep(30)
     outstanding = countOutstanding()
+  print "%s outstanding - continuing" % outstanding
 
 def go(xmin,ymin,xmax,ymax,xskip,yskip,name):
   count = 0

@@ -33,7 +33,7 @@
 		<ant dir="plastic_laf" antfile="build.xml" target="install"/>
 		<ant dir="pluginmanager" antfile="build.xml" target="install"/>
 		<ant dir="slippymap" antfile="build.xml" target="dist"/>
-		<!--<ant dir="surveyor" antfile="build.xml" target="dist"/>-->
+		<ant dir="surveyor" antfile="build.xml" target="dist"/>
 		<ant dir="tagging-preset-tester" antfile="build.xml" target="build"/>
 		<ant dir="tways" antfile="build.xml" target="jar"/>
 		<ant dir="validator" antfile="build.xml" target="build"/>

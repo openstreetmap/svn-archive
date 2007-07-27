@@ -1,5 +1,5 @@
 <project name="namefinder" default="dist" basedir=".">
-  <property name="josm.prj.dir" value="../../josm"/>
+  <property name="josm.prj.dir" value="../../core"/>
   <property name="josm.home.dir" value="${user.home}/.josm"/>
   <property name="plugin.build.dir" value="build"/>
 

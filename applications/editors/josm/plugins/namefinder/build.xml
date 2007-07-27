@@ -6,11 +6,13 @@
     <!-- init target -->
      <target name="init">
         <mkdir dir="build" />
+        <mkdir dir="dist" />
       </target>
 
     <!-- clean target -->
       <target name="clean">
         <delete dir="build" />
+        <delete dir="dist" />
       </target>
     
     <!-- compile target -->
@@ -25,9 +27,9 @@
     </javac>
     </target>
 
-    <!-- dist target - crate jar file -->
+    <!-- dist target - create jar file -->
   <target name="dist" depends="compile">
-    <jar destfile="${ant.project.name}.jar" basedir="${plugin.build.dir}">
+    <jar destfile="dist/${ant.project.name}.jar" basedir="${plugin.build.dir}">
       <manifest>
         <attribute name="Plugin-Class" value="namefinder.NameFinderPlugin" />
         <attribute name="Plugin-Description" value="Allows selection of download areas by name, using an external service" />
@@ -37,7 +39,7 @@
 
     <!-- dist target - copy jar file to plugin destination -->
      <target name="install" depends="dist">
-        <copy file="${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
+        <copy file="dist/${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
       </target>
     
 </project>

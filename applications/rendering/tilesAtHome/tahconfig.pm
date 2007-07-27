@@ -166,14 +166,14 @@ sub CheckConfig{
         {
             printf "! Please set UploadURL to %s, this will become the default ".
                 "UploadURL soon\n", $Config{"UploadURL2"};
-        } 
-        if($Config{"UploadChunkSize"} > 2){
-            print "! Upload chunks may be too large for server\n";
+        }
+        if( ($Config{"UploadChunkSize"}*1024*1204) > ($Config{"ZipHardLimit"}*1000*1000)){
+            die("! Upload chunks may be too large for server\n");
         }
 
-        if($Config{"UploadChunkSize"} < 0.1){
-            $Config{"UploadChunkSize"} = 1;
-            print "! Using default upload chunk size of 1.0 MB\n";
+        if($Config{"UploadChunkSize"} < 0.2){
+            $Config{"UploadChunkSize"} = 2;
+            print "! Using default upload chunk size of 2.0 MB\n";
         }
 
         # $Config{"UploadURL2"};

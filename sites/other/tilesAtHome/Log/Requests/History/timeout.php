@@ -14,7 +14,7 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  // timeout(REQUEST_ACTIVE, 6, "restart");
+  timeout(REQUEST_ACTIVE, 24, "delete");
   timeout(REQUEST_DONE, 2 * 24, "delete");
 
   #---------------------------------------------------------------------------
@@ -28,37 +28,44 @@
   #     : "delete" - delete it
   #--------------------------------------------------------------------------
   function timeout($Status, $MaxAge, $Effect){    
-    printf("Requests of status %d more than %1.1f hours old, %s:\n", $Status, $MaxAge, $Effect);
+    printf("Timeout requests of status %d more than %1.1f hours old, %s:\n", $Status, $MaxAge, $Effect);
 
-    // Find old requests in the "active" queue
-    $SQL = sprintf(
-      "select * from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
-      $MaxAge,
-      $Status);
-
-    $Result = mysql_query($SQL);
-    $Count = mysql_num_rows($Result);
-
-    // For each request that hasn't been done after x hours...
-    while($Data = mysql_fetch_assoc($Result)){
-      printf("  - %d, %d, %d\n", $Data["x"], $Data["y"], $Data["status"]);
-
-      switch($Effect){
-        case "restart":
-          // ...move it to the "new requests" queue
-          moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
+    switch($Effect){
+      case "restart":
+         // ...move it to the "new requests" queue
+         // TODO extend move request to be able to handle multiple requests at once
+	 // then use  moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
+         // Find old requests in the "active" queue
+         $SQL = sprintf("UPDATE `tiles_queue` set `status`=%d where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
+            $MaxAge,
+            $Status,
+            REQUEST_NEW);
           break;
-        case "delete":
-          deleteRequest($Data["x"], $Data["y"], $Data["status"]);
+         // Finished handling the restart case
+
+      case "delete":
+          //Simply time out and delete still existing requests
+          // TODO see above. Make deleteRequest be able to handle multiple requests
+          // and use deleteRequest($Data["x"], $Data["y"], $Data["status"]);
+          // LOW_PRIO and QUICK don't help with InnoDB but can't hurt either
+          $SQL = sprintf("DELETE LOW_PRIORITY QUICK from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
+            $MaxAge,
+            $Status);
           break;
-        default:
+          // Finished handling the delete case here
+
+      default:
           print "Error: unknown effect\n";
           break;
-      }
 
-    }
+    } // end switch(Effect)      
 
-  }
+    print $Result = mysql_query($SQL);
+    $Count = mysql_affected_rows();
 
+    // print some stats (do we want to use msglog() here?
+    //printf ("%s %d tiles of status %d",$Effect,$Count,$Status);
+
+  }   // end function timeout
   
   ?>

@@ -405,13 +405,21 @@ SetOutPath $APPDATA\JOSM\plugins
 File "downloads\validator.jar"
 SectionEnd
 
+Section "tways" SecTWaysPlugin
+;-------------------------------------------
+SectionIn 1 2
+SetShellVarContext current
+SetOutPath $APPDATA\JOSM\plugins
+File "downloads\tways-0.2.jar"
+SectionEnd
+
 SectionGroupEnd	; "Plugins"
 
 Section "-PluginSetting"
 ;-------------------------------------------
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 SetShellVarContext current
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator,tways-0.2"
 SectionEnd
 
 
@@ -475,6 +483,7 @@ Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
 Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
+Delete "$APPDATA\JOSM\plugins\tways-0.2.jar"
 ;Delete "$APPDATA\JOSM\plugins\mappaint\elemstyles.xml"
 RMDir "$APPDATA\JOSM\plugins\osmarender"
 ;RMDir "$APPDATA\JOSM\plugins\mappaint"
@@ -504,6 +513,7 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} "Validates edited data if it conforms to common suggestions."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecTwaysPlugin} "Mass wayfication of segments."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN

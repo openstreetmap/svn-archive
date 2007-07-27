@@ -9,7 +9,7 @@
     </javac>
   </target>
 
-  <target name="jar" depends="compile">
+  <target name="build" depends="compile">
     <jar destfile="tways.jar" basedir="build">
       <manifest>
         <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.tways.TwaysPlugin" />
@@ -25,7 +25,7 @@
     <delete file="tways.jar" />
   </target>
 
-  <target name="install" depends="jar">
+  <target name="install" depends="build">
     <copy file="tways.jar" todir="${user.home}/.josm/plugins"/>
   </target>
 

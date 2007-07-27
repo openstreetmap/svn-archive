@@ -14,8 +14,12 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  timeout(REQUEST_ACTIVE, 24, "delete");
-  timeout(REQUEST_DONE, 2 * 24, "delete");
+  // retry active requests twice after 24h then delete
+  // expire finished requests after 48 houres
+  // make sure delete timeout is bigger than restart timeout if used simulatanously
+  timeout(REQUEST_ACTIVE, 24, 1 "restart");
+  timeout(REQUEST_ACTIVE, 25, 0 "delete");
+  timeout(REQUEST_DONE, 48, 0, "delete");
 
   #---------------------------------------------------------------------------
   # timeout a set of requests
@@ -27,18 +31,21 @@
   #     : "restart" - put it back in the queue
   #     : "delete" - delete it
   #--------------------------------------------------------------------------
-  function timeout($Status, $MaxAge, $Effect){    
+  function timeout($Status, $MaxAge, $MaxRetries, $Effect){    
     printf("Timeout requests of status %d more than %1.1f hours old, %s: ", $Status, $MaxAge, $Effect);
 
     switch($Effect){
       case "restart":
-         // ...move it to the "new requests" queue
+         // if time's over and enough retry attempts are left
+         // move it to the "new requests" queue
          // TODO extend move request to be able to handle multiple requests at once
 	 // then use  moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
-         // Find old requests in the "active" queue
-         $SQL = sprintf("UPDATE `tiles_queue` set `status`=%d where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
+
+         $SQL = sprintf(
+            "UPDATE `tiles_queue` set `status`=%d  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<=%d and `status`=%d;", 
             $MaxAge,
             $Status,
+            $MaxRetries,
             REQUEST_NEW);
           break;
          // Finished handling the restart case

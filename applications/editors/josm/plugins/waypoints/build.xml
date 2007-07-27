@@ -1,7 +1,7 @@
 <project name="waypoints" default="build" basedir=".">
 
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="/home/nick/josm/dist/josm-latest.jar" />
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
 
 
 

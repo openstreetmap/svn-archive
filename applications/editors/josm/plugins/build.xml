@@ -32,6 +32,14 @@
 		<ant dir="osmarender" antfile="build.xml" target="build"/>
 		<ant dir="plastic_laf" antfile="build.xml" target="install"/>
 		<ant dir="pluginmanager" antfile="build.xml" target="install"/>
+		<ant dir="slippymap" antfile="build.xml" target="dist"/>
+		<!--<ant dir="surveyor" antfile="build.xml" target="dist"/>-->
+		<ant dir="tagging-preset-tester" antfile="build.xml" target="build"/>
+		<ant dir="tways" antfile="build.xml" target="jar"/>
+		<ant dir="validator" antfile="build.xml" target="build"/>
+		<ant dir="waypoints" antfile="build.xml" target="build"/>
+		<ant dir="wmsplugin" antfile="build.xml" target="build"/>
+		<ant dir="ywms" antfile="build.xml" target="build"/>
 	</target>
 
 	<target name="clean">
@@ -47,6 +55,13 @@
 		<ant dir="osmarender" antfile="build.xml" target="clean"/>
 		<ant dir="plastic_laf" antfile="build.xml" target="clean"/>
 		<ant dir="pluginmanager" antfile="build.xml" target="clean"/>
+		<ant dir="surveyor" antfile="build.xml" target="clean"/>
+		<!--<ant dir="tagging-preset-tester" antfile="build.xml" target="clean"/>-->
+		<ant dir="tways" antfile="build.xml" target="clean"/>
+		<ant dir="validator" antfile="build.xml" target="clean"/>
+		<ant dir="waypoints" antfile="build.xml" target="clean"/>
+		<ant dir="wmsplugin" antfile="build.xml" target="clean"/>
+		<ant dir="ywms" antfile="build.xml" target="clean"/>
 	</target>
 
 	<target name="clean_install">

@@ -28,6 +28,8 @@
 		<ant dir="mappaint" antfile="build.xml" target="build"/>
 		<ant dir="namefinder" antfile="build.xml" target="dist"/>
 		<ant dir="navigator" antfile="build.xml" target="dist"/>
+		<!--<ant dir="nearclick" antfile="build.xml" target="dist"/>-->
+		<ant dir="osmarender" antfile="build.xml" target="build"/>
 	</target>
 
 	<target name="clean">
@@ -39,6 +41,8 @@
 		<ant dir="mappaint" antfile="build.xml" target="clean"/>
 		<ant dir="namefinder" antfile="build.xml" target="clean"/>
 		<ant dir="navigator" antfile="build.xml" target="clean"/>
+		<!--<ant dir="nearclick" antfile="build.xml" target="clean"/>-->
+		<ant dir="osmarender" antfile="build.xml" target="clean"/>
 	</target>
 
 	<target name="clean_install">

@@ -1,8 +1,8 @@
 <project name="osmarender" default="install" basedir=".">
 
-	<property name="josm" location="../../../../editors/josm/dist/josm-custom.jar" />
-	<property name="osmarender" location="../../../osmarender" />
-
+	<property name="josm" location="../../core/dist/josm-custom.jar" />
+	<!--<property name="osmarender" location="../../../osmarender" />-->
+	<property name="osmarender" location="../../../../rendering/osmarender" />
 
 	<target name="compile">
 		<mkdir dir="bin"></mkdir>
@@ -12,14 +12,14 @@
 		</javac>
 	</target>
 
-	<target name="build">
+	<target name="build"  depends="compile">
 		<copy todir="bin">
 			<fileset dir="${osmarender}">
 				<include name="osmarender.xsl"/>
 				<include name="osm-map-features.xml"/>
 			</fileset>
 		</copy>
-		<jar destfile="${user.home}/.josm/plugins/osmarender.jar" basedir="bin">
+		<jar destfile="dist/osmarender.jar" basedir="bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="OsmarenderPlugin" />
 				<attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image" />

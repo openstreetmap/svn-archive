@@ -28,7 +28,7 @@
   #     : "delete" - delete it
   #--------------------------------------------------------------------------
   function timeout($Status, $MaxAge, $Effect){    
-    printf("Timeout requests of status %d more than %1.1f hours old, %s:\n", $Status, $MaxAge, $Effect);
+    printf("Timeout requests of status %d more than %1.1f hours old, %s: ", $Status, $MaxAge, $Effect);
 
     switch($Effect){
       case "restart":
@@ -60,11 +60,11 @@
 
     } // end switch(Effect)      
 
-    print $Result = mysql_query($SQL);
+    $Result = mysql_query($SQL);
     $Count = mysql_affected_rows();
 
-    // print some stats (do we want to use msglog() here?
-    //printf ("%s %d tiles of status %d",$Effect,$Count,$Status);
+    // finish stats line (do we want to use msglog()?
+    print "$Count\n";
 
   }   // end function timeout
   

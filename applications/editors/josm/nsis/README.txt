@@ -3,13 +3,16 @@ like installer. This should ease installation and provides a reasonable set of
 default preferences for Windows users.
 
 Currently only josm and a small assortment of josm plugins is included in the 
-installer. Probably, other osm related applications like osmarender and mapnik 
-will be added later.
+installer.
+
+As other osm related applications like osmarender and mapnik have a lot of more
+UNIX related dependencies that will make them complicated to install, only JOSM
+is currently installed "the easy way".
 
 
 install
 -------
-simply execute openstreetmap-setup-x.x.x.exe
+simply execute josm-setup-x.x.x.exe
 
 uninstall
 ---------
@@ -19,7 +22,7 @@ use "control panel / software" to uninstall
 current state of the art
 ------------------------
 The installer will currently add:
-- josm into "C:\Program Files\OpenStreetMap" (or the corresponding international dir)
+- josm into "C:\Program Files\JOSM" (or the corresponding international dir)
 - josm icons to the desktop and quick launch bar
 - josm file associations to .osm and .gpx files
 - some plugins to the current user profile (more to follow)
@@ -36,17 +39,17 @@ build the installer
 - launch4j - http://launch4j.sourceforge.net/
 - NSIS - http://nsis.sourceforge.net/
 
-2.) Edit the three absolute paths in the file openstreetmap-setup.sh (in the calls 
+2.) Edit the two absolute paths in the file josm-setup.sh (in the calls 
 to launch4jc and makensis)
 
-3.) Start a cygwin shell and call ./openstreetmap-setup.sh
+3.) Start a cygwin shell and call ./josm-setup.sh
 
 how the installer is build
 --------------------------
 First, wget will download the required files (e.g. the josm plugins) into the 
 downloads subdir. Then jaunch4j wraps the josm.jar into a josm.exe, which 
 makes registration of file extensions a lot easier. Then NSIS is called to 
-create the actual openstreetmap-setup-x.x.x.exe.
+create the actual josm-setup-x.x.x.exe.
 
 known issues
 ------------
@@ -58,4 +61,4 @@ known issues
 - josm should use some defaults already instead of the installer ones
 - some way of automatic installer generation on the server (e.g. nightly build)?
 - install all josm plugins by default and only enable them according to user wishes?
-- make instalation of icons and file extensions optional?
+- make installation of icons and file extensions optional?

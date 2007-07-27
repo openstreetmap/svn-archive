@@ -35,7 +35,7 @@
 		<ant dir="slippymap" antfile="build.xml" target="dist"/>
 		<ant dir="surveyor" antfile="build.xml" target="dist"/>
 		<ant dir="tagging-preset-tester" antfile="build.xml" target="build"/>
-		<ant dir="tways" antfile="build.xml" target="jar"/>
+		<ant dir="tways" antfile="build.xml" target="build"/>
 		<ant dir="validator" antfile="build.xml" target="build"/>
 		<ant dir="waypoints" antfile="build.xml" target="build"/>
 		<ant dir="wmsplugin" antfile="build.xml" target="build"/>

@@ -31,7 +31,8 @@ cp ../../plugins/namefinder/namefinder.jar .
 wget -N http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
 wget -N http://www.eigenheimstrasse.de/josm/plugins/annotation-tester.jar
 wget -N http://chippy2005.googlepages.com/wmsplugin.jar
-wget -N http://personales.ya.com/frsantos/validator.jar
+# wget -N http://personales.ya.com/frsantos/validator.jar
+wget -N http://personales.ya.com/osmfrsantos/validator/latest/validator.jar
 wget -N http://thomas.walraet.net/tways/tways-0.2.jar
 
 cd ..

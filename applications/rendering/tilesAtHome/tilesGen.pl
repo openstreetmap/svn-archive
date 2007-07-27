@@ -398,6 +398,11 @@ sub GenerateTileset
     my ($N, $S) = Project($Y, $Zoom);
     my ($W, $E) = ProjectL($X, $Zoom);
     
+    if ( ($X < 0) or ($X > 4095) or ($Y < 0) or ($Y > 4095) )
+    {
+        #maybe do something else here
+        die("\n Coordinates out of bounds (0..4095)\n");
+    }
     $progress = 0;
     $progressPercent = 0;
     $progressJobs++;

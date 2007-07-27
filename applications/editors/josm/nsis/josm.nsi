@@ -1,5 +1,5 @@
 ;
-; openstreetmap.nsi
+; josm.nsi
 ;
 
 
@@ -13,9 +13,9 @@ SetCompressor /SOLID lzma
 ; work with JAVA ini strings
 !include "INIStrNS.nsh"
 
-!define DEST "openstreetmap"
+!define DEST "josm"
 
-InstType "OpenStreetMap (full install)"
+InstType "JOSM (full install)"
 
 InstType "un.Default (keep Personal Settings and plugins)"
 InstType "un.All (remove all)"
@@ -31,7 +31,7 @@ InstType "un.All (remove all)"
 ; Header configuration
 ; ============================================================================
 ; The name of the installer
-!define PROGRAM_NAME "OpenStreetMap"
+!define PROGRAM_NAME "JOSM"
 
 Name "${PROGRAM_NAME} ${VERSION}"
 
@@ -39,7 +39,7 @@ Name "${PROGRAM_NAME} ${VERSION}"
 OutFile "${DEST}-setup-${VERSION}.exe"
 
 ; Uninstall stuff (NSIS 2.08: "\r\n" don't work here)
-!define MUI_UNCONFIRMPAGE_TEXT_TOP "The following OpenStreetMap installation will be uninstalled. Click 'Next' to continue."
+!define MUI_UNCONFIRMPAGE_TEXT_TOP "The following JAVA OpenStreetMap editor (JOSM) installation will be uninstalled. Click 'Next' to continue."
 
 XPStyle on
 
@@ -59,7 +59,7 @@ XPStyle on
 !define MUI_COMPONENTSPAGE_SMALLDESC
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
-!define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of OpenStreetMap.\r\n\r\nBefore starting the installation, make sure any OpenStreetMap applications are not running.\r\n\r\nClick 'Next' to continue."
+!define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of the JAVA OpenStreetMap editor (JOSM).\r\n\r\nBefore starting the installation, make sure any JOSM applications are not running.\r\n\r\nClick 'Next' to continue."
 ;!define MUI_FINISHPAGE_LINK "Install WinPcap to be able to capture packets from a network!"
 ;!define MUI_FINISHPAGE_LINK_LOCATION "http://www.winpcap.org"
 
@@ -156,10 +156,10 @@ XPStyle on
 DirText "Choose a directory in which to install OpenStreeMap."
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\OpenStreetMap\
+InstallDir $PROGRAMFILES\JOSM\
 
 ; See if this is an upgrade; if so, use the old InstallDir as default
-InstallDirRegKey HKEY_LOCAL_MACHINE SOFTWARE\OpenStreetMap "InstallDir"
+InstallDirRegKey HKEY_LOCAL_MACHINE SOFTWARE\JOSM "InstallDir"
 
 
 ; ============================================================================
@@ -193,7 +193,7 @@ UpdateIcons.error1_${UPDATEICONS_UNIQUE}:
 	MessageBox MB_OK|MB_ICONSTOP  "Can't find 'shell32.dll' library. Impossible to update icons"
 	Goto UpdateIcons.quit_${UPDATEICONS_UNIQUE}
 UpdateIcons.error2_${UPDATEICONS_UNIQUE}:
-	MessageBox MB_OK|MB_ICONINFORMATION "You should install the free 'Microsoft Layer for Unicode' to update OpenStreetMap file icons"
+	MessageBox MB_OK|MB_ICONINFORMATION "You should install the free 'Microsoft Layer for Unicode' to update JOSM file icons"
 	Goto UpdateIcons.quit_${UPDATEICONS_UNIQUE}
 UpdateIcons.quit_${UPDATEICONS_UNIQUE}:
 	!undef UPDATEICONS_UNIQUE
@@ -205,7 +205,7 @@ UpdateIcons.quit_${UPDATEICONS_UNIQUE}:
 
 ; associate a file extension to an icon
 Function Associate
-	; $R0 should contain the prefix to associate to OpenStreetMap
+	; $R0 should contain the prefix to associate to JOSM
 	Push $R1
 
 	ReadRegStr $R1 HKCR $R0 ""
@@ -227,7 +227,7 @@ Function un.unlink
 	StrCmp $R1 ${OSM_ASSOC} un.unlink.doUnlink
 	Goto un.unlink.end
 un.unlink.doUnlink:
-	; The extension is associated with OpenStreetMap so, we must destroy this!
+	; The extension is associated with JOSM so, we must destroy this!
 	DeleteRegKey HKCR $R0
 un.unlink.end:
 	pop $R1
@@ -260,7 +260,7 @@ SetOutPath $INSTDIR
 
 ; Write the uninstall keys for Windows
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayVersion" "${VERSION}"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayName" "OpenStreetMap ${VERSION}"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "DisplayName" "JOSM ${VERSION}"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "UninstallString" '"$INSTDIR\uninstall.exe"'
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "Publisher" "The OpenStreetMap developer community, http://www.openstreetmap.org/"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "HelpLink" "mailto:newbies@openstreetmap.org."

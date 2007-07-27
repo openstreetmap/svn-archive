@@ -2,11 +2,11 @@
 
 ## settings ##
 
-VERSION=0.0.8
+VERSION=0.0.9
 
 PROGRAM_FILES="/cygdrive/c/Program Files"
 
-LAUNCH4J_XML="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\proj\gps\osm\svn.openstreetmap.org\applications\nsis\launch4j.xml"
+LAUNCH4J_XML="C:\Dokumente und Einstellungen\ulfl\Eigene Dateien\svn.openstreetmap.org\applications\editors\josm\nsis\launch4j.xml"
 
 
 ### download required files ###
@@ -19,11 +19,11 @@ wget -nc http://josm.eigenheimstrasse.de/browser/LICENSE?format=raw
 cp LICENSE?format=raw LICENSE
 
 # get latest plugin (and supporting files) versions
-cp ../../editors/josm/plugins/mappaint/mappaint.jar .
-cp ../../editors/josm/plugins/namefinder/namefinder.jar .
-#cp ../../editors/josm/plugins/osmarender/osmarender.jar .
-#cp ../../editors/josm/plugins/annotation-tester/annotation-tester.jar .
-#cp ../../editors/josm/plugins/wmsplugin/wmsplugin.jar .
+cp ../../plugins/mappaint/mappaint.jar .
+cp ../../plugins/namefinder/namefinder.jar .
+#cp ../../plugins/osmarender/osmarender.jar .
+#cp ../../plugins/annotation-tester/annotation-tester.jar .
+#cp ../../plugins/wmsplugin/wmsplugin.jar .
 
 # wget -nc http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
 # wget -nc http://www.free-map.org.uk/downloads/josm/mappaint.jar
@@ -42,4 +42,4 @@ cd ..
 
 ### create the installer exe ###
 # NSIS - http://nsis.sourceforge.net/Main_Page
-"$PROGRAM_FILES/nsis/makensis.exe" /DVERSION=$VERSION openstreetmap.nsi
+"$PROGRAM_FILES/nsis/makensis.exe" /DVERSION=$VERSION josm.nsi

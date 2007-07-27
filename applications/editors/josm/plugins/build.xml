@@ -28,7 +28,7 @@
 		<ant dir="mappaint" antfile="build.xml" target="build"/>
 		<ant dir="namefinder" antfile="build.xml" target="dist"/>
 		<ant dir="navigator" antfile="build.xml" target="dist"/>
-		<!--<ant dir="nearclick" antfile="build.xml" target="dist"/>-->
+		<ant dir="nearclick" antfile="build.xml" target="build"/>
 		<ant dir="osmarender" antfile="build.xml" target="build"/>
 		<ant dir="plastic_laf" antfile="build.xml" target="install"/>
 		<ant dir="pluginmanager" antfile="build.xml" target="install"/>
@@ -51,7 +51,7 @@
 		<ant dir="mappaint" antfile="build.xml" target="clean"/>
 		<ant dir="namefinder" antfile="build.xml" target="clean"/>
 		<ant dir="navigator" antfile="build.xml" target="clean"/>
-		<!--<ant dir="nearclick" antfile="build.xml" target="clean"/>-->
+		<ant dir="nearclick" antfile="build.xml" target="clean"/>
 		<ant dir="osmarender" antfile="build.xml" target="clean"/>
 		<ant dir="plastic_laf" antfile="build.xml" target="clean"/>
 		<ant dir="pluginmanager" antfile="build.xml" target="clean"/>

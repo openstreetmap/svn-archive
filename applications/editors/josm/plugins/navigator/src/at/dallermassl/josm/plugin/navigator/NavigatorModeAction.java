@@ -48,7 +48,7 @@ public class NavigatorModeAction extends MapMode {
 
     @Override public void mouseClicked(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON2) {
-            navigatorModel.clearNodes();
+            navigatorModel.reset();
         } else if (e.getButton() == MouseEvent.BUTTON1) {        
             Node node = Main.map.mapView.getNearestNode(e.getPoint());
             System.out.println("selected node " + node);

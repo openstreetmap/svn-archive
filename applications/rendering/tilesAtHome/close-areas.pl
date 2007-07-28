@@ -532,6 +532,12 @@ unless( $border_crossed )
     {
       addBlueRectangle($helpernodes);
     }
+    elsif ( ($state eq "11") and ( $temp{"01"} == 0 ) ) 
+    # if the tile is marked coast but no land near, assume it's a group of islands instead of lakes.
+    {
+      # coast
+      addBlueRectangle($helpernodes);
+    }
     else
     {
       #land

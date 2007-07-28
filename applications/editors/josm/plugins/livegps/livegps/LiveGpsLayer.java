@@ -14,9 +14,11 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.RawGpsLayer;
+import org.openstreetmap.josm.tools.ColorHelper;
 
 public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener {
-    public final static String LAYER_NAME = "LiveGPS layer";
+    public static final String LAYER_NAME = "LiveGPS layer";
+    public static final String KEY_LIVEGPS_COLOR ="color.livegps.position";
 	LatLon lastPos;
 	GpsPoint lastPoint;
 	Collection<GpsPoint> trackBeingWritten;
@@ -108,10 +110,17 @@ public class LiveGpsLayer extends RawGpsLayer implements PropertyChangeListener 
 //	        g.setColor(new Color(1.0f, 1.0f, 1.0f, 0.8f)); 
 //	        g.fillRect(mvs.x, mvs.y, mvs.width, mvs.height);
 
+	        
 	        if (lastPoint != null)
 	        {
+	            String colorString = Main.pref.get(KEY_LIVEGPS_COLOR);
+	            if(colorString.length() == 0) {
+	                colorString = ColorHelper.color2html(Color.RED);
+	                Main.pref.put(KEY_LIVEGPS_COLOR, colorString);
+	            }
+	            Color color = ColorHelper.html2color(colorString);
 	            Point screen = mv.getPoint(lastPoint.eastNorth);
-	            g.setColor(Color.RED);
+	            g.setColor(color);
 	            g.drawOval(screen.x-10, screen.y-10,20,20);
 	            g.drawOval(screen.x-9, screen.y-9,18,18);
 	        }

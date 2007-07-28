@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -64,8 +65,9 @@ public class NavigatorPlugin extends Plugin {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if(newFrame != null) {
-            newFrame.toolBarActions.add(
-                new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer)));
+            IconToggleButton button = new IconToggleButton(new NavigatorModeAction(newFrame, navigatorModel, navigatorLayer)); 
+            newFrame.toolBarActions.add(button);
+            newFrame.toolGroup.add(button);
         }
     }
 

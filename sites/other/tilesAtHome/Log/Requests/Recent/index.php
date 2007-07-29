@@ -69,7 +69,7 @@
       $Z = 12;
       
       $BrowseURL = sprintf("../../../Browse/?x=%d&amp;y=%d&amp;z=12",$X,$Y,$Z);
-      $DetailsURL = sprintf("../../../Tiles/tile.php/%d/%d/%d.png_details",$Z,$X,$Y);
+      $DetailsURL = sprintf("../../../Tiles/info.php?x=%d&amp;y=%d&amp;z=%d",$X,$Y,$Z);
       
       $TileHtml = sprintf("<a href=\"%s\">%d,%d</a>", $BrowseURL, $X, $Y);
       $DetailsHtml = sprintf("<a href=\"%s\">...</a>", $DetailsURL);

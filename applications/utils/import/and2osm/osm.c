@@ -106,7 +106,7 @@ long hash_text(char *str)
 /*output*/
 
 int openOutput(){
-fp=fopen("AND2osm2.osm","w");
+fp=fopen("AND2osm3.osm","w");
     if (fp==NULL)
     {
 	    printf("error opening file, exiting...");
@@ -434,7 +434,7 @@ struct segments * newSegment(struct nodes * from, struct nodes * to){
 	return s;
 }
 
-struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p){ /*needs work*/
+struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p,struct nodes * from, struct nodes * to){
 	char name[100];
 	int i; 
 	if (fileType==NODE)
@@ -448,6 +448,15 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 2: Type=Integer, Title=`ONLY_', Width=11, Decimals=0
 		//Field 3: Type=Integer, Title=`ND_1', Width=11, Decimals=0
 		sprintf(name,"AND=%i",DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
+		if( from!=to)
+			printf("\nAARRRGGGG:a nodeID can be attached to a way........\n"); 
+		if (from->ANDID==0)
+			from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 3 );
+		else if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 3 ))
+		{
+			printf("\none node should get more than one ANDID! patch needed!\n");
+		}
+		
 		p=addtag(p,"external-ID",name,NULL);
 		//Field 4: Type=Integer, Title=`ND_2', Width=2, Decimals=0
 		//Field 5: Type=Integer, Title=`ND_3', Width=2, Decimals=0
@@ -591,6 +600,10 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 0 ));
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
+			if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+			{
+				printf("\nway in wrong direction! patch required!\n");
+			}
 		}
 			
 			
@@ -599,6 +612,10 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 1 ));
 			p=addtag(p,"AND_TO_NODE",name,NULL);
+			if (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+			{
+				printf("\nway in wrong direction! patch required!\n");
+			}
 		}
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0

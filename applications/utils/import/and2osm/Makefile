@@ -29,7 +29,7 @@ AND2osm:	AND2osm.c shpopen.o dbfopen.o
 
 
 osm.o:	osm.c shpopen.o dbfopen.o
-	$(CC) $(CFLAGS) -c osm.c dbfopen.o shpopen.o $(LINKOPT)
+	$(CC) $(CFLAGS) -c osm.c 
 
 2AND:	2AND.c osm.o shpopen.o dbfopen.o
 	$(CC) $(CFLAGS) 2AND.c osm.o dbfopen.o shpopen.o $(LINKOPT) -o 2AND

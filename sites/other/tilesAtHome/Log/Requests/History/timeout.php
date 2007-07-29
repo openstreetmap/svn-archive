@@ -42,7 +42,7 @@
 	 // then use  moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
 
          $SQL = sprintf(
-            "UPDATE `tiles_queue` set `status`=%d  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<=%d and `status`=%d;", 
+            "UPDATE `tiles_queue` set `status`=%d,  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<=%d and `status`=%d;", 
             REQUEST_NEW,
             $MaxAge,
             $MaxRetries,

@@ -36,8 +36,8 @@ double hash_lat(double x) {
 	long k,*l;
  	double *hd;
 	int i = 0;
-
- 	if(sizeof(double)==sizeof(long long))
+	return x;
+/* 	if(sizeof(double)==sizeof(long long))
 	{
 		f=(long long*)&x;
 		for(h = i = 0; i < sizeof(long long)*8; i++) {
@@ -61,7 +61,7 @@ double hash_lat(double x) {
 	{
 		fprintf(stderr,"not able to hash\n");
 		return x;
-	}
+	}*/
 }
 
 
@@ -106,7 +106,7 @@ long hash_text(char *str)
 /*output*/
 
 int openOutput(){
-fp=fopen("AND2osm3.osm","w");
+fp=fopen("AND2osm.osm","w");
     if (fp==NULL)
     {
 	    printf("error opening file, exiting...");
@@ -194,6 +194,7 @@ void saveAttachedSegments(struct attachedSegments *p){
 	if (p!=NULL)
 	{
 		fprintf(fp,"		<seg id=\"%i\" />\n",p->Segment->ID);
+//		printf("(%2.5f, %2.5f)-(%2.5f,%2.5f)\n",p->Segment->from->lon,p->Segment->from->lat,p->Segment->to->lon,p->Segment->to->lat);
 		saveAttachedSegments(p->nextSegment);
 	}
 }
@@ -210,6 +211,9 @@ long saveWay(struct ways *p){
 	else fprintf(stderr,"unkown wayType in saveWay\n");	
 	saveTags(p->tag);
 	saveAttachedSegments(p->segments);
+	
+
+	
 	if (p->type==ROAD)
 		fprintf(fp,"	</way>\n");
 	else if (p->type==AREA)
@@ -368,7 +372,7 @@ struct nodes * newNode(double lat, double lon){
 	if (node_depth>node_maxdepth)
 	{
 		node_maxdepth=node_depth;
-		//printf("\nnew node depth:%li/%li\n",node_maxdepth,nodeID);
+		printf("\nnew node depth:%li/%li\n",node_maxdepth,nodeID);
 	}
 	return rv;
 }
@@ -447,17 +451,24 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 1: Type=Double, Title=`PERIMETER', Width=20, Decimals=5
 		//Field 2: Type=Integer, Title=`ONLY_', Width=11, Decimals=0
 		//Field 3: Type=Integer, Title=`ND_1', Width=11, Decimals=0
-		sprintf(name,"AND=%i",DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
-		if( from!=to)
-			printf("\nAARRRGGGG:a nodeID can be attached to a way........\n"); 
-		if (from->ANDID==0)
-			from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 3 );
-		else if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 3 ))
+		if (DBFReadIntegerAttribute( hDBF, recordnr, 3 )!=0)
 		{
-			printf("\none node should get more than one ANDID! patch needed!\n");
+			sprintf(name,"AND=%i",DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
+			
+			if( from!=to)
+				//printf("\rAARRRGGGG:a nodeID can be attached to a way........\n");
+				Err_ND_attached_to_way++;
+			if (from->ANDID==0)
+				from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 3 );
+			else if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 3 ))
+			{	
+				//printf("\rone node should get more than one ANDID! patch needed!%li %li\n",from->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
+				Err_more_NDIDs_per_node++;
+			}
+			
+			p=addtag(p,"external-ID",name,NULL);
 		}
 		
-		p=addtag(p,"external-ID",name,NULL);
 		//Field 4: Type=Integer, Title=`ND_2', Width=2, Decimals=0
 		//Field 5: Type=Integer, Title=`ND_3', Width=2, Decimals=0
 		//Field 6: Type=Integer, Title=`ND_4', Width=3, Decimals=0
@@ -600,10 +611,11 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 0 ));
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
-			if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+			/*if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
 			{
-				printf("\nway in wrong direction! patch required!\n");
-			}
+				//printf("\nway in wrong direction! patch required!\n");
+				Err_oneway_way_reversed++;
+			}*/
 		}
 			
 			
@@ -612,10 +624,11 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 1 ));
 			p=addtag(p,"AND_TO_NODE",name,NULL);
-			if (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+			/*if (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
 			{
-				printf("\nway in wrong direction! patch required!\n");
-			}
+				//printf("\nway in wrong direction! patch required!\n");
+				Err_oneway_way_reversed++;
+			}*/
 		}
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0
@@ -632,14 +645,20 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 7: Type=Integer, Title=`RD_2', Width=8, Decimals=0
 		//Field 8: Type=Integer, Title=`RD_3', Width=5, Decimals=0
 		//Field 9: Type=Integer, Title=`RD_4', Width=2, Decimals=0
-		switch (DBFReadIntegerAttribute( hDBF, recordnr, 9 ))//flow direction
+		if (DBFReadIntegerAttribute( hDBF, recordnr, 9 )==1)
 		{
-			case 1: p=addtag(p,"oneway","+1",NULL); break;         //****************************
-			case 2: p=addtag(p,"oneway","-1",NULL); break;         //should check direction from_node ->to_node!!!. may not be the same as direction in shape file!!!
-		}								//***************************
-			
-		
-		
+			if (from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+				p=addtag(p,"oneway","+1",NULL);
+			else
+				p=addtag(p,"oneway","-1",NULL);
+		}	
+		else if (DBFReadIntegerAttribute( hDBF, recordnr, 9 )==2)
+		{
+			if (from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+				p=addtag(p,"oneway","-1",NULL);
+			else
+				p=addtag(p,"oneway","+1",NULL);
+		}
 		//Field 10: Type=Integer, Title=`RD_5', Width=3, Decimals=0
 		switch (DBFReadIntegerAttribute( hDBF, recordnr, 10 ))
 		{

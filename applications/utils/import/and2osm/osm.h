@@ -1,8 +1,16 @@
-#include "shapefil.h"
+#include <libshp/shapefil.h>
 
 #define ROAD 1
 #define NODE 2
 #define AREA 3
+
+
+
+
+
+
+
+
 
 
 /*struct texts{
@@ -83,4 +91,8 @@ void save();
 
 long text_maxdepth;
 long node_maxdepth;
+
+long Err_ND_attached_to_way;
+long Err_more_NDIDs_per_node;
+long Err_oneway_way_reversed;
 

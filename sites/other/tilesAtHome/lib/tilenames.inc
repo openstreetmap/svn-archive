@@ -1,6 +1,6 @@
 <?php
 
-function TileName($X,$Y,$Z,$Layer="Tiles"){
+function TileName($X,$Y,$Z,$Layer="tile"){
   if(!$Layer)
     return("");
   if(!TileValid($X,$Y,$Z))
@@ -15,7 +15,7 @@ function TileName($X,$Y,$Z,$Layer="Tiles"){
 function TileURL($X,$Y,$Z,$Layer="tile"){
   if(!TileValid($X,$Y,$Z))
     return("");
-  return(sprintf("/~ojw/Tiles/%s.php/%d/%d/%d.png",$Layer,$Z,$X,$Y));
+  return(sprintf("/~ojw/Tiles/%s/%d/%d/%d.png",$Layer,$Z,$X,$Y));
 }
   
 function TilePartName($X,$Y,$Z){

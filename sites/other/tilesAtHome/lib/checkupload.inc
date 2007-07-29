@@ -1,6 +1,6 @@
 <?php
 
-include ("./layers.inc");
+include_once ("layers.inc");
 
 #-------------------------------------------------------------------
 # Looks at an uploaded directory, and tests whether it is one
@@ -42,7 +42,9 @@ function CheckUploadDir($Dir){
           $XExpect = $X2;
           $YExpect = $Y2;
           $LExpect = $Layer;
-          $MaxZoom = LayerMaxZoom($Layer); 
+          $MaxZoom = LayerMaxZoom($Layer);
+          $countExpect = layerNumberOfTiles($Layer);
+
         }
         else{
           // Every other time: check the tileset is same as first one
@@ -61,8 +63,8 @@ function CheckUploadDir($Dir){
     }
   }
 
-  if($Count != layerNumberOfTiles($Layer)){
-    print "Too few images ($Count)\n";
+  if($Count != $countExpect){
+    print "Too few images ($Count)\, expected $countExpect in layer $Layer.\n";
     return(array(0,0,0,""));
   }
   return(array(1,$X2,$Y2,$Layer));

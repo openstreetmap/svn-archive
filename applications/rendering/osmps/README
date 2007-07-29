@@ -30,11 +30,33 @@ Features
 --------
 
 Current features include basic areas, roads, simple bridges and
-road names. Planned next are oneway arrows and nodes such as
-churches and fuel stations, possibly followed by little dots that
-can tell you where people are. But don't count on it.
+road names. Planned next are oneway arrows and more node logos,
+and hopefully code to paginate maps easily (think easily print an
+"A-Z" book type town map from OSM).
 
+Logos
+-----
+
+The pslogos directory contains a font designed with FontForge that
+has glyphs to be used as some logos on the map. The .sfd file is
+the FontForge source - this is then generated into a .pfa
+PostScript Type1 font which is copied into logos.eps and osmps.rb
+itself. A small PostScript function is written for each character
+to set the colours and draw it correctly.
 
 Matthew Newton
-20 March 2007
+29 July 2007
+
+
+Changelog:
+
+0.01 - 2007-03-20
+       initial release
+
+0.02 - 2007-07-29
+       fixed scaling issues
+       rendering updates, including logos for some nodes
+       style updates and additions
+       move importosm to be a method of the Graph object
+       several other bugfixes and tweaks
 

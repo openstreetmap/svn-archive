@@ -72,21 +72,14 @@ elsif (open(FAILFILE, ">", $failFile))
 compress(1); ## first run
 
 # Upload any ZIP files which are still waiting to go
-if(opendir(ZIPDIR, $ZipDir))
-{
-    processOldZips(1);
-}
+processOldZips(1);
 
 # We might have created lots of single tiles if some tileset zips were larger than 10 MB, so re-check here
-
 compress(2); ## second (and last) run.
 
 # Do we have new zips? (try to) upload them all!
+processOldZips(2);
 
-if(opendir(ZIPDIR, $ZipDir))
-{
-    processOldZips(2);
-}
 
 ## update the failFile with current failure count from processOldZips
 
@@ -100,11 +93,18 @@ if (open(FAILFILE, ">", $failFile))
 
 sub processOldZips
 {
-    my ($runNumber) = @_;
-    $currentSubTask = "upload" . $runNumber;
-    $progress = 0;
-    my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
-    close ZIPDIR;
+    if(opendir(ZIPDIR, $ZipDir))
+    {
+        my ($runNumber) = @_;
+        $currentSubTask = "upload" . $runNumber;
+        $progress = 0;
+        my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
+        close ZIPDIR;
+    }
+    else 
+    {
+        return 0;
+    }
     @sorted = sort { $a cmp $b } @zipfiles; # sort by ASCII value (i.e. upload oldest first if timestamps used)
     my $zipCount = scalar(@sorted);
     statusMessage(scalar(@sorted)." zip files to upload", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);

@@ -162,7 +162,7 @@ int readfile(char * inputfile)
 	struct segments *lastSegment;
 	struct ways * way;
 	psShape = SHPReadObject( hSHP, i );
-	//if ((i/100)*100==i) printf("\r%7li/%7li                                           ",i,nEntities);
+	if ((i/100)*100==i) printf("\r%7li/%7li   %7li/%7li                       ",i,nEntities,0,psShape->nVertices);
 	//printf("\n*******************************\n");
 	//printf("%i,name=%s\n",i,DBFReadStringAttribute( hDBF, i, 15 ) );
 
@@ -174,7 +174,7 @@ int readfile(char * inputfile)
 	prevNode=lastNode=firstNode=NULL;
 	for( j = 0; j < psShape->nVertices; j++ )
 	{
-		if ((j/100)*100==j) printf("\r%7li/%7li   %7li/%7li                       ",i,nEntities,j,psShape->nVertices);
+		if ((j>0)&&((j/1000)*1000==j)) printf("\r%7li/%7li   %7li/%7li                       ",i,nEntities,j,psShape->nVertices);
 		fflush(stdout);
 		//printf("%i/%i\n",j,psShape->nVertices);
 	    prevNode=lastNode;
@@ -195,7 +195,7 @@ int readfile(char * inputfile)
 	   
 	}
 	//printf("\n");
-	if (psShape->nSHPType==SHPT_POLYGON)
+/*	if (psShape->nSHPType==SHPT_POLYGON)
 	{
 		if (lastNode!=firstNode)
 		{
@@ -203,6 +203,7 @@ int readfile(char * inputfile)
 			addSegment2Way(way,lastSegment);
 		}
 	}
+*/
 	if (psShape->nVertices>0)
 	{
 		way->tag=mkTagList(hDBF, i,fileType,way->tag);
@@ -230,7 +231,7 @@ int readfile(char * inputfile)
 }
 
 
-#define FILENAME "001"
+#define FILENAME "020"
 int main(int argc, char ** argv )
 {
 	/*readfiles*/
@@ -238,8 +239,8 @@ int main(int argc, char ** argv )
 	openOutput();
 	readfile(FILENAME "_nosr_p");
 	readfile(FILENAME "_nosr_r");
-	//readfile(FILENAME "_admin0");
-	//readfile(FILENAME "_admin1");
+	readfile(FILENAME "_admin0");
+	readfile(FILENAME "_admin1");
 	readfile(FILENAME "_admin8");
 	readfile(FILENAME "_a");
 	readfile(FILENAME "_ce");
@@ -248,7 +249,7 @@ int main(int argc, char ** argv )
 	readfile(FILENAME "_gf");
 	readfile(FILENAME "_in");
 	readfile(FILENAME "_i");
-	//readfile(FILENAME "_o");
+	readfile(FILENAME "_o");
 	readfile(FILENAME "_pk");
 	readfile(FILENAME "_r_p");
 	readfile(FILENAME "_r_r");

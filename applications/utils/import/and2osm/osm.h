@@ -5,11 +5,13 @@
 #define AREA 3
 
 
-struct texts{
-	char * text;
+/*struct texts{
+	
+	unsigned char * text;
 	struct texts * btree_l;
 	struct texts * btree_h;
-};
+	
+};*/
 
 struct tags{
 	char * key;  /*stored in text b-tree to save memory*/
@@ -27,6 +29,7 @@ struct nodes{
 	struct tags * tag; /*contains attached tags */
 	struct attachedSegments *segments;
 	struct attachedWays *ways;
+	unsigned long maxdepth;
 };
 
 
@@ -77,5 +80,6 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *)
 void save();
 
 
-
+long text_maxdepth;
+long node_maxdepth;
 

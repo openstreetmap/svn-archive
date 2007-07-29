@@ -1,6 +1,6 @@
 <?php
 
-include ./layers.inc;
+include ("./layers.inc");
 
 #-------------------------------------------------------------------
 # Looks at an uploaded directory, and tests whether it is one

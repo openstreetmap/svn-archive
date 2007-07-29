@@ -74,9 +74,9 @@
  */
 
 static char rcsid[] = 
-  "$Id: AND2osm.c,v 1.0 2007/07/14 15:15:00 Marc Kessels";
+  "$Id: AND2osm.c,v 0.4 2007/07/29 11:04:00 Marc Kessels";
 
-#include "shapefil.h"	
+#include <libshp/shapefil.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -85,11 +85,19 @@ static char rcsid[] =
 int testoverlap(double xmin, double ymin,double  xmax,double ymax)
 {
 	double bbox_xmin,bbox_ymin,bbox_xmax,bbox_ymax;
+//	return -1; //remove this line if you want to use a bounding box!!!!!!!!!!!!!!!!!!!!!!!
+//susteren
 	bbox_ymin=51.056;
 	bbox_ymax=51.074;
 	bbox_xmin=5.835;
 	bbox_xmax=5.881;
 
+//amsterdam
+/*	bbox_ymin=52.367;
+	bbox_ymax=52.370;
+	bbox_xmin=4.878;
+	bbox_xmax=4.880;
+*/
 	//test if any of the points are within bbox
 	if ((xmin>bbox_xmin)&&(xmin<bbox_xmax)&&(ymin>bbox_ymin)&&(ymin<bbox_ymax)) return -1;
 	if ((xmax>bbox_xmin)&&(xmax<bbox_xmax)&&(ymax>bbox_ymin)&&(ymax<bbox_ymax)) return -1;
@@ -186,9 +194,9 @@ int readfile(char * inputfile)
 /* -------------------------------------------------------------------- */
     
     for( i = 0; i <nEntities; i++ )
-    //i=338;
+    //i=11951;
     {
-	long		j;
+	long		j,iPart;
         SHPObject	*psShape;
 	char 		name[100];
 	struct tags * tagList;
@@ -217,16 +225,21 @@ int readfile(char * inputfile)
 	
 	if (testoverlap(psShape->dfXMin, psShape->dfYMin,psShape->dfXMax, psShape->dfYMax))
 	{
-		//printf("\n%i,name=%s ",i,DBFReadStringAttribute( hDBF, i, 13 ) );
-		printf("%i\n",psShape->nVertices);
-		if (psShape->nVertices>1)
+/*
+		if (fileType==ROAD)
+			printf("\n%i,name=%s ",i,DBFReadStringAttribute( hDBF, i, 15 ) );
+		else
+			printf("\n%i,name=%s ",i,DBFReadStringAttribute( hDBF, i, 11 ) );
+*/
+		//printf("%i\n",psShape->nVertices);
+  if (psShape->nVertices>1)
 		{
 			if (psShape->nSHPType==SHPT_POLYGON) way=newWay(AREA); else way=newWay(ROAD);
 		};
 		prevNode=lastNode=firstNode=NULL;
-		for( j = 0; j < psShape->nVertices; j++ )
+		for( j = 0, iPart=1; j < psShape->nVertices; j++ )
 		{
-			if ((j>0)&&((j/1000)*1000==j)) 
+			if ((j>0)&&((j/1000)*1000==j))
 			{
 				printf("\r%7li/%7li   %7li/%7li                   ",i,nEntities,j,psShape->nVertices);
 				fflush(stdout);
@@ -235,19 +248,28 @@ int readfile(char * inputfile)
 			prevNode=lastNode;
 			lastNode=newNode(psShape->padfY[j],psShape->padfX[j]);
 			//printf("%p\n",lastNode);
-			if (j==0) 
+			if (j==0)
 			{
 				firstNode=lastNode;
 			}
 			else
 			{
-				//    printf(" seg\n");
-				lastSegment=newSegment(prevNode,lastNode);
-				//  printf(" seg2way\n");
-				addSegment2Way(way,lastSegment);
+				if( iPart < psShape->nParts
+					&& psShape->panPartStart[iPart] == j )
+				{
+					iPart++;
+					printf("\rdividing\n");
+				}
+				else
+				{
+					//    printf(" seg\n");
+					lastSegment=newSegment(prevNode,lastNode);
+					//  printf(" seg2way\n");
+					addSegment2Way(way,lastSegment);
+    }
 			}
-			//    printf(" [%12.8f,%12.8f]\n",psShape->padfX[j],psShape->padfY[j]);
-			
+/*			    printf("%i [%12.8f,%12.8f]\n",iPart,psShape->padfX[j],psShape->padfY[j]);*/
+
 		}
 		//printf("\n");
 	/*	if (psShape->nSHPType==SHPT_POLYGON)
@@ -265,8 +287,8 @@ int readfile(char * inputfile)
 		}
 		else
 		{
-			firstNode->tag=mkTagList(hDBF, i,fileType,firstNode->tag,firstNode,lastNode);  
-			
+			firstNode->tag=mkTagList(hDBF, i,fileType,firstNode->tag,firstNode,lastNode);
+
 		}
 	}
 	SHPDestroyObject( psShape );
@@ -288,6 +310,11 @@ int readfile(char * inputfile)
 #define FILENAME "020"
 int main(int argc, char ** argv )
 {
+
+	Err_ND_attached_to_way=0;
+	Err_more_NDIDs_per_node=0;
+	Err_oneway_way_reversed=0;	
+	
 	/*readfiles*/
 	
 	openOutput();
@@ -308,7 +335,11 @@ int main(int argc, char ** argv )
 	readfile(FILENAME "_r_p");
 	readfile(FILENAME "_r_r");
 	readfile(FILENAME "_w");
-
 	save();
 	closeOutput();
+	printf("\n Err_ND_attached_to_way=%i\n",Err_ND_attached_to_way);
+	printf("\n Err_more_NDIDs_per_node=%i\n",Err_more_NDIDs_per_node);
+	printf("\n Err_oneway_way_reversed=%i\n",Err_oneway_way_reversed);
+	return 0;	
+	
 }

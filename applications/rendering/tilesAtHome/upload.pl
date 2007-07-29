@@ -93,12 +93,13 @@ if (open(FAILFILE, ">", $failFile))
 
 sub processOldZips
 {
+    my ($runNumber) = @_;
+    my @zipfiles;
     if(opendir(ZIPDIR, $ZipDir))
     {
-        my ($runNumber) = @_;
         $currentSubTask = "upload" . $runNumber;
         $progress = 0;
-        my @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
+        @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
         close ZIPDIR;
     }
     else 

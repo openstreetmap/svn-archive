@@ -355,6 +355,9 @@ sub PutRequestBackToServer
 {
     ## TODO: will not be called in some libGD abort situations
     my ($X,$Y,$Cause) = @_;
+
+    ## do not do this if called in xy mode!
+    return if($Mode eq "xy")
     
     my $Prio = $Config{ReRequestPrio};
     

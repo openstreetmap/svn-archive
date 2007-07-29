@@ -178,6 +178,13 @@ sub upload
     }
     my $SingleTileset = ($File =~ /_tileset\.zip/) ? 'yes' : 'no';
     
+    my $Layer;
+    foreach my $layer(split(/,/, $Config{Layers}))
+    {
+        $Layer=$Config{"Layer.$layer.Prefix"} if ($File =~ /$Config{"Layer.$layer.Prefix"}/);
+        ## DEBUG print "\n.$Layer.\n.$layer.\n";
+    }
+    
     my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
     $ua->protocols_allowed( ['http'] );
@@ -194,11 +201,12 @@ sub upload
         statusMessage("Uploading $File", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         my $res = $ua->post($URL,
           Content_Type => 'form-data',
-          Content => [ file => [$File], 
+          Content => [ file => [$File],
           mp => $Password,
           version => $Config{ClientVersion},
           single_tileset => $SingleTileset,
-          token => $UploadToken ]);
+          token => $UploadToken,
+          layer => $Layer ]);
       
         if(!$res->is_success())
         {

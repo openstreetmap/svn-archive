@@ -8,7 +8,7 @@
 	  <property name="plugin.jar" value="${plugin.name}.jar"/>
 	  
 	  <!-- plugin meta data (enter new version number if anything changed!) -->
-	  <property name="plugin.version" value="0.3"/>
+	  <property name="plugin.version" value="0.3.1"/>
 	  <property name="plugin.description" value="Provides navigation/autorouting functionality (V${plugin.version})."/>
 	  <property name="plugin.stage" value="50"/>
     <property name="plugin.class" value="at.dallermassl.josm.plugin.navigator.NavigatorPlugin"/>

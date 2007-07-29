@@ -5,8 +5,10 @@ package at.dallermassl.josm.plugin.navigator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jgrapht.Graph;
 import org.jgrapht.alg.DijkstraShortestPath;
@@ -23,14 +25,25 @@ import org.openstreetmap.josm.data.osm.Way;
  *
  */
 public class NavigatorModel {
-    private Graph graph;
+    private Graph<Node, SegmentEdge> graph;
     private List<Node> nodes;
-    private int selectionChangedCalls;
-    List<Segment> segmentPath;
-    List<SegmentEdge> edgePath;
+    private List<Segment> segmentPath;
+    private List<SegmentEdge> edgePath;
+    private Map<String, Double> highwayWeight;
 
     public NavigatorModel() {
         nodes = new ArrayList<Node>();
+        highwayWeight = new HashMap<String, Double>();
+    }
+    
+    /**
+     * Set the weight for the given highway type. The higher the weight is,
+     * the more it is preferred in routing.
+     * @param type the type of the highway.
+     * @param weigth the weight.
+     */
+    public void setHighwayTypeWeight(String type, double weigth) {
+        highwayWeight.put(type, weigth);
     }
     
     /**
@@ -44,6 +57,9 @@ public class NavigatorModel {
     public Graph<Node, SegmentEdge> getGraph() {
         if (graph == null) {
             OsmGraphCreator graphCreator = new OsmGraphCreator();
+            for(String type : highwayWeight.keySet()) {
+                graphCreator.setHighwayTypeWeight(type, highwayWeight.get(type));
+            }
             // graph = graphCreator.createGraph();
             graph = graphCreator.createSegmentGraph();
         }
@@ -79,7 +95,7 @@ public class NavigatorModel {
         edgePath = new ArrayList<SegmentEdge>();
         edgePath.addAll(fullPath);
         
-        System.out.println("shortest path found: " + fullPath + " weight: " + fullWeight);
+        System.out.println("shortest path found: " + fullPath + "\nweight: " + fullWeight);
         System.out.println(getPathDescription());
 //        double weight2 = 0;
 //        for(Segment seg : getSegmentPath()) {
@@ -120,20 +136,43 @@ public class NavigatorModel {
         double length = 0;
         Way oldWay = null;
         Way way = null;
-        for(SegmentEdge edge : edgePath) {
+        
+        SegmentEdge edge;
+        for(int segIndex = 0; segIndex < edgePath.size(); ++segIndex) {
+            edge = edgePath.get(segIndex);
             way = edge.getWay();
+            if(way == null) {
+                System.out.println("way is null!");
+            }
             length += edge.getLengthInM();
-            if(oldWay != null && !oldWay.equals(way)) {
-                description = new PathDescription(oldWay, length);
+            // if way changes or it is the last way add the description:
+            if(oldWay != null && !way.equals(oldWay)) {
+                description = new PathDescription(oldWay, length); // add finished way
                 pathDescriptions.add(description);
-                length = 0;
+                length = 0;                
+            }
+            if(segIndex == edgePath.size() - 1) {
+                description = new PathDescription(way, length);
+                pathDescriptions.add(description);                
             }
             oldWay = way;
         }
-        if(way != null) {
-            description = new PathDescription(way, length);
-            pathDescriptions.add(description);
-        }
+        
+        
+//        for(SegmentEdge edge : edgePath) {
+//            way = edge.getWay();
+//            length += edge.getLengthInM();
+//            if(oldWay != null && !oldWay.equals(way)) {
+//                description = new PathDescription(oldWay, length);
+//                pathDescriptions.add(description);
+//                length = 0;
+//            }
+//            oldWay = way;
+//        }
+//        if(way != null) {
+//            description = new PathDescription(way, length);
+//            pathDescriptions.add(description);
+//        }
         return pathDescriptions;
     }
 

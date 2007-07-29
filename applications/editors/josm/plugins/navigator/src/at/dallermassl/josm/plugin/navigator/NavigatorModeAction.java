@@ -25,7 +25,7 @@ public class NavigatorModeAction extends MapMode {
     private boolean layerAdded;
     
     public NavigatorModeAction(MapFrame mapFrame, NavigatorModel navigatorModel, NavigatorLayer navigationLayer) {
-        super(tr("Navigator"), "navigation", tr("Set start/end for autorouting"), KeyEvent.VK_F, mapFrame, ImageProvider.getCursor("crosshair", "selection"));
+        super(tr("Navigator"), "navigation", tr("Set start/end for autorouting. Middle Mouse button to reset."), KeyEvent.VK_F, mapFrame, ImageProvider.getCursor("crosshair", "selection"));
         this.navigatorModel = navigatorModel;
         this.navigatorLayer = navigationLayer;
     }

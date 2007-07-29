@@ -50,4 +50,28 @@ function layerName($ID){
 }
 
 
+#------------------------------------------------------------------------------
+# returns the maximum zoom level we want to be rendered.
+# This is currently used to check if a tileset is complete or not.
+#------------------------------------------------------------------------------
+function layerMaxZoom($ID){
+  switch ($ID){
+    case 1:  return (17);
+    case 3:  return(16);
+    default: return(17);
+  }
+}
+
+
+#------------------------------------------------------------------------------
+# Returns the number of tiles which make a complete tileset per layer
+# this varies as not all layers have all zoom levels
+#------------------------------------------------------------------------------
+function layerNumberOfTiles($ID){
+  switch ($ID){
+    case 1:  return (1365);
+    case 3:  return(341);
+    default: return(1365);
+  }
+}
 ?>

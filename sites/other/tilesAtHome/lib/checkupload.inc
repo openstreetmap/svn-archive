@@ -1,5 +1,7 @@
 <?php
 
+include ./layers.inc;
+
 #-------------------------------------------------------------------
 # Looks at an uploaded directory, and tests whether it is one
 # complete tileset
@@ -40,12 +42,14 @@ function CheckUploadDir($Dir){
           $XExpect = $X2;
           $YExpect = $Y2;
           $LExpect = $Layer;
+          $MaxZoom = LayerMaxZoom($Layer); 
         }
         else{
           // Every other time: check the tileset is same as first one
           if($XExpect != $X2){print "X bad\n"; return(array(0,0,0));}
           if($YExpect != $Y2){print "Y bad\n"; return(array(0,0,0));}
           if($LExpect != $Layer){print "L bad\n"; return(array(0,0,0));}
+          if($MaxZoom < $Z){print "Wrong zoom level.\n"; return(array(0,0,0));}
         }
 
         $Count++;
@@ -57,7 +61,7 @@ function CheckUploadDir($Dir){
     }
   }
 
-  if($Count != 1365){
+  if($Count != layerNumberOfTiles($Layer)){
     print "Too few images ($Count)\n";
     return(array(0,0,0,""));
   }

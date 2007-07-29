@@ -82,6 +82,40 @@ static char rcsid[] =
 #include <string.h>
 #include "osm.h"
 
+int testoverlap(double xmin, double ymin,double  xmax,double ymax)
+{
+	double bbox_xmin,bbox_ymin,bbox_xmax,bbox_ymax;
+	bbox_ymin=51.056;
+	bbox_ymax=51.074;
+	bbox_xmin=5.835;
+	bbox_xmax=5.881;
+
+	//test if any of the points are within bbox
+	if ((xmin>bbox_xmin)&&(xmin<bbox_xmax)&&(ymin>bbox_ymin)&&(ymin<bbox_ymax)) return -1;
+	if ((xmax>bbox_xmin)&&(xmax<bbox_xmax)&&(ymax>bbox_ymin)&&(ymax<bbox_ymax)) return -1;
+	//points could still be completely around bbox
+	if ((xmin<bbox_xmin)&&(xmax>bbox_xmax))
+	{
+		if ((ymin<bbox_ymax)&&(ymin>bbox_ymin)) return -1;
+		if ((ymax<bbox_ymax)&&(ymax>bbox_ymin)) return -1;
+	}
+	if ((ymin<bbox_ymin)&&(ymax>bbox_ymax))
+	{
+		if ((xmin<bbox_xmax)&&(xmin>bbox_xmin)) return -1;
+		if ((xmax<bbox_xmax)&&(xmax>bbox_xmin)) return -1;
+	}
+	
+
+	return 0;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -161,61 +195,81 @@ int readfile(char * inputfile)
 	struct nodes *prevNode,*lastNode,*firstNode;
 	struct segments *lastSegment;
 	struct ways * way;
+
 	psShape = SHPReadObject( hSHP, i );
 	if ((i/100)*100==i) printf("\r%7li/%7li   %7li/%7li                       ",i,nEntities,0,psShape->nVertices);
 	//printf("\n*******************************\n");
-	//printf("%i,name=%s\n",i,DBFReadStringAttribute( hDBF, i, 15 ) );
-
-	if (psShape->nVertices>0)
-	{
-		if (psShape->nSHPType==SHPT_POLYGON) way=newWay(AREA); else way=newWay(ROAD);
-	};
 	
-	prevNode=lastNode=firstNode=NULL;
-	for( j = 0; j < psShape->nVertices; j++ )
+
+
+
+//for bounding box:
+/*	printf( "\nShape:%d (%s)  nVertices=%d, nParts=%d\n"
+                "  Bounds:(%12.3f,%12.3f, %g, %g)\n"
+                "      to (%12.3f,%12.3f, %g, %g)\n",
+	        i, SHPTypeName(psShape->nSHPType),
+                psShape->nVertices, psShape->nParts,
+                psShape->dfXMin, psShape->dfYMin,
+                psShape->dfZMin, psShape->dfMMin,
+                psShape->dfXMax, psShape->dfYMax,
+                psShape->dfZMax, psShape->dfMMax );
+*/
+	
+	if (testoverlap(psShape->dfXMin, psShape->dfYMin,psShape->dfXMax, psShape->dfYMax))
 	{
-		if ((j>0)&&((j/1000)*1000==j)) printf("\r%7li/%7li   %7li/%7li                       ",i,nEntities,j,psShape->nVertices);
-		fflush(stdout);
-		//printf("%i/%i\n",j,psShape->nVertices);
-	    prevNode=lastNode;
-	    lastNode=newNode(psShape->padfY[j],psShape->padfX[j]);
-	    //printf("%p\n",lastNode);
-	    if (j==0) 
-	    {
-		    firstNode=lastNode;
-	    }
-	    else
-	    {
-		//    printf(" seg\n");
-		    lastSegment=newSegment(prevNode,lastNode);
-		  //  printf(" seg2way\n");
-		    addSegment2Way(way,lastSegment);
-	    }
-	//    printf(" [%12.8f,%12.8f]\n",psShape->padfX[j],psShape->padfY[j]);
-	   
-	}
-	//printf("\n");
-/*	if (psShape->nSHPType==SHPT_POLYGON)
-	{
-		if (lastNode!=firstNode)
+		//printf("\n%i,name=%s ",i,DBFReadStringAttribute( hDBF, i, 13 ) );
+		printf("%i\n",psShape->nVertices);
+		if (psShape->nVertices>1)
 		{
-			lastSegment=newSegment(lastNode,firstNode);
-			addSegment2Way(way,lastSegment);
+			if (psShape->nSHPType==SHPT_POLYGON) way=newWay(AREA); else way=newWay(ROAD);
+		};
+		prevNode=lastNode=firstNode=NULL;
+		for( j = 0; j < psShape->nVertices; j++ )
+		{
+			if ((j>0)&&((j/1000)*1000==j)) 
+			{
+				printf("\r%7li/%7li   %7li/%7li                   ",i,nEntities,j,psShape->nVertices);
+				fflush(stdout);
+			}
+			//printf("%i/%i\n",j,psShape->nVertices);
+			prevNode=lastNode;
+			lastNode=newNode(psShape->padfY[j],psShape->padfX[j]);
+			//printf("%p\n",lastNode);
+			if (j==0) 
+			{
+				firstNode=lastNode;
+			}
+			else
+			{
+				//    printf(" seg\n");
+				lastSegment=newSegment(prevNode,lastNode);
+				//  printf(" seg2way\n");
+				addSegment2Way(way,lastSegment);
+			}
+			//    printf(" [%12.8f,%12.8f]\n",psShape->padfX[j],psShape->padfY[j]);
+			
+		}
+		//printf("\n");
+	/*	if (psShape->nSHPType==SHPT_POLYGON)
+		{
+			if (lastNode!=firstNode)
+			{
+				lastSegment=newSegment(lastNode,firstNode);
+				addSegment2Way(way,lastSegment);
+			}
+		}
+	*/
+		if (psShape->nVertices>1)
+		{
+			way->tag=mkTagList(hDBF, i,fileType,way->tag,firstNode,lastNode);
+		}
+		else
+		{
+			firstNode->tag=mkTagList(hDBF, i,fileType,firstNode->tag,firstNode,lastNode);  
+			
 		}
 	}
-*/
-	if (psShape->nVertices>0)
-	{
-		way->tag=mkTagList(hDBF, i,fileType,way->tag);
-	}
-	else
-	{
-		firstNode->tag=mkTagList(hDBF, i,fileType,firstNode->tag); 
-		
-	}
-	
-
-        SHPDestroyObject( psShape );
+	SHPDestroyObject( psShape );
     }
     printf("\n");
 

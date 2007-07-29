@@ -21,6 +21,7 @@ struct tags{
 
 struct nodes{
 	long ID;
+	long ANDID;
 	double hashed_lat;
 	double lat;
 	double lon;
@@ -76,7 +77,7 @@ void addSegment2Way(struct ways * way,struct segments * segment);
 struct ways *newWay(int wayType); 
 struct nodes * newNode(double lat, double lon);
 struct segments * newSegment(struct nodes * from, struct nodes * to);
-struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *);
+struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *,struct nodes * from, struct nodes * to);
 void save();
 
 

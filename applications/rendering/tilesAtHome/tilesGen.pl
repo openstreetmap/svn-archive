@@ -357,7 +357,7 @@ sub PutRequestBackToServer
     my ($X,$Y,$Cause) = @_;
 
     ## do not do this if called in xy mode!
-    return if($Mode eq "xy")
+    return if($Mode eq "xy");
     
     my $Prio = $Config{ReRequestPrio};
     

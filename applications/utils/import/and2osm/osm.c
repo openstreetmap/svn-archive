@@ -5,7 +5,13 @@
 #include "2AND.h"
 /*datatypes*/
 
+
+long text_depth;
+long node_depth;
+long nodeID=-1;
+long textID=-1;
 struct textnode { /* the tree node: */
+	long hash;
 	char *text; /* points to the text */
 	struct textnode *left; /* left child */
 	struct textnode *right; /* right child */
@@ -25,9 +31,9 @@ FILE *fp=NULL;
 /*useful functions*/
 
 
-
 double hash_lat(double x) {
 	long long h,*f;
+	long k,*l;
  	double *hd;
 	int i = 0;
 
@@ -38,16 +44,24 @@ double hash_lat(double x) {
 			h = (h << 1) + (*f & 1); 
 			*f >>= 1; 
 		}
+	hd=(double *) &h;
+	return *hd;	
+	}
+	else if(sizeof(double)==sizeof(long))
+	{
+		l=(long*)&x;
+		for(k = i = 0; i < sizeof(long)*8; i++) {
+			k = (k << 1) + (*l & 1); 
+			*l >>= 1; 
+		}
+	hd=(double *) &k;
+	return *hd;	
 	}
 	else
 	{
 		fprintf(stderr,"not able to hash\n");
 		return x;
 	}
-	hd=(double *) &h;
-
-	return *hd;
-		 
 }
 
 
@@ -62,6 +76,32 @@ long hash_ID(long x) {
 
  return h;
 }
+
+
+
+
+
+/* djb2
+ * This algorithm was first reported by Dan Bernstein
+ * many years ago in comp.lang.c
+ */
+long hash_text(char *str)
+{
+	long hash = 5381;
+	int c; 
+	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
+	return hash_ID(hash);
+}
+
+
+
+
+
+
+
+
+
+
 
 /*output*/
 
@@ -195,8 +235,11 @@ void save(){
 
 struct textnode *addText(struct textnode * p, char * text,char ** rv){
 	int cond;
+	unsigned long hash;
+	hash=hash_text(text);
 	if (p == NULL) { /* a new word has arrived */
 		p = (struct textnode *) calloc(1,sizeof(struct textnode)); /* make a new node */
+		textID--;
 		if (p==NULL)
 		{
 			fprintf(stderr,"out of memory\n");
@@ -210,14 +253,26 @@ struct textnode *addText(struct textnode * p, char * text,char ** rv){
 		}
 		strcpy(p->text,text);
 		p->left = p->right = NULL;
+		p->hash=hash;
 		if (rv!=NULL) *rv=p->text;
-		}	 
-	else if ((cond = strcmp(text, p->text)) < 0)
+		text_depth=0;
+	}
+	else if (hash<p->hash)
 		p->left = addText(p->left, text,rv);/* less than into left subtree */
+	else if (hash>p->hash)
+		p->right = addText(p->right, text,rv); /* greater than into right subtree */
+	else  if ((cond = strcmp(text, p->text)) == 0) {
+		//hashes are the same, so biggest change texts are the same
+		if ((rv)!=NULL) *rv=p->text;/*text found*/
+		text_depth=0;
+		}
 	else if (cond > 0) 
 		p->right = addText(p->right, text,rv); /* greater than into right subtree */
 	else 
-		if ((rv)!=NULL) *rv=p->text;/*text found*/
+		p->left = addText(p->left, text,rv);/* less than into left subtree */
+	
+
+	text_depth++;
 	return p;
 }
 
@@ -235,8 +290,18 @@ struct tags * addtag(struct tags *p,char * tag_key, char * tag_value,struct tags
 		p->nextTag=NULL;
 //		printf("%s %s\n",tag_key,tag_value);
 		root_text=addText(root_text,tag_key,&(p->key));
+		if (text_depth>text_maxdepth)
+		{
+			text_maxdepth=text_depth;
+		//	printf("\nnew text depth:%li/%li\n",text_maxdepth,textID);
+		}
 //		printf("%s %p\n",p->key,root_text);
 		root_text=addText(root_text,tag_value,&(p->value));
+		if (text_depth>text_maxdepth)
+		{
+			text_maxdepth=text_depth;
+		//	printf("\nnew text depth:%li/%li\n",text_maxdepth,textID);
+		}
 		if (rv!=NULL) *rv=p;
 	}
 	else
@@ -245,7 +310,6 @@ struct tags * addtag(struct tags *p,char * tag_key, char * tag_value,struct tags
 }
 
 struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv){
-	static long nodeID=-1;
 	double hashed_lat;
 	hashed_lat=hash_lat(lat);
 	//printf("in mkNode\n");
@@ -268,6 +332,7 @@ struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv)
 		p->tag=NULL;
 		p->segments=NULL;
 		p->ways=NULL;
+		node_depth=0;
 /*		saveNode(p->ID,lat,lon);*/
 	}
 	else if (hashed_lat< p->hashed_lat) 
@@ -289,15 +354,22 @@ struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv)
 	else /*lat=p->lat && lon=p->lon*/
 	{	
 		if (rv!=NULL) *rv=p;
+		node_depth=0;
 		//printf("node found (%8.5f,%8.5f)=(%8.5f,%8.5f) %f=%f %li,%p\n",lon,lat,p->lon,p->lat,hash_lat(hashed_lat),hash_lat(p->hashed_lat),p->ID,(*rv)->ID);
 	}
 	//printf("out mkNode %p\n",p);
+	node_depth++;
 	return p;
 }
 
 struct nodes * newNode(double lat, double lon){
 	struct nodes * rv;
 	root_node=mkNode(lat,lon,root_node,&rv);
+	if (node_depth>node_maxdepth)
+	{
+		node_maxdepth=node_depth;
+		//printf("\nnew node depth:%li/%li\n",node_maxdepth,nodeID);
+	}
 	return rv;
 }
 
@@ -559,7 +631,19 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			case 3: p=addtag(p,"highway","primary",NULL); break;
 			case 4: p=addtag(p,"highway","secondary",NULL); break;
 			case 5: p=addtag(p,"highway","tertiary",NULL); break;
-			case 6: p=addtag(p,"highway","unclassified",NULL); break;
+			case 6:
+			{
+				if (DBFReadIntegerAttribute( hDBF, recordnr, 26 )==-1)
+				{
+					p=addtag(p,"highway","pedestrian",NULL); 
+				}
+				else
+				{
+					p=addtag(p,"highway","unclassified",NULL); 
+				}
+				
+			}
+			break;	
 			case 7: p=addtag(p,"route","ferry;motorcars=yes;hgv=yes",NULL); break;
 			case 9: p=addtag(p,"route","ferry;motorcars=no;foot=yes",NULL); break;
 			case 30: p=addtag(p,"railway","rail",NULL); break;
@@ -633,8 +717,13 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		
 		//Field 22: Type=Integer, Title=`RD_17', Width=2, Decimals=0
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 22 )!=0)
+		{
 			p=addtag(p,"tunnel","yes",NULL);
-		
+			if ((DBFReadIntegerAttribute( hDBF, recordnr, 25 )<1)||(DBFReadIntegerAttribute( hDBF, recordnr, 25 )>8))
+			{
+				p=addtag(p,"layer","-1",NULL); 
+			}
+		}
 		//Field 23: Type=Integer, Title=`RD_18', Width=2, Decimals=0
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 23 )!=0)
 			p=addtag(p,"toll","yes",NULL);

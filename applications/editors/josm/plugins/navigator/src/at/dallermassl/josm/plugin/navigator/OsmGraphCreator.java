@@ -32,20 +32,26 @@ public class OsmGraphCreator {
     private List<WayEdge> edges = new ArrayList<WayEdge>();
 
     private Map<String, Double> highwayWeight;
-    private static final double DEFAULT_WEIGHT = Double.MAX_VALUE;
+    private static final double DEFAULT_WEIGHT = 0.0;
 
     public OsmGraphCreator() {
         highwayWeight = new HashMap<String, Double>();
-        highwayWeight.put("motorway", 130.0);
-        highwayWeight.put("primary", 100.0);
-        highwayWeight.put("secondary", 70.0);
-        highwayWeight.put("unclassified", 50.0);
-        highwayWeight.put("residential", 40.0);
-        highwayWeight.put("footway", 1.0);
+    }
+    
+    /**
+     * Set the weight for the given highway type. The higher the weight is,
+     * the more it is preferred in routing.
+     * @param type the type of the highway.
+     * @param weigth the weight.
+     */
+    public void setHighwayTypeWeight(String type, double weigth) {
+        highwayWeight.put(type, weigth);
+        System.out.println("set " + type + " to " + weigth);
     }
 
     public Graph<Node, SegmentEdge> createSegmentGraph() {
-        SimpleDirectedWeightedGraph<Node, SegmentEdge> graph = new SimpleDirectedWeightedGraph<Node, SegmentEdge>(SegmentEdge.class);
+        DirectedWeightedMultigraph<Node, SegmentEdge> graph = new DirectedWeightedMultigraph<Node, SegmentEdge>(SegmentEdge.class);
+        // SimpleDirectedWeightedGraph<Node, SegmentEdge> graph = new SimpleDirectedWeightedGraph<Node, SegmentEdge>(SegmentEdge.class);
         // SimpleGraph<Node, SegmentEdge> graph = new SimpleGraph<Node, SegmentEdge>(SegmentEdge.class);
         SegmentEdge edge;
         double weight;
@@ -80,8 +86,7 @@ public class OsmGraphCreator {
 
     /**
      * Returns the weight for the given segment depending on the highway type and the length of the
-     * segment.
-     * 
+     * segment. The higher the value, the less it is used in routing.
      * @param way
      * @param segment
      * @return
@@ -89,7 +94,7 @@ public class OsmGraphCreator {
     public double getWeight(Way way, Segment segment) {
         String type = way.get("highway");
         if (type == null) {
-            return 0.0d;
+            return Double.MAX_VALUE;
         }
         Double weightValue = highwayWeight.get(type);
         double weight;
@@ -98,12 +103,12 @@ public class OsmGraphCreator {
         } else {
             weight = weightValue.doubleValue();
         }
-        double distance = Math.sqrt(segment.from.coor.distance(segment.to.coor)) * 111000; // deg
-                                                                                            // to m
-                                                                                            // (at
-                                                                                            // equator
-                                                                                            // :-)
-        return distance; // weight;
+        // deg to m (at equator :-):
+        double distance = Math.sqrt(segment.from.coor.distance(segment.to.coor)) * 111000; 
+        if(weight == 0.0) {
+            weight = 1E-20;
+        }
+        return distance / weight;
     }
 
     public boolean isOneWay(Way way) {

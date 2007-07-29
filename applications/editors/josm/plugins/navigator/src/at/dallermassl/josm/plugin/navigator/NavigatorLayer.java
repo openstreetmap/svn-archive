@@ -146,23 +146,6 @@ public class NavigatorLayer extends Layer {
             screen = mv.getPoint(node.eastNorth);
             endIcon.paintIcon(mv, g, screen.x, screen.y - endIcon.getIconHeight());
         }
-
-        Main.pref.hasKey(KEY_ROUTE_COLOR);
-        String selectString = Main.pref.get(KEY_ROUTE_SELECT);
-        if(selectString.length() == 0) {
-            selectString = "true";
-            Main.pref.put(KEY_ROUTE_SELECT, selectString);
-        }
-        
-        if(Boolean.parseBoolean(selectString)) {
-            List<Segment> path = navigatorNodeModel.getSegmentPath();
-            if(path != null) {
-                synchronized(path) {
-                    Main.ds.setSelected(path);
-//                  Main.map.mapView.repaint();
-                }
-            }
-        }
         
         String colorString = Main.pref.get(KEY_ROUTE_COLOR);
         if(colorString.length() == 0) {
@@ -242,6 +225,21 @@ public class NavigatorLayer extends Layer {
      */
     public void navigate() {
         navigatorNodeModel.calculateShortesPath();
+        Main.pref.hasKey(KEY_ROUTE_COLOR);
+        String selectString = Main.pref.get(KEY_ROUTE_SELECT);
+        if(selectString.length() == 0) {
+            selectString = "true";
+            Main.pref.put(KEY_ROUTE_SELECT, selectString);
+        }
+        
+        if(Boolean.parseBoolean(selectString)) {
+            List<Segment> path = navigatorNodeModel.getSegmentPath();
+            if(path != null) {
+                synchronized(path) {
+                    Main.ds.setSelected(path);
+                }
+            }
+        }
         Main.map.repaint();        
     }
 

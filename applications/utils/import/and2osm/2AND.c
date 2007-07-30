@@ -82,41 +82,46 @@ static char rcsid[] =
 #include <string.h>
 #include "osm.h"
 
-int testoverlap(double xmin, double ymin,double  xmax,double ymax)
+int testoverlap(SHPObject *psShape)
 {
-	double bbox_xmin,bbox_ymin,bbox_xmax,bbox_ymax;
+	
+	double mybox_min[2],mybox_max[2];
+	double bbox_min[2],bbox_max[2];
+	long j;
 //	return -1; //remove this line if you want to use a bounding box!!!!!!!!!!!!!!!!!!!!!!!
 //susteren
-	bbox_ymin=51.056;
+/*	bbox_ymin=51.056;
 	bbox_ymax=51.074;
 	bbox_xmin=5.835;
 	bbox_xmax=5.881;
-
-//amsterdam
-/*	bbox_ymin=52.367;
-	bbox_ymax=52.370;
-	bbox_xmin=4.878;
-	bbox_xmax=4.880;
 */
-	//test if any of the points are within bbox
-	if ((xmin>bbox_xmin)&&(xmin<bbox_xmax)&&(ymin>bbox_ymin)&&(ymin<bbox_ymax)) return -1;
-	if ((xmax>bbox_xmin)&&(xmax<bbox_xmax)&&(ymax>bbox_ymin)&&(ymax<bbox_ymax)) return -1;
-	//points could still be completely around bbox
-	if ((xmin<bbox_xmin)&&(xmax>bbox_xmax))
-	{
-		if ((ymin<bbox_ymax)&&(ymin>bbox_ymin)) return -1;
-		if ((ymax<bbox_ymax)&&(ymax>bbox_ymin)) return -1;
-	}
-	if ((ymin<bbox_ymin)&&(ymax>bbox_ymax))
-	{
-		if ((xmin<bbox_xmax)&&(xmin>bbox_xmin)) return -1;
-		if ((xmax<bbox_xmax)&&(xmax>bbox_xmin)) return -1;
-	}
+//amsterdam http://www.informationfreeway.org/?lat=52.364742523946944&lon=4.876769916897042&zoom=16&layers=B000F000
+	
+	mybox_min[0]=4.874023334865792;
+	mybox_min[1]=52.36336923293132;
+	mybox_max[0]=4.879516498928292;
+	mybox_max[1]=52.36611581496257;
 	
 
+	bbox_min[0]=psShape->dfXMin;
+	bbox_min[1]=psShape->dfYMin;
+	bbox_max[0]=psShape->dfXMax;
+	bbox_max[1]=psShape->dfYMax;
+
+
+	if (SHPCheckBoundsOverlap(bbox_min,bbox_max,mybox_min,mybox_max,2))
+	{
+		for ( j = 0; j < psShape->nVertices; j++ )
+		{
+			if (	  (psShape->padfY[j]<mybox_max[1])
+				&&(psShape->padfY[j]>mybox_min[1])
+				&&(psShape->padfX[j]<mybox_max[0])
+				&&(psShape->padfX[j]>mybox_min[0]))
+			return -1;
+		}
+	}
 	return 0;
 }
-
 
 
 
@@ -223,7 +228,7 @@ int readfile(char * inputfile)
                 psShape->dfZMax, psShape->dfMMax );
 */
 	
-	if (testoverlap(psShape->dfXMin, psShape->dfYMin,psShape->dfXMax, psShape->dfYMax))
+	if (testoverlap(psShape))
 	{
 /*
 		if (fileType==ROAD)
@@ -232,7 +237,7 @@ int readfile(char * inputfile)
 			printf("\n%i,name=%s ",i,DBFReadStringAttribute( hDBF, i, 11 ) );
 */
 		//printf("%i\n",psShape->nVertices);
-  if (psShape->nVertices>1)
+  		if (psShape->nVertices>1)
 		{
 			if (psShape->nSHPType==SHPT_POLYGON) way=newWay(AREA); else way=newWay(ROAD);
 		};
@@ -258,7 +263,7 @@ int readfile(char * inputfile)
 					&& psShape->panPartStart[iPart] == j )
 				{
 					iPart++;
-					printf("\rdividing\n");
+					//printf("\rdividing\n");
 				}
 				else
 				{

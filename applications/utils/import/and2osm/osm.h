@@ -30,7 +30,7 @@ struct tags{
 struct nodes{
 	long ID;
 	long ANDID;
-	double hashed_lat;
+	long hashed_lat;
 	double lat;
 	double lon;
 	struct nodes * btree_l;

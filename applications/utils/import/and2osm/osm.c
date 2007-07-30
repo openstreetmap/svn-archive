@@ -31,38 +31,6 @@ FILE *fp=NULL;
 /*useful functions*/
 
 
-double hash_lat(double x) {
-	long long h,*f;
-	long k,*l;
- 	double *hd;
-	int i = 0;
-	return x;
-/* 	if(sizeof(double)==sizeof(long long))
-	{
-		f=(long long*)&x;
-		for(h = i = 0; i < sizeof(long long)*8; i++) {
-			h = (h << 1) + (*f & 1); 
-			*f >>= 1; 
-		}
-	hd=(double *) &h;
-	return *hd;	
-	}
-	else if(sizeof(double)==sizeof(long))
-	{
-		l=(long*)&x;
-		for(k = i = 0; i < sizeof(long)*8; i++) {
-			k = (k << 1) + (*l & 1); 
-			*l >>= 1; 
-		}
-	hd=(double *) &k;
-	return *hd;	
-	}
-	else
-	{
-		fprintf(stderr,"not able to hash\n");
-		return x;
-	}*/
-}
 
 
 long hash_ID(long x) {
@@ -78,6 +46,9 @@ long hash_ID(long x) {
 }
 
 
+long hash_lat(double x) {
+	return hash_ID(x*1000000);
+}
 
 
 
@@ -106,7 +77,7 @@ long hash_text(char *str)
 /*output*/
 
 int openOutput(){
-fp=fopen("AND2osm.osm","w");
+fp=fopen("#AND2osm.osm","w");
     if (fp==NULL)
     {
 	    printf("error opening file, exiting...");
@@ -314,7 +285,7 @@ struct tags * addtag(struct tags *p,char * tag_key, char * tag_value,struct tags
 }
 
 struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv){
-	double hashed_lat;
+	long long hashed_lat;
 	hashed_lat=hash_lat(lat);
 	//printf("in mkNode\n");
 	if (p == NULL) /* a new Node has arrived */
@@ -347,6 +318,17 @@ struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv)
 	{
 		p->btree_h=mkNode(lat,lon,p->btree_h,rv);
 	}
+	else if (lat< p->lat)
+	{
+		//should not be reached, unless hashing is again not ok...
+		p->btree_l=mkNode(lat,lon,p->btree_l,rv);
+	}
+	else if (lat > p->lat)
+	{
+		//should not be reached, unless hashing is again not ok...
+		p->btree_h=mkNode(lat,lon,p->btree_h,rv);
+	}
+	
 	else if /*lat=p->lat*/ (lon< p->lon)
 	{
 		p->btree_l=mkNode(lat,lon,p->btree_l,rv);
@@ -372,7 +354,7 @@ struct nodes * newNode(double lat, double lon){
 	if (node_depth>node_maxdepth)
 	{
 		node_maxdepth=node_depth;
-		printf("\nnew node depth:%li/%li\n",node_maxdepth,nodeID);
+		//printf("\nnew node depth:%li/%li\n",node_maxdepth,nodeID);
 	}
 	return rv;
 }

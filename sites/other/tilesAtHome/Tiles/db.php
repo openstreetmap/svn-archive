@@ -1,7 +1,8 @@
 <?php
   // This is the 404 handler script, for tiles not present 
   // via mod-rewrite as real files.
-  
+
+  include("../lib/tilenames.inc");
   include("../lib/layers.inc");
   
   if(0){ // Option to turn off non-standard tiles
@@ -22,7 +23,7 @@
   
   // Check x,y,z is valid
   if(!TileValid($X,$Y,$Z)){
-    BlankTile("error");
+    BlankTile("black");
     }
   
   // Lookup layer, and check is valid

@@ -97,7 +97,7 @@
     $Long);
   
   $TileDetailsURL = sprintf(
-    "../Tiles/tile.php/%d/%d/%d.png_details",
+    "../Tiles/info.php?z=%d&amp;x=%d&amp;y=%d&layer=tile",
     $z,
     $x,
     $y);

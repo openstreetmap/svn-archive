@@ -51,10 +51,10 @@
   include("../connect/connect.php");
 
   // look on new filesystem
-  print "<h2>Tiles on the new disk</h2>\n";
+  print "<h2>Tiles on the disk</h2>\n";
   SearchMetaDB($X,$Y,$Z,$LayerID,0);
-  SearchFilesystem($X,$Y,$Z,$LayerID,0);
-  print "<p class=\"notes\">Date and size should match if the image was uploaded through the proper interface. If database has an entry, but no file exists, it might be on the old filesystem (see below).</p>\n";
+  SearchFilesystem($X,$Y,$Z,$LayerID);
+  print "<p class=\"notes\">Date and size should match if the image was uploaded through the proper interface.</p>\n";
   
   // Look for a complete tileset in new system
   if($Z > 12){
@@ -62,16 +62,11 @@
     if($Valid){
       print "<h2>Tileset-at-once uploads</h2>\n";
       if(SearchMetaDB($X12,$Y12,12,$LayerID,1)){
-        SearchFilesystem($X12,$Y12,12,$LayerID,0);
+        SearchFilesystem($X12,$Y12,12,$LayerID);
       }
       print "<p class=\"notes\">If there is both a tile and a tileset entry, the one with the latest timestamp is the correct one</p>\n";
     }
   }
-  
-  // look on old filesystem
-  print "<h2>Images on the old disk</h2>\n";  
-  SearchFilesystem($X,$Y,$Z,$LayerID,1);
-  print "<p class=\"notes\">If these files exist, they can be shown instead of a blank tile.  Compare with the database details above - if they match, then this is the correct one</p>\n";
   
   // look for blank tiles
   print "<h2>Blank db</h2>\n";  
@@ -79,9 +74,9 @@
   print "<p class=\"notes\">Blank tiles are shown only if no images exist, and they're recursively-searched so that one tile can cover many zoom levels</p>\n";
   
   // Look for a file on the filesystem
-  function SearchFilesystem($X,$Y,$Z,$LayerID,$Old){
+  function SearchFilesystem($X,$Y,$Z,$LayerID){
     $LayerName = LayerDir($LayerID);
-    $Filename = TileName($X,$Y,$Z,$LayerName,$Old);
+    $Filename = TileName($X,$Y,$Z,$LayerName);
     
     if(file_exists($Filename)){
       FormatFilenameInfo($Filename);

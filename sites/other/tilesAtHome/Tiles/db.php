@@ -2,7 +2,6 @@
   // This is the 404 handler script, for tiles not present 
   // via mod-rewrite as real files.
   
-  include("../lib/tilenames.inc");
   include("../lib/layers.inc");
   
   if(0){ // Option to turn off non-standard tiles
@@ -32,10 +31,6 @@
     BlankTile("error");
     }
 
-  // Optional: look on old filesystem
-  if(0)
-    SearchFilesystem($X,$Y,$Z,$LayerID);
-  
   // Optional: look for landsea tiles if everything else fails
   if(1){
       
@@ -49,17 +44,6 @@
     SearchDatabase($X,$Y,$Z,$LayerID);
   }
 
-  // Look for a file on the filesystem
-  function SearchFilesystem($X,$Y,$Z,$LayerID){
-    $LayerName = LayerDir($LayerID);
-    $Filename = TileName($X,$Y,$Z,$LayerName,1);
-    if(file_exists($Filename)){
-      header("Content-type: image/PNG");
-      readfile($Filename);
-      exit;
-    }
-  }
-  
   function SearchDatabase($X,$Y,$Z,$LayerID){
     if(0){ // option to turn-off database lookups
       BlankTile();

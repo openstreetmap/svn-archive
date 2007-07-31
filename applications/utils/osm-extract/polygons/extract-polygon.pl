@@ -103,11 +103,11 @@ while(<PF>)
     elsif (/^END/)
     {
         my $pol = Math::Polygon->new(points => $currentpoints);
-		if (($compress > 0 && $compress < 100) && $pol->nrPoints > 99)
+	if (($compress > 0 && $compress < 100) && $pol->nrPoints > 99) {
         	my $simp = $pol->simplify($pol->nrPoints*(100-$compress)/100);
         	push(@{$borderpolys}, $simp);
         } else {
-			push(@{$borderpolys}, $pol);
+		push(@{$borderpolys}, $pol);
 		}
         undef $currentpoints;
     }

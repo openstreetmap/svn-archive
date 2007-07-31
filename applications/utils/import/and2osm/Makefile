@@ -11,7 +11,7 @@ shptree.o:	shptree.c shapefil.h
 dbfopen.o:	dbfopen.c shapefil.h
 	$(CC) $(CFLAGS) -c dbfopen.c
 
-osm.o:	osm.h 2AND.h
+osm.o:	osm.c osm.h 2AND.h
 	$(CC) $(CFLAGS) -c osm.c 
 
 2AND.o:	2AND.c osm.h shapefil.h

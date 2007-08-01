@@ -238,6 +238,7 @@ struct textnode *addText(struct textnode * p, char * text,char ** rv){
 		p->right = addText(p->right, text,rv); /* greater than into right subtree */
 	else  if ((cond = strcmp(text, p->text)) == 0) {
 		//hashes are the same, so biggest change texts are the same
+		//printf("text found\n"); 
 		if ((rv)!=NULL) *rv=p->text;/*text found*/
 		text_depth=0;
 		}
@@ -630,7 +631,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 9 )==1)
 		{
 			if (from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
-				p=addtag(p,"oneway","+1",NULL);
+				p=addtag(p,"oneway","1",NULL);
 			else
 				p=addtag(p,"oneway","-1",NULL);
 		}	
@@ -639,7 +640,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			if (from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
 				p=addtag(p,"oneway","-1",NULL);
 			else
-				p=addtag(p,"oneway","+1",NULL);
+				p=addtag(p,"oneway","1",NULL);
 		}
 		//Field 10: Type=Integer, Title=`RD_5', Width=3, Decimals=0
 		switch (DBFReadIntegerAttribute( hDBF, recordnr, 10 ))
@@ -734,14 +735,27 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		
 		
 		//Field 22: Type=Integer, Title=`RD_17', Width=2, Decimals=0
-		if (DBFReadIntegerAttribute( hDBF, recordnr, 22 )!=0)
+		if (DBFReadIntegerAttribute( hDBF, recordnr, 22 )==1)
 		{
 			p=addtag(p,"tunnel","yes",NULL);
+			
 			if ((DBFReadIntegerAttribute( hDBF, recordnr, 25 )<1)||(DBFReadIntegerAttribute( hDBF, recordnr, 25 )>8))
 			{
 				p=addtag(p,"layer","-1",NULL); 
 			}
 		}
+		else if(DBFReadIntegerAttribute( hDBF, recordnr, 22 )==2)
+		{
+			p=addtag(p,"bridge","yes",NULL);
+			
+			if ((DBFReadIntegerAttribute( hDBF, recordnr, 25 )<1)||(DBFReadIntegerAttribute( hDBF, recordnr, 25 )>8))
+			{
+				p=addtag(p,"layer","1",NULL); 
+			}
+		}
+		else if(DBFReadIntegerAttribute( hDBF, recordnr, 22 )!=0)
+			printf("\nunkown tunnel code%i\n",(DBFReadIntegerAttribute( hDBF, recordnr, 22 ))); 
+		//Field 23: Type=Integer, Title=`RD_18', Width=2, Decimals=0
 		//Field 23: Type=Integer, Title=`RD_18', Width=2, Decimals=0
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 23 )!=0)
 			p=addtag(p,"toll","yes",NULL);

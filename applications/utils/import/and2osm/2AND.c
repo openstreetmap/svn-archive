@@ -90,17 +90,19 @@ int testoverlap(SHPObject *psShape)
 	long j;
 //	return -1; //remove this line if you want to use a bounding box!!!!!!!!!!!!!!!!!!!!!!!
 //susteren
-/*	bbox_ymin=51.056;
-	bbox_ymax=51.074;
-	bbox_xmin=5.835;
-	bbox_xmax=5.881;
-*/
+	mybox_min[0]=5.835;
+	mybox_min[1]=51.056;
+	mybox_max[0]=5.881;
+	mybox_max[1]=51.074;
+
+
+
 //amsterdam http://www.informationfreeway.org/?lat=52.364742523946944&lon=4.876769916897042&zoom=16&layers=B000F000
 	
-	mybox_min[0]=4.874023334865792;
-	mybox_min[1]=52.36336923293132;
-	mybox_max[0]=4.879516498928292;
-	mybox_max[1]=52.36611581496257;
+	mybox_min[0]=4.86;
+	mybox_min[1]=52.35;
+	mybox_max[0]=4.89;
+	mybox_max[1]=52.38;
 	
 
 	bbox_min[0]=psShape->dfXMin;

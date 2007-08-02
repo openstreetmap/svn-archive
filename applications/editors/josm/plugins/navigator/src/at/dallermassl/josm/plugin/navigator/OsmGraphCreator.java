@@ -57,9 +57,9 @@ public class OsmGraphCreator {
         double weight;
         // iterate all ways and segments for all nodes:
         for(Way way : Main.ds.ways) {
-            if(!way.deleted) {                
+            if(way != null && !way.deleted) {                
                 for(Segment segment : way.segments) {
-                    if(!segment.deleted) {
+                    if(segment != null && !segment.deleted && segment.from != null && segment.to != null) {
                         graph.addVertex(segment.from);
                         graph.addVertex(segment.to);
                         edge = new SegmentEdge(segment);

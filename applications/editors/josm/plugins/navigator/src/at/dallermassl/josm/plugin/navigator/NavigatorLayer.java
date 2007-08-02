@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.util.List;
 
@@ -189,6 +190,7 @@ public class NavigatorLayer extends Layer {
         if (screen.contains(from.x, from.y, to.x, to.y) || screen.intersectsLine(line))
         {
             Graphics2D g2d = (Graphics2D)g;
+            Stroke oldStroke = g2d.getStroke();
             g2d.setStroke(new BasicStroke(width)); // thickness
             g.drawLine(from.x, from.y, to.x, to.y);
             if (showDirection) {
@@ -196,6 +198,7 @@ public class NavigatorLayer extends Layer {
                 g.drawLine(to.x,to.y, (int)(to.x + 10*Math.cos(t-ARROW_PHI)), (int)(to.y + 10*Math.sin(t-ARROW_PHI)));
                 g.drawLine(to.x,to.y, (int)(to.x + 10*Math.cos(t+ARROW_PHI)), (int)(to.y + 10*Math.sin(t+ARROW_PHI)));
             }
+            g2d.setStroke(oldStroke);
         }
     }
 

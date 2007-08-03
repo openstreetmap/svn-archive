@@ -55,6 +55,11 @@ Geo::OSM::Planet::planet_dir($planet_dir)
 
 my $new_filename = mirror_planet();
 
+if ( !  $new_filename ) {
+    print "ERROR: No new File found\n";
+    exit -1;
+}
+
 if ( ! $no_symlink ) {
     my $planet_filename =  $new_filename;
     $planet_filename =~ s/(planet)-\d+(\.osm\..+)$/$1$2/;

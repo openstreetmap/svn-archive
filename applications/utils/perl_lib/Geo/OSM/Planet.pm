@@ -135,7 +135,7 @@ sub planet_dir(;$) {
 
 # ------------------------------------------------------------------
 # mirror the newest planet.osm File to
-#  ~/osm/planet/planet.osm.7z
+#  ~/osm/planet/planet.osm.bz2
 # and the resulting 
 # Filename is returned
 #
@@ -157,7 +157,7 @@ sub mirror_planet(){
 	    my $index_content = read_file( $index_file ) ;
 
 	    # Get the current planet.osm File
-	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.7z)/g);
+	    my @all_files = ($index_content =~ m/(planet-\d\d\d\d\d\d.osm.bz2)/g);
 	    ( $current_file ) = grep { $_ !~ m/planet-061008/ } @all_files;
 	    if ( $current_file ) {
 		$url .= "/$current_file";
@@ -165,18 +165,13 @@ sub mirror_planet(){
 		print STDERR "Mirror OSM Data from $url\n" if $VERBOSE || $DEBUG;
 		$result = mirror_file($url,$current_file);
 		#return undef unless $result;
-		
-		if ( $result == 1 ) { # Modified
-		    # Link the current File to planet.osm(.7z)
-		    # symlink
-		}
 	    }
 	}
     }
 
     my @files= sort { $b cmp $a}  
     grep { $_ !~ m/planet-061008/ } 
-    glob("$mirror_dir/planet-*.osm.7z");
+    glob("$mirror_dir/planet-*.osm.bz2");
     if ( $DEBUG) {
 	print STDERR "Existing Files: \n\t".join("\n\t",@files)."\n";
     }
@@ -202,9 +197,9 @@ sub mirror_planet(){
 }
 
 # ------------------------------------------------------------------
-# creates a seconf file with a sanitized Version of planet.osm
+# creates a second file with a sanitized Version of planet.osm
 # the resulting file can be found at
-#    ~/osm/planet/planet-07XXXX-a.osm.7z
+#    ~/osm/planet/planet-07XXXX-a.osm.bz2
 # If a recent enought Version is found in ~/osm/planet/
 # nothing is done, but the filename of the file is returned
 # if the routine finds an uncompressed up to date Version 
@@ -226,7 +221,7 @@ sub UTF8sanitize($){
     $filename_new =~ s/\.osm/-a.osm/;
     my $filename_new_check=newest_unpacked_filename($filename_new);
 
-    # check if planet-070101-a.osm[.7z] is newer than  planet-070101.osm.7z
+    # check if planet-070101-a.osm[.bz2] is newer than  planet-070101.osm.bz2
     return $filename_new_check
 	unless file_needs_re_generation($filename,$filename_new_check);
 
@@ -242,7 +237,7 @@ sub UTF8sanitize($){
     print STDERR "Sanitizer found at '$UTF8sanitizer'\n" if $DEBUG;
 
     print STDERR "     this may take some time ... \n";
-    my $cmd = " 7z e  -so $filename | $UTF8sanitizer  | bzip2 >$filename_new.part";
+    my $cmd = "gzip -dc $filename | $UTF8sanitizer  | bzip2 >$filename_new.part";
     print "Command: $cmd" if $DEBUG || $VERBOSE;
     my $result = `$cmd`;
     print $result if $DEBUG || $VERBOSE;

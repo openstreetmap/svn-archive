@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 21.7.2007 (can now drag new points)
+	# last update 2.8.2007 (can now drag new points)
 	# next steps: 
 	#	make resizable (change getgps code too)
 	#	add see-through panel behind top-right hints (line 1573)
@@ -569,7 +569,7 @@
 						if (qway!=nw) { _root.map.ways[qway].clean=0; }
 					}
 				}
-				if (!_root.map.ways[qway].clean) {
+				if (wayselected!=qway && !_root.map.ways[qway].clean) {
 					_root.map.ways[qway].upload();
 				}
 			}

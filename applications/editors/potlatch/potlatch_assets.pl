@@ -1,4 +1,6 @@
 
+	# updated 2.8.2007 - peno works correctly
+
 	# ----- Export symbols
 
 	#		Empty movie-clip for ways
@@ -441,6 +443,57 @@
 
 	#Ê=====	Menu icons
 		
+	# ------ potlatch_inatural sprite
+	
+	$ec=new SWF::Sprite();
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(190,190,190);
+	$s->movePenTo(-10.00,7.17);
+	$s->drawLineTo(19.00,7.17);
+	$s->drawLineTo(19.00,-10.00);
+	$s->drawLineTo(-10.00,-10.00);
+	$s->drawLineTo(-10.00,7.17);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(-2.98,-8.43);
+	$s->drawLineTo(-8.37,2.55);
+	$s->drawLineTo(-4.82,3.05);
+	$s->drawLineTo(-4.73,5.64);
+	$s->drawLineTo(-2.52,5.72);
+	$s->drawLineTo(-2.40,3.01);
+	$s->drawLineTo(1.15,2.76);
+	$s->drawLineTo(-2.98,-8.43);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(4.86,-2.63);
+	$s->drawLineTo(1.63,3.95);
+	$s->drawLineTo(3.76,4.25);
+	$s->drawLineTo(3.81,5.80);
+	$s->drawLineTo(5.14,5.85);
+	$s->drawLineTo(5.21,4.23);
+	$s->drawLineTo(7.34,4.08);
+	$s->drawLineTo(4.86,-2.63);
+	$ec->add($s);
+	
+	$s=new SWF::Shape();
+	$s->setRightFill(255,255,255);
+	$s->movePenTo(12.96,-8.22);
+	$s->drawLineTo(7.58,2.76);
+	$s->drawLineTo(11.12,3.26);
+	$s->drawLineTo(11.21,5.85);
+	$s->drawLineTo(13.42,5.93);
+	$s->drawLineTo(13.54,3.22);
+	$s->drawLineTo(17.09,2.97);
+	$s->drawLineTo(12.96,-8.22);
+	$ec->add($s);
+	
+	$ec->nextFrame(); $m->addExport($ec,"preset_natural");
+
 	# ----- potlatch_iboat sprite
 	
 	$ec=new SWF::Sprite();
@@ -1290,8 +1343,8 @@
 	# ------ peno pointer
 	
 	$ec=new SWF::Sprite();
-	drawPen();
 	$s=new SWF::Shape();
+	drawPen();
 	$s->setLine(2,0,0,0);
 	$s->setRightFill(255,255,255);
 	$s->movePenTo(7,16); $s->drawCircle(2);

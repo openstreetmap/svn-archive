@@ -150,10 +150,12 @@ public class LiveGpsPlugin extends Plugin
      */
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-        // add dialog
-        newFrame.addToggleDialog(lgpsdialog = new LiveGpsDialog(newFrame));
-        // connect listeners with acquirer:
-        addPropertyChangeListener(lgpsdialog);
+        if(newFrame != null) {
+            // add dialog
+            newFrame.addToggleDialog(lgpsdialog = new LiveGpsDialog(newFrame));
+            // connect listeners with acquirer:
+            addPropertyChangeListener(lgpsdialog);
+        }
     }
 
 
@@ -165,3 +167,4 @@ public class LiveGpsPlugin extends Plugin
     }
 
 }
+

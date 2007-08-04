@@ -7,6 +7,13 @@ planet.
 The project home page is at
 <URL:http://wiki.openstreetmap.org/index.php/Gosmore>
 
+Usage information
+-----------------
+
+Fetch planet file from openstreetmap and feed it to gosmore
+
+  bzcat planet-...osm.bz2 | gosmore rebuild
+
 Downloading latest version
 --------------------------
 

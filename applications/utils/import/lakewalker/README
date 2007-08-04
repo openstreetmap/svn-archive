@@ -1,0 +1,52 @@
+Lakewalker is a tool that automatically traces lakes and other bodies of water from Landsat data.
+
+It can be used to trace almost any land/water interface, including:
+  - lakes
+  - islands
+  - large rivers
+  - coastlines
+
+Lakewalker requires Python and the Python Imaging Library (available from http://www.pythonware.com/products/pil/).
+
+A full list of options is available by running "./lakewalker.py --help".
+
+QUICK START:
+
+To trace a single lake, picking a point inside the lake and use the
+--lat and --lon command-line parameters:
+  ./lakewalker.py --lat 51.2 --lon -99.8
+
+NOTE: The current algorithm starts by going to the specified start
+point and travelling due east until it hits land. So, to trace an
+island, place the start point in the water to the west of the island.
+
+The output will be placed in a file named lake.osm. This can be
+changed by using the -o or --out switch. The OSM file can then be
+opened in JOSM and uploaded to OSM. It is HIGHLY RECOMMENDED that you
+use the JOSM WMS plugin to visually confirm that the data makes sense
+before you upload it.
+
+If it doesn't work, the most likely problem is the threshold value
+used to differentiate between land and water. Try tweaking the
+--threshold parameter; you can either experiment blindly, or open the
+downloading Landsat tiles in an image editor and check the gray
+values.
+
+To trace a lot of lakes, create a .osm file containing untagged nodes,
+and no segments or ways. Then, use the -i or --in command-line
+parameter:
+  ./lakewalker.py -i start_points.osm
+
+There are a large number of other command-line options which need to
+be documented yet. Short documentation is available with --help;
+longer documentation does not (yet) exist.
+
+ABOUT THE TILE CACHE
+
+The lake walker downloads imagery from NASA's Landsat WMS server. This
+imagery is cached locally as PNG files, named
+landsat_*_*_xy_*_*.png. Whenever imagery is needed, the local cache is
+checked first, so that multiple runs in the same area do not
+continually request the same data from NASA. These files can be
+deleted without causing problems; they will simply be re-downloaded if
+they are ever needed again.

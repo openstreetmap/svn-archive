@@ -1,3 +1,27 @@
+/******************************************************************************
+ * Copyright (c) 2007  Marc Kessels
+ * Copyright (c) 2007  Jeroen Dekkers <jeroen@dekkers.cx>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ ******************************************************************************
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,10 +29,10 @@
 #include "2AND.h"
 /*datatypes*/
 
+extern int postgres;
 
 long text_depth;
 long node_depth;
-long nodeID=-1;
 long textID=-1;
 struct textnode { /* the tree node: */
 	long hash;
@@ -26,10 +50,24 @@ struct segments *root_segment=NULL;
 struct ways *root_way=NULL;
 
 
-
+/* File descriptor for .osm file. */
 FILE *fp=NULL;
-/*useful functions*/
 
+/* File descriptors for postgres sql files. */
+FILE *fp_n=NULL;
+FILE *fp_nt=NULL;
+FILE *fp_w=NULL;
+FILE *fp_wn=NULL;
+FILE *fp_wt=NULL;
+
+
+/*useful functions*/
+long incr (long i) {
+	if (postgres)
+		return i+1;
+	else
+		return i-1;
+}
 
 
 
@@ -76,20 +114,63 @@ long hash_text(char *str)
 
 /*output*/
 
-int openOutput(){
-fp=fopen("#AND2osm.osm","w");
-    if (fp==NULL)
-    {
-	    printf("error opening file, exiting...");
-	    return -1;
-    }
-    fprintf(fp,"<osm version=\"0.4\">\n");
-    return 0;
+int openOutput()
+{
+	if (postgres)
+	{
+		fp_n=fopen("nodes.sql","w");
+		fp_nt=fopen("node_tags.sql","w");
+		fp_w=fopen("ways.sql","w");
+		fp_wn=fopen("way_nodes.sql","w");
+		fp_wt=fopen("way_tags.sql","w");
+		if ((fp_n==NULL) || (fp_nt==NULL) ||(fp_w==NULL) ||(fp_wn==NULL) ||(fp_wt==NULL))
+		{
+			printf("error opening files, exiting...");
+			return -1;
+		}
+
+		fprintf(fp_n, "BEGIN;\n");
+		fprintf(fp_n, "PREPARE nodes_insert (int, numeric, numeric) AS INSERT INTO nodes VALUES ($1, SetSRID(MakePoint($2, $3),4326));\n");
+		fprintf(fp_nt, "COPY node_tags (node_id, k, v) FROM stdin;\n");
+		fprintf(fp_w, "BEGIN;\n");
+		fprintf(fp_wn, "COPY way_nodes (way_id, seq, node_id) FROM stdin;\n");
+		fprintf(fp_wt, "COPY way_tags (way_id, k, v) FROM stdin;\n");
+	}
+	else
+	{
+		fp=fopen("AND2osm.osm","w");
+		if (fp==NULL)
+		{
+			printf("error opening file, exiting...");
+			return -1;
+		}
+		fprintf(fp,"<osm version=\"0.4\">\n");
+	}
+	
+	return 0;
 }
 
-int closeOutput(){
-	fprintf(fp,"</osm>\n");
-	fclose(fp);
+int closeOutput()
+{
+	if (postgres)
+	{
+		fprintf(fp_n, "COMMIT;\n");
+		fprintf(fp_nt, "\\.\n");
+		fprintf(fp_w, "COMMIT;\n");
+		fprintf(fp_wn, "\\.\n");
+		fprintf(fp_wt, "\\.\n");
+
+		fclose(fp_n);
+		fclose(fp_nt);
+		fclose(fp_w);
+		fclose(fp_wn);
+		fclose(fp_wt);
+	}
+	else
+	{
+		fprintf(fp,"</osm>\n");
+		fclose(fp);
+	}
 	return 0;
 }
 
@@ -200,11 +281,76 @@ void saveWays(struct ways *p){
 	}
 }
 
+void saveNode_pg(struct nodes *p)
+{
+	struct tags *t;
+
+	fprintf(fp_n, "EXECUTE nodes_insert(%li, %1.6f, %1.6f);\n", p->ID, p->lat, p->lon);
+
+	for (t = p->tag; t != NULL; t = t->nextTag)
+    
+		fprintf(fp_nt, "%li\t%s\t%s\n", p->ID, t->key, t->value);
+}
+
+void saveNodes_pg(struct nodes *p){
+	if (p!=NULL)
+	{
+		saveNodes_pg(p->btree_l);
+		saveNode_pg(p);
+		saveNodes_pg(p->btree_h);
+	}
+}
+
+void saveWay_pg(struct ways *p)
+{
+	struct tags *t;
+	struct attachedSegments *s; 
+	long seqid = 1;
+
+	if (p->segments == NULL)
+	{
+		printf("Way %d doesn't have segments, ignoring", p->wayID);
+		return;
+	}
+  
+	fprintf(fp_w, "INSERT INTO ways VALUES (%li, GeomFromText('LINESTRING(", p->wayID);
+
+	for (s = p->segments;;s = s->nextSegment)
+	{
+		fprintf(fp_w, "%1.6f %1.6f,", s->Segment->from->lat, s->Segment->from->lon);
+		fprintf(fp_wn, "%li\t%li\t%li\n", p->wayID, seqid++, s->Segment->from->ID);
+		if (s->nextSegment == NULL)
+		{
+			fprintf(fp_w, "%1.6f %1.6f)', 4326));\n", s->Segment->to->lat, s->Segment->to->lon);
+			fprintf(fp_wn, "%li\t%li\t%li\n", p->wayID, seqid++, s->Segment->to->ID);
+			break;
+		}
+	}
+
+	for (t = p->tag; t != NULL; t = t->nextTag)
+		fprintf(fp_wt, "%li\t%s\t%s\n", p->wayID, t->key, t->value);
+}
+
+void saveWays_pg(struct ways *p){
+	while (p!=NULL)
+	{
+		saveWay_pg(p);
+		p=p->next;
+	}
+}
 
 void save(){
-	saveNodes(root_node);
-	saveSegments(root_segment);
-	saveWays(root_way);
+	if (postgres)
+	{
+		saveNodes_pg(root_node);
+		saveWays_pg(root_way);
+	}
+	else
+	{
+		saveNodes(root_node);
+		saveSegments(root_segment);
+		saveWays(root_way);
+	}
 }
 	
 
@@ -286,6 +432,7 @@ struct tags * addtag(struct tags *p,char * tag_key, char * tag_value,struct tags
 }
 
 struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv){
+	static long nodeID = 0;
 	long long hashed_lat;
 	hashed_lat=hash_lat(lat);
 	//printf("in mkNode\n");
@@ -299,7 +446,8 @@ struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv)
 			exit(1);
 		}
 		if (rv!=NULL) *rv=p;
-		p->ID=nodeID--;
+		nodeID = incr(nodeID);
+		p->ID=nodeID;
 		p->hashed_lat=hashed_lat;
 		p->lat=lat;
 		p->lon=lon;
@@ -381,7 +529,7 @@ struct attachedSegments * attachsegment(struct attachedSegments* p, struct segme
 }	
 
 struct segments * newSegment(struct nodes * from, struct nodes * to){
-	static long segmentID=-1;
+	static long segmentID = 0;
 	static struct segments *lastsegment=NULL;
 	struct attachedSegments *p;
 	struct segments *s;
@@ -403,7 +551,8 @@ struct segments * newSegment(struct nodes * from, struct nodes * to){
 			fprintf(stderr,"out of memory\n");
 			exit(1);
 		}
-		s->ID=segmentID--;
+		segmentID = incr(segmentID);
+		s->ID=segmentID;
 		s->from=from;
 		s->to=to;
 		s->next=NULL;
@@ -821,7 +970,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 
 
 struct ways *newWay(int wayType){
-	static long wayID=-1;
+	static long wayID = 0;
 	static struct ways *lastway=NULL;
 	if (lastway==NULL)
 	{
@@ -845,7 +994,8 @@ struct ways *newWay(int wayType){
 		lastway=lastway->next;
 	}
 	lastway->type=wayType;
-	lastway->wayID=wayID--;
+	wayID = incr(wayID);
+	lastway->wayID=wayID;
 	lastway->tag=NULL;
 	lastway->segments=NULL;
 	lastway->next=NULL;

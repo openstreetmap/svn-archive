@@ -12,6 +12,7 @@
  ******************************************************************************
  * Copyright (c) 1999, Frank Warmerdam
  * Copyright (c) 2007, Marc Kessels
+ * Copyright (c) 2007  Jeroen Dekkers <jeroen@dekkers.cx>
  *
  * This software is available under the following "MIT Style" license,
  * or at the option of the licensee under the LGPL (see LICENSE.LGPL).  This
@@ -80,30 +81,20 @@ static char rcsid[] =
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "osm.h"
+
+int postgres = 0;
+
+static int use_boundingbox = 0;
+static double mybox_min[2],mybox_max[2];
 
 int testoverlap(SHPObject *psShape)
 {
-	
-	double mybox_min[2],mybox_max[2];
 	double bbox_min[2],bbox_max[2];
 	long j;
-//	return -1; //remove this line if you want to use a bounding box!!!!!!!!!!!!!!!!!!!!!!!
-//susteren
-	mybox_min[0]=5.835;
-	mybox_min[1]=51.056;
-	mybox_max[0]=5.881;
-	mybox_max[1]=51.074;
-
-
-
-//amsterdam http://www.informationfreeway.org/?lat=52.364742523946944&lon=4.876769916897042&zoom=16&layers=B000F000
-	
-	mybox_min[0]=4.86;
-	mybox_min[1]=52.35;
-	mybox_max[0]=4.89;
-	mybox_max[1]=52.38;
-	
+	if (!use_boundingbox)
+		return -1;
 
 	bbox_min[0]=psShape->dfXMin;
 	bbox_min[1]=psShape->dfYMin;
@@ -125,17 +116,7 @@ int testoverlap(SHPObject *psShape)
 	return 0;
 }
 
-
-
-
-
-
-
-
-
-
 int readfile(char * inputfile)
-
 {
     SHPHandle	hSHP;
     DBFHandle   hDBF;
@@ -313,11 +294,67 @@ int readfile(char * inputfile)
 
 }
 
+static void bbox_error(void)
+{
+	fprintf (stderr, "Invalid argument to -b: %s\n", optarg);
+	exit(1);
+}
+
 
 #define FILENAME "020"
 int main(int argc, char ** argv )
 {
+	int c;
+	int do_borders = 1;
+	char *s, *s1, *s2, *s3, *s4, *p;
+	
+	while ((c = getopt (argc, argv, "b:np")) != -1)
+		switch (c)
+		{
+		case 'b':
+			s = strdup(optarg);
+			if (!s)
+			{
+				fprintf (stderr, "malloc failed\n");
+				exit(1);
+			}
+			s1 = strtok(s, ",");
+			s2 = strtok(NULL, ",");
+			s3 = strtok(NULL, ",");
+			s4 = strtok(NULL, ",");
 
+			if (s4 == NULL)
+				bbox_error();
+
+			mybox_min[0] = strtod(s1, &p);
+			if (p == s1)
+				bbox_error();
+			mybox_min[1] = strtod(s2, &p);
+			if (p == s2)
+				bbox_error();
+			mybox_max[0] = strtod(s3, &p);
+			if (p == s3)
+				bbox_error();
+			mybox_max[1] = strtod(s4, &p);
+			if (p == s4)
+				bbox_error();
+
+			printf ("minlon: %f, minlat: %f, maxlon: %f, maxlat: %f\n",
+				mybox_min[0], mybox_min[1], mybox_max[0], mybox_max[1]);
+			break;
+		case 'n':
+			do_borders = 0;
+			break;
+		case 'p':
+			postgres = 1;
+			break;
+		case '?':
+			/* Getopt will print an error message for us. */
+			exit(1);
+		default:
+			abort();
+		}
+	
 	Err_ND_attached_to_way=0;
 	Err_more_NDIDs_per_node=0;
 	Err_oneway_way_reversed=0;	
@@ -327,9 +364,12 @@ int main(int argc, char ** argv )
 	openOutput();
 	readfile(FILENAME "_nosr_p");
 	readfile(FILENAME "_nosr_r");
-	readfile(FILENAME "_admin0");
-	readfile(FILENAME "_admin1");
-	readfile(FILENAME "_admin8");
+	if (do_borders) 
+	{
+		readfile(FILENAME "_admin0");
+		readfile(FILENAME "_admin1");
+		readfile(FILENAME "_admin8");
+	}
 	readfile(FILENAME "_a");
 	readfile(FILENAME "_ce");
 	readfile(FILENAME "_c");
@@ -337,7 +377,10 @@ int main(int argc, char ** argv )
 	readfile(FILENAME "_gf");
 	readfile(FILENAME "_in");
 	readfile(FILENAME "_i");
-	readfile(FILENAME "_o");
+	if (do_borders)
+	{
+		readfile(FILENAME "_o");
+	}
 	readfile(FILENAME "_pk");
 	readfile(FILENAME "_r_p");
 	readfile(FILENAME "_r_r");

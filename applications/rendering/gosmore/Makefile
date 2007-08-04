@@ -1,3 +1,5 @@
+VERSION = 0.0.0.20070720
+
 DESTDIR=
 prefix = /usr/local
 bindir = $(prefix)/bin
@@ -20,6 +22,8 @@ EXTRA=-mms-bitfields -mno-cygwin -I/usr/include/mingw/gtk-2.0 \
   -lgtk-win32-2.0 -lgdk-win32-2.0 -lglib-2.0 -lgobject-2.0
 endif
 
+all: gosmore
+
 gosmore:	gosmore.cc
 		g++ ${CFLAGS} ${WARNFLAGS} \
                  `[ -e /usr/include/gps.h ] && echo -DUSE_GPSD -lgps` \
@@ -36,6 +40,12 @@ CountColours:	CountColours.c
 install: gosmore
 	mkdir -p $(DESTDIR)$(bindir)
 	cp gosmore $(DESTDIR)$(bindir)/.
+
+dist:
+	mkdir gosmore-$(VERSION)
+	cp gosmore.cc Makefile  README gosmore-$(VERSION)
+	tar zcf gosmore-$(VERSION).tar.gz gosmore-$(VERSION)
+	rm -rf gosmore-$(VERSION)
 
 clean:
 	$(RM) gosmore

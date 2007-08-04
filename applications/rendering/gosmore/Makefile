@@ -1,4 +1,5 @@
-VERSION = 0.0.0.20070720
+TODAY := `exec date +%Y%m%d`
+VERSION = 0.0.0.$(TODAY)
 
 DESTDIR=
 prefix = /usr/local

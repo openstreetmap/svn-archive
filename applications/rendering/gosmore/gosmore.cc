@@ -859,7 +859,7 @@ int main (int argc, char *argv[])
       for (;;) {
         char msg[301];
         time_t preread = time (NULL), other;
-        fscanf (rpipe, "%d %300[^\n]", &other, msg);
+        fscanf (rpipe, "%ld %300[^\n]", &other, msg);
         if (preread <= other) flite_text_to_speech (msg, fliteV, "play");
       }
     }

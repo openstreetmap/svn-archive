@@ -3,6 +3,7 @@
 # Lakewalker II.
 # 2007-07-09: Initial public release (v0.2) by Dshpak
 # 2007-07-10: v0.3: Added support for OSM input files. Also reduced start_radius_big, and fixed a division-by-zero error in the degenerate case of point_line_distance().
+# 2007-08-04: Added experimental non-recursive Douglas-Peucker algorithm (--dp-nr). Added --startdir option.
 
 """Lakewalker II - A tool to automatically download and trace Landsat imagery, to generate OpenStreetMap data.
 
@@ -11,9 +12,10 @@ Requires the Python Imaging Library, available from http://www.pythonware.com/pr
 version="Lakewalker II v0.3"
 
 # TODO:
-# - Accept threshold tafgs in OSM input files.
+# - Accept threshold tags in OSM input files.
 # - Command line options:
 #   - direction (deosil/widdershins)
+#   - initial heading
 #   - bbox
 #   - layer to use (monochrome only?)
 #   - additional tags for the way
@@ -21,9 +23,12 @@ version="Lakewalker II v0.3"
 #   - radii for loop detection
 #   - fname for z12 tile output (list or script)
 #   - path to tilesGen for z12 script output
-#   - debug mode (extra tags on nodes)
+#   - debug mode (extra tags on nodes) (make this non-uploadable?)
 # - The "got stuck" message should output coords
 # - Better "got stuck" detection (detect mini loops)
+# - Offset nodes outwards by a half-pixel or so, to prevent duplicate segments
+# - Automatic threshold detection
+# - Non-recursive DP simplification
 
 import math
 import os
@@ -37,6 +42,10 @@ options = None
 
 start_radius_big = 0.001
 start_radius_small = 0.0002
+
+dirs = ((1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1))
+dirnames = ["east", "northeast", "north", "northwest", "west", "southwest", "south", "southeast"]
+dirabbrevs = ["e", "ne", "n", "nw", "w", "sw", "s", "se"]
 
 class FatalError(Exception):
     pass
@@ -118,11 +127,11 @@ class WMSManager:
         #print "%s maps to %s" % (xy, tile_xy)
         return tile.getpixel(tile_xy)
 
-def trace_lake(loc, threshold):
+def trace_lake(loc, threshold, start_dir):
     wms = WMSManager()
     xy = geo_to_xy(loc)
     nodelist = []
-    
+
     print "Starting coordinate: %.4f, %.4f" % loc
     print "Starting position: %d, %d" % xy
     
@@ -131,15 +140,14 @@ def trace_lake(loc, threshold):
         if v > threshold:
             break
 
-        xy = (xy[0] + 1, xy[1])
+        xy = (xy[0] + dirs[start_dir][0], xy[1] + dirs[start_dir][1])
 
     start_xy = xy
     start_loc = xy_to_geo(xy)
     print "Found shore at lat %.4f lon %.4f" % start_loc
 
     #dirs = ((1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1))
-    dirs = ((1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1))
-    last_dir = 0
+    last_dir = start_dir
 
     detect_loop = False
     
@@ -201,6 +209,79 @@ def point_line_distance(p0, p1, p2):
 
 def douglas_peucker(nodes, epsilon):
     #print "Running DP on %d nodes" % len(nodes)
+    farthest_node = None
+    farthest_dist = 0
+    first = nodes[0]
+    last = nodes[-1]
+
+    for i in xrange(1, len(nodes) - 1):
+        d = point_line_distance(nodes[i], first, last)
+        if d > farthest_dist:
+            farthest_dist = d
+            farthest_node = i
+
+    if farthest_dist > epsilon:
+        seg_a = douglas_peucker(nodes[0:farthest_node+1], epsilon)
+        seg_b = douglas_peucker(nodes[farthest_node:-1], epsilon)
+        #print "Minimized %d nodes to %d + %d nodes" % (len(nodes), len(seg_a), len(seg_b))
+        nodes = seg_a[:-1] + seg_b
+    else:
+        return [nodes[0], nodes[-1]]
+
+    return nodes
+
+def dp_findpoint(nodes, start, end):
+    farthest_node = None
+    farthest_dist = 0
+    #print "dp_findpoint(nodes, %s, %s)" % (start, end)
+    first = nodes[start]
+    last = nodes[end]
+
+    for i in xrange(start + 1, end):
+        d = point_line_distance(nodes[i], first, last)
+        if d > farthest_dist:
+            farthest_dist = d
+            farthest_node = i
+
+    return (farthest_node, farthest_dist)
+
+def douglas_peucker_nonrecursive(nodes, epsilon):
+    #print "Running DP on %d nodes" % len(nodes)
+    command_stack = [(0, len(nodes) - 1)]
+    result_stack = []
+
+    while len(command_stack) > 0:
+        cmd = command_stack.pop()
+        if type(cmd) == tuple:
+            (start, end) = cmd
+            (node, dist) = dp_findpoint(nodes, start, end)
+            if dist > epsilon:
+                command_stack.append("+")
+                command_stack.append((start, node))
+                command_stack.append((node, end))
+            else:
+                result_stack.append((start, end))
+        elif cmd == "+":
+            first = result_stack.pop()
+            second = result_stack.pop()
+            if first[-1] == second[0]:
+                result_stack.append(first + second[1:])
+                #print "Added %s and %s; result is %s" % (first, second, result_stack[-1])
+            else:
+                print "ERROR: Cannot connect nodestrings!"
+                #print first
+                #print second
+                return
+        else:
+            print "ERROR: Can't understand command \"%s\"" % (cmd,)
+            return
+
+    if len(result_stack) == 1:
+        return [nodes[x] for x in result_stack[0]]
+    else:
+        print "ERROR: Command stack is empty but result stack has %d nodes!" % len(result_stack)
+        return
+
     farthest_node = None
     farthest_dist = 0
     first = nodes[0]
@@ -286,6 +367,7 @@ def main():
 
     parser.add_option("--lat", type="float", metavar="LATITUDE", help="Starting latitude. Required, unless --infile is used..")
     parser.add_option("--lon", type="float", metavar="LONGITUDE", help="Starting longitude. Required, unless --infile is used.")
+    parser.add_option("--startdir", type="string", default="east", metavar="DIR", help="Direction to travel from start position when seeking land. Defaults to \"east\".")
     parser.add_option("--infile", "-i", type="string", metavar="FILE", help="OSM file containing nodes representing starting points.")
     parser.add_option("--out", "-o", default="lake.osm", dest="outfile", metavar="FILE", help="Output filename. Defaults to lake.osm.")
     parser.add_option("--threshold", "-t", type="int", default="35", metavar="VALUE", help="Maximum gray value to accept as water (based on Landsat IR-1 data). Can be in the range 0-255. Defaults to 35.")
@@ -295,6 +377,7 @@ def main():
     parser.add_option("--tilesize", type="int", default=2000, help="Size of one landsat tile, measured in pixels. Defaults to 2000.")
     parser.add_option("--no-dp", action="store_false", dest="use_dp", default=True, help="Disable Douglas-Peucker line simplification (not recommended)")
     parser.add_option("--dp-epsilon", type="float", metavar="EPSILON", default=0.0003, help="Accuracy of Douglas-Peucker line simplification, measured in degrees. Lower values give more nodes, and more accurate lines. Defaults to 0.0003.")
+    parser.add_option("--dp-nr", action="store_true", dest="dp_nr", default=False, help="Use experimental non-recursive DP implementation")
     parser.add_option("--vr", action="store_true", dest="use_vr", default=False, help="Use vertex reduction before applying line simplification (off by default).")
     parser.add_option("--vr-epsilon", type="float", default=0.0005, metavar="RADIUS", help="Radius used for vertex reduction (measured in degrees). Defaults to 0.0005.")
     parser.add_option("--water", action="store_const", const="water", dest="natural_type", default="coastline", help="Tag ways as natural=water instead of natural=coastline")
@@ -327,10 +410,21 @@ def main():
     else:
         locs = [((start_lat, start_lon), options.threshold)]
 
+    dirname = options.startdir.lower()
+    if dirname in dirnames:
+        startdir = dirnames.index(dirname)
+    elif dirname in dirabbrevs:
+        startdir = dirabbrevs.index(dirname)
+    else:
+        print "Error: Can't understand starting direction \"%s\". Vaild options are %s." % (dirname, ", ".join(dirnames + dirabbrevs))
+        return
+
+    print "Starting direction is %s." % dirnames[startdir]
+
     try:
         lakes = []
         for (loc, threshold) in locs:
-            nodes = trace_lake(loc, threshold)
+            nodes = trace_lake(loc, threshold, startdir)
 
             print "%d nodes generated." % len(nodes)
 
@@ -340,7 +434,11 @@ def main():
                     print "After vertex reduction, %d nodes remain." % len(nodes)
 
                 if options.use_dp:
-                    nodes = douglas_peucker(nodes, options.dp_epsilon)
+                    if options.dp_nr:
+                        nodes = douglas_peucker_nonrecursive(nodes, options.dp_epsilon)
+                        #print "Final result: %s" % (nodes,)
+                    else:
+                        nodes = douglas_peucker(nodes, options.dp_epsilon)
                     print "After Douglas-Peucker approximation, %d nodes remain." % len(nodes)
 
                 lakes.append(nodes)

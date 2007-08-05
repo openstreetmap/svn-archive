@@ -1,4 +1,4 @@
-#include <libshp/shapefil.h>
+#include "shapefil.h"
 
 #define ROAD 1
 #define NODE 2

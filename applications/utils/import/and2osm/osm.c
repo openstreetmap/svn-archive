@@ -598,7 +598,8 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 				//printf("\rone node should get more than one ANDID! patch needed!%li %li\n",from->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
 				Err_more_NDIDs_per_node++;
 			}
-			
+			if (DBFReadIntegerAttribute( hDBF, recordnr, 3 )==10248)
+				printf("\nID 10248 does exist!!!\n");
 			p=addtag(p,"external-ID",name,NULL);
 		}
 		
@@ -744,12 +745,12 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 0 ));
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
-/*			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )) &&
+			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )) &&
 						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )))
 			{
-				printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
+				//printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 				Err_fromID_without_ANDID++;
-			}*/
+			}
 		}
 			
 			
@@ -758,11 +759,12 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 1 ));
 			p=addtag(p,"AND_TO_NODE",name,NULL);
-/*			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )) &&
+			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )) &&
 						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )))
 			{
-				printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
-			}*/
+		//		printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
+				Err_toID_without_ANDID++;
+			}
 		}
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0

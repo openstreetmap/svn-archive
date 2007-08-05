@@ -14,11 +14,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.PluginProxy;
-
 import livegps.LiveGpsPlugin;
+
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.PluginProxy;
 
 /**
  * Plugin that uses live gps data and a button panel to add nodes/waypoints etc at the current

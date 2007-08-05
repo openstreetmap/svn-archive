@@ -4,6 +4,7 @@
 
   include("../lib/tilenames.inc");
   include("../lib/layers.inc");
+  include("../lib/blanktile.inc");
   
   if(0){ // Option to turn off non-standard tiles
     BlankTile();
@@ -32,44 +33,10 @@
     BlankTile("error");
     }
 
-  // Optional: look for landsea tiles if everything else fails
+  // look for landsea tiles if everything else fails
   if(1){
-      
-    $NoExitOnDbFail = 1;
-    include("../connect/connect.php");
-    
-    if(!$DbSuccess){
-      BlankTile("database_error");
-    }
-      
-    SearchDatabase($X,$Y,$Z,$LayerID);
-  }
-
-  function SearchDatabase($X,$Y,$Z,$LayerID){
-    if(0){ // option to turn-off database lookups
-      BlankTile();
-    }
-       
-    $SQL = sprintf("select * from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;", 
-      $X, $Y, $Z, $LayerID);
-    #printf("<p>%s</p>\n", htmlentities($SQL));
-    
-    $Result = mysql_query($SQL);
-    if(mysql_error()){
-      BlankTile("error");
-    }
-    
-    if(mysql_num_rows($Result) == 0){
-	if($Z < 2)
-	  BlankTile("404");
-	else
-          SearchDatabase($X>>1,$Y>>1,$Z-1,$LayerID);
-    }
-  
-    $Data = mysql_fetch_assoc($Result);
-    mysql_close();
-
-    switch($Data["type"]){
+    $Blank = LookUpBlankTile($X,$Y,$Z,$LayerID);
+    switch($Blank){
       case 1:
         BlankTile("sea");
         break;
@@ -81,7 +48,7 @@
         break;
       }
   }
-  
+
   function BlankTile($Type="404"){
     $Filename = "Gfx/$Type.png";
     $CacheDays = 14;

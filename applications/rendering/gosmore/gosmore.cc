@@ -35,9 +35,10 @@ FILE *flitePipe = stdout;
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)
 
-#define MAX_NODES 20100800
-#define MAX_SEGMENTS 20100800
-#define MAX_NAMED_NODES 100000
+#define MAX_NODES 24120960
+#define MAX_SEGMENTS 24120960
+#define MAX_WAYS = 2400000
+#define MAX_NAMED_NODES 120000
 
 inline int Hash (int lon, int lat)
 { /* This is a universal hashfuntion in GF(2^31-1). The hexadecimal numbers */
@@ -888,7 +889,7 @@ int main (int argc, char *argv[])
     halfSegType *halfSeg = (halfSegType *) malloc (sizeof (*halfSeg) *
       (MAX_SEGMENTS + MAX_NAMED_NODES) * 2);
     halfSegType *namedNodeHs = halfSeg + 2 * MAX_SEGMENTS;
-    wayBuildType *w = (wayBuildType *) calloc (sizeof (*w), 2000000);
+    wayBuildType *w = (wayBuildType *) calloc (sizeof (*w), MAX_WAYS);
     if (!node || !halfSeg || !w) {
       fprintf (stderr, "Out of memory. It may work if MAX_SEGMENTS and / or\n"
         "MAX_NODES are reduced\n");

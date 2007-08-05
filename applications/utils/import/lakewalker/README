@@ -16,9 +16,10 @@ To trace a single lake, picking a point inside the lake and use the
 --lat and --lon command-line parameters:
   ./lakewalker.py --lat 51.2 --lon -99.8
 
-NOTE: The current algorithm starts by going to the specified start
+NOTE: By defualt, the algorithm starts by going to the specified start
 point and travelling due east until it hits land. So, to trace an
-island, place the start point in the water to the west of the island.
+island, place the start point in the water to the west of the
+island. This can be modified with the --startdir option.
 
 The output will be placed in a file named lake.osm. This can be
 changed by using the -o or --out switch. The OSM file can then be

@@ -20,7 +20,7 @@ include("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
 include("../../lib/cpu.inc");
-
+include("../../blanktile.inc");
 
 if(0){ // Option to turn off uploads
   AbortWithError("Disabled");
@@ -245,22 +245,17 @@ function SaveBlankTiles($BlankTileList, $UserID){
     # Make a blank tile
     if( $Type >= 0 )
     {
-      $Fields = "x, y, z, layer, type, date, user";
-      $Values = sprintf("%s, now(), %d", $SqlSnippet, $UserID);
-      $UpdateValues = sprintf("type = VALUES(type), date = VALUES(date), user = VALUES(user)");
-
-      $SQL = sprintf("INSERT INTO `tiles_blank` (%s) values (%s) ON DUPLICATE KEY UPDATE %s;", $Fields, $Values , $UpdateValues);
+      InsertBlankTile($X,$Y,$Z,$Layer,$UserID,$Type);
     }
     else
     {
       # Delete a blank tile
       $SQL = sprintf("delete from `tiles_blank` where `x`=%d AND `y`=%s AND `z`=%s AND `layer`=%d", $X, $Y, $Z, $Layer);
+      mysql_query($SQL);
+      logSqlError();
     }
     DeleteRealTile($X,$Y,$Z,$Layer);
 
-    mysql_query($SQL);
-    
-    logSqlError();
   }
 }
 

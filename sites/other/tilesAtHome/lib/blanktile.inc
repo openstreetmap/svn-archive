@@ -7,10 +7,9 @@
 # blankness can be 1=sea,2=land,0= no blankness info found
 #------------------------------------------------------------------------------
 function LookUpBlankTile($X,$Y,$Z,$LayerID){
-    if(!$DbSuccess){
-     $NoExitOnDbFail = 1;
-     include_once("../connect/connect.php");
-    }  
+    $NoExitOnDbFail = 1; 
+    include_once("../connect/connect.php");
+    if (!ConnectDB()) return NULL;
 
     $SQL = sprintf("select type from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;",
 	$X, $Y, $Z, $LayerID);
@@ -31,6 +30,29 @@ function LookUpBlankTile($X,$Y,$Z,$LayerID){
     mysql_close();
 
     return $blank["type"];
+}
+
+
+
+#------------------------------------------------------------------------------
+# This function insert new blankness information if it is necessary
+# blankness can be 1=sea,2=land. It returns FALSE on error, or TRUE on success
+#------------------------------------------------------------------------------
+function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
+   if (($Blanktype < 1) or ($Blanktype > 2)) return FALSE;
+
+   echo "balnktype".$Blanktype." lookup".LookUpBlankTile($X,$Y,$Z,$LayerID);
+   if (LookUpBlankTile($X,$Y,$Z,$LayerID) == $Blanktype) {
+     print "info already there, nothing to do\n";
+     return TRUE;
+   }
+
+   #otherwise we really need to insert stuff
+   include_once("../connect/connect.php");
+   $Fields = "x, y, z, layer, date, user, type";
+   $Values = sprintf("%d, %d, %d, %d, now(), %d, %d", $X, $Y, $Z, $LayerID, $UserID, $Blanktype);
+   print $SQL = sprintf("REPLACE INTO `tiles_blank` (%s) values (%s);", $Fields, $Values);
+   return mysql_query($SQL);
 }
 
 ?>

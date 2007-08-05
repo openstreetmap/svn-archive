@@ -29,6 +29,8 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.XmlObjectParser;
 import org.xml.sax.SAXException;
 
+import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
+
 /**
  * @author cdaller
  *
@@ -128,12 +130,7 @@ public class SurveyorShowAction extends AbstractAction {
         }
         SurveyorComponent component= null;
         try {
-            if (source.startsWith("http://") || source.startsWith("ftp://") || source.startsWith("file:"))
-                in = new URL(source).openStream();
-            else if (source.startsWith("resource://"))
-                in = getClass().getResourceAsStream(source.substring("resource:/".length()));
-            else
-                in = new FileInputStream(source);
+            in = ResourceLoader.getInputStream(source);
             component = createComponent(in);
             in.close();
             return component;

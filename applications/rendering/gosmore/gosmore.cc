@@ -37,7 +37,7 @@ FILE *flitePipe = stdout;
 
 #define MAX_NODES 24120960
 #define MAX_SEGMENTS 24120960
-#define MAX_WAYS = 2400000
+#define MAX_WAYS 2400000
 #define MAX_NAMED_NODES 120000
 
 inline int Hash (int lon, int lat)

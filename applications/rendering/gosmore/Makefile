@@ -7,7 +7,7 @@ bindir = $(prefix)/bin
 
 USE_FLITE=-DUSE_FLITE -lflite_cmu_us_kal16 -lflite_usenglish -lflite_cmulex \
   -lflite
-CFLAGS=-O2
+CFLAGS=-g #-O2
 WARNFLAGS= -W -Wall
 
 # enable this to test the experimental route support

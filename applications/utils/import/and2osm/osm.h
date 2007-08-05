@@ -1,4 +1,4 @@
-#include "shapefil.h"
+#include <libshp/shapefil.h>
 
 #define ROAD 1
 #define NODE 2
@@ -37,7 +37,7 @@ struct nodes{
 	struct nodes * btree_h;
 	struct tags * tag; /*contains attached tags */
 	struct attachedSegments *segments;
-	struct attachedWays *ways;
+	//struct attachedWays *ways;
 	unsigned long maxdepth;
 };
 
@@ -55,7 +55,7 @@ struct segments{
 	struct nodes * from;
 	struct nodes * to;
 	struct segments * next;
-	
+	struct attachedWays *ways;
 };
 
 
@@ -67,6 +67,10 @@ struct attachedSegments{
 struct ways{
 	int type; /*0=way, 1=area*/
 	long wayID;
+	double max_lat;
+	double max_lon;
+	double min_lat;
+	double min_lon;
 	struct tags * tag;
 	struct attachedSegments *segments;
 	struct ways * next;

@@ -455,7 +455,8 @@ struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv)
 		p->btree_h=NULL;
 		p->tag=NULL;
 		p->segments=NULL;
-		p->ways=NULL;
+		
+		//p->ways=NULL;
 		node_depth=0;
 /*		saveNode(p->ID,lat,lon);*/
 	}
@@ -556,6 +557,7 @@ struct segments * newSegment(struct nodes * from, struct nodes * to){
 		s->from=from;
 		s->to=to;
 		s->next=NULL;
+		s->ways=NULL;
 		if (lastsegment!=NULL) lastsegment->next=s;
 		lastsegment=s;
 		if (root_segment==NULL) root_segment=s;
@@ -652,10 +654,10 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			case 91: p=addtag(p,"natural","water",NULL);break;	 
 			case 92: p=addtag(p,"waterway","river",NULL); break;	
 			case 94: p=addtag(p,"natural","water",NULL); break;	
-			case 95: p=addtag(p,"boundary","city",NULL); break;	
+			case 95: p=addtag(p,"place","city",NULL); break;
 			case 96: p=addtag(p,"natural","wood",NULL); break;	
 			case 97: p=addtag(p,"natural","water",NULL); break;	
-			case 98: p=addtag(p,"boundary","city",NULL); break;	
+			case 98: p=addtag(p,"place","city",NULL); break;
 			case 99: p=addtag(p,"aeroway","aerodrome",NULL); break;	
 			case 101: p=addtag(p,"leisure","park",NULL); break;	
 			case 102: p=addtag(p,"leisure","park",NULL); break;	
@@ -742,10 +744,11 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 0 ));
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
-			/*if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+		/*	if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )) &&
+						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )))
 			{
-				//printf("\nway in wrong direction! patch required!\n");
-				Err_oneway_way_reversed++;
+				printf("\rway referres to unattached ANDID! %i %i %i,%f,%f %s\n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
+		//		Err_oneway_way_reversed++;
 			}*/
 		}
 			
@@ -755,6 +758,11 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 1 ));
 			p=addtag(p,"AND_TO_NODE",name,NULL);
+/*			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )) &&
+						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )))
+			{
+				printf("\rway referres to unattached ANDID! %i %i %i %s\n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 1 ),DBFReadStringAttribute( hDBF, recordnr, 15 ));
+			}*/
 			/*if (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
 			{
 				//printf("\nway in wrong direction! patch required!\n");
@@ -926,10 +934,15 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		switch (DBFReadIntegerAttribute( hDBF, recordnr, 26 ))
 		{
 			case -1: 
+			if (DBFReadIntegerAttribute( hDBF, recordnr, 10 )!=6)
+			{
 				p=addtag(p,"foot","yes",NULL); 
 				p=addtag(p,"motorcar","no",NULL); 
 				p=addtag(p,"motorcycle","no",NULL); 
-				p=addtag(p,"hgv","no",NULL); break;
+				p=addtag(p,"hgv","no",NULL);
+			}
+			break;
+				
 			case 3: p=addtag(p,"maxweight","3.5",NULL); break;
 			case 28: p=addtag(p,"maxweight","28",NULL); break;
 			case 40: p=addtag(p,"maxweight","40",NULL); break;
@@ -939,6 +952,8 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 27 )>0)
 			p=addtag(p,"toll","hgv",NULL); 
 		//Field 28: Type=String, Title=`RD_23', Width=60, Decimals=0
+	/*	if (!(DBFIsAttributeNULL( hDBF, recordnr,28 )))
+			printf("\n%s %f,%f\n",DBFReadStringAttribute( hDBF, recordnr, 28 ),from->ANDID, to->ANDID);*/
 		//Field 29: Type=Integer, Title=`RD_24', Width=3, Decimals=0
 		//Field 30: Type=Integer, Title=`RD_25', Width=11, Decimals=0
 		//Field 31: Type=Integer, Title=`RD_26', Width=11, Decimals=0
@@ -959,9 +974,42 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 	 return p; /*should be pointer to first item in tag-list*/
  }
  
+ struct attachedWays * attachway(struct attachedWays * p, struct ways * s) {
+	//printf("%p\t%p\n",p,s);
+	 if (p==NULL)
+	 {
+		 p = (struct attachedWays *) calloc(1,sizeof(struct attachedWays));
+		 if (p==NULL)
+		 {
+			 fprintf(stderr,"out of memory\n");
+			 exit(1);
+		 }
+		 p->nextWay=NULL;
+		 p->way=s;
+	 }
+	 else
+	 {
+		 p->nextWay=attachway(p->nextWay,s);
+	 }
+	 return p;
+ }	
+ 
+
+
  
  void addSegment2Way(struct ways * way,struct segments * segment){
 	way->segments=attachsegment(way->segments,segment);
+	segment->ways=attachway(segment->ways,way);
+	if (way->max_lon < segment->from->lon) way->max_lon=segment->from->lon;
+	if (way->max_lon < segment->to->lon) way->max_lon=segment->to->lon;
+	if (way->max_lat < segment->from->lat) way->max_lat=segment->from->lat;
+	if (way->max_lat < segment->to->lat) way->max_lat=segment->to->lat;
+	if (way->min_lon > segment->from->lon) way->min_lon=segment->from->lon;
+	if (way->min_lon > segment->to->lon) way->min_lon=segment->to->lon;
+	if (way->min_lat > segment->from->lat) way->min_lat=segment->from->lat;
+	if (way->min_lat > segment->to->lat) way->min_lat=segment->to->lat;
+
+	
 	//printf("node from %i to %i, (%f,%f)-(%f-%f)",segment->from->ID, segment->to->ID,segment->from->lon,segment->from->lat,segment->to->lon,segment->to->lat);
 	return;
 }
@@ -998,5 +1046,10 @@ struct ways *newWay(int wayType){
 	lastway->tag=NULL;
 	lastway->segments=NULL;
 	lastway->next=NULL;
+	lastway->min_lat=999;
+	lastway->min_lon=999;
+	lastway->max_lat=-1;
+	lastway->max_lon=-1;
+	
 	return lastway;
 }

@@ -77,7 +77,7 @@
 static char rcsid[] = 
   "$Id: AND2osm.c,v 0.4 2007/07/29 11:04:00 Marc Kessels";
 
-#include "shapefil.h"
+#include <libshp/shapefil.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -253,7 +253,7 @@ int readfile(char * inputfile)
 					lastSegment=newSegment(prevNode,lastNode);
 					//  printf(" seg2way\n");
 					addSegment2Way(way,lastSegment);
-    }
+				}
 			}
 /*			    printf("%i [%12.8f,%12.8f]\n",iPart,psShape->padfX[j],psShape->padfY[j]);*/
 

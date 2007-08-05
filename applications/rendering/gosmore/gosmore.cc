@@ -35,10 +35,10 @@ FILE *flitePipe = stdout;
 #define TILEBITS (18)
 #define TILESIZE (1<<TILEBITS)
 
-#define MAX_NODES 24120960
-#define MAX_SEGMENTS 24120960
-#define MAX_WAYS 2400000
-#define MAX_NAMED_NODES 120000
+#define MAX_NODES 28141120
+#define MAX_SEGMENTS 28141120
+#define MAX_WAYS 2800000
+#define MAX_NAMED_NODES 140000
 
 inline int Hash (int lon, int lat)
 { /* This is a universal hashfuntion in GF(2^31-1). The hexadecimal numbers */

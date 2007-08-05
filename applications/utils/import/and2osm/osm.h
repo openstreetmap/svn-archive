@@ -99,4 +99,5 @@ long node_maxdepth;
 long Err_ND_attached_to_way;
 long Err_more_NDIDs_per_node;
 long Err_oneway_way_reversed;
-
+long Err_toID_without_ANDID;
+long Err_fromID_without_ANDID;

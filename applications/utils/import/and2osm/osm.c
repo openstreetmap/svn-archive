@@ -667,7 +667,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			case 106: p=addtag(p,"natural","beach",NULL); break;	
 			case 107: p=addtag(p,"natural","marsh",NULL); break;	
 			case 109: p=addtag(p,"landuse","industrial",NULL); break;	
-}
+		}
 		//Field 7: Type=Integer, Title=`ND_5', Width=3, Decimals=0
 		//Field 8: Type=Integer, Title=`ND_6', Width=2, Decimals=0
 		//Field 9: Type=Integer, Title=`ND_7', Width=2, Decimals=0
@@ -744,11 +744,11 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 0 ));
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
-		/*	if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )) &&
+/*			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )) &&
 						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )))
 			{
-				printf("\rway referres to unattached ANDID! %i %i %i,%f,%f %s\n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
-		//		Err_oneway_way_reversed++;
+				printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
+				Err_fromID_without_ANDID++;
 			}*/
 		}
 			
@@ -761,12 +761,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 /*			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )) &&
 						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )))
 			{
-				printf("\rway referres to unattached ANDID! %i %i %i %s\n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 1 ),DBFReadStringAttribute( hDBF, recordnr, 15 ));
-			}*/
-			/*if (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
-			{
-				//printf("\nway in wrong direction! patch required!\n");
-				Err_oneway_way_reversed++;
+				printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 			}*/
 		}
 			
@@ -952,8 +947,54 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 27 )>0)
 			p=addtag(p,"toll","hgv",NULL); 
 		//Field 28: Type=String, Title=`RD_23', Width=60, Decimals=0
-	/*	if (!(DBFIsAttributeNULL( hDBF, recordnr,28 )))
-			printf("\n%s %f,%f\n",DBFReadStringAttribute( hDBF, recordnr, 28 ),from->ANDID, to->ANDID);*/
+		if (!(DBFIsAttributeNULL( hDBF, recordnr,28 )))
+		{
+			//printf("\r%s           \n",DBFReadStringAttribute( hDBF, recordnr, 28 ));
+			sprintf(name,"%s",DBFReadStringAttribute( hDBF, recordnr, 28 ));
+       			char *result = NULL;
+   			result = strtok( name, "@");
+   			while( result != NULL )
+   			{
+				switch (*result)
+				{
+					case 's'://slip road and stub link
+						if (*(name+1)=='l')
+						{
+							if (DBFReadIntegerAttribute( hDBF, recordnr, 10 )==1)
+								p=addtag(p,"highway","motorway_link",NULL);
+							else
+								p=addtag(p,"highway","trunk_link",NULL);
+						}
+						break;
+					case 'r': //roundabout
+						p=addtag(p,"junction","roundabout",NULL);
+						break;
+					case 'l': //lay-by and long haul
+						if (*(name+1)=='b')
+						{
+							p=addtag(p,"highway","layby",NULL);
+						}
+						break;
+					case '4': //4-wheel drive
+						p=addtag(p,"grade","5",NULL);
+						break;
+					case 'u': //unsealed
+						p=addtag(p,"surface","unpaved",NULL);
+						break;
+					case 'f': //functional class
+						break;
+					case 'h': //house numbers
+						break;
+					default:
+						printf("\runkown RD_OTHER attribute\n");
+						break;
+				}
+				
+       				result = strtok( NULL, "@" );
+       			}
+   
+
+		}	
 		//Field 29: Type=Integer, Title=`RD_24', Width=3, Decimals=0
 		//Field 30: Type=Integer, Title=`RD_25', Width=11, Decimals=0
 		//Field 31: Type=Integer, Title=`RD_26', Width=11, Decimals=0

@@ -340,6 +340,7 @@ int main(int argc, char ** argv )
 
 			printf ("minlon: %f, minlat: %f, maxlon: %f, maxlat: %f\n",
 				mybox_min[0], mybox_min[1], mybox_max[0], mybox_max[1]);
+			use_boundingbox=1;
 			break;
 		case 'n':
 			do_borders = 0;
@@ -357,7 +358,9 @@ int main(int argc, char ** argv )
 	Err_ND_attached_to_way=0;
 	Err_more_NDIDs_per_node=0;
 	Err_oneway_way_reversed=0;	
-	
+	Err_toID_without_ANDID=0;
+	Err_fromID_without_ANDID=0;
+
 	/*readfiles*/
 	
 	openOutput();
@@ -386,9 +389,11 @@ int main(int argc, char ** argv )
 	readfile(FILENAME "_w");
 	save();
 	closeOutput();
-	printf("\n Err_ND_attached_to_way=%li\n",Err_ND_attached_to_way);
-	printf("\n Err_more_NDIDs_per_node=%li\n",Err_more_NDIDs_per_node);
-	printf("\n Err_oneway_way_reversed=%li\n",Err_oneway_way_reversed);
-	return 0;	
+	printf("\nErr_ND_attached_to_way=%li\n",Err_ND_attached_to_way);
+	printf("Err_more_NDIDs_per_node=%li\n",Err_more_NDIDs_per_node);
+	printf("err_oneway_way_reversed=%li\n",Err_oneway_way_reversed);
+	printf("way \"toID\" refers to not present AND ID=%li\n",Err_toID_without_ANDID);
+	printf("way \"fromID\" refers to not present AND ID=%li\n",Err_fromID_without_ANDID);
+	return 0;
 	
 }

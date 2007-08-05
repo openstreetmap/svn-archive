@@ -10,9 +10,13 @@ The project home page is at
 Usage information
 -----------------
 
-Fetch planet file from openstreetmap and feed it to gosmore
+Fetch planet file from OpenStreetmap and feed it to gosmore
 
   bzcat planet-...osm.bz2 | gosmore rebuild
+
+The rebuild process uses a lot of memory.  Around 2007-08-05, more than
+1 GiB of RAM is needed.  This is due to the design of the program and the
+size of the OpenStreetmap.org data set.
 
 Downloading latest version
 --------------------------
@@ -26,7 +30,7 @@ to download it.
 Reporting bugs and improvements
 -------------------------------
 
-[Need to be documented]
+[Need to documented email address to use]
 
 License
 -------

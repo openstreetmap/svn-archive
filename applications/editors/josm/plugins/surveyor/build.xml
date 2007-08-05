@@ -9,7 +9,7 @@
     <property name="livegpsplugin.jar" value="../livegps/livegps.jar"/>
 	  
 	  <!-- plugin meta data (enter new version number if anything changed!) -->
-	  <property name="plugin.version" value="1.2"/>
+	  <property name="plugin.version" value="1.3.1"/>
 	  <property name="plugin.description" value="Allow adding markers/nodes on current gps positions (V${plugin.version})."/>
 	  <property name="plugin.stage" value="60"/>
     <property name="plugin.class" value="at.dallermassl.josm.plugin.surveyor.SurveyorPlugin"/>
@@ -23,14 +23,11 @@
 
 	<target name="dist" depends="compile,site">
 		<!-- images -->
-		<copy todir="${plugin.build.dir}/images">
-			<fileset dir="src/images" />
-		</copy>
-			<!-- copy configuration xml files -->
-		<copy todir="${plugin.build.dir}">
-			<fileset dir="src"> 
+		<copy todir="${plugin.build.dir}/">
+			<fileset dir="resources">
 				<include name="*.xml"/>
-  		</fileset>
+				<include name="audio/*"/>
+		  </fileset>
 		</copy>
 		
     <!-- create jar file -->

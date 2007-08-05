@@ -98,7 +98,7 @@ long hash_text(char *str)
 {
 	long hash = 5381;
 	int c; 
-	while (c = *str++) hash = ((hash << 5) + hash) + c; // hash*33 + c
+	while ((c = *str++)) hash = ((hash << 5) + hash) + c; // hash*33 + c
 	return hash_ID(hash);
 }
 
@@ -190,7 +190,7 @@ void saveTags(struct tags *p){
 	return;
 }
 
-long saveNode(struct nodes *p){
+void saveNode(struct nodes *p){
 	fprintf(fp,"	<node id=\"%li\" lat=\"%1.5f\" lon=\"%1.5f\" >\n",p->ID,p->lat,p->lon);
 	saveTags(p->tag);
 	fprintf(fp,"		<tag k=\"source\" v=\"AND\" />\n");
@@ -245,7 +245,7 @@ void saveSegments(struct segments *p){
 void saveAttachedSegments(struct attachedSegments *p){
 	if (p!=NULL)
 	{
-		fprintf(fp,"		<seg id=\"%i\" />\n",p->Segment->ID);
+		fprintf(fp,"		<seg id=\"%li\" />\n",p->Segment->ID);
 //		printf("(%2.5f, %2.5f)-(%2.5f,%2.5f)\n",p->Segment->from->lon,p->Segment->from->lat,p->Segment->to->lon,p->Segment->to->lat);
 		saveAttachedSegments(p->nextSegment);
 	}
@@ -254,12 +254,12 @@ void saveAttachedSegments(struct attachedSegments *p){
 
 
 
-long saveWay(struct ways *p){
+void saveWay(struct ways *p){
 
 	if (p->type==ROAD)
-		fprintf(fp,"	<way id=\"%i\" >\n",p->wayID);
+		fprintf(fp,"	<way id=\"%li\" >\n",p->wayID);
 	else if (p->type==AREA)
-		fprintf(fp,"    <way id=\"%i\" >\n",p->wayID);
+		fprintf(fp,"    <way id=\"%li\" >\n",p->wayID);
 	else fprintf(stderr,"unkown wayType in saveWay\n");	
 	saveTags(p->tag);
 	saveAttachedSegments(p->segments);
@@ -309,7 +309,7 @@ void saveWay_pg(struct ways *p)
 
 	if (p->segments == NULL)
 	{
-		printf("Way %d doesn't have segments, ignoring", p->wayID);
+		printf("Way %li doesn't have segments, ignoring", p->wayID);
 		return;
 	}
   
@@ -572,7 +572,6 @@ struct segments * newSegment(struct nodes * from, struct nodes * to){
 
 struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p,struct nodes * from, struct nodes * to){
 	char name[100];
-	int i; 
 	if (fileType==NODE)
 	{
 		//printf("in mkTagList\n");
@@ -779,14 +778,14 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 9: Type=Integer, Title=`RD_4', Width=2, Decimals=0
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 9 )==1)
 		{
-			if (from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+			if (from->ANDID==DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
 				p=addtag(p,"oneway","1",NULL);
 			else
 				p=addtag(p,"oneway","-1",NULL);
 		}	
 		else if (DBFReadIntegerAttribute( hDBF, recordnr, 9 )==2)
 		{
-			if (from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
+			if (from->ANDID==DBFReadIntegerAttribute( hDBF, recordnr, 0 ))
 				p=addtag(p,"oneway","-1",NULL);
 			else
 				p=addtag(p,"oneway","1",NULL);

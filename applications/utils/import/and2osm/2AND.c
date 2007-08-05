@@ -121,7 +121,8 @@ int readfile(char * inputfile)
     SHPHandle	hSHP;
     DBFHandle   hDBF;
     int fileType;
-    int		nShapeType, nEntities, i;
+    int		nShapeType, nEntities;
+    long 	i;
     char	szTitle[12];
     double 	adfMinBound[4], adfMaxBound[4];
 
@@ -186,14 +187,12 @@ int readfile(char * inputfile)
     {
 	long		j,iPart;
         SHPObject	*psShape;
-	char 		name[100];
-	struct tags * tagList;
 	struct nodes *prevNode,*lastNode,*firstNode;
 	struct segments *lastSegment;
 	struct ways * way;
 
 	psShape = SHPReadObject( hSHP, i );
-	if ((i/100)*100==i) printf("\r%7li/%7li   %7li/%7li                       ",i,nEntities,0,psShape->nVertices);
+	if ((i/100)*100==i) printf("\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
 	//printf("\n*******************************\n");
 	
 
@@ -229,7 +228,7 @@ int readfile(char * inputfile)
 		{
 			if ((j>0)&&((j/1000)*1000==j))
 			{
-				printf("\r%7li/%7li   %7li/%7li                   ",i,nEntities,j,psShape->nVertices);
+				printf("\r%7li/%7i   %7li/%7i                   ",i,nEntities,j,psShape->nVertices);
 				fflush(stdout);
 			}
 			//printf("%i/%i\n",j,psShape->nVertices);
@@ -387,9 +386,9 @@ int main(int argc, char ** argv )
 	readfile(FILENAME "_w");
 	save();
 	closeOutput();
-	printf("\n Err_ND_attached_to_way=%i\n",Err_ND_attached_to_way);
-	printf("\n Err_more_NDIDs_per_node=%i\n",Err_more_NDIDs_per_node);
-	printf("\n Err_oneway_way_reversed=%i\n",Err_oneway_way_reversed);
+	printf("\n Err_ND_attached_to_way=%li\n",Err_ND_attached_to_way);
+	printf("\n Err_more_NDIDs_per_node=%li\n",Err_more_NDIDs_per_node);
+	printf("\n Err_oneway_way_reversed=%li\n",Err_oneway_way_reversed);
 	return 0;	
 	
 }

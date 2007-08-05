@@ -77,7 +77,7 @@
 static char rcsid[] = 
   "$Id: AND2osm.c,v 0.4 2007/07/29 11:04:00 Marc Kessels";
 
-#include <libshp/shapefil.h>
+//#include "shapefil.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

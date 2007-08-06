@@ -22,6 +22,7 @@
  ******************************************************************************
  */
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -34,17 +35,10 @@ extern int postgres;
 long text_depth;
 long node_depth;
 long textID=-1;
-struct textnode { /* the tree node: */
-	long hash;
-	char *text; /* points to the text */
-	struct textnode *left; /* left child */
-	struct textnode *right; /* right child */
-};
 
 
 
 /*root nodes of lists*/
-struct textnode *root_text=NULL;
 struct nodes *root_node=NULL;
 struct segments *root_segment=NULL;
 struct ways *root_way=NULL;
@@ -87,30 +81,6 @@ long hash_ID(long x) {
 long hash_lat(double x) {
 	return hash_ID(x*1000000);
 }
-
-
-
-/* djb2
- * This algorithm was first reported by Dan Bernstein
- * many years ago in comp.lang.c
- */
-long hash_text(char *str)
-{
-	long hash = 5381;
-	int c; 
-	while ((c = *str++)) hash = ((hash << 5) + hash) + c; // hash*33 + c
-	return hash_ID(hash);
-}
-
-
-
-
-
-
-
-
-
-
 
 /*output*/
 
@@ -175,24 +145,10 @@ int closeOutput()
 }
 
 
-void saveTag(struct tags *p){
-	fprintf(fp,"	<tag k=\"%s\" v=\"%s\" />\n",p->key,p->value);
-	return;
-}
-
-void saveTags(struct tags *p){
-//	printf("in saveTags %p\n",p);
-	if (p!=NULL)
-	{
-		saveTag(p);
-		saveTags(p->nextTag);
-	}
-	return;
-}
 
 void saveNode(struct nodes *p){
 	fprintf(fp,"	<node id=\"%li\" lat=\"%1.5f\" lon=\"%1.5f\" >\n",p->ID,p->lat,p->lon);
-	saveTags(p->tag);
+	saveTags(fp,p->tag);
 	fprintf(fp,"		<tag k=\"source\" v=\"AND\" />\n");
 	fprintf(fp,"		<tag k=\"source-ref\" v=\"www.and.com\" />\n");
 	fprintf(fp,"	</node>\n");
@@ -261,7 +217,7 @@ void saveWay(struct ways *p){
 	else if (p->type==AREA)
 		fprintf(fp,"    <way id=\"%li\" >\n",p->wayID);
 	else fprintf(stderr,"unkown wayType in saveWay\n");	
-	saveTags(p->tag);
+	saveTags(fp,p->tag);
 	saveAttachedSegments(p->segments);
 	
 
@@ -354,82 +310,6 @@ void save(){
 }
 	
 
-struct textnode *addText(struct textnode * p, char * text,char ** rv){
-	int cond;
-	unsigned long hash;
-	hash=hash_text(text);
-	if (p == NULL) { /* a new word has arrived */
-		p = (struct textnode *) calloc(1,sizeof(struct textnode)); /* make a new node */
-		textID--;
-		if (p==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		p->text = (char *) calloc(1,(strlen(text)+1)*sizeof(char));
-		if (p==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		strcpy(p->text,text);
-		p->left = p->right = NULL;
-		p->hash=hash;
-		if (rv!=NULL) *rv=p->text;
-		text_depth=0;
-	}
-	else if (hash<p->hash)
-		p->left = addText(p->left, text,rv);/* less than into left subtree */
-	else if (hash>p->hash)
-		p->right = addText(p->right, text,rv); /* greater than into right subtree */
-	else  if ((cond = strcmp(text, p->text)) == 0) {
-		//hashes are the same, so biggest change texts are the same
-		//printf("text found\n"); 
-		if ((rv)!=NULL) *rv=p->text;/*text found*/
-		text_depth=0;
-		}
-	else if (cond > 0) 
-		p->right = addText(p->right, text,rv); /* greater than into right subtree */
-	else 
-		p->left = addText(p->left, text,rv);/* less than into left subtree */
-	
-
-	text_depth++;
-	return p;
-}
-
-struct tags * addtag(struct tags *p,char * tag_key, char * tag_value,struct tags **rv){
-//	printf("in addtag\n"); 
-	if (p==NULL)
-	{
-		/*new tag arrived*/
-		p = (struct tags *) calloc(1,sizeof(struct tags));
-		if (p==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		p->nextTag=NULL;
-//		printf("%s %s\n",tag_key,tag_value);
-		root_text=addText(root_text,tag_key,&(p->key));
-		if (text_depth>text_maxdepth)
-		{
-			text_maxdepth=text_depth;
-		//	printf("\nnew text depth:%li/%li\n",text_maxdepth,textID);
-		}
-//		printf("%s %p\n",p->key,root_text);
-		root_text=addText(root_text,tag_value,&(p->value));
-		if (text_depth>text_maxdepth)
-		{
-			text_maxdepth=text_depth;
-		//	printf("\nnew text depth:%li/%li\n",text_maxdepth,textID);
-		}
-		if (rv!=NULL) *rv=p;
-	}
-	else
-		p->nextTag=addtag(p->nextTag, tag_key, tag_value,rv);
-	return p;
-}
 
 struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv){
 	static long nodeID = 0;

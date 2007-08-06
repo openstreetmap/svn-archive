@@ -1,14 +1,8 @@
 #include "shapefil.h"
-
+#include "tags.h"
 #define ROAD 1
 #define NODE 2
 #define AREA 3
-
-
-
-
-
-
 
 
 
@@ -21,11 +15,6 @@
 	
 };*/
 
-struct tags{
-	char * key;  /*stored in text b-tree to save memory*/
-	char * value;  /*stored in text b-tree to save memory*/
-	struct tags* nextTag;
-};
 
 struct nodes{
 	long ID;

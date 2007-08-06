@@ -307,6 +307,8 @@ int main(int argc, char ** argv )
 	int do_borders = 1;
 	char *s, *s1, *s2, *s3, *s4, *p;
 	
+
+	init_tags();
 	while ((c = getopt (argc, argv, "b:np")) != -1)
 		switch (c)
 		{

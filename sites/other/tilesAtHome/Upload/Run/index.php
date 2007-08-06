@@ -20,7 +20,9 @@ include("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
 include("../../lib/cpu.inc");
-include("../../blanktile.inc");
+include("../../connect/connect.php");
+include("../../lib/blanktile.inc");
+
 
 if(0){ // Option to turn off uploads
   AbortWithError("Disabled");
@@ -40,7 +42,6 @@ if(1){
   }
 }
 
-include("../../connect/connect.php");
 
 $QueueDir = "/home/ojw/tiles-ojw/Queue/";
 list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 24);

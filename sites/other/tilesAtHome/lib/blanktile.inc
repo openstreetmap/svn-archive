@@ -8,8 +8,9 @@
 #------------------------------------------------------------------------------
 function LookUpBlankTile($X,$Y,$Z,$LayerID){
     $NoExitOnDbFail = 1; 
-    if (!DbSuccess) include_once("../connect/connect.php");
-    if (!DbSuccess) {return NULL;}
+    if (file_exists("../connect/connect.php")) include_once("../connect/connect.php");
+    if (file_exists("../../connect/connect.php")) include_once("../../connect/connect.php");
+    if (!DbSuccess) return NULL;
 
     $SQL = sprintf("select type from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;",
 	$X, $Y, $Z, $LayerID);
@@ -49,8 +50,9 @@ function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
 
    #otherwise we really need to insert stuff
    $NoExitOnDbFail = 1; 
-   if (!DbSuccess) include_once("../connect/connect.php");
-   if (!DbSuccess) {return FALSE;}
+   if (file_exists("../connect/connect.php")) include_once("../connect/connect.php");
+   if (file_exists("../../connect/connect.php")) include_once("../../connect/connect.php");
+   if (!DbSuccess) return FALSE;
    $Fields = "x, y, z, layer, date, user, type";
    $Values = sprintf("%d, %d, %d, %d, now(), %d, %d", $X, $Y, $Z, $LayerID, $UserID, $Blanktype);
    print $SQL = sprintf("REPLACE INTO `tiles_blank` (%s) values (%s);", $Fields, $Values);

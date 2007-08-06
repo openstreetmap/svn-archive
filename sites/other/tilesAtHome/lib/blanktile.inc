@@ -8,7 +8,7 @@
 #------------------------------------------------------------------------------
 function LookUpBlankTile($X,$Y,$Z,$LayerID){
     $NoExitOnDbFail = 1; 
-    include_once("../connect/connect.php");
+    if (!DbSuccess) include_once("../connect/connect.php");
     if (!ConnectDB()) return NULL;
 
     $SQL = sprintf("select type from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;",
@@ -27,7 +27,8 @@ function LookUpBlankTile($X,$Y,$Z,$LayerID){
     }
   
     $blank = mysql_fetch_assoc($Result);
-    mysql_close();
+    // Don't close MySQL connection, we might need it later on
+    //mysql_close();
 
     return $blank["type"];
 }
@@ -41,14 +42,15 @@ function LookUpBlankTile($X,$Y,$Z,$LayerID){
 function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
    if (($Blanktype < 1) or ($Blanktype > 2)) return FALSE;
 
-   echo "balnktype".$Blanktype." lookup".LookUpBlankTile($X,$Y,$Z,$LayerID);
    if (LookUpBlankTile($X,$Y,$Z,$LayerID) == $Blanktype) {
-     print "info already there, nothing to do\n";
+     # "info already there, nothing to do\n";
      return TRUE;
    }
 
    #otherwise we really need to insert stuff
-   include_once("../connect/connect.php");
+   $NoExitOnDbFail = 1; 
+   if (!DbSuccess) include_once("../connect/connect.php");
+   if (!ConnectDB()) return FALSE;
    $Fields = "x, y, z, layer, date, user, type";
    $Values = sprintf("%d, %d, %d, %d, now(), %d, %d", $X, $Y, $Z, $LayerID, $UserID, $Blanktype);
    print $SQL = sprintf("REPLACE INTO `tiles_blank` (%s) values (%s);", $Fields, $Values);

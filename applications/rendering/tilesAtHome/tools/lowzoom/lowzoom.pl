@@ -299,6 +299,7 @@ sub supertile {
         $Image->Set(quality => 90);  # compress image
         $Image->Write($Filename);
         utime $Timestamp, $Timestamp, $Filename;
+        undef $Image; ## Destroy the ImageMagick object to save Memory
     }
 
      #remove tiles which will not be uploaded

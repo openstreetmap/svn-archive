@@ -1,9 +1,14 @@
 <project name="tagging-preset-tester" default="build" basedir=".">
 
-	<target name="build">
+	<target name="compile">
+		<mkdir dir="build"/>
+		<javac srcdir="src" destdir="build" classpath="../../core/dist/josm-custom.jar" />
+	</target>
+
+	<target name="build" depends="compile">
 		<mkdir dir="dist"/>
 		<jar destfile="dist/tagging-preset-tester.jar" 
-			 basedir="bin"
+			 basedir="build"
 			 manifest="src/org/openstreetmap/josm/plugins/taggingpresettester/MANIFEST.MF">
 			<fileset dir="."><include name="images/*"/></fileset>
 		</jar>
@@ -11,6 +16,7 @@
 
 	<target name="clean">
 		<delete dir="dist"/>
+		<delete dir="build"/>
 	</target>
 
 </project>

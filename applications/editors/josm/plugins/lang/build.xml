@@ -12,6 +12,7 @@
 
 	<target name="install">
 		<mkdir dir="${language}/bin"/>
+		<mkdir dir="dist"/>
 		<javac srcdir="${language}/src" classpath="${josm}/dist/josm-custom.jar" destdir="${language}/bin" />
 
 		<exec executable="msgmerge">
@@ -24,7 +25,7 @@
 
 		<copy file="i18n.properties" todir="${language}/bin/org/openstreetmap/josm" />
 
-		<jar destfile="${user.home}/.josm/plugins/lang-${language}.jar" basedir="${language}/bin">
+		<jar destfile="dist/lang-${language}.jar" basedir="${language}/bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.TranslationLoader_${language}" />
 				<attribute name="Plugin-Description" value="Translation to locale ${language}" />

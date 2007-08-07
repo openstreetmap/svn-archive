@@ -4,19 +4,18 @@
 # 2007-07-09: Initial public release (v0.2) by Dshpak
 # 2007-07-10: v0.3: Added support for OSM input files. Also reduced start_radius_big, and fixed a division-by-zero error in the degenerate case of point_line_distance().
 # 2007-08-04: Added experimental non-recursive Douglas-Peucker algorithm (--dp-nr). Added --startdir option.
+# 2007-08-06: v0.4: Bounding box support (--left, --right, --top, and --bottom), as well as new --josm mode for JOSM integration. This isn't perfect yet, but it's a good start.
 
 """Lakewalker II - A tool to automatically download and trace Landsat imagery, to generate OpenStreetMap data.
 
 Requires the Python Imaging Library, available from http://www.pythonware.com/products/pil/"""
 
-version="Lakewalker II v0.3"
+version="Lakewalker II v0.4"
 
 # TODO:
 # - Accept threshold tags in OSM input files.
 # - Command line options:
 #   - direction (deosil/widdershins)
-#   - initial heading
-#   - bbox
 #   - layer to use (monochrome only?)
 #   - additional tags for the way
 #   - Landsat download retries (count and delay)
@@ -28,7 +27,14 @@ version="Lakewalker II v0.3"
 # - Better "got stuck" detection (detect mini loops)
 # - Offset nodes outwards by a half-pixel or so, to prevent duplicate segments
 # - Automatic threshold detection
-# - Non-recursive DP simplification
+# - (Correct/tested) non-recursive DP simplification
+#
+#
+# For JOSM integration:
+# - Add a --tmpdir option that controls the location of the Landsat
+#   tiles, the results text file, and the lake.osm file (unless it's
+#   got an absolute path
+# - Add a --nocache option that keeps WMS tiles in memory but not on disk.
 
 import math
 import os
@@ -50,6 +56,32 @@ dirabbrevs = ["e", "ne", "n", "nw", "w", "sw", "s", "se"]
 class FatalError(Exception):
     pass
 
+def message(s):
+    if options.josm_mode:
+        print "s %s" % s
+    else:
+        print s
+        
+def error(s):
+    if options.josm_mode:
+        print "e %s" % s
+    else:
+        print s
+        
+class BBox:
+    def __init__(self, top = 90, left = -180, bottom = -90, right = 180):
+        self.left = left
+        self.right = right
+        self.top = top
+        self.bottom = bottom
+    def contains(self, loc):
+        (lat, lon) = loc
+        if lat > self.top or lat < self.bottom:
+            return False
+        if (self.right - self.left) % 360 == 0:
+            return True
+        return (lon - self.left) % 360 <= (self.right - self.left) % 360
+
 def download_landsat(c1, c2, width, height, fname):
     layer = "global_mosaic_base"
     style = "IR1"
@@ -57,7 +89,7 @@ def download_landsat(c1, c2, width, height, fname):
     (min_lat, min_lon) = c1
     (max_lat, max_lon) = c2
     
-    print "Downloading Landsat tile for (%.6f,%.6f)-(%.6f,%.6f)." % (min_lat, min_lon, max_lat, max_lon)
+    message("Downloading Landsat tile for (%.6f,%.6f)-(%.6f,%.6f)." % (min_lat, min_lon, max_lat, max_lon))
     url = "http://onearth.jpl.nasa.gov/wms.cgi?request=GetMap&layers=%s&styles=%s&srs=EPSG:4326&format=image/png&bbox=%0.6f,%0.6f,%0.6f,%0.6f&width=%d&height=%d" % (layer, style, min_lon, min_lat, max_lon, max_lat, width, height)
     #print url
     try:
@@ -101,20 +133,20 @@ class WMSManager:
                 try:
                     im = Image.open(fname)
                     self.images[fname] = im
-                    print "Using imagery in %s for %s." % (fname, xy_to_geo(xy))
+                    message("Using imagery in %s for %s." % (fname, xy_to_geo(xy)))
                 except IOError:
-                    print "Download was corrupt...Deleting %s..." % fname
+                    error("Download was corrupt...Deleting %s..." % fname)
                     os.unlink(fname)
                     im = None
 
                 if im is None:
-                    print "Sleeping and retrying download..."
+                    message("Sleeping and retrying download...")
                     time.sleep(4)
                     fail_count = fail_count + 1
 
         if im is None:
-            if os.path.exists(fname):
-                print open(fname).readlines()
+            #if os.path.exists(fname):
+            #    print open(fname).readlines()
             raise FatalError("Couldn't get image file %s." % fname)
 
         #return (im, top_left_xy)
@@ -127,15 +159,22 @@ class WMSManager:
         #print "%s maps to %s" % (xy, tile_xy)
         return tile.getpixel(tile_xy)
 
-def trace_lake(loc, threshold, start_dir):
+def trace_lake(loc, threshold, start_dir, bbox):
     wms = WMSManager()
     xy = geo_to_xy(loc)
     nodelist = []
 
-    print "Starting coordinate: %.4f, %.4f" % loc
-    print "Starting position: %d, %d" % xy
-    
+    message("Starting coordinate: %.4f, %.4f" % loc)
+    message("Starting position: %d, %d" % xy)
+
+    if not bbox.contains(loc):
+        raise FatalError("Error: Starting location is outside bounding box!")
+
     while True:
+        loc = xy_to_geo(xy)
+        if not bbox.contains(loc):
+            break
+        
         v = wms.get_pixel(xy)
         if v > threshold:
             break
@@ -144,7 +183,7 @@ def trace_lake(loc, threshold, start_dir):
 
     start_xy = xy
     start_loc = xy_to_geo(xy)
-    print "Found shore at lat %.4f lon %.4f" % start_loc
+    message("Found shore at lat %.4f lon %.4f" % start_loc)
 
     #dirs = ((1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1))
     last_dir = start_dir
@@ -153,25 +192,30 @@ def trace_lake(loc, threshold, start_dir):
     
     for i in xrange(options.maxnodes):
         if i % 250 == 0:
-            print i
+            if i > 0:
+                message("%s nodes so far..." % i)
 
         for d in xrange(1, len(dirs)):
             new_dir = dirs[(last_dir + d + 4) % 8]
             test_xy = (xy[0] + new_dir[0], xy[1] + new_dir[1])
+            test_loc = xy_to_geo(test_xy)
+            if not bbox.contains(test_loc):
+                break
+            
             v = wms.get_pixel(test_xy)
             #print "%s: %s: %s" % (new_dir, test_xy, v)
             if v > threshold:
                 break
 
         if d == 8:
-            print "Got stuck."
+            error("Got stuck.")
             break
 
         #print "Moving to %s, direction %s (was %s)" % (test_xy, new_dir, dirs[last_dir])
         last_dir = (last_dir + d + 4) % 8
         xy = test_xy
 
-        if xy == start_loc:
+        if xy == start_xy:
             break
 
         loc = xy_to_geo(xy)
@@ -268,18 +312,18 @@ def douglas_peucker_nonrecursive(nodes, epsilon):
                 result_stack.append(first + second[1:])
                 #print "Added %s and %s; result is %s" % (first, second, result_stack[-1])
             else:
-                print "ERROR: Cannot connect nodestrings!"
+                error("ERROR: Cannot connect nodestrings!")
                 #print first
                 #print second
                 return
         else:
-            print "ERROR: Can't understand command \"%s\"" % (cmd,)
+            error("ERROR: Can't understand command \"%s\"" % (cmd,))
             return
 
     if len(result_stack) == 1:
         return [nodes[x] for x in result_stack[0]]
     else:
-        print "ERROR: Command stack is empty but result stack has %d nodes!" % len(result_stack)
+        error("ERROR: Command stack is empty but result stack has %d nodes!" % len(result_stack))
         return
 
     farthest_node = None
@@ -302,6 +346,21 @@ def douglas_peucker_nonrecursive(nodes, epsilon):
         return [nodes[0], nodes[-1]]
 
     return nodes
+
+def output_to_josm(lakelist):
+    # Description of JOSM output format:
+    # m text - Status message text, to be displayed in a display window
+    # e text - Error message text
+    # s nnn - Start full node list, nnn tracings following
+    # t nnn - Start tracing node list, nnn nodes following (i.e. there will be one of these for each lake where multiple start points specified)
+    # n lat lon - A node
+    # x - End of data
+    print "s %s" % len(lakelist)
+    for nodelist in lakelist:
+        print "t %s" % len(nodelist)
+        for node in nodelist:
+            print "n %.7f %.7f" % (node[0], node[1])
+    print "x"
 
 def write_osm(f, lakelist, waysize):
     f.write('<osm version="0.4">')
@@ -345,7 +404,7 @@ def write_osm(f, lakelist, waysize):
         way_count = way_count + len(ways)
     
     f.write('</osm>')
-    print "Generated %d %s." % (way_count, ["way", "ways"][way_count > 0])
+    message("Generated %d %s." % (way_count, ["way", "ways"][way_count > 0]))
 
 def get_locs(infile):
     nodes = []
@@ -381,6 +440,11 @@ def main():
     parser.add_option("--vr", action="store_true", dest="use_vr", default=False, help="Use vertex reduction before applying line simplification (off by default).")
     parser.add_option("--vr-epsilon", type="float", default=0.0005, metavar="RADIUS", help="Radius used for vertex reduction (measured in degrees). Defaults to 0.0005.")
     parser.add_option("--water", action="store_const", const="water", dest="natural_type", default="coastline", help="Tag ways as natural=water instead of natural=coastline")
+    parser.add_option("--left", type="float", metavar="LONGITUDE", default=-180, help="Left (west) longitude for bounding box")
+    parser.add_option("--right", type="float", metavar="LONGITUDE", default=180, help="Right (east) longitude for bounding box")
+    parser.add_option("--top", type="float", metavar="LATITUDE", default=90, help="Top (north) latitude for bounding box")
+    parser.add_option("--bottom", type="float", metavar="LATITUDE", default=-90, help="Bottom (south) latitude for bounding box")
+    parser.add_option("--josm", action="store_true", dest="josm_mode", default=False, help="Operate in JOSM plugin mode")
 
     global options # Ugly, I know...
     (options, args) = parser.parse_args()
@@ -392,20 +456,21 @@ def main():
     (start_lat, start_lon, infile) = (options.lat, options.lon, options.infile)
 
     if (start_lat is None or start_lon is None) and infile is None:
-        parser.print_help()
-        print
-        print "Error: you must specify a starting latitude and longitude."
+        if not options.josm_mode:
+            parser.print_help()
+            print
+        error("Error: you must specify a starting latitude and longitude.")
         return
 
     if infile is not None:
         if start_lat is not None or start_lon is not None:
-            print "Error: you cannot use both --infile and --lat or --lon."
+            error("Error: you cannot use both --infile and --lat or --lon.")
             return
         try:
             locs = get_locs(infile)
             #print locs
         except FatalError, e:
-            print "%s" % e
+            error("%s" % e)
             return
     else:
         locs = [((start_lat, start_lon), options.threshold)]
@@ -416,37 +481,47 @@ def main():
     elif dirname in dirabbrevs:
         startdir = dirabbrevs.index(dirname)
     else:
-        print "Error: Can't understand starting direction \"%s\". Vaild options are %s." % (dirname, ", ".join(dirnames + dirabbrevs))
+        error("Error: Can't understand starting direction \"%s\". Vaild options are %s." % (dirname, ", ".join(dirnames + dirabbrevs)))
         return
 
-    print "Starting direction is %s." % dirnames[startdir]
+    message("Starting direction is %s." % dirnames[startdir])
+
+    bbox = BBox(options.top, options.left, options.bottom, options.right)
 
     try:
         lakes = []
         for (loc, threshold) in locs:
-            nodes = trace_lake(loc, threshold, startdir)
+            nodes = trace_lake(loc, threshold, startdir, bbox)
 
-            print "%d nodes generated." % len(nodes)
+            message("%d nodes generated." % len(nodes))
 
             if len(nodes) > 0:
                 if options.use_vr:
                     nodes = vertex_reduce(nodes, options.vr_epsilon)
-                    print "After vertex reduction, %d nodes remain." % len(nodes)
+                    message("After vertex reduction, %d nodes remain." % len(nodes))
 
                 if options.use_dp:
-                    if options.dp_nr:
-                        nodes = douglas_peucker_nonrecursive(nodes, options.dp_epsilon)
-                        #print "Final result: %s" % (nodes,)
-                    else:
-                        nodes = douglas_peucker(nodes, options.dp_epsilon)
-                    print "After Douglas-Peucker approximation, %d nodes remain." % len(nodes)
+                    try:
+                        if options.dp_nr:
+                            nodes = douglas_peucker_nonrecursive(nodes, options.dp_epsilon)
+                            #print "Final result: %s" % (nodes,)
+                        else:
+                            nodes = douglas_peucker(nodes, options.dp_epsilon)
+                        message("After Douglas-Peucker approximation, %d nodes remain." % len(nodes))
+                    except FatalError, e:
+                        raise e
+                    except:
+                        raise FatalError("Line simplification failed -- there are probably too many nodes.")
 
                 lakes.append(nodes)
 
-        print "Writing to %s" % options.outfile
-        f = open(options.outfile, "w")
-        write_osm(f, lakes, options.waylength)
-        f.close()
+        if options.josm_mode:
+            output_to_josm(lakes)
+        else:
+            message("Writing to %s" % options.outfile)
+            f = open(options.outfile, "w")
+            write_osm(f, lakes, options.waylength)
+            f.close()
         
         #tiles = tilelist(nodes)
         
@@ -455,8 +530,8 @@ def main():
         
         #print tiles
     except FatalError, e:
-        print "%s" % e
-        print "Bailing out..."
+        error("%s" % e)
+        error("Bailing out...")
 
 if __name__ == "__main__":
     main()

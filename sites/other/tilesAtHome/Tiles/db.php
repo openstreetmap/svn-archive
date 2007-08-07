@@ -13,7 +13,7 @@
   $URL = $_SERVER["REQUEST_URI"];
   
   // Look for tile x,y,z (TODO: layer)
-  if(!preg_match("/(\w+)(\.php)?\/([-\d+])\/([-\d]+)\/([-\d]+)\.png(_\w+)?/", $URL, $Matches)){
+  if(!preg_match("/(\w+)(\.php)?\/(-?\d+)\/(-?\d+)\/(-?\d+)\.png(_\w+)?/", $URL, $Matches)){
     BlankTile("error");
   }
   

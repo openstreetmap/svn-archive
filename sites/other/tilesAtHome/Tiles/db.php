@@ -13,14 +13,14 @@
   $URL = $_SERVER["REQUEST_URI"];
   
   // Look for tile x,y,z (TODO: layer)
-  if(!preg_match("/(\w+)\.php\/(\d+)\/(\d+)\/(\d+)\.png(_\w+)?/", $URL, $Matches)){
+  if(!preg_match("/(\w+)(\.php)?\/(\d+)\/(\d+)\/(\d+)\.png(_\w+)?/", $URL, $Matches)){
     BlankTile("error");
   }
   
   $Layer = $Matches[1];
-  $Z = $Matches[2];
-  $X = $Matches[3];
-  $Y = $Matches[4];
+  $Z = $Matches[3];
+  $X = $Matches[4];
+  $Y = $Matches[5];
   
   // Check x,y,z is valid
   if(!TileValid($X,$Y,$Z)){

@@ -4,9 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.validator.util.AgregatePrimitivesVisitor;
 
@@ -55,8 +57,6 @@ public class ValidateAction extends JosmAction
         if( plugin.validateAction == null || Main.map == null || !Main.map.isVisible() )
             return;
         
-		plugin.errors = new ArrayList<TestError>();
-		
 		Collection<Test> tests = OSMValidatorPlugin.getTests(true);
 		if( tests.isEmpty() )
 			return;
@@ -85,20 +85,19 @@ public class ValidateAction extends JosmAction
 				selection = lastSelection;
 		}
 
+		List<TestError> errors = new ArrayList<TestError>();
 		for(Test test : tests) 
         {
 			test.setPartialSelection(lastSelection != null);
 		    test.startTest();
 		    test.visit(selection);
 			test.endTest();
-			plugin.errors.addAll( test.getErrors() );
+			errors.addAll( test.getErrors() );
 		}
 		tests = null;
 		
-		plugin.validationDialog.tree.setErrors(plugin.errors);
+		plugin.validationDialog.tree.setErrors(errors);
         plugin.validationDialog.setVisible(true);
-        Main.map.repaint();
-        Main.ds.fireSelectionChanged(Main.ds.getSelected());
-        
+        DataSet.fireSelectionChanged(Main.ds.getSelected());
 	}
 }

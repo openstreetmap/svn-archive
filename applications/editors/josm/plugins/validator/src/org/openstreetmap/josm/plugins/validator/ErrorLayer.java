@@ -5,8 +5,11 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.util.Enumeration;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.openstreetmap.josm.Main;
@@ -41,7 +44,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener
 	 * Return a static icon.
 	 */
 	@Override public Icon getIcon() {
-		return ImageProvider.get("preferences", "validator");
+		return ImageProvider.get("layer", "validator");
 	}
 
     /**
@@ -81,7 +84,8 @@ public class ErrorLayer extends Layer implements LayerChangeListener
     public String getToolTipText() 
     {
         Bag<Severity, TestError> errorTree = new Bag<Severity, TestError>();
-        for(TestError e : OSMValidatorPlugin.getPlugin().errors)
+        List<TestError> errors = OSMValidatorPlugin.getPlugin().validationDialog.tree.getErrors();
+        for(TestError e : errors)
         {
             errorTree.add(e.getSeverity(), e);
         }

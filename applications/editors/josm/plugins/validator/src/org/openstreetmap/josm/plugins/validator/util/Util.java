@@ -3,17 +3,18 @@ package org.openstreetmap.josm.plugins.validator.util;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.swing.JButton;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.Plugin;
-import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.PluginProxy;
+import org.openstreetmap.josm.data.osm.Segment;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.*;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -230,4 +231,98 @@ public class Util
 
         return new File(localPath);
     }
+    
+    /**
+     * Returns the start and end cells of a way.
+     * @param w The way
+     * @param cellWays The map with all cells
+     * @return A list with all the cells the way starts or ends
+     */
+    public static List<List<Way>> getWaysInCell(Way w, Map<Point2D,List<Way>> cellWays)
+    {
+        int numSegments = w.segments.size();
+        if( numSegments == 0)
+            return Collections.emptyList();
+
+        Segment start = w.segments.get(0);
+        Segment end = start;
+        if( numSegments > 1 )
+        {
+            end = w.segments.get(numSegments - 1);
+        }
+        
+        if( start.incomplete || end.incomplete )
+            return Collections.emptyList();
+        
+        List<List<Way>> cells = new ArrayList<List<Way>>(2);
+        Set<Point2D> cellNodes = new HashSet<Point2D>();
+        Point2D cell;
+
+        // First, round coordinates
+        long x0 = Math.round(start.from.eastNorth.east()  * 100000);
+        long y0 = Math.round(start.from.eastNorth.north() * 100000);
+        long x1 = Math.round(end.to.eastNorth.east()      * 100000);
+        long y1 = Math.round(end.to.eastNorth.north()     * 100000);
+
+        // Start of the way
+        cell = new Point2D.Double(x0, y0);
+        cellNodes.add(cell);
+        List<Way> ways = cellWays.get( cell );
+        if( ways == null )
+        {
+            ways = new ArrayList<Way>();
+            cellWays.put(cell, ways);
+        }
+        cells.add(ways);
+        
+        // End of the way
+        cell = new Point2D.Double(x1, y1);
+        if( !cellNodes.contains(cell) )
+        {
+            cellNodes.add(cell);
+            ways = cellWays.get( cell );
+            if( ways == null )
+            {
+                ways = new ArrayList<Way>();
+                cellWays.put(cell, ways);
+            }
+            cells.add(ways);
+        }
+
+        // Then floor coordinates, in case the way is in the border of the cell.
+        x0 = (long)Math.floor(start.from.eastNorth.east()  * 100000);
+        y0 = (long)Math.floor(start.from.eastNorth.north() * 100000);
+        x1 = (long)Math.floor(end.to.eastNorth.east()      * 100000);
+        y1 = (long)Math.floor(end.to.eastNorth.north()     * 100000);
+
+        // Start of the way
+        cell = new Point2D.Double(x0, y0);
+        if( !cellNodes.contains(cell) )
+        {
+            cellNodes.add(cell);
+            ways = cellWays.get( cell );
+            if( ways == null )
+            {
+                ways = new ArrayList<Way>();
+                cellWays.put(cell, ways);
+            }
+            cells.add(ways);
+        }
+        
+        // End of the way
+        cell = new Point2D.Double(x1, y1);
+        if( !cellNodes.contains(cell) )
+        {
+            cellNodes.add(cell);
+            ways = cellWays.get( cell );
+            if( ways == null )
+            {
+                ways = new ArrayList<Way>();
+                cellWays.put(cell, ways);
+            }
+            cells.add(ways);
+        }
+
+        return cells;
+    }    
 }

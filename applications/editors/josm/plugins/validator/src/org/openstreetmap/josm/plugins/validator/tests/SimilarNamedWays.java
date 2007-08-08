@@ -5,9 +5,13 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.geom.Point2D;
 import java.util.*;
 
-import org.openstreetmap.josm.data.osm.*;
-import org.openstreetmap.josm.plugins.validator.*;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.plugins.validator.Severity;
+import org.openstreetmap.josm.plugins.validator.Test;
+import org.openstreetmap.josm.plugins.validator.TestError;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
+import org.openstreetmap.josm.plugins.validator.util.Util;
 /**
  * Checks for similar named ways, symptom of a possible typo. It uses the
  * Levenshtein distance to check for similarity
@@ -54,8 +58,8 @@ public class SimilarNamedWays extends Test
         if( name == null || name.length() < 6 )
             return;
         
-        List<List<Way>> cellWays = getWaysInCell(w);
-        for( List<Way> ways : cellWays)
+        List<List<Way>> theCellWays = Util.getWaysInCell(w, cellWays);
+        for( List<Way> ways : theCellWays)
         {
             for( Way w2 : ways)
             {
@@ -63,7 +67,7 @@ public class SimilarNamedWays extends Test
                 	continue;
                 
                 String name2 = w2.get("name");
-                if( name2.length() < 6 )
+                if( name2 == null || name2.length() < 6 )
                     continue;
                 
                 int levenshteinDistance = getLevenshteinDistance(name, name2);
@@ -80,101 +84,6 @@ public class SimilarNamedWays extends Test
         }
 	}
     
-
-    /**
-     * Returns the start and end cells of a way.
-     * @param w The way
-     * @return A list with all the cells the way starts or ends
-     */
-    public List<List<Way>> getWaysInCell(Way w)
-    {
-        int numSegments = w.segments.size();
-        if( numSegments == 0)
-            return Collections.emptyList();
-
-        Segment start = w.segments.get(0);
-        Segment end = start;
-        if( numSegments > 1 )
-        {
-            end = w.segments.get(numSegments - 1);
-        }
-        
-        if( start.incomplete || end.incomplete )
-            return Collections.emptyList();
-        
-        List<List<Way>> cells = new ArrayList<List<Way>>(2);
-        Set<Point2D> cellNodes = new HashSet<Point2D>();
-        Point2D cell;
-
-        // First, round coordinates
-        long x0 = Math.round(start.from.eastNorth.east()  * 100000);
-        long y0 = Math.round(start.from.eastNorth.north() * 100000);
-        long x1 = Math.round(end.to.eastNorth.east()      * 100000);
-        long y1 = Math.round(end.to.eastNorth.north()     * 100000);
-
-        // Start of the way
-        cell = new Point2D.Double(x0, y0);
-        cellNodes.add(cell);
-        List<Way> ways = cellWays.get( cell );
-        if( ways == null )
-        {
-            ways = new ArrayList<Way>();
-            cellWays.put(cell, ways);
-        }
-        cells.add(ways);
-        
-        // End of the way
-        cell = new Point2D.Double(x1, y1);
-        if( !cellNodes.contains(cell) )
-        {
-            cellNodes.add(cell);
-            ways = cellWays.get( cell );
-            if( ways == null )
-            {
-                ways = new ArrayList<Way>();
-                cellWays.put(cell, ways);
-            }
-            cells.add(ways);
-        }
-
-        // Then floor coordinates, in case the way is in the border of the cell.
-        x0 = (long)Math.floor(start.from.eastNorth.east()  * 100000);
-        y0 = (long)Math.floor(start.from.eastNorth.north() * 100000);
-        x1 = (long)Math.floor(end.to.eastNorth.east()      * 100000);
-        y1 = (long)Math.floor(end.to.eastNorth.north()     * 100000);
-
-        // Start of the way
-        cell = new Point2D.Double(x0, y0);
-        if( !cellNodes.contains(cell) )
-        {
-            cellNodes.add(cell);
-            ways = cellWays.get( cell );
-            if( ways == null )
-            {
-                ways = new ArrayList<Way>();
-                cellWays.put(cell, ways);
-            }
-            cells.add(ways);
-        }
-        
-        // End of the way
-        cell = new Point2D.Double(x1, y1);
-        if( !cellNodes.contains(cell) )
-        {
-            cellNodes.add(cell);
-            ways = cellWays.get( cell );
-            if( ways == null )
-            {
-                ways = new ArrayList<Way>();
-                cellWays.put(cell, ways);
-            }
-            cells.add(ways);
-        }
-
-        return cells;
-    }
-    
-
     /**
      * Compute Levenshtein distance
      * 
@@ -237,6 +146,10 @@ public class SimilarNamedWays extends Test
 
     /**
      * Get minimum of three values
+     * @param a First value
+     * @param b Second value
+     * @param c Third value
+     * @return The minimum of the tre values
      */
     private static int Minimum(int a, int b, int c)
     {

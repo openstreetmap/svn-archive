@@ -7,13 +7,12 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.PluginProxy;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -80,25 +79,11 @@ public class Util
 	 */
 	public static Version getVersion()
     {
-    	String revision;
-    	try 
-    	{
-			revision = loadFile(Util.class.getResource("/resources/REVISION"));
-		} 
-    	catch (Exception e) 
-    	{
-			return null;
-		}
+        PluginInformation info = PluginInformation.getLoaded("validator");
+        if( info == null )
+            return null;
 
-		Pattern versionPattern = Pattern.compile(".*?Revision: ([0-9]*).*", Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
-		Matcher match = versionPattern.matcher(revision);
-		String version = match.matches() ? match.group(1) : "UNKNOWN";
-
-		Pattern timePattern = Pattern.compile(".*?Last Changed Date: ([^\n]*).*", Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
-		match = timePattern.matcher(revision);
-		String time = match.matches() ? match.group(1) : "UNKNOWN";
-		
-		return new Version(version, time);
+		return new Version(info.version, info.attr.get("Plugin-Date"));
     }
 
     /**

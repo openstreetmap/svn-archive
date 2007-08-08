@@ -16,23 +16,23 @@
 	</target>
 
 	<target name="build" depends="clean, compile">
-		<copy todir="build/resources">
-			<fileset dir="resources"/>
-		</copy>
 		<copy todir="build/images">
 			<fileset dir="images"/>
 		</copy>
-		<exec append="false" output="build/resources/REVISION" executable="svn" failifexecutionfails="false">
+		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
 			<env key="LANG" value="C"/>
 			<arg value="info"/>
+			<arg value="--xml"/>
 			<arg value="."/>
 		</exec>
-		<property file="build/resources/REVISION" />
+		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+		<delete file="REVISION"/>
 		<jar destfile="validator.jar" basedir="build">
 			<manifest>
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.validator.OSMValidatorPlugin"/>
 				<attribute name="Plugin-Description" value="A OSM data validator"/>
-				<attribute name="Plugin-Version" value="${Revision}"/>
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
 				<attribute name="Author" value="Francisco R. Santos &lt;frsantos@gmail.com>"/>
 			</manifest>
 		</jar>

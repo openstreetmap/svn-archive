@@ -182,7 +182,6 @@ public class SpellCheck extends Test
 	/**
 	 * Reads the presets data.
 	 * 
-	 * @param plugin The validator plugin
 	 * @throws Exception
 	 */
 	public static void initializePresets() throws Exception

@@ -3,8 +3,7 @@ package org.openstreetmap.josm.plugins.ywms;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -51,7 +50,7 @@ public class ImageLoader
 	public static final String GECKO_DEBUG_LINE = "GECKO: PAINT FORCED AFTER ONLOAD:";
 
 	/** THe yahoo URL request */
-	private URL yahooUrl;
+	private URI yahooUrl;
 	/** Original bounding box */
 	double[] orig_bbox = null;
 	/** Original width */
@@ -80,10 +79,9 @@ public class ImageLoader
 	{
 		System.out.println("YWMS::Requested WMS URL: " + wmsUrl);
 		try {
-			URL request = new URL("file:///page" + wmsUrl);
+			URI request = new URI("file:///page" + wmsUrl);
 			String query = request.getQuery().toLowerCase();
-			yahooUrl = new File(Util.getPluginDir(), "ymap.html").toURI().toURL();
-			yahooUrl = new URL( yahooUrl.toExternalForm() + "?" + query);
+			yahooUrl = new URI( "file", null, Util.getPluginDir() + "ymap.html", query, null);
 			
 			// Parse query to find original bounding box and dimensions
         	StringTokenizer st = new StringTokenizer(query, "&");
@@ -105,7 +103,7 @@ public class ImageLoader
         	
         	load();
 		} 
-		catch (MalformedURLException e) {
+		catch (URISyntaxException e) {
 			throw new ImageLoaderException(e);
 		}
 	}
@@ -153,10 +151,10 @@ public class ImageLoader
 	            	String file = st.nextToken();
 	            	firefoxFiles.add(file);
 	            	
-	            	URL browserUrl;
-	            	try {
-	            		browserUrl = new URL(url);	
-		            	if( browserUrl.sameFile(yahooUrl))
+	            	try 
+	            	{
+	            		URI browserUri = new URI(url);	
+		            	if( yahooUrl.getPath().equals(browserUri.getPath()))
 		            	{
 			            	String status = st.nextToken();
 			            	if( !"(OK)".equals(status) )
@@ -165,9 +163,7 @@ public class ImageLoader
 			            	imageFilePpm = new File(file);
 			            	break;
 		            	}
-					} 
-	            	catch (MalformedURLException mue) 
-	            	{
+					} catch (URISyntaxException e) {
 						// Probably a mozilla "chrome://" URL. Do nothing
 					}
 	            }

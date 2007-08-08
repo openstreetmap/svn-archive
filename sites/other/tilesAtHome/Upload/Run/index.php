@@ -201,9 +201,6 @@ function HandleDir($Dir, $UserID, $VersionID){
   return($Count);
 }
 
-function GetKey($X,$Y,$Z,$Layer){
-  return(sprintf("%d_%d_%d_%d", $Layer,$X,$Y,$Z));
-}
 #-----------------------------------------------------------------------------------
 # Save metadata for each tile in the upload
 #-----------------------------------------------------------------------------------
@@ -219,10 +216,8 @@ function SaveMetadata($TileList, $UserID, $VersionID){
     // Use this line if you need access to separate fields
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $SqlSnippet);
     
-    $Key = GetKey($X,$Y,$Z,$Layer);
-
-    $Fields = "x, y, z, type, size, date, user, version, tileset, key";
-    $Values = sprintf("%s, now(), %d, %d, %d, '%s'", $SqlSnippet, $UserID, $VersionID, 0, $Key);
+    $Fields = "x, y, z, type, size, date, user, version, tileset";
+    $Values = sprintf("%s, now(), %d, %d, %d, '%s'", $SqlSnippet, $UserID, $VersionID, 0);
     $UpdateValues = sprintf ("size = VALUES(size), date = VALUES(date), user = VALUES(user), version = VALUES(version), tileset = VALUES(tileset)");
 
     $SQL = sprintf("INSERT INTO `tiles_meta` (%s) values (%s) ON DUPLICATE KEY UPDATE %s;", $Fields, $Values, $UpdateValues);

@@ -52,7 +52,7 @@ public class YWMSPreferenceSetting implements PreferenceSetting
 		Version ver = Util.getVersion();
 		String description = tr("A WMS server for Yahoo imagery based on Firefox.");
 		if( ver != null )
-			description += "<br><br>" + tr("Version: {0}<br>Last change at {1}", ver.revision, ver.time);
+			description += "<br><br>" + tr("Version: {0}<br>Last change at {1}", ver.revision, ver.time) + "<br><br>";
     	JPanel ywms = gui.createPreferenceTab("yahoo.gif", I18n.tr("Yahoo! WMS server"), description + I18n.tr("Settings for the Yahoo! imagery server."));
     	ywms.add(new JLabel(tr("YWMS options")), GBC.eol().insets(0,5,0,0));
 

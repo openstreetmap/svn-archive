@@ -2,10 +2,16 @@ package org.openstreetmap.josm.plugins.validator.tests;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
+import org.openstreetmap.josm.command.Command;
+import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.plugins.validator.*;
+import org.openstreetmap.josm.plugins.validator.Severity;
+import org.openstreetmap.josm.plugins.validator.Test;
+import org.openstreetmap.josm.plugins.validator.TestError;
 /**
  * Checks for untagged ways
  * 
@@ -13,6 +19,13 @@ import org.openstreetmap.josm.plugins.validator.*;
  */
 public class UntaggedWay extends Test 
 {
+	/** Empty way error */
+	protected static final int EMPTY_WAY 	= 0;
+	/** Untagged way error */
+	protected static final int UNTAGGED_WAY = 1;
+	/** Unnamed way error */
+	protected static final int UNNAMED_WAY  = 2;
+
     /** Tags allowed in a way */
     public static final String[] ALLOWED_TAGS = new String[] { "created_by", "converted_by" };
 
@@ -63,14 +76,37 @@ public class UntaggedWay extends Test
                     }
                     
                     if( !hasName)
-                        errors.add( new TestError(this, Severity.WARNING, tr("Unnamed ways"), w) );
+                        errors.add( new TestError(this, Severity.WARNING, tr("Unnamed ways"), w, UNNAMED_WAY ) );
                 }
             }
 		}
 		
         if( numTags == 0 )
         {
-            errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), w) );
+            errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), w, UNTAGGED_WAY) );
         }
+        
+        if( w.segments.size() == 0 )
+        {
+            errors.add( new TestError(this, Severity.ERROR, tr("Empty ways"), w, EMPTY_WAY) );
+        }
+        
 	}		
+	
+	@Override
+	public boolean isFixable(TestError testError)
+	{
+		if( testError.getTester() instanceof UntaggedWay )
+		{
+			return testError.getInternalCode() == EMPTY_WAY;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public Command fixError(TestError testError)
+	{
+		return new DeleteCommand(testError.getPrimitives());
+	}
 }

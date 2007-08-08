@@ -16,6 +16,7 @@ import javax.swing.tree.*;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
@@ -86,6 +87,7 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		if( action != null && action.button != null )
 			action.button.setSelected(v);
 		super.setVisible(v);
+		Main.map.repaint();
 	}
     
     
@@ -144,11 +146,11 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 		if( allComands.size() > 1 )
 			fixCommand = new SequenceCommand("Fix errors", allComands);
 		else 
-			fixCommand = (Command)allComands.get(0);
+			fixCommand = allComands.get(0);
 		
-		Main.main.editLayer().add( fixCommand );
+		Main.main.undoRedo.add( fixCommand );
 		Main.map.repaint();
-		Main.ds.fireSelectionChanged(Main.ds.getSelected());
+		DataSet.fireSelectionChanged(Main.ds.getSelected());
 		       
     	OSMValidatorPlugin.getPlugin().validateAction.doValidate(e, false);
 	}	
@@ -198,16 +200,6 @@ public class ValidatorDialog extends ToggleDialog implements ActionListener
 	    	fixErrors(e); 
 	}
 
-	/**
-	 * Refresh the error messages display
-	 * @param errors The errors to display
-	 */
-	public void refresh(List<TestError> errors)
-	{
-        tree.setErrors(errors);
-		tree.buildTree();
-	}
-	
     /**
      * Checks for fixes in selected element and, if needed, adds to the sel parameter all selected elements
      * @param sel The collection where to add all selected elements

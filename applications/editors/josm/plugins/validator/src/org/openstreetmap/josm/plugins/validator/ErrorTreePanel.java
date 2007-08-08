@@ -33,7 +33,6 @@ public class ErrorTreePanel extends JTree
      */
     public ErrorTreePanel(List<TestError> errors) 
     {
-        this.errors = errors;
         this.setModel(treeModel);
 		this.setRootVisible(false);
 		this.setShowsRootHandles(true);
@@ -41,8 +40,7 @@ public class ErrorTreePanel extends JTree
 		this.setVisibleRowCount(8);
 		this.setCellRenderer(new ErrorTreeRenderer());
 		this.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-        
-        buildTree();
+        setErrorList(errors);
     }
 
     /**
@@ -151,14 +149,37 @@ public class ErrorTreePanel extends JTree
 	}
 
     /**
-     * Set the errors of the tree
-     * @param errors
+     * Sets the errors list used by a data layer
+     * @param errors The error list that is used by a data layer
+     */
+    public void setErrorList(List<TestError> errors)
+    {
+    	this.errors = errors;
+        if( isVisible() )
+        	buildTree();
+    }
+
+    /**
+     * Clears the current error list and adds thiese errors to it
+     * @param errors The validation errors
      */
     public void setErrors(List<TestError> errors)
     {
-        this.errors = errors;
+    	this.errors.clear();
+    	this.errors.addAll(errors);
+        if( isVisible() )
+        	buildTree();
     }
-    
+
+    /**
+     * Returns the errors of the tree
+     * @return  the errors of the tree
+     */
+    public List<TestError> getErrors()
+    {
+        return errors != null ? errors : Collections.<TestError>emptyList();
+    }
+
     /**
      * Expands all tree
      */

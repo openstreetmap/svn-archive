@@ -13,6 +13,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.gui.MapFrame;
+import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.validator.tests.*;
@@ -24,7 +27,7 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
  * 
  * @author Francisco R. Santos <frsantos@gmail.com>
  */
-public class OSMValidatorPlugin extends Plugin 
+public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 {
     /** The validate action */
     ValidateAction validateAction = new ValidateAction();
@@ -32,9 +35,9 @@ public class OSMValidatorPlugin extends Plugin
     /** The validation dialog */
     ValidatorDialog validationDialog;
     
-    /** The list of errors */
-    List<TestError> errors = new ArrayList<TestError>(30);
-
+    /** The list of errors per layer*/
+    Map<Layer, List<TestError>> layerErrors = new HashMap<Layer, List<TestError>>();
+    
     /** 
      * All available tests 
      * TODO: is there any way to find out automagically all available tests? 
@@ -53,6 +56,7 @@ public class OSMValidatorPlugin extends Plugin
         ReusedSegment.class, 
         CrossingSegments.class,
         SimilarNamedWays.class,
+        Coastlines.class,
     };
 
 	/**
@@ -74,11 +78,13 @@ public class OSMValidatorPlugin extends Plugin
 	{
 		if (newFrame != null)
 		{
-            errors = new ArrayList<TestError>(50);
 		    validationDialog = new ValidatorDialog();
 	        newFrame.addToggleDialog(validationDialog);
             Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
+            Main.map.mapView.addLayerChangeListener(this); 
 		}
+		else
+            oldFrame.mapView.removeLayerChangeListener(this); 
         
         // Add/Remove the upload hook
         try
@@ -162,7 +168,7 @@ public class OSMValidatorPlugin extends Plugin
     /**
      * Gets the list of all available test classes
      * 
-     * @return An array of the test classes
+     * @return An array of the test classes	        validationDialog.tree.setErrorList(errors);
      */
     public static Class[] getAllAvailableTests()
     {
@@ -195,5 +201,28 @@ public class OSMValidatorPlugin extends Plugin
                 JOptionPane.showMessageDialog(null, tr("Error initializing test {0}:\n {1}", test.getClass().getSimpleName(), e));
             }
 		}
+	}
+	
+	public void activeLayerChange(Layer oldLayer, Layer newLayer) 
+	{
+		if( newLayer instanceof OsmDataLayer )
+		{
+	        List<TestError> errors = layerErrors.get(newLayer);
+	        validationDialog.tree.setErrorList(errors);
+			Main.map.repaint();	        
+		}
+	}
+
+	public void layerAdded(Layer newLayer) 
+	{
+		if( newLayer instanceof OsmDataLayer )
+		{
+			layerErrors.put(newLayer, new ArrayList<TestError>() );
+		}
+	}
+
+	public void layerRemoved(Layer oldLayer) 
+	{
+		layerErrors.remove(oldLayer);
 	}
 }

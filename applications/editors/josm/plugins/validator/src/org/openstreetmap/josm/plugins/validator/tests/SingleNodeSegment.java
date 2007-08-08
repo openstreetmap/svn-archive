@@ -78,7 +78,7 @@ public class SingleNodeSegment extends Test
         }
 		
 		if( cmds.size() == 1 ) // Segment wasn't in any way
-			return (Command)cmds.get(0);
+			return cmds.get(0);
 		
 		NameVisitor nameV = new NameVisitor();
 		s.visit(nameV);

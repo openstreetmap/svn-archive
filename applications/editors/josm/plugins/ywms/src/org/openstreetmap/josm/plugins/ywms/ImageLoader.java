@@ -81,7 +81,8 @@ public class ImageLoader
 		try {
 			URI request = new URI("file:///page" + wmsUrl);
 			String query = request.getQuery().toLowerCase();
-			yahooUrl = new URI( "file", null, Util.getPluginDir() + "ymap.html", query, null);
+			yahooUrl = new File(Util.getPluginDir(), "ymap.html").toURI();
+			yahooUrl = new URI( yahooUrl.toString() + "?" + query);
 			
 			// Parse query to find original bounding box and dimensions
         	StringTokenizer st = new StringTokenizer(query, "&");

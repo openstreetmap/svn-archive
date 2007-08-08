@@ -24,7 +24,10 @@
   
   // Check x,y,z is valid
   if(!TileValid($X,$Y,$Z)){
-    BlankTile("black");
+    header("HTTP/1.0 404 Not Found");
+    exit;
+    // we used to return a black tile, but that looked ugly, just return 404.
+    //BlankTile("black");
     }
   
   // Lookup layer, and check is valid

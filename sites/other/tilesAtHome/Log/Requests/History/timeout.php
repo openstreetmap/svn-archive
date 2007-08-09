@@ -14,11 +14,11 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  // retry active requests twice after 24h then delete
-  // expire finished requests after 48 houres
+  // retry active requests twice after 6h then delete
+  // expire finished requests after another 7 hours
   // make sure delete timeout is bigger than restart timeout if used simulatanously
-  timeout(REQUEST_ACTIVE, 24, 1, "restart");
-  timeout(REQUEST_ACTIVE, 25, 0, "delete");
+  timeout(REQUEST_ACTIVE, 6, 2, "restart");
+  timeout(REQUEST_ACTIVE, 7, 0, "delete");
   timeout(REQUEST_DONE, 48, 0, "delete");
 
   #---------------------------------------------------------------------------
@@ -42,7 +42,7 @@
 	 // then use  moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
 
          $SQL = sprintf(
-            "UPDATE `tiles_queue` set `status`=%d,  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<=%d and `status`=%d;", 
+            "UPDATE `tiles_queue` set `status`=%d,  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<%d and `status`=%d;", 
             REQUEST_NEW,
             $MaxAge,
             $MaxRetries,

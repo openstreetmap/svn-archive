@@ -209,7 +209,9 @@ function SaveMetadata($TileList, $UserID, $VersionID){
   SaveUserStats($UserID, $VersionID, count($TileList));
   
   RemoveFromQueue($TileList);
-  
+
+  # wrap all tile meta updates in a single transaction;
+  mysql_query('START TRANSACTION;');  
   # Each element in TileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($TileList as $SqlSnippet){
     
@@ -223,6 +225,8 @@ function SaveMetadata($TileList, $UserID, $VersionID){
     $SQL = sprintf("INSERT INTO `tiles_meta` (%s) values (%s) ON DUPLICATE KEY UPDATE %s;", $Fields, $Values, $UpdateValues);
     mysql_query($SQL);
   }
+  # end transaction after tiles are updated
+  mysql_query('COMMIT;');  
 }
 
 #------------------------------------------------------------------------------------

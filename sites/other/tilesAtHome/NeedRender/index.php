@@ -22,20 +22,22 @@
   }
   
   include("../connect/connect.php");
-  $SQL = sprintf(
-    "insert into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`) values (%d,%d,%d,'%s',now(),%s);", 
-    $X, 
-    $Y, 
-    REQUEST_PENDING,
-    mysql_escape_string($Src),
-    $P);
+  if (!(requestExists($X,$Y,REQUEST_PENDING) or requestExists($X,$Y,REQUEST_NEW) or requestExists($X,$Y,REQUEST_ACTIVE))){
+     $SQL = sprintf(
+       "INSERT into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`) values (%d,%d,%d,'%s',now(),%s);", 
+       $X, 
+       $Y, 
+       REQUEST_PENDING,
+       mysql_escape_string($Src),
+       $P);
   
   
-  mysql_query($SQL);
-  if(mysql_error()){
-    printf("Database error %s\n", mysql_error());
-    exit;
-    }
+     mysql_query($SQL);
+     if(mysql_error()){
+       printf("Database error %s\n", mysql_error());
+       exit;
+     }
+  }
   
   print "OK\n";
 ?>

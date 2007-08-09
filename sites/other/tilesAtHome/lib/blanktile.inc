@@ -55,7 +55,7 @@ function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
    if (!DbSuccess) return FALSE;
    $Fields = "x, y, z, layer, date, user, type";
    $Values = sprintf("%d, %d, %d, %d, now(), %d, %d", $X, $Y, $Z, $LayerID, $UserID, $Blanktype);
-   print $SQL = sprintf("REPLACE INTO `tiles_blank` (%s) values (%s);", $Fields, $Values);
+   $SQL = sprintf("REPLACE INTO `tiles_blank` (%s) values (%s);", $Fields, $Values);
    return mysql_query($SQL);
 }
 

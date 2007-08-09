@@ -20,12 +20,12 @@
 <p>The <a href="Recent/">latest 30 requests in each queue</a> are available (which used to be displayed on this page)</p>
 
 <h2>Today</h2>
-<p><img src="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tilesathome-day.png"></p>
+<p><img src="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tah_processed-day.png"></p>
 
 <h2>This week</h2>
-<p><img src="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tilesathome-week.png"></p>
+<p><img src="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tah_processed-week.png"></p>
 
-<p>Munin has a <a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tilesathome.html">page for these graphs</a>, and for <a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html">the dev server</a> in general</p>
+<p>Munin has a <a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html#T@H">page for these graphs</a>, and for <a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html">the dev server</a> in general</p>
   
 <h2>Notes</h2>
   

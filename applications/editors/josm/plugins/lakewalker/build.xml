@@ -1,0 +1,45 @@
+<project name="Lakewalker" default="jar" basedir=".">
+
+  <property name="josm" location="../../core/dist/josm-custom.jar" />
+
+  <target name="compile" depends="clean">
+    <mkdir dir="build"></mkdir>
+  	<mkdir dir="build/images"></mkdir>
+    <copy todir="build">
+    	<fileset dir="bin" casesensitive="yes">
+    	  <filename name="**/*.class"/>
+    	</fileset>
+    </copy>
+  	<copy todir="build/images">
+    	<fileset dir="images" casesensitive="yes">
+    	  <filename name="**/*.png"/>
+    	</fileset>
+  	</copy>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar destfile="Lakewalker.jar" basedir="build">
+      <manifest>
+        <attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.lakewalker.LakewalkerPlugin" />
+        <attribute name="Plugin-Description" value="Interface to Lakewalker module" />
+        <attribute name="Plugin-Version" value="0.1"/>
+        <attribute name="Author" value="Brent Easton &lt;b.easton@uws.edu.au>"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean">
+    <delete dir="build" />
+    <delete file="Lakewalker.jar" />
+  </target>
+
+  <target name="install" depends="jar">
+    <copy file="Lakewalker.jar" todir="${user.home}/Application Data/JOSM/plugins"/>
+  	<copy todir="${user.home}/Application Data/JOSM/plugins/Lakewalker">
+  		<fileset dir="Lakewalker">
+  			<filename name = "*.py"/>
+  		</fileset>
+  	</copy>
+  </target>
+
+</project>

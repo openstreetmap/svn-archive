@@ -29,7 +29,7 @@ if(0){ // Option to turn off uploads
 }
 
 
-if(1){
+if(0){
   $Load = GetLoadAvg();
   //logMsg("$Load load", 4);
   if($Load < 0){
@@ -217,7 +217,7 @@ function SaveMetadata($TileList, $UserID, $VersionID){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $SqlSnippet);
     
     $Fields = "x, y, z, type, size, date, user, version, tileset";
-    $Values = sprintf("%s, now(), %d, %d, %d, '%s'", $SqlSnippet, $UserID, $VersionID, 0);
+    $Values = sprintf("%s, now(), %d, %d, %d", $SqlSnippet, $UserID, $VersionID, 0);
     $UpdateValues = sprintf ("size = VALUES(size), date = VALUES(date), user = VALUES(user), version = VALUES(version), tileset = VALUES(tileset)");
 
     $SQL = sprintf("INSERT INTO `tiles_meta` (%s) values (%s) ON DUPLICATE KEY UPDATE %s;", $Fields, $Values, $UpdateValues);

@@ -14,17 +14,21 @@
     exit;
   }
 
-  if(0){
-    if(rand(0,3) != 0){
-      print "XX|3||||rate_limiting";
-      exit;
-    }
-  }
-
   include("../connect/connect.php");
   include("../lib/log.inc");
   include("../lib/requests.inc");
   include("../lib/versions.inc");
+
+  //Rate limiting: never hand out more than 500 active requests at a time
+  if(1){
+    $res = mysql_query('SELECT COUNT(*) FROM tiles_queue WHERE status='.REQUEST_ACTIVE.');');
+    $row=mysql_fetch_row($res);
+    if($row[0] > 500){
+      print 'XX|3||||rate_limiting ('.$row[0].'requests)';
+      exit;
+    }
+  }
+
 
   # Check whether the client version is allowed to upload
   # (if they can't, there's no point in them taking requests)

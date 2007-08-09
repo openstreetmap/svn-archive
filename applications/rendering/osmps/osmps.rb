@@ -1,6 +1,6 @@
 #! /usr/bin/ruby
 #
-# OSMPS 0.02
+# OSMPS 0.02.1
 #
 # OpenStreetMap .osm to PostScript renderer
 #
@@ -847,6 +847,20 @@ class Path < MapObject# {{{
   end
 
 # }}}
+  def split(snode)# {{{
+    if @closed
+      raise :closedcantsplit
+    end
+    if snode == @nodelist[0] or snode == @nodelist[-1]
+      raise :atendcantsplit
+    end
+    position = @nodelist.index(snode)
+    if position == nil
+      raise :nonodetosplit
+    end
+  end
+
+# }}}
   def rendercount# {{{
     2
   end
@@ -1578,6 +1592,14 @@ g.importosm(ARGV[0])
 
 # Highway 2000-2999
 
+# update a style for a road - called with:
+#   - style object to set
+#   - layer for casing
+#   - layer for core
+#   - width (of casing)
+#   - bridge (true or false)
+#   - casing colour (ps snippet "r g b")
+#   - core colour (ps snippet "r g b")
 def setroad(sty, l1, l2, width, bridge, casecol, corecol)
   brcasew = width * 1.6
   brcorew = width * 1.4
@@ -1602,76 +1624,84 @@ def setroad(sty, l1, l2, width, bridge, casecol, corecol)
   end
 end
 
+# loop to draw all highway-type ways for bridge / no bridge
 for bridge in [false, true]
-  bl = bridge ? 2000 : 0
+  # layer number, decremented as we go along
+  l = 2500
+
   s = Style.new()
   s.addtag("highway", "motorway")
-  setroad(s, 2050, 2500, 1, bridge, "0 0 0", "20 60 200")
+  setroad(s, 2050, l-=20, 1, bridge, "0 0 0", "20 60 200")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "trunk")
-  setroad(s, 2050, 2580, 1, bridge, "0 0 0", "50 150 50")
+  setroad(s, 2050, l-=20, 1, bridge, "0 0 0", "50 150 50")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "primary")
-  setroad(s, 2050, 2560, 1, bridge, "0 0 0", "255 50 50")
+  setroad(s, 2050, l-=20, 1, bridge, "0 0 0", "255 50 50")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "secondary")
-  setroad(s, 2050, 2540, 0.9, bridge, "0 0 0", "250 75 10")
+  setroad(s, 2050, l-=20, 0.9, bridge, "0 0 0", "250 75 10")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "tertiary")
-  setroad(s, 2050, 2520, 0.8, bridge, "0 0 0", "220 220 0")
+  setroad(s, 2050, l-=20, 0.8, bridge, "0 0 0", "220 220 0")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", ["unclassified", "residential"])
-  setroad(s, 2050, 2500, 0.8, bridge, "0 0 0", "240 240 240")
+  setroad(s, 2050, l-=20, 0.8, bridge, "0 0 0", "240 240 240")
+  g.addstyle(s)
+
+  s = Style.new()
+  s.addtag("highway", "pedestrian")
+  setroad(s, 2050, l-=20, 0.8, bridge, "40 40 40", "200 200 200")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "motorway_link")
-  setroad(s, 2050, 2480, 0.7, bridge, "0 0 0", "20 60 200")
+  setroad(s, 2050, l-=20, 0.7, bridge, "0 0 0", "20 60 200")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "trunk_link")
-  setroad(s, 2050, 2460, 0.7, bridge, "0 0 0", "50 150 50")
+  setroad(s, 2050, l-=20, 0.7, bridge, "0 0 0", "50 150 50")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "primary_link")
-  setroad(s, 2050, 2440, 0.7, bridge, "0 0 0", "255 50 50")
+  setroad(s, 2050, l-=20, 0.7, bridge, "0 0 0", "255 50 50")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "secondary_link")
-  setroad(s, 2050, 2420, 0.5, bridge, "0 0 0", "250 75 10")
+  setroad(s, 2050, l-=20, 0.5, bridge, "0 0 0", "250 75 10")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "service")
-  setroad(s, 2050, 2400, 0.5, bridge, "0 0 0", "250 250 250")
+  setroad(s, 2050, l-=20, 0.5, bridge, "0 0 0", "250 250 250")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "track")
-  setroad(s, 2030, 2380, 0.5, bridge, "80 30 0", "250 250 250")
-  g.addstyle(s)
-
-  s = Style.new()
-  s.addtag("highway", ["footway", "steps"])
-  setroad(s, nil, 2140, 0.2, bridge, nil, "80 30 0")
+  setroad(s, 2030, l-=20, 0.5, bridge, "80 30 0", "250 250 250")
   g.addstyle(s)
 
   s = Style.new()
   s.addtag("highway", "cycleway")
-  setroad(s, nil, 2160, 0.3, bridge, nil, "0 80 0")
+  setroad(s, nil, l-=20, 0.3, bridge, nil, "0 80 0")
+  g.addstyle(s)
+
+  s = Style.new()
+  s.addtag("highway", ["footway", "steps"])
+  setroad(s, nil, l-=20, 0.2, bridge, nil, "80 30 0")
   g.addstyle(s)
 end
 

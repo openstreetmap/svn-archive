@@ -83,8 +83,8 @@ if(1){
 // New method
 if(QueueLength() > MaxQueueLength())
   AbortWithError(503, "too much stuff in the queue already");
-  PlaceInQueue($_FILES['file'], $UserID, $VersionID);
-}
+
+PlaceInQueue($_FILES['file'], $UserID, $VersionID);
 exit;
 
 

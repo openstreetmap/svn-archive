@@ -79,16 +79,9 @@ if(1){
 }
 
 
-if(0){
-  // Old method
-  HandleUpload($_FILES['file'], $User, $UserID, $VersionID);
-}
-else
-{
-  // New method
-  if(QueueLength() > MaxQueueLength())
-    AbortWithError(503, "too much stuff in the queue already");
-
+// New method
+if(QueueLength() > MaxQueueLength())
+  AbortWithError(503, "too much stuff in the queue already");
   PlaceInQueue($_FILES['file'], $UserID, $VersionID);
 }
 exit;
@@ -114,94 +107,6 @@ function AbortWithError($Code, $Message){
   header("Content-type:text/plain");
   printf("%s\n", $Message);
   exit;
-}
-
-
-function HandleUpload($File, $User, $UserID, $VersionID){
-
-  # All error-messages etc are plain text for use by clients
-  header("Content-type:text/plain");
-  
-  # Decide on the name of a Temporary directory
-  $Dir = TempDir();
-  
-  # Check the uploaded ZIP file
-  $Size = $File['size'];
-
-  if($Size <= 0){
-    AbortWithError(400, "No file uploaded or file too large");
-  }
-
-  # Keep going if the user presses stop, to ensure temporary directories get erased
-  # see also register_shutdown_function() for another option
-  ignore_user_abort();
-    
-  # Create temporary directory
-  if(!mkdir($Dir)){
-    AbortWithError(503, "Can't create temporary directory");
-  }
-      
-  # Uncompress the uploaded tiles
-  # -j means to ignore any pathnames in the ZIP file
-  # -d $Dir specifies the directory to unzip to
-  # $Filename is the zip file
-  system(sprintf("unzip -j -d %s %s", $Dir, $File['tmp_name']));
-  
-  # Process all the tiles (return number of tiles done)
-  $Count = HandleDir($Dir, $User, $UserID, $VersionID);
-        
-  # Delete the temporary directory and everything inside
-  DelDir($Dir);
-  
-  printf("OK, %d", $Count);
-}
-
-#----------------------------------------------------------------------
-# Delete the temporary directory and everything inside
-#----------------------------------------------------------------------
-function DelDir($Dir){
-  $dp = opendir($Dir);
-  while(($file = readdir($dp)) !== false){
-    if($file != "." && $file != ".."){
-      $Filename = "$Dir/$file";
-      unlink($Filename);
-    }
-  }
-  closedir($dp);
-  rmdir($Dir);
-}
-
-#----------------------------------------------------------------------
-# Processes tiles that are currently sitting in a temp directory
-#----------------------------------------------------------------------
-function HandleDir($Dir, $User, $UserID, $VersionID){
-  $Count = 0;
-  $dp = opendir($Dir);
-  $TileList = array();
-  $BlankTileList = array();
-
-  list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer) = CheckUploadDir($Dir);
-
-  while(($file = readdir($dp)) !== false){
-    $Filename = "$Dir/$file";
-    $Count += HandleFile($Filename, $User, $VersionID, $TileList, $BlankTileList);
-  }
-  closedir($dp);
-
-  # Connect to the database
-  include("../connect/connect.php");
-
-  if($ValidTileset)
-    SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer, $UserID, $VersionID);
-  else
-    SaveMetadata($TileList, $UserID, $VersionID);
-
-  SaveBlankTiles($BlankTileList, $UserID);
-
-  # Disconnect from database
-  mysql_close();
-
-  return($Count);
 }
 
 #-----------------------------------------------------------------------------------

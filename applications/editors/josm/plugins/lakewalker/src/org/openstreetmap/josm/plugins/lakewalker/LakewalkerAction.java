@@ -31,9 +31,9 @@ import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * A plugin to add ways manipulation things
+ * Interface to Darryl Shpak's Lakewalker module
  * 
- * @author Thomas.Walraet
+ * @author Brent Easton
  */
 class LakewalkerAction extends JosmAction implements MouseListener {
 
@@ -92,7 +92,6 @@ class LakewalkerAction extends JosmAction implements MouseListener {
    target += " --right=" + botRight.lon();
    target += " --top=" + topLeft.lat();
    target += " --bottom=" + botRight.lat();
-   target += " --maxnodes=1000";
    target += " --josm";
    
    Collection<Command> commands = new LinkedList<Command>();
@@ -113,6 +112,19 @@ class LakewalkerAction extends JosmAction implements MouseListener {
       (new InputStreamReader(p.getInputStream()));
     BufferedReader err = new BufferedReader(new InputStreamReader (p.getErrorStream())) ;
     
+    /*
+     * Lakewalker will output data it stdout. Each line has a code
+     * in character 1 indicating the type of data on the line:
+     * 
+     * m text - Status message
+     * l name [size] - Access landsat image name. size is returned if it needs to be downloaded.
+     * e text - Error message
+     * s nnn - Start node data stream, nnn seperate tracings to follow
+     * t nnn - Start tracing, nnn nodes to follow
+     * x [o] - End of Tracing. o indicates do not connect last node to first
+     * n lat lon [o] - Node. o indicates it is an open node (not connected to the previous node)
+     * z - End of data stream
+     */
     while ((line = input.readLine()) != null) {
       System.out.println(line);
       char option = line.charAt(0);
@@ -161,7 +173,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
    }
    
    if (!commands.isEmpty()) {
-     Main.main.editLayer().add(new SequenceCommand(tr("Lakewalker trace"), commands));
+     Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
      Main.ds.setSelected(way);
    }
   }

@@ -113,7 +113,7 @@ public class SlippyMapLayer extends Layer implements ImageObserver {
 					}
 				});
 
-				Main.map.mapView.addLayerChangeListener(new LayerChangeListener(){
+				Main.map.mapView.addLayerChangeListener(new MapView.LayerChangeListener(){
 					public void activeLayerChange(Layer oldLayer, Layer newLayer) {}
 					public void layerAdded(Layer newLayer) {}
 					public void layerRemoved(Layer oldLayer) {

@@ -17,8 +17,18 @@ function deleteRequest($X, $Y, $Mode){
   #logSqlError();
 }
 
+#--------------------------------------------------
+# Checks whether a certain request (X,Y) exists
+# If $Mode is NULL, it checks for all unfinished requests
+#--------------------------------------------------
 function requestExists($X,$Y,$Mode){
-  $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `status`=%d;",$X,$Y,$Mode);
+  if ($Mode != NULL)
+    // Check specific state
+    $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `status`=%d;",$X,$Y,$Mode);
+  else
+    //Check for all unfinished requests
+    $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `status`!=%d;",$X,$Y,REQUEST_DONE);
+
   $Result = mysql_query($SQL);
   if(mysql_error())
     return(0);

@@ -150,7 +150,8 @@
 	}
 	else
 	{
-	  print "<p class=\"chat\">Nothing found at z-$Z, searching upwards...</p>\n";
+	  if ($Z == $_GET["z"])
+              print "<p class=\"chat\">Nothing found at z-$Z, searching upwards...</p>\n";
           SearchBlankTiles($X>>1,$Y>>1,$Z-1,$LayerID);
 	  return;
 	}

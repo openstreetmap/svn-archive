@@ -26,7 +26,9 @@
   $X = $_GET["x"];
   $Y = $_GET["y"];
   // with default layer
-  if($Layer=="")$Layer="tile";
+  if($Layer=="") $Layer="tile";
+
+  print "<a href='http://tah.openstreetmap.org/Browse/?x=$X&y=$Y&z=$Z&tileset=$Layer'><img src='http://tah.openstreetmap.org/Tiles/$Layer/$Z/$X/$Y.png' align='right'></a>";
 
   print "<p><form action=\"./info.php\" action=\"get\">\n";
   printf("x <input type=\"text\" name=\"x\" size=5 value=\"%d\">\n", $X);

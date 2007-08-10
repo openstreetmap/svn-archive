@@ -186,7 +186,7 @@ function HandleDir($Dir, $UserID, $VersionID){
   $dp = opendir($Dir);
   while(($file = readdir($dp)) !== false){
     $Filename = "$Dir/$file";
-    logMsg("Handling file $file", 6);
+    //logMsg("Handling file $file", 6);
     $Count += HandleFile($Filename, $VersionID, $TileList, $BlankTileList);
   }
   closedir($dp);

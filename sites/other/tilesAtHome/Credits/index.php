@@ -17,7 +17,13 @@
 include("../connect/connect.php");
 include("../lib/versions.inc");
 
-$SQL = "select *, unix_timestamp(`last_upload`) as unixtime from tiles_users order by tiles desc;";
+print("<p>Sort by <a href=\"./?sort=id\">user</a> or <a href=\"./\">uploads</a></p>\n");
+
+
+$SQL = sprintf(
+  "select *, unix_timestamp(`last_upload`) as unixtime from tiles_users order by %s;",
+  $_GET["sort"] == "id" ? "id" : "tiles desc");
+  
 $Result = mysql_query($SQL);
 if(!mysql_error()){
   if(mysql_num_rows($Result) > 0){
@@ -26,7 +32,7 @@ if(!mysql_error()){
     print "<table border=1 cellspacing=0 cellpadding=5>";
     
     # Header
-    $Columns = "Name, Activity, Last upload, Version, Samples";
+    $Columns = "ID, Name, Activity, Last upload, Version, Notes, Samples";
     print "<tr><th>" . str_replace(", ", "</th><th>", $Columns) . "</th></tr>\n";
     
     ##-------------------------------------------------------
@@ -34,6 +40,9 @@ if(!mysql_error()){
     ##-------------------------------------------------------
     while($Data = mysql_fetch_assoc($Result)){
       $Row = array();
+
+      # User ID
+      array_push($Row, sprintf("#%d", $Data["id"]));
       
       # Username
       array_push($Row, sprintf("<b>%s</b>",htmlentities($Data["name"])));
@@ -52,7 +61,10 @@ if(!mysql_error()){
       # Version ID
       array_push($Row, htmlentities(versionName($Data["version"])));
       
-      # Version ID
+      # Notes
+      array_push($Row, sprintf("--"));
+      
+      # Link to samples
       array_push($Row, sprintf("<a href=\"ByUser/?id=%d\">...</a>", $Data["id"]));
       
       # Convert all the data into a row of HTML table

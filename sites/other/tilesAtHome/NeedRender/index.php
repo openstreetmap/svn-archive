@@ -24,7 +24,7 @@
   include("../connect/connect.php");
   include("../lib/requests.inc");
 
-  if (!(requestExists($X,$Y,REQUEST_PENDING) or requestExists($X,$Y,REQUEST_NEW) or requestExists($X,$Y,REQUEST_ACTIVE))){
+  if (!requestExists($X,$Y,NULL)){
      $SQL = sprintf(
        "INSERT into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`) values (%d,%d,%d,'%s',now(),%s);", 
        $X, 

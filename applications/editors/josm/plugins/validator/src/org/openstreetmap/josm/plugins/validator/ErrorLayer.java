@@ -16,10 +16,10 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.RenameLayerAction;
 import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
 import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.plugins.validator.util.Bag;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -37,7 +37,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener
 	public ErrorLayer(String name) 
     {
 		super(name);
-        Main.map.mapView.addLayerChangeListener(this); 
+        Layer.listeners.add(this); 
 	}
 
 	/**

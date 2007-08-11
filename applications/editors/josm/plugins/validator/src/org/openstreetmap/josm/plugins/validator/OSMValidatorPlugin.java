@@ -13,9 +13,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.UploadAction;
 import org.openstreetmap.josm.actions.UploadAction.UploadHook;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+import org.openstreetmap.josm.gui.layer.Layer.LayerChangeListener;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.validator.tests.*;
@@ -81,10 +81,10 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		    validationDialog = new ValidatorDialog();
 	        newFrame.addToggleDialog(validationDialog);
             Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
-            Main.map.mapView.addLayerChangeListener(this); 
+            Layer.listeners.add(this); 
 		}
 		else
-            oldFrame.mapView.removeLayerChangeListener(this); 
+            Layer.listeners.remove(this); 
         
         // Add/Remove the upload hook
         try

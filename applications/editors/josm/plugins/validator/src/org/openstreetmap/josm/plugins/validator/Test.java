@@ -1,11 +1,14 @@
 package org.openstreetmap.josm.plugins.validator;
 
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.*;
 import org.openstreetmap.josm.data.osm.visitor.Visitor;
@@ -28,14 +31,17 @@ public class Test implements Visitor
 	/** Description of the test */
 	protected String description;
 	
-    /** Whether this test is enabled. Used by peferences */
-    protected boolean enabled;
+    /** Whether this test is enabled. Enabled by default */
+    protected boolean enabled = true;
+
+    /** The preferences check for validation */
+    protected JCheckBox checkEnabled;
 
     /** The preferences check for validation on upload */
     protected JCheckBox checkBeforeUpload;
     
-    /** Whether this test must check before upload. Used by peferences */
-    protected boolean testBeforeUpload;
+    /** Whether this test must check before upload. Enabled by default */
+    protected boolean testBeforeUpload = true;
 
     /** Whether this test is performing just before an upload */
     protected boolean isBeforeUpload;
@@ -133,8 +139,22 @@ public class Test implements Visitor
 	 */
 	public void addGui(@SuppressWarnings("unused") JPanel testPanel) 
 	{
+		checkEnabled = new JCheckBox(name, enabled);
+		checkEnabled.setToolTipText(description);
+        checkEnabled.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                setGuiEnabled(checkEnabled.isSelected() || checkBeforeUpload.isSelected() );
+            }
+        });
+		testPanel.add(checkEnabled, GBC.std().insets(20,0,0,0));
+		
         checkBeforeUpload = new JCheckBox();
         checkBeforeUpload.setSelected(testBeforeUpload);
+        checkBeforeUpload.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                setGuiEnabled(checkEnabled.isSelected() || checkBeforeUpload.isSelected() );
+            }
+        });
         testPanel.add(checkBeforeUpload, GBC.eop().insets(20,0,0,0));
 	}
 
@@ -144,7 +164,6 @@ public class Test implements Visitor
      */
     public void setGuiEnabled(boolean enabled)
     {
-        checkBeforeUpload.setEnabled(enabled);
     }   
 
 	/**
@@ -152,8 +171,8 @@ public class Test implements Visitor
 	 */
 	public void ok() 
 	{
-        String simpleName = getClass().getSimpleName();
-        Main.pref.put("tests." + simpleName + ".checkBeforeUpload", checkBeforeUpload.isSelected() );
+		enabled = checkEnabled.isSelected();
+		testBeforeUpload = checkBeforeUpload.isSelected();
 	}
 	
 	/**

@@ -57,7 +57,7 @@ public class ValidateAction extends JosmAction
         if( plugin.validateAction == null || Main.map == null || !Main.map.isVisible() )
             return;
         
-		Collection<Test> tests = OSMValidatorPlugin.getTests(true);
+		Collection<Test> tests = OSMValidatorPlugin.getTests(true, false);
 		if( tests.isEmpty() )
 			return;
 		

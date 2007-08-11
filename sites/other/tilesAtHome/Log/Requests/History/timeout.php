@@ -14,10 +14,11 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  // retry active requests twice after 6h then delete
-  // expire finished requests after another 7 hours
+  // retry active requests twice after 1h, then every 6h, then
+  // expire unfinished requests after another 7 hours
   // make sure delete timeout is bigger than restart timeout if used simulatanously
-  timeout(REQUEST_ACTIVE, 6, 2, "restart");
+  timeout(REQUEST_ACTIVE, 1, 2, "restart");
+  timeout(REQUEST_ACTIVE, 6, 6, "restart");
   timeout(REQUEST_ACTIVE, 7, 0, "delete");
   timeout(REQUEST_DONE, 48, 0, "delete");
 
@@ -56,7 +57,7 @@
           // TODO see above. Make deleteRequest be able to handle multiple requests
           // and use deleteRequest($Data["x"], $Data["y"], $Data["status"]);
           // LOW_PRIO and QUICK don't help with InnoDB but can't hurt either
-          $SQL = sprintf("DELETE LOW_PRIORITY QUICK from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
+          $SQL = sprintf("DELETE LOW_PRIORITY from `tiles_queue` where `date` < date_sub(now(), INTERVAL %d HOUR) and `status`=%d;", 
             $MaxAge,
             $Status);
           break;

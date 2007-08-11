@@ -31,7 +31,7 @@ public class ValidateUploadHook implements UploadHook
      */
     public boolean checkUpload(Collection<OsmPrimitive> add, Collection<OsmPrimitive> update, Collection<OsmPrimitive> delete)
     {
-        Collection<Test> tests = OSMValidatorPlugin.getTests(true);
+        Collection<Test> tests = OSMValidatorPlugin.getTests(false, true);
         if( tests.isEmpty() )
             return true;
         

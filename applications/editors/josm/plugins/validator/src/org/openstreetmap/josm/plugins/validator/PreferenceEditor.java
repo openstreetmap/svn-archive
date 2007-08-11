@@ -3,9 +3,9 @@ package org.openstreetmap.josm.plugins.validator;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 
@@ -23,6 +23,15 @@ import org.openstreetmap.josm.tools.GBC;
  */
 public class PreferenceEditor implements PreferenceSetting
 {
+	/** The preferences prefix */
+	public static final String PREFIX = "validator";
+	
+	/** The preferences key for enabled tests */
+	public static final String PREF_TESTS = PREFIX + ".tests";
+
+	/** The preferences key for enabled tests before upload*/
+	public static final String PREF_TESTS_BEFORE_UPLOAD = PREFIX + ".testsBeforeUpload";
+
 	/** The list of all tests */
 	private Collection<Test> allTests;
 
@@ -34,23 +43,11 @@ public class PreferenceEditor implements PreferenceSetting
         testPanel.add( new JLabel(), GBC.std() );
         testPanel.add( new JLabel("On upload"), GBC.eop() );
         
-		allTests = OSMValidatorPlugin.getTests(false);
-		for(final Test test: allTests) 
+		allTests = OSMValidatorPlugin.getTests(true, true);
+		for(Test test: allTests) 
 		{
-			final JCheckBox testCheck = new JCheckBox(test.name, test.enabled);
-			testCheck.setToolTipText(test.description);
-			testPanel.add(testCheck, GBC.std().insets(20,0,0,0));
-
-            testCheck.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e) {
-                    boolean selected = testCheck.isSelected();
-                    test.enabled = selected;
-                    test.setGuiEnabled(selected );
-                }
-            });
-            
             test.addGui(testPanel);
-            test.setGuiEnabled(test.enabled);
+            test.setGuiEnabled(test.enabled || test.testBeforeUpload);
 		}
 		
 		JScrollPane testPane = new JScrollPane(testPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -67,26 +64,56 @@ public class PreferenceEditor implements PreferenceSetting
 
 	public void ok() 
 	{
-		String tests = "";
+		StringBuilder tests = new StringBuilder();
+		StringBuilder testsBeforeUpload = new StringBuilder();
 		
 		for (Test test : allTests)
 		{
-			boolean enabled = test.enabled;
+			test.ok();
 			String name = test.getClass().getSimpleName();
-			tests += name + "=" + enabled + ",";
-			
-			if (enabled)
-			{
-				test.ok();
-			}
+			tests.append( ',' ).append( name ).append( '=' ).append( test.enabled );
+			testsBeforeUpload.append( ',' ).append( name ).append( '=' ).append( test.testBeforeUpload );
 		}
 		
-		if (tests.endsWith(","))
-			tests = tests.substring(0, tests.length() - 1);
+		if (tests.length() > 0 ) tests = tests.deleteCharAt(0);
+		if (testsBeforeUpload.length() > 0 ) testsBeforeUpload = testsBeforeUpload.deleteCharAt(0);
 		
 		OSMValidatorPlugin.getPlugin().initializeTests( allTests );
 		
-		Main.pref.put("tests", tests);
+		Main.pref.put( PREF_TESTS, tests.toString());
+		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());
+	}
+	
+	/**
+	 * Import old stored preferences
+	 */
+	public static void importOldPreferences()
+	{
+		if( !Main.pref.hasKey("tests") || !Pattern.matches("(\\w+=(true|false),?)*", Main.pref.get("tests")) )
+			return;
+		
+		String enabledTests = Main.pref.get("tests");
+		Main.pref.put(PREF_TESTS, enabledTests);
+		Main.pref.put("tests", null );
+		
+		StringBuilder testsBeforeUpload = new StringBuilder();
+		Map<String, String> oldPrefs = Main.pref.getAllPrefix("tests");
+		for( Map.Entry<String, String> pref : oldPrefs.entrySet() )
+		{
+			String key = pref.getKey();
+			String value = pref.getValue();
+			if( key.endsWith(".checkBeforeUpload") )
+			{
+				String testName = key.substring(6, key.length() - 18);
+				testsBeforeUpload.append( ',' ).append( testName ).append( '=' ).append( value );
+			}
+			else
+				Main.pref.put( PREFIX + key.substring(5), value );
+			Main.pref.put(key, null );
+		}
+		
+		if (testsBeforeUpload.length() > 0 ) testsBeforeUpload = testsBeforeUpload.deleteCharAt(0);
+		Main.pref.put( PREF_TESTS_BEFORE_UPLOAD, testsBeforeUpload.toString());
 	}
 
 }

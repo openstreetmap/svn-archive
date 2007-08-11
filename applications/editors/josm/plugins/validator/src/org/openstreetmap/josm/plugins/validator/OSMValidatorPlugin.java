@@ -64,7 +64,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	 */
 	public OSMValidatorPlugin()
 	{
-        initializeTests( getTests(true) );
+		PreferenceEditor.importOldPreferences();
+        initializeTests( getTests(true, true) );
 	}
 	
     @Override
@@ -123,32 +124,28 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	/**
 	 * Gets a collection with the available tests
 	 * 
-	 * @param onlyActive if true, gets only active tests
+	 * @param enabled if false, don't get enabled tests
+	 * @param enabledBeforeUpload if false, don't get tests enabled before upload
 	 * @return A collection with the available tests
 	 */
-	public static Collection<Test> getTests(boolean onlyActive)
+	public static Collection<Test> getTests(boolean enabled, boolean enabledBeforeUpload)
 	{
 		Map<String, Test> enabledTests = new LinkedHashMap<String, Test>();
 		for(Class<Test> testClass : getAllAvailableTests() )
 		{
-			Test test;
 			try {
-				test = testClass.newInstance();
+				Test test = testClass.newInstance();
+				enabledTests.put(testClass.getSimpleName(), test);
 			}
 			catch( Exception e)
 			{
 				e.printStackTrace();
 				continue;
 			}
-			test.enabled = true;
-            
-            String simpleName = testClass.getSimpleName();
-            test.testBeforeUpload = Main.pref.getBoolean( "tests." + simpleName + ".checkBeforeUpload", true);            
-			enabledTests.put(simpleName, test);
 		}
 
 		Pattern regexp = Pattern.compile("(\\w+)=(true|false),?");
-		Matcher m = regexp.matcher(Main.pref.get("tests"));
+		Matcher m = regexp.matcher(Main.pref.get(PreferenceEditor.PREF_TESTS));
 		int pos = 0;
 		while( m.find(pos) )
 		{
@@ -156,12 +153,26 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 			Test test = enabledTests.get(testName);
 			if( test != null )
 			{
-				test.enabled = Boolean.valueOf(m.group(2)).booleanValue();
-				if( onlyActive && !test.enabled)
+				test.enabled = Boolean.valueOf(m.group(2));
+			}
+			pos = m.end();
+		}
+
+		m = regexp.matcher(Main.pref.get( PreferenceEditor.PREF_TESTS_BEFORE_UPLOAD ));
+		pos = 0;
+		while( m.find(pos) )
+		{
+			String testName = m.group(1);
+			Test test = enabledTests.get(testName);
+			if( test != null )
+			{
+				test.testBeforeUpload = Boolean.valueOf(m.group(2));
+				if( !enabled && test.enabled || !enabledBeforeUpload && test.testBeforeUpload)
 					enabledTests.remove(test.getClass().getSimpleName() );
 			}
 			pos = m.end();
 		}
+		
 		return enabledTests.values();
 	}
 	

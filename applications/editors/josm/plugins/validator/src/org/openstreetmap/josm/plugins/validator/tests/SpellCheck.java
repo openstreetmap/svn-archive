@@ -40,23 +40,24 @@ public class SpellCheck extends Test
 
 	/** The spell check preset values */
 	protected static Bag<String, String> spellCheckValueData;
-	
+
+	/** The preferences prefix */
+	protected static final String PREFIX = PreferenceEditor.PREFIX + "." + SpellCheck.class.getSimpleName();
+    
     /** Preference name for checking values */
-    public static final String PREF_CHECK_VALUES = "tests." + SpellCheck.class.getSimpleName() + ".checkValues";
+    public static final String PREF_CHECK_VALUES 				= PREFIX + ".checkValues";
     /** Preference name for checking values */
-    public static final String PREF_CHECK_KEYS = "tests." + SpellCheck.class.getSimpleName() + ".checkKeys";
+    public static final String PREF_CHECK_KEYS 					= PREFIX + ".checkKeys";
     /** Preference name for checking FIXMES */
-    public static final String PREF_CHECK_FIXMES = "tests." + SpellCheck.class.getSimpleName() + ".checkFixmes";
+    public static final String PREF_CHECK_FIXMES 				= PREFIX + ".checkFixmes";
     /** Preference name for sources */
-    public static final String PREF_SOURCES = "tests." + SpellCheck.class.getSimpleName() + ".sources";
-    /** Preference name for global upload check */
-    public static final String PREF_CHECK_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkBeforeUpload";
+    public static final String PREF_SOURCES 					= PREFIX + ".sources";
     /** Preference name for keys upload check */
-    public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkKeysBeforeUpload";
+    public static final String PREF_CHECK_KEYS_BEFORE_UPLOAD 	= PREFIX + ".checkKeysBeforeUpload";
     /** Preference name for values upload check */
-    public static final String PREF_CHECK_VALUES_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkValuesBeforeUpload";
+    public static final String PREF_CHECK_VALUES_BEFORE_UPLOAD 	= PREFIX + ".checkValuesBeforeUpload";
     /** Preference name for fixmes upload check */
-    public static final String PREF_CHECK_FIXMES_BEFORE_UPLOAD = "tests." + SpellCheck.class.getSimpleName() + ".checkFixmesBeforeUpload";
+    public static final String PREF_CHECK_FIXMES_BEFORE_UPLOAD 	= PREFIX + ".checkFixmesBeforeUpload";
 	
     /** Whether to check keys */
     protected boolean checkKeys = false;
@@ -363,7 +364,7 @@ public class SpellCheck extends Test
 	@Override
 	public void addGui(JPanel testPanel)
 	{
-        testPanel.add( new JLabel(), GBC.eol());
+		testPanel.add( new JLabel(name), GBC.eol().insets(35,0,0,0) );
         
         boolean checkKeys = Main.pref.getBoolean(PREF_CHECK_KEYS, true);
         prefCheckKeys = new JCheckBox(tr("Check property keys."), checkKeys);
@@ -432,15 +433,17 @@ public class SpellCheck extends Test
         buttonPanel.add(editSrcButton, GBC.std().insets(5,5,5,0));
         buttonPanel.add(deleteSrcButton, GBC.std().insets(0,5,0,0));
         
-        prefCheckKeys.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                boolean selected = prefCheckKeys.isSelected();
-                spellcheckSources.setEnabled( selected );
-                addSrcButton.setEnabled(selected);
-                editSrcButton.setEnabled(selected);
-                deleteSrcButton.setEnabled(selected);
-            }
-        });
+        ActionListener disableCheckKeysActionListener = new ActionListener(){
+		            public void actionPerformed(ActionEvent e) {
+		                boolean selected = prefCheckKeys.isSelected() || prefCheckKeysBeforeUpload.isSelected();
+		                spellcheckSources.setEnabled( selected );
+		                addSrcButton.setEnabled(selected);
+		                editSrcButton.setEnabled(selected);
+		                deleteSrcButton.setEnabled(selected);
+		            }
+		        };
+		prefCheckKeys.addActionListener(disableCheckKeysActionListener);
+		prefCheckKeysBeforeUpload.addActionListener(disableCheckKeysActionListener);
         
         spellcheckSources.setEnabled( checkKeys );
         buttonPanel.setEnabled( checkKeys );
@@ -464,30 +467,18 @@ public class SpellCheck extends Test
         testPanel.add(prefCheckFixmesBeforeUpload, GBC.eop().insets(20,0,0,0));
 	}
 
-    public void setGuiEnabled(boolean enabled)
-    {
-        prefCheckKeys.setEnabled(enabled);
-        prefCheckKeysBeforeUpload.setEnabled(enabled);
-        spellcheckSources.setEnabled( enabled );
-        addSrcButton.setEnabled(enabled);
-        editSrcButton.setEnabled(enabled);
-        deleteSrcButton.setEnabled(enabled);
-        prefCheckValues.setEnabled(enabled);
-        prefCheckValuesBeforeUpload.setEnabled(enabled);
-        prefCheckFixmes.setEnabled(enabled);
-        prefCheckFixmesBeforeUpload.setEnabled(enabled);
-    } 
-    
 	@Override
 	public void ok() 
 	{
+		enabled = prefCheckKeys.isSelected() || prefCheckValues.isSelected() || prefCheckFixmes.isSelected();
+        testBeforeUpload = prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected() || prefCheckFixmesBeforeUpload.isSelected();
+		
         Main.pref.put(PREF_CHECK_VALUES, prefCheckValues.isSelected());
         Main.pref.put(PREF_CHECK_KEYS, prefCheckKeys.isSelected());
         Main.pref.put(PREF_CHECK_FIXMES, prefCheckFixmes.isSelected());
         Main.pref.put(PREF_CHECK_VALUES_BEFORE_UPLOAD, prefCheckValuesBeforeUpload.isSelected());
         Main.pref.put(PREF_CHECK_KEYS_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected());
         Main.pref.put(PREF_CHECK_FIXMES_BEFORE_UPLOAD, prefCheckFixmesBeforeUpload.isSelected());            
-        Main.pref.put(PREF_CHECK_BEFORE_UPLOAD, prefCheckKeysBeforeUpload.isSelected() || prefCheckValuesBeforeUpload.isSelected() || prefCheckFixmesBeforeUpload.isSelected());
         String sources = "";
         if( spellcheckSources.getModel().getSize() > 0 )
         {

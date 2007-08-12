@@ -7,8 +7,8 @@
 	<!-- target directory to place the plugin in -->
 	<!-- Windows has a different home directory scheme then unix/linux -->
 	<!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
-	<property name="plugins" location="${user.home}/.josm/plugins" ></property>
-	<!--<property name="plugins" location="${user.home}/Anwendungsdaten/JOSM/plugins" ></property>-->
+	<!--<property name="plugins" location="${user.home}/.josm/plugins" ></property>-->
+	<property name="plugins" location="${user.home}/Application Data/JOSM/plugins" ></property>
 
 	<!-- you should not need to modify anything below this! -->
 
@@ -19,7 +19,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="${josm}" destdir="build" debug="true">
+		<javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
 			<include name="**/*.java" />
 		</javac>
 	</target>

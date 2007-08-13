@@ -441,33 +441,26 @@ sub GenerateTileset
     # Download data
     #------------------------------------------------------
     killafile($DataFile);
-    my $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
+    my $URLS = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
+    if ($Zoom < 12) {
+	$URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f]", $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1);
+    }
     my @tempfiles;
     push(@tempfiles, $DataFile);
+    my $filelist = [];
+    my $i=0;
+    foreach my $URL (split(/ /,$URLS)) {
+	++$i;
+        my $partialFile = "data-$PID-$i.osm";
+        push(@{$filelist}, $partialFile);
+        push(@tempfiles, $partialFile);
+        statusMessage("Downloading: Map data to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        DownloadFile($URL, $partialFile, 0);
 
-    statusMessage("Downloading: Map data to $DataFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile($URL, $DataFile, 0);
-
-    if (-s $DataFile == 0)
-    {
-        printf("No data at this location\n");
-        printf("Trying smaller slices...\n");
-
-        my $filelist = [];
-
-        my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width
-
-        for (my $i = 0 ; $i<10 ; $i++) 
-        {
-            $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
-                ($W1+($slice*$i)), $S1, ($W1+($slice*($i+1))), $N1);
-            my $partialFile = "data-$PID-$i.osm";
-            statusMessage("Downloading: Map data to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-            DownloadFile($URL, $partialFile, 0);
-            if (-s $partialFile == 0)
+        if (-s $partialFile == 0)
             {
-                printf("No data here either\n");
+                printf("No data here...\n");
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
@@ -475,15 +468,9 @@ sub GenerateTileset
                 return if ($Mode eq "loop"); 
                 exit(1); 
             }
-            push(@{$filelist}, $partialFile);
-        }
-
-        mergeOsmFiles($DataFile, $filelist);
-        foreach my $file (@{$filelist}) 
-        {
-            killafile($file);
-        }
     }
+
+    mergeOsmFiles($DataFile, $filelist);
     
     # Get the server time for the data so we can assign it to the generated image (for tracking from when a tile actually is)
     $JobTime = [stat $DataFile]->[9];

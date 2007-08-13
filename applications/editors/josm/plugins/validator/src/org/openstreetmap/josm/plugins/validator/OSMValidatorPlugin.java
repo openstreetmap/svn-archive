@@ -130,6 +130,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	 */
 	public static Collection<Test> getTests(boolean enabled, boolean enabledBeforeUpload)
 	{
+		Set<Test> tests = new HashSet<Test>();
 		Map<String, Test> enabledTests = new LinkedHashMap<String, Test>();
 		for(Class<Test> testClass : getAllAvailableTests() )
 		{
@@ -154,6 +155,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 			if( test != null )
 			{
 				test.enabled = Boolean.valueOf(m.group(2));
+				if( enabled && test.enabled )
+					tests.add(test );
 			}
 			pos = m.end();
 		}
@@ -167,13 +170,13 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 			if( test != null )
 			{
 				test.testBeforeUpload = Boolean.valueOf(m.group(2));
-				if( !enabled && test.enabled || !enabledBeforeUpload && test.testBeforeUpload)
-					enabledTests.remove(test.getClass().getSimpleName() );
+				if( enabledBeforeUpload && test.testBeforeUpload)
+					tests.add(test );
 			}
 			pos = m.end();
 		}
 		
-		return enabledTests.values();
+		return tests;
 	}
 	
     /**

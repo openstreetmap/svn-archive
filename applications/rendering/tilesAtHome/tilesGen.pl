@@ -136,7 +136,8 @@ if($Mode eq "xy")
     # ----------------------------------
     my $X = shift();
     my $Y = shift();
-    my $Zoom = 12;
+    my $Zoom = shift();
+    if (!$Zoom) {$Zoom = 12;}
     GenerateTileset($X, $Y, $Zoom);
 }
 elsif ($Mode eq "loop") 
@@ -638,7 +639,7 @@ sub GenerateTileset
         my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
-        my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
+        my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
@@ -678,12 +679,13 @@ sub GenerateTileset
 # Render a tile
 #   $X, $Y - which tileset (Always the z12 tilenumbers)
 #   $Ytile, $Zoom - which tilestripe
+#   $ZOrig, the lowest zoom level which called tileset generation
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
-    my ($layer, $X, $Y, $Ytile, $Zoom, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
+    my ($layer, $X, $Y, $Ytile, $Zoom, $ZOrig, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
 
     return if($Zoom > $Config{"Layer.$layer.MaxZoom"});
     
@@ -692,13 +694,13 @@ sub RenderTile
 
     # Render it to PNG
     # printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
-    my $Width = 256 * (2 ** ($Zoom - 12));  # Pixel size of tiles  
+    my $Width = 256 * (2 ** ($Zoom - $ZOrig));  # Pixel size of tiles  
     my $Height = 256; # Pixel height of tile
 
     # svg2png returns true if all tiles extracted were empty. this might break 
     # if a higher zoom tile would contain data that is not rendered at the 
     # current zoom level. 
-    if (svg2png($Zoom, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{"Layer.$layer.RenderFullTileset"}) 
+    if (svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{"Layer.$layer.RenderFullTileset"}) 
     {
         $empty=1;
     }
@@ -717,7 +719,7 @@ sub RenderTile
         $progress += 1;
     }
 
-    if (($progressPercent=$progress*100/(2**($Config{"Layer.$layer.MaxZoom"}-12+1)-1)) == 100)
+    if (($progressPercent=$progress*100/(2**($Config{"Layer.$layer.MaxZoom"}-$ZOrig+1)-1)) == 100)
     {
         statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     }
@@ -745,8 +747,8 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    RenderTile($layer, $X, $Y, $YA, $Zoom+1, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
-    RenderTile($layer, $X, $Y, $YB, $Zoom+1, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
+    RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
+    RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
 
     return $empty;
 }
@@ -921,12 +923,13 @@ sub xml2svg
 
 #-----------------------------------------------------------------------------
 # Render a SVG file
+# $ZOrig - the lowest zoom level of the tileset
 # $X, $Y - tilemnumbers of the z12 tile containing the data we're working on
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
 #-----------------------------------------------------------------------------
 sub svg2png 
 {
-    my($Zoom, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
+    my($Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
     
     my $TempFile = $Config{WorkingDirectory}."/$PID.png_part";
     
@@ -957,7 +960,7 @@ sub svg2png
 
     killafile($stdOut);
     
-    my $ReturnValue = splitImageX($TempFile, $layer, 12, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
+    my $ReturnValue = splitImageX($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
     
     killafile($TempFile);
     

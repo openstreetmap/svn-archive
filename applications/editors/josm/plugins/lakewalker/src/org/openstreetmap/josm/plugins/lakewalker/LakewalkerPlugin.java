@@ -16,8 +16,7 @@ import org.openstreetmap.josm.plugins.Plugin;
  */
 public class LakewalkerPlugin extends Plugin {
 
-  public static final String VERSION = "0.2";
-  public static final String PREF_PYTHON = "lakewalker.python";
+  public static final String VERSION = "0.3";
   
   protected String name;
 
@@ -46,7 +45,7 @@ public class LakewalkerPlugin extends Plugin {
   
   public PreferenceSetting getPreferenceSetting() 
   {
-    return new LakewalkerPreferenceSetting();
+    return new LakewalkerPreferences();
   }
 
 }

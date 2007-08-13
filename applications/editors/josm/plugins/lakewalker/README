@@ -1,8 +1,9 @@
 A JOSM plugin to interface to Darryl Shpak's Lakewalker module
 
- - On-screen feedback to Lakewalker progress
+ - On-screen feedback to Lakewalker progress with cancel
  - Tag ways appropriately
  - limit ways to length
  - Access all lakewalker options via preferences and via ctrl-click pop-up dialog
  - Manage Landsat image cache from Prefs screen
+ - Read data in thread
  - ...

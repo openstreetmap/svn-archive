@@ -1,54 +1,36 @@
 <?php
+$layerData = array (
+ "name"   => array(1=>"tile", 2=>"cycle", 3=>"maplint", 4=>"lowzoom"),
+ "dir"    => array(1=>"tile", 2=>"cycle", 3=>"maplint", 4=>"tile"),
+ "maxZoom"=> array(1=>17, 2=>17, 3=>16, 4=>11),
+ "numTileset"=> array(1=>1365, 2=>1365, 3=>341, 4=>1),
+);
 
+#----------------------------------------------------
 function checkLayer($LayerString){
-  switch($LayerString){
-    case "Tile":
-    case "Tiles":
-    case "tile":
-      return(1);
-    case "cycle":
-      return(2);
-    case "maplint":
-      return(3);
-    case "landsea":
-      return(4);
-    default:
-      return(-1);
-    }
+  global $layerData;
+  $ID = array_search($LayerString,$layerData['name']);
+  return ($ID != FALSE?$ID:-1);
 }
 
+#----------------------------------------------------
 function layerValid($Name){
   return($checkLayer($Name) != -1);
 }
 
+#----------------------------------------------------
 function layerDir($ID){
-  switch($ID){
-    case 1:
-      return("tile");
-    case 2:
-      return("cycle");
-    case 3:
-      return("maplint");
-    case 4:
-      return("landsea");
-    default:
-      return("");
-    }
+  global $layerData;
+  $data = $layerData['dir'][$ID];
+  return ($data != NULL?$data:'');
 }
 
+#----------------------------------------------------
 function layerName($ID){
-  switch($ID){
-    case 1:
-      return("tile");
-    case 2:
-      return("cycle");
-    case 3:
-      return("maplint");
-    default:
-      return("");
-    }
+  global $layerData;
+  $data = $layerData['name'][$ID];
+  return ($data != NULL?$data:'');
 }
-
 
 #------------------------------------------------------------------------------
 # returns the maximum zoom level we want to be rendered.
@@ -56,13 +38,10 @@ function layerName($ID){
 # This is currently used to check if a tileset is complete or not.
 #------------------------------------------------------------------------------
 function layerMaxZoom($layername){
-  switch (checkLayer($layername)){
-    case 1:  return (17);
-    case 3:  return(16);
-    default: return(17);
-  }
+  global $layerData;
+  $data = $layerData['maxZoom'][checkLayer($layername)];
+  return ($data != NULL?$data:17);
 }
-
 
 #------------------------------------------------------------------------------
 # Returns the number of tiles which make a complete tileset per layer
@@ -70,10 +49,8 @@ function layerMaxZoom($layername){
 # it's handed the "layername" of the layer
 #------------------------------------------------------------------------------
 function layerNumberOfTiles($layername){
-  switch (checkLayer($layername)){
-    case 1:  return (1365);
-    case 3:  return(341);
-    default: return(1365);
-  }
+  global $layerData;
+  $data = $layerData['numTileset'][checkLayer($layername)];
+  return ($data != NULL?$data:1365);
 }
 ?>

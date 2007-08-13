@@ -58,7 +58,7 @@ class FatalError(Exception):
 
 def message(s):
     if options.josm_mode:
-        print "s %s" % s
+        print "m %s" % s
     else:
         print s
         

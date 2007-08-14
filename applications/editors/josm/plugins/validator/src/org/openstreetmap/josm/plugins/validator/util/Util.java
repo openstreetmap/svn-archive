@@ -15,6 +15,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.*;
+import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -161,7 +162,7 @@ public class Util
         if( url.getProtocol().equals("file") )
             return new File(url.toString() ) ;
         
-        String localPath = Main.pref.get("tests.mirror." + url);
+        String localPath = Main.pref.get( PreferenceEditor.PREFIX + ".mirror." + url);
         File oldFile = null;
         if( localPath != null && localPath.length() > 0)
         {
@@ -224,7 +225,7 @@ public class Util
             }
         }
         
-        Main.pref.put("tests.mirror." + url, System.currentTimeMillis() + ";" + localPath);
+        Main.pref.put( PreferenceEditor.PREFIX + ".mirror." + url, System.currentTimeMillis() + ";" + localPath);
         
         if( oldFile != null )
             oldFile.delete();

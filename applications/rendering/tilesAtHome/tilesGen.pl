@@ -136,8 +136,7 @@ if($Mode eq "xy")
     # ----------------------------------
     my $X = shift();
     my $Y = shift();
-    my $Zoom = shift();
-    if (!$Zoom) {$Zoom = 12;}
+    my $Zoom = shift() || 12;
     GenerateTileset($X, $Y, $Zoom);
 }
 elsif ($Mode eq "loop") 
@@ -301,7 +300,7 @@ sub ProcessRequestsFromServer
     # such as the list of fields that it's sending out in requests
     # ----------------------------------
     killafile($LocalFilename);
-    my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername};
+    my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername} . "&layers=". $Config{Layers};
     # DEBUG: print "using URL " . $RequestUrlString . "\n";
     statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(

@@ -1,0 +1,87 @@
+Information
+-----------
+
+A general description of the name finder can be found at 
+  http://wiki.openstreetmap.org/index.php/Name_finder
+
+Prerequisites
+-------------
+
+You will need 
+
+* a MySQL database with UTF-8 support. Structure is in the namefind.sql file
+at the top level alongside this file.
+
+* a PHP5 interpreter
+
+* OpenLayers-2.4. Put the Open layers collection of Javascript files in a directory in www and set the location in the configuratin file (see below). Alternatively these could be dragged in from another server.
+
+* classysql.php. This is a set of classes which does for PHP something
+similar to what Rails does for Ruby. See below. This is supplied.
+
+* the system uses a directory dblog, which needs to be writable by the web server.
+
+Licence
+-------
+
+This program creates and provides access to a name index derived from OpenStreetMap map data.
+Copyright (C) 2007 David Earl - contact details below
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program (see LICENCE).  If not, see <http://www.gnu.org/licenses/>.
+
+Configuration
+-------------
+
+The index.html file is really a php file in disguise. You will need a
+.htaccess file to set the file types to be processed by PHP. There is
+a template for this (dot.htaccess.template) in www. Copy this to www
+and amend appropriately.
+
+There is a configuraton file for things like the database user name
+and password, location of various bits of the system etc, called
+.config.php. There is a template for this: dot.config.php in www. Copy
+this to .config.php and amend appropriately.
+
+Build the database
+------------------
+
+In production this should really be done to a separate database which
+can then be cleaned and switched over to the production one as the
+process takes a long time. The database can be controlled by havinga
+separate copy of .config in your utils directory instead of a link to
+the central one in www.
+
+Run import .php like this, cd'd to utils
+  php5 import.php planet-070813.osm
+(or whatever you php interpreter is called). Make sure the planet file
+has the date in it, as exported from osm, as this is used to determine
+the date of the index.
+
+You might want to run this as a background job redirecting output to a
+log file. The output starts showing progress reports after a few minutes.
+
+Once the index is complete, the node and segment tables (by far the
+largest) can be deleted before transferring to production.
+
+
+Classysql
+---------
+
+This utility code is a separate project which provides class oriented
+MySQL database facilities to client PHP code. It is separately
+licensed.
+
+David Earl
+www.frankieandshadow.com
+August 2007

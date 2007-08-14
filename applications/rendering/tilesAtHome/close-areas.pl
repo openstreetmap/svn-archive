@@ -512,7 +512,7 @@ ENDOSM:
 
 unless( $border_crossed )
 {
-  my $state = lookup_handler($helpernodes, $tilex, $tiley);
+  my $state = lookup_handler($helpernodes, $tilex, $tiley, $zoom);
   if( $state eq "10" )
   {
     # sea
@@ -525,10 +525,10 @@ unless( $border_crossed )
   else
   {  
     my %temp = ("00"=>0, "10"=>0, "01"=>0, "11"=>0);;
-    $temp{lookup_handler($helpernodes, $tilex-1, $tiley)}++;
-    $temp{lookup_handler($helpernodes, $tilex+1, $tiley)}++;
-    $temp{lookup_handler($helpernodes, $tilex, $tiley-1)}++;
-    $temp{lookup_handler($helpernodes, $tilex, $tiley+1)}++;
+    $temp{lookup_handler($helpernodes, $tilex-1, $tiley, $zoom)}++;
+    $temp{lookup_handler($helpernodes, $tilex+1, $tiley, $zoom)}++;
+    $temp{lookup_handler($helpernodes, $tilex, $tiley-1, $zoom)}++;
+    $temp{lookup_handler($helpernodes, $tilex, $tiley+1, $zoom)}++;
 
     if( $temp{"10"} > $temp{"01"} )
     {
@@ -590,7 +590,12 @@ sub make_way
 # index lookup by Martijn van Oosterhout
 sub lookup_handler
 {
-    my ($helpernodes, $tilex, $tiley) = @_;
+    my ($helpernodes, $x, $y, $zoom) = @_;
+    # make it use z12 x,y coordinates
+    # this looks up the most upper left z12 tile in zoom<12. This probably
+    # needs to be made smarter for islands etc.
+    my $tilex = $x*(2**(12-$zoom));
+    my $tiley = $y*(2**(12-$zoom));
     my $tileoffset = ($tiley * (2**12)) + $tilex;
     my $fh;
     open($fh, "<", "oceantiles_12.dat") or die;

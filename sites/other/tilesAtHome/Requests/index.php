@@ -27,10 +27,11 @@
 
   //Rate limiting: never hand out more than 500 active requests at a time
   if(1){
-    $res = mysql_query('SELECT COUNT(*) FROM tiles_queue WHERE status='.REQUEST_ACTIVE.');');
+    $SQL='SELECT COUNT(*) FROM tiles_queue WHERE status='.REQUEST_ACTIVE.';';
+    $res = mysql_query($SQL);
     $row=mysql_fetch_row($res);
     if($row[0] > 500){
-      print 'XX|3||||rate_limiting ('.$row[0].'requests)';
+      print 'XX|3||||rate_limiting ('.$row[0].' requests out)';
       exit;
     }
   }

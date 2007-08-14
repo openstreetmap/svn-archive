@@ -14,7 +14,7 @@ use strict;
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
 # Copyright 2006, Oliver White, Etienne Cherdlu, Dirk-Lueder Kreie,
-# and others
+# Sebastian Spaeth and others
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -212,7 +212,7 @@ else
     my $Bar = "-" x 78;
     print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";
     print "Usage: \nNormal mode:\n  \"$0\", will download requests from server\n";
-    print "Specific area:\n  \"$0 xy [x] [y]\"\n  (x and y coordinates of a zoom-12 tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\n";
+    print "Specific area:\n  \"$0 xy <x> <y> [z]\"\n  (x and y coordinates of a zoom-12 (default) tile in the slippy-map coordinate system)\n  See [[Slippy Map Tilenames]] on wiki.openstreetmap.org for details\nz is optional and can be used for low-zoom tilesets\n";
     print "Other modes:\n";
     print "  $0 loop - runs continuously\n";
     print "  $0 upload - uploads any tiles\n";
@@ -465,7 +465,8 @@ sub GenerateTileset
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
                 PutRequestBackToServer($X,$Y,"NoData");
-                return if ($Mode eq "loop"); 
+		foreach my $file(@tempfiles) { killafile($file); }
+                return if ($Mode eq "loop");
                 exit(1); 
             }
     }

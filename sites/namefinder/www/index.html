@@ -1,0 +1,785 @@
+<?php
+
+/* User interface to name finder. search.xml is the programmatic
+   interface.  Note that while name finder itself does not require it,
+   ths file requires OpenLayers-2.4 to display the map 
+   
+   This file also contains the javascript to iterpret name finder's 'where am I?' 
+   query "places near lat,lon"
+*/
+
+include_once('preamble.php');
+include_once('search.php');
+include_once('options.php');
+
+/* Sessions are only used so that queries from the same user get logged in the same log file */
+session_start();
+
+if (! empty($_SERVER['REQUEST_URI'])) {
+  /* note what we were asked for */
+  $db->log("VISITING {$_SERVER['REQUEST_URI']}");
+}
+
+/* With no query given, just displaythe date of the index, and some helpful text */
+$dateoption = options::getoption('indexdate');
+if ($dateoption =='') {
+  $indexdate = '';
+  $message = 'updating the index, back soon...';
+  if (isset($_GET['find'])) { unset ($_GET['find']); }
+} else {
+  list($year,$month,$day) = sscanf($dateoption, "%d-%d-%d");
+  $indexdate = "<p class='examples'>Index from OpenStreetMap data up to ".
+    date("j M Y", jdtounix(cal_to_jd(CAL_GREGORIAN, $month,$day,$year)))."</p>";
+}
+
+$examples = <<<EOD
+<p class='examples'>You can search for a <strong>name</strong>, or <strong>name near place</strong> with the name and place separated with a <strong>comma</strong> or the word <strong>near</strong>. A <strong>place</strong> can be (a) a city, town, suburb, village or hamlet; or (b) a lat,lon pair as in &lsquo;Ely Cathedral near 52.4,0.2&rsquo;. A <strong>name</strong> can be (a) anything on the map which is named, such as a street, school, pub etc.; (b) a road number e.g. &lsquo;M11&rsquo;; (c) an airport code, e.g. &lsquo;STN&rsquo;; (d) a class of things as in &lsquo;pubs near Ely&rsquo; or &lsquo;airport near Derby&rsquo;; or (e) a lat,lon pair - most useful when not qualified by a place to say where it is in relation to nearby places. <a href='http://wiki.openstreetmap.org/index.php/Name_finder'>More information and examples...</a></p>
+EOD;
+
+$found = '';
+if (isset($_GET['find'])) {
+
+  /* process the string requested */
+
+  // --------------------------------------------------
+  function renderentry($xnamed, $i) {
+    $s = <<<EOD
+  <span class='osmurl' id='osmurl{$i}'><a href='http://www.openstreetmap.org/index.html?lat={$xnamed['lat']}&lon={$xnamed['lon']}&zoom={$xnamed['zoom']}' target='osm'>http://www.openstreetmap.org/index.html?lat={$xnamed['lat']}&lon={$xnamed['lon']}&zoom={$xnamed['zoom']}</a></span>
+  <span id='result{$i}'>{$xnamed->description}</span>
+  <a href='javascript:go({$xnamed['lat']},{$xnamed['lon']},{$xnamed['zoom']},{$i})'>map</a>
+
+EOD;
+
+    if ($xnamed['type'] == 'node') {
+      if (isset($_SERVER['REMOTE_ADDR'])) {
+        if (strpos($_SERVER['REMOTE_ADDR'], '192.168.0.') === 0) {
+          $site = 'http://egret/osm/';
+        }
+        if (isset($site)) {
+          $s .= "<a href='{$site}editelement.html?node={$xnamed['id']}' title='edit using mini element editor'>edit&nbsp;(mei)</a>\n";
+        }
+      }
+    }
+
+    $s .= "<a href='http://www.free-map.org.uk/freemap/edit.php?lat={$xnamed['lat']}&lon={$xnamed['lon']}' title='edit using point of interest editor editor'>edit&nbsp;(poi)</a>\n";
+
+    return $s;
+  }
+  // --------------------------------------------------
+
+  $find = isset($_GET['find']) ? $_GET['find'] : '';
+  $max = (int) (isset($_GET['max']) ? $_GET['max'] : $config['limit']);
+
+  /* Do the deed, and unpack the xml results */
+  $xmlo = simplexml_load_string(search::xmlise($find, $max));
+
+  /* interpret the results into the left side, with error messages as appropriate */
+  $results = '';
+  if ($xmlo['distancesearch'] == 'no') {
+    /* a simple seach rather than great circle distance query. This is the more usual case. */
+    if (! empty($xmlo['error'])) {
+      switch($xmlo['error']) {
+      case 'name not found for postcode':
+        $message = "I cannot find {$xmlo['findname']}, {$xmlo['findplace']} for {$find} (not on the map yet? misspelled?)";
+	break;
+      case 'name not found':
+        $message = "I cannot find {$find} (not on the map yet? misspelled?)";
+        break;
+      case 'place not found':
+        $message = "I cannot find a place called {$xmlo['findplace']} (not on the map yet? misspelled?)";
+        break;
+      case 'too many colons':
+        $message = "I can't cope with that many colons";
+        break;
+      default:
+        $message = $xmlo['error'];
+        break;        
+      }
+    } else {
+      for (;;) {
+        if (isset($xmlo['findplace']) && $xmlo['foundnearplace'] == 'no') {
+          if (isset($xmlo['postcode'])) {
+            $message = "I cannot find {$xmlo['findname']}, {$xmlo['findplace']} for postcode {$xmlo['postcode']} (not on the map yet?)";
+            break;
+          } else {
+            $results .= "<p class='results'>" . 
+              htmlspecialchars($find, ENT_QUOTES, 'UTF-8') . 
+              " not found, but...</p>";
+          }
+        }
+        $i = 0;
+        foreach($xmlo->named as $xnamed) {
+          $results .= "<p class='results'><span class='emphatic'>&bull;</span>\n" . 
+            renderentry($xnamed, $i) . "</p>\n";
+          if ($i == 0) { $go1 = "go({$xnamed['lat']},{$xnamed['lon']},{$xnamed['zoom']},{$i})"; }
+          $i++;
+        }
+        if ($i == $config['limit']) {
+          $results .= "<p class='results'>... and possibly others</p>\n";
+        }
+        break;
+      }
+    }
+  } else {
+    // great circle distance search (colon form of query)
+    $i = 0;
+    foreach($xmlo->distance as $xdistance) {
+      $km = (int) round((double)$xdistance);
+      foreach ($xmlo->named as $xnamed) {
+        if ((string)$xnamed['type'] == (string)$xdistance['fromtype'] && 
+            (int)$xnamed['id'] == (int)$xdistance['from']) 
+        {
+          $entry1 = renderentry($xnamed, $i);
+          if ($i == 0) { 
+            $go1 = "go({$xnamed['lat']},{$xnamed['lon']},{$xnamed['zoom']},{$i})"; 
+          }
+        }
+        if ((string)$xnamed['type'] == (string)$xdistance['totype'] && 
+            (int)$xnamed['id'] == (int)$xdistance['to']) 
+        {
+          $entry2 = renderentry($xnamed, $i+1);
+        }
+      }
+      $results .= "<p class='results'><span class='distancetext'>{$km}km between</span><br />\n" .
+        $entry1 . "<br /><span class='distancetext'>and</span><br />\n" . $entry2;
+      $i += 2;
+    }
+  }
+
+  // --------------------------------------------------
+
+} else {
+  /* not processing a query, so substitute an example string in the find box */
+  $find = 'Regent Street, Cambridge [for example]';
+}
+
+/* Present the form and the javascript to reposition the map for each result. */
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+<title>OpenStreetMap name finder</title>
+<meta name='description' content='OpenStreetMap name finder' />
+<meta name='MSSmartTagsPreventParsing' content='TRUE' /> 
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<!--<link rel='stylesheet' href='site.css' type='text/css' />-->
+<style type='text/css'>
+body{
+  font-family: Verdana,sans-serif;
+}
+p.info {
+  font-size: 10px;
+  margin: 0;
+  padding-bottom: 6px;
+  /* font-style: italic; */
+}
+p.results {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 3em;
+  /* font-style: italic; */
+}
+span.emphatic {
+  color: blue;
+  font-weight: bold;
+}
+div.mini {
+  font-size: 0.5em;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+table#innerleft {
+  width: 180px;
+}
+td { 
+  vertical-align: top;
+  /* border: 1px solid red; */
+}
+td.sidepanel {
+  width: 180px;
+  padding: 10px;
+  font-size: 0.6em;
+  position: relative;
+}
+td#logopanel {
+  width: 180px;
+  height: 200px;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+td#logopanel img {
+ width: 120px;
+ height: 120px;
+}
+td#logopanel div#osmheader {
+  width: 180px;
+  font-size: 15px;
+}
+td#logopanel div#strapline {
+  font-size: 9px;
+}
+td#searchpanel {
+  padding-bottom: 10px;
+}
+td#mappanel {
+  width: 100%;
+}
+td#foundpanel {
+  font-size: 1em;
+  color: blue;
+  padding-bottom: 20px;
+}
+td#messagepanel {
+  font-size: 1em;
+  color: red;
+  padding-bottom: 20px;
+}
+input#findbox {
+ width: 80%;
+}
+span.distancetext {
+  font-style: italic;
+  color: green;
+}
+span.osmurl {
+  display: none;
+}
+p.examples {
+  font-size: 0.6em;
+  margin-top: 0.6em;
+  margin-bottom: 0;
+}
+p.osmurl {
+  font-size: 0.7em;
+  color: black;
+  margin-top: 0.2em;
+  margin-bottom: 0;
+}
+div#map {
+ height: 500px;
+ width: 500px;
+}
+div.divtarget {
+ position: relative;
+}
+div.placemarker {
+  position: absolute;
+}
+img.place {
+  width: 10px;
+  height: 10px;
+  position: relative;
+  top: -5px;
+  left: -5px;
+}
+div.placetext {
+  position: absolute;
+  font-size: 1em;
+ color: #666666;
+  z-index: 1000;
+}
+</style>
+
+<script type="text/javascript" src="<?php echo $config['openlayersjsurl']; ?>">
+</script>
+
+<script type="text/javascript">
+var map;
+var mapstarted = 0;
+var layerMarkers;
+var currentMarker;
+
+// --------------------------------------------------
+function get_osm_url(bounds) {
+  var res = this.map.getResolution();
+  var x = Math.round ((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+  var y = Math.round ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+  var z = this.map.getZoom();
+  var path = z + "/" + x + "/" + y + "." + this.type; 
+  var url = this.url;
+  if (url instanceof Array) {
+    url = this.selectUrl(path, url);
+  }
+  return url + path;
+}
+
+// --------------------------------------------------
+function initmap() {
+  map = new OpenLayers.Map ("map", {
+    controls:[
+              new OpenLayers.Control.MouseDefaults(),
+              new OpenLayers.Control.LayerSwitcher(),
+              new OpenLayers.Control.MousePosition(),
+              new OpenLayers.Control.PanZoomBar()],
+    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+    numZoomLevels:19, maxResolution:156543, units:'meters', projection: "EPSG:41001"} );
+
+  layerTilesAtHome = new OpenLayers.Layer.TMS( 
+		"Osmarender", 
+		"http://dev.openstreetmap.org/~ojw/Tiles/tile.php/",
+    {type:'png', getURL: get_osm_url} );
+
+  layerMapnik = new OpenLayers.Layer.TMS( 
+		"Mapnik",
+		"http://tile.openstreetmap.org/mapnik/",
+    {type:'png', getURL: get_osm_url} );
+
+  layerMarkers = new OpenLayers.Layer.Markers( "Markers" );
+  map.addLayers([layerTilesAtHome, layerMapnik,layerMarkers]);
+  map.addControl(new OpenLayers.Control.LayerSwitcher());
+}
+
+// --------------------------------------------------
+function go(lat,lon,zoom,i) {
+  /* they clicked on a result: transfer the information from the list of results to the 
+     main resultpanel, and recenter the map */
+  var foundpanel = document.getElementById("foundpanel");
+  var html;
+  if (i >= 0) {
+    html = document.getElementById("result"+i).innerHTML + 
+      "<p class='osmurl'>here's a url for it: " + 
+      document.getElementById("osmurl"+i).innerHTML + "</p>";
+  } else {
+    html = "<?php echo $examples,$indexdate; ?>";
+  }
+
+  foundpanel.innerHTML = html;
+  if (mapstarted == 0) { 
+    var osm = document.getElementById('map');
+    var w = windowWidth() - 250;
+    osm.style.width = w + 'px';
+    initmap(); 
+    mapstarted = 1;
+  }
+  lon = lon * 20037508.34 / 180;
+  lat = Math.log (Math.tan ((90 + lat) * Math.PI / 360)) / (Math.PI / 180);
+  lat = lat * 20037508.34 / 180;
+  map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+  if (i >= 0) {
+    var size = new OpenLayers.Size(25,22);
+    var offset = new OpenLayers.Pixel(-30,-27);
+    var icon = new OpenLayers.Icon('pointer.png',size,offset);
+    if (currentMarker != null) {
+      layerMarkers.removeMarker(currentMarker);
+    }
+    currentMarker = new OpenLayers.Marker(new OpenLayers.LonLat(lon,lat),icon);
+    layerMarkers.addMarker(currentMarker);
+  }
+}
+
+// ==================================================
+/* the Where Am I button action... */
+var maxdisplay = 6;
+
+var nameds = new Array();
+var nextnamed = 0;
+var targetwidth = 0;
+
+var whereamis = new Array('whereami1','whereami2','whereami3');
+
+// --------------------------------------------------
+function tellmewhereiam() {
+  /* they pressed the 'where am i' button: get the lat/lon centre of the map and 
+     look it up in th ename finder via Ajax */
+  var center = map.getCenter();
+  var lon = center.lon;
+  var lat = center.lat * 180.0 / 20037508.34;
+  lat = Math.atan( Math.exp(lat * (Math.PI / 180.0))) / (Math.PI / 360.0) - 90.0;
+  lon = lon * 180.0 / 20037508.34;
+
+  nameds = new Array();
+  nextnamed = 0;
+
+  /* we want to make sure we get at least some cities and towns; if we don't ask for these 
+     separately we can get swamped with only lots of little nearby places */
+  var url1 = "search.xml?find=cities+near+"+lat+","+lon+"&max=2";
+  var url2 = "search.xml?find=towns+near+"+lat+","+lon+"&max=4";
+  var url3 = "search.xml?find=places+near+"+lat+","+lon+"&max=10";
+  loadxmldoc(url1, processwhereiam, 'whereami1');
+  loadxmldoc(url2, processwhereiam, 'whereami2');
+  loadxmldoc(url3, processwhereiam, 'whereami3');
+}
+
+// --------------------------------------------------
+function processwhereiam() {
+  for (var w = 0; w < whereamis.length; w++) {
+    if(! xmlcheckreadystate(xmlhttp[whereamis[w]])) { return; }
+  }
+
+  /* all three queries from tellmewhereiam completed,so process the results: firstly 
+     collect the data we want from the subordinates of each of the result elements 
+     into the top level of the results */
+
+  for (var w = 0; w < whereamis.length; w++) {
+    var nearbyplaces = xmlhttp[whereamis[w]].responseXML.documentElement;
+    for (var i = 0; i < nearbyplaces.childNodes.length; i++) {
+      var child = nearbyplaces.childNodes[i];
+      if (child.nodeName == "named" && parseInt(child.getAttribute('rank')) > 0) {
+        var id = child.getAttribute('id');
+        for (var n = 0; n < nameds.length; n++) {
+          if (nameds[n].getAttribute('id') == id) {
+            // we've already seen it
+            id = '0';
+          }
+        }
+        if (id == '0') { continue; }
+        if (child.getElementsByTagName("place").length == 0) { continue; }
+        if (child.getElementsByTagName("place")[0].getElementsByTagName("named").length == 0) { 
+          continue; 
+        }
+        var local = child.getElementsByTagName("place")[0].getElementsByTagName("named")[0];
+        var distance = parseFloat(local.getAttribute("distance"));
+        var approxdistance = parseFloat(local.getAttribute("approxdistance"));
+        var direction = parseInt(local.getAttribute("direction"));
+        child.setAttribute("distance", distance);
+        child.setAttribute("approxdistance", approxdistance);
+        child.setAttribute("direction", direction);
+        nameds[nextnamed++] = child;
+      }
+    }
+  }
+
+  /* they would normally be sorted anyway, but we did it in 
+     separate independently sorted queries,so we need to resort */
+
+  nameds.sort(sortbyincreasingdistance);
+
+  /* put the textual result in place */
+  var foundpanel = document.getElementById("foundpanel");
+  if (nameds[0]) {
+    var url = "<?php echo $config['maphref']; ?>?lat="+nameds[0].getAttribute("lat")+"&lon="+nameds[0].getAttribute("lon");
+    foundpanel.innerHTML = "<p class='results'>"+ nameds[0].getElementsByTagName("description")[0].firstChild.data +"</p><p class='osmurl'>here's a url for it: <a href='"+url+"'>"+url+"</a>";
+  } else {
+    foundpanel.innerHTML = "<p>nothing found</p>";
+    var sidepanel = document.getElementById("sidepanel");
+    sidepanel.innerHTML = "";
+    return;
+  }
+
+  /* weight our results according to a combination of type of place
+     and distance away, giving great preference to the
+     nearest places of each type;sort by that weight */
+
+  var firstofrank = 0;
+  var myrank = new Array();
+  myrank[10] = 1; // hamlet
+  myrank[20] = 25; // village
+  myrank[30] = 25; // suburb
+  myrank[50] = 50; // town, small_town
+  myrank[60] = 2000; // city
+  myrank[70] = 2500; // metropolis
+
+  for (var i = 0; i < nameds.length; i++) {
+    var distance = parseFloat(nameds[i].getAttribute("distance"));
+    if (distance < 0.1) { distance = 0.1; }
+    var rank = myrank[parseInt(nameds[i].getAttribute("rank"))];
+    var weight = rank / Math.sqrt(distance);
+    if (rank > firstofrank) { 
+      weight = weight * 20; 
+      firstofrank = rank;
+    }
+    nameds[i].setAttribute("weight", weight);
+  }
+
+  nameds.sort(sortbydecreasingweight);
+
+  /* pick out the first N highest weighted places, and note the farthest distance so we 
+     can scale by this shortly */
+  var results = new Array();
+  if (nameds.length < maxdisplay) { maxdisplay = nameds.length; }
+  var maxdistance = 0.0;
+  for (var i = 0; i < maxdisplay; i++) {
+    var distance = parseFloat(nameds[i].getAttribute("distance"));
+    if (distance > maxdistance) { maxdistance = distance; }
+    results[i] = nameds[i];
+  }
+
+  /* set up the target inage (concentric circles */
+
+  var sidepanel = document.getElementById("sidepanel");
+  if (targetwidth == 0) { targetwidth = parseInt(sidepanel.offsetWidth) - 10; }
+  var targetheight = targetwidth;
+  var xextent = targetwidth / 2.0;
+  var yextent = targetheight / 2;
+  sidepanel.innerHTML = "<div id='divtarget' class='divtarget'><img src='target.png' width='" + targetwidth + "' height='" + targetheight+ "' /><br /><br /><br /><br /><br /><br /><hr style='width: 50%;' /><div style='width: 100%; text-align: center;'>"+ parseInt(maxdistance+0.5) +"km</div></div>";
+
+  /* determine the cartesian coordinates of each place from their
+     polar coordinates. For best presentation, then sort by the absolute
+     distance aay horizontally from the target centre */
+
+  for (var i = 0; i < maxdisplay; i++) {
+    var distance = parseFloat(results[i].getAttribute("distance"));
+    var direction = parseFloat(results[i].getAttribute("direction"));
+    var x = Math.round(- distance * Math.cos(direction * Math.PI/180.0) /maxdistance * xextent);
+    var y = Math.round(distance * Math.sin(direction * Math.PI/180.0) /maxdistance * yextent);
+    results[i].setAttribute("x", x);
+    results[i].setAttribute("y", y);
+  }
+
+  results.sort(sortbyabsx);
+
+  /* Lay down the blob to mark the place. Then the complicated layout
+     bit: divide the target into two columns, left and right, and
+     however many rows are needed according to text line height. Try
+     to put the text to the right of its blob if the blob is right of
+     centre, or left if left of centre; but if that would go off the
+     edge, reverse which side it is on. Mark the row/column as
+     used. If we reversed, mark moth columns in the row as used. When
+     we do the next one, if the row/column we need is used, alternate
+     up and down until we find an unused location (both columns if
+     required to fit the text), and in that case put a leader line to it */
+
+  var takenleft = new Array();
+  var takenright = new Array();
+  var rowheight = 0;
+
+  for (var i = 0; i < maxdisplay; i++) {
+    var approxdistance = results[i].getAttribute("approxdistance");
+    if (approxdistance == "0") { approxdistance = "<1"; }
+    approxdistance = htmlspecialchars(approxdistance);
+    var direction = parseFloat(results[i].getAttribute("direction"));
+    var name = htmlspecialchars(results[i].getAttribute("name").replace(/ *\[.*\] */g, '')).replace(/ /g,'&nbsp;');
+    var namefull = htmlspecialchars(results[i].getAttribute("name")).replace(/ /g,'&nbsp;');
+    var x = parseFloat(results[i].getAttribute("x")) + xextent;
+    var y = parseFloat(results[i].getAttribute("y")) + yextent;
+
+    var divtarget = document.getElementById("divtarget");
+    var divplace = document.createElement("div");
+    divtarget.appendChild(divplace);
+    divplace.className = "placemarker";
+    divplace.style.left = x + "px";
+    divplace.style.top = y + "px";
+    divplace.style.zIndex = "1";
+    var isin = results[i].getAttribute("is_in") ? "(in " + htmlspecialchars(results[i].getAttribute("is_in")) + ")" : "";
+    var alt =  "'" + namefull + isin + " - " + approxdistance + "km'";
+    divplace.innerHTML = "<img class='place' src='place.png' alt="+alt+" title="+alt+"/>";
+
+    divtext = document.createElement("div");
+    divtarget.appendChild(divtext);
+    divtext.className = "placetext";
+    divtext.innerHTML = name;
+    var divtextlength = divtext.offsetWidth;
+    if (rowheight == 0) { rowheight = parseFloat(divtext.offsetHeight); }
+    var divtextrow = parseInt(Math.floor((y + rowheight/2)/rowheight));
+    var yrow = divtextrow * rowheight;
+    var adjustx = divplace.offsetWidth / 2.0 + 1;
+    var thisadjustx = adjustx;
+    var adjusty = - divplace.offsetHeight / 4.0;
+
+    var sign = yrow > yextent ? 1 : -1;
+    var inc = 1;
+    var adjusted = 0;
+
+    if (x < xextent) {
+      if (x - divtextlength < 0) {
+        while (takenleft[divtextrow] || takenright[divtextrow]) {
+          divtextrow += sign * inc; sign = - sign; inc++;
+          adjusted++;
+          thisadjustx = -adjustx + 3;
+        }
+        takenleft[divtextrow] = takenright[divtextrow] = true;
+        divtext.style.left = parseInt(x + thisadjustx) + "px";
+        divtext.style.top = parseInt(divtextrow * rowheight + adjusty) + "px";
+      } else {
+        while (takenleft[divtextrow]) {          
+          divtextrow += sign * inc; sign = - sign; inc++;
+          thisadjustx = -adjustx;
+          adjusted++;
+        }
+        takenleft[divtextrow] = true;
+        divtext.style.right = parseInt(targetwidth - x + thisadjustx) + "px";
+        divtext.style.top = parseInt(divtextrow * rowheight + adjusty) + "px";
+      }
+    } else {
+      if (x + divtextlength > targetwidth) {
+        while (takenleft[divtextrow] || takenright[divtextrow]) {
+          divtextrow += sign * inc; sign = - sign; inc++;
+          thisadjustx = -adjustx;
+          adjusted++;
+        }
+        takenleft[divtextrow] = takenright[divtextrow] = true;
+        divtext.style.right = parseInt(targetwidth - x + thisadjustx) + "px";
+        divtext.style.top = parseInt(divtextrow * rowheight + adjusty) + "px";
+      } else {
+        while (takenright[divtextrow]) {
+          divtextrow += sign * inc; sign = - sign; inc++;
+          thisadjustx = -adjustx + 3;
+          adjusted++;
+        }
+        takenright[divtextrow] = true;
+        divtext.style.left = parseInt(x + thisadjustx) + "px";
+        divtext.style.top = parseInt(divtextrow * rowheight + adjusty) + "px";
+      }
+    }
+
+    /* add leader line when we had to put the text on a different line from the blob */
+    
+    if (adjusted > 0) { 
+      var leader = document.createElement("div");
+      var texttop = parseInt(divtext.style.top);
+      leader.style.width = "0";
+      leader.style.height = parseInt(Math.abs(texttop + (texttop < y ? rowheight : 0) - y)) + "px";
+      leader.style.position = "absolute";
+      leader.style.border="1px solid #35E358";
+      leader.style.top =  (texttop < y ? texttop + rowheight : y) + "px";
+      leader.style.left = x + "px";
+      leader.style.zIndex = "0";
+      divtarget.appendChild(leader);
+    }
+  }
+}
+
+// --------------------------------------------------
+function sortbyincreasingdistance(a, b) {
+  return parseFloat(a.getAttribute("distance")) - parseFloat(b.getAttribute("distance"));
+}
+
+function sortbydecreasingweight(a, b) {
+  return parseInt(b.getAttribute("weight")) - parseInt(a.getAttribute("weight"));
+}
+
+function sortbyabsx(a, b) {
+  return parseInt(Math.abs(parseFloat(a.getAttribute("x"))) - Math.abs(parseFloat(b.getAttribute("x"))));
+}
+
+// ==================================================
+// ajax helperfunctions
+
+function htmlspecialchars(s) {
+  return s.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;');
+}
+
+var xmlhttp = new Array();
+
+function loadxmldoc(url, response, i) {
+  xmlhttp[i]=null;
+  if (window.XMLHttpRequest) { xmlhttp[i]=new XMLHttpRequest(); } // Mozilla etc
+  else if (window.ActiveXObject) { xmlhttp[i]=new ActiveXObject("Microsoft.XMLHTTP"); } // IE
+  if (xmlhttp[i] != null) {
+    xmlhttp[i].onreadystatechange = response;
+    xmlhttp[i].open("GET",url,true);
+    xmlhttp[i].send(null);
+  } else {
+    alert("You are not using a suitable browser");
+  }
+}
+
+function xmlcheckreadystate(obj) {
+  if(obj.readyState == 4) {
+    var internalerror = false;
+    if(obj.status == 200) {  
+      if (obj.responseText.substring(0,5) == '<'+'?xml') { return true; }
+      alert("Problem retrieving data: bad or incomplete xml? javascript error?"); 
+      return false;
+    }
+    if(obj.status == 500) { 
+      alert("server said error status 500"); 
+    } else {
+      alert("Problem retrieving data: has you internet connecton gone down? Server crashed?");
+    }
+  }
+  return false;
+}
+// ==================================================
+/* window/object helper functions */
+
+function windowWidth() {
+  if( typeof( window.innerWidth ) == 'number' ) {
+    //Non-IE
+    return (window.innerWidth);
+  } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+    //IE 6+ in 'standards compliant mode'
+    return (document.documentElement.clientWidth);
+  } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+    //IE 4 compatible
+    return (document.body.clientWidth);
+  }
+}
+function windowHeight() {
+  if( typeof( window.innerHeight ) == 'number' ) {
+    //Non-IE
+    return (window.innerHeight);
+  } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+    //IE 6+ in 'standards compliant mode'
+    return (document.documentElement.clientHeight);
+  } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+    //IE 4 compatible
+    return (document.body.clientHeight);
+  }
+}
+function findtop(obj) {
+  var curtop = 0;
+  if (obj.offsetParent) {
+    curtop = obj.offsetTop;
+    while (obj = obj.offsetParent) {
+      curtop += obj.offsetTop;
+    }
+  }
+  return curtop;
+}
+</script>
+
+</head>
+<?php 
+
+// ==================================================
+/* Finally, the body of the page */
+
+?>
+<body onLoad='javascript:<?php echo isset($go1) ? $go1 : "go(52.0,24.0,4,-1)"; ?>'>
+
+<table id='outer'>
+<tr>
+<td id='leftcolumn'>
+<table id='innerleft'>
+<tr><td id='logopanel'>
+<div id='osmheader'>OpenStreetMap</div>
+<div id='osmheader'>Name Finder</div>
+<img src='http://www.openstreetmap.org/images/osm_logo.png' alt='Open Street Map' />
+<div id='strapline'>The Free Wiki World Map</div>
+<div class='mini'><a href='http://wiki.openstreetmap.org/index.php/Name_finder' target='osmwiki'>
+about searching...</a></div>
+</td></tr>
+
+<tr><td class='sidepanel' id='sidepanel'>
+<?php if (isset($results)) { echo $results; } ?>
+</td></tr>
+</table>
+</td>
+
+<td id='rightcolumn'>
+<table id='innerright'>
+<tr><td id='messagepanel'>
+<?php 
+  if (! empty($message)) { echo htmlentities($message, ENT_QUOTES, 'UTF-8'); }
+?>
+</td></tr>
+
+<tr><td id='foundpanel'>
+</td></tr>
+
+<tr><td id='searchpanel'>
+<form action='' method='get'>
+<input type='text' name='find' id='findbox' 
+       value='<?php echo htmlspecialchars($find, ENT_QUOTES, 'UTF-8'); ?>' />
+<input type='submit' value='Find' />
+<input type='button' onclick='javascript:tellmewhereiam()' id='whereami' value='Where Am I?' /></br />
+</form>
+</td></tr>
+
+<tr><td id='mappanel'>
+<div id='map'>
+<!-- openlayers here -->
+</div>
+<div id='whereamitarget'>
+<!-- js insertscontext -->
+</div>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>

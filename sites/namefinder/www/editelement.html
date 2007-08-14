@@ -1,0 +1,598 @@
+<?php
+
+/* This file is a complete mini tag editor for objects in OSM identified by id. */
+
+// $debug = 1;
+session_start();
+$session =& $_SESSION['osmminieditor'];
+$cookiename = 'osmtageditor';
+
+include_once('preamble.php');
+include_once('search.php');
+include_once('options.php');
+
+if (! empty($_SERVER['REQUEST_URI'])) {
+  $db->log("VISITING {$_SERVER['REQUEST_URI']}");
+}
+
+$result = -1;
+$rememberhtml = '';
+$message;
+
+for(;;) {
+
+  if (isset($_GET['node'])) {
+    $id = $_GET['node'];
+    $elemtype = 'node';
+  } else if (isset($_GET['segment'])) {
+    $id = $_GET['segment'];
+    $elemtype = 'segment';
+  } else if (isset($_GET['way'])) {
+    $id = $_GET['way'];
+    $elemtype = 'way';
+  } else {
+    $result = 'no_id';
+    $message = 'missing ?elemtype=id in url';
+    break;
+  }
+
+  if (! empty($_POST)) {
+    //print_r($_POST);
+    if (! empty($_POST['login'])) {
+      if (! empty($_POST['user'])) {
+        $session['user'] = $_POST['user'];
+      }
+      if (! empty($_POST['user'])) {
+        $session['password'] = $_POST['password'];
+      }
+      if (! empty($_POST['remember'])) {
+        setlogincookie($session['user'], $session['password']);
+        $rememberhtml = "checked='checked'";
+      } else {
+        clearlogincookie();
+      }
+    } else if (! empty($_POST['logout'])) {
+      unset($session['user']);
+      unset($session['password']);
+      $result = 'need_login';
+      clearlogincookie();
+      break;
+    } else if (isset($_POST['action'])) {
+      $action = $_POST['action'];
+      switch($action) {
+      case 0: // ok
+        if (empty($_POST['values']) || ! is_array($_POST['values'])) {
+          $message = 'missing values (naughty, naughty)';
+          break 2;
+        }
+
+        $newtags = '';
+
+        for($i = 0; $i < count($_POST['tags']); $i++) {
+          if (! is_string($_POST['tags'][$i])) {
+            $message = "non-string tag {$i} (naughty, naughty)";
+            break 2;
+          }
+          if (! isset($_POST['values'][$i])) {
+            $message = "missing value {$i} (naughty, naughty)";
+            break 2;
+          }
+          if (! is_string($_POST['values'][$i])) {
+            $message = "non-string value {$i} (naughty, naughty)";
+            break 2;
+          }
+
+          $uploadtag = trim($_POST['tags'][$i]);
+          if ($uploadtag == '') { continue; }
+          $uploadvalue = $_POST['values'][$i];
+          $newtags .= "<tag k='" . htmlspecialchars($uploadtag, ENT_QUOTES, 'UTF-8') . 
+            "' v='" . htmlspecialchars($uploadvalue, ENT_QUOTES, 'UTF-8') . "'/>\n";
+        }
+
+        $uploadxml = preg_replace("~\\<tag .*\\/\\>\\s*\\<\\/{$elemtype}\\>~is", 
+          $newtags . "</{$elemtype}>", 
+          $session['xml'][$elemtype][$id][count($session['xml'][$elemtype][$id])-1]);
+        $uploadxml = str_replace('generator="OpenStreetMap server"', 
+                                 'generator="osm element editor"', $uploadxml);
+        $uploadxml = preg_replace('/(\\<osm .*) timestamp="[^"]*"/i', '${1}', $uploadxml);
+        $uploadxml = preg_replace('/(\\<osm .*) user="[^"]*"/i', '${1}', $uploadxml);
+
+        break;
+      case 1: // cancel
+        // just drop through and get it again
+        break;
+      case 2: // undo
+        if (! isset($session['xml'][$elemtype][$id]) || 
+            count($session['xml'][$elemtype][$id]) < 2) 
+        {
+          $message = "nothing to undo";
+          break 2;
+        }
+        array_pop($session['xml'][$elemtype][$id]);
+        $uploadxml = array_pop($session['xml'][$elemtype][$id]);
+        if (count($session['xml'][$elemtype][$id]) == 0) {
+          unset($session['xml'][$elemtype][$id]);
+        }
+        break;
+      default:
+        $message = 'unknown action (naughty, naughty)';
+        $result = 'need_login';
+        break 2;
+      }
+
+      if (isset($uploadxml)) {
+        $url = "http://www.openstreetmap.org/api/0.4/{$elemtype}/{$id}";
+        $fn = "/tmp/osmmi-".session_id();
+        file_put_contents($fn, $uploadxml);
+        $fh = fopen($fn, 'r');
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_PUT, 1);
+        curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
+          // works round a server problem which generates 417 errors otherwise
+        curl_setopt($ch, CURLOPT_INFILE, $fh);
+        curl_setopt($ch, CURLOPT_INFILESIZE, strlen($uploadxml));
+        curl_setopt($ch, CURLOPT_USERPWD, "{$session['user']}:{$session['password']}");
+        $xml = curl_exec($ch);
+        $uploadresult = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        fclose($fh);
+        unlink($fn);
+
+        switch ($uploadresult) {
+        case 200:
+          $message = "OK";
+          break;
+        default:
+          $message = "upload to server returned {$uploadresult}\n";
+          break 2;
+        }
+      }
+    }
+  }
+
+  if (! isset($session['user'])) {
+    if (! empty($_COOKIE[$cookiename]['un']) && 
+        ! empty($_COOKIE[$cookiename]['up'])) 
+    {
+       $session['user'] = $_COOKIE[$cookiename]['un'];
+       $session['password'] = $_COOKIE[$cookiename]['up'];
+    } else {
+      $result = 'need_login';
+      break;
+    }
+  }
+
+  if (empty($debug)) {
+    $url = "http://www.openstreetmap.org/api/0.4/{$elemtype}/{$id}";
+    // $url = "http://www.openstreetmap.org/api/0.4/map?bllon=0.1899,bllat=52.1999,trlon=0.1901,trlat=52.001";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // give me the output
+    curl_setopt($ch, CURLOPT_USERPWD, "{$session['user']}:{$session['password']}");
+    $xml = curl_exec($ch);
+    $result = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+  } else {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?> <osm version="0.4" generator="OpenStreetMap server"> <node id="20823872" lat="52.2062694249354" lon="0.134404947388109" user="davidearl" visible="true" timestamp="2006-11-01T22:40:05+00:00"> <tag k="amenity" v="cinema"/> <tag k="name" v="Vue Cinema (multiscreen)"/> <tag k="created_by" v="JOSM"/> </node> </osm>';
+    $result = 200;
+  }
+
+  if ($result != 200) {
+    switch ($result) {
+    case 401:
+      $message = "OSM rejected your email/password";
+      break;
+    case 500:
+      $message = "OSM gave server error 500";
+      break;
+    }
+    break;
+  }
+
+  if (! isset($session['xml'][$elemtype][$id]) || 
+      $session['xml'][$elemtype][$id][count($session['xml'][$elemtype][$id]) - 1] != $xml)
+  {
+    $session['xml'][$elemtype][$id][] = $xml;
+  }
+
+  /*
+    <node lon='-0.148588713362387' uid='110308' lat='51.5278975364617'>
+      <tag k="name" v="cheese"/>
+    </node>
+
+    so $xmlo['lon'], $xmlo['lat'], $xmlo['uid']
+       $xmlo->tag[$i]->tag['k']
+       $xmlo->tag[$i]->tag['v']
+  */
+  $xmlo = simplexml_load_string($xml);
+  if (empty($xmlo->$elemtype)) {
+    $result = -4;
+    break;
+  }
+  $uid = $xmlo->{$elemtype}['id'];
+  if ($uid != $id) {
+    /* problem */
+    $result = -2;
+    break;
+  }
+
+  $tags = array();
+  foreach ($xmlo->{$elemtype}->tag as $tag) {
+    $tags[(string)$tag['k']] = str_replace("\n", "\\n", (string)$tag['v']);
+  }
+
+  break;
+}
+
+function setlogincookie($user, $password) {
+  global $cookiename;
+  $expire = time() + 60*60*24* 30 /* days */;
+  /* the last parameter '/' means cookie available site wide */
+  setcookie("{$cookiename}[un]", $user, $expire, '/');
+  setcookie("{$cookiename}[up]", $password, $expire, '/');
+}
+
+function clearlogincookie() {
+  global $cookiename;
+  $expire = time(); 
+  setcookie("{$cookiename}[un]", '', $expire, '/'); /* delete cookie */
+  setcookie("{$cookiename}[up]", '', $expire, '/'); /* delete cookie */
+}
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+<title>OpenStreetMap mini element editor</title>
+<meta name='description' content='OpenStreetMap mini element editor' />
+<meta name='MSSmartTagsPreventParsing' content='TRUE' /> 
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+<?php
+$userhtml = isset($session['user']) ? htmlspecialchars($session['user'], ENT_QUOTES, 'UTF_8') : '';
+if ($result == 200) {
+  include_once('mapfeatures.php');
+
+  $mapfeatureoptions = array(''=>'');
+  foreach ($mapfeatures as $category => $features) {
+    foreach($features as $feature) {
+      if ($feature{0} == '(') {
+        $feature = preg_replace('/\\(.*\\)/', '', $feature);
+        $ks = "{$category}-{$feature}";
+        $mapfeatureoptions[$ks] = array($ks, "{$category}={$feature}");
+      } else {
+        $ks = "{$feature}-{$category}";
+        $mapfeatureoptions[$ks] = array($ks, "{$feature} ({$category})");
+      }
+    }
+    $mapfeatureoptions["{$category}-"] = array("-{$category}", "{$category}=...");
+  }
+  ksort($mapfeatureoptions);
+
+  $xmlinhtml = empty($debug) ? '' : 
+    "<p class='xml'>" . htmlspecialchars($xml, ENT_QUOTES, 'UTF-8') . "</p>";
+
+  $mapfeatureoptionssize = count($mapfeatureoptions);
+  $arrs = "<script type='text/javascript'>\n";
+  $arrs .= "var mfo = new Array({$mapfeatureoptionssize});\n";
+  foreach($mapfeatureoptions as $mfo) { 
+    $arrs .= "mfo['{$mfo[0]}']='{$mfo[1]}';\n"; 
+  }
+  $tagssize = count($tags);
+  $arrs .= "var tags = new Array({$tagssize});\n";
+  $i = 0;
+  foreach($tags as $k=>$v) { 
+    $v = str_replace("'", "\\'", $v);
+    $arrs .= "tags[{$i}] = new Array(2);\ntags[{$i}][0] = '{$k}';\ntags[{$i}][1] = '{$v}';\n";
+    $i++;
+  }
+
+  echo $arrs;
+?>
+
+function addrow(i) {
+  var tbody = document.getElementById("tbody");
+  var trow = document.createElement("TR");
+  var tdselect = document.createElement("TD");
+  var tdkey    = document.createElement("TD");
+  var tdvalue  = document.createElement("TD");
+  var sselect = document.createElement("SELECT");
+  trow.className = 'keyvalue';
+  trow.id = 'tag_' + i;
+  if (tags.length == i) { 
+    tags[i] = new Array(2);
+    tags[i][0] = '';
+    tags[i][1] = '';
+  }
+  sselect.className = 'popup';
+  sselect.id = 'select_' + i;
+  // sselect.onchange = eval("function(){skv("+i+")}");
+  sselect.onchange = skv;
+  if (sselect.captureEvents) sselect.captureEvents(Event.CHANGE);
+
+  var j = 0;
+  for (var o in mfo) {
+    sselect.options[j] = new Option(mfo[o], o);
+    j++;
+  }
+  tdselect.appendChild(sselect);
+  tdkey.innerHTML =    "<input class='key' type='text' value='"+tags[i][0]+"' id='key_"+i+"' name='tags[]' onchange='javascript:changekey("+i+")' />";
+  tdvalue.innerHTML =  "<input class='value' type='text' value='"+tags[i][1]+"' id='value_"+i+"' name='values[]' onchange='javascript:changevalue("+i+")' />";
+  trow.appendChild(tdselect);
+  trow.appendChild(tdkey);
+  trow.appendChild(tdvalue);
+  tbody.appendChild(trow);
+}
+
+function checktags(j) {
+  var newkey = document.getElementById("key_"+j).value;
+  if (newkey == '') { return true; }
+  for (var i = 0; true;i++) {
+    var keyo = document.getElementById("key_"+i);
+    if (! keyo) { break; }
+    keyo.style.color = 'black';
+    if (i == j) { continue; }
+    if (newkey == keyo.value) {
+      keyo.style.color = 'red';
+      alert("duplicated tag "+newkey);
+      return false;
+    }
+  }
+  return true;
+}
+
+function changekey(i) {
+  var nexto;
+  if (i+1 == tags.length) { addrow(i+1); }
+  if (checktags(i)) {
+    nexto = document.getElementById("value_"+i);
+  } else {
+    nexto = document.getElementById("key_"+i);
+  }
+  nexto.focus();
+  nexto.select();
+}
+
+function changevalue(i) {
+  var nexto = document.getElementById("key_"+(i+1));
+  if (! nexto) { nexto = document.getElementById("value_"+i); }
+  nexto.focus(); 
+  nexto.select();
+}
+
+function skv(e) {
+  var select;
+  if (! e) { var e = window.event; }
+  if (e.target) { select = e.target; }
+  else if (e.srcElement) { select = e.srcElement; }
+  if (select.nodeType == 3) { select = select.parentNode; } // defeat Safari bug
+  if (! select) { return; }
+  var i = parseInt(select.id.substr(7)); // after the 'select_' part
+  if (i+1 == tags.length) { addrow(i+1); }
+  var optionvalue = select.options[select.selectedIndex].value;
+  if (optionvalue == '') { return; }
+  select.selectedIndex = 0;
+  var dash = optionvalue.indexOf("-");
+  var valueo = document.getElementById("value_"+i);
+  document.getElementById("key_"+i).value = optionvalue.substr(dash+1);
+  valueo.value = optionvalue.substr(0, dash);
+  if (valueo.value == '') { valueo.focus(); }
+  checktags(i);
+}
+
+function dosubmit(ok) {
+  document.getElementById("action").value = ok;
+  document.theform.submit();
+}
+
+function loadthebody() {
+  var nrows = tags.length; // n.b. tags.length changes as a side effec of addrow 
+  for (var i = 0; i <= nrows; i++) { addrow(i); }
+  changevalue(nrows-1);
+}
+
+</script>
+<?php } ?>
+<style>
+body {
+  font-family: Verdana, sans-serif;
+  font-size: 0.7em;
+}
+h1 { font-size: 2em; }
+h2 { font-size: 1.2em; }
+h2.errormessage { color: red; }
+div.logo {
+ float: right;
+ margin-right: 2em; 
+}
+table { width: 95%; }
+td.key {
+}
+td.value {
+ width: 75%;
+}
+input.key {
+}
+input.value {
+ width: 100%;
+}
+div.user {
+  margin-top: 1em;
+}
+input#user,
+input#password {
+ width: 30em;
+}
+td.prompt {
+ width: 10em;
+ font-size: 1em;
+}
+input.button {
+ width: 18em;
+}
+p.hint {
+ width: 50%;
+}
+div#okcancelundo {
+  margin-top: 1em;
+}
+form#loginform {
+ clear: both;
+}
+</style>
+</head>
+<body onload='javascript:loadthebody()'>
+<div class='logo'>
+<img src='http://www.openstreetmap.org/images/osm_logo.png' alt='OpenStreetMap'/>
+</div>
+<h1>OpenStreetMap mini element editor</h1>
+<?php
+if (! empty($message)) { echo "<h2 class='errormessage'>",$message,"</h2>\n"; }
+
+switch($result) {
+case 401: // authentication failed
+case 'need_login':
+?>
+<h2>please log in</h2>
+<script type='text/javascript'>function loadthebody(){}</script>
+<form action='' method='POST' id='loginform'>
+<table>
+<tr>
+<td class='prompt'>email address:&nbsp;</td>
+<td><input type='text' id='user' name='user' value='<?php echo $userhtml; ?>' /></td>
+</tr><tr>
+<td class='prompt'>OSM&nbsp;password:&nbsp;</td>
+<td><input type='password' id='password' name='password' /></td>
+</tr>
+<tr>
+<td class='prompt'>remember&nbsp;password:&nbsp;</td>
+<td><input type='checkbox' id='remember' name='remember' {$rememberhtml} /></td>
+</tr>
+<tr>
+<td class='prompt'></td>
+<td><input class='submit' type='submit' id='login' name='login'  value='Login' /></td>
+</tr>
+</table>
+<p class='hint'>Your OSM password is needed to collect data from and submit 
+data to the OSM server.</p>
+<p class='hint'>If you tick the 'remember password' box your email 
+address and password will be stored in a cookie on your PC's disk. 
+This means you won't need to re-enter it here again. You can clear it later.</p>
+<p class='hint'>Otherwise your email and password will only be stored on 
+the mini-editor server for the duration of your session (that is, until a few 
+minutes after you stop using it or you explicitly log out).</p>
+<p class='hint'>Passwords are sent in clear text both between your browser 
+and the mini-editor server and from there to the OpenStreetMap server.</p>
+</form>
+
+<?php  
+  break;
+case -1:
+  break;
+case -2:
+  echo "<h2>ids don't match '", $uid, "' '", $id, "'</p>\n";
+  break;
+case 'no_id':
+  echo "<script type='text/javascript'>function loadthebody(){}</script>\n";
+  break;
+case -3:
+  echo "<h2>no node</h2>";
+  break;
+case 500: 
+?>
+<form action='' method='POST'>
+<input class='submit' type='submit' id='logout' name='logout'  value='Logout' />
+<p class='hint'>This will forget your email and password both on the server and remove any login cookie.</p>
+</form>
+<?php
+  break;
+default:
+  echo "<h2>server returned error {$result} for url " . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "</h2>\n";
+  echo htmlspecialchars($xml, ENT_QUOTES, 'UTF-8');
+  break;
+case 200: // normal response
+  $name = empty($tags['name']) ? '' : ' - ' . 
+  htmlspecialchars($tags['name'], ENT_QUOTES, 'UTF-8');
+  $timestamp = str_replace('T', ' ', $xmlo->{$elemtype}['timestamp']);
+
+  $s = "<h2>for {$elemtype} {$id}{$name}:<br />\n";
+
+  if (isset ($xmlo->node['lat'])) {
+    $s .= "at latitude {$xmlo->node['lat']}, longitude {$xmlo->node['lon']}<br />\n";
+    $url = "http://www.openstreetmap.org?index.html?lat={$xmlo->node['lat']}&lon={$xmlo->node['lon']}&zoom=15";
+    $s .= "<a href='{$url}'>" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "</a><br />\n";
+  } else if (isset ($xmlo->segment['from'])) {
+    $s .= "from node <a href='editelement.html?node={$xmlo->segment['from']}'>{$xmlo->segment['from']}</a> to node <a href='editelement.html?node={$xmlo->segment['to']}'>{$xmlo->segment['to']}</a><br />\n";
+  } else if (isset ($xmlo->way)) {
+    $s .= "segments: ";
+    if (empty($xmlo->way->seg)) {
+      $s .= "NONE!<br />\n";
+    } else {
+      $prefix = '';
+      foreach($xmlo->way->seg as $segment) {
+        $s .= "{$prefix}<a href='editelement.html?segment={$segment['id']}'>{$segment['id']}</a>";
+        $prefix = ', ';
+      }
+      $s .= "<br />\n";
+    }
+  }
+
+  $person = $xmlo->{$elemtype}['user'];
+
+$s .=<<<EOD
+last changed by {$person} at {$timestamp}</h2>
+<div style='clear: both'></div>
+{$xmlinhtml}
+<form action='' method='POST' name='theform'>
+<table>
+<thead>
+<tr>
+<td class='select'></td>
+<td class='key'><strong>key<br/>(delete a key to remove the tag)</strong></td>
+<td class='value'><strong>value</strong></td>
+</tr>
+</thead>
+<tbody id='tbody'><!-- js --></tbody>
+</table>
+<input type='hidden' value='0' id='action' name='action' />
+</form>
+<div id='okcancelundo'>
+<input class='button' type='button' id='submit' name='submit' 
+value='Update (commit changes)' 
+onclick='javascript:dosubmit(0)' />
+&nbsp;&nbsp;
+<input class='button' type='button' id='cancel' name='cancel' 
+value='Cancel (ignore these changes)'
+   onclick='javascript:dosubmit(1)' />
+
+EOD;
+
+ if (isset($session['xml'][$elemtype][$id]) && count($session['xml'][$elemtype][$id]) > 1) {
+   $s .= <<<EOD
+&nbsp;&nbsp;
+<input class='button' type='button' id='undo' name='undo' 
+value='Undo (revert database to previous)'
+onclick='javascript:dosubmit(2)' />
+
+EOD;
+ }
+
+ $s .= <<<EOD
+</div>
+<p class='hint'>On Update the database will be changed to reflect the new node 
+contents (all being well) and then the node will be fetched again into this form for 
+confirmation</p>
+
+<form action='' method='POST'>
+<input class='submit' type='submit' id='logout' name='logout'  value='Logout' />
+<p class='hint'>Logged in as <strong>{$userhtml}</strong>. The Logout button 
+will forget your email and 
+password on the server and clear any login cookie on your own computer.</p>
+</form>
+
+EOD;
+
+  echo $s;
+  break;
+}
+?>
+</body>
+</html>

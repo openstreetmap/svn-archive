@@ -1,0 +1,22 @@
+<?php
+
+include_once('preamble.php');
+include_once('search.php');
+
+/* Sessions are only used so that queries from the same user get logged in the same log file */
+session_start();
+
+/* note what we were asked for */
+if (! empty($_SERVER['REQUEST_URI'])) {
+  $db->log("VISITING {$_SERVER['REQUEST_URI']}");
+}
+
+/* get the url query parameters */
+$find = isset($_GET['find']) ? $_GET['find'] : '';
+$max = (int)(isset($_GET['max']) ? $_GET['max'] : $config['limit']);
+
+/* do the deed */
+header("Content-type: text/xml; charset=UTF-8");
+echo search::xmlise($find, $max);
+
+?>

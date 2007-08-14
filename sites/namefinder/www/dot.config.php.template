@@ -1,0 +1,42 @@
+<?php
+
+// where to find the installation
+$config['installdir'] = '/Users/osm/namefinder';
+
+// where to find the php
+$config['includephp'] = "{$config['installdir']}/php";
+
+// open layers url
+$config['openlayersjsurl'] = 'OpenLayers-2.4/OpenLayers.js';
+
+// number of records to insert in one go when building index
+$config['insertchunk'] = 500;
+
+// the bounding area to consider when indexing
+// comment out to do the whole world
+// this is the UK (and a bit of France, and excluding the Orkney and Shetland islands)
+// $config['area'] = array('n'=>60.0,'s'=>49.9,'w'=>-8.0,'e'=>2.0);
+// $config['area'] = array('n'=>52.4,'s'=>52.0,'w'=>-0.25,'e'=>0.4);
+
+// default max number of names to return a match for
+$config['limit'] = 30;
+
+// the distance withing which items with the same name are considered to be the same
+$config['tooclose'] = 3.0; /* km */
+
+// where to get the map
+$config['maphref'] = 'http://www.openstreetmap.org/index.html';
+
+// debug level
+$config['debug'] = 0;
+
+// database parameters
+$config['y_db_name'] = 'namefinder';
+$config['y_db_user'] = 'osm';
+$config['y_db_password'] = 'db-users-password';
+// $config['y_db_prefix'] = 'alpha_';
+$config['y_db_log'] = "{$config['installdir']}/dblog";
+$config['y_db_always_lock'] = TRUE;
+// $config['y_db_debug'] = TRUE;
+
+?>

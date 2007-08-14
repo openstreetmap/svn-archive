@@ -57,13 +57,20 @@ if (scalar(@ARGV) == 2)
     ($maxlat, $minlat) = Project($tiley, 12);
     ($minlon, $maxlon) = ProjectL($tilex, 12);
 }
+elsif (scalar(@ARGV) == 3)
+{
+    my $zoom;
+    ($tilex, $tiley, $zoom) = @ARGV;
+    ($maxlat, $minlat) = Project($tiley, $zoom);
+    ($minlon, $maxlon) = ProjectL($tilex, $zoom);
+}
 elsif (scalar(@ARGV) == 4)
 {
     ($minlat, $minlon, $maxlat, $maxlon) = @ARGV;
 }
 else
 {
-    die "need either 'tilex tiley' or 'minlat minlon maxlat maxlon' on cmdline";
+    die "need either 'tilex tiley [zoom]' (defaults to zoom=12) or 'minlat minlon maxlat maxlon' on cmdline";
 }
 
 my $sigma = 0.01;

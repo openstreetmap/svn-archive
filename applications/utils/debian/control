@@ -7,7 +7,8 @@ Standards-Version: 3.6.1
 
 Package: openstreetmap-utils
 Architecture: all
-Depends: perl, python
+Depends: perl, python, libshp1,libmagick9
+Build-Depends: libshp-dev, libmagick9-dev, libxml2-dev
 Recommends: gpsdrive, mapnik
 Suggests: java
 Description: OpenStreetmap Utils

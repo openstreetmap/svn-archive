@@ -42,6 +42,7 @@ my @coastline_segments;
 
 my $tilex;
 my $tiley; 
+my $zoom;
 my $minlat;
 my $minlon;
 my $maxlat;
@@ -51,18 +52,12 @@ my $emulate_frollo=1;
 # hash containing information about segments that start a subpath
 my $subpath_start;
 
-if (scalar(@ARGV) == 2)
+if (scalar(@ARGV) == 2 or scalar(@ARGV) == 3)
 {
-    ($tilex, $tiley) = @ARGV;
+    ($tilex, $tiley, $zoom) = @ARGV;
+    if (!$zoom) {$zoom = 12;}
     ($maxlat, $minlat) = Project($tiley, 12);
     ($minlon, $maxlon) = ProjectL($tilex, 12);
-}
-elsif (scalar(@ARGV) == 3)
-{
-    my $zoom;
-    ($tilex, $tiley, $zoom) = @ARGV;
-    ($maxlat, $minlat) = Project($tiley, $zoom);
-    ($minlon, $maxlon) = ProjectL($tilex, $zoom);
 }
 elsif (scalar(@ARGV) == 4)
 {

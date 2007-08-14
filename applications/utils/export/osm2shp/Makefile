@@ -6,3 +6,5 @@ CXX = g++
 osm2shp: $(OBJ)  ../../../libs/libosm/libosm.a
 	$(CXX) -o osm2shp $(OBJ) $(CFFFLAGS) $(LDFLAGS)
 
+clean:
+	rm -f *.o

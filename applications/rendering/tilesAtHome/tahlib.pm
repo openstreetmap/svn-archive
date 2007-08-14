@@ -180,7 +180,7 @@ sub DownloadFile
 {
     my ($URL, $File, $UseExisting) = @_;
 
-    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 240);
+    my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 1800);
     $ua->agent("tilesAtHome");
     $ua->env_proxy();
 

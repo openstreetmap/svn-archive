@@ -14,6 +14,12 @@
     exit;
   }
 
+  # Check which layers the client wants to render and refuse if its 'lowzoom'
+  if ($_GET["layers"] == 'lowzoom'){
+    print "XX|3||||we don't hand out lowzoom requests";
+    exit;
+  }
+
   include("../connect/connect.php");
   include("../lib/log.inc");
   include("../lib/requests.inc");

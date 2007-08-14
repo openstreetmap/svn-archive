@@ -1027,7 +1027,7 @@
                 stroke: none;
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 300px;
+                font-size: 1000px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -1036,7 +1036,7 @@
                 fill: black;
                 stroke: none;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 200px;
+                font-size: 600px;
                 opacity: 0.7;
                 font-weight: bold;
                 text-anchor: middle;

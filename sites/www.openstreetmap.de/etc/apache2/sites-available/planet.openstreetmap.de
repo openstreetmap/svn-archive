@@ -14,7 +14,9 @@
 		allow from all
 		# This directive allows us to have apache2's default start page
                 # in /www.openstreetmap.de/, but still have / go to the right place
-                RedirectMatch ^/$ http://www.openstreetmap.de/
+                
+		# removed 2007-08-13 by jens
+		#RedirectMatch ^/$ http://www.openstreetmap.de/
 	</Directory>
 
 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/planet.openstreetmap.de

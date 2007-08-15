@@ -1,0 +1,7 @@
+deb     http://ftp.de.debian.org/debian testing main contrib non-free 
+
+# for the tools stuff to make it install easier
+deb     http://www.gpsdrive.de/debian etch main
+deb-src http://www.gpsdrive.de/debian etch main
+
+

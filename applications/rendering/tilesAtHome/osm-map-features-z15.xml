@@ -529,7 +529,7 @@
 		    <symbol xlink:href="#hospital" width='10px' height='10px' transform='translate(-5,-5)' />
 		</rule>
 		<rule e="node" k="amenity" v="post_office">
-		    <symbol xlink:href="#postoffice" width='4px' height='2px' transform='translate(-2,-1)' />
+		    <symbol xlink:href="#postoffice" width='3px' height='3px' transform='translate(-1.5,-1.5)' />
 		</rule>
 		<rule e="node" k="amenity" v="place_of_worship">
 		    <rule e="node" k="denomination|religion" v="~">
@@ -2085,14 +2085,10 @@
             <svg:path stroke-width="1px" d="M 14.5 7.5 A 7 7 0 1 1 0.5,7.5 A 7 7 0 1 1 14.5 7.5 z" />
         </svg:symbol>
 
-        <svg:symbol
-          id="postoffice"
-          viewBox="0 0 14 8"
-          fill="none"
-          stroke="red"
-          stroke-width="1.5px">
-            <svg:path d="M 0,0 L 14,0 L 14,8 L 0,8 L 0,0 z M 0,0 L 7,4 L 14,0" />
-        </svg:symbol>
+        <svg:symbol id="postoffice" viewBox="0 0 36 36">
+		<svg:ellipse style="fill:#ff0000" cx="18" cy="18" rx="18" ry="18"/>
+		<svg:path style="fill:#ffffff" d="M26 25.44 L26 35.44 L2 35.44 L2 25.44 L14 31.44 L26 25.44 Z M2 23.44 L26 23.44 L14 29.44 L2 23.44 Z M0 37.44 L28 37.44 L28 21.44 L0 21.44 L0 37.44 Z" transform="translate(4,-11.44)"/>
+	</svg:symbol>
 
         <svg:symbol
           id="postbox"

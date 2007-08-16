@@ -74,8 +74,8 @@
  *
  */
 
-static char rcsid[] = 
-  "$Id: AND2osm.c,v 0.4 2007/07/29 11:04:00 Marc Kessels";
+//static char rcsid[] = 
+//  "$Id: AND2osm.c,v 0.4 2007/07/29 11:04:00 Marc Kessels";
 
 //#include "shapefil.h"
 #include <stdlib.h>
@@ -83,6 +83,10 @@ static char rcsid[] =
 #include <string.h>
 #include <unistd.h>
 #include "osm.h"
+#include "ways.h"
+#include "segments.h"
+#include "nodes.h"
+#include "tags.h"
 
 int postgres = 0;
 
@@ -189,7 +193,7 @@ int readfile(char * inputfile)
         SHPObject	*psShape;
 	struct nodes *prevNode,*lastNode,*firstNode;
 	struct segments *lastSegment;
-	struct ways * way;
+	struct ways * way=NULL;
 
 	psShape = SHPReadObject( hSHP, i );
 	if ((i/100)*100==i) printf("\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
@@ -233,7 +237,7 @@ int readfile(char * inputfile)
 			}
 			//printf("%i/%i\n",j,psShape->nVertices);
 			prevNode=lastNode;
-			lastNode=newNode(psShape->padfY[j],psShape->padfX[j]);
+			lastNode=addNode(psShape->padfY[j],psShape->padfX[j]);
 			//printf("%p\n",lastNode);
 			if (j==0)
 			{
@@ -250,7 +254,7 @@ int readfile(char * inputfile)
 				else
 				{
 					//    printf(" seg\n");
-					lastSegment=newSegment(prevNode,lastNode);
+					lastSegment=addSegment(prevNode,lastNode);
 					//  printf(" seg2way\n");
 					addSegment2Way(way,lastSegment);
 				}
@@ -309,6 +313,9 @@ int main(int argc, char ** argv )
 	
 
 	init_tags();
+	init_ways();
+	init_nodes();
+	init_segments();
 	while ((c = getopt (argc, argv, "b:np")) != -1)
 		switch (c)
 		{

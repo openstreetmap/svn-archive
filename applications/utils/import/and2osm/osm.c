@@ -27,21 +27,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "osm.h"
+#include "ways.h"
+#include "segments.h"
+#include "nodes.h"
+#include "tags.h"
+
+
 #include "2AND.h"
 /*datatypes*/
 
+
 extern int postgres;
-
-long text_depth;
-long node_depth;
-long textID=-1;
-
-
-
-/*root nodes of lists*/
-struct nodes *root_node=NULL;
-struct segments *root_segment=NULL;
-struct ways *root_way=NULL;
 
 
 /* File descriptor for .osm file. */
@@ -62,27 +58,6 @@ long incr (long i) {
 	else
 		return i-1;
 }
-
-
-
-long hash_ID(long x) {
- long h = 0;
- int i = 0;
-
- for(h = i = 0; i < sizeof(long)*8; i++) {
-  h = (h << 1) + (x & 1); 
-  x >>= 1; 
- }
-
- return h;
-}
-
-
-long hash_lat(double x) {
-	return hash_ID(x*1000000);
-}
-
-/*output*/
 
 int openOutput()
 {
@@ -120,6 +95,15 @@ int openOutput()
 	return 0;
 }
 
+
+void save(){
+	saveNodes();
+	saveSegments();
+	saveWays();
+}
+
+
+
 int closeOutput()
 {
 	if (postgres)
@@ -136,7 +120,7 @@ int closeOutput()
 		fclose(fp_wn);
 		fclose(fp_wt);
 	}
-	else
+	else 
 	{
 		fprintf(fp,"</osm>\n");
 		fclose(fp);
@@ -145,312 +129,6 @@ int closeOutput()
 }
 
 
-
-void saveNode(struct nodes *p){
-	fprintf(fp,"	<node id=\"%li\" lat=\"%1.5f\" lon=\"%1.5f\" >\n",p->ID,p->lat,p->lon);
-	saveTags(fp,p->tag);
-	fprintf(fp,"		<tag k=\"source\" v=\"AND\" />\n");
-	fprintf(fp,"		<tag k=\"source-ref\" v=\"www.and.com\" />\n");
-	fprintf(fp,"	</node>\n");
-	
-}
-
-void saveNodes(struct nodes *p){
-	if (p!=NULL)
-	{
-		saveNodes(p->btree_l);
-		saveNode(p);
-		saveNodes(p->btree_h);
-	}
-}
-
-long saveSegment(struct segments *p){
-	
-	if (fp==NULL)
-	{
-		printf("saveSegment file not open!!!");
-		exit(1);
-	}
-	if (p==NULL)
-	{
-		printf("saveSegment null-pointer to struct segments !!!");
-		exit(1);
-	}
-	if (p->from==NULL)
-	{
-		printf("saveSegment null-pointer to struct nodes from !!!");
-		exit(1);
-	}
-	if (p->to==NULL)
-	{
-		printf("saveSegment null-pointer to struct nodes to !!!");
-		exit(1);
-	}
-	if (fp!=NULL) fprintf(fp,"	<segment id=\"%li\" from=\"%li\" to=\"%li\" />\n",p->ID,(p->from)->ID,(p->to)->ID);
-	return 0;
-}
-		
-void saveSegments(struct segments *p){
-	while (p!=NULL)
-	{
-		saveSegment(p);
-		p=p->next;
-	}
-}
-
-void saveAttachedSegments(struct attachedSegments *p){
-	if (p!=NULL)
-	{
-		fprintf(fp,"		<seg id=\"%li\" />\n",p->Segment->ID);
-//		printf("(%2.5f, %2.5f)-(%2.5f,%2.5f)\n",p->Segment->from->lon,p->Segment->from->lat,p->Segment->to->lon,p->Segment->to->lat);
-		saveAttachedSegments(p->nextSegment);
-	}
-}
-
-
-
-
-void saveWay(struct ways *p){
-
-	if (p->type==ROAD)
-		fprintf(fp,"	<way id=\"%li\" >\n",p->wayID);
-	else if (p->type==AREA)
-		fprintf(fp,"    <way id=\"%li\" >\n",p->wayID);
-	else fprintf(stderr,"unkown wayType in saveWay\n");	
-	saveTags(fp,p->tag);
-	saveAttachedSegments(p->segments);
-	
-
-	
-	if (p->type==ROAD)
-		fprintf(fp,"	</way>\n");
-	else if (p->type==AREA)
-		fprintf(fp,"    </way>\n");
-
-}	
-
-void saveWays(struct ways *p){
-	while (p!=NULL)
-	{
-		saveWay(p);
-		p=p->next;
-	}
-}
-
-void saveNode_pg(struct nodes *p)
-{
-	struct tags *t;
-
-	fprintf(fp_n, "EXECUTE nodes_insert(%li, %1.6f, %1.6f);\n", p->ID, p->lat, p->lon);
-
-	for (t = p->tag; t != NULL; t = t->nextTag)
-    
-		fprintf(fp_nt, "%li\t%s\t%s\n", p->ID, t->key, t->value);
-}
-
-void saveNodes_pg(struct nodes *p){
-	if (p!=NULL)
-	{
-		saveNodes_pg(p->btree_l);
-		saveNode_pg(p);
-		saveNodes_pg(p->btree_h);
-	}
-}
-
-void saveWay_pg(struct ways *p)
-{
-	struct tags *t;
-	struct attachedSegments *s; 
-	long seqid = 1;
-
-	if (p->segments == NULL)
-	{
-		printf("Way %li doesn't have segments, ignoring", p->wayID);
-		return;
-	}
-  
-	fprintf(fp_w, "INSERT INTO ways VALUES (%li, GeomFromText('LINESTRING(", p->wayID);
-
-	for (s = p->segments;;s = s->nextSegment)
-	{
-		fprintf(fp_w, "%1.6f %1.6f,", s->Segment->from->lat, s->Segment->from->lon);
-		fprintf(fp_wn, "%li\t%li\t%li\n", p->wayID, seqid++, s->Segment->from->ID);
-		if (s->nextSegment == NULL)
-		{
-			fprintf(fp_w, "%1.6f %1.6f)', 4326));\n", s->Segment->to->lat, s->Segment->to->lon);
-			fprintf(fp_wn, "%li\t%li\t%li\n", p->wayID, seqid++, s->Segment->to->ID);
-			break;
-		}
-	}
-
-	for (t = p->tag; t != NULL; t = t->nextTag)
-		fprintf(fp_wt, "%li\t%s\t%s\n", p->wayID, t->key, t->value);
-}
-
-void saveWays_pg(struct ways *p){
-	while (p!=NULL)
-	{
-		saveWay_pg(p);
-		p=p->next;
-	}
-}
-
-void save(){
-	if (postgres)
-	{
-		saveNodes_pg(root_node);
-		saveWays_pg(root_way);
-	}
-	else
-	{
-		saveNodes(root_node);
-		saveSegments(root_segment);
-		saveWays(root_way);
-	}
-}
-	
-
-
-struct nodes * mkNode(double lat, double lon,struct nodes *p ,struct nodes **rv){
-	static long nodeID = 0;
-	long long hashed_lat;
-	hashed_lat=hash_lat(lat);
-	//printf("in mkNode\n");
-	if (p == NULL) /* a new Node has arrived */
-	{
-		//printf("new node\n");
-		p = (struct nodes *) calloc(1,sizeof(struct nodes));
-		if (p==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		if (rv!=NULL) *rv=p;
-		nodeID = incr(nodeID);
-		p->ID=nodeID;
-		p->hashed_lat=hashed_lat;
-		p->lat=lat;
-		p->lon=lon;
-		p->btree_l=NULL;
-		p->btree_h=NULL;
-		p->tag=NULL;
-		p->segments=NULL;
-		
-		//p->ways=NULL;
-		node_depth=0;
-/*		saveNode(p->ID,lat,lon);*/
-	}
-	else if (hashed_lat< p->hashed_lat) 
-	{
-		p->btree_l=mkNode(lat,lon,p->btree_l,rv);
-	}
-	else if (hashed_lat > p->hashed_lat)
-	{
-		p->btree_h=mkNode(lat,lon,p->btree_h,rv);
-	}
-	else if (lat< p->lat)
-	{
-		//should not be reached, unless hashing is again not ok...
-		p->btree_l=mkNode(lat,lon,p->btree_l,rv);
-	}
-	else if (lat > p->lat)
-	{
-		//should not be reached, unless hashing is again not ok...
-		p->btree_h=mkNode(lat,lon,p->btree_h,rv);
-	}
-	
-	else if /*lat=p->lat*/ (lon< p->lon)
-	{
-		p->btree_l=mkNode(lat,lon,p->btree_l,rv);
-	}
-	else if (lon > p->lon)
-	{
-		p->btree_h=mkNode(lat,lon,p->btree_h,rv);
-	}
-	else /*lat=p->lat && lon=p->lon*/
-	{	
-		if (rv!=NULL) *rv=p;
-		node_depth=0;
-		//printf("node found (%8.5f,%8.5f)=(%8.5f,%8.5f) %f=%f %li,%p\n",lon,lat,p->lon,p->lat,hash_lat(hashed_lat),hash_lat(p->hashed_lat),p->ID,(*rv)->ID);
-	}
-	//printf("out mkNode %p\n",p);
-	node_depth++;
-	return p;
-}
-
-struct nodes * newNode(double lat, double lon){
-	struct nodes * rv;
-	root_node=mkNode(lat,lon,root_node,&rv);
-	if (node_depth>node_maxdepth)
-	{
-		node_maxdepth=node_depth;
-		//printf("\nnew node depth:%li/%li\n",node_maxdepth,nodeID);
-	}
-	return rv;
-}
-
-struct attachedSegments * attachsegment(struct attachedSegments* p, struct segments *s){
-	//printf("%p\t%p\n",p,s);
-	if (p==NULL)
-	{
-		p = (struct attachedSegments *) calloc(1,sizeof(struct attachedSegments));
-		if (p==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		p->nextSegment=NULL;
-		p->Segment=s;
-	}
-	else
-	{
-		p->nextSegment=attachsegment(p->nextSegment,s);
-	}
-	return p;
-}	
-
-struct segments * newSegment(struct nodes * from, struct nodes * to){
-	static long segmentID = 0;
-	static struct segments *lastsegment=NULL;
-	struct attachedSegments *p;
-	struct segments *s;
-	/*check if already a segment exists between from and to, having same direction!*/
-
-	p=from->segments;
-	while (p!=NULL)
-	{
-		if (((p->Segment)->from==from)&&((p->Segment)->to==to))
-			return p->Segment;
-		p=p->nextSegment;
-	}
-	
-	if (p == NULL) /* a new Segment has arrived ,if statment a bit overdone... */
-	{
-		s = (struct segments *) calloc(1,sizeof(struct segments));
-		if (s==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		segmentID = incr(segmentID);
-		s->ID=segmentID;
-		s->from=from;
-		s->to=to;
-		s->next=NULL;
-		s->ways=NULL;
-		if (lastsegment!=NULL) lastsegment->next=s;
-		lastsegment=s;
-		if (root_segment==NULL) root_segment=s;
-		/*update from node's segment list*/
-	//printf("new segment\n");
-
-		from->segments=attachsegment(from->segments,s);
-		/*update to node's segment list*/
-		to->segments=attachsegment(to->segments,s);
-	
-	}
-	return s;
-}
 
 struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p,struct nodes * from, struct nodes * to){
 	char name[100];
@@ -897,82 +575,3 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 	 return p; /*should be pointer to first item in tag-list*/
  }
  
- struct attachedWays * attachway(struct attachedWays * p, struct ways * s) {
-	//printf("%p\t%p\n",p,s);
-	 if (p==NULL)
-	 {
-		 p = (struct attachedWays *) calloc(1,sizeof(struct attachedWays));
-		 if (p==NULL)
-		 {
-			 fprintf(stderr,"out of memory\n");
-			 exit(1);
-		 }
-		 p->nextWay=NULL;
-		 p->way=s;
-	 }
-	 else
-	 {
-		 p->nextWay=attachway(p->nextWay,s);
-	 }
-	 return p;
- }	
- 
-
-
- 
- void addSegment2Way(struct ways * way,struct segments * segment){
-	way->segments=attachsegment(way->segments,segment);
-	segment->ways=attachway(segment->ways,way);
-	if (way->max_lon < segment->from->lon) way->max_lon=segment->from->lon;
-	if (way->max_lon < segment->to->lon) way->max_lon=segment->to->lon;
-	if (way->max_lat < segment->from->lat) way->max_lat=segment->from->lat;
-	if (way->max_lat < segment->to->lat) way->max_lat=segment->to->lat;
-	if (way->min_lon > segment->from->lon) way->min_lon=segment->from->lon;
-	if (way->min_lon > segment->to->lon) way->min_lon=segment->to->lon;
-	if (way->min_lat > segment->from->lat) way->min_lat=segment->from->lat;
-	if (way->min_lat > segment->to->lat) way->min_lat=segment->to->lat;
-
-	
-	//printf("node from %i to %i, (%f,%f)-(%f-%f)",segment->from->ID, segment->to->ID,segment->from->lon,segment->from->lat,segment->to->lon,segment->to->lat);
-	return;
-}
-
-
-
-struct ways *newWay(int wayType){
-	static long wayID = 0;
-	static struct ways *lastway=NULL;
-	if (lastway==NULL)
-	{
-		root_way=calloc(1,sizeof(struct ways));
-		if (root_way==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		lastway=root_way;
-
-	}
-	else
-	{
-		lastway->next=calloc(1,sizeof(struct ways));
-		if (lastway->next==NULL)
-		{
-			fprintf(stderr,"out of memory\n");
-			exit(1);
-		}
-		lastway=lastway->next;
-	}
-	lastway->type=wayType;
-	wayID = incr(wayID);
-	lastway->wayID=wayID;
-	lastway->tag=NULL;
-	lastway->segments=NULL;
-	lastway->next=NULL;
-	lastway->min_lat=999;
-	lastway->min_lon=999;
-	lastway->max_lat=-1;
-	lastway->max_lon=-1;
-	
-	return lastway;
-}

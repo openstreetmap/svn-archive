@@ -79,7 +79,7 @@ while not done
   done = true
   all_nodes(page) do |id, lat, lon, timestamp, tags|
     done = false
-    print %{  <node id="#{id}" lat="#{lat}" lon="#{lon}" timestamp="#{timestamp.xmlschema}"}
+    print %{  <node id="#{id}" lat="#{sprintf('%20f', lat).lstrip}" lon="#{sprintf('%20f', lon).lstrip}" timestamp="#{timestamp.xmlschema}"}
     if tags.empty?
       puts "/>"
     else

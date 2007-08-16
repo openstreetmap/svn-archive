@@ -419,10 +419,10 @@ sub GenerateTileset
     my $DataFile = "data-$PID.osm";
     
     # Adjust requested area to avoid boundary conditions
-    my $N1 = $N + $Config{BorderN};
-    my $S1 = $S - $Config{BorderS};
-    my $E1 = $E + $Config{BorderE};
-    my $W1 = $W - $Config{BorderW};
+    my $N1 = $N + ($N-$S)*$Config{BorderN};
+    my $S1 = $S - ($N-$S)*$Config{BorderS};
+    my $E1 = $E + ($E-$W)*$Config{BorderE};
+    my $W1 = $W - ($E-$W)*$Config{BorderW};
 
 
     # TODO: verify the current system cannot handle segments/ways crossing the 

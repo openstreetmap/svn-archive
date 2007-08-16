@@ -93,6 +93,12 @@
             <rule e="way" k="leisure" v="track">
                 <area class='leisure-track'/>
             </rule>
+	    <rule e="node" k="natural" v="peak">
+                <symbol ref="peak" transform="scale(2)" />
+                <rule k="osmarender:renderName" v="~|yes">
+                     <text k="name" class='peak-caption' dx='4px' dy='2.5px'/>
+                </rule>	        
+	    </rule>
         </layer>
 
 
@@ -1780,6 +1786,14 @@
                 stroke-width: 0.1px;
             }
 
+            .peak-caption {
+                fill: black;
+                stroke: white;
+                stroke-width: 0.3px;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 6px;
+                font-weight: bolder;
+            }
 
             /* Landuse */
             .landuse-wood {

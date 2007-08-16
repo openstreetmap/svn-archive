@@ -2428,7 +2428,7 @@
 	<svg:symbol id="peak"
 	  viewBox="50 50 100 100">
 	  <svg:path  fill="#d1adc6" stroke="#1f151d" stroke-width="10" d="M 5,80 L 50,20 L 95,80 L 5,80 z "/>
-	</symbol>
+	</svg:symbol>
 
     </defs>
 

@@ -45,13 +45,13 @@ class LakewalkerAction extends JosmAction implements MouseListener {
   protected String name;
   protected Cursor oldCursor;
   protected List<Node> selectedNodes;
+  protected Thread executeThread;
   
   public LakewalkerAction(String name) {
     super(name, "lakewalker-sml", tr("Lake Walker."), KeyEvent.VK_L, KeyEvent.CTRL_MASK
         | KeyEvent.SHIFT_MASK, true);
     this.name = name;
     setEnabled(true);
-
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -105,11 +105,8 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     target += " --bottom=" + botRight.lat();
     target += " --maxnodes=" + Main.pref.get(LakewalkerPreferences.PREF_MAX_NODES, "50000");
     target += " --threshold=" + Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD, "35");
+    target += " --dp-epsilon=" + Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003");
     target += " --josm";
-
-
-    
-
 
     try {
       /*
@@ -117,7 +114,7 @@ class LakewalkerAction extends JosmAction implements MouseListener {
        */
       Runtime rt = Runtime.getRuntime();
       System.out.println("dir: " + working_dir + ", target: " + target);
-      Process p = rt.exec(target, null, working_dir);
+      final Process p = rt.exec(target, null, working_dir);
       final BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
       
       /*
@@ -134,10 +131,12 @@ class LakewalkerAction extends JosmAction implements MouseListener {
         }
         @Override protected void cancel() {
           reader.cancel();
-          
+          executeThread.interrupt();
+          p.destroy();
         }
       };
-      Main.worker.execute(lakewalkerTask); 
+      Thread executeThread = new Thread(lakewalkerTask);
+      executeThread.start();
     }
     catch (Exception ex) {
       System.out.println("Exception caught: " + ex.getMessage());

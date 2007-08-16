@@ -18,11 +18,15 @@
  */
 package org.openstreetmap.josm.plugins.lakewalker;
 
+import java.text.DecimalFormat;
+
 /**
  * A Configurer for Double values
  */
 public class DoubleConfigurer extends StringConfigurer {
 
+  final static DecimalFormat df = new DecimalFormat("##0.0000000");
+  
   public DoubleConfigurer() {
     super();
   }
@@ -32,7 +36,7 @@ public class DoubleConfigurer extends StringConfigurer {
   }
 
   public DoubleConfigurer(String key, String name, Double val) {
-    super(key, name, val == null ? null : val.toString());
+    super(key, name, val == null ? null : df.format(val));
   }
 
   public void setValue(String s) {
@@ -47,11 +51,14 @@ public class DoubleConfigurer extends StringConfigurer {
       setValue(d);
     }
     if (!noUpdate && nameField != null) {
-      nameField.setText(d.toString());
+      nameField.setText(df.format(d));
     }
   }
 
   public String getValueString() {
-    return value == null ? null : value.toString();
+    if (value == null || value.equals("")) {
+      return (String) value;
+    }
+    return df.format(value);
   }
 }

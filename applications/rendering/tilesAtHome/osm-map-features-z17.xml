@@ -84,6 +84,12 @@
         <rule e="way" k="leisure" v="track">
             <area class='leisure-track'/>
         </rule>
+	<rule e="node" k="natural" v="peak">
+            <symbol xlink:href="#peak" width='15px' height='15px' transform='translate(-7.5,-7.0)' />
+            <rule k="osmarender:renderName" v="~|yes">
+                <text k="name" class='peak-caption' dx='4px' dy='2.5px'/>
+            </rule>	        
+	</rule>
 
 
 		<!-- Airports and runways -->
@@ -2419,6 +2425,10 @@
 			L27 19.44 L25 19.44 L25 17.44 L24 17.44 L24 26.94 L20 26.94 Z" transform="translate(2,-3.44)"/>
 		</svg:symbol>
 
+	<svg:symbol id="peak"
+	  viewBox="50 50 100 100">
+	  <svg:path  fill="#d1adc6" stroke="#1f151d" stroke-width="10" d="M 5,80 L 50,20 L 95,80 L 5,80 z "/>
+	</symbol>
 
     </defs>
 

@@ -82,6 +82,8 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 		    validationDialog = new ValidatorDialog();
 	        newFrame.addToggleDialog(validationDialog);
             Main.main.addLayer(new ErrorLayer(tr("Validation errors")));
+        	if( Main.pref.hasKey(PreferenceEditor.PREF_DEBUG + ".grid") )
+        		Main.main.addLayer(new GridLayer(tr("Grid")));
             Layer.listeners.add(this); 
 		}
 		else

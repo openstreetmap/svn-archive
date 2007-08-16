@@ -25,7 +25,10 @@ public class PreferenceEditor implements PreferenceSetting
 {
 	/** The preferences prefix */
 	public static final String PREFIX = "validator";
-	
+
+	/** The preferences key for debug preferences */
+	public static final String PREF_DEBUG = PREFIX + ".debug";
+
 	/** The preferences key for enabled tests */
 	public static final String PREF_TESTS = PREFIX + ".tests";
 

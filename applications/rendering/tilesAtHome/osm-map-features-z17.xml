@@ -1663,6 +1663,16 @@
                 stroke-width: 0.2px;
             }
 
+	    .peak-caption {
+                fill: black;
+                stroke: white;
+                stroke-width: 0.3px;
+                font-family: "DejaVu Sans",sans-serif;
+                font-size: 8px;
+                font-weight: bold;
+                text-anchor: middle;
+            }
+
             .sport {
                 fill: #bde3cb;
                 stroke: #6fc18e;

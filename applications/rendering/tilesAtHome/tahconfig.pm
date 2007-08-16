@@ -205,7 +205,7 @@ sub CheckConfig{
 
     # Misc stuff
     foreach(qw(N S E W)){
-        if($Config{"Border$_"} > 0.2){
+        if($Config{"Border$_"} > 0.5){
             printf "Border$_ looks abnormally large\n";
         }
     }

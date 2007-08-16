@@ -88,6 +88,7 @@ public class LakewalkerReader {
           Segment s = new Segment(lastNode, firstNode);
           commands.add(new AddCommand(s));
           way.segments.add(s);
+          way.put("created_by", "Dshpak_landsat_lakes");
           commands.add(new AddCommand(way));
           break;
         }
@@ -102,8 +103,6 @@ public class LakewalkerReader {
       Main.main.undoRedo.add(new SequenceCommand(tr("Lakewalker trace"), commands));
       Main.ds.setSelected(ways);
     }
-
-
   }
   
   /*

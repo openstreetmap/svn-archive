@@ -24,21 +24,36 @@
 #include <string.h>
 #include <stdio.h>
 #include "rb.h"
+#include "osm.h"
 #include "tags.h"
 struct rb_table * text_table=NULL;
+extern int postgres;
 
 
-void saveTag(FILE *fp, struct tags *p){
-	fprintf(fp,"	<tag k=\"%s\" v=\"%s\" />\n",p->key,p->value);
+/* File descriptor for .osm file. */
+extern FILE *fp;
+
+/* File descriptors for postgres sql files. */
+extern FILE *fp_n;
+extern FILE *fp_nt;
+extern FILE *fp_w;
+extern FILE *fp_wn;
+extern FILE *fp_wt;
+
+void saveTag(struct tags *p,struct nodes * n){
+	if (postgres) 
+		fprintf(fp_nt, "%li\t%s\t%s\n", n->ID, p->key, p->value);//fp_nt
+	else
+		fprintf(fp,"	<tag k=\"%s\" v=\"%s\" />\n",p->key,p->value);
 	return;
 }
 
-void saveTags(FILE * fp, struct tags *p){
+void saveTags(struct tags *p,struct nodes *n){
 //	printf("in saveTags %p\n",p);
 	if (p!=NULL)
 	{
-		saveTag(fp,p);
-		saveTags(fp,p->nextTag);
+		saveTag(p,n);
+		saveTags(p->nextTag,n);
 	}
 	return;
 }

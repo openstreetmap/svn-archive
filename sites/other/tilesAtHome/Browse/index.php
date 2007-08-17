@@ -2,8 +2,9 @@
   $x = $_GET["x"];
   $y = $_GET["y"];
   $z = $_GET["z"];
-  $tileset = $_GET["tileset"];
+  $layer = $_GET["layer"];
   
+  include_once("../lib/tilenames.inc");
   
   if(array_key_exists("lat", $_GET)){
     list($x,$y,$z) = ll2xyz($_GET["lat"], $_GET["lon"]);
@@ -109,7 +110,7 @@
     $z,
     9);
   
-  $DataURL = sprintf(" http://www.openstreetmap.org/api/0.3/map?bbox=%f,%f,%f,%f",
+  $DataURL = sprintf(" http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
     $W,$S,$E,$N);
   
   $Tools1HTML = sprintf(
@@ -132,14 +133,13 @@
     $Grid + 2,
     $Tools2HTML);
   
-  printf("<tr><td colspan=\"%d\" class=\"tbl\">Display tileset: %s</td></tr>\n",
+  printf("<tr><td colspan=\"%d\" class=\"tbl\">Display layer: %s</td></tr>\n",
     $Grid + 2,
     implode(", ", array(
-      TilesetLink(0,"Tiles@home"), 
-      TilesetLink(1,"Mapnik"),
-      TilesetLink(2,"Cycle"),
-      TilesetLink(3,"Maplint"),
-      TilesetLink(4,"Sea"))));
+      TilesetLink("tile"), 
+      TilesetLink("mapnik"),
+      TilesetLink("cycle"),
+      TilesetLink("maplint"))));
   
   if($z >= 12){
     printf("<tr><td colspan=\"%d\" class=\"tbl\">%s</td></tr>\n",
@@ -179,9 +179,9 @@
     $Html .= "</form>\n";
     return($Html);
     }
-  function TilesetLink($Num,$Name){
+  function TilesetLink($layerDir,$displayName){
     global $x,$y,$z;
-    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z,$Num), $Name));
+    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z,$layerDir), $displayName));
     
   }
   function MoreLink($More){ 
@@ -194,27 +194,18 @@
   function TableLinkedImage($x,$y,$z,$w,$h){
     return(TableImg(ImageURL($x,$y,$z), LinkTile($x,$y,$z),$w,$h));
   }
+
   function ImageURL($x,$y,$z){
-    global $tileset;
-    if($tileset == "1")
+    global $layer;
+    if($layer == "mapnik")
       return(sprintf("http://tile.openstreetmap.org/%d/%d/%d.png", $z,$x,$y));
-    
-    if($tileset == "2")
-      return(sprintf("../Tiles/cycle.php/%d/%d/%d.png", $z,$x,$y));
-    
-    if($tileset == "3")
-      return(sprintf("../Tiles/maplint.php/%d/%d/%d.png", $z,$x,$y));
-      
-    if($tileset == "4")
-      return(sprintf("../Tiles/landsea.php/%d/%d/%d.png", $z,$x,$y));
-      
-    return(sprintf("../Tiles/tile.php/%d/%d/%d.png",$z,$x,$y));
+    else
+      return(TileURL($x,$y,$z,layerDir($layer));
   }
-  function LinkTile($X,$Y,$Z,$linkTileset=-1){
+
+  function LinkTile($X,$Y,$Z,$layerDir="tile"){
     global $tileset;
-    if($linkTileset == -1)
-      $linkTileset = $tileset;
-    return(sprintf("./?x=%d&amp;y=%d&amp;z=%d&amp;tileset=%d",$X,$Y,$Z,$linkTileset));
+    return(sprintf("./?x=%d&amp;y=%d&amp;z=%d&amp;tileset=%s",$X,$Y,$Z,$layerDir));
   }
   function TableRow($Blocks){
     return("<tr><td>".implode("</td><td>", $Blocks) . "</td></tr>");

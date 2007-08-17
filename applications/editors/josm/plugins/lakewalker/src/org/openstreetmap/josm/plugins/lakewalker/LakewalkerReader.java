@@ -47,8 +47,16 @@ public class LakewalkerReader {
     Node lastNode = null;
     Node firstNode = null;
     String line;
-    Main.pleaseWaitDlg.currentAction.setText("Initializing");
-    Main.pleaseWaitDlg.repaint();
+    setStatus("Initializing");
+    double eastOffset = 0.0;
+    double northOffset = 0.0;
+    try {
+      eastOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_EAST_OFFSET, "0.0"));
+      northOffset = Double.parseDouble(Main.pref.get(LakewalkerPreferences.PREF_NORTH_OFFSET, "0.0"));
+    }
+    catch (Exception e) {
+      
+    }
 
     try {
       while ((line = input.readLine()) != null) {
@@ -61,7 +69,7 @@ public class LakewalkerReader {
         case 'n':
           String[] tokens = line.split(" ");
           try {
-            LatLon ll = new LatLon(Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2]));
+            LatLon ll = new LatLon(Double.parseDouble(tokens[1])+northOffset, Double.parseDouble(tokens[2])+eastOffset);
             Node n = new Node(ll);
             commands.add(new AddCommand(n));
             if (lastNode != null) {
@@ -80,8 +88,7 @@ public class LakewalkerReader {
           break;
 
         case 's':
-          Main.pleaseWaitDlg.currentAction.setText(line.substring(2));
-          Main.pleaseWaitDlg.repaint();
+          setStatus(line.substring(2));
           break;
           
         case 'x':
@@ -110,6 +117,11 @@ public class LakewalkerReader {
    */
   public void cancel() {
     cancel = true;
+  }
+  
+  protected void setStatus(String s) {
+    Main.pleaseWaitDlg.currentAction.setText(s);
+    Main.pleaseWaitDlg.repaint();
   }
   
 }

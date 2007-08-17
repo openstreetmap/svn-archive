@@ -77,8 +77,9 @@ my($done,$unnecessary,$double) = (0,0,0);
 
 for my $line (@data)
 {
-  my($x,$y,$zoom,$type) = split /,/,$line;
+  my($x,$y,$zoom,$type,$time,$score) = split /,/,$line;
 
+  next unless $score =~ /^\d+$/ and $score >= 1;
   next unless $zoom =~ /^\d+$/ and $zoom==12;
   next unless $x =~ /^\d+$/ and $x >= 0 and $x < 4096;
   next unless $y =~ /^\d+$/ and $y >= 0 and $y < 4096;
@@ -106,7 +107,6 @@ for my $entry (@todo)
 {
   my ($x,$y) = @$entry;
   my $type  = $hash{$x.",".$y};
-  print "Setting $x, $y to $type: ";
 
   my $oldtype = get_type( $world_im, $x, $y );
   my $newtype = 0;  
@@ -116,14 +116,14 @@ for my $entry (@todo)
 
   if( $newtype != $oldtype )
   {
+    print "Setting $x, $y to $type: ";
     set_type($world_im, $x, $y, $newtype);
     print "done ($newtype != $oldtype)\n";
-    if( get_type( $world_im, $x, $y ) !=$newtype ) { print "huh\n" }
     $done++;
   }
   else
   {
-    print "unnecessary\n";
+#    print "unnecessary\n";
     $unnecessary++;
   }
 }

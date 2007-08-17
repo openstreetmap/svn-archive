@@ -620,32 +620,32 @@
 
 			/* Highways - street specific style */
             .highway-motorway-casing {
-                stroke-width: 22px;
+                stroke-width: 66px;
                 stroke: #222222;
             }
 
             .highway-motorway-core {
-                stroke-width: 20px;
+                stroke-width: 60px;
                 stroke: #809BC0;
             }
 
             .highway-motorway-link-casing {
-                stroke-width: 9px;
+                stroke-width: 27px;
                 stroke: #222222;
             }
 
             .highway-motorway-link-core {
-                stroke-width: 8.5px;
+                stroke-width: 25px;
                 stroke: #809BC0;
             }
 
             .highway-trunk-casing {
-                stroke-width: 18px;
+                stroke-width: 36px;
                 stroke: #222222;
             }
 
             .highway-trunk-core {
-                stroke-width: 16px;
+                stroke-width: 32px;
                 stroke: #7fc97f;
             }
 

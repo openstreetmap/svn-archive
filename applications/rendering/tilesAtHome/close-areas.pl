@@ -56,8 +56,8 @@ if (scalar(@ARGV) == 2 or scalar(@ARGV) == 3)
 {
     ($tilex, $tiley, $zoom) = @ARGV;
     if (!$zoom) {$zoom = 12;}
-    ($maxlat, $minlat) = Project($tiley, 12);
-    ($minlon, $maxlon) = ProjectL($tilex, 12);
+    ($maxlat, $minlat) = Project($tiley, $zoom);
+    ($minlon, $maxlon) = ProjectL($tilex, $zoom);
 }
 elsif (scalar(@ARGV) == 4)
 {

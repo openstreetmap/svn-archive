@@ -106,7 +106,10 @@ class LakewalkerAction extends JosmAction implements MouseListener {
     target += " --maxnodes=" + Main.pref.get(LakewalkerPreferences.PREF_MAX_NODES, "50000");
     target += " --threshold=" + Main.pref.get(LakewalkerPreferences.PREF_THRESHOLD, "35");
     target += " --dp-epsilon=" + Main.pref.get(LakewalkerPreferences.PREF_EPSILON, "0.0003");
+    target += " --landsat-res=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_RES, "4000");
+    target += " --tilesize=" + Main.pref.get(LakewalkerPreferences.PREF_LANDSAT_SIZE, "2000");
     target += " --josm";
+    
 
     try {
       /*

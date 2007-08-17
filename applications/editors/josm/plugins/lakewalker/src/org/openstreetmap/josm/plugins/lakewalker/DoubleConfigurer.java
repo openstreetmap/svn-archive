@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
  */
 public class DoubleConfigurer extends StringConfigurer {
 
-  final static DecimalFormat df = new DecimalFormat("##0.0000000");
+  final static DecimalFormat df = new DecimalFormat("#0.0##########");
   
   public DoubleConfigurer() {
     super();

@@ -1,0 +1,136 @@
+#!/usr/bin/perl -w
+
+# This program grabs the changes to oceantiles submitted by users via
+# informationfreeway and applies them to the oceantiles_12.png file.
+#
+# The file is grabbed from http://osm.test.le.ac.uk/tiles.txt and processed.
+# There is no attempt (yet) to pick up where the previous run left off,
+# however it does note when the request would have no change.
+#
+# Todo:
+# - Automatically request a rerender of changed tiles. Currently not done as
+#   client do not regularly update their oceantiles db
+
+# written by Martijn van Oosterhout <kleptog@gmail.com>
+
+use strict;
+use LWP::Simple;
+
+use GD;
+use strict;
+use bytes;
+
+use constant TILETYPE_UNKNOWN => 0;
+use constant TILETYPE_LAND => 1;
+use constant TILETYPE_SEA => 2;
+use constant TILETYPE_TILE => 3;
+
+#
+#
+#
+sub get_type 
+{
+  my($image, $x, $y) = @_;
+
+  my($r,$g,$b) = $image->rgb( $image->getPixel( $x,$y ) );
+  
+  return TILETYPE_LAND if $r == 0 && $g == 255 && $b == 0;
+  return TILETYPE_SEA if $r == 0 && $g == 0   && $b == 255;
+  return TILETYPE_TILE if $r == 255 && $g == 255 && $b == 255;
+  return TILETYPE_UNKNOWN if $r == 0 && $g == 0 && $b == 0;
+  
+  die "Wierd tiletype at [$x,$y]: ($r,$g,$b)\n";
+}
+
+#
+#
+#
+sub set_type
+{
+  my($image, $x, $y, $type) = @_;
+  my $color;
+
+  # Resolve not Allocate so we don't run out of colors
+  $color = $image->colorResolve(0,0,255) if($type == TILETYPE_SEA);
+  $color = $image->colorResolve(0,255,0) if($type == TILETYPE_LAND);
+  $color = $image->colorResolve(255,255,255) if($type == TILETYPE_TILE);
+  die if not defined $color;
+  print STDERR "Setting $x,$y to $color\n";
+  $image->setPixel($x,$y, $color);
+}
+
+
+
+my $data = get("http://osm.test.le.ac.uk/tiles.txt");
+
+if( not defined $data )
+{
+  die "Couldn't fetch tile changes\n";
+}
+
+my @data = split /\n/, $data;
+
+my %hash;
+my @todo;
+
+my($done,$unnecessary,$double) = (0,0,0);
+
+for my $line (@data)
+{
+  my($x,$y,$zoom,$type) = split /,/,$line;
+
+  next unless $zoom =~ /^\d+$/ and $zoom==12;
+  next unless $x =~ /^\d+$/ and $x >= 0 and $x < 4096;
+  next unless $y =~ /^\d+$/ and $y >= 0 and $y < 4096;
+  next unless $type =~ /^(land|sea|mixed)$/;
+
+  if( not defined $hash{$x.",".$y} )
+  {
+    push @todo, [$x,$y];
+  }
+  else
+  {
+    $double++;
+  }
+  $hash{$x.",".$y} = $type;
+}
+
+open my $world_fh, "<oceantiles_12.png" or die "Couldn't open oceantiles_12.png ($!)\n";
+my $world_im = GD::Image->newFromPng( $world_fh, 1 );
+close $world_fh;
+
+# Autoflush on
+$|=1;
+
+for my $entry (@todo)
+{
+  my ($x,$y) = @$entry;
+  my $type  = $hash{$x.",".$y};
+  print "Setting $x, $y to $type: ";
+
+  my $oldtype = get_type( $world_im, $x, $y );
+  my $newtype = 0;  
+  $newtype = TILETYPE_LAND if ($type eq "land");
+  $newtype = TILETYPE_SEA  if ($type eq "sea");
+  $newtype = TILETYPE_TILE if ($type eq "mixed");
+
+  if( $newtype != $oldtype )
+  {
+    set_type($world_im, $x, $y, $newtype);
+    print "done ($newtype != $oldtype)\n";
+    if( get_type( $world_im, $x, $y ) !=$newtype ) { print "huh\n" }
+    $done++;
+  }
+  else
+  {
+    print "unnecessary\n";
+    $unnecessary++;
+  }
+}
+
+print "Complete: done($done), unnecessary($unnecessary), double($double)\n";
+
+open $world_fh, ">oceantiles_12.png" or die;
+print $world_fh $world_im->png;
+close $world_fh;
+

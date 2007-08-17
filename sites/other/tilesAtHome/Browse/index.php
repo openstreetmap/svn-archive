@@ -2,7 +2,7 @@
   $x = $_GET["x"];
   $y = $_GET["y"];
   $z = $_GET["z"];
-  $layer = $_GET["layer"];
+  $layer = ($_GET["layer"]>''?$_GET["layer"]:'tile');
   
   include_once("../lib/tilenames.inc");
   
@@ -98,10 +98,11 @@
     $Long);
   
   $TileDetailsURL = sprintf(
-    "../Tiles/info.php?z=%d&amp;x=%d&amp;y=%d&layer=tile",
+    "../Tiles/info.php?z=%d&amp;x=%d&amp;y=%d&layer=%s",
     $z,
     $x,
-    $y);
+    $y,
+    $layer);
   
   $PrintableURL = sprintf(
     "http://almien.co.uk/OSM/BigMap/view.php?x=%d&amp;y=%d&amp;z=%d&amp;size=%d",
@@ -136,10 +137,11 @@
   printf("<tr><td colspan=\"%d\" class=\"tbl\">Display layer: %s</td></tr>\n",
     $Grid + 2,
     implode(", ", array(
-      TilesetLink("tile"), 
-      TilesetLink("mapnik"),
-      TilesetLink("cycle"),
-      TilesetLink("maplint"))));
+      TilesetLink("tile","Tile@Home"), 
+      TilesetLink("mapnik","Mapnik"),
+      TilesetLink("cycle","Experimental lowzoom"),
+      TilesetLink("maplint","maplint")
+      )));
   
   if($z >= 12){
     printf("<tr><td colspan=\"%d\" class=\"tbl\">%s</td></tr>\n",
@@ -181,7 +183,7 @@
     }
   function TilesetLink($layerDir,$displayName){
     global $x,$y,$z;
-    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z,$layerDir), $displayName));
+    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z), $displayName));
     
   }
   function MoreLink($More){ 
@@ -192,20 +194,20 @@
   function TableStart(){ print "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"; }
   
   function TableLinkedImage($x,$y,$z,$w,$h){
-    return(TableImg(ImageURL($x,$y,$z), LinkTile($x,$y,$z),$w,$h));
+    global $layer;
+    return(TableImg(ImageURL($x,$y,$z,$layer), LinkTile($x,$y,$z),$w,$h));
   }
 
-  function ImageURL($x,$y,$z){
-    global $layer;
-    if($layer == "mapnik")
+  function ImageURL($x,$y,$z,$layerdir){
+    if($layerdir == "mapnik")
       return(sprintf("http://tile.openstreetmap.org/%d/%d/%d.png", $z,$x,$y));
     else
-      return(TileURL($x,$y,$z,layerDir($layer));
+      return(TileURL($x,$y,$z,$layerdir));
   }
 
-  function LinkTile($X,$Y,$Z,$layerDir="tile"){
-    global $tileset;
-    return(sprintf("./?x=%d&amp;y=%d&amp;z=%d&amp;tileset=%s",$X,$Y,$Z,$layerDir));
+  function LinkTile($X,$Y,$Z){
+    global $layer;
+    return(sprintf("./?x=%d&amp;y=%d&amp;z=%d&amp;layer=%s",$X,$Y,$Z,$layer));
   }
   function TableRow($Blocks){
     return("<tr><td>".implode("</td><td>", $Blocks) . "</td></tr>");

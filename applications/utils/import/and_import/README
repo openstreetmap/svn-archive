@@ -1,0 +1,26 @@
+This document includes the process to import the AND data
+
+Note: this document is about the actual commands to acheive the desired
+effect! Any discussion and details should be referred to:
+
+http://wiki.openstreetmap.org/index.php/AND_Data/Roadmap-integration-NL
+
+1. Get latest planet dump
+2. Get polygon representing the NL border (OSM format)
+
+Ante  is working on the border. His latest version can be found in:
+http://people.vrijschrift.org/~ante/osm/
+
+3. Convert polygon from OSM format to "polygon" format
+
+For example: 
+
+perl -w osm2polygon.pl data/nldgrens.osm >data/nldpolygon.txt
+
+4. Get polygons representing protected areas (OSM format)
+5. Convert protected areas to "polygon" format
+6. Use extract-polygon to extract the current NL data
+7. Use planetosm-deleteby-tags.pl to create file in OSM format indicating
+   what needs to be deleted.
+
+(several steps relating to conversion of data)

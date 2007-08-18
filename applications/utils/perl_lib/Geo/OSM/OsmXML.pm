@@ -11,8 +11,9 @@ use XML::Parser;
 sub new(){ bless{} }
 
 sub load(){
-  my ($self, $Filename) = @_;
+  my ($self, $file_name) = @_;
 
+  my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => \&DoStart, End => \&DoEnd, Char => \&DoChar});
     my $fh = data_open($file_name);
     die "Cannot open OSM File $file_name\n" unless $fh;
@@ -27,7 +28,7 @@ sub load(){
 	warn "$@Error while parsing\n $file_name\n";
 	return;
     }
-    if (not $p) {
+    if (not $P) {
 	warn "WARNING: Could not parse osm data\n";
 	return;
     }
@@ -36,8 +37,8 @@ sub load(){
 sub name(){return($OsmXML::lastName)};
 
 sub bounds(){
-  ($S,$W,$N,$E) = (1e+6,1e+6,-1e+6,-1e+6); # S,W,N,E
-  foreach $Node(values %OsmXML::Nodes){
+  my ($S,$W,$N,$E) = (1e+6,1e+6,-1e+6,-1e+6); # S,W,N,E
+  foreach my $Node(values %OsmXML::Nodes){
     $S = $Node->{"lat"} if($Node->{"lat"} < $S);
     $N = $Node->{"lat"} if($Node->{"lat"} > $N);
     $W = $Node->{"lon"} if($Node->{"lon"} < $W);

@@ -50,7 +50,7 @@ if( $OsmXML::Segments{$segments[0]}->{from} != $OsmXML::Segments{$segments[-1]}-
 }
 
 print "1\n",
-      (map { "   $_->[0] $_->[1]\n" } @points),
-      "   $points[0]->[0] $points[0]->[1]\n",
+      (map { "   $_->[1] $_->[0]\n" } @points),
+      "   $points[0]->[1] $points[0]->[0]\n",
       "END\n";
        

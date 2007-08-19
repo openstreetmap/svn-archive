@@ -237,5 +237,6 @@ EOF
 
 close (OF);
 close (IF);
+print STDERR "\n" if $verbose;
 
 exit;

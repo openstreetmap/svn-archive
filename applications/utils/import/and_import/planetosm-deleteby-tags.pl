@@ -18,7 +18,6 @@
 use strict;
 use warnings;
 
-
 ###########################################################################
 #                BEGIN USER CONFIGURATION BLOCK                           #
 ###########################################################################
@@ -85,6 +84,7 @@ use Bit::Vector;
 
 our $man=0;
 our $help=0;
+our $output = "josm";
 my $bbox_opts='';
 
 my $VERBOSE;
@@ -96,11 +96,16 @@ GetOptions (
 	     'MAN'              => \$man, 
 	     'man'              => \$man, 
 	     'h|help|x'         => \$help, 
+	     'o|output=s'         => \$output,
 	     ) or pod2usage(1);
 
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
+if( $output !~ /^(josm|diff)$/ )
+{
+    die "Output must be either --output=josm or --output=diff\n";
+}
 
 # Grab the filename
 my $xml = shift||'';
@@ -261,12 +266,26 @@ sub processXML {
 		}
 		elsif($line =~ /^\s*\<osm /) {
 			if($pass == 1) {
-				print $line;
+			  if( $output eq "josm" )
+			  {
+			      print $line;
+                          }
+                          else
+                          {
+                              print qq(<planetdiff version="0.1" generator="OpenStreetMap planetdiff">\n);
+                          }
 			}
 		}
 		elsif($line =~ /^\s*\<\/osm\>/ ) {
 			if($pass == 3) {
-				print $line;
+			  if( $output eq "josm" )
+			  {
+			      print $line;
+                          }
+                          else
+                          {
+                              print qq(</planetdiff>\n);
+                          }
 			}
 		}
 		else {
@@ -290,7 +309,6 @@ processXML(undef,sub {
 
 	# Test the tags, to see if we want this
 	if(&$wayTagHelper(@$tagsRef)) {
-	        if( $id == 17901712 ) { print STDERR "Huh???!" }
 		# Bingo, matched
 		# Record the segments we want to get (also track completeness of way)
 		my $complete = 1;
@@ -300,25 +318,54 @@ processXML(undef,sub {
 		}
 
 		# Output
-		if( $complete )
+		if( $output eq "josm" )
 		{
-		        print qq(<way id="$id" action="delete" >\n);
-                        &printTags(@$tagsRef);
-                        print qq(</way>\n);
-                        $deleted{ways}++;
+                    if( $complete )
+                    {
+                            print qq(<way id="$id" action="delete" >\n);
+                            &printTags(@$tagsRef);
+                            print qq(</way>\n);
+                            $deleted{ways}++;
+                    }
+                    else
+                    {
+                            my $a = $main_line;
+                            $a =~ s/way /way action="modify" /;
+                            print $a;
+                            foreach my $seg (@$segsRef) {
+                                    if( not $found_segs->contains($seg) ) {
+                                            print "    <seg id=\"$seg\" />\n";
+                                    }
+                            }
+                            &printTags(@$tagsRef);
+                            print $line;
+                    }
                 }
-                else
+                else  # output = diff
                 {
-                        my $a = $main_line;
-                        $a =~ s/way /way action="modify" /;
-                        print $a;
+                    print qq(<delete>\n);
+                    print $main_line;
+                    foreach my $seg (@$segsRef) {
+                        print qq(    <seg id="$seg" />\n);
+                    }
+                    &printTags(@$tagsRef);
+                    print $line, qq(</delete>\n);
+                    if( not $complete )
+                    {
+                        print qq(<add>\n);
+                        print $main_line;
                         foreach my $seg (@$segsRef) {
-                                if( not $found_segs->contains($seg) ) {
-                                        print "    <seg id=\"$seg\" />\n";
-                                }
+                            if( not $found_segs->contains($seg) ) {
+                                    print qq(    <seg id="$seg" />\n);
+                            }
                         }
                         &printTags(@$tagsRef);
-                        print $line;
+                        print $line, qq(</add>\n);
+                    }
+                    else
+                    {
+                        $deleted{ways}++;
+                    }
                 }
 	} else {
 	        # Want to keep this way, so mark segments used
@@ -341,9 +388,23 @@ processXML(undef, sub {
         }
 
 	if(not $wanted) {
-	        print qq(<segment id="$id" from="$from" to="$to" action="delete" >\n);
+	        if( $output eq "josm" )
+	        {
+	                print qq(<segment id="$id" from="$from" to="$to" action="delete" >\n);
+                }
+                else
+                {
+                        print qq(<delete>\n), $main_line;
+                }
 	        &printTags(@$tagsRef);
-	        print qq(</segment>\n);
+	        if( $line ne $main_line )
+	        {
+	            print $line;
+                }
+	        if( $output eq "diff" )
+	        {
+                        print qq(</delete>\n);
+	        }
                 $deleted{segs}++;
 	} else {
 		# Record the nodes we want to keep
@@ -364,10 +425,22 @@ processXML(sub {
 	# This could presumably fail if the node is actually in use, but you can't win 'em all...
 	if(&$nodeTagHelper(@$tagsRef)) {
 		# Bingo, matched
-                print qq(<node id="$id" lat="$lat" lon="$long" action="delete"> -- not wanted\n);
+	        if( $output eq "josm" )
+	        {
+                    print qq(<node id="$id" lat="$lat" lon="$long" action="delete">\n);
+                }
+                else
+                {
+                    print qq(<delete>\n), $main_line;
+                }
                 &printTags(@$tagsRef);
-                print qq(</node>\n);
-                        $deleted{nodes}++;
+	        if( $line ne $main_line )
+	        {
+	            print $line;
+                }
+                if( $output eq "diff" )
+                { print qq(</delete>\n) }
+                $deleted{nodes}++;
                 return;
 	}
 
@@ -380,10 +453,22 @@ processXML(sub {
 	  last;
         }
 	if(not $useful) {
-			print qq(<node id="$id" lat="$lat" lon="$long" action="delete"> -- not useful\n);
-                        &printTags(@$tagsRef);
-                        print qq(</node>\n);
-                        $deleted{nodes}++;
+	        if( $output eq "josm" )
+	        {
+                    print qq(<node id="$id" lat="$lat" lon="$long" action="delete">\n);
+                }
+                else
+                {
+                    print qq(<delete>\n), $main_line;
+                }
+                &printTags(@$tagsRef);
+	        if( $line ne $main_line )
+	        {
+	            print $line;
+                }
+                if( $output eq "diff" )
+                { print qq(</delete>\n) }
+                $deleted{nodes}++;
 	}
 }, undef, undef);
 

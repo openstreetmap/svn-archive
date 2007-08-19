@@ -5,6 +5,13 @@ effect! Any discussion and details should be referred to:
 
 http://wiki.openstreetmap.org/index.php/AND_Data/Roadmap-integration-NL
 
+As far as possible these steps are encoded in the Makefile, so editting to
+indicate where your planet file is and running "make" will be sufficient in
+most cases.
+
+===========================================================================
+Steps
+
 1. Get latest planet dump
 2. Get polygon representing the NL border (OSM format)
 
@@ -19,8 +26,19 @@ perl -w osm2polygon.pl data/nldgrens.osm >data/nldpolygon.txt
 
 4. Get polygons representing protected areas (OSM format)
 5. Convert protected areas to "polygon" format
-6. Use extract-polygon to extract the current NL data
+6. Use extract-polygon to extract the current NL data (takes > 1 hour)
+
+For example:
+
+../../osm-extract/polygons/extract-polygon.pl -v -i $HOME/osm/planet-070815.osm -o data/nld.osm -p data/nldpolygon.txt
+
+This includes a progress counter.
+
 7. Use planetosm-deleteby-tags.pl to create file in OSM format indicating
    what needs to be deleted.
 
-(several steps relating to conversion of data)
+For example:
+./planetosm-deleteby-tags.pl data/nld.osm > data/nld-delete.osm	
+Deleted: nodes:155290, segs:179150, ways:29651
+
+(several steps relating to conversion of data, coming soon)

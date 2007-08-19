@@ -31,6 +31,7 @@ my $polyfile;
 my $infile;
 my $outfile;
 my $compress;
+my $verbose = 0;
 
 my $prog = basename($0);
 
@@ -79,6 +80,7 @@ EOF
 
 GetOptions ('h|help' => \$help,
 			'c|compress=i' => \$compress,
+			'v|verbose' => \$verbose,
 			'i|input=s' => \$infile,
 			'o|output=s' => \$outfile,
 			'p|polygon=s' => \$polyfile) || usage ();
@@ -93,11 +95,13 @@ if (! $polyfile) {
 
 open (PF, "$polyfile") || die "Could not open file: $polyfile: $!";
 
+my $invert;
 # initialize border polygon.
 while(<PF>)
 {
-    if (/^\d/)
+    if (/^(!?)\d/)
     {
+        $invert = ($1 eq "!") ? 1 : 0;
         $currentpoints = [];
     }
     elsif (/^END/)
@@ -105,11 +109,18 @@ while(<PF>)
         my $pol = Math::Polygon->new(points => $currentpoints);
 	if (($compress > 0 && $compress < 100) && $pol->nrPoints > 99) {
         	my $simp = $pol->simplify($pol->nrPoints*(100-$compress)/100);
-        	push(@{$borderpolys}, $simp);
+        	push(@{$borderpolys}, [$simp,$invert,[$simp->bbox]]);
         } else {
-		push(@{$borderpolys}, $pol);
+		push(@{$borderpolys}, [$pol,$invert,[$pol->bbox]]);
 		}
         undef $currentpoints;
+        if( $verbose )
+        {
+            printf STDERR "Added polygon: %d points (%.2f,%.2f)-(%.2f,%.2f) %s\n",
+                $borderpolys->[-1][0]->nrPoints,
+                @{$borderpolys->[-1][2]},
+                ($borderpolys->[-1][1] ? "exclude" : "include");
+        }
     }
     elsif (defined($currentpoints))
     {
@@ -143,9 +154,16 @@ EOF
 
 my $copy;
 my $waybuf;
+my $count = 0;
 
 while(<IF>) 
 {
+    $count++;
+    if( $verbose and ($count % 10000) == 0 )
+    {
+        my $perc = tell(IF)*100/(-s IF);
+        printf STDERR "\r%.2f%% ", $perc;
+    }
     if (/^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'] lon=["']([0-9.-]+)["']/)
     {
         $copy = 0;
@@ -155,14 +173,27 @@ while(<IF>)
 
         my $ll = [$2, $3];
 
-        foreach my $poly (@{$borderpolys})
+        foreach my $p (@{$borderpolys})
         {
+            my($poly,$invert,$bbox) = @$p;
+            next if ($ll->[0] < $bbox->[0]) or ($ll->[0] > $bbox->[2]);
+            next if ($ll->[1] < $bbox->[1]) or ($ll->[1] > $bbox->[3]);
+
             if ($poly->contains($ll))
             {
+                # If this polygon is for exclusion, we immediately bail and go for the next point
+                if( $invert )
+                {
+                    $copy = 0;
+                    last;
+                }
                 $copy = 1;
-                $used_nodes->{$1} = 1;
-                print OF;
             }
+        }
+        if( $copy )
+        {
+            $used_nodes->{$1} = 1;
+            print OF;
         }
     }
     elsif (/^\s*<segment id=['"](\d+)["'] from=['"](\d+)["'] to=["'](\d+)["']/)

@@ -5,7 +5,7 @@ In this directory you will find a Perl script that allows you to extract
 a subset of the data from within the weekly planet.osm file.  Running the
 script is as simple as:
 
-	extract-polygon.pl -i planet.osm -o gb.osm -p gb.poly
+	extract-polygon.pl [-v] -i planet.osm -o gb.osm -p gb.poly
 
 The options used in this example are -i to specify the input file (or you
 can use STDIN), -o to specify the ouput file (or you can use STDOUT), and
@@ -13,7 +13,8 @@ can use STDIN), -o to specify the ouput file (or you can use STDOUT), and
 option.
 
 If you run the script with the -h option it will print a full list of the
-available options.
+available options. The -v makes the script verbose and prints out a progress
+meter.
 
 
 Polygon files
@@ -37,6 +38,8 @@ defining Great Britain and Ireland (and some of the smaller islands) is:
         -0.6450E+01     0.4980E+02
 END
 
+You can also exclude areas by polygon. You do this by prefixing the number
+that starts a polygon with a "!". Otherwise it is the same.
 
 Contributed polygon files
 -------------------------

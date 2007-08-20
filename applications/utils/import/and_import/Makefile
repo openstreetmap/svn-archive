@@ -15,15 +15,16 @@ data:
 data/nldgrens.osm: data
 	wget -q --mirror http://people.vrijschrift.org/~ante/osm/nld-simplified6.osm -O $@
 	
-# Convert the boundary to a polygon file
-data/nldpolygons.txt: data/nldgrens.osm
+# Convert the boundary to a polygon file and handle exclusions
+data/nldpolygons.txt: data/nldgrens.osm protected_areas
 	perl -w osm2polygon.pl  data/nldgrens.osm > $@
+	./protected2polygon.pl >> $@
 	
 # Extract NLD from the planet file
 data/nld.osm: data/nldpolygons.txt $(PLANET)
 	../../osm-extract/polygons/extract-polygon.pl -v -i $(PLANET) -o $@ -p $<
 
 data/nld-delete.osm: data/nld.osm
-	./planetosm-deleteby-tags.pl data/nld.osm > $@
+	./planetosm-deleteby-tags.pl --output=diff data/nld.osm > $@
 	 
 	

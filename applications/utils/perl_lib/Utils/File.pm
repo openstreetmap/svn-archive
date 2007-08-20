@@ -46,6 +46,7 @@ sub data_open($){
 	$fh or  die("cannot open $filename: $!");
 	return $fh;
     } else {
+        # Note: This test is wrong for pipes...
 	my $size = (-s $filename)||0;
 	if ( $size < 270 ) {
 	    warn "cannot Open $filename ($size) Bytes is too small)\n"

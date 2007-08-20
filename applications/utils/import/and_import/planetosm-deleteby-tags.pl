@@ -102,9 +102,9 @@ GetOptions (
 pod2usage(1) if $help;
 pod2usage(-verbose=>2) if $man;
 
-if( $output !~ /^(josm|diff)$/ )
+if( $output !~ /^(josm|osmchange)$/ )
 {
-    die "Output must be either --output=josm or --output=diff\n";
+    die "Output must be either --output=josm or --output=osmchange\n";
 }
 
 # Grab the filename
@@ -272,7 +272,7 @@ sub processXML {
                           }
                           else
                           {
-                              print qq(<planetdiff version="0.1" generator="OpenStreetMap planetdiff">\n);
+                              print qq(<osmChange version="0.3" generator="planetosm-deleteby-tags">\n);
                           }
 			}
 		}
@@ -284,7 +284,7 @@ sub processXML {
                           }
                           else
                           {
-                              print qq(</planetdiff>\n);
+                              print qq(</osmChange>\n);
                           }
 			}
 		}
@@ -318,54 +318,35 @@ processXML(undef,sub {
 		}
 
 		# Output
-		if( $output eq "josm" )
-		{
-                    if( $complete )
-                    {
-                            print qq(<way id="$id" action="delete" >\n);
-                            &printTags(@$tagsRef);
-                            print qq(</way>\n);
-                            $deleted{ways}++;
-                    }
-                    else
-                    {
+                if( $complete )
+                {
+                        print qq(<delete version="0.3">\n  <way id="$id">\n) if $output eq "osmchange"; 
+                        print qq(<way id="$id" action="delete" >\n) if $output eq "josm";
+                        &printTags(@$tagsRef);
+                        print qq(</way>\n);
+                        print qq(</delete>\n) if $output eq "osmchange";
+                        $deleted{ways}++;
+                }
+                else
+                {
+                        if( $output eq "josm" )
+                        {
                             my $a = $main_line;
                             $a =~ s/way /way action="modify" /;
                             print $a;
-                            foreach my $seg (@$segsRef) {
-                                    if( not $found_segs->contains($seg) ) {
-                                            print "    <seg id=\"$seg\" />\n";
-                                    }
-                            }
-                            &printTags(@$tagsRef);
-                            print $line;
-                    }
-                }
-                else  # output = diff
-                {
-                    print qq(<delete>\n);
-                    print $main_line;
-                    foreach my $seg (@$segsRef) {
-                        print qq(    <seg id="$seg" />\n);
-                    }
-                    &printTags(@$tagsRef);
-                    print $line, qq(</delete>\n);
-                    if( not $complete )
-                    {
-                        print qq(<add>\n);
-                        print $main_line;
+                        }
+                        else
+                        {
+                            print qq(<modify version="0.3">\n  $main_line\n);
+                        }
                         foreach my $seg (@$segsRef) {
-                            if( not $found_segs->contains($seg) ) {
-                                    print qq(    <seg id="$seg" />\n);
-                            }
+                                if( not $found_segs->contains($seg) ) {
+                                        print "    <seg id=\"$seg\" />\n";
+                                }
                         }
                         &printTags(@$tagsRef);
-                        print $line, qq(</add>\n);
-                    }
-                    else
-                    {
-                        $deleted{ways}++;
-                    }
+                        print $line;
+                        print qq(</modify>\n) if $output eq "osmchange";
                 }
 	} else {
 	        # Want to keep this way, so mark segments used
@@ -394,14 +375,14 @@ processXML(undef, sub {
                 }
                 else
                 {
-                        print qq(<delete>\n), $main_line;
+                        print qq(<delete version="0.3">\n), $main_line;
                 }
 	        &printTags(@$tagsRef);
 	        if( $line ne $main_line )
 	        {
 	            print $line;
                 }
-	        if( $output eq "diff" )
+	        if( $output eq "osmchange" )
 	        {
                         print qq(</delete>\n);
 	        }
@@ -431,14 +412,14 @@ processXML(sub {
                 }
                 else
                 {
-                    print qq(<delete>\n), $main_line;
+                    print qq(<delete version="0.3">\n), $main_line;
                 }
                 &printTags(@$tagsRef);
 	        if( $line ne $main_line )
 	        {
 	            print $line;
                 }
-                if( $output eq "diff" )
+                if( $output eq "osmchange" )
                 { print qq(</delete>\n) }
                 $deleted{nodes}++;
                 return;
@@ -466,7 +447,7 @@ processXML(sub {
 	        {
 	            print $line;
                 }
-                if( $output eq "diff" )
+                if( $output eq "osmchange" )
                 { print qq(</delete>\n) }
                 $deleted{nodes}++;
 	}

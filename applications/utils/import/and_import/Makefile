@@ -25,8 +25,8 @@ data/nld.osm: data/nldpolygons.txt $(PLANET)
 	../../osm-extract/polygons/extract-polygon.pl -v -i $(PLANET) -o $@ -p $<
 
 # From the extracted data we determine what we actually want to delete
-data/nld-delete.osm: data/nld.osm
-	./planetosm-deleteby-tags.pl --output=diff data/nld.osm > $@
+data/nld-delete.osm: data/nld.osm planetosm-deleteby-tags.pl
+	./planetosm-deleteby-tags.pl --output=osmchange data/nld.osm > $@
 
 # Nicity so that if the user forgets to update the location of their planet
 # file they get a nice error message

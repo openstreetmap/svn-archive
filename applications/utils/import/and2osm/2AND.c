@@ -82,6 +82,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 #include "osm.h"
 #include "ways.h"
 #include "segments.h"
@@ -138,7 +139,7 @@ int readfile(char * inputfile)
 	printf("%s\n",inputfile);
     if( hSHP == NULL )
     {
-	printf( "Unable to open:%s\n", inputfile );
+	printf( "Unable to open: %s\n", inputfile );
 	return(1);
     }
 
@@ -316,7 +317,7 @@ int main(int argc, char ** argv )
 	init_ways();
 	init_nodes();
 	init_segments();
-	while ((c = getopt (argc, argv, "b:np")) != -1)
+	while ((c = getopt (argc, argv, "b:np?C:")) != -1)
 		switch (c)
 		{
 		case 'b':
@@ -357,11 +358,22 @@ int main(int argc, char ** argv )
 		case 'p':
 			postgres = 1;
 			break;
+		case 'C':
+			if( chdir( optarg ) < 0 )
+			{
+				fprintf(stderr, "Failed to change to directory '%s': %s\n", optarg, strerror(errno) );
+				exit(1);
+			}
+			break;
 		case '?':
-			/* Getopt will print an error message for us. */
-			exit(1);
 		default:
-			abort();
+			/* Getopt will print an error message for us. */
+			fprintf( stderr, "Usage: 2AND [-C dir] [-b minlon,minlat,maxlon,maxlat] [-n] [-p]\n"
+			                 "   -C dir                           - Change to given directory before starting\n"
+			                 "   -b minlon,minlat,maxlon,maxlat   - Bounding box to extract\n"
+			                 "   -n                               - Do not extract borders\n"
+			                 "   -p                               - Output postgresql SQL files\n");
+			exit(1);
 		}
 	
 	Err_ND_attached_to_way=0;

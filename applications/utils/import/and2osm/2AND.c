@@ -89,6 +89,9 @@
 #include "nodes.h"
 #include "tags.h"
 
+/* Control how often the display is update udring processing */
+#define DISPLAY_FREQUENCY   4096
+
 int postgres = 0;
 
 static int use_boundingbox = 0;
@@ -197,7 +200,11 @@ int readfile(char * inputfile)
 	struct ways * way=NULL;
 
 	psShape = SHPReadObject( hSHP, i );
-	if ((i/100)*100==i) printf("\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
+	if ((i%DISPLAY_FREQUENCY)==0)
+	{
+	    printf("\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
+	    fflush(stdout);
+	}
 	//printf("\n*******************************\n");
 	
 
@@ -231,7 +238,7 @@ int readfile(char * inputfile)
 		prevNode=lastNode=firstNode=NULL;
 		for( j = 0, iPart=1; j < psShape->nVertices; j++ )
 		{
-			if ((j>0)&&((j/1000)*1000==j))
+			if ((j>0)&&((j%DISPLAY_FREQUENCY)==0))
 			{
 				printf("\r%7li/%7i   %7li/%7i                   ",i,nEntities,j,psShape->nVertices);
 				fflush(stdout);
@@ -285,7 +292,8 @@ int readfile(char * inputfile)
 	}
 	SHPDestroyObject( psShape );
     }
-    printf("\n");
+    printf("\r%7i/%7i                                     \n",nEntities,nEntities);
+    fflush(stdout);
 
     SHPClose( hSHP );
     DBFClose( hDBF );

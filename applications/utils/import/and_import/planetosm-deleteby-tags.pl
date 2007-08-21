@@ -41,6 +41,7 @@ my @seg_sel_tags = ();
 # These tags are the one that identify ways to be deleted
 my @way_sel_tags = (
 	['railway','rail'],
+	['railway','light_rail'],
 #	['landuse',undef],
 	['highway','motorway'],
 	['highway','motorway_link'],
@@ -57,7 +58,13 @@ my @way_sel_tags = (
 	
 	['waterway','river'],
 	['waterway','canal'],
-	['natural','coastline'], # Gives really huge .osm files
+	['waterway','riverbank'],
+	['natural','water'],
+	['natural','coastline'], 
+	
+	# Silly stuff that shouldn't be there anyway
+	['highway','bridge'],
+	['highway','mini_roundabout'],
 );
 
 ###########################################################################
@@ -432,7 +439,7 @@ processXML(sub {
 	my $useful = 0;
 	foreach my $tag (@$tagsRef)
 	{
-	  next if $tag->[0] =~ /^(created_by|source|converted_by)$/;
+	  next if $tag->[0] =~ /^(created_by|source|converted_by|name)$/;
 	  $useful = 1;
 	  last;
         }

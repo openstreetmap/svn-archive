@@ -583,6 +583,12 @@ sub GenerateTileset
                 statusMessage("Running close-areas", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
+            elsif ($preprocessor eq "mercator")
+            {
+                statusMessage("Running mercatorization", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                ($N, $S, $E, $W) = (ProjectF($N), ProjectF($S), DegToRad($E), DegToRad($W));
+                mercatorize($inputFile,$outputFile);
+            }
             else
             {
                 die "Invalid preprocessing step '$preprocessor'";
@@ -857,6 +863,37 @@ sub frollo
         return 0;
     }
     
+    return 1;
+}
+#-----------------------------------------------------------------------------
+# Transform lat/lon to mercator coordinates (in preprocess)
+#-----------------------------------------------------------------------------
+sub mercatorize
+{
+    my ($inputFile,$outputFile) = @_;
+
+    open(my $fr, "<", $inputFile) || return;
+    open(my $fw, ">", $outputFile) || return;
+    while (my $line = <$fr>) {
+	if ($line =~ /^(.*lat=['"]?)(-?\d+.?\d*)(['"]?.*$)/) {
+          #print "Hello found latitude $2 ".ProjectF($2)."\n";
+          #print "Old line: $line\n";
+
+          $line = $1.ProjectF($2).$3;
+          #print "New line: $line\n";
+        } 
+	if ($line =~ /^(.*lon=['"]?)(-?\d+.?\d*)(['"]?.*$)/) {
+          #print "Hello found longitude $2 ".ProjectF($2)."\n";
+          #print "Old line: $line\n";
+
+          $line = $1.ProjectF(DegToRad($2)).$3;
+          #print "New line: $line\n";
+        } 
+	print $fw $line;
+    }
+    close $fr; 
+    close $fw;
+    statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     return 1;
 }
 

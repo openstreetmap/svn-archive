@@ -28,9 +28,18 @@ use warnings;
 # We will get all Nodes required by Segments (and Ways)
 # We can optionally also get other Nodes, based on their tags
 # This list is the tags that identify nodes to be deleted.
+
+# They won't be deleted if they are needed by a way that isn't deleted, so
+# you can list tags to be ignored here.
 my @node_sel_tags = (
 	['place',undef], 
 	['railway','station'],
+	
+	# These are often added by accident, so we attempt to delete them here if possible
+	['highway',undef],
+	['railway',undef],
+	['waterway',undef],
+	['natural',undef],
 );
 
 # We will get all Segments required by Ways

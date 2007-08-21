@@ -4,6 +4,9 @@
 
 # Where the planet file is
 PLANET=$(HOME)/osm/planet-070815.osm
+# The osmosis jar file
+# Note: version must be at least from 21 August 2007 (0.8.0)
+OSMOSIS=/usr/local/bin/osmosis.jar
 
 all: data/nld-delete.osm
 
@@ -28,10 +31,21 @@ data/nld.osm: data/nldpolygons.txt $(PLANET)
 data/nld-delete.osm: data/nld.osm planetosm-deleteby-tags.pl
 	./planetosm-deleteby-tags.pl --output=osmchange data/nld.osm > $@
 
+data/nld-leftover.osm: $(OSMOSIS) data/nld.osm data/nld-delete.osm
+	java -jar $(OSMOSIS) --read-xml file="data/nld.osm" --read-xml-change file="data/nld-delete.osm" outPipe.0=change --sort-change inPipe.0=change outPipe.0=change2 --apply-change inPipe.1=change2 --write-xml file="data/nld-leftover.osm"
+	
 # Nicity so that if the user forgets to update the location of their planet
 # file they get a nice error message
 $(PLANET):
 	@echo "======================================================================="
 	@echo "ERROR: Planet file not found: $(PLANET)"
 	@echo "Please enter the location of the planet file at the top of the Makefile"
+	@exit 1
+# Same for osmosis
+$(OSMOSIS):
+	@echo "======================================================================="
+	@echo "ERROR: Osmosis not found: $(OSMOSIS)"
+	@echo "To generate nld-leftover.osm we use osmosis"
+	@echo "It is available here: http://www.bretth.com/osmosis/osmosis-latest.zip"
+	@echo "Please specify the location of the jar file in the Makefile"
 	@exit 1

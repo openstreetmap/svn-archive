@@ -164,6 +164,8 @@ while(<IF>)
         my $perc = tell(IF)*100/(-s IF);
         printf STDERR "\r%.2f%% ", $perc;
     }
+    last if /^\s*<\/osm>/;
+    
     if (/^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'] lon=["']([0-9.-]+)["']/)
     {
         $copy = 0;

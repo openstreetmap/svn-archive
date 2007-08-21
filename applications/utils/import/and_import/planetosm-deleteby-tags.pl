@@ -52,9 +52,12 @@ my @way_sel_tags = (
 	['highway','tertiary'],
 	['highway','unclassified'],
 	['highway','residential'],
+	['highway','pedestrian'],
 	['highway','service'],
-#	['waterway','river'],
-#	['natural','coastline'], # Gives really huge .osm files
+	
+	['waterway','river'],
+	['waterway','canal'],
+	['natural','coastline'], # Gives really huge .osm files
 );
 
 ###########################################################################
@@ -429,7 +432,7 @@ processXML(sub {
 	my $useful = 0;
 	foreach my $tag (@$tagsRef)
 	{
-	  next if $tag->[0] =~ /^(created_by|source)$/;
+	  next if $tag->[0] =~ /^(created_by|source|converted_by)$/;
 	  $useful = 1;
 	  last;
         }
@@ -440,7 +443,7 @@ processXML(sub {
                 }
                 else
                 {
-                    print qq(<delete>\n), $main_line;
+                    print qq(<delete version="0.3">\n), $main_line;
                 }
                 &printTags(@$tagsRef);
 	        if( $line ne $main_line )

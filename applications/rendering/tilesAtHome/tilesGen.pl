@@ -586,7 +586,8 @@ sub GenerateTileset
             elsif ($preprocessor eq "mercator")
             {
                 statusMessage("Running mercatorization", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-                ($N, $S, $E, $W) = (ProjectF($N), ProjectF($S), DegToRad($E), DegToRad($W));
+		# adapt the boundaries to mercator coords
+                ($N, $S) = (rad2deg(ProjectF($N)),rad2deg(ProjectF($S)));
                 mercatorize($inputFile,$outputFile);
             }
             else
@@ -876,19 +877,10 @@ sub mercatorize
     open(my $fw, ">", $outputFile) || return;
     while (my $line = <$fr>) {
 	if ($line =~ /^(.*lat=['"]?)(-?\d+.?\d*)(['"]?.*$)/) {
-          #print "Hello found latitude $2 ".ProjectF($2)."\n";
-          #print "Old line: $line\n";
-
-          $line = $1.ProjectF($2).$3;
-          #print "New line: $line\n";
+          #print "Old line: $line";
+          $line = $1.rad2deg(ProjectF($2)).$3;
         } 
-	if ($line =~ /^(.*lon=['"]?)(-?\d+.?\d*)(['"]?.*$)/) {
-          #print "Hello found longitude $2 ".ProjectF($2)."\n";
-          #print "Old line: $line\n";
-
-          $line = $1.ProjectF(DegToRad($2)).$3;
-          #print "New line: $line\n";
-        } 
+        #print "New line: $line\n";
 	print $fw $line;
     }
     close $fr; 

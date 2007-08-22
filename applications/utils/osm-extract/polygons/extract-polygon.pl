@@ -165,8 +165,9 @@ while(<IF>)
         printf STDERR "\r%.2f%% ", $perc;
     }
     last if /^\s*<\/osm>/;
-    
-    if (/^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.-]+)["'] lon=["']([0-9.-]+)["']/)
+
+    # Note: we allow a minus in the ID to allow incomplete files also    
+    if (/^\s*<node.*id=["'](-?\d+)['"].*lat=["']([Ee0-9.-]+)["'] lon=["']([Ee0-9.-]+)["']/)
     {
         $copy = 0;
 
@@ -198,7 +199,7 @@ while(<IF>)
             print OF;
         }
     }
-    elsif (/^\s*<segment id=['"](\d+)["'] from=['"](\d+)["'] to=["'](\d+)["']/)
+    elsif (/^\s*<segment id=['"](-?\d+)["'] from=['"](-?\d+)["'] to=["'](-?\d+)["']/)
     {
         $copy = 0;
         if ($used_nodes->{$2} && $used_nodes->{$3})

@@ -585,10 +585,12 @@ sub GenerateTileset
             }
             elsif ($preprocessor eq "mercator")
             {
-                statusMessage("Running mercatorization", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-		# adapt the boundaries to mercator coords
-                ($N, $S) = (rad2deg(ProjectF($N)),rad2deg(ProjectF($S)));
-                mercatorize($inputFile,$outputFile);
+                my $Cmd = sprintf("%s perl mercatorize.pl %s > %s",
+                        $Config{Niceness},
+                        "$inputFile",
+                        "$outputFile");
+                statusMessage("Running Mercatorization", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                runCommand($Cmd,$PID);
             }
             else
             {
@@ -864,28 +866,6 @@ sub frollo
         return 0;
     }
     
-    return 1;
-}
-#-----------------------------------------------------------------------------
-# Transform lat/lon to mercator coordinates (in preprocess)
-#-----------------------------------------------------------------------------
-sub mercatorize
-{
-    my ($inputFile,$outputFile) = @_;
-
-    open(my $fr, "<", $inputFile) || return;
-    open(my $fw, ">", $outputFile) || return;
-    while (my $line = <$fr>) {
-	if ($line =~ /^(.*lat=['"]?)(-?\d+.?\d*)(['"]?.*$)/) {
-          #print "Old line: $line";
-          $line = $1.rad2deg(ProjectF($2)).$3;
-        } 
-        #print "New line: $line\n";
-	print $fw $line;
-    }
-    close $fr; 
-    close $fw;
-    statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     return 1;
 }
 

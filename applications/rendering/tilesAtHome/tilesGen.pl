@@ -443,7 +443,9 @@ sub GenerateTileset
     my $URLS = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
     if ($Zoom < 12) {
-	$URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f]", $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1);
+	# We only need the bounding box for ways (they will be downloaded completly,
+        # but need the extended bounding box for places (names from neighbouring tiles)
+	$URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[railway=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f]", $W, $S, $E, $N, $W, $S, $E, $N, $W, $S, $E, $N, $W, $S, $E, $N, $W, $S, $E, $N, $W, $S, $E, $N, $W1, $S1, $E1, $N1);
     }
     my @tempfiles;
     push(@tempfiles, $DataFile);

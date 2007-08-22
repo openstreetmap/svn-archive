@@ -47,13 +47,15 @@ sub createCoasts(){
   
   # Logfile
   open(LOG, ">log.txt") || die("Can't create logfile");
-  printf LOG "Long %f to %f, Lat %f to %f, shapefile %s, row ID %d\n";
+  printf LOG "Long %f to %f, Lat %f to %f, shapefile %s, row ID %d\n",
     $X1, $X2, $Y1, $Y2, $Filename, $ID;
   printf LOG "(%f, %f)\n", $X2 - $X1, $Y2 - $Y1;
   
   my $shapefile = new Geo::ShapeFile( $Filename );
   printf "%d shapes\n", $shapefile->shapes();
 
+  my %NodeCache;
+  
   my $Count = 0;
   for(1 .. $shapefile->shapes()) {
     my $shape = $shapefile->get_shp_record($_);
@@ -70,7 +72,12 @@ sub createCoasts(){
       my $InArea = (($Lat > $Y1) && ($Lat < $Y2) && ($Long > $X1) && ($Long < $X2));
       
       if($InArea){
-          my $Node = $osm->uploadNode($Lat, $Long, $TagDefault);
+          if( not defined $NodeCache{"$Lat,$Long"} )
+          {
+            $NodeCache{"$Lat,$Long"}= $osm->uploadNode($Lat, $Long, $TagDefault);
+          }
+          my $Node = $NodeCache{"$Lat,$Long"};
+          
           printf LOG "Node #%d: %f, %f\n", $Node, $Lat, $Long;
           
           if($LastValid){

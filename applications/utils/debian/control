@@ -1,16 +1,15 @@
-Source: openstreetmap-utils
+Source: openstreetmap-josm
 Section: utils
 Priority: optional
 Maintainer: Joerg Ostertag <debian@ostertag.name>
-Build-Depends: debhelper (>> 3.7.2), pkg-config
+Build-Depends: debhelper (>> 3.7.2), pkg-config, ant
 Standards-Version: 3.6.1
 
-Package: openstreetmap-utils
+Package: openstreetmap-josm
 Architecture: all
-Depends: perl, python, libshp1,libmagick9
-Build-Depends: libshp-dev, libmagick9-dev, libxml2-dev
-Recommends: gpsdrive, mapnik
-Suggests: java
-Description: OpenStreetmap Utils
- This Package contains some of the most usefull Utils
- for working with OpenStreetMap
+Depends: 
+Recommends: gpsdrive, mapnik, java
+Suggests:
+Description: OpenStreetmap Editor Josm
+ This Package the Openstreetmap Editor Josm
+ for working with OpenStreetMap Data

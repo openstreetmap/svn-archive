@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.4' generator='JOSM'>
+  <node id='-1' visible='true' lat='53.72319056288995' lon='4.399563531130033' />
+  <node id='-2' visible='true' lat='53.954129036190224' lon='6.558094032121049' />
+  <node id='-3' visible='true' lat='53.257484667669026' lon='7.388298070963748' />
+  <node id='-4' action='modify' visible='true' lat='51.93201011291807' lon='7.115516743915434' />
+  <node id='-5' action='modify' visible='true' lat='51.645901297605484' lon='6.415773339748014' />
+  <node id='-6' action='modify' visible='true' lat='50.65650778654529' lon='6.22601241658397' />
+  <node id='-7' action='modify' visible='true' lat='50.62642256377723' lon='5.43138855083453' />
+  <node id='-8' action='modify' visible='true' lat='51.090581436398395' lon='5.419528493136777' />
+  <node id='-9' action='modify' visible='true' lat='51.29127258154749' lon='4.696064973573854' />
+  <node id='-10' action='modify' visible='true' lat='51.053320460376824' lon='3.7472603577536265' />
+  <node id='-11' action='modify' visible='true' lat='51.32834172666639' lon='2.7984557419334006' />
+  <node id='-12' action='modify' visible='true' lat='52.513232325542425' lon='3.9844615117086843' />
+  <segment id='-13' visible='true' from='-12' to='-1' />
+  <segment id='-14' visible='true' from='-1' to='-2' />
+  <segment id='-15' visible='true' from='-2' to='-3' />
+  <segment id='-16' visible='true' from='-3' to='-4' />
+  <segment id='-17' visible='true' from='-4' to='-5' />
+  <segment id='-18' visible='true' from='-5' to='-6' />
+  <segment id='-19' visible='true' from='-6' to='-7' />
+  <segment id='-20' visible='true' from='-7' to='-8' />
+  <segment id='-21' visible='true' from='-8' to='-9' />
+  <segment id='-22' visible='true' from='-9' to='-10' />
+  <segment id='-23' visible='true' from='-10' to='-11' />
+  <segment id='-24' visible='true' from='-11' to='-12' />
+  <way id='-25' visible='true'>
+    <seg id='-16' />
+    <seg id='-17' />
+    <seg id='-18' />
+    <seg id='-19' />
+    <seg id='-20' />
+    <seg id='-21' />
+    <seg id='-22' />
+    <seg id='-23' />
+    <seg id='-24' />
+    <seg id='-13' />
+    <seg id='-14' />
+    <seg id='-15' />
+  </way>
+</osm>

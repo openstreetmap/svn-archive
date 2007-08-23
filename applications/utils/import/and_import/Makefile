@@ -26,26 +26,33 @@ data/nldgrens.osm: data
 # Convert the boundary to a polygon file and handle exclusions
 data/nldgrens.polygon: data/nldgrens.osm 
 	./osm2polygon.pl data/nldgrens.osm > $@
+data/nld-groot.polygon: nld-groot.osm 
+	./osm2polygon.pl nld-groot.osm > $@
 
 # Make a polygon file for the aras to be extracted	
 data/extract.polygon: protected_areas
 	@echo -e '1\n  0 0\n 90 0\n 90 90\n 0 90\n 0 0\nEND' > $@
 	./protected2polygon.pl >> $@
 	
-# Extract NLD from the planet file
-data/nld.osm: data/nldgrens.polygon $(PLANET)
-	../../osm-extract/polygons/extract-polygon.pl -v -i $(PLANET) -o $@ -p data/nldgrens.polygon
-
+# Extract NLD-groot from the planet file
+data/nld-groot.osm: data/nld-groot.polygon $(PLANET)
+	../../osm-extract/polygons/extract-polygon.pl -v -i $(PLANET) -o $@ -p data/nld-groot.polygon -r data/remains-groot.txt
+# Extract NLD from the NLD-groot file
+data/nld.osm: data/nldgrens.polygon data/nld-groot.osm ../../osm-extract/polygons/extract-polygon.pl
+	../../osm-extract/polygons/extract-polygon.pl -v -i data/nld-groot.osm -o $@ -p data/nldgrens.polygon -r data/remains-grens.txt
 # Remove protected areas from NLD file
-data/nld-unprotected.osm: data/extract.polygon data/nld.osm
-	../../osm-extract/polygons/extract-polygon.pl -v -i data/nld.osm -o $@ -p data/extract.polygon
+data/nld-unprotected.osm: data/extract.polygon data/nld.osm ../../osm-extract/polygons/extract-polygon.pl
+	../../osm-extract/polygons/extract-polygon.pl -v -i data/nld.osm -o $@ -p data/extract.polygon -r data/remains-protected.txt
 
 # From the extracted data we determine what we actually want to delete
 data/nld-delete.osm: data/nld-unprotected.osm planetosm-deleteby-tags.pl
-	./planetosm-deleteby-tags.pl --output=osmchange data/nld-unprotected.osm > $@
+	cat data/remains-groot.txt data/remains-grens.txt data/remains-protected.txt >data/remains.txt
+	./planetosm-deleteby-tags.pl --output=osmchange --remains=data/remains.txt data/nld-unprotected.osm > $@
 
-data/nld-leftover.osm: $(OSMOSIS) data/nld.osm data/nld-delete.osm
-	java -jar $(OSMOSIS) --read-xml file="data/nld.osm" --read-xml-change file="data/nld-delete.osm" outPipe.0=change --sort-change inPipe.0=change outPipe.0=change2 --apply-change inPipe.1=change2 --write-xml file="data/nld-leftover.osm"
+data/nld-leftover.osm: $(OSMOSIS) data/nld-groot.osm data/nld-delete.osm
+	java -jar $(OSMOSIS) --read-xml file="data/nld-groot.osm" --read-xml-change file="data/nld-delete.osm" outPipe.0=change \
+	                   --sort-change inPipe.0=change outPipe.0=change2 --apply-change inPipe.1=change2 \
+	                   --write-xml file="data/nld-leftover.osm"
 	
 ifneq ($(AND_DATA),)
 ###################################

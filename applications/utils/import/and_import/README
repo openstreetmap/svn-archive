@@ -22,23 +22,53 @@ http://people.vrijschrift.org/~ante/osm/
 
 For example: 
 
-perl -w osm2polygon.pl data/nldgrens.osm >data/nldpolygon.txt
+./osm2polygon.pl data/nldgrens.osm >data/nldpolygon.txt
 
-4. Get polygons representing protected areas (OSM format)
-5. Convert protected areas to "polygon" format
+4. There's also a polygon which grabs a slightl larger area. This we use at
+the end to see whether what we did had much effect on our neighbours. This
+data is in nld-groot.osm. Now we need to convert this to polygon format also
+
+./osm2polygon.pl nld-groot.osm > data/nld-groot.polygon
+
+5. Get polygons representing protected areas (OSM format). We have a file
+protected_areas. We have a script which fetches the polygon from the server
+and gives the appropriate exclusion areas. But first we have to *include*
+everything before excluding the protected areas.
+
+echo -e '1\n  0 0\n 90 0\n 90 90\n 0 90\n 0 0\nEND' > data/extract.polygon
+./protected2polygon.pl >> data/extract.polygon
+
 6. Use extract-polygon to extract the current NL data (takes > 1 hour)
 
 For example:
 
-../../osm-extract/polygons/extract-polygon.pl -v -i $HOME/osm/planet-070815.osm -o data/nld.osm -p data/nldpolygon.txt
+../../osm-extract/polygons/extract-polygon.pl -v -i $HOME/osm/planet-070815.osm -o data/nld.osm -p data/nldpolygon.txt -r data/remains-grens.txt
 
-This includes a progress counter.
+The -r option gives us a list of the nodes that are attached to segment that
+arn't inside our area. This is useful for later.
 
-7. Use planetosm-deleteby-tags.pl to create file in OSM format indicating
-   what needs to be deleted.
+7. Use extract-polygon to get the data for the expanded borders.
 
-For example:
-./planetosm-deleteby-tags.pl data/nld.osm > data/nld-delete.osm	
+../../osm-extract/polygons/extract-polygon.pl -v -i $(PLANET) -o data/nld-groot.osm -p data/nld-groot.polygon
+
+8. Areas that are protected need to be removed from the nld.osm file
+
+../../osm-extract/polygons/extract-polygon.pl -v -i data/nld.osm -o data/nld-unprotected.osm -p data/extract.polygon -r data/remains-protected.txt
+
+9. Use planetosm-deleteby-tags.pl to create file in OSM format indicating
+   what needs to be deleted. Here we also join the remains files together so
+   the script knows that certain nodes can't be touched (they're used by
+   other data).
+
+cat data/remains-grens.txt data/remains-protected.txt >data/remains.txt
+./planetosm-deleteby-tags.pl --output=osmchange --remains=data/remains.txt data/nld-unprotected.osm > data/nld-delete.osm
 Deleted: nodes:155290, segs:179150, ways:29651
+
+10. Finally, so we know what we've done we apply the "to delete" file to the
+"large NL" file to see how it all looks.
+
+java -jar $(OSMOSIS) --read-xml file="data/nld-groot.osm" --read-xml-change file="data/nld-delete.osm" outPipe.0=change \
+                     --sort-change inPipe.0=change outPipe.0=change2 --apply-change inPipe.1=change2 \
+                     --write-xml file="data/nld-leftover.osm"
 
 (several steps relating to conversion of data, coming soon)

@@ -1,8 +1,7 @@
 /***********************************************************************
  * @(#)$RCSfile: Tokenizer.java,v $   $Revision: 1.6 $$Date: 2006/04/21 14:14:56 $
  *
- * Copyright (c) 2002 IICM, Graz University of Technology
- * Inffeldgasse 16c, A-8010 Graz, Austria.
+ * Copyright (c) Christof Dallermassl
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License (LGPL)

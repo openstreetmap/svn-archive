@@ -1,3 +1,7 @@
+/**
+ * Copyright by Christof Dallermassl
+ * This program is free software and licensed under GPL.
+ */
 package at.dallermassl.josm.plugin.surveyor;
 
 import javax.swing.Action;

@@ -1,5 +1,6 @@
 /**
- * 
+ * Copyright by Christof Dallermassl
+ * This program is free software and licensed under GPL.
  */
 package at.dallermassl.josm.plugin.surveyor;
 
@@ -8,11 +9,9 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

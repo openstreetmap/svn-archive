@@ -30,6 +30,7 @@ my $help;
 my $polyfile;
 my $infile;
 my $outfile;
+my $remainsfile;
 my $compress;
 my $verbose = 0;
 
@@ -42,7 +43,7 @@ sub usage ()
 This Perl script will process a planet.osm file and extract the nodes,
 segments, and ways, falling within a polygon.
 
-usage: $prog [-h] [-c number] [-i file] [-o file] -p file
+usage: $prog [-h] [-c number] [-i file] [-o file] [-r file] -p file
 
  -h       : print ths help message and exit.
  -c num   : reduce the number of points in the polygon by num %.  This 
@@ -50,6 +51,9 @@ usage: $prog [-h] [-c number] [-i file] [-o file] -p file
  -p file  : file containing the polygon definition.
  -i file  : OSM planet file to process.
  -o file  : OSM planet file to output.
+ -r file  : (optional) outputs a simple list of all node ids that are within
+            your selected area but are also used by segments not selected.
+            Some forms of post-processing need this information.
 
 If you do not supply an input or output file input will be read from STDIN
 and output written to STDOUT.
@@ -83,7 +87,8 @@ GetOptions ('h|help' => \$help,
 			'v|verbose' => \$verbose,
 			'i|input=s' => \$infile,
 			'o|output=s' => \$outfile,
-			'p|polygon=s' => \$polyfile) || usage ();
+			'p|polygon=s' => \$polyfile,
+			'r|remains=s' => \$remainsfile) || usage ();
 
 if ($help) {
 	usage ();
@@ -142,9 +147,13 @@ if ($outfile) {
 }
 
 if ($infile) {
-	open (IF, "$infile") || die "Could not open file: $infile: $!";
+	open (IF, "<$infile") || die "Could not open file: $infile: $!";
 } else {
 	*IF = *STDIN;
+}
+
+if ($remainsfile) {
+        open (RF, ">$remainsfile") || die "Could not open file: $remainsfile: $!";
 }
 
 print OF << "EOF";
@@ -208,6 +217,17 @@ while(<IF>)
             print OF;
             $copy = 1;
         }
+        elsif ($remainsfile)  # Only test if we want the output
+        {
+            if ($used_nodes->{$2})
+            {
+                print RF "$2\n";
+            }
+            if ($used_nodes->{$3})
+            {
+                print RF "$3\n";
+            }
+        }
     }
     elsif (/^\s*<way /)
     {
@@ -240,6 +260,7 @@ EOF
 
 close (OF);
 close (IF);
+close (RF) if ($remainsfile);
 print STDERR "\n" if $verbose;
 
 exit;

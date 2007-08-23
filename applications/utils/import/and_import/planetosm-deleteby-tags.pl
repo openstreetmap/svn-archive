@@ -104,6 +104,7 @@ use Bit::Vector;
 our $man=0;
 our $help=0;
 our $output = "josm";
+our $remainsfile;
 my $bbox_opts='';
 
 my $VERBOSE;
@@ -115,7 +116,8 @@ GetOptions (
 	     'MAN'              => \$man, 
 	     'man'              => \$man, 
 	     'h|help|x'         => \$help, 
-	     'o|output=s'         => \$output,
+	     'o|output=s'       => \$output,
+	     'r|remains=s'      => \$remainsfile,
 	     ) or pod2usage(1);
 
 pod2usage(1) if $help;
@@ -148,6 +150,18 @@ my $wanted_nodes = Bit::Vector->new( 50 * 1000 * 1000 );
 my $wanted_segs = Bit::Vector->new( 50 * 1000 * 1000 );
 my $found_segs = Bit::Vector->new( 50 * 1000 * 1000 );
 
+# Any node listed in the remains file cannot be deleted
+if ($remainsfile)
+{
+    open my $fh, "<$remainsfile" or die "Couldn't open $remainsfile ($!)\n";
+    while(<$fh>)
+    {
+        if( /^(\d+)/ )
+        {
+            $wanted_nodes->Bit_On($1);
+        }
+    }
+}
 # Sub to open xml
 sub openXML {
 	open(XML, "<$xml") or die("$!");
@@ -448,7 +462,7 @@ processXML(sub {
 	my $useful = 0;
 	foreach my $tag (@$tagsRef)
 	{
-	  next if $tag->[0] =~ /^(created_by|source|converted_by|name)$/;
+	  next if $tag->[0] =~ /^(created_by|source|converted_by|name|ele|time)$/;
 	  $useful = 1;
 	  last;
         }

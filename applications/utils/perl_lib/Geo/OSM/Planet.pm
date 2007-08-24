@@ -20,6 +20,7 @@ use HTTP::Request;
 use File::Basename;
 use File::Copy;
 use File::Path;
+use File::Slurp;
 use Getopt::Long;
 use HTTP::Request;
 use Storable ();

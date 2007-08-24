@@ -840,7 +840,7 @@
                 stroke: white;
                 stroke-width: 0.3px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 10px;
+                font-size: 100px;
                 font-weight: bold;
             }
 
@@ -917,7 +917,7 @@
             }
 
             .railway-rail {
-                stroke-width: 14px;
+                stroke-width: 60px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;
@@ -977,7 +977,7 @@
                 stroke: white;
                 stroke-width: 0.6px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 200px;
+                font-size: 500px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -987,7 +987,7 @@
                 stroke: white;
                 stroke-width: 0.5px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 180px;
+                font-size: 380px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -1043,6 +1043,7 @@
             }
 
             .village-caption {
+	        display: none;
                 fill: black;
                 stroke: none;
                 font-family: "DejaVu Sans",sans-serif;

@@ -147,7 +147,11 @@ if ($outfile) {
 }
 
 if ($infile) {
-	open (IF, "<$infile") || die "Could not open file: $infile: $!";
+        if ($infile =~ /\.bz2/ ) {
+        	open (IF, "bzcat $infile |") || die "Could not bzcat file: $infile: $!";
+        } else {
+        	open (IF, "<$infile") || die "Could not open file: $infile: $!";
+        }
 } else {
 	*IF = *STDIN;
 }
@@ -170,7 +174,9 @@ while(<IF>)
     $count++;
     if( $verbose and ($count % 10000) == 0 )
     {
-        my $perc = tell(IF)*100/(-s IF);
+        # When reading from a compressed file we assume a compression ration of 14.6
+        my $perc = tell(IF)*100/((-s IF) || ((-s $infile)*14.6));
+        if( $perc > 100 ) { $perc = 100 }
         printf STDERR "\r%.2f%% ", $perc;
     }
     last if /^\s*<\/osm>/;

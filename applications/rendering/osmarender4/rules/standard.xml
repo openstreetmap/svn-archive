@@ -75,6 +75,9 @@
             <rule e="way" k="natural" v="land">
                 <area class='natural-land' />
             </rule>
+            <rule e="way" k="natural" v="beach">
+                <area class='natural-beach' />
+            </rule>
             <rule e="way" k="landuse" v="forest|wood">
                 <area class='landuse-wood'/>
             </rule>
@@ -1784,6 +1787,11 @@
                 fill: #ffffff;
                 stroke: #e0e0e0;
                 stroke-width: 0.1px;
+            }
+
+            .natural-beach {
+                fill: #eecc55;
+                stroke: none;
             }
 
             .peak-caption {

@@ -111,7 +111,7 @@ sub CheckConfig{
     }
 
     if($2 < 42.0){
-        die("This version of inkscape ($1) is known not to work with tiles\@home\n");
+        die("This version of inkscape ($1.$2) is known not to work with tiles\@home\n");
     }
     if($2 < 45.1){
         print "* Please upgrade to inkscape 0.45.1 due to security problems with your inkscape version:\n"

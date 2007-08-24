@@ -2,8 +2,8 @@
 # data. For now it only handles the cutting out process, but the importing
 # will come at some stage.
 
-# Where the planet file is
-PLANET=$(HOME)/osm/planet-070815.osm
+# Where the planet file is (may be compressed)
+PLANET=$(HOME)/osm/planet-070823.osm.bz2
 # The osmosis jar file
 # Note: version must be at least from 21 August 2007 (0.8.0)
 OSMOSIS=/usr/local/bin/osmosis.jar

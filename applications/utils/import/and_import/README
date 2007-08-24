@@ -1,4 +1,4 @@
-This document includes the process to import the AND data
+This document includes the process to import the AND data.
 
 Note: this document is about the actual commands to acheive the desired
 effect! Any discussion and details should be referred to:
@@ -8,6 +8,12 @@ http://wiki.openstreetmap.org/index.php/AND_Data/Roadmap-integration-NL
 As far as possible these steps are encoded in the Makefile, so editting to
 indicate where your planet file is and running "make" will be sufficient in
 most cases.
+
+Most stuff in the directory written by:
+Martijn van Oosterhout <kleptog@svana.org> August 2007.
+
+See the individual files for licence information. This file in public
+domain.
 
 ===========================================================================
 Steps

@@ -10,6 +10,9 @@
 # Author Frederik Ramm <frederik@remote.org> / public domain
 # Author Keith Sharp <kms@passback.co.uk> / public domain
 
+# Progress meter, exclusions, et al all added by Martijn van Oosterhout
+# <kleptog@svana.org> for the AND import (August 2007) / public domain
+
 # Get this from CPAN!
 use Math::Polygon;
 use Getopt::Long;

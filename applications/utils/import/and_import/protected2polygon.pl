@@ -1,5 +1,12 @@
 #!/usr/bin/perl -w
 
+# Simple script to take list of way IDs representing protected areas and
+# producing polygon files. The actually hard work is done by osm2polygon.pl.
+#
+# By Martijn van Oosterhout <kleptog@svana.org>  August 2007
+# Licence: BSD
+
+
 use strict;
 use warnings;
 use LWP::Simple;

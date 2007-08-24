@@ -13,5 +13,11 @@ extract a rectangular area and/or items based on certain tag values.
 osm-subset.pl does something similar but uses pre-defined bounding
 boxes as opposed to bounding boxes specified on the command line.
 
+Note: for tha AND import the code in the "polygons" subdirectory has been
+significantly expanded. It handles excluding as well as including areas, can
+read compressed planet dumps directly and can provide auxilliary data
+related to nodes included but referenced by excluded stuff. At some point
+the useful features should be ported to the other scripts also.
+
 PLEASE EXPAND AND CHANGE THIS README IF YOU MAKE CHANGES!
 

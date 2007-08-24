@@ -1,6 +1,9 @@
 # This Makefile is intended to automate the process of uploading the AND
 # data. For now it only handles the cutting out process, but the importing
 # will come at some stage.
+#
+# Created by: Martijn van Oosterhout <kleptog@svana.org> August 2007
+# Licence: public domain
 
 # Where the planet file is (may be compressed)
 PLANET=$(HOME)/osm/planet-070823.osm.bz2

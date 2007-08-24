@@ -1,4 +1,11 @@
 #!/usr/bin/perl
+
+# Simple script to take an OSM file with a single way and convert it to a
+# polygon file for use with extract-polygon.pl
+#
+# By Martijn van Oosterhout <kleptog@svana.org>  August 2007
+# Licence: BSD
+
 use strict;
 use warnings;
 

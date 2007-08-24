@@ -917,7 +917,7 @@
             }
 
             .railway-rail {
-                stroke-width: 14px;
+                stroke-width: 140px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;

@@ -38,11 +38,11 @@
   
   # Top row:
   print "<tr>";
-  print TableImg("gfx/out.png", LinkTile($x/2,$y/2,$z-1), 29, 29);
+  print TableImg("gfx/out.png", LinkTile($x/2,$y/2,$z-1,$layer), 29, 29);
   for($i = 0; $i < $Grid; $i++){
-    print TableImg(($i == $Centre ? "gfx/N.png" : "gfx/EW.png"), LinkTile($x,$y-2,$z), 256, 29);
+    print TableImg(($i == $Centre ? "gfx/N.png" : "gfx/EW.png"), LinkTile($x,$y-2,$z,$layer), 256, 29);
     }
-  print TableImg("gfx/in.png", LinkTile($x*2,$y*2,$z+1), 29, 29);
+  print TableImg("gfx/in.png", LinkTile($x*2,$y*2,$z+1,$layer), 29, 29);
   print "</tr>";
   
   # Rows:
@@ -50,13 +50,13 @@
   {
     $RelY = $iy - $Centre;
     print "<tr>";
-    print TableImg(($iy == $Centre ? "gfx/W.png" : "gfx/NS.png"), LinkTile($x-2,$y,$z), 29, 256);
+    print TableImg(($iy == $Centre ? "gfx/W.png" : "gfx/NS.png"), LinkTile($x-2,$y,$z,$layer), 29, 256);
     for($ix = 0; $ix < $Grid; $ix++)
       {
       $RelX = $ix - $Centre;
       print TableLinkedImage($x + $RelX, $y + $RelY, $z, 256, 256);
       }
-    print TableImg(($iy == $Centre ? "gfx/E.png" : "gfx/NS.png"), LinkTile($x+2,$y,$z), 29, 256);
+    print TableImg(($iy == $Centre ? "gfx/E.png" : "gfx/NS.png"), LinkTile($x+2,$y,$z,$layer), 29, 256);
     print "</tr>";
   }
 
@@ -64,7 +64,7 @@
   print "<tr>";
   print TableImg("gfx/C.png", "", 29, 29);
   for($i = 0; $i < $Grid; $i++){
-    print TableImg(($i == $Centre ? "gfx/S.png" : "gfx/EW.png"), LinkTile($x,$y+2,$z), 256, 29);
+    print TableImg(($i == $Centre ? "gfx/S.png" : "gfx/EW.png"), LinkTile($x,$y+2,$z,$layer), 256, 29);
     }
   print TableImg("gfx/C.png", "", 29, 29);
   print "</tr>";
@@ -83,8 +83,8 @@
   $MapSizeKm = $TileSizeKm * $Grid;
   $MapSizeMile = $MapSizeKm / 1.609;
   
-  $ZoomOut = LinkTile($x/2,$y/2,$z-1);
-  $ZoomIn = LinkTile($x*2,$y*2,$z+1);
+  $ZoomOut = LinkTile($x/2,$y/2,$z-1,$layer);
+  $ZoomIn = LinkTile($x*2,$y*2,$z+1,$layer);
   
   $LatLongURL = sprintf(
     "./?lat=%1.3f&lon=%1.3f", 
@@ -178,21 +178,18 @@
     $Html .= "</form>\n";
     return($Html);
     }
-  function TilesetLink($layerDir,$displayName){
+  function TilesetLink($layer,$displayName){
     global $x,$y,$z;
-    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z,$layerDir), $displayName));
+    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z,$layer), $displayName));
     
   }
-  function MoreLink($More){ 
-    global $x,$y,$z;
-    return(LinkTile($x,$y,$z) . "&amp;$More=yes");
-  }
+
   function TableEnd(){ print "</table>"; }
   function TableStart(){ print "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"; }
   
   function TableLinkedImage($x,$y,$z,$w,$h){
     global $layer;
-    return(TableImg(ImageURL($x,$y,$z,$layer), LinkTile($x,$y,$z),$w,$h));
+    return(TableImg(ImageURL($x,$y,$z,$layer), LinkTile($x,$y,$z,$layer),$w,$h));
   }
 
   function ImageURL($x,$y,$z,$layerdir){

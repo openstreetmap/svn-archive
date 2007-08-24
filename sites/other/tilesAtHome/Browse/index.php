@@ -180,7 +180,7 @@
     }
   function TilesetLink($layerDir,$displayName){
     global $x,$y,$z;
-    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z), $displayName));
+    return(sprintf("<a href=\"%s\">%s</a>", LinkTile($x,$y,$z,$layerDir), $displayName));
     
   }
   function MoreLink($More){ 
@@ -202,9 +202,8 @@
       return(TileURL($x,$y,$z,$layerdir));
   }
 
-  function LinkTile($X,$Y,$Z){
-    global $layer;
-    return(sprintf("./?x=%d&amp;y=%d&amp;z=%d&amp;layer=%s",$X,$Y,$Z,$layer));
+  function LinkTile($X,$Y,$Z,$layer="tile"){
+     return(sprintf("./?x=%d&amp;y=%d&amp;z=%d&amp;layer=%s",$X,$Y,$Z,$layer));
   }
   function TableRow($Blocks){
     return("<tr><td>".implode("</td><td>", $Blocks) . "</td></tr>");

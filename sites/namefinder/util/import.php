@@ -30,42 +30,18 @@ if (empty($config['area'])) {
   $area =& $config['area'];
 }
 
-$added = array('node'=>0,
-               'placeindex'=>0,
-               'named'=>0,
-               'segment'=>0);
+$added['node'] = $added['placeindex'] = $added['named'] = $added['segment'] =$added['canon'] = 0;
 
-$pending = array();
-$chunk = $config['insertchunk'];
 $tooclose = $config['tooclose'];
-
-function insert($object) {
-  global $pending, $chunk;
-  $cn = get_class($object);
-  $pending[$cn][] = $object;
-  if (count($pending[$cn]) >= $chunk) {
-     flush_inserts($cn);
-  }
-}
-
-/* static */ function flush_inserts($cn) {
-  global $pending, $db, $added;
-  $n = count($pending[$cn]);
-  if ($n > 0) { 
-    // echo "adding {$n} {$cn}\n";
-    $added[$cn] += $n;
-    $db->insert($pending[$cn]); 
-    $pending[$cn] = array();
-  }
-}
 
 // ==================================================
 class nodecache {
   /* we maintain a node cache as we create nodes and use them because we frequently 
      refer to the same node a few times in quick succession from say a way or segment */
-  var $cache;
-  var $size;
+  var $cache = array();
+  var $size = 0;
   var $maxsize = 500;
+
   function getnode($uid) {
     if (isset($this->cache[$uid])) {
       return $this->cache[$uid];
@@ -80,7 +56,6 @@ class nodecache {
   }
   
   function putnode($node, $uid) {
-    $this->last++;
     if ($this->size == $this->maxsize) {
       array_shift($this->cache);
     } else {
@@ -113,6 +88,15 @@ class tagged {
     /* there was a preponderance at one time for dud objects to end up
        in mid-Atlantic, which we can safely ignore */
     return isset($this->lat) && ($this->lat !=0.0 || $this->lon != 0.0);
+  }
+
+  // --------------------------------------------------
+  function append_for_canonicalisation(&$canonicalise, $category) {
+    if (empty($canonicalise[0])) {
+      $canonicalise[] = $category;
+    } else {
+      $canonicalise[] = $canonicalise[0] . ' ' . $category;
+    }
   }
 
   // --------------------------------------------------
@@ -165,7 +149,8 @@ class tagged {
       return; 
     }
 
-    global $db, $tooclose;
+    global $db, $tooclose, $added;
+
     if (! $this->calc_latlong()) { return; }
 
     /* It has interest, and it has location, so make a named object to
@@ -176,11 +161,15 @@ class tagged {
 
     $named = new named();
     $namestring = '';
+    $canonicalise = array();
     if (! empty($this->tags['name'])) { 
       $namestring .= $this->tags['name']; 
+      $canonicalise[] = $namestring;
     } else if (! empty($this->tags['place_name'])) { 
       $namestring .= $this->tags['place_name']; 
+      $canonicalise[] = $namestring;
     }
+    
     foreach (array('ref', 'iata', 'icao', 'old_name','loc_name') as $refkey) {
       if (! empty($this->tags[$refkey])) { 
         if (empty($namestring)) {
@@ -188,13 +177,13 @@ class tagged {
         } else {
           $namestring .= ' [' . $this->tags[$refkey] .']';
         }
+        $canonicalise[] = $this->tags[$refkey];
       }
     }
-    $canonicalise = $namestring;
     foreach ($this->tags as $key=>$value) {
       if (substr($key,0,5) == 'name:') {
         $namestring .= ' ['.substr($key,5).':'.$value.']';
-        $canonicalise .= "[{$value}]";
+        $canonicalise[] = $value;
       }
     }
 
@@ -207,6 +196,9 @@ class tagged {
     $named->lat = $this->lat;
     $named->lon = $this->lon;
     $named->info = '';
+    $named->category = '';
+    $named->rank = 0;
+    $named->is_in = '';
 
     /* now construct a useful description of the class of the item, so
        we can say, for example, "school St Bede's found ...". This is
@@ -263,13 +255,13 @@ class tagged {
         switch ($value) {
         case 'fast_food':
           $named->info .= "{$prefix}take-away"; 
-          $canonextras[] = 'fast food';
-          $canonextras[] = 'take away';
+          $this->append_for_canonicalisation($canonicalise, 'fast food');
+          $this->append_for_canonicalisation($canonicalise, 'take away');
           $prefix = '; ';
           break;
         case 'place_of_worship':
           $powtype = 'place of worship';
-          // $canonextras[] = $powtype;
+          // $canonicalise[] = $powtype;
           if (! empty($this->tags['religion'])) {
             switch($this->tags['religion']) {
             case 'christian':
@@ -279,12 +271,12 @@ class tagged {
             case 'methodist':
             case 'baptist':
               $powtype = 'church';
-              $canonextras[] = 'church';
+              $this->append_for_canonicalisation($canonicalise, 'church');
               break;
             case 'moslem':
             case 'islam':
               $powtype = 'mosque';
-              $canonextras[] = 'mosque';
+              $this->append_for_canonicalisation($canonicalise, 'mosque');
               break;
             }
           } else if (! empty($this->tags['denomination'])) {
@@ -296,12 +288,12 @@ class tagged {
             case 'methodist':
             case 'baptist':
               $powtype = 'church';
-              $canonextras[] = 'church';
+              $this->append_for_canonicalisation($canonicalise, 'church');
               break;
             case 'moslem':
             case 'islam':
               $powtype = 'mosque';
-              $canonextras[] = 'mosque';
+              $this->append_for_canonicalisation($canonicalise, 'mosque');
               break;
             }
           }
@@ -316,7 +308,7 @@ class tagged {
           if (! empty($value) && strpos($named->info, $value) === FALSE) { 
             $named->info .= "{$prefix}{$value}";
             $prefix = '; ';
-            $canonextras[] = $value;
+            $this->append_for_canonicalisation($canonicalise, $value);
           }
           break;
         }
@@ -353,7 +345,7 @@ class tagged {
         $value = str_replace('_', ' ', $value);
         if (! empty($value) && strpos($named->info, $value) === FALSE) { 
           $named->info .= "{$prefix}{$value}";
-          $canonextras[] = $value;
+          $this->append_for_canonicalisation($canonicalise, $value);
           $prefix = '; ';
         }
         $named->category = $key;
@@ -363,8 +355,8 @@ class tagged {
         if (! empty($value) && strpos($named->info, $value) === FALSE) { 
           $named->info .= "{$prefix}{$value}";
           $named->rank = named::placerank($value);
-          $canonextras[] = $value;
-          $canonextras[] = $key;
+          $this->append_for_canonicalisation($canonicalise, $value);
+          $this->append_for_canonicalisation($canonicalise, $key);
           $named->category = $key;
           $prefix = '; ';
         }
@@ -378,22 +370,15 @@ class tagged {
       }
     }
 
-    /* build the canonical name strings from the real name so that we
+    /* build the array of canonical name strings from the real name so that we
        have something more suitable for matching, no puntuation,
        variants and so on. See canon.php for details */
 
-    $canon1 = canon::canonical($canonicalise, TRUE /* alternates */);
-    $canon1 = $canon1 == '' ? '#' : "#{$canon1}#";
-    $canon2 = $canon1;
-    if (! empty($canonextras)) {
-      foreach($canonextras as $canonextra) {
-        $canon3 = canon::canonical($canonextra);
-        if ($canon3 != '' && strpos($canon1, $canon3) === FALSE) {
-          $canon2 .= $canon3 . '#';
-        }
-      }
+    $canonstrings = array();
+    foreach ($canonicalise as $termstring) {
+      $canonstrings = 
+        array_merge($canonstrings, canon::canonical($termstring, TRUE /* alternates */));
     }
-    $named->canon = $canon2;
 
     /* do we already know about something with this name (same
        canonical form) and in the same locality. We look up only in the
@@ -406,13 +391,13 @@ class tagged {
        other. */
 
     if ($named->name != '') {
+      $canonexists = new canon(NULL, $canonstrings[0]);
       $namedexists = new named();
-      $namedexists->region = $named->region;
-      $namedexists->canon = $canon2;
+      $namedexists->category = $named->category;
       $q = $db->query();
-      while ($q->select($namedexists) > 0) {
+      while ($q->selectjoin($canonexists, $namedexists) > 0) {
         $named->localdistancefrom($namedexists);
-        if ($named->distance < $tooclose && $named->category == $namedexists->category) { 
+        if ($named->distance < $tooclose) { 
           // echo "{$named->name} within {$named->distance} km of another one\n";
           return; 
         }
@@ -430,7 +415,8 @@ class tagged {
          place=country. These will still go in the general index, just
          not inthe place index for determining where a named thing is
          near */
-      insert(placeindex::placeindexfromnamed($named));
+      $db->insert(placeindex::placeindexfromnamed($named));
+      $added['placeindex']++;
     }
 
     /* and finally queue the named object for insertion. However, we
@@ -439,8 +425,14 @@ class tagged {
        similar search on the queue I suppose, which would definitely
        speed things up, but is tricky */
 
-    insert($named);
-    flush_inserts('named');
+    $db->insert($named);
+    $added['named']++;
+
+    $canons = canon::canonfactory($named->id, $canonstrings);
+    foreach ($canons as $canon) { 
+      $db->insert($canon); 
+      $added['canon']++;
+    }
   }
 }
 
@@ -464,7 +456,15 @@ class node extends tagged {
 
   // --------------------------------------------------
   function complete() {
+    global $db, $added;
     /* called when the node is completely read from the planet */
+    $this->interesting_name();
+    
+    // and in any case, add it to the node table
+    $db->insert($this);
+    $added['node']++;
+
+    /*
     global $area, $db;
     if ($this->lat > $area['s'] && $this->lat < $area['n'] && 
         $this->lon > $area['w'] && $this->lon < $area['e'])
@@ -475,8 +475,10 @@ class node extends tagged {
       $this->interesting_name();
 
       // and in any case, add it to the node table
-      insert($this);
+      $db->insert($this);
+      $added[get_class($this)]++;
     }
+    */
   }
 
 }
@@ -537,10 +539,12 @@ class segment extends tagged {
        coastline because (a) they are voluminous and not interesting
        to the name finder, and (b) they have some errors in which
        makes them hard to process efficiently */
+    global $db, $added;
 
     if (! isset($this->tags['natural']) || $this->tags['natural']!='coastline') {
       $this->interesting_name(); // is it an interesting segment?
-      insert($this); // add it (including lat/lon if calculated)
+      $db->insert($this); // add it (including lat/lon if calculated)
+      $added['segment']++;
     }
   }
 }
@@ -626,6 +630,7 @@ zap('node');
 zap('segment');
 zap('placeindex');
 zap('named');
+zap('canon');
 
 /* update the index date */
 include_once('options.php');
@@ -662,9 +667,6 @@ while ($data = fread($planetfd, 4096)) {
 }
 xml_parser_free($xml_parser);
 fclose($planetfd);
-
-flush_inserts('named');
-flush_inserts('placeindex');
 
 echo "added:\n";
 foreach ($added as $class => $count) {
@@ -757,9 +759,6 @@ function startelement($parser, $name, $attrs)
   case 'SEGMENT':
     if (! $seensegment) {
       /* first segment ... */
-      flush_inserts('node');
-      flush_inserts('named');
-      flush_inserts('placeindex');
       echo "starting segments at " . date("H:i:s") . "\n";
       $seensegment = TRUE;
     }
@@ -774,7 +773,6 @@ function startelement($parser, $name, $attrs)
   case 'WAY':
     if (! $seenway) {
       /* first way ... */
-      flush_inserts('segment');
       echo "starting ways at " . date("H:i:s") . "\n";
       $seenway = TRUE;
     }

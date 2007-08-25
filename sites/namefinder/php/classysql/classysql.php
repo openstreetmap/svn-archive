@@ -40,7 +40,7 @@
 // ====================================================
 class y_db {
 
-  var $version = '2.01';
+  var $version = '2.02';
 
   /* constructor */ function y_db ($config) {
     $this->db_name     = $config['y_db_name'];
@@ -884,6 +884,7 @@ class y_query {
   var $distinct = FALSE;
   var $groupby = '';
   var $doinggroupby = FALSE;
+  var $groupbyonly = FALSE;
   var $doinginfo = FALSE;
 
   // --------------------------------------------------
@@ -987,8 +988,8 @@ class y_query {
   }
 
   // --------------------------------------------------
-  /* public */ function groupby ($fieldops 
-    /* either a mixture of fields and yops (for operations), or a single array of same */) 
+  /* public */ function groupby ($fieldops)
+    /* either a mixture of fields and yops (for operations), or a single array of same */
   {
     /* SELECT field1, ..., MAX(field2), ... FROM table WHERE condition GROUP BY field1, ...
        call select() to get results */
@@ -996,6 +997,15 @@ class y_query {
     if (! is_array($fieldops)) { $fieldops = func_get_args(); }
     $this->setaggregates($fieldops);
     $this->doinggroupby = TRUE;
+    $this->groupbyonly = FALSE;
+  }
+
+  // --------------------------------------------------
+  /* public */ function groupbyonly ($fieldops)
+       /* as groupby, but does not affect which fields are selected */
+  {
+    $this->groupby($fieldops);
+    $this->groupbyonly = TRUE;
   }
 
   // --------------------------------------------------
@@ -1282,15 +1292,16 @@ class y_query {
     for ($i = 0; $i < count($this->aggregates); $i++) {
       $a =& $this->aggregates[$i];
       if (is_a($a, 'y_op')) { 
-        $qs .= $prefix . $a->renderop($this->omaps);
+        if (! $this->groupbyonly) { $qs .= $prefix . $a->renderop($this->omaps); }
       } else {
         $fop = new y_op_field($a);
         $fops = $fop->renderop($this->omaps);
-        $qs .= "{$prefix}{$fops}";
+        if (! $this->groupbyonly) { $qs .= "{$prefix}{$fops}"; }
         if ($this->doinggroupby) { $this->groupby = "{$prefix}{$fops}"; }
       }
       $prefix = ',';
     }
+    if ($this->groupbyonly) { $qs .= '*'; }
     return $qs;
   }
 

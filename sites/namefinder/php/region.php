@@ -28,7 +28,11 @@ class region {
   var $lat, $lon;
 
   // --------------------------------------------------
-  /* constructor */ function region($lat, $lon) { $this->lat = $lat; $this->lon = $lon; }
+  /* constructor */ function region($lat, $lon) { 
+    while ($lon >= 360.0) { $lon -= 360.0; }
+    while ($lon < 0.0) { $lon += 360.0; }
+    $this->lat = $lat; $this->lon = $lon; 
+  }
 
   // --------------------------------------------------
   function considerregions() {
@@ -46,34 +50,22 @@ class region {
     $partregionwidth = 360.0 / $this->countregionsatlat() * $fraction;
     $regionnumbers = array($this->regionnumber());
     $region = new region($this->lat + $fraction, $this->lon - $partregionwidth);
-    $region->adjustrange();
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat + $fraction, $this->lon);
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat + $fraction, $this->lon + $partregionwidth);
-    $region->adjustrange();
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat, $this->lon - $partregionwidth);
-    $region->adjustrange();
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat, $this->lon + $partregionwidth);
-    $region->adjustrange();
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat - $fraction, $this->lon - $partregionwidth);
-    $region->adjustrange();
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat - $fraction, $this->lon);
     $regionnumbers[] = $region->regionnumber();
     $region = new region($this->lat - $fraction, $this->lon + $partregionwidth);
-    $region->adjustrange();
     $regionnumbers[] = $region->regionnumber();
     return array_unique($regionnumbers);
-  }
-
-  // --------------------------------------------------
-  /* private */ function adjustrange() {
-    while ($this->lon >= 360.0) { $this->lon -= 360.0; }
-    while ($this->lon < 0.0) { $this->lon += 360.0; }
   }
 
   // --------------------------------------------------

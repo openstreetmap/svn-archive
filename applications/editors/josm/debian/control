@@ -1,0 +1,22 @@
+Source: openstreetmap-josm
+Section: utils
+Priority: optional
+Maintainer: Joerg Ostertag <debian@ostertag.name>
+Build-Depends: debhelper (>> 3.7.2), pkg-config
+Build-Depends-Indep: sun-java6-jdk, ant
+# java2-compiler  | sun-java5-jdk | sun-java6-jdk
+# jikes, java-gcj-compat-dev
+Standards-Version: 3.6.1
+
+Package: openstreetmap-josm
+Architecture: all
+Depends:  gij (>> 4.2) | j2re1.5 | gcj4.2 | sun-java5-re | sun-java6-re | sun-java5-jdk | sun-java6-jdk
+Depends:  openstreetmap-map-icons
+Recommends: gpsdrive, mapnik
+Recommends: openstreetmap-utils
+Recommends: openstreetmap-map-icons-restricted
+Recommends: openstreetmap-mapnik-data
+Suggests:
+Description: OpenStreetmap Editor Josm
+ This Package the Openstreetmap Editor Josm
+ for working with OpenStreetMap Data

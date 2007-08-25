@@ -4,13 +4,16 @@ include_once('preamble.php');
 include_once('options.php');
 include_once('named.php');
 include_once('placeindex.php');
+include_once('canon.php');
 
 $chunk = 1000;
 
 echo "TRUNCATE `named`;\n";
 echo "TRUNCATE `options`;\n";
 echo "TRUNCATE `placeindex`;\n";
+echo "TRUNCATE `canon`;\n";
 
+$a = "'";
 $count = 0;
 for ($start = 0; ; $start += $chunk) {
   
@@ -28,7 +31,6 @@ for ($start = 0; ; $start += $chunk) {
   if (count($inserts) > 0) {
     echo "INSERT INTO `named` VALUES";
     $prefix = "\n";
-    $a = "'";
     for($i = 0; $i < count($inserts); $i++) {
       echo $prefix, '(', 
         $inserts[$i]->id, ',',
@@ -36,7 +38,6 @@ for ($start = 0; ; $start += $chunk) {
         $inserts[$i]->lat, ',',
         $inserts[$i]->lon, ',',
         $a, str_replace("'", "\\'", str_replace('\\', '\\\\', $inserts[$i]->name)), $a, ',',
-        $a, str_replace("'", "\\'", str_replace('\\', '\\\\', $inserts[$i]->canon)), $a, ',',
         $a, str_replace("'", "\\'", str_replace('\\', '\\\\', $inserts[$i]->category)), $a, ',',
         $a, str_replace("'", "\\'", str_replace('\\', '\\\\', $inserts[$i]->is_in)), $a, ',',
         $inserts[$i]->rank, ',',
@@ -73,6 +74,35 @@ for ($start = 0; ; $start += $chunk) {
         $inserts[$i]->lat, ',',
         $inserts[$i]->lon, ',',
         $inserts[$i]->rank, ')';
+      $prefix = ",\n";
+    }
+    echo ";\n";
+  }
+  if ($count == $lastcount) { break; }
+}
+
+$count = 0;
+for ($start = 0; ; $start += $chunk) {
+  
+  $lastcount = $count;
+  $canon = new canon();
+  $q = $db->query();
+  $q->limit($chunk, $start);
+  $inserts = array();
+
+  while ($q->select($canon) > 0) {
+    $count++;
+    $inserts[] = clone $canon;
+  }
+
+  if (count($inserts) > 0) {
+    echo "INSERT INTO `canon` VALUES";
+    $prefix = "\n";
+    $a = "'";
+    for($i = 0; $i < count($inserts); $i++) {
+      echo $prefix, '(', 
+        $inserts[$i]->named_id, ',',
+        $a, str_replace("'", "\\'", str_replace('\\', '\\\\', $inserts[$i]->canon)), $a, ')';
       $prefix = ",\n";
     }
     echo ";\n";

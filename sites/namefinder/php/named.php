@@ -35,15 +35,6 @@ class named {
                     number in square brackets, e.g. "Main Street
                     [A1134]", and language equivalents, e.g. "London
                     [fr:Londres]" */
-  var $canon;    /* A canonical equivalent of the name to make it easy
-                    to search for with variation. It also includes the
-                    type (e.g. 'school') so we can search for
-                    'school'as well as a specific school. By
-                    converting names to canonical form during
-                    indexing, and then converting the users search
-                    term to canonical form too, we can hope to find a
-                    match. See canon.php for more details on the
-                    canonicalisation. */
   var $category; /* The kind of item represented by the named - the
                     tag name of the main tag of the object, such as
                     'highway'or 'amenity'. This is used to ensure that
@@ -347,14 +338,15 @@ class named {
       $ands[] = y_op::lt('lat',$latlon[2]);
       $ands[] = y_op::lt('lon',$latlon[3]);
     }
-    $canon = canon::canonical_with_synonym($name);
-    if (empty($canon)) { return $places; /* empty array */ }
-    $ands[] = canon::likecanon($canon, $exact);
+    $canonstrings = canon::canonical_with_synonym($name);
+    if (empty($canonstrings)) { return $places; /* empty array */ }
+    $ands[] = canon::likecanon($canonstrings, $exact);
     $ands[] = y_op::gt('rank',0);
     $q->where(y_op::aand($ands));
 
     $placecandidate = new named();
-    while ($q->select($placecandidate) > 0) {
+    $canon = new canon();
+    while ($q->selectjoin($placecandidate, $canon) > 0) {
       $places[] = clone $placecandidate;
     }
     return $places;
@@ -497,7 +489,7 @@ class named {
        the context of a search result */
     $xml = '<named';
     $id = $this->getosmid($type);
-    $xml .= sprintf(" type='%s' id='%d' lat='%f' lon='%f' name='%s' category='%s' rank='%d' region='%d' canon='%s'",
+    $xml .= sprintf(" type='%s' id='%d' lat='%f' lon='%f' name='%s' category='%s' rank='%d' region='%d'",
                   $type, 
                   $id, 
                   $this->lat, 
@@ -505,8 +497,7 @@ class named {
                   htmlspecialchars($this->name, ENT_QUOTES, 'UTF-8'),
                   htmlspecialchars($this->category, ENT_QUOTES, 'UTF-8'),
                   $this->rank, 
-                  $this->region,
-                  htmlspecialchars($this->canon, ENT_QUOTES, 'UTF-8')
+                  $this->region
     );
     if (! empty($this->is_in)) { 
       $xml .= " is_in='".htmlspecialchars($this->tidyupisin(TRUE), ENT_QUOTES, 'UTF-8')."'"; }

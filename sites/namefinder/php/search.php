@@ -67,7 +67,7 @@ class search {
       $thisfind = search::explodeterms($finds[$i]);
       
       /* the heart of the search - see below */
-      $nameds = search::find($thisfind, $maxresults);
+      $nameds = search::find($thisfind, $maxresults, $isapostcode);
 
       /* reflect the original search data back in the xml */
       $ks = count($finds) > 1 ? $i+1 : '';
@@ -86,7 +86,7 @@ class search {
       if (is_string($nameds) && ! $isapostcode) {
         if (count($thisfind) == 2) {
           $thisfind = array_merge(array($thisfind[0]), $thisfind);
-          $nameds = search::find($thisfind, $maxresults);
+          $nameds = search::find($thisfind, $maxresults, FALSE);
         }
       } 
 
@@ -163,7 +163,7 @@ class search {
   }
 
   // --------------------------------------------------
-  /* static */ function find(&$terms, $maxresults) {
+  /* static */ function find(&$terms, $maxresults, $doingpostcode) {
     /* Given a search string, returns an array of named's which are the matches 
        for the given search string. Usually this will be called from xmlise rather 
        than directly.
@@ -238,6 +238,7 @@ class search {
       array_splice($terms, 1, 2);
       $nterms -=2;
       $places[] = clone $pseudoplace;
+      $doinglatlonqualifier= TRUE;
     } else if ($nterms > 1) {
       if (search::islatlon($terms[0], $terms[1], $pseudoplace)) {
         /* case 4 above, simply a 'where am i' type of query on
@@ -260,10 +261,19 @@ class search {
         $placeisin = $nterms > 2 ? array_slice($terms, 2) : array();
         if (! empty($placeisin)) {
           foreach($placeisin as $isin) {
-            $isin = canon::canonical($isin);
+            $isinstrings = canon::canonical($isin);
             for ($i = 0; $i < count($places); $i++) {
-              $sourceisin = canon::canonical($places[$i]->is_in);
-              if (strpos($sourceisin, $isin) === FALSE) {
+              $sourceisinstrings = canon::canonical($places[$i]->is_in);
+              $found = FALSE;
+              foreach($isinstrings as $isin) {
+                foreach ($sourceisinstrings as $sourceisin) {
+                  if (strpos($sourceisin, $isin) !== FALSE) {
+                    $found = TRUE;
+                    break 2;
+                  }
+                }
+              }
+              if ($found) {
                 array_splice($places, $i, 1);
                 break 2;
               }
@@ -301,13 +311,23 @@ class search {
       $terms[0] = 'church'; 
       break;
     case 'cities':
-      $terms[0] = 'city'; // and fall through
+      $terms[0] = 'city';
+      $placesonly = y_op::eq('rank', named::placerank('city'));
+      break;
     case 'towns':
+      $placesonly = y_op::eq('rank', named::placerank('town'));
+      break;
     case 'suburbs':
+      $placesonly = y_op::eq('rank', named::placerank('suburb'));
+      break;
     case 'villages':
+      $placesonly = y_op::eq('rank', named::placerank('village'));
+      break;
     case 'hamlets':
+      $placesonly = y_op::eq('rank', named::placerank('hamlet'));
+      break;
     case 'places':
-      $placesonly = TRUE;
+      $placesonly = y_op::gt('rank', 0);
       break;
     }
 
@@ -315,7 +335,7 @@ class search {
        try matching against equivalents in the database. There's more than one because 
        Hinton Road becomes Hinton Rd as well, and so on */
 
-    $names = canon::canonical_with_synonym($terms[0]);
+    $canonstrings = canon::canonical_with_synonym($terms[0]);
 
     if (count($places) > 0) {
       /* There are qualifying places. 
@@ -330,7 +350,7 @@ class search {
            for each of the places we found */
         $q = $db->query();
         $ands = array();
-        $ands[] = canon::likecanon($names);
+        $ands[] = canon::likecanon($canonstrings);
         $region = new region($place->lat, $place->lon);
         $regionnumbers = $region->considerregions();
         $regionors = array();
@@ -338,17 +358,19 @@ class search {
           $regionors[] = y_op::eq('region', $regionnumber);
         }
         $ands[] = count($regionors) == 1 ? $regionors[0] : y_op::oor($regionors);
-        if (! empty($placesonly)) { $ands[] = y_op::gt('rank', 0); }
+        if (! empty($placesonly)) { $ands[] = $placesonly; }
 
         $q->where(y_op::aand($ands));
         $q->ascending(canon::distancerestriction($place->lat, $place->lon));
         $q->limit($maxresults);
+        $q->groupbyonly('id');
 
         $named = new named();
-        
+        $canon = new canon();
+
         $toofar = empty($toofars[$place->rank]) ? $toofars[0]: $toofars[$place->rank];
 
-        while ($q->select($named) > 0) { 
+        while ($q->selectjoin($named, $canon) > 0) { 
 
           $named->place = clone $place;
           $named->place->localdistancefrom($named);
@@ -370,7 +392,7 @@ class search {
       }
     }
 
-    if (count($nameds) == 0) {
+    if (count($nameds) == 0 && empty($doinglatlonqualifier) && empty($doingpostcode)) {
       /* Either no qualifying place, or no name found near given place. If there was a
          qualifying place try general search for name anyway: "but I
          did find one near..." 
@@ -387,16 +409,18 @@ class search {
       for ($i = 0; $i < 2 && $limit > 0; $i++) {
         $q = $db->query();
         $q->limit($limit);
-        $condition = canon::likecanon($names, $exact);
+        $condition = canon::likecanon($canonstrings, $exact);
         if (! $exact) {
-          $condition = y_op::aand($condition, y_op::not(canon::likecanon($names, TRUE)));
+          $condition = y_op::aand($condition, y_op::not(canon::likecanon($canonstrings, TRUE)));
         }
         // $condition = y_op::aand($condition, y_op::le('rank',named::placerank('city')));
         $q->where($condition);
         /* prioritise places, and those in order of importance, cities first */
         $q->descending('rank');
+        $q->groupbyonly('id');
         $named= new named();
-        while ($q->select($named) > 0) { 
+        $canon = new canon();
+        while ($q->selectjoin($named, $canon) > 0) { 
           $namedclone = clone $named;
           if ($namedclone->rank > 0) {
             $namedclone->assigncontext();
@@ -457,7 +481,6 @@ class search {
       $pseudoplace->name = '';
       $anonid -= 10;
       $pseudoplace->id = $anonid; 
-      $pseudoplace->canon = '#;;#';
       $pseudoplace->rank = named::placerank('city'); // hmm
       $pseudoplace->info = 'requested location';
       return TRUE;

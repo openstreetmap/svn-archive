@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Aug 14, 2007 at 05:11 PM
+-- Generation Time: Aug 21, 2007 at 05:34 PM
 -- Server version: 5.0.37
 -- PHP Version: 5.2.1
 
@@ -18,6 +18,19 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- 
 -- Database: `osmplaces`
 -- 
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `canon`
+-- 
+
+CREATE TABLE `canon` (
+  `named_id` int(11) NOT NULL,
+  `canon` varchar(255) character set utf8 NOT NULL,
+  KEY `canon` (`canon`),
+  KEY `named_id` (`named_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -42,16 +55,14 @@ CREATE TABLE `named` (
   `lat` double NOT NULL,
   `lon` double NOT NULL,
   `name` varchar(255) character set utf8 NOT NULL,
-  `canon` varchar(255) character set utf8 NOT NULL,
   `category` varchar(255) character set utf8 NOT NULL,
   `is_in` varchar(255) character set utf8 NOT NULL,
   `rank` tinyint(4) NOT NULL,
   `info` text character set utf8 NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `region` (`region`),
-  KEY `canon` (`canon`),
   KEY `category` (`category`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=337187152 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=352023472 ;
 
 -- --------------------------------------------------------
 
@@ -78,7 +89,7 @@ CREATE TABLE `options` (
   `value` text NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=49 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=83 ;
 
 -- --------------------------------------------------------
 

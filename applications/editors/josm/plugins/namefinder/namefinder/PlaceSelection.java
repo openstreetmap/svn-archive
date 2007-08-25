@@ -3,26 +3,31 @@ package namefinder;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
@@ -37,8 +42,10 @@ public class PlaceSelection implements DownloadSelection {
 
 	private JTextField searchTerm = new JTextField();
 	private JButton submitSearch = new JButton(tr("Search..."));
-	private DefaultListModel searchResults = new DefaultListModel();
-	private JList searchResultDisplay = new JList(searchResults);
+	private DefaultTableModel searchResults = new DefaultTableModel() {
+		@Override public boolean isCellEditable(int row, int col) { return false; }
+	};
+	private JTable searchResultDisplay = new JTable(searchResults);
 	private boolean updatingSelf;
 	
 	/**
@@ -47,6 +54,8 @@ public class PlaceSelection implements DownloadSelection {
 	class SearchResult 
 	{
 		public String name;
+		public String type;
+		public String nearestPlace;
 		public String description;
 		public double lat;
 		public double lon;
@@ -74,21 +83,30 @@ public class PlaceSelection implements DownloadSelection {
 			{
 				if (qName.equals("searchresults")) 
 				{
-					searchResults.clear();
+					searchResults.setRowCount(0);
 				}
 				else if (qName.equals("named") && (depth == 2))
 				{	
 					currentResult = new PlaceSelection.SearchResult();
 					currentResult.name = atts.getValue("name");
+					currentResult.type = atts.getValue("info");
 					currentResult.lat = Double.parseDouble(atts.getValue("lat"));
 					currentResult.lon = Double.parseDouble(atts.getValue("lon"));
 					currentResult.zoom = Integer.parseInt(atts.getValue("zoom"));
-					searchResults.addElement(currentResult);
+					searchResults.addRow(new Object[] { currentResult, currentResult, currentResult, currentResult });
 				}
 				else if (qName.equals("description") && (depth == 3))
 				{
 					description = new StringBuffer();
-				} 
+				}
+				else if (qName.equals("named") && (depth == 4))
+				{
+					// this is a "named" place in the nearest places list.
+					String info = atts.getValue("info");
+					if ("city".equals(info) || "town".equals(info) || "village".equals(info)) {
+						currentResult.nearestPlace = atts.getValue("name");
+					}
+				}
 			}
 			catch (NumberFormatException x) 
 			{
@@ -134,34 +152,57 @@ public class PlaceSelection implements DownloadSelection {
 	 * This queries David Earl's server. Needless to say, stuff should be configurable, and 
 	 * error handling improved.
 	 */
-	public void queryServer()
+	public void queryServer(final JComponent component)
 	{
-		try
-		{
-			URL url = new URL("http://www.frankieandshadow.com/osm/search.xml?find="+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
-			HttpURLConnection activeConnection = (HttpURLConnection)url.openConnection();
-			System.out.println("got return: "+activeConnection.getResponseCode());
-			activeConnection.setConnectTimeout(15000);
-			InputStream inputStream = activeConnection.getInputStream();
-			new Parser().parse(new InputStreamReader(inputStream, "UTF-8"));
-		}
-		catch (Exception x) 
-		{
-			JOptionPane.showMessageDialog(Main.parent,tr("Cannot read place search results from server"));
-			x.printStackTrace();
-		}
+		final Cursor oldCursor = component.getCursor();
+		
+		// had to put this in a thread as it wouldn't update the cursor properly before.
+		Runnable r = new Runnable() {
+			public void run() {
+				try
+				{
+					component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					component.repaint();
+					URL url = new URL("http://www.frankieandshadow.com/osm/search.xml?find="+java.net.URLEncoder.encode(searchTerm.getText(), "UTF-8"));
+					HttpURLConnection activeConnection = (HttpURLConnection)url.openConnection();
+					System.out.println("got return: "+activeConnection.getResponseCode());
+					activeConnection.setConnectTimeout(15000);
+					InputStream inputStream = activeConnection.getInputStream();
+					new Parser().parse(new InputStreamReader(inputStream, "UTF-8"));
+				}
+				catch (Exception x) 
+				{
+					JOptionPane.showMessageDialog(Main.parent,tr("Cannot read place search results from server"));
+					x.printStackTrace();
+				}
+				component.setCursor(oldCursor);
+			}
+		};
+		new Thread(r).start();
 	}
 	
-	// add a new tab to the download dialog
+	/**
+	 * Adds a new tab to the download dialog in JOSM.
+	 * 
+	 * This method is, for all intents and purposes, the constructor for this class.
+	 */
 	public void addGui(final DownloadDialog gui) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
-		panel.add(new JLabel(tr("Enter a place name to search for:")), GBC.eol());
-		panel.add(searchTerm, GBC.std().fill(GBC.HORIZONTAL));
-		panel.add(submitSearch, GBC.eol());
 		
-		GBC c = GBC.std().fill();
+		// this is manually tuned so that it looks nice on a GNOME
+		// desktop - maybe needs some cross platform proofing.
+		panel.add(new JLabel(tr("Enter a place name to search for:")), GBC.eol().insets(5, 5, 5, 5));
+		panel.add(searchTerm, GBC.std().fill(GBC.BOTH).insets(5, 0, 5, 4));
+		panel.add(submitSearch, GBC.eol().insets(5, 0, 5, 5));
+		Dimension btnSize = submitSearch.getPreferredSize();
+		btnSize.setSize(btnSize.width, btnSize.height * 0.8);
+		submitSearch.setPreferredSize(btnSize);
+		
+		GBC c = GBC.std().fill().insets(5, 0, 5, 5);
+		c.gridwidth = 2;
 		JScrollPane scrollPane = new JScrollPane(searchResultDisplay);
+		scrollPane.setPreferredSize(new Dimension(200,200));
 		panel.add(scrollPane, c);
 		gui.tabpane.add(panel, tr("Places"));
 		
@@ -170,18 +211,51 @@ public class PlaceSelection implements DownloadSelection {
 		// when the button is clicked
 		submitSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				queryServer();
+				queryServer(gui);
 			}
 		});
 		
-		// display search results in list just by name, and add tooltip 
-		// for description. would also be possible to use a table model
-		// instead of list, and display lat/lon etc.
-		searchResultDisplay.setCellRenderer(new DefaultListCellRenderer() {
-			@Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		searchTerm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				queryServer(gui);
+			}
+		});
+	
+		searchResults.addColumn("name");
+		searchResults.addColumn("type");
+		searchResults.addColumn("near");
+		searchResults.addColumn("zoom");
+		
+		// TODO - this is probably not the coolest way to set relative sizes?
+		searchResultDisplay.getColumn("name").setPreferredWidth(200);
+		searchResultDisplay.getColumn("type").setPreferredWidth(100);
+		searchResultDisplay.getColumn("near").setPreferredWidth(100);
+		searchResultDisplay.getColumn("zoom").setPreferredWidth(50);
+		searchResultDisplay.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		// display search results in a table. for simplicity, the table contains
+		// the same SearchResult object in each of the four columns, but it is rendered
+		// differently depending on the column.
+		searchResultDisplay.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			@Override public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 				if (value != null) {
-					setText(((SearchResult)value).name);
+					SearchResult sr = (SearchResult) value;
+					switch(column) {
+					case 0: 
+						setText(sr.name);
+						break;
+					case 1:
+						setText(sr.type);
+						break;
+					case 2:
+						setText(sr.nearestPlace);
+						break;
+					case 3:
+						setText(Integer.toString(sr.zoom));
+						break;
+					}
 					setToolTipText("<html>"+((SearchResult)value).description+"</html>");
 				}
 				return this;
@@ -189,14 +263,13 @@ public class PlaceSelection implements DownloadSelection {
 		});
 		
 		// if item is selected in list, notify dialog
-		//searchResultDisplay.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		searchResultDisplay.addListSelectionListener(new ListSelectionListener() {
+		searchResultDisplay.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent lse) {
 				if (lse.getValueIsAdjusting()) return;
 				SearchResult r = null;
 				try 
 				{
-					r = (SearchResult) searchResults.getElementAt(lse.getFirstIndex());
+					r = (SearchResult) searchResults.getValueAt(lse.getFirstIndex(), 0);
 				}
 				catch (Exception x)
 				{
@@ -215,6 +288,20 @@ public class PlaceSelection implements DownloadSelection {
 				}
 			}
 		});
+		
+		// TODO - we'd like to finish the download dialog upon double-click but
+		// don't know how to bypass the JOptionPane in which the whole thing is
+		// displayed.
+		searchResultDisplay.addMouseListener(new MouseAdapter() {
+			@Override public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() > 1) {
+					if (searchResultDisplay.getSelectionModel().getMinSelectionIndex() > -1) {
+						// add sensible action here.
+					}
+				}
+			}
+		});
+
 	}
 
 	// if bounding box selected on other tab, de-select item

@@ -20,6 +20,7 @@
     <javac srcdir="namefinder" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <classpath>
         <pathelement path="${josm.prj.dir}/build"/>
+        <pathelement path="${josm.prj.dir}/src"/>
         <fileset dir="${josm.prj.dir}/lib">
           <include name="**/*.jar"/>
         </fileset>
@@ -33,6 +34,7 @@
       <manifest>
         <attribute name="Plugin-Class" value="namefinder.NameFinderPlugin" />
         <attribute name="Plugin-Description" value="Allows selection of download areas by name, using an external service" />
+        <attribute name="Plugin-Version" value="0.9" />
       </manifest>
     </jar>
   </target>

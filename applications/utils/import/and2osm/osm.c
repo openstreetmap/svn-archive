@@ -38,6 +38,7 @@
 
 
 extern int postgres;
+extern int osmChange;
 
 
 /* File descriptor for .osm file. */
@@ -89,7 +90,10 @@ int openOutput()
 			printf("error opening file, exiting...");
 			return -1;
 		}
-		fprintf(fp,"<osm version=\"0.4\">\n");
+		if( osmChange )
+		        fprintf(fp,"<osmChange version=\"0.3\" generator=\"2AND\">\n<create>\n");
+                else
+        		fprintf(fp,"<osm version=\"0.4\">\n");
 	}
 	
 	return 0;
@@ -122,7 +126,10 @@ int closeOutput()
 	}
 	else 
 	{
-		fprintf(fp,"</osm>\n");
+	        if( osmChange )
+        		fprintf(fp,"</create>\n</osmChange>\n");
+                else
+        		fprintf(fp,"</osm>\n");
 		fclose(fp);
 	}
 	return 0;

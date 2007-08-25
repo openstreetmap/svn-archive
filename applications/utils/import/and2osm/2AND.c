@@ -93,6 +93,7 @@
 #define DISPLAY_FREQUENCY   4096
 
 int postgres = 0;
+int osmChange = 0;
 
 static int use_boundingbox = 0;
 static double mybox_min[2],mybox_max[2];
@@ -325,7 +326,7 @@ int main(int argc, char ** argv )
 	init_ways();
 	init_nodes();
 	init_segments();
-	while ((c = getopt (argc, argv, "b:np?C:")) != -1)
+	while ((c = getopt (argc, argv, "b:np?C:c")) != -1)
 		switch (c)
 		{
 		case 'b':
@@ -373,6 +374,9 @@ int main(int argc, char ** argv )
 				exit(1);
 			}
 			break;
+		case 'c':
+			osmChange = 1;
+			break;
 		case '?':
 		default:
 			/* Getopt will print an error message for us. */
@@ -380,7 +384,8 @@ int main(int argc, char ** argv )
 			                 "   -C dir                           - Change to given directory before starting\n"
 			                 "   -b minlon,minlat,maxlon,maxlat   - Bounding box to extract\n"
 			                 "   -n                               - Do not extract borders\n"
-			                 "   -p                               - Output postgresql SQL files\n");
+			                 "   -p                               - Output postgresql SQL files\n"
+			                 "   -c                               - Output osmChange format\n");
 			exit(1);
 		}
 	

@@ -10,139 +10,164 @@ if [ ! -n "$dst_path" ] ; then
 fi
 
 echo "copying Files to '$dst_path'"
-package_name=openstreetmap-josm
+package_name=openstreetmap
 dst_path=${dst_path%/}
 
-jar_path="$dst_path/usr/local/share/josm"
-mkdir -p "$jar_path"
-
+perl_path="$dst_path/usr/share/perl5"
 bin_path="$dst_path/usr/bin"
+lib_path="$dst_path/usr/lib"
+share_path="$dst_path/usr/share/$package_name"
+man1_path="$dst_path/usr/man/man1"
+mkdir -p "$perl_path"
 mkdir -p "$bin_path"
-
-#plugin_dir="$dst_path/usr/local/share/josm/plugins"
-plugin_dir="$dst_path/usr/lib/josm/plugins"
-mkdir -p "$plugin_dir"
-
-mkdir -p "$dst_path/usr/share/josm" 
-( # map-icons to be symlinked
-    cd  "$dst_path/usr/share/josm" 
-    ln -s ../map-icons/classic.small images
-)
-mkdir -p "$dst_path/usr/lib/josm"
-# ------------------------------------------------------------------
-# Compile the Jar Files 
-echo "Compile Josm"
-cd core
-ant compile || exit -1
-cd ..
-
-echo "Compile Josm Plugins"
-cd plugins
-ant build || exit -1
-cd ..
+mkdir -p "$lib_path"
+mkdir -p "$share_path"
+mkdir -p "$man1_path"
 
 
 # ------------------------------------------------------------------
-# Copy Jar Files
+# Utilities written in C
 
-cp ./core/dist/josm-custom.jar $jar_path/josm.jar || exit -1
+echo ""
+echo "---> import/and2osm"
+(
+    cd import/and2osm/
+    make clean
+    make || exit -1
+    ) || exit -1
+cp import/and2osm/2AND  ${bin_path}/osm2AND
 
-plugin_jars=`find plugins -name "*.jar"`
-for src_fn in $plugin_jars ; do 
-    fn="`basename ${src_fn}`"
-    dst_fn="$plugin_dir/$fn"
-    echo "cp $src_fn $dst_fn"
-    cp "$src_fn" "$dst_fn" || exit -1
-    plugin_name=${fn%.jar}
-    echo $plugin_name | grep -q -e plastic_laf -e lang && continue
-    plugins="$plugins$plugin_name,"
-done || exit -1
+#if false ; then
+# tweety@pack:~/svn.openstreetmap.org/applications/lib/libosm$ make
+# g++ -g -I/usr/local/include -I../ccoord   -c -o Components.o Components.cpp
+# Components.cpp:27:29: error: libshp/shapefil.h: No such file or directory
+# so 
+#    libosm libimg
+# have to be added later to the loop
+for lib in ccoord ; do 
+	(
+	    echo ""
+	    echo "---> lib/$lib"
+	    cd ../lib/$lib
+	#    for a in *.cpp ; do perl -p -i -e 's,libshp/shapefil.h,shapefil.h,g' $a; done
+	    make clean
+	    make || exit -1
+	    ) || exit -1
 
-# remove last empty plugin definition ,
-plugins=${plugins%,}
+	cp ../lib/$lib/lib${lib}.a ${lib_path}
+    done
 
-echo "Activated Plugins:"
-echo "$plugins"
+# As soon as libosm compiles here on my debian machine
+if false ; then
+    echo ""
+    echo "---> filter/wayclean"
+    (
+	cd filter/wayclean
+	make clean
+	make || exit -1
+	) || exit -1
+    cp filter/wayclean/wayclean ${bin_path}
 
-mkdir -p "$jar_path/speller"
-cp ../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
+    echo ""
+    echo "---> osm2shp"
+    ( 
+	cd export/osm2shp
+	make clean
+	make || exit -1
+	) || exit -1
+    cp export/osm2shp/osm2shp ${bin_path}
+fi
+# of later
 
-# Maybe this has to be removed, since it is inside the plugin?
-cp plugins/mappaint/styles/osmfeatures/elemstyles.xml "$jar_path/elemstyles.xml"
-mkdir -p "$jar_path/plugins/mappaint/standard"
-cp plugins/mappaint/styles/osmfeatures/elemstyles.xml "$jar_path/plugins/mappaint/standard/elemstyles.xml"
+echo ""
+echo "---> color255"
+(
+    cd color255
+    make clean
+    make || exit -1
+) || exit -1
+cp color255/color255 ${bin_path}
+
+echo ""
+echo "---> osm2pqsql"
+(
+    cd export/osm2pgsql
+    make clean
+    make || exit -1
+    ) || exit -1 
+cp export/osm2pgsql/osm2pgsql ${bin_path}
+
+echo ""
+echo "---> UTF8Sanitizer"
+(
+    cd planet.osm/C/
+    make clean
+    make || exit -1
+) || exit -1
+cp planet.osm/C/UTF8sanitizer ${bin_path}
+
+
 # ------------------------------------------------------------------
-cat > "$bin_path/josm" <<EOF
-#!/bin/sh
-josm_dir="/usr/local/share/josm"
-josm_bin="\$josm_dir/josm.jar"
-
-test -d ~/.josm/plugins/ || mkdir -p ~/.josm/plugins/
-#for dir in mappaint osmarender validator tways-0.1; do
-for dir in ${plugins//,/ } ; do
-    test -d ~/.josm/plugins/\$dir || mkdir -p ~/.josm/plugins/\$dir
+# Copy Perl libraries
+find perl_lib/ -name "*.pm" | while read src_fn ; do 
+    dst_fn="$perl_path/${src_fn#perl_lib/}"
+    dst_dir="`dirname "$dst_fn"`"
+    test -d "$dst_dir" || mkdir -p "$dst_dir"
+    cp "$src_fn" "$dst_fn"
 done
-test -d ~/.josm/plugins/mappaint/standard || mkdir -p ~/.josm/plugins/mappaint/standard
 
-if ! [ -s ~/.josm/preferences ]; then
-     echo "Installing Preferences File"
-     cp "\$josm_dir/preferences"  ~/.josm/preferences
-fi
-
-if ! [ -s ~/.josm/bookmarks ]; then
-     echo "Installing Bookmarks File"
-     cp "\$josm_dir/bookmarks"  ~/.josm/bookmarks
-fi
-
-if ! [ -s ~/.josm/plugins/mappaint/standard/elemstyles.xml ]; then
-#     echo "Installing Elemstyles File"
-#     cp "\$josm_dir/elemstyles.xml"  ~/.josm/plugins/mappaint/standard/elemstyles.xml
-      true
-fi
-
-# ls -l "\$josm_bin"
-# unzip -p    \$josm_bin REVISION | grep "Last Changed"
-
-# proxy=" -Dhttp.proxyHost=gw-squid -Dhttp.proxyPort=8888 "
-
-java -Djosm.resource=/usr/share/map-icons/square.small \
-     -Xmx500m \
-     \$proxy \
-     -jar "\$josm_bin"\
-     "\$@"
-
-EOF
+# Copy Perl Binaries
+find ./ -name "*.pl" | while read src_fn ; do 
+    dst_fn="$bin_path/${src_fn##*/}"
+    filename="`basename $src_fn`"
+    dst_fn="${dst_fn/.pl}"
+    man1_fn="$man1_path/${filename%.pl}.1"
+    if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/perl' ; then
+	cp "$src_fn" "$dst_fn"
+    else
+	echo "WARNING!!! Perl Hash Bang is missing at File '$src_fn'"
+	echo "           I'm not adding this File to the debian Package"
+	echo "First Line: `head -1 "$src_fn"`"
+    fi
 
 
-cat > "$jar_path/preferences" <<EOF
-download.gps=false
-download.newlayer=false
-download.osm=true
-download.tab=1
-lakewalker.python=/usr/bin/python
-layerlist.visible=true
-osm-server.url=http://www.openstreetmap.org/api
-plugins=$plugins
-projection=org.openstreetmap.josm.data.projection.Epsg4326
-propertiesdialog.visible=true
-propertiesdialog.visible=true
-propertiesdialog.visible=true
-toolbar=download;upload;|;new;open;save;exportgpx;|;undo;redo;|;preference
-validator.SpellCheck.checkKeys=true
-validator.SpellCheck.checkKeysBeforeUpload=true
-validator.SpellCheck.checkValues=true
-validator.SpellCheck.checkValuesBeforeUpload=true
-validator.SpellCheck.sources=/usr/local/share/josm/speller/words.cfg
-ywms.firefox=firefox
-ywms.port=8000
-EOF
 
-cat > "$jar_path/bookmarks" <<EOF
-Muenchen+,47.983424415942416,11.402620097655612,48.36334800308583,12.002250823113542
-Muenchen-,48.05109190794662,11.447878885677385,48.246831966462025,11.703938333879364
-Kirchheim,48.14904045814527,11.728348604380155,48.18983784113904,11.79273346326812
-Muc_Altstadtring,48.125724515280666,11.553433712891074,48.15107325612488,11.596158188775085
-Mainz,49.58,8.14,49.6,8.16
-Erlangen,49.53530551899356,10.893663089997254,49.64013443292672,11.07554098888691
-Ingolstadt,48.615608086215175,11.232933428311759,48.893652866507985,11.728832483590338
-EOF
+    if perldoc "$src_fn" >/dev/null 2>&1 ; then
+	echo "Create Man Page from pod '$man1_fn'"
+	pod2man $src_fn >"$man1_fn"
+    else
+	if grep -q -e "--man" "$src_fn"; then
+	    echo "Create Man Page '$man1_fn'"
+	    perl $src_fn --man >"$man1_fn"
+	else
+	    if grep -q -e "--help" "$src_fn"; then
+		echo "Create Man Page from Help '$man1_fn'"
+		perl $src_fn --help >"$man1_fn"
+	    else
+		echo "No idea how to create Man Page for $src_fn"
+	    fi
+	fi
+    fi
+done
+
+# Copy Python Binaries
+find ./ -name "*.py" | while read src_fn ; do 
+    dst_fn="$bin_path/${src_fn##*/}"
+    dst_fn="${dst_fn/.py}"
+    if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/python' -e '^#!/usr/bin/env python'; then
+	cp "$src_fn" "$dst_fn"
+    else
+	echo "WARNING!!! Python Hash Bang is missing at File '$src_fn'"
+	echo "           I'm not adding this File to the debian Package"
+	echo "           First Line: `head -1 "$src_fn"`"
+    fi
+done
+
+
+
+
+# XXX
+# For later:
+# Add java tools, but for these a build.xml with a target jar or similar would be best 
+
+

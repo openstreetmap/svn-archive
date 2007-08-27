@@ -536,10 +536,10 @@
 		</rule>
 		<rule e="node" k="amenity" v="place_of_worship">
 		    <rule e="node" k="denomination|religion" v="~">
-		        <symbol xlink:href="#church" width='5px' height='10px' transform='translate(-2.5,-5)' />
+		        <symbol xlink:href="#church" width='4px' height='8px' transform='translate(-2,-4)' />
 		    </rule>
 		    <rule e="node" k="denomination|religion" v="christian|church_of_england">
-		        <symbol xlink:href="#church" width='5px' height='10px' transform='translate(-2.5,-5)' />
+		        <symbol xlink:href="#church" width='4px' height='8px' transform='translate(-2,-4)' />
 		    </rule>
 		    <rule e="node" k="denomination|religion" v="jewish">
 		        <symbol xlink:href="#synagogue" width='8px' height='8px' transform='translate(-4,-4)' />

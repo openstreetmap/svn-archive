@@ -11,12 +11,12 @@ PLANET=$(HOME)/osm/planet-070823.osm.bz2
 # Note: version must be at least from 21 August 2007 (0.8.0)
 OSMOSIS=/usr/local/bin/osmosis.jar
 # If this is set it will attempt to do the AND data conversion also
-AND_DATA=$(HOME)/osm/AND/GRD-NSHP-NLD-L6-2006H1-V2.0_OSM/Data/2007H1/NLD/020/
+#AND_DATA=$(HOME)/osm/AND/GRD-NSHP-NLD-L6-2006H1-V2.0_OSM/Data/2007H1/NLD/020/
 # If you have this installed it will be used to cut the memory usage of 2AND
 # (without this you cannot run it on a 1GB machine)
 TCMALLOC=/usr/local/lib/libtcmalloc.so.0
 
-all: data/nld-delete.osm data/nld-leftover.osm
+all: data/nld-delete.osm data/nld-leftover.osm data/and-unprotected.osm
 
 # Data directory must exist
 data:
@@ -66,7 +66,7 @@ ifneq ($(AND_DATA),)
 	
 data/AND2osm.osm: ../and2osm/2AND $(AND_DATA)/020_a.dbf
 	if [ -e $(TCMALLOC) ] ; then export LD_PRELOAD=$(TCMALLOC) ; fi ; \
-		../and2osm/2AND -c -C $(AND_DATA)
+		../and2osm/2AND -C $(AND_DATA)
 	ln -sf $(AND_DATA)/AND2osm.osm data/AND2osm.osm
 
 data/and-unprotected.osm: data/AND2osm.osm data/extract.polygon 
@@ -79,8 +79,18 @@ $(AND_DATA)/020_a.dbf:
 	@echo "or comment the variable out if you do not wish to do those steps. The "
 	@echo "location you want is the location of dbf files."
 	@exit 1
+else
+data/and-unprotected.osm:
+	@echo "======================================================================="
+	@echo "ERROR: AND data not found: $(AND_DATA)"
+	@echo "Please enter the location of the AND data at the top of the makefile, "
+	@exit 1
 endif
 
+load_nld-groot.osm: nld-groot.osm
+	java -classpath /usr/share/java/mysql-connector-java.jar:/usr/local/bin/osmosis.jar com.bretth.osmosis.core.Osmosis \
+		--read-xml file="data/nld-groot.osm" --write-mysql host="localhost" database="osm" user="kleptog"
+	
 # Nicity so that if the user forgets to update the location of their planet
 # file they get a nice error message
 $(PLANET):

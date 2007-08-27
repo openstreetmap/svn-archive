@@ -5,6 +5,20 @@ effect! Any discussion and details should be referred to:
 
 http://wiki.openstreetmap.org/index.php/AND_Data/Roadmap-integration-NL
 
+EXECUTIVE SUMMARY
+=================
+If you have the AND data files and a planet dump, all you need to do is
+execute 'make'. The result will be two files:
+
+data/and-unprotected.osm
+data/nld-delete.osm
+
+These are intended to be uploaded using the bulk uploader in
+../bulk_upload/bulk_upload.pl, like so:
+
+./bulk_upload.pl -l -f -i <filename> -u <username> -p <password>
+
+-----------------
 As far as possible these steps are encoded in the Makefile, so editting to
 indicate where your planet file is and running "make" will be sufficient in
 most cases.

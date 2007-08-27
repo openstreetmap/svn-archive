@@ -32,9 +32,12 @@ sub new()
 { 
   my $obj = bless{}, shift;
   my $proc = shift;
+  my $prog = shift;
   if( ref $proc ne "CODE" )
   { die "new Geo::OSM::OsmChangeXML requires a sub as argument\n" }
   $obj->{proc}  = $proc;
+  if( defined $prog )
+  { $obj->{progress} = $prog }
   return $obj;
 }
 
@@ -47,6 +50,8 @@ sub load(){
   my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
     my $fh = data_open($file_name);
+    $self->{fh} = $fh;
+    $self->{count}=0;
     die "Cannot open OSM File $file_name\n" unless $fh;
     eval {
 	$P->parse($fh);
@@ -150,6 +155,11 @@ sub DoEnd(){
         {
           $self->{proc}->( "create", $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
         }
+      }
+      $self->{count}++;
+      if( $self->{progress} and ($self->{count}%11) == 1)
+      {
+        $self->{progress}->($self->{count}, tell($self->{fh})/(-s $self->{fh}) );
       }
       $self->{state} = STATE_EXPECT_ENTITY;
     }

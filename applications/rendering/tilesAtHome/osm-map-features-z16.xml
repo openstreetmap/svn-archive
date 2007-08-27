@@ -89,7 +89,7 @@
             <area class='leisure-track'/>
         </rule>
 	<rule e="node" k="natural" v="peak">
-            <symbol xlink:href="#peak" width='15px' height='15px' transform='translate(-7.5,-7.0)' />
+            <symbol xlink:href="#peak" width='7px' height='7px' transform='translate(-3.5,-3.5)' />
             <rule k="osmarender:renderName" v="~|yes">
                 <text k="name" class='peak-caption' dx='4px' dy='2.5px'/>
             </rule>	        
@@ -682,10 +682,10 @@
         </rule>
         <rule e="node" k="amenity" v="place_of_worship">
             <rule e="node" k="denomination|religion" v="~">
-                <symbol xlink:href="#church" width='2.5px' height='5px' transform='translate(-1.25,-2.5)' />
+                <symbol xlink:href="#church" width='2px' height='4px' transform='translate(-1,-2)' />
             </rule>
             <rule e="node" k="denomination|religion" v="christian|church_of_england">
-                <symbol xlink:href="#church" width='2.5px' height='5px' transform='translate(-1.25,-2.5)' />
+                <symbol xlink:href="#church" width='2px' height='4px' transform='translate(-1,-2)' />
             </rule>
             <rule e="node" k="denomination|religion" v="jewish">
                 <symbol xlink:href="#synagogue" width='4px' height='4px' transform='translate(-2,-2)' />

@@ -81,7 +81,7 @@
             <area class='leisure-track'/>
         </rule>
 	<rule e="node" k="natural" v="peak">
-            <symbol xlink:href="#peak" width='15px' height='15px' transform='translate(-7.5,-7.0)' />
+            <symbol xlink:href="#peak" width='15px' height='15px' transform='translate(-7.5,-7.5)' />
 	</rule>
 
 		<!-- Airports and runways -->

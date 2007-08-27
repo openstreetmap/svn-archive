@@ -29,7 +29,7 @@ sub new
 
   $url =~ s,/$,,;   # Strip trailing slash
   $obj->{url} = $url;
-  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClient');
+  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV4');
   
   if( defined $attr{username} and defined $attr{password} )
   {
@@ -62,11 +62,11 @@ sub create
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/create";
   $req->content($content);
   
-  print $req->as_string;
+#  print $req->as_string;
   
   my $res = $self->{client}->request($req);
   
-  print $res->as_string;
+#  print $res->as_string;
 
   if( $res->code == 200 )
   {
@@ -84,7 +84,7 @@ sub modify
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/".$ent->id();
   $req->content($content);
   
-  print $req->as_string;
+#  print $req->as_string;
   
   my $res = $self->{client}->request($req);
   
@@ -100,7 +100,7 @@ sub delete
   my $req = new HTTP::Request DELETE => $self->{url}."/".$ent->type()."/".$ent->id();
 #  $req->content($content);
   
-  print $req->as_string;
+#  print $req->as_string;
   
   my $res = $self->{client}->request($req);
   

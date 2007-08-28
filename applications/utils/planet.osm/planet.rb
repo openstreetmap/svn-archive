@@ -71,6 +71,7 @@ end
 
 puts '<?xml version="1.0" encoding="UTF-8"?>'
 puts '<osm version="0.3" generator="OpenStreetMap planet.rb">'
+puts '  <bound box="-90,-180,90,180" origin="http://www.openstreetmap.org/api/0.4" />'
 
 done = false
 page = 0

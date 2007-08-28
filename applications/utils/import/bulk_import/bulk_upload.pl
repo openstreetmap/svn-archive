@@ -3,6 +3,7 @@ use warnings;
 use strict;
 
 use Getopt::Long;
+use Pod::Usage;
 
 BEGIN {
   unshift @INC, "../../perl_lib";
@@ -279,7 +280,7 @@ B<bulk_upload.pl> -i input.osc -u username -p password [-a http://server/api/ver
                                 (eg connection timeout)
   -ff                           continue no matter what
   -n                            dry-run (just parse, don't do anything)
-  -l                            keep redoing file until nothing more can be
+  -l                            keep redoing file until nothing more can be done
                                 useful if file is not sorted
     
 The cachefile is a file that tracks the usage of placeholders and what has

@@ -1,30 +1,35 @@
+/**
+ * Copyright by Christof Dallermassl
+ * This program is free software and licensed under GPL.
+ */
+
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * 
- */
 
 /**
+ * Small java class that allows to upload gpx files to www.openstreetmap.org via its api call.
+ * 
  * @author cdaller
- *
  */
 public class GpxUpload {
     public static final String API_VERSION = "0.4";
     private static final int BUFFER_SIZE = 65535;
     private static final String BASE64_ENC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    private static final String BOUNDARY = "----------------------------d10f7aa230e8";
+    private static final String LINE_END = "\r\n";
     
     public GpxUpload() {
         
@@ -32,39 +37,31 @@ public class GpxUpload {
     
     public void upload(String username, String password, String description, String tags, File gpxFile) throws IOException {
         System.err.println("uploading " + gpxFile.getAbsolutePath() + " to openstreetmap.org");
-        String gpxName = gpxFile.getName();
         try {
-            String urlGpxName = URLEncoder.encode(gpxName.replaceAll("\\.","_"), "UTF-8");
-            String urlDesc = URLEncoder.encode(description.replaceAll("\\.","_"), "UTF-8");
-            String urlTags = URLEncoder.encode(tags.replaceAll("\\.","_"), "UTF-8");
-            URL url = new URL("http://www.openstreetmap.org/api/" 
-                + API_VERSION 
-                + "/gpx/create"
-                + "/" + urlGpxName
-                + "/" + urlDesc
-                + "/" + urlTags);
+            //String urlGpxName = URLEncoder.encode(gpxName.replaceAll("\\.;&?,/","_"), "UTF-8");
+            String urlDesc = description.replaceAll("\\.;&?,/","_");
+            String urlTags = tags.replaceAll("\\\\.;&?,/","_");
+            URL url = new URL("http://www.openstreetmap.org/api/" + API_VERSION + "/gpx/create");
             System.err.println("url: " + url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(15000);
-            con.setRequestMethod("PUT");
+            con.setRequestMethod("POST");
             con.setDoOutput(true);
             con.addRequestProperty("Authorization", "Basic "+encodeBase64(username+":"+password));
+            con.addRequestProperty("Content-Type", "multipart/form-data; boundary="+BOUNDARY);
+            con.addRequestProperty("Connection", "close"); // counterpart of keep-alive
+            con.addRequestProperty("Expect", "");
+                        
             con.connect();
-            OutputStream out = con.getOutputStream();
-            //  copy file to out:
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int fileLen = (int)gpxFile.length();
-            int read;
-            int sumread = 0;
-            InputStream in = new BufferedInputStream(new FileInputStream(gpxFile));
-            System.err.println("Transferring data to server");
-            while((read = in.read(buffer)) >= 0) {
-                out.write(buffer, 0, read);
-                out.flush();
-                sumread += read;
-//                System.out.print("Transferred " + ((1.0 * sumread / fileLen) * 100) + "%                                \r");
-            }
-            in.close();
+            DataOutputStream out  = new DataOutputStream(new BufferedOutputStream(con.getOutputStream()));
+//            DataOutputStream out  = new DataOutputStream(System.out);
+
+            writeContentDispositionFile(out, "file", gpxFile);
+            writeContentDisposition(out, "description", urlDesc);
+            writeContentDisposition(out, "tags", urlTags);
+            writeContentDisposition(out, "public", "1");
+            
+            out.writeBytes("--" + BOUNDARY + "--" + LINE_END);
             out.flush();
             
             int retCode = con.getResponseCode();
@@ -86,6 +83,46 @@ public class GpxUpload {
         }     
     }
     
+    /**
+     * @param out
+     * @param string
+     * @param gpxFile
+     * @throws IOException 
+     */
+    private void writeContentDispositionFile(DataOutputStream out, String name, File gpxFile) throws IOException {
+        out.writeBytes("--" + BOUNDARY + LINE_END);
+        out.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + gpxFile.getName() + "\"" + LINE_END);
+        out.writeBytes("Content-Type: application/octet-stream" + LINE_END);
+        out.writeBytes(LINE_END);
+        
+        byte[] buffer = new byte[BUFFER_SIZE];
+        //int fileLen = (int)gpxFile.length();
+        int read;
+        int sumread = 0;
+        InputStream in = new BufferedInputStream(new FileInputStream(gpxFile));
+        System.err.println("Transferring data to server");
+        while((read = in.read(buffer)) >= 0) {
+            out.write(buffer, 0, read);
+            out.flush();
+            sumread += read;
+//            System.out.print("Transferred " + ((1.0 * sumread / fileLen) * 100) + "%                                \r");
+        }
+        in.close();        
+        out.writeBytes(LINE_END);
+    }
+
+    /**
+     * @param string
+     * @param urlDesc
+     * @throws IOException 
+     */
+    public void writeContentDisposition(DataOutputStream out, String name, String value) throws IOException {
+        out.writeBytes("--" + BOUNDARY + LINE_END);
+        out.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"" + LINE_END);
+        out.writeBytes(LINE_END);
+        out.writeBytes(value + LINE_END);
+    }
+
     /**
      * Return the location of the user defined preferences file
      */

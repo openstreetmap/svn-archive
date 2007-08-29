@@ -140,10 +140,10 @@ int readfile(char * inputfile)
 /*      Open the passed shapefile.                                      */
 /* -------------------------------------------------------------------- */
     hSHP = SHPOpen( inputfile, "rb" );
-	printf("%s\n",inputfile);
+	fprintf(stderr, "%s\n",inputfile);
     if( hSHP == NULL )
     {
-	printf( "Unable to open: %s\n", inputfile );
+	fprintf(stderr,  "Unable to open: %s\n", inputfile );
 	return(1);
     }
 
@@ -151,7 +151,7 @@ int readfile(char * inputfile)
     hDBF = DBFOpen( inputfile, "rb" );
     if( hDBF == NULL )
     {
-	printf( "DBFOpen(%s,\"r\") failed.\n", inputfile );
+	fprintf(stderr,  "DBFOpen(%s,\"r\") failed.\n", inputfile );
 	return(2);
     }
     
@@ -160,7 +160,7 @@ int readfile(char * inputfile)
     /* -------------------------------------------------------------------- */
     SHPGetInfo( hSHP, &nEntities, &nShapeType, adfMinBound, adfMaxBound );
 
-    printf( "Shapefile Type: %s   # of Shapes: %d\n",
+    fprintf(stderr,  "Shapefile Type: %s   # of Shapes: %d\n",
 	    SHPTypeName( nShapeType ), nEntities );
     
     /*printf( "File Bounds: (%12.8f,%12.8f,%g,%g)\n"
@@ -203,8 +203,7 @@ int readfile(char * inputfile)
 	psShape = SHPReadObject( hSHP, i );
 	if ((i%DISPLAY_FREQUENCY)==0)
 	{
-	    printf("\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
-	    fflush(stdout);
+	    fprintf(stderr, "\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
 	}
 	//printf("\n*******************************\n");
 	
@@ -241,8 +240,7 @@ int readfile(char * inputfile)
 		{
 			if ((j>0)&&((j%DISPLAY_FREQUENCY)==0))
 			{
-				printf("\r%7li/%7i   %7li/%7i                   ",i,nEntities,j,psShape->nVertices);
-				fflush(stdout);
+				fprintf(stderr, "\r%7li/%7i   %7li/%7i                   ",i,nEntities,j,psShape->nVertices);
 			}
 			//printf("%i/%i\n",j,psShape->nVertices);
 			prevNode=lastNode;
@@ -259,6 +257,8 @@ int readfile(char * inputfile)
 				{
 					iPart++;
 					//printf("\rdividing\n");
+					if(fileType == ROAD)
+						printf("Multipart road??? (rec=%ld)\n", i);
 				}
 				else
 				{
@@ -293,8 +293,7 @@ int readfile(char * inputfile)
 	}
 	SHPDestroyObject( psShape );
     }
-    printf("\r%7i/%7i                                     \n",nEntities,nEntities);
-    fflush(stdout);
+    fprintf(stderr, "\r%7i/%7i                                     \n",nEntities,nEntities);
 
     SHPClose( hSHP );
     DBFClose( hDBF );

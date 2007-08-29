@@ -91,30 +91,42 @@ void saveWay(struct ways *p){
 	{
 		struct tags *t;
 		struct attachedSegments *s;
-		long seqid = 1;
+		int part = 0;
 
 		if (p->segments == NULL)
 		{
 			printf("Way %li doesn't have segments, ignoring", p->wayID);
 			return;
 		}
-  
-		fprintf(fp_w, "INSERT INTO ways VALUES (%li, GeomFromText('LINESTRING(", p->wayID);
 
-		for (s = p->segments;;s = s->nextSegment)
-		{
-			fprintf(fp_w, "%1.6f %1.6f,", s->segment->from->lat, s->segment->from->lon);
-			fprintf(fp_wn, "%li\t%li\t%li\n", p->wayID, seqid++, s->segment->from->ID);
-			if (s->nextSegment == NULL)
+		s = p->segments;
+		/* Note: Technically this conversion is wrong, it splits ways when they are non-contiguous */
+		for(;;) {  
+			long seqid = 1;
+			long wayID = p->wayID + part*10000000;
+			fprintf(fp_w, "INSERT INTO ways VALUES (%li, GeomFromText('LINESTRING(", wayID);
+
+			for (;;s = s->nextSegment)
 			{
-				fprintf(fp_w, "%1.6f %1.6f)', 4326));\n", s->segment->to->lat, s->segment->to->lon);
-				fprintf(fp_wn, "%li\t%li\t%li\n", p->wayID, seqid++, s->segment->to->ID);
-				break;
+				fprintf(fp_w, "%1.6f %1.6f,", s->segment->from->lat, s->segment->from->lon);
+				fprintf(fp_wn, "%li\t%li\t%li\n", wayID, seqid++, s->segment->from->ID);
+				if (s->nextSegment == NULL || s->segment->to != s->nextSegment->segment->from )
+				{
+					fprintf(fp_w, "%1.6f %1.6f)', 4326));\n", s->segment->to->lat, s->segment->to->lon);
+					fprintf(fp_wn, "%li\t%li\t%li\n", wayID, seqid++, s->segment->to->ID);
+					break;
+				}
 			}
-		}
 
-		for (t = p->tag; t != NULL; t = t->nextTag)
-			fprintf(fp_wt, "%li\t%s\t%s\n", p->wayID, t->key, t->value);
+			fprintf(fp_wt,"%li\t%s\t%d\n", wayID, "AND_part", part+1 );
+			for (t = p->tag; t != NULL; t = t->nextTag)
+				fprintf(fp_wt, "%li\t%s\t%s\n", wayID, t->key, t->value);
+				
+			if( s->nextSegment == NULL )
+				break;
+			s = s->nextSegment;
+			part++;
+		}
 	}		
 	else
 	{

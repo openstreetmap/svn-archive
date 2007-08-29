@@ -23,6 +23,7 @@ struct nodeid
 {
       long ID;
       int count;
+      int pref;
       struct nodeid *next;
 };
 
@@ -78,7 +79,7 @@ void init_nodes(){
 	return;
 }
 
-void addCandidateID( struct node *n, int ID )
+void addCandidateID( struct node *n, int ID, int pref )
 {
       struct nodeid *p = n->nodeids;
       
@@ -97,14 +98,16 @@ void addCandidateID( struct node *n, int ID )
           p->ID = ID;
           p->next = n->nodeids;
           p->count = 1;
+          p->pref = pref;
           n->nodeids = p;
       }
 }
 
+/* First argument is marked as "preferred". So we have a way of breaking ties */
 static void addCandidateIDs(struct node *n, int ID1, int ID2 )
 {
-    addCandidateID( n, ID1 );
-    addCandidateID( n, ID2 );
+    addCandidateID( n, ID1, 1 );
+    addCandidateID( n, ID2, 0 );
 }
 
 int ERR_ambiguous;
@@ -145,6 +148,9 @@ void dumpOutput( SHPHandle shp, DBFHandle dbf)
                 else if( top == NULL )
                 {
                     ERR_ambiguous++;
+                    char buffer[1000];
+                    buffer[0]=0;
+                    
                     if( (ERR_ambiguous % 100000) == 0 )
                     {
                         printf( "Ambiguous: " );
@@ -154,6 +160,18 @@ void dumpOutput( SHPHandle shp, DBFHandle dbf)
                         }
                         printf("\n");
                     }
+                    double x=0.0;
+                    SHPObject *shape = SHPCreateSimpleObject( SHPT_POINT, 1, &p->lon, &p->lat, &x );
+                    int shapeid = SHPWriteObject( shp, -1, shape );
+                    SHPDestroyObject(shape);
+                    for( id = p->nodeids; id; id = id->next )
+                    {
+                        if( id->pref )
+                            DBFWriteIntegerAttribute( dbf, shapeid, 3, id->ID );
+                        sprintf( buffer+strlen(buffer), "%ldx%d,", id->ID, id->count );
+                    }
+                    DBFWriteStringAttribute( dbf, shapeid, 31, buffer);
+                    NodeCount++;
                 }
                 else
                 {
@@ -217,7 +235,7 @@ void createOutput(const char *filename)
         DBFAddField( dbf, "ND_26", FTString, 6, 0 ); //60
         DBFAddField( dbf, "ND_27", FTString, 3, 0 ); //30
         DBFAddField( dbf, "ND_28", FTString, 6, 0 ); //60
-        DBFAddField( dbf, "ND_29", FTString, 6, 0 ); //60
+        DBFAddField( dbf, "ND_29", FTString, 60, 0 ); //60
         
         dumpOutput(shp,dbf);
         
@@ -321,7 +339,7 @@ int readfile(char * inputfile)
 		int ID2 = DBFReadIntegerAttribute( hDBF, i, 1 );
 
 		addCandidateIDs( firstNode, ID1, ID2 );
-		addCandidateIDs( lastNode, ID1, ID2 );
+		addCandidateIDs( lastNode, ID2, ID1 );
 		SHPDestroyObject( psShape );
 	    }
     }

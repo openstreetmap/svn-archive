@@ -300,18 +300,22 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 	else
 	{
 		
-	
-			
+	        /* The AND_NODE_IDs are inverted with respect to the shapefile */
+		int inverted = 0;
 		
 		//nosr_r
 		//r_r
 		//Field 0: Type=Integer, Title=`FNODE_', Width=11, Decimals=0
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 0)))
 		{
-			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 0 ));
+		        int ID = DBFReadIntegerAttribute( hDBF, recordnr, 0 );
+			sprintf(name,"%i",ID);
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
-			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )) &&
-						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 0 )))
+			if (from->ANDID != 0 && from->ANDID != ID && to->ANDID == 0 )
+			        to->ANDID = ID;
+			if (to->ANDID == ID )
+			        inverted = 1;
+			if ((from->ANDID!=ID) && (to->ANDID!=ID))
 			{
 				//printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 				Err_fromID_without_ANDID++;
@@ -322,15 +326,21 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 1: Type=Integer, Title=`TNODE_', Width=11, Decimals=0
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 1)))
 		{
-			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 1 ));
+		        int ID = DBFReadIntegerAttribute( hDBF, recordnr, 1 );
+			sprintf(name,"%i",ID);
 			p=addtag(p,"AND_TO_NODE",name,NULL);
-			if ((from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )) &&
-						  (to->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 1 )))
+			if (to->ANDID != 0 && to->ANDID != ID && from->ANDID == 0 )
+			        from->ANDID = ID;
+                        if (from->ANDID == ID )
+                                inverted = 1;
+			if ((from->ANDID!=ID) && (to->ANDID!=ID))
 			{
 		//		printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 				Err_toID_without_ANDID++;
 			}
 		}
+		if (inverted)
+		        p=addtag(p,"AND-inverted","yes",NULL);
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0
 		//Field 3: Type=Integer, Title=`RPOLY_', Width=11, Decimals=0

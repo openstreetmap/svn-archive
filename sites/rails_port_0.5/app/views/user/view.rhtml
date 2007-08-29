@@ -1,0 +1,39 @@
+<h2><%= @this_user.display_name %></h2>
+<div id="description"><%= simple_format(@this_user.description) %></div>
+
+<% if @user and @this_user.id == @user.id %>
+<h3>Your diary</h3>
+<%= link_to 'View your diary', :controller => 'diary_entry', :action => 'list', :display_name => @user.display_name %><br/>
+<%= link_to 'New diary post', :controller => 'diary_entry', :action => 'new', :display_name => @user.display_name %>
+<h3>Your traces</h3>
+<%= link_to 'View your traces', :controller => 'trace', :action=>'mine' %>
+<h3>Your account</h3>
+<%= link_to 'Edit your settings', :controller => 'user', :action => 'account', :display_name => @user.display_name %>
+<% else %>
+<%= link_to 'Send message', :controller => 'message', :action => 'new', :user_id => @this_user.id %><br /> 
+<%= link_to 'Add as friend', :controller => 'user', :action => 'make_friend', :display_name => @this_user.display_name %><br />
+<%= link_to 'View diary', :controller => 'diary_entry', :action => 'list', :display_name => @this_user.display_name %><br />
+<%= link_to 'View traces', :controller => 'trace', :action => 'view', :display_name => @this_user.display_name %>
+<% end %>
+
+<h3>Nearby users</h3>
+<% if @this_user.home_lat.nil? or @this_user.home_lon.nil? %>
+  No home location has been set.
+  <% if @user and @this_user.id == @user.id %>
+  You can set your home location on your <%= link_to 'settings', :controller => 'user', :action => 'account', :display_name => @user.display_name %> page.
+  <% end %>
+<% else %>
+  <% if @this_user.nearby.empty? %>
+    There are no users who admit to mapping nearby.
+  <% else %>
+    <table id="nearbyusers">
+    <% @this_user.nearby.each do |nearby| %>
+    <tr>
+    <td class="username"><%= link_to nearby.display_name, :controller => 'user', :action => 'view',  :display_name => nearby.display_name %></td>
+    <td><%= @this_user.distance(nearby).round %>km away</td>
+    <td class="message">(<%= link_to 'send message', :controller => 'message', :action => 'new', :user_id => nearby.id %>)</td>
+    </tr>
+    <%end%>
+    </table>
+  <%end%>
+<% end %>

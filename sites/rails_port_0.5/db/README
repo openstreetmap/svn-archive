@@ -1,0 +1,32 @@
+Creating database
+===================
+
+OSM server uses a database with the following name:
+
+openstreetmap
+
+You may create it with your preferable client or run next (linux) command:
+
+$ mysqladmin -u <uid> -p create openstreetmap
+
+(change <uid> with appropriate username of administrative user eg. root )
+
+Creating user, password, and access rights
+============================================
+
+$ mysql -u <uid> -p
+
+(change <uid> with appropriate username of administrative user eg. root )
+
+> grant all privileges on openstreetmap.* to 'openstreetmap'@'localhost' identified by 'openstreetmap';
+> flush privileges;
+> exit
+
+Creating database skeleton tables
+===================================
+
+Run this command from the root of your rails direcotry:
+
+$ rake db:migrate
+
+This will create the db for you

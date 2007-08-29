@@ -1,0 +1,12 @@
+<% content_for "optionals" do %>
+  <div class="optionalbox">
+    <span class="oboxheader">Tags</span>
+    <br />
+    <br />
+    <% if @all_tags %>
+      <% @all_tags.each do |tag| %>
+        <%= link_to_tag tag %><br />
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

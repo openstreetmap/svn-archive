@@ -1,0 +1,31 @@
+<% display_name = (User.find_by_id(params[:user_id])).display_name %>
+
+<h2>Send a new message to <%= display_name %></h2>
+
+<% if params[:display_name] %>
+<p>Writing a new message to <%= params[:display_name] %></p>  
+<p>TODO: drop down box of your friends</p>
+<%end%>
+
+<%= error_messages_for 'message' %>
+
+<% form_for :message do |f| %>
+  <table>
+    <tr valign="top">
+      <th>Subject</th>
+      <td><%= f.text_field :title, :size => 60 %></td>
+    </tr>
+    <tr valign="top">
+      <th>Body</th>
+      <td><%= f.text_area :body, :cols => 80 %></td>
+    </tr>
+    <tr>
+      <th></th>
+      <td><%= submit_tag 'Send' %></td>
+    </tr>
+  </table>
+<% end %>
+
+<br />
+
+<%= link_to 'Back to inbox', :controller => 'message', :action => 'inbox', :display_name => @user.display_name %>

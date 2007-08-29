@@ -1,0 +1,18 @@
+<%= error_messages_for 'diary_entry' %>
+
+<% form_for :diary_entry do |f| %>
+  <table>
+    <tr valign="top">
+      <th>Subject</th>
+      <td><%= f.text_field :title, :size => 60 %></td>
+    </tr>
+    <tr valign="top">
+      <th>Body</th>
+      <td><%= f.text_area :body, :cols => 80 %></td>
+    </tr>
+    <tr>
+      <th></th>
+      <td><%= submit_tag 'Save' %></td>
+    </tr>
+  </table>
+<% end %>

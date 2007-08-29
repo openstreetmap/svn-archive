@@ -151,20 +151,26 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 3: Type=Integer, Title=`ND_1', Width=11, Decimals=0
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 3 )!=0)
 		{
-			sprintf(name,"AND=%i",DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
+		        int ID = DBFReadIntegerAttribute( hDBF, recordnr, 3 );
+			sprintf(name,"AND=%i",ID);
 			
 			if( from!=to)
-				//printf("\rAARRRGGGG:a nodeID can be attached to a way........\n");
+			{
+//				printf("\rAARRRGGGG:a nodeID can be attached to a way........(rec=%ld)\n",recordnr);
+                                /* Not actually an error, occurs whenever
+                                 * an object consists of multiple parts. In
+                                 * that case the first node and last node are
+                                 * in different parts and thus obviously
+                                 * different... */
 				Err_ND_attached_to_way++;
+                        }
 			if (from->ANDID==0)
-				from->ANDID=DBFReadIntegerAttribute( hDBF, recordnr, 3 );
-			else if (from->ANDID!=DBFReadIntegerAttribute( hDBF, recordnr, 3 ))
+				from->ANDID=ID;
+			else if (from->ANDID!=ID && ID < 10000000)
 			{	
-				//printf("\rone node should get more than one ANDID! patch needed!%li %li\n",from->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 3 ));
+				printf("\rone node shouldn't get more than one ANDID! patch needed!%li %i\n",from->ANDID,ID);
 				Err_more_NDIDs_per_node++;
 			}
-			if (DBFReadIntegerAttribute( hDBF, recordnr, 3 )==10248)
-				printf("\nID 10248 does exist!!!\n");
 			p=addtag(p,"external-ID",name,NULL);
 		}
 		
@@ -296,6 +302,14 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 30: Type=String, Title=`ND_28', Width=60, Decimals=0
 		//Field 31: Type=String, Title=`ND_29', Width=60, Decimals=0
 		
+		/* We've taken over attribute 31 for debugging purposes, just stuff it into the debug tag */
+		if (!(DBFIsAttributeNULL( hDBF, recordnr, 31 )))
+		{
+		//printf("adding name\n"); 
+			sprintf(name,"%s",DBFReadStringAttribute( hDBF, recordnr, 31));
+			p=addtag(p,"AND_DEBUG",name,NULL); 
+		}
+		
 	}
 	else
 	{
@@ -317,7 +331,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			        inverted = 1;
 			if ((from->ANDID!=ID) && (to->ANDID!=ID))
 			{
-				//printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
+//				printf("\rway referres to unattached ANDID! from=%li to=%li new_from=%i,name=%s, %f,%f \n",from->ANDID,to->ANDID,ID,DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 				Err_fromID_without_ANDID++;
 			}
 		}

@@ -1543,14 +1543,14 @@ And the OSM Segment and the track segments have an
 angle of less than 30 Degrees.
 If so they will be dropped.
 
-The file osm.csv is the segments file used by osm-pdf-atlas.
+The file osm.csv is the segments filealso used by osm-pdf-atlas.
 It's containing all osm-segments from planet.osm in a rather simple way.
-The probably easiest way to create it is to go to the 
-directory
-   svn.openstreetmap.org/utils/osm-pdf-atlas
-and once call "create.sh".
+The probably easiest way to create it is to have the debian package 
+openstreetmap-utils installed and then call something like:
+   osm2csv --area=germany
 
-If you provide a filename this file is read instead of the osm.csv file. 
+If you provide a filename for the --osm option, this file is read instead
+of the osm.csv file. 
 The Filename provided can be a csv-file or a standard osm-file.
 
 you can use --osm=0 in combination with --filter-all to not let osm-track-filter 

@@ -397,7 +397,8 @@ int main(int argc, char ** argv )
 
 	/*readfiles*/
 	
-	openOutput();
+	if (access( "and_nodes.shp", F_OK) == 0)
+		readfile( "and_nodes");
 	readfile(FILENAME "_nosr_p");
 	readfile(FILENAME "_nosr_r");
 	if (do_borders) 
@@ -421,6 +422,7 @@ int main(int argc, char ** argv )
 	readfile(FILENAME "_r_p");
 	readfile(FILENAME "_r_r");
 	readfile(FILENAME "_w");
+	openOutput();
 	save();
 	closeOutput();
 	printf("\nErr_ND_attached_to_way=%li\n",Err_ND_attached_to_way);

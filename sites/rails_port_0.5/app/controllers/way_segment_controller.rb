@@ -1,0 +1,5 @@
+class WaySegmentController < ApplicationController
+
+
+
+end

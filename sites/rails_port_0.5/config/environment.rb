@@ -2,7 +2,10 @@
 
 # Uncomment below to force Rails into production mode when 
 # you don't control web/app server and can't set it the proper way
-# ENV['RAILS_ENV'] ||= 'production'
+ENV['RAILS_ENV'] ||= 'production'
+
+# Don't add asset tags
+ENV["RAILS_ASSET_ID"] = ''
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '1.2.3'
@@ -11,7 +14,14 @@ RAILS_GEM_VERSION = '1.2.3'
 require File.join(File.dirname(__FILE__), 'boot')
 
 # Application constants needed for routes.rb - must go before Initializer call
-API_VERSION = ENV['OSM_API_VERSION'] || '0.4'
+API_VERSION = ENV['OSM_API_VERSION'] || '0.5'
+
+# Custom logger class to format messages sensibly
+class OSMLogger < Logger
+  def format_message(severity, time, progname, msg)
+    "[%s.%06d #%d] %s\n" % [time.strftime("%Y-%m-%d %H:%M:%S"), time.usec, $$, msg.sub(/^\n+/, "")]
+  end
+end
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
@@ -26,14 +36,25 @@ Rails::Initializer.run do |config|
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
+  # Use our custom logger
+  config.logger = OSMLogger.new(config.log_path)
+  config.logger.level = Logger.const_get(config.log_level.to_s.upcase)
+
   # Use the database for sessions instead of the file system
   # (create the session table with 'rake db:sessions:create')
-  # config.action_controller.session_store = :active_record_store
+  # config.action_controller.session_store = :sql_session_store
+
+  # Unfortunately SqlSessionStore is a plugin which has not been
+  # loaded yet, so we have to do things the hard way...
+  config.after_initialize do
+    ActionController::Base.session_store = :sql_session_store
+    SqlSessionStore.session_class = MysqlSession
+  end
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper, 
   # like if you have constraints or database-specific column types
-  # config.active_record.schema_format = :sql
+  config.active_record.schema_format = :sql
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
@@ -53,11 +74,23 @@ end
 #   inflect.uncountable %w( fish sheep )
 # end
 
+# Set to true to put the API in read-only mode
+API_READONLY = false
+
 # Include your application configuration below
 SERVER_URL = ENV['OSM_SERVER_URL'] || 'www.openstreetmap.org'
 
-ActionMailer::Base.server_settings = {
+ActionMailer::Base.smtp_settings = {
   :address  => "localhost",
   :port  => 25, 
   :domain  => 'localhost',
 } 
+
+#Taming FCGI
+#
+COUNT = 0
+MAX_COUNT = 10000
+
+
+
+

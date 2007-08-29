@@ -3,42 +3,45 @@ class Way < ActiveRecord::Base
   
   belongs_to :user
 
-  has_many :way_segments, :foreign_key => 'id'
+  has_many :way_nodes, :foreign_key => 'id', :order => 'sequence_id'
   has_many :way_tags, :foreign_key => 'id'
 
-  has_many :old_ways, :foreign_key => :id
+  has_many :old_ways, :foreign_key => 'id', :order => 'version'
 
   set_table_name 'current_ways'
 
   def self.from_xml(xml, create=false)
-    p = XML::Parser.new
-    p.string = xml
-    doc = p.parse
+    begin
+      p = XML::Parser.new
+      p.string = xml
+      doc = p.parse
 
-    way = Way.new
+      way = Way.new
 
-    doc.find('//osm/way').each do |pt|
-      if !create and pt['id'] != '0'
-        way.id = pt['id'].to_i
-      end
+      doc.find('//osm/way').each do |pt|
+        if !create and pt['id'] != '0'
+          way.id = pt['id'].to_i
+        end
 
-      if create
-        way.timestamp = Time.now
-        way.visible = true
-      else
-        if pt['timestamp']
-          way.timestamp = Time.parse(pt['timestamp'])
+        if create
+          way.timestamp = Time.now
+          way.visible = true
+        else
+          if pt['timestamp']
+            way.timestamp = Time.parse(pt['timestamp'])
+          end
+        end
+
+        pt.find('tag').each do |tag|
+          way.add_tag_keyval(tag['k'], tag['v'])
+        end
+
+        pt.find('nd').each do |nd|
+          way.add_nd_num(nd['id'])
         end
       end
-
-      pt.find('tag').each do |tag|
-        way.add_tag_keyval(tag['k'], tag['v'])
-      end
-
-      pt.find('seg').each do |seg|
-        way.add_seg_num(seg['id'])
-      end
-
+    rescue
+      way = nil
     end
 
     return way
@@ -50,21 +53,46 @@ class Way < ActiveRecord::Base
     return doc
   end
 
-  def to_xml_node
+  def to_xml_node(visible_nodes = nil, user_display_name_cache = nil)
     el1 = XML::Node.new 'way'
     el1['id'] = self.id.to_s
     el1['visible'] = self.visible.to_s
     el1['timestamp'] = self.timestamp.xmlschema
-    el1['user'] = self.user.display_name if self.user.data_public?
-    # make sure segments are output in sequence_id order
-    ordered_segments = []
-    self.way_segments.each do |seg| 
-      ordered_segments[seg.sequence_id] = seg.segment_id.to_s
+
+    user_display_name_cache = {} if user_display_name_cache.nil?
+    
+    if user_display_name_cache and user_display_name_cache.key?(self.user_id)
+      # use the cache if available
+    elsif self.user.data_public?
+      user_display_name_cache[self.user_id] = self.user.display_name
+    else
+      user_display_name_cache[self.user_id] = nil
     end
-    ordered_segments.each do |seg_id|
-      e = XML::Node.new 'seg'
-      e['id'] = seg_id
-      el1 << e
+
+    el1['user'] = user_display_name_cache[self.user_id] unless user_display_name_cache[self.user_id].nil?
+
+    # make sure nodes are output in sequence_id order
+    ordered_nodes = []
+    self.way_nodes.each do |nd|
+      if visible_nodes
+        # if there is a list of visible nodes then use that to weed out deleted nodes
+        if visible_nodes[nd.node_id]
+          ordered_nodes[nd.sequence_id] = nd.node_id.to_s
+        end
+      else
+        # otherwise, manually go to the db to check things
+        if nd.node.visible? and nd.node.visible?
+          ordered_nodes[nd.sequence_id] = nd.node_id.to_s
+        end
+      end
+    end
+
+    ordered_nodes.each do |nd_id|
+      if nd_id and nd_id != '0'
+        e = XML::Node.new 'nd'
+        e['id'] = nd_id
+        el1 << e
+      end
     end
  
     self.way_tags.each do |tag|
@@ -76,28 +104,37 @@ class Way < ActiveRecord::Base
     return el1
   end 
 
-
-  def segs
-    @segs = Array.new unless @segs
-    @segs
+  def nds
+    unless @nds
+        @nds = Array.new
+        self.way_nodes.each do |nd|
+            @nds += [nd.node_id]
+        end
+    end
+    @nds
   end
 
   def tags
-    @tags = Hash.new unless @tags
+    unless @tags
+        @tags = Hash.new
+        self.way_tags.each do |tag|
+            @tags[tag.k] = tag.v
+        end
+    end
     @tags
   end
 
-  def segs=(s)
-    @segs = s
+  def nds=(s)
+    @nds = s
   end
 
   def tags=(t)
     @tags = t
   end
 
-  def add_seg_num(n)
-    @segs = Array.new unless @segs
-    @segs << n.to_i
+  def add_nd_num(n)
+    @nds = Array.new unless @nds
+    @nds << n.to_i
   end
 
   def add_tag_keyval(k, v)
@@ -106,41 +143,55 @@ class Way < ActiveRecord::Base
   end
 
   def save_with_history
-    t = Time.now
-    self.timestamp = t
-    self.save
-    
-    WayTag.delete_all(['id = ?', self.id])
+    begin
+      Way.transaction do
+        t = Time.now
+        self.timestamp = t
+        self.save!
 
-    self.tags.each do |k,v|
-      tag = WayTag.new
-      tag.k = k
-      tag.v = v
-      tag.id = self.id
-      tag.save
+        tags = self.tags
+
+        WayTag.delete_all(['id = ?', self.id])
+
+        tags.each do |k,v|
+          tag = WayTag.new
+          tag.k = k
+          tag.v = v
+          tag.id = self.id
+          tag.save!
+        end
+
+        nds = self.nds
+
+        WayNode.delete_all(['id = ?', self.id])
+
+        i = 1
+        nds.each do |n|
+          nd = WayNode.new
+          nd.id = self.id
+          nd.node_id = n
+          nd.sequence_id = i
+          nd.save!
+          i += 1
+        end
+
+        old_way = OldWay.from_way(self)
+        old_way.timestamp = t
+        old_way.save_with_dependencies!
+      end
+
+      return true
+    rescue => ex
+      puts ex
+      return nil
     end
-
-    WaySegment.delete_all(['id = ?', self.id])
-    
-    i = 0
-    self.segs.each do |n|
-      seg = WaySegment.new
-      seg.id = self.id
-      seg.segment_id = n
-      seg.sequence_id = i
-      seg.save
-      i += 1
-    end
-
-    old_way = OldWay.from_way(self)
-    old_way.timestamp = t
-    old_way.save_with_dependencies
   end
 
   def preconditions_ok?
-    self.segs.each do |n|
-      segment = Segment.find(n)
-      unless segment and segment.visible and segment.preconditions_ok?
+    return false if self.nds.empty?
+    self.nds.each do |n|
+      node = Node.find(:first, :conditions => ["id = ?", n])
+      unless node and node.visible
         return false
       end
     end

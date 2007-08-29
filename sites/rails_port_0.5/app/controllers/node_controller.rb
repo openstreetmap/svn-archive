@@ -1,105 +1,117 @@
 class NodeController < ApplicationController
   require 'xml/libxml'
 
-  before_filter :authorize
+  session :off
+  before_filter :authorize, :only => [:create, :update, :delete]
+  before_filter :check_availability, :only => [:create, :update, :delete]
   after_filter :compress_output
 
   def create
-    response.headers["Content-Type"] = 'application/xml'
     if request.put?
-      node = nil
-      begin
-        node = Node.from_xml(request.raw_post, true)
-      rescue
-        render :text => "XML didn't parse", :status => 400 # if we got here the doc didnt parse
-        return
-      end
+      node = Node.from_xml(request.raw_post, true)
 
       if node
         node.user_id = @user.id
-        node.visible = 1
+        node.visible = true
+
         if node.save_with_history
-          render :text => node.id.to_s
+          render :text => node.id.to_s, :content_type => "text/plain"
         else
-          render :nothing => true, :status => 500
+          render :nothing => true, :status => :internal_server_error
         end
-        return
-
       else
-        render :nothing => true, :status => 400 # if we got here the doc didnt parse
-        return
+        render :nothing => true, :status => :bad_request
       end
+    else
+      render :nothing => true, :status => :method_not_allowed
     end
-
-    render :nothing => true, :status => 500 # something went very wrong
   end
 
-  def rest
-    response.headers["Content-Type"] = 'application/xml'
-    unless Node.exists?(params[:id])
-      render :nothing => true, :status => 404
-      return
-    end
+  def read
+    begin
+      node = Node.find(params[:id])
 
-    node = Node.find(params[:id])
-
-    case request.method
-
-    when :get
-      unless node
-        render :nothing => true, :status => 500
-        return
-      end
-
-      unless node.visible
-        render :nothing => true, :status => 410
-        return
-      end
-
-      render :text => node.to_xml.to_s
-      return
-
-    when :delete
       if node.visible
-        node.visible = 0
-        node.save_with_history
-        render :nothing => true
-      else
-        render :nothing => true, :status => 410
+        render :text => node.to_xml.to_s, :content_type => "text/xml"
+       else
+        render :nothing => true, :status => :gone
       end
-
-    when :put
-      new_node = Node.from_xml(request.raw_post)
-
-      node.timestamp = Time.now
-      node.user_id = @user.id
-
-      node.latitude = new_node.latitude 
-      node.longitude = new_node.longitude
-      node.tags = new_node.tags
-
-      if node.id == new_node.id and node.save_with_history
-        render :nothing => true, :status => 200
-      else
-        render :nothing => true, :status => 500
-      end
-      return
+    rescue ActiveRecord::RecordNotFound
+      render :nothing => true, :status => :not_found
+    rescue
+      render :nothing => true, :status => :internal_server_error
     end
+  end
 
+  def update
+    begin
+      node = Node.find(params[:id])
+
+      if node.visible
+        new_node = Node.from_xml(request.raw_post)
+
+        if new_node and new_node.id == node.id
+          node.user_id = @user.id
+          node.latitude = new_node.latitude 
+          node.longitude = new_node.longitude
+          node.tags = new_node.tags
+
+          if node.save_with_history
+            render :nothing => true
+          else
+            render :nothing => true, :status => :internal_server_error
+          end
+        else
+          render :nothing => true, :status => :bad_request
+        end
+      else
+        render :nothing => true, :status => :gone
+      end
+    rescue ActiveRecord::RecordNotFound
+      render :nothing => true, :status => :not_found
+    rescue
+      render :nothing => true, :status => :internal_server_error
+    end
+  end
+
+  def delete
+    begin
+      node = Node.find(params[:id])
+
+      if node.visible
+        if WayNode.find(:first, :joins => "INNER JOIN current_ways ON current_ways.id = current_way_nodes.id", :conditions => [ "current_ways.visible = 1 AND current_way_nodes.node_id = ?", node.id ])
+          render :nothing => true, :status => :precondition_failed
+        else if RelationMember.find(:first, :joins => "INNER JOIN current_relations ON current_relations.id=current_relation_members.id", :conditions => [ "visible = 1 AND member_type='node' and member_id=?", params[:id]])
+          render :nothing => true, :status => :precondition_failed
+        else
+          node.user_id = @user.id
+          node.visible = 0
+          node.save_with_history
+          render :nothing => true
+        end
+      else
+        render :nothing => true, :status => :gone
+      end
+    rescue ActiveRecord::RecordNotFound
+      render :nothing => true, :status => :not_found
+    rescue
+      render :nothing => true, :status => :internal_server_error
+    end
   end
 
   def nodes
-    response.headers["Content-Type"] = 'application/xml'
-    ids = params['nodes'].split(',').collect {|n| n.to_i }
+    ids = params['nodes'].split(',').collect { |n| n.to_i }
+
     if ids.length > 0
-      nodelist = Node.find(ids)
-      doc = get_xml_doc
-      nodelist.each do |node|
+      doc = OSM::API.new.get_xml_doc
+
+      Node.find(ids).each do |node|
         doc.root << node.to_xml_node
       end 
-      render :text => doc.to_s
+
+      render :text => doc.to_s, :content_type => "text/xml"
     else
-      render :nothing => true, :status => 400
+      render :nothing => true, :status => :bad_request
     end
   end
 end

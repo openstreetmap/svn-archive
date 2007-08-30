@@ -11,7 +11,7 @@ PLANET=$(HOME)/osm/planet-070823.osm.bz2
 # Note: version must be at least from 21 August 2007 (0.8.0)
 OSMOSIS=/usr/local/bin/osmosis.jar
 # If this is set it will attempt to do the AND data conversion also
-#AND_DATA=$(HOME)/osm/AND/GRD-NSHP-NLD-L6-2006H1-V2.0_OSM/Data/2007H1/NLD/020/
+AND_DATA=$(HOME)/osm/AND/GRD-NSHP-NLD-L6-2006H1-V2.0_OSM/Data/2007H1/NLD/020/
 # If you have this installed it will be used to cut the memory usage of 2AND
 # (without this you cannot run it on a 1GB machine)
 TCMALLOC=/usr/local/lib/libtcmalloc.so.0
@@ -61,13 +61,15 @@ ifneq ($(AND_DATA),)
 ###################################
 #### AND data conversion stuff ####
 ###################################
-../and2osm/2AND:
-	make -C ../and2osm
-	
-data/AND2osm.osm: ../and2osm/2AND $(AND_DATA)/020_a.dbf
+data/AND2osm.osm: ../and2osm/2AND $(AND_DATA)/020_a.dbf $(AND_DATA)/and_nodes.dbf
+	make -C ../and2osm 2AND
 	if [ -e $(TCMALLOC) ] ; then export LD_PRELOAD=$(TCMALLOC) ; fi ; \
-		../and2osm/2AND -C $(AND_DATA)
+		../and2osm/2AND -s -C $(AND_DATA)
 	ln -sf $(AND_DATA)/AND2osm.osm data/AND2osm.osm
+	
+$(AND_DATA)/and_nodes.dbf: ../and2osm/mknodedb
+	make -C ../and2osm mknodedb
+	../and2osm/mknodedb -C $(AND_DATA)
 
 data/and-unprotected.osm: data/AND2osm.osm data/extract.polygon 
 	../../osm-extract/polygons/extract-polygon.pl -v -i data/AND2osm.osm -o $@ -p data/extract.polygon

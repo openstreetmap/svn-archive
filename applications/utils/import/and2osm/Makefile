@@ -1,5 +1,5 @@
 #LINKOPT	=	/usr/local/lib/libdbmalloc.a
-LINKOPT = -lshp
+LINKOPT = -lshp -lm
 CFLAGS	= -g -O2 -Wall
 
 all:	2AND mknodedb

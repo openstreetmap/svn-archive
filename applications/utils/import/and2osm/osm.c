@@ -172,6 +172,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 				Err_more_NDIDs_per_node++;
 			}
 			p=addtag(p,"external-ID",name,NULL);
+			from->required = 1;
 		}
 		
 		//Field 4: Type=Integer, Title=`ND_2', Width=2, Decimals=0
@@ -311,7 +312,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		}
 		
 	}
-	else
+	else   // ROADS
 	{
 		
 	        /* The AND_NODE_IDs are inverted with respect to the shapefile */
@@ -334,6 +335,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 //				printf("\rway referres to unattached ANDID! from=%li to=%li new_from=%i,name=%s, %f,%f \n",from->ANDID,to->ANDID,ID,DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 				Err_fromID_without_ANDID++;
 			}
+			from->required = from->used = 1;
 		}
 			
 			
@@ -352,8 +354,9 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//		printf("\rway referres to unattached ANDID! %li %li %i,%s, %f,%f \n",from->ANDID,to->ANDID,DBFReadIntegerAttribute( hDBF, recordnr, 0 ),DBFReadStringAttribute( hDBF, recordnr, 15 ),from->lat, from->lon);
 				Err_toID_without_ANDID++;
 			}
+			to->required = to->used = 1;
 		}
-		if (inverted)
+		if (inverted)  // For some reason this never happens?
 		        p=addtag(p,"AND-inverted","yes",NULL);
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0

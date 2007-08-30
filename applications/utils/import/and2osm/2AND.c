@@ -83,6 +83,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <math.h>
 #include "osm.h"
 #include "ways.h"
 #include "segments.h"
@@ -94,6 +95,7 @@
 
 int postgres = 0;
 int osmChange = 0;
+int simplify = 0;
 
 static int use_boundingbox = 0;
 static double mybox_min[2],mybox_max[2];
@@ -125,6 +127,36 @@ int testoverlap(SHPObject *psShape)
 	return 0;
 }
 
+#define LON_PROJECT(_x) ((_x)*M_PI/180.0)
+#define LAT_PROJECT(_y) (asinh(tan((_y)*M_PI/180.0)))
+
+int Nodes_Deleted, Nodes_Skipped;
+// Return true if the nodes are in a straight line (with certain margins).
+// Note the projection code: straight here is in the Mercator projection
+int Colinear( struct nodes *n1, struct nodes *n2, double y, double x )
+{
+//	printf("(%f,%f)(%f,%f)(%f,%f)\n", n1->lat, n1->lon, n2->lat, n2->lon, y, x);
+	double x1 = LON_PROJECT(x) - LON_PROJECT(n1->lon);
+	double y1 = LAT_PROJECT(y) - LAT_PROJECT(n1->lat);
+	double x2 = LON_PROJECT(n2->lon) - LON_PROJECT(n1->lon);
+	double y2 = LAT_PROJECT(n2->lat) - LAT_PROJECT(n1->lat);
+	
+	double area = x1*y2 - x2*y1;
+	double base = sqrt(x1*x1 + y1*y1);
+	double height = fabs(2*area/base);
+	
+//	if( n1->ANDID == 420534 )
+//		printf("(%g,%g)(%g,%g) -> area=%e, base=%e, height=%e\n", x1,y1,x2,y2,area,base,height);
+
+	if( height < 5e-7 )
+	{
+		Nodes_Skipped++;
+		return 1;
+	}
+	else
+		return 0;
+}
+
 int readfile(char * inputfile)
 {
     SHPHandle	hSHP;
@@ -140,7 +172,6 @@ int readfile(char * inputfile)
 /*      Open the passed shapefile.                                      */
 /* -------------------------------------------------------------------- */
     hSHP = SHPOpen( inputfile, "rb" );
-	fprintf(stderr, "%s\n",inputfile);
     if( hSHP == NULL )
     {
 	fprintf(stderr,  "Unable to open: %s\n", inputfile );
@@ -160,8 +191,8 @@ int readfile(char * inputfile)
     /* -------------------------------------------------------------------- */
     SHPGetInfo( hSHP, &nEntities, &nShapeType, adfMinBound, adfMaxBound );
 
-    fprintf(stderr,  "Shapefile Type: %s   # of Shapes: %d\n",
-	    SHPTypeName( nShapeType ), nEntities );
+    fprintf(stderr,  "Shapefile '%s' Type: %s   # of Shapes: %d\n",
+	    inputfile, SHPTypeName( nShapeType ), nEntities );
     
     /*printf( "File Bounds: (%12.8f,%12.8f,%g,%g)\n"
 		    "         to  (%12.8f,%12.8f,%g,%g)\n",
@@ -203,7 +234,7 @@ int readfile(char * inputfile)
 	psShape = SHPReadObject( hSHP, i );
 	if ((i%DISPLAY_FREQUENCY)==0)
 	{
-	    fprintf(stderr, "\r%7li/%7i   %7i/%7i                       ",i,nEntities,0,psShape->nVertices);
+	    fprintf(stderr, "\r%7li/%7i   %7i/%7i                      ",i,nEntities,0,psShape->nVertices);
 	}
 	//printf("\n*******************************\n");
 	
@@ -243,8 +274,27 @@ int readfile(char * inputfile)
 				fprintf(stderr, "\r%7li/%7i   %7li/%7i                   ",i,nEntities,j,psShape->nVertices);
 			}
 			//printf("%i/%i\n",j,psShape->nVertices);
+			/* The AND data put nodes whenever two roads cross
+			 * eachover, even if they don't intersect. This is
+			 * bad for OSM. So here we detect if this node is
+			 * colinear with the previous and the next one, in
+			 * whic case it can be completely skipped. Except if
+			 * it's a required node. */
 			prevNode=lastNode;
 			lastNode=addNode(psShape->padfY[j],psShape->padfX[j]);
+
+			if( simplify && !lastNode->required &&
+			    j > 0 &&           // There's a previous
+			    (j+1) < psShape->nVertices && // and a next
+			    (iPart == psShape->nParts || psShape->panPartStart[iPart] != (j+1) ) && // and no gap comming
+			    (psShape->panPartStart[iPart-1] != j ) ) // or just gone
+			{
+				if( Colinear( prevNode, lastNode, psShape->padfY[j+1],psShape->padfX[j+1] ) )
+				{
+					lastNode = prevNode;
+					continue;
+				}
+			}
 			//printf("%p\n",lastNode);
 			if (j==0)
 			{
@@ -262,6 +312,7 @@ int readfile(char * inputfile)
 				}
 				else
 				{
+					
 					//    printf(" seg\n");
 					lastSegment=addSegment(prevNode,lastNode);
 					//  printf(" seg2way\n");
@@ -293,7 +344,7 @@ int readfile(char * inputfile)
 	}
 	SHPDestroyObject( psShape );
     }
-    fprintf(stderr, "\r%7i/%7i                                     \n",nEntities,nEntities);
+    fprintf(stderr, "\r%7i/%7i                                     \r",nEntities,nEntities);
 
     SHPClose( hSHP );
     DBFClose( hDBF );
@@ -325,7 +376,7 @@ int main(int argc, char ** argv )
 	init_ways();
 	init_nodes();
 	init_segments();
-	while ((c = getopt (argc, argv, "b:np?C:c")) != -1)
+	while ((c = getopt (argc, argv, "b:np?C:cs")) != -1)
 		switch (c)
 		{
 		case 'b':
@@ -366,6 +417,9 @@ int main(int argc, char ** argv )
 		case 'p':
 			postgres = 1;
 			break;
+		case 's':
+			simplify = 1;
+			break;
 		case 'C':
 			if( chdir( optarg ) < 0 )
 			{
@@ -384,6 +438,7 @@ int main(int argc, char ** argv )
 			                 "   -b minlon,minlat,maxlon,maxlat   - Bounding box to extract\n"
 			                 "   -n                               - Do not extract borders\n"
 			                 "   -p                               - Output postgresql SQL files\n"
+			                 "   -s                               - simplify output by removing redundant nodes\n"
 			                 "   -c                               - Output osmChange format\n");
 			exit(1);
 		}
@@ -429,6 +484,8 @@ int main(int argc, char ** argv )
 	printf("err_oneway_way_reversed=%li\n",Err_oneway_way_reversed);
 	printf("way \"toID\" refers to not present AND ID=%li\n",Err_toID_without_ANDID);
 	printf("way \"fromID\" refers to not present AND ID=%li\n",Err_fromID_without_ANDID);
+	if( simplify )
+		printf("Useless inbetween nodes skipped: %d, deleted: %d\n", Nodes_Skipped, Nodes_Deleted);
 	return 0;
 	
 }

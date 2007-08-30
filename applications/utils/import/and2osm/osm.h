@@ -30,6 +30,8 @@ struct tags{
 struct nodes{
 	long ID;
 	long ANDID;
+	short required;
+	short used;
 	double lat;
 	double lon;
 	struct tags * tag; /*contains attached tags */

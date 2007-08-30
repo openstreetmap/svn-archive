@@ -7,7 +7,7 @@
 #include "nodes.h"
 
 extern int postgres;
-
+extern int Nodes_Deleted;
 
 /* File descriptor for .osm file. */
 extern FILE *fp;
@@ -43,6 +43,11 @@ void saveNodes(){
 	rb_t_init (&tr, nodes_table);
 	while ((p=(struct nodes *) rb_t_next(&tr))!=NULL)
 	{
+		if( !p->used )
+		{
+			Nodes_Deleted++;
+			continue;
+		}
 		count++;
 		if( (count%1024) == 0 )
 			fprintf(stderr, "\rExporting nodes: %d ", count);

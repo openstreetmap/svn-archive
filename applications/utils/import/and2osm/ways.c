@@ -146,13 +146,18 @@ void saveWay(struct ways *p){
 }
 
 void saveWays(){
+	int count = 0;
 	struct rb_traverser tr;
 	struct ways * p;
 	rb_t_init (&tr, way_table);
 	while ((p=(struct ways *) rb_t_next(&tr))!=NULL)
 	{
+		count++;
+		if( (count%1024) == 0 )
+			fprintf(stderr, "\rExporting ways: %d ", count);
 		saveWay(p);
 	}
+	fprintf(stderr, "\rExported ways: %d ", count);
 }
 
 

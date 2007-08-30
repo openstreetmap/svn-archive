@@ -99,14 +99,18 @@ long saveSegment(struct segments *p){
 void saveSegments(){
 	if (!postgres)
 	{
-			
+		int count = 0;
 		struct rb_traverser tr;
 		struct segments * p;
 		rb_t_init (&tr, segments_table);
 		while ((p=(struct segments *) rb_t_next(&tr))!=NULL)
 		{
+			count++;
+			if( (count%1024) == 0 )
+				fprintf(stderr, "\rExporting segments: %d ", count);
 			saveSegment(p);
 		}
+		fprintf(stderr, "\rExported segments: %d \n", count);
 	}
 }
 

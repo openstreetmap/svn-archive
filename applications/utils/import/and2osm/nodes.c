@@ -37,13 +37,18 @@ void saveNode(struct nodes *p){
 }
 
 void saveNodes(){
+	int count = 0;
 	struct rb_traverser tr;
 	struct nodes * p;
 	rb_t_init (&tr, nodes_table);
 	while ((p=(struct nodes *) rb_t_next(&tr))!=NULL)
 	{
+		count++;
+		if( (count%1024) == 0 )
+			fprintf(stderr, "\rExporting nodes: %d ", count);
 		saveNode(p);
 	}
+	fprintf(stderr, "\rExported nodes: %d \n", count);
 }
 
 int compare_nodes (const void *pa, const void *pb, void *param){

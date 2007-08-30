@@ -78,21 +78,28 @@ sub process
   }
 #  print Dumper($ent);
 #  print $ent->xml;
-  return if $dry_run;
+#  return if $dry_run;
   return if resolve_ids( $ent, $command );
 
   my $id;
-  if( $command eq "create" )
+  if( not $dry_run )
   {
-    $id = $uploader->create( $ent );
+    if( $command eq "create" )
+    {
+      $id = $uploader->create( $ent );
+    }
+    elsif( $command eq "modify" )
+    {
+      $id = $uploader->modify( $ent );
+    }
+    elsif( $command eq "delete" )
+    {
+      $id = $uploader->delete( $ent );
+    }
   }
-  elsif( $command eq "modify" )
+  else
   {
-    $id = $uploader->modify( $ent );
-  }
-  elsif( $command eq "delete" )
-  {
-    $id = $uploader->delete( $ent );
+    $id = 42;
   }
 
   if( not defined $id )
@@ -132,7 +139,7 @@ sub progress
   printf STDERR "%10d %7.2f%% %3d:%02d:%02d \r", $count, $perc*100, int($remain)/3600, int($remain/60)%60, int($remain)%60;
 }
 
-my %resolved;
+#my %resolved;
 my %done;
 my $cache_fh;
 
@@ -153,13 +160,9 @@ sub mark_done
   {
     $line .= "0";
   }
-  print $cache_fh $line,"\n";
+  print $cache_fh $line,"\n"    unless $dry_run;
   
-  $done{$ent->type}{$command}{$ent->id} = 1;
-  
-  return unless $ent->id < 0;
-  
-  $resolved{$ent->type}{$ent->id} = $newid;
+  $done{$ent->type}{$command}{$ent->id} = $newid;
 }
 
 # Cache has the following format
@@ -187,10 +190,6 @@ sub init_cache
         if( $status ne "!" )
         {
           $done{$type}{$command}{$id}=1;
-          if( $id < 0 and $status > 0 )
-          {
-            $resolved{$type}{$id} = $status;
-          }
         }
       }
       else
@@ -213,9 +212,9 @@ sub resolve_ids
   my $incomplete = 0;
   if( $ent->id < 0 )
   {
-    if( exists $resolved{$ent->type}{$ent->id} )
+    if( exists $done{$ent->type}{create}{$ent->id} )
     {
-      $ent->set_id( $resolved{$ent->type}{$ent->id} );
+      $ent->set_id( $done{$ent->type}{create}{$ent->id} );
     }
     elsif( $command ne "create" )
     { $incomplete = 1 }
@@ -224,13 +223,13 @@ sub resolve_ids
   {
     my $from = $ent->from;
     my $to = $ent->to;
-    if( $from < 0 and exists $resolved{node}{$ent->from} )
+    if( $from < 0 and exists $done{node}{create}{$ent->from} )
     {
-      $from = $resolved{node}{$ent->from};
+      $from = $done{node}{create}{$ent->from};
     }
-    if( $to < 0 and exists $resolved{node}{$ent->to} )
+    if( $to < 0 and exists $done{node}{create}{$ent->to} )
     {
-      $to = $resolved{node}{$ent->to};
+      $to = $done{node}{create}{$ent->to};
     }
     $ent->set_fromto( $from, $to );
     if( $from < 0 or $to < 0 )
@@ -242,9 +241,9 @@ sub resolve_ids
     my @newsegs;
     for my $seg (@$segs)
     {
-      if( $seg < 0 and exists $resolved{segment}{$seg} )
+      if( $seg < 0 and exists $done{segment}{create}{$seg} )
       {
-        $seg = $resolved{segment}{$seg};
+        $seg = $done{segment}{create}{$seg};
       }
       push @newsegs, $seg;
       if( $seg < 0 )

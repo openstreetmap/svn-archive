@@ -12,6 +12,7 @@ use LWP::UserAgent;
 use strict;
 
 package Geo::OSM::APIClient;
+use MIME::Base64;
 use HTTP::Request;
 use Carp;
 
@@ -37,6 +38,8 @@ sub new
     {
       $obj->{client}->credentials( "$1:80", "Web Password",  $attr{username}, $attr{password} );
     }
+    my $encoded = MIME::Base64::encode_base64("$attr{username}:$attr{password}","");
+    $obj->{client}->default_header( "Authorization", "Basic $encoded" );
   }
   
   return $obj;

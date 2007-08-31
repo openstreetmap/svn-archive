@@ -18,8 +18,10 @@ my($input, $username, $password, $api, $help, %additional_tags);
 my $force = 0;
 my $dry_run = 0;
 my $loop = 0;
+my $verbose = 0;
 
 Getopt::Long::Configure('no_ignore_case');
+Getopt::Long::Configure ("bundling");
 GetOptions (
              'i|input=s'          => \$input,
              'u|username=s'       => \$username,
@@ -30,6 +32,7 @@ GetOptions (
              'n|dry-run'          => \$dry_run,
              'l|loop'             => \$loop,
              't|tags=s%'          => \%additional_tags,
+             'v|verbose+'         => \$verbose,
              ) or pod2usage(1);
 
 pod2usage(1) if $help;
@@ -64,6 +67,7 @@ if( not exists $db_file{loop} or $db_file{loop} eq "0" )
 {
   $db_file{loop} = 0;
   $db_file{total} = 0;
+  $db_file{count} ||= 0;
 }
 
 do {
@@ -98,7 +102,13 @@ sub process
   {
     $ent = new Geo::OSM::Way( $attr, $tags, $segs );
   }
-  return if resolve_ids( $ent, $command );
+  my $skipped = resolve_ids( $ent, $command );
+  if( $skipped )
+  {
+    print "Skipped: $command ".$ent->type()." ".$ent->id()."\n"
+         if( $verbose and $skipped == 1 );
+    return 0;
+  }
 
   my $id;
   if( not $dry_run )
@@ -240,7 +250,7 @@ sub resolve_ids
   my $command = shift;
   
   return 0 if $dry_run;
-  return 1 if $db_file{key($ent->type, $command, $ent->id)};
+  return 2 if $db_file{key($ent->type, $command, $ent->id)};
 
   my $incomplete = 0;
   if( $ent->id < 0 )

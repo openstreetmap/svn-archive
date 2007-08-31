@@ -6,7 +6,7 @@ Osmarender
 
 ==============================================================================
 
-Copyright (C) 2006-2007  OpenStreetMap Foundation
+Copyright (C) 2006-2007  Etienne Cherdlu, Jochen Topf
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,18 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 ==============================================================================
 -->
-<xsl:stylesheet xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://web.resource.org/cc/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:date="http://exslt.org/dates-and-times" xmlns:set="http://exslt.org/sets" xmlns:osma="http://wiki.openstreetmap.org/index.php/Osmarender/Frollo/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" extension-element-prefixes="date set">
+<xsl:stylesheet 
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:svg="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  xmlns:xi="http://www.w3.org/2001/XInclude" 
+  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" 
+  xmlns:cc="http://web.resource.org/cc/" 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/" 
+  xmlns:osma="http://wiki.openstreetmap.org/index.php/Osmarender/Frollo/1.0" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  version="1.0">
  
     <xsl:output method="xml" omit-xml-declaration="no" indent="yes" encoding="UTF-8"/>
 
@@ -33,6 +44,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     <xsl:param name="scale" select="/rules/@scale"/>
     <xsl:param name="symbolScale" select="/rules/@symbolScale"/>
+	<xsl:param name='textAttenuation' select='/rules/@textAttenuation'/>
     <xsl:param name="withOSMLayers" select="/rules/@withOSMLayers"/>
     <xsl:param name="withUntaggedSegments" select="/rules/@withUntaggedSegments"/>
     <xsl:param name="svgBaseProfile" select="/rules/@svgBaseProfile"/>
@@ -50,7 +62,26 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <xsl:key name="wayBySegment" match="/osm/way" use="seg/@id"/>
 
     <xsl:variable name="data" select="document($osmfile)"/>
-	<xsl:variable name="bFrollo" select="$data/osm/@osma:frollo=&quot;1&quot;"/>
+	<xsl:variable name="bFrollo" select="$data/osm/@osma:frollo='1'"/>
+
+	<!-- Use a web-service (if available) to get the current date -->		
+	<xsl:variable name="now" select="document('http://xobjex.com/service/date.xsl')" />
+	<xsl:variable name="date">
+		<xsl:choose>
+			<xsl:when test="$now">
+				<xsl:value-of select="substring($now/date/utc/@stamp,1,10)" /> <!-- Assumes 4 digit year -->
+			</xsl:when>
+			<xsl:otherwise>2007-01-01</xsl:otherwise>
+		</xsl:choose>		
+	</xsl:variable>
+	<xsl:variable name="year">
+		<xsl:choose>
+			<xsl:when test="$now">
+				<xsl:value-of select="$now/date/utc/year" />
+			</xsl:when>
+			<xsl:otherwise>2007</xsl:otherwise>
+		</xsl:choose>		
+	</xsl:variable>
 
     <!-- extra height for marginalia at top -->
     <xsl:variable name="marginaliaTopHeight">
@@ -86,35 +117,40 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         </xsl:choose>
     </xsl:variable>
 
-    <xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="bllat">
+    <!-- Calculate the size of the bounding box based on the file content -->
+    <xsl:variable name="bllat">
         <xsl:for-each select="$data/osm/node/@lat">
             <xsl:sort data-type="number" order="ascending"/>
             <xsl:if test="position()=1">
                 <xsl:value-of select="."/>
             </xsl:if>
         </xsl:for-each>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="bllon">
+    </xsl:variable>
+    <xsl:variable name="bllon">
         <xsl:for-each select="$data/osm/node/@lon">
             <xsl:sort data-type="number" order="ascending"/>
             <xsl:if test="position()=1">
                 <xsl:value-of select="."/>
             </xsl:if>
         </xsl:for-each>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="trlat">
+    </xsl:variable>
+    <xsl:variable name="trlat">
         <xsl:for-each select="$data/osm/node/@lat">
             <xsl:sort data-type="number" order="descending"/>
             <xsl:if test="position()=1">
                 <xsl:value-of select="."/>
             </xsl:if>
         </xsl:for-each>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="trlon">
+    </xsl:variable>
+    <xsl:variable name="trlon">
         <xsl:for-each select="$data/osm/node/@lon">
             <xsl:sort data-type="number" order="descending"/>
             <xsl:if test="position()=1">
                 <xsl:value-of select="."/>
             </xsl:if>
         </xsl:for-each>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="bottomLeftLatitude">
+    </xsl:variable>
+    <xsl:variable name="bottomLeftLatitude">
         <xsl:choose>
             <xsl:when test="/rules/bounds">
                 <xsl:value-of select="/rules/bounds/@minlat"/>
@@ -126,7 +162,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:value-of select="$bllat"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="bottomLeftLongitude">
+    </xsl:variable>
+    <xsl:variable name="bottomLeftLongitude">
         <xsl:choose>
             <xsl:when test="/rules/bounds">
                 <xsl:value-of select="/rules/bounds/@minlon"/>
@@ -138,7 +175,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:value-of select="$bllon"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="topRightLatitude">
+    </xsl:variable>
+    <xsl:variable name="topRightLatitude">
         <xsl:choose>
             <xsl:when test="/rules/bounds">
                 <xsl:value-of select="/rules/bounds/@maxlat"/>
@@ -150,7 +188,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:value-of select="$trlat"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="topRightLongitude">
+    </xsl:variable>
+    <xsl:variable name="topRightLongitude">
         <xsl:choose>
             <xsl:when test="/rules/bounds">
                 <xsl:value-of select="/rules/bounds/@maxlon"/>
@@ -162,21 +201,43 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:value-of select="$trlon"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="middleLatitude" select="($topRightLatitude + $bottomLeftLatitude) div 2.0"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="latr" select="$middleLatitude * 3.1415926 div 180.0"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="coslat" select="1 - ($latr * $latr) div 2 + ($latr * $latr * $latr * $latr) div 24"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="projection" select="1 div $coslat"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="dataWidth" select="(number($topRightLongitude)-number($bottomLeftLongitude))*10000*$scale"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="dataHeight" select="(number($topRightLatitude)-number($bottomLeftLatitude))*10000*$scale*$projection"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="km" select="(0.0089928*$scale*10000*$projection)"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="documentWidth">
+    </xsl:variable>
+
+    <!-- Derive the latitude of the middle of the map -->
+    <xsl:variable name="middleLatitude" select="($topRightLatitude + $bottomLeftLatitude) div 2.0"/>
+    <!--woohoo lets do trigonometry in xslt -->
+    <!--convert latitude to radians -->
+    <xsl:variable name="latr" select="$middleLatitude * 3.1415926 div 180.0"/>
+    <!--taylor series: two terms is 1% error at lat<68 and 10% error lat<83. we probably need polar projection by then -->
+    <xsl:variable name="coslat" select="1 - ($latr * $latr) div 2 + ($latr * $latr * $latr * $latr) div 24"/>
+    <xsl:variable name="projection" select="1 div $coslat"/>
+
+    <xsl:variable name="dataWidth" select="(number($topRightLongitude)-number($bottomLeftLongitude))*10000*$scale"/>
+    <xsl:variable name="dataHeight" select="(number($topRightLatitude)-number($bottomLeftLatitude))*10000*$scale*$projection"/>    
+    <xsl:variable name="km" select="(0.0089928*$scale*10000*$projection)"/>
+    
+    <xsl:variable name="documentWidth">
         <xsl:choose>
             <xsl:when test="$dataWidth &gt; (number(/rules/@minimumMapWidth) * $km)">
                 <xsl:value-of select="$dataWidth"/>
             </xsl:when>
             <xsl:otherwise><xsl:value-of select="number(/rules/@minimumMapWidth) * $km"/></xsl:otherwise>
         </xsl:choose>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="documentHeight">
+    </xsl:variable>
+    
+    <xsl:variable name="documentHeight">
         <xsl:choose>
             <xsl:when test="$dataHeight &gt; (number(/rules/@minimumMapHeight) * $km)">
                 <xsl:value-of select="$dataHeight"/>
             </xsl:when>
             <xsl:otherwise><xsl:value-of select="number(/rules/@minimumMapHeight) * $km"/></xsl:otherwise>
         </xsl:choose>
-    </xsl:variable><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="width" select="($documentWidth div 2) + ($dataWidth div 2)"/><xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="height" select="($documentHeight div 2) + ($dataHeight div 2)"/>
+    </xsl:variable>
+    
+    <xsl:variable name="width" select="($documentWidth div 2) + ($dataWidth div 2)"/>
+    <xsl:variable name="height" select="($documentHeight div 2) + ($dataHeight div 2)"/>
+
+
 
     <!-- Main template -->
     <xsl:template match="/rules">     
@@ -191,8 +252,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:variable name="svgWidth" select="$documentWidth + $extraWidth"/>
         <xsl:variable name="svgHeight" select="$documentHeight + $marginaliaTopHeight + $marginaliaBottomHeight"/>
 
-        <svg id="main" version="1.1" baseProfile="{$svgBaseProfile}" width="{$svgWidth}px" height="{$svgHeight}px" viewBox="{-$extraWidth div 2} {-$extraHeight div 2} {$svgWidth} {$svgHeight}">
-            <xsl:if test="/rules/@interactive=&quot;yes&quot;">
+        <svg id="main" 
+			version="1.1" 
+			baseProfile="{$svgBaseProfile}" 
+			width="{$svgWidth}px" 
+			height="{$svgHeight}px" 
+			viewBox="{-$extraWidth div 2} {-$extraHeight div 2} {$svgWidth} {$svgHeight}">
+            <xsl:if test="/rules/@interactive='yes'">
                 <xsl:attribute name="onscroll">fnOnScroll(evt)</xsl:attribute>
                 <xsl:attribute name="onzoom">fnOnZoom(evt)</xsl:attribute>
                 <xsl:attribute name="onload">fnOnLoad(evt)</xsl:attribute>
@@ -204,14 +270,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:call-template name="metadata"/>
 
             <!-- Include javaScript functions for all the dynamic stuff --> 
-            <xsl:if test="/rules/@interactive=&quot;yes&quot;">
+            <xsl:if test="/rules/@interactive='yes'">
                 <xsl:call-template name="javaScript"/>
             </xsl:if>
+
 
             <defs id="defs-rulefile">
                 <!-- Get any <defs> and styles from the rules file -->
                 <xsl:copy-of select="defs/*"/>
             </defs>
+
 
             <xsl:if test="$symbolsDir != ''">
                 <!-- Get all symbols mentioned in the rules file from the symbolsDir -->
@@ -226,7 +294,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:variable name="allWays" select="$data/osm/way"/>
             <defs id="defs-ways">
                 <xsl:for-each select="$allWays">
-                    <xsl:call-template name="generateWayPath"/>
+                    <xsl:call-template name="generateWayPaths"/>
                 </xsl:for-each>
             </defs>
 
@@ -240,7 +308,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <rect id="background" x="0px" y="0px" height="{$documentHeight}px" width="{$documentWidth}px" class="map-background"/>
 
                 <!-- If this is set we first draw all untagged segments not belonging to any way -->
-                <xsl:if test="$withUntaggedSegments=&quot;yes&quot;">
+                <xsl:if test="$withUntaggedSegments='yes'">
                     <xsl:call-template name="drawUntaggedSegments"/>
                 </xsl:if>
 
@@ -251,13 +319,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <!-- Draw map decoration -->
             <g id="map-decoration" inkscape:groupmode="layer" inkscape:label="Map decoration" transform="translate(0,{$marginaliaTopHeight})">
                 <!-- Draw a grid if required -->
-                <xsl:if test="$showGrid=&quot;yes&quot;">
-                    <xsl:call-template name="gridDraw"/>
+                <xsl:if test="$showGrid='yes'">
+                    <xsl:call-template name="drawGrid"/>
                 </xsl:if>
 
                 <!-- Draw a border if required -->
-                <xsl:if test="$showBorder=&quot;yes&quot;">
-                    <xsl:call-template name="borderDraw"/>
+                <xsl:if test="$showBorder='yes'">
+                    <xsl:call-template name="drawBorder"/>
                 </xsl:if>
             </g>
 
@@ -266,7 +334,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <g id="marginalia" inkscape:groupmode="layer" inkscape:label="Marginalia">
                     <!-- Draw the title -->
                     <xsl:if test="$title!=''">
-                        <xsl:call-template name="titleDraw">
+                        <xsl:call-template name="drawTitle">
                             <xsl:with-param name="title" select="$title"/>
                         </xsl:call-template>
                     </xsl:if>
@@ -277,14 +345,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                             <rect id="marginalia-background" x="0px" y="{$documentHeight + 5}px" height="40px" width="{$documentWidth}px" class="map-marginalia-background"/>
 
                             <!-- Draw the scale in the bottom left corner -->
-                            <xsl:if test="$showScale=&quot;yes&quot;">
-                                <xsl:call-template name="scaleDraw"/>
+                            <xsl:if test="$showScale='yes'">
+                                <xsl:call-template name="drawScale"/>
                             </xsl:if>
 
                             <!-- Draw Creative commons license -->
-                            <xsl:if test="$showLicense=&quot;yes&quot;">
+                            <xsl:if test="$showLicense='yes'">
                                 <xsl:call-template name="in-image-license">
-                                    <xsl:with-param name="year" select="2007"/>
                                     <xsl:with-param name="dx" select="$documentWidth"/>
                                     <xsl:with-param name="dy" select="$documentHeight"/>
                                 </xsl:call-template>
@@ -297,7 +364,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <!-- Draw labels and controls that are in a static position -->
             <g id="staticElements" transform="scale(1) translate(0,0)">
                 <!-- Draw the +/- zoom controls -->
-                <xsl:if test="/rules/@interactive=&quot;yes&quot;">
+                <xsl:if test="/rules/@interactive='yes'">
                     <xsl:call-template name="zoomControl"/>
                 </xsl:if>
             </g>
@@ -305,18 +372,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
     </xsl:template>
 
-    <!-- include templates from all the other files -->
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="drawLine">
+
+    <!-- Draw a line for the current <segment> element using the formatting of the current <line> instruction -->
+    <xsl:template name="drawLine">
         <xsl:param name="instruction"/>
         <xsl:param name="segment"/> <!-- The current segment element -->
         <xsl:param name="way"/>  <!-- The current way element if applicable -->
 
         <xsl:variable name="from" select="@from"/>
         <xsl:variable name="to" select="@to"/>
-        <xsl:variable name="fromNode" select="key(&quot;nodeById&quot;,$from)"/>
-        <xsl:variable name="toNode" select="key(&quot;nodeById&quot;,$to)"/>
-        <xsl:variable name="fromNodeContinuation" select="(count(key(&quot;segmentByFromNode&quot;,$fromNode/@id))+count(key(&quot;segmentByToNode&quot;,$fromNode/@id)))&gt;1"/>
-        <xsl:variable name="toNodeContinuation" select="(count(key(&quot;segmentByFromNode&quot;,$toNode/@id))+count(key(&quot;segmentByToNode&quot;,$toNode/@id)))&gt;1"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+        <xsl:variable name="fromNodeContinuation" select="(count(key('segmentByFromNode',$fromNode/@id))+count(key('segmentByToNode',$fromNode/@id)))&gt;1"/>
+        <xsl:variable name="toNodeContinuation" select="(count(key('segmentByFromNode',$toNode/@id))+count(key('segmentByToNode',$toNode/@id)))&gt;1"/>
 
         <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
         <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
@@ -351,7 +419,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:call-template name="getSvgAttributesFromOsmTags"/>
         </line>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="drawSegmentFragment">
+    </xsl:template>
+    
+
+    <!-- Draw some part of a segment with round line-caps and no start or end markers -->
+    <xsl:template name="drawSegmentFragment">
         <xsl:param name="x1"/>
         <xsl:param name="x2"/>
         <xsl:param name="y1"/>
@@ -368,107 +440,203 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:attribute name="marker-end">none</xsl:attribute>
                 <xsl:call-template name="getSvgAttributesFromOsmTags"/>
             </line>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="drawWay">
+    </xsl:template>
+    
+
+	<!-- Path Fragment Drawing -->
+    <xsl:template name="drawPath">
+		<xsl:param name='instruction' />
+		<xsl:param name='pathId'/>
+		<xsl:param name='extraClasses'/>
+
+		<xsl:variable name="maskId" select="concat('mask_',$pathId)"/>
+
+		<xsl:call-template name='generateMask'>
+			<xsl:with-param name='instruction' select='$instruction'/>
+			<xsl:with-param name='pathId' select='$pathId'/>
+			<xsl:with-param name='maskId' select='$maskId'/>
+		</xsl:call-template>
+
+        <use xlink:href="#{$pathId}">
+			<!-- Copy all attributes from instruction -->
+            <xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
+			<!-- Add in any extra classes -->
+            <xsl:attribute name="class">
+				<xsl:value-of select='$instruction/@class'/>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="$extraClasses"/>
+			</xsl:attribute>
+            <!-- If there is a mask class then include the mask attribute -->
+			<xsl:if test='$instruction/@mask-class'>
+				<xsl:attribute name="mask">url(#<xsl:value-of select="$maskId"/>)</xsl:attribute>
+			</xsl:if>
+            <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+        </use>
+    </xsl:template>
+
+
+	<xsl:template name='generateMask'>
+		<xsl:param name='instruction' />
+		<xsl:param name='pathId'/>
+		<xsl:param name='maskId'/>
+
+		<!-- If the instruction has a mask class -->
+		<xsl:if test='$instruction/@mask-class'>
+			<mask id="{$maskId}" maskUnits="userSpaceOnUse">
+			    <use xlink:href="#{$pathId}" class="{$instruction/@mask-class} osmarender-mask-black" /> <!-- Required for Inkscape bug -->
+			    <use xlink:href="#{$pathId}" class="{$instruction/@class} osmarender-mask-white" />
+			    <use xlink:href="#{$pathId}" class="{$instruction/@mask-class} osmarender-mask-black" />
+			</mask>
+		</xsl:if>	
+	</xsl:template>
+
+
+
+    <!-- Draw a line for the current <way> element using the formatting of the current <line> instruction -->
+    <xsl:template name="drawWay">
         <xsl:param name="instruction"/>
         <xsl:param name="way"/>  <!-- The current way element if applicable -->
         <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
 
-        <xsl:variable name="tunnel" select="$way/tag[@k='tunnel']"/>
-        <xsl:variable name="railway" select="$way/tag[@k='railway' and @v='rail']"/>
+		<xsl:choose>
+			<xsl:when test="$instruction/@smart-linecap='no'">
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_normal_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="drawWayWithSmartLinecaps">
+					<xsl:with-param name="instruction" select="$instruction"/>
+					<xsl:with-param name="way" select="$way"/>
+					<xsl:with-param name="layer" select="$layer"/>
+				</xsl:call-template>
+			</xsl:otherwise>			
+		</xsl:choose>
+	</xsl:template>
 
-        <xsl:if test="not($tunnel and ($tunnel/@v = 'yes') or ($tunnel/@v = 'true'))">  <!-- if this is not a tunnel -->
 
-            <xsl:if test="not($railway)">
-
-                <!-- For the first and last segments in the way if the start or end is a continuation, then draw a round-capped stub segment
-                        that is 1/10th the length of the segment and without any markers.  TODO: do this for all sub-paths within the path.
-                    Count the number of segments that link to the from node of this segment.  Only count them if they belong to a way that
-                    has a layer tag that is greater than the layer of this way.  If there are any such segments then draw rounded
-                    end fragments. -->
-                <!-- Process the first segment in the way -->
-                <xsl:variable name="firstSegment" select="key(&quot;segmentById&quot;,$way/seg[1]/@id)"/>
-                <xsl:variable name="firstSegmentFromNode" select="key(&quot;nodeById&quot;,$firstSegment/@from)"/>
-                <xsl:variable name="firstSegmentToNode" select="key(&quot;nodeById&quot;,$firstSegment/@to)"/>
-                <xsl:variable name="firstSegmentInboundLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByToNode&quot;,$firstSegmentFromNode/@id)/@id)/tag[@k=&quot;layer&quot; and @v &gt;= $layer])"/>
-                <xsl:variable name="firstSegmentInboundNoLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByToNode&quot;,$firstSegmentFromNode/@id)/@id)[count(tag[@k=&quot;layer&quot;])=0 and $layer &lt; 1])"/>
-                <xsl:variable name="firstSegmentOutboundLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByFromNode&quot;,$firstSegmentFromNode/@id)/@id)/tag[@k=&quot;layer&quot; and @v &gt;= $layer])"/>
-                <xsl:variable name="firstSegmentOutboundNoLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByFromNode&quot;,$firstSegmentFromNode/@id)/@id)[count(tag[@k=&quot;layer&quot;])=0 and $layer &lt; 1])"/>
-                <xsl:variable name="firstSegmentLayerCount" select="($firstSegmentInboundLayerCount+$firstSegmentInboundNoLayerCount+$firstSegmentOutboundLayerCount+$firstSegmentOutboundNoLayerCount)&gt;1"/>
-
-                <xsl:if test="$firstSegmentLayerCount">
-                    <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($firstSegmentFromNode/@lon))*10000*$scale)"/>
-                    <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($firstSegmentFromNode/@lat))*10000*$scale*$projection)"/>
-                    <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($firstSegmentToNode/@lon))*10000*$scale)"/>
-                    <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($firstSegmentToNode/@lat))*10000*$scale*$projection)"/>
-                    <xsl:call-template name="drawSegmentFragment">
-                        <xsl:with-param name="x1" select="$x1"/>
-                        <xsl:with-param name="y1" select="$y1"/>
-                        <xsl:with-param name="x2" select="number($x1)+((number($x2)-number($x1)) div 10)"/>
-                        <xsl:with-param name="y2" select="number($y1)+((number($y2)-number($y1)) div 10)"/>
-                    </xsl:call-template>
-                </xsl:if>
-
-                <!-- Process the last segment in the way -->
-                <xsl:variable name="lastSegment" select="key(&quot;segmentById&quot;,$way/seg[last()]/@id)"/>
-                <xsl:variable name="lastSegmentFromNode" select="key(&quot;nodeById&quot;,$lastSegment/@from)"/>
-                <xsl:variable name="lastSegmentToNode" select="key(&quot;nodeById&quot;,$lastSegment/@to)"/>
-                <xsl:variable name="lastSegmentToNodeLayer" select="(count(key(&quot;segmentByFromNode&quot;,$lastSegmentToNode/@id)[@k=&quot;layer&quot; and @v &gt; $layer])+count(key(&quot;segmentByToNode&quot;,$lastSegmentToNode/@id)[@k=&quot;layer&quot; and @v &gt; $layer]))&gt;0"/>
-                <xsl:variable name="lastSegmentInboundLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByToNode&quot;,$lastSegmentToNode/@id)/@id)/tag[@k=&quot;layer&quot; and @v &gt;= $layer])"/>
-                <xsl:variable name="lastSegmentInboundNoLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByToNode&quot;,$lastSegmentToNode/@id)/@id)[count(tag[@k=&quot;layer&quot;])=0 and $layer &lt; 1])"/>
-                <xsl:variable name="lastSegmentOutboundLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByFromNode&quot;,$lastSegmentToNode/@id)/@id)/tag[@k=&quot;layer&quot; and @v &gt;= $layer])"/>
-                <xsl:variable name="lastSegmentOutboundNoLayerCount" select="count(key(&quot;wayBySegment&quot;,key(&quot;segmentByFromNode&quot;,$lastSegmentToNode/@id)/@id)[count(tag[@k=&quot;layer&quot;])=0 and $layer &lt; 1])"/>
-                <xsl:variable name="lastSegmentLayerCount" select="($lastSegmentInboundLayerCount+$lastSegmentInboundNoLayerCount+$lastSegmentOutboundLayerCount+$lastSegmentOutboundNoLayerCount)&gt;1"/>
-
-                <xsl:if test="$lastSegmentLayerCount">
-                    <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($lastSegmentFromNode/@lon))*10000*$scale)"/>
-                    <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($lastSegmentFromNode/@lat))*10000*$scale*$projection)"/>
-                    <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($lastSegmentToNode/@lon))*10000*$scale)"/>
-                    <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($lastSegmentToNode/@lat))*10000*$scale*$projection)"/>
-                    <xsl:call-template name="drawSegmentFragment">
-                        <xsl:with-param name="x1" select="number($x2)-((number($x2)-number($x1)) div 10)"/>
-                        <xsl:with-param name="y1" select="number($y2)-((number($y2)-number($y1)) div 10)"/>
-                        <xsl:with-param name="x2" select="$x2"/>
-                        <xsl:with-param name="y2" select="$y2"/>
-                    </xsl:call-template>
-                </xsl:if>
-            </xsl:if>
-
-            <!-- Now draw the way itself -->
-            <use xlink:href="#way_{$way/@id}">
-                <xsl:apply-templates select="$instruction/@*" mode="copyAttributes">
-                    <xsl:with-param name="classes" select="$classes"/>
-                </xsl:apply-templates>
-            </use>
-        </xsl:if>
-
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="drawTunnel">
+    <xsl:template name="drawWayWithSmartLinecaps">
         <xsl:param name="instruction"/>
-        <xsl:param name="way"/>
+        <xsl:param name="way"/>  <!-- The current way element if applicable -->
         <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
 
-        <xsl:choose>
-            <xsl:when test="$instruction/@width &gt; 0">
-                <!-- wide tunnels use a dashed line as wide as the road casing with a mask as wide as the road core which will be
-                rendered as a double dotted line -->
-                <mask id="mask_{@id}" maskUnits="userSpaceOnUse">
-                    <use xlink:href="#way_{@id}" style="stroke:black;fill:none;" class="{$instruction/@class}-core"/>
-                    <rect x="0px" y="0px" height="{$documentHeight}px" width="{$documentWidth}px" style="fill:white;"/>
-                </mask>
-                <use xlink:href="#way_{$way/@id}" mask="url(#mask_{@id})" style="stroke-dasharray:0.2,0.2;" class="{$instruction/@class}-casing"/>
-                <use xlink:href="#way_{$way/@id}" class="tunnel-casing" style="stroke-width:{$instruction/@width}px;"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <!-- narrow tunnels will use a single dotted line -->
-                <use xlink:href="#way_{$way/@id}">
-                    <xsl:apply-templates select="$instruction/@*" mode="copyAttributes">
-                        <xsl:with-param name="classes" select="$classes"/>
-                    </xsl:apply-templates>
-                </use>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="drawCircle">
+		<!-- The first half of the first segment and the last half of the last segment are treated differently from the main
+			part of the way path.  The main part is always rendered with a butt line-cap.  Each end fragement is rendered with
+			either a round line-cap, if it connects to some other path, or with its default line-cap if it is not connected
+			to anything.  That way, cul-de-sacs etc are terminated with round, square or butt as specified in the style for the
+			way. -->
+
+        <!-- First draw the middle section of the way with round linejoins and butt linecaps -->
+		<xsl:if test="count($way/seg) &gt; 1">
+			<xsl:call-template name='drawPath'>
+				<xsl:with-param name='pathId' select="concat('way_mid_',$way/@id)"/>
+				<xsl:with-param name='instruction' select='$instruction'/>
+				<xsl:with-param name='extraClasses'>osmarender-stroke-linecap-butt osmarender-no-marker-start osmarender-no-marker-end</xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+
+
+		<!-- For the first half segment in the way, count the number of segments that link to the from-node of this segment.
+			Also count links where the layer tag is less than the layer of this way, if there are links on a lower layer then
+			we can safely draw a butt line-cap because the lower layer will already have a round line-cap. -->
+        <!-- Process the first segment in the way -->
+        <xsl:variable name="firstSegment" select="key('segmentById',$way/seg[1]/@id)"/>
+        <xsl:variable name="firstSegmentFromNode" select="key('nodeById',$firstSegment/@from)"/>
+        <xsl:variable name="firstSegmentToNode" select="key('nodeById',$firstSegment/@to)"/>
+
+
+		<!-- Count the number of segments connecting to the from node. If there is only one (the current segment) then draw
+		     a default line.  -->
+		<xsl:variable name="firstSegmentConnectionCount" select="
+			count(key('segmentByToNode',$firstSegmentFromNode/@id)) +
+			count(key('segmentByFromNode',$firstSegmentFromNode/@id))
+			" />
+		<!-- Count the number of connectors at a layer lower than the current layer -->
+		<xsl:variable name="firstSegmentLowerLayerConnectionCount" select="
+			count(key('wayBySegment',key('segmentByToNode',$firstSegmentFromNode/@id)/@id)/tag[@k='layer' and @v &lt; $layer]) +
+			count(key('wayBySegment',key('segmentByFromNode',$firstSegmentFromNode/@id)/@id)/tag[@k='layer' and @v &lt; $layer]) +
+			count(key('wayBySegment',key('segmentByToNode',$firstSegmentFromNode/@id)/@id)[count(tag[@k='layer'])=0 and $layer &gt; 0]) +
+			count(key('wayBySegment',key('segmentByFromNode',$firstSegmentFromNode/@id)/@id)[count(tag[@k='layer'])=0 and $layer &gt; 0])
+			" />
+
+
+		<xsl:choose>
+			<xsl:when test="$firstSegmentConnectionCount=1">
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+					<xsl:with-param name="extraClasses">osmarender-no-marker-end</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="$firstSegmentLowerLayerConnectionCount>0">
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+					<xsl:with-param name="extraClasses">osmarender-stroke-linecap-butt osmarender-no-marker-end</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_start_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+					<xsl:with-param name="extraClasses">osmarender-stroke-linecap-round osmarender-no-marker-end</xsl:with-param>
+				</xsl:call-template>					
+			</xsl:otherwise>					
+		
+		</xsl:choose>
+
+
+        <!-- Process the last segment in the way -->
+        <xsl:variable name="lastSegment" select="key('segmentById',$way/seg[last()]/@id)"/>
+        <xsl:variable name="lastSegmentFromNode" select="key('nodeById',$lastSegment/@from)"/>
+        <xsl:variable name="lastSegmentToNode" select="key('nodeById',$lastSegment/@to)"/>
+
+		<!-- Count the number of segments connecting to the from node. If there is only one (the current segment) then draw
+		     a default line.  -->
+		<xsl:variable name="lastSegmentConnectionCount" select="
+			count(key('segmentByToNode',$lastSegmentToNode/@id)) +
+			count(key('segmentByFromNode',$lastSegmentToNode/@id))
+			" />
+		<!-- Count the number of connectors at a layer lower than the current layer -->
+		<xsl:variable name="lastSegmentLowerLayerConnectionCount" select="
+			count(key('wayBySegment',key('segmentByToNode',$lastSegmentToNode/@id)/@id)/tag[@k='layer' and @v &lt; $layer]) +
+			count(key('wayBySegment',key('segmentByFromNode',$lastSegmentToNode/@id)/@id)/tag[@k='layer' and @v &lt; $layer]) +
+			count(key('wayBySegment',key('segmentByToNode',$lastSegmentToNode/@id)/@id)[count(tag[@k='layer'])=0 and $layer &gt; 0]) +
+			count(key('wayBySegment',key('segmentByFromNode',$lastSegmentToNode/@id)/@id)[count(tag[@k='layer'])=0 and $layer &gt; 0])
+			" />
+
+
+		<xsl:choose>
+			<xsl:when test="$lastSegmentConnectionCount=1">
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+					<xsl:with-param name="extraClasses">osmarender-no-marker-start</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:when test="$lastSegmentLowerLayerConnectionCount>0">
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+					<xsl:with-param name="extraClasses">osmarender-stroke-linecap-butt osmarender-no-marker-start</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name='drawPath'>
+					<xsl:with-param name='pathId' select="concat('way_end_',$way/@id)"/>
+					<xsl:with-param name='instruction' select='$instruction'/>
+					<xsl:with-param name="extraClasses">osmarender-stroke-linecap-round osmarender-no-marker-start</xsl:with-param>
+				</xsl:call-template>					
+			</xsl:otherwise>					
+		
+		</xsl:choose>
+
+    </xsl:template>
+    
+    
+    <!-- Draw a circle for the current <node> element using the formatting of the current <circle> instruction -->
+    <xsl:template name="drawCircle">
         <xsl:param name="instruction"/>
 
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
@@ -478,7 +646,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the svg attributes from the <circle> instruction -->
         </circle>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="drawSymbol">
+    </xsl:template>
+	
+	
+    <!-- Draw a symbol for the current <node> element using the formatting of the current <symbol> instruction -->
+	<xsl:template name="drawSymbol">
         <xsl:param name="instruction"/>
 
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
@@ -494,7 +666,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/> <!-- Copy all the attributes from the <symbol> instruction -->
             </use>
         </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="renderText">
+    </xsl:template>
+    
+    
+    <!-- Render the appropriate attribute of the current <node> element using the formatting of the current <text> instruction -->
+    <xsl:template name="renderText">
         <xsl:param name="instruction"/>
 
         <xsl:variable name="x" select="($width)-((($topRightLongitude)-(@lon))*10000*$scale)"/>
@@ -507,36 +683,168 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:call-template name="getSvgAttributesFromOsmTags"/>
             <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
         </text>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="renderTextPath">
+    </xsl:template>
+    
+    
+    <!-- Render the appropriate attribute of the current <segment> element using the formatting of the current <textPath> instruction -->
+    <xsl:template name="renderTextPath">
         <xsl:param name="instruction"/>
         <xsl:param name="pathId"/>
-        <text>
-            <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
-            <textPath xlink:href="#{$pathId}">
-                <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
-                <xsl:call-template name="getSvgAttributesFromOsmTags"/>
-                <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
-            </textPath>
-        </text>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@k" mode="renderTextPath-text">
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@*" mode="renderTextPath-text">
+        <xsl:param name="pathDirection"/>
+		<xsl:param name='text'/>
+        
+		<xsl:variable name='pathLengthSquared'>
+			<xsl:call-template name='getPathLength'>
+				<xsl:with-param name='pathLengthMultiplier'>
+					<!-- This factor is used to adjust the path-length for comparison with text along a path to determine whether it will fit. -->
+					<xsl:choose>
+						<xsl:when test='$instruction/@textAttenuation'><xsl:value-of select='$instruction/@textAttenuation'/></xsl:when>
+						<xsl:when test='string($textAttenuation)'><xsl:value-of select='$textAttenuation'/></xsl:when>
+						<xsl:otherwise>99999999</xsl:otherwise>
+					</xsl:choose>
+				</xsl:with-param>
+				<xsl:with-param name='segments' select='seg'/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name='textLength' select='string-length($text)' />
+		<xsl:variable name='textLengthSquared100' select='($textLength)*($textLength)' />
+		<xsl:variable name='textLengthSquared90' select='($textLength *.9)*($textLength*.9)' />
+		<xsl:variable name='textLengthSquared80' select='($textLength *.8)*($textLength*.8)' />
+		<xsl:variable name='textLengthSquared70' select='($textLength *.7)*($textLength*.7)' />
+
+		<xsl:choose>
+			<xsl:when test='($pathLengthSquared) > $textLengthSquared100'>
+				<text>
+				    <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+				    <textPath xlink:href="#{$pathId}">
+				        <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
+				        <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+				        <xsl:value-of select="$text"/>
+				    </textPath>
+				</text>
+			</xsl:when>
+			<xsl:when test='($pathLengthSquared) > ($textLengthSquared90)'>
+				<text>
+				    <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+				    <textPath xlink:href="#{$pathId}">
+				        <xsl:attribute name='font-size'>90%</xsl:attribute>
+				        <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
+				        <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+				        <xsl:value-of select="$text"/>
+				    </textPath>
+				</text>			
+			</xsl:when>
+			<xsl:when test='($pathLengthSquared) > ($textLengthSquared80)'>
+				<text>
+				    <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+				    <textPath xlink:href="#{$pathId}">
+				        <xsl:attribute name='font-size'>80%</xsl:attribute>
+				        <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
+				        <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+				        <xsl:value-of select="$text"/>
+				    </textPath>
+				</text>			
+			</xsl:when>
+			<xsl:when test='($pathLengthSquared) > ($textLengthSquared70)'>
+				<text>
+				    <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-text"/>
+				    <textPath xlink:href="#{$pathId}">
+				        <xsl:attribute name='font-size'>70%</xsl:attribute>
+				        <xsl:apply-templates select="$instruction/@*" mode="renderTextPath-textPath"/>
+				        <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+				        <xsl:value-of select="$text"/>
+				    </textPath>
+				</text>			
+			</xsl:when>
+			<xsl:otherwise /> <!-- Otherwise don't render the text -->
+		</xsl:choose>
+    </xsl:template>
+    
+
+    <xsl:template name='getPathLength'>
+		<xsl:param name='sumLon' select='number("0")' /> <!-- initialise sum to zero -->
+		<xsl:param name='sumLat' select='number("0")' /> <!-- initialise sum to zero -->
+		<xsl:param name='segments'/>
+		<xsl:param name='pathLengthMultiplier'/>
+		<xsl:choose>
+			<xsl:when test='$segments'>
+				<xsl:variable name='segment' select='key("segmentById",$segments[1]/@id)' />
+				<xsl:variable name='fromNode' select='key("nodeById",$segment/@from)'/>
+				<xsl:variable name='toNode' select='key("nodeById",$segment/@to)'/>
+				<xsl:variable name='lengthLon' select='($fromNode/@lon)-($toNode/@lon)'/>
+				<xsl:variable name='absLengthLon'>
+					<xsl:choose>
+						<xsl:when test='$lengthLon &lt; 0'><xsl:value-of select='$lengthLon * -1'/></xsl:when>
+						<xsl:otherwise><xsl:value-of select='$lengthLon'/></xsl:otherwise>					
+					</xsl:choose>
+				</xsl:variable>				
+				<xsl:variable name='lengthLat' select='($fromNode/@lat)-($toNode/@lat)'/>
+				<xsl:variable name='absLengthLat'>
+					<xsl:choose>
+						<xsl:when test='$lengthLat &lt; 0'><xsl:value-of select='$lengthLat * -1'/></xsl:when>
+						<xsl:otherwise><xsl:value-of select='$lengthLat'/></xsl:otherwise>					
+					</xsl:choose>
+				</xsl:variable>				
+				<xsl:call-template name='getPathLength'>
+					<xsl:with-param name='sumLon' select='$sumLon+$absLengthLon'/>
+					<xsl:with-param name='sumLat' select='$sumLat+$absLengthLat'/>
+					<xsl:with-param name='segments' select='$segments[position()!=1]'/>
+					<xsl:with-param name='pathLengthMultiplier' select='$pathLengthMultiplier'/>
+				</xsl:call-template>			
+			</xsl:when>		
+			<xsl:otherwise>
+				<!-- Add the square of the total horzontal length to the square of the total vertical length to get the square of
+				     the total way length.  We don't have a sqrt() function so leave it squared.
+				     Multiply by 1,000 so that we are usually dealing with a values greater than 1.  Squares of values between 0 and 1
+				     are smaller and so not very useful.
+				     Multiply the latitude component by $projection to adjust for Mercator projection issues. 
+				     -->
+				<xsl:value-of select='(
+					(($sumLon*1000*$pathLengthMultiplier)*($sumLon*1000*$pathLengthMultiplier))+
+					(($sumLat*1000*$pathLengthMultiplier*$projection)*($sumLat*1000*$pathLengthMultiplier*$projection))
+					)'/> 
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+    
+    <!-- Suppress the following attributes, allow everything else -->
+    <xsl:template match="@startOffset|@method|@spacing|@lengthAdjust|@textLength|@k" mode="renderTextPath-text" />
+    
+    <xsl:template match="@*" mode="renderTextPath-text">
         <xsl:copy/>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@startOffset|@method|@spacing|@lengthAdjust|@textLength" mode="renderTextPath-textPath">
+    </xsl:template>
+    
+
+    <!-- Allow the following attributes, suppress everything else -->
+    <xsl:template match="@startOffset|@method|@spacing|@lengthAdjust|@textLength" mode="renderTextPath-textPath">
         <xsl:copy/>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@*" mode="renderTextPath-textPath">
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="renderArea">
+    </xsl:template>
+    
+    <xsl:template match="@*" mode="renderTextPath-textPath" />
+    
+
+    <!-- If there are any tags like <tag k="svg:font-size" v="5"/> then add these as attributes of the svg output -->
+    <xsl:template name="getSvgAttributesFromOsmTags">
+        <xsl:for-each select="tag[contains(@k,'svg:')]">
+            <xsl:attribute name="{substring-after(@k,'svg:')}"><xsl:value-of select="@v"/></xsl:attribute>
+        </xsl:for-each>
+    </xsl:template>
+    
+
+    <xsl:template name="renderArea">
         <xsl:param name="instruction"/>
         <xsl:param name="pathId"/>
 
         <use xlink:href="#{$pathId}">
             <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
         </use>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="getSvgAttributesFromOsmTags">
-        <xsl:for-each select="tag[contains(@k,&quot;svg:&quot;)]">
-            <xsl:attribute name="{substring-after(@k,&quot;svg:&quot;)}"><xsl:value-of select="@v"/></xsl:attribute>
-        </xsl:for-each>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="drawUntaggedSegments">
+
+    
+	<!-- Drawing of segments -->
+    <xsl:template name="drawUntaggedSegments">
         <g id="segments" inkscape:groupmode="layer" inkscape:label="Segments">
             <xsl:for-each select="$data/osm/segment[not(key('wayBySegment', @id))]">
                 <xsl:if test="not(tag[@key!='created_by'])">
@@ -551,41 +859,55 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             </xsl:for-each>
         </g>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" match="line">
+    
+
+
+	<!-- Templates to process line, circle, text, etc. instructions -->
+    <!-- Each template is passed a variable containing the set of elements that need to
+         be processed.  The set of elements is already determined by the rules, so
+         these templates don't need to know anything about the rules context they are in. -->
+
+    <!-- Process a <line> instruction -->
+    <xsl:template match="line">
         <xsl:param name="elements"/>
         <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
 
         <!-- This is the instruction that is currently being processed -->
         <xsl:variable name="instruction" select="."/>
 
         <g>
-            <xsl:apply-templates select="@*" mode="copyAttributes"> <!-- Add all the svg attributes of the <line> instruction to the <g> element -->
-                <xsl:with-param name="classes" select="$classes"/>
-            </xsl:apply-templates>
+            <xsl:apply-templates select="@*" mode="copyAttributes" /> <!-- Add all the svg attributes of the <line> instruction to the <g> element -->
 
             <!-- For each segment and way -->
             <xsl:apply-templates select="$elements" mode="line">
                 <xsl:with-param name="instruction" select="$instruction"/>
                 <xsl:with-param name="layer" select="$layer"/>
-                <xsl:with-param name="classes" select="$classes"/>
             </xsl:apply-templates>
 
         </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="*" mode="line"/><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="segment" mode="line">
+    </xsl:template>
+    
+
+    <!-- Suppress output of any unhandled elements -->
+    <xsl:template match="*" mode="line"/>
+    
+
+    <!-- Draw lines for a segment -->
+    <xsl:template match="segment" mode="line">
         <xsl:param name="instruction"/>
-        <xsl:param name="classes"/>
 
         <xsl:call-template name="drawLine">
             <xsl:with-param name="instruction" select="$instruction"/>
             <xsl:with-param name="segment" select="."/>
-            <xsl:with-param name="classes" select="$classes"/>
         </xsl:call-template>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="way" mode="line">
+    </xsl:template>
+    
+
+    <!-- Draw lines for a way (draw all the segments that belong to the way) -->
+    <xsl:template match="way" mode="line">
         <xsl:param name="instruction"/>
         <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
 
         <!-- The current <way> element -->
         <xsl:variable name="way" select="."/>
@@ -594,47 +916,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
             <xsl:with-param name="instruction" select="$instruction"/>
             <xsl:with-param name="way" select="$way"/>
             <xsl:with-param name="layer" select="$layer"/>
-            <xsl:with-param name="classes" select="$classes"/>
         </xsl:call-template>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" match="tunnel">
+    </xsl:template>
+    
+    
+    <!-- Process an <area> instruction -->
+	<xsl:template match="area">
         <xsl:param name="elements"/>
-        <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
-
-        <!-- This is the instruction that is currently being processed -->
-        <xsl:variable name="instruction" select="."/>
-
-        <g>
-            <xsl:apply-templates select="@*" mode="copyAttributes"> <!-- Add all the svg attributes of the <tunnel> instruction to the <g> element -->
-                <xsl:with-param name="classes" select="$classes"/>
-            </xsl:apply-templates>
-
-            <!-- For each segment and way -->
-            <xsl:apply-templates select="$elements" mode="tunnel">
-                <xsl:with-param name="instruction" select="$instruction"/>
-                <xsl:with-param name="layer" select="$layer"/>
-                <xsl:with-param name="classes" select="$classes"/>
-            </xsl:apply-templates>
-        </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="way" mode="tunnel">
-        <xsl:param name="instruction"/>
-        <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
-
-        <!-- The current <way> element -->
-        <xsl:variable name="way" select="."/>
-
-        <xsl:call-template name="drawTunnel">
-            <xsl:with-param name="instruction" select="$instruction"/>
-            <xsl:with-param name="way" select="$way"/>
-            <xsl:with-param name="layer" select="$layer"/>
-            <xsl:with-param name="classes" select="$classes"/>
-        </xsl:call-template>
-
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" match="area">
-        <xsl:param name="elements"/>
-        <xsl:param name="classes"/>
 
         <!-- This is the instruction that is currently being processed -->
         <xsl:variable name="instruction" select="."/>
@@ -647,59 +936,351 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
                 <xsl:with-param name="instruction" select="$instruction"/>
             </xsl:apply-templates>
         </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="*" mode="area"/><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="way" mode="area">
+    </xsl:template>
+    
+    
+	<!-- Discard anything that is not matched by a more specific template -->	
+	<xsl:template match="*" mode="area"/>
+	
+	
+    <!-- Draw area for a <way> -->
+	<xsl:template match="way" mode="area">
         <xsl:param name="instruction"/>
 
         <xsl:call-template name="generateAreaPath"/>
 
         <xsl:call-template name="renderArea">
             <xsl:with-param name="instruction" select="$instruction"/>
-            <xsl:with-param name="pathId" select="concat(&quot;area_&quot;,@id)"/>
+            <xsl:with-param name="pathId" select="concat('area_',@id)"/>
         </xsl:call-template>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="circle">
+    </xsl:template>
+    
+    
+    <!-- Process <circle> instruction -->
+    <xsl:template match="circle">
         <xsl:param name="elements"/>
-        <xsl:param name="classes"/>
 
         <!-- This is the instruction that is currently being processed -->
         <xsl:variable name="instruction" select="."/>
 
-        <xsl:for-each select="$elements[name()=&quot;node&quot;]">
+        <xsl:for-each select="$elements[name()='node']">
             <xsl:call-template name="drawCircle">
                 <xsl:with-param name="instruction" select="$instruction"/>
             </xsl:call-template>
         </xsl:for-each>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="symbol">
+    </xsl:template>
+    
+    
+    <!-- Process a <symbol> instruction -->
+    <xsl:template match="symbol">
         <xsl:param name="elements"/>
-        <xsl:param name="classes"/>
 
         <!-- This is the instruction that is currently being processed -->
         <xsl:variable name="instruction" select="."/>
 
-        <xsl:for-each select="$elements[name()=&quot;node&quot;]">
+        <xsl:for-each select="$elements[name()='node']">
             <xsl:call-template name="drawSymbol">
                 <xsl:with-param name="instruction" select="$instruction"/>
             </xsl:call-template>
         </xsl:for-each>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="text">
+
+    </xsl:template>
+    
+    
+    <!-- wayMarker instruction.  Draws a marker on a node that is perpendicular to a way that passes through the node.
+         If more than one way passes through the node then the result is a bit unspecified.  -->
+    <xsl:template match="wayMarker">
         <xsl:param name="elements"/>
-        <xsl:param name="classes"/>
+
+        <!-- This is the instruction that is currently being processed -->
+        <xsl:variable name="instruction" select="."/>
+
+        <g>
+			<!-- Add all the svg attributes of the <wayMarker> instruction to the <g> element -->
+ 			<xsl:apply-templates select="@*" mode="copyAttributes" />
+
+			<!-- Process each matched node in turn -->
+			<xsl:for-each select="$elements[name()='node']">
+				<xsl:variable name='previousSegment' select="key('segmentByToNode',@id)" />
+				<xsl:variable name='nextSegment' select="key('segmentByFromNode',@id)" />
+
+				<xsl:variable name='path'>
+					<xsl:choose>
+						<xsl:when test='$previousSegment and $nextSegment'>
+							<xsl:for-each select='$previousSegment[1]'>
+								<xsl:call-template name="segmentMoveToStart"/>
+								<xsl:call-template name="segmentLineToEnd"/>
+							</xsl:for-each>
+							<xsl:for-each select='$nextSegment[1]'>
+								<xsl:call-template name="segmentLineToEnd"/>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:when test='$previousSegment'>
+							<xsl:for-each select='$previousSegment[1]'>
+								<xsl:call-template name="segmentMoveToStart"/>
+								<xsl:call-template name="segmentLineToEnd"/>
+								<xsl:call-template name="segmentLineToEnd"/> <!-- sic -->
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:when test='$nextSegment'>
+							<xsl:for-each select='$nextSegment[1]'>
+								<xsl:call-template name="segmentMoveToStart"/> 
+								<xsl:call-template name="segmentLineToStart"/> <!-- sic -->
+								<xsl:call-template name="segmentLineToEnd"/>
+							</xsl:for-each>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
+
+			  <path id="nodePath_{@id}" d="{$path}"/>
+				
+			  <use xlink:href="#nodePath_{@id}">
+			      <xsl:apply-templates select="$instruction/@*" mode="copyAttributes" />
+			  </use>
+			</xsl:for-each>
+		</g>
+
+    </xsl:template>
+
+
+	<!-- Process an <areaText> instruction -->
+    <xsl:template match="areaText">
+        <xsl:param name="elements"/>
+
+        <!-- This is the instruction that is currently being processed -->
+        <xsl:variable name="instruction" select="."/>
+
+        <!-- Select all <way> elements that have a key that matches the k attribute of the text instruction -->
+        <xsl:apply-templates select="$elements[name()='way'][tag[@k=$instruction/@k]]" mode="areaTextPath">
+            <xsl:with-param name="instruction" select="$instruction"/>
+        </xsl:apply-templates>
+    </xsl:template>
+
+
+    <xsl:template match="*" mode="areaTextPath"/>
+
+
+	<xsl:template match="way" mode="areaTextPath">
+        <xsl:param name="instruction"/>
+
+        <!-- The current <way> element -->
+        <xsl:variable name="way" select="."/>
+
+        <xsl:call-template name="renderAreaText">
+            <xsl:with-param name="instruction" select="$instruction"/>
+            <xsl:with-param name="pathId" select="concat('way_normal_',@id)"/>
+        </xsl:call-template>
+
+    </xsl:template>
+
+
+    <xsl:template name="renderAreaText">
+        <xsl:param name="instruction"/>
+
+		<xsl:variable name='left'>
+			<xsl:call-template name='areaExtentLeft'>
+				<xsl:with-param name='seg' select='./seg[1]'/> <!-- First segment -->
+				<xsl:with-param name='left' select='key("nodeById",key("segmentById",./seg[1]/@id)/@from)/@lon'/> <!-- Longitude of first segment -->
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name='right'>
+			<xsl:call-template name='areaExtentRight'>
+				<xsl:with-param name='seg' select='./seg[1]'/> <!-- First segment -->
+				<xsl:with-param name='right' select='key("nodeById",key("segmentById",./seg[1]/@id)/@from)/@lon'/> <!-- Longitude of first segment -->
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name='top'>
+			<xsl:call-template name='areaExtentTop'>
+				<xsl:with-param name='seg' select='./seg[1]'/> <!-- First segment -->
+				<xsl:with-param name='top' select='key("nodeById",key("segmentById",./seg[1]/@id)/@from)/@lat'/> <!-- Latitude of first segment -->
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name='bottom'>
+			<xsl:call-template name='areaExtentBottom'>
+				<xsl:with-param name='seg' select='./seg[1]'/> <!-- First segment -->
+				<xsl:with-param name='bottom' select='key("nodeById",key("segmentById",./seg[1]/@id)/@from)/@lat'/> <!-- Latitude of first segment -->
+			</xsl:call-template>
+		</xsl:variable>
+	
+		<xsl:variable name='midLon'><xsl:value-of select='$left+(($right - $left) div 2)'/></xsl:variable>	
+		<xsl:variable name='midLat'><xsl:value-of select='$bottom+(($top - $bottom) div 2)'/></xsl:variable>	
+		
+        <xsl:variable name="x" select="($width)-((($topRightLongitude)-($midLon))*10000*$scale)"/>
+        <xsl:variable name="y" select="($height)+((($bottomLeftLatitude)-($midLat))*10000*$scale*$projection)"/>
+
+        <text>
+            <xsl:apply-templates select="$instruction/@*" mode="copyAttributes"/>
+            <xsl:attribute name="x"><xsl:value-of select="$x"/></xsl:attribute>
+            <xsl:attribute name="y"><xsl:value-of select="$y"/></xsl:attribute>
+            <xsl:call-template name="getSvgAttributesFromOsmTags"/>
+            <xsl:value-of select="tag[@k=$instruction/@k]/@v"/>
+        </text>
+    </xsl:template>
+
+
+	<xsl:template name='areaExtentLeft'>
+		<xsl:param name='seg'/>
+		<xsl:param name='left'/>
+		
+		<xsl:variable name='fromLon' select='key("nodeById",key("segmentById",$seg/@id)/@from)/@lon'/>
+		<xsl:variable name='toLon' select='key("nodeById",key("segmentById",$seg/@id)/@to)/@lon'/>
+		<xsl:variable name='leftmostLon'>
+			<xsl:choose>
+				<xsl:when test='$fromLon>$toLon'><xsl:value-of select='$toLon'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$fromLon'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name='newLeft'>
+			<xsl:choose>
+				<xsl:when test='$left>$leftmostLon'><xsl:value-of select='$leftmostLon'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$left'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+	
+		<xsl:choose>
+			<xsl:when test="$seg/following-sibling::seg[1]">
+				<xsl:call-template name='areaExtentLeft'>
+					<xsl:with-param name='seg' select='$seg/following-sibling::seg[1]'/> <!-- next segment -->
+					<xsl:with-param name='left' select='$newLeft'/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select='$newLeft'/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<xsl:template name='areaExtentRight'>
+		<xsl:param name='seg'/>
+		<xsl:param name='right'/>
+		
+		<xsl:variable name='fromLon' select='key("nodeById",key("segmentById",$seg/@id)/@from)/@lon'/>
+		<xsl:variable name='toLon' select='key("nodeById",key("segmentById",$seg/@id)/@to)/@lon'/>
+		<xsl:variable name='rightmostLon'>
+			<xsl:choose>
+				<xsl:when test='$fromLon>$toLon'><xsl:value-of select='$fromLon'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$toLon'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name='newRight'>
+			<xsl:choose>
+				<xsl:when test='$rightmostLon>$right'><xsl:value-of select='$rightmostLon'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$right'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+	
+		<xsl:choose>
+			<xsl:when test="$seg/following-sibling::seg[1]">
+				<xsl:call-template name='areaExtentRight'>
+					<xsl:with-param name='seg' select='$seg/following-sibling::seg[1]'/> <!-- next segment -->
+					<xsl:with-param name='right' select='$newRight'/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select='$newRight'/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<xsl:template name='areaExtentTop'>
+		<xsl:param name='seg'/>
+		<xsl:param name='top'/>
+		
+		<xsl:variable name='fromLat' select='key("nodeById",key("segmentById",$seg/@id)/@from)/@lat'/>
+		<xsl:variable name='toLat' select='key("nodeById",key("segmentById",$seg/@id)/@to)/@lat'/>
+		<xsl:variable name='topmostLat'>
+			<xsl:choose>
+				<xsl:when test='$fromLat>$toLat'><xsl:value-of select='$fromLat'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$toLat'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name='newTop'>
+			<xsl:choose>
+				<xsl:when test='$top>$topmostLat'><xsl:value-of select='$top'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$topmostLat'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+	
+		<xsl:choose>
+			<xsl:when test="$seg/following-sibling::seg[1]">
+				<xsl:call-template name='areaExtentTop'>
+					<xsl:with-param name='seg' select='$seg/following-sibling::seg[1]'/> <!-- next segment -->
+					<xsl:with-param name='top' select='$newTop'/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select='$newTop'/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<xsl:template name='areaExtentBottom'>
+		<xsl:param name='seg'/>
+		<xsl:param name='bottom'/>
+		
+		<xsl:variable name='fromLat' select='key("nodeById",key("segmentById",$seg/@id)/@from)/@lat'/>
+		<xsl:variable name='toLat' select='key("nodeById",key("segmentById",$seg/@id)/@to)/@lat'/>
+		<xsl:variable name='bottommostLat'>
+			<xsl:choose>
+				<xsl:when test='$fromLat>$toLat'><xsl:value-of select='$toLat'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$fromLat'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name='newBottom'>
+			<xsl:choose>
+				<xsl:when test='$bottommostLat>$bottom'><xsl:value-of select='$bottom'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$bottommostLat'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+	
+		<xsl:choose>
+			<xsl:when test="$seg/following-sibling::seg[1]">
+				<xsl:call-template name='areaExtentBottom'>
+					<xsl:with-param name='seg' select='$seg/following-sibling::seg[1]'/> <!-- next segment -->
+					<xsl:with-param name='bottom' select='$newBottom'/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select='$newBottom'/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+    <!-- Process a <text> instruction -->
+    <xsl:template match="text">
+        <xsl:param name="elements"/>
 
         <!-- This is the instruction that is currently being processed -->
         <xsl:variable name="instruction" select="."/>
 
         <!-- Select all <node> elements that have a key that matches the k attribute of the text instruction -->
-        <xsl:for-each select="$elements[name()=&quot;node&quot;][tag[@k=$instruction/@k]]">
+        <xsl:for-each select="$elements[name()='node'][tag[@k=$instruction/@k]]">
                 <xsl:call-template name="renderText">
                     <xsl:with-param name="instruction" select="$instruction"/>
                 </xsl:call-template>
         </xsl:for-each>
 
-        <!-- Select all <segment> and <way> elements that have a key that matches the k attribute of the text instruction -->
-        <xsl:apply-templates select="$elements[name()=&quot;segment&quot; or name()=&quot;way&quot;][tag[@k=$instruction/@k]]" mode="textPath">
+        <!-- Select all <segment> and <way> elements -->
+        <xsl:apply-templates select="$elements[name()='segment' or name()='way']" mode="textPath">
             <xsl:with-param name="instruction" select="$instruction"/>
         </xsl:apply-templates>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="*" mode="textPath"/><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="segment" mode="textPath">
+    </xsl:template>
+    
+    
+    <!-- Suppress output of any unhandled elements -->
+    <xsl:template match="*" mode="textPath"/>
+    
+    
+    <!-- Render textPaths for a segment -->
+    <xsl:template match="segment" mode="textPath">
         <xsl:param name="instruction"/>
 
         <!-- The current <segment> element -->
@@ -711,34 +1292,83 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
         <xsl:call-template name="renderTextPath">
             <xsl:with-param name="instruction" select="$instruction"/>
-            <xsl:with-param name="pathId" select="concat(&quot;segment_&quot;,@id)"/>
+            <xsl:with-param name="pathId" select="concat('segment_',@id)"/>
         </xsl:call-template>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="way" mode="textPath">
+    </xsl:template>
+    
+    
+    <!-- Render textPaths for a way -->
+    <xsl:template match="way" mode="textPath">
         <xsl:param name="instruction"/>
 
-        <!-- The current <way> element -->
-        <xsl:variable name="way" select="."/>
+		<!-- The current <way> element -->
+		<xsl:variable name="way" select="."/>
 
-        <xsl:call-template name="renderTextPath">
-            <xsl:with-param name="instruction" select="$instruction"/>
-            <xsl:with-param name="pathId" select="concat(&quot;way_&quot;,@id,&quot;t&quot;)"/>
-        </xsl:call-template>
+		<xsl:variable name='text'>
+			<xsl:choose>
+				<xsl:when test='$instruction/@k'><xsl:value-of select='tag[@k=$instruction/@k]/@v'/></xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select='$instruction' mode='textFormat'>
+						<xsl:with-param name='way' select='$way'/>
+					</xsl:apply-templates>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateSegmentPath">
+		<xsl:if test='string($text)'>
+
+			<xsl:variable name="pathDirection">
+			    <xsl:choose>
+					<!-- Manual override, reverse direction -->
+			        <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">reverse</xsl:when>
+					<!-- Manual override, normal direction -->
+			        <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">normal</xsl:when>
+					<!-- Automatic, reverse direction -->
+			        <xsl:when test="(key('nodeById',key('segmentById',seg[1]/@id)/@from)/@lon &gt; key('nodeById',key('segmentById',seg[last()]/@id)/@to)/@lon)">reverse</xsl:when>
+					<!-- Automatic, normal direction -->
+			        <xsl:otherwise>normal</xsl:otherwise>
+			    </xsl:choose>
+			</xsl:variable>
+
+			<xsl:variable name="wayPath">
+			    <xsl:choose>
+					<!-- Normal -->
+			        <xsl:when test='$pathDirection="normal"'>
+						<xsl:value-of select="concat('way_normal_',@id)"/>
+			        </xsl:when>
+					<!-- Reverse -->
+			        <xsl:otherwise>
+						<xsl:value-of select="concat('way_reverse_',@id)"/>
+			        </xsl:otherwise>
+			    </xsl:choose>
+			</xsl:variable>
+
+			<xsl:call-template name="renderTextPath">
+			    <xsl:with-param name="instruction" select="$instruction"/>
+			    <xsl:with-param name="pathId" select="$wayPath"/>
+			    <xsl:with-param name="pathDirection" select="$pathDirection"/>
+			    <xsl:with-param name="text" select="$text"/>
+			</xsl:call-template>
+		</xsl:if>
+    </xsl:template>
+    
+    
+    <!-- Generate a way path for the current segment -->
+    <xsl:template name="generateSegmentPath">
         <xsl:variable name="pathData">
             <xsl:choose>
 				<!-- Manual override -->
-                <xsl:when test="tag[@k=&quot;name_direction&quot;]/@v=&quot;-1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;-1&quot;">
+                <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">
                     <xsl:call-template name="segmentMoveToEnd"/>
                     <xsl:call-template name="segmentLineToStart"/>
                 </xsl:when>
-                <xsl:when test="tag[@k=&quot;name_direction&quot;]/@v=&quot;1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;1&quot;">
+                <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">
                     <xsl:call-template name="segmentMoveToStart"/>
                     <xsl:call-template name="segmentLineToEnd"/>
                 </xsl:when>
                 <!-- Automatic direction -->
-                <xsl:when test="(key(&quot;nodeById&quot;,@from)/@lon &gt; key(&quot;nodeById&quot;,@to)/@lon)">
+                <xsl:when test="(key('nodeById',@from)/@lon &gt; key('nodeById',@to)/@lon)">
                     <xsl:call-template name="segmentMoveToEnd"/>
                     <xsl:call-template name="segmentLineToStart"/>
                 </xsl:when>
@@ -751,55 +1381,100 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
         <path id="segment_{@id}" d="{$pathData}"/>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateWayPath">
+    </xsl:template>
+    
 
-        <!-- Generate the path for the way that will be used by the street
-        name rendering. This is horribly inefficient, because we will later
-        also have the path used for the rendering of the path itself. So
-        each path is twice in the SVG file. But this path here needs to
-        have the right direction for the names to render right way up
-        and the other path needs to be the right direction for rendering
-        the oneway arrows. This can probably be done better, but currently
-        I don't know how. -->
-        <xsl:variable name="pathData">
+	<!-- Process extended form of text instruction -->
+	<xsl:template match='text' mode='textFormat'>
+		<xsl:param name='way'/>
+		
+		<xsl:apply-templates mode='textFormat'>
+			<xsl:with-param name='way' select='$way'/>
+		</xsl:apply-templates>
+	</xsl:template>
+
+
+	<!-- Substitute a tag in a text instruction -->
+	<xsl:template match='text/tag' mode='textFormat'>
+		<xsl:param name='way'/>
+		
+		<xsl:variable name='key' select='@k'/>
+		<xsl:variable name='value'>
+			<xsl:choose>
+				<xsl:when test='$key="osm:user"'><xsl:value-of select='$way/@user'/></xsl:when>
+				<xsl:when test='$key="osm:timestamp"'><xsl:value-of select='$way/@timestamp'/></xsl:when>
+				<xsl:when test='$key="osm:id"'><xsl:value-of select='$way/@id'/></xsl:when>
+				<xsl:otherwise><xsl:value-of select='$way/tag[@k=$key]/@v'/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test='string($value)'><xsl:value-of select='$value'/></xsl:when>
+			<xsl:otherwise><xsl:value-of select='@default'/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+    
+    <!-- Generate a way path for the current way element -->
+    <xsl:template name="generateWayPaths">
+
+		<!-- Generate a normal way path -->
+        <xsl:variable name="pathWayNormal">
+			<xsl:call-template name="generateWayPathNormal"/>
+        </xsl:variable>
+        <path id="way_normal_{@id}" d="{$pathWayNormal}"/>
+
+		<!-- Generate a reverse way path (if needed) -->
+        <xsl:variable name="pathWayReverse">
             <xsl:choose>
 				<!-- Manual override, reverse direction -->
-                <xsl:when test="tag[@k=&quot;name_direction&quot;]/@v=&quot;-1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;-1&quot;">
+                <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">
 					<xsl:call-template name="generateWayPathReverse"/>
                 </xsl:when>
 				<!-- Manual override, normal direction -->
-                <xsl:when test="tag[@k=&quot;name_direction&quot;]/@v=&quot;1&quot; or tag[@k=&quot;osmarender:nameDirection&quot;]/@v=&quot;1&quot;">
-					<xsl:call-template name="generateWayPathNormal"/>
+                <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">
+					<!-- Generate nothing -->
                 </xsl:when>
 				<!-- Automatic, reverse direction -->
-                <xsl:when test="(key(&quot;nodeById&quot;,key(&quot;segmentById&quot;,seg[1]/@id)/@from)/@lon &gt; key(&quot;nodeById&quot;,key(&quot;segmentById&quot;,seg[last()]/@id)/@to)/@lon)">
+                <xsl:when test="(key('nodeById',key('segmentById',seg[1]/@id)/@from)/@lon &gt; key('nodeById',key('segmentById',seg[last()]/@id)/@to)/@lon)">
 					<xsl:call-template name="generateWayPathReverse"/>
                 </xsl:when>
-				<!-- Automatic, normal direction -->
-                <xsl:otherwise>
-					<xsl:call-template name="generateWayPathNormal"/>
-                </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+		<xsl:if test="$pathWayReverse!=''">
+	        <path id="way_reverse_{@id}" d="{$pathWayReverse}"/>	
+		</xsl:if>
 
-        <path id="way_{@id}t" d="{$pathData}"/>
-
-        <!-- Generate the path for the way itself. Used for rendering the
-        way and, possibly, oneway arrows. -->
-        <xsl:variable name="pathDataFixed">
-			<xsl:call-template name="generateWayPathNormal"/>
+        <!-- Generate the start, middle and end paths needed for smart-linecaps (TM). -->
+        <xsl:variable name="pathWayStart">
+			<xsl:call-template name="generatePathWayStart"/>
         </xsl:variable>
+        <path id="way_start_{@id}" d="{$pathWayStart}"/>
 
-        <path id="way_{@id}" d="{$pathDataFixed}"/>
+		<xsl:if test="count(seg) &gt; 1">
+			<xsl:variable name="pathWayMid">
+				<xsl:call-template name="generatePathWayMid"/>
+			</xsl:variable>
+			<path id="way_mid_{@id}" d="{$pathWayMid}"/>
+		</xsl:if>
+        
+        <xsl:variable name="pathWayEnd">
+			<xsl:call-template name="generatePathWayEnd"/>
+        </xsl:variable>
+        <path id="way_end_{@id}" d="{$pathWayEnd}"/>
 
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="generateWayPathNormal">
+    </xsl:template>
+
+    
+    <!-- Generate a way path in the normal order of the segments in the way -->
+    <xsl:template name="generateWayPathNormal">
 		<xsl:choose>
 			<xsl:when test="$bFrollo">			
-				<xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
+				<xsl:for-each select="seg[key('segmentById',@id)]">
 				    <xsl:variable name="segmentId" select="@id"/>
-					<xsl:variable name="bReverseSeg" select="@osma:reverse=&quot;1&quot;"/>
-					<xsl:variable name="bSubPath" select="(position()=1) or (@osma:sub-path=&quot;1&quot;)"/>
-				    <xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
+					<xsl:variable name="bReverseSeg" select="@osma:reverse='1'"/>
+					<xsl:variable name="bSubPath" select="(position()=1) or (@osma:sub-path='1')"/>
+				    <xsl:for-each select="key('segmentById',$segmentId)">
 						<xsl:choose>
 							<xsl:when test="$bReverseSeg">
 								<xsl:if test="$bSubPath">
@@ -818,10 +1493,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 				</xsl:for-each>				
 			</xsl:when>
 			<xsl:otherwise> <!-- Not pre-processed by frollo -->
-			    <xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
+			    <xsl:for-each select="seg[key('segmentById',@id)]">
 					<xsl:variable name="segmentId" select="@id"/>
-					<xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,@id)/@from=key(&quot;segmentById&quot;,preceding-sibling::seg[1]/@id)/@to"/>
-					<xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
+					<xsl:variable name="linkedSegment" select="key('segmentById',@id)/@from=key('segmentById',preceding-sibling::seg[1]/@id)/@to"/>
+					<xsl:for-each select="key('segmentById',$segmentId)">
 						<xsl:if test="not($linkedSegment)">
 							<xsl:call-template name="segmentMoveToStart"/>
 						</xsl:if>
@@ -830,15 +1505,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 				</xsl:for-each>
 			</xsl:otherwise>		
 		</xsl:choose>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="generateWayPathReverse">
+    </xsl:template>
+    
+    
+    <!-- Generate a way path in the reverse order of the segments in the way -->
+    <xsl:template name="generateWayPathReverse">
 		<xsl:choose>
 			<xsl:when test="$bFrollo">			
 				<xsl:for-each select="seg">
 				    <xsl:sort select="position()" data-type="number" order="descending"/>
 				    <xsl:variable name="segmentId" select="@id"/>
-					<xsl:variable name="bReverseSeg" select="@osma:reverse=&quot;1&quot;"/>
-					<xsl:variable name="bSubPath" select="(position()=1) or (preceding-sibling::seg/@osma:sub-path=&quot;1&quot;)"/>
-				    <xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
+					<xsl:variable name="bReverseSeg" select="@osma:reverse='1'"/>
+					<xsl:variable name="bSubPath" select="(position()=1) or (preceding-sibling::seg/@osma:sub-path='1')"/>
+				    <xsl:for-each select="key('segmentById',$segmentId)">
 						<xsl:choose>
 							<xsl:when test="$bReverseSeg">
 								<xsl:if test="$bSubPath">
@@ -860,29 +1539,179 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 				<xsl:for-each select="seg">
 				    <xsl:sort select="position()" data-type="number" order="descending"/>
 				    <xsl:variable name="segmentId" select="@id"/>
-				    <xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,following-sibling::seg[1]/@id)/@from=key(&quot;segmentById&quot;,@id)/@to"/>
-				    <xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
+				    <xsl:variable name="linkedSegment" select="key('segmentById',following-sibling::seg[1]/@id)/@from=key('segmentById',@id)/@to"/>
+				    <xsl:for-each select="key('segmentById',$segmentId)">
 						<xsl:if test="not($linkedSegment)">
-							<xsl:call-template name="segmentMoveToStart"/>
+							<xsl:call-template name="segmentMoveToEnd"/>
 						</xsl:if>
-						<xsl:call-template name="segmentLineToEnd"/>
+						<xsl:call-template name="segmentLineToStart"/>
 				    </xsl:for-each>
 				</xsl:for-each>	
 			</xsl:otherwise>
 		</xsl:choose>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="generateAreaPath">
+    </xsl:template>
+
+
+    <!-- This template generates two paths, one for each end of a way.  The first segment is cut in two so that the join
+         between the two paths is not at an angle.  -->
+    <xsl:template name="generatePathWayStart">
+		<xsl:choose>
+			<xsl:when test="$bFrollo">
+				<xsl:for-each select="seg[key('segmentById',@id)][1]">
+				    <xsl:variable name="segmentId" select="@id"/>
+					<xsl:variable name="bReverseSeg" select="@osma:reverse='1'"/>
+					<xsl:variable name="bSubPath" select="(position()=1) or (@osma:sub-path='1')"/>
+				    <xsl:for-each select="key('segmentById',$segmentId)">
+						<xsl:choose>
+							<xsl:when test="$bReverseSeg">
+								<xsl:if test="$bSubPath">
+								    <xsl:call-template name="segmentMoveToEnd"/>
+								</xsl:if>
+								<xsl:call-template name="segmentLineToMidpointMinus"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="$bSubPath">
+								    <xsl:call-template name="segmentMoveToStart"/>
+								</xsl:if>
+								<xsl:call-template name="segmentLineToMidpointPlus"/>
+							</xsl:otherwise>				
+						</xsl:choose>
+				    </xsl:for-each>
+				</xsl:for-each>	
+			</xsl:when>
+			<xsl:otherwise> <!-- Not pre-processed by frollo -->
+			    <xsl:for-each select="seg[key('segmentById',@id)][1]">
+					<xsl:variable name="segmentId" select="@id"/>
+					<xsl:variable name="linkedSegment" select="key('segmentById',@id)/@from=key('segmentById',preceding-sibling::seg[1]/@id)/@to"/>
+					<xsl:for-each select="key('segmentById',$segmentId)">
+						<xsl:if test="not($linkedSegment)">
+							<xsl:call-template name="segmentMoveToStart"/>
+						</xsl:if>
+						<xsl:call-template name="segmentLineToMidpointPlus"/>
+					</xsl:for-each>
+				</xsl:for-each>
+			</xsl:otherwise>		
+		</xsl:choose>
+    </xsl:template>
+
+
+    <xsl:template name="generatePathWayEnd">
+		<xsl:choose>
+			<xsl:when test="$bFrollo">
+				<xsl:for-each select="seg[key('segmentById',@id)][position()=last()]">
+				    <xsl:variable name="segmentId" select="@id"/>
+					<xsl:variable name="bReverseSeg" select="@osma:reverse='1'"/>
+					<xsl:variable name="bSubPath" select="(position()=1) or (@osma:sub-path='1')"/>
+				    <xsl:for-each select="key('segmentById',$segmentId)">
+						<xsl:choose>
+							<xsl:when test="$bReverseSeg">
+								<xsl:if test="$bSubPath">
+								    <xsl:call-template name="segmentMoveToEnd"/>
+								</xsl:if>
+								<xsl:call-template name="segmentLineToMidpointPlus"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="$bSubPath">
+								    <xsl:call-template name="segmentMoveToMidpointMinus"/>
+								</xsl:if>
+								<xsl:call-template name="segmentLineToEnd"/>
+							</xsl:otherwise>				
+						</xsl:choose>
+				    </xsl:for-each>
+				</xsl:for-each>	
+			</xsl:when>
+			<xsl:otherwise> <!-- Not pre-processed by frollo -->
+			    <xsl:for-each select="seg[key('segmentById',@id)][position()=last()]">
+					<xsl:variable name="segmentId" select="@id"/>
+					<xsl:for-each select="key('segmentById',$segmentId)">
+						<xsl:call-template name="segmentMoveToMidpointMinus"/>
+						<xsl:call-template name="segmentLineToEnd"/>
+					</xsl:for-each>
+				</xsl:for-each>
+			</xsl:otherwise>		
+		</xsl:choose>
+    </xsl:template>
+
+
+    <xsl:template name="generatePathWayMid">
+		<xsl:choose>
+			<xsl:when test="$bFrollo">
+				<xsl:for-each select="seg[key('segmentById',@id)]">
+				    <xsl:variable name="segmentId" select="@id"/>
+					<xsl:variable name="bReverseSeg" select="@osma:reverse='1'"/>
+					<xsl:variable name="bSubPath" select="(position()=1) or (@osma:sub-path='1')"/>
+					<xsl:variable name="bFirstSeg" select="position()=1"/>
+					<xsl:variable name="bLastSeg" select="position()=last()"/>
+					
+				    <xsl:for-each select="key('segmentById',$segmentId)">
+						<xsl:choose>
+							<xsl:when test="$bReverseSeg">
+								<xsl:if test="$bSubPath">
+									<xsl:choose>
+										<xsl:when test='$bLastSeg'><xsl:call-template name="segmentMoveToMidpointMinus"/></xsl:when>
+										<xsl:otherwise><xsl:call-template name="segmentMoveToEnd"/></xsl:otherwise>
+									</xsl:choose>								    
+								</xsl:if>
+								<xsl:choose>
+									<xsl:when test='$bFirstSeg'><xsl:call-template name="segmentLineToMidpointPlus"/></xsl:when>
+									<xsl:otherwise><xsl:call-template name="segmentLineToStart"/></xsl:otherwise>
+								</xsl:choose>								    
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="$bSubPath">
+									<xsl:choose>
+										<xsl:when test='$bFirstSeg'><xsl:call-template name="segmentMoveToMidpointPlus"/></xsl:when>
+										<xsl:otherwise><xsl:call-template name="segmentMoveToStart"/></xsl:otherwise>
+									</xsl:choose>								    
+								</xsl:if>
+								<xsl:choose>
+									<xsl:when test='$bLastSeg'><xsl:call-template name="segmentLineToMidpointMinus"/></xsl:when>
+									<xsl:otherwise><xsl:call-template name="segmentLineToEnd"/></xsl:otherwise>
+								</xsl:choose>								    
+							</xsl:otherwise>
+						</xsl:choose>
+				    </xsl:for-each>
+				</xsl:for-each>	
+			</xsl:when>
+			<xsl:otherwise> <!-- Not pre-processed by frollo -->
+			    <xsl:for-each select="seg[key('segmentById',@id)]">
+					<xsl:variable name="segmentId" select="@id"/>
+					<xsl:variable name="linkedSegment" select="key('segmentById',@id)/@from=key('segmentById',preceding-sibling::seg[1]/@id)/@to"/>
+					<xsl:variable name="bFirstSeg" select="position()=1"/>
+					<xsl:variable name="bLastSeg" select="position()=last()"/>
+
+					<xsl:for-each select="key('segmentById',$segmentId)">
+						<xsl:if test="not($linkedSegment)">
+							<xsl:choose>
+								<xsl:when test='$bFirstSeg'><xsl:call-template name="segmentMoveToMidpointPlus"/></xsl:when>
+								<xsl:otherwise><xsl:call-template name="segmentMoveToStart"/></xsl:otherwise>
+							</xsl:choose>								    
+						</xsl:if>
+						<xsl:choose>
+							<xsl:when test='$bLastSeg'><xsl:call-template name="segmentLineToMidpointMinus"/></xsl:when>
+							<xsl:otherwise><xsl:call-template name="segmentLineToEnd"/></xsl:otherwise>
+						</xsl:choose>								    
+					</xsl:for-each>
+				</xsl:for-each>
+			</xsl:otherwise>		
+		</xsl:choose>
+    </xsl:template>
+
+
+	<!-- Generate an area path for the current way or area element -->
+    <xsl:template name="generateAreaPath">
 
 		<!-- Generate the path for the area -->
 		<xsl:variable name="pathData">
 			<xsl:choose>
 				<xsl:when test="$bFrollo">			
-					<xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
+					<xsl:for-each select="seg[key('segmentById',@id)]">
 						<xsl:variable name="segmentId" select="@id"/>
-						<xsl:variable name="bReverseSeg" select="@osma:reverse=&quot;1&quot;"/>
-						<xsl:variable name="bSubPath" select="@osma:sub-path=&quot;1&quot;"/>						
+						<xsl:variable name="bReverseSeg" select="@osma:reverse='1'"/>
+						<xsl:variable name="bSubPath" select="@osma:sub-path='1'"/>						
 						<xsl:variable name="fromCount" select="@osma:fromCount"/>						
 						<xsl:variable name="segmentSequence" select="position()"/>
-						<xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
+						<xsl:for-each select="key('segmentById',$segmentId)">
 							<xsl:choose>
 								<xsl:when test="not($bReverseSeg)">
 									<xsl:choose>
@@ -936,27 +1765,27 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 					<xsl:text>Z</xsl:text>
 				</xsl:when>
 				<xsl:otherwise> <!-- Not pre-processed by frollo -->
-					<xsl:for-each select="seg[key(&quot;segmentById&quot;,@id)]">
+					<xsl:for-each select="seg[key('segmentById',@id)]">
 						<xsl:variable name="segmentId" select="@id"/>
-						<xsl:variable name="currentSegmentToNodeId" select="key(&quot;segmentById&quot;,@id)/@to"/>
-						<xsl:variable name="currentSegmentFromNodeId" select="key(&quot;segmentById&quot;,@id)/@from"/>
-						<xsl:variable name="previousSegmentToNodeId" select="key(&quot;segmentById&quot;,preceding-sibling::seg[1]/@id)/@to"/>
+						<xsl:variable name="currentSegmentToNodeId" select="key('segmentById',@id)/@to"/>
+						<xsl:variable name="currentSegmentFromNodeId" select="key('segmentById',@id)/@from"/>
+						<xsl:variable name="previousSegmentToNodeId" select="key('segmentById',preceding-sibling::seg[1]/@id)/@to"/>
 						
 						<!-- The linkedSegment flag indicates whether the previous segment is connected to the current segment.  If it isn't
 						     then we will need to draw an additional line (segmentLineToStart) from the end of the previous segment to the
 						     start of the current segment. 
 						-->
-						<xsl:variable name="linkedSegment" select="key(&quot;segmentById&quot;,@id)/@from=$previousSegmentToNodeId"/>
+						<xsl:variable name="linkedSegment" select="key('segmentById',@id)/@from=$previousSegmentToNodeId"/>
 		
 						<!--  Now we count the number of segments in this way that have a to node that is equal to the current segment's from node.
 						      We do this to find out if the current segment is connected from some other segment in the way.  If it is, and it
 						      is not linked to the current segment then we can assume we have the start of a new sub-path.  In this case we shouldn't
 						      draw an additional line between the end of the previous segment and the start of the current segment.
 						-->
-						<xsl:variable name="connectedSegmentCount" select="count(../*[key(&quot;segmentById&quot;,@id)/@to=$currentSegmentFromNodeId])"/>
+						<xsl:variable name="connectedSegmentCount" select="count(../*[key('segmentById',@id)/@to=$currentSegmentFromNodeId])"/>
 						
 						<xsl:variable name="segmentSequence" select="position()"/>
-						<xsl:for-each select="key(&quot;segmentById&quot;,$segmentId)">
+						<xsl:for-each select="key('segmentById',$segmentId)">
 							<xsl:choose>
 								<!-- If this is the start of the way then we always have to move to the start of the segment. -->
 								<xsl:when test="$segmentSequence=1">
@@ -983,9 +1812,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
 		<path id="area_{@id}" d="{$pathData}"/>
 
-	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentMoveToStart">
+	</xsl:template>
+	
+
+    <!-- Generate a MoveTo command for a segment start -->
+	<xsl:template name="segmentMoveToStart">
         <xsl:variable name="from" select="@from"/>
-        <xsl:variable name="fromNode" select="key(&quot;nodeById&quot;,$from)"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
 
         <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
         <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
@@ -993,9 +1826,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="$x1"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="$y1"/>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentLineToStart">
+    </xsl:template>
+    
+    
+    <!-- Generate a LineTo command for a segment start -->
+    <xsl:template name="segmentLineToStart">
         <xsl:variable name="from" select="@from"/>
-        <xsl:variable name="fromNode" select="key(&quot;nodeById&quot;,$from)"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
 
         <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
         <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
@@ -1003,9 +1840,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="$x1"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="$y1"/>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentMoveToEnd">
+    </xsl:template>
+    
+    
+    <!-- Generate a MoveTo command for a segment end -->
+    <xsl:template name="segmentMoveToEnd">
         <xsl:variable name="to" select="@to"/>
-        <xsl:variable name="toNode" select="key(&quot;nodeById&quot;,$to)"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
 
         <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
         <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
@@ -1013,9 +1854,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:value-of select="$x2"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="$y2"/>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segmentLineToEnd">
+    </xsl:template>
+    
+    
+    <!-- Generate a LineTo command for a segment end -->
+    <xsl:template name="segmentLineToEnd">
         <xsl:variable name="to" select="@to"/>
-        <xsl:variable name="toNode" select="key(&quot;nodeById&quot;,$to)"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
 
         <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
         <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
@@ -1024,64 +1869,254 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <xsl:text> </xsl:text>
         <xsl:value-of select="$y2"/>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@class" mode="copyAttributes">
-        <xsl:param name="classes"/>
-        <xsl:attribute name="class">
-            <xsl:value-of select="normalize-space(concat($classes,' ',.))"/>
-        </xsl:attribute>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@type|@ref|@scale" mode="copyAttributes">
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@*" mode="copyAttributes">
-        <xsl:param name="classes"/>
+    
+    
+    <xsl:template name="segmentLineToMidpoint">
+        <xsl:variable name="from" select="@from"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+
+        <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+
+        <xsl:variable name="to" select="@to"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+
+        <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+        <xsl:text>L</xsl:text>
+        <xsl:value-of select="$x1+(($x2 - $x1) div 2)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$y1+(($y2 - $y1) div 2)"/>
+    </xsl:template>
+
+    <xsl:template name="segmentLineToMidpointPlus">
+        <xsl:variable name="from" select="@from"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+
+        <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+
+        <xsl:variable name="to" select="@to"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+
+        <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+        <xsl:text>L</xsl:text>
+        <xsl:value-of select="$x1+(($x2 - $x1) div 1.9)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$y1+(($y2 - $y1) div 1.9)"/>
+    </xsl:template>
+
+
+    <xsl:template name="segmentLineToMidpointMinus">
+        <xsl:variable name="from" select="@from"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+
+        <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+
+        <xsl:variable name="to" select="@to"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+
+        <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+        <xsl:text>L</xsl:text>
+        <xsl:value-of select="$x1+(($x2 - $x1) div 2.1)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$y1+(($y2 - $y1) div 2.1)"/>
+    </xsl:template>
+
+
+    <xsl:template name="segmentMoveToMidpoint">
+        <xsl:variable name="from" select="@from"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+
+        <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+
+        <xsl:variable name="to" select="@to"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+
+        <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+        <xsl:text>M</xsl:text>
+        <xsl:value-of select="$x1+(($x2 - $x1) div 2)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$y1+(($y2 - $y1) div 2)"/>
+    </xsl:template>
+
+
+    <xsl:template name="segmentMoveToMidpointPlus">
+        <xsl:variable name="from" select="@from"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+
+        <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+
+        <xsl:variable name="to" select="@to"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+
+        <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+        <xsl:text>M</xsl:text>
+        <xsl:value-of select="$x1+(($x2 - $x1) div 1.9)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$y1+(($y2 - $y1) div 1.9)"/>
+    </xsl:template>
+
+    <xsl:template name="segmentMoveToMidpointMinus">
+        <xsl:variable name="from" select="@from"/>
+        <xsl:variable name="fromNode" select="key('nodeById',$from)"/>
+
+        <xsl:variable name="x1" select="($width)-((($topRightLongitude)-($fromNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y1" select="($height)+((($bottomLeftLatitude)-($fromNode/@lat))*10000*$scale*$projection)"/>
+
+        <xsl:variable name="to" select="@to"/>
+        <xsl:variable name="toNode" select="key('nodeById',$to)"/>
+
+        <xsl:variable name="x2" select="($width)-((($topRightLongitude)-($toNode/@lon))*10000*$scale)"/>
+        <xsl:variable name="y2" select="($height)+((($bottomLeftLatitude)-($toNode/@lat))*10000*$scale*$projection)"/>
+        <xsl:text>M</xsl:text>
+        <xsl:value-of select="$x1+(($x2 - $x1) div 2.1)"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$y1+(($y2 - $y1) div 2.1)"/>
+    </xsl:template>
+
+    
+    
+    <!-- Some attribute shouldn't be copied -->
+    <xsl:template match="@type|@ref|@scale" mode="copyAttributes" />
+    
+    
+    <!-- Copy all other attributes  -->
+    <xsl:template match="@*" mode="copyAttributes">
         <xsl:copy/>
     </xsl:template>
 
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="processRules">
-      
+
+	<!-- Rule processing engine -->
+
+	<!-- 
+
+		Calls all templates inside <rule> tags (including itself, if there are nested rules).
+
+		If the global var withOSMLayers is 'no', we don't care about layers and draw everything
+		in one go. This is faster and is sometimes useful. For normal maps you want withOSMLayers
+		to be 'yes', which is the default.
+
+	-->
+    <xsl:template name="processRules">
+
+		<!-- First select all elements - exclude those marked as deleted by JOSM -->
+		<xsl:variable name='elements' select="$data/osm/*[not(@action) or not(@action='delete')]" />
+
         <xsl:choose>
 
             <!-- Process all the rules, one layer at a time -->
             <xsl:when test="$withOSMLayers='yes'">
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;-5&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;-4&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;-3&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;-2&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;-1&quot;"/></xsl:call-template>
                 <xsl:call-template name="processLayer">
-                    <xsl:with-param name="layer" select="&quot;0&quot;"/>
-                    <xsl:with-param name="elements" select="$data/osm/*[not(@action=&quot;delete&quot;) and count(tag[@k=&quot;layer&quot;])=0 or tag[@k=&quot;layer&quot; and @v=&quot;0&quot;]]"/>
+					<xsl:with-param name="layer" select="'-5'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+				</xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'-4'"/>
+					<xsl:with-param name="elements" select="$elements"/>
                 </xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;1&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;2&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;3&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;4&quot;"/></xsl:call-template>
-                <xsl:call-template name="processLayer"><xsl:with-param name="layer" select="&quot;5&quot;"/></xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'-3'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'-2'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'-1'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'0'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'1'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'2'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'3'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'4'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
+                <xsl:call-template name="processLayer">
+					<xsl:with-param name="layer" select="'5'"/>
+					<xsl:with-param name="elements" select="$elements"/>
+                </xsl:call-template>
             </xsl:when>
 
             <!-- Process all the rules, without looking at the layers -->
             <xsl:otherwise>
                 <xsl:apply-templates select="/rules/rule">
-                    <xsl:with-param name="elements" select="$data/osm/*[not(@action=&quot;delete&quot;)]"/>
-                    <xsl:with-param name="layer" select="&quot;0&quot;"/>
-                    <xsl:with-param name="classes" select="''"/>
+                    <xsl:with-param name="elements" select="$elements"/>
+                    <xsl:with-param name="layer" select="'0'"/>
                 </xsl:apply-templates>
             </xsl:otherwise>
 
         </xsl:choose>
-	</xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="processLayer">
+	</xsl:template>
+	
+	
+	<xsl:template name="processLayer">
         <xsl:param name="layer"/>
-        <xsl:param name="elements" select="$data/osm/*[not(@action=&quot;delete&quot;) and tag[@k=&quot;layer&quot; and @v=$layer]]"/>
+        <xsl:param name="elements"/>
 
         <g inkscape:groupmode="layer" id="layer{$layer}" inkscape:label="Layer {$layer}">
             <xsl:apply-templates select="/rules/rule">
                 <xsl:with-param name="elements" select="$elements"/>
                 <xsl:with-param name="layer" select="$layer"/>
-                <xsl:with-param name="classes" select="''"/>
             </xsl:apply-templates>
         </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="rule">
+    </xsl:template>
+
+
+	<!-- Process a rule at a specific level -->
+	<xsl:template match='rule'>
         <xsl:param name="elements"/>
         <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
+
+		<!-- If the rule is for a specific layer and we are processing that layer then pass *all* elements 
+		     to the rule, otherwise just select the matching elements for this layer. -->
+		<xsl:choose>
+			<xsl:when test='$layer=@layer'>
+				<xsl:call-template name="rule">
+				    <xsl:with-param name="elements" select="$elements"/>
+				    <xsl:with-param name="layer" select="$layer"/>
+				</xsl:call-template>		
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test='not(@layer)'>
+					<xsl:call-template name="rule">
+						<xsl:with-param name="elements" select="$elements[
+							tag[@k='layer' and @v=$layer]
+							or ($layer='0' and count(tag[@k='layer'])=0)
+						]"/>
+						<xsl:with-param name="layer" select="$layer"/>
+					</xsl:call-template>
+				</xsl:if>		
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+    <xsl:template name='rule'>
+        <xsl:param name="elements"/>
+        <xsl:param name="layer"/>
 
         <!-- This is the rule currently being processed -->
         <xsl:variable name="rule" select="."/>
@@ -1089,7 +2124,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         <!-- Make list of elements that this rule should be applied to -->
         <xsl:variable name="eBare">
             <xsl:choose>
-                <xsl:when test="$rule/@e=&quot;*&quot;">node|segment|way</xsl:when>
+                <xsl:when test="$rule/@e='*'">node|segment|way</xsl:when>
                 <xsl:when test="$rule/@e"><xsl:value-of select="$rule/@e"/></xsl:when>
                 <xsl:otherwise>node|segment|way</xsl:otherwise>
             </xsl:choose>
@@ -1100,100 +2135,365 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
         <!-- List of values that this rule should be applied to -->
         <xsl:variable name="vBare" select="$rule/@v"/>
+        <xsl:variable name="sBare" select="$rule/@s"/>
 
         <!-- Top'n'tail selectors with | for contains usage -->
         <xsl:variable name="e">|<xsl:value-of select="$eBare"/>|</xsl:variable>
         <xsl:variable name="k">|<xsl:value-of select="$kBare"/>|</xsl:variable>
         <xsl:variable name="v">|<xsl:value-of select="$vBare"/>|</xsl:variable>
+        <xsl:variable name="s">|<xsl:value-of select="$sBare"/>|</xsl:variable>
 
-        <xsl:variable name="selectedElements" select="$elements[contains($e,concat(&quot;|&quot;,name(),&quot;|&quot;))or (contains($e,&quot;|waysegment|&quot;) and name()=&quot;segment&quot; and key(&quot;wayBySegment&quot;,@id))]"/>
+        <xsl:variable 
+          name="selectedElements"
+          select="$elements[
+            contains($e,concat('|',name(),'|')) or 
+            (contains($e,'|waysegment|') and name()='segment' and key('wayBySegment',@id))
+            ]"/>
+
+
+		<!-- Patch $s -->
+        <xsl:choose>
+            <xsl:when test="contains($s,'|way|')">
+				<xsl:choose>
+				    <xsl:when test="contains($k,'|*|')">
+				        <xsl:choose>
+				            <xsl:when test="contains($v,'|~|')">
+				                <xsl:variable name="elementsWithNoTags" select="$selectedElements[count(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag)=0]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$elementsWithNoTags"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:when>
+				            <xsl:when test="contains($v,'|*|')">
+				                <xsl:variable name="allElements" select="$selectedElements"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$allElements"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:when>
+				            <xsl:otherwise>
+				                <xsl:variable name="allElementsWithValue" select="$selectedElements[key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($v,concat('|',@v,'|'))]]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$allElementsWithValue"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:otherwise>
+				        </xsl:choose>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|~|')">
+				        <xsl:variable name="elementsWithoutKey" select="$selectedElements[count(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($k,concat('|',@k,'|'))])=0]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithoutKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|*|')">
+				        <xsl:variable name="allElementsWithKey" select="$selectedElements[key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($k,concat('|',@k,'|'))]]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$allElementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:otherwise>
+				        <xsl:variable name="elementsWithKey" select="$selectedElements[
+							key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[
+								contains($k,concat('|',@k,'|')) and contains($v,concat('|',@v,'|'))
+								]
+							]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:choose>
+				    <xsl:when test="contains($k,'|*|')">
+				        <xsl:choose>
+				            <xsl:when test="contains($v,'|~|')">
+				                <xsl:variable name="elementsWithNoTags" select="$selectedElements[count(tag)=0]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$elementsWithNoTags"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:when>
+				            <xsl:when test="contains($v,'|*|')">
+				                <xsl:variable name="allElements" select="$selectedElements"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$allElements"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:when>
+				            <xsl:otherwise>
+				                <xsl:variable name="allElementsWithValue" select="$selectedElements[tag[contains($v,concat('|',@v,'|'))]]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$allElementsWithValue"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:otherwise>
+				        </xsl:choose>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|~|')">
+				        <xsl:variable name="elementsWithoutKey" select="$selectedElements[count(tag[contains($k,concat('|',@k,'|'))])=0]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithoutKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|*|')">
+				        <xsl:variable name="allElementsWithKey" select="$selectedElements[tag[contains($k,concat('|',@k,'|'))]]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$allElementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:otherwise>
+				        <xsl:variable name="elementsWithKey" select="$selectedElements[tag[contains($k,concat('|',@k,'|')) and contains($v,concat('|',@v,'|'))]]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:template>
+    
+    
+
+
+    <xsl:template match="else">
+        <xsl:param name="elements"/>
+        <xsl:param name="layer"/>
+
+        <!-- This is the previous rule that is being negated -->
+		<!-- TODO: abort if no preceding rule element -->
+        <xsl:variable name="rule" select="preceding-sibling::rule[1]"/>
+
+        <!-- Make list of elements that this rule should be applied to -->
+        <xsl:variable name="eBare">
+            <xsl:choose>
+                <xsl:when test="$rule/@e='*'">node|segment|way</xsl:when>
+                <xsl:when test="$rule/@e"><xsl:value-of select="$rule/@e"/></xsl:when>
+                <xsl:otherwise>node|segment|way</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <!-- List of keys that this rule should be applied to -->
+        <xsl:variable name="kBare" select="$rule/@k"/>
+
+        <!-- List of values that this rule should be applied to -->
+        <xsl:variable name="vBare" select="$rule/@v"/>
+        <xsl:variable name="sBare" select="$rule/@s"/>  <!-- Patch $s -->
+
+        <!-- Top'n'tail selectors with | for contains usage -->
+        <xsl:variable name="e">|<xsl:value-of select="$eBare"/>|</xsl:variable>
+        <xsl:variable name="k">|<xsl:value-of select="$kBare"/>|</xsl:variable>
+        <xsl:variable name="v">|<xsl:value-of select="$vBare"/>|</xsl:variable>
+        <xsl:variable name="s">|<xsl:value-of select="$sBare"/>|</xsl:variable>
+
+        <xsl:variable 
+          name="selectedElements"
+          select="$elements[
+            contains($e,concat('|',name(),'|')) or 
+            (contains($e,'|waysegment|') and name()='segment' and key('wayBySegment',@id))
+            ]"/>
 
         <xsl:choose>
-            <xsl:when test="contains($k,&quot;|*|&quot;)">
-                <xsl:choose>
-                    <xsl:when test="contains($v,&quot;|~|&quot;)">
-                        <xsl:variable name="elementsWithNoTags" select="$selectedElements[count(tag)=0]"/>
-                        <xsl:call-template name="processElements">
-                            <xsl:with-param name="eBare" select="$eBare"/>
-                            <xsl:with-param name="kBare" select="$kBare"/>
-                            <xsl:with-param name="vBare" select="$vBare"/>
-                            <xsl:with-param name="layer" select="$layer"/>
-                            <xsl:with-param name="elements" select="$elementsWithNoTags"/>
-                            <xsl:with-param name="rule" select="$rule"/>
-                            <xsl:with-param name="classes" select="$classes"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:when test="contains($v,&quot;|*|&quot;)">
-                        <xsl:variable name="allElements" select="$selectedElements"/>
-                        <xsl:call-template name="processElements">
-                            <xsl:with-param name="eBare" select="$eBare"/>
-                            <xsl:with-param name="kBare" select="$kBare"/>
-                            <xsl:with-param name="vBare" select="$vBare"/>
-                            <xsl:with-param name="layer" select="$layer"/>
-                            <xsl:with-param name="elements" select="$allElements"/>
-                            <xsl:with-param name="rule" select="$rule"/>
-                            <xsl:with-param name="classes" select="$classes"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:variable name="allElementsWithValue" select="$selectedElements[tag[contains($v,concat(&quot;|&quot;,@v,&quot;|&quot;))]]"/>
-                        <xsl:call-template name="processElements">
-                            <xsl:with-param name="eBare" select="$eBare"/>
-                            <xsl:with-param name="kBare" select="$kBare"/>
-                            <xsl:with-param name="vBare" select="$vBare"/>
-                            <xsl:with-param name="layer" select="$layer"/>
-                            <xsl:with-param name="elements" select="$allElementsWithValue"/>
-                            <xsl:with-param name="rule" select="$rule"/>
-                            <xsl:with-param name="classes" select="$classes"/>
-                        </xsl:call-template>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:when>
-            <xsl:when test="contains($v,&quot;|~|&quot;)">
-                <xsl:variable name="elementsWithoutKey" select="$selectedElements[count(tag[contains($k,concat(&quot;|&quot;,@k,&quot;|&quot;))])=0]"/>
-                <xsl:call-template name="processElements">
-                    <xsl:with-param name="eBare" select="$eBare"/>
-                    <xsl:with-param name="kBare" select="$kBare"/>
-                    <xsl:with-param name="vBare" select="$vBare"/>
-                    <xsl:with-param name="layer" select="$layer"/>
-                    <xsl:with-param name="elements" select="$elementsWithoutKey"/>
-                    <xsl:with-param name="rule" select="$rule"/>
-                    <xsl:with-param name="classes" select="$classes"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:when test="contains($v,&quot;|*|&quot;)">
-                <xsl:variable name="allElementsWithKey" select="$selectedElements[tag[contains($k,concat(&quot;|&quot;,@k,&quot;|&quot;))]]"/>
-                <xsl:call-template name="processElements">
-                    <xsl:with-param name="eBare" select="$eBare"/>
-                    <xsl:with-param name="kBare" select="$kBare"/>
-                    <xsl:with-param name="vBare" select="$vBare"/>
-                    <xsl:with-param name="layer" select="$layer"/>
-                    <xsl:with-param name="elements" select="$allElementsWithKey"/>
-                    <xsl:with-param name="rule" select="$rule"/>
-                    <xsl:with-param name="classes" select="$classes"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:variable name="elementsWithKey" select="$selectedElements[tag[contains($k,concat(&quot;|&quot;,@k,&quot;|&quot;)) and contains($v,concat(&quot;|&quot;,@v,&quot;|&quot;))]]"/>
-                <xsl:call-template name="processElements">
-                    <xsl:with-param name="eBare" select="$eBare"/>
-                    <xsl:with-param name="kBare" select="$kBare"/>
-                    <xsl:with-param name="vBare" select="$vBare"/>
-                    <xsl:with-param name="layer" select="$layer"/>
-                    <xsl:with-param name="elements" select="$elementsWithKey"/>
-                    <xsl:with-param name="rule" select="$rule"/>
-                    <xsl:with-param name="classes" select="$classes"/>
-                </xsl:call-template>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="processElements">
+            <xsl:when test="contains($s,'|way|')">
+				<xsl:choose>
+				    <xsl:when test="contains($k,'|*|')">
+				        <xsl:choose>
+				            <xsl:when test="contains($v,'|~|')">
+				                <xsl:variable name="elementsWithNoTags" select="$selectedElements[count(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag)!=0]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$elementsWithNoTags"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:when>
+				            <xsl:when test="contains($v,'|*|')">
+				                <!-- no-op! -->
+				            </xsl:when>
+				            <xsl:otherwise>
+				                <xsl:variable name="allElementsWithValue" select="$selectedElements[not(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($v,concat('|',@v,'|'))])]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$allElementsWithValue"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:otherwise>
+				        </xsl:choose>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|~|')">
+				        <xsl:variable name="elementsWithoutKey" select="$selectedElements[count(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($k,concat('|',@k,'|'))])!=0]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithoutKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|*|')">
+				        <xsl:variable name="allElementsWithKey" select="$selectedElements[not(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($k,concat('|',@k,'|'))])]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$allElementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:otherwise>
+				        <xsl:variable name="elementsWithKey" select="$selectedElements[not(key('wayBySegment',(key('segmentByFromNode',@id) | key('segmentByToNode',@id))/@id)/tag[contains($k,concat('|',@k,'|')) and contains($v,concat('|',@v,'|'))])]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			
+			<xsl:otherwise> <!-- not contains $s -->
+				<xsl:choose>
+				    <xsl:when test="contains($k,'|*|')">
+				        <xsl:choose>
+				            <xsl:when test="contains($v,'|~|')">
+				                <xsl:variable name="elementsWithNoTags" select="$selectedElements[count(tag)!=0]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$elementsWithNoTags"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:when>
+				            <xsl:when test="contains($v,'|*|')">
+				                <!-- no-op! -->
+				            </xsl:when>
+				            <xsl:otherwise>
+				                <xsl:variable name="allElementsWithValue" select="$selectedElements[not(tag[contains($v,concat('|',@v,'|'))])]"/>
+				                <xsl:call-template name="processElements">
+				                    <xsl:with-param name="eBare" select="$eBare"/>
+				                    <xsl:with-param name="kBare" select="$kBare"/>
+				                    <xsl:with-param name="vBare" select="$vBare"/>
+				                    <xsl:with-param name="layer" select="$layer"/>
+				                    <xsl:with-param name="elements" select="$allElementsWithValue"/>
+				                    <xsl:with-param name="rule" select="$rule"/>
+				                </xsl:call-template>
+				            </xsl:otherwise>
+				        </xsl:choose>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|~|')">
+				        <xsl:variable name="elementsWithoutKey" select="$selectedElements[count(tag[contains($k,concat('|',@k,'|'))])!=0]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithoutKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:when test="contains($v,'|*|')">
+				        <xsl:variable name="allElementsWithKey" select="$selectedElements[not(tag[contains($k,concat('|',@k,'|'))])]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$allElementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:when>
+				    <xsl:otherwise>
+				        <xsl:variable name="elementsWithKey" select="$selectedElements[not(tag[contains($k,concat('|',@k,'|')) and contains($v,concat('|',@v,'|'))])]"/>
+				        <xsl:call-template name="processElements">
+				            <xsl:with-param name="eBare" select="$eBare"/>
+				            <xsl:with-param name="kBare" select="$kBare"/>
+				            <xsl:with-param name="vBare" select="$vBare"/>
+				            <xsl:with-param name="layer" select="$layer"/>
+				            <xsl:with-param name="elements" select="$elementsWithKey"/>
+				            <xsl:with-param name="rule" select="$rule"/>
+				        </xsl:call-template>
+				    </xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+    </xsl:template>
+
+    
+    <xsl:template name="processElements">
         <xsl:param name="eBare"/>
         <xsl:param name="kBare"/>
         <xsl:param name="vBare"/>
         <xsl:param name="layer"/>
         <xsl:param name="elements"/>
         <xsl:param name="rule"/>
-        <xsl:param name="classes"/>
         
         <xsl:if test="$elements">
             <xsl:message>
@@ -1205,178 +2505,18 @@ Matched by <xsl:value-of select="count($elements)"/> elements for layer <xsl:val
                 <xsl:with-param name="layer" select="$layer"/>
                 <xsl:with-param name="elements" select="$elements"/>
                 <xsl:with-param name="rule" select="$rule"/>
-                <xsl:with-param name="classes" select="$classes"/>
-            </xsl:apply-templates>
-        </xsl:if>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="addclass">
-        <xsl:param name="elements"/>
-        <xsl:param name="layer"/>
-        <xsl:param name="classes"/>
-
-        <!-- This is the rule currently being processed -->
-        <xsl:variable name="rule" select="."/>
-
-        <!-- Additional classes from class attribute of this rule -->
-        <xsl:variable name="addclasses" select="@class"/>
-
-        <!-- Make list of elements that this rule should be applied to -->
-        <xsl:variable name="eBare">
-            <xsl:choose>
-                <xsl:when test="$rule/@e=&quot;*&quot;">node|segment|way</xsl:when>
-                <xsl:when test="$rule/@e"><xsl:value-of select="$rule/@e"/></xsl:when>
-                <xsl:otherwise>node|segment|way</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-
-        <!-- List of keys that this rule should be applied to -->
-        <xsl:variable name="kBare" select="$rule/@k"/>
-
-        <!-- List of values that this rule should be applied to -->
-        <xsl:variable name="vBare" select="$rule/@v"/>
-
-        <!-- Top'n'tail selectors with | for contains usage -->
-        <xsl:variable name="e">|<xsl:value-of select="$eBare"/>|</xsl:variable>
-        <xsl:variable name="k">|<xsl:value-of select="$kBare"/>|</xsl:variable>
-        <xsl:variable name="v">|<xsl:value-of select="$vBare"/>|</xsl:variable>
-
-        <xsl:variable name="selectedElements" select="$elements[contains($e,concat(&quot;|&quot;,name(),&quot;|&quot;))or (contains($e,&quot;|waysegment|&quot;) and name()=&quot;segment&quot; and key(&quot;wayBySegment&quot;,@id))]"/>
-
-        <xsl:choose>
-            <xsl:when test="contains($k,&quot;|*|&quot;)">
-                <xsl:choose>
-                    <xsl:when test="contains($v,&quot;|~|&quot;)">
-                        <xsl:variable name="elementsWithNoTags" select="$selectedElements[count(tag)=0]"/>
-                        <xsl:call-template name="processElementsForAddClass">
-                            <xsl:with-param name="eBare" select="$eBare"/>
-                            <xsl:with-param name="kBare" select="$kBare"/>
-                            <xsl:with-param name="vBare" select="$vBare"/>
-                            <xsl:with-param name="layer" select="$layer"/>
-                            <xsl:with-param name="elements" select="$elementsWithNoTags"/>
-                            <xsl:with-param name="rule" select="$rule"/>
-                            <xsl:with-param name="classes" select="$classes"/>
-                            <xsl:with-param name="addclasses" select="$addclasses"/>
-                            <xsl:with-param name="allelements" select="$elements"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:when test="contains($v,&quot;|*|&quot;)">
-                        <xsl:variable name="allElements" select="$selectedElements"/>
-                        <xsl:call-template name="processElementsForAddClass">
-                            <xsl:with-param name="eBare" select="$eBare"/>
-                            <xsl:with-param name="kBare" select="$kBare"/>
-                            <xsl:with-param name="vBare" select="$vBare"/>
-                            <xsl:with-param name="layer" select="$layer"/>
-                            <xsl:with-param name="elements" select="$allElements"/>
-                            <xsl:with-param name="rule" select="$rule"/>
-                            <xsl:with-param name="classes" select="$classes"/>
-                            <xsl:with-param name="addclasses" select="$addclasses"/>
-                            <xsl:with-param name="allelements" select="$elements"/>
-                        </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:variable name="allElementsWithValue" select="$selectedElements[tag[contains($v,concat(&quot;|&quot;,@v,&quot;|&quot;))]]"/>
-                        <xsl:call-template name="processElementsForAddClass">
-                            <xsl:with-param name="eBare" select="$eBare"/>
-                            <xsl:with-param name="kBare" select="$kBare"/>
-                            <xsl:with-param name="vBare" select="$vBare"/>
-                            <xsl:with-param name="layer" select="$layer"/>
-                            <xsl:with-param name="elements" select="$allElementsWithValue"/>
-                            <xsl:with-param name="rule" select="$rule"/>
-                            <xsl:with-param name="classes" select="$classes"/>
-                            <xsl:with-param name="addclasses" select="$addclasses"/>
-                            <xsl:with-param name="allelements" select="$elements"/>
-                        </xsl:call-template>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:when>
-            <xsl:when test="contains($v,&quot;|~|&quot;)">
-                <xsl:variable name="elementsWithoutKey" select="$selectedElements[count(tag[contains($k,concat(&quot;|&quot;,@k,&quot;|&quot;))])=0]"/>
-                <xsl:call-template name="processElementsForAddClass">
-                    <xsl:with-param name="eBare" select="$eBare"/>
-                    <xsl:with-param name="kBare" select="$kBare"/>
-                    <xsl:with-param name="vBare" select="$vBare"/>
-                    <xsl:with-param name="layer" select="$layer"/>
-                    <xsl:with-param name="elements" select="$elementsWithoutKey"/>
-                    <xsl:with-param name="rule" select="$rule"/>
-                    <xsl:with-param name="classes" select="$classes"/>
-                    <xsl:with-param name="addclasses" select="$addclasses"/>
-                    <xsl:with-param name="allelements" select="$elements"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:when test="contains($v,&quot;|*|&quot;)">
-                <xsl:variable name="allElementsWithKey" select="$selectedElements[tag[contains($k,concat(&quot;|&quot;,@k,&quot;|&quot;))]]"/>
-                <xsl:call-template name="processElementsForAddClass">
-                    <xsl:with-param name="eBare" select="$eBare"/>
-                    <xsl:with-param name="kBare" select="$kBare"/>
-                    <xsl:with-param name="vBare" select="$vBare"/>
-                    <xsl:with-param name="layer" select="$layer"/>
-                    <xsl:with-param name="elements" select="$allElementsWithKey"/>
-                    <xsl:with-param name="rule" select="$rule"/>
-                    <xsl:with-param name="classes" select="$classes"/>
-                    <xsl:with-param name="addclasses" select="$addclasses"/>
-                    <xsl:with-param name="allelements" select="$elements"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:variable name="elementsWithKey" select="$selectedElements[tag[contains($k,concat(&quot;|&quot;,@k,&quot;|&quot;)) and contains($v,concat(&quot;|&quot;,@v,&quot;|&quot;))]]"/>
-                <xsl:call-template name="processElementsForAddClass">
-                    <xsl:with-param name="eBare" select="$eBare"/>
-                    <xsl:with-param name="kBare" select="$kBare"/>
-                    <xsl:with-param name="vBare" select="$vBare"/>
-                    <xsl:with-param name="layer" select="$layer"/>
-                    <xsl:with-param name="elements" select="$elementsWithKey"/>
-                    <xsl:with-param name="rule" select="$rule"/>
-                    <xsl:with-param name="classes" select="$classes"/>
-                    <xsl:with-param name="addclasses" select="$addclasses"/>
-                    <xsl:with-param name="allelements" select="$elements"/>
-                </xsl:call-template>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="processElementsForAddClass">
-        <xsl:param name="eBare"/>
-        <xsl:param name="kBare"/>
-        <xsl:param name="vBare"/>
-        <xsl:param name="layer"/>
-        <xsl:param name="elements"/>
-        <xsl:param name="allelements"/>
-        <xsl:param name="rule"/>
-        <xsl:param name="classes"/>
-        <xsl:param name="addclasses"/>
-        
-        <xsl:variable name="newclasses" select="concat($classes,' ',$addclasses)"/>
-        <xsl:variable name="otherelements" select="set:difference($allelements, $elements)"/>
-
-        <xsl:if test="$elements">
-            <xsl:message>
-Processing &lt;addclass e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt; 
-Positive match by <xsl:value-of select="count($elements)"/> elements for layer <xsl:value-of select="$layer"/>.
-            </xsl:message>
-
-            <xsl:apply-templates select="*">
-                <xsl:with-param name="layer" select="$layer"/>
-                <xsl:with-param name="elements" select="$elements"/>
-                <xsl:with-param name="rule" select="$rule"/>
-                <xsl:with-param name="classes" select="$newclasses"/>
-            </xsl:apply-templates>
-        </xsl:if>
-
-        <xsl:if test="$otherelements">
-            <xsl:message>
-Processing &lt;addclass e="<xsl:value-of select="$eBare"/>" k="<xsl:value-of select="$kBare"/>" v="<xsl:value-of select="$vBare"/>" &gt; 
-Negative match by <xsl:value-of select="count($otherelements)"/> elements for layer <xsl:value-of select="$layer"/>.
-            </xsl:message>
-            <xsl:apply-templates select="*">
-                <xsl:with-param name="layer" select="$layer"/>
-                <xsl:with-param name="elements" select="$otherelements"/>
-                <xsl:with-param name="rule" select="$rule"/>
-                <xsl:with-param name="classes" select="$classes"/>
             </xsl:apply-templates>
         </xsl:if>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" match="layer">
+    
+    
+    
+    
+	<!-- Draw SVG layers -->
+    <xsl:template match="layer">
         <xsl:param name="elements"/>
         <xsl:param name="layer"/>
         <xsl:param name="rule"/>
-        <xsl:param name="classes"/>
 
         <xsl:message>Processing SVG layer: <xsl:value-of select="@name"/> (at OSM layer <xsl:value-of select="$layer"/>)
 </xsl:message>
@@ -1402,13 +2542,14 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <xsl:apply-templates select="*">
                 <xsl:with-param name="layer" select="$layer"/>
                 <xsl:with-param name="elements" select="$elements"/>
-                <xsl:with-param name="classes" select="$classes"/>
             </xsl:apply-templates>
         </g>
 
     </xsl:template>
     
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="borderDraw">
+
+    <!-- Draw map border -->
+    <xsl:template name="drawBorder">
         <!-- dasharray definitions here can be overridden in stylesheet -->
         <g id="border" inkscape:groupmode="layer" inkscape:label="Map Border">
             <line id="border-left-casing" x1="0" y1="0" x2="0" y2="{$documentHeight}" class="map-border-casing" stroke-dasharray="{($km div 10) - 1},1"/>
@@ -1422,34 +2563,45 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <line id="border-right-core" x1="{$documentWidth}" y1="0" x2="{$documentWidth}" y2="{$documentHeight}" class="map-border-core" stroke-dasharray="{($km div 10) - 1},1"/>
         </g>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="gridDraw">
+    
+
+	<!-- Draw a grid over the map in 1km increments -->
+    <xsl:template name="drawGrid">
         <g id="grid" inkscape:groupmode="layer" inkscape:label="Grid">
-            <xsl:call-template name="gridDrawHorizontals">
-                <xsl:with-param name="line" select="&quot;1&quot;"/>
+            <xsl:call-template name="drawGridHorizontals">
+                <xsl:with-param name="line" select="'1'"/>
             </xsl:call-template>
-            <xsl:call-template name="gridDrawVerticals">
-                <xsl:with-param name="line" select="&quot;1&quot;"/>
+            <xsl:call-template name="drawGridVerticals">
+                <xsl:with-param name="line" select="'1'"/>
             </xsl:call-template>
         </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="gridDrawHorizontals">
+    </xsl:template>
+    
+    
+    <xsl:template name="drawGridHorizontals">
         <xsl:param name="line"/>
         <xsl:if test="($line*$km) &lt; $documentHeight">
             <line id="grid-hori-{$line}" x1="0px" y1="{$line*$km}px" x2="{$documentWidth}px" y2="{$line*$km}px" class="map-grid-line"/>
-            <xsl:call-template name="gridDrawHorizontals">
+            <xsl:call-template name="drawGridHorizontals">
                 <xsl:with-param name="line" select="$line+1"/>
             </xsl:call-template>
         </xsl:if>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" name="gridDrawVerticals">
+    </xsl:template>
+    
+    
+    <xsl:template name="drawGridVerticals">
         <xsl:param name="line"/>
         <xsl:if test="($line*$km) &lt; $documentWidth">
             <line id="grid-vert-{$line}" x1="{$line*$km}px" y1="0px" x2="{$line*$km}px" y2="{$documentHeight}px" class="map-grid-line"/>
-            <xsl:call-template name="gridDrawVerticals">
+            <xsl:call-template name="drawGridVerticals">
                 <xsl:with-param name="line" select="$line+1"/>
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
 
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="titleDraw">
+
+	<!-- Draw map title -->
+    <xsl:template name="drawTitle">
         <xsl:param name="title"/>
 
         <xsl:variable name="x" select="$documentWidth div 2"/>
@@ -1460,7 +2612,10 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <text id="marginalia-title-text" class="map-title" x="{$x}" y="{$y}"><xsl:value-of select="$title"/></text>
         </g>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" name="scaleDraw">
+    
+    
+	<!-- Draw an approximate scale in the bottom left corner of the map -->
+    <xsl:template name="drawScale">
         <xsl:variable name="x1" select="14"/>
         <xsl:variable name="y1" select="round(($documentHeight)+((($bottomLeftLatitude)-(number($bottomLeftLatitude)))*10000*$scale*$projection))+28"/>
         <xsl:variable name="x2" select="$x1+$km"/>
@@ -1480,10 +2635,11 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             <text id="marginalia-scale-text-to" class="map-scale-caption" x="{$x2}" y="{$y2 - 10}">1km</text>
         </g>
     </xsl:template>
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" name="metadata">
-        <xsl:variable name="date" select="date:date()"/>
-        <xsl:variable name="year" select="date:year()"/>
+    
 
+    <!-- Create a comment in SVG source code and RDF description of license -->
+    <xsl:template name="metadata">
+    
         <xsl:comment>
 
     Copyright (c) <xsl:value-of select="$year"/> OpenStreetMap
@@ -1500,7 +2656,7 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
                     <dc:format>image/svg+xml</dc:format>
                     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
                     <dc:title><xsl:value-of select="$title"/></dc:title>
-                    <dc:date><xsl:value-of select="substring($date,1,10)"/></dc:date>
+                    <dc:date><xsl:value-of select="$date"/></dc:date>
                     <dc:source>http://www.openstreetmap.org/</dc:source>
                 </cc:Work>
                 <cc:License rdf:about="http://creativecommons.org/licenses/by-sa/2.0/">
@@ -1513,11 +2669,12 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
                 </cc:License>
             </rdf:RDF>
         </metadata>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink" name="in-image-license">
+    </xsl:template>
+    
+    <!-- Create a license logo and description in the image -->
+    <xsl:template name="in-image-license">
         <xsl:param name="dx"/>
         <xsl:param name="dy"/>
-
-        <xsl:variable name="year" select="date:year()"/>
 
         <g id="license" inkscape:groupmode="layer" inkscape:label="Copyright" transform="translate({$dx},{$dy})">
             <style type="text/css"><![CDATA[
@@ -1530,36 +2687,337 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
             ]]></style>
             <a id="license-cc-logo-link" xlink:href="http://creativecommons.org/licenses/by-sa/2.0/">
                 <g id="license-cc-logo" transform="scale(0.5,0.5) translate(-604,-49)">
-                    <path id="path3817_2_" nodetypes="ccccccc" d="M                     182.23532,75.39014 L 296.29928,75.59326 C                     297.89303,75.59326 299.31686,75.35644 299.31686,78.77344 L                     299.17721,116.34033 L 179.3569,116.34033 L                     179.3569,78.63379 C 179.3569,76.94922 179.51999,75.39014                     182.23532,75.39014 z " style="fill:#aab2ab"/>
+                    <path id="path3817_2_" nodetypes="ccccccc" d="M
+                    182.23532,75.39014 L 296.29928,75.59326 C
+                    297.89303,75.59326 299.31686,75.35644 299.31686,78.77344 L
+                    299.17721,116.34033 L 179.3569,116.34033 L
+                    179.3569,78.63379 C 179.3569,76.94922 179.51999,75.39014
+                    182.23532,75.39014 z " style="fill:#aab2ab"/>
                     <g id="g5908_2_" transform="matrix(0.872921,0,0,0.872921,50.12536,143.2144)">
-                        <path id="path5906_2_" type="arc" cx="296.35416" cy="264.3577" ry="22.939548" rx="22.939548" d="M                         187.20944,-55.6792 C 187.21502,-46.99896                         180.18158,-39.95825 171.50134,-39.95212 C                         162.82113,-39.94708 155.77929,-46.97998                         155.77426,-55.66016 C 155.77426,-55.66687                         155.77426,-55.67249 155.77426,-55.6792 C                         155.76922,-64.36054 162.80209,-71.40125                         171.48233,-71.40631 C 180.16367,-71.41193                         187.20441,-64.37842 187.20944,-55.69824 C                         187.20944,-55.69263 187.20944,-55.68591                         187.20944,-55.6792 z " style="fill:white"/>
+                        <path id="path5906_2_" type="arc" cx="296.35416"
+                        cy="264.3577" ry="22.939548" rx="22.939548" d="M
+                        187.20944,-55.6792 C 187.21502,-46.99896
+                        180.18158,-39.95825 171.50134,-39.95212 C
+                        162.82113,-39.94708 155.77929,-46.97998
+                        155.77426,-55.66016 C 155.77426,-55.66687
+                        155.77426,-55.67249 155.77426,-55.6792 C
+                        155.76922,-64.36054 162.80209,-71.40125
+                        171.48233,-71.40631 C 180.16367,-71.41193
+                        187.20441,-64.37842 187.20944,-55.69824 C
+                        187.20944,-55.69263 187.20944,-55.68591
+                        187.20944,-55.6792 z " style="fill:white"/>
                         <g id="g5706_2_" transform="translate(-289.6157,99.0653)">
-                            <path id="path5708_2_" d="M 473.88455,-167.54724 C                             477.36996,-164.06128 479.11294,-159.79333                             479.11294,-154.74451 C 479.11294,-149.69513                             477.40014,-145.47303 473.9746,-142.07715 C                             470.33929,-138.50055 466.04281,-136.71283                             461.08513,-136.71283 C 456.18736,-136.71283                             451.96526,-138.48544 448.42003,-142.03238 C                             444.87419,-145.57819 443.10158,-149.81537                             443.10158,-154.74451 C 443.10158,-159.6731                             444.87419,-163.94049 448.42003,-167.54724 C                             451.87523,-171.03375 456.09728,-172.77618                             461.08513,-172.77618 C 466.13342,-172.77618                             470.39914,-171.03375 473.88455,-167.54724 z M                             450.76657,-165.20239 C 447.81982,-162.22601                             446.34701,-158.7395 446.34701,-154.74005 C                             446.34701,-150.7417 447.80529,-147.28485                             450.72125,-144.36938 C 453.63778,-141.45288                             457.10974,-139.99462 461.1383,-139.99462 C                             465.16683,-139.99462 468.66848,-141.46743                             471.64486,-144.41363 C 474.47076,-147.14947                             475.88427,-150.59069 475.88427,-154.74005 C                             475.88427,-158.85809 474.44781,-162.35297                             471.57659,-165.22479 C 468.70595,-168.09546                             465.22671,-169.53131 461.1383,-169.53131 C                             457.04993,-169.53131 453.59192,-168.08813                             450.76657,-165.20239 z M 458.52106,-156.49927 C                             458.07074,-157.4809 457.39673,-157.9715                             456.49781,-157.9715 C 454.90867,-157.9715                             454.11439,-156.90198 454.11439,-154.763 C                             454.11439,-152.62341 454.90867,-151.55389                             456.49781,-151.55389 C 457.54719,-151.55389                             458.29676,-152.07519 458.74647,-153.11901 L                             460.94923,-151.94598 C 459.8993,-150.0805                             458.32417,-149.14697 456.22374,-149.14697 C                             454.60384,-149.14697 453.30611,-149.64367                             452.33168,-150.63653 C 451.35561,-151.62994                             450.86894,-152.99926 450.86894,-154.7445 C                             450.86894,-156.46008 451.37123,-157.82159                             452.37642,-158.83013 C 453.38161,-159.83806                             454.63347,-160.34264 456.13423,-160.34264 C                             458.35435,-160.34264 459.94407,-159.46776                             460.90504,-157.71978 L 458.52106,-156.49927 z M                             468.8844,-156.49927 C 468.43353,-157.4809                             467.77292,-157.9715 466.90201,-157.9715 C                             465.28095,-157.9715 464.46988,-156.90198                             464.46988,-154.763 C 464.46988,-152.62341                             465.28095,-151.55389 466.90201,-151.55389 C                             467.95304,-151.55389 468.68918,-152.07519                             469.10925,-153.11901 L 471.36126,-151.94598 C                             470.31301,-150.0805 468.74007,-149.14697                             466.64358,-149.14697 C 465.02587,-149.14697                             463.73095,-149.64367 462.75711,-150.63653 C                             461.78494,-151.62994 461.29773,-152.99926                             461.29773,-154.7445 C 461.29773,-156.46008                             461.79221,-157.82159 462.78061,-158.83013 C                             463.76843,-159.83806 465.02588,-160.34264                             466.55408,-160.34264 C 468.77027,-160.34264                             470.35776,-159.46776 471.3154,-157.71978 L                             468.8844,-156.49927 z "/>
+                            <path id="path5708_2_" d="M 473.88455,-167.54724 C
+                            477.36996,-164.06128 479.11294,-159.79333
+                            479.11294,-154.74451 C 479.11294,-149.69513
+                            477.40014,-145.47303 473.9746,-142.07715 C
+                            470.33929,-138.50055 466.04281,-136.71283
+                            461.08513,-136.71283 C 456.18736,-136.71283
+                            451.96526,-138.48544 448.42003,-142.03238 C
+                            444.87419,-145.57819 443.10158,-149.81537
+                            443.10158,-154.74451 C 443.10158,-159.6731
+                            444.87419,-163.94049 448.42003,-167.54724 C
+                            451.87523,-171.03375 456.09728,-172.77618
+                            461.08513,-172.77618 C 466.13342,-172.77618
+                            470.39914,-171.03375 473.88455,-167.54724 z M
+                            450.76657,-165.20239 C 447.81982,-162.22601
+                            446.34701,-158.7395 446.34701,-154.74005 C
+                            446.34701,-150.7417 447.80529,-147.28485
+                            450.72125,-144.36938 C 453.63778,-141.45288
+                            457.10974,-139.99462 461.1383,-139.99462 C
+                            465.16683,-139.99462 468.66848,-141.46743
+                            471.64486,-144.41363 C 474.47076,-147.14947
+                            475.88427,-150.59069 475.88427,-154.74005 C
+                            475.88427,-158.85809 474.44781,-162.35297
+                            471.57659,-165.22479 C 468.70595,-168.09546
+                            465.22671,-169.53131 461.1383,-169.53131 C
+                            457.04993,-169.53131 453.59192,-168.08813
+                            450.76657,-165.20239 z M 458.52106,-156.49927 C
+                            458.07074,-157.4809 457.39673,-157.9715
+                            456.49781,-157.9715 C 454.90867,-157.9715
+                            454.11439,-156.90198 454.11439,-154.763 C
+                            454.11439,-152.62341 454.90867,-151.55389
+                            456.49781,-151.55389 C 457.54719,-151.55389
+                            458.29676,-152.07519 458.74647,-153.11901 L
+                            460.94923,-151.94598 C 459.8993,-150.0805
+                            458.32417,-149.14697 456.22374,-149.14697 C
+                            454.60384,-149.14697 453.30611,-149.64367
+                            452.33168,-150.63653 C 451.35561,-151.62994
+                            450.86894,-152.99926 450.86894,-154.7445 C
+                            450.86894,-156.46008 451.37123,-157.82159
+                            452.37642,-158.83013 C 453.38161,-159.83806
+                            454.63347,-160.34264 456.13423,-160.34264 C
+                            458.35435,-160.34264 459.94407,-159.46776
+                            460.90504,-157.71978 L 458.52106,-156.49927 z M
+                            468.8844,-156.49927 C 468.43353,-157.4809
+                            467.77292,-157.9715 466.90201,-157.9715 C
+                            465.28095,-157.9715 464.46988,-156.90198
+                            464.46988,-154.763 C 464.46988,-152.62341
+                            465.28095,-151.55389 466.90201,-151.55389 C
+                            467.95304,-151.55389 468.68918,-152.07519
+                            469.10925,-153.11901 L 471.36126,-151.94598 C
+                            470.31301,-150.0805 468.74007,-149.14697
+                            466.64358,-149.14697 C 465.02587,-149.14697
+                            463.73095,-149.64367 462.75711,-150.63653 C
+                            461.78494,-151.62994 461.29773,-152.99926
+                            461.29773,-154.7445 C 461.29773,-156.46008
+                            461.79221,-157.82159 462.78061,-158.83013 C
+                            463.76843,-159.83806 465.02588,-160.34264
+                            466.55408,-160.34264 C 468.77027,-160.34264
+                            470.35776,-159.46776 471.3154,-157.71978 L
+                            468.8844,-156.49927 z "/>
                         </g>
                     </g>
-                    <path d="M 297.29639,74.91064 L 181.06688,74.91064 C                     179.8203,74.91064 178.80614,75.92529 178.80614,77.17187 L                     178.80614,116.66748 C 178.80614,116.94922                     179.03466,117.17822 179.31639,117.17822 L                     299.04639,117.17822 C 299.32813,117.17822                     299.55713,116.94922 299.55713,116.66748 L                     299.55713,77.17188 C 299.55713,75.92529 298.54297,74.91064                     297.29639,74.91064 z M 181.06688,75.93213 L                     297.29639,75.93213 C 297.97998,75.93213 298.53565,76.48828                     298.53565,77.17188 C 298.53565,77.17188 298.53565,93.09131                     298.53565,104.59034 L 215.4619,104.59034 C                     212.41698,110.09571 206.55077,113.83399 199.81835,113.83399                     C 193.083,113.83399 187.21825,110.09913 184.1748,104.59034                     L 179.82666,104.59034 C 179.82666,93.09132                     179.82666,77.17188 179.82666,77.17188 C 179.82664,76.48828                     180.38329,75.93213 181.06688,75.93213 z " id="frame"/>
+                    <path d="M 297.29639,74.91064 L 181.06688,74.91064 C
+                    179.8203,74.91064 178.80614,75.92529 178.80614,77.17187 L
+                    178.80614,116.66748 C 178.80614,116.94922
+                    179.03466,117.17822 179.31639,117.17822 L
+                    299.04639,117.17822 C 299.32813,117.17822
+                    299.55713,116.94922 299.55713,116.66748 L
+                    299.55713,77.17188 C 299.55713,75.92529 298.54297,74.91064
+                    297.29639,74.91064 z M 181.06688,75.93213 L
+                    297.29639,75.93213 C 297.97998,75.93213 298.53565,76.48828
+                    298.53565,77.17188 C 298.53565,77.17188 298.53565,93.09131
+                    298.53565,104.59034 L 215.4619,104.59034 C
+                    212.41698,110.09571 206.55077,113.83399 199.81835,113.83399
+                    C 193.083,113.83399 187.21825,110.09913 184.1748,104.59034
+                    L 179.82666,104.59034 C 179.82666,93.09132
+                    179.82666,77.17188 179.82666,77.17188 C 179.82664,76.48828
+                    180.38329,75.93213 181.06688,75.93213 z " id="frame"/>
                     <g enable-background="new" id="g2821">
-                        <path d="M 265.60986,112.8833 C 265.68994,113.03906                         265.79736,113.16504 265.93115,113.26172 C                         266.06494,113.35791 266.22119,113.42969                         266.40088,113.47608 C 266.58154,113.52296                         266.76807,113.54639 266.96045,113.54639 C                         267.09033,113.54639 267.22998,113.53565                         267.3794,113.51368 C 267.52784,113.4922                         267.66749,113.44972 267.79835,113.3877 C                         267.92823,113.32569 268.03761,113.23975                         268.12355,113.13086 C 268.21144,113.02197                         268.25441,112.88379 268.25441,112.71533 C                         268.25441,112.53515 268.19679,112.38916                         268.08156,112.27685 C 267.9673,112.16455                         267.81594,112.07177 267.62941,111.99658 C                         267.44386,111.92236 267.23195,111.85693                         266.9966,111.80078 C 266.76027,111.74463                         266.52101,111.68262 266.27883,111.61377 C                         266.02981,111.55176 265.78762,111.47559                         265.55129,111.38525 C 265.31594,111.29541                         265.10402,111.17822 264.9175,111.03515 C                         264.73098,110.89208 264.58059,110.71337                         264.46535,110.49853 C 264.35109,110.28369                         264.29347,110.02392 264.29347,109.71923 C                         264.29347,109.37646 264.36671,109.07958                         264.51222,108.82763 C 264.6587,108.57568                         264.85011,108.36572 265.08644,108.19726 C                         265.32179,108.02929 265.58937,107.90478                         265.8882,107.82372 C 266.18605,107.74315                         266.48488,107.70263 266.78273,107.70263 C                         267.13136,107.70263 267.46535,107.74169                         267.78566,107.81982 C 268.105,107.89746                         268.39015,108.02392 268.6382,108.19824 C                         268.88722,108.37256 269.08449,108.59521                         269.23097,108.86621 C 269.37648,109.13721                         269.44972,109.46582 269.44972,109.85156 L                         268.02784,109.85156 C 268.01514,109.65234                         267.97315,109.4873 267.90284,109.35693 C                         267.83155,109.22607 267.73682,109.12353                         267.61964,109.04834 C 267.50148,108.97412                         267.36671,108.9209 267.21534,108.89014 C                         267.063,108.85889 266.89796,108.84326                         266.71827,108.84326 C 266.60108,108.84326                         266.48292,108.85596 266.36573,108.88037 C                         266.24757,108.90576 266.14112,108.94922                         266.04542,109.01123 C 265.94874,109.07373                         265.86964,109.15137 265.80812,109.24463 C                         265.7466,109.33838 265.71535,109.45654                         265.71535,109.59961 C 265.71535,109.73047                         265.73976,109.83643 265.78957,109.91699 C                         265.83937,109.99804 265.93801,110.07275                         266.08352,110.14111 C 266.22903,110.20947                         266.43118,110.27832 266.68899,110.34668 C                         266.9468,110.41504 267.28372,110.50244                         267.70071,110.60791 C 267.82473,110.63281                         267.99661,110.67822 268.21731,110.74365 C                         268.43801,110.80908 268.65676,110.91308                         268.87454,111.05615 C 269.09231,111.1997                         269.27981,111.39111 269.43899,111.63037 C                         269.59719,111.87012 269.67629,112.17676                         269.67629,112.55029 C 269.67629,112.85547                         269.61672,113.13867 269.49856,113.3999 C                         269.3804,113.66162 269.20461,113.8872                         268.97122,114.07666 C 268.73782,114.26709                         268.44876,114.41455 268.10403,114.52051 C                         267.75833,114.62647 267.35794,114.6792                         266.90481,114.6792 C 266.53762,114.6792                         266.18118,114.63379 265.83547,114.54346 C                         265.49074,114.45313 265.18508,114.31104                         264.92043,114.11768 C 264.65676,113.92432                         264.4468,113.67774 264.29055,113.37891 C                         264.13528,113.07959 264.06106,112.7251                         264.06692,112.31397 L 265.4888,112.31397 C                         265.48877,112.53809 265.52881,112.72803                         265.60986,112.8833 z " id="path2823" style="fill:white"/>
-                        <path d="M 273.8667,107.8667 L                         276.35986,114.53076 L 274.8374,114.53076 L                         274.33349,113.04638 L 271.84033,113.04638 L                         271.31787,114.53076 L 269.84326,114.53076 L                         272.36377,107.8667 L 273.8667,107.8667 z M                         273.95068,111.95264 L 273.11084,109.50928 L                         273.09229,109.50928 L 272.22315,111.95264 L                         273.95068,111.95264 z " id="path2825" style="fill:white"/>
+                        <path d="M 265.60986,112.8833 C 265.68994,113.03906
+                        265.79736,113.16504 265.93115,113.26172 C
+                        266.06494,113.35791 266.22119,113.42969
+                        266.40088,113.47608 C 266.58154,113.52296
+                        266.76807,113.54639 266.96045,113.54639 C
+                        267.09033,113.54639 267.22998,113.53565
+                        267.3794,113.51368 C 267.52784,113.4922
+                        267.66749,113.44972 267.79835,113.3877 C
+                        267.92823,113.32569 268.03761,113.23975
+                        268.12355,113.13086 C 268.21144,113.02197
+                        268.25441,112.88379 268.25441,112.71533 C
+                        268.25441,112.53515 268.19679,112.38916
+                        268.08156,112.27685 C 267.9673,112.16455
+                        267.81594,112.07177 267.62941,111.99658 C
+                        267.44386,111.92236 267.23195,111.85693
+                        266.9966,111.80078 C 266.76027,111.74463
+                        266.52101,111.68262 266.27883,111.61377 C
+                        266.02981,111.55176 265.78762,111.47559
+                        265.55129,111.38525 C 265.31594,111.29541
+                        265.10402,111.17822 264.9175,111.03515 C
+                        264.73098,110.89208 264.58059,110.71337
+                        264.46535,110.49853 C 264.35109,110.28369
+                        264.29347,110.02392 264.29347,109.71923 C
+                        264.29347,109.37646 264.36671,109.07958
+                        264.51222,108.82763 C 264.6587,108.57568
+                        264.85011,108.36572 265.08644,108.19726 C
+                        265.32179,108.02929 265.58937,107.90478
+                        265.8882,107.82372 C 266.18605,107.74315
+                        266.48488,107.70263 266.78273,107.70263 C
+                        267.13136,107.70263 267.46535,107.74169
+                        267.78566,107.81982 C 268.105,107.89746
+                        268.39015,108.02392 268.6382,108.19824 C
+                        268.88722,108.37256 269.08449,108.59521
+                        269.23097,108.86621 C 269.37648,109.13721
+                        269.44972,109.46582 269.44972,109.85156 L
+                        268.02784,109.85156 C 268.01514,109.65234
+                        267.97315,109.4873 267.90284,109.35693 C
+                        267.83155,109.22607 267.73682,109.12353
+                        267.61964,109.04834 C 267.50148,108.97412
+                        267.36671,108.9209 267.21534,108.89014 C
+                        267.063,108.85889 266.89796,108.84326
+                        266.71827,108.84326 C 266.60108,108.84326
+                        266.48292,108.85596 266.36573,108.88037 C
+                        266.24757,108.90576 266.14112,108.94922
+                        266.04542,109.01123 C 265.94874,109.07373
+                        265.86964,109.15137 265.80812,109.24463 C
+                        265.7466,109.33838 265.71535,109.45654
+                        265.71535,109.59961 C 265.71535,109.73047
+                        265.73976,109.83643 265.78957,109.91699 C
+                        265.83937,109.99804 265.93801,110.07275
+                        266.08352,110.14111 C 266.22903,110.20947
+                        266.43118,110.27832 266.68899,110.34668 C
+                        266.9468,110.41504 267.28372,110.50244
+                        267.70071,110.60791 C 267.82473,110.63281
+                        267.99661,110.67822 268.21731,110.74365 C
+                        268.43801,110.80908 268.65676,110.91308
+                        268.87454,111.05615 C 269.09231,111.1997
+                        269.27981,111.39111 269.43899,111.63037 C
+                        269.59719,111.87012 269.67629,112.17676
+                        269.67629,112.55029 C 269.67629,112.85547
+                        269.61672,113.13867 269.49856,113.3999 C
+                        269.3804,113.66162 269.20461,113.8872
+                        268.97122,114.07666 C 268.73782,114.26709
+                        268.44876,114.41455 268.10403,114.52051 C
+                        267.75833,114.62647 267.35794,114.6792
+                        266.90481,114.6792 C 266.53762,114.6792
+                        266.18118,114.63379 265.83547,114.54346 C
+                        265.49074,114.45313 265.18508,114.31104
+                        264.92043,114.11768 C 264.65676,113.92432
+                        264.4468,113.67774 264.29055,113.37891 C
+                        264.13528,113.07959 264.06106,112.7251
+                        264.06692,112.31397 L 265.4888,112.31397 C
+                        265.48877,112.53809 265.52881,112.72803
+                        265.60986,112.8833 z " id="path2823"
+                        style="fill:white"/>
+                        <path d="M 273.8667,107.8667 L
+                        276.35986,114.53076 L 274.8374,114.53076 L
+                        274.33349,113.04638 L 271.84033,113.04638 L
+                        271.31787,114.53076 L 269.84326,114.53076 L
+                        272.36377,107.8667 L 273.8667,107.8667 z M
+                        273.95068,111.95264 L 273.11084,109.50928 L
+                        273.09229,109.50928 L 272.22315,111.95264 L
+                        273.95068,111.95264 z " id="path2825"
+                        style="fill:white"/>
                     </g>
                     <g enable-background="new" id="g2827">
-                        <path d="M 239.17821,107.8667 C 239.49559,107.8667                         239.78563,107.89502 240.04735,107.95068 C                         240.30907,108.00683 240.53368,108.09863                         240.72118,108.22607 C 240.9077,108.35351                         241.05321,108.52295 241.15575,108.73437 C                         241.25829,108.94579 241.31005,109.20703                         241.31005,109.51806 C 241.31005,109.854                         241.23388,110.13329 241.08056,110.35742 C                         240.92822,110.58154 240.70165,110.76465                         240.40283,110.90771 C 240.81494,111.02587                         241.12256,111.23291 241.32568,111.5288 C                         241.5288,111.82469 241.63037,112.18114                         241.63037,112.59814 C 241.63037,112.93408                         241.56494,113.22509 241.43408,113.47119 C                         241.30322,113.7168 241.12646,113.91748                         240.90576,114.07324 C 240.68408,114.229                         240.43115,114.34424 240.14795,114.41845 C                         239.86377,114.49365 239.57275,114.53075                         239.27295,114.53075 L 236.03662,114.53075 L                         236.03662,107.86669 L 239.17821,107.86669 L                         239.17821,107.8667 z M 238.99071,110.56201 C                         239.25243,110.56201 239.46727,110.5 239.63622,110.37597                         C 239.80419,110.25146 239.88817,110.05029                         239.88817,109.77099 C 239.88817,109.61572                         239.85985,109.48828 239.80419,109.38915 C                         239.74755,109.28954 239.67333,109.21239                         239.57958,109.15624 C 239.48583,109.10058                         239.37841,109.06151 239.25731,109.04003 C                         239.13524,109.01806 239.00926,109.00732                         238.8784,109.00732 L 237.50535,109.00732 L                         237.50535,110.56201 L 238.99071,110.56201 z M                         239.07664,113.39014 C 239.22019,113.39014                         239.35691,113.37647 239.48777,113.34815 C                         239.61863,113.32032 239.73484,113.27344                         239.83445,113.2085 C 239.93406,113.14307                         240.01316,113.0542 240.07273,112.94239 C                         240.1323,112.83058 240.1616,112.68751                         240.1616,112.51319 C 240.1616,112.17139                         240.06492,111.92725 239.87156,111.78126 C                         239.6782,111.63527 239.42234,111.56202                         239.10496,111.56202 L 237.50535,111.56202 L                         237.50535,113.39014 L 239.07664,113.39014 z " id="path2829" style="fill:white"/>
-                        <path d="M 241.88914,107.8667 L 243.53269,107.8667 L                         245.09324,110.49854 L 246.64402,107.8667 L                         248.27781,107.8667 L 245.80418,111.97315 L                         245.80418,114.53077 L 244.33543,114.53077 L                         244.33543,111.93604 L 241.88914,107.8667 z " id="path2831" style="fill:white"/>
+                        <path d="M 239.17821,107.8667 C 239.49559,107.8667
+                        239.78563,107.89502 240.04735,107.95068 C
+                        240.30907,108.00683 240.53368,108.09863
+                        240.72118,108.22607 C 240.9077,108.35351
+                        241.05321,108.52295 241.15575,108.73437 C
+                        241.25829,108.94579 241.31005,109.20703
+                        241.31005,109.51806 C 241.31005,109.854
+                        241.23388,110.13329 241.08056,110.35742 C
+                        240.92822,110.58154 240.70165,110.76465
+                        240.40283,110.90771 C 240.81494,111.02587
+                        241.12256,111.23291 241.32568,111.5288 C
+                        241.5288,111.82469 241.63037,112.18114
+                        241.63037,112.59814 C 241.63037,112.93408
+                        241.56494,113.22509 241.43408,113.47119 C
+                        241.30322,113.7168 241.12646,113.91748
+                        240.90576,114.07324 C 240.68408,114.229
+                        240.43115,114.34424 240.14795,114.41845 C
+                        239.86377,114.49365 239.57275,114.53075
+                        239.27295,114.53075 L 236.03662,114.53075 L
+                        236.03662,107.86669 L 239.17821,107.86669 L
+                        239.17821,107.8667 z M 238.99071,110.56201 C
+                        239.25243,110.56201 239.46727,110.5 239.63622,110.37597
+                        C 239.80419,110.25146 239.88817,110.05029
+                        239.88817,109.77099 C 239.88817,109.61572
+                        239.85985,109.48828 239.80419,109.38915 C
+                        239.74755,109.28954 239.67333,109.21239
+                        239.57958,109.15624 C 239.48583,109.10058
+                        239.37841,109.06151 239.25731,109.04003 C
+                        239.13524,109.01806 239.00926,109.00732
+                        238.8784,109.00732 L 237.50535,109.00732 L
+                        237.50535,110.56201 L 238.99071,110.56201 z M
+                        239.07664,113.39014 C 239.22019,113.39014
+                        239.35691,113.37647 239.48777,113.34815 C
+                        239.61863,113.32032 239.73484,113.27344
+                        239.83445,113.2085 C 239.93406,113.14307
+                        240.01316,113.0542 240.07273,112.94239 C
+                        240.1323,112.83058 240.1616,112.68751
+                        240.1616,112.51319 C 240.1616,112.17139
+                        240.06492,111.92725 239.87156,111.78126 C
+                        239.6782,111.63527 239.42234,111.56202
+                        239.10496,111.56202 L 237.50535,111.56202 L
+                        237.50535,113.39014 L 239.07664,113.39014 z "
+                        id="path2829" style="fill:white"/>
+                        <path d="M 241.88914,107.8667 L 243.53269,107.8667 L
+                        245.09324,110.49854 L 246.64402,107.8667 L
+                        248.27781,107.8667 L 245.80418,111.97315 L
+                        245.80418,114.53077 L 244.33543,114.53077 L
+                        244.33543,111.93604 L 241.88914,107.8667 z "
+                        id="path2831" style="fill:white"/>
                     </g>
                     <g id="g6316_1_" transform="matrix(0.624995,0,0,0.624995,391.2294,176.9332)">
-                        <path id="path6318_1_" type="arc" cx="475.97119" cy="252.08646" ry="29.209877" rx="29.209877" d="M                         -175.0083,-139.1153 C -175.00204,-129.7035                         -182.62555,-122.06751 -192.03812,-122.06049 C                         -201.44913,-122.05341 -209.08512,-129.67774                         -209.09293,-139.09028 C -209.09293,-139.09809                         -209.09293,-139.10749 -209.09293,-139.1153 C                         -209.09919,-148.52784 -201.47413,-156.1623                         -192.06311,-156.17011 C -182.65054,-156.17713                         -175.01456,-148.55207 -175.0083,-139.14026 C                         -175.0083,-139.13092 -175.0083,-139.1239                         -175.0083,-139.1153 z " style="fill:white"/>
+                        <path id="path6318_1_" type="arc" cx="475.97119"
+                        cy="252.08646" ry="29.209877" rx="29.209877" d="M
+                        -175.0083,-139.1153 C -175.00204,-129.7035
+                        -182.62555,-122.06751 -192.03812,-122.06049 C
+                        -201.44913,-122.05341 -209.08512,-129.67774
+                        -209.09293,-139.09028 C -209.09293,-139.09809
+                        -209.09293,-139.10749 -209.09293,-139.1153 C
+                        -209.09919,-148.52784 -201.47413,-156.1623
+                        -192.06311,-156.17011 C -182.65054,-156.17713
+                        -175.01456,-148.55207 -175.0083,-139.14026 C
+                        -175.0083,-139.13092 -175.0083,-139.1239
+                        -175.0083,-139.1153 z " style="fill:white"/>
                         <g id="g6320_1_" transform="translate(-23.9521,-89.72962)">
-                            <path id="path6322_1_" d="M -168.2204,-68.05536 C                             -173.39234,-68.05536 -177.76892,-66.25067                             -181.35175,-62.64203 C -185.02836,-58.90759                             -186.86588,-54.48883 -186.86588,-49.38568 C                             -186.86588,-44.28253 -185.02836,-39.89416                             -181.35175,-36.22308 C -177.67673,-32.55114                             -173.29859,-30.71521 -168.2204,-30.71521 C                             -163.07974,-30.71521 -158.62503,-32.56677                             -154.85312,-36.26996 C -151.30307,-39.78558                             -149.52652,-44.15827 -149.52652,-49.38568 C                             -149.52652,-54.6123 -151.33432,-59.03265                             -154.94843,-62.64203 C -158.5625,-66.25067                             -162.98599,-68.05536 -168.2204,-68.05536 z M                             -168.17352,-64.69519 C -163.936,-64.69519                             -160.33752,-63.20221 -157.37655,-60.21466 C                             -154.38748,-57.25836 -152.89214,-53.64899                             -152.89214,-49.38568 C -152.89214,-45.09186                             -154.35466,-41.52856 -157.28438,-38.69653 C                             -160.36876,-35.64727 -163.99849,-34.12304                             -168.17351,-34.12304 C -172.34856,-34.12304                             -175.94701,-35.63244 -178.96892,-38.64965 C                             -181.9908,-41.66918 -183.50176,-45.24657                             -183.50176,-49.38567 C -183.50176,-53.52398                             -181.97518,-57.13414 -178.92205,-60.21465 C                             -175.9939,-63.20221 -172.41107,-64.69519                             -168.17352,-64.69519 z "/>
-                            <path id="path6324_1_" d="M -176.49548,-52.02087 C                             -175.75171,-56.71856 -172.44387,-59.22949                             -168.30008,-59.22949 C -162.33911,-59.22949                             -158.70783,-54.90448 -158.70783,-49.1372 C                             -158.70783,-43.50982 -162.57194,-39.13793                             -168.39383,-39.13793 C -172.39856,-39.13793                             -175.98297,-41.60277 -176.63611,-46.43877 L                             -171.93292,-46.43877 C -171.7923,-43.92778                             -170.1626,-43.04418 -167.83447,-43.04418 C                             -165.1813,-43.04418 -163.4563,-45.50908                             -163.4563,-49.27709 C -163.4563,-53.22942                             -164.94693,-55.32244 -167.74228,-55.32244 C                             -169.79074,-55.32244 -171.55948,-54.57787                             -171.93292,-52.02087 L -170.56418,-52.02789 L                             -174.26734,-48.32629 L -177.96894,-52.02789 L                             -176.49548,-52.02087 z "/>
+                            <path id="path6322_1_" d="M -168.2204,-68.05536 C
+                            -173.39234,-68.05536 -177.76892,-66.25067
+                            -181.35175,-62.64203 C -185.02836,-58.90759
+                            -186.86588,-54.48883 -186.86588,-49.38568 C
+                            -186.86588,-44.28253 -185.02836,-39.89416
+                            -181.35175,-36.22308 C -177.67673,-32.55114
+                            -173.29859,-30.71521 -168.2204,-30.71521 C
+                            -163.07974,-30.71521 -158.62503,-32.56677
+                            -154.85312,-36.26996 C -151.30307,-39.78558
+                            -149.52652,-44.15827 -149.52652,-49.38568 C
+                            -149.52652,-54.6123 -151.33432,-59.03265
+                            -154.94843,-62.64203 C -158.5625,-66.25067
+                            -162.98599,-68.05536 -168.2204,-68.05536 z M
+                            -168.17352,-64.69519 C -163.936,-64.69519
+                            -160.33752,-63.20221 -157.37655,-60.21466 C
+                            -154.38748,-57.25836 -152.89214,-53.64899
+                            -152.89214,-49.38568 C -152.89214,-45.09186
+                            -154.35466,-41.52856 -157.28438,-38.69653 C
+                            -160.36876,-35.64727 -163.99849,-34.12304
+                            -168.17351,-34.12304 C -172.34856,-34.12304
+                            -175.94701,-35.63244 -178.96892,-38.64965 C
+                            -181.9908,-41.66918 -183.50176,-45.24657
+                            -183.50176,-49.38567 C -183.50176,-53.52398
+                            -181.97518,-57.13414 -178.92205,-60.21465 C
+                            -175.9939,-63.20221 -172.41107,-64.69519
+                            -168.17352,-64.69519 z "/>
+                            <path id="path6324_1_" d="M -176.49548,-52.02087 C
+                            -175.75171,-56.71856 -172.44387,-59.22949
+                            -168.30008,-59.22949 C -162.33911,-59.22949
+                            -158.70783,-54.90448 -158.70783,-49.1372 C
+                            -158.70783,-43.50982 -162.57194,-39.13793
+                            -168.39383,-39.13793 C -172.39856,-39.13793
+                            -175.98297,-41.60277 -176.63611,-46.43877 L
+                            -171.93292,-46.43877 C -171.7923,-43.92778
+                            -170.1626,-43.04418 -167.83447,-43.04418 C
+                            -165.1813,-43.04418 -163.4563,-45.50908
+                            -163.4563,-49.27709 C -163.4563,-53.22942
+                            -164.94693,-55.32244 -167.74228,-55.32244 C
+                            -169.79074,-55.32244 -171.55948,-54.57787
+                            -171.93292,-52.02087 L -170.56418,-52.02789 L
+                            -174.26734,-48.32629 L -177.96894,-52.02789 L
+                            -176.49548,-52.02087 z "/>
                         </g>
                     </g>
                     <g id="g2838">
                         <circle cx="242.56226" cy="90.224609" r="10.8064" id="circle2840" style="fill:white"/>
                         <g id="g2842">
-                            <path d="M 245.68994,87.09766 C 245.68994,86.68116                             245.35205,86.34424 244.93603,86.34424 L                             240.16357,86.34424 C 239.74755,86.34424                             239.40966,86.68115 239.40966,87.09766 L                             239.40966,91.87061 L 240.74071,91.87061 L                             240.74071,97.52295 L 244.3579,97.52295 L                             244.3579,91.87061 L 245.68993,91.87061 L                             245.68993,87.09766 L 245.68994,87.09766 z " id="path2844"/>
+                            <path d="M 245.68994,87.09766 C 245.68994,86.68116
+                            245.35205,86.34424 244.93603,86.34424 L
+                            240.16357,86.34424 C 239.74755,86.34424
+                            239.40966,86.68115 239.40966,87.09766 L
+                            239.40966,91.87061 L 240.74071,91.87061 L
+                            240.74071,97.52295 L 244.3579,97.52295 L
+                            244.3579,91.87061 L 245.68993,91.87061 L
+                            245.68993,87.09766 L 245.68994,87.09766 z "
+                            id="path2844"/>
                             <circle cx="242.5498" cy="84.083008" r="1.63232" id="circle2846"/>
                         </g>
-                        <path clip-rule="evenodd" d="M 242.53467,78.31836 C                         239.30322,78.31836 236.56641,79.4458 234.32715,81.70215                         C 232.0293,84.03516 230.88086,86.79736                         230.88086,89.98633 C 230.88086,93.1753                         232.0293,95.91846 234.32715,98.21338 C                         236.625,100.50781 239.36133,101.65527                         242.53467,101.65527 C 245.74756,101.65527                         248.53272,100.49853 250.88819,98.18359 C                         253.10889,95.98681 254.21827,93.2539 254.21827,89.98632                         C 254.21827,86.71874 253.08936,83.95751                         250.83057,81.70214 C 248.57178,79.4458                         245.80615,78.31836 242.53467,78.31836 z M                         242.56396,80.41797 C 245.2124,80.41797                         247.46142,81.35156 249.31103,83.21875 C                         251.18115,85.06592 252.11572,87.32227                         252.11572,89.98633 C 252.11572,92.66992                         251.20068,94.89746 249.36963,96.66699 C                         247.4419,98.57275 245.17334,99.52539 242.56397,99.52539                         C 239.9546,99.52539 237.70557,98.58252                         235.81739,96.6958 C 233.92774,94.80957                         232.98389,92.57324 232.98389,89.98633 C                         232.98389,87.3999 233.93799,85.14404 235.84619,83.21875                         C 237.67676,81.35156 239.9165,80.41797                         242.56396,80.41797 z " id="path2848" style="fill-rule:evenodd"/>
+                        <path clip-rule="evenodd" d="M 242.53467,78.31836 C
+                        239.30322,78.31836 236.56641,79.4458 234.32715,81.70215
+                        C 232.0293,84.03516 230.88086,86.79736
+                        230.88086,89.98633 C 230.88086,93.1753
+                        232.0293,95.91846 234.32715,98.21338 C
+                        236.625,100.50781 239.36133,101.65527
+                        242.53467,101.65527 C 245.74756,101.65527
+                        248.53272,100.49853 250.88819,98.18359 C
+                        253.10889,95.98681 254.21827,93.2539 254.21827,89.98632
+                        C 254.21827,86.71874 253.08936,83.95751
+                        250.83057,81.70214 C 248.57178,79.4458
+                        245.80615,78.31836 242.53467,78.31836 z M
+                        242.56396,80.41797 C 245.2124,80.41797
+                        247.46142,81.35156 249.31103,83.21875 C
+                        251.18115,85.06592 252.11572,87.32227
+                        252.11572,89.98633 C 252.11572,92.66992
+                        251.20068,94.89746 249.36963,96.66699 C
+                        247.4419,98.57275 245.17334,99.52539 242.56397,99.52539
+                        C 239.9546,99.52539 237.70557,98.58252
+                        235.81739,96.6958 C 233.92774,94.80957
+                        232.98389,92.57324 232.98389,89.98633 C
+                        232.98389,87.3999 233.93799,85.14404 235.84619,83.21875
+                        C 237.67676,81.35156 239.9165,80.41797
+                        242.56396,80.41797 z " id="path2848"
+                        style="fill-rule:evenodd"/>
                     </g>
                 </g>
             </a>
@@ -1578,7 +3036,9 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
         </g>
     </xsl:template>
 
-    <xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" name="zoomControl">
+
+	<!-- Draw zoom controls -->
+    <xsl:template name="zoomControl">
         <defs>
 
             <style type="text/css">
@@ -1632,16 +3092,16 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
 
         </defs>
 
-        <g id="gPanDown" filter="url(#fancyButton)" onclick="fnPan(&quot;down&quot;)">
+        <g id="gPanDown" filter="url(#fancyButton)" onclick="fnPan('down')">
             <use x="18px" y="60px" xlink:href="#panDown" width="14px" height="14px"/>
         </g>
-        <g id="gPanRight" filter="url(#fancyButton)" onclick="fnPan(&quot;right&quot;)">
+        <g id="gPanRight" filter="url(#fancyButton)" onclick="fnPan('right')">
             <use x="8px" y="70px" xlink:href="#panRight" width="14px" height="14px"/>
         </g>
-        <g id="gPanLeft" filter="url(#fancyButton)" onclick="fnPan(&quot;left&quot;)">
+        <g id="gPanLeft" filter="url(#fancyButton)" onclick="fnPan('left')">
             <use x="28px" y="70px" xlink:href="#panLeft" width="14px" height="14px"/>
         </g>
-        <g id="gPanUp" filter="url(#fancyButton)" onclick="fnPan(&quot;up&quot;)">
+        <g id="gPanUp" filter="url(#fancyButton)" onclick="fnPan('up')">
             <use x="18px" y="80px" xlink:href="#panUp" width="14px" height="14px"/>
         </g>
 
@@ -1665,15 +3125,17 @@ Negative match by <xsl:value-of select="count($otherelements)"/> elements for la
         </line>
 
         <!-- Need to use onmousedown because onclick is interfered with by the onmousedown handler for panning -->
-        <g id="gZoomIn" filter="url(#fancyButton)" onmousedown="fnZoom(&quot;in&quot;)">
+        <g id="gZoomIn" filter="url(#fancyButton)" onmousedown="fnZoom('in')">
             <use x="15.5px" y="100px" xlink:href="#zoomIn" width="19px" height="19px"/>
         </g>
 
         <!-- Need to use onmousedown because onclick is interfered with by the onmousedown handler for panning -->
-        <g id="gZoomOut" filter="url(#fancyButton)" onmousedown="fnZoom(&quot;out&quot;)">
+        <g id="gZoomOut" filter="url(#fancyButton)" onmousedown="fnZoom('out')">
             <use x="15.5px" y="288px" xlink:href="#zoomOut" width="19px" height="19px"/>
         </g>
-    </xsl:template><xsl:template xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/2000/svg" xmlns:xi="http://www.w3.org/2001/XInclude" name="javaScript">
+    </xsl:template>
+    
+    <xsl:template name="javaScript">
         <script>
             /*
 

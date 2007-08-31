@@ -148,9 +148,9 @@ struct segments * addSegment(struct nodes * from, struct nodes * to)
 	}
 	else
 	{		
-		from->segments=attachsegment(from->segments,*p);
+		from->segments=attachsegment(from->segments,*p,0);
 		/*update to node's segment list*/
-		to->segments=attachsegment(to->segments,*p);
+		to->segments=attachsegment(to->segments,*p,0);
 		
 		to->used = 1;
 		from->used = 1;

@@ -50,8 +50,21 @@ void detachsegments(struct ways* p){
 
 
 
-struct attachedSegments * attachsegment(struct attachedSegments* p, struct segments *s){
+struct attachedSegments * attachsegment(struct attachedSegments* p, struct segments *s, int invert){
 	//printf("%p\t%p\n",p,s);
+	// For inverted ways, we add to the front rather than to the back
+	if( invert )
+	{
+		struct attachedSegments *n = (struct attachedSegments *) calloc(1,sizeof(struct attachedSegments));
+		if (n==NULL)
+		{
+			fprintf(stderr,"out of memory\n");
+			exit(1);
+		}
+		n->nextSegment=p;
+		n->segment=s;
+		return n;
+	}
 	if (p==NULL)
 	{
 		p = (struct attachedSegments *) calloc(1,sizeof(struct attachedSegments));
@@ -65,7 +78,7 @@ struct attachedSegments * attachsegment(struct attachedSegments* p, struct segme
 	}
 	else
 	{
-		p->nextSegment=attachsegment(p->nextSegment,s);
+		p->nextSegment=attachsegment(p->nextSegment,s,0);
 	}
 	return p;
 }
@@ -162,8 +175,8 @@ void saveWays(){
 
 
  
- void addSegment2Way(struct ways * way,struct segments * segment){
-	way->segments=attachsegment(way->segments,segment);
+ void addSegment2Way(struct ways * way,struct segments * segment, int invert){
+	way->segments=attachsegment(way->segments,segment, invert);
 	segment->ways=attachway(segment->ways,way);
 	if (way->max_lon < segment->from->lon) way->max_lon=segment->from->lon;
 	if (way->max_lon < segment->to->lon) way->max_lon=segment->to->lon;

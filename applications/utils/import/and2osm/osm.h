@@ -81,11 +81,12 @@ long incr (long i);
 
 long Err_ND_attached_to_way;
 long Err_more_NDIDs_per_node;
-long Err_oneway_way_reversed;
+long oneway_way_reversed;
 long Err_toID_without_ANDID;
 long Err_fromID_without_ANDID;
 
 
 struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p,struct nodes * from, struct nodes * to);
+int invertRoad(DBFHandle hDBF, long reconrdnr);
 
 #endif  // _OSM_H_INCLUDED

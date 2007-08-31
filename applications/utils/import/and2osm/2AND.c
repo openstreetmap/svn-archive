@@ -262,6 +262,12 @@ int readfile(char * inputfile)
 			printf("\n%i,name=%s ",i,DBFReadStringAttribute( hDBF, i, 11 ) );
 */
 		//printf("%i\n",psShape->nVertices);
+		int invert = 0;
+		
+		if (simplify && fileType == ROAD)
+			if( invertRoad(hDBF, i) )
+				invert = 1;
+		
   		if (psShape->nVertices>1)
 		{
 			if (psShape->nSHPType==SHPT_POLYGON) way=newWay(AREA); else way=newWay(ROAD);
@@ -314,9 +320,12 @@ int readfile(char * inputfile)
 				{
 					
 					//    printf(" seg\n");
-					lastSegment=addSegment(prevNode,lastNode);
+					if( !invert )
+						lastSegment=addSegment(prevNode,lastNode);
+					else
+						lastSegment=addSegment(lastNode,prevNode);
 					//  printf(" seg2way\n");
-					addSegment2Way(way,lastSegment);
+					addSegment2Way(way,lastSegment, invert);
 				}
 			}
 /*			    printf("%i [%12.8f,%12.8f]\n",iPart,psShape->padfX[j],psShape->padfY[j]);*/
@@ -334,7 +343,10 @@ int readfile(char * inputfile)
 	*/
 		if (psShape->nVertices>1)
 		{
-			way->tag=mkTagList(hDBF, i,fileType,way->tag,firstNode,lastNode);
+			if( !invert )
+				way->tag=mkTagList(hDBF, i,fileType,way->tag,firstNode,lastNode);
+			else
+				way->tag=mkTagList(hDBF, i,fileType,way->tag,lastNode,firstNode);
 		}
 		else
 		{
@@ -445,7 +457,7 @@ int main(int argc, char ** argv )
 	
 	Err_ND_attached_to_way=0;
 	Err_more_NDIDs_per_node=0;
-	Err_oneway_way_reversed=0;	
+	oneway_way_reversed=0;	
 	Err_toID_without_ANDID=0;
 	Err_fromID_without_ANDID=0;
 
@@ -481,7 +493,7 @@ int main(int argc, char ** argv )
 	closeOutput();
 	printf("\nErr_ND_attached_to_way=%li\n",Err_ND_attached_to_way);
 	printf("Err_more_NDIDs_per_node=%li\n",Err_more_NDIDs_per_node);
-	printf("err_oneway_way_reversed=%li\n",Err_oneway_way_reversed);
+	printf("Reversed oneway roads=%li\n",oneway_way_reversed);
 	printf("way \"toID\" refers to not present AND ID=%li\n",Err_toID_without_ANDID);
 	printf("way \"fromID\" refers to not present AND ID=%li\n",Err_fromID_without_ANDID);
 	if( simplify )

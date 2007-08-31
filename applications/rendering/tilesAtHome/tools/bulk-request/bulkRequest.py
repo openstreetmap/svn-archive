@@ -24,6 +24,7 @@ def checkOutstanding():
   print "%s outstanding - continuing" % outstanding
 
 def go(xmin,ymin,xmax,ymax,xskip,yskip,name):
+  totalStartTime = time.time()
   count = 0
   for x in range(xskip,xmax+1):
     if x==xskip:
@@ -33,7 +34,7 @@ def go(xmin,ymin,xmax,ymax,xskip,yskip,name):
     for y in range(ystart,ymax+1):
       if not count%50:
         checkOutstanding()
-      print "%s,%s # (%s):" % (x,y,count+1),
+      print "%s,%s # (%s in %s seconds):" % (x,y,count+1,time.time()-totalStartTime),
       sys.stdout.flush()
       url = "http://dev.openstreetmap.org/~ojw/NeedRender/?x=%s&y=%s&priority=2&src=bulk0.1_%s" % (x,y,name)
       startTime = time.time()

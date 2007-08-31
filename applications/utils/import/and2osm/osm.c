@@ -135,7 +135,12 @@ int closeOutput()
 	return 0;
 }
 
-
+int invertRoad(DBFHandle hDBF, long recordnr)
+{
+  if( DBFReadIntegerAttribute( hDBF, recordnr, 9 )== 2)
+    return 1;
+  return 0;
+}
 
 struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p,struct nodes * from, struct nodes * to){
 	char name[100];
@@ -356,8 +361,11 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			}
 			to->required = to->used = 1;
 		}
-		if (inverted)  // For some reason this never happens?
+		if (inverted)
+		{
+		        oneway_way_reversed++;
 		        p=addtag(p,"AND-inverted","yes",NULL);
+                }
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0
 		//Field 3: Type=Integer, Title=`RPOLY_', Width=11, Decimals=0

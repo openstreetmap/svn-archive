@@ -2,7 +2,7 @@
 
 import fileinput
 from math import pi,cos,sin,log,exp,atan
-from subprocess import Popen
+from subprocess import call
 
 DEG_TO_RAD = pi/180
 RAD_TO_DEG = 180/pi
@@ -49,9 +49,10 @@ from StringIO import StringIO
 from mapnik import *
 
 
-mapfile = "/home/steve/osm.xml"
+mapfile = "/home/jburgess/live/osm.xml"
 tile_dir = '/tmp/tiles/'
 maxZoom = 18
+
 
 gprj = GoogleProjection(maxZoom+1)
 m = Map(2 * 256,2 * 256)
@@ -76,25 +77,28 @@ def dotile(x,y,z):
   bbox.height(bbox.height() * 2)
   m.zoom_to_box(bbox)
 
-  if not os.path.isdir(tile_dir + z_str):
-    os.mkdir(tile_dir + z_str)
-  if not os.path.isdir(tile_dir + z_str + '/' + x_str):
-    os.mkdir(tile_dir + z_str + '/' + x_str)
+  #if not os.path.isdir(tile_dir + z_str):
+  #  os.mkdir(tile_dir + z_str)
+  #if not os.path.isdir(tile_dir + z_str + '/' + x_str):
+  #  os.mkdir(tile_dir + z_str + '/' + x_str)
 
   tile_uri = tile_dir + z_str + '-' + x_str + '-' + y_str + '.png'
+  # This can happen when 2 renderers step on each other
+  if os.path.isfile(tile_uri):
+    return
+
   im = Image(512, 512)
   render(m, im)
   im = fromstring('RGBA', (512, 512), rawdata(im))
   im = im.crop((128,128,512-128,512-128))
   fh = open(tile_uri,'w+b')
   im.save(fh, 'PNG', quality=100)
-  command = "convert  -colors 255 %s %s" % (tile_uri,tile_uri)
-  p = Popen(command, shell=True)
-  sts = os.waitpid(p.pid, 0)
-
-  command = "/home/steve/insert_tile.rb %s %s %s %s" % (x_str, y_str, z_str, tile_uri)
-  p = Popen(command, shell=True)
-  sts = os.waitpid(p.pid, 0)
+  #call(["convert", "-colors", "255", tile_uri, tile_uri])
+  call(["color255", tile_uri])  
+  call(["/home/jburgess/live/insert_tile.rb", x_str, y_str, z_str, tile_uri])
+  
+if not os.path.isdir(tile_dir):
+  os.mkdir(tile_dir)
 
 for line in fileinput.input():
   tile_data = line.rstrip('\n').split(' ')

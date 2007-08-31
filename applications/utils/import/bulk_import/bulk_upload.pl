@@ -61,6 +61,7 @@ init_cache($cache,$dbcache);
 
 #$OSM->load("data/nld-delete.osm");
 my $did_something;
+my $delay = 0;   # Delay if get 500 errors...
 
 # On the first iteration, we reset the counters
 if( not exists $db_file{loop} or $db_file{loop} eq "0" )
@@ -146,6 +147,12 @@ sub process
       exit(2) if $code == 401 or $code == 400 or $code == 500;
     }
     # Force==2 is keep on going, no matter what
+    
+    if( $uploader->last_error_code() == 500 )
+    {
+      sleep(2**$delay);
+      $delay++;
+    }
     $did_something |= 2;
   }
   else
@@ -153,6 +160,7 @@ sub process
     mark_done( $ent, $command, $id );
     $did_something |= 1;
     $db_file{count}++;
+    $delay = int($delay/2);
   }
   return;
 }

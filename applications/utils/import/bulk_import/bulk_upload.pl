@@ -189,7 +189,7 @@ sub init_cache
         
         if( $status ne "!" )
         {
-          $done{$type}{$command}{$id}=1;
+          $done{$type}{$command}{$id}=$status;
         }
       }
       else

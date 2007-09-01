@@ -620,7 +620,7 @@ void GetDirections (GtkWidget *, gpointer)
         
         if (strcmp (w->name + data, last)) {
           last = w->name + data;
-          if (!i) len += strlen (last);
+          if (!i) len += strlen (last) + 1;
           else len += sprintf (msg + len, "%s\n", last);
         }
       }

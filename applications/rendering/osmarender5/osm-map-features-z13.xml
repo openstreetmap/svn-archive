@@ -35,7 +35,7 @@
         <rule e="way" k="landuse" v="retail">
             <area class='landuse-retail'/>
         </rule>
-        <rule e="way" k="landuse" v="industrial">
+        <rule e="way" k="landuse" v="industrial|brownfield">
             <area class="landuse-industrial" />
         </rule>
         <rule e="way" k="landuse" v="commercial">

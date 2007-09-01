@@ -53,7 +53,7 @@
         <rule e="way" k="natural" v="land">
             <area class='natural-land' />
         </rule>
-        <rule e="way" k="natural" v="forest|wood|heath|scrub">
+        <rule e="way" k="landuse|natural" v="forest|wood|heath|scrub">
             <area class='landuse-wood'/>
         </rule>
         

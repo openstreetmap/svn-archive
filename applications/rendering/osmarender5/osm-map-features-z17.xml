@@ -49,14 +49,14 @@
         <rule e="way" k="landuse" v="field|village_green|meadow|grass">
             <area class='landuse-field' />
         </rule>
-		<rule e="way" k="landuse" v="cemetery">
-			<rule e="way" k="religion" v="christian">
-				<area class='landuse-cemetery-christian' />
-			</rule>
-			<else>
-				<area class='landuse-cemetery' />
-			</else>
+	<rule e="way" k="landuse" v="cemetery">
+		<rule e="way" k="religion" v="christian">
+			<area class='landuse-cemetery-christian' />
 		</rule>
+		<else>
+			<area class='landuse-cemetery' />
+		</else>
+	</rule>
 
 
         <!-- Natural features -->

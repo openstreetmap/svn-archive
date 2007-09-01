@@ -885,7 +885,7 @@ sub xml2svg
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},
       $Config{XmlStarlet},
-      "osmarender.xsl",
+      "osmarender/osmarender.xsl",
       "$MapFeatures",
       $TSVG);
 

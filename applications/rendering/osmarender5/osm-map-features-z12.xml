@@ -35,7 +35,7 @@
 
 	<!-- Landuse -->
 	<!-- at zoom 12 render all landuse in the same colour so it doesn't look too psychedelic -->
-	<rule e="way" k="landuse" v="residential|retail|industrial|commercial|cemetery">
+	<rule e="way" k="landuse" v="residential|retail|industrial|brownfield|commercial|cemetery">
 	    <area class='landuse-all'/>
 	</rule>
 

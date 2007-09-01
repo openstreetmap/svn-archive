@@ -13,3 +13,4 @@
 13|NO|Headingley
 14|NO|Inverness
 15|OK|Jever
+16|OK|Kingston

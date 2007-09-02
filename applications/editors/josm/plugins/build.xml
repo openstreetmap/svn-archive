@@ -20,10 +20,10 @@
 	<target name="compile" depends="compile_josm">
 	</target>
 
-	<!-- build plugins (where the build process works on all systems) -->
-	<target name="build-port" depends="compile">
+	<target name="build" depends="compile">
 		<ant dir="colorscheme" antfile="build.xml" target="dist"/>
 		<!--ant dir="grid" antfile="build.xml" target="build"/-->
+		<ant dir="lang" antfile="build.xml" target="install-all"/>
 		<ant dir="livegps" antfile="build.xml" target="dist"/>
 		<ant dir="mappaint" antfile="build.xml" target="build"/>
 		<ant dir="namefinder" antfile="build.xml" target="dist"/>
@@ -42,15 +42,10 @@
 		<ant dir="ywms" antfile="build.xml" target="build"/>
 	</target>
 
-	<!-- build plugins (won't work on windows, use build-port instead) -->
-	<target name="build" depends="build-port">
-		<ant dir="lang" antfile="build.xml" target="install-all"/>
-	</target>
-
 	<target name="clean">
 		<ant dir="colorscheme" antfile="build.xml" target="clean"/>
 		<!--ant dir="grid" antfile="build.xml" target="clean"/-->
-		<!--ant dir="lang" antfile="build.xml" target="clean"/-->
+		<ant dir="lang" antfile="build.xml" target="clean"/>
 		<ant dir="livegps" antfile="build.xml" target="clean"/>
 		<ant dir="mappaint" antfile="build.xml" target="clean"/>
 		<ant dir="namefinder" antfile="build.xml" target="clean"/>

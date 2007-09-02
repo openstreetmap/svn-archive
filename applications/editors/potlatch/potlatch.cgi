@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 2.9.2007 (POIs, major rewrite of click handling)
+	# last update 2.9.2007 (POIs, major rewrite of click handling, better Yahoo)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -39,8 +39,10 @@
 	// Site-specific URLs
 //	var apiurl='rubyamf.cgi';
 //	var gpsurl='/potlatch/getgps.cgi';
+//	var yahoourl='/~richard/potlatch/ymap.swf';
 	var apiurl='../api/0.4/amf';
 	var gpsurl='../api/0.4/swf/trackpoints';
+	var yahoourl='/potlatch/ymap.swf';
 
 	// Master movieclip for map
 	_root.createEmptyMovieClip("map",10);
@@ -74,7 +76,7 @@
 	var yzoom=8;		var lastyzoom=yzoom;
 
 	_root.createEmptyMovieClip("yahoo",7);
-	loadMovie("/potlatch/ymap.swf",_root.yahoo);
+	loadMovie(yahoourl,_root.yahoo);
 	_root.yahoo.swapDepths(_root.masksquare);
 	_root.yahoo.setMask(_root.masksquare2);
 
@@ -188,10 +190,6 @@
 
 	_root.attachMovie("roundabout","i_circular",40);
 	with (_root.i_circular) { _x=40; _y=583; _rotation=-45; _visible=false; };
-
-//	_root.attachMovie("nextattr","i_nextattr",35);
-//	with (_root.i_nextattr) { _x=690; _y=545; };
-//	_root.i_nextattr.onPress=function() { nextAttributes(); };
 
 	// =====================================================================================
 	// Initialise text areas
@@ -1275,7 +1273,7 @@
 			text="Background:"; setTextFormat(plainSmall);
 			selectable=false; type='dynamic';
 		}
-		_root.modal.box.attachMovie("menu","background",3);
+		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,_root.baselayer,
 			new Array("None","Yahoo! satellite","Yahoo! satellite (dimmed)"),
 			'Choose the background to display',setBackground,0);
@@ -1290,8 +1288,8 @@
 	function setBackground(n) {
 		_root.baselayer=n;
 		switch (n) {
-			case 1: _root.yahoo._alpha=100; redrawYahoo(); break;
-			case 2: _root.yahoo._alpha=50 ; redrawYahoo(); break;
+			case 1: _root.yahoo._alpha=100; break;
+			case 2: _root.yahoo._alpha=50 ; break;
 		}
 		redrawYahoo(); 
 	}
@@ -1369,6 +1367,7 @@
 		_root.currentproptype=proptype;
 		_root.currentproppoint=pointselected;
 		_root.currentpropway=wayselected;
+		_root.currentproppoi=poiselected;
 		for (el in proparr) {
 			if (proparr[el]!='' && el!='created_by' && el!='edited_by') {
 				_root.properties.attachMovie("keyvalue",el,_root.propn);
@@ -1392,6 +1391,7 @@
 			removeMovieClip(_root.properties[el]);
 		}
 		if (ct>0) { _root.savedpoint=_root.currentproppoint;
+					_root.savedpoi  =_root.currentproppoi;
 					_root.savedway  =_root.currentpropway;
 					_root.savedtype =_root.currentproptype; }
 	};
@@ -1534,10 +1534,10 @@
 	// repeatAttributes - paste in last set of attributes
 	
 	function repeatAttributes() {
-		if (_root.wayselected==0 && _root.pointselected==-2) { return; }
+		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
 		switch (savedtype) {
 			case 'point':	z=_root.map.ways[savedway].path[savedpoint][4]; break;
-			case 'POI':		z=_root.map.pois[savedpoi].attr; break;
+			case 'POI':		z=_root.map.pois[savedpoi].attr; _root.map.pois[poiselected].attr=new Array(); break;
 			case 'way':		z=_root.map.ways[savedway].attr; break;
 		}
 		for (i in z) {
@@ -1681,8 +1681,6 @@
 		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
 		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
 
-//		updateGrid();
-
 		// ----	Trace
 		
 //		_root.coordmonitor.text ="Centre of map: lon "+_root.centre_lon+", lat "+_root.centre_lat+" -- ";
@@ -1693,15 +1691,12 @@
 
 	function redrawYahoo() {
 		if (_root.baselayer>0) {
-			_root.yahoo.visible=true;
+			_root.yahoo._visible=true;
 			_root.ylat=_root.centre_lat;
 			_root.ylon=_root.centre_lon;
 			_root.yzoom=17-_root.scale;
-			_root.yahoo._x=0;
-			_root.yahoo._y=0;
 		} else {
-			_root.yahoo.visible=false;
-			_root.yahoo._x=_root.map._x-3000/Math.pow(2,_root.scale-12);	// keep offscreen
+			_root.yahoo._visible=false;
 		}
 	}
 
@@ -1820,6 +1815,11 @@
 			if (_root.pointertype!='hand') { setPointer('hand'); }
 			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
 		}
+
+		if (_root.yahoo._visible) {
+			_root.ylat=coord2lat((250-_root.map._y)/bscale);
+			_root.ylon=coord2long((350-_root.map._x)/bscale);
+		}
 	}
 
 	function endMapDrag() {
@@ -1827,7 +1827,7 @@
 		_root.map.onMouseUp  =function() {};
 		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance &&
 			Math.abs(_root.firstymouse-_root._ymouse)>tolerance) {
-			redrawYahoo(); whichWays();
+			whichWays();
 		}
 		_root.dragmap=false;
 		if (_root.wayselected) { setPointer(''); }
@@ -1837,8 +1837,6 @@
 	function moveMap(xdiff,ydiff) {
 		_root.map._x+=xdiff;
 		_root.map._y+=ydiff;
-		_root.yahoo._x+=xdiff;	// could use _root.yahoo.myMap.map.map_5.MapBase2._x,
-		_root.yahoo._y+=ydiff;	// but the '2' changes
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
 		redrawMap(_root.map._x,_root.map._y);

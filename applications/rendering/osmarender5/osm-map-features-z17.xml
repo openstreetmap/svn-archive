@@ -78,7 +78,7 @@
         <rule e="way" k="amenity" v="school|college|university">
             <area class='amenity-school'/>
         </rule>
-		<rule e="way" k="leisure" v="park|playing_fields|garden|pitch|golf_course|common|green">
+		<rule e="way" k="leisure" v="park|playground|playing_fields|garden|pitch|golf_course|common|green">
 			<area class='leisure-park'/>
 		</rule>
 		<rule e="way" k="leisure" v="stadium|sports_centre">

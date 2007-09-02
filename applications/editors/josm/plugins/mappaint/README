@@ -1,14 +1,5 @@
 This is the MapPaint Plugin for JOSM.
 
-Ways are shown in different colours and width.
+An alternative render for the map with colouring, line thickness, icons after tags.
 
-Install:
-
-LINUX:
-	Copy the mappaint.jar file into your ./josm/plugins/ folder.
-
-Directories:
- 	styles:
-	  Some day you will find different style files here, currently MapPaint supports only one Style.
-	images:
-		Icons which will appear in the map.
+Details can be found at: http://wiki.openstreetmap.org/index.php/JOSM/Plugins

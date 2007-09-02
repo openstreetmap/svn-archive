@@ -113,12 +113,18 @@ public class ElemStyleHandler extends DefaultHandler
 												} else {
 													try {
 														URL path = getClass().getResource("/standard/icons/"+atts.getValue(count));
-														curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+														if(path == null) {
+															/* icon not found, using default */
+															System.out.println("Mappaint: Icon " + atts.getValue(count) + " not found, using default icon");
+															path = getClass().getResource("/standard/icons/misc/no_icon.png");
+															curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+														} else {
+															curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+														}
 													}
 													catch (Exception e){
 														URL path = getClass().getResource("/standard/icons/amenity.png");
 														curIcon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
-
 													}
 												}
                     } else if (atts.getQName(count).equals("annotate"))

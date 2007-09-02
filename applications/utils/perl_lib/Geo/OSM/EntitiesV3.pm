@@ -92,7 +92,7 @@ sub timestamp
 sub full_xml
 {
   my $self = shift;
-  return qq(<?xml version="0.1"?>\n<osm version="0.3">\n).$self->xml()."</osm>\n";
+  return qq(<?xml version="1.0"?>\n<osm version="0.4">\n).$self->xml()."</osm>\n";
 }
 
 package Geo::OSM::Way;

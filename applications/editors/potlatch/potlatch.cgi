@@ -87,7 +87,6 @@
 	_root.masksquare.onPress   =function() { mapClick(); };
 	_root.masksquare.onRollOver=function() { mapRollOver(); };
 	_root.masksquare.onRollOut =function() { mapRollOut(); };
-	_root.map.onMouseUp        =function() { mouseRelease(); };
 	_root.masksquare.onRelease =function() { mapClickEnd(); };
 
 	var basey=lat2y(baselat);		// Y co-ordinate of map centre
@@ -1492,7 +1491,7 @@
 	// enterNewAttribute - create new attribute
 
 	function enterNewAttribute() {
-		if (_root.wayselected==0 && _root.pointselected==-2) { return; }
+		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
 		if (_root.propn==12) { return; }
 		switch (_root.currentproptype) {
 			case 'point':	_root.map.ways[_root.wayselected].path[_root.pointselected][4].key='(type value here)'; break;
@@ -1826,6 +1825,13 @@
 	function endMapDrag() {
 		_root.map.onMouseMove=function() {};
 		_root.map.onMouseUp  =function() {};
+		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance &&
+			Math.abs(_root.firstymouse-_root._ymouse)>tolerance) {
+			redrawYahoo(); whichWays();
+		}
+		_root.dragmap=false;
+		if (_root.wayselected) { setPointer(''); }
+						  else { setPointer('pen'); }
 	}
 	
 	function moveMap(xdiff,ydiff) {
@@ -1884,17 +1890,7 @@
 			} else {
 				_root.newnodeid--; startNewWay(_root.map._xmouse,_root.map._ymouse,_root.newnodeid);
 			}
-
-		// ----------------------
-		// Dragged map, so redraw
-
-		} else if (_root.dragmap) {
-			redrawYahoo(); whichWays();
-			_root.dragmap=false;
-			if (_root.wayselected) { setPointer(''); }
-							  else { setPointer('pen'); }
 		}
-		
 	}
 
 

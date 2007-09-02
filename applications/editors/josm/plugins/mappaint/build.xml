@@ -28,10 +28,21 @@
 		<copy todir="build/standard">
 			<fileset dir="styles/standard"></fileset>
 		</copy>
+		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+			<env key="LANG" value="C"/>
+			<arg value="info"/>
+			<arg value="--xml"/>
+			<arg value="."/>
+		</exec>
+		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+		<delete file="REVISION"/>
 		<jar destfile="dist/mappaint.jar" basedir="build">
 			<manifest>
 				<attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
 				<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;" />
+				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+				<attribute name="Author" value="Nick Whitelegg / Ulf Lamping"/>
 			</manifest>
 		</jar>
 	</target>

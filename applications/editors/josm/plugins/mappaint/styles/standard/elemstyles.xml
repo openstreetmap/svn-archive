@@ -137,7 +137,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="highway" v="mini_roundabout" />
-		<icon annotate="true" src="vehicle/roundabout_left.png" />
+		<icon annotate="true" src="vehicle/restrictions/roundabout_left.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -380,7 +380,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="waterway" v="mooring" />
-		<icon annotate="true" src="nautical/anchor.png" />
+		<icon annotate="true" src="nautical/marina.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -541,7 +541,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="power" v="tower" />
-		<icon annotate="true" src="places/power/tower.png" />
+		<icon annotate="true" src="misc/landmark/power/tower.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -556,91 +556,91 @@ Using both area and line attributes for the same key/value pair doesn't work!
 <!--man_made tags -->
 	<rule>
 		<condition k="man_made" v="works" />
-		<icon annotate="true" src="places/works.png" />
+		<icon annotate="true" src="misc/landmark/works.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="beacon" />
-		<icon annotate="true" src="places/beacon.png" />
+		<icon annotate="true" src="misc/landmark/beacon.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="survey_point" />
-		<icon annotate="true" src="places/survey_point.png" />
+		<icon annotate="true" src="misc/landmark/survey_point.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="power_wind" />
-		<icon annotate="true" src="places/power/wind.png" />
+		<icon annotate="true" src="misc/landmark/power/wind.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="power_hydro" />
-		<icon annotate="true" src="places/power/hydro.png" />
+		<icon annotate="true" src="misc/landmark/power/hydro.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="power_fossil" />
-		<icon annotate="true" src="places/power/fossil.png" />
+		<icon annotate="true" src="misc/landmark/power/fossil.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="power_nuclear" />
-		<icon annotate="true" src="places/power/nuclear.png" />
+		<icon annotate="true" src="misc/landmark/power/nuclear.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="tower" />
-		<icon annotate="true" src="places/tower.png" />
+		<icon annotate="true" src="misc/landmark/tower.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="water_tower" />
-		<icon annotate="true" src="places/water_tower.png" />
+		<icon annotate="true" src="misc/landmark/water_tower.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="gasometer" />
-		<icon annotate="true" src="places/gasometer.png" />
+		<icon annotate="true" src="misc/landmark/gasometer.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="reservoir_covered" />
-		<icon annotate="true" src="places/reservoir_covered.png" />
+		<icon annotate="true" src="misc/landmark/reservoir_covered.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="lighthouse" />
-		<icon annotate="true" src="places/lighthouse.png" />
+		<icon annotate="true" src="misc/landmark/lighthouse.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
 
 	<rule>
 		<condition k="man_made" v="windmill" />
-		<icon annotate="true" src="places/windmill.png" />
+		<icon annotate="true" src="misc/landmark/windmill.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -771,7 +771,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="amenity" v="biergarten" />
-		<icon annotate="true" src="food/beergarden.png"  />
+		<icon annotate="true" src="food/biergarten.png"  />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -969,7 +969,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="amenity" v="bank" />
-		<icon annotate="true" src="money/bank.png" />
+		<icon annotate="true" src="money.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1049,7 +1049,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="tourism" v="hotel" />
-		<icon annotate="true" src="accommodation/hotel.png" />
+		<icon annotate="true" src="accommodation.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1099,7 +1099,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="historic" v="museum" />
-		<icon annotate="true" src="recreation/museum.png" />
+		<icon annotate="true" src="sightseeing/museum.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1120,7 +1120,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 
 	<rule>
 		<condition k="historic" v="ruins" />
-		<icon annotate="true" src="sightseeing/ruin.png" />
+		<icon annotate="true" src="sightseeing/ruins.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1128,7 +1128,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 <!--landuse tags -->
 	<rule>
 		<condition k="landuse" v="farm" />
-		<icon annotate="true" src="places/farm.png"  />
+		<icon annotate="true" src="misc/landmark/farm.png"  />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
 	</rule>
@@ -1136,7 +1136,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
     <rule>
         <condition k="landuse" v="quarry"/>
         <area colour="#cccccc" />
-		<icon src="places/mine.png" />
+		<icon src="misc/landmark/mine.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
@@ -1292,14 +1292,14 @@ Using both area and line attributes for the same key/value pair doesn't work!
 <!--natural tags -->
     <rule>
         <condition k="natural" v="spring"/>
-        <icon annotate="true" src="places/spring.png"/>
+        <icon annotate="true" src="misc/landmark/spring.png"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>
     
     <rule>
         <condition k="natural" v="peak"/>
-        <icon annotate="true" src="places/peak_small.png"/>
+        <icon annotate="true" src="misc/landmark/peak_small.png"/>
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>
     </rule>

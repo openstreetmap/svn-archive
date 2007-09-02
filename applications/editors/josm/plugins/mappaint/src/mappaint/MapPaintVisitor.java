@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Stroke;
+import java.awt.geom.GeneralPath;
 
 import javax.swing.ImageIcon;
 
@@ -20,20 +22,27 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.visitor.SimplePaintVisitor;
 
-import java.awt.event.MouseEvent;
-
-
 /**
  * A visitor that paints the OSM components in a map-like style.
  */
 
 public class MapPaintVisitor extends SimplePaintVisitor {
 
+    protected boolean useRealWidth;
+    protected boolean zoomLevelDisplay;
+    protected boolean fillAreas;
+    protected Color untaggedColor;
+    protected Color textColor;
+    protected boolean currentDashed = false;
+    protected int currentWidth = 0;
+    protected Stroke currentStroke = null;    
+    protected static final Font orderFont = new Font("Helvetica", Font.PLAIN, 8);
+    
 	protected boolean isZoomOk(ElemStyle e) {
 		double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
 		
 		/* show everything, if the user wishes so */
-		if(!Main.pref.getBoolean("mappaint.zoomLevelDisplay",false)) {
+		if(!zoomLevelDisplay) {
 			return true;
 		}
 					
@@ -80,9 +89,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 				// throw some sort of exception
 			}
 		} else {
-			drawNode(n, n.selected ? getPreferencesColor("selected",
-									Color.YELLOW)
-				: getPreferencesColor("node", Color.RED));
+			drawNode(n, n.selected ? selectedColor : nodeColor);
 		}
 	}
 
@@ -94,7 +101,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	@Override public void visit(Segment ls) {
 		ElemStyle segmentStyle = MapPaintPlugin.elemStyles.getStyle(ls);
 		if(isZoomOk(segmentStyle)) {
-			drawSegment(ls, getPreferencesColor("untagged",Color.GRAY),Main.pref.getBoolean("draw.segment.direction"));
+			drawSegment(ls, untaggedColor, showDirectionArrow);
 		}
 	}
 
@@ -105,9 +112,9 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// Altered from SimplePaintVisitor
 	@Override public void visit(Way w) {
 		double circum = Main.map.mapView.getScale()*100*Main.proj.scaleFactor()*40041455; // circumference of the earth in meter
-		boolean showDirection =	Main.pref.getBoolean("draw.segment.direction") ;
-		if (Main.pref.getBoolean("mappaint.useRealWidth",false) && showDirection && !w.selected) showDirection = false;
-		Color colour = getPreferencesColor("untagged",Color.GRAY);
+		boolean showDirection =	showDirectionArrow ;
+		if (useRealWidth && showDirection && !w.selected) showDirection = false;
+		Color colour = untaggedColor;
 		int width = 2;
 		int realWidth = 0; //the real width of the element in meters 
 		boolean dashed = false;
@@ -133,7 +140,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 				area = true;
 			}
 		}
-		boolean fillAreas = Main.pref.getBoolean("mappaint.fillareas", true);
 		
 		if (area && fillAreas)
 			drawWayAsArea(w, colour);
@@ -143,22 +149,22 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			orderNumber++;
 				if (area && fillAreas)
 					//Draw segments in a different colour so direction arrows show against the fill
-					drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : getPreferencesColor("untagged",Color.GRAY),showDirection, width,true);
+					drawSegment(ls, w.selected ? selectedColor : untaggedColor, showDirection, width,true);
 				else
 					if (area)
-						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,showDirection, width,true);
+						drawSegment(ls, w.selected ? selectedColor : colour, showDirection, width,true);
 					else
-						if (realWidth > 0 && Main.pref.getBoolean("mappaint.useRealWidth",false) && !showDirection){
+						if (realWidth > 0 && useRealWidth && !showDirection){
 							int tmpWidth = (int) (100 /  (float) (circum / realWidth));
 							if (tmpWidth > width) width = tmpWidth;
 						}
 
-						drawSegment(ls, w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour,showDirection, width,dashed);
-				if (!ls.incomplete && Main.pref.getBoolean("draw.segment.order_number"))
+						drawSegment(ls, w.selected ? selectedColor : colour,showDirection, width,dashed);
+				if (!ls.incomplete && showOrderNumber)
 				{
 					try
 					{
-						g.setColor(w.selected ? getPreferencesColor("selected", Color.YELLOW) : colour);
+						g.setColor(w.selected ? selectedColor : colour);
 						drawOrderNumber(ls, orderNumber);
 					}
 					catch (IllegalAccessError e) {} //SimplePaintVisitor::drawOrderNumber was private prior to rev #211
@@ -186,7 +192,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		}
 
 		g.setColor( w.selected ?
-						getPreferencesColor("selected", Color.YELLOW) : colour);
+						selectedColor : colour);
 
 		g.fillPolygon(polygon);
 	}
@@ -200,15 +206,15 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		String name = (n.keys==null) ? null : n.keys.get("name");
 		if (name!=null && annotate)
 		{
-			g.setColor( getPreferencesColor ("text", Color.WHITE));
+			g.setColor(textColor);
 			Font defaultFont = g.getFont();
-			g.setFont (new Font("Helvetica", Font.PLAIN, 8));
+			g.setFont (orderFont);
 			g.drawString (name, p.x+w/2+2, p.y+h/2+2);
 			g.setFont(defaultFont);
 		}
 		if (n.selected)
 		{
-			g.setColor (  getPreferencesColor("selected", Color.YELLOW) );
+			g.setColor (  selectedColor );
 			g.drawRect (p.x-w/2-2,p.y-w/2-2, w+4, h+4);
 		}
 	}
@@ -218,7 +224,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 */
 	// Altered - now specify width
 	@Override protected void drawSegment(Segment ls, Color col,boolean showDirection) {
-			if (Main.pref.getBoolean("mappaint.useRealWidth",false) && showDirection && !ls.selected) showDirection = false;
+			if (useRealWidth && showDirection && !ls.selected) showDirection = false;
 			drawSegment(ls,col,showDirection,1,false);
 	}
 
@@ -230,6 +236,16 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		ls.shown=true;
 		if (ls.incomplete)
 			return;
+		if (ls.selected) {
+		    col = selectedColor;
+		}
+		drawSeg(ls, col, showDirection, width, dashed);
+	}
+		
+	private void drawSeg(Segment ls, Color col,boolean showDirection, int width,boolean dashed) {
+		if (col != currentColor || width != currentWidth || dashed != currentDashed) {
+			displaySegments(col, width, dashed);
+		}
 		Point p1 = nc.getPoint(ls.from.eastNorth);
 		Point p2 = nc.getPoint(ls.to.eastNorth);
 		
@@ -238,27 +254,56 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		if ((p1.y < 0) && (p2.y < 0)) return ;
 		if ((p1.x > nc.getWidth()) && (p2.x > nc.getWidth())) return ;
 		if ((p1.y > nc.getHeight()) && (p2.y > nc.getHeight())) return ;
-		Graphics2D g2d = (Graphics2D)g;
-		if (ls.selected)
-			col = getPreferencesColor("selected", Color.YELLOW);
-		g.setColor(col);
+		//if (ls.selected)
+		//	col = selectedColor;
+		//g.setColor(col);
 		//g.setWidth(width);
-		if (dashed) 
-			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
-		else 
-			g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+		//if (dashed) 
+		//	g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
+		//else 
+		//	g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 
-		g.drawLine(p1.x, p1.y, p2.x, p2.y);
+		//g.drawLine(p1.x, p1.y, p2.x, p2.y);
+		currrentPath.moveTo(p1.x, p1.y);
+		currrentPath.lineTo(p2.x, p2.y);
 
 		if (showDirection) {
 			double t = Math.atan2(p2.y-p1.y, p2.x-p1.x) + Math.PI;
-			g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
-			g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
+			//g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
+			//g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
+			currrentPath.lineTo((int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
+			currrentPath.moveTo((int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
+			currrentPath.lineTo(p2.x, p2.y);
 		}
-		g2d.setStroke(new BasicStroke(1));
+		//g2d.setStroke(new BasicStroke(1));
 		
 	}
-
+	
+	protected void displaySegments() {
+	    displaySegments(null, 0, false);
+	}
+	
+	protected void displaySegments(Color newColor, int newWidth, boolean newDash) {
+	    
+		if (currrentPath != null) {
+		        Graphics2D g2d = (Graphics2D)g;
+			g2d.setColor(currentColor);
+			if (currentStroke == null) {
+			    if (currentDashed)
+				g2d.setStroke(new BasicStroke(currentWidth,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,0,new float[] {9},0));
+			    else 
+				g2d.setStroke(new BasicStroke(currentWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+			}
+			g2d.draw(currrentPath);
+			g2d.setStroke(new BasicStroke(1));
+			
+			currrentPath = new GeneralPath();
+			currentColor = newColor;
+			currentWidth = newWidth;
+			currentDashed = newDash;
+			currentStroke = null;
+		}
+	}
 
 	/**
 	 * Draw the node as small rectangle with the given color.
@@ -278,6 +323,20 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	// NW 111106 Overridden from SimplePaintVisitor in josm-1.4-nw1
 	// Shows areas before non-areas
 	public void visitAll(DataSet data) {
+		inactiveColor = getPreferencesColor("inactive", Color.DARK_GRAY);
+		selectedColor = getPreferencesColor("selected", Color.YELLOW);
+		nodeColor = getPreferencesColor("node", Color.RED);
+		segmentColor = getPreferencesColor("segment", darkgreen);
+		dfltWayColor = getPreferencesColor("way", darkblue);
+		incompleteColor = getPreferencesColor("incomplete way", darkerblue);
+		backgroundColor = getPreferencesColor("background", Color.BLACK);
+		untaggedColor = getPreferencesColor("untagged",Color.GRAY);
+		textColor = getPreferencesColor ("text", Color.WHITE);
+		showDirectionArrow = Main.pref.getBoolean("draw.segment.direction");
+		showOrderNumber = Main.pref.getBoolean("draw.segment.order_number");
+		useRealWidth = Main.pref.getBoolean("mappaint.useRealWidth",false);
+		zoomLevelDisplay = Main.pref.getBoolean("mappaint.zoomLevelDisplay",false);
+		fillAreas = Main.pref.getBoolean("mappaint.fillareas", true);
 		
 		Collection<Way> noAreaWays = new LinkedList<Way>();
 
@@ -307,6 +366,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 				osm.shown=false; //to be sure it will be drawn
 				osm.visit(this);
 			}
+		displaySegments();
 	}
 }
 

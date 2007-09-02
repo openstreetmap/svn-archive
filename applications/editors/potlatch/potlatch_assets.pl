@@ -1,5 +1,5 @@
 
-	# updated 2.8.2007 - peno works correctly
+	# updated 1.9.2007 - POIs, pens work correctly
 
 	# ----- Export symbols
 
@@ -19,6 +19,17 @@
 
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"menu");
 	$ec=new SWF::Sprite(); $ec->nextFrame(); $m->addExport($ec,"checkbox");
+
+	#		POI
+	
+	$ec=new SWF::Sprite();
+	$ch=new SWF::Shape();
+	$ch->setRightFill(0,155,0);
+	$ch->setLine(20,0,0,0);
+	$ch->drawCircle(4);
+	$ec->add($ch);
+	$ec->nextFrame();
+	$m->addExport($ec,"poi");
 
 	#		Anchor (selected)
 
@@ -443,56 +454,126 @@
 
 	#Ê=====	Menu icons
 		
-	# ------ potlatch_inatural sprite
-	
-	$ec=new SWF::Sprite();
-	
-	$s=new SWF::Shape();
+# ------ potlatch_iplace sprite
+
+$ec=new SWF::Sprite();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-7,5);
+$s->drawLineTo(-7,-3);
+$s->drawLineTo(-4,-3);
+$s->drawLineTo(-4,3); $s->drawLineTo(-3,3);
+
+$s->drawLineTo(-3,-7);
+$s->drawLineTo(0,-7);
+$s->drawLineTo(0,3); $s->drawLineTo(1,3);
+
+$s->drawLineTo(1,-4); $s->drawLineTo(3.5,-7);
+$s->drawLineTo(6,-4); $s->drawLineTo(6,3);
+$s->drawLineTo(7,3);
+
+$s->drawLineTo(7,-1); $s->drawLineTo(10,-1);
+$s->drawLineTo(10,3);
+$s->drawLineTo(11,3);
+
+$s->drawLineTo(11,-7); $s->drawLineTo(14,-7);
+$s->drawLineTo(14,3);
+$s->drawLineTo(15,3);
+
+$s->drawLineTo(15,0); $s->drawLineTo(17,0);
+$s->drawLineTo(17,5);
+
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_place");
+
+# ------ potlatch_itourism sprite
+
+$ec=new SWF::Sprite();
+
+$s=new SWF::Shape();
+$s->setRightFill(190,190,190);
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setLine(30,255,255,255);
+$s->movePenTo(-5,-5); $s->drawLineTo(14,-5);
+$s->drawLineTo(14,4); $s->drawLineTo(-5,4);
+$s->drawLineTo(-5,-5);
+
+$s->movePenTo(8,-5); $s->drawLineTo(8,-8);
+$s->drawLineTo(13,-8); $s->drawLineTo(13,-5);
+
+$s->movePenTo(5,-0.5); $s->drawCircle(4);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_tourism");
+
+# ------ potlatch_inatural sprite
+
+$ec=new SWF::Sprite();
+
+$s=new SWF::Shape();
 	$s->setRightFill(190,190,190);
-	$s->movePenTo(-10.00,7.17);
-	$s->drawLineTo(19.00,7.17);
-	$s->drawLineTo(19.00,-10.00);
-	$s->drawLineTo(-10.00,-10.00);
-	$s->drawLineTo(-10.00,7.17);
-	$ec->add($s);
-	
-	$s=new SWF::Shape();
-	$s->setRightFill(255,255,255);
-	$s->movePenTo(-2.98,-8.43);
-	$s->drawLineTo(-8.37,2.55);
-	$s->drawLineTo(-4.82,3.05);
-	$s->drawLineTo(-4.73,5.64);
-	$s->drawLineTo(-2.52,5.72);
-	$s->drawLineTo(-2.40,3.01);
-	$s->drawLineTo(1.15,2.76);
-	$s->drawLineTo(-2.98,-8.43);
-	$ec->add($s);
-	
-	$s=new SWF::Shape();
-	$s->setRightFill(255,255,255);
-	$s->movePenTo(4.86,-2.63);
-	$s->drawLineTo(1.63,3.95);
-	$s->drawLineTo(3.76,4.25);
-	$s->drawLineTo(3.81,5.80);
-	$s->drawLineTo(5.14,5.85);
-	$s->drawLineTo(5.21,4.23);
-	$s->drawLineTo(7.34,4.08);
-	$s->drawLineTo(4.86,-2.63);
-	$ec->add($s);
-	
-	$s=new SWF::Shape();
-	$s->setRightFill(255,255,255);
-	$s->movePenTo(12.96,-8.22);
-	$s->drawLineTo(7.58,2.76);
-	$s->drawLineTo(11.12,3.26);
-	$s->drawLineTo(11.21,5.85);
-	$s->drawLineTo(13.42,5.93);
-	$s->drawLineTo(13.54,3.22);
-	$s->drawLineTo(17.09,2.97);
-	$s->drawLineTo(12.96,-8.22);
-	$ec->add($s);
-	
-	$ec->nextFrame(); $m->addExport($ec,"preset_natural");
+$s->movePenTo(-10.00,7.17);
+$s->drawLineTo(19.00,7.17);
+$s->drawLineTo(19.00,-10.00);
+$s->drawLineTo(-10.00,-10.00);
+$s->drawLineTo(-10.00,7.17);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(-2.98,-8.43);
+$s->drawLineTo(-8.37,2.55);
+$s->drawLineTo(-4.82,3.05);
+$s->drawLineTo(-4.73,5.64);
+$s->drawLineTo(-2.52,5.72);
+$s->drawLineTo(-2.40,3.01);
+$s->drawLineTo(1.15,2.76);
+$s->drawLineTo(-2.98,-8.43);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(4.86,-2.63);
+$s->drawLineTo(1.63,3.95);
+$s->drawLineTo(3.76,4.25);
+$s->drawLineTo(3.81,5.80);
+$s->drawLineTo(5.14,5.85);
+$s->drawLineTo(5.21,4.23);
+$s->drawLineTo(7.34,4.08);
+$s->drawLineTo(4.86,-2.63);
+$ec->add($s);
+
+$s=new SWF::Shape();
+$s->setRightFill(255,255,255);
+$s->movePenTo(12.96,-8.22);
+$s->drawLineTo(7.58,2.76);
+$s->drawLineTo(11.12,3.26);
+$s->drawLineTo(11.21,5.85);
+$s->drawLineTo(13.42,5.93);
+$s->drawLineTo(13.54,3.22);
+$s->drawLineTo(17.09,2.97);
+$s->drawLineTo(12.96,-8.22);
+$ec->add($s);
+
+$ec->nextFrame(); $m->addExport($ec,"preset_natural");
 
 	# ----- potlatch_iboat sprite
 	
@@ -1343,20 +1424,23 @@
 	# ------ peno pointer
 	
 	$ec=new SWF::Sprite();
-	$s=new SWF::Shape();
 	drawPen();
+	$s=new SWF::Shape();
 	$s->setLine(2,0,0,0);
 	$s->setRightFill(255,255,255);
 	$s->movePenTo(7,16); $s->drawCircle(2);
+	$ec->add($s);
 	$ec->nextFrame(); $m->addExport($ec,"peno");
 	
 	# ------ penso pointer (solid o)
 	
 	$ec=new SWF::Sprite();
-	$s=new SWF::Shape();
 	drawPen();
+	$s=new SWF::Shape();
 	$s->setLine(2,0,0,0);
+	$s->setRightFill(0,0,0);
 	$s->movePenTo(7,16); $s->drawCircle(2);
+	$ec->add($s);
 	$ec->nextFrame(); $m->addExport($ec,"penso");
 	
 

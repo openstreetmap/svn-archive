@@ -7,10 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 2.8.2007 (can now drag new points)
-	# next steps: 
-	#	make resizable (change getgps code too)
-	#	add see-through panel behind top-right hints (line 1573)
+	# last update 2.9.2007 (POIs, major rewrite of click handling)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -51,9 +48,11 @@
 
 	// Get variables from browser (forcing them into numbers where appropriate)
 	// London 51.5,0; Weybridge 51.4,-0.5; Worcester 52.2,-2.25; Woodstock 51.85,-1.35
+	var minscale=11;				// don't zoom out past this
+	var maxscale=18;				// don't zoom in past this
 	var baselat=Math.pow(lat,1);
 	var baselong=Math.pow(long,1);
-	var scale=Math.pow(scale,1);
+	var scale=Math.max(Math.min(Math.pow(scale,1),maxscale),minscale);
 	var usertoken=token;
 
 	// Global dimensions
@@ -81,37 +80,38 @@
 
 	// Main initialisation
 	_root.map.createEmptyMovieClip("ways"    ,10); var waydepth=1;
-	_root.map.createEmptyMovieClip("feedback",5003); // feedback line
+	_root.map.createEmptyMovieClip("pois"	 ,11); var poidepth=1;
+	_root.map.createEmptyMovieClip("elastic",5003); // elastic line
 
 	_root.masksquare.useHandCursor=false;
 	_root.masksquare.onPress   =function() { mapClick(); };
 	_root.masksquare.onRollOver=function() { mapRollOver(); };
 	_root.masksquare.onRollOut =function() { mapRollOut(); };
 	_root.map.onMouseUp        =function() { mouseRelease(); };
+	_root.masksquare.onRelease =function() { mapClickEnd(); };
 
-	var minscale=11;				// don't zoom out past this
-	var maxscale=18;				// don't zoom in past this
 	var basey=lat2y(baselat);		// Y co-ordinate of map centre
 	var masterscale=5825.4222222222;// master map scale - how many Flash pixels in 1 degree longitude
 									// (for Landsat, 5120)
-	var wayselected=0;				// way currently selected (or 0)
-	var pointselected=-2;			// node currently selected (or -2)
+	var wayselected=0;				// way selected?    0 no, otherwise way id
+	var poiselected=0;				// POI selected?    0 no, otherwise way id
+	var pointselected=-2;			// point selected? -2 no, otherwise point order
 	var waycount=0;					// number of ways currently loaded
 	var waysrequested=0;			// total number of ways requested
 	var waysreceived=0;				// total number of ways received
+	var poicount=0;					// number of POIs currently loaded
 	var whichrequested=0;			// total number of 'which ways' requested
 	var whichreceived=0;			// total number of 'which ways' received
-	var dragmap=-1;					// map not currently being dragged
-	var dragpoint=-1;				// no point currently being dragged
-	var drawpoint=-1;				// no point currently being drawn
-	var newwayid=-1;				// new way ID (for those not yet saved)
+	var dragmap=false;				// map being dragged?
+	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order), -2 stop drawing when button released
+	var newwayid=-1;				// new way ID  (for those not yet saved)
 	var newnodeid=-2;				// new node ID (for those not yet saved)
+	var newpoiid=-1;				// new POI ID  (for those not yet saved)
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
 	var custompointer=true;			// use custom pointers?
 	var unwayed=false;				// show unwayed segments?
 	var redopropertywindow=0;		// need to redraw property window after deletion?
-	var savedProperties=new Array();// clipboard for properties
 	var tolerance=4/Math.pow(2,_root.scale-12);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
@@ -252,7 +252,7 @@
 	with (_root.t_type	 ) { text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
 	
 	_root.createTextField('t_details',24,5,523,220,20);
-	with (_root.t_details) { text="Potlatch v0.1"; setTextFormat(plainText); };
+	with (_root.t_details) { text="Potlatch v0.2"; setTextFormat(plainText); };
 	
 	_root.createEmptyMovieClip("properties",50);
 	with (_root.properties) { _x=110; _y=525; }; // 110,505
@@ -292,16 +292,25 @@
 	};
 	AnchorPoint.prototype=new MovieClip();
 	AnchorPoint.prototype.onPress=function() {
-		if (this._name==_root.drawpoint) {
-			_root.drawpoint=-2;
-			// flag to signal 'stop drawing' when button released
+		if (this._name==0 && _root.map.ways[this.way].path.length==1) {
+			// solo double-click - create new POI
+			stopDrawing();
+			_root.map.pois.attachMovie("poi",--newpoiid,++poidepth);
+			_root.map.pois[newpoiid]._x=_root.map._xmouse;
+			_root.map.pois[newpoiid]._y=_root.map._ymouse;
+			_root.map.pois[newpoiid].select();
+			_root.map.pois[newpoiid].clean=false;
+		} else if (this._name==_root.drawpoint) {
+			// double-click at end of route
+			stopDrawing();
 		} else if (Key.isDown(Key.SHIFT)) {
+			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
 			startNewWay(_root.map.ways[this.way].path[this._name][0],
 						_root.map.ways[this.way].path[this._name][1],this.node);
 		} else {
 			_root.lastxmouse=_root._xmouse;
 			_root.lastymouse=_root._ymouse;
-			_root.dragpoint=this._name;
+			this.startDrag();
 			_root.pointselected=this._name;
 			_root.map.ways[this.way].highlight();
 			setTypeText("Point",this.node);
@@ -310,19 +319,84 @@
 		}
 	};
 
-	AnchorPoint.prototype.onMouseMove=function() {
-		if (_root.dragpoint==this._name) {
-			this._x=_root.map._xmouse;
-			this._y=_root.map._ymouse;
-			_root.lastxmouse=_root._xmouse;
-			_root.lastymouse=_root._ymouse;
+	AnchorPoint.prototype.startDrag=function() {
+		this.onMouseMove=function() { this.trackDrag(); };
+		this.onMouseUp  =function() { this.endDrag();   };
+	};
+
+	AnchorPoint.prototype.trackDrag=function() {
+		this._x=_root.map._xmouse; _root.lastxmouse=_root._xmouse;
+		this._y=_root.map._ymouse; _root.lastymouse=_root._ymouse;
+	};
+	
+	AnchorPoint.prototype.endDrag=function() {
+		this.onMouseMove=function() {};
+		this.onMouseUp  =function() {};
+		newx=_root.map._xmouse;
+		newy=_root.map._ymouse;
+		movedfar=Math.abs(newx-_root.map.ways[wayselected].path[this._name][0])>=tolerance/2 || 
+				 Math.abs(newy-_root.map.ways[wayselected].path[this._name][1])>=tolerance/2;
+
+		if (movedfar) {
+			// ====	Move existing point
+			for (qway in _root.map.ways) {
+				qdirty=0;
+				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
+					if (_root.map.ways[qway].path[qs][2]==_root.map.ways[wayselected].path[this._name][2]) {
+						_root.map.ways[qway].path[qs][0]=newx;
+						_root.map.ways[qway].path[qs][1]=newy;
+						qdirty=1;
+					}
+				}
+				if (qdirty) {
+					_root.map.ways[qway].redraw();
+					_root.map.ways[qway].clean=false;
+				}
+			}
+			_root.map.ways[wayselected].highlightPoints(5000,"anchor");
+			_root.map.ways[wayselected].highlight();
+
+		} else if ((this._name==0 || this._name==_root.map.ways[wayselected].path.length-1) && !Key.isDown(17)) {
+			// ===== Clicked at start or end of line
+			if (_root.drawpoint==0 || _root.drawpoint==_root.map.ways[wayselected].path.length-1) {
+				// - Join looping path
+				addEndPoint(_root.map.ways[wayselected].path[this._name][0],
+							_root.map.ways[wayselected].path[this._name][1],
+							_root.map.ways[wayselected].path[this._name][2]);
+				stopDrawing();
+			} else if (_root.drawpoint==-1) {
+				// - Start elastic line for adding new point
+				setTooltip("click to add point\ndouble-click/Return\nto end line",0);
+				_root.drawpoint=this._name;
+				this.startElastic();
+			}
+
+		} else {
+			// ===== Clicked elsewhere in line
+			if (_root.drawpoint>-1) {
+				addEndPoint(_root.map.ways[wayselected].path[this._name][0],
+							_root.map.ways[wayselected].path[this._name][1],
+							_root.map.ways[wayselected].path[this._name][2]);
+			}
 		}
-		if (_root.drawpoint==this._name) {
-			_root.map.feedback.clear();
-			_root.map.feedback.lineStyle(3,0x000000,100,false,"none");
-			_root.map.feedback.moveTo(_root.map._xmouse,_root.map._ymouse);
-			_root.map.feedback.lineTo(this._x,this._y);
-		}
+	};
+
+	AnchorPoint.prototype.startElastic=function() {
+		this.onMouseMove=function() { this.trackElastic(); };
+		this.onMouseUp  =function() { this.endElastic();   };
+	};
+	
+	AnchorPoint.prototype.trackElastic=function() {
+		_root.map.elastic.clear();
+		_root.map.elastic.lineStyle(3,0x000000,100,false,"none");
+		_root.map.elastic.moveTo(_root.map._xmouse,_root.map._ymouse);
+		_root.map.elastic.lineTo(this._x,this._y);
+	};
+	
+	AnchorPoint.prototype.endElastic=function() {
+		if (_root.junction) { _root.junction=false; }
+					   else { this.onMouseMove=function() {};
+							  this.onMouseUp  =function() {}; }
 	};
 
 	AnchorPoint.prototype.onRollOver=function() {
@@ -403,21 +477,115 @@
 					}
 				}
 				_root.drawpoint=-1;
-				_root.map.ways[wayselected].clean=0;
+				_root.map.ways[wayselected].clean=false;
 				_root.map.ways[wayselected].redraw();
 				_root.map.ways[wayselected].upload();
 				_root.map.ways[this.way].remove();
 				clearTooltip();
-				_root.map.feedback.clear();
+				_root.map.elastic.clear();
 				_root.map.ways[wayselected].select();	// removes anchorhints, so must be must be last
 			}
 		} else { 
 			// Join ways (i.e. junction)
 			addEndPoint(this._x,this._y,this.node);
+			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
+			_root.map.anchors[_root.drawpoint].startElastic();
 		}
 	};
 	Object.registerClass("anchorhint",AnchorHint);
 
+
+	// =====================================================================================
+	// OOP classes - POI
+	
+	// ----	Initialise
+	
+	function POI() {
+		this.attr=new Array();
+		this.clean=true;
+		this.uploading=false;
+		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-12),6.25);
+	};
+	POI.prototype=new MovieClip();
+	POI.prototype.remove=function() {
+		if (this._name>=0) {
+			poidelresponder = function() { };
+			poidelresponder.onResult = function(result) {
+				if (poiselected==result[0]) { deselectAll(); }
+				removeMovieClip(_root.map.pois[result[0]]);
+			};
+			remote.call('putpoi',poidelresponder,_root.usertoken,this._name,this._x,this._y,this.attr,0,baselong,basey,masterscale);
+		} else {
+			if (this._name==poiselected) { deselectAll(); }
+			removeMovieClip(this);
+		}
+	};
+	POI.prototype.reload=function() {
+		poirelresponder=function() {};
+		poirelresponder.onResult=function(result) {
+			_root.map.pois[result[0]]._x  =result[1];
+			_root.map.pois[result[0]]._y  =result[2];
+			_root.map.pois[result[0]].attr=result[3];
+			populatePropertyWindow('POI');
+		};
+		remote.call('getpoi',poirelresponder,this._name,baselong,basey,masterscale);
+	};
+	POI.prototype.upload=function() {
+		poiresponder=function() { };
+		poiresponder.onResult=function(result) {
+			ni=result[1];	// new way ID
+			if (result[0]!=ni) {
+				_root.map.pois[result[0]]._name=ni;
+				if (poiselected==result[0]) {
+					poiselected=ni;
+					if (_root.t_details.text==result[0]) { _root.t_details.text=ni; _root.t_details.setTextFormat(plainText); }
+				}
+			}
+			_root.map.pois[ni].uploading=false;
+		};
+		if (!this.uploading) {
+			this.attr['created_by']="Potlatch alpha";
+			this.uploading=true;
+			remote.call('putpoi',poiresponder,_root.usertoken,this._name,this._x,this._y,this.attr,1,baselong,basey,masterscale);
+			this.clean=true;
+		}
+	};
+	POI.prototype.onRollOver=function() {
+		setPointer('');
+	};
+	POI.prototype.onPress=function() {
+		if (_root.wayselected || _root.poiselected!=this._name) {
+			stopDrawing(); uploadSelected(); deselectAll(); 
+		}
+		this.select();
+		this.startDrag();
+	};
+	POI.prototype.startDrag=function() {
+		this.onMouseMove=function() { this.trackDrag(); };
+		this.onMouseUp  =function() { this.endDrag();   };
+		_root.firstxmouse=_root._xmouse;
+		_root.firstymouse=_root._ymouse;
+	};
+	POI.prototype.trackDrag=function() {
+		this._x=_root.map._xmouse; _root.lastxmouse=_root._xmouse;
+		this._y=_root.map._ymouse; _root.lastymouse=_root._ymouse;
+	};
+	POI.prototype.endDrag=function() {
+		this.onMouseMove=function() {};
+		this.onMouseUp  =function() {};
+		if (Math.abs(_root._xmouse-_root.firstxmouse)>tolerance/2 ||
+			Math.abs(_root._ymouse-_root.firstymouse)>tolerance/2) {
+			this.clean=false;
+			this.select();
+		}
+	 };
+	POI.prototype.select=function() {
+		_root.poiselected=this._name;
+		setTypeText("Point",this._name);
+		populatePropertyWindow('POI');
+		highlightSquare(this._x,this._y,8/Math.pow(2,Math.min(_root.scale,16)-12));
+	};
+	Object.registerClass("poi",POI);
 
 	// =====================================================================================
 	// OOP classes - OSMWay
@@ -429,8 +597,8 @@
 		// path is an array of points
 		// each point is an array: (x,y,node_id,0 move|1 draw,tag array,segment id)
 		this.attr=new Array();
-		this.clean=1;
-		this.uploading=0;
+		this.clean=true;
+		this.uploading=false;
 		this.xmin=0;
 		this.xmax=0;
 		this.ymin=0;
@@ -443,6 +611,7 @@
 	OSMWay.prototype.load=function(wayid) {
 		responder = function() { };
 		responder.onResult = function(result) {
+			_root["map"]["ways"][result[0]].clean=true;
 			_root["map"]["ways"][result[0]].path=result[1];
 			_root["map"]["ways"][result[0]].attr=result[2];
 			_root["map"]["ways"][result[0]].xmin=result[3];
@@ -468,7 +637,7 @@
 			_root.map.ways[newwayid].xmax=result[2];
 			_root.map.ways[newwayid].ymin=result[3];
 			_root.map.ways[newwayid].ymax=result[4];
-			_root.map.ways[newwayid].clean=0;
+			_root.map.ways[newwayid].clean=false;
 			_root.map.ways[newwayid].redraw();
 			_root.map.ways[newwayid].select();
 		};
@@ -553,7 +722,7 @@
 			_root.map.ways[nw].xmax=result[5];
 			_root.map.ways[nw].ymin=result[6];
 			_root.map.ways[nw].ymax=result[7];
-			_root.map.ways[nw].uploading=0;
+			_root.map.ways[nw].uploading=false;
 
 			// update segment IDs
 			z=result[3];
@@ -561,12 +730,13 @@
 				_root.map.ways[nw].path[qs][5]=result[3][qs];
 			}
 
+
 			// check if renumbered nodes occur in any other ways
 			for (qway in _root.map.ways) {
 				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
 					if (result[2][_root.map.ways[qway].path[qs][2]]) {
 						_root.map.ways[qway].path[qs][2]=result[2][_root.map.ways[qway].path[qs][2]];
-						if (qway!=nw) { _root.map.ways[qway].clean=0; }
+						if (qway!=nw) { _root.map.ways[qway].clean=false; }
 					}
 				}
 				if (wayselected!=qway && !_root.map.ways[qway].clean) {
@@ -574,11 +744,11 @@
 				}
 			}
 		};
-		if (this.uploading==0 && this.path.length>1) {
+		if (!this.uploading && this.path.length>1) {
 			this.attr['created_by']="Potlatch alpha";
-			this.uploading=1;
+			this.uploading=true;
 			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);
-			this.clean=1;
+			this.clean=true;
 		}
 	};
 
@@ -603,9 +773,9 @@
 			// shift-click current way: insert point
 			_root.lastxmouse=_root._xmouse;
 			_root.lastymouse=_root._ymouse;
-			_root.dragpoint=insertAnchorPoint(this._name);
-			_root.pointselected=_root.dragpoint;
+			_root.pointselected=insertAnchorPoint(this._name);
 			this.highlightPoints(5000,"anchor");
+			_root.map.anchors[pointselected].startDrag();
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
 			insertAnchorPoint(this._name);
@@ -619,9 +789,10 @@
 	};
 	
 	OSMWay.prototype.select=function() {
-		if (_root.wayselected!=this._name) { uploadSelected(); }
+		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
 		_root.wayselected=this._name;
 		_root.pointselected=-2;
+		_root.poiselected=0;
 		this.highlightPoints(5000,"anchor");
 		removeMovieClip(_root.map.anchorhints);
 		this.highlight();
@@ -632,16 +803,7 @@
 	OSMWay.prototype.highlight=function() {
 		_root.map.createEmptyMovieClip("highlight",5);
 		if (_root.pointselected>-2) {
-			xd=8/Math.pow(2,Math.min(_root.scale,16)-12);
-			_root.map.highlight._x=_root.map.anchors[pointselected]._x;
-			_root.map.highlight._y=_root.map.anchors[pointselected]._y;
-			_root.map.highlight.beginFill(0xFFFF00,80);
-			_root.map.highlight.moveTo(-xd,xd);
-			_root.map.highlight.lineTo(xd,xd);
-			_root.map.highlight.lineTo(xd,-xd);
-			_root.map.highlight.lineTo(-xd,-xd);
-			_root.map.highlight.lineTo(-xd,xd);
-			_root.map.highlight.endFill();
+			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y,8/Math.pow(2,Math.min(_root.scale,16)-12));
 		} else {
 			linewidth=11;
 			_root.map.highlight.lineStyle(linewidth,0xFFFF00,80,false,"none");
@@ -686,7 +848,7 @@
 
 			this.path.splice(Math.floor(pointselected)+1);				// current way
 			this.redraw();												//  | (Math.floor forces
-			this.clean=0;												//  |  string->number)
+			this.clean=true;											//  |  string->number)
 
 			_root.map.ways[newwayid].path.splice(0,pointselected);		// new way
 			_root.map.ways[newwayid].path[0][3]=0;						//  | first point is 'move'
@@ -721,7 +883,7 @@
 			_root.i_warning._visible=false;
 			for (qway in _root.map.ways) {
 				if (_root.map.ways[qway].uploading) {
-					_root.map.ways[qway].uploading=0;
+					_root.map.ways[qway].uploading=false;
 					_root.map.ways[qway].upload();
 				}
 			}
@@ -729,7 +891,9 @@
 	};
 
 	function keyDelete(doall) {
-		if (_root.pointselected>-2) {
+		if (_root.poiselected) {
+			_root.map.pois[poiselected].remove();
+		} else if (_root.pointselected>-2) {
 			if (doall==1) {
 				// remove node from all ways
 				id=_root.map.ways[_root.wayselected].path[_root.pointselected][2];
@@ -747,7 +911,7 @@
 					} else if (qdirty) {
 						_root.map.ways[qway].path[0][3]=0;	// make sure first point is a 'move'
 						_root.map.ways[qway].redraw();
-						_root.map.ways[qway].clean=0;
+						_root.map.ways[qway].clean=false;
 					}
 				}
 			} else {
@@ -759,12 +923,12 @@
 				} else {
 					_root.map.ways[wayselected].path[0][3]=0;
 					_root.map.ways[wayselected].redraw();
-					_root.map.ways[wayselected].clean=0;
+					_root.map.ways[wayselected].clean=false;
 				}
 			}
 			_root.pointselected=-2;
 			_root.drawpoint=-1;
-			_root.map.feedback.clear();
+			_root.map.elastic.clear();
 			clearTooltip();
 			if (_root.wayselected) {
 				_root.map.ways[_root.wayselected].select();
@@ -773,31 +937,32 @@
 	};
 
 	function stopDrawing() {
+		_root.map.anchors[_root.drawpoint].endElastic();
 		_root.drawpoint=-1;
 		if (_root.map.ways[wayselected].path.length<=1) { 
 			// way not long enough, so abort
 			removeMovieClip(_root.map.ways[wayselected]);
 			removeMovieClip(_root.map.anchors);
 		}
-		_root.map.feedback.clear();
+		_root.map.elastic.clear();
 		clearTooltip();
 	};
 
-	function revertWay() {
-		if (_root.wayselected>0) {
-			stopDrawing();
-			_root.waysrequested+=1;
-			_root.map.ways[wayselected].load(wayselected);
-		} else if (_root.wayselected<0) {
-			stopDrawing();
-			removeMovieClip(_root.map.ways[wayselected]);
-		}
+	function keyRevert() {
+		if      (_root.wayselected>0) {	stopDrawing();
+								        _root.waysrequested+=1;
+										_root.map.ways[wayselected].load(wayselected); }
+		else if (_root.wayselected<0) { stopDrawing();
+										removeMovieClip(_root.map.ways[wayselected]); }
+		else if (_root.poiselected>0) { _root.map.pois[poiselected].reload(); }
+		else if (_root.poiselected<0) { removeMovieClip(_root.map.pois[poiselected]); }
 		deselectAll();
 	};
 
 	function deselectAll() {
 		_root.map.createEmptyMovieClip("anchors",5000); 
 		wayselected=0;
+		poiselected=0;
 		pointselected=-2;
 		removeMovieClip(_root.map.highlight);
 		_root.i_circular._visible=false;
@@ -812,15 +977,30 @@
 	};
 	
 	function uploadSelected() {
-		if (_root.wayselected!=0 && _root.map.ways[wayselected].clean==0) {
+		if (_root.wayselected!=0 && !_root.map.ways[wayselected].clean) {
 			for (qway in _root.map.ways) {
-				if (_root.map.ways[qway].clean==0) {
+				if (!_root.map.ways[qway].clean) {
 					_root.map.ways[qway].upload();
 				}
 			}
 		}
+		if (_root.poiselected!=0 && !_root.map.pois[poiselected].clean) {
+			_root.map.pois[poiselected].upload();
+		}
 	};
 
+	function highlightSquare(sx,sy,ss) {
+		_root.map.createEmptyMovieClip("highlight",5);
+		_root.map.highlight._x=sx;
+		_root.map.highlight._y=sy;
+		_root.map.highlight.beginFill(0xFFFF00,80);
+		_root.map.highlight.moveTo(-ss, ss);
+		_root.map.highlight.lineTo( ss, ss);
+		_root.map.highlight.lineTo( ss,-ss);
+		_root.map.highlight.lineTo(-ss,-ss);
+		_root.map.highlight.lineTo(-ss, ss);
+		_root.map.highlight.endFill();
+	};
 
 	// =====================================================================================
 	// Standard UI
@@ -862,10 +1042,8 @@
 			clear();
 			lineStyle(2,0,100);
 			moveTo(1,0);
-			lineTo(9,0);
-			lineTo(9,9);
-			lineTo(0,9);
-			lineTo(0,0);
+			lineTo(9,0); lineTo(9,9);
+			lineTo(0,9); lineTo(0,0);
 			if (this.state==true) {
 				lineStyle(2,0,100);
 				moveTo(1,1); lineTo(8,8);
@@ -1141,7 +1319,9 @@
 		this.createTextField('value',2,72,-1,110,18);
 		this.value.onSetFocus =function() { if (this.textColor==0x888888) { this.text=''; this.textColor=0x000000; }
 											this.addListener(textfieldListener); Key.removeListener(keyListener); _root.elselected=this._name;
-											_root.map.ways[_root.wayselected].clean=0; };
+											if (_root.currentproptype=='POI') { _root.map.pois[_root.poiselected].clean=false; }
+																			  { _root.map.ways[_root.wayselected].clean=false; }
+											};
 		this.value.onKillFocus=function() { this.removeListener(textfieldListener); Key.addListener(keyListener); 
 											if (this.text=='') { _root.redopropertywindow=1; } // crashes player if called directly!
 											if (_root.currentproptype=='way') { _root.map.ways[wayselected].redraw(); }
@@ -1152,12 +1332,16 @@
 			this.value.type='input';
 			this.value.tabIndex=_root.propn;
 		};
-		if (_root.currentproptype=='point') {
-			this.value.variable="_root.map.ways."+wayselected+".path."+pointselected+".4."+this._name;
-			this.value.text=_root.map.ways[_root.wayselected].path[_root.pointselected][4][this._name];
-		} else {
-			this.value.variable="_root.map.ways."+wayselected+".attr."+this._name;
-			this.value.text=_root.map.ways[wayselected].attr[this._name];
+		switch (_root.currentproptype) {
+			case 'point':	this.value.variable="_root.map.ways."+wayselected+".path."+pointselected+".4."+this._name;
+							this.value.text=_root.map.ways[_root.wayselected].path[_root.pointselected][4][this._name];
+							break;
+			case 'POI':		this.value.variable="_root.map.pois."+poiselected+".attr."+this._name;
+							this.value.text=_root.map.pois[poiselected].attr[this._name];
+							break;
+			case 'way':		this.value.variable="_root.map.ways."+wayselected+".attr."+this._name;
+							this.value.text=_root.map.ways[wayselected].attr[this._name];
+							break;
 		}
 		this.value.setTextFormat(plainSmall);
 		this.value.setNewTextFormat(plainSmall);
@@ -1178,8 +1362,11 @@
 		if (proptype=='') { return; }
 		
 		if (proptype!=currentproptype) { presetmenu.init(141,505,0,presetnames[proptype][presetselected],'Choose from a menu of preset attributes describing the '+proptype,setAttributesFromPreset,151); }
-		if (proptype=='point') { proparr=_root.map.ways[wayselected].path[pointselected][4]; }
-						  else { proparr=_root.map.ways[wayselected].attr; }
+		switch (proptype) {
+			case 'point':	proparr=_root.map.ways[wayselected].path[pointselected][4]; break;
+			case 'POI':		proparr=_root.map.pois[poiselected].attr; break;
+			case 'way':		proparr=_root.map.ways[wayselected].attr; break;
+		}
 		_root.currentproptype=proptype;
 		_root.currentproppoint=pointselected;
 		_root.currentpropway=wayselected;
@@ -1195,6 +1382,7 @@
 		_root.presetmenu._visible=true;
 		_root.i_preset._visible=true;
 		reflectPresets();
+
 	};
 
 	function clearPropertyWindow() {
@@ -1240,8 +1428,11 @@
 			if (pkeys) {
 				ok=1;
 				for (pkey in pkeys) {
-					if (currentproptype=='way') { cvalue=_root.map.ways[wayselected].attr[pkey]; }
-											else { cvalue=_root.map.ways[wayselected].path[pointselected][4][pkey]; }
+					switch (currentproptype) {
+						case 'way':		cvalue=_root.map.ways[wayselected].attr[pkey]; break;
+						case 'POI':		cvalue=_root.map.pois[poiselected].attr[pkey]; break;
+						case 'point':	cvalue=_root.map.ways[wayselected].path[pointselected][4][pkey]; break;
+					}
 					if (cvalue==null) { cvalue=''; }
 					if (cvalue!=presets[pname][pkey] && presets[pname][pkey].substr(0,6)!='(type ') { ok=0; }
 				}
@@ -1257,17 +1448,23 @@
 		pname=presetnames[currentproptype][presetselected][pre];
 		pkeys=presets[pname];
 		for (pkey in pkeys) {
-			if (currentproptype=='way') {
-				if    (_root.map.ways[wayselected].attr[pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
-				else { _root.map.ways[wayselected].attr[pkey]=presets[pname][pkey];	}
-			} else {
-				if    (_root.map.ways[wayselected].path[pointselected][4][pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
-				else { _root.map.ways[wayselected].path[pointselected][4][pkey]=presets[pname][pkey]; }
+			switch (currentproptype) {
+				case 'way':		if   (_root.map.ways[wayselected].attr[pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
+								else { _root.map.ways[wayselected].attr[pkey]=presets[pname][pkey];	}
+								_root.map.ways[wayselected].redraw();
+								_root.map.ways[wayselected].clean=false;
+								break;
+				case 'POI':		if   (_root.map.pois[poiselected].attr[pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
+								else { _root.map.pois[poiselected].attr[pkey]=presets[pname][pkey];	}
+								_root.map.pois[poiselected].clean=false;
+								break;
+				case 'point':	if   (_root.map.ways[wayselected].path[pointselected][4][pkey].length>0 && presets[pname][pkey].substr(0,6)=='(type ') {}
+								else { _root.map.ways[wayselected].path[pointselected][4][pkey]=presets[pname][pkey]; }
+								_root.map.ways[wayselected].clean=false;
+								break;
 			}
 		}
 		populatePropertyWindow(currentproptype);
-		_root.map.ways[wayselected].redraw();
-		_root.map.ways[wayselected].clean=0;
 	}
 
 	// setPresetIcon and cyclePresetIcon
@@ -1297,10 +1494,10 @@
 	function enterNewAttribute() {
 		if (_root.wayselected==0 && _root.pointselected==-2) { return; }
 		if (_root.propn==12) { return; }
-		if (_root.currentproptype=='point') {
-			_root.map.ways[_root.wayselected].path[_root.pointselected][4].key='(type value here)';
-		} else {
-			_root.map.ways[wayselected].attr.key='(type value here)';
+		switch (_root.currentproptype) {
+			case 'point':	_root.map.ways[_root.wayselected].path[_root.pointselected][4].key='(type value here)'; break;
+			case 'POI':		_root.map.pois[poiselected].attr.key='(type value here)'; break;
+			case 'way':		_root.map.ways[wayselected].attr.key='(type value here)'; break;
 		}
 		_root.properties.attachMovie("keyvalue","key",_root.propn);
 		_root.properties.key['value'].textColor=0x888888;
@@ -1314,17 +1511,23 @@
 			Key.addListener(keyListener);
 			this._parent.value.variable=null;
 			z=this._parent.keyname.text;
-			if (_root.currentproptype=='point') {
-				_root.map.ways[wayselected].path[pointselected][4][z]=_root.map.ways[wayselected].path[pointselected][4][this._parent._name];
-				_root.map.ways[wayselected].path[pointselected][4][this._parent._name]='';
-				// above line should be delete _root.map..., but Ming won't compile 'delete' with more than one [] in it
-				this._parent._name=z;
-				this._parent.value.variable="_root.map.ways."+wayselected+".path."+pointselected+".4."+z;
-			} else {
-				_root.map.ways[wayselected].attr[z]=_root.map.ways[wayselected].attr[this._parent._name];
-				_root.map.ways[wayselected].attr[this._parent._name]='';
-				this._parent._name=z;
-				this._parent.value.variable="_root.map.ways."+wayselected+".attr."+z;
+			switch (_root.currentproptype) {
+				case 'point':	_root.map.ways[wayselected].path[pointselected][4][z]=_root.map.ways[wayselected].path[pointselected][4][this._parent._name];
+								_root.map.ways[wayselected].path[pointselected][4][this._parent._name]='';
+								// above line should be delete _root.map..., but Ming won't compile 'delete' with more than one [] in it
+								this._parent._name=z;
+								this._parent.value.variable="_root.map.ways."+wayselected+".path."+pointselected+".4."+z;
+								break;
+				case 'POI':		_root.map.pois[poiselected].attr[z]=_root.map.pois[poiselected].attr[this._parent._name];
+								_root.map.pois[poiselected].attr[this._parent._name]='';
+								this._parent._name=z;
+								this._parent.value.variable="_root.map.pois."+poiselected+".attr."+z;
+								break;
+				case 'way':		_root.map.ways[wayselected].attr[z]=_root.map.ways[wayselected].attr[this._parent._name];
+								_root.map.ways[wayselected].attr[this._parent._name]='';
+								this._parent._name=z;
+								this._parent.value.variable="_root.map.ways."+wayselected+".attr."+z;
+								break;
 			}
 		};
 	}
@@ -1333,32 +1536,42 @@
 	
 	function repeatAttributes() {
 		if (_root.wayselected==0 && _root.pointselected==-2) { return; }
-		if (savedtype=='point') { z=_root.map.ways[savedway].path[savedpoint][4]; }
-						   else { z=_root.map.ways[savedway].attr; }
+		switch (savedtype) {
+			case 'point':	z=_root.map.ways[savedway].path[savedpoint][4]; break;
+			case 'POI':		z=_root.map.pois[savedpoi].attr; break;
+			case 'way':		z=_root.map.ways[savedway].attr; break;
+		}
 		for (i in z) {
 			if (Key.isDown(Key.SHIFT) && (i=='name' || i=='ref') || i=='created_by') {
 				// ignore name and ref if SHIFT pressed
 			} else {
-				if (savedtype=='point') { j=_root.map.ways[savedway].path[savedpoint][4][i]; }
-								   else { j=_root.map.ways[savedway].attr[i]; }
-				if (currentproptype=='point') { _root.map.ways[wayselected].path[pointselected][4][i]=j; }
-										 else { _root.map.ways[wayselected].attr[i]=j; }
+				switch (savedtype) {
+					case 'point':	j=_root.map.ways[savedway].path[savedpoint][4][i]; break;
+					case 'POI':		j=_root.map.pois[savedpoi].attr[i]; break;
+					case 'way':		j=_root.map.ways[savedway].attr[i]; break;
+				}
+				switch (currentproptype) {
+					case 'point':	_root.map.ways[wayselected].path[pointselected][4][i]=j;
+									_root.map.ways[wayselected].clean=false;
+									break;
+					case 'POI':		_root.map.pois[poiselected].attr[i]=j; 
+									_root.map.pois[poiselected].clean=false;
+									break;
+					case 'way':		_root.map.ways[wayselected].attr[i]=j; 
+									_root.map.ways[wayselected].clean=false;
+									_root.map.ways[wayselected].redraw();
+									break;
+				}
 			}
 		}
 		populatePropertyWindow(_root.currentproptype);
-		_root.map.ways[wayselected].clean=0;
-		_root.map.ways[wayselected].redraw();
 	}
 	
-	// nextAttributes	- go to next screen of attributes (not yet supported)
-	
-	function nextAttributes() {
-	}
-
 	// textChanged		- listener marks way as dirty when any change made
 
 	function textChanged() { 
-		_root.map.ways[wayselected].clean=0;
+		if (_root.poiselected!=0) { _root.map.pois[poiselected].clean=false; }
+							 else { _root.map.ways[wayselected].clean=false; }
 	};
 	
 
@@ -1389,7 +1602,7 @@
 		_root.newnodeid--;
 		newpoint=new Array(nx,ny,newnodeid,1,new Array(),0);
 		_root.map.ways[way].path.splice(closei,0,newpoint);
-		_root.map.ways[way].clean=0;
+		_root.map.ways[way].clean=false;
 		_root.map.ways[way].redraw();
 		return closei;
 	}
@@ -1400,18 +1613,18 @@
 
 	function keyPressed() {
 		k=Key.getCode();
-		if (k>48 && k<58 && wayselected!=0) {
+		if (k>48 && k<58 && (wayselected!=0 || poiselected!=0)) {
 			if (presetnames[currentproptype][presetselected][k-48]!=null) {
 				setAttributesFromPreset(k-48);
 			}
 		}
 		switch (k) {
-			case 46:		;													// DELETE/backspace - delete way/node
+			case 46:		;													// DELETE/backspace - delete way -- ode
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
 								if (_root.wayselected!=0) { _root.map.ways[wayselected].remove(); }
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
-			case 27:		revertWay(); break;									// ESCAPE - revert current way
+			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 112:		setBackground(0); break; 							// f1 - no base layer
 			case 113:		setBackground(2-1*(Key.isDown(Key.SHIFT))); break;	// f2 - Yahoo! base layer
 			case 71:		loadGPS(); break;									// G - load GPS
@@ -1462,12 +1675,12 @@
 		_root.map._yscale=100*bscale;
 		
 		_root.centre_lat=coord2lat((250-_root.map._y)/bscale);
-		_root.edge_t	=coord2lat(-_root.map._y	 /bscale);
-		_root.edge_b	=coord2lat((500-_root.map._y)/bscale);
+		_root.coord_t=    -_root.map._y /bscale; _root.edge_t=coord2lat(_root.coord_t);
+		_root.coord_b=(500-_root.map._y)/bscale; _root.edge_b=coord2lat(_root.coord_b);
 
 		_root.centre_lon=coord2long((350-_root.map._x)/bscale);
-		_root.edge_l	=coord2long(-_root.map._x	  /bscale);
-		_root.edge_r	=coord2long((700-_root.map._x)/bscale);
+		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
+		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
 
 //		updateGrid();
 
@@ -1499,8 +1712,10 @@
 		if (_root.scale<_root.maxscale) {
 			changeScaleTo(_root.scale+1);
 			if (_root.waycount>500) { purgeWays(); }
+			if (_root.poicount>500) { purgePOIs(); }
 			redrawMap((_root.map._x*2)-350,(_root.map._y*2)-250);
 			redrawYahoo();
+			resizePOIs();
 			for (qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
 			if (_root.wayselected) {
 				_root.map.ways[wayselected].highlight();
@@ -1514,6 +1729,7 @@
 			changeScaleTo(_root.scale-1); 
 			redrawMap((_root.map._x+350)/2,(_root.map._y+250)/2);
 			redrawYahoo();
+			resizePOIs();
 			whichWays();
 			for (qway in _root.map.ways) { _root.map.ways[qway].redraw(); }
 			if (_root.wayselected) {
@@ -1532,7 +1748,15 @@
 		_root.tolerance=4/Math.pow(2,_root.scale-12);
 	}
 
-	
+	function resizePOIs() {
+		n=Math.max(100/Math.pow(2,_root.scale-12),6.25);
+		for (qpoi in _root.map.pois) {
+			_root.map.pois[qpoi]._xscale=_root.map.pois[qpoi]._yscale=n;
+		}
+		if (_root.poiselected) {
+			highlightSquare(_root.map.pois[poiselected]._x,_root.map.pois[poiselected]._y,8/Math.pow(2,Math.min(_root.scale,16)-12));
+		}
+	}
 
 	// =====================================================================
 	// Map support functions
@@ -1582,21 +1806,26 @@
 		}
 	
 		// Redraw map
-		_root.map.ways[wayselected].clean=0;
+		_root.map.ways[wayselected].clean=false;
 		_root.map.ways[wayselected].redraw();
 		_root.map.ways[wayselected].select();
-		_root.map.feedback.clear();
+		_root.map.elastic.clear();
 	}
 
 
-	// processDrag, moveMap - process map dragging
+	// processMapDrag, moveMap - process map dragging
 
-	function processDrag() {
+	function processMapDrag() {
 		if (Math.abs(_root.firstxmouse-_root._xmouse)>(tolerance*4) ||
 			Math.abs(_root.firstymouse-_root._ymouse)>(tolerance*4)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
 			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
 		}
+	}
+
+	function endMapDrag() {
+		_root.map.onMouseMove=function() {};
+		_root.map.onMouseUp  =function() {};
 	}
 	
 	function moveMap(xdiff,ydiff) {
@@ -1615,84 +1844,24 @@
 	function mapClick() {
 		setPointer('pen');
 		clearTooltip();
-		_root.map.onMouseMove=function() { processDrag(); };
-		_root.dragmap=1;
+		_root.map.onMouseMove=function() { processMapDrag(); };
+		_root.map.onMouseUp  =function() { endMapDrag(); };
+		_root.dragmap=true;
 		_root.lastxmouse=_root._xmouse;
 		_root.lastymouse=_root._ymouse;
 		_root.firstxmouse=_root._xmouse;
 		_root.firstymouse=_root._ymouse;
 	}
 
+	// mapClickEnd - end of click within map area
 
-	// mouseRelease - handle mouseUp event
+	function mapClickEnd() {
 
-	function mouseRelease() {
-		_root.map.onMouseMove=function() {};
-
-		if (_root.dragpoint!=-1) {
-
-			// -------------
-			// Dragged point
-
-			newx=_root.map._xmouse;
-			newy=_root.map._ymouse;
-			inbounds=Math.abs(newx-_root.map.ways[wayselected].path[dragpoint][0])>=tolerance/2 || 
-					 Math.abs(newy-_root.map.ways[wayselected].path[dragpoint][1])>=tolerance/2;
-			if (inbounds) {
-				// ====	Move existing point
-				for (qway in _root.map.ways) {
-					qdirty=0;
-					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
-						if (_root.map.ways[qway].path[qs][2]==_root.map.ways[wayselected].path[dragpoint][2]) {
-							_root.map.ways[qway].path[qs][0]=newx;
-							_root.map.ways[qway].path[qs][1]=newy;
-							qdirty=1;
-						}
-					}
-					if (qdirty) {
-						_root.map.ways[qway].redraw();
-						_root.map.ways[qway].clean=0;
-					}
-				}
-				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
-				_root.map.ways[wayselected].highlight();
-			} else if ((dragpoint==0 || dragpoint==_root.map.ways[wayselected].path.length-1) && !Key.isDown(17)) {
-				// ===== Clicked at start or end of line
-				if (_root.drawpoint==0 || _root.drawpoint==_root.map.ways[wayselected].path.length-1) {
-					// - Join looping path
-					addEndPoint(_root.map.ways[wayselected].path[dragpoint][0],
-								_root.map.ways[wayselected].path[dragpoint][1],
-								_root.map.ways[wayselected].path[dragpoint][2]);
-					stopDrawing();
-				} else if (_root.drawpoint==-1) {
-					// - Start elastic line for adding new point
-					setTooltip("click to add point\ndouble-click/Return\nto end line",0);
-					_root.drawpoint=dragpoint;
-				}
-			} else {
-				// ===== Clicked elsewhere in line
-				if (_root.drawpoint>-1) {
-					addEndPoint(_root.map.ways[wayselected].path[dragpoint][0],
-								_root.map.ways[wayselected].path[dragpoint][1],
-								_root.map.ways[wayselected].path[dragpoint][2]);
-				}
-//				_root.drawpoint=-1;
-			}
-			_root.dragpoint=-1;
-
-		// ------------------------------------------
-		// Double-clicked on point while drawing line
-
-		} else if (_root.drawpoint==-2) {
-			stopDrawing();
-
-		// -------------------------------
 		// Clicked on map without dragging
 
-		} else if (Math.abs(_root.firstxmouse-_root._xmouse)<(tolerance*4) &&
-				   Math.abs(_root.firstymouse-_root._ymouse)<(tolerance*4)) {
-
-			_root.dragmap=-1;
+		if (Math.abs(_root.firstxmouse-_root._xmouse)<(tolerance*4) &&
+			Math.abs(_root.firstymouse-_root._ymouse)<(tolerance*4)) {
+			_root.dragmap=false;
 			// Adding a point to the way being drawn
 			if (_root.drawpoint>-1) {
 				_root.newnodeid--;
@@ -1701,9 +1870,14 @@
 					populatePropertyWindow('way');
 				}
 				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
+				_root.map.anchors[_root.drawpoint].startElastic();
 
 			// Deselecting a way
 			} else if (_root.wayselected) {
+				uploadSelected(); deselectAll();
+
+			// Deselecting a POI
+			} else if (_root.poiselected) {
 				uploadSelected(); deselectAll();
 
 			// Starting a new way
@@ -1714,14 +1888,16 @@
 		// ----------------------
 		// Dragged map, so redraw
 
-		} else if (_root.dragmap==1) {
+		} else if (_root.dragmap) {
 			redrawYahoo(); whichWays();
-			_root.dragmap=-1;
+			_root.dragmap=false;
 			if (_root.wayselected) { setPointer(''); }
 							  else { setPointer('pen'); }
 		}
 		
 	}
+
+
 
 
 	// startNewWay	- create new way with first point x,y,node
@@ -1731,11 +1907,13 @@
 		_root.newwayid--;
 		newpoint=new Array(x,y,node,0,new Array(),0);
 		_root.wayselected=newwayid;
+		_root.poiselected=0;
 		_root.map.ways.attachMovie("way",newwayid,++waydepth);
 		_root.map.ways[newwayid].path[0]=newpoint;
 		_root.map.ways[newwayid].redraw();
 		_root.map.ways[newwayid].select();
-		_root.map.ways[newwayid].clean=0;
+		_root.map.ways[newwayid].clean=false;
+		_root.map.anchors[0].startElastic();
 		_root.drawpoint=0;
 		setTooltip("click to add point\ndouble-click/Return\nto end line",0);
 	}
@@ -1818,6 +1996,7 @@
 
 	function whichWays() {
 		if (_root.waycount>500) { purgeWays(); }
+		if (_root.poicount>500) { purgePOIs(); }
 		if (_root.edge_l>_root.bigedge_l &&
 			_root.edge_r<_root.bigedge_r &&
 			_root.edge_b>_root.bigedge_b &&
@@ -1829,34 +2008,42 @@
 				_root.whichreceived+=1;
 				waylist  =result[0];
 				pointlist=result[1];
-				for (i in waylist) {
-					way=waylist[i];
-					if (!_root["map"]["ways"][way]) {
-						_root.map.ways.attachMovie("way",way,++waydepth);
-						_root["map"]["ways"][way].load(way);
-						_root.waycount+=1;
-						_root.waysrequested+=1;
+
+				for (i in waylist) {										// ways
+					way=waylist[i];											//  |
+					if (!_root["map"]["ways"][way]) {						//  |
+						_root.map.ways.attachMovie("way",way,++waydepth);	//  |
+						_root["map"]["ways"][way].load(way);				//  |
+						_root.waycount+=1;									//  |
+						_root.waysrequested+=1;								//  |
 					}
 				}
-				// - to read pointlist:
-				//   for (i in pointlist) {
-				//     if (pointlist[i][1]['name']) { _root.chat.text+=pointlist[i][1]['name']+','; }
-				//   }
-				// - will need to count and purge POIs too
+				
+				for (i in pointlist) {										// POIs
+					point=pointlist[i][0];									//  |
+					if (!_root["map"]["pois"][point]) {						//  |
+						_root.map.pois.attachMovie("poi",point,++poidepth);	//  |
+						_root.map.pois[point]._x=pointlist[i][1];			//  |
+						_root.map.pois[point]._y=pointlist[i][2];			//  |
+						_root.map.pois[point]._xscale=_root.map.pois[point]._yscale=Math.max(100/Math.pow(2,_root.scale-12),6.25);
+						_root.map.pois[point].attr=pointlist[i][3];			//  |
+						_root.poicount+=1;									//  |
+					}
+				}
 			};
-			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t);
+			remote.call('whichways',whichresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t,baselong,basey,masterscale);
 			_root.bigedge_l=_root.edge_l; _root.bigedge_r=_root.edge_r;
 			_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 			_root.whichrequested+=1;
 		}
 	}
 
-	// purgeWays - remove any clean ways outside current view
+	// purgeWays/purgePOIs - remove any clean ways/POIs outside current view
 	
 	function purgeWays() {
 		for (qway in _root.map.ways) {
 			if (qway==_root.wayselected) {
-			} else if (_root.map.ways[qway].clean==0) {
+			} else if (!_root.map.ways[qway].clean) {
 				_root.map.ways[qway].upload();
 			} else if (((_root.map.ways[qway].xmin<edge_l && _root.map.ways[qway].xmax<edge_l) ||
 						(_root.map.ways[qway].xmin>edge_r && _root.map.ways[qway].xmax>edge_r) ||
@@ -1870,6 +2057,18 @@
 		_root.bigedge_b=_root.edge_b; _root.bigedge_t=_root.edge_t;
 	}
 
+	function purgePOIs() {
+		for (qpoi in _root.map.pois) {
+			if (qpoi==_root.poiselected) {
+			} else if (!_root.map.pois[qpoi].clean) {
+				_root.map.pois[qpoi].upload();
+			} else if ((_root.map.pois[qpoi]._x<coord_l || _root.map.pois[qpoi]._x>coord_r) &&
+					   (_root.map.pois[qpoi]._y<coord_b || _root.map.pois[qpoi]._y>coord_t)) {
+				removeMovieClip(_root.map.pois[qpoi]);
+				_root.poicount-=1;
+			}
+		}
+	}
 
 	// ================================================================
 	// Pointer handling
@@ -1884,7 +2083,7 @@
 	}
 	
 	function setPointer(ptype) {
-		if ((ptype) && _root.custompointer==true) {
+		if ((ptype) && _root.custompointer) {
 			_root.attachMovie(ptype,"pointer",65535);
 			trackMouse();
 			Mouse.addListener(mouseListener);

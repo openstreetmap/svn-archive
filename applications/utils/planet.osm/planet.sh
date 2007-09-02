@@ -5,12 +5,13 @@ planet_dir=/var/www/planet.openstreetmap.org/
 
 export PATH='/usr/local/bin:/usr/bin:/bin:/usr/bin/X11'
 cd /home/steve/bin
-./planet.rb > ${cur_planet}
+./planet.rb | bzip2 > ${cur_planet}.bz2
+mv ${cur_planet}.bz2 ${planet_dir}
+
 #7zr a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on  planet-`date +%y%m%d.osm`.7z  ${cur_planet}
 #chmod a+r ${cur_planet}.7z
 #mv ${cur_planet}.7z ${planet_dir}
-bzip2 ${cur_planet}
-mv ${cur_planet}.bz2 ${planet_dir}
+
 
 cd ${planet_dir}
 

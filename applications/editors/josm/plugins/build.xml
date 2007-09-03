@@ -45,7 +45,7 @@
 	<target name="clean">
 		<ant dir="colorscheme" antfile="build.xml" target="clean"/>
 		<!--ant dir="grid" antfile="build.xml" target="clean"/-->
-		<ant dir="lang" antfile="build.xml" target="clean"/>
+		<!--ant dir="lang" antfile="build.xml" target="clean"/-->
 		<ant dir="livegps" antfile="build.xml" target="clean"/>
 		<ant dir="mappaint" antfile="build.xml" target="clean"/>
 		<ant dir="namefinder" antfile="build.xml" target="clean"/>

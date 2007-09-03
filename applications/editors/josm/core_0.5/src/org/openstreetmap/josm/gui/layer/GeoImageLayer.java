@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -243,10 +244,10 @@ public class GeoImageLayer extends Layer {
 		final JViewport vp = scroll.getViewport();
 		p.add(scroll, BorderLayout.CENTER);
 
-		final JToggleButton scale = new JToggleButton(ImageProvider.get("misc", "rectangle"));
-		final JButton next = new JButton(">>");
-		final JButton prev = new JButton("<<");
-		final JButton cent = new JButton("Centre");
+		final JToggleButton scale = new JToggleButton(ImageProvider.get("dialogs", "zoom-best-fit"));
+		final JButton next  = new JButton(ImageProvider.get("dialogs", "next"));
+		final JButton prev = new JButton(ImageProvider.get("dialogs", "previous"));
+		final JToggleButton cent = new JToggleButton(ImageProvider.get("dialogs", "centreview"));
 
 		JPanel p2 = new JPanel();
 		p2.add(prev);
@@ -257,7 +258,6 @@ public class GeoImageLayer extends Layer {
 		next.setEnabled(currentImage<data.size()-1?true:false);
 		p.add(p2, BorderLayout.SOUTH);
 		final JOptionPane pane = new JOptionPane(p, JOptionPane.PLAIN_MESSAGE);
-		//final JDialog dlg = pane.createDialog(Main.parent, e.image+" ("+e.coor.lat()+","+e.coor.lon()+")");
 		final JDialog dlg = pane.createDialog(Main.parent, e.image+" ("+e.coor.toDisplayString()+")");
 		scale.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
@@ -270,44 +270,53 @@ public class GeoImageLayer extends Layer {
 			}
 		});
 		scale.setSelected(true);
-		prev.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent ev) {
-				p.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				if(currentImage>0) currentImage--;
-				if(currentImage==0) prev.setEnabled(false);
-				next.setEnabled(true);
-				final ImageEntry e = data.get(currentImage);
-				if (scale.getModel().isSelected())
-					((JLabel)vp.getView()).setIcon(loadScaledImage(e.image, Math.max(vp.getWidth(), vp.getHeight())));
-				else
-					((JLabel)vp.getView()).setIcon(new ImageIcon(e.image.getPath()));
-				dlg.setTitle(e.image+" ("+e.coor.toDisplayString()+")");
-				//dlg.setTitle(e.image+" ("+e.coor.lat()+","+e.coor.lon()+")");
-				p.setCursor(Cursor.getDefaultCursor());
-			}
-		});
-		next.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent ev) {
-				p.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				if(currentImage<data.size()-1) currentImage++;
-				if(currentImage==data.size()-1) next.setEnabled(false);
-				prev.setEnabled(true);
-				final ImageEntry e = data.get(currentImage);
-				if (scale.getModel().isSelected())
-					((JLabel)vp.getView()).setIcon(loadScaledImage(e.image, Math.max(vp.getWidth(), vp.getHeight())));
-				else
-					((JLabel)vp.getView()).setIcon(new ImageIcon(e.image.getPath()));
-				dlg.setTitle(e.image+" (" + e.coor.toDisplayString() + ")");
-				p.setCursor(Cursor.getDefaultCursor());
-			}
-		});
 		cent.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
 			    final ImageEntry e = data.get(currentImage);
-			    //Main.map.mapView.repaint();
-			    Main.map.mapView.zoomTo(e.pos, Main.map.mapView.getScale());
+			    if (cent.getModel().isSelected())
+				Main.map.mapView.zoomTo(e.pos, Main.map.mapView.getScale());
 			}
 		    });
+
+		ActionListener nextprevAction = new ActionListener(){
+			public void actionPerformed(ActionEvent ev) {			    
+			    p.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			    if (ev.getActionCommand().equals("Next")) {
+				currentImage++; 
+				if(currentImage>=data.size()-1) next.setEnabled(false);
+				prev.setEnabled(true);
+			    } else {
+				currentImage--;
+				if(currentImage<=0) prev.setEnabled(false);
+				next.setEnabled(true);
+			    }
+			    
+			    final ImageEntry e = data.get(currentImage);
+			    if (scale.getModel().isSelected())
+				((JLabel)vp.getView()).setIcon(loadScaledImage(e.image, Math.max(vp.getWidth(), vp.getHeight())));
+			    else
+				((JLabel)vp.getView()).setIcon(new ImageIcon(e.image.getPath()));
+			    dlg.setTitle(e.image+" ("+e.coor.toDisplayString()+")");
+			    if (cent.getModel().isSelected())
+				Main.map.mapView.zoomTo(e.pos, Main.map.mapView.getScale());
+			    p.setCursor(Cursor.getDefaultCursor());
+			}
+		    };
+		next.setActionCommand("Next");
+		prev.setActionCommand("Previous");
+		next.setMnemonic(KeyEvent.VK_RIGHT);
+		prev.setMnemonic(KeyEvent.VK_LEFT);
+		scale.setMnemonic(KeyEvent.VK_F);
+		cent.setMnemonic(KeyEvent.VK_C);
+		next.setToolTipText("Show next image");
+		prev.setToolTipText("Show previous image");
+		cent.setToolTipText("Centre image location in main display");
+		scale.setToolTipText("Scale image to fit");
+
+		prev.addActionListener(nextprevAction);
+		next.addActionListener(nextprevAction);
+		cent.setSelected(false);
+
 		dlg.setModal(false);
 		dlg.setVisible(true);
 	}

@@ -20,15 +20,18 @@ def read_timestamp time_str
   (time_str.nil? or time_str == "" or time_str == "NULL") ? Time.at(0) : Time.parse(time_str)
 end
 
-def pageSQL(page)
-  return " limit #{page * 500000}, 500000"
+def pageSQL(lastid)
+  if lastid == 0?
+    return ""
+  else
+    return " and id > #{lastid}"
 end
 
 # yields for every node with parameter
 # id, lat, lon, timestamp, tags
 # 'tags' are a hash in format {key1=>value1, key2=>value2...}
-def all_nodes(page)
-  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 order by id #{pageSQL(page)}" do |rows|
+def all_nodes(lastid)
+  $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 #{pageSQL(lastid)} order by id limit 500000" do |rows|
     rows.each do |row|
       yield row[0].to_i, row[1].to_f, row[2].to_f, read_timestamp(row[3]), read_tags(row[4])
     end
@@ -37,8 +40,8 @@ end
 
 # yields for every segment
 # id, from_id, to_id, timestamp, tags
-def all_segments(page)
-  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1 order by id #{pageSQL(page)}" do |rows|
+def all_segments(lastid)
+  $mysql.query "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1 #{pageSQL(lastid)} order by id limit 500000" do |rows|
     rows.each do |row|
       yield row[0].to_i, row[1].to_i, row[2].to_i, read_timestamp(row[3]), read_tags(row[4])
     end
@@ -47,8 +50,8 @@ end
 
 # yields for every way
 # id, [id1,id2,id3...], timestamp, tags
-def all_ways(page)
-  $mysql.query "select id, timestamp from current_ways where visible = 1 order by id #{pageSQL(page)}" do |ways|
+def all_ways(lastid)
+  $mysql.query "select id, timestamp from current_ways where visible = 1 #{pageSQL(lastid)} order by id limit 500000" do |ways|
     ways.each do |row|
       id = row[0].to_i
       segs = []
@@ -74,12 +77,13 @@ puts '<osm version="0.3" generator="OpenStreetMap planet.rb">'
 puts '  <bound box="-90,-180,90,180" origin="http://www.openstreetmap.org/api/0.4" />'
 
 done = false
-page = 0
+lastid = 0
 
 while not done
   done = true
-  all_nodes(page) do |id, lat, lon, timestamp, tags|
+  all_nodes(lastid) do |id, lat, lon, timestamp, tags|
     done = false
+    lastid = id
     print %{  <node id="#{id}" lat="#{sprintf('%.7f', lat)}" lon="#{sprintf('%.7f', lon)}" timestamp="#{timestamp.xmlschema}"}
     if tags.empty?
       puts "/>"
@@ -89,16 +93,16 @@ while not done
       puts "  </node>"
     end
   end
-  page += 1
 end
 
 done = false
-page = 0
+lastid = 0
 
 while not done
   done = true
-  all_segments(page) do |id, from, to, timestamp, tags|
+  all_segments(lastid) do |id, from, to, timestamp, tags|
     done = false
+    lastid = id
     print %{  <segment id="#{id}" from="#{from}" to="#{to}" timestamp="#{timestamp.xmlschema}"}
     if tags.empty?
       puts "/>"
@@ -108,16 +112,16 @@ while not done
       puts "  </segment>"
     end
   end
-  page += 1
 end
 
 done = false
-page = 0
+lastid = 0
 
 while not done
   done = true
-  all_ways(page) do |id, segs, timestamp, tags|
+  all_ways(lastid) do |id, segs, timestamp, tags|
     done = false
+    lastid = id
     print %{  <way id="#{id}" timestamp="#{timestamp.xmlschema}"}
     if tags.empty? and segs.empty?
       puts "/>"
@@ -128,6 +132,5 @@ while not done
       puts "  </way>"
     end
   end
-  page += 1
 end
 puts "</osm>"

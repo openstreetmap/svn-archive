@@ -14,26 +14,25 @@ mkdir -p downloads
 cd downloads
 
 # get latest josm version (and license)
-wget -nc http://josm.eigenheimstrasse.de/download/josm-latest.jar
-wget -nc http://josm.eigenheimstrasse.de/browser/LICENSE?format=raw
+wget -N http://josm.eigenheimstrasse.de/download/josm-latest.jar
+wget -N http://josm.eigenheimstrasse.de/browser/LICENSE?format=raw
 cp LICENSE?format=raw LICENSE
 
 # get latest plugin (and supporting files) versions
-cp ../../plugins/mappaint/mappaint.jar .
-cp ../../plugins/namefinder/namefinder.jar .
-#cp ../../plugins/osmarender/osmarender.jar .
 #cp ../../plugins/annotation-tester/annotation-tester.jar .
-#cp ../../plugins/wmsplugin/wmsplugin.jar .
-
-# wget -N http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
-# wget -N http://www.free-map.org.uk/downloads/josm/mappaint.jar
-# wget -N http://www.free-map.org.uk/downloads/josm/elemstyles.xml
-wget -N http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
 wget -N http://www.eigenheimstrasse.de/josm/plugins/annotation-tester.jar
-wget -N http://chippy2005.googlepages.com/wmsplugin.jar
-# wget -N http://personales.ya.com/frsantos/validator.jar
-wget -N http://personales.ya.com/osmfrsantos/validator/latest/validator.jar
+cp ../../plugins/mappaint/mappaint.jar .
+# wget -N http://svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/mappaint.jar
+cp ../../plugins/namefinder/namefinder.jar .
+# wget --N http://svn.openstreetmap.org/applications/editors/josm/plugins/namefinder/namefinder.jar
+#cp ../../plugins/osmarender/osmarender.jar .
+wget -N http://www.eigenheimstrasse.de/josm/plugins/osmarender.jar
+#cp ../../plugins/tways/tways-0.2.jar .
 wget -N http://thomas.walraet.net/tways/tways-0.2.jar
+#cp ../../plugins/validator/validator.jar .
+wget -N http://personales.ya.com/osmfrsantos/validator/latest/validator.jar
+#cp ../../plugins/wmsplugin/wmsplugin.jar .
+wget -N http://chippy2005.googlepages.com/wmsplugin.jar
 
 cd ..
 

@@ -14,10 +14,10 @@
   include("../../../connect/connect.php");
   include("../../../lib/requests.inc");
 
-  // retry active requests twice after 1h, then every 6h, then
+  // retry active requests twice after 2h, then every 6h, then
   // expire unfinished requests after another 7 hours
   // make sure delete timeout is bigger than restart timeout if used simulatanously
-  timeout(REQUEST_ACTIVE, 1, 2, "restart");
+  timeout(REQUEST_ACTIVE, 2, 2, "restart");
   timeout(REQUEST_ACTIVE, 6, 6, "restart");
   timeout(REQUEST_ACTIVE, 7, 0, "delete");
   timeout(REQUEST_DONE, 48, 0, "delete");

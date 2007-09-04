@@ -56,18 +56,116 @@ def all_ways(lastid)
     ways.each do |row|
       id = row[0].to_i
       segs = []
-      $mysql.query "select segment_id from current_way_segments where id = #{id} order by sequence_id;" do |segments|
-        segments.each {|s| segs << s[0].to_i}
+      all_way_segments(id) do |s|
+        segs << s.to_i
       end
-      tags_arr = []
-      $mysql.query "select k,v from current_way_tags where id = #{id};" do |tags|
-        tags.each {|t| tags_arr << t[0] << t[1]}
-      end
+      tags_arr = all_way_tags(id)
       yield id, segs, read_timestamp(row[1]), Hash[*tags_arr]
     end
   end
 end
 
+# Here we produce the segments associated with a way. How it works is that
+# instead of doing the segments query for each way, it gets all the data
+# from the beginning in groups of 50000. Since this is sorted we can perform
+# a sort of "Merge join". The caller provides the ID they are interesting in
+# and we scan forward in the table to find it, yield each segment and
+# return. The only hard part is that we when we note we're too far, we have
+# to jump back one row so the next iteration sees it again. That's what all
+# the seek/tell is about.
+$way_segments_data = nil
+$way_segments_current = [0,0]
+$way_segments_done = false
+# yields each segment, one at a time
+def all_way_segments(curr_id)
+  loop do
+    if $way_segments_data == nil
+      $way_segments_data = $mysql.query "select id, sequence_id, segment_id from current_way_segments 
+                                                                   where id > #{$way_segments_current[0]} 
+                                                                   or (id = #{$way_segments_current[0]} and sequence_id >  #{$way_segments_current[1]})
+                                                                   order by id, sequence_id limit 500000;" 
+      if $way_segments_data == nil
+        return
+      end
+      $way_segments_done = true
+    end
+    pos = $way_segments_data.row_tell()
+    $way_segments_data.each() do |$way_segments_current|
+      $way_segments_done = false
+      id = $way_segments_current[0].to_i
+      if id < curr_id 
+        pos = $way_segments_data.row_tell()
+        next
+      end
+      if id == curr_id
+        pos = $way_segments_data.row_tell()
+        yield $way_segments_current[2]
+        next
+      end
+      # Need to seek back one so we get this row again...
+      $way_segments_data.row_seek( pos )
+      return
+    end
+    $way_segments_data = nil
+    if $way_segments_done
+      return
+    end
+  end
+end
+    
+$way_tags_data = nil
+$way_tags_current = [0]
+$way_tags_first = false
+# Way tags are more irritating because there's no unique key sort by. So we
+# have to collect the results for an ID in an array and if it turns out to
+# hit the end, we toss out what we've collected and start again with a new
+# query...
+
+# Because of this detecting the end of the table becomes tricky, since when
+# we reach the end of the resultset and it's the end of the table, we'd keep
+# requesting the last bit over and over again. So the rule is, if the ID
+# being returned is the *only* ID in this set, we're done. That's what
+# $way_tags_first is tracking.
+
+# yields the tags, all in one go as an array
+def all_way_tags(curr_id)
+  loop do
+    if $way_tags_data == nil
+      $way_tags_data = $mysql.query "select id,k,v from current_way_tags where id >= #{$way_tags_current[0]}
+                                                                   order by id limit 500000;" 
+      $way_tags_first = true
+      if $way_tags_data == nil
+        return tags
+      end
+    end
+    pos = $way_tags_data.row_tell()
+    tags = []
+    $way_tags_data.each() do |$way_tags_current|
+      id = $way_tags_current[0].to_i
+      if id < curr_id 
+        pos = $way_tags_data.row_tell()
+        next
+      end
+      if id == curr_id
+        pos = $way_tags_data.row_tell()
+        tags << $way_tags_current[1] << $way_tags_current[2]
+        next
+      end
+      # Need to seek back one so we get this row again...
+      $way_tags_data.row_seek( pos )
+      $way_tags_first = false
+      return tags
+    end
+    # So we've hit the end of this dataset. If it's the end of the table, we
+    # return tags, otherwise we clear tags and continue...
+    
+    $way_tags_data = nil
+    if $way_tags_first
+      return tags
+    end
+  end
+end
+    
 # output all tags in the hash
 def out_tags tags
   tags.each {|key, value| puts %{    <tag k="#{CGI.escapeHTML(key)}" v="#{CGI.escapeHTML(value)}" />}}

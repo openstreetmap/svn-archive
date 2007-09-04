@@ -39,7 +39,7 @@
 
 extern int postgres;
 extern int osmChange;
-
+extern char FileID[16];
 
 /* File descriptor for .osm file. */
 FILE *fp=NULL;
@@ -157,7 +157,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (DBFReadIntegerAttribute( hDBF, recordnr, 3 )!=0)
 		{
 		        int ID = DBFReadIntegerAttribute( hDBF, recordnr, 3 );
-			sprintf(name,"AND=%i",ID);
+			sprintf(name,"%i",ID);
 			
 			if( from!=to)
 			{
@@ -176,7 +176,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 				printf("\rone node shouldn't get more than one ANDID! patch needed!%li %i\n",from->ANDID,ID);
 				Err_more_NDIDs_per_node++;
 			}
-			p=addtag(p,"external-ID",name,NULL);
+			p=addtag(p,FileID,name,NULL);
 			from->required = 1;
 		}
 		
@@ -308,6 +308,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 30: Type=String, Title=`ND_28', Width=60, Decimals=0
 		//Field 31: Type=String, Title=`ND_29', Width=60, Decimals=0
 		
+#ifdef DEBUG
 		/* We've taken over attribute 31 for debugging purposes, just stuff it into the debug tag */
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 31 )))
 		{
@@ -315,7 +316,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			sprintf(name,"%s",DBFReadStringAttribute( hDBF, recordnr, 31));
 			p=addtag(p,"AND_DEBUG",name,NULL); 
 		}
-		
+#endif	
 	}
 	else   // ROADS
 	{
@@ -329,8 +330,10 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 0)))
 		{
 		        int ID = DBFReadIntegerAttribute( hDBF, recordnr, 0 );
+#ifdef DEBUG
 			sprintf(name,"%i",ID);
 			p=addtag(p,"AND_FROM_NODE",name,NULL);
+#endif
 			if (from->ANDID != 0 && from->ANDID != ID && to->ANDID == 0 )
 			        to->ANDID = ID;
 			if (to->ANDID == ID )
@@ -348,8 +351,10 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 1)))
 		{
 		        int ID = DBFReadIntegerAttribute( hDBF, recordnr, 1 );
+#ifdef DEBUG
 			sprintf(name,"%i",ID);
 			p=addtag(p,"AND_TO_NODE",name,NULL);
+#endif
 			if (to->ANDID != 0 && to->ANDID != ID && from->ANDID == 0 )
 			        from->ANDID = ID;
                         if (from->ANDID == ID )
@@ -364,7 +369,9 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		if (inverted)
 		{
 		        oneway_way_reversed++;
+#ifdef DEBUG
 		        p=addtag(p,"AND-inverted","yes",NULL);
+#endif
                 }
 			
 		//Field 2: Type=Integer, Title=`LPOLY_', Width=11, Decimals=0
@@ -374,8 +381,8 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		//Field 6: Type=Integer, Title=`RD_1', Width=11, Decimals=0
 		if (!(DBFIsAttributeNULL( hDBF, recordnr, 6)))
 		{
-			sprintf(name,"AND=%i",DBFReadIntegerAttribute( hDBF, recordnr, 6 ));
-			p=addtag(p,"external-ID",name,NULL);
+			sprintf(name,"%i",DBFReadIntegerAttribute( hDBF, recordnr, 6 ));
+			p=addtag(p,FileID,name,NULL);
 		}
 		
 		//Field 7: Type=Integer, Title=`RD_2', Width=8, Decimals=0

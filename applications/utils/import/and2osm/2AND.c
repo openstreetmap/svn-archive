@@ -96,6 +96,7 @@
 int postgres = 0;
 int osmChange = 0;
 int simplify = 0;
+char FileID[16];
 
 static int use_boundingbox = 0;
 static double mybox_min[2],mybox_max[2];
@@ -193,6 +194,8 @@ int readfile(char * inputfile)
 
     fprintf(stderr,  "Shapefile '%s' Type: %s   # of Shapes: %d\n",
 	    inputfile, SHPTypeName( nShapeType ), nEntities );
+    
+    sprintf( FileID, "AND_%s", inputfile+4 );
     
     /*printf( "File Bounds: (%12.8f,%12.8f,%g,%g)\n"
 		    "         to  (%12.8f,%12.8f,%g,%g)\n",

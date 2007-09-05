@@ -9,11 +9,15 @@ import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
+import java.util.HashSet;
 
 import javax.swing.Box;
 import javax.swing.JComboBox;
@@ -30,6 +34,8 @@ import org.openstreetmap.josm.data.SelectionChangedListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.NodePair;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -41,7 +47,7 @@ public class CombineWayAction extends JosmAction implements SelectionChangedList
 
 	public CombineWayAction() {
 		super(tr("Combine Way"), "combineway", tr("Combine several ways into one."), KeyEvent.VK_C, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true);
-		DataSet.listeners.add(this);
+		DataSet.selListeners.add(this);
 	}
 
 	public void actionPerformed(ActionEvent event) {
@@ -67,12 +73,66 @@ public class CombineWayAction extends JosmAction implements SelectionChangedList
 			}
 		}
 		
-		Way oldWay = selectedWays.poll();
-		Way newWay = new Way(oldWay);
-		LinkedList<Command> cmds = new LinkedList<Command>();
+		// Battle plan:
+		//  1. Split the ways into small chunks of 2 nodes and weed out
+		//	   duplicates.
+		//  2. Take a chunk and see if others could be appended or prepended,
+		//	   if so, do it and remove it from the list of remaining chunks.
+		//	   Rather, rinse, repeat.
+		//  3. If this algorithm does not produce a single way,
+		//     complain to the user.
+		//  4. Profit!
 		
-		for (Way w : selectedWays)
-			newWay.segments.addAll(w.segments);
+		HashSet<NodePair> chunkSet = new HashSet<NodePair>();
+		for (Way w : selectedWays) {
+			if (w.nodes.size() == 0) continue;
+			Node lastN = null;
+			for (Node n : w.nodes) {
+				if (lastN == null) {
+					lastN = n;
+					continue;
+				}
+				chunkSet.add(new NodePair(lastN, n));
+				lastN = n;
+			}
+		}
+		LinkedList<NodePair> chunks = new LinkedList<NodePair>(chunkSet);
+
+		if (chunks.isEmpty()) {
+			JOptionPane.showMessageDialog(Main.parent, tr("All the ways were empty"));
+			return;
+		}
+
+		List<Node> nodeList = chunks.poll().toArrayList();
+		while (!chunks.isEmpty()) {
+			ListIterator<NodePair> it = chunks.listIterator();
+			boolean foundChunk = false;
+			while (it.hasNext()) {
+				NodePair curChunk = it.next();
+				if (curChunk.a == nodeList.get(nodeList.size() - 1)) { // append
+					nodeList.add(curChunk.b);
+					foundChunk = true;
+				} else if (curChunk.b == nodeList.get(0)) { // prepend
+					nodeList.add(0, curChunk.a);
+					foundChunk = true;
+				}
+				if (foundChunk) {
+					it.remove();
+					break;
+				}
+			}
+			if (!foundChunk) break;
+		}
+
+		if (!chunks.isEmpty()) {
+			JOptionPane.showMessageDialog(Main.parent,
+				tr("Could not combine ways (Hint: ways have to point into the same direction)"));
+			return;
+		}
+
+		Way newWay = new Way(selectedWays.get(0));
+		newWay.nodes.clear();
+		newWay.nodes.addAll(nodeList);
 		
 		// display conflict dialog
 		Map<String, JComboBox> components = new HashMap<String, JComboBox>();
@@ -96,10 +156,11 @@ public class CombineWayAction extends JosmAction implements SelectionChangedList
 				newWay.put(e.getKey(), e.getValue().getEditor().getItem().toString());
 		}
 
-		cmds.add(new DeleteCommand(selectedWays));
-		cmds.add(new ChangeCommand(oldWay, newWay));
+		LinkedList<Command> cmds = new LinkedList<Command>();
+		cmds.add(new DeleteCommand(selectedWays.subList(1, selectedWays.size())));
+		cmds.add(new ChangeCommand(selectedWays.peek(), newWay));
 		Main.main.undoRedo.add(new SequenceCommand(tr("Combine {0} ways", selectedWays.size()), cmds));
-		Main.ds.setSelected(oldWay);
+		Main.ds.setSelected(selectedWays.peek());
 	}
 
 	/**

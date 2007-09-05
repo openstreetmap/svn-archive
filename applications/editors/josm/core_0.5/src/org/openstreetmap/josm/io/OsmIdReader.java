@@ -27,7 +27,7 @@ public class OsmIdReader extends MinML2 {
 	private Reader in;
 
 	@Override public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
-		if (qName.equals("node") || qName.equals("segment") || qName.equals("way")) {
+		if (qName.equals("node") || qName.equals("way")) {
 			try {
 				entries.put(Long.valueOf(atts.getValue("id")), qName);
 			} catch (Exception e) {

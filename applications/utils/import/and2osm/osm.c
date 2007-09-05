@@ -467,7 +467,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		{
 			sprintf(name+strlen(name),";%s",DBFReadStringAttribute( hDBF, recordnr, 18 ));
 		}	
-		if (strcmp(name,"")!=0) p=addtag(p,"nat_ref",name,NULL); 
+		if (strcmp(name,"")!=0) p=addtag(p,"ref",name,NULL); 
 		
 		
 		

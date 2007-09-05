@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -111,8 +110,6 @@ public class SearchCompiler {
 		@Override public boolean match(OsmPrimitive osm) {
 			if (osm instanceof Node)
 				return type.equals("node");
-			if (osm instanceof Segment)
-				return type.equals("segment");
 			if (osm instanceof Way)
 				return type.equals("way");
 			throw new IllegalStateException("unknown class "+osm.getClass());
@@ -136,7 +133,7 @@ public class SearchCompiler {
 
 	private static class Incomplete extends Match {
 		@Override public boolean match(OsmPrimitive osm) {
-			return osm instanceof Way && ((Way)osm).isIncomplete();
+			return false;
 		}
 		@Override public String toString() {return "incomplete";}
 	}

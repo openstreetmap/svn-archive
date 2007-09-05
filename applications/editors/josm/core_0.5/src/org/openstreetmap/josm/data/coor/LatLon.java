@@ -54,12 +54,12 @@ public class LatLon extends Coordinate {
 	/**
 	 * Returns this lat/lon pair in human-readable format.
 	 * 
-	 * @return String in the format "lat=1.23456°, lon=2.34567°"
+	 * @return String in the format "lat=1.23456Â°, lon=2.34567Â°"
 	 */
 	public String toDisplayString() {
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(5);
-		return "lat=" + nf.format(lat()) + "°, lon=" + nf.format(lon()) + "°";
+		return "lat=" + nf.format(lat()) + "Â°, lon=" + nf.format(lon()) + "Â°";
 	}
 	
 	@Override public String toString() {

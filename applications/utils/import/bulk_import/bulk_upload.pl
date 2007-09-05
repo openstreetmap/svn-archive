@@ -78,6 +78,8 @@ if( not exists $db_file{loop} or $db_file{loop} eq "0" )
   $db_file{total} = 0;
   $db_file{count} ||= 0;
 }
+my $skip_count = 0;  # We track skipped nodes, to stop them screwing the ETA
+my $done_count = 0;  # Like the count inside the cache, but only counts this execution
 
 do {
   $did_something = 0;
@@ -116,11 +118,13 @@ sub process
   my $skipped = resolve_ids( $ent, $command );
   if( $skipped )
   {
+    $skip_count++;
     print "Skipped: $command ".$ent->type()." ".$ent->id()."\n"
          if( $verbose and $skipped == 1 );
     return 0;
   }
-
+  $done_count++;
+  
   my $id;
   if( not $dry_run )
   {
@@ -175,6 +179,7 @@ sub process
   return;
 }
 
+my $spin_delay;
 sub progress
 {
   my $count = shift;
@@ -187,20 +192,40 @@ sub progress
   return if $db_file{total} == 0 or $perc == 0 or $db_file{count} == 0; # Any of these causes problems
   $last_time = $time;  
   
+  my $remain;
+  my $elapsed_time = $last_time - $start_time;
+  
+  if( $done_count == 0 and $skip_count > 0 )
+  { $spin_delay = $elapsed_time / $skip_count }
+
   if( $db_file{loop} != 0 )
   {
     # After the first loop we have the actual count of changes in the file
     $perc = $db_file{count}/$db_file{total};
+    if( $done_count == 0 )
+    { $remain = -1 }
+    else
+    { $remain = (($db_file{total}-$db_file{count})*($elapsed_time-$spin_delay*$skip_count)/$done_count) }
   }
   else
   {
     # During the first loop, we only have the percentage of the file done to go on
     # Adjust it for work actually done
     $perc = $perc*$db_file{count}/$db_file{total};
+    if( ($done_count+$skip_count) <= $db_file{count} )  # While catching up to previous position, no estimate
+    { $remain = -1 }
+    else
+    # Est time per upload * (est records in file - records done)
+    { $remain = (($elapsed_time-$spin_delay*$skip_count)/$done_count) * $db_file{count} * (1/$perc-1) }
   }
-  my $remain = (1-$perc)*($last_time - $start_time)/$perc;
-  printf STDERR "Loop: %2d Done:%10d/%10d %7.2f%% %3d:%02d:%02d \r", $db_file{loop},
-       $db_file{count}, $db_file{total}, $perc*100, int($remain)/3600, int($remain/60)%60, int($remain)%60;
+  my $remain_str;
+  if( $remain <= 0 )
+  { $remain_str = "---:--:--" }
+  else
+  { $remain_str = sprintf "%3d:%02d:%02d", int($remain)/3600, int($remain/60)%60, int($remain)%60 }
+  
+  printf STDERR "Loop: %2d Done:%10d/%10d %7.2f%%  $remain_str\r", $db_file{loop},
+       $db_file{count}, $db_file{total}, $perc*100;
 }
 
 sub key

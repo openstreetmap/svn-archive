@@ -5,6 +5,7 @@ use strict;
 use Getopt::Long;
 use Pod::Usage;
 use DB_File;
+use Time::HiRes qw ( time );   # Get time with floating point seconds
 
 BEGIN {
   unshift @INC, "../../perl_lib";

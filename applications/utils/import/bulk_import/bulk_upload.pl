@@ -40,9 +40,13 @@ pod2usage(1) if $help;
 #$api ||= "http://www.openstreetmap.org/api/0.4";
 if( not defined $api )
 {
-  die "Must supply the URL of the API (standard is http://www.openstreetmap.org/api/0.4/)\n";
+  die "Must supply the URL of the API (-a) (standard is http://www.openstreetmap.org/api/0.4/)\n";
 }
 
+if( not defined $input )
+{
+  die "Must supply input file name (-i)\n";
+}
 if( not $dry_run and (not defined $username or not defined $password) )
 {
   die "Must supply username and password to upload data\n";

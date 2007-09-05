@@ -34,7 +34,7 @@ public final class ReverseWayAction extends JosmAction {
     	new Visitor(){
 			public void visit(Node n)    {}
 			public void visit(Way w)     {sel.add(w);}
-			public void visit(Relation e)  {}
+			public void visit(Relation e){}
 			public void visitAll() {
 				for (OsmPrimitive osm : Main.ds.getSelected())
 					osm.visit(this);

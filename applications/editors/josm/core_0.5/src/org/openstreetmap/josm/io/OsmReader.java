@@ -156,7 +156,7 @@ public class OsmReader {
 						throw new SAXException(tr("<nd> has zero ref"));
 					list.add(id);
 
-				// ---- PARSING ENTITIES ----			
+				// ---- PARSING RELATIONS ----			
 
 				} else if (qName.equals("relation")) {
 					current = new OsmPrimitiveData();

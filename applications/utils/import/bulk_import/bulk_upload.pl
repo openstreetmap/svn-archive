@@ -55,6 +55,9 @@ my $cache = $input.".cache";
 my $dbcache = $input.".dbcache";
 my %db_file;
 
+my $quit_request = 0;
+$SIG{INT} = sub { $quit_request = 1};
+
 my $OSM = new Geo::OSM::OsmChangeReader(\&process,\&progress);
 my $start_time = time();
 my $last_time = 0;
@@ -88,6 +91,8 @@ exit(0);  # Otherwise, nothing to do or everything worked
 sub process
 {
   my($command, $entity, $attr, $tags, $segs) = @_;
+  
+  exit 3 if $quit_request;
   
   push @$tags, %additional_tags;
 
@@ -174,6 +179,8 @@ sub progress
   my $count = shift;
   my $perc = shift;
   my $time = time();
+  exit 3 if $quit_request;
+  
 #  print "$time == $last_time or $last_time == $start_time\n";
   return if $time == $last_time or $time == $start_time;
   return if $db_file{total} == 0 or $perc == 0 or $db_file{count} == 0; # Any of these causes problems

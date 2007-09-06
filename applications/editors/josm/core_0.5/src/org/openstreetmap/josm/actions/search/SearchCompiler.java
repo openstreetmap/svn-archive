@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
 
 /**
@@ -112,6 +113,8 @@ public class SearchCompiler {
 				return type.equals("node");
 			if (osm instanceof Way)
 				return type.equals("way");
+			if (osm instanceof Relation)
+				return type.equals("relation");
 			throw new IllegalStateException("unknown class "+osm.getClass());
 		}
 		@Override public String toString() {return "type="+type;}

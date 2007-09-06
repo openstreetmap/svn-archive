@@ -188,12 +188,12 @@ sub progress
   exit 3 if $quit_request;
   
 #  print "$time == $last_time or $last_time == $start_time\n";
-  return if $time == $last_time or $time == $start_time;
+  return if abs($time - $last_time) < 0.5 or $time == $start_time;
   return if $db_file{total} == 0 or $perc == 0 or $db_file{count} == 0; # Any of these causes problems
   $last_time = $time;  
   
   my $remain;
-  my $elapsed_time = $last_time - $start_time;
+  my $elapsed_time = $time - $start_time;
   
   if( $done_count == 0 and $skip_count > 0 )
   { $spin_delay = $elapsed_time / $skip_count }
@@ -224,6 +224,7 @@ sub progress
   else
   { $remain_str = sprintf "%3d:%02d:%02d", int($remain)/3600, int($remain/60)%60, int($remain)%60 }
   
+  $0 = sprintf "bulk_upload  %s  %7.2f%%  ETA:%s\n", $input, $perc*100, $remain_str;
   printf STDERR "Loop: %2d Done:%10d/%10d %7.2f%%  $remain_str\r", $db_file{loop},
        $db_file{count}, $db_file{total}, $perc*100;
 }

@@ -274,56 +274,6 @@ WriteUninstaller "uninstall.exe"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe" "" '$INSTDIR\josm.exe'
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\App Paths\josm.exe" "Path" '$INSTDIR'
 
-; Create start menu entries (depending on additional tasks page)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 2" "State"
-;StrCmp $0 "0" SecRequired_skip_StartMenu
-; To qoute "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
-; "Do not include Readme, Help, or Uninstall entries on the Programs menu."
-CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
-;SecRequired_skip_StartMenu:
-
-; is command line option "/desktopicon" set?
-;${GetParameters} $R0
-;${GetOptions} $R0 "/desktopicon=" $R1
-;StrCmp $R1 "no" SecRequired_skip_DesktopIcon
-;StrCmp $R1 "yes" SecRequired_install_DesktopIcon
-
-; Create desktop icon (depending on additional tasks page and command line option)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 3" "State"
-;StrCmp $0 "0" SecRequired_skip_DesktopIcon
-;SecRequired_install_DesktopIcon:
-CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
-;SecRequired_skip_DesktopIcon:
-
-; is command line option "/quicklaunchicon" set?
-;${GetParameters} $R0
-;${GetOptions} $R0 "/quicklaunchicon=" $R1
-;StrCmp $R1 "no" SecRequired_skip_QuickLaunchIcon
-;StrCmp $R1 "yes" SecRequired_install_QuickLaunchIcon
-
-; Create quick launch icon (depending on additional tasks page and command line option)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 4" "State"
-;StrCmp $0 "0" SecRequired_skip_QuickLaunchIcon
-;SecRequired_install_QuickLaunchIcon:
-CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
-;SecRequired_skip_QuickLaunchIcon:
-
-; Create File Extensions (depending on additional tasks page)
-;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 6" "State"
-;StrCmp $0 "0" SecRequired_skip_FileExtensions
-WriteRegStr HKCR ${OSM_ASSOC} "" "OpenStreetMap data"
-WriteRegStr HKCR "${OSM_ASSOC}\Shell\open\command" "" '"$INSTDIR\josm.exe" "%1"'
-WriteRegStr HKCR "${OSM_ASSOC}\DefaultIcon" "" '"$INSTDIR\josm.exe",0'
-push $R0
-	StrCpy $R0 ".osm"
-  	Call Associate
-	StrCpy $R0 ".gpx"
-  	Call Associate
-; if somethings added here, add it also to the uninstall section and the AdditionalTask page
-pop $R0
-!insertmacro UpdateIcons
-;SecRequired_skip_FileExtensions:
-
 SectionEnd ; "Required"
 
 
@@ -362,7 +312,7 @@ ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "taggingpreset.sources" "$APPDA
 SectionEnd
 
 
-SectionGroup /e "Plugins" SecPluginsGroup
+SectionGroup "Plugins" SecPluginsGroup
 
 Section "mappaint" SecMappaintPlugin
 ;-------------------------------------------
@@ -417,8 +367,76 @@ SectionEnd
 
 SectionGroupEnd	; "Plugins"
 
+Section "Start Menu Entry" SecStartMenu
+;-------------------------------------------
+SectionIn 1 2
+; Create start menu entries (depending on additional tasks page)
+;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 2" "State"
+;StrCmp $0 "0" SecRequired_skip_StartMenu
+; To qoute "http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwue/html/ch11d.asp":
+; "Do not include Readme, Help, or Uninstall entries on the Programs menu."
+CreateShortCut "$SMPROGRAMS\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
+;SecRequired_skip_StartMenu:
+SectionEnd
+
+Section "Desktop Icon" SecDesktopIcon
+;-------------------------------------------
+; SectionIn 1 2
+; is command line option "/desktopicon" set?
+;${GetParameters} $R0
+;${GetOptions} $R0 "/desktopicon=" $R1
+;StrCmp $R1 "no" SecRequired_skip_DesktopIcon
+;StrCmp $R1 "yes" SecRequired_install_DesktopIcon
+
+; Create desktop icon (depending on additional tasks page and command line option)
+;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 3" "State"
+;StrCmp $0 "0" SecRequired_skip_DesktopIcon
+;SecRequired_install_DesktopIcon:
+CreateShortCut "$DESKTOP\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
+;SecRequired_skip_DesktopIcon:
+SectionEnd
+
+Section "Quick Launch Icon" SecQuickLaunchIcon
+;-------------------------------------------
+SectionIn 1 2
+; is command line option "/quicklaunchicon" set?
+;${GetParameters} $R0
+;${GetOptions} $R0 "/quicklaunchicon=" $R1
+;StrCmp $R1 "no" SecRequired_skip_QuickLaunchIcon
+;StrCmp $R1 "yes" SecRequired_install_QuickLaunchIcon
+
+; Create quick launch icon (depending on additional tasks page and command line option)
+;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 4" "State"
+;StrCmp $0 "0" SecRequired_skip_QuickLaunchIcon
+;SecRequired_install_QuickLaunchIcon:
+CreateShortCut "$QUICKLAUNCH\JOSM.lnk" "$INSTDIR\josm.exe" "" "$INSTDIR\josm.exe" 0 "" "" "JAVA OpenStreetMap - Editor"
+;SecRequired_skip_QuickLaunchIcon:
+SectionEnd
+
+Section "File Extensions" SecFileExtensions
+;-------------------------------------------
+SectionIn 1 2
+; Create File Extensions (depending on additional tasks page)
+;ReadINIStr $0 "$PLUGINSDIR\AdditionalTasksPage.ini" "Field 6" "State"
+;StrCmp $0 "0" SecRequired_skip_FileExtensions
+WriteRegStr HKCR ${OSM_ASSOC} "" "OpenStreetMap data"
+WriteRegStr HKCR "${OSM_ASSOC}\Shell\open\command" "" '"$INSTDIR\josm.exe" "%1"'
+WriteRegStr HKCR "${OSM_ASSOC}\DefaultIcon" "" '"$INSTDIR\josm.exe",0'
+push $R0
+	StrCpy $R0 ".osm"
+  	Call Associate
+	StrCpy $R0 ".gpx"
+  	Call Associate
+; if somethings added here, add it also to the uninstall section and the AdditionalTask page
+pop $R0
+!insertmacro UpdateIcons
+;SecRequired_skip_FileExtensions:
+SectionEnd
+
+
 Section "-PluginSetting"
 ;-------------------------------------------
+SectionIn 1 2
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
@@ -517,13 +535,19 @@ SectionEnd
 ; ============================================================================
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} "JOSM is the JAVA OpenStreetMap editor for .osm files."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} "Various JOSM plugins."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} "An assortment of useful JOSM plugins."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMappaintPlugin} "An alternative renderer for the map with colouring, line thickness, icons after tags."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecOsmarenderPlugin} "Displays the current screen as nicely rendered SVG graphics in FireFox."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} "Validates edited data if it conforms to common suggestions."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecTwaysPlugin} "Mass wayfication of segments."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} "Add a JOSM start menu entry."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} "Add a JOSM desktop icon."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} "Add a JOSM icon to the quick launch bar."
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecFileExtensions} "Add JOSM file extensions for .osm and .gpx files."
+  
+
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN

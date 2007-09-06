@@ -61,4 +61,3 @@ known issues
 - josm should use some defaults already instead of the installer ones
 - some way of automatic installer generation on the server (e.g. nightly build)?
 - install all josm plugins by default and only enable them according to user wishes?
-- make installation of icons and file extensions optional

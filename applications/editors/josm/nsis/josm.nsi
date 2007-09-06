@@ -265,7 +265,7 @@ WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninst
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "Publisher" "The OpenStreetMap developer community, http://www.openstreetmap.org/"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "HelpLink" "mailto:newbies@openstreetmap.org."
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLInfoAbout" "http://www.openstreetmap.org/"
-WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLUpdateInfo" "http://www.openstreetmap.org/"
+WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "URLUpdateInfo" "http://wiki.openstreetmap.org/index.php/JOSM"
 WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "NoModify" 1
 WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\OSM" "NoRepair" 1
 WriteUninstaller "uninstall.exe"
@@ -332,6 +332,8 @@ Section "JOSM" SecJosm
 SectionIn 1
 SetOutPath $INSTDIR
 File "josm.exe"
+
+; XXX - should be provided/done by josm.jar itself and not here!
 SetShellVarContext current
 SetOutPath "$APPDATA\JOSM"
 
@@ -365,26 +367,26 @@ SectionGroup /e "Plugins" SecPluginsGroup
 Section "mappaint" SecMappaintPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext current
+SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\mappaint.jar"
-;SetOutPath $APPDATA\JOSM\plugins\mappaint
-;File "downloads\elemstyles.xml"
 SectionEnd
 
 Section "osmarender" SecOsmarenderPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext current
+SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\osmarender.jar"
+; XXX - should be done inside the plugin and not here!
+SetShellVarContext current
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osmarender.firefox" "$PROGRAMFILES\Mozilla Firefox\firefox.exe"
 SectionEnd
 
 Section "WMS" SecWMSPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext current
+SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\wmsplugin.jar"
 SectionEnd
@@ -392,7 +394,7 @@ SectionEnd
 Section "namefinder" SecNamefinderPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext current
+SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\namefinder.jar"
 SectionEnd
@@ -400,7 +402,7 @@ SectionEnd
 Section "validator" SecValidatorPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext current
+SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\validator.jar"
 SectionEnd
@@ -408,7 +410,7 @@ SectionEnd
 Section "tways" SecTWaysPlugin
 ;-------------------------------------------
 SectionIn 1 2
-SetShellVarContext current
+SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
 File "downloads\tways-0.2.jar"
 SectionEnd
@@ -418,6 +420,7 @@ SectionGroupEnd	; "Plugins"
 Section "-PluginSetting"
 ;-------------------------------------------
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
+; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator,tways-0.2"
 SectionEnd
@@ -434,6 +437,12 @@ SetShellVarContext all
 
 Delete "$INSTDIR\josm.exe"
 Delete "$INSTDIR\uninstall.exe"
+Delete "$INSTDIR\plugins\wmsplugin.jar"
+Delete "$INSTDIR\plugins\osmarender.jar"
+Delete "$INSTDIR\plugins\mappaint.jar"
+Delete "$INSTDIR\plugins\namefinder.jar"
+Delete "$INSTDIR\plugins\validator.jar"
+Delete "$INSTDIR\plugins\tways-0.2.jar"
 IfErrors 0 NoJOSMErrorMsg
 	MessageBox MB_OK "Please note: josm.exe could not be removed, it's probably in use!" IDOK 0 ;skipped if josm.exe removed
 	Abort "Please note: josm.exe could not be removed, it's probably in use! Abort uninstall process!"
@@ -471,9 +480,10 @@ Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
 Delete "$APPDATA\JOSM\de-streets.xml"
 RMDir "$APPDATA\JOSM"
+RMDir "$APPDATA\JOSM\plugins\mappaint"
 SectionEnd
 
-Section /o "Un.Plugins" un.SecPlugins
+Section /o "Un.Personal Plugins" un.SecPlugins
 ;-------------------------------------------
 SectionIn 2
 SetShellVarContext current
@@ -485,10 +495,8 @@ Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
 Delete "$APPDATA\JOSM\plugins\tways-0.2.jar"
-;Delete "$APPDATA\JOSM\plugins\mappaint\elemstyles.xml"
 RMDir "$APPDATA\JOSM\plugins\osmarender"
 RMDir "$APPDATA\JOSM\plugins\validator"
-;RMDir "$APPDATA\JOSM\plugins\mappaint"
 RMDir "$APPDATA\JOSM\plugins"
 RMDir "$APPDATA\JOSM"
 SectionEnd

@@ -51,7 +51,7 @@ public class AddSegmentAction extends MapMode implements MouseListener {
 	 * @param mapFrame The MapFrame this action belongs to.
 	 */
 	public AddSegmentAction(MapFrame mapFrame) {
-		super(tr("Connect two node"), 
+		super(tr("Connect two nodes"), 
 				"addsegment", 
 				tr("Connect two nodes using ways."), 
 				KeyEvent.VK_G, 
@@ -72,7 +72,9 @@ public class AddSegmentAction extends MapMode implements MouseListener {
 		drawHint(false);
 	}
 
-	
+	/**
+	 * Called when user hits space bar while dragging.
+	 */
 	@Override public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
 		makeSegment();
@@ -101,8 +103,9 @@ public class AddSegmentAction extends MapMode implements MouseListener {
 			return;
 
 		Node hovered = Main.map.mapView.getNearestNode(e.getPoint());
-		if (hovered == null || hovered == first) return;
+		if (hovered == second) return;
 
+		drawHint(false);
 		second = hovered;
 		drawHint(true);
 	}
@@ -114,6 +117,7 @@ public class AddSegmentAction extends MapMode implements MouseListener {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			drawHint(false);
 			makeSegment();
+			first = null;
 		}
 	}
 
@@ -142,19 +146,29 @@ public class AddSegmentAction extends MapMode implements MouseListener {
 	private void makeSegment() {
 		Node n1 = first;
 		Node n2 = second;
-			first = null;
-			second = null;
+		
+		// this is to allow continued segment drawing by hitting the space bar
+		// at every intermediate node
+		first = second;
+		second = null;
 
 		if (n1 == null || n2 == null || n1 == n2) return;
-		
+
 		Way w = getWayForNode(n1);
 		Way wnew;
+		Collection<OsmPrimitive> sel = Main.ds.getSelected();
+		
 		if (w == null) {
+			// create a new way and add it to the current selection.
 			wnew = new Way();
 			wnew.nodes.add(n1);
 			wnew.nodes.add(n2);
 			Main.main.undoRedo.add(new AddCommand(wnew));
+			sel.add(wnew);
+			Main.ds.setSelected(sel);
 		} else {
+			// extend an existing way; only add to current selection if
+			// it is not already in there.
 			wnew = new Way(w);
 			if (wnew.nodes.get(wnew.nodes.size() - 1) == n1) {
 				wnew.nodes.add(n2);
@@ -162,11 +176,15 @@ public class AddSegmentAction extends MapMode implements MouseListener {
 				wnew.nodes.add(0, n2);
 			}
 			Main.main.undoRedo.add(new ChangeCommand(w, wnew));
-		}
-
-			Collection<OsmPrimitive> sel = Main.ds.getSelected();
-		sel.add(wnew);
+			// do not use wnew below; ChangeCommand only uses wnew as a
+			// message about changes to be done to w but will not replace w!
+			if (!sel.contains(w)) {
+				sel.add(w);
+			}
+			// do not move this into the if block above since it also
+			// fires the selection change event which is desired.
 			Main.ds.setSelected(sel);
+		}
 
 		Main.map.mapView.repaint();
 	}

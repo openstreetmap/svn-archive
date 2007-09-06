@@ -1,4 +1,4 @@
-This is the Win32 installer generator for OpenStreetMap, to create a Windows 
+This is the Win32 installer generator for JOSM, to create a Windows 
 like installer. This should ease installation and provides a reasonable set of 
 default preferences for Windows users.
 
@@ -25,7 +25,7 @@ The installer will currently add:
 - josm into "C:\Program Files\JOSM" (or the corresponding international dir)
 - josm icons to the desktop and quick launch bar
 - josm file associations to .osm and .gpx files
-- some plugins to the current user profile (more to follow)
+- some assorted plugins into "C:\Program Files\JOSM\plugins" (more to follow?)
 - default preferences to the current user profile (if not already existing)
 - default bookmarks to the current user profile (if not already existing)
 
@@ -61,4 +61,4 @@ known issues
 - josm should use some defaults already instead of the installer ones
 - some way of automatic installer generation on the server (e.g. nightly build)?
 - install all josm plugins by default and only enable them according to user wishes?
-- make installation of icons and file extensions optional?
+- make installation of icons and file extensions optional

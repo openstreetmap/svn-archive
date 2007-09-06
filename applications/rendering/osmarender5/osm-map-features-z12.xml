@@ -53,7 +53,7 @@
 
         
 		<!-- Artificial landuse -->        
-        <rule e="way" k="landuse" v="field|farm|allotments|village_green|meadow">
+        <rule e="way" k="landuse" v="field|farm|allotments|village_green|recreation_ground|meadow">
             <area class='landuse-field'/>
         </rule>
         <rule e="way" k="amenity" v="school|college|university">

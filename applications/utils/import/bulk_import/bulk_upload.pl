@@ -6,6 +6,7 @@ use Getopt::Long;
 use Pod::Usage;
 use DB_File;
 use Time::HiRes qw ( time );   # Get time with floating point seconds
+use POSIX qw(sigaction);
 
 BEGIN {
   unshift @INC, "../../perl_lib";
@@ -59,7 +60,16 @@ my $dbcache = $input.".dbcache";
 my %db_file;
 
 my $quit_request = 0;
-$SIG{INT} = sub { $quit_request = 1};
+
+# This signal stuff is to deal with the fact that LWP treats any kind of
+# interruption as a read timeout. so we set the signal to restartable to
+# avoid that problem.
+{
+  my $sa = POSIX::SigAction->new( sub { $quit_request = 1}, undef, &POSIX::SA_RESTART );
+  sigaction &POSIX::SIGINT, $sa;
+  sigaction &POSIX::SIGQUIT, $sa;
+  sigaction &POSIX::SIGHUP, $sa;
+}
 
 my $OSM = new Geo::OSM::OsmChangeReader(\&process,\&progress);
 my $start_time = time();

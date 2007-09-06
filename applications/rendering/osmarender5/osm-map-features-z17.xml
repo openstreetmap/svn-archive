@@ -46,7 +46,7 @@
         <rule e="way" k="landuse" v="forest|wood">
             <area class='landuse-wood'/>
         </rule>
-        <rule e="way" k="landuse" v="field|farm|allotments|village_green|meadow|grass">
+        <rule e="way" k="landuse" v="field|farm|allotments|village_green|recreation_ground|meadow|grass">
             <area class='landuse-field' />
         </rule>
 	<rule e="way" k="landuse" v="cemetery">

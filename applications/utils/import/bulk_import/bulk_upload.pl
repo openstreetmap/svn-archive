@@ -224,7 +224,7 @@ sub progress
     # During the first loop, we only have the percentage of the file done to go on
     # Adjust it for work actually done
     $perc = $perc*$db_file{count}/$db_file{total};
-    if( ($done_count+$skip_count) <= $db_file{count} )  # While catching up to previous position, no estimate
+    if( ($done_count+$skip_count) < $db_file{count} )  # While catching up to previous position, no estimate
     { $remain = -1 }
     else
     # Est time per upload * (est records in file - records done)

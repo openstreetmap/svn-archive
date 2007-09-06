@@ -15,6 +15,8 @@ use Geo::OSM::OsmChangeReader;
 use Geo::OSM::EntitiesV3;
 use Geo::OSM::APIClientV4;
 
+$ENV{TZ} = "UTC";
+
 my($input, $username, $password, $api, $help, %additional_tags);
 my $force = 0;
 my $dry_run = 0;
@@ -148,7 +150,7 @@ sub process
 
   if( not defined $id )
   {
-    print "Error: ".$uploader->last_error_code()." ".$uploader->last_error_message." ($command ".$ent->type()." ".$ent->id().")\n";
+    print get_time(), " Error: ".$uploader->last_error_code()." ".$uploader->last_error_message." ($command ".$ent->type()." ".$ent->id().")\n";
     $db_file{failed}++;
     # Unless force is on, exit on any error
     exit(1) if $force == 0;
@@ -341,6 +343,13 @@ sub resolve_ids
     $ent->set_segs( \@newsegs );
   }
   return $incomplete;
+}
+
+sub get_time
+{
+  my $time = int(time());
+  my @a = gmtime($time);
+  sprintf("%4d-%02d-%02d %02d:%02d:%02d UTC", $a[5]+1900, $a[4]+1, $a[3], $a[2], $a[1], $a[0]);
 }
 
 =head1 NAME

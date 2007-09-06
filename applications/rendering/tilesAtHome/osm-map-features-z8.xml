@@ -192,9 +192,6 @@
             <rule e="segment|way" k="highway" v="track">
                 <line class='highway-casing highway-track-casing' />
             </rule>
-            <rule e="segment|way" k="highway" v="unclassified|residential|minor">
-                <line class='highway-casing highway-unclassified-casing' />
-            </rule>
             <rule e="segment|way" k="highway" v="unsurfaced">
                 <line class='highway-casing highway-unsurfaced-casing' />
             </rule>
@@ -268,9 +265,6 @@
                 <rule e="segment|way" k="highway" v="track">
                     <line class='highway-core highway-track-core' />
                 </rule>
-                <rule e="segment|way" k="highway" v="unclassified|residential|minor">
-                    <line class='highway-core highway-unclassified-core' />
-                </rule>
                 <rule e="segment|way" k="highway" v="unsurfaced">
                     <line class='highway-core highway-unsurfaced-core' />
                 </rule>
@@ -305,9 +299,6 @@
             </rule>
             <rule e="segment|way" k="highway" v="track">
                 <tunnel width="2" class='highway-core highway-track' />
-            </rule>
-            <rule e="segment|way" k="highway" v="unclassified|residential|minor">
-                <tunnel width="2" class='highway-core highway-unclassified' />
             </rule>
             <rule e="segment|way" k="highway" v="unsurfaced">
                 <tunnel width="2" class='highway-core highway-unsurfaced' />
@@ -679,16 +670,6 @@
 				stroke: #f7f496;
 			}
               
-            .highway-unclassified-casing {
-                stroke-width: 5px;
-                stroke: #c0c0c0;
-            }
-
-            .highway-unclassified-core {
-                stroke-width: 1.2px;
-                stroke: #ffffff;
-            }
-
             .highway-unsurfaced-casing {
                 stroke-width: 1.5px;
                 stroke: #222222;
@@ -917,7 +898,7 @@
             }
 
             .railway-rail {
-                stroke-width: 140px;
+                stroke-width: 100px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;

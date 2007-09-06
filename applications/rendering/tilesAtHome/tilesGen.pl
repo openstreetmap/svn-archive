@@ -627,7 +627,7 @@ sub GenerateTileset
             xml2svg(
                     "map-features-$PID.xml",
                     "$Config{WorkingDirectory}output-$PID-z$i.svg",
-                    "zoom level $i");
+                    $i);
 
             # Delete temporary rules file
             killafile("map-features-$PID.xml");
@@ -876,9 +876,11 @@ sub frollo
 #-----------------------------------------------------------------------------
 sub xml2svg 
 {
-    my($MapFeatures, $SVG, $what) = @_;
+    my($MapFeatures, $SVG, $zoom) = @_;
     my $TSVG = "$SVG";
-    if (!$Config{NoBezier}) 
+    my $NoBezier = $Config{NoBezier} || $zoom <= 11;
+
+    if (!$NoBezier) 
     {
         $TSVG = "$SVG-temp.svg";
     }
@@ -889,22 +891,18 @@ sub xml2svg
       "$MapFeatures",
       $TSVG);
 
-    statusMessage("Transforming $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    statusMessage("Transforming zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID);
-    if ($Config{NoBezier}) 
-    {
-        statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
 #-----------------------------------------------------------------------------
-    if (!$Config{NoBezier}) 
-    {
+    if (!$NoBezier) 
+    {   # do bezier curve hinting
         my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
           $Config{Niceness},
           $TSVG,
           $SVG);
-        statusMessage("Beziercurvehinting $what", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Beziercurvehinting zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand($Cmd,$PID);
 #-----------------------------------------------------------------------------        
 # Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
@@ -917,6 +915,11 @@ sub xml2svg
         }
         killafile($TSVG);
     }
+    else
+    {   # don't do bezier curve hinting
+        statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    }
+
 }
 
 #-----------------------------------------------------------------------------

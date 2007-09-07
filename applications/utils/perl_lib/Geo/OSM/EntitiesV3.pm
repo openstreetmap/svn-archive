@@ -38,6 +38,14 @@ sub add_tag
   push @{$self->{tags}}, $k, $v;
 }
 
+sub add_tags
+{
+  my($self, @tags) = @_;
+  if( scalar(@tags)&1 )
+  { croak "add_tags requires an even number of arguments" }
+  push @{$self->{tags}}, @tags;
+}
+
 sub set_tags
 {
   my($self,$tags) = @_;

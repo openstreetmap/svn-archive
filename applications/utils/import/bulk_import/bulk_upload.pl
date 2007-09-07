@@ -12,7 +12,7 @@ BEGIN {
   unshift @INC, "../../perl_lib";
 }
 
-use Geo::OSM::OsmChangeReader;
+use Geo::OSM::OsmChangeReaderV3;
 use Geo::OSM::EntitiesV3;
 use Geo::OSM::APIClientV4;
 
@@ -74,6 +74,7 @@ my $quit_request = 0;
 my $OSM = init Geo::OSM::OsmChangeReader(\&process,\&progress);
 my $start_time = time();
 my $last_time = 0;
+my $spin_delay = 0;  # Estimates cost of skipping a record because it's done
 my $uploader = new Geo::OSM::APIClient( api => $api, username => $username, password => $password )
     unless $dry_run;
 
@@ -178,7 +179,6 @@ sub process
   return;
 }
 
-my $spin_delay;
 sub progress
 {
   my $count = shift;
@@ -256,6 +256,12 @@ sub init_cache
   my $cache = shift;
   my $dbcache = shift;
 
+  if( $dry_run )
+  {
+    %db_file = ();
+    return;
+  }
+  
   # Open the cache file, as DB cache
   tie %db_file, "DB_File", $dbcache, O_CREAT|O_RDWR, 0666, $DB_HASH
     or die "Could not open dbcachefile '$dbcache' ($!)\n";

@@ -149,8 +149,8 @@ void saveWay(struct ways *p){
 		else if (p->type==AREA)
 			fprintf(fp,"    <way id=\"%li\" >\n",p->wayID);
 		else fprintf(stderr,"unkown wayType in saveWay\n");
-		saveTags(p->tag,NULL);
 		saveAttachedSegments(p->segments);
+		saveTags(p->tag,NULL);
 		if (p->type==ROAD)
 			fprintf(fp,"	</way>\n");
 		else if (p->type==AREA)

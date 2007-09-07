@@ -402,7 +402,7 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 			else
 				p=addtag(p,"oneway","1",NULL);
 		}
-		//Field 10: Type=Integer, Title=`RD_5', Width=3, Decimals=0
+		//Field 10: Type=Integer, Title=`RD_5', Width=3, Decimals=0  // RD_TYPE
 		switch (DBFReadIntegerAttribute( hDBF, recordnr, 10 ))
 		{
 			case 1: p=addtag(p,"highway","motorway",NULL); break;
@@ -434,9 +434,18 @@ struct tags * mkTagList(DBFHandle hDBF,long recordnr,int fileType,struct tags *p
 		}
 
 		//Field 11: Type=Integer, Title=`RD_6', Width=3, Decimals=0
-		//Field 12: Type=Integer, Title=`RD_7', Width=2, Decimals=0
-		if (DBFReadIntegerAttribute( hDBF, recordnr, 12 )==10)
-			p=addtag(p,"railway","rail",NULL); 
+		//Field 12: Type=Integer, Title=`RD_7', Width=2, Decimals=0  // RD_LEVEL
+		{
+		        int level = DBFReadIntegerAttribute( hDBF, recordnr, 12 );
+		        if (level < 6)
+		        {
+		                sprintf(name, "%i", level);
+		                p=addtag(p,"AND:importance_level",name,NULL);
+		        }
+        		if (level==10)
+	        		p=addtag(p,"railway","rail",NULL); 
+                }
+	        		
 			
 		
 		

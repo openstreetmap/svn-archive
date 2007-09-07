@@ -71,7 +71,7 @@ my $quit_request = 0;
   sigaction &POSIX::SIGHUP, $sa;
 }
 
-my $OSM = new Geo::OSM::OsmChangeReader(\&process,\&progress);
+my $OSM = init Geo::OSM::OsmChangeReader(\&process,\&progress);
 my $start_time = time();
 my $last_time = 0;
 my $uploader = new Geo::OSM::APIClient( api => $api, username => $username, password => $password )
@@ -105,28 +105,15 @@ exit(0);  # Otherwise, nothing to do or everything worked
 
 sub process
 {
-  my($command, $entity, $attr, $tags, $segs) = @_;
+  my($command, $ent) = @_;
   
   exit 3 if $quit_request;
   
-  push @$tags, %additional_tags;
+  $ent->add_tags(%additional_tags);
 
   if( $db_file{loop} == 0 )
   { $db_file{total}++ }
     
-  my $ent;
-  if( $entity eq "node" )
-  {
-    $ent = new Geo::OSM::Node( $attr, $tags );
-  }
-  if( $entity eq "segment" )
-  {
-    $ent = new Geo::OSM::Segment( $attr, $tags );
-  }
-  if( $entity eq "way" )
-  {
-    $ent = new Geo::OSM::Way( $attr, $tags, $segs );
-  }
   my $skipped = resolve_ids( $ent, $command );
   if( $skipped )
   {
@@ -236,7 +223,7 @@ sub progress
   else
   { $remain_str = sprintf "%3d:%02d:%02d", int($remain)/3600, int($remain/60)%60, int($remain)%60 }
   
-  $0 = sprintf "bulk_upload  %s  %7.2f%%  ETA:%s\n", $input, $perc*100, $remain_str;
+  $0 = sprintf "bulk_upload  %s  %7.2f%%  ETA:%s  ", $input, $perc*100, $remain_str;
   printf STDERR "Loop: %2d Done:%10d/%10d %7.2f%%  $remain_str\r", $db_file{loop},
        $db_file{count}, $db_file{total}, $perc*100;
 }

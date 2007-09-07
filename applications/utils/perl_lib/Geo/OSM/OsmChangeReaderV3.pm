@@ -18,6 +18,9 @@ use Utils::File;
 use Utils::Math;
 use Utils::Debug;
 use XML::Parser;
+use Carp;
+
+use Geo::OSM::EntitiesV3;
 
 use constant STATE_INIT => 1;
 use constant STATE_EXPECT_COMMAND => 2;
@@ -28,20 +31,61 @@ use constant FILETYPE_UNKNOWN   => 0;
 use constant FILETYPE_OSMCHANGE => 1;
 use constant FILETYPE_OSM       => 2;
 
-sub new()
+sub new
 { 
   my $obj = bless{}, shift;
   my $proc = shift;
   my $prog = shift;
   if( ref $proc ne "CODE" )
-  { die "new Geo::OSM::OsmChangeXML requires a sub as argument\n" }
-  $obj->{proc}  = $proc;
+  { die "new Geo::OSM::OsmChangeReader requires a sub as argument\n" }
+  $obj->{oldproc}  = $proc;
   if( defined $prog )
   { $obj->{progress} = $prog }
   return $obj;
 }
 
-sub load(){
+# With this initialiser, your process will get called with instantiated objects rather than useless details
+sub init
+{ 
+  my $obj = bless{}, shift;
+  my $proc = shift;
+  my $prog = shift;
+  if( ref $proc ne "CODE" )
+  { die "init Geo::OSM::OsmChangeReader requires a sub as argument\n" }
+  $obj->{newproc}  = $proc;
+  if( defined $prog )
+  { $obj->{progress} = $prog }
+  return $obj;
+}
+
+sub _process
+{
+  my($self, $command, $entity, $attr, $tags, $segs) = @_;
+  
+  if( defined $self->{oldproc} )
+  {
+    return $self->{oldproc}->($command, $entity, $attr, $tags, $segs);
+  }
+  
+  my $ent;
+  if( $entity eq "node" )
+  {
+    $ent = new Geo::OSM::Node( $attr, $tags );
+  }
+  if( $entity eq "segment" )
+  {
+    $ent = new Geo::OSM::Segment( $attr, $tags );
+  }
+  if( $entity eq "way" )
+  {
+    $ent = new Geo::OSM::Way( $attr, $tags, $segs );
+  }
+  croak "Unknown entity '$entity'" if not defined $ent;
+
+  return $self->{newproc}->($command, $ent );
+}
+
+sub load{
   my ($self, $file_name) = @_;
 
   $self->{filetype} = FILETYPE_UNKNOWN;
@@ -72,7 +116,7 @@ sub load(){
 }
 
 # Function is called whenever an XML tag is started
-sub DoStart()
+sub DoStart
 {
 #print @_,"\n";   
   my ($self, $Expat, $Name, %Attr) = @_;
@@ -134,7 +178,8 @@ sub DoStart()
 }
 
 # Function is called whenever an XML tag is ended
-sub DoEnd(){
+sub DoEnd
+{
   my ($self, $Expat, $Name) = @_;
   if( $self->{state} == STATE_EXPECT_BODY )
   {
@@ -142,18 +187,18 @@ sub DoEnd(){
     {
       if( $self->{filetype} == FILETYPE_OSMCHANGE )
       {
-        $self->{proc}->( $self->{command}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
+        $self->_process( $self->{command}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
       }
       else  # FILETYPE_OSM
       {
         # Only entities with a modify tag are interesting, or if they have a negative ID (that's create)
         if( exists $self->{attr}->{action} )
         {
-          $self->{proc}->( $self->{attr}->{action}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
+          $self->_process( $self->{attr}->{action}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
         }
         elsif( $self->{attr}{id} < 0 )
         {
-          $self->{proc}->( "create", $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
+          $self->_process( "create", $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
         }
       }
       $self->{count}++;
@@ -200,7 +245,7 @@ __END__
 
 =head1 NAME
 
-OsmChangeReader - Module for reading OpenStreetMap Change XML data files
+OsmChangeReaderV3 - Module for reading OpenStreetMap V3 Change XML data files
 
 =head1 SYNOPSIS
 

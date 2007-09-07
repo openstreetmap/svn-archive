@@ -6,7 +6,7 @@
 # Licence: public domain
 
 # Where the planet file is (may be compressed)
-PLANET=$(HOME)/osm/planet-070823.osm.bz2
+PLANET=$(HOME)/osm/planet-070905.osm.bz2
 # The osmosis jar file
 # Note: version must be at least from 21 August 2007 (0.8.0)
 OSMOSIS=/usr/local/bin/osmosis.jar
@@ -38,7 +38,7 @@ data/extract.polygon: protected_areas
 	./protected2polygon.pl >> $@
 	
 # Extract NLD-groot from the planet file
-data/nld-groot.osm: data/nld-groot.polygon $(PLANET)
+data/nld-groot.osm: data/nld-groot.polygon $(PLANET) ../../osm-extract/polygons/extract-polygon.pl
 	../../osm-extract/polygons/extract-polygon.pl -v -i $(PLANET) -o $@ -p data/nld-groot.polygon -r data/remains-groot.txt
 # Extract NLD from the NLD-groot file
 data/nld.osm: data/nldgrens.polygon data/nld-groot.osm ../../osm-extract/polygons/extract-polygon.pl

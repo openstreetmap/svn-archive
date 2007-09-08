@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
-<maplint:test group="base" id="untagged-unconnected-node" version="1" severity="warning"
+<maplint:test group="segments" id="untagged-unconnected-node" version="1" severity="warning"
     xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 

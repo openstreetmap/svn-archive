@@ -51,6 +51,15 @@
         </way>
     </xsl:template>
 
+    <xsl:template match="relation">
+        <relation>
+            <xsl:copy-of select="@*"/>
+            <xsl:copy-of select="*"/>
+            <xsl:call-template name="call-tests-relation"/>
+            <xsl:call-template name="call-tests-any"/>
+        </relation>
+    </xsl:template>
+
     <xsl:template name="report-result">
         <xsl:param name="text"/>
         <maplint:result test="{$test/@id}" type="{$test/@type}">

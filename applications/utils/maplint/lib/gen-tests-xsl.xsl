@@ -45,6 +45,11 @@
                     <xsl:with-param name="data" select="'way'"/>
                 </xsl:apply-templates>
             </xslout:template>
+            <xslout:template name="call-tests-relation">
+                <xsl:apply-templates select="maplint:test" mode="call">
+                    <xsl:with-param name="data" select="'relation'"/>
+                </xsl:apply-templates>
+            </xslout:template>
 
             <xsl:apply-templates select="maplint:test" mode="templates">
                 <xsl:with-param name="data" select="'any'"/>
@@ -57,6 +62,9 @@
             </xsl:apply-templates>
             <xsl:apply-templates select="maplint:test" mode="templates">
                 <xsl:with-param name="data" select="'way'"/>
+            </xsl:apply-templates>
+            <xsl:apply-templates select="maplint:test" mode="templates">
+                <xsl:with-param name="data" select="'relation'"/>
             </xsl:apply-templates>
         </xslout:stylesheet>
 

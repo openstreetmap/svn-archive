@@ -50,4 +50,8 @@ The following results were found:
         <xsl:value-of select="concat(@ref, ' ', @test, ': way=', ../@id, $name, $nl, '  ', text(), $nl)"/>
     </xsl:template>
 
+    <xsl:template match="/osm/relation/maplint:result">
+        <xsl:value-of select="concat(@ref, ': relation=', ../@id, ' ', text(), $nl)"/>
+    </xsl:template>
+
 </xsl:stylesheet> 

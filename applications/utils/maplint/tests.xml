@@ -172,6 +172,31 @@
     </maplint:check>
 
 </maplint:test>
+<maplint:test group="relations" id="member-missing" version="1" severity="error">
+
+    <maplint:desc xml:lang="en">
+        A member of a relation is missing.
+    </maplint:desc>
+
+    <maplint:setup type="application/xsl+xml">
+        <xsl:key name="nodeId" match="/osm/node" use="@id"/>
+        <xsl:key name="wayId" match="/osm/way" use="@id"/>
+        <xsl:key name="relId" match="/osm/relation" use="@id"/>
+    </maplint:setup>
+
+    <maplint:check data="relation" type="application/xsl+xml">
+        <xsl:if test="member[(@type='way') and not(key('wayId', @ref))]">
+            <maplint:result/>
+        </xsl:if>
+        <xsl:if test="member[(@type='node') and not(key('nodeId', @ref))]">
+            <maplint:result/>
+        </xsl:if>
+        <xsl:if test="member[(@type='relation') and not(key('relId', @ref))]">
+            <maplint:result/>
+        </xsl:if>
+    </maplint:check>
+
+</maplint:test>
 <maplint:test group="segments" id="multiple-segments-on-same-nodes" version="1" severity="error">
 
     <maplint:desc xml:lang="en">

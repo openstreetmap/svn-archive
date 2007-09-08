@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xslout:stylesheet xmlns:maplint="http://maplint.openstreetmap.org/xml/1.0" xmlns:xslout="http://www.w3.org/1999/XSL/Transform" version="1.0">
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="nodesbycoordinates" match="/osm/node" use="concat(@lon,' ', @lat)"/>
+  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="nodeId" match="/osm/node" use="@id"/>
+  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="wayId" match="/osm/way" use="@id"/>
+  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="relId" match="/osm/relation" use="@id"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="fromto2segment" match="/osm/segment" use="concat(@from, ' ', @to)"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="tofrom2segment" match="/osm/segment" use="concat(@to, ' ', @from)"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment2way" match="/osm/way" use="seg/@id"/>
@@ -18,6 +21,7 @@
     <maplint:test agent="xsltests" group="main" id="place-of-worship-without-religion" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="main" id="poi-without-name" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="main" id="residential-without-name" version="1" severity="warning"/>
+    <maplint:test agent="xsltests" group="relations" id="member-missing" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="segments" id="multiple-segments-on-same-nodes" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="segments" id="segment-with-from-equals-to" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="segments" id="segment-without-way" version="1" severity="warning"/>
@@ -51,6 +55,9 @@
     <xslout:call-template name="test-main-residential-without-name-way"/>
     <xslout:call-template name="test-segments-ways-with-unordered-segments-way"/>
     <xslout:call-template name="test-strict-unknown-tags-way"/>
+  </xslout:template>
+  <xslout:template name="call-tests-relation">
+    <xslout:call-template name="test-relations-member-missing-relation"/>
   </xslout:template>
   <xslout:template name="test-base-empty-tag-key-any">
         <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="tag[@k='']">
@@ -198,5 +205,16 @@
                 <maplint:result ref="unknown-tags"><xsl:value-of select="concat(@k, '=', @v)"/></maplint:result>
             </xsl:if>
         </xsl:for-each>
+    </xslout:template>
+  <xslout:template name="test-relations-member-missing-relation">
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="member[(@type='way') and not(key('wayId', @ref))]">
+            <maplint:result ref="member-missing"/>
+        </xsl:if>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="member[(@type='node') and not(key('nodeId', @ref))]">
+            <maplint:result ref="member-missing"/>
+        </xsl:if>
+        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="member[(@type='relation') and not(key('relId', @ref))]">
+            <maplint:result ref="member-missing"/>
+        </xsl:if>
     </xslout:template>
 </xslout:stylesheet>

@@ -207,6 +207,9 @@ Matched by <xsl:value-of select='count($elements)'/> elements.
             <xsl:attribute name="subtype">
                 <xsl:value-of select="$instruction/@subtype"/>
             </xsl:attribute>
+            <xsl:attribute name="id">
+                <xsl:value-of select="@id"/>
+            </xsl:attribute>
             <xsl:attribute name="endlevel">
                 <xsl:choose>
                     <xsl:when test="$instruction/@endlevel">
@@ -291,7 +294,17 @@ Matched by <xsl:value-of select='count($elements)'/> elements.
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
+            <xsl:attribute name="id">
+                <xsl:value-of select="$way/@id"/>
+            </xsl:attribute>
             <xsl:choose>
+                <xsl:when test="($way/tag[(@k='name')and(@v!='')])and($way/tag[(@k='ref')and(@v!='')])">
+                    <label>
+                        <xsl:value-of select="$way/tag[@k='ref']/@v"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="$way/tag[@k='name']/@v"/>
+                    </label>
+                </xsl:when>
                 <xsl:when test="$way/tag[(@k='name')and(@v!='')]">
                     <label><xsl:value-of select="$way/tag[@k='name']/@v"/></label>
                 </xsl:when>

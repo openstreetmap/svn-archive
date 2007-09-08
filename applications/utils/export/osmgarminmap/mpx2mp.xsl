@@ -86,6 +86,9 @@ Elevation=m
         <xsl:text>[</xsl:text>
         <xsl:value-of select="$feature-id"/>
         <xsl:text>]
+; id=</xsl:text>
+        <xsl:value-of select="@id"/>
+        <xsl:text>
 Type=</xsl:text>
         <xsl:for-each select="$mapping">
             <xsl:value-of select="key($current, $type)/@garmin_id"/>
@@ -133,6 +136,9 @@ Data0=(</xsl:text>
         <xsl:text>[</xsl:text>
         <xsl:value-of select="$feature-id"/>
         <xsl:text>]
+; id=</xsl:text>
+        <xsl:value-of select="@id"/>
+        <xsl:text>
 Type=</xsl:text>
         <xsl:variable name="type" select="@type"/>
         <xsl:for-each select="$mapping">

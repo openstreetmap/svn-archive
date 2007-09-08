@@ -37,14 +37,20 @@ step-by-step description:
 
    xsltproc osm2mpx.xml >map.mpx
 
-2. MPX -> MP
+2. MPX -> MPL
    The second step will convert this XML format to a legacy format called
    the Polish format which can then be read by cGPSmapper. This is where
    the symbolic names in the .mpx file will get translated into hex codes.
 
-   xsltproc feature-list.xml >map.mp
+   xsltproc feature-list.xml >map.mpl
 
-3. MP -> IMG
+3. MPL -> MP
+
+   Remove zero length segments from polylines.
+
+   mpl2mp.pl map.mpl >map.mp
+
+4. MP -> IMG
    This file can then be read by cGPSmapper, which will create a .img file.
 
    cgpsmapper-static map.mp
@@ -70,8 +76,7 @@ without any parameters to get help.
 DEVICES
 -------
 
-This was tested on my Garmin GPSmap 60CSx. Works well except the zooming
-stuff (see below).
+This was tested on my Garmin GPSmap 60CSx. Works reasonably well.
 
 
 MAP FEATURES
@@ -97,11 +102,6 @@ KNOWN ISSUES
   and some amenities like parking lots and telephones. I welcome any
   additions.
 
-* In theory cGPSmapper can create and Garmin units can use maps in a way
-  that some features are only visible when zoomed in far enough. When
-  zooming out, those features will not be omitted to reduce clutter.
-  For some reason I could not get this to work.
-
 * Ways will be put into the Garmin map not one segment at a time, but
   as a complete way. If the segments are not ordered properly along the
   way (something which can easily happen in OSM when adding new segments
@@ -116,10 +116,12 @@ KNOWN ISSUES
   Use it like this:
   xsltproc fix.xsl data.osm >data-with-fix.osm
 
+* OSMGarminMap ignores tagged segments.
+
 
 LICENSE
 -------
-Copyright (C) 2006  Jochen Topf <jochen@remote.org>
+Copyright (C) 2006, 2007  Jochen Topf <jochen@remote.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

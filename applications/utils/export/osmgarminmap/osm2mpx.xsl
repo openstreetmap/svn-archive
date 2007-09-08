@@ -52,9 +52,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 		<!-- Make list of elements that this rule should be applied to -->
 		<xsl:variable name='eBare'>
 			<xsl:choose>
-				<xsl:when test='$rule/@e="*"'>node|segment|way|area</xsl:when>
+				<xsl:when test='$rule/@e="*"'>node|way</xsl:when>
 				<xsl:when test='$rule/@e'><xsl:value-of select='$rule/@e'/></xsl:when>
-				<xsl:otherwise>node|segment|way|area</xsl:otherwise>
+				<xsl:otherwise>node|way</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 

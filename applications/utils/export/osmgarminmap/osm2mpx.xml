@@ -74,34 +74,34 @@
 
     <!-- POLYLINES -->
     <!-- highways, roads, paths, ... -->
-    <rule e="segment|way" k="highway" v="footway|steps|cycleway|bridleway|byway">
+    <rule e="way" k="highway" v="footway|steps|cycleway|bridleway|byway">
         <polyline type="trail" endlevel="2"/>
     </rule>
-    <rule e="segment|way" k="highway" v="pedestrian">
+    <rule e="way" k="highway" v="pedestrian">
         <polyline type="road" endlevel="3"/>
     </rule>
-    <rule e="segment|way" k="highway" v="track">
+    <rule e="way" k="highway" v="track">
         <polyline type="unpaved-road" endlevel="2"/>
     </rule>
-    <rule e="segment|way" k="highway" v="unclassified|residential|minor">
+    <rule e="way" k="highway" v="unclassified|residential|minor">
         <polyline type="road" endlevel="3"/>
     </rule>
-    <rule e="segment|way" k="highway" v="unsurfaced">
+    <rule e="way" k="highway" v="unsurfaced">
         <polyline type="unpaved-road" endlevel="2"/>
     </rule>
-    <rule e="segment|way" k="highway" v="service">
+    <rule e="way" k="highway" v="service">
         <polyline type="alley" endlevel="2"/>
     </rule>
-    <rule e="segment|way" k="highway" v="secondary">
+    <rule e="way" k="highway" v="secondary">
         <polyline type="arterial-road-thin" endlevel="4"/>
     </rule>
-    <rule e="segment|way" k="highway" v="primary|primary_link">
+    <rule e="way" k="highway" v="primary|primary_link">
         <polyline type="arterial-road-medium" endlevel="5"/>
     </rule>
-    <rule e="segment|way" k="highway" v="trunk|trunk_link">
+    <rule e="way" k="highway" v="trunk|trunk_link">
         <polyline type="principal-highway-thick" endlevel="8"/>
     </rule>
-    <rule e="segment|way" k="highway" v="motorway|motorway_link">
+    <rule e="way" k="highway" v="motorway|motorway_link">
         <polyline type="principal-highway-thick" endlevel="8"/>
     </rule>
 

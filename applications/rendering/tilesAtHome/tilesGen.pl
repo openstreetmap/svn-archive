@@ -1070,24 +1070,27 @@ sub mergeOsmFiles()
 
     open (DEST, "> $destFile");
 
+    # copying stub file replaced by simply using the introductory lines of 
+    # the first file to be merged!
+    #
     # first, copy stub
-    open (STUB, "stub.osm");
-    while(<STUB>)
-    {
-        print DEST;
-    }
-    close(STUB);
+    # open (STUB, "stub.osm");
+    # while(<STUB>)
+    # {
+    #     print DEST;
+    # }
+    # close(STUB);
 
+    my $copy = 1; # copy <osm...> from first file
     foreach my $sourceFile(@{$sourceFiles})
     {
         open(SOURCE, $sourceFile);
-        my $copy = 0;
         while(<SOURCE>)
         {
             if ($copy)
             {
                 last if (/^\s*<\/osm>/);
-                if (/^\s*<(node|segment|way) id="(\d+)".*(.)>/)
+                if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
                 {
                     my ($what, $id, $slash) = ($1, $2, $3);
                     my $key = substr($what, 0, 1) . $id;
@@ -1115,6 +1118,7 @@ sub mergeOsmFiles()
             }
         }
         close(SOURCE);
+        $copy = 0;
     }
     print DEST "</osm>\n";
     close(DEST);

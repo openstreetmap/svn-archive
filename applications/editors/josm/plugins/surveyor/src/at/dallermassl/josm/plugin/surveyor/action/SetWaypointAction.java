@@ -67,6 +67,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
         String markerText = markerTitle;
         String inputText = dialog.openDialog(SurveyorPlugin.getSurveyorFrame(), "Waypoint Description");
         if(inputText != null && inputText.length() > 0) {
+            inputText = inputText.replaceAll("<", "_"); // otherwise the gpx file is ruined
             markerText = markerText + " " + inputText;
         }
         

@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# A program to from closed areas from incomplete sets of bordering 
+# A program to form closed areas from incomplete sets of bordering 
 # segments, by making an assumption about which side of the segment
 # the enclosed area lies on.
 #
@@ -48,7 +48,7 @@ my $minlon;
 my $maxlat;
 my $maxlon;
 my $border_crossed;
-my $emulate_frollo=1;
+my $emulate_frollo=1; # unused for 0.5
 # hash containing information about segments that start a subpath
 my $subpath_start;
 
@@ -80,6 +80,10 @@ my $copy = 1;
 my $waybuf;
 my $is_coastline;
 my @seglist;
+my $version;
+my $last_node_ref; # for 0.5
+my $segcount = 0;  # for 0.5
+
 while(<STDIN>)
 {
     while(/(<[^'"<>]*((["'])[^\3]*?\3[^<>"']*)*>)/og)
@@ -100,15 +104,29 @@ while(<STDIN>)
             undef $waybuf;
             undef @seglist;
             undef $is_coastline;
+            undef $last_node_ref;
         }
         elsif($xmltag =~ /^\s*<\/osm/)
         {
             last;
         }
-        elsif($xmltag =~ /^\s*<(osm.*)\/>/)
+        elsif($xmltag =~ /^\s*<(osm.*)>/)
         {
-            $copy = 0;
-            print "<$1>\n";
+            if (/version=['"](.*?)['"]/)
+            {
+                if ($1 eq "0.4") 
+                {
+                    $version = "04";
+                }
+                elsif ($1 eq "0.5")
+                {
+                    $version = "05";
+                }
+                else
+                {   
+                    die ("close-areas.pl does not support version $1");
+                }
+            }
         }
 
         if ($copy)
@@ -119,10 +137,20 @@ while(<STDIN>)
         {
             $is_coastline = 1;  
         }
-        elsif ($xmltag =~ /^\s*<seg id=['"](\d+)["']/)
+        elsif ($version eq "04" && ($xmltag =~ /^\s*<seg id=['"](\d+)["']/))
         {
             $waybuf .= $xmltag . "\n";
             push(@seglist, $1);
+        }
+        elsif ($version eq "05" && ($xmltag =~ /^\s*<nd ref=['"](\d+)["']/))
+        {
+            $waybuf .= $xmltag . "\n";
+            if (defined($last_node_ref))
+            {
+                $segments->{$segcount} = { "from" => $last_node_ref, "to" => $1 };
+                push(@seglist, $segcount++);
+            }
+            $last_node_ref = $1;
         }
         elsif ($xmltag =~ /^\s*<\/way/)
         {
@@ -204,7 +232,7 @@ foreach my $seg(keys(%$segments))
         }
         else
         {
-            # this segments enters AND exits the bounding box. as intersection
+            # this segment enters AND exits the bounding box. as intersection
             # points are ordered by distance from the segment's origin, we 
             # assume that the very first intersection is the entry point and
             # the very last is the exit point.
@@ -561,7 +589,8 @@ sub make_seg
 {
     my ($from, $to) = @_;
     my $id = --$segcount;
-    print "<segment id='$id' from='$from' to='$to' />\n";
+    print "<segment id='$id' from='$from' to='$to' />\n" if ($version eq "04");
+    $segments->{$id} = { "from" => $from, "to" => $to } if ($version eq "05");
     return $id;
 }
 
@@ -573,15 +602,29 @@ sub make_way
     print "  <tag k='natural' v='coastline' />\n";
     print "  <tag k='created-with' v='close-areas.pl' />\n";
     print "  <tag k='close-areas.pl:debug' v='open way' />\n" if ($open);
-    foreach my $seg(@$seglist) 
-    { 
-        print "  <seg id='$seg' ";
-        if ($emulate_frollo)
-        {
-            print "osma:fromCount='1' osma:toCount='1' ";
-            print "osma:sub-path='1' " if ($subpath_start->{$seg}) ;
+
+    if ($version eq "04")
+    {
+        foreach my $seg(@$seglist) 
+        { 
+            print "  <seg id='$seg' ";
+            if ($emulate_frollo)
+            {
+                print "osma:fromCount='1' osma:toCount='1' ";
+                print "osma:sub-path='1' " if ($subpath_start->{$seg}) ;
+            }
+            print " />\n";
         }
-        print " />\n";
+    }
+    else # 0.5
+    {
+        my $first = 1;
+        foreach my $seg(@$seglist) 
+        { 
+            printf "  <nd ref='%s' />\n", $segments->{$seg}->{"from"} if ($first);
+            printf "  <nd ref='%s' />\n", $segments->{$seg}->{"to"};
+            $first = 0;
+        }
     }
     print "</way>\n";
     return $id;
@@ -653,7 +696,7 @@ sub addBlueRectangle
 # 2 results - segment begins outside and ends outside, but cuts through
 #             bounding box
 # 3 results - can't think how this can happen
-# 4 results - as case 4 but segment is exactly at the bounding box diagonal,
+# 4 results - as case 2 but segment is exactly at the bounding box diagonal,
 #             thus intersecting with all four edges (freak case)
 #
 # If there is more than one result, results are sorted by distance from the

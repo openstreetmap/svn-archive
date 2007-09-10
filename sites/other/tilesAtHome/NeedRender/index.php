@@ -26,12 +26,13 @@
 
   if (!requestExists($X,$Y,NULL)){
      $SQL = sprintf(
-       "INSERT into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`) values (%d,%d,%d,'%s',now(),%s);", 
+       "INSERT into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`,`ip`) values (%d,%d,%d,'%s',now(),%s);", 
        $X, 
        $Y, 
        REQUEST_PENDING,
        mysql_escape_string($Src),
-       $P);
+       $P,
+       $_SERVER['REMOTE_ADDR']);
   
   
      mysql_query($SQL);

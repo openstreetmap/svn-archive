@@ -25,12 +25,12 @@
   include("../lib/requests.inc");
   include("../lib/versions.inc");
 
-  //Rate limiting: never hand out more than 500 active requests at a time
+  //Rate limiting: never hand out more than 50 active requests at a time
   if(1){
     $SQL='SELECT COUNT(*) FROM tiles_queue WHERE status='.REQUEST_ACTIVE.';';
     $res = mysql_query($SQL);
     $row=mysql_fetch_row($res);
-    if($row[0] > 500){
+    if($row[0] > 50){
       print 'XX|3||||rate_limiting ('.$row[0].' requests out)';
       exit;
     }

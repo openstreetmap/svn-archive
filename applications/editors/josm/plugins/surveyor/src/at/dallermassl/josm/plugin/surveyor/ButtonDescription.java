@@ -136,7 +136,7 @@ public class ButtonDescription {
     /**
      * @return the type
      */
-    public ButtonType getType() {
+    public ButtonType getButtonType() {
         return this.type;
     }
     
@@ -155,7 +155,7 @@ public class ButtonDescription {
     /**
      * @param type the type to set
      */
-    public void setType(ButtonType type) {
+    public void setButtonType(ButtonType type) {
         this.type = type;
     }
     

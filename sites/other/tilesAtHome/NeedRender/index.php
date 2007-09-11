@@ -3,7 +3,7 @@
   $X = $_GET["x"];
   $Y = $_GET["y"];
   $Z = $_GET["z"];
-  if (!$Z) {$Z=12};
+  if (!$Z) {$Z=12;};
   $P = $_GET["priority"];
   $Src = $_GET["src"];
   

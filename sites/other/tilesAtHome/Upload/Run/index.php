@@ -44,7 +44,7 @@ if(0){
 
 
 $QueueDir = "/home/ojw/tiles-ojw/Queue/";
-list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 24);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 100);
 
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
@@ -126,7 +126,7 @@ function HandleUpload($File, $UserID, $VersionID){
   
   if($Size <= 0){ 
     print("No file uploaded or file too large\n");
-    return;
+    return(0);
   }
 
   # Keep going if the user presses stop, to ensure temporary directories get erased
@@ -239,7 +239,7 @@ function SaveBlankTiles($BlankTileList, $UserID){
     // TODO: blank tiles can be z-12, which means they can fulfil a request
     list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
     if($Z == 12){
-      moveRequest($X, $Y, NULL, REQUEST_DONE, 0);
+      moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
     }
     
     # Make a blank tile
@@ -286,7 +286,7 @@ function DeleteRealTile($X,$Y,$Z,$LayerID){
 function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
   SaveUserStats($UserID, $VersionID, 1365);
   
-  moveRequest($X, $Y, NULL, REQUEST_DONE, 0);
+  moveRequest($X, $Y, 12, NULL, REQUEST_DONE, 0);
   logMsg("Tileset $X,$Y uploaded at once\n", 4);
   
   $LayerID = checkLayer($Layer);
@@ -310,9 +310,9 @@ function RemoveFromQueue($TileList){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
     if($Z == 12){
     
-      moveRequest($X, $Y, NULL, REQUEST_DONE, 0);
+      moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
         
-      logMsg(sprintf("Tileset %d, %d moved from mode %d to mode %d", $X, $Y, REQUEST_ACTIVE, REQUEST_DONE), 4);
+      logMsg(sprintf("Tileset %d, %d (z%d) moved from mode %d to mode %d", $X, $Y, $Z, REQUEST_ACTIVE, REQUEST_DONE), 4);
       logSqlError();
     }
   }

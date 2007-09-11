@@ -121,6 +121,9 @@ find ./ -name "*.pl" | while read src_fn ; do
     dst_fn="$bin_path/${src_fn##*/}"
     filename="`basename $src_fn`"
     dst_fn="${dst_fn/.pl}"
+    if ! echo $dst_fn | grep -e osm ; then
+	dst_fn="`dirname ${dst_fn}`/osm-`basename ${dst_fn}`"
+    fi
     man1_fn="$man1_path/${filename%.pl}.1"
     if head -1 "$src_fn" | grep -q -e '^#! */usr/bin/perl' ; then
 	cp "$src_fn" "$dst_fn"
@@ -144,7 +147,7 @@ find ./ -name "*.pl" | while read src_fn ; do
 		echo "Create Man Page from Help '$man1_fn'"
 		perl $src_fn --help >"$man1_fn"
 	    else
-		echo "No idea how to create Man Page for $src_fn"
+		echo "!!!! No idea how to create Man Page for $src_fn"
 	    fi
 	fi
     fi

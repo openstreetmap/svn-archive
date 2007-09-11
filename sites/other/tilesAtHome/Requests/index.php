@@ -49,8 +49,7 @@
   // THE END
 
 function CheckForRequest($Z){
-  $SQL =  "select `x`,`y`,`z`,`status`,`priority`,`date` from `tiles_queue` where `status` <= ".REQUEST_NEW;
-  $SQL .= " order by `priority`,`date` limit 1;";
+  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` <= ".REQUEST_NEW." and `z`=".$Z." order by `priority`,`date` limit 1;";
 
 //  print "$SQL\n";return;
   $Result = mysql_query($SQL);
@@ -67,12 +66,12 @@ function CheckForRequest($Z){
   printf("OK|3|%d|%d|%d|db",
     $Data["x"],
     $Data["y"],
-    $Data["z"]);
+    $Z);
 
   moveRequest(
     $Data["x"],
     $Data["y"],
-    $Data["z"],
+    $Z,
     $Data["status"],
     REQUEST_ACTIVE);
 

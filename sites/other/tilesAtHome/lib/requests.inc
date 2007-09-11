@@ -28,26 +28,28 @@ function requestExists($X,$Y,$Z,$Mode){
 # Moves all requests (X,Y) (normally only 1) from Mode $FromMode to
 # status $ToMode. If $FromMode is NULL it moves all unfinished requests.
 #--------------------------------------------------
-function moveRequest($X, $Y, $FromMode, $ToMode, $Debug = 0){
+function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Debug = 0){
 
-  if(!requestExists($X,$Y,Z,$FromMode))
+  if(!requestExists($X,$Y,$Z,$FromMode))
     return(0);
   
   if($FromMode != NULL) {
     # Move the specified request to the new mode
     $SQL = sprintf(
-      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `status`=%d;",
+      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `z`=%d and `status`=%d;",
       $ToMode,
       $X,
       $Y,
+      $Z,
       $FromMode);
   } else {
     // Move all unfinished requests to new mode
     $SQL = sprintf(
-      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `status`!=%d;",
+      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `z`=%d and `status`!=%d;",
       $ToMode,
       $X,
       $Y,
+      $Z,
       REQUEST_DONE);
   }
 

@@ -15,7 +15,7 @@ function TileName($X,$Y,$Z,$Layer="tile"){
 function TileURL($X,$Y,$Z,$Layer="tile"){
   if(!TileValid($X,$Y,$Z))
     return("");
-  return(sprintf("/~ojw/Tiles/%s/%d/%d/%d.png",$Layer,$Z,$X,$Y));
+  return(sprintf("http://tah.openstreetmap.org/Tiles/%s/%d/%d/%d.png",$Layer,$Z,$X,$Y));
 }
   
 function TilePartName($X,$Y,$Z){

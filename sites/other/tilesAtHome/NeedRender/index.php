@@ -7,7 +7,7 @@
   $P = $_GET["priority"];
   $Src = $_GET["src"];
   
-  if($Z != 12 || $Z != 8){
+  if($Z != 12 && $Z != 8){
      print "Invalid Z\n";
      exit;
   }

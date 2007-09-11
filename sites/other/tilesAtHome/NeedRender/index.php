@@ -26,9 +26,11 @@
 
   if (!requestExists($X,$Y,NULL)){
      //Check the number of existing requests by that ip address and downgrade if needed
-     $SQL = "SELECT COUNT(*) FROM tiles_queue WHERE `status` < REQUEST_DONE GROUP BY ip";
+     $SQL = sprintf ("SELECT COUNT(*) FROM tiles_queue WHERE `status` < %d AND `ip` = '%s'",
+	REQUEST_DONE,
+	$_SERVER['REMOTE_ADDR']);
      $Result = mysql_query($SQL);
-     if (mysql_num_rows($Result) > 10) {$P = 2;}
+     if ($row = mysql_fetch_row($Result) and $row[0] >= 10) {$P = 2;}
 
      $SQL = sprintf(
        "INSERT into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`,`ip`) values (%d,%d,%d,'%s',now(),%s,'%s');", 

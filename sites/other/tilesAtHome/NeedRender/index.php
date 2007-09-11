@@ -25,6 +25,11 @@
   include("../lib/requests.inc");
 
   if (!requestExists($X,$Y,NULL)){
+     //Check the number of existing requests by that ip address and downgrade if needed
+     $SQL = "SELECT COUNT(*) FROM tiles_queue WHERE `status` < REQUEST_DONE GROUP BY ip";
+     $Result = mysql_query($SQL);
+     if (mysql_num_rows($Result) > 10) {$P = 2;}
+
      $SQL = sprintf(
        "INSERT into tiles_queue (`x`,`y`,`status`,`src`,`date`,`priority`,`ip`) values (%d,%d,%d,'%s',now(),%s,'%s');", 
        $X, 

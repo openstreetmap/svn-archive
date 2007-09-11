@@ -238,7 +238,7 @@ function SaveBlankTiles($BlankTileList, $UserID){
 
     // TODO: blank tiles can be z-12, which means they can fulfil a request
     list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
-    if($Z == 12){
+    if($Z == 12 || $Z == 8){
       moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
     }
     
@@ -303,12 +303,12 @@ function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
 
 #-----------------------------------------------------------------------------
 # Removes completed* tilesets from queue
-# * where completed means "z12 was uploaded"
+# * where completed means "z[8|12] was uploaded"
 #-----------------------------------------------------------------------------
 function RemoveFromQueue($TileList){
   foreach($TileList as $CSV){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
-    if($Z == 12){
+    if($Z == 12 || $Z == 8){
     
       moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
         

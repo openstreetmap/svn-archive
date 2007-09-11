@@ -14,7 +14,7 @@
   include("../../../connect/connect.php");
 
   $statuses = array('pending', 'new', 'active', 'done');
-  $Result = mysql_query("select `status`,count(*) as count from `tiles_queue` group by `status` order by `status`;");
+  $Result = mysql_query("select `status`,count(*) as count from `tiles_queue` WHERE z=12 group by `status` order by `status`;");
   while ($row = mysql_fetch_array($Result)) {
     if ($row['status'] == 3) {
       // Divide done by 48 as it represents all that have been done in the last 48 hours.

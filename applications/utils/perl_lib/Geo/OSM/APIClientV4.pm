@@ -15,6 +15,7 @@ package Geo::OSM::APIClient;
 use MIME::Base64;
 use HTTP::Request;
 use Carp;
+use Encode;
 
 sub new
 {
@@ -60,7 +61,7 @@ sub create
   my( $self, $ent ) = @_;
   my $oldid = $ent->id;
   $ent->set_id(0);
-  my $content = $ent->full_xml;
+  my $content = encode("utf-8", $ent->full_xml);
   $ent->set_id($oldid);
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/create";
   $req->content($content);
@@ -83,7 +84,7 @@ sub create
 sub modify
 {
   my( $self, $ent ) = @_;
-  my $content = $ent->full_xml;
+  my $content = encode("utf-8", $ent->full_xml);
   my $req = new HTTP::Request PUT => $self->{url}."/".$ent->type()."/".$ent->id();
   $req->content($content);
   
@@ -99,7 +100,7 @@ sub modify
 sub delete
 {
   my( $self, $ent ) = @_;
-  my $content = $ent->full_xml;
+  my $content = encode("utf-8", $ent->full_xml);
   my $req = new HTTP::Request DELETE => $self->{url}."/".$ent->type()."/".$ent->id();
 #  $req->content($content);
   

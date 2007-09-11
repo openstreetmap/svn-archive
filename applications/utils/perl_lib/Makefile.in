@@ -21,7 +21,7 @@ top_srcdir = @top_srcdir@
 VPATH = @srcdir@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ../..
+top_builddir = ../../..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 INSTALL = @INSTALL@
 install_sh_DATA = $(install_sh) -c -m 644
@@ -37,13 +37,20 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = utils/perl_lib
+subdir = scripts/osm/perl_lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ac_check_perl_modules.m4 \
+	$(top_srcdir)/m4/ac_check_socketlen_t.m4 \
+	$(top_srcdir)/m4/aq_check_gdal.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(install_sh) -d
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -71,9 +78,11 @@ DATA = $(Geo_DATA) $(Geo_Filter_DATA) $(Geo_GPX_DATA) \
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 pkgdatadir = @pkgdatadir@
 ACLOCAL = @ACLOCAL@
+AMAPNIK = @AMAPNIK@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
+AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -84,20 +93,48 @@ CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DBUS_CFLAGS = @DBUS_CFLAGS@
+DBUS_GLIB_LIBS = @DBUS_GLIB_LIBS@
+DBUS_LIBS = @DBUS_LIBS@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DISABLEGARMIN_FALSE = @DISABLEGARMIN_FALSE@
+DISABLEGARMIN_TRUE = @DISABLEGARMIN_TRUE@
+DISABLEPLUGINS_FALSE = @DISABLEPLUGINS_FALSE@
+DISABLEPLUGINS_TRUE = @DISABLEPLUGINS_TRUE@
+ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+F77 = @F77@
+FFLAGS = @FFLAGS@
+FRIENDSSERVERVERSION = @FRIENDSSERVERVERSION@
+GDAL_CFLAGS = @GDAL_CFLAGS@
+GDAL_CONFIG = @GDAL_CONFIG@
+GDAL_LDADD = @GDAL_LDADD@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
+GLIB_LIBS = @GLIB_LIBS@
+GLIB_MKENUMS = @GLIB_MKENUMS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
+GOBJECT_QUERY = @GOBJECT_QUERY@
 GREP = @GREP@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
+HAVE_DBUS_FALSE = @HAVE_DBUS_FALSE@
+HAVE_DBUS_TRUE = @HAVE_DBUS_TRUE@
+HAVE_GDAL_FALSE = @HAVE_GDAL_FALSE@
+HAVE_GDAL_TRUE = @HAVE_GDAL_TRUE@
+HAVE_GTK_FALSE = @HAVE_GTK_FALSE@
+HAVE_GTK_TRUE = @HAVE_GTK_TRUE@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -105,10 +142,12 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INTLLIBS = @INTLLIBS@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 LDFLAGS = @LDFLAGS@
+LIBADD_DL = @LIBADD_DL@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
@@ -117,6 +156,8 @@ MAKEINFO = @MAKEINFO@
 MSGFMT = @MSGFMT@
 MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
+NOGARMIN = @NOGARMIN@
+NOPLUGINS = @NOPLUGINS@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -125,19 +166,32 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PCRE_CONFIG = @PCRE_CONFIG@
+PERL = @PERL@
 PERL_PACKAGE_DIR = @PERL_PACKAGE_DIR@
-PERL_VENDORLIB = @PERL_VENDORLIB@
+PKGCONFIG_CFLAGS = @PKGCONFIG_CFLAGS@
+PKGCONFIG_LIBS = @PKGCONFIG_LIBS@
+PKG_CONFIG = @PKG_CONFIG@
 POSUB = @POSUB@
 POW_LIB = @POW_LIB@
+RANLIB = @RANLIB@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+WITH_MAPNIK_FALSE = @WITH_MAPNIK_FALSE@
+WITH_MAPNIK_TRUE = @WITH_MAPNIK_TRUE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
+XML_CFLAGS = @XML_CFLAGS@
+XML_LIBS = @XML_LIBS@
+YACC = @YACC@
+YFLAGS = @YFLAGS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
+ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -217,9 +271,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  utils/perl_lib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  scripts/osm/perl_lib/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  utils/perl_lib/Makefile
+	  $(AUTOMAKE) --gnu  scripts/osm/perl_lib/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -237,6 +291,15 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
 uninstall-info-am:
 install-GeoDATA: $(Geo_DATA)
 	@$(NORMAL_INSTALL)
@@ -442,11 +505,11 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic
+distclean-am: clean-am distclean-generic distclean-libtool
 
 dvi: dvi-am
 
@@ -477,7 +540,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -492,17 +555,18 @@ uninstall-am: uninstall-GeoDATA uninstall-Geo_FilterDATA \
 	uninstall-Geo_OSMDATA uninstall-Geo_TracksDATA \
 	uninstall-UtilsDATA uninstall-Utils_LWPDATA uninstall-info-am
 
-.PHONY: all all-am check check-am clean clean-generic distclean \
-	distclean-generic distdir dvi dvi-am html html-am info info-am \
-	install install-GeoDATA install-Geo_FilterDATA \
-	install-Geo_GPXDATA install-Geo_GpsdriveDATA \
-	install-Geo_OSMDATA install-Geo_TracksDATA install-UtilsDATA \
-	install-Utils_LWPDATA install-am install-data install-data-am \
-	install-exec install-exec-am install-info install-info-am \
-	install-man install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
-	uninstall-GeoDATA uninstall-Geo_FilterDATA \
+.PHONY: all all-am check check-am clean clean-generic clean-libtool \
+	distclean distclean-generic distclean-libtool distdir dvi \
+	dvi-am html html-am info info-am install install-GeoDATA \
+	install-Geo_FilterDATA install-Geo_GPXDATA \
+	install-Geo_GpsdriveDATA install-Geo_OSMDATA \
+	install-Geo_TracksDATA install-UtilsDATA install-Utils_LWPDATA \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-GeoDATA uninstall-Geo_FilterDATA \
 	uninstall-Geo_GPXDATA uninstall-Geo_GpsdriveDATA \
 	uninstall-Geo_OSMDATA uninstall-Geo_TracksDATA \
 	uninstall-UtilsDATA uninstall-Utils_LWPDATA uninstall-am \

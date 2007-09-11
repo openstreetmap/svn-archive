@@ -25,10 +25,8 @@ BEGIN {
 
     @ISA         = qw(Exporter);
     @EXPORT = qw( &poi_type_names &poi_type_list  &poi_type_name2id &poi_type_id2name
-		  &streets_type_names &streets_type_list  &streets_type_name2id
 		  &db_disconnect  &db_read_mysql_sys_pwd
 		  &add_poi &add_poi_multi
-		  &street_segments_add
 		  &poi_list
 		  &column_names
 		  &source_name2id
@@ -46,8 +44,6 @@ our @EXPORT_OK;
 
 END { } 
 
-
-sub street_segments_add($);
 
 # -----------------------------------------------------------------------------
 # switch off updating of index
@@ -243,11 +239,6 @@ sub delete_all_from_source($){
     $sth->execute()               or die $sth->errstr;
     $sth->finish;
 
-    $query = "DELETE FROM streets WHERE streets.source_id = '$source_id'";
-    $sth=$dbh->prepare($query) or die $dbh->errstr;
-    $sth->execute()            or die $sth->errstr;
-
-    $sth->finish;
     print "Deleted all from '$source_name'\n" if $verbose>3;
 }
 
@@ -424,91 +415,6 @@ sub poi_type_list(){
 
 
 # -----------------------------------------------------------------------------
-# convert streets_type.name to streets_type_id and cache it locally
-# TODO: if we get a Hash; create the source entry if not already existent
-my $streets_type_id_cache;
-sub streets_type_name2id($){
-    my $type_name = shift ||'';
-
-    return 0 unless $type_name;
-
-    my $streets_type_id;
-
-    if ( defined $streets_type_id_cache->{$type_name} ) {
-	$streets_type_id = $streets_type_id_cache->{$type_name};
-    } else {
-	my $dbh = db_connect();
-	my $query = "SELECT streets_type_id FROM streets_type WHERE streets_type.name = '$type_name' LIMIT 1";
-
-	my $sth=$dbh->prepare($query) or die $dbh->errstr;
-	$sth->execute()               or die $sth->errstr;
-
-	my $array_ref = $sth->fetchrow_arrayref();
-	if ( $array_ref ) {
-	    $streets_type_id = $array_ref->[0];
-	    $streets_type_id_cache->{$type_name} = $streets_type_id;
-	} else {
-	    # Nicht gefunden
-	    $streets_type_id=0;
-	}
-	$sth->finish;
-    }
-
-    if ( ! $streets_type_id ) {
-	warn "No Type named '$type_name' found in streets_type\n";
-    }
-#    debug("Type: $type_name -> $streets_type_id");
-
-    return $streets_type_id;
-}
-
-# -----------------------------------------------------------------------------
-# get a list of all streets_type names
-sub streets_type_names(){
-    my @streets_type_names;
-
-    my $dbh = db_connect();
-    
-    my $query = "SELECT name FROM streets_type";
-    
-    my $sth=$dbh->prepare($query) or die $dbh->errstr;
-    $sth->execute()               or die $sth->errstr;
-
-    while (my $row = $sth->fetchrow_arrayref) {
-	push(@streets_type_names,$row->[0]);
-    }
-    $sth->finish;
-
-    return @streets_type_names;
-}
-
-# -----------------------------------------------------------------------------
-# retrieve a complete list of known types
-sub streets_type_list(){
-    my @streets_type_list;
-
-    my $dbh = db_connect();
-    
-    my @columns = column_names("streets_type");
-    my $query = "SELECT ".join(',', @columns)."  FROM streets_type";
-    
-    my $sth=$dbh->prepare($query) or die $dbh->errstr;
-    $sth->execute()               or die $sth->errstr;
-
-    while (my $row = $sth->fetchrow_arrayref) {
-	my $streets_type = {};
-	for my $i ( 0.. $#columns) {
-	    $streets_type->{$columns[$i]} = $row->[$i];
-	}
-	push(@streets_type_list,$streets_type);
-    }
-    $sth->finish;
-
-    return @streets_type_list;
-}
-
-
-# -----------------------------------------------------------------------------
 # retrieve first n entries from  poi Table
 # default is 100 Entries
 sub poi_list(;$){
@@ -596,9 +502,6 @@ sub add_poi($){
 	$point->{'poi.poi_type_id'}    = $poi_type_id;
     }
 
-    # ---------------------- ADDRESS
-    $point->{'poi.address_id'}    ||= 0;
-
     # ---------------------- TYPE
     $point->{'poi.poi_type_id'}       ||= 0;
 
@@ -647,143 +550,6 @@ sub add_wlan($){
     $point->{'wlan.last_modified'} ||= time();
     insert_hash("wlan",$point);
 
-}
-
-#############################################################################
-# Add a single streets into DB
-sub streets_add($){
-    my $segment = shift;
-    my $segment4db = {};
-    my @columns = column_names("streets");
-    map { 
-	$segment4db->{"streets.$_"} = 
-	    ( $segment->{"streets.$_"} || $segment->{$_} || $segment->{lc($_)}) 
-	} @columns;
-
-    # ---------------------- SOURCE
-    #print Dumper(\$segment4db);
-    # TODO: put this out here for performance reason
-    if ( $segment4db->{"source.name"} && ! $segment4db->{'streets.source_id'}) {
-	my $source_id = source_name2id($segment4db->{"source.name"});
-	# print "Source: $segment4db->{'source.name'} -> $source_id\n";
-	
-	$segment4db->{'source.source_id'} = $source_id;
-	$segment4db->{'streets.source_id'}    = $source_id;
-    }
-
-    # ---------------------- Type
-    my $type_name = $segment->{'streets_type.name'};
-    if ( $type_name && ! $segment4db->{'streets.streets_type_id'}) {
-	my $poi_type_id = type_name2id($type_name);
-	unless ( $poi_type_id ) {
-	    my $type_hash= {
-		'streets_type.name' => $type_name
-		};
-	    insert_hash("streets_type",$type_hash);
-	    $poi_type_id = type_name2id($segment4db->{"streets_type.name"});
-	}
-	$segment4db->{'streets.streets_type_id'}    = $poi_type_id;
-    }
-
-    # ---------------------- ADDRESS
-    $segment4db->{'streets.address_id'}      ||= 0;
-
-    # ---------------------- TYPE
-    $segment4db->{'streets.streets_type_id'} ||= 0;
-
-    # ---------------------- STREETS
-    $segment4db->{'streets.last_modified'}   ||= time();
-    $segment4db->{'streets.scale_min'}       ||= 1;
-    $segment4db->{'streets.scale_max'}       ||= 9999999999999999;
-    insert_hash("streets",$segment4db);
-}
-
-
-#############################################################################
-# Add a list of street segments into streets-DB
-# 
-sub street_segments_add($){
-    my $data = shift;
-
-    my $segment4db = {};
-
-    my @columns = column_names("streets");
-    map { 
-	$segment4db->{"streets.$_"} = 
-	    ( $data->{"streets.$_"} || $data->{$_} || $data->{lc($_)}) 
-	} @columns;
-
-    # ---------------------- ADDRESS
-    $segment4db->{'streets.address_id'}        ||= 0;
-
-    if ( ! $segment4db->{'streets.streets_type_id'} ) {
-	print "ERROR: street_segments_add: Error streets.streets_type_id missing:\n";
-	print Dumper(\$data);
-	return;
-    }
-
-    # ---------------------- STREETS
-    $segment4db->{'streets.last_modified'}     ||= time();
-    $segment4db->{'streets.scale_min'}         ||= 1;
-    $segment4db->{'streets.scale_max'}         ||= 100000000000;
-
-    $segment4db->{'streets.lat1'}=0;
-
-    my $count = scalar @{$data->{segments}};
-    debug("Writing $count Segments") if $count ;
-
-    my ($lat2,$lon2,$alt2) = (0,0,0);
-    #my $sql ="insert into streets (streets.streets_id,streets.name,streets.streets_type_id,streets.lat1,streets.lon1,streets.alt1,streets.lat2,streets.lon2,streets.alt2,streets.proximity,streets.comment,streets.scale_min,streets.scale_max,streets.last_modified,streets.source_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    #my $sth = $dbh->prepare_cached($sql);
-    my $segment_nr=0;
-    for my $segment ( @{$data->{segments}} ){
-	my $lat1 = $segment4db->{'streets.lat1'} = $segment4db->{'streets.lat2'};
-	my $lon1 = $segment4db->{'streets.lon1'} = $segment4db->{'streets.lon2'};
-	my $alt1 = $segment4db->{'streets.alt1'} = $segment4db->{'streets.alt2'};
-
-	if ( ref($segment) eq "ARRAY" ) {
-	    $lat2 = $segment->[0];
-	    $lon2 = $segment->[1];
-	    $alt2 = $segment->[2];
-	} elsif ( defined($segment->{'lat1'} ))  {
-	    $segment4db->{'streets.lat1'} = $lat1 = $segment->{'lat1'};
-	    $segment4db->{'streets.lon1'} = $lon1 = $segment->{'lon1'};
-	    $segment4db->{'streets.alt1'} = $alt1 = $segment->{'alt1'};
-
-	    $lat2 = $segment->{'lat2'};
-	    $lon2 = $segment->{'lon2'};
-	    $alt2 = $segment->{'alt2'};
-
-	} else {
-	    $lat2 = $segment->{'lat'};
-	    $lon2 = $segment->{'lon'};
-	    $alt2 = $segment->{'alt'};
-	};
-
-	$segment4db->{'streets.lat2'} = $lat2;
-	$segment4db->{'streets.lon2'} = $lon2;
-	$segment4db->{'streets.alt2'} = $alt2;
-
-	next unless $segment4db->{'streets.lat1'}; # skip first entry
-
-#	my $d_lat=abs($lat1-$lat2);
-#	my $d_lon=abs($lon1-$lon2);
-#	my $dist = $d_lat+$d_lon;
-#	print "Dist: $dist	($lat1,$lon1),($lat2,lon2) $segment4db->{'streets.name'}\n"
-#	    if $dist > 0.05;;
-	$segment4db->{'streets.comment'}         = "Segment: $segment_nr";
-	$segment4db->{'streets.comment'}         = $segment->{'comment'}    if defined $segment->{'comment'};
-#	$segment4db->{'streets.name'}          ||= $segment->{'name'}       if defined $segment->{'name'};
-	$segment4db->{'streets.name'}            = $data->{name}            || $segment->{name};
-	$segment4db->{'streets.streets_type_id'} = $data->{'streets.streets_type_id'} || $data->{'streets_type_id'} || $segment->{streets_type_id};
-#	$segment4db->{'streets.source_id'}       = $data->{source_id}       || $segment->{source_id};
-#	$segment4db->{'streets.scale_min'}       = $data->{scale_min}       || $segment->{scale_min}||1;
-#	$segment4db->{'streets.scale_max'}       = $data->{scale_max}       || $segment->{scale_max}||10000000000;
-
-	#print "segment4db:".Dumper(\$segment4db);
-	insert_hash("streets",$segment4db);
-	$segment_nr++;
-    }
 }
 
 # -----------------------------------------------------------------------------
@@ -850,11 +616,6 @@ sub add_index($){
 	    add_if_not_exist_index($table,$key);
 	}
 	add_if_not_exist_index( $table,'combi1','lat`,`lon`,`poi_type_id');
-    } elsif ( $table eq "streets" ){
-	for my $key ( qw( last_modified name lat1 lon1 lat2 lon2 ) ){
-	    add_if_not_exist_index($table,$key);
-	}
-	add_if_not_exist_index($table,'combi1','lat1`,`lon1`,`lat2`,`lon2`,`streets_type_id');
     } elsif ( $table eq "waypoints" ){
 	for my $key ( qw( macaddr type name typenr ) ){
 	    add_if_not_exist_index($table,$key);
@@ -867,14 +628,9 @@ sub add_index($){
 	for my $key ( qw( name ) ){
 	    add_if_not_exist_index($table,$key);
 	}
-    } elsif ( $table eq "streets_type" ){
-	for my $key ( qw( name ) ){
-	    add_if_not_exist_index($table,$key);
-	}
-    } 
+    }
     
     # TODO: add more index
-    #ALTER TABLE `address` ADD FULLTEXT ( `comment` )
 }
 
 # -----------------------------------------------------------------------------
@@ -895,22 +651,6 @@ sub create_db(){
     $sth->execute()
 	or die $sth->errstr;
     
-    # ------- Address
-    db_exec('CREATE TABLE IF NOT EXISTS `address` (
-                      `address_id`     int(11)      NOT NULL auto_increment,
-                      `country`        varchar(40)  NOT NULL default \'\',
-                      `state`          varchar(80)  NOT NULL default \'\',
-                      `zip`            varchar(5)   NOT NULL default \'\',
-                      `city`           varchar(80)  NOT NULL default \'\',
-                      `city_part`      varchar(80)  NOT NULL default \'\',
-                      `streets_name`   varchar(80)  NOT NULL default \'\',
-                      `streets_number` varchar(5)   NOT NULL default \'\',
-                      `phone`          varchar(160) NOT NULL default \'\',
-                      `comment`        varchar(160) NOT NULL default \'\',
-                      PRIMARY KEY  (`address_id`)
-                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;
-    add_index('address');
-
     # ------- POI
     db_exec('CREATE TABLE IF NOT EXISTS `poi_type` (
                       `poi_type_id` int(11)       NOT NULL auto_increment,
@@ -934,8 +674,7 @@ sub create_db(){
                       `alt`           double                default \'0\',
 		      `proximity`     float                 default \'10\',
                       `comment`       varchar(255)          default NULL,
-                      `last_modified` datetime  NOT NULL default \'0000-00-00\',
-                      `address_id`    int(11)               default \'0\',
+                      `last_modified` datetime     NOT NULL default \'0000-00-00\',
                       `source_id`     int(11)      NOT NULL default \'1\',
 		      `private`       char(1)               default NULL,
                       PRIMARY KEY  (`poi_id`)
@@ -975,41 +714,6 @@ sub create_db(){
                         PRIMARY KEY  (`wlan_id`)
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;
 
-    # ------- Streets
-    db_exec('CREATE TABLE IF NOT EXISTS `streets` (
-                      `streets_id`      int(11)      NOT NULL auto_increment,
-                      `name`            varchar(80)           default NULL,
-                      `streets_type_id` int(11)      NOT NULL default \'0\',
-                      `lat1`            double       NOT NULL default \'0\',
-                      `lon1`            double       NOT NULL default \'0\',
-                      `alt1`            double                default \'0\',
-                      `lat2`            double       NOT NULL default \'0\',
-                      `lon2`            double       NOT NULL default \'0\',
-                      `alt2`            double                default \'0\',
-                      `proximity`       float                 default \'0\',
-                      `comment`         varchar(255)          default NULL,
-                      `scale_min`       int(12)      NOT NULL default \'1\',
-                      `scale_max`       int(12)      NOT NULL default \'0\',
-                      `last_modified`   date         NOT NULL default \'0000-00-00\',
-                      `source_id`       int(11)      NOT NULL default \'0\',
-                      PRIMARY KEY  (`streets_id`)
-                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;
-    add_index('streets');
-
-    db_exec('CREATE TABLE IF NOT EXISTS `streets_type` (
-                      `streets_type_id` int(11)      NOT NULL auto_increment,
-                      `name`            varchar(80)  NOT NULL default \'\',
-                      `scale_min`       int(12)      NOT NULL default \'1\',
-                      `scale_max`       int(12)      NOT NULL default \'0\',
-                      `description`     varchar(160)     NULL default \'\',
-                      `color`           varchar(20)      NULL default \'\',
-                      `color_bg`        varchar(20)      NULL default \'\',
-                      `width`           int(2)           NULL default \'1\',
-                      `width_bg`        int(2)           NULL default \'2\',
-                      `linetype`        varchar(80)      NULL default \'\',
-                      PRIMARY KEY  (`streets_type_id`)
-                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;
-    add_index('streets_type');
 
     # ------- Source
     db_exec('CREATE TABLE IF NOT EXISTS `source` (

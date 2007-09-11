@@ -234,93 +234,6 @@ sub DoEnd(){
 	}
     }
 
-    if($element eq "segment"){
-	my $from = $MainAttr{"from"};
-	my $to   = $MainAttr{"to"};
-	if ( defined($OSM_Nodes{$from}) && 
-	     defined($OSM_Nodes{$to})   &&
-	     $OSM_Nodes{$from} && 
-	     $OSM_Nodes{$to} ) {
-	    my $segment={ osm_obj_type => 'segment' };
-	    for my $k ( keys %MainAttr ) {
-		$segment->{$k} = $MainAttr{$k};
-	    }
-	    for my $k ( keys %Tags ) {
-		$segment->{$k} = $Tags{$k};
-	    }
-	    $OSM_Segments{$id} = "$from,$to,".find_streets_type_id($segment);
-	    
-	    $Stats{"segments"}++;
-	}
-    }
-
-    if($element eq "way"){
-	if ( @WaySegments ) {
-	    my $way = { osm_obj_type => 'way' };
-	    my ($lat1,$lon1,$lat2,$lon2);
-	    for my $k ( keys %MainAttr ) {
-		$way->{$k} = $MainAttr{$k};
-	    }
-	    for my $k ( keys %Tags ) {
-		$way->{$k} = $Tags{$k};
-	    }
-	    my $streets_type_id = find_streets_type_id($way);
-	    unless ( $streets_type_id ) {
-		warn "cannot determine streets_type_id for way($way->{id})\n";
-		print_obj($way);
-		return;
-	    };
-
-	    my $multi_segment= {
-		'source_id'       => $SOURCE_ID_SEGMENT,
-		'segments'        => [],
-		'streets_type_id' => $streets_type_id,
-		'streets.streets_type_id' => $streets_type_id,
-	    };
-	    foreach my $seg_id( @WaySegments ){ # we only have the needed ones in here
-		next unless $seg_id;
-		next unless defined $OSM_Segments{$seg_id};
-		next unless $OSM_Segments{$seg_id};
-		my ( $node_from,$node_to,$segment_type_id) = split(",", $OSM_Segments{$seg_id});
-
-		$segment_type_id ||= $streets_type_id;
-		unless ( $segment_type_id ) {
-		    warn "cannot determine segment_type_id for way($way->{id}) segment($seg_id)\n";
-		    next;
-		}
-
-#		$segment->{way_element}++;
-
-		($lat1,$lon1) = split(",",$OSM_Nodes{$node_from});
-		($lat2,$lon2) = split(",",$OSM_Nodes{$node_to});
-		
-		$multi_segment->{'streets_type_id'} = $segment_type_id;
-		
-#		my $street_name=$segment->{name}||$way->{name};
-		my $street_name=$way->{name};
-		my $comment ='';
-		$comment .= "way_id=$id ";
-		$comment .= "seg_id=$seg_id ";
-		push(@{$multi_segment->{'segments'}},
-		 {
-		     'lat1' => $lat1, 'lon1' => $lon1, 'alt1' => -99,
-		     'lat2' => $lat2, 'lon2' => $lon2, 'alt2' => -99,
-		     'name' => $street_name,
-		     'comment' => $comment,
-		     'streets.source_id' => $SOURCE_ID_SEGMENT,
-		     'streets.streets_type_id' => $segment_type_id,
-		     'streets_type_id' => $segment_type_id,
-		 }
-		     );
-	    }
-	    print "Writing Segments\n" if $debug;
-	    street_segments_add($multi_segment);
-	    $multi_segment->{'segments'}=[];
-	    
-	    $Stats{"ways"}++;
-	}
-    }
-
     if ( ( $VERBOSE || $DEBUG ) &&
 #	 ! ( $Stats{"tags read"} % 10000 ) &&
 	 ( time()-$PARSING_DISPLAY_TIME >0.9)
@@ -403,184 +316,14 @@ sub write_named_point($) {
 	    $values->{'poi.poi_type_id'} = $poi_type_id;
 #		$values->{'poi.comment'}   = $comment;
 	    Geo::Gpsdrive::DBFuncs::add_poi($values);
-	} else {
-	    my $streets_type_id = streets_type_id($k,$v);
-	    if ( $streets_type_id ){
-		my $icon = $streets_type_id->{icon}->{src};
-		if ( $icon ){
-		    $unknown_keys .= "$k=$v (elemstyles $icon)";
-		    if ( $DEBUG>2) { # Simply a question of available memory
-			$all_unknown_tags->{"    <condition k=\"$k\" v=\"$v\"/>\n\tjosm icon=$icon"} ++;
-		    }
-		};
-	    } else {
-		$unknown_keys .= "$k=$v ";
-		if ( $DEBUG>2) { # Simply a question of available memory
-		    $all_unknown_tags->{"    <condition k=\"$k\" v=\"$v\"/>"}++;
-		}
-	    }
-	}
+	} 
     }
     if ( $unknown_keys && !$poi_type_id ) {
 	print STDERR "Unknown Keys:  $unknown_keys\n" if $DEBUG>5;
     }
 }
 
-
-sub find_streets_type_id($) {
-    my $obj = shift;
-    return unless defined $obj;
-    my $poi_type_id=0;
-    my $unknown_keys='';
-    my $id = $obj->{id};
-    my $unknown_tags='';
-    for my $k ( keys %{$obj}) {
-	next if $k =~ m/^(osmarender:|source_ref:)/;
-	next if defined($IGNORE_TAG->{$k});
-	next if defined($IGNORE_TAG->{lc($k)});
-
-	my $v = $obj->{$k};
-	my $streets_type_id = streets_type_id($k,$v);
-	if ( $streets_type_id ) {
-	    #my $from = $OSM_Nodes{$obj->{from}};
-	    #my $to = $OSM_Nodes{$obj->{from}};
-	    #print "Street $id ($from,$to) identified with $k=$v\n";
-	    #print Dumper(\$streets_type_id);
-	    return $streets_type_id->{streets_type_id};
-	}
-	$unknown_tags.= " $k=$v ";
-    }
-    if ( $unknown_tags ) {
-	print "  $obj->{osm_obj_type}($id) has unknown tags: $unknown_tags\n" if $DEBUG;
-    } else {
-	print "  $obj->{osm_obj_type}($id) has no usegfull tags\n" if $DEBUG>3;
-    }
-    return 0;
-}
-
 ###########################################
-
-# -----------------------------------------------------------------------------
-#my $step = 5;
-my $step = .1;
-my $download_area = {
-    #world      => [-90,-180,  90-$step,180-$step],
-    #europe     => [-10,  10,  10,60],
-    #usa        => [-xx,  xx,  xx,xx],
-    ireland     => [-11,  51,  -4,56],
-    uk          => [ -6,  51,   2,60],
-    germany     => [  0,  10,  50,60],
-    bayern      => [  9,  47,  12,50],
-    muenchen    => [ 10,  44,  12,49],
-    schweiz     => [  5,  45,  11,48],
-    oesterreich => [  9,  46,  17,49],
-    italy       => [  6,  36,  20,47.5],
-    italyN     => [  6,  44,  14,47.5],
-    italyS     => [  9,  36,  20,44],
-};
-
-sub download_osm_streets($;$) { # Insert Streets from osm File  
-    my $osm_dir = shift;
-    my $area    = shift;
-
-    return 
-	if $main::no_mirror;
-
-    print "Download OSM Data\n";
-
-
-
-    my $osm_auth = " --http-user=$ENV{OSMUSER} --http-passwd=$ENV{OSMPASSWD} ";
-    my $osm_base_url="http://www.openstreetmap.org/api/0.3/map?bbox=";
-    #$osm_base_url="http://www.openstreetmap.org/api/0.3/map?bbox=11.0,48.0,12.0,49.0
-
-    my ($lat_min,$lon_min,     $lat_max,$lon_max);
-    if ( defined $area ) {
-	if ( defined ( $download_area->{$area} ) ) {
-	    ($lat_min,$lon_min,     $lat_max,$lon_max) = @{$download_area->{$area}};
-	} else {
-	    warn "Download Area '$area' not registered\n";
-	    warn "Existing Areas:\n\t".join("\n\t",keys %{$download_area})."\n";
-	    die "\n";	    
-	};
-	print "Download OSM Area $area ($lat_min,$lon_min,     $lat_max,$lon_max)\n";
-	
-    } elsif ( $main::lat_min && $main::lat_max && $main::lon_min && $main::lon_max ){
-	$lat_min=$main::lat_min;
-	$lat_max=$main::lat_max;
-	$lon_min=$main::lon_min;
-	$lon_max=$main::lon_max;
-    } else {
-	die "Undefined OSM-Area for Download\n";
-    }
-
-    for ( my $lon = $lon_min; $lon < $lon_max; $lon += $step ) {
-	for ( my $lat = $lat_min; $lat< $lat_max; $lat += $step ) {
-	    my $lap  = $lat + $step;
-	    my $lop  = $lon + $step;
-	    print "Get $lat,$lon                       \r";
-	    my $abs_filename= sprintf("$osm_dir/Streets_osm_%05.2f,%06.2f,%05.2f,%06.2f.osm",
-				      $lon,$lat, $lop,$lap  );
-	    my $bbox = sprintf("%.1f,%.1f,%.1f,%.1f",$lat,$lon,$lap,$lop);
-
-	    #my $mirror = mirror_file("$osm_base_url$bbox",$abs_filename);
-	    
-	    if ( $debug ) {
-		print "mirror: $bbox                                       \n";
-	    }
-	    
-	    my $rest_tries=10;
-	    while ($rest_tries){
-		my $size = (-s $abs_filename)||0;
-		if ( $size == 538 || $size < 76 ) {
-		    my $get_cmd ='';
-		    # $get_cmd .= "time " if $debug;
-		    $get_cmd .= "curl --netrc ";
-		    $get_cmd .= " -o  $abs_filename ";
-		    # $get_cmd .= "wget -O $abs_filename $osm_auth ";
-		    #$get_cmd .= " -q " unless $debug || $VERBOSE;
-		    $get_cmd .= " -v " if $debug && $VERBOSE;
-		    $get_cmd .= " -s " unless $debug || $VERBOSE;
-		    $get_cmd .= "    '$osm_base_url$bbox'"; 
-		    print "$get_cmd\n";
-		    my $start_time=time();
-		    `$get_cmd`;		    $size = (-s $abs_filename)||0;
-		    my $diff_time = time()-$start_time;
-		    my $sleep_time= $OSM_polite*$diff_time;
-		    print "sleep ".($sleep_time)." seconds\n";
-		    sleep $sleep_time;
-		}
-
-		my $count_error = `grep -e '400 Bad Request' -e '<H1>ERROR</H1>' -e '<h1>Internal Server Error</h1>' $abs_filename | wc -l`;
-		if ( $count_error >0 ) {
-		    `cat $abs_filename`;
-		    $rest_tries --;
-		    print "	ERROR in downloading\n";
-		    print "   $rest_tries retries\n";
-		    print "	Got $lat,$lon          $size Bytes\n";
-		    my $err_filename = $abs_filename;
-		    $err_filename =~ s/\.osm$/.error/;
-		    rename($abs_filename,$err_filename);
-		} else {
-		    print "Got $lat,$lon             $size Bytes\n"
-			unless $size == 76;
-		    $rest_tries=0;
-		}
-	    }
-	}
-    }
-}
-
-# ------------------------------------------------------------------
-# get the poi_type_id from icon_rules without pulluting the hash-structure
-sub streets_type_id($$){
-    my $k = lc(shift);  # for now lowercase, so we catch more
-    my $v = lc(shift);  # for now lowercase, so we catch more
-    return 0 unless defined $ELEMSTYLES->{$k};
-    return 0 unless defined $ELEMSTYLES->{$k}->{$v};
-    my $rule =  $ELEMSTYLES->{$k}->{$v};
-    return $rule;
-}
 
 # ------------------------------------------------------------------
 # load the complete MapFeatures Structure into memory
@@ -791,79 +534,6 @@ my $class2type = {
     "waypoint"		=> "waypoint",
 };
 
-# ------------------------------------------------------ 
-# Segments not in Ways
-# Insert Streets from osm variables into mysql-db for gpsdrive
-# Take all the segments which are not connected otherwise
-sub fill_osm_rest_segments() { 
-    my $source_id= get_source_id("segment");
-
-    my $start_time=time();
-
-    my $rest_segments=1; # wrong estimation
-
-    my $segment_count=0;
-    my $new_segment_count=0;
-    my $streets_type_id = streets_type_name2id('Strassen.minor');
-    my $estimate_timer=time();
-    for my $seg_id ( keys %OSM_Segments ) {
-	my $segment = $OSM_Segments{$seg_id};
-	$segment_count++;
-	# For DEBUGGING:
-	# last if $segment_count>1000;
-	if ( !($segment_count % 1000)) {
-	    my $percent = $segment_count/$rest_segments*100;
-	    my $time_diff=time()-$estimate_timer;
-	    my $segments_missing=$rest_segments-$segment_count;
-	    my $rest_estimate = $time_diff/1000*$segments_missing;
-	    $estimate_timer=time();
-	    printf "Writing Segment $segment_count to DB ( %d%%) %d Segments missing; estimating %4.2f min\r"
-		,$percent,$segments_missing,$rest_estimate/60;
-	}
-	next 
-	    if defined($segment->{way_element})
-	    && $segment->{way_element} > 0;
-	$new_segment_count++;
-	my $tags = $segment->{tag};
-	my $street_name=$tags->{name} || $tags->{ref} || "Segment=$seg_id";
-
-	my $node_from = $segment->{from}||0;
-	my $node_to   = $segment->{to}||0;
-	#	print Dumper( $segment);
-	unless ( $node_from && $node_to ) {
-	    #print "Missing node '$node_from' or '$node_to' for Segment # $seg_id\n";
-	    next;
-	}
-	my $lat1 = $OSM_Nodes{$node_from}->{lat};
-	my $lon1 = $OSM_Nodes{$node_from}->{lon};
-	#print Dumper( $osm_nodes->{$node_to});
-	my $lat2 = $OSM_Nodes{$node_to}->{lat};
-	my $lon2 = $OSM_Nodes{$node_to}->{lon};
-
-	my $comment ='';
-	$comment .= "seg_id=$seg_id ";
-
-	my $segment4db = {
-	    'streets.lat1' => $lat1, 'streets.lon1' => $lon1, 'streets.alt1' =>-99,
-	    'streets.lat2' => $lat2, 'streets.lon2' => $lon2, 'streets.alt2' =>-99,
-	    'streets.streets_type_id' => $streets_type_id,
-	    'streets.scale_min' => 1,
-	    'streets.scale_max' => 40000,
-	    'streets.last_modified'  => time(),
-	    'streets.source_id' => $source_id,
-	    'streets.name'      => $street_name
-	    };
-	insert_hash("streets",$segment4db);
-    }
-    if ( $debug) {
-	debug("Imported another $new_segment_count Segments not in ways for  ".
-	      scalar( keys %OSM_Segments )." osm Segments".
-	      sprintf(" in %.0f sec\n",time()-$start_time));
-    }
-}
-
-
-
 
 # ******************************************************************
 sub delete_existing_entries($){
@@ -928,7 +598,6 @@ sub import_Data($@){
     $elemstyles_filename ="../../etc/elemstyles.xml" unless -s  $elemstyles_filename;
     load_elemstyles($elemstyles_filename);
 
-    disable_keys('streets');
     disable_keys('poi');
     $SOURCE_ID_NODE   = get_source_id("node");
     $SOURCE_ID_SEGMENT = get_source_id("segment");
@@ -941,11 +610,7 @@ sub import_Data($@){
     for my $filename ( @filenames ) {
 	print "Import OSM Data '$filename'\n";
 	
-	if ( $filename =~ m/^download:(.+)/ ) {
-	    my $area = $1;
-	    download_osm_streets($mirror_dir,$area);
-	    read_osm_dir($mirror_dir,$areas_todo);
-	} elsif ( -s $filename ) {
+	if ( -s $filename ) {
 	    read_osm_file( $filename,$areas_todo);
 	} elsif ( $filename eq '' ) {
 	    print "Download planet-xxxxxx.osm\n";
@@ -959,8 +624,6 @@ sub import_Data($@){
     }	
     
     enable_keys('poi');
-    enable_keys('streets');
-
 
     print "\nDownload and import of OSM Data FINISHED\n";
 }

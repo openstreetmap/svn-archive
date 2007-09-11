@@ -6,16 +6,16 @@ define("REQUEST_DONE", 3);
 #include("log.inc");
 
 #--------------------------------------------------
-# Checks whether a certain request (X,Y) exists
+# Checks whether a certain request (X,Y,Z) exists
 # If $Mode is NULL, it checks for all unfinished requests
 #--------------------------------------------------
-function requestExists($X,$Y,$Mode){
+function requestExists($X,$Y,$Z,$Mode){
   if ($Mode != NULL)
     // Check specific state
-    $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `status`=%d;",$X,$Y,$Mode);
+    $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `z`=%d and `status`=%d;",$X,$Y,$Z,$Mode);
   else
     //Check for all unfinished requests
-    $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `status`!=%d;",$X,$Y,REQUEST_DONE);
+    $SQL = sprintf("select NULL from tiles_queue where `x`=%d and `y`=%d and `z`=%d and `status`!=%d;",$X,$Y,$Z,REQUEST_DONE);
 
   $Result = mysql_query($SQL);
   if(mysql_error())
@@ -30,7 +30,7 @@ function requestExists($X,$Y,$Mode){
 #--------------------------------------------------
 function moveRequest($X, $Y, $FromMode, $ToMode, $Debug = 0){
 
-  if(!requestExists($X,$Y,$FromMode))
+  if(!requestExists($X,$Y,Z,$FromMode))
     return(0);
   
   if($FromMode != NULL) {

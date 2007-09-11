@@ -14,6 +14,7 @@
     <maplint:check data="node" type="application/xsl+xml">
         <xsl:for-each select="tag">
             <xsl:if test="(@k!='created_by') and
+                    (!(starts-with(@k, 'tiger:'))) and
                     (@k!='converted_by') and
                     (@k!='todo') and
                     (@k!='landuse') and
@@ -68,6 +69,7 @@
     <maplint:check data="way" type="application/xsl+xml">
         <xsl:for-each select="tag">
             <xsl:if test="(@k!='created_by') and
+                    (!(starts-with(@k, 'tiger:'))) and
                     (@k!='converted_by') and
                     (@k!='highway') and
                     (@k!='railway') and

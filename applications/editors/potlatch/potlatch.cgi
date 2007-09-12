@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 2.9.2007 (POIs, major rewrite of click handling, better Yahoo)
+	# last update 11.9.2007 (load and display GPX, tab ordering)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -39,9 +39,11 @@
 	// Site-specific URLs
 //	var apiurl='rubyamf.cgi';
 //	var gpsurl='/potlatch/getgps.cgi';
+//	var gpxurl='http://127.0.0.1/~richard/gpx/';
 //	var yahoourl='/~richard/potlatch/ymap.swf';
 	var apiurl='../api/0.4/amf';
 	var gpsurl='../api/0.4/swf/trackpoints';
+	var gpxurl='http://www.openstreetmap.org/trace/';
 	var yahoourl='/potlatch/ymap.swf';
 
 	// Master movieclip for map
@@ -81,6 +83,7 @@
 	_root.yahoo.setMask(_root.masksquare2);
 
 	// Main initialisation
+	_root.map.createEmptyMovieClip("gpx"     ,9);
 	_root.map.createEmptyMovieClip("ways"    ,10); var waydepth=1;
 	_root.map.createEmptyMovieClip("pois"	 ,11); var poidepth=1;
 	_root.map.createEmptyMovieClip("elastic",5003); // elastic line
@@ -104,7 +107,7 @@
 	var whichrequested=0;			// total number of 'which ways' requested
 	var whichreceived=0;			// total number of 'which ways' received
 	var dragmap=false;				// map being dragged?
-	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order), -2 stop drawing when button released
+	var drawpoint=-1;				// point being drawn? -1 no, 0+ yes (point order)
 	var newwayid=-1;				// new way ID  (for those not yet saved)
 	var newnodeid=-2;				// new node ID (for those not yet saved)
 	var newpoiid=-1;				// new POI ID  (for those not yet saved)
@@ -249,7 +252,7 @@
 	with (_root.t_type	 ) { text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
 	
 	_root.createTextField('t_details',24,5,523,220,20);
-	with (_root.t_details) { text="Potlatch v0.2"; setTextFormat(plainText); };
+	with (_root.t_details) { text="Potlatch v0.2a"; setTextFormat(plainText); };
 	
 	_root.createEmptyMovieClip("properties",50);
 	with (_root.properties) { _x=110; _y=525; }; // 110,505
@@ -276,6 +279,72 @@
 		_root.i_preset._visible=false;
 	};
 	remote.call('getpresets',preresponder);
+
+	// =====================================================================================
+	// GPX handling
+	
+	// Parse file if supplied
+	
+	if (gpx) {
+		var lastTime=0;
+		gpxdoc=new XML();
+		gpxdoc.load(gpxurl+gpx);
+		gpxdoc.onLoad=function() {
+			_root.map.gpx.createEmptyMovieClip("line",1);
+			_root.map.gpx.line.lineStyle(1,0x00FFFF,100,false,"none");
+	
+			level1=this.childNodes;
+			for (i=0; i<level1.length; i+=1) {
+				if (level1[i].nodeName=='gpx') {
+					level2=level1[i].childNodes;
+					for (j=0; j<level2.length; j+=1) {
+						if (level2[j].nodeName=='trk') {
+							level3=level2[j].childNodes;
+							for (k=0; k<level3.length; k+=1) {
+								if (level3[k].nodeName=='trkseg') {
+									level4=level3[k].childNodes;
+									for (l=0; l<level4.length; l+=1) {
+										if (level4[l].nodeName=='trkpt') {
+											parsePoint(level4[l]);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		};
+	}
+
+	function parsePoint(xmlobj) {
+		lat= lat2coord(xmlobj.attributes['lat']);
+		lon=long2coord(xmlobj.attributes['lon']);
+		tme=new Date();
+		tme.setTime(0);
+		xcn=xmlobj.childNodes;
+		for (a in xcn) {
+			if (xcn[a].nodeName=='time') {
+				str=xcn[a].firstChild.nodeValue;
+				if (str.substr( 4,1)=='-' &&
+					str.substr(10,1)=='T' &&
+					str.substr(19,1)=='Z') {
+					tme.setFullYear(str.substr(0,4),str.substr(5,2),str.substr(8,2));
+					tme.setHours(str.substr(11,2));
+					tme.setMinutes(str.substr(14,2));
+					tme.setSeconds(str.substr(17,2));
+				}
+			}
+		}
+
+		if (tme==null || tme.getTime()-_root.lastTime<180000) {
+			_root.map.gpx.line.lineTo(lon,lat);
+		} else {
+			_root.map.gpx.line.moveTo(lon,lat);
+		}
+		_root.lastTime=tme.getTime();
+	}
+
 
 	// =====================================================================================
 	// OOP classes - AnchorPoint
@@ -1327,7 +1396,7 @@
 			this.value.backgroundColor=0xDDDDDD;
 			this.value.background=true;
 			this.value.type='input';
-			this.value.tabIndex=_root.propn;
+			// this.value.tabIndex=_root.propn;
 		};
 		switch (_root.currentproptype) {
 			case 'point':	this.value.variable="_root.map.ways."+wayselected+".path."+pointselected+".4."+this._name;
@@ -1346,7 +1415,6 @@
 	};
 	KeyValue.prototype=new MovieClip();
 	Object.registerClass("keyvalue",KeyValue);
-
 
 	// populatePropertyWindow	- set contents of property window
 	// clearPropertyWindow		- clear window
@@ -1380,7 +1448,7 @@
 		_root.presetmenu._visible=true;
 		_root.i_preset._visible=true;
 		reflectPresets();
-
+		setTabOrder();
 	};
 
 	function clearPropertyWindow() {
@@ -1529,6 +1597,7 @@
 								break;
 			}
 		};
+		setTabOrder();
 	}
 	
 	// repeatAttributes - paste in last set of attributes
@@ -1573,7 +1642,15 @@
 							 else { _root.map.ways[wayselected].clean=false; }
 	};
 	
+	// setTabOrder		- fix order for tabbing between fields
 
+	function setTabOrder() {
+		for (el in _root.properties) {
+			o=(_root.properties[el]._x/190*4+_root.properties[el]._y/19)*2;
+			_root.properties[el].keyname.tabIndex=o;
+			_root.properties[el].value.tabIndex=o+1;
+		}
+	}
 
 
 	// =====================================================================================
@@ -1825,6 +1902,9 @@
 	function endMapDrag() {
 		_root.map.onMouseMove=function() {};
 		_root.map.onMouseUp  =function() {};
+		if (_root.drawpoint!=-1) {
+			_root.map.anchors[_root.drawpoint].startElastic();
+		}
 		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance &&
 			Math.abs(_root.firstymouse-_root._ymouse)>tolerance) {
 			whichWays();
@@ -2091,8 +2171,6 @@
 	}
 
 	
-
-
 EOF
 
 	$m->add(new SWF::Action($actionscript));

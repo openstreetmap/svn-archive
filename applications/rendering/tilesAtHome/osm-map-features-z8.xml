@@ -260,12 +260,6 @@
             <rule e="segment|way" k="railway" v="rail">
                 <line class='railway-rail' />
             </rule>
-            <rule e="segment|way" k="railway" v="light_rail|tram">
-                <line class='railway-light-rail' />
-            </rule>
-            <rule e="segment|way" k="railway" v="subway">
-                <line class='railway-subway-rail' />
-            </rule>
             <rule e="segment|way" k="railway" v="preserved">
                 <line class='railway-preserved' />
             </rule>
@@ -502,7 +496,7 @@
             }
 
             .railway-rail {
-                stroke-width: 80px;
+                stroke-width: 70px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #666666;
@@ -517,14 +511,6 @@
                 fill: none;
             }
 
-            .railway-light-rail {
-                stroke-width: 2px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #666666;
-                fill: none;
-            }
-
             .railway-tunnel-narrow {
                 stroke-width: 1px;
                 stroke-dasharray: 1,2;
@@ -532,17 +518,6 @@
                 stroke-linejoin: round;
                 stroke: #000000;
                 fill: none;
-            }
-
-            .railway-subway-rail {
-                stroke-width: 2px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #666666;
-                fill: none;
-                stroke-dasharray: 3px, 1px;
-                stroke-dashoffset: 0;
-                stroke-opacity: 1;
             }
 
             /* Ferry */
@@ -562,7 +537,7 @@
                 stroke: white;
                 stroke-width: 0.6px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 200px;
+                font-size: 800px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -572,7 +547,7 @@
                 stroke: white;
                 stroke-width: 0.5px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 180px;
+                font-size: 500px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -612,7 +587,7 @@
                 stroke: none;
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 500px;
+                font-size: 600px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -621,7 +596,7 @@
                 fill: black;
                 stroke: none;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 200px;
+                font-size: 250px;
                 opacity: 0.7;
                 font-weight: bold;
                 text-anchor: middle;

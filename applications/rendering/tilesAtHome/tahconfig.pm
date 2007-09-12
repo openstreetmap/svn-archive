@@ -128,7 +128,7 @@ sub CheckConfig{
     print "- xmlstarlet version $1\n";
 
     # Zip version
-    $Config{Zip} = "zip" unless defined($Config{Zip});
+    $Config{Zip} = "zip" unless ($Config{Zip});
     my $ZipV = `$Config{Zip} -v`;
     $EnvironmentInfo{Zip}=$ZipV;
 
@@ -139,7 +139,7 @@ sub CheckConfig{
     print "- zip is present\n";
 
     # PNGCrush version
-    $Config{Pngcrush} = "pngcrush" unless defined($Config{Pngcrush});
+    $Config{Pngcrush} = "pngcrush" unless ($Config{Pngcrush});
     my $PngcrushV = `$Config{Pngcrush} -version`;
     $EnvironmentInfo{Pngcrush}=$PngcrushV;
 

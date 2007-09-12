@@ -8,6 +8,7 @@ WorkingDirectory=/tmp/
 Inkscape=inkscape
 XmlStarlet=xmlstarlet
 Niceness=nice
+Pngcrush=pngcrush
 
 ## Workaround for inkscape internationalisation problems. Should be safe to keep on.
 i18n=1

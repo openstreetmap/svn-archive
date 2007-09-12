@@ -7,6 +7,7 @@ WorkingDirectory=c:\temp\
 Inkscape=c:\program files\inkscape\inkscape
 XmlStarlet=c:\program files\xmlstarlet\xml
 Zip=c:\program files\zip\zip
+Pngcrush=c:\program files\pngcrush\pngcrush.exe
 Niceness=
 
 ## Workaround for inkscape internationalisation problems. Default off (0) for windows

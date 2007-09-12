@@ -111,20 +111,21 @@ sub timestamp
 sub full_xml
 {
   my $self = shift;
-  return qq(<?xml version="1.0"?>\n<osm version="0.4">\n).$self->xml()."</osm>\n";
+  return qq(<?xml version="1.0"?>\n<osm version="0.5">\n).$self->xml()."</osm>\n";
 }
 
 package Geo::OSM::Way;
 our @ISA = qw(Geo::OSM::Entity);
+use Carp;
 
 sub new
 {
-  my($class, $attr, $tags, $segs) = @_;
+  my($class, $attr, $tags, $nodes) = @_;
   
   my $obj = bless $class->SUPER::_new(), $class;
   
   $obj->set_tags($tags);
-  $obj->set_segs($segs);
+  $obj->set_nodes($nodes);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
   
@@ -133,16 +134,22 @@ sub new
 
 sub type { return "way" }
 
-sub set_segs
+sub set_nodes
 {
-  my($self,$segs) = @_;
-  $self->{segs} = $segs;
+  my($self,$nodes) = @_;
+  if( not defined $nodes )
+  { $nodes = [] }
+  if( ref($nodes) ne "ARRAY" )
+  { $nodes = [$nodes] }
+  if( scalar( grep { (ref($_) ne "")?$_->type ne "node":$_ !~ /^-?\d+/ } @$nodes ) )
+  { croak "Expected array of nodes" }
+  $self->{nodes} = [map { ref($_)?$_->id:$_ } @$nodes];
 }
 
-sub segs
+sub nodes
 {
   my $self = shift;
-  return [@{$self->{segs}}];  # Return a copy
+  return [@{$self->{nodes}}];  # Return a copy
 }
 
 sub xml
@@ -153,9 +160,9 @@ sub xml
 
   $writer->startTag( "way", id => $self->id, timestamp => $self->timestamp );
   $self->tag_xml( $writer );
-  for my $seg (@{$self->segs})
+  for my $node (@{$self->nodes})
   {
-    $writer->emptyTag( "seg", id => $seg );
+    $writer->emptyTag( "nd", ref => $node );
   }
   $writer->endTag( "way" );
   $writer->end;
@@ -169,49 +176,101 @@ sub map
   my ($new_id) = $mapper->map('way',$self->id);   # Determine mapped ID
   # It is ok for the new_id to be incomplete; it may be a create request
   
-  my @new_segs = map { [ $mapper->map('segment',$_) ] } @{$self->segs};
-  map { $incomplete |= $_->[1] } @new_segs;
+  my @new_nodes = map { [ $mapper->map('node',$_) ] } @{$self->segs};
+  map { $incomplete |= $_->[1] } @new_nodes;
   # incomplete tracks if any of the segs are incomplete
   
-  my $new_ent = new Geo::OSM::Way( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_segs] );
+  my $new_ent = new Geo::OSM::Way( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_nodes] );
   return($new_ent,$incomplete);
 }
 
-package Geo::OSM::Segment;
+package Geo::OSM::Relation::Member;
+use Carp;
+# Relation reference can be specified in several ways:
+# { type => $type, ref => $id [ , role => $str ] }
+# { ref => $obj [ , role => $str ] }
+# [ $type, $id [,$role] ]
+# [ $obj, [,$role] ]
+sub new
+{
+  my $class = shift;
+  my $arg = shift;
+  return $arg if ref($arg) eq $class;   # Return if already object
+  if( ref($arg) eq "ARRAY" )
+  {
+    if( ref $arg->[0] )
+    { $arg = { ref => $arg->[0], role => $arg->[1] } }
+    else
+    { $arg = { type => $arg->[0], ref => $arg->[1], role => $arg->[2] } }
+  }
+  if( ref($arg) eq "HASH" )
+  { 
+    if( ref $arg->{ref} )
+    { $arg = [ $arg->{ref}->type, $arg->{ref}->id, $arg->{role} ] }
+    else
+    { $arg = [ $arg->{type}, $arg->{ref}, $arg->{role} ] }
+  }
+  else
+  { croak "Relation reference must be array or hash" }
+  croak "Bad type of member '$arg->[0]'"
+    unless $arg->[0] =~ /^(way|node|relation)$/;
+  croak "Bad member id '$arg->[1]'"
+    unless $arg->[1] =~ /^-?\d+$/;
+  $arg->[2] ||= "";
+    
+  return bless $arg, $class;
+}
+
+sub member_type { shift->[0] }
+sub ref { shift->[1] }
+sub role { shift->[2] }
+
+sub type { return "relation:member" }
+
+sub xml
+{
+  my $self = shift;
+  my $writer = shift;
+
+  $writer->emptyTag( "member", type => $self->member_type, ref => $self->ref, role => $self->role );
+}
+
+sub map
+{
+  my($self,$mapper) = @_;
+  my ($new_ref,$incomplete) = $mapper->map($self->member_type,$self->ref);
+  my $new_member = new Geo::OSM::Relation::Member( { type => $self->member_type, ref => $new_ref, role => $self->role } );
+  return($new_member,$incomplete);
+}
+
+package Geo::OSM::Relation;
 our @ISA = qw(Geo::OSM::Entity);
 
 sub new
 {
-  my($class, $attr, $tags) = @_;
+  my($class, $attr, $tags, $members) = @_;
   
   my $obj = bless $class->SUPER::_new(), $class;
   
   $obj->set_tags($tags);
+  $obj->set_members($members);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
-  $obj->{from} = $attr->{from};
-  $obj->{to} = $attr->{to};
   
   return $obj;
 }
 
-sub type { return "segment" }
-
-sub set_fromto
+sub set_members
 {
-  my($self,$from,$to) = @_;
-  $self->{from} = $from;
-  $self->{to} = $to;
+  my($self,$members) = @_;
+  if( not defined $members )
+  { $members = [] }
+  if( ref($members) ne "ARRAY" )
+  { $members = [$members] }
+  $self->{members} = [map { new Geo::OSM::Relation::Member($_) } @$members];
 }
 
-sub from
-{
-  shift->{from};
-}
-sub to
-{
-  shift->{to};
-}
+sub type { return "relation" }
 
 sub xml
 {
@@ -219,9 +278,12 @@ sub xml
   my $str = "";
   my $writer = $self->_get_writer(\$str);
 
-  $writer->startTag( "segment", id => $self->id, from => $self->from, to => $self->to, timestamp => $self->timestamp );
+  $writer->startTag( "relation", id => $self->id, timestamp => $self->timestamp );
   $self->tag_xml( $writer );
-  $writer->endTag( "segment" );
+  # Write members
+  foreach my $member (@{$self->{members}})
+  { $member->xml( $writer ) }
+  $writer->endTag( "relation" );
   $writer->end;
   return $str;
 }
@@ -229,14 +291,18 @@ sub xml
 sub map
 {
   my($self,$mapper) = @_;
-  my ($new_id) = $mapper->map('segment',$self->id);
-  my ($new_from,$i1) = $mapper->map('node',$self->from);
-  my ($new_to,$i2) = $mapper->map('node',$self->to);
-  my $new_ent = new Geo::OSM::Segment( {id=>$new_id, timestamp=>$self->timestamp, from=>$new_from, to=>$new_to}, $self->tags );
-  return($new_ent,$i1|$i2);
+  my $incomplete = 0;
+  
+  my ($new_id) = $mapper->map('relation',$self->id);
+  my @new_members = map { [ $_->map($mapper) ] } @{$self->members};
+  map { $incomplete |= $_->[1] } @new_members;
+  # incomplete tracks if any of the members are incomplete
+  my $new_ent = new Geo::OSM::Segment( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_members] );
+  return($new_ent,$incomplete);
 }
 
 package Geo::OSM::Node;
+use Carp;
 our @ISA = qw(Geo::OSM::Entity);
 
 sub new
@@ -248,6 +314,11 @@ sub new
   $obj->set_tags($tags);
   $obj->set_id($attr->{id} );
   $obj->set_timestamp( $attr->{timestamp} );
+  if( $attr->{lon} !~ /^[-+]?\d+(\.\d+)?([eE][+-]?\d+)?$/ or
+      $attr->{lat} !~ /^[-+]?\d+(\.\d+)?([eE][+-]?\d+)?$/ )
+  {
+    croak "Invalid lat,lon values ($attr->{lat},$attr->{lon})\n";
+  }
   $obj->{lon} = $attr->{lon};
   $obj->{lat} = $attr->{lat};
   
@@ -292,5 +363,7 @@ sub map
   my $new_ent = new Geo::OSM::Node( {id=>$new_id, timestamp=>$self->timestamp, lat=>$self->lat, lon=>$self->lon}, $self->tags );
   return($new_ent,0);
 }
+
+
 
 1;

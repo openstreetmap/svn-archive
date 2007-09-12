@@ -1,15 +1,13 @@
 ##################################################################
-## OsmChangeReader.pm - Library for reading OSM change files    ##
+## OsmReader.pm - Library for reading OSM  files                ##
 ## By Martijn van Oosterhout <kleptog@svana.org>                ##
 ##                                                              ##
-## Package that reads both osmChange and JOSM file format change##
-## files. The user creates the parse with a callback and the    ##
-## loader will call the callback for each detected change. Note ##
-## that for JOSM file entires that are not changes are ignored. ##
-##                                                              ##
+## Package that reads both OSM file format files.               ##
+## The user creates the parse with a callback and the           ##
+## loader will call the callback for each detected object.      ##
 ## Licence: LGPL                                                ##
 ##################################################################
-package Geo::OSM::OsmChangeReader;
+package Geo::OSM::OsmReader;
 
 use strict;
 use warnings;
@@ -23,35 +21,17 @@ use Carp;
 use Geo::OSM::EntitiesV3;
 
 use constant STATE_INIT => 1;
-use constant STATE_EXPECT_COMMAND => 2;
 use constant STATE_EXPECT_ENTITY => 3;
 use constant STATE_EXPECT_BODY => 4;
 
-use constant FILETYPE_UNKNOWN   => 0;
-use constant FILETYPE_OSMCHANGE => 1;
-use constant FILETYPE_OSM       => 2;
-
-sub new
-{ 
-  my $obj = bless{}, shift;
-  my $proc = shift;
-  my $prog = shift;
-  if( ref $proc ne "CODE" )
-  { die "new Geo::OSM::OsmChangeReader requires a sub as argument\n" }
-  $obj->{oldproc}  = $proc;
-  if( defined $prog )
-  { $obj->{progress} = $prog }
-  return $obj;
-}
-
-# With this initialiser, your process will get called with instantiated objects rather than useless details
+# With this initialiser, your process will get called with instantiated objects
 sub init
 { 
   my $obj = bless{}, shift;
   my $proc = shift;
   my $prog = shift;
   if( ref $proc ne "CODE" )
-  { die "init Geo::OSM::OsmChangeReader requires a sub as argument\n" }
+  { die "init Geo::OSM::OsmReader requires a sub as argument\n" }
   $obj->{newproc}  = $proc;
   if( defined $prog )
   { $obj->{progress} = $prog }
@@ -60,12 +40,7 @@ sub init
 
 sub _process
 {
-  my($self, $command, $entity, $attr, $tags, $segs) = @_;
-  
-  if( defined $self->{oldproc} )
-  {
-    return $self->{oldproc}->($command, $entity, $attr, $tags, $segs);
-  }
+  my($self, $entity, $attr, $tags, $members) = @_;
   
   my $ent;
   if( $entity eq "node" )
@@ -78,17 +53,17 @@ sub _process
   }
   if( $entity eq "way" )
   {
-    $ent = new Geo::OSM::Way( $attr, $tags, $segs );
+    $ent = new Geo::OSM::Way( $attr, $tags, $members );
   }
   croak "Unknown entity '$entity'" if not defined $ent;
 
-  return $self->{newproc}->($command, $ent );
+  return $self->{newproc}->( $ent );
 }
 
-sub load{
+sub load($)
+{
   my ($self, $file_name) = @_;
 
-  $self->{filetype} = FILETYPE_UNKNOWN;
   $self->{state} = STATE_INIT;
   
   my $start_time = time();
@@ -112,7 +87,32 @@ sub load{
 	warn "WARNING: Could not parse osm data\n";
 	return;
     }
+}
 
+sub parse($)
+{
+  my ($self, $string) = @_;
+
+  $self->{state} = STATE_INIT;
+  
+  my $start_time = time();
+  my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
+    $self->{count}=0;
+    eval {
+	$P->parse($string);
+    };
+    print "\n" if $DEBUG || $VERBOSE;
+    if ( $VERBOSE) {
+	printf "Read and parsed string in %.0f sec\n",time()-$start_time;
+    }
+    if ( $@ ) {
+	warn "$@Error while parsing\n [$string]\n";
+	return;
+    }
+    if (not $P) {
+	warn "WARNING: Could not parse osm data\n";
+	return;
+    }
 }
 
 # Function is called whenever an XML tag is started
@@ -121,34 +121,15 @@ sub DoStart
 #print @_,"\n";   
   my ($self, $Expat, $Name, %Attr) = @_;
 
-  if( $self->{filetype} == FILETYPE_UNKNOWN )
+  if( $self->{state} == STATE_INIT )
   {
-    if( $self->{state} == STATE_INIT )
-    {
-      if($Name eq "osmChange"){
-        $self->{state} = STATE_EXPECT_COMMAND;
-        $self->{filetype} = FILETYPE_OSMCHANGE;
-
-        if( $Attr{version} ne "0.3" and $Attr{version} ne "0.4" )
-        { die "OsmChangeReaderV3 can only read 0.3 and 0.4 files, found '$Attr{version}'\n" }
-      } elsif($Name eq "osm"){
-        $self->{state} = STATE_EXPECT_ENTITY;
-        $self->{filetype} = FILETYPE_OSM;
-        
-        if( $Attr{version} ne "0.3" and $Attr{version} ne "0.4" )
-        { die "OsmChangeReaderV3 can only read 0.3 and 0.4 files, found '$Attr{version}'\n" }
-      } else {
-        die "Expected 'osmChange' tag, got '$Name'\n";
-      }
-    }
-  }
-  elsif( $self->{state} == STATE_EXPECT_COMMAND )
-  {
-    if($Name eq 'create' or $Name eq 'modify' or $Name eq 'delete'){
-      $self->{command} = $Name;
+    if($Name eq "osm"){
       $self->{state} = STATE_EXPECT_ENTITY;
+      
+      if( $Attr{version} ne "0.3" and $Attr{version} ne "0.4")
+      { die "OsmReaderV5 can only read 0.3 or 0.4 files, found '$Attr{version}'\n" }
     } else {
-      die "Expected command\n";
+      die "Expected 'osm' tag, got '$Name'\n";
     }
   }
   elsif( $self->{state} == STATE_EXPECT_ENTITY )
@@ -166,7 +147,7 @@ sub DoStart
       $self->{entity} = $Name;
       $self->{attr} = {%Attr};
       $self->{tags} = [];
-      $self->{segs} = ($Name eq "way") ? [] : undef;
+      $self->{members} = ($Name ne "node") ? [] : undef;
       $self->{state} = STATE_EXPECT_BODY;
     } else {
       die "Expected entity\n";
@@ -178,7 +159,7 @@ sub DoStart
       push @{$self->{tags}}, $Attr{"k"}, $Attr{"v"};
     }
     if($Name eq "seg"){
-      push @{$self->{segs}}, $Attr{"id"};
+      push @{$self->{members}}, $Attr{"id"};
     }
   }
 }
@@ -191,22 +172,7 @@ sub DoEnd
   {
     if( $Name eq $self->{entity} )
     {
-      if( $self->{filetype} == FILETYPE_OSMCHANGE )
-      {
-        $self->_process( $self->{command}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
-      }
-      else  # FILETYPE_OSM
-      {
-        # Only entities with a modify tag are interesting, or if they have a negative ID (that's create)
-        if( exists $self->{attr}->{action} )
-        {
-          $self->_process( $self->{attr}->{action}, $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
-        }
-        elsif( $self->{attr}{id} < 0 )
-        {
-          $self->_process( "create", $self->{entity}, $self->{attr}, $self->{tags}, $self->{segs} );
-        }
-      }
+      $self->_process( $self->{entity}, $self->{attr}, $self->{tags}, $self->{members} );
       $self->{count}++;
       if( $self->{progress} and ($self->{count}%11) == 1)
       {
@@ -219,28 +185,10 @@ sub DoEnd
   elsif( $self->{state} == STATE_EXPECT_ENTITY )
   {
     return if $Name eq "bound";
-    if( $self->{filetype} == FILETYPE_OSMCHANGE )
-    {
-      if( $Name eq $self->{command} )
-      {
-        $self->{state} = STATE_EXPECT_COMMAND;
-      }else {die}
-    }
-    else  # FILETYPE_OSM
-    {
-      if( $Name eq "osm" )
-      {
-        $self->{state} = STATE_INIT;
-      } else {die}
-    }
-    return;
-  }
-  elsif( $self->{state} == STATE_EXPECT_COMMAND )
-  {
-    if( $Name eq "osmChange" )
+    if( $Name eq "osm" )
     {
       $self->{state} = STATE_INIT;
-    }else {die}
+    } else {die}
     return;
   }
 }
@@ -251,21 +199,22 @@ __END__
 
 =head1 NAME
 
-OsmChangeReaderV3 - Module for reading OpenStreetMap V3 Change XML data files
+OsmReaderV3 - Module for reading OpenStreetMap V3 XML data files
 
 =head1 SYNOPSIS
 
-  my $OSM = new Geo::OSM::OsmChangeReader(\&process);
+  my $OSM = new Geo::OSM::OsmReader(\&process);
   $OSM->load("Data/changes.osc");
   
   sub process
   {
-    my($OSM, $command, $entity, $attr, $tags, $segs) = @_;
-    print "Doing a $command on a $entity $attr->{id}\n";
+    my($OSM, $entity) = @_;
+    print "Read $entity ".$entity->id."\n";
+    my $tags = $entity->tags;
     while( my($k,$v) = splice @{$tags}, 0, 2 )
     { print "  $k: $v\n" }
-    if( defined $segs )
-    { print "  Segs: ", join(", ",@$segs),"\n"; }
+    if( $entity->type eq "way" )
+    { print "  Segs: ", join(", ",@{$entity->segs}),"\n"; }
   }
 
 =head1 AUTHOR

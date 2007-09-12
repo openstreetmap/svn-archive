@@ -1,5 +1,5 @@
 ##################################################################
-## APIClientV4.pm - General Perl client for the API             ##
+## APIClientV5.pm - General Perl client for the API             ##
 ## By Martijn van Oosterhout <kleptog@svana.org>                ##
 ##                                                              ##
 ## Currently only supports uploading. Note the package actually ##
@@ -12,7 +12,7 @@ use LWP::UserAgent;
 use strict;
 
 package Geo::OSM::APIClient;
-use Geo::OSM::OsmReaderV3;
+use Geo::OSM::OsmReaderV5;
 use MIME::Base64;
 use HTTP::Request;
 use Carp;
@@ -27,19 +27,15 @@ sub new
   my $url = $attr{api};  
   if( not defined $url )
   {
-    croak "Did not specify aip url";
+    croak "Did not specify api url";
   }
 
   $url =~ s,/$,,;   # Strip trailing slash
   $obj->{url} = $url;
-  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV4');
+  $obj->{client} = new LWP::UserAgent(agent => 'Geo::OSM::APIClientV5');
   
   if( defined $attr{username} and defined $attr{password} )
   {
-    if( $obj->{url} =~ m,http://([\w.]+)/, )
-    {
-      $obj->{client}->credentials( "$1:80", "Web Password",  $attr{username}, $attr{password} );
-    }
     my $encoded = MIME::Base64::encode_base64("$attr{username}:$attr{password}","");
     $obj->{client}->default_header( "Authorization", "Basic $encoded" );
   }
@@ -73,7 +69,7 @@ sub last_error_message
   return shift->{last_error}->message;
 }
 
-sub create
+sub create($)
 {
   my( $self, $ent ) = @_;
   my $oldid = $ent->id;
@@ -98,7 +94,7 @@ sub create
   return undef;
 }
 
-sub modify
+sub modify($)
 {
   my( $self, $ent ) = @_;
   my $content = encode("utf-8", $ent->full_xml);
@@ -114,7 +110,7 @@ sub modify
   return undef;
 }
 
-sub delete
+sub delete($)
 {
   my( $self, $ent ) = @_;
   my $content = encode("utf-8", $ent->full_xml);
@@ -170,10 +166,10 @@ sub get_way($)
   return $self->get("way",shift);
 }
 
-sub get_segment($)
+sub get_relation($)
 {
   my $self = shift;
-  return $self->get("segment",shift);
+  return $self->get("relation",shift);
 }
 
 
@@ -199,6 +195,7 @@ sub map($$$$)
   
   return @res;
 }
+
 
 
 1;

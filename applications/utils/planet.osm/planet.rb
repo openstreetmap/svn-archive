@@ -131,8 +131,7 @@ $way_tags_first = false
 def all_way_tags(curr_id)
   loop do
     if $way_tags_data == nil
-      $way_tags_data = $mysql.query "select id,k,v from current_way_tags where id >= #{$way_tags_current[0]}
-                                                                   order by id limit 500000;" 
+      $way_tags_data = $mysql.query "select id,k,v from current_way_tags where id >= #{$way_tags_current[0]} order by id limit 50000;" 
       $way_tags_first = true
       if $way_tags_data == nil
         return tags

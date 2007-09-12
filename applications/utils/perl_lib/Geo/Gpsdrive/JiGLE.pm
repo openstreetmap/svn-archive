@@ -84,26 +84,22 @@ sub import_Jigle_file($$){
 	    $point->{'wlan.lon'}        = $line[1];
 	    $point->{'wlan.ssid'}       = $line[2];
 	    $point->{'wlan.bssid'}      = $line[3];
-	    $point->{'wlan.name'}      = $point->{'wlan.ssid'}."\n".$point->{'wlan.bssid'};;
+	    $point->{'wlan.name'}       = $point->{'wlan.ssid'}."\n".$point->{'wlan.bssid'};
+	    $point->{'wlan.essid'}      = $point->{'wlan.ssid'};
 	    $point->{'wlan.discoverer'} = $line[4];
 	    $point->{'wlan.channel'}    = $line[5];
 	    $point->{'wlan.type'}       = $line[6];
+	    $point->{'wlan.nettype'}    = $line[6];
+	    $point->{'wlan.cloaked'}    = "0";
 	    $point->{'wlan.freenet'}    = $line[7];
 	    $point->{'wlan.last_modified'}      = $line[8];
 	    $point->{'wlan.wep'}        = $line[8];
-	    $point->{'wlan.comment'}      = $point->{'wlan.bssid'};
+	    $point->{'wlan.comment'}    = $point->{'wlan.bssid'};
+	    $point->{'wlan.macaddr'}    = $point->{'wlan.bssid'};
 	    $point->{'wlan.date2'}      = $line[12];
-	    $point->{'wlan.scale_min'}  = 1;
-	    $point->{'wlan.scale_max'}  = 100000;
 	    $point->{'wlan.proximity'}  = 100;
 	    
 	    # Kismet: bssid time-sec time-usec lat lon alt spd heading fix signal quality noise
-
-	    if ( $point->{'wlan.wep'} ) {
-		$point->{'wlan.poi_type_id'} = $wlan_id->{wep};
-	    } else {
-		$point->{'wlan.poi_type_id'} = $wlan_id->{open};
-	    }
 
 	    $point->{source_id} = $source_id;
 	    correct_lat_lon($point);

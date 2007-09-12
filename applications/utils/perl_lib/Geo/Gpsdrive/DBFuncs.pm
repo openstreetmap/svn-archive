@@ -520,7 +520,7 @@ sub add_wlan($){
     map { $point->{"wlan.$_"} = ( $wlan->{"wlan.$_"} || $wlan->{$_} || $wlan->{lc($_)}) } @columns;
 
     # ---------------------- SOURCE
-    #print Dumper(\$point);
+    #print "Add_WLAN: ".Dumper(\$point);
     if ( $point->{"source.name"} && ! $point->{'wlan.source_id'}) {
 	my $source_id = source_name2id($point->{"source.name"});
 	# print "Source: $point->{'source.name'} -> $source_id\n";
@@ -700,17 +700,16 @@ sub create_db(){
     # ------- WLAN
     db_exec('CREATE TABLE IF NOT EXISTS `wlan` (
                         `wlan_id`               int(11)         NOT NULL        auto_increment,
-                        `macaddr`       varchar(30)     NOT NULL,
-                        `essid`         varchar(255)    NOT NULL,
-                        `nettype`       int(11)         NOT NULL        default \'0\',
-                        `poi_type_id`   int(11)         NOT NULL        default \'0\',
                         `lat`           double          NOT NULL        default \'0\',
                         `lon`           double          NOT NULL        default \'0\',
                         `alt`           double                          default \'0\',
                         `comment`       varchar(255)                    default NULL,
-                        `last_modified` date            NOT NULL        default \'0000-00-00\',
+                        `macaddr`       varchar(30)     NOT NULL,
+                        `essid`         varchar(255)    NOT NULL,
+                        `nettype`       int(11)         NOT NULL        default \'0\',
                         `wep`           int(11)         NOT NULL        default \'0\',
                         `cloaked`       int(11)         NOT NULL        default \'0\',
+                        `last_modified` date            NOT NULL        default \'0000-00-00\',
                         PRIMARY KEY  (`wlan_id`)
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;
 

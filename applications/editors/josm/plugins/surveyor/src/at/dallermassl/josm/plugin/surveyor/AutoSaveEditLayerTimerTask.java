@@ -60,7 +60,7 @@ public class AutoSaveEditLayerTimerTask extends TimerTask {
         } catch (IOException x) {
             x.printStackTrace();
             JOptionPane.showMessageDialog(Main.parent, 
-                tr("Error while exporting {0}", file.getAbsoluteFile())+":\n" + x.getMessage(), 
+                tr("Error while exporting {0}: {1}", file.getAbsoluteFile(), x.getMessage()), 
                 tr("Error"), 
                 JOptionPane.ERROR_MESSAGE);
         }       

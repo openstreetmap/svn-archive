@@ -138,7 +138,7 @@ public class SurveyorShowAction extends AbstractAction {
             JOptionPane.showMessageDialog(Main.parent, tr("Could not read surveyor definition: {0}",source));
         } catch (SAXException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: ", source)+e.getMessage());
+            JOptionPane.showMessageDialog(Main.parent, tr("Error parsing {0}: {1}", source, e.getMessage()));
         }
         return component;
 

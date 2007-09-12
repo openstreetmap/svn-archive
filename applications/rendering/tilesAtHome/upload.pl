@@ -241,7 +241,7 @@ sub compress
 
     my ($runNumber) = @_;
 
-    my $UploadScript = "$Bin/compress.pl $runNumber $progressJobs";
+    my $UploadScript = "perl $Bin/compress.pl $runNumber $progressJobs";
     my $retval = system($UploadScript);
     return $retval;
 }

@@ -14,7 +14,7 @@
     <xsl:key name='nodeById' match='/osm/node' use='@id'/>
     <xsl:key name='segmentById' match='/osm/segment' use='@id'/>
 
-    <xsl:variable name="tests" select="document('/home/sqrt/work/osm/applications/utils/maplint/tests.xml')/maplint:tests/maplint:test"/>
+    <xsl:variable name="tests" select="document('../tests.xml')/maplint:tests/maplint:test"/>
 
     <xsl:template match="osm">
         <gpx version="1.0" creator="Maplint convert-to-gpx">

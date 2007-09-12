@@ -1,0 +1,17 @@
+Sanitycheck
+===========
+
+Tests whether 
+- CSS classes are defined but not used
+- a CSS class is defined twice
+- CSS classes are used but never defined
+- Symbols are used but never defined
+- Symbold are defined but never used
+
+Usage:
+------
+python sanitycheck.py <osm-stylesheet.xml>
+
+License:
+--------
+(c) Sebastian Spaeth, GPL v2 or later

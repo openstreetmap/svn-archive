@@ -1209,15 +1209,15 @@ sub splitImageX
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
             my $Redirect = ">/dev/null";
-			if ($^O eq "MSWin32") {
-				$Redirect = "";
-			}
-			my $Cmd = sprintf("%s %s -q %s %s %s",
-				$Config{Niceness},
-				$Config{Pngcrush},
-				$Filename2,
-				$Filename,
-				$Redirect);
+                if ($^O eq "MSWin32") {
+                    $Redirect = "";
+                }
+                my $Cmd = sprintf("%s %s -q %s %s %s",
+                  $Config{Niceness},
+                  $Config{Pngcrush},
+                  $Filename2,
+                  $Filename,
+                  $Redirect);
 
             statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
             if(runCommand($Cmd,$PID))

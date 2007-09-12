@@ -204,21 +204,6 @@
 						<line class='highway-raceway-core-dismantled' />
 					</rule>
 				</rule>
-                <rule e="segment|way" k="highway" v="pedestrian">
-                    <line class='highway-core highway-pedestrian-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="track">
-                    <line class='highway-core highway-track-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="unsurfaced">
-                    <line class='highway-core highway-unsurfaced-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="service">
-                    <line class='highway-core highway-service-core' />
-                </rule>
-                <rule e="segment|way" k="highway" v="tertiary">
-                    <line class='highway-core highway-tertiary-core' />
-                </rule>
                 <rule e="segment|way" k="highway" v="secondary">
                     <line class='highway-core highway-secondary-core' />
                 </rule>
@@ -239,32 +224,20 @@
 
         <!-- Highway cores in tunnels -->
         <rule e="segment|way" k="tunnel" v="true|yes">
-            <rule e="segment|way" k="highway" v="pedestrian">
-                <tunnel width="2" class='highway-core highway-pedestrian' />
-            </rule>
-            <rule e="segment|way" k="highway" v="track">
-                <tunnel width="2" class='highway-core highway-track' />
-            </rule>
-            <rule e="segment|way" k="highway" v="unsurfaced">
-                <tunnel width="2" class='highway-core highway-unsurfaced' />
-            </rule>
             <rule e="segment|way" k="highway" v="service">
-                <tunnel width="1" class='highway-core highway-service' />
-            </rule>
-            <rule e="segment|way" k="highway" v="tertiary">
-                <tunnel width="2" class='highway-core highway-tertiary' />
+                <tunnel width="1" class='highway-core highway-service-core' />
             </rule>
             <rule e="segment|way" k="highway" v="secondary">
-                <tunnel width="3" class='highway-core highway-secondary' />
+                <tunnel width="3" class='highway-core highway-secondary-core' />
             </rule>
             <rule e="segment|way" k="highway" v="primary|primary_link">
-                <tunnel width="3" class='highway-core highway-primary' />
+                <tunnel width="3" class='highway-core highway-primary-core' />
             </rule>
             <rule e="segment|way" k="highway" v="trunk|trunk_link">
-                <tunnel width="4" class='highway-core highway-trunk' />
+                <tunnel width="4" class='highway-core highway-trunk-core' />
             </rule>
             <rule e="segment|way" k="highway" v="motorway|motorway_link">
-                <tunnel width="4" class='highway-core highway-motorway' />
+                <tunnel width="4" class='highway-core highway-motorway-core' />
             </rule>
         </rule>
 
@@ -376,64 +349,6 @@
                 stroke: red;
             }
 
-            .untagged-segments {
-                stroke-width: 0.5px;
-                stroke-linejoin: butt;
-                stroke-linecap: butt;
-                stroke: #e0e0e0;
-                stroke-dasharray: 0.5,0.5;
-            }
-            
-
-            /* Bridge core */
-            .bridge-core-35 {
-                stroke-width: 22;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #fcfcfc;
-                fill: none;
-            }
-
-            .bridge-core-30 {
-                stroke-width: 15px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #fcfcfc;
-                fill: none;
-            }
-
-            .bridge-core-25 {
-                stroke-width: 9px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #fcfcfc;
-                fill: none;
-            }
-
-            .bridge-core-20 {
-                stroke-width: 1.5px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #fcfcfc;
-                fill: none;
-            }
-
-            .bridge-core-15 {
-                stroke-width: 1.25px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #fcfcfc;
-                fill: none;
-            }
-
-            .bridge-core-10 {
-                stroke-width: 0.75px;
-                stroke-linecap: butt;
-                stroke-linejoin: round;
-                stroke: #fcfcfc;
-                fill: none;
-            }
-
             .highway-core {
                 stroke-linecap: butt;
                 stroke-linejoin: round;
@@ -456,21 +371,6 @@
             display: none;
             }
             
-            .highway-ref {
-                fill: #666666;
-                stroke: white;
-                font-family: "DejaVu Sans",sans-serif;
-                font-weight: normal;
-            }
-
-            .highway-name {
-                fill: black;
-                font-family: "DejaVu Sans",sans-serif;
-                font-weight: normal;
-                stroke: white;
-             }
-
-
 	     /* Highways - street specific style */
 
             .highway-motorway-core {
@@ -577,25 +477,6 @@
                 stroke: #d4dcbd;
                 fill: none;
             }
-
-            .aeroway-aerodrome-caption {
-                fill: black;
-                stroke: white;
-                stroke-width: 0.3px;
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 6px;
-                font-weight: bold;
-            }
-
-            .aeroway-airport-caption {
-                fill: black;
-                stroke: white;
-                stroke-width: 0.3px;
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 10px;
-                font-weight: bold;
-            }
-
 
             /* Waterways */
             .waterway-riverbank {
@@ -746,35 +627,6 @@
                 text-anchor: middle;
             }
 
-            .village-caption {
-                fill: black;
-                stroke: none;
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 60px;
-                font-weight: bold;
-                text-anchor: middle;
-            }
-
-            .suburb-caption {
-                fill: black;
-                stroke: none;
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 6px;
-                font-weight: bold;
-                text-anchor: middle;
-            }
-
-            .church-caption {
-                fill: black;
-                stroke: white;
-                stroke-width: 0.3px;
-                font-family: "DejaVu Sans",sans-serif;
-                font-size: 5px;
-                font-weight: bold;
-                text-anchor: middle;
-            }
-
-
             /* Natural */
             .natural-water {
                 fill: #b5d6f1;
@@ -807,43 +659,9 @@
                 stroke-width: 0.2px;
             }
 
-            .landuse-cemetery {
-                fill: #bde3cb;
-                stroke: #eeeeee;
-                stroke-width: 0.2px;
-            }
-
             .landuse-field {
                 fill: #bde3cb;
                 stroke: #6fc13d;
-                stroke-width: 0.2px;
-            }
-
-            .landuse-residential {
-                stroke: none;
-                fill: #f0f0f0;
-            }
-
-            .landuse-retail {
-                stroke: none;
-                fill: #ffebeb;
-            }
-
-            .landuse-industrial {
-                fill: #ecd8ff;
-                stroke: #eeeeee;
-                stroke-width: 0.2px;
-            }
-
-            .landuse-commercial {
-                fill: #fcffc9;
-                stroke: #eeeeee;
-                stroke-width: 0.2px;
-            }
-
-            .landuse-retail {
-                fill: #ffebeb;
-                stroke: #eeeeee;
                 stroke-width: 0.2px;
             }
 
@@ -986,24 +804,11 @@
             }
 
             /* Building */
-            .building {
-                fill: #dddddd;
-                stroke: #cccccc;
-                stroke-width: 0.2px;
-            }
-
             .building-block {
                 fill: #F3D6B6;
                 stroke: #6a5a8e;
                 stroke-width: 0.2px;
             }
-
-            .building-residential {
-                fill: #c95e2a;
-                stroke: #80290a;
-                stroke-width: 0.2px;
-            }
-
 
             /* Map decoration */
             .map-grid-line {

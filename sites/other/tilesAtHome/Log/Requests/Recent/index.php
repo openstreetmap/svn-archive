@@ -66,9 +66,9 @@
     while($Data = mysql_fetch_assoc($Result)){
       $X = $Data["x"];
       $Y = $Data["y"];
-      $Z = 12;
+      $Z = $Data["z"};
       
-      $BrowseURL = sprintf("../../../Browse/?x=%d&amp;y=%d&amp;z=12",$X,$Y,$Z);
+      $BrowseURL = sprintf("../../../Browse/?x=%d&amp;y=%d&amp;z=%d",$X,$Y,$Z);
       $DetailsURL = sprintf("../../../Tiles/info.php?x=%d&amp;y=%d&amp;z=%d",$X,$Y,$Z);
       
       $TileHtml = sprintf("<a href=\"%s\">%d,%d</a>", $BrowseURL, $X, $Y);

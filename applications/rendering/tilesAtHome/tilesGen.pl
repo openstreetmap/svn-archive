@@ -272,7 +272,7 @@ sub upload
     ## Run upload directly because it uses same messaging as tilesGen.pl, 
     ## no need to hide output at all.
 
-    my $UploadScript = "$Bin/upload.pl $progressJobs";
+    my $UploadScript = "perl $Bin/upload.pl $progressJobs";
     my $retval = system($UploadScript);
     return $retval;
 }
@@ -898,7 +898,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
     if (!$NoBezier) 
     {   # do bezier curve hinting
-        my $Cmd = sprintf("%s ./lines2curves.pl %s > %s",
+        my $Cmd = sprintf("%s perl ./lines2curves.pl %s > %s",
           $Config{Niceness},
           $TSVG,
           $SVG);
@@ -1208,10 +1208,16 @@ sub splitImageX
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
-            my $Cmd = sprintf("%s pngcrush -q %s %s>/dev/null",
-              $Config{Niceness},
-              $Filename2,
-              $Filename);
+            my $Redirect = ">/dev/null";
+			if ($^O eq "MSWin32") {
+				$Redirect = "";
+			}
+			my $Cmd = sprintf("%s %s -q %s %s %s",
+				$Config{Pngcrush},
+				$Config{Niceness},
+				$Filename2,
+				$Filename,
+				$Redirect);
 
             statusMessage("Pngcrushing $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
             if(runCommand($Cmd,$PID))

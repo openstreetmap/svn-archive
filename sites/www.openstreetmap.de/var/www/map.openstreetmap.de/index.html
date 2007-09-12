@@ -43,9 +43,9 @@ function init() {
 	map.addControl(new OpenLayers.Control.PanZoomBar());
 	map.addControl(new OpenLayers.Control.MouseDefaults());
 	map.addControl (new OpenLayers.Control.LayerSwitcher());
-	layer1 = new OpenLayers.Layer.LikeGoogle ("Mapnik (.de)", "http://tile.openstreetmap.de/", {type:'png'});
+	layer1 = new OpenLayers.Layer.LikeGoogle ("Mapnik (.org)", "http://tile.openstreetmap.org/mapnik/", {type:'png'});
 	map.addLayer (layer1);
-	layer2 = new OpenLayers.Layer.LikeGoogle ("Mapnik (.org)", "http://tile.openstreetmap.org/mapnik/", {type:'png'});
+	layer2 = new OpenLayers.Layer.LikeGoogle ("Mapnik (.de)", "http://tile.openstreetmap.de/", {type:'png'});
 	map.addLayer (layer2);
 	layer3 = new OpenLayers.Layer.LikeGoogle( "Osmarender (.org)", "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/", {type:'png'} );
 	map.addLayer(layer3);

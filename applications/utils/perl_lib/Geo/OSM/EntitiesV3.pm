@@ -57,6 +57,12 @@ sub set_tags
   { croak "set_tags must be HASH or ARRAY" }
 }
 
+sub tags
+{
+  my $self = shift;
+  return [@{$self->{tags}}];  # Return copy
+}
+
 sub tag_xml
 {
   my ($self,$writer) = @_;
@@ -151,6 +157,21 @@ sub xml
   return $str;
 }
 
+sub map
+{
+  my($self,$mapper) = @_;
+  my $incomplete = 0;
+  my ($new_id) = $mapper->map('way',$self->id);   # Determine mapped ID
+  # It is ok for the new_id to be incomplete; it may be a create request
+  
+  my @new_segs = map { [ $mapper->map('segment',$_) ] } @{$self->segs};
+  map { $incomplete |= $_->[1] } @new_segs;
+  # incomplete tracks if any of the segs are incomplete
+  
+  my $new_ent = new Geo::OSM::Way( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_segs] );
+  return($new_ent,$incomplete);
+}
+
 package Geo::OSM::Segment;
 our @ISA = qw(Geo::OSM::Entity);
 
@@ -198,6 +219,16 @@ sub xml
   $writer->endTag( "segment" );
   $writer->end;
   return $str;
+}
+
+sub map
+{
+  my($self,$mapper) = @_;
+  my ($new_id) = $mapper->map('segment',$self->id);
+  my ($new_from,$i1) = $mapper->map('node',$self->from);
+  my ($new_to,$i2) = $mapper->map('node',$self->to);
+  my $new_ent = new Geo::OSM::Segment( {id=>$new_id, timestamp=>$self->timestamp, from=>$new_from, to=>$new_to}, $self->tags );
+  return($new_ent,$i1|$i2);
 }
 
 package Geo::OSM::Node;
@@ -249,6 +280,12 @@ sub xml
   return $str;
 }
 
-
+sub map
+{
+  my($self,$mapper) = @_;
+  my ($new_id) = $mapper->map('node',$self->id);
+  my $new_ent = new Geo::OSM::Node( {id=>$new_id, timestamp=>$self->timestamp, lat=>$self->lat, lon=>$self->lon}, $self->tags );
+  return($new_ent,0);
+}
 
 1;

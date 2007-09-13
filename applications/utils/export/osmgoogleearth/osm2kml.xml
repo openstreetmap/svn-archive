@@ -37,6 +37,12 @@
                 </rule>
             </folder>
 
+            <folder name="Emergency Services">
+                <rule e="node" k="amenity" v="hospital">
+                    <point class="hospital"/>
+                </rule>
+            </folder>
+
             <folder name="Places of Worship">
 
                 <rule e="node" k="amenity" v="place_of_worship">
@@ -323,6 +329,15 @@
                 <scale>0.7</scale>
             </IconStyle>
         </Style>
+
+        <Style id="hospital">
+            <IconStyle id="iconstyle-hospital">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/hospitals.png</href>
+                </Icon>
+            </IconStyle>
+        </Style>
+
 
         <Style id="fuel">
             <IconStyle id="iconstyle-fuel">

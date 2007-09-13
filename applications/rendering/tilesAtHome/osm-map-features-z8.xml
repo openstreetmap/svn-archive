@@ -76,16 +76,9 @@
         <rule e="way" k="sport" v="*">
             <area class='sport'/>
         </rule>
-        <rule e="way" k="amenity" v="parking">
-            <area class='amenity-parking'/>
-        </rule>
         <rule e="way" k="aeroway" v="terminal">
             <area class='building-block'/>
         </rule>
-        <rule e="way" k="building" v="*">
-            <area class='building-block'/>
-        </rule>
-
 
         <!-- Waterways, lakes and ponds -->
         <rule e="way" k="waterway" v="riverbank">
@@ -109,24 +102,6 @@
         <rule e="way" k="landuse" v="basin">
             <area class='natural-water' />
         </rule>
-
-
-        <!-- Non-physical boundaries -->
-		<rule e="way" k="boundary" v="national">
-			<line class="boundary boundary-administrative-state-casing" />
-			<line class="boundary boundary-administrative-state-core" />
-		</rule>
-
-		<rule e="way" k="boundary" v="administrative">
-			<rule e="way" k="left:country|right:country" v="*" >
-				<line class="boundary boundary-administrative-state-casing" />
-				<line class="boundary boundary-administrative-state-core" />
-			</rule>	
-			<rule e="way" k="border_type" v="state">
-				<line class="boundary boundary-administrative-state-casing" />
-				<line class="boundary boundary-administrative-state-core" />
-			</rule>	
-		</rule>
 
         <!-- Paths in tunnels -->
         <!-- Paths not in tunnels -->
@@ -195,7 +170,7 @@
             <line class='aeroway-runway-core'/>
         </rule>
         <rule e="node" k="aeroway" v="airport">
-            <symbol xlink:href="#airport" width='40px' height='40px' transform='translate(-20,-20)' />
+            <symbol xlink:href="#airport" width='400px' height='400px' transform='translate(-200,-200)' />
         </rule>
 
 
@@ -203,6 +178,23 @@
         <rule e="way" k="route" v="ferry">
             <line class='route-ferry' />
         </rule>
+
+        <!-- Non-physical boundaries -->
+	<rule e="way" k="boundary" v="national">
+		<line class="boundary boundary-administrative-state-casing" />
+		<line class="boundary boundary-administrative-state-core" />
+	</rule>
+
+	<rule e="way" k="boundary" v="administrative">
+		<rule e="way" k="left:country|right:country" v="*" >
+			<line class="boundary boundary-administrative-state-casing" />
+			<line class="boundary boundary-administrative-state-core" />
+		</rule>	
+		<rule e="way" k="border_type" v="state">
+			<line class="boundary boundary-administrative-state-casing" />
+			<line class="boundary boundary-administrative-state-core" />
+		</rule>	
+	</rule>
 
     </rule> <!-- k="osmarender:render" v="~|yes" -->
 
@@ -324,7 +316,7 @@
             }
 
             .waterway-river-core {
-                stroke-width: 10px;
+                stroke-width: 30px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #b5d6f1;
@@ -332,7 +324,7 @@
             }
 
             .waterway-canal-core {
-                stroke-width: 1px;
+                stroke-width: 30px;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #b5d6f1;
@@ -349,8 +341,8 @@
 
             /* Ferry */
             .route-ferry {
-                stroke-width: 2px;
-                stroke-dasharray: 3,2;
+                stroke-width: 20px;
+                stroke-dasharray: 300,200;
                 stroke-linecap: butt;
                 stroke-linejoin: round;
                 stroke: #777777;
@@ -364,7 +356,7 @@
                 stroke: white;
                 stroke-width: 0.6px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 800px;
+                font-size: 1000px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -374,7 +366,7 @@
                 stroke: white;
                 stroke-width: 0.5px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 500px;
+                font-size: 900px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -384,7 +376,7 @@
                 stroke: white;
                 stroke-width: 0.5px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 160px;
+                font-size: 800px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -394,7 +386,7 @@
                 stroke: white;
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 140px;
+                font-size: 700px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -404,7 +396,7 @@
                 stroke: white;
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 120px;
+                font-size: 600px;
                 font-weight: bold;
                 text-anchor: middle;
             }
@@ -414,8 +406,8 @@
                 stroke: none;
                 stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 600px;
-                font-weight: bold;
+                font-size: 650px;
+                font-weight: normal;
                 text-anchor: middle;
             }
 
@@ -439,13 +431,13 @@
             .natural-coastline {
                 fill: #b5d6f1;
                 stroke: #b5d6f1;
-                stroke-width: 1.5px;
+                stroke-width: 15px;
             }
 
             .natural-land {
                 fill: #ffffff;
                 stroke: #e0e0e0;
-                stroke-width: 0.1px;
+                stroke-width: 2px;
             }
 
 
@@ -458,13 +450,13 @@
             .landuse-wood {
                 fill: #72bf81;
                 stroke: #6fc18e;
-                stroke-width: 0.2px;
+                stroke-width: 2px;
             }
 
             .landuse-field {
                 fill: #bde3cb;
                 stroke: #6fc13d;
-                stroke-width: 0.2px;
+                stroke-width: 2px;
             }
 
 
@@ -472,27 +464,20 @@
             .leisure-park {
                 fill: #c7f1a3;
                 stroke: #6fc18e;
-                stroke-width: 0.2px;
+                stroke-width: 2px;
             }
 
             .leisure-stadium {
                 fill: #bde3cb;
                 stroke: #6fc18e;
-                stroke-width: 0.2px;
+                stroke-width: 2px;
             }
 
             .sport {
                 fill: #bde3cb;
                 stroke: #6fc18e;
-                stroke-width: 0.2px;
+                stroke-width: 2px;
             }
-
-            .amenity-parking {
-                fill: #f7efb7;
-                stroke: #e9dd72;
-                stroke-width: 0.2px;
-            }
-
 
 
 			/* Non-physical boundaries */
@@ -537,11 +522,6 @@
             /* Tourism */
 
             /* Building */
-            .building-block {
-                fill: #F3D6B6;
-                stroke: #6a5a8e;
-                stroke-width: 0.2px;
-            }
 
             /* Map decoration */
             .map-grid-line {

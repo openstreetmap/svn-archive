@@ -404,10 +404,9 @@
             .city-caption {
                 fill: black;
                 stroke: none;
-                stroke-width: 0.4px;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 650px;
-                font-weight: normal;
+                font-size: 700px;
+                font-weight: bold;
                 text-anchor: middle;
             }
 
@@ -415,9 +414,9 @@
                 fill: black;
                 stroke: none;
                 font-family: "DejaVu Sans",sans-serif;
-                font-size: 250px;
-                opacity: 0.7;
-                font-weight: bold;
+                font-size: 350px;
+                opacity: 0.9;
+                font-weight: normal;
                 text-anchor: middle;
             }
 

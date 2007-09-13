@@ -204,33 +204,35 @@
             <line class='route-ferry' />
         </rule>
 
-	<!-- ==================================== Layer 5 ================================== -->
-        <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
-            <!-- Place names  -->
-            <rule e="node" k="place" v="continent">
-                <text k="name" class='continent-caption' />
-            </rule>
-            <rule e="node" k="place" v="country">
-                <text k="name" class='country-caption' />
-            </rule>
-            <rule e="node" k="place" v="state">
-                <text k="name" class='state-caption' />
-            </rule>
-            <rule e="node" k="place" v="region">
-                <text k="name" class='region-caption' />
-            </rule>
-            <rule e="node" k="place" v="county">
-                <text k="name" class='county-caption' />
-            </rule>
-            <rule e="node" k="place" v="city">
-                <text k="name" class='city-caption' />
-            </rule>
-            <rule e="node" k="place" v="town">
-                <text k="name" class='town-caption' />
-            </rule>
-        </rule> <!-- End Layer 5 -->
-
     </rule> <!-- k="osmarender:render" v="~|yes" -->
+
+    <!-- ==================================== Layer 5 ================================== -->
+    <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
+        <!-- Place names  -->
+        <rule e="node" k="place" v="continent" layer="5">
+            <text k="name" class='continent-caption' />
+        </rule>
+        <rule e="node" k="place" v="country" layer="5">
+            <text k="name" class='country-caption' />
+        </rule>
+        <rule e="node" k="place" v="state" layer="5">
+            <text k="name" class='state-caption' />
+        </rule>
+        <rule e="node" k="place" v="region" layer="5">
+            <text k="name" class='region-caption' />
+        </rule>
+        <rule e="node" k="place" v="county" layer="5">
+            <text k="name" class='county-caption' />
+        </rule>
+        <rule e="node" k="place" v="city" layer="5">
+            <text k="name" class='city-caption' />
+        </rule>
+        <rule e="node" k="place" v="town" layer="5">
+            <text k="name" class='town-caption' />
+        </rule>
+    </rule> <!-- End Layer 5 -->
+
+
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>

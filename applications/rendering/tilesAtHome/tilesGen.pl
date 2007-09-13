@@ -32,7 +32,7 @@ use strict;
 #-----------------------------------------------------------------------------
 # Read the config file
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
-my %EnvironmentInfo = CheckConfig(%Config);
+my %EnvironmentInfo = CheckConfig(\%Config);
 
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';

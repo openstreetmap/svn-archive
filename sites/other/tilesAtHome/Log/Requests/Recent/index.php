@@ -66,7 +66,7 @@
     while($Data = mysql_fetch_assoc($Result)){
       $X = $Data["x"];
       $Y = $Data["y"];
-      $Z = $Data["z"};
+      $Z = $Data["z"];
       
       $BrowseURL = sprintf("../../../Browse/?x=%d&amp;y=%d&amp;z=%d",$X,$Y,$Z);
       $DetailsURL = sprintf("../../../Tiles/info.php?x=%d&amp;y=%d&amp;z=%d",$X,$Y,$Z);

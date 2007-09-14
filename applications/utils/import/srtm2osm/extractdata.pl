@@ -1,5 +1,13 @@
 #!/usr/bin/perl 
 
+use Pod::Usage;
+
+if ( @ARGV < 5){
+    printf STDERR "Need Filename and 4 Corners to operate\n";
+    pod2usage(1);
+    exit 1;
+}
+
 open ASC, "$ARGV[0]";
 #open OUT, ">$ARGV[0]";
 
@@ -63,3 +71,38 @@ sub coord {
     $lat = $yllcorner+$cellsize*($nrows-$_[0]);
     return "$lat, $lon\n";
 }
+
+##################################################################
+# Usage/manual
+
+__END__
+
+=head1 NAME
+
+B<extractdata> Version 0.05
+
+=head1 DESCRIPTION
+
+Extracting columns firstcol - lastcol from rows  firstrow - lastrow
+for srtm2osm
+
+=head1 SYNOPSIS
+
+B<Common usages:>
+
+extractdata <filename> <y-ll-corner> <x-ll-corner> <y-tr-corner> <x-tr-corner>
+
+=head1 COPYRIGHT
+
+... please fill in
+
+=head1 AUTHOR
+
+... please fill in
+
+=head1 SEE ALSO
+
+http://www.openstreetmap.org/
+
+
+=cut

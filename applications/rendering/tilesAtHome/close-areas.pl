@@ -578,7 +578,7 @@ unless( $border_crossed )
     }
   }
 }
-make_way(\@coastline_segments);
+make_way(\@coastline_segments) if scalar(@coastline_segments);
 print "</osm>\n";
 
 sub make_node

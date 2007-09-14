@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 11.9.2007 (load and display GPX, tab ordering)
+	# last update 14.9.2007 (convert GPX)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -119,6 +119,7 @@
 	var tolerance=4/Math.pow(2,_root.scale-12);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
+	var sandbox=false;				// we're doing proper editing
 
 	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
 	
@@ -194,6 +195,19 @@
 	_root.attachMovie("roundabout","i_circular",40);
 	with (_root.i_circular) { _x=40; _y=583; _rotation=-45; _visible=false; };
 
+	_root.attachMovie("padlock","padlock",41);
+	with (_root.padlock) { _y=532; _visible=false; };
+	_root.padlock.onPress=function() {
+		if (_root.map.ways[wayselected].path.length>200) {
+			setTooltip("too long to unlock:\nplease split into\nshorter ways");
+		} else {
+			_root.map.ways[wayselected].locked=false;
+			_root.map.ways[wayselected].clean=false;
+			_root.map.ways[wayselected].redraw();
+			_root.padlock._visible=false;
+		}
+	};
+
 	// =====================================================================================
 	// Initialise text areas
 
@@ -213,7 +227,6 @@
 		wordWrap=true;
 		border=true;
 		selectable = true; type = 'input'; _visible = false;
-		text="HERE";
 	};
 
 	_root.createTextField('floater',0xFFFFFF,15,30,200,18);
@@ -252,7 +265,7 @@
 	with (_root.t_type	 ) { text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
 	
 	_root.createTextField('t_details',24,5,523,220,20);
-	with (_root.t_details) { text="Potlatch v0.2a"; setTextFormat(plainText); };
+	with (_root.t_details) { text="Potlatch v0.3"; setTextFormat(plainText); };
 	
 	_root.createEmptyMovieClip("properties",50);
 	with (_root.properties) { _x=110; _y=525; }; // 110,505
@@ -280,70 +293,7 @@
 	};
 	remote.call('getpresets',preresponder);
 
-	// =====================================================================================
-	// GPX handling
-	
-	// Parse file if supplied
-	
-	if (gpx) {
-		var lastTime=0;
-		gpxdoc=new XML();
-		gpxdoc.load(gpxurl+gpx);
-		gpxdoc.onLoad=function() {
-			_root.map.gpx.createEmptyMovieClip("line",1);
-			_root.map.gpx.line.lineStyle(1,0x00FFFF,100,false,"none");
-	
-			level1=this.childNodes;
-			for (i=0; i<level1.length; i+=1) {
-				if (level1[i].nodeName=='gpx') {
-					level2=level1[i].childNodes;
-					for (j=0; j<level2.length; j+=1) {
-						if (level2[j].nodeName=='trk') {
-							level3=level2[j].childNodes;
-							for (k=0; k<level3.length; k+=1) {
-								if (level3[k].nodeName=='trkseg') {
-									level4=level3[k].childNodes;
-									for (l=0; l<level4.length; l+=1) {
-										if (level4[l].nodeName=='trkpt') {
-											parsePoint(level4[l]);
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		};
-	}
-
-	function parsePoint(xmlobj) {
-		lat= lat2coord(xmlobj.attributes['lat']);
-		lon=long2coord(xmlobj.attributes['lon']);
-		tme=new Date();
-		tme.setTime(0);
-		xcn=xmlobj.childNodes;
-		for (a in xcn) {
-			if (xcn[a].nodeName=='time') {
-				str=xcn[a].firstChild.nodeValue;
-				if (str.substr( 4,1)=='-' &&
-					str.substr(10,1)=='T' &&
-					str.substr(19,1)=='Z') {
-					tme.setFullYear(str.substr(0,4),str.substr(5,2),str.substr(8,2));
-					tme.setHours(str.substr(11,2));
-					tme.setMinutes(str.substr(14,2));
-					tme.setSeconds(str.substr(17,2));
-				}
-			}
-		}
-
-		if (tme==null || tme.getTime()-_root.lastTime<180000) {
-			_root.map.gpx.line.lineTo(lon,lat);
-		} else {
-			_root.map.gpx.line.moveTo(lon,lat);
-		}
-		_root.lastTime=tme.getTime();
-	}
+	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
 
 
 	// =====================================================================================
@@ -543,6 +493,7 @@
 					}
 				}
 				_root.drawpoint=-1;
+				if (_root.map.ways[this.way].locked) { _root.map.ways[wayselected].locked=true; }
 				_root.map.ways[wayselected].clean=false;
 				_root.map.ways[wayselected].redraw();
 				_root.map.ways[wayselected].upload();
@@ -570,11 +521,12 @@
 		this.attr=new Array();
 		this.clean=true;
 		this.uploading=false;
+		this.locked=false;
 		this._xscale=this._yscale=Math.max(100/Math.pow(2,_root.scale-12),6.25);
 	};
 	POI.prototype=new MovieClip();
 	POI.prototype.remove=function() {
-		if (this._name>=0) {
+		if (this._name>=0 && !_root.sandbox) {
 			poidelresponder = function() { };
 			poidelresponder.onResult = function(result) {
 				if (poiselected==result[0]) { deselectAll(); }
@@ -609,7 +561,7 @@
 			}
 			_root.map.pois[ni].uploading=false;
 		};
-		if (!this.uploading) {
+		if (!this.uploading && !this.locked && !_root.sandbox) {
 			this.attr['created_by']="Potlatch alpha";
 			this.uploading=true;
 			remote.call('putpoi',poiresponder,_root.usertoken,this._name,this._x,this._y,this.attr,1,baselong,basey,masterscale);
@@ -665,6 +617,7 @@
 		this.attr=new Array();
 		this.clean=true;
 		this.uploading=false;
+		this.locked=false;
 		this.xmin=0;
 		this.xmax=0;
 		this.ymin=0;
@@ -714,19 +667,20 @@
 
 	OSMWay.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
-		linewidth=3; //Math.max(2/Math.pow(2,_root.scale-12),0)+1;
+		var linewidth=3; //Math.max(2/Math.pow(2,_root.scale-12),0)+1;
+		var linealpha=100-50*(this.locked==true);
 		if (colours[this.attr["highway"]]) {
-			this.line.lineStyle(linewidth,colours[this.attr["highway" ]],100,false,"none");
+			this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none");
 		} else if (colours[this.attr["waterway"]]) {
-			this.line.lineStyle(linewidth,colours[this.attr["waterway"]],100,false,"none");
+			this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none");
 		} else if (colours[this.attr["railway"]]) {
-			this.line.lineStyle(linewidth,colours[this.attr["railway" ]],100,false,"none");
+			this.line.lineStyle(linewidth,colours[this.attr["railway" ]],linealpha,false,"none");
 		} else {
-			c=0xCCCCCC; z=this.attr;
-			for (i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x777777; } }
-			this.line.lineStyle(linewidth,c,100,false,"none");
+			var c=0xCCCCCC; var z=this.attr;
+			for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x777777; } }
+			this.line.lineStyle(linewidth,c,linealpha,false,"none");
 		}
-		for (i=0; i<this.path.length; i+=1) {
+		for (var i=0; i<this.path.length; i+=1) {
 			if (this.path[i][3]==0) {
 				this.line.moveTo(this.path[i][0],this.path[i][1]);
 			} else {
@@ -760,7 +714,7 @@
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function() {
-		if (this._name>=0) {
+		if (this._name>=0 && !_root.sandbox) {
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
 				if (wayselected==result) { deselectAll(); }
@@ -810,7 +764,7 @@
 				}
 			}
 		};
-		if (!this.uploading && this.path.length>1) {
+		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
 			this.attr['created_by']="Potlatch alpha";
 			this.uploading=true;
 			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);
@@ -871,8 +825,9 @@
 		if (_root.pointselected>-2) {
 			highlightSquare(_root.map.anchors[pointselected]._x,_root.map.anchors[pointselected]._y,8/Math.pow(2,Math.min(_root.scale,16)-12));
 		} else {
-			linewidth=11;
-			_root.map.highlight.lineStyle(linewidth,0xFFFF00,80,false,"none");
+			var linewidth=11;
+			var linecolour=0xFFFF00; if (this.locked) { var linecolour=0x00FFFF; }
+			_root.map.highlight.lineStyle(linewidth,linecolour,80,false,"none");
 			for (i=0; i<this.path.length; i+=1) {
 				if (this.path[i][3]==0) {
 					_root.map.highlight.moveTo(this.path[i][0],this.path[i][1]);
@@ -913,16 +868,17 @@
 			z=this.attr; for (i in z) { _root.map.ways[newwayid].attr[i]=z[i]; }
 
 			this.path.splice(Math.floor(pointselected)+1);				// current way
-			this.redraw();												//  | (Math.floor forces
-			this.clean=true;											//  |  string->number)
+			this.redraw();												//  |
 
 			_root.map.ways[newwayid].path.splice(0,pointselected);		// new way
 			_root.map.ways[newwayid].path[0][3]=0;						//  | first point is 'move'
 			_root.map.ways[newwayid].redraw();							//  |
+			_root.map.ways[newwayid].locked=this.locked;				//  |
 			_root.map.ways[newwayid].upload();							//  |
 
 			pointselected=-2;
 			this.select();
+			this.clean=false;
 		};
 	};
 
@@ -1288,31 +1244,46 @@
 		// Create buttons
 		for (i=0; i<buttons.length; i+=1) {
 			_root.modal.box.createEmptyMovieClip(i,i*2+1);
-			with (_root.modal.box[i]) {
-				_x=w-60*(buttons.length-i); _y=h-30;
-				beginFill(0x7F7F7F,100);
-				moveTo(0,0);
-				lineTo(50,0); lineTo(50,17);
-				lineTo(0,17); lineTo(0,0); endFill();
-			}
+			drawButton(_root.modal.box[i],w-60*(buttons.length-i),h-30,buttons[i],"");
 			_root.modal.box[i].onPress=function() {
 				if (closefunction) { closefunction(buttons[this._name]); }
 				clearModalDialogue();
 			};
 			_root.modal.box[i].useHandCursor=true;
-	
-			_root.modal.box[i].createTextField('btext',1,0,-1,48,20);
-			with (_root.modal.box[i].btext) {
-				text=buttons[i]; setTextFormat(boldWhite);
-				selectable=false; type='dynamic';
-				_x=(45-textWidth)/2;
-			}
 		}
 	}
 
 	function clearModalDialogue() {
 		Key.addListener(keyListener);
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
+	}
+
+
+	// drawButton		- draw white-on-grey button
+	// (object,x,y,button text, text to right)
+
+	function drawButton(buttonobject,x,y,btext,ltext) {
+		with (buttonobject) {
+			_x=x; _y=y;
+			beginFill(0x7F7F7F,100);
+			moveTo(0,0);
+			lineTo(50,0); lineTo(50,17);
+			lineTo(0,17); lineTo(0,0); endFill();
+		}
+		buttonobject.useHandCursor=true;
+		buttonobject.createTextField('btext',1,0,-1,48,20);
+		with (buttonobject.btext) {
+			text=btext; setTextFormat(boldWhite);
+			selectable=false; type='dynamic';
+			_x=(45-textWidth)/2;
+		}
+		if (ltext!="") {
+			buttonobject.createTextField("explain",2,54,-1,300,20);
+			with (buttonobject.explain) {
+				text=ltext; setTextFormat(plainSmall);
+				selectable=false; type='dynamic';
+			}
+		}
 	}
 
 
@@ -1330,6 +1301,41 @@
 	whichWays();
 	_root.onEnterFrame=function() { everyFrame(); };
 
+	// Welcome buttons
+
+	_root.createEmptyMovieClip("welcome",61);
+
+	_root.welcome.createEmptyMovieClip("start",1);
+	drawButton(_root.welcome.start,250,507,"Start","Start mapping with OpenStreetMap.");
+	_root.welcome.start.onPress=function() { removeMovieClip( _root.welcome); };
+
+	_root.welcome.createEmptyMovieClip("play",2);
+	drawButton(_root.welcome.play,250,529,"Play","Practice mapping - your changes won't be saved.");
+	_root.welcome.play.onPress=function() {
+		_root.sandbox=true; removeMovieClip(_root.welcome);
+		_root.createEmptyMovieClip("practice",62);
+		with (_root.practice) {
+			_x=603; _y=478; beginFill(0xFF0000,100);
+			moveTo(0,0); lineTo(90,0); lineTo(90,17);
+			lineTo(0,17); lineTo(0,0); endFill();
+		};
+		_root.practice.createTextField("btext",1,0,0,90,20);
+		with (_root.practice.btext) {
+			text="Practice mode";
+			setTextFormat(boldWhite);
+			selectable=false; type='dynamic';
+		};
+	};
+
+	_root.welcome.createEmptyMovieClip("help",3);
+	drawButton(_root.welcome.help,250,551,"Help","Find out how to use Potlatch, the map editor.");
+	_root.welcome.help.onPress=function() { getUrl("http://wiki.openstreetmap.org/index.php/Potlatch","_blank"); };
+
+	if (gpx) {
+		_root.welcome.createEmptyMovieClip("convert",4);
+		drawButton(_root.welcome.convert,250,573,"Track","Convert your GPS track to (locked) ways for editing.");
+		_root.welcome.convert.onPress=function() { removeMovieClip(_root.welcome); gpxToWays(); };
+	}
 
 
 	// =====================================================================================
@@ -1452,6 +1458,7 @@
 	};
 
 	function clearPropertyWindow() {
+		removeMovieClip(_root.welcome); 
 		_root.propx=0; _root.propy=0; _root.propn=0;
 		ct=0;
 		for (el in _root.properties) {
@@ -1469,6 +1476,12 @@
 	function setTypeText(a,b) {
 		_root.t_type.text=a; _root.t_type.setTextFormat(boldText);
 		_root.t_details.text=b; _root.t_details.setTextFormat(plainText);
+		if (_root.map.ways[_root.wayselected].locked) {
+			_root.padlock._visible=true;
+			_root.padlock._x=_root.t_details.textWidth+15;
+		} else {
+			_root.padlock._visible=false;
+		}
 	}
 
 	// reflectPresets - set preset menu based on way values
@@ -2060,6 +2073,146 @@
 		_root.map.createEmptyMovieClip('gps',3);
 		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&unwayed='+_root.unwayed+'&token='+_root.usertoken,_root.map.gps); }
 							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&unwayed='+_root.unwayed,_root.map.gps); }
+	}
+
+	// parseGPX		- parse GPX file
+	// parsePoint
+	
+	function parseGPX(gpxname) {
+		_root.tracks=new Array();
+		var lastTime=0;
+		_root.curtrack=0; _root.tracks[curtrack]=new Array();
+		var gpxdoc=new XML();
+		gpxdoc.load(gpxurl+gpxname);
+		gpxdoc.onLoad=function() {
+			_root.map.gpx.createEmptyMovieClip("line",1);
+			_root.map.gpx.line.lineStyle(1,0x00FFFF,100,false,"none");
+	
+			var level1=this.childNodes;
+			for (i=0; i<level1.length; i+=1) {
+				if (level1[i].nodeName=='gpx') {
+					var level2=level1[i].childNodes;
+					for (j=0; j<level2.length; j+=1) {
+						if (level2[j].nodeName=='trk') {
+							var level3=level2[j].childNodes;
+							for (k=0; k<level3.length; k+=1) {
+								if (level3[k].nodeName=='trkseg') {
+									var level4=level3[k].childNodes;
+									for (l=0; l<level4.length; l+=1) {
+										if (level4[l].nodeName=='trkpt') {
+											parsePoint(level4[l]);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		};
+	}
+
+	function parsePoint(xmlobj) {
+		var y= lat2coord(xmlobj.attributes['lat']);
+		var x=long2coord(xmlobj.attributes['lon']);
+		var tme=new Date();
+		tme.setTime(0);
+		var xcn=xmlobj.childNodes;
+		for (a in xcn) {
+			if (xcn[a].nodeName=='time') {
+				str=xcn[a].firstChild.nodeValue;
+				if (str.substr( 4,1)=='-' &&
+					str.substr(10,1)=='T' &&
+					str.substr(19,1)=='Z') {
+					tme.setFullYear(str.substr(0,4),str.substr(5,2),str.substr(8,2));
+					tme.setHours(str.substr(11,2));
+					tme.setMinutes(str.substr(14,2));
+					tme.setSeconds(str.substr(17,2));
+				}
+			}
+		}
+
+		if (tme==null || tme.getTime()-_root.lastTime<180000) {
+			_root.map.gpx.line.lineTo(x,y);
+			_root.tracks[curtrack].push(new Array(x,y));
+		} else {
+			_root.map.gpx.line.moveTo(x,y);
+			_root.curtrack+=1;
+			_root.tracks[curtrack]=new Array();
+			_root.tracks[curtrack].push(new Array(x,y));
+		}
+		lastTime=tme.getTime();
+	}
+	
+	// gpxToWays	- convert all GPS tracks to ways
+	
+	function gpxToWays() {
+		for (var i=0; i<_root.tracks.length; i+=1) {
+			_root.tracks[i]=simplifyPath(_root.tracks[i]);
+
+			_root.newwayid--;
+			_root.map.ways.attachMovie("way",newwayid,++waydepth);
+			_root.map.ways[newwayid].xmin= 999999;
+			_root.map.ways[newwayid].xmax=-999999;
+			_root.map.ways[newwayid].ymin= 999999;
+			_root.map.ways[newwayid].ymax=-999999;
+			for (var j=0; j<_root.tracks[i].length; j+=1) {
+				_root.map.ways[newwayid].path.push(new Array(_root.tracks[i][j][0],_root.tracks[i][j][1],--newnodeid,Math.min(j,1),new Array(),0));
+				_root.map.ways[newwayid].xmin=Math.min(_root.tracks[i][j][0],_root.map.ways[newwayid].xmin);
+				_root.map.ways[newwayid].xmax=Math.max(_root.tracks[i][j][0],_root.map.ways[newwayid].xmax);
+				_root.map.ways[newwayid].ymin=Math.min(_root.tracks[i][j][1],_root.map.ways[newwayid].ymin);
+				_root.map.ways[newwayid].ymax=Math.max(_root.tracks[i][j][1],_root.map.ways[newwayid].ymax);
+			}
+			_root.map.ways[newwayid].clean=false;
+			_root.map.ways[newwayid].locked=true;
+			_root.map.ways[newwayid].redraw();
+
+		}
+	}
+
+	// ================================================================
+	// Douglas-Peucker code
+
+	function distance(ax,ay,bx,by,l,cx,cy) {
+		// l=length of line
+		// r=proportion along AB line (0-1) of nearest point
+		var r=((cx-ax)*(bx-ax)+(cy-ay)*(by-ay))/(l*l);
+		// now find the length from cx,cy to ax+r*(bx-ax),ay+r*(by-ay)
+		var px=(ax+r*(bx-ax)-cx);
+		var py=(ay+r*(by-ay)-cy);
+		return Math.sqrt(px*px+py*py);
+	}
+
+	function simplifyPath(track) {
+		if (track.length<=2) { return track; }
+		
+		result=new Array();
+		stack=new Array();
+		stack.push(track.length-1);
+		anchor=0;
+		
+		while (stack.length) {
+			float=stack[stack.length-1];
+			var xa=track[anchor][0]; var xb=track[float][0];
+			var ya=track[anchor][1]; var yb=track[float][1];
+			var l=Math.sqrt((xb-xa)*(xb-xa)+(yb-ya)*(yb-ya));
+			var furthest=0; var furthdist=0;
+	
+			// find furthest-out point
+			for (var i=anchor+1; i<float; i+=1) {
+				var d=distance(xa,ya,xb,yb,l,track[i][0],track[i][1]);
+				if (d>furthdist && d>0.2) { furthest=i; furthdist=d; }
+			}
+			
+			if (furthest==0) {
+				anchor=stack.pop();
+				result.push(new Array(track[float][0],track[float][1]));
+			} else {
+				stack.push(furthest);
+			}
+		}
+
+		return result;
 	}
 
 

@@ -1077,55 +1077,40 @@ sub mergeOsmFiles()
     
     open (DEST, "> $destFile");
 
-    # copying stub file replaced by simply using the introductory lines of 
-    # the first file to be merged!
-    #
-    # first, copy stub
-    # open (STUB, "stub.osm");
-    # while(<STUB>)
-    # {
-    #     print DEST;
-    # }
-    # close(STUB);
+    print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
+    print DEST qw(<osm version="0.4" generator="tilesGen mergeOsmFiles">\n);
 
-    my $copy = 1; # copy <osm...> from first file
     foreach my $sourceFile(@{$sourceFiles})
     {
         open(SOURCE, $sourceFile);
         while(<SOURCE>)
         {
-            if ($copy)
+            next if /^\s*<?xml/;
+            next if /^\s*<osm/;
+            last if (/^\s*<\/osm>/);
+            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
             {
-                last if (/^\s*<\/osm>/);
-                if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
+                my ($what, $id, $slash) = ($1, $2, $3);
+                my $key = substr($what, 0, 1) . $id;
+                if (defined($existing->{$key}))
                 {
-                    my ($what, $id, $slash) = ($1, $2, $3);
-                    my $key = substr($what, 0, 1) . $id;
-                    if (defined($existing->{$key}))
+                    # object exists already. skip!
+                    next if ($slash eq "/");
+                    while(<SOURCE>)
                     {
-                        # object exists already. skip!
-                        next if ($slash eq "/");
-                        while(<SOURCE>)
-                        {
-                            last if (/^\s*<\/$what>/);
-                        }
-                        next;
+                        last if (/^\s*<\/$what>/);
                     }
-                    else
-                    {
-                        # object didn't exist, note
-                        $existing->{$key} = 1;
-                    }
+                    next;
                 }
-                print DEST;
+                else
+                {
+                    # object didn't exist, note
+                    $existing->{$key} = 1;
+                }
             }
-            else
-            {
-                $copy = 1 if (/^\s*<osm /);
-            }
+            print DEST;
         }
         close(SOURCE);
-        $copy = 0;
     }
     print DEST "</osm>\n";
     close(DEST);

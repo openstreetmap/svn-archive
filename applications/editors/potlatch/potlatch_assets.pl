@@ -1,5 +1,5 @@
 
-	# updated 1.9.2007 - POIs, pens work correctly
+	# updated 14.9.2007 - padlock
 
 	# ----- Export symbols
 
@@ -83,6 +83,19 @@
 	$bq->movePenTo(6,9); $bq->drawLineTo(14,9);
 	$ec->add($bq); $ec->nextFrame();
 	$m->addExport($ec,"zoomout");
+
+	# ------ padlock sprite
+	
+	$ec=new SWF::Sprite();
+	$s=new SWF::Shape();
+	$s->movePenTo(3,-2); $s->setLine(35,0,0,0); $s->drawCircle(2);
+	$s->movePenTo(0,0); $s->setRightFill($s->addFill(0,0,0));
+	$s->drawLineTo(6,0); $s->drawLineTo(6,6);
+	$s->drawLineTo(0,6); $s->drawLineTo(0,0); 
+	$ec->add($s);
+	$ec->nextFrame();
+	$m->addExport($ec,"padlock");
+	
 
 	# ------ exclamation sprite
 	

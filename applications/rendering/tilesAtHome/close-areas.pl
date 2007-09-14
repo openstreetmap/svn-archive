@@ -112,6 +112,10 @@ while(<STDIN>)
         }
         elsif($xmltag =~ /^\s*<(osm.*)>/)
         {
+            # If frollo encounters an empty file, it outputs <osm foo />. Detect this and exit
+            if (substr($1, -1) eq "/" )
+            { print $xmltag; exit }
+            
             if (/version=['"](.*?)['"]/)
             {
                 if ($1 eq "0.4") 

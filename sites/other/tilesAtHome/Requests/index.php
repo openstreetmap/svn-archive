@@ -30,7 +30,7 @@
     $SQL='SELECT COUNT(*) FROM tiles_queue WHERE z=12 and status='.REQUEST_ACTIVE.';';
     $res = mysql_query($SQL);
     $row=mysql_fetch_row($res);
-    if($row[0] > 50){
+    if($row[0] >= 100){
       print 'XX|3||||rate_limiting ('.$row[0].' requests out)';
       exit;
     }

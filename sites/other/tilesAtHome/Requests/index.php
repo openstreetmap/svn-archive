@@ -27,7 +27,7 @@
     $Z=8;
   } else {
     //Rate limiting: never hand out more than 50 active requests at a time
-    $SQL='SELECT COUNT(*) FROM tiles_queue WHERE status='.REQUEST_ACTIVE.';';
+    $SQL='SELECT COUNT(*) FROM tiles_queue WHERE z=12 and status='.REQUEST_ACTIVE.';';
     $res = mysql_query($SQL);
     $row=mysql_fetch_row($res);
     if($row[0] > 50){

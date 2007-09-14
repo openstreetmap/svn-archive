@@ -1068,6 +1068,13 @@ sub mergeOsmFiles()
     my ($destFile, $sourceFiles) = @_;
     my $existing = {};
 
+    # If there's only one file, just copy the input to the output
+    if( scalar(@$sourceFiles) == 1 )
+    {
+      copy $sourceFiles->[0], $destFile;
+      return;
+    }
+    
     open (DEST, "> $destFile");
 
     # copying stub file replaced by simply using the introductory lines of 

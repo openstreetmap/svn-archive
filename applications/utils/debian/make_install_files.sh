@@ -174,3 +174,14 @@ done
 # Add java tools, but for these a build.xml with a target jar or similar would be best 
 
 
+# #######################################################
+# Osmosis
+# #######################################################
+cd osmosis
+ant dist_binary
+cd ..
+mkdir -p $dst_path/usr/local/share/osmosis/
+cp ./osmosis/dist/result/osmosis.jar $dst_path/usr/local/share/osmosis/
+
+
+cp debian/osmosis.sh "$bin_path/osmosis"

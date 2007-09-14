@@ -1078,7 +1078,7 @@ sub mergeOsmFiles()
     open (DEST, "> $destFile");
 
     print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
-    print DEST qw(<osm version="0.4" generator="tilesGen mergeOsmFiles">\n);
+    my $header = 0;
 
     foreach my $sourceFile(@{$sourceFiles})
     {
@@ -1086,7 +1086,18 @@ sub mergeOsmFiles()
         while(<SOURCE>)
         {
             next if /^\s*<?xml/;
-            next if /^\s*<osm/;
+            # We want to copy the version number, but only the first time (obviously)
+            # Handle where the input doesn't have a version
+            if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
+            {
+              if( not $header )
+              {
+                my $version = $1 || "'0.4'";
+                print DEST qq(<osm version=$version generator="tilesGen mergeOsmFiles">\n);
+                $header = 1;
+              }
+              next;
+            }
             last if (/^\s*<\/osm>/);
             if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
             {

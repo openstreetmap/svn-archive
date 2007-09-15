@@ -145,7 +145,7 @@ sub fill_default_sources() {   # Just some Default Sources
 	licence     => $default_licence
       },
       { source_id   => '4',
-        name        => 'osm',
+        name        => 'OpenStreetMap.org',
         comment     => 'General Data imported from the OpenStreetMap Project', 
         last_update => '2007-01-03',
         url         => 'http://www.openstreetmap.org/',
@@ -157,34 +157,6 @@ sub fill_default_sources() {   # Just some Default Sources
         last_update => '2007-01-30',
         url         => 'http://www.groundspeak.com/',
         licence     => 'unknown'
-      },
-      { source_id   => '6',
-        name        => 'osm.node',
-        comment     => 'OpenStreetMap.org Node', 
-        last_update => '2007-03-06',
-        url         => 'http://www.openstreetmap.org/',
-        licence     => 'Creative Commons Attribution-ShareAlike 2.0'
-      },
-      { source_id   => '7',
-        name        => 'osm.way',
-        comment     => 'OpenStreetMap.org Way', 
-        last_update => '2007-03-06',
-        url         => 'http://www.openstreetmap.org/',
-        licence     => 'Creative Commons Attribution-ShareAlike 2.0'
-      },
-      { source_id   => '8',
-        name        => 'osm.segment',
-        comment     => 'OpenStreetMap.org Segment', 
-        last_update => '2007-03-06',
-        url         => 'http://www.openstreetmap.org/',
-        licence     => 'Creative Commons Attribution-ShareAlike 2.0'
-      },
-      { source_id   => '9',
-        name        => 'osm.tag',
-        comment     => 'OpenStreetMap.org Tag', 
-        last_update => '2007-03-06',
-        url         => 'http://www.openstreetmap.org/',
-        licence     => 'Creative Commons Attribution-ShareAlike 2.0'
       },
     );
 

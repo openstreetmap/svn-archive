@@ -35,10 +35,9 @@ our $ELEMSTYLES_RULES;
 my $SOURCE_OSM = "OpenStreetMap.org";
 my $SOURCE_ID_OSM=0;
 
-our (%MainAttr,%Tags, @WaySegments);
+our (%MainAttr,%Tags);
 # Stored data
-our (%OSM_Nodes, %OSM_Segments, %Stats);
-my @needed_segment_tags=qw( name amenity class highway);
+our %Stats;
 my $all_unknown_tags={};
 
 # Estimated Number of elements to show progress while reading in percent
@@ -182,25 +181,10 @@ sub DoStart()
 	undef %Tags;
 	%MainAttr = %attr;
     }
-    if($name eq "segment"){
-	undef %Tags;
-	%MainAttr = %attr;
-    }
-    if($name eq "way"){
-	undef %Tags;
-	undef @WaySegments;
-	%MainAttr = %attr;
-    }
     if($name eq "tag"){
 	# TODO: protect against id,from,to,lat,long,etc. being used as tags
 	$Tags{$attr{"k"}} = $attr{"v"};
 	$Stats{"tags"}++;
-    }
-    if($name eq "seg"){
-	my $id = $attr{"id"};
-	if ( defined ( $OSM_Segments{$id} ) ) {
-	    push(@WaySegments, $id);
-	}
     }
 }
 
@@ -226,7 +210,6 @@ sub DoEnd(){
 	$node->{"lon"} = $MainAttr{"lon"};
 	
 	if ( $AREA_FILTER->inside($node) ) {
-	    $OSM_Nodes{$id} = sprintf("%f,%f",$MainAttr{lat}, $MainAttr{lon});
 	    foreach(keys(%Tags)){
 		$node->{$_} = $Tags{$_};
 	    }

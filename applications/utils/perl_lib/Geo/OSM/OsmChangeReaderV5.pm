@@ -165,7 +165,7 @@ sub DoStart
       push @{$self->{tags}}, $Attr{"k"}, $Attr{"v"};
     }
     if($Name eq "nd"){
-      push @{$self->{members}}, $Attr{"id"};
+      push @{$self->{members}}, $Attr{"ref"};
     }
     if($Name eq "member"){
       push @{$self->{members}}, new Geo::OSM::Relation::Member( \%Attr );

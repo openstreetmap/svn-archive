@@ -28,7 +28,11 @@ Utils_LWP_DATA = Utils/LWP/*.pm
 
 
 EXTRA_DIST = \
-	$(Geo_DATA) $(Geo_Gpsdrive_DATA) $(Geo_OSM_DATA) $(Geo_GPX_DATA)\
+	$(Geo_DATA) \
+	$(Geo_Filter_DATA) \
+	$(Geo_GPX_DATA)\
+	$(Geo_Gpsdrive_DATA) \
+	$(Geo_OSM_DATA) \
 	$(Geo_Tracks_DATA) \
-	$(Geo_Filter_DATA)  $(Utils_DATA) \
+	$(Utils_DATA) \
 	$(Utils_LWP_DATA)

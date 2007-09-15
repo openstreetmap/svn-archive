@@ -11,10 +11,6 @@ BEGIN {
   unshift @INC, "../../perl_lib";
 }
 
-use Geo::OSM::OsmChangeReaderV3;
-use Geo::OSM::EntitiesV3;
-use Geo::OSM::APIClientV4;
-
 $ENV{TZ} = "UTC";
 
 my($input, $username, $password, $api, $help, %additional_tags);
@@ -23,6 +19,7 @@ my $dry_run = 0;
 my $loop = 0;
 my $verbose = 0;
 my $extract = 0;
+my $api_version;
 
 Getopt::Long::Configure('no_ignore_case');
 Getopt::Long::Configure ("bundling");
@@ -38,9 +35,30 @@ GetOptions (
              't|tags=s%'          => \%additional_tags,
              'v|verbose+'         => \$verbose,
              'x|extract+'         => \$extract,
+             '3'                  => sub {$api_version |= 3},
+             '5'                  => sub {$api_version |= 5},
              ) or pod2usage(1);
 
 pod2usage(1) if $help;
+
+$api_version ||= 3;  # Default API
+if( $api_version == 3 )
+{
+  eval "use Geo::OSM::OsmChangeReaderV3;".
+       "use Geo::OSM::EntitiesV3;".
+       "use Geo::OSM::APIClientV4;";
+}
+elsif( $api_version == 5 )
+{
+  eval "use Geo::OSM::OsmChangeReaderV5;".
+       "use Geo::OSM::EntitiesV5;".
+       "use Geo::OSM::APIClientV5;";
+}
+else
+{
+  die "Must specify either API 0.3 or API 0.5\n";
+}
+die $@ if $@;
 
 #$api ||= "http://www.openstreetmap.org/api/0.4";
 if( defined $api and $extract > 0 )
@@ -220,9 +238,7 @@ sub progress
   exit 3 if $quit_request;
   return if $extract;
     
-#  print "$time == $last_time or $last_time == $start_time\n";
   return if abs($time - $last_time) < 0.5 or $time == $start_time;
-  return if $db_file->{total} == 0 or $perc == 0 or $db_file->{count} == 0; # Any of these causes problems
   $last_time = $time;  
   
   my $remain;
@@ -231,7 +247,11 @@ sub progress
   if( $done_count == 0 and $skip_count > 0 )
   { $spin_delay = $elapsed_time / $skip_count }
 
-  if( $db_file->{loop} != 0 )
+  if( $db_file->{total} == 0 or $perc == 0 or $db_file->{count} == 0 ) # Any of these causes problems
+  {
+    $remain = -1
+  } 
+  elsif( $db_file->{loop} != 0 )
   {
     # After the first loop we have the actual count of changes in the file
     $perc = $db_file->{count}/$db_file->{total};

@@ -79,21 +79,24 @@ sub import_Jigle_file($$){
 	    # 0        1              2                 3          4       5    6       7                   8   9       0   1              2      3
 	    my @line = split(/\~/,$line);
 
+	    my $wlan_id=$line[3];
+	    $wlan_id =~ s/://g;
 	    my $point;
 	    $point->{'wlan.lat'}        = $line[0];
 	    $point->{'wlan.lon'}        = $line[1];
 	    $point->{'wlan.ssid'}       = $line[2];
 	    $point->{'wlan.bssid'}      = $line[3];
-	    $point->{'wlan.name'}       = $point->{'wlan.ssid'}."\n".$point->{'wlan.bssid'};
+	    $point->{'wlan.name'}       = $point->{'wlan.ssid'}."\t".$point->{'wlan.bssid'};
 	    $point->{'wlan.essid'}      = $point->{'wlan.ssid'};
+	    $point->{'wlan.wlan_id'}    = $wlan_id;
 	    $point->{'wlan.discoverer'} = $line[4];
 	    $point->{'wlan.channel'}    = $line[5];
 	    $point->{'wlan.type'}       = $line[6];
-	    $point->{'wlan.nettype'}    = $line[6];
+	    $point->{'wlan.nettype'}    = ($line[7] eq "Y") ? 1 : 0;
 	    $point->{'wlan.cloaked'}    = "0";
 	    $point->{'wlan.freenet'}    = $line[7];
 	    $point->{'wlan.last_modified'}      = $line[8];
-	    $point->{'wlan.wep'}        = $line[8];
+	    $point->{'wlan.wep'}        = $line[7];
 	    $point->{'wlan.comment'}    = $point->{'wlan.bssid'};
 	    $point->{'wlan.macaddr'}    = $point->{'wlan.bssid'};
 	    $point->{'wlan.date2'}      = $line[12];
@@ -104,7 +107,6 @@ sub import_Jigle_file($$){
 	    $point->{source_id} = $source_id;
 	    correct_lat_lon($point);
 	    Geo::Gpsdrive::DBFuncs::add_wlan($point);
-	    #print "Wlan:".Dumper(\$point);
 	    
 	}	    
 

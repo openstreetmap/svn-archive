@@ -514,13 +514,11 @@ sub add_poi($){
 #############################################################################
 # Add a single wlan into DB
 sub add_wlan($){
-    my $wlan = shift;
-    my $point = {};
+    my $point = shift;
     my @columns = column_names("wlan");
-    map { $point->{"wlan.$_"} = ( $wlan->{"wlan.$_"} || $wlan->{$_} || $wlan->{lc($_)}) } @columns;
+#    print "Add_WLAN wlan: ".Dumper(\$point);
 
     # ---------------------- SOURCE
-    #print "Add_WLAN: ".Dumper(\$point);
     if ( $point->{"source.name"} && ! $point->{'wlan.source_id'}) {
 	my $source_id = source_name2id($point->{"source.name"});
 	# print "Source: $point->{'source.name'} -> $source_id\n";
@@ -528,23 +526,6 @@ sub add_wlan($){
 	$point->{'source.source_id'} = $source_id;
 	$point->{'wlan.source_id'}    = $source_id;
     }
-
-    # ---------------------- Poi_Type
-    my $type_name = $wlan->{'poi_type.name'};
-    if ( $type_name && ! $point->{'wlan.poi_type_id'}) {
-	my $poi_type_id = type_name2id($type_name);
-	unless ( $poi_type_id ) {
-	    my $type_hash= {
-		'poi_type.name' => $type_name
-		};
-	    insert_hash("poi_type",$type_hash);
-	    $poi_type_id = type_name2id($point->{"type.name"});
-	}
-	$point->{'wlan.poi_type_id'}    = $poi_type_id;
-    }
-
-    # ---------------------- TYPE
-    $point->{'wlan.poi_type_id'}       ||= 0;
 
     # ---------------------- WLAN
     $point->{'wlan.last_modified'} ||= time();
@@ -699,7 +680,7 @@ sub create_db(){
 
     # ------- WLAN
     db_exec('CREATE TABLE IF NOT EXISTS `wlan` (
-                        `wlan_id`               int(11)         NOT NULL        auto_increment,
+                        `wlan_id`       int(11)         NOT NULL        auto_increment,
                         `lat`           double          NOT NULL        default \'0\',
                         `lon`           double          NOT NULL        default \'0\',
                         `alt`           double                          default \'0\',

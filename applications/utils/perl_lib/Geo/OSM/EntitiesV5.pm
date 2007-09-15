@@ -176,7 +176,7 @@ sub map
   my ($new_id) = $mapper->map('way',$self->id);   # Determine mapped ID
   # It is ok for the new_id to be incomplete; it may be a create request
   
-  my @new_nodes = map { [ $mapper->map('node',$_) ] } @{$self->segs};
+  my @new_nodes = map { [ $mapper->map('node',$_) ] } @{$self->nodes};
   map { $incomplete |= $_->[1] } @new_nodes;
   # incomplete tracks if any of the segs are incomplete
   
@@ -227,7 +227,7 @@ sub role { shift->[2] }
 
 sub type { return "relation:member" }
 
-sub xml
+sub _xml
 {
   my $self = shift;
   my $writer = shift;
@@ -270,6 +270,12 @@ sub set_members
   $self->{members} = [map { new Geo::OSM::Relation::Member($_) } @$members];
 }
 
+sub members
+{
+  my $self = shift;
+  return [@{$self->{members}}];
+}
+
 sub type { return "relation" }
 
 sub xml
@@ -282,7 +288,7 @@ sub xml
   $self->tag_xml( $writer );
   # Write members
   foreach my $member (@{$self->{members}})
-  { $member->xml( $writer ) }
+  { $member->_xml( $writer ) }
   $writer->endTag( "relation" );
   $writer->end;
   return $str;
@@ -297,7 +303,7 @@ sub map
   my @new_members = map { [ $_->map($mapper) ] } @{$self->members};
   map { $incomplete |= $_->[1] } @new_members;
   # incomplete tracks if any of the members are incomplete
-  my $new_ent = new Geo::OSM::Segment( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_members] );
+  my $new_ent = new Geo::OSM::Relation( {id=>$new_id, timestamp=>$self->timestamp}, $self->tags, [map {$_->[0]} @new_members] );
   return($new_ent,$incomplete);
 }
 

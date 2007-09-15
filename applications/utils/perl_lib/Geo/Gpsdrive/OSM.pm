@@ -588,10 +588,24 @@ sub import_Data($@){
     -d $mirror_dir or mkpath $mirror_dir
 	    or die "Cannot create Directory $mirror_dir:$!\n";
 
-    my $icons_filename ||= "$ENV{HOME}/.josm/icons.xml";
-    $icons_filename = "../data/map-icons/icons.xml" unless -s $icons_filename;
-    $icons_filename = "data/map-icons/icons.xml" unless -s $icons_filename;
+    my $icons_filename;
+    for my $fn ( "$ENV{HOME}/.josm/icons.xml",
+		 "../data/map-icons/icons.xml",
+		 "data/map-icons/icons.xml",
+		 "/usr/local/map-icons/icons.xml",
+		 "/usr/local/share/map-icons/icons.xml",
+		 ) {
+	unless (  -s $icons_filename ){
+	    print STDERR "Checking icons-file: $fn\n"
+		if $VERBOSE || $DEBUG;
+	    $icons_filename = $fn;
+	}
+    }
+    die "!!!!!!!!ERROR: icons File '$icons_filename' not found\n" 
+	unless $icons_filename && -s $icons_filename;
+
     load_icons( $icons_filename );
+
     my $elemstyles_filename = "$ENV{HOME}/.josm/plugins/mappaint/elemstyles.xml";
     $elemstyles_filename ="$ENV{HOME}/svn.openstreetmap.org/applications/editors/josm/plugins/mappaint/styles/standard/elemstyles.xml" unless -s  $elemstyles_filename;
     $elemstyles_filename ="../../editors/josm/plugins/mappaint/styles/standard/elemstyles.xml" unless -s  $elemstyles_filename;

@@ -59,6 +59,8 @@ sub import_Jigle_file($$){
     my $fh = IO::File->new("<$full_filename");
     my $filename = basename($full_filename);
 
+    my $wlan_id=99999999;
+
     $LINES_COUNT_FILE =0;
     while ( my $line = $fh->getline() ) {
 	$LINES_COUNT_FILE ++;
@@ -79,8 +81,7 @@ sub import_Jigle_file($$){
 	    # 0        1              2                 3          4       5    6       7                   8   9       0   1              2      3
 	    my @line = split(/\~/,$line);
 
-	    my $wlan_id=$line[3];
-	    $wlan_id =~ s/://g;
+	    $wlan_id++;
 	    my $point;
 	    $point->{'wlan.lat'}        = $line[0];
 	    $point->{'wlan.lon'}        = $line[1];

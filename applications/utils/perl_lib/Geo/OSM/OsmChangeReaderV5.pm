@@ -81,9 +81,9 @@ sub load{
   my $start_time = time();
   my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
     my $fh = data_open($file_name);
-    $self->{fh} = $fh;
-    $self->{count}=0;
     die "Cannot open OSM File $file_name\n" unless $fh;
+    $self->{input_length} = -s $fh;
+    $self->{count}=0;
     eval {
 	$P->parse($fh);
     };
@@ -100,6 +100,33 @@ sub load{
 	return;
     }
 
+}
+
+sub parse($)
+{
+  my ($self, $string) = @_;
+
+  $self->{state} = STATE_INIT;
+  
+  my $start_time = time();
+  my $P = new XML::Parser(Handlers => {Start => sub{ DoStart( $self, @_ )}, End => sub { DoEnd( $self, @_ )}});
+    $self->{input_length} = length($string);
+    $self->{count}=0;
+    eval {
+	$P->parse($string);
+    };
+    print "\n" if $DEBUG || $VERBOSE;
+    if ( $VERBOSE) {
+	printf "Read and parsed string in %.0f sec\n",time()-$start_time;
+    }
+    if ( $@ ) {
+	warn "$@Error while parsing\n [$string]\n";
+	return;
+    }
+    if (not $P) {
+	warn "WARNING: Could not parse osm data\n";
+	return;
+    }
 }
 
 # Function is called whenever an XML tag is started
@@ -200,7 +227,7 @@ sub DoEnd
       $self->{count}++;
       if( $self->{progress} and ($self->{count}%11) == 1)
       {
-        $self->{progress}->($self->{count}, tell($self->{fh})/(-s $self->{fh}) );
+        $self->{progress}->($self->{count}, $Expat->current_byte()/$self->{input_length} );
       }
       $self->{state} = STATE_EXPECT_ENTITY;
     }

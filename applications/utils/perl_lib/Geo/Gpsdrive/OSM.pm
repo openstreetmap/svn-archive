@@ -575,7 +575,7 @@ sub import_Data($@){
 		 "/usr/local/map-icons/icons.xml",
 		 "/usr/local/share/map-icons/icons.xml",
 		 ) {
-	unless (  -s $icons_filename ){
+	unless ( $icons_filename && -s $icons_filename ){
 	    print STDERR "Checking icons-file: $fn\n"
 		if $VERBOSE || $DEBUG;
 	    $icons_filename = $fn;

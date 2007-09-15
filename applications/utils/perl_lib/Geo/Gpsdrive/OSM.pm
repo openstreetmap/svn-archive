@@ -31,8 +31,9 @@ our $PARSING_DISPLAY_TIME=0;
 our $ICON_RULES;
 our $ELEMSTYLES;
 our $ELEMSTYLES_RULES;
-my $SOURCE_ID_NODE;
-my $SOURCE_ID_SEGMENT;
+
+my $SOURCE_OSM = "OpenStreetMap.org";
+my $SOURCE_ID_OSM=0;
 
 our (%MainAttr,%Tags, @WaySegments);
 # Stored data
@@ -309,7 +310,7 @@ sub write_named_point($) {
 	$poi_type_id = poi_type_id($k,$v);
 	if ( $poi_type_id ) {
 	    my $values;
-	    $values->{'poi.source_id'} = $SOURCE_ID_NODE;
+	    $values->{'poi.source_id'} = $SOURCE_ID_OSM;
 	    $values->{'poi.name'}      = $node->{name}||$node->{ref}||'Unknown OSM POI';
 	    $values->{'poi.lat'}       = $node->{lat};
 	    $values->{'poi.lon'}       = $node->{lon};
@@ -536,38 +537,34 @@ my $class2type = {
 
 
 # ******************************************************************
-sub delete_existing_entries($){
-    my $type = shift;
-    my $source = "OpenStreetMap.org $type";
+sub delete_existing_osm_entries(){
 
     unless ( $main::no_delete ) {
-	print "Delete old 'OSM $type' Data\n";
-	Geo::Gpsdrive::DBFuncs::delete_all_from_source($source);
-	print "Deleted old '$source' Data\n" if $VERBOSE || $debug;
+	print "Delete old OSM Data\n";
+	Geo::Gpsdrive::DBFuncs::delete_all_from_source($SOURCE_OSM);
+	print "Deleted old OSM Data\n" if $VERBOSE || $debug;
     }
 
 }
 
 # ******************************************************************
-sub get_source_id($){
-    my $type = shift;
+sub get_source_id{
 
-    my $source = "osm.$type";
+    $SOURCE_ID_OSM = Geo::Gpsdrive::DBFuncs::source_name2id($SOURCE_OSM);
 
-    my $source_id = Geo::Gpsdrive::DBFuncs::source_name2id($source);
-
-    unless ( $source_id ) {
+    unless ( $SOURCE_ID_OSM ) {
 	my $source_hash = {
 	    'source.url'     => "http://openstreetmap.org/",
-	    'source.name'    => $source ,
+	    'source.name'    => $SOURCE_ID_OSM ,
 	    'source.comment' => '' ,
 	    'source.licence' => ""
 	    };
 	Geo::Gpsdrive::DBFuncs::insert_hash("source", $source_hash);
-	$source_id = Geo::Gpsdrive::DBFuncs::source_name2id($source);
+	$SOURCE_ID_OSM = Geo::Gpsdrive::DBFuncs::source_name2id($SOURCE_OSM);
     }
-    exit unless $source_id;
-    return $source_id;
+    die "Cannot get Source ID for $SOURCE_OSM\n" 
+	unless $SOURCE_ID_OSM;
+    return $SOURCE_ID_OSM;
 }
 
 
@@ -613,13 +610,9 @@ sub import_Data($@){
     load_elemstyles($elemstyles_filename);
 
     disable_keys('poi');
-    $SOURCE_ID_NODE   = get_source_id("node");
-    $SOURCE_ID_SEGMENT = get_source_id("segment");
-    die "SOURCE_ID_SEGMENT is not set\n" unless $SOURCE_ID_SEGMENT;
+    $SOURCE_ID_OSM   = get_source_id();
     
-    delete_existing_entries("node");
-    delete_existing_entries("segment");
-    delete_existing_entries("way");
+    delete_existing_osm_entries();
     
     for my $filename ( @filenames ) {
 	print "Import OSM Data '$filename'\n";

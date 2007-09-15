@@ -232,6 +232,7 @@ sub delete_all_from_source($){
     debug("delete_all_from_source($source_name)");
     return unless $source_name;
     my $source_id = source_name2id( $source_name);
+    debug("Delete all from '$source_id'\n");
     return unless $source_id >0;
 
     my $query = "DELETE FROM poi WHERE poi.source_id = '$source_id'";

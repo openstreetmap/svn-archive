@@ -17,6 +17,7 @@ use MIME::Base64;
 use HTTP::Request;
 use Carp;
 use Encode;
+use POSIX qw(sigprocmask);
 
 sub new
 {
@@ -59,6 +60,27 @@ sub _process
   die "Internal error: don't know what to do with buffer $obj->{buffer}";
 }  
 
+# Utility function to handle the temporary blocking of signals in a way that
+# works with exception handling.
+sub _with_blocked_sigs(&)
+{
+  my $ss = new POSIX::SigSet( &POSIX::SIGINT );
+  my $func = shift;
+  my $os = new POSIX::SigSet;
+  sigprocmask( &POSIX::SIG_BLOCK, $ss, $os );
+  my $ret = eval { &$func };
+  sigprocmask( &POSIX::SIG_SETMASK, $os );
+  die $@ if $@;
+  return $ret;
+}
+
+sub _request
+{
+  my $self = shift;
+  my $req = shift;
+  return _with_blocked_sigs { $self->{client}->request($req) };
+}
+
 sub last_error_code
 {
   return shift->{last_error}->code;
@@ -81,7 +103,7 @@ sub create($)
   
 #  print $req->as_string;
   
-  my $res = $self->{client}->request($req);
+  my $res = $self->_request($req);
   
 #  print $res->as_string;
 
@@ -103,7 +125,7 @@ sub modify($)
   
 #  print $req->as_string;
   
-  my $res = $self->{client}->request($req);
+  my $res = $self->_request($req);
   
   return $ent->id() if $res->code == 200;
   $self->{last_error} = $res;
@@ -119,7 +141,7 @@ sub delete($)
   
 #  print $req->as_string;
   
-  my $res = $self->{client}->request($req);
+  my $res = $self->_request($req);
   
   return $ent->id() if $res->code == 200;
   $self->{last_error} = $res;
@@ -134,7 +156,7 @@ sub get($$)
   
   my $req = new HTTP::Request GET => $self->{url}."/$type/$id";
   
-  my $res = $self->{client}->request($req);
+  my $res = $self->_request($req);
 
   if( $res->code != 200 )
   {
@@ -180,7 +202,7 @@ sub map($$$$)
   
   my $req = new HTTP::Request GET => $self->{url}."/map?bbox=$bbox[0],$bbox[1],$bbox[2],$bbox[3]";
   
-  my $res = $self->{client}->request($req);
+  my $res = $self->_request($req);
 
   if( $res->code != 200 )
   {
@@ -193,9 +215,7 @@ sub map($$$$)
   $self->{reader}->parse($res->content);
   undef $self->{buffer};
   
-  return @res;
+  return \@res;
 }
-
-
 
 1;

@@ -1,5 +1,6 @@
 NameVirtualHost *
-<VirtualHost *>
+NameVirtualHost *:443
+<VirtualHost _default_>
 	ServerAdmin webmaster@localhost
 	
 	DocumentRoot /var/www/www.openstreetmap.de/
@@ -13,7 +14,7 @@ NameVirtualHost *
 		Order allow,deny
 		allow from all
 		# This directive allows us to have apache2's default start page
-                # in /www.openstreetmap.de/, but still have / go to the right place
+		# in /www.openstreetmap.de/, but still have / go to the right place
 #                RedirectMatch ^/$ /www.openstreetmap.de/
 	</Directory>
 
@@ -34,4 +35,61 @@ NameVirtualHost *
 	CustomLog /var/log/apache2/access.log combined
 	ServerSignature On
 
+	<Location /svn>
+		DAV svn
+		SVNParentPath /var/svn
+		<LimitExcept GET PROPFIND OPTIONS REPORT>
+			Deny from all
+		</LimitExcept>
+	</Location>
 </VirtualHost>
+
+<VirtualHost _default_:443>
+        ServerAdmin webmaster@localhost
+
+	DocumentRoot /var/www/www.openstreetmap.de/
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+		# This directive allows us to have apache2's default start page
+		# in /www.openstreetmap.de/, but still have / go to the right place
+#                RedirectMatch ^/$ /www.openstreetmap.de/
+	</Directory>
+
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/www.openstreetmap.de
+	<Directory "/usr/lib/cgi-bin/www.openstreetmap.de">
+		AllowOverride None
+		Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	ErrorLog /var/log/apache2/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog /var/log/apache2/access.log combined
+	ServerSignature On
+
+	<Location /svn>
+		DAV svn
+		SVNParentPath /var/svn
+		AuthType Basic
+		AuthName "JOSM Repository"
+		AuthUserFile /var/svn/passwd
+	</Location>
+
+	SSLEngine on
+	SSLCertificateFile /etc/apache2/ssl/openstreetmap.de.crt
+	SSLCertificateKeyFile /etc/apache2/ssl/openstreetmap.de.private.key
+	SSLProtocol all -SSLv2
+</VirtualHost>
+

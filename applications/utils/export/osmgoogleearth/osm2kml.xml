@@ -324,7 +324,7 @@
         <Style id="parking">
             <IconStyle id="iconstyle-parking">
                 <Icon>
-                    <href>icons/icon-parking.png</href>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/parking_lot.png</href>
                 </Icon>
                 <scale>0.7</scale>
             </IconStyle>

@@ -284,7 +284,6 @@
             </rule>
         </rule>
 
-
         <!-- Linear cores -->
         <rule e="way" k="tunnel" v="~|false|no">
 			<rule e="way" k="highway" v="raceway">
@@ -491,6 +490,12 @@
 			</rule>
         </rule>
 
+        <!-- highway motorway-junctions -->
+        <rule e="node" k="highway" v="motorway_junction">
+          <circle r="3" class="highway-motorway-junction" />
+          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
+          <text k="ref" class='highway-motorway-junction-caption' dy='+10px' />
+        </rule>
 
 
 
@@ -694,7 +699,6 @@
             </rule>
         </rule>
 
-
         <!-- Road numbers for all highways -->
         <rule e="way" k="osmarender:renderRef" v="~|yes" layer="5">
             <rule e="way" k="tunnel" v="~|no|false" layer="5">    <!-- no road numbers in tunnels -->
@@ -803,7 +807,23 @@
                 stroke-linejoin: round;
                 fill: none;
             }
-
+            
+            .highway-motorway-junction {
+            fill: yellow;
+            stroke: #4D5D73;
+            stroke-width: 1.5px;
+            }
+            
+            .highway-motorway-junction-caption {
+            fill: black;
+            stroke: black;
+            stroke-width: 0.2px;
+            font-family: "DejaVu Sans",sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            }
+            
             .highway-ref {
                 fill: #666666;
                 stroke: white;

@@ -100,7 +100,6 @@
 			</rule>
 		</rule>
 
-
         <!-- Man-made areas -->
         <rule e="way" k="sport" v="*">
             <area class='sport'/>
@@ -365,6 +364,13 @@
 			</rule>
         </rule>
 
+        <!-- highway motorway-junctions -->
+        <rule e="node" k="highway" v="motorway_junction">
+          <circle r="7" class="highway-motorway-junction" />
+          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
+          <text k="ref" class='highway-motorway-junction-caption' dy='+5px' />
+        </rule>
+
 
         <!-- Tunnels -->
         <rule e="way" k="tunnel" v="true|yes">
@@ -469,7 +475,6 @@
 				<line class='railway-rail-casing highway-tunnel-ends'/>
 			</rule>
         </rule>
-
 		<!-- Natural features -->
 		<rule e="node" k="natural" v="peak">
 			<symbol xlink:href="#symbol-peak" width='24px' height='24px' transform='translate(-12,-12)' />
@@ -533,8 +538,7 @@
                 stroke: #e0e0e0;
                 stroke-dasharray: 0.5,0.5;
             }
-
-
+            
 			/* Railways - generic styles */
             .railway-casing {
 				stroke-linecap: butt;
@@ -562,6 +566,22 @@
                 fill: none;
             }
 
+            .highway-motorway-junction {
+            fill: yellow;
+            stroke: #4D5D73;
+            stroke-width: 3px;
+            }
+            
+            .highway-motorway-junction-caption {
+            fill: black;
+            stroke: blue;
+            stroke-width: 0.2px;
+            font-family: "DejaVu Sans",sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            display: none;
+            }
+            
             .highway-ref {
                 fill: #666666;
                 stroke: white;

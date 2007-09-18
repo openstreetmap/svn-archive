@@ -296,7 +296,6 @@
             </rule>
         </rule>
 
-
         <!-- Bridge cores -->
         <rule e="way" k="bridge" v="yes|true">
             <rule e="way" k="railway" v="rail">
@@ -469,6 +468,13 @@
             </rule>
         </rule>
 
+        <!-- highway motorway_junctions -->
+        <rule e="node" k="highway" v="motorway_junction">
+          <circle r="1.825" class="highway-motorway-junction" />
+          <text k="name" class='highway-motorway-junction-caption' dy='-2.3px' />
+          <text k="ref" class='highway-motorway-junction-caption' dy='0.7px' />
+        </rule>
+        
 
         <!-- Linear cores -->
         <rule e="way" k="tunnel" v="~|false|no">
@@ -846,7 +852,6 @@
             <line class='aerialway-line'/>
             <line class='aerialway-struts'/>
         </rule>
-
 
 		<!-- Natural features -->
 		<rule e="node" k="natural" v="peak">
@@ -1382,12 +1387,28 @@
                 fill: none;
             }
 
-            .highway-ref {
+            .highway-motorway-junction {
+               fill: yellow;
+               stroke: #4D5D73;
+               stroke-width: 0.75px;
+               }
+                        
+               .highway-motorway-junction-caption {
+               fill: black;
+               stroke: black;
+               stroke-width: 0.05px;
+               font-family: "DejaVu Sans",sans-serif;
+               font-size: 1.5px;
+               font-weight: bold;
+               text-anchor: middle;
+              }
+            
+           .highway-ref {
                 fill: #666666;
                 stroke: white;
                 font-family: "DejaVu Sans";
                 font-weight: normal;
-				text-anchor: middle;
+		text-anchor: middle;
             }
 
             .highway-name {

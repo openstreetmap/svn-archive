@@ -371,6 +371,13 @@
 			</rule>
         </rule>
 
+        <!-- highway motorway-junctions -->
+        <rule e="node" k="highway" v="motorway_junction">
+          <circle r="6" class="highway-motorway-junction" />
+          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
+          <text k="ref" class='highway-motorway-junction-caption' dy='+5px' />
+        </rule>
+
 
         <!-- Tunnels -->
         <rule e="way" k="tunnel" v="true|yes">
@@ -498,7 +505,6 @@
             <line class='route-ferry' />
         </rule>
 
-
         <!-- Railway stations -->
         <rule e="node" k="railway" v="station">
 			<rule e="node" s="way" k="railway" v="rail">
@@ -608,6 +614,22 @@
                 fill: none;
             }
 
+            .highway-motorway-junction {
+            fill: yellow;
+            stroke: #4D5D73;
+            stroke-width: 2px;
+            }
+            
+            .highway-motorway-junction-caption {
+            fill: black;
+            stroke: blue;
+            stroke-width: 0.2px;
+            font-family: "DejaVu Sans",sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            display: none;
+            }
+            
             .highway-ref {
                 fill: #666666;
                 stroke: white;

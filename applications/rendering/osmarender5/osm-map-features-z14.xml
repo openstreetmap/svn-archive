@@ -490,15 +490,6 @@
 			</rule>
         </rule>
 
-        <!-- highway motorway-junctions -->
-        <rule e="node" k="highway" v="motorway_junction">
-          <circle r="3" class="highway-motorway-junction" />
-          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
-          <text k="ref" class='highway-motorway-junction-caption' dy='+10px' />
-        </rule>
-
-
-
         <!-- Linear cores (under construction) -->
         <rule e="way" k="highway" v="construction">
 			<rule e="way" k="construction" v="steps">

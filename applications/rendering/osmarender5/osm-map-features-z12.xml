@@ -364,14 +364,6 @@
 			</rule>
         </rule>
 
-        <!-- highway motorway-junctions -->
-        <rule e="node" k="highway" v="motorway_junction">
-          <circle r="7" class="highway-motorway-junction" />
-          <text k="name" class='highway-motorway-junction-caption' dy='-2px' />
-          <text k="ref" class='highway-motorway-junction-caption' dy='+5px' />
-        </rule>
-
-
         <!-- Tunnels -->
         <rule e="way" k="tunnel" v="true|yes">
             <rule e="way" k="highway" v="steps">

@@ -1,7 +1,7 @@
 <?php
 $layerData = array (
- "name"   => array(1=>"tile", 2=>"cycle", 3=>"maplint", 4=>"lowzoom"),
- "dir"    => array(1=>"tile", 2=>"cycle", 3=>"maplint", 4=>"tile"),
+ "name"   => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"lowzoom"),
+ "dir"    => array(1=>"tile", 2=>"poi", 3=>"maplint", 4=>"tile"),
  "maxZoom"=> array(1=>17, 2=>17, 3=>16, 4=>11),
  "numTileset"=> array(1=>1365, 2=>1365, 3=>341, 4=>1),
 );

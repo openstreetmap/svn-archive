@@ -1,67 +1,166 @@
+<% content_for :greeting do %>
+<% if @user and !@user.home_lon.nil? and !@user.home_lat.nil? %>
+<%= link_to_function 'home', "setPosition(#{@user.home_lat}, #{@user.home_lon}, 10)" %> |
+<% end %>
+<% end %>
 
+<% content_for :left_menu do %>
+<%= link_to "Map key", "http://wiki.openstreetmap.org/index.php/Map_Key" %>
+<% end %>
 
-<div id="geocoder">
-  <%= start_form_tag :controller => 'way_tag', :action => 'search' %>
-  <%= text_field 'query', 'query'%>
-  <%= submit_tag 'Search' %>
-  <%= end_form_tag %>
-</div>
+<%= render :partial => 'search', :locals => { :onopen => "resizeMap();", :onclose => "resizeMap();" } %>
 
+<div id="map"></div> 
 
+<% if params['mlon'] and params['mlat'] %>
+<% marker = true %>
+<% mlon = params['mlon'] %> 
+<% mlat = params['mlat'] %>
+<% end %>
 
-<% lon =  params['lon'] || '-0.1' %>
-<% lat =  params['lat'] || '51.5' %>
-<% zoom =  params['zoom'] || '4' %>
+<% if params['minlon'] and params['minlat'] and params['maxlon'] and params['maxlat'] %>
+<% bbox = true %>
+<% minlon = params['minlon'] %>
+<% minlat = params['minlat'] %>
+<% maxlon = params['maxlon'] %>
+<% maxlat = params['maxlat'] %>
+<% end %>
 
-<script type="text/javascript">
-  var lon = <%= lon %>;
-  var lat = <%= lat %>;
-  var zoom = <%= zoom %>;
-  var PI = 3.14159265358979323846;
+<% if params['lon'] and params['lat'] %>
+<% lon =  params['lon'] %>
+<% lat =  params['lat'] %>
+<% zoom =  params['zoom'] || '5' %>
+<% layers = params['layers'] %>
+<% elsif params['mlon'] and params['mlat'] %>
+<% lon = params['mlon'] %> 
+<% lat = params['mlat'] %>
+<% zoom =  params['zoom'] || '12' %>
+<% layers = params['layers'] %>
+<% elsif cookies.key?("location") %>
+<% lon,lat,zoom,layers = cookies["location"].value.first.split(",") %>
+<% elsif @user and !@user.home_lon.nil? and !@user.home_lat.nil? %> 
+<% lon =  @user.home_lon %>
+<% lat =  @user.home_lat %>
+<% zoom = '10' %>
+<% else %>
+<% session[:location] = OSM::IPLocation(request.env['REMOTE_ADDR']) unless session[:location] %>
+<% if session[:location] %>
+<% bbox = true %>
+<% minlon = session[:location][:minlon] %>
+<% minlat = session[:location][:minlat] %>
+<% maxlon = session[:location][:maxlon] %>
+<% maxlat = session[:location][:maxlat] %>
+<% else %>
+<% lon =  '-0.1' %>
+<% lat =  '51.5' %>
+<% zoom =  params['zoom'] || '5' %>
+<% layers = params['layers'] %>
+<% end %>
+<% end %>
 
-  <% if params['scale'] and params['scale'].length > 0 then %>
-  zoom = Math.log(360.0/(( <% print params['scale'].to_f() %> ) * 512.0)) / Math.log(2.0);
-  <% end %>
-  zoom = zoom;
-  lon = lon * 20037508.34 / 180;
-  lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
-  lat = lat * 20037508.34 / 180;
+<script type="text/javascript" src="/openlayers/OpenLayers.js"></script>
+<%= javascript_include_tag 'map.js' %>
 
-</script>
-<script type="text/javascript" src="/javascripts/OpenLayers.js"></script>
 
 <script type="text/javascript">
   <!--
-  var map, layer;
-
+  var brokenContentSize = $("content").offsetWidth == 0;
+  var marker;
+  var map;
 
   function init(){
+    map = createMap("map");
 
-    OpenLayers.Util.onImageLoadError = function() {
-      this.src = "http://www.openstreetmap.org/javascript/img/404.png";
+    <% if bbox %>
+    var min = lonLatToMercator(new OpenLayers.LonLat(<%= minlon %>, <%= minlat %>));
+    var max = lonLatToMercator(new OpenLayers.LonLat(<%= maxlon %>, <%= maxlat %>));
+    var bbox = new OpenLayers.Bounds(min.lon, min.lat, max.lon, max.lat);
+
+    map.zoomToExtent(bbox);
+    <% else %>
+    var centre = lonLatToMercator(new OpenLayers.LonLat(<%= lon %>, <%= lat %>));
+    var zoom = <%= zoom %>;
+
+    <% if params['scale'] and params['scale'].length > 0 then %>
+    zoom = scaleToZoom(<%= params['scale'].to_f() %>);
+    <% end %>
+
+    map.setCenter(centre, zoom);
+    <% end %>
+
+    <% if layers %>
+    setMapLayers("<%= layers %>");
+    <% end %>
+
+    <% if marker %>
+    marker = addMarkerToMap(lonLatToMercator(new OpenLayers.LonLat(<%= mlon %>, <%= mlat %>)));
+    <% end %>
+
+    map.events.register("moveend", map, updateLocation);
+    updateLocation();
+
+    handleResize();
+  }
+
+  function getPosition() {
+    return mercatorToLonLat(map.getCenter());
+  }
+
+  function setPosition(lat, lon, zoom) {
+    var centre = lonLatToMercator(new OpenLayers.LonLat(lon, lat));
+
+    map.setCenter(centre, zoom);
+
+    if (marker)
+      removeMarkerFromMap(marker);
+
+    marker = addMarkerToMap(centre, getArrowIcon());
+  }
+
+  function updateLocation() {
+    var lonlat = mercatorToLonLat(map.getCenter());
+    var zoom = map.getZoom();
+    var layers = getMapLayers();
+
+    updatelinks(lonlat.lon, lonlat.lat, zoom, layers);
+
+    document.cookie = "location=" + lonlat.lon + "," + lonlat.lat + "," + zoom + "," + layers;
+  }
+
+  function resizeContent() {
+    var content = $("content");
+    var rightMargin = parseInt(getStyle(content, "right"));
+    var bottomMargin = parseInt(getStyle(content, "bottom"));
+
+    content.style.width = document.documentElement.clientWidth - content.offsetLeft - rightMargin;
+    content.style.height = document.documentElement.clientHeight - content.offsetTop - bottomMargin;
+  }
+  
+  function resizeMap() {
+    var centre = map.getCenter();
+    var zoom = map.getZoom();
+    var search_results_width = $("search_results").offsetWidth;
+
+    if (search_results_width > 0) {
+      search_results_width = search_results_width + 5
     }
-    map = new OpenLayers.Map( "map", 
-        {maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34), maxZoomLevel:18, maxResolution:156543, units:'meters', projection: "EPSG:41001"} );
-    layer = new OpenLayers.Layer.LikeGoogle( "Mapnik", "http://tile.openstreetmap.org/", {type:'png'} );
-    map.addLayer(layer);
-    layer = new OpenLayers.Layer.LikeGoogle( "Osmarender", "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/", {type:'png'} );
-    map.addLayer(layer);
 
-    map.addControl(new OpenLayers.Control.LayerSwitcher());
-    map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
+    $("map").style.left = (search_results_width) + "px";
+    $("map").style.width = ($("content").offsetWidth - search_results_width) + "px";
+    $("map").style.height = ($("content").offsetHeight - 2) + "px";
 
-    map.events.register("moveend", map, function() { 
-        var lonlat = map.getCenter();
+    map.setCenter(centre, zoom);
+  }
 
-        var lon_deg = (lonlat.lon / 20037508.34) * 180;
-        var lat_deg = (lonlat.lat / 20037508.34) * 180;
-        var PI = 3.14159265358979323846;
-        lat_deg = 180/PI * (2 * Math.atan(Math.exp(lat_deg * PI / 180)) - PI / 2);
-        var zoom = map.getZoom();
-        updatelinks(lon_deg,lat_deg,zoom);
-        });
-  }        
+  function handleResize() {
+    if (brokenContentSize) {
+      resizeContent();
+    }
 
-init();
+    resizeMap();
+  }
+
+  window.onresize = handleResize;
+  window.onload = init;
 // -->
 </script>

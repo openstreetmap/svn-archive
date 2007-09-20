@@ -5,13 +5,14 @@ module OSM
   #
   # This would print every latitude value:
   #
-  # gpx = OSM:GPXImporter.new('somefile.gpx')
+  # gpx = OSM::GPXImporter.new('somefile.gpx')
   # gpx.points {|p| puts p['latitude']}
 
   require 'time'
   require 'rexml/parsers/sax2parser'
   require 'rexml/text'
   require 'xml/libxml'
+  require 'digest/md5'
   require 'RMagick'
 
   class Mercator
@@ -22,10 +23,11 @@ module OSM
       @clat = lat
       @clon = lon
       @degrees_per_pixel = degrees_per_pixel
+      @degrees_per_pixel = 0.0000000001 if @degrees_per_pixel < 0.0000000001
       @width = width
       @height = height
-      @dlon = width / 2 * degrees_per_pixel
-      @dlat = height / 2 * degrees_per_pixel  * cos(@clat * PI / 180)
+      @dlon = width / 2 * @degrees_per_pixel
+      @dlat = height / 2 * @degrees_per_pixel  * cos(@clat * PI / 180)
 
       @tx = xsheet(@clon - @dlon)
       @ty = ysheet(@clat - @dlat)
@@ -69,22 +71,22 @@ module OSM
 
     def initialize(filename)
       @filename = filename
-      @possible_points = 0
-      @actual_points = 0
-      @tracksegs = 0
     end
 
     def points
-      file = File.new(@filename)
-      parser = REXML::Parsers::SAX2Parser.new( file )
+      @possible_points = 0
+      @actual_points = 0
+      @tracksegs = 0
 
       lat = -1
       lon = -1
       ele = -1
-      date = Time.now();
+      date = DateTime.now();
       gotlatlon = false
       gotele = false
       gotdate = false
+
+      parser = REXML::Parsers::SAX2Parser.new(File.new(@filename))
 
       parser.listen( :start_element,  %w{ trkpt }) do |uri,localname,qname,attributes| 
         lat = attributes['lat'].to_f
@@ -100,8 +102,11 @@ module OSM
 
       parser.listen( :characters, %w{ time } ) do |text|
         if text && text != ''
-          date = Time.parse(text)
-          gotdate = true
+          begin
+            date = DateTime.parse(text)
+            gotdate = true
+          rescue
+          end
         end
       end
 
@@ -114,17 +119,19 @@ module OSM
           ele = '0' unless gotele
           if lat < 90 && lat > -90 && lon > -180 && lon < 180
             @actual_points += 1
-            yield Hash['latitude' => lat,'longitude' => lon,'timestamp' => date,'altitude' => ele,'segment' => @tracksegs]
+            yield Hash['latitude' => lat, 'longitude' => lon, 'timestamp' => date, 'altitude' => ele, 'segment' => @tracksegs]
           end
         end
         gotlatlon = false
         gotele = false
         gotdate = false
       end
+
       parser.parse
     end
 
     def get_picture(min_lat, min_lon, max_lat, max_lon, num_points)
+      #puts "getting picfor bbox #{min_lat},#{min_lon} - #{max_lat},#{max_lon}"
       frames = 10
       width = 250
       height = 250
@@ -157,13 +164,14 @@ module OSM
           images[n].stroke_width(1)
           images[n].stroke('#BBBBBB')
           images[n].fill('#BBBBBB')
+        #  puts "A #{px},#{py} - #{oldpx},#{oldpy}"
           images[n].line(px, py, oldpx, oldpy ) unless first
         end
         images[mm].stroke_width(3)
         images[mm].stroke('#000000')
         images[mm].fill('#000000')
         images[mm].line(px, py, oldpx, oldpy ) unless first
-
+      #  puts "B #{px},#{py} - #{oldpx},#{oldpy}"
         m +=1
         if m > num_points.to_f / frames.to_f * (mm+1)
           mm += 1
@@ -193,6 +201,7 @@ module OSM
     end
 
     def get_icon(min_lat, min_lon, max_lat, max_lon)
+      #puts "getting icon for bbox #{min_lat},#{min_lon} - #{max_lat},#{max_lon}"
       width = 50
       height = 50
       rat= Math.cos( ((max_lat + min_lat)/2.0) /  180.0 * 3.141592)
@@ -216,6 +225,7 @@ module OSM
         px = proj.x(p['longitude'])
         py = proj.y(p['latitude'])
         gc.line(px, py, oldpx, oldpy ) unless first
+       # puts "C #{px},#{py} - #{oldpx},#{oldpy}"
         first = false
         oldpy = py
         oldpx = px
@@ -234,8 +244,36 @@ module OSM
 
   end
 
+  class GreatCircle
+    include Math
+
+    # initialise with a base position
+    def initialize(lat, lon)
+      @lat = lat * PI / 180
+      @lon = lon * PI / 180
+    end
+
+    # get the distance from the base position to a given position
+    def distance(lat, lon)
+      lat = lat * PI / 180
+      lon = lon * PI / 180
+      return 6372.795 * 2 * asin(sqrt(sin((lat - @lat) / 2) ** 2 + cos(@lat) * cos(lat) * sin((lon - @lon)/2) ** 2))
+    end
+
+    # get the worst case bounds for a given radius from the base position
+    def bounds(radius)
+      latradius = 2 * asin(sqrt(sin(radius / 6372.795 / 2) ** 2))
+      lonradius = 2 * asin(sqrt(sin(radius / 6372.795 / 2) ** 2 / cos(@lat) ** 2))
+      minlat = (@lat - latradius) * 180 / PI
+      maxlat = (@lat + latradius) * 180 / PI
+      minlon = (@lon - lonradius) * 180 / PI
+      maxlon = (@lon + lonradius) * 180 / PI
+      return { :minlat => minlat, :maxlat => maxlat, :minlon => minlon, :maxlon => maxlon }
+    end
+  end
+
   class GeoRSS
-    def initialize(description='OpenStreetMap GPS Traces')
+    def initialize(feed_title='OpenStreetMap GPS Traces', feed_description='OpenStreetMap GPS Traces', feed_url='http://www.openstreetmap.org/traces/')
       @doc = XML::Document.new
       @doc.encoding = 'UTF-8' 
       
@@ -246,19 +284,19 @@ module OSM
       @channel = XML::Node.new 'channel'
       rss << @channel
       title = XML::Node.new 'title'
-      title <<  'OpenStreetMap GPS Traces'
+      title <<  feed_title
       @channel << title
       description_el = XML::Node.new 'description'
       @channel << description_el
 
-      description_el << description
+      description_el << feed_description
       link = XML::Node.new 'link'
-      link << 'http://www.openstreetmap.org/traces/'
+      link << feed_url
       @channel << link
       image = XML::Node.new 'image'
       @channel << image
       url = XML::Node.new 'url'
-      url << 'http://www.openstreetmap.org/feeds/mag_map-rss2.0.png'
+      url << 'http://www.openstreetmap.org/images/mag_map-rss2.0.png'
       image << url
       title = XML::Node.new 'title'
       title << "OpenStreetMap"
@@ -270,11 +308,11 @@ module OSM
       height << '100'
       image << height
       link = XML::Node.new 'link'
-      link << 'http://www.openstreetmap.org/traces/'
+      link << feed_url
       image << link
     end
 
-    def add(latitude=0, longitude=0, title_text='dummy title', url='http://www.example.com/', description_text='dummy description', timestamp=Time.now)
+    def add(latitude=0, longitude=0, title_text='dummy title', author_text='anonymous', url='http://www.example.com/', description_text='dummy description', timestamp=DateTime.now)
       item = XML::Node.new 'item'
 
       title = XML::Node.new 'title'
@@ -284,21 +322,33 @@ module OSM
       link << url
       item << link
 
+      guid = XML::Node.new 'guid'
+      guid << url
+      item << guid
+
       description = XML::Node.new 'description'
       description << description_text
       item << description
 
+      author = XML::Node.new 'author'
+      author << author_text
+      item << author
+
       pubDate = XML::Node.new 'pubDate'
-      pubDate << timestamp.xmlschema
+      pubDate << timestamp.to_s(:rfc822)
       item << pubDate
 
-      lat_el = XML::Node.new 'geo:lat'
-      lat_el << latitude.to_s
-      item << lat_el
+      if latitude
+        lat_el = XML::Node.new 'geo:lat'
+        lat_el << latitude.to_s
+        item << lat_el
+      end
 
-      lon_el = XML::Node.new 'geo:lon'
-      lon_el << longitude.to_s
-      item << lon_el
+      if longitude
+        lon_el = XML::Node.new 'geo:long'
+        lon_el << longitude.to_s
+        item << lon_el
+      end
 
       @channel << item
     end
@@ -318,5 +368,57 @@ module OSM
       doc.root = root
       return doc
     end
+  end
+
+  def self.IPLocation(ip_address)
+    Timeout::timeout(4) do
+      Net::HTTP.start('api.hostip.info') do |http|
+        country = http.get("/country.php?ip=#{ip_address}").body
+        country = "GB" if country = "UK"
+        Net::HTTP.start('ws.geonames.org') do |http|
+          xml = REXML::Document.new(http.get("/countryInfo?country=#{country}").body)
+          xml.elements.each("geonames/country") do |ele|
+            minlon = ele.get_text("bBoxWest").to_s
+            minlat = ele.get_text("bBoxSouth").to_s
+            maxlon = ele.get_text("bBoxEast").to_s
+            maxlat = ele.get_text("bBoxNorth").to_s
+            return { :minlon => minlon, :minlat => minlat, :maxlon => maxlon, :maxlat => maxlat }
+          end
+        end
+      end
+    end
+
+    return nil
+  rescue Exception
+    return nil
+  end
+
+  # Construct a random token of a given length
+  def self.make_token(length = 30)
+    chars = 'abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    token = ''
+
+    length.times do
+      token += chars[(rand * chars.length).to_i].chr
+    end
+
+    return token
+  end
+
+  # Return an encrypted version of a password
+  def self.encrypt_password(password, salt)
+    return Digest::MD5.hexdigest(password) if salt.nil?
+    return Digest::MD5.hexdigest(salt + password)
+  end
+
+  # Return an SQL fragment to select a given area of the globe
+  def self.sql_for_area(minlat, minlon, maxlat, maxlon, prefix = nil)
+    tilesql = QuadTile.sql_for_area(minlat, minlon, maxlat, maxlon, prefix)
+    minlat = (minlat * 10000000).round
+    minlon = (minlon * 10000000).round
+    maxlat = (maxlat * 10000000).round
+    maxlon = (maxlon * 10000000).round
+
+    return "#{tilesql} AND #{prefix}latitude BETWEEN #{minlat} AND #{maxlat} AND #{prefix}longitude BETWEEN #{minlon} AND #{maxlon}"
   end
 end

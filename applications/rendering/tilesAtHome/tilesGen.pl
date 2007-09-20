@@ -104,6 +104,17 @@ if( -s "emptyland.png" != 67 or
   print STDERR "\nAutomatic fix failed. Exiting.\n";
   exit(3);
 }
+# Check the stylesheets for corruption and out of dateness, but only in loop mode
+# The existance check is to attempt to determine we're on a UNIX-like system
+if( $ARGV[0] eq "loop" and -e "/dev/null" )
+{
+  if( qx(svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
+  {
+    print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
+    system("svn status osmarender/*.x[ms]l");
+    exit(3);
+  }
+}
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
 my $LimitY2 = ProjectF(-85.0511);
@@ -136,6 +147,8 @@ if($Mode eq "xy")
     # ----------------------------------
     my $X = shift();
     my $Y = shift();
+    if( not defined $X or not defined $Y )
+    { die "Must specify tile coordinates\n" }
     my $Zoom = shift() || 12;
     GenerateTileset($X, $Y, $Zoom);
 }
@@ -598,6 +611,11 @@ sub GenerateTileset
             {
                 die "Invalid preprocessing step '$preprocessor'";
             }
+# Uncomment to have the output files checked for validity
+#            if( $preprocessor ne "maplint" )
+#            {
+#              runCommand( qq(xmllint --dtdvalid http://dev.openstreetmap.org/~kleptog/tilesAtHome-0.3.dtd --noout $outputFile), $PID );
+#            }
             push(@tempfiles, $outputFile);
         }
 

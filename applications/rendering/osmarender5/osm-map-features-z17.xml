@@ -969,6 +969,9 @@
         <rule e="node" k="amenity" v="pub">
             <symbol xlink:href="#pub" width='1.5px' height='1.5px' transform='translate(-0.75,-0.75)'/>
         </rule>
+        <rule e="node" k="amenity" v="restaurant">
+            <symbol xlink:href="#symbol-restaurant" width='1.5px' height='1.5px' transform='translate(-0.75,-0.75)'/>
+        </rule>
         <rule e="node" k="amenity" v="cinema">
             <symbol xlink:href="#cinema" width='1.75px' height='2.5px' transform='translate(-0.9,-1.25)'/>
         </rule>
@@ -2544,6 +2547,16 @@
           stroke='#000000'>
             <svg:path d="M 16.8725 9.81954 L 96.3004 9.81954 L 59.4774 46.3164 L 59.4774 94.9796 C 59.575 94.9796 57.9896 100.587 84.2324 102.6 L 84.2324 103.99 L 31.0262 103.99 L 31.0275 102.6 C 56.4414 100.587 54.9906 94.9796 54.9906 94.9796 L 54.9906 46.3164 L 16.8725 9.81954 z " />
         </svg:symbol>
+
+        <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
+        <svg:symbol 
+          id="symbol-restaurant"
+          viewBox="0 0 100 100"
+	  fill="black"
+	  stroke="none">
+            <svg:path d="M 94,4 C 90,0 74,18 67,26 C 65,28 62,32 68,38 C 15,89 5,96 12,103 C 19,110 26,100 76,46 C 82,52 87,49 89,47 C 97,40 114,24 110,20 C 106,16 91,40 87,37 C 83,24 106,16 102,12 C 98,8 81,33 77,29 C 73,25 98,8 94,4 z"/>
+            <svg:path d="M 35,33 C 79,81 98,96 90,103 C 81,111 70,91 26,42 C 6,57 -9,16 1,6 C 11,-6 55,13 35,33 z"/>
+	</svg:symbol>
 
         <!-- derived from http://www.sodipodi.com/index.php3?section=clipart -->
         <svg:symbol

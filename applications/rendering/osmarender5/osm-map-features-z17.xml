@@ -143,22 +143,22 @@
             <rule e="way" k="tunnel" v="~|no|false">    <!-- no names in tunnels -->
 				<rule e="way" k="junction" v="~"> <!-- no names on or along junctions -->
 					<rule e="way" k="highway" v="unclassified|residential|minor">
-					    <text startOffset='50%' class="highway-name highway-user" dy='1.7px'>&#169; <tag k="osm:user" default='OpenStreetMap'/></text>
+					    <text startOffset='50%' class="highway-name highway-user" dy='1.7px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 					<rule e="way" k="highway" v="tertiary">
-					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'>&#169; <tag k="osm:user" default='OpenStreetMap'/></text>
+					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 					<rule e="way" k="highway" v="secondary">
-					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'>&#169; <tag k="osm:user" default='OpenStreetMap'/></text>
+					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 					<rule e="way" k="highway" v="primary">
-					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'>&#169; <tag k="osm:user" default='OpenStreetMap'/></text>
+					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 					<rule e="way" k="highway" v="trunk">
-					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'>&#169; <tag k="osm:user" default='OpenStreetMap'/></text>
+					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 					<rule e="way" k="highway" v="motorway">
-					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'>&#169; <tag k="osm:user" default='OpenStreetMap'/></text>
+					    <text startOffset='50%' class="highway-name highway-user" dy='1.9px'><tag k="osm:user" default='&#169; OpenStreetMap'/></text>
 					</rule>
 				</rule>
 			</rule>

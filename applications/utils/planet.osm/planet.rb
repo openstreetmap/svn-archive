@@ -34,7 +34,7 @@ end
 def all_nodes(lastid)
   $mysql.query "select id, latitude, longitude, timestamp, tags from current_nodes where visible = 1 #{pageSQL(lastid)} order by id limit 500000" do |rows|
     rows.each do |row|
-      yield row[0].to_i, row[1], row[2], read_timestamp(row[3]), read_tags(row[4])
+      yield row[0].to_i, row[1].to_i, row[2].to_i, read_timestamp(row[3]), read_tags(row[4])
     end
   end
 end

@@ -13,8 +13,18 @@
 
   include("../../../connect/connect.php");
 
-  $statuses = array('pending', 'new', 'active', 'done');
-  $Result = mysql_query("select `status`,count(*) as count from `tiles_queue` WHERE z=12 group by `status` order by `status`;");
+  //Show just high priority pending
+  $Result = mysql_query("select count(*) as count from `tiles_queue` WHERE status <=1 and z=12 and priority=1;");
+  $row = mysql_fetch_array($Result);
+  printf("prio_high_pending.value %d\n", $row['count']);
+
+  //Show just low priority pending
+  $Result = mysql_query("select count(*) as count from `tiles_queue` WHERE status <=1 and z=12 and priority>1;");
+  $row = mysql_fetch_array($Result);
+  printf("prio_low_pending.value %d\n", $row['count']);
+
+  $statuses = array('pending','new','active', 'done');
+  $Result = mysql_query("select `status`,count(*) as count from `tiles_queue` WHERE z=12 and status > 1 group by `status` order by `status`;");
   while ($row = mysql_fetch_array($Result)) {
     if ($row['status'] == 3) {
       // Divide done by 48 as it represents all that have been done in the last 48 hours.

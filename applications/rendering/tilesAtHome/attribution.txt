@@ -1,0 +1,29 @@
+# tiles@home attribution file.
+#
+# This file provides a mapping from OSM screen name to a free attribution text
+# you want to show up on zoom level 17 on the t@h maps.
+#
+# The default attribution, if you do not override it in this file, is a copyright
+# sign followed by your screen name.
+#
+# Please do not change attribution for other users unless you have been specifically
+# asked to do so!
+#
+# EXAMPLES
+# --------
+#
+# If you do not want your name listed, just but your screen name followed by an
+# equal sign:
+# myname=
+#
+# If you want your name listed without a (c) symbol, use
+# myname=myname
+#
+# If you want something different,
+# myname=something different
+#
+# Remember the (c) symbol has to be written as &#169; 
+# Note "#" only starts a comment when placed in the first column.
+# 
+#
+woodpeck=

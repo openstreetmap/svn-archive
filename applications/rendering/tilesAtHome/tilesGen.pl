@@ -598,6 +598,15 @@ sub GenerateTileset
                 statusMessage("Running close-areas", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                 runCommand($Cmd,$PID);
             }
+            elsif ($preprocessor eq "attribution")
+            {
+                my $Cmd = sprintf("%s perl attribution.pl < %s > %s",
+                        $Config{Niceness},
+                        "$inputFile",
+                        "$outputFile");
+                statusMessage("Running attribution", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                runCommand($Cmd,$PID);
+            }
             elsif ($preprocessor eq "mercator")
             {
                 my $Cmd = sprintf("%s perl mercatorize.pl %s > %s",

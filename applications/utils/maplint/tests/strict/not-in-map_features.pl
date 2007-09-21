@@ -170,6 +170,12 @@ foreach my $type ( keys(%main::keys) ){
     print "<xsl:when test=\"starts-with(\@k, 'tiger:')\">\n";
     print "</xsl:when>\n";
 
+    # Special handling of AND_*
+    print "<xsl:when test=\"starts-with(\@k, 'AND_')\">\n";
+    print "</xsl:when>\n";
+    print "<xsl:when test=\"starts-with(\@k, 'AND:')\">\n";
+    print "</xsl:when>\n";
+
     # Key
     foreach my $key ( sort( keys( %{$main::keys{$type}} ) ) ){
 	# Key must either be a simple string or a valid XSL expression

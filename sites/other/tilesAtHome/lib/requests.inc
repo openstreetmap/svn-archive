@@ -27,11 +27,17 @@ function requestExists($X,$Y,$Z,$Mode){
 #--------------------------------------------------
 # Moves all requests (X,Y) (normally only 1) from Mode $FromMode to
 # status $ToMode. If $FromMode is NULL it moves all unfinished requests.
+# If $Create!=0 then create a request if none had existed
 #--------------------------------------------------
-function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Debug = 0){
+function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
 
-  if(!requestExists($X,$Y,$Z,$FromMode))
+  if(!requestExists($X,$Y,$Z,$FromMode)) {
+    if ($Create) {
+      $SQL = "INSERT INTO `tiles_queue` (`status`,`x`,`y`,`z`,`ip`) VALUES($ToMode,$X,$Y,$Z,NULL);";
+      mysql_query($SQL);
+    }
     return(0);
+  }
   
   if($FromMode != NULL) {
     # Move the specified request to the new mode

@@ -17,7 +17,7 @@
      exit;
   }
   
-  if($P < 1 || $P > 2){
+  if($P < 1 || $P > 3){
      print "Invalid P\n";
      exit;
   }

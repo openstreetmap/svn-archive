@@ -196,7 +196,7 @@ function HandleDir($Dir, $UserID, $VersionID){
   else
     SaveMetadata($TileList, $UserID, $VersionID);
 
-  SaveBlankTiles($BlankTileList, $UserID);
+  SaveBlankTiles($BlankTileList, $UserID, $ValidTileset);
 
   return($Count);
 }
@@ -232,13 +232,14 @@ function SaveMetadata($TileList, $UserID, $VersionID){
 #------------------------------------------------------------------------------------
 # Save uploaded blank tiles in the database
 #------------------------------------------------------------------------------------
-function SaveBlankTiles($BlankTileList, $UserID){
+function SaveBlankTiles($BlankTileList, $UserID, $Tileset){
   # Each element in BlankTileList is a snippet of values (x,y,z,type,size) for each tile
   foreach($BlankTileList as $SqlSnippet){
 
-    // TODO: blank tiles can be z-12, which means they can fulfil a request
     list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
-    if($Z == 12 || $Z == 8){
+
+    // blank tiles can be z-12, which means they can fulfil a request
+    if(!$Tileset && ($Z == 12 || $Z == 8)){
       moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 1);
     }
     

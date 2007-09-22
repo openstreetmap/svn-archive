@@ -30,12 +30,12 @@ public class DuplicateWayPlugin extends Plugin {
 
     if (toolsMenu == null) {
       toolsMenu = new JMenu(name);
-      toolsMenu.add(new JMenuItem(new DuplicateWayAction(name)));
+      toolsMenu.add(new JMenuItem(new DuplicateWayAction()));
       Main.main.menu.add(toolsMenu, 2);
     }
     else {
       toolsMenu.addSeparator();
-      toolsMenu.add(new JMenuItem(new DuplicateWayAction(name)));
+      toolsMenu.add(new JMenuItem(new DuplicateWayAction()));
     }
     
   }

@@ -131,7 +131,7 @@
         <rule e="node" k="amenity" v="fuel">
             <symbol xlink:href="#petrolStation" width='2px' height='2px' transform='translate(-1,-1)' />
         </rule>
-        <rule k="amenity" v="recycling">
+        <rule e="node" k="amenity" v="recycling">
             <symbol xlink:href="#recycling" width='2px' height='2px' transform='translate(-1,-1)'/>
         </rule>
 
@@ -165,7 +165,7 @@
     <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
 
         <rule e="node" k="osmarender:renderName" v="~|yes" layer="5">
-			<rule k="natural" v="peak" layer="5">
+			<rule e="node" k="natural" v="peak" layer="5">
 				<text k="name" class='place-caption peak-caption' dy='-1.5px'/>
 				<text k="elevation" class='place-caption' font-size='1px' dy='2.0px'/>
 			</rule>	        

@@ -35,7 +35,9 @@ function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
     if ($Create) {
       $SQL = "INSERT INTO `tiles_queue` (`status`,`x`,`y`,`z`,`ip`) VALUES($ToMode,$X,$Y,$Z,NULL);";
       mysql_query($SQL);
+      return(1);
     }
+
     return(0);
   }
   
@@ -61,9 +63,6 @@ function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
 
   $Result = mysql_query($SQL);
   #logSqlError();
-  
-  if($Debug)
-    printf("\n$SQL\n".mysql_error()."\n");
   
   return(1);
 }

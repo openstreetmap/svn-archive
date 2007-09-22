@@ -1112,7 +1112,7 @@ sub mergeOsmFiles()
         open(SOURCE, $sourceFile);
         while(<SOURCE>)
         {
-            next if /^\s*<?xml/;
+            next if /^\s*<\?xml/;
             # We want to copy the version number, but only the first time (obviously)
             # Handle where the input doesn't have a version
             if (/^\s*<osm.*(?:version=([\d.'"]+))?/)

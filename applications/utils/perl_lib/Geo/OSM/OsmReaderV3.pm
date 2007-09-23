@@ -177,7 +177,7 @@ sub DoEnd
       $self->{count}++;
       if( $self->{progress} and ($self->{count}%11) == 1)
       {
-        $self->{progress}->($self->{count}, $Expat->current_byte()/$self->{input_length} );
+        $self->{progress}->($self->{count}, $self->{input_length} ? $Expat->current_byte()/$self->{input_length} : $Expat->current_byte());
       }
       $self->{state} = STATE_EXPECT_ENTITY;
     }

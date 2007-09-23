@@ -113,6 +113,10 @@
 <xsl:choose>
 <xsl:when test="starts-with(@k, 'tiger:')">
 </xsl:when>
+<xsl:when test="starts-with(@k, 'AND_')">
+</xsl:when>
+<xsl:when test="starts-with(@k, 'AND:')">
+</xsl:when>
 <xsl:when test="@k='aeroway'">
 <xsl:choose>
 <xsl:when test="@v='aerodrome'"/>
@@ -201,6 +205,7 @@
 <xsl:when test="@v='archaeological_site'"/>
 <xsl:when test="@v='castle'"/>
 <xsl:when test="@v='icon'"/>
+<xsl:when test="@v='memorial'"/>
 <xsl:when test="@v='monument'"/>
 <xsl:when test="@v='museum'"/>
 <xsl:when test="@v='ruins'"/>
@@ -570,6 +575,10 @@
 <xsl:choose>
 <xsl:when test="starts-with(@k, 'tiger:')">
 </xsl:when>
+<xsl:when test="starts-with(@k, 'AND_')">
+</xsl:when>
+<xsl:when test="starts-with(@k, 'AND:')">
+</xsl:when>
 <xsl:when test="@k='created_by'">
 
 </xsl:when>
@@ -649,6 +658,10 @@
 <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
 <xsl:choose>
 <xsl:when test="starts-with(@k, 'tiger:')">
+</xsl:when>
+<xsl:when test="starts-with(@k, 'AND_')">
+</xsl:when>
+<xsl:when test="starts-with(@k, 'AND:')">
 </xsl:when>
 <xsl:when test="@k='abutters'">
 <xsl:choose>

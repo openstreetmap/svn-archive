@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.Map.Entry;
 
 import javax.swing.JButton;
@@ -42,7 +43,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * 
  * In the basic form, it provides two tables, one with the relation tags
  * and one with the relation members. (Relation tags can be edited through 
- * the normal properties dialog as well, if you manage to get an relation 
+ * the normal properties dialog as well, if you manage to get a relation 
  * selected!)
  * 
  * @author Frederik Ramm <frederik@remote.org>
@@ -207,13 +208,13 @@ public class RelationEditor extends JFrame {
 		
 		JPanel buttonPanel = new JPanel(new GridLayout(1,3));
 		
-		buttonPanel.add(createButton(marktr("Add Selected"),tr("Add all currently selected objects as members"), KeyEvent.VK_S, new ActionListener() {
+		buttonPanel.add(createButton(marktr("Add Selected"),tr("Add all currently selected objects as members"), KeyEvent.VK_A, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addSelected();
 			}
 		}));
 
-		buttonPanel.add(createButton(marktr("Delete"),tr("Remove the selected member from this relation"), KeyEvent.VK_D, new ActionListener() {
+		buttonPanel.add(createButton(marktr("Delete"),tr("Remove the member in the current table row from this relation"), KeyEvent.VK_D, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = memberTable.getSelectedRow();
 				RelationMember mem = new RelationMember();
@@ -221,6 +222,14 @@ public class RelationEditor extends JFrame {
 				mem.member = (OsmPrimitive) memberTable.getValueAt(row, 1);
 				clone.members.remove(mem);
 				refreshTables();
+			}
+		}));
+
+		buttonPanel.add(createButton(marktr("Select"),tr("Highlight the member from the current table row as JOSM's selection"), KeyEvent.VK_S, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = memberTable.getSelectedRow();
+				OsmPrimitive p = (OsmPrimitive) memberTable.getValueAt(row, 1);
+				Main.ds.setSelected(Collections.singleton(p));
 			}
 		}));
 		bothTables.add(buttonPanel, GBC.eop().fill(GBC.HORIZONTAL));

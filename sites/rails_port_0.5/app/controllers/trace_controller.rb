@@ -2,22 +2,26 @@ class TraceController < ApplicationController
   before_filter :authorize_web  
   before_filter :authorize, :only => [:api_details, :api_data, :api_create]
   layout 'site'
-  
+ 
   # Counts and selects pages of GPX traces for various criteria (by user, tags, public etc.).
   #  target_user - if set, specifies the user to fetch traces for.  if not set will fetch all traces
-  #  paging_action - the action that will be linked back to from view
-  def list (target_user = nil, paging_action = 'list')
-    @traces_per_page = 20
-    page_index = params[:page] ? params[:page].to_i - 1 : 0 # nice 1-based page -> 0-based page index
-
+  def list(target_user = nil, action = "list")
     # from display name, pick up user id if one user's traces only
     display_name = params[:display_name]
-    if target_user.nil? and display_name and display_name != ''
+    if target_user.nil? and !display_name.blank?
       target_user = User.find(:first, :conditions => [ "display_name = ?", display_name])
     end
 
-    opt = Hash.new
-    opt[:include] = [:user, :tags] # load users and tags from db at same time as traces
+    # set title
+    if target_user.nil?
+      @title = "Public GPS traces"
+    elsif @user and @user.id == target_user.id
+      @title = "Your GPS traces"
+    else
+      @title = "Public GPS traces from #{target_user.display_name}"
+    end
+
+    @title += " tagged with #{params[:tag]}" if params[:tag]
 
     # four main cases:
     # 1 - all traces, logged in = all public traces + all user's (i.e + all mine)
@@ -26,40 +30,32 @@ class TraceController < ApplicationController
     # 4 - user's traces, not logged in as that user = all user's public traces
     if target_user.nil? # all traces
       if @user
-        conditions = ["(public = 1 OR user_id = ?)", @user.id] #1
+        conditions = ["(gpx_files.public = 1 OR gpx_files.user_id = ?)", @user.id] #1
       else
-        conditions  = ["public = 1"] #2
+        conditions  = ["gpx_files.public = 1"] #2
       end
     else
       if @user and @user.id == target_user.id
-        conditions = ["user_id = ?", @user.id] #3 (check vs user id, so no join + can't pick up non-public traces by changing name)
+        conditions = ["gpx_files.user_id = ?", @user.id] #3 (check vs user id, so no join + can't pick up non-public traces by changing name)
       else
-        conditions = ["public = 1 AND user_id = ?", target_user.id] #4
+        conditions = ["gpx_files.public = 1 AND gpx_files.user_id = ?", target_user.id] #4
       end
     end
-    conditions[0] += " AND users.display_name != ''" # users need to set display name before traces will be exposed
     
-    opt[:order] = 'timestamp DESC'
     if params[:tag]
       @tag = params[:tag]
-      conditions[0] += " AND gpx_file_tags.tag = ?"
-      conditions << @tag;
+      conditions[0] += " AND EXISTS (SELECT * FROM gpx_file_tags AS gft WHERE gft.gpx_id = gpx_files.id AND gft.tag = ?)"
+      conditions << @tag
     end
     
-    opt[:conditions] = conditions
+    conditions[0] += " AND gpx_files.visible = 1"
 
-    # count traces using all options except limit
-    @max_trace = Trace.count(opt)
-    @max_page = Integer((@max_trace + 1) / @traces_per_page) 
-    
-    # last step before fetch - add paging options
-    opt[:limit] = @traces_per_page
-    if page_index > 0
-      opt[:offset] = @traces_per_page * page_index
-    end
+    @trace_pages, @traces = paginate(:traces,
+                                     :include => [:user, :tags],
+                                     :conditions => conditions,
+                                     :order => "gpx_files.timestamp DESC",
+                                     :per_page => 20)
 
-    @traces = Trace.find(:all , opt)
-    
     # put together SET of tags across traces, for related links
     tagset = Hash.new
     if @traces
@@ -72,129 +68,233 @@ class TraceController < ApplicationController
     end
     
     # final helper vars for view
-    @display_name = display_name
+    @action = action
+    @display_name = target_user.display_name if target_user
     @all_tags = tagset.values
-    @paging_action = paging_action # the action that paging requests should route back to, e.g. 'list' or 'mine'
-    @page = page_index + 1 # nice 1-based external page numbers
   end
 
   def mine
     if @user
-      list(@user, 'mine') unless @user.nil?
+      list(@user, "mine") unless @user.nil?
     else
-      redirect_to :controller => 'user', :action => 'login'
+      redirect_to :controller => 'user', :action => 'login', :referer => request.request_uri
     end
   end
 
   def view
     @trace = Trace.find(params[:id])
-    unless @trace.public
-      if @user
-        render :nothing, :status => 401 if @trace.user.id != @user.id
-      end
+    @title = "Viewing trace #{@trace.name}"
+    if !@trace.visible?
+      render :nothing => true, :status => :not_found
+    elsif !@trace.public? and @trace.user.id != @user.id
+      render :nothing => true, :status => :forbidden
     end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def create
-    filename = "/tmp/#{rand}"
+    name = params[:trace][:gpx_file].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
 
-    File.open(filename, "w") { |f| f.write(@params['trace']['gpx_file'].read) }
-    @params['trace']['name'] = @params['trace']['gpx_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-    @params['trace'].delete('gpx_file') # remove the field from the hash, because there's no such field in the DB
-    @trace = Trace.new(@params['trace'])
-    @trace.inserted = false
-    @trace.user = @user
-    @trace.timestamp = Time.now
+    do_create(name, params[:trace][:tagstring], params[:trace][:description], params[:trace][:public]) do |f|
+      f.write(params[:trace][:gpx_file].read)
+    end
 
-    if @trace.save
-      saved_filename = "/tmp/#{@trace.id}.gpx"
-      File.rename(filename, saved_filename)
-
+    if @trace.id
       logger.info("id is #{@trace.id}")
       flash[:notice] = "Your GPX file has been uploaded and is awaiting insertion in to the database. This will usually happen within half an hour, and an email will be sent to you on completion."
+
       redirect_to :action => 'mine'
-    else
-      # fixme throw an error here
-      # render :action => 'mine'
     end
   end
 
   def data
     trace = Trace.find(params[:id])
-    if trace.public? or (@user and @user == trace.user)
-      send_data(File.open("/tmp/#{trace.id}.gpx",'r').read , :filename => "#{trace.id}.gpx", :type => 'text/plain', :disposition => 'inline')
+
+    if trace.visible? and (trace.public? or (@user and @user == trace.user))
+      send_file(trace.trace_name, :filename => "#{trace.id}#{trace.extension_name}", :type => trace.mime_type, :disposition => 'attachment')
+    else
+      render :nothing, :status => :not_found
     end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
+  end
+
+  def edit
+    @trace = Trace.find(params[:id])
+
+    if @user and @trace.user == @user
+      if params[:trace]
+        @trace.description = params[:trace][:description]
+        @trace.tagstring = params[:trace][:tagstring]
+        if @trace.save
+          redirect_to :action => 'view'
+        end        
+      end
+    else
+      render :nothing, :status => :forbidden
+    end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
+  end
+
+  def delete
+    trace = Trace.find(params[:id])
+
+    if @user and trace.user == @user
+      if request.post? and trace.visible?
+        trace.visible = false
+        trace.save
+        flash[:notice] = 'Track scheduled for deletion'
+        redirect_to :controller => 'traces', :action => 'mine'
+      else
+        render :nothing, :status => :bad_request
+      end
+    else
+      render :nothing, :status => :forbidden
+    end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def make_public
     trace = Trace.find(params[:id])
-    if @user and trace.user == @user and !trace.public
-      trace.public = true
-      trace.save
-      flash[:notice] = 'Track made public'
-      redirect_to :controller => 'trace', :action => 'view', :id => params[:id]
+
+    if @user and trace.user == @user
+      if request.post? and !trace.public?
+        trace.public = true
+        trace.save
+        flash[:notice] = 'Track made public'
+        redirect_to :controller => 'trace', :action => 'view', :id => params[:id]
+      else
+        render :nothing, :status => :bad_request
+      end
+    else
+      render :nothing, :status => :forbidden
     end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def georss
-    traces = Trace.find(:all, :conditions => ['public = true'], :order => 'timestamp DESC', :limit => 20)
+    conditions = ["gpx_files.public = 1"]
+
+    if params[:display_name]
+      conditions[0] += " AND users.display_name = ?"
+      conditions << params[:display_name]
+    end
+    
+    if params[:tag]
+      conditions[0] += " AND EXISTS (SELECT * FROM gpx_file_tags AS gft WHERE gft.gpx_id = gpx_files.id AND gft.tag = ?)"
+      conditions << params[:tag]
+    end
+
+    traces = Trace.find(:all, :include => :user, :conditions => conditions, 
+                        :order => "timestamp DESC", :limit => 20)
 
     rss = OSM::GeoRSS.new
 
-    #def add(latitude=0, longitude=0, title_text='dummy title', url='http://www.example.com/', description_text='dummy description', timestamp=Time.now)
     traces.each do |trace|
-      rss.add(trace.latitude, trace.longitude, trace.name, url_for({:controller => 'trace', :action => 'view', :id => trace.id, :display_name => trace.user.display_name}), "<img src='#{url_for({:controller => 'trace', :action => 'icon', :id => trace.id, :user_login => trace.user.display_name})}'> GPX file with #{trace.size} points from #{trace.user.display_name}", trace.timestamp)
+      rss.add(trace.latitude, trace.longitude, trace.name, trace.user.display_name, url_for({:controller => 'trace', :action => 'view', :id => trace.id, :display_name => trace.user.display_name}), "<img src='#{url_for({:controller => 'trace', :action => 'icon', :id => trace.id, :user_login => trace.user.display_name})}'> GPX file with #{trace.size} points from #{trace.user.display_name}", trace.timestamp)
     end
 
-    response.headers["Content-Type"] = 'application/xml+rss'
-
-    render :text => rss.to_s
+    render :text => rss.to_s, :content_type => "application/rss+xml"
   end
 
   def picture
     trace = Trace.find(params[:id])
-    send_data(trace.large_picture, :filename => "#{trace.id}.gif", :type => 'image/gif', :disposition => 'inline') if trace.public? or (@user and @user == trace.user)
+
+    if trace.inserted?
+      if trace.public? or (@user and @user == trace.user)
+        send_file(trace.large_picture_name, :filename => "#{trace.id}.gif", :type => 'image/gif', :disposition => 'inline')
+      else
+        render :nothing, :status => :forbidden
+      end
+    else
+      render :nothing => true, :status => :not_found
+    end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def icon
     trace = Trace.find(params[:id])
-    send_data(trace.icon_picture, :filename => "#{trace.id}_icon.gif", :type => 'image/gif', :disposition => 'inline') if trace.public? or (@user and @user == trace.user)
+
+    if trace.inserted?
+      if trace.public? or (@user and @user == trace.user)
+        send_file(trace.icon_picture_name, :filename => "#{trace.id}_icon.gif", :type => 'image/gif', :disposition => 'inline')
+      else
+        render :nothing, :status => :forbidden
+      end
+    else
+      render :nothing => true, :status => :not_found
+    end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def api_details
     trace = Trace.find(params[:id])
-    doc = OSM::API.new.get_xml_doc
-    doc.root << trace.to_xml_node() if trace.public? or trace.user == @user
-    render :text => doc.to_s
+
+    if trace.public? or trace.user == @user
+      render :text => trace.to_xml.to_s, :content_type => "text/xml"
+    else
+      render :nothing => true, :status => :forbidden
+    end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def api_data
-    render :action => 'data'
+    trace = Trace.find(params[:id])
+
+    if trace.public? or trace.user == @user
+      send_file(trace.trace_name, :filename => "#{trace.id}#{trace.extension_name}", :type => trace.mime_type, :disposition => 'attachment')
+    else
+      render :nothing => true, :status => :forbidden
+    end
+  rescue ActiveRecord::RecordNotFound
+    render :nothing => true, :status => :not_found
   end
 
   def api_create
-    #FIXME merge this code with create as they're pretty similar?
-    
+    if request.post?
+      name = params[:file].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
+
+      do_create(name, params[:tags], params[:description], params[:public]) do |f|
+        f.write(params[:file].read)
+      end
+
+      if @trace.id
+        render :text => @trace.id.to_s, :content_type => "text/plain"
+      elsif @trace.valid?
+        render :nothing => true, :status => :internal_server_error
+      else
+        render :nothing => true, :status => :bad_request
+      end
+    else
+      render :nothing => true, :status => :method_not_allowed
+    end
+  end
+
+private
+
+  def do_create(name, tags, description, public)
     filename = "/tmp/#{rand}"
-    File.open(filename, "w") { |f| f.write(request.raw_post) }
-    @params['trace'] = {}
-    @params['trace']['name'] = params[:filename]
-    @params['trace']['tagstring'] = params[:tags]
-    @params['trace']['description'] = params[:description]
-    @trace = Trace.new(@params['trace'])
+
+    File.open(filename, "w") { |f| yield f }
+
+    @trace = Trace.new({:name => name, :tagstring => tags,
+                        :description => description, :public => public})
     @trace.inserted = false
     @trace.user = @user
     @trace.timestamp = Time.now
 
     if @trace.save
-      saved_filename = "/tmp/#{@trace.id}.gpx"
-      File.rename(filename, saved_filename)
-      logger.info("id is #{@trace.id}")
-      flash[:notice] = "Your GPX file has been uploaded and is awaiting insertion in to the database. This will usually happen within half an hour, and an email will be sent to you on completion."
-      render :nothing => true
+      File.rename(filename, @trace.trace_name)
     else
-      render :nothing => true, :status => 400 # er FIXME what fricking code to return?
+      FileUtils.rm_f(filename)
     end
-
   end
+
 end

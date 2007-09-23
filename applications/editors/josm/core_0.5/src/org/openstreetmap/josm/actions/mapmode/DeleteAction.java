@@ -168,21 +168,28 @@ public class DeleteAction extends MapMode {
 
 		if (ways.size() > 1)
 			return tr("Used by more than one way.");
-		Way w = ways.get(0);
+		
+		if (ways.size() == 1) {
+			// node in way
+			Way w = ways.get(0);
 
-		int i = w.nodes.indexOf(n);
-		if (w.nodes.lastIndexOf(n) != i)
-			return tr("Occurs more than once in the same way.");
-		if (i == 0 || i == w.nodes.size() - 1)
-			return tr("Is at the end of a way");
+			int i = w.nodes.indexOf(n);
+			if (w.nodes.lastIndexOf(n) != i)
+				return tr("Occurs more than once in the same way.");
+			if (i == 0 || i == w.nodes.size() - 1)
+				return tr("Is at the end of a way");
 
-		Way wnew = new Way(w);
-		wnew.nodes.remove(i);
+			Way wnew = new Way(w);
+			wnew.nodes.remove(i);
 
-		Collection<Command> cmds = new LinkedList<Command>();
-		cmds.add(new ChangeCommand(w, wnew));
-		cmds.add(new DeleteCommand(Collections.singleton(n)));
-		Main.main.undoRedo.add(new SequenceCommand(tr("Delete Node"), cmds));
+			Collection<Command> cmds = new LinkedList<Command>();
+			cmds.add(new ChangeCommand(w, wnew));
+			cmds.add(new DeleteCommand(Collections.singleton(n)));
+			Main.main.undoRedo.add(new SequenceCommand(tr("Delete Node"), cmds));
+		} else {
+			// unwayed node
+			Main.main.undoRedo.add(new DeleteCommand(Collections.singleton(n)));	
+		}
 		return null;
     }
 }

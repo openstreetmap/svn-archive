@@ -28,6 +28,7 @@ my %Segments;                    # List of all segments
 my %Tags;                        # List of tags in the current object
 my @Segments;                    # List of segments in the current way
 my %IgnoreTags = IgnoreTags();   # List of tag keys to ignore
+my $Tagtype = '-';               # What object the parser is in
 
 # File outputs
 open(NODES, '>nodes.txt') || die();
@@ -37,13 +38,17 @@ while(my $Line = <>){
   if($Line =~ m{<node (.*)}){
     # Beginning of a node
     %Tags = getAttributes($1);
-    $Tags{tagtype} = 'n';
+    $Tagtype = 'n';
   }
   elsif($Line =~ m{<tag k="(.*?)" v="(.*?)"\s*/>}){
     # Tag within an object
     my ($Name, $Value) = ($1, $2);
-    if($Value ne '' && !$IgnoreTags{$Name}){
-      $Tags{$Name} = $Value;
+    if($Value ne ''){
+      if(!$IgnoreTags{$Name}){      # Ignored tags
+        if(!$IgnoreTags{$Tagtype.':'.$Name.'='.$Value}){ # Ignored name=tag combos
+          $Tags{$Name} = $Value;
+        }
+      }
     }
   }
   elsif($Line =~ m{</node}){
@@ -52,16 +57,17 @@ while(my $Line = <>){
     $Nodes{$ID.'_lat'} = $Tags{lat};
     $Nodes{$ID.'_lon'} = $Tags{lon};
     writeNode();
+    $Tagtype = '-';
   }
   elsif($Line =~ m{<segment (.*)}){
     # Beginning of a segment
     %Tags = getAttributes($1);
-    $Tags{tagtype} = 's';
+    $Tagtype = 's';
   }  
   elsif($Line =~ m{<way (.*)}){
     # Beginning of a way
     %Tags = getAttributes($1);
-    $Tags{tagtype} = 'w';
+    $Tagtype = 'w';
     @Segments = ();
   }  
   elsif($Line =~ m{<seg id="(\d+)"/>}){
@@ -75,10 +81,12 @@ while(my $Line = <>){
     $Segments{$ID.'_from_lon'} = $Nodes{$Tags{from} . '_lon'};
     $Segments{$ID.'_to_lat'} = $Nodes{$Tags{to} . '_lat'};
     $Segments{$ID.'_to_lon'} = $Nodes{$Tags{to} . '_lon'};
+    $Tagtype = '-';
   }
   elsif($Line =~ m{</way}){
     # End of a way
     writeWay();
+    $Tagtype = '-';
   }
 }
 
@@ -147,7 +155,43 @@ sub getAttributes{
 # Create a list of tags to ignore
 sub IgnoreTags{
   my %Ignore;
-  foreach my $Tag('lat','lon','tagtype','id','created_by','ele','','from','to','visible','timestamp','source','polyline'){
+  foreach my $Tag(
+    'lat','lon','tagtype','id',  # Reserved words (all objects)
+    'created_by', # Not relevant for rendering
+    'ele',        # GPS metadata
+    '',           # Tags without a name
+    'from',       # Reserved word (segment)
+    'to',         # Reserved word (segment)
+    'visible',    # OSM internal metadata
+    'timestamp',  # OSM internal metadata
+    'source',     # Not relevant for rendering
+    'polyline',   # Reserved word (way)
+    'time',       # GPS metadata?
+    'editor',     # Not relevant for rendering
+    'author',     # Not relevant for rendering
+    'hdop',       # GPS metadata
+    'pdop',       # GPS metadata
+    'sat',        # GPS metadata
+    'speed',      # GPS metadata
+    'fix',        # GPS metadata
+    'course',     # GPS metadata
+    'class',      # depreciated
+    'converted_by', # Some program
+    'n:natural=coastline',    # coastline nodes
+    'n:natural=water',        # coastline nodes
+    'n:highway=primary',      # not needed for nodes 
+    'n:highway=secondary',    # not needed for nodes 
+    'n:highway=minor',        # not needed for nodes 
+    'n:highway=unclassified', # not needed for nodes 
+    'n:highway=residential',  # not needed for nodes 
+    'n:highway=trunk',        # not needed for nodes 
+    'n:highway=service',      # not needed for nodes 
+    'n:highway=cycleway',     # not needed for nodes 
+    'n:highway=bridleway',    # not needed for nodes 
+    'n:highway=footway',      # not needed for nodes 
+    'n:oneway=yes',           # not relevant for nodes 
+    'n:oneway=true',          # not relevant for nodes 
+    ){
     $Ignore{$Tag} = 1;
   }
   return(%Ignore);

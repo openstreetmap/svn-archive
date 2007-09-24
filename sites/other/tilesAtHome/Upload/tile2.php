@@ -7,12 +7,8 @@ if(0){ // Option to turn off uploads
 }
 
 include("../lib/log.inc");
-#include("../lib/tilenames.inc");
 include("../lib/users.inc");
 include("../lib/versions.inc");
-#include("../lib/layers.inc");
-#include("../lib/requests.inc");
-#include("../lib/checkupload.inc");
 include("../lib/queue.inc");
 include("../lib/tokens.inc");
 

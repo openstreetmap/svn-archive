@@ -67,7 +67,7 @@ function CheckUploadDir($Dir){
     print "Too few images ($Count)\, expected $countExpect in layer $Layer.\n";
     return(array(0,0,0,""));
   }
-  return(array(1,$X2,$Y2,$Layer));
+  return(array(1,$X2,$Y2,$Layer,$Count));
 }
 
 ?>

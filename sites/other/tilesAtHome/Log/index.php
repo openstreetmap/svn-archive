@@ -20,7 +20,7 @@ function showLogfile($Title, $Filename){
   print "<h2>$Title</h2>\n";
   
   print "<pre class=\"code\">";
-  print system("tail -n 30 Data/".$Filename);
+  passthru("tail -n 30 Data/".$Filename);
   print "</pre>\n";
 }
 ?>

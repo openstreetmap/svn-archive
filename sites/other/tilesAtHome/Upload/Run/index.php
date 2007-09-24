@@ -119,10 +119,10 @@ function HandleUpload($File, $UserID, $VersionID){
   # Decide on the name of a Temporary directory
   $Dir = TempDir();
   
-  # Check the uploaded ZIP file
+  # Check the uploadedZIP file
   $Size = filesize($File);
 
-  logMsg("Handling $File ($Size bytes) by $UserID (version $VersionID)", 4);
+  logMsg("Handling ".substr(strrchr($File, '/'), 1 )." ($Size bytes) by $UserID (version $VersionID)", 4);
   
   if($Size <= 0){ 
     print("No file uploaded or file too large\n");
@@ -154,7 +154,7 @@ function HandleUpload($File, $UserID, $VersionID){
   # Delete the temporary directory and everything inside
   DelDir($Dir);
   
-  logMsg("OK, $Count tiles in upload", 3);
+  logMsg("OK, $Count tiles in ".substr(strrchr($File, '/'), 1 ), 4);
   return($Count);
 }
 
@@ -288,7 +288,7 @@ function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
   SaveUserStats($UserID, $VersionID, 1365);
   
   moveRequest($X, $Y, 12, NULL, REQUEST_DONE, 1);
-  logMsg("Tileset $X,$Y uploaded at once\n", 4);
+  logMsg("Tileset $X,$Y uploaded at once", 4);
   
   $LayerID = checkLayer($Layer);
 

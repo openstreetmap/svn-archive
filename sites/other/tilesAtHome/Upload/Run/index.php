@@ -55,9 +55,10 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
 
   foreach(SortFiles($Dir) as $File => $Time) {
     if($CountUploads < $NumToProcess){
-      if(preg_match("{(\w+)\.txt}", $File, $Matches)){
+      if(preg_match("#(\w+)\.txt$#", $File, $Matches)){
         $Name = $Matches[1];
         printf( "\n\n===%s===\n\n", htmlentities($Name));
+        logMsg("Found new uploaded file $Name", 4);
         $CountTiles += HandleQueueItem($Name, $Dir);
         $CountUploads++;
       }

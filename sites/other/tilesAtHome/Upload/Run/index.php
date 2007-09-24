@@ -19,7 +19,6 @@ include("../../lib/versions.inc");
 include("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
-include("../../lib/cpu.inc");
 include("../../connect/connect.php");
 include("../../lib/blanktile.inc");
 
@@ -30,6 +29,7 @@ if(0){ // Option to turn off uploads
 
 
 if(0){
+  include_once("../../lib/cpu.inc");
   $Load = GetLoadAvg();
   //logMsg("$Load load", 4);
   if($Load < 0){

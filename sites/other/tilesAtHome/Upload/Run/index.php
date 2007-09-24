@@ -16,7 +16,7 @@ include("../../lib/log.inc");
 include("../../lib/tilenames.inc");
 include("../../lib/users.inc");
 include("../../lib/versions.inc");
-include("../../lib/layers.inc");
+include_once("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
 include("../../connect/connect.php");
@@ -87,7 +87,7 @@ function HandleQueueItem($Name, $Dir){
     
     $Meta = MetaFileInfo($MetaFile);
     
-    logMsg(sprintf("Doing %s by user %d version %d", $ZipFile, $Meta["user"], $Meta["version"]), 4);
+    logMsg(sprintf("Valid file %s by user %d version %d", $Name, $Meta["user"], $Meta["version"]), 4);
     
     $Count = HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
     
@@ -185,7 +185,7 @@ function HandleDir($Dir, $UserID, $VersionID){
   $TileList = array();
   $BlankTileList = array();
 
-  list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer) = CheckUploadDir($Dir);
+  list($ValidTileset, $TilesetX, $TilesetY, $TilesetLayer, $Tilesetcount) = CheckUploadDir($Dir);
   
   $dp = opendir($Dir);
   while(($file = readdir($dp)) !== false){
@@ -196,7 +196,7 @@ function HandleDir($Dir, $UserID, $VersionID){
   closedir($dp);
 
   if($ValidTileset)
-    SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer, $UserID, $VersionID);
+    SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer,$Tilesetcount,$UserID, $VersionID);
   else
     SaveMetadata($TileList, $UserID, $VersionID);
 
@@ -288,8 +288,8 @@ function DeleteRealTile($X,$Y,$Z,$LayerID){
 #-----------------------------------------------------------------------------
 # Save metadata when an entire tileset is uploaded at once
 #-----------------------------------------------------------------------------
-function SaveTilesetMetadata($X,$Y,$Layer,$UserID, $VersionID){
-  SaveUserStats($UserID, $VersionID, 1365);
+function SaveTilesetMetadata($X,$Y,$Layer,$Count, $UserID, $VersionID){
+  SaveUserStats($UserID, $VersionID, $Count);
   
   moveRequest($X, $Y, 12, NULL, REQUEST_DONE, 1);
   logMsg("Tileset $X,$Y uploaded at once", 4);

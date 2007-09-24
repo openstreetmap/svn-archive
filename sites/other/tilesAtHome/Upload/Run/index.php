@@ -243,8 +243,8 @@ function SaveBlankTiles($BlankTileList, $UserID, $Tileset){
     list($X, $Y, $Z, $Layer, $Type) = explode(",", $SqlSnippet);
 
     // blank tiles can be z-12, which means they can fulfil a request
-    if(!$Tileset && ($Z == 12 || $Z == 8)){
-      moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 1);
+    if($Tileset == 0 && ($Z == 12 || $Z == 8)){
+      moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
     }
     
     # Make a blank tile
@@ -291,7 +291,7 @@ function DeleteRealTile($X,$Y,$Z,$LayerID){
 function SaveTilesetMetadata($X,$Y,$Layer,$Count, $UserID, $VersionID){
   SaveUserStats($UserID, $VersionID, $Count);
   
-  moveRequest($X, $Y, 12, NULL, REQUEST_DONE, 1);
+  moveRequest($X, $Y, 12, NULL, REQUEST_DONE, 0);
   logMsg("Tileset $X,$Y uploaded at once", 4);
   
   $LayerID = checkLayer($Layer);
@@ -315,7 +315,7 @@ function RemoveFromQueue($TileList){
     list($X, $Y, $Z, $Layer, $Size) = explode(",", $CSV);
     if($Z == 12 || $Z == 8){
     
-      moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 1);
+      moveRequest($X, $Y, $Z, NULL, REQUEST_DONE, 0);
         
       logMsg(sprintf("Tileset %d, %d (z%d) moved from mode %d to mode %d", $X, $Y, $Z, REQUEST_ACTIVE, REQUEST_DONE), 4);
       logSqlError();

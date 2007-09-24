@@ -7,7 +7,9 @@ require 'time'
 require 'osm/servinfo.rb'
 require 'cgi'
 
-$mysql = Mysql.real_connect $DBSERVER, $USERNAME, $PASSWORD, $DATABASE
+$mysql = Mysql.init
+$mysql.options(Mysql::SET_CHARSET_NAME, "utf8")
+$mysql.real_connect $DBSERVER, $USERNAME, $PASSWORD, $DATABASE
 
 # create a hash of entries out of a list of semi colon seperated key=value pairs
 def read_tags tag_str

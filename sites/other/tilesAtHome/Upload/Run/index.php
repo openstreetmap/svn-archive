@@ -143,10 +143,10 @@ function HandleUpload($File, $UserID, $VersionID){
   # -d $Dir specifies the directory to unzip to
   # $Filename is the zip file
   $Command = sprintf("unzip -j -d %s %s", $Dir, $File);
-  logMsg("Running '$Command'", 3);
+  #logMsg("Running '$Command'", 3);
   system($Command);
   
-  logMsg("Handling directory $Dir", 3);
+  #logMsg("Handling directory $Dir", 4);
   
   # Process all the tiles (return number of tiles done)
   $Count = HandleDir($Dir, $UserID, $VersionID);

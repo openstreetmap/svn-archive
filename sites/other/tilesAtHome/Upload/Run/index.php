@@ -45,10 +45,9 @@ if(0){
 
 $QueueDir = "/home/ojw/tiles-ojw/Queue/";
 list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 100);
-
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
-
+//----------------------------------------------------------------------------------
 function HandleNextFilesFromQueue($Dir, $NumToProcess){
   $CountUploads = 0;
   $CountTiles = 0;
@@ -67,21 +66,23 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
   return(array($CountUploads, $CountTiles));
 }
 
+//----------------------------------------------------------------------------------
 function HandleQueueItem($Name, $Dir){
     $MetaFile = $Dir . $Name . ".txt";
     $ZipFile = $Dir . $Name . ".zip";
     print "$ZipFile\n";
+
     if(!file_exists($MetaFile)){
 	print "No meta file\n";
-        if(file_exists($ZipFile))
-          unlink($ZipFile);        
-	return;
+        unlink($ZipFile);        
+	return (0);
     }
+
     if(!file_exists($ZipFile)){
+        // We should never end up here, theoretically
 	print "No zip file\n";
-        if(file_exists($MetaFile))
-          unlink($MetaFile);
-	return;
+        unlink($MetaFile);
+	return (0);
     }
     
     $Meta = MetaFileInfo($MetaFile);
@@ -95,6 +96,8 @@ function HandleQueueItem($Name, $Dir){
     
     return($Count);
 }
+
+//----------------------------------------------------------------------------------
 function MetaFileInfo($File){
     $fp = fopen($File, "r");
     if(!$fp)

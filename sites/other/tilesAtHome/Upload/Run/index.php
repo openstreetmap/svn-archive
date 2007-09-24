@@ -87,7 +87,7 @@ function HandleQueueItem($Name, $Dir){
     
     $Meta = MetaFileInfo($MetaFile);
     
-    logMsg(sprintf("Doing %s by user %d version %d", $ZipFile, $Meta["user"], $Meta["version"]), 3);
+    logMsg(sprintf("Doing %s by user %d version %d", $ZipFile, $Meta["user"], $Meta["version"]), 4);
     
     $Count = HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
     

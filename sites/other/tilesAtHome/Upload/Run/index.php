@@ -57,7 +57,6 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
       if(preg_match("#(\w+)\.txt$#", $File, $Matches)){
         $Name = $Matches[1];
         printf( "\n\n===%s===\n\n", htmlentities($Name));
-        logMsg("Found new uploaded file $Name", 4);
         $CountTiles += HandleQueueItem($Name, $Dir);
         $CountUploads++;
       }
@@ -86,8 +85,6 @@ function HandleQueueItem($Name, $Dir){
     }
     
     $Meta = MetaFileInfo($MetaFile);
-    
-    logMsg(sprintf("Valid file %s by user %d version %d", $Name, $Meta["user"], $Meta["version"]), 4);
     
     $Count = HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
     

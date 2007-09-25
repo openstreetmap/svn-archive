@@ -174,7 +174,7 @@ sub killafile($){
 }
 
 #-----------------------------------------------------------------------------
-# 
+# GET a URL and save contents to file
 #-----------------------------------------------------------------------------
 sub DownloadFile 
 {
@@ -195,7 +195,19 @@ sub DownloadFile
     doneMessage(sprintf("done, %d bytes", -s $File));
 }
 
+#-----------------------------------------------------------------------------
+# Clean up temporary files before exit, then exit or return with error 
+# depending on mode (loop, xy, ...)
+#-----------------------------------------------------------------------------
+sub cleanUpAndDie
+{
+    my ($Reason,$Mode,$mainPID) = @_;
 
+    ## TODO: actually clean up
+
+    return 0 if ($Mode eq "loop");
+    exit(1);
+}
 
 1;
 

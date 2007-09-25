@@ -480,7 +480,7 @@ sub GenerateTileset
                 # i.e. tell the server the job hasn't been done yet)
                 PutRequestBackToServer($X,$Y,"NoData");
 		foreach my $file(@tempfiles) { killafile($file); }
-                cleanUpAndDie("GenerateTileset",$Mode,1,$PID);
+                return cleanUpAndDie("GenerateTileset",$Mode,1,$PID);
             }
     }
 
@@ -501,7 +501,7 @@ sub GenerateTileset
       {
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         PutRequestBackToServer($X,$Y,"BadUTF8");
-        cleanUpAndDie("GenerateTileset.UTF8",$Mode,1,$PID);
+        return cleanUpAndDie("GenerateTileset.UTF8",$Mode,1,$PID);
       }
     }
 
@@ -561,7 +561,7 @@ sub GenerateTileset
                     # stop rendering if frollo fails, as current osmarender is 
                     # dependent on frollo hints
                     PutRequestBackToServer($X,$Y,"FrolloFail");
-                    cleanUpAndDie("GenerateTileset.Frollo",$Mode,1,$PID);
+                    return cleanUpAndDie("GenerateTileset.Frollo",$Mode,1,$PID);
                 }
             }
             elsif ($preprocessor eq "maplint")

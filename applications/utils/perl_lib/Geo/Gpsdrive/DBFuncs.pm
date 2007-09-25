@@ -691,6 +691,7 @@ sub create_db(){
                         `nettype`       int(11)         NOT NULL        default \'0\',
                         `wep`           int(11)         NOT NULL        default \'0\',
                         `cloaked`       int(11)         NOT NULL        default \'0\',
+                        `source_id`     int(11)         NOT NULL        default \'0\',
                         `last_modified` date            NOT NULL        default \'0000-00-00\',
                         PRIMARY KEY  (`wlan_id`)
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;') or die;

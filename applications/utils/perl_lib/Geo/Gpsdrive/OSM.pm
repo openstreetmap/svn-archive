@@ -538,7 +538,7 @@ sub get_source_id{
     unless ( $SOURCE_ID_OSM ) {
 	my $source_hash = {
 	    'source.url'     => "http://openstreetmap.org/",
-	    'source.name'    => $SOURCE_ID_OSM ,
+	    'source.name'    => $SOURCE_OSM ,
 	    'source.comment' => '' ,
 	    'source.licence' => ""
 	    };

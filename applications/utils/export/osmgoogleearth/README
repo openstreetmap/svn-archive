@@ -18,6 +18,9 @@ is easy to improve on this.
 
 The isle_of_wight.kmz file is provided as an example.
 
+On Linux and other Unix-Like systems you can use the shellscript with the 
+config file to update multiple locations in one go. Use sparingly.
+
 
 LICENSE
 -------

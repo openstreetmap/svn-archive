@@ -130,7 +130,7 @@ sub runCommand
     my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";
     my $retval = system("$cmd 2> $ErrorFile");
     my $ok = 0;
-    my $extraInfo = "\nAdditional info about the Error(s):\n";
+    my $ExtraInfo = "\nAdditional info about the Error(s):\n";
 
     # <0 means that the process could not start
     if ($retval < 0)

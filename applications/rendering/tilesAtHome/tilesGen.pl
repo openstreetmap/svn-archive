@@ -639,7 +639,7 @@ sub GenerateTileset
         # then transform it to SVG
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {
-            # Create a new copy of rules file
+            # Create a new copy of rules file to allow background update
             # don't need zoom or layer in name of file as we'll
             # process one after the other
             my $source = $Config{"Layer.$layer.Rules.$i"};
@@ -920,6 +920,10 @@ sub xml2svg
 
     statusMessage("Transforming zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID);
+
+    # need to look at temporary svg wether it really is a svg or just the 
+    # xmlstarlet dump and exit if the latter.
+
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
 #-----------------------------------------------------------------------------

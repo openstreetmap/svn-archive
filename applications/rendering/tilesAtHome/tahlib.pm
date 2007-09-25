@@ -207,9 +207,11 @@ sub DownloadFile
 #-----------------------------------------------------------------------------
 sub cleanUpAndDie
 {
-    my ($Reason,$Mode,$mainPID) = @_;
+    my ($Reason,$Mode,$Severity,$mainPID) = @_;
 
     ## TODO: clean up *.tempdir too
+
+    print STDERR "\nExiting from $Reason\n" if ($Config{"Verbose"});
 
     if (! $Config{"Debug"}) 
     {
@@ -225,7 +227,7 @@ sub cleanUpAndDie
     }
     
     return 0 if ($Mode eq "loop");
-    exit(1);
+    exit($Severity);
 }
 
 1;

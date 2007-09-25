@@ -203,8 +203,20 @@ sub cleanUpAndDie
 {
     my ($Reason,$Mode,$mainPID) = @_;
 
-    ## TODO: actually clean up
+    ## TODO: clean up *.tempdir too
 
+    if (! $Config{"Debug"}) 
+    {
+        opendir (TEMPDIR, $Config{"WorkingDirectory"});
+        my @files = grep { /$mainPID/ } readdir(TEMPDIR); # FIXME: this will get files from other processes using the same tempdir for low pids
+        closedir (TEMPDIR);
+        while (my $file = shift @files)
+        {
+             killafile($Config{"WorkingDirectory"}."/".$file);
+        }
+        
+    }
+    
     return 0 if ($Mode eq "loop");
     exit(1);
 }

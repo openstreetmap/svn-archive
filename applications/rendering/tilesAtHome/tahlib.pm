@@ -130,6 +130,7 @@ sub runCommand
     my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";
     my $retval = system("$cmd 2> $ErrorFile");
     my $ok = 0;
+    my $extraInfo = "\nAdditional info about the Error(s):\n";
 
     # <0 means that the process could not start
     if ($retval < 0)
@@ -152,8 +153,13 @@ sub runCommand
             while(<ERR>)
             {
                 print STDERR "  | $_";
+                if (grep(/preferences.xml/,$_))
+                {
+                    $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
+                }
             }
             close(ERR);
+            print STDERR $ExtraInfo."\n";
         }
         else
         {

@@ -212,6 +212,7 @@ sub cleanUpAndDie
         closedir (TEMPDIR);
         while (my $file = shift @files)
         {
+             print STDERR "deleting ".$Config{"WorkingDirectory"}."/".$file."\n" if ($Config{"Verbose"});
              killafile($Config{"WorkingDirectory"}."/".$file);
         }
         

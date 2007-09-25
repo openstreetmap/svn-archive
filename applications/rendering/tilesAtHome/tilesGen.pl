@@ -44,7 +44,7 @@ printf STDERR "This is version %d (%s) of tilesgen running on %s\n",
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
     print STDERR "please update your libgd to version 2 for TrueColor support";
-    exit(3);
+    cleanUpAndDie("init.libGD_check","EXIT",4,$PID);
 }
 
 # Setup GD options
@@ -102,7 +102,7 @@ if( -s "emptyland.png" != 67 or
     -s "emptysea.png" != 69 )
 {
   print STDERR "\nAutomatic fix failed. Exiting.\n";
-  exit(3);
+  cleanUpAndDie("init.emptytile_template_check","EXIT",4,$PID);
 }
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
@@ -112,7 +112,7 @@ if( $ARGV[0] eq "loop" and -e "/dev/null" )
   {
     print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
     system("svn status osmarender/*.x[ms]l");
-    exit(3);
+    cleanUpAndDie("init.osmarender_stylesheet_check","EXIT",4,$PID);
   }
 }
 # Setup map projection
@@ -302,7 +302,7 @@ sub ProcessRequestsFromServer
         print "Config option LocalSlippymap is set. Downloading requests\n";
         print "from the server in this mode would take them from the tiles\@home\n";
         print "queue and never upload the results. Program aborted.\n";
-        exit 1;
+        cleanUpAndDie("ProcessRequestFromServer.LocalSlippymap","EXIT",1,$PID);
     }
     
     # ----------------------------------
@@ -353,7 +353,7 @@ sub ProcessRequestsFromServer
         print STDERR "\n";
         print STDERR "Server is speaking a different version of the protocol to us.\n";
         print STDERR "Check to see whether a new version of this program was released!\n";
-        exit(2);
+        cleanUpAndDie("ProcessRequestFromServer.Request_API_version","EXIT",1,$PID);
     }
     
     # Information text to say what's happening
@@ -480,8 +480,7 @@ sub GenerateTileset
                 # i.e. tell the server the job hasn't been done yet)
                 PutRequestBackToServer($X,$Y,"NoData");
 		foreach my $file(@tempfiles) { killafile($file); }
-                return if ($Mode eq "loop");
-                exit(1); 
+                cleanUpAndDie("GenerateTileset",$Mode,1,$PID);
             }
     }
 
@@ -502,8 +501,7 @@ sub GenerateTileset
       {
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         PutRequestBackToServer($X,$Y,"BadUTF8");
-        return 0 if ($Mode eq "loop");
-        exit(1);
+        cleanUpAndDie("GenerateTileset.UTF8",$Mode,1,$PID);
       }
     }
 
@@ -563,8 +561,7 @@ sub GenerateTileset
                     # stop rendering if frollo fails, as current osmarender is 
                     # dependent on frollo hints
                     PutRequestBackToServer($X,$Y,"FrolloFail");
-                    return 0 if ($Mode eq "loop"); 
-                    exit(1); 
+                    cleanUpAndDie("GenerateTileset.Frollo",$Mode,1,$PID);
                 }
             }
             elsif ($preprocessor eq "maplint")
@@ -931,7 +928,7 @@ sub xml2svg
     if (grep(!/</, $TestLine))
     {
        statusMessage("File $TSVG doesn't look like svg, exiting", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
-       return cleanUpAndDie("xml2svg",$Mode,$PID);
+       return cleanUpAndDie("xml2svg",$Mode,3,$PID);
     }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
@@ -995,7 +992,7 @@ sub svg2png
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,"BadSVG");
-        return cleanUpAndDie("svg2png",$Mode,$PID);
+        return cleanUpAndDie("svg2png",$Mode,3,$PID);
     }
 
     killafile($stdOut);
@@ -1215,7 +1212,7 @@ sub splitImageX
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
             PutRequestBackToServer($X,$Y,"BlackTile");
-            exit(3);
+            cleanUpAndDie("SplitImageX.BlackTile","EXIT",4,$PID);
         }
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile

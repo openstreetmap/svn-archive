@@ -1,0 +1,10 @@
+url="http://www.openstreetmap.org/api/0.4/map?bbox="
+
+# list of locations. will be used as filename.
+locations="Bremen Bremerhaven Hanover"
+
+# bounding boxes in form "minlon,minlat,maxlon,maxlat" W and S are negative.
+
+Bremen_bbox="8.4900,52.9195,9.123,53.234"
+Bremerhaven_bbox="8.5,53.48,8.68,53.62"
+Hanover_bbox="9.55,52.3,9.91,52.47"

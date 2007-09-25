@@ -64,17 +64,17 @@
         <folder name="Settlements">
             <folder name="cities">
                 <rule e="node" k="place" v="city">
-                    <point class="settlement"/>
+                    <point class="settlement-city"/>
                 </rule>
             </folder>
             <folder name="towns">
                 <rule e="node" k="place" v="town">
-                    <point class="settlement"/>
+                    <point class="settlement-town"/>
                 </rule>
             </folder>
             <folder name="villages">
                 <rule e="node" k="place" v="village">
-                    <point class="settlement"/>
+                    <point class="settlement-village"/>
                 </rule>
             </folder>
         </folder>
@@ -363,10 +363,28 @@
             </IconStyle>
         </Style>
 
-        <Style id="settlement">
-            <IconStyle id="iconstyle-settlement">
+        <Style id="settlement-city">
+            <IconStyle id="iconstyle-city">
                 <Icon>
-                    <href>icons/icon-settlement.png</href>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href>
+                </Icon>
+                <scale>1</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="settlement-town">
+            <IconStyle id="iconstyle-town">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href>
+                </Icon>
+                <scale>0.7</scale>
+            </IconStyle>
+        </Style>
+
+        <Style id="settlement-village">
+            <IconStyle id="iconstyle-village">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href>
                 </Icon>
                 <scale>0.5</scale>
             </IconStyle>

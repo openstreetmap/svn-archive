@@ -1,184 +1,303 @@
 #!/usr/bin/perl
-#-----------------------------------------------------------------------------
-# coast.pl
+
+# This program creates an OSM file compatible with JOSM, based 
+# on PGS coastlines.
 # 
-# This program will create a JOSM osm file of PGS coastlines
+# It can be used to create OSM 0.4 compatible files (default) 
+# or OSM 0.5 compatible files (set $five=1).
+#
+# This script also supports simplification of the PGS data; see
+# comment below for details. 
 #
 # Usage: 
-#   perl coast.pl LatS LatN LongW LongE [datafile]
+#   perl coast_josm.pl LatS LatN LongW LongE [datafile]
 #
+# See http://wiki.openstreetmap.org/index.php/Running_the_coastline_upload
+# for further usage information.
 #
+# This script written by Frederik Rammm <frederik@remote.org>. It mimicks
+# earlier GPL licensed work by OJW, Joerg Ostertag, Blars Blarson, but
+# being entirely re-written is now Public Domain.
 
-use Geo::ShapeFile;
 use strict;
 
-# Lat, Lat, Long, Long, Sector
-my $Y1 = shift();
-my $Y2 = shift();
-my $X1 = shift();
-my $X2 = shift();
-my $Sector = shift() || "13WLong";
+use Geo::ShapeFile;
 
-  if ($Y1 > $Y2) {
-      my $Y0 = $Y1;
-      $Y1 = $Y2;
-      $Y2 = $Y0;
-  }
-  if ($X1 > $X2) {
-      my $X0 = $X1;
-      $X1 = $X2;
-      $X2 = $X0;
-  }
+use constant PI => 4 * atan2 1, 1;
+use constant DEGRAD => PI / 180;
+use constant RADIUS => 6367000.0;
+use constant MAXINT => 1<<31-1;
 
-open(OSM, ">coast+$X1+$X2+$Y1+$Y2.osm")
+my %node_cache;
+
+unless(scalar(@ARGV)>3)
+{
+    print "Usage: perl coast_josm.pl LatS LatN LongW LongE [datafile]";
+    exit 0;
+}
+
+my ($bllat, $trlat, $bllon, $trlon, $datafile) = @ARGV;
+
+if ($bllat > $trlat) 
+{
+    my $tmp = $bllat;
+    $bllat = $trlat;
+    $trlat = $tmp;
+}
+
+if ($bllon > $trlon) 
+{
+    my $tmp = $bllon;
+    $bllon = $trlon;
+    $trlon = $tmp;
+}
+
+# this controls simplification. the simplification mechanism works like this: 
+# whenever a way has at least one node which can be removed without changing
+# the length of the way more than $max_error metres, the node whose removal
+# means the smalles change in total length is removed. the process is repeated
+# until removing any node would increase the length by more than $max_error
+# metres.
+#
+# values between 5 and 20 give good results. use 0 to disable simplification.
+my $max_error = 12;
+
+# change this to 1 if you need OSM 0.5 compliant output (no segments)
+my $five = 0;
+
+open(OSM, ">coast+$bllat+$trlat+$bllon+$trlon.osm")
     or die "Could not open osm file for writing: $!";
-my $next = 0;
+
+unless($five)
+{
+    open(OSMSEG, "+>.seg.tmp") or die "could not open .seg.tmp for writing: $!";
+    unlink(".seg.tmp");
+}
+open(OSMWAY, "+>.way.tmp") or die "could not open .way.tmp for writing: $!";
+unlink(".way.tmp");
+
+my $current_id = 0;
 print OSM "<?xml version='1.0' encoding='UTF-8'?>\n";
-print OSM "<osm version='0.4' generator='coast.pl'>\n";
+printf OSM "<osm version='0.%d' generator='coast_josm.pl'>\n", $five ? 5 : 4;
 
-  my $Filename = "Data/NGA_GlobalShoreline_cd".$Sector;
+my $filename = "Data/NGA_GlobalShoreline_cd".$datafile;
 
-  # Coastline tags
-  my $TagDefault = "<tag k=\"source\" v=\"PGS\"/>";
-  my $TagWay = $TagDefault."<tag k=\"natural\" v=\"coastline\"/>";
-  
-  # Logfile
-  open(LOG, ">log.txt") || die("Can't create logfile");
-  printf LOG "Long %f to %f, Lat %f to %f, shapefile %s\n",
-    $X1, $X2, $Y1, $Y2, $Filename;
-  printf LOG "(%f, %f)\n", $X2 - $X1, $Y2 - $Y1;
-  
-  my $shapefile = new Geo::ShapeFile( $Filename );
-  printf "%d shapes\n", $shapefile->shapes();
+open(LOG, ">log.txt") or die("Cannot create logfile");
+printf LOG "Lon %f to %f, Lat %f to %f, shapefile %s\n",
+    $bllon, $trlon, $bllat, $trlat, $filename;
+printf LOG "(%f, %f)\n", $trlon - $bllon, $trlat - $bllat;
 
-  my $Count = 0;
-  for(1 .. $shapefile->shapes()) {
-    my $shape = $shapefile->get_shp_record($_);
-    my $LastValid = 0;
-    my $NoBreaks = 1;
-    my $FirstNode = 0;
-    my $LastNode = 0;
-    my @Segments;
-    
-    foreach my $Point($shape->points()){
-      my $Long = $Point->X();
-      my $Lat = $Point->Y();
-    
-      my $InArea = (($Lat > $Y1) && ($Lat < $Y2) && ($Long > $X1) && ($Long < $X2));
-      
-      if($InArea){
-          my $Node = NewNode($Lat, $Long, $TagDefault);
-          printf LOG "Node #%d: %f, %f\n", $Node, $Lat, $Long;
-          
-          if($LastValid){
-            my $Segment = NewSegment($LastNode, $Node, '');
-            push(@Segments, $Segment) if($Segment);
-            printf LOG "Segment #%d: %d, %d\n", $Segment, $LastNode, $Node;
-          
-            if(scalar(@Segments) > 80){
-              my $Way = NewWay($TagWay, @Segments);
-              printf LOG "InterimWay %d: %s\n", $Way, join(", ", @Segments);
-              @Segments = ();
-            }
+my $shapefile = new Geo::ShapeFile($filename);
+printf "%d shapes\n", $shapefile->shapes();
 
-          }
-          $LastNode = $Node;
-          $FirstNode = $Node if(!$FirstNode);
-          
-          $LastValid = 1;
+for (my $i=1; $i<=$shapefile->shapes(); $i++) 
+{
+    my $shape = $shapefile->get_shp_record($i);
+    my $currentpoints = [];
+
+    foreach my $point($shape->points())
+    {
+        my $lon = sprintf("%.7f", $point->X());
+        my $lat = sprintf("%.7f", $point->Y());
+
+        if (($lat > $bllat) && ($lat < $trlat) && ($lon > $bllon) && ($lon < $trlon))
+        {
+            push(@$currentpoints, [$lat,$lon]);
         }
         else
         {
-          $LastValid = 0;
-          $NoBreaks = 0;
+            write_way($currentpoints);
+            $currentpoints = [];
         }
-      }
-          
-      if(scalar(@Segments) > 0){
-        my $Way = NewWay($TagWay, @Segments);
-        printf LOG "Way %d: %s\n", $Way, join(", ", @Segments);
-      }
     }
-    
+    write_way($currentpoints);
+}
+
+unless($five)
+{
+    seek OSMSEG, 0, 0;
+    print OSM while(<OSMSEG>);
+    close(OSMSEG);
+}
+
+seek OSMWAY, 0, 0;
+print OSM while(<OSMWAY>);
+close(OSMWAY);
+
 print OSM "</osm>\n";
-close OSM or die "Error closing osm file: $!";
-    print LOG "Complete\n";
-    close LOG;
-    print "Done\n";
+close OSM;
+print LOG "Complete\n";
+close LOG;
+print "Done\n";
 
 exit 0;
 
-sub NewWay() {
-    my ($Tags, @Segments) = @_;
-    $next--;
-    print OSM "<way id=\"$next\" action='create' visible='true'>\n";
-    foreach my $Segment (@Segments) {
-	print OSM "  <seg id=\"$Segment\" />\n";
+sub write_way 
+{
+    my $points = shift;
+    return unless (scalar(@$points) > 1);
+
+    printf LOG "new way %d nodes\n", scalar(@$points);
+
+    my $eliminated = 0;
+    my $min_error;
+    if ((scalar(@$points) > 2) && ($max_error > 0))
+    { 
+        $points = simplify_way($points);
     }
-    print OSM "  $Tags\n</way>\n";
-    return $next;
-}
 
-sub NewSegment() {
-    my ($Node1, $Node2, $Tags) = @_;
-    $next--;
-    print OSM "<segment id=\"$next\" visible='true' from=\"$Node1\" to=\"$Node2\"/>\n";
-    return $next;
-}
+    $current_id--;
+    print OSMWAY "<way id=\"$current_id\" action='create' visible='true'>\n";
 
-my %NodeCache;
-sub NewNode() {
-    my ($Lat, $Lon, $Tags) = @_;
-    if( defined $NodeCache{"$Lat,$Lon"} )
+    my $lastpoint = $points->[0];
+    printf OSMWAY "  <nd ref=\"%d\" />\n", write_node(@$lastpoint) if ($five);
+    for (my $i=1; $i<scalar(@$points); $i++)
     {
-      return $NodeCache{"$Lat,$Lon"};
+        my $thispoint = $points->[$i];
+        next if ($thispoint == $lastpoint);
+        my $thisnode = write_node(@$thispoint);
+        if ($five)
+        {
+            printf OSMWAY "  <nd ref=\"%d\" />\n", $thisnode;
+        }
+        else
+        {
+            my $lastnode = write_node(@$lastpoint);
+            printf OSMWAY "  <seg id=\"%d\" />\n", write_segment($lastnode, $thisnode);
+        }
+        $lastpoint = $thispoint;
     }
-    $next--;
-    print OSM "<node id=\"$next\" visible='true' lat=\"$Lat\" lon=\"$Lon\">\n  $Tags\n</node>\n";
-    return $next;
+
+    print OSMWAY "  <tag k=\"source\" v=\"PGS\" />\n";
+    print OSMWAY "  <tag k=\"natural\" v=\"coastline\" />\n";
+    print OSMWAY "</way>\n";
+    return $current_id;
 }
 
-__END__
+sub write_segment() 
+{
+    my ($from, $to) = @_;
+    $current_id--;
+    print OSMSEG "<segment id=\"$current_id\" action='create' visible='true' from=\"$from\" to=\"$to\"/>\n";
+    return $current_id;
+}
 
-=head1 NAME
+sub write_node() 
+{
+    my ($lat, $lon) = @_;
+    if (defined $node_cache{"$lat,$lon"})
+    {
+        return $node_cache{"$lat,$lon"};
+    }
+    $current_id--;
+    print OSM "<node id=\"$current_id\" action='create' visible='true' lat=\"$lat\" lon=\"$lon\" />\n";
+    $node_cache{"$lat,$lon"} = $current_id;
+    return $current_id;
+}
 
-B<coast.pl>
+# Haversine formula. Returns distance in metres between two points.
+sub calc_distance 
+{
+    my ($p1, $p2) = @_;
 
-=head1 DESCRIPTION
+    my ($lat1, $lon1, $lat2, $lon2) = 
+        ($p1->[0] * DEGRAD, $p1->[1] * DEGRAD, $p2->[0] * DEGRAD, $p2->[1] * DEGRAD);
 
-This program will create a JOSM osm file of PGS coastlines
+    my $dlon = ($lon2 - $lon1);
+    my $dlat = ($lat2 - $lat1);
+    my $a = (sin($dlat/2))**2 + cos($lat1) * cos($lat2) * (sin($dlon/2))**2;
+    my $c = 2 * atan2(sqrt($a), sqrt(1-$a)) ;
+    return RADIUS * $c;
+}
 
-=head1 SYNOPSIS
+sub simplify_way 
+{
+    my $src = shift;
+    my $first = { "point" => $src->[0],
+        "dist_to_next" => 0,
+        "dist_to_prev" => 0,
+        "error" => MAXINT
+    };
 
-Usage: 
-   perl coast.pl LatS LatN LongW LongE [datafile]
+    my $list = $first;
 
-=head1 OPTIONS
+    # build double linked list
+    for (@$src) 
+    {
+        next if ($_ == $first);
+        my $item = { "point" => $_,
+            "dist_to_next" => 0,
+            "dist_to_prev" => calc_distance($list->{"point"}, $_),
+            "error" => MAXINT,
+            "prev" => $list
+        };
+        $list->{"dist_to_next"} = $item->{"dist_to_prev"};
+        $list->{"next"} = $item;
+        if (defined($list->{"prev"}))
+        {
+            compute_error($list);
+        }
+        $list = $item;
+    }
 
-=head1 COPYRIGHT
+    my $eliminated;
+    my $min_err;
 
-Copyright 2006, Jörg Ostertag
-Copyright 2007 Blars Blarson
+    while(1)
+    {
+        my $min_el;
+        undef $min_err;
+        for (my $i = $first; $i->{"next"}; $i=$i->{"next"})
+        {
+            next unless defined ($i->{"prev"});
+            if ($i->{"error"} < $min_err || !defined($min_err))
+            {
+                $min_err = $i->{"error"};
+                $min_el = $i;
+            }
+        }
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License version 2
-as published by the Free Software Foundation
+        last if (($min_err > $max_error) || (!defined($min_err)));
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+        # if element found, eliminate
+        if (defined($min_err) && $min_err < $max_error)
+        {
+            my $prev = $min_el->{"prev"};
+            my $current_id = $min_el->{"next"};
+            $prev->{"dist_to_next"} = calc_distance($prev->{"point"}, $min_el->{"point"}) + 
+                calc_distance($current_id->{"point"}, $min_el->{"point"});
+            $prev->{"next"} = $current_id;
+            $current_id->{"dist_to_prev"} = $prev->{"dist_to_next"};
+            $current_id->{"prev"} = $prev;
+            compute_error($current_id);
+            compute_error($prev);
+            $eliminated++;
+        }
+    };
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+    my $newpts = [];
+    for (my $i = $first; defined($i); $i=$i->{"next"})
+    {
+        push(@$newpts, $i->{"point"});
+    }
 
-=head1 AUTHOR
+    printf LOG "eliminated %d nodes, smallest error was %d\n", 
+        $eliminated, $min_err;
 
-OJW
+    return $newpts;
+}
 
-=head1 SEE ALSO
-
-http://www.openstreetmap.org/
-
-=cut
+sub compute_error
+{
+    my $listel = shift;
+    if (!defined($listel->{"prev"}) || !defined($listel->{"next"}))
+    {
+        $listel->{"error"} = MAXINT;
+    }
+    else
+    {
+        $listel->{"error"} = $listel->{"dist_to_next"} + $listel->{"dist_to_prev"} - 
+            calc_distance($listel->{"prev"}->{"point"}, 
+                $listel->{"next"}->{"point"});
+    }
+}

@@ -921,9 +921,18 @@ sub xml2svg
     statusMessage("Transforming zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     runCommand($Cmd,$PID);
 
-    # need to look at temporary svg wether it really is a svg or just the 
+    # look at temporary svg wether it really is a svg or just the 
     # xmlstarlet dump and exit if the latter.
+    open(SVGTEST, "<", $TSVG) || return;
+    my $TestLine = <SVGTEST>;
+    chomp $TestLine;
+    close SVGTEST;
 
+    if (grep(!/</, $TestLine))
+    {
+       statusMessage("File $TSVG doesn't look like svg, exiting", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+       return cleanUpAndDie("xml2svg",$Mode,$PID);
+    }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
 #-----------------------------------------------------------------------------
@@ -950,7 +959,7 @@ sub xml2svg
     {   # don't do bezier curve hinting
         statusMessage("Bezier Curve hinting disabled.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     }
-
+    return 1;
 }
 
 #-----------------------------------------------------------------------------
@@ -986,8 +995,7 @@ sub svg2png
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,"BadSVG");
-        return 0 if ($Mode eq "loop");
-        exit(1);
+        return cleanUpAndDie("svg2png",$Mode,$PID);
     }
 
     killafile($stdOut);

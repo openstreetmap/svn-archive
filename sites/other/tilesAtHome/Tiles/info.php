@@ -52,25 +52,23 @@
   // Open database connection
   include("../connect/connect.php");
 
-  print "<h2>Tile on the disk</h2>\n";
-  // look on filesystem
+  print "<h2>Tile on disk</h2>\n";
+  // look up filesystem
   if ($FileExists = SearchFilesystem($X,$Y,$Z,$LayerID)) {
     $Data =  SearchMetaDB($X,$Y,$Z,$LayerID,0);
   
     // Look for a complete tileset information and use newer entry
-    if($Z > 12) {
+    if($Z >= 12) {
       list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
-      if($Valid){
-        if($TilesetData = SearchMetaDB($X12,$Y12,12,$LayerID,1)){
-          if ($TilesetData['date'] > $Data['date']) {
+      if($Valid)
+        if($TilesetData = SearchMetaDB($X12,$Y12,12,$LayerID,1))
+          if ($TilesetData['date'] > $Data['date'])
             $Data = $TilesetData;
-          }
-        }
-      }
     }
-    PrintMetaInfo($Data);
+    if ($Data) PrintMetaInfo($Data);
+     else echo "<p>No meta data in data base.</p>";
   } else {
-    echo "<p>No file found</p>";
+    echo "<p>No file found.</p>";
   }
 
  
@@ -119,7 +117,7 @@
       $ActualSize = filesize($Filename);
       $ActualDate = filemtime($Filename);
       
-      printf("<p>Found file: %d bytes, modified %s</p>", 
+      printf("<p>Image file: %d bytes, modified %s</p>", 
         $ActualSize,
         date("Y-m-d H:i:s", $ActualDate));  
   }

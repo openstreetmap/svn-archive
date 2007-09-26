@@ -52,24 +52,28 @@
   // Open database connection
   include("../connect/connect.php");
 
-  // look on new filesystem
-  print "<h2>Tiles on the disk</h2>\n";
-  SearchMetaDB($X,$Y,$Z,$LayerID,0);
-  SearchFilesystem($X,$Y,$Z,$LayerID);
-  print "<p class=\"notes\">Date and size should match if the image was uploaded through the proper interface.</p>\n";
+  print "<h2>Tile on the disk</h2>\n";
+  // look on filesystem
+  if ($FileExists = SearchFilesystem($X,$Y,$Z,$LayerID)) {
+    $Data =  SearchMetaDB($X,$Y,$Z,$LayerID,0);
   
-  // Look for a complete tileset in new system
-  if($Z >= 12){
-    list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
-    if($Valid){
-      print "<h2>Tileset-at-once uploads</h2>\n";
-      if(SearchMetaDB($X12,$Y12,12,$LayerID,1)){
-        SearchFilesystem($X12,$Y12,12,$LayerID);
+    // Look for a complete tileset information and use newer entry
+    if($Z > 12) {
+      list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
+      if($Valid){
+        if($TilesetData = SearchMetaDB($X12,$Y12,12,$LayerID,1)){
+          if ($TilesetData['date'] > $Data['date']) {
+            $Data = $TilesetData;
+          }
+        }
       }
-      print "<p class=\"notes\">If there is both a tile and a tileset entry, the one with the latest timestamp is the correct one</p>\n";
     }
+    PrintMetaInfo($Data);
+  } else {
+    echo "<p>No file found</p>";
   }
-  
+
+ 
   // look for blank tiles
   print "<h2>Blank db</h2>\n";  
   SearchBlankTiles($X,$Y,$Z,$LayerID);
@@ -80,42 +84,44 @@
     $LayerName = LayerDir($LayerID);
     $Filename = TileName($X,$Y,$Z,$LayerName);
     
-    if(file_exists($Filename)){
+    if($fileexists = file_exists($Filename)){
       FormatFilenameInfo($Filename);
     }
+    return $fileexists;
   }
   
   function SearchMetaDB($X,$Y,$Z,$LayerID,$RequireTileset){
     $Data = MetaInfo($X,$Y,$Z,$LayerID);
     if(!$Data["valid"]){
-      printf("<p>No entry in meta db</p>\n");
-      return(0);
+      return(NULL);
     }
     if($RequireTileset && $Data["tileset"] != 1){
-      printf("<p>None found</p>\n");
-      return(0);
+      return(NULL);
     }
-    printf("<p>Database says %s</p>\n", FormatMetaInfo($Data));
-    return(1);
+    return($Data);
   }
-      
+
+  //------------------------------------------------------------------------
+  function PrintMetaInfo($Data) {
+    printf(
+      "<p>%s upload by user %d (%s) with client %d (%s) recorded on %s</p>",
+      ($Data['tileset']?'Full tileset':'Single tile'),
+      $Data["user"],
+      htmlentities(lookupUser($Data["user"])),
+      $Data["version"],
+      htmlentities(versionName($Data["version"])),
+      $Data['date']
+    );
+  }
+  //------------------------------------------------------------------------
+
   function FormatFilenameInfo($Filename){
       $ActualSize = filesize($Filename);
       $ActualDate = filemtime($Filename);
       
-      printf("<p>Found image: %d bytes, modified %s</p>", 
+      printf("<p>Found file: %d bytes, modified %s</p>", 
         $ActualSize,
         date("Y-m-d H:i:s", $ActualDate));  
-  }
-  function FormatMetaInfo($Data){
-    return(sprintf(
-      "%d bytes, uploaded %s by user %d '<b>%s</b>' with version %d '<b>%s</b>'",
-      $Data["size"],
-      $Data["date"],
-      $Data["user"],
-      htmlentities(lookupUser($Data["user"])),
-      $Data["version"],
-      htmlentities(versionName($Data["version"]))));
   }
   
   function MetaInfo($X,$Y,$Z,$LayerID){

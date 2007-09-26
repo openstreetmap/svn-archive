@@ -31,8 +31,8 @@
 	REQUEST_DONE,
 	$_SERVER['REMOTE_ADDR']);
      $Result = mysql_query($SQL);
-     if ($row = mysql_fetch_row($Result) and $row[0] >= 50) 
-       if $row[0] >= 100 {$P = 3;} else {$P = 2;}
+     if ($row = mysql_fetch_row($Result) and $row[0] >= 20) 
+       if $row[0] >= 100 {$P = 3;} else {$P=($P<2)?2:$P;}
 
      $SQL = sprintf(
        "INSERT into tiles_queue (`x`,`y`,`z`,`status`,`src`,`date`,`priority`,`ip`) values (%d,%d,%d,%d,'%s',now(),%s,'%s');", 

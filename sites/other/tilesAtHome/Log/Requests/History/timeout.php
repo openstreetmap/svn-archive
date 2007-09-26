@@ -17,8 +17,8 @@
   // retry active requests twice after 2h, then every 6h, then
   // expire unfinished requests after another 7 hours
   // make sure delete timeout is bigger than restart timeout if used simulatanously
-  timeout(REQUEST_ACTIVE, 2, 2, "restart");
-  timeout(REQUEST_ACTIVE, 6, 6, "restart");
+  timeout(REQUEST_ACTIVE, 1.5, 2, "restart");
+  timeout(REQUEST_ACTIVE, 6, 4, "restart");
   timeout(REQUEST_ACTIVE, 7, 0, "delete");
   timeout(REQUEST_DONE, 48, 0, "delete");
 
@@ -39,8 +39,6 @@
       case "restart":
          // if time's over and enough retry attempts are left
          // move it to the "new requests" queue
-         // TODO extend move request to be able to handle multiple requests at once
-	 // then use  moveRequest($Data["x"], $Data["y"], $Data["status"], REQUEST_NEW);
 
          $SQL = sprintf(
             "UPDATE `tiles_queue` set `status`=%d,  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<%d and `status`=%d;", 

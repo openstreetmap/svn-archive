@@ -270,33 +270,58 @@ void segments(MYSQL *mysql)
     mysql_free_result(res);
 }
 
-void get_way_tags(MYSQL *mysql, const int id, struct keyval *tags)
+#define TAG_CACHE (1000)
+
+struct tCache {
+    int id;
+    struct keyval tags;
+};
+
+static struct tCache cache[TAG_CACHE+1];
+static MYSQL_STMT *tags_stmt;
+
+void tags_init(MYSQL *mysql)
 {
-    unsigned long length[2];
-    my_bool       is_null[2];
-    my_bool       error[2];
-    static MYSQL_STMT *stmt = NULL;
+    int i;
+    const char *query = "SELECT id, k, v FROM current_way_tags WHERE id >= ? ORDER BY id LIMIT 1000"; // == TAG_CACHE
+    MYSQL_RES *prepare_meta_result;
+    tags_stmt = mysql_stmt_init(mysql);
+    assert(tags_stmt);
+    if (mysql_stmt_prepare(tags_stmt, query, strlen(query))) {
+        fprintf(stderr,"Cannot setup prepared query for current_way_tags: %s\n", mysql_error(mysql));
+        exit(1);
+    }
+    assert(mysql_stmt_param_count(tags_stmt) == 1);
+    prepare_meta_result = mysql_stmt_result_metadata(tags_stmt);
+    assert(prepare_meta_result);
+    assert(mysql_num_fields(prepare_meta_result) == 3);
+    mysql_free_result(prepare_meta_result);
+
+    for (i=0; i< TAG_CACHE; i++)
+        initList(&cache[i].tags);
+}
+
+void tags_exit(void)
+{
+    mysql_stmt_close(tags_stmt);
+    tags_stmt = NULL;
+}
+
+void refill_tags(MYSQL *mysql, const int id)
+{
+    unsigned long length[3];
+    my_bool       is_null[3];
+    my_bool       error[3];
     MYSQL_BIND tags_bind_param[1];
-    MYSQL_BIND tags_bind_res[2];
+    MYSQL_BIND tags_bind_res[3];
     char key[256], value[256];
+    int i, row_id, last_id, cache_slot;
 
-    if (!stmt) {
-        const char *query = "SELECT k, v FROM current_way_tags WHERE id=?";
-        MYSQL_RES *prepare_meta_result;
-        stmt = mysql_stmt_init(mysql);
-        assert(stmt);
-        if (mysql_stmt_prepare(stmt, query, strlen(query))) {
-            fprintf(stderr,"Cannot setup prepared query for current_way_tags: %s\n", mysql_error(mysql));
-            exit(1);
-        }
-        assert(mysql_stmt_param_count(stmt) == 1);
-        prepare_meta_result = mysql_stmt_result_metadata(stmt);
-        assert(prepare_meta_result);
-        assert(mysql_num_fields(prepare_meta_result) == 2);
-        mysql_free_result(prepare_meta_result);
-
-        // FIXME: The prepared statment handle is leaked (but only once)
-        // mysql_stmt_close(stmt)
+    for (i=0; i<TAG_CACHE; i++) {
+        if (!cache[i].id)
+            break;
+        resetList(&cache[i].tags);
+        cache[i].id = 0;
     }
 
     memset(tags_bind_param, 0, sizeof(tags_bind_param));
@@ -305,64 +330,102 @@ void get_way_tags(MYSQL *mysql, const int id, struct keyval *tags)
     tags_bind_param[0].is_null= 0;
     tags_bind_param[0].length= 0;
 
-    if (mysql_stmt_bind_param(stmt, tags_bind_param))
-    {
+    if (mysql_stmt_bind_param(tags_stmt, tags_bind_param)) {
         fprintf(stderr, " mysql_stmt_bind_param() failed\n");
-        fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+        fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
         exit(0);
     }
 
-    if (mysql_stmt_execute(stmt))
+    if (mysql_stmt_execute(tags_stmt))
     {
         fprintf(stderr, " mysql_stmt_execute(), 1 failed\n");
-        fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+        fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
         exit(0);
     }
 
     memset(tags_bind_res, 0, sizeof(tags_bind_res));
 
-    tags_bind_res[0].buffer_type= MYSQL_TYPE_VAR_STRING;
-    tags_bind_res[0].buffer_length= sizeof(key);
-    tags_bind_res[0].buffer= key;
+    tags_bind_res[0].buffer_type= MYSQL_TYPE_LONG;
+    tags_bind_res[0].buffer= (char *)&row_id;
     tags_bind_res[0].is_null= &is_null[0];
     tags_bind_res[0].length= &length[0];
     tags_bind_res[0].error= &error[0];
 
     tags_bind_res[1].buffer_type= MYSQL_TYPE_VAR_STRING;
-    tags_bind_res[1].buffer_length= sizeof(value);
-    tags_bind_res[1].buffer= value;
-    tags_bind_res[1].is_null= &is_null[1];
-    tags_bind_res[1].length= &length[1];
-    tags_bind_res[1].error= &error[1];
+    tags_bind_res[1].buffer_length= sizeof(key);
+    tags_bind_res[1].buffer= key;
+    tags_bind_res[1].is_null= &is_null[0];
+    tags_bind_res[1].length= &length[0];
+    tags_bind_res[1].error= &error[0];
+
+    tags_bind_res[2].buffer_type= MYSQL_TYPE_VAR_STRING;
+    tags_bind_res[2].buffer_length= sizeof(value);
+    tags_bind_res[2].buffer= value;
+    tags_bind_res[2].is_null= &is_null[1];
+    tags_bind_res[2].length= &length[1];
+    tags_bind_res[2].error= &error[1];
 
 
-    if (mysql_stmt_bind_result(stmt, tags_bind_res))
+    if (mysql_stmt_bind_result(tags_stmt, tags_bind_res))
     {
         fprintf(stderr, " mysql_stmt_bind_result() failed\n");
-        fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+        fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
         exit(0);
     }
 
-    if (mysql_stmt_store_result(stmt))
+    if (mysql_stmt_store_result(tags_stmt))
     {
         fprintf(stderr, " mysql_stmt_store_result() failed\n");
-        fprintf(stderr, " %s\n", mysql_stmt_error(stmt));
+        fprintf(stderr, " %s\n", mysql_stmt_error(tags_stmt));
         exit(0);
     }
 
-    while (!mysql_stmt_fetch(stmt))
-        addItem(tags, key, value, 0);
+    cache_slot = 0;
+    last_id = 0;
+    while (!mysql_stmt_fetch(tags_stmt)) {
+        if (last_id != row_id) {
+            if (last_id)
+               cache_slot++;
+            cache[cache_slot].id = row_id;
+            last_id = row_id;
+        }
+        addItem(&cache[cache_slot].tags, key, value, 0);
+    }
+    // We need to clean out final slot since it may be truncated, unless
+    // we only got a single slot filled then we hit the end of the table
+    // which we assume _is_ complete
+    if (cache_slot) {
+        resetList(&cache[cache_slot].tags);
+        cache[cache_slot].id = 0;
+    } else {
+        // This algorithm can not cope with > TAG_CACHE on a single way
+        assert(countList(&cache[cache_slot].tags) != TAG_CACHE);
+    }
 }
 
+static int cache_off;
+
+struct keyval *get_way_tags(MYSQL *mysql, const int id)
+{
+    if (!cache[cache_off].id) {
+        refill_tags(mysql, id);
+        cache_off = 0;
+    }
+
+    if (cache[cache_off].id == id)
+        return &cache[cache_off++].tags;
+
+    assert(cache[cache_off].id > id);
+    return NULL;
+}
 
 void ways(MYSQL *ways_mysql, MYSQL *segs_mysql, MYSQL *tags_mysql)
 {
     char ways_query[255], segs_query[255];
     MYSQL_RES *ways_res, *segs_res;
     MYSQL_ROW ways_row, segs_row;
-    struct keyval tags, segs;
+    struct keyval *tags, segs;
 
-    initList(&tags);
     initList(&segs);
 
     snprintf(ways_query, sizeof(ways_query),
@@ -381,6 +444,8 @@ void ways(MYSQL *ways_mysql, MYSQL *segs_mysql, MYSQL *tags_mysql)
         exit(1);
     }
 
+    tags_init(tags_mysql);
+
     ways_row = mysql_fetch_row(ways_res);
     segs_row = mysql_fetch_row(segs_res);
 
@@ -393,8 +458,8 @@ void ways(MYSQL *ways_mysql, MYSQL *segs_mysql, MYSQL *tags_mysql)
             // no more segments in this way
             struct tm date;
             parseDate(&date, ways_row[1]);
-            get_way_tags(tags_mysql, way_id, &tags);
-            osm_way(way_id, &segs, &tags, strTime(&date));
+            tags = get_way_tags(tags_mysql, way_id);
+            osm_way(way_id, &segs, tags, strTime(&date));
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
             assert(mysql_num_fields(ways_res) == 2);
@@ -413,6 +478,7 @@ void ways(MYSQL *ways_mysql, MYSQL *segs_mysql, MYSQL *tags_mysql)
 
     mysql_free_result(ways_res);
     mysql_free_result(segs_res);
+    tags_exit();
 }
 
 int main(int argc, char **argv)
@@ -421,6 +487,7 @@ int main(int argc, char **argv)
 #define NUM_CONN (3)
     MYSQL mysql[NUM_CONN];
     int i;
+    const char *set_timeout = "SET SESSION net_write_timeout=600";
 
     // Database timestamps use UK localtime
     setenv("TZ", ":GB", 1);
@@ -438,7 +505,11 @@ int main(int argc, char **argv)
             fprintf(stderr,"%s: %s\n",argv[0],mysql_error(&mysql[i]));
             exit(1);
         }
-        mysql[i].reconnect= 1;
+
+        if (mysql_query(mysql, set_timeout)) {
+            fprintf(stderr,"FAILED %s: %s\n", set_timeout, mysql_error(mysql));
+            exit(1);
+        }
     }
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     printf("<osm version=\"0.3\" generator=\"OpenStreetMap planet.c\">\n");

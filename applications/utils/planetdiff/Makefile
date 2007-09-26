@@ -1,4 +1,4 @@
-CFLAGS += -O2 -g -Wall
+CFLAGS += -O2 -g -Wall -D_LARGEFILE64_SOURCE
 CFLAGS += $(shell xml2-config --cflags)
 LDFLAGS += $(shell xml2-config --libs) 
 LDFLAGS += -lbz2

@@ -31,6 +31,15 @@
                 </rule>
             </folder>
 
+            <folder name="Post and Mail">
+                <rule e="node" k="amenity" v="post_box">
+                    <point class="postbox"/>
+                </rule>
+                <rule e="node" k="amenity" v="post_office">
+                    <point class="postoffice"/>
+                </rule>
+            </folder>
+
             <folder name="Hotels">
                 <rule e="node" k="tourism" v="hotel">
                     <point class="tourism-hotel"/>
@@ -354,6 +363,24 @@
                 </Icon>
             </IconStyle>
         </Style>
+
+        <Style id="postoffice">
+            <IconStyle id="iconstyle-postoffice">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/post_office.png</href>
+                </Icon>
+            </IconStyle>
+        </Style>
+
+        <Style id="postbox">
+            <IconStyle id="iconstyle-postbox">
+                <Icon>
+                    <href>http://maps.google.com/mapfiles/kml/shapes/post_office.png</href>
+                </Icon>
+                <scale>0.5</scale>
+            </IconStyle>
+        </Style>
+
 
         <Style id="tourism-hotel">
             <IconStyle id="iconstyle-hotel">

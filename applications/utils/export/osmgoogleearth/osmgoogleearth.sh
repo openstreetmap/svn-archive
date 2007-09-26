@@ -23,7 +23,8 @@ for place in $locations; do
   bbox=$(eval echo \$${place}_bbox)
   echo  "Fetching: $place, $bbox"
   rm -f map.kmz data.osm
-  wget -q -O data.osm "${url}${bbox}"
+  wget -q -O ${place}.osm "${url}${bbox}"
+  cp ${place}.osm data.osm
   make 
   mv map.kmz ${place}.kmz
   echo "created ${place}.kmz"

@@ -48,6 +48,11 @@ sub read_track_TRK($) {
 	print "$line\n" if $DEBUG>10;
 
 	my ($dummy1,$time,$lon,$lat,$heading,$speed,$test1,$test2,$test3) = split(/\s*,\s*/,$line);
+	if ( ( abs($lon)+ abs($lat)) < 0.1 ) {
+	    printf STDERR "Skipping  |$lat|+|$lon| <0.01\n"
+		if $DEBUG >5;
+	    next;
+	}
 	my $alt=0;
 	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
 

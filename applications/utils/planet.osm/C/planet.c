@@ -409,16 +409,23 @@ static int cache_off;
 
 struct keyval *get_way_tags(MYSQL *mysql, const int id)
 {
-    if (!cache[cache_off].id) {
-        refill_tags(mysql, id);
-        cache_off = 0;
+    while (1) {
+        if (!cache[cache_off].id) {
+            if (cache_off == 1)
+                return NULL; // No more tags in DB table
+            refill_tags(mysql, id);
+            cache_off = 0;
+        }
+
+        if (cache[cache_off].id > id)
+            return NULL; // No tags for this way ID
+
+        if (cache[cache_off].id == id)
+            return &cache[cache_off++].tags;
+
+        cache_off++;
+        assert (cache_off <= TAG_CACHE);
     }
-
-    if (cache[cache_off].id == id)
-        return &cache[cache_off++].tags;
-
-    assert(cache[cache_off].id > id);
-    return NULL;
 }
 
 void ways(MYSQL *ways_mysql, MYSQL *segs_mysql, MYSQL *tags_mysql)

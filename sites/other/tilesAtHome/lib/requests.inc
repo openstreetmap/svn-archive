@@ -53,7 +53,7 @@ function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
   } else {
     // Move all unfinished requests to new mode
     $SQL = sprintf(
-      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `z`=%d and `status`!=%d;",
+      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `z`=%d and `status` < %d;",
       $ToMode,
       $X,
       $Y,

@@ -17,7 +17,7 @@
 include("../connect/connect.php");
 include("../lib/versions.inc");
 
-print("<p>Sort by <a href=\"./?sort=id\">user</a> or <a href=\"./\">uploads</a></p>\n");
+print("<p>Sort by <a href=\"./?sort=id\">user-id</a> or <a href=\"./\">activity</a></p>\n");
 
 
 $SQL = sprintf(

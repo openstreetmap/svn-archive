@@ -2,8 +2,11 @@ package slippymap;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.ImageObserver;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -22,6 +25,8 @@ public class SlippyMapTile
 	int x;
 	int y;
 	int z;
+
+    private String metadata;
 	
 	public SlippyMapTile(int x, int y, int z) 
 	{
@@ -32,7 +37,7 @@ public class SlippyMapTile
 	
 	public String getMetadata()
 	{
-		return "";
+		return metadata;
 	}
 	
 	public void loadImage()
@@ -57,7 +62,36 @@ public class SlippyMapTile
 	
 	public void loadMetadata()
 	{
+        try 
+        {
+            URL dev = new URL("http://tah.openstreetmap.org/Tiles/info_short.php?x=" +
+                x + "&y=" + y + "&z=12/layer=tile");
+            URLConnection devc = dev.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(devc.getInputStream()));
+            metadata = in.readLine();
+        }
+        catch (Exception ex)
+        {
+            metadata = "error loading metadata";
+        }
+
 	}
+
+    public void requestUpdate()
+    {
+        try
+        {
+            URL dev = new URL("http://tah.openstreetmap.org/NeedRender?x=" +
+                x + "&y=" + y + "&priority=1&src=slippymap_plugin");
+            URLConnection devc = dev.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(devc.getInputStream()));
+            metadata = "requested: "+ in.readLine();
+        }
+        catch (Exception ex)
+        {
+            metadata = "error requesting update";
+        }
+    }
 	
 	public boolean equals(Object o)
 	{

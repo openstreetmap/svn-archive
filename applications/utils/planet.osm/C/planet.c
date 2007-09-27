@@ -2,6 +2,8 @@
 #define _GNU_SOURCE
 #endif
 
+#undef USE_ICONV
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,10 +31,40 @@
 
 #define INDENT "  "
 
+
+#ifdef USE_ICONV
+#include <iconv.h>
+#define ICONV_ERROR ((iconv_t)-1)
+static iconv_t cd = ICONV_ERROR;
+#endif
+
+
 static char escape_tmp[1024];
 
-const char *xmlescape(const char *in)
+const char *xmlescape(char *in)
 { 
+    // Convert from DB charset to UTF8
+    // Note: this assumes that inbuf is C-string compatible, i.e. has no embedded NUL like UTF16!
+    // To fix this we'd need to fix the DB output parameters too
+#ifdef USE_ICONV 
+    if (cd != ICONV_ERROR) {
+        char iconv_tmp[1024];
+        char *inbuf = in, *outbuf = iconv_tmp;
+        size_t ret;
+        size_t inlen = strlen(inbuf);
+        size_t outlen = sizeof(iconv_tmp);
+        bzero(iconv_tmp, sizeof(iconv_tmp));
+        iconv(cd, NULL, 0, NULL, 0);
+
+        ret = iconv(cd, &inbuf, &inlen, &outbuf, &outlen);
+
+        if (ret == -1) {
+            fprintf(stderr, "failed to convert '%s'\n", in);
+            // Carry on regardless
+        }
+        in = iconv_tmp;
+    }
+#endif
     /* character escaping as per http://www.w3.org/TR/REC-xml/ */
 
     /* WARNING: this funxtion uses a static buffer so do not rely on the result
@@ -495,6 +527,10 @@ int main(int argc, char **argv)
     // 3 MySQL connections are required to fetch way data from multiple tables
 #define NUM_CONN (3)
     MYSQL mysql[NUM_CONN];
+#ifdef USE_ICONV
+    MYSQL_ROW row;
+    MYSQL_RES *res;
+#endif
     int i;
     const char *set_timeout = "SET SESSION net_write_timeout=600";
 
@@ -503,12 +539,12 @@ int main(int argc, char **argv)
 
     for (i=0; i<NUM_CONN; i++) {
         mysql_init(&mysql[i]);
-
+#if 0
         if (mysql_options(&mysql[i], MYSQL_SET_CHARSET_NAME , "utf8")) {
             fprintf(stderr, "set options failed\n");
             exit(1);
         }
-
+#endif
         if (!(mysql_real_connect(&mysql[i],"","openstreetmap","openstreetmap","openstreetmap",MYSQL_PORT,NULL,0)))
         {
             fprintf(stderr,"%s: %s\n",argv[0],mysql_error(&mysql[i]));
@@ -518,8 +554,29 @@ int main(int argc, char **argv)
         if (mysql_query(mysql, set_timeout)) {
             fprintf(stderr,"FAILED %s: %s\n", set_timeout, mysql_error(mysql));
             exit(1);
-        }
+       }
     }
+
+#ifdef USE_ICONV
+    if (mysql_query(mysql, "SHOW VARIABLES like 'character_set_results'") || !(res= mysql_use_result(mysql))) {
+            fprintf(stderr,"FAILED show variables: %s\n", mysql_error(mysql));
+            exit(1);
+    }
+
+    if ((row= mysql_fetch_row(res))) {
+        fprintf(stderr, "Setting up iconv for %s = %s\n", row[0], row[1]);
+        cd = iconv_open("UTF8", row[1]);
+        if (cd == (iconv_t)-1) {
+            perror("iconv_open");
+            exit(1);
+        }
+        row = mysql_fetch_row(res);
+        assert(!row);
+    } else {
+        fprintf(stderr, "Failed to fetch DB charset, assuming UTF8\n");
+    }
+#endif
+
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
     printf("<osm version=\"0.3\" generator=\"OpenStreetMap planet.c\">\n");
     printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.4\" />\n");
@@ -532,6 +589,8 @@ int main(int argc, char **argv)
 
     for (i=0; i<NUM_CONN; i++)
         mysql_close(&mysql[i]);
-
+#ifdef USE_ICONV
+    iconv_close(cd);
+#endif
     return 0;
 }

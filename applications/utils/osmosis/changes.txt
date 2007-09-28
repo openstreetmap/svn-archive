@@ -1,0 +1,95 @@
+0.18
+Improved error messages when errors are returned from the api.
+
+0.17
+Added schema version checking to all MySQL tasks.
+Updated xml reading tasks to provide line number information when parse errors occur.
+Modified xml writing tasks to include the osmosis version number in the generator attribute.
+Updated mysql tasks to support the new tile indexing and fixed precision lat/lon.
+
+0.16
+Fixed a major bug in UTF-8 handling when writing xml files.  All files were being written in the default character set.
+
+0.15
+Added full 0.5 support.
+Updated 0.4 code to the 005 schema.
+
+0.14
+Fixed a bug in the area filtering tasks where the original way was being passed to the destination instead of the modified way with only the available segments populated.
+Fixed a bug in the way comparison code where changes in the ordering of segments wouldn't be picked up.
+Fixed a bug in date parsing where the month was always being parsed a month in advance.
+Added the ability to load database login credentials from a properties file.
+Modified xml file writing to use 2 space indenting instead of 4.
+
+0.13
+Modified the --bounding-polygon task so it can read files containing blank lines.
+Added the ability to dump mysql "current" tables.
+Modified xml output to only write latitude and longitude to 7 decimal places.
+
+0.12
+Added a --read-api task for retrieving data from the central server.
+Added "user" support to the core data types, and all relevant tasks except database writing tasks.
+Added a --bounding-polygon task for filtering data by an area.
+Added a --report task which will produce user statistics for a data set.
+
+0.11
+Modified mysql snapshot task to read entire contents of table and process data in code in attempt to improve dump times.
+Added gzip and bzip2 support to xml tasks.
+Modified all database snapshot tasks to include entities with a timestamp equalling the snapshot time.
+Modified all database changeset tasks to not include the begin time and to include the end time.
+
+0.10
+Added JOSM-like date handling as a fallback if the standard xml date format isn't found.
+Added a custom date parser for the special case of GMT times which this tool always produces (approx 10x speedup over JOSM code and 100x speedup over standard JDK for GMT dates).
+
+0.9
+Fixed the name of the main class attribute in the jar manifest.
+Fixed a potential bug in the change application code where a validation step may have erroneously thrown errors.
+Added merge tasks to combine multiple entity or change files together.
+
+0.8
+Modified node and segment readers to avoid returning duplicate records where multiple records with identical timestamps exist.
+Moved main osmosis code into a "core" sub-package allowing new tools to be added.
+Fixed timeouts in mysql dumping of ways by using temporary files for query results.
+Refactored all temporary file handling to use common persistent iterator functionality.
+Fixed some classes not marked as Serializable.
+Updated change application to use less strict validation to handle "re-creates" of entities.
+Updated xml writing tasks to always write in UTC format.
+
+0.7
+Made a number of changes to the mysql dump task to improve performance and reduce the likelihood of timeouts.
+
+0.6
+Modified ChangeDeriver task to set the timestamp of deleted records to the current time.
+Fixed all uses of java.sql.Timestamp to be converted to java.util.Date explicitly instead of utilising inheritance.
+Fixed bug in change writer where timestamps weren't being written for segments.
+Added UserIdManager functionality which creates a system "Osmosis" user in the database to assign all changes to.
+
+0.5
+Modified command line date format to avoid use of spaces.
+
+0.4
+Modified mysql dump task to produce consistent snapshots.
+Added the ability to skip "current" tables when importing to mysql.
+Optimised mysql change reading queries.
+
+0.3
+Added mysql table truncator task.
+Updated segment xml processing code to handle timestamps.
+Made xml date processing during xml reading optional to improve performance.
+Added buffer tasks to allow pipeline processing to be split across multiple threads.
+Change reading and writing from a mysql database is now working, at least for simple test cases.
+
+0.2
+Added Main-Class feature to the jar manifest simplifying program launch.
+Added a shell launch script to simplify running on unix/linux.
+Added a readme with basic installation instructions.
+Added xml date parsing support.
+Fixed database dump code to read the "current" tables.
+Added a task for reading changes from a database.
+Added a task for writing changes to a database.
+Added a task for truncating database tables.
+Improved mysql import performance by disabling indexes and locking tables.
+
+0.1
+Initial version.

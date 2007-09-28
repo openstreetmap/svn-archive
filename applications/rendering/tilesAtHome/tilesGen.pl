@@ -379,7 +379,7 @@ sub PutRequestBackToServer
     killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
     # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
-    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahClientReRequest:" . $Cause;
+    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahCltReReq:" . $Cause;
     
     statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(

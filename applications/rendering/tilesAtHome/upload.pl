@@ -99,6 +99,7 @@ sub processOldZips
     {
         $currentSubTask = "upload" . $runNumber;
         $progress = 0;
+        $progressPercent = 0;
         @zipfiles = grep { /\.zip$/ } readdir(ZIPDIR);
         close ZIPDIR;
     }

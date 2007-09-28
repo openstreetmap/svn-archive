@@ -192,6 +192,8 @@ sub processTileBatch
         }
     }
 
+    $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount; 
+    
     if($Count)
     {
         statusMessage(sprintf("Got %d files (%d bytes), compressing", $Count, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -199,7 +201,7 @@ sub processTileBatch
     }
     else
     {
-        $progressPercent = ( $tileCount - scalar(@tiles) ) * 100 / $tileCount;
+
         statusMessage("compress finished", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         return 0;
     }

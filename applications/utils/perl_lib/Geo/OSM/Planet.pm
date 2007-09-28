@@ -34,32 +34,32 @@ use Utils::LWP::Utils;
 # As of planet-061220
 my $estimations = {
             'way' => {
-                       'count' => 1986578,
-                       'max_id' => 6065507
+                       'count' => 3918624,
+                       'max_id' => 8013668
                      },
             'elem' => {
-                        'count' => 206470511,
-                        'max_id' => 206470511
+                        'count' => 312752630,
+                        'max_id' => 312752630
                       },
             'seg' => {
-                       'count' => 26718444,
-                       'max_id' => 44429733
+                       'count' => 40992844,
+                       'max_id' => 57261050
                      },
             'segment' => {
-                           'count' => 28634826,
-                           'max_id' => 44356553
+                           'count' => 41325764,
+                           'max_id' => 57259818
                          },
             'tag' => {
-                       'count' => 119070695,
+                       'count' => 186445779,
                        'max_id' => 1
                      },
             'node' => {
-                        'count' => 30059968,
-                        'max_id' => 49727934
+                        'count' => 40069619,
+                        'max_id' => 59943310
                       },
             'line' => {
-                        'count' => 260506933,
-                        'max_id' => 206470511
+                        'count' => 388379350,
+                        'max_id' => 312752630
                       }
 };
 

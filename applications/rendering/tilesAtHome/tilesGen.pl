@@ -927,7 +927,7 @@ sub xml2svg
 
     if (grep(!/</, $TestLine))
     {
-       statusMessage("File $TSVG doesn't look like svg, exiting", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+       statusMessage("File $TSVG doesn't look like svg, aborting render.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
        return cleanUpAndDie("xml2svg",$Mode,3,$PID);
     }
 #-----------------------------------------------------------------------------

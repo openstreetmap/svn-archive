@@ -14,7 +14,6 @@ BEGIN {
 use strict;
 use warnings;
 
-use XML::Parser;
 use Getopt::Long;
 use Storable ();
 use IO::File;
@@ -38,6 +37,9 @@ my $do_list_areas=0;
 my $do_update_only=0;
 my $tie_nodes_hash=undef;
 my $Filename;
+
+our $SEGMENTS_FILENAME;
+our $FH_OSM;
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -113,6 +115,7 @@ our (%Nodes, %Stats);
 our $AREA_FILTER;
 our $PARSING_START_TIME=0;
 our $PARSING_DISPLAY_TIME=0;
+our $PARSING_ELEM_COUNT=0;
 
 my $data_dir=planet_dir()."/csv";
 mkdir_if_needed( $data_dir );
@@ -157,20 +160,19 @@ for my $area_name ( split(",",$areas_todo) ) {
     }
     $Stats{"Tie Nodes_hash"} = $tie_nodes_hash;
 
-    my $filename = "$data_dir/osm-segments-$area_name.csv";
-    if(! open(OSM,">$filename.part")) {
-	warn "output_osm: Cannot write to $filename\n";
-	return;
-    }
-    binmode(OSM,":utf8");
-    parse_planet($Filename,$area_name);
-
     printf STDERR "Creating output files\n";
     die "No Area Name defined\n"
 	unless $area_name;
 
-    rename("$filename.part",$filename)
-	if -s "$filename.part";
+    $SEGMENTS_FILENAME = "$data_dir/osm-segments-$area_name.csv";
+    $FH_OSM = IO::File->new(">$SEGMENTS_FILENAME.part");
+    if( ! $FH_OSM ) {
+	warn "output_osm: Cannot write to $SEGMENTS_FILENAME\n";
+	return;
+    }
+    $FH_OSM->binmode(":utf8");
+
+    parse_planet($Filename,$area_name);
 
     printf STDERR "$area_name Done\n";
 }
@@ -198,34 +200,12 @@ sub parse_planet($$){
 
     $PARSING_START_TIME=time();
     $READ_FH = data_open($Filename);
-    my $P = new XML::Parser( Handlers => {
-	Start => \&DoStart, 
-	End => \&DoEnd, 
-	Char => \&DoChar,
-	});
-    eval {
-	$P->parse($READ_FH);
-	$READ_FH->close();
+    while ( my $line = $READ_FH->getline() ) {
+	parse_line($line);
     };
+    $READ_FH->close();
     if ( $VERBOSE || $DEBUG )  {
 	print STDERR "\n";
-    }
-
-    # Print out not parsed lines
-    my $count=20;
-    $READ_FH->setpos($OK_POS);
-    while ( ($count--) && (my $line = $READ_FH->getline() )) {
-	print "REST: $line";
-    }
-
-    if ($@) {
-	print STDERR "WARNING: Could not parse osm data $Filename\n";
-	print STDERR "ERROR: $@\n";
-	return;
-    }
-    if (not $P) {
-	print STDERR "WARNING: Could not parse osm data $Filename\n";
-	return;
     }
     $Stats{"time parsing"} = time()-$PARSING_START_TIME;
     printf("osm2csv: Parsing Osm-Data in %.0f sec\n",time()-$PARSING_START_TIME )
@@ -233,70 +213,63 @@ sub parse_planet($$){
 
 }
 
-
-# Function is called whenever an XML tag is started
-#----------------------------------------------
-sub DoStart()
-{
-    my ($Expat, $Name, %Attr) = @_;
-    
-    if($Name eq "node"){
-	undef %Tags;
-	%MainAttr = %Attr;
-	$Type = "n";
-    } elsif($Name eq "segment"){
-	undef %Tags;
-	%MainAttr = %Attr;
-	$Type = "s";
-    } elsif($Name eq "tag"){
-	# TODO: protect against id,from,to,lat,long,etc. being used as tags
-	$Tags{$Attr{"k"}} = $Attr{"v"};
-	$Stats{"tag"}++;
-    }
-}
-
 # Function is called whenever an XML tag is ended
 #----------------------------------------------
-sub DoEnd(){
-    my ($Expat, $Element) = @_;
-    my $ID = $MainAttr{"id"};
-    $Stats{"${Element} seen"}++;
+sub parse_line(){
+    my $line = shift;
+
+    my $element='';
+
+    if($line =~ m/node.*id="([\d\.\+\-]+)".*lat="([\d\.\+\-]+)".*lon="([\d\.\+\-]+)"/ ){
+	my $node={id=>$1,lat=>$2,lon=>$3};
+#	print $line. Dumper(\$node);
+	my $id=$1;
+	$element="node";
+	if ( $AREA_FILTER->inside($node) ) {
+	    $Nodes{$id} = sprintf("%f,%f",$node->{lat}, $node->{lon});
+	    $Stats{"node read"}++;
+	    $Stats{"elem read"}++;
+	}
+    } elsif ($line =~ m/segment.*id="([\d\.\+\-]+)".*from="([\d\.\+\-]+)".*to="([\d\.\+\-]+)"/ ){
+	$element = "segment";
+	my $id   = $1;
+	my $from = $2;
+	my $to   = $3;
+	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
+	    printf $FH_OSM "%s,%s\n",$from,$to;
+	    $Stats{"segment read"}++;
+	    $Stats{"elem read"}++;
+	}
+    } elsif($line =~ m/way.*id=/ ){
+	$element = "way";
+	if ($FH_OSM) {
+	    $FH_OSM->close() || warn "Cannot close Segment File:$!\n";
+	    $FH_OSM=0;
+	    rename("$SEGMENTS_FILENAME.part",$SEGMENTS_FILENAME)
+		if -s "$SEGMENTS_FILENAME.part";
+	    
+	    print STDERR "we're done; skipping rest\n";
+	}
+    }
+
+    $Stats{"$element seen"}++;
     $Stats{"elem seen"}++;
-    if ( defined( $Stats{"${Element} seen"} )
-	 &&( $Stats{"${Element} seen"}== 1 ) ){
-	$Stats{"memory at 1st $Element rss"} = sprintf("%.0f",mem_usage('rss'));
-	$Stats{"memory at 1st $Element vsz"} = sprintf("%.0f",mem_usage('vsz'));
+    if ( defined( $Stats{"$element seen"} )
+	 &&( $Stats{"$element seen"}== 1 ) ){
+	$Stats{"memory at 1st $element rss"} = sprintf("%.0f",mem_usage('rss'));
+	$Stats{"memory at 1st $element vsz"} = sprintf("%.0f",mem_usage('vsz'));
 	if ( $DEBUG >1 || $VERBOSE >1) {
 	    print STDERR "\n";
 	}
     }
-    
-    if (     $Stats{"elem seen"} >100 ) {
-	$READ_FH->close();
-    }
 
-    if($Element eq "node"){
-	if ( $AREA_FILTER->inside(\%MainAttr) ) {
-	    $Nodes{$ID} = sprintf("%f,%f",$MainAttr{lat}, $MainAttr{lon});
-	    $Stats{"node read"}++;
-	    $Stats{"elem read"}++;
-	}
-    } elsif($Element eq "segment"){
-	my $from = $MainAttr{"from"};
-	my $to   = $MainAttr{"to"};
-	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
-	    printf OSM "%s,%s\n",$from,$to;
-	    $Stats{"segment read"}++;
-	    $Stats{"elem read"}++;
-	}
-    } elsif($Element eq "way"){
-	#print STDERR "we're done\n";
-    }
-
+    $PARSING_ELEM_COUNT++;
     if ( ( $VERBOSE || $DEBUG ) &&
 #	 ! ( $Stats{"tags read"} % 10000 ) &&
+	 $PARSING_ELEM_COUNT >1000 && 
 	 ( time()-$PARSING_DISPLAY_TIME > 0.9)
 	 )  {
+	$PARSING_ELEM_COUNT=0;
 	$PARSING_DISPLAY_TIME= time();
 	print STDERR "\r";
 	print STDERR "Read(".$AREA_FILTER->name()."): ";
@@ -324,9 +297,8 @@ sub DoEnd(){
 
 	print STDERR mem_usage();
 	print STDERR time_estimate($PARSING_START_TIME,
-				   $Stats{"node seen"}+ $Stats{"segment seen"},
-				   $Stats{"node estim"}+ $Stats{"segment estim"},
-				   );
+				   $Stats{"node seen"}+$Stats{"segment seen"},
+				   $Stats{"node estim"}+$Stats{"segment estim"});
 	print STDERR "\r";
     }
 }

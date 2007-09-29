@@ -63,20 +63,6 @@ use IO::File;
 use Pod::Usage;
 use XML::Parser;
 
-use Geo::Geometry;
-use Geo::OSM::SegmentList;
-use Geo::OSM::Tracks2OSM;
-use Geo::OSM::Write;
-use Geo::Tracks::GpsBabel;
-use Geo::Tracks::Kismet;
-use Geo::Tracks::NMEA;
-use Geo::Tracks::TRK;
-use Geo::Tracks::Tools;
-use Utils::Debug;
-use Utils::File;
-use Utils::Math;
-use Geo::GPX::File;
-
 my ($man,$help);
 #our $DEBUG =0;
 #our $VERBOSE =0;
@@ -114,8 +100,16 @@ use strict;
 use warnings;
 use Carp;
 
+
+use Geo::GPX::File;
 use Geo::Geometry;
 use Geo::OSM::SegmentList;
+use Geo::OSM::Tracks2OSM;
+use Geo::OSM::Write;
+use Geo::Tracks::GpsBabel;
+use Geo::Tracks::Kismet;
+use Geo::Tracks::NMEA;
+use Geo::Tracks::TRK;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -183,7 +177,7 @@ sub filter_against_osm($$$){
     my $dist_osm_track = $config->{dist} || 40;
 
     my $bounds = GPS::get_bounding_box($tracks);
-    #printf STDERR "Track Bounds: ".Dumper(\$bounds);
+    printf STDERR "Track Bounds: ".Dumper(\$bounds) if $DEBUG>5;
     my $osm_segments = reduce_segments_list($all_osm_segments,$bounds);
 
     enrich_tracks($tracks);
@@ -233,7 +227,16 @@ use warnings;
 use Date::Parse;
 use Data::Dumper;
 
+use Geo::GPX::File;
 use Geo::Geometry;
+use Geo::OSM::SegmentList;
+use Geo::OSM::Tracks2OSM;
+use Geo::OSM::Write;
+use Geo::Tracks::GpsBabel;
+use Geo::Tracks::Kismet;
+use Geo::Tracks::NMEA;
+use Geo::Tracks::TRK;
+use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
@@ -336,6 +339,13 @@ use Carp;
 
 use Geo::GPX::File;
 use Geo::Geometry;
+use Geo::OSM::SegmentList;
+use Geo::OSM::Tracks2OSM;
+use Geo::OSM::Write;
+use Geo::Tracks::GpsBabel;
+use Geo::Tracks::Kismet;
+use Geo::Tracks::NMEA;
+use Geo::Tracks::TRK;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -619,10 +629,17 @@ sub split_tracks($$){
     my $start_time=time();
 
     my $filename     = $tracks->{filename};
+    my $filename=$tracks->{filename};
+    if ( $out_raw_gpx && $DEBUG >3 ){
+	my $new_gpx_file = "$filename-raw-pre-splittracks.gpx";
+	$new_gpx_file =~s/\.gpx-raw-pre/-raw-pre/;
+	write_gpx_file($tracks,$new_gpx_file);
+    };
 
-    my $max_allowed_speed = $config->{max_speed} || 200;
-    my $max_allowed_dist  = $config->{max_dist}  || 500; # 1 Km
-    my $max_allowed_time  = $config->{max_time}  || 60;
+
+    my $max_allowed_speed = $config->{max_speed} || 200; # 200 Km/h
+    my $max_allowed_dist  = $config->{max_dist}  || 500; # 0.5 Km
+    my $max_allowed_time  = $config->{max_time}  || 60;  # 1 Minute
 
     my $track_number=0;
     enrich_tracks($tracks);
@@ -892,6 +909,13 @@ sub filter_dup_trace_segments($$){
     my $dist_old2track = $config->{dist} || 20;
     my $start_time=time();
 
+    my $filename=$tracks->{filename};
+    if ( $out_raw_gpx && $DEBUG >3 ){
+	my $new_gpx_file = "$filename-raw-pre-dup_trace_segments.gpx";
+	$new_gpx_file =~s/\.gpx-raw-pre/-raw-pre/;
+	write_gpx_file($tracks,$new_gpx_file);
+    };
+
     my $bounds = GPS::get_bounding_box($tracks);
 
     my $count_points = 0;
@@ -1134,6 +1158,20 @@ package main;
 use strict;
 use warnings;
 
+use Geo::GPX::File;
+use Geo::Geometry;
+use Geo::OSM::SegmentList;
+use Geo::OSM::Tracks2OSM;
+use Geo::OSM::Write;
+use Geo::Tracks::GpsBabel;
+use Geo::Tracks::Kismet;
+use Geo::Tracks::NMEA;
+use Geo::Tracks::TRK;
+use Geo::Tracks::Tools;
+use Utils::Debug;
+use Utils::File;
+use Utils::Math;
+
 # *****************************************************************************
 sub convert_Data(){
     my $all_tracks={
@@ -1230,7 +1268,7 @@ sub convert_Data(){
 	if ( $out_raw_gpx ){
 	    my $new_gpx_file = "$filename-raw.gpx";
 	    $new_gpx_file =~s/.gpx-raw.gpx/-raw.gpx/;
-	    write_gpx_file($new_tracks,$new_gpx_file);
+	    Geo::GPX::File::write_gpx_file($new_tracks,$new_gpx_file);
 
 	    add_tracks($all_raw_tracks,$new_tracks);
 	};

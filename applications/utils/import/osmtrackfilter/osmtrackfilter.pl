@@ -110,6 +110,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -236,6 +237,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -1167,6 +1169,7 @@ use Geo::Tracks::GpsBabel;
 use Geo::Tracks::Kismet;
 use Geo::Tracks::NMEA;
 use Geo::Tracks::TRK;
+use Geo::Tracks::Netmonitor;
 use Geo::Tracks::Tools;
 use Utils::Debug;
 use Utils::File;
@@ -1254,6 +1257,8 @@ sub convert_Data(){
 	    $new_tracks = read_track_NMEA($filename);
 	} elsif ( $extention eq "sav" ) {
 	    $new_tracks = GPSDrive::read_gpsdrive_track_file($filename);
+	} elsif ( $extention eq "log" ) {
+	    $new_tracks = read_track_Netmonitor($filename); # "Netmonitor" www.nobbi.com
 	} else {
 	    warn "$filename: !!! Skipping because of unknown Filetype ($extention) for reading\n";
 	    next;
@@ -1686,6 +1691,7 @@ Default is on.
    - Netstumbler Files *.ns1
    - NMEA              *.nmea
    - Tevion Tracks     *.trk
+   - Netmonitor Tracks *.log
    - via gpsbabel gpsbabel:<type>:*
 
 For each File read a File *-converted.gpx will be written

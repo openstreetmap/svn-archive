@@ -1,11 +1,11 @@
 ##################################################################
-package Geo::Tracks::TRK;
+package Geo::Tracks::Netmonitor;
 ##################################################################
 
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_track_TRK );
+@EXPORT = qw( read_track_Netmonitor);
 
 use strict;
 use warnings;
@@ -20,8 +20,8 @@ use Date::Parse;
 use Time::Local;
 
 # -----------------------------------------------------------------------------
-# Read GPS Data from TRK - File
-sub read_track_TRK($) { 
+# Read GPS Data from Netmonitor - File (www.nobbi.com)
+sub read_track_Netmonitor($) { 
     my $filename = shift;
 
     my $start_time=time();
@@ -36,7 +36,6 @@ sub read_track_TRK($) {
 
     my ($fn_mtime) = (stat($filename))[9] || 0;
     #print "$filename mtime: ".localtime($fn_mtime)."\n";
-    my $date ="01-01-2007";
 
     my $fh = data_open($filename);
     return $new_tracks unless $fh;
@@ -45,39 +44,40 @@ sub read_track_TRK($) {
     while ( my $line = $fh->getline() ) {
 	chomp $line;
 
-	print "$line\n" if $DEBUG>10;
+	print "$line\n" if $DEBUG>4;
 
-	my ($dummy1,$time,$lon,$lat,$heading,$speed,$test1,$test2,$test3) = split(/\s*,\s*/,$line);
+	my ($time,$networkstate,$lon,$lat,$dummy1,$dummy2,$dummy3) = split(/[\t\ \s]+/,$line);
+	my $alt=0;
+	next unless $lat && $lon;
+	next if ( $lat eq "---.-----" ) || ($lon eq "---.-----");
+	next if ( $lat eq "-" ) || ($lon eq "-");
+
+	$time =~ s/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)/$1-$2-$3 $4:$5:$6/;
+
+	$lat=~ s/\s*//g;
+	$lon=~ s/\s*//g;
+	$lat=~ s/,/\./g;
+	$lon=~ s/,/\./g;
+#	printf STDERR "$time\t, la: $lat, lo: $lon\n";
+	if ( $lon =~ s/^E// ) {
+	} elsif ( $lon =~ s/^W// ) {
+	    $lon = -$lon;
+	};
+	if ( $lat =~ s/^N// ) {
+	} elsif ( $lat =~ s/^S// ) {
+	    $lat = -$lat;
+	};
 	if ( ( abs($lon)+ abs($lat)) < 0.1 ) {
 	    printf STDERR "Skipping  |$lat|+|$lon| <0.01\n"
 		if $DEBUG >5;
 	    next;
 	}
-	my $min_pos=50;
-	if ( ( abs($lon)+ abs($lat)) < $min_pos ) {
-	    printf STDERR "Warning   |$lat|+|$lon| < $min_pos\n";
-	}
-	my $alt=0;
-	$time =~ s/^(..)(..)(..)/$1:$2:$3/;
 
-	$time = str2time("$date ${time}");
+	$time = str2time($time);
 	if ( $DEBUG >3) {
-	    printf STDERR "".localtime($time)."\t, la: $lat, lo: $lon,";
-	    printf STDERR "\tHeading: %6.2f",$heading;
-	    printf STDERR "\tSpeed: %8.4f",$speed;
-	    printf STDERR "\tTest1($test1)";
-	    printf STDERR "\tdop?($test2)";
-	    printf STDERR "\tSat#?: $test3";
-	    printf STDERR "\tdummy1: $dummy1\n";
+	    printf STDERR "".localtime($time)."\t, la: $lat, lo: $lon. alt:$alt\n";
 	};
 
-
-	if ( $heading>360) {
-	    print STDERR "Here something is wrong the heading ($heading) ".
-		"is larger than 360 degrees\n";
-	    print STDERR "Line: $line\n";
-	}
-	my ($msg_anz,$msg_no,$rest);
 
 	unless ( defined( $lat) && ($lat ne "" )&& defined( $lon) && ($lon ne "")) {
 	    print "ERROR in Line: $line\n";
@@ -85,7 +85,6 @@ sub read_track_TRK($) {
 	};
 
 	my $elem ={};
-	$elem->{pdop} = $test2;
 	$elem->{lat} = $lat;
 	$elem->{lon} = $lon;
 	$elem->{alt} = $alt if defined $alt;
@@ -121,7 +120,7 @@ __END__
 
 =head1 NAME
 
-TRK.pm
+Netmonitor.pm
 
 =head1 COPYRIGHT
 
@@ -143,7 +142,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 =head1 AUTHOR
 
-Jörg Ostertag (TRK.pm.openstreetmap@ostertag.name)
+Jörg Ostertag (Netmonitor.pm.openstreetmap@ostertag.name)
 
 =head1 SEE ALSO
 

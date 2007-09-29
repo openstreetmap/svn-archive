@@ -158,6 +158,13 @@ sub fill_default_sources() {   # Just some Default Sources
         url         => 'http://www.groundspeak.com/',
         licence     => 'unknown'
       },
+      { source_id   => '11',
+        name        => 'fon',
+        comment     => 'Access point data from FON', 
+        last_update => '2007-09-29',
+        url         => 'http://www.fon.com/',
+        licence     => 'unknown'
+      },
     );
 
     foreach (@sources) {

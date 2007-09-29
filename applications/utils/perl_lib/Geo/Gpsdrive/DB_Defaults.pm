@@ -158,10 +158,25 @@ sub fill_default_sources() {   # Just some Default Sources
         url         => 'http://www.groundspeak.com/',
         licence     => 'unknown'
       },
-      { source_id   => '11',
+      { source_id   => '6',
+        name        => 'opencaching',
+        comment     => 'Geocache data from Opencaching', 
+        last_update => '2007-09-30',
+        url         => 'http://www.opencaching.de/',
+        licence     => 'unknown'
+      },
+      
+      { source_id   => '7',
+        name        => 'friendsd',
+        comment     => 'Position received from friendsd server', 
+        last_update => '2007-09-30',
+        url         => 'http://friendsd.gpsdrive.de/',
+        licence     => 'none'
+      },
+      { source_id   => '8',
         name        => 'fon',
         comment     => 'Access point data from FON', 
-        last_update => '2007-09-29',
+        last_update => '2007-09-30',
         url         => 'http://www.fon.com/',
         licence     => 'unknown'
       },

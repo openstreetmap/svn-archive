@@ -73,7 +73,8 @@ sub write_osm_file($$) { # Write an osm File
 
     print $fh "<?xml version='1.0' encoding='UTF-8'?>\n";
     print $fh "<osm version=\'0.4\' generator=\'".$osm->{tool}."\'>\n";
-    
+    # print $fh "   <bound box=\"-90,-180,90,180\" origin=\"OSM-perl-writer\" />\n";
+
     # --- Nodes
     for my $node_id (  sort keys %{$osm_nodes} ) {
 	next unless $node_id;

@@ -117,6 +117,8 @@
 </xsl:when>
 <xsl:when test="starts-with(@k, 'AND:')">
 </xsl:when>
+<xsl:when test="starts-with(@k, 'gns:')">
+</xsl:when>
 <xsl:when test="@k='aeroway'">
 <xsl:choose>
 <xsl:when test="@v='aerodrome'"/>
@@ -579,6 +581,8 @@
 </xsl:when>
 <xsl:when test="starts-with(@k, 'AND:')">
 </xsl:when>
+<xsl:when test="starts-with(@k, 'gns:')">
+</xsl:when>
 <xsl:when test="@k='created_by'">
 
 </xsl:when>
@@ -662,6 +666,8 @@
 <xsl:when test="starts-with(@k, 'AND_')">
 </xsl:when>
 <xsl:when test="starts-with(@k, 'AND:')">
+</xsl:when>
+<xsl:when test="starts-with(@k, 'gns:')">
 </xsl:when>
 <xsl:when test="@k='abutters'">
 <xsl:choose>
@@ -757,7 +763,6 @@
 <xsl:choose>
 <xsl:when test="@v='administrative'"/>
 <xsl:when test="@v='civil'"/>
-<xsl:when test="@v='national'"/>
 <xsl:when test="@v='national_park'"/>
 <xsl:when test="@v='political'"/>
 <xsl:otherwise>

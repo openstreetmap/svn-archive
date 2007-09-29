@@ -102,6 +102,7 @@ sub LoadOSM_segment_csv($)
     my $start_time=time();
 
     my $segments;
+    my $count=0;
 
     if ( -s "$filename.storable" && 
 	 ! file_needs_re_generation($filename,"$filename.storable")) {
@@ -124,13 +125,14 @@ sub LoadOSM_segment_csv($)
 					    { lat => $segment[2] , lon => $segment[3] });
 	    $segment[5] = $dummy if $DEBUG;
 	    push (@{$segments},\@segment);
+	    $count++;
 	}
 	$fh->close();
 	Storable::store($segments   ,"$filename.storable");
     }
 
     if ( $VERBOSE >1 || $DEBUG) {
-	printf STDERR "Read and parsed $filename";
+	printf STDERR "Read and parsed $count Lines in $filename";
 	print_time($start_time);
     }
 

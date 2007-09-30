@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#e!lusr/bin/perl
 # Takes a planet.osm, and extracts just the bits that relate to one area
 #
 # Nick Burch
@@ -31,6 +31,13 @@ our $help=0;
 my $bbox_opts='';
 
 my $VERBOSE;
+
+print STDERR <<EOF;
+Note that this script is not (yet?) 0.5 compatible. For bounding box excerpts
+with 0.5 style planet files, use the -b option with the polygon extract
+script!
+
+EOF
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -86,8 +93,8 @@ my $way_count = 0;
 my $line_count = 0;
 
 # We assume IDs to be up to 50 million
-my $nodes = Bit::Vector->new( 50 * 1000 * 1000 );
-my $segs = Bit::Vector->new( 50 * 1000 * 1000 );
+my $nodes = Bit::Vector->new( 250 * 1000 * 1000 );
+my $segs = Bit::Vector->new( 250 * 1000 * 1000 );
 
 # Process
 open(XML, "<$xml") or die("$!");
@@ -111,7 +118,7 @@ while(my $line = <XML>) {
 
 	# Process the line of XML
 	if($line =~ /^\s*<node/) {
-		my ($id,$lat,$long) = ($line =~ /^\s*<node id=['"](\d+)['"] lat=['"]?(\-?[\d\.]+)['"]? lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
+		my ($id,$lat,$long) = ($line =~ /^\s*<node[^>]+id=['"](\d+)['"][^>]+lat=['"]?(\-?[\d\.]+)['"]?[^>]+lon=['"]?(\-?[\d\.]+e?\-?\d*)['"]?/);
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "node";
 
@@ -140,7 +147,7 @@ while(my $line = <XML>) {
 		#&display_count("node", $node_count);
 	}
 	elsif($line =~ /^\s*<segment/) {
-		my ($id,$from,$to) = ($line =~ /^\s*<segment id=['"](\d+)['"] from=['"](\d+)['"] to=['"](\d+)['"]/);
+		my ($id,$from,$to) = ($line =~ /^\s*<segment[^>]+id=['"](\d+)['"][^>]+from=['"](\d+)['"][^>]+to=['"](\d+)['"]/);
 		$last_id = undef; # In case it has tags we need to exclude
 		$last_type = "segment";
 

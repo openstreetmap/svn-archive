@@ -1,5 +1,7 @@
+#define _LARGEFILE64_SOURCE
+
 #include <stdio.h>
-#include <malloc.h>
+#include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -86,6 +88,7 @@ void *inputOpen(const char *name)
         return NULL;
 
     memset(ctx, 0, sizeof(*ctx));
+
     ctx->name = strdup(name);
 
     if (ext && !strcmp(ext, ".gz")) {
@@ -97,10 +100,18 @@ void *inputOpen(const char *name)
     } else {
         int *pfd = malloc(sizeof(pfd));
         if (pfd) {
-            *pfd = open(name, O_RDONLY | O_LARGEFILE);
-            if (*pfd < 0) {
-                free(pfd);
-                pfd = NULL;
+            if (!strcmp(name, "-")) {
+                *pfd = STDIN_FILENO;
+            } else {
+                int flags = O_RDONLY;
+#ifdef O_LARGEFILE
+                flags |= O_LARGEFILE;
+#endif
+                *pfd = open(name, flags);
+                if (*pfd < 0) {
+                    free(pfd);
+                    pfd = NULL;
+                }
             }
         }
         ctx->fileHandle = (void *)pfd;
@@ -123,6 +134,7 @@ int inputClose(void *context)
     switch(ctx->type) {
         case plainFile:
             close(*(int *)f);
+            free(f);
             break;
         case gzipFile:
             gzclose((gzFile)f);
@@ -138,4 +150,16 @@ int inputClose(void *context)
     free(ctx->name);
     free(ctx);
     return 0;
+}
+
+xmlTextReaderPtr inputUTF8(const char *name)
+{
+    void *ctx = inputOpen(name);
+
+    if (!ctx) {
+        fprintf(stderr, "Input reader create failed for: %s\n", name);
+        return NULL;
+    }
+
+    return xmlReaderForIO(readFile, inputClose, (void *)ctx, NULL, NULL, 0);
 }

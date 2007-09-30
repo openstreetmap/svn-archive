@@ -13,6 +13,12 @@
 use strict;
 use warnings;
 
+print STDERR <<EOF;
+Note that this script is not (yet?) 0.5 compatible. For bounding box excerpts
+with 0.5 style planet files, use the -b option with the polygon extract
+script!
+
+EOF
 
 ###########################################################################
 #                BEGIN USER CONFIGURATION BLOCK                           #
@@ -103,8 +109,8 @@ unless( -s $xml ) {
 
 
 # We assume IDs to be up to 50 million
-my $wanted_nodes = Bit::Vector->new( 50 * 1000 * 1000 );
-my $wanted_segs = Bit::Vector->new( 50 * 1000 * 1000 );
+my $wanted_nodes = Bit::Vector->new( 250 * 1000 * 1000 );
+my $wanted_segs = Bit::Vector->new( 250 * 1000 * 1000 );
 
 
 # Sub to open xml

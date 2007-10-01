@@ -1,2 +1,4 @@
 /eclipse
 /.compatibility
+/build
+/dist

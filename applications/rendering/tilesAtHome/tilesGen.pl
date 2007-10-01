@@ -903,6 +903,12 @@ sub UpdateOsmarender
 sub frollo 
 {
     my($dataFile, $outputFile) = @_;
+    if ($Config{OSMVersion} >= 0.5)
+    {
+        copy $dataFile, $outputFile;
+        statusMessage("Skipping frollo (nothing to fix)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        return 1;
+    }
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},
       $Config{XmlStarlet},

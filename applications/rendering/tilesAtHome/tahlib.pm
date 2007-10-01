@@ -159,11 +159,11 @@ sub runCommand
                 }
                 if (grep(/infinite template recursion/,$_))
                 {
-                    $ExtraInfo=$ExtraInfo."\n * Tile too complex for Xmlstarlet";
+                    $ExtraInfo=$ExtraInfo."\n * Tile too complex for Xmlstarlet, possibly an excessively long way";
                 }
             }
             close(ERR);
-            print STDERR $ExtraInfo."\n";
+            print STDERR $ExtraInfo."\n\n";
         }
         else
         {

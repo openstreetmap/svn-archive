@@ -438,6 +438,8 @@ sub GenerateTileset
     my $E1 = $E + ($E-$W)*$Config{BorderE};
     my $W1 = $W - ($E-$W)*$Config{BorderW};
 
+    my $bbox = sprintf("%f,%f,%f,%f",
+      $W1, $S1, $E1, $N1);
 
     # TODO: verify the current system cannot handle segments/ways crossing the 
     # 180/-180 deg meridian and implement proper handling of this case, until 
@@ -454,13 +456,21 @@ sub GenerateTileset
     # Download data
     #------------------------------------------------------
     killafile($DataFile);
-    my $URLS = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
-      $W1, $S1, $E1, $N1);
+    my $URLS = sprintf("http://www.openstreetmap.org/api/%s/map?bbox=%s",
+      $Config{OSMVersion},$bbox);
     if ($Zoom < 12) 
     {
         # We only need the bounding box for ways (they will be downloaded completly,
         # but need the extended bounding box for places (names from neighbouring tiles)
-        $URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[boundary=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[railway=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f]", $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1);
+        $URLS = sprintf("http://www.informationfreeway.org/api/%s/way[natural=*][bbox=%s] http://www.informationfreeway.org/api/%s/way[boundary=*][bbox=%s] http://www.informationfreeway.org/api/%s/way[landuse=*][bbox=%s] http://www.informationfreeway.org/api/%s/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%s] http://www.informationfreeway.org/api/%s/way[waterway=river][bbox=%s] http://www.informationfreeway.org/api/%s/way[waterway=river][bbox=%s] http://www.informationfreeway.org/api/%s/way[railway=*][bbox=%s] http://www.informationfreeway.org/api/%s/node[place=*][bbox=%s]",
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox,
+          $Config{OSMVersion},$bbox);
     }
     my @tempfiles;
     push(@tempfiles, $DataFile);
@@ -493,8 +503,8 @@ sub GenerateTileset
                 my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
                 for (my $j = 1 ; $j<=10 ; $j++)
                 {
-                    $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f", 
-                      ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
+                    $URL = sprintf("http://www.openstreetmap.org/api/%s/map?bbox=%f,%f,%f,%f", 
+                      $Config{OSMVersion}, ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
                     $partialFile = "data-$PID-$i-$j.osm";
                     push(@{$filelist}, $partialFile);
                     push(@tempfiles, $partialFile);
@@ -1166,7 +1176,7 @@ sub mergeOsmFiles()
             {
               if( not $header )
               {
-                my $version = $1 || "'0.4'";
+                my $version = $1 || "'".$Config{"OSMVersion"}."'";
                 print DEST qq(<osm version=$version generator="tilesGen mergeOsmFiles">\n);
                 $header = 1;
               }

@@ -274,10 +274,10 @@ sub uploadIfEnoughTiles
     {
         upload();
     }
-    #else
-    #{
-    #    print "Not uploading yet, only $Count tiles\n";
-    #}
+    else
+    {
+        print "Not uploading yet, only $Count tiles\n" if ($Config{"Verbose"});
+    }
 }
 
 sub upload

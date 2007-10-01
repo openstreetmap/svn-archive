@@ -689,6 +689,7 @@ sub GenerateTileset
             {
                 # Delete temporary rules file
                 killafile("map-features-$PID.xml");
+                foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
                 return 0;
             }
         }
@@ -729,7 +730,7 @@ sub GenerateTileset
         }
     }
 
-    foreach my $file(@tempfiles) { killafile($file); }
+    foreach my $file(@tempfiles) { killafile($file) if (!$Config{Debug}); }
     return 1;
 }
 
@@ -1144,6 +1145,7 @@ sub mergeOsmFiles()
     if( scalar(@$sourceFiles) == 1 )
     {
       copy $sourceFiles->[0], $destFile;
+      killafile ($sourceFiles->[0]) if (!$Config{Debug});
       return;
     }
     
@@ -1194,6 +1196,7 @@ sub mergeOsmFiles()
             print DEST;
         }
         close(SOURCE);
+        killafile ($sourceFile) if (!$Config{Debug});
     }
     print DEST "</osm>\n";
     close(DEST);

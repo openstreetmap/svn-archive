@@ -478,7 +478,7 @@ sub GenerateTileset
         {
             if ($Zoom < 12)
             {
-                statusMessage("No data here...\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                statusMessage("No data here...",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
@@ -488,7 +488,7 @@ sub GenerateTileset
             }
             else
             {
-                statusMessage("No data here, trying smaller slices\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                statusMessage("No data here, trying smaller slices",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
                 my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
                 for (my $j = 1 ; $j<=10 ; $j++)
                 {
@@ -502,7 +502,7 @@ sub GenerateTileset
 
                     if (-s $partialFile == 0)
                     {
-                        statusMessage("No data here (sliced)...\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                        statusMessage("No data here (sliced)...",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
                         PutRequestBackToServer($X,$Y,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         return cleanUpAndDie("GenerateTilesetSliced",$Mode,1,$PID);

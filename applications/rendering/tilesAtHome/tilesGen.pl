@@ -455,7 +455,8 @@ sub GenerateTileset
     killafile($DataFile);
     my $URLS = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f",
       $W1, $S1, $E1, $N1);
-    if ($Zoom < 12) {
+    if ($Zoom < 12) 
+    {
 	# We only need the bounding box for ways (they will be downloaded completly,
         # but need the extended bounding box for places (names from neighbouring tiles)
 	$URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[boundary=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[railway=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f]", $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1);
@@ -464,7 +465,8 @@ sub GenerateTileset
     push(@tempfiles, $DataFile);
     my $filelist = [];
     my $i=0;
-    foreach my $URL (split(/ /,$URLS)) {
+    foreach my $URL (split(/ /,$URLS)) 
+    {
 	++$i;
         my $partialFile = "data-$PID-$i.osm";
         push(@{$filelist}, $partialFile);
@@ -473,15 +475,34 @@ sub GenerateTileset
         DownloadFile($URL, $partialFile, 0);
 
         if (-s $partialFile == 0)
+        {
+            if ($Zoom < 12)
             {
-                printf("No data here...\n");
+                statusMessage("No data here...\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
                 PutRequestBackToServer($X,$Y,"NoData");
-		foreach my $file(@tempfiles) { killafile($file); }
+                foreach my $file(@tempfiles) { killafile($file); }
                 return cleanUpAndDie("GenerateTileset",$Mode,1,$PID);
             }
+            else
+            {
+                ## FIXME: do stuff.
+                statusMessage("No data here, trying smaller slices\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
+                for (my $j = 1 ; $j<=10 ; $j++)
+                {
+                    $URL = sprintf("http://www.openstreetmap.org/api/0.4/map?bbox=%f,%f,%f,%f", 
+                      ($W1+($slice*($j-1))), $S1, ($W1+($slice*$j)), $N1); 
+                    $partialFile = "data-$PID-$i-$j.osm";
+                    push(@{$filelist}, $partialFile);
+                    push(@tempfiles, $partialFile);
+                    statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+                    DownloadFile($URL, $partialFile, 0);
+                }
+            }
+        }
     }
 
     mergeOsmFiles($DataFile, $filelist);

@@ -220,7 +220,7 @@ sub cleanUpAndDie
     if (! $Config{"Debug"}) 
     {
         opendir (TEMPDIR, $Config{"WorkingDirectory"});
-        my @files = grep { /$mainPID/ } readdir(TEMPDIR); # FIXME: this will get files from other processes using the same tempdir for low pids
+        my @files = grep { /$mainPID/ } readdir(TEMPDIR); # FIXME: this will get files from other processes using the same Working Directory for low pids because the numbers will collide with tile coordinates
         closedir (TEMPDIR);
         while (my $file = shift @files)
         {

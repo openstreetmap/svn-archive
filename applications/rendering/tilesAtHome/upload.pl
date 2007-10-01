@@ -12,7 +12,7 @@ use tahlib;
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White
+# Copyright 2006, Oliver White, Dirk-Lueder Kreie
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

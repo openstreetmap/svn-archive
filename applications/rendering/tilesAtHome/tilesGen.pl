@@ -276,7 +276,7 @@ sub uploadIfEnoughTiles
     }
     else
     {
-        print "Not uploading yet, only $Count tiles\n" if ($Config{"Verbose"});
+        print "Not uploading yet, only $Count tiles\n"  if ($Config{"Verbose"});
     }
 }
 
@@ -367,6 +367,7 @@ sub ProcessRequestsFromServer
 sub PutRequestBackToServer 
 {
     ## TODO: will not be called in some libGD abort situations
+    ## FIXME: this will request the wrong tiles if zoom != 12
     my ($X,$Y,$Cause) = @_;
 
     ## do not do this if called in xy mode!

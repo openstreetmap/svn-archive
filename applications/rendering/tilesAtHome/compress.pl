@@ -1,17 +1,16 @@
 #!/usr/bin/perl
 use strict;
-#use LWP::UserAgent;
 use File::Copy;
 use English '-no_match_vars';
 use tahconfig;
 use tahlib;
 #-----------------------------------------------------------------------------
-# OpenStreetMap tiles@home, upload module
-# Takes any tiles generated, adds them into ZIP files, and uploads them
+# OpenStreetMap tiles@home, compress module
+# Takes any tiles generated and adds them into ZIP files
 #
 # Contact OJW on the Openstreetmap wiki for help using this program
 #-----------------------------------------------------------------------------
-# Copyright 2006, Oliver White
+# Copyright 2006, Oliver White, Dirk-Lueder Kreie
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -50,10 +49,10 @@ my $progressPercent = 0;
 my $progressJobs = $ARGV[1] or 1;
 my $currentSubTask = "ziprun" . $ARGV[0] or " ";
 
- 
+
 my $lastmsglen;
 
-### TODO: implement locking, this is one of the things that make upload not multithread-safe.
+### TODO: implement locking, this is one of the things that make compress.pl not multithread-safe.
 
 my $tileCount;
 

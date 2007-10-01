@@ -90,6 +90,13 @@ sub ApplyConfigLogic{
             $Config->{"Layer.$layer.RenderFullTileset"} = 0;
         }
     }
+
+    ## switch on verbose mode if Debug is set
+    if ($Config->{"Debug"})
+    {
+        $Config->{"Verbose"} = 1;
+    }
+
     ## check for Pngcrush config option and set to default if not found
     $Config->{"Pngcrush"} = "pngcrush" unless defined($Config->{"Pngcrush"});
 

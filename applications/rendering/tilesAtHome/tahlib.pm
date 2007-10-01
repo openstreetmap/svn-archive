@@ -157,6 +157,10 @@ sub runCommand
                 {
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
                 }
+                if (grep(/infinite template recursion/,_$))
+                {
+                    $ExtraInfo=$ExtraInfo."\n * Tile too complex for Xmlstarlet";
+                }
             }
             close(ERR);
             print STDERR $ExtraInfo."\n";

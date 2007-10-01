@@ -648,13 +648,20 @@ sub GenerateTileset
             SetDataSource($layerDataFile, "map-features-$PID.xml");
 
             # Render the file
-            xml2svg(
+            if (xml2svg(
                     "map-features-$PID.xml",
                     "$Config{WorkingDirectory}output-$PID-z$i.svg",
-                    $i);
-
-            # Delete temporary rules file
-            killafile("map-features-$PID.xml");
+                    $i))
+            {
+                # Delete temporary rules file
+                killafile("map-features-$PID.xml");
+            }
+            else 
+            {
+                # Delete temporary rules file
+                killafile("map-features-$PID.xml");
+                return 0;
+            }
         }
 
         # Find the size of the SVG file

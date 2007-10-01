@@ -202,7 +202,7 @@ sub CheckConfig{
     if (defined($Config->{"OsmUsername"}))
     {
         print "- Using OSM username \"$Config->{OsmUsername}\"\n";
-        print "You have set your OSM username in tilesAtHome.conf or authentication.conf. This is no longer necessary, because the 0.4 API allows map requests without login. It is recommended you remove the option \"OsmUsername\" from the config files\n";
+        print "You have set your OSM username in tilesAtHome.conf or authentication.conf. This is no longer necessary, because from the 0.4 API on the API allows map requests without login. It is recommended you remove the option \"OsmUsername\" from the config files\n";
     }
     #if($Config->{OsmUsername} !~ /%40/){
     #    die("OsmUsername should be an email address, with the \@ replaced by %40\n");

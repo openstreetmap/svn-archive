@@ -580,9 +580,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                     <maplint:result ref="tagged-segment">
-                        <xsl:for-each select="tag[(@k!='created_by') and (@k!='converted_by')]">
-                            <xsl:value-of select="concat(@k,'=',@v,' ')"/>
-                        </xsl:for-each>
+                        <xsl:value-of select="concat(@k,'=',@v,' ')"/>
                     </maplint:result>
                 </xsl:otherwise>
             </xsl:choose>

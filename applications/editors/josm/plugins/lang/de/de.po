@@ -1546,7 +1546,7 @@ msgstr "Erforderliches Attribut \"{0}\" nicht gefunden."
 
 #: ../../core/src/org/openstreetmap/josm/io/OsmReader.java:300
 msgid "Preparing data..."
-msgstr "Breite Daten vor ...."
+msgstr "Bereite Daten vor ...."
 
 #: ../../core/src/org/openstreetmap/josm/io/OsmReader.java:310
 msgid "Illformed Node id"

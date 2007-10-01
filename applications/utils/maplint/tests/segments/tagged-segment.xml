@@ -30,7 +30,7 @@
                         </xsl:for-each>
                     </maplint:result>
                 </xsl:otherwise>
-            </xsl_choose>
+            </xsl:choose>
         </xsl:for-each>
     </maplint:check>
 

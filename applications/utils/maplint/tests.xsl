@@ -564,13 +564,29 @@
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-segments-tagged-segment-segment">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="tag[(@k!='created_by') and (@k!='converted_by')]">
-            <maplint:result ref="tagged-segment">
-                <xsl:for-each select="tag[(@k!='created_by') and (@k!='converted_by')]">
-                    <xsl:value-of select="concat(@k,'=',@v,' ')"/>
-                </xsl:for-each>
-            </maplint:result>
-        </xsl:if>
+        <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
+            <xsl:choose>
+                <xsl:when test="starts-with(@k, 'tiger:')">
+                </xsl:when>
+                <xsl:when test="starts-with(@k, 'AND_')">
+                </xsl:when>
+                <xsl:when test="starts-with(@k, 'AND:')">
+                </xsl:when>
+                <xsl:when test="starts-with(@k, 'gns:')">
+                </xsl:when>
+                <xsl:when test="@k='created_by'">
+                </xsl:when>
+                <xsl:when test="@k='converted_by'">
+                </xsl:when>
+                <xsl:otherwise>
+                    <maplint:result ref="tagged-segment">
+                        <xsl:for-each select="tag[(@k!='created_by') and (@k!='converted_by')]">
+                            <xsl:value-of select="concat(@k,'=',@v,' ')"/>
+                        </xsl:for-each>
+                    </maplint:result>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
     </xslout:template>
   <xslout:template name="test-strict-not-in-map_features-segment">
 <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">

@@ -488,7 +488,6 @@ sub GenerateTileset
             }
             else
             {
-                ## FIXME: do stuff.
                 statusMessage("No data here, trying smaller slices\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
                 my $slice=(($E1-$W1)/10); # A chunk is one tenth of the width 
                 for (my $j = 1 ; $j<=10 ; $j++)
@@ -500,6 +499,14 @@ sub GenerateTileset
                     push(@tempfiles, $partialFile);
                     statusMessage("Downloading: Map data to $partialFile (slice $j of 10)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
                     DownloadFile($URL, $partialFile, 0);
+
+                    if (-s $partialFile == 0)
+                    {
+                        statusMessage("No data here (sliced)...\n",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+                        PutRequestBackToServer($X,$Y,"NoData");
+                        foreach my $file(@tempfiles) { killafile($file); }
+                        return cleanUpAndDie("GenerateTilesetSliced",$Mode,1,$PID);
+                    }
                 }
             }
         }

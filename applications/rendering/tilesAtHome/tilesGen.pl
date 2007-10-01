@@ -101,19 +101,19 @@ if( -s "emptysea.png" != 69 )
 if( -s "emptyland.png" != 67 or
     -s "emptysea.png" != 69 )
 {
-  print STDERR "\nAutomatic fix failed. Exiting.\n";
-  cleanUpAndDie("init.emptytile_template_check","EXIT",4,$PID);
+    print STDERR "\nAutomatic fix failed. Exiting.\n";
+    cleanUpAndDie("init.emptytile_template_check","EXIT",4,$PID);
 }
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
 if( $ARGV[0] eq "loop" and -e "/dev/null" )
 {
-  if( qx(svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
-  {
-    print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
-    system("svn status osmarender/*.x[ms]l");
-    cleanUpAndDie("init.osmarender_stylesheet_check","EXIT",4,$PID);
-  }
+    if( qx(svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
+    {
+        print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
+        system("svn status osmarender/*.x[ms]l");
+        cleanUpAndDie("init.osmarender_stylesheet_check","EXIT",4,$PID);
+    }
 }
 # Setup map projection
 my $LimitY = ProjectF(85.0511);
@@ -457,9 +457,9 @@ sub GenerateTileset
       $W1, $S1, $E1, $N1);
     if ($Zoom < 12) 
     {
-	# We only need the bounding box for ways (they will be downloaded completly,
+        # We only need the bounding box for ways (they will be downloaded completly,
         # but need the extended bounding box for places (names from neighbouring tiles)
-	$URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[boundary=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[railway=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f]", $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1);
+        $URLS = sprintf("http://www.informationfreeway.org/api/0.4/way[natural=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[boundary=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[landuse=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[waterway=river][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/way[railway=*][bbox=%f,%f,%f,%f] http://www.informationfreeway.org/api/0.4/node[place=*][bbox=%f,%f,%f,%f]", $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1, $W1, $S1, $E1, $N1);
     }
     my @tempfiles;
     push(@tempfiles, $DataFile);
@@ -467,7 +467,7 @@ sub GenerateTileset
     my $i=0;
     foreach my $URL (split(/ /,$URLS)) 
     {
-	++$i;
+        ++$i;
         my $partialFile = "data-$PID-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
@@ -562,7 +562,7 @@ sub GenerateTileset
         my $Margin = " " x ($Zoom - 8);
         #printf "%03d %s%d,%d: %1.2f - %1.2f, %1.2f - %1.2f\n", $Zoom, $Margin, $X, $Y, $S,$N, $W,$E;
         
-    
+        
         #------------------------------------------------------
         # Go through preprocessing steps for the current layer
         #------------------------------------------------------
@@ -645,7 +645,7 @@ sub GenerateTileset
             {
                 die "Invalid preprocessing step '$preprocessor'";
             }
-# Uncomment to have the output files checked for validity
+## Uncomment to have the output files checked for validity
 #            if( $preprocessor ne "maplint" )
 #            {
 #              runCommand( qq(xmllint --dtdvalid http://dev.openstreetmap.org/~kleptog/tilesAtHome-0.3.dtd --noout $outputFile), $PID );
@@ -1007,7 +1007,7 @@ sub svg2png
     my $TempFile = $Config{WorkingDirectory}."/$PID.png_part";
     
     my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
-  
+    
     my $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
       $Config{i18n} ? "LC_ALL=C " : "",
       $Config{Niceness},
@@ -1383,4 +1383,3 @@ sub reExecIfRequired
             "progstart=$progstart" or die;
     }
 }
-

@@ -69,14 +69,14 @@ sub talkInSleep
 
     for (my $i = 0; $i< $duration; $i++)
     {
-	my $totalseconds = time() - $progstart;
+        my $totalseconds = time() - $progstart;
         statusMessage(sprintf("%s. Idle for %d:%02d (%d%% idle) ", 
                 $message,
                 $idleFor/60, $idleFor%60,
                 $totalseconds ? $idleSeconds * 100 / $totalseconds : 100));
         sleep 1;
-	$idleFor++;
-	$idleSeconds++;
+        $idleFor++;
+        $idleSeconds++;
     }
 }
 
@@ -200,7 +200,7 @@ sub DownloadFile
     }
     # Note: mirror sets the time on the file to match the server time. This
     # is important for the handling of JobTime later.
-		 $ua->mirror($URL, $File);
+        $ua->mirror($URL, $File);
 
     doneMessage(sprintf("done, %d bytes", -s $File));
 }

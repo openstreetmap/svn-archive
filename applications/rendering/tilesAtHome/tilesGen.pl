@@ -463,14 +463,14 @@ sub GenerateTileset
     {
         # We only need the bounding box for ways (they will be downloaded completly,
         # but need the extended bounding box for places (names from neighbouring tiles)
-        $URLS = sprintf("http://www.informationfreeway.org/api/%s/way[natural=*][bbox=%s] http://www.informationfreeway.org/api/%s/way[boundary=*][bbox=%s] http://www.informationfreeway.org/api/%s/way[landuse=*][bbox=%s] http://www.informationfreeway.org/api/%s/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%s] http://www.informationfreeway.org/api/%s/way[waterway=river][bbox=%s] http://www.informationfreeway.org/api/%s/way[railway=*][bbox=%s] http://www.informationfreeway.org/api/%s/node[place=*][bbox=%s]",
-          $Config{OSMVersion},$bbox,
-          $Config{OSMVersion},$bbox,
-          $Config{OSMVersion},$bbox,
-          $Config{OSMVersion},$bbox,
-          $Config{OSMVersion},$bbox,
-          $Config{OSMVersion},$bbox,
-          $Config{OSMVersion},$bbox);
+        $URLS = sprintf("%s%s/way[natural=*][bbox=%s] %s%s/way[boundary=*][bbox=%s] %s%s/way[landuse=*][bbox=%s] %s%s/way[highway=motorway|motorway_link|trunk|primary|secondary][bbox=%s] %s%s/way[waterway=river][bbox=%s] %s%s/way[railway=*][bbox=%s] %s%s/node[place=*][bbox=%s]",
+          $Config{XAPIURL},$Config{OSMVersion},$bbox,
+          $Config{XAPIURL},$Config{OSMVersion},$bbox,
+          $Config{XAPIURL},$Config{OSMVersion},$bbox,
+          $Config{XAPIURL},$Config{OSMVersion},$bbox,
+          $Config{XAPIURL},$Config{OSMVersion},$bbox,
+          $Config{XAPIURL},$Config{OSMVersion},$bbox,
+          $Config{XAPIURL},$Config{OSMVersion},$bbox);
     }
     my @tempfiles;
     push(@tempfiles, $DataFile);

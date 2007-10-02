@@ -962,14 +962,16 @@ sub xml2svg
     {
         $TSVG = "$SVG-temp.svg";
     }
+ 
+    my $XslFile;
 
     if ($Config{OSMVersion} <= 0.4) 
     {
-        my $XslFile = "osmarender/osmarender.xsl";
+        $XslFile = "osmarender/osmarender.xsl";
     }
     else
     {
-        my $XslFile = "osmarender6/osmarender.xsl";
+        $XslFile = "osmarender6/osmarender.xsl";
     }
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},

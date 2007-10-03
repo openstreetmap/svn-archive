@@ -8,7 +8,8 @@ require 'osm/servinfo.rb'
 require 'cgi'
 
 $mysql = Mysql.init
-$mysql.options(Mysql::SET_CHARSET_NAME, "utf8")
+# If you have a UTF-8 clean setup then you may need to enable the following line
+# $mysql.options(Mysql::SET_CHARSET_NAME, "utf8")
 $mysql.real_connect $DBSERVER, $USERNAME, $PASSWORD, $DATABASE
 
 # create a hash of entries out of a list of semi colon seperated key=value pairs

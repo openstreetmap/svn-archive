@@ -28,15 +28,16 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.download.DownloadDialog;
 import org.openstreetmap.josm.gui.download.DownloadSelection;
 import org.openstreetmap.josm.tools.GBC;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import uk.co.wilson.xml.MinML2;
+import org.xml.sax.helpers.DefaultHandler;
 
 public class PlaceSelection implements DownloadSelection {
 
@@ -67,7 +68,7 @@ public class PlaceSelection implements DownloadSelection {
 	 * Structure of xml described here:  http://wiki.openstreetmap.org/index.php/Name_finder
 	 *
 	 */
-	private class Parser extends MinML2
+	private class Parser extends DefaultHandler
 	{
 		private SearchResult currentResult = null;
 		private StringBuffer description = null;
@@ -168,7 +169,8 @@ public class PlaceSelection implements DownloadSelection {
 					System.out.println("got return: "+activeConnection.getResponseCode());
 					activeConnection.setConnectTimeout(15000);
 					InputStream inputStream = activeConnection.getInputStream();
-					new Parser().parse(new InputStreamReader(inputStream, "UTF-8"));
+					InputSource inputSource = new InputSource(new InputStreamReader(inputStream, "UTF-8"));
+			        SAXParserFactory.newInstance().newSAXParser().parse(inputSource, new Parser());
 				}
 				catch (Exception x) 
 				{

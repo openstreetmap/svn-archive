@@ -1,4 +1,4 @@
-#e!lusr/bin/perl
+#!lusr/bin/perl
 # Takes a planet.osm, and extracts just the bits that relate to one area
 #
 # Nick Burch

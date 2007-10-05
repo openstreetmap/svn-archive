@@ -1190,7 +1190,7 @@
                 stroke-miterlimit: 1.5;
             }
 
-			.city-caption           { font-size: 14px; opacity: 50%; }
+			.city-caption           { font-size: 14px; opacity: 0.5; }
 			.town-caption           { font-size: 12px; }
 			.peak-caption           { font-size: 8px; }
             .village-caption        { font-size: 10px; }

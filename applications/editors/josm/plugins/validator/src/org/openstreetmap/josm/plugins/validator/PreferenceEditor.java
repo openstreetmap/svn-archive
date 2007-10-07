@@ -46,7 +46,7 @@ public class PreferenceEditor implements PreferenceSetting
         testPanel.add( new JLabel(), GBC.std() );
         testPanel.add( new JLabel("On upload"), GBC.eop() );
         
-		allTests = OSMValidatorPlugin.getTests(true, true);
+		allTests = OSMValidatorPlugin.getAllTests();
 		for(Test test: allTests) 
 		{
             test.addGui(testPanel);

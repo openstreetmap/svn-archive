@@ -40,7 +40,7 @@
   # (if they can't, there's no point in them taking requests)
   $VersionID = checkVersion($_GET["version"]);
   if($VersionID == -1){
-    print "XX|3||||client_version_unacceptable";
+    print "XX|4||||client_version_unacceptable"; ## Use a fake Version for the answer to make clients abort loop
     exit;
   }
 

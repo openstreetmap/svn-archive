@@ -50,7 +50,7 @@ public class ErrorLayer extends Layer implements LayerChangeListener
     /**
      * Draw all primitives in this layer but do not draw modified ones (they
      * are drawn by the edit layer).
-     * Draw nodes last to overlap the segments they belong to.
+     * Draw nodes last to overlap the ways they belong to.
      */
     @SuppressWarnings("unchecked")
     @Override 

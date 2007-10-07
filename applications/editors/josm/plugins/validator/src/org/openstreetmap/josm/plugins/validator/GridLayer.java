@@ -21,7 +21,7 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
- * A debug layer for testing the grid cells a segment or way crosses.
+ * A debug layer for testing the grid cells a way crosses.
  * 
  * @author frsantos
  */
@@ -165,18 +165,19 @@ public class GridLayer extends Layer
 	        drawCell( Math.floor(x), Math.floor(y) );
 		}
 
-		public void visit(Segment s) 
-		{
-			for( Point2D p : Util.getSegmentCells(s, gridDetail))
-			{
-		        drawCell( p.getX(), p.getY() );
-			}
-		}
-
 		public void visit(Way w) 
 		{
-			for( Segment s : w.segments )
-				visit(s);
+			Node lastN = null;
+			for (Node n : w.nodes) {
+				if (lastN == null) {
+					lastN = n;
+					continue;
+				}
+				for (Point2D p : Util.getSegmentCells(lastN, n, gridDetail)) {
+					drawCell( p.getX(), p.getY() );
+				}
+				lastN = n;
+			}
 		}
 		
 		/** 

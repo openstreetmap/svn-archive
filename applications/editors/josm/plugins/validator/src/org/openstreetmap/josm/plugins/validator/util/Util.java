@@ -12,8 +12,8 @@ import java.util.*;
 import javax.swing.JButton;
 
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.*;
 import org.openstreetmap.josm.plugins.validator.PreferenceEditor;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -241,29 +241,21 @@ public class Util
      */
     public static List<List<Way>> getWaysInCell(Way w, Map<Point2D,List<Way>> cellWays)
     {
-        int numSegments = w.segments.size();
-        if( numSegments == 0)
+		if (w.nodes.size() == 0)
             return Collections.emptyList();
 
-        Segment start = w.segments.get(0);
-        Segment end = start;
-        if( numSegments > 1 )
-        {
-            end = w.segments.get(numSegments - 1);
-        }
-        
-        if( start.incomplete || end.incomplete )
-            return Collections.emptyList();
+		Node n1 = w.nodes.get(0);
+		Node n2 = w.nodes.get(w.nodes.size() - 1);
         
         List<List<Way>> cells = new ArrayList<List<Way>>(2);
         Set<Point2D> cellNodes = new HashSet<Point2D>();
         Point2D cell;
 
         // First, round coordinates
-        long x0 = Math.round(start.from.eastNorth.east()  * 10000);
-        long y0 = Math.round(start.from.eastNorth.north() * 10000);
-        long x1 = Math.round(end.to.eastNorth.east()      * 10000);
-        long y1 = Math.round(end.to.eastNorth.north()     * 10000);
+        long x0 = Math.round(n1.eastNorth.east()  * 10000);
+        long y0 = Math.round(n1.eastNorth.north() * 10000);
+        long x1 = Math.round(n2.eastNorth.east()  * 10000);
+        long y1 = Math.round(n2.eastNorth.north() * 10000);
 
         // Start of the way
         cell = new Point2D.Double(x0, y0);
@@ -291,10 +283,10 @@ public class Util
         }
 
         // Then floor coordinates, in case the way is in the border of the cell.
-        x0 = (long)Math.floor(start.from.eastNorth.east()  * 10000);
-        y0 = (long)Math.floor(start.from.eastNorth.north() * 10000);
-        x1 = (long)Math.floor(end.to.eastNorth.east()      * 10000);
-        y1 = (long)Math.floor(end.to.eastNorth.north()     * 10000);
+        x0 = (long)Math.floor(n1.eastNorth.east()  * 10000);
+        y0 = (long)Math.floor(n1.eastNorth.north() * 10000);
+        x1 = (long)Math.floor(n2.eastNorth.east()  * 10000);
+        y1 = (long)Math.floor(n2.eastNorth.north() * 10000);
 
         // Start of the way
         cell = new Point2D.Double(x0, y0);
@@ -328,19 +320,22 @@ public class Util
     }    
     
     /**
-	 * Returns the coordinates of all cells in a grid that a segment goes through.
+	 * Returns the coordinates of all cells in a grid that a line between 2
+	 * nodes intersects with.
 	 * 
-	 * @param s The segment
-	 * @param gridDetail The detail of the grid. Bigger values give smaller cells, but a bigger number of them.
+	 * @param n1 The first node.
+	 * @param n2 The second node.
+	 * @param gridDetail The detail of the grid. Bigger values give smaller
+	 * cells, but a bigger number of them.
 	 * @return A list with the coordinates of all cells
 	 */
-	public static List<Point2D> getSegmentCells(Segment s, int gridDetail) 
+	public static List<Point2D> getSegmentCells(Node n1, Node n2, int gridDetail) 
 	{
 		List<Point2D> cells = new ArrayList<Point2D>();
-		double x0 = s.from.eastNorth.east() * gridDetail;
-		double x1 = s.to.eastNorth.east()   * gridDetail;
-        double y0 = s.from.eastNorth.north()* gridDetail + 1;
-        double y1 = s.to.eastNorth.north()  * gridDetail + 1;
+		double x0 = n1.eastNorth.east() * gridDetail;
+		double x1 = n2.eastNorth.east() * gridDetail;
+        double y0 = n1.eastNorth.north() * gridDetail + 1;
+        double y1 = n2.eastNorth.north() * gridDetail + 1;
 
         if( x0 > x1 )
         {

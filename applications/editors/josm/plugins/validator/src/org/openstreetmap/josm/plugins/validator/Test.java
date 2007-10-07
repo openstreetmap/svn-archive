@@ -19,7 +19,7 @@ import org.openstreetmap.josm.tools.GBC;
  * <p>
  * A test is a primitive visitor, so that it can access to all data to be
  * validated. These primitives are always visited in the same order: nodes
- * first, then segments, and ways last.
+ * first, then ways.
  * 
  * @author frsantos
  */
@@ -114,7 +114,7 @@ public class Test implements Visitor
 
     /**
      * Visits all primitives to be tested. These primitives are always visited
-     * in the same order: nodes first, then segments, and ways last.
+     * in the same order: nodes first, then ways.
      * 
      * @param selection The primitives to be tested
      */
@@ -128,8 +128,6 @@ public class Test implements Visitor
     }
 
     public void visit(Node n) {}
-
-	public void visit(Segment s) {}
 
 	public void visit(Way w) {}
 

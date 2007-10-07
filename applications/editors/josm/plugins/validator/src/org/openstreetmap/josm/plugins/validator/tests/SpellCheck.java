@@ -210,13 +210,6 @@ public class SpellCheck extends Test
 
 
 	@Override
-	public void visit(Segment s) 
-	{
-		checkPrimitive(s);
-	}
-
-
-	@Override
 	public void visit(Way w) 
 	{
 		checkPrimitive(w);
@@ -459,7 +452,7 @@ public class SpellCheck extends Test
 
         boolean checkFixmes = Main.pref.getBoolean(PREF_CHECK_FIXMES, true);
         prefCheckFixmes = new JCheckBox(tr("Check for FIXMES."), checkFixmes);
-        prefCheckFixmes.setToolTipText(tr("Looks for nodes, segments or ways with FIXME in any property value."));
+        prefCheckFixmes.setToolTipText(tr("Looks for nodes or ways with FIXME in any property value."));
         testPanel.add(prefCheckFixmes, GBC.std().insets(40,0,0,0));
 
         prefCheckFixmesBeforeUpload = new JCheckBox();

@@ -1,5 +1,5 @@
 
-	# updated 14.9.2007 - padlock
+	# updated 1.10.2007 - writeExports moved to end (d'oh)
 
 	# ----- Export symbols
 
@@ -1300,8 +1300,6 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 	#		pointers
 	#		compasses
 
-	$m->writeExports();
-
 	# -----	Set up screen layout
 
 	#		Properties window
@@ -1522,5 +1520,7 @@ $ec->nextFrame(); $m->addExport($ec,"preset_natural");
 		$s->drawLineTo(2.60,14.21);
 		$ec->add($s);
 	}
+
+	$m->writeExports();
 
 	1;

@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 14.9.2007 (convert GPX)
+	# last update 3.10.2007 (changes for API 0.5, reverse, backspace)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -41,8 +41,8 @@
 //	var gpsurl='/potlatch/getgps.cgi';
 //	var gpxurl='http://127.0.0.1/~richard/gpx/';
 //	var yahoourl='/~richard/potlatch/ymap.swf';
-	var apiurl='../api/0.4/amf';
-	var gpsurl='../api/0.4/swf/trackpoints';
+	var apiurl='../api/0.5/amf';
+	var gpsurl='../api/0.5/swf/trackpoints';
 	var gpxurl='http://www.openstreetmap.org/trace/';
 	var yahoourl='/potlatch/ymap.swf';
 
@@ -69,8 +69,8 @@
 	Key.addListener(keyListener);
 
 	// Mouse listener - copes with custom pointers
-	mouseListener=new Object();
-	mouseListener.onMouseMove=function() { trackMouse(); };
+//	mouseListener=new Object();
+//	mouseListener.onMouseMove=function() { trackMouse(); };
 
 	// Initialise Yahoo
 	var ylat=baselat;	var lastylat=ylat;
@@ -114,12 +114,12 @@
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
 	var custompointer=true;			// use custom pointers?
-	var unwayed=false;				// show unwayed segments?
 	var redopropertywindow=0;		// need to redraw property window after deletion?
 	var tolerance=4/Math.pow(2,_root.scale-12);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
+	var signature="Potlatch 0.4";	// current version
 
 	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
 	
@@ -191,9 +191,14 @@
 
 	_root.attachMovie("rotation","i_direction",39);
 	with (_root.i_direction) { _x=40; _y=583; _rotation=-45; _visible=true; _alpha=50; };
+	_root.i_direction.onPress=function() { _root.map.ways[wayselected].reverseWay(); };
+	_root.i_direction.onRollOver=function() { setFloater("Direction of way - click to reverse"); };
+	_root.i_direction.onRollOut =function() { clearFloater(); };
 
 	_root.attachMovie("roundabout","i_circular",40);
 	with (_root.i_circular) { _x=40; _y=583; _rotation=-45; _visible=false; };
+	_root.i_circular.onRollOver=function() { setFloater("Circular way"); };
+	_root.i_circular.onRollOut =function() { clearFloater(); };
 
 	_root.attachMovie("padlock","padlock",41);
 	with (_root.padlock) { _y=532; _visible=false; };
@@ -207,6 +212,16 @@
 			_root.padlock._visible=false;
 		}
 	};
+
+	_root.createEmptyMovieClip("pointers",90000);
+	_root.pointers.attachMovie("penso"  ,"penso"  ,1); _root.pointers.penso._visible=false;
+	_root.pointers.attachMovie("penx"   ,"penx"   ,2); _root.pointers.penx._visible=false;
+	_root.pointers.attachMovie("peno"   ,"peno"   ,3); _root.pointers.peno._visible=false;
+	_root.pointers.attachMovie("penplus","penplus",5); _root.pointers.penplus._visible=false;
+	_root.pointers.attachMovie("pen"    ,"pen"    ,6); _root.pointers.pen._visible=false;
+	_root.pointers.attachMovie("hand"   ,"hand"   ,7); _root.pointers.hand._visible=false;
+
+
 
 	// =====================================================================================
 	// Initialise text areas
@@ -265,7 +280,7 @@
 	with (_root.t_type	 ) { text="Welcome to OpenStreetMap"; setTextFormat(boldText); };
 	
 	_root.createTextField('t_details',24,5,523,220,20);
-	with (_root.t_details) { text="Potlatch v0.3"; setTextFormat(plainText); };
+	with (_root.t_details) { text=signature; setTextFormat(plainText); };
 	
 	_root.createEmptyMovieClip("properties",50);
 	with (_root.properties) { _x=110; _y=525; }; // 110,505
@@ -295,7 +310,6 @@
 
 	if (gpx) { parseGPX(gpx); }			// Parse GPX if supplied
 
-
 	// =====================================================================================
 	// OOP classes - AnchorPoint
 	// click behaviour:
@@ -324,9 +338,10 @@
 			startNewWay(_root.map.ways[this.way].path[this._name][0],
 						_root.map.ways[this.way].path[this._name][1],this.node);
 		} else {
-			_root.lastxmouse=_root._xmouse;
-			_root.lastymouse=_root._ymouse;
-			this.startDrag();
+//			_root.lastxmouse=_root._xmouse;
+//			_root.lastymouse=_root._ymouse;
+			_root.clicktime=new Date();
+			this.beginDrag();
 			_root.pointselected=this._name;
 			_root.map.ways[this.way].highlight();
 			setTypeText("Point",this.node);
@@ -335,25 +350,30 @@
 		}
 	};
 
-	AnchorPoint.prototype.startDrag=function() {
+	AnchorPoint.prototype.beginDrag=function() {
 		this.onMouseMove=function() { this.trackDrag(); };
 		this.onMouseUp  =function() { this.endDrag();   };
+		_root.firstxmouse=_root.map._xmouse;
+		_root.firstymouse=_root.map._ymouse;
 	};
 
 	AnchorPoint.prototype.trackDrag=function() {
-		this._x=_root.map._xmouse; _root.lastxmouse=_root._xmouse;
-		this._y=_root.map._ymouse; _root.lastymouse=_root._ymouse;
+		this._x=_root.map._xmouse;
+		this._y=_root.map._ymouse;
 	};
 	
 	AnchorPoint.prototype.endDrag=function() {
 		this.onMouseMove=function() {};
 		this.onMouseUp  =function() {};
-		newx=_root.map._xmouse;
-		newy=_root.map._ymouse;
-		movedfar=Math.abs(newx-_root.map.ways[wayselected].path[this._name][0])>=tolerance/2 || 
-				 Math.abs(newy-_root.map.ways[wayselected].path[this._name][1])>=tolerance/2;
+		var newx=_root.map._xmouse;
+		var newy=_root.map._ymouse;
+		var t=new Date();
+		var xdist=Math.abs(newx-_root.firstxmouse);
+		var ydist=Math.abs(newy-_root.firstymouse);
+		var longclick=(t.getTime()-_root.clicktime)>300;
 
-		if (movedfar) {
+		if ((xdist>=tolerance   || ydist>=tolerance  ) ||
+		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			// ====	Move existing point
 			for (qway in _root.map.ways) {
 				qdirty=0;
@@ -364,35 +384,38 @@
 						qdirty=1;
 					}
 				}
-				if (qdirty) {
-					_root.map.ways[qway].redraw();
-					_root.map.ways[qway].clean=false;
-				}
+				if (qdirty) { _root.map.ways[qway].redraw(); }
 			}
 			_root.map.ways[wayselected].highlightPoints(5000,"anchor");
 			_root.map.ways[wayselected].highlight();
-
-		} else if ((this._name==0 || this._name==_root.map.ways[wayselected].path.length-1) && !Key.isDown(17)) {
-			// ===== Clicked at start or end of line
-			if (_root.drawpoint==0 || _root.drawpoint==_root.map.ways[wayselected].path.length-1) {
-				// - Join looping path
-				addEndPoint(_root.map.ways[wayselected].path[this._name][0],
-							_root.map.ways[wayselected].path[this._name][1],
-							_root.map.ways[wayselected].path[this._name][2]);
-				stopDrawing();
-			} else if (_root.drawpoint==-1) {
-				// - Start elastic line for adding new point
-				setTooltip("click to add point\ndouble-click/Return\nto end line",0);
-				_root.drawpoint=this._name;
-				this.startElastic();
-			}
+			_root.map.ways[wayselected].clean=false;
 
 		} else {
-			// ===== Clicked elsewhere in line
-			if (_root.drawpoint>-1) {
-				addEndPoint(_root.map.ways[wayselected].path[this._name][0],
-							_root.map.ways[wayselected].path[this._name][1],
-							_root.map.ways[wayselected].path[this._name][2]);
+			this._x=_root.map.ways[wayselected].path[this._name][0];	// Return point to original position
+			this._y=_root.map.ways[wayselected].path[this._name][1];	//  | (in case dragged slightly)
+			if ((this._name==0 || this._name==_root.map.ways[wayselected].path.length-1) && !Key.isDown(17)) {
+				// ===== Clicked at start or end of line
+				if (_root.drawpoint==0 || _root.drawpoint==_root.map.ways[wayselected].path.length-1) {
+					// - Join looping path
+					addEndPoint(_root.map.ways[wayselected].path[this._name][0],
+								_root.map.ways[wayselected].path[this._name][1],
+								_root.map.ways[wayselected].path[this._name][2]);
+					stopDrawing();
+				} else if (_root.drawpoint==-1) {
+					// - Start elastic line for adding new point
+					setTooltip("click to add point\ndouble-click/Return\nto end line",0);
+					_root.drawpoint=this._name;
+					this.startElastic();
+				}
+	
+			} else {
+				// ===== Clicked elsewhere in line
+				if (_root.drawpoint>-1) {
+					addEndPoint(_root.map.ways[wayselected].path[this._name][0],
+								_root.map.ways[wayselected].path[this._name][1],
+								_root.map.ways[wayselected].path[this._name][2]);
+					_root.junction=true; restartElastic();
+				}
 			}
 		}
 	};
@@ -414,6 +437,13 @@
 					   else { this.onMouseMove=function() {};
 							  this.onMouseUp  =function() {}; }
 	};
+
+	function restartElastic() {
+		if (_root.drawpoint!=-1) {
+			_root.map.anchors[_root.drawpoint].startElastic();
+			_root.map.anchors[_root.drawpoint].trackElastic();
+		}
+	}
 
 	AnchorPoint.prototype.onRollOver=function() {
 		if (_root.drawpoint>-1) {
@@ -451,62 +481,26 @@
 	AnchorHint.prototype.onRollOut=function() {
 		clearTooltip();
 	};
+
 	AnchorHint.prototype.onPress=function() {
+		var i,z;
 		if (Key.isDown(Key.SHIFT)) {
 			// Merge ways
 			if (this._name==0 || this._name==_root.map.ways[this.way].path.length-1) {
-				_root.map.ways[wayselected].path[_root.drawpoint][3]=1;
-				_root.map.ways[this.way].path[0][3]=1;
-				// add from start or end of connecting way?
-				if (this._name==0) {
-					for (i=0; i<_root.map.ways[this.way].path.length; i+=1) {
-						newpoint=new Array(_root.map.ways[this.way].path[i][0],
-										   _root.map.ways[this.way].path[i][1],
-										   _root.map.ways[this.way].path[i][2],
-										   _root.map.ways[this.way].path[i][3],new Array(),0);
-						if (_root.drawpoint==0) { _root.map.ways[wayselected].path.unshift(newpoint); }
-										   else { _root.map.ways[wayselected].path.push(newpoint);    }
-					}
-				} else {
-					p=1;
-					for (i=_root.map.ways[this.way].path.length-1; i>=0; i-=1) {
-						newpoint=new Array(_root.map.ways[this.way].path[i][0],
-										   _root.map.ways[this.way].path[i][1],
-										   _root.map.ways[this.way].path[i][2],
-										   p,new Array(),0);
-						p=_root.map.ways[this.way].path[i][3];
-						if (_root.drawpoint==0) { _root.map.ways[wayselected].path.unshift(newpoint); }
-										   else { _root.map.ways[wayselected].path.push(newpoint);    }
-					}
-				}
-				_root.map.ways[wayselected].path[0][3]=0;	// first point always a 'move'
-				// merge attributes
-				z=_root.map.ways[this.way].attr;
-				for (i in z) {
-					if (_root.map.ways[wayselected].attr[i].substr(0,6)=='(type ') { _root.map.ways[wayselected].attr[i]=null; }
-					if (z[i].substr(0,6)=='(type ') { z[i]=null; }
-					
-					if (_root.map.ways[wayselected].attr[i]!=null) {
-						if (_root.map.ways[wayselected].attr[i]!=z[i]) { _root.map.ways[wayselected].attr[i]+='; '+z[i]; }
-					} else {
-						_root.map.ways[wayselected].attr[i]=z[i];
-					}
-				}
+				_root.map.ways[wayselected].mergeWay(_root.drawpoint,_root.map.ways[this.way],this._name);
 				_root.drawpoint=-1;
-				if (_root.map.ways[this.way].locked) { _root.map.ways[wayselected].locked=true; }
-				_root.map.ways[wayselected].clean=false;
 				_root.map.ways[wayselected].redraw();
-				_root.map.ways[wayselected].upload();
-				_root.map.ways[this.way].remove();
+//				_root.map.ways[wayselected].upload();
+				_root.map.ways[this.way].remove(wayselected);
 				clearTooltip();
 				_root.map.elastic.clear();
-				_root.map.ways[wayselected].select();	// removes anchorhints, so must be must be last
+				_root.map.ways[wayselected].select();	// removes anchorhints, so must be last
 			}
 		} else { 
 			// Join ways (i.e. junction)
 			addEndPoint(this._x,this._y,this.node);
 			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
-			_root.map.anchors[_root.drawpoint].startElastic();
+			restartElastic();
 		}
 	};
 	Object.registerClass("anchorhint",AnchorHint);
@@ -551,7 +545,7 @@
 	POI.prototype.upload=function() {
 		poiresponder=function() { };
 		poiresponder.onResult=function(result) {
-			ni=result[1];	// new way ID
+			var ni=result[1];	// new way ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
 				if (poiselected==result[0]) {
@@ -562,7 +556,7 @@
 			_root.map.pois[ni].uploading=false;
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox) {
-			this.attr['created_by']="Potlatch alpha";
+			this.attr['created_by']=_root.signature;
 			this.uploading=true;
 			remote.call('putpoi',poiresponder,_root.usertoken,this._name,this._x,this._y,this.attr,1,baselong,basey,masterscale);
 			this.clean=true;
@@ -576,23 +570,28 @@
 			stopDrawing(); uploadSelected(); deselectAll(); 
 		}
 		this.select();
-		this.startDrag();
+		this.beginDrag();
 	};
-	POI.prototype.startDrag=function() {
+	POI.prototype.beginDrag=function() {
 		this.onMouseMove=function() { this.trackDrag(); };
 		this.onMouseUp  =function() { this.endDrag();   };
 		_root.firstxmouse=_root._xmouse;
 		_root.firstymouse=_root._ymouse;
 	};
 	POI.prototype.trackDrag=function() {
-		this._x=_root.map._xmouse; _root.lastxmouse=_root._xmouse;
-		this._y=_root.map._ymouse; _root.lastymouse=_root._ymouse;
+		this._x=_root.map._xmouse; // _root.lastxmouse=_root._xmouse;
+		this._y=_root.map._ymouse; // _root.lastymouse=_root._ymouse;
 	};
 	POI.prototype.endDrag=function() {
 		this.onMouseMove=function() {};
 		this.onMouseUp  =function() {};
-		if (Math.abs(_root._xmouse-_root.firstxmouse)>tolerance/2 ||
-			Math.abs(_root._ymouse-_root.firstymouse)>tolerance/2) {
+		var t=new Date();
+		var xdist=Math.abs(_root._xmouse-_root.firstxmouse);
+		var ydist=Math.abs(_root._xmouse-_root.firstymouse);
+		var longclick=(t.getTime()-_root.clicktime)>300;
+
+		if ((xdist>=tolerance   || ydist>=tolerance  ) ||
+		   ((xdist>=tolerance/2 || ydist>=tolerance/2) && longclick)) {
 			this.clean=false;
 			this.select();
 		}
@@ -630,6 +629,7 @@
 	OSMWay.prototype.load=function(wayid) {
 		responder = function() { };
 		responder.onResult = function(result) {
+			var i,id;
 			_root["map"]["ways"][result[0]].clean=true;
 			_root["map"]["ways"][result[0]].path=result[1];
 			_root["map"]["ways"][result[0]].attr=result[2];
@@ -639,29 +639,15 @@
 			_root["map"]["ways"][result[0]].ymax=result[6];
 			_root["map"]["ways"][result[0]].redraw();
 			_root.waysreceived+=1;
+
+			// Remove any POIs that exist
+			for (i in _root["map"]["ways"][result[0]].path) {
+				id=_root["map"]["ways"][result[0]].path[i];
+				if (_root.pois[id]) { removeMovieClip(_root.pois[id]); }
+			}
 		};
 		remote.call('getway',responder,this._name,wayid,baselong,basey,masterscale);
 	};
-
-	//		Variation to create from unwayed segments
-
-	function loadFromUnwayed() {
-		makeresponder=function() { };
-		makeresponder.onResult=function(result) {
-			if (result[0]==0) { return; }
-			_root.newwayid--;
-			_root.map.ways.attachMovie("way",newwayid,++waydepth);
-			_root.map.ways[newwayid].path=result[0];
-			_root.map.ways[newwayid].xmin=result[1];
-			_root.map.ways[newwayid].xmax=result[2];
-			_root.map.ways[newwayid].ymin=result[3];
-			_root.map.ways[newwayid].ymax=result[4];
-			_root.map.ways[newwayid].clean=false;
-			_root.map.ways[newwayid].redraw();
-			_root.map.ways[newwayid].select();
-		};
-		remote.call('makeway',makeresponder,_root.usertoken,_root.map._xmouse,_root.map._ymouse,baselong,basey,masterscale);
-	}
 
 	// ----	Draw line
 
@@ -680,14 +666,13 @@
 			for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x777777; } }
 			this.line.lineStyle(linewidth,c,linealpha,false,"none");
 		}
-		for (var i=0; i<this.path.length; i+=1) {
-			if (this.path[i][3]==0) {
-				this.line.moveTo(this.path[i][0],this.path[i][1]);
-			} else {
-				this.line.lineTo(this.path[i][0],this.path[i][1]);	// draw line
-			}
+		this.line.moveTo(this.path[0][0],this.path[0][1]); 
+		for (var i=1; i<this.path.length; i+=1) {
+			this.line.lineTo(this.path[i][0],this.path[i][1]);
 		}
 	};
+
+	// ----	Show direction
 
 	OSMWay.prototype.direction=function() {
 		if (this.path.length<2) {
@@ -707,20 +692,23 @@
 				_root.i_circular._visible=false;
 			}
 		}
-//		_root.chat.text="From "+this.path[0][0]+","+this.path[0][1];
-//		_root.chat.text+=" to "+this.path[this.path.length-1][0]+","+this.path[this.path.length-1][1];
 	};
 
 	// ----	Remove from server
 	
-	OSMWay.prototype.remove=function() {
+	OSMWay.prototype.remove=function(preserveway) {
 		if (this._name>=0 && !_root.sandbox) {
+			var preservenodes=new Array();						// don't delete nodes which are in preserveway
+			if (preserveway) {									//  |
+				z=_root.map.ways[preserveway].path;				//  |
+				for (i in z) { if (z[i][2]>0) { preservenodes.push(z[i][2]); } }
+			}
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
 				if (wayselected==result) { deselectAll(); }
 				removeMovieClip(_root.map.ways[result]);
 			};
-			remote.call('deleteway',deleteresponder,_root.usertoken,this._name);
+			remote.call('deleteway',deleteresponder,_root.usertoken,this._name,preservenodes);
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 			removeMovieClip(this);
@@ -738,29 +726,18 @@
 				if (_root.t_details.text==result[0]) { _root.t_details.text=nw; _root.t_details.setTextFormat(plainText); }
 				if (wayselected==result[0]) { wayselected=nw; }
 			}
-			_root.map.ways[nw].xmin=result[4];
-			_root.map.ways[nw].xmax=result[5];
-			_root.map.ways[nw].ymin=result[6];
-			_root.map.ways[nw].ymax=result[7];
+			_root.map.ways[nw].xmin=result[3];
+			_root.map.ways[nw].xmax=result[4];
+			_root.map.ways[nw].ymin=result[5];
+			_root.map.ways[nw].ymax=result[6];
 			_root.map.ways[nw].uploading=false;
-
-			// update segment IDs
-			z=result[3];
-			for (qs in z) {
-				_root.map.ways[nw].path[qs][5]=result[3][qs];
-			}
-
 
 			// check if renumbered nodes occur in any other ways
 			for (qway in _root.map.ways) {
 				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
 					if (result[2][_root.map.ways[qway].path[qs][2]]) {
 						_root.map.ways[qway].path[qs][2]=result[2][_root.map.ways[qway].path[qs][2]];
-						if (qway!=nw) { _root.map.ways[qway].clean=false; }
 					}
-				}
-				if (wayselected!=qway && !_root.map.ways[qway].clean) {
-					_root.map.ways[qway].upload();
 				}
 			}
 		};
@@ -789,24 +766,46 @@
 	};
 	
 	OSMWay.prototype.onPress=function() {
-		if (Key.isDown(Key.SHIFT) && this._name==_root.wayselected) {
+		if (Key.isDown(Key.SHIFT) && this._name==_root.wayselected && _root.drawpoint==-1) {
 			// shift-click current way: insert point
-			_root.lastxmouse=_root._xmouse;
-			_root.lastymouse=_root._ymouse;
 			_root.pointselected=insertAnchorPoint(this._name);
 			this.highlightPoints(5000,"anchor");
-			_root.map.anchors[pointselected].startDrag();
+			_root.map.anchors[pointselected].beginDrag();
+		} else if (Key.isDown(Key.SHIFT) && _root.wayselected && this.name!=_root.wayselected && _root.drawpoint==-1) {
+			// shift-click other way: merge two ways
+			var selstart =_root.map.ways[wayselected].path[0][2];
+			var sellen   =_root.map.ways[wayselected].path.length-1;
+			var selend   =_root.map.ways[wayselected].path[sellen][2];
+			var thisstart=_root.map.ways[this._name ].path[0][2];
+			var thislen  =_root.map.ways[this._name ].path.length-1;
+			var thisend  =_root.map.ways[this._name ].path[thislen][2];
+			if      (selstart==thisstart) { _root.map.ways[wayselected].mergeWay(0,_root.map.ways[this._name],0); }
+			else if (selstart==thisend  ) { _root.map.ways[wayselected].mergeWay(0,_root.map.ways[this._name],thislen); }
+			else if (selend  ==thisstart) { _root.map.ways[wayselected].mergeWay(sellen,_root.map.ways[this._name],0); }
+			else if (selend  ==thisend  ) { _root.map.ways[wayselected].mergeWay(sellen,_root.map.ways[this._name],thislen); }
+			else						  { return; }
+			_root.map.ways[wayselected].redraw();
+//			_root.map.ways[wayselected].upload();
+			_root.map.ways[this._name ].remove(wayselected);
+			_root.map.ways[wayselected].select();
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
+			if (this._name==_root.wayselected && _root.drawpoint>0) {
+				_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
+			}
 			insertAnchorPoint(this._name);
 			this.highlightPoints(5001,"anchorhint");
 			addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
+			restartElastic();
+			_root.junction=true;
 		} else {
 			// click way: select
 			this.select();
 			clearTooltip();
 		}
 	};
+	
+	// ----	Select/highlight
 	
 	OSMWay.prototype.select=function() {
 		if (_root.wayselected!=this._name || _root.poiselected!=0) { uploadSelected(); }
@@ -828,12 +827,9 @@
 			var linewidth=11;
 			var linecolour=0xFFFF00; if (this.locked) { var linecolour=0x00FFFF; }
 			_root.map.highlight.lineStyle(linewidth,linecolour,80,false,"none");
-			for (i=0; i<this.path.length; i+=1) {
-				if (this.path[i][3]==0) {
-					_root.map.highlight.moveTo(this.path[i][0],this.path[i][1]);
-				} else {
-					_root.map.highlight.lineTo(this.path[i][0],this.path[i][1]);	// draw line
-				}
+			_root.map.highlight.moveTo(this.path[0][0],this.path[0][1]);
+			for (var i=1; i<this.path.length; i+=1) {
+				_root.map.highlight.lineTo(this.path[i][0],this.path[i][1]);
 			}
 		}
 		this.direction();
@@ -843,7 +839,7 @@
 		anchorsize=120/Math.pow(2,_root.scale-12);
 		group=atype+"s";
 		_root.map.createEmptyMovieClip(group,d);
-		for (i=0; i<this.path.length; i+=1) {
+		for (var i=0; i<this.path.length; i+=1) {
 			_root.map[group].attachMovie(atype,i,i);
 			_root.map[group][i]._x=this.path[i][0];
 			_root.map[group][i]._y=this.path[i][1];
@@ -853,6 +849,8 @@
 			_root.map[group][i].way=this._name;
 		}
 	};
+
+	// ----	Split, merge, reverse
 
 	OSMWay.prototype.splitWay=function() {
 		if (pointselected>0 && pointselected<(this.path.length-1)) {
@@ -871,7 +869,6 @@
 			this.redraw();												//  |
 
 			_root.map.ways[newwayid].path.splice(0,pointselected);		// new way
-			_root.map.ways[newwayid].path[0][3]=0;						//  | first point is 'move'
 			_root.map.ways[newwayid].redraw();							//  |
 			_root.map.ways[newwayid].locked=this.locked;				//  |
 			_root.map.ways[newwayid].upload();							//  |
@@ -881,6 +878,56 @@
 			this.clean=false;
 		};
 	};
+
+	//		Merge (start/end of this way,other way object,start/end of other way)
+	// ** needs to not add duplicate points
+
+	OSMWay.prototype.mergeWay=function(topos,otherway,frompos) {
+		var i,z;
+		if (frompos==0) {
+			for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); }
+		} else {
+			for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); }
+		}
+
+		z=otherway.attr;
+		for (i in z) {
+			if (otherway.attr[i].substr(0,6)=='(type ') { otherway.attr[i]=null; }
+			if (this.attr[i].substr(0,6)=='(type ') { this.attr[i]=null; }
+			if (this.attr[i]!=null) {
+				if (this.attr[i]!=otherway.attr[i] && otherway.attr[i]!=null) { this.attr[i]+='; '+otherway.attr[i]; }
+			} else {
+				this.attr[i]=otherway.attr[i];
+			}
+			if (!this.attr[i]) { delete this.attr[i]; }
+		}
+		this.clean=false;
+		if (otherway.locked) { this.locked=true; }
+
+	};
+	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
+		if (topos==0) { if (this.path[0					][2]==otherway.path[srcpt][2]) { return; } }	// don't add duplicate points
+				 else { if (this.path[this.path.length-1][2]==otherway.path[srcpt][2]) { return; } }	//  |
+		var newpoint=new Array(otherway.path[srcpt][0],
+							   otherway.path[srcpt][1],
+							   otherway.path[srcpt][2],null,
+							   otherway.path[srcpt][4]);
+		if (topos==0) { this.path.unshift(newpoint); }
+			     else { this.path.push(newpoint); }
+	};
+
+	// ---- Reverse order
+	
+	OSMWay.prototype.reverseWay=function() {
+		if (this.path.length<2) { return; }
+		if (_root.drawpoint>-1) { _root.drawpoint=(this.path.length-1)-_root.drawpoint; }
+		this.path.reverse();
+		this.redraw();
+		this.direction();
+		this.select();
+		this.clean=false;
+	};
+
 
 
 	Object.registerClass("way",OSMWay);
@@ -914,8 +961,25 @@
 
 	function keyDelete(doall) {
 		if (_root.poiselected) {
+			// delete POI
 			_root.map.pois[poiselected].remove();
+		} else if (_root.drawpoint>-1) {
+			// delete most recently drawn point
+			if (_root.drawpoint==0) { _root.map.ways[wayselected].path.shift(); }
+							   else { _root.map.ways[wayselected].path.pop(); _root.drawpoint-=1; }
+			if (_root.map.ways[wayselected].path.length) {
+				_root.map.ways[wayselected].clean=false;
+				_root.map.ways[wayselected].redraw();
+				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
+				_root.map.ways[wayselected].highlight();
+				restartElastic();
+			} else {
+				_root.map.anchors[_root.drawpoint].endElastic();
+				_root.map.ways[wayselected].remove(null);
+				_root.drawpoint=-1;
+			}
 		} else if (_root.pointselected>-2) {
+			// delete selected point
 			if (doall==1) {
 				// remove node from all ways
 				id=_root.map.ways[_root.wayselected].path[_root.pointselected][2];
@@ -924,14 +988,12 @@
 					for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
 						if (_root.map.ways[qway].path[qs][2]==id) {
 							_root.map.ways[qway].path.splice(qs,1);
-							if (qs<_root.map.ways[qway].path.length) { _root.map.ways[qway].path[qs][5]=0; }	// old segment IDs no longer valid
 							qdirty=1;
 						}
 					}
 					if (qdirty && _root.map.ways[qway]["path"].length<2) {
-						_root.map.ways[qway].remove();
+						_root.map.ways[qway].remove(null);
 					} else if (qdirty) {
-						_root.map.ways[qway].path[0][3]=0;	// make sure first point is a 'move'
 						_root.map.ways[qway].redraw();
 						_root.map.ways[qway].clean=false;
 					}
@@ -939,11 +1001,9 @@
 			} else {
 				// remove node from this way only
 				_root.map.ways[wayselected].path.splice(pointselected,1);
-				if (pointselected<_root.map.ways[qway].path.length) { _root.map.ways[qway].path[pointselected][5]=0; }
 				if (_root.map.ways[wayselected].path.length<2) {
-					_root.map.ways[wayselected].remove();
+					_root.map.ways[wayselected].remove(null);
 				} else {
-					_root.map.ways[wayselected].path[0][3]=0;
 					_root.map.ways[wayselected].redraw();
 					_root.map.ways[wayselected].clean=false;
 				}
@@ -1083,6 +1143,7 @@
 	};
 	UIMenu.prototype=new MovieClip();
 	UIMenu.prototype.init=function(x,y,selected,options,tooltip,closefunction,menuwidth) {
+		var i,w,h;
 		this._x=x; this._y=y;
 		this.selected=selected; this.original=selected;
 		this.options=options;
@@ -1219,7 +1280,7 @@
 	function createModalDialogue(w,h,buttons,closefunction) {
 		clearFloater();
 		_root.createEmptyMovieClip("modal",0xFFFFFE);
-		ox=(uwidth-w)/2; oy=(uheight-100-h)/2;	// -100 for visual appeal
+		var ox=(uwidth-w)/2; var oy=(uheight-100-h)/2;	// -100 for visual appeal
 
 		// Blank all other areas
 		_root.modal.createEmptyMovieClip("blank",1);
@@ -1242,7 +1303,7 @@
 		}
 
 		// Create buttons
-		for (i=0; i<buttons.length; i+=1) {
+		for (var i=0; i<buttons.length; i+=1) {
 			_root.modal.box.createEmptyMovieClip(i,i*2+1);
 			drawButton(_root.modal.box[i],w-60*(buttons.length-i),h-30,buttons[i],"");
 			_root.modal.box[i].onPress=function() {
@@ -1328,7 +1389,7 @@
 	};
 
 	_root.welcome.createEmptyMovieClip("help",3);
-	drawButton(_root.welcome.help,250,551,"Help","Find out how to use Potlatch, the map editor.");
+	drawButton(_root.welcome.help,250,551,"Help","Find out how to use Potlatch, this map editor.");
 	_root.welcome.help.onPress=function() { getUrl("http://wiki.openstreetmap.org/index.php/Potlatch","_blank"); };
 
 	if (gpx) {
@@ -1342,7 +1403,7 @@
 	// Options window
 	
 	function openOptionsWindow() {
-		createModalDialogue(275,110,new Array('Ok'),null);
+		createModalDialogue(275,90,new Array('Ok'),null);
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
 		with (_root.modal.box.prompt1) {
 			text="Background:"; setTextFormat(plainSmall);
@@ -1356,8 +1417,6 @@
 		_root.modal.box.attachMovie("checkbox","pointer",4);
 		_root.modal.box.pointer.init(10,40,"Use pen and hand pointers",_root.custompointer,function(n) { _root.custompointer=n; });
 
-		_root.modal.box.attachMovie("checkbox","unwayed",5);
-		_root.modal.box.unwayed.init(10,60,"Display unwayed segments with GPS",_root.unwayed,function(n) { _root.unwayed=n; });
 	}
 	
 	function setBackground(n) {
@@ -1488,7 +1547,8 @@
 	// looks in presetselected first, then in all other menus
 
 	function reflectPresets() {
-		found=findPresetInMenu(presetselected);
+		var i,t;
+		var found=findPresetInMenu(presetselected);
 		if (found) { presetmenu.setValue(found); return; }
 		for (i=0; i<presetmenus[currentproptype].length; i+=1) {
 			t=findPresetInMenu(presetmenus[currentproptype][i]); if (t) { found=t; presetselected=presetmenus[currentproptype][i]; }
@@ -1557,6 +1617,7 @@
 		_root.i_preset.onRollOut =function() { clearFloater(); };
 	}
 	function cyclePresetIcon() {
+		var i,j;
 		if (_root.i_preset._visible) {
 			j=0;
 			for (i=0; i<presetmenus[currentproptype].length; i+=1) {
@@ -1616,6 +1677,7 @@
 	// repeatAttributes - paste in last set of attributes
 	
 	function repeatAttributes() {
+		var i,z;
 		if (_root.wayselected==0 && _root.pointselected==-2 && _root.poiselected==0) { return; }
 		switch (savedtype) {
 			case 'point':	z=_root.map.ways[savedway].path[savedpoint][4]; break;
@@ -1670,22 +1732,21 @@
 	// insertAnchorPoint		- add point into way with SHIFT-clicking
 	
 	function insertAnchorPoint(way) {
+		var nx,ny,closest,closei,i,x1,y1,x2,y2,direct,via,newpoint;
 		nx=_root.map._xmouse;	// where we're inserting it
 		ny=_root.map._ymouse;	//	|
 		closest=0.05; closei=0;
 		for (i=0; i<(_root.map.ways[way].path.length)-1; i+=1) {
-			if (_root.map.ways[way].path[i+1][3]) {
-				x1=_root.map.ways[way].path[i][0];
-				y1=_root.map.ways[way].path[i][1];
-				x2=_root.map.ways[way].path[i+1][0];
-				y2=_root.map.ways[way].path[i+1][1];
-				direct=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-				via   =Math.sqrt((nx-x1)*(nx-x1)+(ny-y1)*(ny-y1));
-				via  +=Math.sqrt((nx-x2)*(nx-x2)+(ny-y2)*(ny-y2));
-				if (Math.abs(via/direct-1)<closest) {
-					closei=i+1;
-					closest=Math.abs(via/direct-1);
-				}
+			x1=_root.map.ways[way].path[i][0];
+			y1=_root.map.ways[way].path[i][1];
+			x2=_root.map.ways[way].path[i+1][0];
+			y2=_root.map.ways[way].path[i+1][1];
+			direct=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+			via   =Math.sqrt((nx-x1)*(nx-x1)+(ny-y1)*(ny-y1));
+			via  +=Math.sqrt((nx-x2)*(nx-x2)+(ny-y2)*(ny-y2));
+			if (Math.abs(via/direct-1)<closest) {
+				closei=i+1;
+				closest=Math.abs(via/direct-1);
 			}
 		}
 		_root.newnodeid--;
@@ -1701,7 +1762,7 @@
 	// keyPressed				- key listener
 
 	function keyPressed() {
-		k=Key.getCode();
+		var k=Key.getCode();
 		if (k>48 && k<58 && (wayselected!=0 || poiselected!=0)) {
 			if (presetnames[currentproptype][presetselected][k-48]!=null) {
 				setAttributesFromPreset(k-48);
@@ -1710,16 +1771,14 @@
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way -- ode
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
-								if (_root.wayselected!=0) { _root.map.ways[wayselected].remove(); }
+								if (_root.wayselected!=0) { _root.map.ways[wayselected].remove(null); }
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
 			case 112:		setBackground(0); break; 							// f1 - no base layer
 			case 113:		setBackground(2-1*(Key.isDown(Key.SHIFT))); break;	// f2 - Yahoo! base layer
 			case 71:		loadGPS(); break;									// G - load GPS
-			case 70:		handleWarningAction('Retry'); break;				// F - force reupload
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
-			case 85:		if (_root.unwayed) { loadFromUnwayed(); } break;	// U - get from unwayed segments
 			case 88:		_root.map.ways[wayselected].splitWay(); break;		// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
@@ -1749,31 +1808,24 @@
 	// redrawMap(x,y)
 	// update all world parameters and call in tiles
 	// based on user-selected location
+	// ** could be substantially tidied
 
 	function redrawMap(tx,ty) {
 		_root.map._x=tx;
 		_root.map._y=ty;
-
-		// ----	Set global bounds variables
-		//		x radius (lon) is 280/Math.pow(2,_root.scale)
-		//		y radius (lat) is 280/Math.pow(2,_root.scale)
-
-		bscale=Math.pow(2,_root.scale-12);
-
+		var bscale=Math.pow(2,_root.scale-12);
 		_root.map._xscale=100*bscale;
 		_root.map._yscale=100*bscale;
-		
-		_root.centre_lat=coord2lat((250-_root.map._y)/bscale);
 		_root.coord_t=    -_root.map._y /bscale; _root.edge_t=coord2lat(_root.coord_t);
 		_root.coord_b=(500-_root.map._y)/bscale; _root.edge_b=coord2lat(_root.coord_b);
-
-		_root.centre_lon=coord2long((350-_root.map._x)/bscale);
 		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
 		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
 
 		// ----	Trace
+		//		x radius (lon) is 280/Math.pow(2,_root.scale)
+		//		y radius (lat) is 280/Math.pow(2,_root.scale)
 		
-//		_root.coordmonitor.text ="Centre of map: lon "+_root.centre_lon+", lat "+_root.centre_lat+" -- ";
+//		_root.coordmonitor.text ="Centre of map: lon "+centrelong()+", lat "+centrelat()+" -- ";
 //		_root.coordmonitor.text+="Edges: lon "+_root.edge_l+"->"+_root.edge_r+" -- ";
 //		_root.coordmonitor.text+="           lat "+_root.edge_b+"->"+_root.edge_t+" -- ";
 
@@ -1782,8 +1834,10 @@
 	function redrawYahoo() {
 		if (_root.baselayer>0) {
 			_root.yahoo._visible=true;
-			_root.ylat=_root.centre_lat;
-			_root.ylon=_root.centre_lon;
+			_root.yahoo._x=0;
+			_root.yahoo._y=0;
+			_root.ylat=centrelat();
+			_root.ylon=centrelong();
 			_root.yzoom=17-_root.scale;
 		} else {
 			_root.yahoo._visible=false;
@@ -1805,6 +1859,7 @@
 				_root.map.ways[wayselected].highlight();
 				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
 			}
+			restartElastic();
 		}
 	}
 
@@ -1820,6 +1875,7 @@
 				_root.map.ways[wayselected].highlight();
 				_root.map.ways[wayselected].highlightPoints(5000,"anchor");
 			}
+			restartElastic();
 		}
 	}
 
@@ -1833,8 +1889,8 @@
 	}
 
 	function resizePOIs() {
-		n=Math.max(100/Math.pow(2,_root.scale-12),6.25);
-		for (qpoi in _root.map.pois) {
+		var n=Math.max(100/Math.pow(2,_root.scale-12),6.25);
+		for (var qpoi in _root.map.pois) {
 			_root.map.pois[qpoi]._xscale=_root.map.pois[qpoi]._yscale=n;
 		}
 		if (_root.poiselected) {
@@ -1881,12 +1937,10 @@
 	function addEndPoint(x,y,node) {
 		newpoint=new Array(x,y,node,0,new Array(),0);
 		if (_root.drawpoint==_root.map.ways[wayselected].path.length-1) {
-			newpoint[3]=1;						// add to end
 			_root.map.ways[wayselected].path.push(newpoint);
 			_root.drawpoint=_root.map.ways[wayselected].path.length-1;
 		} else {
 			_root.map.ways[wayselected].path.unshift(newpoint);	// drawpoint=0, add to start
-			_root.map.ways[wayselected].path[1][3]=1;	// set first line to 'draw', not 'move'
 		}
 	
 		// Redraw map
@@ -1903,23 +1957,28 @@
 		if (Math.abs(_root.firstxmouse-_root._xmouse)>(tolerance*4) ||
 			Math.abs(_root.firstymouse-_root._ymouse)>(tolerance*4)) {
 			if (_root.pointertype!='hand') { setPointer('hand'); }
-			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
-		}
 
-		if (_root.yahoo._visible) {
-			_root.ylat=coord2lat((250-_root.map._y)/bscale);
-			_root.ylon=coord2long((350-_root.map._x)/bscale);
+			if (_root.yahoo._visible) {
+				var t=new Date();
+				if ((t.getTime()-yahootime.getTime())<500) {
+					_root.yahoo._x+=Math.floor(_xmouse-lastxmouse); // less than 0.5s, so
+					_root.yahoo._y+=Math.floor(_ymouse-lastymouse); // just move offset
+				} else {
+					redrawYahoo();									// 0.5s elapsed, so
+					_root.yahootime=new Date();						// request new tiles
+				}
+			}
+			moveMap(Math.floor(_xmouse-lastxmouse),Math.floor(_ymouse-lastymouse));
 		}
 	}
 
 	function endMapDrag() {
 		_root.map.onMouseMove=function() {};
 		_root.map.onMouseUp  =function() {};
-		if (_root.drawpoint!=-1) {
-			_root.map.anchors[_root.drawpoint].startElastic();
-		}
-		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance &&
-			Math.abs(_root.firstymouse-_root._ymouse)>tolerance) {
+		redrawYahoo();
+		restartElastic();
+		if (Math.abs(_root.firstxmouse-_root._xmouse)>tolerance*4 &&
+			Math.abs(_root.firstymouse-_root._ymouse)>tolerance*4) {
 			whichWays();
 		}
 		_root.dragmap=false;
@@ -1948,6 +2007,8 @@
 		_root.lastymouse=_root._ymouse;
 		_root.firstxmouse=_root._xmouse;
 		_root.firstymouse=_root._ymouse;
+		_root.clicktime=new Date();
+		_root.yahootime=new Date();
 	}
 
 	// mapClickEnd - end of click within map area
@@ -1967,7 +2028,7 @@
 					populatePropertyWindow('way');
 				}
 				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
-				_root.map.anchors[_root.drawpoint].startElastic();
+				restartElastic();
 
 			// Deselecting a way
 			} else if (_root.wayselected) {
@@ -2063,6 +2124,12 @@
 	function y2lat(a) { return 180/Math.PI * (2 * Math.atan(Math.exp(a*Math.PI/180)) - Math.PI/2); }
 	function lat2y(a) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/180)/2)); }
 
+	// get centre points
+
+	function centrelat()  { return  coord2lat((250-_root.map._y)/Math.pow(2,_root.scale-12)); }
+	function centrelong() { return coord2long((350-_root.map._x)/Math.pow(2,_root.scale-12)); }
+
+
 
 	// ================================================================
 	// GPS functions
@@ -2071,8 +2138,8 @@
 
 	function loadGPS() {
 		_root.map.createEmptyMovieClip('gps',3);
-		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&unwayed='+_root.unwayed+'&token='+_root.usertoken,_root.map.gps); }
-							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&unwayed='+_root.unwayed,_root.map.gps); }
+		if (Key.isDown(Key.SHIFT)) { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale+'&token='+_root.usertoken,_root.map.gps); }
+							  else { loadMovie(gpsurl+'?xmin='+(_root.edge_l-0.01)+'&xmax='+(_root.edge_r+0.01)+'&ymin='+(_root.edge_b-0.01)+'&ymax='+(_root.edge_t+0.01)+'&baselong='+_root.baselong+'&basey='+_root.basey+'&masterscale='+_root.masterscale,_root.map.gps); }
 	}
 
 	// parseGPX		- parse GPX file
@@ -2300,24 +2367,17 @@
 	// ================================================================
 	// Pointer handling
 	
-	function trackMouse() {
-		// if (_root.map.gps.hitTest(_root._xmouse,_root._ymouse,true)) {
-		//	// we're over the GPS area
-		// }
-		_root.pointer._x=_root._xmouse;
-		_root.pointer._y=_root._ymouse;
-		updateAfterEvent();
-	}
-	
 	function setPointer(ptype) {
+		if (_root.pointertype==ptype) { return; }
+		_root.pointers[_root.pointertype]._visible=false;
 		if ((ptype) && _root.custompointer) {
-			_root.attachMovie(ptype,"pointer",65535);
-			trackMouse();
-			Mouse.addListener(mouseListener);
+			_root.pointers[ptype]._x=_root._xmouse;
+			_root.pointers[ptype]._y=_root._ymouse;
+			_root.pointers[ptype].startDrag(true);
+			_root.pointers[ptype]._visible=true;
 			Mouse.hide();
 		} else {
-			removeMovieClip(_root.pointer);
-			Mouse.removeListener(mouseListener);
+			_root.pointers[_root.pointertype].stopDrag();
 			Mouse.show();
 		}
 		_root.pointertype=ptype;
@@ -2338,6 +2398,6 @@ EOF
 		$m->output(9);
 	} else {
 		# Running from command line, so output to file
-		if ($fn=shift @ARGV) { $m->save($fn); }
-						else { $m->save("potlatch.swf"); }
+		if ($fn=shift @ARGV) { print "Saving to $fn\n"; $m->save($fn); }
+						else { print "Saving to this directory\n"; $m->save("potlatch.swf"); }
 	}

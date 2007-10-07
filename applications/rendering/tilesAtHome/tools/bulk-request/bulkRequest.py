@@ -2,8 +2,7 @@
 import urllib, time, sys
 
 def countOutstanding():
-  url="http://dev.openstreetmap.org/~ojw/Log/Requests/History/munin.php"
-  #url="http://jamies-computer.local/tilesAtHome/Log/Requests/History/munin.php"
+  url="http://tah.openstreetmap.org/Log/Requests/History/munin.php"
   munin = { 'pending.value': 0, 'new.value': 0, 'active.value': 0, 'done.value': 0 }
   try:
     file = urllib.urlopen(url)

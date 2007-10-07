@@ -212,7 +212,7 @@ sub curvify_path {
         my @path_points = map [split /(?:\s|,)/, $_], split('L', $move_segment);
 
         if ($way_id =~ /way_/ && dup_points(\@path_points)) {
-            $bezier_path_string .= "M$path_string$postfix"; 
+            $bezier_path_string .= "$path_string"; 
         } else {
             $bezier_path_string 
                 .= 'M'.from_lines_to_curves(\@path_points, $way_id).$postfix;

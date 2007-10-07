@@ -34,7 +34,7 @@
       <manifest>
         <attribute name="Plugin-Class" value="namefinder.NameFinderPlugin" />
         <attribute name="Plugin-Description" value="Allows selection of download areas by name, using an external service" />
-        <attribute name="Plugin-Version" value="0.9" />
+        <attribute name="Plugin-Version" value="1.0" />
       </manifest>
     </jar>
   </target>

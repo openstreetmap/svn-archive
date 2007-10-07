@@ -24,7 +24,7 @@ for place in $locations; do
   echo  "Fetching: $place, $bbox"
   rm -f map.kmz data.osm
   wget -q -O ${place}.osm "${url}${bbox}"
-  cp ${place}.osm data.osm
+  perl conv05/05to04.pl < ${place}.osm > data.osm
   make 
   mv map.kmz ${place}.kmz
   echo "created ${place}.kmz"

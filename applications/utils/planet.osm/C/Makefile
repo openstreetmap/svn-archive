@@ -11,7 +11,7 @@ clean:
 	rm -f UTF8Sanitizer planet
 
 planet: planet.c keyvals.c
-	$(CC) $(MYSQL_CFLAGS) $(MYSQL_LDFLAGS) -DSCHEMA_V6 -o $@ $^
+	$(CC) $(MYSQL_CFLAGS) $(MYSQL_LDFLAGS) -o $@ $^
 
 UTF8Sanitizer: UTF8sanitizer.c
 	$(CC) UTF8sanitizer.c -o UTF8Sanitizer

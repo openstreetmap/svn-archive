@@ -38,7 +38,6 @@
 static iconv_t cd = ICONV_ERROR;
 #endif
 
-
 static char escape_tmp[1024];
 
 const char *xmlescape(char *in)
@@ -115,31 +114,41 @@ static void osm_node(int id, long double lat, long double lon, struct keyval *ta
     }
 }
 
-static void osm_segment(int id, int from, int to, struct keyval *tags, const char *ts)
-{
-    if (listHasData(tags)) {
-        printf(INDENT "<segment id=\"%d\" from=\"%d\" to=\"%d\" timestamp=\"%s\">\n", id, from, to, ts);
-        osm_tags(tags);
-        printf(INDENT "</segment>\n");
-    } else {
-        printf(INDENT "<segment id=\"%d\" from=\"%d\" to=\"%d\" timestamp=\"%s\"/>\n", id, from, to, ts);
-    }
-}
-
-static void osm_way(int id, struct keyval *segs, struct keyval *tags, const char *ts)
+static void osm_way(int id, struct keyval *nodes, struct keyval *tags, const char *ts)
 {
     struct keyval *p;
 
-    if (listHasData(tags) || listHasData(segs)) {
+    if (listHasData(tags) || listHasData(nodes)) {
         printf(INDENT "<way id=\"%d\" timestamp=\"%s\">\n", id, ts);
-        while ((p = popItem(segs)) != NULL) {
-            printf(INDENT INDENT "<seg id=\"%s\" />\n", p->value);
+        while ((p = popItem(nodes)) != NULL) {
+            printf(INDENT INDENT "<nd ref=\"%s\" />\n", p->value);
             freeItem(p);
         }
         osm_tags(tags);
         printf(INDENT "</way>\n");
     } else {
         printf(INDENT "<way id=\"%d\" timestamp=\"%s\"/>\n", id, ts);
+    }
+}
+
+static void osm_relation(int id, struct keyval *members, struct keyval *roles, struct keyval *tags, const char *ts)
+{
+    struct keyval *p, *q;
+
+    if (listHasData(tags) || listHasData(members)) {
+        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\">\n", id, ts);
+        while (((p = popItem(members)) != NULL) && ((q = popItem(roles)) != NULL)) {
+            const char *m_type = p->key;
+            const char *m_id   = p->value;
+            const char *m_role = q->value;
+            printf(INDENT INDENT "<member type=\"%s\" ref=\"%s\" role=\"%s\"/>\n", m_type, m_id, m_role);
+            freeItem(p);
+            freeItem(q);
+        }
+        osm_tags(tags);
+        printf(INDENT "</relation>\n");
+    } else {
+        printf(INDENT "<relation id=\"%d\" timestamp=\"%s\"/>\n", id, ts);
     }
 }
 
@@ -250,55 +259,13 @@ void nodes(MYSQL *mysql)
         assert(mysql_num_fields(res) == 5);
 
         id = strtol(row[0], NULL, 10);
-#ifdef SCHEMA_V6
         latitude  = strtol(row[1], NULL, 10) / 10000000.0;
         longitude = strtol(row[2], NULL, 10) / 10000000.0;
-#else
-        latitude  = strtold(row[1], NULL);
-        longitude = strtold(row[2], NULL);
-#endif
         parseDate(&date, row[3]);
         tag_str = row[4];
         read_tags(tag_str, &tags);
 
         osm_node(id, latitude, longitude, &tags, strTime(&date));
-    }
-
-    mysql_free_result(res);
-}
-
-void segments(MYSQL *mysql)
-{
-    char query[255];
-    MYSQL_RES *res;
-    MYSQL_ROW row;
-    struct keyval tags;
-
-    initList(&tags);
-
-    snprintf(query, sizeof(query), "select id, node_a, node_b, timestamp, tags from current_segments where visible = 1 order by id");
-
-    if ((mysql_query(mysql, query)) || !(res= mysql_use_result(mysql)))
-    {
-        fprintf(stderr,"Cannot query segments: %s\n", mysql_error(mysql));
-        exit(1);
-    }
-
-    while ((row= mysql_fetch_row(res))) {
-        long int id, node_a, node_b;
-        const char *tag_str;
-        struct tm date;
-
-        assert(mysql_num_fields(res) == 5);
-
-        id     = strtol(row[0], NULL, 10);
-        node_a = strtol(row[1], NULL, 10);
-        node_b = strtol(row[2], NULL, 10);
-        parseDate(&date, row[3]);
-        tag_str = row[4];
-
-        read_tags(tag_str, &tags);
-        osm_segment(id, node_a, node_b, &tags, strTime(&date));
     }
 
     mysql_free_result(res);
@@ -313,16 +280,20 @@ struct tCache {
 
 static struct tCache cache[TAG_CACHE+1];
 static MYSQL_STMT *tags_stmt;
+static int cache_off;
 
-void tags_init(MYSQL *mysql)
+void tags_init(MYSQL *mysql, const char *table)
 {
     int i;
-    const char *query = "SELECT id, k, v FROM current_way_tags WHERE id >= ? ORDER BY id LIMIT 1000"; // == TAG_CACHE
+    char query[255];
     MYSQL_RES *prepare_meta_result;
     tags_stmt = mysql_stmt_init(mysql);
     assert(tags_stmt);
+
+    snprintf(query, sizeof(query), "SELECT id, k, v FROM %s WHERE id >= ? ORDER BY id LIMIT 1000", table); // LIMIT == TAG_CACHE
+
     if (mysql_stmt_prepare(tags_stmt, query, strlen(query))) {
-        fprintf(stderr,"Cannot setup prepared query for current_way_tags: %s\n", mysql_error(mysql));
+        fprintf(stderr,"Cannot setup prepared query for %s: %s\n", table, mysql_error(mysql));
         exit(1);
     }
     assert(mysql_stmt_param_count(tags_stmt) == 1);
@@ -331,14 +302,20 @@ void tags_init(MYSQL *mysql)
     assert(mysql_num_fields(prepare_meta_result) == 3);
     mysql_free_result(prepare_meta_result);
 
-    for (i=0; i< TAG_CACHE; i++)
+    for (i=0; i< TAG_CACHE; i++) {
         initList(&cache[i].tags);
+        cache[i].id = 0;
+    }
+    cache_off = 0;
 }
 
 void tags_exit(void)
 {
+    int i;
     mysql_stmt_close(tags_stmt);
     tags_stmt = NULL;
+    for (i=0; i< TAG_CACHE; i++)
+        resetList(&cache[i].tags);
 }
 
 void refill_tags(MYSQL *mysql, const int id)
@@ -437,9 +414,7 @@ void refill_tags(MYSQL *mysql, const int id)
     }
 }
 
-static int cache_off;
-
-struct keyval *get_way_tags(MYSQL *mysql, const int id)
+struct keyval *get_generic_tags(MYSQL *mysql, const int id)
 {
     while (1) {
         if (!cache[cache_off].id) {
@@ -460,67 +435,136 @@ struct keyval *get_way_tags(MYSQL *mysql, const int id)
     }
 }
 
-void ways(MYSQL *ways_mysql, MYSQL *segs_mysql, MYSQL *tags_mysql)
+void ways(MYSQL *ways_mysql, MYSQL *nodes_mysql, MYSQL *tags_mysql)
 {
-    char ways_query[255], segs_query[255];
-    MYSQL_RES *ways_res, *segs_res;
-    MYSQL_ROW ways_row, segs_row;
-    struct keyval *tags, segs;
+    char ways_query[255], nodes_query[255];
+    MYSQL_RES *ways_res, *nodes_res;
+    MYSQL_ROW ways_row, nodes_row;
+    struct keyval *tags, nodes;
 
-    initList(&segs);
+    initList(&nodes);
 
     snprintf(ways_query, sizeof(ways_query),
              "select id, timestamp from current_ways where visible = 1 order by id");
-    snprintf(segs_query, sizeof(segs_query),
-             "select id, segment_id from current_way_segments ORDER BY id, sequence_id");
+    snprintf(nodes_query, sizeof(nodes_query),
+             "select id, node_id from current_way_nodes ORDER BY id, sequence_id");
 
     if ((mysql_query(ways_mysql, ways_query)) || !(ways_res= mysql_use_result(ways_mysql)))
     {
         fprintf(stderr,"Cannot query current_ways: %s\n", mysql_error(ways_mysql));
         exit(1);
     }
-    if ((mysql_query(segs_mysql, segs_query)) || !(segs_res= mysql_use_result(segs_mysql)))
+    if ((mysql_query(nodes_mysql, nodes_query)) || !(nodes_res= mysql_use_result(nodes_mysql)))
     {
-        fprintf(stderr,"Cannot query current_way_segments: %s\n", mysql_error(segs_mysql));
+        fprintf(stderr,"Cannot query current_way_nodes: %s\n", mysql_error(nodes_mysql));
         exit(1);
     }
 
-    tags_init(tags_mysql);
+    tags_init(tags_mysql, "current_way_tags");
 
     ways_row = mysql_fetch_row(ways_res);
-    segs_row = mysql_fetch_row(segs_res);
+    nodes_row = mysql_fetch_row(nodes_res);
 
     while (ways_row) {
         int way_id     = strtol(ways_row[0], NULL, 10);
-        // Terminating way_seg_id is necessary to ensure final way is generated.
-        int way_seg_id = segs_row ? strtol(segs_row[0], NULL, 10): INT_MAX;
+        // Terminating way_nd_id is necessary to ensure final way is generated.
+        int way_nd_id = nodes_row ? strtol(nodes_row[0], NULL, 10): INT_MAX;
 
-        if (way_id < way_seg_id) {
-            // no more segments in this way
+        if (way_id < way_nd_id) {
+            // no more nodes in this way
             struct tm date;
             parseDate(&date, ways_row[1]);
-            tags = get_way_tags(tags_mysql, way_id);
-            osm_way(way_id, &segs, tags, strTime(&date));
+            tags = get_generic_tags(tags_mysql, way_id);
+            osm_way(way_id, &nodes, tags, strTime(&date));
             // fetch new way
             ways_row= mysql_fetch_row(ways_res);
             assert(mysql_num_fields(ways_res) == 2);
-        } else if (way_id > way_seg_id) {
-            // we have entries in current_way_segs for a missing way, discard!
+        } else if (way_id > way_nd_id) {
+            // we have entries in current_way_nodes for a missing way, discard!
             // fetch next way_seg
-            segs_row = mysql_fetch_row(segs_res);
-            assert(mysql_num_fields(segs_res) == 2);
+            nodes_row = mysql_fetch_row(nodes_res);
+            assert(mysql_num_fields(nodes_res) == 2);
         } else {
-            // in step, add current segment and fetch the next one
-            addItem(&segs, "", segs_row[1], 0);
-            segs_row = mysql_fetch_row(segs_res);
-            assert(mysql_num_fields(segs_res) == 2);
+            // in step, add current node and fetch the next one
+            addItem(&nodes, "", nodes_row[1], 0);
+            nodes_row = mysql_fetch_row(nodes_res);
+            assert(mysql_num_fields(nodes_res) == 2);
         }
     }
 
     mysql_free_result(ways_res);
-    mysql_free_result(segs_res);
+    mysql_free_result(nodes_res);
     tags_exit();
 }
+
+void relations(MYSQL *relations_mysql, MYSQL *members_mysql, MYSQL *tags_mysql)
+{
+    char relations_query[255], members_query[255];
+    MYSQL_RES *relations_res, *members_res;
+    MYSQL_ROW relations_row, members_row;
+    struct keyval *tags, members, roles;
+
+    initList(&members);
+    initList(&roles);
+
+    snprintf(relations_query, sizeof(relations_query),
+             "select id, timestamp from current_relations where visible = 1 order by id");
+    snprintf(members_query, sizeof(members_query),
+             "select id, member_id, member_type, member_role from current_relation_members ORDER BY id");
+
+    if ((mysql_query(relations_mysql, relations_query)) || !(relations_res= mysql_use_result(relations_mysql)))
+    {
+        fprintf(stderr,"Cannot query current_relations: %s\n", mysql_error(relations_mysql));
+        exit(1);
+    }
+    if ((mysql_query(members_mysql, members_query)) || !(members_res= mysql_use_result(members_mysql)))
+    {
+        fprintf(stderr,"Cannot query current_relation_members: %s\n", mysql_error(members_mysql));
+        exit(1);
+    }
+
+    tags_init(tags_mysql, "current_relation_tags");
+
+    relations_row = mysql_fetch_row(relations_res);
+    members_row = mysql_fetch_row(members_res);
+
+    while (relations_row) {
+        int relation_id     = strtol(relations_row[0], NULL, 10);
+        // Terminating relation_memb_id is necessary to ensure final way is generated.
+        int relation_memb_id = members_row ? strtol(members_row[0], NULL, 10): INT_MAX;
+
+        if (relation_id < relation_memb_id) {
+            // no more members in this way
+            struct tm date;
+            parseDate(&date, relations_row[1]);
+            tags = get_generic_tags(tags_mysql, relation_id);
+            osm_relation(relation_id, &members, &roles, tags, strTime(&date));
+            // fetch new way
+            relations_row= mysql_fetch_row(relations_res);
+            assert(mysql_num_fields(relations_res) == 2);
+        } else if (relation_id > relation_memb_id) {
+            // we have entries in current_way_members for a missing way, discard!
+            // fetch next way_seg
+            members_row = mysql_fetch_row(members_res);
+            assert(mysql_num_fields(members_res) == 4);
+        } else {
+            // in step, add current member and fetch the next one
+            const char *m_id   = members_row[1];
+            const char *m_type = members_row[2];
+            const char *m_role = members_row[3];
+
+            addItem(&members, m_type, m_id, 0);
+            addItem(&roles, "", m_role, 0);
+            members_row = mysql_fetch_row(members_res);
+            assert(mysql_num_fields(members_res) == 4);
+        }
+    }
+
+    mysql_free_result(relations_res);
+    mysql_free_result(members_res);
+    tags_exit();
+}
+
 
 int main(int argc, char **argv)
 {
@@ -578,12 +622,12 @@ int main(int argc, char **argv)
 #endif
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    printf("<osm version=\"0.3\" generator=\"OpenStreetMap planet.c\">\n");
-    printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.4\" />\n");
+    printf("<osm version=\"0.5\" generator=\"OpenStreetMap planet.c\">\n");
+    printf("  <bound box=\"-90,-180,90,180\" origin=\"http://www.openstreetmap.org/api/0.5\" />\n");
 
     nodes(&mysql[0]);
-    segments(&mysql[0]);
     ways(&mysql[0], &mysql[1], &mysql[2]);
+    relations(&mysql[0], &mysql[1], &mysql[2]);
 
     printf("</osm>\n");
 

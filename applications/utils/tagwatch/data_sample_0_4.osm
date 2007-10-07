@@ -1,24 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version='0.4' generator='JOSM'>
-  <node id='-1' lat='51.022996564635925' lon='-4.206607817168516' />
-  <node id='-2' lat='51.022996564635925' lon='-4.206029048590934' />
-  <node id='-3' lat='51.02229313821087' lon='-4.205681787444384' />
-  <node id='-4' lat='51.02158080765384' lon='-4.206029048590933' />
-  <node id='-5' lat='51.02158080765384' lon='-4.206607817168516' />
-  <node id='-6' lat='51.02229313821086' lon='-4.206919461787214' />
-  <node id='-7' lat='51.02229313821087' lon='-4.206322884945706'>
+  <node id='-1' lat='51.0229' lon='-4.20660' />
+  <node id='-2' lat='51.0229' lon='-4.20602' />
+  <node id='-3' lat='51.0222' lon='-4.20568' />
+  <node id='-4' lat='51.0215' lon='-4.20602' />
+  <node id='-5' lat='51.0215' lon='-4.20660' />
+  <node id='-6' lat='51.0222' lon='-4.20691' />
+  <node id='-7' lat='51.0225' lon='-4.20632'>
     <tag k='[tag]' v='[value]' />
+    <tag k='name' v='Name' />
   </node>
-  <node id='-8' lat='51.02323697619892' lon='-4.206331789077669' />
-  <node id='-9' lat='51.022284234078896' lon='-4.207222202273949' />
-  <node id='-10' lat='51.02231094647479' lon='-4.205405759353537' />
-  <node id='-11' lat='51.02135820435477' lon='-4.206313980813744' />
+  <node id='-8' lat='51.0232' lon='-4.20633' />
+  <node id='-9' lat='51.0222' lon='-4.20722' />
+  <node id='-10' lat='51.0223' lon='-4.20540' />
+  <node id='-11' lat='51.0213' lon='-4.20631' />
+  <segment id='-16' from='-5' to='-6' />
+  <segment id='-17' from='-6' to='-1' />
   <segment id='-12' from='-1' to='-2' />
   <segment id='-13' from='-2' to='-3' />
   <segment id='-14' from='-3' to='-4' />
   <segment id='-15' from='-4' to='-5' />
-  <segment id='-16' from='-5' to='-6' />
-  <segment id='-17' from='-6' to='-1' />
   <way id='-18'>
     <seg id="-12" />
     <seg id="-13" />
@@ -27,5 +28,6 @@
     <seg id="-16" />
     <seg id="-17" />
     <tag k='[tag]' v='[value]' />
+    <tag k='name' v='Name' />
   </way>
 </osm>

@@ -2,7 +2,7 @@
 # Creates pages describing the tagging schemes in use within 
 # OpenStreetmap
 #-----------------------------------------------------------------
-# Usage: perl getPhotos.pl
+# Usage: perl construct.pl
 # Will create an ./html/ directory and fill it with HTML files
 # Uses input from http://wiki.openstreetmap.org/index.php/Tagwatch/*
 #-----------------------------------------------------------------
@@ -57,7 +57,7 @@ sub Watchlist{
    print OUT table();
    foreach my $Value(sort {$Values->{$b} <=> $Values->{$a}} keys %{$Values}){
      if($Values->{$Value} > ($Max / 120)){
-       my $Image = sprintf("../photos/%s_%s.jpg", $Tag, $Value);
+       my $Image = sprintf("Photos/%s_%s.jpg", $Tag, $Value);
        my $ImageHtml = '-';
        $ImageHtml = "<img src=\"$Image\">" if(-f "$Dir/$Image");
        
@@ -87,8 +87,12 @@ sub Watchlist{
 
 sub GetSampleImage{
   my ($Tag, $Value) = @_;
+  # Add this tag to a list of requests, so makeSamples.pl will 
+  # generate the image later
   printf SAMPLE_REQUESTS "%s = %s\n", $Tag, $Value;
-  return sprintf("../Samples/%s_%s.png", $Tag, $Value);
+  
+  # Return the location where makeSamples.pl will put the PNG image
+  return sprintf("Samples/%s_%s.png", $Tag, $Value);
 }
 
 sub AllTags{

@@ -2,7 +2,7 @@
 # Parses an OpenStreetMap XML file looking for tags, and counting
 # how often each one is used
 #-----------------------------------------------------------------
-# Usage: perl parse.pl < data.osm
+# Usage: perl process.pl < data.osm
 # Will create an ./Output/ directory and fill it with text files
 # describing the tags used in data.osm
 #-----------------------------------------------------------------

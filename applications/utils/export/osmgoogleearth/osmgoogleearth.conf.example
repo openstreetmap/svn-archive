@@ -1,4 +1,4 @@
-url="http://www.openstreetmap.org/api/0.4/map?bbox="
+url="http://www.openstreetmap.org/api/0.5/map?bbox="
 
 # list of locations. will be used as filename.
 locations="Bremen Hannover IsleOfWight"

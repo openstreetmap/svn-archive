@@ -16,7 +16,6 @@ import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -55,7 +54,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			}
 		}
 		
-		// formular to calculate a map scale: natural size / map size = scale
+		// formula to calculate a map scale: natural size / map size = scale
 		// example: 876000mm (876m as displayed) / 22mm (roughly estimated screen size of legend bar) = 39818
 		//
 		// so the exact "correcting value" below depends only on the screen size and resolution
@@ -90,18 +89,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			}
 		} else {
 			drawNode(n, n.selected ? selectedColor : nodeColor);
-		}
-	}
-
-	/**
-	 * Draw just a line between the points.
-	 * White if selected (as always) or grey otherwise.
-	 * Want to make un-wayed segments stand out less than ways.
-	 */
-	@Override public void visit(Segment ls) {
-		ElemStyle segmentStyle = MapPaintPlugin.elemStyles.getStyle(ls);
-		if(isZoomOk(segmentStyle)) {
-			drawSegment(ls, untaggedColor, showDirectionArrow);
 		}
 	}
 
@@ -144,31 +131,34 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		if (area && fillAreas)
 			drawWayAsArea(w, colour);
 		int orderNumber = 0;
-		for (Segment ls : w.segments)
-		{
+		
+		Node lastN = null;
+		for (Node n : w.nodes) {
+			if (lastN == null) {
+				lastN = n;
+				continue;
+			}
 			orderNumber++;
-				if (area && fillAreas)
-					//Draw segments in a different colour so direction arrows show against the fill
-					drawSegment(ls, w.selected ? selectedColor : untaggedColor, showDirection, width,true);
-				else
-					if (area)
-						drawSegment(ls, w.selected ? selectedColor : colour, showDirection, width,true);
-					else
-						if (realWidth > 0 && useRealWidth && !showDirection){
-							int tmpWidth = (int) (100 /  (float) (circum / realWidth));
-							if (tmpWidth > width) width = tmpWidth;
-						}
+	//		drawSegment(lastN, n, w.selected && !inactive ? selectedColor : wayColor, showDirectionArrow);
 
-						drawSegment(ls, w.selected ? selectedColor : colour,showDirection, width,dashed);
-				if (!ls.incomplete && showOrderNumber)
-				{
-					try
-					{
-						g.setColor(w.selected ? selectedColor : colour);
-						drawOrderNumber(ls, orderNumber);
+			if (area && fillAreas)
+				//Draw segments in a different colour so direction arrows show against the fill
+				drawSeg(lastN, n, w.selected ? selectedColor : untaggedColor, showDirection, width, true);
+			else
+				if (area)
+					drawSeg(lastN, n, w.selected ? selectedColor : colour, showDirection, width, true);
+				else
+					if (realWidth > 0 && useRealWidth && !showDirection){
+						int tmpWidth = (int) (100 /  (float) (circum / realWidth));
+						if (tmpWidth > width) width = tmpWidth;
 					}
-					catch (IllegalAccessError e) {} //SimplePaintVisitor::drawOrderNumber was private prior to rev #211
-				}
+
+					drawSeg(lastN, n, w.selected ? selectedColor : colour, showDirection, width, dashed);
+
+					if (showOrderNumber)
+						drawOrderNumber(lastN, n, orderNumber);
+			
+			lastN = n;
 		}
 	}
 
@@ -177,17 +167,9 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	{
 		Polygon polygon = new Polygon();
 		Point p;
-		boolean first=true;
-		for (Segment ls : w.segments)
+		for (Node n : w.nodes)
 		{
-		    if (ls.incomplete) continue;
-			if(first)
-			{
-				p = nc.getPoint(ls.from.eastNorth);
-				polygon.addPoint(p.x,p.y);
-				first=false;
-			}
-			p = nc.getPoint(ls.to.eastNorth);
+			p = nc.getPoint(n.eastNorth);
 			polygon.addPoint(p.x,p.y);
 		}
 
@@ -223,31 +205,17 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	 * Draw a line with the given color.
 	 */
 	// Altered - now specify width
-	@Override protected void drawSegment(Segment ls, Color col,boolean showDirection) {
-			if (useRealWidth && showDirection && !ls.selected) showDirection = false;
-			drawSegment(ls,col,showDirection,1,false);
+	@Override protected void drawSegment(Node n1, Node n2, Color col, boolean showDirection) {
+		if (useRealWidth && showDirection) showDirection = false;
+		drawSeg(n1, n2, col, showDirection, 1, false);
 	}
 
-
-	// Altered - now specify width
-	private void drawSegment (Segment ls, Color col,boolean showDirection, int width,boolean dashed) {
-		//do not draw already visible segments
-		if (ls.shown) return;
-		ls.shown=true;
-		if (ls.incomplete)
-			return;
-		if (ls.selected) {
-		    col = selectedColor;
-		}
-		drawSeg(ls, col, showDirection, width, dashed);
-	}
-		
-	private void drawSeg(Segment ls, Color col,boolean showDirection, int width,boolean dashed) {
+	private void drawSeg(Node n1, Node n2, Color col, boolean showDirection, int width, boolean dashed) {
 		if (col != currentColor || width != currentWidth || dashed != currentDashed) {
 			displaySegments(col, width, dashed);
 		}
-		Point p1 = nc.getPoint(ls.from.eastNorth);
-		Point p2 = nc.getPoint(ls.to.eastNorth);
+		Point p1 = nc.getPoint(n1.eastNorth);
+		Point p2 = nc.getPoint(n2.eastNorth);
 		
 		// checking if this segment is visible
 		if ((p1.x < 0) && (p2.x < 0)) return ;
@@ -264,16 +232,16 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		//	g2d.setStroke(new BasicStroke(width,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 
 		//g.drawLine(p1.x, p1.y, p2.x, p2.y);
-		currrentPath.moveTo(p1.x, p1.y);
-		currrentPath.lineTo(p2.x, p2.y);
+		currentPath.moveTo(p1.x, p1.y);
+		currentPath.lineTo(p2.x, p2.y);
 
 		if (showDirection) {
 			double t = Math.atan2(p2.y-p1.y, p2.x-p1.x) + Math.PI;
 			//g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
 			//g.drawLine(p2.x,p2.y, (int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
-			currrentPath.lineTo((int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
-			currrentPath.moveTo((int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
-			currrentPath.lineTo(p2.x, p2.y);
+			currentPath.lineTo((int)(p2.x + 10*Math.cos(t-PHI)), (int)(p2.y + 10*Math.sin(t-PHI)));
+			currentPath.moveTo((int)(p2.x + 10*Math.cos(t+PHI)), (int)(p2.y + 10*Math.sin(t+PHI)));
+			currentPath.lineTo(p2.x, p2.y);
 		}
 		//g2d.setStroke(new BasicStroke(1));
 		
@@ -285,7 +253,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	
 	protected void displaySegments(Color newColor, int newWidth, boolean newDash) {
 	    
-		if (currrentPath != null) {
+		if (currentPath != null) {
 		        Graphics2D g2d = (Graphics2D)g;
 			g2d.setColor(currentColor);
 			if (currentStroke == null) {
@@ -294,10 +262,10 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 			    else 
 				g2d.setStroke(new BasicStroke(currentWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 			}
-			g2d.draw(currrentPath);
+			g2d.draw(currentPath);
 			g2d.setStroke(new BasicStroke(1));
 			
-			currrentPath = new GeneralPath();
+			currentPath = new GeneralPath();
 			currentColor = newColor;
 			currentWidth = newWidth;
 			currentDashed = newDash;
@@ -326,7 +294,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		inactiveColor = getPreferencesColor("inactive", Color.DARK_GRAY);
 		selectedColor = getPreferencesColor("selected", Color.YELLOW);
 		nodeColor = getPreferencesColor("node", Color.RED);
-		segmentColor = getPreferencesColor("segment", darkgreen);
 		dfltWayColor = getPreferencesColor("way", darkblue);
 		incompleteColor = getPreferencesColor("incomplete way", darkerblue);
 		backgroundColor = getPreferencesColor("background", Color.BLACK);
@@ -340,10 +307,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		
 		Collection<Way> noAreaWays = new LinkedList<Way>();
 
-		for (final OsmPrimitive osm : data.segments)
-			if (!osm.deleted)
-				osm.shown=false;
-
 		for (final OsmPrimitive osm : data.ways)
 			if (!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
 				osm.visit(this);
@@ -353,9 +316,6 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		for (final OsmPrimitive osm : noAreaWays)
 			osm.visit(this);
 
-		for (final OsmPrimitive osm : data.segments)
-			if (!osm.deleted)
-				osm.visit(this);
 		
 		for (final OsmPrimitive osm : data.nodes)
 			if (!osm.deleted)

@@ -30,7 +30,7 @@ $c->setup({'wiki' => {
             'host' => 'wiki.openstreetmap.org',
             'path' => ''}});
 
-my $PDir = "html/photos";
+my $PDir = "html/Photos";
 mkdir "html" if ! -d "html";
 mkdir $PDir if ! -d $PDir;
 foreach my $Line(split(/\n/, $c->text("Tagwatch/Photos"))){

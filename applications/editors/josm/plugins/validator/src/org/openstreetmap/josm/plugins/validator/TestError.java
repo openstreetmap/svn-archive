@@ -306,6 +306,11 @@ public class TestError
 				lastN = n;
 			}
         }
+
+		public void visit(Relation r)
+		{
+			/* No idea how to draw a relation. */
+		}
         
         /**
          * Checks if the given node is in the visible area.

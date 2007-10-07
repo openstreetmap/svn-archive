@@ -30,22 +30,28 @@ $c->setup({'wiki' => {
             'host' => 'wiki.openstreetmap.org',
             'path' => ''}});
 
-my $PDir = "photos";
+my $PDir = "html/photos";
+mkdir "html" if ! -d "html";
 mkdir $PDir if ! -d $PDir;
 foreach my $Line(split(/\n/, $c->text("Tagwatch/Photos"))){
   if($Line =~ m{^\*\s*(\w+)=(\w+)\s+(.*?)\s*$}){
+    print "Fetching: $1 = $2\n";
+    
+    # Download the image
     my $Filename = "$PDir/$1_$2.jpg";
-    print "Getting $3\n";
     my $Data = get($3);
     
+    # Open it in GD
     my $Image1 = GD::Image->newFromJpegData($Data);
 
+    # Calculate image size
     my $WO = $Image1->width;
     my $W = 200;
     my $Ratio = $W / $WO;
     my $HO = $Image1->height;
     my $H = $HO * $Ratio;
-    print "Creating $W x $H\nFrom $WO x $HO\n";
+    
+    # Make a resized copy, and save that
     my $Image2 = new GD::Image($W,$H);
     $Image2->copyResampled($Image1,0,0,0,0,$W,$H,$WO,$HO);
     open(IMOUT, ">$Filename") || die;
@@ -53,6 +59,5 @@ foreach my $Line(split(/\n/, $c->text("Tagwatch/Photos"))){
     print IMOUT $Image2->jpeg();
     close IMOUT;
 
-    print "$Filename\n";
   }
 }

@@ -131,6 +131,8 @@ public class Test implements Visitor
 
 	public void visit(Way w) {}
 
+	public void visit(Relation r) {}
+
 	/**
 	 * Allow the tester to manage its own preferences 
 	 * @param testPanel The panel to add any preferences component

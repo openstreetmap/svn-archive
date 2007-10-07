@@ -179,6 +179,8 @@ public class GridLayer extends Layer
 				lastN = n;
 			}
 		}
+
+		public void visit(Relation r) {}
 		
 		/** 
 		 * Draws a solid cell at the (x,y) location

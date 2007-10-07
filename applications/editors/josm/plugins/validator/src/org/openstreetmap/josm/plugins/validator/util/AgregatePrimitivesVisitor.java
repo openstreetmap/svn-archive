@@ -54,6 +54,16 @@ public class AgregatePrimitivesVisitor implements Visitor
 			visit(n);
 	}
 
+	public void visit(Relation r) {
+		// Relations can be cyclic so don't visit them twice.
+		if (!aggregatedData.contains(r)) {
+			aggregatedData.add(r);
+			for (RelationMember m : r.members) {
+				m.member.visit(this);
+			}
+		}
+	}
+
 	/**
 	 * A comparator that orders nodes first, ways last.
 	 * 

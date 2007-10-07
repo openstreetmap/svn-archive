@@ -34,14 +34,16 @@ $c->setup({'wiki' => {
  
 my $Descriptions = GetDescriptions();
 
+print INDEX "<h2>List of all tags found</h2>\n";
 AllTags();
 
+print INDEX "<h2>Watchlist tags</h2>\n";
 foreach my $Line(split(/\n/, $c->text("Tagwatch/Watchlist"))){
   if($Line =~ m{\* (\w+)}){
     Watchlist($1);
   }
 }
-
+close INDEX;
 
 
 sub Watchlist{
@@ -49,8 +51,11 @@ sub Watchlist{
    my $Filename = "tag_$Tag.htm";
    Index($Filename, $Tag);
    open(OUT, ">$Dir/$Filename");
-   print OUT "<h1>$Tag</h1>\n";
    print OUT "<p><a href=\"./index.htm\">Back to index</a></p>\n";
+   print OUT "<h1>$Tag</h1>\n";
+   
+   print OUT "<p>Discuss <a href=\"http://wiki.openstreetmap.org/index.php/Key:$Tag\">$Tag</a> on the wiki</p>\n";
+   
    my $Values = GetValues($Tag);
    my $Max = Max($Values);
    my @Others;
@@ -62,11 +67,23 @@ sub Watchlist{
        $ImageHtml = "<img src=\"$Image\">" if(-f "$Dir/$Image");
        
        my $Text = $Descriptions->{$Tag}->{$Value};
+       $Text = '&nbsp;' if(!$Text);
+       
+       my @Links = (
+       "<a href=\"http://en.wikipedia.org/wiki/$Value\">Wikipedia</a>",
+       "Translate" # TODO
+       );
        
        my $Sample = GetSampleImage($Tag,$Value);
        my $SampleHtml = "<img src=\"$Sample\">";
        
-       printf OUT "<tr><td>%s = %s</td><td>$ImageHtml</td><td>%s</td><td>%s</td></tr>\n", $Tag, $Value, $SampleHtml, $Text;
+       printf OUT "<tr><td>%s = %s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n", 
+       $Tag, 
+       $Value, 
+       $ImageHtml,
+       $SampleHtml, 
+       $Text,
+       "<small>".join(",<br>", @Links)."</small>";
      }
      else{
        my $Log = 1 + (log($Values->{$Value} / $Max) / log(10));

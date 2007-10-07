@@ -32,20 +32,34 @@ my $p = XML::Parser->new;
 my $new_rel_id = -1;
 my $new_way_id = -1;
 my ( %segs, %used_segs );
-our ( $id, $user, $timestamp, %tags, $lat, $lon, $from, $to, @segs );
+our ( $id, $user, $timestamp, $action, %tags, $lat, $lon, $from, $to, @segs );
 
 sub obj_init($) {
     my %attr = %{ $_[0] };
-    ( $id, $user, $timestamp, $visible ) = @attr{qw(id user timestamp visible)};
-    $user      = '' unless defined $user;
-    $visible   = 1  unless defined $visible;
-    $timestamp = '' unless defined $timestamp;
+    ( $id, $user, $timestamp, $visible, $action ) =
+      @attr{qw(id user timestamp visible action)};
+    $visible = 1 unless defined $visible;
+    $action ||= '';
     %tags = @segs = ();
 }
 
 sub fmt_std_tags {
-    sprintf qq(id="%s" user="%s" visible="%s" timestamp="%s"), map esc, $id,
-      $user, $visible, $timestamp;
+    my %atts = (
+        id        => $id,
+        user      => $user,
+        visible   => $visible,
+        timestamp => $timestamp,
+        action    => $action || undef,
+    );
+    for ( keys %atts ) {
+        if ( defined $atts{$_} ) {
+            $atts{$_} = esc $atts{$_};
+        }
+        else {
+            delete $atts{$_};
+        }
+    }
+    join ' ', map qq($_="$atts{$_}"), keys %atts;
 }
 
 sub write_tags {
@@ -85,7 +99,7 @@ $p->setHandlers(
         }
         elsif ( $name eq 'segment' ) {
             $segs{$id} =
-              [ $id, $user, $timestamp, $visible, {%tags}, $from, $to ]
+              [ $id, $user, $timestamp, $visible, $action, {%tags}, $from, $to ]
               if $visible;
         }
         elsif ( $name eq 'way' ) {
@@ -93,7 +107,7 @@ $p->setHandlers(
             my @pairs = map {
                 $used_segs{$_} = 1;
                 if ( defined $segs{$_} ) {
-                    [ $segs{$_}->[5], $segs{$_}->[6] ];
+                    [ $segs{$_}->[6], $segs{$_}->[7] ];
                 }
                 else { () }
             } @segs;
@@ -121,6 +135,14 @@ $p->setHandlers(
                 }
                 push @chunks, \@chunk;
             }
+
+            my $new_action = '';
+            my @seg_actions = map $segs{$_}->[4], @segs;
+            $new_action = 'modify' if grep $_, @seg_actions;
+            $new_action = 'delete' if $action eq 'delete';
+            local $action = $new_action;
+
+            @chunks = $chunks[0] if @chunks and $action eq 'delete';
 
             my $orig_id_used = 0;
             my @ids;
@@ -150,7 +172,8 @@ $p->setHandlers(
                   || grep( defined $tags{$_},
                     qw(leisure landuse sport amenity tourism building) );
                 if ($create_multipolygon) {
-                    local $id = $new_rel_id--;
+                    local $action = undef;
+                    local $id     = $new_rel_id--;
                     printf qq(  <relation %s>\n), fmt_std_tags;
                     printf qq(    <member type="way" ref="%s" role=""/>\n),
                       esc $_
@@ -174,9 +197,10 @@ else {
 
 for my $seg ( values %segs ) {
     my $tags;
-    ( $id, $user, $timestamp, $visible, $tags, $from, $to ) = @$seg;
+    ( $id, $user, $timestamp, $visible, $action, $tags, $from, $to ) = @$seg;
     %tags = %$tags;
     next unless not $used_segs{$id} or grep( $_ ne 'created_by', keys %tags );
+    next if $action eq 'delete';
 
     local $id = $new_way_id--;
     printf qq(  <way %s>\n), fmt_std_tags;

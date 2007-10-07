@@ -250,10 +250,10 @@ public class TestError
          * @param s The segment
          * @param color The color
          */
-        public void drawSegment(Segment s, Color color)
+        public void drawSegment(Node n1, Node n2, Color color)
         {
-            Point p1 = mv.getPoint(s.from.eastNorth);
-            Point p2 = mv.getPoint(s.to.eastNorth);
+            Point p1 = mv.getPoint(n1.eastNorth);
+            Point p2 = mv.getPoint(n2.eastNorth);
             g.setColor(color);
             
             double t = Math.atan2(p2.x-p1.x, p2.y-p1.y);
@@ -291,25 +291,20 @@ public class TestError
                 drawNode(n, severity.getColor());
         }
 
-        /**
-         * Draw just a line between the points.
-         * White if selected (as always) or green otherwise.
-         */
-        public void visit(Segment ls) 
-        {
-            if( isSegmentVisible(ls) )
-                drawSegment(ls, severity.getColor());
-        }
-        
         public void visit(Way w)
         {
-            for (Segment ls : w.segments)
-            {
-                if (isSegmentVisible(ls))
+			Node lastN = null;
+			for (Node n : w.nodes) {
+				if (lastN == null) {
+					lastN = n;
+					continue;
+				}
+                if (isSegmentVisible(lastN, n))
                 {
-                    drawSegment(ls, severity.getColor());
+                    drawSegment(lastN, n, severity.getColor());
                 }
-            }
+				lastN = n;
+			}
         }
         
         /**
@@ -329,10 +324,9 @@ public class TestError
          * @param ls The segment to check
          * @return true if the segment is visible
          */
-        protected boolean isSegmentVisible(Segment ls) {
-            if (ls.incomplete) return false;
-            Point p1 = mv.getPoint(ls.from.eastNorth);
-            Point p2 = mv.getPoint(ls.to.eastNorth);
+        protected boolean isSegmentVisible(Node n1, Node n2) {
+            Point p1 = mv.getPoint(n1.eastNorth);
+            Point p2 = mv.getPoint(n2.eastNorth);
             if ((p1.x < 0) && (p2.x < 0)) return false;
             if ((p1.y < 0) && (p2.y < 0)) return false;
             if ((p1.x > mv.getWidth()) && (p2.x > mv.getWidth())) return false;

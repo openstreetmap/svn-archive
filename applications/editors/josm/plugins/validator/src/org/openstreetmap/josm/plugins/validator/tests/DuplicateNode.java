@@ -112,61 +112,26 @@ public class DuplicateNode extends Test
                 newtarget.put( key, n.get(key) ); 
             }
         }        
-        
-        // Since some segment may disappear, we need to track those too
-        Collection<OsmPrimitive> seglist = new ArrayList<OsmPrimitive>();
-                
-        // Now do the merging
-        Collection<Command> cmds = new LinkedList<Command>();
-        for (final Segment s : Main.ds.segments) 
-        {
-            if( s.deleted || s.incomplete )
-                continue;
-            if( !nodes.contains( s.from ) && !nodes.contains( s.to ) )
-                continue;
-                
-            Segment newseg = new Segment(s);
-            if( nodes.contains( s.from ) )
-                newseg.from = target;
-            if( nodes.contains( s.to ) )
-                newseg.to = target;
 
-            // Is this node now a NULL node?
-            if( newseg.from == newseg.to )
-                seglist.add(s);
-            else
-                cmds.add(new ChangeCommand(s,newseg));
-        }
-        
-        if( seglist.size() > 0 )  // Some segments to be deleted?
-        {
-            // We really want to delete this, but we must check if it is part of a way first
-            for (final Way w : Main.ds.ways)
-            {
-                Way newway = null;
-                if( w.deleted )
-                    continue;
-                for (final OsmPrimitive o : seglist )
-                {
-                    Segment s = (Segment)o;
-                    if( w.segments.contains(s) )
-                    {
-                        if( newway == null )
-                            newway = new Way(w);
-                        newway.segments.remove(s);
-                    }
-                }
-                if( newway != null )   // Made changes?
-                {
-                    // If no segments left, delete the way
-                    if( newway.segments.size() == 0 )
-                        cmds.add(new DeleteCommand(Arrays.asList(new OsmPrimitive[]{w})));
-                    else
-                        cmds.add(new ChangeCommand(w,newway));
-                }
-            }
-            cmds.add(new DeleteCommand(seglist));
-        }
+        Collection<Command> cmds = new LinkedList<Command>();
+
+		// Now search the ways for occurences of the nodes we are about to
+		// merge and replace them with the 'target' node
+		for (Way w : Main.ds.ways) {
+			if (w.deleted) continue;
+			// FIXME: use some fancy method from java.util.Collections and
+			// List.replace
+			Way wnew = null;
+			int len = w.nodes.size();
+			for (int i = 0; i < len; i++) {
+				if (!nodes.contains(w.nodes.get(i))) continue;
+				if (wnew == null) wnew = new Way(w);
+				wnew.nodes.set(i, target);
+			}
+			if (wnew != null) {
+				cmds.add(new ChangeCommand(w, wnew));
+			}
+		}
 
         cmds.add(new DeleteCommand(nodes));
         cmds.add(new ChangeCommand(target, newtarget));

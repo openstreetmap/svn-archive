@@ -45,16 +45,12 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
     public static Class[] allAvailableTests = new Class[]
     { 
     	DuplicateNode.class, 
-    	DuplicateSegment.class, 
-    	SingleNodeSegment.class, 
+    	OverlappingWays.class, 
         UntaggedNode.class, 
-    	TaggedSegment.class, 
         UntaggedWay.class,
-    	UnorderedWay.class, 
     	SpellCheck.class,
-    	OrphanSegment.class, 
-        ReusedSegment.class, 
-        CrossingSegments.class,
+        DuplicatedWayNodes.class, 
+        CrossingWays.class,
         SimilarNamedWays.class,
         Coastlines.class,
     };

@@ -8,13 +8,13 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.DeleteCommand;
 import org.openstreetmap.josm.data.osm.Node;
+import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
 /**
- * Checks for untagged nodes that are in no segment
+ * Checks for untagged nodes that are in no way
  * 
  * @author frsantos
  */
@@ -32,7 +32,7 @@ public class UntaggedNode extends Test
 	public UntaggedNode() 
 	{
 		super(tr("Untagged nodes."),
-			  tr("This test checks for untagged nodes that are not part of any segment."));
+			  tr("This test checks for untagged nodes that are not part of any way."));
 	}
 
 	@Override
@@ -45,22 +45,23 @@ public class UntaggedNode extends Test
     public void visit(Collection<OsmPrimitive> selection) 
     {
 		// If there is a partial selection, it may be false positives if a
-		// node is selected, but not the container segment. So, in this
-		// case, we must visit all segments, selected or not.
-
-		for (OsmPrimitive p : selection)
-        {
-        	if( !p.deleted )
-        	{
-        		if( !partialSelection || p instanceof Node )
-        			p.visit(this);
-        	}
-        }
-        
-		if( partialSelection )
-		{
-			for( Segment s : Main.ds.segments)
-				visit(s);
+		// node is selected, but not the container way. So, in this
+		// case, we must visit all ways, selected or not.
+		if (partialSelection) {
+			for (OsmPrimitive p : selection) {
+				if (!p.deleted && p instanceof Node) {
+					p.visit(this);
+				}
+			}
+			for (Way w : Main.ds.ways) {
+				visit(w);
+			}
+		} else {
+			for (OsmPrimitive p : selection) {
+				if (!p.deleted) {
+					p.visit(this);
+				}
+			}
 		}
     }
     
@@ -83,10 +84,11 @@ public class UntaggedNode extends Test
 	}
 	
 	@Override
-	public void visit(Segment s) 
+	public void visit(Way w) 
 	{
-		emptyNodes.remove(s.from);
-		emptyNodes.remove(s.to);
+		for (Node n : w.nodes) {
+			emptyNodes.remove(n);
+		}
 	}
 	
 	@Override

@@ -16,20 +16,20 @@ import org.openstreetmap.josm.plugins.validator.util.Util;
  * 
  * @author frsantos
  */
-public class CrossingSegments extends Test 
+public class CrossingWays extends Test 
 {
-	/** All segments, grouped by cells */
+	/** All way segments, grouped by cells */
 	Map<Point2D,List<ExtendedSegment>> cellSegments;
     /** The already detected errors */
-    Bag<Segment, Segment> errorSegments;
+	HashSet<WaySegment> errorSegments;
 	
 	/**
 	 * Constructor
 	 */
-	public CrossingSegments() 
+	public CrossingWays() 
 	{
-		super(tr("Crossing roads."),
-			  tr("This test checks if two roads,railways or waterways crosses in the same layer, but are not connected by a node."));
+		super(tr("Crossing ways."),
+			  tr("This test checks if two roads, railways or waterways crosses in the same layer, but are not connected by a node."));
 	}
 
 
@@ -37,7 +37,7 @@ public class CrossingSegments extends Test
 	public void startTest() 
 	{
 		cellSegments = new HashMap<Point2D,List<ExtendedSegment>>(1000);
-        errorSegments = new Bag<Segment, Segment>();
+        errorSegments = new HashSet<WaySegment>();
 	}
 
 	@Override
@@ -61,24 +61,23 @@ public class CrossingSegments extends Test
         	return;
         
         String layer1 = w.get("layer");
-        for(Segment s : w.segments)
-        {
-        	if( s.incomplete )
-        		continue;
-        	
-            ExtendedSegment es1 = new ExtendedSegment(s, layer1, railway1, coastline1);
-            List<List<ExtendedSegment>> cellSegments = getSegments(s);
+
+		int nodesSize = w.nodes.size();
+		for (int i = 0; i < nodesSize - 1; i++) {
+			WaySegment ws = new WaySegment(w, i);
+            ExtendedSegment es1 = new ExtendedSegment(ws, layer1, railway1, coastline1);
+            List<List<ExtendedSegment>> cellSegments = getSegments(es1.n1, es1.n2);
             for( List<ExtendedSegment> segments : cellSegments)
             {
 	            for( ExtendedSegment es2 : segments)
 	            {
-	            	if( errorSegments.contains(s, es2.s) || errorSegments.contains(es2.s, s))
+					if (errorSegments.contains(ws) && errorSegments.contains(es2.ws))
 	            		continue;
 	            	
 	                String layer2 = es2.layer;
 	                String railway2 = es2.railway;
 	                String coastline2 = es2.coastline;
-	                if( (layer1 != null || layer2 != null) && (layer1 == null || !layer1.equals(layer2)) )
+					if (layer1 == null ? layer2 != null : !layer1.equals(layer2))
 	                	continue;
 	                
 	                if( !es1.intersects(es2) ) continue;
@@ -88,9 +87,9 @@ public class CrossingSegments extends Test
 	                if( isCoastline1 != isCoastline2 ) continue;
 	                
                     List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
-                    primitives.add(es1.s);
-                    primitives.add(es2.s);
-                    errors.add( new TestError(this, Severity.WARNING, tr("Crossing roads"), primitives) );
+                    primitives.add(es1.ws.way);
+                    primitives.add(es2.ws.way);
+                    errors.add( new TestError(this, Severity.WARNING, tr("Crossing ways"), primitives) );
 	            }
 	            segments.add(es1);
             }
@@ -98,16 +97,17 @@ public class CrossingSegments extends Test
 	}
 	
 	/**
-     * Returns all the cells this segment crosses . Each cell contains the list
+     * Returns all the cells this segment crosses.  Each cell contains the list
      * of segments already processed
      * 
-     * @param s The segment
+     * @param n1 The first node.
+     * @param n2 The second node.
      * @return A list with all the cells the segment crosses.
      */
-	public List<List<ExtendedSegment>> getSegments(Segment s)
+	public List<List<ExtendedSegment>> getSegments(Node n1, Node n2)
 	{
 		List<List<ExtendedSegment>> cells = new ArrayList<List<ExtendedSegment>>();
-		for( Point2D cell : Util.getSegmentCells(s, 10000) )
+		for( Point2D cell : Util.getSegmentCells(n1, n2, 10000) )
 		{
             List<ExtendedSegment> segments = cellSegments.get( cell );
             if( segments == null )
@@ -122,33 +122,36 @@ public class CrossingSegments extends Test
 	}
     
     /**
-     * A segment is a line with the formula "y = a*x+b"
+     * A way segment with some additional information
      * @author frsantos
      */
-    class ExtendedSegment
+    private class ExtendedSegment
     {
-        /** The segment */
-        Segment s;
+		public Node n1, n2;
+
+		public WaySegment ws;
         
         /** The layer */
-        String layer;
+        public String layer;
         
         /** The railway type */
-		private String railway;
+		public String railway;
 
 		/** The coastline type */
-		private String coastline;
+		public String coastline;
         
         /**
          * Constructor
-         * @param s The segment
+         * @param ws The way segment
          * @param layer The layer of the way this segment is in
          * @param railway The railway type of the way this segment is in
          * @param coastline The coastlyne typo of the way the segment is in
          */
-        public ExtendedSegment(Segment s, String layer, String railway, String coastline)
+        public ExtendedSegment(WaySegment ws, String layer, String railway, String coastline)
         {
-            this.s = s;
+            this.ws = ws;
+			this.n1 = ws.way.nodes.get(ws.lowerIndex);
+			this.n2 = ws.way.nodes.get(ws.lowerIndex + 1);
             this.layer = layer;
             this.railway = railway;
             this.coastline = coastline;
@@ -161,24 +164,17 @@ public class CrossingSegments extends Test
          */
         public boolean intersects(ExtendedSegment s2)
         {
-        	Node n1From = this.s.from;
-			Node n1To = this.s.to;
-			Node n2From = s2.s.from;
-			Node n2To = s2.s.to;
-			if( n1From.equals(n2From) || n1To.equals(n2To) ||  
-        		n1From.equals(n2To)   || n1To.equals(n2From) )
+			if( n1.equals(s2.n1) || n2.equals(s2.n2) ||  
+        		n1.equals(s2.n2)   || n2.equals(s2.n1) )
         	{
                 return false;
         	}
             
-    		return Line2D.linesIntersect(n1From.eastNorth.east(), 
-					    				 n1From.eastNorth.north(),
-					    				 n1To.eastNorth.east(),
-					    				 n1To.eastNorth.north(),
-					    				 n2From.eastNorth.east(),
-					    				 n2From.eastNorth.north(),
-					    				 n2To.eastNorth.east(),
-					    				 n2To.eastNorth.north());
+    		return Line2D.linesIntersect(
+				n1.eastNorth.east(), n1.eastNorth.north(),
+				n2.eastNorth.east(), n2.eastNorth.north(),
+				s2.n1.eastNorth.east(), s2.n1.eastNorth.north(),
+				s2.n2.eastNorth.east(), s2.n2.eastNorth.north());
         }
     }
 }

@@ -10,8 +10,7 @@ import org.openstreetmap.josm.data.osm.visitor.Visitor;
 /**
  * A visitor that aggregates all primitives it visits.
  * <p>
- * The primitives are sorted according to their tyep: first Nodes, then
- * Segments, and Ways last.
+ * The primitives are sorted according to their tyep: first nodes, then ways.
  * 
  * @author frsantos
  */
@@ -48,22 +47,15 @@ public class AgregatePrimitivesVisitor implements Visitor
 		aggregatedData.add(n);
 	}
 
-	public void visit(Segment s) 
-	{
-		aggregatedData.add(s);
-		if( s.from != null ) visit(s.from);
-		if( s.to != null )   visit(s.to);
-	}
-
 	public void visit(Way w) 
 	{
 		aggregatedData.add(w);
-		for(Segment s : w.segments)
-			visit(s);
+		for (Node n : w.nodes)
+			visit(n);
 	}
 
 	/**
-	 * A comparator that orders Nodes first, then Segments and Ways last.
+	 * A comparator that orders nodes first, ways last.
 	 * 
 	 * @author frsantos
 	 */
@@ -78,11 +70,7 @@ public class AgregatePrimitivesVisitor implements Visitor
 			else if( o1 instanceof Way)
 			{
 				return o2 instanceof Way ? o1.hashCode() - o2.hashCode() : 1;
-			}
-			else // o1 is a segment
-			{
-				if( o2 instanceof Node ) return 1;
-				if( o2 instanceof Way ) return -1;
+			} else {
 				return o1.hashCode() - o2.hashCode();
 			}
 		}

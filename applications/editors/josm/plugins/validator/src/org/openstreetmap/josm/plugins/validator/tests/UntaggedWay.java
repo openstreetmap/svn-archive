@@ -86,7 +86,7 @@ public class UntaggedWay extends Test
             errors.add( new TestError(this, Severity.WARNING, tr("Untagged ways"), w, UNTAGGED_WAY) );
         }
         
-        if( w.segments.size() == 0 )
+        if( w.nodes.size() == 0 )
         {
             errors.add( new TestError(this, Severity.ERROR, tr("Empty ways"), w, EMPTY_WAY) );
         }

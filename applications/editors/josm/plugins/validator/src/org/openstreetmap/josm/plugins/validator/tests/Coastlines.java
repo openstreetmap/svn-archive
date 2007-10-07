@@ -6,7 +6,6 @@ import java.awt.geom.Point2D;
 import java.util.*;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
@@ -71,15 +70,7 @@ public class Coastlines extends Test
                 if( natural2 == null || !natural2.equals("coastline") )
                     continue;
                 
-                int numSegments1 = w.segments.size();
-                Segment start1 = w.segments.get(0);
-                Segment end1 = numSegments1 > 1 ? w.segments.get(numSegments1 - 1) : start1;
-
-                int numSegments2 = w2.segments.size();
-                Segment start2 = w2.segments.get(0);
-                Segment end2 = numSegments2 > 1 ? w2.segments.get(numSegments2 - 1) : start2;
-                
-                if( start1.from.equals(start2.from) || end1.to.equals(end2.to))
+                if( w.nodes.get(0).equals(w2.nodes.get(0)) || w.nodes.get(w.nodes.size() - 1).equals(w2.nodes.get(w2.nodes.size() - 1)))
                 {
                     List<OsmPrimitive> primitives = new ArrayList<OsmPrimitive>();
                     primitives.add(w);

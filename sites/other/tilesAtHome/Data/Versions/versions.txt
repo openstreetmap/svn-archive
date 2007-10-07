@@ -12,5 +12,6 @@
 12|NO|Glencoe
 13|NO|Headingley
 14|NO|Inverness
-15|OK|Jever
-16|OK|Kingston
+15|NO|Jever
+16|NO|Kingston
+17|OK|Latrobe

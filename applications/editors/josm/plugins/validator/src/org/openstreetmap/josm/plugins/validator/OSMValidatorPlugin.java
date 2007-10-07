@@ -61,7 +61,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	public OSMValidatorPlugin()
 	{
 		PreferenceEditor.importOldPreferences();
-        initializeTests( getTests(true, true) );
+        initializeTests( getAllTests() );
 	}
 	
     @Override
@@ -118,7 +118,30 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	{
 		return (OSMValidatorPlugin)Util.getPlugin(OSMValidatorPlugin.class);
 	}
-	
+
+	/** Gets a map from simple names to all tests. */
+	public static Map<String, Test> getAllTestsMap() {
+		Map<String, Test> tests = new HashMap<String, Test>();
+		for(Class<Test> testClass : getAllAvailableTests() )
+		{
+			try {
+				Test test = testClass.newInstance();
+				tests.put(testClass.getSimpleName(), test);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				continue;
+			}
+		}
+		return tests;
+	}
+
+	/** Gets a collection of all tests. */
+	public static Collection<Test> getAllTests() {
+		return getAllTestsMap().values();
+	}
+
 	/**
 	 * Gets a collection with the available tests
 	 * 
@@ -129,19 +152,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
 	public static Collection<Test> getTests(boolean enabled, boolean enabledBeforeUpload)
 	{
 		Set<Test> tests = new HashSet<Test>();
-		Map<String, Test> enabledTests = new LinkedHashMap<String, Test>();
-		for(Class<Test> testClass : getAllAvailableTests() )
-		{
-			try {
-				Test test = testClass.newInstance();
-				enabledTests.put(testClass.getSimpleName(), test);
-			}
-			catch( Exception e)
-			{
-				e.printStackTrace();
-				continue;
-			}
-		}
+		Map<String, Test> enabledTests = getAllTestsMap();
 
 		Pattern regexp = Pattern.compile("(\\w+)=(true|false),?");
 		Matcher m = regexp.matcher(Main.pref.get(PreferenceEditor.PREF_TESTS));

@@ -1,4 +1,4 @@
-#!lusr/bin/perl
+#!/usr/bin/perl
 # Takes a planet.osm, and extracts just the bits that relate to one area
 #
 # Nick Burch
@@ -10,6 +10,7 @@ BEGIN {
     unshift(@INC,"$dir/perl");
 
     unshift(@INC,"./perl_lib");
+    unshift(@INC,"../perl_lib");
     unshift(@INC,"../../perl_lib");
     unshift(@INC,"~/svn.openstreetmap.org/applications/utils/perl_lib");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/applications/utils/perl_lib");
@@ -31,13 +32,6 @@ our $help=0;
 my $bbox_opts='';
 
 my $VERBOSE;
-
-print STDERR <<EOF;
-Note that this script is not (yet?) 0.5 compatible. For bounding box excerpts
-with 0.5 style planet files, use the -b option with the polygon extract
-script!
-
-EOF
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -88,13 +82,13 @@ if ( $xml ne "-" && ! -s $xml ) {
 
 # Counts of the numbers handled
 my $node_count = 0;
-my $seg_count = 0;
 my $way_count = 0;
+my $rel_count = 0;
 my $line_count = 0;
 
-# We assume IDs to be up to 50 million
+# We assume IDs to be up to 250 million
 my $nodes = Bit::Vector->new( 250 * 1000 * 1000 );
-my $segs = Bit::Vector->new( 250 * 1000 * 1000 );
+my $ways = Bit::Vector->new( 250 * 1000 * 1000 );
 
 # Process
 open(XML, "<$xml") or die("$!");
@@ -105,10 +99,14 @@ my $last_id;
 my $last_type;
 
 # Hold the segment and tags list for a way
-# (We only add the way+segments+tags if has valid segments)
+# (We only add the way+nodes+tags if has valid segments)
 my $way_line;
 my @way_tags;
-my @way_segs;
+my @way_nodes;
+# Something similar for relations 
+my $rel_line;
+my @rel_tags;
+my @rel_members;
 
 # Loop over the data
 while(my $line = <XML>) {
@@ -146,35 +144,6 @@ while(my $line = <XML>) {
 		$node_count++;
 		#&display_count("node", $node_count);
 	}
-	elsif($line =~ /^\s*<segment/) {
-		my ($id,$from,$to) = ($line =~ /^\s*<segment[^>]+id=['"](\d+)['"][^>]+from=['"](\d+)['"][^>]+to=['"](\d+)['"]/);
-		$last_id = undef; # In case it has tags we need to exclude
-		$last_type = "segment";
-
-		unless($id) { warn "Invalid line '$line'"; next; }
-
-		unless($nodes->contains($to)) { 
-			if($warn_bbox_skip) {
-				warn "No node $to for line '$line'"; 
-			}
-			next; 
-		}
-		unless($nodes->contains($from)) { 
-			if($warn_bbox_skip) {
-				warn "No node $from for line '$line'"; 
-			}
-			next; 
-		}
-
-		# Output
-		print $line;
-
-		$segs->Bit_On($id);
-		$last_id = $id;
-
-		$seg_count++;
-		#&display_count("segment", $seg_count);
-	}
 	elsif($line =~ /^\s*\<way/) {
 		my ($id) = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
 		$last_id = undef; # In case it has tags we need to exclude
@@ -191,7 +160,7 @@ while(my $line = <XML>) {
 
 		# Blank way children lists
 		@way_tags = ();
-		@way_segs = ();
+		@way_nodes = ();
 	}
 	elsif($line =~ /^\s*\<\/way/) {
 		my $way_id = $last_id;
@@ -202,20 +171,22 @@ while(my $line = <XML>) {
 			next; 
 		}
 
-		unless(@way_segs) {
+		unless(@way_nodes) {
 			if($warn_bbox_skip) {
-				warn("Skipping way with no valid segments with id '$way_id'");
+				warn("Skipping way with no valid nodes with id '$way_id'");
 			}
 			next;
 		}
 
+		# Record this id
+		$ways->Bit_On($way_id);
+
 		# Output way
 		print $way_line;
 
-		# Output way segments
-		my $way_seg_count = 0;
-		foreach my $ws (@way_segs) {
-			print $ws->{line};
+		# Output way nodes
+		foreach my $wn (@way_nodes) {
+			print $wn->{line};
 		}
 		# Add way tags
 		foreach my $wt (@way_tags) {
@@ -225,23 +196,105 @@ while(my $line = <XML>) {
 		# Finish way
 		print $line;
 	}
-	elsif($line =~ /^\s*\<seg /) {
-		my ($id) = ($line =~ /^\s*\<seg id=[\'\"](\d+)[\'\"]/);
+	elsif($line =~ /^\s*\<nd /) {
+		my ($ref) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/);
 		unless($last_id) { next; }
-		unless($id) { warn "Invalid line '$line'"; next; }
-		unless($segs->contains($id)) { 
+		unless($ref) { warn "Invalid line '$line'"; next; }
+		unless($nodes->contains($ref)) { 
 			if($warn_bbox_skip) {
-				warn "Invalid segment for line '$line'"; 
+				warn "Invalid node for line '$line'"; 
 			}
 			next; 
 		}
 
 		# Save, only add later
-		my %ws;	
-		$ws{'line'} = $line;
-		$ws{'id'} = $id;
+		my %wn;	
+		$wn{'line'} = $line;
+		$wn{'ref'} = $ref;
 
-		push (@way_segs,\%ws);
+		push (@way_nodes,\%wn);
+	}
+	elsif($line =~ /^\s*\<relation/) {
+		my ($id) = ($line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/);
+		$last_id = undef; # In case it has tags we need to exclude
+		$last_type = "relation";
+
+		unless($id) { warn "Invalid line '$line'"; next; }
+
+		# Save ID and line, will add later
+		$last_id = $id;
+		$rel_line = $line;
+
+		$rel_count++;
+		#&display_count("rel", $rel_count);
+
+		# Blank way children lists
+		@rel_tags = ();
+		@rel_members = ();
+	}
+	elsif($line =~ /^\s*\<\/relation/) {
+		my $rel_id = $last_id;
+		$last_id = undef;
+
+		unless($rel_id) { 
+			# Invalid relation, skip
+			next; 
+		}
+
+		unless(@rel_members) {
+			if($warn_bbox_skip) {
+				warn("Skipping relation with no valid nodes/ways with id '$rel_id'");
+			}
+			next;
+		}
+
+		# Output relation
+		print $rel_line;
+
+		# Output ways and nodes
+		foreach my $rm (@rel_members) {
+			print $rm->{line};
+		}
+		# Add way tags
+		foreach my $rt (@rel_tags) {
+			print $rt->{line};
+		}
+
+		# Finish way
+		print $line;
+	}
+	elsif($line =~ /^\s*\<member /) {
+		my ($type,$ref,$role) = ($line =~ /^\s*\<member type=[\'\"](.*?)[\'\"] ref=[\'\"](\d+)[\'\"] role=[\'\"](.*?)[\'\"]/);
+		unless($last_id) { next; }
+		unless($type && $ref) { warn "Invalid line '$line'"; next; }
+
+		if($type eq "node") {
+			unless($nodes->contains($ref)) {
+				if($warn_bbox_skip) {
+					warn "Invalid node for line '$line'";
+				}
+				next;
+			}
+		} elsif($type eq "way") {
+			unless($ways->contains($ref)) {
+				if($warn_bbox_skip) {
+					warn "Invalid way for line '$line'";
+				}
+				next;
+			}
+		} else {
+			warn("Skipping unknown type '$type' for line '$line'");
+			next;
+		}
+
+		# Save, only add later
+		my %rm;	
+		$rm{'line'} = $line;
+		$rm{'type'} = $type;
+		$rm{'ref'} = $ref;
+		$rm{'role'} = $role;
+
+		push (@rel_members,\%rm);
 	}
 	elsif($line =~ /^\s*\<tag/) {
 		my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);
@@ -251,6 +304,7 @@ while(my $line = <XML>) {
 			}
 			next; 
 		}
+		if($name eq " ") { next; }
 		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
 		# Decode the XML elements in the name and value
@@ -266,18 +320,24 @@ while(my $line = <XML>) {
 
 		if($last_type eq "node") {
 			print $line;
-		} elsif($last_type eq "segment") {
-			print $line;
 		} elsif($last_type eq "way") {
-			# Save, only add if way has segments
+			# Save, only add if way has nodes
 			my %wt;	
 			$wt{'line'} = $line;
 			$wt{'name'} = $name;
 			$wt{'value'} = $value;
 
 			push (@way_tags,\%wt);
+		} elsif($last_type eq "relation") {
+			# Save, only add if relation has nodes/ways
+			my %rt;	
+			$rt{'line'} = $line;
+			$rt{'name'} = $name;
+			$rt{'value'} = $value;
+
+			push (@rel_tags,\%rt);
 		}
-	    }	
+	}	
 	elsif($line =~ /^\s*\<\?xml/) {
 		print $line;
 	}

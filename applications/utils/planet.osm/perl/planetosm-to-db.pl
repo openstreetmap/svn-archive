@@ -8,12 +8,9 @@
 # MySQL support ($dbtype='mysql'):
 #	same table layout as main OSM server
 #
-# WARNING - not yet fully updated to handle the 0.5 API!
-# WARNING - mysql support for 0.5 API un-tested
+# WARNING - mysql support for 0.5 API un-tested, and probably needs some work!
 #
-# Nick Burch
-#     v0.01   23/07/2006
-#     v0.02   26/07/2006 mysql added (Richard Fairhurst)
+# Nick Burch and Richard Fairhurst
 
 BEGIN {
     my $dir = $0;
@@ -26,8 +23,6 @@ BEGIN {
     unshift(@INC,"~/svn.openstreetmap.org/utils/perl_lib");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl_lib");
 }
-
-die("Not fully converted to the 0.5 API yet");
 
 use strict;
 use warnings;
@@ -206,6 +201,7 @@ my $rel_count = 0;
 my $line_count = 0;
 
 # We assume IDs to be up to 100 million
+# If either nodes or ways have IDs of more than this, increase the figure!
 my $nodes = Bit::Vector->new( 100 * 1000 * 1000 );
 my $ways = Bit::Vector->new( 100 * 1000 * 1000 );
 
@@ -401,8 +397,41 @@ while(my $line = <XML>) {
 		}
 		# Add relation tags
 		foreach my $rt (@rel_tags) {
-			do_rel_tag($rel_id,$rt->{name},$rt->{value},$rt->{line});
+			do_relation_tag($rel_id,$rt->{name},$rt->{value},$rt->{line});
 		}
+	}
+	elsif($line =~ /^\s*\<member /) {
+		my ($type,$ref,$role) = ($line =~ /^\s*\<member type=[\'\"](.*?)[\'\"] ref=[\'\"](\d+)[\'\"] role=[\'\"](.*?)[\'\"]/);
+		unless($last_id) { next; }
+		unless($type && $ref) { warn "Invalid line '$line'"; next; }
+
+		if($type eq "node") {
+			unless($nodes->contains($ref)) { 
+				if($warn_bbox_skip) {
+					warn "Invalid node for line '$line'"; 
+				}
+				next; 
+			}
+		} elsif($type eq "way") {
+			unless($ways->contains($ref)) { 
+				if($warn_bbox_skip) {
+					warn "Invalid way for line '$line'"; 
+				}
+				next; 
+			}
+		} else {
+			warn("Skipping unknown type '$type' for line '$line'");
+			next;
+		}
+
+		# Save, only add later
+		my %rm;	
+		$rm{'line'} = $line;
+		$rm{'type'} = $type;
+		$rm{'ref'} = $ref;
+		$rm{'role'} = $role;
+
+		push (@rel_members,\%rm);
 	}
 	elsif($line =~ /^\s*\<tag/) {
 		my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);

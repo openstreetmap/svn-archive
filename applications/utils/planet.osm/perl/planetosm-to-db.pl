@@ -8,7 +8,8 @@
 # MySQL support ($dbtype='mysql'):
 #	same table layout as main OSM server
 #
-# WARNING - not yet updated to handle the 0.5 API!
+# WARNING - not yet fully updated to handle the 0.5 API!
+# WARNING - mysql support for 0.5 API un-tested
 #
 # Nick Burch
 #     v0.01   23/07/2006
@@ -19,13 +20,14 @@ BEGIN {
     $dir =~s,[^/]+/[^/]+$,,;
     unshift(@INC,"$dir/perl");
 
-    unshift(@INC,"./perl");
-    unshift(@INC,"../perl");
-    unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
+    unshift(@INC,"./perl_lib");
+    unshift(@INC,"../perl_lib");
+    unshift(@INC,"../../perl_lib");
+    unshift(@INC,"~/svn.openstreetmap.org/utils/perl_lib");
+    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl_lib");
 }
 
-die("Not converted to the 0.5 API yet");
+die("Not fully converted to the 0.5 API yet");
 
 use strict;
 use warnings;
@@ -41,18 +43,18 @@ use Pod::Usage;
 use Bit::Vector;
 
 sub do_node_tag($$$$); # {}
-sub do_segment_tag($$$$); # {}
 sub do_way_tag($$$$); # {}
+sub do_relation_tag($$$$); # {}
 sub fetch_schema($); # {}
 sub build_node_ps($$); # {}
 sub build_node_tag_ps($$); # {}
 sub build_node_tag_ps_mysql($$); # {}
-sub build_seg_ps($$); # {}
-sub build_seg_tag_ps($$); # {}
-sub build_seg_tag_ps_mysql($$); # {}
 sub build_way_ps($$); # {}
-sub build_way_seg_ps($$); # {}
+sub build_way_node_ps($$); # {}
 sub build_way_tag_ps($$); # {}
+sub build_relation_ps($$); # {}
+sub build_relation_tag_ps($$); # {}
+sub build_relation_member_ps($$); # {}
 sub should_batch_inserts($$); # {}
 sub check_bbox_valid(@); # {}
 sub display_count($$); #{}
@@ -186,12 +188,12 @@ if ( $xml ne "-" && ! -s $xml ) {
 my $node_ps = build_node_ps($dbtype,$conn);
 my $node_tag_ps = build_node_tag_ps($dbtype,$conn);
 my $node_tag_ps_mysql = build_node_tag_ps_mysql($dbtype,$conn);
-my $seg_ps = build_seg_ps($dbtype,$conn);
-my $seg_tag_ps = build_seg_tag_ps($dbtype,$conn);
-my $seg_tag_ps_mysql = build_seg_tag_ps_mysql($dbtype,$conn);
 my $way_ps = build_way_ps($dbtype,$conn);
-my $way_seg_ps = build_way_seg_ps($dbtype,$conn);
+my $way_node_ps = build_way_node_ps($dbtype,$conn);
 my $way_tag_ps = build_way_tag_ps($dbtype,$conn);
+my $rel_ps = build_relation_ps($dbtype,$conn);
+my $rel_tag_ps = build_relation_tag_ps($dbtype,$conn);
+my $rel_member_ps = build_relation_member_ps($dbtype,$conn);
 
 # Should we batch inserts in transactions to help performance?
 # (DB specific if this helps or hinders)
@@ -199,13 +201,13 @@ my $batch_inserts = should_batch_inserts($dbtype,$conn);
 
 # Counts of the numbers handled
 my $node_count = 0;
-my $seg_count = 0;
 my $way_count = 0;
+my $rel_count = 0;
 my $line_count = 0;
 
-# We assume IDs to be up to 50 million
-my $nodes = Bit::Vector->new( 50 * 1000 * 1000 );
-my $segs = Bit::Vector->new( 50 * 1000 * 1000 );
+# We assume IDs to be up to 100 million
+my $nodes = Bit::Vector->new( 100 * 1000 * 1000 );
+my $ways = Bit::Vector->new( 100 * 1000 * 1000 );
 
 # Turn on batching, if the database likes that
 if($batch_inserts) {
@@ -220,11 +222,15 @@ open(XML, "<$xml") or die("$!");
 my $last_id;
 my $last_type;
 
-# Hold the segment and tags list for a way
-# (We only add the way+segments+tags if has valid segments)
+# Hold the nodes and tags list for a way
+# (We only add the way+nodes+tags if has valid nodes)
 my $way_line;
 my @way_tags;
-my @way_segs;
+my @way_nodes;
+# Something similar for relations
+my $rel_line;
+my @rel_tags;
+my @rel_members;
 
 # Loop over the data
 while(my $line = <XML>) {
@@ -278,35 +284,6 @@ while(my $line = <XML>) {
 		$node_count++;
 		&display_count("node", $node_count);
 	}
-	elsif($line =~ /^\s*<segment/) {
-		my ($id,$from,$to) = ($line =~ /^\s*<segment id=['"](\d+)['"] from=['"](\d+)['"] to=['"](\d+)['"]/);
-		$last_id = undef; # In case it has tags we need to exclude
-		$last_type = "segment";
-
-		unless($id) { warn "Invalid line '$line'"; next; }
-
-		unless($nodes->contains($to)) { 
-			if($warn_bbox_skip) {
-				warn "No node $to for line '$line'"; 
-			}
-			next; 
-		}
-		unless($nodes->contains($from)) { 
-			if($warn_bbox_skip) {
-				warn "No node $from for line '$line'"; 
-			}
-			next; 
-		}
-
-		$seg_ps->execute($id,$from,$to)
-			or warn("Invalid line '$line' : ".$conn->errstr);
-
-		$segs->Bit_On($id);
-		$last_id = $id;
-
-		$seg_count++;
-		#&display_count("segment", $seg_count);
-	}
 	elsif($line =~ /^\s*\<way/) {
 		my ($id) = ($line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
 		$last_id = undef; # In case it has tags we need to exclude
@@ -323,7 +300,7 @@ while(my $line = <XML>) {
 
 		# Blank way children lists
 		@way_tags = ();
-		@way_segs = ();
+		@way_nodes = ();
 	}
 	elsif($line =~ /^\s*\<\/way/) {
 		my $way_id = $last_id;
@@ -334,9 +311,9 @@ while(my $line = <XML>) {
 			next; 
 		}
 
-		unless(@way_segs) {
+		unless(@way_nodes) {
 			if($warn_bbox_skip) {
-				warn("Skipping way with no valid segments with id '$way_id'");
+				warn("Skipping way with no valid nodes with id '$way_id'");
 			}
 			next;
 		}
@@ -344,39 +321,93 @@ while(my $line = <XML>) {
 		# Add way
 		$way_ps->execute($way_id)
 			or warn("Invalid line '$way_line' : ".$conn->errstr);
+		$ways->Bit_On($way_id);
 
-		# Add way segments
-		my $way_seg_count = 0;
-		foreach my $ws (@way_segs) {
-			$way_seg_count++;
-			$way_seg_ps->execute($way_id,$ws->{id},$way_seg_count)
-				or warn("Invalid line '$ws->{line}' : ".$conn->errstr);
+		# Add way nodes
+		my $way_node_count = 0;
+		foreach my $wn (@way_nodes) {
+			$way_node_count++;
+			$way_node_ps->execute($way_id,$wn->{ref},$way_node_count)
+				or warn("Invalid line '$wn->{line}' : ".$conn->errstr);
 		}
 		# Add way tags
 		foreach my $wt (@way_tags) {
 			do_way_tag($way_id,$wt->{name},$wt->{value},$wt->{line});
 		}
 	}
-	elsif($line =~ /^\s*\<seg /) {
-		my ($id) = ($line =~ /^\s*\<seg id=[\'\"](\d+)[\'\"]/);
+	elsif($line =~ /^\s*\<nd /) {
+		my ($id) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/);
 		unless($last_id) { next; }
 		unless($id) { warn "Invalid line '$line'"; next; }
-		unless($segs->contains($id)) { 
+		unless($nodes->contains($id)) { 
 			if($warn_bbox_skip) {
-				warn "Invalid segment for line '$line'"; 
+				warn "Invalid node for line '$line'"; 
 			}
 			next; 
 		}
 
 		# Save, only add later
-		my %ws;	
-		$ws{'line'} = $line;
-		$ws{'id'} = $id;
+		my %wn;	
+		$wn{'line'} = $line;
+		$wn{'ref'} = $id;
 
-		push (@way_segs,\%ws);
+		push (@way_nodes,\%wn);
+	}
+	elsif($line =~ /^\s*\<relation /) {
+		my ($id) = ($line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/);
+
+		$last_id = undef; # In case it has tags we need to exclude
+		$last_type = "relation";
+
+		unless($id) { warn "Invalid line '$line'"; next; }
+
+		# Save ID and line, will add later
+		$last_id = $id;
+		$rel_line = $line;
+
+		$rel_count++;
+		&display_count("rel", $rel_count);
+
+		# Blank rel children lists
+		@rel_tags = ();
+		@rel_members = ();
+	}
+	elsif($line =~ /^\s*\<\/relation/) {
+		my $rel_id = $last_id;
+		$last_id = undef;
+
+		unless($rel_id) { 
+			# Invalid relation, skip
+			next; 
+		}
+
+		unless(@rel_members) {
+			if($warn_bbox_skip) {
+				warn("Skipping relation with no valid relations with id '$rel_id'");
+			}
+			next;
+		}
+
+		# Add relation
+		$rel_ps->execute($rel_id)
+			or warn("Invalid line '$rel_line' : ".$conn->errstr);
+
+		# Add relation members
+		my $rel_mem_count = 0;
+		foreach my $rm (@rel_members) {
+			$rel_mem_count++;
+			$rel_member_ps->execute($rel_id,$rm->{type},$rm->{ref},$rm->{role})
+				or warn("Invalid line '$rm->{line}' : ".$conn->errstr);
+		}
+		# Add relation tags
+		foreach my $rt (@rel_tags) {
+			do_rel_tag($rel_id,$rt->{name},$rt->{value},$rt->{line});
+		}
 	}
 	elsif($line =~ /^\s*\<tag/) {
 		my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);
+
+		if($name eq " " && $value eq "") { next; }
 		unless($name) { warn "Invalid line '$line'"; next; }
 		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
@@ -393,10 +424,16 @@ while(my $line = <XML>) {
 
 		if($last_type eq "node") {
 			do_node_tag($last_id,$name,$value,$line);
-		} elsif($last_type eq "segment") {
-			do_segment_tag($last_id,$name,$value,$line);
+		} elsif($last_type eq "relation") {
+			# Save, only add if relation has members
+			my %mt;	
+			$mt{'line'} = $line;
+			$mt{'name'} = $name;
+			$mt{'value'} = $value;
+
+			push (@rel_tags,\%mt);
 		} elsif($last_type eq "way") {
-			# Save, only add if way has segments
+			# Save, only add if way has nodes
 			my %wt;	
 			$wt{'line'} = $line;
 			$wt{'name'} = $name;
@@ -413,8 +450,6 @@ while(my $line = <XML>) {
 	}
 	elsif($line =~ /^\s*\<\/node\>/) {
 	}
-	elsif($line =~ /^\s*\<\/segment\>/) {
-	}
 	else {
 	    print STDERR "Unknown line $line\n";
 	};
@@ -426,8 +461,8 @@ if($batch_inserts) {
 	$conn->{AutoCommit} = 1;
 } else {
     enable_keys($dbtype,$conn,"nodes");
-    enable_keys($dbtype,$conn,"segments");
     enable_keys($dbtype,$conn,"ways");
+    enable_keys($dbtype,$conn,"relations");
 }
 
 # Post-processing
@@ -448,19 +483,15 @@ sub do_node_tag($ $ $ $) {
 		do_tag_append($node_tag_ps_mysql,$last_id,$name,$value,$line);
 	}
 }
-sub do_segment_tag($ $ $ $) {
-	my ($last_id,$name,$value,$line) = @_;
-
-	if ($dbtype eq 'pgsql') {
-		do_tag_add($seg_tag_ps,$last_id,$name,$value,$line);
-	} else {
-		do_tag_append($seg_tag_ps_mysql,$last_id,$name,$value,$line);
-	}
-}
 sub do_way_tag($ $ $ $) {
 	my ($last_id,$name,$value,$line) = @_;
 
 	do_tag_add($way_tag_ps,$last_id,$name,$value,$line);
+}
+sub do_relation_tag($ $ $ $) {
+	my ($last_id,$name,$value,$line) = @_;
+
+	do_tag_add($rel_tag_ps,$last_id,$name,$value,$line);
 }
 
 # Postgres style "one row per tag" tag addition
@@ -554,27 +585,6 @@ sub build_node_tag_ps_mysql($$) {
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_seg_ps($$) {
-	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO segments (id,node_a,node_b) VALUES (?,?,?)";
-	my $sth = $conn->prepare($sql);
-	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
-	return $sth;
-}
-sub build_seg_tag_ps($$) {
-	my ($dbtype,$conn) = @_;
-	my $sql = "INSERT INTO segment_tags (segment,name,value) VALUES (?,?,?)";
-	my $sth = $conn->prepare($sql);
-	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
-	return $sth;
-}
-sub build_seg_tag_ps_mysql($$) {
-	my ($dbtype,$conn) = @_;
-	my $sql = "UPDATE segments SET tags=CONCAT_WS(';',tags,?) WHERE id=?";
-	my $sth = $conn->prepare($sql);
-	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
-	return $sth;
-}
 sub build_way_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql = "INSERT INTO ways (id) VALUES (?)";
@@ -582,11 +592,11 @@ sub build_way_ps($$) {
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
 }
-sub build_way_seg_ps($$) {
+sub build_way_node_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql;
-	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_segments (way,segment,seg_order) VALUES (?,?,?)"; }
-	else					{ $sql = "INSERT INTO way_segments (id,segment_id,sequence_id) VALUES (?,?,?)"; }
+	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_nodes (way,node,node_order) VALUES (?,?,?)"; }
+	else					{ $sql = "INSERT INTO way_nodes (id,node_id,node_id) VALUES (?,?,?)"; }
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -596,6 +606,27 @@ sub build_way_tag_ps($$) {
 	my $sql;
 	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_tags (way,name,value) VALUES (?,?,?)"; }
 	else					{ $sql = "INSERT INTO way_tags (id,k,v) VALUES (?,?,?)"; }
+	my $sth = $conn->prepare($sql);
+	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
+	return $sth;
+}
+sub build_relation_ps($$) {
+	my ($dbtype,$conn) = @_;
+	my $sql = "INSERT INTO relations (id) VALUES (?)";
+	my $sth = $conn->prepare($sql);
+	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
+	return $sth;
+}
+sub build_relation_tag_ps($$) {
+	my ($dbtype,$conn) = @_;
+	my $sql = "INSERT INTO relation_tags (relation,name,value) VALUES (?,?,?)";
+	my $sth = $conn->prepare($sql);
+	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
+	return $sth;
+}
+sub build_relation_member_ps($$) {
+	my ($dbtype,$conn) = @_;
+	my $sql = "INSERT INTO relation_members (relation,type,ref,role) VALUES (?,?,?,?)";
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -634,7 +665,6 @@ CREATE TABLE node_tags (
 	node INTEGER NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	value VARCHAR(255) NOT NULL,
-	CONSTRAINT pk_node_tags PRIMARY KEY (node,name),
 	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id)
 );
 
@@ -647,7 +677,6 @@ CREATE TABLE way_tags (
 	way INTEGER NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	value VARCHAR(255) NOT NULL,
-	CONSTRAINT pk_way_tags PRIMARY KEY (way,name),
 	CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id)
 );
 
@@ -669,7 +698,6 @@ CREATE TABLE relation_tags (
 	relation INTEGER NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	value VARCHAR(255) NOT NULL,
-	CONSTRAINT pk_relation_tags PRIMARY KEY (relation,name),
 	CONSTRAINT fk_relation FOREIGN KEY (relation) REFERENCES relations (id)
 );
 

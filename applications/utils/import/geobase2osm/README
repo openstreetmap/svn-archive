@@ -1,0 +1,36 @@
+-------------
+-- STATUS: --
+-------------
+
+THIS TOOL IS NOT READY FOR PRODUCTION WORK YET. SPECIFIC RULE SETS FOR THE 
+VARIOUS PROVINCES HAVE YET TO BE DEVELOPED AND IN MANY CASES WILL BE DISTINCT
+FROM THE NATIONAL RULE SET DUE TO VARIATIONS IN HOW EACH JURISDICTION CLASSIFIES
+WHAT IS A ROAD.
+
+
+
+
+Introduction:
+-------------
+This tool is designed to take a Canadian Geobase GML file (or files) and 
+convert it to the representative OSM stucture.
+
+This tool is designed to be compatible with the 0.5 API.
+
+How to use:
+-----------
+
+python geobase2osm.py -i NRN_GEOM.gml [-a NRN_ADDR.gml] [-o output.osm] [--pretty]
+
+-i filename = The National Road Network Geometry input file
+-a filename = The National Road Network Address input file (optional)
+-o filename = The file to save to
+--pretty    = Create a indented and neatly formatted output file (can add a fair 
+bit of whitespace)
+
+Requirements:
+-------------
+Python 2.3 or higher
+cElementTree (Note: you can use the native python ElementTree but its much slower. To 
+do so change the relevant import line in the script)
+

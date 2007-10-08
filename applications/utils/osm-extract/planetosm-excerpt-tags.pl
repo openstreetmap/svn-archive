@@ -13,13 +13,6 @@
 use strict;
 use warnings;
 
-print STDERR <<EOF;
-Note that this script is not (yet?) 0.5 compatible. For bounding box excerpts
-with 0.5 style planet files, use the -b option with the polygon extract
-script!
-
-EOF
-
 ###########################################################################
 #                BEGIN USER CONFIGURATION BLOCK                           #
 ###########################################################################
@@ -27,7 +20,7 @@ EOF
 # With these, give a tag name, and optionally a tag value
 # If you only want to match on name, not value, put in undef for the value
 
-# We will get all Nodes required by Segments (and Ways)
+# We will get all Nodes required by Ways and Relations
 # We can optionally also get other Nodes, based on their tags
 my @node_sel_tags = (
 	['place','town'], 
@@ -35,16 +28,18 @@ my @node_sel_tags = (
 	['railway',undef],
 );
 
-# We will get all Segments required by Ways
-# We can optionally also get other Segments, based on their tags
-my @seg_sel_tags = ();
-
-# Specify which ways to get, based on their tags
+# We will get all Ways required by Relations
+# We can optionally also get other Ways, based on their tags
 my @way_sel_tags = (
 	['railway',undef],
 	['highway','motorway'],
 #	['waterway','river'],
 #	['natural','coastline'], # Gives really huge .osm files
+);
+
+# Specify which Relations to get, based on their tags
+my @rel_sel_tags = (
+#	['type','multipolygon'],
 );
 
 ###########################################################################
@@ -108,9 +103,9 @@ unless( -s $xml ) {
 }
 
 
-# We assume IDs to be up to 50 million
+# We assume IDs to be up to 250 million
 my $wanted_nodes = Bit::Vector->new( 250 * 1000 * 1000 );
-my $wanted_segs = Bit::Vector->new( 250 * 1000 * 1000 );
+my $wanted_ways  = Bit::Vector->new( 250 * 1000 * 1000 );
 
 
 # Sub to open xml
@@ -158,7 +153,7 @@ sub printTags {
 # Sub to process the file, against a bunch of helper subroutines
 my $pass = 0;
 sub processXML {
-	my ($nodeH, $segH, $wayH) = @_;
+	my ($nodeH, $wayH, $relH) = @_;
 	openXML();
 	$pass++;
 
@@ -169,12 +164,16 @@ sub processXML {
 	my $main_type;
 	my $wanted;
 	my @tags;
-	my @segs;
+	my @nodes;
+	my @rel_ways;
+	my @rel_nodes;
 
 	my $startNewTag = sub{
 		$wanted = 0;
 		@tags = ();
-		@segs = ();
+		@nodes = ();
+		@rel_ways = ();
+		@rel_nodes = ();
 	};
 
 	while(my $line = <XML>) {
@@ -184,15 +183,15 @@ sub processXML {
 			&$startNewTag();
 			unless($line =~ /\/>\s*$/) { next; }
 		}
-		elsif($line =~ /^\s*<segment/) {
-			$main_line = $line;
-			$main_type = "segment";
-			&$startNewTag();
-			unless($line =~ /\/>\s*$/) { next; }
-		}
 		elsif($line =~ /^\s*\<way/) {
 			$main_line = $line;
 			$main_type = "way";
+			&$startNewTag();
+			unless($line =~ /\/>\s*$/) { next; }
+		}
+		elsif($line =~ /^\s*<relation/) {
+			$main_line = $line;
+			$main_type = "relation";
 			&$startNewTag();
 			unless($line =~ /\/>\s*$/) { next; }
 		}
@@ -208,11 +207,28 @@ sub processXML {
 			my @tag = ($name,$value);
 			push @tags, \@tag;
 		}
-		elsif($line =~ /^\s*\<seg /) {
-			my ($id) = ($line =~ /^\s*\<seg id=[\'\"](\d+)[\'\"]/);
-			unless($main_type eq "way") { warn "Got seg when in $main_type\n"; next; }
-			unless($id) { warn "Invalid line '$line'"; next; }
-			push @segs, $id;
+		elsif($line =~ /^\s*\<nd /) {
+			my ($ref) = ($line =~ /^\s*\<nd ref=[\'\"](\d+)[\'\"]/);
+			unless($main_type eq "way") { warn "Got nd when in $main_type\n"; next; }
+			unless($ref) { warn "Invalid line '$line'"; next; }
+			push @nodes, $ref;
+		}
+		elsif($line =~ /^\s*\<member /) {
+			my ($type,$ref,$role) = ($line =~ /^\s*\<member type=[\'\"](.*?)[\'\"] ref=[\'\"](\d+)[\'\"] role=[\'\"](.*)[\'\"]/);
+			unless($main_type eq "relation") { warn "Got member when in $main_type\n"; next; }
+			unless($type && $ref) { warn "Invalid line '$line'"; next; }
+
+			my %m;
+			$m{'type'} = $type;
+			$m{'ref'} = $ref;
+			$m{'role'} = $role;
+			if($type eq "node") {
+				push @rel_nodes, \%m;
+			} elsif($type eq "way") {
+				push @rel_ways, \%m;
+			} else {
+				warn("Got unknown member type '$type' in '$line'"); next;
+			}
 		}
 
 		# Do the decisions when closing tags - can be self closing
@@ -225,22 +241,22 @@ sub processXML {
 				&$nodeH($id,$lat,$long,\@tags,$main_line,$line);
 			}
 		}
-		elsif($line =~ /^\s*<\/?segment/) {
-			my ($id,$from,$to) = ($main_line =~ /^\s*<segment id=['"](\d+)['"] from=['"](\d+)['"] to=['"](\d+)['"]/);
-
-			unless($id) { warn "Invalid segment line '$main_line'"; next; }
-			unless($main_type eq "segment") { warn "$main_type ended with $line"; next; }
-			if($segH) {
-				&$segH($id,$from,$to,\@tags,$main_line,$line);
-			}
-		}
 		elsif($line =~ /^\s*\<\/?way/) {
 			my ($id) = ($main_line =~ /^\s*\<way id=[\'\"](\d+)[\'\"]/);
 
 			unless($id) { warn "Invalid way line '$main_line'"; next; }
 			unless($main_type eq "way") { warn "$main_type ended with $line"; next; }
 			if($wayH) {
-				&$wayH($id,\@tags,\@segs,$main_line,$line);
+				&$wayH($id,\@tags,\@nodes,$main_line,$line);
+			}
+		}
+		elsif($line =~ /^\s*<\/?relation/) {
+			my ($id) = ($main_line =~ /^\s*\<relation id=[\'\"](\d+)[\'\"]/);
+
+			unless($id) { warn "Invalid relation line '$main_line'"; next; }
+			unless($main_type eq "relation") { warn "$main_type ended with $line"; next; }
+			if($relH) {
+				&$relH($id,\@tags,\@rel_nodes,\@rel_ways,$main_line,$line);
 			}
 		}
 		elsif($line =~ /^\s*\<\?xml/) {
@@ -268,23 +284,29 @@ sub processXML {
 }
 
 
-# First up, call for ways
-my $wayTagHelper = &buildTagMatcher(@way_sel_tags);
-processXML(undef,undef, sub {
-	my ($id,$tagsRef,$segsRef,$main_line,$line) = @_;
+# First up, call for relations
+my $relTagHelper = &buildTagMatcher(@rel_sel_tags);
+processXML(undef, undef, sub {
+	my ($id,$tagsRef,$relNodesRef,$relWaysRef,$main_line,$line) = @_;
 
 	# Test the tags, to see if we want this
-	if(&$wayTagHelper(@$tagsRef)) {
+	if(&$relTagHelper(@$tagsRef)) {
 		# Bingo, matched
-		# Record the segments we want to get
-		foreach my $seg (@$segsRef) {
-			$wanted_segs->Bit_On($seg);
+		# Record the ways and nodes we want to get
+		foreach my $wref (@$relWaysRef) {
+			$wanted_ways->Bit_On($wref->{'ref'});
+		}
+		foreach my $nref (@$relNodesRef) {
+			$wanted_nodes->Bit_On($nref->{'ref'});
 		}
 
 		# Output
 		print $main_line;
-		foreach my $seg (@$segsRef) {
-			print "    <seg id=\"$seg\" />\n";
+		foreach my $wref (@$relWaysRef) {
+			print "    <member type=\"$wref->{'type'}\" ref=\"$wref->{'ref'}\" role=\"$wref->{'role'}\" />\n";
+		}
+		foreach my $nref (@$relNodesRef) {
+			print "    <member type=\"$nref->{'type'}\" ref=\"$nref->{'ref'}\" role=\"$nref->{'role'}\" />\n";
 		}
 		&printTags(@$tagsRef);
 		print $line;
@@ -293,35 +315,37 @@ processXML(undef,undef, sub {
 	}
 });
 
-# Now for segments
-my $segTagHelper = &buildTagMatcher(@seg_sel_tags);
+# Now for ways
+my $wayTagHelper = &buildTagMatcher(@way_sel_tags);
 processXML(undef, sub {
-	my ($id,$from,$to,$tagsRef,$main_line,$line) = @_;
+	my ($id,$tagsRef,$nodesRef,$main_line,$line) = @_;
 	my $wanted = 0;
 
 	# Test the tags, to see if we want this
-	if(&$segTagHelper(@$tagsRef)) {
+	if(&$wayTagHelper(@$tagsRef)) {
 		# Bingo, matched
 		$wanted = 1;
 	} else {
-		# Does a way want it?
-		if($wanted_segs->contains($id)) {
-			# A way wants it
+		# Does a relation want it?
+		if($wanted_ways->contains($id)) {
+			# A relation wants it
 			$wanted = 1;
 		}
 	}
 
 	if($wanted) {
 		# Record the nodes we want to get
-		$wanted_nodes->Bit_On($from);
-		$wanted_nodes->Bit_On($to);
+		foreach my $node (@$nodesRef) {
+			$wanted_nodes->Bit_On($node);
+		}
 
 		# Output
 		print $main_line;
-		unless($main_line =~ /\/>/) {
-			&printTags(@$tagsRef);
-			print $line;
+		foreach my $node (@$nodesRef) {
+			print "    <nd ref=\"$node\" />\n";
 		}
+		&printTags(@$tagsRef);
+		print $line;
 	} else {
 		# Not wanted, skip
 	}
@@ -338,9 +362,9 @@ processXML(sub {
 		# Bingo, matched
 		$wanted = 1;
 	} else {
-		# Does a segment want it?
+		# Does a relation or way want it?
 		if($wanted_nodes->contains($id)) {
-			# A segment wants it
+			# Something wants it
 			$wanted = 1;
 		}
 	}

@@ -4,12 +4,6 @@
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="nodeId" match="/osm/node" use="@id"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="wayId" match="/osm/way" use="@id"/>
   <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="relId" match="/osm/relation" use="@id"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="fromto2segment" match="/osm/segment" use="concat(@from, ' ', @to)"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="tofrom2segment" match="/osm/segment" use="concat(@to, ' ', @from)"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment2way" match="/osm/way" use="seg/@id"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node-from" match="/osm/segment" use="@from"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="node-to" match="/osm/segment" use="@to"/>
-  <xsl:key xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment" match="/osm/segment" use="@id"/>
   <xslout:template name="all-tests">
     <maplint:test agent="xsltests" group="base" id="empty-tag-key" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="base" id="empty-tag-value" version="1" severity="warning"/>
@@ -22,12 +16,6 @@
     <maplint:test agent="xsltests" group="main" id="poi-without-name" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="main" id="residential-without-name" version="1" severity="warning"/>
     <maplint:test agent="xsltests" group="relations" id="member-missing" version="1" severity="error"/>
-    <maplint:test agent="xsltests" group="segments" id="multiple-segments-on-same-nodes" version="1" severity="error"/>
-    <maplint:test agent="xsltests" group="segments" id="segment-with-from-equals-to" version="1" severity="error"/>
-    <maplint:test agent="xsltests" group="segments" id="segment-without-way" version="1" severity="warning"/>
-    <maplint:test agent="xsltests" group="segments" id="tagged-segment" version="1" severity="error"/>
-    <maplint:test agent="xsltests" group="segments" id="untagged-unconnected-node" version="1" severity="warning"/>
-    <maplint:test agent="xsltests" group="segments" id="ways-with-unordered-segments" version="1" severity="error"/>
     <maplint:test agent="xsltests" group="strict" id="not-in-map_features" version="1" severity="notice"/>
   </xslout:template>
   <xslout:template name="call-tests-any">
@@ -39,14 +27,9 @@
     <xslout:call-template name="test-base-nodes-on-same-spot-node"/>
     <xslout:call-template name="test-main-place-of-worship-without-religion-node"/>
     <xslout:call-template name="test-main-poi-without-name-node"/>
-    <xslout:call-template name="test-segments-untagged-unconnected-node-node"/>
     <xslout:call-template name="test-strict-not-in-map_features-node"/>
   </xslout:template>
   <xslout:template name="call-tests-segment">
-    <xslout:call-template name="test-segments-multiple-segments-on-same-nodes-segment"/>
-    <xslout:call-template name="test-segments-segment-with-from-equals-to-segment"/>
-    <xslout:call-template name="test-segments-segment-without-way-segment"/>
-    <xslout:call-template name="test-segments-tagged-segment-segment"/>
     <xslout:call-template name="test-strict-not-in-map_features-segment"/>
   </xslout:template>
   <xslout:template name="call-tests-way">
@@ -54,7 +37,6 @@
     <xslout:call-template name="test-main-bridge-or-tunnel-without-layer-way"/>
     <xslout:call-template name="test-main-motorway-without-ref-way"/>
     <xslout:call-template name="test-main-residential-without-name-way"/>
-    <xslout:call-template name="test-segments-ways-with-unordered-segments-way"/>
     <xslout:call-template name="test-strict-not-in-map_features-way"/>
   </xslout:template>
   <xslout:template name="call-tests-relation">
@@ -101,11 +83,6 @@
                 <xsl:text>amenity=</xsl:text>
                 <xsl:value-of select="tag[@k='amenity']/@v"/>
             </maplint:result>
-        </xsl:if>
-    </xslout:template>
-  <xslout:template name="test-segments-untagged-unconnected-node-node">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(tag[@k != 'created_by'] or key('node-from', @id) or key('node-to', @id))">
-            <maplint:result ref="untagged-unconnected-node"/>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-strict-not-in-map_features-node">
@@ -530,62 +507,6 @@
 </xsl:choose>
 </xsl:for-each>
 </xslout:template>
-  <xslout:template name="test-segments-multiple-segments-on-same-nodes-segment">
-        <xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment-samedir" select="key('fromto2segment', concat(@from, ' ', @to))"/>
-        <xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="segment-otherdir" select="key('tofrom2segment', concat(@to, ' ', @from))"/>
-        <xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="sid" select="@id"/>
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="count($segment-samedir) &gt; 1">
-            <maplint:result ref="multiple-segments-on-same-nodes">
-                <xsl:text>Segments with same @from/@to:</xsl:text>
-                <xsl:for-each select="$segment-samedir">
-                    <xsl:if test="@id != $sid">
-                        <xsl:value-of select="concat(' ', @id)"/>
-                    </xsl:if>
-                </xsl:for-each>
-            </maplint:result>
-        </xsl:if>
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="count($segment-otherdir) &gt; 1">
-                <xsl:text>Segments with @from/@to reversed:</xsl:text>
-                <xsl:for-each select="$segment-otherdir">
-                    <xsl:if test="@id != $sid">
-                        <xsl:value-of select="concat(' ', @id)"/>
-                    </xsl:if>
-                </xsl:for-each>
-        </xsl:if>
-    </xslout:template>
-  <xslout:template name="test-segments-segment-with-from-equals-to-segment">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="@from=@to">
-            <maplint:result ref="segment-with-from-equals-to"/>
-        </xsl:if>
-    </xslout:template>
-  <xslout:template name="test-segments-segment-without-way-segment">
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="not(key('segment2way', @id))">
-            <maplint:result ref="segment-without-way"/>
-        </xsl:if>
-    </xslout:template>
-  <xslout:template name="test-segments-tagged-segment-segment">
-        <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
-            <xsl:choose>
-                <xsl:when test="starts-with(@k, 'tiger:')">
-                </xsl:when>
-                <xsl:when test="starts-with(@k, 'AND_')">
-                </xsl:when>
-                <xsl:when test="starts-with(@k, 'AND:')">
-                </xsl:when>
-                <xsl:when test="starts-with(@k, 'gns:')">
-                </xsl:when>
-                <xsl:when test="@k='created_by'">
-                </xsl:when>
-                <xsl:when test="@k='converted_by'">
-                </xsl:when>
-                <xsl:otherwise>
-                    <maplint:result ref="tagged-segment">
-                        <xsl:value-of select="concat(@k,'=',@v,' ')"/>
-                    </maplint:result>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:for-each>
-    </xslout:template>
   <xslout:template name="test-strict-not-in-map_features-segment">
 <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="tag">
 <xsl:choose>
@@ -650,26 +571,6 @@
   <xslout:template name="test-main-residential-without-name-way">
         <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="(tag[@k='highway' and @v='residential']) and not(tag[@k='name'])">
             <maplint:result ref="residential-without-name"/>
-        </xsl:if>
-    </xslout:template>
-  <xslout:template name="test-segments-ways-with-unordered-segments-way">
-        <xsl:variable xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="error">
-            <xsl:for-each select="seg">
-                <xsl:if test="position() != last()">
-                    <xsl:variable name="thissegment" select="key('segment',@id)"/>
-                    <xsl:variable name="next" select="position()+1"/>
-                    <xsl:variable name="nextsegment" select="key('segment',../seg[$next]/@id)"/>
-                    <xsl:variable name="to" select="$thissegment/@to"/>
-                    <xsl:variable name="from" select="$nextsegment/@from"/>
-                    <xsl:if test="$to != $from">
-                        <xsl:text>fail</xsl:text>
-                    </xsl:if>
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-
-        <xsl:if xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="$error != ''">
-            <maplint:result ref="ways-with-unordered-segments"/>
         </xsl:if>
     </xslout:template>
   <xslout:template name="test-strict-not-in-map_features-way">

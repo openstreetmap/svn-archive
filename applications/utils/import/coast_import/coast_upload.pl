@@ -14,6 +14,12 @@ use LWP::Simple;
 use osm;
 use strict;
 
+print STDERR <<EOF;
+This script is not compatible with API 0.5 and won't work any more.
+You can use coast_josm.pl and then upload the results with JOSM instead.
+EOF
+exit;
+
 # Lat, Lat, Long, Long, Sector
 my $Y1 = shift();
 my $Y2 = shift();
@@ -21,6 +27,7 @@ my $X1 = shift();
 my $X2 = shift();
 my $Sector = shift() || "20";
 
+die if($Y1==0);
 createCoasts("Data/NGA_GlobalShoreline_cd".$Sector, $Y1, $Y2, $X1, $X2);
 print "Done\n";
 
@@ -28,6 +35,7 @@ print "Done\n";
 sub createCoasts(){
   # Filename, Lat, Lat, Long, Long
   my ($Filename, $Y1, $Y2, $X1, $X2) = @_;
+die if($Y1==0);
   
   my $PW = "----"; # Password for reporting progress to the almien website
   my $ID = int(get(sprintf("http://almien.co.uk/OSM/CoastlineUpload/Update/?pg=$PW&action=start&S=%f&N=%f&W=%f&E=%f",$Y1,$Y2,$X1,$X2)));
@@ -41,9 +49,9 @@ sub createCoasts(){
   $osm->tempfiles("temp1.txt", "temp2.txt");
   
   # Coastline tags
-  my $TagDefault = "<tag k=\"source\" v=\"PGS\"/>";
-  my $TagSegment = $TagDefault."<tag k=\"natural\" v=\"coastline\"/>";
-  my $TagWay = $TagDefault."<tag k=\"natural\" v=\"coastline\"/>";
+  my $TagDefault = "";
+  my $TagSegment = "";
+  my $TagWay = $TagDefault."<tag k=\"source\" v=\"PGS\" /><tag k=\"natural\" v=\"coastline\"/>";
   
   # Logfile
   open(LOG, ">log.txt") || die("Can't create logfile");

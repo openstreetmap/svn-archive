@@ -3,8 +3,8 @@
 # This program creates an OSM file compatible with JOSM, based 
 # on PGS coastlines.
 # 
-# It can be used to create OSM 0.4 compatible files (default) 
-# or OSM 0.5 compatible files (set $five=1).
+# It can be used to create OSM 0.5 compatible files (default) 
+# or OSM 0.4 compatible files (set $five=0).
 #
 # This script also supports simplification of the PGS data; see
 # comment below for details. 
@@ -62,8 +62,8 @@ if ($bllon > $trlon)
 # values between 5 and 20 give good results. use 0 to disable simplification.
 my $max_error = 12;
 
-# change this to 1 if you need OSM 0.5 compliant output (no segments)
-my $five = 0;
+# change this to 0 if you want OSM 0.4 compliant output (with segments)
+my $five = 1;
 
 open(OSM, ">coast+$bllat+$trlat+$bllon+$trlon.osm")
     or die "Could not open osm file for writing: $!";

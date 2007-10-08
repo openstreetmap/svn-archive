@@ -8,6 +8,8 @@
 # MySQL support ($dbtype='mysql'):
 #	same table layout as main OSM server
 #
+# WARNING - not yet updated to handle the 0.5 API!
+#
 # Nick Burch
 #     v0.01   23/07/2006
 #     v0.02   26/07/2006 mysql added (Richard Fairhurst)
@@ -22,6 +24,8 @@ BEGIN {
     unshift(@INC,"~/svn.openstreetmap.org/utils/perl");
     unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/perl");
 }
+
+die("Not converted to the 0.5 API yet");
 
 use strict;
 use warnings;
@@ -616,8 +620,8 @@ sub fetch_schema($) {
 		# Note - indexes created in post process
 		return <<"EOT";
 CREATE SEQUENCE s_nodes;
-CREATE SEQUENCE s_segments;
 CREATE SEQUENCE s_ways;
+CREATE SEQUENCE s_relations;
 
 CREATE TABLE nodes (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_nodes'),
@@ -634,23 +638,6 @@ CREATE TABLE node_tags (
 	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id)
 );
 
-CREATE TABLE segments (
-	id INTEGER NOT NULL DEFAULT NEXTVAL('s_segments'),
-	node_a INTEGER NOT NULL,
-	node_b INTEGER NOT NULL,
-	CONSTRAINT pk_segments_id PRIMARY KEY (id),
-	CONSTRAINT fk_segments_a FOREIGN KEY (node_a) REFERENCES nodes (id),
-	CONSTRAINT fk_segments_b FOREIGN KEY (node_b) REFERENCES nodes (id)
-);
-
-CREATE TABLE segment_tags (
-	segment INTEGER NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	value VARCHAR(255) NOT NULL,
-	CONSTRAINT pk_segment_tags PRIMARY KEY (segment,name),
-	CONSTRAINT fk_segment FOREIGN KEY (segment) REFERENCES segments (id)
-);
-
 CREATE TABLE ways (
 	id INTEGER NOT NULL DEFAULT NEXTVAL('s_ways'),
 	CONSTRAINT pk_ways_id PRIMARY KEY (id)
@@ -664,14 +651,37 @@ CREATE TABLE way_tags (
 	CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id)
 );
 
-CREATE TABLE way_segments (
+CREATE TABLE way_nodes (
 	way INTEGER NOT NULL,
-	segment INTEGER NOT NULL,
-	seg_order INTEGER NOT NULL,
-	CONSTRAINT pk_way_segments PRIMARY KEY (way,seg_order),
+	node INTEGER NOT NULL,
+	node_order INTEGER NOT NULL,
+	CONSTRAINT pk_way_nodes PRIMARY KEY (way,node_order),
 	CONSTRAINT fk_ws_way FOREIGN KEY (way) REFERENCES ways (id),
-	CONSTRAINT fk_ws_seg FOREIGN KEY (segment) REFERENCES segments (id)
+	CONSTRAINT fk_ws_node FOREIGN KEY (node) REFERENCES nodes (id)
 );
+
+CREATE TABLE relations (
+	id INTEGER NOT NULL DEFAULT NEXTVAL('s_relations'),
+	CONSTRAINT pk_relations_id PRIMARY KEY (id)
+);
+
+CREATE TABLE relation_tags (
+	relation INTEGER NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	value VARCHAR(255) NOT NULL,
+	CONSTRAINT pk_relation_tags PRIMARY KEY (relation,name),
+	CONSTRAINT fk_relation FOREIGN KEY (relation) REFERENCES relations (id)
+);
+
+CREATE TABLE relation_members (
+	relation INTEGER NOT NULL,
+	type VARCHAR(255) NOT NULL,
+	ref INTEGER NOT NULL,
+	role VARCHAR(255) NOT NULL,
+	CONSTRAINT pk_relation_members PRIMARY KEY (relation,type,ref),
+	CONSTRAINT fk_relation FOREIGN KEY (relation) REFERENCES relations (id)
+);
+
 EOT
 	} elsif ($dbtype eq 'mysql') {
 		return "Please refer to http://trac.openstreetmap.org/browser/sql/mysql-schema.sql\n";
@@ -685,23 +695,24 @@ sub empty_tables($) {
 	if ($dbtype eq 'pgsql') {
 		# Will only work on 8.1, do deletes on earlier versions
 		return <<EOT;
-TRUNCATE TABLE way_tags, way_segments, ways, segment_tags, segments, node_tags, nodes
+TRUNCATE TABLE way_tags, way_nodes, ways, relation_tags, relation_members, relations, node_tags, nodes
 EOT
 	} else {
 		return <<EOT;
 TRUNCATE TABLE nodes
-TRUNCATE TABLE segments
 TRUNCATE TABLE ways
 TRUNCATE TABLE way_tags
-TRUNCATE TABLE way_segments
+TRUNCATE TABLE way_nodes
+TRUNCATE TABLE relations
+TRUNCATE TABLE relation_tags
+TRUNCATE TABLE relation_nodes
 TRUNCATE TABLE current_nodes
-TRUNCATE TABLE current_segments
 TRUNCATE TABLE current_ways
 TRUNCATE TABLE current_way_tags
-TRUNCATE TABLE current_way_segments
+TRUNCATE TABLE current_way_nodes
 TRUNCATE TABLE meta_nodes
-TRUNCATE TABLE meta_segments
 TRUNCATE TABLE meta_ways
+TRUNCATE TABLE meta_relations
 EOT
 	}
 }
@@ -718,32 +729,28 @@ CREATE INDEX i_node_tags_node ON node_tags(node);
 CREATE INDEX i_node_tags_name ON node_tags(name);
 CREATE INDEX i_node_tags_value ON node_tags(value);
 
-CREATE INDEX i_segments_node_a ON segments(node_a);
-CREATE INDEX i_segments_node_b ON segments(node_b);
-
-CREATE INDEX i_segment_tags_segment ON segment_tags(segment);
-CREATE INDEX i_segment_tags_name ON segment_tags(name);
-CREATE INDEX i_segment_tags_value ON segment_tags(value);
-
 CREATE INDEX i_way_tags_way ON way_tags(way);
 CREATE INDEX i_way_tags_name ON way_tags(name);
 CREATE INDEX i_way_tags_value ON way_tags(value);
 
-CREATE INDEX i_way_segments_way ON way_segments(way);
-CREATE INDEX i_way_segments_segment ON way_segments(segment);
+CREATE INDEX i_way_nodes_way ON way_nodes(way);
+CREATE INDEX i_way_nodes_segment ON way_nodes(node);
+
+CREATE INDEX i_relation_tags_relation ON relation_tags(relation);
+CREATE INDEX i_relation_tags_name ON relation_tags(name);
+CREATE INDEX i_relation_tags_value ON relation_tags(value);
+
 EOT
 	} else {
 		return <<EOT;
 UPDATE nodes SET tags=TRIM(';' FROM tags),visible=1
-UPDATE segments SET tags=TRIM(';' FROM tags),visible=1
 INSERT INTO current_ways (id,visible) SELECT id,1 FROM ways
 INSERT INTO current_way_tags (id,k,v) SELECT id,k,v FROM way_tags
-INSERT INTO current_way_segments (id,segment_id,sequence_id) SELECT id,segment_id,sequence_id FROM way_segments
-INSERT INTO current_segments (id,node_a,node_b,tags,visible) SELECT id,node_a,node_b,tags,1 FROM segments
+INSERT INTO current_way_nodes (id,node_id,sequence_id) SELECT id,node_id,sequence_id FROM way_nodes
 INSERT INTO current_nodes (id,latitude,longitude,tags,visible) SELECT id,latitude,longitude,tags,1 FROM nodes
 INSERT INTO meta_nodes (id) SELECT id FROM nodes
-INSERT INTO meta_segments (id) SELECT id FROM segments
 INSERT INTO meta_ways (id) SELECT id FROM ways
+INSERT INTO meta_relations (id) SELECT id FROM relations
 EOT
 	}
 }

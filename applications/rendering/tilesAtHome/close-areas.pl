@@ -16,17 +16,17 @@ use Math::Trig;
 use Math::Complex;
 use strict;
 
-my $segcount = 0;
 my $nodecount = 0;
 my $waycount = 0;
+my $relcount = 0;
 my $halfpi = pi()/2;
 my $twopi = pi()*2;
 
 my $LimitY = pi();
 my $LimitY2 = -pi();
 my $RangeY = $twopi;
-my $debug=0;
-my $make_open_ways=0;
+my $debug=1;
+my $make_open_ways=1;
 my $segments;
 my $nodes;
 
@@ -80,23 +80,17 @@ my $copy = 1;
 my $waybuf;
 my $is_coastline;
 my @seglist;
-my $version;
-my $last_node_ref; # for 0.5
-my $segcount = 0;  # for 0.5
+my $last_node_ref; 
+my $segcount = 0; 
 
 while(<STDIN>)
 {
     while(/(<[^'"<>]*((["'])[^\3]*?\3[^<>"']*)*>)/og)
-
     {
         my $xmltag = $1;
         if ($xmltag =~ /^\s*<node.*id=["'](\d+)['"].*lat=["']([0-9.Ee-]+)["'].*lon=["']([0-9.Ee-]+)["']/)
         {
             $nodes->{$1} = { "lat" => $2, "lon" => $3 };
-        }
-        elsif ($xmltag =~ /^\s*<segment.*id=["'](\d+)['"].*from=["']([0-9.-]+)["'].*to=["']([0-9.-]+)["']/)
-        {
-            $segments->{$1} = { "from" => $2, "to" => $3 };
         }
         elsif ($xmltag =~ /^\s*<way /)
         {
@@ -118,18 +112,7 @@ while(<STDIN>)
             
             if (/version=['"](.*?)['"]/)
             {
-                if ($1 eq "0.4") 
-                {
-                    $version = "04";
-                }
-                elsif ($1 eq "0.5")
-                {
-                    $version = "05";
-                }
-                else
-                {   
-                    die ("close-areas.pl does not support version $1");
-                }
+                die ("close-areas.pl does not support version $1") unless ($1 eq "0.5");
             }
         }
 
@@ -141,18 +124,12 @@ while(<STDIN>)
         {
             $is_coastline = 1;  
         }
-        elsif ($version eq "04" && ($xmltag =~ /^\s*<seg id=['"](\d+)["']/))
-        {
-            $waybuf .= $xmltag . "\n";
-            push(@seglist, $1);
-        }
-        elsif ($version eq "05" && ($xmltag =~ /^\s*<nd ref=['"](\d+)["']/))
+        elsif ($xmltag =~ /^\s*<nd ref=['"](\d+)["']/)
         {
             $waybuf .= $xmltag . "\n";
             if (defined($last_node_ref))
             {
-                $segments->{$segcount} = { "from" => $last_node_ref, "to" => $1 };
-                push(@seglist, $segcount++);
+                push(@seglist, { "from" => $last_node_ref, "to" => $1 });
             }
             $last_node_ref = $1;
         }
@@ -165,15 +142,13 @@ while(<STDIN>)
                 print $waybuf;
                 print $xmltag . "\n";
             }
-            # coastal ways are forgotten too, but they pass on their "coastal"
-            # information to the segments.
+            # coastal ways are forgotten too, but their segments are kept.
             else
             {
                 foreach my $seg(@seglist)
                 {
-                    $segments->{$seg}->{"coast"} = 1 if (defined($segments->{$seg}));
+                    $segments->{++$segcount} = $seg;
                 }
-                        
             }
         }
         else
@@ -189,73 +164,65 @@ while(<STDIN>)
 
 foreach my $seg(keys(%$segments))
 {
-    if ($segments->{$seg}->{"coast"})
+    my $fromnode = $nodes->{$segments->{$seg}->{"from"}};
+    my $tonode = $nodes->{$segments->{$seg}->{"to"}};
+
+    if (!(defined($fromnode) && defined($tonode)))
     {
-        my $fromnode = $nodes->{$segments->{$seg}->{"from"}};
-        my $tonode = $nodes->{$segments->{$seg}->{"to"}};
+        delete $segments->{$seg};
+        print "delete segment - incomplete $seg\n" if ($debug);
+        next;
+    }
 
-        if (!(defined($fromnode) && defined($tonode)))
+    # returns 0, 1, or 2 points.
+    # (may probably return 3 or 4 points in freak cases)
+    my $intersect = compute_bbox_intersections($fromnode, $tonode);
+    printf "intersections for $seg: %d\n", scalar(@$intersect) if ($debug);
+
+    if (!scalar(@$intersect))
+    {
+        # this segment has no intersections with the bounding box.
+        if (!node_is_inside($fromnode))
         {
+            # this segment is fully outside the bounding box, and of 
+            # no concern to us. 
             delete $segments->{$seg};
-            print "delete segment - incomplete $seg\n" if ($debug);
-            next;
+            print "delete $seg fully out\n" if ($debug);
         }
-
-        # returns 0, 1, or 2 points.
-        # (may probably return 3 or 4 points in freak cases)
-        my $intersect = compute_bbox_intersections($fromnode, $tonode);
-        printf "intersections for $seg: %d\n", scalar(@$intersect) if ($debug);
-
-        if (!scalar(@$intersect))
+    }
+    elsif (scalar(@$intersect) == 1)
+    {
+        # this segments enters OR exits the bounding box. find out which,
+        # and tag accordingly.
+        if (node_is_inside($fromnode))
         {
-            # this segment has no intersections with the bounding box.
-            if (!node_is_inside($fromnode))
-            {
-                # this segment is fully outside the bounding box, and of 
-                # no concern to us. 
-                delete $segments->{$seg};
-                print "delete $seg fully out\n" if ($debug);
-            }
-        }
-        elsif (scalar(@$intersect) == 1)
-        {
-            # this segments enters OR exits the bounding box. find out which,
-            # and tag accordingly.
-            if (node_is_inside($fromnode))
-            {
-                $segments->{$seg}->{"exit_intersect"} = $intersect->[0];
-                $segments->{$seg}->{"exit_intersect_angle"} =
-                    compute_angle_from_bbox_center($intersect->[0]);
-            }
-            else
-            {
-                $segments->{$seg}->{"entry_intersect"} = $intersect->[0];
-                $segments->{$seg}->{"entry_intersect_angle"} =
-                    compute_angle_from_bbox_center($intersect->[0]);
-            }
+            $segments->{$seg}->{"exit_intersect"} = $intersect->[0];
+            $segments->{$seg}->{"exit_intersect_angle"} =
+                compute_angle_from_bbox_center($intersect->[0]);
         }
         else
         {
-            # this segment enters AND exits the bounding box. as intersection
-            # points are ordered by distance from the segment's origin, we 
-            # assume that the very first intersection is the entry point and
-            # the very last is the exit point.
-            #   
-            # FIXME: segments like this - probably a very long one cutting right
-            # through the box or a short one cutting diagonally at one edge - 
-            # are very little tested.
+            $segments->{$seg}->{"entry_intersect"} = $intersect->[0];
             $segments->{$seg}->{"entry_intersect_angle"} =
                 compute_angle_from_bbox_center($intersect->[0]);
-            $segments->{$seg}->{"exit_intersect_angle"} =
-                compute_angle_from_bbox_center($intersect->[scalar(@$intersect)-1]);
-            $segments->{$seg}->{"entry_intersect"} = $intersect->[0];
-            $segments->{$seg}->{"exit_intersect"} = $intersect->[scalar(@$intersect)-1];
         }
     }
     else
     {
-        print "delete 2 $seg\n" if ($debug);
-        delete $segments->{$seg};
+        # this segment enters AND exits the bounding box. as intersection
+        # points are ordered by distance from the segment's origin, we 
+        # assume that the very first intersection is the entry point and
+        # the very last is the exit point.
+        #   
+        # FIXME: segments like this - probably a very long one cutting right
+        # through the box or a short one cutting diagonally at one edge - 
+        # are very little tested.
+        $segments->{$seg}->{"entry_intersect_angle"} =
+            compute_angle_from_bbox_center($intersect->[0]);
+        $segments->{$seg}->{"exit_intersect_angle"} =
+            compute_angle_from_bbox_center($intersect->[scalar(@$intersect)-1]);
+        $segments->{$seg}->{"entry_intersect"} = $intersect->[0];
+        $segments->{$seg}->{"exit_intersect"} = $intersect->[scalar(@$intersect)-1];
     }
 }
 
@@ -336,8 +303,7 @@ STRING:
         printf("LOOP\n") if ($debug);
         # loop detected. store the segment list for later output,
         # and move on trying to connect the rest.
-        push(@coastline_segments, @seglist);
-        $subpath_start->{$seglist[0]} = 1;
+        push(@coastline_segments, \@seglist);
         next;
     }
 
@@ -522,7 +488,7 @@ STRING:
     if ($found == $seglist[0])
     {
         printf("CLOSED\n") if ($debug);
-        push(@coastline_segments, @seglist);
+        push(@coastline_segments, \@seglist);
         $subpath_start->{$seglist[0]} = 1;
         next;
     }
@@ -578,7 +544,15 @@ unless( $border_crossed )
     }
   }
 }
-make_way(\@coastline_segments) if scalar(@coastline_segments);
+
+if (scalar(@coastline_segments) == 1)
+{
+    make_way($coastline_segments[0]);
+}
+else
+{
+    make_multipolygon(\@coastline_segments);
+}
 print "</osm>\n";
 
 sub make_node
@@ -593,8 +567,7 @@ sub make_seg
 {
     my ($from, $to) = @_;
     my $id = --$segcount;
-    print "<segment id='$id' from='$from' to='$to' />\n" if ($version eq "04");
-    $segments->{$id} = { "from" => $from, "to" => $to } if ($version eq "05");
+    $segments->{$id} = { "from" => $from, "to" => $to };
     return $id;
 }
 
@@ -607,31 +580,34 @@ sub make_way
     print "  <tag k='created-with' v='close-areas.pl' />\n";
     print "  <tag k='close-areas.pl:debug' v='open way' />\n" if ($open);
 
-    if ($version eq "04")
-    {
-        foreach my $seg(@$seglist) 
-        { 
-            print "  <seg id='$seg' ";
-            if ($emulate_frollo)
-            {
-                print "osma:fromCount='1' osma:toCount='1' ";
-                print "osma:sub-path='1' " if ($subpath_start->{$seg}) ;
-            }
-            print " />\n";
-        }
+    my $first = 1;
+    foreach my $seg(@$seglist) 
+    { 
+        printf "  <nd ref='%s' />\n", $segments->{$seg}->{"from"} if ($first);
+        printf "  <nd ref='%s' />\n", $segments->{$seg}->{"to"};
+        $first = 0;
     }
-    else # 0.5
-    {
-        my $first = 1;
-        foreach my $seg(@$seglist) 
-        { 
-            printf "  <nd ref='%s' />\n", $segments->{$seg}->{"from"} if ($first);
-            printf "  <nd ref='%s' />\n", $segments->{$seg}->{"to"};
-            $first = 0;
-        }
-    }
+
     print "</way>\n";
     return $id;
+}
+
+sub make_multipolygon
+{
+    my ($seglistlist) = @_;
+    my $waylist = [];
+    foreach (@$seglistlist) 
+    {
+        push(@$waylist, make_way($_));
+    }
+    my $id = --$relcount;
+    print "<relation id='$id'>\n";
+    print "  <tag k='type' v='multipolygon' />\n";
+    foreach (@$waylist) 
+    {
+        print "  <member type='way' ref='$_' role='' />\n";
+    }
+    print "</relation>\n";
 }
 
 # index lookup by Martijn van Oosterhout
@@ -685,7 +661,7 @@ sub addBlueRectangle
             $s[3-$i] = make_seg($n[($i+3)%4], $n[($i+2)%4]);
         }
     }
-    push(@coastline_segments, @s);
+    push(@coastline_segments, \@s);
     $subpath_start->{$s[0]} = 1;
 }
 

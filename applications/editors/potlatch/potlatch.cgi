@@ -119,7 +119,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.4";	// current version
+	var signature="Potlatch 0.4a";	// current version
 
 	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
 	
@@ -642,8 +642,8 @@
 
 			// Remove any POIs that exist
 			for (i in _root["map"]["ways"][result[0]].path) {
-				id=_root["map"]["ways"][result[0]].path[i];
-				if (_root.pois[id]) { removeMovieClip(_root.pois[id]); }
+				id=_root["map"]["ways"][result[0]].path[i][2];
+				if (_root.map.pois[id]) { removeMovieClip(_root.map.pois[id]); }
 			}
 		};
 		remote.call('getway',responder,this._name,wayid,baselong,basey,masterscale);
@@ -720,6 +720,7 @@
 	OSMWay.prototype.upload=function() {
 		putresponder=function() { };
 		putresponder.onResult=function(result) {
+			var i,z,nw,qway,qs;
 			nw=result[1];	// new way ID
 			if (result[0]!=nw) {
 				_root.map.ways[result[0]]._name=nw;
@@ -731,6 +732,12 @@
 			_root.map.ways[nw].ymin=result[5];
 			_root.map.ways[nw].ymax=result[6];
 			_root.map.ways[nw].uploading=false;
+
+			// check if renumbered nodes were POIs, delete the POIs if so
+			z=result[2];
+			for (i in z) {
+				if (_root.map.pois[z[i]]) { removeMovieClip(_root.map.pois[z[i]]); }
+			}
 
 			// check if renumbered nodes occur in any other ways
 			for (qway in _root.map.ways) {

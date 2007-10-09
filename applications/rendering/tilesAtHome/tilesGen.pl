@@ -766,7 +766,7 @@ sub RenderTile
     return $empty if($empty == 1);
 
     # Render it to PNG
-    printf ": Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config{"Debug"}); 
+    printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$X,$Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config{"Debug"}); 
     my $Width = 256 * (2 ** ($Zoom - $ZOrig));  # Pixel size of tiles  
     my $Height = 256; # Pixel height of tile
 

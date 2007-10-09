@@ -69,7 +69,6 @@ my $filepos_relations;
 my $input_file_handle;
 my $input_is_seekable;
 my $assume_input_sorted = 1;
-my $last_pass; 
 my $deep_relations = 1;
 my $sort_output = 0;
 my $bbox;
@@ -106,8 +105,8 @@ usage: $prog [-h] [-c number] [-i file] [-o file] [-r file] -p file [-d]
  -s       : sort output; this is only meaningful in conjunction with -r
             as output without -r will be sorted anyway.
 
-If you do not supply an input or output file input will be read from STDIN
-and output written to STDOUT.
+If you do not supply an output file, will write to STDOUT. Reading from
+STDIN is not yet supported.
 
 A polygon file should be a plain text file structured like this: Each 
 polygon begins with a number in the first column; the following rows 
@@ -146,6 +145,7 @@ GetOptions ('h|help' => \$help,
             'o|output=s' => \$outfile,
             'p|polygon=s' => \$polyfile,
             'b|bbox=s' => \$bbox,
+            's|sort' => \$sort_output,
             'r|references' => \$references,
             ) || usage ();
 
@@ -156,6 +156,16 @@ if ($help) {
 if ((!$polyfile && !$bbox) || ($polyfile && $bbox))
 {
     usage("exactly one of -b and -p must be given");
+}
+
+if ($sort_output && !$outfile)
+{
+    usage("you must specify an output file if you want sorting");
+}
+
+if (!$infile)
+{
+    usage("you must specify an input file - cannot work with stdin");
 }
 
 if ($polyfile)
@@ -419,7 +429,6 @@ sub select_nodes
         }
         $lastpos = tell($input_file_handle) if $input_is_seekable;
     }
-    $last_pass = "nodes";
 }
 
 sub select_ways
@@ -435,10 +444,6 @@ sub select_ways
     if (defined($filepos_ways) && $input_is_seekable)
     {
         seek($input_file_handle, $filepos_ways, 0);
-    }
-    elsif (!($assume_input_sorted || ($last_pass eq "nodes")))
-    {
-        reopen_input();
     }
 
     while(<$input_file_handle>) 
@@ -490,7 +495,6 @@ sub select_ways
         }
         $lastpos = tell($input_file_handle) if $input_is_seekable;
     }
-    $last_pass = "ways";
 }
 
 sub select_relations
@@ -507,10 +511,6 @@ sub select_relations
     if (defined($filepos_relations) && $input_is_seekable)
     {
         seek($input_file_handle, $filepos_relations, 0);
-    }
-    elsif (!($assume_input_sorted || ($last_pass eq "ways")))
-    {
-        reopen_input();
     }
 
     while(<$input_file_handle>) 
@@ -573,37 +573,38 @@ sub select_relations
         }
         $lastpos = tell($input_file_handle) if $input_is_seekable;
     }
-    $last_pass = "relations";
 }
 
 sub reopen_input
 {
     undef $input_file_handle;
-    if ($infile) 
+    $input_file_handle = new IO::File;
+    if ($infile =~ /\.bz2/) 
     {
-        $input_file_handle = new IO::File;
-        if ($infile =~ /\.bz2/) 
-        {
-            $input_file_handle->open("bzcat $infile |") || die "Could not bzcat file: $infile: $!";
-            $input_is_seekable = 0;
-        } 
-        else 
-        {
-            $input_file_handle->open($infile) || die "Could not open file: $infile: $!";
-            $input_is_seekable = 1;
-        }
+        $input_file_handle->open("bzcat $infile |") || die "Could not bzcat file: $infile: $!";
+        $input_is_seekable = 0;
     } 
     else 
     {
-        die "Cannot process input data from stdin in -r mode (multiple passes required)" if $references;
-        $input_file_handle = new IO::Handle;
-        $input_file_handle->fdopen(fileno(STDIN),"r") || die "Cannot read from standard input: $!";
+        $input_file_handle->open($infile) || die "Could not open file: $infile: $!";
+        $input_is_seekable = 1;
     }
 }
 
 sub end_output
 {
     print $output_file_handle_rels "</osm>\n";
-    # fixme sort
+    $output_file_handle_nodes->close();
+    $output_file_handle_ways->close();
+    $output_file_handle_rels->close();
+    if ($sort_output)
+    {
+        # fixme do this with seek from within perl
+        system("cat $outfile.w >> $outfile.n");
+        system("cat $outfile.r >> $outfile.n");
+        unlink("$outfile.w");
+        unlink("$outfile.r");
+        rename("$outfile.n","$outfile");
+    }
     exit;
 }

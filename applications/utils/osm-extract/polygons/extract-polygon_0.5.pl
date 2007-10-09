@@ -413,6 +413,10 @@ sub select_nodes
                 print $output_file_handle_nodes $_;
             }
         }
+        elsif ($copy)
+        {
+            print $output_file_handle_nodes $_;
+        }
         $lastpos = tell($input_file_handle) if $input_is_seekable;
     }
     $last_pass = "nodes";

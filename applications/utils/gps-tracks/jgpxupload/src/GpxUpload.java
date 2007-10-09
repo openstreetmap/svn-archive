@@ -25,7 +25,7 @@ import java.util.Properties;
  * @author cdaller
  */
 public class GpxUpload {
-    public static final String API_VERSION = "0.4";
+    public static final String API_VERSION = "0.5";
     private static final int BUFFER_SIZE = 65535;
     private static final String BASE64_ENC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     private static final String BOUNDARY = "----------------------------d10f7aa230e8";

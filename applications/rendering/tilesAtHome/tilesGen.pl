@@ -355,6 +355,7 @@ sub ProcessRequestsFromServer
         print STDERR "Server is speaking a different version of the protocol to us.\n";
         print STDERR "Check to see whether a new version of this program was released!\n";
         cleanUpAndDie("ProcessRequestFromServer.Request_API_version","EXIT",1,$PID);
+        ## No need to return, we exit the program at this point
     }
     
     # Information text to say what's happening
@@ -519,6 +520,7 @@ sub GenerateTileset
                         return cleanUpAndDie("GenerateTilesetSliced",$Mode,1,$PID);
                     }
                 }
+                print STDERR "\n";
             }
         }
     }
@@ -751,6 +753,8 @@ sub GenerateTileset
 #   $ZOrig, the lowest zoom level which called tileset generation
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
+#   $ImageHeight - Height of the SVG in SVG units
+#   $empty - put forward "empty" tilestripe information.
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
@@ -759,10 +763,10 @@ sub RenderTile
     return if($Zoom > $Config{"Layer.$layer.MaxZoom"});
     
     # no need to render subtiles if empty
-    return if($empty == 1);
+    return $empty if($empty == 1);
 
     # Render it to PNG
-    # printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2; 
+    printf "$Filename: Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n", $N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config{"Debug"}); 
     my $Width = 256 * (2 ** ($Zoom - $ZOrig));  # Pixel size of tiles  
     my $Height = 256; # Pixel height of tile
 

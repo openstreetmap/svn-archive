@@ -1152,7 +1152,7 @@ sub tileFilename
 {
     my($layer,$X,$Y,$Zoom) = @_;
     return(sprintf($Config{LocalSlippymap} ? "%s/%s/%d/%d/%d.png" : "%s/%s_%d_%d_%d.png",
-        $Config{LocalSlippymap} ? $Config{WorkingDirectory} : $JobDirectory,
+        $Config{LocalSlippymap} ? $Config{LocalSlippymap} : $JobDirectory,
         $Config{"Layer.$layer.Prefix"},
         $Zoom,
         $X,
@@ -1377,7 +1377,12 @@ sub MagicMkdir
     my $dir = "";
     foreach my $path(@paths)
     {
-        $dir .= "/".$path;
+        if ($dir eq "") {
+		$dir .= $path;
+	}else{
+		$dir .= "/".$path;
+	}
+
         if (!defined($madeDir{$dir}))
         {
             mkdir $dir;

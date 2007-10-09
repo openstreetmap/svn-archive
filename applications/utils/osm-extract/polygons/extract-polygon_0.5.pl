@@ -584,6 +584,11 @@ sub reopen_input
         $input_file_handle->open("bzcat $infile |") || die "Could not bzcat file: $infile: $!";
         $input_is_seekable = 0;
     } 
+    elsif ($infile =~ /\.gz/) 
+    {
+        $input_file_handle->open("zcat $infile |") || die "Could not zcat file: $infile: $!";
+        $input_is_seekable = 0;
+    } 
     else 
     {
         $input_file_handle->open($infile) || die "Could not open file: $infile: $!";

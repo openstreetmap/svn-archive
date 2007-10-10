@@ -25,8 +25,8 @@ my $twopi = pi()*2;
 my $LimitY = pi();
 my $LimitY2 = -pi();
 my $RangeY = $twopi;
-my $debug=1;
-my $make_open_ways=1;
+my $debug=0;
+my $make_open_ways=0;
 my $segments;
 my $nodes;
 
@@ -48,9 +48,6 @@ my $minlon;
 my $maxlat;
 my $maxlon;
 my $border_crossed;
-my $emulate_frollo=1; # unused for 0.5
-# hash containing information about segments that start a subpath
-my $subpath_start;
 
 if (scalar(@ARGV) == 2 or scalar(@ARGV) == 3)
 {
@@ -489,7 +486,6 @@ STRING:
     {
         printf("CLOSED\n") if ($debug);
         push(@coastline_segments, \@seglist);
-        $subpath_start->{$seglist[0]} = 1;
         next;
     }
 
@@ -566,7 +562,7 @@ sub make_node
 sub make_seg
 {
     my ($from, $to) = @_;
-    my $id = --$segcount;
+    my $id = ++$segcount;
     $segments->{$id} = { "from" => $from, "to" => $to };
     return $id;
 }
@@ -662,7 +658,6 @@ sub addBlueRectangle
         }
     }
     push(@coastline_segments, \@s);
-    $subpath_start->{$s[0]} = 1;
 }
 
 # this takes two points (hashes with lat/lon keys) as arguments and returns 

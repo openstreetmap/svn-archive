@@ -206,6 +206,81 @@ sub DownloadFile
 }
 
 #-----------------------------------------------------------------------------
+# Merge multiple OSM files into one, making sure that elements are present in
+# the destination file only once even if present in more than one of the input
+# files.
+# 
+# This has become necessary in the course of supporting maplint, which would
+# get upset about duplicate objects created by combining downloaded stripes.
+#-----------------------------------------------------------------------------
+sub mergeOsmFiles
+{
+    my ($destFile, $sourceFiles) = @_;
+    my $existing = {};
+
+    # If there's only one file, just copy the input to the output
+    if( scalar(@$sourceFiles) == 1 )
+    {
+      copy $sourceFiles->[0], $destFile;
+      killafile ($sourceFiles->[0]) if (!$Config{Debug});
+      return;
+    }
+    
+    open (DEST, "> $destFile");
+
+    print DEST qq(<?xml version="1.0" encoding="UTF-8"?>\n);
+    my $header = 0;
+
+    foreach my $sourceFile(@{$sourceFiles})
+    {
+        open(SOURCE, $sourceFile);
+        while(<SOURCE>)
+        {
+            next if /^\s*<\?xml/;
+            # We want to copy the version number, but only the first time (obviously)
+            # Handle where the input doesn't have a version
+            if (/^\s*<osm.*(?:version=([\d.'"]+))?/)
+            {
+              if( not $header )
+              {
+                my $version = $1 || "'".$Config{"OSMVersion"}."'";
+                print DEST qq(<osm version=$version generator="tilesGen mergeOsmFiles">\n);
+                $header = 1;
+              }
+              next;
+            }
+            last if (/^\s*<\/osm>/);
+            if (/^\s*<(node|segment|way|relation) id="(\d+)".*(.)>/)
+            {
+                my ($what, $id, $slash) = ($1, $2, $3);
+                my $key = substr($what, 0, 1) . $id;
+                if (defined($existing->{$key}))
+                {
+                    # object exists already. skip!
+                    next if ($slash eq "/");
+                    while(<SOURCE>)
+                    {
+                        last if (/^\s*<\/$what>/);
+                    }
+                    next;
+                }
+                else
+                {
+                    # object didn't exist, note
+                    $existing->{$key} = 1;
+                }
+            }
+            print DEST;
+        }
+        close(SOURCE);
+        killafile ($sourceFile) if (!$Config{Debug});
+    }
+    print DEST "</osm>\n";
+    close(DEST);
+}
+
+
+#-----------------------------------------------------------------------------
 # Clean up temporary files before exit, then exit or return with error 
 # depending on mode (loop, xy, ...)
 #-----------------------------------------------------------------------------

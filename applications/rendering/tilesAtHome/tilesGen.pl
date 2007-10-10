@@ -410,7 +410,7 @@ sub PutRequestBackToServer
 #-----------------------------------------------------------------------------
 # Render a tile (and all subtiles, down to a certain depth)
 #-----------------------------------------------------------------------------
-sub GenerateTileset 
+sub GenerateTileset ## TODO: split some subprocesses to own subs
 {
     my ($X, $Y, $Zoom) = @_;
     
@@ -424,15 +424,15 @@ sub GenerateTileset
     
     statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     
-    if ( ($X < 0) or ($X > 4095) or ($Y < 0) or ($Y > 4095) )
+    my $maxCoords = (2 ** $Zoom - 1);
+    
+    if ( ($X < 0) or ($X > $maxCoords) or ($Y < 0) or ($Y > $maxCoords) )
     {
         #maybe do something else here
-        die("\n Coordinates out of bounds (0..4095)\n");
+        die("\n Coordinates out of bounds (0..$maxCoords)\n");
     }
     
     $currentSubTask = "Preproc";
-    
-    my $DataFile = "data-$PID.osm";
     
     # Adjust requested area to avoid boundary conditions
     my $N1 = $N + ($N-$S)*$Config{BorderN};
@@ -457,6 +457,8 @@ sub GenerateTileset
     #------------------------------------------------------
     # Download data
     #------------------------------------------------------
+    my $DataFile = "data-$PID.osm";
+    
     killafile($DataFile);
     my $URLS = sprintf("%s%s/map?bbox=%s",
       $Config{APIURL},$Config{OSMVersion},$bbox);

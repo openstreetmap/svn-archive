@@ -49,7 +49,10 @@
        printf("Database error %s\n", mysql_error());
        exit;
      }
+     print "OK\n";
+  } else {
+     print "Already in queue\n";
   }
   
-  print "OK\n";
+ 
 ?>

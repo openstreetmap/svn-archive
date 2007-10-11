@@ -26,9 +26,9 @@ cp ../../plugins/mappaint/mappaint.jar .
 cp ../../plugins/namefinder/namefinder.jar .
 # wget --N http://svn.openstreetmap.org/applications/editors/josm/plugins/namefinder/namefinder.jar
 #cp ../../plugins/osmarender/osmarender.jar .
-wget -N http://josm.openstreetmap.de/download/plugins/osmarender.jar
-#cp ../../plugins/validator/validator.jar .
-wget -N http://personales.ya.com/osmfrsantos/validator/latest/validator.jar
+#wget -N http://josm.openstreetmap.de/download/plugins/osmarender.jar
+cp ../../plugins/validator/validator.jar .
+#wget -N http://personales.ya.com/osmfrsantos/validator/latest/validator.jar
 #cp ../../plugins/wmsplugin/wmsplugin.jar .
 wget -N http://chippy2005.googlepages.com/wmsplugin.jar
 

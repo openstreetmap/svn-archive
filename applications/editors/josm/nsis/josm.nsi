@@ -432,8 +432,7 @@ SectionIn 1 2
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
-;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator"
 SectionEnd
 
 

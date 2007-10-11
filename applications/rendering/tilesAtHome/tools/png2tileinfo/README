@@ -27,3 +27,17 @@ changed and the .dat file created!)
 Please note that the code is picky about the colours used. Nothing
 but "pure" colors will do - blue has to be 0,0,255, green has to be
 0,255,0, black is 0,0,0 and white 255,255,255.
+
+Usage:
+% cd applications/rendering/tilesAtHome/tools/png2tileinfo
+% svn update
+% perl png2tileinfo.pl check 3762 2471
+oceantiles_12.png(3762, 2471) = 3 (mixed)
+% perl png2tileinfo.pl set 3762 2471 land
+% perl png2tileinfo.pl
+
+[wait until file generated...]
+
+% cp oceantiles_12.dat ../..
+% cd ../..
+% svn commit

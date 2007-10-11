@@ -357,14 +357,6 @@ SetOutPath $APPDATA\JOSM\plugins
 File "downloads\validator.jar"
 SectionEnd
 
-Section "tways" SecTWaysPlugin
-;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext all
-SetOutPath $APPDATA\JOSM\plugins
-File "downloads\tways-0.2.jar"
-SectionEnd
-
 SectionGroupEnd	; "Plugins"
 
 Section "Start Menu Entry" SecStartMenu
@@ -440,7 +432,8 @@ SectionIn 1 2
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator,tways-0.2"
+;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder"
 SectionEnd
 
 
@@ -460,7 +453,6 @@ Delete "$INSTDIR\plugins\osmarender.jar"
 Delete "$INSTDIR\plugins\mappaint.jar"
 Delete "$INSTDIR\plugins\namefinder.jar"
 Delete "$INSTDIR\plugins\validator.jar"
-Delete "$INSTDIR\plugins\tways-0.2.jar"
 IfErrors 0 NoJOSMErrorMsg
 	MessageBox MB_OK "Please note: josm.exe could not be removed, it's probably in use!" IDOK 0 ;skipped if josm.exe removed
 	Abort "Please note: josm.exe could not be removed, it's probably in use! Abort uninstall process!"
@@ -512,7 +504,6 @@ Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
-Delete "$APPDATA\JOSM\plugins\tways-0.2.jar"
 RMDir "$APPDATA\JOSM\plugins\osmarender"
 RMDir "$APPDATA\JOSM\plugins\validator"
 RMDir "$APPDATA\JOSM\plugins"
@@ -541,7 +532,6 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} "Validates edited data if it conforms to common suggestions."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecTwaysPlugin} "Mass wayfication of segments."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecStartMenu} "Add a JOSM start menu entry."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} "Add a JOSM desktop icon."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecQuickLaunchIcon} "Add a JOSM icon to the quick launch bar."

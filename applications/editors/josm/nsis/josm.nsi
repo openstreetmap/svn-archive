@@ -447,11 +447,13 @@ SetShellVarContext all
 
 Delete "$INSTDIR\josm.exe"
 Delete "$INSTDIR\uninstall.exe"
-Delete "$INSTDIR\plugins\wmsplugin.jar"
-Delete "$INSTDIR\plugins\osmarender.jar"
-Delete "$INSTDIR\plugins\mappaint.jar"
-Delete "$INSTDIR\plugins\namefinder.jar"
-Delete "$INSTDIR\plugins\validator.jar"
+Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
+Delete "$APPDATA\JOSM\plugins\osmarender.jar"
+Delete "$APPDATA\JOSM\plugins\mappaint.jar"
+Delete "$APPDATA\JOSM\plugins\namefinder.jar"
+Delete "$APPDATA\JOSM\plugins\validator.jar"
+RMDir "$APPDATA\JOSM\plugins"
+RMDir "$APPDATA\JOSM"
 IfErrors 0 NoJOSMErrorMsg
 	MessageBox MB_OK "Please note: josm.exe could not be removed, it's probably in use!" IDOK 0 ;skipped if josm.exe removed
 	Abort "Please note: josm.exe could not be removed, it's probably in use! Abort uninstall process!"

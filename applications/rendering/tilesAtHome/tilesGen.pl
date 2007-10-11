@@ -34,6 +34,11 @@ use strict;
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 my %EnvironmentInfo = CheckConfig(\%Config);
 
+resetFault("fatal");
+resetFault("nodata");
+resetFault("utf8");
+resetFault("inkscape");
+
 # Get version number from version-control system, as integer
 my $Version = '$Revision$';
 $Version =~ s/\$Revision:\s*(\d+)\s*\$/$1/;
@@ -182,6 +187,18 @@ elsif ($Mode eq "loop")
     
     while(1) 
     {
+        if (getFault("fatal") > 0)
+        {
+            cleanUpAndDie("Fatal error occurred during loop","EXIT",1,$PID);
+        }
+        elsif (getFault("nodata") > 5)
+        {
+            cleanUpAndDie("Five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        }
+        elsif (getFault("inkscape") > 5)
+        {
+            cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
+        }
         reExecIfRequired();
         my ($did_something, $message) = ProcessRequestsFromServer();
         uploadIfEnoughTiles();
@@ -498,6 +515,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 # i.e. tell the server the job hasn't been done yet)
                 PutRequestBackToServer($X,$Y,"NoData");
                 foreach my $file(@tempfiles) { killafile($file); }
+                addFault("nodata",1);
                 return cleanUpAndDie("GenerateTileset",$Mode,1,$PID);
             }
             else
@@ -519,11 +537,16 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         statusMessage("No data here (sliced)...",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
                         PutRequestBackToServer($X,$Y,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
+                        addFault("nodata",1);
                         return cleanUpAndDie("GenerateTilesetSliced",$Mode,1,$PID);
                     }
                 }
                 print STDERR "\n";
             }
+        }
+        else
+        {
+            resetFault("nodata"); #reset to zero if data downloaded
         }
     }
 
@@ -544,10 +567,11 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
       {
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         PutRequestBackToServer($X,$Y,"BadUTF8");
+        addFault("utf8",1);
         return cleanUpAndDie("GenerateTileset.UTF8",$Mode,1,$PID);
       }
     }
-
+    resetFault("utf8"); #reset to zero if no UTF8 errors found.
     #------------------------------------------------------
     # Handle all layers, one after the other
     #------------------------------------------------------
@@ -1062,9 +1086,10 @@ sub svg2png
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,"BadSVG");
+        addFault("inkscape",1);
         return cleanUpAndDie("svg2png",$Mode,3,$PID);
     }
-
+    resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     killafile($stdOut);
     
     my $ReturnValue = splitImageX($TempFile, $layer, $ZOrig, $X, $Y, $Zoom, $Ytile); # returns true if tiles were all empty
@@ -1242,7 +1267,7 @@ sub splitImageX
             # $SubImage->trueColorToPalette($dither,$numcolors);
 
             # Store the tile
-            statusMessage(" -> $Basename", $Config{Verbose}, 0) if ($Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+            statusMessage(" -> $Basename", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0) if ($Config{Verbose});
             WriteImage($SubImage,$Filename2);
 #-----------------------------------------------------------------------------
 # Run pngcrush on each split tile, then delete the temporary cut file

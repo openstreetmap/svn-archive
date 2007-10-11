@@ -9,6 +9,8 @@ my $lastmsglen = 0;
 my $idleFor = 0;
 my $idleSeconds = 0;
 
+my %faults; #variable to track non transient errors
+
 #-----------------------------------------------------------------------------
 # Prints status message without newline, overwrites previous message
 # (if $newline set, starts new line after message)
@@ -108,6 +110,30 @@ sub getIdle
 
 
 #-----------------------------------------------------------------------------
+# fault handling
+#-----------------------------------------------------------------------------
+sub addFault
+{
+    my ($faulttype,$diff) = @_;
+    $diff = 1 if (not $diff);
+    $faults{$faulttype} += $diff;
+    return $faults{$faulttype};
+}
+
+sub getFault
+{
+    my ($faulttype) = @_;
+    return $faults{$faulttype};
+}
+
+sub resetFault
+{
+    my ($faulttype) = @_;
+    $faults{$faulttype} = 0;
+    return "0 but true";
+}
+
+#-----------------------------------------------------------------------------
 # Run a shell command. Suppress command's stderr output unless it terminates
 # with an error code.
 #
@@ -156,6 +182,7 @@ sub runCommand
                 if (grep(/preferences.xml/,$_))
                 {
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
+                    addFault("fatal",1); ## this error is fatal because it needs human intervention before processing can continue
                 }
                 if (grep(/infinite template recursion/,$_))
                 {

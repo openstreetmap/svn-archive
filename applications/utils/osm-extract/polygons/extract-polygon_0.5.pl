@@ -88,7 +88,7 @@ sub usage
 This Perl script will process a planet.osm file and extract the nodes,
 ways, and relations falling within a polygon.
 
-usage: $prog [-h] [-c number] [-i file] [-o file] [-r file] -p file [-d]
+usage: $prog [-h] [-a number] [-c number] [-i file] [-o file] [-r file] -p file [-d]
 
  -h       : print ths help message and exit.
  -a num   : ignore sub-polygons of area "num" or smaller (in degrees squared)
@@ -551,7 +551,7 @@ sub select_relations
                     foreach my $mmb(@$members_in_current_relation)
                     {
                         my ($t, $r) = split(":", $mmb);
-                        $refs->{$t}->Bit_On($r);
+                        $refs->{$t}->Bit_On($r) if defined($refs->{$t});
                     }
                 }
             }

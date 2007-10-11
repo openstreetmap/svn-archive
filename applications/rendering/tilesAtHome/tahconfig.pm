@@ -42,7 +42,7 @@ sub ReadConfig{
 sub ApplyConfigLogic{
     my $Config = shift();
 
-    $Config->{OsmUsername} =~ s/@/%40/;  # Encode the @-symbol in OSM passwords
+    $Config->{"OsmUsername"} =~ s/@/%40/;  # Encode the @-symbol in OSM passwords
     if (!defined($Config->{"Layers"}))
     {
         $Config->{"Layers"} = "default";

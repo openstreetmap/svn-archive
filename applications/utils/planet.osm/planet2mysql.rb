@@ -1,12 +1,11 @@
 #!/usr/bin/ruby -w
 
 $: << File.dirname(__FILE__)+"/../osm-data/lib"
-#$: << File.dirname(__FILE__)+"/../../www.openstreetmap.org/ruby/api"
+$: << File.dirname(__FILE__)+"/../../www.openstreetmap.org/ruby/api"
 
 require 'mysql'
 require 'time'
-#require 'osm/servinfo.rb'
-require 'servinfo.rb'
+require 'osm/servinfo.rb'
 require 'cgi'
 
 require 'osm/data'

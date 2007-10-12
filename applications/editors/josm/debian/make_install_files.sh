@@ -24,10 +24,10 @@ plugin_dir="$dst_path/usr/lib/josm/plugins"
 mkdir -p "$plugin_dir"
 
 mkdir -p "$dst_path/usr/share/josm" 
-( # map-icons to be symlinked
-    cd  "$dst_path/usr/share/josm" 
-    ln -s ../map-icons/classic.small images
-)
+#( # map-icons to be symlinked
+#    cd  "$dst_path/usr/share/josm" 
+#    ln -s ../map-icons/classic.small images
+#)
 mkdir -p "$dst_path/usr/lib/josm"
 # ------------------------------------------------------------------
 # Compile the Jar Files 
@@ -64,13 +64,13 @@ plugins=${plugins%,}
 echo "Activated Plugins:"
 echo "$plugins"
 
-mkdir -p "$jar_path/speller"
-cp ../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
+#mkdir -p "$jar_path/speller"
+#cp ../utils/planet.osm/java/speller/words.cfg "$jar_path/speller/"
 
 # Maybe this has to be removed, since it is inside the plugin?
-cp plugins/mappaint/styles/osmfeatures/elemstyles.xml "$jar_path/elemstyles.xml"
-mkdir -p "$jar_path/plugins/mappaint/standard"
-cp plugins/mappaint/styles/osmfeatures/elemstyles.xml "$jar_path/plugins/mappaint/standard/elemstyles.xml"
+#cp plugins/mappaint/styles/osmfeatures/elemstyles.xml "$jar_path/elemstyles.xml"
+#mkdir -p "$jar_path/plugins/mappaint/standard"
+#cp plugins/mappaint/styles/osmfeatures/elemstyles.xml "$jar_path/plugins/mappaint/standard/elemstyles.xml"
 # ------------------------------------------------------------------
 cat > "$bin_path/josm" <<EOF
 #!/bin/sh

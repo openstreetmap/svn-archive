@@ -2,7 +2,7 @@
 #define _GNU_SOURCE
 #endif
 
-#undef USE_ICONV
+#define USE_ICONV
 
 #include <stdio.h>
 #include <stdlib.h>

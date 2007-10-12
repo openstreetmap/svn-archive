@@ -117,9 +117,11 @@ sub LoadOSM_segment_csv($)
 	    "See --help for more info"  unless $fh;
 
 	while ( my $line = $fh ->getline() ) {
+	    chomp $line;
 	    my @segment;
 	    my $dummy;
 	    ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
+#	    print STDERR Dumper(\@segment);
 	    $segment[4] = angle_north_relative(
 					    { lat => $segment[0] , lon => $segment[1] },
 					    { lat => $segment[2] , lon => $segment[3] });

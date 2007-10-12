@@ -48,9 +48,12 @@ sub read_track_Netmonitor($) {
 
 	my ($time,$networkstate,$lon,$lat,$dummy1,$dummy2,$dummy3) = split(/[\t\ \s]+/,$line);
 	my $alt=0;
-	next unless $lat && $lon;
-	next if ( $lat eq "---.-----" ) || ($lon eq "---.-----");
-	next if ( $lat eq "-" ) || ($lon eq "-");
+	if ( ( !( $lat && $lon) )
+	     || ( $lat eq "---.-----" ) || ($lon eq "---.-----")
+	     || ( $lat eq "-" ) || ($lon eq "-") ) {
+	    # XXXX: Maybe we can split the track here if this happens
+	    next;
+	}
 
 	$time =~ s/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)/$1-$2-$3 $4:$5:$6/;
 

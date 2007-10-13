@@ -1,8 +1,7 @@
 <project name="osmarender" default="install" basedir=".">
 
 	<property name="josm" location="../../core/dist/josm-custom.jar" />
-	<!--<property name="osmarender" location="../../../osmarender" />-->
-	<property name="osmarender" location="../../../../rendering/osmarender" />
+	<property name="rendering" location="../../../../rendering" />
 
 	<target name="compile">
 		<mkdir dir="bin"></mkdir>
@@ -13,12 +12,9 @@
 	</target>
 
 	<target name="build"  depends="compile">
-		<copy todir="bin">
-			<fileset dir="${osmarender}">
-				<include name="osmarender.xsl"/>
-				<include name="osm-map-features.xml"/>
-			</fileset>
-		</copy>
+		<copy todir="bin" file="${rendering}/osmarender6/osmarender.xsl"/>
+		<copy tofile="bin/osm-map-features.xml"
+			file="${rendering}/osmarender5/osm-map-features-z17.xml"/>
 		<jar destfile="dist/osmarender.jar" basedir="bin">
 			<manifest>
 				<attribute name="Plugin-Class" value="OsmarenderPlugin" />

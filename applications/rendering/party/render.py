@@ -19,26 +19,28 @@ from os.path import join, getsize
 deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
+def qnth(sample, n): # http://en.literateprograms.org/Nth_element_%28Python%29
+    pivot = sample[0]
+    below = [s for s in sample if s < pivot]
+    above = [s for s in sample if s > pivot]
+    i, j = len(below), len(sample)-len(above)
+    
+    if n < i:      return qnth(below, n)
+    elif n >= j:   return qnth(above, n-j)
+    else:          return pivot
+    
 def median(a,k):
-  num = len(a)
-  for i in range(1,num):
-    minIndex = i
-    minValue = a[i]
-    for j in range(i+1, num):
-      if(a[j] < minValue):
-        minIndex = j
-        minValue = a[j]
-    # swap a[i] and a[minIndex]
-    temp = a[i]
-    a[i] = a[minIndex]
-    a[minIndex] = temp
-  return a[k]
+  return(qnth(a,k))
 
-if(0):
+if(0): # test accuracy of median()
+  print median([10,100,9,90,50,5], 0)
+  sys.exit();
+  
+if(0): # test speed of median()
   a=[]
-  for i in range(5000):
-    a.append(random.randint(1,10000))
-  print median(a, 400)
+  for i in range(50000):
+    a.append(random.random())
+  print median(a, 40000)
   sys.exit();
 
 class TracklogInfo(saxutils.DefaultHandler):
@@ -145,7 +147,7 @@ class TracklogInfo(saxutils.DefaultHandler):
       
       
 Thingy = TracklogInfo()
-directory = "eg/etienne"
+directory = "eg/"
 print "Loading data"
 Thingy.walkDir(directory)
 print "Calculating extents"

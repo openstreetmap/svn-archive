@@ -52,6 +52,12 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.dLon = self.E - self.W
     self.ratio = self.dLon / self.dLat
     self.debug()
+  def valid(self):
+    if(self.ratio == 0.0):
+      return(0)
+    if(self.dLat <= 0.0 or self.dLon <= 0):
+      return(0)
+    return(1)
 
   def calculateMean(self):
     sumLat = 0
@@ -71,15 +77,17 @@ class TracklogInfo(saxutils.DefaultHandler):
       for y in x:
         dLat = y[0] - self.lat
         dLon = y[1] - self.lon
-        sumDLatSq = sumDLatSq + dLat * dLat
-        sumDLonSq = sumDLonSq + dLon * dLon
+        sumDLatSq = sumDLatSq + dLat ** 2
+        sumDLonSq = sumDLonSq + dLon ** 2
+        #print "%f,%f" %(dLat,dLon)
     self.sdLat = sqrt(sumDLatSq)
     self.sdLon = sqrt(sumDLonSq)
+    print "Variance = %f,%f\nSD = %f,%f" % (sumDLatSq, sumDLonSq, self.sdLat, self.sdLon)
   def debug(self):
+    print "%d points" % self.countPoints
     print "Pos: %f, %f +- %f, %f" % (self.lat,self.lon, self.sdLat,self.sdLon)
     print "Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
     print "Ratio: %f" % self.ratio
-    pass
   def createImage(self,width,height,surface):
     self.width = width
     self.height = height
@@ -91,22 +99,19 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.set_source_rgb(0,0,0)
     ctx.rectangle(border,border,self.width-2*border, self.height-2*border)
     ctx.stroke()
-  def valid(self):
-    return(1)
   def drawTracklogs(self):
     for a in self.points.values():
-      print "*"
       for b in a:
         ctx = cairo.Context(surface)
         x = self.xpos(b[1])
         y = self.ypos(b[0])
-        ctx.arc(x, y, 1.0, 0, 2*M_PI);
+        ctx.arc(x, y, 2.0, 0, 2*M_PI);
         ctx.fill();
     pass
   def xpos(self,lon):
     return(self.width * (lon - self.W) / self.dLon)
   def ypos(self,lat):
-    return(self.height * (lat - self.S) / self.dLat)
+    return(self.height * (1 - (lat - self.S) / self.dLat))
       
       
 Thingy = TracklogInfo()

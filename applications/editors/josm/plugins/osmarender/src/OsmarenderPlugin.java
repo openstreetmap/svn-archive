@@ -19,9 +19,9 @@ import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.Segment;
 import org.openstreetmap.josm.data.osm.Way;
-import org.openstreetmap.josm.data.osm.visitor.AddVisitor;
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.osm.visitor.CollectBackReferencesVisitor;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.preferences.PreferenceDialog;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
@@ -43,30 +43,22 @@ public class OsmarenderPlugin extends Plugin {
             LatLon bottomLeft = Main.map.mapView.getLatLon(0,Main.map.mapView.getHeight());
             LatLon topRight = Main.map.mapView.getLatLon(Main.map.mapView.getWidth(), 0);
             Bounds b = new Bounds(bottomLeft, topRight);
-            Collection<Node> nodes = new HashSet<Node>();
+			CollectBackReferencesVisitor backRefsV =
+				new CollectBackReferencesVisitor(Main.ds, true);
             DataSet fromDataSet = new DataSet();
-            AddVisitor adder = new AddVisitor(fromDataSet);
             for (Node n : Main.ds.nodes) {
                 if (n.coor.isWithin(b)) {
-                    n.visit(adder);
-                    nodes.add(n);
+					fromDataSet.nodes.add(n);
+                    n.visit(backRefsV);
                 }
             }
-            Collection<Segment> segments = new HashSet<Segment>();
-            for (Segment s : Main.ds.segments) {
-                if (nodes.contains(s.from) || nodes.contains(s.to)) {
-                    s.visit(adder);
-                    segments.add(s);
-                }
-            }
-            for (Way w : Main.ds.ways) {
-                for (Segment s : w.segments) {
-                    if (segments.contains(s)) {
-                        w.visit(adder);
-                        break;
-                    }
-                }
-            }
+			for (OsmPrimitive p : new HashSet<OsmPrimitive>(backRefsV.data)) {
+				if (p instanceof Way) {
+					backRefsV.data.addAll(((Way) p).nodes);
+				}
+			}
+			for (OsmPrimitive p : backRefsV.data)
+				fromDataSet.addPrimitive(p);
 
             String firefox = Main.pref.get("osmarender.firefox", "firefox");
             try {

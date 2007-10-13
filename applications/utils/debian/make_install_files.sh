@@ -185,3 +185,9 @@ cp ./osmosis/dist/result/osmosis.jar $dst_path/usr/local/share/osmosis/
 
 
 cp debian/osmosis.sh "$bin_path/osmosis"
+
+
+#########################################################
+# Mapnik installation tool
+#########################################################
+cp ../rendering/mapnik/mapnik-osm-updater.sh "$bin_path"

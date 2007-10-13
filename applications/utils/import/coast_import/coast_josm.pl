@@ -100,8 +100,15 @@ for (my $i=1; $i<=$shapefile->shapes(); $i++)
         my $lon = sprintf("%.7f", $point->X());
         my $lat = sprintf("%.7f", $point->Y());
 
-        if (($lat > $bllat) && ($lat < $trlat) && ($lon > $bllon) && ($lon < $trlon))
+        if (($lat > $bllat) && ($lat < $trlat) && ($lon > $bllon) && ($lon < $trlon) && scalar @{$currentpoints} < 249)
         {
+            push(@$currentpoints, [$lat,$lon]);
+        }
+        elsif (($lat > $bllat) && ($lat < $trlat) && ($lon > $bllon) && ($lon < $trlon) && scalar @{$currentpoints} == 249)
+        {
+            push(@$currentpoints, [$lat,$lon]);
+            write_way($currentpoints);
+            $currentpoints = [];
             push(@$currentpoints, [$lat,$lon]);
         }
         else

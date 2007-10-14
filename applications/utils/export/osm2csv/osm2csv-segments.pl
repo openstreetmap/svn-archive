@@ -236,7 +236,7 @@ sub parse_line(){
 	my $from = $2;
 	my $to   = $3;
 	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
-	    printf $FH_OSM "%s,%s\n",$from,$to;
+	    printf $FH_OSM "%s,%s\n",$Nodes{$from},$Nodes{$to};
 	    $Stats{"segment read"}++;
 	    $Stats{"elem read"}++;
 	}

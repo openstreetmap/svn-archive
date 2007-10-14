@@ -630,7 +630,6 @@ sub split_tracks($$){
 
     my $start_time=time();
 
-    my $filename     = $tracks->{filename};
     my $filename=$tracks->{filename};
     if ( $out_raw_gpx && $DEBUG >3 ){
 	my $new_gpx_file = "$filename-raw-pre-splittracks.gpx";

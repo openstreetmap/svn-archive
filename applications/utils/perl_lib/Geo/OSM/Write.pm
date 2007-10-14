@@ -23,7 +23,7 @@ use Utils::Math;
 sub tags2osm($){
     my $obj = shift;
     
-    my $erg = "\n";
+    my $erg = "";
     for my $k ( keys %{$obj->{tag}} ) {
 	my $v = $obj->{tag}{$k};
 	if ( ! defined $v ) {
@@ -72,7 +72,7 @@ sub write_osm_file($$) { # Write an osm File
     $fh->binmode(':utf8');
 
     print $fh "<?xml version='1.0' encoding='UTF-8'?>\n";
-    print $fh "<osm version=\'0.4\' generator=\'".$osm->{tool}."\'>\n";
+    print $fh "<osm version=\'0.5\' generator=\'".$osm->{tool}."\'>\n";
     # print $fh "   <bound box=\"-90,-180,90,180\" origin=\"OSM-perl-writer\" />\n";
 
     # --- Nodes
@@ -90,7 +90,7 @@ sub write_osm_file($$) { # Write an osm File
 	    if defined $node->{timestamp};
 	print $fh " lat=\'$lat\' ";
 	print $fh " lon=\'$lon\' ";
-	print $fh ">\t";
+	print $fh ">\n";
 	print $fh tags2osm($node);
 	print $fh "  </node>\n";
 	$count_nodes++;
@@ -121,13 +121,12 @@ sub write_osm_file($$) { # Write an osm File
 	print $fh " timestamp=\'".$way->{timestamp}."\'" 
 	    if defined $way->{timestamp};
 	print $fh ">";
-	print $fh tags2osm($way);
 	
-	for my $seg_id ( @{$way->{seg}} ) {
-	    next unless $seg_id;
-	    print $fh "    <seg id=\'$seg_id\'";
-	    print $fh " />\n";
+	for my $way_nd ( @{$way->{nd}} ) {
+	    next unless $way_nd;
+	    print $fh "    <nd ref=\'$way_nd\' />\n";
 	}
+	print $fh tags2osm($way);
 	print $fh "  </way>\n";
 	$count_ways++;
 	

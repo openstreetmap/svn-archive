@@ -89,7 +89,6 @@ class TracklogInfo(saxutils.DefaultHandler):
         sumLon = sumLon + y[1]
     self.lat = sumLat / self.countPoints
     self.lon = sumLon / self.countPoints
-    
   def calculateExtents(self,radius):
     c = 40000.0 # circumference of earth, km
     self.sdLat = (radius / (c / M_PI)) / deg2rad
@@ -103,25 +102,43 @@ class TracklogInfo(saxutils.DefaultHandler):
   def createImage(self,width,height,surface):
     self.width = width
     self.height = height
+    self.extents = [0,0,width,height]
     self.surface = surface
     self.drawBorder()
+    self.keyY = self.height
   def drawBorder(self):
     border=5
     ctx = cairo.Context(surface)
     ctx.set_source_rgb(0,0,0)
     ctx.rectangle(border,border,self.width-2*border, self.height-2*border)
     ctx.stroke()
+    self.extents = [border,border,self.width-border, self.height-border]
+  def drawKey(self, ctx, colour, name):
+    ctx.move_to(self.width, self.keyY)
+    ctx.set_source_rgb(0,0,0)
+    ctx.show_text(name)
+    ctx.stroke()
+    self.keyY = self.keyY - 40
+    pass
+  def inImage(self,x,y):
+    if(x < self.extents[0] or y < self.extents[1]):
+      return(0)
+    if(x > self.extents[2] or y > self.extents[3]):
+      return(0)
+    return(1)
   def drawTracklogs(self, pointsize):
     self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
-    for a in self.points.values():
+    for name,a in self.points.items():
       colour = self.palette.get()
       ctx.set_source_rgb(colour[0],colour[1],colour[2])
       for b in a:
         x = self.xpos(b[1])
         y = self.ypos(b[0])
-        ctx.arc(x, y, pointsize, 0, 2*M_PI)
-        ctx.fill()
+        if(self.inImage(x,y)):
+          ctx.arc(x, y, pointsize, 0, 2*M_PI)
+          ctx.fill()
+      self.drawKey(ctx, colour, name)
   def xpos(self,lon):
     return(self.width * (lon - self.W) / self.dLon)
   def ypos(self,lat):
@@ -159,9 +176,10 @@ if(not Thingy.valid):
   sys.exit()
 width = size
 height = int(width / Thingy.ratio)
-print "Creating image %d x %d" % (width,height)
+fullwidth = width + 120
+print "Creating image %d x %d" % (fullwidth,height)
 
-surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
 Thingy.createImage(width, height, surface)
 Thingy.drawTracklogs(pointsize)
 

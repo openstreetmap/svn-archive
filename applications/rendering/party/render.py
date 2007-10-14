@@ -74,7 +74,8 @@ class CityPlotter(saxutils.DefaultHandler):
   def endElement(self, name):
     """When each node is completely read, store it and reset the tag list for the next node"""
     if(name == 'node'):
-      self.cities.append(self.attr)
+      if self.attr.get('place') in ("city","town","village"):
+        self.cities.append(self.attr)
       self.attr = {}
   def listCities(self):
     """Dumps list of city locations to stdout"""

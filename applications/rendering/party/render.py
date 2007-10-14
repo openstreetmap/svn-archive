@@ -18,6 +18,26 @@ from os.path import join, getsize
 deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
+class Palette:
+  def __init__(self):
+    self.colours = []
+    self.colours.append((255,0,0))
+    self.colours.append((128,128,0))
+    self.colours.append((0,255,0))
+    self.colours.append((0,128,128))
+    self.colours.append((0,0,255))
+    self.colours.append((128,0,128))
+    self.colours.append((128,0,0))
+    self.colours.append((64,64,0))
+    self.colours.append((0,128,0))
+    self.colours.append((0,64,64))
+    self.colours.append((0,0,128))
+    self.colours.append((64,0,64))
+    self.index = 0
+  def get(self):
+    next = self.index % len(self.colours)
+    self.index = self.index + 1
+    return(self.colours[next])
     
 class TracklogInfo(saxutils.DefaultHandler):
   def __init__(self):
@@ -66,8 +86,6 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.dLon = self.E - self.W
     self.ratio = self.dLon / self.dLat
     self.debug()
-    #sys.exit()
-
   def calculateCentre(self):
     sumLat = 0
     sumLon = 0
@@ -82,7 +100,6 @@ class TracklogInfo(saxutils.DefaultHandler):
     c = 40000.0 # circumference of earth, km
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
-    print "SD = %f,%f" % (self.sdLat, self.sdLon)
     pass
   def debug(self):
     print "%d points" % self.countPoints
@@ -94,6 +111,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.height = height
     self.surface = surface
     self.drawBorder()
+    self.palette = Palette()
   def drawBorder(self):
     border=5
     ctx = cairo.Context(surface)
@@ -102,8 +120,10 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.stroke()
   def drawTracklogs(self):
     for a in self.points.values():
+      colour = self.palette.get()
       for b in a:
         ctx = cairo.Context(surface)
+	ctx.set_source_rgb(colour[0],colour[1],colour[2])
         x = self.xpos(b[1])
         y = self.ypos(b[0])
         ctx.arc(x, y, 2.0, 0, 2*M_PI);

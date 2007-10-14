@@ -10,13 +10,15 @@ Standards-Version: 3.6.1
 
 Package: openstreetmap-josm
 Architecture: all
-Depends:  gij (>> 4.2) | j2re1.5 | gcj4.2 | sun-java5-re | sun-java6-re | sun-java5-jdk | sun-java6-jdk
-Depends:  openstreetmap-map-icons
-Recommends: gpsdrive, mapnik
+Depends:  j2re1.5 | sun-java5-re | sun-java6-re | sun-java5-jdk | sun-java6-jdk | sun-java6-jre
 Recommends: openstreetmap-utils
+Recommends: openstreetmap-map-icons
 Recommends: openstreetmap-map-icons-restricted
 Recommends: openstreetmap-mapnik-data
+Recommends: gpsdrive
+Recommends: mapnik
 Suggests:
 Description: OpenStreetmap Editor Josm
- This Package the Openstreetmap Editor Josm
- for working with OpenStreetMap Data
+ This Package contains the Openstreetmap Editor Josm
+ this Editor can be used for working with OpenStreetMap Data
+ you can download, change and update the OSM Data with this Editor

@@ -203,6 +203,15 @@ sub parse_planet($$){
     while ( my $line = $READ_FH->getline() ) {
 	parse_line($line);
     };
+    if ($FH_OSM) {
+	$FH_OSM->close() || warn "Cannot close Segment File:$!\n";
+	$FH_OSM=0;
+	rename("$SEGMENTS_FILENAME.part",$SEGMENTS_FILENAME)
+	    if -s "$SEGMENTS_FILENAME.part";
+	
+	print STDERR "we're done\n";
+    }
+
     $READ_FH->close();
     if ( $VERBOSE || $DEBUG )  {
 	print STDERR "\n";
@@ -215,12 +224,13 @@ sub parse_planet($$){
 
 # Function is called whenever an XML tag is ended
 #----------------------------------------------
+my $from_node=0;
 sub parse_line(){
     my $line = shift;
 
     my $element='';
 
-    if($line =~ m/node.*id="([\d\.\+\-]+)".*lat="([\d\.\+\-]+)".*lon="([\d\.\+\-]+)"/ ){
+    if ( $line =~ m/node.*id=[\'\"]([\d\.\+\-]+)[\'\"].*lat=[\'\"]([\d\.\+\-]+)[\'\"].*lon=[\'\"]([\d\.\+\-]+)[\'\"]/ ){
 	my $node={id=>$1,lat=>$2,lon=>$3};
 #	print $line. Dumper(\$node);
 	my $id=$1;
@@ -230,26 +240,30 @@ sub parse_line(){
 	    $Stats{"node read"}++;
 	    $Stats{"elem read"}++;
 	}
-    } elsif ($line =~ m/segment.*id="([\d\.\+\-]+)".*from="([\d\.\+\-]+)".*to="([\d\.\+\-]+)"/ ){
-	$element = "segment";
-	my $id   = $1;
-	my $from = $2;
-	my $to   = $3;
-	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
-	    printf $FH_OSM "%s,%s\n",$Nodes{$from},$Nodes{$to};
-	    $Stats{"segment read"}++;
+    } elsif ( $line =~ m/<nd.*ref=[\'\"]([\d\.\+\-]+)[\'\"]/ ){
+	$element = "nd_ref";
+	my $to_node   = $1;
+	if ( $from_node &&
+	     defined($Nodes{$from_node}) &&
+	     defined($Nodes{$to_node}) 
+	     ) {
+	    printf $FH_OSM "%s,%s\n",$Nodes{$from_node},$Nodes{$to_node};
+	    $Stats{"nbd_ref read"}++;
 	    $Stats{"elem read"}++;
 	}
-    } elsif($line =~ m/way.*id=/ ){
+	$from_node = $to_node;
+    } elsif ( $line =~ m/<way.*id=/ ) {
 	$element = "way";
-	if ($FH_OSM) {
-	    $FH_OSM->close() || warn "Cannot close Segment File:$!\n";
-	    $FH_OSM=0;
-	    rename("$SEGMENTS_FILENAME.part",$SEGMENTS_FILENAME)
-		if -s "$SEGMENTS_FILENAME.part";
-	    
-	    print STDERR "we're done; skipping rest\n";
-	}
+	$from_node=0;
+    } elsif ( $line =~ m/<\/way/ ){
+    } elsif ( $line =~ m/<\/node/ ){
+    } elsif ( $line =~ m/<\/osm/ ){
+    } elsif ( $line =~ m/<bound box='/ ){
+    } elsif ( $line =~ m/<tag/ ){
+    } elsif ( $line =~ m/<?xml version/ ){
+    } elsif ( $line =~ m/<osm version='0.5' / ){
+    } else {
+	print STDERR "Unknown Line: $line";
     }
 
     $Stats{"$element seen"}++;

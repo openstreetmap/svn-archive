@@ -10,6 +10,7 @@ import cairo
 import math
 import sys
 import getopt
+import colorsys
 from xml.sax import saxutils
 from UserDict import UserDict
 from xml.sax import make_parser
@@ -19,25 +20,18 @@ deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
 class Palette:
-  def __init__(self):
-    self.colours = []
-    self.colours.append((255,0,0))
-    self.colours.append((128,128,0))
-    self.colours.append((0,255,0))
-    self.colours.append((0,128,128))
-    self.colours.append((0,0,255))
-    self.colours.append((128,0,128))
-    self.colours.append((128,0,0))
-    self.colours.append((64,64,0))
-    self.colours.append((0,128,0))
-    self.colours.append((0,64,64))
-    self.colours.append((0,0,128))
-    self.colours.append((64,0,64))
-    self.index = 0
+  def __init__(self, size):
+    size = max(size,1.0)
+    self.h = 0.0
+    self.dh = 1.0/(size + 1.0)
+    self.s = 1.0
+    self.v = 0.8
   def get(self):
-    next = self.index % len(self.colours)
-    self.index = self.index + 1
-    return(self.colours[next])
+    colour = colorsys.hsv_to_rgb(self.h, self.s, self.v)
+    self.h = self.h + self.dh
+    if(self.h > 1.0):
+      self.h = 0.0
+    return(colour)
     
 class TracklogInfo(saxutils.DefaultHandler):
   def __init__(self):
@@ -111,7 +105,6 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.height = height
     self.surface = surface
     self.drawBorder()
-    self.palette = Palette()
   def drawBorder(self):
     border=5
     ctx = cairo.Context(surface)
@@ -119,6 +112,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.rectangle(border,border,self.width-2*border, self.height-2*border)
     ctx.stroke()
   def drawTracklogs(self, pointsize):
+    self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
     for a in self.points.values():
       colour = self.palette.get()

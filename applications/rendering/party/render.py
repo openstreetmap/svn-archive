@@ -45,11 +45,12 @@ class TracklogInfo(saxutils.DefaultHandler):
       for file in files:
         if(file.endswith(".gpx")):
           print file
-          self.currentFile = join(root, file)
+          self.currentFile = file
+          fullFilename = join(root, file)
           self.points[self.currentFile] = []
           parser = make_parser()
           parser.setContentHandler(self)
-          parser.parse(self.currentFile)
+          parser.parse(fullFilename)
           self.count = self.count + 1
     self.currentFile = ''
     if(self.countPoints == 0):

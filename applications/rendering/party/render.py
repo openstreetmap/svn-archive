@@ -118,17 +118,16 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.set_source_rgb(0,0,0)
     ctx.rectangle(border,border,self.width-2*border, self.height-2*border)
     ctx.stroke()
-  def drawTracklogs(self):
+  def drawTracklogs(self, pointsize):
+    ctx = cairo.Context(surface)
     for a in self.points.values():
       colour = self.palette.get()
+      ctx.set_source_rgb(colour[0],colour[1],colour[2])
       for b in a:
-        ctx = cairo.Context(surface)
-	ctx.set_source_rgb(colour[0],colour[1],colour[2])
         x = self.xpos(b[1])
         y = self.ypos(b[0])
-        ctx.arc(x, y, 2.0, 0, 2*M_PI);
-        ctx.fill();
-    pass
+        ctx.arc(x, y, pointsize, 0, 2*M_PI)
+        ctx.fill()
   def xpos(self,lon):
     return(self.width * (lon - self.W) / self.dLon)
   def ypos(self,lat):
@@ -137,11 +136,12 @@ class TracklogInfo(saxutils.DefaultHandler):
 Thingy = TracklogInfo()
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:", ["help=", "size=", "dir=", "radius="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:", ["help=", "size=", "dir=", "radius=","pointsize="])
 # Defauts:
 directory = "./"
 size = 600
 radius = 10 # km
+pointsize = 1 # mm
 # Options:
 for o, a in opts:
   if o in ("-h", "--help"):
@@ -153,6 +153,8 @@ for o, a in opts:
     size = int(a)
   if o in ("-r", "--radius"):
     radius = float(a)
+  if o in ("-p", "--pointsize"):
+    pointsize = float(a)
 
 print "Loading data"
 Thingy.walkDir(directory)
@@ -167,7 +169,7 @@ print "Creating image %d x %d" % (width,height)
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 Thingy.createImage(width, height, surface)
-Thingy.drawTracklogs()
+Thingy.drawTracklogs(pointsize)
 
 surface.write_to_png("output.png")
 

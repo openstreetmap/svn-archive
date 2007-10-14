@@ -265,7 +265,7 @@ if(not TracklogPlotter.valid):
   print "Couldn't calculate extents"
   sys.exit()
 width = size
-height = int(width / TracklogPlotter.proj.ratio)
+height = size
 fullwidth = width + 120
 print "Creating image %d x %d px" % (fullwidth,height)
 

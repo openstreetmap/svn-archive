@@ -62,6 +62,9 @@ class TracklogInfo(saxutils.DefaultHandler):
           parser.parse(self.currentFile)
           self.count = self.count + 1
     self.currentFile = ''
+    if(self.countPoints == 0):
+      print "No GPX files found"
+      sys.exit()
     print "Read %d points in %d files" % (self.countPoints,self.count)
   def startElement(self, name, attrs):
     if(name == 'trkpt'):
@@ -75,10 +78,10 @@ class TracklogInfo(saxutils.DefaultHandler):
     if(self.dLat <= 0.0 or self.dLon <= 0):
       return(0)
     return(1)
-  def calculate(self, amount):
+  def calculate(self, radius):
     # Calculate mean and standard deviation
-    self.calculateMean()
-    self.calculateSD(amount)
+    self.calculateCentre()
+    self.calculateExtents(radius)
     # then use that to calculate extents
     self.N = self.lat + self.sdLat
     self.E = self.lon + self.sdLon
@@ -90,7 +93,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.debug()
     #sys.exit()
 
-  def calculateMean(self):
+  def calculateCentre(self):
     sumLat = 0
     sumLon = 0
     for x in self.points.values():
@@ -100,20 +103,10 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.lat = sumLat / self.countPoints
     self.lon = sumLon / self.countPoints
     
-  def calculateSD(self,amount):
-    diffsLat = []
-    diffsLon = []
-    for x in self.points.values():
-      for y in x:
-        diffsLat.append(abs(y[0] - self.lat))
-        diffsLon.append(abs(y[1] - self.lon))
-    self.sdLat = median(diffsLat, int(self.countPoints * amount))
-    self.sdLon = median(diffsLon, int(self.countPoints * amount))
-    return
-    diffsLat.sort();
-    diffsLon.sort();
-    self.sdLat = diffsLat[int(self.countPoints * amount)]
-    self.sdLon = diffsLon[int(self.countPoints * amount)]
+  def calculateExtents(self,radius):
+    c = 40000.0 # circumference of earth, km
+    self.sdLat = (radius / (c / M_PI)) / deg2rad
+    self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
     print "SD = %f,%f" % (self.sdLat, self.sdLon)
     pass
   def debug(self):
@@ -149,24 +142,27 @@ class TracklogInfo(saxutils.DefaultHandler):
 Thingy = TracklogInfo()
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:", ["help=","size=", "dir="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:", ["help=", "size=", "dir=", "radius="])
 # Defauts:
 directory = "./"
 size = 600
+radius = 10 # km
 # Options:
 for o, a in opts:
   if o in ("-h", "--help"):
-    print "Usage: render.py -d [directory] -s [size,pixel]"
+    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km]"
     sys.exit()
   if o in ("-d", "--dir"):
     directory = a
   if o in ("-s", "--size"):
     size = int(a)
+  if o in ("-r", "--radius"):
+    radius = float(a)
 
 print "Loading data"
 Thingy.walkDir(directory)
 print "Calculating extents"
-Thingy.calculate(0.99)
+Thingy.calculate(radius)
 if(not Thingy.valid):
   print "Couldn't calculate extents"
   sys.exit()

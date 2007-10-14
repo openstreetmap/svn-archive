@@ -42,21 +42,25 @@ class CityPlotter(saxutils.DefaultHandler):
   def __init__(self,surface,extents):
     self.extents = extents
     self.surface = surface
-  def drawCities(self,proj):
+  def drawCities(self,proj,gazeteer):
     """Load and plot city locations"""
-    self.loadCities(proj)
+    self.loadCities(proj, gazeteer)
     self.renderCities(proj)
-  def loadCities(self,proj):
-    """Load city data from the network (OSMXAPI)"""
-    URL =  "http://www.informationfreeway.org/api/0.5/node[%s][bbox=%f,%f,%f,%f]" % ("place=city|town|village", proj.W, proj.S, proj.E, proj.N)
-    print "Downloading gazeteer"
+  def loadCities(self,proj,gazeteer):
+    """Load city data from the network (osmxapi), or from a file"""
     self.attr = {}
     self.cities = []
     parser = make_parser()
     parser.setContentHandler(self)
-    sock = urllib.urlopen(URL)
-    parser.parse(sock)
-    sock.close
+    if gazeteer == "osmxapi":
+      URL =  "http://www.informationfreeway.org/api/0.5/node[%s][bbox=%f,%f,%f,%f]" % ("place=city|town|village", proj.W, proj.S, proj.E, proj.N)
+      print "Downloading gazeteer"
+      sock = urllib.urlopen(URL)
+      parser.parse(sock)
+      sock.close
+    else:
+      print "Loading gazeteer"
+      parser.parse(gazeteer)
     print " - Loaded %d placenames" % len(self.cities)
   def startElement(self, name, attrs):
     """Store node positions and tag values"""
@@ -221,21 +225,22 @@ class TracklogInfo(saxutils.DefaultHandler):
           ctx.arc(x, y, pointsize, 0, 2*M_PI)
           ctx.fill()
       self.drawKey(ctx, colour, name)
-  def drawCities(self):
+  def drawCities(self, gazeteer):
     Cities = CityPlotter(self.surface, self.extents)
-    Cities.drawCities(self.proj)
+    Cities.drawCities(self.proj, gazeteer)
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:", ["help", "size=", "dir=", "radius=","pointsize="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","pointsize=","gazeteer="])
 # Defauts:
 directory = "./"
 size = 600
 radius = 10 # km
 pointsize = 1 # mm
+gazeteer = "osmxapi" # can change to a filename
 # Options:
 for o, a in opts:
   if o in ("-h", "--help"):
-    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km] -p [point size]"
+    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km] -p [point size] -g [gazeteer file]"
     sys.exit()
   if o in ("-d", "--dir"):
     directory = a
@@ -245,6 +250,8 @@ for o, a in opts:
     radius = float(a)
   if o in ("-p", "--pointsize"):
     pointsize = float(a)
+  if o in ("-g", "--gazeteer"):
+    gazeteer = a
 
 TracklogPlotter = TracklogInfo()
 print "Loading data"
@@ -264,7 +271,7 @@ TracklogPlotter.createImage(width, height, surface)
 
 print "Plotting tracklogs"
 TracklogPlotter.drawTracklogs(pointsize)
-TracklogPlotter.drawCities()
+TracklogPlotter.drawCities(gazeteer)
 
 surface.write_to_png("output.png")
 

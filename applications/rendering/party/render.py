@@ -9,6 +9,7 @@
 import cairo
 import math
 import sys
+import getopt
 from xml.sax import saxutils
 from UserDict import UserDict
 from xml.sax import make_parser
@@ -144,10 +145,24 @@ class TracklogInfo(saxutils.DefaultHandler):
     return(self.width * (lon - self.W) / self.dLon)
   def ypos(self,lat):
     return(self.height * (1 - (lat - self.S) / self.dLat))
-      
-      
+
 Thingy = TracklogInfo()
-directory = "eg/"
+
+# Handle command-line options
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:", ["help=","size=", "dir="])
+# Defauts:
+directory = "./"
+size = 600
+# Options:
+for o, a in opts:
+  if o in ("-h", "--help"):
+    print "Usage: render.py -d [directory] -s [size,pixel]"
+    sys.exit()
+  if o in ("-d", "--dir"):
+    directory = a
+  if o in ("-s", "--size"):
+    size = int(a)
+
 print "Loading data"
 Thingy.walkDir(directory)
 print "Calculating extents"
@@ -155,7 +170,7 @@ Thingy.calculate(0.99)
 if(not Thingy.valid):
   print "Couldn't calculate extents"
   sys.exit()
-width = 1000
+width = size
 height = int(width / Thingy.ratio)
 print "Creating image %d x %d" % (width,height)
 

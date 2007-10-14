@@ -13,37 +13,12 @@ import getopt
 from xml.sax import saxutils
 from UserDict import UserDict
 from xml.sax import make_parser
-from math import sqrt
 import os
-import random 
 from os.path import join, getsize
 deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
-def qnth(sample, n): # http://en.literateprograms.org/Nth_element_%28Python%29
-    pivot = sample[0]
-    below = [s for s in sample if s < pivot]
-    above = [s for s in sample if s > pivot]
-    i, j = len(below), len(sample)-len(above)
     
-    if n < i:      return qnth(below, n)
-    elif n >= j:   return qnth(above, n-j)
-    else:          return pivot
-    
-def median(a,k):
-  return(qnth(a,k))
-
-if(0): # test accuracy of median()
-  print median([10,100,9,90,50,5], 0)
-  sys.exit();
-  
-if(0): # test speed of median()
-  a=[]
-  for i in range(50000):
-    a.append(random.random())
-  print median(a, 40000)
-  sys.exit();
-
 class TracklogInfo(saxutils.DefaultHandler):
   def __init__(self):
     self.count = 0

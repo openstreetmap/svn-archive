@@ -11,7 +11,9 @@ import math
 import sys
 import getopt
 import colorsys
+import urllib
 from xml.sax import saxutils
+from xml.dom import minidom
 from UserDict import UserDict
 from xml.sax import make_parser
 import os
@@ -21,17 +23,88 @@ M_PI = 3.1415926535
 
 class Palette:
   def __init__(self, size):
+    """Create a palette of visually-unique colours. 
+    size = how many colours to create"""
     size = max(size,1.0)
     self.h = 0.0
     self.dh = 1.0/(size + 1.0)
     self.s = 0.8
     self.v = 0.9
   def get(self):
+    """Get the next available colour"""
     colour = colorsys.hsv_to_rgb(self.h, self.s, self.v)
     self.h = self.h + self.dh
     if(self.h > 1.0):
       self.h = 0.0
     return(colour)
+
+class CityPlotter(saxutils.DefaultHandler):
+  def __init__(self,surface,extents):
+    self.extents = extents
+    self.surface = surface
+  def drawCities(self,proj):
+    """Load and plot city locations"""
+    self.loadCities(proj)
+    self.renderCities(proj)
+  def loadCities(self,proj):
+    """Load city data from the network (OSMXAPI)"""
+    URL =  "http://www.informationfreeway.org/api/0.5/node[%s][bbox=%f,%f,%f,%f]" % ("place=city|town|village", proj.W, proj.S, proj.E, proj.N)
+    print "Downloading gazeteer"
+    self.attr = {}
+    self.cities = []
+    parser = make_parser()
+    parser.setContentHandler(self)
+    sock = urllib.urlopen(URL)
+    parser.parse(sock)
+    sock.close
+    print " - Loaded %d placenames" % len(self.cities)
+  def startElement(self, name, attrs):
+    """Store node positions and tag values"""
+    if(name == 'node'):
+      self.attr['lat'] = float(attrs.get('lat', None))
+      self.attr['lon'] = float(attrs.get('lon', None))
+    if(name == 'tag'):
+      self.attr[attrs.get('k', None)] = attrs.get('v', None)
+  def endElement(self, name):
+    """When each node is completely read, store it and reset the tag list for the next node"""
+    if(name == 'node'):
+      self.cities.append(self.attr)
+      self.attr = {}
+  def listCities(self):
+    """Dumps list of city locations to stdout"""
+    for c in self.cities:
+      print "%s: %f,%f %s" % (c.get('name',''), c.get('lat'), c.get('lon'), c.get('place',''))
+  def renderCities(self,proj):
+    """Draws cities onto the map"""
+    for c in self.cities:
+      ctx = cairo.Context(surface)
+      ctx.set_source_rgb(1.0,1.0,1.0)
+      x = proj.xpos(c.get('lon'))
+      y = proj.ypos(c.get('lat'))
+      ctx.move_to(x, y)
+      ctx.show_text(c.get('name',''))
+      ctx.stroke()
+
+class Projection:
+  def __init__(self,N,E,S,W):
+    self.N = N
+    self.E = E
+    self.S = S
+    self.W = W
+    self.dLat = N - S
+    self.dLon = E - W
+    self.ratio = self.dLon / self.dLat
+  def setOutput(self,width,height):
+    self.width = width
+    self.height = height
+  def xpos(self,lon):
+    return(self.width * (lon - self.W) / self.dLon)
+  def ypos(self,lat):
+    return(self.height * (1 - (lat - self.S) / self.dLat))
+  def debug(self):
+    """Display the map extents"""
+    print " - Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
+    print " - Ratio: %f" % self.ratio
     
 class TracklogInfo(saxutils.DefaultHandler):
   def __init__(self):
@@ -44,7 +117,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     for root, dirs, files in os.walk(directory):
       for file in files:
         if(file.endswith(".gpx")):
-          print file
+          print " * %s" % file
           self.currentFile = file
           fullFilename = join(root, file)
           self.points[self.currentFile] = []
@@ -76,14 +149,12 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.calculateCentre()
     self.calculateExtents(radius)
     # then use that to calculate extents
-    self.N = self.lat + self.sdLat
-    self.E = self.lon + self.sdLon
-    self.S = self.lat - self.sdLat
-    self.W = self.lon - self.sdLon
-    self.dLat = self.N - self.S
-    self.dLon = self.E - self.W
-    self.ratio = self.dLon / self.dLat
-    self.debug()
+    self.proj = Projection(
+      self.lat + self.sdLat,
+      self.lon + self.sdLon,
+      self.lat - self.sdLat,
+      self.lon - self.sdLon)
+    self.proj.debug()
   def calculateCentre(self):
     """Calculate the centre point of the map"""
     sumLat = 0
@@ -100,16 +171,11 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
     pass
-  def debug(self):
-    """Display the map extents"""
-    print "%d points" % self.countPoints
-    print "Pos: %f, %f +- %f, %f" % (self.lat,self.lon, self.sdLat,self.sdLon)
-    print "Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
-    print "Ratio: %f" % self.ratio
   def createImage(self,width1,height,surface):
     """Supply a cairo drawing surface for the maps"""
     self.width = width1
     self.height = height
+    self.proj.setOutput(width1,height)
     self.extents = [0,0,width1,height]
     self.surface = surface
     self.drawBorder()
@@ -149,16 +215,15 @@ class TracklogInfo(saxutils.DefaultHandler):
       colour = self.palette.get()
       ctx.set_source_rgb(colour[0],colour[1],colour[2])
       for b in a:
-        x = self.xpos(b[1])
-        y = self.ypos(b[0])
+        x = self.proj.xpos(b[1])
+        y = self.proj.ypos(b[0])
         if(self.inImage(x,y)):
           ctx.arc(x, y, pointsize, 0, 2*M_PI)
           ctx.fill()
       self.drawKey(ctx, colour, name)
-  def xpos(self,lon):
-    return(self.width * (lon - self.W) / self.dLon)
-  def ypos(self,lat):
-    return(self.height * (1 - (lat - self.S) / self.dLat))
+  def drawCities(self):
+    Cities = CityPlotter(self.surface, self.extents)
+    Cities.drawCities(self.proj)
 
 # Handle command-line options
 opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:", ["help", "size=", "dir=", "radius=","pointsize="])
@@ -190,13 +255,16 @@ if(not TracklogPlotter.valid):
   print "Couldn't calculate extents"
   sys.exit()
 width = size
-height = int(width / TracklogPlotter.ratio)
+height = int(width / TracklogPlotter.proj.ratio)
 fullwidth = width + 120
-print "Creating image %d x %d" % (fullwidth,height)
+print "Creating image %d x %d px" % (fullwidth,height)
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
 TracklogPlotter.createImage(width, height, surface)
+
+print "Plotting tracklogs"
 TracklogPlotter.drawTracklogs(pointsize)
+TracklogPlotter.drawCities()
 
 surface.write_to_png("output.png")
 

@@ -190,4 +190,4 @@ cp debian/osmosis.sh "$bin_path/osmosis"
 #########################################################
 # Mapnik installation tool
 #########################################################
-cp ../rendering/mapnik/mapnik-osm-updater.sh "$bin_path"
+cp export/osm2pgsql/mapnik-osm-updater.sh "$bin_path"

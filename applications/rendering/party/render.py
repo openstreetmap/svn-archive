@@ -24,8 +24,8 @@ class Palette:
     size = max(size,1.0)
     self.h = 0.0
     self.dh = 1.0/(size + 1.0)
-    self.s = 1.0
-    self.v = 0.8
+    self.s = 0.8
+    self.v = 0.9
   def get(self):
     colour = colorsys.hsv_to_rgb(self.h, self.s, self.v)
     self.h = self.h + self.dh
@@ -120,7 +120,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx = cairo.Context(surface)
     ctx.set_source_rgb(0,0,0)
     ctx.rectangle(border,border,self.width-2*border, self.height-2*border)
-    ctx.stroke()
+    ctx.fill()
     self.extents = [border,border,self.width-border, self.height-border]
   def drawKey(self, ctx, colour, name):
     """Add a label showing which colour represents which tracklog"""
@@ -161,7 +161,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     return(self.height * (1 - (lat - self.S) / self.dLat))
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:", ["help=", "size=", "dir=", "radius=","pointsize="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:", ["help", "size=", "dir=", "radius=","pointsize="])
 # Defauts:
 directory = "./"
 size = 600
@@ -170,7 +170,7 @@ pointsize = 1 # mm
 # Options:
 for o, a in opts:
   if o in ("-h", "--help"):
-    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km]"
+    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km] -p [point size]"
     sys.exit()
   if o in ("-d", "--dir"):
     directory = a

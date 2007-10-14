@@ -40,6 +40,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.points = {}
     self.currentFile = ''
   def walkDir(self, directory):
+    """Load a directory-structure full of GPX files into memory"""
     for root, dirs, files in os.walk(directory):
       for file in files:
         if(file.endswith(".gpx")):
@@ -56,19 +57,21 @@ class TracklogInfo(saxutils.DefaultHandler):
       sys.exit()
     print "Read %d points in %d files" % (self.countPoints,self.count)
   def startElement(self, name, attrs):
+    """Handle tracklog points found in the GPX files"""
     if(name == 'trkpt'):
       lat = float(attrs.get('lat', None))
       lon = float(attrs.get('lon', None))
       self.points[self.currentFile].append((lat,lon));
       self.countPoints = self.countPoints + 1
   def valid(self):
+    """Test whether the lat/long extents of the map are sane"""
     if(self.ratio == 0.0):
       return(0)
     if(self.dLat <= 0.0 or self.dLon <= 0):
       return(0)
     return(1)
   def calculate(self, radius):
-    # Calculate mean and standard deviation
+    """Calculate (somehow*) the extents of the map"""
     self.calculateCentre()
     self.calculateExtents(radius)
     # then use that to calculate extents
@@ -81,6 +84,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.ratio = self.dLon / self.dLat
     self.debug()
   def calculateCentre(self):
+    """Calculate the centre point of the map"""
     sumLat = 0
     sumLon = 0
     for x in self.points.values():
@@ -90,23 +94,27 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.lat = sumLat / self.countPoints
     self.lon = sumLon / self.countPoints
   def calculateExtents(self,radius):
+    """Calculate the width and height of the map"""
     c = 40000.0 # circumference of earth, km
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
     pass
   def debug(self):
+    """Display the map extents"""
     print "%d points" % self.countPoints
     print "Pos: %f, %f +- %f, %f" % (self.lat,self.lon, self.sdLat,self.sdLon)
     print "Lat %f to %f, Long %f to %f" % (self.S,self.N,self.W,self.E)
     print "Ratio: %f" % self.ratio
-  def createImage(self,width,height,surface):
-    self.width = width
+  def createImage(self,width1,height,surface):
+    """Supply a cairo drawing surface for the maps"""
+    self.width = width1
     self.height = height
-    self.extents = [0,0,width,height]
+    self.extents = [0,0,width1,height]
     self.surface = surface
     self.drawBorder()
     self.keyY = self.height - 20
   def drawBorder(self):
+    """Draw a border around the 'map' portion of the image"""
     border=5
     ctx = cairo.Context(surface)
     ctx.set_source_rgb(0,0,0)
@@ -114,6 +122,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.stroke()
     self.extents = [border,border,self.width-border, self.height-border]
   def drawKey(self, ctx, colour, name):
+    """Add a label showing which colour represents which tracklog"""
     x = self.width + 10
     y = self.keyY
     ctx.arc(x, y, 4, 0, 2*M_PI)
@@ -125,12 +134,14 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.keyY = self.keyY - 20
     pass
   def inImage(self,x,y):
+    """Test whether an x,y coordinate is within the map drawing area"""
     if(x < self.extents[0] or y < self.extents[1]):
       return(0)
     if(x > self.extents[2] or y > self.extents[3]):
       return(0)
     return(1)
   def drawTracklogs(self, pointsize):
+    """Draw all tracklogs from memory onto the map"""
     self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
     for name,a in self.points.items():
@@ -147,8 +158,6 @@ class TracklogInfo(saxutils.DefaultHandler):
     return(self.width * (lon - self.W) / self.dLon)
   def ypos(self,lat):
     return(self.height * (1 - (lat - self.S) / self.dLat))
-
-Thingy = TracklogInfo()
 
 # Handle command-line options
 opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:", ["help=", "size=", "dir=", "radius=","pointsize="])
@@ -171,21 +180,22 @@ for o, a in opts:
   if o in ("-p", "--pointsize"):
     pointsize = float(a)
 
+TracklogPlotter = TracklogInfo()
 print "Loading data"
-Thingy.walkDir(directory)
+TracklogPlotter.walkDir(directory)
 print "Calculating extents"
-Thingy.calculate(radius)
-if(not Thingy.valid):
+TracklogPlotter.calculate(radius)
+if(not TracklogPlotter.valid):
   print "Couldn't calculate extents"
   sys.exit()
 width = size
-height = int(width / Thingy.ratio)
+height = int(width / TracklogPlotter.ratio)
 fullwidth = width + 120
 print "Creating image %d x %d" % (fullwidth,height)
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
-Thingy.createImage(width, height, surface)
-Thingy.drawTracklogs(pointsize)
+TracklogPlotter.createImage(width, height, surface)
+TracklogPlotter.drawTracklogs(pointsize)
 
 surface.write_to_png("output.png")
 

@@ -105,7 +105,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.extents = [0,0,width,height]
     self.surface = surface
     self.drawBorder()
-    self.keyY = self.height
+    self.keyY = self.height - 20
   def drawBorder(self):
     border=5
     ctx = cairo.Context(surface)
@@ -114,11 +114,15 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.stroke()
     self.extents = [border,border,self.width-border, self.height-border]
   def drawKey(self, ctx, colour, name):
-    ctx.move_to(self.width, self.keyY)
+    x = self.width + 10
+    y = self.keyY
+    ctx.arc(x, y, 4, 0, 2*M_PI)
+    ctx.fill()
+    ctx.move_to(x + 10, y+4)
     ctx.set_source_rgb(0,0,0)
     ctx.show_text(name)
     ctx.stroke()
-    self.keyY = self.keyY - 40
+    self.keyY = self.keyY - 20
     pass
   def inImage(self,x,y):
     if(x < self.extents[0] or y < self.extents[1]):

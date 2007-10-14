@@ -44,6 +44,8 @@ class CityPlotter(saxutils.DefaultHandler):
     self.surface = surface
   def drawCities(self,proj,gazeteer):
     """Load and plot city locations"""
+    if gazeteer == "none" or gazeteer == "":
+      return
     self.loadCities(proj, gazeteer)
     self.renderCities(proj)
   def loadCities(self,proj,gazeteer):

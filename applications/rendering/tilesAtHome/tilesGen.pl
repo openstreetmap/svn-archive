@@ -49,7 +49,7 @@ printf STDERR "This is version %d (%s) of tilesgen running on %s\n",
 eval GD::Image->trueColor(1);
 if ($@ ne '') {
     print STDERR "please update your libgd to version 2 for TrueColor support";
-    cleanUpAndDie("init.libGD_check","EXIT",4,$PID);
+    cleanUpAndDie("init:libGD check failed, exiting","EXIT",4,$PID);
 }
 
 # Setup GD options
@@ -107,7 +107,7 @@ if( -s "emptyland.png" != 67 or
     -s "emptysea.png" != 69 )
 {
     print STDERR "\nAutomatic fix failed. Exiting.\n";
-    cleanUpAndDie("init.emptytile_template_check","EXIT",4,$PID);
+    cleanUpAndDie("init:emptytile_template_check repair failed, exiting","EXIT",4,$PID);
 }
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
@@ -118,7 +118,7 @@ if( $ARGV[0] eq "loop" and -e "/dev/null" )
     {
         print STDERR "Custom changes in osmarender stylesheets. Examine the following output to fix:\n";
         system("svn status osmarender/*.x[ms]l");
-        cleanUpAndDie("init.osmarender_stylesheet_check","EXIT",4,$PID);
+        cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4,$PID);
     }
 }
 # Setup map projection
@@ -189,7 +189,7 @@ elsif ($Mode eq "loop")
     {
         if (getFault("fatal") > 0)
         {
-            cleanUpAndDie("Fatal error occurred during loop","EXIT",1,$PID);
+            cleanUpAndDie("Fatal error occurred during loop, exiting","EXIT",1,$PID);
         }
         elsif (getFault("nodata") > 5)
         {
@@ -199,9 +199,13 @@ elsif ($Mode eq "loop")
         {
             cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
         }
-        reExecIfRequired();
-        my ($did_something, $message) = ProcessRequestsFromServer();
-        uploadIfEnoughTiles();
+
+        reExecIfRequired(); ## check for new version of tilesGen.pl and reExec if true
+
+        my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server
+
+        uploadIfEnoughTiles(); # upload if enough work done
+
         if ($did_something == 0) 
         {
             talkInSleep($message, 60);
@@ -320,7 +324,7 @@ sub ProcessRequestsFromServer
         print "Config option LocalSlippymap is set. Downloading requests\n";
         print "from the server in this mode would take them from the tiles\@home\n";
         print "queue and never upload the results. Program aborted.\n";
-        cleanUpAndDie("ProcessRequestFromServer.LocalSlippymap","EXIT",1,$PID);
+        cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1,$PID);
     }
     
     # ----------------------------------
@@ -371,7 +375,7 @@ sub ProcessRequestsFromServer
         print STDERR "\n";
         print STDERR "Server is speaking a different version of the protocol to us.\n";
         print STDERR "Check to see whether a new version of this program was released!\n";
-        cleanUpAndDie("ProcessRequestFromServer.Request_API_version","EXIT",1,$PID);
+        cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting","EXIT",1,$PID);
         ## No need to return, we exit the program at this point
     }
     
@@ -516,7 +520,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 PutRequestBackToServer($X,$Y,"NoData");
                 foreach my $file(@tempfiles) { killafile($file); }
                 addFault("nodata",1);
-                return cleanUpAndDie("GenerateTileset",$Mode,1,$PID);
+                return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
             }
             else
             {
@@ -538,7 +542,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                         PutRequestBackToServer($X,$Y,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
-                        return cleanUpAndDie("GenerateTilesetSliced",$Mode,1,$PID);
+                        return cleanUpAndDie("GenerateTilesetSliced, no data (sliced).",$Mode,1,$PID);
                     }
                 }
                 print STDERR "\n";
@@ -568,7 +572,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         PutRequestBackToServer($X,$Y,"BadUTF8");
         addFault("utf8",1);
-        return cleanUpAndDie("GenerateTileset.UTF8",$Mode,1,$PID);
+        return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
       }
     }
     resetFault("utf8"); #reset to zero if no UTF8 errors found.
@@ -628,7 +632,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     # stop rendering if frollo fails, as current osmarender is 
                     # dependent on frollo hints
                     PutRequestBackToServer($X,$Y,"FrolloFail");
-                    return cleanUpAndDie("GenerateTileset.Frollo",$Mode,1,$PID);
+                    return cleanUpAndDie("GenerateTileset:Frollo failed",$Mode,1,$PID);
                 }
             }
             elsif ($preprocessor eq "maplint")
@@ -1022,7 +1026,7 @@ sub xml2svg
     if (grep(!/</, $TestLine))
     {
        statusMessage("File $TSVG doesn't look like svg, aborting render.", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
-       return cleanUpAndDie("xml2svg",$Mode,3,$PID);
+       return cleanUpAndDie("xml2svg failed",$Mode,3,$PID);
     }
 #-----------------------------------------------------------------------------
 # Process lines to Bezier curve hinting
@@ -1087,7 +1091,7 @@ sub svg2png
         ## TODO: check this actually gets the correct coords 
         PutRequestBackToServer($X,$Y,"BadSVG");
         addFault("inkscape",1);
-        return cleanUpAndDie("svg2png",$Mode,3,$PID);
+        return cleanUpAndDie("svg2png failed",$Mode,3,$PID);
     }
     resetFault("inkscape"); # reset to zero if inkscape succeeds at least once
     killafile($stdOut);
@@ -1237,7 +1241,7 @@ sub splitImageX
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
             PutRequestBackToServer($X,$Y,"BlackTile");
-            cleanUpAndDie("SplitImageX.BlackTile","EXIT",4,$PID);
+            cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4,$PID);
         }
         # Detect empty tile here:
         elsif (not($SubImage->compare($EmptyLandImage) & GD_CMP_IMAGE)) # libGD comparison returns true if images are different. (i.e. non-empty Land tile) so return the opposite (false) if the tile doesn''t look like an empty land tile

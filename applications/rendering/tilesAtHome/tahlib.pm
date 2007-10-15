@@ -317,7 +317,7 @@ sub cleanUpAndDie
 
     ## TODO: clean up *.tempdir too
 
-    print STDERR "\nExiting from $Reason\n" if ($Config{"Verbose"});
+    print STDERR "\n$Reason\n" if ($Config{"Verbose"});
 
     if (! $Config{"Debug"}) 
     {
@@ -333,6 +333,7 @@ sub cleanUpAndDie
     }
     
     return 0 if ($Mode eq "loop");
+    print STDERR "\n$Reason\n" if (! $Config{"Verbose"}); #print error only once, and only if fatal.
     exit($Severity);
 }
 

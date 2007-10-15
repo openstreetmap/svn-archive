@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # GPX Party renderer
 # Takes a directory structure full of GPX file tracklogs, 
 # and renders them all to a series of PNG images that can

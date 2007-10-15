@@ -200,8 +200,9 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
     pass
-  def createImage(self,width1,height,surface):
+  def createImage(self,fullwidth,width1,height,surface):
     """Supply a cairo drawing surface for the maps"""
+    self.fullwidth = fullwidth
     self.width = width1
     self.height = height
     self.proj.setOutput(width1,height)
@@ -211,6 +212,10 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.keyY = self.height - 20
   def drawBorder(self):
     """Draw a border around the 'map' portion of the image"""
+    ctx = cairo.Context(surface)
+    ctx.set_source_rgb(1.0,1.0,1.0)
+    ctx.rectangle(0,0,self.fullwidth,self.height)
+    ctx.fill()
     border=5
     ctx = cairo.Context(surface)
     ctx.set_source_rgb(0,0,0)
@@ -245,13 +250,13 @@ class TracklogInfo(saxutils.DefaultHandler):
     count = 1
     self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
-    
-    secondsPerFrame = 30
-    numFrames = len(timeList) / secondsPerFrame
+    secondsPerFrame = 100
     tt = range(int(timeList[0]), int(timeList[-1]), secondsPerFrame)
+    numFrames = len(tt)
     lastT = 0
+    frame = 1
     for t in tt:
-      self.palette.reset
+      self.palette.reset()
       pointsDrawnThisTimestep = 0
       for name,a in self.points.items():
         colour = self.palette.get()
@@ -267,9 +272,10 @@ class TracklogInfo(saxutils.DefaultHandler):
         if(count == 1):
           self.drawKey(ctx, colour, name)
       if(pointsDrawnThisTimestep > 0):
-        filename = "gfx/img_%05d.jpg" % count
-        surface.write_to_jpeg(filename)
-      print "%03.1f%%" % (100.0 * count / numFrames)
+        filename = "gfx/img_%05d.png" % frame
+        frame = frame + 1
+        surface.write_to_png(filename)
+      print "%03.1f%%: %d" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
 
@@ -316,7 +322,7 @@ fullwidth = width + 120
 print "Creating image %d x %d px" % (fullwidth,height)
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
-TracklogPlotter.createImage(width, height, surface)
+TracklogPlotter.createImage(fullwidth, width, height, surface)
 
 print "Plotting tracklogs"
 TracklogPlotter.drawCities(gazeteer)

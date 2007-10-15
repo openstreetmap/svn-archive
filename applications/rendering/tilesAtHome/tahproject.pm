@@ -4,6 +4,11 @@ use strict;
 # The following is duplicated from tilesGen.pl
 # =====================================================================
 
+# Setup map projection
+my $LimitY = ProjectF(85.0511);
+my $LimitY2 = ProjectF(-85.0511);
+my $RangeY = $LimitY - $LimitY2;
+
 #-----------------------------------------------------------------------------
 # Project latitude in degrees to Y coordinates in mercator projection
 #-----------------------------------------------------------------------------

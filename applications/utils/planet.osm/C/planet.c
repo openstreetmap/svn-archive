@@ -215,20 +215,18 @@ void parseDate(struct tm *tm, const char *str)
     tm->tm_mon  -= 1;
     tm->tm_isdst = -1;
 
-    // Converting to/from time_t ensures the tm_isdst field gets set to indicate GMT/BST
-    // Rails stores the timestamps in the DB using UK localtime.
+    // Rails stores the timestamps in the DB using UK localtime (ugh), convert to UTC
     tmp = mktime(tm);
-    localtime_r(&tmp, tm);
+    gmtime_r(&tmp, tm);
 }
 
 const char *strTime(struct tm *tm)
 {
     static char out[64]; // Not thread safe
 
-    //2000-01-04T12:02:09+00:00
-    snprintf(out, sizeof(out), "%d-%02d-%02dT%02d:%02d:%02d+0%c:00",
-             tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec,
-             tm->tm_isdst ? '1':'0');
+    //2007-07-10T11:32:32Z
+    snprintf(out, sizeof(out), "%d-%02d-%02dT%02d:%02d:%02dZ",
+             tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 
     return out;
 }

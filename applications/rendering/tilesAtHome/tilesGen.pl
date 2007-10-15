@@ -200,6 +200,11 @@ elsif ($Mode eq "loop")
             cleanUpAndDie("Five times inkscape failed, exiting","EXIT",1,$PID);
         }
 
+        if (-e "stopfile.txt")
+        {
+            cleanUpAndDie("Stopfile found, exiting","EXIT",7,$PID);
+        }
+
         reExecIfRequired(); ## check for new version of tilesGen.pl and reExec if true
 
         my ($did_something, $message) = ProcessRequestsFromServer(); # Actually render stuff if job on server

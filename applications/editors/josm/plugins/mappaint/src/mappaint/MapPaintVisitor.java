@@ -30,6 +30,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
     protected boolean useRealWidth;
     protected boolean zoomLevelDisplay;
     protected boolean fillAreas;
+    protected int fillAlpha;
     protected Color untaggedColor;
     protected Color textColor;
     protected boolean currentDashed = false;
@@ -167,6 +168,9 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 	{
 		Polygon polygon = new Polygon();
 		Point p;
+		// set the opacity (alpha) level of the filled polygon
+		Color coloura = new Color( colour.getRed(), colour.getGreen(), colour.getBlue(), fillAlpha);
+		
 		for (Node n : w.nodes)
 		{
 			p = nc.getPoint(n.eastNorth);
@@ -174,7 +178,7 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		}
 
 		g.setColor( w.selected ?
-						selectedColor : colour);
+						selectedColor : coloura);
 
 		g.fillPolygon(polygon);
 	}
@@ -304,6 +308,19 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		useRealWidth = Main.pref.getBoolean("mappaint.useRealWidth",false);
 		zoomLevelDisplay = Main.pref.getBoolean("mappaint.zoomLevelDisplay",false);
 		fillAreas = Main.pref.getBoolean("mappaint.fillareas", true);
+		
+		/* XXX - there must be a better way to get a bounded Integer pref! */
+		try {
+			fillAlpha = Integer.valueOf(Main.pref.get("mappaint.fillalpha", "50"));
+			if(fillAlpha < 0) {
+				fillAlpha = 0;
+			}
+			if(fillAlpha > 255) {
+				fillAlpha = 255;
+			}
+		} catch (NumberFormatException nfe) {
+			fillAlpha = 50;
+		}
 		
 		Collection<Way> noAreaWays = new LinkedList<Way>();
 

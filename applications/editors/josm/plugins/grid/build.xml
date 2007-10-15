@@ -1,7 +1,14 @@
 <project name="grid" default="build" basedir=".">
 
+  <!-- compilation properties -->
+  <property name="josm.build.dir" value="../../core"/>
+  <property name="josm.home.dir" value="${user.home}/.josm"/>
+  <property name="plugin.build.dir" value="bin"/>
+  <property name="plugin.name" value="${ant.project.name}"/>
+  <property name="plugin.jar" value="${plugin.name}.jar"/>
+  
 	<!-- point to your JOSM directory -->
-	<property name="josm" location="../../core/dist/josm-custom.jar" />
+	<property name="josm" location="${josm.build.dir}/dist/josm-custom.jar" />
 
 
 
@@ -20,7 +27,7 @@
 		<copy todir="build/images" >
 			<fileset dir="images" />
 		</copy>
-		<jar destfile="dist/grid.jar" basedir="build">
+		<jar destfile="${plugin.jar}" basedir="build">
 			<manifest>
 				<attribute name="Plugin-Class" value="grid.GridPlugin" />
 				<attribute name="Plugin-Description" value="Provide a background layer that displays a map grid" />
@@ -31,10 +38,12 @@
 	<target name="clean">
 		<delete dir="build" />
 		<delete dir="dist" />
+		<delete dir="${plugin.jar}" />
 	</target>
 
 	<target name="install" depends="build">
-		<copy file="dist/grid.jar" todir="${user.home}/.josm/plugins"/>
+		<copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
 	</target>
+
 
 </project>

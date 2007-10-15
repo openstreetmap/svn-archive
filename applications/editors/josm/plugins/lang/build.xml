@@ -1,7 +1,13 @@
 <project name="lang" default="install-all" basedir=".">
 
-	<property name="josm" value="../../core" />
-	<property name="plugins" value=".."/>
+
+  <!-- compilation properties -->
+  <property name="josm.build.dir" value="../../core"/>
+  <property name="josm.home.dir" value="${user.home}/.josm"/>
+  <property name="plugin.build.dir" value="bin"/>
+  <property name="plugin.name" value="${ant.project.name}"/>
+  <property name="plugin.jar" value="${plugin.name}.jar"/>
+  <property name="plugins" value=".."/>
 
 	<target name="install-all" depends="josm-build,keys.pot">
 		<ant target="install"><property name="language" value="de"/></ant>
@@ -13,7 +19,7 @@
 	<target name="install">
 		<mkdir dir="${language}/bin"/>
 		<mkdir dir="dist"/>
-		<javac srcdir="${language}/src" classpath="${josm}/dist/josm-custom.jar" destdir="${language}/bin" />
+		<javac srcdir="${language}/src" classpath="${josm.build.dir}/dist/josm-custom.jar" destdir="${language}/bin" />
 
 		<exec executable="msgmerge">
 			<arg line="-U ${language}/${language}.po keys.pot"/>
@@ -37,16 +43,23 @@
 
 
 	<target name="josm-build">
-		<ant dir="${josm}" />
+		<ant dir="${josm.build.dir}" />
 	</target>
 	
 	<target name="keys.pot">
 		<exec executable="find" output="alljava.txt">
-			<arg line="${josm}/src ${plugins} -name '*.java'"/>
+			<arg line="${josm.build.dir}/src ${plugins} -name '*.java'"/>
 		</exec>
 
 		<exec executable="xgettext">
 			<arg line="-ktr -ktrn:1,2 -ktrc -kmarktr -Ljava -okeys.pot -falljava.txt"/>
 		</exec>
 	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="dist" />
+		<delete dir="${plugin.jar}" />
+	</target>
+
 </project>

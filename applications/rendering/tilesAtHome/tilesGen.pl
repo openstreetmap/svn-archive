@@ -122,10 +122,6 @@ if( $ARGV[0] eq "loop" and -e "/dev/null" )
         cleanUpAndDie("init.osmarender_stylesheet_check repair failed","EXIT",4,$PID);
     }
 }
-# Setup map projection
-my $LimitY = ProjectF(85.0511);
-my $LimitY2 = ProjectF(-85.0511);
-my $RangeY = $LimitY - $LimitY2;
 
 # Create the working directory if necessary
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});

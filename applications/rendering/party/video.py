@@ -1,11 +1,10 @@
 # GPX Party renderer
 # Takes a directory structure full of GPX file tracklogs, 
-# and renders them all to a single image
+# and renders them all to a series of PNG images that can
+# be encoded into a video
 # 
 # Copyright 2007, Oliver White
 # Licensed as GNU GPL version3 or at your option any later version
-# 
-# Usage: python render.py
 import cairo
 import math
 import sys
@@ -156,12 +155,11 @@ class TracklogInfo(saxutils.DefaultHandler):
   def endElement(self,name):
     if(name == 'time' and self.inTime):
       self.inTime = 0
+      # Parses <time>2006-10-28T10:06:03Z</time>
       time = mktime(strptime(self.timeText, "%Y-%m-%dT%H:%M:%SZ"))
       self.validTimes[time] = 1;
-      #print "%s: %f, %f = %d" % (self.timeText, self.pLat, self.pLon,time)
       self.points[self.currentFile].append((self.pLat,self.pLon,time));
       self.countPoints = self.countPoints + 1
-      # <time>2006-10-28T10:06:03Z</time>
   def characters(self, content):
     if(self.inTime == 1):
       self.timeText = self.timeText + content
@@ -242,25 +240,33 @@ class TracklogInfo(saxutils.DefaultHandler):
       return(0)
     return(1)
   def drawTracklogs(self, pointsize):
-    print "Sorting"
+    """Draw all tracklogs from memory onto the map"""
+    
+    # Get a list of timestamps in the GPX
     timeList = self.validTimes.keys()
     timeList.sort()
-    print "Done"
-    """Draw all tracklogs from memory onto the map"""
-    count = 1
+    
+    # Setup drawing
     self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
-    secondsPerFrame = 100
-    tt = range(int(timeList[0]), int(timeList[-1]), secondsPerFrame)
-    numFrames = len(tt)
+    
+    # Divide time into frames
+    secondsPerFrame = 50
+    frameTimes = range(int(timeList[0]), int(timeList[-1]), secondsPerFrame)
+    numFrames = len(frameTimes)
     lastT = 0
     frame = 1
-    for t in tt:
+    count = 1
+    pointsDrawn = 0
+    # For each timeslot (not all of these will become frames in the video)
+    for t in frameTimes:
       self.palette.reset()
       pointsDrawnThisTimestep = 0
+      # For each file
       for name,a in self.points.items():
         colour = self.palette.get()
         ctx.set_source_rgb(colour[0],colour[1],colour[2])
+        # For each trackpoint which occurs within this timeslot
         for b in a:
           if(b[2] <= t and b[2] > lastT):
             x = self.proj.xpos(b[1])
@@ -269,16 +275,19 @@ class TracklogInfo(saxutils.DefaultHandler):
               ctx.arc(x, y, pointsize, 0, 2*M_PI)
               ctx.fill()
               pointsDrawnThisTimestep = pointsDrawnThisTimestep + 1
+              pointsDrawn = pointsDrawn + 1
+        # On the first frame, draw a key for each track 
+        # (this remains on the image when subsequent trackpoints are drawn)
         if(count == 1):
           self.drawKey(ctx, colour, name)
+      # If anything changed in this frame, then add it to the video
       if(pointsDrawnThisTimestep > 0):
         filename = "gfx/img_%05d.png" % frame
         frame = frame + 1
         surface.write_to_png(filename)
-      print "%03.1f%%: %d" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
+      print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
-
 
   def drawCities(self, gazeteer):
     Cities = CityPlotter(self.surface, self.extents)

@@ -198,7 +198,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
     pass
-  def createImage(self,fullwidth,width1,height,surface):
+  def createImage(self,fullwidth,width1,height,surface,surface2):
     """Supply a cairo drawing surface for the maps"""
     self.fullwidth = fullwidth
     self.width = width1
@@ -206,6 +206,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.proj.setOutput(width1,height)
     self.extents = [0,0,width1,height]
     self.surface = surface
+    self.surface2 = surface2
     self.drawBorder()
     self.keyY = self.height - 20
   def drawBorder(self):
@@ -258,6 +259,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     frame = 1
     count = 1
     pointsDrawn = 0
+    currentPositions = {}
     # For each timeslot (not all of these will become frames in the video)
     for t in frameTimes:
       self.palette.reset()
@@ -273,6 +275,7 @@ class TracklogInfo(saxutils.DefaultHandler):
             y = self.proj.ypos(b[0])
             if(self.inImage(x,y)):
               ctx.arc(x, y, pointsize, 0, 2*M_PI)
+              currentPositions[name] = (x,y)
               ctx.fill()
               pointsDrawnThisTimestep = pointsDrawnThisTimestep + 1
               pointsDrawn = pointsDrawn + 1
@@ -282,9 +285,16 @@ class TracklogInfo(saxutils.DefaultHandler):
           self.drawKey(ctx, colour, name)
       # If anything changed in this frame, then add it to the video
       if(pointsDrawnThisTimestep > 0):
+        ctx2 = cairo.Context(surface2)
+        ctx2.set_source_surface(surface, 0, 0);
+        ctx2.paint();
+        ctx2.set_source_rgb(1.0, 1.0, 0.0)
+        for name,pos in currentPositions.items():
+          ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
+          ctx2.fill()
         filename = "gfx/img_%05d.png" % frame
         frame = frame + 1
-        surface.write_to_png(filename)
+        surface2.write_to_png(filename)
       print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
@@ -331,7 +341,8 @@ fullwidth = width + 120
 print "Creating image %d x %d px" % (fullwidth,height)
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
-TracklogPlotter.createImage(fullwidth, width, height, surface)
+surface2 = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
+TracklogPlotter.createImage(fullwidth, width, height, surface, surface2)
 
 print "Plotting tracklogs"
 TracklogPlotter.drawCities(gazeteer)

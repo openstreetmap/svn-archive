@@ -10,7 +10,7 @@ Standards-Version: 3.6.1
 
 Package: openstreetmap-josm
 Architecture: all
-Depends:  j2re1.5 | sun-java5-re | sun-java6-re | sun-java5-jdk | sun-java6-jdk | sun-java6-jre
+Depends:  sun-java6-re | sun-java6-jdk | sun-java6-jre
 Recommends: openstreetmap-utils
 Recommends: openstreetmap-map-icons
 Recommends: openstreetmap-map-icons-restricted

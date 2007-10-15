@@ -250,6 +250,8 @@ class TracklogInfo(saxutils.DefaultHandler):
     # Setup drawing
     self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
+    # CAIRO_LINE_CAP_ROUND
+    ctx.set_line_cap(cairo.LINE_CAP_ROUND)
     
     # Divide time into frames
     secondsPerFrame = 50
@@ -274,7 +276,12 @@ class TracklogInfo(saxutils.DefaultHandler):
             x = self.proj.xpos(b[1])
             y = self.proj.ypos(b[0])
             if(self.inImage(x,y)):
-              ctx.arc(x, y, pointsize, 0, 2*M_PI)
+              if(1):
+                ctx.move_to(x,y)
+                ctx.line_to(x,y)
+                ctx.stroke()
+              else:
+                ctx.arc(x, y, pointsize, 0, 2*M_PI)
               currentPositions[name] = (x,y)
               ctx.fill()
               pointsDrawnThisTimestep = pointsDrawnThisTimestep + 1
@@ -287,6 +294,7 @@ class TracklogInfo(saxutils.DefaultHandler):
       if(pointsDrawnThisTimestep > 0):
         ctx2 = cairo.Context(surface2)
         ctx2.set_source_surface(surface, 0, 0);
+        ctx2.set_operator(cairo.OPERATOR_SOURCE);
         ctx2.paint();
         ctx2.set_source_rgb(1.0, 1.0, 0.0)
         for name,pos in currentPositions.items():
@@ -340,8 +348,8 @@ height = size
 fullwidth = width + 120
 print "Creating image %d x %d px" % (fullwidth,height)
 
-surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
-surface2 = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
+surface = cairo.ImageSurface(cairo.FORMAT_RGB24, fullwidth, height)
+surface2 = cairo.ImageSurface(cairo.FORMAT_RGB24, fullwidth, height)
 TracklogPlotter.createImage(fullwidth, width, height, surface, surface2)
 
 print "Plotting tracklogs"

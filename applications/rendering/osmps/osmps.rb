@@ -63,12 +63,6 @@ setrgbcolor
 /gr {grestore} bd
 /cpf {closepath fill} bd
 /rgb {setrgbcolor} bd
-% node
-/n { 0.2 0 360 arc fill } bd
-% segment
-/s { 4 2 roll moveto lineto } bd
-% 0.3 setlinewidth
-% 0.7 setgray
 
 /osm {/OsmPsMapSymbol findfont 2 scalefont setfont} bd
 
@@ -735,22 +729,7 @@ class Node < MapObject #{{{
   def initialize(lon, lat)# {{{
     @lon = lon.to_f
     @lat = lat.to_f
-    @segments = []
     super()
-  end
-
-  # }}}
-  def addsegment(seg)# {{{
-    if seg != nil
-      if not @segments.include?(seg)
-        @segments.push(seg)
-      end
-    end
-  end
-
-  # }}}
-  def segments# {{{
-    @segments
   end
 
   # }}}
@@ -782,53 +761,14 @@ class Node < MapObject #{{{
 
 # }}}
 end #}}}
-class Segment < MapObject #{{{
-  def initialize(from, to)# {{{
-    @fnode = from
-    @tnode = to
-    super()
-    @fnode.addsegment(self)
-    @tnode.addsegment(self)
-  end
-
-# }}}
-  def nodes# {{{
-    [@fnode, @tnode]
-  end
-
-# }}}
-  def othernode(node)# {{{
-    if @fnode == node
-      return @tnode
-    end
-    if @tnode == node
-      return @fnode
-    end
-    nil
-  end
-
-# }}}
-  def from# {{{
-    @fnode
-  end
-
-# }}}
-  def to# {{{
-    @tnode
-  end
-
-# }}}
-  def to_s# {{{
-    "segment(#" + @osmid.to_s + ", " + @fnode.to_s + "->" + @tnode.to_s + ")"
-  end
-
-# }}}
-end #}}}
 class Path < MapObject# {{{
   def initialize(nodelist)# {{{
     super()
     @nodelist = nodelist
     @closed = false
+    if nodelist[0] == nodelist[-1]
+      @closed = true
+    end
   end
 
 # }}}
@@ -905,6 +845,11 @@ class Path < MapObject# {{{
   end
 
   # }}}
+  def to_s# {{{
+    "path(#" + @osmid.to_s + ")"
+  end
+
+  # }}}
 end # }}}
 class Area < MapObject# {{{
   def initialize(path)# {{{
@@ -958,7 +903,6 @@ end # }}}
 class Graph#{{{
   def initialize# {{{
     @nodes = {}
-    @segments = {}
     @paths = {}
     @areas = {}
     @tags = {}
@@ -976,6 +920,9 @@ class Graph#{{{
     nodes = {}
     # read nodes
     doc.find("//osm/node").each do |n|
+      if n['visible'] != 'true'
+        next
+      end
       tags = {}
       n.each_child do |c|
         if c.name == "tag" and c['k'] != "created_by"
@@ -984,62 +931,41 @@ class Graph#{{{
       end
       if n['action'] != 'delete'
         node = Node.new(n['lon'], n['lat'])
-        node.settags(tags)
+        node.settags(Tags.new(tags))
         node.setosmid(n['id'])
         addnode(node)
         nodes[n['id']] = node
       end
     end
 
-    # hash for osm segment ids
-    segments = {}
-    # read segments
-    doc.find("//osm/segment").each do |s|
-      tags = {}
-      s.each_child do |c|
-        if c.name == "tag" and c['k'] != "created_by"
-          tags[c['k']] = c['v']
-        end
-      end
-      if s['action'] != 'delete'
-        segment = Segment.new(nodes[s['from']], nodes[s['to']])
-        segment.settags(tags)
-        segment.setosmid(s['id'])
-        addsegment(segment)
-        segments[s['id']] = segment
-      end
-    end
-
-    # pull in all the ways. we don't care about them per se, but
-    # we do care that the segments in a way get the way's tags
+    ways = {}
+    # pull in all the ways
     doc.find("//osm/way").each do |w|
       tags = {}
-      segs = {}
-      if w['action'] == 'delete'
+      waynodes = []
+      if w['action'] == 'delete' or w['visible'] != 'true'
         next
       end
       w.each_child do |c|
         if c.name == "tag" and c['k'] != "created_by"
           tags[c['k']] = c['v']
         end
-        if c.name == "seg"
-          # add segment to segs list only if it existed in the osm file
-          if segments.has_key?(c['id'])
-            segs[segments[c['id']]] = 1
+        if c.name == "nd"
+          # add node to nodes list only if it existed in the osm file
+          if nodes.has_key?(c['ref'])
+            waynodes.push(nodes[c['ref']])
           end
         end
       end
-      wayseglist = []
-      segs.keys.each do |s|
-        s.addtags(tags)
-        wayseglist.push(s)
-      end
 
-      area = trybuildarea(wayseglist)
-      if area != nil
-#        area.settags(tags)
-        addarea(area)
-        addtags(area, tags)
+      p = Path.new(waynodes)
+      p.settags(Tags.new(tags))
+      p.setosmid(w['id'])
+      addpath(p)
+      ways[w['id']] = p
+
+      if p.closed?
+        addarea(Area.new(p))
       end
     end
   end #}}}
@@ -1052,18 +978,10 @@ class Graph#{{{
   end
   
   # }}}
-  def addsegment(segment)# {{{
-    segment.setgraph(self)
-    @segments[segment] = {}
-    # this call will use findtags to make sure that duplicate tags
-    # are stored in the same Tag object
-    setobjtags(segment, segment.tags)
-  end
-  
-  # }}}
   def addpath(path)# {{{
     path.setgraph(self)
     @paths[path] = 1
+    setobjtags(path, path.tags)
   end
   
   # }}}
@@ -1078,26 +996,8 @@ class Graph#{{{
   end
   
   # }}}
-  def makepaths# {{{
-    @paths = {}
-    seg = @segments.keys.dup
-
-    while (seg.length > 0)
-      seglist = buildadjseglist(seg)
-      p = Path.new(seglisttopath(seglist))
-      p.settags(seglist[0].tags)
-      addpath(p)
-    end
-  end
-
-  # }}}
   def nodes# {{{
     @nodes.keys
-  end
-  
-  # }}}
-  def segments# {{{
-    @segments.keys
   end
   
   # }}}
@@ -1119,9 +1019,9 @@ class Graph#{{{
   end
   
   # }}}
-  def findtags(tags)# {{{
+  def findtags(ftags)# {{{
     @tags.keys.each do |t|
-      if t.tags == tags
+      if t.tags == ftags.tags
         return t
       end
     end
@@ -1133,7 +1033,7 @@ class Graph#{{{
     tagdec(obj.tags)
     t = findtags(tags)
     if t == nil
-      t = Tags.new(tags)
+      t = tags
     end
     obj.settags(t)
     taginc(t)
@@ -1147,10 +1047,10 @@ class Graph#{{{
       str += "#{n.tags}\n"
     end
 
-    str = "== segments ==\n"
-    @segments.keys.each do |s|
-      str += "#{s} "
-      str += "#{s.tags}\n"
+    str += "== paths ==\n"
+    @paths.keys.each do |p|
+      str += "#{p} "
+      str += "#{p.tags}\n"
     end
 
     str += "== tags ==\n"
@@ -1319,161 +1219,6 @@ EOP
     end
   end
   
-  # }}}
-  def trybuildarea(wayseglist)# {{{
-    segments = wayseglist.dup
-    paths = []
-    area = nil
-
-    # assumption: no nodes in an area defintion have degree > 2,
-    #             otherwise this will all go wrong
-    while segments.length > 0
-      seg = segments.shift
-      pathlist = [seg.from, seg.to]
-      currnode = seg.to
-      while (pathlist[0] != pathlist[-1]) and (currnode != nil)
-        nextnode = nil
-        segments.each do |ts|
-          if ts.nodes.include?(currnode)
-            nextnode = ts.othernode(currnode)
-            segments.delete(ts)
-          end
-        end
-        if nextnode != nil
-          pathlist.push(nextnode)
-        end
-        currnode = nextnode
-      end
-      if pathlist[0] == pathlist[-1]
-        # we have a closed path :-)
-        pa = Path.new(pathlist)
-        pa.setclosed
-        paths.push(pa)
-      end
-    end
-
-    if paths.length > 0
-      area = Area.new(nil)
-      paths.each do |p|
-        area.addpath(p)
-      end
-    end
-
-    area
-  end
-
-  # }}}
-  def buildadjseglist(segments)# {{{
-  # this finds a path in the segments by whether adjacent segments
-  # have the same tags or not.
-  # it is slightly broken - need to check for currseg.to OR
-  # currseg.from depending on the node we came from (a path could
-  # consist of segments that point in different directions)
-  # hmm - maybe... ----oneway---><---oneway---- would break this, so
-  # probably it is ok.
-  # It _does_ need to be extended to always find the longest
-  # possible path, otherwise names can occasionally be placed on
-  # roads in unusual places!
-    path = []
-    debug = false
-
-    currseg = segments[0]
-
-    tags = currseg.tags
-    # forward
-    while currseg != nil
-      path.push(currseg)
-      segments.delete(currseg)
-      candidates = []
-      if debug
-        puts "considering F segment #{currseg.to_s}"
-      end
-      currseg.to.segments.each do |s|
-        if debug
-          puts "  looking at segment #{s.to_s}"
-          if s.tags != tags
-            puts "    tags don't match"
-          end
-          if path.include?(s)
-            puts "    path includes this"
-          end
-        end
-        if s.from == currseg.to and s.tags == tags and not path.include?(s)
-          if segments.include?(s)
-            candidates.push(s)
-          end
-        end
-      end
-      currseg = nil
-      if candidates.length > 0
-        currseg = candidates[0]
-      end
-    end
-
-    currseg = path[0]
-    path.shift
-    # backwards
-    while currseg != nil
-      path.unshift(currseg)
-      segments.delete(currseg)
-      if debug
-        puts "considering B segment #{currseg.to_s}"
-      end
-      candidates = []
-      currseg.from.segments.each do |s|
-        if debug
-          puts "  looking at segment #{s.to_s}"
-          if s.tags != tags
-            puts "    tags don't match"
-          end
-          if path.include?(s)
-            puts "    path includes this"
-          end
-        end
-        if s.to == currseg.from and s.tags == tags and not path.include?(s)
-          if segments.include?(s)
-            candidates.push(s)
-          end
-        end
-      end
-      currseg = nil
-      if candidates.length > 0
-        currseg = candidates[0]
-      end
-    end
-
-    path
-  end
-
-  # }}}
-  def seglisttopath(segments)# {{{
-    if segments.length == 1
-      return segments[0].nodes
-    end
-    if segments[1].nodes.include?(segments[0].to)
-      nodelist = [segments[0].from, segments[0].to]
-      currnode = segments[0].to
-    elsif segments[1].nodes.include?(segments[0].from)
-      nodelist = [segments[0].to, segments[0].from]
-      currnode = segments[0].from
-    else
-      raise "this is not a path"
-    end
-
-    for sn in (1..segments.length-1)
-      seg = segments[sn]
-      if seg.from == currnode
-        nodelist.push(currnode = seg.to)
-      elsif seg.to == currnode
-        nodelist.push(currnode = seg.from)
-      else
-        raise "this is not a path"
-      end
-    end
-
-    nodelist
-  end
-
   # }}}
 
 end# }}}
@@ -1721,6 +1466,5 @@ end
 
 # }}}
 
-g.makepaths
 puts g.eps()
 

@@ -63,3 +63,7 @@ Changelog:
 0.02.1  - 2007-08-09
           added highway=pedestrian style
           tweaked highway style gen code and added a few comments :)
+
+0.03    - 2007-10-15
+          converted for OSM data version 0.5
+

@@ -1,8 +1,11 @@
 <?php
   header("Content-type:text/plain");
 
+  $APIVersion=3;
+
   if(0){ // Option to kill database access, but keep sending request queries
-    printf("OK|3|%d|%d|%d|dev_random",
+    printf("OK|%d|%d|%d|%d|dev_random",
+      $APIVersion,
       rand(0,4095),
       rand(0,4095),
       12);
@@ -10,7 +13,8 @@
   }
 
   if(0){ // Option to kill request queries
-    print "XX|3||||disabled";
+    printf("XX|%d||||disabled",
+      $APIVersion);
     exit;
   }
 
@@ -40,12 +44,12 @@
   # (if they can't, there's no point in them taking requests)
   $VersionID = checkVersion($_GET["version"]);
   if($VersionID == -1){
-    print "XX|4||||client_version_unacceptable"; ## Use a fake Version for the answer to make clients abort loop
+    printf("XX|%d||||client_version_unacceptable",($APIVersion+1)); ## Use a fake Version for the answer to make clients abort loop
     exit;
   }
 
   CheckForRequest($Z);
-  print "XX|3||||nothing_to_do";
+  printf("XX|%d||||nothing_to_do",$APIVersion);
   // THE END
 
 function CheckForRequest($Z){
@@ -58,7 +62,9 @@ function CheckForRequest($Z){
   $Result = mysql_query($SQL);
 
   if(mysql_errno()){
-    print "XX|3||||error: " . mysql_error();
+    printf("XX|%d||||error: %s",
+      $APIVersion,
+      mysql_error());
     exit;
   }
   if(mysql_num_rows($Result) == 0){
@@ -66,7 +72,8 @@ function CheckForRequest($Z){
   }
 
   $Data = mysql_fetch_assoc($Result);
-  printf("OK|3|%d|%d|%d|db",
+  printf("OK|%d|%d|%d|%d|db",
+    $APIVersion,
     $Data["x"],
     $Data["y"],
     $Z);

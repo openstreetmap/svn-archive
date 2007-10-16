@@ -237,13 +237,17 @@ elsif ($Mode eq "")
     # ----------------------------------
     my ($did_something, $message) = ProcessRequestsFromServer();
     
-    talkInSleep($message, 60) unless($did_something);
-    
+    if (! $did_something)
+    {
+        statusMessage("you may safely press Ctrl-C now if you are not running this from a script", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
+        talkInSleep($message, 60);
+    }
+    statusMessage("if you want to run this program continuously use loop mode", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
 }
 else
 {
     # ----------------------------------
-    # "help" as first argument tells how to use the program
+    # "help" (or any other non understood parameter) as first argument tells how to use the program
     # ----------------------------------
     my $Bar = "-" x 78;
     print "\n$Bar\nOpenStreetMap tiles\@home client\n$Bar\n";

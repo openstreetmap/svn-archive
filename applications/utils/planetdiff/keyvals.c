@@ -113,7 +113,8 @@ char *getItem(struct keyval *head, const char *name)
 }	
 
 
-struct keyval *popItem(struct keyval *head)
+
+static struct keyval *popItemInternal(struct keyval *head)
 {
     struct keyval *p;
 
@@ -133,6 +134,26 @@ struct keyval *popItem(struct keyval *head)
     return p;
 }	
 
+struct keyval *popItem(struct keyval *head)
+{
+    struct keyval *p = popItemInternal(head);
+    char *k, *v;
+
+    if (!p) 
+        return NULL;
+
+    // Lazy escaping (only escape values which actually get output)
+    k = p->key;
+    p->key = escape(k);
+    free(k);
+
+    v = p->value;
+    p->value = escape(v);
+    free(v);
+
+    return p;
+}	
+
 
 void pushItem(struct keyval *head, struct keyval *item)
 {
@@ -145,20 +166,19 @@ void pushItem(struct keyval *head, struct keyval *item)
     head->prev = item;
 }	
 
-int addItem(struct keyval *head, const char *key, const char *value, int noDupe)
+int addItem(struct keyval *head, const char *name, const char *value, int noDupe)
 {
     struct keyval *item;
-    char *k = escape(key);
-    char *v = escape(value);
+
+    assert(head);
+    assert(name);
+    assert(value);
 
     if (noDupe) {
         item = head->next;
         while (item != head) {
-            if (!strcmp(item->value, v) && !strcmp(item->key, k)) {
-                free(k);
-                free(v);
+            if (!strcmp(item->value, value) && !strcmp(item->key, name))
                 return 1;
-            }
             item = item->next;
         }
     }
@@ -167,13 +187,11 @@ int addItem(struct keyval *head, const char *key, const char *value, int noDupe)
 
     if (!item) {
         fprintf(stderr, "Error allocating keyval\n");
-        free(k);
-        free(v);
         return 2;
     }
 
-    item->key   = k;
-    item->value = v;
+    item->key   = strdup(name);
+    item->value = strdup(value);
 
 #if 0
     item->next = head->next;
@@ -191,7 +209,7 @@ void resetList(struct keyval *head)
 {
     struct keyval *item;
 	
-    while((item = popItem(head))) 
+    while((item = popItemInternal(head))) 
         freeItem(item);
 }
 

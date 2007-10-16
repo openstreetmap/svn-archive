@@ -36,7 +36,7 @@
  * DONE:
  * Escape key/values on output (&"'<>)
  * write patch tool
- * Error if file not in required sequence (node/segment/way with increasing ID)
+ * Error if file not in required sequence (node/way/relation with increasing ID)
  * Warn if generator is not planet.rb since others tend to violate ordering above
  * Generate run-time stats on stderr
  * Allow direct reading of .gz and .bz2 files
@@ -56,13 +56,14 @@
 #include "input.h"
 #include "sanitizer.h"
 
-/* Since {node,segment,way} elements are not nested we can
- *  accumulates the attributes, tags and segments in global data.
+/* Since {node,way,relation} elements are not nested we can
+ * accumulates the attributes, tags and nodes in global data.
  * This is maintained independently for planetA and planetB
  */
-enum type { invalid, node, segment, way, eof } current[2];
+enum type { invalid, node, way, relation, eof } current[2];
 static int osm_id[2];
-static struct keyval tags[2], segs[2], attrs[2];
+static struct keyval tags[2], nds[2], attrs[2];
+static struct keyval member_nodes[2], member_ways[2], member_rels[2];
 static xmlTextReaderPtr reader[2];
 static const char *files[2];
 // Strict mode is considers timestamp and key ordering changes as significant, otherwise they are ignored
@@ -155,9 +156,9 @@ void sortList(struct keyval *in, struct keyval *out)
     free(t);
 }
 
-static int compareTags(void)
+static int compareLists(struct keyval kv[2])
 {
-    // Strict mode requires all tags to be in a consistent order
+    // Strict mode requires all lists to be in a consistent order
     // non-strict treats the 2 sets of tags below as equivalent
     //
     // <k='A' v='1' />
@@ -170,13 +171,13 @@ static int compareTags(void)
     int r;
 
     if (strict)
-        return compareKeyval(tags);
+        return compareKeyval(kv);
 
-    if (!listHasData(&tags[0]) && !listHasData(&tags[1]))
+    if (!listHasData(&kv[0]) && !listHasData(&kv[1]))
         return 0;
 
-    sortList(&tags[0], &clone[0]);
-    sortList(&tags[1], &clone[1]);
+    sortList(&kv[0], &clone[0]);
+    sortList(&kv[1], &clone[1]);
     r = compareKeyval(clone);
     resetList(&clone[0]);
     resetList(&clone[1]);
@@ -192,10 +193,19 @@ static int compareOther(void)
     c = compareKeyval(attrs);
     if (c) return c;
 
-    c = compareTags();
+    c = compareLists(tags);
     if (c) return c;
 
-    c = compareKeyval(segs);
+    c = compareKeyval(nds);
+    if (c) return c;
+
+    c = compareLists(member_nodes);
+    if (c) return c;
+
+    c = compareLists(member_ways);
+    if (c) return c;
+
+    c = compareLists(member_rels);
     if (c) return c;
 
     return 0;
@@ -219,14 +229,11 @@ static void collectAttributes(int i)
 
 static void StartElement(int i, const xmlChar *name)
 {
-    xmlChar *xk, *xv, *xid, *xgen;
+    xmlChar *xk, *xv, *xid, *xgen, *xrole, *xtype;
     static int warn = 1;
 
     if (xmlStrEqual(name, BAD_CAST "node")) {
         current[i] = node;
-        collectAttributes(i);
-    } else if (xmlStrEqual(name, BAD_CAST "segment")) {
-        current[i] = segment;
         collectAttributes(i);
     } else if (xmlStrEqual(name, BAD_CAST "tag")) {
         xk = xmlTextReaderGetAttribute(reader[i], BAD_CAST "k");
@@ -234,13 +241,31 @@ static void StartElement(int i, const xmlChar *name)
         addItem(&tags[i], (char *)xk, (char *)xv, 0);
         xmlFree(xk);
         xmlFree(xv);
+    } else if (xmlStrEqual(name, BAD_CAST "member")) {
+        xtype = xmlTextReaderGetAttribute(reader[i], BAD_CAST "type");
+        xid   = xmlTextReaderGetAttribute(reader[i], BAD_CAST "ref");
+        xrole = xmlTextReaderGetAttribute(reader[i], BAD_CAST "role");
+        if (xmlStrEqual(xtype, BAD_CAST "node"))
+            addItem(&member_nodes[i], (char *)xid, (char *)xrole, 0);
+        else if (xmlStrEqual(xtype, BAD_CAST "way"))
+            addItem(&member_ways[i], (char *)xid, (char *)xrole, 0);
+        else if (xmlStrEqual(xtype, BAD_CAST "relation"))
+            addItem(&member_rels[i], (char *)xid, (char *)xrole, 0);
+        else
+            fprintf(stderr, "Unknown type: <member type='%s' ...\n", (char *)xtype);
+        xmlFree(xtype);
+        xmlFree(xid);
+        xmlFree(xrole);
     } else if (xmlStrEqual(name, BAD_CAST "way")) {
         current[i] = way;
         collectAttributes(i);
-    } else if (xmlStrEqual(name, BAD_CAST "seg")) {
-        xid  = xmlTextReaderGetAttribute(reader[i], BAD_CAST "id");
-        addItem(&segs[i], "id", (char *)xid, 0);
+    } else if (xmlStrEqual(name, BAD_CAST "nd")) {
+        xid  = xmlTextReaderGetAttribute(reader[i], BAD_CAST "ref");
+        addItem(&nds[i], "ref", (char *)xid, 0);
         xmlFree(xid);
+    } else if (xmlStrEqual(name, BAD_CAST "relation")) {
+        current[i] = relation;
+        collectAttributes(i);
     } else if (xmlStrEqual(name, BAD_CAST "osm")) {
         if (warn) {
             xgen = xmlTextReaderGetAttribute(reader[i], BAD_CAST "generator");
@@ -261,18 +286,20 @@ static void StartElement(int i, const xmlChar *name)
 
 static int EndElement(int i, const xmlChar *name)
 {
-    // Return 0 for closing tag of node/segment/way
+    // Return 0 for closing tag of node/way/relation
     int ret;
     if (xmlStrEqual(name, BAD_CAST "node")) {
-        ret = 0;
-    } else if (xmlStrEqual(name, BAD_CAST "segment")) {
         ret = 0;
     } else if (xmlStrEqual(name, BAD_CAST "way")) {
         ret = 0;
     } else if (xmlStrEqual(name, BAD_CAST "tag")) {
         ret = 1;
-    } else if (xmlStrEqual(name, BAD_CAST "seg")) {
+    } else if (xmlStrEqual(name, BAD_CAST "member")) {
         ret = 1;
+    } else if (xmlStrEqual(name, BAD_CAST "nd")) {
+        ret = 1;
+    } else if (xmlStrEqual(name, BAD_CAST "relation")) {
+        ret = 0;
     } else if (xmlStrEqual(name, BAD_CAST "osm")) {
         ret = 1; // maybe should be 0
     } else if (xmlStrEqual(name, BAD_CAST "bound")) {
@@ -318,8 +345,8 @@ static const char *getName(int i)
 {
     switch (current[i]) {
         case node: return "node";
-        case segment: return "segment";
         case way: return "way";
+        case relation: return "relation";
         case invalid: return "invalid";
         default:
             break;
@@ -340,8 +367,11 @@ static void getobject(int i)
 
     // Delete data for previous object
     resetList(&attrs[i]);
-    resetList(&segs[i]);
+    resetList(&nds[i]);
     resetList(&tags[i]);
+    resetList(&member_nodes[i]);
+    resetList(&member_ways[i]);
+    resetList(&member_rels[i]);
 
     current[i] = eof;
     if (!reader[i])
@@ -362,7 +392,7 @@ static void getobject(int i)
 
         ret = processNode(i);
     }
-    // Retrieve osm_id for node/segment/way
+    // Retrieve osm_id for node/way/relation
     id = getItem(&attrs[i], "id");
     osm_id[i] = id ? atoi(id) : 0;
     //fprintf(stderr, "%d: object %d, id=%d\n", i, current[i], osm_id[i]);
@@ -370,7 +400,7 @@ static void getobject(int i)
     // Perform sanity checking on element sequence. The output of planet.rb conforms to this and
     // the current diff/patch algorithm relies on these properties.
     if (current[i] < last_type) {
-        fprintf(stderr, "Error: <%s> seen after <%s>. The file must be strictly ordered node/segment/way.\n", getName(i), last_name);
+        fprintf(stderr, "Error: <%s> seen after <%s>. The file must be strictly ordered node/way/relation.\n", getName(i), last_name);
         fprintf(stderr, "The planet.osm generated by the planet export (planet.rb) is consistent with this.\n");
         exit(8);
     }
@@ -405,11 +435,24 @@ static void displayNode(int i, const char *indent)
         freeItem(p);
     }
 
-    if (listHasData(&tags[i]) || listHasData(&segs[i])) {
+    if (listHasData(&tags[i]) || listHasData(&nds[i]) || listHasData(&member_nodes[i]) ||
+        listHasData(&member_ways[i]) || listHasData(&member_rels[i])) {
         printf(">\n");
 
-        while ((p = popItem(&segs[i])) != NULL) {
-            printf("%s  <seg id=\"%s\" />\n", indent, p->value);
+        while ((p = popItem(&nds[i])) != NULL) {
+            printf("%s  <nd ref=\"%s\" />\n", indent, p->value);
+            freeItem(p);
+        }
+        while ((p = popItem(&member_nodes[i])) != NULL) {
+            printf("%s  <member type=\"node\" ref=\"%s\" role=\"%s\" />\n", indent, p->key, p->value);
+            freeItem(p);
+        }
+        while ((p = popItem(&member_ways[i])) != NULL) {
+            printf("%s  <member type=\"way\" ref=\"%s\" role=\"%s\" />\n", indent, p->key, p->value);
+            freeItem(p);
+        }
+        while ((p = popItem(&member_rels[i])) != NULL) {
+            printf("%s  <member type=\"relation\" ref=\"%s\" role=\"%s\" />\n", indent, p->key, p->value);
             freeItem(p);
         }
         while ((p = popItem(&tags[i])) != NULL) {
@@ -483,7 +526,7 @@ static int diffFiles(void)
     }
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    printf("<planetdiff version=\"0.3\" generator=\"OpenStreetMap planetdiff\" from=\"%s\" to=\"%s\">\n", files[0], files[1]);
+    printf("<planetdiff version=\"0.5\" generator=\"OpenStreetMap planetdiff\" from=\"%s\" to=\"%s\">\n", files[0], files[1]);
     process();
     printf("</planetdiff>\n");
 
@@ -586,10 +629,10 @@ static int patchFiles(void)
     }
 
     printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    printf("<osm version=\"0.3\" generator=\"OpenStreetMap planet.rb\">\n");
+    printf("<osm version=\"0.5\" generator=\"OpenStreetMap planet.rb\">\n");
     // Ensure generator string length matches original planet.rb
     // to allow 'cmp -l' to be run on output to verify correctness 
-    //printf("<osm version=\"0.3\" generator=\"OSM planetpatch tool---\">\n");
+    //printf("<osm version=\"0.5\" generator=\"OSM planetpatch tool---\">\n");
 
     ret = xmlTextReaderRead(reader[1]);
 
@@ -635,8 +678,11 @@ static int mainDiff(int argc, char *argv[], const char *name)
     for (i=0; i<2; i++) {
         files[i] = argv[i+1];
         initList(&tags[i]);
-        initList(&segs[i]);
+        initList(&nds[i]);
         initList(&attrs[i]);
+        initList(&member_nodes[i]);
+        initList(&member_ways[i]);
+        initList(&member_rels[i]);
     }
 
     if (diffFiles() != 0)
@@ -664,8 +710,11 @@ static int mainPatch(int argc, char *argv[], const char *name)
     for (i=0; i<2; i++) {
         files[i] = argv[i+1];
         initList(&tags[i]);
-        initList(&segs[i]);
+        initList(&nds[i]);
         initList(&attrs[i]);
+        initList(&member_nodes[i]);
+        initList(&member_ways[i]);
+        initList(&member_rels[i]);
     }
 
     if (patchFiles() != 0)

@@ -123,6 +123,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.points = {}
     self.currentFile = ''
     self.validTimes = {}
+    self.frame = 1
   def walkDir(self, directory):
     """Load a directory-structure full of GPX files into memory"""
     for root, dirs, files in os.walk(directory):
@@ -255,11 +256,10 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.set_line_cap(cairo.LINE_CAP_ROUND)
     
     # Divide time into frames
-    secondsPerFrame = 500
+    secondsPerFrame = 2000
     frameTimes = range(int(timeList[0]), int(timeList[-1]), secondsPerFrame)
     numFrames = len(frameTimes)
     lastT = 0
-    frame = 1
     count = 1
     pointsDrawn = 0
     currentPositions = {}
@@ -301,19 +301,28 @@ class TracklogInfo(saxutils.DefaultHandler):
         for name,pos in currentPositions.items():
           ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
           ctx2.fill()
-        filename = "gfx/img_%05d.png" % frame
-        frame = frame + 1
+        filename = "gfx/img_%05d.png" % self.frame
+        self.frame = self.frame + 1
         surface2.write_to_png(filename)
       print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
-    self.fadeToMapImage("gfx/img_%05d.png", frame)
+    self.pause("gfx/img_%05d.png", self.surface2, 50)
+    self.fadeToMapImage("gfx/img_%05d.png")
 
   def drawCities(self, gazeteer):
     Cities = CityPlotter(self.surface, self.extents)
     Cities.drawCities(self.proj, gazeteer)
   
-  def fadeToMapImage(self, filenameFormat, frame):
+  def pause(self, filenameFormat, surface, frames):
+    for t in range(0, frames):
+      print "Pausing"
+      
+      filename = filenameFormat % self.frame
+      self.surface2.write_to_png(filename)
+      self.frame = self.frame + 1
+    
+  def fadeToMapImage(self, filenameFormat):
     URL =  "http://dev.openstreetmap.org/~ojw/bbox/?W=%f&S=%f&E=%f&N=%f&width=%d&height=%d" % (self.proj.W, self.proj.S, self.proj.E, self.proj.N, self.width, self.height)
     print "Downloading map: ", URL
     sock = urllib.urlopen(URL)
@@ -328,7 +337,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     h = mapSurface.get_height()
     print "Size %d x %d" % (w,h)
   
-    for alphaPercent in range(0, 101, 1):
+    for alphaPercent in range(0, 101, 3):
       alpha = float(alphaPercent) / 100.0
       print "Fading map: %1.0f%%" % alphaPercent
       
@@ -342,9 +351,10 @@ class TracklogInfo(saxutils.DefaultHandler):
       ctx2.set_source_surface(mapSurface, 0, 0);
       ctx2.paint_with_alpha(alpha)
       
-      filename = filenameFormat % frame
+      filename = filenameFormat % self.frame
       self.surface2.write_to_png(filename)
-      frame = frame + 1
+      self.frame = self.frame + 1
+    self.pause(filenameFormat, self.surface2, 50)
 
 
 # Handle command-line options

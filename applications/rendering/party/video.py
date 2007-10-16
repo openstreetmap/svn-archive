@@ -255,7 +255,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     ctx.set_line_cap(cairo.LINE_CAP_ROUND)
     
     # Divide time into frames
-    secondsPerFrame = 50
+    secondsPerFrame = 500
     frameTimes = range(int(timeList[0]), int(timeList[-1]), secondsPerFrame)
     numFrames = len(frameTimes)
     lastT = 0
@@ -307,10 +307,45 @@ class TracklogInfo(saxutils.DefaultHandler):
       print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
+    self.fadeToMapImage("gfx/img_%05d.png", frame)
 
   def drawCities(self, gazeteer):
     Cities = CityPlotter(self.surface, self.extents)
     Cities.drawCities(self.proj, gazeteer)
+  
+  def fadeToMapImage(self, filenameFormat, frame):
+    URL =  "http://dev.openstreetmap.org/~ojw/bbox/?W=%f&S=%f&E=%f&N=%f&width=%d&height=%d" % (self.proj.W, self.proj.S, self.proj.E, self.proj.N, self.width, self.height)
+    print "Downloading map: ", URL
+    sock = urllib.urlopen(URL)
+    out = open("map.png","w")
+    out.write(sock.read())
+    out.close()
+    sock.close
+    
+    mapSurface = cairo.ImageSurface.create_from_png("map.png")
+    
+    w = mapSurface.get_width()
+    h = mapSurface.get_height()
+    print "Size %d x %d" % (w,h)
+  
+    for alphaPercent in range(0, 101, 1):
+      alpha = float(alphaPercent) / 100.0
+      print "Fading map: %1.0f%%" % alphaPercent
+      
+      # Copy 
+      ctx2 = cairo.Context(surface2)
+      ctx2.set_source_surface(surface, 0, 0);
+      ctx2.set_operator(cairo.OPERATOR_SOURCE);
+      ctx2.paint();
+    
+      # Overlay
+      ctx2.set_source_surface(mapSurface, 0, 0);
+      ctx2.paint_with_alpha(alpha)
+      
+      filename = filenameFormat % frame
+      self.surface2.write_to_png(filename)
+      frame = frame + 1
+
 
 # Handle command-line options
 opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","pointsize=","gazeteer="])
@@ -355,5 +390,7 @@ TracklogPlotter.createImage(fullwidth, width, height, surface, surface2)
 
 print "Plotting tracklogs"
 TracklogPlotter.drawCities(gazeteer)
+
 TracklogPlotter.drawTracklogs(pointsize)
+
 

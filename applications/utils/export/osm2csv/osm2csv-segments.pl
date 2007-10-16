@@ -22,6 +22,7 @@ use Data::Dumper;
 
 use Geo::Filter::Area;
 use Geo::OSM::Planet;
+use Geo::Geometry;
 use Utils::Debug;
 use Utils::File;
 use Utils::LWP::Utils;
@@ -247,7 +248,13 @@ sub parse_line(){
 	     defined($Nodes{$from_node}) &&
 	     defined($Nodes{$to_node}) 
 	     ) {
-	    printf $FH_OSM "%s,%s\n",$Nodes{$from_node},$Nodes{$to_node};
+	    my ($lat1,$lon1)=split(",",$Nodes{$from_node});
+	    my ($lat2,$lon2)=split(",",$Nodes{$to_node});
+	    my $angle = angle_north_relative(
+				       { lat => $lat1 , lon => $lon1 },
+				       { lat => $lat2 , lon => $lon2 });
+
+	    printf $FH_OSM "%s,%s,%f\n",$Nodes{$from_node},$Nodes{$to_node},$angle;
 	    $Stats{"nbd_ref read"}++;
 	    $Stats{"elem read"}++;
 	}
@@ -256,12 +263,16 @@ sub parse_line(){
 	$element = "way";
 	$from_node=0;
     } elsif ( $line =~ m/<\/way/ ){
+    } elsif ( $line =~ m/<relation/ ){
+    } elsif ( $line =~ m/<\/relation/ ){
+    } elsif ( $line =~ m/<memberrelation/ ){
+    } elsif ( $line =~ m/<member / ){
     } elsif ( $line =~ m/<\/node/ ){
     } elsif ( $line =~ m/<\/osm/ ){
-    } elsif ( $line =~ m/<bound box='/ ){
+    } elsif ( $line =~ m/<bound.*box=[\'\"]/ ){
     } elsif ( $line =~ m/<tag/ ){
     } elsif ( $line =~ m/<?xml version/ ){
-    } elsif ( $line =~ m/<osm version='0.5' / ){
+    } elsif ( $line =~ m/<osm version=[\'\"]0\.5[\'\"]/ ){
     } else {
 	print STDERR "Unknown Line: $line";
     }

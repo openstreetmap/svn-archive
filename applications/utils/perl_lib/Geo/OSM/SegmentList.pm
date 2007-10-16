@@ -46,7 +46,7 @@ sub load_segment_list($){
 
 	my $home = $ENV{HOME}|| '~/';
 	my $path=	planet_dir();
-	my $osm_filename = "${path}/csv/osm.csv";
+	my $osm_filename = "${path}/csv/osm-segments.csv";
 	$osm_filename =~ s,\~/,$home/,;
 	printf STDERR "check $osm_filename for loading\n" if $DEBUG;
 	
@@ -84,7 +84,7 @@ sub reduce_segments_list($$) {
 	push(@{$osm_segments},$segment);
     }
     if ( $VERBOSE > 3 || $DEBUG > 3 ) {
-	printf STDERR "		Reduced OSM Data to $count( $all_count) OSM-Segments ";
+	printf STDERR "		Reduced OSM Segment list to $count( $all_count) OSM-Segments ";
 	print_time($start_time);
     }
 
@@ -93,50 +93,78 @@ sub reduce_segments_list($$) {
 
 # -------------------------------------------------------
 # Load the csv Version of a segment list
-sub LoadOSM_segment_csv($)
+# Args: $filename, {lat_min=> .., lat_max => ..., lon_min => .., lon_max => .. }
+sub LoadOSM_segment_csv($;$)
 {
     my $filename = shift;
-
-    printf STDERR "Reading OSM File: $filename\n"
+    my $bounds  = shift;
+    printf STDERR "Reading OSM-Segment-csv File: $filename, ($bounds->{lat_min} ... $bounds->{lat_max} , $bounds->{lon_min} ... $bounds->{lon_max})\n"
 	if $DEBUG || $VERBOSE;
     my $start_time=time();
 
     my $segments;
-    my $count=0;
+    my $check_bounds = 1 if defined $bounds;
+    $main::dont_write_osm_storable=1 ||  $check_bounds;
+    $main::dont_read_osm_storable=1;
 
     if ( -s "$filename.storable" && 
-	 ! file_needs_re_generation($filename,"$filename.storable")) {
+	 ! file_needs_re_generation($filename,"$filename.storable")
+	 && ! $main::dont_read_osm_storable ) {
 	# later we should compare if the file also is newer than the source
 	$filename .= ".storable";
+	printf STDERR "Reading OSM File as storable: $filename\n"
+	    if $DEBUG || $VERBOSE;
 	$segments = Storable::retrieve($filename);
+	if ( $VERBOSE >1 || $DEBUG) {
+	    printf STDERR "Reading $filename done";
+	    print_time($start_time);
+	}
     } else {
 	my $fh = data_open($filename);
+	my $count=0;
+	my $count_read=0;
 
 	die "Cannot open $filename in LoadOSM_segment_csv.\n".
 	    "Please create it first to use the option --osm.\n".
 	    "See --help for more info"  unless $fh;
 
 	while ( my $line = $fh ->getline() ) {
+	    $count++;
 	    chomp $line;
 	    my @segment;
 	    my $dummy;
-	    ($segment[0],$segment[1],$segment[2],$segment[3],$dummy) = split(/,/,$line,5);
+	    ($segment[0],$segment[1],$segment[2],$segment[3],$segment[4]) = split(/,/,$line,5);
 #	    print STDERR Dumper(\@segment);
-	    $segment[4] = angle_north_relative(
-					    { lat => $segment[0] , lon => $segment[1] },
-					    { lat => $segment[2] , lon => $segment[3] });
-	    $segment[5] = $dummy if $DEBUG;
+
+	    if ( $check_bounds ) {
+		next unless $segment[0] >= $bounds->{lat_min};
+		next unless $segment[0] <= $bounds->{lat_max};
+		next unless $segment[1] >= $bounds->{lon_min};
+		next unless $segment[1] <= $bounds->{lon_max};
+		next unless $segment[2] >= $bounds->{lat_min};
+		next unless $segment[2] <= $bounds->{lat_max};
+		next unless $segment[3] >= $bounds->{lon_min};
+		next unless $segment[3] <= $bounds->{lon_max};
+	    }
+
 	    push (@{$segments},\@segment);
-	    $count++;
+	    $count_read++;
 	}
 	$fh->close();
-	Storable::store($segments   ,"$filename.storable");
+	if ( $VERBOSE >1 || $DEBUG) {
+	    printf STDERR "Read and parsed $count_read($count) Lines in $filename";
+	    print_time($start_time);
+	}
+	if ( ! $main::dont_write_osm_storable ) {
+	    $start_time=time();
+	    Storable::store($segments   ,"$filename.storable");
+	    if ( $VERBOSE >1 || $DEBUG) {
+		printf STDERR "Wrote Storable in to $filename.storable";
+		print_time($start_time);
+	    }
+	};
     }
 
-    if ( $VERBOSE >1 || $DEBUG) {
-	printf STDERR "Read and parsed $count Lines in $filename";
-	print_time($start_time);
-    }
 
     return($segments);
 }
@@ -230,9 +258,11 @@ sub segment {
     ($segment[0],$segment[1],$segment[2],$segment[3]) =
 	($node1->{lat},$node1->{lon},$node2->{lat},$node2->{lon});
     
-    $segment[4] = angle_north_relative(
+    if ( ! $segment[4] ){
+	$segment[4] = angle_north_relative(
 				       { lat => $segment[0] , lon => $segment[1] },
 				       { lat => $segment[2] , lon => $segment[3] });
+    }
     #$segment[5] = $attrs{name} if $DEBUG;
     push (@{$read_osm_segments},\@segment);
 }

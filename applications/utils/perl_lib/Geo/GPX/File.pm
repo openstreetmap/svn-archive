@@ -5,7 +5,7 @@ package Geo::GPX::File;
 use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
-@EXPORT = qw( read_gpx_file write_gpx_file );
+@EXPORT = qw( read_gpx_file write_gpx_file  debug_write_track);
 
 
 use strict;
@@ -281,6 +281,21 @@ sub write_gpx_file($$) { # Write an gpx File
     printf STDERR "%-35s: %5d Points in %d Tracks $comment",$filename,$point_count,$track_id;
     print_time($start_time);
 }
+
+# ------------------------------------------------------------------
+# Write intermediate raw gpx Files for Debugging
+sub debug_write_track($$){
+    my $tracks       = shift; # Track to write
+    my $name_suffix = shift;
+    my $filename=$tracks->{filename};
+
+    if ( $main::out_raw_gpx && $DEBUG >3 ){
+	my $new_gpx_file = $filename;
+	return unless $new_gpx_file =~s/(\.gpx)?$/$name_suffix.gpx/;
+	write_gpx_file($tracks,$new_gpx_file);
+    };
+}
+
 
 1;
 

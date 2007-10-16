@@ -49,6 +49,7 @@ sub create_node($$) {
 	$next_osm_node_number--;
 	$id = $next_osm_node_number;
 	$elem->{tag}->{converted_by} = "Track2osm" ;
+	$elem->{node_id} ||= $id;
 	$osm_nodes->{$id}=$elem;
 	$lat_lon2node->{$lat_lon}=$id;
 	$osm_nodes_duplicate->{$lat_lon}=$id;
@@ -79,37 +80,33 @@ sub tracks2osm($){
 
     my $count_valid_points_for_ways=0;
 
-    my $track_nr=0;
-
     enrich_tracks($tracks);
 
     for my $track ( @{$tracks->{tracks}} ) {
-	$track_nr++;
 
-	my $element_count=0;
+	# We need at least two elements in track
+	next unless scalar(@{$track})>1;
 
-	my $tags = {
+	$osm_way_number--;
+	$osm_ways->{$osm_way_number}->{tag} =  {
 	    "converted_by" => "Track2osm",
 	    "highway"      => "FIXME",
 	    "note"         => "FIXME",
 	};
-	$osm_way_number--;
-	for my $track_pos ( 1 .. $#{@{$track}} ) {
-	    my $elem = $track->[$track_pos];
-
+	for my $elem ( @{$track} ) {
 	    my $node_id   = $elem->{node_id}      || create_node($osm_nodes,$elem);
-	    $elem->{node_id} ||=  $node_id;
 	    
 	    # -------------------------------------------- Add to Way
-	    ;
 	    push(@{$osm_ways->{$osm_way_number}->{nd}},$node_id);
 	    $count_valid_points_for_ways++;
-		
 	}
-	$osm_ways->{$osm_way_number}->{tag} = $tags;
     }
+
+    my $bounds = GPS::get_bounding_box($tracks);
+    printf STDERR "Track $reference Bounds: ".Dumper(\$bounds) if $DEBUG>5;
     return { nodes    => $osm_nodes,
 	     ways     => $osm_ways,
+	     bounds   => $bounds,
 	 };
 }
 

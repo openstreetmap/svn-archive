@@ -163,23 +163,19 @@ sub is_segment_of_list_nearby($$$){
 # check if new trackpoints are on existing osm tracks
 sub filter_against_osm($$$){
     my $tracks       = shift; # reference to tracks list
-    my $all_osm_segments = shift;
+    my $segments_filename = shift;
     my $config       = shift;
 
     my $start_time=time();
 
     my $filename=$tracks->{filename};
-    if ( $out_raw_gpx && $DEBUG >3 ){
-	my $new_gpx_file = "$filename-raw-pre-osm.gpx";
-	$new_gpx_file =~s/.gpx-raw-pre-osm.gpx/-raw-pre-osm.gpx/;
-	write_gpx_file($tracks,$new_gpx_file);
-    };
 
     my $dist_osm_track = $config->{dist} || 40;
 
     my $bounds = GPS::get_bounding_box($tracks);
     printf STDERR "Track Bounds: ".Dumper(\$bounds) if $DEBUG>5;
-    my $osm_segments = reduce_segments_list($all_osm_segments,$bounds);
+#    my $osm_segments = reduce_segments_list($all_osm_segments,$bounds);
+    my $osm_segments = LoadOSM_segment_csv($segments_filename,$bounds);
 
     enrich_tracks($tracks);
 
@@ -631,12 +627,6 @@ sub split_tracks($$){
     my $start_time=time();
 
     my $filename=$tracks->{filename};
-    if ( $out_raw_gpx && $DEBUG >3 ){
-	my $new_gpx_file = "$filename-raw-pre-splittracks.gpx";
-	$new_gpx_file =~s/\.gpx-raw-pre/-raw-pre/;
-	write_gpx_file($tracks,$new_gpx_file);
-    };
-
 
     my $max_allowed_speed = $config->{max_speed} || 200; # 200 Km/h
     my $max_allowed_dist  = $config->{max_dist}  || 500; # 0.5 Km
@@ -911,11 +901,6 @@ sub filter_dup_trace_segments($$){
     my $start_time=time();
 
     my $filename=$tracks->{filename};
-    if ( $out_raw_gpx && $DEBUG >3 ){
-	my $new_gpx_file = "$filename-raw-pre-dup_trace_segments.gpx";
-	$new_gpx_file =~s/\.gpx-raw-pre/-raw-pre/;
-	write_gpx_file($tracks,$new_gpx_file);
-    };
 
     my $bounds = GPS::get_bounding_box($tracks);
 
@@ -949,7 +934,7 @@ sub filter_dup_trace_segments($$){
 		print STDERR "Track: $track_no ".
 		    "sliding_track_pos: $sliding_track_pos/".($sliding_track_pos-$track_pos).
 		    " ($track_pos,$pos_max)	track_angle: $track_angle lets me assume a turn\n" 
-		    if $DEBUG > 1;
+		    if $DEBUG > 5;
 	    }
 	    if ( ( $track_pos - $sliding_track_pos ) > 140 ) {
 		#add_trackpoint2segmentlist($segment_list,$track,$sliding_track_pos);
@@ -1091,13 +1076,6 @@ sub filter_gps_clew($$){
 
     my $start_time=time();
 
-    if ( $out_raw_gpx && $DEBUG >3 ){
-	my $filename=$tracks->{filename};
-	my $new_gpx_file = "$filename-raw-pre-clew.gpx";
-	$new_gpx_file =~s/.gpx-raw-pre-clew.gpx/-raw-pre-clew.gpx/;
-	write_gpx_file($tracks,$new_gpx_file);
-    };
-
     my $dist_osm_track = $config->{dist} || 40;
 
     enrich_tracks($tracks);
@@ -1203,7 +1181,7 @@ sub convert_Data(){
     
     my $osm_segments;
     if ( $do_filter_against_osm ) {
-	$osm_segments = load_segment_list($do_filter_against_osm);
+#	$osm_segments = load_segment_list($do_filter_against_osm);
     }
     
 
@@ -1281,34 +1259,47 @@ sub convert_Data(){
 
 	if ( @filter_area_files ) {
 	    $new_tracks = GPS::filter_track_by_area($new_tracks);
+	    debug_write_track($new_tracks,"-post-filter_track_by_area");
 	}
 
 	if ( $split_tracks ) {
+	    debug_write_track($new_tracks,"-pre-split_tracks-max_speed_200");
 	    $new_tracks = GPS::split_tracks($new_tracks,
 					{ max_speed => 200 });
+	    debug_write_track($new_tracks,"-post-split_tracks-max_speed_200");
 	}
 
 	if ( $do_filter_clew ) {
+	    debug_write_track($new_tracks,"-pre-filter_gps_clew");
 	    $new_tracks = GPS::filter_gps_clew( $new_tracks,
 					      { dist => 30 });
+	    debug_write_track($new_tracks,"-post-filter_gps_clew");
 	};
 
 	if ( $do_filter_dup_trace_segments ) {
+	    debug_write_track($new_tracks,"-pre-filter_dup_trace_segments");
 	    $new_tracks = GPS::filter_dup_trace_segments( $new_tracks,{});
+	    debug_write_track($new_tracks,"-post-filter_dup_trace_segments");
 	};
 
 	if ( $do_filter_against_osm ) {
-	    $new_tracks = OSM::filter_against_osm( $new_tracks,$osm_segments,
+	    debug_write_track($new_tracks,"-pre-filter_against_osm");
+	    $new_tracks = OSM::filter_against_osm( $new_tracks,$do_filter_against_osm,
 					      { dist => 30 });
+	    debug_write_track($new_tracks,"-post-filter_against_osm");
 	};
 
 	if ( $split_tracks ) {
+	    debug_write_track($new_tracks,"-pre-split_tracks-max_speed_200b");
 	    $new_tracks = GPS::split_tracks($new_tracks,
 					{ max_speed => 200 });
+	    debug_write_track($new_tracks,"-post-split_tracks-max_speed_200b");
 	}
 
 	if ( $do_filter_reduce_pt ) {
+	    debug_write_track($new_tracks,"-pre-filter_data_reduce_points");
 	    $new_tracks = GPS::filter_data_reduce_points($new_tracks);
+	    debug_write_track($new_tracks,"-post-filter_data_reduce_points");
 	}
 
 	my ($track_count,$point_count);

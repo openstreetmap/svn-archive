@@ -48,12 +48,10 @@ sub write_osm_file($$) { # Write an osm File
     my $osm = shift;
 
     my $osm_nodes    = $osm->{nodes};
-    my $osm_segments = $osm->{segments};
     my $osm_ways     = $osm->{ways};
 
     $osm->{tool} ||= "OSM-Tool";
     my $count_nodes    = 0;
-    my $count_segments = 0;
     my $count_ways     = 0;
 
     my $generate_ways=$main::generate_ways;
@@ -73,7 +71,13 @@ sub write_osm_file($$) { # Write an osm File
 
     print $fh "<?xml version='1.0' encoding='UTF-8'?>\n";
     print $fh "<osm version=\'0.5\' generator=\'".$osm->{tool}."\'>\n";
-    # print $fh "   <bound box=\"-90,-180,90,180\" origin=\"OSM-perl-writer\" />\n";
+    if ( defined ( $osm->{bounds} ) ) {
+	my $bounds = $osm->{bounds};
+	my $bounds_sting = "$bounds->{lat_min}$bounds->{lon_min},$bounds->{lat_max},$bounds->{lon_max}"; 
+	# -90,-180,90,180
+	print $fh "   <bound box=\"$bounds_sting\" origin=\"OSM-perl-writer\" />\n";
+	
+    }
 
     # --- Nodes
     for my $node_id (  sort keys %{$osm_nodes} ) {
@@ -96,27 +100,12 @@ sub write_osm_file($$) { # Write an osm File
 	$count_nodes++;
     }
 
-    # --- Segments
-    for my $segment_id (  sort keys %{$osm_segments} ) {
-	next unless $segment_id;
-	my $segment = $osm_segments->{$segment_id};
-	my $node_from = $segment->{from};
-	my $node_to   = $segment->{to};
-	print $fh "  <segment id=\'$segment_id\' ";
-	print $fh " timestamp=\'".$segment->{timestamp}."\' " 
-	    if defined $segment->{timestamp};
-	print $fh " from=\'$node_from\' ";
-	print $fh " to=\'$node_to\' ";
-	print $fh ">";
-	print $fh tags2osm($segment);
-	print $fh "  </segment>\n";
-	$count_segments++;
-    }
-
     # --- Ways
     for my $way_id ( sort keys %{$osm_ways} ) {
 	next unless $way_id;
 	my $way = $osm_ways->{$way_id};
+	next unless scalar( @{$way->{nd}} )>1;
+
 	print $fh "  <way id=\'$way_id\'";
 	print $fh " timestamp=\'".$way->{timestamp}."\'" 
 	    if defined $way->{timestamp};
@@ -138,7 +127,7 @@ sub write_osm_file($$) { # Write an osm File
     if ( $VERBOSE || $DEBUG ) {
 	printf STDERR "%-35s:	",$filename;
 	printf STDERR " Wrote OSM File ".
-	    "($count_nodes Nodes, $count_segments Segments, $count_ways Ways)";
+	    "($count_nodes Nodes, $count_ways Ways)";
 	print_time($start_time);
     }
 

@@ -395,7 +395,7 @@ class TracklogInfo(saxutils.DefaultHandler):
       ctx2.set_source_surface(mapSurface, 0, 0);
       ctx2.paint_with_alpha(alpha)
 
-      self.video.addFrame(surface2)
+      self.video.addFrame(surface2, 3)
       
     self.pause(self.surface2, 200)
 

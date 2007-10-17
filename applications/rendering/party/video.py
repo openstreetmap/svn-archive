@@ -310,46 +310,55 @@ class TracklogInfo(saxutils.DefaultHandler):
     currentPositions = {}
     # For each timeslot (not all of these will become frames in the video)
     for t in frameTimes:
-      self.palette.reset()
-      pointsDrawnThisTimestep = 0
-      # For each file
-      for name,a in self.points.items():
-        colour = self.palette.get()
-        ctx.set_source_rgb(colour[0],colour[1],colour[2])
-        # For each trackpoint which occurs within this timeslot
-        for b in a:
-          if(b[2] <= t and b[2] > lastT):
-            x = self.proj.xpos(b[1])
-            y = self.proj.ypos(b[0])
-            if(self.inImage(x,y)):
-              if(1):
-                ctx.move_to(x,y)
-                ctx.line_to(x,y)
-                ctx.stroke()
-              else:
-                ctx.arc(x, y, pointsize, 0, 2*M_PI)
-              currentPositions[name] = (x,y)
-              ctx.fill()
-              pointsDrawnThisTimestep = pointsDrawnThisTimestep + 1
-              pointsDrawn = pointsDrawn + 1
-        # On the first frame, draw a key for each track 
-        # (this remains on the image when subsequent trackpoints are drawn)
-        if(count == 1):
-          self.drawKey(ctx, colour, name)
-      # If anything changed in this frame, then add it to the video
-      if(pointsDrawnThisTimestep > 0):
-        ctx2 = cairo.Context(surface2)
-        ctx2.set_source_surface(surface, 0, 0);
-        ctx2.set_operator(cairo.OPERATOR_SOURCE);
-        ctx2.paint();
-        ctx2.set_source_rgb(1.0, 1.0, 0.0)
-        for name,pos in currentPositions.items():
-          ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
-          ctx2.fill()
-        self.video.addFrame(surface2)
-      print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
-      count = count + 1
+      somethingToDraw = 0
+      if lastT == 0:
+        somethingToDraw = 1
+      else:
+        for ti in range(lastT+1, t+1):
+          if self.validTimes.has_key(ti):
+            somethingToDraw = 1
+
+      if somethingToDraw:
+        self.palette.reset()
+        pointsDrawnThisTimestep = 0
+        # For each file
+        for name,a in self.points.items():
+          colour = self.palette.get()
+          ctx.set_source_rgb(colour[0],colour[1],colour[2])
+          # For each trackpoint which occurs within this timeslot
+          for b in a:
+            if(b[2] <= t and b[2] > lastT):
+              x = self.proj.xpos(b[1])
+              y = self.proj.ypos(b[0])
+              if(self.inImage(x,y)):
+                if(1):
+                  ctx.move_to(x,y)
+                  ctx.line_to(x,y)
+                  ctx.stroke()
+                else:
+                  ctx.arc(x, y, pointsize, 0, 2*M_PI)
+                currentPositions[name] = (x,y)
+                ctx.fill()
+                pointsDrawnThisTimestep = pointsDrawnThisTimestep + 1
+                pointsDrawn = pointsDrawn + 1
+          # On the first frame, draw a key for each track 
+          # (this remains on the image when subsequent trackpoints are drawn)
+          if(count == 1):
+            self.drawKey(ctx, colour, name)
+        # If anything changed in this frame, then add it to the video
+        if(pointsDrawnThisTimestep > 0):
+          ctx2 = cairo.Context(surface2)
+          ctx2.set_source_surface(surface, 0, 0);
+          ctx2.set_operator(cairo.OPERATOR_SOURCE);
+          ctx2.paint();
+          ctx2.set_source_rgb(1.0, 1.0, 0.0)
+          for name,pos in currentPositions.items():
+            ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
+            ctx2.fill()
+          self.video.addFrame(surface2)
+          print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       lastT = t
+      count = count + 1
     self.pause(self.surface2, 50)
     self.fadeToMapImage()
 

@@ -26,7 +26,7 @@ import array
 deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
-class videoThingy():
+class videoThingy:
   def __init__(self, width, height):
     params= { \
       'type': 0,
@@ -38,7 +38,7 @@ class videoThingy():
       'frame_rate': 2997,
       'deinterlace': 0,
       'bitrate': 2700000,
-      'id': vcodec.getCodecID( "mpeg2video")
+      'id': vcodec.getCodecID( "mpeg1video")
     }
     self.width = width
     self.height = height
@@ -425,7 +425,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     print "Credits..."
     self.video.addFrame(self.surface, 70)
 
-class TitlePage():
+class TitlePage:
   def __init__(self,xc,height,context):
     self.context = context
     self.height = height

@@ -27,35 +27,34 @@ deg2rad = 0.0174532925
 M_PI = 3.1415926535
 
 class videoThingy():
-  def __init__(self):
+  def __init__(self, width, height):
     params= { \
       'type': 0,
       'gop_size': 12,
       'frame_rate_base': 125,
       'max_b_frames': 0,
-      'height': 500,
-      'width': 500,
+      'height': height,
+      'width': width,
       'frame_rate': 2997,
       'deinterlace': 0,
       'bitrate': 2700000,
       'id': vcodec.getCodecID( "mpeg2video")
     }
+    self.width = width
+    self.height = height
     filename = "out_m.mpg"
-    print "Outputting to ", filename
+    print "Outputting to %s at %d x %d" %( filename,width,height)
     self.fw= open(filename, 'wb' )
     self.e= vcodec.Encoder( params )
   
   def addFrame(self, surface, repeat = 1):
     # surface = cairo.ImageSurface.create_from_png("map.png")
-
     buf = surface.get_data_as_rgba()
-
     w = surface.get_width()
     h = surface.get_height()
-
     #s= pygame.image.load("map.png")
-    s= pygame.image.frombuffer(buf, (w,h), "RGBA")
-
+    
+    s= pygame.image.frombuffer(buf, (self.width,self.height), "RGBA")
     ss= pygame.image.tostring(s, "RGB")
 
     bmpFrame= vcodec.VFrame( vcodec.formats.PIX_FMT_RGB24, s.get_size(), (ss,None,None))
@@ -260,7 +259,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.drawBorder()
     self.keyY = self.height - 20
     #self.filenameFormat = "gfx/img_%05d.png"
-    self.video = videoThingy()
+    self.video = videoThingy(fullwidth, height)
   def drawBorder(self):
     """Draw a border around the 'map' portion of the image"""
     ctx = cairo.Context(surface)

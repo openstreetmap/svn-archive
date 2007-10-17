@@ -103,6 +103,7 @@ sub ApplyConfigLogic{
     ## do the same for Zip
     $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
 
+    $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "/" if ($Config->{"WorkingDirectory"} !~ /\/$/);
 }
 
 #--------------------------------------------------------------------------

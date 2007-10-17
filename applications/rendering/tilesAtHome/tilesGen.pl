@@ -285,7 +285,7 @@ sub uploadIfEnoughTiles
         mkdir $Config{WorkingDirectory};
     }
 
-    if (opendir(my $dp, $Config{WorkingDirectory}."/uploadable"))
+    if (opendir(my $dp, $Config{WorkingDirectory}."uploadable"))
     {
         while(my $File = readdir($dp))
         {
@@ -295,7 +295,7 @@ sub uploadIfEnoughTiles
     }
     else 
     {
-        mkdir $Config{WorkingDirectory}."/uploadable";
+        mkdir $Config{WorkingDirectory}."uploadable";
     }
 
     if (($Count >= 200) or ($ZipCount >= 1))
@@ -323,7 +323,7 @@ sub upload
 #-----------------------------------------------------------------------------
 sub ProcessRequestsFromServer 
 {
-    my $LocalFilename = "$Config{WorkingDirectory}request.txt";
+    my $LocalFilename = $Config{WorkingDirectory} . "request-" . $PID . ".txt";
 
     if ($Config{"LocalSlippymap"})
     {
@@ -404,7 +404,7 @@ sub PutRequestBackToServer
     
     my $Prio = $Config{ReRequestPrio};
     
-    my $LocalFilename = $Config{WorkingDirectory}."/requesting.txt";
+    my $LocalFilename = $Config{WorkingDirectory} . "requesting-" . $PID . ".txt";
     
     killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
@@ -593,7 +593,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         $progressPercent=0;
         $currentSubTask = $layer;
         
-        $JobDirectory = sprintf("%s/%s_%d_%d_%d.tmpdir",
+        $JobDirectory = sprintf("%s%s_%d_%d_%d.tmpdir",
                                 $Config{WorkingDirectory},
                                 $Config{"Layer.$layer.Prefix"},
                                 $Zoom, $X, $Y);
@@ -759,7 +759,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         {
             my $Filename=sprintf("%s_%s_%s_%s.png",$Config{"Layer.$layer.Prefix"}, $Zoom, $X, $Y);
             my $oldFilename = sprintf("%s/%s",$JobDirectory, $Filename); 
-            my $newFilename = sprintf("%s/%s",$Config{WorkingDirectory},$Filename);
+            my $newFilename = sprintf("%s%s",$Config{WorkingDirectory},$Filename);
             rename($oldFilename, $newFilename);
             rmdir($JobDirectory);
         }
@@ -1020,9 +1020,9 @@ sub svg2png
 {
     my($Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
     
-    my $TempFile = $Config{WorkingDirectory}."/$PID.png_part";
+    my $TempFile = $Config{WorkingDirectory}."$PID.png_part";
     
-    my $stdOut = $Config{WorkingDirectory}."/".$PID.".stdout";
+    my $stdOut = $Config{WorkingDirectory}.$PID.".stdout";
     
     my $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
       $Config{i18n} ? "LC_ALL=C " : "",

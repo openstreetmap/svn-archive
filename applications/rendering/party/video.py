@@ -59,12 +59,10 @@ class videoThingy():
     ss= pygame.image.tostring(s, "RGB")
 
     bmpFrame= vcodec.VFrame( vcodec.formats.PIX_FMT_RGB24, s.get_size(), (ss,None,None))
-
     yuvFrame= bmpFrame.convert( vcodec.formats.PIX_FMT_YUV420P )
-
-    d= self.e.encode( yuvFrame )
     
     for i in range(repeat):
+      d= self.e.encode( yuvFrame )
       self.fw.write( d.data )
       
   def finish(self):
@@ -353,11 +351,7 @@ class TracklogInfo(saxutils.DefaultHandler):
         for name,pos in currentPositions.items():
           ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
           ctx2.fill()
-          
         self.video.addFrame(surface2)
-        #filename = self.filenameFormat % self.frame
-        #self.frame = self.frame + 1
-        #surface2.write_to_png(filename)
       print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
@@ -370,11 +364,7 @@ class TracklogInfo(saxutils.DefaultHandler):
   
   def pause(self, surface, frames):
     print "Pausing..."
-    #for t in range(0, frames):
-      #filename = self.filenameFormat % self.frame
-      #self.surface2.write_to_png(filename)
-      #self.frame = self.frame + 1
-    self.video.addFrame(self.surface2, frames)
+    self.video.addFrame(surface, frames)
     
   def fadeToMapImage(self):
     URL =  "http://dev.openstreetmap.org/~ojw/bbox/?W=%f&S=%f&E=%f&N=%f&width=%d&height=%d" % (self.proj.W, self.proj.S, self.proj.E, self.proj.N, self.width, self.height)
@@ -405,10 +395,7 @@ class TracklogInfo(saxutils.DefaultHandler):
       # Overlay
       ctx2.set_source_surface(mapSurface, 0, 0);
       ctx2.paint_with_alpha(alpha)
-      
-      #filename = self.filenameFormat % self.frame
-      #self.surface2.write_to_png(filename)
-      #self.frame = self.frame + 1
+
       self.video.addFrame(surface2)
       
     self.pause(self.surface2, 200)
@@ -423,11 +410,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     page.text("Creative Commons CC-BY-SA 2.0", 25, 0.85)
     
     print "Title..."
-    #for t in range(0, 70):
     self.video.addFrame(self.surface, 70)
-      #filename = self.filenameFormat % self.frame
-      #self.surface.write_to_png(filename)
-      #self.frame = self.frame + 1    
 
   def drawCredits(self):
     self.drawBorder()
@@ -436,11 +419,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     page.text("www.OpenStreetMap.org", 30, 0.35)
     page.text("Creative Commons CC-BY-SA 2.0", 25, 0.85)
     print "Credits..."
-    #for t in range(0, 70):
     self.video.addFrame(self.surface, 70)
-      #filename = self.filenameFormat % self.frame
-      #self.surface.write_to_png(filename)
-      #self.frame = self.frame + 1    
 
 class TitlePage():
   def __init__(self,xc,height,context):

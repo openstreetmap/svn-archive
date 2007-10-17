@@ -220,17 +220,10 @@ class TracklogInfo(saxutils.DefaultHandler):
     if(self.dLat <= 0.0 or self.dLon <= 0):
       return(0)
     return(1)
-  def calculate(self, radius):
-    """Calculate (somehow*) the extents of the map"""
-    self.calculateCentre()
-    self.calculateExtents(radius)
-    # then use that to calculate extents
-    self.proj = Projection(
-      self.lat + self.sdLat,
-      self.lon + self.sdLon,
-      self.lat - self.sdLat,
-      self.lon - self.sdLon)
-    self.proj.debug()
+  def setCentre(self,lat,lon):
+    self.lat = lat
+    self.lon = lon
+    print "Centred on %f, %f" % (lat,lon)
   def calculateCentre(self):
     """Calculate the centre point of the map"""
     sumLat = 0
@@ -239,14 +232,18 @@ class TracklogInfo(saxutils.DefaultHandler):
       for y in x:
         sumLat = sumLat + y[0]
         sumLon = sumLon + y[1]
-    self.lat = sumLat / self.countPoints
-    self.lon = sumLon / self.countPoints
+    self.setCentre(sumLat / self.countPoints, sumLon / self.countPoints)
   def calculateExtents(self,radius):
     """Calculate the width and height of the map"""
     c = 40000.0 # circumference of earth, km
     self.sdLat = (radius / (c / M_PI)) / deg2rad
     self.sdLon = self.sdLat / math.cos(self.lat * deg2rad)
-    pass
+    self.proj = Projection(
+      self.lat + self.sdLat,
+      self.lon + self.sdLon,
+      self.lat - self.sdLat,
+      self.lon - self.sdLon)
+    self.proj.debug()
   def createImage(self,fullwidth,width1,height,surface,surface2):
     """Supply a cairo drawing surface for the maps"""
     self.fullwidth = fullwidth
@@ -291,7 +288,7 @@ class TracklogInfo(saxutils.DefaultHandler):
     if(x > self.extents[2] or y > self.extents[3]):
       return(0)
     return(1)
-  def drawTracklogs(self, pointsize):
+  def drawTracklogs(self):
     """Draw all tracklogs from memory onto the map"""
     
     # Get a list of timestamps in the GPX
@@ -301,7 +298,6 @@ class TracklogInfo(saxutils.DefaultHandler):
     # Setup drawing
     self.palette = Palette(self.count)
     ctx = cairo.Context(surface)
-    # CAIRO_LINE_CAP_ROUND
     ctx.set_line_cap(cairo.LINE_CAP_ROUND)
     
     # Divide time into frames
@@ -441,17 +437,18 @@ class TitlePage():
     self.context.show_text(text)    
 
 # Handle command-line options
-opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","pointsize=","gazeteer="])
+opts, args = getopt.getopt(sys.argv[1:], "hs:d:r:p:g:", ["help", "size=", "dir=", "radius=","gazeteer=","pos="])
 # Defauts:
 directory = "./"
 size = 600
 radius = 10 # km
 pointsize = 1 # mm
+specifyCentre = 0
 gazeteer = "osmxapi" # can change to a filename
 # Options:
 for o, a in opts:
   if o in ("-h", "--help"):
-    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km] -p [point size] -g [gazeteer file]"
+    print "Usage: render.py -d [directory] -s [size,pixel] -r [radius,km] -g [gazeteer file] --pos=[lat],[lon]"
     sys.exit()
   if o in ("-d", "--dir"):
     directory = a
@@ -459,19 +456,28 @@ for o, a in opts:
     size = int(a)
   if o in ("-r", "--radius"):
     radius = float(a)
-  if o in ("-p", "--pointsize"):
-    pointsize = float(a)
   if o in ("-g", "--gazeteer"):
     gazeteer = a
+  if o in ("--pos"):
+    lat, lon = [float(x) for x in a.split(",")]
+    specifyCentre = 1
+    print "Lat: %f\nLon: %f" % (lat,lon)
 
 TracklogPlotter = TracklogInfo()
 print "Loading data"
 TracklogPlotter.walkDir(directory)
+
 print "Calculating extents"
-TracklogPlotter.calculate(radius)
+if specifyCentre:
+  TracklogPlotter.setCentre(lat,lon)
+else:
+  TracklogPlotter.calculateCentre()
+TracklogPlotter.calculateExtents(radius)
+  
 if(not TracklogPlotter.valid):
   print "Couldn't calculate extents"
   sys.exit()
+
 width = size
 height = size
 fullwidth = width + 120
@@ -487,7 +493,7 @@ print "Plotting tracklogs"
 TracklogPlotter.drawBorder()
 TracklogPlotter.drawCities(gazeteer)
 
-TracklogPlotter.drawTracklogs(pointsize)
+TracklogPlotter.drawTracklogs()
 
 TracklogPlotter.drawCredits()
 

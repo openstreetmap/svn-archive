@@ -19,8 +19,56 @@ from time import *
 from xml.sax import make_parser
 import os
 from os.path import join, getsize
+import pymedia.video.vcodec as vcodec
+import pygame
+import array
+
 deg2rad = 0.0174532925
 M_PI = 3.1415926535
+
+class videoThingy():
+  def __init__(self):
+    params= { \
+      'type': 0,
+      'gop_size': 12,
+      'frame_rate_base': 125,
+      'max_b_frames': 0,
+      'height': 500,
+      'width': 500,
+      'frame_rate': 2997,
+      'deinterlace': 0,
+      'bitrate': 2700000,
+      'id': vcodec.getCodecID( "mpeg2video")
+    }
+    filename = "out_m.mpg"
+    print "Outputting to ", filename
+    self.fw= open(filename, 'wb' )
+    self.e= vcodec.Encoder( params )
+  
+  def addFrame(self, surface, repeat = 1):
+    # surface = cairo.ImageSurface.create_from_png("map.png")
+
+    buf = surface.get_data_as_rgba()
+
+    w = surface.get_width()
+    h = surface.get_height()
+
+    #s= pygame.image.load("map.png")
+    s= pygame.image.frombuffer(buf, (w,h), "RGBA")
+
+    ss= pygame.image.tostring(s, "RGB")
+
+    bmpFrame= vcodec.VFrame( vcodec.formats.PIX_FMT_RGB24, s.get_size(), (ss,None,None))
+
+    yuvFrame= bmpFrame.convert( vcodec.formats.PIX_FMT_YUV420P )
+
+    d= self.e.encode( yuvFrame )
+    
+    for i in range(repeat):
+      self.fw.write( d.data )
+      
+  def finish(self):
+    self.fw.close()
 
 class Palette:
   def __init__(self, size):
@@ -124,6 +172,8 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.currentFile = ''
     self.validTimes = {}
     self.frame = 1
+  def finish(self):
+    self.video.finish()
   def walkDir(self, directory):
     """Load a directory-structure full of GPX files into memory"""
     for root, dirs, files in os.walk(directory):
@@ -211,7 +261,8 @@ class TracklogInfo(saxutils.DefaultHandler):
     self.surface2 = surface2
     self.drawBorder()
     self.keyY = self.height - 20
-    self.filenameFormat = "gfx/img_%05d.png"
+    #self.filenameFormat = "gfx/img_%05d.png"
+    self.video = videoThingy()
   def drawBorder(self):
     """Draw a border around the 'map' portion of the image"""
     ctx = cairo.Context(surface)
@@ -302,9 +353,11 @@ class TracklogInfo(saxutils.DefaultHandler):
         for name,pos in currentPositions.items():
           ctx2.arc(pos[0], pos[1], pointsize*5, 0, 2*M_PI)
           ctx2.fill()
-        filename = self.filenameFormat % self.frame
-        self.frame = self.frame + 1
-        surface2.write_to_png(filename)
+          
+        self.video.addFrame(surface2)
+        #filename = self.filenameFormat % self.frame
+        #self.frame = self.frame + 1
+        #surface2.write_to_png(filename)
       print "t: %03.1f%%, %d points" % (100.0 * count / numFrames, pointsDrawnThisTimestep)
       count = count + 1
       lastT = t
@@ -316,11 +369,12 @@ class TracklogInfo(saxutils.DefaultHandler):
     Cities.drawCities(self.proj, gazeteer)
   
   def pause(self, surface, frames):
-    for t in range(0, frames):
-      print "Pausing"
-      filename = self.filenameFormat % self.frame
-      self.surface2.write_to_png(filename)
-      self.frame = self.frame + 1
+    print "Pausing..."
+    #for t in range(0, frames):
+      #filename = self.filenameFormat % self.frame
+      #self.surface2.write_to_png(filename)
+      #self.frame = self.frame + 1
+    self.video.addFrame(self.surface2, frames)
     
   def fadeToMapImage(self):
     URL =  "http://dev.openstreetmap.org/~ojw/bbox/?W=%f&S=%f&E=%f&N=%f&width=%d&height=%d" % (self.proj.W, self.proj.S, self.proj.E, self.proj.N, self.width, self.height)
@@ -352,9 +406,11 @@ class TracklogInfo(saxutils.DefaultHandler):
       ctx2.set_source_surface(mapSurface, 0, 0);
       ctx2.paint_with_alpha(alpha)
       
-      filename = self.filenameFormat % self.frame
-      self.surface2.write_to_png(filename)
-      self.frame = self.frame + 1
+      #filename = self.filenameFormat % self.frame
+      #self.surface2.write_to_png(filename)
+      #self.frame = self.frame + 1
+      self.video.addFrame(surface2)
+      
     self.pause(self.surface2, 200)
 
   def drawTitle(self):
@@ -366,11 +422,12 @@ class TracklogInfo(saxutils.DefaultHandler):
     page.text("October 2006", 30, 0.52)
     page.text("Creative Commons CC-BY-SA 2.0", 25, 0.85)
     
-    for t in range(0, 70):
-      print "Title"
-      filename = self.filenameFormat % self.frame
-      self.surface.write_to_png(filename)
-      self.frame = self.frame + 1    
+    print "Title..."
+    #for t in range(0, 70):
+    self.video.addFrame(self.surface, 70)
+      #filename = self.filenameFormat % self.frame
+      #self.surface.write_to_png(filename)
+      #self.frame = self.frame + 1    
 
   def drawCredits(self):
     self.drawBorder()
@@ -378,11 +435,12 @@ class TracklogInfo(saxutils.DefaultHandler):
     page = TitlePage(0.5 * self.width, self.height, ctx)
     page.text("www.OpenStreetMap.org", 30, 0.35)
     page.text("Creative Commons CC-BY-SA 2.0", 25, 0.85)
-    for t in range(0, 70):
-      print "Credits"
-      filename = self.filenameFormat % self.frame
-      self.surface.write_to_png(filename)
-      self.frame = self.frame + 1    
+    print "Credits..."
+    #for t in range(0, 70):
+    self.video.addFrame(self.surface, 70)
+      #filename = self.filenameFormat % self.frame
+      #self.surface.write_to_png(filename)
+      #self.frame = self.frame + 1    
 
 class TitlePage():
   def __init__(self,xc,height,context):
@@ -441,8 +499,8 @@ height = size
 fullwidth = width + 120
 print "Creating image %d x %d px" % (fullwidth,height)
 
-surface = cairo.ImageSurface(cairo.FORMAT_RGB24, fullwidth, height)
-surface2 = cairo.ImageSurface(cairo.FORMAT_RGB24, fullwidth, height)
+surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
+surface2 = cairo.ImageSurface(cairo.FORMAT_ARGB32, fullwidth, height)
 TracklogPlotter.createImage(fullwidth, width, height, surface, surface2)
 
 TracklogPlotter.drawTitle()
@@ -455,3 +513,4 @@ TracklogPlotter.drawTracklogs(pointsize)
 
 TracklogPlotter.drawCredits()
 
+TracklogPlotter.finish()

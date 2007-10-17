@@ -91,7 +91,7 @@ public class LiveGpsAcquirer implements Runnable {
 			{
 				if (!connected)
 				{
-				    System.out.println("LiveGps try to connect to gpsd");
+				    System.out.println("LiveGps tries to connect to gpsd");
                     fireGpsStatusChangeEvent(LiveGpsStatus.GpsStatus.CONNECTING, tr("Connecting"));
 					InetAddress[] addrs = InetAddress.getAllByName(gpsdHost);
 					for (int i=0; i < addrs.length && gpsdSocket == null; i++) {
@@ -99,6 +99,7 @@ public class LiveGpsAcquirer implements Runnable {
 							gpsdSocket = new Socket(addrs[i], gpsdPort);
 							break;
 						} catch (Exception e) {
+							System.out.println("LiveGps: Could not open connection to gpsd: " + e);
 							gpsdSocket = null;
 						}
 					}

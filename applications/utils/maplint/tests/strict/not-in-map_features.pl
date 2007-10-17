@@ -186,6 +186,10 @@ foreach my $type ( keys(%main::keys) ){
     print "<xsl:when test=\"starts-with(\@k, 'gns:')\">\n";
     print "</xsl:when>\n";
 
+    # Special handdling of massgis:*
+    print "<xsl:when test=\"starts-with(\@k, 'massgis:')\">\n";
+    print "</xsl:when>\n";
+
     # Key
     foreach my $key ( sort( keys( %{$main::keys{$type}} ) ) ){
 	# Key must either be a simple string or a valid XSL expression

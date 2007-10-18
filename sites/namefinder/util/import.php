@@ -3,18 +3,17 @@
 /* This file takes an OSM planet file, and processes it to produce the 
    name finder index.
 
-   It requires temporary tables 'node' and 'segment' in order to
-   retrieve references by id from within the planet xml file, but these large tables 
-   can be emptied on completion. 
+   It requires temporary 'node' and 'way' tables in order to retrieve
+   references by id from within the planet xml file, but these large
+   tables can be emptied on completion.
 
-   node and segment classes for these tables are defined inline below 
+   node and way classes for these tables are defined inline below 
    as subclasses of 'tagged'
 
    The process takes many hours to run, so it is better to run it on a
    temporary database and then export the tables (other than node and
-   segment) and import them into the production database, which takes only 
-   maybe a minute or so. 
-*/
+   way) and import them into the production database, which takes only 
+   maybe a minute or so.  */
 
 session_start(); // only so we get a unique log file
 
@@ -30,14 +29,14 @@ if (empty($config['area'])) {
   $area =& $config['area'];
 }
 
-$added['node'] = $added['placeindex'] = $added['named'] = $added['segment'] =$added['canon'] = 0;
+$added['node'] = $added['placeindex'] = $added['named'] = $added['way'] =$added['canon'] = 0;
 
 $tooclose = $config['tooclose'];
 
 // ==================================================
 class nodecache {
   /* we maintain a node cache as we create nodes and use them because we frequently 
-     refer to the same node a few times in quick succession from say a way or segment */
+     refer to the same node a few times in quick succession from say a way or relation */
   var $cache = array();
   var $size = 0;
   var $maxsize = 500;
@@ -68,7 +67,7 @@ class nodecache {
 // ==================================================
 class tagged {
 
-  /* tagged is the superclass of node, segment and way (the latter is not 
+  /* tagged is the superclass of node, way and relation (the latter is not 
      mapped to a database table, as we don't need to store ways).
 
      It represents the class of things in the planet file which have
@@ -103,7 +102,7 @@ class tagged {
   function interesting_name() {
 
     /* This is the key indexing function. It chooses an item (node,
-       way, segment) with tags sufficiently interesting to go into the
+       way, relation) with tags sufficiently interesting to go into the
        index. This is anything with a name, certain classes of object
        which we might search for by class ("pubs near Cambridge") and
        proxy-names like road numbers ('ref') and IATA airport codes */
@@ -208,165 +207,180 @@ class tagged {
     
     $prefix = '';
     $isplace = FALSE;
-    foreach ($this->tags as $key=>$value) {
-      switch ($key) {
-      case 'highway':
-        $named->category = $key;
-        switch ($value) {
-        case 'trunk':
-        case 'primary':
-        case 'secondary':
-        case 'service':
-        case 'unclassified':
-          $residential = (! empty($this->tags['abutters']) && 
-                          $this->tags['abutters'] == 'residential') ? 'residential ' : '';
-          $named->info .= "{$prefix}{$residential}{$value} road"; 
+    if (is_a($this, 'relation')) {
+      foreach ($this->tags as $key=>$value) {
+        switch ($key) {
+        case 'type':
+          $named->info = str_replace('_', ' ', $value);
           break;
-        case 'track':
-          $residential = (! empty($this->tags['abutters']) && 
-                          $this->tags['abutters'] == 'residential') ? 'residential ' : '';
-          $named->info .= "{$prefix}{$residential}{$value}"; 
-          break;
-        case 'trunk_link':
-        case 'primary_link':
-        case 'motorway_link':
-          $named->info .= "{$prefix}link road"; 
-          break;
-        case 'tertiary':
-          $named->info .= "{$prefix}road"; 
-          break;
-        case 'residential':
-          $named->info .= "{$prefix}street"; 
-          break;
-        case 'cycleway':
-        case 'bridleway':
-        case 'footway':
-        case 'footpath':
-          $named->info .= "{$prefix}{$value}"; 
-          break;
-        default:
-          $value = str_replace('_', ' ', $value);
-          $named->info .= "{$prefix}{$value}"; 
         }
-        $prefix = '; ';
-        break;
-      case 'amenity':
-        $named->category = $key;
-        switch ($value) {
-        case 'fast_food':
-          $named->info .= "{$prefix}take-away"; 
-          $this->append_for_canonicalisation($canonicalise, 'fast food');
-          $this->append_for_canonicalisation($canonicalise, 'take away');
+      }
+    } else /* way or node */ {
+      foreach ($this->tags as $key=>$value) {
+        switch ($key) {
+        case 'type':
+          if (is_a($this, 'relation')) {
+            $named->info = str_replace('_', ' ', $value);
+          }
+          break;
+        case 'highway':
+          $named->category = $key;
+          switch ($value) {
+          case 'trunk':
+          case 'primary':
+          case 'secondary':
+          case 'service':
+          case 'unclassified':
+            $residential = (! empty($this->tags['abutters']) && 
+                            $this->tags['abutters'] == 'residential') ? 'residential ' : '';
+            $named->info .= "{$prefix}{$residential}{$value} road"; 
+            break;
+          case 'track':
+            $residential = (! empty($this->tags['abutters']) && 
+                            $this->tags['abutters'] == 'residential') ? 'residential ' : '';
+            $named->info .= "{$prefix}{$residential}{$value}"; 
+            break;
+          case 'trunk_link':
+          case 'primary_link':
+          case 'motorway_link':
+            $named->info .= "{$prefix}link road"; 
+            break;
+          case 'tertiary':
+            $named->info .= "{$prefix}road"; 
+            break;
+          case 'residential':
+            $named->info .= "{$prefix}street"; 
+            break;
+          case 'cycleway':
+          case 'bridleway':
+          case 'footway':
+          case 'footpath':
+            $named->info .= "{$prefix}{$value}"; 
+            break;
+          default:
+            $value = str_replace('_', ' ', $value);
+            $named->info .= "{$prefix}{$value}"; 
+          }
           $prefix = '; ';
           break;
-        case 'place_of_worship':
-          $powtype = 'place of worship';
-          // $canonicalise[] = $powtype;
-          if (! empty($this->tags['religion'])) {
-            switch($this->tags['religion']) {
-            case 'christian':
-            case 'church_of_england':
-            case 'catholic':
-            case 'anglican':
-            case 'methodist':
-            case 'baptist':
-              $powtype = 'church';
-              $this->append_for_canonicalisation($canonicalise, 'church');
-              break;
-            case 'moslem':
-            case 'islam':
-              $powtype = 'mosque';
-              $this->append_for_canonicalisation($canonicalise, 'mosque');
-              break;
-            }
-          } else if (! empty($this->tags['denomination'])) {
-            switch($this->tags['denomination']) {
-            case 'christian':
-            case 'church_of_england':
-            case 'catholic':
-            case 'anglican':
-            case 'methodist':
-            case 'baptist':
-              $powtype = 'church';
-              $this->append_for_canonicalisation($canonicalise, 'church');
-              break;
-            case 'moslem':
-            case 'islam':
-              $powtype = 'mosque';
-              $this->append_for_canonicalisation($canonicalise, 'mosque');
-              break;
-            }
-          }
-          if (! empty($powtype) && strpos($named->info, $powtype) === FALSE) { 
-            $named->info .= "{$prefix}{$powtype}"; 
-            $prefix = '; ';
-          }
+        case 'amenity':
           $named->category = $key;
+          switch ($value) {
+          case 'fast_food':
+            $named->info .= "{$prefix}take-away"; 
+            $this->append_for_canonicalisation($canonicalise, 'fast food');
+            $this->append_for_canonicalisation($canonicalise, 'take away');
+            $prefix = '; ';
+            break;
+          case 'place_of_worship':
+            $powtype = 'place of worship';
+            // $canonicalise[] = $powtype;
+            if (! empty($this->tags['religion'])) {
+              switch($this->tags['religion']) {
+              case 'christian':
+              case 'church_of_england':
+              case 'catholic':
+              case 'anglican':
+              case 'methodist':
+              case 'baptist':
+                $powtype = 'church';
+                $this->append_for_canonicalisation($canonicalise, 'church');
+                break;
+              case 'moslem':
+              case 'islam':
+                $powtype = 'mosque';
+                $this->append_for_canonicalisation($canonicalise, 'mosque');
+                break;
+              }
+            } else if (! empty($this->tags['denomination'])) {
+              switch($this->tags['denomination']) {
+              case 'christian':
+              case 'church_of_england':
+              case 'catholic':
+              case 'anglican':
+              case 'methodist':
+              case 'baptist':
+                $powtype = 'church';
+                $this->append_for_canonicalisation($canonicalise, 'church');
+                break;
+              case 'moslem':
+              case 'islam':
+                $powtype = 'mosque';
+                $this->append_for_canonicalisation($canonicalise, 'mosque');
+                break;
+              }
+            }
+            if (! empty($powtype) && strpos($named->info, $powtype) === FALSE) { 
+              $named->info .= "{$prefix}{$powtype}"; 
+              $prefix = '; ';
+            }
+            $named->category = $key;
+            break;
+          default:
+            $value = str_replace('_', ' ', $value);
+            if (! empty($value) && strpos($named->info, $value) === FALSE) { 
+              $named->info .= "{$prefix}{$value}";
+              $prefix = '; ';
+              $this->append_for_canonicalisation($canonicalise, $value);
+            }
+            break;
+          }
           break;
-        default:
+        case 'landuse':
+          $named->category = $key;
+          switch ($value) {
+          case 'farm':
+            if (! empty($value) && strpos($named->info, $value) === FALSE) { 
+              $named->info .= "{$prefix}{$value}"; 
+              $prefix = '; ';
+            }
+            break;
+          default:
+            if (! empty($value) && strpos($named->info, $value) === FALSE) { 
+              $named->info .= "{$prefix}{$value} area"; 
+              $prefix = '; ';
+            }
+            break;
+          }
+          break;
+        case 'railway':        
+        case 'aeroway':        
+        case 'man_made':
+        case 'military':
+        case 'tourism':
+        case 'waterway':
+        case 'leisure':
+        case 'shop':
+        case 'tourism':
+        case 'historic':
+        case 'natural':
+        case 'sport':
           $value = str_replace('_', ' ', $value);
           if (! empty($value) && strpos($named->info, $value) === FALSE) { 
             $named->info .= "{$prefix}{$value}";
-            $prefix = '; ';
             $this->append_for_canonicalisation($canonicalise, $value);
-          }
-          break;
-        }
-        break;
-      case 'landuse':
-        $named->category = $key;
-        switch ($value) {
-        case 'farm':
-          if (! empty($value) && strpos($named->info, $value) === FALSE) { 
-            $named->info .= "{$prefix}{$value}"; 
             $prefix = '; ';
           }
-          break;
-        default:
-          if (! empty($value) && strpos($named->info, $value) === FALSE) { 
-            $named->info .= "{$prefix}{$value} area"; 
-            $prefix = '; ';
-          }
-          break;
-        }
-        break;
-      case 'railway':        
-      case 'aeroway':        
-      case 'man_made':
-      case 'military':
-      case 'tourism':
-      case 'waterway':
-      case 'leisure':
-      case 'shop':
-      case 'tourism':
-      case 'historic':
-      case 'natural':
-      case 'sport':
-        $value = str_replace('_', ' ', $value);
-        if (! empty($value) && strpos($named->info, $value) === FALSE) { 
-          $named->info .= "{$prefix}{$value}";
-          $this->append_for_canonicalisation($canonicalise, $value);
-          $prefix = '; ';
-        }
-        $named->category = $key;
-        break;
-      case 'place':
-        $value = str_replace('_', ' ', $value);
-        if (! empty($value) && strpos($named->info, $value) === FALSE) { 
-          $named->info .= "{$prefix}{$value}";
-          $named->rank = named::placerank($value);
-          $this->append_for_canonicalisation($canonicalise, $value);
-          $this->append_for_canonicalisation($canonicalise, $key);
           $named->category = $key;
-          $prefix = '; ';
+          break;
+        case 'place':
+          $value = str_replace('_', ' ', $value);
+          if (! empty($value) && strpos($named->info, $value) === FALSE) { 
+            $named->info .= "{$prefix}{$value}";
+            $named->rank = named::placerank($value);
+            $this->append_for_canonicalisation($canonicalise, $value);
+            $this->append_for_canonicalisation($canonicalise, $key);
+            $named->category = $key;
+            $prefix = '; ';
+          }
+          break;        
+        case 'is_in':
+          $named->is_in = $value;
+          break;
+        case 'religion':
+        case 'denomination':
+          break;
         }
-        break;        
-      case 'is_in':
-        $named->is_in = $value;
-        break;
-      case 'religion':
-      case 'denomination':
-        break;
       }
     }
 
@@ -484,76 +498,9 @@ class node extends tagged {
 }
 
 // ==================================================
-class segment extends tagged {
-
-  var $from, $to; 
-  var $nodefrom, $nodeto;
-
-  // --------------------------------------------------
-  /* constructor */ function segment($id, $amended=FALSE) { 
-    if (! $amended) { $id = canon::getuniqueid($id, 'segment'); }
-    $this->id = $id;
-  }
-
-  // --------------------------------------------------
-  function set_fromto($idfrom, $idto) { 
-    $this->from = canon::getuniqueid($idfrom, 'node');
-    $this->to = canon::getuniqueid($idto, 'node');
-  }
-
-  // --------------------------------------------------
-  function calc_latlong() {
-    /* the lat/lon of a segment is determined to be its midpoint */
-    if ($this->ok_latlon()) { return TRUE; }
-    if (! $this->get_nodes()) { return FALSE; }
-    $this->lat = ($this->nodefrom->lat + $this->nodeto->lat) / 2.0;
-    $this->lon = ($this->nodefrom->lon + $this->nodeto->lon) / 2.0;
-    if (($this->nodefrom->lon > 90.0 && $this->nodeto->lon < -90.0) ||
-        ($this->nodefrom->lon < -90.0 && $this->nodeto->lon > 90.0)) {
-      /* very unusual case - an enormously long segment, or one which 
-         crosses the antemeridian: assume the latter */
-      $this->lon += 180.0;
-      if ($this->lon >= 360.0) { $this->lon -= 360.0; }
-    }
-    return TRUE;
-    // echo "calc_latlong for ",print_r($this, 1);
-  }
-
-  // --------------------------------------------------
-  function get_nodes() {
-    /* that is,getthe nodes into the segment from either end by looking them up 
-       in the database (try the cache first) */
-    global $nc;
-    $n = $nc->getnode($this->from);
-    if ($n === FALSE) { return FALSE; }
-    $this->nodefrom = clone $n;
-    $n = $nc->getnode($this->to);
-    if ($n === FALSE) { return FALSE; }
-    $this->nodeto = clone $n;
-    return TRUE;
-  }
-
-  // --------------------------------------------------
-  function complete() {
-    /* called on completion of reading the segment. We ignore
-       coastline because (a) they are voluminous and not interesting
-       to the name finder, and (b) they have some errors in which
-       makes them hard to process efficiently */
-    global $db, $added;
-
-    if (! isset($this->tags['natural']) || $this->tags['natural']!='coastline') {
-      $this->interesting_name(); // is it an interesting segment?
-      $db->insert($this); // add it (including lat/lon if calculated)
-      $added['segment']++;
-    }
-  }
-}
-
-// ==================================================
 class way extends tagged {
-  var $segments;
-  var $midsegment;
-  var $nodefrom, $nodeto;
+  var $midpoint;
+  var $nodes;
 
   // --------------------------------------------------
   function way($id, $amended=FALSE) { 
@@ -562,36 +509,93 @@ class way extends tagged {
   }
 
   // --------------------------------------------------
-  function add_segment($osmid) { $this->segments[] = canon::getuniqueid($osmid, 'segment'); }
+  function add_node($osmid) { $this->nodes[] = canon::getuniqueid($osmid, 'node'); }
 
   // --------------------------------------------------
   function calc_latlong() { 
-    /* The lat/lon of a way is detemrined to be the lat/lon of its middle segment, which 
-       in turn is that segment's midpoint. If we can't determine position, 
-       we're not interested  */
-    if (! $this->get_midsegment()) { return FALSE; }
-    if (! $this->midsegment->calc_latlong()) { return FALSE; } 
-    $this->lat = $this->midsegment->lat;
-    $this->lon = $this->midsegment->lon;
+    /* The lat/lon of a way is detemrined to be the lat/lon of its middle node */
+    if (! $this->get_midpoint()) { return FALSE; }
+    if (! $this->midpoint->calc_latlong()) { return FALSE; } 
+    $this->lat = $this->midpoint->lat;
+    $this->lon = $this->midpoint->lon;
     return TRUE;
   }
 
   // --------------------------------------------------
-  function get_midsegment() {
+  function get_midpoint() {
     global $db;
-    if (empty($this->segments)) { return FALSE; }
-    $segmentid = $this->segments[count($this->segments)/2];
-    $segment = new segment($segmentid, TRUE);
-    if ($db->select($segment) == 1) {
-      $this->midsegment = $segment;
-      return TRUE;
-    }
-    return FALSE;
+    if (empty($this->nodes)) { return FALSE; }
+    $nodeid = $this->nodes[count($this->nodes)/2];
+    $node = new node($nodeid, TRUE);
+    if ($db->select($node) != 1) { return FALSE; }
+    $this->midpoint = $node;
+    return TRUE;
   }
 
   // --------------------------------------------------
   function complete() {
     /* called on completion of reading the way.Is it of any interest? */
+    global $db, $added;
+    $this->interesting_name();
+
+    // and in any case, add it to the way table
+    $db->insert($this);
+    $added['way']++;
+  }
+}
+
+// ==================================================
+class relation extends tagged {
+  var $representativemember;
+  var $nodes;
+  var $ways;
+
+  // --------------------------------------------------
+  function relation($id, $amended=FALSE) { 
+    if (! $amended) { $id = canon::getuniqueid($id, 'relation'); }
+    $this->id = $id; 
+  }
+
+  // --------------------------------------------------
+  function add_node($osmid) { $this->nodes[] = canon::getuniqueid($osmid, 'node'); }
+
+  // --------------------------------------------------
+  function add_way($osmid) { $this->ways[] = canon::getuniqueid($osmid, 'way'); }
+
+  // --------------------------------------------------
+  function calc_latlong() { 
+    /* The lat/lon of a relation is detemrined to be the lat/lon of a
+       representative member: its first node if there is one, or if
+       not via middle way. In time we might want to refine this to
+       take roles and/or the type of relation into account */
+    if (! $this->get_representativemember()) { return FALSE; }
+    if (! $this->representativemember->calc_latlong()) { return FALSE; } 
+    $this->lat = $this->representativemember->lat;
+    $this->lon = $this->representativemember->lon;
+    return TRUE;
+  }
+
+  // --------------------------------------------------
+  function get_representativemember() {
+    global $db;
+    if (empty($this->nodes)) { 
+      if (empty($this->ways)) { return FALSE; }
+      $wayid = $this->ways[count($this->ways)/2];
+      $way = new way($wayid, TRUE);
+      if ($db->select($way) != 1) { return FALSE; }
+      $this->representativemember = $way;
+      return TRUE;
+    }
+    $nodeid = $this->nodes[0];
+    $node = new node($nodeid, TRUE);
+    if ($db->select($node) != 1) { return FALSE; }
+    $this->representativemember = $node;
+    return TRUE;
+  }
+
+  // --------------------------------------------------
+  function complete() {
+    /* called on completion of reading the relation.Is it of any interest? */
     global $db;
     $this->interesting_name();
   }
@@ -627,7 +631,7 @@ echo "started at ", date("H:i:s", $starttime), "\n";
 
 /* start clean... */
 zap('node');
-zap('segment');
+zap('way');
 zap('placeindex');
 zap('named');
 zap('canon');
@@ -648,7 +652,7 @@ if (isset($planetdate)) {
    to see if this has finished */
 $elementcheckfile = '/tmp/osmimportgrep';
 file_put_contents('', $elementcheckfile);
-exec ("grep -c \"\\(<node \\|<segment\\|<way \\)\" {$planetfilename} > {$elementcheckfile} &");
+exec ("grep -c \"\\(<node \\|<way \\|<relation \\)\" {$planetfilename} > {$elementcheckfile} &");
 $elementcount = $currentelementcount = 0; 
 
 /* initialise the node cache */
@@ -687,14 +691,14 @@ printf("took %d:%02d:%02d\n", $hours, $minutes, $seconds);
 // ==================================================
 /* XML parser callbacks
 
-   $tagged is the current node, segment or way we are processing, where tags go 
-   when we encounter them, and where way seg's go */
+   $tagged is the current node, way or relation we are processing, where tags go 
+   when we encounter them, and where nodes of ways and members of relations go */
 
 function startelement($parser, $name, $attrs)
 {
   global $tagged, $elementcount, $elementcheckfile, $currentelementcount;
-  static $seensegment = FALSE;
   static $seenway = FALSE;
+  static $seenrelation = FALSE;
   static $lastelementcheck = 0;
   static $lastpermill = 0;
 
@@ -733,20 +737,32 @@ function startelement($parser, $name, $attrs)
       die("no tag K or V".print_r($tagged,1)."\n".print_r($attrs,1)); }
     $tagged->add_tag($attrs['K'], $attrs['V']);
     break;
-  case 'SEG':
-    /* SEG is the element which puts a segment reference into a way */
+  case 'ND': /* constituent node of way */
     if (empty($tagged)) { die("no tagged\n"); }
-    if (! isset($attrs['ID'])) { 
-      echo("no seg ID".print_r($tagged,1).print_r($attrs,1)); 
+    if (! isset($attrs['REF'])) { 
+      echo("no node REF".print_r($tagged,1).print_r($attrs,1)); 
     }  else {
-      $tagged->add_segment((int)$attrs['ID']);
+      $tagged->add_node((int)$attrs['REF']);
+    }
+    break;
+  case 'MEMBER': /* constituent member of relation */
+    if (empty($tagged)) { die("no tagged\n"); }
+    if (! isset($attrs['REF']) || ! isset($attrs['TYPE'])) { 
+      echo("no node REF".print_r($tagged,1).print_r($attrs,1)); 
+    }  else {
+      switch ($attrs['TYPE']) {
+      case 'node':
+        $tagged->add_node((int)$attrs['REF']);
+        break;
+      case 'way':
+        $tagged->add_way((int)$attrs['REF']);
+        break;
+      default:
+        echo("unrecognised TYPE".print_r($tagged,1).print_r($attrs,1)); 
+      }
     }
     break;
 
-  /* node, segment and way start those elements: create objects for
-   them as they appear so we have somewhere to put the tags; call the
-   relevant complete() function on eac later when we see the end of
-   the tag */
   case 'NODE':
     if (! empty($tagged)) { die("tagged active\n".print_r($tagged,1)); }
     if (empty($attrs['ID'])) { die("no node ID"); }
@@ -754,20 +770,6 @@ function startelement($parser, $name, $attrs)
     if (empty($attrs['LAT']) || empty($attrs['LON'])) { 
       die("no node LAT/LON".print_r($tagged,1)); }
     $tagged->set_latlon((double)$attrs['LAT'], (double)$attrs['LON']);
-    $currentelementcount++;
-    break;
-  case 'SEGMENT':
-    if (! $seensegment) {
-      /* first segment ... */
-      echo "starting segments at " . date("H:i:s") . "\n";
-      $seensegment = TRUE;
-    }
-    if (! empty($tagged)) { die("tagged active\n".print_r($tagged,1)); }
-    if (empty($attrs['ID'])) { die("no segment ID"); }
-    $tagged = new segment((int)$attrs['ID']);
-    if (empty($attrs['FROM']) || empty($attrs['TO'])) { 
-      die("no segment FROM/TO".print_r($tagged,1)); }
-    $tagged->set_fromto((int)$attrs['FROM'], (int)$attrs['TO']);
     $currentelementcount++;
     break;
   case 'WAY':
@@ -781,6 +783,17 @@ function startelement($parser, $name, $attrs)
     $tagged = new way((int)$attrs['ID']);
     $currentelementcount++;
     break;
+  case 'RELATION':
+    if (! $seenrelation) {
+      /* first relation ... */
+      echo "starting relations at " . date("H:i:s") . "\n";
+      $seenrelation = TRUE;
+    }
+    if (! empty($tagged)) { die("tagged active\n".print_r($tagged,1)); }
+    if (empty($attrs['ID'])) { die("no relation ID"); }
+    $tagged = new relation((int)$attrs['ID']);
+    $currentelementcount++;
+    break;
   }
 }
 
@@ -792,8 +805,8 @@ function endelement($parser, $name)
 
   switch($name) {
   case 'NODE':
-  case 'SEGMENT':
   case 'WAY':
+  case 'RELATION':
     $tagged->complete();
     $tagged = NULL;
     break;

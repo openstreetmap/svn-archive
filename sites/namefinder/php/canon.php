@@ -3,14 +3,14 @@
 /* This class represents elements of the table which matches indexed
    alternate canonical forms of search terms and also
    provides services to canonicalise and generalise
-   search terms */
+   search terms  */
 
 class canon {
 
   var $named_id; /* a number unique across all nameds, unlike the osm id
                     which is only unique within type. This id is the osm
                     id multiplied by 10 and then the type inserted in the
-                    low order decimal digit (1 for node, 2 for segement,
+                    low order decimal digit (1 for node, 4 for relation,
                     3 for way. It's done this way to make it easy to see
                     the correspondence when seeing the number, and
                     therefore to debug. Conversion functions below */
@@ -292,7 +292,7 @@ class canon {
 
   // --------------------------------------------------
   /* static */ function getuniqueid($osmid, $type) {
-    /* osm ids are only unique within type (node, segement, way), so we make them unique
+    /* osm ids are only unique within type (node, way, relation), so we make them unique
        overall by inserting in the osm id an extra loworder decimal digit for the type */
     static $types;
     if (! isset($types)) { $types = array_flip(canon::getosmtypes()); }
@@ -311,7 +311,7 @@ class canon {
 
   // --------------------------------------------------
   /* static */ function getosmtypes() {
-    static $types = array(1=>'node',2=>'segment',3=>'way');    
+    static $types = array(1=>'node',3=>'way',4=>'relation');
     return $types;
   }
   

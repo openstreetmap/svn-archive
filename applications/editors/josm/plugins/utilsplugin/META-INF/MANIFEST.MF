@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Created-By: 1.5.0_10 (Sun Microsystems Inc.)
+Plugin-Class: UtilsPlugin.UtilsPlugin
+Plugin-Description: Adds various utilities to JOSM (v.4) By Martijn va
+ n Oosterhout <kleptog@svana.org>
+Main-Class: UtilsPlugin.UtilsPlugin
+

@@ -24,15 +24,20 @@ use MediaWiki;
 use strict;
 my $Dir = "html"; mkdir $Dir if ! -d $Dir;
 my $DataDir = "Data";
-open(INDEX, ">$Dir/index.htm");
+open(INDEX, ">$Dir/index_en.htm");
 open(SAMPLE_REQUESTS, ">sample_requests.txt");
+
+my @Languages = ("en","fr","de");
 
 my $c = MediaWiki->new;
 $c->setup({'wiki' => {
             'host' => 'wiki.openstreetmap.org',
             'path' => ''}});
  
-my $Descriptions = GetDescriptions();
+my $Descriptions;
+foreach my $Lang(@Languages){
+  $Descriptions->{$Lang} = GetDescriptions($Lang);
+}
 
 print INDEX "<h2>List of all tags found</h2>\n";
 AllTags();
@@ -40,18 +45,20 @@ AllTags();
 print INDEX "<h2>Watchlist tags</h2>\n";
 foreach my $Line(split(/\n/, $c->text("Tagwatch/Watchlist"))){
   if($Line =~ m{\* (\w+)}){
-    Watchlist($1);
+    foreach my $Lang(@Languages){
+      Watchlist($1, $Lang);
+    }
   }
 }
 close INDEX;
 
 
 sub Watchlist{
-   my($Tag) = @_;
-   my $Filename = "tag_$Tag.htm";
-   Index($Filename, $Tag);
+   my($Tag, $Language) = @_;
+   my $Filename = "${Language}_tag_$Tag.htm";
+   Index($Filename, "$Language:$Tag");
    open(OUT, ">$Dir/$Filename");
-   print OUT "<p><a href=\"./index.htm\">Back to index</a></p>\n";
+   print OUT "<p><a href=\"./index_$Language.htm\">Back to index</a></p>\n";
    print OUT "<h1>$Tag</h1>\n";
    
    print OUT "<p>Discuss <a href=\"http://wiki.openstreetmap.org/index.php/Key:$Tag\">$Tag</a> on the wiki</p>\n";
@@ -66,11 +73,11 @@ sub Watchlist{
        my $ImageHtml = '-';
        $ImageHtml = "<img src=\"$Image\">" if(-f "$Dir/$Image");
        
-       my $Text = $Descriptions->{$Tag}->{$Value};
+       my $Text = $Descriptions->{$Language}->{$Tag}->{$Value};
        $Text = '&nbsp;' if(!$Text);
        
        my @Links = (
-       "<a href=\"http://en.wikipedia.org/wiki/$Value\">Wikipedia</a>",
+       "<a href=\"http://$Language.wikipedia.org/wiki/$Value\">Wikipedia</a>",
        "Translate" # TODO
        );
        
@@ -149,8 +156,9 @@ sub GetTags{
   return \%Values;
 }
 sub GetDescriptions{
+  my ($Language) = @_;
   my %D;
-  foreach my $Line(split(/\n/, $c->text("Tagwatch/Descriptions"))){
+  foreach my $Line(split(/\n/, $c->text("Tagwatch/Descriptions/$Language"))){
     if($Line =~ m{\*\s*(\w+)\s*=\s*(\w+)\s*:\s*(.*?)\s*$}){
       $D{$1}->{$2} = $3;
     }

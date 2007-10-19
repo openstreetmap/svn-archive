@@ -59,15 +59,11 @@ public class SimplifyWayAction extends JosmAction {
 			}
 
 			if (used) {
-				if (toI - i >= 2) {
-					ArrayList<Node> ns = new ArrayList<Node>();
-					simplifyWayRange(wnew, i, toI, ns, threshold);
-					for (int j = toI-1; j > i; j--) wnew.nodes.remove(j);
-					wnew.nodes.addAll(i+1, ns);
-				}
+				simplifyWayRange(wnew, i, toI, threshold);
 				toI = i;
 			}
 		}
+		simplifyWayRange(wnew, 0, toI, threshold);
 
 		HashSet<Node> delNodes = new HashSet<Node>();
 		delNodes.addAll(w.nodes);
@@ -82,6 +78,15 @@ public class SimplifyWayAction extends JosmAction {
 						delNodes.size()),
 					cmds));
 			Main.map.repaint();
+		}
+	}
+
+	public void simplifyWayRange(Way wnew, int from, int to, double thr) {
+		if (to - from >= 2) {
+			ArrayList<Node> ns = new ArrayList<Node>();
+			simplifyWayRange(wnew, from, to, ns, thr);
+			for (int j = to-1; j > from; j--) wnew.nodes.remove(j);
+			wnew.nodes.addAll(from+1, ns);
 		}
 	}
 

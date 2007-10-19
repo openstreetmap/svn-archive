@@ -49,15 +49,16 @@ foreach my $Lang(@Languages){
   $Descriptions->{$Lang} = GetDescriptions($Lang);
 }
 
+my $Interface = LoadInterface();
 
 foreach my $Language(@Languages){
   open(INDEX, ">$Dir/index_$Language.htm");
   print INDEX htmlHeader("OpenStreetMap tagging");
   print INDEX InterLingualLinks("index_%s.htm",  $Language);
-  print INDEX "<h2>List of all tags found</h2>\n";
+  printf INDEX "<h2>%s</h2>\n", $Interface->{'everything'}->{$Language};
   AllTags();
   
-  print INDEX "<h2>Watchlist tags</h2>\n";
+  printf INDEX "<h2>%s</h2>\n", $Interface->{'watchlist'}->{$Language};
   foreach my $Line(split(/\n/, $c->text("Tagwatch/Watchlist"))){
     if($Line =~ m{\* (\w+)}){
       Watchlist($1, $Language);
@@ -80,18 +81,27 @@ sub InterLingualLinks{
       push(@InterLanguageLinks, "<a href=\"$URL\">$L</a>");
     }
   }
-  return("<p>In other languages: ". join(", ", @InterLanguageLinks). "</p>");
+  return sprintf
+    "<p>%s: %s</p>",
+    $Interface->{'interlang'}->{$CurrentLanguage},
+    join(", ", @InterLanguageLinks);
 }
 sub Watchlist{
-   my($Tag, $Language) = @_;
-   my $Filename = "${Language}_tag_$Tag.htm";
-   Index($Filename, "$Tag");
-   open(OUT, ">$Dir/$Filename");
-   print OUT htmlHeader($Tag);
-   print OUT "<p><a href=\"./index_$Language.htm\">Back to index</a></p>\n";
-   print OUT "<h1>$Tag</h1>\n";
+  my($Tag, $Language) = @_;
+  my $Filename = "${Language}_tag_$Tag.htm";
+  Index($Filename, "$Tag");
+  open(OUT, ">$Dir/$Filename");
+  print OUT htmlHeader($Tag);
+  printf OUT 
+    "<p><a href=\"%s\">%s</a></p>\n",
+    "./index_$Language.htm",
+    $Interface->{'up'}->{$Language};
+  
+  print OUT "<h1>$Tag</h1>\n";
    
-   print OUT "<p>Discuss <a href=\"http://wiki.openstreetmap.org/index.php/Key:$Tag\">$Tag</a> on the wiki</p>\n";
+  printf OUT 
+    $Interface->{'wiki'}->{$Language} . "\n",
+    "<a href=\"http://wiki.openstreetmap.org/index.php/Key:$Tag\">$Tag</a>";
    
    print OUT InterLingualLinks("%s_tag_$Tag.htm",  $Language);
    
@@ -111,7 +121,6 @@ sub Watchlist{
        
        my @Links = (
        "<a href=\"http://$Language.wikipedia.org/wiki/$Value\">Wikipedia</a>",
-       "Translate" # TODO
        );
        
        my $Sample = GetSampleImage($Tag,$Value);
@@ -245,4 +254,14 @@ sub translate{
     return($1, 1);
   }
   return($Word, 0);
+}
+
+sub LoadInterface{
+  my $X;
+  foreach my $Line(split(/\n/, $c->text("Tagwatch/Interface"))){
+    if($Line =~ m{ \* \s* (\w+) \: (\w+) \: \s* (.*) }x){
+      $X->{$2}->{$1} = $3;
+    }
+  }
+  return $X;
 }

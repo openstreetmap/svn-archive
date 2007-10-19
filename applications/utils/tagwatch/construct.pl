@@ -64,6 +64,18 @@ sub Watchlist{
    
    print OUT "<p>Discuss <a href=\"http://wiki.openstreetmap.org/index.php/Key:$Tag\">$Tag</a> on the wiki</p>\n";
    
+   my @InterLanguageLinks;
+   foreach my $OtherLanguage(@Languages){
+     if($OtherLanguage eq $Language){
+       push(@InterLanguageLinks, "<b>$OtherLanguage</b>");
+     }
+     else{
+       my $URL = "${OtherLanguage}_tag_$Tag.htm";
+       push(@InterLanguageLinks, "<a href=\"$URL\">$OtherLanguage</a>");
+     }
+   }
+   print OUT "<p>In other languages: ", join(", ", @InterLanguageLinks), "</p>";
+   
    my $Values = GetValues($Tag);
    my $Max = Max($Values);
    my @Others;

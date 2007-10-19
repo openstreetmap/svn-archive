@@ -147,7 +147,10 @@ sub Watchlist{
    }
    print OUT "</table>\n";
    
-   printf OUT "<h2>Other values used</h2>\n<p>%s</p>\n", join(",\n", @Others);
+   printf OUT "<h2>%s:</h2>\n<p>%s</p>\n", 
+    $Interface->{'othertags'}->{$Language},
+    join(",\n", @Others);
+
    print OUT htmlFooter();
    close OUT;
 }

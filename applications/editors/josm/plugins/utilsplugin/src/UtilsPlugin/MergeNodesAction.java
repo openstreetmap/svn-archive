@@ -3,6 +3,7 @@ package UtilsPlugin;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +36,7 @@ class MergeNodesAction extends JosmAction {
 
 	public void actionPerformed(ActionEvent e) {
 		Collection<OsmPrimitive> sel = Main.ds.getSelected();
-		Collection<Node> nodes = new ArrayList<Node>();
+		HashSet<Node> nodes = new HashSet<Node>();
 
 		for (OsmPrimitive osm : sel)
 			if (osm instanceof Node)
@@ -58,7 +59,6 @@ class MergeNodesAction extends JosmAction {
 		Collection<Command> cmds = new LinkedList<Command>();
 
 		Node newTarget = new Node(target);
-		cmds.add(new ChangeCommand(target, newTarget));
 
 		// Don't place the merged node on one of the former nodes.
 		// Place it right there in the middle.
@@ -70,9 +70,11 @@ class MergeNodesAction extends JosmAction {
 		newTarget.eastNorth = new EastNorth(
 			x / nodes.size(), y / nodes.size());
 
-		nodes.remove(target);
+		cmds.add(new ChangeCommand(target, newTarget));
 
-		cmds.add(new DeleteCommand(nodes));
+		HashSet<Node> delNodes = new HashSet<Node>(nodes);
+		delNodes.remove(target);
+		cmds.add(new DeleteCommand(delNodes));
 
 		for (Way w : Main.ds.ways) {
 			if (w.deleted || w.incomplete) continue;
@@ -86,21 +88,20 @@ class MergeNodesAction extends JosmAction {
 			}
 			if (!affected) continue;
 
-			// Replace the old nodes with the merged ones
+			// Replace the old nodes with the merged one
 			Way wnew = new Way(w);
 			for (int i = 0; i < wnew.nodes.size(); i++) {
 				if (nodes.contains(wnew.nodes.get(i))) {
-					wnew.nodes.set(i, newTarget);
+					wnew.nodes.set(i, target);
 				}
 			}
 
 			// Remove duplicates
 			Node lastN = null;
 			for (int i = wnew.nodes.size() - 1; i >= 0; i--) {
-				if (lastN == wnew.nodes.get(i)) {
-					wnew.nodes.remove(i);
-					if (i < wnew.nodes.size()) i++;
-				}
+				Node n = wnew.nodes.get(i);
+				if (lastN == n) wnew.nodes.remove(i);
+				lastN = n;
 			}
 
 			if (wnew.nodes.size() < 2) {
@@ -110,7 +111,7 @@ class MergeNodesAction extends JosmAction {
 				if (!backRefV.data.isEmpty()) {
 					JOptionPane.showMessageDialog(Main.parent,
 						tr("Cannot merge nodes: " +
-							"Would have to delete way that is still used."));
+							"Would have to delete a way that is still used."));
 					return;
 				}
 
@@ -121,6 +122,7 @@ class MergeNodesAction extends JosmAction {
 		}
 
 		Main.main.undoRedo.add(new SequenceCommand(tr("Merge Nodes"), cmds));
+		Main.ds.setSelected(newTarget);
 		Main.map.repaint();
 	}
 }

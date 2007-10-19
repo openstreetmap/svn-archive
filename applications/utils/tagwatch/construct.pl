@@ -24,7 +24,6 @@ use MediaWiki;
 use strict;
 my $Dir = "html"; mkdir $Dir if ! -d $Dir;
 my $DataDir = "Data";
-open(INDEX, ">$Dir/index_en.htm");
 open(SAMPLE_REQUESTS, ">sample_requests.txt");
 
 my @Languages = ("en","fr","de");
@@ -37,30 +36,40 @@ my $wp = MediaWiki->new;
 $wp->setup({'wiki' => {
             'host' => 'en.wikipedia.org',
             'path' => 'w'}});
+
+# P.O.S. website doesn't even expose an REST API... :(
+# my $omega = MediaWiki->new;
+# $omega->setup({'wiki' => {
+#            'host' => 'www.omegawiki.org',
+#            'path' => ''}});
+# print $omega->text("DefinedMeaning:river_(3253)");die;
  
 my $Descriptions;
 foreach my $Lang(@Languages){
   $Descriptions->{$Lang} = GetDescriptions($Lang);
 }
 
-print INDEX "<h2>List of all tags found</h2>\n";
-AllTags();
 
-print INDEX "<h2>Watchlist tags</h2>\n";
-foreach my $Line(split(/\n/, $c->text("Tagwatch/Watchlist"))){
-  if($Line =~ m{\* (\w+)}){
-    foreach my $Lang(@Languages){
-      Watchlist($1, $Lang);
+foreach my $Language(@Languages){
+  open(INDEX, ">$Dir/index_$Language.htm");
+  print INDEX htmlHeader("OpenStreetMap tagging");
+  print INDEX "<h2>List of all tags found</h2>\n";
+  AllTags();
+  
+  print INDEX "<h2>Watchlist tags</h2>\n";
+  foreach my $Line(split(/\n/, $c->text("Tagwatch/Watchlist"))){
+    if($Line =~ m{\* (\w+)}){
+      Watchlist($1, $Language);
     }
   }
+  print INDEX htmlFooter();
+  close INDEX;
 }
-close INDEX;
-
 
 sub Watchlist{
    my($Tag, $Language) = @_;
    my $Filename = "${Language}_tag_$Tag.htm";
-   Index($Filename, "$Language:$Tag");
+   Index($Filename, "$Tag");
    open(OUT, ">$Dir/$Filename");
    print OUT htmlHeader($Tag);
    print OUT "<p><a href=\"./index_$Language.htm\">Back to index</a></p>\n";

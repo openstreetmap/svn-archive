@@ -90,13 +90,9 @@ sub Watchlist{
        my $ImageHtml = '-';
        $ImageHtml = "<img src=\"$Image\">" if(-f "$Dir/$Image");
        
-       my ($ValueTranslated, $IsTranslated) = translate($Value, $Language); 
-       
        my $Text = $Descriptions->{$Language}->{$Tag}->{$Value};
        $Text = '&nbsp;' if(!$Text);
        
-       $Text = "<b>$ValueTranslated</b>:<br>".$Text;
-
        
        my @Links = (
        "<a href=\"http://$Language.wikipedia.org/wiki/$Value\">Wikipedia</a>",

@@ -31,15 +31,32 @@ $c->setup({'wiki' => {
             'path' => ''}});
 
 my $PDir = "html/Photos";
+my $CacheDir = "original_photos";
 mkdir "html" if ! -d "html";
 mkdir $PDir if ! -d $PDir;
+mkdir $CacheDir if ! -d $CacheDir;
+
 foreach my $Line(split(/\n/, $c->text("Tagwatch/Photos"))){
   if($Line =~ m{^\*\s*(\w+)=(\w+)\s+(.*?)\s*$}){
     print "Fetching: $1 = $2\n";
     
     # Download the image
     my $Filename = "$PDir/$1_$2.jpg";
-    my $Data = get($3);
+    my $URL = $3;
+    
+    my $CacheName = $URL;
+    $CacheName =~ s/\W/_/g;
+    $CacheName = "$CacheDir/$CacheName.jpg";
+    mirror($URL, $CacheName);
+    
+    my $Data;
+    {
+    local($/);
+    open(LOAD, $CacheName) || die;
+    binmode LOAD;
+    $Data = <LOAD>;
+    close LOAD;
+    }
     
     # Open it in GD
     my $Image1 = GD::Image->newFromJpegData($Data);

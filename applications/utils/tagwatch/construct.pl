@@ -53,6 +53,7 @@ foreach my $Lang(@Languages){
 foreach my $Language(@Languages){
   open(INDEX, ">$Dir/index_$Language.htm");
   print INDEX htmlHeader("OpenStreetMap tagging");
+  print INDEX InterLingualLinks("index_%s.htm",  $Language);
   print INDEX "<h2>List of all tags found</h2>\n";
   AllTags();
   
@@ -66,6 +67,21 @@ foreach my $Language(@Languages){
   close INDEX;
 }
 
+sub InterLingualLinks{
+  my ($UrlPattern, $CurrentLanguage) = @_;
+  
+  my @InterLanguageLinks;
+  foreach my $L(@Languages){
+    if($L eq $CurrentLanguage){
+      push(@InterLanguageLinks, "<b>$L</b>");
+    }
+    else{
+      my $URL = sprintf($UrlPattern, $L);
+      push(@InterLanguageLinks, "<a href=\"$URL\">$L</a>");
+    }
+  }
+  return("<p>In other languages: ". join(", ", @InterLanguageLinks). "</p>");
+}
 sub Watchlist{
    my($Tag, $Language) = @_;
    my $Filename = "${Language}_tag_$Tag.htm";
@@ -77,17 +93,7 @@ sub Watchlist{
    
    print OUT "<p>Discuss <a href=\"http://wiki.openstreetmap.org/index.php/Key:$Tag\">$Tag</a> on the wiki</p>\n";
    
-   my @InterLanguageLinks;
-   foreach my $OtherLanguage(@Languages){
-     if($OtherLanguage eq $Language){
-       push(@InterLanguageLinks, "<b>$OtherLanguage</b>");
-     }
-     else{
-       my $URL = "${OtherLanguage}_tag_$Tag.htm";
-       push(@InterLanguageLinks, "<a href=\"$URL\">$OtherLanguage</a>");
-     }
-   }
-   print OUT "<p>In other languages: ", join(", ", @InterLanguageLinks), "</p>";
+   print OUT InterLingualLinks("%s_tag_$Tag.htm",  $Language);
    
    my $Values = GetValues($Tag);
    my $Max = Max($Values);

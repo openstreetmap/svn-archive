@@ -1,0 +1,8 @@
+README for utils/gazeteer directory
+--------------------------------------
+
+This directory contains scripts that extract places information from a planet.osm
+file or (preferably) from the osmxapi server
+
+PLEASE EXPAND AND CHANGE THIS README IF YOU MAKE CHANGES!
+

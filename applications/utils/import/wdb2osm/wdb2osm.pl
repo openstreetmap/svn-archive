@@ -76,10 +76,10 @@ while( my $line = <FILE> ) {
 
     if(@lineSplit[0] eq "segment"){
 	# Output way of all segments if we have added any
-	if( $#segments ){
+	if( $#nodes ){
 	    print OUT "<way id='-1'>\n";
-	    foreach(@segments){
-		print OUT "  <seg id='$_' />\n";
+	    foreach(@nodes){
+		print OUT "  <nd ref='$_' />\n";
 	    }
 	    print OUT "</way>\n";
 	}
@@ -108,28 +108,24 @@ while( my $line = <FILE> ) {
 	# every element.
 	$nodeid = -1; $segmentid = -2;
 
-	@segments = ();
+	# @segments = ();
+	@nodes = ();
 
 	# Output header
 	print OUT "<?xml version='1.0' encoding='UTF-8'?>\n";
-	print OUT "<osm version='0.4' generator='wdb2osm.pl'>\n";
+	print OUT "<osm version='0.5' generator='wdb2osm.pl'>\n";
     } elsif( @lineSplit[0] ne "segment" && @lineSplit[0] ne "" ){
 	$nodeid-=2;
 	print OUT "<node id=\"$nodeid\" lat=\"@lineSplit[0]\" lon=\"@lineSplit[1]\"/>\n";
-
-	if( $nodeid != -3 ){ # Don't try to make a segment before we have two nodes
-	    $segmentid -= 2;
-	    print OUT "<segment id='$segmentid' from='$nodeid' to='". ($nodeid+2 ) ."' />\n";
-	    push(@segments, $segmentid);
-	}
+	push(@nodes, $nodeid);
     }
 }
 
 # Output the way with all the segments, then close the file
 if( $#segments ){
     print OUT "<way id='-1'>\n";
-    foreach(@segments){
-	print OUT "  <seg id='$_' />\n";
+    foreach(@nodes){
+	print OUT "  <nd ref='$_' />\n";
     }
     print OUT "</way>\n";
 }

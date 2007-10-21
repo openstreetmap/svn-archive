@@ -2,6 +2,18 @@
 OSMGarminMap
 ------------
 
+****************************************************************************
+
+  IMPORTANT!
+
+  OSMGarminMap has not been updated to work with API 0.5 files. We recommend
+  you use the "Mkgmap" program instead which works with API 0.5 files and
+  is faster and easier to use.
+
+  See: http://wiki.openstreetmap.org/index.php/Mkgmap
+
+****************************************************************************
+
 By Jochen Topf <jochen@remote.org>
 
 

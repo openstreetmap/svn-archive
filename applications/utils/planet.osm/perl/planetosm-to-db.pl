@@ -81,17 +81,17 @@ GetOptions (
 	     'proxy=s'          => \$Utils::LWP::Utils::PROXY,
 
 	     'empty'            => \$do_empty,
-	     'schema'		=> \$do_schema,
-	     'bbox:s'		=> \$do_bbox,
-	     'exbbox:s'		=> \$do_exbbox,
-	     'exbox:s'		=> \$do_exbbox,
-	     'ebbox:s'		=> \$do_exbbox,
+	     'schema'           => \$do_schema,
+	     'bbox:s'           => \$do_bbox,
+	     'exbbox:s'         => \$do_exbbox,
+	     'exbox:s'          => \$do_exbbox,
+	     'ebbox:s'          => \$do_exbbox,
 
-	     'dbtype' => \$dbtype,
-	     'dbname' => \$dbname,
-	     'dbhost' => \$dbhost,
-	     'dbuser' => \$dbuser,
-	     'dbpass' => \$dbpass,
+	     'dbtype:s'         => \$dbtype,
+	     'dbname:s'         => \$dbname,
+	     'dbhost:s'         => \$dbhost,
+	     'dbuser:s'         => \$dbuser,
+	     'dbpass:s'         => \$dbpass,
 	     ) or pod2usage(1);
 
 pod2usage(1) if $help;

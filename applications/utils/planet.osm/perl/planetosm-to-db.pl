@@ -54,7 +54,7 @@ sub should_batch_inserts($$); # {}
 sub check_bbox_valid(@); # {}
 sub display_count($$); #{}
 
-my $dbtype = $ENV{DBTYPE} || "pgsql";	# mysql | pgsql
+my $dbtype = $ENV{DBTYPE} || "pgsql";	# mysql | pgsql | monetdb
 my $dbname = $ENV{DBNAME} || "osm";
 my $dbhost = $ENV{DBHOST} || "localhost";
 my $dbuser = $ENV{DBUSER} || "";
@@ -578,6 +578,10 @@ sub open_connection($$$$$) {
 	} elsif ($dbtype eq 'mysql') {
 		$dsn = "DBI:mysql:$dbname";
 		$dsn.= ";host=$dbhost" if $dbhost;
+	} elsif ($dbtype eq "monetdb") {
+		my $dbport = 50000;
+		if(!$dbhost) { $dbhost="localhost"; }
+		$dsn = "dbi:monetdb:host=$dbhost;port=$dbport;database=$dbname;user=$dbuser;password=$dbpass;host=$dbhost;port=$dbport;language=sql";
 	} else {
 		die("Unknown database type '$dbtype'");
 	}
@@ -624,8 +628,11 @@ sub build_way_ps($$) {
 sub build_way_node_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql;
-	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_nodes (way,node,node_order) VALUES (?,?,?)"; }
-	else					{ $sql = "INSERT INTO way_nodes (id,node_id,node_id) VALUES (?,?,?)"; }
+	if ($dbtype eq 'pgsql' || $dbtype eq 'monetdb') { 
+		$sql = "INSERT INTO way_nodes (way,node,node_order) VALUES (?,?,?)";
+	} else { 
+		$sql = "INSERT INTO way_nodes (id,node_id,node_id) VALUES (?,?,?)"; 
+	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -633,8 +640,11 @@ sub build_way_node_ps($$) {
 sub build_way_tag_ps($$) {
 	my ($dbtype,$conn) = @_;
 	my $sql;
-	if ($dbtype eq 'pgsql') { $sql = "INSERT INTO way_tags (way,name,value) VALUES (?,?,?)"; }
-	else					{ $sql = "INSERT INTO way_tags (id,k,v) VALUES (?,?,?)"; }
+	if ($dbtype eq 'pgsql' || $dbtype eq 'monetdb') {
+		$sql = "INSERT INTO way_tags (way,name,value) VALUES (?,?,?)"; 
+	} else { 
+		$sql = "INSERT INTO way_tags (id,k,v) VALUES (?,?,?)"; 
+	}
 	my $sth = $conn->prepare($sql);
 	unless($sth) { die("Couldn't create prepared statement: ".$conn->errstr); }
 	return $sth;
@@ -665,8 +675,9 @@ sub build_relation_member_ps($$) {
 
 sub should_batch_inserts($$) {
 	my ($dbtype,$conn) = @_;
-	if($dbtype eq 'pgsql') {
+	if($dbtype eq 'pgsql' || $dbtype eq 'monetdb') {
 		# Postgres likes to get bulk inserts in batches
+		# Apparently, MonetDB likes bulk insert batches too
 		return 1;
 	}
 	return 0;
@@ -727,7 +738,7 @@ CREATE TABLE relation_tags (
 	relation INTEGER NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	value VARCHAR(255) NOT NULL,
-	CONSTRAINT fk_relation FOREIGN KEY (relation) REFERENCES relations (id)
+	CONSTRAINT fk_relation_tags_relation FOREIGN KEY (relation) REFERENCES relations (id)
 );
 
 CREATE TABLE relation_members (
@@ -735,9 +746,32 @@ CREATE TABLE relation_members (
 	type VARCHAR(255) NOT NULL,
 	ref INTEGER NOT NULL,
 	role VARCHAR(255) NOT NULL,
-	CONSTRAINT pk_relation_members PRIMARY KEY (relation,type,ref),
-	CONSTRAINT fk_relation FOREIGN KEY (relation) REFERENCES relations (id)
+	CONSTRAINT pk_relation_members_relation PRIMARY KEY (relation,type,ref),
+	CONSTRAINT fk_relation_members FOREIGN KEY (relation) REFERENCES relations (id)
 );
+
+EOT
+	} elsif ($dbtype eq 'monetdb') {
+		return <<"EOT";
+CREATE SEQUENCE s_nodes AS INTEGER;
+CREATE SEQUENCE s_ways AS INTEGER;
+CREATE SEQUENCE s_relations AS INTEGER;
+
+CREATE TABLE nodes (id INTEGER NOT NULL DEFAULT next value for "sys"."s_nodes",	latitude REAL NOT NULL,	longitude REAL NOT NULL, CONSTRAINT pk_nodes_id PRIMARY KEY (id));
+
+CREATE TABLE node_tags (node INTEGER NOT NULL, name VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL,	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id));
+
+CREATE TABLE ways (id INTEGER NOT NULL DEFAULT next value for "sys"."s_ways", CONSTRAINT pk_ways_id PRIMARY KEY (id));
+
+CREATE TABLE way_tags (way INTEGER NOT NULL, name VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id));
+
+CREATE TABLE way_nodes (way INTEGER NOT NULL, node INTEGER NOT NULL, node_order INTEGER NOT NULL, CONSTRAINT pk_way_nodes PRIMARY KEY (way,node_order), CONSTRAINT fk_ws_way FOREIGN KEY (way) REFERENCES ways (id), CONSTRAINT fk_ws_node FOREIGN KEY (node) REFERENCES nodes (id));
+
+CREATE TABLE relations (id INTEGER NOT NULL DEFAULT next value for "sys"."s_relations", CONSTRAINT pk_relations_id PRIMARY KEY (id));
+
+CREATE TABLE relation_tags (relation INTEGER NOT NULL, name VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL,	CONSTRAINT fk_relation_tags FOREIGN KEY (relation) REFERENCES relations (id));
+
+CREATE TABLE relation_members (relation INTEGER NOT NULL, type VARCHAR(255) NOT NULL, ref INTEGER NOT NULL, role VARCHAR(255) NOT NULL,	CONSTRAINT pk_relation_members PRIMARY KEY (relation,type,ref),	CONSTRAINT fk_relation_members FOREIGN KEY (relation) REFERENCES relations (id));
 
 EOT
 	} elsif ($dbtype eq 'mysql') {
@@ -776,7 +810,7 @@ EOT
 
 sub post_process($) {
 	my ($dbtype)=@_;
-	if ($dbtype eq 'pgsql') {
+	if ($dbtype eq 'pgsql' || $dbtype eq 'monetdb') {
 		# Enable the indexes, which we turn off during a bulk load
 		return <<EOT;
 CREATE INDEX i_nodes_lat ON nodes(latitude);
@@ -862,9 +896,9 @@ Use "20,-180,80,-45" to exclude the Tiger data
 
 =item B<--dbtype>
 
-mysql | pgsql
+mysql | pgsql | monetdb
 
- ENV DBTYPE to  mysql | pgsql
+ ENV DBTYPE to  mysql | pgsql | monetdb
        
  default: pgsql
 
@@ -891,7 +925,7 @@ mysql | pgsql
 =back
 
 Before running, think about your database type
-(pgsql or mysql), name, host, user and password and 
+(pgsql, mysql or monetdb), name, host, user and password and 
 provide them at commandline or set the Environment Variables.
 
 =head1 COPYRIGHT

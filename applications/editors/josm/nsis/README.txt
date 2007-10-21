@@ -53,7 +53,7 @@ create the actual josm-setup-latest.exe.
 
 known issues
 ------------
-- absolute paths in openstreetmap-setup.sh
+- absolute paths in josm-setup.sh
 - bookmarks are of ulfl's personal interest (should be replaced e.g. by some "well known" places)
 - version number fixed to latest (JOSM and Plugins have different SVN versions, some plugins not even in SVN)
 - localisation/internationalisation settings (currently only english supported)

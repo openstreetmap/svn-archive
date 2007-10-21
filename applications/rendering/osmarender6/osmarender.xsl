@@ -1378,6 +1378,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 			<xsl:call-template name="generateWayPathNormal"/>
         </xsl:variable>
         <path id="way_normal_{@id}" d="{$pathWayNormal}"/>
+		<xsl:variable name="way" select="."/>
 
 		<!-- Generate a reverse way path (if needed) -->
         <xsl:variable name="pathWayReverse">
@@ -1391,7 +1392,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 					<!-- Generate nothing -->
                 </xsl:when>
 				<!-- Automatic, reverse direction -->
-                <xsl:when test="(key('nodeById',key('segmentById',seg[1]/@id)/@from)/@lon &gt; key('nodeById',key('segmentById',seg[last()]/@id)/@to)/@lon)">
+			    <xsl:when test="(key('nodeById',$way/nd[1]/@ref)/@lon &gt; key('nodeById',$way/nd[last()]/@ref)/@lon)">
 					<xsl:call-template name="generateWayPathReverse"/>
                 </xsl:when>
             </xsl:choose>

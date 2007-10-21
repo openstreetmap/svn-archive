@@ -66,6 +66,7 @@ my $do_empty=0;
 my $do_schema=0;
 my $do_bbox='';
 my $do_exbbox='';
+my $decode_entities=0;
 
 Getopt::Long::Configure('no_ignore_case');
 GetOptions ( 
@@ -80,6 +81,7 @@ GetOptions (
 	     'no-mirror'        => \$Utils::LWP::Utils::NO_MIRROR,
 	     'proxy=s'          => \$Utils::LWP::Utils::PROXY,
 
+         'decode-entities'  => \$decode_entities,
 	     'empty'            => \$do_empty,
 	     'schema'           => \$do_schema,
 	     'bbox:s'           => \$do_bbox,
@@ -106,6 +108,9 @@ my $warn_bbox_skip = 0;
 if($do_schema) {
 	print fetch_schema($dbtype);
 	exit;
+}
+if($decode_entities) {
+	use HTML::Entities;
 }
 
 # Exclude nodes within this lat,long,lat,long bounding box
@@ -511,7 +516,19 @@ foreach my $sql (split "\n",&post_process($dbtype)) {
 sub do_node_tag($ $ $ $) {
 	my ($last_id,$name,$value,$line) = @_;
 
-	if ($dbtype eq 'pgsql') {
+	# Decode entities if needed
+	if($decode_entities) {
+		$name = decode_entities($name);
+		$value = decode_entities($value);
+	}
+	# MonetDB doesn't correctly do escaping for prepared statements
+	# So, we have to do it for it :(
+	if($dbtype eq 'monetdb') {
+		$name = $conn->quote($name);
+		$value = $conn->quote($value);
+	}
+
+	if ($dbtype eq 'pgsql' || $dbtype eq 'monetdb') {
 		do_tag_add($node_tag_ps,$last_id,$name,$value,$line);
 	} else {
 		do_tag_append($node_tag_ps_mysql,$last_id,$name,$value,$line);
@@ -680,9 +697,9 @@ sub build_relation_member_ps($$) {
 
 sub should_batch_inserts($$) {
 	my ($dbtype,$conn) = @_;
-	if($dbtype eq 'pgsql' || $dbtype eq 'monetdb') {
+	if($dbtype eq 'pgsql') {
 		# Postgres likes to get bulk inserts in batches
-		# Apparently, MonetDB likes bulk insert batches too
+		# (MySQL and MonetDB don't like it)
 		return 1;
 	}
 	return 0;
@@ -708,8 +725,8 @@ CREATE TABLE nodes (
 
 CREATE TABLE node_tags (
 	node INTEGER NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	value VARCHAR(255) NOT NULL,
+	name VARCHAR(511) NOT NULL,
+	value VARCHAR(511) NOT NULL,
 	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id)
 );
 
@@ -720,8 +737,8 @@ CREATE TABLE ways (
 
 CREATE TABLE way_tags (
 	way INTEGER NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	value VARCHAR(255) NOT NULL,
+	name VARCHAR(511) NOT NULL,
+	value VARCHAR(511) NOT NULL,
 	CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id)
 );
 
@@ -741,8 +758,8 @@ CREATE TABLE relations (
 
 CREATE TABLE relation_tags (
 	relation INTEGER NOT NULL,
-	name VARCHAR(255) NOT NULL,
-	value VARCHAR(255) NOT NULL,
+	name VARCHAR(511) NOT NULL,
+	value VARCHAR(511) NOT NULL,
 	CONSTRAINT fk_relation_tags_relation FOREIGN KEY (relation) REFERENCES relations (id)
 );
 
@@ -764,17 +781,17 @@ CREATE SEQUENCE s_relations AS INTEGER;
 
 CREATE TABLE nodes (id INTEGER NOT NULL DEFAULT next value for "sys"."s_nodes",	latitude REAL NOT NULL,	longitude REAL NOT NULL, CONSTRAINT pk_nodes_id PRIMARY KEY (id));
 
-CREATE TABLE node_tags (node INTEGER NOT NULL, name VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL,	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id));
+CREATE TABLE node_tags (node INTEGER NOT NULL, name VARCHAR(511) NOT NULL, value VARCHAR(511) NOT NULL,	CONSTRAINT fk_node FOREIGN KEY (node) REFERENCES nodes (id));
 
 CREATE TABLE ways (id INTEGER NOT NULL DEFAULT next value for "sys"."s_ways", CONSTRAINT pk_ways_id PRIMARY KEY (id));
 
-CREATE TABLE way_tags (way INTEGER NOT NULL, name VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id));
+CREATE TABLE way_tags (way INTEGER NOT NULL, name VARCHAR(511) NOT NULL, value VARCHAR(511) NOT NULL, CONSTRAINT fk_way FOREIGN KEY (way) REFERENCES ways (id));
 
 CREATE TABLE way_nodes (way INTEGER NOT NULL, node INTEGER NOT NULL, node_order INTEGER NOT NULL, CONSTRAINT pk_way_nodes PRIMARY KEY (way,node_order), CONSTRAINT fk_ws_way FOREIGN KEY (way) REFERENCES ways (id), CONSTRAINT fk_ws_node FOREIGN KEY (node) REFERENCES nodes (id));
 
 CREATE TABLE relations (id INTEGER NOT NULL DEFAULT next value for "sys"."s_relations", CONSTRAINT pk_relations_id PRIMARY KEY (id));
 
-CREATE TABLE relation_tags (relation INTEGER NOT NULL, name VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL,	CONSTRAINT fk_relation_tags FOREIGN KEY (relation) REFERENCES relations (id));
+CREATE TABLE relation_tags (relation INTEGER NOT NULL, name VARCHAR(511) NOT NULL, value VARCHAR(511) NOT NULL,	CONSTRAINT fk_relation_tags FOREIGN KEY (relation) REFERENCES relations (id));
 
 CREATE TABLE relation_members (relation INTEGER NOT NULL, type VARCHAR(255) NOT NULL, ref INTEGER NOT NULL, role VARCHAR(255) NOT NULL,	CONSTRAINT pk_relation_members PRIMARY KEY (relation,type,ref),	CONSTRAINT fk_relation_members FOREIGN KEY (relation) REFERENCES relations (id));
 
@@ -881,6 +898,8 @@ B<planertosm-to-db.pl> <planet.osm.xml> - parse planet.osm file and upload to db
 =item B<--schema> - output database schema
 
 =item B<--empty> - empty tables ready for new upload
+
+=item B<--decode-entities> - turn xml entities like &amp; back into ascii
 
 =item B<--bbox>
 

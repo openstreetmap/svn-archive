@@ -436,7 +436,10 @@ while(my $line = <XML>) {
 	elsif($line =~ /^\s*\<tag/) {
 		my ($name,$value) = ($line =~ /^\s*\<tag k=[\'\"](.*?)[\'\"] v=[\'\"](.*?)[\'\"]/);
 
+		# Skip over empty tags
+		if($name eq "" && $value eq "") { next; }
 		if($name eq " " && $value eq "") { next; }
+		# And warn on other partly empty tags
 		unless($name) { warn "Invalid line '$line'"; next; }
 		if($name =~ /^\s+$/) { warn "Skipping invalid tag line '$line'"; next; }
 
@@ -478,6 +481,8 @@ while(my $line = <XML>) {
 	elsif($line =~ /^\s*\<\/osm\>/) {
 	}
 	elsif($line =~ /^\s*\<\/node\>/) {
+	}
+	elsif($line =~ /^\s*\<bound box=\>/) {
 	}
 	else {
 	    print STDERR "Unknown line $line\n";

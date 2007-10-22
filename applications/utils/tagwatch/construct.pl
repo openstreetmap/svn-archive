@@ -26,7 +26,7 @@ my $Dir = "html"; mkdir $Dir if ! -d $Dir;
 my $DataDir = "Data";
 open(SAMPLE_REQUESTS, ">sample_requests.txt");
 
-my @Languages = ("en","fr","de");
+my @Languages = ("en","fr","de","tr");
 
 my $c = MediaWiki->new;
 $c->setup({'wiki' => {

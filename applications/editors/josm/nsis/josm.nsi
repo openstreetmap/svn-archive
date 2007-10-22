@@ -322,16 +322,16 @@ SetOutPath $APPDATA\JOSM\plugins
 File "downloads\mappaint.jar"
 SectionEnd
 
-Section "osmarender" SecOsmarenderPlugin
+;Section "osmarender" SecOsmarenderPlugin
 ;-------------------------------------------
-SectionIn 1 2
-SetShellVarContext all
-SetOutPath $APPDATA\JOSM\plugins
-File "downloads\osmarender.jar"
+;SectionIn 1 2
+;SetShellVarContext all
+;SetOutPath $APPDATA\JOSM\plugins
+;File "downloads\osmarender.jar"
 ; XXX - should be done inside the plugin and not here!
-SetShellVarContext current
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osmarender.firefox" "$PROGRAMFILES\Mozilla Firefox\firefox.exe"
-SectionEnd
+;SetShellVarContext current
+;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osmarender.firefox" "$PROGRAMFILES\Mozilla Firefox\firefox.exe"
+;SectionEnd
 
 Section "WMS" SecWMSPlugin
 ;-------------------------------------------
@@ -432,7 +432,7 @@ SectionIn 1 2
 ;MessageBox MB_OK "PluginSetting!" IDOK 0
 ; XXX - should better be handled inside JOSM (recent plugin manager is going in the right direction)
 SetShellVarContext current
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,osmarender,wmsplugin,namefinder,validator"
+${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "plugins" "mappaint,wmsplugin,namefinder,validator"
 SectionEnd
 
 
@@ -448,7 +448,7 @@ SetShellVarContext all
 Delete "$INSTDIR\josm.exe"
 Delete "$INSTDIR\uninstall.exe"
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
-Delete "$APPDATA\JOSM\plugins\osmarender.jar"
+;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
 Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
@@ -499,13 +499,13 @@ Section /o "Un.Personal Plugins" un.SecPlugins
 SectionIn 2
 SetShellVarContext current
 Delete "$APPDATA\JOSM\plugins\wmsplugin.jar"
-Delete "$APPDATA\JOSM\plugins\osmarender.jar"
-Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
+;Delete "$APPDATA\JOSM\plugins\osmarender.jar"
+;Delete "$APPDATA\JOSM\plugins\osmarender\*.*"
 Delete "$APPDATA\JOSM\plugins\mappaint.jar"
 Delete "$APPDATA\JOSM\plugins\namefinder.jar"
 Delete "$APPDATA\JOSM\plugins\validator\*.*"
 Delete "$APPDATA\JOSM\plugins\validator.jar"
-RMDir "$APPDATA\JOSM\plugins\osmarender"
+;RMDir "$APPDATA\JOSM\plugins\osmarender"
 RMDir "$APPDATA\JOSM\plugins\validator"
 RMDir "$APPDATA\JOSM\plugins"
 RMDir "$APPDATA\JOSM"
@@ -529,7 +529,7 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecJosm} "JOSM is the JAVA OpenStreetMap editor for .osm files."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecPluginsGroup} "An assortment of useful JOSM plugins."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMappaintPlugin} "An alternative renderer for the map with colouring, line thickness, icons after tags."
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecOsmarenderPlugin} "Displays the current screen as nicely rendered SVG graphics in FireFox."
+;  !insertmacro MUI_DESCRIPTION_TEXT ${SecOsmarenderPlugin} "Displays the current screen as nicely rendered SVG graphics in FireFox."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecWMSPlugin} "Display background images from Web Map Service (WMS) sources."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecNamefinderPlugin} "Add a 'Find places by their name' tab to the download dialog."
   !insertmacro MUI_DESCRIPTION_TEXT ${SecValidatorPlugin} "Validates edited data if it conforms to common suggestions."

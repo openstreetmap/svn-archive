@@ -293,9 +293,10 @@ File "bookmarks"
 dont_overwrite_bookmarks:
 
 ; don't overwrite existing de_streets.xml file
-IfFileExists de-streets.xml dont_overwrite_de_streets
-File "de-streets.xml"
-dont_overwrite_de_streets:
+; in the meantime, JOSM provides a basic set of tagging presets - don't provide our own
+;IfFileExists de-streets.xml dont_overwrite_de_streets
+;File "de-streets.xml"
+;dont_overwrite_de_streets:
 
 ; write reasonable defaults for some preferences
 ; XXX - some of this should be done in JOSM itself
@@ -308,7 +309,7 @@ ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "projection" "org.openstreetmap.josm.data.projection.Epsg4326"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "taggingpreset.sources" "$APPDATA/JOSM/de-streets.xml"
+;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "taggingpreset.sources" "$APPDATA/JOSM/de-streets.xml"
 SectionEnd
 
 
@@ -323,6 +324,8 @@ File "downloads\mappaint.jar"
 SectionEnd
 
 ;Section "osmarender" SecOsmarenderPlugin
+; osmarender needs Firefox (which isn't available on all machines)
+; and often provides clipped SVG graphics - therefore it's ommited by default
 ;-------------------------------------------
 ;SectionIn 1 2
 ;SetShellVarContext all
@@ -489,7 +492,7 @@ SectionIn 2
 SetShellVarContext current
 Delete "$APPDATA\JOSM\preferences"
 Delete "$APPDATA\JOSM\bookmarks"
-Delete "$APPDATA\JOSM\de-streets.xml"
+;Delete "$APPDATA\JOSM\de-streets.xml"
 RMDir "$APPDATA\JOSM"
 RMDir "$APPDATA\JOSM\plugins\mappaint"
 SectionEnd

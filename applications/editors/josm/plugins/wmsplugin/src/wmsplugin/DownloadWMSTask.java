@@ -38,6 +38,7 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 	}
 	
 	@Override public void realRun() throws IOException {
+		Main.pleaseWaitDlg.currentAction.setText(tr("Contacting WMS Server..."));
 		wmsLayer.grab(minlat,minlon,maxlat,maxlon);
 	}
 

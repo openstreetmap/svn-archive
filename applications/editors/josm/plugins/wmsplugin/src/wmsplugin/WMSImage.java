@@ -14,6 +14,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.NavigatableComponent;
+import org.openstreetmap.josm.io.ProgressInputStream;
 
 public class WMSImage
 {
@@ -97,7 +98,8 @@ public class WMSImage
 
 	protected void doGrab (URL url) throws IOException
 	{
-		InputStream is = url.openStream();
+		InputStream is = new ProgressInputStream(
+			url.openConnection(), Main.pleaseWaitDlg);
 		theImage = ImageIO.read(is) ;
 		is.close();
 		Main.map.repaint();

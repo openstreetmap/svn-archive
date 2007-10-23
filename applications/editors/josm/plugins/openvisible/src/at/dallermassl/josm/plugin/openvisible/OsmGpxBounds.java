@@ -3,7 +3,6 @@
  */
 package at.dallermassl.josm.plugin.openvisible;
 
-import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;

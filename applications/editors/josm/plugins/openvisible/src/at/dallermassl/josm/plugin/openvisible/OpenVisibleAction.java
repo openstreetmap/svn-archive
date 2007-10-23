@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.zip.GZIPInputStream;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -37,7 +36,6 @@ import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
 import org.openstreetmap.josm.io.OsmReader;
 import org.openstreetmap.josm.io.RawCsvReader;
 import org.openstreetmap.josm.io.RawGpsReader;
-import org.openstreetmap.josm.tools.ImageProvider;
 import org.xml.sax.SAXException;
 
 /**

@@ -4,7 +4,6 @@
 package at.dallermassl.josm.plugin.openvisible;
 
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;

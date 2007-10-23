@@ -131,7 +131,7 @@
   <target name="upload" depends="dist,site">
     <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
     <exec executable="scp">
-      <arg value="${plugin.jar}"/>
+      <arg value="${plugin.dist.dir}/${plugin.jar}"/>
       <arg value="${plugin.site.file}"/>
       <arg value="${plugin.site.upload.target}"/>
     </exec>

@@ -77,8 +77,6 @@
 
     <ant	dir="surveyor"		antfile="build.xml"	target="clean"/>
     <ant	dir="livegps"		antfile="build.xml"	target="clean"/>
-
-    <delete dir="dist" />
   </target>
 
   <target name="clean_install">

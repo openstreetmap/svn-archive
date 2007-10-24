@@ -630,17 +630,6 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 # no action; files for this preprocessing step seem to have been created 
                 # by another layer already!
             }
-            elsif ($preprocessor eq "frollo")
-            {
-                # Pre-process the data file using frollo
-                if (not frollo($inputFile, $outputFile))
-                {
-                    # stop rendering if frollo fails, as current osmarender is 
-                    # dependent on frollo hints
-                    PutRequestBackToServer($X,$Y,"FrolloFail");
-                    return cleanUpAndDie("GenerateTileset:Frollo failed",$Mode,1,$PID);
-                }
-            }
             elsif ($preprocessor eq "maplint")
             {
                 # Pre-process the data file using maplint
@@ -887,51 +876,9 @@ sub UpdateOsmarender
 #-----------------------------------------------------------------------------
 # Pre-process on OSM file (using frollo)
 #-----------------------------------------------------------------------------
-sub frollo 
+sub frollo ## provided as fallback, should never be actually called
 {
-    my($dataFile, $outputFile) = @_;
-    if ($Config{OSMVersion} >= 0.5)
-    {
-        copy $dataFile, $outputFile;
-        statusMessage("Skipping frollo (nothing to fix)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,1);
-        return 1;
-    }
-    my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-      $Config{Niceness},
-      $Config{XmlStarlet},
-      "frollo1.xsl",
-      "$dataFile",
-      "temp-$PID.osm"); 
-    statusMessage("Frolloizing (part I) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    if(runCommand($Cmd,$PID))
-    {
-        my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
-          $Config{Niceness},
-          $Config{XmlStarlet},
-          "frollo2.xsl",
-          "temp-$PID.osm",
-          "$outputFile");
-        statusMessage("Frolloizing (part II) ...", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        if(runCommand($Cmd,$PID))
-        {
-            statusMessage("Frollification successful", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-            killafile("temp-$PID.osm");
-        }
-        else 
-        {
-            statusMessage("Frollotation failure (part II)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-            killafile("temp-$PID.osm");
-            killafile($outputFile);
-            return 0;
-        }
-    } 
-    else 
-    {
-        statusMessage("Failure of Frollotron (part I)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        killafile("temp-$PID.osm");
-        return 0;
-    }
-    
+    print STDERR "\nYour layers.conf is outdated, please use current version from SVN\n"
     return 1;
 }
 
@@ -948,17 +895,11 @@ sub xml2svg
     {
         $TSVG = "$SVG-temp.svg";
     }
- 
+
     my $XslFile;
 
-    if ($Config{OSMVersion} <= 0.4) 
-    {
-        $XslFile = "osmarender/osmarender.xsl";
-    }
-    else
-    {
-        $XslFile = "osmarender6/osmarender.xsl";
-    }
+    $XslFile = "osmarender6/osmarender.xsl";
+
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},
       $Config{XmlStarlet},

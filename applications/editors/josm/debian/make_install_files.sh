@@ -34,14 +34,14 @@ mkdir -p "$dst_path/usr/lib/josm"
 # Compile the Jar Files 
 echo "Compile Josm"
 cd core
-ant clean
-ant compile || exit -1
+ant -q clean
+ant -q compile || exit -1
 cd ..
 
 echo "Compile Josm Plugins"
 cd plugins
-ant clean
-ant build || exit -1
+ant -q clean
+ant -q dist|| exit -1
 cd ..
 
 

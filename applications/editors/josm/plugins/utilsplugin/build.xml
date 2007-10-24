@@ -1,6 +1,6 @@
 <project name="utilsplugin" default="build" basedir=".">
   <property name="josm" location="../../core/dist/josm-custom.jar" />
-	
+  
   <target name="init">
     <mkdir dir="build"/>
   </target>
@@ -19,7 +19,7 @@
 	<attribute name="Plugin-Description" value="Useful JOSM utilities"/>
 	<attribute name="Plugin-Version" value="0.5"/>
 	<attribute name="Author"
-	  value="(originally) Martijn van Oosterhout &gt;kleptog@svana.org&gt;"/>
+		   value="(originally) Martijn van Oosterhout &gt;kleptog@svana.org&gt;"/>
       </manifest>
     </jar>
   </target>

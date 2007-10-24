@@ -1,49 +1,49 @@
 <project name="nearclick" default="build" basedir=".">
 
-	<!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
-	<property name="josm" location="../../core/dist/josm-custom.jar" />
-	<!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
-	
-	<!-- target directory to place the plugin in -->
-	<!-- Windows has a different home directory scheme then unix/linux -->
-	<!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
-	<!--<property name="plugins" location="${user.home}/.josm/plugins" ></property>-->
-	<property name="plugins" location="${user.home}/Application Data/JOSM/plugins" ></property>
+  <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
+  <property name="josm" location="../../core/dist/josm-custom.jar" />
+  <!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
+  
+  <!-- target directory to place the plugin in -->
+  <!-- Windows has a different home directory scheme then unix/linux -->
+  <!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
+  <!--<property name="plugins" location="${user.home}/.josm/plugins" ></property>-->
+  <property name="plugins" location="${user.home}/Application Data/JOSM/plugins" ></property>
 
-	<!-- you should not need to modify anything below this! -->
+  <!-- you should not need to modify anything below this! -->
 
 
-	<target name="init">
-		<mkdir dir="build"></mkdir>
-		<mkdir dir="dist"></mkdir>
-	</target>
+  <target name="init">
+    <mkdir dir="build"></mkdir>
+    <mkdir dir="dist"></mkdir>
+  </target>
 
-	<target name="compile" depends="init">
-		<javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
-			<include name="**/*.java" />
-		</javac>
-	</target>
+  <target name="compile" depends="init">
+    <javac srcdir="src" target="1.5" classpath="${josm}" destdir="build" debug="true">
+      <include name="**/*.java" />
+    </javac>
+  </target>
 
-	<target name="build" depends="compile">
-		<jar destfile="dist/nearclick.jar" basedir="build">
-			<manifest>
-				<attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
-				<attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
-			</manifest>
-		</jar>
-	</target>
+  <target name="build" depends="compile">
+    <jar destfile="dist/nearclick.jar" basedir="build">
+      <manifest>
+	<attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
+	<attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="clean">
-		<delete dir="build" />
-		<delete dir="dist" />
-	</target>
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
 
-	<target name="clean_install">
-		<delete file="${plugins}/nearclick.jar" />
-	</target>
+  <target name="clean_install">
+    <delete file="${plugins}/nearclick.jar" />
+  </target>
 
-	<target name="install" depends="build">
-		<copy file="dist/nearclick.jar" todir="${plugins}"/>
-	</target>
+  <target name="install" depends="build">
+    <copy file="dist/nearclick.jar" todir="${plugins}"/>
+  </target>
 
 </project>

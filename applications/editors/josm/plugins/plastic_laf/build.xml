@@ -1,22 +1,22 @@
 <project name="plastic_laf" default="build" basedir=".">
 
-	<target name="build">
-		<mkdir dir="dist"></mkdir>
-		<unjar dest="bin" src="lib/looks-2.0.4.jar" />
-		<javac srcdir="src" destdir="bin">
-			<include name="**/*.java" />
-		</javac>
-		<jar destfile="dist/plastic_laf.jar" basedir="bin">
-			<manifest>
-				<attribute name="Plugin-Class" value="plastic_laf.Plugin" />
-				<attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel" />
-				<attribute name="Plugin-Early" value="true" />
-			</manifest>
-		</jar>
-	</target>
+  <target name="build">
+    <mkdir dir="dist"></mkdir>
+    <unjar dest="bin" src="lib/looks-2.0.4.jar" />
+    <javac srcdir="src" destdir="bin">
+      <include name="**/*.java" />
+    </javac>
+    <jar destfile="dist/plastic_laf.jar" basedir="bin">
+      <manifest>
+	<attribute name="Plugin-Class" value="plastic_laf.Plugin" />
+	<attribute name="Plugin-Description" value="The great JGoodies Plastic Look and Feel" />
+	<attribute name="Plugin-Early" value="true" />
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="clean">
-		<delete dir="dist" />
-	</target>
+  <target name="clean">
+    <delete dir="dist" />
+  </target>
 
 </project>

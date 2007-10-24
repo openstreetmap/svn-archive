@@ -3,20 +3,20 @@
   <property name="josm.home.dir" value="${user.home}/.josm"/>
   <property name="plugin.build.dir" value="build"/>
 
-    <!-- init target -->
-     <target name="init">
-        <mkdir dir="build" />
-        <mkdir dir="dist" />
-      </target>
+  <!-- init target -->
+  <target name="init">
+    <mkdir dir="build" />
+    <mkdir dir="dist" />
+  </target>
 
-    <!-- clean target -->
-      <target name="clean">
-        <delete dir="build" />
-        <delete dir="dist" />
-      </target>
-    
-    <!-- compile target -->
-    <target name="compile" depends="init">
+  <!-- clean target -->
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
+  
+  <!-- compile target -->
+  <target name="compile" depends="init">
     <javac srcdir="namefinder" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <classpath>
         <pathelement path="${josm.prj.dir}/build"/>
@@ -26,9 +26,9 @@
         </fileset>
       </classpath>
     </javac>
-    </target>
+  </target>
 
-    <!-- dist target - create jar file -->
+  <!-- dist target - create jar file -->
   <target name="dist" depends="compile">
     <jar destfile="dist/${ant.project.name}.jar" basedir="${plugin.build.dir}">
       <manifest>
@@ -39,10 +39,9 @@
     </jar>
   </target>
 
-    <!-- dist target - copy jar file to plugin destination -->
-     <target name="install" depends="dist">
-        <copy file="dist/${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
-      </target>
-    
+  <!-- dist target - copy jar file to plugin destination -->
+  <target name="install" depends="dist">
+    <copy file="dist/${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
+  </target>
+  
 </project>
-

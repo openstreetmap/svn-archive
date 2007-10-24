@@ -4,17 +4,17 @@
 
   <target name="compile" depends="clean">
     <mkdir dir="build"></mkdir>
-  	<mkdir dir="build/images"></mkdir>
+    <mkdir dir="build/images"></mkdir>
     <copy todir="build">
-    	<fileset dir="bin" casesensitive="yes">
-    	  <filename name="**/*.class"/>
-    	</fileset>
+      <fileset dir="bin" casesensitive="yes">
+    	<filename name="**/*.class"/>
+      </fileset>
     </copy>
-  	<copy todir="build/images">
-    	<fileset dir="images" casesensitive="yes">
-    	  <filename name="**/*.png"/>
-    	</fileset>
-  	</copy>
+    <copy todir="build/images">
+      <fileset dir="images" casesensitive="yes">
+    	<filename name="**/*.png"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="jar" depends="compile">

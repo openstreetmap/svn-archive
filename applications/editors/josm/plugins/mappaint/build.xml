@@ -1,63 +1,63 @@
 <project name="mappaint" default="build" basedir=".">
 
-	<!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
-	<property name="josm" location="../../core/dist/josm-custom.jar" />
-	<!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
-	
-	<!-- target directory to place the plugin in -->
-	<!-- Windows has a different home directory scheme then unix/linux -->
-	<!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
-	<property name="plugins" location="${user.home}/.josm/plugins" ></property>
-	<!--<property name="plugins" location="${user.home}/Anwendungsdaten/JOSM/plugins" ></property>-->
+  <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
+  <property name="josm" location="../../core/dist/josm-custom.jar" />
+  <!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
+  
+  <!-- target directory to place the plugin in -->
+  <!-- Windows has a different home directory scheme then unix/linux -->
+  <!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
+  <property name="plugins" location="${user.home}/.josm/plugins" ></property>
+  <!--<property name="plugins" location="${user.home}/Anwendungsdaten/JOSM/plugins" ></property>-->
 
-	<!-- you should not need to modify anything below this! -->
+  <!-- you should not need to modify anything below this! -->
 
 
-	<target name="init">
-		<mkdir dir="build"></mkdir>
-		<mkdir dir="dist"></mkdir>
-	</target>
+  <target name="init">
+    <mkdir dir="build"></mkdir>
+    <mkdir dir="dist"></mkdir>
+  </target>
 
-	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="${josm}" destdir="build" debug="true" source="1.5" target="1.5">
-			<include name="**/*.java" />
-		</javac>
-	</target>
+  <target name="compile" depends="init">
+    <javac srcdir="src" classpath="${josm}" destdir="build" debug="true" source="1.5" target="1.5">
+      <include name="**/*.java" />
+    </javac>
+  </target>
 
-	<target name="build" depends="compile">
-		<copy todir="build/standard">
-			<fileset dir="styles/standard"></fileset>
-		</copy>
-		<exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
-			<env key="LANG" value="C"/>
-			<arg value="info"/>
-			<arg value="--xml"/>
-			<arg value="."/>
-		</exec>
-		<xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
-		<delete file="REVISION"/>
-		<jar destfile="dist/mappaint.jar" basedir="build">
-			<manifest>
-				<attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
-				<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;" />
-				<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-				<attribute name="Author" value="Nick Whitelegg / Ulf Lamping"/>
-			</manifest>
-		</jar>
-	</target>
+  <target name="build" depends="compile">
+    <copy todir="build/standard">
+      <fileset dir="styles/standard"></fileset>
+    </copy>
+    <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
+      <env key="LANG" value="C"/>
+      <arg value="info"/>
+      <arg value="--xml"/>
+      <arg value="."/>
+    </exec>
+    <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+    <delete file="REVISION"/>
+    <jar destfile="dist/mappaint.jar" basedir="build">
+      <manifest>
+	<attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
+	<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;" />
+	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+	<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+	<attribute name="Author" value="Nick Whitelegg / Ulf Lamping"/>
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="clean">
-		<delete dir="build" />
-		<delete dir="dist" />
-	</target>
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
 
-	<target name="clean_install">
-		<delete file="${plugins}/mappaint.jar" />
-	</target>
+  <target name="clean_install">
+    <delete file="${plugins}/mappaint.jar" />
+  </target>
 
-	<target name="install" depends="build">
-		<copy file="dist/mappaint.jar" todir="${plugins}"/>
-	</target>
+  <target name="install" depends="build">
+    <copy file="dist/mappaint.jar" todir="${plugins}"/>
+  </target>
 
 </project>

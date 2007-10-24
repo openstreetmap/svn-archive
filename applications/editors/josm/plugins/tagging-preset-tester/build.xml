@@ -6,17 +6,17 @@
 	</target>
 
 	<target name="build" depends="compile">
-		<mkdir dir="dist"/>
-		<jar destfile="dist/tagging-preset-tester.jar" 
-			 basedir="build"
-			 manifest="src/org/openstreetmap/josm/plugins/taggingpresettester/MANIFEST.MF">
-			<fileset dir="."><include name="images/*"/></fileset>
-		</jar>
+	  <mkdir dir="dist"/>
+	  <jar destfile="dist/tagging-preset-tester.jar" 
+	       basedir="build"
+	       manifest="src/org/openstreetmap/josm/plugins/taggingpresettester/MANIFEST.MF">
+	    <fileset dir="."><include name="images/*"/></fileset>
+	  </jar>
 	</target>
 
 	<target name="clean">
-		<delete dir="dist"/>
-		<delete dir="build"/>
+	  <delete dir="dist"/>
+	  <delete dir="build"/>
 	</target>
 
 </project>

@@ -21,11 +21,11 @@
   <target name="dist" depends="compile, site">
     <!-- images -->
     <!-- 
-    <copy todir="${plugin.build.dir}/images">
-      <fileset dir="src/images" />
-    </copy>
-    -->
-      <!-- copy configuration xml files -->
+	 <copy todir="${plugin.build.dir}/images">
+	   <fileset dir="src/images" />
+	 </copy>
+	 -->
+    <!-- copy configuration xml files -->
     <copy todir="${plugin.build.dir}">
       <fileset dir="src"> 
         <include name="*.xml"/>
@@ -60,8 +60,8 @@
   </target>
 
   <target name="init">
-     <echo>java version: ${java.version}</echo>
-   </target>
+    <echo>java version: ${java.version}</echo>
+  </target>
 
   <target name="clean">
     <delete dir="${plugin.build.dir}" />
@@ -74,49 +74,49 @@
     <echo message="creating site description in ${plugin.site.file}"/>
     <echo file="${plugin.site.file}">&lt;!-- plugins available on this site -->
   &lt;plugins>
-    &lt;plugin id="${ant.project.name}" version="${plugin.version}">
-      &lt;name>${ant.project.name}&lt;/name>
-      &lt;description>${plugin.description}&lt;/description>
-      &lt;resource>${plugin.site.url}${plugin.jar}&lt;/resource>
-    &lt;/plugin>
+  &lt;plugin id="${ant.project.name}" version="${plugin.version}">
+  &lt;name>${ant.project.name}&lt;/name>
+  &lt;description>${plugin.description}&lt;/description>
+  &lt;resource>${plugin.site.url}${plugin.jar}&lt;/resource>
+  &lt;/plugin>
   &lt;/plugins>
-    </echo>
-  </target>
+</echo>
+</target>
 
-	<!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
-  <target name="site-full-donotuse">
-    <echo message="creating site description in ${plugin.site.file}"/>
-    <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
-&lt;site version="1.0">
-  &lt;!-- meta data of site -->
-  &lt;site-info>
-    &lt;site-name>${plugin.site.description}&lt;/site-name>
-    &lt;site-url>${plugin.site.url}&lt;/site-url>
-  &lt;/site-info>
+<!-- write site description for the given plugin (not implemented in JOSM as full version yet!) -->
+<target name="site-full-donotuse">
+  <echo message="creating site description in ${plugin.site.file}"/>
+  <echo file="${plugin.site.file}">&lt;?xml version="1.0"?>
+    &lt;site version="1.0">
+    &lt;!-- meta data of site -->
+&lt;site-info>
+&lt;site-name>${plugin.site.description}&lt;/site-name>
+&lt;site-url>${plugin.site.url}&lt;/site-url>
+&lt;/site-info>
 
-  &lt;!-- plugins available on this site -->
-  &lt;plugins>
-    &lt;plugin id="${ant.project.name}" version="${plugin.version}">
-      &lt;name>${ant.project.name}&lt;/name>
-      &lt;description>${plugin.description}&lt;/description>
-      &lt;resources>
-        &lt;resource src="${plugin.site.url}${plugin.jar}"
-                  target="${josm.home.dir}/plugins/${plugin.jar}"/>
-      &lt;/resources>
-    &lt;/plugin>
-  &lt;/plugins>
+&lt;!-- plugins available on this site -->
+&lt;plugins>
+&lt;plugin id="${ant.project.name}" version="${plugin.version}">
+&lt;name>${ant.project.name}&lt;/name>
+&lt;description>${plugin.description}&lt;/description>
+&lt;resources>
+&lt;resource src="${plugin.site.url}${plugin.jar}"
+target="${josm.home.dir}/plugins/${plugin.jar}"/>
+&lt;/resources>
+&lt;/plugin>
+&lt;/plugins>
 &lt;/site>
-    </echo>
-  </target>
+</echo>
+</target>
 
-  <!-- upload the site description and the jar file via ssh -->
-  <target name="upload" depends="dist,site">
-    <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
-    <exec executable="scp">
-      <arg value="${plugin.jar}"/>
-      <arg value="${plugin.site.file}"/>
-      <arg value="${plugin.site.upload.target}"/>
-    </exec>
-  </target>
+<!-- upload the site description and the jar file via ssh -->
+<target name="upload" depends="dist,site">
+  <echo message="uploading jar and site description to ${plugin.site.upload.target}"/>
+  <exec executable="scp">
+    <arg value="${plugin.jar}"/>
+    <arg value="${plugin.site.file}"/>
+    <arg value="${plugin.site.upload.target}"/>
+  </exec>
+</target>
 
 </project>

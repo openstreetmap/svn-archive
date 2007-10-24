@@ -1,33 +1,33 @@
 <project name="osmarender" default="install" basedir=".">
 
-	<property name="josm" location="../../core/dist/josm-custom.jar" />
-	<property name="rendering" location="../../../../rendering" />
+  <property name="josm" location="../../core/dist/josm-custom.jar" />
+  <property name="rendering" location="../../../../rendering" />
 
-	<target name="compile">
-		<mkdir dir="bin"></mkdir>
-		<mkdir dir="dist"></mkdir>
-		<javac srcdir="src" debug="true" classpath="${josm}" destdir="bin">
-			<include name="**/*.java" />
-		</javac>
-	</target>
+  <target name="compile">
+    <mkdir dir="bin"></mkdir>
+    <mkdir dir="dist"></mkdir>
+    <javac srcdir="src" debug="true" classpath="${josm}" destdir="bin">
+      <include name="**/*.java" />
+    </javac>
+  </target>
 
-	<target name="build"  depends="compile">
-		<copy todir="bin" file="${rendering}/osmarender6/osmarender.xsl"/>
-		<copy tofile="bin/osm-map-features.xml"
-			file="${rendering}/osmarender5/osm-map-features-z17.xml"/>
-		<jar destfile="dist/osmarender.jar" basedir="bin">
-			<manifest>
-				<attribute name="Plugin-Class" value="OsmarenderPlugin" />
-				<attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image" />
-			</manifest>
-		</jar>
-	</target>
+  <target name="build"  depends="compile">
+    <copy todir="bin" file="${rendering}/osmarender6/osmarender.xsl"/>
+    <copy tofile="bin/osm-map-features.xml"
+	  file="${rendering}/osmarender5/osm-map-features-z17.xml"/>
+    <jar destfile="dist/osmarender.jar" basedir="bin">
+      <manifest>
+	<attribute name="Plugin-Class" value="OsmarenderPlugin" />
+	<attribute name="Plugin-Description" value="Launches FireFox to display the current visible screen as a nice SVG image" />
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="clean">
-		<delete dir="bin" />
-		<delete dir="dist" />
-	</target>
+  <target name="clean">
+    <delete dir="bin" />
+    <delete dir="dist" />
+  </target>
 
-	<target name="install" depends="compile,build" />
+  <target name="install" depends="compile,build" />
 
 </project>

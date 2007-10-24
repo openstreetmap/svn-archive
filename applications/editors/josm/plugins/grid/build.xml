@@ -7,43 +7,43 @@
   <property name="plugin.name" value="${ant.project.name}"/>
   <property name="plugin.jar" value="${plugin.name}.jar"/>
   
-	<!-- point to your JOSM directory -->
-	<property name="josm" location="${josm.build.dir}/dist/josm-custom.jar" />
+  <!-- point to your JOSM directory -->
+  <property name="josm" location="${josm.build.dir}/dist/josm-custom.jar" />
 
 
 
-	<target name="init">
-		<mkdir dir="build"></mkdir>
-		<mkdir dir="dist"></mkdir>
-	</target>
+  <target name="init">
+    <mkdir dir="build"></mkdir>
+    <mkdir dir="dist"></mkdir>
+  </target>
 
-	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
-			<include name="**/*.java" />
-		</javac>
-	</target>
+  <target name="compile" depends="init">
+    <javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
+      <include name="**/*.java" />
+    </javac>
+  </target>
 
-	<target name="build" depends="compile">
-		<copy todir="build/images" >
-			<fileset dir="images" />
-		</copy>
-		<jar destfile="${plugin.jar}" basedir="build">
-			<manifest>
-				<attribute name="Plugin-Class" value="grid.GridPlugin" />
-				<attribute name="Plugin-Description" value="Provide a background layer that displays a map grid" />
-			</manifest>
-		</jar>
-	</target>
+  <target name="build" depends="compile">
+    <copy todir="build/images" >
+      <fileset dir="images" />
+    </copy>
+    <jar destfile="${plugin.jar}" basedir="build">
+      <manifest>
+	<attribute name="Plugin-Class" value="grid.GridPlugin" />
+	<attribute name="Plugin-Description" value="Provide a background layer that displays a map grid" />
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="clean">
-		<delete dir="build" />
-		<delete dir="dist" />
-		<delete dir="${plugin.jar}" />
-	</target>
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+    <delete dir="${plugin.jar}" />
+  </target>
 
-	<target name="install" depends="build">
-		<copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
-	</target>
+  <target name="install" depends="build">
+    <copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
+  </target>
 
 
 </project>

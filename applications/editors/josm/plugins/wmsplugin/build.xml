@@ -1,41 +1,41 @@
 <project name="wmsplugin" default="build" basedir=".">
 
-	<!-- point to your JOSM directory -->
-	<property name="josm" location="../../core/dist/josm-custom.jar" />
+  <!-- point to your JOSM directory -->
+  <property name="josm" location="../../core/dist/josm-custom.jar" />
 
 
 
-	<target name="init">
-		<mkdir dir="build"></mkdir>
-		<mkdir dir="dist"></mkdir>
-	</target>
+  <target name="init">
+    <mkdir dir="build"></mkdir>
+    <mkdir dir="dist"></mkdir>
+  </target>
 
-	<target name="compile" depends="init">
-		<javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
-			<include name="**/*.java" />
-		</javac>
-	</target>
+  <target name="compile" depends="init">
+    <javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
+      <include name="**/*.java" />
+    </javac>
+  </target>
 
-	<target name="build" depends="compile">
-		<copy todir="build/images" >
-			<fileset dir="images" />
-		</copy>
-		<jar destfile="dist/wmsplugin.jar" basedir="build">
-			<manifest>
-				<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
-				<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed,&lt;br&gt; i.e from Metacarta's Map Rectifier, Landsat, NPE.&lt;br&gt;
-					Change url via menu item, or wmsplugin.url in advanced prefs. v2.1" />
-			</manifest>
-		</jar>
-	</target>
+  <target name="build" depends="compile">
+    <copy todir="build/images" >
+      <fileset dir="images" />
+    </copy>
+    <jar destfile="dist/wmsplugin.jar" basedir="build">
+      <manifest>
+	<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
+	<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed,&lt;br&gt; i.e from Metacarta's Map Rectifier, Landsat, NPE.&lt;br&gt;
+						    Change url via menu item, or wmsplugin.url in advanced prefs. v2.1" />
+      </manifest>
+    </jar>
+  </target>
 
-	<target name="clean">
-		<delete dir="build" />
-		<delete dir="dist" />
-	</target>
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+  </target>
 
-	<target name="install" depends="build">
-		<copy file="dist/wmsplugin.jar" todir="${user.home}/.josm/plugins"/>
-	</target>
+  <target name="install" depends="build">
+    <copy file="dist/wmsplugin.jar" todir="${user.home}/.josm/plugins"/>
+  </target>
 
 </project>

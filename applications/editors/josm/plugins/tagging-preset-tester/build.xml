@@ -1,22 +1,31 @@
-<project name="tagging-preset-tester" default="build" basedir=".">
+<project name="tagging-preset-tester" default="dist" basedir=".">
 
-	<target name="compile">
-		<mkdir dir="build"/>
-		<javac srcdir="src" destdir="build" classpath="../../core/dist/josm-custom.jar" />
-	</target>
+  <!-- compilation properties -->
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
 
-	<target name="build" depends="compile">
-	  <mkdir dir="dist"/>
-	  <jar destfile="dist/tagging-preset-tester.jar" 
-	       basedir="build"
-	       manifest="src/org/openstreetmap/josm/plugins/taggingpresettester/MANIFEST.MF">
-	    <fileset dir="."><include name="images/*"/></fileset>
-	  </jar>
-	</target>
+  <target name="compile">
+    <mkdir dir="build"/>
+    <javac srcdir="src" destdir="build" classpath="../../core/dist/josm-custom.jar" />
+  </target>
 
-	<target name="clean">
-	  <delete dir="dist"/>
-	  <delete dir="build"/>
-	</target>
+  <target name="dist" depends="compile">
+    <mkdir dir="dist"/>
+    <jar destfile="${plugin.jar}" 
+	 basedir="build"
+	 manifest="src/org/openstreetmap/josm/plugins/taggingpresettester/MANIFEST.MF">
+      <fileset dir="."><include name="images/*"/></fileset>
+    </jar>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${plugin.build.dir}" />
+    <delete file="${plugin.jar}" />
+  </target>
 
 </project>

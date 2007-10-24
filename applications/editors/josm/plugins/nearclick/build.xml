@@ -1,4 +1,13 @@
-<project name="nearclick" default="build" basedir=".">
+<project name="nearclick" default="dist" basedir=".">
+
+  <!-- compilation properties -->
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
 
   <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
   <property name="josm" location="../../core/dist/josm-custom.jar" />
@@ -24,8 +33,8 @@
     </javac>
   </target>
 
-  <target name="build" depends="compile">
-    <jar destfile="dist/nearclick.jar" basedir="build">
+  <target name="dist" depends="compile">
+    <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="nearclick.NearClickPlugin" />
 	<attribute name="Plugin-Description" value="Simulates a click when you do a small and short drag. This is usefull for tablet pens, when you have problems just clicking the tablet without the mouse moving (general Java - tablet problem)." />
@@ -34,16 +43,16 @@
   </target>
 
   <target name="clean">
-    <delete dir="build" />
-    <delete dir="dist" />
+    <delete dir="${plugin.build.dir}" />
+    <delete file="${plugin.jar}" />
   </target>
-
+  
   <target name="clean_install">
     <delete file="${plugins}/nearclick.jar" />
   </target>
 
-  <target name="install" depends="build">
-    <copy file="dist/nearclick.jar" todir="${plugins}"/>
+  <target name="install" depends="dist">
+    <copy file="${plugin.jar}" todir="${plugins}"/>
   </target>
 
 </project>

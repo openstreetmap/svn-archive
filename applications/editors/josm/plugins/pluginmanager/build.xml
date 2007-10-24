@@ -1,6 +1,15 @@
 <project name="pluginmanager" default="dist" basedir=".">
 
   <!-- compilation properties -->
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
+
+  <!-- compilation properties -->
   <property name="josm.build.dir" value="../../core"/>
   <property name="josm.home.dir" value="${user.home}/.josm"/>
   <property name="plugin.build.dir" value="bin"/>
@@ -67,7 +76,7 @@
   <target name="clean">
     <delete dir="${plugin.build.dir}" />
     <delete dir="${plugin.site.file}" />
-    <delete dir="${plugin.jar}" />
+    <delete file="${plugin.jar}" />
   </target>
 
   <!-- write site description for the given plugin -->

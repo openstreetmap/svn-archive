@@ -3,10 +3,10 @@
   <!-- compilation properties -->
   <property name="josm.build.dir" value="../../core"/>
   <property name="josm.home.dir" value="${user.home}/.josm"/>
-  <property name="plugin.build.dir" value="bin"/>
-  <property name="plugin.dist.dir" value="dist"/>
+  <property name="plugin.build.dir" value="build"/>
+  <property name="plugin.dist.dir" value="../dist"/>
   <property name="plugin.name" value="${ant.project.name}"/>
-  <property name="plugin.jar" value="${plugin.name}.jar"/>
+  <property name="plugin.jar" value="../dist/${plugin.name}.jar"/>
   
   <!-- plugin meta data (enter new version number if anything changed!) -->
   <property name="plugin.version" value="0.2"/>
@@ -80,12 +80,6 @@
     <echo>java version: ${java.version}</echo>
   </target>
 
-  <target name="clean">
-    <delete dir="${plugin.build.dir}" />
-    <delete dir="${plugin.site.file}" />
-    <delete dir="${plugin.jar}" />
-  </target>
-
   <!-- write site description for the given plugin so josm will accept it -->
   <target name="site">
     <echo message="creating site description in ${plugin.site.file}"/>
@@ -135,6 +129,12 @@ target="${josm.home.dir}/plugins/${plugin.jar}"/>
     <arg value="${plugin.site.file}"/>
     <arg value="${plugin.site.upload.target}"/>
   </exec>
+</target>
+
+<target name="clean">
+  <delete dir="${plugin.build.dir}" />
+  <delete dir="${plugin.site.file}" />
+  <delete file="${plugin.jar}" />
 </target>
 
 </project>

@@ -4,8 +4,11 @@
   <jar>downloads/josm-latest.jar</jar>
   <outfile>josm.exe</outfile>
   <errTitle></errTitle>
-  <jarArgs></jarArgs>
+  <cmdLine></cmdLine>
   <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
   <customProcName>false</customProcName>
   <stayAlive>true</stayAlive>
   <icon>logo.ico</icon>
@@ -13,8 +16,8 @@
     <path></path>
     <minVersion>1.5.0</minVersion>
     <maxVersion></maxVersion>
+    <dontUsePrivateJres>false</dontUsePrivateJres>
     <initialHeapSize>0</initialHeapSize>
     <maxHeapSize>0</maxHeapSize>
-    <args></args>
   </jre>
 </launch4jConfig>

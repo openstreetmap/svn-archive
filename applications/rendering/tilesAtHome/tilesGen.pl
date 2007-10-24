@@ -878,7 +878,7 @@ sub UpdateOsmarender
 #-----------------------------------------------------------------------------
 sub frollo ## provided as fallback, should never be actually called
 {
-    print STDERR "\nYour layers.conf is outdated, please use current version from SVN\n"
+    print STDERR "\nYour layers.conf is outdated, please use current version from SVN\n";
     return 1;
 }
 

@@ -1,9 +1,13 @@
-<project name="wmsplugin" default="build" basedir=".">
+<project name="wmsplugin" default="dist" basedir=".">
 
-  <!-- point to your JOSM directory -->
-  <property name="josm" location="../../core/dist/josm-custom.jar" />
-
-
+  <!-- compilation properties -->
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
 
   <target name="init">
     <mkdir dir="build"></mkdir>
@@ -16,11 +20,11 @@
     </javac>
   </target>
 
-  <target name="build" depends="compile">
+  <target name="dist" depends="compile">
     <copy todir="build/images" >
       <fileset dir="images" />
     </copy>
-    <jar destfile="dist/wmsplugin.jar" basedir="build">
+    <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
 	<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed,&lt;br&gt; i.e from Metacarta's Map Rectifier, Landsat, NPE.&lt;br&gt;
@@ -30,12 +34,12 @@
   </target>
 
   <target name="clean">
-    <delete dir="build" />
-    <delete dir="dist" />
+    <delete dir="${plugin.build.dir}" />
+    <delete file="${plugin.jar}" />
   </target>
-
-  <target name="install" depends="build">
-    <copy file="dist/wmsplugin.jar" todir="${user.home}/.josm/plugins"/>
+  
+  <target name="install" depends="dist">
+    <copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
   </target>
-
+  
 </project>

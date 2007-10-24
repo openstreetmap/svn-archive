@@ -1,12 +1,15 @@
 <project name="surveyor" default="dist" basedir=".">
-
+  
   <!-- compilation properties -->
-  <property name="josm.build.dir" value="../../core"/>
-  <property name="josm.home.dir" value="${user.home}/.josm"/>
-  <property name="plugin.build.dir" value="bin"/>
-  <property name="plugin.name" value="${ant.project.name}"/>
-  <property name="plugin.jar" value="${plugin.name}.jar"/>
-  <property name="livegpsplugin.jar" value="../livegps/livegps.jar"/>
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
+
+  <property name="livegpsplugin.jar" value="../dist/livegps.jar"/>
   
   <!-- plugin meta data (enter new version number if anything changed!) -->
   <property name="plugin.version" value="1.3.3"/>
@@ -20,7 +23,7 @@
   <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/surveyor/"/>
   <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/surveyor/"/>
   
-
+  
   <target name="dist" depends="compile,site">
     <!-- images -->
     <copy todir="${plugin.build.dir}/">
@@ -50,11 +53,11 @@
 	<fileset dir="${josm.build.dir}/lib">
 	  <include name="**/*.jar"/>
 	</fileset>
-        <pathelement location="${livegpsplugin.jar}"/>
+	<pathelement location="${livegpsplugin.jar}"/>
       </classpath>
     </javac>
   </target>
-
+  
   <target name="install" depends="dist">
     <copy file="${plugin.jar}" todir="${josm.home.dir}/plugins" />
   </target>
@@ -66,7 +69,7 @@
   <target name="clean">
     <delete dir="${plugin.build.dir}" />
     <delete dir="${plugin.site.file}" />
-    <delete dir="${plugin.jar}" />
+    <delete file="${plugin.jar}" />
   </target>
 
   <!-- write site description for the given plugin so josm will accept it -->

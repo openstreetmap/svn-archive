@@ -1,6 +1,14 @@
-<project name="utilsplugin" default="build" basedir=".">
-  <property name="josm" location="../../core/dist/josm-custom.jar" />
-  
+<project name="utilsplugin" default="dist" basedir=".">
+
+  <!-- compilation properties -->
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
+
   <target name="init">
     <mkdir dir="build"/>
   </target>
@@ -9,11 +17,11 @@
     <javac srcdir="src" classpath="${josm}" destdir="build" debug="true"/>
   </target>
 
-  <target name="build" depends="clean, compile">
+  <target name="dist" depends="clean, compile">
     <copy todir="build/images">
       <fileset dir="images"/>
     </copy>
-    <jar destfile="utilsplugin.jar" basedir="build">
+    <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="UtilsPlugin.UtilsPlugin"/>
 	<attribute name="Plugin-Description" value="Useful JOSM utilities"/>
@@ -25,10 +33,11 @@
   </target>
 
   <target name="clean">
-    <delete dir="build" />
+    <delete dir="${plugin.build.dir}" />
+    <delete file="${plugin.jar}" />
   </target>
 
-  <target name="install" depends="build">
-    <copy file="utilsplugin.jar" todir="${user.home}/.josm/plugins"/>
+  <target name="install" depends="dist">
+    <copy file="${plugin.jar}" todir="${user.home}/.josm/plugins"/>
   </target>
 </project>

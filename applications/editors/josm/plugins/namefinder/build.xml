@@ -1,36 +1,41 @@
 <project name="namefinder" default="dist" basedir=".">
-  <property name="josm.prj.dir" value="../../core"/>
-  <property name="josm.home.dir" value="${user.home}/.josm"/>
-  <property name="plugin.build.dir" value="build"/>
 
+  <!-- compilation properties -->
+  <property name="josm.build.dir"	value="../../core"/>
+  <property name="josm.home.dir"	value="${user.home}/.josm"/>
+  <property name="josm"			location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir"	value="build"/>
+  <property name="plugin.dist.dir"	value="../dist"/>
+  <property name="plugin.name"		value="${ant.project.name}"/>
+  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
+  
   <!-- init target -->
   <target name="init">
-    <mkdir dir="build" />
-    <mkdir dir="dist" />
+    <mkdir dir="${plugin.build.dir}" />
   </target>
-
+  
   <!-- clean target -->
   <target name="clean">
-    <delete dir="build" />
-    <delete dir="dist" />
+    <delete dir="${plugin.build.dir}" />
+    <delete file="${plugin.jar}" />
   </target>
   
   <!-- compile target -->
   <target name="compile" depends="init">
     <javac srcdir="namefinder" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <classpath>
-        <pathelement path="${josm.prj.dir}/build"/>
-        <pathelement path="${josm.prj.dir}/src"/>
-        <fileset dir="${josm.prj.dir}/lib">
+        <pathelement path="${josm.build.dir}/build"/>
+        <pathelement path="${josm.build.dir}/src"/>
+        <fileset dir="${josm.build.dir}/lib">
           <include name="**/*.jar"/>
         </fileset>
       </classpath>
     </javac>
   </target>
-
+  
   <!-- dist target - create jar file -->
   <target name="dist" depends="compile">
-    <jar destfile="dist/${ant.project.name}.jar" basedir="${plugin.build.dir}">
+    <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
         <attribute name="Plugin-Class" value="namefinder.NameFinderPlugin" />
         <attribute name="Plugin-Description" value="Allows selection of download areas by name, using an external service" />
@@ -38,10 +43,11 @@
       </manifest>
     </jar>
   </target>
-
-  <!-- dist target - copy jar file to plugin destination -->
+  
+  <!-- install target - copy jar file to plugin destination -->
   <target name="install" depends="dist">
-    <copy file="dist/${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
+    <copy file="../dist/${ant.project.name}.jar" todir="${josm.home.dir}/plugins" />
   </target>
   
 </project>
+

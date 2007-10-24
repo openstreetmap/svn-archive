@@ -10,8 +10,14 @@
 ## settings ##
 LAUNCH4J="java -jar launch4j/launch4j.jar"
 
-export VERSION=latest
-#export VERSION=custom
+svncorerevision=`svnversion ../core`
+svnpluginsrevision=`svnversion ../plugins`
+svnrevision="$svncorerevision-$svnpluginsrevision"
+
+#export VERSION=latest
+export VERSION=custom-${svnrevision}
+
+echo "Creating Windows Instller for josm-$VERSION"
 
 ##################################################################
 ### Build the Complete josm + Plugin Stuff

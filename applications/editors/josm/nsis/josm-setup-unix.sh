@@ -16,23 +16,26 @@ export VERSION=latest
 ##################################################################
 ### Build the Complete josm + Plugin Stuff
 if true; then
-    echo "Build the Complete josm Stuff"
-    
-    echo "Compile Josm"
-    cd ../core
-    ant clean
-    ant compile || exit -1
-    cd ..
+    (
+	echo "Build the Complete josm Stuff"
 	
-    echo "Compile Josm Plugins"
-    cd plugins
-    ant clean
-    ant dist || exit -1
+	echo "Compile Josm"
+	cd ../core
+	ant clean
+	ant compile || exit -1
+	cd ..
+	
+	echo "Compile Josm Plugins"
+	cd plugins
+	ant clean
+	ant dist || exit -1
+	) || exit -1
 fi
 
 
-##################################################################
-### Copy the required Stuff into the download Directory
+echo 
+echo "##################################################################"
+echo "### Copy the required Stuff into the download Directory"
 mkdir -p downloads
 ( 
     cd downloads
@@ -45,14 +48,16 @@ mkdir -p downloads
     cp ../../plugins/dist/*.jar .
 )
 
-##################################################################
-### convert jar to exe
+echo 
+echo "##################################################################"
+echo "### convert jar to exe with launch4j"
 # (makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
 $LAUNCH4J ./launch4j.xml
 
-##################################################################
-### create the installer exe
+echo 
+echo "##################################################################"
+echo "### create the installer exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
 # apt-get install nsis
 makensis -DVERSION=$VERSION josm.nsi

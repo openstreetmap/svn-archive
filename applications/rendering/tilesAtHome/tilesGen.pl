@@ -362,16 +362,6 @@ sub ProcessRequestsFromServer
     # Parse the request
     my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
     
-    # First field is always "OK" if the server has actually sent a request
-    if ($ValidFlag eq "XX")
-    {
-        return (0, "Server has no work for us"); 
-    }
-    elsif ($ValidFlag ne "OK")
-    {
-        return (0, "Server dysfunctional");
-    }
-    
     # Check what format the results were in
     # If you get this message, please do check for a new version, rather than
     # commenting-out the test - it means the field order has changed and this
@@ -383,6 +373,16 @@ sub ProcessRequestsFromServer
         print STDERR "Check to see whether a new version of this program was released!\n";
         cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting","EXIT",1,$PID);
         ## No need to return, we exit the program at this point
+    }
+    
+    # First field is always "OK" if the server has actually sent a request
+    if ($ValidFlag eq "XX")
+    {
+        return (0, "Server has no work for us"); 
+    }
+    elsif ($ValidFlag ne "OK")
+    {
+        return (0, "Server dysfunctional");
     }
     
     # Information text to say what's happening

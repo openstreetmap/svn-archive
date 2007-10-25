@@ -3,12 +3,16 @@
 # Creates an josm-install.exe File
 # for working on a debian-unix system install the nsis package with
 # apt-get install nsis
-# replace the  /usr/share/nsis/Plugins/System.dll with the new Version from the nsis .zip File
-# The old one is missing the Call:: Function
-# then download launch4j from http://launch4j.sourceforge.net/
+# replace the  /usr/share/nsis/Plugins/System.dll with the Version from the nsis .zip File
+# The one comming with the debian package is missing the Call:: Function
+# See also /usr/share/doc/nsis/README.Debian 
+#
+# Then download launch4j from http://launch4j.sourceforge.net/ 
+# wget http://mesh.dl.sourceforge.net/sourceforge/launch4j/launch4j-3.0.0-pre2-linux.tgz
+# and unpack it to /usr/share/launch4j
 
 ## settings ##
-LAUNCH4J="java -jar launch4j/launch4j.jar"
+LAUNCH4J="java -jar /usr/share/launch4j/launch4j.jar"
 
 svncorerevision=`svnversion ../core`
 svnpluginsrevision=`svnversion ../plugins`
@@ -59,7 +63,13 @@ echo "##################################################################"
 echo "### convert jar to exe with launch4j"
 # (makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
+rm josm.exe
 $LAUNCH4J ./launch4j.xml
+
+if ! [ -s josm.exe ]; then
+    echo "NO Josm File Created"
+    exit -1
+fi
 
 echo 
 echo "##################################################################"

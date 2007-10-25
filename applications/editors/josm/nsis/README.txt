@@ -36,8 +36,8 @@ build the installer
 -------------------
 1.) You will need to download and install the following on your machine:
 - cygwin bash and wget
-- launch4j - http://launch4j.sourceforge.net/
-- NSIS - http://nsis.sourceforge.net/
+- launch4j - http://launch4j.sourceforge.net/ (currently 3.0.0-pre2, older 2.x will NOT work!)
+- NSIS - http://nsis.sourceforge.net/ (any recent version should do)
 
 2.) Edit the two absolute paths in the file josm-setup.sh (in the calls 
 to launch4jc and makensis)
@@ -61,3 +61,12 @@ known issues
 - josm should use some defaults already instead of the installer ones
 - some way of automatic installer generation on the server (e.g. nightly build)?
 - install all josm plugins by default and only enable them according to user wishes?
+
+build the installer under Linux / Debian
+----------------------------------------
+It's possible to build the installer under Linux. Beside the things mentioned above, 
+the NSIS Debian package currently has an incomplete System.dll (in the plugins directory).
+This dll needs to be replaced by the System.dll included in the NSIS zip package, e.g. from
+http://nsis.sourceforge.net/Development_Files.
+More details can be found in the german NSIS forum thread:
+http://forums.winamp.com/showthread.php?s=bb7fa5bf8173e31c05e083340ca2c242&postid=2211132 

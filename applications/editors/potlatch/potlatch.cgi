@@ -736,7 +736,7 @@
 			// check if renumbered nodes were POIs, delete the POIs if so
 			z=result[2];
 			for (i in z) {
-				if (_root.map.pois[z[i]]) { removeMovieClip(_root.map.pois[z[i]]); }
+				if (_root.map.pois[i]) { removeMovieClip(_root.map.pois[i]); }
 			}
 
 			// check if renumbered nodes occur in any other ways

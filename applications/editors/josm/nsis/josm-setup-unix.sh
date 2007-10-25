@@ -66,4 +66,4 @@ echo "##################################################################"
 echo "### create the installer exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
 # apt-get install nsis
-makensis -DVERSION=$VERSION josm.nsi
+makensis -V2 -DVERSION=$VERSION josm.nsi

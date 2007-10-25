@@ -68,5 +68,5 @@ It's possible to build the installer under Linux. Beside the things mentioned ab
 the NSIS Debian package currently has an incomplete System.dll (in the plugins directory).
 This dll needs to be replaced by the System.dll included in the NSIS zip package, e.g. from
 http://nsis.sourceforge.net/Development_Files.
-More details can be found in the german NSIS forum thread:
+More details can be found in the following NSIS forum thread:
 http://forums.winamp.com/showthread.php?s=bb7fa5bf8173e31c05e083340ca2c242&postid=2211132 

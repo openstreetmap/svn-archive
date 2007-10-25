@@ -78,7 +78,7 @@
   <target name="clean">
     <delete dir="${plugin.build.dir}" />
     <delete dir="${plugin.site.file}" />
-    <delete dir="${plugin.jar}" />
+    <delete file="${plugin.jar}" />
   </target>
 
   <!-- write site description for the given plugin so josm will accept it -->

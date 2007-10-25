@@ -1,12 +1,13 @@
 use strict;
+use Math::Trig;
 
 # =====================================================================
 # The following is duplicated from tilesGen.pl
 # =====================================================================
 
 # Setup map projection
-my $LimitY = ProjectF(85.0511);
-my $LimitY2 = ProjectF(-85.0511);
+my $LimitY = ProjectF(RadToDeg(atan(sinh(pi)))); #atan(sinh(pi)) = 85.0511 deg
+my $LimitY2 = ProjectF(RadToDeg(atan(sinh(-&pi))));
 my $RangeY = $LimitY - $LimitY2;
 
 #-----------------------------------------------------------------------------

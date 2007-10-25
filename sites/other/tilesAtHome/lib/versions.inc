@@ -22,7 +22,7 @@ function checkVersion($VersionString){
             return(-2);
           }
  
-          # Version name found
+          # Version name found, return version number
           return($Matches[1]);
         }
       }

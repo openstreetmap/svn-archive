@@ -43,7 +43,7 @@
   # Check whether the client version is allowed to upload
   # (if they can't, there's no point in them taking requests)
   $VersionID = checkVersion($_GET["version"]);
-  if($VersionID == -1){
+  if($VersionID < 0){
     printf("XX|%d||||client_version_unacceptable",($APIVersion+1)); ## Use a fake Version for the answer to make clients abort loop
     exit;
   }

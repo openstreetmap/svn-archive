@@ -53,6 +53,20 @@ See http://www.gnu.org/licenses/gpl.txt
 =cut
 
 
+sub save_way()
+{
+    # Output the way with all the segments, then close the file
+    if( $#segments )
+    {
+        print OUT "<way id='-1'>\n";
+        foreach(@nodes)
+        {
+            print OUT "  <nd ref='$_' />\n";
+        }
+        print OUT "</way>\n";
+    }
+}
+
 
 sub main()
 {
@@ -85,21 +99,10 @@ sub main()
 
         if(@lineSplit[0] eq "segment")
         {
-            # Output way of all segments if we have added any
-            if( $#nodes )
-            {
-                print OUT "<way id='-1'>\n";
-                foreach(@nodes)
-                {
-                    print OUT "  <nd ref='$_' />\n";
-                }
-                print OUT "</way>\n";
-            }
-        
-            # Add the closing "</osm>" and close the file
+            save_way();
             print OUT "</osm>";
             close(OUT);
-        
+
             # Get the remaining "special elements"
             $segmentNumber = @lineSplit[1];
             $rankNumber = @lineSplit[3];
@@ -135,16 +138,8 @@ sub main()
         }
     }
 
-    # Output the way with all the segments, then close the file
-    if( $#segments )
-    {
-        print OUT "<way id='-1'>\n";
-        foreach(@nodes)
-        {
-            print OUT "  <nd ref='$_' />\n";
-        }
-        print OUT "</way>\n";
-    }
+    # There might be left-over data...
+    save_way();
     print OUT "</osm>";
     close(OUT);
 }

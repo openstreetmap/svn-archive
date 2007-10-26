@@ -68,7 +68,8 @@ sub save_way()
         $source = $foo[$#foo];
         $source = "CIA World database II - " . $source . " - segment " . $segmentNumber;
 
-        print OUT "  <tag k=\"source\" v=\"" . $source . "\" />\n";
+        print OUT "  <tag k=\"source\" v=\"CIA World database II\" />\n";
+        print OUT "  <tag k=\"wdb:source\" v=\"" . $source . "\" />\n";
         
         if ($filename =~ /-bdy/)
         {

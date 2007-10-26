@@ -383,6 +383,8 @@ sub GetRequestFromServer
     my $LocalFilename = $Config{WorkingDirectory} . "request-" . $PID . ".txt";
     killafile($LocalFilename); ## make sure no old request file is laying around.
 
+    my $Request;
+
     if ($Mode eq "GET")
     {
         my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername} . "&layers=". $Config{Layers};
@@ -399,7 +401,7 @@ sub GetRequestFromServer
 
         # Read into memory
         open(my $fp, "<", $LocalFilename) || return 0;
-        my $Request = <$fp>;
+        $Request = <$fp>;
         chomp $Request;
         close $fp;
     

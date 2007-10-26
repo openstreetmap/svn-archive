@@ -216,8 +216,12 @@ sub upload
             print STDERR "  Error uploading $File to $URL:\n";
             print STDERR "  ".$res->status_line."\n";
             return 0; # hard fail
-        } 
-    
+        }
+        else
+        {
+            print $res->content if ($Config{Debug});
+        }
+
         if($Config{DeleteZipFilesAfterUpload})
         {
             unlink($File);

@@ -80,7 +80,12 @@ sub save_way()
             print OUT "  <tag k=\"right:country\" v=\"????\" />\n";
         }
 
+        print OUT "  <!-- $min_lat ... lat ... $max_lat -->\n";
+        print OUT "  <!-- $min_lon ... lon ... $max_lon -->\n";
+
         print OUT "</way>\n";
+
+        print "    $min_lat ... lat ... $max_lat , $min_lon ... lon ... $max_lon \n";
     }
 }
 
@@ -134,6 +139,12 @@ sub main()
             $outfile = "$dirName/$newFile.osm";
             print "Opening $outfile\n";
             open OUT, "> $outfile" or die "Can't open $outfile : $!";
+            
+            $min_lat =  10000;
+            $max_lat = -10000;
+
+            $min_lon =  10000;
+            $max_lon = -10000;
 
             # Initialize IDs.
             # We start nodes at -1 and segments at -2 then alternate as we
@@ -153,7 +164,18 @@ sub main()
         elsif( @lineSplit[0] ne "segment" && @lineSplit[0] ne "" )
         {
             $nodeid-=2;
-            print OUT "<node id=\"$nodeid\" lat=\"@lineSplit[0]\" lon=\"@lineSplit[1]\"/>\n";
+
+            $lat = $lineSplit[0];
+            $lon = $lineSplit[1];
+
+            print OUT "<node id=\"$nodeid\" lat=\"$lat\" lon=\"$lon\"/>\n";
+
+            $min_lat = $lat if ($lat < $min_lat);
+            $max_lat = $lat if ($lat > $max_lat);
+
+            $min_lon = $lon if ($lon < $min_lon);
+            $max_lon = $lon if ($lon > $max_lon);
+
             push(@nodes, $nodeid);
         }
     }

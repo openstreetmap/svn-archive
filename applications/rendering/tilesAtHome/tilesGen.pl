@@ -383,7 +383,7 @@ sub GetRequestFromServer
     my $LocalFilename = $Config{WorkingDirectory} . "request-" . $PID . ".txt";
     killafile($LocalFilename); ## make sure no old request file is laying around.
 
-    if ($Mode -eq "GET")
+    if ($Mode eq "GET")
     {
         my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername} . "&layers=". $Config{Layers};
         print STDERR "using URL " . $RequestUrlString . "\n" if ($Config{Debug});
@@ -405,7 +405,7 @@ sub GetRequestFromServer
     
         killafile($LocalFilename);
     }
-    elsif ($Mode -eq "POST")
+    elsif ($Mode eq "POST")
     {
         my $URL = $Config{RequestURL};
     

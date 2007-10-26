@@ -323,8 +323,6 @@ sub upload
 #-----------------------------------------------------------------------------
 sub ProcessRequestsFromServer 
 {
-    my $LocalFilename = $Config{WorkingDirectory} . "request-" . $PID . ".txt";
-
     if ($Config{"LocalSlippymap"})
     {
         print "Config option LocalSlippymap is set. Downloading requests\n";
@@ -340,25 +338,11 @@ sub ProcessRequestsFromServer
     # It will give you details of other help pages available,
     # such as the list of fields that it's sending out in requests
     # ----------------------------------
-    killafile($LocalFilename);
-    my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername} . "&layers=". $Config{Layers};
-    # DEBUG: print "using URL " . $RequestUrlString . "\n";
-    statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    DownloadFile(
-        $RequestUrlString, 
-        $LocalFilename, 
-        0);
-    
-    if(! -f $LocalFilename){
-        return (0, "Error reading request from server");
-    }
 
-    # Read into memory
-    open(my $fp, "<", $LocalFilename) || return;
-    my $Request = <$fp>;
-    chomp $Request;
-    close $fp;
-    
+    $Request=GetRequestFromServer("GET");
+
+    return (0, "Error reading request from server") unless ($Request);
+   
     # Parse the request
     my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
     
@@ -392,6 +376,72 @@ sub ProcessRequestsFromServer
     GenerateTileset($X, $Y, $Z);
     return (1, "");
 }
+
+sub GetRequestFromServer
+{
+    my $Mode=shift();
+    my $LocalFilename = $Config{WorkingDirectory} . "request-" . $PID . ".txt";
+    killafile($LocalFilename); ## make sure no old request file is laying around.
+
+    if ($Mode -eq "GET")
+    {
+        my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername} . "&layers=". $Config{Layers};
+        print STDERR "using URL " . $RequestUrlString . "\n" if ($Config{Debug});
+        statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        DownloadFile(
+          $RequestUrlString, 
+          $LocalFilename, 
+          0);
+        
+        if(! -f $LocalFilename){
+            return 0;
+        }
+
+        # Read into memory
+        open(my $fp, "<", $LocalFilename) || return 0;
+        my $Request = <$fp>;
+        chomp $Request;
+        close $fp;
+    
+        killafile($LocalFilename);
+    }
+    elsif ($Mode -eq "POST")
+    {
+        my $URL = $Config{RequestURL};
+    
+        my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
+
+        $ua->protocols_allowed( ['http'] );
+        $ua->agent("tilesAtHome");
+        $ua->env_proxy();
+
+        my $res = $ua->post($URL,
+          Content_Type => 'form-data',
+          Content => [ user => $Config{Username},
+          pass => $Config{Password},
+          version => $Config{ClientVersion},
+          layers => $Config{Layers} ]);
+      
+        if(!$res->is_success())
+        {
+            print $res->content if ($Config{Debug});
+            return 0;
+        }
+        else
+        {
+            print $res->content if ($Config{Debug});
+            $Request = $res->content;  ## FIXME: check single line returned. grep?
+            chomp $Request;
+        }
+
+    }
+    else
+    {
+        return 0;
+    }
+    return $Request;
+}
+
 
 sub PutRequestBackToServer 
 {

@@ -339,7 +339,7 @@ sub ProcessRequestsFromServer
     # such as the list of fields that it's sending out in requests
     # ----------------------------------
 
-    $Request=GetRequestFromServer("GET");
+    my $Request = GetRequestFromServer("GET");
 
     return (0, "Error reading request from server") unless ($Request);
    

@@ -19,6 +19,8 @@
   <property name="plugin.site.description" value="Josm's ColorScheme Plugin Update Site"/>
   <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/colorscheme/"/>
   <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/colorscheme/"/>
+
+  <property name="ant.build.javac.target" value="1.5"/>
   
   <target name="dist" depends="compile, site">
     <!-- images -->

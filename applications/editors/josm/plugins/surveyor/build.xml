@@ -22,6 +22,8 @@
   <property name="plugin.site.description" value="Josm's Surveyor Update Site"/>
   <property name="plugin.site.url" value="http://www.tegmento.org/~cdaller/josm/surveyor/"/>
   <property name="plugin.site.upload.target" value="cdaller@www.tegmento.org:public_html/josm/surveyor/"/>
+
+  <property name="ant.build.javac.target" value="1.5"/>
   
   
   <target name="dist" depends="compile,site">

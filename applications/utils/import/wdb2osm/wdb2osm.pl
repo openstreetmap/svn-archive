@@ -63,6 +63,13 @@ sub save_way()
         {
             print OUT "  <nd ref='$_' />\n";
         }
+
+        @foo = split(/[\/\\]/, $filename);
+        $source = $foo[$#foo];
+        $source = "CIA World database II - " . $source . " - " . $segmentNumber;
+        
+        print OUT "  <tag k=\"source\" v=\"" . $source . "\" />\n";
+
         print OUT "</way>\n";
     }
 }

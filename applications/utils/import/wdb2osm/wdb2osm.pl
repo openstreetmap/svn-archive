@@ -126,7 +126,10 @@ sub main()
             $points = @lineSplit[5];
         
             # name the file according to the segment number
-            $newFile = "segment$segmentNumber";
+            # $newFile = "segment$segmentNumber";
+            $newFile = 100000 + $segmentNumber;
+            $newFile =~ s/^1//;
+            $newFile = "segment-" . $newFile;
             # open the file for writing
             $outfile = "$dirName/$newFile.osm";
             print "Opening $outfile\n";

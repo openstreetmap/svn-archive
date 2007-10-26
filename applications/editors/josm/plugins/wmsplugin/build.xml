@@ -9,6 +9,8 @@
   <property name="plugin.name"		value="${ant.project.name}"/>
   <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
 
+  <property name="ant.build.javac.target" value="1.5"/>
+
   <target name="init">
     <mkdir dir="build"></mkdir>
     <mkdir dir="dist"></mkdir>

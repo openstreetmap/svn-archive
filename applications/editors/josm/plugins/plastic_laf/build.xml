@@ -9,6 +9,8 @@
   <property name="plugin.name"		value="${ant.project.name}"/>
   <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
 
+  <property name="ant.build.javac.target" value="1.5"/>
+
   <target name="dist">
     <mkdir dir="dist"></mkdir>
     <unjar dest="${plugin.build.dir}" src="lib/looks-2.0.4.jar" />

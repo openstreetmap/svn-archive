@@ -8,7 +8,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.osm.Node;
-import org.openstreetmap.josm.data.osm.NodePair;
+import org.openstreetmap.josm.tools.Pair;
 import org.openstreetmap.josm.plugins.validator.Severity;
 import org.openstreetmap.josm.plugins.validator.Test;
 import org.openstreetmap.josm.plugins.validator.TestError;
@@ -22,7 +22,7 @@ import org.openstreetmap.josm.plugins.validator.util.Bag;
 public class OverlappingWays extends Test 
 {
 	/** Bag of all way segments */
-	Bag<NodePair, OsmPrimitive> nodePairs;
+	Bag<Pair<Node,Node>, OsmPrimitive> nodePairs;
 	
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class OverlappingWays extends Test
 	@Override
 	public void startTest() 
 	{
-		nodePairs = new Bag<NodePair, OsmPrimitive>(1000);
+		nodePairs = new Bag<Pair<Node,Node>, OsmPrimitive>(1000);
 	}
 
 	@Override
@@ -65,9 +65,9 @@ public class OverlappingWays extends Test
 				continue;
 			}
 			if (n.hashCode() > lastN.hashCode()) {
-				nodePairs.add(new NodePair(lastN, n), w);
+				nodePairs.add(new Pair<Node,Node>(lastN, n), w);
 			} else {
-				nodePairs.add(new NodePair(n, lastN), w);
+				nodePairs.add(new Pair<Node,Node>(n, lastN), w);
 			}
 			lastN = n;
 		}

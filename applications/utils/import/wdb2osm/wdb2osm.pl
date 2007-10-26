@@ -66,9 +66,18 @@ sub save_way()
 
         @foo = split(/[\/\\]/, $filename);
         $source = $foo[$#foo];
-        $source = "CIA World database II - " . $source . " - " . $segmentNumber;
-        
+        $source = "CIA World database II - " . $source . " - segment " . $segmentNumber;
+
         print OUT "  <tag k=\"source\" v=\"" . $source . "\" />\n";
+        
+        if ($filename =~ /-bdy/)
+        {
+            print OUT "  <tag k=\"name\" v=\"Border ???? - ????\" />\n";
+            print OUT "  <tag k=\"boundary\" v=\"administrative\" />\n";
+            print OUT "  <tag k=\"border_type\" v=\"nation\" />\n";
+            print OUT "  <tag k=\"left:country\" v=\"????\" />\n";
+            print OUT "  <tag k=\"right:country\" v=\"????\" />\n";
+        }
 
         print OUT "</way>\n";
     }

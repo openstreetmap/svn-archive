@@ -44,7 +44,7 @@
   # (if they can't, there's no point in them taking requests)
   $VersionID = checkVersion($_GET["version"]);
   if($VersionID < 0){
-    printf("XX|%d||||client_version_unacceptable",($APIVersion+1)); ## Use a fake Version for the answer to make clients abort loop
+    printf("OK|%d||||client_version_unacceptable",($APIVersion+1)); ## Use a fake Version for the answer to make clients abort loop, need OK for buggy old clients, can be changed back to "XX" in the next version.
     exit;
   }
 

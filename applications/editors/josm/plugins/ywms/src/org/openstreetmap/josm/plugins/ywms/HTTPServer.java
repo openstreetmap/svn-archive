@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.InetAddress;
 
 /**
  * Simple HTTP server that spawn a {@link RequestProcessor} for every connection.
@@ -28,8 +29,11 @@ public class HTTPServer extends Thread
 	{
 		super("YWMS HTTP Server");
 		this.setDaemon(true);
-		// Start the server socket with only 1 connection, because we can only start one firefox process
-		this.server = new ServerSocket(port, 1);
+		// Start the server socket with only 1 connection, because we can 
+        // only start one firefox process. Also make sure we only listen
+        // on the local interface so nobody from the outside can connect!
+		this.server = new ServerSocket(port, 1, 
+            InetAddress.getByAddress(new byte[] { 127, 0, 0, 1 }));
 	}
 
 	/**

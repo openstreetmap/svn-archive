@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Creates an josm-install.exe File
+# Creates an josm-setup-xy.exe File
 # for working on a debian-unix system install the nsis package with
 # apt-get install nsis
 # replace the  /usr/share/nsis/Plugins/System.dll with the Version from the nsis .zip File
@@ -21,7 +21,7 @@ svnrevision="$svncorerevision-$svnpluginsrevision"
 #export VERSION=latest
 export VERSION=custom-${svnrevision}
 
-echo "Creating Windows Instller for josm-$VERSION"
+echo "Creating Windows Installer for josm-$VERSION"
 
 ##################################################################
 ### Build the Complete josm + Plugin Stuff
@@ -61,7 +61,7 @@ mkdir -p downloads
 echo 
 echo "##################################################################"
 echo "### convert jar to exe with launch4j"
-# (makes attaching to file extensions a lot easier)
+# (an exe file makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
 rm josm.exe
 $LAUNCH4J ./launch4j.xml

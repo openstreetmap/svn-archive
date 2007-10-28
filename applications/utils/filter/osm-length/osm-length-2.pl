@@ -4,17 +4,11 @@ use strict;
 # Script that computes lengths of ways in an OSM file.
 #
 # Reads the OSM file on stdin.
-# Writes an OSM file to stdout in whcih all ways carry an additional
+# Writes an OSM file to stdout in which all ways carry an additional
 # tag: <d length="1234.567">, specifying the length in metres.
-# The "incomplete=true" attribute is added to <d> if not all segments
-# referenced by that way were present in the input file (in that case,
-# the sum you get is only for the segments present).
 #
 # On stderr, outputs a list of all highway types encountered together 
 # with total length.
-#
-# Does not count unwayed segments. Segments where one node is missing
-# are ignored.
 #
 # Stores all node positions in a memory hash and will thus be unable
 # to process the whole planet file unlesss you have 8 Gig of RAM or so.
@@ -36,6 +30,7 @@ use constant RADIUS => 6367000.0;
 my $waylen;
 my $hw;
 my $warning;
+my $lastnode;
 
 while(<>) 
 {
@@ -43,37 +38,28 @@ while(<>)
     {
         $nodes->{$1}=[$2,$3];
     }
-    elsif (/^\s*<segment id=['"](\d+)["'] from=['"](\d+)["'] to=["'](\d+)["']/)
-    {
-        if (defined($nodes->{$2}) && defined($nodes->{$3}))
-        {
-            $seglen->{$1}=calc_distance($nodes->{$2}, $nodes->{$3});
-        }
-    }
     elsif (/^\s*<way /)
     {
         $waylen = 0;
         undef $hw;
         undef $warning;
+        undef $lastnode;
     }
     elsif (defined($waylen) && /k=.highway.\s*v=["'](.*?)["']/)
     {
         $hw = $1;
     }
-    elsif (/^\s*<seg id=['"](.*)["']/)
+    elsif (/^\s*<nd ref=['"](.*)["']/)
     {
-        if (defined($seglen->{$1}))
+        if (defined($nodes->{$1}) && defined($lastnode))
         {
-            $waylen += $seglen->{$1};
+            $waylen += calc_distance($lastnode, $nodes->{$1});
         }
-        else
-        {
-            $warning = 1;
-        }
+        $lastnode = $nodes->{$1};
     }
     elsif ((/^\s*<\/way/) && defined($hw))
     {
-        printf "   <d length='%f' %s/>\n", $waylen, $warning ? "incomplete='true' " : "";
+        printf "   <d length='%f'/>\n", $waylen;
         $waysum->{$hw} += $waylen;
     }
     print;

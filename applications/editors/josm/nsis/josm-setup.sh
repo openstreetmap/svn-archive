@@ -37,7 +37,12 @@ cd ..
 ### convert jar to exe ###
 # (makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
+
+# delete old exe file first
+rm josm.exe
 "$PROGRAM_FILES/Launch4j/launch4jc.exe" "$LAUNCH4J_XML"
+# using a relative path still doesn't work with launch4j 3.0.0-pre2
+#"$PROGRAM_FILES/Launch4j/launch4jc.exe" ./launch4j.xml
 
 ### create the installer exe ###
 # NSIS - http://nsis.sourceforge.net/Main_Page

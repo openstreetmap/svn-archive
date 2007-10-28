@@ -119,7 +119,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.4a";	// current version
+	var signature="Potlatch 0.4b";	// current version
 
 	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
 	
@@ -566,11 +566,19 @@
 		setPointer('');
 	};
 	POI.prototype.onPress=function() {
-		if (_root.wayselected || _root.poiselected!=this._name) {
-			stopDrawing(); uploadSelected(); deselectAll(); 
+		if (_root.drawpoint>-1) {
+			// add POI to way
+			addEndPoint(this._x,this._y,this._name,this.attr);
+			_root.junction=true; restartElastic();
+			removeMovieClip(this);
+		} else {
+			// click POI
+			if (_root.wayselected || _root.poiselected!=this._name) {
+				stopDrawing(); uploadSelected(); deselectAll(); 
+			}
+			this.select();
+			this.beginDrag();
 		}
-		this.select();
-		this.beginDrag();
 	};
 	POI.prototype.beginDrag=function() {
 		this.onMouseMove=function() { this.trackDrag(); };
@@ -749,7 +757,7 @@
 			}
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
-			this.attr['created_by']="Potlatch alpha";
+			this.attr['created_by']=_root.signature;
 			this.uploading=true;
 			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);
 			this.clean=true;
@@ -1941,8 +1949,9 @@
 
 	// addEndPoint - add point to start/end of line
 
-	function addEndPoint(x,y,node) {
-		newpoint=new Array(x,y,node,0,new Array(),0);
+	function addEndPoint(x,y,node,tags) {
+		if (tags) {} else { tags=new Array(); }
+		newpoint=new Array(x,y,node,0,tags,0);
 		if (_root.drawpoint==_root.map.ways[wayselected].path.length-1) {
 			_root.map.ways[wayselected].path.push(newpoint);
 			_root.drawpoint=_root.map.ways[wayselected].path.length-1;

@@ -19,7 +19,7 @@ svnpluginsrevision=`svnversion ../plugins`
 svnrevision="$svncorerevision-$svnpluginsrevision"
 
 #export VERSION=latest
-export VERSION=custom-${svnrevision}
+export VERSION=custom-${svnrevision}                                         
 
 echo "Creating Windows Installer for josm-$VERSION"
 
@@ -42,22 +42,6 @@ if true; then
 	) || exit -1
 fi
 
-
-echo 
-echo "##################################################################"
-echo "### Copy the required Stuff into the download Directory"
-mkdir -p downloads
-( 
-    cd downloads
-    
-    # get latest josm version (and license)
-    cp ../../core/LICENSE LICENSE
-    cp ../../core/dist/josm-custom.jar josm-latest.jar
-    
-    # Get all plugins
-    cp ../../plugins/dist/*.jar .
-)
-
 echo 
 echo "##################################################################"
 echo "### convert jar to exe with launch4j"
@@ -77,3 +61,6 @@ echo "### create the installer exe with makensis"
 # NSIS - http://nsis.sourceforge.net/Main_Page
 # apt-get install nsis
 makensis -V2 -DVERSION=$VERSION josm.nsi
+
+# delete the intermediate file, just to avoid confusion
+rm josm.exe

@@ -1835,6 +1835,7 @@
 		_root.coord_b=(500-_root.map._y)/bscale; _root.edge_b=coord2lat(_root.coord_b);
 		_root.coord_l=    -_root.map._x	/bscale; _root.edge_l=coord2long(_root.coord_l);
 		_root.coord_r=(700-_root.map._x)/bscale; _root.edge_r=coord2long(_root.coord_r);
+		getURL("javascript:updatelinks("+centrelong()+","+centrelat()+","+_root.scale+")");
 
 		// ----	Trace
 		//		x radius (lon) is 280/Math.pow(2,_root.scale)

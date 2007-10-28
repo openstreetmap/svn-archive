@@ -58,6 +58,9 @@
 	var baselong=Math.pow(long,1);
 	var scale=Math.max(Math.min(Math.pow(scale,1),maxscale),minscale);
 	var usertoken=token;
+	
+	// Preferences
+	preferences=SharedObject.getLocal("preferences");
 
 	// Global dimensions
 	var uwidth=700;
@@ -113,15 +116,14 @@
 	var newpoiid=-1;				// new POI ID  (for those not yet saved)
 	var currentproptype='';			// type of property currently being edited
 	var pointertype='';				// current mouse pointer
-	var custompointer=true;			// use custom pointers?
 	var redopropertywindow=0;		// need to redraw property window after deletion?
 	var tolerance=4/Math.pow(2,_root.scale-12);
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
 	var signature="Potlatch 0.4b";	// current version
-
-	setBackground(2);				// base layer: 0 none, 1/2 Yahoo
+	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
+	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
 	// Way styling
 	// ** should be moved into presets file
@@ -1371,9 +1373,9 @@
 	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset attributes describing the way',setAttributesFromPreset,151);
 	_root.presetmenu._visible=false;
 
+	setBackground(preferences.data.baselayer);
 	redrawMap(350-350*Math.pow(2,_root.scale-12),
 			  250-250*Math.pow(2,_root.scale-12));
-	redrawYahoo();
 	whichWays();
 	_root.onEnterFrame=function() { everyFrame(); };
 
@@ -1425,17 +1427,18 @@
 			selectable=false; type='dynamic';
 		}
 		_root.modal.box.attachMovie("menu","background",6);
-		_root.modal.box.background.init(87,10,_root.baselayer,
+		_root.modal.box.background.init(87,10,preferences.data.baselayer,
 			new Array("None","Yahoo! satellite","Yahoo! satellite (dimmed)"),
 			'Choose the background to display',setBackground,0);
 
 		_root.modal.box.attachMovie("checkbox","pointer",4);
-		_root.modal.box.pointer.init(10,40,"Use pen and hand pointers",_root.custompointer,function(n) { _root.custompointer=n; });
+		_root.modal.box.pointer.init(10,40,"Use pen and hand pointers",preferences.data.custompointer,function(n) { preferences.data.custompointer=n; });
 
 	}
 	
 	function setBackground(n) {
-		_root.baselayer=n;
+		preferences.data.baselayer=n;
+		preferences.flush();
 		switch (n) {
 			case 1: _root.yahoo._alpha=100; break;
 			case 2: _root.yahoo._alpha=50 ; break;
@@ -1660,7 +1663,10 @@
 		_root.properties.key.keyname.type="input";
 		_root.properties.key.keyname.setTextFormat(boldSmall);
 		_root.properties.key.keyname.setNewTextFormat(boldSmall);
-		_root.properties.key.keyname.onSetFocus=function()  { this.addListener(textfieldListener); Key.removeListener(keyListener); };
+		_root.properties.key.keyname.onSetFocus=function()  { 
+			this.addListener(textfieldListener);
+			Key.removeListener(keyListener);
+		};
 		_root.properties.key.keyname.onKillFocus=function() {
 			// rename field
 			this.removeListener(textfieldListener);
@@ -1687,6 +1693,7 @@
 			}
 		};
 		setTabOrder();
+		// Selection.setFocus(_root.properties.key.keyname); Selection.setSelection(0,3); // should work, but doesn't
 	}
 	
 	// repeatAttributes - paste in last set of attributes
@@ -1848,7 +1855,7 @@
 	}
 
 	function redrawYahoo() {
-		if (_root.baselayer>0) {
+		if (preferences.data.baselayer>0) {
 			_root.yahoo._visible=true;
 			_root.yahoo._x=0;
 			_root.yahoo._y=0;
@@ -1920,8 +1927,9 @@
 	// everyFrame() - called onEnterFrame
 
 	function everyFrame() {
-		// ----	Disable Yahoo! over-eager keyboard listener
+		// ----	Fix Yahoo! peculiarities
 		_root.yahoo.myMap.enableKeyboardShortcuts(false);
+		_root.yahoo._visible=(preferences.data.baselayer>0);
 
 		// ----	Do we need to redraw the property window? (workaround)
 		if (_root.redopropertywindow) {
@@ -2387,7 +2395,7 @@
 	function setPointer(ptype) {
 		if (_root.pointertype==ptype) { return; }
 		_root.pointers[_root.pointertype]._visible=false;
-		if ((ptype) && _root.custompointer) {
+		if ((ptype) && preferences.data.custompointer) {
 			_root.pointers[ptype]._x=_root._xmouse;
 			_root.pointers[ptype]._y=_root._ymouse;
 			_root.pointers[ptype].startDrag(true);

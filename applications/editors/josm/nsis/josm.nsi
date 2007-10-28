@@ -82,7 +82,7 @@ XPStyle on
 ; ============================================================================
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "downloads\LICENSE"
+!insertmacro MUI_PAGE_LICENSE "..\core\LICENSE"
 !insertmacro MUI_PAGE_COMPONENTS
 ;Page custom DisplayAdditionalTasksPage
 !insertmacro MUI_PAGE_DIRECTORY
@@ -320,7 +320,7 @@ Section "mappaint" SecMappaintPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "downloads\mappaint.jar"
+File "..\plugins\dist\mappaint.jar"
 SectionEnd
 
 ;Section "osmarender" SecOsmarenderPlugin
@@ -341,7 +341,7 @@ Section "WMS" SecWMSPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "downloads\wmsplugin.jar"
+File "..\plugins\dist\wmsplugin.jar"
 SectionEnd
 
 Section "namefinder" SecNamefinderPlugin
@@ -349,7 +349,7 @@ Section "namefinder" SecNamefinderPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "downloads\namefinder.jar"
+File "..\plugins\dist\namefinder.jar"
 SectionEnd
 
 Section "validator" SecValidatorPlugin
@@ -357,7 +357,7 @@ Section "validator" SecValidatorPlugin
 SectionIn 1 2
 SetShellVarContext all
 SetOutPath $APPDATA\JOSM\plugins
-File "downloads\validator.jar"
+File "..\plugins\dist\validator.jar"
 SectionEnd
 
 SectionGroupEnd	; "Plugins"

@@ -1,44 +1,39 @@
 <project name="mappaint" default="dist" basedir=".">
 
+  <!-- josm "user home" directory depends on the platform used (windows has a different place than unix/linux) -->
+  <property environment="env"/>
+  <condition property="josm.home.dir" value="${env.APPDATA}/JOSM" else="${user.home}/.josm">
+    <and>
+      <os family="windows"/>
+    </and>
+  </condition>
+
   <!-- compilation properties -->
-  <property name="josm.build.dir"	value="../../core"/>
-  <property name="josm.home.dir"	value="${user.home}/.josm"/>
-  <property name="josm"			location="../../core/dist/josm-custom.jar" />
-  <property name="plugin.build.dir"	value="build"/>
-  <property name="plugin.dist.dir"	value="../dist"/>
-  <property name="plugin.name"		value="${ant.project.name}"/>
-  <property name="plugin.jar"		value="../dist/${plugin.name}.jar"/>
-  
-  <!-- There's no josm.jar in the svn, so point "josm" to a local copy of your JOSM binary -->
-  <property name="josm" location="../../core/dist/josm-custom.jar" />
-  <!--<property name="josm" location="../josm/josm-latest.jar" ></property>-->
-  
-  <!-- target directory to place the plugin in -->
-  <!-- Windows has a different home directory scheme then unix/linux -->
-  <!-- I don't know an automatic way to find it with ant :-(, if you know, please fix -->
-  <property name="plugins" location="${user.home}/.josm/plugins" ></property>
-  <!--<property name="plugins" location="${user.home}/Anwendungsdaten/JOSM/plugins" ></property>-->
+  <property name="josm.build.dir"   value="../../core"/>
+  <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
+  <property name="josm.jar"         location="../../core/dist/josm-custom.jar" />
+  <property name="plugin.build.dir" value="build"/>
+  <property name="plugin.dist.dir"  value="../dist"/>
+  <property name="plugin.name"      value="${ant.project.name}"/>
+  <property name="plugin.jar"       value="../dist/${plugin.name}.jar"/>
+
 
   <!-- you should not need to modify anything below this! -->
 
-  <property name="ant.build.javac.target" value="1.5"/>
-
-
-  <target name="init">
-    <mkdir dir="build"></mkdir>
-    <mkdir dir="dist"></mkdir>
-  </target>
-
-  <target name="compile" depends="init">
-    <javac srcdir="src" classpath="${josm}" destdir="build" debug="true" source="1.5" target="1.5">
+  <target name="compile">
+    <mkdir dir="${plugin.build.dir}"></mkdir>
+    <javac srcdir="src" classpath="${josm.jar}" destdir="${plugin.build.dir}" debug="true" source="1.5" target="1.5">
       <include name="**/*.java" />
+	  <!--compilerarg value="-Xlint:deprecation"/-->
     </javac>
   </target>
 
   <target name="dist" depends="compile">
-    <copy todir="build/standard">
+    <!-- copy the "standard" mappaint style -->
+    <copy todir="${plugin.build.dir}/standard">
       <fileset dir="styles/standard"></fileset>
     </copy>
+    <!-- define the version of the jar file -->
     <exec append="false" output="REVISION" executable="svn" failifexecutionfails="false">
       <env key="LANG" value="C"/>
       <arg value="info"/>
@@ -46,14 +41,16 @@
       <arg value="."/>
     </exec>
     <xmlproperty file="REVISION" prefix="version" keepRoot="false" collapseAttributes="true"/>
+	<!-- delete intermediate file -->
     <delete file="REVISION"/>
-    <jar destfile="${plugin.jar}" basedir="build">
+    <!-- create jar file with manifest -->
+    <jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
       <manifest>
-	<attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
-	<attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;" />
-	<attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
-	<attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
-	<attribute name="Author" value="Nick Whitelegg / Ulf Lamping"/>
+        <attribute name="Plugin-Class" value="mappaint.MapPaintPlugin" />
+        <attribute name="Plugin-Description" value="An alternative render for the map with colouring, line thickness and icons.&lt;br&gt;" />
+        <attribute name="Plugin-Version" value="${version.entry.commit.revision}"/>
+        <attribute name="Plugin-Date" value="${version.entry.commit.date}"/>
+        <attribute name="Author" value="Nick Whitelegg / Ulf Lamping"/>
       </manifest>
     </jar>
   </target>
@@ -64,11 +61,11 @@
   </target>
 
   <target name="clean_install">
-    <delete file="${plugins}/mappaint.jar" />
+    <delete file="${josm.plugins.dir}/${plugin.name}.jar" />
   </target>
 
   <target name="install" depends="dist">
-    <copy file="${plugin.jar}" todir="${plugins}"/>
+    <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
   </target>
 
 </project>

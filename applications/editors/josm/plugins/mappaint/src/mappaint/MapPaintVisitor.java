@@ -325,9 +325,9 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 		Collection<Way> noAreaWays = new LinkedList<Way>();
 
 		for (final OsmPrimitive osm : data.ways)
-			if (!osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
+			if (!osm.incomplete && !osm.deleted && MapPaintPlugin.elemStyles.isArea(osm))
 				osm.visit(this);
-			else if (!osm.deleted)
+			else if (!osm.deleted && !osm.incomplete)
 				noAreaWays.add((Way)osm);
 
 		for (final OsmPrimitive osm : noAreaWays)
@@ -335,11 +335,11 @@ public class MapPaintVisitor extends SimplePaintVisitor {
 
 		
 		for (final OsmPrimitive osm : data.nodes)
-			if (!osm.deleted)
+			if (!osm.incomplete && !osm.deleted)
 				osm.visit(this);
 
 		for (final OsmPrimitive osm : data.getSelected())
-			if (!osm.deleted){
+			if (!osm.incomplete && !osm.deleted){
 				osm.shown=false; //to be sure it will be drawn
 				osm.visit(this);
 			}

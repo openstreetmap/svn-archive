@@ -1,7 +1,7 @@
 <?php
   header("Content-type:text/plain");
 
-  $APIVersion=4;
+  $APIVersion=3;
 
   if(0){ // Option to kill database access, but keep sending request queries
     printf("OK|%d|%d|%d|%d|dev_random",

@@ -339,7 +339,7 @@ sub ProcessRequestsFromServer
     # such as the list of fields that it's sending out in requests
     # ----------------------------------
 
-    my $Request = GetRequestFromServer("GET");
+    my $Request = GetRequestFromServer("POST");
 
     return (0, "Error reading request from server") unless ($Request);
    
@@ -350,12 +350,12 @@ sub ProcessRequestsFromServer
     # If you get this message, please do check for a new version, rather than
     # commenting-out the test - it means the field order has changed and this
     # program no longer makes sense!
-    if ($Version != 3)
+    if (($Version < 3) or ($Version > 4))
     {
         print STDERR "\n";
         print STDERR "Server is speaking a different version of the protocol to us.\n";
         print STDERR "Check to see whether a new version of this program was released!\n";
-        cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting","EXIT",1,$PID);
+        cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
         ## No need to return, we exit the program at this point
     }
     
@@ -409,7 +409,7 @@ sub GetRequestFromServer
     }
     elsif ($Mode eq "POST")
     {
-        my $URL = $Config{RequestURL}."Request2.php?usr=".$Config{Username};
+        my $URL = $Config{RequestURL}."Request2.php?usr=".$Config{UploadUsername};
     
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 
@@ -419,8 +419,8 @@ sub GetRequestFromServer
 
         my $res = $ua->post($URL,
           Content_Type => 'form-data',
-          Content => [ user => $Config{Username},
-          pass => $Config{Password},
+          Content => [ user => $Config{UploadUsername},
+          pass => $Config{UploadPassword},
           version => $Config{ClientVersion},
           layers => $Config{Layers} ]);
       

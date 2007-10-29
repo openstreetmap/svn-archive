@@ -409,7 +409,7 @@ sub GetRequestFromServer
     }
     elsif ($Mode eq "POST")
     {
-        my $URL = $Config{RequestURL}."Request2.php?usr=".$Config{UploadUsername};
+        my $URL = $Config{RequestURL}."Request2.php"."?v=".$Config{ClientVersion}."&usr=".$Config{UploadUsername};
     
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 

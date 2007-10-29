@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Creates an josm-setup-xy.exe File
+#
 # for working on a debian-unix system install the nsis package with
 # apt-get install nsis
 # replace the  /usr/share/nsis/Plugins/System.dll with the Version from the nsis .zip File
@@ -47,6 +48,7 @@ echo "##################################################################"
 echo "### convert jar to exe with launch4j"
 # (an exe file makes attaching to file extensions a lot easier)
 # launch4j - http://launch4j.sourceforge.net/
+# delete old exe file first
 rm josm.exe
 $LAUNCH4J ./launch4j.xml
 

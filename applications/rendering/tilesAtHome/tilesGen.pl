@@ -409,7 +409,7 @@ sub GetRequestFromServer
     }
     elsif ($Mode eq "POST")
     {
-        my $URL = $Config{RequestURL};
+        my $URL = $Config{RequestURL}."Request2.php?usr=".$Config{Username};
     
         my $ua = LWP::UserAgent->new(keep_alive => 1, timeout => 360);
 

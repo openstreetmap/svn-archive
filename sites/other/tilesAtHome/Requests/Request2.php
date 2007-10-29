@@ -105,4 +105,12 @@ function CheckForRequest($Z){
   exit;
 }
 
+## The following function duplicated from tile2.php from uploads
+function AbortWithError($Code, $Message){
+  header(sprintf("HTTP/1.0 %d %s", $Code, $Message));
+  header("Content-type:text/plain");
+  printf("%s\n", $Message);
+  exit;
+}
+
 ?>

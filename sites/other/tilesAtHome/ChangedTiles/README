@@ -1,0 +1,14 @@
+index.php
+
+This file can be called more often than the configured interval, since it
+won't add Tilejobs where they already exist.
+
+it should be called at least once per interval, preferrably from cron.
+Current interval is 4 hours.
+
+example cron entry (paths need adapting!)
+0 */4 * * * ~/public_html/ChangedTile/dailytiles.sh
+
+The file may also be called via webserver, it does not harm (other than
+consume server resources) operations for the reasons stated above.
+

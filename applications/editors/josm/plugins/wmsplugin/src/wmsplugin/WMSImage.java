@@ -93,7 +93,7 @@ public class WMSImage
 	{
 		String str = constURL + "&bbox=" + w +"," + s + ","+
 				e+","+n + "&width=" + wi + "&height=" + ht;
-		return new URL(str);
+		return new URL(str.replace(" ", "%20"));
 	}
 
 	protected void doGrab (URL url) throws IOException

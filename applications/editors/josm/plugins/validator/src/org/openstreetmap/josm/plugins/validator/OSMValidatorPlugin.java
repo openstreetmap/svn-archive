@@ -48,6 +48,7 @@ public class OSMValidatorPlugin extends Plugin implements LayerChangeListener
     	OverlappingWays.class, 
         UntaggedNode.class, 
         UntaggedWay.class,
+        SelfIntersectingWay.class,
     	SpellCheck.class,
         DuplicatedWayNodes.class, 
         CrossingWays.class,

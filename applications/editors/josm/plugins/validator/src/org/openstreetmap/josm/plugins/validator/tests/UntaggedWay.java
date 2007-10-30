@@ -25,6 +25,8 @@ public class UntaggedWay extends Test
 	protected static final int UNTAGGED_WAY = 1;
 	/** Unnamed way error */
 	protected static final int UNNAMED_WAY  = 2;
+	/** One node way error */
+	protected static final int ONE_NODE_WAY = 3;
 
     /** Tags allowed in a way */
     public static final String[] ALLOWED_TAGS = new String[] { "created_by", "converted_by" };
@@ -47,8 +49,8 @@ public class UntaggedWay extends Test
 	 */
 	public UntaggedWay() 
 	{
-		super(tr("Untagged ways."),
-			  tr("This test checks for untagged ways."));
+		super(tr("Untagged, empty, and one node ways."),
+			  tr("This test checks for untagged, empty and one node ways."));
 	}
 
 	@Override
@@ -91,6 +93,11 @@ public class UntaggedWay extends Test
             errors.add( new TestError(this, Severity.ERROR, tr("Empty ways"), w, EMPTY_WAY) );
         }
         
+        if( w.nodes.size() == 1 )
+        {
+            errors.add( new TestError(this, Severity.ERROR, tr("One node ways"), w, ONE_NODE_WAY) );
+        }
+        
 	}		
 	
 	@Override
@@ -98,7 +105,8 @@ public class UntaggedWay extends Test
 	{
 		if( testError.getTester() instanceof UntaggedWay )
 		{
-			return testError.getInternalCode() == EMPTY_WAY;
+			return testError.getInternalCode() == EMPTY_WAY
+				|| testError.getInternalCode() == ONE_NODE_WAY;
 		}
 		
 		return false;

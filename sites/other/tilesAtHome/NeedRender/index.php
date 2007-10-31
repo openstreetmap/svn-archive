@@ -52,10 +52,11 @@
      }
      print "OK\n";
   } else {
-    print "Already in queue\n";
-    $SQL = sprintf("SELECT max(`priority`) FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d ",
+    print "Already in queue \n";
+    $SQL = sprintf("SELECT max(`priority`) as p FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d ",
 	$X, $Y, $Z, REQUEST_PENDING);
-    $Result = mysql_query($SQL);                                                     +     if ($row = mysql_fetch_assoc($Result) and $row['priority'] > $P) {                
+    $Result = mysql_query($SQL);
+    if ($row = mysql_fetch_assoc($Result) and $row['p'] > $P) {                
       $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d",
 	$P, $X, $Y, $Z, REQUEST_PENDING);
       mysql_query($SQL);                                                             

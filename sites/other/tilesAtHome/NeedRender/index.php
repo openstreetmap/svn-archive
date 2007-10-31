@@ -25,15 +25,16 @@
   include("../connect/connect.php");
   include("../lib/requests.inc");
 
-  if (!requestExists($X,$Y,$Z,NULL)){
-     //Check the number of existing requests by that ip address and downgrade if needed
-     $SQL = sprintf ("SELECT COUNT(*) FROM tiles_queue WHERE `status` < %d AND `ip` = '%s'",
+
+  //Check the number of existing requests by that ip address and downgrade if needed
+  $SQL = sprintf ("SELECT COUNT(*) FROM tiles_queue WHERE `status` < %d AND `ip` = '%s'",
 	REQUEST_DONE,
 	$_SERVER['REMOTE_ADDR']);
-     $Result = mysql_query($SQL);
-     if ($row = mysql_fetch_row($Result) and $row[0] >= 20) 
-       if ($row[0] >= 100) {$P = 3;} else {$P=($P<2)?2:$P;}
+  $Result = mysql_query($SQL);
+  if ($row = mysql_fetch_row($Result) and $row[0] >= 20) 
+    if ($row[0] >= 100) {$P = 3;} else {$P=($P<2)?2:$P;}
 
+  if (!requestExists($X,$Y,$Z,NULL)){
      $SQL = sprintf(
        "INSERT into tiles_queue (`x`,`y`,`z`,`status`,`src`,`date`,`priority`,`ip`) values (%d,%d,%d,%d,'%s',now(),%s,'%s');", 
        $X, 
@@ -51,7 +52,16 @@
      }
      print "OK\n";
   } else {
-     print "Already in queue\n";
+    print "Already in queue\n";
+    $SQL = sprintf("SELECT max(`priority`) FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d ",
+	$X, $Y, $Z, REQUEST_PENDING);
+    $Result = mysql_query($SQL);                                                     +     if ($row = mysql_fetch_assoc($Result) and $row['priority'] > $P) {                
+      $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d",
+	$P, $X, $Y, $Z, REQUEST_PENDING);
+      mysql_query($SQL);                                                             
+      if(mysql_error())
+         printf("Database error %s\n", mysql_error());
+    }
   }
   
  

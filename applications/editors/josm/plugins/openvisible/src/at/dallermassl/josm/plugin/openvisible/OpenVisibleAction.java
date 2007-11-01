@@ -29,13 +29,10 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.layer.RawGpsLayer;
-import org.openstreetmap.josm.gui.layer.RawGpsLayer.GpsPoint;
-import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
+import org.openstreetmap.josm.gui.layer.GpxLayer;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
+import org.openstreetmap.josm.io.GpxReader;
 import org.openstreetmap.josm.io.OsmReader;
-import org.openstreetmap.josm.io.RawCsvReader;
-import org.openstreetmap.josm.io.RawGpsReader;
 import org.xml.sax.SAXException;
 
 /**
@@ -85,7 +82,7 @@ public class OpenVisibleAction extends JosmAction {
                     if(file.getName().endsWith("osm")) {
                         openAsData(file);
                     } else if(file.getName().endsWith("gpx")) {
-                        openFileAsRawGps(file);
+                        openFileAsGpx(file);
                     }
                     
                 }
@@ -112,28 +109,21 @@ public class OpenVisibleAction extends JosmAction {
             JOptionPane.showMessageDialog(Main.parent, fn+": "+tr("Unknown file extension: {0}", fn.substring(file.getName().lastIndexOf('.')+1)));
     }
 
-    private void openFileAsRawGps(File file) throws SAXException, IOException, FileNotFoundException {
+    private void openFileAsGpx(File file) throws SAXException, IOException, FileNotFoundException {
         String fn = file.getName();
-        Collection<Collection<GpsPoint>> gpsData = null;
-        Collection<Marker> markerData = null;
         if (ExtensionFileFilter.filters[ExtensionFileFilter.GPX].acceptName(fn)) {
-            RawGpsReader r = null;
-            if (file.getName().endsWith(".gpx.gz"))
-                r = new RawGpsReader(new GZIPInputStream(new FileInputStream(file)), file.getAbsoluteFile().getParentFile());
-            else
-                r = new RawGpsReader(new FileInputStream(file), file.getAbsoluteFile().getParentFile());
-            gpsData = r.trackData;
-            markerData = r.markerData;
-        } else if (ExtensionFileFilter.filters[ExtensionFileFilter.CSV].acceptName(fn)) {
-            gpsData = new LinkedList<Collection<GpsPoint>>();
-            gpsData.add(new RawCsvReader(new FileReader(file)).parse());
-        } else
+            GpxReader r = null;
+            if (file.getName().endsWith(".gpx.gz")) {
+                r = new GpxReader(new GZIPInputStream(new FileInputStream(file)), file.getAbsoluteFile().getParentFile());
+            } else{
+                r = new GpxReader(new FileInputStream(file), file.getAbsoluteFile().getParentFile());
+            }
+            r.data.storageFile = file;
+            Main.main.addLayer(new GpxLayer(r.data, fn));
+            Main.main.addLayer(new MarkerLayer(r.data, tr("Markers from {0}", fn), file));
+
+        } else {
             throw new IllegalStateException();
-        if (gpsData != null && !gpsData.isEmpty())
-            Main.main.addLayer(new RawGpsLayer(false, gpsData, tr("Tracks from {0}", file.getName()), file));
-        if (markerData != null && !markerData.isEmpty())
-            Main.main.addLayer(new MarkerLayer(markerData, tr ("Markers from {0}", file.getName()), file));
+        }
     }
-
-
 }

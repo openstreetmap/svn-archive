@@ -15,6 +15,7 @@ import livegps.LiveGpsLock;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.gpx.GpxData;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.markerlayer.Marker;
 import org.openstreetmap.josm.gui.layer.markerlayer.MarkerLayer;
@@ -89,7 +90,7 @@ public class SetWaypointAction extends AbstractSurveyorAction {
             }
             // not found:
             if(markerLayer == null) {
-                markerLayer = new MarkerLayer(new ArrayList<Marker>(), MARKER_LAYER_NAME, null);
+                markerLayer = new MarkerLayer(new GpxData(), MARKER_LAYER_NAME, null);
                 Main.main.addLayer(markerLayer);
             }
         }

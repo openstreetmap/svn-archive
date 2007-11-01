@@ -112,7 +112,7 @@ if( -s "emptyland.png" != 67 or
 }
 # Check the stylesheets for corruption and out of dateness, but only in loop mode
 # The existance check is to attempt to determine we're on a UNIX-like system
-## FIXME: move stuff over to osmarender6
+
 if( $ARGV[0] eq "loop" and -e "/dev/null" )
 {
     if( qx(svn status osmarender/*.x[ms]l 2>/dev/null) ne "" )
@@ -950,7 +950,7 @@ sub xml2svg
 
     my $XslFile;
 
-    $XslFile = "osmarender6/osmarender.xsl";
+    $XslFile = "osmarender/osmarender.xsl";
 
     my $Cmd = sprintf("%s \"%s\" tr %s %s > \"%s\"",
       $Config{Niceness},

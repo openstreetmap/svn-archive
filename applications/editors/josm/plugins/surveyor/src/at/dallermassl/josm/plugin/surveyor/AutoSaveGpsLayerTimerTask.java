@@ -109,11 +109,17 @@ public class AutoSaveGpsLayerTimerTask extends TimerTask {
      * @return the writer.
      */
     public XmlWriter.OsmWriterInterface getXmlWriter() {
+        return null;
+
+        /*
+         * FIXME! this disables auto-save. need to work with new GPX writing code in JOSM.
+         *
         RawGpsLayer gpsLayer = findGpsLayer(gpsLayerName, RawGpsLayer.class);
         if(gpsLayer == null) {
             return null;
         }
         return new GpxWriter.Trk(gpsLayer.data);
+        */
     }
 
 

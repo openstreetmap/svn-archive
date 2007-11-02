@@ -986,11 +986,16 @@
 				<symbol xlink:href="#synagogue" width='2px' height='2px' transform='translate(-1,-1)' />
 			</rule>
 			<else>
-				<rule e="node" k="denomination|religion" v="muslim">
+				<rule e="node" k="denomination|religion" v="muslim|moslem">
 					<symbol xlink:href="#mosque" width='2px' height='2px' transform='translate(-1,-1)' />
 				</rule>
 				<else>
-					<symbol xlink:href="#church" width='1px' height='2px' transform='translate(-0.5,-1)' />
+                    <rule e="node" k="denomination|religion" v="christian">
+                        <symbol xlink:href="#church" width='2px' height='2px' transform='translate(-1,-1)' />
+                    </rule>
+                    <else>
+			            <symbol xlink:href="#symbol-peak" width='2px' height='2px' transform='translate(-0.5,-1)' />
+                    </else>
 				</else>
 			</else>
         </rule>

@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 3.10.2007 (changes for API 0.5, reverse, backspace)
+	# last update 1.11.2007 (bugfixes, beginnings of revert/undo)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -121,7 +121,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.4b";	// current version
+	var signature="Potlatch 0.4c";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
@@ -640,23 +640,50 @@
 		responder = function() { };
 		responder.onResult = function(result) {
 			var i,id;
-			_root["map"]["ways"][result[0]].clean=true;
-			_root["map"]["ways"][result[0]].path=result[1];
-			_root["map"]["ways"][result[0]].attr=result[2];
-			_root["map"]["ways"][result[0]].xmin=result[3];
-			_root["map"]["ways"][result[0]].xmax=result[4];
-			_root["map"]["ways"][result[0]].ymin=result[5];
-			_root["map"]["ways"][result[0]].ymax=result[6];
-			_root["map"]["ways"][result[0]].redraw();
+			_root.map.ways[result[0]].clean=true;
+			_root.map.ways[result[0]].path=result[1];
+			_root.map.ways[result[0]].attr=result[2];
+			_root.map.ways[result[0]].xmin=result[3];
+			_root.map.ways[result[0]].xmax=result[4];
+			_root.map.ways[result[0]].ymin=result[5];
+			_root.map.ways[result[0]].ymax=result[6];
+			_root.map.ways[result[0]].redraw();
 			_root.waysreceived+=1;
-
-			// Remove any POIs that exist
-			for (i in _root["map"]["ways"][result[0]].path) {
-				id=_root["map"]["ways"][result[0]].path[i][2];
-				if (_root.map.pois[id]) { removeMovieClip(_root.map.pois[id]); }
-			}
+			_root.map.ways[result[0]].clearPOIs();
 		};
 		remote.call('getway',responder,this._name,wayid,baselong,basey,masterscale);
+	};
+
+	OSMWay.prototype.loadFromDeleted=function(wayid,version) {
+		delresponder=function() { };
+		delresponder.onResult=function(result) {
+			var i,z;
+			_root.map.ways[result[0]].clean=true;
+			_root.map.ways[result[0]].locked=true;
+			z=result[1]; // assign negative IDs to anything where visible=1
+			for (i in z) {
+				if (result[1][i][3]) { _root.newnodeid--; result[1][i][2]=newnodeid; }
+			}
+			_root.map.ways[result[0]].path=result[1];
+			_root.map.ways[result[0]].attr=result[2];
+			_root.map.ways[result[0]].xmin=result[3];
+			_root.map.ways[result[0]].xmax=result[4];
+			_root.map.ways[result[0]].ymin=result[5];
+			_root.map.ways[result[0]].ymax=result[6];
+			_root.map.ways[result[0]].redraw();
+			_root.waysreceived+=1;
+			_root.map.ways[result[0]].clearPOIs();
+		};
+		remote.call('getway_deleted',delresponder,this._name,wayid,version,baselong,basey,masterscale);
+	};
+
+	OSMWay.prototype.clearPOIs=function() {
+		// check if any way nodes are POIs, delete the POIs if so
+		var i,z;
+		z=this.path;
+		for (i in z) {
+			if (_root.map.pois[this.path[i][2]]) { removeMovieClip(_root.map.pois[this.path[i][2]]); }
+		}
 	};
 
 	// ----	Draw line
@@ -730,7 +757,7 @@
 	OSMWay.prototype.upload=function() {
 		putresponder=function() { };
 		putresponder.onResult=function(result) {
-			var i,z,nw,qway,qs;
+			var i,r,z,nw,qway,qs;
 			nw=result[1];	// new way ID
 			if (result[0]!=nw) {
 				_root.map.ways[result[0]]._name=nw;
@@ -743,12 +770,6 @@
 			_root.map.ways[nw].ymax=result[6];
 			_root.map.ways[nw].uploading=false;
 
-			// check if renumbered nodes were POIs, delete the POIs if so
-			z=result[2];
-			for (i in z) {
-				if (_root.map.pois[i]) { removeMovieClip(_root.map.pois[i]); }
-			}
-
 			// check if renumbered nodes occur in any other ways
 			for (qway in _root.map.ways) {
 				for (qs=0; qs<_root.map.ways[qway]["path"].length; qs+=1) {
@@ -757,6 +778,7 @@
 					}
 				}
 			}
+			_root.map.ways[nw].clearPOIs();
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
 			this.attr['created_by']=_root.signature;
@@ -1373,9 +1395,9 @@
 	_root.presetmenu.init(141,505,1,presetnames['way'][presetselected],'Choose from a menu of preset attributes describing the way',setAttributesFromPreset,151);
 	_root.presetmenu._visible=false;
 
-	setBackground(preferences.data.baselayer);
 	redrawMap(350-350*Math.pow(2,_root.scale-12),
 			  250-250*Math.pow(2,_root.scale-12));
+	setBackground(preferences.data.baselayer);
 	whichWays();
 	_root.onEnterFrame=function() { everyFrame(); };
 
@@ -1800,7 +1822,9 @@
 			case 112:		setBackground(0); break; 							// f1 - no base layer
 			case 113:		setBackground(2-1*(Key.isDown(Key.SHIFT))); break;	// f2 - Yahoo! base layer
 			case 71:		loadGPS(); break;									// G - load GPS
+			case 72:		if (_root.wayselected>0) { wayHistory(); }; break;	// H - way history
 			case 82:		repeatAttributes(); break;							// R - repeat attributes
+			case 85:		getDeleted(); break;								// U - undelete
 			case 88:		_root.map.ways[wayselected].splitWay(); break;		// X - split way
 			case Key.PGUP:	zoomIn(); break;									// Page Up - zoom in
 			case Key.PGDN:	zoomOut(); break;									// Page Down - zoom out
@@ -2307,6 +2331,41 @@
 		return result;
 	}
 
+	// =====================================================================================
+	// History functions
+	
+	function wayHistory() {
+		historyresponder = function() { };
+		historyresponder.onResult = function(result) {
+			createModalDialogue(275,90,new Array('Revert','Cancel'),handleRevert);
+			_root.modal.box.createTextField("prompt",2,7,9,250,100);
+			with (_root.modal.box.prompt) {
+				text="Revert to an earlier saved version:"; setTextFormat(plainSmall);
+				selectable=false; type='dynamic';
+			}
+			var versionlist=new Array();
+			_root.versionnums=new Array();
+			for (i=0; i<result[0].length; i+=1) {
+				versionlist.push(result[0][i][1]+' ('+result[0][i][3]+')');
+				versionnums[i]=result[0][i][0];
+			}
+			_root.modal.box.attachMovie("menu","version",6);
+			_root.modal.box.version.init(9,32,0,versionlist,
+				'Choose the version to revert to',
+				function(n) { _root.revertversion=versionnums[n]; },0);
+			_root.revertversion=versionnums[0];
+		};
+		remote.call('getway_history',historyresponder,_root.wayselected);
+	};
+	function handleRevert(choice) {
+		if (choice=='Cancel') { return; }
+		// *** call getFromDeleted with version number revertversion
+	};
+	function getDeleted() {
+		// *** call whichways_deleted
+		// *** responder then uses getFromDeleted for each way
+	};
+
 
 	// ================================================================
 	// Way communication
@@ -2330,9 +2389,9 @@
 
 				for (i in waylist) {										// ways
 					way=waylist[i];											//  |
-					if (!_root["map"]["ways"][way]) {						//  |
+					if (!_root.map.ways[way]) {								//  |
 						_root.map.ways.attachMovie("way",way,++waydepth);	//  |
-						_root["map"]["ways"][way].load(way);				//  |
+						_root.map.ways[way].load(way);						//  |
 						_root.waycount+=1;									//  |
 						_root.waysrequested+=1;								//  |
 					}

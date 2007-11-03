@@ -91,10 +91,7 @@ class GetRoutes(handler.ContentHandler):
       if to in self.routing[fr]:
         #print "duplicate %d from %d" % (to,fr)
         return
-    except KeyError:
-      pass
-    # Try to add to list. If list doesn't exist, create it
-    try:
+      # Try to add to list. If list doesn't exist, create it
       self.routing[fr].append(to)
     except KeyError:
       self.routing[fr] = [to]
@@ -252,7 +249,10 @@ class GetRoutes(handler.ContentHandler):
 
     fout.write("<way id='1'>\n")
     for i in listNodes:
-      fout.write("<nd ref='%d' />\n" % i)
+      fout.write("<nd ref='%d' lat='%f' lon='%f' />\n" % ( \
+        i,
+        self.nodes[i][0],
+        self.nodes[i][0]))
     fout.write("</way>\n")
     fout.write("</osm>")
     fout.close()

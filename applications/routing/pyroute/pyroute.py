@@ -74,7 +74,7 @@ class GetRoutes(handler.ContentHandler):
       railway = self.tags.get('railway', '')
       oneway = self.tags.get('oneway', '')
       reversible = not oneway in('yes','true','1')
-      cyclable = highway in ('secondary','tertiary','unclassified','minor','cycleway','residential', 'service')
+      cyclable = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'service')
       if cyclable:
         for i in self.waynodes:
           if last != -1:
@@ -96,16 +96,12 @@ class GetRoutes(handler.ContentHandler):
     except KeyError:
       self.routing[fr] = [to]
   
-  def initProj(self,w,h, centrenode, scale=1):
+  def initProj(self,w,h, lat,lon, scale=1):
     """Setup an image coordinate system"""
     self.w = w
     self.h = h
-    if centrenode == 0:
-      self.clat = (self.maxLat + self.minLat) / 2
-      self.clon = (self.maxLon + self.minLon) / 2
-    else:
-      self.clat = self.nodes[centrenode][0]
-      self.clon = self.nodes[centrenode][1]
+    self.clat = lat
+    self.clon = lon
     self.dlat = (self.maxLat - self.minLat) / scale
     self.dlon = (self.maxLon - self.minLon) / scale
   
@@ -152,8 +148,11 @@ class GetRoutes(handler.ContentHandler):
   def doRouting(self, routeFrom, routeTo):
     """Wrapper around the routing function, which creates the output image, etc"""
     size = 800
-    scalemap = 10 # the bigger this is, the more the map zooms-in
-    self.initProj(size, size, routeFrom, scalemap)
+    scalemap = 5 # the bigger this is, the more the map zooms-in
+    # Centre the map halfway between start and finish
+    ctrLat = (self.nodes[routeFrom][0] + self.nodes[routeTo][0]) / 2
+    ctrLon = (self.nodes[routeFrom][1] + self.nodes[routeTo][1]) / 2
+    self.initProj(size, size, ctrLat, ctrLon, scalemap)
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)
     
     self.ctx = cairo.Context(surface)
@@ -188,13 +187,13 @@ class GetRoutes(handler.ContentHandler):
       self.addToQueue(start,i, blankQueueItem)
     
     # Limit for how long it will search (also useful for debugging step-by-step)
-    maxSteps = 320
+    maxSteps = 10000
     while maxSteps > 0:
       maxSteps = maxSteps - 1
       try:
         nextItem = self.queue.pop(0)
       except IndexError:
-        print "Queue empty"
+        print "Failed to find any route"
         return
       x = nextItem['end']
       if x in closed:

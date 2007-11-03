@@ -229,12 +229,11 @@ class GetRoutes(handler.ContentHandler):
     
     # Route is stored as text initially. Split into a list
     print "Route: %s" % item['nodes']
-    listNodes = item['nodes'].split(",")
+    listNodes = [int(i) for i in item['nodes'].split(",")]
     
     # Display the route on the map
     last = -1
-    for istr in listNodes:
-      i = int(istr)
+    for i in listNodes:
       if last != -1:
         self.markLine(last,i,0.5,1.0,0.5)
       self.markNode(i,0.5,1.0,0.5)
@@ -245,16 +244,15 @@ class GetRoutes(handler.ContentHandler):
     fout.write("<?xml version='1.0' encoding='UTF-8'?>");
     fout.write("<osm version='0.5' generator='route.py'>");
     
-    for istr in listNodes:
-      i = int(istr)
+    for i in listNodes:
       fout.write("<node id='%d' lat='%f' lon='%f'>\n</node>\n" % ( \
         i,
         self.nodes[i][0],
         self.nodes[i][1]))
 
     fout.write("<way id='1'>\n")
-    for istr in listNodes:
-      fout.write("<nd ref='%d' />\n" % int(istr))
+    for i in listNodes:
+      fout.write("<nd ref='%d' />\n" % i)
     fout.write("</way>\n")
     fout.write("</osm>")
     fout.close()

@@ -34,7 +34,7 @@ class GetRoutes(handler.ContentHandler):
   def __init__(self):
     """Initialise an OSM-file parser"""
     self.routing = {}
-    self.realnodes = {}
+    self.nodes = {}
     self.minLon = 180
     self.minLat = 90
     self.maxLon = -180
@@ -47,7 +47,7 @@ class GetRoutes(handler.ContentHandler):
         id = int(attrs.get('id'))
         lat = float(attrs.get('lat'))
         lon = float(attrs.get('lon'))
-        self.realnodes[id] = (lat,lon)
+        self.nodes[id] = (lat,lon)
         if lon < self.minLon:
           self.minLon = lon
         if lat < self.minLat:
@@ -57,10 +57,10 @@ class GetRoutes(handler.ContentHandler):
         if lat > self.maxLat:
           self.maxLat = lat
       self.tags = {}
-      self.nodes = []
+      self.waynodes = []
     elif name == 'nd':
       """Nodes within a way -- add them to a list"""
-      self.nodes.append(int(attrs.get('ref')))
+      self.waynodes.append(int(attrs.get('ref')))
     elif name == 'tag':
       """Tags - store them in a hash"""
       k,v = (attrs.get('k'), attrs.get('v'))
@@ -76,7 +76,7 @@ class GetRoutes(handler.ContentHandler):
       reversible = not oneway in('yes','true','1')
       cyclable = highway in ('secondary','tertiary','unclassified','minor','cycleway','residential', 'service')
       if cyclable:
-        for i in self.nodes:
+        for i in self.waynodes:
           if last != -1:
             #print "%d -> %d & v.v." % (last, i)
             self.addLink(last, i)
@@ -107,8 +107,8 @@ class GetRoutes(handler.ContentHandler):
       self.clat = (self.maxLat + self.minLat) / 2
       self.clon = (self.maxLon + self.minLon) / 2
     else:
-      self.clat = self.realnodes[centrenode][0]
-      self.clon = self.realnodes[centrenode][1]
+      self.clat = self.nodes[centrenode][0]
+      self.clon = self.nodes[centrenode][1]
     self.dlat = (self.maxLat - self.minLat) / scale
     self.dlon = (self.maxLon - self.minLon) / scale
   
@@ -121,8 +121,8 @@ class GetRoutes(handler.ContentHandler):
   def markNode(self,node,r,g,b):
     """Mark a node on the map"""
     self.ctx.set_source_rgb(r,g,b)
-    lat = self.realnodes[node][0]
-    lon = self.realnodes[node][1]
+    lat = self.nodes[node][0]
+    lon = self.nodes[node][1]
     x,y = self.project(lat,lon)
     self.ctx.arc(x,y,2, 0,2*3.14)
     self.ctx.fill()
@@ -130,22 +130,22 @@ class GetRoutes(handler.ContentHandler):
   def markLine(self,n1,n2,r,g,b):
     """Draw a line on the map between two nodes"""
     self.ctx.set_source_rgba(r,g,b,0.3)
-    lat = self.realnodes[n1][0]
-    lon = self.realnodes[n1][1]
+    lat = self.nodes[n1][0]
+    lon = self.nodes[n1][1]
     x,y = self.project(lat,lon)
     self.ctx.move_to(x,y)
-    lat = self.realnodes[n2][0]
-    lon = self.realnodes[n2][1]
+    lat = self.nodes[n2][0]
+    lon = self.nodes[n2][1]
     x,y = self.project(lat,lon)
     self.ctx.line_to(x,y)
     self.ctx.stroke()
 
   def distance(self,n1,n2):
     """Calculate distance between two nodes"""
-    lat1 = self.realnodes[n1][0]
-    lon1 = self.realnodes[n1][1]
-    lat2 = self.realnodes[n2][0]
-    lon2 = self.realnodes[n2][1]
+    lat1 = self.nodes[n1][0]
+    lon1 = self.nodes[n1][1]
+    lat2 = self.nodes[n2][0]
+    lon2 = self.nodes[n2][1]
     # TODO: projection issues
     dlat = lat2 - lat1
     dlon = lon2 - lon1
@@ -163,7 +163,7 @@ class GetRoutes(handler.ContentHandler):
     # Dump all the nodes onto the map, to give the routes some context
     self.ctx.set_source_rgb(1.0, 0.0, 0.0)
     self.ctx.set_line_cap(cairo.LINE_CAP_ROUND)
-    for id,n in self.realnodes.items():
+    for id,n in self.nodes.items():
       x,y = self.project(n[0], n[1])
       self.ctx.move_to(x,y)
       self.ctx.line_to(x,y)
@@ -249,8 +249,8 @@ class GetRoutes(handler.ContentHandler):
       i = int(istr)
       fout.write("<node id='%d' lat='%f' lon='%f'>\n</node>\n" % ( \
         i,
-        self.realnodes[i][0],
-        self.realnodes[i][1]))
+        self.nodes[i][0],
+        self.nodes[i][1]))
 
     fout.write("<way id='1'>\n")
     for istr in listNodes:

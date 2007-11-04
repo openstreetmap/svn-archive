@@ -94,11 +94,12 @@ class Router:
     distance = self.distance(start, end)
     
     # Create a hash for all the route's attributes
-    queueItem = {}
-    queueItem['distance'] = queueSoFar['distance'] + distance
-    queueItem['maxdistance'] = queueItem['distance'] + self.distance(end, self.searchEnd)
-    queueItem['nodes'] = queueSoFar['nodes'] + ","+str(end)
-    queueItem['end'] = end
+    distanceSoFar = queueSoFar['distance']
+    queueItem = { \
+      'distance': distanceSoFar + distance,
+      'maxdistance': distanceSoFar + self.distance(end, self.searchEnd),
+      'nodes': queueSoFar['nodes'] + "," + str(end),
+      'end': end}
     
     # Try to insert, keeping the queue ordered by decreasing worst-case distance
     count = 0

@@ -29,10 +29,18 @@ from xml.sax import make_parser, handler
 
 class LoadOsm(handler.ContentHandler):
   """Parse an OSM file looking for routing information, and do routing with it"""
-  def __init__(self):
+  def __init__(self, filename):
     """Initialise an OSM-file parser"""
     self.routing = {}
     self.nodes = {}
+    parser = make_parser()
+    parser.setContentHandler(self)
+    parser.parse(filename)
+  def report(self):
+    """Display some info about the loaded data"""
+    return "Loaded %d nodes and %d routable sections" % ( \
+      len(self.nodes.keys()), 
+      len(self.routing.keys()))
   def startElement(self, name, attrs):
     """Handle XML elements"""
     if name in('node','way','relation'):
@@ -84,7 +92,5 @@ class LoadOsm(handler.ContentHandler):
 # Parse the supplied OSM file
 if __name__ == "__main__":
   print "Loading data..."
-  obj = LoadOsm()
-  parser = make_parser()
-  parser.setContentHandler(obj)
-  parser.parse(sys.argv[1])
+  data = LoadOsm(sys.argv[1])
+  print data.report()

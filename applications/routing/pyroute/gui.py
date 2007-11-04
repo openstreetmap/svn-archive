@@ -23,6 +23,9 @@ class Projection:
     self.lat = lat
     self.lon = lon
     self.scale = scale  # TODO: scale and scaleCosLat
+  def nudge(self,dx,dy,scale):
+    self.lat = self.lat + dy * scale * self.scale
+    self.lon = self.lon + dx * scale * self.scale
   def ll2xy(self,lat,lon):
     px = (lon - self.lon) / self.scale
     py = (lat - self.lat) / self.scale
@@ -46,13 +49,10 @@ class MapWidget(gtk.Widget):
     self.projection = Projection()
     self.projection.recentre(51.524,-0.129, 0.02)
   def move(self,dx,dy):
-    pass
+    self.projection.nudge(-dx,dy,1.0/self.rect.width)
+    self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
   def draw(self, cr):
-    if 0:
-      cr.set_source_rgb(0,0,0)
-      cr.move_to(self.rect.x,self.rect.y)
-      cr.line_to(self.rect.x + self.rect.width,self.rect.y + self.rect.height)
-      cr.stroke()
+    # Just nodes:
     cr.set_source_rgb(0.0, 0.0, 0.0)
     cr.set_line_cap(cairo.LINE_CAP_ROUND)
     for k,v in self.data.nodes.items():

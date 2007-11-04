@@ -5,7 +5,7 @@
 #
 #------------------------------------------------------
 # Usage: 
-#  routeAsOsm.py [input OSM file] [start node] [end node]
+#  routeAsOsm.py [input OSM file] [start node] [end node] [transport] [description]
 #------------------------------------------------------
 # Copyright 2007, Oliver White
 #
@@ -24,10 +24,11 @@
 #------------------------------------------------------
 # Changelog:
 #  2007-11-04  OJW  Created
+#  2007-11-05  OJW  Multiple forms of transport
 #------------------------------------------------------
 from route import *
   
-def routeToOsm(nodeList, osmData, description=""):
+def routeToOsm(nodeList, osmData, description="", transport=""):
   """Format a route (as list of nodes) into an OSM file"""
   output = ''
   output = output + "<?xml version='1.0' encoding='UTF-8'?>\n";
@@ -45,6 +46,7 @@ def routeToOsm(nodeList, osmData, description=""):
     
   output = output + "  <tag k='route_display' v='yes' />\n"
   output = output + "  <tag k='name' v='%s' />\n" % description
+  output = output + "  <tag k='transport' v='%s' />\n" % transport
   output = output + " </way>\n"
   output = output + "</osm>"
   
@@ -52,17 +54,20 @@ def routeToOsm(nodeList, osmData, description=""):
   
 
 if __name__ == "__main__":
-  data = LoadOsm(sys.argv[1])
-  
-  router = Router(data)
-  result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]))
-  
   try:
-    description = sys.argv[4]
+    # Load data
+    data = LoadOsm(sys.argv[1])
+  
+    # Do routing
+    router = Router(data)
+    result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
+    
+    # Display result
+    if result == 'success':
+      print routeToOsm(route, data, sys.argv[5], sys.argv[4])
+    else:
+      sys.stderr.write("Failed (%s)\n" % result)
+      
   except IndexError:
-    description = "(no name)"
-
-  if result == 'success':
-    print routeToOsm(route, data, description)
-  else:
-    sys.stderr.write("Failed (%s)" % result)
+    # Not enough argv[]s
+    sys.stderr.write("Usage: routeAsOsm.py [OSM file] [from node] [to node] [transport method] [description]\n")

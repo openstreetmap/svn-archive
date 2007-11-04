@@ -25,6 +25,7 @@
 #------------------------------------------------------
 # Changelog:
 #  2007-11-04  OJW  Modified from pyroute.py
+#  2007-11-05  OJW  Multiple forms of transport
 #------------------------------------------------------
 import sys
 from xml.sax import make_parser, handler
@@ -34,16 +35,25 @@ class LoadOsm(handler.ContentHandler):
   def __init__(self, filename, storeMap = 0):
     """Initialise an OSM-file parser"""
     self.routing = {}
+    self.routeTypes = ('cycle','car','train','foot','horse')
+    for routeType in self.routeTypes:
+      self.routing[routeType] = {}
     self.nodes = {}
+    self.ways = []
     self.storeMap = storeMap
     parser = make_parser()
     parser.setContentHandler(self)
     parser.parse(filename)
   def report(self):
     """Display some info about the loaded data"""
-    return "Loaded %d nodes and %d routable sections" % ( \
-      len(self.nodes.keys()), 
-      len(self.routing.keys()))
+    report = "Loaded %d nodes,\n" % len(self.nodes.keys())
+    report = report + "%d ways, and...\n" % len(self.ways)
+    for routeType in self.routeTypes:
+      report = report + " %d %s routes\n" % ( \
+        len(self.routing[routeType].keys()),
+        routeType)
+    return(report)
+
   def startElement(self, name, attrs):
     """Handle XML elements"""
     if name in('node','way','relation'):
@@ -63,37 +73,62 @@ class LoadOsm(handler.ContentHandler):
       k,v = (attrs.get('k'), attrs.get('v'))
       if not k in ('created_by'):
         self.tags[k] = v
+  
   def endElement(self, name):
     """Handle ways in the OSM data"""
     if name == 'way':
-      last = -1
       highway = self.tags.get('highway', '')
       railway = self.tags.get('railway', '')
       oneway = self.tags.get('oneway', '')
       reversible = not oneway in('yes','true','1')
-      cyclable = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'service')
-      if cyclable:
-        for i in self.waynodes:
-          if last != -1:
-            newLink = {'to':i}
-            
-            #print "%d -> %d & v.v." % (last, i)
-            self.addLink(last, newLink)
-            if reversible:
-              self.addLink(i, {'to':last})
-          last = i
-  
-  def addLink(self,fr,newLink):
+    
+      # Calculate what vehicles can use this route
+      access = {}
+      access['cycle'] = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'service')
+      access['car'] = highway in ('motorway','trunk','primary','secondary','tertiary','unclassified','minor','residential', 'service')
+      access['train'] = railway in('rail','light_rail','subway')
+      access['foot'] = access['cycle'] or highway in('footway','steps')
+      access['horse'] = highway in ('track','unclassified','bridleway')
+      
+      # Store routing information
+      last = -1
+      for i in self.waynodes:
+        if last != -1:
+          #print "%d -> %d & v.v." % (last, i)
+          for routeType in self.routeTypes:
+            if(access[routeType]):
+              self.addLink(last, i, routeType)
+              if reversible:
+                self.addLink(i, last, routeType)
+        last = i
+      
+      # Store map information
+      if(self.storeMap):
+        wayType = self.WayType(self.tags)
+        if(wayType):
+          self.ways.append({ \
+            't':wayType,
+            'n':self.waynodes})
+
+  def WayType(self, tags):
+    # Look for a variety of tags (priority order - first one found is used)
+    for key in ('highway','railway','waterway','natural'):
+      value = tags.get('highway', '')
+      if value:
+        return(value)
+    return('')
+    
+  def addLink(self,fr,to, routeType):
     """Add a routeable edge to the scenario"""
     try:
-      if newLink in self.routing[fr]:
+      if to in self.routing[routeType][fr]:
         return
-      self.routing[fr].append(newLink)
+      self.routing[routeType][fr].append(to)
     except KeyError:
-      self.routing[fr] = [newLink]
+      self.routing[routeType][fr] = [to]
       
 # Parse the supplied OSM file
 if __name__ == "__main__":
   print "Loading data..."
-  data = LoadOsm(sys.argv[1])
+  data = LoadOsm(sys.argv[1], True)
   print data.report()

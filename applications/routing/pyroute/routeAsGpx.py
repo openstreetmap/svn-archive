@@ -5,7 +5,7 @@
 #
 #------------------------------------------------------
 # Usage: 
-#  routeAsGpx.py [input OSM file] [start node] [end node] [description]
+#  routeAsGpx.py [input OSM file] [start node] [end node] [transport] [description]
 #------------------------------------------------------
 # Copyright 2007, Oliver White
 #
@@ -24,6 +24,7 @@
 #------------------------------------------------------
 # Changelog:
 #  2007-11-04  OJW  Created
+#  2007-11-05  OJW  Multiple forms of transport
 #------------------------------------------------------
 from route import *
   
@@ -51,17 +52,20 @@ def routeToGpx(nodeList, osmData, description=""):
   return(output)
 
 if __name__ == "__main__":
-  data = LoadOsm(sys.argv[1])
-  
-  router = Router(data)
-  result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]))
-  
   try:
-    description = sys.argv[4]
+    # Load data
+    data = LoadOsm(sys.argv[1])
+  
+    # Do routing
+    router = Router(data)
+    result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
+  
+    # Display result
+    if result == 'success':
+      print routeToGpx(route, data, sys.argv[5])
+    else:
+      sys.stderr.write("Failed (%s)" % result)
+  
   except IndexError:
-    description = "(no name)"
-
-  if result == 'success':
-    print routeToGpx(route, data, description)
-  else:
-    sys.stderr.write("Failed (%s)" % result)
+    # Not enough argv[]s
+    sys.stderr.write("Usage: routeAsGpx.py [OSM file] [from node] [to node] [transport method] [description]\n")

@@ -5,10 +5,12 @@
 #------------------------------------------------------
 # Usage as library: 
 #   router = Router(LoadOsmObject)
-#   result, route = router.doRoute(node1, node2)
+#   result, route = router.doRoute(node1, node2, transport)
 #
 # Usage from command-line:
-#   route.py filename.osm node1 node2  
+#   route.py filename.osm node1 node2 transport
+# 
+# (where transport is cycle, foot, car, etc...)
 #------------------------------------------------------
 # Copyright 2007, Oliver White
 #
@@ -27,6 +29,7 @@
 #------------------------------------------------------
 # Changelog:
 #  2007-11-04  OJW  Modified from pyroute.py
+#  2007-11-05  OJW  Multiple forms of transport
 #------------------------------------------------------
 import sys
 import math 
@@ -47,7 +50,7 @@ class Router:
     dist2 = dlat * dlat + dlon * dlon
     return(math.sqrt(dist2))
   
-  def doRoute(self,start,end):
+  def doRoute(self,start,end,transport):
     """Do the routing"""
     self.searchEnd = end
     closed = [start]
@@ -55,8 +58,8 @@ class Router:
     
     # Start by queueing all outbound links from the start node
     blankQueueItem = {'end':-1,'distance':0,'nodes':str(start)}
-    for i in self.data.routing[start]:
-      self.addToQueue(start,i['to'], blankQueueItem)
+    for i in self.data.routing[transport][start]:
+      self.addToQueue(start,i, blankQueueItem)
     
     # Limit for how long it will search
     count = 0
@@ -76,9 +79,9 @@ class Router:
         return('success', routeNodes)
       closed.append(x)
       try:
-        for i in self.data.routing[x]:
-          if not i['to'] in closed:
-            self.addToQueue(x,i['to'],nextItem)
+        for i in self.data.routing[transport][x]:
+          if not i in closed:
+            self.addToQueue(x,i,nextItem)
       except KeyError:
         pass
     else:
@@ -114,8 +117,14 @@ class Router:
 if __name__ == "__main__":
   data = LoadOsm(sys.argv[1])
   
+  try:
+    transport = sys.argv[4]
+  except IndexError:
+    transport = 'cycle'
+    print "WARNING: No transport type specified, assuming \"%s\"" % transport
+  
   router = Router(data)
-  result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]))
+  result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), transport)
   
   if result == 'success':
     print "Route: %s" % ",".join("%d" % i for i in route)

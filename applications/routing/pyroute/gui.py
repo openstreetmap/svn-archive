@@ -27,13 +27,17 @@ class Projection:
     self.lat = lat
     self.lon = lon
     self.scale = scale  # TODO: scale and scaleCosLat
-    self.S = lat - scale
-    self.N = lat + scale
-    self.W = lon - scale
-    self.E = lon + scale
+    self.findEdges()
+  def findEdges(self):
+    """(S,W,E,N) are derived from (lat,lon,scale)"""
+    self.S = self.lat - self.scale
+    self.N = self.lat + self.scale
+    self.W = self.lon - self.scale
+    self.E = self.lon + self.scale
   def nudge(self,dx,dy,scale):
     self.lat = self.lat + dy * scale * self.scale
     self.lon = self.lon + dx * scale * self.scale
+    self.findEdges()
   def ll2xy(self,lat,lon):
     px = (lon - self.lon) / self.scale
     py = (lat - self.lat) / self.scale
@@ -113,6 +117,8 @@ class MapWidget(gtk.Widget):
     
   def drawImage(self,cr, tile, bbox):
     name = self.imageName(tile[0],tile[1],tile[2])
+    if not name in self.images.keys():
+      return
     cr.save()
     cr.translate(bbox[0],bbox[1])
     cr.scale((bbox[2] - bbox[0]) / 256.0, (bbox[3] - bbox[1]) / 256.0)

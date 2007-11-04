@@ -31,10 +31,11 @@ from xml.sax import make_parser, handler
 
 class LoadOsm(handler.ContentHandler):
   """Parse an OSM file looking for routing information, and do routing with it"""
-  def __init__(self, filename):
+  def __init__(self, filename, storeMap = 0):
     """Initialise an OSM-file parser"""
     self.routing = {}
     self.nodes = {}
+    self.storeMap = storeMap
     parser = make_parser()
     parser.setContentHandler(self)
     parser.parse(filename)
@@ -74,21 +75,23 @@ class LoadOsm(handler.ContentHandler):
       if cyclable:
         for i in self.waynodes:
           if last != -1:
+            newLink = {'to':i}
+            
             #print "%d -> %d & v.v." % (last, i)
-            self.addLink(last, i)
+            self.addLink(last, newLink)
             if reversible:
-              self.addLink(i, last)
+              self.addLink(i, {'to':last})
           last = i
-  def addLink(self,fr,to):
+  
+  def addLink(self,fr,newLink):
     """Add a routeable edge to the scenario"""
-    # Look for existing
     try:
-      if to in self.routing[fr]:
+      if newLink in self.routing[fr]:
         return
-      self.routing[fr].append(to)
+      self.routing[fr].append(newLink)
     except KeyError:
-      self.routing[fr] = [to]
-
+      self.routing[fr] = [newLink]
+      
 # Parse the supplied OSM file
 if __name__ == "__main__":
   print "Loading data..."

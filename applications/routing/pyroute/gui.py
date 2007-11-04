@@ -3,19 +3,34 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import sys
 from gtk import gdk
-import loadOsm
+from loadOsm import *
 import cairo
 
 def update(mapWidget):
   return(True)
 
-class Rect:
-  def __init__(self,x,y,w,h):
-    self.x = x
-    self.y = y
-    self.w = w
-    self.h = h
+class Projection:
+  def __init__(self):
+    pass
+  def setView(self,x,y,w,h):
+    self.w = w / 2
+    self.h = h / 2
+    self.xc = x + self.w
+    self.yc = y + self.h
+  def recentre(self,lat,lon,scale):
+    self.lat = lat
+    self.lon = lon
+    self.scale = scale  # TODO: scale and scaleCosLat
+  def ll2xy(self,lat,lon):
+    px = (lon - self.lon) / self.scale
+    py = (lat - self.lat) / self.scale
+    x = self.xc + self.w * px
+    y = self.yc - self.h * py
+    return(x,y)
+  def xy2ll(self,x,y):
+    pass
     
 class MapWidget(gtk.Widget):
   __gsignals__ = { \
@@ -23,18 +38,29 @@ class MapWidget(gtk.Widget):
     'expose-event' : 'override',
     'size-allocate': 'override',
     'size-request': 'override'}
-  def __init__(self):
+  def __init__(self, osmDataFile):
     gtk.Widget.__init__(self)
     self.draw_gc = None
     self.timer = gobject.timeout_add(200, update, self)
+    self.data = LoadOsm(osmDataFile)
+    self.projection = Projection()
+    self.projection.recentre(51.524,-0.129, 0.02)
   def move(self,dx,dy):
     pass
   def draw(self, cr):
-    cr.set_source_rgb(0,0,0)
-    cr.move_to(self.rect.x,self.rect.y)
-    cr.line_to(self.rect.x + self.rect.width,self.rect.y + self.rect.height)
-    cr.stroke()
-    pass
+    if 0:
+      cr.set_source_rgb(0,0,0)
+      cr.move_to(self.rect.x,self.rect.y)
+      cr.line_to(self.rect.x + self.rect.width,self.rect.y + self.rect.height)
+      cr.stroke()
+    cr.set_source_rgb(0.0, 0.0, 0.0)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    for k,v in self.data.nodes.items():
+      x,y = self.projection.ll2xy(v[0],v[1])
+      cr.move_to(x,y)
+      cr.line_to(x,y)
+      cr.stroke()
+  
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)
     self.window = gdk.Window( \
@@ -56,6 +82,11 @@ class MapWidget(gtk.Widget):
       self.window.move_resize(*allocation)
   def _expose_cairo(self, event, cr):
     self.rect = self.allocation
+    self.projection.setView( \
+      self.rect.x, 
+      self.rect.y, 
+      self.rect.width, 
+      self.rect.height)
     self.draw(cr)
   def do_expose_event(self, event):
     self.chain(event)
@@ -64,7 +95,7 @@ class MapWidget(gtk.Widget):
 
 class GuiBase:
   """Wrapper class for a GUI interface"""
-  def __init__(self):
+  def __init__(self, osmDataFile):
     # Create the window
     win = gtk.Window()
     win.set_title('map')
@@ -80,7 +111,7 @@ class GuiBase:
     win.add(event_box)
     
     # Create the map
-    self.mapWidget = MapWidget()
+    self.mapWidget = MapWidget(osmDataFile)
     event_box.add(self.mapWidget)
     
     # Finalise the window
@@ -99,4 +130,4 @@ class GuiBase:
     self.dragy = event.y
 
 if __name__ == "__main__":
-  program = GuiBase()
+  program = GuiBase(sys.argv[1])

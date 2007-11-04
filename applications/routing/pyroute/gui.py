@@ -6,6 +6,7 @@ import gtk
 import sys
 from gtk import gdk
 from loadOsm import *
+from route import *
 import cairo
 
 def update(mapWidget):
@@ -48,9 +49,16 @@ class MapWidget(gtk.Widget):
     self.data = LoadOsm(osmDataFile)
     self.projection = Projection()
     self.projection.recentre(51.524,-0.129, 0.02)
+    self.router = Router(self.data)
+    result, self.route = self.router.doRoute(107318,107999)
+    print "Done routing, result: %s" % result
+    
   def move(self,dx,dy):
     self.projection.nudge(-dx,dy,1.0/self.rect.width)
     self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
+  def nodeXY(self,node):
+    node = self.data.nodes[node]
+    return(self.projection.ll2xy(node[0], node[1]))
   def draw(self, cr):
     # Just nodes:
     cr.set_source_rgb(0.0, 0.0, 0.0)
@@ -60,7 +68,15 @@ class MapWidget(gtk.Widget):
       cr.move_to(x,y)
       cr.line_to(x,y)
       cr.stroke()
-  
+    
+    if(len(self.route) > 1):
+      x,y = self.nodeXY(self.route[0])
+      cr.move_to(x,y)
+      for i in self.route:
+        x,y = self.nodeXY(i)
+        cr.line_to(x,y)
+      cr.stroke()
+      
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)
     self.window = gdk.Window( \

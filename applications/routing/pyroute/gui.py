@@ -7,7 +7,10 @@ import sys
 from gtk import gdk
 from loadOsm import *
 from route import *
+from tilenames import *
 import cairo
+import urllib
+import os
 
 def update(mapWidget):
   return(True)
@@ -24,6 +27,10 @@ class Projection:
     self.lat = lat
     self.lon = lon
     self.scale = scale  # TODO: scale and scaleCosLat
+    self.S = lat - scale
+    self.N = lat + scale
+    self.W = lon - scale
+    self.E = lon + scale
   def nudge(self,dx,dy,scale):
     self.lat = self.lat + dy * scale * self.scale
     self.lon = self.lon + dx * scale * self.scale
@@ -51,9 +58,14 @@ class MapWidget(gtk.Widget):
     self.projection = Projection()
     self.projection.recentre(51.524,-0.129, 0.02)
     self.router = Router(self.data)
-    result, self.route = self.router.doRoute(107318,107999,self.transport)
+    #routeStart, routeEnd = (107318,107999) # short
+    #routeStart, routeEnd = (21533912, 109833) # across top
+    routeStart, routeEnd = (21544863, 108898) # crescent to aldwych
+    result, self.route = self.router.doRoute(routeStart, routeEnd, self.transport)
     print "Done routing (transport: %s), result: %s" % (self.transport, result)
     self.unknownTags = []
+    self.im = cairo.ImageSurface.create_from_png('image2.png')
+    self.images = {}
   def move(self,dx,dy):
     self.projection.nudge(-dx,dy,1.0/self.rect.width)
     self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
@@ -71,7 +83,6 @@ class MapWidget(gtk.Widget):
       "river": {'rgb':(0.5, 0.5, 1.0),'w':2},
       "rail": {'rgb':(0.3, 0.3, 0.3)}
       }
-    
     try:
       style = styles[wayType]
     except KeyError:
@@ -79,35 +90,67 @@ class MapWidget(gtk.Widget):
         print "Unknown %s" % wayType
         self.unknownTags.append(wayType)
       return(False)
-    
     rgb = style['rgb']
     cr.set_source_rgb(rgb[0], rgb[1], rgb[2])
-    
     try:
       width = style['w']
     except KeyError:
       width = 1
     cr.set_line_width(width)
-    
     return(True)
+  
+  def imageName(self,x,y,z):
+    return("%d_%d_%d" % (z,x,y))
+  def loadImage(self,x,y,z):
+    name = self.imageName(x,y,z)
+    if name in self.images.keys():
+      return
+    filename = "cache/%s.png" % name
+    if not os.path.exists(filename):
+      url = tileURL(x,y,z)
+      urllib.urlretrieve(url, filename)
+    self.images[name]  = cairo.ImageSurface.create_from_png(filename)
+    
+  def drawImage(self,cr, tile, bbox):
+    name = self.imageName(tile[0],tile[1],tile[2])
+    cr.save()
+    cr.translate(bbox[0],bbox[1])
+    cr.scale((bbox[2] - bbox[0]) / 256.0, (bbox[3] - bbox[1]) / 256.0)
+    cr.set_source_surface(self.images[name],0,0)
+    cr.paint()
+    cr.restore()
     
   def draw(self, cr):
+    # Map as image
+    z = 14
+    view_x1,view_y1 = latlon2xy(self.projection.N,self.projection.W,z)
+    view_x2,view_y2 = latlon2xy(self.projection.S,self.projection.E,z)
+    #print "X: %1.3f - %1.3f. y: %1.3f - %1.3f" % (view_x1,view_x2,view_y1,view_y2)
+    for x in range(int(floor(view_x1)), int(ceil(view_x2))):
+      for y in range(int(floor(view_y1)), int(ceil(view_y2))):
+        S,W,N,E = tileEdges(x,y,z) 
+        x1,y1 = self.projection.ll2xy(N,W)
+        x2,y2 = self.projection.ll2xy(S,E)
+        self.loadImage(x,y,z)
+        self.drawImage(cr,(x,y,z),(x1,y1,x2,y2))
+    
     # The map
-    for way in self.data.ways:
-      if(self.setupDrawStyle(cr, way['t'])):
-        firstTime = True
-        for node in way['n']:
-          x,y = self.nodeXY(node)
-          if firstTime:
-            cr.move_to(x,y)
-            firstTime = False
-          else:
-            cr.line_to(x,y)
-        cr.stroke()
-
+    if 0:
+      for way in self.data.ways:
+        if(self.setupDrawStyle(cr, way['t'])):
+          firstTime = True
+          for node in way['n']:
+            x,y = self.nodeXY(node)
+            if firstTime:
+              cr.move_to(x,y)
+              firstTime = False
+            else:
+              cr.line_to(x,y)
+          cr.stroke()
+    
     # The route
     if(len(self.route) > 1):
-      cr.set_source_rgba(1.0, 0.0, 0.0, 0.5)
+      cr.set_source_rgba(0.0, 1.0, 0.0, 0.5)
       cr.set_line_width(8)
       x,y = self.nodeXY(self.route[0])
       cr.move_to(x,y)
@@ -115,7 +158,8 @@ class MapWidget(gtk.Widget):
         x,y = self.nodeXY(i)
         cr.line_to(x,y)
       cr.stroke()
-      
+
+    
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)
     self.window = gdk.Window( \

@@ -4,7 +4,9 @@
 #
 #------------------------------------------------------
 # Usage: 
-#  pyroute.py [input OSM file] [start node] [end node]
+#   data = LoadOsm(filename)
+# or:
+#   loadOsm.py filename.osm
 #------------------------------------------------------
 # Copyright 2007, Oliver White
 #
@@ -22,7 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #------------------------------------------------------
 # Changelog:
-#  2007-11-03  OJW  Created
+#  2007-11-04  OJW  Modified from pyroute.py
 #------------------------------------------------------
 import sys
 from xml.sax import make_parser, handler
@@ -82,9 +84,7 @@ class LoadOsm(handler.ContentHandler):
     # Look for existing
     try:
       if to in self.routing[fr]:
-        #print "duplicate %d from %d" % (to,fr)
         return
-      # Try to add to list. If list doesn't exist, create it
       self.routing[fr].append(to)
     except KeyError:
       self.routing[fr] = [to]

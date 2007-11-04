@@ -77,8 +77,8 @@ class LoadOsm(handler.ContentHandler):
   def endElement(self, name):
     """Handle ways in the OSM data"""
     if name == 'way':
-      highway = self.tags.get('highway', '')
-      railway = self.tags.get('railway', '')
+      highway = self.equivalent(self.tags.get('highway', ''))
+      railway = self.equivalent(self.tags.get('railway', ''))
       oneway = self.tags.get('oneway', '')
       reversible = not oneway in('yes','true','1')
     
@@ -98,7 +98,7 @@ class LoadOsm(handler.ContentHandler):
           for routeType in self.routeTypes:
             if(access[routeType]):
               self.addLink(last, i, routeType)
-              if reversible:
+              if reversible or routeType == 'foot':
                 self.addLink(i, last, routeType)
         last = i
       
@@ -115,8 +115,34 @@ class LoadOsm(handler.ContentHandler):
     for key in ('highway','railway','waterway','natural'):
       value = tags.get('highway', '')
       if value:
-        return(value)
+        return(self.equivalent(value))
     return('')
+  def equivalent(self,tag):
+    """Simplifies a bunch of tags to nearly-equivalent ones"""
+    equivalent = { \
+      "primary_link":"primary",
+      "trunk":"primary",
+      "trunk_link":"primary",
+      "secondary_link":"secondary",
+      "tertiary":"secondary",
+      "tertiary_link":"secondary",
+      "residential":"unclassified",
+      "minor":"unclassified",
+      "steps":"footway",
+      "driveway":"service",
+      "pedestrian":"footway",
+      "bridleway":"cycleway",
+      "track":"cycleway",
+      "arcade":"footway",
+      "canal":"river",
+      "riverbank":"river",
+      "lake":"river",
+      "light_rail":"railway"
+      }
+    try:
+      return(equivalent[tag])
+    except KeyError:
+      return(tag)
     
   def addLink(self,fr,to, routeType):
     """Add a routeable edge to the scenario"""

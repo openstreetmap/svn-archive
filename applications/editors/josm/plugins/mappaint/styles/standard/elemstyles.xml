@@ -1105,7 +1105,7 @@ Using both area and line attributes for the same key/value pair doesn't work!
 	</rule>
 
 	<rule>
-		<condition k="historic" v="archeological_site" />
+		<condition k="historic" v="archaeological_site" />
 		<icon annotate="true" src="sightseeing/archeological.png" />
         <scale_min>1</scale_min>
         <scale_max>50000</scale_max>

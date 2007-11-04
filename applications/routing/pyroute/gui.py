@@ -46,30 +46,69 @@ class MapWidget(gtk.Widget):
     gtk.Widget.__init__(self)
     self.draw_gc = None
     self.timer = gobject.timeout_add(200, update, self)
-    self.data = LoadOsm(osmDataFile)
+    self.transport = 'cycle'
+    self.data = LoadOsm(osmDataFile, True)
     self.projection = Projection()
     self.projection.recentre(51.524,-0.129, 0.02)
     self.router = Router(self.data)
-    result, self.route = self.router.doRoute(107318,107999)
-    print "Done routing, result: %s" % result
-    
+    result, self.route = self.router.doRoute(107318,107999,self.transport)
+    print "Done routing (transport: %s), result: %s" % (self.transport, result)
+    self.unknownTags = []
   def move(self,dx,dy):
     self.projection.nudge(-dx,dy,1.0/self.rect.width)
     self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
   def nodeXY(self,node):
     node = self.data.nodes[node]
     return(self.projection.ll2xy(node[0], node[1]))
-  def draw(self, cr):
-    # Just nodes:
-    cr.set_source_rgb(0.0, 0.0, 0.0)
-    cr.set_line_cap(cairo.LINE_CAP_ROUND)
-    for k,v in self.data.nodes.items():
-      x,y = self.projection.ll2xy(v[0],v[1])
-      cr.move_to(x,y)
-      cr.line_to(x,y)
-      cr.stroke()
+  def setupDrawStyle(self, cr, wayType):
+    styles = { \
+      "primary": {'rgb':(0.5, 0.0, 0.0),'w':3},
+      "secondary": {'rgb':(0.5, 0.25, 0.0),'w':2},
+      "unclassified": {'rgb':(0.8, 0.5, 0.5)},
+      "service": {'rgb':(0.5, 0.5, 0.5),'w':0.5},
+      "footway": {'rgb':(0.0, 0.5, 0.5)},
+      "cycleway": {'rgb':(0.0, 0.5, 0.8)},
+      "river": {'rgb':(0.5, 0.5, 1.0),'w':2},
+      "rail": {'rgb':(0.3, 0.3, 0.3)}
+      }
     
+    try:
+      style = styles[wayType]
+    except KeyError:
+      if not wayType in self.unknownTags:
+        print "Unknown %s" % wayType
+        self.unknownTags.append(wayType)
+      return(False)
+    
+    rgb = style['rgb']
+    cr.set_source_rgb(rgb[0], rgb[1], rgb[2])
+    
+    try:
+      width = style['w']
+    except KeyError:
+      width = 1
+    cr.set_line_width(width)
+    
+    return(True)
+    
+  def draw(self, cr):
+    # The map
+    for way in self.data.ways:
+      if(self.setupDrawStyle(cr, way['t'])):
+        firstTime = True
+        for node in way['n']:
+          x,y = self.nodeXY(node)
+          if firstTime:
+            cr.move_to(x,y)
+            firstTime = False
+          else:
+            cr.line_to(x,y)
+        cr.stroke()
+
+    # The route
     if(len(self.route) > 1):
+      cr.set_source_rgba(1.0, 0.0, 0.0, 0.5)
+      cr.set_line_width(8)
       x,y = self.nodeXY(self.route[0])
       cr.move_to(x,y)
       for i in self.route:
@@ -138,12 +177,12 @@ class GuiBase:
     self.dragx = event.x
     self.dragy = event.y
   def released(self, event):
-    pass
-  def moved(self, event):
     """Drag-handler"""
     self.mapWidget.move(event.x - self.dragx, event.y - self.dragy)
     self.dragx = event.x
     self.dragy = event.y
+  def moved(self, event):
+    pass
 
 if __name__ == "__main__":
   program = GuiBase(sys.argv[1])

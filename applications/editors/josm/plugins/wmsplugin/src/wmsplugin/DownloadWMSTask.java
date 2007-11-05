@@ -20,21 +20,18 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 	
 	
 	public DownloadWMSTask(String name, String wmsurl) {
-		
 		super(tr("Downloading " + name));
-		
+
 		// simply check if we already have a layer created. if not, create; if yes, reuse.
-		
 		if (wmsLayer == null) {
-			
 			if (wmsurl.matches("(?i).*layers=npeoocmap.*") || wmsurl.matches("(?i).*layers=npe.*") ){
 				//then we use the OSGBLayer
 				this.wmsLayer= new OSGBLayer(name, wmsurl);
-			} else {			
+			} else {
 				this.wmsLayer = new WMSLayer(name, wmsurl); 
-				
 			} 
 		} 
+	
 	}
 	
 	@Override public void realRun() throws IOException {
@@ -49,12 +46,9 @@ public class DownloadWMSTask extends PleaseWaitRunnable {
 		
 		layerAdded = false;
 		for (Iterator it = Main.map.mapView.getAllLayers().iterator(); it.hasNext(); ) {
-        Object  element = it.next();
-       
-        if (element.equals(wmsLayer)) layerAdded = true;
-        
+			Object  element = it.next();
+			if (element.equals(wmsLayer)) layerAdded = true;
 		}
-		 
 				
 		if ((wmsLayer != null) && (!layerAdded))
 		{

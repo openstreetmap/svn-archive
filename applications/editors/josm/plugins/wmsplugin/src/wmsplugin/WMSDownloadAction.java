@@ -20,7 +20,7 @@ public class WMSDownloadAction extends JosmAction {
 		// store the download task with the "info" object. if we create a new
 		// download task here every time, then different layers are displayed even
 		// for images from the same server, and we don't want that.
-		
+		System.out.println(info.url);
 		if (info.downloadTask == null)
 			info.downloadTask = new DownloadWMSTask(info.name, info.url);
 		

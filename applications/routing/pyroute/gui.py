@@ -60,13 +60,11 @@ class MapWidget(gtk.Widget):
     self.transport = 'cycle'
     self.data = LoadOsm(osmDataFile, True)
     self.projection = Projection()
-    self.projection.recentre(51.524,-0.129, 0.02)
     self.router = Router(self.data)
-    #routeStart, routeEnd = (107318,107999) # short
-    #routeStart, routeEnd = (21533912, 109833) # across top
     routeStart, routeEnd = (21544863, 108898) # crescent to aldwych
     result, self.route = self.router.doRoute(routeStart, routeEnd, self.transport)
     print "Done routing (transport: %s), result: %s" % (self.transport, result)
+    self.projection.recentre(self.data.nodes[routeStart][0], self.data.nodes[routeStart][1], 0.02)
     self.unknownTags = []
     self.im = cairo.ImageSurface.create_from_png('image2.png')
     self.images = {}
@@ -128,7 +126,7 @@ class MapWidget(gtk.Widget):
     
   def draw(self, cr):
     # Map as image
-    z = 14
+    z = 13
     view_x1,view_y1 = latlon2xy(self.projection.N,self.projection.W,z)
     view_x2,view_y2 = latlon2xy(self.projection.S,self.projection.E,z)
     #print "X: %1.3f - %1.3f. y: %1.3f - %1.3f" % (view_x1,view_x2,view_y1,view_y2)
@@ -156,8 +154,8 @@ class MapWidget(gtk.Widget):
     
     # The route
     if(len(self.route) > 1):
-      cr.set_source_rgba(0.0, 1.0, 0.0, 0.5)
-      cr.set_line_width(8)
+      cr.set_source_rgba(0.0, 0.0, 0.0, 0.5)
+      cr.set_line_width(12)
       x,y = self.nodeXY(self.route[0])
       cr.move_to(x,y)
       for i in self.route:
@@ -227,12 +225,12 @@ class GuiBase:
     self.dragx = event.x
     self.dragy = event.y
   def released(self, event):
+    pass
+  def moved(self, event):
     """Drag-handler"""
     self.mapWidget.move(event.x - self.dragx, event.y - self.dragy)
     self.dragx = event.x
     self.dragy = event.y
-  def moved(self, event):
-    pass
 
 if __name__ == "__main__":
   program = GuiBase(sys.argv[1])

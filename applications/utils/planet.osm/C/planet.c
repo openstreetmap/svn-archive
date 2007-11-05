@@ -574,7 +574,7 @@ int main(int argc, char **argv)
     MYSQL_RES *res;
 #endif
     int i;
-    const char *set_timeout = "SET SESSION net_write_timeout=600";
+    const char *set_timeout = "SET SESSION net_write_timeout=3600";
 
     // Database timestamps use UK localtime
     setenv("TZ", ":GB", 1);

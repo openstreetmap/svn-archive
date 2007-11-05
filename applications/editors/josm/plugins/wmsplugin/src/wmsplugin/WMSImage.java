@@ -3,12 +3,22 @@ package wmsplugin;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
@@ -16,10 +26,10 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.io.ProgressInputStream;
 
-public class WMSImage
+public class WMSImage implements Serializable
 {
 	String constURL;
-	protected Image theImage;
+	protected BufferedImage theImage;
 	protected double grabbedScale;
 	protected EastNorth topLeft, bottomRight;
 	double dEast, dNorth;	
@@ -28,12 +38,32 @@ public class WMSImage
 	{
 		this.constURL = constURL;
 	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+		constURL = (String) in.readObject();
+		topLeft = (EastNorth) in.readObject();
+		bottomRight = (EastNorth) in.readObject();
+		dEast = in.readDouble();
+		dNorth = in.readDouble();
+		grabbedScale = in.readDouble();
+		theImage = (BufferedImage) ImageIO.read(ImageIO.createImageInputStream(in));
+	}
+	
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		System.out.println("writ" + theImage.getWidth(null));
+		out.writeObject(constURL);
+		out.writeObject(topLeft);
+		out.writeObject(bottomRight);
+		out.writeDouble(dEast);
+		out.writeDouble(dNorth);
+		out.writeDouble(grabbedScale);
+		ImageIO.write(theImage, "png", ImageIO.createImageOutputStream(out));
+	}
 
 	public void grab(NavigatableComponent nc) throws IOException
 	{
-
-		EastNorth topLeft  = nc.getEastNorth(0,0);
-		grabbedScale =  nc.getScale();  // scale is enPerPixel
+		EastNorth topLeft = nc.getEastNorth(0,0);
+		grabbedScale = nc.getScale();  // scale is enPerPixel
 
 		this.topLeft = topLeft;
 
@@ -100,7 +130,7 @@ public class WMSImage
 	{
 		InputStream is = new ProgressInputStream(
 			url.openConnection(), Main.pleaseWaitDlg);
-		theImage = ImageIO.read(is) ;
+		theImage = ImageIO.read(is);
 		is.close();
 		Main.map.repaint();
 	}
@@ -125,7 +155,7 @@ public class WMSImage
 
 	public void paint(Graphics g,NavigatableComponent nc) 
 	{
-		if(theImage!=null)
+		if (theImage != null)
 		{
 			double zoomInFactor = grabbedScale / nc.getScale();
 

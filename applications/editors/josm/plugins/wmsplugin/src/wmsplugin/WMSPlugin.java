@@ -3,9 +3,12 @@ package wmsplugin;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeSet;
+
+import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -30,12 +33,8 @@ public class WMSPlugin extends Plugin {
 
 	static ArrayList<WMSInfo> wmsList = new ArrayList<WMSInfo>();
 	
-
-	
 	public WMSPlugin() {
-		
 		refreshMenu();
-		
 	}
 
 	// this parses the preferences settings. preferences for the wms plugin have to
@@ -109,14 +108,17 @@ public class WMSPlugin extends Plugin {
 		wmsJMenu.add(new JMenuItem(new Map_Rectifier_WMSmenuAction()));
 		
 		wmsJMenu.addSeparator();
+		wmsJMenu.add(new JMenuItem(new AbstractAction("Blank Layer") {
+			public void actionPerformed(ActionEvent ev) {
+				Main.main.addLayer(new WMSLayer());
+			}
+		}));
+		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new Help_WMSmenuAction()));
-		
-		
-	
 	}
 	
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
-		if(oldFrame==null && newFrame!=null) { 
+		if (oldFrame==null && newFrame!=null) { 
 			wmsJMenu.setEnabled(true);
 			Main.map.toolBarActions.addSeparator();
 			Main.map.toolBarActions.add(new IconToggleButton

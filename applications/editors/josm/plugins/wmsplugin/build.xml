@@ -29,8 +29,8 @@
     <jar destfile="${plugin.jar}" basedir="build">
       <manifest>
 	<attribute name="Plugin-Class" value="wmsplugin.WMSPlugin" />
-	<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed,&lt;br&gt; i.e from Metacarta's Map Rectifier, Landsat, NPE.&lt;br&gt;
-						    Change url via menu item, or wmsplugin.url in advanced prefs. v2.1" />
+	<attribute name="Plugin-Version" value="3.0" />
+	<attribute name="Plugin-Description" value="Allows external WMS resources to be displayed." />
       </manifest>
     </jar>
   </target>

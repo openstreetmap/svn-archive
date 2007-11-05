@@ -29,6 +29,12 @@ to upload tiles use "upload.pl"
 
 (might need multiple calls to upload everything, depending on your setup)
 
+== Stopping the client ==
+
+the client will stop automatically after completing its job, unless in "loop"
+mode. This can be exited cleanly simply by creating a file called 
+"stopfile.txt" in the tilesAtHome directory. Upon encountering this file the
+client will exit after it completes it's current job.
 
 == Troubleshooting ==
 

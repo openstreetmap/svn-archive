@@ -83,11 +83,7 @@ class MapWidget(gtk.Widget):
     #print "position is now %1.4f, %1.4f" % (self.ownpos[0],self.ownpos[1])
     self.projection.recentre(self.ownpos[0],self.ownpos[1], 0.03)
     self.forceRedraw()
-    newnode = self.data.findNode(self.ownpos[0],self.ownpos[1], self.transport)
-    if(newnode != self.routeStart):
-      self.routeStart = newnode
-      self.updateRoute()
-    
+  
   def updateRoute(self):
     if(self.routeStart== 0 or self.routeEnd == 0):
       self.route = []
@@ -101,6 +97,7 @@ class MapWidget(gtk.Widget):
       print "No route"
     
   def click(self, x, y):
+    self.routeStart = self.data.findNode(self.ownpos[0],self.ownpos[1], self.transport)
     lat, lon = self.projection.xy2ll(x,y)
     self.routeEnd = self.data.findNode(lat,lon,self.transport)
     self.updateRoute()

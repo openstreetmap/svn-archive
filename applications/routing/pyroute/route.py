@@ -58,8 +58,11 @@ class Router:
     
     # Start by queueing all outbound links from the start node
     blankQueueItem = {'end':-1,'distance':0,'nodes':str(start)}
-    for i in self.data.routing[transport][start]:
-      self.addToQueue(start,i, blankQueueItem)
+    try:
+      for i in self.data.routing[transport][start]:
+        self.addToQueue(start,i, blankQueueItem)
+    except KeyError:
+      return('no_such_node',[])
     
     # Limit for how long it will search
     count = 0

@@ -36,8 +36,10 @@ class LoadOsm(handler.ContentHandler):
     """Initialise an OSM-file parser"""
     self.routing = {}
     self.routeTypes = ('cycle','car','train','foot','horse')
+    self.routeableNodes = {}
     for routeType in self.routeTypes:
       self.routing[routeType] = {}
+      self.routeableNodes[routeType] = {}
     self.nodes = {}
     self.ways = []
     self.storeMap = storeMap
@@ -146,6 +148,7 @@ class LoadOsm(handler.ContentHandler):
     
   def addLink(self,fr,to, routeType):
     """Add a routeable edge to the scenario"""
+    self.routeablefrom(fr,routeType)
     try:
       if to in self.routing[routeType][fr]:
         return
@@ -153,10 +156,14 @@ class LoadOsm(handler.ContentHandler):
     except KeyError:
       self.routing[routeType][fr] = [to]
 
-  def findNode(self,lat,lon):
+  def routeablefrom(self,fr,routeType):
+    self.routeableNodes[routeType][fr] = 1
+
+  def findNode(self,lat,lon,routeType):
     maxDist = 1000
     nodeFound = 0
-    for id, n in self.nodes.items():
+    for id in self.routeableNodes[routeType].keys():
+      n = self.nodes[id]
       dlat = n[0] - lat
       dlon = n[1] - lon
       dist = dlat * dlat + dlon * dlon

@@ -84,7 +84,7 @@ class LoadOsm(handler.ContentHandler):
     
       # Calculate what vehicles can use this route
       access = {}
-      access['cycle'] = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'service')
+      access['cycle'] = highway in ('primary','secondary','tertiary','unclassified','minor','cycleway','residential', 'track','service')
       access['car'] = highway in ('motorway','trunk','primary','secondary','tertiary','unclassified','minor','residential', 'service')
       access['train'] = railway in('rail','light_rail','subway')
       access['foot'] = access['cycle'] or highway in('footway','steps')
@@ -152,7 +152,19 @@ class LoadOsm(handler.ContentHandler):
       self.routing[routeType][fr].append(to)
     except KeyError:
       self.routing[routeType][fr] = [to]
-      
+
+  def findNode(self,lat,lon):
+    maxDist = 1000
+    nodeFound = 0
+    for id, n in self.nodes.items():
+      dlat = n[0] - lat
+      dlon = n[1] - lon
+      dist = dlat * dlat + dlon * dlon
+      if(dist < maxDist):
+        maxDist = dist
+        nodeFound = id
+    return(nodeFound)
+    
 # Parse the supplied OSM file
 if __name__ == "__main__":
   print "Loading data..."

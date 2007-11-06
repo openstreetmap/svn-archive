@@ -8,6 +8,7 @@ from gtk import gdk
 from loadOsm import *
 from route import *
 from tilenames import *
+from math import sqrt
 import cairo
 import urllib
 import os
@@ -45,7 +46,11 @@ class Projection:
     y = self.yc - self.h * py
     return(x,y)
   def xy2ll(self,x,y):
-    pass
+    px = (x - self.xc) / self.w
+    py = (y - self.yc) / self.h
+    lon = self.lon + px * self.scale
+    lat = self.lat - py * self.scale
+    return(lat,lon)
     
 class MapWidget(gtk.Widget):
   __gsignals__ = { \
@@ -53,7 +58,7 @@ class MapWidget(gtk.Widget):
     'expose-event' : 'override',
     'size-allocate': 'override',
     'size-request': 'override'}
-  def __init__(self, osmDataFile):
+  def __init__(self, osmDataFile, routeStart,routeEnd):
     gtk.Widget.__init__(self)
     self.draw_gc = None
     self.timer = gobject.timeout_add(200, update, self)
@@ -61,16 +66,35 @@ class MapWidget(gtk.Widget):
     self.data = LoadOsm(osmDataFile, True)
     self.projection = Projection()
     self.router = Router(self.data)
-    routeStart, routeEnd = (21544863, 108898) # crescent to aldwych
+    #routeStart, routeEnd = (107318,107999) # short
+    #routeStart, routeEnd = (21533912, 109833) # across top
+    #routeStart, routeEnd = (21544863, 108898) # crescent to aldwych
     result, self.route = self.router.doRoute(routeStart, routeEnd, self.transport)
+    
+    self.currentNode = routeStart
+    self.projection.recentre(self.data.nodes[routeStart][0],self.data.nodes[routeStart][1], 0.02)
+    
     print "Done routing (transport: %s), result: %s" % (self.transport, result)
-    self.projection.recentre(self.data.nodes[routeStart][0], self.data.nodes[routeStart][1], 0.02)
     self.unknownTags = []
-    self.im = cairo.ImageSurface.create_from_png('image2.png')
     self.images = {}
+  def click(self, x, y):
+    lat, lon = self.projection.xy2ll(x,y)
+    node = self.data.findNode(lat,lon)
+    print "Latlon %f, %f -> %d" % (lat, lon, node)
+    print "Routing from %d to %d using %s" % (self.currentNode, node, self.transport)
+    result, newroute = self.router.doRoute(self.currentNode, node, self.transport)
+    if result == 'success':
+      print "Routed OK"
+      self.route = newroute
+      self.forceRedraw()
+    else:
+      print "No route"
+      
+  def forceRedraw(self):
+    self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
   def move(self,dx,dy):
     self.projection.nudge(-dx,dy,1.0/self.rect.width)
-    self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
+    self.forceRedraw() # self.window.invalidate_rect((0,0,self.rect.width,self.rect.height),False)
   def nodeXY(self,node):
     node = self.data.nodes[node]
     return(self.projection.ll2xy(node[0], node[1]))
@@ -126,7 +150,7 @@ class MapWidget(gtk.Widget):
     
   def draw(self, cr):
     # Map as image
-    z = 13
+    z = 14
     view_x1,view_y1 = latlon2xy(self.projection.N,self.projection.W,z)
     view_x2,view_y2 = latlon2xy(self.projection.S,self.projection.E,z)
     #print "X: %1.3f - %1.3f. y: %1.3f - %1.3f" % (view_x1,view_x2,view_y1,view_y2)
@@ -154,7 +178,7 @@ class MapWidget(gtk.Widget):
     
     # The route
     if(len(self.route) > 1):
-      cr.set_source_rgba(0.0, 0.0, 0.0, 0.5)
+      cr.set_source_rgba(0.5, 0.0, 0.0, 0.5)
       cr.set_line_width(12)
       x,y = self.nodeXY(self.route[0])
       cr.move_to(x,y)
@@ -162,7 +186,7 @@ class MapWidget(gtk.Widget):
         x,y = self.nodeXY(i)
         cr.line_to(x,y)
       cr.stroke()
-
+  
     
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)
@@ -198,7 +222,7 @@ class MapWidget(gtk.Widget):
 
 class GuiBase:
   """Wrapper class for a GUI interface"""
-  def __init__(self, osmDataFile):
+  def __init__(self, osmDataFile, routeStart,routeEnd):
     # Create the window
     win = gtk.Window()
     win.set_title('map')
@@ -214,7 +238,7 @@ class GuiBase:
     win.add(event_box)
     
     # Create the map
-    self.mapWidget = MapWidget(osmDataFile)
+    self.mapWidget = MapWidget(osmDataFile, routeStart,routeEnd)
     event_box.add(self.mapWidget)
     
     # Finalise the window
@@ -222,15 +246,22 @@ class GuiBase:
     gtk.main()
     
   def pressed(self, event):
+    self.dragstartx = event.x
+    self.dragstarty = event.y
     self.dragx = event.x
     self.dragy = event.y
-  def released(self, event):
-    pass
   def moved(self, event):
     """Drag-handler"""
     self.mapWidget.move(event.x - self.dragx, event.y - self.dragy)
     self.dragx = event.x
     self.dragy = event.y
+  def released(self, event):
+    dx = event.x - self.dragstartx
+    dy = event.y - self.dragstarty
+    distSq = dx * dx + dy * dy
+    if distSq < 4:
+      self.mapWidget.click(event.x, event.y)
+
 
 if __name__ == "__main__":
-  program = GuiBase(sys.argv[1])
+  program = GuiBase(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]))

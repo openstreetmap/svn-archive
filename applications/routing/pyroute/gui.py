@@ -63,7 +63,7 @@ class MapWidget(gtk.Widget):
   def __init__(self, osmDataFile, positionFile):
     gtk.Widget.__init__(self)
     self.draw_gc = None
-    self.timer = gobject.timeout_add(700, update, self)
+    self.timer = gobject.timeout_add(1100, update, self)
     self.transport = 'cycle'
     self.data = LoadOsm(osmDataFile, True)
     self.projection = Projection()
@@ -81,9 +81,9 @@ class MapWidget(gtk.Widget):
   def updatePosition(self):
     self.ownpos = self.position.get()
     #print "position is now %1.4f, %1.4f" % (self.ownpos[0],self.ownpos[1])
-    self.projection.recentre(self.ownpos[0],self.ownpos[1], 0.01)
+    self.projection.recentre(self.ownpos[0],self.ownpos[1], 0.03)
     self.forceRedraw()
-    newnode = self.data.findNode(self.ownpos[0],self.ownpos[1])
+    newnode = self.data.findNode(self.ownpos[0],self.ownpos[1], self.transport)
     if(newnode != self.routeStart):
       self.routeStart = newnode
       self.updateRoute()
@@ -102,7 +102,7 @@ class MapWidget(gtk.Widget):
     
   def click(self, x, y):
     lat, lon = self.projection.xy2ll(x,y)
-    self.routeEnd = self.data.findNode(lat,lon)
+    self.routeEnd = self.data.findNode(lat,lon,self.transport)
     self.updateRoute()
       
   def forceRedraw(self):

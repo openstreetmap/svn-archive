@@ -28,6 +28,7 @@
 #  2007-11-05  OJW  Multiple forms of transport
 #------------------------------------------------------
 import sys
+import os
 from xml.sax import make_parser, handler
 
 class LoadOsm(handler.ContentHandler):
@@ -44,16 +45,16 @@ class LoadOsm(handler.ContentHandler):
     self.ways = []
     self.storeMap = storeMap
     
-    
-    extension = filename.split('.')[-1]
-    if(extension == 'cache'):
-      self.load(filename)
-    elif(extension == 'osm'):
+    cachefile = filename + "_cached"
+    if(os.path.exists(cachefile)):
+      print "Loading cached copy from %s" % cachefile
+      self.load(cachefile)
+    else:
       parser = make_parser()
       parser.setContentHandler(self)
       parser.parse(filename)
-    else:
-      print "Unrecognised file type (expected: osm or cache)"
+      self.save(cachefile)
+      
   def report(self):
     """Display some info about the loaded data"""
     report = "Loaded %d nodes,\n" % len(self.nodes.keys())
@@ -168,6 +169,7 @@ class LoadOsm(handler.ContentHandler):
     self.routeableNodes[routeType][fr] = 1
   
   def save(self, filename):
+    """Saves routing data (to cache)"""
     toStore = { \
       'routing': self.routing,
       'routeNodes':self.routeableNodes,
@@ -176,10 +178,10 @@ class LoadOsm(handler.ContentHandler):
     file = open(filename, "w")
     file.write(str(toStore))
     file.close()
+
   def load(self, filename):
-    print "Loading %s"%filename
+    """Loads routing data (from cache)"""
     file = open(filename, "r")
-    
     data = file.read()
     struct = eval(data)
     self.routing = struct['routing']
@@ -189,6 +191,8 @@ class LoadOsm(handler.ContentHandler):
     file.close()
     
   def findNode(self,lat,lon,routeType):
+    """Find the nearest node to a point.
+    Filters for nodes which have a route leading from them"""
     maxDist = 1000
     nodeFound = 0
     for id in self.routeableNodes[routeType].keys():
@@ -205,10 +209,4 @@ class LoadOsm(handler.ContentHandler):
 if __name__ == "__main__":
   print "Loading data..."
   data = LoadOsm(sys.argv[1], True)
-  
-  try:
-    if(sys.argv[2] == 'save'):
-      data.save("routes.cache")
-  except IndexError:
-    pass
   data.report()

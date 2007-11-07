@@ -43,9 +43,17 @@ class LoadOsm(handler.ContentHandler):
     self.nodes = {}
     self.ways = []
     self.storeMap = storeMap
-    parser = make_parser()
-    parser.setContentHandler(self)
-    parser.parse(filename)
+    
+    
+    extension = filename.split('.')[-1]
+    if(extension == 'cache'):
+      self.load(filename)
+    elif(extension == 'osm'):
+      parser = make_parser()
+      parser.setContentHandler(self)
+      parser.parse(filename)
+    else:
+      print "Unrecognised file type (expected: osm or cache)"
   def report(self):
     """Display some info about the loaded data"""
     report = "Loaded %d nodes,\n" % len(self.nodes.keys())
@@ -158,7 +166,28 @@ class LoadOsm(handler.ContentHandler):
 
   def routeablefrom(self,fr,routeType):
     self.routeableNodes[routeType][fr] = 1
-
+  
+  def save(self, filename):
+    toStore = { \
+      'routing': self.routing,
+      'routeNodes':self.routeableNodes,
+      'nodes':self.nodes,
+      'ways':self.ways}
+    file = open(filename, "w")
+    file.write(str(toStore))
+    file.close()
+  def load(self, filename):
+    print "Loading %s"%filename
+    file = open(filename, "r")
+    
+    data = file.read()
+    struct = eval(data)
+    self.routing = struct['routing']
+    self.routeableNodes = struct['routeNodes']
+    self.nodes = struct['nodes']
+    self.ways = struct['ways']
+    file.close()
+    
   def findNode(self,lat,lon,routeType):
     maxDist = 1000
     nodeFound = 0
@@ -176,4 +205,10 @@ class LoadOsm(handler.ContentHandler):
 if __name__ == "__main__":
   print "Loading data..."
   data = LoadOsm(sys.argv[1], True)
-  print data.report()
+  
+  try:
+    if(sys.argv[2] == 'save'):
+      data.save("routes.cache")
+  except IndexError:
+    pass
+  data.report()

@@ -194,7 +194,7 @@ sub upload
     $ua->env_proxy();
     
     my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
-    my $URL = $Config{"UploadURL2"};
+    my $URL = $Config{"UploadURL"};
     
     my ($UploadToken,$Load) = UploadOkOrNot();
     

@@ -174,11 +174,14 @@ sub CheckConfig{
             die("Check your upload password\n");
         }
 
-        if($Config->{"UploadURL"} ne $Config->{"UploadURL2"})
+        if ($Config->{"UploadURL2"})
         {
-            printf "! Please set UploadURL to %s, this will become the default ".
-                "UploadURL soon\n", $Config->{"UploadURL2"};
+            if(($Config->{"UploadURL"} ne $Config->{"UploadURL2"}) and ($Config->{"UploadURL"}))
+            {
+                print "! Please use only UploadURL in the config, this is the default setting";
+            }
         }
+
         if( ($Config->{"UploadChunkSize"}*1024*1024) > ($Config->{"ZipHardLimit"}*1000*1000)){
             die("! Upload chunks may be too large for server\n");
         }

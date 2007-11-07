@@ -192,7 +192,8 @@ sub upload
     $ua->protocols_allowed( ['http'] );
     $ua->agent("tilesAtHomeZip");
     $ua->env_proxy();
-    
+    push @{ $ua->requests_redirectable }, 'POST';
+
     my $Password = join("|", ($Config{UploadUsername}, $Config{UploadPassword}));
     my $URL = $Config{"UploadURL"};
     

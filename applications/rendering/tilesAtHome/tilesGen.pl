@@ -416,6 +416,7 @@ sub GetRequestFromServer
         $ua->protocols_allowed( ['http'] );
         $ua->agent("tilesAtHome");
         $ua->env_proxy();
+        push @{ $ua->requests_redirectable }, 'POST';
 
         my $res = $ua->post($URL,
           Content_Type => 'form-data',

@@ -16,6 +16,7 @@ include("../../lib/log.inc");
 include("../../lib/tilenames.inc");
 include("../../lib/users.inc");
 include("../../lib/versions.inc");
+include("../../lib/queue.inc");
 include_once("../../lib/layers.inc");
 include("../../lib/requests.inc");
 include("../../lib/checkupload.inc");
@@ -43,8 +44,7 @@ if(0){
 }
 
 
-$QueueDir = "/home/ojw/tiles-ojw/Queue/";
-list($Uploads, $Tiles) = HandleNextFilesFromQueue($QueueDir, 100);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(), 100);
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 //----------------------------------------------------------------------------------

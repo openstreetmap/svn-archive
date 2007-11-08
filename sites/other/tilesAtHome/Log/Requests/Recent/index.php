@@ -26,9 +26,7 @@
     RenderList("Active", REQUEST_ACTIVE, "Date taken by renderer");
     RenderList("Completed", REQUEST_DONE, "Date uploaded");
     
-    print "<p><i>max 30 requests shown in each categeory</i></p>";
-    print "<p><i>*may not link to the correct layer</i></p>";
-
+    print "<p><i>Current local server time is ".date('r')."</i></p>";
     }
     
   function RenderList($Title, $Status, $DateLabel="Date"){

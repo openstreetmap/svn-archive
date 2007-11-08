@@ -12,10 +12,10 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
 52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
 #
-30 1	* * *	root	/usr/local/ezad/bin/cron/Nacht.pl2
-25 1	* * *	root	ntpdate www.uni-giessen.de
+#30 1	* * *	root	/usr/local/ezad/bin/cron/Nacht.pl2
+#25 1	* * *	root	ntpdate www.uni-giessen.de
 
 
 38 */1	* * *	www-data	/usr/bin/osm-planet-mirror --planet-dir=/var/www/planet.openstreetmap.de/
-13 */1  * * *   www-data	/bin/bash /var/www/bin/update_postgress.sh
-
+48 */6  * * *   root	/bin/bash /var/www/bin/update_postgress.sh
+6 5  * * *   www-data	/bin/bash /var/www/bin/nsis_update.sh

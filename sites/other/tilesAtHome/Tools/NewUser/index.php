@@ -40,5 +40,4 @@ function CreateUser($User, $Pass){
 }
 
 ?>
-<p>Then <a href="../exportpasswords.php">export the passwords list</a> to filesystem</p>
 </body></html>

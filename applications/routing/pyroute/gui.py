@@ -10,6 +10,7 @@ from route import *
 from tilenames import *
 from geoPosition import *
 from math import sqrt
+from time import clock
 import cairo
 import urllib
 import os
@@ -20,17 +21,22 @@ def update(mapWidget):
 
 class Projection:
   def __init__(self):
-    pass
+    self.xyValid = 0
+    self.llValid = 0
+  def isValid(self):
+    return(self.xyValid and self.llValid)
   def setView(self,x,y,w,h):
     self.w = w / 2
     self.h = h / 2
     self.xc = x + self.w
     self.yc = y + self.h
+    self.xyValid = 1
   def recentre(self,lat,lon,scale):
     self.lat = lat
     self.lon = lon
     self.scale = scale  # TODO: scale and scaleCosLat
     self.findEdges()
+    self.llValid = 1
   def findEdges(self):
     """(S,W,E,N) are derived from (lat,lon,scale)"""
     self.S = self.lat - self.scale
@@ -53,6 +59,8 @@ class Projection:
     lon = self.lon + px * self.scale
     lat = self.lat - py * self.scale
     return(lat,lon)
+  def relXY(self,x,y):
+    return(x/(2*self.w), y/(2*self.h))
     
 class MapWidget(gtk.Widget):
   __gsignals__ = { \
@@ -63,14 +71,12 @@ class MapWidget(gtk.Widget):
   def __init__(self, osmDataFile, positionFile):
     gtk.Widget.__init__(self)
     self.draw_gc = None
-    self.timer = gobject.timeout_add(1100, update, self)
+    self.timer = gobject.timeout_add(30, update, self)
     self.transport = 'cycle'
     self.data = LoadOsm(osmDataFile, True)
     self.projection = Projection()
     self.router = Router(self.data)
-    #routeStart, routeEnd = (107318,107999) # short
-    #routeStart, routeEnd = (21533912, 109833) # across top
-    #routeStart, routeEnd = (21544863, 108898) # crescent to aldwych
+    
     self.routeStart = 0
     self.routeEnd = 0
     self.route = []
@@ -80,10 +86,21 @@ class MapWidget(gtk.Widget):
     self.updatePosition()
   def updatePosition(self):
     self.ownpos = self.position.get()
-    #print "position is now %1.4f, %1.4f" % (self.ownpos[0],self.ownpos[1])
+    if(not self.projection.isValid()):
+      print "Projection not yet valid, centering on ownpos"
+      self.centreOnOwnPos()
+      return
+    x,y = self.projection.ll2xy(self.ownpos[0], self.ownpos[1])
+    x,y = self.projection.relXY(x,y)
+    border = 0.15
+    if(x < border or y < border or x > (1-border) or y > (1-border)):
+      self.centreOnOwnPos()
+      print "Moving because xy = %1.4f,%1.4f" % (x,y)
+    else:
+      self.forceRedraw()
+  def centreOnOwnPos(self):
     self.projection.recentre(self.ownpos[0],self.ownpos[1], 0.03)
     self.forceRedraw()
-  
   def updateRoute(self):
     if(self.routeStart== 0 or self.routeEnd == 0):
       self.route = []
@@ -164,6 +181,7 @@ class MapWidget(gtk.Widget):
     cr.restore()
     
   def draw(self, cr):
+    start = clock()
     # Map as image
     z = 14
     view_x1,view_y1 = latlon2xy(self.projection.N,self.projection.W,z)
@@ -210,6 +228,10 @@ class MapWidget(gtk.Widget):
     cr.set_source_rgb(1.0, 0.0, 0.0)
     cr.arc(x,y,10, 0,2*3.1415)
     cr.fill()
+    
+    end = clock()
+    delay = end - start 
+    #print "%1.1f ms" % (delay * 100)
     
   def do_realize(self):
     self.set_flags(self.flags() | gtk.REALIZED)
@@ -271,6 +293,8 @@ class GuiBase:
   def pressed(self, event):
     self.dragstartx = event.x
     self.dragstarty = event.y
+    #print dir(event)
+    print "Pressed button %d" % event.button
     self.dragx = event.x
     self.dragy = event.y
   def moved(self, event):

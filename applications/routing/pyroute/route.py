@@ -59,8 +59,8 @@ class Router:
     # Start by queueing all outbound links from the start node
     blankQueueItem = {'end':-1,'distance':0,'nodes':str(start)}
     try:
-      for i in self.data.routing[transport][start]:
-        self.addToQueue(start,i, blankQueueItem)
+      for i, weight in self.data.routing[transport][start].items():
+        self.addToQueue(start,i, blankQueueItem, weight)
     except KeyError:
       return('no_such_node',[])
     
@@ -82,15 +82,15 @@ class Router:
         return('success', routeNodes)
       closed.append(x)
       try:
-        for i in self.data.routing[transport][x]:
+        for i, weight in self.data.routing[transport][x].items():
           if not i in closed:
-            self.addToQueue(x,i,nextItem)
+            self.addToQueue(x,i,nextItem, weight)
       except KeyError:
         pass
     else:
       return('gave_up',[])
   
-  def addToQueue(self,start,end, queueSoFar):
+  def addToQueue(self,start,end, queueSoFar, weight = 1):
     """Add another potential route to the queue"""
     
     # If already in queue
@@ -98,6 +98,9 @@ class Router:
       if test['end'] == end:
         return
     distance = self.distance(start, end)
+    if(weight == 0):
+      return
+    distance = distance / weight
     
     # Create a hash for all the route's attributes
     distanceSoFar = queueSoFar['distance']

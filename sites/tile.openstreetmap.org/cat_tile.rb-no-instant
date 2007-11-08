@@ -84,28 +84,28 @@ if y and (y < 0 or y > limit)
 end
 
 
-res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
-if res.nil?
-  exit
-end
-
-if res.num_rows == 0
-  fb.call_local_sql { "insert into tiles (x,y,z,dirty_t, created_at) values (#{x},#{y},#{z},'true',NOW())" }
-
-  res = fb.call_local_sql { "select count(dirty_t) as dirty from tiles where dirty_t='true'" }
-  if res.nil?
-    exit
-  end
-  res.each_hash do |row|
-    if row['dirty'].to_i < 128
-      render = IO.popen("/home/jburgess/live/render_from_list.py > /dev/null", "w+")
-      render.puts "#{x} #{y} #{z}"
-      render.close
-    else
-      exit
-    end
-  end
-end
+#res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
+#if res.nil?
+#  exit
+#end
+#
+#if res.num_rows == 0
+#  fb.call_local_sql { "insert into tiles (x,y,z,dirty_t, created_at) values (#{x},#{y},#{z},'true',NOW())" }
+#
+#  res = fb.call_local_sql { "select count(dirty_t) as dirty from tiles where dirty_t='true'" }
+#  if res.nil?
+#    exit
+#  end
+#  res.each_hash do |row|
+#    if row['dirty'].to_i < 128
+#      render = IO.popen("/home/jburgess/live/render_from_list.py > /dev/null", "w+")
+#      render.puts "#{x} #{y} #{z}"
+#      render.close
+#    else
+#      exit
+#    end
+#  end
+#end
 
 res = fb.call_local_sql { "select data, dirty_t, created_at from tiles where x = #{x} and y=#{y} and z=#{z} limit 1" }
 if res.nil?

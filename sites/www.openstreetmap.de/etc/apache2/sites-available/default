@@ -20,7 +20,7 @@ NameVirtualHost *
 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
 	<Directory "/usr/lib/cgi-bin">
 		AllowOverride None
-		Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
 		Order allow,deny
 		Allow from all
 	</Directory>

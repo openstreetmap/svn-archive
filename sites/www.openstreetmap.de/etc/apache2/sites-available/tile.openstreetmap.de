@@ -30,8 +30,8 @@
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
 	LogLevel warn
-
-	CustomLog /var/log/apache2/access.log combined
+	CustomLog /var/www/log/tile.openstreetmap.de/access.log combined
+#	CustomLog /var/log/apache2/access.log combined
 	ServerSignature On
 
 </VirtualHost>

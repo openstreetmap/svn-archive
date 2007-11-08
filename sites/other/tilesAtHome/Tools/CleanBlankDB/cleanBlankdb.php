@@ -20,7 +20,7 @@ function removeRedundantBlankEntries() {
  $max_x = $row[0];
 
 
-for ($x=30000; $x<=$max_x; ++$x) {
+for ($x=0; $x<=$max_x; ++$x) {
   $i=0;
   $SQL="SELECT x,y,z,layer,type from tiles_blank WHERE x=$x;";
   $res = mysql_query($SQL);

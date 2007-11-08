@@ -11,18 +11,15 @@
 <hr>
 <p>The following people have been uploading tiles to the program:</p>
 
-<p><i>Counting began 10pm, 6<sup>th</sup> March 2007 - no records are available for earlier uploads. Blank tiles not included in count.</i></p>
 <p>blue row = upload within the last 10 minutes.</p>
 <?php
 include("../connect/connect.php");
 include("../lib/versions.inc");
 
-print("<p>Sort by <a href=\"./?sort=id\">user-id</a> or <a href=\"./\">activity</a></p>\n");
-
 
 $SQL = sprintf(
   "select *, unix_timestamp(`last_upload`) as unixtime from tiles_users order by %s;",
-  $_GET["sort"] == "id" ? "id" : "tiles desc");
+    "tiles desc");
   
 $Result = mysql_query($SQL);
 if(!mysql_error()){
@@ -32,17 +29,21 @@ if(!mysql_error()){
     print "<table border=1 cellspacing=0 cellpadding=5>";
     
     # Header
-    $Columns = "ID, Name, Activity, Last upload, Version, Notes, Samples";
+    $Columns = "Rank, Name, Activity, Last upload, Version, Notes, Samples";
     print "<tr><th>" . str_replace(", ", "</th><th>", $Columns) . "</th></tr>\n";
     
     ##-------------------------------------------------------
     ## For each user...
     ##-------------------------------------------------------
+    $i = 0;
     while($Data = mysql_fetch_assoc($Result)){
       $Row = array();
 
+      # Rank
+      array_push($Row, sprintf("%d.", ++$i));
+
       # User ID
-      array_push($Row, sprintf("#%d", $Data["id"]));
+      #array_push($Row, sprintf("#%d", $Data["id"]));
       
       # Username
       array_push($Row, sprintf("<b>%s</b>",htmlentities($Data["name"])));
@@ -76,6 +77,7 @@ if(!mysql_error()){
     }
     ##-------------------------------------------------------
     print "</table>\n";
+    print "<p><i>Blank tiles not included in count.</i></p>\n";
   }
 }
 

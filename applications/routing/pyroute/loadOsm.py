@@ -31,9 +31,11 @@ import sys
 import os
 from xml.sax import make_parser, handler
 
+execfile("weights.py")
+
 class LoadOsm(handler.ContentHandler):
   """Parse an OSM file looking for routing information, and do routing with it"""
-  def __init__(self, filename, storeMap = 0):
+  def __init__(self, filename, storeMap = 0, usecache=0):
     """Initialise an OSM-file parser"""
     self.routing = {}
     self.routeTypes = ('cycle','car','train','foot','horse')
@@ -46,14 +48,15 @@ class LoadOsm(handler.ContentHandler):
     self.storeMap = storeMap
     
     cachefile = filename + "_cached"
-    if(os.path.exists(cachefile)):
+    if(usecache and os.path.exists(cachefile)):
       print "Loading cached copy from %s" % cachefile
       self.load(cachefile)
     else:
       parser = make_parser()
       parser.setContentHandler(self)
       parser.parse(filename)
-      self.save(cachefile)
+      if(usecache):
+        self.save(cachefile)
       
   def report(self):
     """Display some info about the loaded data"""
@@ -108,9 +111,10 @@ class LoadOsm(handler.ContentHandler):
           #print "%d -> %d & v.v." % (last, i)
           for routeType in self.routeTypes:
             if(access[routeType]):
-              self.addLink(last, i, routeType)
+              weight = getWeight(routeType, highway)
+              self.addLink(last, i, routeType, weight)
               if reversible or routeType == 'foot':
-                self.addLink(i, last, routeType)
+                self.addLink(i, last, routeType, weight)
         last = i
       
       # Store map information
@@ -120,6 +124,16 @@ class LoadOsm(handler.ContentHandler):
           self.ways.append({ \
             't':wayType,
             'n':self.waynodes})
+  
+  def addLink(self,fr,to, routeType, weight=1):
+    """Add a routeable edge to the scenario"""
+    self.routeablefrom(fr,routeType)
+    try:
+      if to in self.routing[routeType][fr].keys():
+        return
+      self.routing[routeType][fr][to] = weight
+    except KeyError:
+      self.routing[routeType][fr] = {to: weight}
 
   def WayType(self, tags):
     # Look for a variety of tags (priority order - first one found is used)
@@ -155,16 +169,6 @@ class LoadOsm(handler.ContentHandler):
     except KeyError:
       return(tag)
     
-  def addLink(self,fr,to, routeType):
-    """Add a routeable edge to the scenario"""
-    self.routeablefrom(fr,routeType)
-    try:
-      if to in self.routing[routeType][fr]:
-        return
-      self.routing[routeType][fr].append(to)
-    except KeyError:
-      self.routing[routeType][fr] = [to]
-
   def routeablefrom(self,fr,routeType):
     self.routeableNodes[routeType][fr] = 1
   
@@ -182,13 +186,13 @@ class LoadOsm(handler.ContentHandler):
   def load(self, filename):
     """Loads routing data (from cache)"""
     file = open(filename, "r")
-    data = file.read()
-    struct = eval(data)
+    struct = eval(file.read())
     self.routing = struct['routing']
     self.routeableNodes = struct['routeNodes']
     self.nodes = struct['nodes']
     self.ways = struct['ways']
     file.close()
+    print "done"
     
   def findNode(self,lat,lon,routeType):
     """Find the nearest node to a point.

@@ -44,3 +44,14 @@ LayerUpload=0
 # set to 1 if the tile should be stored in workdir, so you can upload a bunch of them
 # if set to 0 this tile will be uploaded as a set
 GatherBlankTiles=0
+
+# If set to 1, then Batik will be used for rendering instead of Inkscape
+Batik=0
+
+# Set to the maximum JVM size to pass to the -Xmx parameter when running the rasterizer. The
+# maximum size depends on the OS. For Windows XP it is 1300M
+BatikJVMSize=1300M
+
+# Set to the location of the batik rasterizer jar. The Batik libraries should reside in the same folder,
+#   or in a sub-folder named lib
+BatikPath=c:\tilesAtHome\batik\batik-rasterizer.jar

@@ -25,15 +25,17 @@
   // Check x,y,z is valid
   if(!TileValid($X,$Y,$Z)){
     header("HTTP/1.0 404 Not Found");
+    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+    header('Cache-Control: no-store, no-cache, must-revalidate');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
     exit;
-    // we used to return a black tile, but that looked ugly, just return 404.
-    //BlankTile("black");
     }
   
   // Lookup layer, and check is valid
   $LayerID = checkLayer($Layer);
   if($LayerID < 0){
-    BlankTile("error");
+    BlankTile("error", TRUE);
     }
 
   // look for landsea tiles if everything else fails
@@ -41,25 +43,38 @@
     $Blank = LookUpBlankTile($X,$Y,$Z,$LayerID);
     switch($Blank){
       case 1:
-        BlankTile("sea");
+        BlankTile("sea", FALSE);
         break;
       case 2:
-        BlankTile("land");
+        BlankTile("land", FALSE);
         break;
       default:
-        BlankTile("unknown"); // probably shouldn't reach this line
+        header("HTTP/1.0 302 Found");
+        header("Location: http://dev.openstreetmap.org/~ojw/Tiles/tile.php/$Z/$X/$Y.png");
+        //BlankTile("unknown", TRUE); // probably shouldn't reach this line
         break;
       }
   }
 
-  function BlankTile($Type="404"){
+  function BlankTile($Type="404", $Error=TRUE){
     $Filename = "Gfx/$Type.png";
     $CacheDays = 14;
-      
+          
     header("Content-type:image/png");
     header('Last-Modified: ' . gmdate('D, j M Y H:i:s T',  $Data["date"]));
-    header('Cache-Control: max-age=' . $CacheDays * 86400);
-    header('Expires: ' . gmdate('D, j M Y H:i:s T',  time() + $CacheDays * 86400));
+
+    if ($Error==TRUE) {
+            //Do not cache errors
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Cache-Control: no-store, no-cache, must-revalidate');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Pragma: no-cache');
+	} else {
+            //Proxy friendly caching
+	    header('Vary: Accept-Encoding');
+            //Cache tile for $CacheDays on proxy and 24 hour client.
+            header('Cache-Control: s-maxage='.($CacheDays*86400).', must-revalidate, max-age=86400');
+        }
 
     readfile($Filename);
     exit;

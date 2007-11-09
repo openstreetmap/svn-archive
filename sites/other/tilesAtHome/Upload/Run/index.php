@@ -32,11 +32,10 @@ if(0){ // Option to turn off uploads
 if(0){
   include_once("../../lib/cpu.inc");
   $Load = GetLoadAvg();
-  //logMsg("$Load load", 4);
   if($Load < 0){
     logMsg("Load average failed", 4);
   }
-  elseif(0 && $Load > 4.0){
+  elseif($Load > 4.0){
     logMsg("Too busy...", 2);
     print "Too busy";
     exit;
@@ -45,7 +44,7 @@ if(0){
 
 
 list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(), 20);
-logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
+//logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 //----------------------------------------------------------------------------------
 function HandleNextFilesFromQueue($Dir, $NumToProcess){

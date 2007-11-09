@@ -52,6 +52,10 @@
         header("HTTP/1.0 302 Found");
         header("Location: http://dev.openstreetmap.org/~ojw/Tiles/tile.php/$Z/$X/$Y.png");
         //BlankTile("unknown", TRUE); // probably shouldn't reach this line
+	//Request the render of this missing tile
+	if ($Z==12) {
+	  fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=TAHmissingTile","r");
+        }
         break;
       }
   }

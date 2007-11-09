@@ -301,7 +301,6 @@ dont_overwrite_bookmarks:
 ; write reasonable defaults for some preferences
 ; XXX - some of this should be done in JOSM itself
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "laf" "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "download.osm" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "layerlist.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "commandstack.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "true"

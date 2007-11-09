@@ -104,6 +104,12 @@ sub ApplyConfigLogic{
     $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
 
     $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "/" if ($Config->{"WorkingDirectory"} !~ /\/$/);
+    
+    ## Set defaults for Batik options
+    $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});
+    $Config->{"BatikJVMSize"} = "1300M" unless defined($Config->{"BatikJVMSize"});
+    $Config->{"BatikPath"} = "batik-rasterizer.jar" unless defined($Config->{"BatikPath"});
+   
 }
 
 #--------------------------------------------------------------------------

@@ -306,9 +306,6 @@ ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "commandstack.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "propertiesdialog.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "validator.visible" "true"
 ${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "draw.segment.direction" "true"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "projection" "org.openstreetmap.josm.data.projection.Epsg4326"
-${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "osm-server.url" "http://www.openstreetmap.org/api"
-;${WriteINIStrNS} $R0 "$APPDATA\JOSM\preferences" "taggingpreset.sources" "$APPDATA/JOSM/de-streets.xml"
 SectionEnd
 
 

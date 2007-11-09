@@ -36,7 +36,7 @@ if(0){
   if($Load < 0){
     logMsg("Load average failed", 4);
   }
-  elseif($Load > 4.0){
+  elseif(0 && $Load > 4.0){
     logMsg("Too busy...", 2);
     print "Too busy";
     exit;
@@ -44,7 +44,7 @@ if(0){
 }
 
 
-list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(), 100);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(), 20);
 logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 //----------------------------------------------------------------------------------
@@ -54,11 +54,18 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
 
   foreach(SortFiles($Dir) as $File => $Time) {
     if($CountUploads < $NumToProcess){
-      if(preg_match("#(\w+)\.txt$#", $File, $Matches)){
+      if(preg_match("#(\w+)\.zip$#", $File, $Matches)){
         $Name = $Matches[1];
-        printf( "\n\n===%s===\n\n", htmlentities($Name));
-        $CountTiles += HandleQueueItem($Name, $Dir);
-        $CountUploads++;
+        $run = mkdir($Name);
+        if ($run) {
+            printf( "\n\n===%s===\n\n", htmlentities($Name));
+            $CountTiles += HandleQueueItem($Name, $Dir);
+            $CountUploads++;
+            rmdir($Name);
+        } else {
+            printf("Another thread already grabbed $Name");
+        }    
+
       }
     }
   }
@@ -69,6 +76,7 @@ function HandleNextFilesFromQueue($Dir, $NumToProcess){
 function HandleQueueItem($Name, $Dir){
     $MetaFile = $Dir . $Name . ".txt";
     $ZipFile = $Dir . $Name . ".zip";
+
     print "$ZipFile\n";
 
     if(!file_exists($MetaFile)){
@@ -136,19 +144,18 @@ function HandleUpload($File, $UserID, $VersionID){
     
   # Create temporary directory
   if(!mkdir($Dir)){
-    AbortWithError("Can't create temporary directory");
+    AbortWithError("Can't create temporary directory $Dir");
   }
       
   # Uncompress the uploaded tiles
   # -j means to ignore any pathnames in the ZIP file
   # -d $Dir specifies the directory to unzip to
   # $Filename is the zip file
-  $Command = sprintf("unzip -j -d %s %s", $Dir, $File);
+  $Command = sprintf("unzip -q -j -d %s %s", $Dir, $File);
   #logMsg("Running '$Command'", 3);
   system($Command);
   
   #logMsg("Handling directory $Dir", 4);
-  
   # Process all the tiles (return number of tiles done)
   $Count = HandleDir($Dir, $UserID, $VersionID);
         
@@ -464,7 +471,7 @@ function CreateDir($Dir){
     return(1);
   }
   
-  if(!mkdir($Dir, 0777)){
+  if(!mkdir($Dir, 0770)){
     printf("Failed to create directory %s\n", $Dir);
     return(0);
   }
@@ -481,7 +488,7 @@ function CreateDir($Dir){
 # * uniqid means multiple threads are unlikely to conflict
 #----------------------------------------------------------------------
 function TempDir(){
-  return(sprintf("/home/ojw/tiles-ojw/temp/%s", md5(uniqid(rand(), 1))));
+  return(sprintf("/mnt/agami/openstreetmap/tah/temp/%s", md5(uniqid(rand(), 1))));
 }
 
 #----------------------------------------------------------

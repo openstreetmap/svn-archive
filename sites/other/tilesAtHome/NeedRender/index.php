@@ -27,13 +27,14 @@
 
 
   //Check the number of existing requests by that ip address and downgrade if needed
-  $SQL = sprintf ("SELECT COUNT(*) FROM tiles_queue WHERE `status` < %d AND `ip` = '%s'",
-	REQUEST_DONE,
-	$_SERVER['REMOTE_ADDR']);
-  $Result = mysql_query($SQL);
-  if ($row = mysql_fetch_row($Result) and $row[0] >= 20) 
-    if ($row[0] >= 1000) {$P = 3;} else {$P=($P<2)?2:$P;}
-
+  if ($P != 3) {
+    $SQL = sprintf ("SELECT COUNT(*) FROM tiles_queue WHERE `status` < %d AND `ip` = '%s'",
+      REQUEST_DONE,
+      $_SERVER['REMOTE_ADDR']);
+    $Result = mysql_query($SQL);
+    if ($row = mysql_fetch_row($Result) and $row[0] >= 20) 
+      if ($row[0] >= 1000) {$P = 3;} else {$P=($P<2)?2:$P;}
+  }
   if (!requestExists($X,$Y,$Z,NULL)){
      $SQL = sprintf(
        "INSERT into tiles_queue (`x`,`y`,`z`,`status`,`src`,`date`,`priority`,`ip`, `request_date`) values (%d,%d,%d,%d,'%s',now(),%s,'%s',now());", 
@@ -47,24 +48,25 @@
      print "OK\n";
   } else {
       print "Already in queue \n";
-      
-      # Check existing priority, and increase priority if requested/allowed priority is higher. 
-      # There should only ever be one row returned here, so the 'max' is just a safety case.
-      $SQL = sprintf("SELECT priority as p FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d ",
-	      $X, $Y, $Z, REQUEST_DONE);
-      $Result = mysql_query($SQL);
-      if ($row = mysql_fetch_assoc($Result) and $row['p'] > $P) {                
-          $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d",
-            $P, $X, $Y, $Z, REQUEST_DONE);
-          mysql_query($SQL);                                                             
-          if(mysql_error()) {
-             printf("Database error %s\n", mysql_error());
-          } else {
-              print "Updated priority from ".$row['p'] ." to $P\n";
-          }    
-      } else {
-        print "Current priority is ".$row['p'].".";
-      }  
+      if ($P != 3) {
+        # Check existing priority, and increase priority if requested/allowed priority is higher. 
+        # There should only ever be one row returned here, so the 'max' is just a safety case.
+        $SQL = sprintf("SELECT priority as p FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d ",
+	        $X, $Y, $Z, REQUEST_DONE);
+        $Result = mysql_query($SQL);
+        if ($row = mysql_fetch_assoc($Result) and $row['p'] > $P) {                
+            $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d",
+              $P, $X, $Y, $Z, REQUEST_DONE);
+            mysql_query($SQL);                                                             
+            if(mysql_error()) {
+               printf("Database error %s\n", mysql_error());
+            } else {
+                print "Updated priority from ".$row['p'] ." to $P\n";
+            }    
+        } else {
+          print "Current priority is ".$row['p'].".";
+        } 
+      }
   }
  
 ?>

@@ -50,12 +50,12 @@
       
       # Check existing priority, and increase priority if requested/allowed priority is higher. 
       # There should only ever be one row returned here, so the 'max' is just a safety case.
-      $SQL = sprintf("SELECT max(`priority`) as p FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d ",
-	      $X, $Y, $Z, REQUEST_PENDING);
+      $SQL = sprintf("SELECT priority as p FROM tiles_queue WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d ",
+	      $X, $Y, $Z, REQUEST_DONE);
       $Result = mysql_query($SQL);
       if ($row = mysql_fetch_assoc($Result) and $row['p'] > $P) {                
-          $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`=%d",
-            $P, $X, $Y, $Z, REQUEST_PENDING);
+          $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=%d WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d",
+            $P, $X, $Y, $Z, REQUEST_DONE);
           mysql_query($SQL);                                                             
           if(mysql_error()) {
              printf("Database error %s\n", mysql_error());

@@ -36,7 +36,7 @@
 
   if (!requestExists($X,$Y,$Z,NULL)){
      $SQL = sprintf(
-       "INSERT into tiles_queue (`x`,`y`,`z`,`status`,`src`,`date`,`priority`,`ip`) values (%d,%d,%d,%d,'%s',now(),%s,'%s');", 
+       "INSERT into tiles_queue (`x`,`y`,`z`,`status`,`src`,`date`,`priority`,`ip`, `request_date`) values (%d,%d,%d,%d,'%s',now(),%s,'%s',now());", 
        $X, 
        $Y,
        $Z,

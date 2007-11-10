@@ -1,8 +1,16 @@
 <project name="openvisible" default="dist" basedir=".">
 
+  <!-- josm "user home" directory depends on the platform used (windows has a different place than unix/linux) -->
+  <property environment="env"/>
+  <condition property="josm.home.dir" value="${env.APPDATA}/JOSM" else="${user.home}/.josm">
+    <and>
+      <os family="windows"/>
+    </and>
+  </condition>
+
   <!-- compilation properties -->
   <property name="josm.build.dir" value="../../core"/>
-  <property name="josm.home.dir" value="${user.home}/.josm"/>
+  <property name="josm.plugins.dir" value="${josm.home.dir}/plugins"/>
   <property name="plugin.build.dir" value="build"/>
   <property name="plugin.dist.dir" value="../dist"/>
   <property name="plugin.name" value="${ant.project.name}"/>
@@ -68,7 +76,7 @@
   </target>
 
   <target name="install" depends="dist">
-    <copy file="${plugin.dist.dir}/${plugin.jar}" todir="${josm.home.dir}/plugins" />
+    <copy file="${plugin.jar}" todir="${josm.plugins.dir}"/>
     <!--
 	<copy todir="${josm.home.dir}/plugins">
     	  <fileset dir="lib">

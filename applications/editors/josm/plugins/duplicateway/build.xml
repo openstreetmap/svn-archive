@@ -29,6 +29,10 @@
     	<filename name="**/*.png"/>
       </fileset>
     </copy>
+    <!-- the code still uses no longer existing Segments, disable compile!
+	<javac srcdir="src" classpath="${josm}" debug="true" destdir="build">
+      <include name="**/*.java" />
+    </javac>-->
   </target>
 
   <target name="dist" depends="compile">

@@ -26,6 +26,7 @@ import livegps.LiveGpsPlugin;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.tools.XmlObjectParser;
+import org.openstreetmap.josm.actions.JosmAction;
 import org.xml.sax.SAXException;
 
 import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
@@ -34,18 +35,14 @@ import at.dallermassl.josm.plugin.surveyor.util.ResourceLoader;
  * @author cdaller
  *
  */
-public class SurveyorShowAction extends AbstractAction {
+public class SurveyorShowAction extends JosmAction {
     private static final long serialVersionUID = 2184570223633094734L;
     private static final String DEFAULT_SOURCE = "resource://surveyor.xml";
     private JFrame surveyorFrame;
     private LiveGpsPlugin gpsPlugin;
 
     public SurveyorShowAction(LiveGpsPlugin gpsPlugin) {
-        this(null, gpsPlugin);
-    }
-    
-    public SurveyorShowAction(String name, LiveGpsPlugin gpsPlugin) {
-        super(name);
+        super(tr("Surveyor ..."), "surveyormenu.png", tr("Open surveyor tool."), KeyEvent.VK_S, KeyEvent.CTRL_MASK, true);
         this.gpsPlugin = gpsPlugin;
     }
 
@@ -106,7 +103,8 @@ public class SurveyorShowAction extends AbstractAction {
             surveyorFrame.add(comp);
             surveyorFrame.pack();
             surveyorFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            surveyorFrame.setTitle((String)getValue(AbstractAction.NAME));
+            //surveyorFrame.setTitle((String)getValue(AbstractAction.NAME));
+            surveyorFrame.setTitle(tr("Surveyor"));
             // <FIXXME date="28.04.2007" author="cdaller">
             // TODO get old pos of frame from properties
             // </FIXXME> 

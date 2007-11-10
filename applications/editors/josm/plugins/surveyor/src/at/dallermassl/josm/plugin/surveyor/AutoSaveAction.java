@@ -4,6 +4,8 @@
  */
 package at.dallermassl.josm.plugin.surveyor;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -12,8 +14,10 @@ import java.util.TimerTask;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import java.awt.event.KeyEvent;
 
 import at.dallermassl.josm.plugin.surveyor.action.SetWaypointAction;
+import org.openstreetmap.josm.actions.JosmAction;
 
 import livegps.LiveGpsLayer;
 
@@ -21,7 +25,7 @@ import livegps.LiveGpsLayer;
  * @author cdaller
  *
  */
-public class AutoSaveAction extends AbstractAction {
+public class AutoSaveAction extends JosmAction {
     private static final long serialVersionUID = -8608679323231116043L;
     private static final long AUTO_SAVE_PERIOD_SEC = 60; // once a minute
     public static final String GPS_FILE_NAME_PATTERN = "surveyor-{0,date,yyyyMMdd-HHmmss}.gpx";
@@ -30,8 +34,8 @@ public class AutoSaveAction extends AbstractAction {
     private Timer gpsDataTimer;
     
     
-    public AutoSaveAction(String name) {
-        super(name);
+    public AutoSaveAction() {
+		super(tr("AutoSave LiveData"), "autosave.png", tr("Save captured data to file every minute."), KeyEvent.VK_S, KeyEvent.CTRL_MASK | KeyEvent.ALT_MASK, true);
         // <FIXXME date="23.06.2007" author="cdaller">
         // TODO set accelerator key
         // </FIXXME> 

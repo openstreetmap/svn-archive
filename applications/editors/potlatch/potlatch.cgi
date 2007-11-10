@@ -7,7 +7,7 @@
 	# editions Systeme D / Richard Fairhurst 2006-7
 	# public domain
 
-	# last update 1.11.2007 (bugfixes, beginnings of revert/undo)
+	# last update 10.11.2007 (revert/undo)
 
 	# You may do what you like with this file, but please think very
 	# carefully before adding dependencies or complicating the user
@@ -121,7 +121,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.4c";	// current version
+	var signature="Potlatch 0.5";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
@@ -335,7 +335,7 @@
 		} else if (this._name==_root.drawpoint) {
 			// double-click at end of route
 			stopDrawing();
-		} else if (Key.isDown(Key.SHIFT)) {
+		} else if (Key.isDown(Key.SHIFT) && this.oldversion==0) {
 			_root.junction=true;						// flag to prevent elastic band stopping on _this_ mouseUp
 			startNewWay(_root.map.ways[this.way].path[this._name][0],
 						_root.map.ways[this.way].path[this._name][1],this.node);
@@ -485,6 +485,10 @@
 	};
 
 	AnchorHint.prototype.onPress=function() {
+		if (_root.map.ways[this.way].oldversion>0) {
+			_root.junction=true;
+			restartElastic(); return;	// can't merge/join to historic ways
+		}
 		var i,z;
 		if (Key.isDown(Key.SHIFT)) {
 			// Merge ways
@@ -624,9 +628,10 @@
 		// path is an array of points
 		// each point is an array: (x,y,node_id,0 move|1 draw,tag array,segment id)
 		this.attr=new Array();
-		this.clean=true;
-		this.uploading=false;
-		this.locked=false;
+		this.clean=true;			// altered since last upload?
+		this.uploading=false;		// currently uploading?
+		this.locked=false;			// locked against upload?
+		this.oldversion=0;			// is this an undeleted, not-uploaded way?
 		this.xmin=0;
 		this.xmax=0;
 		this.ymin=0;
@@ -639,8 +644,12 @@
 	OSMWay.prototype.load=function(wayid) {
 		responder = function() { };
 		responder.onResult = function(result) {
+			_root.waysreceived+=1;
+			if (length(result[1])==0) { removeMovieClip(_root.map.ways[result[0]]); return; }
 			var i,id;
 			_root.map.ways[result[0]].clean=true;
+			_root.map.ways[result[0]].locked=false;
+			_root.map.ways[result[0]].oldversion=0;
 			_root.map.ways[result[0]].path=result[1];
 			_root.map.ways[result[0]].attr=result[2];
 			_root.map.ways[result[0]].xmin=result[3];
@@ -648,7 +657,6 @@
 			_root.map.ways[result[0]].ymin=result[5];
 			_root.map.ways[result[0]].ymax=result[6];
 			_root.map.ways[result[0]].redraw();
-			_root.waysreceived+=1;
 			_root.map.ways[result[0]].clearPOIs();
 		};
 		remote.call('getway',responder,this._name,wayid,baselong,basey,masterscale);
@@ -658,11 +666,11 @@
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
 			var i,z;
-			_root.map.ways[result[0]].clean=true;
-			_root.map.ways[result[0]].locked=true;
-			z=result[1]; // assign negative IDs to anything where visible=1
+			_root.map.ways[result[0]].clean=false;
+			_root.map.ways[result[0]].oldversion=result[7];
+			z=result[1]; // assign negative IDs to anything moved
 			for (i in z) {
-				if (result[1][i][3]) { _root.newnodeid--; result[1][i][2]=newnodeid; }
+				if (result[1][i][2]<0) { _root.newnodeid--; result[1][i][2]=newnodeid; }
 			}
 			_root.map.ways[result[0]].path=result[1];
 			_root.map.ways[result[0]].attr=result[2];
@@ -670,11 +678,12 @@
 			_root.map.ways[result[0]].xmax=result[4];
 			_root.map.ways[result[0]].ymin=result[5];
 			_root.map.ways[result[0]].ymax=result[6];
+			if (result[0]==wayselected) { _root.map.ways[result[0]].select(); }
+								   else { _root.map.ways[result[0]].locked=true; }
 			_root.map.ways[result[0]].redraw();
-			_root.waysreceived+=1;
 			_root.map.ways[result[0]].clearPOIs();
 		};
-		remote.call('getway_deleted',delresponder,this._name,wayid,version,baselong,basey,masterscale);
+		remote.call('getway_old',delresponder,this._name,wayid,version,baselong,basey,masterscale);
 	};
 
 	OSMWay.prototype.clearPOIs=function() {
@@ -691,8 +700,10 @@
 	OSMWay.prototype.redraw=function() {
 		this.createEmptyMovieClip("line",1);					// clear line
 		var linewidth=3; //Math.max(2/Math.pow(2,_root.scale-12),0)+1;
-		var linealpha=100-50*(this.locked==true);
-		if (colours[this.attr["highway"]]) {
+		var linealpha=100; // -50*(this.locked==true);
+		if (this.locked) {
+			this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); 
+		} else if (colours[this.attr["highway"]]) {
 			this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none");
 		} else if (colours[this.attr["waterway"]]) {
 			this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none");
@@ -734,7 +745,7 @@
 	// ----	Remove from server
 	
 	OSMWay.prototype.remove=function(preserveway) {
-		if (this._name>=0 && !_root.sandbox) {
+		if (this._name>=0 && !_root.sandbox && this.oldversion==0) {
 			var preservenodes=new Array();						// don't delete nodes which are in preserveway
 			if (preserveway) {									//  |
 				z=_root.map.ways[preserveway].path;				//  |
@@ -769,6 +780,7 @@
 			_root.map.ways[nw].ymin=result[5];
 			_root.map.ways[nw].ymax=result[6];
 			_root.map.ways[nw].uploading=false;
+			_root.map.ways[nw].oldversion=0;
 
 			// check if renumbered nodes occur in any other ways
 			for (qway in _root.map.ways) {
@@ -783,7 +795,7 @@
 		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
 			this.attr['created_by']=_root.signature;
 			this.uploading=true;
-			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,baselong,basey,masterscale);
+			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,this.oldversion,baselong,basey,masterscale);
 			this.clean=true;
 		}
 	};
@@ -829,14 +841,16 @@
 			_root.map.ways[wayselected].select();
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
-			if (this._name==_root.wayselected && _root.drawpoint>0) {
-				_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
+			if (this.oldversion==0) {
+				if (this._name==_root.wayselected && _root.drawpoint>0) {
+					_root.drawpoint+=1;	// inserting node earlier into the way currently being drawn
+				}
+				insertAnchorPoint(this._name);
+				this.highlightPoints(5001,"anchorhint");
+				addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
 			}
-			insertAnchorPoint(this._name);
-			this.highlightPoints(5001,"anchorhint");
-			addEndPoint(_root.map._xmouse,_root.map._ymouse,newnodeid);
-			restartElastic();
 			_root.junction=true;
+			restartElastic();
 		} else {
 			// click way: select
 			this.select();
@@ -892,7 +906,7 @@
 	// ----	Split, merge, reverse
 
 	OSMWay.prototype.splitWay=function() {
-		if (pointselected>0 && pointselected<(this.path.length-1)) {
+		if (pointselected>0 && pointselected<(this.path.length-1) && this.oldversion==0) {
 			_root.newwayid--;											// create new way
 			_root.map.ways.attachMovie("way",newwayid,++waydepth);		//  |
 
@@ -923,6 +937,8 @@
 
 	OSMWay.prototype.mergeWay=function(topos,otherway,frompos) {
 		var i,z;
+		if (this.oldversion>0 || otherway.oldversion>0) { return; }
+
 		if (frompos==0) {
 			for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); }
 		} else {
@@ -942,7 +958,7 @@
 		}
 		this.clean=false;
 		if (otherway.locked) { this.locked=true; }
-
+		
 	};
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
 		if (topos==0) { if (this.path[0					][2]==otherway.path[srcpt][2]) { return; } }	// don't add duplicate points
@@ -1070,11 +1086,11 @@
 	};
 
 	function keyRevert() {
-		if      (_root.wayselected>0) {	stopDrawing();
+		if		(_root.wayselected<0) { stopDrawing();
+										removeMovieClip(_root.map.ways[wayselected]); }
+		else if	(_root.wayselected>0) {	stopDrawing();
 								        _root.waysrequested+=1;
 										_root.map.ways[wayselected].load(wayselected); }
-		else if (_root.wayselected<0) { stopDrawing();
-										removeMovieClip(_root.map.ways[wayselected]); }
 		else if (_root.poiselected>0) { _root.map.pois[poiselected].reload(); }
 		else if (_root.poiselected<0) { removeMovieClip(_root.map.pois[poiselected]); }
 		deselectAll();
@@ -2333,6 +2349,9 @@
 
 	// =====================================================================================
 	// History functions
+	// wayHistory - show dialogue for previous versions of the way
+	//				(calling handleRevert to actually initiate the revert)
+	// getDeleted - load all deleted ways (like whichways), but locked
 	
 	function wayHistory() {
 		historyresponder = function() { };
@@ -2359,11 +2378,22 @@
 	};
 	function handleRevert(choice) {
 		if (choice=='Cancel') { return; }
-		// *** call getFromDeleted with version number revertversion
+		_root.map.ways[_root.wayselected].loadFromDeleted(_root.wayselected,_root.revertversion);
 	};
 	function getDeleted() {
-		// *** call whichways_deleted
-		// *** responder then uses getFromDeleted for each way
+		whichdelresponder=function() {};
+		whichdelresponder.onResult=function(result) {
+			waylist=result[0];
+			for (i in waylist) {										// ways
+				way=waylist[i];											//  |
+				if (!_root.map.ways[way]) {								//  |
+					_root.map.ways.attachMovie("way",way,++waydepth);	//  |
+					_root.map.ways[way].loadFromDeleted(way,-1);		//  |
+					_root.waycount+=1;									//  |
+				}
+			}
+		};
+		remote.call('whichways_deleted',whichdelresponder,_root.edge_l,_root.edge_b,_root.edge_r,_root.edge_t,baselong,basey,masterscale);
 	};
 
 

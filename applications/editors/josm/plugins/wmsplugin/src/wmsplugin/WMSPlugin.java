@@ -4,6 +4,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeSet;
@@ -95,6 +96,7 @@ public class WMSPlugin extends Plugin {
 
 		if (wmsJMenu == null) {
 			wmsJMenu = new JMenu(tr("WMS"));
+			wmsJMenu.setMnemonic(KeyEvent.VK_W);
 			menu.add(wmsJMenu, 5);
 		} else {
 			wmsJMenu.removeAll();

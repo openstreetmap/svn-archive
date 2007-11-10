@@ -1057,7 +1057,7 @@ sub svg2png
     
     # stop rendering the current job when inkscape fails
     statusMessage("Rendering", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-    if (not runCommand($Cmd,$PID))
+    if (not runCommand($Cmd,$PID) or ! -e $TempFile )
     {
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         ## TODO: check this actually gets the correct coords 

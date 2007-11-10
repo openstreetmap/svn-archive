@@ -39,7 +39,7 @@ public class LiveGpsPlugin extends Plugin
         JMenuBar menu = Main.main.menu;
         lgpsmenu = new JMenu("LiveGPS");
         lgpsmenu.setMnemonic(KeyEvent.VK_G);
-        menu.add(lgpsmenu, 2);
+        menu.add(lgpsmenu, 5);
         lgpscapture = new JCheckBoxMenuItem(tr("Capture GPS Track"));
         lgpscapture.setSelected(false);
         lgpscapture.setAccelerator(KeyStroke.getKeyStroke("alt R"));
@@ -50,7 +50,8 @@ public class LiveGpsPlugin extends Plugin
         });
         lgpsmenu.add(lgpscapture);
 
-        lgpscenter = new JMenuItem(tr("Center Once"), KeyEvent.VK_C);
+        lgpscenter = new JMenuItem(tr("Center Once"));
+        lgpscenter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));
         lgpscenter.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent ev) {
         	    if(lgpslayer != null) {

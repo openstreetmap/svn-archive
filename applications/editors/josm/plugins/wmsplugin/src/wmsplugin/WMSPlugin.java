@@ -18,6 +18,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.preferences.PreferenceSetting;
+import org.openstreetmap.josm.actions.JosmAction;
 
 
 // NW 151006 only add the landsat task when the map frame is initialised with
@@ -94,8 +95,7 @@ public class WMSPlugin extends Plugin {
 
 		if (wmsJMenu == null) {
 			wmsJMenu = new JMenu(tr("WMS"));
-			menu.add(wmsJMenu, 3);
-			wmsJMenu.setEnabled(false);
+			menu.add(wmsJMenu, 5);
 		} else {
 			wmsJMenu.removeAll();
 		}
@@ -103,28 +103,38 @@ public class WMSPlugin extends Plugin {
 		// for each configured WMSInfo, add a menu entry.
 		for (final WMSInfo u : wmsList) {
 			wmsJMenu.add(new JMenuItem(new WMSDownloadAction(u)));
-		}	
+		}
 		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new Map_Rectifier_WMSmenuAction()));
 		
 		wmsJMenu.addSeparator();
-		wmsJMenu.add(new JMenuItem(new AbstractAction("Blank Layer") {
+		wmsJMenu.add(new JMenuItem(new 
+				JosmAction("Blank Layer", "blankmenu", "Open a blank WMS layer to load data from a file", 0, 0, false) {
 			public void actionPerformed(ActionEvent ev) {
 				Main.main.addLayer(new WMSLayer());
 			}
 		}));
 		wmsJMenu.addSeparator();
 		wmsJMenu.add(new JMenuItem(new Help_WMSmenuAction()));
+		setEnabledAll(false);
+	}
+	
+	private static void setEnabledAll(boolean isEnabled) {
+		for(int i=0; i < wmsJMenu.getItemCount(); i++) {
+			JMenuItem item = wmsJMenu.getItem(i);
+			
+			if(item != null) item.setEnabled(isEnabled);
+		}
 	}
 	
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (oldFrame==null && newFrame!=null) { 
-			wmsJMenu.setEnabled(true);
+			setEnabledAll(true);
 			Main.map.toolBarActions.addSeparator();
 			Main.map.toolBarActions.add(new IconToggleButton
 						(new WMSAdjustAction(Main.map)));
 		} else if (oldFrame!=null && newFrame==null ) {
-			wmsJMenu.setEnabled(false);
+			setEnabledAll(false);
 		}
 	}
 	

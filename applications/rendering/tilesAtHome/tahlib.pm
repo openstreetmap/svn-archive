@@ -150,7 +150,7 @@ sub runCommand
     if ($Config{Verbose})
     {
         my $retval = system($cmd);
-        return ($retval<0) ? 0 : ($retval>>8) ? 0 : 1;
+        return $retval != 0;
     }
 
     my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";
@@ -168,7 +168,11 @@ sub runCommand
     } 
     else
     {
-        $retval = $retval >> 8;
+        # Technically the return value is ($retval >> 8) but if we only look
+        # at that we will miss the situations where the program died due to
+        # a signal. In that case $retval will be the signal that killed it.
+        # So any non-zero value is an error.
+        
         if ($retval)
         {
             print STDERR "ERROR\n";

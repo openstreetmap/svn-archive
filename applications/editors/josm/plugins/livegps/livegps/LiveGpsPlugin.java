@@ -40,14 +40,16 @@ public class LiveGpsPlugin extends Plugin
         lgpsmenu = new JMenu("LiveGPS");
         lgpsmenu.setMnemonic(KeyEvent.VK_G);
         menu.add(lgpsmenu, 5);
+        
         lgpscapture = new JCheckBoxMenuItem(tr("Capture GPS Track"));
         lgpscapture.setSelected(false);
-        lgpscapture.setAccelerator(KeyStroke.getKeyStroke("alt R"));
+        lgpscapture.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.VK_ALT));
         lgpscapture.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent ev) {
         	    enableTracking(lgpscapture.isSelected());
         	}
         });
+        lgpscapture.setToolTipText("Connect to gpsd server and show current position in LiveGPS layer");
         lgpsmenu.add(lgpscapture);
 
         lgpscenter = new JMenuItem(tr("Center Once"));
@@ -59,10 +61,11 @@ public class LiveGpsPlugin extends Plugin
         	    }
         	}
         });
+        lgpscenter.setToolTipText("Center the LiveGPS layer to current position");
         lgpsmenu.add(lgpscenter);
         
         
-        lgpsautocenter = new JCheckBoxMenuItem(tr("Auto-Center on current position"));
+        lgpsautocenter = new JCheckBoxMenuItem(tr("Auto-Center"));
         lgpsautocenter.setSelected(true);
         lgpsautocenter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
         lgpsautocenter.addActionListener(new ActionListener() {
@@ -70,6 +73,7 @@ public class LiveGpsPlugin extends Plugin
                 setAutoCenter(lgpsautocenter.isSelected());
             }
         });
+        lgpsautocenter.setToolTipText("Continuously center the LiveGPS layer to current position");
         lgpsmenu.add(lgpsautocenter);        
     }
     

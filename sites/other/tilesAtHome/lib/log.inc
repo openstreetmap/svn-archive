@@ -1,7 +1,7 @@
 <?php
 
 function logMsg($Text, $Priority){
-  $Filename = sprintf("/home/ojw/public_html/Log/Data/messages_p%d.txt", $Priority);
+  $Filename = sprintf("/var/www/osm/Log/Data/messages_p%d.txt", $Priority);
   $fp = fopen($Filename, "a");
   if(!$fp)
     return;

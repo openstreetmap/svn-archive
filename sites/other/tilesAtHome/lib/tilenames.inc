@@ -6,7 +6,7 @@ function TileName($X,$Y,$Z,$Layer="tile"){
   if(!TileValid($X,$Y,$Z))
     return("");
 
-    $BaseDir = "/home/ojw/tiles-ojw/Tiles";
+    $BaseDir = "/mnt/agami/openstreetmap/tah/Tiles";
 
   $Filename = $BaseDir . "/" . $Layer . "/" . TilePartName($X,$Y,$Z);
   return($Filename);

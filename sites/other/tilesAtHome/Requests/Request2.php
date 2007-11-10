@@ -70,8 +70,7 @@ function CheckForRequest($Z){
   
   global $APIVersion;
   # next request that is handed out: order by priority, then date.
-  # Add a queue waiting bonus of 1 per 48 hours, to not starve low prio
-  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` <= ".REQUEST_NEW." and `z`=".$Z." order by (`priority` - TIMEDIFF(NOW(),date)/48),`date` limit 1;";
+  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` <= ".REQUEST_NEW." and `z`=".$Z." order by `priority`,`date` limit 1;";
 
 //  print "$SQL\n";return;
   $Result = mysql_query($SQL);

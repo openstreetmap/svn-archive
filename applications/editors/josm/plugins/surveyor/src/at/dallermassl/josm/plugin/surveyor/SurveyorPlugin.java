@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 
 import livegps.LiveGpsPlugin;
 
@@ -74,17 +75,17 @@ public class SurveyorPlugin {
         if(gpsPlugin == null) {
             throw new IllegalStateException("SurveyorPlugin needs LiveGpsPlugin, but could not find it!");
         }
-        SurveyorShowAction surveyorAction = new SurveyorShowAction("Surveyor", gpsPlugin);
+        SurveyorShowAction surveyorAction = new SurveyorShowAction(gpsPlugin);
         JMenuItem surveyorMenuItem = new JMenuItem(surveyorAction);
-        surveyorAction.putValue(AbstractAction.ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt S"));
-//        surveyorMenuItem.addActionListener(new ActionListener() {
+        surveyorMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.VK_ALT));
+
         gpsPlugin.getLgpsMenu().addSeparator();
         gpsPlugin.getLgpsMenu().add(surveyorMenuItem);
         
-        AutoSaveAction autoSaveAction = new AutoSaveAction(tr("AutoSave LiveData"));
-        autoSaveAction.putValue(AbstractAction.ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt ctrl S"));
+        AutoSaveAction autoSaveAction = new AutoSaveAction();
         JCheckBoxMenuItem autoSaveMenu = new JCheckBoxMenuItem(autoSaveAction);
         gpsPlugin.getLgpsMenu().add(autoSaveMenu);  
+        autoSaveMenu.setAccelerator(autoSaveAction.shortCut);
     }
 
     /**

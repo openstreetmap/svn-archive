@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.actions.JosmAction;
 
 /**
  * @author cdaller
@@ -18,11 +19,13 @@ public class OpenVisiblePlugin extends Plugin {
     public OpenVisiblePlugin() {
         super();
         JMenu fileMenu = Main.main.menu.fileMenu;
-        //JMenu navigatorMenu = new JMenu("Open Visible");
-        JMenuItem menuItem = new JMenuItem(new OpenVisibleAction());
-        
-        fileMenu.add(menuItem);
+        JosmAction openVisible = new OpenVisibleAction();
 
+        //JMenu navigatorMenu = new JMenu("Open Visible");
+        JMenuItem menuItem = new JMenuItem(openVisible);
+        
+        fileMenu.add(menuItem,2);
+        menuItem.setAccelerator(openVisible.shortCut);
     }
 
 }

@@ -43,7 +43,7 @@ public class OpenVisibleAction extends JosmAction {
     private File lastDirectory;
     
     public OpenVisibleAction() {
-        super(tr("Open Visible"), "openvisible", tr("Open only files that are visible in current view."), KeyEvent.VK_O, 
+        super(tr("Open Visible ..."), "openvisible", tr("Open only files that are visible in current view."), KeyEvent.VK_O, 
             InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true);
     }
 

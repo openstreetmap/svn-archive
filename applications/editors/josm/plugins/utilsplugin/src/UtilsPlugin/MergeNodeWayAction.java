@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.osm.Node;
@@ -32,7 +33,7 @@ import javax.swing.AbstractAction;
 class MergeNodeWayAction extends JosmAction {
 	public MergeNodeWayAction() {
 	    super(tr("Join node to way"), "mergenodeway",
-			tr("Join a node into the nearest way segments"), 0, 0, true);
+			tr("Join a node into the nearest way segments"), KeyEvent.VK_J, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true);
 	}
 
 	public void actionPerformed(ActionEvent e) {

@@ -3,6 +3,7 @@ package UtilsPlugin;
 import static org.openstreetmap.josm.tools.I18n.tr;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import org.openstreetmap.josm.actions.JosmAction;
 public class SimplifyWayAction extends JosmAction {
 	public SimplifyWayAction() {
 		super(tr("Simplify Way"), "simplify",
-			tr("Delete unnecessary nodes from a way."), 0, 0, true);
+			tr("Delete unnecessary nodes from a way."), KeyEvent.VK_Y, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true);
 	}
 
 	public void actionPerformed(ActionEvent e) {

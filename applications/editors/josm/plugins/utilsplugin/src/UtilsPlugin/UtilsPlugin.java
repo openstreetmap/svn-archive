@@ -17,15 +17,23 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.actions.JosmAction;
 
 public class UtilsPlugin extends Plugin {
 	JMenuItem MergeNodeWay;
 	JMenuItem SimplifyWay;
 
 	public UtilsPlugin() {
-		MergeNodeWay = Main.main.menu.toolsMenu.add(new MergeNodeWayAction());
+		JosmAction action;
+		
+		action = new MergeNodeWayAction();
+		MergeNodeWay = Main.main.menu.toolsMenu.add(action);
+		MergeNodeWay.setAccelerator(action.shortCut);
 		MergeNodeWay.setEnabled(false);
-		SimplifyWay = Main.main.menu.toolsMenu.add(new SimplifyWayAction());
+
+		action = new SimplifyWayAction();
+		SimplifyWay = Main.main.menu.toolsMenu.add(action);
+		SimplifyWay.setAccelerator(action.shortCut);
 		SimplifyWay.setEnabled(false);
 	}
 	

@@ -19,6 +19,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.layer.RawGpsLayer.GpsPoint;
 import org.openstreetmap.josm.plugins.Plugin;
+import org.openstreetmap.josm.actions.JosmAction;
 
 public class LiveGpsPlugin extends Plugin
 {
@@ -34,6 +35,41 @@ public class LiveGpsPlugin extends Plugin
 	private Collection<Collection<GpsPoint>> data = new ArrayList<Collection<GpsPoint>>();
     private LiveGpsLayer lgpslayer;
     
+	
+	public class CaptureAction extends JosmAction {
+	public CaptureAction() {
+		super(tr("Capture GPS Track"), "capturemenu", tr("Connect to gpsd server and show current position in LiveGPS layer."), KeyEvent.VK_R, KeyEvent.ALT_MASK, true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		enableTracking(lgpscapture.isSelected());
+	}
+	}
+
+	public class CenterAction extends JosmAction {
+	public CenterAction() {
+		super(tr("Center Once"), "centermenu", tr("Center the LiveGPS layer to current position."), KeyEvent.VK_C, 0, true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if(lgpslayer != null) {
+			lgpslayer.center();
+		}
+	}
+	}
+
+	public class AutoCenterAction extends JosmAction {
+	public AutoCenterAction() {
+		super(tr("Auto-Center"), "autocentermenu", tr("Continuously center the LiveGPS layer to current position."), KeyEvent.VK_HOME, 0, true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if(lgpslayer != null) {
+			lgpslayer.center();
+		}
+	}
+	}
+
     public LiveGpsPlugin() 
     {        
         JMenuBar menu = Main.main.menu;
@@ -41,40 +77,20 @@ public class LiveGpsPlugin extends Plugin
         lgpsmenu.setMnemonic(KeyEvent.VK_G);
         menu.add(lgpsmenu, 5);
         
-        lgpscapture = new JCheckBoxMenuItem(tr("Capture GPS Track"));
-        lgpscapture.setSelected(false);
-        lgpscapture.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.VK_ALT));
-        lgpscapture.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent ev) {
-        	    enableTracking(lgpscapture.isSelected());
-        	}
-        });
-        lgpscapture.setToolTipText("Connect to gpsd server and show current position in LiveGPS layer");
-        lgpsmenu.add(lgpscapture);
+        JosmAction captureAction = new CaptureAction();
+        JCheckBoxMenuItem captureMenu = new JCheckBoxMenuItem(captureAction);
+        lgpsmenu.add(captureMenu);  
+        captureMenu.setAccelerator(captureAction.shortCut);
 
-        lgpscenter = new JMenuItem(tr("Center Once"));
-        lgpscenter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));
-        lgpscenter.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent ev) {
-        	    if(lgpslayer != null) {
-        	        lgpslayer.center();
-        	    }
-        	}
-        });
-        lgpscenter.setToolTipText("Center the LiveGPS layer to current position");
-        lgpsmenu.add(lgpscenter);
-        
-        
-        lgpsautocenter = new JCheckBoxMenuItem(tr("Auto-Center"));
-        lgpsautocenter.setSelected(true);
-        lgpsautocenter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
-        lgpsautocenter.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                setAutoCenter(lgpsautocenter.isSelected());
-            }
-        });
-        lgpsautocenter.setToolTipText("Continuously center the LiveGPS layer to current position");
-        lgpsmenu.add(lgpsautocenter);        
+        JosmAction centerAction = new CenterAction();
+        JMenuItem centerMenu = new JMenuItem(centerAction);
+        lgpsmenu.add(centerMenu);  
+        centerMenu.setAccelerator(centerAction.shortCut);
+
+        JosmAction autoCenterAction = new AutoCenterAction();
+        JCheckBoxMenuItem autoCenterMenu = new JCheckBoxMenuItem(autoCenterAction);
+        lgpsmenu.add(autoCenterMenu);  
+        autoCenterMenu.setAccelerator(autoCenterAction.shortCut);
     }
     
     /**

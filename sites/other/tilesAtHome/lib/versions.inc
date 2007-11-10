@@ -59,7 +59,7 @@ function versionName($ID){
 }
 
 function versionFilename(){
-  return("/home/ojw/public_html/Data/Versions/versions.txt");
+  return("/var/www/osm/lib/clientversions.txt");
 }
 
 ?>

@@ -20,11 +20,11 @@ function QueueLength(){
 }
 
 function QueueDirectory(){
-  return("/home/ojw/tiles-ojw/Queue/");
+  return("/mnt/agami/openstreetmap/tah/Incoming/");
 }
 
 function MaxQueueLength(){
-  return(300);
+  return(625);
 }
 
 ?>

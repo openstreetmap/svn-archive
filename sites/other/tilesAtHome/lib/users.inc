@@ -9,14 +9,17 @@ function checkUser($SuppliedUsername, $SuppliedPassword){
     if (!DbSuccess) return NULL;
 
     $SQL = sprintf("SELECT id FROM tiles_users WHERE name='%s' and password='%s';", 
-      mysql_real_escape_string($SuppliedUsername), 
+      mysql_real_escape_string($SuppliedUsername),
       md5($SuppliedPassword));
     $Result = mysql_query($SQL);
     if(mysql_error()){
       logSqlError();
       return (-1);
     }
-    if(mysql_num_rows($Result) == 0){return(-1);}
+    if(mysql_num_rows($Result) == 0){
+      logMsg("Failed user authentication for user ".$SuppliedUsername, 5);
+      return(-1);
+    }
     $Row = mysql_fetch_assoc($Result);
 
     return($Row['id']);

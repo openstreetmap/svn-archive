@@ -1183,6 +1183,12 @@ sub splitImageX
     # Load the tileset image
     statusMessage(sprintf("Splitting %s (%d x 1)", $File, $Size), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 0);
     my $Image = newFromPng GD::Image($File);
+    if( not defined $Image )
+    {
+        print STDERR "\nERROR: Failed to read in file $File\n";
+        PutRequestBackToServer($X,$Y,"MissingFile");
+        cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4,$PID);
+    }
   
     # Use one subimage for everything, and keep copying data into it
     my $SubImage = new GD::Image($Pixels,$Pixels);

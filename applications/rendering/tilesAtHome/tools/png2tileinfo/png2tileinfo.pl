@@ -127,6 +127,7 @@ if ($#ARGV > -1)
 # Convert the resulting file in any case...
 open $world_fh, "<oceantiles_12.png" or die;
 open $tileinfo_fh, ">oceantiles_12.dat" or die;
+print STDERR "Writing output to ./oceantiles_12.dat\n";
 $world_im = GD::Image->newFromPng( $world_fh, 1 );
 
 for my $y (0..4095)

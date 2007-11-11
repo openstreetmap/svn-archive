@@ -75,7 +75,7 @@ public class OsmarenderPlugin extends Plugin {
                 // launch up the viewer
                 Runtime.getRuntime().exec(exec);
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(Main.parent, tr("FireFox not found. Please set firefox executable in the preferences."));
+                JOptionPane.showMessageDialog(Main.parent, tr("FireFox not found. Please set firefox executable in the Map Settings page of the preferences."));
             }
         }
     }

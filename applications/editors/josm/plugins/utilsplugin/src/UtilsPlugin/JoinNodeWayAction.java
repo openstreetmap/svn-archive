@@ -30,9 +30,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 import javax.swing.AbstractAction;
 
-class MergeNodeWayAction extends JosmAction {
-	public MergeNodeWayAction() {
-	    super(tr("Join node to way"), "mergenodeway",
+class JoinNodeWayAction extends JosmAction {
+	public JoinNodeWayAction() {
+	    super(tr("Join node to way"), "joinnodeway",
 			tr("Join a node into the nearest way segments"), KeyEvent.VK_J, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, true);
 	}
 

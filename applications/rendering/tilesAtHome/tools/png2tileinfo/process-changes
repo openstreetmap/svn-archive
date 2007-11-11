@@ -79,7 +79,7 @@ for my $line (@data)
 {
   my($x,$y,$zoom,$type,$time,$score) = split /,/,$line;
 
-  next unless $score =~ /^\d+$/ and $score >= 1;
+  next unless $score =~ /^\d+(\.\d+)?$/ and $score >= 1;
   next unless $zoom =~ /^\d+$/ and $zoom==12;
   next unless $x =~ /^\d+$/ and $x >= 0 and $x < 4096;
   next unless $y =~ /^\d+$/ and $y >= 0 and $y < 4096;

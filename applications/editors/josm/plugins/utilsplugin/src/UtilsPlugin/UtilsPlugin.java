@@ -20,16 +20,16 @@ import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.actions.JosmAction;
 
 public class UtilsPlugin extends Plugin {
-	JMenuItem MergeNodeWay;
+	JMenuItem JoinNodeWay;
 	JMenuItem SimplifyWay;
 
 	public UtilsPlugin() {
 		JosmAction action;
 		
-		action = new MergeNodeWayAction();
-		MergeNodeWay = Main.main.menu.toolsMenu.add(action);
-		MergeNodeWay.setAccelerator(action.shortCut);
-		MergeNodeWay.setEnabled(false);
+		action = new JoinNodeWayAction();
+		JoinNodeWay = Main.main.menu.toolsMenu.add(action);
+		JoinNodeWay.setAccelerator(action.shortCut);
+		JoinNodeWay.setEnabled(false);
 
 		action = new SimplifyWayAction();
 		SimplifyWay = Main.main.menu.toolsMenu.add(action);
@@ -40,7 +40,7 @@ public class UtilsPlugin extends Plugin {
 	@Override
 	public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
 		if (oldFrame == null && newFrame != null) {
-			MergeNodeWay.setEnabled(true);
+			JoinNodeWay.setEnabled(true);
 			SimplifyWay.setEnabled(true);
 		}
 	}

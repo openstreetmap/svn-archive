@@ -16,20 +16,27 @@
 include("../connect/connect.php");
 include("../lib/versions.inc");
 
+$order = "tiles desc";
+if ($_GET['order'] == "bytes") {
+    $order = "bytes desc";
+}
+if ($_GET['order'] == "date") {
+    $order = "last_upload desc";
+}    
 
 $SQL = sprintf(
   "select *, unix_timestamp(`last_upload`) as unixtime from tiles_users order by %s;",
-    "tiles desc");
+    $order);
   
 $Result = mysql_query($SQL);
 if(!mysql_error()){
   if(mysql_num_rows($Result) > 0){
     
     # Start the HTML table
-    print "<table border=1 cellspacing=0 cellpadding=5>";
+    print "<table border=1 cellspacing=0 cellpadding=5 width='100%'>";
     
     # Header
-    $Columns = "Rank, Name, Activity, Last upload, Version, Notes, Samples";
+    $Columns = "Rank, Name, Activity, Last upload, Version, Uploaded Bytes (Since 2007/11/11)";
     print "<tr><th>" . str_replace(", ", "</th><th>", $Columns) . "</th></tr>\n";
     
     ##-------------------------------------------------------
@@ -42,11 +49,8 @@ if(!mysql_error()){
       # Rank
       array_push($Row, sprintf("%d.", ++$i));
 
-      # User ID
-      #array_push($Row, sprintf("#%d", $Data["id"]));
-      
-      # Username
-      array_push($Row, sprintf("<b>%s</b>",htmlentities($Data["name"])));
+      # Link to samples
+      array_push($Row, sprintf("<a href=\"ByUser/?id=%d\">%s</a>", $Data["id"], htmlentities($Data["name"])));
       
       # Upload details
       array_push($Row, sprintf("%s tiles in %s uploads",
@@ -62,11 +66,8 @@ if(!mysql_error()){
       # Version ID
       array_push($Row, htmlentities(versionName($Data["version"])));
       
-      # Notes
-      array_push($Row, sprintf("--"));
-      
-      # Link to samples
-      array_push($Row, sprintf("<a href=\"ByUser/?id=%d\">...</a>", $Data["id"]));
+      # Version ID
+      array_push($Row, htmlentities(number_Format($Data["bytes"], 0, ".", ",")));
       
       # Convert all the data into a row of HTML table
       $Style = $OnNow
@@ -82,11 +83,9 @@ if(!mysql_error()){
 }
 
 function ageOf($Timestamp){
-  if($Timestamp == 0)
-    return("never");
-  
   $Age = time() - $Timestamp;
-  return($Age);
+  
+  return( $Age ? $Age : "never");
 }
 
 function FormatAge($Age){

@@ -1,0 +1,6 @@
+This script (or collection of scripts, let's see how it turns out)
+collects a set of nodes (say, place-nodes) and creates / updates
+relations for them.
+
+The first purpose is to create a relation containing all place=city
+nodes inside a given bbox.

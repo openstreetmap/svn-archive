@@ -121,7 +121,7 @@ sub CheckConfig{
 
     printf "- Using working directory %s\n", $Config->{"WorkingDirectory"};
 
-    if ($Config->{Batik}); 
+    if ($Config->{Batik})
     {
         print "- Using Batik";
     }

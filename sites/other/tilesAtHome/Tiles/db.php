@@ -54,7 +54,7 @@
         //BlankTile("unknown", TRUE); // probably shouldn't reach this line
 	//Request the render of this missing tile
 	if ($Z==12) {
-	  fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=TAHmissingTile","r");
+	  fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile","r");
         }
         break;
       }

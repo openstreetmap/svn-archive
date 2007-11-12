@@ -121,23 +121,29 @@ sub CheckConfig{
 
     printf "- Using working directory %s\n", $Config->{"WorkingDirectory"};
 
-    # Inkscape version
-    my $InkscapeV = `$Config->{Inkscape} --version`;
-    $EnvironmentInfo{Inkscape}=$InkscapeV;
-
-    if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
+    if ($Config->{Batik}); 
     {
-        die("Can't find inkscape (using \"$Config->{Inkscape}\")\n");
+        print "- Using Batik";
     }
+    else
+    {
+        # Inkscape version
+        my $InkscapeV = `$Config->{Inkscape} --version`;
+        $EnvironmentInfo{Inkscape}=$InkscapeV;
 
-    if($2 < 42.0){
-        die("This version of inkscape ($1.$2) is known not to work with tiles\@home\n");
+        if($InkscapeV !~ /Inkscape (\d+)\.(\d+\.?\d*)/)
+        {
+            die("Can't find inkscape (using \"$Config->{Inkscape}\")\n");
+        }
+    
+        if($2 < 42.0){
+            die("This version of inkscape ($1.$2) is known not to work with tiles\@home\n");
+        }
+        if($2 < 45.1){
+            print "* Please upgrade to inkscape 0.45.1 due to security problems with your inkscape version:\n"
+        }
+        print "- Inkscape version $1.$2\n";
     }
-    if($2 < 45.1){
-        print "* Please upgrade to inkscape 0.45.1 due to security problems with your inkscape version:\n"
-    }
-    print "- Inkscape version $1.$2\n";
-
     # XmlStarlet version
     my $XmlV = `$Config->{XmlStarlet} --version`;
     $EnvironmentInfo{Xml}=$XmlV;

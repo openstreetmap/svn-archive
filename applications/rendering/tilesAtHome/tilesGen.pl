@@ -1014,7 +1014,7 @@ sub svg2png
 {
     my($Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
     
-    my $TempFile = $Config{WorkingDirectory}."/".$PID."_part.png";
+    my $TempFile = $Config{WorkingDirectory}.$PID."_part.png";
     
     my $stdOut = $Config{WorkingDirectory}.$PID.".stdout";
     

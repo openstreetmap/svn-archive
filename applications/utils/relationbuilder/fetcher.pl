@@ -3,6 +3,8 @@
 use strict;
 
 use LWP::UserAgent;
+use XML::Parser;
+
 
 #
 #
@@ -46,7 +48,42 @@ sub fetch_place_nodes
     }
 }
 
+
+#
+#
+#
+sub create_is_in_hierarchy
+{
+    my ($datafile) = @_;
+    
+    my $parser = new XML::Parser (Handlers =>
+                                    {
+                                        Start => \&is_in_start_handler,
+                                        End   => \&is_in_end_handler
+                                    }
+                                  );
+
+    $parser->parsefile($datafile); # , ProtocolEncoding => 'UTF-16');
+}
+
+sub is_in_start_handler
+{
+    my $expat = shift;
+    my $tag = shift;
+
+    print STDERR "START - @{$expat->{Context}} \\\\ '$tag' - (@_)\n";
+}
+
+sub is_in_end_handler
+{
+    my $expat = shift;
+    my $tag = shift;
+
+    print STDERR "END - @{$expat->{Context}} // $tag\n";
+}
+
 # Turkey
 fetch_place_nodes("turkey-places.xml", "35.8", "42.5", "26.0", "45.0");
+create_is_in_hierarchy("turkey-places.xml");
 
 # Cyprus

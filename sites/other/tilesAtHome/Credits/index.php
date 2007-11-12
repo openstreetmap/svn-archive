@@ -18,7 +18,7 @@ include("../lib/versions.inc");
 
 $order = "tiles desc";
 if ($_GET['order'] == "bytes") {
-    $order = "bytes desc";
+    $order = "bytes desc, tiles desc";
 }
 if ($_GET['order'] == "date") {
     $order = "last_upload desc";
@@ -36,7 +36,7 @@ if(!mysql_error()){
     print "<table border=1 cellspacing=0 cellpadding=5 width='100%'>";
     
     # Header
-    $Columns = "Rank, Name, Activity, Last upload, Version, Uploaded Bytes (Since 2007/11/11)";
+    $Columns = "Rank, Name, Activity<a href='".$_server[php-self]."?order='>&darr;</a>, Last upload<a href='".$_server[php-self]."?order=date'>&darr;</a>, Version, Uploaded Bytes (Since 2007/11/11)<a href='".$_server[php-self]."?order=bytes'>&darr;</a>";
     print "<tr><th>" . str_replace(", ", "</th><th>", $Columns) . "</th></tr>\n";
     
     ##-------------------------------------------------------

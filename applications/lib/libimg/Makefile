@@ -22,3 +22,6 @@ ImgData.o: Img.h ImgData.h
 ImgHeader.o: ImgHeader.h ImgData.h Img.h
 ImgSubfile.o: ImgData.h Img.h ImgSubfile.h ImgFat.h
 img2img.o: Img.h
+
+clean:
+	rm -f *.a *.o

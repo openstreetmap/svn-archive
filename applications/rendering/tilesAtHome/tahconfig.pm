@@ -103,7 +103,14 @@ sub ApplyConfigLogic{
     ## do the same for Zip
     $Config->{"Zip"} = "zip" unless defined($Config->{"Zip"});
 
-    $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "/" if ($Config->{"WorkingDirectory"} !~ /\/$/);
+    if (($Config->{"WorkingDirectory"} !~ /\/$/) and ("MSWin32" ne $^0))
+    {
+        $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "/";
+    }
+    elsif (($Config->{"WorkingDirectory"} !~ /\\$/) and ("MSWin32" eq $^0))
+    {
+        $Config->{"WorkingDirectory"} = $Config->{"WorkingDirectory"} . "\\";
+    }
     
     ## Set defaults for Batik options
     $Config->{"Batik"} = "0" unless defined($Config->{"Batik"});

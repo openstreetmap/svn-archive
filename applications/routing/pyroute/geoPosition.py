@@ -29,11 +29,15 @@ class geoPosition:
   def __init__(self, filename):
     self.filename = filename
   def get(self):
+    
     file = open(self.filename, 'r')
     text = file.readline(50)
     file.close()
-    lat,lon = [float(i) for i in text.rstrip().split(",")]
-    return(lat,lon)
+    try:
+      lat,lon = [float(i) for i in text.rstrip().split(",")]
+      return(lat,lon)
+    except ValueError:
+      return(0,0)
     
 if __name__ == "__main__":
   pos = geoPosition(sys.argv[1])

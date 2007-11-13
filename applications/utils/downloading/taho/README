@@ -1,0 +1,6 @@
+This script downloads a given set of tiles from t@h and creates calibration
+files for various navigation programs. Further documentation can be found
+at http://wiki.openstreetmap.org/index.php/Oziexplorer
+
+It is checked in on behalf of Oliver Reimann, who hasn't got an svn account
+yet.

@@ -121,7 +121,7 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.5";	// current version
+	var signature="Potlatch 0.5a";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
@@ -497,7 +497,7 @@
 				_root.drawpoint=-1;
 				_root.map.ways[wayselected].redraw();
 //				_root.map.ways[wayselected].upload();
-				_root.map.ways[this.way].remove(wayselected);
+//				_root.map.ways[this.way].remove(wayselected);
 				clearTooltip();
 				_root.map.elastic.clear();
 				_root.map.ways[wayselected].select();	// removes anchorhints, so must be last
@@ -529,6 +529,7 @@
 		if (this._name>=0 && !_root.sandbox) {
 			poidelresponder = function() { };
 			poidelresponder.onResult = function(result) {
+				var code=result.shift(); if (code) { handleError(code,result); return; }
 				if (poiselected==result[0]) { deselectAll(); }
 				removeMovieClip(_root.map.pois[result[0]]);
 			};
@@ -551,6 +552,7 @@
 	POI.prototype.upload=function() {
 		poiresponder=function() { };
 		poiresponder.onResult=function(result) {
+			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var ni=result[1];	// new way ID
 			if (result[0]!=ni) {
 				_root.map.pois[result[0]]._name=ni;
@@ -628,10 +630,11 @@
 		// path is an array of points
 		// each point is an array: (x,y,node_id,0 move|1 draw,tag array,segment id)
 		this.attr=new Array();
-		this.clean=true;			// altered since last upload?
-		this.uploading=false;		// currently uploading?
-		this.locked=false;			// locked against upload?
-		this.oldversion=0;			// is this an undeleted, not-uploaded way?
+		this.clean=true;				// altered since last upload?
+		this.uploading=false;			// currently uploading?
+		this.locked=false;				// locked against upload?
+		this.oldversion=0;				// is this an undeleted, not-uploaded way?
+		this.mergedways=new Array();	// list of ways merged into this
 		this.xmin=0;
 		this.xmax=0;
 		this.ymin=0;
@@ -665,6 +668,7 @@
 	OSMWay.prototype.loadFromDeleted=function(wayid,version) {
 		delresponder=function() { };
 		delresponder.onResult=function(result) {
+			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,z;
 			_root.map.ways[result[0]].clean=false;
 			_root.map.ways[result[0]].oldversion=result[7];
@@ -744,19 +748,16 @@
 
 	// ----	Remove from server
 	
-	OSMWay.prototype.remove=function(preserveway) {
+	OSMWay.prototype.remove=function() {
+		this.deleteMergedWays();
 		if (this._name>=0 && !_root.sandbox && this.oldversion==0) {
-			var preservenodes=new Array();						// don't delete nodes which are in preserveway
-			if (preserveway) {									//  |
-				z=_root.map.ways[preserveway].path;				//  |
-				for (i in z) { if (z[i][2]>0) { preservenodes.push(z[i][2]); } }
-			}
 			deleteresponder = function() { };
 			deleteresponder.onResult = function(result) {
-				if (wayselected==result) { deselectAll(); }
-				removeMovieClip(_root.map.ways[result]);
+				var code=result.shift(); if (code) { handleError(code,result); return; }
+				if (wayselected==result[0]) { deselectAll(); }
+				removeMovieClip(_root.map.ways[result[0]]);
 			};
-			remote.call('deleteway',deleteresponder,_root.usertoken,this._name,preservenodes);
+			remote.call('deleteway',deleteresponder,_root.usertoken,this._name);
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
 			removeMovieClip(this);
@@ -768,6 +769,7 @@
 	OSMWay.prototype.upload=function() {
 		putresponder=function() { };
 		putresponder.onResult=function(result) {
+			var code=result.shift(); if (code) { handleError(code,result); return; }
 			var i,r,z,nw,qway,qs;
 			nw=result[1];	// new way ID
 			if (result[0]!=nw) {
@@ -791,6 +793,7 @@
 				}
 			}
 			_root.map.ways[nw].clearPOIs();
+			_root.map.ways[nw].deleteMergedWays();
 		};
 		if (!this.uploading && !this.locked && !_root.sandbox && this.path.length>1) {
 			this.attr['created_by']=_root.signature;
@@ -798,6 +801,29 @@
 			remote.call('putway',putresponder,_root.usertoken,this._name,this.path,this.attr,this.oldversion,baselong,basey,masterscale);
 			this.clean=true;
 		}
+	};
+
+	// ---- Delete any ways merged into this one
+
+	OSMWay.prototype.deleteMergedWays=function() {
+		while (this.mergedways.length>0) {
+			var i=this.mergedways.shift();
+			_root.map.ways.attachMovie("way",i,++waydepth);	// can't remove unless the movieclip exists!
+			_root.map.ways[i].remove();
+		}
+	};
+
+	// ----	Revert to copy in database
+	
+	OSMWay.prototype.reload=function() {
+		_root.waysrequested+=1;
+		while (this.mergedways.length>0) {
+			var i=this.mergedways.shift();
+			_root.waysrequested+=1;
+			_root.map.ways.attachMovie("way",i,++waydepth);
+			_root.map.ways[i].load(i);
+		}
+		this.load(this._name);
 	};
 
 	// ----	Click handling	
@@ -837,7 +863,7 @@
 			else						  { return; }
 			_root.map.ways[wayselected].redraw();
 //			_root.map.ways[wayselected].upload();
-			_root.map.ways[this._name ].remove(wayselected);
+//			_root.map.ways[this._name ].remove(wayselected);
 			_root.map.ways[wayselected].select();
 		} else if (_root.drawpoint>-1) {
 			// click other way while drawing: insert point as junction
@@ -939,11 +965,8 @@
 		var i,z;
 		if (this.oldversion>0 || otherway.oldversion>0) { return; }
 
-		if (frompos==0) {
-			for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); }
-		} else {
-			for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); }
-		}
+		if (frompos==0) { for (i=0; i<otherway.path.length;    i+=1) { this.addPointFrom(topos,otherway,i); } }
+				   else { for (i=otherway.path.length-1; i>=0; i-=1) { this.addPointFrom(topos,otherway,i); } }
 
 		z=otherway.attr;
 		for (i in z) {
@@ -956,9 +979,12 @@
 			}
 			if (!this.attr[i]) { delete this.attr[i]; }
 		}
+
+		this.mergedways.push(otherway._name);
+		this.mergedways.concat(otherway.mergedways);
 		this.clean=false;
 		if (otherway.locked) { this.locked=true; }
-		
+		removeMovieClip(otherway);
 	};
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
 		if (topos==0) { if (this.path[0					][2]==otherway.path[srcpt][2]) { return; } }	// don't add duplicate points
@@ -990,15 +1016,27 @@
 	// =====================================================================================
 	// Support functions
 
-	function handleWarning() {
-		createModalDialogue(275,130,new Array('Retry','Cancel'),handleWarningAction);
-		_root.modal.box.createTextField("prompt",2,7,9,250,100);
-		with (_root.modal.box.prompt) {
-			text="Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?";
-			wordWrap=true;
+	function writeText(obj,t) {
+		with (obj) {
+			text=t; wordWrap=true;
 			setTextFormat(plainSmall);
 			selectable=false; type='dynamic';
 		}
+	}
+
+	function handleError(code,result) {
+		var h=100;
+		if (code==-1) { error=result[0]; }
+				 else { error=result[0]+"\n\nPlease e-mail richard\@systemeD.net with a bug report, saying what you were doing at the time."; h+=50; }
+		createModalDialogue(275,h,new Array('Ok'),null);
+		_root.modal.box.createTextField("prompt",2,7,9,250,h-30);
+		writeText(_root.modal.box.prompt,error);
+	}
+
+	function handleWarning() {
+		createModalDialogue(275,130,new Array('Retry','Cancel'),handleWarningAction);
+		_root.modal.box.createTextField("prompt",2,7,9,250,100);
+		writeText(_root.modal.box.prompt,"Sorry - the connection to the OpenStreetMap server failed. Any recent changes have not been saved.\n\nWould you like to try again?");
 	};
 
 	function handleWarningAction(choice) {
@@ -1030,7 +1068,7 @@
 				restartElastic();
 			} else {
 				_root.map.anchors[_root.drawpoint].endElastic();
-				_root.map.ways[wayselected].remove(null);
+				_root.map.ways[wayselected].remove();
 				_root.drawpoint=-1;
 			}
 		} else if (_root.pointselected>-2) {
@@ -1047,7 +1085,7 @@
 						}
 					}
 					if (qdirty && _root.map.ways[qway]["path"].length<2) {
-						_root.map.ways[qway].remove(null);
+						_root.map.ways[qway].remove();
 					} else if (qdirty) {
 						_root.map.ways[qway].redraw();
 						_root.map.ways[qway].clean=false;
@@ -1057,7 +1095,7 @@
 				// remove node from this way only
 				_root.map.ways[wayselected].path.splice(pointselected,1);
 				if (_root.map.ways[wayselected].path.length<2) {
-					_root.map.ways[wayselected].remove(null);
+					_root.map.ways[wayselected].remove();
 				} else {
 					_root.map.ways[wayselected].redraw();
 					_root.map.ways[wayselected].clean=false;
@@ -1089,8 +1127,7 @@
 		if		(_root.wayselected<0) { stopDrawing();
 										removeMovieClip(_root.map.ways[wayselected]); }
 		else if	(_root.wayselected>0) {	stopDrawing();
-								        _root.waysrequested+=1;
-										_root.map.ways[wayselected].load(wayselected); }
+										_root.map.ways[wayselected].reload(); }
 		else if (_root.poiselected>0) { _root.map.pois[poiselected].reload(); }
 		else if (_root.poiselected<0) { removeMovieClip(_root.map.pois[poiselected]); }
 		deselectAll();
@@ -1395,10 +1432,7 @@
 		}
 		if (ltext!="") {
 			buttonobject.createTextField("explain",2,54,-1,300,20);
-			with (buttonobject.explain) {
-				text=ltext; setTextFormat(plainSmall);
-				selectable=false; type='dynamic';
-			}
+			writeText(buttonobject.explain,ltext);
 		}
 	}
 
@@ -1460,10 +1494,8 @@
 	function openOptionsWindow() {
 		createModalDialogue(275,90,new Array('Ok'),null);
 		_root.modal.box.createTextField("prompt1",2,7,9,80,20);
-		with (_root.modal.box.prompt1) {
-			text="Background:"; setTextFormat(plainSmall);
-			selectable=false; type='dynamic';
-		}
+		writeText(_root.modal.box.prompt1,"Background:");
+
 		_root.modal.box.attachMovie("menu","background",6);
 		_root.modal.box.background.init(87,10,preferences.data.baselayer,
 			new Array("None","Yahoo! satellite","Yahoo! satellite (dimmed)"),
@@ -1831,7 +1863,7 @@
 		switch (k) {
 			case 46:		;													// DELETE/backspace - delete way -- ode
 			case 8:			if (Key.isDown(Key.SHIFT)) {						//  |
-								if (_root.wayselected!=0) { _root.map.ways[wayselected].remove(null); }
+								if (_root.wayselected!=0) { _root.map.ways[wayselected].remove(); }
 							} else { keyDelete(1); }; break;					//  |
 			case 13:		stopDrawing(); break;								// ENTER - stop drawing line
 			case 27:		keyRevert(); break;									// ESCAPE - revert current way
@@ -2358,10 +2390,8 @@
 		historyresponder.onResult = function(result) {
 			createModalDialogue(275,90,new Array('Revert','Cancel'),handleRevert);
 			_root.modal.box.createTextField("prompt",2,7,9,250,100);
-			with (_root.modal.box.prompt) {
-				text="Revert to an earlier saved version:"; setTextFormat(plainSmall);
-				selectable=false; type='dynamic';
-			}
+			writeText(_root.modal.box.prompt,"Revert to an earlier saved version:");
+
 			var versionlist=new Array();
 			_root.versionnums=new Array();
 			for (i=0; i<result[0].length; i+=1) {

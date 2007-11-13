@@ -1301,32 +1301,7 @@ sub WriteImage
     close $fp;
 }
 
-#-----------------------------------------------------------------------------
-# Create a directory and all its parent directories
-# (equivalent to a "mkdir -p" on Unix, but stores already-created dirs
-# in a hash to avoid unnecessary system calls)
-#-----------------------------------------------------------------------------
-sub MagicMkdir
-{
-    my $file = shift;
-    my @paths = split("/", $file);
-    pop(@paths);
-    my $dir = "";
-    foreach my $path(@paths)
-    {
-        if ($dir eq "") {
-		$dir .= $path; # how are paths with leading "/" handled now?
-	}else{
-		$dir .= "/".$path;
-	}
-
-        if (!defined($madeDir{$dir}))
-        {
-            mkdir $dir;
-            $madeDir{$dir}=1;
-        }
-    }
-}
+# sub MagicMkdir moved to tahlib.pm
 
 #-----------------------------------------------------------------------------
 # A function to re-execute the program.  

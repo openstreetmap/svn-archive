@@ -11,6 +11,9 @@ my $idleSeconds = 0;
 
 my %faults; #variable to track non transient errors
 
+# hash for MagicMkdir
+my %madeDir;
+
 #-----------------------------------------------------------------------------
 # Prints status message without newline, overwrites previous message
 # (if $newline set, starts new line after message)

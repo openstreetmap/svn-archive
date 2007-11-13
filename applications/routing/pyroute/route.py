@@ -49,7 +49,15 @@ class Router:
     dlon = lon2 - lon1
     dist2 = dlat * dlat + dlon * dlon
     return(math.sqrt(dist2))
-  
+  def doRouteAsLL(self,start,end,transport):
+    result, nodes = self.doRoute(start,end,transport)
+    if(result != 'success'):
+      return(result,[])
+    pos = []
+    for node in nodes:
+      lat,lon = self.data.nodes[node]
+      pos.append((lat,lon))
+    return(result,pos)
   def doRoute(self,start,end,transport):
     """Do the routing"""
     self.searchEnd = end
@@ -130,10 +138,10 @@ if __name__ == "__main__":
     print "WARNING: No transport type specified, assuming \"%s\"" % transport
   
   router = Router(data)
-  result, route = router.doRoute(int(sys.argv[2]), int(sys.argv[3]), transport)
+  result, route = router.doRouteAsLL(int(sys.argv[2]), int(sys.argv[3]), transport)
   
   if result == 'success':
-    print "Route: %s" % ",".join("%d" % i for i in route)
+    print "Route: %s" % ",".join("%1.4f,%1.4f" % (i[0],i[1]) for i in route)
   else:
     print "Failed (%s)" % result
 

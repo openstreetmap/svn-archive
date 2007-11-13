@@ -198,7 +198,7 @@ class LoadOsm(handler.ContentHandler):
     """Find the nearest node to a point.
     Filters for nodes which have a route leading from them"""
     maxDist = 1000
-    nodeFound = 0
+    nodeFound = None
     for id in self.routeableNodes[routeType].keys():
       n = self.nodes[id]
       dlat = n[0] - lat

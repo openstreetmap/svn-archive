@@ -449,7 +449,7 @@ sub PutRequestBackToServer
     ## FIXME: this will request the wrong tiles if zoom != 12
     my ($X,$Y,$Cause) = @_;
 
-    my $Z = ($Config{"Layers"} eq "lowzoom") 8 : 12;
+    my $Z = ($Config{"Layers"} eq "lowzoom") ? 8 : 12;
 
     ## do not do this if called in xy mode!
     return if($Mode eq "xy");

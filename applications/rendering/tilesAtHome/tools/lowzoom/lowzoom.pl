@@ -54,7 +54,7 @@ my $Layer = shift() || "tile";
 my $Options = shift();
 
 # Check the command-line arguments, and display usage information
-my $Usage = "Usage: $0 x y z maxZ [layer] [keep]\n  x,y,z are the tile to generate\n  maxZ is the zoom level to download tiles from\n  Options: \n    * layer - which layer to run lowzoom on (tile (default) or maplint)\n    * 'keep' - don't move tiles to an upload area afterwards\nOther options (URLs, upload staging area) are part of the script - change them in source code\n";
+my $Usage = "Usage: $0 x y z maxZ [layer] [keep]\n  x,y,z are the tile to generate\n  maxZ is the zoom level to download tiles from\n  Options: \n    * layer - which layer to run lowzoom on (tile (default) or maplint)\n    * 'keep' - don't move tiles to an upload area afterwards\nOther options (URLs, upload staging area) are part of the script - change them in source code\n\n * Note: lowzoom for z8-11 is now handled by tilesGen.pl and the TAH server queue.\n";
 if(($MaxZ > 8)
   || ($MaxZ <= $Z)
   || ($Z < 0) || (!defined($Z))

@@ -137,9 +137,6 @@ my $dirent;
 # keep track of the server time for current job
 my $JobTime;
 
-# hash for MagicMkdir
-my %madeDir;
-
 # Handle the command-line
 my $Mode = shift();
 

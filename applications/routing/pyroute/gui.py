@@ -20,6 +20,7 @@ from projection import Projection
 from overlay import *
 from dataStore import *
 from mod_geoRss import geoRss
+from mod_geonames import geonames
 
 def update(mapWidget):
   mapWidget.updatePosition();
@@ -39,9 +40,10 @@ class MapWidget(gtk.Widget):
     
     self.modules = {'plugins':{}}
     self.modules['plugins']['rss'] = geoRss('Setup/feeds.txt')
+    self.modules['plugins']['geonames'] = geonames()
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition(positionFile)
-    self.modules['data'] = DataStore()
+    self.modules['data'] = DataStore(self)
     self.modules['data'].setState('mode','cycle')
     self.modules['osmdata'] = LoadOsm(osmDataFile, True)
     self.modules['projection'] = Projection()

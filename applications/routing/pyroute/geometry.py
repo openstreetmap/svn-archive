@@ -13,11 +13,10 @@ def distance(a,b):
     dlon = math.radians(a[1] - b[1])
 
     dlon = dlon * math.cos(math.radians(a[0]))
-    print "d = %f, %f" % (dlat, dlon)
+    #print "d = %f, %f" % (dlat, dlon)
     # todo: mercator proj
     dRad = math.sqrt(dlat * dlat + dlon * dlon)
 
-    print dRad
     c = 40000 # earth circumference,km
     
     return(dRad * c)

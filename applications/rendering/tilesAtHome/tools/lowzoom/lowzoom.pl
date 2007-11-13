@@ -49,13 +49,13 @@ die "can't find upload directory \"$uploadDir\"" unless (-d $uploadDir);
 my $X = shift();
 my $Y = shift();
 my $Z = shift();
-my $MaxZ = shift() || 12;
+my $MaxZ = shift() || 8;
 my $Layer = shift() || "tile";
 my $Options = shift();
 
 # Check the command-line arguments, and display usage information
 my $Usage = "Usage: $0 x y z maxZ [layer] [keep]\n  x,y,z are the tile to generate\n  maxZ is the zoom level to download tiles from\n  Options: \n    * layer - which layer to run lowzoom on (tile (default) or maplint)\n    * 'keep' - don't move tiles to an upload area afterwards\nOther options (URLs, upload staging area) are part of the script - change them in source code\n";
-if(($MaxZ > 12)
+if(($MaxZ > 8)
   || ($MaxZ <= $Z)
   || ($Z < 0) || (!defined($Z))
   || ($MaxZ > 17)
@@ -203,7 +203,7 @@ sub downloadtile {
 sub deleteBlankSubtiles
 {
   my($X,$Y,$Z,$Layer) = @_;
-    if (($Z == 11 ) && ($Options ne "keep")){
+    if (($Z == 7 ) && ($Options ne "keep")){
         for my $x (0,1)
         {
             for my $y (0,1)
@@ -213,7 +213,7 @@ sub deleteBlankSubtiles
             }
         }
     };
-  return if $Z >= 11;  # Not lowzoom's problem
+  return if $Z <= 9;  # Not lowzoom's problem
   # This keeps real blank tiles at zooms 3,6 and 9
   return if ($Z+1)%3 == 0;
   
@@ -458,7 +458,7 @@ sub localfile {
 # Option: URL for downloading tiles
 sub remotefile {
   my ($X,$Y,$Z,$Layer) = @_;
-  return sprintf("http://dev.openstreetmap.org/~ojw/Tiles/%s.php/%d/%d/%d.png", $Layer,$Z,$X,$Y);
+  return sprintf("http://tah.openstreetmap.org/Tiles/%s.php/%d/%d/%d.png", $Layer,$Z,$X,$Y);
 }
 # Option: what to use as temporary storage for tiles
 sub tempdir {

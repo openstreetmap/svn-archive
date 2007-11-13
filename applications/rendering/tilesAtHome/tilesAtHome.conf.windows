@@ -40,8 +40,8 @@ GatherBlankTiles=0
 Batik=0
 
 # Set to the maximum JVM size to pass to the -Xmx parameter when running the rasterizer. The
-# maximum size depends on the OS. For Windows XP it is 1300M
-BatikJVMSize=1300M
+# maximum size depends on the OS. For Windows XP it is 1350M
+BatikJVMSize=1350M
 
 # Set to the location of the batik rasterizer jar. The Batik libraries should reside in the same folder,
 #   or in a sub-folder named lib

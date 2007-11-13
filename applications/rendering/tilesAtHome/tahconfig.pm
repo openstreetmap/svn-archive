@@ -130,7 +130,7 @@ sub CheckConfig{
 
     if ($Config->{Batik})
     {
-        print "- Using Batik";
+        print "- Using Batik\n";
     }
     else
     {

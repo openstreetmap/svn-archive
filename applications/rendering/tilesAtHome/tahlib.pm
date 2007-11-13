@@ -150,7 +150,7 @@ sub runCommand
     if ($Config{Verbose})
     {
         my $retval = system($cmd);
-        return $retval != 0;
+        return $retval == 0;
     }
 
     my $ErrorFile = $Config{WorkingDirectory}."/".$mainPID.".stderr";

@@ -449,6 +449,8 @@ sub PutRequestBackToServer
     ## FIXME: this will request the wrong tiles if zoom != 12
     my ($X,$Y,$Cause) = @_;
 
+    my $Z = ($Config{"Layers"} eq "lowzoom") 8 : 12;
+
     ## do not do this if called in xy mode!
     return if($Mode eq "xy");
     
@@ -459,7 +461,7 @@ sub PutRequestBackToServer
     killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
     # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
-    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahCltReReq:" . $Cause;
+    my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&z=" . $Z . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahCltReReq:" . $Cause;
     
     statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
     DownloadFile(

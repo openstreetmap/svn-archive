@@ -40,7 +40,7 @@ use GD;
 our $help=0;
 my $coord; 
 my $tilename;
-my $tilesource = "http://dev.openstreetmap.org/~ojw/Tiles/tile.php";
+my $tilesource = "http://tah.openstreetmap.org/Tiles/tile";
 my $tilesource_fallback1 = "http://tile.openstreetmap.org";
 my $tilesource_fallback2 = "http://dev.openstreetmap.org/~ojw/Tiles/tile.php";
 my $proxyname; 
@@ -610,7 +610,7 @@ sub usage {
   print "x,y: slippy map tilenames\n\n";
   print "lat,lon: :-)\n\n";
   print "source: \n";
-  print "      - http://dev.openstreetmap.org/~ojw/Tiles/tile.php \n";
+  print "      - http://tah.openstreetmap.org/Tiles/tile \n";
   print "      - http://dev.openstreetmap.org/~ojw/Tiles/maplint.php \n";
   print "      - http://tile.openstreetmap.org \n\n";
   print "proxyname:\nproxy and port number\n\n";

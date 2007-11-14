@@ -269,7 +269,7 @@ void nodes(MYSQL *mysql)
     mysql_free_result(res);
 }
 
-#define TAG_CACHE (1000)
+#define TAG_CACHE (10000)
 
 struct tCache {
     int id;
@@ -288,7 +288,7 @@ void tags_init(MYSQL *mysql, const char *table)
     tags_stmt = mysql_stmt_init(mysql);
     assert(tags_stmt);
 
-    snprintf(query, sizeof(query), "SELECT id, k, v FROM %s WHERE id >= ? ORDER BY id LIMIT 1000", table); // LIMIT == TAG_CACHE
+    snprintf(query, sizeof(query), "SELECT id, k, v FROM %s WHERE id >= ? ORDER BY id LIMIT 10000", table); // LIMIT == TAG_CACHE
 
     if (mysql_stmt_prepare(tags_stmt, query, strlen(query))) {
         fprintf(stderr,"Cannot setup prepared query for %s: %s\n", table, mysql_error(mysql));
@@ -574,7 +574,7 @@ int main(int argc, char **argv)
     MYSQL_RES *res;
 #endif
     int i;
-    const char *set_timeout = "SET SESSION net_write_timeout=3600";
+    const char *set_timeout = "SET SESSION net_write_timeout=60*60*6";
 
     // Database timestamps use UK localtime
     setenv("TZ", ":GB", 1);

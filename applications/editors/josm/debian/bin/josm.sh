@@ -29,5 +29,3 @@ java -Djosm.resource=/usr/share/map-icons/square.small \
      $proxy \
      -jar "$josm_bin"\
      "$@"
-
-EOF

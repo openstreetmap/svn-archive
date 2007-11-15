@@ -32,7 +32,7 @@ class MapWidget(gtk.Widget):
     'expose-event' : 'override',
     'size-allocate': 'override',
     'size-request': 'override'}
-  def __init__(self, osmDataFile, positionFile):
+  def __init__(self, osmDataFile):
     gtk.Widget.__init__(self)
     self.draw_gc = None
     self.timer = gobject.timeout_add(30, update, self)
@@ -42,35 +42,40 @@ class MapWidget(gtk.Widget):
     self.modules['plugins']['rss'] = geoRss('Setup/feeds.txt')
     self.modules['plugins']['geonames'] = geonames()
     self.modules['overlay'] = guiOverlay(self.modules)
-    self.modules['position'] = geoPosition(positionFile)
+    self.modules['position'] = geoPosition()
     self.modules['data'] = DataStore(self)
     self.modules['data'].setState('mode','cycle')
     self.modules['osmdata'] = LoadOsm(osmDataFile, True)
     self.modules['projection'] = Projection()
+    self.modules['projection'].recentre(51.2,-0.2, 0.1)
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.updatePosition()
     for name,mod in self.modules['plugins'].items():
       mod.callbacks(self.modules)
   def updatePosition(self):
     self.ownpos = self.modules['position'].get()
+    if(not self.ownpos[0]):
+      #print "Own position not known"
+      return
     if(not self.modules['projection'].isValid()):
       print "Projection not yet valid, centering on ownpos"
       self.centreOnOwnPos()
       return
-    x,y = self.modules['projection'].ll2xy(self.ownpos[0], self.ownpos[1])
-    x,y = self.modules['projection'].relXY(x,y)
-    border = 0.15
-    followMode = self.modules['data'].getOption("centred")
-    outsideMap = (x < border or y < border or x > (1-border) or y > (1-border))
-    if(followMode):
-      self.centreOnOwnPos()
-    else:
-      self.forceRedraw()
+    if(self.ownpos[0]):
+      x,y = self.modules['projection'].ll2xy(self.ownpos[1], self.ownpos[2])
+      x,y = self.modules['projection'].relXY(x,y)
+      border = 0.15
+      followMode = self.modules['data'].getOption("centred")
+      outsideMap = (x < border or y < border or x > (1-border) or y > (1-border))
+      if(followMode):
+        self.centreOnOwnPos()
+      else:
+        self.forceRedraw()
   def centreOnOwnPos(self):
-    self.modules['projection'].recentre(self.ownpos[0],self.ownpos[1], 0.01)
-    self.forceRedraw()
-    
-    
+    if(self.ownpos[0]):
+      self.modules['projection'].recentre(self.ownpos[1],self.ownpos[2], 0.01)
+      self.forceRedraw()
+
   def click(self, x, y):
     if(self.modules['overlay'].handleClick(x,y)):
       return
@@ -167,15 +172,16 @@ class MapWidget(gtk.Widget):
               cr.show_text(item.title)
 
     
-      # Us
-      x,y = self.modules['projection'].ll2xy(self.ownpos[0],self.ownpos[1])
-      cr.set_source_rgb(0.0, 0.0, 0.0)
-      cr.arc(x,y,14, 0,2*3.1415)
-      cr.fill()
-      cr.set_source_rgb(1.0, 0.0, 0.0)
-      cr.arc(x,y,10, 0,2*3.1415)
-      cr.fill()
-      
+      if(self.ownpos[0]):
+        # Us
+        x,y = self.modules['projection'].ll2xy(self.ownpos[1],self.ownpos[2])
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.arc(x,y,14, 0,2*3.1415)
+        cr.fill()
+        cr.set_source_rgb(1.0, 0.0, 0.0)
+        cr.arc(x,y,10, 0,2*3.1415)
+        cr.fill()
+        
     # Overlay (menus etc)
     self.modules['overlay'].draw(cr, self.rect)
     
@@ -217,7 +223,7 @@ class MapWidget(gtk.Widget):
 
 class GuiBase:
   """Wrapper class for a GUI interface"""
-  def __init__(self, osmDataFile, positionFile):
+  def __init__(self, osmDataFile):
     # Create the window
     win = gtk.Window()
     win.set_title('pyroute')
@@ -233,7 +239,7 @@ class GuiBase:
     win.add(event_box)
     
     # Create the map
-    self.mapWidget = MapWidget(osmDataFile, positionFile)
+    self.mapWidget = MapWidget(osmDataFile)
     event_box.add(self.mapWidget)
     
     # Finalise the window
@@ -267,4 +273,4 @@ class GuiBase:
 
 
 if __name__ == "__main__":
-  program = GuiBase(sys.argv[1], sys.argv[2])
+  program = GuiBase(sys.argv[1])

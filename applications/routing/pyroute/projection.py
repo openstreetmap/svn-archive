@@ -27,6 +27,9 @@ class Projection:
     self.lat = self.lat + dy * scale * self.scale
     self.lon = self.lon + dx * scale * self.scale
     self.findEdges()
+  def nudgeZoom(self,amount):
+    self.scale = self.scale * (1 + amount)
+    self.findEdges()    
   def ll2xy(self,lat,lon):
     px = (lon - self.lon) / self.scale
     py = (lat - self.lat) / self.scale

@@ -90,6 +90,9 @@ class MapWidget(gtk.Widget):
   def move(self,dx,dy):
     self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
     self.forceRedraw()
+  def zoom(self,dx):
+    self.modules['projection'].nudgeZoom(dx / self.rect.width)
+    self.forceRedraw()
   def nodeXY(self,node):
     node = self.modules['osmdata'].nodes[node]
     return(self.modules['projection'].ll2xy(node[0], node[1]))
@@ -241,12 +244,18 @@ class GuiBase:
     self.dragstartx = event.x
     self.dragstarty = event.y
     #print dir(event)
-    #print "Pressed button %d" % event.button
+    #print "Pressed button %d at %1.0f, %1.0f" % (event.button, event.x, event.y)
+    
     self.dragx = event.x
     self.dragy = event.y
   def moved(self, event):
     """Drag-handler"""
-    self.mapWidget.move(event.x - self.dragx, event.y - self.dragy)
+
+    if(self.dragstarty < 100):
+      self.mapWidget.zoom(event.x - self.dragx)
+    else:
+      self.mapWidget.move(event.x - self.dragx, event.y - self.dragy)
+    
     self.dragx = event.x
     self.dragy = event.y
   def released(self, event):

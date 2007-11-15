@@ -180,7 +180,14 @@ class guiOverlay:
             self.drawMenu(currentMenu)
         else:
             self.cells[0][0].mainMenuButton()
-            
+            self.cr.set_line_width(2)
+            self.cr.set_dash((2,2,2), 0);
+            self.cr.set_source_rgba(0.4,0,0)
+            y = 100
+            self.cr.move_to(0,y)
+            self.cr.line_to(rect.width,y)
+            self.cr.stroke()
+                    
     def drawMenu(self, menu):
         menuName = 'menu_%s' % menu
         try:

@@ -2,7 +2,7 @@
 <!--
 ==============================================================================
 
-Osmarender 6.0 Alpha 4 orig area generation
+Osmarender 6.0 Alpha 5 orig area generation + one node way filtered out
 
 ==============================================================================
 
@@ -473,11 +473,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- Process the first segment in the way -->
     <xsl:variable name="firstNode" select="key('nodeById',$way/nd[1]/@ref)"/>
 
-    <!-- Count the number of segments connecting to the from node. If there is only one (the current segment) then draw
-		     a default line.  -->
+    <!-- Count the number of segments connecting to the from node. If there is only one (the current segment) then draw a default line.  -->
     <xsl:variable name="firstNodeConnectionCount" select="count(key('wayByNode',$firstNode/@id))" />
+    
     <!-- Count the number of connectors at a layer lower than the current layer -->
-
     <xsl:variable name="firstNodeLowerLayerConnectionCount" select="
 			count(key('wayByNode',$firstNode/@id)/tag[@k='layer' and @v &lt; $layer]) +
 			count(key('wayByNode',$firstNode/@id)[count(tag[@k='layer'])=0 and $layer &gt; 0])
@@ -728,7 +727,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
-        <!-- Add the square of the total horzontal length to the square of the total vertical length to get the square of
+        <!-- Add the square of the total horizontal length to the square of the total vertical length to get the square of
 				     the total way length.  We don't have a sqrt() function so leave it squared.
 				     Multiply by 1,000 so that we are usually dealing with a values greater than 1.  Squares of values between 0 and 1
 				     are smaller and so not very useful.
@@ -818,12 +817,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- The current <way> element -->
     <xsl:variable name="way" select="."/>
 
-    <xsl:call-template name="drawWay">
-      <xsl:with-param name="instruction" select="$instruction"/>
-      <xsl:with-param name="way" select="$way"/>
-      <xsl:with-param name="layer" select="$layer"/>
-    </xsl:call-template>
-
+    <!-- DODI: !!!WORKAROUND!!! skip one node ways-->
+    <xsl:if test="count($way/nd) &gt; 1">
+      <xsl:call-template name="drawWay">
+        <xsl:with-param name="instruction" select="$instruction"/>
+        <xsl:with-param name="way" select="$way"/>
+        <xsl:with-param name="layer" select="$layer"/>
+      </xsl:call-template>
+    </xsl:if >
   </xsl:template>
 
 
@@ -862,7 +863,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <xsl:call-template name="generateAreaPath"/>
     </xsl:variable>
     <path id="area_{@id}" d="{$pathArea}"/>
-    
+
     <xsl:call-template name="renderArea">
       <xsl:with-param name="instruction" select="$instruction"/>
       <xsl:with-param name="pathId" select="concat('area_',@id)"/>
@@ -1151,53 +1152,56 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
     <!-- The current <way> element -->
     <xsl:variable name="way" select="."/>
 
-    <xsl:variable name='text'>
-      <xsl:choose>
-        <xsl:when test='$instruction/@k'>
-          <xsl:value-of select='tag[@k=$instruction/@k]/@v'/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select='$instruction' mode='textFormat'>
-            <xsl:with-param name='way' select='$way'/>
-          </xsl:apply-templates>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <xsl:if test='string($text)'>
-
-      <xsl:variable name="pathDirection">
+    <!-- DODI: !!!WORKAROUND!!! no text for one node ways-->
+    <xsl:if test="count($way/nd) &gt; 1">
+      <xsl:variable name='text'>
         <xsl:choose>
-          <!-- Manual override, reverse direction -->
-          <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">reverse</xsl:when>
-          <!-- Manual override, normal direction -->
-          <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">normal</xsl:when>
-          <!-- Automatic, reverse direction -->
-          <xsl:when test="(key('nodeById',$way/nd[1]/@ref)/@lon &gt; key('nodeById',$way/nd[last()]/@ref)/@lon)">reverse</xsl:when>
-          <!-- Automatic, normal direction -->
-          <xsl:otherwise>normal</xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-
-      <xsl:variable name="wayPath">
-        <xsl:choose>
-          <!-- Normal -->
-          <xsl:when test='$pathDirection="normal"'>
-            <xsl:value-of select="concat('way_normal_',@id)"/>
+          <xsl:when test='$instruction/@k'>
+            <xsl:value-of select='tag[@k=$instruction/@k]/@v'/>
           </xsl:when>
-          <!-- Reverse -->
           <xsl:otherwise>
-            <xsl:value-of select="concat('way_reverse_',@id)"/>
+            <xsl:apply-templates select='$instruction' mode='textFormat'>
+              <xsl:with-param name='way' select='$way'/>
+            </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
 
-      <xsl:call-template name="renderTextPath">
-        <xsl:with-param name="instruction" select="$instruction"/>
-        <xsl:with-param name="pathId" select="$wayPath"/>
-        <xsl:with-param name="pathDirection" select="$pathDirection"/>
-        <xsl:with-param name="text" select="$text"/>
-      </xsl:call-template>
+      <xsl:if test='string($text)'>
+
+        <xsl:variable name="pathDirection">
+          <xsl:choose>
+            <!-- Manual override, reverse direction -->
+            <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">reverse</xsl:when>
+            <!-- Manual override, normal direction -->
+            <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">normal</xsl:when>
+            <!-- Automatic, reverse direction -->
+            <xsl:when test="(key('nodeById',$way/nd[1]/@ref)/@lon &gt; key('nodeById',$way/nd[last()]/@ref)/@lon)">reverse</xsl:when>
+            <!-- Automatic, normal direction -->
+            <xsl:otherwise>normal</xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:variable name="wayPath">
+          <xsl:choose>
+            <!-- Normal -->
+            <xsl:when test='$pathDirection="normal"'>
+              <xsl:value-of select="concat('way_normal_',@id)"/>
+            </xsl:when>
+            <!-- Reverse -->
+            <xsl:otherwise>
+              <xsl:value-of select="concat('way_reverse_',@id)"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:call-template name="renderTextPath">
+          <xsl:with-param name="instruction" select="$instruction"/>
+          <xsl:with-param name="pathId" select="$wayPath"/>
+          <xsl:with-param name="pathDirection" select="$pathDirection"/>
+          <xsl:with-param name="text" select="$text"/>
+        </xsl:call-template>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -1246,59 +1250,63 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
 
   <!-- Generate a way path for the current way element -->
   <xsl:template name="generateWayPaths">
+    <!-- DODI: !!!WORKAROUND!!! skip one node ways -->
+    <xsl:if test="count(nd) &gt; 1">
 
-    <!-- Generate a normal way path -->
-    <xsl:variable name="pathWayNormal">
-      <xsl:call-template name="generateWayPathNormal"/>
-    </xsl:variable>
-    <path id="way_normal_{@id}" d="{$pathWayNormal}"/>
+      <!-- Generate a normal way path -->
+      <xsl:variable name="pathWayNormal">
+        <xsl:call-template name="generateWayPathNormal"/>
+      </xsl:variable>
+      <xsl:if test="$pathWayNormal!=''">
+        <path id="way_normal_{@id}" d="{$pathWayNormal}"/>
+      </xsl:if>
 
-    <!-- Generate a normal way path as area -->
-    <!-- DODI: added to generate "area for all ways, yes it is very dirty... but -->
-    <!-- DODI: removed because of line2curves.pl dupplicate node decetion problem -->
-    <!-- <xsl:variable name="pathArea">
+      <!-- Generate a normal way path as area -->
+      <!-- DODI: !!!WORKAROUND!!! added to generate "area for all ways, yes it is very dirty... but -->
+      <!-- DODI: removed because of line2curves.pl duplicate node detection problem -->
+      <!-- <xsl:variable name="pathArea">
       <xsl:call-template name="generateAreaPath"/>
     </xsl:variable>
     <path id="area_{@id}" d="{$pathArea}"/> -->
-    <!-- Generate a reverse way path (if needed) -->
-    <xsl:variable name="pathWayReverse">
-      <xsl:choose>
-        <!-- Manual override, reverse direction -->
-        <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">
-          <xsl:call-template name="generateWayPathReverse"/>
-        </xsl:when>
-        <!-- Manual override, normal direction -->
-        <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">
-          <!-- Generate nothing -->
-        </xsl:when>
-        <!-- Automatic, reverse direction -->
-        <xsl:when test="(key('nodeById',nd[1]/@ref)/@lon &gt; key('nodeById',nd[last()]/@ref)/@lon)">
-          <xsl:call-template name="generateWayPathReverse"/>
-        </xsl:when>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:if test="$pathWayReverse!=''">
-      <path id="way_reverse_{@id}" d="{$pathWayReverse}"/>
-    </xsl:if>
-
-    <!-- Generate the start, middle and end paths needed for smart-linecaps (TM). -->
-    <xsl:variable name="pathWayStart">
-      <xsl:call-template name="generatePathWayStart"/>
-    </xsl:variable>
-    <path id="way_start_{@id}" d="{$pathWayStart}"/>
-
-    <xsl:if test="count(nd) &gt; 1">
-      <xsl:variable name="pathWayMid">
-        <xsl:call-template name="generatePathWayMid"/>
+      <!-- Generate a reverse way path (if needed) -->
+      <xsl:variable name="pathWayReverse">
+        <xsl:choose>
+          <!-- Manual override, reverse direction -->
+          <xsl:when test="tag[@k='name_direction']/@v='-1' or tag[@k='osmarender:nameDirection']/@v='-1'">
+            <xsl:call-template name="generateWayPathReverse"/>
+          </xsl:when>
+          <!-- Manual override, normal direction -->
+          <xsl:when test="tag[@k='name_direction']/@v='1' or tag[@k='osmarender:nameDirection']/@v='1'">
+            <!-- Generate nothing -->
+          </xsl:when>
+          <!-- Automatic, reverse direction -->
+          <xsl:when test="(key('nodeById',nd[1]/@ref)/@lon &gt; key('nodeById',nd[last()]/@ref)/@lon)">
+            <xsl:call-template name="generateWayPathReverse"/>
+          </xsl:when>
+        </xsl:choose>
       </xsl:variable>
-      <path id="way_mid_{@id}" d="{$pathWayMid}"/>
-    </xsl:if>
+      <xsl:if test="$pathWayReverse!=''">
+        <path id="way_reverse_{@id}" d="{$pathWayReverse}"/>
+      </xsl:if>
 
-    <xsl:variable name="pathWayEnd">
-      <xsl:call-template name="generatePathWayEnd"/>
-    </xsl:variable>
-    <path id="way_end_{@id}" d="{$pathWayEnd}"/>
+      <!-- Generate the start, middle and end paths needed for smart-linecaps (TM). -->
+      <xsl:variable name="pathWayStart">
+        <xsl:call-template name="generatePathWayStart"/>
+      </xsl:variable>
+      <path id="way_start_{@id}" d="{$pathWayStart}"/>
 
+      <xsl:if test="count(nd) &gt; 1">
+        <xsl:variable name="pathWayMid">
+          <xsl:call-template name="generatePathWayMid"/>
+        </xsl:variable>
+        <path id="way_mid_{@id}" d="{$pathWayMid}"/>
+      </xsl:if>
+
+      <xsl:variable name="pathWayEnd">
+        <xsl:call-template name="generatePathWayEnd"/>
+      </xsl:variable>
+      <path id="way_end_{@id}" d="{$pathWayEnd}"/>
+    </xsl:if >
   </xsl:template>
 
 
@@ -1321,7 +1329,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
   </xsl:template>
 
 
-  <!-- Generate a normal way path -->
+  <!-- Generate a reverse way path -->
   <xsl:template name="generateWayPathReverse">
     <xsl:for-each select="nd">
       <xsl:sort select="position()" data-type="number" order="descending"/>
@@ -2605,7 +2613,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <a id="license-osm-link" xlink:href="http://www.openstreetmap.org/">
         <g transform="translate(-210,10)" id="license-osm-text">
           <text class="license-text" dx="0" dy="0">
-            Copyright Â© <xsl:value-of select="$year"/> OpenStreetMap (openstreetmap.org)
+            Copyright © <xsl:value-of select="$year"/> OpenStreetMap (openstreetmap.org)
           </text>
         </g>
       </a>

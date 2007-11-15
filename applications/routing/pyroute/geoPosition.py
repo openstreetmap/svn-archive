@@ -55,6 +55,9 @@ class geoPosition:
     return((False,0,0))
   
   def get_gpsd(self):
+    self.gps.query('mosy')
+    # a = altitude, d = date/time, m=mode,
+    # o=postion/fix, s=status, y=satellites    
     return((True, self.gpsd.fix.latitude, self.gpsd.fix.longitude))
   
   def get_file(self):

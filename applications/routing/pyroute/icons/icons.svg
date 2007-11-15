@@ -13,13 +13,14 @@
    width="1000px"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.45"
    sodipodi:docname="icons.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   sodipodi:docbase="C:\home\oliver\pyroute\icons">
+   sodipodi:docbase="/home/owhite/OpenStreetmap/pyroute/icons"
+   sodipodi:modified="true">
   <sodipodi:namedview
-     inkscape:window-height="712"
-     inkscape:window-width="1024"
+     inkscape:window-height="917"
+     inkscape:window-width="1206"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      guidetolerance="10.0"
@@ -32,10 +33,10 @@
      showgrid="true"
      inkscape:grid-points="false"
      inkscape:zoom="2.5597511"
-     inkscape:cx="1129.3024"
-     inkscape:cy="263.90562"
+     inkscape:cx="1355.207"
+     inkscape:cy="170.1465"
      inkscape:window-x="0"
-     inkscape:window-y="22"
+     inkscape:window-y="0"
      inkscape:current-layer="svg2"
      inkscape:object-paths="false"
      inkscape:grid-bbox="false"
@@ -4629,4 +4630,214 @@
        id="rect5716"
        style="opacity:1;fill:#226bdd;fill-opacity:1;stroke:none;stroke-width:4.19999981;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   </g>
+  <rect
+     id="rect2797"
+     x="1271.2462"
+     y="355.00455"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2801"
+     x="1339.0642"
+     y="355.00455"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2803"
+     x="1305.1553"
+     y="355.00455"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2805"
+     x="1271.2462"
+     y="388.91357"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2807"
+     x="1305.1553"
+     y="422.8226"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2809"
+     x="1339.0642"
+     y="388.91357"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2811"
+     x="1271.2462"
+     y="321.09552"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2813"
+     x="1339.0642"
+     y="321.09552"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2815"
+     x="1305.1553"
+     y="321.09552"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2817"
+     x="1305.1553"
+     y="388.91357"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2819"
+     x="1339.0642"
+     y="422.8226"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     id="rect2821"
+     x="1271.2462"
+     y="422.8226"
+     inkscape:export-xdpi="92.212929"
+     width="32.171886"
+     height="32.171886"
+     ry="6.8000002"
+     inkscape:export-filename="C:\home\oliver\pyroute\icons\bitmap\forward.png"
+     inkscape:export-ydpi="92.212929"
+     rx="6.4000001"
+     style="fill:#92aaf3;fill-opacity:1;stroke:#3d60fa;stroke-width:1.73713911;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <text
+     xml:space="preserve"
+     style="font-size:6.91395235px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="1309.2202"
+     y="377.91162"
+     id="text2823"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan2825"
+       x="1309.2202"
+       y="377.91162">Move to</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:6.91395235px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="1306.7753"
+     y="445.83795"
+     id="text2827"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan2829"
+       x="1306.7753"
+       y="445.83795">Direct to</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:6.91395235px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="1283.24"
+     y="407.46259"
+     id="text2831"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan2833"
+       x="1283.24"
+       y="407.46259">Mark</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:6.91395235px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="1315.4502"
+     y="407.6127"
+     id="text2835"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan2837"
+       x="1315.4502"
+       y="407.6127">Info</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:6.91395235px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="1341.7178"
+     y="409.70319"
+     id="text2839"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan2841"
+       x="1341.7178"
+       y="409.70319">Set pos</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:6.91395235px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="1307.333"
+     y="331.4472"
+     id="text2843"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan2845"
+       x="1307.333"
+       y="331.4472">51.42342. -1.4332</tspan></text>
 </svg>

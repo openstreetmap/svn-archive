@@ -70,9 +70,8 @@ function CheckForRequest($Z){
   
   global $APIVersion;
   # next request that is handed out: order by priority, then date.
-  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` <= ".REQUEST_NEW." and `z`=".$Z." order by `priority`,`date` limit 1;";
+  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." and `z`=".$Z." order by `priority`,`date` limit 1;";
 
-//  print "$SQL\n";return;
   $Result = mysql_query($SQL);
 
   if(mysql_errno()){
@@ -82,7 +81,7 @@ function CheckForRequest($Z){
     exit;
   }
   if(mysql_num_rows($Result) == 0){
-    return;
+      return;
   }
 
   $Data = mysql_fetch_assoc($Result);

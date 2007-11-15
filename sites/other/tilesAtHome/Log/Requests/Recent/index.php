@@ -32,7 +32,7 @@
   function RenderList($Title, $Status, $DateLabel="Date"){
   
     $SQL = sprintf(
-      "SELECT * FROM tiles_queue WHERE `status`=%d ORDER BY date desc limit 30;",
+      "SELECT * FROM tiles_queue WHERE `status`=%d GROUP BY status ORDER BY date desc limit 30;",
       $Status);
       
     # SQL query to get those records

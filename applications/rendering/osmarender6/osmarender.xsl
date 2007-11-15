@@ -2613,7 +2613,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
       <a id="license-osm-link" xlink:href="http://www.openstreetmap.org/">
         <g transform="translate(-210,10)" id="license-osm-text">
           <text class="license-text" dx="0" dy="0">
-            Copyright © <xsl:value-of select="$year"/> OpenStreetMap (openstreetmap.org)
+            Copyright Â© <xsl:value-of select="$year"/> OpenStreetMap (openstreetmap.org)
           </text>
         </g>
       </a>

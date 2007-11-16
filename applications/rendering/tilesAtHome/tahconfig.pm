@@ -3,12 +3,15 @@ use strict;
 #--------------------------------------------------------------------------
 # Reads a tiles@home config file, returns a hash array
 #--------------------------------------------------------------------------
-sub ReadConfig{
+sub ReadConfig
+{
     my %Config;
-    while (my $Filename = shift()){
+    while (my $Filename = shift())
+    {
 
         open(my $fp,"<$Filename") || die("Can't open \"$Filename\" ($!)\n");
-        while(my $Line = <$fp>){
+        while(my $Line = <$fp>)
+        {
             $Line =~ s/#.*$//; # Comments
             $Line =~ s/\s*$//; # Trailing whitespace
 
@@ -28,7 +31,6 @@ sub ReadConfig{
             }
         }
         close $fp;
-
     }
     ApplyConfigLogic(\%Config);
 
@@ -39,7 +41,8 @@ sub ReadConfig{
 # Any application-specific knowledge regarding config file options
 # e.g. correct common errors in config files, or enforce naming conventions
 #--------------------------------------------------------------------------
-sub ApplyConfigLogic{
+sub ApplyConfigLogic
+{
     my $Config = shift();
 
     $Config->{"OsmUsername"} =~ s/@/%40/;  # Encode the @-symbol in OSM passwords
@@ -122,7 +125,8 @@ sub ApplyConfigLogic{
 #--------------------------------------------------------------------------
 # Checks a tiles@home configuration
 #--------------------------------------------------------------------------
-sub CheckConfig{
+sub CheckConfig
+{
     my $Config = shift();
     my %EnvironmentInfo;
 

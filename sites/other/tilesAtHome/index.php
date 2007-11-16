@@ -1,3 +1,9 @@
+<?php
+/// \file
+/// \brief Entrypoint which links to some status pages. Virtually no php here.
+///
+/// The only php used here embeds a sample map excerpt in the page.
+?>
 <html>
 <head>
 <title>OpenStreetMap tiles@home</title>
@@ -32,16 +38,16 @@
   </ul></p>
   
   <?php
-  $Z = 16;
-  $X = 32684;
-  $Y = 21834;
+  $Z = 16;    ///< z value of the displayed example maps
+  $X = 32684; ///< x value of the displayed example map
+  $Y = 21834; ///< y value of the displayed example map
   
   print "<table border=\"0\">";
   for($yi = 0; $yi < 2; $yi++){
     print "<tr>";
     for($xi = 0; $xi < 2; $xi++){
       $Img = sprintf(
-      "http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", 
+      "http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png", 
         $Z, 
         $X + $xi, 
         $Y + $yi);

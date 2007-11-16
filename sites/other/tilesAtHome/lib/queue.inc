@@ -24,7 +24,7 @@ function QueueDirectory(){
 }
 
 function MaxQueueLength(){
-  return(625);
+  return(1000);
 }
 
 ?>

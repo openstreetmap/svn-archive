@@ -38,9 +38,9 @@
   </ul></p>
   
   <?php
-  $Z = 16;    ///< z value of the displayed example maps
-  $X = 32684; ///< x value of the displayed example map
-  $Y = 21834; ///< y value of the displayed example map
+  $Z = 16;    ///< z value of the displayed example maps (local to this file)
+  $X = 32684; ///< x value of the displayed example map (local to this file)
+  $Y = 21834; ///< y value of the displayed example map (local to this file)
   
   print "<table border=\"0\">";
   for($yi = 0; $yi < 2; $yi++){

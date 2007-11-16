@@ -88,7 +88,7 @@ function doMap($Lat, $Long, $Zoom, $Width, $Height, $Format){
 # Location of map tiles
 #-----------------------------------------------------------------------------
 function tileURLB($X,$Y,$Z){
-  return(sprintf("http://dev.openstreetmap.org/~ojw/Tiles/tile.php/%d/%d/%d.png", $Z, $X, $Y));
+  return(sprintf("http://tah.openstreetmap.org/Tiles/tile/%d/%d/%d.png", $Z, $X, $Y));
 }
 #-----------------------------------------------------------------------------
 # Slippy map coordinate functions: should probably use a library

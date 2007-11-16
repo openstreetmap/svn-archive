@@ -424,10 +424,7 @@ sub GetRequestFromServer
 sub PutRequestBackToServer 
 {
     ## TODO: will not be called in some libGD abort situations
-    ## FIXME: this will request the wrong tiles if zoom != 12
-    my ($X,$Y,$Cause) = @_;
-
-    my $Z = ($Config{"Layers"} eq "lowzoom") ? 8 : 12;
+    my ($X,$Y,$Z,$Cause) = @_;
 
     ## do not do this if called in xy mode!
     return if($Mode eq "xy");
@@ -438,7 +435,6 @@ sub PutRequestBackToServer
     
     killafile($LocalFilename); # maybe not necessary if DownloadFile is called correctly?
     
-    # http://dev.openstreetmap.org/~ojw/NeedRender/?x=1&y=2&priority=0&src=test
     my $RequestUrlString = $Config{ReRequestURL} . "?x=" . $X . "&y=" . $Y . "&z=" . $Z . "&priority=" . $Prio . "&src=" . $Config{UploadUsername}. ":tahCltReReq:" . $Cause;
     
     statusMessage("Putting Job ".$X.",".$Y." back to server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
@@ -479,7 +475,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     $progressJobs++;
     $currentSubTask = "jobinit";
     
-    statusMessage(sprintf("Doing tileset $X,$Y (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+    statusMessage(sprintf("Doing tileset $X,$Y (zoom $Zoom) (area around %f,%f)", ($N+$S)/2, ($W+$E)/2), $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     
     my $maxCoords = (2 ** $Zoom - 1);
     
@@ -553,7 +549,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 # if loop was requested just return  or else exit with an error. 
                 # (to enable wrappers to better handle this situation 
                 # i.e. tell the server the job hasn't been done yet)
-                PutRequestBackToServer($X,$Y,"NoData");
+                PutRequestBackToServer($X,$Y,$Zoom,"NoData");
                 foreach my $file(@tempfiles) { killafile($file); }
                 addFault("nodata",1);
                 return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
@@ -575,7 +571,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                     if (-s $partialFile == 0)
                     {
                         statusMessage("No data here (sliced)...",$Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
-                        PutRequestBackToServer($X,$Y,"NoData");
+                        PutRequestBackToServer($X,$Y,$Zoom,"NoData");
                         foreach my $file(@tempfiles) { killafile($file); }
                         addFault("nodata",1);
                         return cleanUpAndDie("GenerateTilesetSliced, no data (sliced).",$Mode,1,$PID);
@@ -606,7 +602,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
       if (utf8::is_utf8($osmline)) # this might require perl 5.8.1 or an explicit use statement
       {
         statusMessage("found incorrect UTF-8 chars in $DataFile, job $X $Y  $Zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
-        PutRequestBackToServer($X,$Y,"BadUTF8");
+        PutRequestBackToServer($X,$Y,$Zoom,"BadUTF8");
         addFault("utf8",1);
         return cleanUpAndDie("GenerateTileset:UTF8 test failed",$Mode,1,$PID);
       }
@@ -1038,7 +1034,7 @@ sub svg2png
     {
         statusMessage("$Cmd failed", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
         ## TODO: check this actually gets the correct coords 
-        PutRequestBackToServer($X,$Y,"BadSVG");
+        PutRequestBackToServer($X,$Y,$ZOrig,"BadSVG");
         addFault("inkscape",1);
         return cleanUpAndDie("svg2png failed",$Mode,3,$PID);
     }
@@ -1163,7 +1159,7 @@ sub splitImageX
     if( not defined $Image )
     {
         print STDERR "\nERROR: Failed to read in file $File\n";
-        PutRequestBackToServer($X,$Y,"MissingFile");
+        PutRequestBackToServer($X,$Y,$ZOrig,"MissingFile");
         cleanUpAndDie("SplitImageX:MissingFile encountered, exiting","EXIT",4,$PID);
     }
   
@@ -1195,7 +1191,7 @@ sub splitImageX
         if (not ($SubImage->compare($BlackTileImage) & GD_CMP_IMAGE)) 
         {
             print STDERR "\nERROR: Your inkscape has just produced a totally black tile. This usually indicates a broken Inkscape, please upgrade.\n";
-            PutRequestBackToServer($X,$Y,"BlackTile");
+            PutRequestBackToServer($X,$Y,$ZOrig,"BlackTile");
             cleanUpAndDie("SplitImageX:BlackTile encountered, exiting","EXIT",4,$PID);
         }
         # Detect empty tile here:

@@ -769,7 +769,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
 
-        #if $empty then the next zoom level was empty, so we only upload one tile
+        #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
         if ($empty == 1 && $Config{GatherBlankTiles}) 
         {
             my $Filename=sprintf("%s_%s_%s_%s.png",$Config{"Layer.$layer.Prefix"}, $Zoom, $X, $Y);
@@ -809,12 +809,12 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 #-----------------------------------------------------------------------------
 sub RenderTile 
 {
-    my ($layer, $X, $Y, $Ytile, $Zoom, $ZOrig, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$empty) = @_;
+    my ($layer, $X, $Y, $Ytile, $Zoom, $ZOrig, $N, $S, $W, $E, $ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$SkipEmpty) = @_;
 
-    return if($Zoom > $Config{"Layer.$layer.MaxZoom"});
+    return 0 if($Zoom > $Config{"Layer.$layer.MaxZoom"});
     
     # no need to render subtiles if empty
-    return $empty if($empty == 1);
+    return $SkipEmpty if($SkipEmpty == 1);
 
     # Render it to PNG
     printf "Tilestripe %s (%s,%s): Lat %1.3f,%1.3f, Long %1.3f,%1.3f, X %1.1f,%1.1f, Y %1.1f,%1.1f\n",       $Ytile,$X,$Y,$N,$S,$W,$E,$ImgX1,$ImgX2,$ImgY1,$ImgY2 if ($Config{"Debug"}); 
@@ -826,11 +826,11 @@ sub RenderTile
     # current zoom level. 
     if (svg2png($Zoom, $ZOrig, $layer, $Width, $Height,$ImgX1,$ImgY1,$ImgX2,$ImgY2,$ImageHeight,$X,$Y,$Ytile) and !$Config{"Layer.$layer.RenderFullTileset"}) 
     {
-        $empty=1;
+        $SkipEmpty=1;
     }
 
     # Get progress percentage 
-    if($empty == 1) 
+    if($SkipEmpty == 1) 
     {
         # leap forward because this tile and all higher zoom tiles of it are "done" (empty).
         for (my $j = $Config{"Layer.$layer.MaxZoom"}; $j >= $Zoom ; $j--) 
@@ -871,10 +871,10 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$empty);
-    RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$empty);
+    RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+    RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
 
-    return $empty;
+    return $SkipEmpty; ## main call wants to know wether the entire tileset was empty so we return 1 if the tile was empty
 }
 
 
@@ -980,7 +980,7 @@ sub xml2svg
 #-----------------------------------------------------------------------------
 # Render a SVG file
 # $ZOrig - the lowest zoom level of the tileset
-# $X, $Y - tilemnumbers of the z12 tile containing the data we're working on
+# $X, $Y - tilemnumbers of the tileset
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
 #-----------------------------------------------------------------------------
 sub svg2png 

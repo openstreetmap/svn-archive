@@ -382,29 +382,7 @@ sub GetRequestFromServer
 
     my $Request;
 
-    if ($Mode eq "GET")
-    {
-        my $RequestUrlString = $Config{RequestURL} . "?version=" . $Config{ClientVersion} . "&user=" . $Config{UploadUsername} . "&layers=". $Config{Layers};
-        print STDERR "using URL " . $RequestUrlString . "\n" if ($Config{Debug});
-        statusMessage("Downloading: Request from server", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        DownloadFile(
-          $RequestUrlString, 
-          $LocalFilename, 
-          0);
-        
-        if(! -f $LocalFilename){
-            return 0;
-        }
-
-        # Read into memory
-        open(my $fp, "<", $LocalFilename) || return 0;
-        $Request = <$fp>;
-        chomp $Request;
-        close $fp;
-    
-        killafile($LocalFilename);
-    }
-    elsif ($Mode eq "POST")
+    if ($Mode eq "POST")
     {
         my $URL = $Config{RequestURL}."Request2.php"."?v=".$Config{ClientVersion}."&usr=".$Config{UploadUsername};
     

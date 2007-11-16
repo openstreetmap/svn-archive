@@ -36,7 +36,7 @@ function lookupUser($UserID){
     $SQL = sprintf("SELECT name FROM tiles_users WHERE `id`=%s;", mysql_real_escape_string($UserID));
     $Result = mysql_query($SQL);
     if(mysql_error()){
-    	logSqlError();
+    	#logSqlError();
 	return (NULL);
     }
     if(mysql_num_rows($Result) == 0){return(-1);}

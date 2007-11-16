@@ -29,11 +29,11 @@ function requestExists($X,$Y,$Z,$Mode){
 # status $ToMode. If $FromMode is NULL it moves all unfinished requests.
 # If $Create!=0 then create a request if none had existed
 #--------------------------------------------------
-function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
+function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0, $UserID = 0){
 
   if(!requestExists($X,$Y,$Z,$FromMode)) {
     if ($Create) {
-      $SQL = "INSERT INTO `tiles_queue` (`status`,`x`,`y`,`z`,`ip`) VALUES($ToMode,$X,$Y,$Z,NULL);";
+      $SQL = "INSERT INTO `tiles_queue` (`status`,`x`,`y`,`z`,`ip`, `user`) VALUES($ToMode,$X,$Y,$Z,NULL, $UserID);";
       mysql_query($SQL);
       return(1);
     }
@@ -42,10 +42,16 @@ function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
   }
   
   if($FromMode != NULL) {
+    $time_column = "active_date";
+    if ($FromMode == 2) {
+        $time_column = "complete_date";
+    }    
     # Move the specified request to the new mode
     $SQL = sprintf(
-      "update `tiles_queue` set `status`=%d, `date`=now() where `x`=%d and `y`=%d and `z`=%d and `status`=%d;",
+      "update `tiles_queue` set `status`=%d, `date`=now(), `%s`=now(), `user`=%s where `x`=%d and `y`=%d and `z`=%d and `status`=%d;",
       $ToMode,
+      $time_column,
+      $UserID,
       $X,
       $Y,
       $Z,
@@ -65,6 +71,17 @@ function moveRequest($X, $Y, $Z, $FromMode, $ToMode, $Create = 0){
   #logSqlError();
   
   return(1);
+}
+
+function request_info($X, $Y, $Z) {
+    $query = "SELECT * FROM tiles_queue WHERE x=$X AND y=$Y AND z=$Z ORDER BY date DESC";
+    $Result = mysql_query($query);
+      
+    if (mysql_num_rows($Result) != 0) {
+      $data = mysql_fetch_assoc($Result);
+      return $data;
+    }
+    return NULL;
 }
 
 ?>

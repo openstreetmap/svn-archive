@@ -1,4 +1,17 @@
 <?php
+NeedRender();
+?>
+
+<?php
+//////////////////////////////////////////////////////
+///	\brief Takes Render Requests via it's API
+///	and adds the request to the pending list if it is not there yet.
+///
+///	In case the request exists already and has a lower priority than the new request has
+///	the priority in the request queue will be increased.
+///	It also forces the priority of requests down if there are too many active requests from that IP address
+///	It returns a plaintext "OK" or "Already in queue" as answer
+function NeedRender() {
   header("Content-type:text/plain");
   $X = $_GET["x"];
   $Y = $_GET["y"];
@@ -77,5 +90,5 @@
         } 
       }
   }
- 
+} 
 ?>

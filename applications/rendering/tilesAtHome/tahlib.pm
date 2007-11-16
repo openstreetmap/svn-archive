@@ -191,7 +191,7 @@ sub runCommand
                     $ExtraInfo=$ExtraInfo."\n * Inkscape preference file corrupt. Delete ~/.inkscape/preferences.xml to continue";
                     addFault("fatal",1); ## this error is fatal because it needs human intervention before processing can continue
                 }
-                if (grep(/infinite template recursion/,$_))
+                elsif (grep(/infinite template recursion/,$_))
                 {
                     $ExtraInfo=$ExtraInfo."\n * Tile too complex for Xmlstarlet, possibly an excessively long way, or too many maplint errors";
                 }

@@ -43,7 +43,7 @@ if(0){
 }
 
 
-list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(), 20);
+list($Uploads, $Tiles) = HandleNextFilesFromQueue(QueueDirectory(),1000);
 //logMsg(sprintf("Queue runner - done %d uploads with %d tiles", $Uploads, $Tiles), 24);
 
 //----------------------------------------------------------------------------------
@@ -93,12 +93,12 @@ function HandleQueueItem($Name, $Dir){
     
     $Meta = MetaFileInfo($MetaFile);
     
-    $Count = HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
+    $Size = HandleUpload($ZipFile, $Meta["user"], $Meta["version"]);
     
     unlink($MetaFile);
     unlink($ZipFile);
     
-    return($Count);
+    return($Size);
 }
 
 //----------------------------------------------------------------------------------
@@ -124,6 +124,7 @@ function AbortWithError($Message){
 
 
 function HandleUpload($File, $UserID, $VersionID){
+  print "Handling $File from $UserID\n";
   # Decide on the name of a Temporary directory
   $Dir = TempDir();
   
@@ -150,13 +151,15 @@ function HandleUpload($File, $UserID, $VersionID){
   # -j means to ignore any pathnames in the ZIP file
   # -d $Dir specifies the directory to unzip to
   # $Filename is the zip file
+  print "Unzipping $File\n";
   $Command = sprintf("unzip -q -j -d %s %s", $Dir, $File);
   #logMsg("Running '$Command'", 3);
   system($Command);
+  print "Finished unzipping $File\n";
   
   #logMsg("Handling directory $Dir", 4);
   # Process all the tiles (return number of tiles done)
-  $Count = HandleDir($Dir, $UserID, $VersionID);
+  $Count = HandleDir($Dir, $UserID, $VersionID, $Size);
         
   # Delete the temporary directory and everything inside
   DelDir($Dir);
@@ -183,7 +186,7 @@ function DelDir($Dir){
 #----------------------------------------------------------------------
 # Processes tiles that are currently sitting in a temp directory
 #----------------------------------------------------------------------
-function HandleDir($Dir, $UserID, $VersionID){
+function HandleDir($Dir, $UserID, $VersionID, $Size = 0){
   $Count = 0;
   $TileList = array();
   $BlankTileList = array();
@@ -197,11 +200,11 @@ function HandleDir($Dir, $UserID, $VersionID){
     $Count += HandleFile($Filename, $VersionID, $TileList, $BlankTileList);
   }
   closedir($dp);
-
+   
   if($ValidTileset)
-    SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer,$Tilesetcount,$UserID, $VersionID);
+    SaveTilesetMetadata($TilesetX,$TilesetY,$TilesetLayer,$Tilesetcount,$UserID, $VersionID, $Size);
   else
-    SaveMetadata($TileList, $UserID, $VersionID);
+    SaveMetadata($TileList, $UserID, $VersionID, $Size);
 
   SaveBlankTiles($BlankTileList, $UserID, $ValidTileset);
 
@@ -211,9 +214,9 @@ function HandleDir($Dir, $UserID, $VersionID){
 #-----------------------------------------------------------------------------------
 # Save metadata for each tile in the upload
 #-----------------------------------------------------------------------------------
-function SaveMetadata($TileList, $UserID, $VersionID){
+function SaveMetadata($TileList, $UserID, $VersionID, $Size = 0){
   
-  SaveUserStats($UserID, $VersionID, count($TileList));
+  SaveUserStats($UserID, $VersionID, count($TileList), $Size);
   
   RemoveFromQueue($TileList);
 
@@ -291,8 +294,8 @@ function DeleteRealTile($X,$Y,$Z,$LayerID){
 #-----------------------------------------------------------------------------
 # Save metadata when an entire tileset is uploaded at once
 #-----------------------------------------------------------------------------
-function SaveTilesetMetadata($X,$Y,$Layer,$Count, $UserID, $VersionID){
-  SaveUserStats($UserID, $VersionID, $Count);
+function SaveTilesetMetadata($X,$Y,$Layer,$Count, $UserID, $VersionID, $Size = 0){
+  SaveUserStats($UserID, $VersionID, $Count, $Size);
   
   moveRequest($X, $Y, 12, NULL, REQUEST_DONE, 0);
   logMsg("Tileset $X,$Y uploaded at once", 4);
@@ -329,11 +332,12 @@ function RemoveFromQueue($TileList){
 #---------------------------------------------------------------------------
 # Update user info with their latest upload
 #---------------------------------------------------------------------------
-function SaveUserStats($UserID, $VersionID, $NumTiles){
+function SaveUserStats($UserID, $VersionID, $NumTiles, $NumBytes = 0){
   $SQL = 
     "update `tiles_users` set ".
       "`uploads` = `uploads` + 1, ".
       sprintf("`tiles` = `tiles` + %d, ", $NumTiles).
+      sprintf("`bytes` = `bytes` + %d, ", $NumBytes).
       sprintf("`version` = %d, ", $VersionID).
       "`last_upload` = now() ".
     " where ".

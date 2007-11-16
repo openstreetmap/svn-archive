@@ -21,7 +21,7 @@ function Handle($Permalink){
     
     # Create a URL showing this area in the MapOf viewer
     $MapURL = sprintf(
-      "http://dev.openstreetmap.org/~ojw/MapOf/?lat=%f&long=%f&z=%d&w=%d&h=%d&format=jpeg",
+      "http://tah.openstreetmap.org/MapOf/?lat=%f&long=%f&z=%d&w=%d&h=%d&format=jpeg",
       $Keys['lat'],
       $Keys['lon'],
       $Keys['zoom'],

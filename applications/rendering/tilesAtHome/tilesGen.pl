@@ -804,7 +804,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 #   $ZOrig, the lowest zoom level which called tileset generation
 #   $N, $S, $W, $E - bounds of the tile
 #   $ImgX1,$ImgY1,$ImgX2,$ImgY2 - location of the tile in the SVG file
-#   $ImageHeight - Height of the SVG in SVG units
+#   $ImageHeight - Height of the entire SVG in SVG units
 #   $empty - put forward "empty" tilestripe information.
 #-----------------------------------------------------------------------------
 sub RenderTile 
@@ -860,13 +860,13 @@ sub RenderTile
     }
 
     # Sub-tiles
-    my $MercY2 = ProjectF($N);
-    my $MercY1 = ProjectF($S);
-    my $MercYC = 0.5 * ($MercY1 + $MercY2);
-    my $LatC = ProjectMercToLat($MercYC);
+    my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
+    my $MercY1 = ProjectF($S); # get mercator coordinates for South border of tile
+    my $MercYC = 0.5 * ($MercY1 + $MercY2); # get center of tile in mercator
+    my $LatC = ProjectMercToLat($MercYC); # reproject centerline to latlon
 
-    my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1);
-    my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;
+    my $ImgYCP = ($MercYC - $MercY1) / ($MercY2 - $MercY1); 
+    my $ImgYC = $ImgY1 + ($ImgY2 - $ImgY1) * $ImgYCP;       # find mercator coordinates for bottom/top of subtiles
 
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;

@@ -32,7 +32,7 @@
       REQUEST_DONE,
       $_SERVER['REMOTE_ADDR']);
     $Result = mysql_query($SQL);
-    if ($row = mysql_fetch_row($Result) and $row[0] >= 20) 
+    if ($row = mysql_fetch_row($Result) and $row[0] >= 100) 
       if ($row[0] >= 1000) {$P = 3;} else {$P=($P<2)?2:$P;}
   }
   if (!requestExists($X,$Y,$Z,NULL)){
@@ -40,6 +40,15 @@
        "INSERT into tiles_queue (`x`,`y`,`z`,`status`,`src`,`date`,`priority`,`ip`, `request_date`) values (%d,%d,%d,%d,'%s',now(),%s,'%s',now());", 
        $X, $Y, $Z, REQUEST_PENDING, mysql_escape_string($Src), $P, $_SERVER['REMOTE_ADDR']);
 
+     mysql_query($SQL);
+     if(mysql_error()){
+       printf("Database error %s\n", mysql_error());
+       exit;
+     }
+     print "OK\n";
+  } else if (!(stripos($Src, "tahCltReReq") === FALSE)) {
+     $SQL = sprintf("UPDATE `tiles_queue` SET `priority`=2, `status`=0, `src`='%s' WHERE `x`=%d AND `y`=%d AND `z`=%d AND `status`!=%d",
+       mysql_escape_string($Src), $X, $Y, $Z, REQUEST_DONE);
      mysql_query($SQL);
      if(mysql_error()){
        printf("Database error %s\n", mysql_error());

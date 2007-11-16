@@ -42,7 +42,7 @@
 
          $SQL = sprintf(
             "UPDATE `tiles_queue` set `status`=%d,  `retries`=`retries`+1, `date`=now() where `date` < date_sub(now(), INTERVAL %d HOUR) and `retries`<%d and `status`=%d;", 
-            REQUEST_NEW,
+            REQUEST_PENDING,
             $MaxAge,
             $MaxRetries,
             $Status

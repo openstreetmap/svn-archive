@@ -20,17 +20,17 @@
 <p>The <a href="Recent/">latest 30 requests in each queue</a> are available (which used to be displayed on this page)</p>
 
 <h2>Today</h2>
-<p><img src="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tah_processed-day.png"></p>
+<p><img src="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap-tah_processed-day.png"></p>
 
 <h2>This week</h2>
-<p><img src="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap-tah_processed-week.png"></p>
+<p><img src="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap-tah_processed-week.png"></p>
 
-<p>Munin has a <a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html#T@H">page for these graphs</a>, and for <a href="http://munin.openstreetmap.org/openstreetmap/dev.openstreetmap.html">the dev server</a> in general</p>
+<p>Munin has a <a href="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap.html#T@H">page for these graphs</a>, and for <a href="http://munin.openstreetmap.org/openstreetmap/tah.openstreetmap.html">the tiles@home server</a> in general</p>
   
 <h2>Notes</h2>
   
 <ul>
-<li><b>Pending</b> requests are created when you ask for an area to be rerendered. (see the <a href="http://wiki.openstreetmap.org/index.php/Tiles%40home/APIs">API</a> if you want to know how to make those requests)</li>
+<li><b>Pending</b> requests are created when you ask for an area to be rerendered. (see the <a href="http://wiki.openstreetmap.org/index.php/Tiles%40home/APIs">API</a> if you want to know how to make those requests). Low priority pending requests get their own graph.</li>
 
 <li><b>Active</b> requests have been taken by tiles@home clients to render</li>
 
@@ -41,13 +41,13 @@
 
 <ul>
 
-<li><b>Green (or blue) goes up</b> - something's been requested</li>
+<li><b>Green goes up</b> - something's been requested</li>
 
-<li><b>Green (or blue) to red</b> - tiles@home client has taken a request</li>
+<li><b>Green to blue</b> - tiles@home client has taken a request</li>
 
-<li><b>Red to Pink</b> - a successful rendering</li>
+<li><b>Blue to Turquoise</b> - a successful rendering</li>
 
-<li><b>Turquoise</b> - Long-term moving average of fulfilled requests per hour</li>
+<li><b>Red</b> - Long-term moving average of fulfilled requests per hour</li>
 
 </ul>
 

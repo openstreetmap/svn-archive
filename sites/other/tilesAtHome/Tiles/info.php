@@ -18,6 +18,7 @@
   include("../lib/tilenames.inc");
   include("../lib/layers.inc");
   include("../lib/users.inc");
+  include("../lib/requests.inc");
   include("../lib/versions.inc");
   
   
@@ -51,26 +52,26 @@
 
   // Open database connection
   include("../connect/connect.php");
-  if ($Z >= 12) {
-  list($Valid,$X,$Y) = WhichTileset($X,$Y,$Z);
+  if ($Z > 12) {
+    list($Valid,$X,$Y) = WhichTileset($X,$Y,$Z);
   }
-  $query = "SELECT * FROM tiles_queue WHERE x=$X AND y=$Y AND z=$Z ORDER BY date DESC";
-  $Result = mysql_query($query);
-  $States = Array( 
-    0 => "Pending",
-    1 => "New",
-    2 => "Active (out to client)",
-    3 => "Complete"
-  );  
-    
-  if (mysql_num_rows($Result) != 0) {
-    $data = mysql_fetch_assoc($Result);
-    print "<h2>Current Request Status</h2>";
-    print "Requested at ".$data['request_date'].", by ".$data['src'].", with priority ".$data['priority'].". <br />Current state is <b>".$States[$data['status']]."</b>.<br />";
-    if ($data['status'] >= 2) {
-        print "Taken by client at ".$data['active_date'].".";
-    }    
-  }  
+  if ($Z >= 12) {
+    $data = request_info($X, $Y, 12);
+    if ($data) {
+      $States = Array( 
+        0 => "Pending",
+        1 => "New",
+        2 => "Active (out to client)",
+        3 => "Complete"
+      );  
+      
+      print "<h2>Current Request Status</h2>";
+      print "Requested at ".$data['request_date'].", by ".$data['src'].", with priority ".$data['priority'].". <br />Current state is <b>".$States[$data['status']]."</b>.<br />";
+      if ($data['status'] >= 2) {
+          print "Taken by client at ".$data['active_date'].".";
+      }    
+    }  
+  }
   print "<h2>Tile on disk</h2>\n";
   // look up filesystem
   if ($FileExists = SearchFilesystem($X,$Y,$Z,$LayerID)) {

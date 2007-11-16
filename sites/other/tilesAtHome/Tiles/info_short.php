@@ -3,6 +3,7 @@
   include("../lib/tilenames.inc");
   include("../lib/layers.inc");
   include("../lib/users.inc");
+  include("../lib/requests.inc");
   include("../lib/versions.inc");
   
   
@@ -34,14 +35,14 @@
   	$Data = SearchMetaDB($X,$Y,$Z,$LayerID,0);  
 	// Look for a complete tileset and use the newer entry
   	if($Z > 12){
-    	  list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
-    	  if($Valid){
-      	    if ($TilesetData = SearchMetaDB($X12,$Y12,12,$LayerID,1)){
-	      if ($TilesetData['date'] > $Data['date']) {
-	        $Date = $TilesetData;
-	      }
-      	    }
-    	  }
+    	list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
+    	if($Valid){
+      	  if ($TilesetData = SearchMetaDB($X12,$Y12,12,$LayerID,1)){
+	    if ($TilesetData['date'] > $Data['date']) {
+	      $Date = $TilesetData;
+	    }
+      	  }
+    	}
 	}
   }
   PrintMetaInfo($Data);
@@ -50,6 +51,20 @@
 	SearchBlankTiles($X,$Y,$Z,$LayerID);
   }
   
+  if ($Z >= 12) {
+    list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
+    $data = request_info($X12, $Y12, Z);
+    if ($data) {
+        print "\nState | ".$data['status']." | Source ".$data['src']." | Requested ".$data['request_date'] . " | Retries ".$data['retries'];
+        if ($data['status'] == 2) {
+            print " | Client " . $data['active_date'];
+        }
+        if ($data['status'] == 3) {
+            print " | Complete " . $data['date'];
+        }    
+    }
+  }  
+
   // Look for a file on the filesystem
   function SearchFilesystem($X,$Y,$Z,$LayerID){
     $LayerName = LayerDir($LayerID);
@@ -83,11 +98,15 @@
   }
       
   function PrintMetaInfo($Data){
+    $username = "unknown";
+    if ($Data["user"]) { 
+      $username = htmlentities(lookupUser($Data["user"]));
+    }  
     printf(
       "| uploaded %s | user %d (%s) | version %d (%s)",
       $Data["date"],
       $Data["user"],
-      htmlentities(lookupUser($Data["user"])),
+      $username,
       $Data["version"],
       htmlentities(versionName($Data["version"])));
   }

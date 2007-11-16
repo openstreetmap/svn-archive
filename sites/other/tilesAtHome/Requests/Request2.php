@@ -62,11 +62,11 @@
     #}
   }
 
-  CheckForRequest($Z);
+  CheckForRequest($Z, $UserID);
   printf("XX|%d||||nothing_to_do",$APIVersion);
   // THE END
 
-function CheckForRequest($Z){
+function CheckForRequest($Z, $UserID = 0){
   
   global $APIVersion;
   # next request that is handed out: order by priority, then date.
@@ -97,7 +97,7 @@ function CheckForRequest($Z){
     $Z,
     $Data["status"],
     REQUEST_ACTIVE,
-    0);
+    0, $UserID);
 
   logSqlError();
   exit;

@@ -5,10 +5,7 @@ BEGIN {
     my $dir = $0;
     $dir =~s,[^/]+/[^/]+$,,;
     unshift(@INC,"$dir/perl_lib");
-
-    unshift(@INC,"../../perl_lib");
-    unshift(@INC,"~/svn.openstreetmap.org/applications/utils/perl_lib");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/applications/utils/perl_lib");
+    unshift(@INC,"../perl_lib");
 }
 
 

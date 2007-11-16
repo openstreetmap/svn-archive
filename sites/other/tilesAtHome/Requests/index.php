@@ -3,8 +3,8 @@
   // All Requests should be done via the Request2.php now
 
   header("Content-type:text/plain");
-  $APIVersion=3;
+  $APIVersion=99; #make clients using GET stop and not re-request every 60 seconds by setting arbitrarily high API version number
 
-  printf("XX|%d||||index.php is deprecated. Update client to later version.\n\nNew URL is Requests/Request2.php",
-      $APIVersion);
+  printf("OK|%d||||index.php is deprecated. Update client to later version.\n\nNew URL is Requests/Request2.php",
+      $APIVersion); #OK as a workaround for *really* old clients which would only look at api version if the request was starting "OK"
 ?>

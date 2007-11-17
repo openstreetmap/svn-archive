@@ -52,6 +52,7 @@ function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
    if (file_exists("../connect/connect.php")) include_once("../connect/connect.php");
    if (file_exists("../../connect/connect.php")) include_once("../../connect/connect.php");
    if (!DbSuccess) return FALSE;
+   if ($LayerID < 1) return FALSE;
    $Fields = "x, y, z, layer, date, user, type";
    $Values = sprintf("%d, %d, %d, %d, now(), %d, %d", $X, $Y, $Z, $LayerID, $UserID, $Blanktype);
    $SQL = sprintf("REPLACE INTO `tiles_blank` (%s) values (%s);", $Fields, $Values);

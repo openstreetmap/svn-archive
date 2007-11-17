@@ -54,11 +54,13 @@
       case 201:
         // mark tile as blank sea
 	include_once("../lib/blanktile.inc");
+	include_once("../lib/layers.inc");
         InsertBlankTile($X,$Y,$Z,checkLayer($layer),$UID,1);
         break;
       case 202:
         // mark tile as blank land
 	include_once("../lib/blanktile.inc");
+	include_once("../lib/layers.inc");
         InsertBlankTile($X,$Y,$Z,checkLayer($layer),$UID,2);
         break;
       default:

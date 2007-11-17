@@ -6,4 +6,7 @@ $conf['BASEDIR'] = '/var/www/osm';
 
 /// log directory (no ending slash)
 $conf['LOGDIR'] = $conf['BASEDIR'].'/Log/Data';
+
+/// tiles are stored in
+$conf['TILEDIR'] = '/mnt/agami/openstreetmap/tah/Tiles';
 ?>

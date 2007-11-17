@@ -44,11 +44,14 @@
      FeedbackReturn(205,'no such unfinished request in queue. ignore error and get next job.');
   } else {
     // The request exists and is in unfinished state. Check the error code and act accordingly
-    switch($result) {
+    switch($resCode) {
       case 200:
-        // feedback: tileset rendered OK. 
+        /// feedback 200: tileset rendered OK.
+        /// \todo Need to record the render time/tile complexity in the data base
+        FeedbackReturn(200,'OK');
         break;
-      case default:
+
+      default:
         // catch all unknown feedback codes
         FeedbackReturn(501,'feedback code not rmplemented');
     }
@@ -67,7 +70,7 @@
 function FeedbackReturn($code=200, $reason='OK') {
   header('HTTP/1.1 '.$code.' '.$reason);
   header('Content-type: text/plain');
-  printf("%d: %s\n", $code, $reason);
+  printf("%d %s\n", $code, $reason);
   exit;
 }
 ?>

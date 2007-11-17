@@ -12,16 +12,16 @@ if(1){
   }
 }
 
-include("../../lib/log.inc");
-include("../../lib/tilenames.inc");
-include("../../lib/users.inc");
-include("../../lib/versions.inc");
-include("../../lib/queue.inc");
-include_once("../../lib/layers.inc");
-include("../../lib/requests.inc");
-include("../../lib/checkupload.inc");
-include("../../connect/connect.php");
-include("../../lib/blanktile.inc");
+require_once("../../lib/log.inc");
+require_once("../../lib/tilenames.inc");
+require_once("../../lib/users.inc");
+require_once("../../lib/versions.inc");
+require_once("../../lib/queue.inc");
+require_once("../../lib/layers.inc");
+require_once("../../lib/requests.inc");
+require_once("../../lib/checkupload.inc");
+require_once("../../connect/connect.php");
+require_once("../../lib/blanktile.inc");
 
 
 if(0){ // Option to turn off uploads

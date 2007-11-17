@@ -11,10 +11,12 @@
   $Z = $_POST["z"]?$_POST["z"]:$_GET["z"]; ///< z level of feedback tile(set)
   $layer = $_POST['layer']?$_POST['layer']:$_GET['layer'];  ///< layer of feedback tile(set)
 
-  /// feedback code
-  ///
+  
   /// 200: Tileset rendered OK. resMsg contains the render time in seconds.
-  $resCode = $_POST['resCode']?$_POST['resCode']:$_GET['resCode'];
+  /// 201: mark tile as blank sea
+  /// 202: mark tile as blank land
+  $resCode = $_POST['resCode']?$_POST['resCode']:$_GET['resCode']; ///< feedback code
+
   /// feedback message
   $resMsg = $_POST['resMsg']?$_POST['resMsg']:urldecode($_GET['resMsg']); 
 
@@ -30,7 +32,7 @@
      FeedbackReturn(400,'Invalid XY');
   }
   
-  include("../lib/users.inc");
+  include_once("../lib/users.inc");
   if (($UID = checkUser($client,'letmein')) < 1) {
     FeedbackReturn(401,'Wrong username/passsword');
   }
@@ -48,13 +50,22 @@
       case 200:
         /// feedback 200: tileset rendered OK.
         /// \todo Need to record the render time/tile complexity in the data base
-        FeedbackReturn(200,'OK');
         break;
-
+      case 201:
+        // mark tile as blank sea
+	include_once("../lib/blanktile.inc");
+        InsertBlankTile($X,$Y,$Z,checkLayer($layer),$UID,1);
+        break;
+      case 202:
+        // mark tile as blank land
+	include_once("../lib/blanktile.inc");
+        InsertBlankTile($X,$Y,$Z,checkLayer($layer),$UID,2);
+        break;
       default:
         // catch all unknown feedback codes
         FeedbackReturn(501,'feedback code not rmplemented');
     }
+    FeedbackReturn(200,'OK');
   }
 
 

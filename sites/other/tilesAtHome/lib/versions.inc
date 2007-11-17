@@ -1,6 +1,9 @@
 <?php
+require_once('config.inc.php');
+$versiontxt = $conf['BASEDIR'].'/lib/clientversions.txt';
 
 function checkVersion($VersionString){
+  global $versiontxt;
 
   # x_ prefix means an experimental client (ID=11) which is default-accept
   if(substr($VersionString, 0, 2) == "x_"){
@@ -8,7 +11,7 @@ function checkVersion($VersionString){
   }
 
   # Look in the list of versions
-  $fp = fopen(versionFilename(), "r");
+  $fp = fopen($versiontxt, "r");
   if(!$fp){
     return(-1);
   }
@@ -35,7 +38,9 @@ function checkVersion($VersionString){
 }
 
 function getVersions(){
-  $fp = fopen(versionFilename(), "r");
+  global $versiontxt;
+
+  $fp = fopen($versiontxt, "r");
   if(!$fp){
     return(Array());
   }
@@ -56,10 +61,6 @@ function versionName($ID){
   if(!$Version)
     return("unknown");
   return($Version);
-}
-
-function versionFilename(){
-  return("/var/www/osm/lib/clientversions.txt");
 }
 
 ?>

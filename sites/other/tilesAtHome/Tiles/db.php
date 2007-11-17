@@ -2,6 +2,7 @@
   // This is the 404 handler script, for tiles not present 
   // via mod-rewrite as real files.
 
+  include("../connect/connect.php");
   include("../lib/tilenames.inc");
   include("../lib/layers.inc");
   include("../lib/blanktile.inc");
@@ -41,6 +42,11 @@
   // look for landsea tiles if everything else fails
   if(1){
     $Blank = LookUpBlankTile($X,$Y,$Z,$LayerID);
+    if ($Z == 12) {
+      $complexity = FindComplexity($X, $Y, $Z);
+    } else {
+      $complexity = 5;
+    }
     switch($Blank){
       case 1:
         BlankTile("sea", FALSE);
@@ -52,14 +58,23 @@
         header("HTTP/1.0 302 Found");
         header("Location: http://dev.openstreetmap.org/~ojw/Tiles/tile.php/$Z/$X/$Y.png");
         //BlankTile("unknown", TRUE); // probably shouldn't reach this line
-	//Request the render of this missing tile
-	if ($Z==12) {
-	  fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile","r");
+        //Request the render of this missing tile
+        if ($Z==12 && $complexity) {
+          fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile:$complexity","r");
         }
         break;
       }
   }
 
+  function FindComplexity($X, $Y, $Z = 12) {
+    $sql = "SELECT * FROM tiles_complexity WHERE x=$X and y=$Y";
+    $r = mysql_query($sql); 
+    if (mysql_num_rows($r)) {
+        $result = mysql_fetch_assoc($r);
+        return $result['complexity'];
+    }
+    return 0;
+  }  
   function BlankTile($Type="404", $Error=TRUE){
     $Filename = "Gfx/$Type.png";
     $CacheDays = 14;
@@ -73,9 +88,9 @@
             header('Cache-Control: no-store, no-cache, must-revalidate');
             header('Cache-Control: post-check=0, pre-check=0', false);
             header('Pragma: no-cache');
-	} else {
+        } else {
             //Proxy friendly caching
-	    header('Vary: Accept-Encoding');
+            header('Vary: Accept-Encoding');
             //Cache tile for $CacheDays on proxy and 24 hour client.
             header('Cache-Control: s-maxage='.($CacheDays*86400).', must-revalidate, max-age=86400');
         }

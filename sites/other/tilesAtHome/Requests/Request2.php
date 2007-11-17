@@ -30,6 +30,9 @@
   $Pass = $_POST["pass"];
   $UserID = checkUser($User, $Pass);
 
+  if ($UserID == -1) {
+    printf("XX|%d||||client disabled",$APIVersion);
+  }
   # If credentials are valid
   if($UserID < 1){
     printf("XX|%d||||Invalid username", ($APIVersion+1));

@@ -1,4 +1,6 @@
 <?php
+  /// \file
+  /// Hands out render request to tah clients
   header("Content-type:text/plain");
 
   $APIVersion=3;
@@ -20,7 +22,7 @@
 
 
   include("../connect/connect.php");
-  include("../lib/log.inc");
+  include_once("../lib/log.inc");
   include("../lib/requests.inc");
   include("../lib/versions.inc");
   include("../lib/users.inc");
@@ -33,10 +35,11 @@
   if ($UserID == -1) {
     printf("XX|%d||||client disabled",$APIVersion);
   }
+
   # If credentials are valid
   if($UserID < 1){
-    printf("XX|%d||||Invalid username", ($APIVersion+1));
     AbortWithError(401, "Invalid username");
+    printf("XX|%d||||Invalid username", ($APIVersion+1));
     exit; # Redundant, failsafe
   }
 
@@ -106,7 +109,7 @@ function CheckForRequest($Z, $UserID = 0){
   exit;
 }
 
-## The following function duplicated from tile2.php from uploads
+/// Exit with an HTTP error code
 function AbortWithError($Code, $Message){
   header(sprintf("HTTP/1.0 %d %s", $Code, $Message));
   header("Content-type:text/plain");

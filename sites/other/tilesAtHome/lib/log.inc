@@ -1,7 +1,11 @@
 <?php
+require_once('config.inc.php');
+
 
 function logMsg($Text, $Priority){
-  $Filename = sprintf("/var/www/osm/Log/Data/messages_p%d.txt", $Priority);
+  global $conf;  
+
+  $Filename = sprintf("%s/messages_p%d.txt", $conf['LOGDIR'], $Priority);
   $fp = fopen($Filename, "a");
   if(!$fp)
     return;

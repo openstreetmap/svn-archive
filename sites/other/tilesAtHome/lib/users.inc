@@ -10,7 +10,7 @@ function checkUser($SuppliedUsername, $SuppliedPassword){
     if (file_exists("../../connect/connect.php")) include_once("../../connect/connect.php");
     if (!DbSuccess) return NULL;
 
-    $SQL = sprintf("SELECT id FROM tiles_users WHERE name='%s' and password='%s';", 
+    $SQL = sprintf("SELECT id,disabled FROM tiles_users WHERE name='%s' and password='%s';", 
       mysql_real_escape_string($SuppliedUsername),
       md5($SuppliedPassword));
     $Result = mysql_query($SQL);
@@ -23,8 +23,11 @@ function checkUser($SuppliedUsername, $SuppliedPassword){
       return(-1);
     }
     $Row = mysql_fetch_assoc($Result);
-
-    return($Row['id']);
+    if ($Row['disabled']) {
+      return -1;
+    } else {  
+      return($Row['id']);
+    }  
 }
 
 /// return a user name from its ID

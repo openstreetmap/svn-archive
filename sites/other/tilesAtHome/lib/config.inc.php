@@ -1,6 +1,6 @@
 <?php
 /// \file 
-/// contains the central configuration data for the t@h server installation
+/// contains the central configuration data for the tah server installation
 
 /// root directory (no ending slash)
 $conf['BASEDIR'] = '/var/www/osm';

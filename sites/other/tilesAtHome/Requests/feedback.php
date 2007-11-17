@@ -6,15 +6,21 @@
   ///
   /// For a list of return codes, see documentation of FeedbackReturn();
 
-  $X = $_POST["x"]?$_POST["x"]:$_GET["x"];
-  $Y = $_POST["y"]?$_POST["y"]:$_GET["y"];
-  $Z = $_POST["z"]?$_POST["z"]:$_GET["z"];
-  $client = $_POST["user"]?$_POST["user"]:$_GET["user"];
-  $passwd = $_POST["passwd"]?$_POST["passwd"]:$_GET["passwd"];
-  $layer = $_POST["layer"];
-  $result = $_POST["result"];
-  $reason = $_POST["reason"];
-  
+  $X = $_POST["x"]?$_POST["x"]:$_GET["x"]; ///< x coord of feedback tile(set)
+  $Y = $_POST["y"]?$_POST["y"]:$_GET["y"]; ///< y coord of feedback tile(set)
+  $Z = $_POST["z"]?$_POST["z"]:$_GET["z"]; ///< z level of feedback tile(set)
+  $layer = $_POST['layer']?$_POST['layer']:$_GET['layer'];  ///< layer of feedback tile(set)
+
+  /// feedback code
+  ///
+  /// 200: Tileset rendered OK. resMsg contains the render time in seconds.
+  $resCode = $_POST['resCode']?$_POST['resCode']:$_GET['resCode'];
+  /// feedback message
+  $resMsg = $_POST['resMsg']?$_POST['resMsg']:urldecode($_GET['resMsg']); 
+
+  $client = $_POST['user']?$_POST['user']:urldecode($_GET['user']); ///< user auth name
+  $passwd = $_POST['passwd']?$_POST['passwd']:urldecode($_GET['passwd']); ///< user auth password
+
   //sanity checks
   if($Z != 12 && $Z != 8){
      FeedbackReturn(400,'Invalid Z');
@@ -38,8 +44,14 @@
      FeedbackReturn(205,'no such unfinished request in queue. ignore error and get next job.');
   } else {
     // The request exists and is in unfinished state. Check the error code and act accordingly
-   
-    FeedbackReturn();
+    switch($result) {
+      case 200:
+        // feedback: tileset rendered OK. 
+        break;
+      case default:
+        // catch all unknown feedback codes
+        FeedbackReturn(501,'feedback code not rmplemented');
+    }
   }
 
 
@@ -49,7 +61,8 @@
 /// and as a plaintext line.
 /// 200: everything is fine
 /// 205: no unfinished request existed
-/// 400: bad request. something was invalid.
+/// 400: bad request. something in the request was invalid.
+/// 501: the sent feedback code was unknown.
 ///
 function FeedbackReturn($code=200, $reason='OK') {
   header('HTTP/1.1 '.$code.' '.$reason);

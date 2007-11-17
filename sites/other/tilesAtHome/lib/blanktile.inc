@@ -35,11 +35,10 @@ function LookUpBlankTile($X,$Y,$Z,$LayerID){
 }
 
 
-
-#------------------------------------------------------------------------------
-# This function insert new blankness information if it is necessary
-# blankness can be 1=sea,2=land. It returns FALSE on error, or TRUE on success
-#------------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////
+/// This function insert new blankness information if it is necessary
+/// blankness can be 1=sea,2=land. It returns FALSE on error, or TRUE on success
+//////////////////////////////////////////////////////////////
 function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
    if (($Blanktype < 1) or ($Blanktype > 2)) return FALSE;
 

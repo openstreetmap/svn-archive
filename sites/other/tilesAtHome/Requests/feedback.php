@@ -5,14 +5,16 @@
   ///
   /// For a list of return codes, see documentation of FeedbacReturn();
 
-  $X = $_GET["x"];
-  $Y = $_GET["y"];
-  $Z = $_GET["z"];
-  $Src = $_GET["src"];
-  $layer = $_GET["layer"];
-  $result = $_GET["result"];
-  $reason = $_GET["reason"];
+  $X = $_POST["x"];
+  $Y = $_POST["y"];
+  $Z = $_POST["z"];
+  $client = $_POST["user"];
+  $passwd = $_POST["passwd"]
+  $layer = $_POST["layer"];
+  $result = $_POST["result"];
+  $reason = $_POST["reason"];
   
+  //sanity checks
   if($Z != 12 && $Z != 8){
      FeedbackReturn(400,'Invalid Z');
      exit;
@@ -23,6 +25,12 @@
      exit;
   }
   
+  include("../lib/users.inc");
+  if (($uid = checkUser($_POST['user'],$_POST['passwd']) < 1) {
+    FeedbackReturn(401,'Wrong username/passsword');
+    exit;
+  }
+
   include("../connect/connect.php");
   include("../lib/requests.inc");
 

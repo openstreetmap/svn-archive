@@ -6,11 +6,11 @@
   ///
   /// For a list of return codes, see documentation of FeedbackReturn();
 
-  $X = $_POST["x"]|0;
-  $Y = $_POST["y"]|0;
-  $Z = $_POST["z"]|12;
-  $client = $_POST["user"];
-  $passwd = $_POST["passwd"];
+  $X = $_POST["x"]?$_POST["x"]:$_GET["x"];
+  $Y = $_POST["y"]?$_POST["y"]:$_GET["y"];
+  $Z = $_POST["z"]?$_POST["z"]:$_GET["z"];
+  $client = $_POST["user"]?$_POST["user"]:$_GET["user"];
+  $passwd = $_POST["passwd"]?$_POST["passwd"]:$_GET["passwd"];
   $layer = $_POST["layer"];
   $result = $_POST["result"];
   $reason = $_POST["reason"];
@@ -25,7 +25,7 @@
   }
   
   include("../lib/users.inc");
-  if (($UID = checkUser($_POST['user'],$_POST['passwd'])) < 1) {
+  if (($UID = checkUser($client,'letmein')) < 1) {
     FeedbackReturn(401,'Wrong username/passsword');
   }
 

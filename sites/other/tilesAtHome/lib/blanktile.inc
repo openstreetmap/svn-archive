@@ -1,4 +1,6 @@
 <?php
+require_once('config.inc.php');
+require_once($conf['BASEDIR']."/connect/connect.php");
 
 #------------------------------------------------------------------------------
 # This function looks up the blankness entries recursively and returns the 
@@ -7,11 +9,6 @@
 # blankness can be 1=sea,2=land,0= no blankness info found
 #------------------------------------------------------------------------------
 function LookUpBlankTile($X,$Y,$Z,$LayerID){
-    $NoExitOnDbFail = 1; 
-    if (file_exists("../connect/connect.php")) include_once("../connect/connect.php");
-    if (file_exists("../../connect/connect.php")) include_once("../../connect/connect.php");
-    if (!DbSuccess) return NULL;
-
     $SQL = sprintf("select type from tiles_blank where `x`=%d and `y`=%d and `z`=%d and `layer`=%d limit 1;",
 	$X, $Y, $Z, $LayerID);
     $Result = mysql_query($SQL);
@@ -28,9 +25,6 @@ function LookUpBlankTile($X,$Y,$Z,$LayerID){
     }
   
     $blank = mysql_fetch_assoc($Result);
-    // Don't close MySQL connection, we might need it later on
-    //mysql_close();
-
     return $blank["type"];
 }
 
@@ -48,10 +42,6 @@ function InsertBlankTile($X,$Y,$Z,$LayerID,$UserID,$Blanktype){
    }
 
    #otherwise we really need to insert stuff
-   $NoExitOnDbFail = 1; 
-   if (file_exists("../connect/connect.php")) include_once("../connect/connect.php");
-   if (file_exists("../../connect/connect.php")) include_once("../../connect/connect.php");
-   if (!DbSuccess) return FALSE;
    if ($LayerID < 1) return FALSE;
    $Fields = "x, y, z, layer, date, user, type";
    $Values = sprintf("%d, %d, %d, %d, now(), %d, %d", $X, $Y, $Z, $LayerID, $UserID, $Blanktype);

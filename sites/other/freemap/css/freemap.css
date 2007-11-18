@@ -1,0 +1,644 @@
+html,body
+{
+	width:100%;
+	height:100%;
+}
+
+body 
+{ 
+	background-color : #c0ffff;
+	font-family : luxi sans,arial,helvetica,sans-serif; 
+	color : black; 
+	font-weight : normal ;
+	font-size: 100%
+}
+
+
+td,th
+{
+	border-style:ridge;
+	font-family: verdana, helvetica,arial,sans-serif;
+}
+
+form
+{
+	margin:0px;
+}
+
+#topbar
+{
+
+	background-color: #200060;
+	top:0px;
+	left:0px;
+	position: absolute;
+	width:100%;
+	height: 59px;
+	z-index : 5;
+	border-width:5px;
+	border-color: #200060;
+	border-style:solid;
+	font-size: 70%
+}
+
+#topnav
+{ 
+	border-color: #600000;
+	color: white;
+	display: inline;
+	position:absolute;
+	left:10%;
+}
+
+/*
+#firefox
+{ 
+	right: 10px; 
+	top: 15px; 
+	position: absolute;  
+}
+*/
+
+#login
+{ 
+	margin-left:5px; 
+	font-weight:bold; 
+	font-size: 75%;
+	text-align: center;
+}
+
+#login span
+{
+	display: block;
+}
+
+#copyright
+{
+	margin-left:5px
+}
+
+#copyright strong
+{
+	background-color: yellow;
+	color: red;
+}
+#topnav em
+{
+	color: yellow;
+}
+
+#navbar
+{
+	position:absolute;
+	top:0%;
+	left:0%;
+	width:147px;
+	height: 538px;
+}
+
+.navbarentry
+{
+	border-width: 10px;
+	border-style: solid;
+	border-color: blue;
+	color: blue;
+	background-color: #e0e0ff;
+	width:100%;
+}
+
+#mainold 
+{ 
+	color : black; 
+	vertical-align : top;
+	position: absolute;
+	margin-left: 5px;
+	top: 0%;
+	left: 147px;
+	width: 100%;
+
+	background-color : #C0FFFF;
+	font-weight: normal;
+	z-index: 1;
+}
+
+#freemap
+{
+	position:relative;
+	
+	margin-left:auto;
+	margin-right:auto;
+	
+	width: 903px;
+	height: 538px;
+	color:white;
+	z-index: 2;
+	background-color:navy;
+}
+
+#main
+{
+	position:absolute;
+	left:147px;
+	width:756px;
+	height:520px;
+	top:0px;
+	overflow: auto;
+	background-color:#ffffff;
+	color: black;
+	border-color:red;
+	border-width: 4px;
+	border-style:solid;
+	font-size: 80%;
+	padding: 5px;
+}
+
+#main h1
+{
+	text-align: center
+}
+
+#mapdiv1 
+{
+	position: absolute;
+	top:0%;
+	left:0%;
+	width:0%;
+	height: 100%;
+	z-index: 3;
+}
+
+#mapdiv2 
+{
+	position:absolute;
+	top:0%;
+	left:0%;
+	width:600px;
+	height:100%;
+}
+
+#mapdiv3 
+{
+	position:absolute;
+	top:0%;
+	left:603px;
+	width:150px;
+	height:434px;
+}
+
+
+#mapdiv4 
+{
+	position:absolute;
+	top:0%;
+	left:753px;
+	width:150px;
+	height:434px;
+}
+
+
+.panel
+{
+	border-width: 2px;
+	margin: 10px;
+	border-style: ridge;
+	text-align: center;
+	background-color: #4000C0; 
+	color: white;
+	padding: 5px;
+	font-size: 75%
+}
+
+.panel h1
+{
+	font-size: 120%;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.panel label 
+{
+	display: block;
+	font-size: 80%;
+}
+
+#units
+{
+	font-size: 80%;
+}
+
+.panel .inputelement
+{
+	width: 80%;
+}
+
+.panel .submit
+{
+	width: 40%; 
+	background-color: #00c0c0; 
+	color: blue;
+}
+
+#left
+{
+	top:169px;
+	left:0px;
+	position: absolute;
+	z-index:100;
+}
+
+#right
+{
+	top:169px;
+	left:417px;
+	position:absolute;
+	z-index:100;
+}
+
+#up
+{
+	top:0px;
+	left:209px;
+	position:absolute;
+	z-index:100;
+}
+
+#down
+{
+	top:337px;
+	left:209px;
+	position:absolute;
+	z-index:100;
+}
+
+.layout td
+{
+	border-style: none
+}
+
+
+#milometer
+{
+	background-color:white;
+	font-weight:bold;
+	font-size: 120%;
+	font-family:courier,monospace;
+	border-style: ridge;
+	border-width: 2px;
+	margin-left: auto;
+	margin-right: auto;
+	color:black;
+}
+
+#distUnits
+{
+	color:black;
+}
+
+#distTenths
+{
+	color:red;
+}
+
+#vpcontainer
+{
+	/*
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	*/
+	top: 0px; left:147px; position:absolute;
+	width: 434px; /* 372 */
+	height: 374px;
+}
+	
+.viewport
+{
+	top: 17px;
+	left: 17px;
+	position: absolute;
+	border-width: 1px;
+	border-style: ridge;
+	border-color: #C00000;
+	background-color: #FFFFC0;
+	overflow:auto;
+	width:400px;
+	height:320px;
+	text-align:left; /* cancels out text-align:center for IE on main DIV */
+    box-sizing:content-box
+}
+
+#viewport
+{
+	top: 17px;
+	left: 17px;
+	position: absolute;
+}
+#map
+{
+	width:400px;
+	height:320px;
+	position:absolute;
+	z-index: 10;
+}
+
+#map2
+{
+	width:400px;
+	height:320px;
+	position:absolute;
+	visibility:hidden;
+	z-index: 11;
+}
+.panel .control
+{
+	border-style:solid;
+	border-width:1px;
+	background-color:#80C0FF;
+	color:blue;
+	font-size:80%;
+	text-align:center;
+	display: block;
+	margin-top:5px;
+	margin-bottom:5px;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.command
+{
+	color: white;
+	cursor: pointer;
+}
+
+.toolbarentry
+{
+	color: blue;
+	border-color: white;
+	border-width : 10px;
+	background-color: #c0c0ff;;
+	margin:5px;
+	font-size: 80%;
+	cursor: pointer;
+}
+
+.toolbarentry_inactive
+{
+	color: black;
+	margin:5px;
+	font-size: 80%;
+}
+
+a.toolbarentry
+{
+	display: block;
+}
+
+.toolbarentry:hover
+{
+	background-color:#C0E0FF;
+}
+
+.scaleimg
+{
+	margin: 5px;
+}
+
+#magnify
+{
+	left:168px;
+}
+
+#shrink
+{
+	left:188px;
+}
+
+#navbar a
+{
+	text-align:center;
+	display:block
+}
+
+#navbar a.navbarentry 
+{ 
+	color: #000080;
+	border-style: solid;
+	border-width: 1px;
+	background-color: #f0f0ff;
+	border-color: #000080;
+}
+
+#navbar a.navbarentry:hover
+{
+	color: #f0f0ff;
+	background-color: #000080;
+}
+
+a#cond
+{
+	color: #ff0080;
+}
+
+a#cond:hover
+{
+	color : #ff80c0;
+}
+
+.centred
+{ 
+	text-align : center;
+}
+
+#logodiv
+{
+	display:inline;
+	width:100%;
+}
+
+/* Need margin-left:auto and margin-right:auto to centre the titlebox DIV;
+   text-align:center needed to centre the image within. */
+.titlebox
+{
+	text-align:center;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+img
+{
+	border-style: none;
+}
+
+#footer
+{
+	margin-top:10px;
+	font-size: 100%;	
+	text-align:left;
+}
+
+em
+{
+	color:#000080;
+	font-weight:bold;
+}
+
+strong
+{
+	color:#c00000;
+	font-weight:bold;
+}
+
+#mapkey
+{
+	width: 40%;
+}
+
+#mapkey td
+{
+	width: 50%
+}
+
+#mapkey caption
+{
+	font-size:120%;
+	font-weight: bold
+}
+
+.modelabel
+{
+	font-size: 80%;
+}
+
+.modeselect
+{
+	width : 80%;
+}
+#bottomarea
+{
+	width:756px;
+	height: 184px;
+	position:absolute;
+	left:147px;
+	top: 354px;
+	overflow:auto
+}
+
+#status
+{
+	overflow: auto;
+	background-color:black;
+	color: white;
+}
+
+#username, #password
+{
+	width: 80%;
+}
+
+#xmarksthespot
+{
+	width:32px;
+	height:32px;
+	position:absolute;
+	visibility:hidden;
+	z-index:100
+}
+
+#pleasewait
+{
+	/*
+	background-color:blue;
+	color:white;
+	*/
+	left:184px;
+	top:144px;
+	visibility:hidden;
+	position:absolute;
+	z-index:100
+}
+
+#promptbox
+{
+	top:100px;
+	left:100px;
+	position: absolute;
+	background-color:  #ffffc0;
+	color:black;
+	border-width:2px;
+	border-style:solid;
+	width: 200px;
+	height:200px;
+	z-index:101;
+	font-size: 75%;
+	visibility:hidden 
+}
+
+.hitlink,#bottomarea a
+{
+	color: yellow;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.hitlink:hover,#bottomarea a:hover
+{
+	color: #80ff80;
+}
+
+#bottomarea .wikipediaLink
+{
+	color: yellow;
+	font-style: italic;
+}
+
+#popup .wikipediaLink
+{
+	color: blue; 
+	font-style: italic;
+}
+#popup
+{
+	position: absolute;
+	background-color:  #ffffc0;
+	color:black;
+	border-width:2px;
+	border-style:solid;
+	width: 200px;
+	height:200px;
+	z-index:101;
+	font-size: 75%;
+	visibility:hidden ;
+	overflow: auto
+}
+
+#drag
+{
+	top: 14px;
+	left: 14px;
+	position:absolute;
+	width:400px;
+	height:320px;
+
+}
+
+#canvas1
+{
+	top: 14px;
+	left: 14px;
+	position:absolute;
+	width:400px;
+	height:320px;
+	visibility:hidden;
+}
+
+#newline
+{
+}

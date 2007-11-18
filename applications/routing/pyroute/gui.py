@@ -74,7 +74,7 @@ class MapWidget(gtk.Widget):
       self.forceRedraw()
   def centreOnOwnPos(self):
     if(self.ownpos['valid']):
-      self.modules['projection'].recentre(self.ownpos['lat'], self.ownpos['lon'], 0.01)
+      self.modules['projection'].recentre(self.ownpos['lat'], self.ownpos['lon'])
       self.forceRedraw()
 
   def click(self, x, y):

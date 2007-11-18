@@ -179,27 +179,21 @@
             <line class='route-ferry' />
         </rule>
 
-        <!-- Non-physical boundaries -->
-	<rule e="way" k="boundary" v="national">
-		<line class="boundary boundary-administrative-state-casing" />
-		<line class="boundary boundary-administrative-state-core" />
-	</rule>
-
-	<rule e="way" k="boundary" v="administrative">
-		<rule e="way" k="left:country|right:country" v="*" >
-			<line class="boundary boundary-administrative-state-casing" />
-			<line class="boundary boundary-administrative-state-core" />
-		</rule>	
-		<rule e="way" k="border_type" v="state">
-			<line class="boundary boundary-administrative-state-casing" />
-			<line class="boundary boundary-administrative-state-core" />
-		</rule>	
-	</rule>
-
     </rule> <!-- k="osmarender:render" v="~|yes" -->
 
     <!-- ==================================== Layer 5 ================================== -->
     <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
+		<!-- Non-physical boundaries -->
+		<rule e="way" k="boundary" v="administrative" layer="5">
+			<rule e="way" k="border_type" v="state" layer="5">
+				<line class="boundary boundary-administrative-state-casing" />
+				<line class="boundary boundary-administrative-state-core" />
+			</rule>	
+			<else>
+				<line class="boundary boundary-administrative-state-core" />
+			</else>	
+		</rule>
+    
         <!-- Place names  -->
         <rule e="node" k="place" v="continent" layer="5">
             <text k="name" class='continent-caption' />
@@ -486,17 +480,17 @@
                 fill: none;
             }
 
-	    .boundary-administrative-state-casing {
-		stroke-width: 180px; 
-		stroke: #ffff00;
-		opacity: 0.5;
-	    }
+			.boundary-administrative-state-casing {
+				stroke-width: 80px; 
+				stroke: #ffff00;
+				opacity: 0.5;
+	        }
 
-	    .boundary-administrative-state-core {
-		stroke-width: 100px; 
-		stroke: #f9574b;
-		stroke-dasharray: 80, 16, 16, 16;
-	    }
+			.boundary-administrative-state-core {
+				stroke-width: 16px; 
+				stroke: #f9574b;
+				stroke-dasharray: 80, 16, 16, 16;
+			}
 
 
 

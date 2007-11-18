@@ -1,0 +1,30 @@
+<html>
+<head>
+<script type='text/javascript'>
+
+    function distp(px,py,x1,y1,x2,y2) {
+        var u = ((px-x1)*(x2-x1)+(py-y1)*(y2-y1)) / 
+            (Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
+		alert(u);
+        var xintersection = x1+u*(x2-x1), yintersection=y1+u*(y2-y1);
+        return (u>=0&&u<=1) ? dist(px,py,xintersection,yintersection):
+                    -1;
+    }
+
+    function dist(x1,y1,x2,y2) {
+        var dx=x2-x1,dy=y2-y1;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
+
+	function test()
+	{
+		alert(distp(5,5,0,1,0,4));
+		alert(distp(5,5,3,3,7,7));
+	}
+
+</script>
+
+<body>
+<input type='button' value='test' onclick='test()'/>
+</body>
+</html>

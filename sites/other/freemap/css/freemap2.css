@@ -1,0 +1,37 @@
+body { font-family: sans-serif; 
+color: black; 
+			background-image: url(http://www.free-map.org.uk/images/grad.png);
+			background-repeat: repeat-x;
+			background-color: #afdce7; font-size:80%
+}
+a { text-decoration: none; }
+#main { top:0%; left:20%; width:80%; height:100%; position:absolute; 
+			background-image: url(http://www.free-map.org.uk/images/grad.png);
+			background-repeat: repeat-x;
+			background-color: #afdce7;
+			margin-left:10px
+}
+#sidebar { top:0%; left:0%; width:20%; height:100%; position:absolute;
+			background-image: url(http://www.free-map.org.uk/images/grad.png);
+			background-repeat: repeat-x;
+			background-color: #afdce7;
+}
+#map { width: 640px; height: 480px; background-color: #d8d8d8 }
+input, select, textarea 
+	{ border-style:solid; border-width: 1px }
+#inputbox .textbox { width: 90% }
+
+#inputbox {  visibility:hidden;position:absolute; width:400px; height:400px;
+background-color: #ffffff; z-index: 99999;
+border-width: 2px; border-style: solid; border-color: black } 
+
+#menubar { background-color: #000080; color: white; width: 640px } 
+#menubar a { color: white; text-decoration:none }
+#menubar a.hover { color: white; text-decoration:none }
+h1 { font-weight: normal }
+
+#links { font-size:120%; border-width: 1px; background-color: #000080;
+color:white; padding: 5px; border-color:black; border-style:solid; margin:5px;}
+#links a { text-decoration: none; color: white;}
+#links a:hover { text-decoration: underline; }
+.titlebox { text-align: center; width: 100%;  }

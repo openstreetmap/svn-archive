@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map>
+<Map bgcolor="#b5d0d0" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over 
++no_defs">
+ 
+  <Style name="coast-poly">
+     <Rule>
+	 	<PolygonSymbolizer>
+			<CssParameter name="fill">#f2efe9</CssParameter>
+		</PolygonSymbolizer>
+	</Rule>
+  </Style>
+
+  <Style name="coast-line">
+     <Rule>
+	 	<PolygonSymbolizer>
+			<CssParameter name="stroke">skyblue</CssParameter>
+		</PolygonSymbolizer>
+	</Rule>
+  </Style>
+
+  <Style name="amenity">
+    <Rule>
+      <Filter>[amenity]='pub'</Filter>
+      <PointSymbolizer file="/var/www/images/pub.png" type="png" 
+	  		width="16" height="16" />
+    </Rule>
+    <Rule>
+      <Filter>[natural]='peak'</Filter>
+      <PointSymbolizer file="/home/nick/planet.old/symbols/peak.png" type="png" 
+	  	width="8" height="8" />
+    </Rule>
+    <Rule>
+      <Filter>[man_made]='mast'</Filter>
+      <PointSymbolizer file="/var/www/images/mast.png" type="png" 
+	  	width="16" height="16" />
+    </Rule>
+     <Rule>
+      <Filter>[amenity]='parking'</Filter>
+      <PointSymbolizer file="/var/www/images/carpark.png" type="png" 
+	  	width="16" height="16"/>
+     </Rule>
+     <Rule>
+      <Filter>[residence]='farm'</Filter>
+      <PointSymbolizer file="/var/www/images/farm.png" type="png" 
+	  	width="16" height="16"/>
+     </Rule>
+  </Style>
+  
+  
+  <Style name="leisure">
+    <Rule>
+      <Filter>[landuse] = 'reservoir'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#89bac6</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[landuse] = 'cemetery'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">grey</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[landuse] = 'wood' or [landuse] = 'forest'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#aed1a0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[leisure] = 'park' or [leisure] = 'common' or
+	  	[leisure] = 'golf_course'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#d8e8d0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[natural] = 'wood'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#aed1a0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+     <Rule>
+      <Filter>[natural] = 'heath'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#ffe0c0</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+  </Style>
+ 
+
+  <Style name='lakes'>
+    <Rule>
+      <Filter>[natural] = 'water'</Filter>
+      <PolygonSymbolizer>
+        <CssParameter name="fill">#89bac6</CssParameter>
+     </PolygonSymbolizer>
+    </Rule>
+  </Style>
+
+
+
+  <Style name="text">
+    <Rule>
+      <Filter>[place] = 'city'</Filter>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="16" fill="#000" halo_radius="2" wrap_width="0"/>
+    </Rule>
+    <Rule>
+      <Filter>[place] = 'town'</Filter>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="14" fill="000" halo_radius="2" wrap_width="20"/>
+    </Rule>
+     <Rule>
+      <Filter>[place] = 'village' or [place] = 'suburb'</Filter>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="13" fill="#000" halo_radius="1" wrap_width="0"/>
+    </Rule>
+     <Rule>
+      <Filter>[place] = 'hamlet'</Filter>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="#000" halo_radius="1" wrap_width="0"/>
+    </Rule>
+     <Rule>
+      <Filter>[natural] = 'peak'</Filter>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="11" fill="#000" halo_radius="1" wrap_width="0"/>
+    </Rule>
+	<Rule>
+	  <Filter>[natural] = 'wood' or [natural] = 'water' or [natural] = 'heath'
+	  or [leisure] = 'golf_course' </Filter>
+	  <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" 
+	  size="10" fill="#000" halo_radius="2" wrap_width="0" />
+	</Rule>
+  </Style>
+  
+   <Style name="river">
+    <Rule>
+      <Filter>[waterway] = 'river'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#89bac6</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="9" fill="white" placement="line"/>
+    </Rule>
+  </Style>
+   <Style name="stream">
+    <Rule>
+      <Filter>[waterway] = 'stream'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#89bac6</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="9" fill="white" placement="line"/>
+    </Rule>
+  </Style>
+  
+  
+  <Style name="roads-casing">
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway]='motorway_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#506077</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#477147</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#8d4346</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#a37b48</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'tertiary' or [highway] = 'tertiary_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'minor' or [highway] = 'unclassified'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'residential' or [highway] = 'service'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'unsurfaced' or [highway] = 'track'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#999</CssParameter>
+		<CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="motorway">
+    <Rule>
+      <Filter>[highway] = 'motorway' or [highway] = 'motorway_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#809bc0</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+	</Style>
+  <Style name="trunk">
+    <Rule>
+      <Filter>[highway] = 'trunk' or [highway] = 'trunk_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#7fc97f</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+  
+  <Style name="primary">
+    <Rule>
+      <Filter>[highway] = 'primary' or [highway] = 'primary_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#e46d71</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="secondary">
+    <Rule>
+      <Filter>[highway] = 'secondary' or [highway] = 'secondary_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fdbf6f</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>  
+
+  <Style name="tertiary">
+    <Rule>
+      <Filter>[highway] = 'tertiary' or [highway] = 'tertiary_link'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#ffffc0</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>  
+
+  <Style name="unclassified">
+    <Rule>
+      <Filter>[highway] = 'minor' or [highway] = 'unclassified'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+   <Style name="residential">
+    <Rule>
+      <Filter>[highway] = 'residential' or [highway] = 'service' or
+	  	[highway] = 'unsurfaced' or [highway] = 'track' or
+		[newforest_pathtype] = 'gravel'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+	</Style>
+    
+	<Style name="railway">
+    <Rule>
+      <Filter>[railway] = 'rail' or [railway] = 'tram' or 
+	  	[railway] = 'light_rail'</Filter>
+      <LinePatternSymbolizer file="/home/nick/planet.old/symbols/rail.png" 
+	  	type="png" width="11" height="4" />
+    </Rule>
+	</Style>
+
+	<Style name="bridleway">
+    <Rule>
+      <Filter>[highway] = 'bridleway'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">magenta</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'bridleway' and [foot] = 'yes' and [horse] = 'yes'
+	  and [bicycle] = 'yes'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">red</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'bridleway' and [newforest_pathtype] = 'narrow'
+	  </Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#00ff80</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">1,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'bridleway' and [newforest_pathtype] = 'path'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#00ff80</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'bridleway' and [newforest_pathtype] = 'gravel'
+	  </Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#ffc080</CssParameter>
+		<CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-width">4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'bridleway' and [newforest_pathtype] = 'track'
+	  </Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#ffc080</CssParameter>
+		<CssParameter name="stroke-dasharray">6,4</CssParameter>
+        <CssParameter name="stroke-width">2</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+	</Style>
+	<Style name="footway">
+    <Rule>
+      <Filter>[highway] = 'footway'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">magenta</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">1,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'footway' and [foot] = 'yes'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">red</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">1,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+	</Style>
+	<Style name="cycleway">
+    <Rule>
+      <Filter>[highway] = 'cycleway'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">blue</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-dasharray">4,4</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+	</Style>
+	<Style name="byway">
+    <Rule>
+      <Filter>[highway] = 'byway'</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fff</CssParameter>
+        <CssParameter name="stroke-width">6</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+        <CssParameter name="stroke-opacity">0.4</CssParameter>
+      </LineSymbolizer>
+      <LineSymbolizer>
+        <CssParameter name="stroke">red</CssParameter>
+        <CssParameter name="stroke-width">2.0</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+  <Style name="roads-text">
+    <Rule>
+      <Filter>[highway] = 'motorway' and [length] = 2</Filter>
+      <ShieldSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="white" placement="line" file="/home/nick/planet.old/symbols/motorway_shield.png" type="png" width="32" height="24"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'motorway' and [length] = 3</Filter>
+      <ShieldSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="12" fill="white" placement="line" file="/home/nick/planet.old/symbols/motorway_shield2.png" type="png" width="40" height="24"/>
+    </Rule>
+    <Rule>
+      <Filter>[highway] = 'footway' or [highway] = 'bridleway' or [highway] = 'byway'</Filter>
+      <TextSymbolizer name="name" face_name="Bitstream Vera Sans Roman" size="8" fill="#000" halo_radius="1" placement="line"/>
+    </Rule>
+  </Style>
+
+  <Style name="contours">
+  	<Rule>
+  	<Filter>[major] = 1</Filter>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fb9b67</CssParameter>
+        <CssParameter name="stroke-width">1.0</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+  	</Rule>
+	<Rule>
+      <ElseFilter/>
+      <LineSymbolizer>
+        <CssParameter name="stroke">#fb9b67</CssParameter>
+        <CssParameter name="stroke-width">0.5</CssParameter>
+        <CssParameter name="stroke-linejoin">round</CssParameter>
+        <CssParameter name="stroke-linecap">round</CssParameter>
+      </LineSymbolizer>
+    </Rule>
+  </Style>
+
+  <Style name="contours-text">
+    <Rule>
+      <TextSymbolizer name="height" face_name="Bitstream Vera Sans Roman" 
+	  	size="8" fill="#fb9b67" halo_radius="0" placement="line"/>
+    </Rule>
+  </Style>
+
+  <Layer name="coast-poly" status="on" srs="+proj=merc +datum=WGS84 +over +no_defs">
+<!--
+  <Layer name="coast-poly" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
+-->
+    <StyleName>coast-poly</StyleName>
+		<Datasource>
+			<Parameter name="type">shape</Parameter>
+			<Parameter name="file">/var/www/images/world_boundaries/shoreline_a</Parameter>
+		</Datasource>
+  </Layer>
+
+  <Layer name="coast-line" status="on" srs="+proj=merc +datum=WGS84 +over +no_defs">
+<!--
+  <Layer name="coast-poly" status="on" srs="+proj=latlong +ellps=GRS80 +no_defs">
+-->
+    <StyleName>coast-line</StyleName>
+		<Datasource>
+			<Parameter name="type">shape</Parameter>
+			<Parameter name="file">/var/www/images/world_boundaries/shoreline_l</Parameter>
+		</Datasource>
+  </Layer>
+
+  <Layer name="leisure" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>leisure</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>     
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+	  <Parameter name="table">(select * from planet_osm_polygon where leisure IS NOT NULL or  landuse IS NOT NULL or "natural" IS NOT NULL or man_made IS NOT NULL) as leisure</Parameter>
+    </Datasource>
+  </Layer>
+  
+
+  <Layer name="srtm" status="on" srs="+proj=merc +ellps=GRS80 +no_defs">
+  <StyleName>contours</StyleName>
+  <StyleName>contours-text</StyleName>
+  <Datasource>
+    <Parameter name="type">shape</Parameter>
+	<Parameter name="file">/home/nick/merged</Parameter>
+  </Datasource>
+  </Layer>
+
+  <Layer name="waterway" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>river</StyleName>
+    <StyleName>stream</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+      <Parameter name="table">(select * from planet_osm_line where waterway IS NOT NULL) as water</Parameter>
+    </Datasource>
+  </Layer>
+  
+  <Layer name="lakes" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>lakes</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>     
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+	  <Parameter name="table">(select * from planet_osm_polygon where "natural"='water') as lakes</Parameter>
+    </Datasource>
+  </Layer>
+
+  <Layer name="roads" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>roads-casing</StyleName>
+    <StyleName>footway</StyleName>
+    <StyleName>cycleway</StyleName>
+    <StyleName>bridleway</StyleName>
+    <StyleName>byway</StyleName>
+    <StyleName>railway</StyleName>
+    <StyleName>residential</StyleName>
+    <StyleName>unclassified</StyleName>
+    <StyleName>tertiary</StyleName>
+    <StyleName>secondary</StyleName>
+    <StyleName>primary</StyleName>
+    <StyleName>trunk</StyleName>
+    <StyleName>motorway</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>     
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+      <Parameter name="table">(select way,highway,railway,landuse,"natural",man_made,waterway,tourism,amenity,place,name,foot,horse,motorcar,bicycle,newforest_pathtype,char_length(name) as length from planet_osm_line where waterway IS NULL and leisure IS NULL and landuse IS NULL) as roads</Parameter>
+    </Datasource>
+   </Layer>
+
+  <Layer name="amenity" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>amenity</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>	   
+     <Parameter name="user">www-data</Parameter>	   
+      <Parameter name="dbname">freemap</Parameter>
+      <Parameter name="table">(select * from planet_osm_point where amenity IS NOT NULL or "natural" IS NOT NULL or man_made IS NOT NULL or residence IS NOT NULL) as amenity</Parameter>
+    </Datasource>
+  </Layer>
+
+  <Layer name="roadstext" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+     <StyleName>roads-text</StyleName>
+     <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+      <Parameter name="table">(select way,highway,landuse,"natural",man_made,waterway,tourism,amenity,place,name,char_length(name) as length from planet_osm_line where waterway IS NULL and leisure IS NULL and landuse IS NULL) as roads</Parameter>
+    </Datasource>
+   </Layer>
+  
+  <Layer name="text" status="on" srs="+proj=merc +datum=WGS84 +k=1.0 +units=m +over +no_defs">
+    <StyleName>text</StyleName>
+    <Datasource>
+      <Parameter name="type">postgis</Parameter>
+      <Parameter name="host">/var/run/postgresql</Parameter>
+      <Parameter name="port">5432</Parameter>     
+      <Parameter name="user">www-data</Parameter>
+      <Parameter name="dbname">freemap</Parameter>
+      <Parameter name="table">planet_osm_point</Parameter>
+    </Datasource>
+  </Layer>
+
+</Map>

@@ -1,0 +1,55 @@
+<ruleset>
+
+<rule>
+<condition k="highway" v="footway" />
+<style colour="255,0,0" width="2" z-index="2" dash="6,6"/>
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+<rule>
+<condition k="highway" v="footway" />
+<condition k="foot" v="permissive" />
+<style colour="255,0,255" width="2" z-index="2" dash="6,6"/>
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+<rule>
+<condition k="highway" v="cycleway" />
+<style colour="0,0,255" width="2" z-index="2" dash="6,6"/>
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+<rule>
+<condition k="highway" v="bridleway" />
+<style colour="255,0,0" width="2"  z-index="3" dash="12,12"/>
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+<rule>
+<condition k="highway" v="bridleway" />
+<condition k="horse" v="permissive" />
+<style colour="255,0,255" width="2"  z-index="3" dash="12,12"/>
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+<rule>
+<condition k="highway" v="unsurfaced" />
+<style colour="255,0,0" width="3" z-index="4" /> 
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+<rule>
+<condition k="highway" v="unsurfaced" />
+<condition k="bicycle" v="permissive" />
+<style colour="0,0,255" width="3" z-index="4" /> 
+<gpsmapcode>0x16</gpsmapcode>
+<gpstype>path</gpstype>
+</rule>
+
+</ruleset>

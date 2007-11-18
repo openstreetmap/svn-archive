@@ -77,8 +77,8 @@ class geoPosition:
       text1 = match.group(1)
       text2 = match.group(2)
       print "matched '%s', '%s'"%(text1,text2)
-      return(float(text1), float(text2))
-    return(0,0)
+      return((True, float(text1), float(text2)))
+    return((False, 0,0))
   
   def get_file(self):
     file = open("pos.txt", 'r')

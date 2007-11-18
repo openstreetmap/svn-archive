@@ -330,7 +330,9 @@ function FreemapClient(map,addFeatureURL,georssURL,
                    "you can create and share walking routes and "
                    +"information about path blockages and interesting places "+
                    "you visit.</p>" +
-                   "<p><a href='/wordpress'>Development blog</a></p>";
+                   "<p><a href='/wordpress'>Development blog</a> <br/>"+
+				   "<a href='/downloads/freemap.tar.bz2'>Download Freemap "+
+				   "source</a></p>";
         $('infopanel').innerHTML = html;
     }
 

@@ -118,7 +118,7 @@ public class DuplicateNode extends Test
 		// Now search the ways for occurences of the nodes we are about to
 		// merge and replace them with the 'target' node
 		for (Way w : Main.ds.ways) {
-			if (w.deleted) continue;
+			if (w.deleted || w.incomplete) continue;
 			// FIXME: use some fancy method from java.util.Collections and
 			// List.replace
 			Way wnew = null;

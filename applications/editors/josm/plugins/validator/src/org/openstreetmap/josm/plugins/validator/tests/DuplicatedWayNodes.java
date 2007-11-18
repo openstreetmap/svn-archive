@@ -18,7 +18,7 @@ public class DuplicatedWayNodes extends Test {
 	}
 
 	@Override public void visit(Way w) {
-		if (w.deleted) return;
+		if (w.deleted || w.incomplete) return;
 
 		Node lastN = null;
 		for (Node n : w.nodes) {

@@ -51,7 +51,7 @@ public class SimilarNamedWays extends Test
 	@Override
 	public void visit(Way w) 
 	{
-        if( w.deleted )
+        if( w.deleted || w.incomplete )
             return;
         
         String name = w.get("name");

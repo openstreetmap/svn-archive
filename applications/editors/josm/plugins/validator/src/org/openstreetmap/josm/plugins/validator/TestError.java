@@ -200,7 +200,7 @@ public class TestError
         PaintVisitor v = new PaintVisitor(g, mv);
         for( OsmPrimitive p : primitives)
         {
-            if( !p.deleted )
+            if( !p.deleted || !p.incomplete )
                 p.visit(v);
         }
     }	

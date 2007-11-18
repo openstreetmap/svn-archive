@@ -23,24 +23,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #------------------------------------------------------
 import sys
-import gps
 import os
 import socket
 from time import sleep
+import re
 
 class geoPosition:
   def __init__(self):
     self.mode = "none"
     try:
-      self.gpsd = gps.gps()
-      self.mode = "gpsd"
-      return
+      self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      self.s.connect(("127.0.0.1", 2947))
+      self.mode = "socket"
     except socket.error:
-      pass
+      print "No GPSD detected, position information will not be available"
+      pass # leave mode at "none"
     
     self.filename = "pos.txt"
     if(os.path.exists(self.filename)):
       self.mode = "file"
+      print "Using %s as position reference" % self.filename
   
   def get(self):
     try:
@@ -54,11 +56,29 @@ class geoPosition:
   def get_none(self):
     return((False,0,0))
   
-  def get_gpsd(self):
-    self.gps.query('mosy')
-    # a = altitude, d = date/time, m=mode,
-    # o=postion/fix, s=status, y=satellites    
-    return((True, self.gpsd.fix.latitude, self.gpsd.fix.longitude))
+  def socket_cmd(self, cmd):
+    self.s.send("%s\r\n" % cmd)
+    return self.s.recv(8192)
+    
+  def test_socket(self):
+    for i in ('i','p','p','p','p'):
+      print "%s = %s" % (i, self.socket_cmd(i))
+      sleep(1)
+    pos = self.socket_cmd("p")
+    p = re.compile('P=(.*?)\s+(.*?)\s*')
+    match = p.search(pos)
+    print (pos, dir(match), match.group(1))
+  
+  def get_socket(self):
+    pos = self.socket_cmd("p")
+    p = re.compile('P=([0-9.]+?)\s+([0-9.]+?)\s*')
+    match = p.search(pos)
+    if(match != None):
+      text1 = match.group(1)
+      text2 = match.group(2)
+      print "matched '%s', '%s'"%(text1,text2)
+      return(float(text1), float(text2))
+    return(0,0)
   
   def get_file(self):
     file = open("pos.txt", 'r')
@@ -71,5 +91,6 @@ class geoPosition:
       return((False, 0,0))
     
 if __name__ == "__main__":
+  #print dir(socket)
   pos = geoPosition()
   print pos.get()

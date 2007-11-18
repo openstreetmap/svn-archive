@@ -539,6 +539,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
         statusMessage("Downloading: Map data to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        print "Download $URL\n" if ($Config{Debug});
         DownloadFile($URL, $partialFile, 0);
 
         if (-s $partialFile == 0)

@@ -163,16 +163,6 @@
             <area class='natural-water' />
         </rule>
 
-
-		<!-- Non-physical boundaries -->
-		<rule e="way" k="boundary" v="administrative">
-			<rule e="way" k="border_type" v="state">
-				<line class="boundary boundary-administrative-state-casing" />
-				<line class="boundary boundary-administrative-state-core" />
-			</rule>	
-		</rule>
-
-
         <!-- Highway casings -->
         <rule e="segment|way" k="tunnel" v="~|no">
 			<rule e="segment|way" k="highway" v="raceway">
@@ -428,6 +418,19 @@
 
 	</rule> <!-- k="osmarender:render" v="~|yes" -->
 
+    <!-- ==================================== Layer 5 ================================== -->
+    <rule e="node|way" k="osmarender:render" v="~|yes" layer="5">
+		<!-- Non-physical boundaries -->
+		<rule e="way" k="boundary" v="administrative" layer="5">
+			<rule e="way" k="border_type" v="state" layer="5">
+				<line class="boundary boundary-administrative-state-casing" />
+				<line class="boundary boundary-administrative-state-core" />
+			</rule>	
+			<else>
+				<line class="boundary boundary-administrative-state-core" />
+			</else>	
+		</rule>
+    </rule>
 
     <!-- SVG Definitions - markers, symbols etc go here -->
     <defs>
@@ -448,7 +451,7 @@
 
             .untagged-segments {
                 stroke-width: 0.5px;
-                stroke-linejoin: butt;
+                stroke-linejoin: round;
                 stroke-linecap: butt;
                 stroke: #e0e0e0;
                 stroke-dasharray: 0.5,0.5;

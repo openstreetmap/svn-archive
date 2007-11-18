@@ -48,13 +48,11 @@ class geoPosition:
     try:
         function = getattr(self, 'get_%s' % self.mode)
     except AttributeError:
-        print "Error: position mode %s not defined" % self.mode
-        self.mode = 'none'
-        return((False,0,0,"function not defined"))
+        return({'valid':False,'message':"function for %s not defined" % self.mode})
     return(function())
     
   def get_none(self):
-    return((False,0,0,"no gps"))
+    return({'valid':False,'message':"no gps"})
   
   def socket_cmd(self, cmd):
     self.s.send("%s\r\n" % cmd)
@@ -71,23 +69,23 @@ class geoPosition:
     p = re.compile('P=(.*?)\s*$')
     match = p.search(pos)
     if(match == None):
-      return((False,0,0, "No regexp"))
+      return({'valid':False,'message':"GPS returned %s" % pos})
     text = match.group(1)
     if(text == '?'):
-      return((False,0,0, "P=?"))
+      return({'valid':False,'message':"GPS returned P=?"})
     lat,lon = [float(ll) for ll in text.split(' ')]
     #print "matched '%s', '%s'"%(lat,lon)
-    return((True, lat, lon, "GPSD"))
+    return({'valid':True, 'lat':lat, 'lon':lon, 'source':'GPS'})
   
   def get_file(self):
-    file = open("pos.txt", 'r')
+    file = open(self.filename, 'r')
     text = file.readline(50)
     file.close()
     try:
       lat,lon = [float(i) for i in text.rstrip().split(",")]
-      return((True, lat,lon,"textfile"))
+      return({'valid':True, 'lat':lat, 'lon':lon, 'source':'textfile'})
     except ValueError:
-      return((False, 0,0,"Invalid pos file"))
+      return({'valid':False, 'message':'Invalid textfile'})
     
 if __name__ == "__main__":
   #print dir(socket)

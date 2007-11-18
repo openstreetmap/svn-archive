@@ -42,11 +42,6 @@
   // look for landsea tiles if everything else fails
   if(1){
     $Blank = LookUpBlankTile($X,$Y,$Z,$LayerID);
-    if ($Z == 12) {
-      $complexity = FindComplexity($X, $Y, $Z);
-    } else {
-      $complexity = 5;
-    }
     switch($Blank){
       case 1:
         BlankTile("sea", FALSE);
@@ -59,8 +54,27 @@
         header("Location: http://dev.openstreetmap.org/~ojw/Tiles/tile.php/$Z/$X/$Y.png");
         //BlankTile("unknown", TRUE); // probably shouldn't reach this line
         //Request the render of this missing tile
+        if ($Z == 12) {
+          $complexity = FindComplexity($X, $Y, $Z);
+        } else {
+          $complexity = 5;
+        }
         if ($Z==12 && $complexity) {
           fopen("http://tah.openstreetmap.org/NeedRender?priority=3&x=$X&y=$Y&z=12&src=server:MissingTile:$complexity","r");
+        } else if ($Z == 12) {
+            $im = @imagecreatefrompng("/var/www/osm/dev/oceantiles.png");
+            $color = imagecolorsforindex($im, imagecolorat($im, $X, $Y));
+            $type = 0;
+            if ($color['red'] == 255) {
+               $type = 2; # land
+            } else if ($color['blue'] == 255) {
+                $type = 1;
+            } else if ($color['green'] == 255) {
+                $type = 2; # land
+            }
+            if ($type) {
+                InsertBlankTile($X, $Y, 12, $LayerID, 334, $type);  
+            }
         }
         break;
       }

@@ -102,6 +102,7 @@ class MapWidget(gtk.Widget):
   def zoom(self,dx):
     self.modules['projection'].nudgeZoom(dx / self.rect.width)
     self.forceRedraw()
+    #print "Scale %f" % self.modules['projection'].scale
   def nodeXY(self,node):
     node = self.modules['osmdata'].nodes[node]
     return(self.modules['projection'].ll2xy(node[0], node[1]))
@@ -114,8 +115,11 @@ class MapWidget(gtk.Widget):
       return
     filename = "cache/%s.png" % name
     if not os.path.exists(filename):
+      print "downloading %s"%name
       url = tileURL(x,y,z)
       urllib.urlretrieve(url, filename)
+    else:
+      print "loading %s from cache"%name
     self.images[name]  = cairo.ImageSurface.create_from_png(filename)
     
   def drawImage(self,cr, tile, bbox):
@@ -128,12 +132,23 @@ class MapWidget(gtk.Widget):
     cr.set_source_surface(self.images[name],0,0)
     cr.paint()
     cr.restore()
+  def zoomFromScale(self,scale):
+    if(scale > 0.046):
+      return(10)
+    if(scale > 0.0085):
+      return(13)
+    if(scale > 0.0026):
+      return(15)
+    return(17)
     
+  def tileZoom(self):
+    return(self.zoomFromScale(self.modules['projection'].scale))
+  
   def draw(self, cr):
     start = clock()
     # Map as image
     if(not self.modules['overlay'].fullscreen()):
-      z = 10
+      z = self.tileZoom()
       view_x1,view_y1 = latlon2xy(self.modules['projection'].N,self.modules['projection'].W,z)
       view_x2,view_y2 = latlon2xy(self.modules['projection'].S,self.modules['projection'].E,z)
       for x in range(int(floor(view_x1)), int(ceil(view_x2))):

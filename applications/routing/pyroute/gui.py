@@ -56,13 +56,13 @@ class MapWidget(gtk.Widget):
   def updatePosition(self):
     self.ownpos = self.modules['position'].get()
     if(not self.ownpos['valid']):
-      print "Own position not known"
+      #print "Own position not known"
       return
     if(not self.modules['projection'].isValid()):
       print "Projection not yet valid, centering on ownpos"
       self.centreOnOwnPos()
       return
-    print "Position: %f, %f" % (self.ownpos['lat'], self.ownpos['lon'])
+    #print "Position: %f, %f" % (self.ownpos['lat'], self.ownpos['lon'])
     x,y = self.modules['projection'].ll2xy(self.ownpos['lat'], self.ownpos['lon'])
     x,y = self.modules['projection'].relXY(x,y)
     border = 0.15

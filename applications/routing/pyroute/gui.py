@@ -39,12 +39,13 @@ class MapWidget(gtk.Widget):
     self.images = {}
     
     self.modules = {'plugins':{}}
-    self.modules['plugins']['rss'] = geoRss('Setup/feeds.txt')
-    self.modules['plugins']['geonames'] = geonames()
+    #self.modules['plugins']['rss'] = geoRss('Setup/feeds.txt')
+    #self.modules['plugins']['geonames'] = geonames()
     self.modules['overlay'] = guiOverlay(self.modules)
     self.modules['position'] = geoPosition()
     self.modules['data'] = DataStore(self)
     self.modules['data'].setState('mode','cycle')
+    self.modules['data'].setOption('centred',True)
     self.modules['osmdata'] = LoadOsm(osmDataFile, True)
     self.modules['projection'] = Projection()
     self.modules['projection'].recentre(51.2,-0.2, 0.1)
@@ -54,33 +55,36 @@ class MapWidget(gtk.Widget):
       mod.callbacks(self.modules)
   def updatePosition(self):
     self.ownpos = self.modules['position'].get()
-    if(not self.ownpos[0]):
-      #print "Own position not known"
+    if(not self.ownpos['valid']):
+      print "Own position not known"
       return
     if(not self.modules['projection'].isValid()):
       print "Projection not yet valid, centering on ownpos"
       self.centreOnOwnPos()
       return
-    if(self.ownpos[0]):
-      x,y = self.modules['projection'].ll2xy(self.ownpos[1], self.ownpos[2])
-      x,y = self.modules['projection'].relXY(x,y)
-      border = 0.15
-      followMode = self.modules['data'].getOption("centred")
-      outsideMap = (x < border or y < border or x > (1-border) or y > (1-border))
-      if(followMode):
-        self.centreOnOwnPos()
-      else:
-        self.forceRedraw()
+    print "Position: %f, %f" % (self.ownpos['lat'], self.ownpos['lon'])
+    x,y = self.modules['projection'].ll2xy(self.ownpos['lat'], self.ownpos['lon'])
+    x,y = self.modules['projection'].relXY(x,y)
+    border = 0.15
+    followMode = self.modules['data'].getOption("centred")
+    outsideMap = (x < border or y < border or x > (1-border) or y > (1-border))
+    if(followMode):
+      self.centreOnOwnPos()
+    else:
+      self.forceRedraw()
   def centreOnOwnPos(self):
-    if(self.ownpos[0]):
-      self.modules['projection'].recentre(self.ownpos[1],self.ownpos[2], 0.01)
+    if(self.ownpos['valid']):
+      self.modules['projection'].recentre(self.ownpos['lat'], self.ownpos['lon'], 0.01)
       self.forceRedraw()
 
   def click(self, x, y):
+    if(not self.ownpos['valid']):
+      print "Can't route, don't have an 'own position' to start from"
+      return
     if(self.modules['overlay'].handleClick(x,y)):
       return
     transport = self.modules['data'].getState('mode')
-    self.modules['route'].setStartLL(self.ownpos[0],self.ownpos[1], transport)
+    self.modules['route'].setStartLL(self.ownpos['lat'],self.ownpos['lon'], transport)
 
     lat, lon = self.modules['projection'].xy2ll(x,y)
     self.modules['route'].setEndLL(lat,lon,transport)
@@ -129,7 +133,7 @@ class MapWidget(gtk.Widget):
     start = clock()
     # Map as image
     if(not self.modules['overlay'].fullscreen()):
-      z = 14
+      z = 10
       view_x1,view_y1 = latlon2xy(self.modules['projection'].N,self.modules['projection'].W,z)
       view_x2,view_y2 = latlon2xy(self.modules['projection'].S,self.modules['projection'].E,z)
       for x in range(int(floor(view_x1)), int(ceil(view_x2))):
@@ -172,9 +176,9 @@ class MapWidget(gtk.Widget):
               cr.show_text(item.title)
 
     
-      if(self.ownpos[0]):
+      if(self.ownpos['valid']):
         # Us
-        x,y = self.modules['projection'].ll2xy(self.ownpos[1],self.ownpos[2])
+        x,y = self.modules['projection'].ll2xy(self.ownpos['lat'],self.ownpos['lon'])
         cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.arc(x,y,14, 0,2*3.1415)
         cr.fill()

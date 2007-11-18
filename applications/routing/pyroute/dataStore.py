@@ -38,4 +38,6 @@ class DataStore:
     def setState(self,name,value):
         self.state[name] = value
     def getOption(self,name,default=None):
-        return(self.options.get(name,default))        
+        return(self.options.get(name,default))
+    def setOption(self,name,value):
+        self.options[name] = value

@@ -51,12 +51,13 @@
     }
 
   // Open database connection
-  include("../connect/connect.php");
   if ($Z > 12) {
-    list($Valid,$X,$Y) = WhichTileset($X,$Y,$Z);
+    list($Valid,$X12,$Y12) = WhichTileset($X,$Y,$Z);
   }
   if ($Z >= 12) {
-    $data = request_info($X, $Y, 12);
+    $complexity = TileComplexity($X12, $Y12);
+    print "<h2>Tile Info</h2> <p>Complexity: $complexity</p>"; 
+    $data = request_info($X12, $Y12, 12);
     if ($data) {
       $States = Array( 
         0 => "Pending",

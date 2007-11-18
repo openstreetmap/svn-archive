@@ -558,6 +558,14 @@ Pixel = POINT(0,0)
 Longitude = $E
 Latitude = $S
 Pixel = POINT($Width_m1,$Width_m1)
+[Calibration Point 3]
+Longitude = $E
+Latitude = $N
+Pixel = POINT($Width_m1,0)
+[Calibration Point 4]
+Longitude = $W
+Latitude = $S
+Pixel = POINT(0,$Width_m1)
 [Map]
 Bitmap = $mapFilename.$extension
 Size = SIZE($Width,$Width)

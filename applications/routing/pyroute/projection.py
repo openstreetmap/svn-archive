@@ -11,10 +11,11 @@ class Projection:
     self.xc = x + self.w
     self.yc = y + self.h
     self.xyValid = 1
-  def recentre(self,lat,lon,scale):
+  def recentre(self,lat,lon,scale = None):
     self.lat = lat
     self.lon = lon
-    self.scale = scale  # TODO: scale and scaleCosLat
+    if(scale != None):
+      self.scale = scale  # TODO: scale and scaleCosLat
     self.findEdges()
     self.llValid = 1
   def findEdges(self):

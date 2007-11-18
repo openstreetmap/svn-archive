@@ -547,6 +547,9 @@ sub GenCalibrationMap_Glopus{
 my $Width_m1 = $Width-1;
 
 my $Data = << "ENDE3" ; 
+
+[Kalibrierung]
+
 [Calibration Point 1]
 Longitude = $W
 Latitude = $N

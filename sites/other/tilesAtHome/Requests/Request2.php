@@ -68,6 +68,10 @@
     #}
   }
 
+  if ($_POST["layerspossible"] == 'default,maplint,lowzoom'){
+    $Z = -1;
+  }
+
   CheckForRequest($Z, $UserID);
   printf("XX|%d||||nothing_to_do",$APIVersion);
   // THE END

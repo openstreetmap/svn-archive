@@ -21,15 +21,29 @@ class DataStore:
                 self.options[name] = self.getOption(name,0) + float(add)
                 print "adding %f to %s, new = %s" % (float(add),name,str(self.getOption(name)))
         elif(action == 'route'):
-					lat, lon = [float(ll) for ll in params.split(':',1)]
-					transport = self.globals.modules['data'].getState('mode')
-					self.globals.modules['route'].setStartLL(self.globals.ownpos[0],self.globals.ownpos[1], transport)
-					self.globals.modules['route'].setEndLL(lat,lon,transport)
-					self.globals.modules['route'].update()
-					self.globals.forceRedraw()
-					self.closeAllMenus()
-
-            
+          if(not self.globals.ownpos['valid']):
+            print "Can't route, don't know start position"
+            return
+          if(params == 'clicked'):
+            lat,lon = self.getState('clicked')
+          else:
+            lat, lon = [float(ll) for ll in params.split(':',1)]
+          transport = self.globals.modules['data'].getState('mode')
+          self.globals.modules['route'].setStartLL(self.globals.ownpos['lat'],self.globals.ownpos['lon'], transport)
+          self.globals.modules['route'].setEndLL(lat,lon,transport)
+          self.globals.modules['route'].update()
+          self.globals.forceRedraw()
+          self.closeAllMenus()
+        elif(action == 'ownpos'):
+          lat,lon = self.getState('clicked')
+          self.globals.ownpos = {'lat':lat,'lon':lon,'valid':True}
+          print "Set ownpos to %f,%f" % (lat,lon)
+          self.closeAllMenus()
+        elif(action == 'direct'):
+          pass
+        
+        
+        
     def closeAllMenus(self):
         self.setState('menu',None)
         

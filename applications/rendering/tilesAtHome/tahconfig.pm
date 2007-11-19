@@ -134,7 +134,16 @@ sub CheckConfig
 
     if ($Config->{Batik})
     {
-        print "- Using Batik\n";
+        print "- Using Batik";
+        if ($Config->{Batik} == 1)
+        {
+            print " in jar mode";
+        }
+        if ($Config->{Batik} == 2)
+        {
+            print " in wrapper mode";
+        }
+        print "\n";
     }
     else
     {

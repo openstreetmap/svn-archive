@@ -86,6 +86,7 @@
 	_root.yahoo.setMask(_root.masksquare2);
 
 	// Main initialisation
+	_root.map.createEmptyMovieClip("areas"   ,8);  var areadepth=1;
 	_root.map.createEmptyMovieClip("gpx"     ,9);
 	_root.map.createEmptyMovieClip("ways"    ,10); var waydepth=1;
 	_root.map.createEmptyMovieClip("pois"	 ,11); var poidepth=1;
@@ -121,12 +122,13 @@
 	var bigedge_l=999999; var bigedge_r=-999999; // area of largest whichways
 	var bigedge_b=999999; var bigedge_t=-999999; //  |
 	var sandbox=false;				// we're doing proper editing
-	var signature="Potlatch 0.5a";	// current version
+	var signature="Potlatch 0.5b";	// current version
 	if (preferences.data.baselayer    ==undefined) { preferences.data.baselayer    =2; }	// show Yahoo?
 	if (preferences.data.custompointer==undefined) { preferences.data.custompointer=true; }	// use custom pointers?
 	
 	// Way styling
 	// ** should be moved into presets file
+	// ** area colours need to be value-specific (not just key-specific)
 	colours=new Array();
 	colours["motorway"		]=0x3366CC; 
 	colours["motorway_link"	]=0x3366CC;	
@@ -141,6 +143,19 @@
 	colours["rail"			]=0x000001;	
 	colours["river"			]=0x8888FF;	
 	colours["canal"			]=0x8888FF;	
+	colours["stream"		]=0x8888FF;	
+	
+	areas=new Array();
+	areas['leisure' ]=0x8CD6B5;
+	areas['amenity' ]=0xADCEB5;
+	areas['shop'    ]=0xADCEB5;
+	areas['tourism' ]=0xF7CECE;
+	areas['historic']=0xF7F7DE;
+	areas['ruins'   ]=0xF7F7DE;
+	areas['landuse' ]=0x444444;
+	areas['military']=0xD6D6D6;
+	areas['natural' ]=0xADD6A5;
+	areas['sport'   ]=0x8CD6B5;
 
 	// =====================================================================================
 	// Icons
@@ -705,19 +720,49 @@
 		this.createEmptyMovieClip("line",1);					// clear line
 		var linewidth=3; //Math.max(2/Math.pow(2,_root.scale-12),0)+1;
 		var linealpha=100; // -50*(this.locked==true);
-		if (this.locked) {
-			this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); 
-		} else if (colours[this.attr["highway"]]) {
-			this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none");
-		} else if (colours[this.attr["waterway"]]) {
-			this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none");
-		} else if (colours[this.attr["railway"]]) {
-			this.line.lineStyle(linewidth,colours[this.attr["railway" ]],linealpha,false,"none");
-		} else {
+		
+		// Set stroke
+
+		if		(this.locked)					 { this.line.lineStyle(linewidth,0xFF0000,linealpha,false,"none"); }
+		else if (colours[this.attr["highway"]])  { this.line.lineStyle(linewidth,colours[this.attr["highway" ]],linealpha,false,"none"); }
+		else if (colours[this.attr["waterway"]]) { this.line.lineStyle(linewidth,colours[this.attr["waterway"]],linealpha,false,"none"); }
+		else if (colours[this.attr["railway"]])  { this.line.lineStyle(linewidth,colours[this.attr["railway" ]],linealpha,false,"none"); }
+		else {
 			var c=0xCCCCCC; var z=this.attr;
 			for (var i in z) { if (i!='created_by' && this.attr[i]!='' && this.attr[i].substr(0,6)!='(type ') { c=0x777777; } }
 			this.line.lineStyle(linewidth,c,linealpha,false,"none");
 		}
+		
+		// Draw fill/casing
+
+		var f=-1; 
+		if (this.path[this.path.length-1][0]==this.path[0][0] &&
+			this.path[this.path.length-1][1]==this.path[0][1] &&
+			this.path.length>2) {
+			if (this.attr['area']) { f='0x777777'; }
+			var z=this.attr;
+			for (var i in z) { if (areas[i] && this.attr[i]!='' && this.attr[i]!='coastline') { f=areas[i]; } }
+		}
+
+		if (f>-1 || this.attr['highway']) {
+			if (!_root.map.areas[this._name]) { _root.map.areas.createEmptyMovieClip(this._name,++areadepth); }
+			with (_root.map.areas[this._name]) {
+				clear();
+				enabled=false;
+				moveTo(this.path[0][0],this.path[0][1]); 
+				if (f>-1) { beginFill(f,20); }
+					 else { lineStyle(linewidth*1.5,0,100,false,"none"); }
+				for (var i=1; i<this.path.length; i+=1) {
+					lineTo(this.path[i][0],this.path[i][1]);
+				}
+				if (f>-1) { endFill(); }
+			};
+		} else if (_root.map.areas[this._name]) {
+			removeMovieClip(_root.map.areas[this._name]);
+		}
+
+		// Draw line
+
 		this.line.moveTo(this.path[0][0],this.path[0][1]); 
 		for (var i=1; i<this.path.length; i+=1) {
 			this.line.lineTo(this.path[i][0],this.path[i][1]);

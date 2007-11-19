@@ -63,3 +63,5 @@ BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar
 # Only used for Batik jar
 BatikJVMSize=1536M
 
+# If set to 1, it will enable forking to render tiles
+Fork=0

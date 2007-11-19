@@ -48,5 +48,5 @@ BatikJVMSize=1350M
 #   or in a sub-folder named lib
 BatikPath=c:\tilesAtHome\batik\batik-rasterizer.jar
 
-# If set to 1, it will enable forking to render tiles
+# If set to 1, it will enable forking to render tiles, does not work for windows, currently.
 Fork=0

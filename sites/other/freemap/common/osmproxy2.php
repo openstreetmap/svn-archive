@@ -6,6 +6,10 @@ if($_REQUEST['call']=='logout')
 {
 	unset($_SESSION['osmusername']);
 	unset($_SESSION['osmpassword']);
+	if(isset($_REQUEST['redirect']))
+	{
+		header("Location: $_REQUEST[redirect]");
+	}
 }
 else
 {
@@ -20,6 +24,7 @@ else
 		$call = (isset($_REQUEST['call'])) ? $_REQUEST['call']: 'map';
 		$result = callOSM ($call, $_SESSION['osmusername'], 
 					$_SESSION['osmpassword'], $_REQUEST['method'], $_REQUEST);
+
 		if($result['code']==200)
 			echo $result["content"];
 		else

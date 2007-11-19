@@ -47,7 +47,7 @@
   # (if they can't, there's no point in them taking requests)
   $VersionID = checkVersion($_POST["version"]);
   if($VersionID < 0){
-    printf("XX|%d||||client_version_unacceptable",($APIVersion+1)); ## Use a fake Version for the answer to make clients abort loop.
+    printf("XX|%d||||client_version_unacceptable",($APIVersion+100)); ## Use a fake Version for the answer to make clients abort loop.
     exit;
   }
 
@@ -76,8 +76,12 @@ function CheckForRequest($Z, $UserID = 0){
   
   global $APIVersion;
   # next request that is handed out: order by priority, then date.
-  $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." and `z`=".$Z." order by `priority`,`date` limit 1;";
-
+  if ($Z >= 0){
+    $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." and `z`=".$Z." order by `priority`,`date` limit 1;";
+  } else {
+    $SQL =  "select `x`,`y`,`status`,`priority`,`date` from `tiles_queue` where `status` = ".REQUEST_PENDING." order by `priority`,`date` limit 1;";
+  }
+  
   $Result = mysql_query($SQL);
 
   if(mysql_errno()){

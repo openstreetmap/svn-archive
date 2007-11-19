@@ -1,10 +1,11 @@
 #!/bin/sh
 
-if [ "$@" = "--help" \
-    -o  "$@" = "-help" \
-    -o  "$@" = "-h" \
-    -o  "$@" = "-?" \
-    ]; then
+if [ "x$@" = "x" ] \
+    || [ "x$@" = 'x--help' ] \
+    || [ "x$@" = 'x-help' ] \
+    || [ "x$@" = "x-h" ]  \
+    || [ "x$@" = "x-?" ] \
+    || [ "x$@" = "x-help" ]; then
 cat <<EOF
 osmosis
 

@@ -22,16 +22,19 @@ use Geo::OSM::Planet;
 use Utils::Debug;
 use Utils::File;
 use Utils::Math;
+use Geo::Filter::Area;
 
-sub load_segment_list($){
+sub load_segment_list($;$){
     my $do_filter_against_osm = shift;
+    my $bounds  = shift;
 
     my $osm_segments;
+    print STDERR "load_segment_list from: '$do_filter_against_osm'\n";
     if ( -s $do_filter_against_osm ) {
 	if (  $do_filter_against_osm =~ m/\.csv/ ) {
-	    $osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($do_filter_against_osm);
+	    $osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($do_filter_against_osm, $bounds);
 	} elsif ( $do_filter_against_osm =~ m/\.osm/ ) {
-	    $osm_segments = Geo::OSM::SegmentList::read_osm_file($do_filter_against_osm);
+	    $osm_segments = Geo::OSM::SegmentList::read_osm_file($do_filter_against_osm, $bounds);
 	} else {
 	    die "Unknown Datatype for $do_filter_against_osm\n";
 	}
@@ -51,7 +54,7 @@ sub load_segment_list($){
 	printf STDERR "check $osm_filename for loading\n" if $DEBUG;
 	
 	die "Cannot open $osm_filename\n" unless -s $osm_filename;
-	$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($osm_filename);
+	$osm_segments = Geo::OSM::SegmentList::LoadOSM_segment_csv($osm_filename, $bounds);
     };
     return $osm_segments
 }
@@ -94,8 +97,7 @@ sub reduce_segments_list($$) {
 # -------------------------------------------------------
 # Load the csv Version of a segment list
 # Args: $filename, {lat_min=> .., lat_max => ..., lon_min => .., lon_max => .. }
-sub LoadOSM_segment_csv($;$)
-{
+sub LoadOSM_segment_csv($;$){
     my $filename = shift;
     my $bounds  = shift;
     printf STDERR "Reading OSM-Segment-csv File: $filename, ($bounds->{lat_min} ... $bounds->{lat_max} , $bounds->{lon_min} ... $bounds->{lon_max})\n"
@@ -134,7 +136,7 @@ sub LoadOSM_segment_csv($;$)
 	    my @segment;
 	    my $dummy;
 	    ($segment[0],$segment[1],$segment[2],$segment[3],$segment[4]) = split(/,/,$line,5);
-#	    print STDERR Dumper(\@segment);
+	    #print STDERR Dumper(\@segment);
 
 	    if ( $check_bounds ) {
 		next unless $segment[0] >= $bounds->{lat_min};
@@ -199,130 +201,135 @@ sub Storable_load($){
 # read Segment list from osm File
 ##################################################################
 
-our $read_osm_nodes;
+#our $read_osm_nodes;
 our $read_osm_segments;
-our $read_osm_obj;
+#our $read_osm_obj;
+our (%MainAttr,$Type,%Tags, @WaySegments);
+# Stats
+our %AllTags;
+# Stored data
+our (%Nodes, %Segments, %Stats);
+our $AREA_FILTER;
+$AREA_FILTER = Geo::Filter::Area->new( area => "world" );
+my $from_node=0;
 
-sub node_ {
-    $read_osm_obj = undef;
-}
-sub node {
-    my($p, $tag, %attrs) = @_;  
+# Function is called whenever an XML tag is started
+#----------------------------------------------
+sub DoStart()
+{
+    my ($Expat, $Name, %Attr) = @_;
     
-    my $id = delete $attrs{id};
-    $read_osm_obj = {};
-    $read_osm_obj->{id} = $id;
-
-    $read_osm_obj->{lat} = delete $attrs{lat};
-    $read_osm_obj->{lon} = delete $attrs{lon};
-
-    delete $attrs{timestamp};
-    delete $attrs{action};
-    delete $attrs{visible};
-    delete $attrs{user};
-
-    if ( keys %attrs ) {
-	warn "node $id has extra attrs: ".Dumper(\%attrs);
+    if($Name eq "node"){
+	undef %Tags;
+	%MainAttr = %Attr;
+	$Type = "n";
     }
-
-    $read_osm_nodes->{$id} = $read_osm_obj;
+    if($Name eq "segment"){
+	undef %Tags;
+	%MainAttr = %Attr;
+	$Type = "s";
+    }
+    if($Name eq "way"){
+	undef %Tags;
+	undef @WaySegments;
+	%MainAttr = %Attr;
+	$Type = "w";
+    }
+    if($Name eq "tag"){
+	# TODO: protect against id,from,to,lat,long,etc. being used as tags
+	$Tags{$Attr{"k"}} = $Attr{"v"};
+	$AllTags{$Attr{"k"}}++;
+	$Stats{"tags"}++;
+    }
+    if($Name eq "way"){
+	$from_node=0;
+    }
+    if($Name eq "nd" ) {
+	my $to_node   =  $Attr{"ref"};
+	if ( $from_node &&
+	     defined($Nodes{$from_node}) &&
+	     defined($Nodes{$to_node}) 
+	     ) {
+	    my ($lat1,$lon1)=split(",",$Nodes{$from_node});
+	    my ($lat2,$lon2)=split(",",$Nodes{$to_node});
+	    my $angle = angle_north_relative(
+				       { lat => $lat1 , lon => $lon1 },
+				       { lat => $lat2 , lon => $lon2 });
+	    push (@{$read_osm_segments},[$lat1,$lon1,$lat2,$lon2,$angle]);
+    }
+	$from_node = $to_node;
+    }
 }
 
-# ----------------------
-sub segment_ {
-    $read_osm_obj = undef;
-}
-sub segment {
-    my($p, $tag, %attrs) = @_;  
-
-    my $id = delete $attrs{id};
-    $read_osm_obj = {};
-    $read_osm_obj->{id} = $id;
-
-    $read_osm_obj->{from} = delete $attrs{from};
-    $read_osm_obj->{to}   = delete $attrs{to};
-
-    delete $attrs{timestamp};
-    delete $attrs{action};
-    delete $attrs{visible};
-    delete $attrs{user};
-
-    if ( keys %attrs ) {
-	warn "segment $id has extra attrs: ".Dumper(\%attrs);
-    }
-
-    my @segment;
-    my $dummy;
-    my $node1 = $read_osm_nodes->{$read_osm_obj->{from}};
-    my $node2 = $read_osm_nodes->{$read_osm_obj->{to}};
-    ($segment[0],$segment[1],$segment[2],$segment[3]) =
-	($node1->{lat},$node1->{lon},$node2->{lat},$node2->{lon});
+# Function is called whenever an XML tag is ended
+#----------------------------------------------
+sub DoEnd(){
+    my ($Expat, $Element) = @_;
+    my $ID = $MainAttr{"id"};
     
-    if ( ! $segment[4] ){
-	$segment[4] = angle_north_relative(
-				       { lat => $segment[0] , lon => $segment[1] },
-				       { lat => $segment[2] , lon => $segment[3] });
-    }
-    #$segment[5] = $attrs{name} if $DEBUG;
-    push (@{$read_osm_segments},\@segment);
-}
-
-# ----------------------
-sub way_ {
-    $read_osm_obj = undef;
-}
-sub way {
-    my($p, $tag, %attrs) = @_;  
-
-    my $id = delete $attrs{id};
-}
-
-# ----------------------
-sub tag {
-    my($p, $tag, %attrs) = @_;  
-    #print "Tag - $tag: ".Dumper(\%attrs);
-    my $k = delete $attrs{k};
-    my $v = delete $attrs{v};
-
-    return if $k eq "created_by";
-
-    if ( keys %attrs ) {
-	print "Unknown Tag value for ".Dumper($read_osm_obj)."Tags:".Dumper(\%attrs);
-    }
-    
-    my $id = $read_osm_obj->{id};
-    if ( defined( $read_osm_obj->{tag}->{$k} ) &&
-	 $read_osm_obj->{tag}->{$k} ne $v
-	 ) {
-	if ( $DEBUG >1 ) {
-	    printf STDERR "Tag %8s already exists for obj tag '$read_osm_obj->{tag}->{$k}' ne '$v'\n",$k ;
+    if($Element eq "node"){
+	my $node={};
+	$node->{"lat"} = $MainAttr{"lat"};
+	$node->{"lon"} = $MainAttr{"lon"};
+	
+	if ( $AREA_FILTER->inside($node) ) {
+	    $Nodes{$ID} = sprintf("%f,%f",$MainAttr{lat}, $MainAttr{lon});
+	    foreach(keys(%Tags)){
+		$node->{$_} = $Tags{$_};
+	    }
 	}
     }
-    $read_osm_obj->{tag}->{$k} = $v;
-    if ( $k eq "alt" ) {
-	$read_osm_obj->{alt} = $v;
-    }	    
+
+    if($Element eq "segment"){
+	my $from = $MainAttr{"from"};
+	my $to   = $MainAttr{"to"};
+	if ( defined($Nodes{$from}) && defined($Nodes{$to}) ) {
+	    $Segments{$ID}{"from"} = $from;
+	    $Segments{$ID}{"to"} = $to;
+	}
+    }
+
+    if($Element eq "way"){
+	if ( @WaySegments ) {
+	    foreach my $seg_id( @WaySegments ){ # we only have the needed ones in here
+	    }
+	}
+    }
+}
+
+# Function is called whenever text is encountered in the XML file
+#----------------------------------------------
+sub DoChar(){
+    my ($Expat, $String) = @_;
 }
 
 # --------------------------------------------
-sub read_osm_file($) { # Insert Segments from osm File
+sub read_osm_file($;$) { # Insert Segments from osm File
     my $filename = shift;
+    my $bounds  = shift;
 
+    print("Reading OSM Segment from File $filename\n") if $VERBOSE || $DEBUG;
     if ( file_needs_re_generation($filename,"$filename.storable")) {
-	print("Reading OSM Segment from File $filename\n") if $VERBOSE || $DEBUG;
 	print "$filename:	".(-s $filename)." Bytes\n" if $DEBUG;
 	
 	print STDERR "Parsing file: $filename\n" if $DEBUG;
-	my $p = XML::Parser->new( Style => 'Subs' ,
-				  ErrorContext => 10,
-				  );
+	my $p = new XML::Parser( Handlers => {
+	    Start => \&DoStart, 
+	    End => \&DoEnd, 
+	    Char => \&DoChar,
+			     },
+				 ErrorContext => 10,
+	    );
 	
 	my $fh = data_open($filename);
 	if (not $fh) {
 	    print STDERR "WARNING: Could not open osm data from $filename\n";
 	    return;
 	}
-	my $content = $p->parse($fh);
+	my $content;
+	eval {
+	    $content = $p->parse($fh);
+	};
 	if (not $p) {
 	    print STDERR "WARNING: Could not parse osm data from $filename\n";
 	    return;

@@ -41,12 +41,12 @@
 
 BEGIN {
     my $dir = $0;
-    $dir =~s,[^/]+$,,;
-    unshift(@INC,"$dir/../../perl_lib");
-
+    $dir =~s,/[^/]+$,,;
+    $dir =~s,/[^/]+$,,;
+    $dir =~s,/[^/]+$,,;
+    $dir =~s,/utils.*$,/utils/perl_lib,;
+    unshift(@INC,"$dir");
     unshift(@INC,"../../perl_lib");
-    unshift(@INC,"~/svn.openstreetmap.org/utils/import/perl_lib");
-    unshift(@INC,"$ENV{HOME}/svn.openstreetmap.org/utils/import/perl_lib");
 }
 
 
@@ -62,6 +62,7 @@ use HTTP::Request;
 use IO::File;
 use Pod::Usage;
 use XML::Parser;
+use Geo::OSM::SegmentList;
 
 my ($man,$help);
 #our $DEBUG =0;
@@ -174,8 +175,7 @@ sub filter_against_osm($$$){
 
     my $bounds = GPS::get_bounding_box($tracks);
     printf STDERR "Track Bounds: ".Dumper(\$bounds) if $DEBUG>5;
-#    my $osm_segments = reduce_segments_list($all_osm_segments,$bounds);
-    my $osm_segments = LoadOSM_segment_csv($segments_filename,$bounds);
+    my $osm_segments = load_segment_list($segments_filename,$bounds);
 
     enrich_tracks($tracks);
 
@@ -753,7 +753,7 @@ sub is_gps_combineable($$){
     for my $track_pos_test ( $track_pos .. $pos_max ) {
 	my $elem2 = $track->[$track_pos_test];
 	$sum_dist = $sum_dist + $elem2->{dist};
-	if ( $sum_dist > 300 ) { # max 300 m distanz
+	if ( $sum_dist > 500 ) { # max 500 m distanz
 	    printf STDERR "Elements have $sum_dist m Distance, which would be too much\n"
 		if $DEBUG >10;
 	    last;
@@ -1265,7 +1265,10 @@ sub convert_Data(){
 	if ( $split_tracks ) {
 	    debug_write_track($new_tracks,"-pre-split_tracks-max_speed_200");
 	    $new_tracks = GPS::split_tracks($new_tracks,
-					{ max_speed => 200 });
+					{ max_speed => 200, # 200   Km/h
+					  max_dist  => 500, #   0.5 Km
+					  max_time  => 60,  #  60   sec
+					});
 	    debug_write_track($new_tracks,"-post-split_tracks-max_speed_200");
 	}
 
@@ -1292,7 +1295,10 @@ sub convert_Data(){
 	if ( $split_tracks ) {
 	    debug_write_track($new_tracks,"-pre-split_tracks-max_speed_200b");
 	    $new_tracks = GPS::split_tracks($new_tracks,
-					{ max_speed => 200 });
+					{ max_speed => 200, # 200   Km/h
+					  max_dist  => 500, #   0.5 Km
+					  max_time  => 60,  #  60   sec
+					});
 	    debug_write_track($new_tracks,"-post-split_tracks-max_speed_200b");
 	}
 

@@ -898,7 +898,7 @@ sub RenderTile
             statusMessage("Working", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         }
     }
-
+    
     # Sub-tiles
     my $MercY2 = ProjectF($N); # get mercator coordinates for North border of tile
     my $MercY1 = ProjectF($S); # get mercator coordinates for South border of tile
@@ -1033,7 +1033,7 @@ sub xml2svg
 # $X, $Y - tilemnumbers of the tileset
 # $Ytile - the actual tilenumber in Y-coordinate of the zoom we are processing
 #-----------------------------------------------------------------------------
-sub svg2png 
+sub svg2png
 {
     my($Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
     
@@ -1278,7 +1278,7 @@ sub splitImageX
             if ($Config{"Layer.$layer.Transparent"}) 
             {
                 $SubImage->transparent($SubImage->colorAllocate(248,248,248));
-            } 
+            }
             else 
             {
                 $SubImage->transparent(-1);
@@ -1294,7 +1294,8 @@ sub splitImageX
 # Run pngcrush on each split tile, then delete the temporary cut file
 #-----------------------------------------------------------------------------
             my $Redirect = ">/dev/null";
-                if ($^O eq "MSWin32") {
+                if ($^O eq "MSWin32")
+                {
                     $Redirect = "";
                 }
                 my $Cmd = sprintf("%s %s -q %s %s %s",

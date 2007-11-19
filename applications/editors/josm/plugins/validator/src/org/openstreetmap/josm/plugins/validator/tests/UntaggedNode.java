@@ -68,6 +68,8 @@ public class UntaggedNode extends Test
 	@Override
 	public void visit(Node n) 
 	{
+		if (n.incomplete || n.deleted) return;
+
 		int numTags = 0;
 		Map<String, String> tags = n.keys;
 		if( tags != null )

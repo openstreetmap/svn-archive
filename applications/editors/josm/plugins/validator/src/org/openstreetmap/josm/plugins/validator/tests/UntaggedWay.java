@@ -56,6 +56,8 @@ public class UntaggedWay extends Test
 	@Override
 	public void visit(Way w) 
 	{
+		if (w.deleted || w.incomplete) return;
+
 		int numTags = 0;
 		Map<String, String> tags = w.keys;
 		if( tags != null )

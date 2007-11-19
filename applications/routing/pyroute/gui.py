@@ -51,13 +51,14 @@ class MapWidget(gtk.Widget):
     self.modules['projection'].recentre(51.2,-0.2, 0.1)
     self.modules['route'] = RouteOrDirect(self.modules['osmdata'])
     self.updatePosition()
+    self.ownpos = {'valid':False}
     for name,mod in self.modules['plugins'].items():
       mod.callbacks(self.modules)
   def updatePosition(self):
-    self.ownpos = self.modules['position'].get()
-    if(not self.ownpos['valid']):
-      #print "Own position not known"
+    newpos = self.modules['position'].get()
+    if(not newpos['valid']):
       return
+    self.ownpos = newpos
     if(not self.modules['projection'].isValid()):
       print "Projection not yet valid, centering on ownpos"
       self.centreOnOwnPos()
@@ -76,19 +77,16 @@ class MapWidget(gtk.Widget):
     if(self.ownpos['valid']):
       self.modules['projection'].recentre(self.ownpos['lat'], self.ownpos['lon'])
       self.forceRedraw()
-
+  
   def click(self, x, y):
-    if(not self.ownpos['valid']):
-      print "Can't route, don't have an 'own position' to start from"
-      return
     if(self.modules['overlay'].handleClick(x,y)):
-      return
-    transport = self.modules['data'].getState('mode')
-    self.modules['route'].setStartLL(self.ownpos['lat'],self.ownpos['lon'], transport)
-
-    lat, lon = self.modules['projection'].xy2ll(x,y)
-    self.modules['route'].setEndLL(lat,lon,transport)
-    self.modules['route'].update()
+      pass
+    elif(self.modules['overlay'].fullscreen()):
+      pass
+    else:
+      lat, lon = self.modules['projection'].xy2ll(x,y)
+      self.modules['data'].setState('clicked', (lat,lon))
+      self.modules['data'].setState('menu','click')
     self.forceRedraw()
       
   def forceRedraw(self):
@@ -97,6 +95,8 @@ class MapWidget(gtk.Widget):
     except AttributeError:
       pass
   def move(self,dx,dy):
+    if(self.modules['overlay'].fullscreen()):
+      return
     self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
     self.forceRedraw()
   def zoom(self,dx):

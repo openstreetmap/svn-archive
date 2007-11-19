@@ -28,7 +28,7 @@ class menuIcons:
         cr.paint()
         cr.restore()
 
-class guiRect:
+class overlayArea:
     def __init__(self,cr,x,y,dx,dy,modules,iconSet):
         self.cr = cr
         self.x1 = x;
@@ -102,7 +102,7 @@ class guiRect:
     def copyself(self,px1,py1,px2,py2):
         x1 = self.xc(px1)
         y1 = self.yc(py1)
-        return(guiRect( \
+        return(overlayArea( \
             self.cr,
             x1,
             y1,
@@ -141,6 +141,7 @@ class guiRect:
             self.modules['data'].handleEvent(self.event)
             return(1)
         return(0)
+    
 class guiOverlay:
     def __init__(self, modules):
         self.modules = modules
@@ -161,7 +162,7 @@ class guiOverlay:
         return(0)
     def draw(self, cr, rect):
         self.cr = cr
-        self.rect = guiRect(cr,rect.x,rect.y,rect.width,rect.height,self.modules,self.icons)
+        self.rect = overlayArea(cr,rect.x,rect.y,rect.width,rect.height,self.modules,self.icons)
         nx = 3
         ny = 4
         self.clickable = []
@@ -173,7 +174,7 @@ class guiOverlay:
             self.cells[i] = {}
             for j in range(0,ny):
                 y1 = rect.y + j * dy
-                self.cells[i][j] = guiRect(cr,x1,y1,dx,dy,self.modules, self.icons)
+                self.cells[i][j] = overlayArea(cr,x1,y1,dx,dy,self.modules, self.icons)
                 self.clickable.append(self.cells[i][j])
         currentMenu = self.modules['data'].getState('menu')
         if(currentMenu):
@@ -370,13 +371,13 @@ class guiOverlay:
         self.cells[1][0].button("(lat)",None,None)
         self.cells[2][0].button("(lon)",None,None)
 
-        self.cells[0][1].button("set pos",None,None)
-        self.cells[1][1].button("route to",None,None)
-        self.cells[2][1].button("direct to",None,None)
+        self.cells[0][1].button("set pos","ownpos:clicked",None)
+        self.cells[1][1].button("route to","route:clicked",None)
+        self.cells[2][1].button("direct to","direct:clicked",None)
 
-        self.cells[0][2].button("waypoint",None,None)
-        self.cells[1][2].button("extend route",None,None)
-        self.cells[2][2].button("extend direct",None,None)
+        self.cells[0][2].button("waypoint","waypoint:clicked",None)
+        self.cells[1][2].button("extend route","extend:route:clicked",None)
+        self.cells[2][2].button("extend direct","extend:direct:clicked",None)
 
         self.cells[0][3].button("",None,None)
         self.cells[1][3].button("",None,None)

@@ -39,6 +39,7 @@ my $Layers = $Config{"Layers"};
 
 resetFault("fatal");
 resetFault("nodata");
+resetFault("nodataXAPI");
 resetFault("utf8");
 resetFault("inkscape");
 
@@ -190,6 +191,10 @@ elsif ($Mode eq "loop")
         elsif (getFault("nodata") > 5)
         {
             cleanUpAndDie("Five times no data, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
+        }
+        elsif (getFault("nodataXAPI") > 5)
+        {
+            cleanUpAndDie("Five times no data from XAPI, perhaps the server doesn't like us, exiting","EXIT",1,$PID);
         }
         elsif (getFault("inkscape") > 5)
         {
@@ -575,7 +580,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
                 # i.e. tell the server the job hasn't been done yet)
                 PutRequestBackToServer($X,$Y,$Zoom,"NoData");
                 foreach my $file(@tempfiles) { killafile($file); }
-                addFault("nodata",1);
+                addFault("nodataXAPI",1);
                 return cleanUpAndDie("GenerateTileset: no data!",$Mode,1,$PID);
             }
             else
@@ -606,7 +611,14 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         }
         else
         {
-            resetFault("nodata"); #reset to zero if data downloaded
+            if ($Zoom < 12)
+            {
+                resetFault("nodataXAPI"); #reset to zero if data downloaded
+            }
+            else 
+            {
+                resetFault("nodata"); #reset to zero if data downloaded
+            }
         }
     }
 
@@ -788,7 +800,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
         # Clean-up the SVG files
-        for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
+        for (my $i = $Zoom ; $i <= $maxzoom; $i++) the server and the client are 
         {
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }
@@ -978,7 +990,7 @@ sub xml2svg
           $SVG);
         statusMessage("Beziercurvehinting zoom level $zoom", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         runCommand($Cmd,$PID);
-#-----------------------------------------------------------------------------        
+#-----------------------------------------------------------------------------
 # Sanitycheck for Bezier curve hinting, no output = bezier curve hinting failed
 #-----------------------------------------------------------------------------
         my $filesize= -s $SVG;

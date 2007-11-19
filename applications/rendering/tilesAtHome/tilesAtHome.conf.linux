@@ -46,13 +46,18 @@ LayerUpload=0
 GatherBlankTiles=0
 
 # If set to 1, then Batik will be used for rendering instead of Inkscape
+# If set to 2, then the Batik-wrapper will be used instead of Batik .jar file
+# (adjust the path below accordingly)
 Batik=0
 
-# Set to the maximum JVM size to pass to the -Xmx parameter when running the rasterizer. The
-# maximum size depends on the OS and the available memory.
+# Set to the location of the batik rasterizer jar or the Batik wrapper (see
+# Batik config parameter above) The Batik libraries should reside in the same
+# folder, or in a sub-folder named lib.
+BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar
+
+# Set to the maximum JVM size to pass to the -Xmx parameter when running the
+# rasterizer. The maximum size depends on the OS and the available memory.
 # For 32bit Systems it is 1536M (1.5GiB)
+# Only used for Batik jar
 BatikJVMSize=1536M
 
-# Set to the location of the batik rasterizer jar. The Batik libraries should reside in the same folder,
-#   or in a sub-folder named lib
-BatikPath=/usr/share/batik-1.6/lib/batik-rasterizer.jar

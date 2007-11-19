@@ -561,7 +561,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my $partialFile = "data-$PID-$i.osm";
         push(@{$filelist}, $partialFile);
         push(@tempfiles, $partialFile);
-        statusMessage("Downloading: Map data to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+        statusMessage("Downloading: Map data for $Layers to $partialFile", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
         print "Download $URL\n" if ($Config{Debug});
         DownloadFile($URL, $partialFile, 0);
 

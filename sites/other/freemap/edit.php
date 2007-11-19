@@ -3,11 +3,11 @@
 require_once('common/inc.php');
 require_once('common/defines.php');
 require_once('common/latlong.php');
-require_once('common/osmclient.php');
+require_once('common/osmproxy2.php');
 
 session_start();
 
-die("Temporarily unavailable");
+//die("Temporarily unavailable");
 
 if(isset($_POST["osmusername"]) && isset($_POST["osmpassword"]))
 {
@@ -75,9 +75,9 @@ var basemap = "<?php echo $basemap; ?>";
 <script src='/freemap/javascript/vector/routetypes.js'></script>
 <script src='/freemap/javascript/vector/DrawOSMFeature.js'></script>
 <script src='/freemap/javascript/vector/ajax.js'></script>
-<script type='text/javascript' src="/freemap/javascript/jscoord-1.0.js" > 
+<script type='text/javascript' src="/freemap/javascript/lib/jscoord-1.0.js" > 
 </script>
-<script type='text/javascript' src="/freemap/javascript/converter.js" > 
+<script type='text/javascript' src="/freemap/javascript/lib/converter.js" > 
 </script>
 <style type='text/css'>
 #status { color: #000080; }
@@ -94,7 +94,8 @@ if(isset($_SESSION["osmusername"]))
 	echo "<div id='sidebar'>";
 	echo "<p id='osmloginmsg'><em>Logged into OSM as ".
  		"$_SESSION[osmusername]</em></p>".
-		"<p><a href='common/osmlogout.php'>Log out</a></p>";
+		"<p><a href='common/osmproxy2.php?call=logout&".
+		"redirect=/freemap/edit.php'>Log out</a></p>";
 	?>
 
 	<div id='searchDiv'>

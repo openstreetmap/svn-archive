@@ -801,10 +801,12 @@
 				var code=result.shift(); if (code) { handleError(code,result); return; }
 				if (wayselected==result[0]) { deselectAll(); }
 				removeMovieClip(_root.map.ways[result[0]]);
+				removeMovieClip(_root.map.areas[result[0]]);
 			};
 			remote.call('deleteway',deleteresponder,_root.usertoken,this._name);
 		} else {
 			if (this._name==wayselected) { stopDrawing(); deselectAll(); }
+			removeMovieClip(_root.map.areas[this._name]);
 			removeMovieClip(this);
 		}
 	};
@@ -1029,6 +1031,7 @@
 		this.mergedways.concat(otherway.mergedways);
 		this.clean=false;
 		if (otherway.locked) { this.locked=true; }
+		removeMovieClip(_root.map.areas[otherway._name]);
 		removeMovieClip(otherway);
 	};
 	OSMWay.prototype.addPointFrom=function(topos,otherway,srcpt) {
@@ -1161,6 +1164,7 @@
 		_root.drawpoint=-1;
 		if (_root.map.ways[wayselected].path.length<=1) { 
 			// way not long enough, so abort
+			removeMovieClip(_root.map.areas[wayselected]);
 			removeMovieClip(_root.map.ways[wayselected]);
 			removeMovieClip(_root.map.anchors);
 		}
@@ -1170,6 +1174,7 @@
 
 	function keyRevert() {
 		if		(_root.wayselected<0) { stopDrawing();
+										removeMovieClip(_root.map.areas[wayselected]);
 										removeMovieClip(_root.map.ways[wayselected]); }
 		else if	(_root.wayselected>0) {	stopDrawing();
 										_root.map.ways[wayselected].reload(); }
@@ -2533,6 +2538,7 @@
 					    (_root.map.ways[qway].ymin<edge_b && _root.map.ways[qway].ymax<edge_b) ||
 						(_root.map.ways[qway].ymin>edge_t && _root.map.ways[qway].ymax>edge_t))) {
 				removeMovieClip(_root.map.ways[qway]);
+				removeMovieClip(_root.map.areas[qway]);
 				_root.waycount-=1;
 			}
 		}

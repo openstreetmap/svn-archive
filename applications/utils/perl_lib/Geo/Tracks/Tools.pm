@@ -6,7 +6,7 @@ use Exporter;
 @ISA = qw( Exporter );
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 @EXPORT = qw( copy_track_structure copy_track_wpt
-	      tracks_only_good_point tracks_only_good_point_split
+	      tracks_only_good_point
 	      count_good_point
 	      set_number_bad_points
 	      enrich_tracks
@@ -81,12 +81,12 @@ sub tracks_only_good_point($){
 	my $new_track=[];
 
 	# Copy only those with good_point set to 1
+	# split if split_track is set
 	for my $track_pos ( 0 .. $#{@{$track}} ) {
 	    my $elem=$track->[$track_pos];
 	    
 	    if ( $elem->{split_track} ) {
-		my $num_elem=scalar(@{$new_track});
-		if ( $num_elem >1 ) {
+		if ( scalar(@{$new_track}) > 1 ) {
 		    push(@{$new_tracks->{tracks}},$new_track);
 		}
 		$new_track=[];
@@ -137,8 +137,10 @@ sub count_good_point($){
 
 
 # ------------------------------------------------------------------
-# Enrich Track Data by adding:;
-#    dist: Distance to next point in meters
+# Enrich Track Data by adding:
+#  the results are stored in place of the old track
+#    dist: Distance to last point in meters
+#    time_diff: Time difference to last point in seconds
 #    angle_n: Angle to next point compared to north
 #    angle_n_r: Angle to next point compared to north ignoring direction
 #    angle: Angle between previous segment and following segment
@@ -186,11 +188,16 @@ sub enrich_single_track($){
 	     ( $track_pos < $last_track_point ) ) {
 	    $elem2->{angle_to_last} =$elem1->{angle};
 	}
-	# Distance between line of segment($segment)  to trackpoint $elem1
-	$elem1->{dist} = 1000*distance_point_point_Km($elem1,$elem2);
+	# Distance between elem1 and elem2
+	if ($track_pos > 0) {
+	    $elem1->{dist} = 1000*distance_point_point_Km($elem0,$elem1);
 
-	if ( defined($elem1->{time}) && defined($elem2->{time}) ) {
-	    $elem1->{time_diff} = $elem1->{time} - $elem2->{time};
+	    if ( defined($elem0->{time}) && defined($elem1->{time}) ) {
+		$elem1->{time_diff} = $elem1->{time} - $elem0->{time};
+	    }
+	} else {
+	    $elem1->{dist} =0;
+	    $elem1->{time_diff}=0;
 	}
     }
 }

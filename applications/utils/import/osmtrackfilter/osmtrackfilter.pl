@@ -634,26 +634,32 @@ sub split_tracks($$){
 
     my $track_number=0;
     enrich_tracks($tracks);
+    if ( $DEBUG>3) {
+	my ($track_count,$point_count) = count_data($tracks);
+	print_count_data($tracks,"before splitting");
+    }
     for my $track ( @{$tracks->{tracks}} ) {
 	my $max_pos = $#{@{$track}};
 	for  ( my $track_pos=0; $track_pos <= $max_pos;$track_pos++ ) {
 	    my $elem = $track->[$track_pos];
 	    unless ( defined($elem->{lat}) && defined($elem->{lon})){
 		$elem->{good_point}=0;
+		print STDERR "bad point ($track_pos)" if $DEBUG>3;
 		next;
 	    }
 	    if ( $elem->{fix} && $elem->{fix} eq "none" ) {
 		$elem->{good_point}=0;
-		print STDERR "x ";
+		print STDERR "x ($track_pos)" if $DEBUG>2;
 		next;
 	    };		
 	    next if $track_pos >= $max_pos;
 
 	    $elem->{time} = 0 unless defined $elem->{time};
 
-	    if ( defined($elem->{time_diff}) && 
+	    if ( defined($elem->{time_diff}) &&
 		 ( $elem->{time_diff} > $max_allowed_time ) ) { # ---- Check for Track Split: time diff
 		$elem->{split_track} =1;
+		print STDERR "split($track_pos)\n " if $DEBUG>3;
 	    }
 
 	    my $dist  = $elem->{dist};   # in Km
@@ -807,10 +813,17 @@ sub filter_data_reduce_points($){
 
     enrich_tracks($tracks);
     for my $track ( @{$tracks->{tracks}} ) {
-	for  ( my $track_pos=0; $track_pos <= $#{@{$track}};$track_pos++ ) {
+	my $last_track_elem= $#{@{$track}};
+	for  ( my $track_pos=0; $track_pos <= $last_track_elem;$track_pos++ ) {
 	    my $count_combinable = is_gps_combineable($track,$track_pos);
-	    set_number_bad_points($track,$track_pos,$count_combinable);
-	    $track_pos+=$count_combinable;
+	    if ( $track_pos+1+$count_combinable >= $last_track_elem ) {
+		# Do not remove last point in sub-track
+		$count_combinable =  $last_track_elem-$track_pos-2;
+	    };
+	    if ( $count_combinable>0) {
+		set_number_bad_points($track,$track_pos+1,$count_combinable);
+		$track_pos+=$count_combinable;
+	    }
 	}
     }
     

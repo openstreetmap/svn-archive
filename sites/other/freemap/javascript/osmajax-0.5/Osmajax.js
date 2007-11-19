@@ -200,10 +200,6 @@ function Osmajax(map)
                 "stored on the Freemap server until you log out and will be "+
                 "sent to OSM every time you make an edit. Please only "+
                 "continue if you're happy with this.</p>";
-        html += "<p>Also note that no check of the validity of the username"+
-                " and password will be made after you have entered them. You "+
-                "will only know if the username and password is incorrect "+
-                "when you try to edit something.</p>";
         html += "Username <input id='osmusername'/><br/>"+
                     "Password <input id='osmpassword' type='password'/><br/>";
         self.loginDlg = Dialog(html,self.provideLogin,

@@ -310,4 +310,36 @@ function RouteTypes()
 		}
 		return types;
 	}
+	
+	this.getUpdatedTags = function(oldTags,newTags)
+	{
+		var updatedTags = new Array(), curTag;
+		for(var tag in newTags)
+			updatedTags[tag] = newTags[tag];
+
+		var deleteTags = new Array
+				('foot','horse','motorcar','bicycle','amenity','power',
+				'residence','place','religion','denomination','tourism',
+				'man_made','railway','leisure');
+
+
+		// Blank any tags which should no longer be there - when we 
+		// change the type of a highway we might want to blank out old
+		// foot, horse tags etc.
+		var found;
+		for(tag in oldTags) 
+		{
+			found=false;
+			for(var count=0; count<deleteTags.length; count++)
+			{
+				if(tag==deleteTags[count])
+					found=true;
+			}
+
+			if(!found)
+				updatedTags[tag]=oldTags[tag];
+		}
+
+		return updatedTags;
+	}
 }

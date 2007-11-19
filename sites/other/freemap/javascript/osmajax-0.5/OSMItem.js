@@ -46,18 +46,26 @@ OpenLayers.OSMItem.prototype = {
 		},
 
 		updateTags: function(newTags) {
-			for(tag in newTags) {
-				this.tags[tag] = newTags[tag];
-			}
+
+			var deleteTags = new Array
+				('foot','horse','motorcar','bicycle','amenity','power',
+				'residence','place','religion','denomination','tourism',
+				'man_made','railway','leisure');
+
 
 			// Blank any tags which should no longer be there - when we 
 			// change the type of a highway we might want to blank out old
 			// foot, horse tags etc.
 			for(tag in this.tags) {
-				if( (tag == 'foot' || tag == 'horse' || 
-					tag == 'motorcar' || tag == 'bicycle') && !newTags[tag]) {
-					this.tags[tag]=null;
+				for(var count=0; count<deleteTags.length; count++)
+				{
+					if(tag==deleteTags[count])
+						this.tags[tag]=null;
 				}
+			}
+
+			for(tag in newTags) {
+				this.tags[tag] = newTags[tag];
 			}
 		},
 

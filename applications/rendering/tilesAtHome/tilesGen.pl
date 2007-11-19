@@ -994,13 +994,13 @@ sub svg2png
     
     my $Cmd = "";
     
-    if ($Config{Batik} == "1") 
-    {
-        my $Left = $X1;
-        my $Top = $ImageHeight - $Y1 - ($Y2 - $Y1);
-        my $Width = $X2 - $X1;
-        my $Height = $Y2 - $Y1;
+    my $Left = $X1;
+    my $Top = $ImageHeight - $Y1 - ($Y2 - $Y1);
+    my $Width = $X2 - $X1;
+    my $Height = $Y2 - $Y1;
     
+    if ($Config{Batik} == "1")
+    {
         $Cmd = sprintf("%s%s java -Xms256M -Xmx%s -jar %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s", 
         $Config{i18n} ? "LC_ALL=C " : "",
         $Config{Niceness},
@@ -1014,7 +1014,21 @@ sub svg2png
         "output-$PID-z$Zoom.svg",
         $stdOut);
     }
-    else 
+    elsif ($Config{Batik} == "2")
+    {
+        $Cmd = sprintf("%s%s %s -w %d -h %d -a %f,%f,%f,%f -m image/png -d \"%s\" \"%s%s\" > %s",
+        $Config{i18n} ? "LC_ALL=C " : "",
+        $Config{Niceness},
+        $Config{BatikPath},
+        $SizeX,
+        $SizeY,
+        $Left,$Top,$Width,$Height,
+        $TempFile,
+        $Config{WorkingDirectory},
+        "output-$PID-z$Zoom.svg",
+        $stdOut);
+    }
+    else
     {
         $Cmd = sprintf("%s%s \"%s\" -z -w %d -h %d --export-area=%f:%f:%f:%f --export-png=\"%s\" \"%s%s\" > %s", 
         $Config{i18n} ? "LC_ALL=C " : "",

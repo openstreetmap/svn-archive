@@ -634,7 +634,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     # Handle all layers, one after the other
     #------------------------------------------------------
 
-    foreach my $layer(split(/,/, $Layers)
+    foreach my $layer(split(/,/, $Layers))
     {
         #reset progress for each layer
         $progress=0;

@@ -365,6 +365,23 @@ class guiOverlay:
         
         self.cells[0][3].button("Events",None,"events")
 
+    def menu_click(self):
+        self.backButton(0,0)
+        self.cells[1][0].button("(lat)",None,None)
+        self.cells[2][0].button("(lon)",None,None)
+
+        self.cells[0][1].button("set pos",None,None)
+        self.cells[1][1].button("route to",None,None)
+        self.cells[2][1].button("direct to",None,None)
+
+        self.cells[0][2].button("waypoint",None,None)
+        self.cells[1][2].button("extend route",None,None)
+        self.cells[2][2].button("extend direct",None,None)
+
+        self.cells[0][3].button("",None,None)
+        self.cells[1][3].button("",None,None)
+        self.cells[2][3].button("",None,None)
+
     def menu_options(self):
         view,scroll = self.rect.xsplit(0.8)
         view.fill(1,0,0)

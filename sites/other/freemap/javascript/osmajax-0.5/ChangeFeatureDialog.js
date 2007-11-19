@@ -36,7 +36,8 @@ function ChangeFeatureDialog (selFeature,routeTypes,upCB,canCB,map)
         var t = (document.getElementById('ftype').value=="--Select--")?
                     "unknown" : document.getElementById('ftype').value;
         var newTags = self.routeTypes.getTags(t);
-        self.tempTags = newTags;
+        var tt = self.routeTypes.getUpdatedTags(self.tempTags,newTags);
+		self.tempTags=tt;
         self.tempType=t;
         self.populateFullTags();
     }

@@ -883,20 +883,15 @@ sub RenderTile
 #-----------------------------------------------------------------------------
 # Gets latest copy of osmarender from repository
 #-----------------------------------------------------------------------------
-sub UpdateOsmarender 
+sub UpdateClient # FIXME: should be called. (triggered by server?)
 {
-    foreach my $File(("osm-map-features.xml", "osmarender.xsl", "Osm_linkage.png", "somerights20.png"))
-    {
-        statusMessage("Downloading: Osmarender ($File)", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
-        DownloadFile(
-          "http://almien.co.uk/OSM/Places/Download/$File", 
-          $File,
-          1);
-    }
-    # TODO: should be config option. 
-    # TODO: should be SVN. 
-    # TODO: should be called at all
-    # TODO: should update other aspects of the client as well
+    my $Cmd = sprintf("%s%s up",
+        $Config{i18n} ? "LC_ALL=C " : "",
+        $Config{Subversion});
+
+    statusMessage("Updating the Client", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent,0);
+    runCommand($Cmd,$PID); # FIXME: evaluate output and handle locally changed files that need updating!
+
 }
 
 

@@ -9,6 +9,8 @@ Inkscape=inkscape
 XmlStarlet=xmlstarlet
 Niceness=nice -n10
 Pngcrush=pngcrush
+Subversion=svn
+
 
 ## Workaround for inkscape internationalisation problems. Should be safe to keep on.
 i18n=1

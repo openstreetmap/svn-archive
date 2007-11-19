@@ -800,7 +800,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
 
         # Clean-up the SVG files
-        for (my $i = $Zoom ; $i <= $maxzoom; $i++) the server and the client are 
+        for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {
             killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
         }

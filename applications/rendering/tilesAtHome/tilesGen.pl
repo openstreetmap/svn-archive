@@ -911,7 +911,7 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    if ($Config{Fork} && $Zoom == 12) {
+    if ($Config{Fork} && $Zoom >= $ZOrig && $Zoom < ($ZOrig + $Config{Fork})) {
         my $pid = fork();
         if (not defined $pid) {
             return cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$PID);
@@ -922,7 +922,7 @@ sub RenderTile
             RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
             waitpid($pid,0);
         }
-        $progressPercent=100;
+        $progressPercent=100 if (! $Config{"Debug"}); # workaround for not correctly updating %age in fork, disable in debug mode
         statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
     } else {
         RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);

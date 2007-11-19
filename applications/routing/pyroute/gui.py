@@ -100,7 +100,7 @@ class MapWidget(gtk.Widget):
     self.modules['projection'].nudge(-dx,dy,1.0/self.rect.width)
     self.forceRedraw()
   def zoom(self,dx):
-    self.modules['projection'].nudgeZoom(dx / self.rect.width)
+    self.modules['projection'].nudgeZoom(-1 * dx / self.rect.width)
     self.forceRedraw()
     #print "Scale %f" % self.modules['projection'].scale
   def nodeXY(self,node):

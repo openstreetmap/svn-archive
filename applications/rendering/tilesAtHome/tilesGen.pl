@@ -35,6 +35,8 @@ use strict;
 my %Config = ReadConfig("tilesAtHome.conf", "general.conf", "authentication.conf", "layers.conf");
 my %EnvironmentInfo = CheckConfig(\%Config);
 
+my $Layers = $Config{"Layers"};
+
 resetFault("fatal");
 resetFault("nodata");
 resetFault("utf8");
@@ -266,7 +268,7 @@ sub uploadIfEnoughTiles
     # compile a list of the "Prefix" values of all configured layers,
     # separated by |
     my $allowedPrefixes = join("|", 
-        map($Config{"Layer.$_.Prefix"}, split(/,/,$Config{"Layers"})));
+        map($Config{"Layer.$_.Prefix"}, split(/,/,$Layers)));
 
     if (opendir(my $dp, $Config{WorkingDirectory}))
     {
@@ -328,6 +330,13 @@ sub ProcessRequestsFromServer
         cleanUpAndDie("ProcessRequestFromServer:LocalSlippymap set, exiting","EXIT",1,$PID);
     }
     
+    my $ValidFlag;
+    my $Version;
+    my $X;
+    my $Y;
+    my $Z;
+    my $ModuleName;
+    
     # ----------------------------------
     # Download the request, and check it
     # Note: to find out exactly what this server is telling you, 
@@ -339,9 +348,6 @@ sub ProcessRequestsFromServer
     my $Request = GetRequestFromServer($Config{RequestMethod});
 
     return (0, "Error reading request from server") unless ($Request);
-   
-    # Parse the request
-    my ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
     
     # Check what format the results were in
     # If you get this message, please do check for a new version, rather than
@@ -354,6 +360,20 @@ sub ProcessRequestsFromServer
         print STDERR "Check to see whether a new version of this program was released!\n";
         cleanUpAndDie("ProcessRequestFromServer:Request API version mismatch, exiting \n".$Request,"EXIT",1,$PID);
         ## No need to return, we exit the program at this point
+    }
+    
+    # Parse the request
+    if ($Version == 3)
+    {
+        ($ValidFlag,$Version,$X,$Y,$Z,$ModuleName) = split(/\|/, $Request);
+    }
+    elsif ($Version == 4)
+    {
+        ($ValidFlag,$Version,$X,$Y,$Z,$Layers,$ModuleName) = split(/\|/, $Request);
+    }
+    else
+    {
+        die "This cannot happen";
     }
     
     # First field is always "OK" if the server has actually sent a request
@@ -398,7 +418,8 @@ sub GetRequestFromServer
           Content => [ user => $Config{UploadUsername},
           pass => $Config{UploadPassword},
           version => $Config{ClientVersion},
-          layers => $Config{Layers} ]);
+          layers => $Layers,
+          layerspossible => $Config{LayersCapability} ]);
       
         if(!$res->is_success())
         {
@@ -613,7 +634,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
     # Handle all layers, one after the other
     #------------------------------------------------------
 
-    foreach my $layer(split(/,/, $Config{Layers}))
+    foreach my $layer(split(/,/, $Layers)
     {
         #reset progress for each layer
         $progress=0;

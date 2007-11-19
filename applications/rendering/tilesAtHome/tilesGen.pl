@@ -2,6 +2,7 @@
 use LWP::UserAgent;
 use Math::Trig;
 use File::Copy;
+use File::Temp qw(tempfile);
 use FindBin qw($Bin);
 use tahconfig;
 use tahlib;
@@ -128,6 +129,9 @@ if( $ARGV[0] eq "loop" and -e "/dev/null" )
 
 # Create the working directory if necessary
 mkdir $Config{WorkingDirectory} if(!-d $Config{WorkingDirectory});
+
+# We need to keep parent PID so that child get the correct files after fork()
+my $parent_pid = $PID;
 
 # Subdirectory for the current job (layer & z12 tileset),
 # as used in sub GenerateTileset() and tileFilename()
@@ -667,7 +671,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Faff around
         for (my $i = $Zoom ; $i <= $maxzoom ; $i++) 
         {
-            killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
+            killafile("$Config{WorkingDirectory}output-$parent_pid-z$i.svg");
         }
         
         my $Margin = " " x ($Zoom - 8);
@@ -778,7 +782,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
             # Render the file
             if (xml2svg(
                     "map-features-$PID.xml",
-                    "$Config{WorkingDirectory}output-$PID-z$i.svg",
+                    "$Config{WorkingDirectory}output-$parent_pid-z$i.svg",
                     $i))
             {
                 # Delete temporary rules file
@@ -794,7 +798,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         }
 
         # Find the size of the SVG file
-        my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$PID-z$maxzoom.svg");
+        my ($ImgH,$ImgW,$Valid) = getSize("$Config{WorkingDirectory}output-$parent_pid-z$maxzoom.svg");
 
         # Render it as loads of recursive tiles
         my $empty = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
@@ -802,7 +806,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {
-            killafile("$Config{WorkingDirectory}output-$PID-z$i.svg");
+            killafile("$Config{WorkingDirectory}output-$parent_pid-z$i.svg");
         }
 
         #if $empty then the next zoom level was empty, so we only upload one tile unless RenderFullTileset is set.
@@ -907,8 +911,23 @@ sub RenderTile
     my $YA = $Ytile * 2;
     my $YB = $YA + 1;
 
-    RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
-    RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+    if ($Config{Fork} && $Zoom == 12) {
+        my $pid = fork();
+        if (not defined $pid) {
+            return cleanUpAndDie("RenderTile: could not fork, exiting","EXIT",4,$PID);
+        } elsif ($pid == 0) {
+            RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+            exit(0);
+        } else {
+            RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+            waitpid($pid,0);
+        }
+        $progressPercent=100;
+        statusMessage("Finished $X,$Y for layer $layer", $Config{Verbose}, $currentSubTask, $progressJobs, $progressPercent, 1);
+    } else {
+        RenderTile($layer, $X, $Y, $YA, $Zoom+1, $ZOrig, $N, $LatC, $W, $E, $ImgX1, $ImgYC, $ImgX2, $ImgY2,$ImageHeight,$SkipEmpty);
+        RenderTile($layer, $X, $Y, $YB, $Zoom+1, $ZOrig, $LatC, $S, $W, $E, $ImgX1, $ImgY1, $ImgX2, $ImgYC,$ImageHeight,$SkipEmpty);
+    }
 
     return $SkipEmpty; ## main call wants to know wether the entire tileset was empty so we return 1 if the tile was empty
 }
@@ -1018,9 +1037,11 @@ sub svg2png
 {
     my($Zoom, $ZOrig, $layer, $SizeX, $SizeY, $X1, $Y1, $X2, $Y2, $ImageHeight, $X, $Y, $Ytile) = @_;
     
-    my $TempFile = $Config{WorkingDirectory}.$PID."_part.png";
-    
-    my $stdOut = $Config{WorkingDirectory}.$PID.".stdout";
+    my $TempFile;
+    my $stdOut;
+    (undef, $TempFile) = tempfile($PID."_part-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".png");
+    (undef, $stdOut) = tempfile("$PID-XXXXXX", DIR => $Config{WorkingDirectory}, SUFFIX => ".stdout");
+
     
     my $Cmd = "";
     
@@ -1041,7 +1062,7 @@ sub svg2png
         $Left,$Top,$Width,$Height,
         $TempFile,
         $Config{WorkingDirectory},
-        "output-$PID-z$Zoom.svg",
+        "output-$parent_pid-z$Zoom.svg",
         $stdOut);
     }
     elsif ($Config{Batik} == "2")
@@ -1069,7 +1090,7 @@ sub svg2png
         $X1,$Y1,$X2,$Y2,
         $TempFile,
         $Config{WorkingDirectory},
-        "output-$PID-z$Zoom.svg",
+        "output-$parent_pid-z$Zoom.svg",
         $stdOut);
     }
     

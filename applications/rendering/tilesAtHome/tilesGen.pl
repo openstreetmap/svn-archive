@@ -348,7 +348,9 @@ sub ProcessRequestsFromServer
     my $Request = GetRequestFromServer($Config{RequestMethod});
 
     return (0, "Error reading request from server") unless ($Request);
-    
+
+    ($ValidFlag,$Version) = split(/\|/, $Request);
+
     # Check what format the results were in
     # If you get this message, please do check for a new version, rather than
     # commenting-out the test - it means the field order has changed and this

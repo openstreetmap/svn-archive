@@ -83,10 +83,10 @@ class overlayArea:
     def button(self,text=None,event=None,icon=None):
         # Rectangle
         if(not icon):
-            self.cr.set_line_width(2)
-            self.cr.set_source_rgba(0.4,0,0)
-            self.cr.rectangle(self.x1,self.y1,self.w,self.h)
-            self.cr.stroke()
+          if(text):
+            self.iconSet.draw(self.cr,"generic",self.x1,self.y1,self.w,self.h)
+          else:
+            self.iconSet.draw(self.cr,"blank",self.x1,self.y1,self.w,self.h)
         if(icon):
             self.iconSet.draw(self.cr,icon,self.x1,self.y1,self.w,self.h)
         if(text):
@@ -215,7 +215,7 @@ class guiOverlay:
         self.cells[2][2].button()
         
         self.cells[0][3].button("Centre","option:toggle:centred","centre")
-        self.cells[1][3].button("Options","menu:options")
+        self.cells[1][3].button("Options","menu:options","options")
         self.cells[2][3].button("Mode", "menu:mode","transport")
 
     def menu_mode(self):

@@ -62,8 +62,8 @@ sub ProjectL
 #-----------------------------------------------------------------------------
 # Angle unit-conversions
 #-----------------------------------------------------------------------------
-sub DegToRad($){return pi * shift() / 180;}
-sub RadToDeg($){return 180 * shift() / pi;}
+sub DegToRad {return pi * shift() / 180;}
+sub RadToDeg {return 180 * shift() / pi;}
 
 
 1;

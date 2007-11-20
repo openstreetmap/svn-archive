@@ -802,7 +802,7 @@ sub GenerateTileset ## TODO: split some subprocesses to own subs
 
         # Render it as loads of recursive tiles
         my ($success,$empty) = RenderTile($layer, $X, $Y, $Y, $Zoom, $Zoom, $N, $S, $W, $E, 0,0,$ImgW,$ImgH,$ImgH,0);
-        cleanUpAndDie("GenerateTileset: could not render tileset","EXIT",1,$PID); 
+        cleanUpAndDie("GenerateTileset: could not render tileset","EXIT",1,$PID) if not $success; 
         # Clean-up the SVG files
         for (my $i = $Zoom ; $i <= $maxzoom; $i++) 
         {

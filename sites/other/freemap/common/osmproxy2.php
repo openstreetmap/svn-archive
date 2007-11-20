@@ -18,9 +18,14 @@ else
 	if(isset($_REQUEST['osmpassword']))
 		$_SESSION['osmpassword'] = $_REQUEST['osmpassword'];
 
-	if($_REQUEST['call']=='map' || !isset($_REQUEST['call']) ||
+	if($_REQUEST['call']=='map' || $_REQUEST['call']=='parentways' ||
+		!isset($_REQUEST['call']) ||
 		(isset($_SESSION["osmusername"]) && isset($_SESSION["osmpassword"])))
 	{
+
+		if($_REQUEST['method']=='GET' || !isset($_REQUEST['method']))
+			header("Content-type: text/xml");
+
 		$call = (isset($_REQUEST['call'])) ? $_REQUEST['call']: 'map';
 		$result = callOSM ($call, $_SESSION['osmusername'], 
 					$_SESSION['osmpassword'], $_REQUEST['method'], $_REQUEST);
@@ -57,7 +62,6 @@ function callOSM ($call, $username, $password, $method='GET', $input=null)
 		break;
 
 	case "node":
-	case "segment":
 	case "way":
 		if(isset($input["id"]))
 		{
@@ -66,6 +70,13 @@ function callOSM ($call, $username, $password, $method='GET', $input=null)
 
 			$url = "http://www.openstreetmap.org/api/0.5/$call/$input[id]";
 		}
+		else
+			$valid=false;
+		break;
+
+	case "parentways":
+		if(isset($input["id"]))
+			$url = "http://www.openstreetmap.org/api/0.5/node/$input[id]/ways";
 		else
 			$valid=false;
 		break;

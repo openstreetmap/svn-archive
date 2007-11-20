@@ -480,5 +480,105 @@ OpenLayers.Layer.OSM.prototype =
 		return foundWays;
 	},
 
+	deleteNode: function(nodeFeature)
+	{
+		this.statusCallback('Deleting the node with id=' +
+			nodeFeature.osmitem.osmid);
+
+		// delete the node 
+		nodeFeature.osmitem.del
+				('http://www.free-map.org.uk/freemap/common/osmproxy2.php?'+
+				'call=node&id='+nodeFeature.osmitem.osmid,
+				this,this.nodeDeleted,nodeFeature);
+	},
+
+	// delete a way
+	deleteWay: function(wayFeature)
+	{
+		this.statusCallback('Deleting the way with id=' +
+			wayFeature.osmitem.osmid);
+
+		// delete the way
+		wayFeature.osmitem.del
+				('http://www.free-map.org.uk/freemap/common/osmproxy2.php?'+
+				'call=way&id='+wayFeature.osmitem.osmid,
+				this,this.wayDeleted,wayFeature);
+	},
+
+	wayDeleted: function(xmlHTTP,addData)
+	{
+
+		if(xmlHTTP.status!=200)
+		{
+			alert('Could not delete the way: error code='+xmlHTTP.status);
+			return;
+		}
+
+		var way = addData.osmitem;
+
+		this.removeFeatures(addData);
+
+		// loop through the way nodes. find out if each node belongs to any
+		// ways other than the current one. if so, the callback will 
+		// delete it.
+		// we remove the nodes first. removing the way first could lead to
+		// difficulties as we might not be able to tell whether the 
+		// constituent nodes are parented by the way if it's gone!
+		for(var count=0; count<way.nds.length; count++)
+		{
+			var realCB = this.doDeleteWayNode.bind(this);
+			ajaxrequest	
+				("http://www.free-map.org.uk/freemap/common/osmproxy2.php",
+				'call=parentways&id='+way.nds[count],
+				realCB,way.nds[count]);
+		}
+		this.ways[addData.osmitem] = null;
+	},
+
+	doDeleteWayNode: function(xmlHTTP, addData)
+	{
+		if(xmlHTTP.status==200||xmlHTTP.status==400)
+		{
+			var nodeid = addData;
+			var nodeWays = xmlHTTP.responseXML.getElementsByTagName("way");
+			if(xmlHTTP.status==400) // nasty fudge, this isn't really an error
+			{
+				this.statusCallback('Deleting node ' + nodeid);
+				this.nodes[nodeid].del
+					('http://www.free-map.org.uk/freemap/common/osmproxy2.php?'+
+					'call=node&id='+nodeid,
+					this,this.nodeDeleted,nodeid);
+			}
+		}
+		else
+		{
+			alert('Error on server, code ' + xmlHTTP.status + 
+					', unable to delete node within way with ID ' + nodeid);
+		}
+	},
+
+	nodeDeleted: function (xmlHTTP,addData)
+	{
+
+		var nodeid = 
+			(addData instanceof OpenLayers.Feature.OSM) ?
+			addData.osmitem.osmid : addData;
+
+		if(xmlHTTP.status==200)
+		{
+			if(addData instanceof OpenLayers.Feature.OSM)
+			{
+				this.removeFeatures(addData);
+			}
+			this.statusCallback('node with ID ' + nodeid + ' deleted.');
+			this.nodes[nodeid] = null;
+		}
+		else
+		{
+			alert('Error on server, code ' + xmlHTTP.status + 
+					', unable to delete node with ID ' + nodeid);
+		}
+	},
+
     CLASS_NAME: "OpenLayers.Layer.OSM"
 });

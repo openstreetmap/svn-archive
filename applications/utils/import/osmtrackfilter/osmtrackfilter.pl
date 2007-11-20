@@ -1260,6 +1260,16 @@ sub convert_Data(){
 	    print  STDERR "\n";
 	}
 
+	if ( $split_tracks ) {
+	    debug_write_track($new_tracks,"-pre-split_tracks-max_speed_500");
+	    $new_tracks = GPS::split_tracks($new_tracks,
+					{ max_speed => 500, # 500 Km/h
+					  max_dist  => 5000,#   5 Km
+					  max_time  => 300, #   5 min
+					});
+	    debug_write_track($new_tracks,"-post-split_tracks-max_speed_500");
+	}
+
 	if ( $out_raw_gpx ){
 	    my $new_gpx_file = "$filename-raw.gpx";
 	    $new_gpx_file =~s/.gpx-raw.gpx/-raw.gpx/;
